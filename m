@@ -1,137 +1,167 @@
 Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7055D6BB55;
-	Thu, 21 Dec 2023 11:32:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 290C36D1AF
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 11:37:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4SwpDQ3sllzsSSJ;
-	Thu, 21 Dec 2023 19:31:50 +0800 (CST)
-Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id DD81318005E;
-	Thu, 21 Dec 2023 19:32:08 +0800 (CST)
-Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
- (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 21 Dec
- 2023 19:32:08 +0800
-Subject: Re: [RFC PATCH net-next v1 4/4] net: page_pool: use netmem_t instead
- of struct page in API
-To: Mina Almasry <almasrymina@google.com>, Shakeel Butt <shakeelb@google.com>
-CC: Jakub Kicinski <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <bpf@vger.kernel.org>, Thomas Gleixner
-	<tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
-	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Sumit
- Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=c3=b6nig?=
-	<christian.koenig@amd.com>, Michael Chan <michael.chan@broadcom.com>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
- Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>, Wei Fang <wei.fang@nxp.com>,
-	Shenwei Wang <shenwei.wang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, NXP
- Linux Team <linux-imx@nxp.com>, Jeroen de Borst <jeroendb@google.com>,
-	Praveen Kaligineedi <pkaligineedi@google.com>, Shailend Chand
-	<shailend@google.com>, Yisen Zhuang <yisen.zhuang@huawei.com>, Salil Mehta
-	<salil.mehta@huawei.com>, Jesse Brandeburg <jesse.brandeburg@intel.com>, Tony
- Nguyen <anthony.l.nguyen@intel.com>, Thomas Petazzoni
-	<thomas.petazzoni@bootlin.com>, Marcin Wojtas <mw@semihalf.com>, Russell King
-	<linux@armlinux.org.uk>, Sunil Goutham <sgoutham@marvell.com>, Geetha
- sowjanya <gakula@marvell.com>, Subbaraya Sundeep <sbhatta@marvell.com>,
-	hariprasad <hkelam@marvell.com>, Felix Fietkau <nbd@nbd.name>, John Crispin
-	<john@phrozen.org>, Sean Wang <sean.wang@mediatek.com>, Mark Lee
-	<Mark-MC.Lee@mediatek.com>, Lorenzo Bianconi <lorenzo@kernel.org>, Matthias
- Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Saeed Mahameed
-	<saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>, Horatiu Vultur
-	<horatiu.vultur@microchip.com>, <UNGLinuxDriver@microchip.com>, "K. Y.
- Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei
- Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Jassi Brar
-	<jaswinder.singh@linaro.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu
-	<joabreu@synopsys.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>, Ravi Gunasekaran
-	<r-gunasekaran@ti.com>, Roger Quadros <rogerq@kernel.org>, Jiawen Wu
-	<jiawenwu@trustnetic.com>, Mengyuan Lou <mengyuanlou@net-swift.com>, Ronak
- Doshi <doshir@vmware.com>, VMware PV-Drivers Reviewers
-	<pv-drivers@vmware.com>, Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen
-	<shayne.chen@mediatek.com>, Kalle Valo <kvalo@kernel.org>, Juergen Gross
-	<jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, Oleksandr
- Tyshchenko <oleksandr_tyshchenko@epam.com>, Andrii Nakryiko
-	<andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu
-	<song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP Singh
-	<kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo
-	<haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Stefan Hajnoczi
-	<stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan
-	<shuah@kernel.org>, =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers
-	<ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, Justin Stitt
-	<justinstitt@google.com>, Jason Gunthorpe <jgg@nvidia.com>, Willem de Bruijn
-	<willemdebruijn.kernel@gmail.com>
-References: <20231214020530.2267499-1-almasrymina@google.com>
- <20231214020530.2267499-5-almasrymina@google.com>
- <ddffff98-f3de-6a5d-eb26-636dacefe9aa@huawei.com>
- <CAHS8izO2nDHuxKau8iLcAmnho-1TYkzW09MBZ80+JzOo9YyVFA@mail.gmail.com>
- <20231215021114.ipvdx2bwtxckrfdg@google.com>
- <20231215190126.1040fa12@kernel.org>
- <CALvZod5myy2SvuCMNmqjjYeNONqSArV+8y8mrkfnNeog8WLjng@mail.gmail.com>
- <CAHS8izOLBtjHOqbTS_PiTNe+rTE=jboDWDM9zS108B57vVNcwA@mail.gmail.com>
- <CAHS8izMkCwv3jak9KUHeDUrkwBNNpdYk4voEX7Cbp7mTpNAQdA@mail.gmail.com>
-From: Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <54f226ef-df2d-9f32-fa3f-e846d6510758@huawei.com>
-Date: Thu, 21 Dec 2023 19:32:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4SwpKh29RTzvSKP;
+	Thu, 21 Dec 2023 19:36:24 +0800 (CST)
+Received: from kwepemi500024.china.huawei.com (unknown [7.221.188.100])
+	by mail.maildlp.com (Postfix) with ESMTPS id D0CB61800BC;
+	Thu, 21 Dec 2023 19:37:19 +0800 (CST)
+Received: from [10.174.179.163] (10.174.179.163) by
+ kwepemi500024.china.huawei.com (7.221.188.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 21 Dec 2023 19:37:18 +0800
+Message-ID: <e8fe8db9-7f69-19c5-9391-3d100a7338fb@huawei.com>
+Date: Thu, 21 Dec 2023 19:37:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAHS8izMkCwv3jak9KUHeDUrkwBNNpdYk4voEX7Cbp7mTpNAQdA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH] locking/osq_lock: Avoid false sharing in
+ optimistic_spin_node
+To: Waiman Long <longman@redhat.com>, <peterz@infradead.org>,
+	<will@kernel.org>, <guohui@uniontech.com>, <boqun.feng@gmail.com>,
+	<mingo@redhat.com>
+CC: <linux-kernel@vger.kernel.org>, <liwei391@huawei.com>
+References: <20231220070204.2662730-1-zengheng4@huawei.com>
+ <ef3e34be-a30a-402b-a806-aa6ef29b410d@redhat.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500005.china.huawei.com (7.185.36.74)
+From: Zeng Heng <zengheng4@huawei.com>
+In-Reply-To: <ef3e34be-a30a-402b-a806-aa6ef29b410d@redhat.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemi500024.china.huawei.com (7.221.188.100)
 
-On 2023/12/20 11:01, Mina Almasry wrote:
 
-...
-
->>>> Perhaps we should aim to not export netmem_to_page(),
->>>> prevent modules from accessing it directly.
->>>
->>> +1.
+在 2023/12/21 0:58, Waiman Long 写道:
+>
+> On 12/20/23 02:02, Zeng Heng wrote:
+>> Using the UnixBench test suite, we clearly find that osq_lock() cause
+>> extremely high overheads with perf tool in the File Copy items:
 >>
-> 
-> I looked into this, but it turns out it's a slightly bigger change
-> that needs some refactoring to make it work. There are few places
-> where I believe I need to add netmem_to_page() that are exposed to the
-> drivers via inline helpers, these are:
-> 
-> - skb_frag_page(), which returns NULL if the netmem is not a page, but
-> needs to do a netmem_to_page() to return the page otherwise.
+>> Overhead  Shared Object            Symbol
+>>    94.25%  [kernel]                 [k] osq_lock
+>>     0.74%  [kernel]                 [k] rwsem_spin_on_owner
+>>     0.32%  [kernel]                 [k] filemap_get_read_batch
+>>
+>> In response to this, we conducted an analysis and made some gains:
+>>
+>> In the prologue of osq_lock(), it set `cpu` member of percpu struct
+>> optimistic_spin_node with the local cpu id, after that the value of the
+>> percpu struct would never change in fact. Based on that, we can regard
+>> the `cpu` member as a constant variable.
+>>
+>> In the meanwhile, other members of the percpu struct like next, prev and
+>> locked are frequently modified by osq_lock() and osq_unlock() which are
+>> called by rwsem, mutex and so on. However, that would invalidate the 
+>> cache
+>> of the cpu member on other CPUs.
+>>
+>> Therefore, we can place padding here and split them into different cache
+>> lines to avoid cache misses when the next CPU is spinning to check other
+>> node's cpu member by vcpu_is_preempted().
+>>
+>> Here provide the UnixBench full-core test result based on v6.6 as below:
+>> Machine Intel(R) Xeon(R) Gold 6248 CPU, 40 cores, 80 threads
+>> Run the command of "./Run -c 80 -i 3" over 20 times and take the 
+>> average.
+>>
+>> System Benchmarks Index Values           Without Patch   With 
+>> Patch     Diff
+>> Dhrystone 2 using register variables         185518.38 185329.56   
+>> -0.10%
+>> Double-Precision Whetstone                    79330.46 79268.22   -0.08%
+>> Execl Throughput                               9725.14 10390.18    6.84%
+>> File Copy 1024 bufsize 2000 maxblocks          1658.42 2035.55   22.74%
+>> File Copy 256 bufsize 500 maxblocks            1086.54 1316.96   21.21%
+>> File Copy 4096 bufsize 8000 maxblocks          3610.42 4152.79   15.02%
+>> Pipe Throughput                               69325.18 69913.85    0.85%
+>> Pipe-based Context Switching                  14026.32 14703.07    4.82%
+>> Process Creation                               8329.94 8355.31    0.30%
+>> Shell Scripts (1 concurrent)                  38942.41 41518.39    6.61%
+>> Shell Scripts (8 concurrent)                  37762.35 40224.49    6.52%
+>> System Call Overhead                           4064.44 4004.45   -1.48%
+>> ========
+>> System Benchmarks Index Score                 13634.17 14560.71    6.80%
+>>
+>> Signed-off-by: Zeng Heng <zengheng4@huawei.com>
+>> ---
+>>   include/linux/osq_lock.h  | 6 +++++-
+>>   kernel/locking/osq_lock.c | 8 +++++++-
+>>   2 files changed, 12 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/include/linux/osq_lock.h b/include/linux/osq_lock.h
+>> index 5581dbd3bd34..f33f47ec0c90 100644
+>> --- a/include/linux/osq_lock.h
+>> +++ b/include/linux/osq_lock.h
+>> @@ -9,7 +9,11 @@
+>>   struct optimistic_spin_node {
+>>       struct optimistic_spin_node *next, *prev;
+>>       int locked; /* 1 if lock acquired */
+>> -    int cpu; /* encoded CPU # + 1 value */
+>> +    /*
+>> +     * Stores an encoded CPU # + 1 value.
+>> +     * Only read by other cpus, so split into different cache lines.
+>> +     */
+>> +    int cpu ____cacheline_aligned;
+>>   };
+>>     struct optimistic_spin_queue {
+>> diff --git a/kernel/locking/osq_lock.c b/kernel/locking/osq_lock.c
+>> index d5610ad52b92..17618d62343f 100644
+>> --- a/kernel/locking/osq_lock.c
+>> +++ b/kernel/locking/osq_lock.c
+>> @@ -96,7 +96,13 @@ bool osq_lock(struct optimistic_spin_queue *lock)
+>>         node->locked = 0;
+>>       node->next = NULL;
+>> -    node->cpu = curr;
+>> +    /*
+>> +     * After this cpu member is initialized for the first time, it
+>> +     * would no longer change in fact. That could avoid cache misses
+>> +     * when spin and access the cpu member by other CPUs.
+>> +     */
+>> +    if (node->cpu != curr)
+>> +        node->cpu = curr;
+>>         /*
+>>        * We need both ACQUIRE (pairs with corresponding RELEASE in
+>
+> The contention on prev->cpu is due to the vcpu_is_preempted() call in 
+> osq_lock(). Could you try the attached patch to see if that helps?
+>
+> Thanks,
+> Longman
+>
+Hi Waiman,
 
-Is it possible to introduce something like skb_frag_netmem() for
-netmem? so that we can keep most existing users of skb_frag_page()
-unchanged and avoid adding additional checking overhead for existing
-users.
+I apply the patch you sent and do reboot before each UnixBench test.
 
-> - The helpers inside skb_add_rx_frag(), which needs to do a
-> netmem_to_page() to set skb->pfmemalloc.
+This is the result after testing 18 times. Here for your information:
 
-Similar as above, perhaps introduce something like skb_add_rx_netmem_frag()?
+Dhrystone 2 using register variables            181176.4667
+Double-Precision Whetstone                        77940.39444
+Execl Throughput                                          10137.1
+File Copy 1024 bufsize 2000 maxblocks       1966.116667
+File Copy 256 bufsize 500 maxblocks           1293.883333
+File Copy 4096 bufsize 8000 maxblocks       4046.594444
+Pipe Throughput 67955.76111
+Pipe-based Context Switching                      13385.50556
+Process Creation 8466.627778
+Shell Scripts (1 concurrent)                           40251.48889
+Shell Scripts (8 concurrent)                           39259.65556
+System Call Overhead                                   4060.766667
+System Benchmarks Index Score                  14251.95
 
-> - Some of the page_pool APIs are exposed to the drivers as static
-> inline helpers, and if I want the page_pool to use netmem internally
-> the page_pool needs to do a netmem_to_page() in these helpers.
-> 
-> The refactor is not an issue, but I was wondering if not exporting
-> netmem_to_page() was worth moving the code around. I was thinking in
-> the interim until netmem is adopted and has actual driver users we may
-> prefer to just add a comment on the netmem_to_page() helper that says
-> 'try not to use this directly and use the netmem helpers instead'.
-> 
+B.R.,
+
+Zeng Heng
+
+
 
