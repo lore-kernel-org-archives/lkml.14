@@ -1,217 +1,176 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA76562805;
-	Thu, 21 Dec 2023 17:11:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214B15990A;
+	Thu, 21 Dec 2023 17:12:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mUFviwBD"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-553eb74df60so1228638a12.0;
-        Thu, 21 Dec 2023 09:11:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703178713; x=1703783513; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8c7qdOK44Erw1rd2N9Dkc3C/rkBrTjfjshoie/DwZvs=;
-        b=mUFviwBDk+rBD0Cigr7Ej1YqAFjUeW9dpF+t6QeI6n6ppzg3OrDoWqq4wOiWKrDMgU
-         QI0bXw9Y70sxTTp12n/v86SeMKdw6qTyARCSit+yHJlNyopV2GkLcW7IwVpEDTV6mvAw
-         y1BUTSs1GCulkEENA7QX7AVSPjFNt+s9Kgf5EeNJ3L+ttgt9Zck9qSCY6ieMdRrenA0P
-         iYFFYRTyT0dgSxyYck4huvBZTts5Xk/PJ5Af1Ya6KByOa7xSa048a9sAp5HlFrOuqlpM
-         5gMJGtArxsmU9+fodaU4Mga4JwvSl55VVyNtlUDcNYC7p1MPx2lPGJfTQZ+fbZ5u9KIT
-         4zbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703178713; x=1703783513;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8c7qdOK44Erw1rd2N9Dkc3C/rkBrTjfjshoie/DwZvs=;
-        b=n7VlwyqyTCc5jBAk7Xvsevj70aCd08ecfYc/ULRg0Wl9D30m/3uuVs6f8vV6HOiOMl
-         QfmlGmgJ3katSmXKkSeG2L/bKz9qSUY+Yml3oiZX0lqmLAC/Pw61EwVOdGBO4E0VqJ1z
-         mEaLe+NLblFaKiR6v0MYEqy/lyNOoHJqIlvqNZ1N5fKa9MFqzbc4zxScgWfWez2q3q+x
-         f8WUaP2PM1YzKK24ujs5WFLMlhJDFasWo7tn3ALDNSDu5BSuIvZxKO7bfVMKaPge85Ri
-         DB4Ke5UK6Mn4gsoQtV40zf0XOpQmvQvvauKcHczQyxx6U2uC/OuqsSDZuz5q69lqRyJW
-         d0aw==
-X-Gm-Message-State: AOJu0Yytc6zepfRDLk7Trg02x9XRskgmt8uA9z184vGJthckM/ddhU+v
-	e+v4wFarTJ1nzvNZxldUVs4=
-X-Google-Smtp-Source: AGHT+IHNiAZdFnzAEiUdKfNoeSk+geKiEkWgT/aPnMVG9zgCLJmSuW1YXNdZkHxCVKCqsDhOaSRiwg==
-X-Received: by 2002:a50:c057:0:b0:54b:27e7:f965 with SMTP id u23-20020a50c057000000b0054b27e7f965mr12048802edd.19.1703178712653;
-        Thu, 21 Dec 2023 09:11:52 -0800 (PST)
-Received: from localhost.localdomain ([154.72.163.204])
-        by smtp.gmail.com with ESMTPSA id b24-20020a056402139800b0054cb316499dsm1400760edv.10.2023.12.21.09.11.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 09:11:52 -0800 (PST)
-From: Brandon Cheo Fusi <fusibrandon13@gmail.com>
-To: andre.przywara@arm.com
-Cc: aou@eecs.berkeley.edu,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	fusibrandon13@gmail.com,
-	jernej.skrabec@gmail.com,
-	krzysztof.kozlowski+dt@linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	rafael@kernel.org,
-	robh+dt@kernel.org,
-	samuel@sholland.org,
-	sfr@canb.auug.org.au,
-	tiny.windzz@gmail.com,
-	viresh.kumar@linaro.org,
-	wens@csie.org
-Subject: Re: [RFC PATCH v2 2/3] cpufreq: sun50i: Add support for D1's speed bin decoding
-Date: Thu, 21 Dec 2023 18:11:07 +0100
-Message-Id: <20231221171107.85991-1-fusibrandon13@gmail.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20231221124957.27fa9922@donnerap.manchester.arm.com>
-References: <20231221124957.27fa9922@donnerap.manchester.arm.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Fq+Hnp7d"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 3BLGr2tN023358;
+	Thu, 21 Dec 2023 18:11:36 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=dxmkweGMh19Sc2/yX4ifon/v2Dk/DFKokt/84XbR2Vo=; b=Fq
+	+Hnp7dUngZ5rsy/RLGFZ4LClwcMeEQR8kL2q2M+0gOv+WLeZbCGbPy5CKHDPFIOe
+	oNjzQW9qHatXHs3LQrxBb3p5R1lAhQZ1slZhH9vF/P2Po2gA9c1vH2XMxSKva8VS
+	Uxflg22Bov1nAOYarU24Aiwe54llbRSI1MkOWR/g/SVLkY+B00/Y9a8gry329PUI
+	qfiuU1P2QlEaCYyqP7l8FMMOVhCB+qpq9sOQSZHLV4PVhEW+QBFV4eThrpR/Eg+b
+	cEat7jY7Gwj0MFLnzJGEyFdi4spWqi72Vlt2ubPgmwWZtPJXafYbBRTSzdj68Lbr
+	Q47yKhiu5UP/xD+LMg0w==
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3v3q811wjx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Dec 2023 18:11:36 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 64770100053;
+	Thu, 21 Dec 2023 18:11:35 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2F006252E58;
+	Thu, 21 Dec 2023 18:11:35 +0100 (CET)
+Received: from [10.201.20.208] (10.201.20.208) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 21 Dec
+ 2023 18:11:34 +0100
+Message-ID: <5e007fe4-d6cd-4ec3-b9c1-ef7841e29851@foss.st.com>
+Date: Thu, 21 Dec 2023 18:11:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dmaengine: add channel device name to channel
+ registration
+Content-Language: en-US
+To: Vinod Koul <vkoul@kernel.org>
+CC: Fenghua Yu <fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20231213174021.3074759-1-amelie.delaunay@foss.st.com>
+ <ZYRkP-m_sra8qUNZ@matsya>
+From: Amelie Delaunay <amelie.delaunay@foss.st.com>
+In-Reply-To: <ZYRkP-m_sra8qUNZ@matsya>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-21_09,2023-12-21_02,2023-05-22_02
 
-On Thu, Dec 21, 2023 at 1:50 PM Andre Przywara <andre.przywara@arm.com> wrote:
->
-> On Thu, 21 Dec 2023 11:10:12 +0100
-> Brandon Cheo Fusi <fusibrandon13@gmail.com> wrote:
->
-> Hi Brandon,
->
-> thanks for the quick turnaround, and for splitting this code up, that
-> makes reasoning about this much easier!
->
-> > Adds support for decoding the efuse value read from D1 efuse speed
-> > bins, and factors out equivalent code for sun50i.
-> >
-> > The algorithm is gotten from
-> >
-> > https://github.com/Tina-Linux/linux-5.4/blob/master/drivers/cpufreq/sun50i-cpufreq-nvmem.c#L293-L338
-> >
-> > and maps an efuse value to either 0 or 1, with 1 meaning stable at
-> > a lower supply voltage for the same clock frequency.
-> >
-> > Signed-off-by: Brandon Cheo Fusi <fusibrandon13@gmail.com>
-> > ---
-> >  drivers/cpufreq/sun50i-cpufreq-nvmem.c | 34 ++++++++++++++++++++++++++
-> >  1 file changed, 34 insertions(+)
-> >
-> > diff --git a/drivers/cpufreq/sun50i-cpufreq-nvmem.c b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-> > index fc509fc49..b1cb95308 100644
-> > --- a/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-> > +++ b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-> > @@ -29,6 +29,33 @@ struct sunxi_cpufreq_data {
-> >       u32 (*efuse_xlate)(u32 *speedbin, size_t len);
-> >  };
-> >
-> > +static u32 sun20i_efuse_xlate(u32 *speedbin, size_t len)
->
-> I feel like this prototype can be shortened to:
->
-> static u32 sun20i_efuse_xlate(u32 speedbin)
->
-> See below.
->
-> > +{
-> > +     u32 ret, efuse_value = 0;
-> > +     int i;
-> > +
-> > +     for (i = 0; i < len; i++)
-> > +             efuse_value |= ((u32)speedbin[i] << (i * 8));
->
-> The cast is not needed. Looking deeper into the original code you linked
-> to, cell_value[] there is an array of u8, so they assemble a little endian
-> 32-bit integer from *up to* four 8-bit values read from the nvmem.
->
-> So I think this code here is wrong, len is the size of the nvmem cells
-> holding the bin identifier, in *bytes*, so the idea here is to just read
-> the (lowest) 16 bits (in the D1 case, cf. "reg = <0x00 0x2>;" in the next
-> patch) from this nvmem cell. Here you are combining two 32-bit words into
+Hi Vinod,
 
-This is true. Not sure though what the 'in the D1 case...' bit means.
+On 12/21/23 17:13, Vinod Koul wrote:
+> On 13-12-23, 18:40, Amelie Delaunay wrote:
+>> Channel device name is used for sysfs, but also by dmatest filter function.
+>>
+>> With dynamic channel registration, channels can be registered after dma
+>> controller registration. Users may want to have specific channel names.
+>>
+>> If name is NULL, the channel name relies on previous implementation,
+>> dma<controller_device_id>chan<channel_device_id>.
+> 
+> lgtm, where is the user for this..?
+> 
 
-> efuse_value.
->
-> So I think this whole part above is actually not necessary: we are
-> expecting maximum 32 bits, and nvmem_cell_read() should take care of
-> masking off unrequested bits, so we get the correct value back already. So
-> can you try to remove the loop above, and use ...
->
-> > +
-> > +     switch (efuse_value) {
->
->         switch (*speedbin & 0xffff) {
->
+I'll send beginning of next year a DMA controller driver for STM32MP25 
+SoC family. It relies on the dynamic channel registration. It will be a 
+user of this dma_async_device_channel_register(struct dma_device 
+*device, struct dma_chan *chan, const char *name).
 
-Shouldn't the bytes in *speedbin be reversed? 
+Regards,
+Amelie
 
-> here instead? Or drop the pointer at all, and just use one u32 value, see
-> the above prototype.
->
-
-I was uncomfortable dropping the len parameter, because then each
-platform's efuse_xlate would ignore the number of valid bytes actually
-read.
-
-> Cheers,
-> Andre
->
-> P.S. This is just a "peephole review" of this patch, I haven't got around
-> to look at this whole scheme in whole yet, to see if we actually need this
-> or can simplify this or clean it up.
->
->
-> > +     case 0x5e00:
-> > +             /* QFN package */
-> > +             ret = 0;
-> > +             break;
-> > +     case 0x5c00:
-> > +     case 0x7400:
-> > +             /* QFN package */
-> > +             ret = 1;
-> > +             break;
-> > +     case 0x5000:
-> > +     default:
-> > +             /* BGA package */
-> > +             ret = 0;
-> > +     }
-> > +
-> > +     return ret;
-> > +}
-> > +
-> >  static u32 sun50i_efuse_xlate(u32 *speedbin, size_t len)
-> >  {
-> >       u32 efuse_value = 0;
-> > @@ -46,6 +73,10 @@ static u32 sun50i_efuse_xlate(u32 *speedbin, size_t len)
-> >               return 0;
-> >  }
-> >
-> > +struct sunxi_cpufreq_data sun20i_cpufreq_data = {
-> > +     .efuse_xlate = sun20i_efuse_xlate,
-> > +};
-> > +
-> >  struct sunxi_cpufreq_data sun50i_cpufreq_data = {
-> >       .efuse_xlate = sun50i_efuse_xlate,
-> >  };
-> > @@ -54,6 +85,9 @@ static const struct of_device_id cpu_opp_match_list[] = {
-> >       { .compatible = "allwinner,sun50i-h6-operating-points",
-> >         .data = &sun50i_cpufreq_data,
-> >       },
-> > +     { .compatible = "allwinner,sun20i-d1-operating-points",
-> > +       .data = &sun20i_cpufreq_data,
-> > +     },
-> >       {}
-> >  };
-> >
->
-
-Thank you for reviewing.
-Brandon.
+>>
+>> Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+>> ---
+>>   drivers/dma/dmaengine.c   | 16 ++++++++++------
+>>   drivers/dma/idxd/dma.c    |  2 +-
+>>   include/linux/dmaengine.h |  3 ++-
+>>   3 files changed, 13 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+>> index b7388ae62d7f..7848428da2d6 100644
+>> --- a/drivers/dma/dmaengine.c
+>> +++ b/drivers/dma/dmaengine.c
+>> @@ -1037,7 +1037,8 @@ static int get_dma_id(struct dma_device *device)
+>>   }
+>>   
+>>   static int __dma_async_device_channel_register(struct dma_device *device,
+>> -					       struct dma_chan *chan)
+>> +					       struct dma_chan *chan,
+>> +					       const char *name)
+>>   {
+>>   	int rc;
+>>   
+>> @@ -1066,8 +1067,10 @@ static int __dma_async_device_channel_register(struct dma_device *device,
+>>   	chan->dev->device.parent = device->dev;
+>>   	chan->dev->chan = chan;
+>>   	chan->dev->dev_id = device->dev_id;
+>> -	dev_set_name(&chan->dev->device, "dma%dchan%d",
+>> -		     device->dev_id, chan->chan_id);
+>> +	if (!name)
+>> +		dev_set_name(&chan->dev->device, "dma%dchan%d", device->dev_id, chan->chan_id);
+>> +	else
+>> +		dev_set_name(&chan->dev->device, name);
+>>   	rc = device_register(&chan->dev->device);
+>>   	if (rc)
+>>   		goto err_out_ida;
+>> @@ -1087,11 +1090,12 @@ static int __dma_async_device_channel_register(struct dma_device *device,
+>>   }
+>>   
+>>   int dma_async_device_channel_register(struct dma_device *device,
+>> -				      struct dma_chan *chan)
+>> +				      struct dma_chan *chan,
+>> +				      const char *name)
+>>   {
+>>   	int rc;
+>>   
+>> -	rc = __dma_async_device_channel_register(device, chan);
+>> +	rc = __dma_async_device_channel_register(device, chan, name);
+>>   	if (rc < 0)
+>>   		return rc;
+>>   
+>> @@ -1200,7 +1204,7 @@ int dma_async_device_register(struct dma_device *device)
+>>   
+>>   	/* represent channels in sysfs. Probably want devs too */
+>>   	list_for_each_entry(chan, &device->channels, device_node) {
+>> -		rc = __dma_async_device_channel_register(device, chan);
+>> +		rc = __dma_async_device_channel_register(device, chan, NULL);
+>>   		if (rc < 0)
+>>   			goto err_out;
+>>   	}
+>> diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
+>> index 47a01893cfdb..101a265567a9 100644
+>> --- a/drivers/dma/idxd/dma.c
+>> +++ b/drivers/dma/idxd/dma.c
+>> @@ -269,7 +269,7 @@ static int idxd_register_dma_channel(struct idxd_wq *wq)
+>>   		desc->txd.tx_submit = idxd_dma_tx_submit;
+>>   	}
+>>   
+>> -	rc = dma_async_device_channel_register(dma, chan);
+>> +	rc = dma_async_device_channel_register(dma, chan, NULL);
+>>   	if (rc < 0) {
+>>   		kfree(idxd_chan);
+>>   		return rc;
+>> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+>> index 3df70d6131c8..cbad92cc3e0b 100644
+>> --- a/include/linux/dmaengine.h
+>> +++ b/include/linux/dmaengine.h
+>> @@ -1574,7 +1574,8 @@ int dma_async_device_register(struct dma_device *device);
+>>   int dmaenginem_async_device_register(struct dma_device *device);
+>>   void dma_async_device_unregister(struct dma_device *device);
+>>   int dma_async_device_channel_register(struct dma_device *device,
+>> -				      struct dma_chan *chan);
+>> +				      struct dma_chan *chan,
+>> +				      const char *name);
+>>   void dma_async_device_channel_unregister(struct dma_device *device,
+>>   					 struct dma_chan *chan);
+>>   void dma_run_dependencies(struct dma_async_tx_descriptor *tx);
+>> -- 
+>> 2.25.1
+> 
