@@ -1,63 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62EF058224;
-	Thu, 21 Dec 2023 22:01:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC3E77F15
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 22:03:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S2O8QXVK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83B2EC433C8;
-	Thu, 21 Dec 2023 22:01:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703196075;
-	bh=Mu966ENzqAzL5zVpXkX0okIrHoGjPvhJ8rqTFtXNsxY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S2O8QXVKb3ZUGIFC0OpGxRRynfGqmj+gp7FTRV7NaqGkWM4IE05+Gqd4cUFQEQYL4
-	 wG8CTj9V0h17GQd4DGWTQ/ID88OjucDGd4K+yDcA/dII3YbqJZwo8/WEGbw+0/BCww
-	 uvzyeWwpnjNf8BE09DbyfTe4eatwQUCKS88qqoFVuq4Fb0xHA3dCIj/qvA6T9heVw1
-	 XMReR5iaSQzexSnB5wS2XhpBfBxtK/INvsJIBmzcaV4NgQ/FFgNRrpnmVxI9gmQ0P9
-	 68dzeUi++eubqSxVn0qTA5U4n6uBSTfo0lld+kP5+b9rRlCVwpuJxK42akZsycfsTr
-	 Hh/bbpwOTtWRw==
-Received: (nullmailer pid 166032 invoked by uid 1000);
-	Thu, 21 Dec 2023 22:01:11 -0000
-Date: Thu, 21 Dec 2023 16:01:11 -0600
-From: Rob Herring <robh@kernel.org>
-To: Gatien Chevallier <gatien.chevallier@foss.st.com>
-Cc: mchehab@kernel.org, rcsekar@samsung.com, olivier.moysan@foss.st.com, Frank Rowand <frowand.list@gmail.com>, dmaengine@vger.kernel.org, linux-crypto@vger.kernel.org, jic23@kernel.org, lars@metafoo.de, mkl@pengutronix.de, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, davem@davemloft.net, conor+dt@kernel.org, fabrice.gasnier@foss.st.com, pabeni@redhat.com, linux-media@vger.kernel.org, catalin.marinas@arm.com, netdev@vger.kernel.org, Oleksii_Moisieiev@epam.com, linux-serial@vger.kernel.org, hugues.fruchet@foss.st.com, linux-usb@vger.kernel.org, linux-mmc@vger.kernel.org, arnd@kernel.org, linux-iio@vger.kernel.org, will@kernel.org, edumazet@google.com, linux-stm32@st-md-mailman.stormreply.com, krzysztof.kozlowski+dt@linaro.org, ulf.hansson@linaro.org, alexandre.torgue@foss.st.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, herbert@gondor.apana.org.au, vkoul@kernel.org, robh+dt@kernel.org, kuba@kernel.org, wg@grandegger.com, lee@kernel.org, peng.fan@oss.nxp.com, 
- linux-phy@lists.infradead.org, arnaud.pouliquen@foss.st.com, gregkh@linuxfoundation.org, richardcochran@gmail.com, linux-arm-kernel@lists.infradead.org, andi.shyti@kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH v8 06/13] of: property: fw_devlink: Add support for
- "access-controller"
-Message-ID: <170319607084.165973.14576693798188042387.robh@kernel.org>
-References: <20231212152356.345703-1-gatien.chevallier@foss.st.com>
- <20231212152356.345703-7-gatien.chevallier@foss.st.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cw8Y20B2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5AF6C433CB;
+	Thu, 21 Dec 2023 22:03:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1703196181;
+	bh=8FGnjhDRKc63x6ERnHGCSptOkrbsqPFpkkKFJyg21vQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cw8Y20B2iIadYSq+h5u2ueHu6JqUTjdciIgVa4yrnUfWDfZjoDo89/Tsuom2/ncZy
+	 H89QvIwHir1WNrmKBE1ixTnVNvptOSaNk0vZcOx0IBbS9iwG6BuZWvXt8Goj+h8vWD
+	 iJLrfWKHYPJiyfrzmHMcA45OYhJ64/NT4fBEqFbk=
+Date: Thu, 21 Dec 2023 14:03:00 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Yuntao Wang <ytcoode@gmail.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, Baoquan He
+ <bhe@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Simon
+ Horman <horms@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] x86/kexec: fix incorrect end address passed to
+ kernel_ident_mapping_init()
+Message-Id: <20231221140300.4fcfd4945eeb3b6c145a969c@linux-foundation.org>
+In-Reply-To: <20231221101702.20956-1-ytcoode@gmail.com>
+References: <20231221101702.20956-1-ytcoode@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231212152356.345703-7-gatien.chevallier@foss.st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Thu, 21 Dec 2023 18:17:02 +0800 Yuntao Wang <ytcoode@gmail.com> wrote:
 
-On Tue, 12 Dec 2023 16:23:49 +0100, Gatien Chevallier wrote:
-> Allows tracking dependencies between devices and their access
-> controller.
+> kernel_ident_mapping_init() takes an exclusive memory range [pstart, pend)
+> where pend is not included in the range, while res represents an inclusive
+> memory range [start, end] where end is considered part of the range.
 > 
-> Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
-> ---
+> Therefore, passing res->end directly to kernel_ident_mapping_init() is
+> incorrect, the correct end address should be `res->end + 1`.
 > 
-> Changes in V6:
->     	- Renamed access-controller to access-controllers
-> 
-> Changes in V5:
-> 	- Rename feature-domain* to access-control*
-> 
-> Patch not present in V1
-> 
->  drivers/of/property.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+> ...
+>
+> --- a/arch/x86/kernel/machine_kexec_64.c
+> +++ b/arch/x86/kernel/machine_kexec_64.c
+> @@ -44,7 +44,7 @@ static int mem_region_callback(struct resource *res, void *arg)
+>  	struct init_pgtable_data *data = arg;
+>  
+>  	return kernel_ident_mapping_init(data->info, data->level4p,
+> -					 res->start, res->end);
+> +					 res->start, res->end + 1);
+>  }
 
-Acked-by: Rob Herring <robh@kernel.org>
+Thanks.  When fixing a bug, please always full describe the
+userspace-visible effects of that bug.
 
+In this case I'm assuming "none", due to kernel_ident_mapping_init()'s
+upward rounding of the address?
