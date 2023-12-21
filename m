@@ -1,56 +1,44 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D9C7995A;
-	Thu, 21 Dec 2023 12:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A49D873179;
+	Thu, 21 Dec 2023 12:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ipm4M4ZU"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BLCi6uQ007058;
-	Thu, 21 Dec 2023 12:48:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2023-11-20;
- bh=HvPSu01XvhdYDYSnMEu4+snsYnVxSHyR0wBlHc0igYw=;
- b=ipm4M4ZUajsQPvX2bEayuSnh96CV66MzlD7fL8QHtdRW37yAAAKIsiVqT+BwpQOGEm3a
- r4IrzmHLI6ZruZYzrNOYcId7c4cTQricVKaBlDneuyyHyxjS6v4MoirP9N9iLV/TBk2s
- nb4B52bPOwxs9Phl0V/G2cmJuIhITjakeogSevrrVCdz74rCKBkq6/39nsYYvBlzldhz
- ei7gnHMJ3EzezZe6WxzmlVSitsZShrGSRXsaZlV4aZzNHou6rPUZiMQAc7msbZ7LT6yo
- KO/kiwCX+F7cSkJxF3zDDj+cgZa53NCKdmuMnG2bUYaGpkY0kCS4ZF4E019PGjwZAYEZ XQ== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3v13gujsuc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 21 Dec 2023 12:48:33 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3BLC8HpF035489;
-	Thu, 21 Dec 2023 12:48:32 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3v12bb308d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 21 Dec 2023 12:48:32 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BLCmSsS039413;
-	Thu, 21 Dec 2023 12:48:32 GMT
-Received: from t460-2.nl.oracle.com (dhcp-10-175-32-150.vpn.oracle.com [10.175.32.150])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3v12bb304w-2;
-	Thu, 21 Dec 2023 12:48:32 +0000
-From: Vegard Nossum <vegard.nossum@oracle.com>
-To: Jonathan Corbet <corbet@lwn.net>, Jaroslav Kysela <perex@perex.cz>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Vegard Nossum <vegard.nossum@oracle.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 1/2] Documentation: move driver-api/isapnp to userspace-api/
-Date: Thu, 21 Dec 2023 13:48:15 +0100
-Message-Id: <20231221124816.2978000-2-vegard.nossum@oracle.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231221124816.2978000-1-vegard.nossum@oracle.com>
-References: <20231221124816.2978000-1-vegard.nossum@oracle.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JspRYnmA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1703162926;
+	bh=/tP0vOAcAPktGngh+MT0OZObQF+qtxH8HNQl/CdWeXc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=JspRYnmAD49OSoc7E/ls2xadn/4qZ1yf84DDeK4ry7w6vz7aLjgsOOq0NC+cJYuhi
+	 lhx+4Hazgdr4BXudJdZcehwWLsuJRGQ7q4xGPrfmPzEV+EmT2rHoqiWdrKPWhRtd/C
+	 xKirkwG6PyHT+6g80f/H3h1TA7GVxZqqsM1bEtMs1csSpnDKLT0+FZExUfSHSUw/Ns
+	 WkMi8dw1xzMGMU9R5OxshZsgAKEQlHC0JuaO9r7IeQ+OehWQYo8xs1pgxNvJ6xOkIt
+	 4QHiIr/lAISzs2awTTF8bX2TbS0siDPWezpnFlxgvjcRDEzAh2U4qKviSBGcK2NTQ9
+	 j3NjH3XPrmXgw==
+Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id AC41B3782001;
+	Thu, 21 Dec 2023 12:48:45 +0000 (UTC)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: daniel.lezcano@linaro.org
+Cc: rafael@kernel.org,
+	rui.zhang@intel.com,
+	lukasz.luba@arm.com,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	kernel@collabora.com
+Subject: [RFC PATCH 18/26] thermal/drivers/kirkwood: Migrate to thermal_zone_device_register()
+Date: Thu, 21 Dec 2023 13:48:17 +0100
+Message-ID: <20231221124825.149141-19-angelogioacchino.delregno@collabora.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20231221124825.149141-1-angelogioacchino.delregno@collabora.com>
+References: <20231221124825.149141-1-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,108 +46,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-21_06,2023-12-20_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 mlxscore=0
- mlxlogscore=999 bulkscore=0 adultscore=0 suspectscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2312210096
-X-Proofpoint-ORIG-GUID: EUPvnK1tAM4yaYa7i36uzvDeAON75DC3
-X-Proofpoint-GUID: EUPvnK1tAM4yaYa7i36uzvDeAON75DC3
 
-driver-api/isapnp documents /proc interfaces for interfacing directly
-with ISA Plug & Play devices, not any kind of API for kernel developers,
-and should thus also live under userspace-api/.
+The thermal API has a new thermal_zone_device_register() function which
+is deprecating the older thermal_zone_device_register_with_trips() and
+thermal_tripless_zone_device_register().
 
-Also fix a few issues while we're at it.
+Migrate to the new thermal zone device registration function.
 
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- Documentation/driver-api/index.rst                     | 1 -
- Documentation/userspace-api/index.rst                  | 1 +
- Documentation/{driver-api => userspace-api}/isapnp.rst | 8 ++++----
- MAINTAINERS                                            | 2 +-
- drivers/pnp/isapnp/Kconfig                             | 2 +-
- 5 files changed, 7 insertions(+), 7 deletions(-)
- rename Documentation/{driver-api => userspace-api}/isapnp.rst (51%)
+ drivers/thermal/kirkwood_thermal.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
-index 9511db303446..b1b82ac1063b 100644
---- a/Documentation/driver-api/index.rst
-+++ b/Documentation/driver-api/index.rst
-@@ -81,7 +81,6 @@ available subsections can be seen below.
-    dcdbas
-    eisa
-    isa
--   isapnp
-    io-mapping
-    io_ordering
-    generic-counter
-diff --git a/Documentation/userspace-api/index.rst b/Documentation/userspace-api/index.rst
-index 93174ffc7350..277b7a40ca91 100644
---- a/Documentation/userspace-api/index.rst
-+++ b/Documentation/userspace-api/index.rst
-@@ -31,6 +31,7 @@ place where this information is gathered.
-    vduse
-    futex2
-    tee
-+   isapnp
+diff --git a/drivers/thermal/kirkwood_thermal.c b/drivers/thermal/kirkwood_thermal.c
+index a18158ebe65f..a9ccb27b5906 100644
+--- a/drivers/thermal/kirkwood_thermal.c
++++ b/drivers/thermal/kirkwood_thermal.c
+@@ -59,6 +59,10 @@ static const struct of_device_id kirkwood_thermal_id_table[] = {
  
- .. only::  subproject and html
+ static int kirkwood_thermal_probe(struct platform_device *pdev)
+ {
++	struct thermal_zone_device_params tzdp = {
++		.type = "kirkwood_thermal",
++		.ops = &ops
++	};
+ 	struct thermal_zone_device *thermal = NULL;
+ 	struct kirkwood_thermal_priv *priv;
+ 	int ret;
+@@ -71,8 +75,8 @@ static int kirkwood_thermal_probe(struct platform_device *pdev)
+ 	if (IS_ERR(priv->sensor))
+ 		return PTR_ERR(priv->sensor);
  
-diff --git a/Documentation/driver-api/isapnp.rst b/Documentation/userspace-api/isapnp.rst
-similarity index 51%
-rename from Documentation/driver-api/isapnp.rst
-rename to Documentation/userspace-api/isapnp.rst
-index 8d0840ac847b..d6fceb19b8ae 100644
---- a/Documentation/driver-api/isapnp.rst
-+++ b/Documentation/userspace-api/isapnp.rst
-@@ -1,11 +1,11 @@
--==========================================================
--ISA Plug & Play support by Jaroslav Kysela <perex@suse.cz>
--==========================================================
-+=======================
-+ISA Plug & Play support
-+=======================
- 
- Interface /proc/isapnp
- ======================
- 
--The interface has been removed. See pnp.txt for more details.
-+The interface was removed in kernel 2.5.53. See pnp.rst for more details.
- 
- Interface /proc/bus/isapnp
- ==========================
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0506d14340f7..7b6d2dbe4f1d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11252,7 +11252,7 @@ F:	drivers/media/radio/radio-isa*
- ISAPNP
- M:	Jaroslav Kysela <perex@perex.cz>
- S:	Maintained
--F:	Documentation/driver-api/isapnp.rst
-+F:	Documentation/userspace-api/isapnp.rst
- F:	drivers/pnp/isapnp/
- F:	include/linux/isapnp.h
- 
-diff --git a/drivers/pnp/isapnp/Kconfig b/drivers/pnp/isapnp/Kconfig
-index d0479a563123..8b5f2e461a80 100644
---- a/drivers/pnp/isapnp/Kconfig
-+++ b/drivers/pnp/isapnp/Kconfig
-@@ -7,6 +7,6 @@ config ISAPNP
- 	depends on ISA || COMPILE_TEST
- 	help
- 	  Say Y here if you would like support for ISA Plug and Play devices.
--	  Some information is in <file:Documentation/driver-api/isapnp.rst>.
-+	  Some information is in <file:Documentation/userspace-api/isapnp.rst>.
- 
- 	  If unsure, say Y.
+-	thermal = thermal_tripless_zone_device_register("kirkwood_thermal",
+-							priv, &ops, NULL);
++	tzdp.devdata = priv;
++	thermal = thermal_zone_device_register(&tzdp);
+ 	if (IS_ERR(thermal)) {
+ 		dev_err(&pdev->dev,
+ 			"Failed to register thermal zone device\n");
 -- 
-2.34.1
+2.43.0
 
