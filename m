@@ -1,202 +1,261 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2054.outbound.protection.outlook.com [40.107.102.54])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E46156CE;
-	Thu, 21 Dec 2023 07:37:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C6239858;
+	Thu, 21 Dec 2023 07:37:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="CKcfAvLa"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d7PO54kfXFup4K8kfvqkOjltFEBAzCUgY6k1fPHnSDo6gMpMjoTiOibYXTFEViE/g1Io5rG0CoCWsgsRPIB5pfNkdevLKBgub/gK0ucpYdMP1LPeslwUUCfQNNPwKEYMKCQpb9ngCYO7YwMtBZ07xU9Jizi5WajhMW2ROdtf/EoZ4JJYfZ7hR4210cdMDc1rpXDJSP3tFQPsWFp6bbA1ZMoxDW9vWUsixg0j5h91pjmwFI5zpcHiM+g8RXPgoPYXBXLe8f6m5t0+yWDG8Y4vyFQt1h/df3XxbtzA2dAeTV71cJwCd95szmpx5K0GAxyL4Yf5KakaRZztEvSdabbqOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+omCGRhppcTZgY3hpYmOov+emvix6/ZrChbQ00XGnbg=;
- b=R/v9OYooEy1XnRKrY44Z47gUJpITtULC7N4U1hgfdUER1KP4+5/RaRSdnAK5BA1JAimxBla8eordDz8/BUa432OoEeRi242XnhqFXlaMJV1BcaSWhCx07FBEMMOB0uHmLPX/lME7T8BNh+STdLVHyWeb3WqCINubwebqrLiHCzGAHfw5tHLhYm7nnPlQZfMPU9VVlaNK3diIlB2Gi+oOr8eDzQbncBcPEZsB0FTjuKez+MR/cuJlHAOgJWw26xDjtQFp0kGO57FgFqWgDXTr7w34foNHR0UIWEy5aB4bCTfGvUe9xj2ydcZ6XV4yqB7G9oVqfQjPAp6wmmN52EnkZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+omCGRhppcTZgY3hpYmOov+emvix6/ZrChbQ00XGnbg=;
- b=CKcfAvLaSwpXm2IH4Rgh+sYisr4QR988HRbRqSfTqWPo2ji13BV0N0/9MoDZRLQsSziAAE4CwVX2GpYoeFKr2n2LDFwNXKSexLM+I8QFZ/BZBt23o+tqao/zjGA2AfLCIMbQkfz0RNUpFbWVUoGl2OC7STfojmFu9jadWfq4aKQ=
-Received: from MW4PR03CA0196.namprd03.prod.outlook.com (2603:10b6:303:b8::21)
- by PH7PR12MB6666.namprd12.prod.outlook.com (2603:10b6:510:1a8::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.18; Thu, 21 Dec
- 2023 07:37:41 +0000
-Received: from CO1PEPF000044F7.namprd21.prod.outlook.com
- (2603:10b6:303:b8:cafe::e) by MW4PR03CA0196.outlook.office365.com
- (2603:10b6:303:b8::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.18 via Frontend
- Transport; Thu, 21 Dec 2023 07:37:41 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- CO1PEPF000044F7.mail.protection.outlook.com (10.167.241.197) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7113.18 via Frontend Transport; Thu, 21 Dec 2023 07:37:41 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Thu, 21 Dec
- 2023 01:37:40 -0600
-Received: from vijendar-X570-GAMING-X.amd.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.34
- via Frontend Transport; Thu, 21 Dec 2023 01:37:34 -0600
-From: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-To: <broonie@kernel.org>, <vkoul@kernel.org>
-CC: <alsa-devel@alsa-project.org>, <Basavaraj.Hiregoudar@amd.com>,
-	<Sunil-kumar.Dommati@amd.com>, <pierre-louis.bossart@linux.intel.com>,
-	<vinod.koul@intel.com>, <venkataprasad.potturu@amd.com>, Vijendar Mukunda
-	<Vijendar.Mukunda@amd.com>, Liam Girdwood <lgirdwood@gmail.com>, "Peter
- Ujfalusi" <peter.ujfalusi@linux.intel.com>, Bard Liao
-	<yung-chuan.liao@linux.intel.com>, Ranjani Sridharan
-	<ranjani.sridharan@linux.intel.com>, Daniel Baluta <daniel.baluta@nxp.com>,
-	Kai Vehmanen <kai.vehmanen@linux.intel.com>, Jaroslav Kysela
-	<perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, V sujith kumar Reddy
-	<Vsujithkumar.Reddy@amd.com>, Wang Jinchao <wangjinchao@xfusion.com>,
-	"moderated list:SOUND - SOUND OPEN FIRMWARE (SOF) DRIVERS"
-	<sound-open-firmware@alsa-project.org>, "open list:SOUND - SOC LAYER /
- DYNAMIC AUDIO POWER MANAGEM..." <linux-sound@vger.kernel.org>, open list
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH 09/12] ASoC: SOF: amd: add machine select logic for soundwire based platforms
-Date: Thu, 21 Dec 2023 13:05:55 +0530
-Message-ID: <20231221073558.3181911-10-Vijendar.Mukunda@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231221073558.3181911-1-Vijendar.Mukunda@amd.com>
-References: <20231221073558.3181911-1-Vijendar.Mukunda@amd.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HeBijgvr"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BL62uDC026618;
+	Thu, 21 Dec 2023 07:37:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=xM8x3CylIQFdiJ4PeOPo6wWJ3ARCdFJr+MWgDcH0lo0=; b=He
+	BijgvrCSezFSZFryb1/RN59NCpOTXVnuodwomoBKFBIH9/OLlhKQ9UJeA5cr1blF
+	d9EGap/7OzQpRRRQSZZzgc1N2KVAn6rWl05DoXJXB/fsjtrharAvb3ys3JoxgkD/
+	9EXhbNwAnnZrK9sbcZ2NHyXHm8MOdU0/iT9nhGBWf5vcIEMzNj8l+cStNMTh8VgQ
+	5OcT63fX3SPwW5tz+7xCdiGOzvFfyeuJRF7QMvrzmgLVXeJCVbce/udqRL+y/fWw
+	FilcdxU1OtloPWr04oF5JJT5pUTxLOTDvmPmOHi6ua/FL7HIc73PlHNi5Ba3jojD
+	mo7W3CbOleCTCkJCMgng==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3v4ea0grus-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Dec 2023 07:37:38 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3BL7bb1L013516
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Dec 2023 07:37:37 GMT
+Received: from [10.216.1.141] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 20 Dec
+ 2023 23:37:26 -0800
+Message-ID: <351eb4d2-4d14-4a4d-ac14-a0189e6614cc@quicinc.com>
+Date: Thu, 21 Dec 2023 13:07:22 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044F7:EE_|PH7PR12MB6666:EE_
-X-MS-Office365-Filtering-Correlation-Id: c5c2faf2-435d-4f80-4e64-08dc01f7b6a9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	gKf+Zl+StYnmutEYoiNIJ+8OK8APXOOhKbLYqqO9056yazzUbuILCOJSCfUcvH2w+SQxoHf07W5rdJECoxK7Z+RcQTc1LMp5hV9HwkRX3u/6p7BbwcCr3cSFGKZbFvcSVP5NadPMcjWLLAangJOeM+jdwJfcEHeYf9F7CQpsbEbHpR6XRtE3KK+n45mbViXpmEqktS8/T+ps0FNLs9Ew+hFzOoZxkPN0bkXgq0GNdgS2Ave/9/0xTR+zulP9B81oWbg4CoAHK2Zbzoxf+jd4wtgij+ofM3fyOZFoSyA0WJFS0PuxixQpbm7jdjYacMtlZOx30SGjVABeHUd2P8bfB2zX5Q5PDZ88wtfDNdEZ+t1Ed0MKkCeBFRW+DwX7Wkb1bcFxoSomaZmNVU0HOsAifXBpJ/rfPlpFfnVu7b13Sume9oe2eWd2rpVxmjCb7Zx2QX6ceb3hNjh28xwEF7RbXpnseFdTVai0YcXtl/EAutZBJTc4fDylZfp0gEmxBeyg9z/+wQ3qbZ5HCgtFI/733SmWn4aA77YdLm8dmLkWWPFVPY/0mSHzuOQmscBXsFvHwLFTo/WdXlirwtH5a8YzNCNnc4Abtxfz1a4GTWNjBHyX25E3eWPSmcpiYuMHm0d7xaknjvaqaMUdiZzQKkEcOdVIbisko6W9PR5k8tuVLZxldrtnzdbDzqFNNVkdADqBWnlwg1WhKifI1VERX8nn9VpWpxCLiMGkd0ILAdeiKosAQUw5OF5FoCS0DotPmntfXRL0Lf7ROqhB2BCI5DgsKg==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(136003)(396003)(346002)(376002)(230922051799003)(82310400011)(186009)(1800799012)(64100799003)(451199024)(46966006)(40470700004)(36840700001)(5660300002)(40480700001)(7416002)(8936002)(8676002)(4326008)(2906002)(316002)(54906003)(40460700003)(70586007)(70206006)(110136005)(478600001)(36860700001)(36756003)(47076005)(41300700001)(6666004)(426003)(26005)(336012)(1076003)(2616005)(7696005)(86362001)(81166007)(82740400003)(356005)(83380400001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Dec 2023 07:37:41.1147
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c5c2faf2-435d-4f80-4e64-08dc01f7b6a9
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044F7.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6666
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v7 3/3] net: stmmac: Add driver support for
+ DWMAC5 common safety IRQ
+Content-Language: en-US
+To: Serge Semin <fancer.lancer@gmail.com>
+CC: Vinod Koul <vkoul@kernel.org>, Bhupesh Sharma <bhupesh.sharma@linaro.org>,
+        Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Jose Abreu
+	<joabreu@synopsys.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>, <netdev@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Prasad Sodagudi
+	<psodagud@quicinc.com>,
+        Andrew Halaney <ahalaney@redhat.com>, Rob Herring
+	<robh@kernel.org>,
+        <kernel@quicinc.com>
+References: <20231219104815.3443231-1-quic_jsuraj@quicinc.com>
+ <20231219104815.3443231-4-quic_jsuraj@quicinc.com>
+ <irmn42brbxjwz45gh7hoay4aeollnq7gnzkuyuzjxjyh3syrst@mvgm7vecrhna>
+From: Suraj Jaiswal <quic_jsuraj@quicinc.com>
+In-Reply-To: <irmn42brbxjwz45gh7hoay4aeollnq7gnzkuyuzjxjyh3syrst@mvgm7vecrhna>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: lx4C50JPc6BOYOsGVW5TobU25mo2GVb8
+X-Proofpoint-ORIG-GUID: lx4C50JPc6BOYOsGVW5TobU25mo2GVb8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 phishscore=0 suspectscore=0 bulkscore=0 clxscore=1015
+ mlxlogscore=999 mlxscore=0 malwarescore=0 spamscore=0 impostorscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2312210055
 
-Add machine select logic for soundwire endpoints for AMD platforms.
+hi Serge,
+taken care of comments please review.
 
-Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
----
- sound/soc/sof/amd/acp-common.c | 65 +++++++++++++++++++++++++++++++---
- 1 file changed, 61 insertions(+), 4 deletions(-)
+Thanks
+Suraj
 
-diff --git a/sound/soc/sof/amd/acp-common.c b/sound/soc/sof/amd/acp-common.c
-index 2d72c6d55dc8..0fc4e20ec673 100644
---- a/sound/soc/sof/amd/acp-common.c
-+++ b/sound/soc/sof/amd/acp-common.c
-@@ -118,16 +118,72 @@ void amd_sof_dump(struct snd_sof_dev *sdev, u32 flags)
- 				 &panic_info, stack, AMD_STACK_DUMP_SIZE);
- }
- 
-+#if IS_ENABLED(CONFIG_SND_SOC_SOF_AMD_SOUNDWIRE)
-+static int amd_sof_sdw_get_slave_info(struct snd_sof_dev *sdev)
-+{
-+	struct acp_dev_data *acp_data = sdev->pdata->hw_pdata;
-+
-+	return sdw_amd_get_slave_info(acp_data->sdw);
-+}
-+
-+static struct snd_soc_acpi_mach *amd_sof_sdw_machine_select(struct snd_sof_dev *sdev)
-+{
-+	struct snd_soc_acpi_mach *mach;
-+	const struct snd_soc_acpi_link_adr *link;
-+	struct acp_dev_data *acp_data = sdev->pdata->hw_pdata;
-+	int ret, i;
-+
-+	if (acp_data->info.count) {
-+		ret = amd_sof_sdw_get_slave_info(sdev);
-+		if (ret) {
-+			dev_info(sdev->dev, "failed to read slave information\n");
-+			return NULL;
-+		}
-+		for (mach = sdev->pdata->desc->alt_machines; mach; mach++) {
-+			if (!mach->links)
-+				break;
-+			link = mach->links;
-+			for (i = 0; i < acp_data->info.count && link->num_adr; link++, i++) {
-+				if (!snd_soc_acpi_sdw_link_slaves_found(sdev->dev, link,
-+									acp_data->sdw->ids,
-+									acp_data->sdw->num_slaves))
-+					break;
-+			}
-+			if (i == acp_data->info.count || !link->num_adr)
-+				break;
-+		}
-+		if (mach && mach->link_mask) {
-+			mach->mach_params.links = mach->links;
-+			mach->mach_params.link_mask = mach->link_mask;
-+			mach->mach_params.platform = dev_name(sdev->dev);
-+			return mach;
-+		}
-+	}
-+	dev_info(sdev->dev, "No SoundWire machine driver found\n");
-+	return NULL;
-+}
-+
-+#else
-+static struct snd_soc_acpi_mach *amd_sof_sdw_machine_select(struct snd_sof_dev *sdev)
-+{
-+	return NULL;
-+}
-+#endif
-+
- struct snd_soc_acpi_mach *amd_sof_machine_select(struct snd_sof_dev *sdev)
- {
- 	struct snd_sof_pdata *sof_pdata = sdev->pdata;
- 	const struct sof_dev_desc *desc = sof_pdata->desc;
--	struct snd_soc_acpi_mach *mach;
-+	struct snd_soc_acpi_mach *mach = NULL;
- 
--	mach = snd_soc_acpi_find_machine(desc->machines);
-+	if (desc->machines)
-+		mach = snd_soc_acpi_find_machine(desc->machines);
- 	if (!mach) {
--		dev_warn(sdev->dev, "No matching ASoC machine driver found\n");
--		return NULL;
-+		mach = amd_sof_sdw_machine_select(sdev);
-+		if (!mach) {
-+			dev_warn(sdev->dev, "No matching ASoC machine driver found\n");
-+			return NULL;
-+		}
- 	}
- 
- 	sof_pdata->tplg_filename = mach->sof_tplg_filename;
-@@ -204,5 +260,6 @@ EXPORT_SYMBOL_NS(sof_acp_common_ops, SND_SOC_SOF_AMD_COMMON);
- 
- MODULE_IMPORT_NS(SND_SOC_SOF_AMD_COMMON);
- MODULE_IMPORT_NS(SND_SOC_SOF_XTENSA);
-+MODULE_IMPORT_NS(SOUNDWIRE_AMD_INIT);
- MODULE_DESCRIPTION("ACP SOF COMMON Driver");
- MODULE_LICENSE("Dual BSD/GPL");
--- 
-2.34.1
-
+On 12/20/2023 8:20 PM, Serge Semin wrote:
+> Hi Suraj
+> 
+> On Tue, Dec 19, 2023 at 04:18:15PM +0530, Suraj Jaiswal wrote:
+>> Add support to listen HW safety IRQ like ECC(error
+>> correction code), DPP(data path parity), FSM(finite state
+>> machine) fault in common IRQ line.
+>>
+>> Signed-off-by: Suraj Jaiswal <quic_jsuraj@quicinc.com>
+>> ---
+>>  drivers/net/ethernet/stmicro/stmmac/common.h  |  1 +
+>>  drivers/net/ethernet/stmicro/stmmac/stmmac.h  |  2 ++
+>>  .../net/ethernet/stmicro/stmmac/stmmac_main.c | 35 +++++++++++++++++++
+>>  .../ethernet/stmicro/stmmac/stmmac_platform.c |  8 +++++
+>>  4 files changed, 46 insertions(+)
+>>
+>> diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
+>> index 721c1f8e892f..b9233b09b80f 100644
+>> --- a/drivers/net/ethernet/stmicro/stmmac/common.h
+>> +++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+>> @@ -344,6 +344,7 @@ enum request_irq_err {
+>>  	REQ_IRQ_ERR_ALL,
+>>  	REQ_IRQ_ERR_TX,
+>>  	REQ_IRQ_ERR_RX,
+>> +	REQ_IRQ_ERR_SFTY,
+>>  	REQ_IRQ_ERR_SFTY_UE,
+>>  	REQ_IRQ_ERR_SFTY_CE,
+>>  	REQ_IRQ_ERR_LPI,
+>> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+>> index 9f89acf31050..9aeaca01cace 100644
+>> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+>> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+>> @@ -31,6 +31,7 @@ struct stmmac_resources {
+>>  	int wol_irq;
+>>  	int lpi_irq;
+>>  	int irq;
+>> +	int sfty_irq;
+>>  	int sfty_ce_irq;
+>>  	int sfty_ue_irq;
+>>  	int rx_irq[MTL_MAX_RX_QUEUES];
+>> @@ -297,6 +298,7 @@ struct stmmac_priv {
+>>  	void __iomem *ptpaddr;
+>>  	void __iomem *estaddr;
+>>  	unsigned long active_vlans[BITS_TO_LONGS(VLAN_N_VID)];
+>> +	int sfty_irq;
+>>  	int sfty_ce_irq;
+>>  	int sfty_ue_irq;
+>>  	int rx_irq[MTL_MAX_RX_QUEUES];
+>> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+>> index 47de466e432c..f6639ffb017e 100644
+>> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+>> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+>> @@ -3592,6 +3592,10 @@ static void stmmac_free_irq(struct net_device *dev,
+>>  		if (priv->wol_irq > 0 && priv->wol_irq != dev->irq)
+>>  			free_irq(priv->wol_irq, dev);
+>>  		fallthrough;
+>> +	case REQ_IRQ_ERR_SFTY:
+>> +		if (priv->sfty_irq > 0 && priv->sfty_irq != dev->irq)
+>> +			free_irq(priv->sfty_irq, dev);
+>> +		fallthrough;
+>>  	case REQ_IRQ_ERR_WOL:
+>>  		free_irq(dev->irq, dev);
+>>  		fallthrough;
+>> @@ -3661,6 +3665,21 @@ static int stmmac_request_irq_multi_msi(struct net_device *dev)
+>>  		}
+>>  	}
+>>  
+>> +	/* Request the common Safety Feature Correctible/Uncorrectible
+>> +	 * Error line in case of another line is used
+>> +	 */
+> 
+>> +	if (priv->sfty_irq > 0 && priv->sfty_irq != dev->irq) {
+>> +		ret = request_irq(priv->sfty_irq, stmmac_safety_interrupt,
+>> +				  0, dev->name, dev);
+> 
+> Not entirely what I asked. What I asked was to make the code unified in
+> the respective IRQ-request methods. You just copy-and-pasted the same
+> code snippet in both functions. To see what I meant please find the
+> diff attached to this message. It's applicable on top of this patch.
+> 
+>> +		if (unlikely(ret < 0)) {
+>> +			netdev_err(priv->dev,
+> 
+>> +				   "%s: alloc safety failed %d (error: %d)\n",
+>> +				   __func__, priv->sfty_irq, ret);
+> 
+> This looks different than the rest of the error messages in this
+> method (see the attached diff).
+> 
+>> +			irq_err = REQ_IRQ_ERR_SFTY;
+>> +			goto irq_error;
+>> +		}
+>> +	}
+>> +
+>>  	/* Request the Safety Feature Correctible Error line in
+>>  	 * case of another line is used
+>>  	 */
+>> @@ -3798,6 +3817,21 @@ static int stmmac_request_irq_single(struct net_device *dev)
+>>  		}
+>>  	}
+>>  
+>> +	/* Request the common Safety Feature Correctible/Uncorrectible
+>> +	 * Error line in case of another line is used
+>> +	 */
+>> +	if (priv->sfty_irq > 0 && priv->sfty_irq != dev->irq) {
+> 
+>> +		ret = request_irq(priv->sfty_irq, stmmac_safety_interrupt,
+>> +				  0, dev->name, dev);
+> 
+> IRQF_SHARED?
+> 
+>> +		if (unlikely(ret < 0)) {
+> 
+>> +			netdev_err(priv->dev,
+>> +				   "%s: alloc safety failed %d (error: %d)\n",
+>> +				   __func__, priv->sfty_irq, ret);
+> 
+> This also looks different than the rest of the error messages in this 
+> method (see the attached diff).
+> 
+> Some other comments I'll send to v8 after all the above finally fixed.
+> 
+> -Serge(y)
+> 
+>> +			irq_err = REQ_IRQ_ERR_SFTY;
+>> +			goto irq_error;
+>> +		}
+>> +	}
+>> +
+>>  	return 0;
+>>  
+>>  irq_error:
+>> @@ -7462,6 +7496,7 @@ int stmmac_dvr_probe(struct device *device,
+>>  	priv->dev->irq = res->irq;
+>>  	priv->wol_irq = res->wol_irq;
+>>  	priv->lpi_irq = res->lpi_irq;
+>> +	priv->sfty_irq = res->sfty_irq;
+>>  	priv->sfty_ce_irq = res->sfty_ce_irq;
+>>  	priv->sfty_ue_irq = res->sfty_ue_irq;
+>>  	for (i = 0; i < MTL_MAX_RX_QUEUES; i++)
+>> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+>> index 70eadc83ca68..ab250161fd79 100644
+>> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+>> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+>> @@ -743,6 +743,14 @@ int stmmac_get_platform_resources(struct platform_device *pdev,
+>>  		dev_info(&pdev->dev, "IRQ eth_lpi not found\n");
+>>  	}
+>>  
+>> +	stmmac_res->sfty_irq =
+>> +		platform_get_irq_byname_optional(pdev, "sfty");
+>> +	if (stmmac_res->sfty_irq < 0) {
+>> +		if (stmmac_res->sfty_irq == -EPROBE_DEFER)
+>> +			return -EPROBE_DEFER;
+>> +		dev_info(&pdev->dev, "IRQ safety IRQ not found\n");
+>> +	}
+>> +
+>>  	stmmac_res->addr = devm_platform_ioremap_resource(pdev, 0);
+>>  
+>>  	return PTR_ERR_OR_ZERO(stmmac_res->addr);
+>> -- 
+>> 2.25.1
+>>
+>>
