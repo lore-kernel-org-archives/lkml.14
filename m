@@ -1,192 +1,86 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2108.outbound.protection.outlook.com [40.107.212.108])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B46576DDA;
-	Thu, 21 Dec 2023 13:41:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=Sony.onmicrosoft.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA9D7763F;
+	Thu, 21 Dec 2023 13:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="hTdXKxLp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EGe5GOouJOYOrfJw7oOTO6cPpgN1ULhj0Jw8wlBcvqMlRB02aE6gINqELbAkpY2IZt06/G5Sksm9rIaMT5LBVJ5HcLZXY0sOtv98rtitZcn+NWCjImAyldbKXwyzzKIOzNkNx0B6s2P+WhJsVE2S9YR3vBalz31O8y/OIGIJIWk4YMBDIbIhRjqk1yAbLKyyqqsIa+tGNyjnO+YtN8OOw8qMjase51/YWWNKd3h/qiG8FsCZMP4B37y8PTMpv5Edzp3Keo2MDrNK717pNOW3QUT6ZTfrtjlmI/7YahbXMTQxJbvlgoJpGEGpDihopauwwxoUMsdqdKlnHnntrnyQRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=G8XwtCSxGPzTQdHIx5TxffiqY0PWTaS/zWVcjiJ5q8Q=;
- b=BJ/LXBB4Mn1pVRYRxa91GgSLwvPwNaM7Uh9yrBSJi3BB4gTreVQhiKXMUtoBKRYD1okwzszNmED5iQLmVHpp1DUPM2ciz9dioAeDaID8v26edliJWUUNhR5nEs8elc9tTiqFKWNJj+50tKPmyslc5YOCGh98vg6d/sgRM49qng8AXA/nO1Vf2B5/kplAFZVV4bXQyL9pt2Lx80XJN89yLXtGC3w52K44h8okvjtcbNJrGLD98bTEg92UE40Walp3Phwxl3La7mhTeJxDdEL1soRsouYupcH3glqLDlG2sPnjJYCENHoPqiNcpgvMRU7Xy31NjVfcq95aHM/Ms1xczA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 121.100.38.198) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=mail.sony.com; dmarc=fail (p=none sp=none pct=100) action=none
- header.from=sony.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
- s=selector2-Sony-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G8XwtCSxGPzTQdHIx5TxffiqY0PWTaS/zWVcjiJ5q8Q=;
- b=hTdXKxLpBlVBLxWkZmxby3XCiizxaEuxoGDMoQCjtvHwWqrVSItzX2Ybz+2jct9KN0F9WWmwwS5ZufFHQoftKRbsXUmGxAOiq0pLQjcn48+LNXsREwjfk9ZZQbn/n0VGRLDRBDKP832RPIbqQhHqYA4GJdr0/OJANmxNqRW3ZqA=
-Received: from DM6PR02CA0153.namprd02.prod.outlook.com (2603:10b6:5:332::20)
- by BL0PR13MB4548.namprd13.prod.outlook.com (2603:10b6:208:1cc::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.21; Thu, 21 Dec
- 2023 13:41:27 +0000
-Received: from DS1PEPF0001708F.namprd03.prod.outlook.com
- (2603:10b6:5:332:cafe::8) by DM6PR02CA0153.outlook.office365.com
- (2603:10b6:5:332::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.20 via Frontend
- Transport; Thu, 21 Dec 2023 13:41:27 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 121.100.38.198)
- smtp.mailfrom=mail.sony.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=sony.com;
-Received-SPF: Fail (protection.outlook.com: domain of mail.sony.com does not
- designate 121.100.38.198 as permitted sender)
- receiver=protection.outlook.com; client-ip=121.100.38.198;
- helo=gepdcl09.sg.gdce.sony.com.sg;
-Received: from gepdcl09.sg.gdce.sony.com.sg (121.100.38.198) by
- DS1PEPF0001708F.mail.protection.outlook.com (10.167.17.139) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7113.14 via Frontend Transport; Thu, 21 Dec 2023 13:41:26 +0000
-Received: from gepdcl04.s.gdce.sony.com.sg (SGGDCSE1NS08.sony.com.sg [146.215.123.198])
-	by gepdcl09.sg.gdce.sony.com.sg (8.14.7/8.14.4) with ESMTP id 3BLDeoI5021753;
-	Thu, 21 Dec 2023 21:41:07 +0800
-Received: from mail.sony.com ([43.88.80.246])
-	by gepdcl04.s.gdce.sony.com.sg (8.14.7/8.14.4) with ESMTP id 3BLDeGmO019292;
-	Thu, 21 Dec 2023 21:40:16 +0800
-Received: by mail.sony.com (Postfix, from userid 1000)
-	id 3E87320C224A; Thu, 21 Dec 2023 19:10:06 +0530 (IST)
-From: Sreenath Vijayan <sreenath.vijayan@sony.com>
-To: linux-doc@vger.kernel.org, linux-serial@vger.kernel.org, corbet@lwn.net,
-        gregkh@linuxfoundation.org, jirislaby@kernel.org
-Cc: linux-kernel@vger.kernel.org, anandakumar.balasubramaniam@sony.com,
-        Sreenath Vijayan <sreenath.vijayan@sony.com>,
-        Shimoyashiki Taichi <taichi.shimoyashiki@sony.com>
-Subject: [PATCH] tty/sysrq: Dump kernel ring buffer messages via sysrq
-Date: Thu, 21 Dec 2023 19:09:53 +0530
-Message-ID: <20231221133953.1507021-1-sreenath.vijayan@sony.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JrbMBzzc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703166145; x=1734702145;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=R6miQeV/VuHmO5eVyMe/230bW5y4XCSTO7Hh0DdH/iE=;
+  b=JrbMBzzc/E5CHeIzx3cD96HPDfSc1DQ80FRltqNSJqd+X03HHFokZnU4
+   R64hilneFtKx2EyHIBCPZGlVTSBVfH4FgxJZNiKInmIFbsDYShj04Bp6G
+   jxeecy/v08PLK1iHS/FjXDh0YIYfOxPsfQK79B7UdflmYDLbz4xjTvnNh
+   rQGZT48BpqM3bp1eTFqrud7LRxyDXGl2Smt/KUj7S3C09x4c/azUuuZI0
+   R+s1IU2olMsP6ImxWj8syY3ameFaJgMs03QmWfMDIbZJU6bRV60E13gQT
+   ugeRY2gJgUwLWv59Pnre1C69yEsz8l/vCamvcNg6XOSZ7Yl/Yc5tXpLJC
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="393141727"
+X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
+   d="scan'208";a="393141727"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 05:42:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="776707125"
+X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
+   d="scan'208";a="776707125"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 05:42:20 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rGJJa-00000007rYy-0CnL;
+	Thu, 21 Dec 2023 15:42:18 +0200
+Date: Thu, 21 Dec 2023 15:42:17 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mark Hasemeyer <markhas@chromium.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, chrome-platform@lists.linux.dev,
+	cros-qcom-dts-watchers@chromium.org, devicetree@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-mediatek@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v2 00/22] Improve IRQ wake capability reporting and
+ update the cros_ec driver to use it
+Message-ID: <ZYRAuY1LGdD8_u5K@smile.fi.intel.com>
+References: <20231220235459.2965548-1-markhas@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF0001708F:EE_|BL0PR13MB4548:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: dbc1de9d-2385-4def-2bb5-08dc022a8829
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	PKWX52Dqt9dqXCxEa8S4g2LkHFdiCknGWnIiJ9fqFGzFCIBBc6G1iUXozUAs+fjdNd1u9QIhIvCHtjWZmyuibufPe23u/yfpgXycoAv9jLCSL1cWvQb8weYhk2G67ySWhTDkyit6y8vY/RY5N6h4/c7Nqj9z0PqkDHVVJFKGKjSoXUsQMcpKWYqiC1ZQmWBP0zNmfxMgwpJJm8gxy9YVFAPOgpolXxeadJcTY0VKSBKnPey+KXHQw6UpTEsCMPgYCc4WCCMfeiYMwb9e+na6iMvrSD2q1VRiYZDQYp2ogZxPRUndKQ1DZCtz5KBQZv+kWuu8+01vnhhASLpMDB42T73feZsOnL2fxjDqBIiQFcnD99Lqz+6Ik18kj3rn6BewH/0mUEfe2Yut41mX4dzgWTi5D8BbsBtJJxDkSWS4D91XSCXjm20jtlhxfmR4l+yMdZJoHM48Mre1y7+5ktE31/KH4pLwTl3YfrfngBOYqfn74XPJimfcAv7oeUcNZEI12pylpfNd7TPcuBFH18rkfR0ccHRT8W0xOCSHqg6hs5S3PtYsyhel7eI33H89cU0LmtOh2gxS5Cz8173t9mYS22PU68BAU93MoAiy0AB4AJ7QmFnbc/+FKuBjgyuF5yz1wAvQgyS3Oeo+CW2KxA9NyUxeKbp5YXfj27aRTkKakR/LxTfwk6dh7wXgSMlkzao/2SyL2FmIkdlJCcaszH40uLxDUakpp5pJl0JX/h8QmV+rgNZammuyO2u+lpZXAcH6
-X-Forefront-Antispam-Report:
-	CIP:121.100.38.198;CTRY:SG;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:gepdcl09.sg.gdce.sony.com.sg;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(136003)(346002)(376002)(396003)(230922051799003)(82310400011)(64100799003)(451199024)(1800799012)(46966006)(40480700001)(6266002)(26005)(1076003)(2616005)(336012)(426003)(6666004)(107886003)(36756003)(82740400003)(82960400001)(83170400001)(81166007)(356005)(35950700001)(8936002)(8676002)(4326008)(41300700001)(83380400001)(44832011)(5660300002)(47076005)(54906003)(42186006)(15650500001)(70206006)(70586007)(2906002)(316002)(450100002)(498600001);DIR:OUT;SFP:1102;
-X-OriginatorOrg: sony.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Dec 2023 13:41:26.9174
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dbc1de9d-2385-4def-2bb5-08dc022a8829
-X-MS-Exchange-CrossTenant-Id: 66c65d8a-9158-4521-a2d8-664963db48e4
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=66c65d8a-9158-4521-a2d8-664963db48e4;Ip=[121.100.38.198];Helo=[gepdcl09.sg.gdce.sony.com.sg]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF0001708F.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR13MB4548
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231220235459.2965548-1-markhas@chromium.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-When terminal is unresponsive, one cannot use dmesg to view kernel
-ring buffer messages. Also, syslog services may be disabled,
-to check them after a reboot, especially on embedded systems.
-In this scenario, dump the kernel ring buffer messages via sysrq
-by pressing sysrq+D.
+On Wed, Dec 20, 2023 at 04:54:14PM -0700, Mark Hasemeyer wrote:
+> Currently the cros_ec driver assumes that its associated interrupt is
+> wake capable. This is an incorrect assumption as some Chromebooks use a
+> separate wake pin, while others overload the interrupt for wake and IO.
+> This patch train updates the driver to query the underlying ACPI/DT data
+> to determine whether or not the IRQ should be enabled for wake.
+> 
+> Both the device tree and ACPI systems have methods for reporting IRQ
+> wake capability. In device tree based systems, a node can advertise
+> itself as a 'wakeup-source'. In ACPI based systems, GpioInt and
+> Interrupt resource descriptors can use the 'SharedAndWake' or
+> 'ExclusiveAndWake' share types.
+> 
+> Some logic is added to the platform, ACPI, and DT subsystems to more
+> easily pipe wakeirq information up to the driver.
 
-Signed-off-by: Sreenath Vijayan <sreenath.vijayan@sony.com>
-Signed-off-by: Shimoyashiki Taichi <taichi.shimoyashiki@sony.com>
----
- Documentation/admin-guide/sysrq.rst |  2 ++
- drivers/tty/sysrq.c                 | 43 ++++++++++++++++++++++++++++-
- 2 files changed, 44 insertions(+), 1 deletion(-)
+Just wondering if you used --histogram diff algo when preparing patches.
 
-diff --git a/Documentation/admin-guide/sysrq.rst b/Documentation/admin-guide/sysrq.rst
-index 2f2e5bd440f9..464c4e138b9d 100644
---- a/Documentation/admin-guide/sysrq.rst
-+++ b/Documentation/admin-guide/sysrq.rst
-@@ -161,6 +161,8 @@ Command	    Function
-             will be printed to your console. (``0``, for example would make
-             it so that only emergency messages like PANICs or OOPSes would
-             make it to your console.)
-+
-+``D``	    Dump the kernel ring buffer
- =========== ===================================================================
- 
- Okay, so what can I use them for?
-diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-index 02217e3c916b..aa43cb40c117 100644
---- a/drivers/tty/sysrq.c
-+++ b/drivers/tty/sysrq.c
-@@ -51,6 +51,8 @@
- #include <linux/syscalls.h>
- #include <linux/of.h>
- #include <linux/rcupdate.h>
-+#include <linux/kmsg_dump.h>
-+#include <linux/console.h>
- 
- #include <asm/ptrace.h>
- #include <asm/irq_regs.h>
-@@ -450,6 +452,45 @@ static const struct sysrq_key_op sysrq_unrt_op = {
- 	.enable_mask	= SYSRQ_ENABLE_RTNICE,
- };
- 
-+static void dmesg_dump_callback(struct work_struct *work)
-+{
-+	struct kmsg_dump_iter iter;
-+	size_t len;
-+	char buf[1024];
-+	struct console *con;
-+	int cookie;
-+
-+	kmsg_dump_rewind(&iter);
-+	while (kmsg_dump_get_line(&iter, 1, buf, sizeof(buf), &len)) {
-+		/*
-+		 * Since using printk() or pr_*() will append the message to the
-+		 * kernel ring buffer, they cannot be used to display the retrieved
-+		 * message. Hence console_write() of serial drivers is used.
-+		 */
-+		console_lock();
-+		cookie = console_srcu_read_lock();
-+		for_each_console_srcu(con) {
-+			if ((console_srcu_read_flags(con) & CON_ENABLED) && con->write)
-+				con->write(con, buf, len);
-+		}
-+		console_srcu_read_unlock(cookie);
-+		console_unlock();
-+	}
-+}
-+
-+static DECLARE_WORK(sysrq_dmesg_work, dmesg_dump_callback);
-+
-+static void sysrq_handle_dmesg_dump(u8 key)
-+{
-+	queue_work(system_unbound_wq, &sysrq_dmesg_work);
-+}
-+static struct sysrq_key_op sysrq_dmesg_dump_op = {
-+	.handler        = sysrq_handle_dmesg_dump,
-+	.help_msg       = "dump-dmesg(D)",
-+	.action_msg     = "Dump dmesg",
-+	.enable_mask    = SYSRQ_ENABLE_DUMP,
-+};
-+
- /* Key Operations table and lock */
- static DEFINE_SPINLOCK(sysrq_key_table_lock);
- 
-@@ -505,7 +546,7 @@ static const struct sysrq_key_op *sysrq_key_table[62] = {
- 	NULL,				/* A */
- 	NULL,				/* B */
- 	NULL,				/* C */
--	NULL,				/* D */
-+	&sysrq_dmesg_dump_op,		/* D */
- 	NULL,				/* E */
- 	NULL,				/* F */
- 	NULL,				/* G */
+
 -- 
-2.42.0
+With Best Regards,
+Andy Shevchenko
+
 
