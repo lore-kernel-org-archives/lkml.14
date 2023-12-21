@@ -1,88 +1,62 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A506D6C0;
-	Thu, 21 Dec 2023 14:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6dbb9d03b5eso100008a34.1;
-        Thu, 21 Dec 2023 06:17:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703168260; x=1703773060;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iBHSazj3p+MLo+y/uvsliBm5vLXGA+IDGINMZnlhLjU=;
-        b=b0YdAvzTy8XW9rHfrp9OvDcG6df+eCtjbwRZSopAewKrlsz5LV3X2iK6ZpX1kmxsS+
-         vxtRNGhBCGPrMN4i4qQP+HKrMIuxWWTP5h9GPaFjJC6pvJ0yWYZbgIhF+JCf85IKeP8U
-         Q6UUPbpwxVBLAmJNIcozoWXo8QWkwbq/XLqo266MSPqddIPpqy6qbsWe74zsNSnd9VxV
-         Nnh9DGoamR5OHQ8PMERoJdGtdK/HMY6Izq/SNbl/RXFXh8PDX7UDY8jvKzTJ5QvQ3PRL
-         lhoKvHW8vB06eCwWEd/KPGk8YZNN4NC/Zs3fbqnAD0GU6LgAE265cXkOUr1xWui0eaeq
-         IAKA==
-X-Gm-Message-State: AOJu0YygwXY4+3BLWsXDWxMz0o+oYf3c/7H+e8xm16gPisBVhfPUKvvw
-	u4mjqGjaMbPx8XCblt6T4KbQJbQBu8xWLLDP7XZOhZDzuvM=
-X-Google-Smtp-Source: AGHT+IEj20FBnmLZ/ARdh0C0RK0hJmU/LJkWL9Ggrx3TW+UsEGgW147R1BWJygWWzB9l/UjKt/sx9R3eMBp8DiHLGNY=
-X-Received: by 2002:a05:6820:258a:b0:593:e53b:2df1 with SMTP id
- cs10-20020a056820258a00b00593e53b2df1mr7893445oob.1.1703168260730; Thu, 21
- Dec 2023 06:17:40 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 604896D6C0;
+	Thu, 21 Dec 2023 14:18:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF226C433C7;
+	Thu, 21 Dec 2023 14:18:44 +0000 (UTC)
+Date: Thu, 21 Dec 2023 09:19:47 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: David Laight <David.Laight@ACULAB.COM>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Tzvetomir Stoyanov
+ <tz.stoyanov@gmail.com>, Vincent Donnefort <vdonnefort@google.com>, Kent
+ Overstreet <kent.overstreet@gmail.com>
+Subject: Re: [PATCH v5 02/15] ring-buffer: Page size per ring buffer
+Message-ID: <20231221091947.3b35d5d8@gandalf.local.home>
+In-Reply-To: <30f49370d7ae494ab1afca5cf602ab55@AcuMS.aculab.com>
+References: <20231219185414.474197117@goodmis.org>
+	<20231219185628.009147038@goodmis.org>
+	<84d3b41a72bd43dbb9d44921ef535c92@AcuMS.aculab.com>
+	<20231220080129.3453bca8@gandalf.local.home>
+	<30f49370d7ae494ab1afca5cf602ab55@AcuMS.aculab.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231215072405.65887-1-luoxueqin@kylinos.cn>
-In-Reply-To: <20231215072405.65887-1-luoxueqin@kylinos.cn>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 21 Dec 2023 15:17:29 +0100
-Message-ID: <CAJZ5v0g5PdOiRVB08zvi1gBqFU5LKm4O0FaFdH-FC=eQKyNNGA@mail.gmail.com>
-Subject: Re: [PATCH -next] ACPICA: Replace strncpy() with strscpy_pad() for dest
-To: xueqin Luo <luoxueqin@kylinos.cn>
-Cc: robert.moore@intel.com, rafael.j.wysocki@intel.com, lenb@kernel.org, 
-	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Dec 15, 2023 at 8:24=E2=80=AFAM xueqin Luo <luoxueqin@kylinos.cn> w=
-rote:
->
-> While it is safe to use strncpy in this case, the advice is to move to
-> strscpy_pad[1].
->
-> Link: https://www.kernel.org/doc/html/latest/process/deprec:qated.html#st=
-rncpy-on-nul-terminated-strings [1]
-> Signed-off-by: xueqin Luo <luoxueqin@kylinos.cn>
-> ---
->  drivers/acpi/acpica/utnonansi.c | 3 +--
+On Thu, 21 Dec 2023 09:17:55 +0000
+David Laight <David.Laight@ACULAB.COM> wrote:
 
-ACPICA code comes from an external project.  The proper way of
-modifying it is to submit a pull request to the upstream ACPICA
-project on GitHub.  Once this pull request has been merged upstream, a
-Linux patch containing a Link: tag to the corresponding upstream pull
-request can be submitted.
+> > Unfortunately, it has to be PAGE_SIZE (and for now it's a power of 2 to
+> > make masking easy). It's used for splice and will also be used for memory
+> > mapping with user space.  
+> 
+> Perhaps then the sysctl to set the size should be powers of 4k
 
-Thanks!
+It's not a sysctl but a file in tracefs
 
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/acpi/acpica/utnonansi.c b/drivers/acpi/acpica/utnona=
-nsi.c
-> index ff0802ace19b..3a7952be6545 100644
-> --- a/drivers/acpi/acpica/utnonansi.c
-> +++ b/drivers/acpi/acpica/utnonansi.c
-> @@ -168,8 +168,7 @@ void acpi_ut_safe_strncpy(char *dest, char *source, a=
-cpi_size dest_size)
->  {
->         /* Always terminate destination string */
->
-> -       strncpy(dest, source, dest_size);
-> -       dest[dest_size - 1] =3D 0;
-> +       strscpy_pad(dest, source, dest_size);
->  }
->
->  #endif
-> --
-> 2.34.1
->
->
+> with a minimum size of PAGE_SIZE.
+> Then you don't have to know the page size when setting things up.
+
+The user shouldn't need to know either. But the size of the sub-buffer
+limits the biggest size of an event, so the user only needs to make sure
+the sub-buffer is bigger than their biggest event.
+
+> 
+> I'm also guessing that no Linux kernels have a PAGE_SIZE of 2k?
+> IIRC some old mmu (maybe 68020 era) used 2k pages.
+
+I think 1kb units is perfectly fine (patch 15 changes to kb units). The
+interface says its to define the minimal size of the sub-buffer, not the
+actual size.
+
+-- Steve
