@@ -1,89 +1,102 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749374F8B5;
-	Thu, 21 Dec 2023 09:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJ7eYtZl"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d045097b4cso3737425ad.0;
-        Thu, 21 Dec 2023 01:17:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703150265; x=1703755065; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Zy5fYk5yDFfc5MecTU/b1uM8JTuFAaLBpt7UpnKQhPg=;
-        b=GJ7eYtZl5fkJaYKWVtAKMGTapD1PaNl1UDI61nsvPIPzwLiCcAu/pvYWc2zqShQzfk
-         fMnVHlwV0Y5n0yXyv4B2c2dyxnAIkVE0W9IfvPDZY8YFi6D/itwP92qtYCavYzd+fSPm
-         c2s3N6JJcgB4HHyxhfGloEMz3Yos5SB6p8/vORKEVMNR5PmUoTl7OcdBZdpJ2WcSyHpu
-         7edAvEqg4wNPh7jJUK+XsWHZM0WfM3TcrwhGmdbh/6rar81TblcVCBFLvAzVTVUQXJ55
-         L7OsQsja+EzVw87kFPwYrvfhO0V7KPtrnh1r/oxSghVv3fbwGwe2tpgO/rYUWdm7Aqnm
-         jj3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703150265; x=1703755065;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zy5fYk5yDFfc5MecTU/b1uM8JTuFAaLBpt7UpnKQhPg=;
-        b=hUz8rpuam1AmK7FRPEzTEeICyQ+94975fb86jMuZGz6+taIMFF3SmhIL+F9gOEOBZL
-         O5IvtJ1RSgYP9iui8MPIZmzLtxH9cwcY6oCqTbY01pFTMlEkv55ApP0U3iexgjkb6tU6
-         CZbwF4CzoU7zSP1efVNQgD7KEemGn/RXc6CUeRGcqIOCLUd30UzjOCSWoMU0h1dyOMmm
-         gRfZKi9CEhMvDnFb62rYA/IY+GnOQ+ySmhZtwLdMx/DP5Ys8SF+HMwalMZPhVsdXjaqh
-         tl26VU6TyMgG7/cQR41+8sMs8HAeozTv0vhBAb/YW521AoTz4vbqGjFYsD15FODMQp/G
-         8vJg==
-X-Gm-Message-State: AOJu0YxEI+y9XYww+3WPAje03MCVpNI5BXQ34ixHxxJ4a2cyu91veuD+
-	TpIA6JjrDqWnDq/fYrTNkMxqFAVYpbX4Pw==
-X-Google-Smtp-Source: AGHT+IGJwATCU53PsVXUBLoFjApVwkYLAw1meIU+j4poFsW15zB8XY5w9vKHGO85ifAtXUYKuACnnw==
-X-Received: by 2002:a17:902:da89:b0:1d3:c202:3d4 with SMTP id j9-20020a170902da8900b001d3c20203d4mr4807069plx.15.1703150265495;
-        Thu, 21 Dec 2023 01:17:45 -0800 (PST)
-Received: from [192.168.0.106] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id h15-20020a170902ac8f00b001bc930d4517sm1144692plr.42.2023.12.21.01.17.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Dec 2023 01:17:45 -0800 (PST)
-Message-ID: <ba2ac330-d977-4637-93bc-99ee953faab8@gmail.com>
-Date: Thu, 21 Dec 2023 16:17:37 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7582A50271
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 09:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-69-J7BJckRQMDGfmljkKT1FmA-1; Thu, 21 Dec 2023 09:18:09 +0000
+X-MC-Unique: J7BJckRQMDGfmljkKT1FmA-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 21 Dec
+ 2023 09:17:55 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Thu, 21 Dec 2023 09:17:55 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Steven Rostedt' <rostedt@goodmis.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+	<akpm@linux-foundation.org>, Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+	Vincent Donnefort <vdonnefort@google.com>, Kent Overstreet
+	<kent.overstreet@gmail.com>
+Subject: RE: [PATCH v5 02/15] ring-buffer: Page size per ring buffer
+Thread-Topic: [PATCH v5 02/15] ring-buffer: Page size per ring buffer
+Thread-Index: AQHaMqz+dUnedT4aZk+oEbt0Pk2DGrCx3FFAgABHoICAAVLeAA==
+Date: Thu, 21 Dec 2023 09:17:55 +0000
+Message-ID: <30f49370d7ae494ab1afca5cf602ab55@AcuMS.aculab.com>
+References: <20231219185414.474197117@goodmis.org>
+	<20231219185628.009147038@goodmis.org>
+	<84d3b41a72bd43dbb9d44921ef535c92@AcuMS.aculab.com>
+ <20231220080129.3453bca8@gandalf.local.home>
+In-Reply-To: <20231220080129.3453bca8@gandalf.local.home>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net 0/2] ISDN/mISDN maintenanceship cleanup
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
 Content-Language: en-US
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Networking <netdev@vger.kernel.org>,
- Linux Kernel Janitors <kernel-janitors@vger.kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Kees Cook <keescook@chromium.org>, Jakub Kicinski <kuba@kernel.org>,
- "David S. Miller" <davem@davemloft.net>,
- "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
- Justin Stitt <justinstitt@google.com>, Kunwu Chan <chentao@kylinos.cn>,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- Nathan Chancellor <nathan@kernel.org>,
- "Steven Rostedt (Google)" <rostedt@goodmis.org>,
- Karsten Keil <isdn@linux-pingi.de>, Karsten Keil <keil@b1-systems.de>,
- YouHong Li <liyouhong@kylinos.cn>
-References: <20231221091419.11764-1-bagasdotme@gmail.com>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <20231221091419.11764-1-bagasdotme@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On 12/21/23 16:14, Bagas Sanjaya wrote:
-> When I'm looking at simple typofix against ISDN subsystem [1], I find
-> out more about subsystem activity. It turns out that the subsystem
-> maintainer has been inactive since 3 years ago. And also, when I test
-> sending "Lorem ipsum" message to the subsystem mailing list, it gets
-> bounced.
-> 
+From: Steven Rostedt
+> Sent: 20 December 2023 13:01
+>=20
+> On Wed, 20 Dec 2023 08:48:02 +0000
+> David Laight <David.Laight@ACULAB.COM> wrote:
+>=20
+> > From: Steven Rostedt
+> > > Sent: 19 December 2023 18:54
+> > > From: "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
+> > >
+> > > Currently the size of one sub buffer page is global for all buffers a=
+nd
+> > > it is hard coded to one system page. In order to introduce configurab=
+le
+> > > ring buffer sub page size, the internal logic should be refactored to
+> > > work with sub page size per ring buffer.
+> > >
+> > ...
+> > > -=09nr_pages =3D DIV_ROUND_UP(size, BUF_PAGE_SIZE);
+> > > +=09/* Default buffer page size - one system page */
+> > > +=09buffer->subbuf_size =3D PAGE_SIZE - BUF_PAGE_HDR_SIZE;
+> > > +
+> > > +=09/* Max payload is buffer page size - header (8bytes) */
+> > > +=09buffer->max_data_size =3D buffer->subbuf_size - (sizeof(u32) * 2)=
+;
+> > > +
+> > > +=09nr_pages =3D DIV_ROUND_UP(size, buffer->subbuf_size);
+> >
+> > While not new, does this really make any sense for systems with 64k pag=
+es?
+> > Wouldn't it be better to have units of 4k?
+>=20
+> Unfortunately, it has to be PAGE_SIZE (and for now it's a power of 2 to
+> make masking easy). It's used for splice and will also be used for memory
+> mapping with user space.
 
-Oops, sorry not adding the link.
+Perhaps then the sysctl to set the size should be powers of 4k
+with a minimum size of PAGE_SIZE.
+Then you don't have to know the page size when setting things up.
 
-[1]: https://lore.kernel.org/lkml/20231221024758.1317603-1-liyouhong@kylinos.cn/
+I'm also guessing that no Linux kernels have a PAGE_SIZE of 2k?
+IIRC some old mmu (maybe 68020 era) used 2k pages.
 
--- 
-An old man doll... just what I always wanted! - Clara
+=09David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
 
