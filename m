@@ -1,13 +1,13 @@
 Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96B56360AD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFD17360B4;
 	Thu, 21 Dec 2023 14:55:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
 Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1rGKSq-0002PR-00; Thu, 21 Dec 2023 15:55:56 +0100
+	id 1rGKSr-0002PV-00; Thu, 21 Dec 2023 15:55:57 +0100
 Received: by alpha.franken.de (Postfix, from userid 1000)
-	id D7761C0A1E; Thu, 21 Dec 2023 15:55:43 +0100 (CET)
-Date: Thu, 21 Dec 2023 15:55:43 +0100
+	id AD3D4C0A2B; Thu, 21 Dec 2023 15:38:20 +0100 (CET)
+Date: Thu, 21 Dec 2023 15:38:20 +0100
 From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 To: Gregory CLEMENT <gregory.clement@bootlin.com>
 Cc: Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org,
@@ -19,71 +19,60 @@ Cc: Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org,
 	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
 	Alexandre Belloni <alexandre.belloni@bootlin.com>,
 	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v5 00/22] Add support for the Mobileye EyeQ5 SoC
-Message-ID: <ZYRR7zIZax7yUgsZ@alpha.franken.de>
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>
+Subject: Re: [PATCH v5 01/22] MIPS: compressed: Use correct instruction for
+ 64 bit code
+Message-ID: <ZYRN3FMH4od3QX+i@alpha.franken.de>
 References: <20231212163459.1923041-1-gregory.clement@bootlin.com>
- <878r5vctdg.fsf@BL-laptop>
- <ZYNhbQjMbAH6I0kI@alpha.franken.de>
- <87frzwasxo.fsf@BL-laptop>
+ <20231212163459.1923041-2-gregory.clement@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <87frzwasxo.fsf@BL-laptop>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231212163459.1923041-2-gregory.clement@bootlin.com>
 
-On Thu, Dec 21, 2023 at 08:57:55AM +0100, Gregory CLEMENT wrote:
-> I do not oppose the addition of a new platform, even though, like
-> Jiaxun, I would prefer to avoid duplicating code. The only thing
-> preventing the use of the same kernel for EyeQ5 and other platforms is
-> the starting address.
+On Tue, Dec 12, 2023 at 05:34:33PM +0100, Gregory CLEMENT wrote:
+> The code clearing BSS already use macro or use correct instruction
+> depending if the CPU is 32 bits or 64 bits. However, a few
+> instructions remained 32 bits only.
+> 
+> By using the accurate MACRO, it is now possible to deal with memory
+> address beyond 32 bits. As a side effect, when using 64bits processor,
+> it also divides the loop number needed to clear the BSS by 2.
+> 
+> Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
+> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> ---
+>  arch/mips/boot/compressed/head.S | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/mips/boot/compressed/head.S b/arch/mips/boot/compressed/head.S
+> index 5795d0af1e1b2..d237a834b85ee 100644
+> --- a/arch/mips/boot/compressed/head.S
+> +++ b/arch/mips/boot/compressed/head.S
+> @@ -25,8 +25,8 @@
+>  	/* Clear BSS */
+>  	PTR_LA	a0, _edata
+>  	PTR_LA	a2, _end
+> -1:	sw	zero, 0(a0)
+> -	addiu	a0, a0, 4
+> +1:	PTR_S	zero, 0(a0)
+> +	PTR_ADDIU a0, a0, PTRSIZE
+>  	bne	a2, a0, 1b
+>  
+>  	PTR_LA	a0, (.heap)	     /* heap address */
+> -- 
+> 2.42.0
 
-there shouldn't be code duplication.
-
-My rough idea would be something like
-
-diff --git a/arch/mips/Kbuild b/arch/mips/Kbuild
-index af2967bffb73..d683993ed331 100644
---- a/arch/mips/Kbuild
-+++ b/arch/mips/Kbuild
-@@ -17,6 +17,7 @@ obj- := $(platform-y)
- # mips object files
- # The object files are linked as core-y files would be linked
- 
-+obj-y += generic/
- obj-y += kernel/
- obj-y += mm/
- obj-y += net/
-diff --git a/arch/mips/generic/Makefile b/arch/mips/generic/Makefile
-index e37a59bae0a6..56011d738441 100644
---- a/arch/mips/generic/Makefile
-+++ b/arch/mips/generic/Makefile
-@@ -4,9 +4,9 @@
- # Author: Paul Burton <paul.burton@mips.com>
- #
- 
--obj-y += init.o
--obj-y += irq.o
--obj-y += proc.o
-+obj-$(CONFIG_MACH_GENERIC_CORE) += init.o
-+obj-$(CONFIG_MACH_GENERIC_CORE) += irq.o
-+obj-$(CONFIG_MACH_GENERIC_CORE) += proc.o
- 
- obj-$(CONFIG_YAMON_DT_SHIM)            += yamon-dt.o
- obj-$(CONFIG_LEGACY_BOARD_SEAD3)       += board-sead3.o
-
-so everyboady needing these parts of a generic kernel is able
-to take it.
-
-> Therefore, if it were possible to have a relocatable kernel, this
-> issue would disappear.
-
-yes. There is support for relocatable kernel, so what are we missing
-there ?
+applied to mips-next.
 
 Thomas.
 
