@@ -1,70 +1,107 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D044416;
-	Thu, 21 Dec 2023 02:42:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-	id 1rG91K-00DGnB-B3; Thu, 21 Dec 2023 10:42:47 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 21 Dec 2023 10:42:57 +0800
-Date: Thu, 21 Dec 2023 10:42:57 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: syzbot <syzbot+8ffb0839a24e9c6bfa76@syzkaller.appspotmail.com>
-Cc: davem@davemloft.net, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-	Edward Adam Davis <eadavis@qq.com>
-Subject: [PATCH] crypto: skcipher - Pass statesize for simple lskcipher
- instances
-Message-ID: <ZYOmMW9bwehnl+NT@gondor.apana.org.au>
-References: <000000000000d52e14060cc9c551@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7163C34;
+	Thu, 21 Dec 2023 02:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iiWvjyLm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1703126730;
+	bh=4JUUkyq4Szf2FSLo/m+X1SFuBiyu9JLbhik0x5Gd5lU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=iiWvjyLmySbjYGHbpm4TDCKsdaA28J+R0REpM+lcfjXuIvRpmIZOO7pDr8vw3ekH1
+	 SY4zm7AdPgvialOdj1ceqvza5A2KvvAvvqHC+AvN9R0LlgSQWU2URcPYfKXYR2zJXx
+	 eH/XgignUCT2GEpNObkiCyQVcHZIFzVHPk/vYM+R5shtVEk7/wraijBJShynGxVvTc
+	 vbVeHzNq10Xnzwx6qfS4gNiIH6B/ptiNSf11Vhp30FOp7tdMsGht8XP0U8qfG48Z7W
+	 aaznfA+NI4YFiPinGVWtAViVaO/3hmV0fxmxUjPp8uRQ6K2aGc+U2+l7UdjgzxsEd7
+	 n8hUZKj5bF79g==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4SwZY53yx6z4xGC;
+	Thu, 21 Dec 2023 13:45:28 +1100 (AEDT)
+Date: Thu, 21 Dec 2023 13:45:27 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Jens Axboe <axboe@kernel.dk>, David Sterba <dsterba@suse.cz>
+Cc: Christoph Hellwig <hch@lst.de>, David Sterba <dsterba@suse.com>, Linux
+ Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the block tree with the btrfs tree
+Message-ID: <20231221134527.38493677@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000d52e14060cc9c551@google.com>
+Content-Type: multipart/signed; boundary="Sig_/ubuOmb9ut+BJKLRVkyv6T+I";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Mon, Dec 18, 2023 at 06:43:27AM -0800, syzbot wrote:
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    17cb8a20bde6 Add linux-next specific files for 20231215
-> git tree:       linux-next
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=1129f3b6e80000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=ec104439b5dbc583
-> dashboard link: https://syzkaller.appspot.com/bug?extid=8ffb0839a24e9c6bfa76
-> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17d23c01e80000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14cfe021e80000
+--Sig_/ubuOmb9ut+BJKLRVkyv6T+I
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
----8<---
-When ecb is used to wrap an lskcipher, the statesize isn't set
-correctly.  Fix this by making the simple instance creator set
-the statesize.
+Hi all,
 
-Reported-by: syzbot+8ffb0839a24e9c6bfa76@syzkaller.appspotmail.com
-Reported-by: Edward Adam Davis <eadavis@qq.com>
-Fixes: 662ea18d089b ("crypto: skcipher - Make use of internal state")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Today's linux-next merge of the block tree got a conflict in:
 
-diff --git a/crypto/lskcipher.c b/crypto/lskcipher.c
-index a06008e112f3..0b6dd8aa21f2 100644
---- a/crypto/lskcipher.c
-+++ b/crypto/lskcipher.c
-@@ -642,6 +642,7 @@ struct lskcipher_instance *lskcipher_alloc_instance_simple(
- 	inst->alg.co.min_keysize = cipher_alg->co.min_keysize;
- 	inst->alg.co.max_keysize = cipher_alg->co.max_keysize;
- 	inst->alg.co.ivsize = cipher_alg->co.base.cra_blocksize;
-+	inst->alg.co.statesize = cipher_alg->co.statesize;
- 
- 	/* Use struct crypto_lskcipher * by default, can be overridden */
- 	inst->alg.co.base.cra_ctxsize = sizeof(struct crypto_lskcipher *);
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+  fs/btrfs/zoned.h
+
+between commit:
+
+  eefaf0a1a6f1 ("btrfs: fix typos found by codespell")
+
+from the btrfs tree and commit:
+
+  7437bb73f087 ("block: remove support for the host aware zone model")
+
+from the block tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc fs/btrfs/zoned.h
+index f24a5ffb7807,bc1b540c1597..000000000000
+--- a/fs/btrfs/zoned.h
++++ b/fs/btrfs/zoned.h
+@@@ -319,8 -323,8 +319,8 @@@ static inline bool btrfs_check_device_z
+  			(bdev_zone_sectors(bdev) << SECTOR_SHIFT);
+  	}
+ =20
+ -	/* Do not allow Host Manged zoned device */
+ +	/* Do not allow Host Managed zoned device. */
+- 	return bdev_zoned_model(bdev) !=3D BLK_ZONED_HM;
++ 	return !bdev_is_zoned(bdev);
+  }
+ =20
+  static inline bool btrfs_check_super_location(struct btrfs_device *device=
+, u64 pos)
+
+--Sig_/ubuOmb9ut+BJKLRVkyv6T+I
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWDpscACgkQAVBC80lX
+0Gy96ggAhDofuBU3W/sZc+bvZ1KvpgZLxYrW2i8B0BNQYp3liP1j9Nki2WTYQ88Z
+nQ19IBL6RFf9c4YriQ6W5N+mrW2UUZXTfNpS/XBLwrokGN5yfh0GD5vIlTFRLTKE
+CCnehcDr4GMd2Yre+jbr2CeS5d2u38PyY7jTosK4alwAKUO3NemDcFl8oO5y+3HJ
+dbhXxQzog4cacB+Z4X54pz2NLFpwVHI/Arlz1Q3gTymqpjciut9bxGv2ErDH8tdi
+LXuMwh/ywI9TGCYVYrr/Gc4yL+UANqkrpJ0jSD65d7ThymyHwex7CwsfZ8Q5dOF4
+4Gims0dr+xCyoP9koHaprhgmGwFwTA==
+=A2P9
+-----END PGP SIGNATURE-----
+
+--Sig_/ubuOmb9ut+BJKLRVkyv6T+I--
