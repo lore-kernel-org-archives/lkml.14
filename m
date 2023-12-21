@@ -1,101 +1,189 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from tarta.nabijaczleweli.xyz (tarta.nabijaczleweli.xyz [139.28.40.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD88F14262;
-	Thu, 21 Dec 2023 03:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893EB15AE7;
+	Thu, 21 Dec 2023 03:09:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nabijaczleweli.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nabijaczleweli.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k7Hgfg6k"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-1fb37f25399so206487fac.1;
-        Wed, 20 Dec 2023 19:09:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703128148; x=1703732948; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5AP2LRwmj5B1JnlRMb7Khmq8hXg0KZXg4HVBuQYFNSQ=;
-        b=k7Hgfg6ko4KTPBBopehlrJRT0JZ5AOFRiCbil9XJq59qX8s8HNBQ37fM0vrr4jycnK
-         /xedySJipj9hxJ5KwMirMJsFeNEqt7IKGtGiUeZ9BnrNlG+V3JeI7YOAHLhfM1lGI8ck
-         d1Gs8kEs/YyhZ46VCzCQwB8SgxSMKa1na9xh4MfZo72lWQRevJA8elvk8ipLAUpaqE3d
-         3j2LklHKaEnCBuLi4iZGXpzTWebnqtgLLgadHYjFmkXkO7vxhe72vkh3fLeM7UwgyewV
-         2SrMpeFtNO942o5Mwt64DpbzpyVM4nE+hcwQBtBupCMU+5HlaajceRc2mt+GfIqQkcjb
-         L+fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703128148; x=1703732948;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5AP2LRwmj5B1JnlRMb7Khmq8hXg0KZXg4HVBuQYFNSQ=;
-        b=s7FztOb18mSYdynyINh5k5q8kO5L2e0gAtS18Sjv2K3IRX5I9kHFf/er0v87Vez9H1
-         RP5GcSD9JlGXhET1SNgfg+Vorf59LpQSMkx1zCzucWxRatohMX0sM6ZyzbyOuxrK+VNY
-         Dvn7A53ftvRMjhW5deAb2BLo8ItULKCZpSachHjSBxfJPFIaNSFrX2qnfDnFMrdV38hq
-         LqgDFC08e3Vyjml9G34BIVQzZBhbRaY65bb6oBuYqdXhNlW4ERmGxGvACHnjfSEEr2KP
-         y3/GefVhsdMPoMtZf/KsEHt8/osimBq5Ikn6ksAeLbWKKNobdKmsX54yfuX5PoZNYUqz
-         MifA==
-X-Gm-Message-State: AOJu0YxI6uACnveH0EShGOWKukihl1mkmpJHLw3GHXn/3xGQ4N0MwF3R
-	eDAoE9mwKOcfECUUefqe1kqjbIQaMm8=
-X-Google-Smtp-Source: AGHT+IEDkiio061QvVAbfFXsuR+Ygds+inA19zrIgaNUqgjHH4SPtN8YDKI2uPWdjxO8ciFnSppKFA==
-X-Received: by 2002:a05:6871:d202:b0:204:371:f5a9 with SMTP id pk2-20020a056871d20200b002040371f5a9mr955875oac.38.1703128148515;
-        Wed, 20 Dec 2023 19:09:08 -0800 (PST)
-Received: from google.com ([2620:15c:9d:2:9d7:3461:3155:35d4])
-        by smtp.gmail.com with ESMTPSA id w22-20020a63c116000000b005cd8b5d1007sm496588pgf.89.2023.12.20.19.09.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Dec 2023 19:09:08 -0800 (PST)
-Date: Wed, 20 Dec 2023 19:09:05 -0800
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Support Opensource <support.opensource@diasemi.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Input: da9063_onkey - avoid using OF-specific APIs
-Message-ID: <ZYOsUfKceOFXuCt5@google.com>
+	dkim=pass (2048-bit key) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.b="pHDgVoMi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nabijaczleweli.xyz;
+	s=202305; t=1703128148;
+	bh=fnKQoYZiI85fSTbAEaSEfBVSSLGdtMQnakutCuLUGCM=;
+	h=Date:From:Cc:Subject:References:In-Reply-To:From;
+	b=pHDgVoMizVeq6S9MWjn6uFDxllWq6WcSq2K7TB4c041J+twDbF2NTE2zhwr+5oIWW
+	 xUVV0a6x46nlrs3++bVB4Js/bq9at4BnjVdo47lP9XATAs1HW6dGqc6harEIdxtpmd
+	 jOhuYtMKj4wfmnBPgcRGljdUZb4XZuwCNYqr5jaC+WtzeauWCGDZg5wyqt4a0Q+7zD
+	 aGX3tGEKc9P6eFLqcyDq7T1iigA0PaarDSCMdYsn2C4CjU/6rAcHqh5juofkXC1su6
+	 sFxQLeyNa77hwQHmvHZnzMHkOVZIJBgpYyAS4upsU1UAO1pi5r/lvKYw6bl0evc+r1
+	 8GzCAWdNZe/5g==
+Received: from tarta.nabijaczleweli.xyz (unknown [192.168.1.250])
+	by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id 9AA7313D42;
+	Thu, 21 Dec 2023 04:09:08 +0100 (CET)
+Date: Thu, 21 Dec 2023 04:09:08 +0100
+From: 
+	Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
+Cc: Jens Axboe <axboe@kernel.dk>, Christian Brauner <brauner@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, 
+	Eric Dumazet <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 07/11] net/tcp: tcp_splice_read: always do non-blocking
+ reads
+Message-ID: <d2d856ed990f713d03e72c72dc81097467cbf983.1703126594.git.nabijaczleweli@nabijaczleweli.xyz>
+References: <cover.1703126594.git.nabijaczleweli@nabijaczleweli.xyz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hdk27c4uwgmfnada"
 Content-Disposition: inline
+In-Reply-To: <cover.1703126594.git.nabijaczleweli@nabijaczleweli.xyz>
+User-Agent: NeoMutt/20231103-116-3b855e-dirty
 
-There is nothing OF-specific in the driver, so switch from OF properties
-helpers to generic device helpers.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+--hdk27c4uwgmfnada
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Otherwise we risk sleeping with the pipe locked for indeterminate
+lengths of time =E2=80=92 given:
+	cat > tcp.c <<^D
+	#define _GNU_SOURCE
+	#include <fcntl.h>
+	#include <unistd.h>
+	#include <sys/socket.h>
+	#include <netinet/in.h>
+	#include <linux/tls.h>
+	int main()
+	{
+		int s =3D socket(AF_INET, SOCK_STREAM, 0);
+		struct sockaddr_in addr =3D {
+			.sin_family =3D AF_INET,
+			.sin_addr =3D { htonl(INADDR_LOOPBACK) },
+			.sin_port =3D htons(getpid() % (0xFFFF - 1000) + 1000)
+		};
+		bind(s, &addr, sizeof(addr));
+		listen(s, 1);
+		if (!fork()) {
+			connect(socket(AF_INET, SOCK_STREAM, 0), &addr, sizeof(addr));
+			sleep(100);
+			return 0;
+		}
+
+		s =3D accept(s, NULL, NULL);
+		for (;;)
+			splice(s, 0, 1, 0, 128 * 1024 * 1024, 0);
+	}
+	^D
+	cc tcp.c -o tcp
+	mkfifo fifo
+	./tcp > fifo &
+	read -r _ < fifo &
+	sleep 0.1
+	echo zupa > fifo
+tcp used to sleep in splice and the shell used to enter an
+uninterruptible sleep in open("fifo");
+now the splice returns -EAGAIN and the whole program completes.
+
+sock_rcvtimeo() returns 0 if the second argument is true, so the
+explicit re-try loop for empty read conditions can be removed
+entirely.
+
+Signed-off-by: Ahelenia Ziemia=C5=84ska <nabijaczleweli@nabijaczleweli.xyz>
 ---
- drivers/input/misc/da9063_onkey.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ net/ipv4/tcp.c | 32 +++-----------------------------
+ 1 file changed, 3 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/input/misc/da9063_onkey.c b/drivers/input/misc/da9063_onkey.c
-index a8b7f1cd0ec2..ce499c28a7b2 100644
---- a/drivers/input/misc/da9063_onkey.c
-+++ b/drivers/input/misc/da9063_onkey.c
-@@ -9,11 +9,12 @@
- #include <linux/errno.h>
- #include <linux/input.h>
- #include <linux/interrupt.h>
-+#include <linux/mod_devicetable.h>
- #include <linux/platform_device.h>
- #include <linux/pm_wakeirq.h>
-+#include <linux/property.h>
- #include <linux/workqueue.h>
- #include <linux/regmap.h>
--#include <linux/of.h>
- #include <linux/mfd/da9063/core.h>
- #include <linux/mfd/da9063/registers.h>
- #include <linux/mfd/da9062/core.h>
-@@ -199,8 +200,8 @@ static int da9063_onkey_probe(struct platform_device *pdev)
- 		return dev_err_probe(&pdev->dev, -ENXIO,
- 				     "Parent regmap unavailable.\n");
- 
--	onkey->key_power = !of_property_read_bool(pdev->dev.of_node,
--						  "dlg,disable-key-power");
-+	onkey->key_power = !device_property_read_bool(&pdev->dev,
-+						      "dlg,disable-key-power");
- 
- 	onkey->input = devm_input_allocate_device(&pdev->dev);
- 	if (!onkey->input)
--- 
-2.43.0.195.gebba966016-goog
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index ff6838ca2e58..17a0e2a766b7 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -782,7 +782,6 @@ ssize_t tcp_splice_read(struct socket *sock, loff_t *pp=
+os,
+ 		.len =3D len,
+ 		.flags =3D flags,
+ 	};
+-	long timeo;
+ 	ssize_t spliced;
+ 	int ret;
+=20
+@@ -797,7 +796,6 @@ ssize_t tcp_splice_read(struct socket *sock, loff_t *pp=
+os,
+=20
+ 	lock_sock(sk);
+=20
+-	timeo =3D sock_rcvtimeo(sk, sock->file->f_flags & O_NONBLOCK);
+ 	while (tss.len) {
+ 		ret =3D __tcp_splice_read(sk, &tss);
+ 		if (ret < 0)
+@@ -821,37 +819,13 @@ ssize_t tcp_splice_read(struct socket *sock, loff_t *=
+ppos,
+ 				ret =3D -ENOTCONN;
+ 				break;
+ 			}
+-			if (!timeo) {
+-				ret =3D -EAGAIN;
+-				break;
+-			}
+-			/* if __tcp_splice_read() got nothing while we have
+-			 * an skb in receive queue, we do not want to loop.
+-			 * This might happen with URG data.
+-			 */
+-			if (!skb_queue_empty(&sk->sk_receive_queue))
+-				break;
+-			ret =3D sk_wait_data(sk, &timeo, NULL);
+-			if (ret < 0)
+-				break;
+-			if (signal_pending(current)) {
+-				ret =3D sock_intr_errno(timeo);
+-				break;
+-			}
+-			continue;
++			ret =3D -EAGAIN;
++			break;
+ 		}
+ 		tss.len -=3D ret;
+ 		spliced +=3D ret;
+=20
+-		if (!tss.len || !timeo)
+-			break;
+-		release_sock(sk);
+-		lock_sock(sk);
+-
+-		if (sk->sk_err || sk->sk_state =3D=3D TCP_CLOSE ||
+-		    (sk->sk_shutdown & RCV_SHUTDOWN) ||
+-		    signal_pending(current))
+-			break;
++		break;
+ 	}
+=20
+ 	release_sock(sk);
+--=20
+2.39.2
 
+--hdk27c4uwgmfnada
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Dmitry
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAmWDrFQACgkQvP0LAY0m
+WPEuzxAApW4yq5Dyu4M9dPkyvFpQ+3E5bXzE78/t08DzT4BYKiVs3lWJmT8zdQ9r
+ia5Q+qt3qLTwP4Qk8v6Br3n/PlsUXC4+BI/iNJ9VONYqJmKVP//W4rECWtDOWGzt
+uPFTwZ/2+0g01mMMuWkiknZEezXUB3W6nmKunAmCf6SjRIP2kA7/B0KF9QrE7fqo
+aN9/OBmLMJ1KbwAkla1DCKh920jS6J4r/1/QTq7Pr/SZz88E/H3G0c77j3smDccl
+rZl4THzrN5pjb7nXvPvCnU3r5gi7HVuZMcctL8VMY3jOekCQFcwMVGithI42KUPJ
+RBHY2+4zCWzFHtGoQGm/tObvX0hVnziGxg8oyEjDEA7wB/wRI0jlghBG05/Z2CHl
+g7qK7tjQg8DjBJgQ2KfzLBoq9zct6hBJLUxx8+hpRfmeI6fh1IwIy1f1MIsIrsHm
+78gmw6LcBkz7VLkwLSiFXK1I1OAJ76j76J7T8SUKbQ31ALL3Z9u9mLq0V/jsrEMX
+wkVWLUbnaSXRJosK/KN2ILt7V67pwFaMJ4p0FU22hrMHqRQ7GbhUztKXhPph2gHp
+7zAAwIFhB1x9D4tqwwkUJHAw/LsaFnoKzWz996p6KM/BTQvoRSfqkM2YcMo34rD+
+t5SUqKAa9IWeVHC58pLb2o8AKKWzCH0OlX9x8HUa5EZqS/Y3g+U=
+=+Ry1
+-----END PGP SIGNATURE-----
+
+--hdk27c4uwgmfnada--
