@@ -1,34 +1,34 @@
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A67C4C63D;
-	Thu, 21 Dec 2023 09:03:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3E84CB42;
+	Thu, 21 Dec 2023 09:03:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CcQThKvh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BxfEhmEa"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703149425; x=1734685425;
+  t=1703149426; x=1734685426;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=O+In4X9Kp5bd1+hICvCOfi4/QLtmFNAek1QhOW3ItLM=;
-  b=CcQThKvhCRj/PRkKCY7SMPWg1CdKG/6/sjVd5yYCXlQxAM11fkKBxE8d
-   aaem5ioZrtVImG8hJEK4QASCN+ijNSPs9sx+I5IAzcZ1U1LZePtEHbPJJ
-   8seLaxUm7cBLghz74mt8d+1JKA5diSU5At8mhKB6hq5K9dHyP4KCizT3a
-   +hSGhwQ+zymrZmvvNh6rAxqKjvP15bwQqT1vO1LlPiImR2d+TrDi8wOLM
-   ydhRTu+XDfDuyZ9LC6WZZ5VsJ42Cm0CXa6tO85xrb96O/vjZVNU0Hhyl5
-   1aXxtq8WAwNc9suC+Wx5AjHFsIXGhV13YJFn8znmcp2Mr42ULfg/o6iG4
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="398729602"
+  bh=QMG+Yk4D8j/JmasRk+1daUK2kCpsOOtXnCC9FPmPDII=;
+  b=BxfEhmEa8HZE7dP3RQbc9VI0k7IfcLwalctm68Nv7/rL8RlvXXJR4L61
+   yvrumOdnvLcLboUHHCnPH7ReyM4NHqPmVh0ajNCgI12t5T5YXGsPXG7IQ
+   4xy/HpB+wsUrMpson2/YSE9l2eiY9onXR34mjDZ+I2E/0gAHe0n/WKg+i
+   Iqanr4XFAg1PSWwqWiLXLHGOB8rurOMj0W1x0f2o72eUCmqTkBFX8UpE9
+   BJgiZYxzXA06YEVuycnf3hqSJGyJ/QWBHSUSZbiuLt5KRDF6MH2mvDRKm
+   ojnxfo3aRDFgaECpdVl3vCNCmF3fST9XvdrXymEfZvhJnpVCh3xh54fkd
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="398729607"
 X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="398729602"
+   d="scan'208";a="398729607"
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
   by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 01:03:43 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="900028567"
+X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="900028572"
 X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="900028567"
+   d="scan'208";a="900028572"
 Received: from 984fee00a5ca.jf.intel.com (HELO embargo.jf.intel.com) ([10.165.9.183])
   by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 01:03:10 -0800
 From: Yang Weijiang <weijiang.yang@intel.com>
@@ -43,9 +43,9 @@ Cc: peterz@infradead.org,
 	mlevitsk@redhat.com,
 	john.allen@amd.com,
 	weijiang.yang@intel.com
-Subject: [PATCH v8 02/26] x86/fpu/xstate: Refine CET user xstate bit enabling
-Date: Thu, 21 Dec 2023 09:02:15 -0500
-Message-Id: <20231221140239.4349-3-weijiang.yang@intel.com>
+Subject: [PATCH v8 04/26] x86/fpu/xstate: Introduce XFEATURE_MASK_KERNEL_DYNAMIC xfeature set
+Date: Thu, 21 Dec 2023 09:02:17 -0500
+Message-Id: <20231221140239.4349-5-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20231221140239.4349-1-weijiang.yang@intel.com>
 References: <20231221140239.4349-1-weijiang.yang@intel.com>
@@ -57,54 +57,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove XFEATURE_CET_USER entry from dependency array as the entry doesn't
-reflect true dependency between CET features and the user xstate bit.
-Enable the bit in fpu_kernel_cfg.max_features when either SHSTK or IBT is
-available.
+Define a new XFEATURE_MASK_KERNEL_DYNAMIC mask to specify the features
+that can be optionally enabled by kernel components. This is similar to
+XFEATURE_MASK_USER_DYNAMIC in that it contains optional xfeatures that
+can allows the FPU buffer to be dynamically sized. The difference is that
+the KERNEL variant contains supervisor features and will be enabled by
+kernel components that need them, and not directly by the user. Currently
+it's used by KVM to configure guest dedicated fpstate for calculating
+the xfeature and fpstate storage size etc.
 
-Both user mode shadow stack and indirect branch tracking features depend
-on XFEATURE_CET_USER bit in XSS to automatically save/restore user mode
-xstate registers, i.e., IA32_U_CET and IA32_PL3_SSP whenever necessary.
+The kernel dynamic xfeatures now only contain XFEATURE_CET_KERNEL, which
+is supported by host as they're enabled in kernel XSS MSR setting but
+relevant CPU feature, i.e., supervisor shadow stack, is not enabled in
+host kernel therefore it can be omitted for normal fpstate by default.
 
-Note, the issue, i.e., CPUID only enumerates IBT but no SHSTK is resulted
-from CET KVM series which synthesizes guest CPUIDs based on userspace
-settings,in real world the case is rare. In other words, the existing
-dependency check is correct when only user mode SHSTK is available.
+Remove the kernel dynamic feature from fpu_kernel_cfg.default_features
+so that the bits in xstate_bv and xcomp_bv are cleared and xsaves/xrstors
+can be optimized by HW for normal fpstate.
 
+Suggested-by: Dave Hansen <dave.hansen@intel.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Tested-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- arch/x86/kernel/fpu/xstate.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/fpu/xstate.h | 5 ++++-
+ arch/x86/kernel/fpu/xstate.c      | 1 +
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
+diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
+index 3b4a038d3c57..a212d3851429 100644
+--- a/arch/x86/include/asm/fpu/xstate.h
++++ b/arch/x86/include/asm/fpu/xstate.h
+@@ -46,9 +46,12 @@
+ #define XFEATURE_MASK_USER_RESTORE	\
+ 	(XFEATURE_MASK_USER_SUPPORTED & ~XFEATURE_MASK_PKRU)
+ 
+-/* Features which are dynamically enabled for a process on request */
++/* Features which are dynamically enabled per userspace request */
+ #define XFEATURE_MASK_USER_DYNAMIC	XFEATURE_MASK_XTILE_DATA
+ 
++/* Features which are dynamically enabled per kernel side request */
++#define XFEATURE_MASK_KERNEL_DYNAMIC	XFEATURE_MASK_CET_KERNEL
++
+ /* All currently supported supervisor features */
+ #define XFEATURE_MASK_SUPERVISOR_SUPPORTED (XFEATURE_MASK_PASID | \
+ 					    XFEATURE_MASK_CET_USER | \
 diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index 07911532b108..f6b98693da59 100644
+index 03e166a87d61..ca4b83c142eb 100644
 --- a/arch/x86/kernel/fpu/xstate.c
 +++ b/arch/x86/kernel/fpu/xstate.c
-@@ -73,7 +73,6 @@ static unsigned short xsave_cpuid_features[] __initdata = {
- 	[XFEATURE_PT_UNIMPLEMENTED_SO_FAR]	= X86_FEATURE_INTEL_PT,
- 	[XFEATURE_PKRU]				= X86_FEATURE_OSPKE,
- 	[XFEATURE_PASID]			= X86_FEATURE_ENQCMD,
--	[XFEATURE_CET_USER]			= X86_FEATURE_SHSTK,
- 	[XFEATURE_XTILE_CFG]			= X86_FEATURE_AMX_TILE,
- 	[XFEATURE_XTILE_DATA]			= X86_FEATURE_AMX_TILE,
- };
-@@ -798,6 +797,14 @@ void __init fpu__init_system_xstate(unsigned int legacy_size)
- 			fpu_kernel_cfg.max_features &= ~BIT_ULL(i);
- 	}
+@@ -824,6 +824,7 @@ void __init fpu__init_system_xstate(unsigned int legacy_size)
+ 	/* Clean out dynamic features from default */
+ 	fpu_kernel_cfg.default_features = fpu_kernel_cfg.max_features;
+ 	fpu_kernel_cfg.default_features &= ~XFEATURE_MASK_USER_DYNAMIC;
++	fpu_kernel_cfg.default_features &= ~XFEATURE_MASK_KERNEL_DYNAMIC;
  
-+	/*
-+	 * CET user mode xstate bit has been cleared by above sanity check.
-+	 * Now pick it up if either SHSTK or IBT is available. Either feature
-+	 * depends on the xstate bit to save/restore user mode states.
-+	 */
-+	if (boot_cpu_has(X86_FEATURE_SHSTK) || boot_cpu_has(X86_FEATURE_IBT))
-+		fpu_kernel_cfg.max_features |= BIT_ULL(XFEATURE_CET_USER);
-+
- 	if (!cpu_feature_enabled(X86_FEATURE_XFD))
- 		fpu_kernel_cfg.max_features &= ~XFEATURE_MASK_USER_DYNAMIC;
- 
+ 	fpu_user_cfg.default_features = fpu_user_cfg.max_features;
+ 	fpu_user_cfg.default_features &= ~XFEATURE_MASK_USER_DYNAMIC;
 -- 
 2.39.3
 
