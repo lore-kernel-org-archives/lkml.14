@@ -1,73 +1,57 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D17E4C627;
-	Thu, 21 Dec 2023 09:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 686A54E1A8
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 09:15:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PNQeE0UO"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6d741fb7c8eso553426b3a.2;
-        Thu, 21 Dec 2023 01:14:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LfIFaajh"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40d12b56a38so5839995e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 01:15:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703150068; x=1703754868; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1CGjWDSkysFv97HHQzfjDPfqf3VPoMwSFXyDdvLi7BM=;
-        b=PNQeE0UO6RH6pxi72Ll70GvxrrKAN4swtZANRXQmzlLObUht/7TCpyuOt0B9Qqswyx
-         CctTkh9xVt2y6GWdBRKxjz/+wffEf9EbRaTgsimePIxE4N74MNmZGwteeAulHv6NjoHy
-         aSRD7BXyzDI+G5krtcwGPBWJJZuBt3WdwfUgDLqV2/CpNkWMVh8tPRNEYODzn0KiDwv0
-         1PF6XiQ/hWBo+YqTJUOQXo/ew44OoIzIRa/GTWJwItj/Eb30Ud/H0tA6FWHKcdRNk8Gi
-         ASu03ckNIJ7PZeangNub7O8Y91LvYJHSNQErkRf8QCy3wnG+kjqWKNOvB2gzsq1Yh3X8
-         VAZw==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1703150150; x=1703754950; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mD/dxcpKDkGqyDT0hW/nURglpnMq+ut1OW2xwKTP0cc=;
+        b=LfIFaajhsO0cSzKMHpN5AC2hxlEf5NUgTcpaZn8b0+Gv2MqZJ3kBRuY9uM0lPH+YfE
+         nuIsOqwVVXQrYXR9oDiIzdrI39foXgGC2Qzu7YUdbJdXazcOQS5D5+UOa9t/D0sMUbSY
+         v6nScwU7UavUbJ5NbXHsbP2PP+RCXxCxDirNSlvMg2MItTUOv/j68lXuEHrjMmUdhoKe
+         70q3/mrg2QDNiZgU0KK8e4xJfjaHTWfFzvekBMp8VtEE4/1wicPu6UzvRXblPeCy4c/q
+         MESr5bSFe5vuWY5ZqBo/8QQl0G9qyMx8c+PQfxLL+l5Go1dcNCkRWqLAjFZnCqfSrB5u
+         yhiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703150068; x=1703754868;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1CGjWDSkysFv97HHQzfjDPfqf3VPoMwSFXyDdvLi7BM=;
-        b=btU/gWM5hrySGUx7fdht0k6UaF4kDc6yh8R71PAT72n5GDooiBU6eUfWREqrCVJDwS
-         hyfo94ldGlNjeX+WVMlGqGdCFE/L2kfggIannPPIU6oil84/GlFdqF0l/xm/7OEJ03VP
-         +s0Mm2a/nhlY4l2nvEiRcCfPDmIu0wvnmRe0BBDwuaVv61tEhxOR7O9o5gMspzDC1xXJ
-         ohiwN1fcFMpr/UoNC6pAtFDnSxXfkeqoGnvnDEYMSMJ6GO3uHSYIox8MUQ/eE4osiDMq
-         ZmiGg30BBmE88f0mAkuluz82FwrD1eBqLpfjyTMm7AB95s3Q/DEKytTeI/4EgwVvELTy
-         3S/Q==
-X-Gm-Message-State: AOJu0Yyr/Uu0zp8pJLUVMrmAVPa1IHUN87UiIA9U0TUTmSBL09wojObw
-	BZZNPzeDA3/+seOc1POpYwg=
-X-Google-Smtp-Source: AGHT+IEYm5R46naacXA4TfxnnRRE9q6jqcrx4TiBJlx9bfCOMBJ+E5n4Op970e6/ONFnRL3UBNnRbQ==
-X-Received: by 2002:a05:6a20:748c:b0:194:c7f0:6068 with SMTP id p12-20020a056a20748c00b00194c7f06068mr1062179pzd.17.1703150067739;
-        Thu, 21 Dec 2023 01:14:27 -0800 (PST)
-Received: from archie.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id ch10-20020a17090af40a00b0028bbd30172csm1279452pjb.56.2023.12.21.01.14.26
+        d=1e100.net; s=20230601; t=1703150150; x=1703754950;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mD/dxcpKDkGqyDT0hW/nURglpnMq+ut1OW2xwKTP0cc=;
+        b=ICPNhxzIEOzFiQysCSSnuE9Xk44ugSmVIlhzIhaRMrIViYAlEqiEKb4tlxqC/DNEZw
+         6xk5QU2/LHpAaG+G+7XZ6CY5MBM1cFb0co1RdYDGwbPdKVC9EjZu0Dgi0ADrch9d90Ga
+         G3u0npwVIo/Ft4XzyUzcRk8uVTl2yl3wFaT7DodrClc4VPTKo3M4PabQJPglWPHr2Eo0
+         MMW/uATewIth0ZwQJktj2Qpqe8pY6P1TC59tjoJJZ5pPBQGpsmTrwC8Hkhg2nCaydFdd
+         4CgtJklWBgDDlJgUZVdGvf+3aw6FxRksLhraIuuqwL7l7Iy+lq0bGy8uzgobDipViEJq
+         z9oA==
+X-Gm-Message-State: AOJu0YwsUek8ARW7SE3V5s22gDEMAXkt/juy9TtexHCIyAQx+O0VJXuu
+	/meVKwiCd2GhR2x5afi2tpyLfQ==
+X-Google-Smtp-Source: AGHT+IFrftLkKBC2zN9KxCzcfRYYYlTm1CsExtiwU/o1asMnRUTi2nV6CU4GLvRvMVMg8MB+Y45snA==
+X-Received: by 2002:a05:600c:202:b0:40d:3d98:249c with SMTP id 2-20020a05600c020200b0040d3d98249cmr195593wmi.196.1703150150419;
+        Thu, 21 Dec 2023 01:15:50 -0800 (PST)
+Received: from brgl-uxlite.. ([2a02:8440:c20c:e072:65b3:1998:74df:2809])
+        by smtp.gmail.com with ESMTPSA id s13-20020a05600c45cd00b0040d414b57e8sm122157wmo.26.2023.12.21.01.15.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 01:14:27 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id 085CD1024D744; Thu, 21 Dec 2023 16:14:22 +0700 (WIB)
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Networking <netdev@vger.kernel.org>,
-	Linux Kernel Janitors <kernel-janitors@vger.kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Kees Cook <keescook@chromium.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Justin Stitt <justinstitt@google.com>,
-	Kunwu Chan <chentao@kylinos.cn>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Nathan Chancellor <nathan@kernel.org>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	Karsten Keil <isdn@linux-pingi.de>,
-	Karsten Keil <keil@b1-systems.de>,
-	YouHong Li <liyouhong@kylinos.cn>,
-	Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: [PATCH net 2/2] MAINTAINERS: Remove isdn4linux@listserv.isdn4linux.de mailing list
-Date: Thu, 21 Dec 2023 16:14:19 +0700
-Message-ID: <20231221091419.11764-3-bagasdotme@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231221091419.11764-1-bagasdotme@gmail.com>
-References: <20231221091419.11764-1-bagasdotme@gmail.com>
+        Thu, 21 Dec 2023 01:15:50 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Kent Gibson <warthog618@gmail.com>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v2 1/2] gpiolib: drop tabs from local variable declarations
+Date: Thu, 21 Dec 2023 10:15:46 +0100
+Message-Id: <20231221091547.57352-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,40 +60,114 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Emails to the subscribers-only ML bounce with "550 Address not found"
-error, yet the subsystem web page (http://www.isdn4linux.de) is still
-active (last updated in 2008).
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Remove the ML address to keep people's inbox from delivery status
-notification messages (and to keep Cc: lists a bit shorter).
-(Note that get_maintainer.pl already excludes subscribers-only MLs by
-default, so this is no harm.)
+Older code has an annoying habit of putting tabs between the type and the
+name of the variable. This doesn't really add to readability and newer
+code doesn't do it so make the entire file consistent.
 
-Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+While at it: convert 'unsigned' to 'unsigned int'.
+
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- MAINTAINERS | 2 --
- 1 file changed, 2 deletions(-)
+v1 -> v2:
+- arrange variables we're touching in a reverse x-mass tree
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fab95e0258e799..dfe4540984e103 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11238,7 +11238,6 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/nab/target-pending.git mast
- F:	drivers/infiniband/ulp/isert
+ drivers/gpio/gpiolib.c | 38 ++++++++++++++++++--------------------
+ 1 file changed, 18 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index c9ca809b55de..bdfa3d119c2e 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1049,8 +1049,8 @@ EXPORT_SYMBOL_GPL(gpiochip_add_data_with_key);
+ void gpiochip_remove(struct gpio_chip *gc)
+ {
+ 	struct gpio_device *gdev = gc->gpiodev;
+-	unsigned long	flags;
+-	unsigned int	i;
++	unsigned long flags;
++	unsigned int i;
  
- ISDN/CMTP OVER BLUETOOTH
--L:	isdn4linux@listserv.isdn4linux.de (subscribers-only)
- L:	netdev@vger.kernel.org
- S:	Orphan
- W:	http://www.isdn4linux.de
-@@ -11249,7 +11248,6 @@ F:	include/uapi/linux/isdn/
- F:	net/bluetooth/cmtp/
+ 	down_write(&gdev->sem);
  
- ISDN/mISDN SUBSYSTEM
--L:	isdn4linux@listserv.isdn4linux.de (subscribers-only)
- L:	netdev@vger.kernel.org
- S:	Orphan
- W:	http://www.isdn4linux.de
+@@ -2186,10 +2186,10 @@ EXPORT_SYMBOL_GPL(gpiochip_remove_pin_ranges);
+  */
+ static int gpiod_request_commit(struct gpio_desc *desc, const char *label)
+ {
+-	struct gpio_chip	*gc = desc->gdev->chip;
+-	int			ret;
+-	unsigned long		flags;
+-	unsigned		offset;
++	struct gpio_chip *gc = desc->gdev->chip;
++	unsigned long flags;
++	unsigned int offset;
++	int ret;
+ 
+ 	if (label) {
+ 		label = kstrdup_const(label, GFP_KERNEL);
+@@ -2301,9 +2301,9 @@ int gpiod_request(struct gpio_desc *desc, const char *label)
+ 
+ static bool gpiod_free_commit(struct gpio_desc *desc)
+ {
+-	bool			ret = false;
+-	unsigned long		flags;
+-	struct gpio_chip	*gc;
++	struct gpio_chip *gc;
++	unsigned long flags;
++	bool ret = false;
+ 
+ 	might_sleep();
+ 
+@@ -2577,8 +2577,8 @@ int gpio_set_debounce_timeout(struct gpio_desc *desc, unsigned int debounce)
+  */
+ int gpiod_direction_input(struct gpio_desc *desc)
+ {
+-	struct gpio_chip	*gc;
+-	int			ret = 0;
++	struct gpio_chip *gc;
++	int ret = 0;
+ 
+ 	VALIDATE_DESC(desc);
+ 	gc = desc->gdev->chip;
+@@ -2927,7 +2927,7 @@ static int gpio_chip_get_value(struct gpio_chip *gc, const struct gpio_desc *des
+ 
+ static int gpiod_get_raw_value_commit(const struct gpio_desc *desc)
+ {
+-	struct gpio_chip	*gc;
++	struct gpio_chip *gc;
+ 	int value;
+ 
+ 	gc = desc->gdev->chip;
+@@ -3222,7 +3222,7 @@ static void gpio_set_open_source_value_commit(struct gpio_desc *desc, bool value
+ 
+ static void gpiod_set_raw_value_commit(struct gpio_desc *desc, bool value)
+ {
+-	struct gpio_chip	*gc;
++	struct gpio_chip *gc;
+ 
+ 	gc = desc->gdev->chip;
+ 	trace_gpio_value(desc_to_gpio(desc), 0, value);
+@@ -4709,13 +4709,11 @@ core_initcall(gpiolib_dev_init);
+ 
+ static void gpiolib_dbg_show(struct seq_file *s, struct gpio_device *gdev)
+ {
+-	struct gpio_chip	*gc = gdev->chip;
+-	struct gpio_desc	*desc;
+-	unsigned		gpio = gdev->base;
+-	int			value;
+-	bool			is_out;
+-	bool			is_irq;
+-	bool			active_low;
++	struct gpio_chip *gc = gdev->chip;
++	bool active_low, is_irq, is_out;
++	unsigned int gpio = gdev->base;
++	struct gpio_desc *desc;
++	int value;
+ 
+ 	for_each_gpio_desc(gc, desc) {
+ 		if (test_bit(FLAG_REQUESTED, &desc->flags)) {
 -- 
-An old man doll... just what I always wanted! - Clara
+2.40.1
 
