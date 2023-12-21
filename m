@@ -1,160 +1,247 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74FA059924
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 17:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9104158224
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 17:05:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MOY7DnoZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1703178072;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MTJ5ESIOyUqDB8n0Xz8qCRHr+4/Mt0yPLsVWj0QhBx4=;
-	b=MOY7DnoZ/b4FCXh9kHlVaPLlKuclFCkcs8rUZSDU0W6Is84CQAhj92KZhQARqQUABoObPG
-	k6+q50o6e16WkpnCLGcpmsrL59ETVcye9fwD9O+WUhoIp3EwVk78GjR2RC22ftxhSaaZE9
-	FS1IJWVIVcblQN8y+Tji8jfgfPXc9t8=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-575-qt-fjS7nMii7M50Cqo9KZA-1; Thu, 21 Dec 2023 12:01:10 -0500
-X-MC-Unique: qt-fjS7nMii7M50Cqo9KZA-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-553dd5dfba8so1124468a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 09:01:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703178069; x=1703782869;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MTJ5ESIOyUqDB8n0Xz8qCRHr+4/Mt0yPLsVWj0QhBx4=;
-        b=tZDYrtZ7KOhGm3lk9sHPIFmqMSVuU+fPbNjE0H8ELLtgJNtWtUUfKcjxLUF/gutxh2
-         xYitHA/glOCjvAjHfwoySpSjhz/ze98z5sUgdq7OA0YA/OOlKK2y1BTvVnewoyGnuKVX
-         fmgkEA2a99sbHVudOKDmozBobPFWdj7JCNeZCf8Ba/0NTiGF1VpVKxlincU/TmSswb/p
-         d3inaJ46jd8AINk8eaJOb4YfnnUYSviXAc+H0dkCXQ6E5ccU9bbaaI9yDN8A2eZFmT85
-         IMGmMw6+KWcFnuTyYmXBT4jpgzgYpHGOGX1HNaW4OW+VhMvQbvY1vZYgzOGylKruj0AH
-         q77A==
-X-Gm-Message-State: AOJu0YwfxBE+4P/ATIHa6v0R9CPKflwJFJsMG/SYpecW2wuWa65lEyVP
-	k4zYf2uR5KrbZZm9cUiI8snCI89b4b957kYD4xjzsUHcZR3ja2XKBD3Y/MWxY+klZ7v+lnRFZer
-	PYYB6ZpYaN1Ewy2nSWb9zCBb9
-X-Received: by 2002:aa7:cf99:0:b0:552:fccb:c3b0 with SMTP id z25-20020aa7cf99000000b00552fccbc3b0mr1154658edx.25.1703178069310;
-        Thu, 21 Dec 2023 09:01:09 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG7+Kx8aYbDCznZCj24KpGmL00NeWvL5EXT10506ac0wUHvn3R/Pf/ORUj9FK42eGybxOZbwA==
-X-Received: by 2002:aa7:cf99:0:b0:552:fccb:c3b0 with SMTP id z25-20020aa7cf99000000b00552fccbc3b0mr1154644edx.25.1703178069009;
-        Thu, 21 Dec 2023 09:01:09 -0800 (PST)
-Received: from starship ([77.137.131.62])
-        by smtp.gmail.com with ESMTPSA id f20-20020a056402195400b005543f50e53asm258311edz.93.2023.12.21.09.01.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 09:01:08 -0800 (PST)
-Message-ID: <c7fdb72fc8ae79148a7be6c1668f6310f98b468c.camel@redhat.com>
-Subject: Re: [PATCH v2 1/3] KVM: x86: Make the hardcoded APIC bus frequency
- vm variable
-From: Maxim Levitsky <mlevitsk@redhat.com>
-To: Isaku Yamahata <isaku.yamahata@linux.intel.com>, Sean Christopherson
-	 <seanjc@google.com>
-Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org,  isaku.yamahata@gmail.com, Paolo Bonzini
- <pbonzini@redhat.com>,  erdemaktas@google.com, Vishal Annapurve
- <vannapurve@google.com>, Jim Mattson <jmattson@google.com>
-Date: Thu, 21 Dec 2023 19:01:06 +0200
-In-Reply-To: <20231219014045.GA2639779@ls.amr.corp.intel.com>
-References: <cover.1699936040.git.isaku.yamahata@intel.com>
-	 <1c12f378af7de16d7895f8badb18c3b1715e9271.1699936040.git.isaku.yamahata@intel.com>
-	 <938efd3cfcb25d828deab0cc0ba797177cc69602.camel@redhat.com>
-	 <ZXo54VNuIqbMsYv-@google.com>
-	 <aa7aa5ea5b112a0ec70c6276beb281e19c052f0e.camel@redhat.com>
-	 <ZXswR04H9Tl7xlyj@google.com>
-	 <20231219014045.GA2639779@ls.amr.corp.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="USd/XpK9";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="gA1CWPmP"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BLFPtq8005764;
+	Thu, 21 Dec 2023 17:04:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=tbW6OqWS6TeDF6NPQxV98J0jxb9WmP0gE5G581JmwfY=;
+ b=USd/XpK9ggh4BQ01RZl0xb3BUJrHPOUvIsgdJYD8YY+yNYHXcZ09w0kTNBCvQfh+/qWt
+ VBqouhigYvBWfGQEgMAU5uhRsGFBXoJJ0CoaHpllAMT76x85C0gME2Y8JJksPTB8DDb4
+ QccHE8dS8shb1Wj9KMovVx8S84Jkx46PWJx8LSYNPcd/ivNBxhk6yF1aiNeDW8PJZdDr
+ Eg4fbkueItpBrPhAzW+RyBGJoDjpbaKfO6Jqd36QUU/AqeQq8dreq9PU0WR8IkjbfEAl
+ 5p92/3n27EaVYFeoFWR1Q1bvJSvHOVOI+ovJ8a9aQKzoW3AXAs0CisBP3E5nQJbQafC3 Bg== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3v13gukeb4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 21 Dec 2023 17:04:33 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3BLGnnaI024146;
+	Thu, 21 Dec 2023 17:04:32 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2101.outbound.protection.outlook.com [104.47.58.101])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3v12bbj9qc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 21 Dec 2023 17:04:32 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QU/vMBztYe0IRuo67qFT5HT10Np7oKuX7DsZEdKPP2x8aSCKoPSK7ujpjcCtsbBkpnY+Qviqoa6RuaKahlNc1CxSfW6vzCuHsv+7si4b8obWl5ssU1jwq8RXSO7ItuuUd3mP7Aq2a4q/uCUrr3NCwuRg4b5mqVacY20spigwX9mHVOrQPbCDRz/3hwjWXNTNYMg65uMyKBir0zQkgE8Q/WJlG+SUflWg1OME+yG0npMqZOjbnQrqKmgvm2WlYgpf3oEsps4IQEZ4x5bvCUZ3MtO+aYhp6B28ZNJxwf+HThymzTv18XBnQgtqqV+7O7UovuhLbUt9G6XH+3v7PoXlKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tbW6OqWS6TeDF6NPQxV98J0jxb9WmP0gE5G581JmwfY=;
+ b=CmnCUSneoZ/P2fuaNHfyujZz6nSGP2SSMjzlKsAgQqn+lNTBjxVcIjgotr8RnqMGOO0BwUt6w4oBNU27+rAidTkNlEp+99EIhHDKrZgO+CAGupgsAHlkWC6ionkDtnTDekLoMDTKtXBSY4YZdQEgaKFWWd6VDYabWRiX74+QM881T8i7qNPzweTW/WYjNWz6xYlTS+EszBKZxt+tzGalkP8EJZhQEtq5bNIGjdAA9SiA3BqQFdTQEd6WbHDNfRlXqZvKdLY3BOR0h7BO5wSKfkHhGsOtqA42GCqVO5HR3aGPa95wSV25mNCozRX3KySPE9nK7OS4vmzGvmPcY2y4PQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tbW6OqWS6TeDF6NPQxV98J0jxb9WmP0gE5G581JmwfY=;
+ b=gA1CWPmPDUjpvKu4cLqtALDLfhsfiw1NdYGg4fSB9DQMA8uY0sK2SmYJlcclykfim9RSGW+Y2ec7sYlSYgX4E1plwQHL+xGNr3DQqNhDMhGTUWvtoXcAsG9nfNdWlEOVtTZe5EXYgfLk2jTsKaVh6YDOpGRi0dAX+LmM4SGI75U=
+Received: from CO1PR10MB4468.namprd10.prod.outlook.com (2603:10b6:303:6c::24)
+ by BN0PR10MB5287.namprd10.prod.outlook.com (2603:10b6:408:12f::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.21; Thu, 21 Dec
+ 2023 17:04:30 +0000
+Received: from CO1PR10MB4468.namprd10.prod.outlook.com
+ ([fe80::5a0:6591:b3e7:75fc]) by CO1PR10MB4468.namprd10.prod.outlook.com
+ ([fe80::5a0:6591:b3e7:75fc%6]) with mapi id 15.20.7113.019; Thu, 21 Dec 2023
+ 17:04:30 +0000
+Message-ID: <2769a37a-fc76-45b7-9ae7-d328778a25fc@oracle.com>
+Date: Fri, 22 Dec 2023 04:04:23 +1100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched: Fix tg->load when offlining a CPU
+Content-Language: en-US
+To: Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, vschneid@redhat.com, aaron.lu@intel.com,
+        linux-kernel@vger.kernel.org
+References: <20231221164014.447122-1-vincent.guittot@linaro.org>
+From: Imran Khan <imran.f.khan@oracle.com>
+In-Reply-To: <20231221164014.447122-1-vincent.guittot@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SY4P282CA0001.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:a0::11) To CO1PR10MB4468.namprd10.prod.outlook.com
+ (2603:10b6:303:6c::24)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PR10MB4468:EE_|BN0PR10MB5287:EE_
+X-MS-Office365-Filtering-Correlation-Id: e167a597-a8f8-46be-169a-08dc0246e563
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	EeMfl+QBdC/ypgQQfINTiLYE8ylIByRpAI3j1Jr2/2SmHHW1jbp3gp35BxQD3NI3F1SFfJ51HnTMniuRdTagdLxJToZMmmLRiD6EjYxGrYzGqTGbWjpsyJK9j+5Ld32g8FPeyYVKqz5PH3e2RQu1gVL6J1uUsSX/04/PdH19JNkwzXRT0WwZDUEQU4xMxJSBsbzWph+prksc5QhptkhkHxlCNGSJKfOpaNtZrRbHvySoUopNZT5BkPAeyaDMfPxV5+nu7v98mHcKoaQfUUFjA3nwE2fNBzU0IZBHEgUOsZpioklhqNTOLlHIKa3Zbdq99ETTGxq/FlQnbBcYy+q/WZyot8YHzUTp80jFQSPyAYJxgRrbwDtMSEpWmrcHac745PJ7ygwHZMD6ni/HqamHYXpm6RHoqPJkOrOGXqE1gAbbizFwnI5nuo4qGBQjZeXbpZLNQmeTfByRl9r82sAIZSHE8GvCxJ6IhwFXtUSlms04w1z96ZVtKITCMMSC6i2T/csJ5Vj3NXgiJXiobQVzsnUQnKslPfOCbXt3vFEl5Hho/x7s/9KZos3HcUJ96c3+QfaKR3w6IWkKFrIcCRQ8tZKY0x8PBbWbl9QYLySy+oh/01yP8mBhCLHLVAl5ptuUlLY38tuUU+0nrbp8Bi1m7e/VqQLuUPvugmdFliF+2Sk=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4468.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(376002)(39860400002)(396003)(366004)(230922051799003)(1800799012)(186009)(64100799003)(451199024)(478600001)(6486002)(26005)(31686004)(6666004)(6506007)(6512007)(36756003)(53546011)(66556008)(66476007)(66946007)(8676002)(83380400001)(8936002)(2906002)(5660300002)(7416002)(316002)(38100700002)(2616005)(921008)(41300700001)(86362001)(31696002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?T3NFZFNkS3dkbE9nazI3SStvOEI3NjJoQ0U1bFRKejdFSk9RemlXVFFmQ1Vq?=
+ =?utf-8?B?dnNVbWJHVnlkTUQ5VnQwVy9weW4vbXpiMjJweXQ2RFo1T0VuZGd3QnI2dFFo?=
+ =?utf-8?B?L0lTKzNiaEhVY3BUZUlWZUppSU9reWNqRTlocDY1T2YvbDBGbTBBQVo4N3E1?=
+ =?utf-8?B?dDJZSWp0K0ZuZmJhMVVIdkRERkZ4NnJXV3M3M2FtczJ6UVFOeXpUMjBBVndw?=
+ =?utf-8?B?czE2MXNWcW1yYUZBVFh0VkV1Ty83cjdHeEVzdE91QVFBc3plQnU3NjNubVJY?=
+ =?utf-8?B?WnJNdDNIMjlzR2Fsd2hrRHZjK2hBZ3NIUGZ6MHAxRVd5ckF4TzVNZ25YZFAv?=
+ =?utf-8?B?VGhxT25VSU52WExKT3JzR2xXRGEvVWdhb1Z2NjVPREJGVm9wa3ZWci9HeEtL?=
+ =?utf-8?B?aldjNmdEaHcyVG5pZkZIWmJGaFJBYi82cHczUXliZ2g3Z2FwcTd5L091K2pK?=
+ =?utf-8?B?ejF1cERaUHdPRjRqb1FvTWxLcVljQ1NlVXkvSnFZN0xYQ0ZERDFFcU5vZGZo?=
+ =?utf-8?B?eHlkbXBQeTVSdi94WUJIZnhCcm5LN0RHV1BHNUdXWktHdWMwWk9TcnB1Ny9N?=
+ =?utf-8?B?bXFlcldkUHA0blFlN0taR21QYTFPSHhLcjZ1eUk3VDZhWFFyRTNhejVreGsr?=
+ =?utf-8?B?V1NCZHlMamxRTWhyOVZSOEd5T1J0WHZHUlU1YzI4bVJhMHBiZHIvbEwrS1o0?=
+ =?utf-8?B?T3lJSnVEV2h6c1RyNEhPSUUraDB4MkFPZERmRGZ4SFY5V2RlNmx6WXZQRU1a?=
+ =?utf-8?B?eVo1b2VWSzlRT0FKbjBrRDdwTU9ONWF1UU5NMzArSmxTdkk2YzdoSDNIdVg5?=
+ =?utf-8?B?QzhIRjhmcmVGOVZubWdBSHhFRzJhenBUcytBOUhaTlJ4TDhWaTM2dGFyVGlI?=
+ =?utf-8?B?c1oya2RpQU1MZUtYYkNmVGtqdkhHR2oyR1FVd2tjMi9SQkkxaENjZnlhbVp2?=
+ =?utf-8?B?ZXl3TEZNOHg1QXZsVkF6aWMyckwxT1RoTHI3QUtGTFJsVW45bnVBRmEydTZv?=
+ =?utf-8?B?UEsvaHBpUzlPOXJKM25WcjdnOXZXUGRzOXJKMUhEcVlkb29xdjZpZzBBRGVo?=
+ =?utf-8?B?bUNqd3FRb2h0U1AzL0lIaitxeHEzemRPU3hFbk8xeDJIcTExZjJSelRyOHVo?=
+ =?utf-8?B?NnhDb0JhTVZMNVJ2cDR6UUxVY3JrNFFOSCtDbjFYR0IwcGU5UzJEV3FRQVBL?=
+ =?utf-8?B?dWNsL25ZT0VSSW9kbFJjZFk2Wm9IckNXNmI3SFNtREZsdW1GOG5JL0xXTzZt?=
+ =?utf-8?B?dG0yRVplbXh0ZWRlY2lvdTFtcFZNZ0c2VDVqNE1OZWJDWURQR0E2S0daWXpi?=
+ =?utf-8?B?endicW5vWnNyWUhKNHIxMnJFWXdMZmJHUHhRSjF0UGZ1VE9KMnlnVEUrOGxq?=
+ =?utf-8?B?VDdFRlg2QjlIV3FncmZvTCtlN3p5Ui9hR1hSa2F0VTBsRVBRSjdvUWNpN0Z1?=
+ =?utf-8?B?YklBMkw1RlJabldHbG1VWm8rSnY0dUE2OFdQdHRIS2Q2S0ovSVVsekg3RDVK?=
+ =?utf-8?B?THI5WTlaeG9rVUdUUUtDdUJ1ZXMrakYzcmlXVXQ3NWZrSUppenRMZ1QwNEJG?=
+ =?utf-8?B?cTVBNW1ya3A3QkFPY2g4TTRuRUo1czJhd1VRUThNMys2YWVPOEFnNGRsYzdH?=
+ =?utf-8?B?aDRIOExabXFnMUVZT1JCOEt3cVhScGt0UlpiUDNjbU9HTjJwUjgzdDBBcnNT?=
+ =?utf-8?B?SzF1czc5Y0VPRWJPaWx1VW1odlRsY3F4aWhjM2VJNzl0UWRjalRpMlRWUk5l?=
+ =?utf-8?B?blplVDdkVW94d20zRk1neUQ5SGZFTlhvbys2WU5IbGxXcStKTGJUY28zQ01D?=
+ =?utf-8?B?RHFsbnFpMmJxWWxkd3d6MFRFdk1ndUdTNEtuK1lYZ1Fpa25oV1JvdUdvcUhE?=
+ =?utf-8?B?dzJCTmFGVytEZUp2dzg1aVJaM28rb3lENEpZY3kwM0Y1TGZyZ0R2d2RsOTUw?=
+ =?utf-8?B?d05mL0N5NStia2dURU5mTXFCaElxM1RMM0NNS25RYTN4eHhWK3gwUndZb29k?=
+ =?utf-8?B?Kzl4ZmRjOXhyeTlRUXp5Z1dwbGRPYWZ1ZXlVVEMrY0RJMWhabWhNRHh5VlA0?=
+ =?utf-8?B?VTQyMWhkNzlGYlA2ZVFFUkVUd3AzTitaUzhYbjAvT1dESktCRldHTWdDSzhk?=
+ =?utf-8?B?ZGloOUNBQkhsM2lhK0E1bG9YdThCQkNKdnJRa1l5dXRlaHBJNTlVQm81OXNG?=
+ =?utf-8?B?WFE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	ScWq/imTrgnlrYqdKQdGFnCJh6NFfSoKPaEg8qyFS1sOsrXB64uUns0XJuZTFhhtD7oWw0ivOkLmwjNuSwHnuAagWEQqZBbjx3Tn2rr2bIykNR99nDPoPK+xR8It8IZp5sJFy2r0EGcp+Gjv5MVgLMx1EX0mbs/qt90GDcTnRMgNjnrwRZEAY6jQvf9MMRP+5zGIvFncG3BqV63ZxH2zoKtISUZ7ZG1/rGZwVkUhfITHrVkFXoJMADi5CBkc9Z++BqUWl2zWchgi5BTya+Y/lPVdL96lbsLRvTlC4QodgYwShxqsMDgZmlgCfVUv5tqCN9iYTSl7nSSypPxdT6IO66tESaDPzdN7yfFVujvnfLLriuhslATHwCGX5fX026C6UFDYeJZBsWAkbrheUDacjuYlzrgvgKD+ZSkk6zwCJC9rBT0MlXTIzOdyImfhGbjm7Dgcc50PT8N3exZO9g1NpUwJvnYRLqC+nht3F/sDkqjzC8oec0nLJGzQ0/FghGXBek59wfjpkveEQlpFCdc7f5KtsE5KrR+noiHE7qugsaGbEjNRwudBPko9DMUKnLWi0xkTpM08yrkKDjdvkU96kW4kyOYD8ijVnZd1hu6vshc=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e167a597-a8f8-46be-169a-08dc0246e563
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR10MB4468.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Dec 2023 17:04:30.2227
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cGV7JymVBHbUA72v5XhXv+2rU4orcp1jTg5WunODhZgePkioLEPSJChs0aOisTB2hrFWKU22PAWYm9v0jcHvuw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR10MB5287
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-21_09,2023-12-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 adultscore=0 suspectscore=0 mlxscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2312210130
+X-Proofpoint-ORIG-GUID: vdTY_ejyld1e9lbcEK60O9s2o3zPNTkP
+X-Proofpoint-GUID: vdTY_ejyld1e9lbcEK60O9s2o3zPNTkP
 
-On Mon, 2023-12-18 at 17:40 -0800, Isaku Yamahata wrote:
-> On Thu, Dec 14, 2023 at 08:41:43AM -0800,
-> Sean Christopherson <seanjc@google.com> wrote:
-> 
-> > On Thu, Dec 14, 2023, Maxim Levitsky wrote:
-> > > On Wed, 2023-12-13 at 15:10 -0800, Sean Christopherson wrote:
-> > > > Upstream KVM's non-TDX behavior is fine, because KVM doesn't advertise support
-> > > > for CPUID 0x15, i.e. doesn't announce to host userspace that it's safe to expose
-> > > > CPUID 0x15 to the guest.  Because TDX makes exposing CPUID 0x15 mandatory, KVM
-> > > > needs to be taught to correctly emulate the guest's APIC bus frequency, a.k.a.
-> > > > the TDX guest core crystal frequency of 25Mhz.
-> > > 
-> > > I assume that TDX doesn't allow to change the CPUID 0x15 leaf.
-> > 
-> > Correct.  I meant to call that out below, but left my sentence half-finished.  It
-> > was supposed to say:
-> > 
-> >   I halfheartedly floated the idea of "fixing" the TDX module/architecture to either
-> >   use 1Ghz as the base frequency or to allow configuring the base frequency
-> >   advertised to the guest.
-> > 
-> > > > I halfheartedly floated the idea of "fixing" the TDX module/architecture to either
-> > > > use 1Ghz as the base frequency (off list), but it definitely isn't a hill worth
-> > > > dying on since the KVM changes are relatively simple.
-> > > > 
-> > > > https://lore.kernel.org/all/ZSnIKQ4bUavAtBz6@google.com
-> > > > 
-> > > 
-> > > Best regards,
-> > > 	Maxim Levitsky
-> 
-> The followings are the updated version of the commit message.
-> 
-> 
-> KVM: x86: Make the hardcoded APIC bus frequency VM variable
-> 
-> The TDX architecture hard-codes the APIC bus frequency to 25MHz in the
-> CPUID leaf 0x15.  The
-> TDX mandates it to be exposed and doesn't allow the VMM to override
-> its value.  The KVM APIC timer emulation hard-codes the frequency to
-> 1GHz.  It doesn't unconditionally enumerate it to the guest unless the
-> user space VMM sets the CPUID leaf 0x15 by KVM_SET_CPUID.
-> 
-> If the CPUID leaf 0x15 is enumerated, the guest kernel uses it as the
-> APIC bus frequency.  If not, the guest kernel measures the frequency
-> based on other known timers like the ACPI timer or the legacy PIT.
-> The TDX guest kernel gets timer interrupt more times by 1GHz / 25MHz.
-> 
-> To ensure that the guest doesn't have a conflicting view of the APIC
-> bus frequency, allow the userspace to tell KVM to use the same
-> frequency that TDX mandates instead of the default 1Ghz.
+Thanks again for the fix Vincent.
 
-Looks great!
-
-In theory this gives me an idea that KVM could parse the guest CPUID leaf
-0x15 and deduce the frequency from it automatically instead of a new capability,
-but I understand that this is (also in theory) not backward compatible assuming
-that some hypervisors already expose this leaf for some reason,
-thus a new capability will be needed anyway.
-
-Thus I have no more complaints, and thanks for addressing my feedback!
-
-Best regards,
-	Maxim Levitsky
-
+On 22/12/2023 3:40 am, Vincent Guittot wrote:
+> When a CPU taken offline, the contribution of its cfs_rqs to task_groups'
+> load may remain and impact the calculation of the share of the online
+> CPUs.
+> Clear the contribution of an offlining CPU to task groups' load and skip
+> its contribution while it is inactive.
 > 
-> There are several options to address this.
-> 1. Make the KVM able to configure APIC bus frequency (This patch).
->    Pros: It resembles the existing hardware.  The recent Intel CPUs
->    adapts 25MHz.
->    Cons: Require the VMM to emulate the APIC timer at 25MHz.
-> 2. Make the TDX architecture enumerate CPUID 0x15 to configurable
->    frequency or not enumerate it.
->    Pros: Any APIC bus frequency is allowed.
->    Cons: Deviation from the real hardware.
-> 3. Make the TDX guest kernel use 1GHz when it's running on KVM.
->    Cons: The kernel ignores CPUID leaf 0x15.
-> 
-> 
+> Reported-by: Imran Khan <imran.f.khan@oracle.com>
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 
+Reviewed-and-tested-by: Imran Khan <imran.f.khan@oracle.com>
 
+> ---
+>  kernel/sched/fair.c | 50 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 07200b4751b3..07edb7dce671 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -4094,6 +4094,10 @@ static inline void update_tg_load_avg(struct cfs_rq *cfs_rq)
+>  	if (cfs_rq->tg == &root_task_group)
+>  		return;
+>  
+> +	/* rq has been offline and doesn't contribute anymore to the share */
+> +	if (!cpu_active(cpu_of(rq_of(cfs_rq))))
+> +		return;
+> +
+>  	/*
+>  	 * For migration heavy workloads, access to tg->load_avg can be
+>  	 * unbound. Limit the update rate to at most once per ms.
+> @@ -4110,6 +4114,49 @@ static inline void update_tg_load_avg(struct cfs_rq *cfs_rq)
+>  	}
+>  }
+>  
+> +static inline void clear_tg_load_avg(struct cfs_rq *cfs_rq)
+> +{
+> +	long delta;
+> +	u64 now;
+> +
+> +	/*
+> +	 * No need to update load_avg for root_task_group as it is not used.
+> +	 */
+> +	if (cfs_rq->tg == &root_task_group)
+> +		return;
+> +
+> +	now = sched_clock_cpu(cpu_of(rq_of(cfs_rq)));
+> +	delta = 0 - cfs_rq->tg_load_avg_contrib;
+> +	atomic_long_add(delta, &cfs_rq->tg->load_avg);
+> +	cfs_rq->tg_load_avg_contrib = 0;
+> +	cfs_rq->last_update_tg_load_avg = now;
+> +}
+> +
+> +/* cpu offline callback */
+> +static void __maybe_unused clear_tg_offline_cfs_rqs(struct rq *rq)
+> +{
+> +	struct task_group *tg;
+> +
+> +	lockdep_assert_rq_held(rq);
+> +
+> +	/*
+> +	 * The rq clock has already been updated in the
+> +	 * set_rq_offline(), so we should skip updating
+> +	 * the rq clock again in unthrottle_cfs_rq().
+> +	 */
+> +	rq_clock_start_loop_update(rq);
+> +
+> +	rcu_read_lock();
+> +	list_for_each_entry_rcu(tg, &task_groups, list) {
+> +		struct cfs_rq *cfs_rq = tg->cfs_rq[cpu_of(rq)];
+> +
+> +		clear_tg_load_avg(cfs_rq);
+> +	}
+> +	rcu_read_unlock();
+> +
+> +	rq_clock_stop_loop_update(rq);
+> +}
+> +
+>  /*
+>   * Called within set_task_rq() right before setting a task's CPU. The
+>   * caller only guarantees p->pi_lock is held; no other assumptions,
+> @@ -12423,6 +12470,9 @@ static void rq_offline_fair(struct rq *rq)
+>  
+>  	/* Ensure any throttled groups are reachable by pick_next_task */
+>  	unthrottle_offline_cfs_rqs(rq);
+> +
+> +	/* Ensure that we remove rq contribution to group share */
+> +	clear_tg_offline_cfs_rqs(rq);
+>  }
+>  
+>  #endif /* CONFIG_SMP */
