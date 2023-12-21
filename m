@@ -1,235 +1,247 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB65C208DE;
-	Thu, 21 Dec 2023 08:58:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95A82031D;
+	Thu, 21 Dec 2023 08:58:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hb0pT7TY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98173C433C8;
-	Thu, 21 Dec 2023 08:58:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VigeQnGA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1671C433C8;
+	Thu, 21 Dec 2023 08:58:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703149092;
-	bh=gLq6owYsi5+HzSEWjDiTXSIZh7zeqkTrjBurAO/BXVM=;
+	s=k20201202; t=1703149136;
+	bh=wm1PdQNBEorVmceg+YsKLt+qojEwDpCAuzfzZgHVPgE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hb0pT7TYb6E2npKuG1J8kJlRD8022tec43nOjCXNzAfTKOW4HSo6vhCKgic7S/MS7
-	 zT0KXYfeJvUFWhw32SigZV/GPh/px0g2h5y0r4MnE5NMyoh5Htf8dLbgJB/NWV9jXw
-	 nxlK381fmNuArHKuK9bzObZMLaP9u2HbVu1TGRzMyrUJuMio7kf79aVMH5VhkX0aGR
-	 xNPobhJ0Z83rEd2MWsC8SNMBSjtadWPOMB2NKBGbSi3pMbag1zH3JZcD+QKh5Ind3H
-	 wQXx0OEXTp4/jAyE2xSCIZcZ8D6ZzHt5nxqMMer7sE0mcCWizpFQsGzVoZ23YMCo7C
-	 vfYYISIamm6kg==
-Date: Thu, 21 Dec 2023 16:58:07 +0800
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Mark Hasemeyer <markhas@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Raul Rangel <rrangel@chromium.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	Rob Herring <robh@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>,
-	Benson Leung <bleung@chromium.org>,
-	Bhanu Prakash Maiya <bhanumaiya@chromium.org>,
-	Chen-Yu Tsai <wenst@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>, Lee Jones <lee@kernel.org>,
-	Prashant Malani <pmalani@chromium.org>,
-	Rob Barnes <robbarnes@google.com>,
-	Stephen Boyd <swboyd@chromium.org>, chrome-platform@lists.linux.dev
-Subject: Re: [PATCH v2 22/22] platform/chrome: cros_ec: Use PM subsystem to
- manage wakeirq
-Message-ID: <ZYP-H27vsJvMTupH@google.com>
-References: <20231220235459.2965548-1-markhas@chromium.org>
- <20231220165423.v2.22.Ieee574a0e94fbaae01fd6883ffe2ceeb98d7df28@changeid>
+	b=VigeQnGAvfmjN1u9Rrte0ikdLP8ceGGjw8Is02oIVlhEtVlzAbWrmwsKtby8x308u
+	 2krFnQHVp1O4cm1aa1JE4uAPUuE8+hf6EFP/zrmSy3o/vcqKbAoov58W4fWhkF0f0f
+	 bGCT5uDgSpcu2gOyddd1xZELcbRHGsWRqhkOpHh/cMGZWOcX69DHMaqT8MTv4PF9FS
+	 w9UBSRNz6CRuSLrhl8L5FdtjxrZCnyY74iMVcleiK0Zsp4IKYSuH6fzbAl6dbD3TgX
+	 U2u0z0H8KtqM7UHaXfLjnf+73p5B3856lJiwZA7GBJNtdvEbXtxycchxCdcBdLaXfV
+	 aHRQ406P7hitw==
+Date: Thu, 21 Dec 2023 09:58:53 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Andrew Davis <afd@ti.com>, Frank Binns <frank.binns@imgtec.com>, 
+	Donald Robson <donald.robson@imgtec.com>, Matt Coster <matt.coster@imgtec.com>, 
+	Adam Ford <aford173@gmail.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	=?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>, 
+	Paul Cercueil <paul@crapouillou.net>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-omap@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH RFC 01/10] dt-bindings: gpu: Add PowerVR Series5 SGX GPUs
+Message-ID: <nzqeqwof44e3nxjz6lsxmxcfh235unbu343br45esxh6vinskp@xvjydpxhvsuk>
+References: <23livt5mcc64bb6lkeec2uxp5cyn4wfekwaj6wzrjnrkndvwgj@6tveqglqpr4v>
+ <B3A1B8A7-0363-4ECB-AFBF-576FECA569FA@goldelico.com>
+ <vawv2mwhonuyvgmp7uox4rfgdcjwg5fa7hmbcfgl3wiase6e4p@tyavpclppfvu>
+ <6BC60156-89E2-4734-BD00-B49A9A6C1D7A@goldelico.com>
+ <6gpehpoz54f5lxhmvirqbfwmq7dpgiroy27cljpvu66wtn7aqy@lgrh7wysyxnp>
+ <D8AB6CC4-DCA5-40DD-A311-94A16FF59254@goldelico.com>
+ <oobcl2kfsuph27er7rflfqvt3lu6athufomxv5chf3uctx4emh@x6rzjtlskhbf>
+ <F58855EC-D87D-4747-A363-0E7AA5DB1AEC@goldelico.com>
+ <22cny5aumc5wafsrjd3j55zcjbjf2viip64kfbjiqis2grtd6t@wg5dxeuzil6l>
+ <3E03E913-48E1-49EC-A6C9-EAC1612E65E7@goldelico.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="cuiar5zluuku2kr2"
+Content-Disposition: inline
+In-Reply-To: <3E03E913-48E1-49EC-A6C9-EAC1612E65E7@goldelico.com>
+
+
+--cuiar5zluuku2kr2
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231220165423.v2.22.Ieee574a0e94fbaae01fd6883ffe2ceeb98d7df28@changeid>
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 20, 2023 at 04:54:36PM -0700, Mark Hasemeyer wrote:
-> The IRQ wake logic was added on an interface basis (lpc, spi, uart) as
-> opposed to adding it to cros_ec.c because the i2c subsystem already
-> enables the wakirq (if applicable) on our behalf.
+On Mon, Dec 18, 2023 at 11:54:47AM +0100, H. Nikolaus Schaller wrote:
+>=20
+>=20
+> > Am 18.12.2023 um 11:14 schrieb Maxime Ripard <mripard@kernel.org>:
+> >=20
+> > On Mon, Dec 18, 2023 at 10:28:09AM +0100, H. Nikolaus Schaller wrote:
+> >> Hi Maxime,
+> >>=20
+> >>> Am 15.12.2023 um 14:33 schrieb Maxime Ripard <mripard@kernel.org>:
+> >>>=20
+> >>>>>=20
+> >>>>> It's for a separate architecture, with a separate driver, maintaine=
+d out
+> >>>>> of tree by a separate community, with a separate set of requirement=
+s as
+> >>>>> evidenced by the other thread. And that's all fine in itself, but
+> >>>>> there's very little reason to put these two bindings in the same fi=
+le.
+> >>>>>=20
+> >>>>> We could also turn this around, why is it important that it's in the
+> >>>>> same file?
+> >>>>=20
+> >>>> Same vendor. And enough similarity in architectures, even a logical =
+sequence
+> >>>> of development of versions (SGX =3D Version 5, Rogue =3D Version 6+)=
+ behind.
+> >>>> (SGX and Rogue seem to be just trade names for their architecture de=
+velopment).
+> >>>=20
+> >>> Again, none of that matters for *where* the binding is stored.
+> >>=20
+> >> So what then speaks against extending the existing bindings file as pr=
+oposed
+> >> here?
+> >=20
+> > I mean, apart from everything you quoted, then sure, nothing speaks
+> > against it.
+> >=20
+> >>>> AFAIK bindings should describe hardware and not communities or drive=
+rs
+> >>>> or who is currently maintaining it. The latter can change, the first=
+ not.
+> >>>=20
+> >>> Bindings are supposed to describe hardware indeed. Nothing was ever s=
+aid
+> >>> about where those bindings are supposed to be located.
+> >>>=20
+> >>> There's hundreds of other YAML bindings describing devices of the same
+> >>> vendors and different devices from the same generation.
+> >>=20
+> >> Usually SoC seem to be split over multiple files by subsystem. Not by =
+versions
+> >> or generations. If the subsystems are similar enough they share the sa=
+me bindings
+> >> doc instead of having one for each generation duplicating a lot of cod=
+e.
+> >>=20
+> >> Here is a comparable example that combines multiple vendors and genera=
+tions:
+> >>=20
+> >> Documentation/devicetree/bindings/usb/generic-ehci.yaml
+> >=20
+> > EHCI is a single interface for USB2.0 controllers. It's a standard API,
+> > and is made of a single driver that requires minor modifications to deal
+> > with multiple devices.
+> >=20
+> > We're very far from the same situation here.
+>=20
+> How far are we really?
 
-The setting flow are all the same.  I think helper functions in cros_ec.c help
-to deduplicate the code.
+There's one binding for one driver. You suggest one binding for two drivers.
 
-> diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
-[...]
-> +static const struct dmi_system_id untrusted_fw_irq_wake_capable[] = {
-> +	{
-> +		.ident = "Brya",
-> +		.matches = {
-> +			DMI_MATCH(DMI_PRODUCT_FAMILY, "Google_Brya")
-> +		}
-> +	},
-> +	{
-> +		.ident = "Brask",
-> +		.matches = {
-> +			DMI_MATCH(DMI_PRODUCT_FAMILY, "Google_Brask")
-> +		}
-> +	},
-> +	{ }
-> +}
-> +MODULE_DEVICE_TABLE(dmi, untrusted_fw_irq_wake_capable);
+> And, it is the purpose of the driver to handle different cases.
+>=20
+> That there are currently two drivers is just a matter of history and
+> not a necessity.
 
-Does it really need `MODULE_DEVICE_TABLE`?
+Cool, so what you're saying is that your plan is to support those GPUs
+upstream in the imagination driver?
 
-> +static bool cros_ec_should_force_irq_wake_capable(void)
+I guess we should delay this patch until we see that series then.
 
-Suggestion: either drop "cros_ec_" prefix or use "cros_ec_lpc_" prefix.
+> >>> If anything it'll make it easier for you. I'm really not sure why it =
+is
+> >>> controversial and you're fighting this so hard.
+> >>=20
+> >> Well, you made it controversial by proposing to split what IMHO belong=
+s together.
+> >=20
+> > No, reviews aren't controversial.
+> > The controversy started when you chose
+> > to oppose it while you could have just rolled with it.
+>=20
+> Well, you asked
+>=20
+> "I think it would be best to have a separate file for this, img,sgx.yaml
+> maybe?"
+>=20
+> and
+>=20
+> "Because it's more convenient?"
+>=20
+> I understood that as an invitation for discussing the pros and cons
+> and working out the most convenient solution. And that involves
+> playing the devil's advocate which of course is controversial by
+> principle.
+>=20
+> Now, IMHO all the pros and cons are on the table and the question is
+> who makes a decision how to go.
 
-> @@ -428,20 +453,36 @@ static int cros_ec_lpc_probe(struct platform_device *pdev)
->  	 * Some boards do not have an IRQ allotted for cros_ec_lpc,
->  	 * which makes ENXIO an expected (and safe) scenario.
->  	 */
-> -	irq = platform_get_irq_optional(pdev, 0);
-> -	if (irq > 0)
-> +	irq = platform_get_irq_resource_optional(pdev, 0, &irqres);
-> +	if (irq > 0) {
->  		ec_dev->irq = irq;
-> -	else if (irq != -ENXIO) {
-> +		if (cros_ec_should_force_irq_wake_capable())
+You haven't listed any pro so far, you're claiming that the one I raise
+are irrelevant.
 
-Please see suggestion above.
+> >> I feel that the original patch is good enough for its purpose and foll=
+ows
+> >> some design pattern that can be deduced from other binding docs.
+> >=20
+> > [citation needed]
+>=20
+> Joke: Documentation/devicetree/bindings/* - I am not aware of a formal an=
+alysis of course.
+>=20
+> But see my example for ehci. It follows the pattern I mean. If clocks, re=
+gs, interrupts,
+> resets, and more properties are (almost) the same, then group them and ju=
+st differentiate
+> by different compatible strings.
 
->  	ret = cros_ec_register(ec_dev);
->  	if (ret) {
-> -		dev_err(dev, "couldn't register ec_dev (%d)\n", ret);
-> +		dev_err_probe(dev, ret, "couldn't register ec_dev (%d)\n", ret);
+Again, EHCI is not something you can compare to. It's a binding to
+support a standard interface. You don't have the same interface and your
+driver will need to be different.
 
-The change is irrelevant to the series.
+And more importantly: bindings are meant to describe the hardware
+itself. How it's supported in Linux is irrelevant to the discussion.
 
-> +	if (irq_wake) {
-> +		ret = device_init_wakeup(dev, true);
-> +		if (ret) {
-> +			dev_err_probe(dev, ret, "Failed to init device for wakeup");
-> +			return ret;
-> +		}
-> +		ret = dev_pm_set_wake_irq(dev, irq);
-> +		if (ret)
-> +			return ret;
-> +	}
-[...]
-> @@ -470,6 +512,8 @@ static void cros_ec_lpc_remove(struct platform_device *pdev)
->  		acpi_remove_notify_handler(adev->handle, ACPI_ALL_NOTIFY,
->  					   cros_ec_lpc_acpi_notify);
->  
-> +	dev_pm_clear_wake_irq(dev);
-> +	device_init_wakeup(dev, false);
+So, we could have: 10 drivers for the same binding, or 1 driver for 10
+bindings. The two notions are orthogonal.
 
-Is it safe to call them anyway regardless of `irq_wake` in cros_ec_lpc_probe()?
+> If necessary use some - if: clauses.
+>=20
+> It is the task of drivers to handle the details.
+>
+> As my other (maybe more important) comment to this patch did indicate we =
+IMHO can easily
+> live with something like
+>=20
+> +      - items:
+> +          - enum:
+> +              - ti,am62-gpu # IMG AXE GPU model/revision is fully discov=
+erable
+> +              - ti,omap3430-gpu # sgx530 Rev 121
+> +              - ti,omap3630-gpu # sgx530 Rev 125
+> +              - ingenic,jz4780-gpu # sgx540 Rev 130
+> +              - ti,omap4430-gpu # sgx540 Rev 120
+> +              - allwinner,sun6i-a31-gpu # sgx544 MP2 Rev 115
+> +              - ti,omap4470-gpu # sgx544 MP1 Rev 112
+> +              - ti,omap5432-gpu # sgx544 MP2 Rev 105
+> +              - ti,am5728-gpu # sgx544 MP2 Rev 116
+> +              - ti,am6548-gpu # sgx544 MP1 Rev 117
+>=20
+> And leave it to drivers using a table to deduce the generation and
+> revision or read it out from the chip. And there can even be different
+> drivers handling only a subset of the potential compatibles.
+>=20
+> Then the currently-out-of-tree driver for the sgx5 can be reworked in
+> less than half an hour without loosing functionality.
 
-> diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
-[...]
-> -static void cros_ec_spi_dt_probe(struct cros_ec_spi *ec_spi, struct device *dev)
-> +static void cros_ec_spi_dt_probe(struct cros_ec_spi *ec_spi, struct spi_device *spi)
->  {
-> -	struct device_node *np = dev->of_node;
-> +	struct cros_ec_device *ec_dev = spi_get_drvdata(spi);
-> +	struct device_node *np = spi->dev.of_node;
+Again, you're making it harder than it needs to be for no particular
+reason other than the potential file name clash that can be addressed.
 
-struct spi_device *spi = ec_spi->spi; [1]
+Maxime
 
-[1]: https://elixir.bootlin.com/linux/v6.6/source/drivers/platform/chrome/cros_ec_spi.c#L751
+--cuiar5zluuku2kr2
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +	if (!np)
-> +		return;
-> +
+-----BEGIN PGP SIGNATURE-----
 
-The change is an improvement (or rather say it could change behavior).  But
-strictly speaking, the change is irrelevant to the series.
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZYP+RAAKCRDj7w1vZxhR
+xXV6AQDDDrZBXTND+ZA5tJYZObZh1JN/uWCGtddmC+cdKRRazAD/TBl0erAktvMo
+xAQxFlpjvE94vKEMqz+0P/uaY9m2fQQ=
+=z99/
+-----END PGP SIGNATURE-----
 
-> @@ -702,6 +710,11 @@ static void cros_ec_spi_dt_probe(struct cros_ec_spi *ec_spi, struct device *dev)
->  	ret = of_property_read_u32(np, "google,cros-ec-spi-msg-delay", &val);
->  	if (!ret)
->  		ec_spi->end_of_msg_delay = val;
-> +
-> +	if (ec_dev->irq > 0 && of_property_read_bool(np, "wakeup-source")) {
-
-Or just use `spi->irq`[2].
-
-[2]: https://elixir.bootlin.com/linux/v6.6/source/drivers/platform/chrome/cros_ec_spi.c#L762
-
-They are the same, but does of_property_present() make more sense?
-
-> @@ -768,6 +778,9 @@ static int cros_ec_spi_probe(struct spi_device *spi)
->  			   sizeof(struct ec_response_get_protocol_info);
->  	ec_dev->dout_size = sizeof(struct ec_host_request);
->  
-> +	/* Check for any DT properties */
-> +	cros_ec_spi_dt_probe(ec_spi, spi);
-
-`spi` is possibly not needed.  See comment above.
-
-> @@ -776,19 +789,31 @@ static int cros_ec_spi_probe(struct spi_device *spi)
->  
->  	err = cros_ec_register(ec_dev);
->  	if (err) {
-> -		dev_err(dev, "cannot register EC\n");
-> +		dev_err_probe(dev, err, "cannot register EC\n");
-
-The change is irrelevant to the series.
-
-> -	device_init_wakeup(&spi->dev, true);
-> +	if (ec_spi->irq_wake) {
-> +		err = device_init_wakeup(dev, true);
-> +		if (err) {
-> +			dev_err_probe(dev, err, "Failed to init device for wakeup\n");
-> +			return err;
-> +		}
-> +		err = dev_pm_set_wake_irq(dev, ec_dev->irq);
-> +		if (err)
-> +			dev_err_probe(dev, err, "Failed to set irq(%d) for wake\n", ec_dev->irq);
-
-The part is different from what the patch changed in cros_ec_lpc.c.  Better to
-be consistent.
-- Just return vs. dev_err_probe().
-- %i vs. %d.
-
->  static void cros_ec_spi_remove(struct spi_device *spi)
->  {
->  	struct cros_ec_device *ec_dev = spi_get_drvdata(spi);
-> +	struct device *dev = ec_dev->dev;
->  
-> +	dev_pm_clear_wake_irq(dev);
-> +	device_init_wakeup(dev, false);
-
-Ditto, is it safe to just call them regardless of `ec_spi->irq_wake`?
-
-> diff --git a/drivers/platform/chrome/cros_ec_uart.c b/drivers/platform/chrome/cros_ec_uart.c
-[...]
-> @@ -301,13 +307,31 @@ static int cros_ec_uart_probe(struct serdev_device *serdev)
->  
->  	serdev_device_set_client_ops(serdev, &cros_ec_uart_client_ops);
->  
-> -	return cros_ec_register(ec_dev);
-> +	/* Register a new cros_ec device */
-> +	ret = cros_ec_register(ec_dev);
-> +	if (ret) {
-> +		dev_err(dev, "Couldn't register ec_dev (%d)\n", ret);
-
-From reading the changes above, I thought it would use dev_err_probe().
-
-> +	if (ec_uart->irq_wake) {
-> +		ret = device_init_wakeup(dev, true);
-> +		if (ret) {
-> +			dev_err_probe(dev, ret, "Failed to init device for wakeup");
-> +			return ret;
-> +		}
-> +		ret = dev_pm_set_wake_irq(dev, ec_uart->irq);
-
-Ditto, better to be consistent.
-
->  static void cros_ec_uart_remove(struct serdev_device *serdev)
->  {
->  	struct cros_ec_device *ec_dev = serdev_device_get_drvdata(serdev);
-> +	struct device *dev = ec_dev->dev;
->  
-> +	dev_pm_clear_wake_irq(dev);
-> +	device_init_wakeup(dev, false);
-
-Ditto, is it safe to just call them regardless of `ec_uart->irq_wake`?
+--cuiar5zluuku2kr2--
