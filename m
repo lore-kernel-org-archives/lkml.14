@@ -1,188 +1,112 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m121157.qiye.163.com (mail-m121157.qiye.163.com [115.236.121.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0619C945A;
-	Thu, 21 Dec 2023 02:01:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7AD15CC;
+	Thu, 21 Dec 2023 02:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvl5fdhk"
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7b7fdde8b54so12756439f.1;
-        Wed, 20 Dec 2023 18:01:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703124085; x=1703728885; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7uprnz/jjYuy4jWp8M6YseVkbWg8KRWXhaIAky0jmfE=;
-        b=fvl5fdhkGCMSY4JACtoE5vZEE0OZ5mvM5hc/zaI0tobA2ZmXV0w5QWqYAXIhfvhdR3
-         qzee0RVDbtCM6+9YCwFYnS+/mP+MQdmFdg19YU15PCKZC+6VjmXgqkwL/g4KjsfW4Ibk
-         0odUQKp38Rqic+FTfD+FLUUhzBq3F4lW1DGqJXJpLNI+/g85mA+D2qVwZECHiUhbtbjd
-         1C4pxbpuBXD+u94iW/HadP649b/wmqI14iI1JJE0cr2YQr9QLdWc8bLcHPbxhF8ZUxQH
-         xoKGZKIgzltMwZMGS6eRkB9B1CcmJkerTpE2ztDeV5dj1kBcszWdZSmXYX7gNDIj7/65
-         l0GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703124085; x=1703728885;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7uprnz/jjYuy4jWp8M6YseVkbWg8KRWXhaIAky0jmfE=;
-        b=QmkDB2coY1A7hecqxdYSm8mnXFiM4d6nQDmU7iktU+AYFQPiQjuSxiGzPRXIyb2nn6
-         E0r13MTApr1wtySm71cq0kTYVojFFlRjFb7yVfTqf2Oq7Vu6fCRrtXa+1cjB2j6dJwQT
-         iP0hl1pUVFDg1H3mPCudWX6vnXRR25qwx2TI/aJU3xwjtH1wIrTAdAWyuOe4Zsdb4wpt
-         IfAbBVnare7cGOAWHQ/dwnfaBV+rzi4Nj52epboRdRkUyFD+5TVi8WqkPZwO1POF0fvL
-         3bbAUcw9gbI1KVCH8xAuT3b4eiZGRofXBGtttYVGjbLJmximCtfejLWYGJRvGpQYFtjU
-         wsjA==
-X-Gm-Message-State: AOJu0YxPh0MDMn7wQPtygLkLttPWqW/4j5+Znwrg3YO0Iz20hAsxTtq7
-	ztzT3qrV6rf6lDYokq4K3l6PhDFMkU/zz0XMqX0=
-X-Google-Smtp-Source: AGHT+IHR51LjiWdOebtbBexnDeSV//C/Noc4zDv9CvLklzYhekwRS6kGUobGMBJIQkMj3Tu/WQhPg+zbFBnbMgKV5YM=
-X-Received: by 2002:a6b:3f56:0:b0:7b9:232c:eeb3 with SMTP id
- m83-20020a6b3f56000000b007b9232ceeb3mr2763300ioa.6.1703124084910; Wed, 20 Dec
- 2023 18:01:24 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="VhNvvwdb"
+DKIM-Signature: a=rsa-sha256;
+	b=VhNvvwdbjPo7R61TzOR7Aoq7UhGk90latFKZasp/5FxmK2Zjgf2YfDe0ZBFJecM7NR1DXcqoUsW3nK8cXmZgzOuYE/TAa3QnMX32jVmW/gxqfreP9IFqU4cYuEpns3ENMq+AZ+R+yAYnR2JwuFqd61hBXnyypD0j6XJNr0ult9o=;
+	s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=sgNbKKH79HHBf3IgFv/B9H2If9G4Vjiqig3E0NMzJhk=;
+	h=date:mime-version:subject:message-id:from;
+Received: from [172.16.12.141] (unknown [58.22.7.114])
+	by mail-m12779.qiye.163.com (Hmail) with ESMTPA id 3FEEA780171;
+	Thu, 21 Dec 2023 09:07:14 +0800 (CST)
+Message-ID: <28216be5-810f-40d6-850b-a0fc590ffa3c@rock-chips.com>
+Date: Thu, 21 Dec 2023 09:07:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231220152653.3273778-1-schatzberg.dan@gmail.com> <20231220152653.3273778-2-schatzberg.dan@gmail.com>
-In-Reply-To: <20231220152653.3273778-2-schatzberg.dan@gmail.com>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Wed, 20 Dec 2023 18:01:14 -0800
-Message-ID: <CAKEwX=NppvrRFLJzksQ5noHmWHEfWmyiVA2DyhMcY3Lh9dgJ3w@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] mm: add defines for min/max swappiness
-To: Dan Schatzberg <schatzberg.dan@gmail.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Yosry Ahmed <yosryahmed@google.com>, Huan Yang <link@vivo.com>, linux-kernel@vger.kernel.org, 
-	cgroups@vger.kernel.org, linux-mm@kvack.org, Tejun Heo <tj@kernel.org>, 
-	Zefan Li <lizefan.x@bytedance.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Michal Hocko <mhocko@kernel.org>, Shakeel Butt <shakeelb@google.com>, 
-	Muchun Song <muchun.song@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
-	Kefeng Wang <wangkefeng.wang@huawei.com>, SeongJae Park <sj@kernel.org>, 
-	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>, Yue Zhao <findns94@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] ARM: dts: rockchip: Add psci for rk3036
+Content-Language: en-US
+To: Alex Bee <knaerzche@gmail.com>, Andy Yan <andyshrk@163.com>,
+ heiko@sntech.de
+Cc: krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ zhengxing@rock-chips.com
+References: <20231218105523.2478315-1-andyshrk@163.com>
+ <20231218105523.2478315-2-andyshrk@163.com>
+ <da10e2fc-3179-4bd5-88ed-b4d5f64a7191@gmail.com>
+From: Andy Yan <andy.yan@rock-chips.com>
+In-Reply-To: <da10e2fc-3179-4bd5-88ed-b4d5f64a7191@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUhOSFYeQ0NIS0NMQkoZGUJVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk1PSU5IVUpLS1VKQk
+	tLWQY+
+X-HM-Tid: 0a8c89e98fafb24fkuuu3feea780171
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6ME06Sio6EDw0LyFLHC1WFUxK
+	TTwKCRFVSlVKTEtISklLQ0hOS05JVTMWGhIXVRoVHwJVAhoVOwkUGBBWGBMSCwhVGBQWRVlXWRIL
+	WUFZTkNVSUlVTFVKSk9ZV1kIAVlBSENDQzcG
 
-On Wed, Dec 20, 2023 at 7:27=E2=80=AFAM Dan Schatzberg <schatzberg.dan@gmai=
-l.com> wrote:
->
-> We use the constants 0 and 200 in a few places in the mm code when
-> referring to the min and max swappiness. This patch adds MIN_SWAPPINESS
-> and MAX_SWAPPINESS #defines to improve clarity. There are no functional
-> changes.
->
-> Signed-off-by: Dan Schatzberg <schatzberg.dan@gmail.com>
-> ---
->  include/linux/swap.h |  2 ++
->  mm/memcontrol.c      |  2 +-
->  mm/vmscan.c          | 14 +++++++-------
->  3 files changed, 10 insertions(+), 8 deletions(-)
->
-> diff --git a/include/linux/swap.h b/include/linux/swap.h
-> index f6dd6575b905..e2ab76c25b4a 100644
-> --- a/include/linux/swap.h
-> +++ b/include/linux/swap.h
-> @@ -407,6 +407,8 @@ extern unsigned long try_to_free_pages(struct zonelis=
-t *zonelist, int order,
->
->  #define MEMCG_RECLAIM_MAY_SWAP (1 << 1)
->  #define MEMCG_RECLAIM_PROACTIVE (1 << 2)
-> +#define MIN_SWAPPINESS 0
-> +#define MAX_SWAPPINESS 200
->  extern unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *mem=
-cg,
->                                                   unsigned long nr_pages,
->                                                   gfp_t gfp_mask,
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index b226090fd906..fbe9f02dd206 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -4337,7 +4337,7 @@ static int mem_cgroup_swappiness_write(struct cgrou=
-p_subsys_state *css,
->  {
->         struct mem_cgroup *memcg =3D mem_cgroup_from_css(css);
->
-> -       if (val > 200)
-> +       if (val > MAX_SWAPPINESS)
->                 return -EINVAL;
->
->         if (!mem_cgroup_is_root(memcg))
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index 9dd8977de5a2..d91963e2d47f 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -183,7 +183,7 @@ struct scan_control {
->  #endif
->
->  /*
-> - * From 0 .. 200.  Higher means more swappy.
-> + * From 0 .. MAX_SWAPPINESS.  Higher means more swappy.
->   */
->  int vm_swappiness =3D 60;
->
-> @@ -2403,7 +2403,7 @@ static void get_scan_count(struct lruvec *lruvec, s=
-truct scan_control *sc,
->         ap =3D swappiness * (total_cost + 1);
->         ap /=3D anon_cost + 1;
->
-> -       fp =3D (200 - swappiness) * (total_cost + 1);
-> +       fp =3D (MAX_SWAPPINESS - swappiness) * (total_cost + 1);
->         fp /=3D file_cost + 1;
->
->         fraction[0] =3D ap;
-> @@ -4400,7 +4400,7 @@ static int get_type_to_scan(struct lruvec *lruvec, =
-int swappiness, int *tier_idx
->  {
->         int type, tier;
->         struct ctrl_pos sp, pv;
-> -       int gain[ANON_AND_FILE] =3D { swappiness, 200 - swappiness };
-> +       int gain[ANON_AND_FILE] =3D { swappiness, MAX_SWAPPINESS - swappi=
-ness };
->
->         /*
->          * Compare the first tier of anon with that of file to determine =
-which
-> @@ -4436,7 +4436,7 @@ static int isolate_folios(struct lruvec *lruvec, st=
-ruct scan_control *sc, int sw
->         /*
->          * Try to make the obvious choice first. When anon and file are b=
-oth
->          * available from the same generation, interpret swappiness 1 as =
-file
-> -        * first and 200 as anon first.
-> +        * first and MAX_SWAPPINESS as anon first.
->          */
->         if (!swappiness)
->                 type =3D LRU_GEN_FILE;
-> @@ -4444,7 +4444,7 @@ static int isolate_folios(struct lruvec *lruvec, st=
-ruct scan_control *sc, int sw
->                 type =3D LRU_GEN_ANON;
->         else if (swappiness =3D=3D 1)
->                 type =3D LRU_GEN_FILE;
-> -       else if (swappiness =3D=3D 200)
-> +       else if (swappiness =3D=3D MAX_SWAPPINESS)
->                 type =3D LRU_GEN_ANON;
->         else
->                 type =3D get_type_to_scan(lruvec, swappiness, &tier);
-> @@ -5398,9 +5398,9 @@ static int run_cmd(char cmd, int memcg_id, int nid,=
- unsigned long seq,
->
->         lruvec =3D get_lruvec(memcg, nid);
->
-> -       if (swappiness < 0)
-> +       if (swappiness < MIN_SWAPPINESS)
->                 swappiness =3D get_swappiness(lruvec, sc);
-> -       else if (swappiness > 200)
-> +       else if (swappiness > MAX_SWAPPINESS)
->                 goto done;
->
->         switch (cmd) {
-> --
-> 2.39.3
->
+Hi Alex:
 
-Sorry for being late to the party :) Was preoccupied with zswap convos.
+On 12/20/23 19:16, Alex Bee wrote:
+> Hi Andy,
+> Am 18.12.23 um 11:55 schrieb Andy Yan:
+>> From: Andy Yan <andy.yan@rock-chips.com>
+>>
+>> The system will hang at bringup secondary CPUs
+>> without psci node.
+>>
+>> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+>>
+>> ---
+>>
+>> (no changes since v1)
+>>
+>>   arch/arm/boot/dts/rockchip/rk3036.dtsi | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/rockchip/rk3036.dtsi b/arch/arm/boot/dts/rockchip/rk3036.dtsi
+>> index 78686fc72ce6..5344803442a1 100644
+>> --- a/arch/arm/boot/dts/rockchip/rk3036.dtsi
+>> +++ b/arch/arm/boot/dts/rockchip/rk3036.dtsi
+>> @@ -67,6 +67,11 @@ display-subsystem {
+>>           ports = <&vop_out>;
+>>       };
+>> +    psci {
+>> +        compatible = "arm,psci-1.0";
+>> +        method = "smc";
+>> +    };
+>> +
+> I don't think that's an good idea. 
 
-Hmm these are all the occurrences of 0 and 200 (in the context of
-swappiness) I can dig out. So, FWIW:
-Reviewed-by: Nhat Pham <nphamcs@gmail.com>
+Why?
+
+>You most likely need that because you have downstream bootloader installed on this board. PSCI implementation takes place in TEE-OS for Rockchips ARM SoCs. There is no support for RK3036 in upstream op-tee OS. It's pretty much the same for RK3128 and RK3288.
+> If you use upstream u-boot it should be good as-is.
+
+Unfortunately, upstream u-boot also cannot boot up on this board.
+At present, I haven't had time to debug what is going on.
+
+Another reason I want to use downstream u-boot it is: I try run
+this board with mainline just because i want to test some community
+patches about inno-hdmi driver, as you said "the inno-hdmi driver currently gets a lot of attention"[0]
+
+With a downstream u-boot I can easy switch between upstream kernel and downstream kernel(no need to replace other components)
+if I found some function is not work as expected.
+
+
+[0]https://patchwork.kernel.org/project/linux-rockchip/cover/20231219170100.188800-1-knaerzche@gmail.com/
+> 
+> Alex
+>>       timer {
+>>           compatible = "arm,armv7-timer";
+>>           arm,cpu-registers-not-fw-configured;
+> 
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
