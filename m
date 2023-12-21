@@ -1,136 +1,74 @@
-Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2EDE634F5
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 18:14:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C42634F5
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 18:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="as0Ierba"
-Date: Thu, 21 Dec 2023 18:14:20 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1703182465;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Aup1y7DMypb5wPtcvwloevUDTj0Q9j+BJY8D6Z+NijM=;
-	b=as0IerbasBR/dZTFoOiCqg7ve4xqsh2t0qP46njjzYZ5anYkz4I53EyK5yrZ65gvXkLG8l
-	Qsppl/r8B7BRLiAW5ZDQdOjRkLXVwrfgjH5TSQ/O2PUPLGQYg8oc/0G3yiL9DstFvGKLIa
-	Xgfr0FgAPAFwRjen+HVwg1K/91IWx/0=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Sebastian Ene <sebastianene@google.com>
-Cc: will@kernel.org, James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>, catalin.marinas@arm.com,
-	mark.rutland@arm.com, akpm@linux-foundation.org, maz@kernel.org,
-	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kernel-team@android.com,
-	vdonnefort@google.com, qperret@google.com, smostafa@google.com
-Subject: Re: [PATCH v4 02/10] KVM: arm64: Add ptdump registration with
- debugfs for the stage-2 pagetables
-Message-ID: <ZYSAfORj2-cXo5t_@linux.dev>
-References: <20231218135859.2513568-2-sebastianene@google.com>
- <20231218135859.2513568-4-sebastianene@google.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PzaVHwf3"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dbdbfaab70eso988897276.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 10:16:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1703182608; x=1703787408; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=nyMLgLGAFCwB8tigzL3zmg0fWOPsybCh7CewIziIx18=;
+        b=PzaVHwf3bnIVaEYmaMtoFhjA0TJYZJKa/q/WmBIyKiLo5U+Em4vxWoCMNZ2USWmnBW
+         dVdhyT3J22SakSsMqYiKX8DY6VY4N9IEKgU1xx2d7dsZ3BnMVVzUmFT4x4pvntKU4Va6
+         INNiezQbtip1s5ikq1O9K6ce3gVmvGNjpu+50=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703182608; x=1703787408;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nyMLgLGAFCwB8tigzL3zmg0fWOPsybCh7CewIziIx18=;
+        b=QAipJJfvQn2vCng4FHuiYmQEfFGIhQei+EX2x7Ichy0yWyawH4HD/K+BdRXcVAKQF9
+         0CtjqgguAmurJaM57ZRfGt1NzgDhVF4pDDHZ43eNr90+KpN+nWJjPJoLL29yT7e1Kyql
+         RfjHCR6uU4U9nhhtvX3qJq6qv+EE70f9j4bz1kMh+WJcZ9SsfG898Dik3VKRlWdF3xyZ
+         Qw+ek0ER24RNEyDosxpB4KGNxSwMU2IYV/EzHtx1LxsuRDUDdRuHYiZD3YjQBreXDSe+
+         BKPZFx4m38mmDEen6YhkNSec4N2sn/sCeI7qJkiE9SxgHdW+CpQDU6A3EVeBmvZYJNp4
+         pvQA==
+X-Gm-Message-State: AOJu0Yy/gHVktjvNQnm0Z87fet9UTlM1XDhBLTB0bznMwpCH7zWl1lrA
+	5EAe0o4sUvc/MHLpbOeh07Ba0Z43KR6swyspsrNyPtjNdiqG
+X-Google-Smtp-Source: AGHT+IEz2hEouqtFpi9y297UCAmL1hayY/sHAX9vot3iBwQrrLhdG3TcbADflkdpdeiHilF5fsnb81+c8Xz+HGLa+yA=
+X-Received: by 2002:a5b:94c:0:b0:dbd:5ab8:1dbc with SMTP id
+ x12-20020a5b094c000000b00dbd5ab81dbcmr128760ybq.108.1703182608426; Thu, 21
+ Dec 2023 10:16:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231218135859.2513568-4-sebastianene@google.com>
-X-Migadu-Flow: FLOW_OUT
+References: <20231220235459.2965548-1-markhas@chromium.org>
+ <20231220165423.v2.3.I1016a45ac9e8daf8a9ebc9854ab90ec3542e7c30@changeid> <bc1731e0-0770-4bc9-abd7-239733a03d95@linaro.org>
+In-Reply-To: <bc1731e0-0770-4bc9-abd7-239733a03d95@linaro.org>
+From: Mark Hasemeyer <markhas@chromium.org>
+Date: Thu, 21 Dec 2023 11:16:36 -0700
+Message-ID: <CANg-bXBfEb1jBBsBJse7jmV1V8v=6Qe_NhTLNyYhjqmad+yv9g@mail.gmail.com>
+Subject: Re: [PATCH v2 03/22] Documentation: devicetree: Clarify wording for
+ wakeup-source property
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Tzung-Bi Shih <tzungbi@kernel.org>, Raul Rangel <rrangel@chromium.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Andy Shevchenko <andriy.shevchenko@intel.com>, 
+	Rob Herring <robh@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, 
+	Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Dec 18, 2023 at 01:58:52PM +0000, Sebastian Ene wrote:
-> +config PTDUMP_STAGE2_DEBUGFS
-> +       bool "Present the stage-2 pagetables to debugfs"
-> +       depends on PTDUMP_DEBUGFS && KVM
-> +       default n
-> +       help
-> +         Say Y here if you want to show the stage-2 kernel pagetables
-> +         layout in a debugfs file. This information is only useful for kernel developers
-> +         who are working in architecture specific areas of the kernel.
-> +         It is probably not a good idea to enable this feature in a production
-> +         kernel.
+> Please use subject prefixes matching the subsystem. You can get them for
+> example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+> your patch is touching.
+>
+> You nicely skipped all my filters... No need to resend to fix this, but
+> fix it if sending a new version.
 
-It isn't really a good idea to mount debugfs at all in a production
-system. There are already plenty worse interfaces lurking in that
-filesystem. The pKVM portions already depend on CONFIG_NVHE_EL2_DEBUG,
-so I don't see a need for this Kconfig option.
-
-> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> index e5f75f1f1..ee8d7cb67 100644
-> --- a/arch/arm64/kvm/arm.c
-> +++ b/arch/arm64/kvm/arm.c
-> @@ -40,6 +40,7 @@
->  #include <asm/kvm_pkvm.h>
->  #include <asm/kvm_emulate.h>
->  #include <asm/sections.h>
-> +#include <kvm_ptdump.h>
->  
->  #include <kvm/arm_hypercalls.h>
->  #include <kvm/arm_pmu.h>
-> @@ -2592,6 +2593,7 @@ static __init int kvm_arm_init(void)
->  	if (err)
->  		goto out_subs;
->  
-> +	kvm_ptdump_register_host();
->  	kvm_arm_initialised = true;
->  
->  	return 0;
-> diff --git a/arch/arm64/kvm/kvm_ptdump.h b/arch/arm64/kvm/kvm_ptdump.h
-> new file mode 100644
-> index 000000000..98b595ce8
-> --- /dev/null
-> +++ b/arch/arm64/kvm/kvm_ptdump.h
-> @@ -0,0 +1,18 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +//
-> +// Copyright (C) Google, 2023
-> +// Author: Sebastian Ene <sebastianene@google.com>
-
-You've got the comment styles backwards for these. The SPDX license uses
-the 'C++' style comment (//), whereas your multiline comment should always
-use a 'C' style comment (/* */).
-
-> +struct kvm_ptdump_register {
-> +	void *(*get_ptdump_info)(struct kvm_ptdump_register *reg);
-> +	void (*put_ptdump_info)(void *priv);
-> +	int (*show_ptdump_info)(struct seq_file *m, void *v);
-> +	void *priv;
-> +};
-
-Please thoroughly consider the necessity of this. You're wrapping a
-callback structure with yet another callback structure. IMO, it would
-make a lot more sense to implement the file ops structure for every
-walker variant you need and avoid the indirection, it's hard to
-understand.
-
-> +void kvm_ptdump_register_host(void)
-> +{
-> +	if (!is_protected_kvm_enabled())
-> +		return;
-> +
-> +	kvm_ptdump_debugfs_register(&host_reg, "host_page_tables",
-> +				    kvm_debugfs_dir);
-> +}
-> +
-> +static int __init kvm_host_ptdump_init(void)
-> +{
-> +	host_reg.priv = (void *)host_s2_pgtable_pages();
-> +	return 0;
-> +}
-> +
-> +device_initcall(kvm_host_ptdump_init);
-
-Why can't all of this be called from finalize_pkvm()?
-
-> -- 
-> 2.43.0.472.g3155946c3a-goog
-> 
-
--- 
-Thanks,
-Oliver
+I picked up the tags by using that exact command against "wakeup-source.txt".
+"Documentation: devicetree:" was used in the originating commit and is
+why I used it. There isn't really a consistent history wrt to tags on
+this file. Looking at the containing directory, "dt-bindings: power"
+looks pretty common. I'll use that unless you'd prefer something else.
