@@ -1,73 +1,81 @@
-Received: from forward103b.mail.yandex.net (forward103b.mail.yandex.net [178.154.239.150])
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00854C3BF
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 09:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="YocrqQag"
-Received: from mail-nwsmtp-smtp-production-main-24.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-24.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:2ead:0:640:1417:0])
-	by forward103b.mail.yandex.net (Yandex) with ESMTP id E8795608F8;
-	Thu, 21 Dec 2023 12:03:31 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-24.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id V3KbXZTo50U0-LwUn3dXm;
-	Thu, 21 Dec 2023 12:03:31 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1703149411; bh=kvyDArisowPEg0sMrU1swWXqZH47Ih9gEWW+BZaRFro=;
-	h=Message-ID:Date:Cc:Subject:To:From;
-	b=YocrqQagxP+LZ5CXxCo2s4V/XUhKdj/qF0ruGj8dZINEklS1snQpIKnkE3/herfOI
-	 cdJQwyLhCBnsBEXdJQ2ErdJXC2NEWj8+WW0TjzXUEd4RU9+Trs3iUfCiDMrwODi774
-	 KxAaBkKNyjfa72z3ZoVh8BohstluuBr3HCpXqyaE=
-Authentication-Results: mail-nwsmtp-smtp-production-main-24.iva.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-From: Dmitry Antipov <dmantipov@yandex.ru>
-To: David Howells <dhowells@redhat.com>
-Cc: Christian Brauner <brauner@kernel.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 643044C615;
+	Thu, 21 Dec 2023 09:03:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4SwkxP3FC7z9v9j;
+	Thu, 21 Dec 2023 10:03:37 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id Fqs9y1ggkq6h; Thu, 21 Dec 2023 10:03:37 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4Swkwl6cZLz9v6D;
+	Thu, 21 Dec 2023 10:03:03 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id DF5B68B788;
+	Thu, 21 Dec 2023 10:03:03 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id W2ziqtgAv9yK; Thu, 21 Dec 2023 10:03:03 +0100 (CET)
+Received: from PO20335.idsi0.si.c-s.fr (PO25106.IDSI0.si.c-s.fr [192.168.232.169])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 5C38B8B765;
+	Thu, 21 Dec 2023 10:03:03 +0100 (CET)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Luis Chamberlain <mcgrof@kernel.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
 	linux-kernel@vger.kernel.org,
-	Dmitry Antipov <dmantipov@yandex.ru>
-Subject: [PATCH] watch_queue: fix kcalloc() arguments order
-Date: Thu, 21 Dec 2023 12:01:21 +0300
-Message-ID: <20231221090139.12579-1-dmantipov@yandex.ru>
-X-Mailer: git-send-email 2.43.0
+	linuxppc-dev@lists.ozlabs.org,
+	linux-modules@vger.kernel.org
+Subject: [PATCH 2/3] modules: Remove #ifdef CONFIG_STRICT_MODULE_RWX around rodata_enabled
+Date: Thu, 21 Dec 2023 10:02:47 +0100
+Message-ID: <ac300e1a84eed4ba4d6a791eef2be30654bc566e.1703149011.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <7b5df1782e94a755b4a18733af44d17d8dd8b37b.1703149011.git.christophe.leroy@csgroup.eu>
+References: <7b5df1782e94a755b4a18733af44d17d8dd8b37b.1703149011.git.christophe.leroy@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1703149365; l=911; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=KgXa9tEdYbBGRtlR2Sk8FbMi8n/9B7ioVpOACaYMJnE=; b=bo+Bre38mcoaNi8xnqzMLLZvyIpZAWuADlq8yZdyZp1/UYDgHgyNKuVO+iy9JCZyGJYTIUT3f m9mnac+tp9rBKFv96ZmTDUPGfIg97OTiYd9K8LYhy1CkbzkJkVLe4W4
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
 Content-Transfer-Encoding: 8bit
 
-When compiling with gcc version 14.0.0 20231220 (experimental)
-and W=1, I've noticed the following warning:
+Now that rodata_enabled is declared at all time, the #ifdef
+CONFIG_STRICT_MODULE_RWX can be removed.
 
-kernel/watch_queue.c: In function 'watch_queue_set_size':
-kernel/watch_queue.c:273:32: warning: 'kcalloc' sizes specified with 'sizeof'
-in the earlier argument and not in the later argument [-Wcalloc-transposed-args]
-  273 |         pages = kcalloc(sizeof(struct page *), nr_pages, GFP_KERNEL);
-      |                                ^~~~~~
-
-Since 'n' and 'size' arguments of 'kcalloc()' are multiplied to
-calculate the final size, their actual order doesn't affect the
-result and so this is not a bug. But it's still worth to fix it.
-
-Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- kernel/watch_queue.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/module/strict_rwx.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/kernel/watch_queue.c b/kernel/watch_queue.c
-index 778b4056700f..03b90d7d2175 100644
---- a/kernel/watch_queue.c
-+++ b/kernel/watch_queue.c
-@@ -270,7 +270,7 @@ long watch_queue_set_size(struct pipe_inode_info *pipe, unsigned int nr_notes)
- 		goto error;
+diff --git a/kernel/module/strict_rwx.c b/kernel/module/strict_rwx.c
+index a2b656b4e3d2..eadff63b6e80 100644
+--- a/kernel/module/strict_rwx.c
++++ b/kernel/module/strict_rwx.c
+@@ -34,12 +34,8 @@ void module_enable_x(const struct module *mod)
  
- 	ret = -ENOMEM;
--	pages = kcalloc(sizeof(struct page *), nr_pages, GFP_KERNEL);
-+	pages = kcalloc(nr_pages, sizeof(struct page *), GFP_KERNEL);
- 	if (!pages)
- 		goto error;
+ void module_enable_ro(const struct module *mod, bool after_init)
+ {
+-	if (!IS_ENABLED(CONFIG_STRICT_MODULE_RWX))
+-		return;
+-#ifdef CONFIG_STRICT_MODULE_RWX
+-	if (!rodata_enabled)
++	if (!IS_ENABLED(CONFIG_STRICT_MODULE_RWX) || !rodata_enabled)
+ 		return;
+-#endif
  
+ 	module_set_memory(mod, MOD_TEXT, set_memory_ro);
+ 	module_set_memory(mod, MOD_INIT_TEXT, set_memory_ro);
 -- 
-2.43.0
+2.41.0
 
