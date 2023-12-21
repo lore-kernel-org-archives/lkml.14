@@ -1,157 +1,215 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39F520310
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 08:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mwa.re
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mwa.re
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E751220322
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 08:57:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mwa.re header.i=@mwa.re header.b="NDMfaLUk"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-40d2376db79so4152995e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 00:56:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TVBtASz3"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a2330a92ae6so64748866b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 00:57:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mwa.re; s=google; t=1703148969; x=1703753769; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NEvSJjqER4dwgNc/kNYaxgpYNiAgTRW68D75l9amAIo=;
-        b=NDMfaLUkyhpXoqEV/t0PgPzhk5tk0HRHeTtDcI1R71X6U13Ipb55S9WkDMh/NFPAq9
-         ZaljAfhx6bqRiinITey+xustLqMFuOuV3F6nZn1S8KA5zPmAMWhuS5Wtgoh43FfqO3ny
-         RHaa5McxKAX/auJAMDuN046mtclPjLdj5/bWUkIrLhg7q5Dcs8Fo9r+o0dNuZl4GKXBk
-         zxsOjdyiNZdeGIJM2LA2iFt5NIc7b+QQg17etv3LsscILKjb8Sss1fFnUT21ou8cQyop
-         ohMlDxhhDUOsfDSOE2osZTUz+d4P++bgCu0kErmwx5mv0wCxhtZJpnARx3lWrAmilvLy
-         NUsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703148969; x=1703753769;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+        d=linaro.org; s=google; t=1703149030; x=1703753830; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=NEvSJjqER4dwgNc/kNYaxgpYNiAgTRW68D75l9amAIo=;
-        b=LCyUG/Ru63l9XQg3j4D+Dzer/Paa+3HBy3pgVRmTDFAnXAT77Gl/+Y+kpB6h+ewv2j
-         b1CPQc96EOgIcNakW2jhsuNNkB+4MQ3RrY8Tl9lVx1lcA9I9rooQR3ZU9ZpFJRQ6fBF1
-         HL+p9wZQzinMdEugbpeXm+WgwVSNZJ4rUnPEiThQvTbCJr1ZMUgDYTIBGaSDBxtZiNny
-         iiZ5pBX1Kho2QqvcotWpk0cd8M7cEqD74HmwKTxwldjHHsJlv+M/k8zD1S2r2qOq1liR
-         SVVloUPD53rz7uDTpe7jPL2OgY0NBKRqcSJUU2erPi9mj6zJLIp5M5o+KmCsXqFoIvt+
-         XLWA==
-X-Gm-Message-State: AOJu0YzZvi4CCKEvCWXBbXyM6Ck5dFdt2pTIRRDm+PUbnfyFYkPc24O9
-	XmX0JDTFGVG8gZnrg/KaY/VWJA==
-X-Google-Smtp-Source: AGHT+IHU/9GNoG9CPlJyJF9wM151c4hjR0wjSeY1C/IGdwvvUOslq6CPfOOZuGw4+k0LWBSfy21dKA==
-X-Received: by 2002:a05:600c:4fd4:b0:40b:5e22:958 with SMTP id o20-20020a05600c4fd400b0040b5e220958mr646831wmq.71.1703148968824;
-        Thu, 21 Dec 2023 00:56:08 -0800 (PST)
-Received: from 2001-4dd0-53c2-1-e989-a920-d643-58fc.ipv6dyn.netcologne.de (2001-4dd0-53c2-1-e989-a920-d643-58fc.ipv6dyn.netcologne.de. [2001:4dd0:53c2:1:e989:a920:d643:58fc])
-        by smtp.gmail.com with ESMTPSA id l11-20020a5d560b000000b0033680f7be5fsm1502267wrv.87.2023.12.21.00.56.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 00:56:08 -0800 (PST)
-Message-ID: <491250ba57be2ab983048ffcf5ffd2aec2bedb9e.camel@mwa.re>
-Subject: Re: element sizes in input_event struct on riscv32
-From: Antonios Salios <antonios@mwa.re>
-To: Arnd Bergmann <arnd@arndb.de>, Dmitry Torokhov
- <dmitry.torokhov@gmail.com>,  Deepa Dinamani <deepa.kernel@gmail.com>
-Cc: rydberg@bitmath.org, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Jan Henrik Weinstock <jan@mwa.re>, Lukas
-	=?ISO-8859-1?Q?J=FCnger?=
-	 <lukas@mwa.re>
-Date: Thu, 21 Dec 2023 09:56:06 +0100
-In-Reply-To: <9e97eb50-f9a6-4655-9422-fa1106fff97a@app.fastmail.com>
-References: <c812ea74dd02d1baf85dc6fb32701e103984d25d.camel@mwa.re>
-	 <ZYEFCHBC75rjCE0n@google.com>
-	 <9e97eb50-f9a6-4655-9422-fa1106fff97a@app.fastmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.2 
+        bh=IEpTLEBwYtzfdtfV17OSlaS7IaFDu0jr1ITxf4EdUzE=;
+        b=TVBtASz3BiVrp7v0ytOWgdzRV75zr7yVkacHAV90cEofpe0oJIv2v4gfwKCKdXP592
+         OdaIOJ0tpDp6dxmkifduVTN8AGLG0c0IRlLjgr+5SVLNm/7u0rO0K+fIZY7wkkm0nR0a
+         49PPDIYjCHZFhaKl1YjJ22c2QzcUFKhubiX6pDzeSxLpgidWaUnuY1VjtRVigJ1LsayH
+         ht4J3NNaMYShkxnBVNzoNWyRkl62kLKY/jPiS0Piw8heVmFi6bWflFjtO0zP/IF0ZQhT
+         lu7EAHg0CWMqpMYdwtOyqcV+byBimVJoZ894Hti3FfErCdYEBgQZj7aBis7yK1GCVhqI
+         x4vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703149030; x=1703753830;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IEpTLEBwYtzfdtfV17OSlaS7IaFDu0jr1ITxf4EdUzE=;
+        b=pTf15PE7UkPYGsmtUJRPpj2HxVpVoZtO0gAf8UMP3wk2fQj4edvdIi2Fsw/Os4l6of
+         OAdN5jsEu32X66vVNurHcW1x5RIHvAekCsSB7VxnJmzJJbr5k8H1UiTkt1xGIvY7m1MP
+         DTPwE/v+KGqqZBrvShJw8k891gOeovVFrvoXoDAAOGY0z1lSRm9BwyxxLC7KXM5x4h7G
+         2f2fXXqBo7l483nqtmUZRezIVL6WRdxgouSOWuZHG20Mj7BZ3vIJhSF53xCgCB5NlrqR
+         KE6WYrJQnd3a0sWqOWOL4oB+27gZ14dUlp1tEvuamCaFbvPlGjEhOWBFF3ThRB74qRHq
+         8svg==
+X-Gm-Message-State: AOJu0YzOtCUaNbzn+Qe1HR81ZlRdshJKs+Lj9GnRARKSmEIIaDM0ZZke
+	YyNJhGD/OrV8fOxHLADhjoSxYw==
+X-Google-Smtp-Source: AGHT+IF59nod0rEmvvoLcd9kzd0V0yAuprza+iVkp/g2KJp1mAQw/MrCWeIJDv4wTmkvlm9hpgsonw==
+X-Received: by 2002:a17:906:1bb2:b0:a23:7467:7a82 with SMTP id r18-20020a1709061bb200b00a2374677a82mr2057573ejg.22.1703149030164;
+        Thu, 21 Dec 2023 00:57:10 -0800 (PST)
+Received: from [192.168.0.22] ([78.10.206.178])
+        by smtp.gmail.com with ESMTPSA id k16-20020a17090632d000b00a2357c16fd0sm718773ejk.171.2023.12.21.00.57.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Dec 2023 00:57:09 -0800 (PST)
+Message-ID: <6a4356e2-e201-4b87-bac0-056b29a07fc8@linaro.org>
+Date: Thu, 21 Dec 2023 09:57:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/1] arm64: dts: qcom: sm8550: remove
+ address/size-cells from mdss_dsi1
+Content-Language: en-US
+To: "Aiqun Yu (Maria)" <quic_aiquny@quicinc.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Tengfei Fan <quic_tengfan@quicinc.com>, andersson@kernel.org,
+ konrad.dybcio@linaro.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel@quicinc.com
+References: <20231219003106.8663-1-quic_tengfan@quicinc.com>
+ <20231219003106.8663-2-quic_tengfan@quicinc.com>
+ <457e336e-004c-4721-b58d-e9ada16dc04b@linaro.org>
+ <a8f168da-14f7-4377-8dea-f282a3eac0a4@quicinc.com>
+ <13b61d41-6045-499e-864b-51c6cb6eacf9@linaro.org>
+ <38604415-b410-4995-9c4f-525536435699@quicinc.com>
+ <CAA8EJpo07gE7ZeNP6wSGTLtmF_3PKQAKFyMRZ8dk1K+f7PAxrg@mail.gmail.com>
+ <ad1547cf-0520-422d-a105-ec426f526d71@quicinc.com>
+ <CAA8EJppwsezPV21Uw8xTn=ra8L2jfnkHoRghDPN96O5tJsOD7A@mail.gmail.com>
+ <72305a35-02e6-4ff6-8251-01f986530c5d@quicinc.com>
+ <A45746C4-54C9-48D2-9DB7-52B4B56854E6@linaro.org>
+ <4e328cd8-9ef7-42ce-b592-7f2216c00c0b@quicinc.com>
+ <CAA8EJprE8v3bhHfyZJM9SJT=ShJ-LQvk5mR=gpdAWXF2yANWbQ@mail.gmail.com>
+ <e88787dc-ed03-42d2-a6e7-fb88bbc89357@quicinc.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
+ m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
+ HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
+ XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
+ mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
+ v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
+ cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
+ rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
+ qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
+ aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
+ gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
+ dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
+ NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
+ hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
+ oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
+ H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
+ yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
+ 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
+ 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
+ +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
+ FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
+ 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
+ DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
+ oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
+ 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
+ Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
+ qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
+ /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
+ qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
+ EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
+ KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
+ fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <e88787dc-ed03-42d2-a6e7-fb88bbc89357@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 2023-12-19 at 13:53 +0000, Arnd Bergmann wrote:
-> On Tue, Dec 19, 2023, at 02:50, Dmitry Torokhov wrote:
-> > Hi Antonious,
-> >=20
-> > On Thu, Dec 14, 2023 at 11:11:18AM +0100, Antonios Salios wrote:
-> > > Hi all.
-> > >=20
-> > > I'm having trouble getting evdev to run in a simulated Buildroot
-> > > environment on riscv32. Evtest (and the x11 driver) seems to be
-> > > receiving garbage data from input devices.
-> > >=20
-> > > Analyzing the input_event struct shows that the kernel uses 32-
-> > > bit (aka
-> > > __kernel_ulong_t) values for __sec & __usec.
-> > > Evtest on the other hand interprets these variables as 64-bit
-> > > time_t
-> > > values in a timeval struct, resulting in a mismatch between the
-> > > kernel
-> > > and userspace.
-> > >=20
-> > > What would be the correct size for these values on a 32-bit
-> > > architecture that uses 64-bit time_t values?
-> >=20
-> > I think there is misunderstanding - we do not have *2* 64-bit
-> > values on
-> > 32-but architectures. Here is what was done:
-> >=20
-> > =C2=A0=C2=A0=C2=A0 Input: extend usable life of event timestamps to 210=
-6 on 32 bit
-> > systems
->=20
-> Thanks for forwarding this to me. You are definitely right that
-> the user-space structure is intended to use a pair of
-> __kernel_ulong_t
-> for the timestamp. Usually if an application gets this wrong, it is
-> the
-> result of having copied old kernel headers the source directory that
-> need to be updated.
->=20
-> For evtest in particular, I don't see how that is possible, the
-> source
-> code at [1] shows that it just includes the global linux/input.h,
-> which on riscv32 would have to be at least from linux-5.6 anyway
-> because older versions are too old to build a time64 glibc.
->=20
-> Antonios, can you check which header was used to build your copy
-> of evtest, and in case this came from /usr/include/linux, which
-> version it corresponds to?
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Arnd
->=20
-> [1]
-> https://gitlab.freedesktop.org/libevdev/evtest/-/blob/master/evtest.c?ref=
-_type=3Dheads
+On 21/12/2023 09:49, Aiqun Yu (Maria) wrote:
+> For example:
+> 
+> --- a/Documentation/devicetree/bindings/display/msm/qcom,sm8550-mdss.yaml
+> +++ b/Documentation/devicetree/bindings/display/msm/qcom,sm8550-mdss.yaml
+> 
+> @@ -55,14 +50,7 @@ patternProperties:
+>             - const: qcom,sm8350-dp
+> 
+>     "^dsi@[0-9a-f]+$":
+> -    type: object
+> -    additionalProperties: true
+> -
+> -    properties:
+> -      compatible:
+> -        items:
+> -          - const: qcom,sm8550-dsi-ctrl
+> -          - const: qcom,mdss-dsi-ctrl
+> +    $ref: ../dsi-controller-main.yaml#
+> 
+> With above unified reference change, it will be easier for other 
+> developers to reference bindings files next time.
+> Also dsi@[0-9a-f] node in mdss node will be correctly fully described.
 
-The header is included from the sysroot of the toolchain, using version
-6.5.6.
-I'm using glibc 2.37 with a toolchain built from Buildroot.
+No, this does not make sense and allows anything as dsi. It is opposite
+of what we want in bindings, so NAK.
 
-The problem seems to be, that __USE_TIME_BITS64 is not defined even
-though riscv32 uses 64-bit time.
-__BITS_PER_LONG is set to 32 & __KERNEL__ is (of course) undefined in
-userspace.
-The userspace therefore uses 64-bit values as opposed to the kernel,
-which uses 32-bit values.
+>>
+>>> In my opinion if the example have "#address-cells" "#size-cells", then
+>>> it's better to also include "panel@0" with "reg = <0>" to not confuse.
+>>
+>> It is already there, see dsi-controller.yaml.
+>>
+>>>>> 3. Too many bindings files for driver "qcom,mdss-dsi-ctrl", shall we align them into 1 binding files.
+>>>>
+>>>> There is just one.
+>>> Currently I mentioned bindings files was searched the compatible
+>>> "qcom,mdss-dsi-ctrl", and find binding docs like "qcom,sm8550-mdss.yaml"
+>>> "qcom,sm8450-mdss.yaml" etc.
+>>> There is duplicate information on "qcom,sm8550-mdss.yaml" etc, while
+>>> "qcom,mdss-common.yaml" is not common enough for my understanding.
+>>
+>> If you had compared the qcom,SOC-mdss.yaml, you would have seen that
+>> they provide tight binding between compatible strings used for all the
+>> subblocks. The `mdss-common.yaml` describes MDSS common properties. It
+>> describes everything except the platform specifics. It can not be made
+>> more common. And there is no duplication.
+>>
+>> If you think you can improve the bindings, please send the patches.
+> I am thinking of a unified qcom,mdss.yaml instead of "qcom,*each 
+> SOC*-mdss.yaml". I will try to have a patch.
 
-__USE_TIME_BITS64 is only set when __TIMESIZE is set to 32. [1]
-Under riscv32, the default value of 64 is used. [2]
+I asked first of you to read previous discussions. If you still insist
+on sending patch for this, it means you did not read them.
+
+How you wrote this idea, sounds like exactly opposite of what we were
+doing and what I was recommending few times on the list, so it is very
+likely I will NAK it.
+
+>> They must pass the `make dt_binding_check` check.
+> Thx for the remind.
+
+And follow bindings guidelines.
+
+>>
+>>>>> 4. enhance the dtc warning check if we still want to have "#address-cells" "#size-cells" even if there is no "panel@0" attached.
+>>>>
+>>>> In my opinion this is a way to go, if any. Did you include devicetree@ ML and the corresponding maintainers into the discussion?
+>>> Already included devicetree@ ML at the very beginning.
+>>
+>> Good, thanks for the confirmation.
+>>
+>>> If the required properties part in each yaml is marked good enough, I
+>>> think it can be an input for avoid unnecessary dtc warnings.
+>>
+>> Patches are welcome.
+> Improving developer efficiency with unnecessary warnings is one of my 
+> interest as well.
+> First of all, I'd better to make sure "Required properties" attribute in 
+> current bindings are good enough. Let me try to get back on this in a 
+
+I don't understand why do you keep mentioning the "required properties".
+They have nothing to do with any of this here.
 
 
-[1]
-https://sourceware.org/git/?p=3Dglibc.git;a=3Dblob;f=3Dsysdeps/unix/sysv/li=
-nux/features-time64.h;h=3Daf9d84daa7dfe4174e9f977b2c76c5c0df1ce47b;hb=3Dref=
-s/tags/glibc-2.37
-[2]
-https://sourceware.org/git/?p=3Dglibc.git;a=3Dblob_plain;f=3Dbits/timesize.=
-h;hb=3Drefs/tags/glibc-2.37
 
---=20
-Antonios Salios
-Software Engineer
+Best regards,
+Krzysztof
 
-MachineWare GmbH | www.machineware.de
-H=C3=BChnermarkt 19, 52062 Aachen, Germany
-Amtsgericht Aachen HRB25734
-
-Gesch=C3=A4ftsf=C3=BChrung
-Lukas J=C3=BCnger
-Dr.-Ing. Jan Henrik Weinstock
