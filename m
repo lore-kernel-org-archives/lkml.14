@@ -1,72 +1,79 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16BA46FB9
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 06:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R301e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0VywbA6j_1703138595;
-Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VywbA6j_1703138595)
-          by smtp.aliyun-inc.com;
-          Thu, 21 Dec 2023 14:03:55 +0800
-From: Jing Zhang <renyu.zj@linux.alibaba.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: kajoljain <kjain@linux.ibm.com>,
-	Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
-	Ian Rogers <irogers@google.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D544DBA29;
+	Thu, 21 Dec 2023 06:05:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
+X-QQ-mid: bizesmtp89t1703138658te87spac
+Received: from HX01040022.powercore.com.cn ( [223.112.234.130])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 21 Dec 2023 14:04:16 +0800 (CST)
+X-QQ-SSF: 01400000000000B0B000000A0000000
+X-QQ-FEAT: J5JfekO1Wsjz5NyORLhPTRxZaCE3ofmeLpw7waOCn0XanAKdVpbp6hjumU7+6
+	9tm+uoKbGjbWvocQsCJQqDgCb6NdSwtUoXMRpF0EUIhsTAekCAhL43wbcyg11T6OLZFBJWy
+	7LFfKCTEAFaCKUdAxRVtF8Rg3D00GuLvJvCbFeG1pQTebdrOBp3RRKEUibkaMx1JtQaMGhI
+	L5kNuPOoBudZBpYBfWj7mXMQN+dYU77jMzQjTn5rSRyTG1jrGEdDq9hQODtoX1v/oRauH5L
+	8DWsXqbDttDtBfccK3cGTpqKd36Mag8FRuqGWA+J3cQXBNcNB9rtJKX9Qi3fxCE3QYuub9B
+	c4O8w/eGUdq/ZIrtVbstgRJ9OSnEtx8qggpf5zB7FxrplQVnAyI/pgwd4oskx4QuAiz99w/
+	FcaZnt1NLoeDIQvLrrB4fQ==
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 4835634459533132483
+From: "JiaLong.Yang" <jialong.yang@shingroup.cn>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
-	linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH] perf vendor events: Remove UTF-8 characters from cmn.json
-Date: Thu, 21 Dec 2023 14:03:13 +0800
-Message-Id: <1703138593-50486-1-git-send-email-renyu.zj@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>
+Cc: shenghui.qu@shingroup.cn,
+	ke.zhao@shingroup.cn,
+	zhijie.ren@shingroup.cn,
+	"JiaLong.Yang" <jialong.yang@shingroup.cn>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V0 RESEND] tools/perf: Add PVN for HX-C2000 CPU with Power8 Architecture
+Date: Thu, 21 Dec 2023 14:02:41 +0800
+Message-Id: <20231221060242.4532-1-jialong.yang@shingroup.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz6a-1
 
-cmn.json contains UTF-8 characters in brief description which
-could break the perf build on some distros.
+HX-C2000 is a new CPU made by HEXIN Technologies Co., Ltd. And a new
+PVN 0x0066 has been applied from the OpenPower Community for this CPU. Here is
+a patch to make perf tool run in the CPU.
 
-Fix this issue by removing the UTF-8 characters from cmn.json.
-
-without the fix:
-$find tools/perf/pmu-events/ -name "*.json" | xargs file -i | grep -v us-ascii
-tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json:                   application/json; charset=utf-8
-
-with the fix:
-$file -i tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
-tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json: text/plain; charset=us-ascii
-
-Fixes: 0b4de7bdf46c5215 ("perf jevents: Add support for Arm CMN PMU aliasing")
-Reported-by: Arnaldo Carvalho de Melo <acme@kernel.com>
-Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+Signed-off-by: JiaLong.Yang <jialong.yang@shingroup.cn>
 ---
- tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Here tells detail info.
+Link: https://lore.kernel.org/all/20231129075845.57976-1-ke.zhao@shingroup.cn/
 
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
-index 428605c..5ec157c 100644
---- a/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/cmn.json
-@@ -107,7 +107,7 @@
- 		"EventName": "hnf_qos_hh_retry",
- 		"EventidCode": "0xe",
- 		"NodeType": "0x5",
--		"BriefDescription": "Counts number of times a HighHigh priority request is protocolretried at the HN‑F.",
-+		"BriefDescription": "Counts number of times a HighHigh priority request is protocolretried at the HN-F.",
- 		"Unit": "arm_cmn",
- 		"Compat": "(434|436|43c|43a).*"
- 	},
+ tools/perf/pmu-events/arch/powerpc/mapfile.csv | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/tools/perf/pmu-events/arch/powerpc/mapfile.csv b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
+index f4908af7ad66..599a588dbeb4 100644
+--- a/tools/perf/pmu-events/arch/powerpc/mapfile.csv
++++ b/tools/perf/pmu-events/arch/powerpc/mapfile.csv
+@@ -11,8 +11,7 @@
+ #
+ # Multiple PVRs could map to a single JSON file.
+ #
+-
+-# Power8 entries
+ 0x004[bcd][[:xdigit:]]{4},1,power8,core
++0x0066[[:xdigit:]]{4},1,power8,core
+ 0x004e[[:xdigit:]]{4},1,power9,core
+ 0x0080[[:xdigit:]]{4},1,power10,core
 -- 
-1.8.3.1
+2.25.1
 
