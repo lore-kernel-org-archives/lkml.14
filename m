@@ -1,23 +1,23 @@
 Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC798745C8;
-	Thu, 21 Dec 2023 10:40:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC72A745C7
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 10:40:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Swn5Z3GcXz4xGT;
-	Thu, 21 Dec 2023 21:40:50 +1100 (AEDT)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Swn5d1l6lz4xPQ;
+	Thu, 21 Dec 2023 21:40:53 +1100 (AEDT)
 From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Jakub Kicinski <kuba@kernel.org>, Vladimir Oltean <vladimir.oltean@nxp.com>, David Heidelberg <david@ixit.cz>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20231212184515.82886-2-david@ixit.cz>
-References: <20231212184515.82886-2-david@ixit.cz>
-Subject: Re: [RESEND PATCH] powerpc/fsl: fix the schema check errors for fsl,tmu-calibration
-Message-Id: <170315510024.2192823.6759883781736803779.b4-ty@ellerman.id.au>
+To: linuxppc-dev@lists.ozlabs.org, Michael Ellerman <mpe@ellerman.id.au>
+Cc: linux-kernel@vger.kernel.org, oss@buserror.net, christophe.leroy@csgroup.eu
+In-Reply-To: <20231205051239.737384-1-mpe@ellerman.id.au>
+References: <20231205051239.737384-1-mpe@ellerman.id.au>
+Subject: Re: [PATCH] MAINTAINERS: powerpc: Transfer PPC83XX to Christophe
+Message-Id: <170315510011.2192823.14998930570584611588.b4-ty@ellerman.id.au>
 Date: Thu, 21 Dec 2023 21:38:20 +1100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -28,16 +28,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On Tue, 12 Dec 2023 19:44:58 +0100, David Heidelberg wrote:
-> fsl,tmu-calibration is in u32-matrix. Use matching property syntax.
-> No functional changes. Fixes warnings as:
-> ...
+On Tue, 05 Dec 2023 16:12:39 +1100, Michael Ellerman wrote:
+> Christophe volunteered[1] to maintain PPC83XX.
 > 
-> [...]
+> 1: https://lore.kernel.org/all/7b1bf4dc-d09d-35b8-f4df-16bf00429b6d@csgroup.eu/
+> 
+> 
 
 Applied to powerpc/next.
 
-[1/1] powerpc/fsl: fix the schema check errors for fsl,tmu-calibration
-      https://git.kernel.org/powerpc/c/9ec1d7486e2520b4898d7f8e1ec3acc7c13c8dc8
+[1/1] MAINTAINERS: powerpc: Transfer PPC83XX to Christophe
+      https://git.kernel.org/powerpc/c/4cb3e3ec23fa33a0f58ff133d5aedd26a50356ef
 
 cheers
