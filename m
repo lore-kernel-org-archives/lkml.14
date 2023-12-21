@@ -1,248 +1,191 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D18B678;
-	Thu, 21 Dec 2023 06:55:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFDBBC2C6;
+	Thu, 21 Dec 2023 06:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="tH2ZQ6jb";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="iyvzNrsz"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C54801FB4B;
-	Thu, 21 Dec 2023 06:55:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1703141718; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=DGshl1nIv+V2hgUd9EI06Ue9Fk3LWdPOqDuKRxW6D+M=;
-	b=tH2ZQ6jb69HuxgSd9wmqGtc4zcib0YKZzAlR7P/ooP4BncGo8I2/81/8OapD+mlu23b4It
-	ajZ8rVRAHps66pnQjswGHKz6f/0C+wzJaEo+azNBIjaS3/z4pxybQ0LY/gtvafMqC03TYb
-	LtUTfHOgbl8hW9caJkneuyCLOfFp4aM=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1703141717; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=DGshl1nIv+V2hgUd9EI06Ue9Fk3LWdPOqDuKRxW6D+M=;
-	b=iyvzNrsz4mgaEwXIFBkZ2kNKmXPXFU+LperFQPZLBsjmIUMzubVXUNskDllZ3UeiEerwDz
-	zRyEALFButIcY0w0qSkpw3SfqY7TfMAK0bzaKLJ7DrioDp8hZRgXj8xniYFff8MEGJVIPS
-	xZKxbZ0KsuHg5W//Cyf3M1spBorT36w=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9FD0113725;
-	Thu, 21 Dec 2023 06:55:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 0/QrJVXhg2WEDQAAD6G6ig
-	(envelope-from <jgross@suse.com>); Thu, 21 Dec 2023 06:55:17 +0000
-Message-ID: <1d5b5559-b23d-47cc-9c8d-0badf0c21482@suse.com>
-Date: Thu, 21 Dec 2023 07:55:16 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b2bfbSOH"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5c66b093b86so1181919a12.0;
+        Wed, 20 Dec 2023 22:56:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703141802; x=1703746602; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UEtEt++hhmQprHsmNzuao+3x/xY9EBfmLNIQ2caP2ME=;
+        b=b2bfbSOHrtWP0FEqxOX3TCEXIUNR/0OlKn0bQy/LMmibG8bwl2DuxcUVlIy4kJ9Wlu
+         C4apg1zHM4eGgWPj8w4pUmJi9qgZVGbU6fUxN1xbn2t5VQqIV9q5AzV8ecvWhlDGAGNT
+         UQZNi3FOhz5IKGO1SSCBI+cpmadqgypxcWeUnoI2uP9qVhu4L3RbqpJFETxbqNe+cwlR
+         ryCc7NHp3jrhoDrM7/VVDDXN7gQjN6IGbaY1qRin/ykPpfbwDkeY5yjrNKeH4c/Q+IaV
+         tP4maWxruf6R4NMxRe7zu75xs8DSLffkSuJ3XEjpYdfOwk02fxU4L6iQ37qqcW9Xl/+/
+         4w0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703141802; x=1703746602;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UEtEt++hhmQprHsmNzuao+3x/xY9EBfmLNIQ2caP2ME=;
+        b=bYQCjwaEmzTkp1eLGLA83lHWGnfNV5/TnfLKC3ZH74XG2e1zY2SGizyOA2wOXbuOGI
+         A+Nrq64+3ZnvcUBakGSj1WxwDLJWn4Bp1nmN8pYurOAV7HmeaCT6dlurGz7TZb/FGtW6
+         bO1fXKXvc0CheCl7BZFrtHSHkLSuZfSM06FMmEPIUQRNPLJGI3iCIOn5yP3T+fbTX/KT
+         NmA7lwsCYySVKLV3EgxteKglc/w9jogDyH6LyWWcrNlZ1XyrChhPZnWT1H0uTGeHGLtB
+         nG6tGgPctBfgI3n4lx8cweEHQmGPPndomYCLtbhs8u0H5byvOx/lbrrmEKHpzLWBV6iv
+         pynw==
+X-Gm-Message-State: AOJu0YxQ4b8bYMK3fx3NSZN0cfaIQi/dMabfr5o/gtZvuPt7gSL7Ua5B
+	FGHjfHs18h3HaCYegFRUi5s=
+X-Google-Smtp-Source: AGHT+IGOcBb85kPB2NAjer3W1zoymTt2tLScYSZwOMMxzAbb+/4OGwChG9GHN9fy0S6j858l24HXEw==
+X-Received: by 2002:a17:90a:df14:b0:28b:bdf1:fd25 with SMTP id gp20-20020a17090adf1400b0028bbdf1fd25mr313549pjb.11.1703141801836;
+        Wed, 20 Dec 2023 22:56:41 -0800 (PST)
+Received: from archie.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id so17-20020a17090b1f9100b0028658c6209dsm4890665pjb.2.2023.12.20.22.56.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Dec 2023 22:56:41 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id E694B101D8A8C; Thu, 21 Dec 2023 13:56:36 +0700 (WIB)
+Date: Thu, 21 Dec 2023 13:56:36 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Max Kellermann <max.kellermann@ionos.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux CGroups <cgroups@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] kernel/cgroup: use kernfs_create_dir_ns()
+Message-ID: <ZYPhpKOewFkYIDFL@archie.me>
+References: <20231208093310.297233-1-max.kellermann@ionos.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drivers/block/xen-blkback/common.h: Fix spelling typo in
- comment
-Content-Language: en-US
-To: YouHong Li <liyouhong@kylinos.cn>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- k2ci <kernel-bot@kylinos.cn>
-References: <20231221030014.1319663-1-liyouhong@kylinos.cn>
-From: Juergen Gross <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <20231221030014.1319663-1-liyouhong@kylinos.cn>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------QDaL28BRIsd15DQ5NKjwAGDO"
-X-Spam-Level: 
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -2.18
-X-Spamd-Result: default: False [-2.18 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 XM_UA_NO_VERSION(0.01)[];
-	 FROM_HAS_DN(0.00)[];
-	 RCPT_COUNT_THREE(0.00)[4];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.20)[multipart/signed,multipart/mixed,text/plain];
-	 HAS_ATTACHMENT(0.00)[];
-	 BAYES_SPAM(0.01)[44.17%];
-	 MIME_BASE64_TEXT_BOGUS(1.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 MIME_BASE64_TEXT(0.10)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[kylinos.cn:email];
-	 SIGNED_PGP(-2.00)[];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+,1:+,2:+,3:+,4:~,5:~];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 MIME_UNKNOWN(0.10)[application/pgp-keys]
-X-Spam-Flag: NO
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="MF3osqI6+GUgm1Na"
+Content-Disposition: inline
+In-Reply-To: <20231208093310.297233-1-max.kellermann@ionos.com>
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------QDaL28BRIsd15DQ5NKjwAGDO
-Content-Type: multipart/mixed; boundary="------------RBvB2gDZTrgQLbBDXrXNViSP";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: YouHong Li <liyouhong@kylinos.cn>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- k2ci <kernel-bot@kylinos.cn>
-Message-ID: <1d5b5559-b23d-47cc-9c8d-0badf0c21482@suse.com>
-Subject: Re: [PATCH] drivers/block/xen-blkback/common.h: Fix spelling typo in
- comment
-References: <20231221030014.1319663-1-liyouhong@kylinos.cn>
-In-Reply-To: <20231221030014.1319663-1-liyouhong@kylinos.cn>
 
---------------RBvB2gDZTrgQLbBDXrXNViSP
-Content-Type: multipart/mixed; boundary="------------k31GFwE0RIXkVcwxsb3sLX8m"
-
---------------k31GFwE0RIXkVcwxsb3sLX8m
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
-
-T24gMjEuMTIuMjMgMDQ6MDAsIFlvdUhvbmcgTGkgd3JvdGU6DQo+IEZyb206IGxpeW91aG9u
-ZyA8bGl5b3Vob25nQGt5bGlub3MuY24+DQo+IA0KPiBGaXggc3BlbGxpbmcgdHlwbyBpbiBj
-b21tZW50Lg0KPiANCj4gUmVwb3J0ZWQtYnk6IGsyY2kgPGtlcm5lbC1ib3RAa3lsaW5vcy5j
-bj4NCj4gU2lnbmVkLW9mZi1ieTogbGl5b3Vob25nIDxsaXlvdWhvbmdAa3lsaW5vcy5jbj4N
-Cj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Jsb2NrL3hlbi1ibGtiYWNrL2NvbW1vbi5o
-IGIvZHJpdmVycy9ibG9jay94ZW4tYmxrYmFjay9jb21tb24uaA0KPiBpbmRleCA0MGY2N2Jm
-YzA1MmQuLmM2NDI1M2QzYmI0MCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ibG9jay94ZW4t
-YmxrYmFjay9jb21tb24uaA0KPiArKysgYi9kcml2ZXJzL2Jsb2NrL3hlbi1ibGtiYWNrL2Nv
-bW1vbi5oDQo+IEBAIC0xMzIsNyArMTMyLDcgQEAgc3RydWN0IGJsa2lmX3g4Nl8zMl9yZXF1
-ZXN0IHsNCj4gICBzdHJ1Y3QgYmxraWZfeDg2XzY0X3JlcXVlc3Rfcncgew0KPiAgIAl1aW50
-OF90ICAgICAgICBucl9zZWdtZW50czsgIC8qIG51bWJlciBvZiBzZWdtZW50cyAgICAgICAg
-ICAgICAgICAgICAqLw0KPiAgIAlibGtpZl92ZGV2X3QgICBoYW5kbGU7ICAgICAgIC8qIG9u
-bHkgZm9yIHJlYWQvd3JpdGUgcmVxdWVzdHMgICAgICAgICAqLw0KPiAtCXVpbnQzMl90ICAg
-ICAgIF9wYWQxOyAgICAgICAgLyogb2Zmc2V0b2YoYmxraWZfcmVxZXN0Li4sdS5ydy5pZCk9
-PTggICovDQo+ICsJdWludDMyX3QgICAgICAgX3BhZDE7ICAgICAgICAvKiBvZmZzZXRvZihi
-bGtpZl9yZXF1ZXN0Li4sdS5ydy5pZCk9PTggICovDQoNClBsZWFzZSBrZWVwIHRoZSAiKi8i
-IGFsaWduZWQgd2l0aCB0aGUgb25lcyBhYm92ZSBhbmQgYmVsb3cuDQoNCj4gICAJdWludDY0
-X3QgICAgICAgaWQ7DQo+ICAgCWJsa2lmX3NlY3Rvcl90IHNlY3Rvcl9udW1iZXI7Lyogc3Rh
-cnQgc2VjdG9yIGlkeCBvbiBkaXNrIChyL3cgb25seSkgICovDQo+ICAgCXN0cnVjdCBibGtp
-Zl9yZXF1ZXN0X3NlZ21lbnQgc2VnW0JMS0lGX01BWF9TRUdNRU5UU19QRVJfUkVRVUVTVF07
-DQoNCg0KSnVlcmdlbg0K
---------------k31GFwE0RIXkVcwxsb3sLX8m
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
+--MF3osqI6+GUgm1Na
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+On Fri, Dec 08, 2023 at 10:33:09AM +0100, Max Kellermann wrote:
+> By passing the fsugid to kernfs_create_dir_ns(), we don't need
+> cgroup_kn_set_ugid() any longer.  That function was added for exactly
+> this purpose by commit 49957f8e2a43 ("cgroup: newly created dirs and
+> files should be owned by the creator").
+>=20
+> Eliminating this piece of duplicate code means we benefit from future
+> improvements to kernfs_create_dir_ns(); for example, both are lacking
+> S_ISGID support currently, which my next patch will add to
+> kernfs_create_dir_ns().  It cannot (easily) be added to
+> cgroup_kn_set_ugid() because we can't dereference struct kernfs_iattrs
+> from there.
+>=20
+> Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+> Acked-by: Tejun Heo <tj@kernel.org>
+> --
+> v1 -> v2: 12-digit commit id
+> ---
+>  kernel/cgroup/cgroup.c | 31 ++++---------------------------
+>  1 file changed, 4 insertions(+), 27 deletions(-)
+>=20
+> diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+> index 4b9ff41ca603..a844b421fd83 100644
+> --- a/kernel/cgroup/cgroup.c
+> +++ b/kernel/cgroup/cgroup.c
+> @@ -4169,20 +4169,6 @@ static struct kernfs_ops cgroup_kf_ops =3D {
+>  	.seq_show		=3D cgroup_seqfile_show,
+>  };
+> =20
+> -/* set uid and gid of cgroup dirs and files to that of the creator */
+> -static int cgroup_kn_set_ugid(struct kernfs_node *kn)
+> -{
+> -	struct iattr iattr =3D { .ia_valid =3D ATTR_UID | ATTR_GID,
+> -			       .ia_uid =3D current_fsuid(),
+> -			       .ia_gid =3D current_fsgid(), };
+> -
+> -	if (uid_eq(iattr.ia_uid, GLOBAL_ROOT_UID) &&
+> -	    gid_eq(iattr.ia_gid, GLOBAL_ROOT_GID))
+> -		return 0;
+> -
+> -	return kernfs_setattr(kn, &iattr);
+> -}
+> -
+>  static void cgroup_file_notify_timer(struct timer_list *timer)
+>  {
+>  	cgroup_file_notify(container_of(timer, struct cgroup_file,
+> @@ -4195,25 +4181,18 @@ static int cgroup_add_file(struct cgroup_subsys_s=
+tate *css, struct cgroup *cgrp,
+>  	char name[CGROUP_FILE_NAME_MAX];
+>  	struct kernfs_node *kn;
+>  	struct lock_class_key *key =3D NULL;
+> -	int ret;
+> =20
+>  #ifdef CONFIG_DEBUG_LOCK_ALLOC
+>  	key =3D &cft->lockdep_key;
+>  #endif
+>  	kn =3D __kernfs_create_file(cgrp->kn, cgroup_file_name(cgrp, cft, name),
+>  				  cgroup_file_mode(cft),
+> -				  GLOBAL_ROOT_UID, GLOBAL_ROOT_GID,
+> +				  current_fsuid(), current_fsgid(),
+>  				  0, cft->kf_ops, cft,
+>  				  NULL, key);
+>  	if (IS_ERR(kn))
+>  		return PTR_ERR(kn);
+> =20
+> -	ret =3D cgroup_kn_set_ugid(kn);
+> -	if (ret) {
+> -		kernfs_remove(kn);
+> -		return ret;
+> -	}
+> -
+>  	if (cft->file_offset) {
+>  		struct cgroup_file *cfile =3D (void *)css + cft->file_offset;
+> =20
+> @@ -5616,7 +5595,9 @@ static struct cgroup *cgroup_create(struct cgroup *=
+parent, const char *name,
+>  		goto out_cancel_ref;
+> =20
+>  	/* create the directory */
+> -	kn =3D kernfs_create_dir(parent->kn, name, mode, cgrp);
+> +	kn =3D kernfs_create_dir_ns(parent->kn, name, mode,
+> +				  current_fsuid(), current_fsgid(),
+> +				  cgrp, NULL);
+>  	if (IS_ERR(kn)) {
+>  		ret =3D PTR_ERR(kn);
+>  		goto out_stat_exit;
+> @@ -5761,10 +5742,6 @@ int cgroup_mkdir(struct kernfs_node *parent_kn, co=
+nst char *name, umode_t mode)
+>  	 */
+>  	kernfs_get(cgrp->kn);
+> =20
+> -	ret =3D cgroup_kn_set_ugid(cgrp->kn);
+> -	if (ret)
+> -		goto out_destroy;
+> -
+>  	ret =3D css_populate_dir(&cgrp->self);
+>  	if (ret)
+>  		goto out_destroy;
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+No noticeable regressions with this patch applied.
 
---------------k31GFwE0RIXkVcwxsb3sLX8m--
+Tested-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
---------------RBvB2gDZTrgQLbBDXrXNViSP--
+--=20
+An old man doll... just what I always wanted! - Clara
 
---------------QDaL28BRIsd15DQ5NKjwAGDO
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+--MF3osqI6+GUgm1Na
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmWD4VQFAwAAAAAACgkQsN6d1ii/Ey8F
-ywf/U+xtuHhBlVGoLLdG9kfdRRL91VjUzmRC68ABUlyZzR0UlwBAoRrPLjxtRNE/X+XmT7m2Fl17
-jWqdezi/v113y9T7nS8VhxEsvzdGBCIAZAmzqtkBj5rZWsyk6Sp3smWIIGhI6zSanIN30GRYgb4z
-5BJxfuVNNZoE+Mh5+JlOZKQJ+2yeFxDmRRjOs0BFSyfGGgOkamxVFgSZNTE9RWyCiiDW/c4Xt+KG
-uAgbjhOzfVSaTYYIq3nL6PCIPT6ahQ/8kD76eBD3rkXBCeridCvI2J+lU/el4peTustv6nXFnaCv
-CfiWw1VczTj+WYbLwqEblLQiO1dW7Prt+XPAF9pj5Q==
-=ddpK
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZYPhnwAKCRD2uYlJVVFO
+o90vAQDDn55gsGPiaCKeuPg75TssDbT5TrTVA4bncC2D1RsxcAEAxMKDFyns+uYR
+wZ6IxDR+1liL6ADVLXNTLi1xVPi5OA8=
+=FLCG
 -----END PGP SIGNATURE-----
 
---------------QDaL28BRIsd15DQ5NKjwAGDO--
+--MF3osqI6+GUgm1Na--
