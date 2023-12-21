@@ -1,65 +1,75 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A505990D;
-	Thu, 21 Dec 2023 17:11:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA76562805;
+	Thu, 21 Dec 2023 17:11:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g/Ks9dfX"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40c6ea99429so11290215e9.3;
-        Thu, 21 Dec 2023 09:11:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mUFviwBD"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-553eb74df60so1228638a12.0;
+        Thu, 21 Dec 2023 09:11:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703178704; x=1703783504; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1703178713; x=1703783513; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3hihuwD9LbPKxqf+5u/wIYAygOzw3x2ScxGnztieWIY=;
-        b=g/Ks9dfXIIRlAeccp1BL6Hc+uoIGLlwxajFeImZtV0TTPG2n/+RWHLuGHgVaLBTb4P
-         uccFoARcW26L7aDOTB3JSKh+lOk9Aci3+Qovryxhit7LQ6HzkPg2AdnjpwnGgbYvwKUU
-         3tfvHDpseJk696liEfp8TA3s0Vkn/9k9LyunA5jR62EvbyUVKo6ETbolTNRaVfeCyysv
-         +HMmIXJsDxaS4C8H49cW1zFYx23519wWrNQTShCPO85nNo1mIO9r7b3loNRXjYAE1x0M
-         4aOTj8AWJMenS/t9/V2PfQHTLOhVsCU9PiGmEtISFZ1pvOYGHRU1gYAQ1bJVGA1NUGeY
-         HykA==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8c7qdOK44Erw1rd2N9Dkc3C/rkBrTjfjshoie/DwZvs=;
+        b=mUFviwBDk+rBD0Cigr7Ej1YqAFjUeW9dpF+t6QeI6n6ppzg3OrDoWqq4wOiWKrDMgU
+         QI0bXw9Y70sxTTp12n/v86SeMKdw6qTyARCSit+yHJlNyopV2GkLcW7IwVpEDTV6mvAw
+         y1BUTSs1GCulkEENA7QX7AVSPjFNt+s9Kgf5EeNJ3L+ttgt9Zck9qSCY6ieMdRrenA0P
+         iYFFYRTyT0dgSxyYck4huvBZTts5Xk/PJ5Af1Ya6KByOa7xSa048a9sAp5HlFrOuqlpM
+         5gMJGtArxsmU9+fodaU4Mga4JwvSl55VVyNtlUDcNYC7p1MPx2lPGJfTQZ+fbZ5u9KIT
+         4zbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703178704; x=1703783504;
+        d=1e100.net; s=20230601; t=1703178713; x=1703783513;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3hihuwD9LbPKxqf+5u/wIYAygOzw3x2ScxGnztieWIY=;
-        b=I+0hY+zeF/kFcPXjwRur8bBXW06ILEQqdMch6bXNlmxlAWXd5lSTAsaiHEtot2MnEO
-         +olIJGnQsaVz5GjOj2bjGmfaw3g9fbOlmcF0/gCXOidLZISbZDyUFgbpZFT/0+3oGppd
-         FA+ZTqKHGmMEzR3TTR+HdLNvmInVSIzNSb7d/p4cVnABuo1J4/oEu1MrArojqbrYOfY2
-         p5dD6aApeOFbA37dOJLHaNfFC8T0JKSn1Rf5yXWivpx7WRB4bpryZ40UmdPOFzkIV6z3
-         wJ0ChozBSp7JB9+j6RCpd3jFiNdUd/NqM7wEJbw5jj/GdvjgWLZclMr888ZdTkyq0TTW
-         siCA==
-X-Gm-Message-State: AOJu0YypXUqaKhI48mu/5p220ZwaR7xfB1BFNcZnxuagZxecKOegA05S
-	sjidWfRZ6DjenICilP4lfhk=
-X-Google-Smtp-Source: AGHT+IGBLVnxRHlRMvofJQB+iAIQbr0MCLIkNX2d66hvC70LVg7/zeoDCXf5ihKWKFF0V53VJ9pg5Q==
-X-Received: by 2002:a05:600c:b8f:b0:40c:3548:1f0e with SMTP id fl15-20020a05600c0b8f00b0040c35481f0emr15196wmb.64.1703178704340;
-        Thu, 21 Dec 2023 09:11:44 -0800 (PST)
-Received: from localhost.localdomain (host-95-250-248-68.retail.telecomitalia.it. [95.250.248.68])
-        by smtp.googlemail.com with ESMTPSA id m20-20020a05600c4f5400b0040c44b4a282sm4020727wmq.43.2023.12.21.09.11.42
+        bh=8c7qdOK44Erw1rd2N9Dkc3C/rkBrTjfjshoie/DwZvs=;
+        b=n7VlwyqyTCc5jBAk7Xvsevj70aCd08ecfYc/ULRg0Wl9D30m/3uuVs6f8vV6HOiOMl
+         QfmlGmgJ3katSmXKkSeG2L/bKz9qSUY+Yml3oiZX0lqmLAC/Pw61EwVOdGBO4E0VqJ1z
+         mEaLe+NLblFaKiR6v0MYEqy/lyNOoHJqIlvqNZ1N5fKa9MFqzbc4zxScgWfWez2q3q+x
+         f8WUaP2PM1YzKK24ujs5WFLMlhJDFasWo7tn3ALDNSDu5BSuIvZxKO7bfVMKaPge85Ri
+         DB4Ke5UK6Mn4gsoQtV40zf0XOpQmvQvvauKcHczQyxx6U2uC/OuqsSDZuz5q69lqRyJW
+         d0aw==
+X-Gm-Message-State: AOJu0Yytc6zepfRDLk7Trg02x9XRskgmt8uA9z184vGJthckM/ddhU+v
+	e+v4wFarTJ1nzvNZxldUVs4=
+X-Google-Smtp-Source: AGHT+IHNiAZdFnzAEiUdKfNoeSk+geKiEkWgT/aPnMVG9zgCLJmSuW1YXNdZkHxCVKCqsDhOaSRiwg==
+X-Received: by 2002:a50:c057:0:b0:54b:27e7:f965 with SMTP id u23-20020a50c057000000b0054b27e7f965mr12048802edd.19.1703178712653;
+        Thu, 21 Dec 2023 09:11:52 -0800 (PST)
+Received: from localhost.localdomain ([154.72.163.204])
+        by smtp.gmail.com with ESMTPSA id b24-20020a056402139800b0054cb316499dsm1400760edv.10.2023.12.21.09.11.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 09:11:44 -0800 (PST)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>,
-	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Li Zetao <lizetao1@huawei.com>,
+        Thu, 21 Dec 2023 09:11:52 -0800 (PST)
+From: Brandon Cheo Fusi <fusibrandon13@gmail.com>
+To: andre.przywara@arm.com
+Cc: aou@eecs.berkeley.edu,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	fusibrandon13@gmail.com,
+	jernej.skrabec@gmail.com,
+	krzysztof.kozlowski+dt@linaro.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-leds@vger.kernel.org
-Subject: [PATCH v6 2/2] docs: ABI: sysfs-class-led-trigger-netdev: Document now hidable link_*
-Date: Thu, 21 Dec 2023 18:11:25 +0100
-Message-Id: <20231221171125.1732-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20231221171125.1732-1-ansuelsmth@gmail.com>
-References: <20231221171125.1732-1-ansuelsmth@gmail.com>
+	linux-pm@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	rafael@kernel.org,
+	robh+dt@kernel.org,
+	samuel@sholland.org,
+	sfr@canb.auug.org.au,
+	tiny.windzz@gmail.com,
+	viresh.kumar@linaro.org,
+	wens@csie.org
+Subject: Re: [RFC PATCH v2 2/3] cpufreq: sun50i: Add support for D1's speed bin decoding
+Date: Thu, 21 Dec 2023 18:11:07 +0100
+Message-Id: <20231221171107.85991-1-fusibrandon13@gmail.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20231221124957.27fa9922@donnerap.manchester.arm.com>
+References: <20231221124957.27fa9922@donnerap.manchester.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,80 +79,139 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Document now hidable link speed modes for the LED netdev trigger.
+On Thu, Dec 21, 2023 at 1:50 PM Andre Przywara <andre.przywara@arm.com> wrote:
+>
+> On Thu, 21 Dec 2023 11:10:12 +0100
+> Brandon Cheo Fusi <fusibrandon13@gmail.com> wrote:
+>
+> Hi Brandon,
+>
+> thanks for the quick turnaround, and for splitting this code up, that
+> makes reasoning about this much easier!
+>
+> > Adds support for decoding the efuse value read from D1 efuse speed
+> > bins, and factors out equivalent code for sun50i.
+> >
+> > The algorithm is gotten from
+> >
+> > https://github.com/Tina-Linux/linux-5.4/blob/master/drivers/cpufreq/sun50i-cpufreq-nvmem.c#L293-L338
+> >
+> > and maps an efuse value to either 0 or 1, with 1 meaning stable at
+> > a lower supply voltage for the same clock frequency.
+> >
+> > Signed-off-by: Brandon Cheo Fusi <fusibrandon13@gmail.com>
+> > ---
+> >  drivers/cpufreq/sun50i-cpufreq-nvmem.c | 34 ++++++++++++++++++++++++++
+> >  1 file changed, 34 insertions(+)
+> >
+> > diff --git a/drivers/cpufreq/sun50i-cpufreq-nvmem.c b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
+> > index fc509fc49..b1cb95308 100644
+> > --- a/drivers/cpufreq/sun50i-cpufreq-nvmem.c
+> > +++ b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
+> > @@ -29,6 +29,33 @@ struct sunxi_cpufreq_data {
+> >       u32 (*efuse_xlate)(u32 *speedbin, size_t len);
+> >  };
+> >
+> > +static u32 sun20i_efuse_xlate(u32 *speedbin, size_t len)
+>
+> I feel like this prototype can be shortened to:
+>
+> static u32 sun20i_efuse_xlate(u32 speedbin)
+>
+> See below.
+>
+> > +{
+> > +     u32 ret, efuse_value = 0;
+> > +     int i;
+> > +
+> > +     for (i = 0; i < len; i++)
+> > +             efuse_value |= ((u32)speedbin[i] << (i * 8));
+>
+> The cast is not needed. Looking deeper into the original code you linked
+> to, cell_value[] there is an array of u8, so they assemble a little endian
+> 32-bit integer from *up to* four 8-bit values read from the nvmem.
+>
+> So I think this code here is wrong, len is the size of the nvmem cells
+> holding the bin identifier, in *bytes*, so the idea here is to just read
+> the (lowest) 16 bits (in the D1 case, cf. "reg = <0x00 0x2>;" in the next
+> patch) from this nvmem cell. Here you are combining two 32-bit words into
 
-Link speed modes are now showed only if the named network device
-supports them and are hidden if not.
+This is true. Not sure though what the 'in the D1 case...' bit means.
 
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-Reviewed-by: Marek Behún <kabel@kernel.org>
----
-Changes v6:
-- Add Reviewed-by tag
-Changes v2:
-- Add this patch
+> efuse_value.
+>
+> So I think this whole part above is actually not necessary: we are
+> expecting maximum 32 bits, and nvmem_cell_read() should take care of
+> masking off unrequested bits, so we get the correct value back already. So
+> can you try to remove the loop above, and use ...
+>
+> > +
+> > +     switch (efuse_value) {
+>
+>         switch (*speedbin & 0xffff) {
+>
 
- .../ABI/testing/sysfs-class-led-trigger-netdev       | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Shouldn't the bytes in *speedbin be reversed? 
 
-diff --git a/Documentation/ABI/testing/sysfs-class-led-trigger-netdev b/Documentation/ABI/testing/sysfs-class-led-trigger-netdev
-index a6c307c4befa..ed46b37ab8a2 100644
---- a/Documentation/ABI/testing/sysfs-class-led-trigger-netdev
-+++ b/Documentation/ABI/testing/sysfs-class-led-trigger-netdev
-@@ -88,6 +88,8 @@ Description:
- 		speed of 10MBps of the named network device.
- 		Setting this value also immediately changes the LED state.
- 
-+		Present only if the named network device supports 10Mbps link speed.
-+
- What:		/sys/class/leds/<led>/link_100
- Date:		Jun 2023
- KernelVersion:	6.5
-@@ -101,6 +103,8 @@ Description:
- 		speed of 100Mbps of the named network device.
- 		Setting this value also immediately changes the LED state.
- 
-+		Present only if the named network device supports 100Mbps link speed.
-+
- What:		/sys/class/leds/<led>/link_1000
- Date:		Jun 2023
- KernelVersion:	6.5
-@@ -114,6 +118,8 @@ Description:
- 		speed of 1000Mbps of the named network device.
- 		Setting this value also immediately changes the LED state.
- 
-+		Present only if the named network device supports 1000Mbps link speed.
-+
- What:		/sys/class/leds/<led>/link_2500
- Date:		Nov 2023
- KernelVersion:	6.8
-@@ -127,6 +133,8 @@ Description:
- 		speed of 2500Mbps of the named network device.
- 		Setting this value also immediately changes the LED state.
- 
-+		Present only if the named network device supports 2500Mbps link speed.
-+
- What:		/sys/class/leds/<led>/link_5000
- Date:		Nov 2023
- KernelVersion:	6.8
-@@ -140,6 +148,8 @@ Description:
- 		speed of 5000Mbps of the named network device.
- 		Setting this value also immediately changes the LED state.
- 
-+		Present only if the named network device supports 5000Mbps link speed.
-+
- What:		/sys/class/leds/<led>/link_10000
- Date:		Nov 2023
- KernelVersion:	6.8
-@@ -153,6 +163,8 @@ Description:
- 		speed of 10000Mbps of the named network device.
- 		Setting this value also immediately changes the LED state.
- 
-+		Present only if the named network device supports 10000Mbps link speed.
-+
- What:		/sys/class/leds/<led>/half_duplex
- Date:		Jun 2023
- KernelVersion:	6.5
--- 
-2.40.1
+> here instead? Or drop the pointer at all, and just use one u32 value, see
+> the above prototype.
+>
 
+I was uncomfortable dropping the len parameter, because then each
+platform's efuse_xlate would ignore the number of valid bytes actually
+read.
+
+> Cheers,
+> Andre
+>
+> P.S. This is just a "peephole review" of this patch, I haven't got around
+> to look at this whole scheme in whole yet, to see if we actually need this
+> or can simplify this or clean it up.
+>
+>
+> > +     case 0x5e00:
+> > +             /* QFN package */
+> > +             ret = 0;
+> > +             break;
+> > +     case 0x5c00:
+> > +     case 0x7400:
+> > +             /* QFN package */
+> > +             ret = 1;
+> > +             break;
+> > +     case 0x5000:
+> > +     default:
+> > +             /* BGA package */
+> > +             ret = 0;
+> > +     }
+> > +
+> > +     return ret;
+> > +}
+> > +
+> >  static u32 sun50i_efuse_xlate(u32 *speedbin, size_t len)
+> >  {
+> >       u32 efuse_value = 0;
+> > @@ -46,6 +73,10 @@ static u32 sun50i_efuse_xlate(u32 *speedbin, size_t len)
+> >               return 0;
+> >  }
+> >
+> > +struct sunxi_cpufreq_data sun20i_cpufreq_data = {
+> > +     .efuse_xlate = sun20i_efuse_xlate,
+> > +};
+> > +
+> >  struct sunxi_cpufreq_data sun50i_cpufreq_data = {
+> >       .efuse_xlate = sun50i_efuse_xlate,
+> >  };
+> > @@ -54,6 +85,9 @@ static const struct of_device_id cpu_opp_match_list[] = {
+> >       { .compatible = "allwinner,sun50i-h6-operating-points",
+> >         .data = &sun50i_cpufreq_data,
+> >       },
+> > +     { .compatible = "allwinner,sun20i-d1-operating-points",
+> > +       .data = &sun20i_cpufreq_data,
+> > +     },
+> >       {}
+> >  };
+> >
+>
+
+Thank you for reviewing.
+Brandon.
