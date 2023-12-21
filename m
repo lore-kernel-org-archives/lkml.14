@@ -1,28 +1,55 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832AB73190
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 16:10:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13C46C433CC;
-	Thu, 21 Dec 2023 16:10:03 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1rGLdb-000000041O5-0GxN;
-	Thu, 21 Dec 2023 11:11:07 -0500
-Message-ID: <20231221161106.846599574@goodmis.org>
-User-Agent: quilt/0.67
-Date: Thu, 21 Dec 2023 11:10:40 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
- Vincent Donnefort <vdonnefort@google.com>,
- Kent Overstreet <kent.overstreet@gmail.com>
-Subject: [for-next][PATCH 16/16] ring-buffer: Use subbuf_order for buffer page masking
-References: <20231221161024.478795180@goodmis.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96C155E59;
+	Thu, 21 Dec 2023 16:10:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XVVT+V4W"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 565394000E;
+	Thu, 21 Dec 2023 16:10:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1703175002;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gkK4AF7fmwjohH95nu92SeMkvjofU4OWgRfUvJJb7ok=;
+	b=XVVT+V4WzVh0CEE9G8BJkmzJRuMJPSQ0fYIRuhZoeEavFCYf+D5n6Zado9dytxztGLfT/8
+	huvois90EhKVW2xd3vXCoMdFQ5S+qgQrr/Mii/p065Lwxne1Q86RVhkEsL4swDNJy74sQr
+	yBwIl52k3LlbDMeiitvK8XKNJMj/HU0IHl8rGSVRWI8XnGhnpZYw29azFYWsCAXVFmF2C7
+	jw0vR8P4X8tzsWNHYs9XRasAPRvSGf9ZBktAryAf3iX6/9FmDNl61Cm9ql7qKn3+dfgaYu
+	8QbZph68Rk/3hSO4bYbGr2Nrp+FVsie2NdrLIwAKq3evuE7ED1D/d3eGVwqQdg==
+Date: Thu, 21 Dec 2023 17:10:00 +0100
+From: =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
+ <corbet@lwn.net>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight
+ <russ.weight@linux.dev>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Dent Project
+ <dentproject@linuxfoundation.org>, Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH net-next v2 8/8] net: pse-pd: Add PD692x0 PSE controller
+ driver
+Message-ID: <20231221171000.45310167@kmaincent-XPS-13-7390>
+In-Reply-To: <ffda1003-b752-402e-8e51-e2e24a840cff@sirena.org.uk>
+References: <20231201-feature_poe-v2-0-56d8cac607fa@bootlin.com>
+	<20231201-feature_poe-v2-8-56d8cac607fa@bootlin.com>
+	<20231204225956.GG981228@pengutronix.de>
+	<20231205064527.GJ981228@pengutronix.de>
+	<4b96b8c8-7def-46e5-9c85-d9e925fb9251@sirena.org.uk>
+	<20231205140203.GK981228@pengutronix.de>
+	<88ed0c94-d052-4564-be0c-79a0f502eda8@sirena.org.uk>
+	<20231221163610.47038996@kmaincent-XPS-13-7390>
+	<ffda1003-b752-402e-8e51-e2e24a840cff@sirena.org.uk>
+Organization: bootlin
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -30,102 +57,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: kory.maincent@bootlin.com
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Thu, 21 Dec 2023 15:43:21 +0000
+Mark Brown <broonie@kernel.org> wrote:
 
-The comparisons to PAGE_SIZE were all converted to use the
-buffer->subbuf_order, but the use of PAGE_MASK was missed.
+> On Thu, Dec 21, 2023 at 04:36:10PM +0100, K=C3=B6ry Maincent wrote:
+> > Mark Brown <broonie@kernel.org> wrote: =20
+>=20
+> > > OK...  I mean, if they're not using the regulator framework I'm not s=
+ure
+> > > it has much impact - there are plenty of internal regulators in devic=
+es
+> > > already so it wouldn't be *too* unusual other than the fact that AFAI=
+CT
+> > > this is somewhat split between devices within the subsystem?  Neither=
+ of
+> > > the messages was super clear. =20
+>=20
+> > PSE Power Interface (which is kind of the RJ45 in PSE world) have simil=
+ar
+> > functionalities as regulators. We wondered if registering a regulator f=
+or
+> > each PSE PI (RJ45 ports) is a good idea. The point is that the PSE
+> > controller driver will be its own regulator consumer.
+> > I can't find any example in Linux with such a case of a driver being a
+> > provider and a consumer of its own regulator. This idea of a regulator
+> > biting its own tail seems weird to me. Maybe it is better to implement =
+the
+> > PSE functionalities even if they are like the regulator functionalities=
+. =20
+>=20
+> Is it at all plausible that a system (perhaps an embedded one) might use
+> something other than PSE?
 
-Convert all the PAGE_MASK usages over to:
+Do you mean to supply power to a RJ45 port?
+This can be done with a simple regulator. In that case we use the pse_regul=
+ator
+driver which is a regulator consumer.
+I don't know about other cases. Oleksij do you?
 
-  (PAGE_SIZE << cpu_buffer->buffer->subbuf_order) - 1
-
-Link: https://lore.kernel.org/linux-trace-kernel/20231219173800.66eefb7a@gandalf.local.home
-
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
-Cc: Vincent Donnefort <vdonnefort@google.com>
-Cc: Kent Overstreet <kent.overstreet@gmail.com>
-Fixes: 139f84002145 ("ring-buffer: Page size per ring buffer")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ring_buffer.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 7ee6779bf292..173d2595ce2d 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -2269,11 +2269,13 @@ rb_commit_index(struct ring_buffer_per_cpu *cpu_buffer)
- }
- 
- static __always_inline unsigned
--rb_event_index(struct ring_buffer_event *event)
-+rb_event_index(struct ring_buffer_per_cpu *cpu_buffer, struct ring_buffer_event *event)
- {
- 	unsigned long addr = (unsigned long)event;
- 
--	return (addr & ~PAGE_MASK) - BUF_PAGE_HDR_SIZE;
-+	addr &= (PAGE_SIZE << cpu_buffer->buffer->subbuf_order) - 1;
-+
-+	return addr - BUF_PAGE_HDR_SIZE;
- }
- 
- static void rb_inc_iter(struct ring_buffer_iter *iter)
-@@ -2646,7 +2648,8 @@ rb_move_tail(struct ring_buffer_per_cpu *cpu_buffer,
- 
- /* Slow path */
- static struct ring_buffer_event *
--rb_add_time_stamp(struct ring_buffer_event *event, u64 delta, bool abs)
-+rb_add_time_stamp(struct ring_buffer_per_cpu *cpu_buffer,
-+		  struct ring_buffer_event *event, u64 delta, bool abs)
- {
- 	if (abs)
- 		event->type_len = RINGBUF_TYPE_TIME_STAMP;
-@@ -2654,7 +2657,7 @@ rb_add_time_stamp(struct ring_buffer_event *event, u64 delta, bool abs)
- 		event->type_len = RINGBUF_TYPE_TIME_EXTEND;
- 
- 	/* Not the first event on the page, or not delta? */
--	if (abs || rb_event_index(event)) {
-+	if (abs || rb_event_index(cpu_buffer, event)) {
- 		event->time_delta = delta & TS_MASK;
- 		event->array[0] = delta >> TS_SHIFT;
- 	} else {
-@@ -2728,7 +2731,7 @@ static void rb_add_timestamp(struct ring_buffer_per_cpu *cpu_buffer,
- 		if (!abs)
- 			info->delta = 0;
- 	}
--	*event = rb_add_time_stamp(*event, info->delta, abs);
-+	*event = rb_add_time_stamp(cpu_buffer, *event, info->delta, abs);
- 	*length -= RB_LEN_TIME_EXTEND;
- 	*delta = 0;
- }
-@@ -2812,10 +2815,10 @@ rb_try_to_discard(struct ring_buffer_per_cpu *cpu_buffer,
- 	struct buffer_page *bpage;
- 	unsigned long addr;
- 
--	new_index = rb_event_index(event);
-+	new_index = rb_event_index(cpu_buffer, event);
- 	old_index = new_index + rb_event_ts_length(event);
- 	addr = (unsigned long)event;
--	addr &= PAGE_MASK;
-+	addr &= ~((PAGE_SIZE << cpu_buffer->buffer->subbuf_order) - 1);
- 
- 	bpage = READ_ONCE(cpu_buffer->tail_page);
- 
-@@ -3726,7 +3729,7 @@ rb_decrement_entry(struct ring_buffer_per_cpu *cpu_buffer,
- 	struct buffer_page *bpage = cpu_buffer->commit_page;
- 	struct buffer_page *start;
- 
--	addr &= PAGE_MASK;
-+	addr &= ~((PAGE_SIZE << cpu_buffer->buffer->subbuf_order) - 1);
- 
- 	/* Do the likely case first */
- 	if (likely(bpage->page == (void *)addr)) {
--- 
-2.42.0
-
-
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
