@@ -1,36 +1,36 @@
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB0A5467F;
-	Thu, 21 Dec 2023 09:03:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F3454F88;
+	Thu, 21 Dec 2023 09:03:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JAPYsE3H"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N1n1CC4F"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703149431; x=1734685431;
+  t=1703149432; x=1734685432;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=VvF0PBScwCsWmxl1ZnSXv9NBr/c+xJKpYRCNE4wuI0c=;
-  b=JAPYsE3HN+zpGT3mmErYaHbVMdVszXCcJ2n/AwFxh13PXX8niJN5RAZD
-   nT9+Q3IGlrWOOSbdE85ewAu9GfWUxziyNMiogjjEIx9sl28Z2rSRQ6VBX
-   bjhjF87At5x4mZJccH5ho2C2rFto3HX0GF5RiZC98tOXj3xTHwUohcWOT
-   XFIDtwbBZzCuXxh/HkOCnDwfC8ZyPXZxzk3zJVYX/nizm7YcYeT1gj4qU
-   LW7OrSbRqJFcDq3f07s6cm82MCX9s2fOGJ6eJUDTB+rew520CcEwugQJZ
-   zsWhQrbwDQofgQhKrzd7E3ZKdwwLHSKKaWGw1gGVsLk1d4pVmMOYa7a73
+  bh=F9opDfCZwYUSpXz1rhkoPf6Q6E9dmRJye3dTlxS+ZDs=;
+  b=N1n1CC4F5ObPAITsmi0cegntltIVFM7nezGqCGuhZFQYXB2l9z3YddhF
+   5eDGToU9b38gVTTcJ87/k3a+kKv9dePa0Cwxym11Doc7MUJJlIMKK7oPH
+   J7+K6TGPq05vpdltosm7m6Jttshbn/48D6qwtpzRt86S847yvabndtu+I
+   z4wszExk6W1awXfRtMsAVNMadz6H1/lODSA7LVV1tWDl6bU+t6APX0036
+   eQINKLHWC0iws3d+mpYp1q9U48KlZXq2jj4vLIa5q5buuBb6hFs0CvDfR
+   Jz9gVdrTlljaWJ6zWxtjtwOV8IrvO/BKei5cRvBz5ehxqAEOIX9ySlU3X
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="398729667"
+X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="398729672"
 X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="398729667"
+   d="scan'208";a="398729672"
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
   by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 01:03:45 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="900028565"
+X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="900028625"
 X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="900028565"
+   d="scan'208";a="900028625"
 Received: from 984fee00a5ca.jf.intel.com (HELO embargo.jf.intel.com) ([10.165.9.183])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 01:03:10 -0800
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 01:03:11 -0800
 From: Yang Weijiang <weijiang.yang@intel.com>
 To: seanjc@google.com,
 	pbonzini@redhat.com,
@@ -43,9 +43,9 @@ Cc: peterz@infradead.org,
 	mlevitsk@redhat.com,
 	john.allen@amd.com,
 	weijiang.yang@intel.com
-Subject: [PATCH v8 01/26] x86/fpu/xstate: Always preserve non-user xfeatures/flags in __state_perm
-Date: Thu, 21 Dec 2023 09:02:14 -0500
-Message-Id: <20231221140239.4349-2-weijiang.yang@intel.com>
+Subject: [PATCH v8 19/26] KVM: x86: Use KVM-governed feature framework to track "SHSTK/IBT enabled"
+Date: Thu, 21 Dec 2023 09:02:32 -0500
+Message-Id: <20231221140239.4349-20-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20231221140239.4349-1-weijiang.yang@intel.com>
 References: <20231221140239.4349-1-weijiang.yang@intel.com>
@@ -57,154 +57,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Sean Christopherson <seanjc@google.com>
+Use the governed feature framework to track whether X86_FEATURE_SHSTK
+and X86_FEATURE_IBT features can be used by userspace and guest, i.e.,
+the features can be used iff both KVM and guest CPUID can support them.
 
-When granting userspace or a KVM guest access to an xfeature, preserve the
-entity's existing supervisor and software-defined permissions as tracked
-by __state_perm, i.e. use __state_perm to track *all* permissions even
-though all supported supervisor xfeatures are granted to all FPUs and
-FPU_GUEST_PERM_LOCKED disallows changing permissions.
+TODO: remove this patch once Sean's refactor to "KVM-governed" framework
+is upstreamed. See the work here [*].
 
-Effectively clobbering supervisor permissions results in inconsistent
-behavior, as xstate_get_group_perm() will report supervisor features for
-process that do NOT request access to dynamic user xfeatures, whereas any
-and all supervisor features will be absent from the set of permissions for
-any process that is granted access to one or more dynamic xfeatures (which
-right now means AMX).
+[*]: https://lore.kernel.org/all/20231110235528.1561679-1-seanjc@google.com/
 
-The inconsistency isn't problematic because fpu_xstate_prctl() already
-strips out everything except user xfeatures:
-
-        case ARCH_GET_XCOMP_PERM:
-                /*
-                 * Lockless snapshot as it can also change right after the
-                 * dropping the lock.
-                 */
-                permitted = xstate_get_host_group_perm();
-                permitted &= XFEATURE_MASK_USER_SUPPORTED;
-                return put_user(permitted, uptr);
-
-        case ARCH_GET_XCOMP_GUEST_PERM:
-                permitted = xstate_get_guest_group_perm();
-                permitted &= XFEATURE_MASK_USER_SUPPORTED;
-                return put_user(permitted, uptr);
-
-and similarly KVM doesn't apply the __state_perm to supervisor states
-(kvm_get_filtered_xcr0() incorporates xstate_get_guest_group_perm()):
-
-        case 0xd: {
-                u64 permitted_xcr0 = kvm_get_filtered_xcr0();
-                u64 permitted_xss = kvm_caps.supported_xss;
-
-But if KVM in particular were to ever change, dropping supervisor
-permissions would result in subtle bugs in KVM's reporting of supported
-CPUID settings.  And the above behavior also means that having supervisor
-xfeatures in __state_perm is correctly handled by all users.
-
-Dropping supervisor permissions also creates another landmine for KVM.  If
-more dynamic user xfeatures are ever added, requesting access to multiple
-xfeatures in separate ARCH_REQ_XCOMP_GUEST_PERM calls will result in the
-second invocation of __xstate_request_perm() computing the wrong ksize, as
-as the mask passed to xstate_calculate_size() would not contain *any*
-supervisor features.
-
-Commit 781c64bfcb73 ("x86/fpu/xstate: Handle supervisor states in XSTATE
-permissions") fudged around the size issue for userspace FPUs, but for
-reasons unknown skipped guest FPUs.  Lack of a fix for KVM "works" only
-because KVM doesn't yet support virtualizing features that have supervisor
-xfeatures, i.e. as of today, KVM guest FPUs will never need the relevant
-xfeatures.
-
-Simply extending the hack-a-fix for guests would temporarily solve the
-ksize issue, but wouldn't address the inconsistency issue and would leave
-another lurking pitfall for KVM.  KVM support for virtualizing CET will
-likely add CET_KERNEL as a guest-only xfeature, i.e. CET_KERNEL will not
-be set in xfeatures_mask_supervisor() and would again be dropped when
-granting access to dynamic xfeatures.
-
-Note, the existing clobbering behavior is rather subtle.  The @permitted
-parameter to __xstate_request_perm() comes from:
-
-	permitted = xstate_get_group_perm(guest);
-
-which is either fpu->guest_perm.__state_perm or fpu->perm.__state_perm,
-where __state_perm is initialized to:
-
-        fpu->perm.__state_perm          = fpu_kernel_cfg.default_features;
-
-and copied to the guest side of things:
-
-	/* Same defaults for guests */
-	fpu->guest_perm = fpu->perm;
-
-fpu_kernel_cfg.default_features contains everything except the dynamic
-xfeatures, i.e. everything except XFEATURE_MASK_XTILE_DATA:
-
-        fpu_kernel_cfg.default_features = fpu_kernel_cfg.max_features;
-        fpu_kernel_cfg.default_features &= ~XFEATURE_MASK_USER_DYNAMIC;
-
-When __xstate_request_perm() restricts the local "mask" variable to
-compute the user state size:
-
-	mask &= XFEATURE_MASK_USER_SUPPORTED;
-	usize = xstate_calculate_size(mask, false);
-
-it subtly overwrites the target __state_perm with "mask" containing only
-user xfeatures:
-
-	perm = guest ? &fpu->guest_perm : &fpu->perm;
-	/* Pairs with the READ_ONCE() in xstate_get_group_perm() */
-	WRITE_ONCE(perm->__state_perm, mask);
-
-Cc: Maxim Levitsky <mlevitsk@redhat.com>
-Cc: Weijiang Yang <weijiang.yang@intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Chao Gao <chao.gao@intel.com>
-Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Cc: John Allen <john.allen@amd.com>
-Cc: kvm@vger.kernel.org
-Link: https://lore.kernel.org/all/ZTqgzZl-reO1m01I@google.com
-Signed-off-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 ---
- arch/x86/kernel/fpu/xstate.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+ arch/x86/kvm/governed_features.h | 2 ++
+ arch/x86/kvm/vmx/vmx.c           | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index 117e74c44e75..07911532b108 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -1601,16 +1601,20 @@ static int __xstate_request_perm(u64 permitted, u64 requested, bool guest)
- 	if ((permitted & requested) == requested)
- 		return 0;
+diff --git a/arch/x86/kvm/governed_features.h b/arch/x86/kvm/governed_features.h
+index ad463b1ed4e4..daf0c0a3e29c 100644
+--- a/arch/x86/kvm/governed_features.h
++++ b/arch/x86/kvm/governed_features.h
+@@ -17,6 +17,8 @@ KVM_GOVERNED_X86_FEATURE(PFTHRESHOLD)
+ KVM_GOVERNED_X86_FEATURE(VGIF)
+ KVM_GOVERNED_X86_FEATURE(VNMI)
+ KVM_GOVERNED_X86_FEATURE(LAM)
++KVM_GOVERNED_X86_FEATURE(SHSTK)
++KVM_GOVERNED_X86_FEATURE(IBT)
  
--	/* Calculate the resulting kernel state size */
-+	/*
-+	 * Calculate the resulting kernel state size.  Note, @permitted also
-+	 * contains supervisor xfeatures even though supervisor are always
-+	 * permitted for kernel and guest FPUs, and never permitted for user
-+	 * FPUs.
-+	 */
- 	mask = permitted | requested;
--	/* Take supervisor states into account on the host */
--	if (!guest)
--		mask |= xfeatures_mask_supervisor();
- 	ksize = xstate_calculate_size(mask, compacted);
+ #undef KVM_GOVERNED_X86_FEATURE
+ #undef KVM_GOVERNED_FEATURE
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index b2f6bcf3bf9b..29a0fd3e83c5 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7764,6 +7764,8 @@ static void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
  
--	/* Calculate the resulting user state size */
--	mask &= XFEATURE_MASK_USER_SUPPORTED;
--	usize = xstate_calculate_size(mask, false);
-+	/*
-+	 * Calculate the resulting user state size.  Take care not to clobber
-+	 * the supervisor xfeatures in the new mask!
-+	 */
-+	usize = xstate_calculate_size(mask & XFEATURE_MASK_USER_SUPPORTED, false);
+ 	kvm_governed_feature_check_and_set(vcpu, X86_FEATURE_VMX);
+ 	kvm_governed_feature_check_and_set(vcpu, X86_FEATURE_LAM);
++	kvm_governed_feature_check_and_set(vcpu, X86_FEATURE_SHSTK);
++	kvm_governed_feature_check_and_set(vcpu, X86_FEATURE_IBT);
  
- 	if (!guest) {
- 		ret = validate_sigaltstack(usize);
+ 	vmx_setup_uret_msrs(vmx);
+ 
 -- 
 2.39.3
 
