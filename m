@@ -1,61 +1,64 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from mail.astralinux.ru (mail.astralinux.ru [217.74.38.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278226A32D;
-	Thu, 21 Dec 2023 11:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 6D419101E3643;
-	Thu, 21 Dec 2023 12:01:38 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 400BA4BB67; Thu, 21 Dec 2023 12:01:38 +0100 (CET)
-Date: Thu, 21 Dec 2023 12:01:38 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Ethan Zhao <haifeng.zhao@linux.intel.com>
-Cc: bhelgaas@google.com, baolu.lu@linux.intel.com, dwmw2@infradead.org,
-	will@kernel.org, robin.murphy@arm.com, linux-pci@vger.kernel.org,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] iommu/vt-d: don's issue devTLB flush request when
- device is disconnected
-Message-ID: <20231221110138.GA27755@wunner.de>
-References: <20231220005153.3984502-1-haifeng.zhao@linux.intel.com>
- <20231220005153.3984502-3-haifeng.zhao@linux.intel.com>
- <20231221103940.GA12714@wunner.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103BA6A34B;
+	Thu, 21 Dec 2023 11:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.astralinux.ru (Postfix) with ESMTP id CB1C31868D3B;
+	Thu, 21 Dec 2023 14:01:58 +0300 (MSK)
+Received: from mail.astralinux.ru ([127.0.0.1])
+	by localhost (rbta-msk-vsrv-mail01.astralinux.ru [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id gt00sCmcMSre; Thu, 21 Dec 2023 14:01:58 +0300 (MSK)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.astralinux.ru (Postfix) with ESMTP id 7DA651868CE0;
+	Thu, 21 Dec 2023 14:01:58 +0300 (MSK)
+X-Virus-Scanned: amavisd-new at astralinux.ru
+Received: from mail.astralinux.ru ([127.0.0.1])
+	by localhost (rbta-msk-vsrv-mail01.astralinux.ru [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id GtlX3tkcyl9n; Thu, 21 Dec 2023 14:01:58 +0300 (MSK)
+Received: from new-mail.astralinux.ru (unknown [10.177.185.102])
+	by mail.astralinux.ru (Postfix) with ESMTPS id E00AB1867B5E;
+	Thu, 21 Dec 2023 14:01:57 +0300 (MSK)
+Received: from rbta-msk-lt-156703.astralinux.ru (unknown [10.177.232.135])
+	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4SwnYx0D5MzfYkm;
+	Thu, 21 Dec 2023 14:01:56 +0300 (MSK)
+From: Alexey Panov <apanov@astralinux.ru>
+To: stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alexey Panov <apanov@astralinux.ru>,
+	ericvh@kernel.org,
+	lucho@ionkov.net,
+	asmadeus@codewreck.org,
+	linux_oss@crudebyte.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	v9fs@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH 5.10 0/1] 9p/net: fix possible memory leak in p9_check_errors()
+Date: Thu, 21 Dec 2023 14:01:21 +0300
+Message-Id: <20231221110122.9838-1-apanov@astralinux.ru>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231221103940.GA12714@wunner.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 21, 2023 at 11:39:40AM +0100, Lukas Wunner wrote:
-> On Tue, Dec 19, 2023 at 07:51:53PM -0500, Ethan Zhao wrote:
-> > For those endpoint devices connect to system via hotplug capable ports,
-> > users could request a warm reset to the device by flapping device's link
-> > through setting the slot's link control register, as pciehpt_ist() DLLSC
-> > interrupt sequence response, pciehp will unload the device driver and
-> > then power it off. thus cause an IOMMU devTLB flush request for device to
-> > be sent and a long time completion/timeout waiting in interrupt context.
-> 
-> I think the problem is in the "waiting in interrupt context".
+Syzkaller reports "memory leak in p9pdu_readf" in 5.10 stable releases.
+I've attached reproducers in Bugzilla [1].
 
-I'm wondering whether Intel IOMMUs possibly have a (perhaps undocumented)
-capability to reduce the Invalidate Completion Timeout to a sane value?
-Could you check whether that's supported?
+The problem has been fixed by the following patch which can be applied
+to the 5.10 branch.
+The fix is already present in all stable branches starting from 5.15.
 
-Granted, the Implementation Note you've pointed to allows 1 sec + 50%,
-but that's not even a "must", it's a "should".  So devices are free to
-take even longer.  We have to cut off at *some* point.
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=3D218235
 
-Thanks,
-
-Lukas
+Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
