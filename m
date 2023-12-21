@@ -1,36 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C25C627F0;
-	Thu, 21 Dec 2023 17:15:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D327E634E5;
+	Thu, 21 Dec 2023 17:15:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dxK+bMpO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EE46C433D9;
-	Thu, 21 Dec 2023 17:15:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UTrt7OOz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60F5AC433C8;
+	Thu, 21 Dec 2023 17:15:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703178955;
-	bh=+zyXRn20w9EQZVYWIlgPBatlUpErpGuSEmHVNzCBnRY=;
+	s=k20201202; t=1703178959;
+	bh=T64o/dtQ7k7QygDUHe30OKZ2zq+ngvNvrISkp4YyKtQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=dxK+bMpOr3ZXrqtkX+4I99FHLCgwz2ydUpLgWFDG3z4xLnkjRUe0I26qTX3UDcHbt
-	 qCgjDqoNpQjQsLXwM920syDLXffV6ZNPlMmdtSm36vCw5lelSeI4VBkZFDvthQG5SR
-	 0gakYzUj4rGQYYx/LHd+j6lj3A064Hcczgo54upcUXEYJtZZEMCRe4G9Cr2uaqqn+l
-	 z0+m5d13TotrYyQO1NHo+Zc4HnnTgEd7LGpUku4e5LFd9NFK2yCFxHJC363mo5e+13
-	 Ry6RutvhKDvkCAzeC8WtaU3+a9dxErBNAf5/lMUn7LaIIUA78ATe1H6MQEitixTbbN
-	 1q/FztPwybVqw==
+	b=UTrt7OOzNo3cbKE4i5QqvfzjePciZenWP480tHgQoFs4pL99PmsDiT4rIXBRK0b/Z
+	 4XqRnHccI7Ou4angSRI9f751qQULSmhI8ieQfhT5ZInR0Av0AGNfUiAIVHTBdOXTne
+	 I3HG0tdHsYepIs3RAKOrelPS2r4cweJBGgEH3+8+6d0lX0uI7Gh8c3A1/bxRyhOKUu
+	 HIcKZoZ/sXq8h9TeJqn7Q6f+U4ecQKshs8igttQaMIWm7/xe6MWDpxdptD8oSu4gyw
+	 7ncDXprmqOqoK+Iwg2Rh/2s3JlSJa5pIBM9hbEiznUZKfAfipHp9UC1zLKKaFxhumU
+	 hueHlTT74bJbw==
 From: Vinod Koul <vkoul@kernel.org>
-To: bvanassche@acm.org, mani@kernel.org, adrian.hunter@intel.com, 
- beanhuo@micron.com, avri.altman@wdc.com, junwoo80.lee@samsung.com, 
- martin.petersen@oracle.com, Can Guo <quic_cang@quicinc.com>
-Cc: linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org
-In-Reply-To: <1701520577-31163-1-git-send-email-quic_cang@quicinc.com>
-References: <1701520577-31163-1-git-send-email-quic_cang@quicinc.com>
-Subject: Re: (subset) [PATCH v8 00/10] Enable HS-G5 support on SM8550
-Message-Id: <170317895067.712473.11493486832134923013.b4-ty@kernel.org>
-Date: Thu, 21 Dec 2023 22:45:50 +0530
+To: Wolfgang Grandegger <wg@grandegger.com>, 
+ Marc Kleine-Budde <mkl@pengutronix.de>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, linux-can@vger.kernel.org, 
+ linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Wang Jinchao <wangjinchao@xfusion.com>
+Cc: stone.xulei@xfusion.com
+In-Reply-To: <202312151407+0800-wangjinchao@xfusion.com>
+References: <202312151407+0800-wangjinchao@xfusion.com>
+Subject: Re: [PATCH] phy: phy-can-transceiver: insert space after include
+Message-Id: <170317895592.712473.1040949125860507698.b4-ty@kernel.org>
+Date: Thu, 21 Dec 2023 22:45:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,27 +40,15 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.12.3
 
 
-On Sat, 02 Dec 2023 04:36:06 -0800, Can Guo wrote:
-> This series enables HS-G5 support on SM8550.
+On Fri, 15 Dec 2023 14:09:00 +0800, Wang Jinchao wrote:
+> Maintain Consistent Formatting: Insert Space after #include
 > 
-> This series is rebased on below changes from Mani -
-> https://patchwork.kernel.org/project/linux-scsi/patch/20230908145329.154024-1-manivannan.sadhasivam@linaro.org/
-> https://patchwork.kernel.org/project/linux-scsi/patch/20230908145329.154024-2-manivannan.sadhasivam@linaro.org/
 > 
-> This series is tested on below HW combinations -
-> SM8550 MTP + UFS4.0
-> SM8550 QRD + UFS3.1
-> SM8450 MTP + UFS3.1 (for regression test)
-> SM8350 MTP + UFS3.1 (for regression test)
-> 
-> [...]
 
 Applied, thanks!
 
-[09/10] phy: qualcomm: phy-qcom-qmp-ufs: Rectify SM8550 UFS HS-G4 PHY Settings
-        commit: 5301b7a04040b0a6191856c765146e0a9ab88ebc
-[10/10] phy: qualcomm: phy-qcom-qmp-ufs: Add High Speed Gear 5 support for SM8550
-        (no commit info)
+[1/1] phy: phy-can-transceiver: insert space after include
+      commit: 57f31e911eaa5e682c0a03253f8b4348adee52cb
 
 Best regards,
 -- 
