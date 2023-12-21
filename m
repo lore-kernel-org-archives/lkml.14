@@ -1,185 +1,142 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C77634F7;
-	Thu, 21 Dec 2023 18:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF4A634F7
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 18:17:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gi6ls69n"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d045097b4cso7842235ad.0;
-        Thu, 21 Dec 2023 10:17:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703182621; x=1703787421; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YkM0jC9/yHAO382d+ILawqQDBhBWk0KZJUHJnBoAQj8=;
-        b=gi6ls69nO9y16qL7Wl1OfZCf741VlbWSd5F0v/rUvh3/SaJ/r6JXrJDUbnKgIxB6t5
-         A4NRF6v+Ybg4282Q/f74XleVSwraG5JXi0z+3rWldD59myBIaP2YNJtMRNH6mp8kxRUB
-         KWRFGns+A4p8i8rg2VjLKQW2O/Y8uDLtMB0y89XfkHQO9pUdLEWs1gF58H9nRVh+/HQ9
-         CNIJBNlgpM8/PtARErKoI6QzDIIF/B7WZV2sYrGxf1cnBmDfgmuzXx1SNGE+aFSSEstz
-         Nh/RG2fQFcAH/+UvvfdCcd1y+FRvy5XajqRvKNWAo+4CZl36i1ekmhDvl+e5SatDygNU
-         171Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F6YG/nl6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1703182672;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Ho/Hcsth5WNcdfU5/xCubS2uTkEJrrPZyZ0Y0+D6Mac=;
+	b=F6YG/nl6USxmx2l1Bh6YSEAkim4sBVUUJYvKVxcKU0QSoOy1p/qDRtB5WzqRMpMXfJWyED
+	+KOR2Uu378fuJ1tngbpPBeex8seIA68fSwjxE1ubCbcqj4A9emtT1N8BF6APMvI5Kt72Fl
+	+n0Wi4o74Gt8VfwLmYNmrCVogcaTpU4=
+Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com
+ [209.85.161.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-689-bHVV8Zu9MtCYIJIOtA69JA-1; Thu, 21 Dec 2023 13:17:50 -0500
+X-MC-Unique: bHVV8Zu9MtCYIJIOtA69JA-1
+Received: by mail-oo1-f72.google.com with SMTP id 006d021491bc7-59070f0f0b5so1062208eaf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 10:17:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703182621; x=1703787421;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1703182670; x=1703787470;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=YkM0jC9/yHAO382d+ILawqQDBhBWk0KZJUHJnBoAQj8=;
-        b=mlp/UBT0Ztk24R7wyX/tIdC0yVNEn0LkAfQTbqICOpNar+NXtUmHAv5wDDz7HXkVxd
-         yTrRshAI1Dh5geup6SZeG1XK9FtVvMh2Q74FdIgou5cBn2equrlL8heo3dE2CkGFIFjb
-         xoNrn2O75DCkYWP0FhdyOfD/F2xNhLnsWushWWGOCJgfgs6XjnMpWvevfTHTmkTLL33R
-         HpkZEUqp/7Rs8QCnxAEAdZnJDC5Ar7tteA2raFyY2GJTnhYJoFCNuMs4GklfaENy+DTb
-         PLLk4UDLYuoDGZqGxmnrOaN4elbwX/6rbH8chQUpenAKs/x8vfGMQR9PQYgBnFl4RZHk
-         dsGQ==
-X-Gm-Message-State: AOJu0YyGud140mrctMn4c/7f8xSoLlrhEUsui+tRjQu/kdk5OpyH7ZsN
-	LTU/3Xz6UrYyd8aaTlnO3olSwjAKcRPmnQ==
-X-Google-Smtp-Source: AGHT+IGDgd2VOVIdT8TOMu96tItwZra5gdbxf1n9VZmBNR7FQBm3hI+DsGtXZ54F1fGp1RRi9U/DPw==
-X-Received: by 2002:a17:90a:f188:b0:28a:c3e2:3967 with SMTP id bv8-20020a17090af18800b0028ac3e23967mr134583pjb.30.1703182620849;
-        Thu, 21 Dec 2023 10:17:00 -0800 (PST)
-Received: from localhost.localdomain ([2401:4900:5f28:c37d:9ad0:e7ae:52c2:c31a])
-        by smtp.gmail.com with ESMTPSA id lt17-20020a17090b355100b0028b338470a0sm2121454pjb.3.2023.12.21.10.16.55
+        bh=Ho/Hcsth5WNcdfU5/xCubS2uTkEJrrPZyZ0Y0+D6Mac=;
+        b=I50sMZNFWIqqZznMNXAemq7sa3ioJvYy+JwLaQTV9Jb81UB82ZoG8Q36+fitaGfNYn
+         w2s/GD1QCtIH60jJlox+mkGgPI/VYtIhYpj+k1s0NL/rIcTL7lqdJJsmfwiymNLeG/Ad
+         exnKaw+TMydk/VISax9O76Gi5+vt26HZL+JdHao7RbPJdWWH30qJiWzgXiy8aJGb0q2d
+         TPIEYy1dCCmjAG/2KqUKAnUu1b25YHLnowlSPmodsFnVtWDbHa64d5dRoiLMCIm+UVy+
+         a/emQGSHe8rnUYn1w1llTgNtJtfRKBO23je2zcMEsPrkT7jYrUIieS3AjmkHXcenNbv3
+         mPEA==
+X-Gm-Message-State: AOJu0Yx8QwUf3PGi9z/4H53N39T8sVer+3O7DujAtzMgz6SPIMAj03ld
+	92JCA1T+DG7eZQfD8otYfrM1sHCdVN8S7b6l36S6SsrQhhT3ZHOhfn694nqSONQbh7aIEg/6ptk
+	zRmv9CN1hk8BdFH9cE+YddfOLFDnN781V
+X-Received: by 2002:a05:6358:1203:b0:172:bbf4:94fd with SMTP id h3-20020a056358120300b00172bbf494fdmr140144rwi.64.1703182670000;
+        Thu, 21 Dec 2023 10:17:50 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGhAvZXrDG0kdNmV5YECNXE1vJEgbSHuQ+Bd//qXX+gQOskJE3awaH+jOEdcjwzdQfcCon5Fg==
+X-Received: by 2002:a05:6358:1203:b0:172:bbf4:94fd with SMTP id h3-20020a056358120300b00172bbf494fdmr140111rwi.64.1703182669562;
+        Thu, 21 Dec 2023 10:17:49 -0800 (PST)
+Received: from [192.168.1.163] ([2600:1700:1ff0:d0e0::37])
+        by smtp.gmail.com with ESMTPSA id hj10-20020a05622a620a00b00425e8c7d65fsm1025758qtb.23.2023.12.21.10.17.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 10:17:00 -0800 (PST)
-From: Anshul Dalal <anshulusr@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org
-Cc: Anshul Dalal <anshulusr@gmail.com>,
-	Dan Murphy <dmurphy@ti.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH v1] dt-bindings: input: convert drv266x to json-schema
-Date: Thu, 21 Dec 2023 23:44:22 +0530
-Message-ID: <20231221181423.671432-1-anshulusr@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Thu, 21 Dec 2023 10:17:49 -0800 (PST)
+From: Andrew Halaney <ahalaney@redhat.com>
+Subject: [PATCH RFC v2 00/11] scsi: ufs: Remove overzealous memory barriers
+Date: Thu, 21 Dec 2023 12:16:46 -0600
+Message-Id: <20231221-ufs-reset-ensure-effect-before-delay-v2-0-6dc6a48f2f19@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAA6BhGUC/5WNQQrCMBQFr1L+2i9J1Jq4EgQP4Fa6iM2LDWgrS
+ VsspXc39AYu5z2YmSkhBiQ6FTNFjCGFrs2gNgXVjW2f4OAykxJqJ5XQPPjEEQk9o01DBMN71D0
+ /4LtMDi87cQlRamPcYS8NZdUnwofvmrnT7XqhKo9NSH0XpzU9yvX6rzJKlqyt8Fq5oxUG5wjX2
+ H5bd2+qlmX5AbOnynjeAAAA
+To: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Manivannan Sadhasivam <mani@kernel.org>, 
+ "James E.J. Bottomley" <jejb@linux.ibm.com>, 
+ "Martin K. Petersen" <martin.petersen@oracle.com>, 
+ Yaniv Gardi <ygardi@codeaurora.org>, Dov Levenglick <dovl@codeaurora.org>, 
+ Hannes Reinecke <hare@suse.de>, Subhash Jadavani <subhashj@codeaurora.org>, 
+ Gilad Broner <gbroner@codeaurora.org>, 
+ Venkat Gopalakrishnan <venkatg@codeaurora.org>, 
+ Janek Kotas <jank@cadence.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+ Avri Altman <avri.altman@wdc.com>, Bart Van Assche <bvanassche@acm.org>, 
+ Anjana Hari <quic_ahari@quicinc.com>, Dolev Raviv <draviv@codeaurora.org>, 
+ Can Guo <quic_cang@quicinc.com>
+Cc: Will Deacon <will@kernel.org>, linux-arm-msm@vger.kernel.org, 
+ linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Andrew Halaney <ahalaney@redhat.com>, 
+ Manivannan Sadhasivam <mani@kernel.org>
+X-Mailer: b4 0.12.3
 
-Convert devicetree binding documentation for ti drv2665 and drv2667
-haptics driver to json-schema. The previously two separate bindings have
-been merged into a single drv266x.yaml.
+This is an RFC because I'm not all the confident in this topic. UFS has
+a lot of mb() variants used, most with comments saying "ensure this
+takes effect before continuing". mb()'s aren't really the way to
+guarantee that, a read back is the best method.
 
-Signed-off-by: Anshul Dalal <anshulusr@gmail.com>
+Some of these though I think could go a step further and remove the mb()
+variant without a read back. As far as I can tell there's no real reason
+to ensure it takes effect in most cases (there's no delay() or anything
+afterwards, and eventually another readl()/writel() happens which is by
+definition ordered).
+
+In this current series I don't do that as I wasn't totally convinced,
+but it should be considered when reviewing.
+
+Hopefully this series gets enough interest where we can confidently
+merge the final result after review helps improve it.
+
+I'll be travelling a good bit the next 2ish weeks, so expect little
+response until my return.
+
+Thanks in advance for the help,
+Andrew
+
+Signed-off-by: Andrew Halaney <ahalaney@redhat.com>
 ---
- .../devicetree/bindings/input/ti,drv2665.txt  | 17 -------
- .../devicetree/bindings/input/ti,drv2667.txt  | 17 -------
- .../devicetree/bindings/input/ti,drv266x.yaml | 50 +++++++++++++++++++
- 3 files changed, 50 insertions(+), 34 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/input/ti,drv2665.txt
- delete mode 100644 Documentation/devicetree/bindings/input/ti,drv2667.txt
- create mode 100644 Documentation/devicetree/bindings/input/ti,drv266x.yaml
+Changes in v2:
+- Added review tags for original patch
+- Added new patches to address all other memory barriers used
 
-diff --git a/Documentation/devicetree/bindings/input/ti,drv2665.txt b/Documentation/devicetree/bindings/input/ti,drv2665.txt
-deleted file mode 100644
-index 1ba97ac04305..000000000000
---- a/Documentation/devicetree/bindings/input/ti,drv2665.txt
-+++ /dev/null
-@@ -1,17 +0,0 @@
--* Texas Instruments - drv2665 Haptics driver
--
--Required properties:
--	- compatible - "ti,drv2665" - DRV2665
--	- reg -  I2C slave address
--	- vbat-supply - Required supply regulator
--
--Example:
--
--haptics: haptics@59 {
--	compatible = "ti,drv2665";
--	reg = <0x59>;
--	vbat-supply = <&vbat>;
--};
--
--For more product information please see the link below:
--http://www.ti.com/product/drv2665
-diff --git a/Documentation/devicetree/bindings/input/ti,drv2667.txt b/Documentation/devicetree/bindings/input/ti,drv2667.txt
-deleted file mode 100644
-index 996382cf994a..000000000000
---- a/Documentation/devicetree/bindings/input/ti,drv2667.txt
-+++ /dev/null
-@@ -1,17 +0,0 @@
--* Texas Instruments - drv2667 Haptics driver
--
--Required properties:
--	- compatible - "ti,drv2667" - DRV2667
--	- reg -  I2C slave address
--	- vbat-supply - Required supply regulator
--
--Example:
--
--haptics: haptics@59 {
--	compatible = "ti,drv2667";
--	reg = <0x59>;
--	vbat-supply = <&vbat>;
--};
--
--For more product information please see the link below:
--http://www.ti.com/product/drv2667
-diff --git a/Documentation/devicetree/bindings/input/ti,drv266x.yaml b/Documentation/devicetree/bindings/input/ti,drv266x.yaml
-new file mode 100644
-index 000000000000..da1818824373
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/ti,drv266x.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/ti,drv266x.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Texas Instruments - drv266x Haptics driver
-+
-+description: |
-+  Product Page:
-+    http://www.ti.com/product/drv2665
-+    http://www.ti.com/product/drv2667
-+
-+maintainers:
-+  - Anshul Dalal <anshulusr@gmail.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,drv2665
-+      - ti,drv2667
-+
-+  reg:
-+    maxItems: 1
-+
-+  vbat-supply:
-+    description: Required supply regulator
-+
-+required:
-+  - compatible
-+  - reg
-+  - vbat-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        haptics@59 {
-+            compatible = "ti,drv2667";
-+            reg = <0x59>;
-+            vbat-supply = <&vbat>;
-+        };
-+    };
+- Link to v1: https://lore.kernel.org/r/20231208-ufs-reset-ensure-effect-before-delay-v1-1-8a0f82d7a09e@redhat.com
+
+---
+Andrew Halaney (11):
+      scsi: ufs: qcom: Perform read back after writing reset bit
+      scsi: ufs: qcom: Perform read back after writing REG_UFS_SYS1CLK_1US
+      scsi: ufs: qcom: Perform read back after writing testbus config
+      scsi: ufs: qcom: Perform read back after writing unipro mode
+      scsi: ufs: qcom: Perform read back after writing CGC enable
+      scsi: ufs: cdns-pltfrm: Perform read back after writing HCLKDIV
+      scsi: ufs: core: Perform read back after writing UTP_TASK_REQ_LIST_BASE_H
+      scsi: ufs: core: Perform read back after disabling interrupts
+      scsi: ufs: core: Perform read back after disabling UIC_COMMAND_COMPL
+      scsi: ufs: core: Perform read back to commit doorbell
+      scsi: ufs: core: Perform read back before writing run/stop regs
+
+ drivers/ufs/core/ufshcd.c      | 10 +++++-----
+ drivers/ufs/host/cdns-pltfrm.c |  2 +-
+ drivers/ufs/host/ufs-qcom.c    | 14 ++++++--------
+ drivers/ufs/host/ufs-qcom.h    | 12 ++++++------
+ 4 files changed, 18 insertions(+), 20 deletions(-)
+---
+base-commit: 20d857259d7d10cd0d5e8b60608455986167cfad
+change-id: 20231208-ufs-reset-ensure-effect-before-delay-6e06899d5419
+
+Best regards,
 -- 
-2.43.0
+Andrew Halaney <ahalaney@redhat.com>
 
