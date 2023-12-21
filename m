@@ -1,134 +1,101 @@
-Received: from mail.holtmann.org (coyote.holtmann.net [212.227.132.17])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 017A1768EC;
-	Thu, 21 Dec 2023 20:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=holtmann.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=holtmann.org
-Received: from smtpclient.apple (p5b3d29b7.dip0.t-ipconnect.de [91.61.41.183])
-	by mail.holtmann.org (Postfix) with ESMTPSA id E1C15CECC7;
-	Thu, 21 Dec 2023 21:39:35 +0100 (CET)
-Content-Type: text/plain;
-	charset=us-ascii
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13BB9760B8
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 20:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dlSSALkP"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-28bf27be6c4so543515a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 12:40:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703191206; x=1703796006; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=y2n7W31aNWMIkIL9wLBmZYYyUB9rGbrcDxhFrQaq9TQ=;
+        b=dlSSALkPwOidhgB447+auCT8KSl/M5ZtN6RnYY2yh0k+vPE1cLK+IbgGARvDV+y3OF
+         yTPCCeavvymFh6BaOFPUOSv8gSdTVfs5lYZJX05L2cYR3fl+vrWxYMhS7G+6AJpuHNco
+         Flb0kyvjzuqjXDYOsCS9+OEC2vPm9FbYVAN238DLWjv5rkdm8HmMXFxUjHLedgkkHtKX
+         jNBomSrfoMdg7SLxUsSE7lFhp5jIDV8gjGCboJQ3FryOMykUfsJ2cmvAJ7WGT5SnNgBx
+         fvtkYPlravxYRgims4imvfGGjpk6kUtoTwnfgSLqg1QYbugrnATzNTOe8uPZUxylwpZk
+         gVBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703191206; x=1703796006;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=y2n7W31aNWMIkIL9wLBmZYYyUB9rGbrcDxhFrQaq9TQ=;
+        b=mvX/RvInOBP0B7OJzay4gGeVUnyi5Hlbz5yDz5bQl4w4h6gcgaaktSg3L40iRU8OoN
+         2zX8F9E4OiTCwCZat4fyS1bMoNdXKljUfQ5MPu+XBGckHBuyjaxpfC9kUlH+P5tocMnX
+         DCQPS2GHBOoj1j1T4EJ7IebJ45lBM7OCxFLIz5K+mbyjLI3aS7cHrvIXP3CHtO6F60hX
+         yzACa/c1f+/11CNbbciydWnZxAUAmNpUBbZGVaXiIJF6LKOi7yU7r7QYxi4eLidINY9x
+         b02tUi4B/C6OTofcZjtvR+Xp3WePXhtLc8sd88xdCJvbfvclot8bGvhWtNBvfrUcMaYl
+         ENuQ==
+X-Gm-Message-State: AOJu0YxGZJdRXr7DhBieDELU44Lq0MxX0lFjItqbKm70CHMX89Lq2WZ+
+	R40rPYKqGZNr3/8eItNnOx4JyFacsAz8aQ==
+X-Google-Smtp-Source: AGHT+IHqBBi7MQB9335VyFpUAMC3Wig4NgFozmRCB+kcn2IAn4Xucox+CKjMVBCYYtR61k48BQTm7A==
+X-Received: by 2002:a17:90a:7285:b0:28b:e0e9:4816 with SMTP id e5-20020a17090a728500b0028be0e94816mr313510pjg.65.1703191206378;
+        Thu, 21 Dec 2023 12:40:06 -0800 (PST)
+Received: from vps.terceiro.xyz (vps.terceiro.xyz. [2a02:4780:14:7710::1])
+        by smtp.gmail.com with ESMTPSA id nh24-20020a17090b365800b00287731b0ceasm5842518pjb.13.2023.12.21.12.40.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Dec 2023 12:40:05 -0800 (PST)
+Received: from localhost (unknown [IPv6:2804:14d:7224:8745:26f4:3599:ce80:10])
+	by vps.terceiro.xyz (Postfix) with ESMTPSA id E4E5D43EA0;
+	Thu, 21 Dec 2023 17:40:01 -0300 (-03)
+From: Antonio Terceiro <antonio.terceiro@linaro.org>
+To: Shuah Khan <shuah@kernel.org>
+Cc: linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests: uevent: use shared makefile library
+Date: Thu, 21 Dec 2023 17:38:47 -0300
+Message-ID: <20231221203849.339025-1-antonio.terceiro@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.300.61.1.2\))
-Subject: Re: [PATCH] wifi: brcmfmac: cfg80211: Use WSEC to set SAE password
-From: Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <CAGRGNgW0h_uqHn0rKwGx0L41R+YgzgWPEh83kSKVCeqfCDeOug@mail.gmail.com>
-Date: Thu, 21 Dec 2023 21:39:25 +0100
-Cc: Arend van Spriel <arend.vanspriel@broadcom.com>,
- Kalle Valo <kvalo@kernel.org>,
- Hector Martin <marcan@marcan.st>,
- Arend van Spriel <aspriel@gmail.com>,
- Franky Lin <franky.lin@broadcom.com>,
- Hante Meuleman <hante.meuleman@broadcom.com>,
- Daniel Berlin <dberlin@dberlin.org>,
- linux-wireless@vger.kernel.org,
- brcm80211-dev-list.pdl@broadcom.com,
- SHA-cyfmac-dev-list@infineon.com,
- linux-kernel@vger.kernel.org,
- asahi@lists.linux.dev
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C3F2FB99-C022-4BEE-8F1C-8B6F0E14DAA1@holtmann.org>
-References: <20231107-brcmfmac-wpa3-v1-1-4c7db8636680@marcan.st>
- <170281231651.2255653.7498073085103487666.kvalo@kernel.org>
- <18c80d15e30.279b.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
- <1b51997f-2994-46e8-ac58-90106d1c486d@marcan.st>
- <c392f901-789a-42e2-8cf7-5e246365a1ca@broadcom.com>
- <CAGRGNgW0h_uqHn0rKwGx0L41R+YgzgWPEh83kSKVCeqfCDeOug@mail.gmail.com>
-To: Julian Calaby <julian.calaby@gmail.com>
-X-Mailer: Apple Mail (2.3774.300.61.1.2)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Julian,
+This makes the uevent selftests build not write to the source tree
+unconditionally, as that breaks out of tree builds when the source tree
+is read-only. It also avoids leaving a git repository in a dirty state
+after a build.
 
->>>>>> Using the WSEC command instead of sae_password seems to be the =
-supported
->>>>>> mechanism on newer firmware, and also how the brcmdhd driver does =
-it.
->>>>>>=20
->>>>>> According to user reports [1], the sae_password codepath doesn't =
-actually
->>>>>> work on machines with Cypress chips anyway, so no harm in =
-removing it.
->>>>>>=20
->>>>>> This makes WPA3 work with iwd, or with wpa_supplicant pending a =
-support
->>>>>> patchset [2].
->>>>>>=20
->>>>>> [1] https://rachelbythebay.com/w/2023/11/06/wpa3/
->>>>>> [2] =
-http://lists.infradead.org/pipermail/hostap/2023-July/041653.html
->>>>>>=20
->>>>>> Signed-off-by: Hector Martin <marcan@marcan.st>
->>>>>> Reviewed-by: Neal Gompa <neal@gompa.dev>
->>>>>=20
->>>>> Arend, what do you think?
->>>>>=20
->>>>> We recently talked about people testing brcmfmac patches, has =
-anyone else
->>>>> tested this?
->>>>=20
->>>> Not sure I already replied so maybe I am repeating myself. I would =
-prefer
->>>> to keep the Cypress sae_password path as well although it =
-reportedly does
->>>> not work. The vendor support in the driver can be used to =
-accommodate for
->>>> that. The other option would be to have people with Cypress chipset =
-test
->>>> this patch. If that works for both we can consider dropping the
->>>> sae_password path.
->>>>=20
->>>> Regards,
->>>> Arend
->>>=20
->>> So, if nobody from Cypress chimes in ever, and nobody cares nor =
-tests
->>> Cypress chipsets, are we keeping any and all existing Cypress =
-code-paths
->>> as bitrotting code forever and adding gratuitous conditionals every =
-time
->>> any functionality needs to change "just in case it breaks Cypress" =
-even
->>> though it has been tested compatible on Broadcom chipsets/firmware?
->>>=20
->>> Because that's not sustainable long term.
->>=20
->> You should look into WEXT just for the fun of it. If it were up to me
->> and a bunch of other people that would have been gone decades ago. =
-Maybe
->> a bad example if the sae_password is indeed not working, but the =
-Cypress
->> chipset is used in RPi3 and RPi4 so there must be a couple of users.
->=20
-> There are reports that WPA3 is broken on the Cypress chipsets the
-> Raspberry Pis are using and this patch fixes it:
-> https://rachelbythebay.com/w/2023/11/06/wpa3/
->=20
-> Based on that, it appears that all known users of WPA3 capable
-> hardware with this driver require this fix.
+Signed-off-by: Antonio Terceiro <antonio.terceiro@linaro.org>
+---
+ tools/testing/selftests/uevent/Makefile | 16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
 
-the Pis are all using an outdated firmware. In their distro they put the
-firmware already under the alternates systems, but it just lacks the SAE
-offload support that is required to make WPA3 work. The linux-firmware
-version does the trick nicely.
-
-I documented what I did to make this work on Pi5 (note that I normally
-use Fedora on Pi4 and thus never encountered this issue)
-
-https://holtmann.dev/enabling-wpa3-on-raspberry-pi/
-
-However you need to use iwd and not hope that you get a wpa_supplicant
-released version that will work.
-
-So whole game of wpa_supplicant is vendor specific to the company that
-provides the driver is also insane, but that is another story. Use iwd
-and you can most likely have WPA3 support if you have the right =
-firmware.
-
-Regards
-
-Marcel
+diff --git a/tools/testing/selftests/uevent/Makefile b/tools/testing/selftests/uevent/Makefile
+index f7baa9aa2932..9d1ba09baa90 100644
+--- a/tools/testing/selftests/uevent/Makefile
++++ b/tools/testing/selftests/uevent/Makefile
+@@ -1,17 +1,9 @@
+ # SPDX-License-Identifier: GPL-2.0
+ all:
+ 
+-include ../lib.mk
+-
+-.PHONY: all clean
+-
+-BINARIES := uevent_filtering
+-CFLAGS += -Wl,-no-as-needed -Wall
+-
+-uevent_filtering: uevent_filtering.c ../kselftest.h ../kselftest_harness.h
+-	$(CC) $(CFLAGS) $< -o $@
++# SPDX-License-Identifier: GPL-2.0
++CFLAGS += -Wl,-no-as-needed -Wall $(KHDR_INCLUDES)
+ 
+-TEST_PROGS += $(BINARIES)
+-EXTRA_CLEAN := $(BINARIES)
++TEST_GEN_PROGS = uevent_filtering
+ 
+-all: $(BINARIES)
++include ../lib.mk
+-- 
+2.43.0
 
