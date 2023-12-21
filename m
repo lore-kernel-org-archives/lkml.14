@@ -1,143 +1,153 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947CA6D1DC;
-	Thu, 21 Dec 2023 11:23:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF236BB3D;
+	Thu, 21 Dec 2023 11:23:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g0jUaNeW"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-50e60d67e6aso379262e87.1;
-        Thu, 21 Dec 2023 03:23:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c0rqv1YD"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d3e2972f65so2766495ad.3;
+        Thu, 21 Dec 2023 03:23:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703157783; x=1703762583; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1703157792; x=1703762592; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PePSp+PbF4BfBMSUYpDpriXKuCCpPeH9Cv6eaY4BwCk=;
-        b=g0jUaNeWGvJqfg27V6l9P1tqufMKQpCWmK31BQXcThZsmYXEh5jHpXNsPHHAaAhhSo
-         MfJwHawI6pv8zno8ZgXCVdka3UxcLI8L/1y9FJJX0Zzn5IQ0suewTa377EFn9fIlVSIt
-         Lm5HOK/d9O+yGw6KkNmGZ7M7QHaw6RdgvB9M5+kbNW0Y3X7NlUR3RovZ4A3asbxDotde
-         s8N+EZelTl6nrZ5iPux0E4c+T8KShQKiwxovUHTjzpV3AnR3pUezWvazlZKpTjG/icJm
-         ZWMbNAZXCFeIGmTiDJByHvXPpt51uA4bOLKdBJsz2azuOeu2sEbkW8qgNAB2kpBQTTgn
-         TgFQ==
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iurPx6U1Yq+NZr3UnEVxu22VONJz6nR4G9rGokJKtfI=;
+        b=c0rqv1YDPQQkIOq2WVrS0ll7SYfRhXpKkU4dq8CIGijAiL6DATbORglgiJmRMC9Sh6
+         gS7L+hF735IEUZ03YKm2jVTx2oD2w/u+eLPt6vUvx1ERFOhPFKdTBp21BEFzQN01FemJ
+         cRw1MfVokkK59mEQGT9RTXm77yX8wMpxQjwiOHDi3b1A/c8lAT3GKdPvkMyExLb9Prnp
+         L14sAnbZ42si5kXlcqYq/sjDf7gt61RxpNsAsylSg/zUkG1Tak9b1I9PgC2PbXs0oEgp
+         pdKkqFlJkd5a896iXimXL7hZ6Ac3b7BJcUDnr6ZTTyw8CDnUrauLx1DXAmyTA9YfnAyA
+         kcIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703157783; x=1703762583;
+        d=1e100.net; s=20230601; t=1703157792; x=1703762592;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PePSp+PbF4BfBMSUYpDpriXKuCCpPeH9Cv6eaY4BwCk=;
-        b=iFA+rBjouIPEb9iF8u08voAo0VxiI/2nYejFWFpvQa7y0t8vZaHuneDYZKgimDgdd5
-         zFaWQqpE+Qz4scKKIOfv+gh4MRYBml/IMlqO6rYmF2PJ+d4KjwSb3esF7xhySJhBjSPx
-         LG41MwK0bBDry/06+RiCfFuq+2DdkgrKZu92+IxfVPo1AShy4AJS4UpwkLn3VPCtIOoC
-         lSAOyUe2vZKL5Ab4wOueaNFhsZffNNNx2eNitaWmS8RK2K2+uXWVhDN1c4GcC9VJeAZ8
-         JXlST3IxJD0IPrvxwUw1LyWFbhgUvlnNkeXAgZZVY8fA7G1DYRrgmU4z/IS4YP+l6yss
-         5ZdA==
-X-Gm-Message-State: AOJu0YzrKnlAWmjvlAK4EH3Hs9ytrMcjv9M76/rQfq8pTqZrCiw97wm3
-	a+W7O9tkeplcxKKu8MeDqO4=
-X-Google-Smtp-Source: AGHT+IFBBp4Oy8m5Thz79K804egyupbldOYQy2a6Eg/NfMOP2Fzg7uzMtXqNfeBtm6p72qcok3aPpQ==
-X-Received: by 2002:a05:6512:4c1:b0:50e:535f:f325 with SMTP id w1-20020a05651204c100b0050e535ff325mr363256lfq.9.1703157783213;
-        Thu, 21 Dec 2023 03:23:03 -0800 (PST)
-Received: from pc636 (host-90-233-221-204.mobileonline.telia.com. [90.233.221.204])
-        by smtp.gmail.com with ESMTPSA id h4-20020a056512220400b0050e3904848esm242057lfu.56.2023.12.21.03.23.01
+        bh=iurPx6U1Yq+NZr3UnEVxu22VONJz6nR4G9rGokJKtfI=;
+        b=ulfuYX+Dr1G+WC0pC0okK45ycZbvqMZszk7p4zkU+HJ/gYgmyHs2mxG7F8fMzA4hYn
+         yxuVR/NqXCikrqBlnEAOmimO4bwHjLGriTeeKX3gIm5GcWv7bJvqztrCQfQ7ngWJJk/a
+         kiJHzAvrUMAYg9CRnNY9o6lFnTOoeNt+q82dgyHy0tloHbKOZ0jgCv0CK2q0BugWMQ1I
+         LtevQj6XQ1SQdTuBVAZi+9is9Ap3EvK1xwvOsTGlcuiBxCvGOJzNWwiZLGpDyYAYDaID
+         SDJNUWusI719QmkjiT2w9LFtT8of6dIoTADaWa8b+byEbQv9PuOxMDsTyEENJgX9h1FK
+         fZ8A==
+X-Gm-Message-State: AOJu0YzwoDso9qiCJMf/LtwcttkqRipqOJnl3G5LxFx9X3ScV35nHL9g
+	PG+zAuzg+aSE0Y/oNoMNR0M=
+X-Google-Smtp-Source: AGHT+IExJqNXn7XmZ803oCoArKhVQWyZmpB8PHbShkKvYBOvRSlQv57Xx7zYUNX6P4EjV6J0PZjwGg==
+X-Received: by 2002:a17:902:684c:b0:1d3:f285:15a5 with SMTP id f12-20020a170902684c00b001d3f28515a5mr1727435pln.35.1703157791960;
+        Thu, 21 Dec 2023 03:23:11 -0800 (PST)
+Received: from archie.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id ju22-20020a170903429600b001d1cd7e4acesm1410398plb.68.2023.12.21.03.23.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 03:23:02 -0800 (PST)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Thu, 21 Dec 2023 12:22:59 +0100
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>, RCU <rcu@vger.kernel.org>,
-	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Hillf Danton <hdanton@sina.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
-	Frederic Weisbecker <frederic@kernel.org>
-Subject: Re: [PATCH v3 5/7] rcu: Support direct wake-up of synchronize_rcu()
- users
-Message-ID: <ZYQgE_dJnoADxN0a@pc636>
-References: <20231128080033.288050-1-urezki@gmail.com>
- <20231128080033.288050-6-urezki@gmail.com>
- <e04f30bf-9793-4c42-a9a9-24c8f3545f3f@paulmck-laptop>
+        Thu, 21 Dec 2023 03:23:11 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id E149C1026AE88; Thu, 21 Dec 2023 18:23:07 +0700 (WIB)
+Date: Thu, 21 Dec 2023 18:23:07 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Networking <netdev@vger.kernel.org>,
+	Linux Kernel Janitors <kernel-janitors@vger.kernel.org>,
+	Kees Cook <keescook@chromium.org>, Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	Justin Stitt <justinstitt@google.com>,
+	Kunwu Chan <chentao@kylinos.cn>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Nathan Chancellor <nathan@kernel.org>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	Karsten Keil <isdn@linux-pingi.de>,
+	Karsten Keil <keil@b1-systems.de>,
+	YouHong Li <liyouhong@kylinos.cn>
+Subject: Re: [PATCH net 1/2] MAINTAINERS: Remove Karsten Keil
+Message-ID: <ZYQgGxKOKqIe4TIL@archie.me>
+References: <20231221091419.11764-1-bagasdotme@gmail.com>
+ <20231221091419.11764-2-bagasdotme@gmail.com>
+ <2023122156-diocese-movie-3d75@gregkh>
+ <ZYQYUgZrewi2Up50@archie.me>
+ <2023122116-favoring-roulette-554f@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ZMxuX3fRkHidytpf"
 Content-Disposition: inline
-In-Reply-To: <e04f30bf-9793-4c42-a9a9-24c8f3545f3f@paulmck-laptop>
+In-Reply-To: <2023122116-favoring-roulette-554f@gregkh>
 
-On Tue, Dec 19, 2023 at 05:46:11PM -0800, Paul E. McKenney wrote:
-> On Tue, Nov 28, 2023 at 09:00:31AM +0100, Uladzislau Rezki (Sony) wrote:
-> > This patch introduces a small enhancement which allows to do a
-> > direct wake-up of synchronize_rcu() callers. It occurs after a
-> > completion of grace period, thus by the gp-kthread.
-> > 
-> > Number of clients is limited by the hard-coded maximum allowed
-> > threshold. The remaining part, if still exists is deferred to
-> > a main worker.
-> > 
-> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> 
-> Nice optimization!
-> 
-> One question below.
-> 
-> > ---
-> >  kernel/rcu/tree.c | 39 +++++++++++++++++++++++++++++++++++++--
-> >  1 file changed, 37 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index d7b48996825f..69663a6d5050 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -1384,6 +1384,12 @@ static void rcu_poll_gp_seq_end_unlocked(unsigned long *snap)
-> >  		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
-> >  }
-> >  
-> > +/*
-> > + * A max threshold for synchronize_rcu() users which are
-> > + * awaken directly by the rcu_gp_kthread(). Left part is
-> > + * deferred to the main worker.
-> > + */
-> > +#define SR_MAX_USERS_WAKE_FROM_GP 5
-> >  #define SR_NORMAL_GP_WAIT_HEAD_MAX 5
-> >  
-> >  struct sr_wait_node {
-> > @@ -1617,7 +1623,8 @@ static DECLARE_WORK(sr_normal_gp_cleanup, rcu_sr_normal_gp_cleanup_work);
-> >   */
-> >  static void rcu_sr_normal_gp_cleanup(void)
-> >  {
-> > -	struct llist_node *wait_tail;
-> > +	struct llist_node *wait_tail, *head, *rcu;
-> > +	int done = 0;
-> >  
-> >  	wait_tail = sr.srs_wait_tail;
-> >  	if (wait_tail == NULL)
-> > @@ -1626,11 +1633,39 @@ static void rcu_sr_normal_gp_cleanup(void)
-> >  	sr.srs_wait_tail = NULL;
-> >  	ASSERT_EXCLUSIVE_WRITER(sr.srs_wait_tail);
-> >  
-> > +	WARN_ON_ONCE(!rcu_sr_is_wait_head(wait_tail));
-> > +	head = wait_tail->next;
-> > +
-> > +	/*
-> > +	 * Process (a) and (d) cases. See an illustration. Apart of
-> > +	 * that it handles the scenario when all clients are done,
-> > +	 * wait-head is released if last. The worker is not kicked.
-> > +	 */
-> > +	llist_for_each_safe(rcu, head, head) {
-> 
-> This does appear to be a clever way to save eight bytes on the stack,
-> but is our stack space really so restricted?  We are being invoked from
-> the RCU GP kthread, which isn't using much stack, right?
-> 
-> If so, let's spend the extra local variable and spare the reader a
-> trip to the llist_for_each_safe() definition.
-> 
-OK, you mean to go with an extra "next" variable to use it in the
-llist-loop. I will change it accordingly!
 
---
-Uladzislau Rezki
+--ZMxuX3fRkHidytpf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Dec 21, 2023 at 11:54:02AM +0100, Greg Kroah-Hartman wrote:
+> On Thu, Dec 21, 2023 at 05:49:54PM +0700, Bagas Sanjaya wrote:
+> > On Thu, Dec 21, 2023 at 10:32:09AM +0100, Greg Kroah-Hartman wrote:
+> > > On Thu, Dec 21, 2023 at 04:14:18PM +0700, Bagas Sanjaya wrote:
+> > > > He's no longer active maintaining ISDN/mISDN subsystem: his last me=
+ssage
+> > > > on kernel mailing lists was three years ago [1] and last commit act=
+ivity
+> > > > from him was 1e1589ad8b5cb5 ("mISDN: Support DR6 indication in mISD=
+Nipac
+> > > > driver") in 2016 when he gave Acked-by: from his @b1-systems.de add=
+ress.
+> > > >=20
+> > > > Move him to CREDITS, as netdev people should already handle ISDN/mI=
+SDN
+> > > > patches.
+> > > >=20
+> > > > Link: https://lore.kernel.org/r/0ee243a9-9937-ad26-0684-44b18e77266=
+2@linux-pingi.de/ [1]
+> > > > Cc: Karsten Keil <isdn@linux-pingi.de>
+> > > > Cc: Karsten Keil <keil@b1-systems.de>
+> > > > Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+> > >=20
+> > > Are you sure he's not active?  It doesn't take much work to keep an o=
+ld
+> > > subsystem like this alive, last I remember, real changes were accepted
+> > > just fine.
+> >=20
+> > As for LKML messages, yes; he doesn't post any new messages since 2020.
+> >=20
+> > >=20
+> > > Perhaps just don't send coding style cleanups to old subsystems?  :)
+> > >=20
+> > > I would not take these unless Karsten agrees that he no longer wants =
+to
+> > > maintain this.
+> >=20
+> > OK, I will send a private message to him asking for continuing maintain=
+er
+> > role. If there's no response from him by the new year, then it's safe to
+> > route this through net tree instead (hence [PATCH net]).
+>=20
+> Why are you arbritrarily saying that "no response in 2 weeks, during the
+> time of the year almost all of Europe is on vacation, means we drop
+> someone from the MAINTAINERS file"?
+>=20
+
+Because I'm impatient. Maybe I can wait for right timing to reroll once
+Karsten agrees to remove his MAINTAINERS entry.
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--ZMxuX3fRkHidytpf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZYQgGwAKCRD2uYlJVVFO
+o+uUAQDfsKMoaQFtaOT6DpcRB+FMAkidQGmnQpY0Aq69jjG64gD+JIUIecWepwwo
+X4o7niyGHz992tTPL+VyT7bt9eZfIQg=
+=BYT9
+-----END PGP SIGNATURE-----
+
+--ZMxuX3fRkHidytpf--
