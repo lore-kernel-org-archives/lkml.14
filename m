@@ -1,148 +1,176 @@
-Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2A36979B
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 13:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87E1745E2;
+	Thu, 21 Dec 2023 13:08:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b="WxgBRCLP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OTeaUDby"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.west.internal (Postfix) with ESMTP id 269933200AD1;
-	Thu, 21 Dec 2023 08:08:39 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Thu, 21 Dec 2023 08:08:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.org; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1703164118; x=1703250518; bh=TSmi62AbKk
-	Ag1rP/36saQuYN5nGRz1D7HRB5YJAMmKw=; b=WxgBRCLP2yF/PaujaW7gO9nASx
-	MgiYNQpg+wbtYwfCR2KjKEbtt1TN46Sc5jP15PoK/2CtlI+D2w5GsHCCvsEE/G77
-	rcdsX5fbleY9THXENezD8mS8GNdQSdGP20g7/HGRwKcHo+FPqHziY5R4fH91M2qx
-	LN7KdGnD+1Tys0BdyrRUwlwVmV3aa0aN5OJDUSoObmuhBo+EuorsleZE/Q8lyMK/
-	xIlkGIA35QSqfJjE4jye2NiaO/1wV6mQG5yBTQT0/Nv1mSHFrq4RcVylTfXU1Aw1
-	+qGi7s8XWprWoL3niptY9WLY2ACWZZJkaiVegqW5azIEoenmjqKLI7KZHAfg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1703164118; x=1703250518; bh=TSmi62AbKkAg1rP/36saQuYN5nGR
-	z1D7HRB5YJAMmKw=; b=OTeaUDbySbg+p8N8/zE7JtImq+9CUznDsOVkcl2iFTAU
-	X9+qHdnlLSsWnXlunYr7+lOIWlAEWAckWqg7CpUHLk6KEZahYVtTBCfOswJ/PkWk
-	aOtJkhomD5kgaywYfaRZevTQCkTCjqGuYvF0BONuRvFXcHlC0FjCv5H0uBuTBcf4
-	yCiKeBcNQS+mmHKkD76qsvHKBRNFwqIbjWh2NlQUkLDE1Dnh53CIrMhYFOTA+Ang
-	rIDWJjWy8nS+CKMOfMZRyfPY+ZGLC3O7OU+28LENKaIWZAEKOJKzL5Zoz+/2+RY1
-	tgbR1o5CI9cRZKv6xpLfgVbrbBpgqzUryOKYhlr6iQ==
-X-ME-Sender: <xms:1jiEZdh-7mpORy7jfLfyHd3at1yWP2mm0RfD3oNw9evc0IqgwG3rzg>
-    <xme:1jiEZSAumFQjFfTULk2VVVS8YO_4hKTiMXJm88YgeyhHmDzX_0K5Q7B4oKGmNB1Va
-    WHAf53KIc9BHFA-628>
-X-ME-Received: <xmr:1jiEZdG7HPuATFHaR_wZEvVSssgtYp3IX13HfQfL4Nu1wJ5plXvjuNlx3szf469orS6Ejvo6Pkz5eIA7GsD09SMXhf4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdduhedgvdegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfhgfhffvvefuffgjkfggtgesghdtreertdertdenucfhrhhomhepifgrrhih
-    ucftohhokhgrrhguuceoghgrrhihrhhoohhkrghrugesfhgrshhtmhgrihhlrdhorhhgqe
-    enucggtffrrghtthgvrhhnpeeileehheehtdeiveduffdugfdtgfevjeffudfgtefgteff
-    udfhhffftedvieeggeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpehgrghrhihrohhokhgrrhgusehfrghsthhmrghilhdrohhrgh
-X-ME-Proxy: <xmx:1jiEZSQqiWOVHzESqO-D7VuBpzKfVepTTyvHAZV2KCDIh5qPCiOPeQ>
-    <xmx:1jiEZawNt-pDPluggYu-8eE7OLhqrtxXCzonQV3dhrSyDlEjgc2bzg>
-    <xmx:1jiEZY72r6m2YG-_-R81edJpH3KkZoNS9BaqXInrinwaup7POiS4jQ>
-    <xmx:1jiEZV-kvX1-hn90rqqDYCmvJWTtPL8vvQWsfn_kXrrP2HLXygJtWg>
-Feedback-ID: ifd194980:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 21 Dec 2023 08:08:38 -0500 (EST)
-References: <20231221031004.14779-1-garyrookard@fastmail.org>
- <2023122137-account-vitality-9a72@gregkh>
-User-agent: mu4e 1.10.8; emacs 29.1
-From: Gary Rookard <garyrookard@fastmail.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: philipp.g.hortmann@gmail.com, linux-staging@list.linux.dev,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] staging: rtl8192e: rename variable
- HTInitializeBssDesc and (4) other
-Date: Thu, 21 Dec 2023 08:06:13 -0500
-In-reply-to: <2023122137-account-vitality-9a72@gregkh>
-Message-ID: <875y0rog7j.fsf@fastmail.org>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="0w0mEaaV"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 3BLAIATv023361;
+	Thu, 21 Dec 2023 14:08:26 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=0l3CJIF0YF007rW0bGlIBQ9AkCLi54Vt0zTpMSyEszk=; b=0w
+	0mEaaVchzg0y3gIqMJgY9PbojsKnCH4cyWBSUBcla6RU/Ft+0dOFWs1msjk0EhCN
+	H0xTIYGqiUC+C/FoKCfd0+c8x0PjaNz4hX5HNB5uIM+SY1V5mZgTiuuY8f3O9L5M
+	lq44oS32APSol9xYPTNmT6ZbWDl4A8PUdoiuEYJTzYlu4Mmc+QmosY7TOqOEZpCT
+	vYsJC4AYbJb91xDhI418Hj/BZ2P65mKKfp4aa+oVcDlMCr41LzfIgHDtmCm69Rfz
+	Uka0EVZErKoz+ZOl+8L4ZRBvinik2OVzJboztuQpqRi8MbZIw2syuU0rwVi13tv/
+	QYrF4ayhsCHpSMcrJz3Q==
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3v3q810t43-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Dec 2023 14:08:26 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 768F0100053;
+	Thu, 21 Dec 2023 14:08:25 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6CABE2C38C0;
+	Thu, 21 Dec 2023 14:08:25 +0100 (CET)
+Received: from [10.201.20.120] (10.201.20.120) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 21 Dec
+ 2023 14:08:24 +0100
+Message-ID: <a240d2ac-db0e-481b-8d13-3ae76cfd2fe7@foss.st.com>
+Date: Thu, 21 Dec 2023 14:08:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha256; protocol="application/pgp-signature"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/5] Add support for video hardware codec of
+ STMicroelectronics STM32 SoC series
+Content-Language: en-US
+To: Alex Bee <knaerzche@gmail.com>,
+        Nicolas Dufresne
+	<nicolas.dufresne@collabora.com>
+CC: Marco Felsch <m.felsch@pengutronix.de>, Adam Ford <aford173@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Andrzej Pietrasiewicz
+	<andrzej.p@collabora.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+        Laurent Pinchart
+	<laurent.pinchart+renesas@ideasonboard.com>,
+        Benjamin Mugnier
+	<benjamin.mugnier@foss.st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Daniel Almeida
+	<daniel.almeida@collabora.com>,
+        Heiko Stuebner <heiko@sntech.de>, Hans
+ Verkuil <hverkuil@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-rockchip@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        <linux-media@vger.kernel.org>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Ezequiel Garcia
+	<ezequiel@vanguardiasur.com.ar>
+References: <20231221084723.2152034-1-hugues.fruchet@foss.st.com>
+ <769a1510-f8d2-4095-9879-42f413141dee@gmail.com>
+From: Hugues FRUCHET <hugues.fruchet@foss.st.com>
+In-Reply-To: <769a1510-f8d2-4095-9879-42f413141dee@gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-21_06,2023-12-20_01,2023-05-22_02
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi Alex,
 
+This is because VDEC and VENC are two separated IPs with their own 
+hardware resources and no links between both.
+On future SoCs, VDEC can ship on its own, same for VENC.
 
-Greg KH <gregkh@linuxfoundation.org> writes:
+Hoping that this clarify.
 
-> On Wed, Dec 20, 2023 at 10:09:59PM -0500, Gary Rookard wrote:
->> Hi,
->>=20
->> This patch series renames (5) different variables with
->> the checkpatch coding style issue, Avoid CamelCase.
->>=20
->> Patch 1/5) rename variable HTInitializeBssDesc
->> Patch 2/5) rename variable HTResetSelfAndSavePeerSetting
->> Patch 3/5) rename variable HTCCheck
->> Patch 4/5) rename variable HTSetConnectBwModeCallback
->> Patch 5/5) rename variable ePeerHTSpecVer
->>=20
->> Signed-off-by: Gary Rookard <garyrookard@fastmail.org>
->>=20
->> Gary Rookard (5):
->>   staging: rtl8192e: rename variable HTInitializeBssDesc
->>   staging: rtl8192e: rename variable HTResetSelfAndSavePeerSetting
->>   staging: rtl8192e: rename variable HTCCheck
->>   staging: rtl8192e: rename variable HTSetConnectBwModeCallback
->>   staging: rtl8192e: rename variable ePeerHTSpecVer
->>=20
->>  drivers/staging/rtl8192e/rtl819x_HT.h     |  2 +-
->>  drivers/staging/rtl8192e/rtl819x_HTProc.c | 16 ++++++++--------
->>  drivers/staging/rtl8192e/rtllib.h         |  6 +++---
->>  drivers/staging/rtl8192e/rtllib_rx.c      |  6 +++---
->>  drivers/staging/rtl8192e/rtllib_softmac.c |  6 +++---
->>  5 files changed, 18 insertions(+), 18 deletions(-)
->
-> I see 2 different patch series here sent to the list, both seeming to do
-> the same thing?
->
-> confused,
->
-> greg k-h
+Best regards,
+Hugues.
 
-Sorry that was caused by an address typo
-so it got resent to linux-staging..
-new setup on different distro
-Regards,
-Gary
-=2D-=20
-Sent with my mu4e on Void Linux.
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJNBAEBCAA3FiEE92Mpdr0+Cqw+uCNR5J46Hep3K4QFAmWEOPAZHGdhcnlyb29r
-YXJkQGZhc3RtYWlsLm9yZwAKCRDknjod6ncrhHYHEACsbVqzfvvL0x6zZAmeHJev
-EQBIDgGSghLpm8l+nw3SNetfY0Lxswgz0qS/XPYaKkwko0HSx8aRAwg/BCzG4jtA
-+XzQbiV8se1FGawgeNitAc5/axT3gZkAXZHbCf9oU+rIO+sU/n9OlWb04OAeDjtN
-I7xYPKufkGO0SquDmostYwPMPpI3EbK1jhADBkQuhDo2BKxXSQ+KSut/+hIGUgKW
-koxXbUFTQSB1tMFlP3IzTUKv/HhiRB4F6M7uIXn0yab/IPxuikBcnRqi5/wWAzwz
-dhFfwZp6JNTUqahyD4qxF6Galxxo6dASBhsLV2XIyTMT+DsqgsGtrfkFDhnqa3Bi
-SSSJjp21uYhmUkKHfFecu65uS3KWLFtQi73li4OXFtABjoWlwjriWzTIOB9adPmk
-b3xxtcva+vj7/SZleFXqHjm6XrsFJmnRJhOoVDG/qCtYpXqdOZ0cHv7/JfLHTcX5
-BVgG20r4lWsMETO1b2Hz3Ur6LMK5zuE6k7NhjG13Sd8u5APgmsrNHdCyJkAe+YMf
-fz9baKuanOIh9TChfoBzbysk7HYOXVSH1qDEFPpszf2qsQZtw3HkbJldeCGDglLJ
-9zczLWR+68TvlKgPoMMcLXABvhSsTysE1mU7Y0Ry2ZgKm+YRFYtlrKnYmYyrTCCM
-dr9HoNjD2KaTDEknGBVrrQ==
-=eI5L
------END PGP SIGNATURE-----
---=-=-=--
+On 12/21/23 13:40, Alex Bee wrote:
+> Hi Hugues, Hi Nicolas,
+> 
+> is there any specific reason I'm not understanding / seeing why this is 
+> added in two seperate vdec* / venc* files and not a single vpu* file? Is 
+> it only for the seperate clocks (-names) / irqs (-names) / callbacks? 
+> Those are defined per variant and perfectly fit in a single file holding 
+> one vdec and one venc variant.
+> 
+> Alex
+> 
+> Am 21.12.23 um 09:47 schrieb Hugues Fruchet:
+>> This patchset introduces support for VDEC video hardware decoder
+>> and VENC video hardware encoder of STMicroelectronics STM32MP25
+>> SoC series.
+>>
+>> This initial support implements H264 decoding, VP8 decoding and
+>> JPEG encoding.
+>>
+>> This has been tested on STM32MP257F-EV1 evaluation board.
+>>
+>> ===========
+>> = history =
+>> ===========
+>> version 5:
+>>     - Precise that video decoding as been successfully tested up to 
+>> full HD
+>>     - Add Nicolas Dufresne reviewed-by
+>>
+>> version 4:
+>>     - Fix comments from Nicolas about dropping encoder raw steps
+>>
+>> version 3:
+>>     - Fix remarks from Krzysztof Kozlowski:
+>>      - drop "items", we keep simple enum in such case
+>>      - drop second example - it is the same as the first
+>>     - Drop unused node labels as suggested by Conor Dooley
+>>     - Revisit min/max resolutions as suggested by Nicolas Dufresne
+>>
+>> version 2:
+>>     - Fix remarks from Krzysztof Kozlowski on v1:
+>>      - single video-codec binding for both VDEC/VENC
+>>      - get rid of "-names"
+>>      - use of generic node name "video-codec"
+>>
+>> version 1:
+>>    - Initial submission
+>>
+>> Hugues Fruchet (5):
+>>    dt-bindings: media: Document STM32MP25 VDEC & VENC video codecs
+>>    media: hantro: add support for STM32MP25 VDEC
+>>    media: hantro: add support for STM32MP25 VENC
+>>    arm64: dts: st: add video decoder support to stm32mp255
+>>    arm64: dts: st: add video encoder support to stm32mp255
+>>
+>>   .../media/st,stm32mp25-video-codec.yaml       |  50 ++++++++
+>>   arch/arm64/boot/dts/st/stm32mp251.dtsi        |  12 ++
+>>   arch/arm64/boot/dts/st/stm32mp255.dtsi        |  17 +++
+>>   drivers/media/platform/verisilicon/Kconfig    |  14 ++-
+>>   drivers/media/platform/verisilicon/Makefile   |   4 +
+>>   .../media/platform/verisilicon/hantro_drv.c   |   4 +
+>>   .../media/platform/verisilicon/hantro_hw.h    |   2 +
+>>   .../platform/verisilicon/stm32mp25_vdec_hw.c  |  92 ++++++++++++++
+>>   .../platform/verisilicon/stm32mp25_venc_hw.c  | 115 ++++++++++++++++++
+>>   9 files changed, 307 insertions(+), 3 deletions(-)
+>>   create mode 100644 
+>> Documentation/devicetree/bindings/media/st,stm32mp25-video-codec.yaml
+>>   create mode 100644 
+>> drivers/media/platform/verisilicon/stm32mp25_vdec_hw.c
+>>   create mode 100644 
+>> drivers/media/platform/verisilicon/stm32mp25_venc_hw.c
+>>
+> 
