@@ -1,183 +1,144 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7D9651AB
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 19:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89AE745C9
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 19:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OqvsvJ4S"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-553e36acfbaso1674a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 11:10:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1703185812; x=1703790612; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AFrW4mwSQkPFJyi7GEYfnWuglO4pb57kPDM5jaJU5mM=;
-        b=OqvsvJ4SH4vdSlMUMle9A0tanulvhIA/g9oMMpC44T8WzUDd3+ADTS7gNdqvyEBbt9
-         Ou1i3Jv5W4dGlcj1RGdiirRjh8KYAjmsEP9eGBZWEcYiNF8uqGB4rFkRnl2PlOhXIcw8
-         ZV4VXlH7jhC81N/WuEuMokRopcdBJYjRnKNTCXsheB+/xEEMmYU91jaYkziJvXy6Vnzw
-         ZPYEoOSYgP3kCPU+GTttm2pGctr0uHNSCM3ouL1DAtwHTDbb/gRo1kfMo7cxhvciFCxN
-         ji5apUSyvUzQIpa7lnXmvDSih5ACkcUzDsZhyJUYbAQE0rGHf4HZ97d7WG+NTtSYsZ8d
-         OEjQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UDntXmPZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1703185821;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hZHuvhwToeaoaoZVXmPZHHVtGh/nwSUb0e8gt0f15YM=;
+	b=UDntXmPZDZoeHtpfAor4xnAscR32bLE8qLbx6m/NFuRypTO/mnyJquaEqcm7GpjMM5A4yU
+	1q/0mGMB7vdqOFSddDxHup2WYF6cA6Gd6LezZwaXqBbPy2sG6F4Hi4amSZ2MrJ2Scm30xm
+	VXhpH/EvEdrPklguUSnydihXAUxd6ig=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-178-UXD6mRS3Ore1nbr_PG-5mA-1; Thu, 21 Dec 2023 14:10:20 -0500
+X-MC-Unique: UXD6mRS3Ore1nbr_PG-5mA-1
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4279625273cso15949171cf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 11:10:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703185812; x=1703790612;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AFrW4mwSQkPFJyi7GEYfnWuglO4pb57kPDM5jaJU5mM=;
-        b=B3BVjvAGRtqqxPsBqoL4bnRnQulPry4D5KW9Kpj+QYiLJlEQzfDWIbTljjDuJYaqwq
-         AYZ4rQkyF5CRn3U2M9YHhZ13z8NaXzwIBLSIqEFWBjiqzsDtbh5Edz1E6wq7grFO2TF9
-         XA4oZ9GG/DrK8cP7EY6bjDTAgAuLHI2HD3Kkzl9EN88+CNEAzkF+I7zj1yylPo+aOZR/
-         SQLrY4XoLgIxjrF1IGD84H/gwuvoMtrGW53CPPhyvnNppZPcR97JBBfQQJQFJimrTq0m
-         xM9yvQCWP5KXhxfopkEAOLc2kfQoUM+8Yo0tNdBFvgWPloStevkox5tWckBpjYuCU/wB
-         DaCg==
-X-Gm-Message-State: AOJu0YypNS9Vg34tikM1tUQ9rwx5ubrHAlKZDvQrjXomAd4HojZ7lPm9
-	TCAKqn5nIj5XvO94OlqkWiwqgthcaP/EEc3y7futGrtB9MDT
-X-Google-Smtp-Source: AGHT+IESeqEdgrqKz0/GMqLTd/fjag+tdJcjQwL7DLqFfGzpbYDoxB294HxeTrld5LUrQiq+V6r6BSM4bMcT4cv0olc=
-X-Received: by 2002:a50:d705:0:b0:553:62b4:5063 with SMTP id
- t5-20020a50d705000000b0055362b45063mr8689edi.4.1703185812520; Thu, 21 Dec
- 2023 11:10:12 -0800 (PST)
+        d=1e100.net; s=20230601; t=1703185820; x=1703790620;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hZHuvhwToeaoaoZVXmPZHHVtGh/nwSUb0e8gt0f15YM=;
+        b=Ns+bYmn+Qx7cqzhVSNL6t6xbCtQ0QQepvmuoW/cbnCeeHXDB6wA+ekhEwPJjKNaARE
+         L05r28iulF5/ye7nOnySyLqdIuU9XyVTMbNSYGtUTHJEThCQbPxBzFOJi8KxU//aV0B4
+         FcIh2fBp8Y/8MzLfk040D/Ib03ISXHIgBK4L3TMyYQ+XNjkLkGN7b+AbwMIb9J61UQeR
+         HjS0B8bMW2Eijln5iHNEZ4Yc/aa3p9H0lQMBpdvG8ISVPCjJnN4/wPn1yIos2JBQE6tw
+         FscLRqnPHeS26IupCvgq6pZBnMrM8JcHtqfv2kC2M1jQ0Hv8t8L5dnQ6/j+OLEPMmUaG
+         REBg==
+X-Gm-Message-State: AOJu0YyXhP+e5brXkWS2TR6bixll+TNj43lR9thl+qHmbR6BHYqtH5fy
+	YGGBozIFe64qg8esxXCg68WmE+oMfJ71L1l465BGzuChbwnoi3/dtciEmZbYFEGu9zqUumcqdHK
+	ZMy8EB3Gs9X77M7MPY6HbGXMDUR+IcNjz
+X-Received: by 2002:a05:6214:f27:b0:67f:f92:29ff with SMTP id iw7-20020a0562140f2700b0067f0f9229ffmr171534qvb.123.1703185819866;
+        Thu, 21 Dec 2023 11:10:19 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGx2O2/q9nQgS6+PqwWNkUib41xKh58crZQWBXyWSQ3d0w0skt4cmacBiYQUg7/dkT6UrakvQ==
+X-Received: by 2002:a05:6214:f27:b0:67f:f92:29ff with SMTP id iw7-20020a0562140f2700b0067f0f9229ffmr171513qvb.123.1703185819605;
+        Thu, 21 Dec 2023 11:10:19 -0800 (PST)
+Received: from fedora.redhat.com ([2600:1700:1ff0:d0e0::37])
+        by smtp.gmail.com with ESMTPSA id 25-20020a05620a04d900b0077f0a4bd3c6sm846370qks.77.2023.12.21.11.10.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Dec 2023 11:10:19 -0800 (PST)
+From: Andrew Halaney <ahalaney@redhat.com>
+To: Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Janek Kotas <jank@cadence.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Avri Altman <avri.altman@wdc.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Can Guo <quic_cang@quicinc.com>
+Cc: Andrew Halaney <ahalaney@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH RFC v3 00/11] scsi: ufs: Remove overzealous memory barriers
+Date: Thu, 21 Dec 2023 13:09:46 -0600
+Message-ID: <20231221-ufs-reset-ensure-effect-before-delay-v3-0-2195a1b66d2e@redhat.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20c9c21619aa44363c2c7503db1581cb816a1c0f.camel@redhat.com>
-In-Reply-To: <20c9c21619aa44363c2c7503db1581cb816a1c0f.camel@redhat.com>
-From: Jim Mattson <jmattson@google.com>
-Date: Thu, 21 Dec 2023 11:09:57 -0800
-Message-ID: <CALMp9eSy2r+iUzqHV+V2mbPaPWfn=Y=a1aM+9C65PGtE0=nGqA@mail.gmail.com>
-Subject: Re: RFC: NTP adjustments interfere with KVM emulation of TSC deadline timers
-To: Maxim Levitsky <mlevitsk@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Vitaly Kuznetsov <vkuznets@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Mailer: b4 0.12.3
+Content-Transfer-Encoding: 8bit
 
-On Thu, Dec 21, 2023 at 8:52=E2=80=AFAM Maxim Levitsky <mlevitsk@redhat.com=
-> wrote:
->
->
-> Hi!
->
-> Recently I was tasked with triage of the failures of 'vmx_preemption_time=
-r'
-> that happen in our kernel CI pipeline.
->
->
-> The test usually fails because L2 observes TSC after the
-> preemption timer deadline, before the VM exit happens.
->
-> This happens because KVM emulates nested preemption timer with HR timers,
-> so it converts the preemption timer value to nanoseconds, taking in accou=
-nt
-> tsc scaling and host tsc frequency, and sets HR timer.
->
-> HR timer however as I found out the hard way is bound to CLOCK_MONOTONIC,
-> and thus its rate can be adjusted by NTP, which means that it can run slo=
-wer or
-> faster than KVM expects, which can result in the interrupt arriving earli=
-er,
-> or late, which is what is happening.
->
-> This is how you can reproduce it on an Intel machine:
->
->
-> 1. stop the NTP daemon:
->       sudo systemctl stop chronyd.service
-> 2. introduce a small error in the system time:
->       sudo date -s "$(date)"
->
-> 3. start NTP daemon:
->       sudo chronyd -d -n  (for debug) or start the systemd service again
->
-> 4. run the vmx_preemption_timer test a few times until it fails:
->
->
-> I did some research and it looks like I am not the first to encounter thi=
-s:
->
-> From the ARM side there was an attempt to support CLOCK_MONOTONIC_RAW wit=
-h
-> timer subsystem which was even merged but then reverted due to issues:
->
-> https://lore.kernel.org/all/1452879670-16133-3-git-send-email-marc.zyngie=
-r@arm.com/T/#u
->
-> It looks like this issue was later worked around in the ARM code:
->
->
-> commit 1c5631c73fc2261a5df64a72c155cb53dcdc0c45
-> Author: Marc Zyngier <maz@kernel.org>
-> Date:   Wed Apr 6 09:37:22 2016 +0100
->
->     KVM: arm/arm64: Handle forward time correction gracefully
->
->     On a host that runs NTP, corrections can have a direct impact on
->     the background timer that we program on the behalf of a vcpu.
->
->     In particular, NTP performing a forward correction will result in
->     a timer expiring sooner than expected from a guest point of view.
->     Not a big deal, we kick the vcpu anyway.
->
->     But on wake-up, the vcpu thread is going to perform a check to
->     find out whether or not it should block. And at that point, the
->     timer check is going to say "timer has not expired yet, go back
->     to sleep". This results in the timer event being lost forever.
->
->     There are multiple ways to handle this. One would be record that
->     the timer has expired and let kvm_cpu_has_pending_timer return
->     true in that case, but that would be fairly invasive. Another is
->     to check for the "short sleep" condition in the hrtimer callback,
->     and restart the timer for the remaining time when the condition
->     is detected.
->
->     This patch implements the latter, with a bit of refactoring in
->     order to avoid too much code duplication.
->
->     Cc: <stable@vger.kernel.org>
->     Reported-by: Alexander Graf <agraf@suse.de>
->     Reviewed-by: Alexander Graf <agraf@suse.de>
->     Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
->     Signed-off-by: Christoffer Dall <christoffer.dall@linaro.org>
->
->
-> So to solve this issue there are two options:
->
->
-> 1. Have another go at implementing support for CLOCK_MONOTONIC_RAW timers=
-.
->    I don't know if that is feasible and I would be very happy to hear a f=
-eedback from you.
->
-> 2. Also work this around in KVM. KVM does listen to changes in the timeke=
-eping system
->   (kernel calls its update_pvclock_gtod), and it even notes rates of both=
- regular and raw clocks.
->
->   When starting a HR timer I can adjust its period for the difference in =
-rates, which will in most
->   cases produce more correct result that what we have now, but will still=
- fail if the rate
->   is changed at the same time the timer is started or before it expires.
->
->   Or I can also restart the timer, although that might cause more harm th=
-an
->   good to the accuracy.
->
->
-> What do you think?
+This is an RFC because I'm not all the confident in this topic. UFS has
+a lot of mb() variants used, most with comments saying "ensure this
+takes effect before continuing". mb()'s aren't really the way to
+guarantee that, a read back is the best method.
 
-Is this what the "adaptive tuning" in the local APIC TSC_DEADLINE
-timer is all about (lapic_timer_advance_ns =3D -1)? If so, can we
-leverage that for the VMX-preemption timer as well?
->
-> Best regards,
->         Maxim Levitsky
->
->
->
+Some of these though I think could go a step further and remove the mb()
+variant without a read back. As far as I can tell there's no real reason
+to ensure it takes effect in most cases (there's no delay() or anything
+afterwards, and eventually another readl()/writel() happens which is by
+definition ordered).
+
+In this current series I don't do that as I wasn't totally convinced,
+but it should be considered when reviewing.
+
+Hopefully this series gets enough interest where we can confidently
+merge the final result after review helps improve it.
+
+I'll be travelling a good bit the next 2ish weeks, so expect little
+response until my return.
+
+Thanks in advance for the help,
+Andrew
+
+Signed-off-by: Andrew Halaney <ahalaney@redhat.com>
+---
+Changes in v3:
+- Nothing changed, I just failed to send with b4 (resulting in 2 half
+  sent v2 series on list)
+- Link to v2: https://lore.kernel.org/r/pnwsdz3i2liivjxvtfwq6tijotgh5adyqipjjb5wdvo4jpu7yv@j6fkshm5ipue
+
+Changes in v2:
+- Added review tags for original patch
+- Added new patches to address all other memory barriers used
+
+- Link to v1: https://lore.kernel.org/r/20231208-ufs-reset-ensure-effect-before-delay-v1-1-8a0f82d7a09e@redhat.com
+
+---
+Andrew Halaney (11):
+      scsi: ufs: qcom: Perform read back after writing reset bit
+      scsi: ufs: qcom: Perform read back after writing REG_UFS_SYS1CLK_1US
+      scsi: ufs: qcom: Perform read back after writing testbus config
+      scsi: ufs: qcom: Perform read back after writing unipro mode
+      scsi: ufs: qcom: Perform read back after writing CGC enable
+      scsi: ufs: cdns-pltfrm: Perform read back after writing HCLKDIV
+      scsi: ufs: core: Perform read back after writing UTP_TASK_REQ_LIST_BASE_H
+      scsi: ufs: core: Perform read back after disabling interrupts
+      scsi: ufs: core: Perform read back after disabling UIC_COMMAND_COMPL
+      scsi: ufs: core: Perform read back to commit doorbell
+      scsi: ufs: core: Perform read back before writing run/stop regs
+
+ drivers/ufs/core/ufshcd.c      | 10 +++++-----
+ drivers/ufs/host/cdns-pltfrm.c |  2 +-
+ drivers/ufs/host/ufs-qcom.c    | 14 ++++++--------
+ drivers/ufs/host/ufs-qcom.h    | 12 ++++++------
+ 4 files changed, 18 insertions(+), 20 deletions(-)
+---
+base-commit: 20d857259d7d10cd0d5e8b60608455986167cfad
+change-id: 20231208-ufs-reset-ensure-effect-before-delay-6e06899d5419
+
+Best regards,
+-- 
+Andrew Halaney <ahalaney@redhat.com>
+
