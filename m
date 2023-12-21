@@ -1,77 +1,183 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A265C65198;
-	Thu, 21 Dec 2023 19:08:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7D9651AB
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 19:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UM5fgkst"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso826009a12.3;
-        Thu, 21 Dec 2023 11:08:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OqvsvJ4S"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-553e36acfbaso1674a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 11:10:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703185705; x=1703790505; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=76+oyG2G1x0gT7TSaAnna8obnYpV1SthTcTntxCagtY=;
-        b=UM5fgkstvtcsonikn3MmV855Z6DkKkqgnExhSeG+34DQv9oI3ZduIEbAwOlr8ptXQa
-         vVdYDUhsRqk2optCunr3OXLiH/ONdwEvRc6T5+/g9RCR0OBKX+Qb7GEYG2IUEHedJ5CJ
-         mx5PgThZqK1qwYQPUhCwSoikOkZcfMQN42f+arVEHl2haquMwevqhSy3H++iIipw5EXw
-         cZNxfNfLPNdUY88BnvcU/8rgROLHIWdWmnytcn09d+GPoj9JKjwLyoVmjiuw0CJbeMsW
-         XwC8Ne6AlbTdZ7qdWuHAV698jHgYc7KN/+P0nTbK2z+jBuQKOvGH3Dg48BALw9UovuID
-         /qdA==
+        d=google.com; s=20230601; t=1703185812; x=1703790612; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AFrW4mwSQkPFJyi7GEYfnWuglO4pb57kPDM5jaJU5mM=;
+        b=OqvsvJ4SH4vdSlMUMle9A0tanulvhIA/g9oMMpC44T8WzUDd3+ADTS7gNdqvyEBbt9
+         Ou1i3Jv5W4dGlcj1RGdiirRjh8KYAjmsEP9eGBZWEcYiNF8uqGB4rFkRnl2PlOhXIcw8
+         ZV4VXlH7jhC81N/WuEuMokRopcdBJYjRnKNTCXsheB+/xEEMmYU91jaYkziJvXy6Vnzw
+         ZPYEoOSYgP3kCPU+GTttm2pGctr0uHNSCM3ouL1DAtwHTDbb/gRo1kfMo7cxhvciFCxN
+         ji5apUSyvUzQIpa7lnXmvDSih5ACkcUzDsZhyJUYbAQE0rGHf4HZ97d7WG+NTtSYsZ8d
+         OEjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703185705; x=1703790505;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=76+oyG2G1x0gT7TSaAnna8obnYpV1SthTcTntxCagtY=;
-        b=r5bt5gB0c9uLIWM0Z4MexnbnPKjjHQ34IVPZBxYl8wCc1gLUtHfv8bA5+Huf41OTVX
-         6U84qvGixEMc4pMzumk0pVnYI79aJ5erSMPmsSUzW/Q/rfr6iWIPS5ZViu5eraml+Iyp
-         DtjK5FRpQB1SBS0oIuqi+Ngr0yRLq34kJdBGRN7GciqlB1FqWe/3U8zO1Et3KUnjk2r2
-         gkXzouTGS3CAde3fPTxeIjOyR/4vuiRR8GnhpjQZXhjSmbtaKXmYYw66DvrOmc4HHS6p
-         0obMP39HQ680BQzfgwnDfhlUI1nQmSuBf7fH47Zb3i4t9O8EMqg+VhQ4TRtoWrHONkiX
-         FInA==
-X-Gm-Message-State: AOJu0Ywo1gDeQyKgKSErkpAY6fV/fG28EXjrQrprszvbH2RIeCGPmnar
-	wZaMJolJDhjaZegXsg2JfG/mHbGrSl1tlQ==
-X-Google-Smtp-Source: AGHT+IF4zGZPazNZTfZ5miRc6/PEO7loJCDDGRSV2wmSChdY5PEy1bwjCkDj2S68lM164f2lBqSy0g==
-X-Received: by 2002:a17:902:e843:b0:1d3:eddf:6769 with SMTP id t3-20020a170902e84300b001d3eddf6769mr128289plg.92.1703185705576;
-        Thu, 21 Dec 2023 11:08:25 -0800 (PST)
-Received: from ?IPV6:2401:4900:5f1b:292f:dc7e:1579:ed7c:8f49? ([2401:4900:5f1b:292f:dc7e:1579:ed7c:8f49])
-        by smtp.gmail.com with ESMTPSA id u11-20020a17090282cb00b001d398889d4dsm1975467plz.127.2023.12.21.11.08.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Dec 2023 11:08:25 -0800 (PST)
-Message-ID: <1f84c8f4-0b21-4e6e-942c-1f987dd5f63e@gmail.com>
-Date: Fri, 22 Dec 2023 00:36:08 +0530
+        d=1e100.net; s=20230601; t=1703185812; x=1703790612;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AFrW4mwSQkPFJyi7GEYfnWuglO4pb57kPDM5jaJU5mM=;
+        b=B3BVjvAGRtqqxPsBqoL4bnRnQulPry4D5KW9Kpj+QYiLJlEQzfDWIbTljjDuJYaqwq
+         AYZ4rQkyF5CRn3U2M9YHhZ13z8NaXzwIBLSIqEFWBjiqzsDtbh5Edz1E6wq7grFO2TF9
+         XA4oZ9GG/DrK8cP7EY6bjDTAgAuLHI2HD3Kkzl9EN88+CNEAzkF+I7zj1yylPo+aOZR/
+         SQLrY4XoLgIxjrF1IGD84H/gwuvoMtrGW53CPPhyvnNppZPcR97JBBfQQJQFJimrTq0m
+         xM9yvQCWP5KXhxfopkEAOLc2kfQoUM+8Yo0tNdBFvgWPloStevkox5tWckBpjYuCU/wB
+         DaCg==
+X-Gm-Message-State: AOJu0YypNS9Vg34tikM1tUQ9rwx5ubrHAlKZDvQrjXomAd4HojZ7lPm9
+	TCAKqn5nIj5XvO94OlqkWiwqgthcaP/EEc3y7futGrtB9MDT
+X-Google-Smtp-Source: AGHT+IESeqEdgrqKz0/GMqLTd/fjag+tdJcjQwL7DLqFfGzpbYDoxB294HxeTrld5LUrQiq+V6r6BSM4bMcT4cv0olc=
+X-Received: by 2002:a50:d705:0:b0:553:62b4:5063 with SMTP id
+ t5-20020a50d705000000b0055362b45063mr8689edi.4.1703185812520; Thu, 21 Dec
+ 2023 11:10:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] dt-bindings: input: convert drv266x to json-schema
-Content-Language: en-US
-To: linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- linux-kernel-mentees@lists.linuxfoundation.org
-References: <20231221181423.671432-1-anshulusr@gmail.com>
-From: Anshul Dalal <anshulusr@gmail.com>
-In-Reply-To: <20231221181423.671432-1-anshulusr@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20c9c21619aa44363c2c7503db1581cb816a1c0f.camel@redhat.com>
+In-Reply-To: <20c9c21619aa44363c2c7503db1581cb816a1c0f.camel@redhat.com>
+From: Jim Mattson <jmattson@google.com>
+Date: Thu, 21 Dec 2023 11:09:57 -0800
+Message-ID: <CALMp9eSy2r+iUzqHV+V2mbPaPWfn=Y=a1aM+9C65PGtE0=nGqA@mail.gmail.com>
+Subject: Re: RFC: NTP adjustments interfere with KVM emulation of TSC deadline timers
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Vitaly Kuznetsov <vkuznets@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I mistakenly submitted this patch to the iio subsystem and CC'd the no
-longer valid e-mail of Dan Murphy.
+On Thu, Dec 21, 2023 at 8:52=E2=80=AFAM Maxim Levitsky <mlevitsk@redhat.com=
+> wrote:
+>
+>
+> Hi!
+>
+> Recently I was tasked with triage of the failures of 'vmx_preemption_time=
+r'
+> that happen in our kernel CI pipeline.
+>
+>
+> The test usually fails because L2 observes TSC after the
+> preemption timer deadline, before the VM exit happens.
+>
+> This happens because KVM emulates nested preemption timer with HR timers,
+> so it converts the preemption timer value to nanoseconds, taking in accou=
+nt
+> tsc scaling and host tsc frequency, and sets HR timer.
+>
+> HR timer however as I found out the hard way is bound to CLOCK_MONOTONIC,
+> and thus its rate can be adjusted by NTP, which means that it can run slo=
+wer or
+> faster than KVM expects, which can result in the interrupt arriving earli=
+er,
+> or late, which is what is happening.
+>
+> This is how you can reproduce it on an Intel machine:
+>
+>
+> 1. stop the NTP daemon:
+>       sudo systemctl stop chronyd.service
+> 2. introduce a small error in the system time:
+>       sudo date -s "$(date)"
+>
+> 3. start NTP daemon:
+>       sudo chronyd -d -n  (for debug) or start the systemd service again
+>
+> 4. run the vmx_preemption_timer test a few times until it fails:
+>
+>
+> I did some research and it looks like I am not the first to encounter thi=
+s:
+>
+> From the ARM side there was an attempt to support CLOCK_MONOTONIC_RAW wit=
+h
+> timer subsystem which was even merged but then reverted due to issues:
+>
+> https://lore.kernel.org/all/1452879670-16133-3-git-send-email-marc.zyngie=
+r@arm.com/T/#u
+>
+> It looks like this issue was later worked around in the ARM code:
+>
+>
+> commit 1c5631c73fc2261a5df64a72c155cb53dcdc0c45
+> Author: Marc Zyngier <maz@kernel.org>
+> Date:   Wed Apr 6 09:37:22 2016 +0100
+>
+>     KVM: arm/arm64: Handle forward time correction gracefully
+>
+>     On a host that runs NTP, corrections can have a direct impact on
+>     the background timer that we program on the behalf of a vcpu.
+>
+>     In particular, NTP performing a forward correction will result in
+>     a timer expiring sooner than expected from a guest point of view.
+>     Not a big deal, we kick the vcpu anyway.
+>
+>     But on wake-up, the vcpu thread is going to perform a check to
+>     find out whether or not it should block. And at that point, the
+>     timer check is going to say "timer has not expired yet, go back
+>     to sleep". This results in the timer event being lost forever.
+>
+>     There are multiple ways to handle this. One would be record that
+>     the timer has expired and let kvm_cpu_has_pending_timer return
+>     true in that case, but that would be fairly invasive. Another is
+>     to check for the "short sleep" condition in the hrtimer callback,
+>     and restart the timer for the remaining time when the condition
+>     is detected.
+>
+>     This patch implements the latter, with a bit of refactoring in
+>     order to avoid too much code duplication.
+>
+>     Cc: <stable@vger.kernel.org>
+>     Reported-by: Alexander Graf <agraf@suse.de>
+>     Reviewed-by: Alexander Graf <agraf@suse.de>
+>     Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+>     Signed-off-by: Christoffer Dall <christoffer.dall@linaro.org>
+>
+>
+> So to solve this issue there are two options:
+>
+>
+> 1. Have another go at implementing support for CLOCK_MONOTONIC_RAW timers=
+.
+>    I don't know if that is feasible and I would be very happy to hear a f=
+eedback from you.
+>
+> 2. Also work this around in KVM. KVM does listen to changes in the timeke=
+eping system
+>   (kernel calls its update_pvclock_gtod), and it even notes rates of both=
+ regular and raw clocks.
+>
+>   When starting a HR timer I can adjust its period for the difference in =
+rates, which will in most
+>   cases produce more correct result that what we have now, but will still=
+ fail if the rate
+>   is changed at the same time the timer is started or before it expires.
+>
+>   Or I can also restart the timer, although that might cause more harm th=
+an
+>   good to the accuracy.
+>
+>
+> What do you think?
 
-Kindly refer to the patch below for further discussions:
-
-https://lore.kernel.org/lkml/20231221183109.684325-1-anshulusr@gmail.com/
-
-Apologies for any inconvenience,
-Anshul
+Is this what the "adaptive tuning" in the local APIC TSC_DEADLINE
+timer is all about (lapic_timer_advance_ns =3D -1)? If so, can we
+leverage that for the VMX-preemption timer as well?
+>
+> Best regards,
+>         Maxim Levitsky
+>
+>
+>
