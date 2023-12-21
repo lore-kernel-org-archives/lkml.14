@@ -1,88 +1,97 @@
-Received: from mailrelay.tu-berlin.de (mailrelay.tu-berlin.de [130.149.7.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5913E7995F;
-	Thu, 21 Dec 2023 23:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mailbox.tu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=campus.tu-berlin.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7291A7995F
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 23:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tu-berlin.de header.i=@tu-berlin.de header.b="L2gO5BZF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xUs/D+UY"
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6da4894a8d6so837023a34.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 15:22:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tu-berlin.de; l=1833; s=dkim-tub; t=1703200787;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Ti5eomPIZbnykEiRIHFWHoRdnkVM3Lii6pCaOjMdzxI=;
-  b=L2gO5BZF/pQ8Nx6bOGFAyVa79pauEyOKNK1HfHIfviPLnJFR80/4eyCD
-   b0vaArE4+7GDSuNHxERPVBWOs3UnArBZG1Vqwmc7Dd6BkOsqCkzdOpB2Y
-   U451QFFETkJK1rkn1NZnhCQo3PRwkBiX9NakQpdWksjcZDgqK3yJytl1p
-   c=;
-X-CSE-ConnectionGUID: THVcGfoHSOaMWzOeFXAlZw==
-X-CSE-MsgGUID: uvaIDAWJQ+yjFuvgSaLsfw==
-X-IronPort-AV: E=Sophos;i="6.04,294,1695679200"; 
-   d="scan'208";a="14652823"
-Received: from mail.tu-berlin.de ([141.23.12.141])
-  by mailrelay.tu-berlin.de with ESMTP; 22 Dec 2023 00:19:44 +0100
-From: =?UTF-8?q?J=C3=B6rn-Thorben=20Hinz?= <jthinz@mailbox.tu-berlin.de>
-To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: =?UTF-8?q?J=C3=B6rn-Thorben=20Hinz?= <jthinz@mailbox.tu-berlin.de>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Willem de Bruijn
-	<willemb@google.com>, Deepa Dinamani <deepa.kernel@gmail.com>
-Subject: [PATCH net] net: Implement missing getsockopt(SO_TIMESTAMPING_NEW)
-Date: Fri, 22 Dec 2023 00:19:01 +0100
-Message-ID: <20231221231901.67003-1-jthinz@mailbox.tu-berlin.de>
-X-Mailer: git-send-email 2.39.2
+        d=linaro.org; s=google; t=1703200937; x=1703805737; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TlybDmShL7dZTsi3x+EewBqggHiwTM9Kr/2m+TeNB7c=;
+        b=xUs/D+UYD4Nuns6GwHk1E9jeO37f2Vy5P9TKT+OgRr1DQyCbHZ4/q9Z8nedZCoFLxI
+         RRsW3K4V9npbKQ7RJoiOyQECOpxEBKaSiU0ItktOPNu6W5S8B2e6Liw3mTlqOjHZPsxe
+         yNz+WxtWPt69SZeb7ufbXLp5KYTH9ClFFtDNp+O388IK0SbH8T6Sy0AyhHHhUcjbd0Ev
+         ltrmigtetyXcyJxhpkrn21ljoAgd8yyDX39RaLjEFz3jEOTDhPOUn7mVugNR6BpDzmF1
+         k5k06vkDO+RlNg+IcA/oGMGLPy1U5UBZpeO2MVdCAposTulyFH3+kCDA7Hbutz6c6Q2A
+         lSLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703200937; x=1703805737;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TlybDmShL7dZTsi3x+EewBqggHiwTM9Kr/2m+TeNB7c=;
+        b=l1ZYwarXE7E+jpjlR6g0U31sMZrqM/+nSJvjmejn2SmTDC2p+/nlP7UN3dCA654pPr
+         e6ctAgaNDik1uX7LBTCtKghTK8sxJpnFUZWW0dh5iPU4W90A3B2caSHnKtxA8Aog8wzZ
+         3amXiwQaclhdeXJi0koKXAdUhe67um982B0bGPXspFeYmeEmNwxrwwfFs+ayiyciRAZg
+         Aznkf6BrA+1bRmacAJ2Ama32gdA7O0MVjd0KgcDQdtWii7ymCDr0tgnKuZ9hVjC/xCZn
+         yug8vOfcgwq/pTU28+WYWMvGHOsDzuZTv36KD+mTJpmCUgDzPcbkOYnZdIQYtdBIJ0bB
+         KTrg==
+X-Gm-Message-State: AOJu0Yxspi5bNtsov4bxRMYWX8MbLOxwUJzOZgQGED1sEf/sWfN61fZ1
+	1ZEc/v1lavJequVUswkfARLTqMqAbDKDExOOnLd6hBX1LUUmxA==
+X-Google-Smtp-Source: AGHT+IGs7zUqzdCT9Xyd01upCzhbYPXR4Yuwd8j//oNfpJW5nVv9WL+6qwUnigu46hKo0j07CMMh7ibsBZideIuLpP8=
+X-Received: by 2002:a05:6830:44a1:b0:6d9:dbe2:5ec2 with SMTP id
+ r33-20020a05683044a100b006d9dbe25ec2mr509430otv.69.1703200936971; Thu, 21 Dec
+ 2023 15:22:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20231221214822.3063219-1-olvaffe@gmail.com> <c5b28a49-cc0f-41b1-8dfb-76af93636fb0@linaro.org>
+ <CAPaKu7Rx_tShhmJrwYgnZefaxy37yhms9qoXS9n07+=ohCEZ9w@mail.gmail.com>
+In-Reply-To: <CAPaKu7Rx_tShhmJrwYgnZefaxy37yhms9qoXS9n07+=ohCEZ9w@mail.gmail.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Fri, 22 Dec 2023 01:22:05 +0200
+Message-ID: <CAA8EJpos2D0pjLtXR67p5G-uC9LyraVHm2H-by0h2RZgppVJ4Q@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7280: revert back to PSCI PC mode
+To: Chia-I Wu <olvaffe@gmail.com>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, cros-qcom-dts-watchers@chromium.org, 
+	Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Maulik Shah <quic_mkshah@quicinc.com>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 
-Commit 9718475e6908 ("socket: Add SO_TIMESTAMPING_NEW") added the new
-socket option SO_TIMESTAMPING_NEW. Setting the option is handled in
-sk_setsockopt(), querying it was not handled in sk_getsockopt(), though.
+On Fri, 22 Dec 2023 at 00:07, Chia-I Wu <olvaffe@gmail.com> wrote:
+>
+> On Thu, Dec 21, 2023 at 1:55=E2=80=AFPM Konrad Dybcio <konrad.dybcio@lina=
+ro.org> wrote:
+> >
+> > On 21.12.2023 22:48, Chia-I Wu wrote:
+> > > This effectively reverts 7925ca85e9561 ("arm64: dts: qcom: sc7280: Ad=
+d
+> > > power-domains for cpuidle states") for sc7280-herobrine.
+> > >
+> > > Fixes: 7925ca85e9561 ("arm64: dts: qcom: sc7280: Add power-domains fo=
+r cpuidle states")
+> > > Signed-off-by: Chia-I Wu <olvaffe@gmail.com>
+> > > ---
+> > 0 explanations?
+> Ouch.  It's in the comment
+>
+> + * Devices that use SC7280 with TrustedFirmware-A
+> + * need PSCI PC mode instead of the OSI mode provided
+> + * by Qualcomm firmware.
+>
+> and is similar to the case with sc7180-trogdor.  I can send v2 if necessa=
+ry.
 
-Following remarks on an earlier submission of this patch, keep the old
-behavior of getsockopt(SO_TIMESTAMPING_OLD) which returns the active
-flags even if they actually have been set through SO_TIMESTAMPING_NEW.
+Absolutely necessary. And so does the accurate commit subject. The
+existing one means that the whole SC7280 PSCI mode is reversed, while
+instead you do it only for the TF-A platforms.
 
-The new getsockopt(SO_TIMESTAMPING_NEW) is stricter, returning flags
-only if they have been set through the same option.
 
-Fixes: 9718475e6908 ("socket: Add SO_TIMESTAMPING_NEW")
-Link: https://lore.kernel.org/lkml/20230703175048.151683-1-jthinz@mailbox.tu-berlin.de/
-Link: https://lore.kernel.org/netdev/0d7cddc9-03fa-43db-a579-14f3e822615b@app.fastmail.com/
-Signed-off-by: Jörn-Thorben Hinz <jthinz@mailbox.tu-berlin.de>
----
- net/core/sock.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/net/core/sock.c b/net/core/sock.c
-index fef349dd72fa..51d52859e942 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -1711,9 +1711,16 @@ int sk_getsockopt(struct sock *sk, int level, int optname,
- 		break;
- 
- 	case SO_TIMESTAMPING_OLD:
-+	case SO_TIMESTAMPING_NEW:
- 		lv = sizeof(v.timestamping);
--		v.timestamping.flags = READ_ONCE(sk->sk_tsflags);
--		v.timestamping.bind_phc = READ_ONCE(sk->sk_bind_phc);
-+		/* For the later-added case SO_TIMESTAMPING_NEW: Be strict about only
-+		 * returning the flags when they were set through the same option.
-+		 * Don't change the beviour for the old case SO_TIMESTAMPING_OLD.
-+		 */
-+		if (optname == SO_TIMESTAMPING_OLD || sock_flag(sk, SOCK_TSTAMP_NEW)) {
-+			v.timestamping.flags = READ_ONCE(sk->sk_tsflags);
-+			v.timestamping.bind_phc = READ_ONCE(sk->sk_bind_phc);
-+		}
- 		break;
- 
- 	case SO_RCVTIMEO_OLD:
--- 
-2.39.2
-
+--=20
+With best wishes
+Dmitry
