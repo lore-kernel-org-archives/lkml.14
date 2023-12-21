@@ -1,95 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4EE539F3;
-	Thu, 21 Dec 2023 16:08:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fW2oFWnM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703174915; x=1734710915;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Ht2da222gkdrScCbMu4NEKmjUDgWThAi8y/EPds7Zrs=;
-  b=fW2oFWnMqAHHsxNkZDzRKrGxu3EGAjupGf3pFEmiV27gLX3j/b1cQ5nj
-   pSxC2UB6jZ2iid0Z4cj+o6Q1k3BjFBcPCrcKfApWkQS6VHSChZR7cBfep
-   IKqL2AvDoKSFw/Zqn69y/YUdnLUx6WlSM+ZMCOZJq3bKuBkmMIT1SXdrp
-   kBlNL/IphiW7IOjvsF/CEICqw1gjzNUZNso2oLB9adsLnqRY8huErZDA+
-   m/KIoELTVxQBSEh+XP1bU7pMHxkfvcBeiIvDWo6iXMLkgIuNZQfRH+AqN
-   ePw/MBIJ3496Leu3gENkHTjjqoc2OXzBZNeg8yZqj3LKvXDbBeThGvZrY
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="2827900"
-X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="2827900"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 08:08:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="1023900990"
-X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="1023900990"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 08:08:20 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1rGLY2-00000007tEd-2Dpc;
-	Thu, 21 Dec 2023 18:05:22 +0200
-Date: Thu, 21 Dec 2023 18:05:22 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Hugo Villeneuve <hugo@hugovil.com>
-Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, jringle@gridpoint.com,
-	kubakici@wp.pl, phil@raspberrypi.org, bo.svangard@embeddedart.se,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>, stable@vger.kernel.org,
-	Yury Norov <yury.norov@gmail.com>
-Subject: Re: [PATCH 02/18] serial: sc16is7xx: fix invalid sc16is7xx_lines
- bitfield in case of probe error
-Message-ID: <ZYRiQpt56IVYhwOg@smile.fi.intel.com>
-References: <20231219171903.3530985-1-hugo@hugovil.com>
- <20231219171903.3530985-3-hugo@hugovil.com>
- <ZYMK-l03S86Nw19I@smile.fi.intel.com>
- <20231221105639.17910de5e7d7a486834bd856@hugovil.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2E455E4D
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 16:09:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C032C433C8;
+	Thu, 21 Dec 2023 16:09:58 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1rGLdW-000000041G5-1XeU;
+	Thu, 21 Dec 2023 11:11:02 -0500
+Message-ID: <20231221161024.478795180@goodmis.org>
+User-Agent: quilt/0.67
+Date: Thu, 21 Dec 2023 11:10:24 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [for-next][PATCH 00/16] tracing: Add dynamic sub-buffer size for 6.8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231221105639.17910de5e7d7a486834bd856@hugovil.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Dec 21, 2023 at 10:56:39AM -0500, Hugo Villeneuve wrote:
-> On Wed, 20 Dec 2023 17:40:42 +0200
-> Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
-> > On Tue, Dec 19, 2023 at 12:18:46PM -0500, Hugo Villeneuve wrote:
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+trace/for-next
 
-...
-
-> > Yes, this seems to be the correct one to fix the problem described in
-> > the patch 1. I dunno why the patch 1 even exists.
-> 
-> Hi,
-> this will indeed fix the problem described in patch 1.
-> 
-> However, if I remove patch 1, and I simulate the same probe error as
-> described in patch 1, now we get stuck forever when trying to 
-> remove the driver. This is something that I observed before and
-> that patch 1 also corrected.
-> 
-> The problem is caused in sc16is7xx_remove() when calling this function
-> 
->     kthread_flush_worker(&s->kworker);
-> 
-> I am not sure how best to handle that without patch 1.
-
-So, it means we need to root cause this issue. Because patch 1 looks
-really bogus.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Head SHA1: 3cb3091138ca0921c4569bcf7ffa062519639b6a
 
 
+Steven Rostedt (Google) (11):
+      ring-buffer: Clear pages on error in ring_buffer_subbuf_order_set() failure
+      ring-buffer: Do no swap cpu buffers if order is different
+      ring-buffer: Make sure the spare sub buffer used for reads has same size
+      tracing: Update snapshot order along with main buffer order
+      tracing: Stop the tracing while changing the ring buffer subbuf size
+      ring-buffer: Keep the same size when updating the order
+      ring-buffer: Just update the subbuffers when changing their allocation order
+      ring-buffer: Add documentation on the buffer_subbuf_order file
+      ringbuffer/selftest: Add basic selftest to test changing subbuf order
+      tracing: Update subbuffer with kilobytes not page order
+      ring-buffer: Use subbuf_order for buffer page masking
+
+Tzvetomir Stoyanov (VMware) (5):
+      ring-buffer: Have ring_buffer_print_page_header() be able to access ring_buffer_iter
+      ring-buffer: Page size per ring buffer
+      ring-buffer: Add interface for configuring trace sub buffer size
+      ring-buffer: Set new size of the ring buffer sub page
+      ring-buffer: Read and write to ring buffers with custom sub buffer size
+
+----
+ Documentation/trace/ftrace.rst                     |  21 +
+ include/linux/ring_buffer.h                        |  17 +-
+ kernel/trace/ring_buffer.c                         | 428 ++++++++++++++++-----
+ kernel/trace/ring_buffer_benchmark.c               |  10 +-
+ kernel/trace/trace.c                               | 155 +++++++-
+ kernel/trace/trace.h                               |   1 +
+ kernel/trace/trace_events.c                        |  59 ++-
+ .../test.d/00basic/ringbuffer_subbuf_size.tc       |  95 +++++
+ 8 files changed, 658 insertions(+), 128 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/00basic/ringbuffer_subbuf_size.tc
