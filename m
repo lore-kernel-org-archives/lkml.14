@@ -1,92 +1,62 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5871C156C5;
-	Thu, 21 Dec 2023 06:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="k3VZjW8L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1703140453;
-	bh=nUhtLvTOheYdHlXefbwGGNCCpcBwQqatrUG1V2Cygo0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=k3VZjW8LZBmHc7VpUF31JUXm1FXX1dgCm71nNN+GX+e0QmWFq5MorVTGgRcbpA1/Q
-	 LJyBz8pA1O4Ud8eXFJ8erECXpfdOBPm0ShmbT4mTCZWeeMPa7B91H9ATEy5NnwyPWK
-	 nVkPH7/82MXqcZXRqOxnSrUQ8YA088UC7C6OFP1kUpXQRM6rFurOUbradUvIftrsgP
-	 61FvoNPiEP6ki5IrsqMg69lA7C8zZ+bBSuBP3tOKOkdp6iT9POXsAT4oStW0R9xzBg
-	 kyOGsV0Rw+2SDQjthKUDv1sDMbVEo8hfNzMfTJWHAPmCvglkmAtYe9N1JcoAemh4OK
-	 Bi2QEkf2OUp+Q==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Swgd12Y1yz4wby;
-	Thu, 21 Dec 2023 17:34:13 +1100 (AEDT)
-Date: Thu, 21 Dec 2023 17:34:12 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Vlastimil Babka <vbabka@suse.cz>, Andrew Morton
- <akpm@linux-foundation.org>
-Cc: Andrey Konovalov <andreyknvl@gmail.com>, Andrey Konovalov
- <andreyknvl@google.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the slab tree with the mm tree
-Message-ID: <20231221173412.24b78407@canb.auug.org.au>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320FE15AC5
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 06:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-35fce5a5d3cso5927935ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Dec 2023 22:35:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703140503; x=1703745303;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tOB2xyfv3gPTGCHBOVv3ydZYN0fASqgWCX/nV/93oCg=;
+        b=IXC9Y0iMJm9IK85I1gygfd8kxECWTjwyQZ98/0XZrGfM0Id7UQBD22c7hjWD/Df4tl
+         xPzpZUc3W1H81kaL0Iu7qCBlHix4YyDA6AzuHtwjeMsk4j0qawtb7DkQ29VqNpBdL9qO
+         XP/7qbxuTZ0d9rFk3cLPqMDfdDKQm5fNIEAW6gZDU27X0B0VFOH4fMRzWcXIHqTQR/nA
+         Iv2frJktad+t658L74lSx5y4XsP3quJL8k8PhU8YSesBZromJ72ex4qbPA44g7BNFSJ7
+         HJugF2rsUBypWsyA4Cyh0jk8Hp+Zhux158oAiSWYADNAtI9Akxe9Yf5cdwOHYpmbV4SP
+         CDeQ==
+X-Gm-Message-State: AOJu0YwB6gWhLoiCnxDUXqq3kjRK8NuHsQfwHWgcHZfSAN1Zi8gpooCV
+	FrvVRXOVniHGUFijl8oegCXCvivp0b1wxS+KPUTyUtRwvCaOeDg=
+X-Google-Smtp-Source: AGHT+IFwRy6s+63Gv8edU1yvZUZFuVwAr5ohZmW2fUHVkN0/l7wu9nZhniyZ0NJtAKOSi25Joxhc+M0+2wyZvvpo7NYUAaw9m3oQ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/kVhN78tD/kc2/0MCeJe=e4q";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-Received: by 2002:a92:c569:0:b0:35f:a0ff:de13 with SMTP id
+ b9-20020a92c569000000b0035fa0ffde13mr1129674ilj.3.1703140503468; Wed, 20 Dec
+ 2023 22:35:03 -0800 (PST)
+Date: Wed, 20 Dec 2023 22:35:03 -0800
+In-Reply-To: <20231221061105.1471131-1-lizhi.xu@windriver.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b64208060cff4cad@google.com>
+Subject: Re: [syzbot] [exfat?] INFO: task hung in exfat_write_inode
+From: syzbot <syzbot+2f73ed585f115e98aee8@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
---Sig_/kVhN78tD/kc2/0MCeJe=e4q
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-Hi all,
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+INFO: rcu detected stall in corrupted
 
-Today's linux-next merge of the slab tree got a conflict in:
+rcu: INFO: rcu_preempt detected expedited stalls on CPUs/tasks: { P5341 } 2673 jiffies s: 2901 root: 0x0/T
+rcu: blocking rcu_node structures (internal RCU debug):
 
-  mm/slab.c
 
-between commit:
+Tested on:
 
-  3ef36a834801 ("kasan: rename and document kasan_(un)poison_object_data")
+commit:         f9ff5644 Merge tag 'hsi-for-6.2' of git://git.kernel.o..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=1555014ee80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1bf08f50e8fff9ad
+dashboard link: https://syzkaller.appspot.com/bug?extid=2f73ed585f115e98aee8
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1056bb4ee80000
 
-from the mm tree and commit:
-
-  16a1d968358a ("mm/slab: remove mm/slab.c and slab_def.h")
-
-from the slab tree.
-
-I fixed it up (I just removed the file) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/kVhN78tD/kc2/0MCeJe=e4q
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWD3GQACgkQAVBC80lX
-0GxgOAf9HLr30SJjbsSUzVkyV8u+j9c4SL/bYT2oQoJ3yjVaE0vnxKpF0Mvx6uwa
-LhQ/DDiYEWgpgBImVLl1xM78ztvqNiOFptRRqnYIgDzygdPx6d6d7beG1k43nxpL
-HMLnGPLNO3SBLpCxUaTtDQVtwGFJF+DyKuOmxM3oV3QO8SrFkhBQrqr8y0NSOucT
-XRFXCu7GQFws3MQ/Kym88m7i6Vr1hY4Qb/fmUkrlG1eWxlj0yv8+xT9QZK3tNh/l
-pCpWtrDQievcM0Aq3jAHgOpEvXc4zS18xESfVQynjNTPMmoQEL0sklK7L0dl/HcR
-C02TZG5h1g52U4+LK26WO5hwmSDEhA==
-=UdHA
------END PGP SIGNATURE-----
-
---Sig_/kVhN78tD/kc2/0MCeJe=e4q--
