@@ -1,244 +1,119 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6E26D6E4;
-	Thu, 21 Dec 2023 14:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F7e3XXOp"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5542a7f1f3cso578243a12.2;
-        Thu, 21 Dec 2023 06:18:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703168338; x=1703773138; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZgRxVc3b/cXQXk1FRUsZmIntq3x5skTt1E+0eRMTOto=;
-        b=F7e3XXOpj8ZahLLsO50OebukbsJhKU3jK+2ff31ea1AnV7FUHEOBwyelJk4CFVRPmM
-         zqzvLC6VG9qKysX+DVIzmmxfb04zCAGPQz7AvbhzJeRwSqJVNXkPHzkpPsgOZSEyBCG5
-         5bWRKAYeEhGaR2D95KnQy1ebxytOSLaCxx9hnptKfqBsgvd3DpoR+Bu+HjgyBogalYTe
-         2Phq27gCnUfZzgaZZQcVvSLDuqv1x6O9Kk0dykXz1g6Ef+xpKymniQq2Z/sfPo7AJsiF
-         CLdoaV3CK0/iJmBe6Fp8Kk4QrOd6BIeFOpdI7hrLU956muUhjnobbd82xdMIvqSoMCO1
-         2V5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703168338; x=1703773138;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZgRxVc3b/cXQXk1FRUsZmIntq3x5skTt1E+0eRMTOto=;
-        b=X1GBZS+RYdIlexLXtm3i2gI1rSioSP5temvy3eyGdBQiFLeNO09JlHcN0pqIIKsfK/
-         Lr3buMAtCHuLD5nHEKprtt2vlnY28/2Bqn5G+YMJhNqDnNK8zMcqdluBXzg01vwWkv5e
-         MJvtZoSCcvwD4WZbXL68DGmCnCrXGBdVQWi6IjLxxDU1DzqtRqHARM3ZUNWBns3CU741
-         ULpnfy+s08YNaWqY05ZgN7CjsMJKCQIvnCAhedfeTRnitwCNdyM1pTbuvFHccdzhVAje
-         mFqdE/LcV2q1d8r3NoWD9Zv1EWCdIhKWZTWAgD6lcJ18tTJzuM7tCptTiaSiG02qIekc
-         NBsg==
-X-Gm-Message-State: AOJu0YzuhA2Cw03Ft51oaBSKq3KM8OgY6M687vZGvUqDrEx/5QW12Ohf
-	U7vAxCSNy8ytDS0B2W9cqw==
-X-Google-Smtp-Source: AGHT+IGEcbQ20zL8VfJo7vaJHeSnFBDczuJI73eIk9D6ghdxribg8KJUIIU6DKKNnhyLuCnYwDPQYg==
-X-Received: by 2002:a50:a45e:0:b0:553:354a:9a81 with SMTP id v30-20020a50a45e000000b00553354a9a81mr4529475edb.26.1703168338069;
-        Thu, 21 Dec 2023 06:18:58 -0800 (PST)
-Received: from ?IPV6:2a02:810b:f40:4300:1c49:5d1e:f6f3:77a0? ([2a02:810b:f40:4300:1c49:5d1e:f6f3:77a0])
-        by smtp.gmail.com with ESMTPSA id dj25-20020a05640231b900b00552743342c8sm1232410edb.59.2023.12.21.06.18.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Dec 2023 06:18:57 -0800 (PST)
-Message-ID: <5095f695-6dad-45e2-9cff-1b79003355c9@gmail.com>
-Date: Thu, 21 Dec 2023 15:18:56 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049676D6D7;
+	Thu, 21 Dec 2023 14:20:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE203C433C8;
+	Thu, 21 Dec 2023 14:20:46 +0000 (UTC)
+Date: Thu, 21 Dec 2023 09:21:49 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Alexander Graf <graf@amazon.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Tom Zanussi <zanussi@kernel.org>
+Subject: Re: [PATCH] tracing / synthetic: Disable events after testing in
+ synth_event_gen_test_init()
+Message-ID: <20231221092149.74ef39e9@gandalf.local.home>
+In-Reply-To: <e2655687-38ba-4e5b-9573-32eb12fb0583@amazon.com>
+References: <20231220111525.2f0f49b0@gandalf.local.home>
+	<e2655687-38ba-4e5b-9573-32eb12fb0583@amazon.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/5] Add support for video hardware codec of
- STMicroelectronics STM32 SoC series
-Content-Language: en-US, de-DE
-To: Hugues FRUCHET <hugues.fruchet@foss.st.com>
-Cc: Nicolas Dufresne <nicolas.dufresne@collabora.com>,
- Marco Felsch <m.felsch@pengutronix.de>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Benjamin Gaignard <benjamin.gaignard@collabora.com>,
- Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
- Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, linux-kernel@vger.kernel.org,
- Daniel Almeida <daniel.almeida@collabora.com>,
- Heiko Stuebner <heiko@sntech.de>, Hans Verkuil <hverkuil@xs4all.nl>,
- Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- linux-stm32@st-md-mailman.stormreply.com,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- devicetree@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- linux-media@vger.kernel.org, Alexandre Torgue
- <alexandre.torgue@foss.st.com>,
- Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
- Adam Ford <aford173@gmail.com>
-References: <20231221084723.2152034-1-hugues.fruchet@foss.st.com>
- <769a1510-f8d2-4095-9879-42f413141dee@gmail.com>
- <a240d2ac-db0e-481b-8d13-3ae76cfd2fe7@foss.st.com>
- <e5ba1e14-4bbf-43e3-933a-fee6d4b90641@gmail.com>
- <CAHCN7xJ3Ktn+TnoOYdnNvKTddGCfLp4OQ+gM0WonWj-aqnsGuA@mail.gmail.com>
- <b03a7ddc-65c5-44c3-a563-d52ee938148a@gmail.com>
- <6d26d307-eb7a-43ad-b4f3-57f8ac7ce8f0@foss.st.com>
-From: Alex Bee <knaerzche@gmail.com>
-In-Reply-To: <6d26d307-eb7a-43ad-b4f3-57f8ac7ce8f0@foss.st.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Hugues,
+On Thu, 21 Dec 2023 11:06:38 +0100
+Alexander Graf <graf@amazon.com> wrote:
 
-Am 21.12.23 um 14:55 schrieb Hugues FRUCHET:
-> Hi Alex,
->
-> On 12/21/23 14:46, Alex Bee wrote:
->>
->> Am 21.12.23 um 14:38 schrieb Adam Ford:
->>> On Thu, Dec 21, 2023 at 7:31 AM Alex Bee <knaerzche@gmail.com> wrote:
->>>> Hi Hugues,
->>>>
->>>> Am 21.12.23 um 14:08 schrieb Hugues FRUCHET:
->>>>> Hi Alex,
->>>>>
->>>>> This is because VDEC and VENC are two separated IPs with their own
->>>>> hardware resources and no links between both.
->>>>> On future SoCs, VDEC can ship on its own, same for VENC.
->>>>>
->>>> I think that's what the driver is/was designed for :)
->>>>
->>>> I don't  think there _has_ to be a link between variants in the 
->>>> same file.
->>>> For Rockchip we only had the issue that there _is_ a link (shared
->>>> resources) between encoder and decoder and they had (for that 
->>>> reason) to be
->>>> defined has a _single_ variant. And there is no reason you can ship 
->>>> decoder
->>>> and encoder seperated when you have two variants (with different
->>>> compatibles).
->>>> For Rockchip and iMX those files are even containing variants for 
->>>> completly
->>>> different generations / different SoCs. I had to cleanup this mess for
->>> The i.MX8M Mini and Plus have different power domains for encoder and
->>> decoders as well as different clocks.  Keeping them separate would
->>> almost be necessary.
->> I guess there is missunderstanding: I didn't say the two STM variants
->> should be merged in one variant, but the two variants should be 
->> within the
->> same _file_, like the other platforms are doing :)
->
-> I have two separated hardware: VDEC and VENC, not a single block like 
-> "VPU" for example. So what name should have this file ?
-> Other platforms had a common file because there was a common block 
-> embedding both decoder and encoder, sometimes with links/dependencies 
-> between both.
-> SAMA5D4 has only a decoder, only a single file called "_vdec_hw.c"...
-> so it is quite logical for me to have one file per independent IP.
->
-Maybe - but that's not way the driver is currently organzied.
-rockchip_vpu_hw.c also holds variants which have only have a decoder and
-also some which only have a encoder. So "vpu" is quite neutral, I guess. It
-doesn't say anything if it belongs to encoder or decoder.
-When I was adding the RK3066 variant a I was even asked to add a explicit
-comment, why this integration can't be splitted in encoder and decoder
-variant.
+> Thanks a bunch for the super quick turnaround time for the fix! I can=20
+> confirm that I'm no longer seeing the warning :)
+>=20
+> Tested-by: Alexander Graf <graf@amazon.com>
 
-We were having a a lot of these split-ups in the early days of hantro
-driver and it was no fun to clean them up.
+Thanks Alex,
 
-Alex
+>=20
+>=20
+> Do we need another similar patch for the kprobe self tests? The below is=
+=20
+> with 55cb5f43689d7 plus an unrelated initrd patch plus this patch and=20
+> the following .config: http://csgraf.de/tmp2/config-ftrace.xz
 
->>> adam
->>>
->>>> Rockchip once - and it was no fun :) Anyways: It's up to the 
->>>> maintainers I
->>>> guess - I just wanted to ask if I missunderstand something here.
->>>>
->>>> Greetings,
->>>>
->>>> Alex
->>>>
->>>>> Hoping that this clarify.
->>>>>
->>>>> Best regards,
->>>>> Hugues.
->>>>>
->>>>> On 12/21/23 13:40, Alex Bee wrote:
->>>>>> Hi Hugues, Hi Nicolas,
->>>>>>
->>>>>> is there any specific reason I'm not understanding / seeing why this
->>>>>> is added in two seperate vdec* / venc* files and not a single vpu*
->>>>>> file? Is it only for the seperate clocks (-names) / irqs (-names) /
->>>>>> callbacks? Those are defined per variant and perfectly fit in a
->>>>>> single file holding one vdec and one venc variant.
->>>>>>
->>>>>> Alex
->>>>>>
->>>>>> Am 21.12.23 um 09:47 schrieb Hugues Fruchet:
->>>>>>> This patchset introduces support for VDEC video hardware decoder
->>>>>>> and VENC video hardware encoder of STMicroelectronics STM32MP25
->>>>>>> SoC series.
->>>>>>>
->>>>>>> This initial support implements H264 decoding, VP8 decoding and
->>>>>>> JPEG encoding.
->>>>>>>
->>>>>>> This has been tested on STM32MP257F-EV1 evaluation board.
->>>>>>>
->>>>>>> ===========
->>>>>>> = history =
->>>>>>> ===========
->>>>>>> version 5:
->>>>>>>      - Precise that video decoding as been successfully tested 
->>>>>>> up to
->>>>>>> full HD
->>>>>>>      - Add Nicolas Dufresne reviewed-by
->>>>>>>
->>>>>>> version 4:
->>>>>>>      - Fix comments from Nicolas about dropping encoder raw steps
->>>>>>>
->>>>>>> version 3:
->>>>>>>      - Fix remarks from Krzysztof Kozlowski:
->>>>>>>       - drop "items", we keep simple enum in such case
->>>>>>>       - drop second example - it is the same as the first
->>>>>>>      - Drop unused node labels as suggested by Conor Dooley
->>>>>>>      - Revisit min/max resolutions as suggested by Nicolas Dufresne
->>>>>>>
->>>>>>> version 2:
->>>>>>>      - Fix remarks from Krzysztof Kozlowski on v1:
->>>>>>>       - single video-codec binding for both VDEC/VENC
->>>>>>>       - get rid of "-names"
->>>>>>>       - use of generic node name "video-codec"
->>>>>>>
->>>>>>> version 1:
->>>>>>>     - Initial submission
->>>>>>>
->>>>>>> Hugues Fruchet (5):
->>>>>>>     dt-bindings: media: Document STM32MP25 VDEC & VENC video codecs
->>>>>>>     media: hantro: add support for STM32MP25 VDEC
->>>>>>>     media: hantro: add support for STM32MP25 VENC
->>>>>>>     arm64: dts: st: add video decoder support to stm32mp255
->>>>>>>     arm64: dts: st: add video encoder support to stm32mp255
->>>>>>>
->>>>>>>    .../media/st,stm32mp25-video-codec.yaml       |  50 ++++++++
->>>>>>>    arch/arm64/boot/dts/st/stm32mp251.dtsi        |  12 ++
->>>>>>>    arch/arm64/boot/dts/st/stm32mp255.dtsi        |  17 +++
->>>>>>>    drivers/media/platform/verisilicon/Kconfig    |  14 ++-
->>>>>>>    drivers/media/platform/verisilicon/Makefile   |   4 +
->>>>>>>    .../media/platform/verisilicon/hantro_drv.c   |   4 +
->>>>>>>    .../media/platform/verisilicon/hantro_hw.h    |   2 +
->>>>>>>    .../platform/verisilicon/stm32mp25_vdec_hw.c  |  92 
->>>>>>> ++++++++++++++
->>>>>>>    .../platform/verisilicon/stm32mp25_venc_hw.c  | 115
->>>>>>> ++++++++++++++++++
->>>>>>>    9 files changed, 307 insertions(+), 3 deletions(-)
->>>>>>>    create mode 100644
->>>>>>> Documentation/devicetree/bindings/media/st,stm32mp25-video-codec.yaml 
->>>>>>>
->>>>>>>    create mode 100644
->>>>>>> drivers/media/platform/verisilicon/stm32mp25_vdec_hw.c
->>>>>>>    create mode 100644
->>>>>>> drivers/media/platform/verisilicon/stm32mp25_venc_hw.c
->>>>>>>
->
-> Best regards,
-> Hugues.
+Sure, now you tell me ;-)
+
+I just finished all my tests and will be sending Linus a pull request soon.
+
+I'll let Masami handle this one, as it's under his department.
+
+-- Steve
+
+>=20
+> [=C2=A0 919.717134] Testing all events: OK
+> [=C2=A0 924.418194] Testing ftrace filter: OK
+> [=C2=A0 924.418887] trace_kprobe: Testing kprobe tracing:
+> [=C2=A0 924.424244] ------------[ cut here ]------------
+> [=C2=A0 924.424952] WARNING: CPU: 2 PID: 1 at=20
+> kernel/trace/trace_kprobe.c:2073 kprobe_trace_self_tests_init+0x192/0x540
+> [=C2=A0 924.425659] Modules linked in:
+> [=C2=A0 924.425886] CPU: 2 PID: 1 Comm: swapper/0 Not tainted=20
+> 6.7.0-rc6-00024-gc10698ad3c9a #298
+> [=C2=A0 924.426448] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), B=
+IOS=20
+> rel-1.16.2-0-gea1b7a073390-prebuilt.qemu.org 04/01/2014
+> [=C2=A0 924.427230] RIP: 0010:kprobe_trace_self_tests_init+0x192/0x540
+> [=C2=A0 924.427639] Code: 7e 10 74 3b 48 8b 36 48 39 d6 75 f2 0f 0b 48 c7=
+ c7=20
+> 58 71 79 a5 e8 ee 3e 5a fe 48 c7 c7 20 38 b7 a5 e8 a2 51 68 fe 85 c0 74=20
+> 33 <0f> 0b 48 c7 c7 38 73 79 a5 e8 d0 3e 5a fe e8 4b 64 62 fe eb 23 48
+> [=C2=A0 924.428922] RSP: 0000:ffffab508001be58 EFLAGS: 00010286
+> [=C2=A0 924.429288] RAX: 00000000fffffff0 RBX: 000000000000005a RCX:=20
+> 0000000000000202
+> [=C2=A0 924.429800] RDX: 0000000000000000 RSI: 000000000002e970 RDI:=20
+> ffffffffa5b708a0
+> [=C2=A0 924.430295] RBP: 0000000000000000 R08: 0000000000000001 R09:=20
+> ffffffffa4855a90
+> [=C2=A0 924.430794] R10: 0000000000000007 R11: 000000000000028a R12:=20
+> 0000000000000001
+> [=C2=A0 924.431286] R13: ffffffffa5cc9a00 R14: ffff8cec81bebe00 R15:=20
+> ffffffffa619f0f0
+> [=C2=A0 924.431785] FS:=C2=A0 0000000000000000(0000) GS:ffff8cecf9100000(=
+0000)=20
+> knlGS:0000000000000000
+> [=C2=A0 924.432346] CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [=C2=A0 924.432748] CR2: 0000000000000000 CR3: 000000004883e001 CR4:=20
+> 00000000003706f0
+> [=C2=A0 924.433246] DR0: 0000000000000000 DR1: 0000000000000000 DR2:=20
+> 0000000000000000
+> [=C2=A0 924.433739] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:=20
+> 0000000000000400
+> [=C2=A0 924.434233] Call Trace:
+> [=C2=A0 924.434418]=C2=A0 <TASK>
+> [=C2=A0 924.434569]=C2=A0 ? __warn+0x7d/0x140
+> [=C2=A0 924.434807]=C2=A0 ? kprobe_trace_self_tests_init+0x192/0x540
+> [=C2=A0 924.435172]=C2=A0 ? report_bug+0xf8/0x1e0
+> [=C2=A0 924.435430]=C2=A0 ? handle_bug+0x3f/0x70
+> [=C2=A0 924.435677]=C2=A0 ? exc_invalid_op+0x13/0x60
+> [=C2=A0 924.435954]=C2=A0 ? asm_exc_invalid_op+0x16/0x20
+> [=C2=A0 924.436249]=C2=A0 ? rdinit_setup+0x40/0x40
+> [=C2=A0 924.436509]=C2=A0 ? trace_kprobe_release+0x70/0xb0
+> [=C2=A0 924.436822]=C2=A0 ? kprobe_trace_self_tests_init+0x192/0x540
+> [=C2=A0 924.437189]=C2=A0 ? kprobe_trace_self_tests_init+0x421/0x540
+> [=C2=A0 924.437551]=C2=A0 ? init_kprobe_trace+0x1b0/0x1b0
+> [=C2=A0 924.437855]=C2=A0 do_one_initcall+0x44/0x200
+> [=C2=A0 924.438131]=C2=A0 kernel_init_freeable+0x1e8/0x330
+> [=C2=A0 924.438439]=C2=A0 ? rest_init+0xd0/0xd0
+> [=C2=A0 924.438682]=C2=A0 kernel_init+0x16/0x130
+> [=C2=A0 924.438943]=C2=A0 ret_from_fork+0x30/0x50
+> [=C2=A0 924.439202]=C2=A0 ? rest_init+0xd0/0xd0
+> [=C2=A0 924.439445]=C2=A0 ret_from_fork_asm+0x11/0x20
+> [=C2=A0 924.439734]=C2=A0 </TASK>
+> [=C2=A0 924.439893] ---[ end trace 0000000000000000 ]---
+> [=C2=A0 924.440217] trace_kprobe: error on cleaning up probes.
+> [=C2=A0 924.440575] NG: Some tests are failed. Please check them.
+
