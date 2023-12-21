@@ -1,148 +1,150 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80374CE11
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 09:23:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38F54B5B0
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 09:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=landley.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jMo0qkLf"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6d6d48354ccso290522b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 01:23:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=landley-net.20230601.gappssmtp.com header.i=@landley-net.20230601.gappssmtp.com header.b="aaaqOUWg"
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6dbb650ad59so358508a34.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 01:24:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1703150609; x=1703755409; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VRGqB+rpK2JtTATUiTfsiyokzdHpJCMrcXkOJidY/3Y=;
-        b=jMo0qkLfG7olI5hdqNNW0qUeXBF6d+1PylmgolOoACRMxLiDnURJUzR307WQLREZG5
-         Ie+uP5FCeL4q2hPE7L/fpYs7PqRX52UmQKSIsAmANKNJdYh/skpIT/40lufs22LJTZeg
-         Uu2r5HvnZ6nks35A+DXGrRJBIX9PmKA2ZDv6g=
+        d=landley-net.20230601.gappssmtp.com; s=20230601; t=1703150681; x=1703755481; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LrFYVKMKAls73y7tPJ/0eD7g7DzKwCrOBW20HJX//Lk=;
+        b=aaaqOUWgquzhDNerPKun3uJ6K6SBNcVh4rgw25Yz6vkv3Rvl4JcfMSUYEJ4vHclqAU
+         jp0z9Vp01B7ck3imhGJdoDpnV7eiW8+t8hVp2SJfXCzukODYuSsd+thD13ZiJmQ7H+Fg
+         wXro0Ir7ZO8uAEEwx/FcptkSZAhWHy5HyV7xj3/w7uuqRXsEcvOZHEFb2qg1wd1NJ03a
+         TT4hjKNDY8e/CE2r3cB6jrs0+49mKY1txJRA6IwyyUzGjQsjQrKGtTd+1fzmX/0oPhvS
+         KRRmIjiyOxOchdSE48/Dx800Lsmx9l6Xguw21vDT201yIlZAwEKBhbIRzJS45xCgxTk1
+         Qe2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703150609; x=1703755409;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VRGqB+rpK2JtTATUiTfsiyokzdHpJCMrcXkOJidY/3Y=;
-        b=KBSrGo1SMWSlmgO4Qzhu/0rzYxkVc1HYNHYx/7TD06vovRd6cRUQrbQFCo/fE9uoUf
-         Iyb2Z7TmX9JYmXTYHkd5wt8VSJWcWwvh1GigPT5E7EtzdUM/8z9Tej3fUZtvNQ7ZopBn
-         aD69MCS/rxgF1CLGWVSJbMDVMUbTABT7Nf8Of4GGMI+qd5kklZ8m26+b/msCw42zhBGT
-         HuiXN/3GdxtNv1gqmD7rxNreU+9onm8WTEHGEv4GTPolscmJM7bIti7nIQiN9H6E1Ayv
-         7dI4JJS2pKiaxqwQPB5YZdpi55/1RX2FkryOhcHaPNGm8W+ev0vioTgACwMls9JFuWdy
-         XbwA==
-X-Gm-Message-State: AOJu0Yxe+Y+Fq6wOunATvxHUe8dTshGGPLF1DKQm2YN4a/65LKCFIdLP
-	56wHLDQuFCBw2iZuw3MSjh5yAQ==
-X-Google-Smtp-Source: AGHT+IGFWfj7wEYiXCBut673fAaKAyWsuJBDh1gl52c86wCwAWY5yMXd3rwbFvkIALXsD38i5TLGMw==
-X-Received: by 2002:a05:6a20:8f1c:b0:190:7b07:b7c9 with SMTP id b28-20020a056a208f1c00b001907b07b7c9mr659230pzk.66.1703150608903;
-        Thu, 21 Dec 2023 01:23:28 -0800 (PST)
-Received: from fshao-p620.tpe.corp.google.com ([2401:fa00:1:10:5d8a:fab1:933a:9ae9])
-        by smtp.gmail.com with ESMTPSA id l6-20020a17090add8600b00274b035246esm1001915pjv.1.2023.12.21.01.23.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 01:23:28 -0800 (PST)
-From: Fei Shao <fshao@chromium.org>
-To: Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Fei Shao <fshao@chromium.org>,
-	Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-	Tiffany Lin <tiffany.lin@mediatek.com>,
-	Xiaoyong Lu <xiaoyong.lu@mediatek.com>,
-	Yunfei Dong <yunfei.dong@mediatek.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH v2 4/4] media: mediatek: vcodec: Only free buffer VA that is not NULL
-Date: Thu, 21 Dec 2023 17:17:46 +0800
-Message-ID: <20231221092226.1395427-4-fshao@chromium.org>
-X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
-In-Reply-To: <20231221092226.1395427-1-fshao@chromium.org>
-References: <20231221092226.1395427-1-fshao@chromium.org>
+        d=1e100.net; s=20230601; t=1703150681; x=1703755481;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LrFYVKMKAls73y7tPJ/0eD7g7DzKwCrOBW20HJX//Lk=;
+        b=xFvF0D1gJ84fir3nNB1hd5vAB2WfUEhahivO1FBLYBPhXb8WzCxiPlojwu9fASqZQR
+         L0XrtsktUeEcZsfezJ/y/x6t5/RJvtJaRxk7LL1ilcA3NB6IAsBuRn6Bk/dUxRRfF0kB
+         eHE19q5/zErWxbJ9x0GBPZw6N5ZDOVu81C9pmT3jeFQXoY2dwArxiOBo8W9e9x2tf9YC
+         nssDgLF2sfYd4tShUO0hmqBYh3F9whT1ngW2yN2530FJWEtkMcdvWMQQrnH3CBVFTCN2
+         Dfb3DJsY8gv3/oGITZbVy3qzgMo3S0beigGz1kB4evnbRf3bE7xakvuPSjo+3fAUQWl+
+         vvqA==
+X-Gm-Message-State: AOJu0YxTCbfmqNHeBU5VXbYjIKZ0MWJoQ2r0yVqcltaeQVvIc9Ef2yVx
+	bb9WIYZN0B2/ePmdiDS3rD3fRA==
+X-Google-Smtp-Source: AGHT+IG/e7v/4yjyw7iqrmWPlhi6xdNZWnDQpy4LNKo26D8VVfTnVvifn6J0+295mAbJcFvWyBA5sQ==
+X-Received: by 2002:a05:6870:55cb:b0:204:bd5:4b26 with SMTP id qk11-20020a05687055cb00b002040bd54b26mr956962oac.112.1703150680677;
+        Thu, 21 Dec 2023 01:24:40 -0800 (PST)
+Received: from ?IPV6:2607:fb90:e600:87e2:3ea9:f4ff:fe4b:aee8? ([2607:fb90:e600:87e2:3ea9:f4ff:fe4b:aee8])
+        by smtp.gmail.com with ESMTPSA id hi27-20020a056870c99b00b001fa39dfef88sm376079oab.37.2023.12.21.01.24.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Dec 2023 01:24:39 -0800 (PST)
+Message-ID: <d4b227de-d609-aef2-888b-203dbcf06707@landley.net>
+Date: Thu, 21 Dec 2023 03:30:37 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v3] rootfs: Fix support for rootfstype= when root= is
+ given
+Content-Language: en-US
+To: Askar Safin <safinaskar@gmail.com>, stefanb@linux.ibm.com
+Cc: gregkh@linuxfoundation.org, initramfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, zohar@linux.ibm.com
+References: <CAPnZJGDcNwPLbzC99qNQ+bRMwxPU-Z0xe=TD6DWQU=0MNyeftA@mail.gmail.com>
+From: Rob Landley <rob@landley.net>
+In-Reply-To: <CAPnZJGDcNwPLbzC99qNQ+bRMwxPU-Z0xe=TD6DWQU=0MNyeftA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-In the MediaTek vcodec driver, while mtk_vcodec_mem_free() is mostly
-called only when the buffer to free exists, there are some instances
-that didn't do the check and triggered warnings in practice.
+On 12/19/23 20:19, Askar Safin wrote:
+> On Sun, Nov 19, 2023 at 08:12:48PM -0500, Stefan Berger wrote:
+>> Documentation/filesystems/ramfs-rootfs-initramfs.rst states:
+>>
+>>   If CONFIG_TMPFS is enabled, rootfs will use tmpfs instead of ramfs by
+>>   default.  To force ramfs, add "rootfstype=ramfs" to the kernel command
+>>   line.
 
-We believe those checks were forgotten unintentionally. Add the checks
-back to fix the warnings.
+I wrote that around 2005.
 
-Signed-off-by: Fei Shao <fshao@chromium.org>
----
-I had discussion with Yunfei, and he also thinks that the developers
-just forgot to wrap mtk_vcodec_mem_free() with the checks back then.
-We believe it's safe to add those checks.
+>> This currently does not work when root= is provided since then
+>> saved_root_name contains a string and rootfstype= is ignored.
 
+I wrote the code to populate a tmpfs from initramfs in 2013 (8 years later),
+because nobody else had bothered to, and I've had a patch to fix the rootfstype=
+issue for years, but I long ago lost my touch with linux-kernel proctology:
 
- .../vcodec/decoder/vdec/vdec_av1_req_lat_if.c | 22 +++++++++++++------
- .../vcodec/encoder/venc/venc_h264_if.c        |  5 +++--
- 2 files changed, 18 insertions(+), 9 deletions(-)
+https://lkml.iu.edu/hypermail/linux/kernel/2302.2/05601.html
 
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_av1_req_lat_if.c b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_av1_req_lat_if.c
-index 2b6a5adbc419..b0e2e59f61b5 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_av1_req_lat_if.c
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_av1_req_lat_if.c
-@@ -1023,18 +1023,26 @@ static void vdec_av1_slice_free_working_buffer(struct vdec_av1_slice_instance *i
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(instance->mv); i++)
--		mtk_vcodec_mem_free(ctx, &instance->mv[i]);
-+		if (instance->mv[i].va)
-+			mtk_vcodec_mem_free(ctx, &instance->mv[i]);
- 
- 	for (i = 0; i < ARRAY_SIZE(instance->seg); i++)
--		mtk_vcodec_mem_free(ctx, &instance->seg[i]);
-+		if (instance->seg[i].va)
-+			mtk_vcodec_mem_free(ctx, &instance->seg[i]);
- 
- 	for (i = 0; i < ARRAY_SIZE(instance->cdf); i++)
--		mtk_vcodec_mem_free(ctx, &instance->cdf[i]);
-+		if (instance->cdf[i].va)
-+			mtk_vcodec_mem_free(ctx, &instance->cdf[i]);
-+
- 
--	mtk_vcodec_mem_free(ctx, &instance->tile);
--	mtk_vcodec_mem_free(ctx, &instance->cdf_temp);
--	mtk_vcodec_mem_free(ctx, &instance->cdf_table);
--	mtk_vcodec_mem_free(ctx, &instance->iq_table);
-+	if (instance->tile.va)
-+		mtk_vcodec_mem_free(ctx, &instance->tile);
-+	if (instance->cdf_temp.va)
-+		mtk_vcodec_mem_free(ctx, &instance->cdf_temp);
-+	if (instance->cdf_table.va)
-+		mtk_vcodec_mem_free(ctx, &instance->cdf_table);
-+	if (instance->iq_table.va)
-+		mtk_vcodec_mem_free(ctx, &instance->iq_table);
- 
- 	instance->level = AV1_RES_NONE;
- }
-diff --git a/drivers/media/platform/mediatek/vcodec/encoder/venc/venc_h264_if.c b/drivers/media/platform/mediatek/vcodec/encoder/venc/venc_h264_if.c
-index a68dac72c4e4..f8145998fcaf 100644
---- a/drivers/media/platform/mediatek/vcodec/encoder/venc/venc_h264_if.c
-+++ b/drivers/media/platform/mediatek/vcodec/encoder/venc/venc_h264_if.c
-@@ -301,11 +301,12 @@ static void h264_enc_free_work_buf(struct venc_h264_inst *inst)
- 	 * other buffers need to be freed by AP.
- 	 */
- 	for (i = 0; i < VENC_H264_VPU_WORK_BUF_MAX; i++) {
--		if (i != VENC_H264_VPU_WORK_BUF_SKIP_FRAME)
-+		if (i != VENC_H264_VPU_WORK_BUF_SKIP_FRAME && inst->work_bufs[i].va)
- 			mtk_vcodec_mem_free(inst->ctx, &inst->work_bufs[i]);
- 	}
- 
--	mtk_vcodec_mem_free(inst->ctx, &inst->pps_buf);
-+	if (inst->pps_buf.va)
-+		mtk_vcodec_mem_free(inst->ctx, &inst->pps_buf);
- }
- 
- static int h264_enc_alloc_work_buf(struct venc_h264_inst *inst, bool is_34bit)
--- 
-2.43.0.472.g3155946c3a-goog
+Last I heard it was going upstream via somebody else (who tripled the size of
+the fix for no obvious reason, but that's modern linux-kernel for you), but I
+lost track after the guy who'd said to send it to him instead did multiple
+automated bounces from a bot that said "to save this one special guy's time,
+we're going to spam linux-kernel with autogenerated content delivered to tens of
+thousands of plebian mailboxes":
 
+https://lkml.iu.edu/hypermail/linux/kernel/2311.1/05544.html
+https://lkml.iu.edu/hypermail/linux/kernel/2311.1/06448.html
+
+Last I saw the rewrite of the fix had been resubmitted to the Special Guy a
+fourth time:
+
+https://lkml.iu.edu/hypermail/linux/kernel/2311.2/02938.html
+
+Maybe it'll show up in a git pull someday? Who knows...
+
+> Therefore,
+>> ramfs is currently always chosen when root= is provided.
+> 
+> Maybe it is a good idea to just fully remove ramfs?
+
+"Let's delete a 20 year old filesystem that's been built into every system that
+whole time, this can't POSSIBLY have any side effects."
+
+We've already discussed this, more than once:
+
+https://lkml.iu.edu/hypermail/linux/kernel/2311.0/00435.html
+
+Can you build tmpfs on a nommu system? Last I checked the plumbing expects swap,
+but it's been a while...
+
+> initramfs will
+> always be tmpfs. And tmpfs will always be enabled.
+> 
+> As well as I understand, ramfs was originally introduced, because
+> tmpfs seemed too big.
+
+No, ramfs came first, tmpfs was created later. Not just what initramfs uses, but
+the order in which the filesystems were written.
+
+I believe modern ramfs more or less dates to Al Viro factoring out "libfs":
+
+https://lwn.net/Articles/57369/
+
+Although the memory grows a bit hazy. (I vaguely remember what happened, but
+exactly when it was, and what came before what... git log in my unified history
+tree is showing fs/ramfs originating from 2.3.99pre4 in 2000 but it may be
+confused by a rename. I remember somebody, I thought Linus, saying that ramfs
+was an example user of the libfs code...)
+
+> Here are my configs (x86_64). Just enough to run busybox in "qemu -serial stdio"
+
+Back when I maintained busybox there were people in that space who cared about
+14k, and that's not measuring runtime overhead.
+
+There was a lovely ELC talk in 2015 about booting Linux in 256 kilobytes of SRAM
+(everything else being XIP out of ROM-alikes), but alas the entire year's videos
+got wiped by the Linux Foundation. The PDF is still online though:
+
+https://elinux.org/images/9/90/Linux_for_Microcontrollers-_From_Marginal_to_Mainstream.pdf
+
+Alas, XIP got replaced with DAX which I've never managed to get to work...
+
+Rob
