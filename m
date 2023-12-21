@@ -1,139 +1,123 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA604C64;
-	Thu, 21 Dec 2023 03:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E36B4A19;
+	Thu, 21 Dec 2023 03:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="F5RWXqHP"
-X-UUID: c7d0b8c89fb011eeba30773df0976c77-20231221
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=qlh/VbDYXlXEU1JaXc715148R0jpddLs+ZhwUrdEA90=;
-	b=F5RWXqHPPTCwYDeM+Zckon9CTQAHP5hBqWehQOEoNSgOYogk8NQyQmBOGY8G2n6A9J67oAMM5+fW04FcKAjjXzHsIH/XNv85ENYea1vWUkO6gHze/aXIjYOc0qQbb/VQUpH9JXiNScjFx+4ohb/TRvw6ni6hLkfCos4TE4Rk0zY=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:0cb7be99-254d-456c-9198-ace6eb0f5d96,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:5d391d7,CLOUDID:3b18688d-e2c0-40b0-a8fe-7c7e47299109,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,
-	DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: c7d0b8c89fb011eeba30773df0976c77-20231221
-Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw02.mediatek.com
-	(envelope-from <chui-hao.chiu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1023971889; Thu, 21 Dec 2023 11:26:51 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Thu, 21 Dec 2023 11:26:49 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Thu, 21 Dec 2023 11:26:49 +0800
-From: Peter Chiu <chui-hao.chiu@mediatek.com>
-To: Felix Fietkau <nbd@nbd.name>, Rob Herring <robh+dt@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-CC: Conor Dooley <conor+dt@kernel.org>, Lorenzo Bianconi <lorenzo@kernel.org>,
-	Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>, Kalle Valo <kvalo@kernel.org>, Matthias
- Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, <linux-wireless@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	Peter Chiu <chui-hao.chiu@mediatek.com>
-Subject: [PATCH v4] dt-bindings: net: wireless: mt76: add interrupts description for MT7986
-Date: Thu, 21 Dec 2023 11:26:48 +0800
-Message-ID: <20231221032648.641-1-chui-hao.chiu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UuweDkXY"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6d741fb7c8eso364095b3a.2;
+        Wed, 20 Dec 2023 19:28:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703129322; x=1703734122; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2cwy609ViDO/5NGng780dz2Zp63VE09X7quZEZMkNVo=;
+        b=UuweDkXYNG7TvokCgZUI6iiWpO1b/oEc61DvpZ0oYaal5frSWave4akjw9F3vGnVH9
+         1ksNr8ECIboUqgEABgfwLXO5edW+MQcIhb5lxSiXE38wZjNE8sojd7yiMFTFhYeCwyFf
+         ihs8iWtrtPUrI+gZn6KFpJwZgldlWv7C6Z6ZRSifpIrC1LKct4Hyq6BChk5Og1O3atc9
+         y/0YD/M/7mHMdwsvniFPzl5waOjsrNado+foyILZ7SFUmFft7GJFgHT6Smfr/IWNZQSF
+         aVWDR00RUNCbzH9Zy/YL8iD9kYPmHfHOXmfUU+wxY2CTmtTgYkcpbbj2EMaQREykEJ7G
+         QYEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703129322; x=1703734122;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2cwy609ViDO/5NGng780dz2Zp63VE09X7quZEZMkNVo=;
+        b=TnomvDpQklWpxQ/sIXYJrRd2GQEXrcdmSwRwJ8urPIea2GN7QCGLW/bwQ1QDmLE48R
+         zJPOu11/S70/5VXkUZBITRfKVOA1kHTr3nJVIZKeuaAbC4aLXU/3H6PhHOZKIhAX3hGO
+         PoylbHiXc1xSPnIxcH5P6AlpYVpRJsysp4OgSJ96OP955wKbc6r/b4JdmsGnOlHChUw1
+         DmQHi+ZTb6xNfu6Tt4cITbgRh0wjSY9aXXSugN5gSKakYbYhJMjPPV1Tom594UKVgs1n
+         fPfJxJhNOO5AW5+pkcJgZojQ3NvL/mqEqILMNQffTZLsrgKv3jx8Ds0pcXMAAn4wBj58
+         3RUw==
+X-Gm-Message-State: AOJu0Yw+aBU9GfrXfqY4LRD8WCx1+3hR2dC6COBfRDzMAU6wvuRcob9q
+	zBwPFRnXOQKffyP3Yu4lFl4=
+X-Google-Smtp-Source: AGHT+IH00C6bByvTzePNj6kiL3xYMrwqwS66Re6fu1otTnsCDa97TAOATj8PHde+3hqCHgKc+xTfCw==
+X-Received: by 2002:a05:6a21:a59e:b0:195:7f2:d556 with SMTP id gd30-20020a056a21a59e00b0019507f2d556mr175918pzc.76.1703129321812;
+        Wed, 20 Dec 2023 19:28:41 -0800 (PST)
+Received: from archie.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id x29-20020a63171d000000b005c60cdb08f0sm537606pgl.0.2023.12.20.19.28.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Dec 2023 19:28:41 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id 135E41028B29B; Thu, 21 Dec 2023 10:28:36 +0700 (WIB)
+Date: Thu, 21 Dec 2023 10:28:36 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux ALSA Development <alsa-devel@alsa-project.org>,
+	patches@opensource.cirrus.com,
+	Linux Sound System <linux-sound@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: James Schulman <james.schulman@cirrus.com>,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Kailang Yang <kailang@realtek.com>,
+	Stefan Binding <sbinding@opensource.cirrus.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Andy Chi <andy.chi@canonical.com>,
+	Shenghao Ding <shenghao-ding@ti.com>,
+	Matthew Anderson <ruinairas1992@gmail.com>,
+	Luka Guzenko <l.guzenko@web.de>, Yuchi Yang <yangyuchi66@gmail.com>,
+	Vitaly Rodionov <vitalyr@opensource.cirrus.com>,
+	Lucas Tanure <tanure@linux.com>, Fae <faenkhauser@gmail.com>,
+	Albert Tseng <tsengalb99@gmail.com>,
+	Lukas Voreck <overloader@tutanota.com>
+Subject: Fwd: No sound drivers on HP Envy x360 ey0xxx
+Message-ID: <ZYOw5OVHGugrEP30@archie.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK: N
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="+dEZltS9BeS27wKC"
+Content-Disposition: inline
 
-The mt7986 can support four interrupts to distribute the interrupts
-to different CPUs.
 
-Signed-off-by: Peter Chiu <chui-hao.chiu@mediatek.com>
----
-v2: Change to use description instead of using items.
-v3: Change to use items and set different minItems for mediatek,mt7986-wmac
-v4: Move allOf after required and remove duplicated blank line.
----
- .../bindings/net/wireless/mediatek,mt76.yaml  | 32 ++++++++++++++++---
- 1 file changed, 27 insertions(+), 5 deletions(-)
+--+dEZltS9BeS27wKC
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.yaml b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.yaml
-index 252207adbc54..0c6835db397f 100644
---- a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.yaml
-+++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.yaml
-@@ -19,9 +19,6 @@ description: |
-   Alternatively, it can specify the wireless part of the MT7628/MT7688
-   or MT7622/MT7986 SoC.
- 
--allOf:
--  - $ref: ieee80211.yaml#
--
- properties:
-   compatible:
-     enum:
-@@ -38,7 +35,12 @@ properties:
-       MT7986 should contain 3 regions consys, dcm, and sku, in this order.
- 
-   interrupts:
--    maxItems: 1
-+    minItems: 1
-+    items:
-+      - description: major interrupt for rings
-+      - description: additional interrupt for ring 19
-+      - description: additional interrupt for ring 4
-+      - description: additional interrupt for ring 5
- 
-   power-domains:
-     maxItems: 1
-@@ -217,6 +219,23 @@ required:
-   - compatible
-   - reg
- 
-+allOf:
-+  - $ref: ieee80211.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - mediatek,mt7986-wmac
-+    then:
-+      properties:
-+        interrupts:
-+          minItems: 4
-+    else:
-+      properties:
-+        interrupts:
-+          maxItems: 1
-+
- unevaluatedProperties: false
- 
- examples:
-@@ -293,7 +312,10 @@ examples:
-         reg = <0x18000000 0x1000000>,
-               <0x10003000 0x1000>,
-               <0x11d10000 0x1000>;
--        interrupts = <GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupts = <GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 214 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH>;
-         clocks = <&topckgen 50>,
-                  <&topckgen 62>;
-         clock-names = "mcu", "ap2conn";
--- 
-2.18.0
+Hi all,
 
+I'm forwarding a Bugzilla report [1], as many developers don't take a look
+on Bugzilla. The reporter (Lukas Voreck <overloader@tutanota.com>, Cc'ed)
+wrote:
+
+> On an HP Envy x360 ey0xxx (and probably similar devices) there is no soun=
+d from
+> the internal Speakers whatsoever.
+>=20
+> Currently I'm using the patch found here
+> https://lore.kernel.org/all/20220811053950.11810-1-faenkhauser@gmail.com/=
+T/ But
+> with newer kernel versions that patch wont work, It will fail to build (t=
+ested
+> with 6.6.6)
+>=20
+> This is my first issue here and my first encounter with hardware issues, =
+if I
+> can provide more Info, please let me know
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=3D218280
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--+dEZltS9BeS27wKC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZYOw4AAKCRD2uYlJVVFO
+o+30AP9EIaHIVpT2Tk9XjLbrg50ewBz3Z3mvGhVSq6v27g3+HQEA6qlS4qEIndJ2
+SDQa7Hq1fx5Hiw8C+z8pJ9doxVysyQo=
+=qIw/
+-----END PGP SIGNATURE-----
+
+--+dEZltS9BeS27wKC--
