@@ -1,107 +1,115 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F9F51C29;
-	Thu, 21 Dec 2023 10:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B154F5E8
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 10:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rvNCEiKm"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 3BLAEHkq123049;
-	Thu, 21 Dec 2023 04:14:17 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1703153657;
-	bh=8h/5qNeBqZLu4DtB6QWlxRAttsKrDL6jdEBGySa6oNo=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=rvNCEiKmTkwd7qYnofyFNa2UVRy0l03p6FpkiGoBz5JOrZDyzYgUNLB6tADqJE/UX
-	 LkO8+2jG9Js2mum0Pn3UtQfrqz8mPY8KbhbDdBvG/HAN+dIC/RGaiQRK10LxhKkjgW
-	 7XqyFZSHt2CRP7KYs2C3hEccVFhYD4uyLdXShzOs=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 3BLAEGD8003965
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 21 Dec 2023 04:14:16 -0600
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 21
- Dec 2023 04:14:16 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 21 Dec 2023 04:14:16 -0600
-Received: from LT5CG31242FY.dhcp.ti.com (lt5cg31242fy.dhcp.ti.com [10.85.14.210])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 3BLADoQf069419;
-	Thu, 21 Dec 2023 04:14:11 -0600
-From: Shenghao Ding <shenghao-ding@ti.com>
-To: <broonie@kernel.org>, <conor+dt@kernel.org>,
-        <krzysztof.kozlowski@linaro.org>
-CC: <robh+dt@kernel.org>, <andriy.shevchenko@linux.intel.com>,
-        <kevin-lu@ti.com>, <baojun.xu@ti.com>, <devicetree@vger.kernel.org>,
-        <lgirdwood@gmail.com>, <perex@perex.cz>,
-        <pierre-louis.bossart@linux.intel.com>, <13916275206@139.com>,
-        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <liam.r.girdwood@intel.com>, <soyer@irl.hu>, <tiwai@suse.de>,
-        <peeyush@ti.com>, <navada@ti.com>,
-        Shenghao Ding <shenghao-ding@ti.com>
-Subject: [PATCH v2 4/5] ASoC: tas2781: Add tas2563 into driver
-Date: Thu, 21 Dec 2023 18:13:44 +0800
-Message-ID: <20231221101346.429-4-shenghao-ding@ti.com>
-X-Mailer: git-send-email 2.33.0.windows.2
-In-Reply-To: <20231221101346.429-1-shenghao-ding@ti.com>
-References: <20231221101346.429-1-shenghao-ding@ti.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NAac0Ov0"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-55435a07fd6so172058a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 02:16:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703153769; x=1703758569; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=e4JFHYci+V3luhkXhhHRIy5zeJUOwtYsr3299HW+LRg=;
+        b=NAac0Ov0zKsTtzZZh/J/we9wUjPont0lKmzNydg1BISuuj8hgPhrzWiMJLIMMSo9es
+         zRD9XYM3QzbKdDsSbU1Jja8GldzobYVjE6H1rGCOOeVfMmx5rUEOvEm/fEblDQv39k8A
+         EGMQ6Q1GjS0K8TVkgO5I0ksRI5Ol5vYNdXkt7I+cYuXRHa3w/KiZspK9fsDQQ9CmKl2J
+         6qwB7G34+mVKVnqv124Ck+VGmnRE0JQJ8Duas9Er1tOnP0Gv7f0+1KufdedMW+fb3cGp
+         /lx4gbDHgm48JuJ9hrJHq33phRN+Ex9UDaLDQHc50+Ss8fu7Ptk6cjG1DHW6RrD5r9tg
+         lHYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703153769; x=1703758569;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e4JFHYci+V3luhkXhhHRIy5zeJUOwtYsr3299HW+LRg=;
+        b=AZpfRduxycVfKGMTejfE+lkJ7BhxdfAu1Aar5XWVv06Le/WTcgUjsOiTr0hIq2ux+N
+         5S0WZwc8u3KJPqVkhDMA7iigTwDT8xuLfWXIDdvk2xZQZBbON88p/7Ajz+EHjEQPFdFK
+         zk1ajagPk8deqKLX6kxGN8Grs4kM0DfV7BMluLIstsTmGxfNa5baQbrHcGvtGtMVkSSC
+         lkLvkVzRRnzcwrIY70Y+qhS37CUt6Ip9/OyIs8rBU7ZFigZWIpzd/ntQmB8gzbcoGEOi
+         GcFcYnWr1C2MF7v79Q6M9ZWZ+DTUxJCOiHGdYviMJlPcHyN8Wodq9JvsClyeQjF5CcC2
+         pt0Q==
+X-Gm-Message-State: AOJu0Yzf7jEBtvDQSrqnQldP7KRlyFNw/WkXqbZqcDdYeR6P6eS/1Dtf
+	K9EDUG5blYfvok7T0q3qejVCee4Y3obaIQsn0LMpyg==
+X-Google-Smtp-Source: AGHT+IGHJIo+/xtR4/sf5Ls5VqcvbKgjx0YZl6mliy24uXe3pckW1SHv6SbBkCcMr/z5auN4LgzRmw==
+X-Received: by 2002:a50:a6d1:0:b0:553:2b99:ce52 with SMTP id f17-20020a50a6d1000000b005532b99ce52mr3895145edc.37.1703153769637;
+        Thu, 21 Dec 2023 02:16:09 -0800 (PST)
+Received: from krzk-bin.. ([78.10.206.178])
+        by smtp.gmail.com with ESMTPSA id h2-20020a0564020e8200b005532a337d51sm962868eda.44.2023.12.21.02.16.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Dec 2023 02:16:09 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [GIT PULL] w1: drivers for v6.8
+Date: Thu, 21 Dec 2023 11:16:02 +0100
+Message-Id: <20231221101602.15826-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Add tas2563 to better support dsp mode.
+The following changes since commit b85ea95d086471afb4ad062012a4d73cd328fa86:
 
-Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
+  Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
 
----
-Change in v2:
- - Move tas2563 to tas2781 driver
----
- sound/soc/codecs/tas2781-i2c.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+are available in the Git repository at:
 
-diff --git a/sound/soc/codecs/tas2781-i2c.c b/sound/soc/codecs/tas2781-i2c.c
-index 55cd5e3c23a5..c6afc87f2c69 100644
---- a/sound/soc/codecs/tas2781-i2c.c
-+++ b/sound/soc/codecs/tas2781-i2c.c
-@@ -5,9 +5,9 @@
- // Copyright (C) 2022 - 2023 Texas Instruments Incorporated
- // https://www.ti.com
- //
--// The TAS2781 driver implements a flexible and configurable
-+// The TAS2781/TAS2563 driver implements a flexible and configurable
- // algo coefficient setting for one, two, or even multiple
--// TAS2781 chips.
-+// TAS2781/TAS2563 chips.
- //
- // Author: Shenghao Ding <shenghao-ding@ti.com>
- // Author: Kevin Lu <kevin-lu@ti.com>
-@@ -33,6 +33,7 @@
- 
- static const struct i2c_device_id tasdevice_id[] = {
- 	{ "tas2781", TAS2781 },
-+	{ "tas2563", TAS2563 },
- 	{}
- };
- MODULE_DEVICE_TABLE(i2c, tasdevice_id);
-@@ -40,6 +41,7 @@ MODULE_DEVICE_TABLE(i2c, tasdevice_id);
- #ifdef CONFIG_OF
- static const struct of_device_id tasdevice_of_match[] = {
- 	{ .compatible = "ti,tas2781" },
-+	{ .compatible = "ti,tas2563" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, tasdevice_of_match);
--- 
-2.34.1
+  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-w1.git tags/w1-drv-6.8
 
+for you to fetch changes up to 93c4bb3666a3d463c73a66ab3cc78a4c4b83631a:
+
+  w1: ds2433: add support for ds28ec20 eeprom (2023-12-20 09:25:25 +0100)
+
+----------------------------------------------------------------
+1-Wire bus drivers for v6.8
+
+1. Add new AMD AXI 1-wire host driver for AMD programmable logic IP
+   core.
+2. Add support for Analog Devices DS28EC20 EEPROM to existing DS2433
+   driver.
+3. Few cleanups in W1 GPIO driver.
+
+----------------------------------------------------------------
+Kris Chaplin (2):
+      dt-bindings: w1: Add AMD AXI w1 host and MAINTAINERS entry
+      w1: Add AXI 1-wire host driver for AMD programmable logic IP core
+
+Marc Ferland (5):
+      w1: ds2490: support block sizes larger than 128 bytes in ds_read_block
+      w1: ds2433: remove unused definitions
+      w1: ds2433: introduce a configuration structure
+      w1: ds2433: use the kernel bitmap implementation
+      w1: ds2433: add support for ds28ec20 eeprom
+
+Rob Herring (1):
+      w1: amd_axi_w1: Explicitly include correct DT includes
+
+Uwe Kleine-König (3):
+      w1: gpio: Don't use platform data for driver data
+      w1: gpio: Drop unused enable_external_pullup from driver data
+      w1: gpio: rename pointer to driver data from pdata to ddata
+
+ .../devicetree/bindings/w1/amd,axi-1wire-host.yaml |  44 +++
+ MAINTAINERS                                        |   8 +
+ drivers/w1/masters/Kconfig                         |  11 +
+ drivers/w1/masters/Makefile                        |   1 +
+ drivers/w1/masters/amd_axi_w1.c                    | 396 +++++++++++++++++++++
+ drivers/w1/masters/ds2490.c                        |  25 +-
+ drivers/w1/masters/w1-gpio.c                       | 118 +++---
+ drivers/w1/slaves/w1_ds2433.c                      | 162 +++++++--
+ include/linux/w1-gpio.h                            |  22 --
+ 9 files changed, 659 insertions(+), 128 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/w1/amd,axi-1wire-host.yaml
+ create mode 100644 drivers/w1/masters/amd_axi_w1.c
+ delete mode 100644 include/linux/w1-gpio.h
