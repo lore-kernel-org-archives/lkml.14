@@ -1,38 +1,38 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC774F1EF;
-	Thu, 21 Dec 2023 09:30:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19494F5F3;
+	Thu, 21 Dec 2023 09:30:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="W8TQn9cD"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BL0waHg028351;
-	Thu, 21 Dec 2023 01:29:49 -0800
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="UtU/6BYI"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BL6ILkY019367;
+	Thu, 21 Dec 2023 01:29:56 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	pfpt0220; bh=hVW+cIy4SLe2kchQeFMc/03/gO6DHzTc9JV4hrEJyGI=; b=W8T
-	Qn9cD4hP4NCETDcrOdmFPUItx/pZEfzj29OqD2Y+EOE6Q7bwlpjhRBd0tdNwa1Qc
-	p14kf5wkqYwFdFfQx2js9gLeduccsQ+mpMvcLMNMTktLYnXDnqdowd4e3Lvcdsu9
-	ShFfp5ztI5PJd87TbSzXXhPNGZBgtPtxouSCCchblFM/ACW5E3EPvWqGM24tKwGG
-	giCWZkIduHV5ytVf5/JPu0RrOG75R+JXnuD3IR/GYYEhGpU/gcJwLmB5aFGQuMir
-	quxhFlXxBa4YK69I5aB/s9PzpIhZHOzaJt1gJk+ywahqfPeZ6CIQEp4Izp01oJ2V
-	5zcWz+A+gvflyxIPTLg==
+	pfpt0220; bh=a1UkXVEj3PrH4A/oXcCBhqAayYMu+/WjRdwmm+eMBkY=; b=UtU
+	/6BYIhiDvRqIdBLuiSaKmLCNhkyRWmrPKkVBarc7h//QUKYou5MyPNyj7OwP3jhH
+	/oY/ALLUJO+dr2MIdW1a60hjJUvACwPo+hKrA5yBth+a1g48xNw91ts51hG6deLw
+	0Ab9fobQzo/2o0+qPu+/y2HJ6QqT0bQk3GJUJxMG70+ae1LE+VhH1PCScDpLCPdK
+	/W2AuTh0AcRCdD5jf0J1jjPdYbQ88JMmtdpIzULh8VUITOxjUtdnDZ3TleAiVXA/
+	TdOv8qeazGsaJln/sgt7iWJ5aD5GwVNmw98UIOufSDJo5STynB8HYrO9or4P2iDr
+	MxqYITFPY+Eo9zxNdQg==
 Received: from dc5-exch01.marvell.com ([199.233.59.181])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3v3ntrqm28-1
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3v4fyr148c-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-	Thu, 21 Dec 2023 01:29:48 -0800 (PST)
+	Thu, 21 Dec 2023 01:29:56 -0800 (PST)
 Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
  (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 21 Dec
- 2023 01:29:46 -0800
+ 2023 01:29:54 -0800
 Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
  (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
- Transport; Thu, 21 Dec 2023 01:29:46 -0800
+ Transport; Thu, 21 Dec 2023 01:29:54 -0800
 Received: from ubuntu-PowerEdge-T110-II.sclab.marvell.com (unknown [10.106.27.86])
-	by maili.marvell.com (Postfix) with ESMTP id C57423F7048;
-	Thu, 21 Dec 2023 01:29:45 -0800 (PST)
+	by maili.marvell.com (Postfix) with ESMTP id 4058C3F7048;
+	Thu, 21 Dec 2023 01:29:54 -0800 (PST)
 From: Shinas Rasheed <srasheed@marvell.com>
 To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <hgani@marvell.com>, <vimleshk@marvell.com>, <sedara@marvell.com>,
@@ -45,9 +45,9 @@ CC: <hgani@marvell.com>, <vimleshk@marvell.com>, <sedara@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet
 	<edumazet@google.com>
-Subject: [PATCH net-next v1 4/8] octeon_ep_vf: add Tx/Rx ring resource setup and cleanup
-Date: Thu, 21 Dec 2023 01:28:40 -0800
-Message-ID: <20231221092844.2885872-5-srasheed@marvell.com>
+Subject: [PATCH net-next v1 7/8] octeon_ep_vf: add ethtool support
+Date: Thu, 21 Dec 2023 01:28:43 -0800
+Message-ID: <20231221092844.2885872-8-srasheed@marvell.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20231221092844.2885872-1-srasheed@marvell.com>
 References: <20231221092844.2885872-1-srasheed@marvell.com>
@@ -59,527 +59,389 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-GUID: SKMRnlzlZsjUEb-XCAtH7KBQLhZZ528Y
-X-Proofpoint-ORIG-GUID: SKMRnlzlZsjUEb-XCAtH7KBQLhZZ528Y
+X-Proofpoint-GUID: lXljPmB59ZvLMiWPzZWdaiSgMguVD6gH
+X-Proofpoint-ORIG-GUID: lXljPmB59ZvLMiWPzZWdaiSgMguVD6gH
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
 
-Implement Tx/Rx ring resource allocation and cleanup.
+Add support for the following ethtool commands:
+
+ethtool -i|--driver devname
+ethtool devname
+ethtool -S|--statistics devname
 
 Signed-off-by: Shinas Rasheed <srasheed@marvell.com>
 ---
- .../marvell/octeon_ep_vf/octep_vf_rx.c        | 222 ++++++++++++++++++
- .../marvell/octeon_ep_vf/octep_vf_tx.c        | 217 +++++++++++++++++
- 2 files changed, 439 insertions(+)
+ .../ethernet/marvell/octeon_ep_vf/Makefile    |   3 +-
+ .../marvell/octeon_ep_vf/octep_vf_ethtool.c   | 307 ++++++++++++++++++
+ .../marvell/octeon_ep_vf/octep_vf_main.c      |   1 +
+ .../marvell/octeon_ep_vf/octep_vf_main.h      |   1 +
+ .../marvell/octeon_ep_vf/octep_vf_mbox.c      |   2 +-
+ 5 files changed, 312 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_ethtool.c
 
-diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_rx.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_rx.c
-index 4f1a8157ce39..54e6935c6ee8 100644
---- a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_rx.c
-+++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_rx.c
-@@ -7,10 +7,199 @@
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/Makefile b/drivers/net/ethernet/marvell/octeon_ep_vf/Makefile
+index 46e87e1f4773..bacf0d540337 100644
+--- a/drivers/net/ethernet/marvell/octeon_ep_vf/Makefile
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/Makefile
+@@ -6,4 +6,5 @@
+ obj-$(CONFIG_OCTEON_EP_VF) += octeon_ep_vf.o
  
- #include <linux/pci.h>
- #include <linux/etherdevice.h>
-+#include <linux/vmalloc.h>
- 
- #include "octep_vf_config.h"
- #include "octep_vf_main.h"
- 
-+static void octep_vf_oq_reset_indices(struct octep_vf_oq *oq)
+ octeon_ep_vf-y := octep_vf_main.o octep_vf_cn9k.o octep_vf_cnxk.o \
+-		  octep_vf_tx.o octep_vf_rx.o
++		  octep_vf_tx.o octep_vf_rx.o octep_vf_ethtool.o \
++		  octep_vf_mbox.o
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_ethtool.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_ethtool.c
+new file mode 100644
+index 000000000000..25e6f643cd9f
+--- /dev/null
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_ethtool.c
+@@ -0,0 +1,307 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Marvell Octeon EP (EndPoint) VF Ethernet Driver
++ *
++ * Copyright (C) 2020 Marvell.
++ *
++ */
++
++#include <linux/pci.h>
++#include <linux/netdevice.h>
++#include <linux/ethtool.h>
++
++#include "octep_vf_config.h"
++#include "octep_vf_main.h"
++
++static const char octep_vf_gstrings_global_stats[][ETH_GSTRING_LEN] = {
++	"rx_packets",
++	"tx_packets",
++	"rx_bytes",
++	"tx_bytes",
++	"rx_alloc_errors",
++	"tx_busy_errors",
++	"rx_dropped",
++	"tx_dropped",
++	"tx_hw_pkts",
++	"tx_hw_octs",
++	"tx_hw_bcast",
++	"tx_hw_mcast",
++	"rx_hw_pkts",
++	"rx_hw_bytes",
++	"rx_hw_bcast",
++	"rx_hw_mcast",
++	"rx_dropped_pkts_fifo_full",
++	"rx_dropped_bytes_fifo_full",
++	"rx_err_pkts",
++};
++
++#define OCTEP_VF_GLOBAL_STATS_CNT (sizeof(octep_vf_gstrings_global_stats) / ETH_GSTRING_LEN)
++
++static const char octep_vf_gstrings_tx_q_stats[][ETH_GSTRING_LEN] = {
++	"tx_packets_posted[Q-%u]",
++	"tx_packets_completed[Q-%u]",
++	"tx_bytes[Q-%u]",
++	"tx_busy[Q-%u]",
++};
++
++#define OCTEP_VF_TX_Q_STATS_CNT (sizeof(octep_vf_gstrings_tx_q_stats) / ETH_GSTRING_LEN)
++
++static const char octep_vf_gstrings_rx_q_stats[][ETH_GSTRING_LEN] = {
++	"rx_packets[Q-%u]",
++	"rx_bytes[Q-%u]",
++	"rx_alloc_errors[Q-%u]",
++};
++
++#define OCTEP_VF_RX_Q_STATS_CNT (sizeof(octep_vf_gstrings_rx_q_stats) / ETH_GSTRING_LEN)
++
++static void octep_vf_get_drvinfo(struct net_device *netdev,
++				 struct ethtool_drvinfo *info)
 +{
-+	oq->host_read_idx = 0;
-+	oq->host_refill_idx = 0;
-+	oq->refill_count = 0;
-+	oq->last_pkt_count = 0;
-+	oq->pkts_pending = 0;
++	struct octep_vf_device *oct = netdev_priv(netdev);
++
++	strscpy(info->driver, OCTEP_VF_DRV_NAME, sizeof(info->driver));
++	strscpy(info->bus_info, pci_name(oct->pdev), sizeof(info->bus_info));
 +}
 +
-+/**
-+ * octep_vf_oq_fill_ring_buffers() - fill initial receive buffers for Rx ring.
-+ *
-+ * @oq: Octeon Rx queue data structure.
-+ *
-+ * Return: 0, if successfully filled receive buffers for all descriptors.
-+ *         -1, if failed to allocate a buffer or failed to map for DMA.
-+ */
-+static int octep_vf_oq_fill_ring_buffers(struct octep_vf_oq *oq)
++static void octep_vf_get_strings(struct net_device *netdev,
++				 u32 stringset, u8 *data)
 +{
-+	struct octep_vf_oq_desc_hw *desc_ring = oq->desc_ring;
-+	struct page *page;
-+	u32 i;
++	struct octep_vf_device *oct = netdev_priv(netdev);
++	u16 num_queues = CFG_GET_PORTS_ACTIVE_IO_RINGS(oct->conf);
++	char *strings = (char *)data;
++	int i, j;
 +
-+	for (i = 0; i < oq->max_count; i++) {
-+		page = dev_alloc_page();
-+		if (unlikely(!page)) {
-+			dev_err(oq->dev, "Rx buffer alloc failed\n");
-+			goto rx_buf_alloc_err;
++	switch (stringset) {
++	case ETH_SS_STATS:
++		for (i = 0; i < OCTEP_VF_GLOBAL_STATS_CNT; i++) {
++			snprintf(strings, ETH_GSTRING_LEN,
++				 octep_vf_gstrings_global_stats[i]);
++			strings += ETH_GSTRING_LEN;
 +		}
-+		desc_ring[i].buffer_ptr = dma_map_page(oq->dev, page, 0,
-+						       PAGE_SIZE,
-+						       DMA_FROM_DEVICE);
-+		if (dma_mapping_error(oq->dev, desc_ring[i].buffer_ptr)) {
-+			dev_err(oq->dev,
-+				"OQ-%d buffer alloc: DMA mapping error!\n",
-+				oq->q_no);
-+			put_page(page);
-+			goto dma_map_err;
++
++		for (i = 0; i < num_queues; i++) {
++			for (j = 0; j < OCTEP_VF_TX_Q_STATS_CNT; j++) {
++				snprintf(strings, ETH_GSTRING_LEN,
++					 octep_vf_gstrings_tx_q_stats[j], i);
++				strings += ETH_GSTRING_LEN;
++			}
 +		}
-+		oq->buff_info[i].page = page;
++
++		for (i = 0; i < num_queues; i++) {
++			for (j = 0; j < OCTEP_VF_RX_Q_STATS_CNT; j++) {
++				snprintf(strings, ETH_GSTRING_LEN,
++					 octep_vf_gstrings_rx_q_stats[j], i);
++				strings += ETH_GSTRING_LEN;
++			}
++		}
++		break;
++	default:
++		break;
++	}
++}
++
++static int octep_vf_get_sset_count(struct net_device *netdev, int sset)
++{
++	struct octep_vf_device *oct = netdev_priv(netdev);
++	u16 num_queues = CFG_GET_PORTS_ACTIVE_IO_RINGS(oct->conf);
++
++	switch (sset) {
++	case ETH_SS_STATS:
++		return OCTEP_VF_GLOBAL_STATS_CNT + (num_queues *
++		       (OCTEP_VF_TX_Q_STATS_CNT + OCTEP_VF_RX_Q_STATS_CNT));
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static void octep_vf_get_ethtool_stats(struct net_device *netdev,
++				       struct ethtool_stats *stats, u64 *data)
++{
++	struct octep_vf_device *oct = netdev_priv(netdev);
++	struct octep_vf_iface_tx_stats *iface_tx_stats;
++	struct octep_vf_iface_rx_stats *iface_rx_stats;
++	u64 rx_alloc_errors, tx_busy_errors;
++	u64 rx_packets, rx_bytes;
++	u64 tx_packets, tx_bytes;
++	int q, i;
++
++	rx_packets = 0;
++	rx_bytes = 0;
++	tx_packets = 0;
++	tx_bytes = 0;
++	rx_alloc_errors = 0;
++	tx_busy_errors = 0;
++	tx_packets = 0;
++	tx_bytes = 0;
++	rx_packets = 0;
++	rx_bytes = 0;
++
++	octep_vf_get_if_stats(oct);
++	iface_tx_stats = &oct->iface_tx_stats;
++	iface_rx_stats = &oct->iface_rx_stats;
++
++	for (q = 0; q < oct->num_oqs; q++) {
++		struct octep_vf_iq *iq = oct->iq[q];
++		struct octep_vf_oq *oq = oct->oq[q];
++
++		tx_packets += iq->stats.instr_completed;
++		tx_bytes += iq->stats.bytes_sent;
++		tx_busy_errors += iq->stats.tx_busy;
++
++		rx_packets += oq->stats.packets;
++		rx_bytes += oq->stats.bytes;
++		rx_alloc_errors += oq->stats.alloc_failures;
++	}
++	i = 0;
++	data[i++] = rx_packets;
++	data[i++] = tx_packets;
++	data[i++] = rx_bytes;
++	data[i++] = tx_bytes;
++	data[i++] = rx_alloc_errors;
++	data[i++] = tx_busy_errors;
++	data[i++] = iface_rx_stats->dropped_pkts_fifo_full +
++		    iface_rx_stats->err_pkts;
++	data[i++] = iface_tx_stats->dropped;
++	data[i++] = iface_tx_stats->pkts;
++	data[i++] = iface_tx_stats->octs;
++	data[i++] = iface_tx_stats->bcst;
++	data[i++] = iface_tx_stats->mcst;
++	data[i++] = iface_rx_stats->pkts;
++	data[i++] = iface_rx_stats->octets;
++	data[i++] = iface_rx_stats->mcast_pkts;
++	data[i++] = iface_rx_stats->bcast_pkts;
++	data[i++] = iface_rx_stats->dropped_pkts_fifo_full;
++	data[i++] = iface_rx_stats->dropped_octets_fifo_full;
++	data[i++] = iface_rx_stats->err_pkts;
++
++	/* Per Tx Queue stats */
++	for (q = 0; q < oct->num_iqs; q++) {
++		struct octep_vf_iq *iq = oct->iq[q];
++
++		data[i++] = iq->stats.instr_posted;
++		data[i++] = iq->stats.instr_completed;
++		data[i++] = iq->stats.bytes_sent;
++		data[i++] = iq->stats.tx_busy;
 +	}
 +
++	/* Per Rx Queue stats */
++	for (q = 0; q < oct->num_oqs; q++) {
++		struct octep_vf_oq *oq = oct->oq[q];
++
++		data[i++] = oq->stats.packets;
++		data[i++] = oq->stats.bytes;
++		data[i++] = oq->stats.alloc_failures;
++	}
++}
++
++#define OCTEP_VF_SET_ETHTOOL_LINK_MODES_BITMAP(octep_vf_speeds, ksettings, name) \
++{ \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_10GBASE_T)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 10000baseT_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_10GBASE_R)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 10000baseR_FEC); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_10GBASE_CR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 10000baseCR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_10GBASE_KR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 10000baseKR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_10GBASE_LR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 10000baseLR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_10GBASE_SR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 10000baseSR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_25GBASE_CR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 25000baseCR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_25GBASE_KR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 25000baseKR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_25GBASE_SR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 25000baseSR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_40GBASE_CR4)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 40000baseCR4_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_40GBASE_KR4)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 40000baseKR4_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_40GBASE_LR4)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 40000baseLR4_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_40GBASE_SR4)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 40000baseSR4_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_50GBASE_CR2)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 50000baseCR2_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_50GBASE_KR2)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 50000baseKR2_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_50GBASE_SR2)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 50000baseSR2_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_50GBASE_CR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 50000baseCR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_50GBASE_KR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 50000baseKR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_50GBASE_LR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 50000baseLR_ER_FR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_50GBASE_SR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 50000baseSR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_100GBASE_CR4)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 100000baseCR4_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_100GBASE_KR4)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 100000baseKR4_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_100GBASE_LR4)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 100000baseLR4_ER4_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_100GBASE_SR4)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 100000baseSR4_Full); \
++}
++
++static int octep_vf_get_link_ksettings(struct net_device *netdev,
++				       struct ethtool_link_ksettings *cmd)
++{
++	struct octep_vf_device *oct = netdev_priv(netdev);
++	struct octep_vf_iface_link_info *link_info;
++	u32 advertised_modes, supported_modes;
++
++	ethtool_link_ksettings_zero_link_mode(cmd, supported);
++	ethtool_link_ksettings_zero_link_mode(cmd, advertising);
++
++	octep_vf_get_link_info(oct);
++
++	advertised_modes = oct->link_info.advertised_modes;
++	supported_modes = oct->link_info.supported_modes;
++	link_info = &oct->link_info;
++
++	OCTEP_VF_SET_ETHTOOL_LINK_MODES_BITMAP(supported_modes, cmd, supported);
++	OCTEP_VF_SET_ETHTOOL_LINK_MODES_BITMAP(advertised_modes, cmd, advertising);
++
++	if (link_info->autoneg) {
++		if (link_info->autoneg & OCTEP_VF_LINK_MODE_AUTONEG_SUPPORTED)
++			ethtool_link_ksettings_add_link_mode(cmd, supported, Autoneg);
++		if (link_info->autoneg & OCTEP_VF_LINK_MODE_AUTONEG_ADVERTISED) {
++			ethtool_link_ksettings_add_link_mode(cmd, advertising, Autoneg);
++			cmd->base.autoneg = AUTONEG_ENABLE;
++		} else {
++			cmd->base.autoneg = AUTONEG_DISABLE;
++		}
++	} else {
++		cmd->base.autoneg = AUTONEG_DISABLE;
++	}
++
++	cmd->base.port = PORT_FIBRE;
++	ethtool_link_ksettings_add_link_mode(cmd, supported, FIBRE);
++	ethtool_link_ksettings_add_link_mode(cmd, advertising, FIBRE);
++
++	if (netif_carrier_ok(netdev)) {
++		cmd->base.speed = link_info->speed;
++		cmd->base.duplex = DUPLEX_FULL;
++	} else {
++		cmd->base.speed = SPEED_UNKNOWN;
++		cmd->base.duplex = DUPLEX_UNKNOWN;
++	}
 +	return 0;
-+
-+dma_map_err:
-+rx_buf_alloc_err:
-+	while (i) {
-+		i--;
-+		dma_unmap_page(oq->dev, desc_ring[i].buffer_ptr, PAGE_SIZE, DMA_FROM_DEVICE);
-+		put_page(oq->buff_info[i].page);
-+		oq->buff_info[i].page = NULL;
-+	}
-+
-+	return -1;
 +}
 +
-+/**
-+ * octep_vf_setup_oq() - Setup a Rx queue.
-+ *
-+ * @oct: Octeon device private data structure.
-+ * @q_no: Rx queue number to be setup.
-+ *
-+ * Allocate resources for a Rx queue.
-+ */
-+static int octep_vf_setup_oq(struct octep_vf_device *oct, int q_no)
++static const struct ethtool_ops octep_vf_ethtool_ops = {
++	.get_drvinfo = octep_vf_get_drvinfo,
++	.get_link = ethtool_op_get_link,
++	.get_strings = octep_vf_get_strings,
++	.get_sset_count = octep_vf_get_sset_count,
++	.get_ethtool_stats = octep_vf_get_ethtool_stats,
++	.get_link_ksettings = octep_vf_get_link_ksettings,
++};
++
++void octep_vf_set_ethtool_ops(struct net_device *netdev)
 +{
-+	struct octep_vf_oq *oq;
-+	u32 desc_ring_size;
-+
-+	oq = vzalloc(sizeof(*oq));
-+	if (!oq)
-+		goto create_oq_fail;
-+	oct->oq[q_no] = oq;
-+
-+	oq->octep_vf_dev = oct;
-+	oq->netdev = oct->netdev;
-+	oq->dev = &oct->pdev->dev;
-+	oq->q_no = q_no;
-+	oq->max_count = CFG_GET_OQ_NUM_DESC(oct->conf);
-+	oq->ring_size_mask = oq->max_count - 1;
-+	oq->buffer_size = CFG_GET_OQ_BUF_SIZE(oct->conf);
-+	oq->max_single_buffer_size = oq->buffer_size - OCTEP_VF_OQ_RESP_HW_SIZE;
-+
-+	/* When the hardware/firmware supports additional capabilities,
-+	 * additional header is filled-in by Octeon after length field in
-+	 * Rx packets. this header contains additional packet information.
-+	 */
-+	if (oct->fw_info.rx_ol_flags)
-+		oq->max_single_buffer_size -= OCTEP_VF_OQ_RESP_HW_EXT_SIZE;
-+
-+	oq->refill_threshold = CFG_GET_OQ_REFILL_THRESHOLD(oct->conf);
-+
-+	desc_ring_size = oq->max_count * OCTEP_VF_OQ_DESC_SIZE;
-+	oq->desc_ring = dma_alloc_coherent(oq->dev, desc_ring_size,
-+					   &oq->desc_ring_dma, GFP_KERNEL);
-+
-+	if (unlikely(!oq->desc_ring)) {
-+		dev_err(oq->dev,
-+			"Failed to allocate DMA memory for OQ-%d !!\n", q_no);
-+		goto desc_dma_alloc_err;
-+	}
-+
-+	oq->buff_info = (struct octep_vf_rx_buffer *)
-+			vzalloc(oq->max_count * OCTEP_VF_OQ_RECVBUF_SIZE);
-+	if (unlikely(!oq->buff_info)) {
-+		dev_err(&oct->pdev->dev,
-+			"Failed to allocate buffer info for OQ-%d\n", q_no);
-+		goto buf_list_err;
-+	}
-+
-+	if (octep_vf_oq_fill_ring_buffers(oq))
-+		goto oq_fill_buff_err;
-+
-+	octep_vf_oq_reset_indices(oq);
-+	oct->hw_ops.setup_oq_regs(oct, q_no);
-+	oct->num_oqs++;
-+
-+	return 0;
-+
-+oq_fill_buff_err:
-+	vfree(oq->buff_info);
-+	oq->buff_info = NULL;
-+buf_list_err:
-+	dma_free_coherent(oq->dev, desc_ring_size,
-+			  oq->desc_ring, oq->desc_ring_dma);
-+	oq->desc_ring = NULL;
-+desc_dma_alloc_err:
-+	vfree(oq);
-+	oct->oq[q_no] = NULL;
-+create_oq_fail:
-+	return -1;
++	netdev->ethtool_ops = &octep_vf_ethtool_ops;
 +}
-+
-+/**
-+ * octep_vf_oq_free_ring_buffers() - Free ring buffers.
-+ *
-+ * @oq: Octeon Rx queue data structure.
-+ *
-+ * Free receive buffers in unused Rx queue descriptors.
-+ */
-+static void octep_vf_oq_free_ring_buffers(struct octep_vf_oq *oq)
-+{
-+	struct octep_vf_oq_desc_hw *desc_ring = oq->desc_ring;
-+	int  i;
-+
-+	if (!oq->desc_ring || !oq->buff_info)
-+		return;
-+
-+	for (i = 0; i < oq->max_count; i++)  {
-+		if (oq->buff_info[i].page) {
-+			dma_unmap_page(oq->dev, desc_ring[i].buffer_ptr,
-+				       PAGE_SIZE, DMA_FROM_DEVICE);
-+			put_page(oq->buff_info[i].page);
-+			oq->buff_info[i].page = NULL;
-+			desc_ring[i].buffer_ptr = 0;
-+		}
-+	}
-+	octep_vf_oq_reset_indices(oq);
-+}
-+
-+/**
-+ * octep_vf_free_oq() - Free Rx queue resources.
-+ *
-+ * @oq: Octeon Rx queue data structure.
-+ *
-+ * Free all resources of a Rx queue.
-+ */
-+static int octep_vf_free_oq(struct octep_vf_oq *oq)
-+{
-+	struct octep_vf_device *oct = oq->octep_vf_dev;
-+	int q_no = oq->q_no;
-+
-+	octep_vf_oq_free_ring_buffers(oq);
-+
-+	if (oq->buff_info)
-+		vfree(oq->buff_info);
-+
-+	if (oq->desc_ring)
-+		dma_free_coherent(oq->dev,
-+				  oq->max_count * OCTEP_VF_OQ_DESC_SIZE,
-+				  oq->desc_ring, oq->desc_ring_dma);
-+
-+	vfree(oq);
-+	oct->oq[q_no] = NULL;
-+	oct->num_oqs--;
-+	return 0;
-+}
-+
- /**
-  * octep_vf_setup_oqs() - setup resources for all Rx queues.
-  *
-@@ -18,6 +207,26 @@
-  */
- int octep_vf_setup_oqs(struct octep_vf_device *oct)
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
+index e98ec8e8df9c..9fb48e2b909a 100644
+--- a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
+@@ -1082,6 +1082,7 @@ static int octep_vf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	INIT_WORK(&octep_vf_dev->tx_timeout_task, octep_vf_tx_timeout_task);
+ 
+ 	netdev->netdev_ops = &octep_vf_netdev_ops;
++	octep_vf_set_ethtool_ops(netdev);
+ 	netif_carrier_off(netdev);
+ 
+ 	if (octep_vf_setup_mbox(octep_vf_dev)) {
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.h b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.h
+index b3150f977a30..599e1c7fc651 100644
+--- a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.h
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.h
+@@ -331,6 +331,7 @@ void octep_vf_device_setup_cn93(struct octep_vf_device *oct);
+ void octep_vf_device_setup_cnxk(struct octep_vf_device *oct);
+ int octep_vf_iq_process_completions(struct octep_vf_iq *iq, u16 budget);
+ int octep_vf_oq_process_rx(struct octep_vf_oq *oq, int budget);
++void octep_vf_set_ethtool_ops(struct net_device *netdev);
+ int octep_vf_get_link_info(struct octep_vf_device *oct);
+ int octep_vf_get_if_stats(struct octep_vf_device *oct);
+ void octep_vf_mbox_work(struct work_struct *work);
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_mbox.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_mbox.c
+index 2eab21e43048..594bee15bd36 100644
+--- a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_mbox.c
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_mbox.c
+@@ -114,7 +114,7 @@ static int __octep_vf_mbox_send_cmd(struct octep_vf_device *oct,
  {
-+	int i, retval = 0;
-+
-+	oct->num_oqs = 0;
-+	for (i = 0; i < CFG_GET_PORTS_ACTIVE_IO_RINGS(oct->conf); i++) {
-+		retval = octep_vf_setup_oq(oct, i);
-+		if (retval) {
-+			dev_err(&oct->pdev->dev,
-+				"Failed to setup OQ(RxQ)-%d.\n", i);
-+			goto oq_setup_err;
-+		}
-+		dev_dbg(&oct->pdev->dev, "Successfully setup OQ(RxQ)-%d.\n", i);
-+	}
-+
-+	return 0;
-+
-+oq_setup_err:
-+	while (i) {
-+		i--;
-+		octep_vf_free_oq(oct->oq[i]);
-+	}
- 	return -1;
- }
+ 	struct octep_vf_mbox *mbox = oct->mbox;
+ 	u64 reg_val = 0ull;
+-	int count;
++	int count = 0;
  
-@@ -30,6 +239,10 @@ int octep_vf_setup_oqs(struct octep_vf_device *oct)
-  */
- void octep_vf_oq_dbell_init(struct octep_vf_device *oct)
- {
-+	int i;
-+
-+	for (i = 0; i < oct->num_oqs; i++)
-+		writel(oct->oq[i]->max_count, oct->oq[i]->pkts_credit_reg);
- }
- 
- /**
-@@ -39,4 +252,13 @@ void octep_vf_oq_dbell_init(struct octep_vf_device *oct)
-  */
- void octep_vf_free_oqs(struct octep_vf_device *oct)
- {
-+	int i;
-+
-+	for (i = 0; i < CFG_GET_PORTS_ACTIVE_IO_RINGS(oct->conf); i++) {
-+		if (!oct->oq[i])
-+			continue;
-+		octep_vf_free_oq(oct->oq[i]);
-+		dev_dbg(&oct->pdev->dev,
-+			"Successfully freed OQ(RxQ)-%d.\n", i);
-+	}
- }
-diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.c
-index 232ba479ecf6..787132ffd708 100644
---- a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.c
-+++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.c
-@@ -7,10 +7,73 @@
- 
- #include <linux/pci.h>
- #include <linux/etherdevice.h>
-+#include <linux/vmalloc.h>
- 
- #include "octep_vf_config.h"
- #include "octep_vf_main.h"
- 
-+/* Reset various index of Tx queue data structure. */
-+static void octep_vf_iq_reset_indices(struct octep_vf_iq *iq)
-+{
-+	iq->fill_cnt = 0;
-+	iq->host_write_index = 0;
-+	iq->octep_vf_read_index = 0;
-+	iq->flush_index = 0;
-+	iq->pkts_processed = 0;
-+	iq->pkt_in_done = 0;
-+}
-+
-+/**
-+ * octep_vf_iq_free_pending() - Free Tx buffers for pending completions.
-+ *
-+ * @iq: Octeon Tx queue data structure.
-+ */
-+static void octep_vf_iq_free_pending(struct octep_vf_iq *iq)
-+{
-+	struct octep_vf_tx_buffer *tx_buffer;
-+	struct skb_shared_info *shinfo;
-+	u32 fi = iq->flush_index;
-+	struct sk_buff *skb;
-+	u8 frags, i;
-+
-+	while (fi != iq->host_write_index) {
-+		tx_buffer = iq->buff_info + fi;
-+		skb = tx_buffer->skb;
-+
-+		fi++;
-+		if (unlikely(fi == iq->max_count))
-+			fi = 0;
-+
-+		if (!tx_buffer->gather) {
-+			dma_unmap_single(iq->dev, tx_buffer->dma,
-+					 tx_buffer->skb->len, DMA_TO_DEVICE);
-+			dev_kfree_skb_any(skb);
-+			continue;
-+		}
-+
-+		/* Scatter/Gather */
-+		shinfo = skb_shinfo(skb);
-+		frags = shinfo->nr_frags;
-+
-+		dma_unmap_single(iq->dev,
-+				 tx_buffer->sglist[0].dma_ptr[0],
-+				 tx_buffer->sglist[0].len[0],
-+				 DMA_TO_DEVICE);
-+
-+		i = 1; /* entry 0 is main skb, unmapped above */
-+		while (frags--) {
-+			dma_unmap_page(iq->dev, tx_buffer->sglist[i >> 2].dma_ptr[i & 3],
-+				       tx_buffer->sglist[i >> 2].len[i & 3], DMA_TO_DEVICE);
-+			i++;
-+		}
-+
-+		dev_kfree_skb_any(skb);
-+	}
-+
-+	iq->flush_index = fi;
-+	netdev_tx_reset_queue(netdev_get_tx_queue(iq->netdev, iq->q_no));
-+}
-+
- /**
-  * octep_vf_clean_iqs()  - Clean Tx queues to shutdown the device.
-  *
-@@ -21,6 +84,133 @@
-  */
- void octep_vf_clean_iqs(struct octep_vf_device *oct)
- {
-+	int i;
-+
-+	for (i = 0; i < oct->num_iqs; i++) {
-+		octep_vf_iq_free_pending(oct->iq[i]);
-+		octep_vf_iq_reset_indices(oct->iq[i]);
-+	}
-+}
-+
-+/**
-+ * octep_vf_setup_iq() - Setup a Tx queue.
-+ *
-+ * @oct: Octeon device private data structure.
-+ * @q_no: Tx queue number to be setup.
-+ *
-+ * Allocate resources for a Tx queue.
-+ */
-+static int octep_vf_setup_iq(struct octep_vf_device *oct, int q_no)
-+{
-+	u32 desc_ring_size, buff_info_size, sglist_size;
-+	struct octep_vf_iq *iq;
-+	int i;
-+
-+	iq = vzalloc(sizeof(*iq));
-+	if (!iq)
-+		goto iq_alloc_err;
-+	oct->iq[q_no] = iq;
-+
-+	iq->octep_vf_dev = oct;
-+	iq->netdev = oct->netdev;
-+	iq->dev = &oct->pdev->dev;
-+	iq->q_no = q_no;
-+	iq->max_count = CFG_GET_IQ_NUM_DESC(oct->conf);
-+	iq->ring_size_mask = iq->max_count - 1;
-+	iq->fill_threshold = CFG_GET_IQ_DB_MIN(oct->conf);
-+	iq->netdev_q = netdev_get_tx_queue(iq->netdev, q_no);
-+
-+	/* Allocate memory for hardware queue descriptors */
-+	desc_ring_size = OCTEP_VF_IQ_DESC_SIZE * CFG_GET_IQ_NUM_DESC(oct->conf);
-+	iq->desc_ring = dma_alloc_coherent(iq->dev, desc_ring_size,
-+					   &iq->desc_ring_dma, GFP_KERNEL);
-+	if (unlikely(!iq->desc_ring)) {
-+		dev_err(iq->dev,
-+			"Failed to allocate DMA memory for IQ-%d\n", q_no);
-+		goto desc_dma_alloc_err;
-+	}
-+
-+	/* Allocate memory for hardware SGLIST descriptors */
-+	sglist_size = OCTEP_VF_SGLIST_SIZE_PER_PKT *
-+		      CFG_GET_IQ_NUM_DESC(oct->conf);
-+	iq->sglist = dma_alloc_coherent(iq->dev, sglist_size,
-+					&iq->sglist_dma, GFP_KERNEL);
-+	if (unlikely(!iq->sglist)) {
-+		dev_err(iq->dev,
-+			"Failed to allocate DMA memory for IQ-%d SGLIST\n",
-+			q_no);
-+		goto sglist_alloc_err;
-+	}
-+
-+	/* allocate memory to manage Tx packets pending completion */
-+	buff_info_size = OCTEP_VF_IQ_TXBUFF_INFO_SIZE * iq->max_count;
-+	iq->buff_info = vzalloc(buff_info_size);
-+	if (!iq->buff_info) {
-+		dev_err(iq->dev,
-+			"Failed to allocate buff info for IQ-%d\n", q_no);
-+		goto buff_info_err;
-+	}
-+
-+	/* Setup sglist addresses in tx_buffer entries */
-+	for (i = 0; i < CFG_GET_IQ_NUM_DESC(oct->conf); i++) {
-+		struct octep_vf_tx_buffer *tx_buffer;
-+
-+		tx_buffer = &iq->buff_info[i];
-+		tx_buffer->sglist =
-+			&iq->sglist[i * OCTEP_VF_SGLIST_ENTRIES_PER_PKT];
-+		tx_buffer->sglist_dma =
-+			iq->sglist_dma + (i * OCTEP_VF_SGLIST_SIZE_PER_PKT);
-+	}
-+
-+	octep_vf_iq_reset_indices(iq);
-+	oct->hw_ops.setup_iq_regs(oct, q_no);
-+
-+	oct->num_iqs++;
-+	return 0;
-+
-+buff_info_err:
-+	dma_free_coherent(iq->dev, sglist_size, iq->sglist, iq->sglist_dma);
-+sglist_alloc_err:
-+	dma_free_coherent(iq->dev, desc_ring_size,
-+			  iq->desc_ring, iq->desc_ring_dma);
-+desc_dma_alloc_err:
-+	vfree(iq);
-+	oct->iq[q_no] = NULL;
-+iq_alloc_err:
-+	return -1;
-+}
-+
-+/**
-+ * octep_vf_free_iq() - Free Tx queue resources.
-+ *
-+ * @iq: Octeon Tx queue data structure.
-+ *
-+ * Free all the resources allocated for a Tx queue.
-+ */
-+static void octep_vf_free_iq(struct octep_vf_iq *iq)
-+{
-+	struct octep_vf_device *oct = iq->octep_vf_dev;
-+	u64 desc_ring_size, sglist_size;
-+	int q_no = iq->q_no;
-+
-+	desc_ring_size = OCTEP_VF_IQ_DESC_SIZE * CFG_GET_IQ_NUM_DESC(oct->conf);
-+
-+	if (iq->buff_info)
-+		vfree(iq->buff_info);
-+
-+	if (iq->desc_ring)
-+		dma_free_coherent(iq->dev, desc_ring_size,
-+				  iq->desc_ring, iq->desc_ring_dma);
-+
-+	sglist_size = OCTEP_VF_SGLIST_SIZE_PER_PKT *
-+		      CFG_GET_IQ_NUM_DESC(oct->conf);
-+	if (iq->sglist)
-+		dma_free_coherent(iq->dev, sglist_size,
-+				  iq->sglist, iq->sglist_dma);
-+
-+	vfree(iq);
-+	oct->iq[q_no] = NULL;
-+	oct->num_iqs--;
- }
- 
- /**
-@@ -30,6 +220,25 @@ void octep_vf_clean_iqs(struct octep_vf_device *oct)
-  */
- int octep_vf_setup_iqs(struct octep_vf_device *oct)
- {
-+	int i;
-+
-+	oct->num_iqs = 0;
-+	for (i = 0; i < CFG_GET_PORTS_ACTIVE_IO_RINGS(oct->conf); i++) {
-+		if (octep_vf_setup_iq(oct, i)) {
-+			dev_err(&oct->pdev->dev,
-+				"Failed to setup IQ(TxQ)-%d.\n", i);
-+			goto iq_setup_err;
-+		}
-+		dev_dbg(&oct->pdev->dev, "Successfully setup IQ(TxQ)-%d.\n", i);
-+	}
-+
-+	return 0;
-+
-+iq_setup_err:
-+	while (i) {
-+		i--;
-+		octep_vf_free_iq(oct->iq[i]);
-+	}
- 	return -1;
- }
- 
-@@ -40,4 +249,12 @@ int octep_vf_setup_iqs(struct octep_vf_device *oct)
-  */
- void octep_vf_free_iqs(struct octep_vf_device *oct)
- {
-+	int i;
-+
-+	for (i = 0; i < CFG_GET_PORTS_ACTIVE_IO_RINGS(oct->conf); i++) {
-+		octep_vf_free_iq(oct->iq[i]);
-+		dev_dbg(&oct->pdev->dev,
-+			"Successfully destroyed IQ(TxQ)-%d.\n", i);
-+	}
-+	oct->num_iqs = 0;
- }
+ 	if (!mbox)
+ 		return OCTEP_PFVF_MBOX_CMD_STATUS_NOT_SETUP;
 -- 
 2.25.1
 
