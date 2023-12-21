@@ -1,72 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB7E6519F;
-	Thu, 21 Dec 2023 17:16:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14D559918;
+	Thu, 21 Dec 2023 17:16:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KkHWrw6L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F32CBC433CA;
-	Thu, 21 Dec 2023 17:16:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sNV7lZS0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08D50C433C8;
+	Thu, 21 Dec 2023 17:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703178982;
-	bh=TQnnNdN3bVLMWPQ/3nx5Jm2PxVjwduzfYNkah623D6Y=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=KkHWrw6LCm6KJQ2lAYoZbwoya1iZHkCBwZCaEcU/2jrJnU3ZOSNMUdR+zPXIrJ+qJ
-	 dV1LOXgnRT9g5d173mqwDLA16Oge7ISzhMrUhk7h/4U4KVnWS2Qlra4g/jMdZsm+5F
-	 c+jhIN2cuTbP0p48GfWfIvlTrTOdOwBhTgacu3vg70BWqGzcBjIaZzwjD0DkbwMBDc
-	 QQVfaZ9zU+iEWbLz34ajdKSaPmXq0tL7mcWrldaKotWXwDsRkHZZBHrVLbkpcfCxfr
-	 D8znULkEJfE2Wg8mhfAztEmNhoA2x4LTdbCyD+YdujYZKJccavzxKUiSFlB8gRvZ9s
-	 twV78Cf8Eh0ow==
-From: Vinod Koul <vkoul@kernel.org>
-To: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- Abel Vesa <abel.vesa@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20231122-phy-qualcomm-v6-v6-20-v7-new-offsets-v3-0-dfd1c375ef61@linaro.org>
-References: <20231122-phy-qualcomm-v6-v6-20-v7-new-offsets-v3-0-dfd1c375ef61@linaro.org>
-Subject: Re: [PATCH v3 0/7] phy: qcom: Add register offsets for v6 and v7
-Message-Id: <170317897954.712473.7478662557724121939.b4-ty@kernel.org>
-Date: Thu, 21 Dec 2023 22:46:19 +0530
+	s=k20201202; t=1703179018;
+	bh=bDav0XbsAfuTS75hQIrAGbf6XOHLOBml3F4jrPJKbRM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sNV7lZS04yNfQwBOYBAjWpKOF+0V2PPVAW68IkXvXWxedJEnFFhibjmEp3yYsxluM
+	 QZv5qNHowjdEWDoJwnYNeOtH0vBKQJ+lsgvXKSpoX1NXUWE+maLerg1iZ/5KQFAebZ
+	 n7QFC8A2JK4Fbe+cnDjhHmYJWUBm1RiBW2Us0yy2U/u93Zvbl93f8Ohs72AzTpmBmP
+	 ufO+nqrK3HupBJMJ2oXHpxdvbWGZWoNZu1GZZ7s2B2K07g3cJL7UUBhkuFlTki609y
+	 EngdiAURpPL2ToYxfKp72oEKGnwF64ErvAMSS6TfTlc1S5ulyHFmI+SNGregsIPAmi
+	 zfO8K47XcAEyA==
+Date: Thu, 21 Dec 2023 18:16:48 +0100
+From: Simon Horman <horms@kernel.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	kvm@vger.kernel.org, virtualization@lists.linux.dev,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	Stefano Garzarella <sgarzare@redhat.com>,
+	David Howells <dhowells@redhat.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	Shakeel Butt <shakeelb@google.com>,
+	Yunsheng Lin <linyunsheng@huawei.com>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Subject: Re: [PATCH net-next v3 3/3] net: add netmem_ref to skb_frag_t
+Message-ID: <20231221171648.GC1056991@kernel.org>
+References: <20231220214505.2303297-1-almasrymina@google.com>
+ <20231220214505.2303297-4-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231220214505.2303297-4-almasrymina@google.com>
 
-
-On Thu, 07 Dec 2023 14:19:09 +0200, Abel Vesa wrote:
-> This patchset adds some missing register offsets for the v6 and v6.20,
-> as well as the new v7 ones. These register offsets are used by the
-> new Qualcomm Snapdragon X Elite (X1E80100) platform.
+On Wed, Dec 20, 2023 at 01:45:02PM -0800, Mina Almasry wrote:
+> Use netmem_ref instead of page in skb_frag_t. Currently netmem_ref
+> is always a struct page underneath, but the abstraction allows efforts
+> to add support for skb frags not backed by pages.
 > 
+> There is unfortunately 1 instance where the skb_frag_t is assumed to be
+> a bio_vec in kcm. For this case, add a debug assert that the skb frag is
+> indeed backed by a page, and do a cast.
 > 
+> Add skb[_frag]_fill_netmem_*() and skb_add_rx_frag_netmem() helpers so
+> that the API can be used to create netmem skbs.
+> 
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
 
-Applied, thanks!
+...
 
-[1/7] phy: qcom-qmp: qserdes-com: Add some more v6 register offsets
-      commit: 2226ec072ed3f1bd3f8dbe0cbf0e6cad699aedc2
-[2/7] phy: qcom-qmp: qserdes-txrx: Add some more v6.20 register offsets
-      commit: a40542507b9045da03f4e013ab8562f6e6fe8aad
-[3/7] phy: qcom-qmp: pcs: Add v7 register offsets
-      commit: 7b98cf0e9b5f8a05a7f0f0d06d3cfa130bb576e2
-[4/7] phy: qcom-qmp: pcs-usb: Add v7 register offsets
-      commit: 8d4f9f801095b120e433d935b296baf0e3bdc6a0
-[5/7] phy: qcom-qmp: qserdes-com: Add v7 register offsets
-      commit: bc546cc85c1d92d9ba7b278b77016b7d4334fafa
-[6/7] phy: qcom-qmp: qserdes-txrx: Add V6 N4 register offsets
-      commit: 762c3565f3c8105603089eeaa0501e5089922221
-[7/7] phy: qcom-qmp: qserdes-txrx: Add v7 register offsets
-      commit: ee6fcc0f337d6790b46838bab76c36e8bdd5658e
+> diff --git a/net/kcm/kcmsock.c b/net/kcm/kcmsock.c
+> index 65d1f6755f98..3180a54b2c68 100644
+> --- a/net/kcm/kcmsock.c
+> +++ b/net/kcm/kcmsock.c
+> @@ -636,9 +636,15 @@ static int kcm_write_msgs(struct kcm_sock *kcm)
+>  		for (i = 0; i < skb_shinfo(skb)->nr_frags; i++)
+>  			msize += skb_shinfo(skb)->frags[i].bv_len;
+>  
+> +		/* The cast to struct bio_vec* here assumes the frags are
+> +		 * struct page based. WARN if there is no page in this skb.
+> +		 */
+> +		DEBUG_NET_WARN_ON_ONCE(
+> +			!skb_frag_page(&skb_shinfo(skb)->frags[0]));
+> +
+>  		iov_iter_bvec(&msg.msg_iter, ITER_SOURCE,
+> -			      skb_shinfo(skb)->frags, skb_shinfo(skb)->nr_frags,
+> -			      msize);
+> +			      (const struct bio_vec *)skb_shinfo(skb)->frags,
+> +			      skb_shinfo(skb)->nr_frags, msize);
+>  		iov_iter_advance(&msg.msg_iter, txm->frag_offset);
+>  
+>  		do {
 
-Best regards,
+Hi Mina,
+
+something isn't quite right here.
+
+  ...//kcmsock.c:637:39: error: no member named 'bv_len' in 'struct skb_frag'
+  637 |                         msize += skb_shinfo(skb)->frags[i].bv_len;
+      |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~ ^
+
 -- 
-~Vinod
-
-
+pw-bot: changes-requested
