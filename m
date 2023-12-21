@@ -1,89 +1,104 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB8C539F9
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 15:26:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4CC1D6A9;
+	Thu, 21 Dec 2023 15:26:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gAQK00WN"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-28bc870c540so724910a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 07:26:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703172402; x=1703777202; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=dC5SYh5wvDuLRLTzz+EBxLcN+RV8t/MMdts61ZKTGpM=;
-        b=gAQK00WNHcA8r+I0bj28Kz7rqnbPcfUT2GYgmb8LDByRdUPvO4czgORZRb8uiIkkdG
-         0+25qmmcpCNL9I1EbR4sYjFNYjCNvaso+AFRRMREnT0SuowObLh7L5fG15dNNz0oHIDr
-         MBQmBtor2ncMs5EMj7pF4Z01S+MBRQGtgKpNMZmjQnW+Sbzcf9A2XZPdB7df0HN1YAvr
-         aY3joIDG+Tnx8BNCIQiaNFXEY+fhR55GKrB8sNpVLyd84PacoM9eahV90nue/77pniL3
-         0o3WvIkRBtDaISBtawSeRapTRTgkxuRR6kxx3ZoT/CDA9pe3CXhrfdbnkXqjnk9/MHaQ
-         EpRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703172402; x=1703777202;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dC5SYh5wvDuLRLTzz+EBxLcN+RV8t/MMdts61ZKTGpM=;
-        b=fd5IjA4zLSd4OMEkax2uKv1K0PbO/CuhKer/QOdx8Fm1ui7bPtYkoE4yt2jdAQ0iCL
-         HxvwN6cjMipTtJU3LnIsClpFp/uSN/JXB4KvdmGAUviFPNYgtDWOF09QqDOaI8Htrpy/
-         HO7C7II7xRxTUg6v3jBCPgyoicrIXPhwVI+DmHrqhWwD0ELCoYuSPl7Wq2ORu+HNxfuH
-         8h5tUh3a8DvhvWhiIsP2Dzbrjmihhv/knG8sRLEXMhoq2ztDbbA8oJ6eL3DteX9dP45z
-         LYJ1pfihzYHPD/elkSLnvpqeHUckbG7rhvKuKJ3Ze6zpsN4Hr4ntEEkv617qWGy3cI0Q
-         MZ3g==
-X-Gm-Message-State: AOJu0YzvqdQgfOpXPj7BlHejPYgstw49bk9hOoOBOEO0vt+nJCEpbmWr
-	EW3IeRKkZy4EBHYmWW4mJ386e2x8lBSAQEZdii9MPA==
-X-Google-Smtp-Source: AGHT+IGmod8PxPFs6GtLGlc1ip28xbRCud5bvi34qmO5VlkGOnVt8UR2EPlFRqRpX/09QQQYU5oP5AUdyh4JCBlfl/U=
-X-Received: by 2002:a17:90a:5408:b0:28b:cbec:2f4a with SMTP id
- z8-20020a17090a540800b0028bcbec2f4amr2327195pjh.15.1703172401946; Thu, 21 Dec
- 2023 07:26:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PFB8QSux"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5639C433C7;
+	Thu, 21 Dec 2023 15:26:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703172415;
+	bh=m3O9CScU6xqdwkvpQ3pWK3reUb7snyZyNRDnrg4G2nA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PFB8QSuxYGCoIVrL5jKjAjDJscJuC+Imt+qCV9X8AX2MnFCVfYSaOAMSn+3arG/YJ
+	 NpdPmFSH/jrXbIQuyQ28ztxvPn4Sn40mvLREKqyc1aJaTgO09wJbNDXHVRG2NSnkMd
+	 xZb7NXCkdugkPK3l15tbcCRSpNKilPJWWq5gqRvqSY1kkdqKwqOUACwluBvdfcl0fd
+	 8rZ+EeXwP2hr62g8m9lhbC+932AQ8o3H6xznKTTS/DZ6j2tsmkvt6lI2Qznm4CiwoU
+	 QdFblIcPRCq802AKdcutMfucxqiMUqLgq77wpdTwVuSyAJ62QggJOq3UF/ezkpgq97
+	 asdZ8fw3t4Lhw==
+Date: Thu, 21 Dec 2023 15:26:50 +0000
+From: Lee Jones <lee@kernel.org>
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: fuyao <fuyao1697@cyg.com>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+	maijianzhang <maijianzhang@allwinnertech.com>
+Subject: Re: [PATCH RESEND] iio: adc: sun4i-gpadc-iio: adaptation interrupt
+ number
+Message-ID: <20231221152650.GN10102@google.com>
+References: <YxmR5SPPY18O7LaG@google.com>
+ <YwdhTlk+9h+9Mrwm@scg>
+ <20231220115412.65bbc8c7@donnerap.manchester.arm.com>
+ <20231221152553.GM10102@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231215052652.917741-1-imran.f.khan@oracle.com>
- <CAKfTPtD85OSem=7RMquLWokVp7gffvDaY3mtwevkxp1mSSVVqQ@mail.gmail.com>
- <d8507f86-2458-4b01-a774-5102473e657e@oracle.com> <1c13b0cc-098c-4f75-9f37-a53a66965409@oracle.com>
- <CAKfTPtDqqAYNCFb6US-4Yd=-xvj8mhMuO0PkUhWsqekxp__M4g@mail.gmail.com>
- <a9993f8b-6449-4452-a168-db966d9bae49@oracle.com> <CAKfTPtD1Q7R0ySc=a_5Aw9M0McQiom80DWEB6FRv7vYoPRVebg@mail.gmail.com>
- <20231221082105.GA600162@ziqianlu-desk2>
-In-Reply-To: <20231221082105.GA600162@ziqianlu-desk2>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Thu, 21 Dec 2023 16:26:30 +0100
-Message-ID: <CAKfTPtDP6FXKa0ifpXd+jh5DBBBXmz7CcgaB7w8R5in1iQbTiw@mail.gmail.com>
-Subject: Re: [RFC PATCH] sched: fair: reset task_group.load_avg when there are
- no running tasks.
-To: Aaron Lu <aaron.lu@intel.com>
-Cc: Imran Khan <imran.f.khan@oracle.com>, mingo@redhat.com, peterz@infradead.org, 
-	juri.lelli@redhat.com, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
-	bsegall@google.com, mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231221152553.GM10102@google.com>
 
-Hi Aaron,
+On Thu, 21 Dec 2023, Lee Jones wrote:
 
-On Thu, 21 Dec 2023 at 09:21, Aaron Lu <aaron.lu@intel.com> wrote:
->
-> Hi Vincent,
->
-> Thanks for the heads up.
->
-> On Wed, Dec 20, 2023 at 06:31:08PM +0100, Vincent Guittot wrote:
-> > Aaron,
-> > Could you run the tests that you run for testing "Ratelimit update to
-> > tg->load_avg" and check if this patch impacts your performance ?
->
-> I run hackbench/netperf/postgres_sysbench with nr_thread=nr_cpu on a 2
-> sockets/120cores/240cpus Intel server and didn't notice any performance
-> change after applying your diff so I think it's not a problem.
+> On Wed, 20 Dec 2023, Andre Przywara wrote:
+> 
+> > On Wed, 20 Dec 2023 15:23:17 +0800
+> > fuyao <fuyao1697@cyg.com> wrote:
+> > 
+> > Hi,
+> > 
+> > > __platform_get_irq_byname determinies whether the interrupt
+> > > number is 0 and returns EINVAL.
+> > 
+> > can you please say what this fixes, exactly? Is something not working at
+> > the moment? Can you please provide parts of the error message?
+> > 
+> > And maybe expand the explanation a bit more? For instance mention that the
+> > identifiers are used as IRQ resource numbers, where 0 is treated specially.
+> > 
+> > Cheers,
+> > Andre
+> > 
+> > > 
+> > > Signed-off-by: fuyao <fuyao1697@cyg.com>
+> 
+> You have to use your full real name as well.
+> 
+> > > Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+> > > ---
+> > >  include/linux/mfd/sun4i-gpadc.h | 4 ++--
 
-Thanks for the tests.
+Also the subject line is wrong.
 
-I'm going to prepare a proper patch
+This doesn't have anything to do with IIO.
 
->
-> Regards,
-> Aaron
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/include/linux/mfd/sun4i-gpadc.h b/include/linux/mfd/sun4i-gpadc.h
+> > > index ea0ccf33a459..021f820f9d52 100644
+> > > --- a/include/linux/mfd/sun4i-gpadc.h
+> > > +++ b/include/linux/mfd/sun4i-gpadc.h
+> > > @@ -81,8 +81,8 @@
+> > >  #define SUN4I_GPADC_TEMP_DATA				0x20
+> > >  #define SUN4I_GPADC_DATA				0x24
+> > >  
+> > > -#define SUN4I_GPADC_IRQ_FIFO_DATA			0
+> > > -#define SUN4I_GPADC_IRQ_TEMP_DATA			1
+> > > +#define SUN4I_GPADC_IRQ_FIFO_DATA			1
+> > > +#define SUN4I_GPADC_IRQ_TEMP_DATA			2
+> > >  
+> > >  /* 10s delay before suspending the IP */
+> > >  #define SUN4I_GPADC_AUTOSUSPEND_DELAY			10000
+> > 
+> 
+> -- 
+> Lee Jones [李琼斯]
+
+-- 
+Lee Jones [李琼斯]
