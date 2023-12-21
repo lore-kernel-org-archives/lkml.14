@@ -1,175 +1,631 @@
-Received: from mx0a-0014ca01.pphosted.com (mx0a-0014ca01.pphosted.com [208.84.65.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE3862811;
-	Thu, 21 Dec 2023 17:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cadence.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cadence.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947CE634F6
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 17:35:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="KdGjekLI";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="NvJVA9QD"
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-	by mx0a-0014ca01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BLArhOg016198;
-	Thu, 21 Dec 2023 08:21:01 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type; s=
-	proofpoint; bh=t2WAHcTojol5LyadNmKttj8dpuigd+Kgg8tMs4vs2Fg=; b=K
-	dGjekLI214bNLJMDWBaTabHhrxcOsOerML15OeMquNI4XrXjgc/5knvJsN4BJfcf
-	CugindziFhKkRXgRWho0R3zAspsB93ha3Y0jtLJOdUKUbdAg0Rx5uG+iQgiisxZN
-	cSjezA5K+Vyr2c+Xys9YIgGJb/DUVE8f7rJPSOJBXc3NIjXMkWiM+n/Ux/sZmhzA
-	xPbIz0PdNs8CwUeN2+sEi+/7w8hiCOTkN3hbLj9agCFtvEid0kKrYxkYvvX9x84j
-	+cARgtuJvswGTjkLYaSMmi9Ez6kq7T9PyL8RvTOxJAEB2jHF4hcReWTPEHs6onAu
-	2EWu6oRIFlMvMv0NTTRnA==
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2101.outbound.protection.outlook.com [104.47.55.101])
-	by mx0a-0014ca01.pphosted.com (PPS) with ESMTPS id 3v3rj5gsv7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 21 Dec 2023 08:21:01 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HOJq7e+zEd6j0sKVnDGTDALgemQf00DgJuHqoD3llmtXopxdn5FKLThW7NwyrKzL2K6A2afur73UT2YapS7zyDYklNH4r4eV1yOE3fhLOA+QtU3vbyZgIewMXd0rpB0zsRii7tXoyzbj2D34makQuhbf6dAHWIlfHA/CiTgZ1/F0vLNLw7s1OxkmhF08Cv0tadazXnEA9XNgaYHyZU1SNTuY51DgSqYN8+sDudBmgwSMuZ3RCLMiwPaot6MFWrXz30A8bW3CEvv+wfjFNhA9UqC5IhVtVnD6G6Ea+MNntd5Bts134+n3GZPdArDiKr/GcTZw5OU+dSKMHBPS4AKQeg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=t2WAHcTojol5LyadNmKttj8dpuigd+Kgg8tMs4vs2Fg=;
- b=ZBHDEbgH0/CVwA75690vDmy55bTEy/8WG5RXj1u7lwq9rGuygWV46OUch4VcAgfb+ouPB5KDJitlyIaP3iDp1g4jMl4dmchD/qpzpbaV1sjGwYM+y2Mhj6QroerJVjgakG+k4sUMcN/xHbfeeGk04leLvJjOIbYXtC0AYOgAxPk+7hymU6mC6uML3thuJJHSjiwcFUBBzbCuhdlZcXPSOlywSRDsFRwbzriPEG2puZajBbXjB/1OW5BpSgbEmnrkJW57R0ZjYEU5HiLPmUbmvMVNoyTDEnD3e+7bfxTYxPyvnI266eAlFRlC/N1jTTuNNNEq2k3CIKxxoyg/bPFqBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 158.140.1.147) smtp.rcpttodomain=ti.com smtp.mailfrom=cadence.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=cadence.com; dkim=none
- (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t2WAHcTojol5LyadNmKttj8dpuigd+Kgg8tMs4vs2Fg=;
- b=NvJVA9QDgM3y5uQFbud2n/9Xe7cWB8w2/hmtCtssl/jVCGXuVnrfjQtBuRqRHBTKUOibG608bKWZUe6JzF4V+jNN8Gp6OYCbzPxvHn+z9IDy+HTBzYBhucLWJ3b9h6GpoKSqHZkIOVA0g9QJUMvAQqlYINzLbq5nw2Y3pl9N2v8=
-Received: from BN9PR03CA0894.namprd03.prod.outlook.com (2603:10b6:408:13c::29)
- by BN8PR07MB7074.namprd07.prod.outlook.com (2603:10b6:408:da::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.19; Thu, 21 Dec
- 2023 16:20:59 +0000
-Received: from BN8NAM12FT026.eop-nam12.prod.protection.outlook.com
- (2603:10b6:408:13c:cafe::65) by BN9PR03CA0894.outlook.office365.com
- (2603:10b6:408:13c::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.20 via Frontend
- Transport; Thu, 21 Dec 2023 16:20:59 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 158.140.1.147)
- smtp.mailfrom=cadence.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=cadence.com;
-Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
- 158.140.1.147 as permitted sender) receiver=protection.outlook.com;
- client-ip=158.140.1.147; helo=sjmaillnx1.cadence.com; pr=C
-Received: from sjmaillnx1.cadence.com (158.140.1.147) by
- BN8NAM12FT026.mail.protection.outlook.com (10.13.182.202) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7135.10 via Frontend Transport; Thu, 21 Dec 2023 16:20:59 +0000
-Received: from maileu5.global.cadence.com (eudvw-maileu5.cadence.com [10.160.110.202])
-	by sjmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id 3BLGKtLe005149
-	(version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 21 Dec 2023 08:20:57 -0800
-Received: from maileu4.global.cadence.com (10.160.110.201) by
- maileu5.global.cadence.com (10.160.110.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 21 Dec 2023 17:20:53 +0100
-Received: from cadence.com (10.160.88.83) by maileu4.global.cadence.com
- (10.160.110.201) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.7 via Frontend
- Transport; Thu, 21 Dec 2023 17:20:53 +0100
-Received: from vleu-orange.cadence.com (localhost [127.0.0.1])
-	by cadence.com (8.15.2/8.15.2) with ESMTP id 3BLGKsPG2131247;
-	Thu, 21 Dec 2023 17:20:54 +0100
-Received: (from sjakhade@localhost)
-	by vleu-orange.cadence.com (8.15.2/8.15.2/Submit) id 3BLGKp7r2131244;
-	Thu, 21 Dec 2023 17:20:51 +0100
-From: Swapnil Jakhade <sjakhade@cadence.com>
-To: <vkoul@kernel.org>, <kishon@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC: <mparab@cadence.com>, <sjakhade@cadence.com>, <rogerq@kernel.org>,
-        <s-vadapalli@ti.com>
-Subject: [PATCH v3 0/5] PHY: Add support for dual refclk configurations in Cadence Torrent PHY driver
-Date: Thu, 21 Dec 2023 17:20:46 +0100
-Message-ID: <20231221162051.2131202-1-sjakhade@cadence.com>
-X-Mailer: git-send-email 2.15.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bP4uh0lI"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-40d2f6f2787so7553185e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 09:35:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1703180130; x=1703784930; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=flsl1W8Jq0dd6RoYYTxG5EtJGKQMo2Xhl77ih3og4H4=;
+        b=bP4uh0lIFGG5rlmwiYe9yusRk8AJlWUQEsf8Kuzet0jg4GxtIHmDFAH2FIb0gQsYfi
+         fSoIZAs1PMCix36RFYXA4QrKZG5saGbI3KaRcIPpmzfnlM3JL0u6IdCZULjnW7QfPqpv
+         s6w5Uv/tJNp2fxvdsOxFBo27riOMhPsQp02FYkKe4PAlV9XrmPSIQm8Sn+inatDFTe11
+         CcVrfv+oSvyLl6rya4qyaPpO5qQ8YP90wTALHEHH50XTuE3wNWIlILgb+Eeeix55hkPN
+         Hkv0Gj+tESMjxzIWkJcx0mQLs6/av5xddEwOiqGYyN2xiT9wmwxD/G27uKWE/um0JdQ0
+         8PsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703180130; x=1703784930;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=flsl1W8Jq0dd6RoYYTxG5EtJGKQMo2Xhl77ih3og4H4=;
+        b=mhed4M9HDVAEeC25gDGKqHw0/JQJ1Tj+4XYY9xN88Nx/5jxhAJdprYQ9vAcg1RMGMG
+         q+YuUzFsECV5qqLm3t4bxt6MVmHpGy+oWsgvqjOp/zJYHPWfSBqCOLTiKJpzzs4B1w0W
+         5eOgK0d3MRk/9VS87ASOORvUCTFQ6mbkfVJsQqn/PhYeWoByFDSqzz1xne2gdl5Nvrnh
+         9WMlyYFmlMGAs8sEnrWjL50WtOjW94rwsb3/IEya/FR3vYk2f6xsQj+Nlr7QEX4YJt/W
+         n2zhW7DSUQ2j5aTT5LtCd2zsSuTFE0kKuXQ8TmdMGHKy19blXS1fnaXMKFtpAkBd1VrL
+         AEDQ==
+X-Gm-Message-State: AOJu0Yweq1DgkVfPNwuf69+oOg2i2nuhal5yQkv6ikbMC6KYksG6952j
+	H7aw/Hn8a3S9uHAxm4471cuJSA2Zw1kxsYJ3Px2K8UQ=
+X-Google-Smtp-Source: AGHT+IGJCLPxlu2eE3a8AZg3mPvSVr2dS6TQK/i+NtEO5h/7nRk2vc7OOKVhY1UvTXAVdgkrT8KP5S7P3MC7kZgd
+X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
+ (user=vdonnefort job=sendgmr) by 2002:a05:600c:45cf:b0:40c:4ca8:6ad2 with
+ SMTP id s15-20020a05600c45cf00b0040c4ca86ad2mr1518wmo.5.1703180129919; Thu,
+ 21 Dec 2023 09:35:29 -0800 (PST)
+Date: Thu, 21 Dec 2023 17:35:22 +0000
+In-Reply-To: <20231221173523.3015715-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-CrossPremisesHeadersFilteredBySendConnector: maileu5.global.cadence.com
-X-OrganizationHeadersPreserved: maileu5.global.cadence.com
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM12FT026:EE_|BN8PR07MB7074:EE_
-X-MS-Office365-Filtering-Correlation-Id: c4c3334f-66b9-40aa-185a-08dc0240d15e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	24HT5z9bQZNRL4pBbpU66yl5eIsIRcIVf8LJ9oK0x92J84GHC0uDhXGdkKkmAYqeUfc+FWQTYT82P3X5mJ+SFRuohCE2sx91jnrzSsKoZYIdFkH8TTvTeu1X2imv9xV1u/S0hCfW+GGWGZ1xhxIVCIaYegnN59JJeiVJDsSzrttHTKIxJ9OnfJ54XY3ccvvoTSyX0Ia7d+OwFX594XtDJ2g6e3XRNMS0UoRefIznBhStXY9dGFLpSKAapzzhC5i2opDqdQSVytdNM89odBHCKxPMPaUQYXCRyQE8uy1cro4ZcSv2qxO3MSj/CkW6lNAZUaVCMNUIiLjo+M6/0Im5nK7+RVcGP64c/cOS5ymVs7F9Z3osNOEobY+n1SRzk8q6yR5gm6aHKVbuk+61h/QT+/VJolPX9vrICsydrvFQmtMV2z2MgRA60EVSB3qQz38fCxY8E5MNanjj+D7fVeOXoAe3l8zdml/YZZfizIiNpqojvwEAHUZ9xdquIRT9y1ntIDM6s9lGyol2LD52HOAKni2V+czjgWjQ9I1OlV1rCudqxG6fhkUABEXFvpy69TkYQ+vSBMPXhzR3ZRCgrBm+qi/3YsCR6YZ4vD02K+dzeIFk0f+zR2yUwqfPOzajJtEoTBLq5Io1TQD+3Z0BUId6Jounx/pi21qhr3058V347eIlkz6kEZP0eTKygpnBZynQ9tklJTAsO4nDDl5AFpchriKxCDWjCjH+bCMb/R8UteHofvQP9/QZdKsjMiwXqInR
-X-Forefront-Antispam-Report: 
-	CIP:158.140.1.147;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:sjmaillnx1.cadence.com;PTR:unknown.Cadence.COM;CAT:NONE;SFS:(13230031)(4636009)(346002)(396003)(39860400002)(136003)(376002)(230922051799003)(1800799012)(186009)(451199024)(64100799003)(82310400011)(40470700004)(36840700001)(46966006)(41300700001)(2616005)(82740400003)(36756003)(86362001)(356005)(6666004)(966005)(478600001)(7636003)(1076003)(2906002)(40480700001)(336012)(426003)(83380400001)(26005)(40460700003)(70586007)(70206006)(110136005)(316002)(54906003)(47076005)(8936002)(42186006)(8676002)(4326008)(5660300002)(7416002)(36860700001)(2101003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Dec 2023 16:20:59.1972
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4c3334f-66b9-40aa-185a-08dc0240d15e
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.147];Helo=[sjmaillnx1.cadence.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	BN8NAM12FT026.eop-nam12.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR07MB7074
-X-Proofpoint-ORIG-GUID: MlJAifdHj32hK6ZusfFqENv4z7ibnJHT
-X-Proofpoint-GUID: MlJAifdHj32hK6ZusfFqENv4z7ibnJHT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-02_01,2023-11-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 phishscore=0
- priorityscore=1501 bulkscore=0 malwarescore=0 lowpriorityscore=0
- mlxscore=0 clxscore=1015 impostorscore=0 spamscore=0 mlxlogscore=999
- suspectscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2311290000 definitions=main-2312210124
+Mime-Version: 1.0
+References: <20231221173523.3015715-1-vdonnefort@google.com>
+X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
+Message-ID: <20231221173523.3015715-2-vdonnefort@google.com>
+Subject: [PATCH v9 1/2] ring-buffer: Introducing ring-buffer mapping functions
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Cc: kernel-team@android.com, Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-This patch series extends Torrent PHY driver functionality to support
-dual input reference clocks.
+In preparation for allowing the user-space to map a ring-buffer, add
+a set of mapping functions:
 
-It also adds support for following multilink configurations:
-- PCIe(100MHz) + USXGMII(156.25MHz)
-- USXGMII(156.25MHz) + SGMII/QSGMII(100MHz)
+  ring_buffer_{map,unmap}()
+  ring_buffer_map_fault()
 
-The changes have been validated on TI J721E and J7200 platforms.
+And controls on the ring-buffer:
 
-v1 of the patch series can be found at [1].
+  ring_buffer_map_get_reader()  /* swap reader and head */
 
-Version History:
+Mapping the ring-buffer also involves:
 
-v3:
-   - Updated clock description in DT documentation
-   - Added Acked-by from Conor
+  A unique ID for each subbuf of the ring-buffer, currently they are
+  only identified through their in-kernel VA.
 
-v2:
-   - Rename refclk1 to pll1_refclk in bindings and in driver
-   - Simplify clock-names as suggested by Rob
+  A meta-page, where are stored ring-buffer statistics and a
+  description for the current reader
 
-[1] https://lore.kernel.org/linux-phy/20230724150002.5645-1-sjakhade@cadence.com/
+The linear mapping exposes the meta-page, and each subbuf of the
+ring-buffer, ordered following their unique ID, assigned during the
+first mapping.
 
-Swapnil Jakhade (5):
-  dt-bindings: phy: cadence-torrent: Add optional input reference clock
-    for PLL1
-  phy: cadence-torrent: Add PCIe(100MHz) + USXGMII(156.25MHz) multilink
-    configuration
-  phy: cadence-torrent: Add USXGMII(156.25MHz) + SGMII/QSGMII(100MHz)
-    multilink configuration
-  dt-bindings: phy: cadence-torrent: Add a separate compatible for TI
-    J7200
-  phy: cadence-torrent: Add USXGMII(156.25MHz) + SGMII/QSGMII(100MHz)
-    multilink config for TI J7200
+Once mapped, no subbuf can get in or out of the ring-buffer: the buffer
+size will remain unmodified and the splice enabling functions will in
+reality simply memcpy the data instead of swapping subbufs.
 
- .../bindings/phy/phy-cadence-torrent.yaml     |  11 +-
- drivers/phy/cadence/phy-cadence-torrent.c     | 705 +++++++++++++++++-
- 2 files changed, 710 insertions(+), 6 deletions(-)
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index fa802db216f9..0841ba8bab14 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -6,6 +6,8 @@
+ #include <linux/seq_file.h>
+ #include <linux/poll.h>
+ 
++#include <uapi/linux/trace_mmap.h>
++
+ struct trace_buffer;
+ struct ring_buffer_iter;
+ 
+@@ -221,4 +223,9 @@ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node);
+ #define trace_rb_cpu_prepare	NULL
+ #endif
+ 
++int ring_buffer_map(struct trace_buffer *buffer, int cpu);
++int ring_buffer_unmap(struct trace_buffer *buffer, int cpu);
++struct page *ring_buffer_map_fault(struct trace_buffer *buffer, int cpu,
++				   unsigned long pgoff);
++int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu);
+ #endif /* _LINUX_RING_BUFFER_H */
+diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
+new file mode 100644
+index 000000000000..f950648b0ba9
+--- /dev/null
++++ b/include/uapi/linux/trace_mmap.h
+@@ -0,0 +1,29 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++#ifndef _UAPI_TRACE_MMAP_H_
++#define _UAPI_TRACE_MMAP_H_
++
++#include <linux/types.h>
++
++struct trace_buffer_meta {
++	unsigned long	entries;
++	unsigned long	overrun;
++	unsigned long	read;
++
++	unsigned long	subbufs_touched;
++	unsigned long	subbufs_lost;
++	unsigned long	subbufs_read;
++
++	struct {
++		unsigned long	lost_events;	/* Events lost at the time of the reader swap */
++		__u32		id;		/* Reader subbuf ID from 0 to nr_subbufs - 1 */
++		__u32		read;		/* Number of bytes read on the reader subbuf */
++	} reader;
++
++	__u32		subbuf_size;		/* Size of each subbuf including the header */
++	__u32		nr_subbufs;		/* Number of subbufs in the ring-buffer */
++
++	__u32		meta_page_size;		/* Size of the meta-page */
++	__u32		meta_struct_len;	/* Len of this struct */
++};
++
++#endif /* _UAPI_TRACE_MMAP_H_ */
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 173d2595ce2d..2f3e0260db88 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -338,6 +338,7 @@ struct buffer_page {
+ 	local_t		 entries;	/* entries on this page */
+ 	unsigned long	 real_end;	/* real end of data */
+ 	unsigned	 order;		/* order of the page */
++	u32		 id;		/* ID for external mapping */
+ 	struct buffer_data_page *page;	/* Actual data page */
+ };
+ 
+@@ -388,6 +389,7 @@ struct rb_irq_work {
+ 	bool				waiters_pending;
+ 	bool				full_waiters_pending;
+ 	bool				wakeup_full;
++	bool				is_cpu_buffer;
+ };
+ 
+ /*
+@@ -484,6 +486,12 @@ struct ring_buffer_per_cpu {
+ 	u64				read_stamp;
+ 	/* pages removed since last reset */
+ 	unsigned long			pages_removed;
++
++	int				mapped;
++	struct mutex			mapping_lock;
++	unsigned long			*subbuf_ids;	/* ID to addr */
++	struct trace_buffer_meta	*meta_page;
++
+ 	/* ring buffer pages to update, > 0 to add, < 0 to remove */
+ 	long				nr_pages_to_update;
+ 	struct list_head		new_pages; /* new pages to add */
+@@ -739,6 +747,22 @@ static __always_inline bool full_hit(struct trace_buffer *buffer, int cpu, int f
+ 	return (dirty * 100) > (full * nr_pages);
+ }
+ 
++static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
++{
++	if (unlikely(READ_ONCE(cpu_buffer->mapped))) {
++		/* Ensure the meta_page is ready */
++		smp_rmb();
++		WRITE_ONCE(cpu_buffer->meta_page->entries,
++			   local_read(&cpu_buffer->entries));
++		WRITE_ONCE(cpu_buffer->meta_page->overrun,
++			   local_read(&cpu_buffer->overrun));
++		WRITE_ONCE(cpu_buffer->meta_page->subbufs_touched,
++			   local_read(&cpu_buffer->pages_touched));
++		WRITE_ONCE(cpu_buffer->meta_page->subbufs_lost,
++			   local_read(&cpu_buffer->pages_lost));
++	}
++}
++
+ /*
+  * rb_wake_up_waiters - wake up tasks waiting for ring buffer input
+  *
+@@ -749,6 +773,18 @@ static void rb_wake_up_waiters(struct irq_work *work)
+ {
+ 	struct rb_irq_work *rbwork = container_of(work, struct rb_irq_work, work);
+ 
++	if (rbwork->is_cpu_buffer) {
++		struct ring_buffer_per_cpu *cpu_buffer;
++
++		cpu_buffer = container_of(rbwork, struct ring_buffer_per_cpu,
++					  irq_work);
++		/*
++		 * If the waiter is a cpu_buffer, this might be due to a
++		 * userspace mapping. Let's update the meta-page.
++		 */
++		rb_update_meta_page(cpu_buffer);
++	}
++
+ 	wake_up_all(&rbwork->waiters);
+ 	if (rbwork->full_waiters_pending || rbwork->wakeup_full) {
+ 		rbwork->wakeup_full = false;
+@@ -1541,6 +1577,8 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+ 	init_irq_work(&cpu_buffer->irq_work.work, rb_wake_up_waiters);
+ 	init_waitqueue_head(&cpu_buffer->irq_work.waiters);
+ 	init_waitqueue_head(&cpu_buffer->irq_work.full_waiters);
++	mutex_init(&cpu_buffer->mapping_lock);
++	cpu_buffer->irq_work.is_cpu_buffer = true;
+ 
+ 	bpage = kzalloc_node(ALIGN(sizeof(*bpage), cache_line_size()),
+ 			    GFP_KERNEL, cpu_to_node(cpu));
+@@ -4544,6 +4582,14 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
+ 		cpu_buffer->last_overrun = overwrite;
+ 	}
+ 
++	if (cpu_buffer->mapped) {
++		WRITE_ONCE(cpu_buffer->meta_page->reader.read, 0);
++		WRITE_ONCE(cpu_buffer->meta_page->reader.id, reader->id);
++		WRITE_ONCE(cpu_buffer->meta_page->reader.lost_events, cpu_buffer->lost_events);
++		WRITE_ONCE(cpu_buffer->meta_page->subbufs_read,
++			   local_read(&cpu_buffer->pages_read));
++	}
++
+ 	goto again;
+ 
+  out:
+@@ -4611,6 +4657,12 @@ static void rb_advance_reader(struct ring_buffer_per_cpu *cpu_buffer)
+ 	length = rb_event_length(event);
+ 	cpu_buffer->reader_page->read += length;
+ 	cpu_buffer->read_bytes += length;
++	if (cpu_buffer->mapped) {
++		WRITE_ONCE(cpu_buffer->meta_page->reader.read,
++			   cpu_buffer->reader_page->read);
++		WRITE_ONCE(cpu_buffer->meta_page->read,
++			   cpu_buffer->read);
++	}
+ }
+ 
+ static void rb_advance_iter(struct ring_buffer_iter *iter)
+@@ -5158,6 +5210,19 @@ static void rb_clear_buffer_page(struct buffer_page *page)
+ 	page->read = 0;
+ }
+ 
++static void rb_reset_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
++{
++	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
++
++	WRITE_ONCE(meta->entries, 0);
++	WRITE_ONCE(meta->overrun, 0);
++	WRITE_ONCE(meta->read, cpu_buffer->read);
++	WRITE_ONCE(meta->subbufs_touched, 0);
++	WRITE_ONCE(meta->subbufs_lost, 0);
++	WRITE_ONCE(meta->subbufs_read, local_read(&cpu_buffer->pages_read));
++	WRITE_ONCE(meta->reader.read, cpu_buffer->reader_page->read);
++}
++
+ static void
+ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
+ {
+@@ -5202,6 +5267,9 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
+ 	cpu_buffer->lost_events = 0;
+ 	cpu_buffer->last_overrun = 0;
+ 
++	if (cpu_buffer->mapped)
++		rb_reset_meta_page(cpu_buffer);
++
+ 	rb_head_page_activate(cpu_buffer);
+ 	cpu_buffer->pages_removed = 0;
+ }
+@@ -5416,6 +5484,11 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
+ 	cpu_buffer_a = buffer_a->buffers[cpu];
+ 	cpu_buffer_b = buffer_b->buffers[cpu];
+ 
++	if (READ_ONCE(cpu_buffer_a->mapped) || READ_ONCE(cpu_buffer_b->mapped)) {
++		ret = -EBUSY;
++		goto out;
++	}
++
+ 	/* At least make sure the two buffers are somewhat the same */
+ 	if (cpu_buffer_a->nr_pages != cpu_buffer_b->nr_pages)
+ 		goto out;
+@@ -5679,7 +5752,8 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+ 	 * Otherwise, we can simply swap the page with the one passed in.
+ 	 */
+ 	if (read || (len < (commit - read)) ||
+-	    cpu_buffer->reader_page == cpu_buffer->commit_page) {
++	    cpu_buffer->reader_page == cpu_buffer->commit_page ||
++	    cpu_buffer->mapped) {
+ 		struct buffer_data_page *rpage = cpu_buffer->reader_page->page;
+ 		unsigned int rpos = read;
+ 		unsigned int pos = 0;
+@@ -5898,6 +5972,11 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+ 
+ 		cpu_buffer = buffer->buffers[cpu];
+ 
++		if (cpu_buffer->mapped) {
++			err = -EBUSY;
++			goto error;
++		}
++
+ 		/* Update the number of pages to match the new size */
+ 		nr_pages = old_size * buffer->buffers[cpu]->nr_pages;
+ 		nr_pages = DIV_ROUND_UP(nr_pages, buffer->subbuf_size);
+@@ -5999,6 +6078,307 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_subbuf_order_set);
+ 
++#define subbuf_page(off, start) \
++	virt_to_page((void *)(start + (off << PAGE_SHIFT)))
++
++#define foreach_subbuf_page(off, sub_order, start, page)	\
++	for (off = 0, page = subbuf_page(0, start);		\
++	     off < (1 << sub_order);				\
++	     off++, page = subbuf_page(off, start))
++
++static inline void subbuf_map_prepare(unsigned long subbuf_start, int order)
++{
++	struct page *page;
++	int subbuf_off;
++
++	/*
++	 * When allocating order > 0 pages, only the first struct page has a
++	 * refcount > 1. Increasing the refcount here ensures none of the struct
++	 * page composing the sub-buffer is freeed when the mapping is closed.
++	 */
++	foreach_subbuf_page(subbuf_off, order, subbuf_start, page)
++		page_ref_inc(page);
++}
++
++static inline void subbuf_unmap(unsigned long subbuf_start, int order)
++{
++	struct page *page;
++	int subbuf_off;
++
++	foreach_subbuf_page(subbuf_off, order, subbuf_start, page) {
++		page_ref_dec(page);
++		page->mapping = NULL;
++	}
++}
++
++static void rb_free_subbuf_ids(struct ring_buffer_per_cpu *cpu_buffer)
++{
++	int sub_id;
++
++	for (sub_id = 0; sub_id < cpu_buffer->nr_pages + 1; sub_id++)
++		subbuf_unmap(cpu_buffer->subbuf_ids[sub_id],
++			     cpu_buffer->buffer->subbuf_order);
++
++	kfree(cpu_buffer->subbuf_ids);
++	cpu_buffer->subbuf_ids = NULL;
++}
++
++static int rb_alloc_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
++{
++	if (cpu_buffer->meta_page)
++		return 0;
++
++	cpu_buffer->meta_page = page_to_virt(alloc_page(GFP_USER));
++	if (!cpu_buffer->meta_page)
++		return -ENOMEM;
++
++	return 0;
++}
++
++static void rb_free_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
++{
++	unsigned long addr = (unsigned long)cpu_buffer->meta_page;
++
++	virt_to_page((void *)addr)->mapping = NULL;
++	free_page(addr);
++	cpu_buffer->meta_page = NULL;
++}
++
++static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
++				   unsigned long *subbuf_ids)
++{
++	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
++	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
++	struct buffer_page *first_subbuf, *subbuf;
++	int id = 0;
++
++	subbuf_ids[id] = (unsigned long)cpu_buffer->reader_page->page;
++	subbuf_map_prepare(subbuf_ids[id], cpu_buffer->buffer->subbuf_order);
++	cpu_buffer->reader_page->id = id++;
++
++	first_subbuf = subbuf = rb_set_head_page(cpu_buffer);
++	do {
++		if (id >= nr_subbufs) {
++			WARN_ON(1);
++			break;
++		}
++
++		subbuf_ids[id] = (unsigned long)subbuf->page;
++		subbuf->id = id;
++		subbuf_map_prepare(subbuf_ids[id], cpu_buffer->buffer->subbuf_order);
++
++		rb_inc_page(&subbuf);
++		id++;
++	} while (subbuf != first_subbuf);
++
++	/* install subbuf ID to kern VA translation */
++	cpu_buffer->subbuf_ids = subbuf_ids;
++
++	meta->meta_page_size = PAGE_SIZE;
++	meta->meta_struct_len = sizeof(*meta);
++	meta->nr_subbufs = nr_subbufs;
++	meta->subbuf_size = cpu_buffer->buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
++	meta->reader.id = cpu_buffer->reader_page->id;
++	rb_reset_meta_page(cpu_buffer);
++}
++
++static inline struct ring_buffer_per_cpu *
++rb_get_mapped_buffer(struct trace_buffer *buffer, int cpu)
++{
++	struct ring_buffer_per_cpu *cpu_buffer;
++
++	if (!cpumask_test_cpu(cpu, buffer->cpumask))
++		return ERR_PTR(-EINVAL);
++
++	cpu_buffer = buffer->buffers[cpu];
++
++	mutex_lock(&cpu_buffer->mapping_lock);
++
++	if (!cpu_buffer->mapped) {
++		mutex_unlock(&cpu_buffer->mapping_lock);
++		return ERR_PTR(-ENODEV);
++	}
++
++	return cpu_buffer;
++}
++
++static inline void rb_put_mapped_buffer(struct ring_buffer_per_cpu *cpu_buffer)
++{
++	mutex_unlock(&cpu_buffer->mapping_lock);
++}
++
++int ring_buffer_map(struct trace_buffer *buffer, int cpu)
++{
++	struct ring_buffer_per_cpu *cpu_buffer;
++	unsigned long flags, *subbuf_ids;
++	int err = 0;
++
++	if (!cpumask_test_cpu(cpu, buffer->cpumask))
++		return -EINVAL;
++
++	cpu_buffer = buffer->buffers[cpu];
++
++	mutex_lock(&cpu_buffer->mapping_lock);
++
++	if (cpu_buffer->mapped) {
++		WRITE_ONCE(cpu_buffer->mapped, cpu_buffer->mapped + 1);
++		mutex_unlock(&cpu_buffer->mapping_lock);
++		return 0;
++	}
++
++	/* prevent another thread from changing buffer sizes */
++	mutex_lock(&buffer->mutex);
++
++	err = rb_alloc_meta_page(cpu_buffer);
++	if (err)
++		goto unlock;
++
++	/* subbuf_ids include the reader while nr_pages does not */
++	subbuf_ids = kzalloc(sizeof(*subbuf_ids) * (cpu_buffer->nr_pages + 1),
++			   GFP_KERNEL);
++	if (!subbuf_ids) {
++		rb_free_meta_page(cpu_buffer);
++		err = -ENOMEM;
++		goto unlock;
++	}
++
++	atomic_inc(&cpu_buffer->resize_disabled);
++
++	/*
++	 * Lock all readers to block any subbuf swap until the subbuf IDs are
++	 * assigned.
++	 */
++	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
++
++	rb_setup_ids_meta_page(cpu_buffer, subbuf_ids);
++	/*
++	 * Ensure rb_update_meta() will observe the meta-page before
++	 * cpu_buffer->mapped.
++	 */
++	smp_wmb();
++	WRITE_ONCE(cpu_buffer->mapped, 1);
++
++	/* Init meta_page values unless the writer did it already */
++	cmpxchg(&cpu_buffer->meta_page->entries, 0,
++		local_read(&cpu_buffer->entries));
++	cmpxchg(&cpu_buffer->meta_page->overrun, 0,
++		local_read(&cpu_buffer->overrun));
++	cmpxchg(&cpu_buffer->meta_page->subbufs_touched, 0,
++		local_read(&cpu_buffer->pages_touched));
++	cmpxchg(&cpu_buffer->meta_page->subbufs_lost, 0,
++		local_read(&cpu_buffer->pages_lost));
++
++	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
++unlock:
++	mutex_unlock(&buffer->mutex);
++	mutex_unlock(&cpu_buffer->mapping_lock);
++
++	return err;
++}
++
++int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
++{
++	struct ring_buffer_per_cpu *cpu_buffer;
++	int err = 0;
++
++	if (!cpumask_test_cpu(cpu, buffer->cpumask))
++		return -EINVAL;
++
++	cpu_buffer = buffer->buffers[cpu];
++
++	mutex_lock(&cpu_buffer->mapping_lock);
++
++	if (!cpu_buffer->mapped) {
++		err = -ENODEV;
++		goto unlock;
++	}
++
++	WRITE_ONCE(cpu_buffer->mapped, cpu_buffer->mapped - 1);
++	if (!cpu_buffer->mapped) {
++		/* Wait for the writer and readers to observe !mapped */
++		synchronize_rcu();
++
++		rb_free_subbuf_ids(cpu_buffer);
++		rb_free_meta_page(cpu_buffer);
++		atomic_dec(&cpu_buffer->resize_disabled);
++	}
++unlock:
++	mutex_unlock(&cpu_buffer->mapping_lock);
++
++	return err;
++}
++
++/*
++ *   +--------------+  pgoff == 0
++ *   |   meta page  |
++ *   +--------------+  pgoff == 1
++ *   | subbuffer 0  |
++ *   +--------------+  pgoff == 1 + (1 << subbuf_order)
++ *   | subbuffer 1  |
++ *         ...
++ */
++struct page *ring_buffer_map_fault(struct trace_buffer *buffer, int cpu,
++				   unsigned long pgoff)
++{
++	struct ring_buffer_per_cpu *cpu_buffer = buffer->buffers[cpu];
++	unsigned long subbuf_id, subbuf_offset, addr;
++	struct page *page;
++
++	if (!pgoff)
++		return virt_to_page((void *)cpu_buffer->meta_page);
++
++	pgoff--;
++
++	subbuf_id = pgoff >> buffer->subbuf_order;
++	if (subbuf_id > cpu_buffer->nr_pages)
++		return NULL;
++
++	subbuf_offset = pgoff & ((1UL << buffer->subbuf_order) - 1);
++	addr = cpu_buffer->subbuf_ids[subbuf_id] + (subbuf_offset * PAGE_SIZE);
++	page = virt_to_page((void *)addr);
++
++	return page;
++}
++
++int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
++{
++	struct ring_buffer_per_cpu *cpu_buffer;
++	unsigned long reader_size;
++	unsigned long flags;
++
++	cpu_buffer = rb_get_mapped_buffer(buffer, cpu);
++	if (IS_ERR(cpu_buffer))
++		return (int)PTR_ERR(cpu_buffer);
++
++	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
++consume:
++	if (rb_per_cpu_empty(cpu_buffer))
++		goto out;
++
++	reader_size = rb_page_size(cpu_buffer->reader_page);
++
++	/*
++	 * There are data to be read on the current reader page, we can
++	 * return to the caller. But before that, we assume the latter will read
++	 * everything. Let's update the kernel reader accordingly.
++	 */
++	if (cpu_buffer->reader_page->read < reader_size) {
++		while (cpu_buffer->reader_page->read < reader_size)
++			rb_advance_reader(cpu_buffer);
++		goto out;
++	}
++
++	if (WARN_ON(!rb_get_reader_page(cpu_buffer)))
++		goto out;
++
++	goto consume;
++out:
++	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
++	rb_put_mapped_buffer(cpu_buffer);
++
++	return 0;
++}
++
+ /*
+  * We only allocate new buffers, never free them if the CPU goes down.
+  * If we were to free the buffer, then the user would lose any trace that was in
 -- 
-2.25.1
+2.43.0.472.g3155946c3a-goog
 
