@@ -1,275 +1,162 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79B955E41
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 16:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB8C53A17
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 16:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="eEDmGz8N";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Z8AA3iNc";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="eEDmGz8N";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Z8AA3iNc"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 0070B21E45;
-	Thu, 21 Dec 2023 16:05:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1703174734; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=Y0o6m2PLxPN/8wWQ2CD6ak5/tzc7u6pVRNRVvBJRC70=;
-	b=eEDmGz8NPM6vTqM3HQNPqYopGEM1VFEYqETqCXPpsQpj+X5zSG0Qc8ZSGj1ciEThznKgOR
-	eg8h4qznTtO2u/AXlPgwUi8xPo07NAHS4KD8TUnQ1NO93NkeEb06PKReEpL70IrQyC4Wpp
-	ChqrRo0V222WYhDTCuQu//b0pN7PUNM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1703174734;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=Y0o6m2PLxPN/8wWQ2CD6ak5/tzc7u6pVRNRVvBJRC70=;
-	b=Z8AA3iNcBOX0PDGQCb6H1u1O4sLIWHwgxgtWukPnC6RTuXPUBHJoNWLeUz0XK+L1KSQKGq
-	zbRa5vz0hlvQncBg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1703174734; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=Y0o6m2PLxPN/8wWQ2CD6ak5/tzc7u6pVRNRVvBJRC70=;
-	b=eEDmGz8NPM6vTqM3HQNPqYopGEM1VFEYqETqCXPpsQpj+X5zSG0Qc8ZSGj1ciEThznKgOR
-	eg8h4qznTtO2u/AXlPgwUi8xPo07NAHS4KD8TUnQ1NO93NkeEb06PKReEpL70IrQyC4Wpp
-	ChqrRo0V222WYhDTCuQu//b0pN7PUNM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1703174734;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=Y0o6m2PLxPN/8wWQ2CD6ak5/tzc7u6pVRNRVvBJRC70=;
-	b=Z8AA3iNcBOX0PDGQCb6H1u1O4sLIWHwgxgtWukPnC6RTuXPUBHJoNWLeUz0XK+L1KSQKGq
-	zbRa5vz0hlvQncBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E051613AB5;
-	Thu, 21 Dec 2023 16:05:33 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id mOG8Nk1ihGWWPAAAD6G6ig
-	(envelope-from <jwiesner@suse.de>); Thu, 21 Dec 2023 16:05:33 +0000
-Received: by incl.suse.cz (Postfix, from userid 1000)
-	id D4C92985FF; Thu, 21 Dec 2023 17:05:17 +0100 (CET)
-Date: Thu, 21 Dec 2023 17:05:17 +0100
-From: Jiri Wiesner <jwiesner@suse.de>
-To: linux-kernel@vger.kernel.org
-Cc: John Stultz <jstultz@google.com>, Thomas Gleixner <tglx@linutronix.de>,
-	Stephen Boyd <sboyd@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Feng Tang <feng.tang@intel.com>
-Subject: [PATCH] clocksource: Use proportional clocksource skew threshold
-Message-ID: <20231221160517.GA22919@incl>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bHfuF/Xq"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-50e51a7545dso1178438e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 08:07:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703174830; x=1703779630; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RW+aituytgnCG5vsvH8iyQf8oNlLjNY2vCWaBlZ39k8=;
+        b=bHfuF/Xq/3RI0bAPRcGF7t0hLzt5Kt5G/J5QV41Jiz9jKlMy5mquPnIpfcjeF4qC7G
+         DveI2e5tNcxHUP8PHQuTYqRxcOxyjfnsE7WgU3h2xe63gDHVcEY5YKWjSCWF7ETT54Cm
+         loi4ZFkBrJbi0cORv6B7JFubpvpsVl43gP/xE8dSd+mHD6RMfwpfGwjXm069s+Vd4iMp
+         7VpAk5sEMXeM3mOSA/2DQ3oMvRAgDTQYqIuTpVkOL0w4ZEhE+jalmmnk6m8xeVEHOc5M
+         7ftQ3e2Qm/JnFYEe9Le8k1vJ7iy+cKfYHyNnKiT45fZx4z5SV5002efkRJdg+rJFFSCv
+         uWlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703174830; x=1703779630;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RW+aituytgnCG5vsvH8iyQf8oNlLjNY2vCWaBlZ39k8=;
+        b=WywU0yN9kzrV73D7O4ueloiXAeQMwPg9EjXtpT1chLnW2pdr3NWlYFn5vdKxITbTbB
+         gY/K7nfS4Lo41g7TVfv9CFJleHjZHpSrET9HC6Xyd3vORnV5RqMUYunv5NotYqbmRz8g
+         +/glnR5hPOIeFEQeHKTTcUJhAw/3enx0ogXshf2D7GOPL9NjX0V1k2cniHooDYjQBGi/
+         W6TnJROZQrRbn26G3xji9gLe5hUMq3RFaHSUGHdNtUN020RgL994++lNTxNjnM/LZjv/
+         9vJUFcsqgbSEfEovJwMr92LEGx/bCyl/O/xia9YHIvcOk9DF9Q1NBX9HtoBSUykG+eNu
+         BqFA==
+X-Gm-Message-State: AOJu0YzpB9M4j0PlufRnyLnhbLupQiWcHsG7Ih2QfNYe8wA8vX3vWbp/
+	bO6aTv23XFjLXR6uCAdcHt1dsA==
+X-Google-Smtp-Source: AGHT+IHKmCPoniIfJQAEwBYu+Q0MShTpFmHr1QAWtiFczqTjDr7zWlQp7IR2ZRNBph6KKMuDSCCSKg==
+X-Received: by 2002:a05:6512:1329:b0:50d:f93b:97a9 with SMTP id x41-20020a056512132900b0050df93b97a9mr2923505lfu.1.1703174829787;
+        Thu, 21 Dec 2023 08:07:09 -0800 (PST)
+Received: from [192.168.0.22] ([78.10.206.178])
+        by smtp.gmail.com with ESMTPSA id wl1-20020a170907310100b00a233515c39esm1096071ejb.67.2023.12.21.08.07.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Dec 2023 08:07:09 -0800 (PST)
+Message-ID: <2e74c513-40de-41b7-ba86-c5b345344ce4@linaro.org>
+Date: Thu, 21 Dec 2023 17:07:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: 5.29
-X-Spamd-Bar: +++++
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [5.29 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 BAYES_SPAM(5.10)[99.99%];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCPT_COUNT_FIVE(0.00)[6];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MX_GOOD(-0.01)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=eEDmGz8N;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Z8AA3iNc
-X-Spam-Level: *****
-X-Rspamd-Queue-Id: 0070B21E45
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] dt-bindings: ASoC: Add Cadence I2S controller for
+ StarFive JH8100 SoC
+Content-Language: en-US
+To: Xingyu Wu <xingyu.wu@starfivetech.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Claudiu Beznea <Claudiu.Beznea@microchip.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor.dooley@microchip.com>
+Cc: Walker Chen <walker.chen@starfivetech.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+ linux-sound@vger.kernel.org
+References: <20231221033223.73201-1-xingyu.wu@starfivetech.com>
+ <20231221033223.73201-2-xingyu.wu@starfivetech.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20231221033223.73201-2-xingyu.wu@starfivetech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-There have been reports of the watchdog marking clocksources unstable on
-machines 8 NUMA nodes:
-> clocksource: timekeeping watchdog on CPU373: Marking clocksource 'tsc' as unstable because the skew is too large:
-> clocksource:   'hpet' wd_nsec: 14523447520 wd_now: 5a749706 wd_last: 45adf1e0 mask: ffffffff
-> clocksource:   'tsc' cs_nsec: 14524115132 cs_now: 515ce2c5a96caa cs_last: 515cd9a9d83918 mask: ffffffffffffffff
-> clocksource:   'tsc' is current clocksource.
-> tsc: Marking TSC unstable due to clocksource watchdog
-> TSC found unstable after boot, most likely due to broken BIOS. Use 'tsc=unstable'.
-> sched_clock: Marking unstable (1950347883333462, 79649632569)<-(1950428279338308, -745776594)
-> clocksource: Checking clocksource tsc synchronization from CPU 400 to CPUs 0,46,52,54,138,208,392,397.
-> clocksource: Switched to clocksource hpet
+On 21/12/2023 04:32, Xingyu Wu wrote:
+> +  dma-names:
+> +    items:
+> +      - const: tx
+> +      - const: rx
+> +    minItems: 1
+> +
+> +  cdns,i2s-max-channels:
 
-The measured clocksource skew - the absolute difference between cs_nsec
-and wd_nsec - was 668 microseconds:
-> cs_nsec - wd_nsec = 14524115132 - 14523447520 = 667612
-
-The kernel used 200 microseconds for the uncertainty_margin of both the
-clocksource and watchdog, resulting in a threshold of 400 microseconds.
-The discrepancy is that the measured clocksource skew was evaluated against
-a threshold suited for watchdog intervals of roughly WATCHDOG_INTERVAL,
-i.e. HZ >> 1. Both the cs_nsec and the wd_nsec value indicate that the
-actual watchdog interval was circa 14.5 seconds. Since the watchdog is
-executed in softirq context the expiration of the watchdog timer can get
-severely delayed on account of a ksoftirqd thread not getting to run in a
-timely manner. Surely, a system with such belated softirq execution is not
-working well and the scheduling issue should be looked into but the
-clocksource watchdog should be able to deal with it accordingly.
-
-To keep the limit imposed by NTP (500 microseconds of skew per second),
-the margins must be scaled so that the threshold value is proportional to
-the length of the actual watchdog interval. The solution in the patch
-utilizes left-shifting to approximate the division by
-WATCHDOG_INTERVAL * NSEC_PER_SEC / HZ, which leads to slighly narrower
-margins and a slightly lower threshold for longer watchdog intervals.
-
-Fixes: 2e27e793e280 ("clocksource: Reduce clocksource-skew threshold")
-Signed-off-by: Jiri Wiesner <jwiesner@suse.de>
----
- kernel/time/clocksource.c | 60 ++++++++++++++++++++++++++++++++++-----
- 1 file changed, 53 insertions(+), 7 deletions(-)
-
-diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index c108ed8a9804..a84c4c6f49e3 100644
---- a/kernel/time/clocksource.c
-+++ b/kernel/time/clocksource.c
-@@ -98,7 +98,8 @@ static u64 suspend_start;
- /*
-  * Interval: 0.5sec.
-  */
--#define WATCHDOG_INTERVAL (HZ >> 1)
-+#define WATCHDOG_INTERVAL_SHIFT	1
-+#define WATCHDOG_INTERVAL	(HZ >> WATCHDOG_INTERVAL_SHIFT)
- 
- /*
-  * Threshold: 0.0312s, when doubled: 0.0625s.
-@@ -121,7 +122,8 @@ static u64 suspend_start;
- #define MAX_SKEW_USEC	(125 * WATCHDOG_INTERVAL / HZ)
- #endif
- 
--#define WATCHDOG_MAX_SKEW (MAX_SKEW_USEC * NSEC_PER_USEC)
-+#define WATCHDOG_MAX_SKEW	(MAX_SKEW_USEC * NSEC_PER_USEC)
-+#define WATCHDOG_MIN_MARGIN	(2 * WATCHDOG_MAX_SKEW)
- 
- #ifdef CONFIG_CLOCKSOURCE_WATCHDOG
- static void clocksource_watchdog_work(struct work_struct *work);
-@@ -395,16 +397,47 @@ static inline void clocksource_reset_watchdog(void)
- 		cs->flags &= ~CLOCK_SOURCE_WATCHDOG;
- }
- 
-+/* Scaled margin calculation */
-+#define MARGIN_SCALE		24
-+/* Bits needed for multiplication with WATCHDOG_MIN_MARGIN */
-+#define MARGIN_MIN_BITS		(const_ilog2(WATCHDOG_MIN_MARGIN) + 1)
-+/* 1UL << 30 approximates NSEC_PER_SEC */
-+#define MARGIN_SHIFT		(30 - WATCHDOG_INTERVAL_SHIFT - MARGIN_SCALE)
-+/* The result needs to fit into 32 bits */
-+#define MARGIN_MAX_INTERVAL	(1ULL << (32 + MARGIN_SCALE - MARGIN_MIN_BITS \
-+					  + MARGIN_SHIFT))
-+
-+/*
-+ * Calculate the minimal uncertainty margin scaled by
-+ * the length of the watchdog interval that elapsed since
-+ * cs_last and wd_last. Since the watchdog is executed
-+ * in softirq context the expiration of the timer can get
-+ * severely delayed on account of a ksoftirqd thread not
-+ * getting to run in a timely manner.
-+ * Left-shifting is utilized to approximate the division by
-+ * WATCHDOG_INTERVAL * NSEC_PER_SEC / HZ
-+ */
-+static u32 clocksource_calc_margin(int64_t interval)
-+{
-+	u64 tmp;
-+
-+	if (interval < 0)
-+		return 0;
-+	tmp = interval < MARGIN_MAX_INTERVAL ? interval : MARGIN_MAX_INTERVAL;
-+	tmp >>= MARGIN_SHIFT;
-+	tmp *= WATCHDOG_MIN_MARGIN;
-+	return tmp >> MARGIN_SCALE;
-+}
- 
- static void clocksource_watchdog(struct timer_list *unused)
- {
- 	u64 csnow, wdnow, cslast, wdlast, delta;
-+	u32 scaled_cs_margin, scaled_wd_margin, md;
- 	int next_cpu, reset_pending;
- 	int64_t wd_nsec, cs_nsec;
- 	struct clocksource *cs;
- 	enum wd_read_status read_ret;
- 	unsigned long extra_wait = 0;
--	u32 md;
- 
- 	spin_lock(&watchdog_lock);
- 	if (!watchdog_running)
-@@ -470,8 +503,19 @@ static void clocksource_watchdog(struct timer_list *unused)
- 		if (atomic_read(&watchdog_reset_pending))
- 			continue;
- 
-+		/*
-+		 * Skip the check if CONFIG_CLOCKSOURCE_VALIDATE_LAST_CYCLE
-+		 * detected the MSB of the mask in the delta or delta == mask.
-+		 */
-+		if (!wd_nsec || !cs_nsec)
-+			continue;
-+
- 		/* Check the deviation from the watchdog clocksource. */
--		md = cs->uncertainty_margin + watchdog->uncertainty_margin;
-+		scaled_cs_margin = clocksource_calc_margin(cs_nsec);
-+		scaled_wd_margin = clocksource_calc_margin(wd_nsec);
-+		md = max(cs->uncertainty_margin, scaled_cs_margin);
-+		md += max(watchdog->uncertainty_margin, scaled_wd_margin);
-+
- 		if (abs(cs_nsec - wd_nsec) > md) {
- 			s64 cs_wd_msec;
- 			s64 wd_msec;
-@@ -487,6 +531,8 @@ static void clocksource_watchdog(struct timer_list *unused)
- 			wd_msec = div_s64_rem(wd_nsec, 1000 * 1000, &wd_rem);
- 			pr_warn("                      Clocksource '%s' skewed %lld ns (%lld ms) over watchdog '%s' interval of %lld ns (%lld ms)\n",
- 				cs->name, cs_nsec - wd_nsec, cs_wd_msec, watchdog->name, wd_nsec, wd_msec);
-+			pr_warn("                      Max deviation: %u scaled_cs_margin: %u scaled_wd_margin: %u\n",
-+				md, scaled_cs_margin, scaled_wd_margin);
- 			if (curr_clocksource == cs)
- 				pr_warn("                      '%s' is current clocksource.\n", cs->name);
- 			else if (curr_clocksource)
-@@ -1138,12 +1184,12 @@ void __clocksource_update_freq_scale(struct clocksource *cs, u32 scale, u32 freq
- 	 */
- 	if (scale && freq && !cs->uncertainty_margin) {
- 		cs->uncertainty_margin = NSEC_PER_SEC / (scale * freq);
--		if (cs->uncertainty_margin < 2 * WATCHDOG_MAX_SKEW)
--			cs->uncertainty_margin = 2 * WATCHDOG_MAX_SKEW;
-+		if (cs->uncertainty_margin < WATCHDOG_MIN_MARGIN)
-+			cs->uncertainty_margin = WATCHDOG_MIN_MARGIN;
- 	} else if (!cs->uncertainty_margin) {
- 		cs->uncertainty_margin = WATCHDOG_THRESHOLD;
- 	}
--	WARN_ON_ONCE(cs->uncertainty_margin < 2 * WATCHDOG_MAX_SKEW);
-+	WARN_ON_ONCE(cs->uncertainty_margin < WATCHDOG_MIN_MARGIN);
- 
- 	/*
- 	 * Ensure clocksources that have large 'mult' values don't overflow
--- 
-2.35.3
+Custom properties after generic, so after sound-dai-cells. The coding
+style now mentions this.
 
 
--- 
-Jiri Wiesner
-SUSE Labs
+> +    description: |
+> +      Number of I2S max stereo channels supported by the hardware.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 1
+> +    maximum: 8
+> +
+> +  "#sound-dai-cells":
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +
+> +oneOf:
+> +  - required:
+> +      - dmas
+> +      - dma-names
+> +  - required:
+> +      - interrupts
+> +
+> +unevaluatedProperties: false
+
+This is not correct without allOf: which should point you to missing
+$ref to dai-common.
+
+
+Best regards,
+Krzysztof
+
