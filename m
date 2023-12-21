@@ -1,123 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E112567;
-	Thu, 21 Dec 2023 01:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="opmQblqy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEAFAC433C7;
-	Thu, 21 Dec 2023 01:06:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703120794;
-	bh=3q/je4lxiM88lpvgaF61zSPIgyprdo8v2CPqjz3q1IY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=opmQblqy1kblwTnTrw2H8sT3BN2wFlHh04CUp8N15C2cC233vLrCT8WAeW7yj8Esp
-	 0i9BVNrC1itAe3TiB8nYnjRs9WtaGYBCGuD91AjLYybX3o6AkaZzZ8F11jAG6dSK2X
-	 WYQLGuEi7FkbKBwxfu98I5LUmmf6c6P9mW4HdnZkJyCjlzo13nP5+0LvoAdEOqgIts
-	 q0KBCL4+4BiMPtgz38OHRNfj/mRtIyHrmDbCDkzeDWfXWx1Nc1yDtZN5/5Wpv89fMo
-	 TWn8oT+mrc0SKYfoFkROhvA0Gvjb37kDbdysQrWbpaHv5LnK75UoV3QvZl3CJL9K7K
-	 QXQIdT28O3sjQ==
-Date: Thu, 21 Dec 2023 01:06:28 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	lkft-triage@lists.linaro.org, linux-stable <stable@vger.kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Marc Zyngier <maz@kernel.org>
-Subject: Re: selftests: ftrace: Internal error: Oops: sve_save_state
-Message-ID: <b1b8cbdd-6d6c-4656-b17a-4d2dfb555f8a@sirena.org.uk>
-References: <CA+G9fYtEGe_DhY2Ms7+L7NKsLYUomGsgqpdBj+QwDLeSg=JhGg@mail.gmail.com>
- <ad5b7442-385d-41db-9202-a36414460610@sirena.org.uk>
- <CA+G9fYsbwWpDVR9KJXx8UO5MXsYT81uAJbLLNDnLianr8jmXUA@mail.gmail.com>
- <63e92a6a-9cb7-4272-b524-ccaf997aceb3@sirena.org.uk>
- <CAEUSe7_9tE5K7NpsmaG_v_bTJaMGhVVSDRhMn1QYnr2z4vSg8w@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EAF015B7;
+	Thu, 21 Dec 2023 01:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4SwXYL0mjyz4f3k5n;
+	Thu, 21 Dec 2023 09:15:34 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 7A1F91A0180;
+	Thu, 21 Dec 2023 09:15:35 +0800 (CST)
+Received: from [10.174.176.117] (unknown [10.174.176.117])
+	by APP3 (Coremail) with SMTP id _Ch0CgD3fr2zkYNl5e2LEA--.23425S2;
+	Thu, 21 Dec 2023 09:15:32 +0800 (CST)
+Subject: Re: BUG: unable to handle kernel paging request in
+ bpf_probe_read_compat_str
+To: Yonghong Song <yonghong.song@linux.dev>,
+ xingwei lee <xrivendell7@gmail.com>
+Cc: ast@kernel.org, jolsa@kernel.org, daniel@iogearbox.net,
+ john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com,
+ haoluo@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ song@kernel.org
+References: <CABOYnLynjBoFZOf3Z4BhaZkc5hx_kHfsjiW+UWLoB=w33LvScw@mail.gmail.com>
+ <cde2ebc4-7e7d-56be-5f08-6d261142189e@huaweicloud.com>
+ <2327d4aa-68f5-48d4-9296-7d5df15502b1@linux.dev>
+From: Hou Tao <houtao@huaweicloud.com>
+Message-ID: <6568a839-be3c-6898-4e56-95436ea18069@huaweicloud.com>
+Date: Thu, 21 Dec 2023 09:15:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gWCBnsT00SOVLyLa"
-Content-Disposition: inline
-In-Reply-To: <CAEUSe7_9tE5K7NpsmaG_v_bTJaMGhVVSDRhMn1QYnr2z4vSg8w@mail.gmail.com>
-X-Cookie: bug, n:
+In-Reply-To: <2327d4aa-68f5-48d4-9296-7d5df15502b1@linux.dev>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID:_Ch0CgD3fr2zkYNl5e2LEA--.23425S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7AFyfJF1Dur18XrW7XFyUAwb_yoW8Ar1rp3
+	y5Ga9YyrZ8Xr1xAws7t348Xa4Ivw4fGa15WrW8try7u3s09rnaya1vvay3CrZIqr10gF4x
+	trs0qa9Igr1UXrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS
+	07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+	02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_
+	WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAF
+	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IU1zuWJUUUUU==
+X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
 
+Hi,
 
---gWCBnsT00SOVLyLa
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 12/21/2023 1:50 AM, Yonghong Song wrote:
+>
+> On 12/20/23 1:19 AM, Hou Tao wrote:
+>> Hi,
+>>
+>> On 12/14/2023 11:40 AM, xingwei lee wrote:
+>>> Hello I found a bug in net/bpf in the lastest upstream linux and
+>>> comfired in the lastest net tree and lastest net bpf titled BUG:
+>>> unable to handle kernel paging request in bpf_probe_read_compat_str
+>>>
+>>> If you fix this issue, please add the following tag to the commit:
+>>> Reported-by: xingwei Lee <xrivendell7@gmail.com>
+>>>
+>>> kernel: net 9702817384aa4a3700643d0b26e71deac0172cfd / bpf
+>>> 2f2fee2bf74a7e31d06fc6cb7ba2bd4dd7753c99
+>>> Kernel config:
+>>> https://syzkaller.appspot.com/text?tag=KernelConfig&x=b50bd31249191be8
+>>>
+>>> in the lastest bpf tree, the crash like:
+>>>
+>>> TITLE: BUG: unable to handle kernel paging request in
+>>> bpf_probe_read_compat_str
+>>> CORRUPTED: false ()
+>>> MAINTAINERS (TO): [akpm@linux-foundation.org linux-mm@kvack.org]
+>>> MAINTAINERS (CC): [linux-kernel@vger.kernel.org]
+>>>
+>>> BUG: unable to handle page fault for address: ff0
+>> Thanks for the report and reproducer. The output is incomplete. It
+>> should be: "BUG: unable to handle page fault for address:
+>> ffffffffff600000". The address is a vsyscall address, so
+>> handle_page_fault() considers that the fault address is in userspace
+>> instead of kernel space, and there will be no fix-up for the exception
+>> and oops happened. Will post a fix and a selftest for it.
+>
+> There is a proposed fix here:
+>
+> https://lore.kernel.org/bpf/87r0jwquhv.ffs@tglx/
+>
+> Not sure the fix in the above link is merged to some upstream branch
+> or not.
 
-On Wed, Dec 20, 2023 at 06:06:53PM -0600, Daniel D=EDaz wrote:
+It seems it has not been merged. will ping Thomas later.
 
-> We have been seeing this problem in other instances, specifically on
-> the following kernels:
-> * 5.15.132, 5.15.134-rc1, 5.15.135, 5.15.136-rc1, 5.15.142, 5.15.145-rc1
-> * 6.1.42, 6.1.43, 6.1.51-rc1, 6.1.56-rc1, 6.1.59-rc1, 6.1.63
-> * 6.3.10, 6.3.11
-> * 6.4.7
-> * 6.5.2, 6.5.10-rc2
-
-This is a huge range of kernels with some substantial reworkings of
-the FP code, and I do note that v5.15 appears to have backported only
-one change there (an incidental one related to ESR handling).  This
-makes me think this is likely to be something that's been sitting there
-for a very long time and is unrelated to those versions and any changes
-that went into them.  I see you're still testing back to v4.19 which
-suggests an issue introduced between v5.10 and v5.15, my change
-cccb78ce89c45a4 ("arm64/sve: Rework SVE access trap to convert state in
-registers") does jump out there though I don't immediately see what the
-issue would be.
-
-Looking at the list of versions you've posted the earliest is from the
-very end of June with others in July, was there something that changed
-in your test environment in broadly that time?  I see that the=20
-logs you and Naresh posted are both using a Debian 12/Bookworm based
-root filesystem and that was released a couple of weeks before this
-started appearing, Bookworm introduced glibc usage of SVE which makes
-usage much more common.  Is this perhaps tied to you upgrading your root
-filesystems to Bookworm or were you tracking testing before then?
-
-> Most recent case is for the current 5.15 RC. Decoded stack trace is here:
-> -----8<-----
->   <4>[   29.297166] ------------[ cut here ]------------
->   <4>[ 29.298039] WARNING: CPU: 1 PID: 220 at
-> arch/arm64/kernel/fpsimd.c:950 do_sve_acc
-> (/builds/linux/arch/arm64/kernel/fpsimd.c:950 (discriminator 1))
-
-That's an assert that we shouldn't take a SVE trap when SVE is
-alreadly enabled for the thread.  The backtrace Naresh originally
-supplied was a NULL pointer dereference attempting to save SVE state=20
-(indicating that we think we're trying to save SVE state but don't have
-any storage allocated for it) during thread switch.  It's very plausible
-that the two are the same underlying issue but it's also not 100% a
-given.  Can you double check exactly how similar the various issues you
-are seeing are please?
-
-I have coincidentally been chasing some other stuff in the past week or
-two which might potentially be different manifestations of the same
-underlying issue with current code, broadly in the area of the register
-state and task state getting out of sync.
-
---gWCBnsT00SOVLyLa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWDj5MACgkQJNaLcl1U
-h9D8yQf+O6aLYXO+eqsG/uShuVW2abRfdRrSWdr4CR8ZhbRnWwgeiNGH89O0lF1Z
-U8uswFHmqnDkFV3peRN0jmsU/TlxwaO45LRUT0s/puEYMnLkaCEfTVfYahbs/6c7
-DFO5/sNcBxO1/GaFrItZdOhJm9YIwbXsCAlPDIh2laOj4kpI6C/mO+rb4nFxyFJ4
-1B0y4PBfT7kO+wP6sYKXfn76fGi5jgONmsV696UcPTfJFyQUfvFmgDWB6SM1xWr0
-8n/62TCUwfxSgsnFVyvPJ+b2r5wObp3sV84nYHRPxom7WtXpwU9g6+t1At2UuRNV
-g4aIscLDEL8j4Bifd7OpoyBVlnAvFQ==
-=muue
------END PGP SIGNATURE-----
-
---gWCBnsT00SOVLyLa--
