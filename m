@@ -1,101 +1,84 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74AEA62815;
-	Thu, 21 Dec 2023 13:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894C759929;
+	Thu, 21 Dec 2023 13:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-1ff010595f6so24904fac.1;
-        Thu, 21 Dec 2023 05:47:29 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E0oS8v+e"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a236456fee1so97080566b.1;
+        Thu, 21 Dec 2023 05:48:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703166480; x=1703771280; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3bECvggky9Gr1iMkQbFegJ4kp/uXj9cku7pm8F83ADI=;
+        b=E0oS8v+et+bT3EgmtjWYQRFsDJjOwwtv5kNjhQ1vfYKBVz/493kOMi+WnirBED+8/t
+         n6L1IOIJ+FrLZxxG2k3aXfrq5dCIX8XuBftvuZyy4v9YKPTJTDZKWxCVgQxQ6NRyM+aY
+         ochZZGHU/oKB9BuU0Ee5P491NVN1bh4cpw4ZnKkLB83qa1H92NGRWYu24SMc9Y/YydfC
+         RydD4rIkq0uNJU5235b1ziTonI2xiakfXA7aiG70JeTZnply6CcOkgNP+LPgW1hXwvuy
+         zuC1DQZOtFYi4jD8pqrLszfCZw7ltUslMygWZSxgPl9AxUKNTDtAiaGMxQYy4n4wXwVT
+         pjeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703166448; x=1703771248;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I18+KHcYU9LVNWT1j7IeCdABeIX+wJlsSl36dw3cVlY=;
-        b=bvJ9zBDH1AWPQE3nj7DT4Kfrz7PGax5ZxG/NyGFsh/1QPvHZZsCpJmqIMh71g68SAL
-         45xRY40DSJitBHDP8zNm38sQ78bqfOm+DKGefi7Vbl10peNbyoUyK9QoUE2ncjHhR4EA
-         PGV5gkAyNBtoSiOI4WvM/Sx5tuvsGpvKOgX44+Oi403iSB0glIjlsDRwgnttHf8tmhUn
-         obiYc0BjLdDhdcW52jRtjrnZasKZHFTYtcw7bOuWcMZUel4nnMy54O4vSIOnsBwVAeJv
-         b5IrQQ+VkKI5Jv2LPkzRTfK9Af5RiDHO4tebAbrwXkDomSdm2uSdCtFHwhy2iagmz0jI
-         0J+g==
-X-Gm-Message-State: AOJu0Yw3lQrkm2npPKEnatv3M2ULLCm5sT6iL4tehNyAv8p1sn8Gjpre
-	Wi620yqIdgP0/VPWF7jKNmwhG2AnYvOtKhdlRWg=
-X-Google-Smtp-Source: AGHT+IGycU/rvF2NFQOBvNN7qjABSTsNMm2yrNgLN4uoMxiE/BM8qZZhhBVbQ3EDbrA1Avz3Q6swQf6aZEwjAeXf3+E=
-X-Received: by 2002:a05:6870:b028:b0:1fb:e5f:c530 with SMTP id
- y40-20020a056870b02800b001fb0e5fc530mr39465533oae.4.1703166448497; Thu, 21
- Dec 2023 05:47:28 -0800 (PST)
+        d=1e100.net; s=20230601; t=1703166480; x=1703771280;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3bECvggky9Gr1iMkQbFegJ4kp/uXj9cku7pm8F83ADI=;
+        b=vfU+Iw1jstG1nXRXZioZ2wgC3zFEjufxzk2T8as+a/+aSeDGBkuHUNP0YQ5pHgwf0Q
+         ENwC8OTCq6u0uucKz8SZ6zWSSUyAmXRcUDnOMAeC+NzojqLXqu3vxZatfKsBFiQTL6ve
+         HaeLHRNW3LyDifXiqx+yHAM+Wx3azepXxUuBUqSWj5Dgvid95qCrtvZ6ISDF+FxjUL0/
+         0ykU57HW/5shBoOdU2ZE29cHPo0yuuIaMx+CxQYeSHBli4JLCbUWNRBP//zrpwY5ljci
+         4xTyMyluwe8vGJfvbeK3/cPu8O2stOfTitZkz0cCiUL9t+1LyIJym1fJec321zKJurH2
+         HV7A==
+X-Gm-Message-State: AOJu0YyZzxzmRxDEYE3fYtswLhqxebpkAZgx1oYKBWIkEOd7J8MF8fcp
+	JuHCfCEINb+oF3NkMg2G/zc=
+X-Google-Smtp-Source: AGHT+IHldRfP0gErmbkSPhRzjjSGbZhxxQhXQycsWrhetXjzpXTaM2Cpzbqyd6nXrsMl/+7AuoBJkQ==
+X-Received: by 2002:a17:906:c50a:b0:a23:5905:1521 with SMTP id bf10-20020a170906c50a00b00a2359051521mr3011817ejb.100.1703166479788;
+        Thu, 21 Dec 2023 05:47:59 -0800 (PST)
+Received: from eichest-laptop ([2a02:168:af72:0:fcc7:6bc:8973:63f3])
+        by smtp.gmail.com with ESMTPSA id ez24-20020a1709070bd800b00a250c28ef83sm972149ejc.75.2023.12.21.05.47.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Dec 2023 05:47:59 -0800 (PST)
+Date: Thu, 21 Dec 2023 14:47:57 +0100
+From: Stefan Eichenberger <eichest@gmail.com>
+To: Dimitri Fedrau <dima.fedrau@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] net: phy: marvell-88q2xxx: add driver for the
+ Marvell 88Q2220 PHY
+Message-ID: <ZYRCDTWgHbM2qAom@eichest-laptop>
+References: <20231219093554.GA6393@debian>
+ <20231221072853.107678-1-dima.fedrau@gmail.com>
+ <20231221072853.107678-5-dima.fedrau@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <918945b6-8959-4228-b642-396ae346b20a@kernel.org>
-In-Reply-To: <918945b6-8959-4228-b642-396ae346b20a@kernel.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 21 Dec 2023 14:47:17 +0100
-Message-ID: <CAJZ5v0goP-468FT0pw5AeAYd8sQamdc1-64pyrEdFwbWHO4WfQ@mail.gmail.com>
-Subject: Re: [GIT PULL] devfreq next for 6.8
-To: Chanwoo Choi <chanwoo@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
-	"open list:DEVICE FREQUENCY (DEVFREQ)" <linux-pm@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, 
-	MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231221072853.107678-5-dima.fedrau@gmail.com>
 
-On Tue, Dec 19, 2023 at 12:03=E2=80=AFAM Chanwoo Choi <chanwoo@kernel.org> =
-wrote:
->
-> Dear Rafael,
->
-> This is devfreq-next pull request for v6.8. I add detailed description of
-> this pull request on the following tag. Please pull devfreq with
-> following updates.
->
-> Best Regards,
-> Chanwoo Choi
->
->
-> The following changes since commit b85ea95d086471afb4ad062012a4d73cd328fa=
-86:
->
->   Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git tags/de=
-vfreq-next-for-6.8
->
-> for you to fetch changes up to aed5ed595960c6d301dcd4ed31aeaa7a8054c0c6:
->
->   PM / devfreq: Synchronize devfreq_monitor_[start/stop] (2023-12-19 07:5=
-8:27 +0900)
->
-> ----------------------------------------------------------------
-> Update devfreq next for v6.8
->
-> Detailed description for this pull request:
-> 1. Fix buffer overflow of trans_stat_show sysfs node on devfreq core
-> - Fix buffer overflow of trans_stat_show sysfs node to replace
->   sprintf with scnprintf and then replace it with sysfs_emit
->   according to the syfs guide.
->
-> 2. Fix the timer list corruption when frequent switching of governor
-> by synchronizing the devfreq_moniotr_start and _stop function.
-> ----------------------------------------------------------------
->
-> Christian Marangi (2):
->       PM / devfreq: Fix buffer overflow in trans_stat_show
->       PM / devfreq: Convert to use sysfs_emit_at() API
->
-> Mukesh Ojha (1):
->       PM / devfreq: Synchronize devfreq_monitor_[start/stop]
->
->  Documentation/ABI/testing/sysfs-class-devfreq |  3 +
->  drivers/devfreq/devfreq.c                     | 80 ++++++++++++++++++++-=
-------
->  2 files changed, 62 insertions(+), 21 deletions(-)
+Hi Dimitri,
 
-Pulled and added to the linux-next branch in linux-pm.git, thanks!
+On Thu, Dec 21, 2023 at 08:28:51AM +0100, Dimitri Fedrau wrote:
+> Add a driver for the Marvell 88Q2220. This driver allows to detect the
+> link, switch between 100BASE-T1 and 1000BASE-T1 and switch between
+> master and slave mode and autonegotiation.
+> 
+> Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
+
+I tried to make your patch work in my setup but I'm unable to force a
+link speed. Were you able to force a different link speed with the
+following command?
+ethtool -s eth0 speed 100 autoneg off
+
+Regards,
+Stefan
