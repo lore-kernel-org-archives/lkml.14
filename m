@@ -1,96 +1,130 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5059E4F203
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 10:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A634F20E
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 10:20:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aUrvf1v6"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d3e05abcaeso4279605ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 02:18:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EudNFrUg"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40c2db2ee28so7527225e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 02:20:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703153888; x=1703758688; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1703153999; x=1703758799; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=M6NIr38DFBWDZyn+9oG1rPeiRckvDgmloLxDUP+lGxk=;
-        b=aUrvf1v6dXaeJi5Q+VXgTqFktHaI0S4bl7JejXh9wtIMAn3S/D1We8FqHWVJeBK4Ev
-         7ZyYv96HxRgW8g8K+4+s0pYQf9BR1We2/A1hYCKgq9Q+G1BMs0DLmaHVXbFneKt9ni6x
-         WuzXTQrosNbgxdgWUstb2lf3oaGh2fAY+ZKbtDtgaURCuNOpsXx5/UU788LyoTGJdOjF
-         Z9U5IQRFHWiOMrQVGuxa6gLrmT6cmnUZHRTc24IsdEuyi+yFn5C05FrJlGfN9uUStpyg
-         iBrXnwR09amuJ3/mxodjiQQo0ht5IEsE7SolcwuqXraMyubDr3bPhB5+SIA18aBTXq5F
-         4LIA==
+        bh=ncgABTCdGBw0CAzWbFnnfumaUfHdt8Nbmu7o0Ioedpw=;
+        b=EudNFrUgFuhO51GHl5kbFhUxOY6xTnWxpBf4IU3RBZbODu60kx6EILafDBa9tHF6H9
+         fdmPk5/DtO8gm6a9u4dB86oRrDfrUhLaE9zG1U5R0Y5IDNiXCuWj9C6324IZowPewl5d
+         9uQVlcr1xE5IR53Lg2AvcLXiWl/Fgr54apz7zF2mX+aXDY42nMe0q6rUv6o/Db45RMfh
+         h7j8xgh2tVTI2olgXxj0XckLsH3oNYF5D36WcFo6Rnm77m3LHmTrjQOPQff8OjvtVNu8
+         Ylm0qimlP8b+pciPi5TMzEIqAs+6JDztinVwr5oJx1aKSB1WCy1aNMve1Gd9P71kRo8D
+         kM9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703153888; x=1703758688;
+        d=1e100.net; s=20230601; t=1703153999; x=1703758799;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=M6NIr38DFBWDZyn+9oG1rPeiRckvDgmloLxDUP+lGxk=;
-        b=Xt5Q6qOMrZqxkPXGPCfSO4YqAuPyD3725XgiKqCq8Acf4i5hNHPxUD4HN3MxSAgEyI
-         uUNxkfgJH/SJlja8oS47VvGhff4j4E3vK/l9/GbrNhVkEMcSmQHDh1izld215PWvicn8
-         o7s+aw34BeHrCh7FaMPSY43FVDi+8sdtYS+ikGy95qZjkfgjKD6AT+CiDjgdmurNp1Ok
-         q0enlymSPkMzMvxktX6kmXcMdr+knz/GzqB4NQ8Twdtdgaygi7/zS80WQCmYYbR8PQlU
-         yDeOnS4CHubHmHrhgVq90kijmvu/fBjD97S69VX6BU6XwJHEtjSA6ZEnhQm3W15YJMFN
-         3kpg==
-X-Gm-Message-State: AOJu0YzJUj4oNLifbgO6W4FsUw4b3nqfDyHQQtSZgDVP6vpQWC1s5J+1
-	yVqS6Tk8ED47aTz1xPG4+qeq+NjEb8U=
-X-Google-Smtp-Source: AGHT+IGeSMifuSlZ3eGvRhBSncLQrvYxQzUJxE3dTXFno94ky3upBk44K71olMO1EOoTRq1QNEd2lQ==
-X-Received: by 2002:a17:902:7848:b0:1d3:2d73:e1ae with SMTP id e8-20020a170902784800b001d32d73e1aemr8568885pln.109.1703153888223;
-        Thu, 21 Dec 2023 02:18:08 -0800 (PST)
-Received: from code.. ([144.202.108.46])
-        by smtp.gmail.com with ESMTPSA id a17-20020a170902ee9100b001d0c418174fsm1255375pld.117.2023.12.21.02.18.04
+        bh=ncgABTCdGBw0CAzWbFnnfumaUfHdt8Nbmu7o0Ioedpw=;
+        b=K2Eq9N9PE+pPKrmq/8aRD8fPI8x2pLP1hvt/CZX+SguArA3FZ9LlZetTe3IhZVPGnV
+         1iPNB8UhJTYKgFJCgjFDwuTD5wIua5ajL9pa/CrD+dyaOvY61LtlOuS8IwhKnvbCCe7y
+         aikO6R0ULdyEK6gfzAMlnvv0dYBzpSZpjaVEv/nH9/MlEDXlOljnNsvHyOx/m9OMMVFg
+         u5bgoU3yldzDVs3ot0MuGKfmVNULdBOIC50huDXd6BV/twIo6aCWuvBT73xGi0kW2ztM
+         q6AhUbyGBAZefc/7RizlYsSnPFGO0YmSzNi6ama7GQzkDCbfi+5/VYpFWnMKQfQCJDWv
+         2UYQ==
+X-Gm-Message-State: AOJu0YwAsTK04BSvOMm6zz0WyszwiiXbmBo0ZeNp9Kn5L6Eqvv8SHEyE
+	VaPSJKwVhmdAHFwbcpaZr6bGmg==
+X-Google-Smtp-Source: AGHT+IFg88O/OHFdh5msbuWj8UlRrpIJ55OkeR2K7Sdmc5pIObNzWxGViQXX4T11YRZDFKQZ5NwONw==
+X-Received: by 2002:a05:600c:34d3:b0:40d:18c4:d744 with SMTP id d19-20020a05600c34d300b0040d18c4d744mr634990wmq.97.1703153999252;
+        Thu, 21 Dec 2023 02:19:59 -0800 (PST)
+Received: from krzk-bin.. ([78.10.206.178])
+        by smtp.gmail.com with ESMTPSA id p9-20020a170907910900b00a26ac5e3683sm125186ejq.100.2023.12.21.02.19.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 02:18:08 -0800 (PST)
-From: Yuntao Wang <ytcoode@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Simon Horman <horms@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Yuntao Wang <ytcoode@gmail.com>
-Subject: [PATCH] x86/kexec: fix incorrect end address passed to kernel_ident_mapping_init()
-Date: Thu, 21 Dec 2023 18:17:02 +0800
-Message-ID: <20231221101702.20956-1-ytcoode@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Thu, 21 Dec 2023 02:19:58 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Olof Johansson <olof@lixom.net>,
+	Arnd Bergmann <arnd@arndb.de>,
+	arm@kernel.org,
+	soc@kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [GIT PULL] memory: drivers for v6.8, part two
+Date: Thu, 21 Dec 2023 11:19:56 +0100
+Message-Id: <20231221101956.16351-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-kernel_ident_mapping_init() takes an exclusive memory range [pstart, pend)
-where pend is not included in the range, while res represents an inclusive
-memory range [start, end] where end is considered part of the range.
+Hi,
 
-Therefore, passing res->end directly to kernel_ident_mapping_init() is
-incorrect, the correct end address should be `res->end + 1`.
+On top of previous pull request.
 
-Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
----
- arch/x86/kernel/machine_kexec_64.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Best regards,
+Krzysztof
 
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 6f8df998890e..bc0a5348b4a6 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -44,7 +44,7 @@ static int mem_region_callback(struct resource *res, void *arg)
- 	struct init_pgtable_data *data = arg;
- 
- 	return kernel_ident_mapping_init(data->info, data->level4p,
--					 res->start, res->end);
-+					 res->start, res->end + 1);
- }
- 
- static int
--- 
-2.43.0
 
+The following changes since commit 4a23d0f9814c38308dc82b6dbc466666a400b27d:
+
+  memory: tegra: Protect SID override call under CONFIG_IOMMU_API (2023-12-06 11:22:24 +0100)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-mem-ctrl.git tags/memory-controller-drv-6.8-2
+
+for you to fetch changes up to 365fcc03b6321f36eb7cbda8baa737238c387907:
+
+  memory: ti-emif-pm: Convert to platform remove callback returning void (2023-12-19 09:05:19 +0100)
+
+----------------------------------------------------------------
+Memory controller drivers for v6.8, part two
+
+Convert all drivers platform remove callback to the "remove_new" which
+returns void.  Usual rationale from Uwe:
+
+  The .remove() callback for a platform driver returns an int which
+  makes many driver authors wrongly assume it's possible to do error
+  handling by returning an error code. However the value returned is
+  ignored (apart from emitting a warning) and this typically results in
+  resource leaks.
+
+----------------------------------------------------------------
+Uwe Kleine-König (15):
+      memory: brcmstb_dpfe: Convert to platform remove callback returning void
+      memory: brcmstb_memc: Convert to platform remove callback returning void
+      memory: emif: Convert to platform remove callback returning void
+      memory: fsl-corenet-cf: Convert to platform remove callback returning void
+      memory: fsl_ifc: Convert to platform remove callback returning void
+      memory: jz4780-nemc: Convert to platform remove callback returning void
+      memory: mtk-smi: Convert to platform remove callback returning void
+      memory: omap-gpmc: Convert to platform remove callback returning void
+      memory: renesas-rpc-if: Convert to platform remove callback returning void
+      memory: exynos5422-dmc: Convert to platform remove callback returning void
+      memory: stm32-fmc2-ebi: Convert to platform remove callback returning void
+      memory: tegra186-emc: Convert to platform remove callback returning void
+      memory: tegra210-emc: Convert to platform remove callback returning void
+      memory: ti-aemif: Convert to platform remove callback returning void
+      memory: ti-emif-pm: Convert to platform remove callback returning void
+
+ drivers/memory/brcmstb_dpfe.c            |  6 ++----
+ drivers/memory/brcmstb_memc.c            |  6 ++----
+ drivers/memory/emif.c                    |  6 ++----
+ drivers/memory/fsl-corenet-cf.c          |  6 ++----
+ drivers/memory/fsl_ifc.c                 |  6 ++----
+ drivers/memory/jz4780-nemc.c             |  5 ++---
+ drivers/memory/mtk-smi.c                 | 10 ++++------
+ drivers/memory/omap-gpmc.c               |  6 ++----
+ drivers/memory/renesas-rpc-if.c          |  6 ++----
+ drivers/memory/samsung/exynos5422-dmc.c  |  6 ++----
+ drivers/memory/stm32-fmc2-ebi.c          |  6 ++----
+ drivers/memory/tegra/tegra186-emc.c      |  6 ++----
+ drivers/memory/tegra/tegra210-emc-core.c |  6 ++----
+ drivers/memory/ti-aemif.c                |  5 ++---
+ drivers/memory/ti-emif-pm.c              |  6 ++----
+ 15 files changed, 32 insertions(+), 60 deletions(-)
