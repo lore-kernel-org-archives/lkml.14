@@ -1,128 +1,210 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5702C760B1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645D0760B2;
 	Thu, 21 Dec 2023 12:31:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="0wcQhuzB";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="lj/PL811";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="0wcQhuzB";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="lj/PL811"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id A7E301FB79;
-	Thu, 21 Dec 2023 12:31:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1703161913; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QwHR5tUvfneScMWsP8MbP9fmEkGw5uhOCQkhJHPk1OA=;
-	b=0wcQhuzBCULrMhsrPbMUDvPq1vkJknK8Dh3qDnxgyYVejGEMPmLLd4xI0RZd24Vgr63qOG
-	giAjay67i0UDSNidEpiGhBizY/QP5B2eDztrzA0VJ/ttyeM+cbHiyn8qlN4Ax1VukiCTjx
-	QMrlqkDpKYso3MeMAHKZxR83HQRRjr8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1703161913;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QwHR5tUvfneScMWsP8MbP9fmEkGw5uhOCQkhJHPk1OA=;
-	b=lj/PL811DVuzQ3shfd0630+UlaPG7rPzDMRTxc8wfu9DeHUCPWHcFJquegPUnPWviMhkKQ
-	RCKbcyG15WM17eAA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1703161913; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QwHR5tUvfneScMWsP8MbP9fmEkGw5uhOCQkhJHPk1OA=;
-	b=0wcQhuzBCULrMhsrPbMUDvPq1vkJknK8Dh3qDnxgyYVejGEMPmLLd4xI0RZd24Vgr63qOG
-	giAjay67i0UDSNidEpiGhBizY/QP5B2eDztrzA0VJ/ttyeM+cbHiyn8qlN4Ax1VukiCTjx
-	QMrlqkDpKYso3MeMAHKZxR83HQRRjr8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1703161913;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QwHR5tUvfneScMWsP8MbP9fmEkGw5uhOCQkhJHPk1OA=;
-	b=lj/PL811DVuzQ3shfd0630+UlaPG7rPzDMRTxc8wfu9DeHUCPWHcFJquegPUnPWviMhkKQ
-	RCKbcyG15WM17eAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 90F3413AB5;
-	Thu, 21 Dec 2023 12:31:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MYhiIzkwhGXfcAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 21 Dec 2023 12:31:53 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 47484A07E3; Thu, 21 Dec 2023 13:31:49 +0100 (CET)
-Date: Thu, 21 Dec 2023 13:31:49 +0100
-From: Jan Kara <jack@suse.cz>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Jan Kara <jack@suse.cz>, linux-mm@kvack.org,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Jan Kara <jack@suse.com>, David Howells <dhowells@redhat.com>,
-	Brian Foster <bfoster@redhat.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 13/17] writeback: Factor writeback_get_folio() out of
- write_cache_pages()
-Message-ID: <20231221123149.liaii5ziwyvb3rmx@quack3>
-References: <20231218153553.807799-1-hch@lst.de>
- <20231218153553.807799-14-hch@lst.de>
- <20231221114153.2ktiwixqedsk5adw@quack3>
- <20231221122535.GE17956@lst.de>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="2hahOQz5"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 3BLCVIVF026219;
+	Thu, 21 Dec 2023 13:31:31 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	selector1; bh=f+RuX/Eia9uR2MHJdZssTap6bVCpuc5frqUe4l82QhE=; b=2h
+	ahOQz5JifuxVoA0OYdFj/Ue+3k4I8L8jDuYDD+UXKwQJTsNMtjPWKax1HXf1ZQ+c
+	oTPwx6VD22ERWODSXMSNZWFiVKfnSaLuqqaRhS3Bcc5r/3uT/sfMXmmR+mDu29/n
+	DNFBpgjKlW0/oonS5T3tETbFSNVAc1RTE5xz1ee2OAExdrecK/2C/u9e7aktmBIQ
+	M1lbDUSARjCOgKt226SLup3TxD7k+0AZyiH4RNVsLn5l88gsRPehW1RUdhSJzK3J
+	BFZ8LGkFxSjaNK0IqciaIJlIKM73vUxNf8C6Aj/lt8xnvHaEV3esiiGmlNjFRmRo
+	+3TVE5NVp73BXPiGZXWA==
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3v126m7ywe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Dec 2023 13:31:31 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8C93C10005F;
+	Thu, 21 Dec 2023 13:31:29 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 820AA2747C5;
+	Thu, 21 Dec 2023 13:31:29 +0100 (CET)
+Received: from localhost (10.252.25.159) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 21 Dec
+ 2023 13:31:27 +0100
+From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>,
+        Jessica Zhang <quic_jesszhan@quicinc.com>,
+        Sam
+ Ravnborg <sam@ravnborg.org>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre
+ Torgue <alexandre.torgue@foss.st.com>,
+        Yannick Fertre
+	<yannick.fertre@foss.st.com>,
+        Raphael Gallais-Pou
+	<raphael.gallais-pou@foss.st.com>,
+        Philippe Cornu
+	<philippe.cornu@foss.st.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Lad
+ Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Thierry Reding
+	<thierry.reding@gmail.com>
+CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v1 8/8] arm64: dts: st: add display support on stm32mp257f-ev
+Date: Thu, 21 Dec 2023 13:30:37 +0100
+Message-ID: <20231221123037.418851-9-raphael.gallais-pou@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20231221123037.418851-6-raphael.gallais-pou@foss.st.com>
+References: <20231221123037.418851-6-raphael.gallais-pou@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231221122535.GE17956@lst.de>
-X-Spam-Level: 
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -2.90
-X-Spamd-Result: default: False [-2.90 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_SEVEN(0.00)[9];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 BAYES_HAM(-2.10)[95.66%];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[]
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-21_05,2023-12-20_01,2023-05-22_02
 
-On Thu 21-12-23 13:25:35, Christoph Hellwig wrote:
-> On Thu, Dec 21, 2023 at 12:41:53PM +0100, Jan Kara wrote:
-> > But I'd note that the call stack depth of similarly called helper functions
-> > (with more to come later in the series) is getting a bit confusing. Maybe
-> > we should inline writeback_get_next() into its single caller
-> > writeback_get_folio() to reduce confusion a bit...
-> 
-> I just hacked that up based on the fully applied series and that looks
-> good to me.
+This patch enables the following IPs on stm32mp257f-ev :
+  * LTDC
+  * LVDS
+  * WSVGA LVDS panel (1024x600)
+  * Panel backlight
+  * Ilitek touchescreen
 
-Yeah, cleanup on top works for me so that you don't have to rebase.
+Signed-off-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
+---
+ arch/arm64/boot/dts/st/stm32mp257f-ev1.dts | 79 ++++++++++++++++++++++
+ 1 file changed, 79 insertions(+)
 
-								Honza
+diff --git a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
+index 0ea8e69bfb3d..ca2da988d91c 100644
+--- a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
++++ b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
+@@ -29,6 +29,43 @@ memory@80000000 {
+ 		reg = <0x0 0x80000000 0x1 0x0>;
+ 	};
+ 
++	panel_lvds: panel-lvds {
++		compatible = "edt,etml0700z9ndha", "panel-lvds";
++		enable-gpios = <&gpiog 15 GPIO_ACTIVE_HIGH>;
++		backlight = <&panel_lvds_backlight>;
++		status = "okay";
++
++		width-mm = <156>;
++		height-mm = <92>;
++		data-mapping = "vesa-24";
++
++		panel-timing {
++			clock-frequency = <54000000>;
++			hactive = <1024>;
++			vactive = <600>;
++			hfront-porch = <150>;
++			hback-porch = <150>;
++			hsync-len = <21>;
++			vfront-porch = <24>;
++			vback-porch = <24>;
++			vsync-len = <21>;
++		};
++
++		port {
++			lvds_panel_in: endpoint {
++				remote-endpoint = <&lvds_out0>;
++			};
++		};
++	};
++
++	panel_lvds_backlight: panel-lvds-backlight {
++		compatible = "gpio-backlight";
++		gpios = <&gpioi 5 GPIO_ACTIVE_HIGH>;
++		default-on;
++		default-brightness-level = <0>;
++		status = "okay";
++	};
++
+ 	reserved-memory {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+@@ -63,6 +100,15 @@ &i2c2 {
+ 	i2c-scl-falling-time-ns = <13>;
+ 	clock-frequency = <400000>;
+ 	status = "okay";
++
++	ili2511: ili2511@41 {
++		compatible = "ilitek,ili251x";
++		reg = <0x41>;
++		interrupt-parent = <&gpioi>;
++		interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
++		reset-gpios = <&gpiog 14 GPIO_ACTIVE_LOW>;
++		status = "okay";
++	};
+ };
+ 
+ &i2c8 {
+@@ -75,6 +121,39 @@ &i2c8 {
+ 	status = "disabled";
+ };
+ 
++&ltdc {
++	status = "okay";
++
++	port {
++		ltdc_ep0_out: endpoint {
++			remote-endpoint = <&lvds_in>;
++		};
++	};
++};
++
++&lvds {
++	status = "okay";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++			lvds_in: endpoint {
++				remote-endpoint = <&ltdc_ep0_out>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++			lvds_out0: endpoint {
++				remote-endpoint = <&lvds_panel_in>;
++			};
++		};
++	};
++};
++
+ &sdmmc1 {
+ 	pinctrl-names = "default", "opendrain", "sleep";
+ 	pinctrl-0 = <&sdmmc1_b4_pins_a>;
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.25.1
+
