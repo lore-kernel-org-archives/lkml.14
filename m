@@ -1,98 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731D352F67;
-	Thu, 21 Dec 2023 09:34:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D77B4D138;
+	Thu, 21 Dec 2023 09:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k2RzLsD9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703151248; x=1734687248;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=L+k5CS5sgC8pMM6kY4u78Belg2iE72BS8zZ13TBDiEs=;
-  b=k2RzLsD9anFS2xOvYcebFfeKXaDfc9nNThRLICBPlg8yiLXXs0+4m4wD
-   TgVO2MZ7XQguFD1ypxgEA6iW0yr0JVsi7nE3NXwAMwmAu7GRvCWFI0Btt
-   NB+WHjERNfoXEWGWxnRAAuOBfXLZv8wwyl+YbeZvVvT2QMoNEU+RR+jSq
-   gzx6tJbpLp2R8t7PTW17uenPfuE+YdoqukP5NGz4Z3S13n6oqDkJw/RGl
-   SIG7lLTbhxHcacvefEGaGZYqESrH6Jr8RA3/5UyTRq+iqG1f8S5Bx7UTm
-   UCClW4zjQJJqsoI6vzPk11chSSJ8sh1ojnTN2q6/n28b0RX2Qgn7bQkr0
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="3188687"
-X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="3188687"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 01:34:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="810918311"
-X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="810918311"
-Received: from inlubt0316.iind.intel.com ([10.191.20.213])
-  by orsmga001.jf.intel.com with ESMTP; 21 Dec 2023 01:34:00 -0800
-From: lakshmi.sowjanya.d@intel.com
-To: tglx@linutronix.de,
-	jstultz@google.com,
-	giometti@enneenne.com,
-	corbet@lwn.net,
-	linux-kernel@vger.kernel.org
-Cc: x86@kernel.org,
-	netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org,
-	andriy.shevchenko@linux.intel.com,
-	eddie.dong@intel.com,
-	christopher.s.hall@intel.com,
-	jesse.brandeburg@intel.com,
-	davem@davemloft.net,
-	alexandre.torgue@foss.st.com,
-	joabreu@synopsys.com,
-	mcoquelin.stm32@gmail.com,
-	perex@perex.cz,
-	linux-sound@vger.kernel.org,
-	anthony.l.nguyen@intel.com,
-	pandith.n@intel.com,
-	mallikarjunappa.sangannavar@intel.com,
-	thejesh.reddy.t.r@intel.com,
-	lakshmi.sowjanya.d@intel.com
-Subject: [RFC PATCH v2 10/10] ABI: pps: Add ABI documentation for Intel TIO
-Date: Thu, 21 Dec 2023 15:02:54 +0530
-Message-Id: <20231221093254.9599-11-lakshmi.sowjanya.d@intel.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20231221093254.9599-1-lakshmi.sowjanya.d@intel.com>
-References: <20231221093254.9599-1-lakshmi.sowjanya.d@intel.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="u64MZeWy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=eQNfhfsFjzJYZH5PnVQia77yspljqRwYnwLxrRqg9go=; b=u64MZeWyy0onASveXCvIqnXSiD
+	LGk90559UkYXU5K85QQi7++MG9hL64nCbLSYSgi548v/oMJRDdXKK3XV2Hb8L/yM8p/ejDNgATl1e
+	G3GXqSfxKvxVCWtmW3VZlRoZT6s2xKEac7KM6FYTX9or6sSmBplv5ZNs2tkggUvTF7PU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rGFRx-003Ulg-T5; Thu, 21 Dec 2023 10:34:41 +0100
+Date: Thu, 21 Dec 2023 10:34:41 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Rob Herring <robh@kernel.org>
+Cc: Christian Marangi <ansuelsmth@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Tobias Waldekranz <tobias@waldekranz.com>
+Subject: Re: [net-next PATCH v4 1/4] dt-bindings: net: phy: Document new LEDs
+ polarity property
+Message-ID: <42ddbe25-8acd-4959-ae84-269e943f7c84@lunn.ch>
+References: <20231215212244.1658-1-ansuelsmth@gmail.com>
+ <20231215212244.1658-2-ansuelsmth@gmail.com>
+ <20231220152209.GA229412-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231220152209.GA229412-robh@kernel.org>
 
-From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
+> I do worry this continues to evolve until we've re-created the pinctrl 
+> binding...
 
-Document sysfs interface for Intel Timed I/O PPS driver
+Hi Rob
 
-Signed-off-by: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
----
- Documentation/ABI/testing/sysfs-platform-pps-tio | 7 +++++++
- 1 file changed, 7 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-platform-pps-tio
+What is you opinion of the pinctrl binding? Should we just copy parts
+of it?
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-pps-tio b/Documentation/ABI/testing/sysfs-platform-pps-tio
-new file mode 100644
-index 000000000000..d8be3a6d5795
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-platform-pps-tio
-@@ -0,0 +1,7 @@
-+What:		/sys/devices/platform/INTCxxxx/enable
-+Date:		January 2024
-+KernelVersion	6.8
-+Contact:	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
-+Description:
-+		(RW) Enable or disable PPS TIO generator output, read to
-+		see the status of hardware(Enabled/Disabled).
--- 
-2.35.3
-
+     Andrew
