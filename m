@@ -1,123 +1,196 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF6B3398E;
-	Thu, 21 Dec 2023 09:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9882B41235
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 09:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Lv/x3rDs"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BL6IGer019052;
-	Thu, 21 Dec 2023 01:28:53 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=pfpt0220; bh=v99kQxAd
-	tpEt3M6lqd22NVNMCYcE19GlNI8tMkZFstg=; b=Lv/x3rDsY5XWTIraMr6ncsZH
-	VXM6VqEAs3HhmIP171zhZGRFEK/wBeDye6mfSDtVxdaFHpDk3OamMKx8HX+Cu3Pi
-	nH5+QGFfwfMy+rPjn9LKYXSb5QZ2upqf1k8921cNM8HBys0fpxkbIZEOwaAvGUZ5
-	/jmsNTjPJ73KOAJ52TpyQ+Xgj/lobiRMl0/ZRflWF6ICuakdWOzL5Hr76O6wW2F/
-	AQPa7nQhnjDTc8LBt8Pmwhkb+4TI68JDmD48N9bAakROWeV+F/hWoE//Sh1vY9iI
-	ry2p5ZYUr77VJSzAZnDWgfXqHdEkw3InRrNt0HuKcvG/o3uX+cQkkujQ5X+s4A==
-Received: from dc5-exch01.marvell.com ([199.233.59.181])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3v4fyr13xm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-	Thu, 21 Dec 2023 01:28:52 -0800 (PST)
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 21 Dec
- 2023 01:28:51 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
- Transport; Thu, 21 Dec 2023 01:28:51 -0800
-Received: from ubuntu-PowerEdge-T110-II.sclab.marvell.com (unknown [10.106.27.86])
-	by maili.marvell.com (Postfix) with ESMTP id CF3173F7048;
-	Thu, 21 Dec 2023 01:28:50 -0800 (PST)
-From: Shinas Rasheed <srasheed@marvell.com>
-To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <hgani@marvell.com>, <vimleshk@marvell.com>, <sedara@marvell.com>,
-        <srasheed@marvell.com>, <egallen@redhat.com>, <mschmidt@redhat.com>,
-        <pabeni@redhat.com>, <kuba@kernel.org>, <horms@kernel.org>,
-        <wizhao@redhat.com>, <kheib@redhat.com>, <konguyen@redhat.com>
-Subject: [PATCH net-next v1 0/8] add octeon_ep_vf driver
-Date: Thu, 21 Dec 2023 01:28:36 -0800
-Message-ID: <20231221092844.2885872-1-srasheed@marvell.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OZ9rk4li"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1703150954;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Q6K90sRODmbMWwtU9tNxvUv67L4upvPo7RF/ZdrIftQ=;
+	b=OZ9rk4li7MLtDlacO3QfI2asB8MYFHCNUSgp145M6lgiFl8/KtWcuqxLNl97ypue84urB4
+	BS0V78x6z/gZm1tVdJP/IIfHFFfLJf0i0mWg8VKY0jZbllpUSf/JqtG68OFt5KK0h5+N5X
+	JPhsBN3XzPcrDGpDo6s9ZTKJhJxO3DQ=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-124-VX3mDQWMMHuPI-6PVJCIUw-1; Thu, 21 Dec 2023 04:29:12 -0500
+X-MC-Unique: VX3mDQWMMHuPI-6PVJCIUw-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-40c691ffb32so4934005e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 01:29:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703150951; x=1703755751;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q6K90sRODmbMWwtU9tNxvUv67L4upvPo7RF/ZdrIftQ=;
+        b=rPvU1PjARRIsoeii5Gt/7z8W7MZkCtYtgm9rBB91ROpKQFA8js02CJriO5hwV6Hx80
+         ODQaHe1GfidWExLF56J2MKpk6dSuazdECtalTNti6gp4Rcfd0T5HmWcrb9A/gx3gDwf5
+         kpZ2EJRBLh1TW1f89x9so7VRRujJjzjtObjyR6RA17LLKjhjgdfdiAE/3jYNwMjNms4W
+         LuWh6q0CvCKY0I7UwyYXqdwA0uzWI6rMpo/CSkjHrHktFFH1x0SCmlgJKuvqnMAeE3x+
+         UQtq3z5dRHgqcnLYaHvouQvyVQI20KdaYjYgRQcIqawRhmJYW04y+CnQKw8bmoFu4d/Y
+         LBVw==
+X-Gm-Message-State: AOJu0YzZNhENyrfCICYvrLXaWAEkLsA5BEWXECxxdPWgCbw+6jHsy3kL
+	SeJ7lZbd4vIBAONcjC4xTegDK9XS+hBeeZbCjTpOIMktJSTOyzC+/H9wderkMgiXhnpARsktlbQ
+	ArG6i+L0fEhmxlyt9cgHRxXYa
+X-Received: by 2002:a05:600c:714:b0:40c:708b:cf3c with SMTP id i20-20020a05600c071400b0040c708bcf3cmr361268wmn.48.1703150951046;
+        Thu, 21 Dec 2023 01:29:11 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHrKvcg5mOUfP/Ss7z7G6/twkyy79D97a8tGWQva5Ve1rkclRMtSNtdCjUOZhjwCZ+O4i4aZw==
+X-Received: by 2002:a05:600c:714:b0:40c:708b:cf3c with SMTP id i20-20020a05600c071400b0040c708bcf3cmr361256wmn.48.1703150950601;
+        Thu, 21 Dec 2023 01:29:10 -0800 (PST)
+Received: from [10.32.64.237] (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id fm13-20020a05600c0c0d00b0040b37f107c4sm2664041wmb.16.2023.12.21.01.29.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Dec 2023 01:29:10 -0800 (PST)
+Message-ID: <71f2ceb0-ee76-4832-ace5-24403ba54283@redhat.com>
+Date: Thu, 21 Dec 2023 10:29:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: DE6Jo0w6wJOuWpOLhhIXLwXbE3f1lhEm
-X-Proofpoint-ORIG-GUID: DE6Jo0w6wJOuWpOLhhIXLwXbE3f1lhEm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 04/40] mm/rmap: introduce and use
+ hugetlb_try_dup_anon_rmap()
+To: Matthew Wilcox <willy@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins <hughd@google.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Yin Fengwei <fengwei.yin@intel.com>,
+ Mike Kravetz <mike.kravetz@oracle.com>, Muchun Song <muchun.song@linux.dev>,
+ Peter Xu <peterx@redhat.com>
+References: <20231220224504.646757-1-david@redhat.com>
+ <20231220224504.646757-5-david@redhat.com>
+ <ZYPBt6v0JY3QI3QW@casper.infradead.org>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <ZYPBt6v0JY3QI3QW@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This driver implements networking functionality of Marvell's Octeon
-PCI Endpoint NIC VF.
+On 21.12.23 05:40, Matthew Wilcox wrote:
+> On Wed, Dec 20, 2023 at 11:44:28PM +0100, David Hildenbrand wrote:
+>> hugetlb rmap handling differs quite a lot from "ordinary" rmap code.
+>> For example, hugetlb currently only supports entire mappings, and treats
+>> any mapping as mapped using a single "logical PTE". Let's move it out
+>> of the way so we can overhaul our "ordinary" rmap.
+>> implementation/interface.
+>>
+>> So let's introduce and use hugetlb_try_dup_anon_rmap() to make all
+>> hugetlb handling use dedicated hugetlb_* rmap functions.
+>>
+>> Add sanity checks that we end up with the right folios in the right
+>> functions.
+>>
+>> Note that is_device_private_page() does not apply to hugetlb.
+>>
+>> Reviewed-by: Yin Fengwei <fengwei.yin@intel.com>
+>> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+> 
+> Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> 
 
-This driver support following devices:
- * Network controller: Cavium, Inc. Device b203
- * Network controller: Cavium, Inc. Device b403
- * Network controller: Cavium, Inc. Device b103
- * Network controller: Cavium, Inc. Device b903
- * Network controller: Cavium, Inc. Device ba03
- * Network controller: Cavium, Inc. Device bc03
- * Network controller: Cavium, Inc. Device bd03
+Thanks!
 
-Shinas Rasheed (8):
-  octeon_ep_vf: Add driver framework and device initialization
-  octeon_ep_vf: add hardware configuration APIs
-  octeon_ep_vf: add VF-PF mailbox communication.
-  octeon_ep_vf: add Tx/Rx ring resource setup and cleanup
-  octeon_ep_vf: add support for ndo ops
-  octeon_ep_vf: add Tx/Rx processing and interrupt support
-  octeon_ep_vf: add ethtool support
-  octeon_ep_vf: update MAINTAINERS
+>> +static inline bool folio_needs_cow_for_dma(struct vm_area_struct *vma,
+>> +					  struct folio *folio)
+> 
+> I particularly like it that you introduced this.
 
- .../device_drivers/ethernet/index.rst         |    1 +
- .../ethernet/marvell/octeon_ep_vf.rst         |   24 +
- MAINTAINERS                                   |    9 +
- drivers/net/ethernet/marvell/Kconfig          |    1 +
- drivers/net/ethernet/marvell/Makefile         |    1 +
- .../net/ethernet/marvell/octeon_ep_vf/Kconfig |   19 +
- .../ethernet/marvell/octeon_ep_vf/Makefile    |   10 +
- .../marvell/octeon_ep_vf/octep_vf_cn9k.c      |  488 +++++++
- .../marvell/octeon_ep_vf/octep_vf_cnxk.c      |  500 +++++++
- .../marvell/octeon_ep_vf/octep_vf_config.h    |  160 +++
- .../marvell/octeon_ep_vf/octep_vf_ethtool.c   |  307 ++++
- .../marvell/octeon_ep_vf/octep_vf_main.c      | 1231 +++++++++++++++++
- .../marvell/octeon_ep_vf/octep_vf_main.h      |  338 +++++
- .../marvell/octeon_ep_vf/octep_vf_mbox.c      |  430 ++++++
- .../marvell/octeon_ep_vf/octep_vf_mbox.h      |  166 +++
- .../marvell/octeon_ep_vf/octep_vf_regs_cn9k.h |  154 +++
- .../marvell/octeon_ep_vf/octep_vf_regs_cnxk.h |  162 +++
- .../marvell/octeon_ep_vf/octep_vf_rx.c        |  511 +++++++
- .../marvell/octeon_ep_vf/octep_vf_rx.h        |  224 +++
- .../marvell/octeon_ep_vf/octep_vf_tx.c        |  332 +++++
- .../marvell/octeon_ep_vf/octep_vf_tx.h        |  276 ++++
- 21 files changed, 5344 insertions(+)
- create mode 100644 Documentation/networking/device_drivers/ethernet/marvell/octeon_ep_vf.rst
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/Kconfig
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/Makefile
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_cn9k.c
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_cnxk.c
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_config.h
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_ethtool.c
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.h
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_mbox.c
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_mbox.h
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_regs_cn9k.h
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_regs_cnxk.h
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_rx.c
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_rx.h
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.c
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.h
+And a later patch even removes page_needs_cow_for_dma() :)
+
+
+A note that we have one remaining user of page_maybe_dma_pinned(). 
+Instead of converting that code to folios, we should probably just 
+remove that pte_is_pinned() handling completely: it's inconsistent (only 
+checks PTEs) and cannot handle concurrent GUP-fast. It's a leftover from 
+the COW issues we had before PageAnonExclusive. [I've had patch lying 
+around to do that for a long time, but never sent it]
+
+> 
+>> +static inline int hugetlb_try_dup_anon_rmap(struct folio *folio,
+>> +		struct vm_area_struct *vma)
+>> +{
+>> +	VM_WARN_ON_FOLIO(!folio_test_hugetlb(folio), folio);
+>> +	VM_WARN_ON_FOLIO(!folio_test_anon(folio), folio);
+>> +
+>> +	if (PageAnonExclusive(&folio->page)) {
+> 
+> I wonder if we need a folio_test_hugetlb_anon_exclusive() to make this
+> a little more ergonomic?
+> 
+>> +		if (unlikely(folio_needs_cow_for_dma(vma, folio)))
+>> +			return -EBUSY;
+>> +		ClearPageAnonExclusive(&folio->page);
+> 
+> ... and set/clear variants.
+> 
+
+I thought about that as well, and even going a step further and instead 
+of having PageAnonExclusive checks outside rmap code, have something 
+like the following instead:
+
+hugetlb_test_anon_rmap_exclusive()
+folio_test_anon_rmap_exclusive_[pte|pmd]()
+
+I added that to my TODO list, because it results again in a bigger 
+patchset (especially also in GUP).
 
 -- 
-2.25.1
+Cheers,
+
+David / dhildenb
 
