@@ -1,82 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07A93D386
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 19:31:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5C93D3A7
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 19:31:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kQ+y5J++"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36FEDC433C7;
-	Tue,  9 Jan 2024 19:31:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704828713;
-	bh=DuKYBO+7w/uc0uTUCzs21KjanFoIiR9zDfYC6/3epKk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kQ+y5J++5lIKysrognLtCk1y9SKnX06Cu3DwizEQODrE63G8NAe2tSS/YyM3wKEEB
-	 VApxUUSgVrzygzq2WPp8MltbGWee+lViP1Y+s0M2ImFoxVRSEsYIqfx87kjm2F7qLO
-	 l8MmMpTLs/Mn2PbAkCqmEFYWkKOTvugukWXQAI5GGEKvpOa/f9DloA8AqHRXXpsBAe
-	 Fd0MpmHfmFbhCz4xtAYXQ65TwLOZj6+2C9riQPOWOrV8MC68WawfUrdAs15ytjOQ8j
-	 kEKdEbijsgITbzHaBmNtyCpAPE9w7vDjhk1YRLUoSkMDNdfq+WIZ2CcAUh/BD099Js
-	 gZy9Eb4wT+UeQ==
-Date: Tue, 9 Jan 2024 11:31:51 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Dimitri John Ledkov <dimitri.ledkov@canonical.com>
-Cc: peterz@infradead.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] objtool: make objtool SLS validation fatal when
- building with CONFIG_SLS=y
-Message-ID: <20240109193151.nkmn5yfv24tfmodd@treble>
-References: <20231213134303.2302285-1-dimitri.ledkov@canonical.com>
- <20231213134303.2302285-3-dimitri.ledkov@canonical.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XIbX3DKg"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3bc4f49a3b6so3696352b6e.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 11:31:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704828714; x=1705433514; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PBnpa/7xlrSbnA3Nm7BMZMZEN1FuSc8e9znQIZPVWWQ=;
+        b=XIbX3DKgtiILJc491zm91AZ4qAoZVsez7vEuHE5HvFamGShCGT5ugNYXpqnwsVdGoe
+         8SW5FN+Kb+1G8J0bdpf2wwfjl/BirTmPzWQGa73LLDAqRMdS0LsDnF/RNocG0UfiHCCk
+         +rsNc75+nDJJPzlKcXZlfOiuJvNMbkix6yunbvdBTO+kiCwBUlZc+F1Gv0RGnCrsLntk
+         fwfLWqzmqbkz1OkchYwhC3aFDaGfEn7XBDVhI5rK0d5z9pdEPtfsbn78hSpb+6h8/csJ
+         xmXB4Ge6iAWVTwYsTpsEQIDESDz7TpFPugF9Cks9vHqbhqIpFbx2eK0bPI/HuU3Udxnv
+         OH3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704828714; x=1705433514;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PBnpa/7xlrSbnA3Nm7BMZMZEN1FuSc8e9znQIZPVWWQ=;
+        b=eflbvygfiZBTDHrU+6oENhZxk6dAktdlBYEQI/GANtzXLTAoB5TuaMrR4n3VR94g2C
+         VJ7cZKqNDWs6S8tPEeDY8ubAEuNDmp9TktKG1WQat3SJu8DSRLr+d/8S9f063f7jnmO1
+         +ffZXmW3ZFHTSsJzBjnhuyLC60qV7FlEwq079CXClAkmFZtoIIJ4Ndz53btZHAYovr0y
+         HluCa2Do/dDAYlzSnUSuuUXw6r/FHE7PC/IAVhXPGrDWxcQRPCUQaYt9gBli///nwUOg
+         wxaD05u0BnNDe9g1h5iZxqV692IQPP7xj9Yu6ZTgGttAdlsSZPe9GWRIdFIaa2orE3wM
+         tcpA==
+X-Gm-Message-State: AOJu0YxVXk2a7C3AxBQ0BC5HeymAGyp2IWZMWOB+OCAtxhCpNs3zQR8x
+	CKvHNP7Y9r/ch77AU8j/cEQ=
+X-Google-Smtp-Source: AGHT+IH7zrV9oxl6TmkXukuqZboCYoT7R9fSIVyaATb0QfvPmgkY/BRdMdgTOF5M+7EcvrEZFU4bDg==
+X-Received: by 2002:a54:4709:0:b0:3bc:3c4a:44b with SMTP id k9-20020a544709000000b003bc3c4a044bmr7023972oik.106.1704828714635;
+        Tue, 09 Jan 2024 11:31:54 -0800 (PST)
+Received: from localhost.localdomain (c-67-174-241-145.hsd1.ca.comcast.net. [67.174.241.145])
+        by smtp.gmail.com with ESMTPSA id w2-20020a62c702000000b006d9a0059a9asm2173490pfg.172.2024.01.09.11.31.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jan 2024 11:31:54 -0800 (PST)
+From: Yang Shi <shy828301@gmail.com>
+To: oliver.sang@intel.com,
+	riel@surriel.com,
+	fengwei.yin@intel.com,
+	willy@infradead.org,
+	cl@linux.com,
+	ying.huang@intel.com,
+	akpm@linux-foundation.org
+Cc: shy828301@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [PATCH 1/2] mm: mmap: no need to call khugepaged_enter_vma() for stack
+Date: Wed, 20 Dec 2023 22:59:42 -0800
+Message-Id: <20231221065943.2803551-1-shy828301@gmail.com>
+X-Mailer: git-send-email 2.39.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20231213134303.2302285-3-dimitri.ledkov@canonical.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Dec 13, 2023 at 01:43:01PM +0000, Dimitri John Ledkov wrote:
-> Make objtool SLS validation fatal when building with CONFIG_SLS=y,
-> currently it is a build.log warning only.
-> 
-> This is a standalone patch, such that if regressions are identified
-> (with any config or toolchain configuration) it can be reverted until
-> relevant identified code is fixed up or otherwise
-> ignored/silecned/marked as safe.
-> 
-> Signed-off-by: Dimitri John Ledkov <dimitri.ledkov@canonical.com>
-> ---
->  tools/objtool/check.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> index 15df4afae2..9709f037f1 100644
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -4500,7 +4500,9 @@ static int validate_sls(struct objtool_file *file)
->  		}
->  	}
->  
-> -	return warnings;
-> +	/* SLS is an optional security safety feature, make it fatal
-> +	 * to ensure no new code is introduced that fails SLS */
-> +	return -warnings;
->  }
+From: Yang Shi <yang@os.amperecomputing.com>
 
-I'm thinking this patch (and the next one) go too far, yet not far
-enough :-)
+We avoid allocating THP for temporary stack, even tnough
+khugepaged_enter_vma() is called for stack VMAs, it actualy returns
+false.  So no need to call it in the first place at all.
 
-Too far, because there are still some outstanding randconfig warnings
-which need to be fixed.
+Signed-off-by: Yang Shi <yang@os.amperecomputing.com>
+---
+ mm/mmap.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Not far enough, because there are other warnings which might also have
-disastrous effects.  For example, even the "unreachable warning" could
-mean missing SLS or retpoline mitigations.
-
-So I'm thinking we should try to get as many of the outstanding warnings
-fixed as we can, and then flip the CONFIG_WERROR switch for all
-non-fatal warnings.
-
+diff --git a/mm/mmap.c b/mm/mmap.c
+index b78e83d351d2..2ff79b1d1564 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -2046,7 +2046,6 @@ static int expand_upwards(struct vm_area_struct *vma, unsigned long address)
+ 		}
+ 	}
+ 	anon_vma_unlock_write(vma->anon_vma);
+-	khugepaged_enter_vma(vma, vma->vm_flags);
+ 	mas_destroy(&mas);
+ 	validate_mm(mm);
+ 	return error;
+@@ -2140,7 +2139,6 @@ int expand_downwards(struct vm_area_struct *vma, unsigned long address)
+ 		}
+ 	}
+ 	anon_vma_unlock_write(vma->anon_vma);
+-	khugepaged_enter_vma(vma, vma->vm_flags);
+ 	mas_destroy(&mas);
+ 	validate_mm(mm);
+ 	return error;
 -- 
-Josh
+2.41.0
+
