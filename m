@@ -1,17 +1,17 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8A759910
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9EC59927
 	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 16:10:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F87BC433C8;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B51F4C433BF;
 	Thu, 21 Dec 2023 16:10:00 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rGLdY-000000041J3-0WLL;
+	id 1rGLdY-000000041K3-31gc;
 	Thu, 21 Dec 2023 11:11:04 -0500
-Message-ID: <20231221161103.912510492@goodmis.org>
+Message-ID: <20231221161104.501992954@goodmis.org>
 User-Agent: quilt/0.67
-Date: Thu, 21 Dec 2023 11:10:30 -0500
+Date: Thu, 21 Dec 2023 11:10:32 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -21,8 +21,8 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
  Vincent Donnefort <vdonnefort@google.com>,
  Kent Overstreet <kent.overstreet@gmail.com>
-Subject: [for-next][PATCH 06/16] ring-buffer: Clear pages on error in ring_buffer_subbuf_order_set()
- failure
+Subject: [for-next][PATCH 08/16] ring-buffer: Make sure the spare sub buffer used for reads has same
+ size
 References: <20231221161024.478795180@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -34,11 +34,12 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-On failure to allocate ring buffer pages, the pointer to the CPU buffer
-pages is freed, but the pages that were allocated previously were not.
-Make sure they are freed too.
+Now that the ring buffer specifies the size of its sub buffers, they all
+need to be the same size. When doing a read, a swap is done with a spare
+page. Make sure they are the same size before doing the swap, otherwise
+the read will fail.
 
-Link: https://lore.kernel.org/linux-trace-kernel/20231219185629.179352802@goodmis.org
+Link: https://lore.kernel.org/linux-trace-kernel/20231219185629.763664788@goodmis.org
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
@@ -47,24 +48,47 @@ Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
 Cc: Vincent Donnefort <vdonnefort@google.com>
 Cc: Kent Overstreet <kent.overstreet@gmail.com>
-Fixes: f9b94daa542a ("tracing: Set new size of the ring buffer sub page")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ring_buffer.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/trace/trace.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index c2afcf98ea91..3c11e8e811ed 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -5927,6 +5927,7 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- 	for_each_buffer_cpu(buffer, cpu) {
- 		if (!cpu_buffers[cpu])
- 			continue;
-+		rb_free_cpu_buffer(cpu_buffers[cpu]);
- 		kfree(cpu_buffers[cpu]);
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 711095aa731d..4dcdc30aa110 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -7582,6 +7582,7 @@ struct ftrace_buffer_info {
+ 	struct trace_iterator	iter;
+ 	void			*spare;
+ 	unsigned int		spare_cpu;
++	unsigned int		spare_size;
+ 	unsigned int		read;
+ };
+ 
+@@ -8301,6 +8302,15 @@ tracing_buffers_read(struct file *filp, char __user *ubuf,
+ 
+ 	page_size = ring_buffer_subbuf_size_get(iter->array_buffer->buffer);
+ 
++	/* Make sure the spare matches the current sub buffer size */
++	if (info->spare) {
++		if (page_size != info->spare_size) {
++			ring_buffer_free_read_page(iter->array_buffer->buffer,
++						   info->spare_cpu, info->spare);
++			info->spare = NULL;
++		}
++	}
++
+ 	if (!info->spare) {
+ 		info->spare = ring_buffer_alloc_read_page(iter->array_buffer->buffer,
+ 							  iter->cpu_file);
+@@ -8309,6 +8319,7 @@ tracing_buffers_read(struct file *filp, char __user *ubuf,
+ 			info->spare = NULL;
+ 		} else {
+ 			info->spare_cpu = iter->cpu_file;
++			info->spare_size = page_size;
+ 		}
  	}
- 	kfree(cpu_buffers);
+ 	if (!info->spare)
 -- 
 2.42.0
 
