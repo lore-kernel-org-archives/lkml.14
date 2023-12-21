@@ -1,126 +1,153 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D753D967
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 09:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF2A8446A2
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 09:07:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CMm/Rz/2"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a2698cff486so63309566b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 01:06:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703149577; x=1703754377; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BJKWL/RLIYC2dGYF1fLVc/aszWdNVo8voUMzbTBDZ58=;
-        b=CMm/Rz/2puNkh+0915iRj/slkmGrqS+fYKWn4+FQ+V/jY7WW9ET+Nd8TtqV7UVvguU
-         pGtQDR03S9tlN068iUzW8FqIDn2WkVP2UBijQojjlXcfMtv7i4kUvDz1hl2NJwnIokLi
-         xuYduDPoe+Upy+QQqDc9KSU51wXV++FSpNnoHMgHC2MHmK0UUZImGqDvz00DaeoeDLXP
-         SYrpfBnoNaXDiZ3foOBHZ/kFtimr1vFg/Td2g0BuwoI4kjdQirxWQOUcl3pCHxeoFx2r
-         L0+55/Ge5n2Y4IOt9imfTCU4ZpCALDYzf6NzhiwqDOWxFO6VZyxMQO9CJFtmgMngMaRz
-         BA/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703149577; x=1703754377;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BJKWL/RLIYC2dGYF1fLVc/aszWdNVo8voUMzbTBDZ58=;
-        b=bOIWR0HSyiWySL7D8m/F+fEfxEVAVSNciSVlntc5J+s52/lao8SZxT9NPNIXfBX3e3
-         nITq9S5I5PeL1xqsEONbIgIEokHnNV29xSubKZB/LratPOxpbzx9bdm4mejTQ7Otyhuk
-         qS6YuWOPBpEqt2LXFcNYgrdobzqXltA17WwONgav095oSZc2M3eJavFu68YDEzaiGa6N
-         V8gFfe5oEhmynierGOZDHXhW1RMmT6dasA2ozqHUchs6Y4LkcOFv75XL5OKCRH64kl9U
-         /6tLscs9UoIPLJ+22o19DYxzvFDh6zaqySM+kfyADZGdzT0trbNEmouyF4mo2f3aKKMu
-         tKhg==
-X-Gm-Message-State: AOJu0YxE/V6qZVRNSmWmWDddfEN/9VP/y9nL5rh80rZ8T1MWtag/uI3V
-	c77RvQraH3l83xNuryCGWW7TIakoqVdfuVEENjVuLg==
-X-Google-Smtp-Source: AGHT+IEjzXAI9l8ThmSng/1YC2ArzsN5shZYFH3NNwUQsxizgtOfC4kqZ+E4j92s7lZXeaZhQnp6Jg==
-X-Received: by 2002:a17:906:1d:b0:a23:6ea2:167b with SMTP id 29-20020a170906001d00b00a236ea2167bmr1179519eja.204.1703149576985;
-        Thu, 21 Dec 2023 01:06:16 -0800 (PST)
-Received: from [192.168.0.22] ([78.10.206.178])
-        by smtp.gmail.com with ESMTPSA id lo27-20020a170906fa1b00b00a23365f1290sm715492ejb.218.2023.12.21.01.06.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Dec 2023 01:06:16 -0800 (PST)
-Message-ID: <05636f63-398c-4225-b638-1f87628e155d@linaro.org>
-Date: Thu, 21 Dec 2023 10:06:15 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b856BG6L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8BAAC433C8;
+	Thu, 21 Dec 2023 09:07:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703149626;
+	bh=e4HwI+rYcJHOJPcuJl4AqF12SZkaucHI/9Vovq6T6p8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=b856BG6L9vLS0sdCXBgb52Gt/Pt4sqc+2n2ncutFNWVGpa3KsxOb01pBpalzXQ/1m
+	 jPzxgTVD8CtRJTrcunmi7c3f0smXiR2+O2+uEx8e4M6iLXfvbb5PeHncqjArNYmclK
+	 lEKUemErrE0JOuQv5OQ9xNHh+Qy3T9Gsy0yT1Jg3SJOZ66xqjYMUJOzWqXk8hjsdE4
+	 p746EmlkTIaqEN54KIp2WjlFuCYvhi3LJ4ShAFuL+Qu8Jwa9OttanUZhwjCe8pY5pf
+	 Zbv4lpw8PgS2QweswLZ4Dn+i5+7Ads+HdObObzi9QCITFtlG5AZMKFw4Cv/AOaZ31I
+	 YuhgD45wOJ1Yw==
+Date: Thu, 21 Dec 2023 10:07:03 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Johan Jonker <jbx6244@gmail.com>
+Cc: hjc@rock-chips.com, heiko@sntech.de, andy.yan@rock-chips.com, 
+	maarten.lankhorst@linux.intel.com, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch, 
+	dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] drm/rockchip: rk3066_hdmi: drop custom fill_modes
+ hook
+Message-ID: <j2cpes3kyssj6cw34v5z6clef4buzb2j6srvmrniumbn2kptqx@ovf2yvhxlslr>
+References: <f86ec29f-194a-800d-0aaf-9e16e551b37d@gmail.com>
+ <410b116b-cb63-7ba7-3689-4f0832ab5796@gmail.com>
+ <evaq3yfbqf4gchsps2qoojemtii7tmcss24aruiuze5kkzlnhy@mih7rky7viqz>
+ <4aeef6df-2616-0741-00a3-6e45ec63f920@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dt-bindings: hwmon: ina2xx: Describe
- #io-channel-cells property
-Content-Language: en-US
-To: Michal Simek <michal.simek@amd.com>, linux-kernel@vger.kernel.org,
- monstr@monstr.eu, michal.simek@xilinx.com, git@xilinx.com
-Cc: Conor Dooley <conor+dt@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
- Jean Delvare <jdelvare@suse.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
- linux-hwmon@vger.kernel.org
-References: <6f3c57d08984c1978569d3918cb38eb295c0c67d.1703077926.git.michal.simek@amd.com>
- <aa303b9fe3116e7f98d6b72822f7f57694366db3.1703077926.git.michal.simek@amd.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <aa303b9fe3116e7f98d6b72822f7f57694366db3.1703077926.git.michal.simek@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="6x4c6jydyzhxy4vm"
+Content-Disposition: inline
+In-Reply-To: <4aeef6df-2616-0741-00a3-6e45ec63f920@gmail.com>
 
-On 20/12/2023 14:12, Michal Simek wrote:
-> There are two drivers in the Linux kernel. One is hwmon based and second
-> IIO. IIO version requires to define #io-channel-cells to operate.
-> 
-> Signed-off-by: Michal Simek <michal.simek@amd.com>
-> ---
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+--6x4c6jydyzhxy4vm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Krzysztof
+On Tue, Dec 19, 2023 at 04:40:12PM +0100, Johan Jonker wrote:
+>=20
+>=20
+> On 12/19/23 13:55, Maxime Ripard wrote:
+> > Hi,
+> >=20
+> > On Mon, Dec 18, 2023 at 04:49:06PM +0100, Johan Jonker wrote:
+> >> CRTC size validation for the display controller has been added with
+> >> Commit 8e140cb60270 ("drm/rockchip: vop: limit maximum resolution to
+> >> hardware capabilities"), so we can drop the custom fill_modes hook.
+> >>
+> >> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> >=20
+>=20
+> > I'm not sure those two are equivalent. CRTC and connectors usually have
+> > different requirements and capabilities, and thus different,
+> > supplementary, mode_valid/atomic_check implementations.
+>=20
+> Rockchip RK3066 CRTC and connector resolution max_output are equivalent.
+>=20
+> From Rockchip PX2 TRM V1.0.pdf page 17:
+> - Video Encoder
+>   Maximum frame rate is up to 30fps@1920x1080
+>=20
+> - Display Interface
+>   Support LCD or TFT interfaces up to 1920x1080
+>=20
+> - HDMI TX Interface
+>    HDMI version 1.4a, HDCP revision 1.4 and DVI version 1.0 compliant tra=
+nsmitter
+>    Supports DTV from 480i to 1080i/p HD resolution, and PC from VGA to UX=
+GA by LCDC0 or LCDC1 in RK PX2
 
+My point is that there's two limits: the CRTC and HDMI controller ones.
+You should put the CRTC ones in the CRTC driver, and the HDMI controller
+ones in the HDMI controller driver.
+
+If they are equivalent, great, it's going to filter out the same things, bu=
+t...
+
+> Compared to the drm_helper_probe_single_connector_modes() this function a=
+dded an extra max_output
+>=20
+> Checked in rockchip_drm_vop.c is:
+> https://lore.kernel.org/linux-rockchip/20230216102447.582905-2-s.hauer@pe=
+ngutronix.de/
+>=20
+> +	if (vop->data->max_output.width && mode->hdisplay > vop->data->max_outp=
+ut.width)
+> +		return MODE_BAD_HVALUE;
+> +
+> +	if (vop->data->max_output.height && mode->vdisplay > vop->data->max_out=
+put.height)
+> +		return MODE_BAD_VVALUE;
+>=20
+> For RK3066 VOP max_output:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/d=
+rivers/gpu/drm/rockchip/rockchip_vop_reg.c#n506
+>=20
+> This patch was made with HDMI in mind.
+>=20
+> 	.max_output =3D { 1920, 1080 },
+>=20
+> This first part was added by Heiko, but not was not part my patch that I =
+submitted:
+> -	if (maxX > 1920)
+> -		maxX =3D 1920;
+> -	if (maxY > 1080)
+> -		maxY =3D 1080;
+> -
+> -	return drm_helper_probe_single_connector_modes(connector, maxX, maxY);
+> -}
+>=20
+> Original patch:
+> https://patchwork.freedesktop.org/patch/msgid/20190330095639.14626-2-jbx6=
+244@gmail.com
+>=20
+> +static int
+> +rk3066_hdmi_probe_single_connector_modes(struct drm_connector *connector,
+> +					 uint32_t maxX, uint32_t maxY)
+> +{
+> +	return drm_helper_probe_single_connector_modes(connector, 1920, 1080);
+> +}
+>=20
+> Rockchip RK3066 CRTC and connector resolution max_output are equivalent.
+
+=2E.. a user / dev unfamiliar with the SoC won't have to go through that
+to figure out how it's handled, it will be obvious.
+
+Maxime
+
+--6x4c6jydyzhxy4vm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZYQANwAKCRDj7w1vZxhR
+xSAjAQC/cny6EDPS6Yo2LIqQuLPlGA1yohiqkZolkGVOCEB3rgEA+W93tTlZ5lV2
+ZZIvJUVxNMzYtlqJpZ9Tk7HKVNiPegk=
+=tcho
+-----END PGP SIGNATURE-----
+
+--6x4c6jydyzhxy4vm--
