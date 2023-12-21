@@ -1,201 +1,316 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2052.outbound.protection.outlook.com [40.107.220.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87FA81775B
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 07:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45732CCD5;
+	Thu, 21 Dec 2023 07:37:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TK12sFm4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703144251; x=1734680251;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=1tenrxPh5H+PfwvkT2Lthn4SEfWVg4aqiPGuKz+Aobo=;
-  b=TK12sFm4K8ysYPCKnyzPhB+68BkoSCPLoTZK6zBlVd+0rvA+vR+BAPpe
-   LA2RgFdaX8Z8jJrkTeqqvPe5xdlrvRpoo8Z+6kWx43WfyMBNvYBdhqehb
-   2V2K+O8JbjKWM9OaWiKWP8akKwc+wsZaUQ6Y2zMYQxvXaxSbFOS35Z0Gg
-   JZpz6fwkghuKipAuhy8X9XSCDwawbYyrBy0RJLCn9zNa2vM/MJzHywy12
-   2vtaHCZmBYYN1BvUeYh4JyuB87/Dg6jyt8IqaAnWiiHysmVRCQQ0vR7cc
-   oUfteGv6mcQeQ2LKcDGloYCVMdYOaqwPmtpnXgCr5n3Kyufe6K2p1SLmw
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="394825681"
-X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="394825681"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2023 23:37:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="769867879"
-X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="769867879"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orsmga007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 20 Dec 2023 23:37:30 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 20 Dec 2023 23:37:29 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 20 Dec 2023 23:37:29 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 20 Dec 2023 23:37:29 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 20 Dec 2023 23:37:28 -0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SMmWoVT2"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JGOZjl+gFNqveG29lyUSsblR028E8ILO3qhnLUq+rapoQ6/7ePv2MDdkZ30cw7KieEDT3TblR7lwsXR4/AC7vNAOcyn11+npvSNtwynVj2wz4eViPkL2xF95ablg2PrexwU/Xtg/VcbJMaaRY6orrO1rEQP8S/XVNaZtmmOCVlfx/HRh3KuBqpVBWCzhNAfysyPmpRfa5OhMQBhC0p+/+MVLovkKj0J79JI6CPcgctxVPWe84opAhgbGsvo/6ntSkIBfcNQrXLQTVR/Yp2WIm5umg4Kzv98payE6L19woZ5ib5GfeMveiSNZouKEFwUF48Q+yAAF0/aB5SxYZ8J2Xg==
+ b=E9f2AtxDNlVZTJU1GyH2xXLp2TWOEYu6Qv7SFwNO1iLil2OBNOGhJytWgDF5S7e+NNQ5JlRYB7JzuixiTir8HGIDgTYifMEFm0MYKyTAPHFj3dsF0TcGa+U3CCjDDDFZh07OYIavCcmQSxtDTkGA11MtI2PVfTy8lc9owiTEGBF3S34vrveXax9GzgMIilKYh7SoeYI+VIOs5Ds4YWu9iNsdlTr7OnL2O/P5oXAFiiucOFvYORARC3La/P8hzHed4mYhcMcJwW1NwtMmgbEL15wzXv7Pw3JEq4870BZv3Ml/8O99cNvQoSeHQy09DidB/Pr1h+HFd+y16SnnnTGmHA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bVIyDT9PuZqiCr4dQpCcJoUokXjt1L0eZ/Lt9BFf6xo=;
- b=YJKYeLpdFPKc+8vqRbCRrFpEKQEDVi+ZEMuZQhIO9EtXL8i2sjYZILxzZjYT37H3wFolcM1MlorgVbzhaBNr7v6MSpDJTDdaTzNxraD+/QK5YHmkq4OBCFYuoNDkleA5Bni+GTY925aok0rbyYJ1KVBZgsd0KPFLXUzYUtGZF+fILannUwyPIMMglFjsuw0DLCQBstZ3B6HSaif0tuFv3pBrSikqGnWuD3AytlwzslHJj73WfYfMZEBwOpy8l/84MZaIwvb/d45wFVcXKa/kUywkVSrxp7isJp1UKWrqb3oD7kjCAzLvloUhHqF9DiLOYa519dCfz5zGKl+Mgv/0gQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from DM8PR11MB5751.namprd11.prod.outlook.com (2603:10b6:8:12::16) by
- BL1PR11MB5416.namprd11.prod.outlook.com (2603:10b6:208:319::22) with
+ bh=iPqL8D8sIUEJdIE9QqRF4FLGLmz9V6QPJ3PtGhXMEUs=;
+ b=oJHAVPvU7U5mNGqokA5Mi9p7/6Q2Rj5Ajgau3+gzzsJP50/fDRFF5AG68MQ6YvGkABeDBnaIFxu6ODZxdoG7pcGoSuozduJsvaMZR8mKj5GUimb+QQuTnMMXUSHl6VlOAbb09Z2NjNSm5h/GpEQ9aIqCSIwH1b8+QPjb6LC19H1OfI/chyA62w+FtZmdyjrwqW4PhrKfFMc2EkAysKSZFo0WzTL6BttbwWCKbi1IP8QaJpBV6Uo8nCyPj3GXIF7MJOaqo1nDHCrJ9Y2roDgVmZQz0xa3+X8E9SyPGV1OPOh+blEo5TL/IO74LjthUR8M5G3Th58slfZC5HdPdeQBIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iPqL8D8sIUEJdIE9QqRF4FLGLmz9V6QPJ3PtGhXMEUs=;
+ b=SMmWoVT2nz1EOPyvm4KEOF64A03ERPiH83csBJmZ3bGkKBdpqSauuxbZmy0DYE2DbEjbqjHntCMp5WkIk024mezR4F+T9Ae6/fSqduWFy78wbjJcNb/7DQ8snNyDkkehlI0yhL7rd6+BfpTTFxH7N//hgrUs4Gv749EFNkeLHWk=
+Received: from MW4P223CA0013.NAMP223.PROD.OUTLOOK.COM (2603:10b6:303:80::18)
+ by CYYPR12MB8891.namprd12.prod.outlook.com (2603:10b6:930:c0::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.20; Thu, 21 Dec
- 2023 07:37:22 +0000
-Received: from DM8PR11MB5751.namprd11.prod.outlook.com
- ([fe80::da85:3d5:65fd:4a21]) by DM8PR11MB5751.namprd11.prod.outlook.com
- ([fe80::da85:3d5:65fd:4a21%7]) with mapi id 15.20.7113.016; Thu, 21 Dec 2023
- 07:37:22 +0000
-From: "Wang, Xiao W" <xiao.w.wang@intel.com>
-To: Song Shuai <songshuaishuai@tinylab.org>, "paul.walmsley@sifive.com"
-	<paul.walmsley@sifive.com>, "palmer@dabbelt.com" <palmer@dabbelt.com>,
-	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "andy.chiu@sifive.com"
-	<andy.chiu@sifive.com>, "greentime.hu@sifive.com" <greentime.hu@sifive.com>,
-	"conor.dooley@microchip.com" <conor.dooley@microchip.com>,
-	"guoren@kernel.org" <guoren@kernel.org>, "bjorn@rivosinc.com"
-	<bjorn@rivosinc.com>, "heiko@sntech.de" <heiko@sntech.de>,
-	"ruinland.tsai@sifive.com" <ruinland.tsai@sifive.com>
-CC: "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] riscv: vector: Check SR_SD before saving vstate
-Thread-Topic: [PATCH] riscv: vector: Check SR_SD before saving vstate
-Thread-Index: AQHaM9xUk1Gku3WWt0+1VAEzObUeIbCzVYuA
-Date: Thu, 21 Dec 2023 07:37:22 +0000
-Message-ID: <DM8PR11MB5751B02E235561D402D4C608B895A@DM8PR11MB5751.namprd11.prod.outlook.com>
-References: <20231221070449.1809020-1-songshuaishuai@tinylab.org>
-In-Reply-To: <20231221070449.1809020-1-songshuaishuai@tinylab.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM8PR11MB5751:EE_|BL1PR11MB5416:EE_
-x-ms-office365-filtering-correlation-id: eef68ef4-d4c5-467d-18b4-08dc01f7ab44
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zTdoL/9DeN7QHitz5b7/h7DRK4jcSYzG15vsTJtpmIy28lNFFDIi2KzkGBFuhPyy6oY396UZ4Zjk/p74ePXmPyOeftzuyiJ8FGduMYBLzbzZ4ySe4BQoU6dQzr390Rla0uK2HJuSjFHv9JVvMpLLw7zZ5XbF6sYfrJ9mZCavCBnwE2bNZByqPxKIUHc+JEWwfrzBVf2DHVBxU7DMvksfO2Yy1vfrDdsVuRDs8IhM057pdKKntKey4JzZh6OMdV+hQa9zXFhOq0yiQuFGah6IcC4dvx56FqvbmaE7Vb1WLqEdbIbQo+9IRRN/nCYFKJIUORF55TkRERfikt1f82B/qJKF6/kuFj/34m5Qf9Kwdr6T+x9+fes7w/RjIuIltWTyT8s337LYfdVDUm/4sgXqrAu+ePP1Fq/LUtTsI6q2tdKuClpggPHUlBqkSqCe+5qlmYOFIGxxbZ8ZehP1224IjL68napT9qEnMNoCxx819V6d+oSjZVqr7zge2zbkDtKxzjolrosJnSjxMbp4wH5IADYXBBtRQu+zR/2rYenav1xv0b9gWlaB+Z0HLhYTkVIB+ZzyfY0luJxCNRURVnxxNgZaxeNanJZpkkAMtjOYJi3C4RXh2lidrg5kWIZVWah4JcdrXo6pbTNH482y4b7r+A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR11MB5751.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(396003)(366004)(346002)(376002)(136003)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(26005)(9686003)(71200400001)(6506007)(7696005)(53546011)(122000001)(83380400001)(4326008)(7416002)(52536014)(8676002)(8936002)(41300700001)(2906002)(478600001)(316002)(5660300002)(110136005)(76116006)(66946007)(54906003)(64756008)(66446008)(66476007)(66556008)(82960400001)(86362001)(33656002)(38100700002)(38070700009)(921008)(55016003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?Windows-1252?Q?O+sdWBd1ZBdpa2EI3wu2LqL2lCjFkcvSPTx5zSpLrrAp/ffS9O1YTkdc?=
- =?Windows-1252?Q?Pq7jds4yezQ8hAhk7I3wFIL1Ij1MV6NX7cNhZmvoEeiF0zg/VJdOAL+K?=
- =?Windows-1252?Q?iXNCVTXMfYGORxHdvjdDUO9kMfn/jkQ8bJ3XpGxODmuYql5hgE3VtTeu?=
- =?Windows-1252?Q?7dtLQnr03GoRK6StSHIasTieYhLORq1Su81GhaIYFh1OqW9eZ2inJKds?=
- =?Windows-1252?Q?S7rxOLAizPS8OyLqGmuAgN+YYDSWwd6GrBD18LRvl0pzBPbl/kAifCFO?=
- =?Windows-1252?Q?rHebTXfgYN1x5/qr7iB+2zbNnkLvditqxHqXMlC2pbSgHeGFY3jvUXcp?=
- =?Windows-1252?Q?bD47N9bancLMCiTSzcTFrljNZRpkiWuJ4L1ycK/PepiN3pQlkEPi77Z7?=
- =?Windows-1252?Q?Hieirx0c3R22mrq0aQ3ti2G6uWFbCM9b4ppEzfk6HbAlbxWjJzLdnyfE?=
- =?Windows-1252?Q?avZsjNPo49yNx40qt2qOJaCWaiSVGIEQHgHHTBrrsnLF+OfPNTDY93Om?=
- =?Windows-1252?Q?1aUOoH2HOrYSyLq8/ldeQ59EHwB/WTatVytmjdqthOPhitVMqbtw0cbN?=
- =?Windows-1252?Q?WA3DAr5lPU/c7rLJVSWlwOUY6LGnu6Q6R0ZsebrepDfGY712QelI7Cpt?=
- =?Windows-1252?Q?QeJm11vTeblibN0/TJY7O1PoQocnA7Vp6CveI2LVIlJlqzPAeoz1DPvg?=
- =?Windows-1252?Q?o0uZroks6g7NORsKb8hxURjV2dK0f+ulg+tb5q2VIoyU2YuH09imcdfR?=
- =?Windows-1252?Q?g34gy9zxwHdgUvUyuQDRYhn4LlB1k9UXZdoPLIZCmMewsyWs0+R9ERxz?=
- =?Windows-1252?Q?ic/vOswCq04k/v/E4ab1yPCj3VTQW//SMosi+b7Sy63C+1fuoDtR/7U+?=
- =?Windows-1252?Q?/GFyT01v++v0DiHcnPXOZQ39yL5Gf/b0PQV+Z7uVqrCxRsDkDxtgnehu?=
- =?Windows-1252?Q?P/ZRXOo1t7M1b/JcdKeauVG2NabB8NXk1hKKSPCKHL1fC/l2cySYna8F?=
- =?Windows-1252?Q?w3UUQ3TA+96jrfnv1TQ9md9Ko2QrAisLPZ+PEjoGQWOfxrvMTfD0u415?=
- =?Windows-1252?Q?1XOsbA8SWWZvPJupFqgUTkXOmv/s4jwCm0UEA4v3qpwGtmG5rWcU9Xjd?=
- =?Windows-1252?Q?EH/LSDuilmyFqe2PmIIDoh7Rn0aCydEftbqCQpcfIBLb+pGyZfsRNY70?=
- =?Windows-1252?Q?SrYJuD0YsK4sbgFpxrBi/oV9Q+LW1Y7kV0kZ4NAwXewQ9Lj4v4Gykcjo?=
- =?Windows-1252?Q?j7ndmfaUEr0fQNVQKcWM2cd89RJCJjRLH9XGMOS7k554oq7F5H7d8S5f?=
- =?Windows-1252?Q?YOf61rgj22z+R66JOiqKTZMBGdpGvS6Hp8G647E/Q1O/CPIz9cjtsbkl?=
- =?Windows-1252?Q?NBBetKN9zSJYouHb63iHcDHx2opms5kAl9CyzKwpAQSUoGCoKLVIM7ag?=
- =?Windows-1252?Q?4fCP7zUiqmNXQsOtNX2h+hvqzfx1IIIUTv735Cc7F2ebFH+rCK2ow5HW?=
- =?Windows-1252?Q?IA3mdM6sPTrTKtWYnx+Ureq9AU08vJWkvBzeck7L/tnX5vxyFiXB81xV?=
- =?Windows-1252?Q?ll0XOGA2nz7NUtqjHcqUqTQRgovp5FOElbjLpOnRbGXqiBuXGhxMim51?=
- =?Windows-1252?Q?6J9wlyqKUgSCTfGYq2rvvqc+uz9hrDujQ0NqFrqQs3KXbUsTfJvoHoqk?=
- =?Windows-1252?Q?wn+kjrrtvzWM9ur2W/8HoQ6ixFWQxZtZ?=
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.38; Thu, 21 Dec
+ 2023 07:37:33 +0000
+Received: from CO1PEPF000044F8.namprd21.prod.outlook.com
+ (2603:10b6:303:80:cafe::84) by MW4P223CA0013.outlook.office365.com
+ (2603:10b6:303:80::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.20 via Frontend
+ Transport; Thu, 21 Dec 2023 07:37:32 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ CO1PEPF000044F8.mail.protection.outlook.com (10.167.241.198) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7113.18 via Frontend Transport; Thu, 21 Dec 2023 07:37:32 +0000
+Received: from SATLEXMB08.amd.com (10.181.40.132) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Thu, 21 Dec
+ 2023 01:37:31 -0600
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB08.amd.com
+ (10.181.40.132) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.32; Wed, 20 Dec
+ 2023 23:37:31 -0800
+Received: from vijendar-X570-GAMING-X.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.34
+ via Frontend Transport; Thu, 21 Dec 2023 01:37:25 -0600
+From: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+To: <broonie@kernel.org>, <vkoul@kernel.org>
+CC: <alsa-devel@alsa-project.org>, <Basavaraj.Hiregoudar@amd.com>,
+	<Sunil-kumar.Dommati@amd.com>, <pierre-louis.bossart@linux.intel.com>,
+	<vinod.koul@intel.com>, <venkataprasad.potturu@amd.com>, Vijendar Mukunda
+	<Vijendar.Mukunda@amd.com>, Liam Girdwood <lgirdwood@gmail.com>, "Jaroslav
+ Kysela" <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Peter Ujfalusi
+	<peter.ujfalusi@linux.intel.com>, Bard Liao
+	<yung-chuan.liao@linux.intel.com>, Ranjani Sridharan
+	<ranjani.sridharan@linux.intel.com>, Daniel Baluta <daniel.baluta@nxp.com>,
+	Kai Vehmanen <kai.vehmanen@linux.intel.com>, Rander Wang
+	<rander.wang@intel.com>, Jyri Sarha <jyri.sarha@intel.com>, Curtis Malainey
+	<cujomalainey@chromium.org>, "open list:SOUND - SOC LAYER / DYNAMIC AUDIO
+ POWER MANAGEM..." <linux-sound@vger.kernel.org>, open list
+	<linux-kernel@vger.kernel.org>, "moderated list:SOUND - SOUND OPEN FIRMWARE
+ (SOF) DRIVERS" <sound-open-firmware@alsa-project.org>
+Subject: [PATCH 08/12] ASoC: SOF: amd: Add Soundwire DAI configuration support for AMD platforms
+Date: Thu, 21 Dec 2023 13:05:54 +0530
+Message-ID: <20231221073558.3181911-9-Vijendar.Mukunda@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231221073558.3181911-1-Vijendar.Mukunda@amd.com>
+References: <20231221073558.3181911-1-Vijendar.Mukunda@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR11MB5751.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eef68ef4-d4c5-467d-18b4-08dc01f7ab44
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Dec 2023 07:37:22.1350
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044F8:EE_|CYYPR12MB8891:EE_
+X-MS-Office365-Filtering-Correlation-Id: c11d4c3e-4c01-46c2-c138-08dc01f7b166
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	zl3+WeUYdqYcvWqlZLKjEB5JdV8IE4CnI7ulcaqb6wo4tuKz6lTEVYyWOoQIimAWTcNGr14nEO6N5RFLzQZQfWAfJcYXOn8yyvgUI4uiPLqFrSD5QHrKZ2U3thuoivGikUcJbqcqhjSms/MfZi9uyoPhkMtBZPFG2i+E4dJd2FY6ynw3NbHXUXmet9tmEIku9rni3QlK2Eprv2V6y3yBDFRE9gu/TTq0ES3V/1XoZY8wp04u+A36Wu1j5KcbqiDumP0yDD24IUkudiimUSwNM1qxRJi1Y3yrPJ/FMH+/sdr6riljSKrF/MrDqSjGeWV3MLyxY4SJ4B3F9/WGWi7LOutQb2YlDdCH3PgxDjAmWGYnh8sE0pFbcGt2MLSuhJGfU3gitLU4RqUmwRiMxXiIlDJZOn4+dSHAWDKGuu2HouMdMiDy7eQeyKAkNvG2mn/aRm1Gl4jZk3SiUd3J+Hsr+CJZCQxMOzl8BlzlmKAhY8Qtg7wHrP5uT1f3T14DDviz8y/Sm6id2m8OnRnxWkPRHTngx8rs7a5Gpc9x40mqEBZAMKXkCul1Y4OcM9EnqSl2hkxZLf/iWHdNF6PWNkocG9adURG4HysSJMASyiEyCjb3IhUEMChtiSFbTNrtqYz16Z7joYfcIJNVqjtv6e7Ka8j0QD//m0X4MvcZjBySI9PESvinCSBAfGfJxw0Q8fP4WAwmpDJETqFsEhry5nrhnEvf3QJE1hFte4u3oSM8RGtmx3HwdYNg324Hl8vZHiAkSZrkcG1llQHZalaY2vU2ow==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(376002)(136003)(39860400002)(396003)(230922051799003)(82310400011)(451199024)(64100799003)(1800799012)(186009)(36840700001)(46966006)(40470700004)(40480700001)(40460700003)(336012)(1076003)(7696005)(6666004)(426003)(2616005)(26005)(82740400003)(83380400001)(81166007)(356005)(2906002)(86362001)(36756003)(41300700001)(36860700001)(8936002)(110136005)(8676002)(5660300002)(47076005)(7416002)(4326008)(478600001)(70206006)(54906003)(70586007)(316002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Dec 2023 07:37:32.2900
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Dy7Zmvf4lsGGrgJz5AcaQulHTM36cqJZTOIKtBK0pl1/Tenz/Sq31Q8i7mQzUJ4SsWq56quaXKA3JuMm7o98LA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5416
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c11d4c3e-4c01-46c2-c138-08dc01f7b166
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000044F8.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8891
 
+Add support for configuring AMD Soundwire DAI from topology.
 
+Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+---
+ include/sound/sof/dai-amd.h     |  7 ++++++
+ include/sound/sof/dai.h         |  2 ++
+ include/uapi/sound/sof/tokens.h |  4 ++++
+ sound/soc/sof/ipc3-pcm.c        | 25 +++++++++++++++++++++
+ sound/soc/sof/ipc3-topology.c   | 40 +++++++++++++++++++++++++++++++++
+ sound/soc/sof/sof-audio.h       |  1 +
+ sound/soc/sof/topology.c        |  5 +++++
+ 7 files changed, 84 insertions(+)
 
-> -----Original Message-----
-> From: Song Shuai <songshuaishuai@tinylab.org>
-> Sent: Thursday, December 21, 2023 3:05 PM
-> To: paul.walmsley@sifive.com; palmer@dabbelt.com;
-> aou@eecs.berkeley.edu; andy.chiu@sifive.com; greentime.hu@sifive.com;
-> conor.dooley@microchip.com; guoren@kernel.org;
-> songshuaishuai@tinylab.org; bjorn@rivosinc.com; Wang, Xiao W
-> <xiao.w.wang@intel.com>; heiko@sntech.de; ruinland.tsai@sifive.com
-> Cc: linux-riscv@lists.infradead.org; linux-kernel@vger.kernel.org
-> Subject: [PATCH] riscv: vector: Check SR_SD before saving vstate
->=20
-> The SD bit summarizes the dirty states of FS, VS, or XS fields,
-> providing a "fast check" before saving fstate or vstate.
->=20
-> Let __switch_to_vector() check SD bit as __switch_to_fpu() does.
-
-It looks a duplication of status check since the __switch_to_*() internally=
- will check the ext specific status bit.
-Can we just remove SR_SD check for the fpu() case?
-
-BRs,
-Xiao
-
->=20
-> Fixes: 3a2df6323def ("riscv: Add task switch support for vector")
-> Signed-off-by: Song Shuai <songshuaishuai@tinylab.org>
-> ---
->  arch/riscv/include/asm/vector.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/riscv/include/asm/vector.h b/arch/riscv/include/asm/vec=
-tor.h
-> index 87aaef656257..d30fa56f67c6 100644
-> --- a/arch/riscv/include/asm/vector.h
-> +++ b/arch/riscv/include/asm/vector.h
-> @@ -190,7 +190,8 @@ static inline void __switch_to_vector(struct
-> task_struct *prev,
->  	struct pt_regs *regs;
->=20
->  	regs =3D task_pt_regs(prev);
-> -	riscv_v_vstate_save(prev, regs);
-> +	if (unlikely(regs->status & SR_SD))
-> +		riscv_v_vstate_save(prev, regs);
->  	riscv_v_vstate_restore(next, task_pt_regs(next));
->  }
->=20
-> --
-> 2.20.1
+diff --git a/include/sound/sof/dai-amd.h b/include/sound/sof/dai-amd.h
+index 9df7ac824efe..59cd014392c1 100644
+--- a/include/sound/sof/dai-amd.h
++++ b/include/sound/sof/dai-amd.h
+@@ -26,4 +26,11 @@ struct sof_ipc_dai_acpdmic_params {
+ 	uint32_t pdm_ch;
+ } __packed;
+ 
++/* ACP_SDW Configuration Request - SOF_IPC_DAI_AMD_SDW_CONFIG */
++struct sof_ipc_dai_acp_sdw_params {
++	struct sof_ipc_hdr hdr;
++	u32 rate;
++	u32 channels;
++} __packed;
++
+ #endif
+diff --git a/include/sound/sof/dai.h b/include/sound/sof/dai.h
+index 4773a5f616a4..0764a80c17a9 100644
+--- a/include/sound/sof/dai.h
++++ b/include/sound/sof/dai.h
+@@ -89,6 +89,7 @@ enum sof_ipc_dai_type {
+ 	SOF_DAI_AMD_SP_VIRTUAL,		/**< AMD ACP SP VIRTUAL */
+ 	SOF_DAI_AMD_HS_VIRTUAL,		/**< AMD ACP HS VIRTUAL */
+ 	SOF_DAI_IMX_MICFIL,		/** < i.MX MICFIL PDM */
++	SOF_DAI_AMD_SDW,		/**< AMD ACP SDW */
+ };
+ 
+ /* general purpose DAI configuration */
+@@ -119,6 +120,7 @@ struct sof_ipc_dai_config {
+ 		struct sof_ipc_dai_acp_params acphs;
+ 		struct sof_ipc_dai_mtk_afe_params afe;
+ 		struct sof_ipc_dai_micfil_params micfil;
++		struct sof_ipc_dai_acp_sdw_params acp_sdw;
+ 	};
+ } __packed;
+ 
+diff --git a/include/uapi/sound/sof/tokens.h b/include/uapi/sound/sof/tokens.h
+index ee5708934614..6bf00c09d30d 100644
+--- a/include/uapi/sound/sof/tokens.h
++++ b/include/uapi/sound/sof/tokens.h
+@@ -218,4 +218,8 @@
+ #define SOF_TKN_IMX_MICFIL_RATE			2000
+ #define SOF_TKN_IMX_MICFIL_CH			2001
+ 
++/* ACP SDW */
++#define SOF_TKN_AMD_ACP_SDW_RATE		2100
++#define SOF_TKN_AMD_ACP_SDW_CH			2101
++
+ #endif
+diff --git a/sound/soc/sof/ipc3-pcm.c b/sound/soc/sof/ipc3-pcm.c
+index 330f04bcd75d..35769dd7905e 100644
+--- a/sound/soc/sof/ipc3-pcm.c
++++ b/sound/soc/sof/ipc3-pcm.c
+@@ -395,6 +395,31 @@ static int sof_ipc3_pcm_dai_link_fixup(struct snd_soc_pcm_runtime *rtd,
+ 		dev_dbg(component->dev, "MICFIL PDM channels_min: %d channels_max: %d\n",
+ 			channels->min, channels->max);
+ 		break;
++	case SOF_DAI_AMD_SDW:
++		/* change the default trigger sequence as per HW implementation */
++		for_each_dpcm_fe(rtd, SNDRV_PCM_STREAM_PLAYBACK, dpcm) {
++			struct snd_soc_pcm_runtime *fe = dpcm->fe;
++
++			fe->dai_link->trigger[SNDRV_PCM_STREAM_PLAYBACK] =
++					SND_SOC_DPCM_TRIGGER_POST;
++		}
++
++		for_each_dpcm_fe(rtd, SNDRV_PCM_STREAM_CAPTURE, dpcm) {
++			struct snd_soc_pcm_runtime *fe = dpcm->fe;
++
++			fe->dai_link->trigger[SNDRV_PCM_STREAM_CAPTURE] =
++					SND_SOC_DPCM_TRIGGER_POST;
++		}
++		rate->min = private->dai_config->acp_sdw.rate;
++		rate->max = private->dai_config->acp_sdw.rate;
++		channels->min = private->dai_config->acp_sdw.channels;
++		channels->max = private->dai_config->acp_sdw.channels;
++
++		dev_dbg(component->dev,
++			"AMD_SDW rate_min: %d rate_max: %d\n", rate->min, rate->max);
++		dev_dbg(component->dev, "AMD_SDW channels_min: %d channels_max: %d\n",
++			channels->min, channels->max);
++		break;
+ 	default:
+ 		dev_err(component->dev, "Invalid DAI type %d\n", private->dai_config->type);
+ 		break;
+diff --git a/sound/soc/sof/ipc3-topology.c b/sound/soc/sof/ipc3-topology.c
+index a8832a1c1a24..0970dbdfa78a 100644
+--- a/sound/soc/sof/ipc3-topology.c
++++ b/sound/soc/sof/ipc3-topology.c
+@@ -298,6 +298,14 @@ static const struct sof_topology_token micfil_pdm_tokens[] = {
+ 		offsetof(struct sof_ipc_dai_micfil_params, pdm_ch)},
+ };
+ 
++/* ACP_SDW */
++static const struct sof_topology_token acp_sdw_tokens[] = {
++	{SOF_TKN_AMD_ACP_SDW_RATE, SND_SOC_TPLG_TUPLE_TYPE_WORD, get_token_u32,
++		offsetof(struct sof_ipc_dai_acp_sdw_params, rate)},
++	{SOF_TKN_AMD_ACP_SDW_CH, SND_SOC_TPLG_TUPLE_TYPE_WORD, get_token_u32,
++		offsetof(struct sof_ipc_dai_acp_sdw_params, channels)},
++};
++
+ /* Core tokens */
+ static const struct sof_topology_token core_tokens[] = {
+ 	{SOF_TKN_COMP_CORE_ID, SND_SOC_TPLG_TUPLE_TYPE_WORD, get_token_u32,
+@@ -336,6 +344,7 @@ static const struct sof_token_info ipc3_token_list[SOF_TOKEN_COUNT] = {
+ 	[SOF_ACPI2S_TOKENS]   = {"ACPI2S tokens", acpi2s_tokens, ARRAY_SIZE(acpi2s_tokens)},
+ 	[SOF_MICFIL_TOKENS] = {"MICFIL PDM tokens",
+ 		micfil_pdm_tokens, ARRAY_SIZE(micfil_pdm_tokens)},
++	[SOF_ACP_SDW_TOKENS]   = {"ACP_SDW tokens", acp_sdw_tokens, ARRAY_SIZE(acp_sdw_tokens)},
+ };
+ 
+ /**
+@@ -1315,6 +1324,34 @@ static int sof_link_acp_hs_load(struct snd_soc_component *scomp, struct snd_sof_
+ 	return 0;
+ }
+ 
++static int sof_link_acp_sdw_load(struct snd_soc_component *scomp, struct snd_sof_dai_link *slink,
++				 struct sof_ipc_dai_config *config, struct snd_sof_dai *dai)
++{
++	struct sof_dai_private_data *private = dai->private;
++	u32 size = sizeof(*config);
++	int ret;
++
++	/* parse the required set of ACP_SDW tokens based on num_hw_cfgs */
++	ret = sof_update_ipc_object(scomp, &config->acp_sdw, SOF_ACP_SDW_TOKENS, slink->tuples,
++				    slink->num_tuples, size, slink->num_hw_configs);
++	if (ret < 0)
++		return ret;
++
++	/* init IPC */
++	config->hdr.size = size;
++	dev_dbg(scomp->dev, "ACP SDW config rate %d channels %d\n",
++		config->acp_sdw.rate, config->acp_sdw.channels);
++
++	/* set config for all DAI's with name matching the link name */
++	dai->number_configs = 1;
++	dai->current_config = 0;
++	private->dai_config = kmemdup(config, size, GFP_KERNEL);
++	if (!private->dai_config)
++		return -ENOMEM;
++
++	return 0;
++}
++
+ static int sof_link_afe_load(struct snd_soc_component *scomp, struct snd_sof_dai_link *slink,
+ 			     struct sof_ipc_dai_config *config, struct snd_sof_dai *dai)
+ {
+@@ -1629,6 +1666,9 @@ static int sof_ipc3_widget_setup_comp_dai(struct snd_sof_widget *swidget)
+ 		case SOF_DAI_MEDIATEK_AFE:
+ 			ret = sof_link_afe_load(scomp, slink, config, dai);
+ 			break;
++		case SOF_DAI_AMD_SDW:
++			ret = sof_link_acp_sdw_load(scomp, slink, config, dai);
++			break;
+ 		default:
+ 			break;
+ 		}
+diff --git a/sound/soc/sof/sof-audio.h b/sound/soc/sof/sof-audio.h
+index 8874ee5f557f..f98242a404db 100644
+--- a/sound/soc/sof/sof-audio.h
++++ b/sound/soc/sof/sof-audio.h
+@@ -276,6 +276,7 @@ enum sof_tokens {
+ 	SOF_ACPDMIC_TOKENS,
+ 	SOF_ACPI2S_TOKENS,
+ 	SOF_MICFIL_TOKENS,
++	SOF_ACP_SDW_TOKENS,
+ 
+ 	/* this should be the last */
+ 	SOF_TOKEN_COUNT,
+diff --git a/sound/soc/sof/topology.c b/sound/soc/sof/topology.c
+index 617a225fff24..25fb0d1443b6 100644
+--- a/sound/soc/sof/topology.c
++++ b/sound/soc/sof/topology.c
+@@ -297,6 +297,7 @@ static const struct sof_dai_types sof_dais[] = {
+ 	{"ACPSP_VIRTUAL", SOF_DAI_AMD_SP_VIRTUAL},
+ 	{"ACPHS_VIRTUAL", SOF_DAI_AMD_HS_VIRTUAL},
+ 	{"MICFIL", SOF_DAI_IMX_MICFIL},
++	{"ACP_SDW", SOF_DAI_AMD_SDW},
+ 
+ };
+ 
+@@ -1968,6 +1969,10 @@ static int sof_link_load(struct snd_soc_component *scomp, int index, struct snd_
+ 		token_id = SOF_MICFIL_TOKENS;
+ 		num_tuples += token_list[SOF_MICFIL_TOKENS].count;
+ 		break;
++	case SOF_DAI_AMD_SDW:
++		token_id = SOF_ACP_SDW_TOKENS;
++		num_tuples += token_list[SOF_ACP_SDW_TOKENS].count;
++		break;
+ 	default:
+ 		break;
+ 	}
+-- 
+2.34.1
 
