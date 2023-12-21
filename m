@@ -1,26 +1,31 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671FA7765B;
-	Thu, 21 Dec 2023 13:53:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from fsav414.sakura.ne.jp (fsav414.sakura.ne.jp [133.242.250.113])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 3BLDqPBm014091;
-	Thu, 21 Dec 2023 22:52:25 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav414.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav414.sakura.ne.jp);
- Thu, 21 Dec 2023 22:52:25 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav414.sakura.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 3BLDqONe014083
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 21 Dec 2023 22:52:25 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <f2fefbfd-0ec9-4d4a-b065-bf68ad8e1641@I-love.SAKURA.ne.jp>
-Date: Thu, 21 Dec 2023 22:52:20 +0900
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F1978E95;
+	Thu, 21 Dec 2023 13:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="WC1H7ubj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1703166854;
+	bh=sYVHTNGAkI5wRJlcobVBGFxVgolKAqf6ony8h16VMKc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=WC1H7ubjC+75Wb6nkLy6w701MsHM2+M6kXPgQlaSl/MkxgyIZ1XLyN/fF7zBAdEx6
+	 GaAhiFxbNgYn6c9RsIkPanR6PKFo9hZnpByhjMRvb8rwDoN0Qd6dmSvPgZ/eD/yqO5
+	 pGTl34PBqH54v9QJ4ldvIcvdLhj30A5waonZcmHofUq4P89RF9Gzy6e8kGEmB6dSo7
+	 WcyS9kF61E8HTWXMU3p4Y4Q94isGjqFeDqm3AHRIfKZaj+C3xJztxeUiI1jsrglH/9
+	 1f76XhrD/e4f1XVWX4RIkAWZm/yjq9vDlnV2HvUMXtxQ2U2ZD9evwLEqF3kRX1c4AN
+	 622p6VorMynIA==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id BBB003781F92;
+	Thu, 21 Dec 2023 13:54:13 +0000 (UTC)
+Message-ID: <76e84d66-2ab3-4ec2-9e8c-644faf22e823@collabora.com>
+Date: Thu, 21 Dec 2023 14:54:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -28,74 +33,56 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [fs?] INFO: trying to register non-static key in
- debugfs_file_get
+Subject: Re: [RFC PATCH 00/26] Add thermal zones names and new registration
+ func
 Content-Language: en-US
-To: syzbot <syzbot+fb20af23d0671a82c9a2@syzkaller.appspotmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        syzkaller-bugs@googlegroups.com
-References: <000000000000fc306f060d052b5f@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        rafael@kernel.org
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <000000000000fc306f060d052b5f@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: daniel.lezcano@linaro.org, rui.zhang@intel.com, lukasz.luba@arm.com,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
+References: <20231221124825.149141-1-angelogioacchino.delregno@collabora.com>
+ <CAJZ5v0g4D66c4mkHmKko+wdLbyRxXnaW77gKiDR42rX2NbzPKw@mail.gmail.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <CAJZ5v0g4D66c4mkHmKko+wdLbyRxXnaW77gKiDR42rX2NbzPKw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-#syz fix: Revert "debugfs: annotate debugfs handlers vs. removal with lockdep"
+Il 21/12/23 14:38, Rafael J. Wysocki ha scritto:
+> On Thu, Dec 21, 2023 at 1:48 PM AngeloGioacchino Del Regno
+> <angelogioacchino.delregno@collabora.com> wrote:
+>>
+>> ** This RFC was sent only to thermal API maintainers + reviewers on purpose **
+>>
+>> As per previous discussion with Daniel [1], I've prepared this series adding
+>> a new struct thermal_zone_device_params, used in a new registration function
+>> for thermal zones thermal_zone_device_register(), deprecating and, finally,
+>> replacing functions thermal_tripless_zone_device_register() and
+>> thermal_zone_device_register_with_trips().
+>>
+>> The new flow to register a thermal zone becomes the following:
+>>   - Declare a struct thermal_zone_device_params (`tzp` in this example)
+>>   - Fill in all the params (instead of passing all of them to a function)
+>>   - Call thermal_zone_device_register(tzp)
+>>
+>> Moreover, I've also introduced the concept of `name` for a thermal zone,
+>> and set, as suggested, a constraint for which:
+>>   - Multiple thermal zones can have the same `type` (so, no change), and
+>>   - A thermal zone's name must be *unique*.
+>>
+>> This should then help (in a later series?) to disambiguate thermal zone
+>> name vs type, as most of (if not all) the users seem to actually be
+>> misusing the TZ type referring to / using it as a TZ name.
+>>
+>> Please note that this series is currently a RFC because it's apparently
+>> growing bigger than I wanted - and because I probably have to add some
+>> more code on top. Before doing so, I'm trying to get feedback on what
+>> I've done until now.
+> 
+> And it is very unlikely that I will be able to provide any useful
+> feedback on this series before 6.8-rc1 is out.
+> 
+> Thanks!
 
-By the way, use of cmpxchg() implies that this path might run in parallel?
-If yes, I think you need to finish lockdep_init_map() before cmpxchg(), or
-concurrently running threads might reach lock_map_acquire_read() before
-lockdep_init_map() completes...
+Thanks for telling - but hey, obviously there's no rush, please take your time.
 
-        d_fsd = READ_ONCE(dentry->d_fsdata);
-        if (!((unsigned long)d_fsd & DEBUGFS_FSDATA_IS_REAL_FOPS_BIT)) {
-                fsd = d_fsd;
-        } else {
-                fsd = kmalloc(sizeof(*fsd), GFP_KERNEL);
-                if (!fsd)
-                        return -ENOMEM;
-
-                fsd->real_fops = (void *)((unsigned long)d_fsd &
-                                        ~DEBUGFS_FSDATA_IS_REAL_FOPS_BIT);
-                refcount_set(&fsd->active_users, 1);
-                init_completion(&fsd->active_users_drained);
-                if (cmpxchg(&dentry->d_fsdata, d_fsd, fsd) != d_fsd) {
-                        kfree(fsd);
-                        fsd = READ_ONCE(dentry->d_fsdata);
-                }
-+#ifdef CONFIG_LOCKDEP
-+               fsd->lock_name = kasprintf(GFP_KERNEL, "debugfs:%pd", dentry);
-+               lockdep_register_key(&fsd->key);
-+               lockdep_init_map(&fsd->lockdep_map, fsd->lock_name ?: "debugfs",
-+                                &fsd->key, 0);
-+#endif
-        }
-
-        /*
-         * In case of a successful cmpxchg() above, this check is
-         * strictly necessary and must follow it, see the comment in
-         * __debugfs_remove_file().
-         * OTOH, if the cmpxchg() hasn't been executed or wasn't
-         * successful, this serves the purpose of not starving
-         * removers.
-         */
-        if (d_unlinked(dentry))
-                return -EIO;
-
-        if (!refcount_inc_not_zero(&fsd->active_users))
-                return -EIO;
-
-+       lock_map_acquire_read(&fsd->lockdep_map);
-
-
-On 2023/12/21 22:35, syzbot wrote:
-> HEAD commit:    b10a3ccaf6e3 Merge tag 'loongarch-fixes-6.7-2' of git://gi..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1278f06ce80000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=70dcde26e6b912e5
-> dashboard link: https://syzkaller.appspot.com/bug?extid=fb20af23d0671a82c9a2
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
+Cheers!
+Angelo
