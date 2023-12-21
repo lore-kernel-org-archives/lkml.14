@@ -1,87 +1,104 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-190d.mail.infomaniak.ch (smtp-190d.mail.infomaniak.ch [185.125.25.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69655B1ED;
-	Thu, 21 Dec 2023 18:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56EF31F601
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 18:46:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dTlMHxwG"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-40b5155e154so13615005e9.3;
-        Thu, 21 Dec 2023 10:44:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703184294; x=1703789094; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:from:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ntx7s0uRV0mp2r8zWsvNB9qnCJ5QsvZ3Jpv2yv8Rzbw=;
-        b=dTlMHxwGSNjMVPZVkfkVEwtfKPW7p+xNSz20Awi4FOBl0qbeda0CK2J/tmlRA6mmAp
-         VFKnCBlBV15fXYmU32ralnO1+VbElH8yotEc+aB1UJxEmMpdJq/oQLbpxIP1+c22z35F
-         7VBmtUXy46nFEfq/MbbenS8aZDMxrrfyrXCOU7VDA3rF+6c01cC2PwztJH/I5lT3mQMx
-         /qF1gMn0dMJ8u2KDkw08sPAgUBTDov8khKacz4wKTd+PqRV8zY0/hkdZ4hdimYU8anv1
-         Yo8l4B2s/bTzBxcqE56AeaxvZfRoOBjemUq2si5DTwhW0XsHwM127D2cYNWek2WQn5Nk
-         odHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703184294; x=1703789094;
-        h=content-transfer-encoding:to:subject:from:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ntx7s0uRV0mp2r8zWsvNB9qnCJ5QsvZ3Jpv2yv8Rzbw=;
-        b=KTU9WGxMccnMLElAjOYtp2s8zvboh59Ks+Ch8BLAax4CpJZUtDlpyUQW0KxetUSnUd
-         vZSAjiKXQaelVCfS3j28YRNJTtIFkkXExXaC7H+FSADMJe0NCYI+0wgsll7STEk0psEJ
-         vvMh4GFszihhgoQ5rssu7nsXCet/llb3CnJIwqIgRuT0TkCkjaEJVZU5Rt7GV/RB5tNR
-         Z6lL7iqel5WVEVVY3/8h7ZIWH9eJEQrAdpZOeBvIHJ2DtQPZ4hOsDF9Ilz87eeP7/R95
-         xvLk5z+4bwXLbTCMx1gQZ/t8QM7i963arxbxKAh1gIEtGZuIqk/7XhROb8+3r+95OUgX
-         X54A==
-X-Gm-Message-State: AOJu0YyHCuHJO22p3Y/lzcsHHQV91Gxqre4w5NoAo/4sZH+QjAZQ0fex
-	ROcS46s8+mQhNkZG6MEaZH4=
-X-Google-Smtp-Source: AGHT+IEHfvTA00m83GwRhaHI0yXC1lou9gcvK7/JhPDyAgarVWZ1ehCvpTJA55yuV8gPBaeKKVCYeQ==
-X-Received: by 2002:a05:600c:1f07:b0:40c:314a:42e with SMTP id bd7-20020a05600c1f0700b0040c314a042emr81041wmb.246.1703184293889;
-        Thu, 21 Dec 2023 10:44:53 -0800 (PST)
-Received: from debian ([146.70.204.204])
-        by smtp.gmail.com with ESMTPSA id l4-20020a05600c1d0400b0040d3276ba19sm4212714wms.25.2023.12.21.10.44.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Dec 2023 10:44:53 -0800 (PST)
-Message-ID: <f4eff69d-3917-4c42-8c6b-d09597ac4437@gmail.com>
-Date: Thu, 21 Dec 2023 19:44:13 +0100
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="Jz8p7OLm"
+Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
+	by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4SwzsQ3Q0nzMqGk7;
+	Thu, 21 Dec 2023 18:46:02 +0000 (UTC)
+Received: from unknown by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4SwzsP3FQGzMpnPr;
+	Thu, 21 Dec 2023 19:46:01 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1703184362;
+	bh=deZ4ghKKW+5Po8LBWBxHHxYPzl2S7/Qg+OvXDshhnrM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Jz8p7OLmX78jTpuk4kL02zFarFURPfJdjmw6+227t89uuSC68b28T/PC/SkASES5u
+	 ckyTHkqqxniGinRQFpTFRYcLcqT9KoaXxnRqoFX1DR45RdqCqjlda9qA/c1f5TelyL
+	 djbtHsneUnctKlH+l2sewJbAGYIsN/7/Nz9my3pY=
+Date: Thu, 21 Dec 2023 19:45:58 +0100
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Eric Paris <eparis@redhat.com>, James Morris <jmorris@namei.org>, 
+	"Serge E . Hallyn" <serge@hallyn.com>, Ben Scarlato <akhna@google.com>, 
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Jeff Xu <jeffxu@google.com>, 
+	Jorge Lucangeli Obes <jorgelo@google.com>, Konstantin Meskhidze <konstantin.meskhidze@huawei.com>, 
+	Shervin Oloumi <enlightened@google.com>, audit@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org
+Subject: Re: [RFC PATCH v1 4/7] landlock: Log domain creation and enforcement
+Message-ID: <20231221.doe8Aebae8vi@digikod.net>
+References: <20230921061641.273654-1-mic@digikod.net>
+ <20230921061641.273654-5-mic@digikod.net>
+ <CAHC9VhQ3fqq6bP=eco1hk=AoMa=5QNyXHCzNw5RZt92y9Z7T2g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Richard Gobert <richardbgobert@gmail.com>
-Subject: [PATCH net-next 0/3] net: gro: reduce extension header parsing
- overhead
-To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, shuah@kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHC9VhQ3fqq6bP=eco1hk=AoMa=5QNyXHCzNw5RZt92y9Z7T2g@mail.gmail.com>
+X-Infomaniak-Routing: alpha
 
-This series attempts to reduce parsing overhead of IPv6 extension headers
-in GRO and GSO, by removing extension header specific code and enabling
-the frag0 fast path.
- 
-The following changes were made:
-- Specific unnecessary HBH conditionals were removed by adding HBH offload
-  to inet6_offloads
-- Added a utility function to support frag0 fast path in ipv6_gro_receive
-- Added self-test for IPv6 packets with extension headers in GRO
+On Wed, Dec 20, 2023 at 04:22:22PM -0500, Paul Moore wrote:
+> On Thu, Sep 21, 2023 at 2:17 AM Mickaël Salaün <mic@digikod.net> wrote:
+> >
+> > Add audit support for domain creation, i.e. task self-restriction.
+> >
+> > Signed-off-by: Mickaël Salaün <mic@digikod.net>
+> > ---
+> >  security/landlock/audit.c    | 24 ++++++++++++++++++++++++
+> >  security/landlock/audit.h    |  8 ++++++++
+> >  security/landlock/syscalls.c |  4 ++++
+> >  3 files changed, 36 insertions(+)
+> >
+> > diff --git a/security/landlock/audit.c b/security/landlock/audit.c
+> > index f58bd529784a..d9589d07e126 100644
+> > --- a/security/landlock/audit.c
+> > +++ b/security/landlock/audit.c
+> > @@ -84,6 +84,30 @@ void landlock_log_create_ruleset(struct landlock_ruleset *const ruleset)
+> >         audit_log_end(ab);
+> >  }
+> >
+> > +void landlock_log_restrict_self(struct landlock_ruleset *const domain,
+> > +                               struct landlock_ruleset *const ruleset)
+> > +{
+> > +       struct audit_buffer *ab;
+> > +
+> > +       WARN_ON_ONCE(domain->id);
+> > +       WARN_ON_ONCE(!ruleset->id);
+> > +
+> > +       ab = audit_log_start(audit_context(), GFP_ATOMIC, AUDIT_LANDLOCK);
+> > +       if (!ab)
+> > +               /* audit_log_lost() call */
+> > +               return;
+> > +
+> > +       domain->hierarchy->id =
+> > +               atomic64_inc_return(&ruleset_and_domain_counter);
+> > +       log_task(ab);
+> > +       audit_log_format(ab, " op=restrict-self domain=%llu ruleset=%llu",
+> > +                        domain->hierarchy->id, ruleset->id);
+> 
+> If domain creation and self restriction are the same, I would suggest
+> going with "op=create-domain" so it better matches "op=release-domain"
+> in patch 3/7.
 
-Richard
+OK, I'll do something more consistent.
 
-Richard Gobert (3):
-  net: gso: add HBH extension header offload support
-  net: gro: parse ipv6 ext headers without frag0 invalidation
-  selftests/net: fix GRO coalesce test and add ext header coalesce test
-
- net/ipv6/exthdrs_offload.c        | 11 +++++
- net/ipv6/ip6_offload.c            | 76 ++++++++++++++++++++----------
- tools/testing/selftests/net/gro.c | 78 ++++++++++++++++++++++++++++---
- 3 files changed, 134 insertions(+), 31 deletions(-)
-
--- 
-2.36.1
-
-
+> 
+> Also see my previous comment about consistency between AUDIT_LANDLOCK records.
+> 
+> > +       audit_log_format(
+> > +               ab, " parent=%llu",
+> > +               domain->hierarchy->parent ? domain->hierarchy->parent->id : 0);
+> > +       audit_log_end(ab);
+> > +}
+> 
+> --
+> paul-moore.com
+> 
