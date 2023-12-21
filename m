@@ -1,90 +1,165 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1045E37168;
-	Thu, 21 Dec 2023 14:57:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4DD360AE
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 14:58:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UMdi7jfv"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d3dee5f534so14457555ad.1;
-        Thu, 21 Dec 2023 06:57:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="dZdS4uUD"
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-20439c8296cso110872fac.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 06:58:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703170662; x=1703775462; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=i3USUl9WO2gcOQwDnVCeaBX3q/QuTE9UFOGfxgimai4=;
-        b=UMdi7jfvHUDGhSCeuYvG2KETN9NFclrIBzSKrD3MEhny89Zmjm1MNEj4wOFQtLRzNH
-         RmeLpmxrO/rMv0usruXt9DWqrgu026crXC628T34xCRR9iWPnbBmuZ3MalQuUcFePQLk
-         J1DRXKZeUAiIdtKk8tcyX+t/jQwgm0B/0kIXa7QD6uJ7ItLFh5NGd0IYENq6SoE0iYyX
-         9+PrhAaQiZE2QNGjLt9hLCoOwPEcCLbeWLssc0hL/72U9umq0ZDJdA1rsOh5Vt8w5xxb
-         g0SciyQ26Epux4gby/XwUWvzVvdhHi/spoz7KRa84dVQnCWn33PAIs1u5Wzohn3JnMcA
-         9MEw==
+        d=soleen.com; s=google; t=1703170738; x=1703775538; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ADgCcEWTSu7tJptHDbPcOYurSOtNDMB0td089W0nlvQ=;
+        b=dZdS4uUDdHQuQs42RTv+7gtOCH97gogEzNytwLj5P9q+RwnIU07gNQ4+VJrVWtWxjw
+         FpYonUSr58SI7ubLUzup04NESOWtvGm89+laqtDFLSLihhDjJpRlmuuCs+745mCGJHq6
+         kG57/W8+r90AkcGeJeTrUrC5cIOqEWr6Y+zMLHdAmCv7B3NcS7Xmpu6fbdVB9z8nF+h8
+         ALaUa4VLKIRI7JbqtZ7Nlpof5uwJYiT6SsfBiVz3gwxYAzt3+SAwvOrIlA9DO+BZnMR6
+         uGCBIF/BwLTPo3ya1qEctYtz9UHmZKLLFIllIzEYVzOed9Exo9g9Wsapx9L9mWaSCT7c
+         B8Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703170662; x=1703775462;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1703170738; x=1703775538;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=i3USUl9WO2gcOQwDnVCeaBX3q/QuTE9UFOGfxgimai4=;
-        b=KXhjBK5FS0gq1grFnfOYpfF2k3FCZ3NBwsfFpIqADDd3nRuNYi9bIWZpQIgy2v+epp
-         EuGyc2c9aLe3GujsA/llCc44izClO8ZySVGg3j8RKOW1Etpw+5GDZ7dwAy5Q8wEkG45s
-         yiCnwu6cGBFRmN3UVtO7Dplf8Rk7y4ZHwLZRwAIVbh7T+y2qcwXi9hPlYMIdCVG0ba3T
-         QWW6BDPuHQxi9h/754G0+YShCl7aGOO1xd4isiHJylSf/TOnPUv42v6k1NiK93qrna1/
-         slEaMC/tYQyLlq6mxRTNMQ7UPDF0x/NUQ4y6IeW7icjTIfTU/x+2ceQvPqJNRrLH9TWf
-         7zrw==
-X-Gm-Message-State: AOJu0Yzjww0Iuk3nC6JaoFAN2VBWeg36Po5j0v4REHWCEDpd7WLyJWoc
-	IjIgzMbSd09avoRf/jQz7vY=
-X-Google-Smtp-Source: AGHT+IE5wFdUULiCY8ELFxZqWGyGPK5/+XMGldnySVulFribOOOrmtJkIkISv8i7aleKcpl8MtnXpw==
-X-Received: by 2002:a17:903:22cf:b0:1d3:cc75:63a4 with SMTP id y15-20020a17090322cf00b001d3cc7563a4mr973865plg.21.1703170662197;
-        Thu, 21 Dec 2023 06:57:42 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d5-20020a170902cec500b001d07ebef623sm1750024plg.69.2023.12.21.06.57.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 06:57:41 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Thu, 21 Dec 2023 06:57:40 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	allen.lkml@gmail.com
-Subject: Re: [PATCH 5.15 000/159] 5.15.145-rc1 review
-Message-ID: <9307d019-b0ea-41ed-a559-2fb14022295d@roeck-us.net>
-References: <20231220160931.251686445@linuxfoundation.org>
+        bh=ADgCcEWTSu7tJptHDbPcOYurSOtNDMB0td089W0nlvQ=;
+        b=s0FtjrdixpAgBABviQQylFIH5BimMo/1nimF1C00x++2vgajuYeYn8iBH2igfNRCif
+         MVtUTBG6wKvLTexs0ZyHyYbzj5GxEhz1+wzciDO15Y0nceeJ4ed8VOT7QghAnYfTEz/w
+         NRDQArx3XdYSRz0Gl5SZR+3Rzy3gkX8nCjAKcsSZ3ds+akATebX6i4MA/lxLepsyOU9z
+         hcugP6iX0ceETmQWf/HHIjg+kV48cIhjyE4wWHsJ8FPfKKQpeXfIzWK0bRbdARYqdBlv
+         LrGYEyh9uySMaHSsuTmr6u6XEdnUXLk+F52JK2XpQ53HCXqRAoPrxzeRxwKLJ3pbSkHx
+         dENA==
+X-Gm-Message-State: AOJu0YzpPZ6Y+eVSLQcYQATVj2Cl2KTCbm5fOsxsOOso0NIJcprmb+Kb
+	q33yilmYdH5UQ012MrhiNQbL0DcwG44MI5GRTFl9o4oB+6G9k3wr5BA=
+X-Google-Smtp-Source: AGHT+IETQwSqKPcARlSTqvGAKMyDahi+ld9dUal/ANt/1wL90IX8u4caH+uMMeSXpiFCQt+AXRLu31ANep+1kMW99Es=
+X-Received: by 2002:a05:6870:148e:b0:203:30c6:295 with SMTP id
+ k14-20020a056870148e00b0020330c60295mr1281924oab.0.1703170738280; Thu, 21 Dec
+ 2023 06:58:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231220160931.251686445@linuxfoundation.org>
+References: <20231221031915.619337-1-pasha.tatashin@soleen.com>
+ <ZYO8IqiHeqs8LktJ@casper.infradead.org> <CA+CK2bBJuZPF5yC2Axo0S_P4ApjwgBWu9YwnDo+yOiOiL16Bhg@mail.gmail.com>
+ <CA+CK2bAHLpRWJfHCAPzAjSzF8Hue1wK_SW5GxSue9rOW6OtT5Q@mail.gmail.com> <ZYRGSv0OzJknmVPY@casper.infradead.org>
+In-Reply-To: <ZYRGSv0OzJknmVPY@casper.infradead.org>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Thu, 21 Dec 2023 09:58:20 -0500
+Message-ID: <CA+CK2bAjsv5CM8YhYeRFCwjN6OdqKZxvvOHs-CQgpVQFATS0LA@mail.gmail.com>
+Subject: Re: [RFC 0/3] iommu/intel: Free empty page tables on unmaps
+To: Matthew Wilcox <willy@infradead.org>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, rientjes@google.com, dwmw2@infradead.org, 
+	baolu.lu@linux.intel.com, joro@8bytes.org, will@kernel.org, 
+	robin.murphy@arm.com, iommu@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 20, 2023 at 05:07:45PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.15.145 release.
-> There are 159 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 22 Dec 2023 16:08:59 +0000.
-> Anything received after that time might be too late.
-> 
+On Thu, Dec 21, 2023 at 9:06=E2=80=AFAM Matthew Wilcox <willy@infradead.org=
+> wrote:
+>
+> On Thu, Dec 21, 2023 at 12:42:41AM -0500, Pasha Tatashin wrote:
+> > On Thu, Dec 21, 2023 at 12:13=E2=80=AFAM Pasha Tatashin
+> > <pasha.tatashin@soleen.com> wrote:
+> > >
+> > > On Wed, Dec 20, 2023 at 11:16=E2=80=AFPM Matthew Wilcox <willy@infrad=
+ead.org> wrote:
+> > > >
+> > > > On Thu, Dec 21, 2023 at 03:19:12AM +0000, Pasha Tatashin wrote:
+> > > > > This series frees empty page tables on unmaps. It intends to be a
+> > > > > low overhead feature.
+> > > > >
+> > > > > The read-writer lock is used to synchronize page table, but most =
+of
+> > > > > time the lock is held is reader. It is held as a writer for short
+> > > > > period of time when unmapping a page that is bigger than the curr=
+ent
+> > > > > iova request. For all other cases this lock is read-only.
+> > > > >
+> > > > > page->refcount is used in order to track number of entries at eac=
+h page
+> > > > > table.
+> > > >
+> > > > Have I not put enough DANGER signs up around the page refcount?
+> > > >
+> > > >  * If you want to use the refcount field, it must be used in such a=
+ way
+> > > >  * that other CPUs temporarily incrementing and then decrementing t=
+he
+> > > >  * refcount does not cause problems.  On receiving the page from
+> > > >  * alloc_pages(), the refcount will be positive.
+> > > >
+> > > > You can't use refcount for your purpose, and honestly I'm shocked y=
+ou
+> > > > haven't seen any of your WARNings trigger.
+> > >
+> > > Hi Matthew,
+> > >
+> > > Thank you for looking at this.
+> > >
+> > > Could you please explain exactly why refcount can't be used like this=
+?
+> > >
+> > > After alloc_page() refcount is set to 1, we never reduce it to 0,
+> > > every new entry in a page table adds 1, so we get up-to 513, that is
+> > > why I added warn like this: WARN_ON_ONCE(rc > 513 || rc < 2); to
+> >
+> > I guess, what you mean is that other CPUs could temporarily
+> > increase/decrease refcount outside of IOMMU management, do you have an
+> > example of why that would happen? I could remove the above warning,
+> > and in the worst case we would miss an opportunity to free a page
+> > table during unmap, not a big deal, it can be freed during another
+> > map/unmap event. Still better than today, where we never free them
+> > during unmaps.
+>
+> Both GUP-fast and the page cache will find a page under RCU protection,
+> inc it's refcount if not zero, check the page is still the one they were
+> looking for, and if not will dec the refcount again.  That means if a
+> page has been in the page cache or process page tables and you can't
+> guarantee that all CPUs have been through the requisite grace periods,
+> you might see the refcount increased.
 
-Build results:
-	total: 158 pass: 158 fail: 0
-Qemu test results:
-	total: 525 pass: 525 fail: 0
+Interesting scenario, it sounds like this could only happen for a
+short period of time at the beginning of the life of a page in the
+IOMMU Page Table.
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
 
-As you may have noticed, the two day response time isn't enough
-for my testbed, especially if all releases have to be built and
-if there are multiple release candidates.
+> I'm not prepared to make a guarantee that these are the only circumstance=
+s
+> under which you'll see a temporarily higher refcount than you expect.
+> Either currently or in the future.  If you use the refcount as anything
+> other than a refcount, you're living dangerously.  And if you think that
+> you'll be the one to do the last refcount put, you're not necessarily
+> correct (see the saga around __free_pages() which ended up as commit
+> e320d3012d25 fixed by 462a8e08e0e6 (which indicates the rare race does
+> actually happen)).
+>
+> Now, it seems like from your further explanation that the consequence
+> of getting this wrong is simply that you fail to free the page early.
+> That seems OK, but I insist that you insert some comments explaining
+> what is going on and why it's safe so somebody auditing uses of refcount
+> doesn't have to reanalyse the whole thing for themself.  Or worse that
+> somebody working on the iommu sees this and thinks they can "improve"
+> on it.
 
-Guenter
+Yes, I can add detailed comments explaining how refcount is used here.
+
+Alternatively, I was thinking of using mapcount:
+
+From mm_types.h:
+  * If your page will not be mapped to userspace, you can also use the
+four
+  * bytes in the mapcount union, but you must call
+page_mapcount_reset()
+  * before freeing it.
+
+It sounds like we can safely use _mapcount for our needs, and do
+page_mapcount_reset() before freeing pages.
+
+Pasha
