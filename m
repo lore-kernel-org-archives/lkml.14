@@ -1,146 +1,217 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6621E745DA;
-	Thu, 21 Dec 2023 13:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A251E745D4;
+	Thu, 21 Dec 2023 13:53:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F3oIk2pK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703166695; x=1734702695;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MW/VQMh0lV18jKfLyDKMM1MKJVVzFTeS8LzjzUBd4Mo=;
-  b=F3oIk2pK9K+aty22CTcVX2VDLZtQ804YcVsu0zeX0KXeF6QqdtlohILk
-   k3sHJ6IIyKlrYls8ADagkA8uYEu8lOBqe5vGapIrAYMCx+OIqlgRzPZ9j
-   OKDJIOuNZ8IrTpICUVGCDPJAThG7eSSoRmdBwbfhWkulvCLOPP8mh9Omg
-   n5DfuM/y4/+X+UOA1QUO4m2ZJ8m5fyCzztCxYBFj00nojRGs4ySugouEC
-   l/q7gz2hqgd1FJ/4BdVmWP+NtVt3U1AmwAJ0fQX4R8X7QDaNtwswNKR+X
-   l4xXThjfpXO8NIee6tuiWQ/kMV2sIvwJ9BVXE73N3AL54JPXSI4QtYZdQ
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="399804414"
-X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="399804414"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 05:51:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="920329264"
-X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="920329264"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 05:51:15 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1rGJSC-00000007rfr-0jfj;
-	Thu, 21 Dec 2023 15:51:12 +0200
-Date: Thu, 21 Dec 2023 15:51:11 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Mark Hasemeyer <markhas@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Raul Rangel <rrangel@chromium.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>, linux-acpi@vger.kernel.org,
-	linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v2 02/22] i2c: acpi: Modify i2c_acpi_get_irq() to use
- resource
-Message-ID: <ZYRCz-FiG_w71qhB@smile.fi.intel.com>
-References: <20231220235459.2965548-1-markhas@chromium.org>
- <20231220165423.v2.2.Ib65096357993ff602e7dd0000dd59a36571c48d8@changeid>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="On2uCpC+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D0DFC433C7;
+	Thu, 21 Dec 2023 13:53:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703166785;
+	bh=pPMVyevmpbWPJgmQU7BRAWm3WCy0zRv/2Uz1rFGHuiA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=On2uCpC+rib2wTj1bZI3ww/V0sidzj/s0K5wmmMPAAnNCLNx6htQnrayG+HX++JYh
+	 o0+9/Vp7DUrOpd8I3RgEAIsJF92NvYeGozwQXThXZ/jBdFaU3atiXCcclMRGHD1wWL
+	 cJU8hhLWaEDD6DtFgV58bF5rdRyBReRuaQhJhTcTUer2JKDO7VGP/gIwZzavH0+I9v
+	 VzuLybXJXvZYNUUEuHB756R0pCbSQZcBIRCB2PyvNoUGXxU8vTvDge3M7x9E0wsNKJ
+	 nLDs0p49gueULOZ85BE5XoR1gih9DdZ75LEvGe83j6tk3n+nQgOzORpyhNjWLnsIiI
+	 wHBXi0wF2wSHg==
+Date: Thu, 21 Dec 2023 13:53:00 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Xingyu Wu <xingyu.wu@starfivetech.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Claudiu Beznea <Claudiu.Beznea@microchip.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Walker Chen <walker.chen@starfivetech.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] dt-bindings: ASoC: Add Cadence I2S controller for
+ StarFive JH8100 SoC
+Message-ID: <20231221-saddlebag-tricolor-d02a17d66795@spud>
+References: <20231221033223.73201-1-xingyu.wu@starfivetech.com>
+ <20231221033223.73201-2-xingyu.wu@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="KOGwlaDIWVEFGDEl"
+Content-Disposition: inline
+In-Reply-To: <20231221033223.73201-2-xingyu.wu@starfivetech.com>
+
+
+--KOGwlaDIWVEFGDEl
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231220165423.v2.2.Ib65096357993ff602e7dd0000dd59a36571c48d8@changeid>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 20, 2023 at 04:54:16PM -0700, Mark Hasemeyer wrote:
-> The i2c_acpi_irq_context structure provides redundant information that
-> can be provided with struct resource.
-> 
-> Refactor i2c_acpi_get_irq() to use struct resource instead of struct
-> i2c_acpi_irq_context.
+Xingyu, Mark,
 
-Suggested-by?
+On Thu, Dec 21, 2023 at 11:32:22AM +0800, Xingyu Wu wrote:
+> Add bindings for the Multi-Channel I2S controller of Cadence
+> on the StarFive JH8100 SoC.
+>=20
+> Signed-off-by: Xingyu Wu <xingyu.wu@starfivetech.com>
+> ---
+>  .../bindings/sound/cdns,jh8100-i2s.yaml       | 100 ++++++++++++++++++
+>  1 file changed, 100 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/cdns,jh8100-i=
+2s.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/sound/cdns,jh8100-i2s.yaml=
+ b/Documentation/devicetree/bindings/sound/cdns,jh8100-i2s.yaml
+> new file mode 100644
+> index 000000000000..5d95d9ab3e45
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/cdns,jh8100-i2s.yaml
+> @@ -0,0 +1,100 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/cdns,jh8100-i2s.yaml#
 
-...
+Filename matching the compatible please.
 
->  static int i2c_acpi_add_irq_resource(struct acpi_resource *ares, void *data)
->  {
-> -	struct i2c_acpi_irq_context *irq_ctx = data;
-> -	struct resource r;
-> +	struct resource *r = data;
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Cadence multi-channel I2S controller for StarFive JH8100 SoC
+> +
+> +description: |
 
-> -	if (irq_ctx->irq > 0)
-> +	if (r->start > 0)
->  		return 1;
+You only need the | if there is formatting to preserve.
 
-Checking flags is more robust.
+> +  The Cadence I2S Controller implements a function of the multi-channel
+> +  (up to 8-channel) bus. It combines functions of a transmitter and a re=
+ceiver.
+> +  It is used in the StarFive JH8100 SoC.
+> +
+> +maintainers:
+> +  - Xingyu Wu <xingyu.wu@starfivetech.com>
+> +  - Walker Chen <walker.chen@starfivetech.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: starfive,jh8100-i2s
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: |
+> +      The interrupt line number for the I2S controller. Add this
+> +      parameter if the I2S controller that you are using does not
+> +      support DMA.
 
-	if (r->flags)
-		return 1;
+You've got one i2s controller here, you should know if it supports DMA
+or not.
 
-> -	if (!acpi_dev_resource_interrupt(ares, 0, &r))
-> +	if (!acpi_dev_resource_interrupt(ares, 0, r))
->  		return 1;
->  
-> -	irq_ctx->irq = i2c_dev_irq_from_resources(&r, 1);
-> -	irq_ctx->wake_capable = r.flags & IORESOURCE_IRQ_WAKECAPABLE;
-> +	i2c_dev_irq_from_resources(r, 1);
->  
->  	return 1; /* No need to add resource to the list */
->  }
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: Bit clock
+> +      - description: Main ICG clock
+> +      - description: Inner master clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: bclk
+> +      - const: icg
+> +      - const: mclk_inner
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  dmas:
+> +    items:
+> +      - description: TX DMA Channel
+> +      - description: RX DMA Channel
+> +    minItems: 1
+> +
+> +  dma-names:
+> +    items:
+> +      - const: tx
+> +      - const: rx
+> +    minItems: 1
+> +
+> +  cdns,i2s-max-channels:
+> +    description: |
+> +      Number of I2S max stereo channels supported by the hardware.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 1
+> +    maximum: 8
 
-...
+Mark, is there no common property for this kind of thing? That said,
+there's one device here so the number is known at present.
+Another note, this property is not required, so it should have a
+default.
 
-> +	if (IS_ERR_OR_NULL(r))
-> +		return -EINVAL;
+It's kinda hard to know with this binding - it is touted as being for a
+particular Cadence IP, and some aspects are pretty generic, but at the
+same time there's only one device here so it's hard to tell what is
+variable between implementations and what is not.
+Are there no other implementations of this controller? Unless it is
+brand new, I find that hard to believe.
 
-Hmm... Do we expect this to be an error pointer in some cases?
+Cheers,
+Conor.
 
-...
+> +
+> +  "#sound-dai-cells":
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +
+> +oneOf:
+> +  - required:
+> +      - dmas
+> +      - dma-names
+> +  - required:
+> +      - interrupts
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2s@122b0000 {
+> +      compatible =3D "starfive,jh8100-i2s";
+> +      reg =3D <0x122b0000 0x1000>;
+> +      clocks =3D <&syscrg_ne 133>,
+> +               <&syscrg_ne 170>,
+> +               <&syscrg 50>;
+> +      clock-names =3D "bclk", "icg",
+> +                    "mclk_inner";
+> +      resets =3D <&syscrg_ne 43>;
+> +      dmas =3D <&dma 7>, <&dma 6>;
+> +      dma-names =3D "tx", "rx";
+> +      cdns,i2s-max-channels =3D <2>;
+> +      #sound-dai-cells =3D <0>;
+> +    };
+> --=20
+> 2.25.1
+>=20
+>=20
 
-> +	ret = acpi_dev_get_gpio_irq_resource(adev, NULL, 0, r);
-> +	if (!ret)
-> +		return r->start;
->  
-> -	return irq_ctx.irq;
-> +	return ret;
+--KOGwlaDIWVEFGDEl
+Content-Type: application/pgp-signature; name="signature.asc"
 
-What's wrong with the standard pattern?
+-----BEGIN PGP SIGNATURE-----
 
-	if (ret)
-		return ret;
-	...
-	return ...;
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZYRDPAAKCRB4tDGHoIJi
+0s94AP9geB4PYcZr4+jWv+afH31tjZK9Ipg74/OInCTDenjFWgD+Lkrt4YCJ5jzp
+6mcV3fL0qrb+B7BF6qed1c7Naq7xzQs=
+=gqs+
+-----END PGP SIGNATURE-----
 
-...
-
-> +			struct resource r = {0};
-
-'0' is redundant.
-
-...
-
-> +			irq = i2c_acpi_get_irq(client, &r);
-> +			if (irq > 0 && r.flags & IORESOURCE_IRQ_WAKECAPABLE)
-
-Why checking just flags is not enough?
-
->  				client->flags |= I2C_CLIENT_WAKE;
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+--KOGwlaDIWVEFGDEl--
