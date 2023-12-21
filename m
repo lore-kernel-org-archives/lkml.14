@@ -1,131 +1,132 @@
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636C065191
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 18:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C636518B;
+	Thu, 21 Dec 2023 18:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ouzU/g0P"
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-4668c57cec8so128200137.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 10:50:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1703184627; x=1703789427; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tOmKqIn6W7z+rgmBQ78sMx0aZEwQC8hdhsv42OVTCrs=;
-        b=ouzU/g0PxDkJObI+xeDj58zkEPfto/ASbdxyXGldGSCuKwhSwJSbwHRZxalWbDgsDs
-         LaV3SGtZSIPducWBbu0ujdGbkO9sX12Egxx+Q3ivEorOuGvj5QWD2tuMn8ZyimgHCnRJ
-         MXqaTCGoDnu0l3XyuBwIbsymCr99GXHXrx3PBfy45WzSBE7K0OM80tn7UbqWcdcwg0jY
-         /FskD8FoOTRaSGPoRJqTguorTSMx4vC9IR/zUYbtOwSSawRouyly6VaeWJGH9iSRzdzG
-         +ICPRzL1cc9127QqGp16tGmbNKd7Nu+FkvmRmh6Mvk4KI9OgNSBZaFzovZ4NnuDxnpnu
-         A7jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703184627; x=1703789427;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tOmKqIn6W7z+rgmBQ78sMx0aZEwQC8hdhsv42OVTCrs=;
-        b=Lh/sZZ+7qS/9Cuwic72hMMlP/H3Ulg5FoT222mFSkIxxN4Q0e83QB9CewZnqpI3Jt4
-         E+YB6bsNidSpZz2iq5eq5o6gcgSag/rxbv09wRKY7FA2iSjMggKRd0gGdZtYD5+f9R7B
-         v5CBKWkKSsfL1nJIIhI+TfEsDf2m3THHqfEuO1qYU6gBbMDdng+iFDwzPQY9hmFAR2Tz
-         Q+ZceHV4GLvRlKuEkc6X8Nc/6Tv/AvGFSue8zek6ncD3aFh2He8h1yewkVpp/DNcLhoH
-         MRzZXInFE+sgk3iDklj7OQRy7eBjvFLkUlMiH+W9V3gjIHkqPkxcKsGyjI/FhQgDu6va
-         xXyg==
-X-Gm-Message-State: AOJu0YwzS/Cmc5S+Sz6TUgQLeoP/OFi4CfH3Eldy8Nd5hwo2dtYFs/QM
-	bZ4H+p1KOQICo3cNTakvZj2Uv7/pDby8czFeP2YE/7POG7lbsw==
-X-Google-Smtp-Source: AGHT+IGB9eH7AqDU9cHm9AMj/Tnxr1XNb7gPtn0K/98iDGAeQAx28mz/pD0u9r/6+qM8Ad3mQZA1iaPVZnKh8XVHcWM=
-X-Received: by 2002:a1f:72cd:0:b0:4b6:c299:4a8f with SMTP id
- n196-20020a1f72cd000000b004b6c2994a8fmr75309vkc.5.1703184627299; Thu, 21 Dec
- 2023 10:50:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NRSvr9xw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703184631; x=1734720631;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=6lqfECsnx9YNGz7mNu1P1q5RcYfS8nYI6pc/nxTM7UQ=;
+  b=NRSvr9xwu8uUsCJvIuUNMSq4vmzVfwdjoepfVThM+cj1amxFYXz1HfN4
+   aeGC0pFU0JNpOqZJu3snBaAIwYrRsY4Nhccg90CsH+07tC4mQV/NBdfiJ
+   QyEOTYO0FyfXRDDos3biRWv+ktHvIiu220Xdla3tN9f13bb8OArZgoLMh
+   eGW2nRaGFFrB5wXKXLd2kWYBu12kB1fEqGICz5xm95FsvMskLDNPQFjX/
+   XjX8U8qPFQJF5wu4q2+RZ7r+j80cRgSH9CsP4fmmZmlMzUU5PBLELdIg8
+   MILUq2Yp3fLFw2dnPLCar6VdLmL4yimdGQZboNThB1DKE1ntADzlqlC7s
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="462463230"
+X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
+   d="scan'208";a="462463230"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 10:50:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="920407804"
+X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
+   d="scan'208";a="920407804"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 21 Dec 2023 10:50:28 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 93260B8; Thu, 21 Dec 2023 19:55:28 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] gpiolib: cdev: Split line_get_debounce_period() and use
+Date: Thu, 21 Dec 2023 19:55:27 +0200
+Message-ID: <20231221175527.2814506-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231219201102.41639-1-brgl@bgdev.pl> <ZYL0MWAQ-frYLnZq@smile.fi.intel.com>
- <CACRpkdZB-5DN5NYJNGheDJnNWRt8x4LwgOQpL4NDyX2JSn+_9g@mail.gmail.com>
- <CAMRc=MfLXxfzhKDc9e3jRF9mdVo=9UnC9O+i9s-uGm2pEa7vMg@mail.gmail.com>
- <ZYQ09RIq1R8xmn_k@smile.fi.intel.com> <CAMRc=MfYG09UUfqfuE89Or4HsP8QWUBJXCvuPPhe+vx0JiZF4w@mail.gmail.com>
- <ZYRkLfYnU3WZEWPa@smile.fi.intel.com>
-In-Reply-To: <ZYRkLfYnU3WZEWPa@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 21 Dec 2023 19:50:16 +0100
-Message-ID: <CAMRc=MfFRZJUT_Cq=x73gj71x2PFFrV1x9GL+PiEOX_KxQZkiQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] gpiolib: remove extra_checks
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Dec 21, 2023 at 5:13=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Thu, Dec 21, 2023 at 02:00:39PM +0100, Bartosz Golaszewski wrote:
-> > On Thu, Dec 21, 2023 at 1:52=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Thu, Dec 21, 2023 at 10:26:03AM +0100, Bartosz Golaszewski wrote:
-> > > > On Wed, Dec 20, 2023 at 4:28=E2=80=AFPM Linus Walleij <linus.wallei=
-j@linaro.org> wrote:
->
-> ...
->
-> > > > Defining DEBUG makes sense to
-> > > > enable dev_dbg() messages.
-> > >
-> > > Exactly!
-> > >
-> > > > CONFIG_DEBUG_GPIO is used by one driver
-> > >
-> > > By all drivers which are using pr_debug() / dev_dbg().
-> > > I am using it a lot in my development process (actually I have it ena=
-bled
-> > > in all my kernel configurations).
-> >
-> > I'm not saying we should remove it. It'll stay defined in the Makefile
-> > and remain seamless for debug messages. I just want to get rid of that
-> > ugly extra_checks variable which has very little impact.
->
-> I agree that extra_checks is unusual (or as Linus put it "non-standard")
-> thingy. And I agree that removal is for good.
->
-> My question here solely about that WARN_ON(). Do we need it always be ena=
-bled
-> or not?
->
+Instead of repeating the same code and reduce possible miss
+of READ_ONCE(), split line_get_debounce_period() heler out
+and use in the existing cases.
 
-I think it makes sense. If you're freeing a non-requested descriptor
-then you clearly are doing something wrong and the system should yell.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpiolib-cdev.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-Bart
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index 744734405912..c573820d5722 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
+@@ -651,6 +651,16 @@ static struct line *supinfo_find(struct gpio_desc *desc)
+ 	return NULL;
+ }
+ 
++static unsigned int line_get_debounce_period(struct line *line)
++{
++	return READ_ONCE(line->debounce_period_us);
++}
++
++static inline bool line_has_supinfo(struct line *line)
++{
++	return line_get_debounce_period(line);
++}
++
+ static void supinfo_to_lineinfo(struct gpio_desc *desc,
+ 				struct gpio_v2_line_info *info)
+ {
+@@ -665,15 +675,10 @@ static void supinfo_to_lineinfo(struct gpio_desc *desc,
+ 
+ 	attr = &info->attrs[info->num_attrs];
+ 	attr->id = GPIO_V2_LINE_ATTR_ID_DEBOUNCE;
+-	attr->debounce_period_us = READ_ONCE(line->debounce_period_us);
++	attr->debounce_period_us = line_get_debounce_period(line);
+ 	info->num_attrs++;
+ }
+ 
+-static inline bool line_has_supinfo(struct line *line)
+-{
+-	return READ_ONCE(line->debounce_period_us);
+-}
+-
+ /*
+  * Checks line_has_supinfo() before and after the change to avoid unnecessary
+  * supinfo_tree access.
+@@ -846,7 +851,7 @@ static enum hte_return process_hw_ts(struct hte_ts_data *ts, void *p)
+ 		line->total_discard_seq++;
+ 		line->last_seqno = ts->seq;
+ 		mod_delayed_work(system_wq, &line->work,
+-		  usecs_to_jiffies(READ_ONCE(line->debounce_period_us)));
++				 usecs_to_jiffies(line_get_debounce_period(line)));
+ 	} else {
+ 		if (unlikely(ts->seq < line->line_seqno))
+ 			return HTE_CB_HANDLED;
+@@ -987,7 +992,7 @@ static irqreturn_t debounce_irq_handler(int irq, void *p)
+ 	struct line *line = p;
+ 
+ 	mod_delayed_work(system_wq, &line->work,
+-		usecs_to_jiffies(READ_ONCE(line->debounce_period_us)));
++			 usecs_to_jiffies(line_get_debounce_period(line)));
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -1215,7 +1220,7 @@ static int edge_detector_update(struct line *line,
+ 			gpio_v2_line_config_debounce_period(lc, line_idx);
+ 
+ 	if ((active_edflags == edflags) &&
+-	    (READ_ONCE(line->debounce_period_us) == debounce_period_us))
++	    (line_get_debounce_period(line) == debounce_period_us))
+ 		return 0;
+ 
+ 	/* sw debounced and still will be...*/
+-- 
+2.43.0.rc1.1.gbec44491f096
 
-> > > > to enable code that can lead to undefined behavior (should it maybe=
- be
-> > > > #if 0?).
-> > >
-> > > I don't know what you are talking about here.
-> >
-> > I'm talking about drivers/gpio/gpio-tps65219.c and its usage of
-> > CONFIG_DEBUG_GPIO.
->
-> Oh, that one should probably be
->
-> #if 0
->         ...
-> #endif
->
-> or
->
->         if (0) {
->                 ...
->         }
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
