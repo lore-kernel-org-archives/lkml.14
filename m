@@ -1,1412 +1,486 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD1A7CD16;
-	Thu, 21 Dec 2023 13:41:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850AF7D5F6;
+	Thu, 21 Dec 2023 13:41:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lHqWS/lU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703166063; x=1734702063;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=7cz48Y4qZLURbq32KD66ok0FDqbnk4bAgO3dQp0SGvc=;
-  b=lHqWS/lUDwy4uy2euiSP/oH5Y+wP1viegPDOBMIQr2L4po1uCuvCKNcs
-   pRYhsNNWBJ7KaiwkrQVW63iZsu/ub0n9jhllH33ItvrQ1Sh4DxkZ1cxuI
-   SNc/eUpd56KeRX3TfmLRWC+AuxshljfvX9Kxv+Q84zFDGmfLYJ5qIARFp
-   whWr0mS4Dg937D+6WLnXpEduUH4mcsXwdTg7HRZfKl1gg35lVQcA6ABnh
-   FG8A2uS+dZJ0LTLpyq2ib/NfPGKyQR0S9HKeaPiqwSPSG+fK9BXaTNPfs
-   sE/TXpdOFqka8uoh4q20zeUCr2XCgB9texZ16ItwuKvCi5M4EOf+Ohxvu
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="9446078"
-X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="9446078"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 05:41:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="1108105189"
-X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="1108105189"
-Received: from pglc00021.png.intel.com ([10.221.207.41])
-  by fmsmga005.fm.intel.com with ESMTP; 21 Dec 2023 05:41:00 -0800
-From: <deepakx.nagaraju@intel.com>
-To: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: jdavem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	mun.yew.tham@intel.com,
-	Nagaraju DeepakX <deepakx.nagaraju@intel.com>,
-	Andy Schevchenko <andriy.schevchenko@linux.intel.com>
-Subject: [PATCH v2 4/4] net: ethernet: altera: rename functions and their prototypes
-Date: Thu, 21 Dec 2023 21:40:41 +0800
-Message-Id: <20231221134041.27104-5-deepakx.nagaraju@intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20231221134041.27104-1-deepakx.nagaraju@intel.com>
-References: <20231213071112.18242-6-deepakx.nagaraju@intel.com>
- <20231221134041.27104-1-deepakx.nagaraju@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="em2Pf7+7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA441C433C9;
+	Thu, 21 Dec 2023 13:41:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703166071;
+	bh=8qjHmK2bpdcXk2VB1+0on5LJjryCcZmWJwlf/k7dmgY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=em2Pf7+7Zqw9XlHWt/bw/NJ2mClWKNrzeFTYewKyCG/eOAD9Az4JJsOt4141v9IM5
+	 Zp36Y6g+BirxPKhVR2UEM3Ob59s1/8fVZVhhf9oxm/4sPni8QTCDOOB40OzzF33jvg
+	 ASE2a56MInlLMLy3qZcgoA+/CzIqTi6p2X6g7RNiL0bPAmCgPjU8nEW9gKuPucRvqB
+	 E2nmkC32HX7A5IxlyLdHaAkGNpKzLE9TDN0yTj/psTh7shEpb2aUG5YDRqEA84lxpF
+	 Q5mSG475uKtKyduASTgsGI+IqL6Z4dhStOjNHi2H715u7mhQ514A/l4j8mNsmRUq1M
+	 onGS4w1JDeW4Q==
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2041064831bso558463fac.3;
+        Thu, 21 Dec 2023 05:41:10 -0800 (PST)
+X-Gm-Message-State: AOJu0Yx+ZXqWB/SiBDz2ZN11ItZiOO9bjRjykUx0Uy9XBflYfYztLYvo
+	4PSwvYhkbRM9WmqnQ9pn74iAlLZV4tVgOVwR93Q=
+X-Google-Smtp-Source: AGHT+IE1eLTPfEQDLhxshFfitnGyQvV0xTJQecGUc+CZUzT162D+YF8Q8mKovrgiazVtRJaEiln2FHMa7iaSXlK2bwI=
+X-Received: by 2002:a05:6871:201:b0:204:a85:2580 with SMTP id
+ t1-20020a056871020100b002040a852580mr1592958oad.34.1703166070096; Thu, 21 Dec
+ 2023 05:41:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231122221814.139916-1-deller@kernel.org>
+In-Reply-To: <20231122221814.139916-1-deller@kernel.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Thu, 21 Dec 2023 22:40:33 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQZO0g-B7UUEvdJWh3FhdhmWaaSaJyyEUoVoSYG0j8v-Q@mail.gmail.com>
+Message-ID: <CAK7LNAQZO0g-B7UUEvdJWh3FhdhmWaaSaJyyEUoVoSYG0j8v-Q@mail.gmail.com>
+Subject: Re: [PATCH 0/4] Section alignment issues?
+To: deller@kernel.org
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
+	linux-modules@vger.kernel.org, linux-arch@vger.kernel.org, 
+	Luis Chamberlain <mcgrof@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Nagaraju DeepakX <deepakx.nagaraju@intel.com>
+On Thu, Nov 23, 2023 at 7:18=E2=80=AFAM <deller@kernel.org> wrote:
+>
+> From: Helge Deller <deller@gmx.de>
+>
+> While working on the 64-bit parisc kernel, I noticed that the __ksymtab[]
+> table was not correctly 64-bit aligned in many modules.
+> The following patches do fix some of those issues in the generic code.
+>
+> But further investigation shows that multiple sections in the kernel and =
+in
+> modules are possibly not correctly aligned, and thus may lead to performa=
+nce
+> degregations at runtime (small on x86, huge on parisc, sparc and others w=
+hich
+> need exception handlers). Sometimes wrong alignments may also be simply h=
+idden
+> by the linker or kernel module loader which pulls in the sections by luck=
+ with
+> a correct alignment (e.g. because the previous section was aligned alread=
+y).
+>
+> An objdump on a x86 module shows e.g.:
+>
+> ./kernel/net/netfilter/nf_log_syslog.ko:     file format elf64-x86-64
+> Sections:
+> Idx Name          Size      VMA               LMA               File off =
+ Algn
+>   0 .text         00001fdf  0000000000000000  0000000000000000  00000040 =
+ 2**4
+>                   CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+>   1 .init.text    000000f6  0000000000000000  0000000000000000  00002020 =
+ 2**4
+>                   CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+>   2 .exit.text    0000005c  0000000000000000  0000000000000000  00002120 =
+ 2**4
+>                   CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+>   3 .rodata.str1.8 000000dc  0000000000000000  0000000000000000  00002180=
+  2**3
+>                   CONTENTS, ALLOC, LOAD, READONLY, DATA
+>   4 .rodata.str1.1 0000030a  0000000000000000  0000000000000000  0000225c=
+  2**0
+>                   CONTENTS, ALLOC, LOAD, READONLY, DATA
+>   5 .rodata       000000b0  0000000000000000  0000000000000000  00002580 =
+ 2**5
+>                   CONTENTS, ALLOC, LOAD, READONLY, DATA
+>   6 .modinfo      0000019e  0000000000000000  0000000000000000  00002630 =
+ 2**0
+>                   CONTENTS, ALLOC, LOAD, READONLY, DATA
+>   7 .return_sites 00000034  0000000000000000  0000000000000000  000027ce =
+ 2**0
+>                   CONTENTS, ALLOC, LOAD, RELOC, READONLY, DATA
+>   8 .call_sites   0000029c  0000000000000000  0000000000000000  00002802 =
+ 2**0
+>                   CONTENTS, ALLOC, LOAD, RELOC, READONLY, DATA
+>
+> In this example I believe the ".return_sites" and ".call_sites" should ha=
+ve
+> an alignment of at least 32-bit (4 bytes).
+>
+> On other architectures or modules other sections like ".altinstructions" =
+or
+> "__ex_table" may show up wrongly instead.
+>
+> In general I think it would be beneficial to search for wrong alignments =
+at
+> link time, and maybe at runtime.
+>
+> The patch at the end of this cover letter
+> - adds compile time checks to the "modpost" tool, and
+> - adds a runtime check to the kernel module loader at runtime.
+> And it will possibly show false positives too (!!!)
+> I do understand that some of those sections are not performce critical
+> and thus any alignment is OK.
+>
+> The modpost patch will emit at compile time such warnings (on x86-64 kern=
+el build):
+>
+> WARNING: modpost: vmlinux: section .initcall7.init (type 1, flags 2) has =
+alignment of 1, expected at least 4.
+> Maybe you need to add ALIGN() to the modules.lds file (or fix modpost) ?
+> WARNING: modpost: vmlinux: section .altinstructions (type 1, flags 2) has=
+ alignment of 1, expected at least 2.
+> WARNING: modpost: vmlinux: section .initcall6.init (type 1, flags 2) has =
+alignment of 1, expected at least 4.
+> WARNING: modpost: vmlinux: section .initcallearly.init (type 1, flags 2) =
+has alignment of 1, expected at least 4.
+> WARNING: modpost: vmlinux: section .rodata.cst2 (type 1, flags 18) has al=
+ignment of 2, expected at least 64.
+> WARNING: modpost: vmlinux: section .static_call_tramp_key (type 1, flags =
+2) has alignment of 1, expected at least 8.
+> WARNING: modpost: vmlinux: section .con_initcall.init (type 1, flags 2) h=
+as alignment of 1, expected at least 8.
+> WARNING: modpost: vmlinux: section __bug_table (type 1, flags 3) has alig=
+nment of 1, expected at least 4.
+> ...
 
-Move standard DMA interface for sgdma and msgdma and rename them
-from tse_private to dma_private.
 
-Signed-off-by: Nagaraju DeepakX <deepakx.nagaraju@intel.com>
-Reviewed-by: Andy Schevchenko <andriy.schevchenko@linux.intel.com>
----
- drivers/net/ethernet/altera/Makefile          |   5 +-
- drivers/net/ethernet/altera/altera_eth_dma.c  |  58 ++++
- drivers/net/ethernet/altera/altera_eth_dma.h  | 121 +++++++++
- drivers/net/ethernet/altera/altera_msgdma.c   |  38 +--
- drivers/net/ethernet/altera/altera_msgdma.h   |  28 +-
- drivers/net/ethernet/altera/altera_sgdma.c    | 110 ++++----
- drivers/net/ethernet/altera/altera_sgdma.h    |  30 +--
- drivers/net/ethernet/altera/altera_tse.h      |  26 +-
- .../net/ethernet/altera/altera_tse_ethtool.c  |   1 +
- drivers/net/ethernet/altera/altera_tse_main.c | 248 +++++++-----------
- drivers/net/ethernet/altera/altera_utils.c    |   1 +
- 11 files changed, 390 insertions(+), 276 deletions(-)
- create mode 100644 drivers/net/ethernet/altera/altera_eth_dma.c
- create mode 100644 drivers/net/ethernet/altera/altera_eth_dma.h
 
-diff --git a/drivers/net/ethernet/altera/Makefile b/drivers/net/ethernet/altera/Makefile
-index a52db80aee9f..ce723832edc4 100644
---- a/drivers/net/ethernet/altera/Makefile
-+++ b/drivers/net/ethernet/altera/Makefile
-@@ -3,6 +3,9 @@
- # Makefile for the Altera device drivers.
- #
 
-+ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=NET_ALTERA
-+
- obj-$(CONFIG_ALTERA_TSE) += altera_tse.o
- altera_tse-objs := altera_tse_main.o altera_tse_ethtool.o \
--altera_msgdma.o altera_sgdma.o altera_utils.o
-+		   altera_msgdma.o altera_sgdma.o altera_utils.o \
-+		   altera_eth_dma.o
-diff --git a/drivers/net/ethernet/altera/altera_eth_dma.c b/drivers/net/ethernet/altera/altera_eth_dma.c
-new file mode 100644
-index 000000000000..6a47a3cb3406
---- /dev/null
-+++ b/drivers/net/ethernet/altera/altera_eth_dma.c
-@@ -0,0 +1,58 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* DMA support for Intel FPGA Quad-Speed Ethernet MAC driver
-+ * Copyright (C) 2023 Intel Corporation. All rights reserved
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/export.h>
-+#include <linux/io.h>
-+#include <linux/platform_device.h>
-+
-+#include "altera_eth_dma.h"
-+#include "altera_utils.h"
-+
-+/* Probe DMA */
-+int altera_eth_dma_probe(struct platform_device *pdev, struct altera_dma_private *priv,
-+			 enum altera_dma_type type)
-+{
-+	void __iomem *descmap;
-+
-+	/* xSGDMA Rx Dispatcher address space */
-+	priv->rx_dma_csr = devm_platform_ioremap_resource_byname(pdev, "rx_csr");
-+	if (IS_ERR(priv->rx_dma_csr))
-+		return PTR_ERR(priv->rx_dma_csr);
-+
-+	/* mSGDMA Tx Dispatcher address space */
-+	priv->tx_dma_csr = devm_platform_ioremap_resource_byname(pdev, "tx_csr");
-+	if (IS_ERR(priv->rx_dma_csr))
-+		return PTR_ERR(priv->rx_dma_csr);
-+
-+	switch (type) {
-+	case ALTERA_DTYPE_SGDMA:
-+		/* Get the mapped address to the SGDMA descriptor memory */
-+		descmap = devm_platform_ioremap_resource_byname(pdev, "s1");
-+		if (IS_ERR(descmap))
-+			return PTR_ERR(descmap);
-+		break;
-+	case ALTERA_DTYPE_MSGDMA:
-+		priv->rx_dma_resp = devm_platform_ioremap_resource_byname(pdev, "rx_resp");
-+		if (IS_ERR(priv->rx_dma_resp))
-+			return PTR_ERR(priv->rx_dma_resp);
-+
-+		priv->tx_dma_desc = devm_platform_ioremap_resource_byname(pdev, "tx_desc");
-+		if (IS_ERR(priv->tx_dma_desc))
-+			return PTR_ERR(priv->tx_dma_desc);
-+
-+		priv->rx_dma_desc = devm_platform_ioremap_resource_byname(pdev, "rx_desc");
-+		if (IS_ERR(priv->rx_dma_desc))
-+			return PTR_ERR(priv->rx_dma_desc);
-+		break;
-+	default:
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+
-+};
-+EXPORT_SYMBOL_NS(altera_eth_dma_probe, NET_ALTERA);
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/net/ethernet/altera/altera_eth_dma.h b/drivers/net/ethernet/altera/altera_eth_dma.h
-new file mode 100644
-index 000000000000..5007f2396221
---- /dev/null
-+++ b/drivers/net/ethernet/altera/altera_eth_dma.h
-@@ -0,0 +1,121 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* DMA support for Intel FPGA Quad-Speed Ethernet MAC driver
-+ * Copyright (C) 2023 Intel Corporation. All rights reserved
-+ */
-+
-+#ifndef __ALTERA_ETH_DMA_H__
-+#define __ALTERA_ETH_DMA_H__
-+
-+#include <linux/types.h>
-+
-+struct device;
-+struct net_device;
-+struct platform_device;
-+struct sk_buff;
-+
-+struct altera_dma_buffer;
-+struct altera_dma_private;
-+struct msgdma_pref_extended_desc;
-+
-+/* Wrapper around a pointer to a socket buffer,
-+ * so a DMA handle can be stored along with the buffer.
-+ */
-+
-+struct altera_dma_buffer {
-+	struct list_head lh;
-+	struct sk_buff *skb;
-+	dma_addr_t dma_addr;
-+	u32 len;
-+	int mapped_as_page;
-+};
-+
-+struct altera_dma_private {
-+	struct net_device *dev;
-+	struct device *device;
-+
-+	/* mSGDMA Rx Dispatcher address space */
-+	void __iomem *rx_dma_csr;
-+	void __iomem *rx_dma_desc;
-+	void __iomem *rx_dma_resp;
-+
-+	/* mSGDMA Tx Dispatcher address space */
-+	void __iomem *tx_dma_csr;
-+	void __iomem *tx_dma_desc;
-+	void __iomem *tx_dma_resp;
-+
-+	/* mSGDMA Rx Prefecher address space */
-+	void __iomem *rx_pref_csr;
-+	struct msgdma_pref_extended_desc *pref_rxdesc;
-+	dma_addr_t pref_rxdescphys;
-+	u32 pref_rx_prod;
-+
-+	/* mSGDMA Tx Prefecher address space */
-+	void __iomem *tx_pref_csr;
-+	struct msgdma_pref_extended_desc *pref_txdesc;
-+	dma_addr_t pref_txdescphys;
-+	u32 rx_poll_freq;
-+	u32 tx_poll_freq;
-+
-+	/* Rx buffers queue */
-+	struct altera_dma_buffer *rx_ring;
-+	u32 rx_cons;
-+	u32 rx_prod;
-+	u32 rx_ring_size;
-+	u32 rx_dma_buf_sz;
-+
-+	/* Tx ring buffer */
-+	struct altera_dma_buffer *tx_ring;
-+	u32 tx_prod;
-+	u32 tx_cons;
-+	u32 tx_ring_size;
-+
-+	/* Descriptor memory info for managing SGDMA */
-+	u32 txdescmem;
-+	u32 rxdescmem;
-+	dma_addr_t rxdescmem_busaddr;
-+	dma_addr_t txdescmem_busaddr;
-+	u32 txctrlreg;
-+	u32 rxctrlreg;
-+	dma_addr_t rxdescphys;
-+	dma_addr_t txdescphys;
-+
-+	struct list_head txlisthd;
-+	struct list_head rxlisthd;
-+
-+	int hwts_tx_en;
-+	int hwts_rx_en;
-+
-+	/* ethtool msglvl option */
-+	u32 msg_enable;
-+};
-+
-+enum altera_dma_type {
-+	ALTERA_DTYPE_SGDMA = 1,
-+	ALTERA_DTYPE_MSGDMA = 2,
-+};
-+
-+/* standard DMA interface for SGDMA and MSGDMA */
-+struct altera_dmaops {
-+	enum altera_dma_type altera_dtype;
-+	int dmamask;
-+	void (*reset_dma)(struct altera_dma_private *priv);
-+	void (*enable_txirq)(struct altera_dma_private *priv);
-+	void (*enable_rxirq)(struct altera_dma_private *priv);
-+	void (*disable_txirq)(struct altera_dma_private *priv);
-+	void (*disable_rxirq)(struct altera_dma_private *priv);
-+	void (*clear_txirq)(struct altera_dma_private *priv);
-+	void (*clear_rxirq)(struct altera_dma_private *priv);
-+	int (*tx_buffer)(struct altera_dma_private *priv, struct altera_dma_buffer *buffer);
-+	u32 (*tx_completions)(struct altera_dma_private *priv);
-+	void (*add_rx_desc)(struct altera_dma_private *priv, struct altera_dma_buffer *buffer);
-+	u32 (*get_rx_status)(struct altera_dma_private *priv);
-+	int (*init_dma)(struct altera_dma_private *priv);
-+	void (*uninit_dma)(struct altera_dma_private *priv);
-+	void (*start_rxdma)(struct altera_dma_private *priv);
-+	void (*start_txdma)(struct altera_dma_private *priv);
-+};
-+
-+int altera_eth_dma_probe(struct platform_device *pdev, struct altera_dma_private *priv,
-+			 enum altera_dma_type type);
-+
-+#endif /* __ALTERA_ETH_DMA_H__ */
-diff --git a/drivers/net/ethernet/altera/altera_msgdma.c b/drivers/net/ethernet/altera/altera_msgdma.c
-index ac1efd08267a..d15400c33d05 100644
---- a/drivers/net/ethernet/altera/altera_msgdma.c
-+++ b/drivers/net/ethernet/altera/altera_msgdma.c
-@@ -4,26 +4,28 @@
-  */
+modpost acts on vmlinux.o instead of vmlinux.
 
- #include <linux/netdevice.h>
--#include "altera_utils.h"
--#include "altera_tse.h"
--#include "altera_msgdmahw.h"
-+
-+#include "altera_eth_dma.h"
- #include "altera_msgdma.h"
-+#include "altera_msgdmahw.h"
-+#include "altera_tse.h"
-+#include "altera_utils.h"
 
- /* No initialization work to do for MSGDMA */
--int msgdma_initialize(struct altera_tse_private *priv)
-+int msgdma_initialize(struct altera_dma_private *priv)
+vmlinux.o is a relocatable ELF, which is not a real layout
+because no linker script has been considered yet at this
+point.
+
+
+vmlinux is an executable ELF, produced by a linker,
+with the linker script taken into consideration
+to determine the final section/symbol layout.
+
+
+So, checking this in modpost is meaningless.
+
+
+
+I did not check the module checking code, but
+modules are also relocatable ELF.
+
+
+
+
+
+
+
+
+
+
+
+>
+> while the kernel module loader may show at runtime:
+>
+> ** WARNING **:   module: efivarfs, dest=3D0xffffffffc02d08d2, section=3D.=
+retpoline_sites possibly not correctly aligned.
+> ** WARNING **:   module: efivarfs, dest=3D0xffffffffc02d0bae, section=3D.=
+ibt_endbr_seal possibly not correctly aligned.
+> ** WARNING **:   module: efivarfs, dest=3D0xffffffffc02d0be6, section=3D.=
+orc_unwind possibly not correctly aligned.
+> ** WARNING **:   module: efivarfs, dest=3D0xffffffffc02d12a6, section=3D.=
+orc_unwind_ip possibly not correctly aligned.
+> ** WARNING **:   module: efivarfs, dest=3D0xffffffffc02d178c, section=3D.=
+note.Linux possibly not correctly aligned.
+> ** WARNING **:   module: efivarfs, dest=3D0xffffffffc02d17bc, section=3D.=
+orc_header possibly not correctly aligned.
+> ** WARNING **:   module: xt_addrtype, dest=3D0xffffffffc01ef18a, size=3D0=
+x00000020, section=3D.return_sites
+>
+> My questions:
+> - Am I wrong with my analysis?
+> - What does people see on other architectures?
+> - Does it make sense to add a compile- and runtime-check, like the patch =
+below, to the kernel?
+>
+> Helge
+>
+> ---
+>
+> From: Helge Deller <deller@gmx.de>
+> Subject: [PATCH] MODPOST: Detect and report possible section alignment is=
+sues
+>
+> IMPORTANT: THIS PATCH IS NOT INTENDED TO BE APPLIED !!!!
+>
+> The main idea here is to check at compile time (during modpost run) and a=
+t
+> runtime (when loading a module) if the sections in kernel modules (and
+> vmlinux) are correctly aligned in memory and report if a wrong alignment =
+is
+> suspected.
+>
+> It WILL report false positives. Many section names still need to be added=
+ to
+> the various tables.
+> But even at this stage it gives some insight at the various possibly wron=
+g
+> section alignments.
+>
+> Signed-off-by: Helge Deller <deller@gmx.de>
+>
+> diff --git a/kernel/module/main.c b/kernel/module/main.c
+> index 98fedfdb8db5..88201d6b0c17 100644
+> --- a/kernel/module/main.c
+> +++ b/kernel/module/main.c
+> @@ -2277,6 +2277,10 @@ static int move_module(struct module *mod, struct =
+load_info *info)
+>                                 ret =3D -ENOEXEC;
+>                                 goto out_enomem;
+>                         }
+> +                       if (((uintptr_t)dest) & (BITS_PER_LONG/8 - 1)) {
+> +                               printk("** WARNING **: \tmodule: %s, dest=
+=3D0x%lx, section=3D%s possibly not correctly aligned.\n",
+> +                                       mod->name, (long)dest, info->secs=
+trings + shdr->sh_name);
+> +                       }
+>                         memcpy(dest, (void *)shdr->sh_addr, shdr->sh_size=
+);
+>                 }
+>                 /*
+> diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+> index 739402f45509..2add144a05e3 100644
+> --- a/scripts/Makefile.modpost
+> +++ b/scripts/Makefile.modpost
+> @@ -49,6 +49,8 @@ modpost-args =3D                                       =
+                                         \
+>         $(if $(KBUILD_NSDEPS),-d $(MODULES_NSDEPS))                      =
+               \
+>         $(if $(CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS)$(KBUILD_NSD=
+EPS),-N)       \
+>         $(if $(findstring 1, $(KBUILD_EXTRA_WARN)),-W)                   =
+               \
+> +       $(if $(CONFIG_64BIT),-6)                                         =
+               \
+> +       $(if $(CONFIG_HAVE_ARCH_PREL32_RELOCATIONS),-R)                  =
+               \
+>         -o $@
+>
+>  modpost-deps :=3D $(MODPOST)
+> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+> index cb6406f485a9..70c69db6a17c 100644
+> --- a/scripts/mod/modpost.c
+> +++ b/scripts/mod/modpost.c
+> @@ -43,6 +43,10 @@ static bool ignore_missing_files;
+>  /* If set to 1, only warn (instead of error) about missing ns imports */
+>  static bool allow_missing_ns_imports;
+>
+> +/* is target a 64-bit platform and has it prel32 relocation support? */
+> +static bool target_64bit;
+> +static bool target_prel32_relocations;
+> +
+>  static bool error_occurred;
+>
+>  static bool extra_warn;
+> @@ -1493,6 +1497,76 @@ static void check_sec_ref(struct module *mod, stru=
+ct elf_info *elf)
+>         }
+>  }
+>
+> +/**
+> + * Check alignment of sections in modules.
+> + **/
+> +static void check_sec_alignment(struct module *mod, struct elf_info *elf=
+)
+> +{
+> +       /* sections that may use PREL32 relocations and only need 4-byte =
+alignment */
+> +       static const char *const prel32_sec_list[] =3D {
+> +               "__tracepoints_ptrs",
+> +               "__ksymtab",
+> +               "__bug_table",
+> +               ".smp_locks",
+> +               NULL
+> +       };
+> +       /* sections that are fine with any/1-byte alignment */
+> +       static const char *const byte_sec_list[] =3D {
+> +               ".modinfo",
+> +               ".init.ramfs",
+> +               NULL
+> +       };
+> +       /* sections with special alignment */
+> +       static struct { int align; const char *name; } const special_list=
+[] =3D {
+> +               { 64,   ".rodata.cst2" },
+> +               { 0,    NULL }
+> +       };
+> +
+> +       int i;
+> +
+> +       /* ignore vmlinux for now? */
+> +       // if (mod->is_vmlinux) return;
+> +
+> +       /* Walk through all sections */
+> +       for (i =3D 0; i < elf->num_sections; i++) {
+> +               Elf_Shdr *sechdr =3D &elf->sechdrs[i];
+> +               const char *sec =3D sech_name(elf, sechdr);
+> +               const char *modname =3D mod->name;
+> +               const int is_shalign =3D sechdr->sh_addralign;
+> +               int should_shalign;
+> +               int k;
+> +
+> +               /* ignore some sections */
+> +               if ((sechdr->sh_type =3D=3D SHT_NULL) ||
+> +                   !(sechdr->sh_flags & SHF_ALLOC))
+> +                       continue;
+> +
+> +               /* default alignment is 8 for 64-bit and 4 for 32-bit tar=
+gets * */
+> +               should_shalign =3D target_64bit ? 8 : 4;
+> +               if (match(sec, prel32_sec_list))
+> +                       should_shalign =3D target_prel32_relocations ? 4 =
+: should_shalign;
+> +               else if (strstr(sec, "text")) /* assume text segments to =
+be 4-byte aligned */
+> +                       should_shalign =3D 4;
+> +               else if (match(sec, byte_sec_list)) /* any alignment is O=
+K. */
+> +                       continue;
+> +               else {
+> +                       /* search in list with special alignment */
+> +                       k =3D 0;
+> +                       while (special_list[k].align && strstarts(sec, sp=
+ecial_list[k].name)) {
+> +                               should_shalign =3D special_list[k].align;
+> +                               break;
+> +                       }
+> +               }
+> +
+> +               if (is_shalign  >=3D should_shalign)
+> +                       continue;
+> +
+> +               warn("%s: section %s (type %d, flags %lu) has alignment o=
+f %d, expected at least %d.\n"
+> +                    "Maybe you need to add ALIGN() to the modules.lds fi=
+le (or fix modpost) ?\n",
+> +                    modname, sec, sechdr->sh_type, sechdr->sh_flags, is_=
+shalign, should_shalign);
+> +       }
+> +}
+> +
+>  static char *remove_dot(char *s)
+>  {
+>         size_t n =3D strcspn(s, ".");
+> @@ -1653,6 +1727,8 @@ static void read_symbols(const char *modname)
+>                 handle_moddevtable(mod, &info, sym, symname);
+>         }
+>
+> +       check_sec_alignment(mod, &info);
+> +
+>         check_sec_ref(mod, &info);
+>
+>         if (!mod->is_vmlinux) {
+> @@ -2183,7 +2259,7 @@ int main(int argc, char **argv)
+>         LIST_HEAD(dump_lists);
+>         struct dump_list *dl, *dl2;
+>
+> -       while ((opt =3D getopt(argc, argv, "ei:MmnT:to:au:WwENd:")) !=3D =
+-1) {
+> +       while ((opt =3D getopt(argc, argv, "ei:MmnT:to:au:WwENd:6R")) !=
+=3D -1) {
+>                 switch (opt) {
+>                 case 'e':
+>                         external_module =3D true;
+> @@ -2232,6 +2308,12 @@ int main(int argc, char **argv)
+>                 case 'd':
+>                         missing_namespace_deps =3D optarg;
+>                         break;
+> +               case '6':
+> +                       target_64bit =3D true;
+> +                       break;
+> +               case 'R':
+> +                       target_prel32_relocations =3D true;
+> +                       break;
+>                 default:
+>                         exit(1);
+>                 }
+> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+> index 70c69db6a17c..b09ab081dc03 100644
+> --- a/scripts/mod/modpost.c
+> +++ b/scripts/mod/modpost.c
+> @@ -1510,15 +1510,24 @@ static void check_sec_alignment(struct module *mo=
+d, struct elf_info *elf)
+>                 ".smp_locks",
+>                 NULL
+>         };
+> -       /* sections that are fine with any/1-byte alignment */
+> +       /* sections that are fine with any alignment */
+>         static const char *const byte_sec_list[] =3D {
+>                 ".modinfo",
+>                 ".init.ramfs",
+>                 NULL
+>         };
+> -       /* sections with special alignment */
+> +       /* sections with special given minimal alignment. Checked with
+> +        * startswith(). */
+>         static struct { int align; const char *name; } const special_list=
+[] =3D {
+>                 { 64,   ".rodata.cst2" },
+> +               { 2,    ".altinstructions" }, /* at least on x86 */
+> +               { 1,    ".altinstr_replacement" },
+> +               { 1,    ".altinstr_aux" },
+> +               { 4,    ".call_sites" },
+> +               { 4,    ".return_sites" },
+> +               { 1,    ".note.Linux" },        /* correct? */
+> +               { 4,    "__ex_table" },
+> +               { 4,    ".initcall" },          /* at least 4 ? */
+>                 { 0,    NULL }
+>         };
+>
+> @@ -1545,16 +1554,17 @@ static void check_sec_alignment(struct module *mo=
+d, struct elf_info *elf)
+>                 should_shalign =3D target_64bit ? 8 : 4;
+>                 if (match(sec, prel32_sec_list))
+>                         should_shalign =3D target_prel32_relocations ? 4 =
+: should_shalign;
+> -               else if (strstr(sec, "text")) /* assume text segments to =
+be 4-byte aligned */
+> -                       should_shalign =3D 4;
+>                 else if (match(sec, byte_sec_list)) /* any alignment is O=
+K. */
+>                         continue;
+> +               else if (strstr(sec, "text")) /* assume text segments to =
+be 4-byte aligned */
+> +                       should_shalign =3D 4;
+>                 else {
+>                         /* search in list with special alignment */
+> -                       k =3D 0;
+> -                       while (special_list[k].align && strstarts(sec, sp=
+ecial_list[k].name)) {
+> -                               should_shalign =3D special_list[k].align;
+> -                               break;
+> +                       for (k =3D 0; special_list[k].align; k++) {
+> +                               if (strstarts(sec, special_list[k].name))=
  {
- 	return 0;
- }
+> +                                       should_shalign =3D special_list[k=
+].align;
+> +                                       break;
+> +                               }
+>                         }
+>                 }
+>
+> Helge Deller (4):
+>   linux/export: Fix alignment for 64-bit ksymtab entries
+>   modules: Ensure 64-bit alignment on __ksymtab_* sections
+>   vmlinux.lds.h: Fix alignment for __ksymtab*, __kcrctab_* and
+>     .pci_fixup sections
+>   modules: Add missing entry for __ex_table
+>
+>  include/asm-generic/vmlinux.lds.h | 5 +++++
+>  include/linux/export-internal.h   | 5 ++++-
+>  scripts/module.lds.S              | 9 +++++----
+>  3 files changed, 14 insertions(+), 5 deletions(-)
+>
+> --
+> 2.41.0
+>
 
--void msgdma_uninitialize(struct altera_tse_private *priv)
-+void msgdma_uninitialize(struct altera_dma_private *priv)
- {
- }
-
--void msgdma_start_rxdma(struct altera_tse_private *priv)
-+void msgdma_start_rxdma(struct altera_dma_private *priv)
- {
- }
-
--void msgdma_reset(struct altera_tse_private *priv)
-+void msgdma_reset(struct altera_dma_private *priv)
- {
- 	int counter;
-
-@@ -71,42 +73,42 @@ void msgdma_reset(struct altera_tse_private *priv)
- 	csrwr32(MSGDMA_CSR_STAT_MASK, priv->tx_dma_csr, msgdma_csroffs(status));
- }
-
--void msgdma_disable_rxirq(struct altera_tse_private *priv)
-+void msgdma_disable_rxirq(struct altera_dma_private *priv)
- {
- 	tse_clear_bit(priv->rx_dma_csr, msgdma_csroffs(control),
- 		      MSGDMA_CSR_CTL_GLOBAL_INTR);
- }
-
--void msgdma_enable_rxirq(struct altera_tse_private *priv)
-+void msgdma_enable_rxirq(struct altera_dma_private *priv)
- {
- 	tse_set_bit(priv->rx_dma_csr, msgdma_csroffs(control),
- 		    MSGDMA_CSR_CTL_GLOBAL_INTR);
- }
-
--void msgdma_disable_txirq(struct altera_tse_private *priv)
-+void msgdma_disable_txirq(struct altera_dma_private *priv)
- {
- 	tse_clear_bit(priv->tx_dma_csr, msgdma_csroffs(control),
- 		      MSGDMA_CSR_CTL_GLOBAL_INTR);
- }
-
--void msgdma_enable_txirq(struct altera_tse_private *priv)
-+void msgdma_enable_txirq(struct altera_dma_private *priv)
- {
- 	tse_set_bit(priv->tx_dma_csr, msgdma_csroffs(control),
- 		    MSGDMA_CSR_CTL_GLOBAL_INTR);
- }
-
--void msgdma_clear_rxirq(struct altera_tse_private *priv)
-+void msgdma_clear_rxirq(struct altera_dma_private *priv)
- {
- 	csrwr32(MSGDMA_CSR_STAT_IRQ, priv->rx_dma_csr, msgdma_csroffs(status));
- }
-
--void msgdma_clear_txirq(struct altera_tse_private *priv)
-+void msgdma_clear_txirq(struct altera_dma_private *priv)
- {
- 	csrwr32(MSGDMA_CSR_STAT_IRQ, priv->tx_dma_csr, msgdma_csroffs(status));
- }
-
- /* return 0 to indicate transmit is pending */
--int msgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
-+int msgdma_tx_buffer(struct altera_dma_private *priv, struct altera_dma_buffer *buffer)
- {
- 	csrwr32(lower_32_bits(buffer->dma_addr), priv->tx_dma_desc,
- 		msgdma_descroffs(read_addr_lo));
-@@ -123,7 +125,7 @@ int msgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
- 	return 0;
- }
-
--u32 msgdma_tx_completions(struct altera_tse_private *priv)
-+u32 msgdma_tx_completions(struct altera_dma_private *priv)
- {
- 	u32 ready = 0;
- 	u32 inuse;
-@@ -149,8 +151,8 @@ u32 msgdma_tx_completions(struct altera_tse_private *priv)
-
- /* Put buffer to the mSGDMA RX FIFO
-  */
--void msgdma_add_rx_desc(struct altera_tse_private *priv,
--			struct tse_buffer *rxbuffer)
-+void msgdma_add_rx_desc(struct altera_dma_private *priv,
-+			struct altera_dma_buffer *rxbuffer)
- {
- 	u32 len = priv->rx_dma_buf_sz;
- 	dma_addr_t dma_addr = rxbuffer->dma_addr;
-@@ -176,7 +178,7 @@ void msgdma_add_rx_desc(struct altera_tse_private *priv,
- /* status is returned on upper 16 bits,
-  * length is returned in lower 16 bits
-  */
--u32 msgdma_rx_status(struct altera_tse_private *priv)
-+u32 msgdma_rx_status(struct altera_dma_private *priv)
- {
- 	u32 rxstatus = 0;
- 	u32 pktlength;
-diff --git a/drivers/net/ethernet/altera/altera_msgdma.h b/drivers/net/ethernet/altera/altera_msgdma.h
-index 9813fbfff4d3..ac04eb676bc8 100644
---- a/drivers/net/ethernet/altera/altera_msgdma.h
-+++ b/drivers/net/ethernet/altera/altera_msgdma.h
-@@ -6,19 +6,19 @@
- #ifndef __ALTERA_MSGDMA_H__
- #define __ALTERA_MSGDMA_H__
-
--void msgdma_reset(struct altera_tse_private *);
--void msgdma_enable_txirq(struct altera_tse_private *);
--void msgdma_enable_rxirq(struct altera_tse_private *);
--void msgdma_disable_rxirq(struct altera_tse_private *);
--void msgdma_disable_txirq(struct altera_tse_private *);
--void msgdma_clear_rxirq(struct altera_tse_private *);
--void msgdma_clear_txirq(struct altera_tse_private *);
--u32 msgdma_tx_completions(struct altera_tse_private *);
--void msgdma_add_rx_desc(struct altera_tse_private *, struct tse_buffer *);
--int msgdma_tx_buffer(struct altera_tse_private *, struct tse_buffer *);
--u32 msgdma_rx_status(struct altera_tse_private *);
--int msgdma_initialize(struct altera_tse_private *);
--void msgdma_uninitialize(struct altera_tse_private *);
--void msgdma_start_rxdma(struct altera_tse_private *);
-+void msgdma_reset(struct altera_dma_private *priv);
-+void msgdma_enable_txirq(struct altera_dma_private *priv);
-+void msgdma_enable_rxirq(struct altera_dma_private *priv);
-+void msgdma_disable_rxirq(struct altera_dma_private *priv);
-+void msgdma_disable_txirq(struct altera_dma_private *priv);
-+void msgdma_clear_rxirq(struct altera_dma_private *priv);
-+void msgdma_clear_txirq(struct altera_dma_private *priv);
-+u32 msgdma_tx_completions(struct altera_dma_private *priv);
-+void msgdma_add_rx_desc(struct altera_dma_private *priv, struct altera_dma_buffer *buffer);
-+int msgdma_tx_buffer(struct altera_dma_private *priv, struct altera_dma_buffer *buffer);
-+u32 msgdma_rx_status(struct altera_dma_private *priv);
-+int msgdma_initialize(struct altera_dma_private *priv);
-+void msgdma_uninitialize(struct altera_dma_private *priv);
-+void msgdma_start_rxdma(struct altera_dma_private *priv);
-
- #endif /*  __ALTERA_MSGDMA_H__ */
-diff --git a/drivers/net/ethernet/altera/altera_sgdma.c b/drivers/net/ethernet/altera/altera_sgdma.c
-index d4edfb3e09e8..14f7b0115eda 100644
---- a/drivers/net/ethernet/altera/altera_sgdma.c
-+++ b/drivers/net/ethernet/altera/altera_sgdma.c
-@@ -4,10 +4,12 @@
-  */
-
- #include <linux/list.h>
--#include "altera_utils.h"
--#include "altera_tse.h"
--#include "altera_sgdmahw.h"
-+#include <linux/netdevice.h>
-+
-+#include "altera_eth_dma.h"
- #include "altera_sgdma.h"
-+#include "altera_sgdmahw.h"
-+#include "altera_utils.h"
-
- static void sgdma_setup_descrip(struct sgdma_descrip __iomem *desc,
- 				struct sgdma_descrip __iomem *ndesc,
-@@ -19,39 +21,39 @@ static void sgdma_setup_descrip(struct sgdma_descrip __iomem *desc,
- 				int rfixed,
- 				int wfixed);
-
--static int sgdma_async_write(struct altera_tse_private *priv,
-+static int sgdma_async_write(struct altera_dma_private *priv,
- 			     struct sgdma_descrip __iomem *desc);
-
--static int sgdma_async_read(struct altera_tse_private *priv);
-+static int sgdma_async_read(struct altera_dma_private *priv);
-
- static dma_addr_t
--sgdma_txphysaddr(struct altera_tse_private *priv,
-+sgdma_txphysaddr(struct altera_dma_private *priv,
- 		 struct sgdma_descrip __iomem *desc);
-
- static dma_addr_t
--sgdma_rxphysaddr(struct altera_tse_private *priv,
-+sgdma_rxphysaddr(struct altera_dma_private *priv,
- 		 struct sgdma_descrip __iomem *desc);
-
--static int sgdma_txbusy(struct altera_tse_private *priv);
-+static int sgdma_txbusy(struct altera_dma_private *priv);
-
--static int sgdma_rxbusy(struct altera_tse_private *priv);
-+static int sgdma_rxbusy(struct altera_dma_private *priv);
-
- static void
--queue_tx(struct altera_tse_private *priv, struct tse_buffer *buffer);
-+queue_tx(struct altera_dma_private *priv, struct altera_dma_buffer *buffer);
-
- static void
--queue_rx(struct altera_tse_private *priv, struct tse_buffer *buffer);
-+queue_rx(struct altera_dma_private *priv, struct altera_dma_buffer *buffer);
-
--static struct tse_buffer *
--dequeue_tx(struct altera_tse_private *priv);
-+static struct altera_dma_buffer *
-+dequeue_tx(struct altera_dma_private *priv);
-
--static struct tse_buffer *
--dequeue_rx(struct altera_tse_private *priv);
-+static struct altera_dma_buffer *
-+dequeue_rx(struct altera_dma_private *priv);
-
--static struct tse_buffer *
--queue_rx_peekhead(struct altera_tse_private *priv);
-+static struct altera_dma_buffer *
-+queue_rx_peekhead(struct altera_dma_private *priv);
-
--int sgdma_initialize(struct altera_tse_private *priv)
-+int sgdma_initialize(struct altera_dma_private *priv)
- {
- 	priv->txctrlreg = SGDMA_CTRLREG_ILASTD |
- 		      SGDMA_CTRLREG_INTEN;
-@@ -96,7 +98,7 @@ int sgdma_initialize(struct altera_tse_private *priv)
- 	return 0;
- }
-
--void sgdma_uninitialize(struct altera_tse_private *priv)
-+void sgdma_uninitialize(struct altera_dma_private *priv)
- {
- 	if (priv->rxdescphys)
- 		dma_unmap_single(priv->device, priv->rxdescphys,
-@@ -110,7 +112,7 @@ void sgdma_uninitialize(struct altera_tse_private *priv)
- /* This function resets the SGDMA controller and clears the
-  * descriptor memory used for transmits and receives.
-  */
--void sgdma_reset(struct altera_tse_private *priv)
-+void sgdma_reset(struct altera_dma_private *priv)
- {
- 	/* Initialize descriptor memory to 0 */
- 	memset_io(priv->tx_dma_desc, 0, priv->txdescmem);
-@@ -128,29 +130,29 @@ void sgdma_reset(struct altera_tse_private *priv)
-  * and disable
-  */
-
--void sgdma_enable_rxirq(struct altera_tse_private *priv)
-+void sgdma_enable_rxirq(struct altera_dma_private *priv)
- {
- }
-
--void sgdma_enable_txirq(struct altera_tse_private *priv)
-+void sgdma_enable_txirq(struct altera_dma_private *priv)
- {
- }
-
--void sgdma_disable_rxirq(struct altera_tse_private *priv)
-+void sgdma_disable_rxirq(struct altera_dma_private *priv)
- {
- }
-
--void sgdma_disable_txirq(struct altera_tse_private *priv)
-+void sgdma_disable_txirq(struct altera_dma_private *priv)
- {
- }
-
--void sgdma_clear_rxirq(struct altera_tse_private *priv)
-+void sgdma_clear_rxirq(struct altera_dma_private *priv)
- {
- 	tse_set_bit(priv->rx_dma_csr, sgdma_csroffs(control),
- 		    SGDMA_CTRLREG_CLRINT);
- }
-
--void sgdma_clear_txirq(struct altera_tse_private *priv)
-+void sgdma_clear_txirq(struct altera_dma_private *priv)
- {
- 	tse_set_bit(priv->tx_dma_csr, sgdma_csroffs(control),
- 		    SGDMA_CTRLREG_CLRINT);
-@@ -161,7 +163,7 @@ void sgdma_clear_txirq(struct altera_tse_private *priv)
-  *
-  * tx_lock is held by the caller
-  */
--int sgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
-+int sgdma_tx_buffer(struct altera_dma_private *priv, struct altera_dma_buffer *buffer)
- {
- 	struct sgdma_descrip __iomem *descbase =
- 		(struct sgdma_descrip __iomem *)priv->tx_dma_desc;
-@@ -192,7 +194,7 @@ int sgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
- }
-
- /* tx_lock held to protect access to queued tx list */
--u32 sgdma_tx_completions(struct altera_tse_private *priv)
-+u32 sgdma_tx_completions(struct altera_dma_private *priv)
- {
- 	u32 ready = 0;
-
-@@ -206,13 +208,13 @@ u32 sgdma_tx_completions(struct altera_tse_private *priv)
- 	return ready;
- }
-
--void sgdma_start_rxdma(struct altera_tse_private *priv)
-+void sgdma_start_rxdma(struct altera_dma_private *priv)
- {
- 	sgdma_async_read(priv);
- }
-
--void sgdma_add_rx_desc(struct altera_tse_private *priv,
--		       struct tse_buffer *rxbuffer)
-+void sgdma_add_rx_desc(struct altera_dma_private *priv,
-+		       struct altera_dma_buffer *rxbuffer)
- {
- 	queue_rx(priv, rxbuffer);
- }
-@@ -220,12 +222,12 @@ void sgdma_add_rx_desc(struct altera_tse_private *priv,
- /* status is returned on upper 16 bits,
-  * length is returned in lower 16 bits
-  */
--u32 sgdma_rx_status(struct altera_tse_private *priv)
-+u32 sgdma_rx_status(struct altera_dma_private *priv)
- {
- 	struct sgdma_descrip __iomem *base =
- 		(struct sgdma_descrip __iomem *)priv->rx_dma_desc;
- 	struct sgdma_descrip __iomem *desc = NULL;
--	struct tse_buffer *rxbuffer = NULL;
-+	struct altera_dma_buffer *rxbuffer = NULL;
- 	unsigned int rxstatus = 0;
-
- 	u32 sts = csrrd32(priv->rx_dma_csr, sgdma_csroffs(status));
-@@ -327,14 +329,14 @@ static void sgdma_setup_descrip(struct sgdma_descrip __iomem *desc,
-  * If read status indicate not busy and a status, restart the async
-  * DMA read.
-  */
--static int sgdma_async_read(struct altera_tse_private *priv)
-+static int sgdma_async_read(struct altera_dma_private *priv)
- {
- 	struct sgdma_descrip __iomem *descbase =
- 		(struct sgdma_descrip __iomem *)priv->rx_dma_desc;
-
- 	struct sgdma_descrip __iomem *cdesc = &descbase[0];
- 	struct sgdma_descrip __iomem *ndesc = &descbase[1];
--	struct tse_buffer *rxbuffer = NULL;
-+	struct altera_dma_buffer *rxbuffer = NULL;
-
- 	if (!sgdma_rxbusy(priv)) {
- 		rxbuffer = queue_rx_peekhead(priv);
-@@ -372,7 +374,7 @@ static int sgdma_async_read(struct altera_tse_private *priv)
- 	return 0;
- }
-
--static int sgdma_async_write(struct altera_tse_private *priv,
-+static int sgdma_async_write(struct altera_dma_private *priv,
- 			     struct sgdma_descrip __iomem *desc)
- {
- 	if (sgdma_txbusy(priv))
-@@ -397,7 +399,7 @@ static int sgdma_async_write(struct altera_tse_private *priv,
- }
-
- static dma_addr_t
--sgdma_txphysaddr(struct altera_tse_private *priv,
-+sgdma_txphysaddr(struct altera_dma_private *priv,
- 		 struct sgdma_descrip __iomem *desc)
- {
- 	dma_addr_t paddr = priv->txdescmem_busaddr;
-@@ -407,7 +409,7 @@ sgdma_txphysaddr(struct altera_tse_private *priv,
- }
-
- static dma_addr_t
--sgdma_rxphysaddr(struct altera_tse_private *priv,
-+sgdma_rxphysaddr(struct altera_dma_private *priv,
- 		 struct sgdma_descrip __iomem *desc)
- {
- 	dma_addr_t paddr = priv->rxdescmem_busaddr;
-@@ -438,7 +440,7 @@ sgdma_rxphysaddr(struct altera_tse_private *priv,
-  * primitive to avoid simultaneous pushes/pops to the list.
-  */
- static void
--queue_tx(struct altera_tse_private *priv, struct tse_buffer *buffer)
-+queue_tx(struct altera_dma_private *priv, struct altera_dma_buffer *buffer)
- {
- 	list_add_tail(&buffer->lh, &priv->txlisthd);
- }
-@@ -448,7 +450,7 @@ queue_tx(struct altera_tse_private *priv, struct tse_buffer *buffer)
-  * primitive to avoid simultaneous pushes/pops to the list.
-  */
- static void
--queue_rx(struct altera_tse_private *priv, struct tse_buffer *buffer)
-+queue_rx(struct altera_dma_private *priv, struct altera_dma_buffer *buffer)
- {
- 	list_add_tail(&buffer->lh, &priv->rxlisthd);
- }
-@@ -458,12 +460,12 @@ queue_rx(struct altera_tse_private *priv, struct tse_buffer *buffer)
-  * assumes the caller is managing and holding a mutual exclusion
-  * primitive to avoid simultaneous pushes/pops to the list.
-  */
--static struct tse_buffer *
--dequeue_tx(struct altera_tse_private *priv)
-+static struct altera_dma_buffer *
-+dequeue_tx(struct altera_dma_private *priv)
- {
--	struct tse_buffer *buffer = NULL;
-+	struct altera_dma_buffer *buffer = NULL;
-
--	list_remove_head(&priv->txlisthd, buffer, struct tse_buffer, lh);
-+	list_remove_head(&priv->txlisthd, buffer, struct altera_dma_buffer, lh);
- 	return buffer;
- }
-
-@@ -472,12 +474,12 @@ dequeue_tx(struct altera_tse_private *priv)
-  * assumes the caller is managing and holding a mutual exclusion
-  * primitive to avoid simultaneous pushes/pops to the list.
-  */
--static struct tse_buffer *
--dequeue_rx(struct altera_tse_private *priv)
-+static struct altera_dma_buffer *
-+dequeue_rx(struct altera_dma_private *priv)
- {
--	struct tse_buffer *buffer = NULL;
-+	struct altera_dma_buffer *buffer = NULL;
-
--	list_remove_head(&priv->rxlisthd, buffer, struct tse_buffer, lh);
-+	list_remove_head(&priv->rxlisthd, buffer, struct altera_dma_buffer, lh);
- 	return buffer;
- }
-
-@@ -487,18 +489,18 @@ dequeue_rx(struct altera_tse_private *priv)
-  * primitive to avoid simultaneous pushes/pops to the list while the
-  * head is being examined.
-  */
--static struct tse_buffer *
--queue_rx_peekhead(struct altera_tse_private *priv)
-+static struct altera_dma_buffer *
-+queue_rx_peekhead(struct altera_dma_private *priv)
- {
--	struct tse_buffer *buffer = NULL;
-+	struct altera_dma_buffer *buffer = NULL;
-
--	list_peek_head(&priv->rxlisthd, buffer, struct tse_buffer, lh);
-+	list_peek_head(&priv->rxlisthd, buffer, struct altera_dma_buffer, lh);
- 	return buffer;
- }
-
- /* check and return rx sgdma status without polling
-  */
--static int sgdma_rxbusy(struct altera_tse_private *priv)
-+static int sgdma_rxbusy(struct altera_dma_private *priv)
- {
- 	return csrrd32(priv->rx_dma_csr, sgdma_csroffs(status))
- 		       & SGDMA_STSREG_BUSY;
-@@ -507,7 +509,7 @@ static int sgdma_rxbusy(struct altera_tse_private *priv)
- /* waits for the tx sgdma to finish it's current operation, returns 0
-  * when it transitions to nonbusy, returns 1 if the operation times out
-  */
--static int sgdma_txbusy(struct altera_tse_private *priv)
-+static int sgdma_txbusy(struct altera_dma_private *priv)
- {
- 	int delay = 0;
-
-diff --git a/drivers/net/ethernet/altera/altera_sgdma.h b/drivers/net/ethernet/altera/altera_sgdma.h
-index 08afe1c9994f..998deb74c5f1 100644
---- a/drivers/net/ethernet/altera/altera_sgdma.h
-+++ b/drivers/net/ethernet/altera/altera_sgdma.h
-@@ -6,20 +6,20 @@
- #ifndef __ALTERA_SGDMA_H__
- #define __ALTERA_SGDMA_H__
-
--void sgdma_reset(struct altera_tse_private *);
--void sgdma_enable_txirq(struct altera_tse_private *);
--void sgdma_enable_rxirq(struct altera_tse_private *);
--void sgdma_disable_rxirq(struct altera_tse_private *);
--void sgdma_disable_txirq(struct altera_tse_private *);
--void sgdma_clear_rxirq(struct altera_tse_private *);
--void sgdma_clear_txirq(struct altera_tse_private *);
--int sgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *);
--u32 sgdma_tx_completions(struct altera_tse_private *);
--void sgdma_add_rx_desc(struct altera_tse_private *priv, struct tse_buffer *);
--void sgdma_status(struct altera_tse_private *);
--u32 sgdma_rx_status(struct altera_tse_private *);
--int sgdma_initialize(struct altera_tse_private *);
--void sgdma_uninitialize(struct altera_tse_private *);
--void sgdma_start_rxdma(struct altera_tse_private *);
-+void sgdma_reset(struct altera_dma_private *priv);
-+void sgdma_enable_txirq(struct altera_dma_private *priv);
-+void sgdma_enable_rxirq(struct altera_dma_private *priv);
-+void sgdma_disable_rxirq(struct altera_dma_private *priv);
-+void sgdma_disable_txirq(struct altera_dma_private *priv);
-+void sgdma_clear_rxirq(struct altera_dma_private *priv);
-+void sgdma_clear_txirq(struct altera_dma_private *priv);
-+int sgdma_tx_buffer(struct altera_dma_private *priv, struct altera_dma_buffer *buffer);
-+u32 sgdma_tx_completions(struct altera_dma_private *priv);
-+void sgdma_add_rx_desc(struct altera_dma_private *priv, struct altera_dma_buffer *buffer);
-+void sgdma_status(struct altera_dma_private *priv);
-+u32 sgdma_rx_status(struct altera_dma_private *priv);
-+int sgdma_initialize(struct altera_dma_private *priv);
-+void sgdma_uninitialize(struct altera_dma_private *priv);
-+void sgdma_start_rxdma(struct altera_dma_private *priv);
-
- #endif /*  __ALTERA_SGDMA_H__ */
-diff --git a/drivers/net/ethernet/altera/altera_tse.h b/drivers/net/ethernet/altera/altera_tse.h
-index 4874139e7cdf..020ac5946acc 100644
---- a/drivers/net/ethernet/altera/altera_tse.h
-+++ b/drivers/net/ethernet/altera/altera_tse.h
-@@ -368,29 +368,6 @@ struct tse_buffer {
-
- struct altera_tse_private;
-
--#define ALTERA_DTYPE_SGDMA 1
--#define ALTERA_DTYPE_MSGDMA 2
--
--/* standard DMA interface for SGDMA and MSGDMA */
--struct altera_dmaops {
--	int altera_dtype;
--	int dmamask;
--	void (*reset_dma)(struct altera_tse_private *);
--	void (*enable_txirq)(struct altera_tse_private *);
--	void (*enable_rxirq)(struct altera_tse_private *);
--	void (*disable_txirq)(struct altera_tse_private *);
--	void (*disable_rxirq)(struct altera_tse_private *);
--	void (*clear_txirq)(struct altera_tse_private *);
--	void (*clear_rxirq)(struct altera_tse_private *);
--	int (*tx_buffer)(struct altera_tse_private *, struct tse_buffer *);
--	u32 (*tx_completions)(struct altera_tse_private *);
--	void (*add_rx_desc)(struct altera_tse_private *, struct tse_buffer *);
--	u32 (*get_rx_status)(struct altera_tse_private *);
--	int (*init_dma)(struct altera_tse_private *);
--	void (*uninit_dma)(struct altera_tse_private *);
--	void (*start_rxdma)(struct altera_tse_private *);
--};
--
- /* This structure is private to each device.
-  */
- struct altera_tse_private {
-@@ -401,6 +378,9 @@ struct altera_tse_private {
- 	/* MAC address space */
- 	struct altera_tse_mac __iomem *mac_dev;
-
-+	/* Shared DMA structure */
-+	struct altera_dma_private dma_priv;
-+
- 	/* TSE Revision */
- 	u32	revision;
-
-diff --git a/drivers/net/ethernet/altera/altera_tse_ethtool.c b/drivers/net/ethernet/altera/altera_tse_ethtool.c
-index d34373bac94a..6253bfe86e47 100644
---- a/drivers/net/ethernet/altera/altera_tse_ethtool.c
-+++ b/drivers/net/ethernet/altera/altera_tse_ethtool.c
-@@ -21,6 +21,7 @@
- #include <linux/netdevice.h>
- #include <linux/phy.h>
-
-+#include "altera_eth_dma.h"
- #include "altera_tse.h"
- #include "altera_utils.h"
-
-diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
-index 6a1a004ea693..1b66970a40e6 100644
---- a/drivers/net/ethernet/altera/altera_tse_main.c
-+++ b/drivers/net/ethernet/altera/altera_tse_main.c
-@@ -29,21 +29,23 @@
- #include <linux/mii.h>
- #include <linux/mdio/mdio-regmap.h>
- #include <linux/netdevice.h>
--#include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/of_mdio.h>
- #include <linux/of_net.h>
-+#include <linux/of_platform.h>
- #include <linux/pcs-lynx.h>
- #include <linux/phy.h>
- #include <linux/platform_device.h>
--#include <linux/property.h>
- #include <linux/regmap.h>
- #include <linux/skbuff.h>
-+
- #include <asm/cacheflush.h>
-
--#include "altera_utils.h"
--#include "altera_tse.h"
--#include "altera_sgdma.h"
-+#include "altera_eth_dma.h"
- #include "altera_msgdma.h"
-+#include "altera_sgdma.h"
-+#include "altera_tse.h"
-+#include "altera_utils.h"
-
- static atomic_t instance_count = ATOMIC_INIT(~0);
- /* Module parameters */
-@@ -78,13 +80,15 @@ MODULE_PARM_DESC(dma_tx_num, "Number of descriptors in the TX list");
- /* Allow network stack to resume queuing packets after we've
-  * finished transmitting at least 1/4 of the packets in the queue.
-  */
--#define TSE_TX_THRESH(x)	(x->tx_ring_size / 4)
-+#define TSE_TX_THRESH(x)	(x->dma_priv.tx_ring_size / 4)
-
- #define TXQUEUESTOP_THRESHHOLD	2
-
- static inline u32 tse_tx_avail(struct altera_tse_private *priv)
- {
--	return priv->tx_cons + priv->tx_ring_size - priv->tx_prod - 1;
-+	struct altera_dma_private *dma = &priv->dma_priv;
-+
-+	return dma->tx_cons + dma->tx_ring_size - dma->tx_prod - 1;
- }
-
- /* MDIO specific functions
-@@ -193,7 +197,7 @@ static void altera_tse_mdio_destroy(struct net_device *dev)
- }
-
- static int tse_init_rx_buffer(struct altera_tse_private *priv,
--			      struct tse_buffer *rxbuffer, int len)
-+			      struct altera_dma_buffer *rxbuffer, int len)
- {
- 	rxbuffer->skb = netdev_alloc_skb_ip_align(priv->dev, len);
- 	if (!rxbuffer->skb)
-@@ -214,7 +218,7 @@ static int tse_init_rx_buffer(struct altera_tse_private *priv,
- }
-
- static void tse_free_rx_buffer(struct altera_tse_private *priv,
--			       struct tse_buffer *rxbuffer)
-+			       struct altera_dma_buffer *rxbuffer)
- {
- 	dma_addr_t dma_addr = rxbuffer->dma_addr;
- 	struct sk_buff *skb = rxbuffer->skb;
-@@ -233,7 +237,7 @@ static void tse_free_rx_buffer(struct altera_tse_private *priv,
- /* Unmap and free Tx buffer resources
-  */
- static void tse_free_tx_buffer(struct altera_tse_private *priv,
--			       struct tse_buffer *buffer)
-+			       struct altera_dma_buffer *buffer)
- {
- 	if (buffer->dma_addr) {
- 		if (buffer->mapped_as_page)
-@@ -252,42 +256,42 @@ static void tse_free_tx_buffer(struct altera_tse_private *priv,
-
- static int alloc_init_skbufs(struct altera_tse_private *priv)
- {
--	unsigned int rx_descs = priv->rx_ring_size;
--	unsigned int tx_descs = priv->tx_ring_size;
-+	struct altera_dma_private *dma = &priv->dma_priv;
-+	unsigned int rx_descs = dma->rx_ring_size;
-+	unsigned int tx_descs = dma->tx_ring_size;
- 	int ret = -ENOMEM;
- 	int i;
-
- 	/* Create Rx ring buffer */
--	priv->rx_ring = kcalloc(rx_descs, sizeof(struct tse_buffer), GFP_KERNEL);
--	if (!priv->rx_ring)
-+	dma->rx_ring = kcalloc(rx_descs, sizeof(struct altera_dma_private), GFP_KERNEL);
-+	if (!dma->rx_ring)
- 		goto err_rx_ring;
-
- 	/* Create Tx ring buffer */
--	priv->tx_ring = kcalloc(tx_descs, sizeof(struct tse_buffer), GFP_KERNEL);
--	if (!priv->tx_ring)
-+	dma->tx_ring = kcalloc(tx_descs, sizeof(struct altera_dma_private), GFP_KERNEL);
-+	if (!dma->tx_ring)
- 		goto err_tx_ring;
-
--	priv->tx_cons = 0;
--	priv->tx_prod = 0;
-+	dma->tx_cons = 0;
-+	dma->tx_prod = 0;
-
- 	/* Init Rx ring */
- 	for (i = 0; i < rx_descs; i++) {
--		ret = tse_init_rx_buffer(priv, &priv->rx_ring[i],
--					 priv->rx_dma_buf_sz);
-+		ret = tse_init_rx_buffer(priv, &priv->dma_priv.rx_ring[i], dma->rx_dma_buf_sz);
- 		if (ret)
- 			goto err_init_rx_buffers;
- 	}
-
--	priv->rx_cons = 0;
--	priv->rx_prod = 0;
-+	dma->rx_cons = 0;
-+	dma->rx_prod = 0;
-
- 	return 0;
- err_init_rx_buffers:
- 	while (--i >= 0)
--		tse_free_rx_buffer(priv, &priv->rx_ring[i]);
--	kfree(priv->tx_ring);
-+		tse_free_rx_buffer(priv, &priv->dma_priv.rx_ring[i]);
-+	kfree(dma->tx_ring);
- err_tx_ring:
--	kfree(priv->rx_ring);
-+	kfree(dma->rx_ring);
- err_rx_ring:
- 	return ret;
- }
-@@ -295,36 +299,38 @@ static int alloc_init_skbufs(struct altera_tse_private *priv)
- static void free_skbufs(struct net_device *dev)
- {
- 	struct altera_tse_private *priv = netdev_priv(dev);
--	unsigned int rx_descs = priv->rx_ring_size;
--	unsigned int tx_descs = priv->tx_ring_size;
-+	struct altera_dma_private *dma = &priv->dma_priv;
-+	unsigned int rx_descs = dma->rx_ring_size;
-+	unsigned int tx_descs = dma->tx_ring_size;
- 	int i;
-
- 	/* Release the DMA TX/RX socket buffers */
- 	for (i = 0; i < rx_descs; i++)
--		tse_free_rx_buffer(priv, &priv->rx_ring[i]);
-+		tse_free_rx_buffer(priv, &priv->dma_priv.rx_ring[i]);
- 	for (i = 0; i < tx_descs; i++)
--		tse_free_tx_buffer(priv, &priv->tx_ring[i]);
-+		tse_free_tx_buffer(priv, &priv->dma_priv.tx_ring[i]);
-
-
--	kfree(priv->tx_ring);
-+	kfree(dma->tx_ring);
- }
-
- /* Reallocate the skb for the reception process
-  */
- static inline void tse_rx_refill(struct altera_tse_private *priv)
- {
--	unsigned int rxsize = priv->rx_ring_size;
-+	struct altera_dma_private *dma = &priv->dma_priv;
-+	unsigned int rxsize = dma->rx_ring_size;
- 	unsigned int entry;
- 	int ret;
-
--	for (; priv->rx_cons - priv->rx_prod > 0; priv->rx_prod++) {
--		entry = priv->rx_prod % rxsize;
--		if (likely(priv->rx_ring[entry].skb == NULL)) {
--			ret = tse_init_rx_buffer(priv, &priv->rx_ring[entry],
--				priv->rx_dma_buf_sz);
-+	for (; dma->rx_cons - dma->rx_prod > 0; dma->rx_prod++) {
-+		entry = dma->rx_prod % rxsize;
-+		if (likely(dma->rx_ring[entry].skb == NULL)) {
-+			ret = tse_init_rx_buffer(priv, &priv->dma_priv.rx_ring[entry],
-+						 dma->rx_dma_buf_sz);
- 			if (unlikely(ret != 0))
- 				break;
--			priv->dmaops->add_rx_desc(priv, &priv->rx_ring[entry]);
-+			priv->dmaops->add_rx_desc(&priv->dma_priv, &priv->dma_priv.rx_ring[entry]);
- 		}
- 	}
- }
-@@ -349,7 +355,8 @@ static inline void tse_rx_vlan(struct net_device *dev, struct sk_buff *skb)
-  */
- static int tse_rx(struct altera_tse_private *priv, int limit)
- {
--	unsigned int entry = priv->rx_cons % priv->rx_ring_size;
-+	struct altera_dma_private *dma = &priv->dma_priv;
-+	unsigned int entry = dma->rx_cons % dma->rx_ring_size;
- 	unsigned int next_entry;
- 	unsigned int count = 0;
- 	struct sk_buff *skb;
-@@ -363,7 +370,7 @@ static int tse_rx(struct altera_tse_private *priv, int limit)
- 	* (reading the last byte of the response pops the value from the fifo.)
- 	*/
- 	while ((count < limit) &&
--	       ((rxstatus = priv->dmaops->get_rx_status(priv)) != 0)) {
-+	       ((rxstatus = priv->dmaops->get_rx_status(&priv->dma_priv)) != 0)) {
- 		pktstatus = rxstatus >> 16;
- 		pktlength = rxstatus & 0xffff;
-
-@@ -379,9 +386,9 @@ static int tse_rx(struct altera_tse_private *priv, int limit)
- 		pktlength -= 2;
-
- 		count++;
--		next_entry = (++priv->rx_cons) % priv->rx_ring_size;
-+		next_entry = (++dma->rx_cons) % dma->rx_ring_size;
-
--		skb = priv->rx_ring[entry].skb;
-+		skb = dma->rx_ring[entry].skb;
- 		if (unlikely(!skb)) {
- 			netdev_err(priv->dev,
- 				   "%s: Inconsistent Rx descriptor chain\n",
-@@ -389,12 +396,12 @@ static int tse_rx(struct altera_tse_private *priv, int limit)
- 			priv->dev->stats.rx_dropped++;
- 			break;
- 		}
--		priv->rx_ring[entry].skb = NULL;
-+		dma->rx_ring[entry].skb = NULL;
-
- 		skb_put(skb, pktlength);
-
--		dma_unmap_single(priv->device, priv->rx_ring[entry].dma_addr,
--				 priv->rx_ring[entry].len, DMA_FROM_DEVICE);
-+		dma_unmap_single(priv->device, dma->rx_ring[entry].dma_addr,
-+				 dma->rx_ring[entry].len, DMA_FROM_DEVICE);
-
- 		if (netif_msg_pktdata(priv)) {
- 			netdev_info(priv->dev, "frame received %d bytes\n",
-@@ -425,30 +432,31 @@ static int tse_rx(struct altera_tse_private *priv, int limit)
-  */
- static int tse_tx_complete(struct altera_tse_private *priv)
- {
--	unsigned int txsize = priv->tx_ring_size;
--	struct tse_buffer *tx_buff;
-+	struct altera_dma_private *dma = &priv->dma_priv;
-+	unsigned int txsize = dma->tx_ring_size;
-+	struct altera_dma_buffer *tx_buff;
- 	unsigned int entry;
- 	int txcomplete = 0;
- 	u32 ready;
-
- 	spin_lock(&priv->tx_lock);
-
--	ready = priv->dmaops->tx_completions(priv);
-+	ready = priv->dmaops->tx_completions(&priv->dma_priv);
-
- 	/* Free sent buffers */
--	while (ready && (priv->tx_cons != priv->tx_prod)) {
--		entry = priv->tx_cons % txsize;
--		tx_buff = &priv->tx_ring[entry];
-+	while (ready && (dma->tx_cons != dma->tx_prod)) {
-+		entry = dma->tx_cons % txsize;
-+		tx_buff = &priv->dma_priv.tx_ring[entry];
-
- 		if (netif_msg_tx_done(priv))
--			netdev_dbg(priv->dev, "%s: curr %d, dirty %d\n",
--				   __func__, priv->tx_prod, priv->tx_cons);
-+			netdev_dbg(priv->dev, "%s: curr %d, dirty %d\n", __func__, dma->tx_prod,
-+				   dma->tx_cons);
-
- 		if (likely(tx_buff->skb))
- 			priv->dev->stats.tx_packets++;
-
- 		tse_free_tx_buffer(priv, tx_buff);
--		priv->tx_cons++;
-+		dma->tx_cons++;
-
- 		txcomplete++;
- 		ready--;
-@@ -491,8 +499,8 @@ static int tse_poll(struct napi_struct *napi, int budget)
- 			   rxcomplete, budget);
-
- 		spin_lock_irqsave(&priv->rxdma_irq_lock, flags);
--		priv->dmaops->enable_rxirq(priv);
--		priv->dmaops->enable_txirq(priv);
-+		priv->dmaops->enable_rxirq(&priv->dma_priv);
-+		priv->dmaops->enable_txirq(&priv->dma_priv);
- 		spin_unlock_irqrestore(&priv->rxdma_irq_lock, flags);
- 	}
- 	return rxcomplete;
-@@ -513,14 +521,14 @@ static irqreturn_t altera_isr(int irq, void *dev_id)
-
- 	spin_lock(&priv->rxdma_irq_lock);
- 	/* reset IRQs */
--	priv->dmaops->clear_rxirq(priv);
--	priv->dmaops->clear_txirq(priv);
-+	priv->dmaops->clear_rxirq(&priv->dma_priv);
-+	priv->dmaops->clear_txirq(&priv->dma_priv);
- 	spin_unlock(&priv->rxdma_irq_lock);
-
- 	if (likely(napi_schedule_prep(&priv->napi))) {
- 		spin_lock(&priv->rxdma_irq_lock);
--		priv->dmaops->disable_rxirq(priv);
--		priv->dmaops->disable_txirq(priv);
-+		priv->dmaops->disable_rxirq(&priv->dma_priv);
-+		priv->dmaops->disable_txirq(&priv->dma_priv);
- 		spin_unlock(&priv->rxdma_irq_lock);
- 		__napi_schedule(&priv->napi);
- 	}
-@@ -539,10 +547,11 @@ static irqreturn_t altera_isr(int irq, void *dev_id)
- static netdev_tx_t tse_start_xmit(struct sk_buff *skb, struct net_device *dev)
- {
- 	struct altera_tse_private *priv = netdev_priv(dev);
-+	struct altera_dma_private *dma = &priv->dma_priv;
- 	unsigned int nopaged_len = skb_headlen(skb);
--	unsigned int txsize = priv->tx_ring_size;
-+	unsigned int txsize = dma->tx_ring_size;
- 	int nfrags = skb_shinfo(skb)->nr_frags;
--	struct tse_buffer *buffer = NULL;
-+	struct altera_dma_buffer *buffer = NULL;
- 	netdev_tx_t ret = NETDEV_TX_OK;
- 	dma_addr_t dma_addr;
- 	unsigned int entry;
-@@ -562,8 +571,8 @@ static netdev_tx_t tse_start_xmit(struct sk_buff *skb, struct net_device *dev)
- 	}
-
- 	/* Map the first skb fragment */
--	entry = priv->tx_prod % txsize;
--	buffer = &priv->tx_ring[entry];
-+	entry = dma->tx_prod % txsize;
-+	buffer = &priv->dma_priv.tx_ring[entry];
-
- 	dma_addr = dma_map_single(priv->device, skb->data, nopaged_len,
- 				  DMA_TO_DEVICE);
-@@ -577,11 +586,11 @@ static netdev_tx_t tse_start_xmit(struct sk_buff *skb, struct net_device *dev)
- 	buffer->dma_addr = dma_addr;
- 	buffer->len = nopaged_len;
-
--	priv->dmaops->tx_buffer(priv, buffer);
-+	priv->dmaops->tx_buffer(&priv->dma_priv, buffer);
-
- 	skb_tx_timestamp(skb);
-
--	priv->tx_prod++;
-+	dma->tx_prod++;
- 	dev->stats.tx_bytes += skb->len;
-
- 	if (unlikely(tse_tx_avail(priv) <= TXQUEUESTOP_THRESHHOLD)) {
-@@ -874,12 +883,13 @@ static void tse_set_rx_mode(struct net_device *dev)
- static int tse_open(struct net_device *dev)
- {
- 	struct altera_tse_private *priv = netdev_priv(dev);
-+	struct altera_dma_private *dma = &priv->dma_priv;
- 	unsigned long flags;
- 	int ret = 0;
- 	int i;
-
- 	/* Reset and configure TSE MAC and probe associated PHY */
--	ret = priv->dmaops->init_dma(priv);
-+	ret = priv->dmaops->init_dma(&priv->dma_priv);
- 	if (ret != 0) {
- 		netdev_err(dev, "Cannot initialize DMA\n");
- 		goto phy_error;
-@@ -909,11 +919,11 @@ static int tse_open(struct net_device *dev)
- 		goto alloc_skbuf_error;
- 	}
-
--	priv->dmaops->reset_dma(priv);
-+	priv->dmaops->reset_dma(&priv->dma_priv);
-
- 	/* Create and initialize the TX/RX descriptors chains. */
--	priv->rx_ring_size = dma_rx_num;
--	priv->tx_ring_size = dma_tx_num;
-+	dma->rx_ring_size = dma_rx_num;
-+	dma->tx_ring_size = dma_tx_num;
- 	ret = alloc_init_skbufs(priv);
- 	if (ret) {
- 		netdev_err(dev, "DMA descriptors initialization failed\n");
-@@ -941,12 +951,12 @@ static int tse_open(struct net_device *dev)
-
- 	/* Enable DMA interrupts */
- 	spin_lock_irqsave(&priv->rxdma_irq_lock, flags);
--	priv->dmaops->enable_rxirq(priv);
--	priv->dmaops->enable_txirq(priv);
-+	priv->dmaops->enable_rxirq(&priv->dma_priv);
-+	priv->dmaops->enable_txirq(&priv->dma_priv);
-
- 	/* Setup RX descriptor chain */
--	for (i = 0; i < priv->rx_ring_size; i++)
--		priv->dmaops->add_rx_desc(priv, &priv->rx_ring[i]);
-+	for (i = 0; i < priv->dma_priv.rx_ring_size; i++)
-+		priv->dmaops->add_rx_desc(&priv->dma_priv, &priv->dma_priv.rx_ring[i]);
-
- 	spin_unlock_irqrestore(&priv->rxdma_irq_lock, flags);
-
-@@ -960,7 +970,7 @@ static int tse_open(struct net_device *dev)
- 	napi_enable(&priv->napi);
- 	netif_start_queue(dev);
-
--	priv->dmaops->start_rxdma(priv);
-+	priv->dmaops->start_rxdma(&priv->dma_priv);
-
- 	/* Start MAC Rx/Tx */
- 	spin_lock(&priv->mac_cfg_lock);
-@@ -993,8 +1003,8 @@ static int tse_shutdown(struct net_device *dev)
-
- 	/* Disable DMA interrupts */
- 	spin_lock_irqsave(&priv->rxdma_irq_lock, flags);
--	priv->dmaops->disable_rxirq(priv);
--	priv->dmaops->disable_txirq(priv);
-+	priv->dmaops->disable_rxirq(&priv->dma_priv);
-+	priv->dmaops->disable_txirq(&priv->dma_priv);
- 	spin_unlock_irqrestore(&priv->rxdma_irq_lock, flags);
-
- 	/* Free the IRQ lines */
-@@ -1012,13 +1022,13 @@ static int tse_shutdown(struct net_device *dev)
- 	 */
- 	if (ret)
- 		netdev_dbg(dev, "Cannot reset MAC core (error: %d)\n", ret);
--	priv->dmaops->reset_dma(priv);
-+	priv->dmaops->reset_dma(&priv->dma_priv);
- 	free_skbufs(dev);
-
- 	spin_unlock(&priv->tx_lock);
- 	spin_unlock(&priv->mac_cfg_lock);
-
--	priv->dmaops->uninit_dma(priv);
-+	priv->dmaops->uninit_dma(&priv->dma_priv);
-
- 	return 0;
- }
-@@ -1133,11 +1143,9 @@ static int altera_tse_probe(struct platform_device *pdev)
- 	struct mdio_regmap_config mrc;
- 	struct resource *control_port;
- 	struct regmap *pcs_regmap;
--	struct resource *dma_res;
- 	struct resource *pcs_res;
- 	struct mii_bus *pcs_bus;
- 	struct net_device *ndev;
--	void __iomem *descmap;
- 	int ret = -ENODEV;
-
- 	ndev = alloc_etherdev(sizeof(struct altera_tse_private));
-@@ -1150,69 +1158,18 @@ static int altera_tse_probe(struct platform_device *pdev)
-
- 	priv = netdev_priv(ndev);
- 	priv->device = &pdev->dev;
-+	priv->dma_priv.device = &pdev->dev;
- 	priv->dev = ndev;
-+	priv->dma_priv.dev = ndev;
- 	priv->msg_enable = netif_msg_init(debug, default_msg_level);
-+	priv->dma_priv.msg_enable = netif_msg_init(debug, default_msg_level);
-
- 	priv->dmaops = device_get_match_data(&pdev->dev);
-
--	if (priv->dmaops &&
--	    priv->dmaops->altera_dtype == ALTERA_DTYPE_SGDMA) {
--		/* Get the mapped address to the SGDMA descriptor memory */
--		ret = request_and_map(pdev, "s1", &dma_res, &descmap);
--		if (ret)
--			goto err_free_netdev;
--
--		/* Start of that memory is for transmit descriptors */
--		priv->tx_dma_desc = descmap;
--
--		/* First half is for tx descriptors, other half for tx */
--		priv->txdescmem = resource_size(dma_res)/2;
--
--		priv->txdescmem_busaddr = (dma_addr_t)dma_res->start;
--
--		priv->rx_dma_desc = (void __iomem *)((uintptr_t)(descmap +
--						     priv->txdescmem));
--		priv->rxdescmem = resource_size(dma_res)/2;
--		priv->rxdescmem_busaddr = dma_res->start;
--		priv->rxdescmem_busaddr += priv->txdescmem;
--
--		if (upper_32_bits(priv->rxdescmem_busaddr)) {
--			dev_dbg(priv->device,
--				"SGDMA bus addresses greater than 32-bits\n");
--			ret = -EINVAL;
--			goto err_free_netdev;
--		}
--		if (upper_32_bits(priv->txdescmem_busaddr)) {
--			dev_dbg(priv->device,
--				"SGDMA bus addresses greater than 32-bits\n");
--			ret = -EINVAL;
--			goto err_free_netdev;
--		}
--	} else if (priv->dmaops &&
--		   priv->dmaops->altera_dtype == ALTERA_DTYPE_MSGDMA) {
--		ret = request_and_map(pdev, "rx_resp", &dma_res,
--				      &priv->rx_dma_resp);
--		if (ret)
--			goto err_free_netdev;
--
--		ret = request_and_map(pdev, "tx_desc", &dma_res,
--				      &priv->tx_dma_desc);
--		if (ret)
--			goto err_free_netdev;
--
--		priv->txdescmem = resource_size(dma_res);
--		priv->txdescmem_busaddr = dma_res->start;
--
--		ret = request_and_map(pdev, "rx_desc", &dma_res,
--				      &priv->rx_dma_desc);
--		if (ret)
--			goto err_free_netdev;
--
--		priv->rxdescmem = resource_size(dma_res);
--		priv->rxdescmem_busaddr = dma_res->start;
--
--	} else {
--		ret = -ENODEV;
-+	/* Map DMA */
-+	ret = altera_eth_dma_probe(pdev, &priv->dma_priv, priv->dmaops->altera_dtype);
-+	if (ret) {
-+		dev_err(&pdev->dev, "cannot map DMA\n");
- 		goto err_free_netdev;
- 	}
-
-@@ -1232,18 +1189,6 @@ static int altera_tse_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_free_netdev;
-
--	/* xSGDMA Rx Dispatcher address space */
--	ret = request_and_map(pdev, "rx_csr", &dma_res,
--			      &priv->rx_dma_csr);
--	if (ret)
--		goto err_free_netdev;
--
--
--	/* xSGDMA Tx Dispatcher address space */
--	ret = request_and_map(pdev, "tx_csr", &dma_res,
--			      &priv->tx_dma_csr);
--	if (ret)
--		goto err_free_netdev;
-
- 	memset(&pcs_regmap_cfg, 0, sizeof(pcs_regmap_cfg));
- 	memset(&mrc, 0, sizeof(mrc));
-@@ -1340,7 +1285,7 @@ static int altera_tse_probe(struct platform_device *pdev)
- 	/* The DMA buffer size already accounts for an alignment bias
- 	 * to avoid unaligned access exceptions for the NIOS processor,
- 	 */
--	priv->rx_dma_buf_sz = ALTERA_RXDMABUFFER_SIZE;
-+	priv->dma_priv.rx_dma_buf_sz = ALTERA_RXDMABUFFER_SIZE;
-
- 	/* get default MAC address from device tree */
- 	ret = of_get_ethdev_address(pdev->dev.of_node, ndev);
-@@ -1529,4 +1474,5 @@ module_platform_driver(altera_tse_driver);
-
- MODULE_AUTHOR("Altera Corporation");
- MODULE_DESCRIPTION("Altera Triple Speed Ethernet MAC driver");
-+MODULE_IMPORT_NS(NET_ALTERA);
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/net/ethernet/altera/altera_utils.c b/drivers/net/ethernet/altera/altera_utils.c
-index e6a7fc9d8fb1..09a53f879b51 100644
---- a/drivers/net/ethernet/altera/altera_utils.c
-+++ b/drivers/net/ethernet/altera/altera_utils.c
-@@ -3,6 +3,7 @@
-  * Copyright (C) 2014 Altera Corporation. All rights reserved
-  */
-
-+#include "altera_eth_dma.h"
- #include "altera_tse.h"
- #include "altera_utils.h"
 
 --
-2.26.2
-
+Best Regards
+Masahiro Yamada
