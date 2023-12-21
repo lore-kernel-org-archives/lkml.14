@@ -1,97 +1,65 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD956280D
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 17:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9EA2634EE
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 17:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=t-8ch.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-8ch.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Q6gsePZl"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a268836254aso129350766b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 09:46:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1703180762; x=1703785562; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Io+O65t5bdOYeX7rjnfPtchqtd91gUb6zPccYQXRtPA=;
-        b=Q6gsePZltqqxxML2RE6j1aZhPVVjvaiZAqYqHNouUlG+pnDX4jgsYGWZvXRBqzPhLy
-         SZD0RVu00PPQKEWW5pRwftag6F/xe7kuES9YobQgwKZHDn0H1CSrVab3h7/9+LfGakXU
-         Q3RjjVt24wryLcrDgTcrnil8xWfpfHiWJ52hU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703180762; x=1703785562;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Io+O65t5bdOYeX7rjnfPtchqtd91gUb6zPccYQXRtPA=;
-        b=LycFR5f3pJICdaSwlrq4CMd0xdCFmw/Da3+YVp2MhWi2N9kSXX4OI2QaxLQPGH6ZWK
-         3GJUzDeQyFnCqIPDsMNNex4g+sQHvp3XUvP4VCDjE73JiBIMrytnugNdSAEH6OOBVFCB
-         6deZ5odt7AQ+lKSr6cuKiT1KKEeW671qdHsBcHCVCEtjWUBnDzMm+fYJH6OMt984f8TQ
-         deTsJxworeBrZxp5Ume7bTn+RCs0/BV4HXq8L5mQwFvZXW2TIMaitL0f6mUPMbjdnCn4
-         Tfh3V0aeQkbOQ1Kze2YnFLuHWmDGQljPunX5qslc6u7wr43EB2gqxq6uAkTBM/4VSdvP
-         haJg==
-X-Gm-Message-State: AOJu0Yy80B0CJEgDkuEscqbV3l66GljorPzRYn0WsxVfTmfOG7FfqyU5
-	itkPlmQTZuFx3ZaMQvLfYimHyoWHilNaYBZ5hiPsQ2Zvh2H3yMia
-X-Google-Smtp-Source: AGHT+IGVgIjrxNV+eaG47p5p7TYJgRkjgzWDOK2X4TiP10j/XDwz92EkLL2bKOjaivjc9nGhhPzDfw==
-X-Received: by 2002:a17:906:a288:b0:a23:2ccc:8eb1 with SMTP id i8-20020a170906a28800b00a232ccc8eb1mr76479ejz.134.1703180761817;
-        Thu, 21 Dec 2023 09:46:01 -0800 (PST)
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com. [209.85.218.45])
-        by smtp.gmail.com with ESMTPSA id ft1-20020a170907800100b00a26aa420389sm681764ejc.33.2023.12.21.09.46.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Dec 2023 09:46:01 -0800 (PST)
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a1fae88e66eso128309866b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 09:46:00 -0800 (PST)
-X-Received: by 2002:a17:906:5c:b0:a23:6d09:413 with SMTP id
- 28-20020a170906005c00b00a236d090413mr84157ejg.46.1703180760380; Thu, 21 Dec
- 2023 09:46:00 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b="Ih4TXrhJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
+	t=1703180789; bh=+ZCY1Qb2wMJBWyRbH4gw2JjGYZOSVk0BBR18YWiBWHE=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=Ih4TXrhJGO63OjfUer/xhFtgnwW+rp5QcUo4dOkslFQzIKa4yMDdFCGsrrAErmcvX
+	 EykpJ+U+muxvWeW9c7Zo3RVkRtmvROms7anDynYIAMs4N1L+5NPONSUEArD4mEu6Pp
+	 0tMXr7G/sQnzCQF3Yb1HZTUmPo1zh4t8VtokTZhA=
+Date: Thu, 21 Dec 2023 18:46:26 +0100 (GMT+01:00)
+From: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh_?= <thomas@t-8ch.de>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Message-ID: <28a235ff-bb1c-4d4f-a2a8-db29fb16af45@t-8ch.de>
+In-Reply-To: <20231221140921.2760432-1-andriy.shevchenko@linux.intel.com>
+References: <20231221140921.2760432-1-andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v1 1/1] pvpanic: Kill duplicate PCI_VENDOR_ID_REDHAT
+ definition
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231221102703.08dc1273@gandalf.local.home>
-In-Reply-To: <20231221102703.08dc1273@gandalf.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 21 Dec 2023 09:45:43 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiwQtUHvzwyZucDq8=Gtw+AnwScyLhpFswrQ84PjhoGsg@mail.gmail.com>
-Message-ID: <CAHk-=wiwQtUHvzwyZucDq8=Gtw+AnwScyLhpFswrQ84PjhoGsg@mail.gmail.com>
-Subject: Re: [GIT PULL] tracing: A few more fixes for 6.7
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Alexander Graf <graf@amazon.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Correlation-ID: <28a235ff-bb1c-4d4f-a2a8-db29fb16af45@t-8ch.de>
 
-On Thu, 21 Dec 2023 at 07:26, Steven Rostedt <rostedt@goodmis.org> wrote:
+Dec 21, 2023 15:15:32 Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
+
+> PCI_VENDOR_ID_REDHAT is already defined in pci_ids.h. Kill the dup.
 >
-> - Fix eventfs files to inherit the ownership of its parent directory.
->   The dynamic creating of dentries in eventfs did not take into
->   account if the tracefs file system was mounted with a gid/uid,
->   and would still default to the gid/uid of root. This is a regression.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Honestly, this seems to still be entirely buggy. In fact, it looks
-buggy in two different ways:
+Reviewed-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
 
- (a) if 'attr' is NULL, none of this logic is triggered, and uid/gid
-is still left as root despite the explicit mount options
+> ---
+> drivers/misc/pvpanic/pvpanic-pci.c | 1 -
+> 1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/misc/pvpanic/pvpanic-pci.c b/drivers/misc/pvpanic/pv=
+panic-pci.c
+> index 689af4c28c2a..c5fb6298cb8d 100644
+> --- a/drivers/misc/pvpanic/pvpanic-pci.c
+> +++ b/drivers/misc/pvpanic/pvpanic-pci.c
+> @@ -15,7 +15,6 @@
+>
+> #include "pvpanic.h"
+>
+> -#define PCI_VENDOR_ID_REDHAT=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1b36
+> #define PCI_DEVICE_ID_REDHAT_PVPANIC=C2=A0=C2=A0=C2=A0=C2=A0 0x0011
+>
+> MODULE_AUTHOR("Mihai Carabas <mihai.carabas@oracle.com>");
+> --
+> 2.43.0.rc1.1.gbec44491f096
 
- (b) if somebody has done a chown/gid on the directory, the new
-dynamic creation logic seems to create any files inside that directory
-with the new uid/gid.
-
-Maybe (a) cannot happen, but that code in update_inode_attr() does
-have a check for a NULL attr, so either it can happen, or that check
-is bogus.
-
-And (b) just looks messy.  Maybe you've disallowed chown/chgid on
-tracefs, I didn't check. But why would it inherit the parent uid/gid?
-That just doesn't seem to make any sense at all.
-
-I still claim that the whole dynamic ftrace stuff was a huge mistake,
-and that the real solution should always have been to just use one
-single inode for every file (and use that 'attr' that you track and
-the '->getattr()' callback to make them all *look* different to
-users).
-
-               Linus
