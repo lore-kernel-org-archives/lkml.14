@@ -1,80 +1,42 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B6F6F602;
-	Thu, 21 Dec 2023 12:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E22E6EB63;
+	Thu, 21 Dec 2023 12:48:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="yMbGXGTb"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 3BL8o3BO011875;
-	Thu, 21 Dec 2023 13:46:32 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=f+RuX/Eia9uR2MHJdZssTap6bVCpuc5frqUe4l82QhE=; b=yM
-	bGXGTbRhCoPDtMjIarTTcmjFrL7lidjkKbrr1iUAEOGF+Z32SFEmzT2VnvYAQomy
-	F7vjYPDQi5JS8x1Etz6qc/wkHeNYnB/nUmJ15X3voaCAL9KslDlMgkERKsBN7YPy
-	6Khru6YrLUPcBZ3AoorbrZem1hY9ouN0/ZvyNv4fZIsDIjLTVMHTqRZE0DH0Dym8
-	EB4AMWT+VHsIQ2yMhPFf6QqO0omesZZSzminBoVMRbU7xtV5ByzxTjYqVYUYdtHp
-	ZQiGhEY1mYQOo+/iN1KxvKRBPbcaTp5MV3kwRIiNdLxnlIm14Wd4Nwn/h7HEXtrT
-	N2Sa8MXbl2BPPHIijlJw==
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3v13nhq73w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 21 Dec 2023 13:46:32 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 80E5C100053;
-	Thu, 21 Dec 2023 13:46:30 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7655329D7E8;
-	Thu, 21 Dec 2023 13:46:30 +0100 (CET)
-Received: from localhost (10.252.25.159) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 21 Dec
- 2023 13:46:29 +0100
-From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        Jessica Zhang <quic_jesszhan@quicinc.com>,
-        Sam
- Ravnborg <sam@ravnborg.org>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre
- Torgue <alexandre.torgue@foss.st.com>,
-        Yannick Fertre
-	<yannick.fertre@foss.st.com>,
-        Raphael Gallais-Pou
-	<raphael.gallais-pou@foss.st.com>,
-        Philippe Cornu
-	<philippe.cornu@foss.st.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Lad
- Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Thierry Reding
-	<thierry.reding@gmail.com>
-CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH RESEND v1 8/8] arm64: dts: st: add display support on stm32mp257f-ev
-Date: Thu, 21 Dec 2023 13:43:39 +0100
-Message-ID: <20231221124339.420119-9-raphael.gallais-pou@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20231221124339.420119-1-raphael.gallais-pou@foss.st.com>
-References: <20231221124339.420119-1-raphael.gallais-pou@foss.st.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="EAOGMCt6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1703162912;
+	bh=2NCEeLfcBTGldq8y38nz7ZWXoN1JW/y1+OmDgAsYgXo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EAOGMCt68cmj+wdZMGdZ1VpamGZvkorPLseeE/zWVz5O7IVZwQT9dM8x8ZKUYZyn8
+	 u/VgkRM6XEAj7ZPYR353W9VLptOfB6LjfnkYG7kZkqX38azs8jpgHQqotAlaZ8irPg
+	 MZ/de6lcu0CBB9R1DKIeY3hW60ueKi905x06swnhEsyy3krfjBbgdR6V7kJAEkgVDF
+	 MjrSh5q8yk41i96uZ7tqrIDF8w5xx2T2TiWNWHgKvc8iPFqJ/0Bw0PN0qiS30fpNWG
+	 ZCO0N8f4AEotZv1cwoLkCRgDinKNRcsldOSeviOkq7zo0P+uKJr2X+h00wHKuGsbIf
+	 +9hwZS4FbevIQ==
+Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B75CE3781485;
+	Thu, 21 Dec 2023 12:48:31 +0000 (UTC)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: daniel.lezcano@linaro.org
+Cc: rafael@kernel.org,
+	rui.zhang@intel.com,
+	lukasz.luba@arm.com,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	kernel@collabora.com
+Subject: [RFC PATCH 00/26] Add thermal zones names and new registration func
+Date: Thu, 21 Dec 2023 13:47:59 +0100
+Message-ID: <20231221124825.149141-1-angelogioacchino.delregno@collabora.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,129 +44,98 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-21_06,2023-12-20_01,2023-05-22_02
 
-This patch enables the following IPs on stm32mp257f-ev :
-  * LTDC
-  * LVDS
-  * WSVGA LVDS panel (1024x600)
-  * Panel backlight
-  * Ilitek touchescreen
+** This RFC was sent only to thermal API maintainers + reviewers on purpose **
 
-Signed-off-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
----
- arch/arm64/boot/dts/st/stm32mp257f-ev1.dts | 79 ++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
+As per previous discussion with Daniel [1], I've prepared this series adding
+a new struct thermal_zone_device_params, used in a new registration function
+for thermal zones thermal_zone_device_register(), deprecating and, finally,
+replacing functions thermal_tripless_zone_device_register() and
+thermal_zone_device_register_with_trips().
 
-diff --git a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-index 0ea8e69bfb3d..ca2da988d91c 100644
---- a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-+++ b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-@@ -29,6 +29,43 @@ memory@80000000 {
- 		reg = <0x0 0x80000000 0x1 0x0>;
- 	};
- 
-+	panel_lvds: panel-lvds {
-+		compatible = "edt,etml0700z9ndha", "panel-lvds";
-+		enable-gpios = <&gpiog 15 GPIO_ACTIVE_HIGH>;
-+		backlight = <&panel_lvds_backlight>;
-+		status = "okay";
-+
-+		width-mm = <156>;
-+		height-mm = <92>;
-+		data-mapping = "vesa-24";
-+
-+		panel-timing {
-+			clock-frequency = <54000000>;
-+			hactive = <1024>;
-+			vactive = <600>;
-+			hfront-porch = <150>;
-+			hback-porch = <150>;
-+			hsync-len = <21>;
-+			vfront-porch = <24>;
-+			vback-porch = <24>;
-+			vsync-len = <21>;
-+		};
-+
-+		port {
-+			lvds_panel_in: endpoint {
-+				remote-endpoint = <&lvds_out0>;
-+			};
-+		};
-+	};
-+
-+	panel_lvds_backlight: panel-lvds-backlight {
-+		compatible = "gpio-backlight";
-+		gpios = <&gpioi 5 GPIO_ACTIVE_HIGH>;
-+		default-on;
-+		default-brightness-level = <0>;
-+		status = "okay";
-+	};
-+
- 	reserved-memory {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
-@@ -63,6 +100,15 @@ &i2c2 {
- 	i2c-scl-falling-time-ns = <13>;
- 	clock-frequency = <400000>;
- 	status = "okay";
-+
-+	ili2511: ili2511@41 {
-+		compatible = "ilitek,ili251x";
-+		reg = <0x41>;
-+		interrupt-parent = <&gpioi>;
-+		interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
-+		reset-gpios = <&gpiog 14 GPIO_ACTIVE_LOW>;
-+		status = "okay";
-+	};
- };
- 
- &i2c8 {
-@@ -75,6 +121,39 @@ &i2c8 {
- 	status = "disabled";
- };
- 
-+&ltdc {
-+	status = "okay";
-+
-+	port {
-+		ltdc_ep0_out: endpoint {
-+			remote-endpoint = <&lvds_in>;
-+		};
-+	};
-+};
-+
-+&lvds {
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			lvds_in: endpoint {
-+				remote-endpoint = <&ltdc_ep0_out>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+			lvds_out0: endpoint {
-+				remote-endpoint = <&lvds_panel_in>;
-+			};
-+		};
-+	};
-+};
-+
- &sdmmc1 {
- 	pinctrl-names = "default", "opendrain", "sleep";
- 	pinctrl-0 = <&sdmmc1_b4_pins_a>;
+The new flow to register a thermal zone becomes the following:
+ - Declare a struct thermal_zone_device_params (`tzp` in this example)
+ - Fill in all the params (instead of passing all of them to a function)
+ - Call thermal_zone_device_register(tzp)
+
+Moreover, I've also introduced the concept of `name` for a thermal zone,
+and set, as suggested, a constraint for which:
+ - Multiple thermal zones can have the same `type` (so, no change), and
+ - A thermal zone's name must be *unique*.
+
+This should then help (in a later series?) to disambiguate thermal zone
+name vs type, as most of (if not all) the users seem to actually be
+misusing the TZ type referring to / using it as a TZ name.
+
+Please note that this series is currently a RFC because it's apparently
+growing bigger than I wanted - and because I probably have to add some
+more code on top. Before doing so, I'm trying to get feedback on what
+I've done until now.
+
+P.S.: I know, there's a fixup commit in the mix, will obviously fix
+that for v1 :-)
+
+[1]: https://lore.kernel.org/all/20231115144857.424005-1-angelogioacchino.delregno@collabora.com/
+
+AngeloGioacchino Del Regno (26):
+  thermal: Introduce thermal_zone_device_register() and params structure
+  thermal/of: Migrate to thermal_zone_device_register()
+  platform/x86: acerhdf: Migrate to thermal_zone_device_register()
+  ACPI: thermal: Migrate to thermal_zone_device_register()
+  thermal/drivers/da9062: Migrate to thermal_zone_device_register()
+  thermal/drivers/imx: Migrate to thermal_zone_device_register()
+  thermal/drivers/rcar: Migrate to thermal_zone_device_register()
+  thermal/drivers/st: Migrate to thermal_zone_device_register()
+  thermal: intel: pch_thermal: Migrate to thermal_zone_device_register()
+  thermal: intel: quark_dts: Migrate to thermal_zone_device_register()
+  thermal: intel: soc_dts_iosf: Migrate to
+    thermal_zone_device_register()
+  thermal: intel: int340x: Migrate to thermal_zone_device_register()
+  thermal: int340x: processor: Migrate to thermal_zone_device_register()
+  thermal: intel: x86_pkg_temp: Migrate to
+    thermal_zone_device_register()
+  power: supply: core: Migrate to thermal_zone_device_register()
+  thermal/drivers/armada: Migrate to thermal_zone_device_register()
+  thermal/drivers/dove: Migrate to thermal_zone_device_register()
+  thermal/drivers/kirkwood: Migrate to thermal_zone_device_register()
+  thermal/drivers/spear: Migrate to thermal_zone_device_register()
+  thermal/drivers/int340x: Migrate to thermal_zone_device_register()
+  wifi: iwlwifi: mvm: Migrate to thermal_zone_device_register()
+  cxgb4: Migrate to thermal_zone_device_register()
+  mlxsw: core_thermal: Migrate to thermal_zone_device_register()
+  fixup! power: supply: core: Migrate to thermal_zone_device_register()
+  thermal: Remove tripless_zone_register and register_with_trips
+    functions
+  thermal: Introduce thermal zones names
+
+ drivers/acpi/thermal.c                        |  18 +--
+ .../ethernet/chelsio/cxgb4/cxgb4_thermal.c    |  18 ++-
+ .../ethernet/mellanox/mlxsw/core_thermal.c    |  93 +++++++-------
+ drivers/net/wireless/intel/iwlwifi/mvm/tt.c   |  27 ++--
+ drivers/platform/x86/acerhdf.c                |  25 ++--
+ drivers/power/supply/power_supply_core.c      |  14 +-
+ drivers/thermal/armada_thermal.c              |  10 +-
+ drivers/thermal/da9062-thermal.c              |  14 +-
+ drivers/thermal/dove_thermal.c                |   8 +-
+ drivers/thermal/imx_thermal.c                 |  19 ++-
+ .../intel/int340x_thermal/int3400_thermal.c   |  17 +--
+ .../int340x_thermal/int340x_thermal_zone.c    |  28 ++--
+ .../processor_thermal_device_pci.c            |  23 ++--
+ drivers/thermal/intel/intel_pch_thermal.c     |  11 +-
+ .../thermal/intel/intel_quark_dts_thermal.c   |  21 +--
+ drivers/thermal/intel/intel_soc_dts_iosf.c    |  22 +++-
+ drivers/thermal/intel/x86_pkg_temp_thermal.c  |  20 +--
+ drivers/thermal/kirkwood_thermal.c            |   8 +-
+ drivers/thermal/rcar_thermal.c                |  13 +-
+ drivers/thermal/spear_thermal.c               |   8 +-
+ drivers/thermal/st/st_thermal.c               |  15 ++-
+ drivers/thermal/thermal_core.c                | 120 +++++++++---------
+ drivers/thermal/thermal_of.c                  |  38 +++---
+ drivers/thermal/thermal_sysfs.c               |   9 ++
+ drivers/thermal/thermal_trace.h               |  17 ++-
+ include/linux/thermal.h                       |  50 ++++++--
+ 26 files changed, 391 insertions(+), 275 deletions(-)
+
 -- 
-2.25.1
+2.43.0
 
