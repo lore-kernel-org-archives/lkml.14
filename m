@@ -1,114 +1,110 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F398B360AF
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 14:58:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 684B4539E4;
+	Thu, 21 Dec 2023 14:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mWJHVsUG"
-Message-ID: <5e5fb1fa-33a3-470c-b479-24019f322ed3@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1703170738;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I5T5w8CgY/enZFfTVMOvm6QbdpwFB/KmSvNCGj7+SDI=;
-	b=mWJHVsUGk2Krdds/QK0LWVTNIzd5fuP0Y8K9rrCg6vt9XbSEqkMluS03MvAR6R2XVe1hz5
-	ZfhyAuzgncdrfVxmnvPmn/u2Pd9zCUj+t6b0stlWultOpdckiVIo74JT9/wd5S01Oyc9QT
-	b0EsQIA/wHVlSpFYd9ol+DqAxomfWnE=
-Date: Thu, 21 Dec 2023 14:58:53 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CVERI9Cz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703170797; x=1734706797;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OoapTPukjShzEohQxJsr9nMKqKZQxWObxkyyNaa2x2o=;
+  b=CVERI9Cz7w/UOXBmVypCObeprp4Dik3z4YE2uu/CDu25zSo+ajYIN6CQ
+   nytYl/+NNNFY5R9GjXge6OnWy9k7EBa2kuDNGz6vVyrPcdG8ByMNa00je
+   gp2CI8lAJLAdwkervr/4/hUCt9yEftljlJYR8+Bc+pCQ6oANjCa3KyEn7
+   yjtsSni0xMtzF+uGGlTeQCTF7PpIQAJhhBgUhJKteswSNGFuXzylD4Cv2
+   2ik3aUbpYdcibEUzhbJ35OlCQpQtD1c1ctMUQYGDcKcl1Jw+gMZg3aJYa
+   XpYztKL3w2spkJOyYmyfdCizXgAvG65INdT8hnPFqMExcPS/1qUnUsHwD
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="2811584"
+X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
+   d="scan'208";a="2811584"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 06:59:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="900120139"
+X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
+   d="scan'208";a="900120139"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 06:59:49 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rGJWv-00000007rjT-2rCh;
+	Thu, 21 Dec 2023 15:56:05 +0200
+Date: Thu, 21 Dec 2023 15:56:05 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mark Hasemeyer <markhas@chromium.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Raul Rangel <rrangel@chromium.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Frank Rowand <frowand.list@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Len Brown <lenb@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2 20/22] device property: Modify fwnode irq_get() to use
+ resource
+Message-ID: <ZYRD9Y3Y_jd1NBs8@smile.fi.intel.com>
+References: <20231220235459.2965548-1-markhas@chromium.org>
+ <20231220165423.v2.20.I38ac58ab04985a404ed6551eb5813fa7841ef410@changeid>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next v1 1/1] ptp: ocp: Use DEFINE_RES_*() in place
-Content-Language: en-US
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Jonathan Lemon <jonathan.lemon@gmail.com>,
- Richard Cochran <richardcochran@gmail.com>, Paolo Abeni <pabeni@redhat.com>,
- "David S. Miller" <davem@davemloft.net>
-References: <20231221140607.2760115-1-andriy.shevchenko@linux.intel.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <20231221140607.2760115-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231220165423.v2.20.I38ac58ab04985a404ed6551eb5813fa7841ef410@changeid>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 21/12/2023 14:06, Andy Shevchenko wrote:
-> There is no need to have an intermediate functions as DEFINE_RES_*()
-> macros are represented by compound literals. Just use them in place.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->   drivers/ptp/ptp_ocp.c | 26 ++++++--------------------
->   1 file changed, 6 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
-> index 4021d3d325f9..306353a69231 100644
-> --- a/drivers/ptp/ptp_ocp.c
-> +++ b/drivers/ptp/ptp_ocp.c
-> @@ -1716,20 +1716,6 @@ ptp_ocp_get_mem(struct ptp_ocp *bp, struct ocp_resource *r)
->   	return __ptp_ocp_get_mem(bp, start, r->size);
->   }
->   
-> -static void
-> -ptp_ocp_set_irq_resource(struct resource *res, int irq)
-> -{
-> -	struct resource r = DEFINE_RES_IRQ(irq);
-> -	*res = r;
-> -}
-> -
-> -static void
-> -ptp_ocp_set_mem_resource(struct resource *res, resource_size_t start, int size)
-> -{
-> -	struct resource r = DEFINE_RES_MEM(start, size);
-> -	*res = r;
-> -}
-> -
->   static int
->   ptp_ocp_register_spi(struct ptp_ocp *bp, struct ocp_resource *r)
->   {
-> @@ -1741,15 +1727,15 @@ ptp_ocp_register_spi(struct ptp_ocp *bp, struct ocp_resource *r)
->   	int id;
->   
->   	start = pci_resource_start(pdev, 0) + r->offset;
-> -	ptp_ocp_set_mem_resource(&res[0], start, r->size);
-> -	ptp_ocp_set_irq_resource(&res[1], pci_irq_vector(pdev, r->irq_vec));
-> +	res[0] = DEFINE_RES_MEM(start, r->size);
-> +	res[1] = DEFINE_RES_IRQ(pci_irq_vector(pdev, r->irq_vec));
->   
->   	info = r->extra;
->   	id = pci_dev_id(pdev) << 1;
->   	id += info->pci_offset;
->   
->   	p = platform_device_register_resndata(&pdev->dev, info->name, id,
-> -					      res, 2, info->data,
-> +					      res, ARRAY_SIZE(res), info->data,
->   					      info->data_size);
->   	if (IS_ERR(p))
->   		return PTR_ERR(p);
-> @@ -1768,11 +1754,11 @@ ptp_ocp_i2c_bus(struct pci_dev *pdev, struct ocp_resource *r, int id)
->   
->   	info = r->extra;
->   	start = pci_resource_start(pdev, 0) + r->offset;
-> -	ptp_ocp_set_mem_resource(&res[0], start, r->size);
-> -	ptp_ocp_set_irq_resource(&res[1], pci_irq_vector(pdev, r->irq_vec));
-> +	res[0] = DEFINE_RES_MEM(start, r->size);
-> +	res[1] = DEFINE_RES_IRQ(pci_irq_vector(pdev, r->irq_vec));
->   
->   	return platform_device_register_resndata(&pdev->dev, info->name,
-> -						 id, res, 2,
-> +						 id, res, ARRAY_SIZE(res),
->   						 info->data, info->data_size);
->   }
->   
+On Wed, Dec 20, 2023 at 04:54:34PM -0700, Mark Hasemeyer wrote:
+> The underlying ACPI and OF subsystems provide their own APIs which
+> provide IRQ information as a struct resource. This allows callers to get
+> more information about the IRQ by looking at the resource flags.  For
 
-Thanks, Andy!
+Double space when other lines have a single space.
 
-Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+> example, whether or not an IRQ is wake capable.
+
+Suggested-by?
+
+...
+
+> -int fwnode_irq_get(const struct fwnode_handle *fwnode, unsigned int index)
+> +int fwnode_irq_get_resource(const struct fwnode_handle *fwnode,
+> +			    unsigned int index, struct resource *r)
+
+It's perfectly fine to replace ) by , on the previous line, no need
+to make it shorter.
+
+...
+
+> +int fwnode_irq_get(const struct fwnode_handle *fwnode, unsigned int index)
+> +{
+> +	struct resource r;
+
+	struct resource r = {};
+
+?
+
+> +	return fwnode_irq_get_resource(fwnode, index, &r);
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
