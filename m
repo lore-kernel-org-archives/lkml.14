@@ -1,64 +1,51 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8892983503
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 13:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A01D83518;
+	Thu, 21 Dec 2023 13:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OkPGWvh0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1703165140;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yOUF/NRG7mUfYTB4RMtCJtSjpr7YJjQloMElL0RkM4I=;
-	b=OkPGWvh0pMCt4qQ4xW+q3ddqSCTAc3JgcuAgoDpKKMC4qBfzsb2r6UJpHzbp/1GIeIvubv
-	OdOODZFDarOPcbOGil4xELc2zbi+VBtAaFL32u9KOi0srcDM7kD6B1r3p+xkcjNdI7Qu6J
-	LFfnw06/CGbWWqiyC20UtlJJoX/yAjY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-691-MGPyVwAsMyaaWqEv59xzuQ-1; Thu, 21 Dec 2023 08:25:34 -0500
-X-MC-Unique: MGPyVwAsMyaaWqEv59xzuQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B57B4101A5B3;
-	Thu, 21 Dec 2023 13:25:33 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.39.195.169])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id BE310C15968;
-	Thu, 21 Dec 2023 13:25:30 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Jeff Layton <jlayton@kernel.org>,
-	Steve French <smfrench@gmail.com>
-Cc: David Howells <dhowells@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Tom Talpey <tom@talpey.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	Christian Brauner <christian@brauner.io>,
-	linux-cachefs@redhat.com,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 23/40] netfs: Prep to use folio->private for write grouping and streaming write
-Date: Thu, 21 Dec 2023 13:23:18 +0000
-Message-ID: <20231221132400.1601991-24-dhowells@redhat.com>
-In-Reply-To: <20231221132400.1601991-1-dhowells@redhat.com>
-References: <20231221132400.1601991-1-dhowells@redhat.com>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="gzl8cOBN"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BL7oFUv019653;
+	Thu, 21 Dec 2023 07:25:27 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	PODMain02222019; bh=A01iCX0fWBQ9auFL6nMgSjTOC80nxoUOMAEq6yxbr4E=; b=
+	gzl8cOBN75CgdEOieBtcm0u+vsy1z70k+1Cg4rH5ozmRDAw9JF1wTJhCaTeGJEWn
+	yPPGCUyR6HFNb+Pk/zNpBKbufPCXjKIrKuhFYnYRFmhZb+quaSI3kyLJooar9pWd
+	5/mP7mNruj7MX9K+ilK4Rm7Sd5jgBevBeVkNbOGO+mi8EGt2UXt5eT8nCXF0qOpC
+	hBf+4u1jBUjTtNjiXQ5J9w2+IXDx0uyytS1CgRNCyKnB5rDH2MM5kBiXnYPqbO41
+	1/JuKJ2OTMHVcSZfWK/a0q79b+8/OkoolJGWje9BWArIWVDWzx9e78TdA46DyVm6
+	I3PfS0sE10hcv7Px/BHr6A==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3v1a627crn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Dec 2023 07:25:27 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 21 Dec
+ 2023 13:25:25 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.2.1118.40 via Frontend
+ Transport; Thu, 21 Dec 2023 13:25:25 +0000
+Received: from sbinding-cirrus-dsktp2.ad.cirrus.com (unknown [198.90.238.77])
+	by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 141AB15B4;
+	Thu, 21 Dec 2023 13:25:25 +0000 (UTC)
+From: Stefan Binding <sbinding@opensource.cirrus.com>
+To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+CC: <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
+        "Stefan
+ Binding" <sbinding@opensource.cirrus.com>
+Subject: [PATCH v2 1/3] ALSA: hda: cs35l41: Support additional Dell models without _DSD
+Date: Thu, 21 Dec 2023 13:25:16 +0000
+Message-ID: <20231221132518.3213-2-sbinding@opensource.cirrus.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231221132518.3213-1-sbinding@opensource.cirrus.com>
+References: <20231221132518.3213-1-sbinding@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,192 +53,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+Content-Type: text/plain
+X-Proofpoint-GUID: Il5Aq585USwPV-zbIHE6dPZzs-IgGYu1
+X-Proofpoint-ORIG-GUID: Il5Aq585USwPV-zbIHE6dPZzs-IgGYu1
+X-Proofpoint-Spam-Reason: safe
 
-Prepare to use folio->private to hold information write grouping and
-streaming write.  These are implemented in the same commit as they both
-make use of folio->private and will be both checked at the same time in
-several places.
+Add new model entries into configuration table.
 
-"Write grouping" involves ordering the writeback of groups of writes, such
-as is needed for ceph snaps.  A group is represented by a
-filesystem-supplied object which must contain a netfs_group struct.  This
-contains just a refcount and a pointer to a destructor.
-
-"Streaming write" is the storage of data in folios that are marked dirty,
-but not uptodate, to avoid unnecessary reads of data.  This is represented
-by a netfs_folio struct.  This contains the offset and length of the
-modified region plus the otherwise displaced write grouping pointer.
-
-The way folio->private is multiplexed is:
-
- (1) If private is NULL then neither is in operation on a dirty folio.
-
- (2) If private is set, with bit 0 clear, then this points to a group.
-
- (3) If private is set, with bit 0 set, then this points to a netfs_folio
-     struct (with bit 0 AND'ed out).
-
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-cc: linux-cachefs@redhat.com
-cc: linux-fsdevel@vger.kernel.org
-cc: linux-mm@kvack.org
+Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
 ---
- fs/netfs/internal.h   | 28 ++++++++++++++++++++++++++
- fs/netfs/misc.c       | 46 +++++++++++++++++++++++++++++++++++++++++++
- include/linux/netfs.h | 41 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 115 insertions(+)
+ sound/pci/hda/cs35l41_hda_property.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/fs/netfs/internal.h b/fs/netfs/internal.h
-index 2bf2e82b2ad7..d72292e40f9b 100644
---- a/fs/netfs/internal.h
-+++ b/fs/netfs/internal.h
-@@ -149,6 +149,34 @@ static inline bool netfs_is_cache_enabled(struct netfs_inode *ctx)
- #endif
- }
- 
-+/*
-+ * Get a ref on a netfs group attached to a dirty page (e.g. a ceph snap).
-+ */
-+static inline struct netfs_group *netfs_get_group(struct netfs_group *netfs_group)
-+{
-+	if (netfs_group)
-+		refcount_inc(&netfs_group->ref);
-+	return netfs_group;
-+}
-+
-+/*
-+ * Dispose of a netfs group attached to a dirty page (e.g. a ceph snap).
-+ */
-+static inline void netfs_put_group(struct netfs_group *netfs_group)
-+{
-+	if (netfs_group && refcount_dec_and_test(&netfs_group->ref))
-+		netfs_group->free(netfs_group);
-+}
-+
-+/*
-+ * Dispose of a netfs group attached to a dirty page (e.g. a ceph snap).
-+ */
-+static inline void netfs_put_group_many(struct netfs_group *netfs_group, int nr)
-+{
-+	if (netfs_group && refcount_sub_and_test(nr, &netfs_group->ref))
-+		netfs_group->free(netfs_group);
-+}
-+
- /*
-  * fscache-cache.c
-  */
-diff --git a/fs/netfs/misc.c b/fs/netfs/misc.c
-index 5d545073fe03..eeb44abe59c5 100644
---- a/fs/netfs/misc.c
-+++ b/fs/netfs/misc.c
-@@ -177,9 +177,55 @@ EXPORT_SYMBOL(netfs_clear_inode_writeback);
-  */
- void netfs_invalidate_folio(struct folio *folio, size_t offset, size_t length)
- {
-+	struct netfs_folio *finfo = NULL;
-+	size_t flen = folio_size(folio);
-+
- 	_enter("{%lx},%zx,%zx", folio_index(folio), offset, length);
- 
- 	folio_wait_fscache(folio);
-+
-+	if (!folio_test_private(folio))
-+		return;
-+
-+	finfo = netfs_folio_info(folio);
-+
-+	if (offset == 0 && length >= flen)
-+		goto erase_completely;
-+
-+	if (finfo) {
-+		/* We have a partially uptodate page from a streaming write. */
-+		unsigned int fstart = finfo->dirty_offset;
-+		unsigned int fend = fstart + finfo->dirty_len;
-+		unsigned int end = offset + length;
-+
-+		if (offset >= fend)
-+			return;
-+		if (end <= fstart)
-+			return;
-+		if (offset <= fstart && end >= fend)
-+			goto erase_completely;
-+		if (offset <= fstart && end > fstart)
-+			goto reduce_len;
-+		if (offset > fstart && end >= fend)
-+			goto move_start;
-+		/* A partial write was split.  The caller has already zeroed
-+		 * it, so just absorb the hole.
-+		 */
-+	}
-+	return;
-+
-+erase_completely:
-+	netfs_put_group(netfs_folio_group(folio));
-+	folio_detach_private(folio);
-+	folio_clear_uptodate(folio);
-+	kfree(finfo);
-+	return;
-+reduce_len:
-+	finfo->dirty_len = offset + length - finfo->dirty_offset;
-+	return;
-+move_start:
-+	finfo->dirty_len -= offset - finfo->dirty_offset;
-+	finfo->dirty_offset = offset;
- }
- EXPORT_SYMBOL(netfs_invalidate_folio);
- 
-diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-index f87193fa0f16..bb78021332f5 100644
---- a/include/linux/netfs.h
-+++ b/include/linux/netfs.h
-@@ -140,6 +140,47 @@ struct netfs_inode {
- #define NETFS_ICTX_ODIRECT	0		/* The file has DIO in progress */
+diff --git a/sound/pci/hda/cs35l41_hda_property.c b/sound/pci/hda/cs35l41_hda_property.c
+index 194e1179a253..5eab2de0d4bb 100644
+--- a/sound/pci/hda/cs35l41_hda_property.c
++++ b/sound/pci/hda/cs35l41_hda_property.c
+@@ -35,6 +35,10 @@ struct cs35l41_config {
  };
  
-+/*
-+ * A netfs group - for instance a ceph snap.  This is marked on dirty pages and
-+ * pages marked with a group must be flushed before they can be written under
-+ * the domain of another group.
-+ */
-+struct netfs_group {
-+	refcount_t		ref;
-+	void (*free)(struct netfs_group *netfs_group);
-+};
-+
-+/*
-+ * Information about a dirty page (attached only if necessary).
-+ * folio->private
-+ */
-+struct netfs_folio {
-+	struct netfs_group	*netfs_group;	/* Filesystem's grouping marker (or NULL). */
-+	unsigned int		dirty_offset;	/* Write-streaming dirty data offset */
-+	unsigned int		dirty_len;	/* Write-streaming dirty data length */
-+};
-+#define NETFS_FOLIO_INFO	0x1UL	/* OR'd with folio->private. */
-+
-+static inline struct netfs_folio *netfs_folio_info(struct folio *folio)
-+{
-+	void *priv = folio_get_private(folio);
-+
-+	if ((unsigned long)priv & NETFS_FOLIO_INFO)
-+		return (struct netfs_folio *)((unsigned long)priv & ~NETFS_FOLIO_INFO);
-+	return NULL;
-+}
-+
-+static inline struct netfs_group *netfs_folio_group(struct folio *folio)
-+{
-+	struct netfs_folio *finfo;
-+	void *priv = folio_get_private(folio);
-+
-+	finfo = netfs_folio_info(folio);
-+	if (finfo)
-+		return finfo->netfs_group;
-+	return priv;
-+}
-+
+ static const struct cs35l41_config cs35l41_config_table[] = {
++	{ "10280B27", SPI, 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
++	{ "10280B28", SPI, 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
++	{ "10280BEB", SPI, 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, -1, 0, 0, 0, 0 },
++	{ "10280C4D", I2C, 4, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, CS35L41_LEFT, CS35L41_RIGHT }, 0, 1, -1, 1000, 4500, 24 },
  /*
-  * Resources required to do operations on a cache.
-  */
+  * Device 103C89C6 does have _DSD, however it is setup to use the wrong boost type.
+  * We can override the _DSD to correct the boost type here.
+@@ -347,6 +351,10 @@ struct cs35l41_prop_model {
+ static const struct cs35l41_prop_model cs35l41_prop_model_table[] = {
+ 	{ "CLSA0100", NULL, lenovo_legion_no_acpi },
+ 	{ "CLSA0101", NULL, lenovo_legion_no_acpi },
++	{ "CSC3551", "10280B27", generic_dsd_config },
++	{ "CSC3551", "10280B28", generic_dsd_config },
++	{ "CSC3551", "10280BEB", generic_dsd_config },
++	{ "CSC3551", "10280C4D", generic_dsd_config },
+ 	{ "CSC3551", "103C89C6", generic_dsd_config },
+ 	{ "CSC3551", "104312AF", generic_dsd_config },
+ 	{ "CSC3551", "10431433", generic_dsd_config },
+-- 
+2.34.1
 
