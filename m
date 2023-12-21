@@ -1,152 +1,119 @@
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FB551C33
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 10:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CA04F203;
+	Thu, 21 Dec 2023 10:22:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="GLCWmb80"
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-4b6be94d512so989331e0c.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 02:20:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1703154007; x=1703758807; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=03hQ4xDH3ZdArEtlBeQWM6+JQhq7YbGI4xUxwEElpFc=;
-        b=GLCWmb80ulkj1cUuoQsoImKjrKl/pUq3AfImb4zTiiU+VQW6YbCXDCpZXoewFr1EkO
-         z7ItTfR2EUJdwJDMXfeuThrRc+3B1cipuMRp1vwK9ToybzEPkkjJ7hnobAKeBf6OJbl7
-         pn5GShfu1BGCeYYRtLv8l+Iq93NlH8s4mfr9wPdzTJ44QexmusTt5LIkbnajPoneG6wF
-         KWvXgJO17G3Qi9PylOA4UvgNMPWmIyKpgNw4VerBcDoxOmuLVV7z8PF6F5YIRKbH5hE2
-         TXW5fx7ZOLKV5UciY1K5gTuFrVTnfq4xN4xKIYGUFixoVikXYmE+SBgXDTiz6iZOk1pA
-         7neg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703154007; x=1703758807;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=03hQ4xDH3ZdArEtlBeQWM6+JQhq7YbGI4xUxwEElpFc=;
-        b=LyWoOWlbw2FQCjU4dDdZxPPXJoru7Q0dZd5Ex9HaUnNM4E+Iv44y+oYM4tFpj009JH
-         gLhwS7tVvwQ9Pl4COiRxuelnRsIabXU6TdNgMMpLJ1Gfntn2gsDLE7aXwrDSPckkF7/4
-         s8mqwVz3HrJzny6uiXDcYzlmo1Z09e9KixOmiYeZP4+rF9zhOSixcB0Yof04EwW5M31Y
-         KwhhsisrlK+Nrx0w87+l5f7z0rjYlDLZ0wizb2bosCqZaf3SpL3BaqU/I3dAcyE+UmcQ
-         7C8uR4vL/KTc3qPaHx4/5Vm7zSLMYfO/WZKuWuJUOkOuUB6FOKKfvGfnxXi1VUIaufQL
-         nu6w==
-X-Gm-Message-State: AOJu0YzoxqHxHXqG4JdsileluCyY1ThhJq419UXS9x4HJ4Y6m2Ry3QVN
-	YQabOBXGTx7qk7L/Quus29FYmR0lOVlSsk11mMaJw6zBE/gRAg==
-X-Google-Smtp-Source: AGHT+IF7JcaUe7esEAOgMsDE8x43U2N9OCJ++O3rTCKcYNxpvMih3JiYiKgj/YASzRkyb5lC7vXlxWIfVjMTcmMVpJQ=
-X-Received: by 2002:a05:6122:3119:b0:4b6:dbc2:1079 with SMTP id
- cg25-20020a056122311900b004b6dbc21079mr168382vkb.0.1703154006993; Thu, 21 Dec
- 2023 02:20:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JHXejGAb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C148FC433C9;
+	Thu, 21 Dec 2023 10:22:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703154168;
+	bh=NLQdNdVs2WfO85/N+bwgl3CF/QIMJF8sPAIBnqfHoyE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=JHXejGAbJLvIX1eOdwwOFJuPDKanbcOepVaqG+OgyvvDJHLSOBeO0hvWXVEjxN6tT
+	 dY4cSa/6VyYyV78nKvrhu3dBt53Y7+i3hLxeZ99x/Gay4Cnq8Op9uOsyW+ByrLRamF
+	 YdIb2+SJzPNrAMM03DSqndLVhpCgItRgZmzmjlZs6IDpKgGSXBnYRO7xUxzoK9MOiF
+	 /G9/I2JRPfnBPcbF6rHOFxZZIPTVNQC9dGAO/m2U9oX2gN8IXmVCWdfi+olAiaDVax
+	 lOnw/fG950c8sUbB+eT6kwYGg8du/3ER4/qcKt3gBSwvwFc1oBuh1JmTfMpbFCqnS1
+	 QeCDIqvlYW64A==
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-204235d0913so367630fac.1;
+        Thu, 21 Dec 2023 02:22:48 -0800 (PST)
+X-Gm-Message-State: AOJu0Yyc+8TqvNLH4rq+Dks+QlOtmI+dx5P2r30XjiGL7GMHMtVKv+dP
+	HYLGgInI/pcvSqtJrsAA37uTYSxk7i0QLrvH6cY=
+X-Google-Smtp-Source: AGHT+IFD0Wb8eYzesckvtQcgLKNMTZArhr3VRhRy5ctAEtHgOX2tQvUkW1DewMY1lnpONaKv20gyp7IJLHG6Efg7Fgc=
+X-Received: by 2002:a05:6870:1702:b0:203:bcd8:c5c2 with SMTP id
+ h2-20020a056870170200b00203bcd8c5c2mr1469312oae.78.1703154168121; Thu, 21 Dec
+ 2023 02:22:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231219101620.4617-1-xiongxin@kylinos.cn> <20231220022901.29158-1-xiongxin@kylinos.cn>
-In-Reply-To: <20231220022901.29158-1-xiongxin@kylinos.cn>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 21 Dec 2023 11:19:55 +0100
-Message-ID: <CAMRc=Md7ODHUSe2fa37NazgJoV5aGXRh1Pp24LcFc49=UXgnwA@mail.gmail.com>
-Subject: Re: [PATCH v5] gpio: dwapb: mask/unmask IRQ when disable/enale it
-To: xiongxin <xiongxin@kylinos.cn>
-Cc: fancer.lancer@gmail.com, hoan@os.amperecomputing.com, 
-	linus.walleij@linaro.org, andy@kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@kernel.org, 
-	Riwen Lu <luriwen@kylinos.cn>
+References: <20231122221814.139916-1-deller@kernel.org> <20231122221814.139916-2-deller@kernel.org>
+In-Reply-To: <20231122221814.139916-2-deller@kernel.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Thu, 21 Dec 2023 19:22:11 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ4C66NZpOwM6_pzdFbTx7LHfv40vJsNu3spPCEJKfOFw@mail.gmail.com>
+Message-ID: <CAK7LNAQ4C66NZpOwM6_pzdFbTx7LHfv40vJsNu3spPCEJKfOFw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] linux/export: Fix alignment for 64-bit ksymtab entries
+To: deller@kernel.org
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
+	linux-modules@vger.kernel.org, linux-arch@vger.kernel.org, 
+	Luis Chamberlain <mcgrof@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 20, 2023 at 3:29=E2=80=AFAM xiongxin <xiongxin@kylinos.cn> wrot=
-e:
+On Thu, Nov 23, 2023 at 7:18=E2=80=AFAM <deller@kernel.org> wrote:
 >
-> In the hardware implementation of the I2C HID driver based on DesignWare
-> GPIO IRQ chip, when the user continues to use the I2C HID device in the
-> suspend process, the I2C HID interrupt will be masked after the resume
-> process is finished.
+> From: Helge Deller <deller@gmx.de>
 >
-> This is because the disable_irq()/enable_irq() of the DesignWare GPIO
-> driver does not synchronize the IRQ mask register state. In normal use
-> of the I2C HID procedure, the GPIO IRQ irq_mask()/irq_unmask() functions
-> are called in pairs. In case of an exception, i2c_hid_core_suspend()
-> calls disable_irq() to disable the GPIO IRQ. With low probability, this
-> causes irq_unmask() to not be called, which causes the GPIO IRQ to be
-> masked and not unmasked in enable_irq(), raising an exception.
+> An alignment of 4 bytes is wrong for 64-bit platforms which don't define
+> CONFIG_HAVE_ARCH_PREL32_RELOCATIONS (which then store 64-bit pointers).
+> Fix their alignment to 8 bytes.
 >
-> Add synchronization to the masked register state in the
-> dwapb_irq_enable()/dwapb_irq_disable() function. mask the GPIO IRQ
-> before disabling it. After enabling the GPIO IRQ, unmask the IRQ.
->
-> Fixes: 7779b3455697 ("gpio: add a driver for the Synopsys DesignWare APB =
-GPIO block")
-> Cc: stable@kernel.org
-> Co-developed-by: Riwen Lu <luriwen@kylinos.cn>
-> Signed-off-by: Riwen Lu <luriwen@kylinos.cn>
-> Signed-off-by: xiongxin <xiongxin@kylinos.cn>
-> Acked-by: Serge Semin <fancer.lancer@gmail.com>
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
+> Signed-off-by: Helge Deller <deller@gmx.de>
+
+
+This is correct.
+
+Acked-by: Masahiro Yamada <masahiroy@kernel.org>
+
+Please add
+
+
+Fixes: ddb5cdbafaaa ("kbuild: generate KSYMTAB entries by modpost")
+
+
+
+
+
 > ---
-> v5:
->         * fix typo in patch description
-> v4:
->         * Add patch tag information
-> v3:
->         * Modify the submitter's information
-> v2:
->         * Resubmit the patch to fix this exception from the DesignWare
->           GPIO driver side
-> v1:
->         * Resolve the exception from the IRQ core layer. (key point not
->           found correctly)
-> ---
->  drivers/gpio/gpio-dwapb.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
+>  include/linux/export-internal.h | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 >
-> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-> index 4a4f61bf6c58..8c59332429c2 100644
-> --- a/drivers/gpio/gpio-dwapb.c
-> +++ b/drivers/gpio/gpio-dwapb.c
-> @@ -282,13 +282,15 @@ static void dwapb_irq_enable(struct irq_data *d)
->  {
->         struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
->         struct dwapb_gpio *gpio =3D to_dwapb_gpio(gc);
-> +       irq_hw_number_t hwirq =3D irqd_to_hwirq(d);
->         unsigned long flags;
->         u32 val;
+> diff --git a/include/linux/export-internal.h b/include/linux/export-inter=
+nal.h
+> index 69501e0ec239..cd253eb51d6c 100644
+> --- a/include/linux/export-internal.h
+> +++ b/include/linux/export-internal.h
+> @@ -16,10 +16,13 @@
+>   * and eliminates the need for absolute relocations that require runtime
+>   * processing on relocatable kernels.
+>   */
+> +#define __KSYM_ALIGN           ".balign 4"
+>  #define __KSYM_REF(sym)                ".long " #sym "- ."
+>  #elif defined(CONFIG_64BIT)
+> +#define __KSYM_ALIGN           ".balign 8"
+>  #define __KSYM_REF(sym)                ".quad " #sym
+>  #else
+> +#define __KSYM_ALIGN           ".balign 4"
+>  #define __KSYM_REF(sym)                ".long " #sym
+>  #endif
 >
->         raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
-> -       val =3D dwapb_read(gpio, GPIO_INTEN);
-> -       val |=3D BIT(irqd_to_hwirq(d));
-> +       val =3D dwapb_read(gpio, GPIO_INTEN) | BIT(hwirq);
->         dwapb_write(gpio, GPIO_INTEN, val);
-> +       val =3D dwapb_read(gpio, GPIO_INTMASK) & ~BIT(hwirq);
-> +       dwapb_write(gpio, GPIO_INTMASK, val);
->         raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->  }
->
-> @@ -296,12 +298,14 @@ static void dwapb_irq_disable(struct irq_data *d)
->  {
->         struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
->         struct dwapb_gpio *gpio =3D to_dwapb_gpio(gc);
-> +       irq_hw_number_t hwirq =3D irqd_to_hwirq(d);
->         unsigned long flags;
->         u32 val;
->
->         raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
-> -       val =3D dwapb_read(gpio, GPIO_INTEN);
-> -       val &=3D ~BIT(irqd_to_hwirq(d));
-> +       val =3D dwapb_read(gpio, GPIO_INTMASK) | BIT(hwirq);
-> +       dwapb_write(gpio, GPIO_INTMASK, val);
-> +       val =3D dwapb_read(gpio, GPIO_INTEN) & ~BIT(hwirq);
->         dwapb_write(gpio, GPIO_INTEN, val);
->         raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->  }
+> @@ -42,7 +45,7 @@
+>             "   .asciz \"" ns "\""                                      "=
+\n"    \
+>             "   .previous"                                              "=
+\n"    \
+>             "   .section \"___ksymtab" sec "+" #name "\", \"a\""        "=
+\n"    \
+> -           "   .balign 4"                                              "=
+\n"    \
+> +               __KSYM_ALIGN                                            "=
+\n"    \
+>             "__ksymtab_" #name ":"                                      "=
+\n"    \
+>                 __KSYM_REF(sym)                                         "=
+\n"    \
+>                 __KSYM_REF(__kstrtab_ ##name)                           "=
+\n"    \
 > --
-> 2.34.1
+> 2.41.0
 >
 
-Queued for fixes, thanks!
 
-Bartosz
+--=20
+Best Regards
+Masahiro Yamada
