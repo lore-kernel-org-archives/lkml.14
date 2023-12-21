@@ -1,132 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C636518B;
-	Thu, 21 Dec 2023 18:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC6064ABD
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 18:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NRSvr9xw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QouMiyuk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703184631; x=1734720631;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=6lqfECsnx9YNGz7mNu1P1q5RcYfS8nYI6pc/nxTM7UQ=;
-  b=NRSvr9xwu8uUsCJvIuUNMSq4vmzVfwdjoepfVThM+cj1amxFYXz1HfN4
-   aeGC0pFU0JNpOqZJu3snBaAIwYrRsY4Nhccg90CsH+07tC4mQV/NBdfiJ
-   QyEOTYO0FyfXRDDos3biRWv+ktHvIiu220Xdla3tN9f13bb8OArZgoLMh
-   eGW2nRaGFFrB5wXKXLd2kWYBu12kB1fEqGICz5xm95FsvMskLDNPQFjX/
-   XjX8U8qPFQJF5wu4q2+RZ7r+j80cRgSH9CsP4fmmZmlMzUU5PBLELdIg8
-   MILUq2Yp3fLFw2dnPLCar6VdLmL4yimdGQZboNThB1DKE1ntADzlqlC7s
+  t=1703184672; x=1734720672;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=H9VtJMjyy4qb5DQ9rpL8j6I/eT5s8WjO4H2icrTSuks=;
+  b=QouMiyukiISsYZd8Ne20r3Vmj5aolTN/lk7TzBcGsVun6ebY16fjeLx1
+   SZT27bRbwVRn+0q7wIDaA/YizxsSxO3YTy/U8+v1OfSFo/BqiMqpkIket
+   7eSSJlw6EdF9PKgvp1SB5+tP22ciHMdPnIbIa2Aver8+QvcS5BSuz9EjC
+   sY3v3g3cpcnWFMhbmTOug5SdrPQWONEycGidHC7GXb7OzKPKZ/Zto+e67
+   lOmSRY/95Afk6oxS4E5CcxuqlxHztteNcIDPrge/JiG1Qvp8L369QJoM/
+   u4lj2G1R+793IBOU44Cd71HYD/FmSvYoC4isCWG1S0+IcHjlENnIuWydv
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="462463230"
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="3256495"
 X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
-   d="scan'208";a="462463230"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 10:50:30 -0800
+   d="scan'208";a="3256495"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 10:51:12 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="920407804"
 X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
-   d="scan'208";a="920407804"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Dec 2023 10:50:28 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 93260B8; Thu, 21 Dec 2023 19:55:28 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] gpiolib: cdev: Split line_get_debounce_period() and use
-Date: Thu, 21 Dec 2023 19:55:27 +0200
-Message-ID: <20231221175527.2814506-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+   d="scan'208";a="11218147"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by fmviesa002.fm.intel.com with ESMTP; 21 Dec 2023 10:51:08 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rGO8Q-0008ac-2H;
+	Thu, 21 Dec 2023 18:51:06 +0000
+Date: Fri, 22 Dec 2023 02:50:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Joshua Hay <joshua.a.hay@intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Alan Brady <alan.brady@intel.com>,
+	Madhu Chittim <madhu.chittim@intel.com>,
+	Phani Burra <phani.r.burra@intel.com>,
+	Sridhar Samudrala <sridhar.samudrala@intel.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Pavan Kumar Linga <pavan.kumar.linga@intel.com>
+Subject: include/linux/build_bug.h:78:41: error: static assertion failed:
+ "(6) == sizeof(struct virtchnl2_ptype)"
+Message-ID: <202312220250.ufEm8doQ-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Instead of repeating the same code and reduce possible miss
-of READ_ONCE(), split line_get_debounce_period() heler out
-and use in the existing cases.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   a4aebe936554dac6a91e5d091179c934f8325708
+commit: a251eee62133774cf35ff829041377e721ef9c8c idpf: add SRIOV support and other ndo_ops
+date:   3 months ago
+config: arm-randconfig-r051-20231221 (https://download.01.org/0day-ci/archive/20231222/202312220250.ufEm8doQ-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231222/202312220250.ufEm8doQ-lkp@intel.com/reproduce)
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib-cdev.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202312220250.ufEm8doQ-lkp@intel.com/
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index 744734405912..c573820d5722 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -651,6 +651,16 @@ static struct line *supinfo_find(struct gpio_desc *desc)
- 	return NULL;
- }
- 
-+static unsigned int line_get_debounce_period(struct line *line)
-+{
-+	return READ_ONCE(line->debounce_period_us);
-+}
-+
-+static inline bool line_has_supinfo(struct line *line)
-+{
-+	return line_get_debounce_period(line);
-+}
-+
- static void supinfo_to_lineinfo(struct gpio_desc *desc,
- 				struct gpio_v2_line_info *info)
- {
-@@ -665,15 +675,10 @@ static void supinfo_to_lineinfo(struct gpio_desc *desc,
- 
- 	attr = &info->attrs[info->num_attrs];
- 	attr->id = GPIO_V2_LINE_ATTR_ID_DEBOUNCE;
--	attr->debounce_period_us = READ_ONCE(line->debounce_period_us);
-+	attr->debounce_period_us = line_get_debounce_period(line);
- 	info->num_attrs++;
- }
- 
--static inline bool line_has_supinfo(struct line *line)
--{
--	return READ_ONCE(line->debounce_period_us);
--}
--
- /*
-  * Checks line_has_supinfo() before and after the change to avoid unnecessary
-  * supinfo_tree access.
-@@ -846,7 +851,7 @@ static enum hte_return process_hw_ts(struct hte_ts_data *ts, void *p)
- 		line->total_discard_seq++;
- 		line->last_seqno = ts->seq;
- 		mod_delayed_work(system_wq, &line->work,
--		  usecs_to_jiffies(READ_ONCE(line->debounce_period_us)));
-+				 usecs_to_jiffies(line_get_debounce_period(line)));
- 	} else {
- 		if (unlikely(ts->seq < line->line_seqno))
- 			return HTE_CB_HANDLED;
-@@ -987,7 +992,7 @@ static irqreturn_t debounce_irq_handler(int irq, void *p)
- 	struct line *line = p;
- 
- 	mod_delayed_work(system_wq, &line->work,
--		usecs_to_jiffies(READ_ONCE(line->debounce_period_us)));
-+			 usecs_to_jiffies(line_get_debounce_period(line)));
- 
- 	return IRQ_HANDLED;
- }
-@@ -1215,7 +1220,7 @@ static int edge_detector_update(struct line *line,
- 			gpio_v2_line_config_debounce_period(lc, line_idx);
- 
- 	if ((active_edflags == edflags) &&
--	    (READ_ONCE(line->debounce_period_us) == debounce_period_us))
-+	    (line_get_debounce_period(line) == debounce_period_us))
- 		return 0;
- 
- 	/* sw debounced and still will be...*/
+All errors (new ones prefixed by >>):
+
+   In file included from include/linux/init.h:5,
+                    from include/linux/printk.h:6,
+                    from include/asm-generic/bug.h:22,
+                    from arch/arm/include/asm/bug.h:60,
+                    from include/linux/ktime.h:26,
+                    from include/net/pkt_sched.h:6,
+                    from drivers/net/ethernet/intel/idpf/idpf.h:12,
+                    from drivers/net/ethernet/intel/idpf/idpf_dev.c:4:
+>> include/linux/build_bug.h:78:41: error: static assertion failed: "(6) == sizeof(struct virtchnl2_ptype)"
+      78 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+         |                                         ^~~~~~~~~~~~~~
+   include/linux/build_bug.h:77:34: note: in expansion of macro '__static_assert'
+      77 | #define static_assert(expr, ...) __static_assert(expr, ##__VA_ARGS__, #expr)
+         |                                  ^~~~~~~~~~~~~~~
+   drivers/net/ethernet/intel/idpf/virtchnl2.h:26:9: note: in expansion of macro 'static_assert'
+      26 |         static_assert((n) == sizeof(struct X))
+         |         ^~~~~~~~~~~~~
+   drivers/net/ethernet/intel/idpf/virtchnl2.h:982:1: note: in expansion of macro 'VIRTCHNL2_CHECK_STRUCT_LEN'
+     982 | VIRTCHNL2_CHECK_STRUCT_LEN(6, virtchnl2_ptype);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +78 include/linux/build_bug.h
+
+bc6245e5efd70c Ian Abbott       2017-07-10  60  
+6bab69c65013be Rasmus Villemoes 2019-03-07  61  /**
+6bab69c65013be Rasmus Villemoes 2019-03-07  62   * static_assert - check integer constant expression at build time
+6bab69c65013be Rasmus Villemoes 2019-03-07  63   *
+6bab69c65013be Rasmus Villemoes 2019-03-07  64   * static_assert() is a wrapper for the C11 _Static_assert, with a
+6bab69c65013be Rasmus Villemoes 2019-03-07  65   * little macro magic to make the message optional (defaulting to the
+6bab69c65013be Rasmus Villemoes 2019-03-07  66   * stringification of the tested expression).
+6bab69c65013be Rasmus Villemoes 2019-03-07  67   *
+6bab69c65013be Rasmus Villemoes 2019-03-07  68   * Contrary to BUILD_BUG_ON(), static_assert() can be used at global
+6bab69c65013be Rasmus Villemoes 2019-03-07  69   * scope, but requires the expression to be an integer constant
+6bab69c65013be Rasmus Villemoes 2019-03-07  70   * expression (i.e., it is not enough that __builtin_constant_p() is
+6bab69c65013be Rasmus Villemoes 2019-03-07  71   * true for expr).
+6bab69c65013be Rasmus Villemoes 2019-03-07  72   *
+6bab69c65013be Rasmus Villemoes 2019-03-07  73   * Also note that BUILD_BUG_ON() fails the build if the condition is
+6bab69c65013be Rasmus Villemoes 2019-03-07  74   * true, while static_assert() fails the build if the expression is
+6bab69c65013be Rasmus Villemoes 2019-03-07  75   * false.
+6bab69c65013be Rasmus Villemoes 2019-03-07  76   */
+6bab69c65013be Rasmus Villemoes 2019-03-07  77  #define static_assert(expr, ...) __static_assert(expr, ##__VA_ARGS__, #expr)
+6bab69c65013be Rasmus Villemoes 2019-03-07 @78  #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+6bab69c65013be Rasmus Villemoes 2019-03-07  79  
+07a368b3f55a79 Maxim Levitsky   2022-10-25  80  
+
+:::::: The code at line 78 was first introduced by commit
+:::::: 6bab69c65013bed5fce9f101a64a84d0385b3946 build_bug.h: add wrapper for _Static_assert
+
+:::::: TO: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+:::::: CC: Linus Torvalds <torvalds@linux-foundation.org>
+
 -- 
-2.43.0.rc1.1.gbec44491f096
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
