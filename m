@@ -1,34 +1,34 @@
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F49057308;
-	Thu, 21 Dec 2023 09:03:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54BDF55C28;
+	Thu, 21 Dec 2023 09:03:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HEUjBg/d"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HXq8C5h9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703149435; x=1734685435;
+  t=1703149433; x=1734685433;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=KjDe60Yb7E8XbbbfTdTf5HJMHBxDk3I1fydRBBz9T98=;
-  b=HEUjBg/diXbRy0yIOLMjfBat8EVZ3R8tIY/mjO7gnc1y/vHBDovqlAid
-   WnjTeodNXpUZ1GCr+q+XjzKjsbAc3LS2dw2tI9PyaQgBNJ8l/Hmr1O/TT
-   RFvY2jBH2MaRXwAYqTMsKR6WRBp/J/5WffctgmVdHx0HtOvy2AE3gm/3C
-   OxwzZYQ/ywndAB9ToaObote5fvjBouV5WQJUYZrST3TvTGXxfKBsiiBuw
-   3PEasWNAz9ftM+7See9PCt1Ki/H53FI9BekhGPOCcfOe0yEaOIEpS3cio
-   7+Px4e5oj5vs8zAeqzD+c0wY4qs6iufAwWG3j0MHJLvpmYA+SHY3g4DWK
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="398729709"
+  bh=Ky/BGy7YdiRQEiX3OiH3FB749KKoV/jpv2wQq4kCc/0=;
+  b=HXq8C5h9PnCGFsidjcjhd+j8LbqCdWB+k8wnWaHjwIMsXnPvf9AVpg+r
+   P9PL1Jrqfi3IYbTkugnNcUZMhGCJUOlJIZJ4LiFz5XDqN1dkvsq77ghVe
+   R/2Rf+T1+lexkTLameGtRVxWz7CXCMcI5bfmLdX9UuzFtlZHugnqjJp2W
+   XKSGxJD2nnYOr0YR88fXFCsRw23soqojf3vncKcPDtpLegz98YM1buDoq
+   QN3ArbDZ8VSpmvKeGKQoc6m3p9xusRfAXxokt2g6eMy0R6qn58Woa29iT
+   DHU0QpSxmZkhzQ66roo2fuMgoM2UwCHTa6J2V6bbtQXf1Ep2sLODEheVv
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="398729679"
 X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="398729709"
+   d="scan'208";a="398729679"
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 01:03:46 -0800
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 01:03:45 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="900028627"
+X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="900028622"
 X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="900028627"
+   d="scan'208";a="900028622"
 Received: from 984fee00a5ca.jf.intel.com (HELO embargo.jf.intel.com) ([10.165.9.183])
   by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 01:03:11 -0800
 From: Yang Weijiang <weijiang.yang@intel.com>
@@ -42,10 +42,11 @@ Cc: peterz@infradead.org,
 	rick.p.edgecombe@intel.com,
 	mlevitsk@redhat.com,
 	john.allen@amd.com,
-	weijiang.yang@intel.com
-Subject: [PATCH v8 20/26] KVM: VMX: Emulate read and write to CET MSRs
-Date: Thu, 21 Dec 2023 09:02:33 -0500
-Message-Id: <20231221140239.4349-21-weijiang.yang@intel.com>
+	weijiang.yang@intel.com,
+	Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Subject: [PATCH v8 18/26] KVM: VMX: Introduce CET VMCS fields and control bits
+Date: Thu, 21 Dec 2023 09:02:31 -0500
+Message-Id: <20231221140239.4349-19-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20231221140239.4349-1-weijiang.yang@intel.com>
 References: <20231221140239.4349-1-weijiang.yang@intel.com>
@@ -57,181 +58,106 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add emulation interface for CET MSR access. The emulation code is split
-into common part and vendor specific part. The former does common checks
-for MSRs, e.g., accessibility, data validity etc., then pass the operation
-to either XSAVE-managed MSRs via the helpers or CET VMCS fields.
+Control-flow Enforcement Technology (CET) is a kind of CPU feature used
+to prevent Return/CALL/Jump-Oriented Programming (ROP/COP/JOP) attacks.
+It provides two sub-features(SHSTK,IBT) to defend against ROP/COP/JOP
+style control-flow subversion attacks.
 
-Suggested-by: Sean Christopherson <seanjc@google.com>
+Shadow Stack (SHSTK):
+  A shadow stack is a second stack used exclusively for control transfer
+  operations. The shadow stack is separate from the data/normal stack and
+  can be enabled individually in user and kernel mode. When shadow stack
+  is enabled, CALL pushes the return address on both the data and shadow
+  stack. RET pops the return address from both stacks and compares them.
+  If the return addresses from the two stacks do not match, the processor
+  generates a #CP.
+
+Indirect Branch Tracking (IBT):
+  IBT introduces instruction(ENDBRANCH)to mark valid target addresses of
+  indirect branches (CALL, JMP etc...). If an indirect branch is executed
+  and the next instruction is _not_ an ENDBRANCH, the processor generates
+  a #CP. These instruction behaves as a NOP on platforms that have no CET.
+
+Several new CET MSRs are defined to support CET:
+  MSR_IA32_{U,S}_CET: CET settings for {user,supervisor} CET respectively.
+
+  MSR_IA32_PL{0,1,2,3}_SSP: SHSTK pointer linear address for CPL{0,1,2,3}.
+
+  MSR_IA32_INT_SSP_TAB: Linear address of SHSTK pointer table, whose entry
+			is indexed by IST of interrupt gate desc.
+
+Two XSAVES state bits are introduced for CET:
+  IA32_XSS:[bit 11]: Control saving/restoring user mode CET states
+  IA32_XSS:[bit 12]: Control saving/restoring supervisor mode CET states.
+
+Six VMCS fields are introduced for CET:
+  {HOST,GUEST}_S_CET: Stores CET settings for kernel mode.
+  {HOST,GUEST}_SSP: Stores current active SSP.
+  {HOST,GUEST}_INTR_SSP_TABLE: Stores current active MSR_IA32_INT_SSP_TAB.
+
+On Intel platforms, two additional bits are defined in VM_EXIT and VM_ENTRY
+control fields:
+If VM_EXIT_LOAD_CET_STATE = 1, host CET states are loaded from following
+VMCS fields at VM-Exit:
+  HOST_S_CET
+  HOST_SSP
+  HOST_INTR_SSP_TABLE
+
+If VM_ENTRY_LOAD_CET_STATE = 1, guest CET states are loaded from following
+VMCS fields at VM-Entry:
+  GUEST_S_CET
+  GUEST_SSP
+  GUEST_INTR_SSP_TABLE
+
+Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+Reviewed-by: Chao Gao <chao.gao@intel.com>
+Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 18 +++++++++
- arch/x86/kvm/x86.c     | 88 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 106 insertions(+)
+ arch/x86/include/asm/vmx.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 29a0fd3e83c5..064a5fe87948 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -2106,6 +2106,15 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		else
- 			msr_info->data = vmx->pt_desc.guest.addr_a[index / 2];
- 		break;
-+	case MSR_IA32_S_CET:
-+		msr_info->data = vmcs_readl(GUEST_S_CET);
-+		break;
-+	case MSR_KVM_SSP:
-+		msr_info->data = vmcs_readl(GUEST_SSP);
-+		break;
-+	case MSR_IA32_INT_SSP_TAB:
-+		msr_info->data = vmcs_readl(GUEST_INTR_SSP_TABLE);
-+		break;
- 	case MSR_IA32_DEBUGCTLMSR:
- 		msr_info->data = vmcs_read64(GUEST_IA32_DEBUGCTL);
- 		break;
-@@ -2415,6 +2424,15 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		else
- 			vmx->pt_desc.guest.addr_a[index / 2] = data;
- 		break;
-+	case MSR_IA32_S_CET:
-+		vmcs_writel(GUEST_S_CET, data);
-+		break;
-+	case MSR_KVM_SSP:
-+		vmcs_writel(GUEST_SSP, data);
-+		break;
-+	case MSR_IA32_INT_SSP_TAB:
-+		vmcs_writel(GUEST_INTR_SSP_TABLE, data);
-+		break;
- 	case MSR_IA32_PERF_CAPABILITIES:
- 		if (data && !vcpu_to_pmu(vcpu)->version)
- 			return 1;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index a7368adad6b8..cf0f9e4474a4 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1850,6 +1850,36 @@ bool kvm_msr_allowed(struct kvm_vcpu *vcpu, u32 index, u32 type)
- }
- EXPORT_SYMBOL_GPL(kvm_msr_allowed);
+diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
+index 0e73616b82f3..451fd4f4fedc 100644
+--- a/arch/x86/include/asm/vmx.h
++++ b/arch/x86/include/asm/vmx.h
+@@ -104,6 +104,7 @@
+ #define VM_EXIT_CLEAR_BNDCFGS                   0x00800000
+ #define VM_EXIT_PT_CONCEAL_PIP			0x01000000
+ #define VM_EXIT_CLEAR_IA32_RTIT_CTL		0x02000000
++#define VM_EXIT_LOAD_CET_STATE                  0x10000000
  
-+#define CET_US_RESERVED_BITS		GENMASK(9, 6)
-+#define CET_US_SHSTK_MASK_BITS		GENMASK(1, 0)
-+#define CET_US_IBT_MASK_BITS		(GENMASK_ULL(5, 2) | GENMASK_ULL(63, 10))
-+#define CET_US_LEGACY_BITMAP_BASE(data)	((data) >> 12)
-+
-+static bool is_set_cet_msr_allowed(struct kvm_vcpu *vcpu, u32 index, u64 data,
-+				   bool host_initiated)
-+{
-+	bool msr_ctrl = index == MSR_IA32_S_CET || index == MSR_IA32_U_CET;
-+
-+	if (guest_can_use(vcpu, X86_FEATURE_SHSTK))
-+		return true;
-+
-+	if (msr_ctrl && guest_can_use(vcpu, X86_FEATURE_IBT))
-+		return true;
-+
-+	/*
-+	 * If KVM supports the MSR, i.e. has enumerated the MSR existence to
-+	 * userspace, then userspace is allowed to write '0' irrespective of
-+	 * whether or not the MSR is exposed to the guest.
-+	 */
-+	if (!host_initiated || data)
-+		return false;
-+
-+	if (kvm_cpu_cap_has(X86_FEATURE_SHSTK))
-+		return true;
-+
-+	return msr_ctrl && kvm_cpu_cap_has(X86_FEATURE_IBT);
-+}
-+
+ #define VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR	0x00036dff
+ 
+@@ -117,6 +118,7 @@
+ #define VM_ENTRY_LOAD_BNDCFGS                   0x00010000
+ #define VM_ENTRY_PT_CONCEAL_PIP			0x00020000
+ #define VM_ENTRY_LOAD_IA32_RTIT_CTL		0x00040000
++#define VM_ENTRY_LOAD_CET_STATE                 0x00100000
+ 
+ #define VM_ENTRY_ALWAYSON_WITHOUT_TRUE_MSR	0x000011ff
+ 
+@@ -345,6 +347,9 @@ enum vmcs_field {
+ 	GUEST_PENDING_DBG_EXCEPTIONS    = 0x00006822,
+ 	GUEST_SYSENTER_ESP              = 0x00006824,
+ 	GUEST_SYSENTER_EIP              = 0x00006826,
++	GUEST_S_CET                     = 0x00006828,
++	GUEST_SSP                       = 0x0000682a,
++	GUEST_INTR_SSP_TABLE            = 0x0000682c,
+ 	HOST_CR0                        = 0x00006c00,
+ 	HOST_CR3                        = 0x00006c02,
+ 	HOST_CR4                        = 0x00006c04,
+@@ -357,6 +362,9 @@ enum vmcs_field {
+ 	HOST_IA32_SYSENTER_EIP          = 0x00006c12,
+ 	HOST_RSP                        = 0x00006c14,
+ 	HOST_RIP                        = 0x00006c16,
++	HOST_S_CET                      = 0x00006c18,
++	HOST_SSP                        = 0x00006c1a,
++	HOST_INTR_SSP_TABLE             = 0x00006c1c
+ };
+ 
  /*
-  * Write @data into the MSR specified by @index.  Select MSR specific fault
-  * checks are bypassed if @host_initiated is %true.
-@@ -1909,6 +1939,43 @@ static int __kvm_set_msr(struct kvm_vcpu *vcpu, u32 index, u64 data,
- 
- 		data = (u32)data;
- 		break;
-+	case MSR_IA32_U_CET:
-+	case MSR_IA32_S_CET:
-+		if (!is_set_cet_msr_allowed(vcpu, index, data, host_initiated))
-+			return 1;
-+		if (data & CET_US_RESERVED_BITS)
-+			return 1;
-+		if (!guest_can_use(vcpu, X86_FEATURE_SHSTK) &&
-+		    (data & CET_US_SHSTK_MASK_BITS))
-+			return 1;
-+		if (!guest_can_use(vcpu, X86_FEATURE_IBT) &&
-+		    (data & CET_US_IBT_MASK_BITS))
-+			return 1;
-+		if (!IS_ALIGNED(CET_US_LEGACY_BITMAP_BASE(data), 4))
-+			return 1;
-+		/* IBT can be suppressed iff the TRACKER isn't WAIT_ENDBR. */
-+		if ((data & CET_SUPPRESS) && (data & CET_WAIT_ENDBR))
-+			return 1;
-+		break;
-+	case MSR_IA32_INT_SSP_TAB:
-+		if (!is_set_cet_msr_allowed(vcpu, index, data, host_initiated) ||
-+		    !guest_cpuid_has(vcpu, X86_FEATURE_LM))
-+			return 1;
-+		if (is_noncanonical_address(data, vcpu))
-+			return 1;
-+		break;
-+	case MSR_KVM_SSP:
-+		if (!host_initiated)
-+			return 1;
-+		fallthrough;
-+	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-+		if (!is_set_cet_msr_allowed(vcpu, index, data, host_initiated))
-+			return 1;
-+		if (is_noncanonical_address(data, vcpu))
-+			return 1;
-+		if (!IS_ALIGNED(data, 4))
-+			return 1;
-+		break;
- 	}
- 
- 	msr.data = data;
-@@ -1952,6 +2019,19 @@ static int __kvm_get_msr(struct kvm_vcpu *vcpu, u32 index, u64 *data,
- 		    !guest_cpuid_has(vcpu, X86_FEATURE_RDPID))
- 			return 1;
- 		break;
-+	case MSR_IA32_INT_SSP_TAB:
-+		if (!guest_can_use(vcpu, X86_FEATURE_SHSTK) ||
-+		    !guest_cpuid_has(vcpu, X86_FEATURE_LM))
-+			return 1;
-+		break;
-+	case MSR_KVM_SSP:
-+		if (!host_initiated)
-+			return 1;
-+		fallthrough;
-+	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-+		if (!guest_can_use(vcpu, X86_FEATURE_SHSTK))
-+			return 1;
-+		break;
- 	}
- 
- 	msr.index = index;
-@@ -4143,6 +4223,10 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		vcpu->arch.guest_fpu.xfd_err = data;
- 		break;
- #endif
-+	case MSR_IA32_U_CET:
-+	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-+		kvm_set_xstate_msr(vcpu, msr_info);
-+		break;
- 	default:
- 		if (kvm_pmu_is_valid_msr(vcpu, msr))
- 			return kvm_pmu_set_msr(vcpu, msr_info);
-@@ -4502,6 +4586,10 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		msr_info->data = vcpu->arch.guest_fpu.xfd_err;
- 		break;
- #endif
-+	case MSR_IA32_U_CET:
-+	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-+		kvm_get_xstate_msr(vcpu, msr_info);
-+		break;
- 	default:
- 		if (kvm_pmu_is_valid_msr(vcpu, msr_info->index))
- 			return kvm_pmu_get_msr(vcpu, msr_info);
 -- 
 2.39.3
 
