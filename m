@@ -1,69 +1,72 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A357465
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 04:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039CBAD31;
+	Thu, 21 Dec 2023 04:36:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J5SiicJF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=tIcyVTUvWTVmkOSCh+ORFYZ85sHYJlwaK0XklBB5ZHE=; b=J5SiicJFI/O/bVfWLC9VcRBwHF
-	U9hmYBbfiJcPZjDG2ibyXMa6qthx6h+v1tv+yKoz8BSXG+O9i2PyPnRFoIoAiUpb40np6jruW3neX
-	Rm245sI6RMSP2h/ABE/mi5SJBBt6i4yfpffDKbQEdS58o4KyKbEVy+opaWPCYmYidI9VioICu3Lw4
-	VvEFkmZnKdQxBtV7BhngNLutAN3EzV1fNkboU9hAr/SNOGQnFvRHXKOz5yrzEptmSR1KGrciuzwrt
-	m5HXofIZkyJ4YlEq4VMO2VY9T4mol5Ol3ZAv5rujEEhLxQcwSKWT2YEtsz11RjkvjH3Jwyjnj3gGD
-	FDueA0yw==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1rGAmg-004f5Z-Dq; Thu, 21 Dec 2023 04:35:46 +0000
-Date: Thu, 21 Dec 2023 04:35:46 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Hugh Dickins <hughd@google.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Yin Fengwei <fengwei.yin@intel.com>,
-	Mike Kravetz <mike.kravetz@oracle.com>,
-	Muchun Song <muchun.song@linux.dev>, Peter Xu <peterx@redhat.com>
-Subject: Re: [PATCH v2 03/40] mm/rmap: introduce and use
- hugetlb_add_file_rmap()
-Message-ID: <ZYPAoq0mIje00j+U@casper.infradead.org>
-References: <20231220224504.646757-1-david@redhat.com>
- <20231220224504.646757-4-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PudtbnkL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EA1DC433C8;
+	Thu, 21 Dec 2023 04:36:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703133385;
+	bh=Ye0z8hSnZkvGRVITl2wlNpanlqLTvzdlfbhdatzGoR4=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=PudtbnkLI0SC9Z0NDsUUSzMU0ipAjqo60oSzraQ7xsNN3sdgdBZAAUxAiLxBLQcxm
+	 C3r9vtGIiK4fwmrQce1zVRLHaZD+6R1nASG367QBQV0YIgHS10p7UUpjKFcOP9fhuV
+	 M0dPvCvdsLHf3kD/dx9weNUjr8R575aiZvYX27vMePLLepvRuWwrXz6BsR6fDcHTll
+	 Lanq0JZV+JeXdzeAQRndBdLNx2P02z2ViR6g1fozSAe30hXvqka96EGodMSbJzaWYM
+	 P+2XObkg0V6nk0JfnilGyuUV2PZLi6oaBTdKjRsZL59k89Nbsgf1GWNO+sYPOdVqPA
+	 lHZkPIkJ7EDtQ==
+Message-ID: <d0fe9a3302f8c367a26dd5b4b1b29c68.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231220224504.646757-4-david@redhat.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20231220-sa8295p-gpu-v1-2-d8cdf2257f97@quicinc.com>
+References: <20231220-sa8295p-gpu-v1-0-d8cdf2257f97@quicinc.com> <20231220-sa8295p-gpu-v1-2-d8cdf2257f97@quicinc.com>
+Subject: Re: [PATCH 2/8] clk: qcom: gdsc: Enable supply reglator in GPU GX handler
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bjorn Andersson <quic_bjorande@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>, Bjorn Andersson <quic_bjorande@quicinc.com>, Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley <conor+dt@kernel.org>, Johan Hovold <johan+linaro@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Taniya Das <quic_tdas@quicinc.com>, Ulf Hansson <ulf.hansson@linaro.org>, Will Deacon <will@kernel.org>
+Date: Wed, 20 Dec 2023 20:36:23 -0800
+User-Agent: alot/0.10
 
-On Wed, Dec 20, 2023 at 11:44:27PM +0100, David Hildenbrand wrote:
-> hugetlb rmap handling differs quite a lot from "ordinary" rmap code.
-> For example, hugetlb currently only supports entire mappings, and treats
-> any mapping as mapped using a single "logical PTE". Let's move it out
-> of the way so we can overhaul our "ordinary" rmap.
-> implementation/interface.
-> 
-> Right now we're using page_dup_file_rmap() in some cases where "ordinary"
-> rmap code would have used page_add_file_rmap(). So let's introduce and
-> use hugetlb_add_file_rmap() instead. We won't be adding a
-> "hugetlb_dup_file_rmap()" functon for the fork() case, as it would be
-> doing the same: "dup" is just an optimization for "add".
-> 
-> What remains is a single page_dup_file_rmap() call in fork() code.
-> 
-> Add sanity checks that we end up with the right folios in the right
-> functions.
-> 
-> Reviewed-by: Yin Fengwei <fengwei.yin@intel.com>
-> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+Quoting Bjorn Andersson (2023-12-20 19:50:36)
+> The GX GDSC is modelled to aid the GMU in powering down the GPU in the
+> event that the GPU crashes, so that it can be restarted again. But in
+> the event that the power-domain is supplied through a dedicated
+> regulator (in contrast to being a subdomin of another power-domain),
+> something needs to turn that regulator on, both to make sure things are
+> powered and to match the operation in gdsc_disable().
+>=20
+> Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+> ---
+>  drivers/clk/qcom/gdsc.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/clk/qcom/gdsc.c b/drivers/clk/qcom/gdsc.c
+> index 5358e28122ab..d1139c895503 100644
+> --- a/drivers/clk/qcom/gdsc.c
+> +++ b/drivers/clk/qcom/gdsc.c
+> @@ -557,7 +557,13 @@ void gdsc_unregister(struct gdsc_desc *desc)
+>   */
+>  int gdsc_gx_do_nothing_enable(struct generic_pm_domain *domain)
+>  {
+> +       struct gdsc *sc =3D domain_to_gdsc(domain);
+> +       int ret =3D 0;
+> +
+>         /* Do nothing but give genpd the impression that we were successf=
+ul */
 
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Update this comment.
+
+> -       return 0;
+> +       if (sc->rsupply)
+> +               ret =3D regulator_enable(sc->rsupply);
+> +
+> +       return ret;
+>  }
