@@ -1,49 +1,39 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A504171A4
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 08:52:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CAD1A715;
+	Thu, 21 Dec 2023 08:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="tCl0HfaC"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-553729ee917so606163a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 00:52:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1703148764; x=1703753564; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=FTIeI4DoPouDjkk2jweCozK50yrWApKhZHnyb+L8pDY=;
-        b=tCl0HfaC6gpWclJVr+uRVlaLWmt0SfABWXaVH0xERTEXjwgwQjs+6KKfWQ9izwXkqp
-         GNssuQcbIqeBeG09t1O50sSlSyIKq1GWOAP7kdZcb4HMP/59tscVwoJQ0K17eFCXlE1I
-         7zkxnUQQ6j0esiCoRrC9g02KI3r5LYzHIzXJWLaoB96FA5wyOOVdAtkIldXpDMmzYyXx
-         oULUS8qVr40jna8sKGV3GCAuIxSy1Quo+RK/UvrtgM23bNJXMXBlH/VegEjPSuXTW2AX
-         Ok5tZnqw/iUVz4opoNq5rVgAzhjxL26WB5hhWC6LtPeh7fN03/vAHxFFCfBynC0D48e0
-         5rhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703148764; x=1703753564;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FTIeI4DoPouDjkk2jweCozK50yrWApKhZHnyb+L8pDY=;
-        b=kCjmkDEkozCucg6kZcgoYTtNuy7cPU0/L724Hi+eEsBeDzHPWhviHcy0JVZT8KgZOc
-         ZraoIcYVUJg9m3s4k60SKjiKljB+n7/aVe/pbGHddBW8bWRYzwBPHFV+G1DJokt9mB2m
-         15+33ahGudBsg2kpcUAAxi20IXCKIiPmygyl+7cW9cY0eYVeXvwyRLD5bU7wmCXrivUp
-         vOmdx+LkSd1S3zKDlq+kMT92bL58F1FX78Dma/cKgzUL40la+6OJ2zAZ5Tm7uu7nJzcQ
-         3xFkAKwRTfg3vWqz30iXiXOpTsvQ+mkHQTZ5eu61MqWUyxw+u7JMHj27lV7/e0b6RVPe
-         2I0A==
-X-Gm-Message-State: AOJu0YzpB6Tuta6DbIc/jKYPRoovclUpWF8teMJnb5RFTwSeZWYlycg8
-	iPOJcirwGdkd2AkI8GXCBi4XZw==
-X-Google-Smtp-Source: AGHT+IEWMOTPB9r62Wb7FIh3oonVv5j6dbF/GZFxvecSF5+3yVgCdDo/ASxWxlvTlimQhzhpshBYqg==
-X-Received: by 2002:a17:906:4e82:b0:a26:98ff:6464 with SMTP id v2-20020a1709064e8200b00a2698ff6464mr994115eju.17.1703148763984;
-        Thu, 21 Dec 2023 00:52:43 -0800 (PST)
-Received: from [192.168.0.161] ([62.73.69.208])
-        by smtp.gmail.com with ESMTPSA id rh9-20020a17090720e900b00a269e87ad84sm707136ejb.189.2023.12.21.00.52.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Dec 2023 00:52:43 -0800 (PST)
-Message-ID: <dff34170-fc5d-4344-b6a2-6af2b2903208@blackwall.org>
-Date: Thu, 21 Dec 2023 10:52:41 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Ht3Y1/n3"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BL63Ncl000354;
+	Thu, 21 Dec 2023 08:54:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=Ah///7Ew/pVHtSqFFyxdVQ5+uk4DukkXZr7lLzP9CTw=; b=Ht
+	3Y1/n3MRlbCV8W/qIcHpxgoHom9WZ3mFHN/x0Gc+t+EkiWHlh4TxzFpocK2C2IBQ
+	dsuqFhIS9R/By6fxfRXP5WpnMYKRNNkaUYdPpV2UYphCloydlzzkC7OmArero18q
+	2+Cj6rZG5xi4ZSZlm5AfYiXGgCbSxRrWAqYJQ4SnAWrqWOXhjSKzwIC9rHtZs6oa
+	9tw8POnfTKr/SifWgONj9MuqvUf1Z6BZ5btUwFulbW21JmWKFQQAUiaBudFphPfs
+	NVoSnBPUvjhPsMXpKJM5H5IfB7KrzksBJThacMMIclnnaFlqLHpJRKJmEhYusdGc
+	C49AF6PD+y8AizEh3BcQ==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3v4837hxdr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Dec 2023 08:54:09 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3BL8s80K005148
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Dec 2023 08:54:08 GMT
+Received: from [10.218.17.183] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 21 Dec
+ 2023 00:54:00 -0800
+Message-ID: <8f94489d-5f0e-4166-a14e-4959098a5c80@quicinc.com>
+Date: Thu, 21 Dec 2023 14:23:57 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,54 +41,190 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2] bridge: cfm: fix enum typo in
- br_cc_ccm_tx_parse
-To: Lin Ma <linma@zju.edu.cn>, roopa@nvidia.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horatiu.vultur@microchip.com, henrik.bjoernlund@microchip.com,
- bridge@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, horms@kernel.org
-References: <20231220163451.2720130-1-linma@zju.edu.cn>
+Subject: Re: [PATCH net-next] net: stmmac: dwmac-qcom-ethqos: Add support for
+ 2.5G SGMII
 Content-Language: en-US
-From: Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <20231220163451.2720130-1-linma@zju.edu.cn>
-Content-Type: text/plain; charset=UTF-8
+To: Andrew Halaney <ahalaney@redhat.com>
+CC: Vinod Koul <vkoul@kernel.org>, Bhupesh Sharma <bhupesh.sharma@linaro.org>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Jose Abreu
+	<joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>, <netdev@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@quicinc.com>
+References: <20231218071118.21879-1-quic_snehshah@quicinc.com>
+ <4zbf5fmijxnajk7kygcjrcusf6tdnuzsqqboh23nr6f3rb3c4g@qkfofhq7jmv6>
+ <8b80ab09-8444-4c3d-83b0-c7dbf5e58658@quicinc.com>
+ <wvzhz4fmtheculsiag4t2pn2kaggyle2mzhvawbs4m5isvqjto@lmaonvq3c3e7>
+From: Sneh Shah <quic_snehshah@quicinc.com>
+In-Reply-To: <wvzhz4fmtheculsiag4t2pn2kaggyle2mzhvawbs4m5isvqjto@lmaonvq3c3e7>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: t5O3yU5HJCjlLeZ_rtOcJrwHtYJOLrkg
+X-Proofpoint-ORIG-GUID: t5O3yU5HJCjlLeZ_rtOcJrwHtYJOLrkg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ suspectscore=0 mlxscore=0 malwarescore=0 clxscore=1015 bulkscore=0
+ priorityscore=1501 adultscore=0 spamscore=0 lowpriorityscore=0
+ phishscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2311290000 definitions=main-2312210065
 
-On 20/12/2023 18:34, Lin Ma wrote:
-> It appears that there is a typo in the code where the nlattr array is
-> being parsed with policy br_cfm_cc_ccm_tx_policy, but the instance is
-> being accessed via IFLA_BRIDGE_CFM_CC_RDI_INSTANCE, which is associated
-> with the policy br_cfm_cc_rdi_policy.
-> 
-> This problem was introduced by commit 2be665c3940d ("bridge: cfm: Netlink
-> SET configuration Interface.").
-> 
-> Though it seems like a harmless typo since these two enum owns the exact
-> same value (1 here), it is quite misleading hence fix it by using the
-> correct enum IFLA_BRIDGE_CFM_CC_CCM_TX_INSTANCE here.
-> 
-> Signed-off-by: Lin Ma <linma@zju.edu.cn>
-> Reviewed-by: Simon Horman <horms@kernel.org>
-> ---
-> V1 -> V2: remove Fixes tag as this patch resolves nothing but a typo.
-> 
->  net/bridge/br_cfm_netlink.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/bridge/br_cfm_netlink.c b/net/bridge/br_cfm_netlink.c
-> index 5c4c369f8536..2faab44652e7 100644
-> --- a/net/bridge/br_cfm_netlink.c
-> +++ b/net/bridge/br_cfm_netlink.c
-> @@ -362,7 +362,7 @@ static int br_cc_ccm_tx_parse(struct net_bridge *br, struct nlattr *attr,
->  
->  	memset(&tx_info, 0, sizeof(tx_info));
->  
-> -	instance = nla_get_u32(tb[IFLA_BRIDGE_CFM_CC_RDI_INSTANCE]);
-> +	instance = nla_get_u32(tb[IFLA_BRIDGE_CFM_CC_CCM_TX_INSTANCE]);
->  	nla_memcpy(&tx_info.dmac.addr,
->  		   tb[IFLA_BRIDGE_CFM_CC_CCM_TX_DMAC],
->  		   sizeof(tx_info.dmac.addr));
 
-Acked-by: Nikolay Aleksandrov <razor@blackwall.org>
 
+On 12/20/2023 9:29 PM, Andrew Halaney wrote:
+> On Wed, Dec 20, 2023 at 01:02:45PM +0530, Sneh Shah wrote:
+>>
+>>
+>> On 12/18/2023 9:50 PM, Andrew Halaney wrote:
+>>> On Mon, Dec 18, 2023 at 12:41:18PM +0530, Sneh Shah wrote:
+>>>> Serdes phy needs to operate at 2500 mode for 2.5G speed and 1000
+>>>> mode for 1G/100M/10M speed.
+>>>> Added changes to configure serdes phy and mac based on link speed.
+>>>>
+>>>> Signed-off-by: Sneh Shah <quic_snehshah@quicinc.com>
+>>>> ---
+>>>>  .../stmicro/stmmac/dwmac-qcom-ethqos.c        | 31 +++++++++++++++++--
+>>>>  1 file changed, 29 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
+>>>> index d3bf42d0fceb..b3a28dc19161 100644
+>>>> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
+>>>> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
+>>>> @@ -21,6 +21,7 @@
+>>>>  #define RGMII_IO_MACRO_CONFIG2		0x1C
+>>>>  #define RGMII_IO_MACRO_DEBUG1		0x20
+>>>>  #define EMAC_SYSTEM_LOW_POWER_DEBUG	0x28
+>>>> +#define ETHQOS_MAC_AN_CTRL		0xE0
+>>>>  
+>>>>  /* RGMII_IO_MACRO_CONFIG fields */
+>>>>  #define RGMII_CONFIG_FUNC_CLK_EN		BIT(30)
+>>>> @@ -78,6 +79,10 @@
+>>>>  #define ETHQOS_MAC_CTRL_SPEED_MODE		BIT(14)
+>>>>  #define ETHQOS_MAC_CTRL_PORT_SEL		BIT(15)
+>>>>  
+>>>> +/*ETHQOS_MAC_AN_CTRL bits */
+>>>> +#define ETHQOS_MAC_AN_CTRL_RAN			BIT(9)
+>>>> +#define ETHQOS_MAC_AN_CTRL_ANE			BIT(12)
+>>>> +
+>>>
+>>> nit: space please add a space before ETHQOS_MAC_AN_CTRL
+>>>
+>> will take care of this in next patch
+>>
+>>>>  struct ethqos_emac_por {
+>>>>  	unsigned int offset;
+>>>>  	unsigned int value;
+>>>> @@ -109,6 +114,7 @@ struct qcom_ethqos {
+>>>>  	unsigned int num_por;
+>>>>  	bool rgmii_config_loopback_en;
+>>>>  	bool has_emac_ge_3;
+>>>> +	unsigned int serdes_speed;
+> 
+> Another nit as I look closer: I think this should be grouped by phy_mode
+> etc just for readability.
+Didn't get this. can you please elaborate more?
+> 
+>>>>  };
+>>>>  
+>>>>  static int rgmii_readl(struct qcom_ethqos *ethqos, unsigned int offset)
+>>>> @@ -600,27 +606,47 @@ static int ethqos_configure_rgmii(struct qcom_ethqos *ethqos)
+>>>>  
+>>>>  static int ethqos_configure_sgmii(struct qcom_ethqos *ethqos)
+>>>>  {
+>>>> -	int val;
+>>>> -
+>>>> +	int val, mac_an_value;
+>>>>  	val = readl(ethqos->mac_base + MAC_CTRL_REG);
+>>>> +	mac_an_value = readl(ethqos->mac_base + ETHQOS_MAC_AN_CTRL);
+>>>>  
+>>>>  	switch (ethqos->speed) {
+>>>> +	case SPEED_2500:
+>>>> +		val &= ~ETHQOS_MAC_CTRL_PORT_SEL;
+>>>> +		rgmii_updatel(ethqos, RGMII_CONFIG2_RGMII_CLK_SEL_CFG,
+>>>> +			      RGMII_CONFIG2_RGMII_CLK_SEL_CFG,
+>>>> +			      RGMII_IO_MACRO_CONFIG2);
+>>>> +		if (ethqos->serdes_speed != SPEED_2500)
+>>>> +			phy_set_speed(ethqos->serdes_phy, ethqos->speed);
+>>>> +		mac_an_value &= ~ETHQOS_MAC_AN_CTRL_ANE;
+>>>> +		break;
+>>>>  	case SPEED_1000:
+>>>>  		val &= ~ETHQOS_MAC_CTRL_PORT_SEL;
+>>>>  		rgmii_updatel(ethqos, RGMII_CONFIG2_RGMII_CLK_SEL_CFG,
+>>>>  			      RGMII_CONFIG2_RGMII_CLK_SEL_CFG,
+>>>>  			      RGMII_IO_MACRO_CONFIG2);
+>>>> +		if (ethqos->serdes_speed != SPEED_1000)
+>>>> +			phy_set_speed(ethqos->serdes_phy, ethqos->speed);
+>>>> +		mac_an_value |= ETHQOS_MAC_AN_CTRL_RAN | ETHQOS_MAC_AN_CTRL_ANE;
+>>>>  		break;
+>>>>  	case SPEED_100:
+>>>>  		val |= ETHQOS_MAC_CTRL_PORT_SEL | ETHQOS_MAC_CTRL_SPEED_MODE;
+>>>> +		if (ethqos->serdes_speed != SPEED_1000)
+>>>> +			phy_set_speed(ethqos->serdes_phy, ethqos->speed);
+>>>> +		mac_an_value |= ETHQOS_MAC_AN_CTRL_RAN | ETHQOS_MAC_AN_CTRL_ANE;
+>>>>  		break;
+>>>>  	case SPEED_10:
+>>>>  		val |= ETHQOS_MAC_CTRL_PORT_SEL;
+>>>>  		val &= ~ETHQOS_MAC_CTRL_SPEED_MODE;
+>>>> +		if (ethqos->serdes_speed != SPEED_1000)
+>>>> +			phy_set_speed(ethqos->serdes_phy, ethqos->speed);
+>>>> +		mac_an_value |= ETHQOS_MAC_AN_CTRL_RAN | ETHQOS_MAC_AN_CTRL_ANE;
+>>>>  		break;
+>>>>  	}
+>>>>  
+>>>>  	writel(val, ethqos->mac_base + MAC_CTRL_REG);
+>>>> +	writel(mac_an_value, ethqos->mac_base + ETHQOS_MAC_AN_CTRL);
+>>>> +	ethqos->serdes_speed = ethqos->speed;
+>>>
+>>> I see these bits are generic and there's some functions in stmmac_pcs.h
+>>> that muck with these...
+>>>
+>>> Could you help me understand if this really should be Qualcomm specific,
+>>> or if this is something that should be considered for the more core bits
+>>> of the driver? I feel in either case we should take advantage of the
+>>> common definitions in that file if possible.
+>>>
+>> we do have function dwmac_ctrl_ane in core driver which updates same registers. However, it does not have the option to reset ANE bit, it can only set bits. For SPEED_2500 we need to reset ANE bit. Hence I am adding it here. Not sure if we can extend dwmac_ctrl_ane function to reset bits as well.
+> 
+> I'd evaluate if you can update that function to clear the ANE bit when
+> the ane boolean is false. From the usage I see I feel that makes sense,
+> but correct me if you think I'm wrong.
+> At the very least let's use the defines from there, and possibly add a
+> new function if clearing is not acceptable in dwmac_ctrl_ane().
+> 
+> Stepping back, I was asking in general is the need to muck with ANE here
+> is a Qualcomm specific problem, or is that a generic thing that should be
+> handled in the core (and the phy_set_speed() bit stay here)? i.e. would
+> any dwmac5 based IP need to do something like this for SPEED_2500?
+I think disabling ANE for SPEED_2500 is generic not specific to qualcomm. Even in dwxgmac2 versions also we need to disable ANE for SPEED_2500. Autoneg clause 37 stadard doesn't support 2500 speed. So we need to disable autoneg for speed 2500
+
+> 
+>>>>  
+>>>>  	return val;
+>>>>  }
+>>>> @@ -789,6 +815,7 @@ static int qcom_ethqos_probe(struct platform_device *pdev)
+>>>>  				     "Failed to get serdes phy\n");
+>>>>  
+>>>>  	ethqos->speed = SPEED_1000;
+>>>> +	ethqos->serdes_speed = SPEED_1000;
+>>>>  	ethqos_update_link_clk(ethqos, SPEED_1000);
+>>>>  	ethqos_set_func_clk_en(ethqos);
+>>>>  
+>>>> -- 
+>>>> 2.17.1
+>>>>
+>>>
+>>
+> 
