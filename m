@@ -1,57 +1,57 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40145745E5
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 18:25:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44FCA64A9C
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 18:25:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P5Ybnato"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M3VjT6LK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1703183145;
+	s=mimecast20190719; t=1703183150;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4219KYM+Lx5MIoMXHlnouIE3ETSXouTN4mLohiWEzAY=;
-	b=P5YbnatoUxoLz4x7kVjciDdmYJ8ITPdPbFDScXogbYznJ91mXVx7pUA/ILfdK75y362Kh5
-	vOAAHDj8BzPn/XATDZ1gTZoPxgqSnrcxf25/3tTeblrluDP18sSCR8HxF1bnRjljpcLFJ+
-	E5evAgJW0DU1/wXBwAnAVwUVCbX7iqQ=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=hFXXGAQMvAtKWxVkRcpFMTchD2fzgAOU8dNzT5bz2Wo=;
+	b=M3VjT6LKNaZ2dghsR40WOMnvGE3IbNJoHhBjWhzSwWQNFxzQoiZgZwL+rG4dIC1sFXdgRz
+	4TwWtGkrQUmZDxIWnqvzLZIRviYtpE67/s5uh22rxhcEGrksV/L/ptIt9H2tw2AFu1N/dv
+	/LySG/p01J/Z2C9G7f6RpmQlkzSkVzA=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-586-R-_pKPRdOxKn_eJaM98ueg-1; Thu, 21 Dec 2023 13:25:43 -0500
-X-MC-Unique: R-_pKPRdOxKn_eJaM98ueg-1
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-67eee3fbeb1so16441736d6.2
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 10:25:43 -0800 (PST)
+ us-mta-195-PW-9Qr6SO0q7_ZXIn_CE0w-1; Thu, 21 Dec 2023 13:25:49 -0500
+X-MC-Unique: PW-9Qr6SO0q7_ZXIn_CE0w-1
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-67f7b69433dso16492066d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 10:25:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703183140; x=1703787940;
+        d=1e100.net; s=20230601; t=1703183145; x=1703787945;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4219KYM+Lx5MIoMXHlnouIE3ETSXouTN4mLohiWEzAY=;
-        b=Bn1MSO5yIEe0XVf4jkOeUesagzmsMlCdKXy7uh/eFoSWmrcnnslWTAjcWdqpABb9xV
-         eR8CTDsznr5PNN8tWSrZ8eZzYyJ9GR5o883KrfTiOiuClrbh2URl/DZFm5+4prS/xkj5
-         zxpSE3o9wH92gGJTuhqNQxY2oS0m85A3syAWPxWCT08arVZzl595rpRlDJ00qA3mp9ii
-         H8+1451Y9V8iChDszba4k6w+WJHY+kfJ3tvg3njX0KTrAD9GXcOoSnRn/khKS1UICkhL
-         idC/tkVjOe/VW3BX50Q4I3u+zZ9cYw0iMthHSyx6KL3IDa10wPYVRrRc57gHrgDknbX0
-         gb6g==
-X-Gm-Message-State: AOJu0YyCQZWt9FBrUjXJqdTzzaSC2wp+iJ/EmXxL+s5dsi9UsoqgDPtw
-	b6PwuEHImKjrfnNcR2hlCKettlkpZZmTIGquPBdYEy0hzZkLvG2iF3QHMrBOcR1EWNVl7GDJ5Fu
-	btDEbvTVYJ0W+9p6o59XJMg2lBoq8ZaaF
-X-Received: by 2002:a05:6214:c69:b0:67f:2167:add8 with SMTP id t9-20020a0562140c6900b0067f2167add8mr128954qvj.63.1703183139772;
-        Thu, 21 Dec 2023 10:25:39 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEZ5Ey0k8eka1Tmd1wHccFHcVx5O7AMpaYlZVPVIE4Mlzs93Ul5Aid/9sPv0OnMJmxA3rI2gQ==
-X-Received: by 2002:a05:6214:c69:b0:67f:2167:add8 with SMTP id t9-20020a0562140c6900b0067f2167add8mr128935qvj.63.1703183139516;
-        Thu, 21 Dec 2023 10:25:39 -0800 (PST)
+        bh=hFXXGAQMvAtKWxVkRcpFMTchD2fzgAOU8dNzT5bz2Wo=;
+        b=p/p0OjgQJORcLuhfbIBSsYfv78kz0BBoztqaIOWj3rZKCNnM9losJePOnH7FBsTS+E
+         7whhVzwdcKWhUUGGjl+j+Jj262WRF2jjAmmZx3ukGgCirUmP1vXdc6PSj3hTAqC5zJ+n
+         N5IynpH8vmzhuGiLp5vYcOFNqvRlMC+Um1uKYjoAnMjzEyaJgopOx+xtsn1ofMdN7cPw
+         oKzgK9KkyP8OLJEFav8Hp/hj2cHXxJdXURQgta6YX9w2OKsezwAgtcn5LTc98z6MkXqh
+         IQ3PU+QXbDA4tGZrsDEHvTgczITuqXKA2WJKaXjvT1Uo5OMyfS26Kmm4zbelojs1E8Ha
+         u//Q==
+X-Gm-Message-State: AOJu0YwWXqtgYOVn6q9b+Mx22qu/zMTi3bzLNkE0/oNRaQT1ebV5UW0L
+	yXZnwzF+NoRea9TF0pzQkZyKMlhn7ieKFbnSnLM5T8urIfWpj9mpy5zyGSBWLmonTg2/krwkRt+
+	vIZzNhD2xf8Gd2+TEcpNaM8wmX39J3vO7
+X-Received: by 2002:a05:6214:20e6:b0:67a:a721:caf4 with SMTP id 6-20020a05621420e600b0067aa721caf4mr120993qvk.85.1703183144895;
+        Thu, 21 Dec 2023 10:25:44 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEIzHIP8IP+Btntq31oA+NJrP8wQlY6ZrjfmYei4CjrYTO1lr59Bq4x9PrGSfUb4jsXlwQcHw==
+X-Received: by 2002:a05:6214:20e6:b0:67a:a721:caf4 with SMTP id 6-20020a05621420e600b0067aa721caf4mr120983qvk.85.1703183144634;
+        Thu, 21 Dec 2023 10:25:44 -0800 (PST)
 Received: from [192.168.1.163] ([2600:1700:1ff0:d0e0::37])
-        by smtp.gmail.com with ESMTPSA id da7-20020a05621408c700b0067f2c03d4adsm779605qvb.100.2023.12.21.10.25.36
+        by smtp.gmail.com with ESMTPSA id da7-20020a05621408c700b0067f2c03d4adsm779605qvb.100.2023.12.21.10.25.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 10:25:37 -0800 (PST)
+        Thu, 21 Dec 2023 10:25:44 -0800 (PST)
 From: Andrew Halaney <ahalaney@redhat.com>
-Date: Thu, 21 Dec 2023 12:25:21 -0600
-Subject: [PATCH RFC v2 04/11] scsi: ufs: qcom: Perform read back after
- writing unipro mode
+Date: Thu, 21 Dec 2023 12:25:23 -0600
+Subject: [PATCH RFC v2 06/11] scsi: ufs: cdns-pltfrm: Perform read back
+ after writing HCLKDIV
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231221-ufs-reset-ensure-effect-before-delay-v2-4-75af2a9bae51@redhat.com>
+Message-Id: <20231221-ufs-reset-ensure-effect-before-delay-v2-6-75af2a9bae51@redhat.com>
 References: <20231221-ufs-reset-ensure-effect-before-delay-v2-0-75af2a9bae51@redhat.com>
 In-Reply-To: <20231221-ufs-reset-ensure-effect-before-delay-v2-0-75af2a9bae51@redhat.com>
 To: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
@@ -81,8 +81,7 @@ Cc: Will Deacon <will@kernel.org>, linux-arm-msm@vger.kernel.org,
  Andrew Halaney <ahalaney@redhat.com>
 X-Mailer: b4 0.12.3
 
-Currently, the QUNIPRO_SEL bit is written to and then an mb() is used to
-ensure that completes before continuing.
+Currently, HCLKDIV is written to and then completed with an mb().
 
 mb() ensure that the write completes, but completion doesn't mean that
 it isn't stored in a buffer somewhere. The recommendation for
@@ -97,25 +96,25 @@ Let's do that to ensure the bit hits the device. Because the mb()'s
 purpose wasn't to add extra ordering (on top of the ordering guaranteed
 by writel()/readl()), it can safely be removed.
 
-Fixes: f06fcc7155dc ("scsi: ufs-qcom: add QUniPro hardware support and power optimizations")
+Fixes: d90996dae8e4 ("scsi: ufs: Add UFS platform driver for Cadence UFS")
 Signed-off-by: Andrew Halaney <ahalaney@redhat.com>
 ---
- drivers/ufs/host/ufs-qcom.c | 2 +-
+ drivers/ufs/host/cdns-pltfrm.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-index 6df2ab3b6f23..ab1ff7432d11 100644
---- a/drivers/ufs/host/ufs-qcom.c
-+++ b/drivers/ufs/host/ufs-qcom.c
-@@ -280,7 +280,7 @@ static void ufs_qcom_select_unipro_mode(struct ufs_qcom_host *host)
- 		ufshcd_rmwl(host->hba, QUNIPRO_G4_SEL, 0, REG_UFS_CFG0);
- 
- 	/* make sure above configuration is applied before we return */
+diff --git a/drivers/ufs/host/cdns-pltfrm.c b/drivers/ufs/host/cdns-pltfrm.c
+index bb30267da471..66811d8d1929 100644
+--- a/drivers/ufs/host/cdns-pltfrm.c
++++ b/drivers/ufs/host/cdns-pltfrm.c
+@@ -136,7 +136,7 @@ static int cdns_ufs_set_hclkdiv(struct ufs_hba *hba)
+ 	 * Make sure the register was updated,
+ 	 * UniPro layer will not work with an incorrect value.
+ 	 */
 -	mb();
-+	ufshcd_readl(host->hba, REG_UFS_CFG1);
- }
++	ufshcd_readl(hba, CDNS_UFS_REG_HCLKDIV);
  
- /*
+ 	return 0;
+ }
 
 -- 
 2.43.0
