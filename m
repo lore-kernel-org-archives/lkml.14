@@ -1,174 +1,175 @@
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F9A171A1;
-	Thu, 21 Dec 2023 08:41:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792B31772F
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 08:44:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="YoxynidC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZzaUFC6d"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailout.nyi.internal (Postfix) with ESMTP id 1C8B75C01C4;
-	Thu, 21 Dec 2023 03:41:36 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Thu, 21 Dec 2023 03:41:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1703148096;
-	 x=1703234496; bh=uDYCns7R2c9+ba4N41tqq3RlwSG0Hhskkv8O0oTsnv0=; b=
-	YoxynidCHbY15rnJINRcioZqvc0TbF6Vi+f/gt9wZaNAmDJ7PZmSEeKs/3f3y4+t
-	4mTHaUA0e2yFRRkVQ/K9T2NHAhmDd/N1LyrOdFW6kayao81YBCajO1ceInt8lM0B
-	iMlxcT/xnHplv0u8QjLSJWfC9AAb0r7zdzAV18zaoGYKxgmd5jT9FjOlg/01iHOB
-	Ac1Y2an9M21ZcyRMIy41bw0sk5wuQyttyUrI/cuczaGy6sM0xoXb6NCUkY/iR8q7
-	+VVcCnoqN6SSCsLAsiYKulxEtmYkjbqKe9jTH5S7Rk4pMhwY8uLYWp6rNzZtqnyw
-	6U5Hd0bcwq8F6FPQ92oH4g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1703148096; x=
-	1703234496; bh=uDYCns7R2c9+ba4N41tqq3RlwSG0Hhskkv8O0oTsnv0=; b=Z
-	zaUFC6duztSx+Frn4etT3WSzBTqPNPE4aExazCG+lUg/NxSo/oiOBT6gI19p73IR
-	2srVvr1Ajc6+7ERgAjHHmMKzudwQlznxzTOFggFBmXngEHjRcjGZvCk229UYBzIm
-	2Xqj5YAy5Gktqd27YgocvdJiYksozuovZozzMopX1z6BeQv/NZBatdHTGa5rzPGa
-	7Kfxb3Ub1LSqz6J2VhXs0EnCqTS2BN2yT4R+qxNdfaqUD+wxkLH0YYL4f8a0Pa+J
-	oIIzi0ZbmmPwHPrT/CbhErcJFnDKTzra7LmNT/n5j9u1zsO7++BFwLS9gNf1Mfxh
-	2hTokzPxLVKw4RlhNVJLw==
-X-ME-Sender: <xms:P_qDZdEiVsKIKUmp99ZRZ6RETqc9yWM8YFlcz6z41LNbvIr55cZqFg>
-    <xme:P_qDZSW1lsA8FlKBBeYO7lFT0V14hMgaFiZobQODagtgRSOCvN7JcS9wnCHXPJjgk
-    YxmZDTdn5xXBMwViWQ>
-X-ME-Received: <xmr:P_qDZfK2ZnJlW24drH5S-jzm4pMf63ngjft5eHvA2EtKcUEZ7p4JdK3Tr1t4csqYm_ZAeGt4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvddufedguddvgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefkuffhvfevffgjfhgtgfgfggesthhqredttderjeenucfhrhhomhepnfhu
-    khgvucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvg
-    hrnhepkeefffeujeevueejueegleelhedtgedvledukedttdffhfeifeelvdduheefjeei
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukh
-    gvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:P_qDZTG9FMb1gGNZpIAt1BJ4jg1Q2sj0VNSvPdl9vL9JGh9ZBFQt5A>
-    <xmx:P_qDZTVYPhwijaUNQzlyI_45rLEGaYBW8dY1fTWCTWSzLNBrmumQGw>
-    <xmx:P_qDZePIjdHqDie4dwNLzrYt6x8DQf_Wv9pBBGNbvptVF86aKk1qwg>
-    <xmx:QPqDZZd3_9dAFVe6tuMdQkWqMERBah4W2EY_1r47YbOdsfocCnYC2g>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 21 Dec 2023 03:41:32 -0500 (EST)
-Message-ID: <cc07eae78c07e09e378cf37494b0f973905130ff.camel@ljones.dev>
-Subject: Re: [PATCH v1 2/7] ALSA: hda: cs35l41: Support additional ASUS ROG
- 2023 models
-From: Luke Jones <luke@ljones.dev>
-To: Stefan Binding <sbinding@opensource.cirrus.com>, Jaroslav Kysela
-	 <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
-Date: Thu, 21 Dec 2023 21:41:26 +1300
-In-Reply-To: <20231218151221.388745-3-sbinding@opensource.cirrus.com>
-References: <20231218151221.388745-1-sbinding@opensource.cirrus.com>
-	 <20231218151221.388745-3-sbinding@opensource.cirrus.com>
-Autocrypt: addr=luke@ljones.dev; prefer-encrypt=mutual;
- keydata=mQENBGRG7LwBCADC4B1XNMyJpOmtXVhN12glMXTVTV9RxgqunqQt7g+3RAG8kfYcAE+VnCUbcdtjeLRYhVka1zE86VBp0cyXiG9IYNlGZhtBFeik5NdgFt2fBXhDV3fm+91ARLvW7iOxHepyG+jepFf18oI6mPXC7cBzysosEkzdHl0Rm5z9rUoXksVzlT3i76s1AfQL3empFKbKkwSZsMVY/MLzWjPjVloMPqxfwpCex6PHnHfZ37VabsI3CG5Whmo3B+kFvpAYvCZZKYTjGDuFfFEH5Ba6FeY0xNSJYGyvuE8LY1VehipZtEaqnxiNP7kU0t5ZTX7nfDbi9a7uaqqHdPAJDCitJPhTABEBAAG0HEx1a2UgSm9uZXMgPGx1a2VAbGpvbmVzLmRldj6JAVEEEwEIADsWIQRZERbOg6XlNi+ijnEwmht7rUENtAUCZEbsvAIbAwULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgAAKCRAwmht7rUENtGoxB/wNh2J4t/Scb94yAUNGXje65tuC9ej+XHtfeDCKhQW0WchSDaXpZHLn47b9o+nBaICIaa1WR29viPNAk4Ss7k0lx5w7A/vSYrGcpO69DLWwMhqk+pVn+RPfeuGKwxGhvEjZkWSwIYXtBDfVXM7Paiq6ZOiaYOlFokbvV1s1NfIaxkTdJwuFK14SYfn3CE1XdyUQ2EQ9572yATPwElcaNp9qXo/UE/yjub7VAkFhg+EI9sXXV0pi+TKWKrF0htpmjoHBzzRz4MdqhE3C6lj8aIrfmRg3lWxUpdYbTVVQvfp0PCWCnXq6y+02QU1RG/WgwHOohDVWr+y5BhzSMX+kP5LsuQENBGRG7LwBCADVsGLOw5YmYJXZQ8FWfwWmHJ6dalWsjI4S6ktBZ+u7gFXJwHbzYw3AYzTrWiBUU+ii0lUtVEQRfh4VeMrO/iufxGMwjquedZeZNzxU/nysEoh+D9cGwgPff
-	RWhMBuktASgwULSyaR095YPslFfU0w/iZtoz3uM3YYedFGXyrydb2ZUv+i88LUKiY5qK+4HqaG6wsaS0Bx8vKymmVMSbZi/PWYHS5w+w5q71Z9fNRdF3MTMPIVvFH6mH1AULh6hRK/vH0UMEc2tN93szVupFvLBJVxf2doHjGNzvrytq0nTrRnl7jJspehC29cDKtJ6DtKmaw470bhClgAlE085UhuzABEBAAGJATYEGAEIACAWIQRZERbOg6XlNi+ijnEwmht7rUENtAUCZEbsvAIbDAAKCRAwmht7rUENtKM8B/9UyyyRA6/NQx2xzEibKxyYhHfP3OCPCbnFAyWT0TWF7OVSQg/Hc6PnrhDVUXLyrSxkXUaRtmxjxqhphhODH62jGrCn4nciczcrVwswFP53CMRQXdlpyW72LZ3wSo1XK1twWqFP48L+l00ZEbP3NXYk2rbuNKbyB6SBlmYZu+L6mEfZ+/eAoAgh9+ZCthNg+RsSwqfYwoO+bZXCjuWzLX2Tljg2yYhg+f9TotR6cW+sbcWi5cqjDmezsV0TIkE3FK9LN5Kzc8gUI/jSDSrW6rf72KTw7RgGdywW2VaA/XKz6GkaGReHeoZAetK9/2jxL6xQwDzr5gLUEuTBXG2lJ79O
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.1 (by Flathub.org) 
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E6qM3u4n"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-54c77e0835bso657058a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 00:44:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703148260; x=1703753060; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=utQG9kyLvMcZVcUXCxxQXym3N/zAi7oKhpJTdt9ZoiM=;
+        b=E6qM3u4nkl9CUU1HzTtR8Ds75Wov0RC5Pj2uIQgFVLcrSgS3A2MNEOZP7N7nT6dny0
+         xoZ2/CGtE1M9xiVjNFih3ktDhzFqH7ZP8BTBxKMMdddR7cztPr81h4uHQc+oUJjaX9p5
+         tWM5w23dvyuT9rxG5zMH4uvmE312DwKcdH7TvyK1rnzXdTH051MaFtqG+jaP0scLoI6n
+         wk95os/z0GqU/SjrRMMZoRO02ywS9ipXhxrB6msx+HeaULAw4h4eWOMnCN/Ms+8rTLRz
+         DOfVM0/aflFGJ9s5/nSFEtf8TKTO/WEbCo2pELgtyyEeEUkXU4E+8IZov6IQ8nJw9jZS
+         MU4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703148260; x=1703753060;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=utQG9kyLvMcZVcUXCxxQXym3N/zAi7oKhpJTdt9ZoiM=;
+        b=aXxYYQNTme/CmZyYYrpo63UqZUsQRtsRv2bS25tJUMhlWvttPFG7bADDEdQvWmBFR3
+         1QnK5yUY8KkEW8Z9WQraxne4y3xwyo5Nzlz6yZiqpOFLpUNoc3439VmIreIV5z0Z8Ev9
+         ZlLYB7DuETSbm4Uw+2YAfc6CHLUueE7FZaMX+RTAx52YA0tbvVLle7m5YoMRDZRiCVO+
+         ehtgL31m9iuTFcnVCn7znwaKahDoRTDfMwvvdouhuF//3I3dWo5TgVVIYlBU6GzJEjwR
+         smac7lrCwvG7QtmZKQQgX2Bj9TfRxIkMguG9N24BayIp85eW603TcjQUDGtOk/w7Rpo2
+         f/4Q==
+X-Gm-Message-State: AOJu0Yw9HJIuPVp395YlpF1fiX9Maa4D4xd0Bw4K3sHzZVV6kjdUfntL
+	0Uh6YKiAKXm9qA02c8+VLralqA==
+X-Google-Smtp-Source: AGHT+IG25cwQDjyC8sB/SzWs5JYSnjP4P8EFr5jrGq5nCZ9AspG6GalyscX0kywV/IsRHq1KTrogyg==
+X-Received: by 2002:a17:906:9c48:b0:a26:8816:b3b0 with SMTP id fg8-20020a1709069c4800b00a268816b3b0mr1384355ejc.144.1703148259723;
+        Thu, 21 Dec 2023 00:44:19 -0800 (PST)
+Received: from [192.168.0.22] ([78.10.206.178])
+        by smtp.gmail.com with ESMTPSA id n16-20020a170906b31000b00a235e5139d2sm705647ejz.150.2023.12.21.00.44.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Dec 2023 00:44:19 -0800 (PST)
+Message-ID: <d4c6c32f-b1cf-4cf2-9c52-85fa8c1ed73f@linaro.org>
+Date: Thu, 21 Dec 2023 09:44:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] dt-bindings: arm: coresight: Update the pattern of
+ ete node name
+Content-Language: en-US
+To: Jinlong Mao <quic_jinlmao@quicinc.com>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
+ Leo Yan <leo.yan@linaro.org>, Andy Gross <agross@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Tingwei Zhang <quic_tingweiz@quicinc.com>,
+ Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+ Tao Zhang <quic_taozha@quicinc.com>, coresight@lists.linaro.org
+References: <20231220140538.13136-1-quic_jinlmao@quicinc.com>
+ <20231220140538.13136-2-quic_jinlmao@quicinc.com>
+ <79f88d35-17cc-43b0-bb22-3c854f89d961@linaro.org>
+ <8e5e9603-456b-4956-be03-b866feeeafb4@quicinc.com>
+ <c41ff7c8-48d6-4f4f-a9df-aafe953a2e98@linaro.org>
+ <f2f983b7-4c57-4b1b-925d-ffb18f6350a0@quicinc.com>
+ <c64a41af-ff62-43c5-89f7-0558f8456010@linaro.org>
+ <16932826-fcc2-49d3-95ab-201eff729360@quicinc.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <16932826-fcc2-49d3-95ab-201eff729360@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 2023-12-18 at 15:12 +0000, Stefan Binding wrote:
-> Add new model entries into configuration table.
->=20
-> Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
-> ---
-> =C2=A0sound/pci/hda/cs35l41_hda_property.c | 36
-> ++++++++++++++++++++++++++++
-> =C2=A01 file changed, 36 insertions(+)
->=20
-> diff --git a/sound/pci/hda/cs35l41_hda_property.c
-> b/sound/pci/hda/cs35l41_hda_property.c
-> index f90423ded85d..a0d808ed640a 100644
-> --- a/sound/pci/hda/cs35l41_hda_property.c
-> +++ b/sound/pci/hda/cs35l41_hda_property.c
-> @@ -42,6 +42,24 @@ static const struct cs35l41_config
-> cs35l41_config_table[] =3D {
-> =C2=A0 * in the ACPI. The Reset GPIO is also valid, so we can use the
-> Reset defined in _DSD.
-> =C2=A0 */
-> =C2=A0	{ "103C89C6", SPI, 2, INTERNAL, { CS35L41_RIGHT,
-> CS35L41_LEFT, 0, 0 }, -1, -1, -1, 1000, 4500, 24 },
-> +	{ "10431433", I2C, 2, INTERNAL, { CS35L41_LEFT,
-> CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
-> +	{ "10431463", I2C, 2, INTERNAL, { CS35L41_LEFT,
-> CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
-> +	{ "10431473", SPI, 2, INTERNAL, { CS35L41_LEFT,
-> CS35L41_RIGHT, 0, 0 }, 1, -1, 0, 1000, 4500, 24 },
-> +	{ "10431483", SPI, 2, INTERNAL, { CS35L41_LEFT,
-> CS35L41_RIGHT, 0, 0 }, 1, -1, 0, 1000, 4500, 24 },
-> +	{ "10431493", SPI, 2, INTERNAL, { CS35L41_LEFT,
-> CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
-> +	{ "104314D3", SPI, 2, INTERNAL, { CS35L41_LEFT,
-> CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
-> +	{ "104314E3", I2C, 2, INTERNAL, { CS35L41_LEFT,
-> CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
-> +	{ "10431503", I2C, 2, INTERNAL, { CS35L41_LEFT,
-> CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
-> +	{ "10431533", I2C, 2, INTERNAL, { CS35L41_LEFT,
-> CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
-> +	{ "10431573", SPI, 2, INTERNAL, { CS35L41_LEFT,
-> CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
-> +	{ "10431663", SPI, 2, INTERNAL, { CS35L41_LEFT,
-> CS35L41_RIGHT, 0, 0 }, 1, -1, 0, 1000, 4500, 24 },
-> +	{ "104317F3", I2C, 2, INTERNAL, { CS35L41_LEFT,
-> CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
-> +	{ "10431C9F", SPI, 2, INTERNAL, { CS35L41_LEFT,
-> CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
-> +	{ "10431CAF", SPI, 2, INTERNAL, { CS35L41_LEFT,
-> CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
-> +	{ "10431CCF", SPI, 2, INTERNAL, { CS35L41_LEFT,
-> CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
-> +	{ "10431CDF", SPI, 2, INTERNAL, { CS35L41_LEFT,
-> CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
-> +	{ "10431CEF", SPI, 2, INTERNAL, { CS35L41_LEFT,
-> CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
-> +	{ "10431D1F", I2C, 2, INTERNAL, { CS35L41_LEFT,
-> CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
-> =C2=A0	{}
-> =C2=A0};
-> =C2=A0
+On 21/12/2023 09:36, Jinlong Mao wrote:
+> 
+> 
+> On 12/21/2023 4:17 PM, Krzysztof Kozlowski wrote:
+>> On 21/12/2023 09:15, Jinlong Mao wrote:
+>>>
+>>>
+>>> On 12/21/2023 4:12 PM, Krzysztof Kozlowski wrote:
+>>>> On 21/12/2023 04:28, Jinlong Mao wrote:
+>>>>>>> diff --git a/Documentation/devicetree/bindings/arm/arm,embedded-trace-extension.yaml b/Documentation/devicetree/bindings/arm/arm,embedded-trace-extension.yaml
+>>>>>>> index f725e6940993..cbf583d34029 100644
+>>>>>>> --- a/Documentation/devicetree/bindings/arm/arm,embedded-trace-extension.yaml
+>>>>>>> +++ b/Documentation/devicetree/bindings/arm/arm,embedded-trace-extension.yaml
+>>>>>>> @@ -23,7 +23,7 @@ description: |
+>>>>>>>     
+>>>>>>>     properties:
+>>>>>>>       $nodename:
+>>>>>>> -    pattern: "^ete([0-9a-f]+)$"
+>>>>>>> +    pattern: "^ete-([0-9a-f]+)$"
+>>>>>>
+>>>>>> My concerns are not resolved. Why is it here in the first place?
+>>>>>
+>>>>> Hi Krzysztof,
+>>>>>
+>>>>> ETE is acronym of embedded trace extension. The number of the name is
+>>>>> the same as the number of the CPU it belongs to.
+>>>>
+>>>> This is obvious and was not my question.
+>>>
+>>> Do you mean why the pattern match of the node name is added here ?
+>>
+>> Yes, especially that it is requiring a non-generic name.
+>>
+>>>
+>>> This node should not have the node name match, right ?
+>>
+>> Usually. For sure shouldn't be for non-generic names.
+>>
+> Hi Suzuki,
+> 
+> Can we remove the pattern match of the node name and use a generic name 
+> "ete" for the ete DT nodes ?
 
-Very good to see this work done. I have tested on 3 models and each one
-has very good sound now. Many thanks!
+"ete" is not a generic name. What is generic here? It's an acronym of
+some specific device name.
 
-> @@ -316,6 +334,24 @@ static const struct cs35l41_prop_model
-> cs35l41_prop_model_table[] =3D {
-> =C2=A0	{ "CLSA0100", NULL, lenovo_legion_no_acpi },
-> =C2=A0	{ "CLSA0101", NULL, lenovo_legion_no_acpi },
-> =C2=A0	{ "CSC3551", "103C89C6", generic_dsd_config },
-> +	{ "CSC3551", "10431433", generic_dsd_config },
-> +	{ "CSC3551", "10431463", generic_dsd_config },
-> +	{ "CSC3551", "10431473", generic_dsd_config },
-> +	{ "CSC3551", "10431483", generic_dsd_config },
-> +	{ "CSC3551", "10431493", generic_dsd_config },
-> +	{ "CSC3551", "104314D3", generic_dsd_config },
-> +	{ "CSC3551", "104314E3", generic_dsd_config },
-> +	{ "CSC3551", "10431503", generic_dsd_config },
-> +	{ "CSC3551", "10431533", generic_dsd_config },
-> +	{ "CSC3551", "10431573", generic_dsd_config },
-> +	{ "CSC3551", "10431663", generic_dsd_config },
-> +	{ "CSC3551", "104317F3", generic_dsd_config },
-> +	{ "CSC3551", "10431C9F", generic_dsd_config },
-> +	{ "CSC3551", "10431CAF", generic_dsd_config },
-> +	{ "CSC3551", "10431CCF", generic_dsd_config },
-> +	{ "CSC3551", "10431CDF", generic_dsd_config },
-> +	{ "CSC3551", "10431CEF", generic_dsd_config },
-> +	{ "CSC3551", "10431D1F", generic_dsd_config },
-> =C2=A0	{}
-> =C2=A0};
-> =C2=A0
+Best regards,
+Krzysztof
 
