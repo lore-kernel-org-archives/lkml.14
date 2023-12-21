@@ -1,95 +1,72 @@
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68FA4CDF4
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 09:26:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FEC44D108;
+	Thu, 21 Dec 2023 09:27:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xVuVli6c"
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-466cf6fab0aso53844137.2
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 01:26:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1703150774; x=1703755574; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gk+0buIHnn5B1pDfrVBgAlFPQ+p7oDkf5Qf9+5+b3Xs=;
-        b=xVuVli6cVwjdD59LyTzVCoC1pYuQ6CL+1o+SD7udSoJvwfAShNtw1p5u22AGkhZRN1
-         Bryhz/hpW7q9BMNccSRummkrSxKaPPMvmsuFqamCzJBgE3+SLAbd57P6eF9iPXRXq4we
-         NNLIN2cGVwFx452zs2xzMST/Dxt+cdSS3Ns4fyopeSQpLb8ZOpBsoYoZnGUswWwZpq71
-         k2Nw9LQ/46AWgULMPFhhUtiNefOBa6dwGphWGMVLdPg5ldZaALHVYWwJTQDEIrSQwPcd
-         v3lFAYzOdnyKTxg9ZN7um2iec0TQlqHvtFlsbaMAFijzjZuPZJjyz28uvjR8mQfnFdpS
-         wsSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703150774; x=1703755574;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gk+0buIHnn5B1pDfrVBgAlFPQ+p7oDkf5Qf9+5+b3Xs=;
-        b=kjt7Q+u/1uE8B4A820VmRQM1506adNemfl5qZXD7hDa/q2gyAib4FLxFX2H8gj69/Q
-         xhyg+bQg56108/MfsCqXReU9TGMELg3svAQrHeNg2AQ68E5lI8QQ3hPBDEPVxwqJX1zN
-         tqQ9+HauoIa7wF0saNsugcyl4SKMDtK/szz1meRtcLeAIiYj80v5BquoEQF1nVWN3/HS
-         EkeE67pogolptt0GNzMPmiPm9K5xCxPYmfo4ax5Tat2WdmCr9aJCUFS7VyF+0b4qncL1
-         R8RW6Z0j4CLKZNVb0PnwcwJRH/Y13WO7wlx4OYRYhJQL3ePZs+a2H1kHet0Qs4wNkP75
-         V4HQ==
-X-Gm-Message-State: AOJu0Yw0g0VXBgWe6iLDV4eBokvRlHVf4aw1dgZyevX5Mgt5KmXtqDTF
-	9p2zPVlzBXr7ScKMNonEItYCiCz89UhHLf/OOOBgqA==
-X-Google-Smtp-Source: AGHT+IGTihQckbMQHTNC3UcJXcLAVe6JnYF0NAspcuEnOya+pEHOGU76yy8KCiIq9oaidV2vNVq4Amrg23Je7L8rcC4=
-X-Received: by 2002:a05:6102:3712:b0:466:8743:5ed5 with SMTP id
- s18-20020a056102371200b0046687435ed5mr802212vst.53.1703150774506; Thu, 21 Dec
- 2023 01:26:14 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="HGG1wa2r"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=8Q5cOIVW2NXQCgE8m7MOSUxp7IMMRSApRmgjadLhzFs=; b=HGG1wa2raGGp05ho8o8RKqOknz
+	KILTqZixOLLzlW1a6Z03U2rsSkmIsk7JIuRgI+NqiPxoYcBVRpxgdeLiYbBbxyAt0MoyPCTeDj6WD
+	QpTNzCi+vTCe8a4ZECCa54w7drc3WtfQ5+bzb8g+u5Wd8ssmwJrO+OiPSAZ6JbRIKrRo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rGFKu-003Uho-BE; Thu, 21 Dec 2023 10:27:24 +0100
+Date: Thu, 21 Dec 2023 10:27:24 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Ravi Gunasekaran <r-gunasekaran@ti.com>
+Cc: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Landen Chao <Landen.Chao@mediatek.com>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	David Bauer <mail@david-bauer.net>, mithat.guner@xeront.com,
+	erkin.bozoglu@xeront.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH net-next] net: dsa: mt7530: register OF node for internal
+ MDIO bus
+Message-ID: <8e248f59-007a-4c53-877f-6026f4a74d0b@lunn.ch>
+References: <20231220173539.59071-1-arinc.unal@arinc9.com>
+ <d78949f0-bb03-82ea-b40f-1bb92b41e200@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231219201102.41639-1-brgl@bgdev.pl> <ZYL0MWAQ-frYLnZq@smile.fi.intel.com>
- <CACRpkdZB-5DN5NYJNGheDJnNWRt8x4LwgOQpL4NDyX2JSn+_9g@mail.gmail.com>
-In-Reply-To: <CACRpkdZB-5DN5NYJNGheDJnNWRt8x4LwgOQpL4NDyX2JSn+_9g@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 21 Dec 2023 10:26:03 +0100
-Message-ID: <CAMRc=MfLXxfzhKDc9e3jRF9mdVo=9UnC9O+i9s-uGm2pEa7vMg@mail.gmail.com>
-Subject: Re: [RFC PATCH] gpiolib: remove extra_checks
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kent Gibson <warthog618@gmail.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d78949f0-bb03-82ea-b40f-1bb92b41e200@ti.com>
 
-On Wed, Dec 20, 2023 at 4:28=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
->
-> On Wed, Dec 20, 2023 at 3:03=E2=80=AFPM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Tue, Dec 19, 2023 at 09:11:02PM +0100, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > extra_checks is only used in a few places. It also depends on
-> >
-> > > a non-standard DEBUG define one needs to add to the source file.
-> >
-> > Huh?!
-> >
-> > What then CONFIG_DEBUG_GPIO is about?
->
-> Yeah that is some helper DBrownell added because like me he could
-> never figure out how to pass -DDEBUG to a single file on the command
-> line and besides gpiolib is several files. I added the same to pinctrl
-> to get core debug messages.
->
-> I guess Bartosz means extra_checks is =3D=3D a non-standard DEBUG
-> define.
->
-> Yours,
-> Linus Walleij
+> > @@ -2177,7 +2180,9 @@ mt7530_setup_mdio(struct mt7530_priv *priv)
+> >  	if (priv->irq)
+> >  		mt7530_setup_mdio_irq(priv);
+> >  
+> > -	ret = devm_mdiobus_register(dev, bus);
+> > +	mnp = of_get_child_by_name(np, "mdio");
+> 
+> If the node is not found, then the return value would be NULL.
+> Though devm_of_mdiobus_register() and of_node_put() take care of NULL references,
+> other drivers that use devm_of_mdiobus_register() mostly perform a early exit if the node is NULL.
 
-I think this patch is still correct. Defining DEBUG makes sense to
-enable dev_dbg() messages. CONFIG_DEBUG_GPIO is used by one driver to
-enable code that can lead to undefined behavior (should it maybe be
-#if 0?). So the Makefile bit and the Kconfig option can stay but I'd
-love to see extra_checks gone.
+Actually, many don't as well. of_mdiobus_register() falls back to
+mdiobus_register() is np==NULL. That causes a scan of the bus to find
+all the PHYs and you can then use phy_find_first() to access them.
 
-Bart
+So this code is O.K.
+
+   Andrew
