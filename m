@@ -1,37 +1,37 @@
 Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBA55102F;
-	Thu, 21 Dec 2023 10:15:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A3E4EB31;
+	Thu, 21 Dec 2023 10:15:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="umB+kXZ1"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 3BLAE3W4030693;
-	Thu, 21 Dec 2023 04:14:03 -0600
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DYpu6YiF"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 3BLAENjV030741;
+	Thu, 21 Dec 2023 04:14:23 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1703153643;
-	bh=jIF3ygWneWyg4E9/HdJotb5ROUTYDslZO/q/Izyycnc=;
+	s=ti-com-17Q1; t=1703153663;
+	bh=rbns9usRGQpZ2NWl1wj7gXW/38aT9PQoDkciQ1L7398=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=umB+kXZ1g2hALmaW4+Q+IXAAd0xtTIUWv+eUTvwTtpSY+vvNYuCElw1wm3uCrkaUR
-	 /1Tgm1uj1UZ7ATpFHPsiEj8UMuvVJgg3Qsw9YG77OunPyxAwRcNsjWljWID717TEqy
-	 063N6k20Rn6W11yzeFlLs8U8GLlaozmjKGR7FpJY=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 3BLAE36j003779
+	b=DYpu6YiFBfSv/Y1+aXFDci3Yq9Lq28NvcQp3Y6HN34sN5XxhoLYes6tcSe5o7lm8I
+	 ggsev08hY62sJb2BCXfgYHNaHO5lHHu7Najt3RLiLMWuMd8mYJ2OJv171GcEBDNpdq
+	 aixnk+sezNrbgyLG96FpgR4HuE2Yc79kgeaR0YZM=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 3BLAENuP017558
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 21 Dec 2023 04:14:03 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+	Thu, 21 Dec 2023 04:14:23 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 21
- Dec 2023 04:14:03 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2023 04:14:23 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 21 Dec 2023 04:14:03 -0600
+ Frontend Transport; Thu, 21 Dec 2023 04:14:23 -0600
 Received: from LT5CG31242FY.dhcp.ti.com (lt5cg31242fy.dhcp.ti.com [10.85.14.210])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 3BLADoQd069419;
-	Thu, 21 Dec 2023 04:13:58 -0600
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 3BLADoQg069419;
+	Thu, 21 Dec 2023 04:14:17 -0600
 From: Shenghao Ding <shenghao-ding@ti.com>
 To: <broonie@kernel.org>, <conor+dt@kernel.org>,
         <krzysztof.kozlowski@linaro.org>
@@ -43,9 +43,9 @@ CC: <robh+dt@kernel.org>, <andriy.shevchenko@linux.intel.com>,
         <liam.r.girdwood@intel.com>, <soyer@irl.hu>, <tiwai@suse.de>,
         <peeyush@ti.com>, <navada@ti.com>,
         Shenghao Ding <shenghao-ding@ti.com>
-Subject: [PATCH v2 2/5] ASoC: tas2562: remove tas2563 into driver
-Date: Thu, 21 Dec 2023 18:13:42 +0800
-Message-ID: <20231221101346.429-2-shenghao-ding@ti.com>
+Subject: [PATCH v2 5/5] ASoC: dt-bindings: Add tas2563 into ti,ta2781.yaml to support dsp mode better
+Date: Thu, 21 Dec 2023 18:13:45 +0800
+Message-ID: <20231221101346.429-5-shenghao-ding@ti.com>
 X-Mailer: git-send-email 2.33.0.windows.2
 In-Reply-To: <20231221101346.429-1-shenghao-ding@ti.com>
 References: <20231221101346.429-1-shenghao-ding@ti.com>
@@ -59,46 +59,109 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Remove tas2563 from tas2562, it will be supported in tas2781 to better
-support dsp mode.
+Add tas2563 to better support dsp mode.
 
 Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
 
 ---
 Change in v2:
- - remove tas2563, which will be move to tas2781 driver
+ - Add devicetree list and other list of necessary people and lists to CC
+ - Express Compatibility in the bindings
 ---
- sound/soc/codecs/tas2562.c | 3 ---
- 1 file changed, 3 deletions(-)
+ .../devicetree/bindings/sound/ti,tas2781.yaml | 61 +++++++++++++------
+ 1 file changed, 43 insertions(+), 18 deletions(-)
 
-diff --git a/sound/soc/codecs/tas2562.c b/sound/soc/codecs/tas2562.c
-index 962c2cdfa017..54561ae598b8 100644
---- a/sound/soc/codecs/tas2562.c
-+++ b/sound/soc/codecs/tas2562.c
-@@ -59,7 +59,6 @@ struct tas2562_data {
+diff --git a/Documentation/devicetree/bindings/sound/ti,tas2781.yaml b/Documentation/devicetree/bindings/sound/ti,tas2781.yaml
+index a69e6c223308..76d4357117d5 100644
+--- a/Documentation/devicetree/bindings/sound/ti,tas2781.yaml
++++ b/Documentation/devicetree/bindings/sound/ti,tas2781.yaml
+@@ -5,36 +5,33 @@
+ $id: http://devicetree.org/schemas/sound/ti,tas2781.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
  
- enum tas256x_model {
- 	TAS2562,
--	TAS2563,
- 	TAS2564,
- 	TAS2110,
- };
-@@ -721,7 +720,6 @@ static int tas2562_parse_dt(struct tas2562_data *tas2562)
+-title: Texas Instruments TAS2781 SmartAMP
++title: Texas Instruments TAS2781/TAS2563 SmartAMP
  
- static const struct i2c_device_id tas2562_id[] = {
- 	{ "tas2562", TAS2562 },
--	{ "tas2563", TAS2563 },
- 	{ "tas2564", TAS2564 },
- 	{ "tas2110", TAS2110 },
- 	{ }
-@@ -770,7 +768,6 @@ static int tas2562_probe(struct i2c_client *client)
- #ifdef CONFIG_OF
- static const struct of_device_id tas2562_of_match[] = {
- 	{ .compatible = "ti,tas2562", },
--	{ .compatible = "ti,tas2563", },
- 	{ .compatible = "ti,tas2564", },
- 	{ .compatible = "ti,tas2110", },
- 	{ },
+ maintainers:
+   - Shenghao Ding <shenghao-ding@ti.com>
+ 
+ description:
+-  The TAS2781 is a mono, digital input Class-D audio amplifier
+-  optimized for efficiently driving high peak power into small
+-  loudspeakers. An integrated on-chip DSP supports Texas Instruments
+-  Smart Amp speaker protection algorithm. The integrated speaker
+-  voltage and current sense provides for real time
++  The TAS2781/TAS2563 is a mono, digital input Class-D audio
++  amplifier optimized for efficiently driving high peak power into
++  small loudspeakers. An integrated on-chip DSP supports Texas
++  Instruments Smart Amp speaker protection algorithm. The
++  integrated speaker voltage and current sense provides for real time
+   monitoring of loudspeaker behavior.
+ 
+-allOf:
+-  - $ref: dai-common.yaml#
+-
+ properties:
+   compatible:
++    description: |
++      ti,tas2781: 24-V Class-D Amplifier with Real Time Integrated Speaker
++      Protection and Audio Processing, 16/20/24/32bit stereo I2S or
++      multichannel TDM.
++
++      ti,tas2563: 6.1-W Boosted Class-D Audio Amplifier With Integrated
++      DSP and IV Sense, 16/20/24/32bit stereo I2S or multichannel TDM.
+     enum:
+       - ti,tas2781
++      - ti,tas2563          # fallback compatible
+ 
+-  reg:
+-    description:
+-      I2C address, in multiple tas2781s case, all the i2c address
+-      aggregate as one Audio Device to support multiple audio slots.
+-    maxItems: 8
+-    minItems: 1
+-    items:
+-      minimum: 0x38
+-      maximum: 0x3f
++  reg: true
+ 
+   reset-gpios:
+     maxItems: 1
+@@ -49,6 +46,34 @@ required:
+   - compatible
+   - reg
+ 
++allOf:
++  - $ref: dai-common.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - ti,tas2781
++    then:
++      properties:
++        reg:
++          description:
++            I2C address, in multiple AMP case, all the i2c address
++            aggregate as one Audio Device to support multiple audio slots.
++          maxItems: 8
++          minItems: 1
++          items:
++            minimum: 0x38
++            maximum: 0x3f
++    else:
++      properties:
++        reg:
++          maxItems: 4
++          minItems: 1
++          items:
++            minimum: 0x4c
++            maximum: 0x4f
++
+ additionalProperties: false
+ 
+ examples:
 -- 
 2.34.1
 
