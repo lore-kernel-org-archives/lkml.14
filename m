@@ -1,77 +1,31 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598126A02D;
-	Thu, 21 Dec 2023 10:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KOX9jgSm";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="a5SMVjtV";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KOX9jgSm";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="a5SMVjtV"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278226A32D;
+	Thu, 21 Dec 2023 11:01:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6E4B91FB42;
-	Thu, 21 Dec 2023 10:59:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1703156397; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=npajW/mlWHrdK3reJzYC8iKJhiyMeovPiW3SxiW3PpU=;
-	b=KOX9jgSmKdCXnbQ05qeZeEyD/jTUeiSMMXmb78ldAvYlyvqNxabY3TB6ALwaCCgEyDa3n8
-	EQBTpLoWyijBPOZDfC7W01R28BIHiyE+Ib/rJ+U27Bc44UXCjZagaGjB0rz+mDtleJUkuA
-	MTvZYEbT7KizaGn9vezvjOCPie+ZLSc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1703156397;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=npajW/mlWHrdK3reJzYC8iKJhiyMeovPiW3SxiW3PpU=;
-	b=a5SMVjtV5OgcuJnDegg+TTnF73BGoJXfTmVoKqFOhRO7o8ahluGCw/YOn/2FC3YHdka5M8
-	jkBuR0SECJwCKcAw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1703156397; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=npajW/mlWHrdK3reJzYC8iKJhiyMeovPiW3SxiW3PpU=;
-	b=KOX9jgSmKdCXnbQ05qeZeEyD/jTUeiSMMXmb78ldAvYlyvqNxabY3TB6ALwaCCgEyDa3n8
-	EQBTpLoWyijBPOZDfC7W01R28BIHiyE+Ib/rJ+U27Bc44UXCjZagaGjB0rz+mDtleJUkuA
-	MTvZYEbT7KizaGn9vezvjOCPie+ZLSc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1703156397;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=npajW/mlWHrdK3reJzYC8iKJhiyMeovPiW3SxiW3PpU=;
-	b=a5SMVjtV5OgcuJnDegg+TTnF73BGoJXfTmVoKqFOhRO7o8ahluGCw/YOn/2FC3YHdka5M8
-	jkBuR0SECJwCKcAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 59D5213725;
-	Thu, 21 Dec 2023 10:59:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id GXLsFa0ahGVRUQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 21 Dec 2023 10:59:57 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 22EBAA07E3; Thu, 21 Dec 2023 11:59:57 +0100 (CET)
-Date: Thu, 21 Dec 2023 11:59:57 +0100
-From: Jan Kara <jack@suse.cz>
-To: Christoph Hellwig <hch@lst.de>
-Cc: linux-mm@kvack.org, "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Jan Kara <jack@suse.com>, David Howells <dhowells@redhat.com>,
-	Brian Foster <bfoster@redhat.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/17] writeback: remove a duplicate prototype for
- tag_pages_for_writeback
-Message-ID: <20231221105957.havwaqt4ijlu6l65@quack3>
-References: <20231218153553.807799-1-hch@lst.de>
- <20231218153553.807799-6-hch@lst.de>
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 6D419101E3643;
+	Thu, 21 Dec 2023 12:01:38 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 400BA4BB67; Thu, 21 Dec 2023 12:01:38 +0100 (CET)
+Date: Thu, 21 Dec 2023 12:01:38 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Ethan Zhao <haifeng.zhao@linux.intel.com>
+Cc: bhelgaas@google.com, baolu.lu@linux.intel.com, dwmw2@infradead.org,
+	will@kernel.org, robin.murphy@arm.com, linux-pci@vger.kernel.org,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] iommu/vt-d: don's issue devTLB flush request when
+ device is disconnected
+Message-ID: <20231221110138.GA27755@wunner.de>
+References: <20231220005153.3984502-1-haifeng.zhao@linux.intel.com>
+ <20231220005153.3984502-3-haifeng.zhao@linux.intel.com>
+ <20231221103940.GA12714@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,65 +34,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231218153553.807799-6-hch@lst.de>
-X-Spam-Level: 
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -0.80
-X-Spamd-Result: default: False [-0.80 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-0.998];
-	 RCPT_COUNT_SEVEN(0.00)[8];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[lst.de:email,suse.com:email,infradead.org:email,suse.cz:email];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.00)[28.53%]
-X-Spam-Flag: NO
+In-Reply-To: <20231221103940.GA12714@wunner.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon 18-12-23 16:35:41, Christoph Hellwig wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Thu, Dec 21, 2023 at 11:39:40AM +0100, Lukas Wunner wrote:
+> On Tue, Dec 19, 2023 at 07:51:53PM -0500, Ethan Zhao wrote:
+> > For those endpoint devices connect to system via hotplug capable ports,
+> > users could request a warm reset to the device by flapping device's link
+> > through setting the slot's link control register, as pciehpt_ist() DLLSC
+> > interrupt sequence response, pciehp will unload the device driver and
+> > then power it off. thus cause an IOMMU devTLB flush request for device to
+> > be sent and a long time completion/timeout waiting in interrupt context.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> [hch: split from a larger patch]
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> I think the problem is in the "waiting in interrupt context".
 
-Sure. Feel free to add:
+I'm wondering whether Intel IOMMUs possibly have a (perhaps undocumented)
+capability to reduce the Invalidate Completion Timeout to a sane value?
+Could you check whether that's supported?
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+Granted, the Implementation Note you've pointed to allows 1 sec + 50%,
+but that's not even a "must", it's a "should".  So devices are free to
+take even longer.  We have to cut off at *some* point.
 
-								Honza
+Thanks,
 
-> ---
->  include/linux/writeback.h | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/include/linux/writeback.h b/include/linux/writeback.h
-> index 083387c00f0c8b..833ec38fc3e0c9 100644
-> --- a/include/linux/writeback.h
-> +++ b/include/linux/writeback.h
-> @@ -364,8 +364,6 @@ bool wb_over_bg_thresh(struct bdi_writeback *wb);
->  typedef int (*writepage_t)(struct folio *folio, struct writeback_control *wbc,
->  				void *data);
->  
-> -void tag_pages_for_writeback(struct address_space *mapping,
-> -			     pgoff_t start, pgoff_t end);
->  int write_cache_pages(struct address_space *mapping,
->  		      struct writeback_control *wbc, writepage_t writepage,
->  		      void *data);
-> -- 
-> 2.39.2
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Lukas
