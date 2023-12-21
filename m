@@ -1,124 +1,123 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849B278E8D;
-	Thu, 21 Dec 2023 13:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gal0+Fue"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d3ea5cc137so6652525ad.0;
-        Thu, 21 Dec 2023 05:32:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703165525; x=1703770325; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0cUg/+vllJugO46aB+P68E/fubJZERqebixXBfi33xg=;
-        b=Gal0+FueLsZuUqsXNVXFg44cz7w2Nzk8PZsaJeCJtNUHe2n85X6JScpYWDuSevLiQJ
-         O1XqNgAtPS5tIuG8q+wvOGRZX/ymRVVNFu/p2ePr+5MxK5OiuOjnWk57bhgWDlRAo+Hj
-         te+mgr7C88z0rx+rSkCg6juuk8vPBlKxfp8CAln1UVj2oWNUinRJ7ZG9E5QdliItodUE
-         nMud9TisiKT+2fzZWb7DSLPItCXoG5Nt6bCncBdcXMiTKsLw58WU7ZlyPdayMcZPvjpT
-         5lEnUaae07LdH7m1lBbaeQRh2m9Om6V1VGGPLQWoXt2pVh6gG1Vxi9xE6i/OmCEzTZii
-         w1XQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96B9745D2
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 13:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7ba7d72a52dso106733039f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 05:35:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703165525; x=1703770325;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0cUg/+vllJugO46aB+P68E/fubJZERqebixXBfi33xg=;
-        b=uLqGnfR5LYZsHOjHfvbY5mpqbO9Mh8pxDXZY56KX2V9LG1iSSTq68SL3mQmTFVL+aT
-         zsRT8nwOatzVPd/UsqLgTGCDltDK0vJTZUPEjoBEoXcbsKA6pyJSUkCVuPJ4J0vgz+ZL
-         0vtNLztXUNZdLjXZ2msUAvw42VHhSvnjIC4MAQFVH37fk9CxcZf/L2O7ziK+XuUsRqDe
-         osJ14XVR+gdAjVhomwHIO1JwBCeUerV3BeMb70mBGOofXYfjqQEp0nBqAAn6f8Sgyvzr
-         dq21LUedn8MEeKJm1FK2tWzorOQwHTkH6sUmTBsZol8PXeUzTokW28aBeZH5HZ4OxnZP
-         QfDQ==
-X-Gm-Message-State: AOJu0YwsqVbktWxvwZ4QvOGoNXz6RuX1IBO41tueDkP5GGHiPgvBPBR2
-	bF1wyRFMhgL4xFd8IKO18kI=
-X-Google-Smtp-Source: AGHT+IFhtu5fXogwjXDEVQEkWCRtPR28aCpniwfyI/gGUy8Zhl+6rVd9AegUxMf+5qrVTjHA8TkXuw==
-X-Received: by 2002:a17:903:246:b0:1d3:bc96:6c13 with SMTP id j6-20020a170903024600b001d3bc966c13mr8617784plh.35.1703165524863;
-        Thu, 21 Dec 2023 05:32:04 -0800 (PST)
-Received: from ruipeng-ThinkCentre-M730e-N010.company.local (014136220210.static.ctinets.com. [14.136.220.210])
-        by smtp.gmail.com with ESMTPSA id k1-20020a170902ba8100b001d2ed17751asm1601624pls.261.2023.12.21.05.32.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 05:32:04 -0800 (PST)
-From: Ruipeng Qi <ruipengqi7@gmail.com>
-To: robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org
-Cc: qiruipeng@lixiang.com,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 4/7] dt-bindings: reserved-memory: Support osdump module
-Date: Thu, 21 Dec 2023 21:31:58 +0800
-Message-Id: <20231221133158.729-1-ruipengqi7@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        d=1e100.net; s=20230601; t=1703165724; x=1703770524;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=A9PxSjYP0rDRuNLT7k6jrNvuC4Up53pyn+x1KpRL05I=;
+        b=hw+hhBmMj8SHt/HWE22ORhVXOZ22bKrFgnU8fUOuednv1HUjratRMXLny2NOLwlC9u
+         Lwhv+FMxMjaIdMgebY3Nw0PknD9BgqhgJ2fObacDRNAI29w4Vw1yAmAZjnyJ17IdOKmS
+         eYDHljFv3Yuqtz4iYnSncdoxyGFlp5M2acPCA+0h6udxm7arHhkgNG04a8IG67B+llur
+         TxRDNfFY1etS40pNrKk6eR9w9uX7E6OaQaor56mrhY8xc9CYP2uSVRU/f6Yavwj8ij9l
+         f1jJqmo66L9avC9En426c+SwMg+8zQreiHZWVD5QptTExh4NmtOoP/he+NGayjvr40Zz
+         eMuA==
+X-Gm-Message-State: AOJu0YyYGPjFxTljtrfYlkg4LnqjCYT6mDgfvhicddwnZ1ze12AN2g3X
+	XOv69uGnKsV2mc3SZ/f9FyulOVQRJbqhBp+Ey2A2Fs1mHhUz
+X-Google-Smtp-Source: AGHT+IFavJ1J52T+Z0uMBCNJ4lTcjFFaA8fHTXSUhb4qBTxtcKc/Z5lJg3R1mCvAOjMQZD6RKYcg+ztLVFPTTAw7kho5wZLbTHJ3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-Received: by 2002:a05:6638:810c:b0:46b:e82:4120 with SMTP id
+ hl12-20020a056638810c00b0046b0e824120mr562614jab.5.1703165724207; Thu, 21 Dec
+ 2023 05:35:24 -0800 (PST)
+Date: Thu, 21 Dec 2023 05:35:24 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000fc306f060d052b5f@google.com>
+Subject: [syzbot] [fs?] INFO: trying to register non-static key in debugfs_file_get
+From: syzbot <syzbot+fb20af23d0671a82c9a2@syzkaller.appspotmail.com>
+To: gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rafael@kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: qiruipeng <qiruipeng@lixiang.com>
+Hello,
 
-Add bindings to allow osdump module to store dump in reserved-memory
-region named "osdump".
+syzbot found the following issue on:
 
-Signed-off-by: qiruipeng <qiruipeng@lixiang.com>
+HEAD commit:    b10a3ccaf6e3 Merge tag 'loongarch-fixes-6.7-2' of git://gi..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1278f06ce80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=70dcde26e6b912e5
+dashboard link: https://syzkaller.appspot.com/bug?extid=fb20af23d0671a82c9a2
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/ee4bb72d1747/disk-b10a3cca.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/35219c49fd40/vmlinux-b10a3cca.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/d3c8dc8aa792/bzImage-b10a3cca.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+fb20af23d0671a82c9a2@syzkaller.appspotmail.com
+
+INFO: trying to register non-static key.
+The code is fine but needs lockdep annotation, or maybe
+you didn't initialize this object before use?
+turning off the locking correctness validator.
+CPU: 0 PID: 5078 Comm: syz-executor.0 Not tainted 6.7.0-rc4-syzkaller-00384-gb10a3ccaf6e3 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/10/2023
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x1e7/0x2d0 lib/dump_stack.c:106
+ assign_lock_key+0x234/0x270 kernel/locking/lockdep.c:976
+ register_lock_class+0x1cf/0x970 kernel/locking/lockdep.c:1289
+ __lock_acquire+0xd9/0x1fd0 kernel/locking/lockdep.c:5014
+ lock_acquire+0x1e3/0x530 kernel/locking/lockdep.c:5754
+ debugfs_file_get+0x545/0x6d0 fs/debugfs/file.c:135
+ open_proxy_open+0x56/0x490 fs/debugfs/file.c:269
+ do_dentry_open+0x8ff/0x1590 fs/open.c:948
+ do_open fs/namei.c:3622 [inline]
+ path_openat+0x2849/0x3290 fs/namei.c:3779
+ do_filp_open+0x234/0x490 fs/namei.c:3809
+ do_sys_openat2+0x13e/0x1d0 fs/open.c:1440
+ do_sys_open fs/open.c:1455 [inline]
+ __do_sys_openat fs/open.c:1471 [inline]
+ __se_sys_openat fs/open.c:1466 [inline]
+ __x64_sys_openat+0x247/0x290 fs/open.c:1466
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0x45/0x110 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x63/0x6b
+RIP: 0033:0x7f8cf7a7b721
+Code: 75 57 89 f0 25 00 00 41 00 3d 00 00 41 00 74 49 80 3d ea 17 10 00 00 74 6d 89 da 48 89 ee bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d 00 f0 ff ff 0f 87 93 00 00 00 48 8b 54 24 28 64 48 2b 14 25
+RSP: 002b:00007ffe0eccf310 EFLAGS: 00000202 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f8cf7a7b721
+RDX: 0000000000000002 RSI: 00007f8cf7ac7551 RDI: 00000000ffffff9c
+RBP: 00007f8cf7ac7551 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffe0eccfa68
+R13: 0000000000000003 R14: 00007f8cf7b9c018 R15: 0000000000000000
+ </TASK>
+
+
 ---
- .../bindings/reserved-memory/osdump.yaml      | 45 +++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reserved-memory/osdump.yaml
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/Documentation/devicetree/bindings/reserved-memory/osdump.yaml b/Documentation/devicetree/bindings/reserved-memory/osdump.yaml
-new file mode 100644
-index 000000000000..149bf0204e68
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reserved-memory/osdump.yaml
-@@ -0,0 +1,45 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/reserved-memory/osdump.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: OS minidump module
-+
-+description: |
-+  Specifies that the reserved memory region can be used for OS minidump
-+  module.
-+
-+  The "osdump" node is named after the "OS minidump" module which
-+  provides an implementation of a new crash dumping solutionin in Linux.
-+
-+maintainers:
-+  - Ruipeng Qi <ruipengqi7@gmail.com>
-+
-+allOf:
-+  - $ref: reserved-memory.yaml
-+
-+properties:
-+  compatible:
-+    const: osdump
-+
-+  reg:
-+    description: region of memory that can be used for OS minidump module
-+
-+required:
-+  - compatible
-+  - reg
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    reserved-memory {
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+
-+        osdump: osdump@64000000 {
-+            compatible = "osdump";
-+            reg = <0x64000000 0x01000000>;
-+        };
-+    };
--- 
-2.17.1
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
