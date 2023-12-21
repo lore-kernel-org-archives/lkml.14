@@ -1,23 +1,23 @@
 Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ECD06EB4F
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 10:40:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504A26EB52
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 10:40:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Swn5W4MLjz4xKl;
-	Thu, 21 Dec 2023 21:40:47 +1100 (AEDT)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Swn5Y1gJZz4xM2;
+	Thu, 21 Dec 2023 21:40:49 +1100 (AEDT)
 From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: npiggin@gmail.com, christophe.leroy@csgroup.eu, bgray@linux.ibm.com, maddy@linux.vnet.ibm.com, bigeasy@linutronix.de, hemant@linux.vnet.ibm.com, anju@linux.vnet.ibm.com, kjain@linux.ibm.com, Kunwu Chan <chentao@kylinos.cn>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, kunwu.chan@hotmail.com
-In-Reply-To: <20231126093719.1440305-1-chentao@kylinos.cn>
-References: <20231126093719.1440305-1-chentao@kylinos.cn>
-Subject: Re: [PATCH] powerpc/imc-pmu: Fix null pointer dereference in update_events_in_group
-Message-Id: <170315510019.2192823.17458008321780037269.b4-ty@ellerman.id.au>
+To: npiggin@gmail.com, christophe.leroy@csgroup.eu, ajd@linux.ibm.com, Kunwu Chan <chentao@kylinos.cn>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, mirimmad17@gmail.com, Kunwu Chan <kunwu.chan@hotmail.com>
+In-Reply-To: <20231208085937.107210-1-chentao@kylinos.cn>
+References: <20231208085937.107210-1-chentao@kylinos.cn>
+Subject: Re: [PATCH] powerpc/powernv: Add a null pointer check to scom_debug_init_one
+Message-Id: <170315510016.2192823.2333350776691711493.b4-ty@ellerman.id.au>
 Date: Thu, 21 Dec 2023 21:38:20 +1100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -28,15 +28,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On Sun, 26 Nov 2023 17:37:19 +0800, Kunwu Chan wrote:
+On Fri, 08 Dec 2023 16:59:37 +0800, Kunwu Chan wrote:
 > kasprintf() returns a pointer to dynamically allocated memory
 > which can be NULL upon failure.
+> Add a null pointer check, and release 'ent' to avoid memory leaks.
 > 
 > 
 
 Applied to powerpc/next.
 
-[1/1] powerpc/imc-pmu: Fix null pointer dereference in update_events_in_group
-      https://git.kernel.org/powerpc/c/0a233867a39078ebb0f575e2948593bbff5826b3
+[1/1] powerpc/powernv: Add a null pointer check to scom_debug_init_one
+      https://git.kernel.org/powerpc/c/9a260f2dd827bbc82cc60eb4f4d8c22707d80742
 
 cheers
