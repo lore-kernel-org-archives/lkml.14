@@ -1,185 +1,140 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2479C651AC
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 19:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB95745C9
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 19:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VQz/dE9r"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5cdc159034eso683479a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 11:46:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VxzU3tai"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40d3b2c8517so9625e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 11:46:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703187963; x=1703792763; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1703187984; x=1703792784; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+FKILjwnffsZ2mmqJQPrrhUAU5h2ZycGnJTVyIPfkMY=;
-        b=VQz/dE9rQBPGeIala2+eV7nF1AbXs+7Huk3A60MjVkC3dJcZo3pm8hM7sSxcz4Ws1a
-         9akwDYlu2sUFu/044HfDVunhySH8XIdHypn54X5rLj991JYAPwhpODnhb2ACJWKkN9nd
-         cz11atOW2OVwsecXwtDfXJ8iaph33YdHnl4yUKm3osWU/Xk2ADyC7N97CIkdAFwHHFlP
-         j4qSpzz0FfBqyrbxExXSHQO5bWdA6mcFANR3osmSC+RFbkjNZJCNyS5jN4ppDPheAhta
-         zD9DNC4Bu661AIWzlMFNQn9lqM8lWvSxL+AKb/GMH/V02DYLKCgMZyFRVziSPrOK2ojL
-         T5Sg==
+        bh=Z3ZUs8q0OT85w/gjivGdk3ICEoFIzqIVcdgY0GdySpc=;
+        b=VxzU3taijU/VzGE9kUjHijO3EnUa+taaE4XlyRn47ZwCJk7SvU3D2NhYQYeWeAkLPY
+         CeKzBewHZDV6t6q4LjOUUa4hGIBna+5S4R7SvChLPE6sUz/X2xbYcVLvCnP9sgyv+0Nl
+         S+YS1fOYrTZtIMY15sDH2mYB+XuEHjNL721q6ulMnUvB7rEB68Y1iJYtH9Fpy9B1F5cv
+         DwARpNaQdTVrdqUWL8tCRlh8wGCPBnjrAc1NWIg0KCvoT4BV68M6xOmcwTcsxiZRV8oR
+         I18TXWDHBj+Oyu67z6eok+rZLjGJCVbnJwYizDbvlJl6xSDRJLzTTTEdFrl1Hgsvl31M
+         56JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703187963; x=1703792763;
+        d=1e100.net; s=20230601; t=1703187984; x=1703792784;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+FKILjwnffsZ2mmqJQPrrhUAU5h2ZycGnJTVyIPfkMY=;
-        b=I3TJIm/XnM5Ywjqa3VT7VW0mhl89djJT8JOfcaLTPYgsnBHdc8Ko99AcmXJdwR2goP
-         f05bbNFU8Z/O176oZbeGqXga6VzK7pG5xTPStujp7cJbliWP5KimY5Rad7vI2WfwkJO9
-         Ss4kY9UQRbflV7dkgpFsUrmCDn7xI7lMBExju6QEv0gRuOwMjb0ULv6eOumGl/VjKWZx
-         APBkFuGaW29Wlp4UDny+U1AT1paD8R9ylp+wtPVna61gZxVE2Gze7ujmnzyZ3sNJwZMq
-         spaGqsXcuPD2pHhITOxNfOap96BvopmWekRVbqnbtgOmTciLQw5dCaEUEVZV/qzN/L6U
-         Qw3Q==
-X-Gm-Message-State: AOJu0YzwU/C8W7f8XH7ecyHUQrdpv5BndkGvEDCzcsvvrFrU5uEyIhiP
-	v5M9XGrzRTWWlk8ClN6h+Gx/5CnW+HX9wGI9DVY=
-X-Google-Smtp-Source: AGHT+IHAj/A6aU4UWkIU8f4/Octn90lN03mujVgsSVLECUZw8Qs8yxIQskBPpmpPBW7sqhMDhoELhTs/OpbBxHxDDpI=
-X-Received: by 2002:a17:90a:7504:b0:28b:b6fa:82ec with SMTP id
- q4-20020a17090a750400b0028bb6fa82ecmr260414pjk.52.1703187963396; Thu, 21 Dec
- 2023 11:46:03 -0800 (PST)
+        bh=Z3ZUs8q0OT85w/gjivGdk3ICEoFIzqIVcdgY0GdySpc=;
+        b=vf5oEQbNmcRDlbpD2Ak5VSbDXozCTVgTuBSzbiT5EjZnZgbYzruOAkre7drUi+6vyf
+         oVY/PooBlRX0paABOtRtpbl1ohTs76W4FhxhqXB8/Pipq/lRvqUlPS9yEetsT5+y7Eum
+         J4pdL0749J6Ek+tkMMG7XqKaznnWQGfXA0mByiSQiI4ApFLV+byvv8nUiM0MQ4iNl1XY
+         zV8ZB4txzIG64yOW9jfTCnuC6inxhOoNDiaFtkCQm2oPHQTHVjMZ3jsPpKtq3QJuQJmB
+         saguR5BMGjsRceQqhsrjAQbCPJiP/uW6+xN1ii+PR0W+UMpnDVZhChyycY8mmzBl/k6n
+         f/bg==
+X-Gm-Message-State: AOJu0YyqrFcbRdEJv9+xH4OZ/ioXR03/Yj6mvfFxZVzL07C+n5OExBFF
+	1vFU7QNjJADEJMVagR+M7BaAOOFKam9G+Y2BQk9E2sr/6Ak=
+X-Google-Smtp-Source: AGHT+IG9ykIAmiwe+eNHQxnl9zNgR3Z7hqN4637lEvph4nj48cEGDct1mU6Vs+njELWGv7GLCWUk8MnwHbXx8unAqD0=
+X-Received: by 2002:a05:600c:6a88:b0:40d:3ab7:86e0 with SMTP id
+ jl8-20020a05600c6a8800b0040d3ab786e0mr10173wmb.3.1703187983895; Thu, 21 Dec
+ 2023 11:46:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231220054123.1266001-1-maskray@google.com> <CAHbLzkpZomZBHVkSpCiK-hZUoZi4x2N6MB=PtFj-cBHOVhYs7Q@mail.gmail.com>
- <CAFP8O3+5fKcGS8xEY5=DHqsN0YdybEY178nM+cXRY1bbQXV4WQ@mail.gmail.com> <CAHbLzkpTKcceY19EASdDu=yhm+mFCzEAfhwX338hCxPAjpOPtw@mail.gmail.com>
-In-Reply-To: <CAHbLzkpTKcceY19EASdDu=yhm+mFCzEAfhwX338hCxPAjpOPtw@mail.gmail.com>
-From: Yang Shi <shy828301@gmail.com>
-Date: Thu, 21 Dec 2023 11:45:51 -0800
-Message-ID: <CAHbLzkpLBb_0vO1ZPgZBbNvbvCTBRTjNRqmxBf1cyD_eGjnGbA@mail.gmail.com>
-Subject: Re: [PATCH] mm: remove VM_EXEC requirement for THP eligibility
-To: Fangrui Song <maskray@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	Song Liu <songliubraving@fb.com>, Miaohe Lin <linmiaohe@huawei.com>, 
-	linux-kernel@vger.kernel.org, Zhouyi Zhou <zhouzhouyi@gmail.com>
+References: <20231220001856.3710363-1-jstultz@google.com> <20231220001856.3710363-15-jstultz@google.com>
+ <534c73b2-c28c-4e2a-9e6b-a5002c72afe8@arm.com>
+In-Reply-To: <534c73b2-c28c-4e2a-9e6b-a5002c72afe8@arm.com>
+From: John Stultz <jstultz@google.com>
+Date: Thu, 21 Dec 2023 11:46:10 -0800
+Message-ID: <CANDhNCp+FLdu2M+pi_E_LzFZnvqo8PLX2vk50jvp-CnMgS=7SQ@mail.gmail.com>
+Subject: Re: [PATCH v7 14/23] sched: Handle blocked-waiter migration (and
+ return migration)
+To: Metin Kaya <metin.kaya@arm.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Joel Fernandes <joelaf@google.com>, 
+	Qais Yousef <qyousef@google.com>, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Valentin Schneider <vschneid@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Zimuzo Ezeozue <zezeozue@google.com>, 
+	Youssef Esmat <youssefesmat@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Daniel Bristot de Oliveira <bristot@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Xuewen Yan <xuewen.yan94@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 21, 2023 at 11:31=E2=80=AFAM Yang Shi <shy828301@gmail.com> wro=
+On Thu, Dec 21, 2023 at 8:13=E2=80=AFAM Metin Kaya <metin.kaya@arm.com> wro=
 te:
+> On 20/12/2023 12:18 am, John Stultz wrote:
+> > Because tasks may get migrated to where they cannot run,
+> > this patch also modifies the scheduling classes to avoid
+> > sched class migrations on mutex blocked tasks, leaving
+> > proxy() to do the migrations and return migrations.
 >
-> On Wed, Dec 20, 2023 at 8:53=E2=80=AFPM Fangrui Song <maskray@google.com>=
- wrote:
-> >
-> > On Wed, Dec 20, 2023 at 3:42=E2=80=AFPM Yang Shi <shy828301@gmail.com> =
-wrote:
-> > >
-> > > On Tue, Dec 19, 2023 at 9:41=E2=80=AFPM Fangrui Song <maskray@google.=
-com> wrote:
-> > > >
-> > > > Commit e6be37b2e7bd ("mm/huge_memory.c: add missing read-only THP
-> > > > checking in transparent_hugepage_enabled()") introduced the VM_EXEC
-> > > > requirement, which is not strictly needed.
-> > > >
-> > > > lld's default --rosegment option and GNU ld's -z separate-code opti=
-on
-> > > > (default on Linux/x86 since binutils 2.31) create a read-only PT_LO=
-AD
-> > > > segment without the PF_X flag, which should be eligible for THP.
-> > > >
-> > > > Certain architectures support medium and large code models, where
-> > > > .lrodata may be placed in a separate read-only PT_LOAD segment, whi=
-ch
-> > > > should be eligible for THP as well.
-> > >
-> > > Yeah, it doesn't have to be VM_EXEC. The original implementation was
-> > > restricted to VM_EXEC to minimize the blast radius and the targe use
-> > > case is for large text segments. Out of curiosity, did you see any
-> > > noticeable improvement with this change?
-> >
-> > Hi Yang,
-> >
-> > Thanks for the comment. Frankly, I am not familiar with huge pages...
-> > I noticed this VM_EXEC condition when I was writing this
-> > hugepage-related section in
-> > https://maskray.me/blog/2023-12-17-exploring-the-section-layout-in-link=
-er-output#transparent-huge-pages-for-mapped-files
-> > (Thanks to Alexander Monakov's comment about
-> > CONFIG_READ_ONLY_THP_FOR_FS in
-> > https://mazzo.li/posts/check-huge-page.html).
->
-> Thanks for sharing the article, learnt something about linker and loader.
+> s/proxy/find_proxy_task/
 
-BTW, kernel should try to map the segments (the size has to be >=3D 2M)
-to 2M aligned address even though the loading address is not 2M
-aligned for ext4/xfs/btrfs since v5.18. See commit 1854bc6e2420
-("mm/readahead: Align file mappings for non-DAX"). Did you see this
-behavior?
+Thanks, fixed.
 
+> > +     if (p->blocked_on && p->blocked_on_state =3D=3D BO_WAKING) {
+> > +             raw_spin_lock(&p->blocked_lock);
+> > +             if (!is_cpu_allowed(p, cpu_of(rq))) {
+> > +                     if (task_current_selected(rq, p)) {
+> > +                             put_prev_task(rq, p);
+> > +                             rq_set_selected(rq, rq->idle);
+> > +                     }
+> > +                     deactivate_task(rq, p, DEQUEUE_SLEEP | DEQUEUE_NO=
+CLOCK);
+> > +                     resched_curr(rq);
+> > +                     raw_spin_unlock(&p->blocked_lock);
+> > +                     return true;
+> > +             }
+> > +             resched_curr(rq);
+> > +             raw_spin_unlock(&p->blocked_lock);
 >
-> >
-> > As dTLB for read-only data is also an important optimization of
-> > file-backed THP, it seems straightforward that we should drop the
-> > VM_EXEC condition :)
+> Do we need to hold blocked_lock while checking allowed CPUs? Would
+> moving raw_spin_lock(&p->blocked_lock); inside if (!is_cpu_allowed())
+> block be silly? i.e.,:
+
+That's an interesting idea. I'll take a shot at reworking it. Thanks!
+
+> Nit: what about this
+> -#ifdef CONFIG_SMP
+>   static inline bool proxy_needs_return(struct rq *rq, struct
+> task_struct *p)
+>   {
+> +       if (!IS_ENABLED(CONFIG_SMP))
+> +               return false;
+> +
+
+It would be nice, but the trouble is is_cpu_allowed() isn't defined
+for !CONFIG_SMP, so that won't build.
+
+
+> > + * Note: The owner can disappear, but simply migrate to @target_cpu
+> > + * and leave that CPU to sort things out.
+> > + */
+> > +static struct task_struct *
 >
-> Yeah, as long as the use case is valid, it is definitely fine to lift
-> the restriction.
+> proxy_migrate_task() always returns NULL. Is return type really needed?
+
+Good point. Reworked to clean that up.
+
+> > +proxy_migrate_task(struct rq *rq, struct rq_flags *rf,
+> > +                struct task_struct *p, int target_cpu)
+> > +{
+> > +     struct rq *target_rq;
+> > +     int wake_cpu;
+> > +
 >
-> >
-> > On my Arch linux machine, the r--p page gets split if I invoke
-> > madvise(__ehdr_start, HPAGE_SIZE, MADV_HUGEPAGE) I haven't figured out
-> > why it behaves so in the presence of the VM_EXEC check.
->
-> What do you mean about "split"? THP got split into small pages? It
-> depends on the address of __ehdr_start. If it is in the middle of a
-> VMA, the VMA is going to be split due to the different huge page
-> attributes.
->
-> >
-> > % g++ test.cc -o ~/tmp/test -O2 -fuse-ld=3Dlld
-> > -Wl,-z,max-page-size=3D2097152 && sudo ~/tmp/test
-> > __ehdr_start: 0x55f3b1c00000
-> > 55f3b1c00000-55f3b1e00000 r--p 00000000 103:03 555277119
-> >   /home/ray/tmp/test
-> > 55f3b1e00000-55f3b1e01000 r--p 00200000 103:03 555277119
-> >   /home/ray/tmp/test
-> > 55f3b2000000-55f3b2002000 r-xp 00200000 103:03 555277119
-> >   /home/ray/tmp/test
-> > 55f3b2201000-55f3b2202000 r--p 00201000 103:03 555277119
-> >   /home/ray/tmp/test
-> > 55f3b2401000-55f3b2402000 rw-p 00201000 103:03 555277119
-> >   /home/ray/tmp/test
-> > 55f3b3a9a000-55f3b3abb000 rw-p 00000000 00:00 0                        =
-  [heap]
-> >
-> >
-> > It'd be greatly appreciated if someone familiar with
-> > CONFIG_READ_ONLY_THP_FOR_FS could provide some notes on how to use
-> > this feature:)
->
-> I think your blog covered all the points. If you don't mind, you could
-> add some notes in Documentation/admin-guide/mm/transhuge.rst.
->
-> >
-> > > >
-> > > > Signed-off-by: Fangrui Song <maskray@google.com>
-> > > > ---
-> > > >  include/linux/huge_mm.h | 1 -
-> > > >  1 file changed, 1 deletion(-)
-> > > >
-> > > > diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-> > > > index fa0350b0812a..4c9e67e9000f 100644
-> > > > --- a/include/linux/huge_mm.h
-> > > > +++ b/include/linux/huge_mm.h
-> > > > @@ -126,7 +126,6 @@ static inline bool file_thp_enabled(struct vm_a=
-rea_struct *vma)
-> > > >         inode =3D vma->vm_file->f_inode;
-> > > >
-> > > >         return (IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS)) &&
-> > > > -              (vma->vm_flags & VM_EXEC) &&
-> > > >                !inode_is_open_for_write(inode) && S_ISREG(inode->i_=
-mode);
-> > > >  }
-> > > >
-> > > > --
-> > > > 2.43.0.472.g3155946c3a-goog
-> > > >
-> >
-> >
-> >
-> > --
-> > =E5=AE=8B=E6=96=B9=E7=9D=BF
+> Having a "if (!IS_ENABLED(CONFIG_SMP))" check here would help in
+> dropping #else part. i.e.,
+
+Sadly same problem as before, as wake_cpu isn't defined when !CONFIG_SMP :(
+
+thanks again for the detailed review!
+-john
