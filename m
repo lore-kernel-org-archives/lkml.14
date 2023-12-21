@@ -1,84 +1,139 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A18E4427;
-	Thu, 21 Dec 2023 03:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D972EA947
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 03:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M0656Vdf"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d3eae5c1d7so2359695ad.2;
-        Wed, 20 Dec 2023 19:09:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703128188; x=1703732988; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SEgF2ZhQjQOKtPApvRdmEAY0ycPOACRB4YXgq2azI0w=;
-        b=M0656Vdf2IXrBqGxE/FSAqQr+t8qlb9ws4wDm3l4iKK3zJ3z952AMQPwxgO+l+wJ7G
-         6/YwvWc8zJQUA92o08ATAdGRObbFJPmbDuGDGB40nlPdM0E40LOB6mlxRSC6K9CCGR5K
-         STIVYj48ZqUxak4EKRH7cuLVb0CJdbCB9KxYjoB5EobuLmEuSSrAYk0jQLp8cT2Lbvu2
-         rjv4lFhWnNIaDhf8FIX+/2Id8+p9rXofIzDuxsR4hND0WbuvKiBQM0w4QxOxZE3rFk8o
-         XnueDt0s7593GS/FLybueDx+5VHXiNll7F7a+nU6PZkKnIvR6OrvE6bH1cBVEv0ieVfF
-         9BCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703128188; x=1703732988;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SEgF2ZhQjQOKtPApvRdmEAY0ycPOACRB4YXgq2azI0w=;
-        b=V7m9m6wy829sq6ogqILEq5n1Qo32rCfYPJOho2JGg0LNp7/8xFOqk1xFhCzF9b3X7O
-         4j1KFVVqWyk6P+jKcUCcmHs+nNdi6mMua9va6VRshvEvwYoeOKV72oIz2f3pAOxIDUK5
-         3M+r4UU89Yc0WmRXQgGS8UQEHq8QZutVgWWk+7ye6D0bwg2qt8uVtjzWKKn87M3DsqFJ
-         5t9Kfk76XWUv49W6tnFdDP7DDgOfB4vlqgpYkZfhv7bT5uEkTohhqI3uyshDP9XJ78T0
-         bTQczqP1O/WU/9N0N2RC6FJWIzgujKeYYdqyCpIwzSJvJE+TJzxEUkvU53PTXCq8rFzM
-         L1rA==
-X-Gm-Message-State: AOJu0YzElWWEzJ0xv9p0RMFkM82FlFmFE55RCKPXaqHpXccjG8dE4oXD
-	rb3wm68ehZ3xH48cTmVfHwI=
-X-Google-Smtp-Source: AGHT+IHRGnHJwpjCjQ1miRy1I3XQd0E899CUD1DA9ShKDOU01VPjvm1IYa3AeF6D1GAqlv8eOeyXQA==
-X-Received: by 2002:a17:902:b60f:b0:1d0:711b:c926 with SMTP id b15-20020a170902b60f00b001d0711bc926mr11313301pls.110.1703128188252;
-        Wed, 20 Dec 2023 19:09:48 -0800 (PST)
-Received: from google.com ([2620:15c:9d:2:9d7:3461:3155:35d4])
-        by smtp.gmail.com with ESMTPSA id e12-20020a170902b78c00b001bb750189desm434145pls.255.2023.12.20.19.09.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Dec 2023 19:09:48 -0800 (PST)
-Date: Wed, 20 Dec 2023 19:09:45 -0800
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Support Opensource <support.opensource@diasemi.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Input: da9063_onkey - avoid explicitly setting input's parent
-Message-ID: <ZYOseYfVgg0Ve6Zl@google.com>
+	dkim=pass (2048-bit key) header.d=fastmail.org header.i=@fastmail.org header.b="nsy9PIGX";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YSFecz5c"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.west.internal (Postfix) with ESMTP id A63333200A8D;
+	Wed, 20 Dec 2023 22:09:48 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Wed, 20 Dec 2023 22:09:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.org; h=
+	cc:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1703128188; x=
+	1703214588; bh=NFwX6DpI/WDWMxbg2l+n1YK4Zppa2WdhFie4RInmDDo=; b=n
+	sy9PIGXoJl8MlHl//j7yCZzYQuFBwDmp9H3FWwxoZfDrCaVWwvdVCkEr/MjDm2SE
+	iBXCdce6v93yu+3SUwn8ulHhzfkKbPsY0jANrbr3ktomQV6/fH9cnCUpy0kQyL7+
+	g9oAPXuqBqKkc3JrXalh3DM1nqjMM4SKc1Y++MI3Yju0ZkFjp/CIX1ioQG4xOr/V
+	fhN04zE6nDhn48mpOJmjHsV4sW1y73etnNg1GsHnaRzuXO2YpPZlzA+spiDWofxf
+	+vwpUWp53xuw/FBfovqvVSwDezYDsLoYta/QWptt7Gwx9bKZq+BPqjKi0m/VcAPM
+	YfOQSqQQ7StRMdsCn6zbA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1703128188; x=
+	1703214588; bh=NFwX6DpI/WDWMxbg2l+n1YK4Zppa2WdhFie4RInmDDo=; b=Y
+	SFecz5cmZUg9Cl1vPXYbdxMy+Phhzt2k70FZCBfVcGvzpDndLgiKxq9P8K+ZqT/k
+	nkyhH/vy8uHnoeeV7xnQCZMYSKNruvCvg8ivt5gOTqKIpKzsHSWa5a8v10cbOvzl
+	BiW1mntG/cJshuF+p2O5GrLJIUl+06yRiMs8uVEsALCgfVatScweT9s7XFqhrGOT
+	DbIPWah6YL4Uc3MpRA9ajzTP+d6RNa+96hCXDgy6E9QRk3pvKNrX4hu0/+A3RX4v
+	itwRtkyHjd72T3LBawnHcxEQGN2lNSZ2Rbo+OszpFfd1ENBOjo1iiN+osF2IwMEP
+	ep146nRTwroFUei7i3wuw==
+X-ME-Sender: <xms:e6yDZbDVOv2Cu4L6j4qL6WvJSW2USBZ_CGr4WjnI4Fgnmsp1qEhx-Q>
+    <xme:e6yDZRg4P5Tb40BSC2XCYSUqT0PbAg_3hUMlNmc9TNbSbwopvVW_bRHoA9WHzoCFw
+    RPfRCfhrdr_viH2-00>
+X-ME-Received: <xmr:e6yDZWnK0GgIdJ3RIjt_gHnOVvJWEFZTqYxJ2LqDHKk3uOO2yxbC5sr9GdD4T82T3dReU8ZZdba84V_2wrKWTv4Q4cVfEfly>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvddufedgheejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
+    ertdertddtnecuhfhrohhmpefirghrhicutfhoohhkrghrugcuoehgrghrhihrohhokhgr
+    rhgusehfrghsthhmrghilhdrohhrgheqnecuggftrfgrthhtvghrnhepkeeuvdffueduke
+    egieeuffejhefgkeetfeehueelfeduuefgveellefhfefgjedvnecuvehluhhsthgvrhfu
+    ihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghgrrhihrhhoohhkrghrugesfh
+    grshhtmhgrihhlrdhorhhg
+X-ME-Proxy: <xmx:fKyDZdzwbyJ7a9PLHjeunXRhxAFmP8n_mPaUM8cBUvspoOMwaMce7g>
+    <xmx:fKyDZQT6IktMnxQvSnIQvpGEov90yzN0xbzRC_dDKZU38DTtcUgrnA>
+    <xmx:fKyDZQaoGt_QRxZ7bRL2P3fT2YOHL9uoag0Wh095ewUiUIwEMTTdKQ>
+    <xmx:fKyDZWfIUTn6IuszC9dFIB51f4xS1wGW1sGaX5vakjygb1t_1H4Efg>
+Feedback-ID: ifd194980:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 20 Dec 2023 22:09:47 -0500 (EST)
+From: Gary Rookard <garyrookard@fastmail.org>
+To: gregkh@linuxfoundation.org,
+	philipp.g.hortmann@gmail.com
+Cc: linux-staging@list.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Gary Rookard <garyrookard@fastmail.org>
+Subject: [PATCH 3/5] staging: rtl8192e: rename variable HTCCheck
+Date: Wed, 20 Dec 2023 22:10:02 -0500
+Message-ID: <20231221031004.14779-4-garyrookard@fastmail.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20231221031004.14779-1-garyrookard@fastmail.org>
+References: <20231221031004.14779-1-garyrookard@fastmail.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-devm_input_allocate_device() already sets parent of the new input
-device, there's no need to set it up explicitly.
+Coding style issue, checkpatch Avoid CamelCase,
+rename it. HTCCheck -> ht_c_check
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Gary Rookard <garyrookard@fastmail.org>
 ---
- drivers/input/misc/da9063_onkey.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/staging/rtl8192e/rtl819x_HTProc.c | 2 +-
+ drivers/staging/rtl8192e/rtllib.h         | 2 +-
+ drivers/staging/rtl8192e/rtllib_rx.c      | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/input/misc/da9063_onkey.c b/drivers/input/misc/da9063_onkey.c
-index ce499c28a7b2..c338765e0ecd 100644
---- a/drivers/input/misc/da9063_onkey.c
-+++ b/drivers/input/misc/da9063_onkey.c
-@@ -211,7 +211,6 @@ static int da9063_onkey_probe(struct platform_device *pdev)
- 	snprintf(onkey->phys, sizeof(onkey->phys), "%s/input0",
- 		 onkey->config->name);
- 	onkey->input->phys = onkey->phys;
--	onkey->input->dev.parent = &pdev->dev;
+diff --git a/drivers/staging/rtl8192e/rtl819x_HTProc.c b/drivers/staging/rtl8192e/rtl819x_HTProc.c
+index a32f3553df93..5698b48fdcc9 100644
+--- a/drivers/staging/rtl8192e/rtl819x_HTProc.c
++++ b/drivers/staging/rtl8192e/rtl819x_HTProc.c
+@@ -622,7 +622,7 @@ void HT_update_self_and_peer_setting(struct rtllib_device *ieee,
+ }
+ EXPORT_SYMBOL(HT_update_self_and_peer_setting);
  
- 	input_set_capability(onkey->input, EV_KEY, KEY_POWER);
+-u8 HTCCheck(struct rtllib_device *ieee, u8 *pFrame)
++u8 ht_c_check(struct rtllib_device *ieee, u8 *pFrame)
+ {
+ 	if (ieee->ht_info->current_ht_support) {
+ 		if ((IsQoSDataFrame(pFrame) && Frame_Order(pFrame)) == 1) {
+diff --git a/drivers/staging/rtl8192e/rtllib.h b/drivers/staging/rtl8192e/rtllib.h
+index 78eae7daa351..341d9ddc9a1f 100644
+--- a/drivers/staging/rtl8192e/rtllib.h
++++ b/drivers/staging/rtl8192e/rtllib.h
+@@ -1767,7 +1767,7 @@ u8 ht_get_highest_mcs_rate(struct rtllib_device *ieee, u8 *pMCSRateSet,
+ 		       u8 *pMCSFilter);
+ extern u8 MCS_FILTER_ALL[];
+ extern u16 MCS_DATA_RATE[2][2][77];
+-u8 HTCCheck(struct rtllib_device *ieee, u8 *pFrame);
++u8 ht_c_check(struct rtllib_device *ieee, u8 *pFrame);
+ void ht_reset_iot_setting(struct rt_hi_throughput *ht_info);
+ bool is_ht_half_nmode_aps(struct rtllib_device *ieee);
+ u16  tx_count_to_data_rate(struct rtllib_device *ieee, u8 nDataRate);
+diff --git a/drivers/staging/rtl8192e/rtllib_rx.c b/drivers/staging/rtl8192e/rtllib_rx.c
+index 5f219cfb65eb..595ec9af25ea 100644
+--- a/drivers/staging/rtl8192e/rtllib_rx.c
++++ b/drivers/staging/rtl8192e/rtllib_rx.c
+@@ -857,7 +857,7 @@ static size_t rtllib_rx_get_hdrlen(struct rtllib_device *ieee,
+ 	size_t hdrlen;
  
+ 	hdrlen = rtllib_get_hdrlen(fc);
+-	if (HTCCheck(ieee, skb->data)) {
++	if (ht_c_check(ieee, skb->data)) {
+ 		if (net_ratelimit())
+ 			netdev_info(ieee->dev, "%s: find HTCControl!\n",
+ 				    __func__);
+@@ -1401,7 +1401,7 @@ static int rtllib_rx_Monitor(struct rtllib_device *ieee, struct sk_buff *skb,
+ 		return 0;
+ 	}
+ 
+-	if (HTCCheck(ieee, skb->data)) {
++	if (ht_c_check(ieee, skb->data)) {
+ 		if (net_ratelimit())
+ 			netdev_info(ieee->dev, "%s: Find HTCControl!\n",
+ 				    __func__);
 -- 
-2.43.0.195.gebba966016-goog
+2.43.0
 
-
--- 
-Dmitry
