@@ -1,91 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8B31773B
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 08:46:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0B91A5A4;
+	Thu, 21 Dec 2023 08:48:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="quDhBRDL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF5B3C433C8;
-	Thu, 21 Dec 2023 08:46:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1703148414;
-	bh=y1FNTAj8Bh/ZM8ACZhw9sMqYhwCvI+GD9lAYIihPqSs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=quDhBRDLlEnQK02arNaJ4xhU8o1T3meTTZ4uW3AJtFCqPgmEDRgPekTxR0IKGOpm/
-	 35UfE+LIM9Zaq4CELnRLqMTxW+p9kFhAH6jxopyzZR2rd9DIthUo7gAsKrQhx+6a4v
-	 EaEL/qUGCDQ31G8CrDn/xiGNcoNKkZxH0AU9jVAA=
-Date: Thu, 21 Dec 2023 09:46:51 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: "Gangurde, Abhijit" <abhijit.gangurde@amd.com>
-Cc: "Gupta, Nipun" <Nipun.Gupta@amd.com>,
-	"Agarwal, Nikhil" <nikhil.agarwal@amd.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] cdx: Enable COMPILE_TEST
-Message-ID: <2023122142-blandness-cortex-76c7@gregkh>
-References: <20231207163128.2707993-1-robh@kernel.org>
- <2023121551-uncommon-negation-fdda@gregkh>
- <2023121509-snuggle-lagged-1365@gregkh>
- <DM4PR12MB77656006A8A6EB5DE6A468038F95A@DM4PR12MB7765.namprd12.prod.outlook.com>
- <2023122142-huff-closure-d5d4@gregkh>
- <DM4PR12MB7765D853EAAB6788AA06699C8F95A@DM4PR12MB7765.namprd12.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="NVrFqFft"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 3BL1VJ3o020454;
+	Thu, 21 Dec 2023 09:47:29 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	selector1; bh=iSjyXXBlLU8CmpUXVSZCKnI2Y7L6CFxxoTsOMTlPK98=; b=NV
+	rFqFftU2ovvdggXkvJ1OH5d/uzDzzi99Mwgl6YZHiqQUjz5FLonDwM0M8XDdegK8
+	6sVf0TW1OdYjsG57ovT/5PV++tBAEAFeCDL3MeUR02uGk3EBqXI0B4unSlgmbM5I
+	bmMgxtAsD3Bx9Pv5ZaKBaNlHsUAwNDuy3QipMqnWp683gcLWQMeV14anOTYnovCv
+	XAzF1fcvUn2rIwZs0qKp2LIqp5fJxD7TaHdv6wbPv4AyNzs5ihpkcKMMrNppKEZl
+	yScQI0He4ECcp506iyx71eVK1jWo9MOMx2lysMhv2t3U3Xr3NdjIX7iJA0m0N1WN
+	A7oX3dYrvbip/2wZEJzg==
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3v14426ah0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Dec 2023 09:47:29 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id ED09F100065;
+	Thu, 21 Dec 2023 09:47:28 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E14F722A6C3;
+	Thu, 21 Dec 2023 09:47:28 +0100 (CET)
+Received: from localhost (10.201.20.120) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 21 Dec
+ 2023 09:47:28 +0100
+From: Hugues Fruchet <hugues.fruchet@foss.st.com>
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        Philipp Zabel
+	<p.zabel@pengutronix.de>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Sakari Ailus
+	<sakari.ailus@linux.intel.com>,
+        Benjamin Gaignard
+	<benjamin.gaignard@collabora.com>,
+        Laurent Pinchart
+	<laurent.pinchart+renesas@ideasonboard.com>,
+        Daniel Almeida
+	<daniel.almeida@collabora.com>,
+        Benjamin Mugnier
+	<benjamin.mugnier@foss.st.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Mauro
+ Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-rockchip@lists.infradead.org>
+CC: Hugues Fruchet <hugues.fruchet@foss.st.com>,
+        Marco Felsch
+	<m.felsch@pengutronix.de>,
+        Adam Ford <aford173@gmail.com>
+Subject: [PATCH v5 4/5] arm64: dts: st: add video decoder support to stm32mp255
+Date: Thu, 21 Dec 2023 09:47:22 +0100
+Message-ID: <20231221084723.2152034-5-hugues.fruchet@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20231221084723.2152034-1-hugues.fruchet@foss.st.com>
+References: <20231221084723.2152034-1-hugues.fruchet@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM4PR12MB7765D853EAAB6788AA06699C8F95A@DM4PR12MB7765.namprd12.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-21_04,2023-12-20_01,2023-05-22_02
 
-On Thu, Dec 21, 2023 at 08:40:05AM +0000, Gangurde, Abhijit wrote:
-> > > > > On Thu, Dec 07, 2023 at 10:31:26AM -0600, Rob Herring wrote:
-> > > > > > There is no reason CDX needs to depend on ARM64 other than limiting
-> > > > > > visibility. So let's also enable building with COMPILE_TEST.
-> > > > > >
-> > > > > > The CONFIG_OF dependency is redundant as ARM64 always enables it
-> > and
-> > > > all
-> > > > > > the DT functions have empty stubs.
-> > > > > >
-> > > > > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > > > > ---
-> > > > > >  drivers/cdx/Kconfig | 2 +-
-> > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > >
-> > > > > > diff --git a/drivers/cdx/Kconfig b/drivers/cdx/Kconfig
-> > > > > > index a08958485e31..7cdb7c414453 100644
-> > > > > > --- a/drivers/cdx/Kconfig
-> > > > > > +++ b/drivers/cdx/Kconfig
-> > > > > > @@ -7,7 +7,7 @@
-> > > > > >
-> > > > > >  config CDX_BUS
-> > > > > >  	bool "CDX Bus driver"
-> > > > > > -	depends on OF && ARM64
-> > > > > > +	depends on ARM64 || COMPILE_TEST
-> > > > >
-> > > > > Ok, good start, now we need to turn this into a module, what's keeping
-> > > > > it from being able to be built as a tristate?
-> > > >
-> > > > To answer my own question, the following errors:
-> > > >
-> > > > ERROR: modpost: missing MODULE_LICENSE() in drivers/cdx/cdx.o
-> > > > ERROR: modpost: "iommu_device_unuse_default_domain"
-> > > > [drivers/cdx/cdx.ko] undefined!
-> > > > ERROR: modpost: "iommu_device_use_default_domain"
-> > [drivers/cdx/cdx.ko]
-> > > > undefined!
-> > > >
-> > > > Would be great for someone to fix this up...
-> > >
-> > > I did look at this code. There are 2 issues here for it to be a module.
-> > > 1. There are many symbols in iommu, msi and other module which are not
-> > exported.
-> > > Most of other busses like amba, fslmc, pci are bool only.
-> > 
-> > I only see 2 symbols here, what other ones do you see?
-> 
-> There are ~5 symbols from cdx msi patch
+Add VDEC hardware video decoder support to STM32MP255.
 
-That hasn't been merged yet :)
+Signed-off-by: Hugues Fruchet <hugues.fruchet@foss.st.com>
+---
+ arch/arm64/boot/dts/st/stm32mp251.dtsi |  6 ++++++
+ arch/arm64/boot/dts/st/stm32mp255.dtsi | 10 ++++++++++
+ 2 files changed, 16 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+index 96859d098ef8..8fc7e9199499 100644
+--- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
++++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+@@ -52,6 +52,12 @@ ck_icn_ls_mcu: ck-icn-ls-mcu {
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <200000000>;
+ 		};
++
++		ck_icn_p_vdec: ck-icn-p-vdec {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <200000000>;
++		};
+ 	};
+ 
+ 	firmware {
+diff --git a/arch/arm64/boot/dts/st/stm32mp255.dtsi b/arch/arm64/boot/dts/st/stm32mp255.dtsi
+index e6fa596211f5..aea5096dac3c 100644
+--- a/arch/arm64/boot/dts/st/stm32mp255.dtsi
++++ b/arch/arm64/boot/dts/st/stm32mp255.dtsi
+@@ -6,4 +6,14 @@
+ #include "stm32mp253.dtsi"
+ 
+ / {
++	soc@0 {
++		rifsc: rifsc-bus@42080000 {
++			vdec: vdec@480d0000 {
++				compatible = "st,stm32mp25-vdec";
++				reg = <0x480d0000 0x3c8>;
++				interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&ck_icn_p_vdec>;
++			};
++		};
++	};
+ };
+-- 
+2.25.1
+
