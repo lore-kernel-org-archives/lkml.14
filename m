@@ -1,117 +1,162 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A896978F
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 10:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R2cVRFVZ"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-5df49931b4eso7458597b3.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 02:34:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703154891; x=1703759691; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=k1jggwYkG4hQyycQm/RtNvDfA67fuZq9Z5qOm74FzWI=;
-        b=R2cVRFVZK8yYhOW2cQy2NMWE6yMdB8Vpaknnm8gwCF9Zzsp8NPIjlsyO730w+Z9uWq
-         aLlHOLrLELiJzSm7HyXg6+J+Fwbz6ge/mocVKj8XVdGB9aquYgeDVQv811IKR2Dx7Wht
-         pg57sswTJBa51l5hvJ0JwjkXmxUg9kOrmnR3nmia05j2qsIfOHlX6ZYzMyQ46KmP5Mrm
-         gU4huELdFVHqMVD8Rk2X3lCGIEWZ4+huDzrDG/vyx880MQQXrffKaa68woz3ocioScli
-         C3xrjJ5PiO81X2gYwuWyvpWkfi6cDubS3PHtJH0DhCwnjiV4F7M4DkNMSMSDl5xIlq42
-         XrUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703154891; x=1703759691;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=k1jggwYkG4hQyycQm/RtNvDfA67fuZq9Z5qOm74FzWI=;
-        b=uaSJhKxNrVHEf7lfbCN0OJbCmW3oiPKJ1PtlVs18yW/GRpfEk/Nzd2pIzn3VcuWdmb
-         GhJ4s0xFQychmPkZ7tkfKdOnu4rCDY228agVkQ/CUubCwNwU4lJJdZjOuvmNRchDIXCU
-         gZqQP77sJkhMZtFpfs4v+nKUg2KCrg2bibd0UuaaFLdLq4hDxkV+05ztQblVCm2pdjyU
-         NCMvzfvVIQZJ2F5NxSD/M6tC8/bRm0n8u838nWIgKAlfXiEaSEvGnmlLI1PPlwwVTzV2
-         e0HE27Fyq6/DwtLLFVWuPxo7SIhLWVHlBQklyMH4Z2H2numWHa7aH/0SwmSySYYzH0Cd
-         lRkA==
-X-Gm-Message-State: AOJu0Yw7nYJnpuXKxordGgrVl2WhJmu+wOjGy8j6KxdL9NA90Pyd5Gc1
-	M1EQ9ZjMS2OoYXgvsAF8kFzLwH3PfKSGGWxJQYLZnw==
-X-Google-Smtp-Source: AGHT+IGfnie6/2dvOxBU6HIqheolQzMJV+6Zo4QAQEchMvhcGdYYrIohHNPC1JpbJAdq0YamseBDZvDZglYO6CXJ7tE=
-X-Received: by 2002:a0d:c5c3:0:b0:5d7:1940:b384 with SMTP id
- h186-20020a0dc5c3000000b005d71940b384mr1196055ywd.80.1703154891585; Thu, 21
- Dec 2023 02:34:51 -0800 (PST)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AC6D6978E;
+	Thu, 21 Dec 2023 10:35:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BAA052F4;
+	Thu, 21 Dec 2023 02:36:18 -0800 (PST)
+Received: from pluto (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 05D2E3F5A1;
+	Thu, 21 Dec 2023 02:35:32 -0800 (PST)
+Date: Thu, 21 Dec 2023 10:35:30 +0000
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Xinglong Yang <xinglong.yang@cixtech.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+	"vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] firmware: arm_scmi: Check Mailbox/SMT channel for
+ consistency
+Message-ID: <ZYQU8n7btB17nvuc@pluto>
+References: <20231220172112.763539-1-cristian.marussi@arm.com>
+ <PUZPR06MB54988A8170D462FC8EE43A05F095A@PUZPR06MB5498.apcprd06.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231220-fp5-pmic-glink-v1-0-2a1f8e3c661c@fairphone.com>
- <8d042095-1e09-45cc-9762-909fe8d663a9@linaro.org> <CXTU5MLN0YDS.29PPV8KZF8G9R@fairphone.com>
-In-Reply-To: <CXTU5MLN0YDS.29PPV8KZF8G9R@fairphone.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 21 Dec 2023 12:34:40 +0200
-Message-ID: <CAA8EJpoD3x=kVLu4x2yLtAqCp=wmGSU4ssq5Oj_SD5VQ=GyAYQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Fairphone 5 PMIC-GLINK support (USB-C, charger, fuel gauge)
-To: Luca Weiss <luca.weiss@fairphone.com>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, cros-qcom-dts-watchers@chromium.org, 
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PUZPR06MB54988A8170D462FC8EE43A05F095A@PUZPR06MB5498.apcprd06.prod.outlook.com>
 
-On Thu, 21 Dec 2023 at 09:33, Luca Weiss <luca.weiss@fairphone.com> wrote:
->
-> On Wed Dec 20, 2023 at 1:32 PM CET, Konrad Dybcio wrote:
-> > On 20.12.2023 11:02, Luca Weiss wrote:
-> > > This series adds all the necessary bits to enable USB-C role switching,
-> > > charger and fuel gauge (all via pmic-glink) on Fairphone 5.
-> > >
-> > > One thing that could be made different is the pmic-glink compatible.
-> > > I've chosen to use qcm6490 compatible for it and not sc7280 since
-> > > there's plenty of firmware variety on sc7280-based platforms and they
-> > > might require different quirks in the future, so limit this PDOS quirk
-> > > to just qcm6490 for now.
-> > >
-> > > If someone thinks it should be qcom,sc7280-pmic-glink, please let me
-> > > know :)
-> > IMO it's best to continue using the "base soc" (which just so happened
-> > to fall onto sc7280 this time around) for all compatibles, unless the
-> > derivatives actually had changes
->
-> Hi Konrad,
->
-> I think at some point I asked Dmitry what he thought and he mentioned
-> qcm6490. Even found the message again:
->
-> > well, since it is a firmware thing, you might want to emphasise that.
-> > So from my POV qcm6490 makes more sense
->
-> But yeah since it's likely that sc7280 firmware behaves the same as
-> qcm6490 firmware it's probably okay to use sc7280 compatible, worst case
-> we change it later :) I'll send a v2 with those changes.
+On Thu, Dec 21, 2023 at 10:31:29AM +0000, Xinglong Yang wrote:
+> Hi, Cristian
+> 
+> This patch successfully solves the bug.
+> 
 
-Worst case we end up with sc7280 which has yet another slightly
-different UCSI / PMIC GLINK implementation, but the compatible string
-is already taken.
-I still suppose that this should be a qcm6490-related string.
+Hi Xinglong,
 
->
-> Regards
-> Luca
->
+thanks for reporting and testing !
+
+Cristian
+
+> From: Cristian Marussi <cristian.marussi@arm.com> Sent: Thursday, December 21, 2023 1:21 AM
+> > On reception of a completion interrupt the SMT memory area is accessed to
+> > retrieve the message header at first and then, if the message sequence
+> > number identifies a transaction which is still pending, the related
+> > payload is fetched too.
 > >
-> > as far as firmware goes, I *think* CrOS doesn't even have PMIC_GLINK?
-> > There are however WoA 7280 laptops which totally should have it.. Would
-> > be nice to hunt some down and see if they report different stuff to
-> > what's there on android firmware
+> > When an SCMI command times out the channel ownership remains with the
+> > platform until eventually a late reply is received and, as a consequence,
+> > any further transmission attempt remains pending, waiting for the channel
+> > to be relinquished by the platform.
 > >
-> > Konrad
->
-
-
--- 
-With best wishes
-Dmitry
+> > Once that late reply is received the channel ownership is given back
+> > to the agent and any pending request is then allowed to proceed and
+> > overwrite the SMT area of the just delivered late reply; then the wait for
+> > the reply to the new request starts.
+> >
+> > It has been observed that the spurious IRQ related to the late reply can
+> > be wrongly associated with the freshly enqueued request: when that
+> > happens
+> > the SCMI stack in-flight lookup procedure is fooled by the fact that the
+> > message header now present in the SMT area is related to the new pending
+> > transaction, even though the real reply has still to arrive.
+> >
+> > This race-condition on the A2P channel can be detected by looking at the
+> > channel status bits: a genuine reply from the platform will have set the
+> > channel free bit before triggering the completion IRQ.
+> >
+> > Add a consistency check to validate such condition in the A2P ISR.
+> >
+> > Reported-by: Xinglong Yang <xinglong.yang@cixtech.com>
+> > Closes:
+> > https://lore.k/
+> > ernel.org%2Fall%2FPUZPR06MB54981E6FA00D82BFDBB864FBF08DA%40PUZP
+> > R06MB5498.apcprd06.prod.outlook.com%2F&data=05%7C02%7Cxinglong.ya
+> > ng%40cixtech.com%7C669e9ff5e6764a77791208dc01801b8e%7C0409f77ae53
+> > d4d23943eccade7cb4811%7C1%7C0%7C638386896955072826%7CUnknown%
+> > 7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haW
+> > wiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=T1DOD7KfY%2FJNJHacHtX
+> > d5wcfde%2Fd5UDqGvyW4vuYwYU%3D&reserved=0
+> > Fixes: 5c8a47a5a91d ("firmware: arm_scmi: Make scmi core independent of
+> > the transport type")
+> > CC: stable@vger.kernel.org # 5.15+
+> > Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+> > ---
+> >  drivers/firmware/arm_scmi/common.h  |  1 +
+> >  drivers/firmware/arm_scmi/mailbox.c | 14 ++++++++++++++
+> >  drivers/firmware/arm_scmi/shmem.c   |  6 ++++++
+> >  3 files changed, 21 insertions(+)
+> >
+> > diff --git a/drivers/firmware/arm_scmi/common.h
+> > b/drivers/firmware/arm_scmi/common.h
+> > index 3b7c68a11fd0..0956c2443840 100644
+> > --- a/drivers/firmware/arm_scmi/common.h
+> > +++ b/drivers/firmware/arm_scmi/common.h
+> > @@ -329,6 +329,7 @@ void shmem_fetch_notification(struct
+> > scmi_shared_mem __iomem *shmem,
+> >  void shmem_clear_channel(struct scmi_shared_mem __iomem *shmem);
+> >  bool shmem_poll_done(struct scmi_shared_mem __iomem *shmem,
+> >                      struct scmi_xfer *xfer);
+> > +bool shmem_channel_free(struct scmi_shared_mem __iomem *shmem);
+> >
+> >  /* declarations for message passing transports */
+> >  struct scmi_msg_payld;
+> > diff --git a/drivers/firmware/arm_scmi/mailbox.c
+> > b/drivers/firmware/arm_scmi/mailbox.c
+> > index 19246ed1f01f..b8d470417e8f 100644
+> > --- a/drivers/firmware/arm_scmi/mailbox.c
+> > +++ b/drivers/firmware/arm_scmi/mailbox.c
+> > @@ -45,6 +45,20 @@ static void rx_callback(struct mbox_client *cl, void *m)
+> >  {
+> >         struct scmi_mailbox *smbox = client_to_scmi_mailbox(cl);
+> >
+> > +       /*
+> > +        * An A2P IRQ is NOT valid when received while the platform still has
+> > +        * the ownership of the channel, because the platform at first releases
+> > +        * the SMT channel and then sends the completion interrupt.
+> > +        *
+> > +        * This addresses a possible race condition in which a spurious IRQ from
+> > +        * a previous timed-out reply which arrived late could be wrongly
+> > +        * associated with the next pending transaction.
+> > +        */
+> > +       if (cl->knows_txdone && !shmem_channel_free(smbox->shmem)) {
+> > +               dev_warn(smbox->cinfo->dev, "Ignoring spurious A2P IRQ !\n");
+> > +               return;
+> > +       }
+> > +
+> >         scmi_rx_callback(smbox->cinfo, shmem_read_header(smbox->shmem),
+> > NULL);
+> >  }
+> >
+> > diff --git a/drivers/firmware/arm_scmi/shmem.c
+> > b/drivers/firmware/arm_scmi/shmem.c
+> > index 87b4f4d35f06..517d52fb3bcb 100644
+> > --- a/drivers/firmware/arm_scmi/shmem.c
+> > +++ b/drivers/firmware/arm_scmi/shmem.c
+> > @@ -122,3 +122,9 @@ bool shmem_poll_done(struct scmi_shared_mem
+> > __iomem *shmem,
+> >                 (SCMI_SHMEM_CHAN_STAT_CHANNEL_ERROR |
+> >                  SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE);
+> >  }
+> > +
+> > +bool shmem_channel_free(struct scmi_shared_mem __iomem *shmem)
+> > +{
+> > +       return (ioread32(&shmem->channel_status) &
+> > +                       SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE);
+> > +}
+> > --
+> > 2.34.1
+> 
+> Thanks,
+> Xinglong
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
