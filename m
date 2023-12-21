@@ -1,133 +1,235 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACD6210F8;
-	Thu, 21 Dec 2023 08:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB65C208DE;
+	Thu, 21 Dec 2023 08:58:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EOiQtYjb"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 3BL8uVRa014634;
-	Thu, 21 Dec 2023 02:56:31 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1703148991;
-	bh=16IxcBEYZK9twQ1G/yQmRxe1As8IXBcEe8yradY/0k8=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=EOiQtYjbdl2KdH+EqJDqJOwxPYmI0wE86tJ4Tnkq8/vVJSZUFOmfo4lpTPaWuPq5n
-	 3QijJeWBLHvfBjtlGFYHgFyDfYNTVn0nbchvNpw0A2PKGb5wZjMGQuEF7tc/fDfRd8
-	 qh5RE1qqwq39c49MQzZM0+Nmrlzj95WReElkv5OE=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 3BL8uVCH063030
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 21 Dec 2023 02:56:31 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 21
- Dec 2023 02:56:31 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 21 Dec 2023 02:56:31 -0600
-Received: from [172.24.227.247] (uda0500640.dhcp.ti.com [172.24.227.247])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 3BL8uORk081324;
-	Thu, 21 Dec 2023 02:56:25 -0600
-Message-ID: <d78949f0-bb03-82ea-b40f-1bb92b41e200@ti.com>
-Date: Thu, 21 Dec 2023 14:26:24 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hb0pT7TY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98173C433C8;
+	Thu, 21 Dec 2023 08:58:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703149092;
+	bh=gLq6owYsi5+HzSEWjDiTXSIZh7zeqkTrjBurAO/BXVM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hb0pT7TYb6E2npKuG1J8kJlRD8022tec43nOjCXNzAfTKOW4HSo6vhCKgic7S/MS7
+	 zT0KXYfeJvUFWhw32SigZV/GPh/px0g2h5y0r4MnE5NMyoh5Htf8dLbgJB/NWV9jXw
+	 nxlK381fmNuArHKuK9bzObZMLaP9u2HbVu1TGRzMyrUJuMio7kf79aVMH5VhkX0aGR
+	 xNPobhJ0Z83rEd2MWsC8SNMBSjtadWPOMB2NKBGbSi3pMbag1zH3JZcD+QKh5Ind3H
+	 wQXx0OEXTp4/jAyE2xSCIZcZ8D6ZzHt5nxqMMer7sE0mcCWizpFQsGzVoZ23YMCo7C
+	 vfYYISIamm6kg==
+Date: Thu, 21 Dec 2023 16:58:07 +0800
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Mark Hasemeyer <markhas@chromium.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Raul Rangel <rrangel@chromium.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Rob Herring <robh@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>,
+	Benson Leung <bleung@chromium.org>,
+	Bhanu Prakash Maiya <bhanumaiya@chromium.org>,
+	Chen-Yu Tsai <wenst@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>, Lee Jones <lee@kernel.org>,
+	Prashant Malani <pmalani@chromium.org>,
+	Rob Barnes <robbarnes@google.com>,
+	Stephen Boyd <swboyd@chromium.org>, chrome-platform@lists.linux.dev
+Subject: Re: [PATCH v2 22/22] platform/chrome: cros_ec: Use PM subsystem to
+ manage wakeirq
+Message-ID: <ZYP-H27vsJvMTupH@google.com>
+References: <20231220235459.2965548-1-markhas@chromium.org>
+ <20231220165423.v2.22.Ieee574a0e94fbaae01fd6883ffe2ceeb98d7df28@changeid>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH net-next] net: dsa: mt7530: register OF node for internal
- MDIO bus
-Content-Language: en-US
-To: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
-        Daniel Golle
-	<daniel@makrotopia.org>,
-        Landen Chao <Landen.Chao@mediatek.com>,
-        DENG
- Qingfang <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>,
-        Andrew Lunn
-	<andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
-        Vladimir Oltean
-	<olteanv@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni
-	<pabeni@redhat.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-CC: David Bauer <mail@david-bauer.net>, <mithat.guner@xeront.com>,
-        <erkin.bozoglu@xeront.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Ravi Gunasekaran <r-gunasekaran@ti.com>
-References: <20231220173539.59071-1-arinc.unal@arinc9.com>
-From: Ravi Gunasekaran <r-gunasekaran@ti.com>
-In-Reply-To: <20231220173539.59071-1-arinc.unal@arinc9.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231220165423.v2.22.Ieee574a0e94fbaae01fd6883ffe2ceeb98d7df28@changeid>
 
+On Wed, Dec 20, 2023 at 04:54:36PM -0700, Mark Hasemeyer wrote:
+> The IRQ wake logic was added on an interface basis (lpc, spi, uart) as
+> opposed to adding it to cros_ec.c because the i2c subsystem already
+> enables the wakirq (if applicable) on our behalf.
 
+The setting flow are all the same.  I think helper functions in cros_ec.c help
+to deduplicate the code.
 
-On 12/20/23 11:05 PM, Arınç ÜNAL wrote:
-> From: David Bauer <mail@david-bauer.net>
-> 
-> The MT753x switches provide a switch-internal MDIO bus for the embedded
-> PHYs.
-> 
-> Register a OF sub-node on the switch OF-node for this internal MDIO bus.
-> This allows to configure the embedded PHYs using device-tree.
-> 
-> Signed-off-by: David Bauer <mail@david-bauer.net>
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-> ---
->  drivers/net/dsa/mt7530.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-> index 391c4dbdff42..f8ecc354630b 100644
-> --- a/drivers/net/dsa/mt7530.c
-> +++ b/drivers/net/dsa/mt7530.c
-> @@ -2155,10 +2155,13 @@ mt7530_setup_mdio(struct mt7530_priv *priv)
->  {
->  	struct dsa_switch *ds = priv->ds;
->  	struct device *dev = priv->dev;
-> +	struct device_node *np, *mnp;
->  	struct mii_bus *bus;
->  	static int idx;
->  	int ret;
->  
-> +	np = priv->dev->of_node;
-> +
->  	bus = devm_mdiobus_alloc(dev);
->  	if (!bus)
->  		return -ENOMEM;
-> @@ -2177,7 +2180,9 @@ mt7530_setup_mdio(struct mt7530_priv *priv)
->  	if (priv->irq)
->  		mt7530_setup_mdio_irq(priv);
->  
-> -	ret = devm_mdiobus_register(dev, bus);
-> +	mnp = of_get_child_by_name(np, "mdio");
+> diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
+[...]
+> +static const struct dmi_system_id untrusted_fw_irq_wake_capable[] = {
+> +	{
+> +		.ident = "Brya",
+> +		.matches = {
+> +			DMI_MATCH(DMI_PRODUCT_FAMILY, "Google_Brya")
+> +		}
+> +	},
+> +	{
+> +		.ident = "Brask",
+> +		.matches = {
+> +			DMI_MATCH(DMI_PRODUCT_FAMILY, "Google_Brask")
+> +		}
+> +	},
+> +	{ }
+> +}
+> +MODULE_DEVICE_TABLE(dmi, untrusted_fw_irq_wake_capable);
 
-If the node is not found, then the return value would be NULL.
-Though devm_of_mdiobus_register() and of_node_put() take care of NULL references,
-other drivers that use devm_of_mdiobus_register() mostly perform a early exit if the node is NULL.
+Does it really need `MODULE_DEVICE_TABLE`?
 
+> +static bool cros_ec_should_force_irq_wake_capable(void)
 
-> +	ret = devm_of_mdiobus_register(dev, bus, mnp);
-> +	of_node_put(mnp);
+Suggestion: either drop "cros_ec_" prefix or use "cros_ec_lpc_" prefix.
+
+> @@ -428,20 +453,36 @@ static int cros_ec_lpc_probe(struct platform_device *pdev)
+>  	 * Some boards do not have an IRQ allotted for cros_ec_lpc,
+>  	 * which makes ENXIO an expected (and safe) scenario.
+>  	 */
+> -	irq = platform_get_irq_optional(pdev, 0);
+> -	if (irq > 0)
+> +	irq = platform_get_irq_resource_optional(pdev, 0, &irqres);
+> +	if (irq > 0) {
+>  		ec_dev->irq = irq;
+> -	else if (irq != -ENXIO) {
+> +		if (cros_ec_should_force_irq_wake_capable())
+
+Please see suggestion above.
+
+>  	ret = cros_ec_register(ec_dev);
 >  	if (ret) {
->  		dev_err(dev, "failed to register MDIO bus: %d\n", ret);
->  		if (priv->irq)
+> -		dev_err(dev, "couldn't register ec_dev (%d)\n", ret);
+> +		dev_err_probe(dev, ret, "couldn't register ec_dev (%d)\n", ret);
 
--- 
-Regards,
-Ravi
+The change is irrelevant to the series.
+
+> +	if (irq_wake) {
+> +		ret = device_init_wakeup(dev, true);
+> +		if (ret) {
+> +			dev_err_probe(dev, ret, "Failed to init device for wakeup");
+> +			return ret;
+> +		}
+> +		ret = dev_pm_set_wake_irq(dev, irq);
+> +		if (ret)
+> +			return ret;
+> +	}
+[...]
+> @@ -470,6 +512,8 @@ static void cros_ec_lpc_remove(struct platform_device *pdev)
+>  		acpi_remove_notify_handler(adev->handle, ACPI_ALL_NOTIFY,
+>  					   cros_ec_lpc_acpi_notify);
+>  
+> +	dev_pm_clear_wake_irq(dev);
+> +	device_init_wakeup(dev, false);
+
+Is it safe to call them anyway regardless of `irq_wake` in cros_ec_lpc_probe()?
+
+> diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
+[...]
+> -static void cros_ec_spi_dt_probe(struct cros_ec_spi *ec_spi, struct device *dev)
+> +static void cros_ec_spi_dt_probe(struct cros_ec_spi *ec_spi, struct spi_device *spi)
+>  {
+> -	struct device_node *np = dev->of_node;
+> +	struct cros_ec_device *ec_dev = spi_get_drvdata(spi);
+> +	struct device_node *np = spi->dev.of_node;
+
+struct spi_device *spi = ec_spi->spi; [1]
+
+[1]: https://elixir.bootlin.com/linux/v6.6/source/drivers/platform/chrome/cros_ec_spi.c#L751
+
+> +	if (!np)
+> +		return;
+> +
+
+The change is an improvement (or rather say it could change behavior).  But
+strictly speaking, the change is irrelevant to the series.
+
+> @@ -702,6 +710,11 @@ static void cros_ec_spi_dt_probe(struct cros_ec_spi *ec_spi, struct device *dev)
+>  	ret = of_property_read_u32(np, "google,cros-ec-spi-msg-delay", &val);
+>  	if (!ret)
+>  		ec_spi->end_of_msg_delay = val;
+> +
+> +	if (ec_dev->irq > 0 && of_property_read_bool(np, "wakeup-source")) {
+
+Or just use `spi->irq`[2].
+
+[2]: https://elixir.bootlin.com/linux/v6.6/source/drivers/platform/chrome/cros_ec_spi.c#L762
+
+They are the same, but does of_property_present() make more sense?
+
+> @@ -768,6 +778,9 @@ static int cros_ec_spi_probe(struct spi_device *spi)
+>  			   sizeof(struct ec_response_get_protocol_info);
+>  	ec_dev->dout_size = sizeof(struct ec_host_request);
+>  
+> +	/* Check for any DT properties */
+> +	cros_ec_spi_dt_probe(ec_spi, spi);
+
+`spi` is possibly not needed.  See comment above.
+
+> @@ -776,19 +789,31 @@ static int cros_ec_spi_probe(struct spi_device *spi)
+>  
+>  	err = cros_ec_register(ec_dev);
+>  	if (err) {
+> -		dev_err(dev, "cannot register EC\n");
+> +		dev_err_probe(dev, err, "cannot register EC\n");
+
+The change is irrelevant to the series.
+
+> -	device_init_wakeup(&spi->dev, true);
+> +	if (ec_spi->irq_wake) {
+> +		err = device_init_wakeup(dev, true);
+> +		if (err) {
+> +			dev_err_probe(dev, err, "Failed to init device for wakeup\n");
+> +			return err;
+> +		}
+> +		err = dev_pm_set_wake_irq(dev, ec_dev->irq);
+> +		if (err)
+> +			dev_err_probe(dev, err, "Failed to set irq(%d) for wake\n", ec_dev->irq);
+
+The part is different from what the patch changed in cros_ec_lpc.c.  Better to
+be consistent.
+- Just return vs. dev_err_probe().
+- %i vs. %d.
+
+>  static void cros_ec_spi_remove(struct spi_device *spi)
+>  {
+>  	struct cros_ec_device *ec_dev = spi_get_drvdata(spi);
+> +	struct device *dev = ec_dev->dev;
+>  
+> +	dev_pm_clear_wake_irq(dev);
+> +	device_init_wakeup(dev, false);
+
+Ditto, is it safe to just call them regardless of `ec_spi->irq_wake`?
+
+> diff --git a/drivers/platform/chrome/cros_ec_uart.c b/drivers/platform/chrome/cros_ec_uart.c
+[...]
+> @@ -301,13 +307,31 @@ static int cros_ec_uart_probe(struct serdev_device *serdev)
+>  
+>  	serdev_device_set_client_ops(serdev, &cros_ec_uart_client_ops);
+>  
+> -	return cros_ec_register(ec_dev);
+> +	/* Register a new cros_ec device */
+> +	ret = cros_ec_register(ec_dev);
+> +	if (ret) {
+> +		dev_err(dev, "Couldn't register ec_dev (%d)\n", ret);
+
+From reading the changes above, I thought it would use dev_err_probe().
+
+> +	if (ec_uart->irq_wake) {
+> +		ret = device_init_wakeup(dev, true);
+> +		if (ret) {
+> +			dev_err_probe(dev, ret, "Failed to init device for wakeup");
+> +			return ret;
+> +		}
+> +		ret = dev_pm_set_wake_irq(dev, ec_uart->irq);
+
+Ditto, better to be consistent.
+
+>  static void cros_ec_uart_remove(struct serdev_device *serdev)
+>  {
+>  	struct cros_ec_device *ec_dev = serdev_device_get_drvdata(serdev);
+> +	struct device *dev = ec_dev->dev;
+>  
+> +	dev_pm_clear_wake_irq(dev);
+> +	device_init_wakeup(dev, false);
+
+Ditto, is it safe to just call them regardless of `ec_uart->irq_wake`?
