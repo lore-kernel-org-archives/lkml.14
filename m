@@ -1,131 +1,180 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FC98651B3
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 20:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0L6pdioM"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-50e68243b67so223359e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 12:14:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1703189662; x=1703794462; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ijpi7yL8jJKP/LTHTn6tiHQRczMxthGLWkutDiKOvB4=;
-        b=0L6pdioMDuF165iiRuns8H9PItu+bNbcYNV0g829gJER/VJRzdDg+VBtilu4gA0RHo
-         1nEUgqn5lSJAxY4oFxR9xn5EeJCB/PB30IurC//Mp+yOj4bfGlbm8s+vC1KHX44tgtZy
-         CryJA26h7KZ7+PyfFmCFlSzzRCnFyV75Qng97AkQgOMiYlnGy1fXfr0BWBuWEYXSBuFg
-         BLG7/xQhiBQb7Lm54WXKu3hBuV6yKy93BeNkzehiGqhiIZlx42S47c2e/FMKjwTioBzd
-         AlIErK6fQz8CwbGEYJWTDlUtKhZcx4IEHi2nLiJrQYI+qjtO4yqriEliOTtS2/Upwzc0
-         D5YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703189662; x=1703794462;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ijpi7yL8jJKP/LTHTn6tiHQRczMxthGLWkutDiKOvB4=;
-        b=j4lPPfvCk0S8fTgl2iK+ndqUuip0ArIpnuvJGhMkG3+xgT/jbQ8rEu6AEyxzckqvuL
-         nvMCf1BM0MnwpijAS+D+1lHMqvaK7hB8aJTWujMBlX9am6Q7g1xi7vhYy5eBJ9cvum4O
-         41LYG8KrKWe3Q++qptLPLIHCxAFMPzismZChNk9LZTwxiCaWB7F0aGiMMuzj30pkrUg9
-         XnkEcUdbmM1No+wtW9VFqHnU/0K2MSbzdDoSid06fpS6X3eesNGCepvuJjlyT+OgXgc4
-         7NDTSuLM9qQSMt98jNJqlOPPB9rW5+UZRTYq8AkabqpERaYD1hxhfL5fuiGy8z3qgi0n
-         UsGA==
-X-Gm-Message-State: AOJu0YwEeBck4bHYQBfGAfdG9eey3CNDKaeYV7dGRQYZiaEig0wxp+Nr
-	0s3TQ3Knqo08PSMU/x1IwbYurGBrAOpQBCpjZ2uPlnkYCFgX
-X-Google-Smtp-Source: AGHT+IHBnrac0FEpnHGgr+WUxPanK1JDmNnibxTtSW5ojDg1dk13bRfTTGEW38UxwbiZtW29eD+v3LwcFyB1OtSnzHw=
-X-Received: by 2002:a05:6512:3767:b0:50e:644a:d384 with SMTP id
- z7-20020a056512376700b0050e644ad384mr83656lft.129.1703189662207; Thu, 21 Dec
- 2023 12:14:22 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3F9651BC
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 20:18:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC3DAC433C7;
+	Thu, 21 Dec 2023 20:18:44 +0000 (UTC)
+Date: Thu, 21 Dec 2023 15:19:48 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Randy Dunlap
+ <rdunlap@infradead.org>, Alexander Graf <graf@amazon.com>
+Subject: Re: [GIT PULL] tracing: A few more fixes for 6.7
+Message-ID: <20231221151948.423a87b9@gandalf.local.home>
+In-Reply-To: <CAHk-=wjmUr93TFgpZ6ew3t5XFO2Cyxb8wnRENCkWvrH8m9XEOA@mail.gmail.com>
+References: <20231221102703.08dc1273@gandalf.local.home>
+	<CAHk-=wiwQtUHvzwyZucDq8=Gtw+AnwScyLhpFswrQ84PjhoGsg@mail.gmail.com>
+	<20231221142841.48b13ba4@gandalf.local.home>
+	<CAHk-=wjmUr93TFgpZ6ew3t5XFO2Cyxb8wnRENCkWvrH8m9XEOA@mail.gmail.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231221183540.168428-1-andrey.konovalov@linux.dev> <20231221183540.168428-4-andrey.konovalov@linux.dev>
-In-Reply-To: <20231221183540.168428-4-andrey.konovalov@linux.dev>
-From: Marco Elver <elver@google.com>
-Date: Thu, 21 Dec 2023 21:13:44 +0100
-Message-ID: <CANpmjNMJM0zp9qmxh0MkAfKTLgzkcxyraGMp6JKSf9YquW4WMg@mail.gmail.com>
-Subject: Re: [PATCH mm 4/4] kasan: simplify kasan_complete_mode_report_info
- for tag-based modes
-To: andrey.konovalov@linux.dev
-Cc: Andrew Morton <akpm@linux-foundation.org>, Juntong Deng <juntong.deng@outlook.com>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Alexander Potapenko <glider@google.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, kasan-dev@googlegroups.com, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Andrey Konovalov <andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 21 Dec 2023 at 19:35, <andrey.konovalov@linux.dev> wrote:
->
-> From: Andrey Konovalov <andreyknvl@google.com>
->
-> memcpy the alloc/free tracks when collecting the information about a bad
-> access instead of copying fields one by one.
->
-> Fixes: 5d4c6ac94694 ("kasan: record and report more information")
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+On Thu, 21 Dec 2023 12:01:45 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Reviewed-by: Marco Elver <elver@google.com>
+> On Thu, 21 Dec 2023 at 11:27, Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > Luckily, that's easy to get to. All I need to do is:
 
-> ---
->  mm/kasan/report_tags.c | 23 ++++-------------------
->  1 file changed, 4 insertions(+), 19 deletions(-)
->
-> diff --git a/mm/kasan/report_tags.c b/mm/kasan/report_tags.c
-> index 688b9d70b04a..d15f8f580e2c 100644
-> --- a/mm/kasan/report_tags.c
-> +++ b/mm/kasan/report_tags.c
-> @@ -27,15 +27,6 @@ static const char *get_common_bug_type(struct kasan_report_info *info)
->         return "invalid-access";
->  }
->
-> -#ifdef CONFIG_KASAN_EXTRA_INFO
-> -static void kasan_complete_extra_report_info(struct kasan_track *track,
-> -                                        struct kasan_stack_ring_entry *entry)
-> -{
-> -       track->cpu = entry->track.cpu;
-> -       track->timestamp = entry->track.timestamp;
-> -}
-> -#endif /* CONFIG_KASAN_EXTRA_INFO */
-> -
->  void kasan_complete_mode_report_info(struct kasan_report_info *info)
->  {
->         unsigned long flags;
-> @@ -80,11 +71,8 @@ void kasan_complete_mode_report_info(struct kasan_report_info *info)
->                         if (free_found)
->                                 break;
->
-> -                       info->free_track.pid = entry->track.pid;
-> -                       info->free_track.stack = entry->track.stack;
-> -#ifdef CONFIG_KASAN_EXTRA_INFO
-> -                       kasan_complete_extra_report_info(&info->free_track, entry);
-> -#endif /* CONFIG_KASAN_EXTRA_INFO */
-> +                       memcpy(&info->free_track, &entry->track,
-> +                              sizeof(info->free_track));
+Note, this actually still has a broken corner case. And that would be:
 
-Not sure why the line break is necessary.
+[ No setting of ownership on mount ]
 
->                         free_found = true;
->
->                         /*
-> @@ -98,11 +86,8 @@ void kasan_complete_mode_report_info(struct kasan_report_info *info)
->                         if (alloc_found)
->                                 break;
->
-> -                       info->alloc_track.pid = entry->track.pid;
-> -                       info->alloc_track.stack = entry->track.stack;
-> -#ifdef CONFIG_KASAN_EXTRA_INFO
-> -                       kasan_complete_extra_report_info(&info->alloc_track, entry);
-> -#endif /* CONFIG_KASAN_EXTRA_INFO */
-> +                       memcpy(&info->alloc_track, &entry->track,
-> +                              sizeof(info->alloc_track));
->                         alloc_found = true;
->
->                         /*
-> --
-> 2.25.1
->
+ # chown rostedt:rostedt instances
+ # mkdir instance/foo
+
+ # ls -l instances/foo
+total 0
+-r--r-----  1 rostedt rostedt 0 Dec 21 14:55 available_tracers
+-rw-r-----  1 rostedt rostedt 0 Dec 21 14:55 buffer_percent
+-rw-r-----  1 rostedt rostedt 0 Dec 21 14:55 buffer_size_kb
+-r--r-----  1 rostedt rostedt 0 Dec 21 14:55 buffer_total_size_kb
+-rw-r-----  1 rostedt rostedt 0 Dec 21 14:55 current_tracer
+-rw-r-----  1 rostedt rostedt 0 Dec 21 14:55 error_log
+drwxr-xr-x  2 root    root    0 Dec 21 14:55 events  <<<---- not updated, nor is the children.
+--w-------  1 rostedt rostedt 0 Dec 21 14:55 free_buffer
+drwxr-x---  2 rostedt rostedt 0 Dec 21 14:55 options
+drwxr-x--- 10 rostedt rostedt 0 Dec 21 14:55 per_cpu
+-rw-r-----  1 rostedt rostedt 0 Dec 21 14:55 set_event
+-rw-r-----  1 rostedt rostedt 0 Dec 21 14:55 set_event_notrace_pid
+-rw-r-----  1 rostedt rostedt 0 Dec 21 14:55 set_event_pid
+-rw-r-----  1 rostedt rostedt 0 Dec 21 14:55 set_ftrace_filter
+-rw-r-----  1 rostedt rostedt 0 Dec 21 14:55 set_ftrace_notrace
+-rw-r-----  1 rostedt rostedt 0 Dec 21 14:55 set_ftrace_notrace_pid
+-rw-r-----  1 rostedt rostedt 0 Dec 21 14:55 set_ftrace_pid
+-rw-r-----  1 rostedt rostedt 0 Dec 21 14:55 snapshot
+-r--r-----  1 rostedt rostedt 0 Dec 21 14:55 timestamp_mode
+-rw-r-----  1 rostedt rostedt 0 Dec 21 14:55 trace
+-rw-r-----  1 rostedt rostedt 0 Dec 21 14:55 trace_clock
+--w--w----  1 rostedt rostedt 0 Dec 21 14:55 trace_marker
+--w--w----  1 rostedt rostedt 0 Dec 21 14:55 trace_marker_raw
+-rw-r-----  1 rostedt rostedt 0 Dec 21 14:55 trace_options
+-r--r-----  1 rostedt rostedt 0 Dec 21 14:55 trace_pipe
+-rw-r-----  1 rostedt rostedt 0 Dec 21 14:55 tracing_cpumask
+-rw-r-----  1 rostedt rostedt 0 Dec 21 14:55 tracing_max_latency
+-rw-r-----  1 rostedt rostedt 0 Dec 21 14:55 tracing_on
+
+The events directory did not take on the parent.
+
+And even if it did, the files and directories created under it needs to
+default to what the events directory was created with, not what the mount.
+
+That's not too hard to fix either. We just need to save that information in
+the eventfs_inode of the events directory, and find it when creating other
+files and directories.
+
+> >
+> > static void update_inode_attr(struct dentry *dentry, struct inode *inode,
+> >                               struct eventfs_attr *attr, umode_t mode)
+> > {
+> >         struct tracefs_fs_info *fsi = dentry->d_sb->s_fs_info;
+> >         struct tracefs_mount_opts *opts = &fsi->mount_opts;
+> >
+> >         /* Default the ownership to what it was mounted as */
+> >         inode->i_uid = opts->uid;
+> >         inode->i_gid = opts->gid;  
+> 
+> I think you should add
+> 
+> >         inode->i_mode = mode;  
+> 
+> to that "default setup", which not only makes things more consistent,
+> it also means that you can then remove it from here:
+> 
+> >         if (!attr) {
+> >                 inode->i_mode = mode;
+> >                 return;
+> >         }  
+> 
+> .. and the 'else' side from here:
+> 
+> >         if (attr->mode & EVENTFS_SAVE_MODE)
+> >                 inode->i_mode = attr->mode & EVENTFS_MODE_MASK;
+> >         else
+> >                 inode->i_mode = mode;  
+> 
+> and it all looks a lot more clear and obvious.
+
+sure.
+
+> 
+> "Set things to default values, then if we have attr and the specific
+> fields are set in those attrs, update them".
+> 
+> Instead of having this odd "do one thing for git/uid, another for mode".
+> 
+> > > I still claim that the whole dynamic ftrace stuff was a huge mistake,
+> > > and that the real solution should always have been to just use one
+> > > single inode for every file (and use that 'attr' that you track and
+> > > the '->getattr()' callback to make them all *look* different to
+> > > users).  
+> >
+> > Files now do not even have meta-data, and that saved 2 megs per trace
+> > instance. I only keep meta data for the directories. The files themselves
+> > are created via callback functions.  
+> 
+> I bet that was basically *all* just the inodes.
+> 
+> The dentries take up very little space, and the fact that you didn't
+> keep the dentries around meant that you instead replaced them with
+> that 'struct eventfs_file' which probably takes up as much room as the
+> dentries ever did - and now when you use them, you obviously use
+> *more* memory since it duplicates the data in the dentries, including
+> the name etc.
+
+In 6.7 I got rid of the eventfs_file and friends.
+
+  5790b1fb3d672 ("eventfs: Remove eventfs_file and just use eventfs_inode")
+
+> 
+> So I bet you use *more* memory than if you just kept the dentry tree
+> around, and this dynamic creation has then caused a number of bugs and
+> a lot of extra complexity - things like having to re-implement your
+> own readdir() etc, much of which has been buggy.
+
+As I'm new to VFS I expected to have a lot of bugs, but those bugs are
+settling down now.
+
+> 
+> And when you fix the resulting bugs, the end result is often
+> disgusting. I'm talking about things like commit ef36b4f92868
+> ("eventfs: Remember what dentries were created on dir open"), which
+> does things like re-use file->private_data for two entirely different
+> things (is it a 'cursor' or a 'dlist'? Who can know? That thing makes
+> me gag).
+
+As I stated back then, I could get rid of the re-use of private_data by
+creating my own cursor, but then I would need to reimplement the code to
+iterate. Ideally, the readdir code should not have touched the
+private_data, as now the file system has no private data to use.
+
+> 
+> Honestly, that was just one example of "that code does some truly ugly
+> things because the whole notion is mis-designed".
+
+I would argue the implementation of readdir that couples itself with the
+private_data of the descriptor it is implementing the walk from was a
+mis-design. I had no way to pass information from the open to the release
+function without re-implementing all of readdir.
+
+-- Steve
