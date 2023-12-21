@@ -1,78 +1,80 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D698F52;
-	Thu, 21 Dec 2023 03:01:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 7b55f3bcf43a41c4aec9b6ba6e278ec2-20231221
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.33,REQID:ada57bc5-8679-49e8-bb38-eba6e84ae9bd,IP:15,
-	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:35
-X-CID-INFO: VERSION:1.1.33,REQID:ada57bc5-8679-49e8-bb38-eba6e84ae9bd,IP:15,UR
-	L:0,TC:0,Content:0,EDM:25,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:35
-X-CID-META: VersionHash:364b77b,CLOUDID:c4e40082-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:231221110100PRPDICKD,BulkQuantity:0,Recheck:0,SF:66|24|72|19|44|102,
-	TC:nil,Content:0,EDM:5,IP:-2,URL:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL
-	:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_ULN,TF_CID_SPAM_SNR,TF_CID_SPAM_FSD
-X-UUID: 7b55f3bcf43a41c4aec9b6ba6e278ec2-20231221
-Received: from node4.com.cn [(39.156.73.12)] by mailgw
-	(envelope-from <liyouhong@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1660399244; Thu, 21 Dec 2023 11:00:58 +0800
-Received: from node4.com.cn (localhost [127.0.0.1])
-	by node4.com.cn (NSMail) with SMTP id D699016001CD7;
-	Thu, 21 Dec 2023 11:00:57 +0800 (CST)
-X-ns-mid: postfix-6583AA69-6562031
-Received: from localhost.localdomain (unknown [172.20.185.164])
-	by node4.com.cn (NSMail) with ESMTPA id 5302416001CD7;
-	Thu, 21 Dec 2023 03:00:57 +0000 (UTC)
-From: YouHong Li <liyouhong@kylinos.cn>
-To: jgross@suse.com
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	liyouhong <liyouhong@kylinos.cn>,
-	k2ci <kernel-bot@kylinos.cn>
-Subject: [PATCH] drivers/block/xen-blkback/common.h: Fix spelling typo in comment
-Date: Thu, 21 Dec 2023 11:00:14 +0800
-Message-Id: <20231221030014.1319663-1-liyouhong@kylinos.cn>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15ED0AD39;
+	Thu, 21 Dec 2023 03:01:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="msOHwjfu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1703127686;
+	bh=S0WymPy34W2d4KzOacMTp93C73SdBRl/bJcClUs3eoQ=;
+	h=Date:From:To:Cc:Subject:From;
+	b=msOHwjfu7US9+VCSsdS1JvVAofWaoFe70cw9xuT7t/u7pDUj6MsSMSCeKLXLXJj0d
+	 eQ/I8y1voSqwcS6BdP8AOw5PzAw9CPjScO7jnu7ZCC8AKEs0Q1Dy80oUBgxYfIeBvP
+	 TCAmE3I6X7/l/URdHiMROLiDL3R3Z2mVxFYcRRFK67scTe4vLqQgpQUS9gD8NIUeuo
+	 a+oqN1f0Uupr+tgJ6sELHxEt5o/zw2cZs9cqLqXDuEGZZVT2RNAQ++5C59MssKK6Or
+	 IdsJylkweHI5VNlWDCP5Wv7MbBeWgZUA9fY9Y8ZO4pelOPu0Slwo7XsFEspyJIAcz1
+	 PrlKXr66DEKLw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4SwZvV3xSRz4x5m;
+	Thu, 21 Dec 2023 14:01:26 +1100 (AEDT)
+Date: Thu, 21 Dec 2023 14:01:24 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Christoph Hellwig <hch@lst.de>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the block tree
+Message-ID: <20231221140124.16418659@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/OqGlL=TCOqe9Hw_H4pzM0/q";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/OqGlL=TCOqe9Hw_H4pzM0/q
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-From: liyouhong <liyouhong@kylinos.cn>
+Hi all,
 
-Fix spelling typo in comment.
+After merging the block tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-Reported-by: k2ci <kernel-bot@kylinos.cn>
-Signed-off-by: liyouhong <liyouhong@kylinos.cn>
+ERROR: modpost: "disk_clear_zoned" [drivers/scsi/sd_mod.ko] undefined!
 
-diff --git a/drivers/block/xen-blkback/common.h b/drivers/block/xen-blkba=
-ck/common.h
-index 40f67bfc052d..c64253d3bb40 100644
---- a/drivers/block/xen-blkback/common.h
-+++ b/drivers/block/xen-blkback/common.h
-@@ -132,7 +132,7 @@ struct blkif_x86_32_request {
- struct blkif_x86_64_request_rw {
- 	uint8_t        nr_segments;  /* number of segments                   */
- 	blkif_vdev_t   handle;       /* only for read/write requests         */
--	uint32_t       _pad1;        /* offsetof(blkif_reqest..,u.rw.id)=3D=3D8=
-  */
-+	uint32_t       _pad1;        /* offsetof(blkif_request..,u.rw.id)=3D=3D=
-8  */
- 	uint64_t       id;
- 	blkif_sector_t sector_number;/* start sector idx on disk (r/w only)  */
- 	struct blkif_request_segment seg[BLKIF_MAX_SEGMENTS_PER_REQUEST];
+Caused by commit
+
+  d73e93b4dfab ("block: simplify disk_set_zoned")
+
+I have used the block tree from next-20231220 for today.
+
 --=20
-2.34.1
+Cheers,
+Stephen Rothwell
 
+--Sig_/OqGlL=TCOqe9Hw_H4pzM0/q
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWDqoQACgkQAVBC80lX
+0GxFgAf9GRxZ9eE3qM7WS9sJzmUmBQLp6b95Ab4n2cwqm7Jy51zrwBbLebEQb5nC
+j4RZVunCTL6zqvEjNr+Tme21GthEnzm55/lu8vqsbDz5FIkrTIVcoVhSDN/BUGDo
+Hyor18lkc75tIHU70HAJVn4fctOJXTnviSuTcJdIV0n625NqzvGkseNOTQR3Do31
+4XTGHMvcBiIYS4bIsyjKyxw4Sp6kxGSKP7YJJAcCX+uE2WDBvISj9H/rJ19YUOu6
+DqRn2Y6bZX3ZOv46zhDRMuhDo7ij3B4oWggirlniMm0LppfjhNz2lWP4Nc05eYGi
+H2o6I22dZ2zUDxC7Y7DHd8+cbRVH1A==
+=nq7S
+-----END PGP SIGNATURE-----
+
+--Sig_/OqGlL=TCOqe9Hw_H4pzM0/q--
