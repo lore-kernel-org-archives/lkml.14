@@ -1,100 +1,95 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B383E77626
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 13:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 860C374E17;
+	Thu, 21 Dec 2023 13:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cnd5CQau"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6d93278bfbeso452629b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 05:39:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703165964; x=1703770764; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0WRPtFKRbZo87GpoO95/PqPDiQIBNAfn361E91yU6k0=;
-        b=Cnd5CQauM5XifTnZjzkJHqlSdWBnZTqdVnKLhJbVZAO3+47V7Li/bT1AqrV9zt370q
-         7Iqj4WRNEBsWANctCPO87cpRXxY3L1mJdHRrMGwRJGpzjVK0zTpppBMbS3TizFlWP6Ud
-         TcYUPBmX7XPGTYqSVCkt00hnH4Fw65S/m6VR6uXE1JWDV1Gp9YLHrqwK/ojWnLjKA+vA
-         jbfFjC5lwYVjE/bWPGsveK2Uq+iylcG1Dp+Sm7y19qJaUYTy4w2ghar9d5Nf5v3rz6kC
-         f9ZE6S5gdEvmZB0NFkf/Imb25Y0xkGeYodyrdpN+gt2KVF/le4TN6HIL3zUcuEX5sXk3
-         m4eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703165964; x=1703770764;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0WRPtFKRbZo87GpoO95/PqPDiQIBNAfn361E91yU6k0=;
-        b=iikLjytOxWQQMWUiTogJQHEzu0wdLwOQZl9l4ZLACW7HlTGbIVGY07A3cbgAqdXT2w
-         m14FQB0wmZXCllmSTMROz9pciww2kQm5WTw+nAyA2ad1l+NVTtsuGi+xyR3vBvbumi2a
-         KfjmJIyi5YlT/DxfYmaLgBdtaqrxT1Q1N6gLoUbqq48ZP7LPv1+bgg3ldqpAI/GVrvpR
-         22Sbb9Xu5vr/ODFbX9dW5jvQBSbWWZsdiu9MggoWgJmfTLbB4+rOLP2BUF1HH+9cgJBn
-         H6sHqyPOSNrW1bDZ2+U7xLOTlFD9V9dVv8b5ZDPbXG5R9U3Vh4dA72tk+Yxpu6LCvNuK
-         iKMA==
-X-Gm-Message-State: AOJu0YwVJU6vv6v55A6AlgKAWWd/CvBTT3faVp4Kgaf3O0uAAf6NVTI2
-	WPga9wykgwkhFg3K0TlYPEw=
-X-Google-Smtp-Source: AGHT+IHxfdkJAxzDBvmI1qMaJp2TBMZfApl1OaDz0gzCXOZ0Mr+F6FZ6MLMibhYF/Bxt/GKgPiiCyQ==
-X-Received: by 2002:aa7:8dda:0:b0:6d8:174b:97f2 with SMTP id j26-20020aa78dda000000b006d8174b97f2mr3409846pfr.9.1703165963997;
-        Thu, 21 Dec 2023 05:39:23 -0800 (PST)
-Received: from ruipeng-ThinkCentre-M730e-N010.company.local (014136220210.static.ctinets.com. [14.136.220.210])
-        by smtp.gmail.com with ESMTPSA id e7-20020aa78c47000000b006ce64ebd2a0sm1622340pfd.99.2023.12.21.05.39.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 05:39:23 -0800 (PST)
-From: Ruipeng Qi <ruipengqi7@gmail.com>
-To: akpm@linux-foundation.org,
-	peterz@infradead.org,
-	jpoimboe@kernel.org,
-	mingo@kernel.org
-Cc: qiruipeng@lixiang.com,
-	arnd@arndb.de,
-	gpiccoli@igalia.com,
-	ubizjak@gmail.com,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eUnPxv6Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703166046; x=1734702046;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=D+d1eruEgFzaUZmbFRKZnQX7tcnQVjmv2hkzB5mVXtk=;
+  b=eUnPxv6ZmJzJ+ohrKLHdIWcfKcmNKGJ622Kc5dPKYTXphkuEdrcRCT3E
+   3YcWZvc1Ltt3wGw85qn+APfrvUKorhr51L3we8XMVrnr6ZZaODOWory73
+   4cb6Ri+5aBZOw9zSKL+mbkU+RC1UeZkICsvNO19OXvaRMCmqFxhZHq+rV
+   Tyiw0827Gk0eeJ1Ow+J71JhOZj25h0mpN2f46iGJ6x2edMjAfITqjCkUQ
+   WdwCRlyZUmLTfM14hbfbgOmRtDTg3cTM5offXJJhghmQP2zXeEaLXdzSj
+   CXOWmktDHgrnO1NlYHuz2ZKej6LKgmMEsXRxUPqEZWv3c7k4L+3bSSwE5
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="9446053"
+X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
+   d="scan'208";a="9446053"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 05:40:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="1108105158"
+X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
+   d="scan'208";a="1108105158"
+Received: from pglc00021.png.intel.com ([10.221.207.41])
+  by fmsmga005.fm.intel.com with ESMTP; 21 Dec 2023 05:40:43 -0800
+From: <deepakx.nagaraju@intel.com>
+To: netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 7/7] panic: invoke osdump when panic
-Date: Thu, 21 Dec 2023 21:39:17 +0800
-Message-Id: <20231221133917.955-1-ruipengqi7@gmail.com>
-X-Mailer: git-send-email 2.17.1
+Cc: jdavem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	mun.yew.tham@intel.com,
+	Nagaraju DeepakX <deepakx.nagaraju@intel.com>
+Subject: [PATCH v2 0/4] Rename functions and their prototypes and move to common files.
+Date: Thu, 21 Dec 2023 21:40:37 +0800
+Message-Id: <20231221134041.27104-1-deepakx.nagaraju@intel.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20231213071112.18242-6-deepakx.nagaraju@intel.com>
+References: <20231213071112.18242-6-deepakx.nagaraju@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-From: qiruipeng <qiruipeng@lixiang.com>
+From: Nagaraju DeepakX <deepakx.nagaraju@intel.com>
 
-Invoke osdump upon a panic to generate a minidump, which can be analyzed
-later with the crash utility.
+Hi,
+Moving the standard DMA interface for SGDMA and MSGDMA and renaming from
+tse_private to dma_private. Moving read-write function prototypes from
+altera_tse.h to altera_utils.h. Commonize DMA for upcoming altera Drivers.
 
-Signed-off-by: qiruipeng <qiruipeng@lixiang.com>
----
- kernel/panic.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Patch1: Removing unneeded assignments.
+Patch2: Fixing indentation warnings.
+Patch3: Moving read write Function prototypes.
+Patch4: Renaming function prototypes.
 
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 2807639aab51..b83e5caf8003 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -37,6 +37,9 @@
- #include <linux/context_tracking.h>
- #include <trace/events/error_report.h>
- #include <asm/sections.h>
-+#ifdef CONFIG_OS_MINIDUMP
-+#include <linux/osdump.h>
-+#endif
- 
- #define PANIC_TIMER_STEP 100
- #define PANIC_BLINK_SPD 18
-@@ -326,6 +329,10 @@ void panic(const char *fmt, ...)
- 	} else if (old_cpu != this_cpu)
- 		panic_smp_self_stop();
- 
-+#ifdef CONFIG_OS_MINIDUMP
-+	osdump();
-+#endif
-+
- 	console_verbose();
- 	bust_spinlocks(1);
- 	va_start(args, fmt);
--- 
-2.17.1
+changelog v2:
+* Build issue resolved.
+
+Nagaraju DeepakX (4):
+  net: ethernet: altera: remove unneeded assignments
+  net: ethernet: altera: fix indentation warnings
+  net: ethernet: altera: move read write functions
+  net: ethernet: altera: rename functions and their prototypes
+
+ drivers/net/ethernet/altera/Makefile          |   5 +-
+ drivers/net/ethernet/altera/altera_eth_dma.c  |  58 ++++
+ drivers/net/ethernet/altera/altera_eth_dma.h  | 121 +++++++++
+ drivers/net/ethernet/altera/altera_msgdma.c   |  38 +--
+ drivers/net/ethernet/altera/altera_msgdma.h   |  28 +-
+ drivers/net/ethernet/altera/altera_sgdma.c    | 138 +++++-----
+ drivers/net/ethernet/altera/altera_sgdma.h    |  30 +--
+ drivers/net/ethernet/altera/altera_tse.h      |  71 +----
+ .../net/ethernet/altera/altera_tse_ethtool.c  |   2 +
+ drivers/net/ethernet/altera/altera_tse_main.c | 251 +++++++-----------
+ drivers/net/ethernet/altera/altera_utils.c    |   1 +
+ drivers/net/ethernet/altera/altera_utils.h    |  43 +++
+ 12 files changed, 447 insertions(+), 339 deletions(-)
+ create mode 100644 drivers/net/ethernet/altera/altera_eth_dma.c
+ create mode 100644 drivers/net/ethernet/altera/altera_eth_dma.h
+
+--
+2.26.2
 
