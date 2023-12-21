@@ -1,162 +1,133 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5B98768E3;
-	Thu, 21 Dec 2023 12:50:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D90762F4;
-	Thu, 21 Dec 2023 04:50:46 -0800 (PST)
-Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7D29D3F738;
-	Thu, 21 Dec 2023 04:49:59 -0800 (PST)
-Date: Thu, 21 Dec 2023 12:49:57 +0000
-From: Andre Przywara <andre.przywara@arm.com>
-To: Brandon Cheo Fusi <fusibrandon13@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Chen-Yu Tsai
- <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
- <samuel@sholland.org>, Yangtao Li <tiny.windzz@gmail.com>, "Rafael J .
- Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
- Stephen Rothwell <sfr@canb.auug.org.au>, devicetree@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org
-Subject: Re: [RFC PATCH v2 2/3] cpufreq: sun50i: Add support for D1's speed
- bin decoding
-Message-ID: <20231221124957.27fa9922@donnerap.manchester.arm.com>
-In-Reply-To: <20231221101013.67204-3-fusibrandon13@gmail.com>
-References: <20231221101013.67204-1-fusibrandon13@gmail.com>
-	<20231221101013.67204-3-fusibrandon13@gmail.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F397176DB1;
+	Thu, 21 Dec 2023 12:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bAvh3J/7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A518C433C7;
+	Thu, 21 Dec 2023 12:51:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703163073;
+	bh=JWkwZTxr1bx7lg4F5uSH+TZQiOtgILUeHxtqIe2ucXo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bAvh3J/7x2ifsPC4dkV6Lp1isab009nZA9lCssYwh0oJPG490Ynx9iGLMc03l9cDp
+	 4vYbbm3k3ad+rnoH0qAMMAxWYs1uDYCBz1bzDGpTy36LjlVPkD7MJ5NPInz6RW3CBK
+	 Bvj7tzze8Mh6WXfoyJnaRe6LgwxBdTq+Jt6dkU34HjxUGJjNViT7ndrheKot48cXAu
+	 4U8KZbZm1Xh8mX6MM/dlrDMQZ7Tkl1NcWtgE4hZuO8mmkMVl1YPpD921wHJzfBrxYi
+	 qTeW5Fi4lUd6oWRDIqQdCqxrzNTNRVZlYu1jgD56mOcAI4ipFcC3kZ413eJpRHeYPH
+	 ePsRl7pVNFshA==
+Date: Thu, 21 Dec 2023 12:51:08 +0000
+From: Lee Jones <lee@kernel.org>
+To: Sean Young <sean@mess.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Flavio Suligoi <f.suligoi@asem.it>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the pwm tree
+Message-ID: <20231221125108.GF10102@google.com>
+References: <20231221165805.0c4771c1@canb.auug.org.au>
+ <ZYQEcg0-SEFEeuN6@orome.fritz.box>
+ <20231221100950.GC10102@google.com>
+ <ZYQr0TkzdgJpoR5v@gofer.mess.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZYQr0TkzdgJpoR5v@gofer.mess.org>
 
-On Thu, 21 Dec 2023 11:10:12 +0100
-Brandon Cheo Fusi <fusibrandon13@gmail.com> wrote:
+On Thu, 21 Dec 2023, Sean Young wrote:
 
-Hi Brandon,
-
-thanks for the quick turnaround, and for splitting this code up, that
-makes reasoning about this much easier!
-
-> Adds support for decoding the efuse value read from D1 efuse speed
-> bins, and factors out equivalent code for sun50i.
+> On Thu, Dec 21, 2023 at 10:09:50AM +0000, Lee Jones wrote:
+> > On Thu, 21 Dec 2023, Thierry Reding wrote:
+> > 
+> > > On Thu, Dec 21, 2023 at 04:58:05PM +1100, Stephen Rothwell wrote:
+> > > > Hi all,
+> > > > 
+> > > > After merging the backlight tree, today's linux-next build (x86_64
+> > > > allmodconfig) failed like this:
+> > > > 
+> > > > drivers/video/backlight/mp3309c.c: In function 'mp3309c_bl_update_status':
+> > > > drivers/video/backlight/mp3309c.c:134:23: error: implicit declaration of function 'pwm_apply_state'; did you mean 'pwm_apply_args'? [-Werror=implicit-function-declaration]
+> > > >   134 |                 ret = pwm_apply_state(chip->pwmd, &pwmstate);
+> > > >       |                       ^~~~~~~~~~~~~~~
+> > > >       |                       pwm_apply_args
+> > > > 
+> > > > Caused by commit
+> > > > 
+> > > >   c748a6d77c06 ("pwm: Rename pwm_apply_state() to pwm_apply_might_sleep()")
+> > > > 
+> > > > interacting with commit
+> > > > 
+> > > >   2e914516a58c ("backlight: mp3309c: Add support for MPS MP3309C")
+> > > > 
+> > > > from the backlight tree.
+> > > > 
+> > > > I have appplied the following merge fix patch.
+> > > > 
+> > > > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > > Date: Thu, 21 Dec 2023 16:13:37 +1100
+> > > > Subject: [PATCH] fix up for "backlight: mp3309c: Add support for MPS MP3309C"
+> > > > 
+> > > > from the backlight tree interacting with commit
+> > > > 
+> > > >   c748a6d77c06 ("pwm: Rename pwm_apply_state() to pwm_apply_might_sleep()")
+> > > > 
+> > > > from the pwm tree.
+> > > > 
+> > > > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > > ---
+> > > >  drivers/video/backlight/mp3309c.c | 4 ++--
+> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/video/backlight/mp3309c.c b/drivers/video/backlight/mp3309c.c
+> > > > index 34d71259fac1..b0d9aef6942b 100644
+> > > > --- a/drivers/video/backlight/mp3309c.c
+> > > > +++ b/drivers/video/backlight/mp3309c.c
+> > > > @@ -131,7 +131,7 @@ static int mp3309c_bl_update_status(struct backlight_device *bl)
+> > > >  					    chip->pdata->levels[brightness],
+> > > >  					    chip->pdata->levels[chip->pdata->max_brightness]);
+> > > >  		pwmstate.enabled = true;
+> > > > -		ret = pwm_apply_state(chip->pwmd, &pwmstate);
+> > > > +		ret = pwm_apply_might_sleep(chip->pwmd, &pwmstate);
+> > > >  		if (ret)
+> > > >  			return ret;
+> > > >  
+> > > > @@ -393,7 +393,7 @@ static int mp3309c_probe(struct i2c_client *client)
+> > > >  					    chip->pdata->default_brightness,
+> > > >  					    chip->pdata->max_brightness);
+> > > >  		pwmstate.enabled = true;
+> > > > -		ret = pwm_apply_state(chip->pwmd, &pwmstate);
+> > > > +		ret = pwm_apply_might_sleep(chip->pwmd, &pwmstate);
+> > > >  		if (ret)
+> > > >  			return dev_err_probe(chip->dev, ret,
+> > > >  					     "error setting pwm device\n");
+> > > 
+> > > Hi Lee,
+> > > 
+> > > We could exchange stable tags to make this work, but given that people
+> > > (myself included) are getting into holiday mode I'm inclined to just add
+> > > a pwm_apply_state() compatibility inline for now and then we can address
+> > > this in the new year or for the next cycle. What do you think?
+> > 
+> > Sorry, why is this happening?
+> > 
+> > I still see support for pwm_apply_state() in -next.
 > 
-> The algorithm is gotten from
+> Not any more:
 > 
-> https://github.com/Tina-Linux/linux-5.4/blob/master/drivers/cpufreq/sun50i-cpufreq-nvmem.c#L293-L338
-> 
-> and maps an efuse value to either 0 or 1, with 1 meaning stable at
-> a lower supply voltage for the same clock frequency.
-> 
-> Signed-off-by: Brandon Cheo Fusi <fusibrandon13@gmail.com>
-> ---
->  drivers/cpufreq/sun50i-cpufreq-nvmem.c | 34 ++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
-> 
-> diff --git a/drivers/cpufreq/sun50i-cpufreq-nvmem.c b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-> index fc509fc49..b1cb95308 100644
-> --- a/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-> +++ b/drivers/cpufreq/sun50i-cpufreq-nvmem.c
-> @@ -29,6 +29,33 @@ struct sunxi_cpufreq_data {
->  	u32 (*efuse_xlate)(u32 *speedbin, size_t len);
->  };
->  
-> +static u32 sun20i_efuse_xlate(u32 *speedbin, size_t len)
+> $ git grep pwm_apply_state linux-next/master 
+> $ 
 
-I feel like this prototype can be shortened to:
+Okay, that's changed since this morning.
 
-static u32 sun20i_efuse_xlate(u32 speedbin)
+I think the easiest solution would be to take Stephen's patch.
 
-See below.
-
-> +{
-> +	u32 ret, efuse_value = 0;
-> +	int i;
-> +
-> +	for (i = 0; i < len; i++)
-> +		efuse_value |= ((u32)speedbin[i] << (i * 8));
-
-The cast is not needed. Looking deeper into the original code you linked
-to, cell_value[] there is an array of u8, so they assemble a little endian
-32-bit integer from *up to* four 8-bit values read from the nvmem.
-
-So I think this code here is wrong, len is the size of the nvmem cells
-holding the bin identifier, in *bytes*, so the idea here is to just read
-the (lowest) 16 bits (in the D1 case, cf. "reg = <0x00 0x2>;" in the next
-patch) from this nvmem cell. Here you are combining two 32-bit words into
-efuse_value.
-
-So I think this whole part above is actually not necessary: we are
-expecting maximum 32 bits, and nvmem_cell_read() should take care of
-masking off unrequested bits, so we get the correct value back already. So
-can you try to remove the loop above, and use ...
-
-> +
-> +	switch (efuse_value) {
-
-	switch (*speedbin & 0xffff) {
-
-here instead? Or drop the pointer at all, and just use one u32 value, see
-the above prototype.
-
-Cheers,
-Andre
-
-P.S. This is just a "peephole review" of this patch, I haven't got around
-to look at this whole scheme in whole yet, to see if we actually need this
-or can simplify this or clean it up.
-
-
-> +	case 0x5e00:
-> +		/* QFN package */
-> +		ret = 0;
-> +		break;
-> +	case 0x5c00:
-> +	case 0x7400:
-> +		/* QFN package */
-> +		ret = 1;
-> +		break;
-> +	case 0x5000:
-> +	default:
-> +		/* BGA package */
-> +		ret = 0;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static u32 sun50i_efuse_xlate(u32 *speedbin, size_t len)
->  {
->  	u32 efuse_value = 0;
-> @@ -46,6 +73,10 @@ static u32 sun50i_efuse_xlate(u32 *speedbin, size_t len)
->  		return 0;
->  }
->  
-> +struct sunxi_cpufreq_data sun20i_cpufreq_data = {
-> +	.efuse_xlate = sun20i_efuse_xlate,
-> +};
-> +
->  struct sunxi_cpufreq_data sun50i_cpufreq_data = {
->  	.efuse_xlate = sun50i_efuse_xlate,
->  };
-> @@ -54,6 +85,9 @@ static const struct of_device_id cpu_opp_match_list[] = {
->  	{ .compatible = "allwinner,sun50i-h6-operating-points",
->  	  .data = &sun50i_cpufreq_data,
->  	},
-> +	{ .compatible = "allwinner,sun20i-d1-operating-points",
-> +	  .data = &sun20i_cpufreq_data,
-> +	},
->  	{}
->  };
->  
-
+-- 
+Lee Jones [李琼斯]
