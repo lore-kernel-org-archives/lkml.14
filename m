@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2AC3608F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2DC360B3;
 	Thu, 21 Dec 2023 15:00:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CgsYL0TR"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 78990C433C8;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NMogsgic"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6F123C433C9;
 	Thu, 21 Dec 2023 15:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1703170823;
-	bh=zSxKdeMV7i+o2DwR5Chw6s112MhrvoSfwPZaBaf4654=;
+	bh=LlxzwAz224mEmMmzADaUuuXsPSYbvxu5dH/x5r8TGGg=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=CgsYL0TRYEOHZZfRLjbpGiE8iqIMFzwj13wiHDOd/Q6kTpjOmWensDD8nADSeIPOj
-	 X4xw/RmBvqlsHcJ3Efq8WVjFiZ2H+xe5C4e4DaZ0dZxvf2xCRy+Z8fEQnkzwi750p2
-	 rFJsVo1BOTi1L1rAU63TRAKYft3xHRLAJ1t+Cuhd3mwh6u8FM1oz/7sgkpdJdP/uMp
-	 bqugytxvVXzoSoZXavNpUlQ+qq8ErUCWAzrvaciJiDGaLeVIrLSYItlcjIdJPU3jJE
-	 ONfmIFkcT9vcUcW6KwMII2SmkXFS37KEMcAWBIMozVXbxAFKGdtOOOdMxVNit9Fkqq
-	 NJRl9Sc3sUsVA==
+	b=NMogsgicP4eXyI7tIUnQgXMBxLFduI5rf47nM40ScSC2vq9yTksWAs7OZIZQnehZ6
+	 PS/UzgmWyBbApyvNZn6Gxc9522CJqfs5bDILAiu/iP6OxI3EhU8AQ5/XEitWCn5rkL
+	 4XF+JDYECHA1oFa7Xg4Bmb62VkAB0WBC5L3QQcm1ZgW+nm0Wd6UCmCqU5nPXnb+hk4
+	 A/GXx+TlIbcEOPIGqVahEaIhozOBBdk+zAsM2B8RdAr9Lvb0LRgaZiO7MKzyBcnI1R
+	 pCaWBuoQvVcEJB0h4MM6L3sZbU0rVdAgtj7YsgpMJ2Dgu2LWGT81me5bHZc5EzZLG0
+	 eRXaHmb1Bq9nQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5E9EEDD4EE5;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5488EDD4EEA;
 	Thu, 21 Dec 2023 15:00:23 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -28,13 +28,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [net-next PATCH] net: phy: at803x: remove extra space after cast
+Subject: Re: [net-next PATCH] net: phy: at803x: replace msleep(1) with
+ usleep_range
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <170317082338.5769.2881350995739706971.git-patchwork-notify@kernel.org>
+ <170317082334.5769.10549760261707030430.git-patchwork-notify@kernel.org>
 Date: Thu, 21 Dec 2023 15:00:23 +0000
-References: <20231217232739.27065-1-ansuelsmth@gmail.com>
-In-Reply-To: <20231217232739.27065-1-ansuelsmth@gmail.com>
+References: <20231217232508.26470-1-ansuelsmth@gmail.com>
+In-Reply-To: <20231217232508.26470-1-ansuelsmth@gmail.com>
 To: Christian Marangi <ansuelsmth@gmail.com>
 Cc: andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
  davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
@@ -45,18 +46,17 @@ Hello:
 This patch was applied to netdev/net-next.git (main)
 by Paolo Abeni <pabeni@redhat.com>:
 
-On Mon, 18 Dec 2023 00:27:39 +0100 you wrote:
-> Remove extra space after cast as reported by checkpatch to keep code
-> clean.
+On Mon, 18 Dec 2023 00:25:08 +0100 you wrote:
+> Replace msleep(1) with usleep_range as suggested by timers-howto guide.
 > 
 > Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 > ---
->  drivers/net/phy/at803x.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/net/phy/at803x.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
 Here is the summary with links:
-  - [net-next] net: phy: at803x: remove extra space after cast
-    https://git.kernel.org/netdev/net-next/c/fc9d7264ddc3
+  - [net-next] net: phy: at803x: replace msleep(1) with usleep_range
+    https://git.kernel.org/netdev/net-next/c/3ab5720881a9
 
 You are awesome, thank you!
 -- 
