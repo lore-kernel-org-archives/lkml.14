@@ -1,70 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2768A651AC
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 19:43:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F53651B3
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 19:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OGoLG9TF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 491C8C433C8;
-	Thu, 21 Dec 2023 19:43:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1703187828;
-	bh=3f4LLHOYQ9vIXC3yu9JguC4DcowbIKg3jo/PtkCxKgo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OGoLG9TFPFAYjYUxeCsafqcHSwmwba3n0j/eQLkISCr6+C8TEHoYtOnYNTDvepTbY
-	 riVCjqUBFz9GqL9wZ1VUEwqTaeS66AHaa5fUqs7xCVgIHh63wdZ+4n9fhBZxZapubN
-	 OpTpNSezmC0erIOyoMkBtEYYhjaXN5eaDWCfrGoY=
-Date: Thu, 21 Dec 2023 20:43:45 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: linux-kernel@vger.kernel.org,
-	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Subject: Re: [PATCH] debugfs: initialize cancellations earlier
-Message-ID: <2023122118-stopper-sizably-cc59@gregkh>
-References: <20231221150444.1e47a0377f80.If7e8ba721ba2956f12c6e8405e7d61e154aa7ae7@changeid>
- <2023122129-seclusion-qualm-3084@gregkh>
- <4b2fbac42345acb21ac2bdfe6abd4fb4a00bb8c6.camel@sipsolutions.net>
- <2023122129-distress-sanding-8449@gregkh>
- <2d760360e1f47783166365110f8473fadfbc80a3.camel@sipsolutions.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S42+2qFd"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d3a9b9634dso24085ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 11:45:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1703187956; x=1703792756; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+UlLTxJhr+3mvS0lWPu166Qi9WAJIRoa2lC5FF3ixSk=;
+        b=S42+2qFdB0KBvF1MShNOriTXPh0q6GWQdW0G5QoDSn6MzLjtBAFxPa9n7wsIxryhTu
+         kSaqNOECeiiPqYRvD17l/8DFRamha3NUHxts48yDRCNXf8T0zKtaoshDrzVA1BXmv8M6
+         2FeAaULIeZD7k51G0BEfJ+dhmbNVAqRKDzT1khPyssxPh01Hk8vn6SMskM3i8llLB/Yo
+         ys9LmjTfAW8EjKY20xQa9ZZ+EQtl5KXDHiQEMpw0lJZ1lug29PGywu1K5CqRgIwDHNeF
+         PNaXbpTju3iktccqhSb9aoOFPchhXn00K2vMjCV4Sln5J+1Z4/ll3/9LkkOSzPJeEnBw
+         KKgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703187956; x=1703792756;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+UlLTxJhr+3mvS0lWPu166Qi9WAJIRoa2lC5FF3ixSk=;
+        b=TAd0kyOJA9l89zCE8JHDWHYUHbLT/ncx182yIfq+kQ0LUro/PMVZIiuMu1Z8oiPHHD
+         KDRaippa+vIn2Y0efKx5LdrdJEqxdOf5/GnXx7HrdJ+/yBrbBHji1NyXhRyZ7XUaTZID
+         AYReeBk7fZ4Fqj269D8phLGSUAiLm6favNGojtluv2pD9uvMghpkBW1KsyWWegkKYjaM
+         ArISq2qe61sIoSkIhZnk8xEBwuq9hh44R4YgOnWElJ2G8DGyJQkTPsioJYUEmaIfKWJO
+         2w0dbzbH0pon3eXeE8vB0CqUplvL+sApk9GNFGszqHRNMZ4izBih8D1GzAKlakRjTqcp
+         ifxw==
+X-Gm-Message-State: AOJu0YyzizyHtP+33G+0RCg/5XPgKdaJKe8aDRMhGAweFGic3DetyCVc
+	gpnnaxXiVMkZBb+izpubjJuBksXojJCR
+X-Google-Smtp-Source: AGHT+IHH0GZ0TEFMwakAl2DnF3SX8iuFbzzVFzA49lYHkBAf260BuKQi9+ViLEG6cHxawyJx4YAxJA==
+X-Received: by 2002:a17:902:e551:b0:1d4:cae:9a03 with SMTP id n17-20020a170902e55100b001d40cae9a03mr13592plf.23.1703187956107;
+        Thu, 21 Dec 2023 11:45:56 -0800 (PST)
+Received: from [2620:0:1008:15:184:1476:510:6ea1] ([2620:0:1008:15:184:1476:510:6ea1])
+        by smtp.gmail.com with ESMTPSA id e15-20020a056a0000cf00b006d967315fbbsm1974678pfj.136.2023.12.21.11.45.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Dec 2023 11:45:55 -0800 (PST)
+Date: Thu, 21 Dec 2023 11:45:54 -0800 (PST)
+From: David Rientjes <rientjes@google.com>
+To: David Hildenbrand <david@redhat.com>, 
+    Mina Almasry <almasrymina@google.com>, 
+    James Houghton <jthoughton@google.com>
+cc: Mike Kravetz <mike.kravetz@oracle.com>, linux-mm@kvack.org, 
+    linux-kernel@vger.kernel.org, Muchun Song <songmuchun@bytedance.com>, 
+    Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] MAINTAINERS: remove hugetlb maintainer Mike Kravetz
+In-Reply-To: <9c7cc2ed-6f9d-4305-8efa-6381eb9e39d3@redhat.com>
+Message-ID: <ab373102-9192-e3bd-e829-63048365b3ca@google.com>
+References: <20231220220843.73586-1-mike.kravetz@oracle.com> <9c7cc2ed-6f9d-4305-8efa-6381eb9e39d3@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2d760360e1f47783166365110f8473fadfbc80a3.camel@sipsolutions.net>
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, Dec 21, 2023 at 07:55:13PM +0100, Johannes Berg wrote:
-> On Thu, 2023-12-21 at 18:17 +0100, Greg Kroah-Hartman wrote:
+On Wed, 20 Dec 2023, David Hildenbrand wrote:
+
+> On 20.12.23 23:08, Mike Kravetz wrote:
+> > I am stepping away from my role as hugetlb maintainer.  There should be
+> > no gap in coverage as Muchun Song is also a hugetlb maintainer.
 > > 
-> > But this doesn't apply against Linus's tree, 
+> > Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
 > 
-> Hmm. It does for me?
+> Mike, thank you so much for all your hard work over all these years!
 > 
-> $ git checkout linux/master
-> ...
-> $ curl -s https://lore.kernel.org/lkml/20231221150444.1e47a0377f80.If7e8ba721ba2956f12c6e8405e7d61e154aa7ae7@changeid/raw | git am -
-> Applying: debugfs: initialize cancellations earlier
-> $ 
+> It's been a real pleasure working with you every time our upstream paths
+> crossed! :)
 > 
-> > or my driver-core-next branch now,
-> 
-> Right, it doesn't apply there, that was branched out from v6.7-rc3.
 
-Ah, yes.
++100.
 
-> > where should it go?
-> 
-> I think/hope to 6.7 still, since it fixes something that only got there.
-> 
-> Looks like you routed that other debugfs patch (the lockdep revert I was
-> talking about) through char-misc?
+Mike, your ownership, expertise, and collaboration have been deeply needed 
+but also very motivating and inspiring.
 
-I did, sorry for the confusion, too many branches/trees...
-
-I'll queue this up in the morning, thanks.
-
-greg k-h
+You know how I feel about it.  It's been a pleasure.
