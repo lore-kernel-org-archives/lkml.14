@@ -1,54 +1,30 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC12658ACC;
-	Thu, 21 Dec 2023 09:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lsf0h+lX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703149438; x=1734685438;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=lMZtS6Uq1+UmjnNud65lP8wqI6nTT04uC10gnZ4fF20=;
-  b=Lsf0h+lX9MNfCjhhCF29NtXP9vd4NX+ihu+Qwrvpu58lOxwCbnI6BTEC
-   /IVRSwLBkeaaYwbEEhn8uUInpKEeAPrhBf2/THZsdu1fgckvfRVtyPabe
-   0N001IWZtp0ha96TTdmWIhmpQh9a3TGuwuAoQ9csmpMi+nr7gE+MzGcuF
-   z6wRnpxCzJ39xkXpYpxV3DmDLqR6kM/jM7luv1F+AqX8xy53zOhhzRRSk
-   5v6MceHNDWWGmE1xTgXsVzpQdWAT/JSEoHUQMYFTYuff6YJJh1Gh0IZJ4
-   HhrLyJ5KVq9UfYKh11q1qU76LJVoe3er7ABIqKUgRZSSJed68hT1RsBwU
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="398729740"
-X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="398729740"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 01:03:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="900028641"
-X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="900028641"
-Received: from 984fee00a5ca.jf.intel.com (HELO embargo.jf.intel.com) ([10.165.9.183])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 01:03:11 -0800
-From: Yang Weijiang <weijiang.yang@intel.com>
-To: seanjc@google.com,
-	pbonzini@redhat.com,
-	dave.hansen@intel.com,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: peterz@infradead.org,
-	chao.gao@intel.com,
-	rick.p.edgecombe@intel.com,
-	mlevitsk@redhat.com,
-	john.allen@amd.com,
-	weijiang.yang@intel.com
-Subject: [PATCH v8 23/26] KVM: VMX: Set host constant supervisor states to VMCS fields
-Date: Thu, 21 Dec 2023 09:02:36 -0500
-Message-Id: <20231221140239.4349-24-weijiang.yang@intel.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20231221140239.4349-1-weijiang.yang@intel.com>
-References: <20231221140239.4349-1-weijiang.yang@intel.com>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7528208D6;
+	Thu, 21 Dec 2023 09:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B27092F4;
+	Thu, 21 Dec 2023 01:06:28 -0800 (PST)
+Received: from e129166.arm.com (unknown [10.57.87.53])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E09F03F5A1;
+	Thu, 21 Dec 2023 01:05:41 -0800 (PST)
+From: Lukasz Luba <lukasz.luba@arm.com>
+To: linux-kernel@vger.kernel.org,
+	rafael@kernel.org
+Cc: linux-pm@vger.kernel.org,
+	daniel.lezcano@linaro.org,
+	rui.zhang@intel.com,
+	lukasz.luba@arm.com,
+	m.majewski2@samsung.com,
+	bzolnier@gmail.com,
+	m.szyprowski@samsung.com,
+	krzysztof.kozlowski@linaro.org,
+	linux-samsung-soc@vger.kernel.org
+Subject: [RFC PATCH] thermal: Add API to update framework with known temperature
+Date: Thu, 21 Dec 2023 09:06:37 +0000
+Message-Id: <20231221090637.1996394-1-lukasz.luba@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,117 +33,176 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Save constant values to HOST_{S_CET,SSP,INTR_SSP_TABLE} field explicitly.
-Kernel IBT is supported and the setting in MSR_IA32_S_CET is static after
-post-boot(The exception is BIOS call case but vCPU thread never across it)
-and KVM doesn't need to refresh HOST_S_CET field before every VM-Enter/
-VM-Exit sequence.
+Some thermal drivers support trip point interrupts. These IRQs are
+triggered when the defined temperature threshold value is reached. This
+information is enough to say what is the temperature. Therefore, create
+a new API, which allows to provide temperature value as an argument and
+avoid reading the temperature again by in the framework function. This
+would also avoid scenario when the temperature which is later read via
+update_temperature() is different than the one which triggered the IRQ.
+This issue has been reported on some mainline boards.
 
-Host supervisor shadow stack is not enabled now and SSP is not accessible
-to kernel mode, thus it's safe to set host IA32_INT_SSP_TAB/SSP VMCS field
-to 0s. When shadow stack is enabled for CPL3, SSP is reloaded from PL3_SSP
-before it exits to userspace. Check SDM Vol 2A/B Chapter 3/4 for SYSCALL/
-SYSRET/SYSENTER SYSEXIT/RDSSP/CALL etc.
+It should also improve performance in such scenario, since there is no
+call to __thermal_zone_get_temp() in the code path (which might be heavy,
+when temperature sensor is connected via slow interface).
 
-Prevent KVM module loading if host supervisor shadow stack SHSTK_EN is set
-in MSR_IA32_S_CET as KVM cannot co-exit with it correctly.
-
-Suggested-by: Sean Christopherson <seanjc@google.com>
-Suggested-by: Chao Gao <chao.gao@intel.com>
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
 ---
- arch/x86/kvm/vmx/capabilities.h |  4 ++++
- arch/x86/kvm/vmx/vmx.c          | 15 +++++++++++++++
- arch/x86/kvm/x86.c              | 14 ++++++++++++++
- arch/x86/kvm/x86.h              |  1 +
- 4 files changed, 34 insertions(+)
+Hi all,
 
-diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
-index 41a4533f9989..ee8938818c8a 100644
---- a/arch/x86/kvm/vmx/capabilities.h
-+++ b/arch/x86/kvm/vmx/capabilities.h
-@@ -106,6 +106,10 @@ static inline bool cpu_has_load_perf_global_ctrl(void)
- 	return vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL;
+This is a RFC with proposal to skip reading temperature using get_temp()
+callback when calling thermal_zone_device_update() from thermal driver IRQ
+hanlder. There was a discussion [1] that reading temperature after the IRQ
+might give different value than that IRQ trip threshold was programmed. 
+
+Therefore, this proposal aims to solve the situation and feed temperature
+to the thermal fwk as an argument.
+
+Regards,
+Lukasz
+
+[1] https://lore.kernel.org/lkml/20231113130435.500353-1-m.majewski2@samsung.com/
+
+
+ drivers/thermal/thermal_core.c  | 29 ++++++++++++++++++++++++-----
+ drivers/thermal/thermal_core.h  |  3 ++-
+ drivers/thermal/thermal_sysfs.c |  6 ++++--
+ drivers/thermal/thermal_trip.c  |  2 +-
+ 4 files changed, 31 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index 62979c5401c3..9f25c62bd3cd 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -417,10 +417,16 @@ static void handle_thermal_trip(struct thermal_zone_device *tz,
+ 		handle_non_critical_trips(tz, trip);
  }
  
-+static inline bool cpu_has_load_cet_ctrl(void)
-+{
-+	return (vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_CET_STATE);
-+}
- static inline bool cpu_has_vmx_mpx(void)
+-static void update_temperature(struct thermal_zone_device *tz)
++static void update_temperature(struct thermal_zone_device *tz, bool read_temp,
++			       int known_temp)
  {
- 	return vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_BNDCFGS;
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 08058b182893..e9c0b571b3bb 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4371,6 +4371,21 @@ void vmx_set_constant_host_state(struct vcpu_vmx *vmx)
+ 	int temp, ret;
  
- 	if (cpu_has_load_ia32_efer())
- 		vmcs_write64(HOST_IA32_EFER, host_efer);
-+
-+	/*
-+	 * Supervisor shadow stack is not enabled on host side, i.e.,
-+	 * host IA32_S_CET.SHSTK_EN bit is guaranteed to 0 now, per SDM
-+	 * description(RDSSP instruction), SSP is not readable in CPL0,
-+	 * so resetting the two registers to 0s at VM-Exit does no harm
-+	 * to kernel execution. When execution flow exits to userspace,
-+	 * SSP is reloaded from IA32_PL3_SSP. Check SDM Vol.2A/B Chapter
-+	 * 3 and 4 for details.
-+	 */
-+	if (cpu_has_load_cet_ctrl()) {
-+		vmcs_writel(HOST_S_CET, host_s_cet);
-+		vmcs_writel(HOST_SSP, 0);
-+		vmcs_writel(HOST_INTR_SSP_TABLE, 0);
++	if (!read_temp) {
++		temp = known_temp;
++		goto set_temperature;
 +	}
- }
- 
- void set_cr4_guest_host_mask(struct vcpu_vmx *vmx)
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index cf0f9e4474a4..9596763fae8d 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -114,6 +114,8 @@ static u64 __read_mostly efer_reserved_bits = ~((u64)EFER_SCE);
- #endif
- 
- static u64 __read_mostly cr4_reserved_bits = CR4_RESERVED_BITS;
-+u64 __read_mostly host_s_cet;
-+EXPORT_SYMBOL_GPL(host_s_cet);
- 
- #define KVM_EXIT_HYPERCALL_VALID_MASK (1 << KVM_HC_MAP_GPA_RANGE)
- 
-@@ -9840,6 +9842,18 @@ static int __kvm_x86_vendor_init(struct kvm_x86_init_ops *ops)
- 		return -EIO;
++
+ 	ret = __thermal_zone_get_temp(tz, &temp);
+ 	if (ret) {
+ 		if (ret != -EAGAIN)
+@@ -430,6 +436,7 @@ static void update_temperature(struct thermal_zone_device *tz)
+ 		return;
  	}
  
-+	if (boot_cpu_has(X86_FEATURE_SHSTK)) {
-+		rdmsrl(MSR_IA32_S_CET, host_s_cet);
-+		/*
-+		 * Linux doesn't yet support supervisor shadow stacks (SSS), so
-+		 * KVM doesn't save/restore the associated MSRs, i.e. KVM may
-+		 * clobber the host values.  Yell and refuse to load if SSS is
-+		 * unexpectedly enabled, e.g. to avoid crashing the host.
-+		 */
-+		if (WARN_ON_ONCE(host_s_cet & CET_SHSTK_EN))
-+			return -EIO;
-+	}
++set_temperature:
+ 	tz->last_temperature = tz->temperature;
+ 	tz->temperature = temp;
+ 
+@@ -449,7 +456,8 @@ static void thermal_zone_device_init(struct thermal_zone_device *tz)
+ }
+ 
+ void __thermal_zone_device_update(struct thermal_zone_device *tz,
+-				  enum thermal_notify_event event)
++				  enum thermal_notify_event event,
++				  bool read_temp, int temp)
+ {
+ 	struct thermal_trip *trip;
+ 
+@@ -459,7 +467,7 @@ void __thermal_zone_device_update(struct thermal_zone_device *tz,
+ 	if (!thermal_zone_device_is_enabled(tz))
+ 		return;
+ 
+-	update_temperature(tz);
++	update_temperature(tz, read_temp, temp);
+ 
+ 	__thermal_zone_set_trips(tz);
+ 
+@@ -491,7 +499,7 @@ static int thermal_zone_device_set_mode(struct thermal_zone_device *tz,
+ 	if (!ret)
+ 		tz->mode = mode;
+ 
+-	__thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
++	__thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED, true, 0);
+ 
+ 	mutex_unlock(&tz->lock);
+ 
+@@ -532,11 +540,22 @@ void thermal_zone_device_update(struct thermal_zone_device *tz,
+ {
+ 	mutex_lock(&tz->lock);
+ 	if (thermal_zone_is_present(tz))
+-		__thermal_zone_device_update(tz, event);
++		__thermal_zone_device_update(tz, event, true, 0);
+ 	mutex_unlock(&tz->lock);
+ }
+ EXPORT_SYMBOL_GPL(thermal_zone_device_update);
+ 
++void thermal_zone_device_update_with_temp(struct thermal_zone_device *tz,
++					  enum thermal_notify_event event,
++					  int temp)
++{
++	mutex_lock(&tz->lock);
++	if (thermal_zone_is_present(tz))
++		__thermal_zone_device_update(tz, event, false, temp);
++	mutex_unlock(&tz->lock);
++}
++EXPORT_SYMBOL_GPL(thermal_zone_device_update_with_temp);
 +
- 	x86_emulator_cache = kvm_alloc_emulator_cache();
- 	if (!x86_emulator_cache) {
- 		pr_err("failed to allocate cache for x86 emulator\n");
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index 9c19dfb5011d..656107e64c93 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -325,6 +325,7 @@ fastpath_t handle_fastpath_set_msr_irqoff(struct kvm_vcpu *vcpu);
- extern u64 host_xcr0;
- extern u64 host_xss;
- extern u64 host_arch_capabilities;
-+extern u64 host_s_cet;
+ static void thermal_zone_device_check(struct work_struct *work)
+ {
+ 	struct thermal_zone_device *tz = container_of(work, struct
+diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
+index e6a2b6f97be8..2d73847fcfea 100644
+--- a/drivers/thermal/thermal_core.h
++++ b/drivers/thermal/thermal_core.h
+@@ -113,7 +113,8 @@ void thermal_unregister_governor(struct thermal_governor *);
+ int thermal_zone_device_set_policy(struct thermal_zone_device *, char *);
+ int thermal_build_list_of_policies(char *buf);
+ void __thermal_zone_device_update(struct thermal_zone_device *tz,
+-				  enum thermal_notify_event event);
++				  enum thermal_notify_event event,
++				  bool read_temp, int temp);
+ void thermal_zone_device_critical_reboot(struct thermal_zone_device *tz);
+ void thermal_governor_update_tz(struct thermal_zone_device *tz,
+ 				enum thermal_notify_event reason);
+diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
+index 5abf6d136c24..9062545f314e 100644
+--- a/drivers/thermal/thermal_sysfs.c
++++ b/drivers/thermal/thermal_sysfs.c
+@@ -131,7 +131,8 @@ trip_point_temp_store(struct device *dev, struct device_attribute *attr,
  
- extern struct kvm_caps kvm_caps;
+ 		thermal_zone_set_trip_temp(tz, trip, temp);
  
+-		__thermal_zone_device_update(tz, THERMAL_TRIP_CHANGED);
++		__thermal_zone_device_update(tz, THERMAL_TRIP_CHANGED,
++					     true, 0);
+ 	}
+ 
+ unlock:
+@@ -256,7 +257,8 @@ emul_temp_store(struct device *dev, struct device_attribute *attr,
+ 		ret = tz->ops->set_emul_temp(tz, temperature);
+ 
+ 	if (!ret)
+-		__thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
++		__thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED,
++					     true, 0);
+ 
+ 	mutex_unlock(&tz->lock);
+ 
+diff --git a/drivers/thermal/thermal_trip.c b/drivers/thermal/thermal_trip.c
+index a1ad345c0741..77dc433e6e1c 100644
+--- a/drivers/thermal/thermal_trip.c
++++ b/drivers/thermal/thermal_trip.c
+@@ -158,7 +158,7 @@ void thermal_zone_trip_updated(struct thermal_zone_device *tz,
+ 	thermal_notify_tz_trip_change(tz->id, thermal_zone_trip_id(tz, trip),
+ 				      trip->type, trip->temperature,
+ 				      trip->hysteresis);
+-	__thermal_zone_device_update(tz, THERMAL_TRIP_CHANGED);
++	__thermal_zone_device_update(tz, THERMAL_TRIP_CHANGED, true, 0);
+ }
+ 
+ void thermal_zone_set_trip_temp(struct thermal_zone_device *tz,
 -- 
-2.39.3
+2.25.1
 
