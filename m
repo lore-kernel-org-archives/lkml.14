@@ -1,182 +1,171 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1ECE5990A
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 17:43:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rGN4L-0005G0-4R; Thu, 21 Dec 2023 18:42:49 +0100
-Received: from [2a0a:edc0:2:b01:1d::c0] (helo=ptx.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rGN4H-000ZrS-DK; Thu, 21 Dec 2023 18:42:46 +0100
-Received: from ore by ptx.whiteo.stw.pengutronix.de with local (Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rGN4I-008Aa1-DK; Thu, 21 Dec 2023 18:42:46 +0100
-Date: Thu, 21 Dec 2023 18:42:46 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Mark Brown <broonie@kernel.org>
-Cc: =?utf-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
-	Dent Project <dentproject@linuxfoundation.org>,
-	Liam Girdwood <lgirdwood@gmail.com>
-Subject: Re: [PATCH net-next v2 8/8] net: pse-pd: Add PD692x0 PSE controller
- driver
-Message-ID: <20231221174246.GI1697233@pengutronix.de>
-References: <20231201-feature_poe-v2-8-56d8cac607fa@bootlin.com>
- <20231204225956.GG981228@pengutronix.de>
- <20231205064527.GJ981228@pengutronix.de>
- <4b96b8c8-7def-46e5-9c85-d9e925fb9251@sirena.org.uk>
- <20231205140203.GK981228@pengutronix.de>
- <88ed0c94-d052-4564-be0c-79a0f502eda8@sirena.org.uk>
- <20231221163610.47038996@kmaincent-XPS-13-7390>
- <ffda1003-b752-402e-8e51-e2e24a840cff@sirena.org.uk>
- <20231221171000.45310167@kmaincent-XPS-13-7390>
- <501f671d-4e03-490b-a9d6-e1f39bb99115@sirena.org.uk>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57E362814
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 17:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="phsb8dC5"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a233a60f8feso121569666b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 09:45:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703180744; x=1703785544; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=87JjHG7Ygx63DeV9lA55wmy+CzjMNzulU/PMn3Hnu/0=;
+        b=phsb8dC5IJumh64U4lAYfvarDucbjHjm0pW4Y5o37Q1dKKUXXHnhbgihybeOJwvcpX
+         xaIUfbE1YuoCqkTWsd3D+QobqSwxajjiZ59wmflKca5Vec5xhRFC+MAbTz2lRDVcM1Po
+         rFw8CDJdCCpr3Apy4xzZc5SpKNpJ4NFal0bDiH+TWp8HJ4DtfPCe8wDjDfW9d1XzCbkP
+         QX91AkxX5rC7ebKJJJRzBjONxpIGLfjRJsapqzMOV2oTNgTPmDypmN9m+vjZg2xS/HLQ
+         acqfZFtE7ZpHKClV6TJ5HDAdShYAd2T4m9TLvn6mqMi9vKkVmVyP0tH3VtSaQXWY7erG
+         wl5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703180744; x=1703785544;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=87JjHG7Ygx63DeV9lA55wmy+CzjMNzulU/PMn3Hnu/0=;
+        b=Ja7J+dCj1LByx3Cpc/peSmrXlX/di3sJheixW6cKp+voaEVjbGQW6HpYbW55VbLLkh
+         57idy0yFvjjRVz1nOYGASi7XVdGVfosL9+l2a8P0TRk+bubDp/u4bni4Ns0NnikSGh9l
+         vHQOjnWCnx52t2wywehJ7VzG5WvCqfKjl97UB0B4jJN2tah2qYdYbMxmWDuuVPd4Bqwp
+         j4pYEhy84rVqNi8RmQ/r1HLg6neSKTlfdffhjZZXTquuTXaTmPDPgC4M4jXeeoaBgSii
+         irjhUd63FcpR9SaWKbzTv6qwlq7K5tKsIUj4VFmhYyeqwtAtZ+xbUakiPQdRE8iBaAoV
+         nehw==
+X-Gm-Message-State: AOJu0Yw77WaUgVEK7BdRSvLDXFO+uFKD+vk8IL6Tp1z94AMU0JaeRAOG
+	QQXH9TI/2tKMWf8oxJ6okutLPUSUvL58WA==
+X-Google-Smtp-Source: AGHT+IHCI2BY9vNfuJN+tfrY/pGggHxcM+dtdm6Rhj6r3jOUarAQw6WZtGdc1WQ8pcjMivy3nlyh7Q==
+X-Received: by 2002:a17:906:81c6:b0:a23:499b:c72e with SMTP id e6-20020a17090681c600b00a23499bc72emr91526ejx.41.1703180744024;
+        Thu, 21 Dec 2023 09:45:44 -0800 (PST)
+Received: from [192.168.0.22] ([78.10.206.178])
+        by smtp.gmail.com with ESMTPSA id jt4-20020a170906dfc400b00a2369d8ca07sm1179891ejc.203.2023.12.21.09.45.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Dec 2023 09:45:43 -0800 (PST)
+Message-ID: <5b63afc1-3449-4231-b0f6-2b540237d725@linaro.org>
+Date: Thu, 21 Dec 2023 18:45:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <501f671d-4e03-490b-a9d6-e1f39bb99115@sirena.org.uk>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 1/2] dt-bindings: adc: add AD7173
+Content-Language: en-US
+To: Dumitru Ceclan <mitrutzceclan@gmail.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
+ linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Michael Walle <michael@walle.cc>,
+ Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+ ChiaEn Wu <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>,
+ =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
+ Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>,
+ Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+ Ceclan Dumitru <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231220104810.3179-1-mitrutzceclan@gmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20231220104810.3179-1-mitrutzceclan@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Dec 21, 2023 at 04:20:10PM +0000, Mark Brown wrote:
-> On Thu, Dec 21, 2023 at 05:10:00PM +0100, Köry Maincent wrote:
-> > Mark Brown <broonie@kernel.org> wrote:
-> > > On Thu, Dec 21, 2023 at 04:36:10PM +0100, Köry Maincent wrote:
-> > > > Mark Brown <broonie@kernel.org> wrote:  
+On 20/12/2023 11:48, Dumitru Ceclan wrote:
+> The AD7173 family offer a complete integrated Sigma-Delta ADC solution
+> which can be used in high precision, low noise single channel applications
+> or higher speed multiplexed applications. The Sigma-Delta ADC is intended
+> primarily for measurement of signals close to DC but also delivers
+> outstanding performance with input bandwidths out to ~10kHz.
 > 
-> > > > > OK...  I mean, if they're not using the regulator framework I'm not sure
-> > > > > it has much impact - there are plenty of internal regulators in devices
-> > > > > already so it wouldn't be *too* unusual other than the fact that AFAICT
-> > > > > this is somewhat split between devices within the subsystem?  Neither of
-> > > > > the messages was super clear.  
-> 
-> > > > PSE Power Interface (which is kind of the RJ45 in PSE world) have similar
-> > > > functionalities as regulators. We wondered if registering a regulator for
-> > > > each PSE PI (RJ45 ports) is a good idea. The point is that the PSE
-> > > > controller driver will be its own regulator consumer.
-> > > > I can't find any example in Linux with such a case of a driver being a
-> > > > provider and a consumer of its own regulator. This idea of a regulator
-> > > > biting its own tail seems weird to me. Maybe it is better to implement the
-> > > > PSE functionalities even if they are like the regulator functionalities.  
-> 
-> > > Is it at all plausible that a system (perhaps an embedded one) might use
-> > > something other than PSE?
-> 
-> > Do you mean to supply power to a RJ45 port?
-> 
-> Whatever it is that PSE does.
-> 
-> > This can be done with a simple regulator. In that case we use the pse_regulator
-> > driver which is a regulator consumer.
-> > I don't know about other cases. Oleksij do you?
-> 
-> In that case it sounds like you need the split to allow people to
-> substitute in a non-PSE supply, and everything ought to be doing the
-> consumer thing?
+> Signed-off-by: Dumitru Ceclan <mitrutzceclan@gmail.com>
+> ---
+> V10->V11
+>  - Fix example warning: '#gpio-cells' is a dependency of 'gpio-controller'
+>  - Add description to #gpio-cells property
+> V9->V10
 
-I decided and suggested to use regulator framework for following
-reasons:
-- The PSE is never a standalone controller. It is part of the system
-  which includes Power Supply, which is providing power to the SoC and
-  PSE.
-- One system may contain multiple PSEs, we need to use some framework
-  outside of PSE to regulate consumer priorities based on available
-  power budget.
-- a complex design may contain multiple hot swappable power supplies, we need
-  to manage them and regulate power budget between multiple PSEs.
-- in many cases PSE is kind of PMIC with multiple channels and some
-  extras: prioritization, classification of attached devices. I suggest
-  to represent every channel as a regulator, since it allow us to reuse
-  existing diagnostic interfaces.
+None of your previous version were tested before sending, so I have
+really doubts that this version was.
 
-Since everything power related on a embedded system we already handle
-with regulator framework, so why not use it within PSE too?
+>  - Fix dt_binding_check type warning from adi,reference-select
+> V8->v9
 
-Here is an example of more or less complex system:
+...
 
-  +----------------------------------------------------------------+
-  |                        Ethernet Switch                         |
-  |                                                                |
-  |  +-----------------+  +-----------------+  +-----------------+ |
-  |  | Power Supply 1  |  | Power Supply 2  |  | removed Supply 3| |
-  |  +--------+--------+  +--------+--------+  +--------+--------+ |
-  |           |                    |-------------------.           |
-  |  +--------v--------+  +--------v--------+  +--------v--------+ |
-  |  | PSE Controller  |  | PSE Controller  |  | PSE Controller  | |
-  |  |       #1        |  |       #2        |  |       #3        | |
-  |  +----+++++--------+  +--------+--------+  +--------+--------+ |
-  |       |||||                    |                    |          |
-  +-------|||||--------------------|--------------------|----------+
-          |||||                    |                    |            
-          |||||                    |                    |            
-  +-------....v--------------------v--------------------v---------+
-  |                         Powered Devices                       |
-  |                                                               |
-  |  +--------+  +--------+  +--------+         +--------+  +-----+
-  |  | Sensor |  | Sensor |  | Sensor |  ...    | Motor  |  | ... |
-  |  +--------+  +--------+  +--------+         +--------+  +-----+
-  |                                                               |
-  +---------------------------------------------------------------+
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2023 Analog Devices Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7173.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD7173 ADC
+> +
+> +maintainers:
+> +  - Ceclan Dumitru <dumitru.ceclan@analog.com>
+> +
+> +description: |
+> +  Bindings for the Analog Devices AD717X ADC's. Datasheets for supported chips:
 
-How a PD reserves/communicates power budget on PSE PI (Power Interfaces)?
+If there is going to be resend:
+Drop "Bindings for" and instead describe shortly the hardware. Also wrap
+above according to Linux coding style, so at 80.
 
-There are 3 ways to reserve power budget for PD:
-- Level 1 classification. Done by PSE in cooperation with PD by firmware or
-  can be done by Linux. Linux variant is currently not implemented.
-- Done over Link Layer Discovery Protocol (LLDP). In this case some user
-  space application (lldp daemon) will tell kernel to reserve power on some
-  specific port (PSE PI).
-- Set by user if all other ways fail or not implemented
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7172-2.pdf
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7173-8.pdf
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7175-2.pdf
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7176-2.pdf
+> +
 
-PD side may have similar kind of challenges. For example, if PSE
-notifies PD about reducing power budge for PD, PD may decide to reduce
-consumption by keeping system alive - turn of the motor, but keep
-sensors enabled. 
+Rest looks good, so please tell did you test it?
 
-The main question is - how to represent a remote consumer (Powered
-Device)? It looks for me like having a dummy regulator consumer for each
-(PSE PI) withing the PSE framework is the simplest thing to do. User
-should enable this dummy consumer from user space by using already
-existing interface in case of PoDL - ETHTOOL_A_PODL_PSE_ADMIN_CONTROL
-or new interface for Clause 33 PSE.
 
-Regards,
-Oleksij
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Best regards,
+Krzysztof
+
