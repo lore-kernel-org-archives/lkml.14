@@ -1,70 +1,92 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03231A70A;
-	Thu, 21 Dec 2023 08:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3032F208B6;
+	Thu, 21 Dec 2023 08:54:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="qbZ6UVWw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=5ktajS7Qe5O4rJa9eQMA3Tl+cNTM4FoF6JkRfLqBM1I=; b=qb
-	Z6UVWw9hxJ31lmP77B/rElpZQmz5GE3quEUnaFTDnkPVmyVcC7/uFKaB8rXHaD5DFd281XTLFJEDf
-	Lq0MKHn8nCWHcnBHwAYvSRu5nAZ78ESvwQuWN8/rWgTkipAJkDYtVNHUcekp/YUuOd/AiG8H4zJcB
-	fL/IVZILATvEg2E=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rGEoW-003URf-5n; Thu, 21 Dec 2023 09:53:56 +0100
-Date: Thu, 21 Dec 2023 09:53:56 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-Cc: Daniel Golle <daniel@makrotopia.org>,
-	Landen Chao <Landen.Chao@mediatek.com>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SWaeveQ9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703148870; x=1734684870;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=nPqbnaHiW6+MXK3XW+N9OxQlTqrsdHfKbFZUo5uWY3g=;
+  b=SWaeveQ9kJ1DJF8NJJ3PyVjUwBaVVq3eaJCwpFiA1QfV02ECPR9GSkDO
+   9qy1egz+bnXEB+4p+4hWKuGFePb5NjazbTc1UXqKjpz1ccYF1eB8tvD2l
+   jvE4b7Te/t2tf/fNVpYXLIkpFwHXICrUDTj8aAnNNDdU1X1rIab89eYh/
+   aNCKjAUjGNR5Kr1PC602bcRBWCaAGOuAKtjqqgRsbPPL3/nL8cwXmIknI
+   YYpPuiMQS18XuaJBEqPxIEZwrejEfDyw1umZLVE4siYuTv6gcnRh0G5AT
+   3QDZyU89M6mdM8ZJiyCOyFWyG+tTVHoZ1BikXZnTuISaSNe6xiK+mDLgZ
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="2793664"
+X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
+   d="scan'208";a="2793664"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 00:54:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="842568301"
+X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
+   d="scan'208";a="842568301"
+Received: from ssid-ilbpg3-teeminta.png.intel.com (HELO localhost.localdomain) ([10.88.227.74])
+  by fmsmga008.fm.intel.com with ESMTP; 21 Dec 2023 00:54:23 -0800
+From: "Gan, Yi Fang" <yi.fang.gan@intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andrew Halaney <ahalaney@redhat.com>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	John Stultz <jstultz@google.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Gan Yi Fang <yi.fang.gan@intel.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Russell King <linux@armlinux.org.uk>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	David Bauer <mail@david-bauer.net>, mithat.guner@xeront.com,
-	erkin.bozoglu@xeront.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net-next] net: dsa: mt7530: register OF node for internal
- MDIO bus
-Message-ID: <34b314a6-1bfd-4133-99bd-d03c95729046@lunn.ch>
-References: <20231220173539.59071-1-arinc.unal@arinc9.com>
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+	netdev@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Looi Hong Aun <hong.aun.looi@intel.com>,
+	Voon Weifeng <weifeng.voon@intel.com>,
+	Song Yoong Siang <yoong.siang.song@intel.com>,
+	Lai Peter Jun Ann <peter.jun.ann.lai@intel.com>,
+	Choong Yong Liang <yong.liang.choong@intel.com>
+Subject: [PATCH net v2 0/2] Fix phylink unloadable issue
+Date: Thu, 21 Dec 2023 16:51:07 +0800
+Message-Id: <20231221085109.2830794-1-yi.fang.gan@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231220173539.59071-1-arinc.unal@arinc9.com>
 
-On Wed, Dec 20, 2023 at 07:35:39PM +0200, Arınç ÜNAL wrote:
-> From: David Bauer <mail@david-bauer.net>
-> 
-> The MT753x switches provide a switch-internal MDIO bus for the embedded
-> PHYs.
-> 
-> Register a OF sub-node on the switch OF-node for this internal MDIO bus.
-> This allows to configure the embedded PHYs using device-tree.
-> 
-> Signed-off-by: David Bauer <mail@david-bauer.net>
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+Add module_exit_stub() for phylink module.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Changes since v1:
+- Introduce a helper macro for module_exit() boilerplate
 
-    Andrew
+This series is the combination of following:
+v1 with empty phylink_exit():
+https://lore.kernel.org/all/20231127101603.807593-1-yi.fang.gan@intel.com/
+v1 of module_exit_stub():
+https://lore.kernel.org/all/20231212094352.2263283-1-yi.fang.gan@intel.com/
+
+Gan, Yi Fang (2):
+  driver.h: add helper macro for module_exit() boilerplate
+  net: phylink: Add module_exit_stub()
+
+ drivers/net/phy/phylink.c     |  1 +
+ include/linux/device/driver.h | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+)
+
+-- 
+2.34.1
+
