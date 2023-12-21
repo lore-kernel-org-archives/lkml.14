@@ -1,155 +1,107 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB8E56518A;
-	Thu, 21 Dec 2023 18:55:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486FD64AA0
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 18:57:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OCeeHp6E"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40d352c826eso13890875e9.0;
-        Thu, 21 Dec 2023 10:55:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="qvgKvBWV"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40c256ffdbcso12446345e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 10:57:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703184939; x=1703789739; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:references:to:from:subject
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MzRL/kaIkL+FCfYHWzRmGBN8H4sfOu7t1rXgZsR+1BI=;
-        b=OCeeHp6E/s9POgGBtHV81Ovrl6uILmF1bEqlnjjGr+6F6CVslAavmcNQ71qV5EOrgp
-         FKeJy46mwowvvW7S8ssRyGso4V/BCTuzFb8swp9C+aZpLWw3IecDO/901jm7PcE7Y6EP
-         jYvQ5xXR8xHaD0j3WRIszttescjdbaHNG3tKzCHRZCkqhu1aEkXVTMX5msA4zaQW2Fsx
-         LstUcQaSWxd+0SBpJp0+Ide+kimeZ9/OA1pnW69KwyZtVbFRA6CGh8xs5CsmxKWrBPqL
-         /TF4RAvTxPTWf9XOAyMukyymnhQYjcXZbvHCne/kLs0NbxQVV6gQUQed4kSUg3taP8el
-         Ux2g==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1703185034; x=1703789834; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1ez827Nwv0PCJp7yHRGpscI+PcE4XwM2uw7IbXMXl5M=;
+        b=qvgKvBWVreZP4ptG+yOSgyuE1TFvcA+YCN4BTK5biADBd6x6p56gUp92DKl3UlzfmW
+         J618miRJe6oxxdS9iUGgDJ6PnSjJ2wI5nDsqtD7Yuk4VyAAY5pG4pmPBhNbKdwGCx7Vg
+         j4smXPG8+YZffONKuiAlNUFBYfMAiRk+rtlD8R4kckrOv7t/g76kTmEJLw0uF14cqDFq
+         OA37br+y/NaeAqUwf69oTmB584yB0mY8hzLaYCOteQoAFKzV5/G7V+ESJQHvyBYK2W4p
+         TZ/Ht9hkZ5haEOn+AB2JabYtO/UJiqJwSohaeUKtlPPSr7+qcDD8DWqofjoNwP8LDRVL
+         E7UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703184939; x=1703789739;
-        h=content-transfer-encoding:in-reply-to:references:to:from:subject
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=MzRL/kaIkL+FCfYHWzRmGBN8H4sfOu7t1rXgZsR+1BI=;
-        b=BsCh6K+WriuFnOhq1vpG3akSvhfzFggakma8+pT3s6H3j3r1EAmlCzp7FlXcfx79l3
-         2vDjRsLaxm/UhFC/qogxmC/bFi57TetlhP0J3MQrbf3nEUsuKwA5gPhUzlFpK8QyyeRB
-         JOlGMuW0NdMhD49gGInv260ERRe0g6mU6GgQNB2GAO6DNkUsJJVBJ/EThgaDSIL2pDy2
-         cHKKmZBjagApKt8f5mNtAOG3J6DWasWB+aa3DANRY61fjQbz9H2I8chJBwr9GyGLU1w0
-         Vyvw3gYD/52oRtSjU1cnrDVaq4ahIUxr0BtwZrU7SSghbeY8ZCEb8VOLSanfiYR1ed0d
-         9PHg==
-X-Gm-Message-State: AOJu0YxiLbfJ26l3XG3/A5NWqIxEdczLJ792/oKyjoZPQMV4FNCWrrwa
-	KCwGFbYvooCwvLl4mROyhYI=
-X-Google-Smtp-Source: AGHT+IGFUlVEOxzVfAgpmsAytp27NgQaIZj3k+0l8jqfEuwmqyRYB6ovrt47LAB8sA/sjM71fvPKBg==
-X-Received: by 2002:a05:600c:3511:b0:40b:5e21:dd34 with SMTP id h17-20020a05600c351100b0040b5e21dd34mr103969wmq.98.1703184939049;
-        Thu, 21 Dec 2023 10:55:39 -0800 (PST)
-Received: from debian ([146.70.204.204])
-        by smtp.gmail.com with ESMTPSA id iv11-20020a05600c548b00b0040b4b2a15ebsm4317478wmb.28.2023.12.21.10.55.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Dec 2023 10:55:38 -0800 (PST)
-Message-ID: <e8b01e54-b623-44ec-84d5-406ea3b0c80b@gmail.com>
-Date: Thu, 21 Dec 2023 19:55:09 +0100
+        d=1e100.net; s=20230601; t=1703185034; x=1703789834;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1ez827Nwv0PCJp7yHRGpscI+PcE4XwM2uw7IbXMXl5M=;
+        b=xQTBaBgsame2SNhAiwoGYzErIcEjItJ/CY/h0/9w5i9vz+3hMzliCVhzTjMiHOlMPX
+         ldNtBGkBNPVlI+96XC+/Lm+FDMOmJJUCwGslb2dKQZqlKthwKjtAFm3jmsxDxK8e4Fab
+         NjRI+ny7PQrBiXcc75QxVM/Xs3L8O2hZhudm9Ug7K0kNzN5vWHeFdvufj+v6sJMBggZD
+         xMuBbIDTMuXQkQstwIudxYJF41XsEPaIg2nWpt2QJZUits2w3RTCrl61/GVNqQO4bt3w
+         PDy2R6ObpsNvrKuN/rePevUqQ8fnsy8mEnsxl+NGpqpP//O//g3fAiVu5+gaSjwe1r2v
+         fKVA==
+X-Gm-Message-State: AOJu0YwiZxKAT6jxkR/qb0U2ovgd7nBgulR3nltV5AKtAaMX/uMbNk7S
+	Mr2pkHbRPCSGDj23o8Sl1vWDUGkGqUswGw==
+X-Google-Smtp-Source: AGHT+IETlTI6wAfVOp5F4c8392SkTN9zkl2x5ytVqBeSIDMi4vkgq2+YYf6CeXrpzwk1bjBp9KY+oA==
+X-Received: by 2002:a05:600c:a42:b0:40c:3905:51e4 with SMTP id c2-20020a05600c0a4200b0040c390551e4mr101519wmq.68.1703185034624;
+        Thu, 21 Dec 2023 10:57:14 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:7701:a2c3:cba4:74db])
+        by smtp.gmail.com with ESMTPSA id u4-20020a05600c138400b0040c03c3289bsm4277125wmf.37.2023.12.21.10.57.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Dec 2023 10:57:14 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Tony Lindgren <tony@atomide.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: linux-omap@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] gpio: tps65219: don't use CONFIG_DEBUG_GPIO
+Date: Thu, 21 Dec 2023 19:57:02 +0100
+Message-Id: <20231221185702.24685-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: [PATCH net-next 1/3] net: gso: add HBH extension header offload
- support
-From: Richard Gobert <richardbgobert@gmail.com>
-To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, shuah@kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <f4eff69d-3917-4c42-8c6b-d09597ac4437@gmail.com>
-In-Reply-To: <f4eff69d-3917-4c42-8c6b-d09597ac4437@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-This commit adds net_offload to IPv6 Hop-by-Hop extension headers (as it
-is done for routing and dstopts) since it is supported in GSO and GRO.
-This allows to remove specific HBH conditionals in GSO and GRO when
-pulling and parsing an incoming packet.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Signed-off-by: Richard Gobert <richardbgobert@gmail.com>
+CONFIG_DEBUG_GPIO should only be used to enable debug log messages and
+for core GPIOLIB debugging. Don't use it to control the execution of
+potentially buggy code. Just put it under an always-false #if.
+
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- net/ipv6/exthdrs_offload.c | 11 +++++++++++
- net/ipv6/ip6_offload.c     | 25 +++++++++++--------------
- 2 files changed, 22 insertions(+), 14 deletions(-)
+ drivers/gpio/gpio-tps65219.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/net/ipv6/exthdrs_offload.c b/net/ipv6/exthdrs_offload.c
-index 06750d65d480..4c00398f4dca 100644
---- a/net/ipv6/exthdrs_offload.c
-+++ b/net/ipv6/exthdrs_offload.c
-@@ -16,6 +16,10 @@ static const struct net_offload dstopt_offload = {
- 	.flags		=	INET6_PROTO_GSO_EXTHDR,
- };
+diff --git a/drivers/gpio/gpio-tps65219.c b/drivers/gpio/gpio-tps65219.c
+index 7b38aa360112..cd1f17041f8c 100644
+--- a/drivers/gpio/gpio-tps65219.c
++++ b/drivers/gpio/gpio-tps65219.c
+@@ -96,16 +96,16 @@ static int tps65219_gpio_change_direction(struct gpio_chip *gc, unsigned int off
+ 	 * Below can be used for test purpose only.
+ 	 */
  
-+static const struct net_offload hbh_offload = {
-+	.flags		=	INET6_PROTO_GSO_EXTHDR,
-+};
-+
- int __init ipv6_exthdrs_offload_init(void)
- {
- 	int ret;
-@@ -28,9 +32,16 @@ int __init ipv6_exthdrs_offload_init(void)
- 	if (ret)
- 		goto out_rt;
- 
-+	ret = inet6_add_offload(&hbh_offload, IPPROTO_HOPOPTS);
-+	if (ret)
-+		goto out_dstopts;
-+
- out:
- 	return ret;
- 
-+out_dstopts:
-+	inet6_del_offload(&dstopt_offload, IPPROTO_DSTOPTS);
-+
- out_rt:
- 	inet6_del_offload(&rthdr_offload, IPPROTO_ROUTING);
- 	goto out;
-diff --git a/net/ipv6/ip6_offload.c b/net/ipv6/ip6_offload.c
-index d6314287338d..0e0b5fed0995 100644
---- a/net/ipv6/ip6_offload.c
-+++ b/net/ipv6/ip6_offload.c
-@@ -45,15 +45,13 @@ static int ipv6_gso_pull_exthdrs(struct sk_buff *skb, int proto)
- 		struct ipv6_opt_hdr *opth;
- 		int len;
- 
--		if (proto != NEXTHDR_HOP) {
--			ops = rcu_dereference(inet6_offloads[proto]);
-+		ops = rcu_dereference(inet6_offloads[proto]);
- 
--			if (unlikely(!ops))
--				break;
-+		if (unlikely(!ops))
-+			break;
- 
--			if (!(ops->flags & INET6_PROTO_GSO_EXTHDR))
--				break;
+-	if (IS_ENABLED(CONFIG_DEBUG_GPIO)) {
+-		int ret = regmap_update_bits(gpio->tps->regmap, TPS65219_REG_MFP_1_CONFIG,
+-					     TPS65219_GPIO0_DIR_MASK, direction);
+-		if (ret) {
+-			dev_err(dev,
+-				"GPIO DEBUG enabled: Fail to change direction to %u for GPIO%d.\n",
+-				direction, offset);
+-			return ret;
 -		}
-+		if (!(ops->flags & INET6_PROTO_GSO_EXTHDR))
-+			break;
++#if 0
++	int ret = regmap_update_bits(gpio->tps->regmap, TPS65219_REG_MFP_1_CONFIG,
++				     TPS65219_GPIO0_DIR_MASK, direction);
++	if (ret) {
++		dev_err(dev,
++			"GPIO DEBUG enabled: Fail to change direction to %u for GPIO%d.\n",
++			direction, offset);
++		return ret;
+ 	}
++#endif
  
- 		if (unlikely(!pskb_may_pull(skb, 8)))
- 			break;
-@@ -171,13 +169,12 @@ static int ipv6_exthdrs_len(struct ipv6hdr *iph,
- 
- 	proto = iph->nexthdr;
- 	for (;;) {
--		if (proto != NEXTHDR_HOP) {
--			*opps = rcu_dereference(inet6_offloads[proto]);
--			if (unlikely(!(*opps)))
--				break;
--			if (!((*opps)->flags & INET6_PROTO_GSO_EXTHDR))
--				break;
--		}
-+		*opps = rcu_dereference(inet6_offloads[proto]);
-+		if (unlikely(!(*opps)))
-+			break;
-+		if (!((*opps)->flags & INET6_PROTO_GSO_EXTHDR))
-+			break;
-+
- 		opth = (void *)opth + optlen;
- 		optlen = ipv6_optlen(opth);
- 		len += optlen;
+ 	dev_err(dev,
+ 		"GPIO%d direction set by NVM, change to %u failed, not allowed by specification\n",
 -- 
-2.36.1
+2.40.1
 
