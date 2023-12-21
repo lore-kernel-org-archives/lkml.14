@@ -1,74 +1,66 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85FC94F8A6;
-	Thu, 21 Dec 2023 09:00:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Swkt36MMjz4f3kJq;
-	Thu, 21 Dec 2023 17:00:43 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 3C58B1A0A0A;
-	Thu, 21 Dec 2023 17:00:45 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgBXpQu6_oNlNxzvEA--.33831S4;
-	Thu, 21 Dec 2023 17:00:44 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: axboe@kernel.dk,
-	roger.pau@citrix.com,
-	colyli@suse.de,
-	kent.overstreet@gmail.com,
-	joern@lazybastard.org,
-	miquel.raynal@bootlin.com,
-	richard@nod.at,
-	vigneshr@ti.com,
-	sth@linux.ibm.com,
-	hoeppner@linux.ibm.com,
-	hca@linux.ibm.com,
-	gor@linux.ibm.com,
-	agordeev@linux.ibm.com,
-	jejb@linux.ibm.com,
-	martin.petersen@oracle.com,
-	clm@fb.com,
-	josef@toxicpanda.com,
-	dsterba@suse.com,
-	viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	nico@fluxnic.net,
-	xiang@kernel.org,
-	chao@kernel.org,
-	tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	jack@suse.com,
-	konishi.ryusuke@gmail.com,
-	willy@infradead.org,
-	akpm@linux-foundation.org,
-	hare@suse.de,
-	p.raghav@samsung.com
-Cc: linux-block@vger.kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E40650258
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 09:00:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sPl2Z2mI"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3367903b4dcso516919f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 01:00:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703149251; x=1703754051; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mmp2BpvyTxAcamyi3InOfkuuoCxM3N59/lufaFAw+Ac=;
+        b=sPl2Z2mIMjPnhXx5yxq5LXlB9pIzDmD6+Ib6PaVUFwFDPbcw+ygc0iZaCSbVMrIjQg
+         FT4Zxg6UianwPD89bRQTi+AGyz1yXY6tgBy61+9YlOCyDh0A8FkBzw4hjO8B1ISazUa1
+         rXcJZ2/hmcMJcV0XDVCzv0eVO2o0rnQvSgrt1jffuLAD3oc24MDy2XDtLIizWEjVnuTj
+         mGLRdaDFByd4OkdSFE7HFX1lVv4CkmCrtYqL1xMm5Si9KahumqvW4H6+ocR/Azw4Vdnv
+         DPqiPebTrtGLqVLa66vkvfSH9zbbFccCg5erMgF68VS1sbMOdMoRuduXdp4sv5Sy3Ect
+         jehg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703149251; x=1703754051;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mmp2BpvyTxAcamyi3InOfkuuoCxM3N59/lufaFAw+Ac=;
+        b=h4fk21ocFGrWV/4kP4k+1Pdanv1KGpndPwaFG4D1QFuZl54UKfU3y1EgoNwnGAO8Uh
+         K0ou/+yf56ZGtx9zV++/5A7P53Fxzc1MIzJSDlSOE7hAAYPvAV2fxX6ixEd8Ses91yfL
+         InrdDwh9IIeB9Nxk4SaYrGAi7n7T2R56xNSCUdq7pzf5l48wnybAkXesJLYhowbQYbtq
+         FR+W1lBKsYPhsp2ME9usipII0y5y+8AJf5D8pJV+pk0Ut2jFHgp3XXdFslEn3eL6Op9b
+         zAQ2o1lN+ETwCz7/yDTXK5AoyH6hOfse4z8PuePry0UIvj56gZrUVT6NGFIL+UqtlZJg
+         IOdw==
+X-Gm-Message-State: AOJu0YzgiWO++JVEOR3DfeZm3wXIOKXt7fue2EqjoVJGhvfGlN/ZjxIw
+	cPa3Yz8BWPFeI5rQX03GAx6/Rg==
+X-Google-Smtp-Source: AGHT+IG0f2gUZlFOYKxp5bxwe1u/dGjFlsWPWeQnkLcyvxzmwlVs1GWMPSB6g9ccz2VX8bwSQiNmhg==
+X-Received: by 2002:adf:f54b:0:b0:336:6a2d:f60 with SMTP id j11-20020adff54b000000b003366a2d0f60mr655749wrp.75.1703149250795;
+        Thu, 21 Dec 2023 01:00:50 -0800 (PST)
+Received: from ta2.c.googlers.com.com (216.131.76.34.bc.googleusercontent.com. [34.76.131.216])
+        by smtp.gmail.com with ESMTPSA id o10-20020adfeaca000000b0033677a4e0d6sm1523900wrn.13.2023.12.21.01.00.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Dec 2023 01:00:49 -0800 (PST)
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+To: peter.griffin@linaro.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org
+Cc: conor+dt@kernel.org,
+	mturquette@baylibre.com,
+	alim.akhtar@samsung.com,
+	semen.protsenko@linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	xen-devel@lists.xenproject.org,
-	linux-bcache@vger.kernel.org,
-	linux-mtd@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	linux-bcachefs@vger.kernel.org,
-	linux-btrfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-erofs@lists.ozlabs.org,
-	linux-ext4@vger.kernel.org,
-	linux-nilfs@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH RFC v3 for-6.8/block 13/17] jbd2: use bdev apis
-Date: Thu, 21 Dec 2023 16:58:46 +0800
-Message-Id: <20231221085846.1768977-1-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231221085712.1766333-1-yukuai1@huaweicloud.com>
-References: <20231221085712.1766333-1-yukuai1@huaweicloud.com>
+	kernel-team@android.com,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Rob Herring <robh@kernel.org>
+Subject: [PATCH 1/2] dt-bindings: clock: gs101: rename cmu_misc clock-names
+Date: Thu, 21 Dec 2023 09:00:45 +0000
+Message-ID: <20231221090046.1486195-1-tudor.ambarus@linaro.org>
+X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,81 +68,33 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBXpQu6_oNlNxzvEA--.33831S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7AryDWFWftF1xCw18GF4Uurg_yoW8ZFyrpr
-	yUGas8CrZFvrW8XF1kGF4kJrWjga40vayUCFnF93Z2yw4Svr1avw18Kr13GFyYvFWFga1U
-	Xr1jyay8Kw4YgFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
-	JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Wrv_Gr1U
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26F4UJVW0owCI42IY6xAIw20EY4v20xvaj40_JFI_Gr1lIxAIcVC2z280aVAFwI0_
-	Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVWxJr0_GcJvcSsGvfC2KfnxnUUI43ZEXa7VUb
-	Mq2tUUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-From: Yu Kuai <yukuai3@huawei.com>
+'bus' and 'ip' are sufficient because naming is local to the module.
+As the bindings have not made a release yet, rename the cmu_misc
+clock-names.
 
-Avoid to access bd_inode directly, prepare to remove bd_inode from
-block_device.
-
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Fixes: 0a910f160638 ("dt-bindings: clock: Add Google gs101 clock management unit bindings")
+Suggested-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 ---
- fs/jbd2/journal.c  | 3 +--
- fs/jbd2/recovery.c | 6 ++----
- 2 files changed, 3 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/clock/google,gs101-clock.yaml         | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index ed53188472f9..f1b5ffeaf02a 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -2003,8 +2003,7 @@ static int __jbd2_journal_erase(journal_t *journal, unsigned int flags)
- 		byte_count = (block_stop - block_start + 1) *
- 				journal->j_blocksize;
+diff --git a/Documentation/devicetree/bindings/clock/google,gs101-clock.yaml b/Documentation/devicetree/bindings/clock/google,gs101-clock.yaml
+index 3eebc03a309b..ca7fdada3ff2 100644
+--- a/Documentation/devicetree/bindings/clock/google,gs101-clock.yaml
++++ b/Documentation/devicetree/bindings/clock/google,gs101-clock.yaml
+@@ -85,8 +85,8 @@ allOf:
  
--		truncate_inode_pages_range(journal->j_dev->bd_inode->i_mapping,
--				byte_start, byte_stop);
-+		truncate_bdev_range(journal->j_dev, 0, byte_start, byte_stop);
+         clock-names:
+           items:
+-            - const: dout_cmu_misc_bus
+-            - const: dout_cmu_misc_sss
++            - const: bus
++            - const: sss
  
- 		if (flags & JBD2_JOURNAL_FLUSH_DISCARD) {
- 			err = blkdev_issue_discard(journal->j_dev,
-diff --git a/fs/jbd2/recovery.c b/fs/jbd2/recovery.c
-index 01f744cb97a4..6b6a2c4585fa 100644
---- a/fs/jbd2/recovery.c
-+++ b/fs/jbd2/recovery.c
-@@ -290,7 +290,6 @@ int jbd2_journal_recover(journal_t *journal)
+ additionalProperties: false
  
- 	struct recovery_info	info;
- 	errseq_t		wb_err;
--	struct address_space	*mapping;
- 
- 	memset(&info, 0, sizeof(info));
- 	sb = journal->j_superblock;
-@@ -309,8 +308,7 @@ int jbd2_journal_recover(journal_t *journal)
- 	}
- 
- 	wb_err = 0;
--	mapping = journal->j_fs_dev->bd_inode->i_mapping;
--	errseq_check_and_advance(&mapping->wb_err, &wb_err);
-+	bdev_wb_err_check_and_advance(journal->j_fs_dev, &wb_err);
- 	err = do_one_pass(journal, &info, PASS_SCAN);
- 	if (!err)
- 		err = do_one_pass(journal, &info, PASS_REVOKE);
-@@ -334,7 +332,7 @@ int jbd2_journal_recover(journal_t *journal)
- 	err2 = sync_blockdev(journal->j_fs_dev);
- 	if (!err)
- 		err = err2;
--	err2 = errseq_check_and_advance(&mapping->wb_err, &wb_err);
-+	err2 = bdev_wb_err_check_and_advance(journal->j_fs_dev, &wb_err);
- 	if (!err)
- 		err = err2;
- 	/* Make sure all replayed data is on permanent storage */
 -- 
-2.39.2
+2.43.0.472.g3155946c3a-goog
 
