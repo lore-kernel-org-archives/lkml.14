@@ -1,44 +1,44 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E02FE745C7
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 20:19:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B625B1DA3B
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 20:21:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uo4abMHv"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-28bf27be6c4so531751a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 12:19:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DCqbZt6S"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-28bc8540299so761548a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 12:21:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703189987; x=1703794787; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1703190097; x=1703794897; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Gssvy5smjz8a5SJrD6j08da6bZEPTZEaRbn1KUt4UuQ=;
-        b=Uo4abMHvR3kusy1Om58iJETpugQnHrdiRthE4D6+I7asAdiT5IczdxT+dGgvja+2qt
-         QPIWWEfNdvLNL8APH3+GV702z9EUrCfmZMjYEOP9SYbPky9Y4K5rORCYCwzCKhtBlp8l
-         PC+3BoFP0E3Gk06lNXtb/AsyMru76obWA0wIazunwRuafSwnjUKO5iPJy66hn/kiTPQ2
-         xcv+zzt1DB4z8cbAqnmtWLJU+97OgL79idJlEhmebK/UQyWusLTn6xjov6BaRHNyVfg6
-         s0VC0xfrOAc79zCHws6bkVJUMl7UGZtiMd+agTNZHrm3uNLwoOGmzcBkVlI70LvqaWYf
-         6zmw==
+        bh=8YbFjGH80BA4VduiXuChGc2yL1fnFJ1q2+v81EA2deQ=;
+        b=DCqbZt6S8JM6khFR79lyHdW8gvS7xC4CDqBi7zaABAVBNO3XkKfEyPSldgHWCQVwTu
+         Y/9BU9N5aHglsmbH4yl6svSY41tvWa+AeEoMe8RUNey9m+pWxyNxIkA3ZeSCAKtHGyEE
+         yT6EFOSMYj1MtNCpZeBjuD/qO7B99r2Zcq0aqh6HfBo5fNkujm8O8aX1VwCQWzfv7fRT
+         9wmZfPXrMwnSEUlG1Ze+t0LE9dIoBB5wqRScThas4vRa5IgcNSrYU8eW+lvSpCrUAn57
+         2lGzoUO2Cr6jdalThMkNnkRcOlZcg51KPr0fyN9l8tDUMO3UC0ZJEEMOkVuS7hnOR5yG
+         XW4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703189987; x=1703794787;
+        d=1e100.net; s=20230601; t=1703190097; x=1703794897;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Gssvy5smjz8a5SJrD6j08da6bZEPTZEaRbn1KUt4UuQ=;
-        b=khmpdKG/1rG2uNyQxKTERizVjCsqRD/9voTKyJR2MF6vOKyz6Ga5BynUImbzh31m9v
-         Jbm2gTIDnCnP7Dm4kV/3L9TGIdFAJ500rxHnSRaSiYnwSakooq8damYaZFnr01TAZrPr
-         ad7OdlU+6TwzMbRFMjvfT5ZNoJaR1bvLwnlb8F+8oyadYaBR4mdQ4MvibwOaGQkitbWY
-         cX6xqPF4n9kei4bsRAK+3YG9l4qX3GROr6pOU0uQKsdd+NcNmZ3wHuP16EsgYh4V4ljP
-         C9lg4HqJxjf9HhVF3LhuS6NoddeNT0f6uQiHxNi3NFZj9/BPyODvaPZvfKj7SDPz49r3
-         2+rw==
-X-Gm-Message-State: AOJu0YzQtA3wq+Iyw/SbEu2aerOALRXi9vVRYl8XTd+JY6Wu9moay1jn
-	823LfJ1lgboixCssNldBiGd2j4/QKFvCaRDvZlg=
-X-Google-Smtp-Source: AGHT+IHS5EXZjgpp2fJkrvuuqF8/IpGeWCj1CjncaEw1dze4kKh4Kr6ER64TVAJIZej89ke+4GkFOFbLK40jeIcuYpU=
-X-Received: by 2002:a17:90a:ad92:b0:28c:194:8de1 with SMTP id
- s18-20020a17090aad9200b0028c01948de1mr317153pjq.63.1703189987119; Thu, 21 Dec
- 2023 12:19:47 -0800 (PST)
+        bh=8YbFjGH80BA4VduiXuChGc2yL1fnFJ1q2+v81EA2deQ=;
+        b=Pm+2HGUcVU0VXwA14mWXfo906yKZyktcVDKXUZ8SzHmCljeI2guyf1F/UkO2gR/jRv
+         /dSFwC0wiWLZ3CaBqY2YB3Oh2jT7o59jeZBTmLkdzLJl/TI71cEofjqBI/FREw9PNEU7
+         cFtA0Ne0IDnWbwtN6LXBfHyh9wn/0U//7hbyJ3Nzyd5TtAKbk0OzpWiFrhVL9DGbP3lD
+         yeyoZUGX08uzpuLgQVi92wj6cTGErG4cCFBoP06xCllgkLvLK/iFYmx1I1xqvR/UXEcx
+         0AH0PwoOXqtMOvxW/59PGQRj4ijikK8mXjo2PbQDlsZ2dUtECUeY2OKYot12HPXcL+WJ
+         xnyg==
+X-Gm-Message-State: AOJu0Yyw4g+yxa49NcTkdQLWSWHFvkgW4/qztEelR6MIAAQwvDkp5PCL
+	bf9IQpWG+GC+AUEoLz4k9a77L546eXk/xITTBo8=
+X-Google-Smtp-Source: AGHT+IFcfHudS9n+XdyuSgT14JuAuy08kzr2Lki2isJtrEE6UATH2ipSDHVm/TT+0qLBLVx/gaR8cpAe0Tq/vYHwkFE=
+X-Received: by 2002:a05:6a20:2926:b0:195:687:7921 with SMTP id
+ t38-20020a056a20292600b0019506877921mr218388pzf.58.1703190096948; Thu, 21 Dec
+ 2023 12:21:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,12 +46,12 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20231221183540.168428-1-andrey.konovalov@linux.dev>
- <20231221183540.168428-2-andrey.konovalov@linux.dev> <CANpmjNPGBMD6XsPpdL-ix8VTuWAwV-jmBjLpC66Z5y543j0DuA@mail.gmail.com>
-In-Reply-To: <CANpmjNPGBMD6XsPpdL-ix8VTuWAwV-jmBjLpC66Z5y543j0DuA@mail.gmail.com>
+ <20231221183540.168428-3-andrey.konovalov@linux.dev> <CANpmjNNkgRbj4jgAGHtKTBB0Qj_u+KmFnBS5699zjL7-p1eV+Q@mail.gmail.com>
+In-Reply-To: <CANpmjNNkgRbj4jgAGHtKTBB0Qj_u+KmFnBS5699zjL7-p1eV+Q@mail.gmail.com>
 From: Andrey Konovalov <andreyknvl@gmail.com>
-Date: Thu, 21 Dec 2023 21:19:36 +0100
-Message-ID: <CA+fCnZcMRT2p07PLqXnm3p=YFOq9SDR_74fbnA+x1BtFuotCjA@mail.gmail.com>
-Subject: Re: [PATCH mm 2/4] kasan: reuse kasan_track in kasan_stack_ring_entry
+Date: Thu, 21 Dec 2023 21:21:25 +0100
+Message-ID: <CA+fCnZf1TDEu9JwT2my7-p9XKrHjyWyjpXiGJ2y6SV9mxcCZvA@mail.gmail.com>
+Subject: Re: [PATCH mm 3/4] kasan: simplify saving extra info into tracks
 To: Marco Elver <elver@google.com>
 Cc: andrey.konovalov@linux.dev, Andrew Morton <akpm@linux-foundation.org>, 
 	Juntong Deng <juntong.deng@outlook.com>, Alexander Potapenko <glider@google.com>, 
@@ -61,23 +61,20 @@ Cc: andrey.konovalov@linux.dev, Andrew Morton <akpm@linux-foundation.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 21, 2023 at 9:11=E2=80=AFPM Marco Elver <elver@google.com> wrot=
+On Thu, Dec 21, 2023 at 9:12=E2=80=AFPM Marco Elver <elver@google.com> wrot=
 e:
 >
 > On Thu, 21 Dec 2023 at 19:35, <andrey.konovalov@linux.dev> wrote:
 > >
 > > From: Andrey Konovalov <andreyknvl@google.com>
 > >
-> > Avoid duplicating fields of kasan_track in kasan_stack_ring_entry:
-> > reuse the structure.
->
-> No functional change?
-
-Yes, no functional changes in this and the following patches in the series.
-
+> > Avoid duplicating code for saving extra info into tracks: reuse the
+> > common function for this.
+> >
 > > Fixes: 5d4c6ac94694 ("kasan: record and report more information")
-> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 >
-> Reviewed-by: Marco Elver <elver@google.com>
+> Looking at this patch and the previous ones, is this Fixes really
+> needed? I.e. was the previous patch broken?
 
-Thank you!
+Yeah, maybe it's not needed in these 3 patches. The original patch
+works, these are just clean-ups.
