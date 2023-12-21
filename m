@@ -1,130 +1,139 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2079.outbound.protection.outlook.com [40.107.94.79])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C34674E18;
-	Thu, 21 Dec 2023 12:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA6D7319C
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 12:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2IcttrlW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oA+EpWuDycCIgbKrN3Glb/SE0T0PoLP42iEG6sBQXUTzN/IYlWWvpbvXYFL5vib8NkdVBq3zytGB23Maewp6dXYIaYhI/7S73z+ErwYhFR2uxXQUKgpGc6F+huT13nsnaOWF/X4CCaQuvADAkEvJ3l4a/KEqDtcUTrg1o7UEoP+CpnmrcFdBdCiz5jJ11Adcr5FRHe+auBQrw4wYm0xEY/5Nhx6Jb3sDe+1D59dVhTx0ki2LgwqpSF+p406Zpym9CppHJFq11J0oeU3HLTq6yvUVk8GbotOBSD53BlHU3P1YGYLzyLvDB/xgnD9+b0EyovamIK018YvBVoMTUoShPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uO8Hkqf3nYkoWcd7AbiWmGc0BbzDrlT8pIaCDOVOBH4=;
- b=iQYfzr5Y/lJlcYKXyBy776tkphb0N6TM6MR06SvDKGZug8y9Mm8OildRDDuGqQz/LbI60KBPeeJSM9j9MOXdDh958pDqFAewdU8qd2YYXD0+jhADmvTSMjHrqvYDeZ7dndwd7qHvXbpf2gH/cfHTweM/HXwFoen8DVIS4025b6ZuRWwDaGAA30p/IFd2NczcVj2G58o+e7Eggo9mfe9eiomDF+w2Ehj++1ZAnh0Cpw7JIlh6KMTnxBzUY7/aRHm13V/0xbirrnh3ic6FGGXWmgtscnn6eYeRe0kImQHyeK8kOvzle5TRay7fCn34IdbtfMB0mP1WNNfVoM0vyBz3Jg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uO8Hkqf3nYkoWcd7AbiWmGc0BbzDrlT8pIaCDOVOBH4=;
- b=2IcttrlWW1dPoToL8+EvXKaG+nTRrxpAzZF7sU1IhpYJDie7zmx+c56beDc7G059wAIz3sPaCw9jn+uoWMtmkYABhX/A7fLw0dVBXVPJ2pl4KjPPeoH5wr+DOcfZDjTwfP50XeYJVpmVqZprcEITFmIcSyr+IkOjiPPRZStD4sI=
-Received: from MW4P221CA0018.NAMP221.PROD.OUTLOOK.COM (2603:10b6:303:8b::23)
- by BN9PR12MB5258.namprd12.prod.outlook.com (2603:10b6:408:11f::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.21; Thu, 21 Dec
- 2023 12:28:27 +0000
-Received: from MWH0EPF000971E9.namprd02.prod.outlook.com
- (2603:10b6:303:8b:cafe::92) by MW4P221CA0018.outlook.office365.com
- (2603:10b6:303:8b::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.18 via Frontend
- Transport; Thu, 21 Dec 2023 12:28:26 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MWH0EPF000971E9.mail.protection.outlook.com (10.167.243.71) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7113.14 via Frontend Transport; Thu, 21 Dec 2023 12:28:26 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Thu, 21 Dec
- 2023 06:28:24 -0600
-From: Michal Simek <michal.simek@amd.com>
-To: <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
-	<michal.simek@xilinx.com>, <git@xilinx.com>
-CC: Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Laurent Pinchart
-	<laurent.pinchart@ideasonboard.com>, Parth Gajjar <parth.gajjar@amd.com>,
-	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>, Rob Herring
-	<robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v3 4/4] arm64: zynqmp: Rename zynqmp-power node to power-management
-Date: Thu, 21 Dec 2023 13:27:57 +0100
-Message-ID: <bf24cde92c2b9e2824847687fab69fc25c533d53.1703161663.git.michal.simek@amd.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <cover.1703161663.git.michal.simek@amd.com>
-References: <cover.1703161663.git.michal.simek@amd.com>
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="sEPmDJlC"
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 5B6A73F73D
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 12:28:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1703161730;
+	bh=utwwjd3w/GTj0TOYQ7r9hzEA4xysvpOk2/pKVIn6Dd8=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=sEPmDJlCtPhMZGGX4hMs+N+3/syHVA/APg4UwTnQJVaHFmr+wbOUuahWGaDViWudv
+	 EvCw6KkxFIKDjITVYFtqk7U75uHyK8E2sTLMiERZNEq1RKRdnQ5hwGj2/63pQCTX8U
+	 wENGR2PXLhpUx5PLtOr/egjp2fx9QryJHWJxapjSQGUarnf4FF/So3maUtWc4+9O9N
+	 f+iYUaYIHJsaczpv/O4ELBBaec8LWv5KDcV6z5i6DIXqZwsTE/h7Q4ZPkmWPWK7T1H
+	 ql2XLUDnG/9+9IJzLf7fqgQCzGiPN4XazpgAYpXO6sNEb32LmzuMIsfsefI8+Lyq+u
+	 +soPLWhoh0r8w==
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-781029a475bso122172785a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 04:28:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703161727; x=1703766527;
+        h=content-transfer-encoding:cc:to:subject:message-id:date
+         :mime-version:references:in-reply-to:from:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=utwwjd3w/GTj0TOYQ7r9hzEA4xysvpOk2/pKVIn6Dd8=;
+        b=O9Spzm/ctZrimpIvs7ipm2TJvXX4F6ZO78qTgHm9ksWtgs2m3BXm/QlfE55kDYvIwq
+         pAOA+J/shmBhECOuyiQFvpxzIS1ikqJpGG6G07ynMFQR5jnmAw3dVWl04QBssO6h1N9g
+         w9zg+vJMvSVl1xdZPh4KZsMuliZDu6tFETwNRkxShA9JcEuQQ7AP2YAiwGJf3Zfjl0nG
+         JnA1ES22MqOtgFeRvIHXWxdOZ6ES8bRPYCTSTyuGx9RYU/HCkFCJKHIE8mqj5oYtBaAZ
+         4HiYgPc0vwh00ngVkd4kCi4nYRFQRb9vFdtxqDdxXW0XFb9LOkrzHqtn6I8Hw1sOVvHs
+         b2gA==
+X-Gm-Message-State: AOJu0YxhMo7IlT0JQGifcdJeffaGRObcPedXQIpZzSXxO07B42LX6cL6
+	v/eHsu12gIuyEDQhkuuDc4D87Qla7q9D38LZocAi/n2ml2I0c80ckhFHMlnF2T4q5vFUEf5eE3c
+	qfCwJOC1nUT3leqV8WKOslFRtYUhDq3WLGd+fbt89nbTCwT3doMwiesL8YSz3ZK8I
+X-Received: by 2002:a05:620a:3dc:b0:77e:ffcd:2728 with SMTP id r28-20020a05620a03dc00b0077effcd2728mr897514qkm.53.1703161727419;
+        Thu, 21 Dec 2023 04:28:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHB2Dun85XQ6cgWOoZpoJaB/RapIEzw1KjVwm/JtqPitqqKxcRJWcJjtxi1b+wBY8zYrCiPA/YZeVrH74MD5jI=
+X-Received: by 2002:a05:620a:3dc:b0:77e:ffcd:2728 with SMTP id
+ r28-20020a05620a03dc00b0077effcd2728mr897496qkm.53.1703161727167; Thu, 21 Dec
+ 2023 04:28:47 -0800 (PST)
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 21 Dec 2023 04:28:46 -0800
+From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+In-Reply-To: <CACRpkdYT+jf4=dk3Y9cwa_=aYCihVq93N-iT0RUbtT2-+PX69w@mail.gmail.com>
+References: <20231215143906.3651122-1-emil.renner.berthing@canonical.com>
+ <20231215143906.3651122-2-emil.renner.berthing@canonical.com>
+ <20231215202137.GA317624-robh@kernel.org> <CAJM55Z9pBpYfwpxPH7bUumuosVDn9DHLSBngW6CtG7aK_z+_bQ@mail.gmail.com>
+ <CACRpkdYT+jf4=dk3Y9cwa_=aYCihVq93N-iT0RUbtT2-+PX69w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=928; i=michal.simek@amd.com; h=from:subject:message-id; bh=UqwBcwhjjOZze1EbwhuQ03cJrt3vxRGVfDSVVLHBiMU=; b=owGbwMvMwCR4yjP1tKYXjyLjabUkhtQWfS+biZphGv4+vzoE9H3CP1079+nX+RXdW0+rR6XeD 2WXXlffEcvCIMjEICumyCJtc+XM3soZU4QvHpaDmcPKBDKEgYtTACYSK8owP16iTzcjayl73qXI Y+9tZ83aoW5/kmF+zDKZM6EOvYervXOMqt5IPFePfW0PAA==
-X-Developer-Key: i=michal.simek@amd.com; a=openpgp; fpr=67350C9BF5CCEE9B5364356A377C7F21FE3D1F91
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E9:EE_|BN9PR12MB5258:EE_
-X-MS-Office365-Filtering-Correlation-Id: bc475010-6988-49ef-68ba-08dc0220550a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	NMNRzzTkoeYKbC23mU6l6nFTuMNyLRyHMxL7Ul61EUXuN9wZDAZVGTCEdSsmAwBElSJM4DSfYqX06jyzFm07X80jMAs92fnKEpXbSWcH1dj72g3731s0YQmXCuPkiJ5xN9B5Fu9FI7hCFmJWiAQohDEY2Kh38UAooRXoBiKh12qbzrsCUlxrZ6SHQRw9hbIBMz+knxb7mjRB46aIbB9kJbLofyo8S5m5uNYgvwS6RzRvvY8f+2BckkPYzu4K2ifZlAqC5ooDQKTdJqPuiNiaq9ru7Jtv6+1k83wgRHPmW0Wcg3nhPbubLYJelGVZ5sTjjGvZBQxCjuVAkXp5MRkqv23Hp05Lf1g+pyajkeD2kMKwNWwoyw8OjvA5d5d5CUAZVxooafNzAnB+FlZigFLZu5zKXQyJuYaS29G8CM3QMj5PMkFU2+irFJlVpM8LRW5hgSMBKSUKMKRm6WDAT8Htq4aF4z0giY3N7oUufRUk2z5XG7Gm0tWTDUsNEqbBDwCd74U67r2GgQAo0MNFX3NagNZfHWzihjWMQ7zmKraOPnZYLVawDufdCV+jNBtxUNP/V0puUnrUpdpyXoK8IfizCVkPATq6fnzPsKlLbFa2oWyEYyXGqh7WAcBXAIkxeBx3Zh0hmGFIfARLE3v+VhNED/2Y/KOOzjqz5nWimtlY7Q93EUYv/NeTtqt7iHiTSYixdph/fD8Jsi5b0beH7/GV4lpsW/IkBxzsyzSN9gBZSeCUb2M1m8G3zyX8+ZTHMdHTovoYfkrx3QbIbVC2PBhtaaSvi6TMdXs2rfJcVjQy0P8=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(396003)(376002)(136003)(346002)(230922051799003)(64100799003)(451199024)(186009)(82310400011)(1800799012)(46966006)(40470700004)(36840700001)(40460700003)(16526019)(426003)(336012)(2616005)(26005)(6666004)(36860700001)(47076005)(83380400001)(4326008)(44832011)(8676002)(8936002)(41300700001)(4744005)(2906002)(478600001)(316002)(5660300002)(110136005)(70586007)(70206006)(54906003)(36756003)(82740400003)(86362001)(356005)(81166007)(40480700001)(2101003)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Dec 2023 12:28:26.7159
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc475010-6988-49ef-68ba-08dc0220550a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000971E9.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5258
+Mime-Version: 1.0
+Date: Thu, 21 Dec 2023 04:28:46 -0800
+Message-ID: <CAJM55Z8osSFxKi_7=aRkEr+U3vAq0TS93OggnRzyPpssNuuJ3Q@mail.gmail.com>
+Subject: Re: [PATCH v1 1/8] dt-bindings: pinctrl: Add thead,th1520-pinctrl bindings
+To: Linus Walleij <linus.walleij@linaro.org>, 
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc: Rob Herring <robh@kernel.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Hoan Tran <hoan@os.amperecomputing.com>, Serge Semin <fancer.lancer@gmail.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Rename zynqmp-power node name to power-management which is more aligned
-with generic node name recommendation.
+Linus Walleij wrote:
+> On Sat, Dec 16, 2023 at 2:57=E2=80=AFPM Emil Renner Berthing
+> <emil.renner.berthing@canonical.com> wrote:
+>
+> > > > +          thead,strong-pull-up:
+> > > > +            oneOf:
+> > > > +              - type: boolean
+> > > > +              - $ref: /schemas/types.yaml#/definitions/uint32
+> > > > +                enum: [ 0, 2100 ]
+> > > > +            description: Enable or disable strong 2.1kOhm pull-up.
+> > >
+> > > bias-pull-up can already specify the strength in Ohms.
+> >
+> > The strong pull up is a separate bit that can be enabled independently =
+from the
+> > regular pull-up/down, so in theory you could enable both the regular pu=
+ll-up
+> > and the strong pull-up at the same time, or even the regular poll-down =
+and the
+> > strong pull-up which is probably not advised.
+>
+> bias-pull-up; <- Just regular pulling up the ordinary
+> bias-pull-up =3D <100>; <- Same thing if the ordinary is 100 Ohm (figure =
+out what
+>   resistance it actually is....)
+> bias-pull-up =3D <21000000>; <- strong pull up
+> bias-pull-up =3D <21000100>; <- both at the same time
 
-Signed-off-by: Michal Simek <michal.simek@amd.com>
----
+Hmm.. the two pull-ups combined would be a stronger pull-up, eg. lower
+resistance, right? So you'd need to calculate it using
+https://en.wikipedia.org/wiki/Series_and_parallel_circuits#Resistance_units=
+_2
 
-Changes in v3:
-- s/power-controller/power-management/g
-- update subject and commit message to match sed above
+The problem is that the documentation doesn't actually mention what will ha=
+ppen
+if you combine the strong pull-up with the regular bias. My best guess for =
+what
+happens if you enable the strong pull-up and the regular pull-down is that =
+you
+create a sort of voltage divider. But how do you represent that as an Ohm v=
+alue?
 
-Changes in v2:
-- New patch is series
+We would kind of have to, otherwise the pinconf_get callbacks have states t=
+hat
+it can't represent.
 
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index eaba466804bc..ea1a9ba16246 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -186,7 +186,7 @@ zynqmp_firmware: zynqmp-firmware {
- 			method = "smc";
- 			bootph-all;
- 
--			zynqmp_power: zynqmp-power {
-+			zynqmp_power: power-management {
- 				bootph-all;
- 				compatible = "xlnx,zynqmp-power";
- 				interrupt-parent = <&gic>;
--- 
-2.36.1
-
+> > So the idea here was just to make sure that you can do eg.
+> >
+> >         thead,strong-pull-up =3D <0>;
+> >
+> > to make sure the bit is cleared.
+>
+> No use bias-disable; for this.
+>
+> Yours,
+> Linus Walleij
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
