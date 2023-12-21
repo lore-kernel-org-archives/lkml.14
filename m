@@ -1,159 +1,106 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB44A11733;
-	Thu, 21 Dec 2023 18:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B333965189;
+	Thu, 21 Dec 2023 18:58:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d5bmne/a"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40d4103aed7so7877555e9.3;
-        Thu, 21 Dec 2023 10:58:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703185104; x=1703789904; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:references:to:from:subject
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nHklhKkIDpRGAbC6EyVSS7Ick/sDdM+0PSLDLsMKiVc=;
-        b=d5bmne/a4VJxS+hiGc2Yr83v6DnHjuSi75qggz918SXOjma6FXGn9xOiF/ziNlRfF2
-         vvYbwNwK0MjcgpMpOX7WOH8SfqclxgEshPOVmIzguxU3LvYt9dZrIXDscph6sY+SVHkJ
-         cbjXHYsRiN2u8OXNGn8TT5/d2FhzyrWRAgVy3kXcVlVnnqSP5YVakblBLujr8UnGLrKG
-         vZgb0IUfD/VRKnnbPzrjaxfCtIi0lH4AeRwsi/OjVQ8AfXQMfoER5tSygxx1NQCx8tjO
-         PoA/LCGndHInAeC25zDmii5zmvWR5ZGS8ubWdqsxhral1rH5LoD3lFwtQ5/Cy6MlKze5
-         0RuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703185104; x=1703789904;
-        h=content-transfer-encoding:in-reply-to:references:to:from:subject
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=nHklhKkIDpRGAbC6EyVSS7Ick/sDdM+0PSLDLsMKiVc=;
-        b=qWDjOM2wrHTfwfIBBr/1DuVOIlCaIqAfZxj83t6jJY8XM0OidGMvTsrc+btE9JZRJW
-         JdYnQJ1xZv1c8TwffDejQk5L2xjwruBuwQG4X5VFuMtMKwXBEZr9NYvjFITAzOj+PWD4
-         rKeHyydrOgd+vI6IXr9GKE8JZTZcgqZMFdXaVLif/RtVe+4dq193HD4Fbxnmt+R4Eya/
-         FO7FFEq/rHvggLYv9XMbr+DW77S3zau0qmlToUbBtfz4ypvUwdB/ISJ9JqKM2p2sicbF
-         g3tmW7vHj+o/xFkPtqDWTze52vwvGNdUQ/V3KncVU5I9/TqdMOXoa1qlRxOY/RPKq+jh
-         NDaw==
-X-Gm-Message-State: AOJu0YzLZ93hT1ln8VXu6N5xHKtE7015loQu6sGBHUJeqLM2JtsTwzRH
-	XDRHfY4dzjdq6yCtgHvOTl4=
-X-Google-Smtp-Source: AGHT+IEZRGhr19YcFmW2jepDNMeTHfZ2bFIrwD4JzHi58QljsW8CqhwZmLFiGx8I968xig1nuKm0UQ==
-X-Received: by 2002:a05:600c:4496:b0:40d:41d4:d29e with SMTP id e22-20020a05600c449600b0040d41d4d29emr104917wmo.187.1703185103884;
-        Thu, 21 Dec 2023 10:58:23 -0800 (PST)
-Received: from debian ([146.70.204.204])
-        by smtp.gmail.com with ESMTPSA id p6-20020a05600c468600b004053e9276easm11868269wmo.32.2023.12.21.10.58.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Dec 2023 10:58:23 -0800 (PST)
-Message-ID: <32febbc9-e603-4400-addd-bdb97ce56c1d@gmail.com>
-Date: Thu, 21 Dec 2023 19:57:51 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ner+DC5e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3848FC433C7;
+	Thu, 21 Dec 2023 18:58:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703185131;
+	bh=j6UCPuNDbZ6kPS/Mzu96W0KCWZA5ifSOq9ApMbEEPhk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ner+DC5eOIxk+8hI74FeKIYb33YzoZOqH63n+C7KUxp0dezkbY/FyRe/z2No9XwEH
+	 8mMSUijdeFHSAwX1n/HVn32XtFzxyQoxaY2dM13Co9gZS/IWnU4e/Hm7oeRWJ0fPEW
+	 egWGBagN40prKCnYrun+v1XlnbghjkUbcx+GX+sbpSvxcs6McDl6QGFoanj3ZH8nuq
+	 iWwj16okuEM4p2eSmJXm7FP8y2/UfNEC06R5UunQnvNZTqeEUmD5nc5ukscEKX/lZB
+	 XOwU7vEktaVjFJRc9KFpImXCbJ65hzXVIPYe++ZF013SLnfdXut6tqRni7PhYgqeBv
+	 SjgwXu86RJMhQ==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-50e281b149aso1399785e87.1;
+        Thu, 21 Dec 2023 10:58:51 -0800 (PST)
+X-Gm-Message-State: AOJu0YxMxhHgCaMlPEYS/56UG8iIV24+0Wt/lmOVLOgWAa05uxmG+DD1
+	8Dzq8/RLvwlB7Y2iVlMg2V/up1iQdXUU5fBREmU=
+X-Google-Smtp-Source: AGHT+IHePdvbMPNoNvP2Q+0znrhupUMEPxDIRt83N3i7rXk96XMCtaLGg61OHN2n/BF4oYf87sGgu00lh+ClKfiWx18=
+X-Received: by 2002:a05:6512:210b:b0:50e:277a:5f79 with SMTP id
+ q11-20020a056512210b00b0050e277a5f79mr38949lfr.128.1703185129418; Thu, 21 Dec
+ 2023 10:58:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: [PATCH net-next 2/3] net: gro: parse ipv6 ext headers without frag0
-From: Richard Gobert <richardbgobert@gmail.com>
-To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, shuah@kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <f4eff69d-3917-4c42-8c6b-d09597ac4437@gmail.com>
-In-Reply-To: <f4eff69d-3917-4c42-8c6b-d09597ac4437@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20231221071109.1562530-1-linan666@huaweicloud.com> <20231221071109.1562530-2-linan666@huaweicloud.com>
+In-Reply-To: <20231221071109.1562530-2-linan666@huaweicloud.com>
+From: Song Liu <song@kernel.org>
+Date: Thu, 21 Dec 2023 10:58:38 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW5SPiy5bsSfagYrSLa3JTn2Gw0VJKUToS2PS9h4w2=zSA@mail.gmail.com>
+Message-ID: <CAPhsuW5SPiy5bsSfagYrSLa3JTn2Gw0VJKUToS2PS9h4w2=zSA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] md: fix WARN_ON if create symlink fail in bind_rdev_to_array()
+To: linan666@huaweicloud.com
+Cc: yukuai3@huawei.com, linux-raid@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, yi.zhang@huawei.com, houtao1@huawei.com, 
+	yangerkun@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This commit utilizes a new helper function, ipv6_gro_pull_exthdrs, which
-is used in ipv6_gro_receive to pull ipv6 ext headers instead of
-ipv6_gso_pull_exthdrs. To use ipv6_gso_pull_exthdr, pskb_pull and
-__skb_push must be used, and frag0 must be invalidated. This commit
-removes unnecessary code around the call to ipv6_gso_pull_exthdrs and
-enables the frag0 fast path in IPv6 packets with ext headers.
+Hi,
 
-Signed-off-by: Richard Gobert <richardbgobert@gmail.com>
----
- net/ipv6/ip6_offload.c | 51 +++++++++++++++++++++++++++++++++---------
- 1 file changed, 41 insertions(+), 10 deletions(-)
+On Wed, Dec 20, 2023 at 11:13=E2=80=AFPM <linan666@huaweicloud.com> wrote:
+>
+> From: Li Nan <linan122@huawei.com>
+>
+> Removing a device can trigger WARN_ON in bd_unlink_disk_holder() if creat=
+ing
+> symlink failed while adding device.
+>
+>   WARNING: CPU: 0 PID: 742 at block/holder.c:145 bd_unlink_disk_holder+0x=
+17b/0x1a0
+>
+> Fix it by adding the flag 'SymlinkCreated', which only be set after
+> creating symlink success.
+>
+> Signed-off-by: Li Nan <linan122@huawei.com>
+> ---
+>  drivers/md/md.h | 3 +++
+>  drivers/md/md.c | 8 ++++++--
+>  2 files changed, 9 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/md/md.h b/drivers/md/md.h
+> index 8d881cc59799..427d17713a8c 100644
+> --- a/drivers/md/md.h
+> +++ b/drivers/md/md.h
+> @@ -207,6 +207,9 @@ enum flag_bits {
+>                                  * check if there is collision between ra=
+id1
+>                                  * serial bios.
+>                                  */
+> +       SymlinkCreated,         /* This device has created the symlink
+> +                                * with gendisk.
+> +                                */
 
-diff --git a/net/ipv6/ip6_offload.c b/net/ipv6/ip6_offload.c
-index 0e0b5fed0995..a3b8d9127dbb 100644
---- a/net/ipv6/ip6_offload.c
-+++ b/net/ipv6/ip6_offload.c
-@@ -37,6 +37,40 @@
- 		INDIRECT_CALL_L4(cb, f2, f1, head, skb);	\
- })
- 
-+static int ipv6_gro_pull_exthdrs(struct sk_buff *skb, int off, int proto)
-+{
-+	const struct net_offload *ops = NULL;
-+	struct ipv6_opt_hdr *opth;
-+
-+	for (;;) {
-+		int len;
-+
-+		ops = rcu_dereference(inet6_offloads[proto]);
-+
-+		if (unlikely(!ops))
-+			break;
-+
-+		if (!(ops->flags & INET6_PROTO_GSO_EXTHDR))
-+			break;
-+
-+		opth = skb_gro_header(skb, off + 8, off);
-+		if (unlikely(!opth))
-+			break;
-+
-+		len = ipv6_optlen(opth);
-+
-+		opth = skb_gro_header(skb, off + len, off);
-+		if (unlikely(!opth))
-+			break;
-+		proto = opth->nexthdr;
-+
-+		off += len;
-+	}
-+
-+	skb_gro_pull(skb, off - skb_network_offset(skb));
-+	return proto;
-+}
-+
- static int ipv6_gso_pull_exthdrs(struct sk_buff *skb, int proto)
- {
- 	const struct net_offload *ops = NULL;
-@@ -203,28 +237,25 @@ INDIRECT_CALLABLE_SCOPE struct sk_buff *ipv6_gro_receive(struct list_head *head,
- 		goto out;
- 
- 	skb_set_network_header(skb, off);
--	skb_gro_pull(skb, sizeof(*iph));
--	skb_set_transport_header(skb, skb_gro_offset(skb));
- 
--	flush += ntohs(iph->payload_len) != skb_gro_len(skb);
-+	flush += ntohs(iph->payload_len) != skb->len - hlen;
- 
- 	proto = iph->nexthdr;
- 	ops = rcu_dereference(inet6_offloads[proto]);
- 	if (!ops || !ops->callbacks.gro_receive) {
--		pskb_pull(skb, skb_gro_offset(skb));
--		skb_gro_frag0_invalidate(skb);
--		proto = ipv6_gso_pull_exthdrs(skb, proto);
--		skb_gro_pull(skb, -skb_transport_offset(skb));
--		skb_reset_transport_header(skb);
--		__skb_push(skb, skb_gro_offset(skb));
-+		proto = ipv6_gro_pull_exthdrs(skb, hlen, proto);
- 
- 		ops = rcu_dereference(inet6_offloads[proto]);
- 		if (!ops || !ops->callbacks.gro_receive)
- 			goto out;
- 
--		iph = ipv6_hdr(skb);
-+		iph = skb_gro_network_header(skb);
-+	} else {
-+		skb_gro_pull(skb, sizeof(*iph));
- 	}
- 
-+	skb_set_transport_header(skb, skb_gro_offset(skb));
-+
- 	NAPI_GRO_CB(skb)->proto = proto;
- 
- 	flush--;
--- 
-2.36.1
+In general, I would like to avoid adding flags if possible.
 
+>  };
+>
+>  static inline int is_badblock(struct md_rdev *rdev, sector_t s, int sect=
+ors,
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index e05858653a41..d6612b922c76 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -2526,7 +2526,8 @@ static int bind_rdev_to_array(struct md_rdev *rdev,=
+ struct mddev *mddev)
+>                 sysfs_get_dirent_safe(rdev->kobj.sd, "bad_blocks");
+>
+>         list_add_rcu(&rdev->same_set, &mddev->disks);
+> -       bd_link_disk_holder(rdev->bdev, mddev->gendisk);
+> +       if (!bd_link_disk_holder(rdev->bdev, mddev->gendisk))
+> +               set_bit(SymlinkCreated, &rdev->flags);
+
+Shall we just fail bind_rdev_to_array() if bd_link_disk_holder()
+returns non-zero?
+
+Thanks,
+Song
