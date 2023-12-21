@@ -1,147 +1,202 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D7E56E2A1
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 13:06:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D76E6979B;
+	Thu, 21 Dec 2023 13:08:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iplUKz3+"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6d97b7c8efdso180847b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 05:06:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703163965; x=1703768765; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7+JuPQ8wqNJlzJagstC7ldl3dtxeJYdR1Fvwuzn2zf0=;
-        b=iplUKz3+zQcfMeyQMO8Y9loBTzLdNZqEdpDyazs+MV+GPR4gY/BIjBj2y7qTE2fPmV
-         HgQcXqTL4gff6A34X0/xg8uDNeR8Hn5Bkm2qF2U3Z0/ONbdD53hI+wk+JqQ5toW+EqqY
-         RU8ZwSNpIJxX7cLrCWs29e0NFI2ndzr55/63JmOGS9vfz/+yRd12dqZphx8BS57wI9Ji
-         lz9wzu1UJ+6XACApXDMRFIeBNGJ+FnP2CGJWpQHVa3gyiZ2bxb3dahKhEIHvCRWnz4xJ
-         B3GoHRkzRXEBHn68zbXw/PT7Nhdww3fcAds00SBQ3Hkbq4VCI/XYrxN2n5IN46LnYzT6
-         ZmwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703163965; x=1703768765;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7+JuPQ8wqNJlzJagstC7ldl3dtxeJYdR1Fvwuzn2zf0=;
-        b=FoKCCW7cFsi5aZWuGyBg1KQ3/NzSB/7YzBiAXOyl73ZZpFiPyjM1adbBBl/+tZYatM
-         +dQ8Gn47myt1PC/AXofsp+WE0SwnIXYmv90ze4JfBCiz0KMgXviZH5CvcXfmv9HjXD/I
-         2/9U+TfsNfphpIQYxMiVzWG7QBfHwygEZMFVQnvV6LUMl5rbC8/07ozH4dYLhGaxJyPT
-         oljqNAiFd9prY0ZUEHK8tZqfTFEXqrru1qmlKZ/1nw/3PPb4rC3/QA668iYV3kY8K2Nr
-         Zp+yBhX6Jt2BaWB+InfB88wdWs3Q51fRkIy1ZlmCIOZ2w8mBEa+zqn63MMGIba8HKiwa
-         A5ag==
-X-Gm-Message-State: AOJu0Yy2bjKblXu2NK4xgCCSUZM1+lvviARppKUrHiBv3oXi3hz+LLYm
-	MR9D/Z2QS6H5W0BHI81w56M=
-X-Google-Smtp-Source: AGHT+IHy7BDWEANLiGAImZQLqW1L1FrUfcyW89dxfgSoRdp/XfgRewLLnqOMWdZvV7yq1pzZCQwpXA==
-X-Received: by 2002:a05:6a00:982:b0:6d8:1493:5a89 with SMTP id u2-20020a056a00098200b006d814935a89mr5469741pfg.59.1703163964996;
-        Thu, 21 Dec 2023 05:06:04 -0800 (PST)
-Received: from ruipeng-ThinkCentre-M730e-N010.company.local (014136220210.static.ctinets.com. [14.136.220.210])
-        by smtp.gmail.com with ESMTPSA id m2-20020a62f202000000b006d97eaba6cesm289326pfh.21.2023.12.21.05.05.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 05:06:04 -0800 (PST)
-From: Ruipeng Qi <ruipengqi7@gmail.com>
-To: catalin.marinas@arm.com,
-	will@kernel.org,
-	bhe@redhat.com,
-	vgoyal@redhat.com,
-	dyoung@redhat.com,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org
-Cc: zalbassam@google.com,
-	dianders@chromium.org,
-	mark.rutland@arm.com,
-	lecopzer.chen@mediatek.com,
-	maz@kernel.org,
-	arnd@arndb.de,
-	yury.norov@gmail.com,
-	brauner@kernel.org,
-	mcgrof@kernel.org,
-	maninder1.s@samsung.com,
-	michael.christie@oracle.com,
-	samitolvanen@google.com,
-	linux-arm-kernel@lists.infradead.org,
-	qiruipeng@lixiang.com
-Subject: [RFC PATCH 0/7] osdump: Add one new os minidump module
-Date: Thu, 21 Dec 2023 21:05:55 +0800
-Message-Id: <20231221130555.32551-1-ruipengqi7@gmail.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V9/5Tybk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 608C8C433C8;
+	Thu, 21 Dec 2023 13:08:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703164111;
+	bh=iA0nMBqfGGvyFCpyzaTwayJwz5GyTjLlqiAdO6NpX0M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=V9/5Tybkt7owiZq1VzlYE78r7O/R++PQqPqgMK8eZ4E/w6uYXnXJw1yLWxuIOsbPU
+	 IkSJMNKaN+IQoo6MIrymT8vFXG2AzOnKQSCNWexrLRXTKeLkXWHs1aPiAn+12K95+b
+	 fhc04oIbk2qkM3zH2ChH44/7xhDS7k74By4bG5kr7c0Q/4sjofIyV8xnuNOU+zsWRA
+	 AD8shMxfnQTWFnMZRyZupiS/aX1uCpWlsMvEqiSlmg7jgaLfJ6agB5rWodWWnqj87E
+	 uifdEadvCN7hmnaICXmXnqYpYQUOutJy1vh05on1rWPbT8r86ZkCX3oQ359Fwmw4xc
+	 SLQPqNvdGeUQg==
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2041c292da8so473070fac.3;
+        Thu, 21 Dec 2023 05:08:31 -0800 (PST)
+X-Gm-Message-State: AOJu0YzT0JfmX6JxMHm5wTSlG/hPxfY3RxuAYtQ2/nT9O7+kxxVcezpk
+	PXKHaB6ma915Bu8a8l7i7VsjyQHa8Mvo9vC/exA=
+X-Google-Smtp-Source: AGHT+IHwZ+9ZrMjZ/s27O4pXGsY8niPUk4a4s88Max/9z2dQkBPlGNyxZrffUnFgxBYMLkgU0m/v8uVoQCvdgF11+mY=
+X-Received: by 2002:a05:6870:b51e:b0:204:1204:d2c5 with SMTP id
+ v30-20020a056870b51e00b002041204d2c5mr1481574oap.102.1703164110637; Thu, 21
+ Dec 2023 05:08:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20231122221814.139916-1-deller@kernel.org> <20231122221814.139916-4-deller@kernel.org>
+In-Reply-To: <20231122221814.139916-4-deller@kernel.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Thu, 21 Dec 2023 22:07:54 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARgQ0t=4dfkJXDhSzdFGbxDuN2kPGxTgDR7siCYTtGU5w@mail.gmail.com>
+Message-ID: <CAK7LNARgQ0t=4dfkJXDhSzdFGbxDuN2kPGxTgDR7siCYTtGU5w@mail.gmail.com>
+Subject: Re: [PATCH 3/4] vmlinux.lds.h: Fix alignment for __ksymtab*,
+ __kcrctab_* and .pci_fixup sections
+To: deller@kernel.org
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
+	linux-modules@vger.kernel.org, linux-arch@vger.kernel.org, 
+	Luis Chamberlain <mcgrof@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: qiruipeng <qiruipeng@lixiang.com>
+On Thu, Nov 23, 2023 at 7:18=E2=80=AFAM <deller@kernel.org> wrote:
+>
+> From: Helge Deller <deller@gmx.de>
+>
+> On 64-bit architectures without CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
+> (e.g. ppc64, ppc64le, parisc, s390x,...) the __KSYM_REF() macro stores
+> 64-bit pointers into the __ksymtab* sections.
+> Make sure that the start of those sections is 64-bit aligned in the vmlin=
+ux
+> executable, otherwise unaligned memory accesses may happen at runtime.
 
-Osdump is a new crash dumping solution aiming at specific embedded
-devices within automotive or Industrial.
- - limited memory.
- - reboot as soon as possible when system fault.
 
-In order to reduce dump file size and speed up dump process, it has the
-following features:
- - no userspace memory, just designed for solving os issues.
- - no const data, such as text segment
- - dump core os data only.
-   - bss, data segments which alloc static.
-   - dynamic data
-     - slub data for little size data.
-     - some large size data.
- - compress dump data to reduce dump file size.
+Are you solving a real problem?
 
-consist of large massive of uncontinuous data,so use binary data format
-directly.
 
-reasemble a standard elf format file with dump file and vmlinux, and
-then parse it with crash tool.
+1/4 already ensures the proper alignment of __ksymtab*, doesn't it?
 
-Signed-off-by: qiruipeng <qiruipeng@lixiang.com>
 
-qiruipeng (7):
-  [RFC PATCH 1/7] osdump: Add one new os minidump module
-  [RFC PATCH 2/7] osdump: reuse some code from crash_core to get
-    vmcoreinfo
-  [RFC PATCH 3/7] doc: Add osdump guide
-  [RFC PATCH 4/7] dt-bindings: reserved-memory: Support osdump module
-  [RFC PATCH 5/7] sched: access to runqueues by function
-  [RFC PATCH 6/7] mm/slub: make slab data more observable
-  [RFC PATCH 7/7] panic: invoke osdump when panic
 
- Documentation/admin-guide/index.rst           |   1 +
- Documentation/admin-guide/osdump.rst          |  94 +++
- .../bindings/reserved-memory/osdump.yaml      |  45 ++
- arch/arm64/Kconfig                            | 169 +++++
- arch/arm64/kernel/Makefile                    |   1 +
- drivers/of/platform.c                         |   1 +
- include/linux/buildid.h                       |   3 +-
- include/linux/osdump.h                        |   7 +
- kernel/Makefile                               |   2 +
- kernel/crash_core_mini.c                      | 275 ++++++++
- kernel/osdump/Makefile                        |   1 +
- kernel/osdump/compr.c                         | 252 ++++++++
- kernel/osdump/core.c                          | 608 ++++++++++++++++++
- kernel/osdump/extern.h                        |  13 +
- kernel/osdump/inode.c                         |  77 +++
- kernel/osdump/internal.h                      |  95 +++
- kernel/panic.c                                |   7 +
- kernel/printk/printk.c                        |   2 +-
- kernel/sched/core.c                           |   8 +
- lib/buildid.c                                 |   3 +-
- mm/slab.h                                     |   2 +
- mm/slub.c                                     |  38 +-
- 22 files changed, 1700 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/admin-guide/osdump.rst
- create mode 100644 Documentation/devicetree/bindings/reserved-memory/osdump.yaml
- create mode 100644 include/linux/osdump.h
- create mode 100644 kernel/crash_core_mini.c
- create mode 100644 kernel/osdump/Makefile
- create mode 100644 kernel/osdump/compr.c
- create mode 100644 kernel/osdump/core.c
- create mode 100644 kernel/osdump/extern.h
- create mode 100644 kernel/osdump/inode.c
- create mode 100644 kernel/osdump/internal.h
+I applied the following hack to attempt to
+break the alignment intentionally.
 
--- 
-2.17.1
 
+diff --git a/include/asm-generic/vmlinux.lds.h
+b/include/asm-generic/vmlinux.lds.h
+index bae0fe4d499b..e2b5c9acee97 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -482,7 +482,7 @@
+        TRACEDATA                                                       \
+                                                                        \
+        PRINTK_INDEX                                                    \
+-                                                                       \
++       . =3D . + 1;                                                      \
+        /* Kernel symbol table: Normal symbols */                       \
+        __ksymtab         : AT(ADDR(__ksymtab) - LOAD_OFFSET) {         \
+                __start___ksymtab =3D .;                                  \
+
+
+
+
+The __ksymtab section and __start___ksymtab symbol
+are still properly aligned due to the '.balign'
+in <linux/export-internal.h>
+
+
+
+So, my understanding is this patch is unneeded.
+
+
+Or, does the behaviour depend on toolchains?
+
+
+
+
+
+
+
+
+> The __kcrctab* sections store 32-bit entities, so make those sections
+> 32-bit aligned.
+>
+> The pci fixup routines want to be 64-bit aligned on 64-bit platforms
+> which don't define CONFIG_HAVE_ARCH_PREL32_RELOCATIONS. An alignment
+> of 8 bytes is sufficient to guarantee aligned accesses at runtime.
+>
+> Signed-off-by: Helge Deller <deller@gmx.de>
+> Cc: <stable@vger.kernel.org> # v6.0+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+> ---
+>  include/asm-generic/vmlinux.lds.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmli=
+nux.lds.h
+> index bae0fe4d499b..fa4335346e7d 100644
+> --- a/include/asm-generic/vmlinux.lds.h
+> +++ b/include/asm-generic/vmlinux.lds.h
+> @@ -467,6 +467,7 @@
+>         }                                                               \
+>                                                                         \
+>         /* PCI quirks */                                                \
+> +       . =3D ALIGN(8);                                                  =
+ \
+>         .pci_fixup        : AT(ADDR(.pci_fixup) - LOAD_OFFSET) {        \
+>                 BOUNDED_SECTION_PRE_LABEL(.pci_fixup_early,  _pci_fixups_=
+early,  __start, __end) \
+>                 BOUNDED_SECTION_PRE_LABEL(.pci_fixup_header, _pci_fixups_=
+header, __start, __end) \
+> @@ -484,6 +485,7 @@
+>         PRINTK_INDEX                                                    \
+>                                                                         \
+>         /* Kernel symbol table: Normal symbols */                       \
+> +       . =3D ALIGN(8);                                                  =
+ \
+>         __ksymtab         : AT(ADDR(__ksymtab) - LOAD_OFFSET) {         \
+>                 __start___ksymtab =3D .;                                 =
+ \
+>                 KEEP(*(SORT(___ksymtab+*)))                             \
+> @@ -491,6 +493,7 @@
+>         }                                                               \
+>                                                                         \
+>         /* Kernel symbol table: GPL-only symbols */                     \
+> +       . =3D ALIGN(8);                                                  =
+ \
+>         __ksymtab_gpl     : AT(ADDR(__ksymtab_gpl) - LOAD_OFFSET) {     \
+>                 __start___ksymtab_gpl =3D .;                             =
+ \
+>                 KEEP(*(SORT(___ksymtab_gpl+*)))                         \
+> @@ -498,6 +501,7 @@
+>         }                                                               \
+>                                                                         \
+>         /* Kernel symbol table: Normal symbols */                       \
+> +       . =3D ALIGN(4);                                                  =
+ \
+>         __kcrctab         : AT(ADDR(__kcrctab) - LOAD_OFFSET) {         \
+>                 __start___kcrctab =3D .;                                 =
+ \
+>                 KEEP(*(SORT(___kcrctab+*)))                             \
+> @@ -505,6 +509,7 @@
+>         }                                                               \
+>                                                                         \
+>         /* Kernel symbol table: GPL-only symbols */                     \
+> +       . =3D ALIGN(4);                                                  =
+ \
+>         __kcrctab_gpl     : AT(ADDR(__kcrctab_gpl) - LOAD_OFFSET) {     \
+>                 __start___kcrctab_gpl =3D .;                             =
+ \
+>                 KEEP(*(SORT(___kcrctab_gpl+*)))                         \
+> --
+> 2.41.0
+>
+
+
+--=20
+Best Regards
+Masahiro Yamada
