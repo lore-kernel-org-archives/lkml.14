@@ -1,92 +1,151 @@
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8237A8F52
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 04:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D560945A
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 04:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="KWpQE0/Z"
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2037ef59df0so52335fac.1
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Dec 2023 20:52:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S79BkpdH"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-548ae9a5eeaso3990a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Dec 2023 20:53:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1703134354; x=1703739154; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Bz5m5ul72l4RhCvdkAAZDejQ0Cy9sHzUwoLbrF+jVCs=;
-        b=KWpQE0/ZIZe0PHUnoHO0XzhADJujxKQGCrEEIiJcvvpuzPpkaJr2JxebOkM+Rrkopt
-         RoS6DfRdA4r66Rnwr3xcogsXp2tiMiBoRIeI5C8JK4wu70CGNx7s8NL7fRoqha/mrW9V
-         fr51hZ69Tj5k+x6qy1Bs9WDWZKe/e/1XhdBlo=
+        d=google.com; s=20230601; t=1703134433; x=1703739233; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Uys1j6YEzRq4wq9YfSmj6G3Wty+wABOKW/AhAfFFgQk=;
+        b=S79BkpdHOE5a09P6i+8fMKDHoLTHtXIdTlQWCdg68nJPwr4H7Gvn8cIMpVOndOp3B0
+         EUwoxD/uoKBVJINZMlTetnmexciy2tFBAvjaLAXVxT3Va73xbVeJNf8fFunOVyFRtxzA
+         1+QwpvIC8ZHKMAd77jPa1lrhhBwMnbswW2LIfBJu2YA2RFYqSG/70GTQRjj+ZVznlYqw
+         aR8ZZyEpyaVmKOvoif2aCd4hZy0Y+NkkvYSzFO2/woSjJKflXqg7bg4uzdbtbrtG1GZM
+         t6tE7gueGZRo1GEDKoqK/x3RaE0UyLHqS6C9W142/iQGQQsejw7kSTjX+mwUCn3+t+xS
+         tPQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703134354; x=1703739154;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bz5m5ul72l4RhCvdkAAZDejQ0Cy9sHzUwoLbrF+jVCs=;
-        b=pDnqqWVdLDj/6WDhgXhHoW18Dv7MQ2ToBIRO+aVVri3F4eGtGLZQWBxIuD2JRhSrGL
-         RLO70uvxBr/yiiAIRyeskLcrZaBVNKHF+8rWG3PjYpR8fEkiF6bXqbKLDm4Kjv/on/yh
-         TslcSOdMa5NOb0oFctYkrbWuJBVVWCTqdSIJg4QBmI3F8m55OSXsjHtbZX230L60Gqbb
-         mB/0ZjpntOhtWLUP5GmQh9IeCPnRoKE6XvD0PJg/qcpdCNUGhWiGWmctKHJEaQ+17Lqw
-         BkECaOAjPXQAT9gNk6HtRf8Itf7pthdL4iNwPkAGfQ+v3jGkC2EPRbWrYkboWhgceKOk
-         EiFQ==
-X-Gm-Message-State: AOJu0YzZpjb2IvqoshrUQxCn22a5StGu93qx6+r3jfS8D6Y6HmZNumqP
-	BKGqezjmSjnoBp9JqJOaJlCFbQ==
-X-Google-Smtp-Source: AGHT+IFU6YIKltqtyRWS5Fq80oW1ZM2e2tj8nwLk0KoDFlFz6ocQhueT3KZ7ESKWk7sxooIZC+jWPA==
-X-Received: by 2002:a4a:a581:0:b0:591:cdc0:f28d with SMTP id d1-20020a4aa581000000b00591cdc0f28dmr12232023oom.0.1703134354564;
-        Wed, 20 Dec 2023 20:52:34 -0800 (PST)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id j12-20020a02a68c000000b0046b70c98d41sm289714jam.26.2023.12.20.20.52.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Dec 2023 20:52:33 -0800 (PST)
-Message-ID: <56301ac9-ca34-44fa-b18b-9c779fe9b24a@linuxfoundation.org>
-Date: Wed, 20 Dec 2023 21:52:32 -0700
+        d=1e100.net; s=20230601; t=1703134433; x=1703739233;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Uys1j6YEzRq4wq9YfSmj6G3Wty+wABOKW/AhAfFFgQk=;
+        b=YsOejKedy/PSfJytaIIrp7IGRaytAOAD9B8lZOPdctMgbiyMZYBdjirtPuJ/srLdAn
+         zEw+iTUDYEP/2g2YKgf0gNrZYyrFTvsD+NwL87Rsf5GoLgKBI60OZkM90beEnfs/me8N
+         g9WHYCouYD6StnekOOPL5Qa7QvyMNknrWHvuxbV1Ae//oW2NK46YKXPN5ldxEIPQTQpn
+         joSIk2K/oaRksQv2qQXgjM/KJJ4hnGAGLI6FQ5nFqQJfOg8eVR80CQ9hytbj2P7W6WX0
+         j7ntmaNL5J0oBQ6NM4jqYxGJplj7YBrDc1V0aF2S3IgV5V5DnvDVMAidyZM6kPmsbd+j
+         DdfQ==
+X-Gm-Message-State: AOJu0Yz7Rjv94AlWcrYg4ytJ4zQIgW0ZS1eYVo4xv4pL+OQ0npv+XrMK
+	r5KHOV6kbQbN1fyl8JGXdi2uJK79y7NPXBXbuGVog8/nMzDRPTnq2XA6MObJ9Xmy
+X-Google-Smtp-Source: AGHT+IHIMe06nh3kOPxV/Mn61oNP8wf4HjXiELznDUOlvm5Pf3goyvdWbUSubyhjsXrKMbkotEYZPEKxifZ/99QGcxA=
+X-Received: by 2002:a50:c109:0:b0:551:9870:472 with SMTP id
+ l9-20020a50c109000000b0055198700472mr11677edf.1.1703134433161; Wed, 20 Dec
+ 2023 20:53:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5.15 000/159] 5.15.145-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20231220160931.251686445@linuxfoundation.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20231220160931.251686445@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20231220054123.1266001-1-maskray@google.com> <CAHbLzkpZomZBHVkSpCiK-hZUoZi4x2N6MB=PtFj-cBHOVhYs7Q@mail.gmail.com>
+In-Reply-To: <CAHbLzkpZomZBHVkSpCiK-hZUoZi4x2N6MB=PtFj-cBHOVhYs7Q@mail.gmail.com>
+From: Fangrui Song <maskray@google.com>
+Date: Wed, 20 Dec 2023 20:53:38 -0800
+Message-ID: <CAFP8O3+5fKcGS8xEY5=DHqsN0YdybEY178nM+cXRY1bbQXV4WQ@mail.gmail.com>
+Subject: Re: [PATCH] mm: remove VM_EXEC requirement for THP eligibility
+To: Yang Shi <shy828301@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	Song Liu <songliubraving@fb.com>, Miaohe Lin <linmiaohe@huawei.com>, 
+	linux-kernel@vger.kernel.org, Zhouyi Zhou <zhouzhouyi@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 12/20/23 09:07, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.15.145 release.
-> There are 159 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 22 Dec 2023 16:08:59 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.145-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+On Wed, Dec 20, 2023 at 3:42=E2=80=AFPM Yang Shi <shy828301@gmail.com> wrot=
+e:
+>
+> On Tue, Dec 19, 2023 at 9:41=E2=80=AFPM Fangrui Song <maskray@google.com>=
+ wrote:
+> >
+> > Commit e6be37b2e7bd ("mm/huge_memory.c: add missing read-only THP
+> > checking in transparent_hugepage_enabled()") introduced the VM_EXEC
+> > requirement, which is not strictly needed.
+> >
+> > lld's default --rosegment option and GNU ld's -z separate-code option
+> > (default on Linux/x86 since binutils 2.31) create a read-only PT_LOAD
+> > segment without the PF_X flag, which should be eligible for THP.
+> >
+> > Certain architectures support medium and large code models, where
+> > .lrodata may be placed in a separate read-only PT_LOAD segment, which
+> > should be eligible for THP as well.
+>
+> Yeah, it doesn't have to be VM_EXEC. The original implementation was
+> restricted to VM_EXEC to minimize the blast radius and the targe use
+> case is for large text segments. Out of curiosity, did you see any
+> noticeable improvement with this change?
 
-Compiled and booted on my test system. No dmesg regressions.
+Hi Yang,
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+Thanks for the comment. Frankly, I am not familiar with huge pages...
+I noticed this VM_EXEC condition when I was writing this
+hugepage-related section in
+https://maskray.me/blog/2023-12-17-exploring-the-section-layout-in-linker-o=
+utput#transparent-huge-pages-for-mapped-files
+(Thanks to Alexander Monakov's comment about
+CONFIG_READ_ONLY_THP_FOR_FS in
+https://mazzo.li/posts/check-huge-page.html).
 
-thanks,
--- Shuah
+As dTLB for read-only data is also an important optimization of
+file-backed THP, it seems straightforward that we should drop the
+VM_EXEC condition :)
+
+On my Arch linux machine, the r--p page gets split if I invoke
+madvise(__ehdr_start, HPAGE_SIZE, MADV_HUGEPAGE) I haven't figured out
+why it behaves so in the presence of the VM_EXEC check.
+
+% g++ test.cc -o ~/tmp/test -O2 -fuse-ld=3Dlld
+-Wl,-z,max-page-size=3D2097152 && sudo ~/tmp/test
+__ehdr_start: 0x55f3b1c00000
+55f3b1c00000-55f3b1e00000 r--p 00000000 103:03 555277119
+  /home/ray/tmp/test
+55f3b1e00000-55f3b1e01000 r--p 00200000 103:03 555277119
+  /home/ray/tmp/test
+55f3b2000000-55f3b2002000 r-xp 00200000 103:03 555277119
+  /home/ray/tmp/test
+55f3b2201000-55f3b2202000 r--p 00201000 103:03 555277119
+  /home/ray/tmp/test
+55f3b2401000-55f3b2402000 rw-p 00201000 103:03 555277119
+  /home/ray/tmp/test
+55f3b3a9a000-55f3b3abb000 rw-p 00000000 00:00 0                          [h=
+eap]
+
+
+It'd be greatly appreciated if someone familiar with
+CONFIG_READ_ONLY_THP_FOR_FS could provide some notes on how to use
+this feature:)
+
+> >
+> > Signed-off-by: Fangrui Song <maskray@google.com>
+> > ---
+> >  include/linux/huge_mm.h | 1 -
+> >  1 file changed, 1 deletion(-)
+> >
+> > diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> > index fa0350b0812a..4c9e67e9000f 100644
+> > --- a/include/linux/huge_mm.h
+> > +++ b/include/linux/huge_mm.h
+> > @@ -126,7 +126,6 @@ static inline bool file_thp_enabled(struct vm_area_=
+struct *vma)
+> >         inode =3D vma->vm_file->f_inode;
+> >
+> >         return (IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS)) &&
+> > -              (vma->vm_flags & VM_EXEC) &&
+> >                !inode_is_open_for_write(inode) && S_ISREG(inode->i_mode=
+);
+> >  }
+> >
+> > --
+> > 2.43.0.472.g3155946c3a-goog
+> >
+
+
+
+--=20
+=E5=AE=8B=E6=96=B9=E7=9D=BF
