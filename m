@@ -1,182 +1,114 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A39276DCB
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 13:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4EB76DA9
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 13:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mwa.re
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mwa.re
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IfMRnHIw"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d40eec5e12so2686945ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 05:37:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=mwa.re header.i=@mwa.re header.b="gn6BIKio"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40c2308faedso9158315e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 05:38:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703165849; x=1703770649; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I8TLE2kUuGCG2w8SZOBe9ZxqNJOdz1Kg/CbBvyN0PpE=;
-        b=IfMRnHIwmf1a+4/uYjLK1b1swC3/TGJR+H3FLiK4f//gU9Pav6KYgbqG/6Yi8M924F
-         hv1sJTN95TbIToNBXoo6nNja88cc2LZ+aAG/YXvFgEp8khjIHPsgO5aEmo1jlJAN9bqZ
-         zX51zISdV7oWuUFc+XAeNSzeiLwu9kHZttLOWdYlRVxYA44Lo3OP7G9KlBphbXA5gvI+
-         zsBLm7jY8CVcYwQlgJgrxV+6+3sp+w7VEQihtV4hXNHQC/rOK8bbv9mp02UbJDMez/La
-         cWWQKMpZ5KKE434N3FDuuTlZ2TDk5Z3hj9cJ9l6tvXLsxyMJPPP0DU46j3qM7HTWh7By
-         Hvnw==
+        d=mwa.re; s=google; t=1703165929; x=1703770729; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8erZIDLTxmf1m2HH8xQugTTdLGmjGK9/jdlvEoF7f58=;
+        b=gn6BIKioQLApCbL+49R8eFqNWY6KQvsbPg03E2H6wCl6Y2XKfPmtRXEq4SePIOOVH+
+         iYKfyznuTbO31YB427SieFKhyfmVmjRitZCcRUzOPx7VWLtnhdNIxqZqh1izCG+D4ww8
+         C4o9WmM1NiEDHbuUh+0PRT4b+VB7ZBYd7d0GwyYFN7Tin4EYGHDOTi8uN3X9mxOSYNJS
+         CWQnXv4xUSz8IgZ/HQCnndqw7T6q6WAH04CFXWAvCOwSmrEB/C1d+XhtCyy1oXSiE5wL
+         82zgGkAf5oJVsXlhGiI6jjQpfl5DdRDAN5P1lycHVyyr4kFRNQ2HDn0y+7NXNRhRCMCo
+         z2KA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703165849; x=1703770649;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I8TLE2kUuGCG2w8SZOBe9ZxqNJOdz1Kg/CbBvyN0PpE=;
-        b=JfpXERpP+nVGpxr8DHv3X1o1750R6DdE192lXOXnpTbgELiKLzt0XcJn5PTvE7uEoI
-         YRb7veRTusMMqkNYAdiMf86zKZPMSNuT4XeXQVMmGD/G2rK7+zWtUEfAkKaRWt/OO3zo
-         JGs56PoSdFLObrfiLs4oOOubx7WGBtgOQoh9LggfIBHqQL0D0DZ/mTxE8wGpUZbiblj/
-         ZO99wTSrtg/Tqg9A76Ee37hJ/q+H4hCgmiCuXp+NzGcXvGYHfCFsjzod1ZEuHRMDe1qP
-         ZDBDMdvFj+Emw8R+L1P3G/s5VYvtHI8Tv/0zDdjo0wjubBj3JbblSfy62mvoP8882AGG
-         gmyw==
-X-Gm-Message-State: AOJu0Yx0mA59ADa4Q8PkxmMZnXslzLRMnx8CoOTA639+ei89tNHm2uJh
-	Hr7h65/ddURgv4AOrjEmOPWC10O2kP8=
-X-Google-Smtp-Source: AGHT+IG1VZkMuki8ILhK8wkgFhj53kOB6dgGstwuC7zuTi0EnqIDuB2kQP7HxWEuA6GDaVY+kHNlPA==
-X-Received: by 2002:a17:902:d2cb:b0:1d3:4af3:2e75 with SMTP id n11-20020a170902d2cb00b001d34af32e75mr18726806plc.81.1703165849442;
-        Thu, 21 Dec 2023 05:37:29 -0800 (PST)
-Received: from ruipeng-ThinkCentre-M730e-N010.company.local (014136220210.static.ctinets.com. [14.136.220.210])
-        by smtp.gmail.com with ESMTPSA id w12-20020a170902e88c00b001d06df5c1absm1636297plg.86.2023.12.21.05.37.26
+        d=1e100.net; s=20230601; t=1703165929; x=1703770729;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8erZIDLTxmf1m2HH8xQugTTdLGmjGK9/jdlvEoF7f58=;
+        b=QZqedntvhwTC2p5/LjQDGwxmbHTgAbWrzOxZfkftTwrDkLUlk14K/VFK7uUcmWBgO/
+         VjM5Lua9aKHayq0jCHfmh71gaQrwZ5+3fCeJKsD0EbNpj6kCCTd/3NHIcdAnkGV+fQKq
+         7qYoWAYz7ju5o3oui4zOKDi0VEB5P9YILlStNVHwYac6uhVuOguHeS33xEN0+twgs/j0
+         E3qu5TXLX/3B8za8jGwMMUPGkNh79mmTU7/IgXVenEeL8WIPpHmEg0X8Dsisk4XhP6iH
+         SDL+lIqnZMLROc2t9BAvnMADiY+ETNYRRDixT1uaopLlBKCy255sVN6ZCVxAPBsDkHgW
+         G/Og==
+X-Gm-Message-State: AOJu0YzqpsGVS1vvt+jEHIUqSl3Z+qGDjmNzPLlkb+iX9QVoGWZ9iox0
+	hzZaEJ8oZdaLXkxDXyYqkEoomQ==
+X-Google-Smtp-Source: AGHT+IGUIR9znwRjUUxrMi/ay/nLju+L/FpWc6lJv1LUqDx66iRzdK4UFBqkkY58xGux8n6O0R91Hg==
+X-Received: by 2002:a05:600c:46ce:b0:40c:3464:f816 with SMTP id q14-20020a05600c46ce00b0040c3464f816mr802894wmo.51.1703165928870;
+        Thu, 21 Dec 2023 05:38:48 -0800 (PST)
+Received: from 2001-4dd0-53c2-1-46ed-318a-d674-8fda.ipv6dyn.netcologne.de (2001-4dd0-53c2-1-46ed-318a-d674-8fda.ipv6dyn.netcologne.de. [2001:4dd0:53c2:1:46ed:318a:d674:8fda])
+        by smtp.gmail.com with ESMTPSA id g14-20020a05600c310e00b0040d1774b4e4sm3323167wmo.42.2023.12.21.05.38.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 05:37:28 -0800 (PST)
-From: Ruipeng Qi <ruipengqi7@gmail.com>
-To: cl@linux.com,
-	penberg@kernel.org,
-	rientjes@google.com,
-	iamjoonsoo.kim@lge.com,
-	akpm@linux-foundation.org,
-	vbabka@suse.cz
-Cc: roman.gushchin@linux.dev,
-	42.hyeyoo@gmail.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	qiruipeng <qiruipeng@lixiang.com>
-Subject: [RFC PATCH 6/7] mm/slub: make slab data more observable
-Date: Thu, 21 Dec 2023 21:37:17 +0800
-Message-Id: <20231221133717.882-1-ruipengqi7@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 21 Dec 2023 05:38:48 -0800 (PST)
+Message-ID: <caa041d27b0fa45aad09a9a262038e3ae4099ca2.camel@mwa.re>
+Subject: Re: element sizes in input_event struct on riscv32
+From: Antonios Salios <antonios@mwa.re>
+To: Arnd Bergmann <arnd@arndb.de>, Dmitry Torokhov
+ <dmitry.torokhov@gmail.com>,  Deepa Dinamani <deepa.kernel@gmail.com>
+Cc: rydberg@bitmath.org, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Jan Henrik Weinstock <jan@mwa.re>, Lukas
+	=?ISO-8859-1?Q?J=FCnger?=
+	 <lukas@mwa.re>
+Date: Thu, 21 Dec 2023 14:38:47 +0100
+In-Reply-To: <1a528414-f193-4ac0-a911-af426bb48d64@app.fastmail.com>
+References: <c812ea74dd02d1baf85dc6fb32701e103984d25d.camel@mwa.re>
+	 <ZYEFCHBC75rjCE0n@google.com>
+	 <9e97eb50-f9a6-4655-9422-fa1106fff97a@app.fastmail.com>
+	 <491250ba57be2ab983048ffcf5ffd2aec2bedb9e.camel@mwa.re>
+	 <1a528414-f193-4ac0-a911-af426bb48d64@app.fastmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
 
-From: qiruipeng <qiruipeng@lixiang.com>
+On Thu, 2023-12-21 at 12:28 +0000, Arnd Bergmann wrote:
+> On Thu, Dec 21, 2023, at 08:56, Antonios Salios wrote:
+> > On Tue, 2023-12-19 at 13:53 +0000, Arnd Bergmann wrote:
+> > > On Tue, Dec 19, 2023, at 02:50, Dmitry Torokhov wrote:
+> >=20
+> > The problem seems to be, that __USE_TIME_BITS64 is not defined even
+> > though riscv32 uses 64-bit time.
+>=20
+> That sounds like a libc bug. Which C library are you using?
 
-Osdump is interested in data stored within slab subsystem. Add full list
-back into corresponding struct, and record full list within respective
-functions instead of enabling SLUB_DEBUG directly, which will intruduce
-sensible overhead.
+Glibc 2.37.
 
-Signed-off-by: qiruipeng <qiruipeng@lixiang.com>
----
- mm/slab.h |  2 ++
- mm/slub.c | 38 +++++++++++++++++++++++++++++++++++++-
- 2 files changed, 39 insertions(+), 1 deletion(-)
+> > __BITS_PER_LONG is set to 32 & __KERNEL__ is (of course) undefined
+> > in
+> > userspace.
+> > The userspace therefore uses 64-bit values as opposed to the
+> > kernel,
+> > which uses 32-bit values.
+> >=20
+> > __USE_TIME_BITS64 is only set when __TIMESIZE is set to 32. [1]
+> > Under riscv32, the default value of 64 is used. [2]
+>=20
+> I don't know what __TIMESIZE is, this is not part of the kernel ABI
+> as far as I can tell. __USE_TIME_BITS64 should be set by any 32-bit
+> architecture if the C library defines a 64-bit time_t, otherwise the
+> kernel headers have no way of picking the correct definitions based
+> on preprocessor logic.
 
-diff --git a/mm/slab.h b/mm/slab.h
-index 3d07fb428393..a42a54c9c5de 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -799,6 +799,8 @@ struct kmem_cache_node {
- 	atomic_long_t nr_slabs;
- 	atomic_long_t total_objects;
- 	struct list_head full;
-+#elif defined(CONFIG_OS_MINIDUMP)
-+	struct list_head full;
- #endif
- #endif
- 
-diff --git a/mm/slub.c b/mm/slub.c
-index 63d281dfacdb..1a496ec945b6 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -1730,10 +1730,26 @@ static inline int check_object(struct kmem_cache *s, struct slab *slab,
- static inline depot_stack_handle_t set_track_prepare(void) { return 0; }
- static inline void set_track(struct kmem_cache *s, void *object,
- 			     enum track_item alloc, unsigned long addr) {}
-+#ifndef CONFIG_OS_MINIDUMP
- static inline void add_full(struct kmem_cache *s, struct kmem_cache_node *n,
- 					struct slab *slab) {}
- static inline void remove_full(struct kmem_cache *s, struct kmem_cache_node *n,
- 					struct slab *slab) {}
-+#else
-+static inline void add_full(struct kmem_cache *s,
-+	struct kmem_cache_node *n, struct slab *slab)
-+{
-+	lockdep_assert_held(&n->list_lock);
-+	list_add(&slab->slab_list, &n->full);
-+}
-+
-+static inline void remove_full(struct kmem_cache *s, struct kmem_cache_node *n, struct slab *slab)
-+{
-+	lockdep_assert_held(&n->list_lock);
-+	list_del(&slab->slab_list);
-+}
-+#endif
-+
- slab_flags_t kmem_cache_flags(unsigned int object_size,
- 	slab_flags_t flags, const char *name)
- {
-@@ -2570,6 +2586,14 @@ static void deactivate_slab(struct kmem_cache *s, struct slab *slab,
- 		spin_lock_irqsave(&n->list_lock, flags);
- 	} else {
- 		mode = M_FULL_NOLIST;
-+#ifdef CONFIG_OS_MINIDUMP
-+		/*
-+		 * Taking the spinlock removes the possibility that
-+		 * acquire_slab() will see a slab that is frozen
-+		 */
-+		spin_lock_irqsave(&n->list_lock, flags);
-+
-+#endif
- 	}
- 
- 
-@@ -2577,7 +2601,11 @@ static void deactivate_slab(struct kmem_cache *s, struct slab *slab,
- 				old.freelist, old.counters,
- 				new.freelist, new.counters,
- 				"unfreezing slab")) {
-+#ifndef CONFIG_OS_MINIDUMP
- 		if (mode == M_PARTIAL)
-+#else
-+		if (mode != M_FREE)
-+#endif
- 			spin_unlock_irqrestore(&n->list_lock, flags);
- 		goto redo;
- 	}
-@@ -2592,6 +2620,10 @@ static void deactivate_slab(struct kmem_cache *s, struct slab *slab,
- 		discard_slab(s, slab);
- 		stat(s, FREE_SLAB);
- 	} else if (mode == M_FULL_NOLIST) {
-+#ifdef CONFIG_OS_MINIDUMP
-+		add_full(s, n, slab);
-+		spin_unlock_irqrestore(&n->list_lock, flags);
-+#endif
- 		stat(s, DEACTIVATE_FULL);
- 	}
- }
-@@ -4202,6 +4234,9 @@ init_kmem_cache_node(struct kmem_cache_node *n)
- 	atomic_long_set(&n->nr_slabs, 0);
- 	atomic_long_set(&n->total_objects, 0);
- 	INIT_LIST_HEAD(&n->full);
-+#elif defined(CONFIG_OS_MINIDUMP)
-+	INIT_LIST_HEAD(&n->full);
-+
- #endif
- }
- 
-@@ -5009,7 +5044,8 @@ static struct kmem_cache * __init bootstrap(struct kmem_cache *static_cache)
- 		list_for_each_entry(p, &n->partial, slab_list)
- 			p->slab_cache = s;
- 
--#ifdef CONFIG_SLUB_DEBUG
-+#if defined(CONFIG_SLUB_DEBUG) || \
-+	defined(CONFIG_OS_MINIDUMP)
- 		list_for_each_entry(p, &n->full, slab_list)
- 			p->slab_cache = s;
- #endif
--- 
-2.17.1
+Okay, I agree that this might be a libc problem then. I'll ask the
+glibc maintainers.
 
+Thanks for your kind help and happy holidays!
+
+--=20
+Antonios Salios
+Software Engineer
+
+MachineWare GmbH | www.machineware.de
+H=C3=BChnermarkt 19, 52062 Aachen, Germany
+Amtsgericht Aachen HRB25734
+
+Gesch=C3=A4ftsf=C3=BChrung
+Lukas J=C3=BCnger
+Dr.-Ing. Jan Henrik Weinstock
