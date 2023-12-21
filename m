@@ -1,117 +1,117 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDFF662812;
-	Thu, 21 Dec 2023 15:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PVVrDZW8"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5DF4A1C0008;
-	Thu, 21 Dec 2023 15:26:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1703172364;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XnimU0svkWDNRKLCz0ZHPlRmfQ2Z7rDvpCfZmcxrsRA=;
-	b=PVVrDZW8xJ8POwGPVj8PmC3/ImUj1UkPGA2n10kyjrVPwnsbr49JHOiasX5HibWVMGoPVD
-	Dp8D1cj2DYgjaGFsv3bUuEsUjLpT5yskbduq7VJ+NeiKYiVxKZJmoAhhkeulSd0729r2Dg
-	/nPjzT+NiDc9HznVjwzGGrNng9opes3zrTD3f972m0kq+dTQcD0qq43P+WtShk0eBKZB5x
-	lZzwS7JwMHBSNEMg3jMVoOpnOKjF4sxmUlnwSt3HK4L4IZipz0V4QBy/GmHEg4ShUTnwdV
-	xAT7a3nzHojAC1XjgJgY+Lg5zxdso+Il1ydaz0DrQG+x7eLxWBd2EpwO9C3V4A==
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org, Jiaxun
- Yang <jiaxun.yang@flygoat.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vladimir
- Kondratiev <vladimir.kondratiev@mobileye.com>, Tawfik Bayouk
- <tawfik.bayouk@mobileye.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, =?utf-8?Q?Th=C3=A9o?= Lebrun
- <theo.lebrun@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v5 00/22] Add support for the Mobileye EyeQ5 SoC
-In-Reply-To: <ZYRR7zIZax7yUgsZ@alpha.franken.de>
-References: <20231212163459.1923041-1-gregory.clement@bootlin.com>
- <878r5vctdg.fsf@BL-laptop> <ZYNhbQjMbAH6I0kI@alpha.franken.de>
- <87frzwasxo.fsf@BL-laptop> <ZYRR7zIZax7yUgsZ@alpha.franken.de>
-Date: Thu, 21 Dec 2023 16:26:02 +0100
-Message-ID: <87a5q3bmr9.fsf@BL-laptop>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4E78360B3
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 15:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D4BD2F4;
+	Thu, 21 Dec 2023 07:27:20 -0800 (PST)
+Received: from [192.168.1.25] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 192B03F64C;
+	Thu, 21 Dec 2023 07:26:32 -0800 (PST)
+Message-ID: <179693ab-74d1-4358-8fdf-04cdcb80a814@arm.com>
+Date: Thu, 21 Dec 2023 16:26:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-GND-Sasl: gregory.clement@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] sched: Generalize misfit load balance
+Content-Language: en-US
+To: Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: linux-kernel@vger.kernel.org, Lukasz Luba <lukasz.luba@arm.com>,
+ Wei Wang <wvw@google.com>, Rick Yiu <rickyiu@google.com>,
+ Chung-Kai Mei <chungkai@google.com>
+References: <20231209011759.398021-1-qyousef@layalina.io>
+From: Pierre Gondois <pierre.gondois@arm.com>
+In-Reply-To: <20231209011759.398021-1-qyousef@layalina.io>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Thomas Bogendoerfer <tsbogend@alpha.franken.de> writes:
+Hello Qais,
 
-> On Thu, Dec 21, 2023 at 08:57:55AM +0100, Gregory CLEMENT wrote:
->> I do not oppose the addition of a new platform, even though, like
->> Jiaxun, I would prefer to avoid duplicating code. The only thing
->> preventing the use of the same kernel for EyeQ5 and other platforms is
->> the starting address.
->
-> there shouldn't be code duplication.
->
-> My rough idea would be something like
+On 12/9/23 02:17, Qais Yousef wrote:
+> Misfit load balance was added to help handle HMP systems where we can make
+> a wrong decision at wake up thinking a task can run at a smaller core, but its
+> characteristics change and requires to migrate to a bigger core to meet its
+> performance demands.
+> 
+> With the addition of uclamp, we can encounter more cases where such wrong
+> placement decisions can be made and require load balancer to do a corrective
+> action.
+> 
+> Specifically if a big task capped by uclamp_max was placed on a big core at
+> wake up because EAS thought it is the most energy efficient core at the time,
+> the dynamics of the system might change where other uncapped tasks might wake
+> up on the cluster and there could be a better new more energy efficient
+> placement for the capped task(s).
+> 
+> We can generalize the misfit load balance to handle different type of misfits
+> (whatever they may be) by simply giving it a reason. The reason can decide the
+> type of action required then.
+> 
+> Current misfit implementation is considered MISFIT_PERF. Which means we need to
+> move a task to a better CPU to meet its performance requirement.
+> 
+> For UCLAMP_MAX I propose MISFIT_POWER, where we need to find a better placement
+> to control its impact on power.
+> 
+> Once we have an API to annotate latency sensitive tasks, it is anticipated
+> MISFIT_LATENCY load balance will be required to help handle oversubscribe
+> situations to help better distribute the latency sensitive tasks to help reduce
+> their wake up latency.
+> 
+> Patch 1 splits misfit status update from misfit detection by adding a new
+> function is_misfit_task().
+> 
+> Patch 2 implements the generalization logic by adding a misfit reason and
+> propagating that correctly and guarding the current misfit code with
+> MISFIT_PERF reason.
+> 
+> Patch 3 is an RFC on a potential implementation for MISFIT_POWER.
+> 
+> Patch 1 and 2 were tested stand alone and had no regression observed and should
+> not introduce a functional change and can be considered for merge if they make
+> sense after addressing any review comments.
+> 
+> Patch 3 was only tested to verify it does what I expected it to do. But no real
+> power/perf testing was done. Mainly because I was expecting to remove uclamp
+> max-aggregation [1] and the RFC I currently have (which I wrote many many
+> months ago) is tied to detecting a task being uncapped by max-aggregation.
+> I need to rethink the detection mechanism.
 
-Thanks for the feedback, I am going to test it.
+I tried to trigger the MISFIT_POWER misfit reason without success so far.
+Would it be possible to provide a workload/test to reliably trigger the
+condition ?
 
->
-> diff --git a/arch/mips/Kbuild b/arch/mips/Kbuild
-> index af2967bffb73..d683993ed331 100644
-> --- a/arch/mips/Kbuild
-> +++ b/arch/mips/Kbuild
-> @@ -17,6 +17,7 @@ obj- := $(platform-y)
->  # mips object files
->  # The object files are linked as core-y files would be linked
->  
-> +obj-y += generic/
->  obj-y += kernel/
->  obj-y += mm/
->  obj-y += net/
-> diff --git a/arch/mips/generic/Makefile b/arch/mips/generic/Makefile
-> index e37a59bae0a6..56011d738441 100644
-> --- a/arch/mips/generic/Makefile
-> +++ b/arch/mips/generic/Makefile
-> @@ -4,9 +4,9 @@
->  # Author: Paul Burton <paul.burton@mips.com>
->  #
->  
-> -obj-y += init.o
-> -obj-y += irq.o
-> -obj-y += proc.o
-> +obj-$(CONFIG_MACH_GENERIC_CORE) += init.o
-> +obj-$(CONFIG_MACH_GENERIC_CORE) += irq.o
-> +obj-$(CONFIG_MACH_GENERIC_CORE) += proc.o
->  
->  obj-$(CONFIG_YAMON_DT_SHIM)            += yamon-dt.o
->  obj-$(CONFIG_LEGACY_BOARD_SEAD3)       += board-sead3.o
->
-> so everyboady needing these parts of a generic kernel is able
-> to take it.
->
->> Therefore, if it were possible to have a relocatable kernel, this
->> issue would disappear.
->
-> yes. There is support for relocatable kernel, so what are we missing
-> there ?
+Regards,
+Pierre
 
-But in arch/mips/generic/Platform we have:
-
-load-$(CONFIG_MIPS_GENERIC)    += 0xffffffff80100000
-
-So, the load address is defined during compilation; for example, I don't
-think there is such a mechanism currently for ARM. hat's what I mean by
-'relocatable,' but perhaps it's not exactly what you have in mind.
-
-Gregory
-
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+> 
+> Beside that, the logic relies on using find_energy_efficient_cpu() to find the
+> best potential new placement for the task. To do that though, we need to force
+> every CPU to do the MISFIT_POWER load balance as we don't know which CPU should
+> do the pull. But there might be better thoughts on how to handle this. So
+> feedback and thoughts would be appreciated.
+> 
+> [1] https://lore.kernel.org/lkml/20231208015242.385103-1-qyousef@layalina.io/
+> 
+> Thanks!
+> 
+> --
+> Qais Yousef
+> 
+> Qais Yousef (3):
+>    sched/fair: Add is_misfit_task() function
+>    sched/fair: Generalize misfit lb by adding a misfit reason
+>    sched/fair: Implement new type of misfit MISFIT_POWER
+> 
+>   kernel/sched/fair.c  | 115 +++++++++++++++++++++++++++++++++++++------
+>   kernel/sched/sched.h |   9 ++++
+>   2 files changed, 110 insertions(+), 14 deletions(-)
+> 
