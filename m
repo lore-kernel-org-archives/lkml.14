@@ -1,105 +1,104 @@
-Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646AE3D86;
-	Thu, 21 Dec 2023 01:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
-	by fd01.gateway.ufhost.com (Postfix) with ESMTP id 3DCDF7FFC;
-	Thu, 21 Dec 2023 09:58:32 +0800 (CST)
-Received: from EXMBX061.cuchost.com (172.16.6.61) by EXMBX166.cuchost.com
- (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 21 Dec
- 2023 09:58:32 +0800
-Received: from [192.168.125.131] (113.72.145.47) by EXMBX061.cuchost.com
- (172.16.6.61) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 21 Dec
- 2023 09:58:31 +0800
-Message-ID: <ec9f653d-7078-4efc-b1b6-bbd7a74a1c18@starfivetech.com>
-Date: Thu, 21 Dec 2023 09:50:10 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98AE25239
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 01:58:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eH5PmCz8"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-50e587fb62fso461843e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Dec 2023 17:58:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703123917; x=1703728717; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ErAEEiT3RhrIXvHzreTCpHV5zkBsSIfKV0fdWMIpUMQ=;
+        b=eH5PmCz8iqAiwTjyf2qpv7I3y8ymORvdSoT3hKOReu/FFsgKhRxSzyln9UbEQZwb4n
+         vy5c1GpG1RbeHUE8O2EbW4RzDhnHEcnVy09tmtHio8Tr8tCOSNiZtYY4jJP8oHUPSEBl
+         kKgGeMglEqvIQM0GV/h/NLMMoqlb6Hpd55DXn4G3yCBB74GdyZDmxk8S4ifOO5p1pRcP
+         NJMbAE0Pn/R9BF/vfZNYyyCFLsxx0KpYi/vbDcXpZ9yCq/iC8mz7l08eWQn7phfPlX30
+         6UFPPAVc7nNoJcdFwQp2teTX9QA844HBApaH1Ux5Oxrf8qQmpK8TYLgGBUfmE/hAmh+t
+         9flg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703123917; x=1703728717;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ErAEEiT3RhrIXvHzreTCpHV5zkBsSIfKV0fdWMIpUMQ=;
+        b=feaHLrbwhUCgSTO5jGYw5sf77jQVPfsgRm16m1RzAlI6rjxIn2sbozaB1HQksoQvU3
+         6kjCpeyvh80TDeKqHRgm9A7CNwdZBUBbtrF2AR9c29cLwhkUXuv9AVqyG3ZMEpgXMYcR
+         EC1SCMr1dpy0V7PSmVHfdXe93clQil1CCQgJHY0w3xCAgpaolhi/WurxFM33sFeCSQsS
+         5/H+Z7Zt/jtqyo7eI8trB9oiVbBjJcTsoaw1bz19ESBjUN772xJcqNBBZ3wY65Yk8K8D
+         7+Kmecbz1FMVpIUV2cIuYAWF03rC62oOmIVXhTW1RsXZEik4HYr8Nqx7RTEs9qULPxfc
+         GO6A==
+X-Gm-Message-State: AOJu0YyVMzC5d1ZWRZPoxjgw2dAY1JFZ3vq96chhtQlngQOF8hf0kPg0
+	3aZchWsWn7B0a4eJJ6R5jSkkbat/Jdvt2P1WVicZNuTv
+X-Google-Smtp-Source: AGHT+IHMqhXwYu59CmMuePryKXW2xxWXRW1jObGnLa7i6A5j56gEB0lfNOSdq+FGpJILArPhBxoPpVVe9iHlFXhibHU=
+X-Received: by 2002:a05:6512:3687:b0:50e:384c:6982 with SMTP id
+ d7-20020a056512368700b0050e384c6982mr2896047lfs.42.1703123917349; Wed, 20 Dec
+ 2023 17:58:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/3] clocksource: Add JH7110 timer driver
-To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-CC: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner
-	<tglx@linutronix.de>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>, Rob Herring
-	<robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Philipp Zabel <p.zabel@pengutronix.de>, Walker Chen
-	<walker.chen@starfivetech.com>, <linux-kernel@vger.kernel.org>, Conor Dooley
-	<conor@kernel.org>
-References: <20231219145402.7879-1-xingyu.wu@starfivetech.com>
- <20231219145402.7879-3-xingyu.wu@starfivetech.com>
- <CAJM55Z_X9b=TJt7343kQ68ndN1MvH-rFM9hyEZMJRvQnOk72Yg@mail.gmail.com>
-Content-Language: en-US
-From: Xingyu Wu <xingyu.wu@starfivetech.com>
-In-Reply-To: <CAJM55Z_X9b=TJt7343kQ68ndN1MvH-rFM9hyEZMJRvQnOk72Yg@mail.gmail.com>
+References: <20231220102948.1963798-1-zhaoyang.huang@unisoc.com> <ZYL2rbD5UTz3s8gg@casper.infradead.org>
+In-Reply-To: <ZYL2rbD5UTz3s8gg@casper.infradead.org>
+From: Zhaoyang Huang <huangzhaoyang@gmail.com>
+Date: Thu, 21 Dec 2023 09:58:25 +0800
+Message-ID: <CAGWkznFcMkkqsKJSyHJfts9ZiYsxxg_dFTccieQ4+boRDJgG4g@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/1] mm: mark folio accessed in minor fault
+To: Matthew Wilcox <willy@infradead.org>
+Cc: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, steve.kang@unisoc.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EXCAS061.cuchost.com (172.16.6.21) To EXMBX061.cuchost.com
- (172.16.6.61)
-X-YovoleRuleAgent: yovoleflag
+Content-Transfer-Encoding: quoted-printable
 
-On 2023/12/20 21:59, Emil Renner Berthing wrote:
-> Xingyu Wu wrote:
->> Add timer driver for the StarFive JH7110 SoC and select it by
->> CONFIG_SOC_STARFIVE.
->>
->> This timer has four free-running and independent 32-bit counters.
->> Each channel(counter) can trigger an interrupt when timeout even
->> CPU is sleeping. So this timer is used as global timer and register
->> clockevent for each CPU core after riscv-timer registration on the
->> StarFive JH7110 SoC.
->>
->> Signed-off-by: Xingyu Wu <xingyu.wu@starfivetech.com>
->> ---
->>  MAINTAINERS                        |   7 +
->>  arch/riscv/Kconfig.socs            |   1 +
->>  drivers/clocksource/Kconfig        |   9 +
->>  drivers/clocksource/Makefile       |   1 +
->>  drivers/clocksource/timer-jh7110.c | 360 +++++++++++++++++++++++++++++
->>  include/linux/cpuhotplug.h         |   1 +
->>  6 files changed, 379 insertions(+)
->>  create mode 100644 drivers/clocksource/timer-jh7110.c
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 9104430e148e..fe0e803606a5 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -20617,6 +20617,13 @@ S:	Maintained
->>  F:	Documentation/devicetree/bindings/sound/starfive,jh7110-tdm.yaml
->>  F:	sound/soc/starfive/jh7110_tdm.c
->>
->> +STARFIVE JH7110 TIMER DRIVER
->> +M:	Samin Guo <samin.guo@starfivetech.com>
-> 
-> Last time I sent a mail to samin.guo@starfivetech.com it bounced. Was that just
-> a temporary error?
-> 
-> /Emil
+On Wed, Dec 20, 2023 at 10:14=E2=80=AFPM Matthew Wilcox <willy@infradead.or=
+g> wrote:
+>
+> On Wed, Dec 20, 2023 at 06:29:48PM +0800, zhaoyang.huang wrote:
+> > From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+> >
+> > Inactive mapped folio will be promoted to active only when it is
+> > scanned in shrink_inactive_list, while the vfs folio will do this
+> > immidiatly when it is accessed. These will introduce two affections:
+> >
+> > 1. NR_ACTIVE_FILE is not accurate as expected.
+> > 2. Low reclaiming efficiency caused by dummy nactive folio which should
+> >    be kept as earlier as shrink_active_list.
+> >
+> > I would like to suggest mark the folio be accessed in minor fault to
+> > solve this situation.
+>
+> This isn't going to be as effective as you imagine.  Almost all file
+> faults are handled through filemap_map_pages().  So I must ask, what
+> testing have you done with this patch?
+>
+> And while you're gathering data, what effect would this patch have on you=
+r
+> workloads?
+Thanks for heads-up, I am out of date for readahead mechanism. My goal
+is to have mapped file pages behave like other pages which could be
+promoted immediately when they are accessed. I will update the patch
+and provide benchmark data in new patch set.
 
-Oh, This email has been deactivated and I don't have his other personal email.
-I had dropped it in the driver but forget it here.
-Will fix.
-
-Thanks,
-Xingyu Wu
-
-> 
->> +M:	Xingyu Wu <xingyu.wu@starfivetech.com>
->> +S:	Supported
->> +F:	Documentation/devicetree/bindings/timer/starfive,jh7110-timer.yaml
->> +F:	drivers/clocksource/timer-jh7110.c
->> +
->>  STARFIVE JH71X0 CLOCK DRIVERS
->>  M:	Emil Renner Berthing <kernel@esmil.dk>
->>  M:	Hal Feng <hal.feng@starfivetech.com>
-
+>
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index 2e6b1daac6cd..8cecf82dcc5a 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -3418,6 +3418,7 @@ static struct folio *next_uptodate_folio(struct xa_=
+state *xas,
+>                 max_idx =3D DIV_ROUND_UP(i_size_read(mapping->host), PAGE=
+_SIZE);
+>                 if (xas->xa_index >=3D max_idx)
+>                         goto unlock;
+> +               folio_mark_accessed(folio);
+>                 return folio;
+>  unlock:
+>                 folio_unlock(folio);
+>
