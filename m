@@ -1,91 +1,251 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777E74E623;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E420D4F8B4;
 	Thu, 21 Dec 2023 09:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="fh5PTc5S"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BL13HQO028427;
-	Thu, 21 Dec 2023 01:30:00 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	pfpt0220; bh=4u3+udgkNCeqmQbvJktX7SgT61qZlUpcC2uaQN0FcYM=; b=fh5
-	PTc5SQuCwa4bFGCEiu9a16c8Du7eI4Y0PMllF3x2iB7P+n67LB4YmBMnh7u++wlY
-	lLObD/VruvM0wNycsqH0UZ4HtlIAwfBr0izu7UD8T6ZrgUBbwa9UUOCg/4Q7LglL
-	RBYtv6pQVdpETeL/b7LjiLoEkaWle+0mJGMtmyQPdkVxv+r5P5hcvWuNSGTjAlq7
-	AEXNXM/aY0BnS6nUPVmxsfJVEAbtK+KvKNRG6tUAhl3IlQt/LQPm1CM8lrY6KpeK
-	yjsW85ZQtT5OETdO3F3QZCvnwo13lQQtXpX1O5JlBj3070DOgN+wmop/3wr396mX
-	zrHZJlvm0HDc959oKSQ==
-Received: from dc5-exch01.marvell.com ([199.233.59.181])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3v3ntrqm34-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-	Thu, 21 Dec 2023 01:29:59 -0800 (PST)
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 21 Dec
- 2023 01:29:56 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
- Transport; Thu, 21 Dec 2023 01:29:56 -0800
-Received: from ubuntu-PowerEdge-T110-II.sclab.marvell.com (unknown [10.106.27.86])
-	by maili.marvell.com (Postfix) with ESMTP id EDF9B3F7048;
-	Thu, 21 Dec 2023 01:29:55 -0800 (PST)
-From: Shinas Rasheed <srasheed@marvell.com>
-To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <hgani@marvell.com>, <vimleshk@marvell.com>, <sedara@marvell.com>,
-        <srasheed@marvell.com>, <egallen@redhat.com>, <mschmidt@redhat.com>,
-        <pabeni@redhat.com>, <kuba@kernel.org>, <horms@kernel.org>,
-        <wizhao@redhat.com>, <kheib@redhat.com>, <konguyen@redhat.com>
-Subject: [PATCH net-next v1 8/8] octeon_ep_vf: update MAINTAINERS
-Date: Thu, 21 Dec 2023 01:28:44 -0800
-Message-ID: <20231221092844.2885872-9-srasheed@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20231221092844.2885872-1-srasheed@marvell.com>
-References: <20231221092844.2885872-1-srasheed@marvell.com>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="AgAxTj55";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="AgAxTj55"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 3AA9F1FB5E;
+	Thu, 21 Dec 2023 09:30:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1703151000; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=H4HSDhkn3mbzmn+HYU4/3nbaXxmpHuloAKvKi9O9PuU=;
+	b=AgAxTj55I08NGUtiw7xFFRpCJA9QY9GYswORVLiK6V8E/0xB8HJFqZg7nkUOPXh+xTjrtF
+	itfvWm1l5RiV7Yp/cQ0k17lUCDF+jZh9y1zcEZsDNVwHBRFx0Qp4yApRMvZXqkpK1CabC7
+	JuC/t2PNhuMfCWcaCH3mDiJgqGnZyo0=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1703151000; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=H4HSDhkn3mbzmn+HYU4/3nbaXxmpHuloAKvKi9O9PuU=;
+	b=AgAxTj55I08NGUtiw7xFFRpCJA9QY9GYswORVLiK6V8E/0xB8HJFqZg7nkUOPXh+xTjrtF
+	itfvWm1l5RiV7Yp/cQ0k17lUCDF+jZh9y1zcEZsDNVwHBRFx0Qp4yApRMvZXqkpK1CabC7
+	JuC/t2PNhuMfCWcaCH3mDiJgqGnZyo0=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EC01213725;
+	Thu, 21 Dec 2023 09:29:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id MaiZNpcFhGU2MgAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Thu, 21 Dec 2023 09:29:59 +0000
+Date: Thu, 21 Dec 2023 10:29:59 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Dan Schatzberg <schatzberg.dan@gmail.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Yosry Ahmed <yosryahmed@google.com>, Huan Yang <link@vivo.com>,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, Tejun Heo <tj@kernel.org>,
+	Zefan Li <lizefan.x@bytedance.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shakeel Butt <shakeelb@google.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	SeongJae Park <sj@kernel.org>,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
+	Nhat Pham <nphamcs@gmail.com>, Yue Zhao <findns94@gmail.com>
+Subject: Re: [PATCH v5 2/2] mm: add swapiness= arg to memory.reclaim
+Message-ID: <ZYQFlynE7CU_Fjoc@tiehlicka>
+References: <20231220152653.3273778-1-schatzberg.dan@gmail.com>
+ <20231220152653.3273778-3-schatzberg.dan@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: Jn4P4RTJt4vM9AqSMMxRR63Cvlqz6deq
-X-Proofpoint-ORIG-GUID: Jn4P4RTJt4vM9AqSMMxRR63Cvlqz6deq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231220152653.3273778-3-schatzberg.dan@gmail.com>
+X-Spam-Level: 
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-1.31 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 R_RATELIMIT(0.00)[to_ip_from(RLsgd6kpfonsu388crrfsk7e3y)];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_TRACE(0.00)[suse.com:+];
+	 MX_GOOD(-0.01)[];
+	 FREEMAIL_TO(0.00)[gmail.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 BAYES_HAM(-3.00)[100.00%];
+	 ARC_NA(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 RCPT_COUNT_TWELVE(0.00)[19];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:email];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[cmpxchg.org,linux.dev,google.com,vivo.com,vger.kernel.org,kvack.org,kernel.org,bytedance.com,lwn.net,linux-foundation.org,huawei.com,gmail.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[];
+	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=AgAxTj55
+X-Spam-Score: -1.31
+X-Rspamd-Queue-Id: 3AA9F1FB5E
 
-add MAINTAINERS for octeon_ep_vf driver.
+On Wed 20-12-23 07:26:51, Dan Schatzberg wrote:
+> Allow proactive reclaimers to submit an additional swappiness=<val>
+> argument to memory.reclaim. This overrides the global or per-memcg
+> swappiness setting for that reclaim attempt.
+> 
+> For example:
+> 
+> echo "2M swappiness=0" > /sys/fs/cgroup/memory.reclaim
+> 
+> will perform reclaim on the rootcg with a swappiness setting of 0 (no
+> swap) regardless of the vm.swappiness sysctl setting.
+> 
+> Userspace proactive reclaimers use the memory.reclaim interface to
+> trigger reclaim. The memory.reclaim interface does not allow for any way
+> to effect the balance of file vs anon during proactive reclaim. The only
+> approach is to adjust the vm.swappiness setting. However, there are a
+> few reasons we look to control the balance of file vs anon during
+> proactive reclaim, separately from reactive reclaim:
+> 
+> * Swapout should be limited to manage SSD write endurance. In near-OOM
+> situations we are fine with lots of swap-out to avoid OOMs. As these are
+> typically rare events, they have relatively little impact on write
+> endurance. However, proactive reclaim runs continuously and so its
+> impact on SSD write endurance is more significant. Therefore it is
+> desireable to control swap-out for proactive reclaim separately from
+> reactive reclaim
+> 
+> * Some userspace OOM killers like systemd-oomd[1] support OOM killing on
+> swap exhaustion. This makes sense if the swap exhaustion is triggered
+> due to reactive reclaim but less so if it is triggered due to proactive
+> reclaim (e.g. one could see OOMs when free memory is ample but anon is
+> just particularly cold). Therefore, it's desireable to have proactive
+> reclaim reduce or stop swap-out before the threshold at which OOM
+> killing occurs.
+> 
+> In the case of Meta's Senpai proactive reclaimer, we adjust
+> vm.swappiness before writes to memory.reclaim[2]. This has been in
+> production for nearly two years and has addressed our needs to control
+> proactive vs reactive reclaim behavior but is still not ideal for a
+> number of reasons:
+> 
+> * vm.swappiness is a global setting, adjusting it can race/interfere
+> with other system administration that wishes to control vm.swappiness.
+> In our case, we need to disable Senpai before adjusting vm.swappiness.
+> 
+> * vm.swappiness is stateful - so a crash or restart of Senpai can leave
+> a misconfigured setting. This requires some additional management to
+> record the "desired" setting and ensure Senpai always adjusts to it.
+> 
+> With this patch, we avoid these downsides of adjusting vm.swappiness
+> globally.
 
-Signed-off-by: Shinas Rasheed <srasheed@marvell.com>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Thank you for extending the changelog with usecases!
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index dda78b4ce707..42e144c5b1e3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12858,6 +12858,15 @@ L:	netdev@vger.kernel.org
- S:	Supported
- F:	drivers/net/ethernet/marvell/octeon_ep
+> [1]https://www.freedesktop.org/software/systemd/man/latest/systemd-oomd.service.html
+> [2]https://github.com/facebookincubator/oomd/blob/main/src/oomd/plugins/Senpai.cpp#L585-L598
+> 
+> Signed-off-by: Dan Schatzberg <schatzberg.dan@gmail.com>
+> ---
+>  Documentation/admin-guide/cgroup-v2.rst | 18 ++++----
+>  include/linux/swap.h                    |  3 +-
+>  mm/memcontrol.c                         | 56 ++++++++++++++++++++-----
+>  mm/vmscan.c                             | 13 +++++-
+>  4 files changed, 69 insertions(+), 21 deletions(-)
+
+LGTM
+Acked-by: Michal Hocko <mhocko@suse.com.
+
+Just one minor thing. It would be really great to prevent from potential
+incorrect use of mem_cgroup_swappiness. This should be internal function
+to memcg. Now, having scan_control internal to vmscan.c makes that
+harder and moving it out to swap.h or internal.h sounds overreaching.
+
+We could do this at least to reduce those mistakes. I can make it a
+proper patch if this seems reasonable or you can fold it into your patch
+directly.
+--- 
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index f98dff23b758..5f3a182e9515 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -92,8 +92,10 @@ struct scan_control {
+ 	unsigned long	anon_cost;
+ 	unsigned long	file_cost;
  
-+MARVELL OCTEON ENDPOINT VF DRIVER
-+M:	Veerasenareddy Burru <vburru@marvell.com>
-+M:	Sathesh Edara <sedara@marvell.com>
-+M:	Shinas Rasheed <srasheed@marvell.com>
-+M:	Satananda Burla <sburla@marvell.com>
-+L:	netdev@vger.kernel.org
-+S:	Supported
-+F:	drivers/net/ethernet/marvell/octeon_ep_vf
+-	/* Swappiness value for reclaim. NULL will fall back to per-memcg/global value */
++#ifdef CONFIG_MEMCG
++	/* Swappiness value for reclaim. Always use sc_swappiness()! */
+ 	int *swappiness;
++#endif
+ 
+ 	/* Can active folios be deactivated as part of reclaim? */
+ #define DEACTIVATE_ANON 1
+@@ -230,6 +232,13 @@ static bool writeback_throttling_sane(struct scan_control *sc)
+ #endif
+ 	return false;
+ }
 +
- MARVELL OCTEONTX2 PHYSICAL FUNCTION DRIVER
- M:	Sunil Goutham <sgoutham@marvell.com>
- M:	Geetha sowjanya <gakula@marvell.com>
++static int sc_swappiness(struct scan_control *sc, struct mem_cgroup *memcg)
++{
++	if (sc->swappiness)
++		return *sc->swappiness;
++	return mem_cgroup_swappiness(memcg);
++}
+ #else
+ static bool cgroup_reclaim(struct scan_control *sc)
+ {
+@@ -245,6 +254,10 @@ static bool writeback_throttling_sane(struct scan_control *sc)
+ {
+ 	return true;
+ }
++static int sc_swappiness(struct scan_control *sc, struct mem_cgroup *memcg)
++{
++	return READ_ONCE(vm_swappiness);
++}
+ #endif
+ 
+ static void set_task_reclaim_state(struct task_struct *task,
+@@ -2330,8 +2343,7 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
+ 	struct pglist_data *pgdat = lruvec_pgdat(lruvec);
+ 	struct mem_cgroup *memcg = lruvec_memcg(lruvec);
+ 	unsigned long anon_cost, file_cost, total_cost;
+-	int swappiness = sc->swappiness ?
+-		*sc->swappiness : mem_cgroup_swappiness(memcg);
++	int swappiness = sc_swappiness(sc, memcg);
+ 	u64 fraction[ANON_AND_FILE];
+ 	u64 denominator = 0;	/* gcc */
+ 	enum scan_balance scan_balance;
+@@ -2612,10 +2624,7 @@ static int get_swappiness(struct lruvec *lruvec, struct scan_control *sc)
+ 	    mem_cgroup_get_nr_swap_pages(memcg) < MIN_LRU_BATCH)
+ 		return 0;
+ 
+-	if (sc->swappiness)
+-		return *sc->swappiness;
+-
+-	return mem_cgroup_swappiness(memcg);
++	return sc_swappiness(sc, memcg);
+ }
+ 
+ static int get_nr_gens(struct lruvec *lruvec, int type)
 -- 
-2.25.1
-
+Michal Hocko
+SUSE Labs
