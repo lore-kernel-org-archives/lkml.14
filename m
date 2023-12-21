@@ -1,191 +1,200 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [81.169.146.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A3958214
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 15:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C78C14F1E9;
+	Thu, 21 Dec 2023 15:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goldelico.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=goldelico.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CFb1oPYU"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3368ae75082so382204f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 07:24:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703172258; x=1703777058; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EW4UFXmfryDRvAbEc3thu9hdl9GkSp2IgG/2/oPu1XE=;
-        b=CFb1oPYUVZuKtyxsTQYDiYV7XR5OXVAgJd9Mktt1mqjEsxGfoAnARasGZcvGTEpUAZ
-         TfO5HxearkFBts+C1t1eN+0xu5TAmysCFz/AIm3H7GDkPOvzmOgy0vJGyO14ERtH2HhL
-         1EgMxuMsGDBFA3EPclCqW9Y1BnsT2Q9lCgNIZlSsjHje6Vz1qEg7Umi9NTAqBbizXnTJ
-         kkTXbcEQdSFbxNsSW4B1AkYaoGhltwQYa5Ll8T3dZ77Yc483TOi1yNAIeWSycHHE5/Zx
-         ntAdq/QKAXi2/Sz6yASwTO7BWt1pGWNjc2OaAne9MkWlQBq46ZEZG8sADaZdXixBtdYS
-         Vffw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703172258; x=1703777058;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EW4UFXmfryDRvAbEc3thu9hdl9GkSp2IgG/2/oPu1XE=;
-        b=pfCqxeJStDnVqw5dT9nDBY3rAHrSle54zqGhWROFbolx1tzeoIiye1cqUrbvWn7sTz
-         mKJYWTf10+xKVylAbPhGpWpnZAHmem16snWiY8BRBsZTyZkadqxlQzfOT6T1exXiRQct
-         SWNMq2hMDD+akq7uEVbdoYuEP+0U8jM4Nddn+1mz/n2HF26YexSQFr/RghER0Pfb2o7f
-         pfi/ymRHq33C5UgSXTcG/ny0RJy0/GfGGPbj+3pqe+hcvQfmb98FdDZrm0HXzaBioxTh
-         QTbrgVyd2tS//r3fjKzlCR2sUMs0ma+2eXMsvH7oVC9nQKoVWrWXNQEVKOHCteEJJRgq
-         szRQ==
-X-Gm-Message-State: AOJu0YywhDGcG29hidiVaG4tk/YEDOTLmQCRzUQH44QyxSBs2wcR9a5F
-	EKhYU2fV1J5qWVgpAQY8d6yTCA==
-X-Google-Smtp-Source: AGHT+IFV4lp3HaT2elvrC1ZEK9+aGj2nsqqaqkLI2enYvIHG+UiSLXNYY15i3mv5tv1y2IdbLT/KwQ==
-X-Received: by 2002:a05:600c:3b25:b0:40c:6a61:23da with SMTP id m37-20020a05600c3b2500b0040c6a6123damr564633wms.41.1703172258515;
-        Thu, 21 Dec 2023 07:24:18 -0800 (PST)
-Received: from vingu-book.. ([2a01:e0a:f:6020:2db4:9d2a:db65:42d6])
-        by smtp.gmail.com with ESMTPSA id t3-20020a05600c450300b0040c4acaa4bfsm11466974wmo.19.2023.12.21.07.24.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 07:24:17 -0800 (PST)
-From: Vincent Guittot <vincent.guittot@linaro.org>
-To: catalin.marinas@arm.com,
-	will@kernel.org,
-	sudeep.holla@arm.com,
-	rafael@kernel.org,
-	viresh.kumar@linaro.org,
-	agross@kernel.org,
-	andersson@kernel.org,
-	konrad.dybcio@linaro.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	bristot@redhat.com,
-	vschneid@redhat.com,
-	lukasz.luba@arm.com,
-	rui.zhang@intel.com,
-	mhiramat@kernel.org,
-	daniel.lezcano@linaro.org,
-	amit.kachhap@gmail.com,
-	linux@armlinux.org.uk,
-	corbet@lwn.net,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH v2 5/5] sched/pelt: Remove shift of thermal clock
-Date: Thu, 21 Dec 2023 16:24:07 +0100
-Message-Id: <20231221152407.436177-6-vincent.guittot@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231221152407.436177-1-vincent.guittot@linaro.org>
-References: <20231221152407.436177-1-vincent.guittot@linaro.org>
+	dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="UA7Q0CO0";
+	dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="SZJRLTbw"
+ARC-Seal: i=1; a=rsa-sha256; t=1703172232; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=UwUq/YQX2zRCRkfeyBlXslp0UWcH60extncrAjK6TFBnwi3nkGDhK7z7n4fs/T+/S2
+    A9hP3ZMOlc3HyO43nWI4FkajiLPRoVqdu3Bgv+Tq/2v0oqNYh3D7xhVqJs2Gwt9jXTLS
+    uLYEJeL1Mxgnhf+KDAzWJaZB+hZq03wsgE0/ZB+qKnC44dZLziJANpDQIfHm8OXLr5cv
+    5sDVOFwmSO/tzMtzwJq1ATYGsYVocIV5FIPunxob5oKfBA6O/pRA956O070QgybZESL4
+    2xgJfnImKuLUm5n+liNHrbhrydrnlCIVKut35ON2oCGgm7i2CIibdxLLj4msQj9c02GB
+    R0lw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1703172232;
+    s=strato-dkim-0002; d=strato.com;
+    h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=IlLQWtO5L6QKmPmiq2x6VX4CBIJlI6GOZ++GNJegOGk=;
+    b=pxpT2VbelrAIZDkXj9IZhQXR9SfF3KLzBbr6KVGO6OCrcKuByoIek76R7a9HocWSRY
+    4jU7M2owiVka7Db3TV1j8YGA55CIydyCi9g3ZbIiaivJmAcmG6uzXdy0ea6KAA124um+
+    aeJBNpe8KGJ0JilGgs332uGi6bFOQn2CYD6KI0k162NCKyICkskKKfvglcqduswjI+U+
+    7qRI36HuUoiUspzYHqdZKuPz2IcXNhQgT1vUWkCabCnE1uKkKAhbRDblwQsR9cdzabjh
+    PO5uZOLxdRWtK9qqRquggg8UKmwjCFJY+3iAH9dPSQ0lygp9gVfQrGTTBhj6Iv5qP5iM
+    7szg==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1703172232;
+    s=strato-dkim-0002; d=goldelico.com;
+    h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=IlLQWtO5L6QKmPmiq2x6VX4CBIJlI6GOZ++GNJegOGk=;
+    b=UA7Q0CO0/L9rhAgeD5fPYyWE1i6CylAFokMLXBp/QAHRWSlzucUgdV0Js+Kj9kHU1j
+    KEHc7Vow77+V4YZQAqaNDN1oaMXGS4Bcu8WaSQK98VHeR/pNELscmY1tQG5jW0DOEXdU
+    9cbFsDGfhg/JHMr/5C7I6lBjLK8Lh/gdZXAWPbukVgsd9c56f7CXW4Z7DIKORqELfXkC
+    83x+KzwuBM+bC6Y9rMhrXSYqaVJDqLrro0PCf1gUlRy48qJvDH4YXy0lg+KPdyIJdDCU
+    aq2LH9NLj26sB6QJrYzXuN89rrGBsL9D2gWkDXqyjN5lJt2d61gK9eJ15LpdGZXNk6yn
+    toBA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1703172232;
+    s=strato-dkim-0003; d=goldelico.com;
+    h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=IlLQWtO5L6QKmPmiq2x6VX4CBIJlI6GOZ++GNJegOGk=;
+    b=SZJRLTbwvTIaw2c1/vOtdG1/jR1e72SIo6ZjDY5ScOp5xW1MMGbn1zATNGB9p9WqS8
+    oNccSextnPwLlTzlxTAw==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qviAxtjc3yiuvr5qbMskH1rzDt9Ntflha3riRgdpClD1qY="
+Received: from smtpclient.apple
+    by smtp.strato.de (RZmta 49.10.0 AUTH)
+    with ESMTPSA id wfeb35zBLFNoFFz
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+	(Client did not present a certificate);
+    Thu, 21 Dec 2023 16:23:50 +0100 (CET)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.300.61.1.2\))
+Subject: Re: [PATCH RFC 01/10] dt-bindings: gpu: Add PowerVR Series5 SGX GPUs
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <nzqeqwof44e3nxjz6lsxmxcfh235unbu343br45esxh6vinskp@xvjydpxhvsuk>
+Date: Thu, 21 Dec 2023 16:23:39 +0100
+Cc: Andrew Davis <afd@ti.com>,
+ Frank Binns <frank.binns@imgtec.com>,
+ Donald Robson <donald.robson@imgtec.com>,
+ Matt Coster <matt.coster@imgtec.com>,
+ Adam Ford <aford173@gmail.com>,
+ Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>,
+ =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+ Tony Lindgren <tony@atomide.com>,
+ Nishanth Menon <nm@ti.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>,
+ Tero Kristo <kristo@kernel.org>,
+ Paul Cercueil <paul@crapouillou.net>,
+ dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev,
+ linux-omap@vger.kernel.org,
+ linux-mips@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F2D7693E-7769-463A-97A8-BA952EB5320B@goldelico.com>
+References: <23livt5mcc64bb6lkeec2uxp5cyn4wfekwaj6wzrjnrkndvwgj@6tveqglqpr4v>
+ <B3A1B8A7-0363-4ECB-AFBF-576FECA569FA@goldelico.com>
+ <vawv2mwhonuyvgmp7uox4rfgdcjwg5fa7hmbcfgl3wiase6e4p@tyavpclppfvu>
+ <6BC60156-89E2-4734-BD00-B49A9A6C1D7A@goldelico.com>
+ <6gpehpoz54f5lxhmvirqbfwmq7dpgiroy27cljpvu66wtn7aqy@lgrh7wysyxnp>
+ <D8AB6CC4-DCA5-40DD-A311-94A16FF59254@goldelico.com>
+ <oobcl2kfsuph27er7rflfqvt3lu6athufomxv5chf3uctx4emh@x6rzjtlskhbf>
+ <F58855EC-D87D-4747-A363-0E7AA5DB1AEC@goldelico.com>
+ <22cny5aumc5wafsrjd3j55zcjbjf2viip64kfbjiqis2grtd6t@wg5dxeuzil6l>
+ <3E03E913-48E1-49EC-A6C9-EAC1612E65E7@goldelico.com>
+ <nzqeqwof44e3nxjz6lsxmxcfh235unbu343br45esxh6vinskp@xvjydpxhvsuk>
+To: Maxime Ripard <mripard@kernel.org>
+X-Mailer: Apple Mail (2.3774.300.61.1.2)
 
-The optional shift of the clock used by thermal/hw load avg has been
-introduced to handle case where the signal was not always a high frequency
-hw signal. Now that cpufreq provides a signal for firmware and
-SW pressure, we can remove this exception and always keep this PELT signal
-aligned with other signals.
-Mark deprecated sched_thermal_decay_shift boot parameter.
 
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
----
- .../admin-guide/kernel-parameters.txt          |  1 +
- kernel/sched/core.c                            |  2 +-
- kernel/sched/fair.c                            | 10 ++--------
- kernel/sched/sched.h                           | 18 ------------------
- 4 files changed, 4 insertions(+), 27 deletions(-)
+> Am 21.12.2023 um 09:58 schrieb Maxime Ripard <mripard@kernel.org>:
+>=20
+> Cool, so what you're saying is that your plan is to support those GPUs
+> upstream in the imagination driver?
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 65731b060e3f..2ee15522b15d 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5722,6 +5722,7 @@
- 			but is useful for debugging and performance tuning.
- 
- 	sched_thermal_decay_shift=
-+			[Deprecated]
- 			[KNL, SMP] Set a decay shift for scheduler thermal
- 			pressure signal. Thermal pressure signal follows the
- 			default decay period of other scheduler pelt
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index a6f084bdf1c5..c68e47bfd5ae 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -5670,7 +5670,7 @@ void scheduler_tick(void)
- 
- 	update_rq_clock(rq);
- 	hw_pressure = arch_scale_hw_pressure(cpu_of(rq));
--	update_hw_load_avg(rq_clock_hw(rq), rq, hw_pressure);
-+	update_hw_load_avg(rq_clock_task(rq), rq, hw_pressure);
- 	curr->sched_class->task_tick(rq, curr, 0);
- 	if (sched_feat(LATENCY_WARN))
- 		resched_latency = cpu_resched_latency(rq);
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index ce0d32f441a8..16d71e764131 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -78,15 +78,9 @@ static unsigned int normalized_sysctl_sched_base_slice	= 750000ULL;
- 
- const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
- 
--int sched_hw_decay_shift;
- static int __init setup_sched_thermal_decay_shift(char *str)
- {
--	int _shift = 0;
--
--	if (kstrtoint(str, 0, &_shift))
--		pr_warn("Unable to set scheduler thermal pressure decay shift parameter\n");
--
--	sched_hw_decay_shift = clamp(_shift, 0, 10);
-+	pr_warn("Ignoring the deprecated sched_thermal_decay_shift= option\n");
- 	return 1;
- }
- __setup("sched_thermal_decay_shift=", setup_sched_thermal_decay_shift);
-@@ -9271,7 +9265,7 @@ static bool __update_blocked_others(struct rq *rq, bool *done)
- 
- 	decayed = update_rt_rq_load_avg(now, rq, curr_class == &rt_sched_class) |
- 		  update_dl_rq_load_avg(now, rq, curr_class == &dl_sched_class) |
--		  update_hw_load_avg(rq_clock_hw(rq), rq, hw_pressure) |
-+		  update_hw_load_avg(now, rq, hw_pressure) |
- 		  update_irq_load_avg(rq, 0);
- 
- 	if (others_have_blocked(rq))
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 677d24202eec..6fc6718a1060 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1520,24 +1520,6 @@ static inline u64 rq_clock_task(struct rq *rq)
- 	return rq->clock_task;
- }
- 
--/**
-- * By default the decay is the default pelt decay period.
-- * The decay shift can change the decay period in
-- * multiples of 32.
-- *  Decay shift		Decay period(ms)
-- *	0			32
-- *	1			64
-- *	2			128
-- *	3			256
-- *	4			512
-- */
--extern int sched_hw_decay_shift;
--
--static inline u64 rq_clock_hw(struct rq *rq)
--{
--	return rq_clock_task(rq) >> sched_hw_decay_shift;
--}
--
- static inline void rq_clock_skip_update(struct rq *rq)
- {
- 	lockdep_assert_rq_held(rq);
--- 
-2.34.1
+Yes, I would like to see PowerVR Series 5 SGX supported upstream since =
+there
+are still so many devices in the wild which could use it. The most =
+advanced
+being the Pyra handheld gaming computer but there are omap4 based phones
+or other omap3/amm335x based devices.
+
+And the only reason the OpenPVRSGX group was founded (BTW not by me, I =
+am just
+maintaining the code and running a mailing list because it was rejected =
+to host
+it on vger.kernel.org), was to make that happen.
+
+=46rom the GitHub description:
+	This is about shaping existing GPL Linux kernel drivers for the =
+PVR/SGX5
+	architecture so that they can become accepted into =
+drivers/staging
+
+But nobody can currently tell if it can be integrated with the recently =
+upstreamed
+Rogue driver (I wouldn't call that *the* imagination driver) or if it =
+better stays
+a separate driver because the first would need touching closed =
+user-space code
+and GPU firmware.
+
+And nobody knows who is capable and willing to work on it. It depends on =
+access to
+(confidential) documentation and available time to make such a big task =
+a rewarding
+project. And discussions like this one are not at all encouraging to =
+even try.
+
+>> Now, IMHO all the pros and cons are on the table and the question is
+>> who makes a decision how to go.
+>=20
+> You haven't listed any pro so far, you're claiming that the one I =
+raise
+> are irrelevant.
+
+I have listed some "pros" for "single file" but you apparently don't see
+them as such. I can't change that. The main argument is that a single =
+file is
+simpler than two files duplicating parts, which are apparently the same
+(integration of PVR architectures into SoC doesn't differ very much: =
+shared
+register block, DMA memory, clocks, resets etc.).
+Yours is that two files duplicating such common things is "more =
+convenient".
+I just wonder for whom.
+
+But it seems as if the IMHO second best solution has already been =
+chosen.
+So let it be.
+
+>> Then the currently-out-of-tree driver for the sgx5 can be reworked in
+>> less than half an hour without loosing functionality.
+>=20
+> Again, you're making it harder than it needs to be for no particular
+> reason other than the potential file name clash that can be addressed.
+
+What I want to avoid is a situation that upstream activities do not take =
+the
+existing and working out-of-tree SGX driver into account and make =
+porting
+(not even speaking of upstreaming) that driver more difficult than =
+necessary
+and force device tree files to contain redundant information nobody will =
+need
+and use. You can of course ignore experience and suggestions of people
+who have worked on an SGX driver for a while. But that is the reason why =
+I
+participate in this discussion and raise my voice.
+
+Now, I am looking forward to a v2 of this patch.
+
+BR,
+Nikolaus
+
 
