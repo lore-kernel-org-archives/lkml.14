@@ -1,117 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3E84CB42;
-	Thu, 21 Dec 2023 09:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BxfEhmEa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703149426; x=1734685426;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=QMG+Yk4D8j/JmasRk+1daUK2kCpsOOtXnCC9FPmPDII=;
-  b=BxfEhmEa8HZE7dP3RQbc9VI0k7IfcLwalctm68Nv7/rL8RlvXXJR4L61
-   yvrumOdnvLcLboUHHCnPH7ReyM4NHqPmVh0ajNCgI12t5T5YXGsPXG7IQ
-   4xy/HpB+wsUrMpson2/YSE9l2eiY9onXR34mjDZ+I2E/0gAHe0n/WKg+i
-   Iqanr4XFAg1PSWwqWiLXLHGOB8rurOMj0W1x0f2o72eUCmqTkBFX8UpE9
-   BJgiZYxzXA06YEVuycnf3hqSJGyJ/QWBHSUSZbiuLt5KRDF6MH2mvDRKm
-   ojnxfo3aRDFgaECpdVl3vCNCmF3fST9XvdrXymEfZvhJnpVCh3xh54fkd
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="398729607"
-X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="398729607"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 01:03:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="900028572"
-X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="900028572"
-Received: from 984fee00a5ca.jf.intel.com (HELO embargo.jf.intel.com) ([10.165.9.183])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 01:03:10 -0800
-From: Yang Weijiang <weijiang.yang@intel.com>
-To: seanjc@google.com,
-	pbonzini@redhat.com,
-	dave.hansen@intel.com,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: peterz@infradead.org,
-	chao.gao@intel.com,
-	rick.p.edgecombe@intel.com,
-	mlevitsk@redhat.com,
-	john.allen@amd.com,
-	weijiang.yang@intel.com
-Subject: [PATCH v8 04/26] x86/fpu/xstate: Introduce XFEATURE_MASK_KERNEL_DYNAMIC xfeature set
-Date: Thu, 21 Dec 2023 09:02:17 -0500
-Message-Id: <20231221140239.4349-5-weijiang.yang@intel.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20231221140239.4349-1-weijiang.yang@intel.com>
-References: <20231221140239.4349-1-weijiang.yang@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996274CE11;
+	Thu, 21 Dec 2023 09:03:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4SwkxQ52fPz9vCB;
+	Thu, 21 Dec 2023 10:03:38 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id FKlQMyQJLnqX; Thu, 21 Dec 2023 10:03:38 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4Swkwm32vqz9v9n;
+	Thu, 21 Dec 2023 10:03:04 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 64C748B788;
+	Thu, 21 Dec 2023 10:03:04 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id EZnoZuYRvcNG; Thu, 21 Dec 2023 10:03:04 +0100 (CET)
+Received: from PO20335.idsi0.si.c-s.fr (PO25106.IDSI0.si.c-s.fr [192.168.232.169])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id E4F228B765;
+	Thu, 21 Dec 2023 10:03:03 +0100 (CET)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Luis Chamberlain <mcgrof@kernel.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-modules@vger.kernel.org
+Subject: [PATCH 3/3] powerpc: Simplify strict_kernel_rwx_enabled()
+Date: Thu, 21 Dec 2023 10:02:48 +0100
+Message-ID: <c54d7059af678e68a44f308b5b7257de1f185593.1703149011.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <7b5df1782e94a755b4a18733af44d17d8dd8b37b.1703149011.git.christophe.leroy@csgroup.eu>
+References: <7b5df1782e94a755b4a18733af44d17d8dd8b37b.1703149011.git.christophe.leroy@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1703149365; l=975; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=61tIdC869creNbvoUUZwC7sh+5NT+SZdhVBf8LQ7dmo=; b=VM3FCIwO0MJ1zMIjQiNfj86TkrOAgOPhedmsu+HpbdECtBstZmTqjVAlvXBy5YRxmlHpNeXW8 ztSK1PqCA/IB5f4La4LlLFvdZT5vzS7bceDCx4bpcXDmTR98vximFzt
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
 Content-Transfer-Encoding: 8bit
 
-Define a new XFEATURE_MASK_KERNEL_DYNAMIC mask to specify the features
-that can be optionally enabled by kernel components. This is similar to
-XFEATURE_MASK_USER_DYNAMIC in that it contains optional xfeatures that
-can allows the FPU buffer to be dynamically sized. The difference is that
-the KERNEL variant contains supervisor features and will be enabled by
-kernel components that need them, and not directly by the user. Currently
-it's used by KVM to configure guest dedicated fpstate for calculating
-the xfeature and fpstate storage size etc.
+Now that rodata_enabled is always declared, remove #ifdef
+and define a single version of strict_kernel_rwx_enabled().
 
-The kernel dynamic xfeatures now only contain XFEATURE_CET_KERNEL, which
-is supported by host as they're enabled in kernel XSS MSR setting but
-relevant CPU feature, i.e., supervisor shadow stack, is not enabled in
-host kernel therefore it can be omitted for normal fpstate by default.
-
-Remove the kernel dynamic feature from fpu_kernel_cfg.default_features
-so that the bits in xstate_bv and xcomp_bv are cleared and xsaves/xrstors
-can be optimized by HW for normal fpstate.
-
-Suggested-by: Dave Hansen <dave.hansen@intel.com>
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/x86/include/asm/fpu/xstate.h | 5 ++++-
- arch/x86/kernel/fpu/xstate.c      | 1 +
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ arch/powerpc/include/asm/mmu.h | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
-index 3b4a038d3c57..a212d3851429 100644
---- a/arch/x86/include/asm/fpu/xstate.h
-+++ b/arch/x86/include/asm/fpu/xstate.h
-@@ -46,9 +46,12 @@
- #define XFEATURE_MASK_USER_RESTORE	\
- 	(XFEATURE_MASK_USER_SUPPORTED & ~XFEATURE_MASK_PKRU)
+diff --git a/arch/powerpc/include/asm/mmu.h b/arch/powerpc/include/asm/mmu.h
+index d8b7e246a32f..24241995f740 100644
+--- a/arch/powerpc/include/asm/mmu.h
++++ b/arch/powerpc/include/asm/mmu.h
+@@ -330,17 +330,10 @@ static __always_inline bool early_radix_enabled(void)
+ 	return early_mmu_has_feature(MMU_FTR_TYPE_RADIX);
+ }
  
--/* Features which are dynamically enabled for a process on request */
-+/* Features which are dynamically enabled per userspace request */
- #define XFEATURE_MASK_USER_DYNAMIC	XFEATURE_MASK_XTILE_DATA
+-#ifdef CONFIG_STRICT_KERNEL_RWX
+ static inline bool strict_kernel_rwx_enabled(void)
+ {
+-	return rodata_enabled;
++	return IS_ENABLED(CONFIG_STRICT_KERNEL_RWX) && rodata_enabled;
+ }
+-#else
+-static inline bool strict_kernel_rwx_enabled(void)
+-{
+-	return false;
+-}
+-#endif
  
-+/* Features which are dynamically enabled per kernel side request */
-+#define XFEATURE_MASK_KERNEL_DYNAMIC	XFEATURE_MASK_CET_KERNEL
-+
- /* All currently supported supervisor features */
- #define XFEATURE_MASK_SUPERVISOR_SUPPORTED (XFEATURE_MASK_PASID | \
- 					    XFEATURE_MASK_CET_USER | \
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index 03e166a87d61..ca4b83c142eb 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -824,6 +824,7 @@ void __init fpu__init_system_xstate(unsigned int legacy_size)
- 	/* Clean out dynamic features from default */
- 	fpu_kernel_cfg.default_features = fpu_kernel_cfg.max_features;
- 	fpu_kernel_cfg.default_features &= ~XFEATURE_MASK_USER_DYNAMIC;
-+	fpu_kernel_cfg.default_features &= ~XFEATURE_MASK_KERNEL_DYNAMIC;
- 
- 	fpu_user_cfg.default_features = fpu_user_cfg.max_features;
- 	fpu_user_cfg.default_features &= ~XFEATURE_MASK_USER_DYNAMIC;
+ static inline bool strict_module_rwx_enabled(void)
+ {
 -- 
-2.39.3
+2.41.0
 
