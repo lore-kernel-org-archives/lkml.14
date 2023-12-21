@@ -1,77 +1,141 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63A24696;
-	Thu, 21 Dec 2023 02:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 1fa981e0a9ac4fb8b6eeedb8fe97a0db-20231221
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.33,REQID:0714505d-1e12-4565-826b-5a7d1ba633c9,IP:25,
-	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:45
-X-CID-INFO: VERSION:1.1.33,REQID:0714505d-1e12-4565-826b-5a7d1ba633c9,IP:25,UR
-	L:0,TC:0,Content:0,EDM:25,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:45
-X-CID-META: VersionHash:364b77b,CLOUDID:79b50082-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:231221104536RFASABPQ,BulkQuantity:0,Recheck:0,SF:72|19|44|66|24|102,
-	TC:nil,Content:0,EDM:5,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,
-	OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 1fa981e0a9ac4fb8b6eeedb8fe97a0db-20231221
-Received: from node4.com.cn [(39.156.73.12)] by mailgw
-	(envelope-from <liyouhong@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 417191506; Thu, 21 Dec 2023 10:45:33 +0800
-Received: from node4.com.cn (localhost [127.0.0.1])
-	by node4.com.cn (NSMail) with SMTP id 9059416001CD7;
-	Thu, 21 Dec 2023 10:45:33 +0800 (CST)
-X-ns-mid: postfix-6583A6CD-18814229
-Received: from localhost.localdomain (unknown [172.20.185.164])
-	by node4.com.cn (NSMail) with ESMTPA id 5E8A016001CD7;
-	Thu, 21 Dec 2023 02:45:31 +0000 (UTC)
-From: YouHong Li <liyouhong@kylinos.cn>
-To: paulus@samba.org
-Cc: linux-ppp@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	davem@davemloft.net,
-	liyouhong <liyouhong@kylinos.cn>,
-	k2ci <kernel-bot@kylinos.cn>
-Subject: [PATCH] drivers/net/ppp/ppp_async.c: Fix spelling typo in comment
-Date: Thu, 21 Dec 2023 10:44:48 +0800
-Message-Id: <20231221024448.1317341-1-liyouhong@kylinos.cn>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE0B4404;
+	Thu, 21 Dec 2023 02:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4SwZbS1mx1zWhk9;
+	Thu, 21 Dec 2023 10:47:32 +0800 (CST)
+Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id E054B180076;
+	Thu, 21 Dec 2023 10:47:52 +0800 (CST)
+Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
+ (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 21 Dec
+ 2023 10:47:52 +0800
+Subject: Re: [PATCH net-next 6/6] tools: virtio: introduce vhost_net_test
+To: Jason Wang <jasowang@redhat.com>
+CC: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Michael S.
+ Tsirkin" <mst@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	<virtualization@lists.linux.dev>
+References: <20231205113444.63015-1-linyunsheng@huawei.com>
+ <20231205113444.63015-7-linyunsheng@huawei.com>
+ <CACGkMEvVezZnHK-gRWY+MUd_6awnprb024scqPNmMQ05P8rWTQ@mail.gmail.com>
+ <424670ab-23d8-663b-10cb-d88906767956@huawei.com>
+ <CACGkMEsMdP1B-9RaqibJYfFsd_qJpB+Kta5BnyD_WXH=W2w_OQ@mail.gmail.com>
+ <c5b5d36c-d0ca-c943-5355-343214d92c26@huawei.com>
+ <CACGkMEs8HWq_NFNk=Pp3qxuo7AWBsybXT78LPgC-nKaP_u3LqA@mail.gmail.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <8401fefd-d0da-efb9-78ab-cc4974a35801@huawei.com>
+Date: Thu, 21 Dec 2023 10:47:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CACGkMEs8HWq_NFNk=Pp3qxuo7AWBsybXT78LPgC-nKaP_u3LqA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemm500005.china.huawei.com (7.185.36.74)
 
-From: liyouhong <liyouhong@kylinos.cn>
+On 2023/12/21 10:33, Jason Wang wrote:
+> On Wed, Dec 20, 2023 at 8:45 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>>
+>> On 2023/12/12 12:35, Jason Wang wrote:>>>> +done:
+>>>>>> +       backend.fd = tun_alloc();
+>>>>>> +       assert(backend.fd >= 0);
+>>>>>> +       vdev_info_init(&dev, features);
+>>>>>> +       vq_info_add(&dev, 256);
+>>>>>> +       run_test(&dev, &dev.vqs[0], delayed, batch, reset, nbufs);
+>>>>>
+>>>>> I'd expect we are testing some basic traffic here. E.g can we use a
+>>>>> packet socket then we can test both tx and rx?
+>>>>
+>>>> Yes, only rx for tun is tested.
+>>>> Do you have an idea how to test the tx too? As I am not familar enough
+>>>> with vhost_net and tun yet.
+>>>
+>>> Maybe you can have a packet socket to bind to the tun/tap. Then you can test:
+>>>
+>>> 1) TAP RX: by write a packet via virtqueue through vhost_net and read
+>>> it from packet socket
+>>> 2) TAP TX:  by write via packet socket and read it from the virtqueue
+>>> through vhost_net
+>>
+>> When implementing the TAP TX by adding VHOST_NET_F_VIRTIO_NET_HDR,
+>> I found one possible use of uninitialized data in vhost_net_build_xdp().
+>>
+>> And vhost_hlen is set to sizeof(struct virtio_net_hdr_mrg_rxbuf) and
+>> sock_hlen is set to zero in vhost_net_set_features() for both tx and rx
+>> queue.
+>>
+>> For vhost_net_build_xdp() called by handle_tx_copy():
+>>
+>> The (gso->flags & VIRTIO_NET_HDR_F_NEEDS_CSUM) checking below may cause a
+>> read of uninitialized data if sock_hlen is zero.
+> 
+> Which data is uninitialized here?
 
-Fix spelling typo in comment
+The 'gso', as the sock_hlen is zero, there is no copying for:
 
-Reported-by: k2ci <kernel-bot@kylinos.cn>
-Signed-off-by: liyouhong <liyouhong@kylinos.cn>
+         copied = copy_page_from_iter(alloc_frag->page,
+                                      alloc_frag->offset +
+                                      offsetof(struct tun_xdp_hdr, gso),
+                                      sock_hlen, from);
 
-diff --git a/drivers/net/ppp/ppp_async.c b/drivers/net/ppp/ppp_async.c
-index fbaaa8c102a1..840da924708b 100644
---- a/drivers/net/ppp/ppp_async.c
-+++ b/drivers/net/ppp/ppp_async.c
-@@ -533,7 +533,7 @@ ppp_async_encode(struct asyncppp *ap)
- 	proto =3D get_unaligned_be16(data);
-=20
- 	/*
--	 * LCP packets with code values between 1 (configure-reqest)
-+	 * LCP packets with code values between 1 (configure-request)
- 	 * and 7 (code-reject) must be sent as though no options
- 	 * had been negotiated.
- 	 */
---=20
-2.34.1
+> 
+>>
+>> And it seems vhost_hdr is skipped in get_tx_bufs():
+>> https://elixir.bootlin.com/linux/latest/source/drivers/vhost/net.c#L616
+>>
+>> static int vhost_net_build_xdp(struct vhost_net_virtqueue *nvq,
+>>                                struct iov_iter *from)
+>> {
+>> ...
+>>         buflen += SKB_DATA_ALIGN(len + pad);
+>>         alloc_frag->offset = ALIGN((u64)alloc_frag->offset, SMP_CACHE_BYTES);
+>>         if (unlikely(!vhost_net_page_frag_refill(net, buflen,
+>>                                                  alloc_frag, GFP_KERNEL)))
+>>                 return -ENOMEM;
+>>
+>>         buf = (char *)page_address(alloc_frag->page) + alloc_frag->offset;
+>>         copied = copy_page_from_iter(alloc_frag->page,
+>>                                      alloc_frag->offset +
+>>                                      offsetof(struct tun_xdp_hdr, gso),
+>>                                      sock_hlen, from);
+>>         if (copied != sock_hlen)
+>>                 return -EFAULT;
+>>
+>>         hdr = buf;
+>>         gso = &hdr->gso;
+>>
+>>         if ((gso->flags & VIRTIO_NET_HDR_F_NEEDS_CSUM) &&
+>>             vhost16_to_cpu(vq, gso->csum_start) +
+>>             vhost16_to_cpu(vq, gso->csum_offset) + 2 >
+>>             vhost16_to_cpu(vq, gso->hdr_len)) {
+>> ...
+>> }
+>>
+>> I seems the handle_tx_copy() does not handle the VHOST_NET_F_VIRTIO_NET_HDR
+>> case correctly, Or do I miss something obvious here?
+> 
+> In get_tx_bufs() we did:
+> 
+>         *len = init_iov_iter(vq, &msg->msg_iter, nvq->vhost_hlen, *out);
+> 
+> Which covers this case?
 
+It does not seems to cover it, as the vhost_hdr is just skipped without any
+handling in get_tx_bufs():
+https://elixir.bootlin.com/linux/v6.7-rc6/source/drivers/vhost/net.c#L616
+
+> 
+> Thanks
