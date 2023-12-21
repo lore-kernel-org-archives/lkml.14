@@ -1,57 +1,98 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5B57608D
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 23:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=t-8ch.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-8ch.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55AEF745E6
+	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 23:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tanzirh.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b="GVv+oPsR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-	t=1703200132; bh=YJPwFFu7kv9a7ZX/yOSk5YbQRwVbRvOaOJ5O6QREgno=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GVv+oPsRj/tthwaDm+sMDGKT1AglV5OjKJUsIwYVltOoF1CCJTpiar1egDurPAkkZ
-	 Ql0G5Ac7KOQn7mecyIcGVcGaWXml9YwxUdKiZNUFmqqEUZyDT14lW3MSF56La6AW/c
-	 iyI1BN59pzvj2zQgRAm23vKmovlRFXQ0TTU53zRU=
-Date: Fri, 22 Dec 2023 00:08:51 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v1 1/1] pvpanic: Don't use "proxy" headers
-Message-ID: <f3e4f74b-c532-48f6-990f-232208268c04@t-8ch.de>
-References: <20231221144447.2762077-1-andriy.shevchenko@linux.intel.com>
- <c37fecee-f5b2-497f-a48d-2a2faf6697d9@t-8ch.de>
- <ZYSD3C6fKvWUulXC@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZyBoOTbs"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-db4004a8aa9so1513443276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 15:11:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1703200269; x=1703805069; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+yOLP80MSa9iKNeNSW+2YmDpottMY5fEPpejkDDUSHQ=;
+        b=ZyBoOTbsw2ZOI1SOlOCfE1eZykTdoR2Vm90Os+2VU4Uj1Zntoekyh7r7RsxRninv/3
+         7U3eyIGffPVQIoF7N3QIyXL3Fe3bmgbNRruzkTn5rE6LF82SxOtXQ+Ij5QLl7ee7/mwn
+         xmaTBpliubJcAmBjxhjYj8SGBhiOqvf9RTqYTME4AEUCzKkEsidkw89AqCWXXhp2ClkV
+         CxYn865VJgKANC3d+OyZk5CZafBzJZR7GcTQNyheMUBDHVp7oZg3bSFgvviUR4ELKj8V
+         3oHoFwrCY9TqDFSd9QrYZlAH7oOudSm/OsEJEF1UJByBzo0DYsWtJK7B1hwLC0dWtWmL
+         j/nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703200269; x=1703805069;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+yOLP80MSa9iKNeNSW+2YmDpottMY5fEPpejkDDUSHQ=;
+        b=qfFAUDE4KknXUEpl0yMzb+Gs+7UqW2DKI0e5s6ELzD7EXhqe3vSr3eQO7sO2vVIbmj
+         n8JWpiE7cWugGbYTrSUU/C6A4cuVzeHKIecX9jZEuEej7+ocm2fPbKTY7UNF0CEfEWWV
+         YDa4Fe8PKxNHoXD1leBFy3YN7BG97eafFF2jAy7US6l5xu2+9vzcgfp9xZ3Q8HmwGFts
+         0UNxwvE3VuwpbgfQZjy3cQOZ+W06X/4OXkMIdLzwK+2XLyl7lF0/yXkYXStjcGafjBct
+         sk9+hT1PDqRyo6BRuhO90hIV4mKtvzbUQRn9YNYEpyrw9aL44uDIy+7oXTPMYOPa8Gb7
+         0i9Q==
+X-Gm-Message-State: AOJu0Yw4ZlvaT4HY5DUmKLdao0qjY2GGp6Rk3HbwqIBrPzXlcfJPukvN
+	K4H6Lo1ZGTgyNYn3OXNJYRVSg5H8aIIU31l9qq8=
+X-Google-Smtp-Source: AGHT+IH6mmiklx10ZZqi3bnaIQdND8Xn32ZNvnrJuQf0gyxQ1P5XAiJO5gLEdmiM51ZMieviFKMDBGG/5HS6
+X-Received: from tanz.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:c4a])
+ (user=tanzirh job=sendgmr) by 2002:a05:6902:541:b0:dbd:716d:3102 with SMTP id
+ z1-20020a056902054100b00dbd716d3102mr13608ybs.0.1703200269346; Thu, 21 Dec
+ 2023 15:11:09 -0800 (PST)
+Date: Thu, 21 Dec 2023 23:11:01 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZYSD3C6fKvWUulXC@smile.fi.intel.com>
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAATGhGUC/x3MMQqAMAxA0auUzBZMVBCvIg6liZrBKg2IULy7x
+ fEP7xcwySoGkyuQ5VbTM9XAxkHcQ9rEK9cGaqlDIvTBjk1SRfEOzNkjD7GPjDRKB1VdWVZ9/uO 8vO8HFFOnUWEAAAA=
+X-Developer-Key: i=tanzirh@google.com; a=ed25519; pk=UeRjcUcv5W9AeLGEbAe2+0LptQpcY+o1Zg0LHHo7VN4=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1703200267; l=935;
+ i=tanzirh@google.com; s=20231204; h=from:subject:message-id;
+ bh=OFfC6lpIaC3E+xjFYayuCYFLYBCLF7zqmJeV59imeT4=; b=+3+zWFxZ1NzSTGoxze6B8DcKskn9MEQFJE4P9hc+slQVT5dQG/GGHTrNeRJ8g2IC+NEjkW7aQ
+ oQSi8QcoDq+Avax3TRqrT1zcNDo456c/GZ6hGPNGA/POyxZJBnEkgDZ
+X-Mailer: b4 0.12.4
+Message-ID: <20231221-asmgenericvaddr-v1-1-742b170c914e@google.com>
+Subject: [PATCH] mm/damon/vaddr: changed asm-generic/mman-common.h to linux/mman.h
+From: Tanzir Hasan <tanzirh@google.com>
+To: SeongJae Park <sj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: damon@lists.linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Nick Desaulniers <nnn@google.com>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Tanzir Hasan <tanzirh@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On 2023-12-21 20:28:44+0200, Andy Shevchenko wrote:
-> On Thu, Dec 21, 2023 at 06:48:49PM +0100, Thomas Weißschuh  wrote:
-> > Dec 21, 2023 15:44:55 Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
-> > 
-> > > Update header inclusions to follow IWYU (Include What You Use)
-> > > principle.
-> > >
-> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > 
-> > Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
-> 
-> Thank you!
-> 
-> > Note:
-> > This also drops the unused include of the UAPI header
-> > which could be mentioned in the changelog.
-> 
-> Isn't it implied?
+asm-generic/mman-common.h can be replaced by linux/mman.h and the file
+will still build correctly. It is an asm-generic file which should be
+avoided if possible.
 
-It's not covered by the subject. The message itself is fine.
-But it's only a tiny nitpick anyways.
+Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Tanzir Hasan <tanzirh@google.com>
+---
+ mm/damon/vaddr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/damon/vaddr.c b/mm/damon/vaddr.c
+index a4d1f63c5b23..1741e0751e01 100644
+--- a/mm/damon/vaddr.c
++++ b/mm/damon/vaddr.c
+@@ -7,9 +7,9 @@
+ 
+ #define pr_fmt(fmt) "damon-va: " fmt
+ 
+-#include <asm-generic/mman-common.h>
+ #include <linux/highmem.h>
+ #include <linux/hugetlb.h>
++#include <linux/mman.h>
+ #include <linux/mmu_notifier.h>
+ #include <linux/page_idle.h>
+ #include <linux/pagewalk.h>
+
+---
+base-commit: 9a6b294ab496650e9f270123730df37030911b55
+change-id: 20231221-asmgenericvaddr-1d5c4cd128e3
+
+Best regards,
+-- 
+Tanzir Hasan <tanzirh@google.com>
+
