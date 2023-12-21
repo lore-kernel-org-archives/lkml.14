@@ -1,141 +1,81 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E486A35A;
-	Thu, 21 Dec 2023 10:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="Wbuvniu8"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BL5AA93026850;
-	Thu, 21 Dec 2023 04:39:02 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type
-	:content-transfer-encoding; s=PODMain02222019; bh=8swxHzLIkGDzxO
-	I8Vz/Y9c2HnswUaOPTF6vff2JboJ8=; b=Wbuvniu8ayMnN13D8UbM+PrBpqBKl0
-	EJ7oxwH1b2NXi42Q9t44nQD72ACQ7e0dWv64s3xBf118yFvdNQ3bSgivqpJ21HSv
-	1vmtSpFg1V7h0R72WTYK4udLVqfAnM3MuiG28yF6VKc74aiYbMs6P0vti1TT/91q
-	eZOGSSS1zyj/E0FxIfwMFm7HyG27gez2dBSUhAe5oI+Iv/K7fH4zgcZk26cUU/Q2
-	NjbBGB/hmN7CF/qiGV90vLcrowjnvqjeIQtN+HjXlFdf7TOUj60pePmxuP32/H4G
-	Lx9b/Mbh+6CIuRCWrI2vZVuQqWgTHQuu1DD3U5DpAMA6Prz49D8P/j7w==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3v196nf3tk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 21 Dec 2023 04:39:01 -0600 (CST)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 21 Dec
- 2023 10:39:00 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.2.1118.40 via Frontend
- Transport; Thu, 21 Dec 2023 10:39:00 +0000
-Received: from work-debian.ad.cirrus.com (unknown [198.61.64.187])
-	by ediswmail.ad.cirrus.com (Postfix) with ESMTP id C722711D1;
-	Thu, 21 Dec 2023 10:38:59 +0000 (UTC)
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-To: <brendan.higgins@linux.dev>, <davidgow@google.com>, <rmoar@google.com>
-CC: <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        "Richard
- Fitzgerald" <rf@opensource.cirrus.com>
-Subject: [PATCH v2 1/2] kunit: Allow passing function pointer to kunit_activate_static_stub()
-Date: Thu, 21 Dec 2023 10:38:56 +0000
-Message-ID: <20231221103858.46010-1-rf@opensource.cirrus.com>
-X-Mailer: git-send-email 2.30.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ABC36D1C2;
+	Thu, 21 Dec 2023 10:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id CACE02800BBD9;
+	Thu, 21 Dec 2023 11:39:40 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id BFA402A7C1; Thu, 21 Dec 2023 11:39:40 +0100 (CET)
+Date: Thu, 21 Dec 2023 11:39:40 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Ethan Zhao <haifeng.zhao@linux.intel.com>
+Cc: bhelgaas@google.com, baolu.lu@linux.intel.com, dwmw2@infradead.org,
+	will@kernel.org, robin.murphy@arm.com, linux-pci@vger.kernel.org,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] iommu/vt-d: don's issue devTLB flush request when
+ device is disconnected
+Message-ID: <20231221103940.GA12714@wunner.de>
+References: <20231220005153.3984502-1-haifeng.zhao@linux.intel.com>
+ <20231220005153.3984502-3-haifeng.zhao@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: iyZnRFjCVFG0a-1xJ0ABpQ3lQ2HcCyVa
-X-Proofpoint-GUID: iyZnRFjCVFG0a-1xJ0ABpQ3lQ2HcCyVa
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231220005153.3984502-3-haifeng.zhao@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Swap the arguments to typecheck_fn() in kunit_activate_static_stub()
-so that real_fn_addr can be either the function itself or a pointer
-to that function.
+On Tue, Dec 19, 2023 at 07:51:53PM -0500, Ethan Zhao wrote:
+> For those endpoint devices connect to system via hotplug capable ports,
+> users could request a warm reset to the device by flapping device's link
+> through setting the slot's link control register, as pciehpt_ist() DLLSC
+> interrupt sequence response, pciehp will unload the device driver and
+> then power it off. thus cause an IOMMU devTLB flush request for device to
+> be sent and a long time completion/timeout waiting in interrupt context.
 
-This is useful to simplify redirecting static functions in a module.
-Having to pass the actual function meant that it must be exported
-from the module. Either making the 'static' and EXPORT_SYMBOL*()
-conditional (which makes the code messy), or change it to always
-exported (which increases the export namespace and prevents the
-compiler inlining a trivial stub function in non-test builds).
+I think the problem is in the "waiting in interrupt context".
 
-With the original definition of kunit_activate_static_stub() the
-address of real_fn_addr was passed to typecheck_fn() as the type to
-be passed. This meant that if real_fn_addr was a pointer-to-function
-it would resolve to a ** instead of a *, giving an error like this:
+Can you change qi_submit_sync() to *sleep* until the queue is done?
+Instead of busy-waiting in atomic context?
 
-   error: initialization of ‘int (**)(int)’ from incompatible pointer
-   type ‘int (*)(int)’ [-Werror=incompatible-pointer-types]
-   kunit_activate_static_stub(test, add_one_fn_ptr, subtract_one);
-      |                             ^~~~~~~~~~~~
-   ./include/linux/typecheck.h:21:25: note: in definition of macro
-   ‘typecheck_fn’
-   21 | ({ typeof(type) __tmp = function; \
+Is the hardware capable of sending an interrupt once the queue is done?
+If it is not capable, would it be viable to poll with exponential backoff
+and sleep in-between polling once the polling delay increases beyond, say,
+10 usec?
 
-Swapping the arguments to typecheck_fn makes it take the type of a
-pointer to the replacement function. Either a function or a pointer
-to function can be assigned to that. For example:
+Again, the proposed patch is not a proper solution.  It will paper over
+the issue most of the time but every once in a while someone will still
+get a hard lockup splat and it will then be more difficult to reproduce
+and fix if the proposed patch is accepted.
 
-static int some_function(int x)
-{
-    /* whatever */
-}
 
-int (* some_function_ptr)(int) = some_function;
+> [ 4223.822622] CPU: 144 PID: 1422 Comm: irq/57-pciehp Kdump: loaded Tainted: G S
+>          OE    kernel version xxxx
 
-static int replacement(int x)
-{
-    /* whatever */
-}
+I don't see any reason to hide the kernel version.
+This isn't Intel Confidential information.
 
-Then:
-  kunit_activate_static_stub(test, some_function, replacement);
-yields:
-  typecheck_fn(typeof(&replacement), some_function);
 
-and:
-  kunit_activate_static_stub(test, some_function_ptr, replacement);
-yields:
-  typecheck_fn(typeof(&replacement), some_function_ptr);
+> [ 4223.822628] Call Trace:
+> [ 4223.822628]  qi_flush_dev_iotlb+0xb1/0xd0
+> [ 4223.822628]  __dmar_remove_one_dev_info+0x224/0x250
+> [ 4223.822629]  dmar_remove_one_dev_info+0x3e/0x50
 
-The two typecheck_fn() then resolve to:
+__dmar_remove_one_dev_info() was removed by db75c9573b08 in v6.0
+one and a half years ago, so the stack trace appears to be from
+an older kernel version.
 
-  int (*__tmp)(int) = some_function;
-and
-  int (*__tmp)(int) = some_function_ptr;
+Thanks,
 
-Both of these are valid. In the first case the compiler inserts
-an implicit '&' to take the address of the supplied function, and
-in the second case the RHS is already a pointer to the same type.
-
-Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-Reviewed-by: Rae Moar <rmoar@google.com>
----
-No changes since V1.
----
- include/kunit/static_stub.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/kunit/static_stub.h b/include/kunit/static_stub.h
-index 85315c80b303..bf940322dfc0 100644
---- a/include/kunit/static_stub.h
-+++ b/include/kunit/static_stub.h
-@@ -93,7 +93,7 @@ void __kunit_activate_static_stub(struct kunit *test,
-  * The redirection can be disabled again with kunit_deactivate_static_stub().
-  */
- #define kunit_activate_static_stub(test, real_fn_addr, replacement_addr) do {	\
--	typecheck_fn(typeof(&real_fn_addr), replacement_addr);			\
-+	typecheck_fn(typeof(&replacement_addr), real_fn_addr);			\
- 	__kunit_activate_static_stub(test, real_fn_addr, replacement_addr);	\
- } while (0)
- 
--- 
-2.30.2
-
+Lukas
