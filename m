@@ -1,235 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA71E627F6;
-	Thu, 21 Dec 2023 15:43:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B58162813;
+	Thu, 21 Dec 2023 15:43:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W0Lb/onC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54B74C433C9;
-	Thu, 21 Dec 2023 15:43:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BvPuYSYB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00995C433C8;
+	Thu, 21 Dec 2023 15:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703173382;
-	bh=MWfBIeGV77ZPzBms8I8+8JYz2lrVS9wQV+KpBlK+plk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=W0Lb/onCPnWS0E5hgE4x6WdFMxQ58Or6FUWxq/OSmNPXNwii2WmeCJnDV3xmnzq63
-	 dpprRWXsgzVCexyIyzaPWn8RroSwdqs33A4Yc5+7rVEes8I3SGaorNATbQm5hndX1i
-	 eVkALAkqwpcDyiJdeePD0xkX0ACVAohAzifciRfMu83zR2IYoNk6SGS91GF+ysh541
-	 0pm9tAkmDo4i1mluLF5Epv+PGKSmSTPAZ+PjJXI/z10w2XapnKpB+EIjMF4UCFpogy
-	 WIFpZjXCgriO3/tk56SjdZY6HSyyW3oSll3Vm75VVFwv/jQRTQknkzC6ggbRRlgI7G
-	 jXrBAZlOF2L/Q==
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-1f03d9ad89fso640217fac.1;
-        Thu, 21 Dec 2023 07:43:02 -0800 (PST)
-X-Gm-Message-State: AOJu0YyLF3XeX/aTAwi4sUWyTANupZeBIQJDeyKllq2ZgmRyNryZVPUt
-	j8EI99KGlUMcNhC0M9DnI0OCsflLWSg9ocYOk24=
-X-Google-Smtp-Source: AGHT+IE9BVu0bYISlDv2Jpo0rVXJUqkiAdxu0n5k9dGj9xn/BXpl6sZnvHFWGFOmYDL9miXoXD3caFx9cnasgkIkpgA=
-X-Received: by 2002:a05:6871:b0c:b0:204:31a1:9b84 with SMTP id
- fq12-20020a0568710b0c00b0020431a19b84mr950136oab.64.1703173381696; Thu, 21
- Dec 2023 07:43:01 -0800 (PST)
+	s=k20201202; t=1703173409;
+	bh=p268v/Z0J/H5DA9xBR1KA840CSsR1hZCKg5Z9xk2s3c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BvPuYSYBl2X/2ntuQY8d5QQk0Ku6zFRvgcG2d7Z79O9T5f1wQKO9o7+gGxgJ6a/a2
+	 mfCYdGFw7CHXl4NAVZpAz3J2YrB8h0NS4C7U2/mjQESTrS4dK37riC8323lwWg1nOb
+	 z5etc72DN2g2y8VehSmx21Yd9vc+VbBL20ljCYhb1sHuD6qnBr8qfx33YoVTH91thr
+	 wuaGC4M4c3Pgst7X9bupkaLDGvaVG4eZLc3/1+bCDoMe32XubgGgptffMXe3dmMAay
+	 N2CgV3x3cyOxo9pnEzoD5Wmv/QIBuUEGZBGlvFNy3EBi8ZWhInb0GC6hbWb0EGLH3p
+	 UT/ivN+mvANFw==
+Date: Thu, 21 Dec 2023 15:43:21 +0000
+From: Mark Brown <broonie@kernel.org>
+To: =?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
+	Dent Project <dentproject@linuxfoundation.org>,
+	Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH net-next v2 8/8] net: pse-pd: Add PD692x0 PSE controller
+ driver
+Message-ID: <ffda1003-b752-402e-8e51-e2e24a840cff@sirena.org.uk>
+References: <20231201-feature_poe-v2-0-56d8cac607fa@bootlin.com>
+ <20231201-feature_poe-v2-8-56d8cac607fa@bootlin.com>
+ <20231204225956.GG981228@pengutronix.de>
+ <20231205064527.GJ981228@pengutronix.de>
+ <4b96b8c8-7def-46e5-9c85-d9e925fb9251@sirena.org.uk>
+ <20231205140203.GK981228@pengutronix.de>
+ <88ed0c94-d052-4564-be0c-79a0f502eda8@sirena.org.uk>
+ <20231221163610.47038996@kmaincent-XPS-13-7390>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231122221814.139916-1-deller@kernel.org> <CAK7LNAQZO0g-B7UUEvdJWh3FhdhmWaaSaJyyEUoVoSYG0j8v-Q@mail.gmail.com>
-In-Reply-To: <CAK7LNAQZO0g-B7UUEvdJWh3FhdhmWaaSaJyyEUoVoSYG0j8v-Q@mail.gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Fri, 22 Dec 2023 00:42:24 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASk=A4aeMuhUt4NGi5RHedcQ_WQrdN3r7S_x0euvsPUXA@mail.gmail.com>
-Message-ID: <CAK7LNASk=A4aeMuhUt4NGi5RHedcQ_WQrdN3r7S_x0euvsPUXA@mail.gmail.com>
-Subject: Re: [PATCH 0/4] Section alignment issues?
-To: deller@kernel.org
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
-	linux-modules@vger.kernel.org, linux-arch@vger.kernel.org, 
-	Luis Chamberlain <mcgrof@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ayY3hi9uzG0eQYAg"
+Content-Disposition: inline
+In-Reply-To: <20231221163610.47038996@kmaincent-XPS-13-7390>
+X-Cookie: Results are not typical.
+
+
+--ayY3hi9uzG0eQYAg
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 21, 2023 at 10:40=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.=
-org> wrote:
->
-> On Thu, Nov 23, 2023 at 7:18=E2=80=AFAM <deller@kernel.org> wrote:
-> >
-> > From: Helge Deller <deller@gmx.de>
-> >
-> > While working on the 64-bit parisc kernel, I noticed that the __ksymtab=
-[]
-> > table was not correctly 64-bit aligned in many modules.
-> > The following patches do fix some of those issues in the generic code.
-> >
-> > But further investigation shows that multiple sections in the kernel an=
-d in
-> > modules are possibly not correctly aligned, and thus may lead to perfor=
-mance
-> > degregations at runtime (small on x86, huge on parisc, sparc and others=
- which
-> > need exception handlers). Sometimes wrong alignments may also be simply=
- hidden
-> > by the linker or kernel module loader which pulls in the sections by lu=
-ck with
-> > a correct alignment (e.g. because the previous section was aligned alre=
-ady).
-> >
-> > An objdump on a x86 module shows e.g.:
-> >
-> > ./kernel/net/netfilter/nf_log_syslog.ko:     file format elf64-x86-64
-> > Sections:
-> > Idx Name          Size      VMA               LMA               File of=
-f  Algn
-> >   0 .text         00001fdf  0000000000000000  0000000000000000  0000004=
-0  2**4
-> >                   CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
-> >   1 .init.text    000000f6  0000000000000000  0000000000000000  0000202=
-0  2**4
-> >                   CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
-> >   2 .exit.text    0000005c  0000000000000000  0000000000000000  0000212=
-0  2**4
-> >                   CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
-> >   3 .rodata.str1.8 000000dc  0000000000000000  0000000000000000  000021=
-80  2**3
-> >                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-> >   4 .rodata.str1.1 0000030a  0000000000000000  0000000000000000  000022=
-5c  2**0
-> >                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-> >   5 .rodata       000000b0  0000000000000000  0000000000000000  0000258=
-0  2**5
-> >                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-> >   6 .modinfo      0000019e  0000000000000000  0000000000000000  0000263=
-0  2**0
-> >                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-> >   7 .return_sites 00000034  0000000000000000  0000000000000000  000027c=
-e  2**0
-> >                   CONTENTS, ALLOC, LOAD, RELOC, READONLY, DATA
-> >   8 .call_sites   0000029c  0000000000000000  0000000000000000  0000280=
-2  2**0
-> >                   CONTENTS, ALLOC, LOAD, RELOC, READONLY, DATA
-> >
-> > In this example I believe the ".return_sites" and ".call_sites" should =
-have
-> > an alignment of at least 32-bit (4 bytes).
-> >
-> > On other architectures or modules other sections like ".altinstructions=
-" or
-> > "__ex_table" may show up wrongly instead.
-> >
-> > In general I think it would be beneficial to search for wrong alignment=
-s at
-> > link time, and maybe at runtime.
-> >
-> > The patch at the end of this cover letter
-> > - adds compile time checks to the "modpost" tool, and
-> > - adds a runtime check to the kernel module loader at runtime.
-> > And it will possibly show false positives too (!!!)
-> > I do understand that some of those sections are not performce critical
-> > and thus any alignment is OK.
-> >
-> > The modpost patch will emit at compile time such warnings (on x86-64 ke=
-rnel build):
-> >
-> > WARNING: modpost: vmlinux: section .initcall7.init (type 1, flags 2) ha=
-s alignment of 1, expected at least 4.
-> > Maybe you need to add ALIGN() to the modules.lds file (or fix modpost) =
-?
-> > WARNING: modpost: vmlinux: section .altinstructions (type 1, flags 2) h=
-as alignment of 1, expected at least 2.
-> > WARNING: modpost: vmlinux: section .initcall6.init (type 1, flags 2) ha=
-s alignment of 1, expected at least 4.
-> > WARNING: modpost: vmlinux: section .initcallearly.init (type 1, flags 2=
-) has alignment of 1, expected at least 4.
-> > WARNING: modpost: vmlinux: section .rodata.cst2 (type 1, flags 18) has =
-alignment of 2, expected at least 64.
-> > WARNING: modpost: vmlinux: section .static_call_tramp_key (type 1, flag=
-s 2) has alignment of 1, expected at least 8.
-> > WARNING: modpost: vmlinux: section .con_initcall.init (type 1, flags 2)=
- has alignment of 1, expected at least 8.
-> > WARNING: modpost: vmlinux: section __bug_table (type 1, flags 3) has al=
-ignment of 1, expected at least 4.
-> > ...
->
->
->
->
-> modpost acts on vmlinux.o instead of vmlinux.
->
->
-> vmlinux.o is a relocatable ELF, which is not a real layout
-> because no linker script has been considered yet at this
-> point.
->
->
-> vmlinux is an executable ELF, produced by a linker,
-> with the linker script taken into consideration
-> to determine the final section/symbol layout.
->
->
-> So, checking this in modpost is meaningless.
->
->
->
-> I did not check the module checking code, but
-> modules are also relocatable ELF.
+On Thu, Dec 21, 2023 at 04:36:10PM +0100, K=F6ry Maincent wrote:
+> Mark Brown <broonie@kernel.org> wrote:
 
+> > OK...  I mean, if they're not using the regulator framework I'm not sure
+> > it has much impact - there are plenty of internal regulators in devices
+> > already so it wouldn't be *too* unusual other than the fact that AFAICT
+> > this is somewhat split between devices within the subsystem?  Neither of
+> > the messages was super clear.
 
+> PSE Power Interface (which is kind of the RJ45 in PSE world) have similar
+> functionalities as regulators. We wondered if registering a regulator for
+> each PSE PI (RJ45 ports) is a good idea. The point is that the PSE contro=
+ller
+> driver will be its own regulator consumer.
+> I can't find any example in Linux with such a case of a driver being a pr=
+ovider
+> and a consumer of its own regulator. This idea of a regulator biting its =
+own
+> tail seems weird to me. Maybe it is better to implement the PSE functiona=
+lities
+> even if they are like the regulator functionalities.
 
-Sorry, I replied too early.
-(Actually I replied without reading your modpost code).
+Is it at all plausible that a system (perhaps an embedded one) might use
+something other than PSE?
 
-Now, I understand what your checker is doing.
+--ayY3hi9uzG0eQYAg
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-I did not test how many false positives are produced,
-but it catches several suspicious mis-alignments.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWEXRkACgkQJNaLcl1U
+h9AWAwf+OP5Q11gZjq9GXb7vPW2rJm2BAFFBY2+mv5PDmeN23hAQZJ3hk7m0AYwr
+5KBzgRuvGPeJ+pPbYmiwxNi8kXh9i8osTopdSP5p+OAzEIdT5DMqaaKJ0uWJlpYX
+zS0gp3FM1eH7Td+BrOAvJFlt0OgQLXr8SADS/SwEB16iIg6mHwEdSrDw8ZI66sA/
+A7ANAodvCQ0WBYAU5OvDHoNwmzuKyNTHu+Z2Wqq/PLP5qsojZTi6QrbL1hNPqiLE
+lCvrWI58JCdfRjyM5f3BoQ05HDPdHTrVs1eTPScpZgHjFrwBk/89TJL87tRsBMi5
+d/MFhEW24jlwrBiUU12PL9nk41zkqw==
+=r7wZ
+-----END PGP SIGNATURE-----
 
-
-However, I am not convinced with this warning.
-
-
-+               warn("%s: section %s (type %d, flags %lu) has
-alignment of %d, expected at least %d.\n"
-+                    "Maybe you need to add ALIGN() to the modules.lds
-file (or fix modpost) ?\n",
-+                    modname, sec, sechdr->sh_type, sechdr->sh_flags,
-is_shalign, should_shalign);
-+       }
-
-
-Adding ALGIN() hides the real problem.
-
-
-I think the real problem is that not enough alignment was requested
-in the code.
-
-
-For example, the right fix for ".initcall7.init" should be this:
-
-
-diff --git a/include/linux/init.h b/include/linux/init.h
-index 3fa3f6241350..650311e4b215 100644
---- a/include/linux/init.h
-+++ b/include/linux/init.h
-@@ -264,6 +264,7 @@ extern struct module __this_module;
- #define ____define_initcall(fn, __stub, __name, __sec)         \
-        __define_initcall_stub(__stub, fn)                      \
-        asm(".section   \"" __sec "\", \"a\"            \n"     \
-+           ".balign 4                                  \n"     \
-            __stringify(__name) ":                      \n"     \
-            ".long      " __stringify(__stub) " - .     \n"     \
-            ".previous                                  \n");   \
-
-
-
-Then, "this section requires at least 4 byte alignment"
-is recorded in the sh_addralign field.
-
-Then, the rest is the linker's job.
-
-We should not tweak the linker script.
-
-
-
-
-
-
---
-Best Regards
-Masahiro Yamada
+--ayY3hi9uzG0eQYAg--
