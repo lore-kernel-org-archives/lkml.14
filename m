@@ -1,181 +1,169 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D40A7319C
-	for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 12:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 723952F4;
-	Thu, 21 Dec 2023 04:31:30 -0800 (PST)
-Received: from [10.1.25.50] (e132833.arm.com [10.1.25.50])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C14A73F5A1;
-	Thu, 21 Dec 2023 04:30:42 -0800 (PST)
-Message-ID: <d029fafd-658a-44ec-872d-62370c6422d7@arm.com>
-Date: Thu, 21 Dec 2023 12:30:41 +0000
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4D06E5B6;
+	Thu, 21 Dec 2023 12:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="U8VvYhpU"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 3BL8lG7H012122;
+	Thu, 21 Dec 2023 13:31:20 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=selector1; bh=taptUeW
+	ufNXHyemueP2x8NUNC0EjLHeC6TmVKFcUkU4=; b=U8VvYhpUpd/NLziemRido/T
+	/XsbHkSOg9M78/aStLHKEMma7XByzjU+7UWKzjsoJQCEzHZPreFfFIsMw5UHrWVt
+	jR2tDkcWshduOq4JcLaTkylMaCLV5s9tT/wO2D2lCVCK9F+kL45ddbz3xQntnxnI
+	ULCVxmaPPFXEYAOypfQpBjetUfFAFoHaymLI8QCT0oHTCqFGpmNeHFYrnErhdAgE
+	aCT+8DYGKcFmb0xEzofXkaPW+gFikrxoWbC9VpM+5IHKqyowigQ5KmWuQfBo7867
+	+Vt8wG6P1M5LapDDdvwZgfdvam5LvhwSEFLlgm91cMEOYlaBV/iopi+ORuQ/dPQ=
+	=
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3v13nhq5cm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 21 Dec 2023 13:31:19 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4F4AC100053;
+	Thu, 21 Dec 2023 13:31:18 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 431962747C2;
+	Thu, 21 Dec 2023 13:31:18 +0100 (CET)
+Received: from localhost (10.252.25.159) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 21 Dec
+ 2023 13:31:15 +0100
+From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>,
+        Jessica Zhang <quic_jesszhan@quicinc.com>,
+        Sam
+ Ravnborg <sam@ravnborg.org>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre
+ Torgue <alexandre.torgue@foss.st.com>,
+        Yannick Fertre
+	<yannick.fertre@foss.st.com>,
+        Raphael Gallais-Pou
+	<raphael.gallais-pou@foss.st.com>,
+        Philippe Cornu
+	<philippe.cornu@foss.st.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Lad
+ Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Thierry Reding
+	<thierry.reding@gmail.com>
+CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v1 5/8] drm/stm: ltdc: add lvds pixel clock
+Date: Thu, 21 Dec 2023 13:30:34 +0100
+Message-ID: <20231221123037.418851-6-raphael.gallais-pou@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 10/23] sched: Split out __sched() deactivate task logic
- into a helper
-Content-Language: en-US
-To: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>
-Cc: Joel Fernandes <joelaf@google.com>, Qais Yousef <qyousef@google.com>,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Valentin Schneider <vschneid@redhat.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Zimuzo Ezeozue <zezeozue@google.com>, Youssef Esmat
- <youssefesmat@google.com>, Mel Gorman <mgorman@suse.de>,
- Daniel Bristot de Oliveira <bristot@redhat.com>,
- Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
- Boqun Feng <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>,
- Xuewen Yan <xuewen.yan94@gmail.com>, K Prateek Nayak
- <kprateek.nayak@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
- kernel-team@android.com
-References: <20231220001856.3710363-1-jstultz@google.com>
- <20231220001856.3710363-11-jstultz@google.com>
-From: Metin Kaya <metin.kaya@arm.com>
-In-Reply-To: <20231220001856.3710363-11-jstultz@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-21_05,2023-12-20_01,2023-05-22_02
 
-On 20/12/2023 12:18 am, John Stultz wrote:
-> As we're going to re-use the deactivation logic,
-> split it into a helper.
-> 
-> Cc: Joel Fernandes <joelaf@google.com>
-> Cc: Qais Yousef <qyousef@google.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Cc: Valentin Schneider <vschneid@redhat.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ben Segall <bsegall@google.com>
-> Cc: Zimuzo Ezeozue <zezeozue@google.com>
-> Cc: Youssef Esmat <youssefesmat@google.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Waiman Long <longman@redhat.com>
-> Cc: Boqun Feng <boqun.feng@gmail.com>
-> Cc: "Paul E. McKenney" <paulmck@kernel.org>
-> Cc: Metin Kaya <Metin.Kaya@arm.com>
-> Cc: Xuewen Yan <xuewen.yan94@gmail.com>
-> Cc: K Prateek Nayak <kprateek.nayak@amd.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: kernel-team@android.com
-> Signed-off-by: John Stultz <jstultz@google.com>
-> ---
-> v6:
-> * Define function as static to avoid "no previous prototype"
->    warnings as Reported-by: kernel test robot <lkp@intel.com>
-> v7:
-> * Rename state task_state to be more clear, as suggested by
->    Metin Kaya
-> ---
->   kernel/sched/core.c | 66 +++++++++++++++++++++++++--------------------
->   1 file changed, 37 insertions(+), 29 deletions(-)
-> 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 0ce34f5c0e0c..34acd80b6bd0 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -6571,6 +6571,42 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
->   # define SM_MASK_PREEMPT	SM_PREEMPT
->   #endif
->   
+The STM32MP25x display subsystem presents a mux which feeds the loopback
+pixel clock of the current bridge in use into the LTDC. This mux is only
+accessible through sysconfig registers which is not yet available in the
+STM32MP25x common clock framework.
 
-* Better to have a comment (e.g., in which conditions 
-try_to_deactivate_task() returns true or false) here.
+While waiting for a complete update of the clock framework, this would
+allow to use the LVDS.
 
-* try_to_deactivate_task() is temporarily used by 2 commits in the patch 
-set (i.e., it's only called by __schedule() just like in this patch at 
-the end of the series). However, it's nice to make that big 
-__scheduler() function a bit modular as we discussed off-list. So, 
-should we move this function out of the Proxy Execution patch set to get 
-it merged independently?
+Signed-off-by: Raphael Gallais-Pou <raphael.gallais-pou@st.com>
+Signed-off-by: Yannick Fertre <yannick.fertre@foss.st.com>
+---
+ drivers/gpu/drm/stm/ltdc.c | 18 ++++++++++++++++++
+ drivers/gpu/drm/stm/ltdc.h |  1 +
+ 2 files changed, 19 insertions(+)
 
-> +static bool try_to_deactivate_task(struct rq *rq, struct task_struct *p,
-> +				   unsigned long task_state)
-> +{
-> +	if (signal_pending_state(task_state, p)) {
-> +		WRITE_ONCE(p->__state, TASK_RUNNING);
-> +	} else {
-> +		p->sched_contributes_to_load =
-> +			(task_state & TASK_UNINTERRUPTIBLE) &&
-> +			!(task_state & TASK_NOLOAD) &&
-> +			!(task_state & TASK_FROZEN);
-> +
-> +		if (p->sched_contributes_to_load)
-> +			rq->nr_uninterruptible++;
-> +
-> +		/*
-> +		 * __schedule()			ttwu()
-> +		 *   prev_state = prev->state;    if (p->on_rq && ...)
-> +		 *   if (prev_state)		    goto out;
-> +		 *     p->on_rq = 0;		  smp_acquire__after_ctrl_dep();
-> +		 *				  p->state = TASK_WAKING
-> +		 *
-> +		 * Where __schedule() and ttwu() have matching control dependencies.
-> +		 *
-> +		 * After this, schedule() must not care about p->state any more.
-> +		 */
-> +		deactivate_task(rq, p, DEQUEUE_SLEEP | DEQUEUE_NOCLOCK);
-> +
-> +		if (p->in_iowait) {
-> +			atomic_inc(&rq->nr_iowait);
-> +			delayacct_blkio_start();
-> +		}
-> +		return true;
-> +	}
-> +	return false;
-> +}
-> +
->   /*
->    * __schedule() is the main scheduler function.
->    *
-> @@ -6662,35 +6698,7 @@ static void __sched notrace __schedule(unsigned int sched_mode)
->   	 */
->   	prev_state = READ_ONCE(prev->__state);
->   	if (!(sched_mode & SM_MASK_PREEMPT) && prev_state) {
-> -		if (signal_pending_state(prev_state, prev)) {
-> -			WRITE_ONCE(prev->__state, TASK_RUNNING);
-> -		} else {
-> -			prev->sched_contributes_to_load =
-> -				(prev_state & TASK_UNINTERRUPTIBLE) &&
-> -				!(prev_state & TASK_NOLOAD) &&
-> -				!(prev_state & TASK_FROZEN);
-> -
-> -			if (prev->sched_contributes_to_load)
-> -				rq->nr_uninterruptible++;
-> -
-> -			/*
-> -			 * __schedule()			ttwu()
-> -			 *   prev_state = prev->state;    if (p->on_rq && ...)
-> -			 *   if (prev_state)		    goto out;
-> -			 *     p->on_rq = 0;		  smp_acquire__after_ctrl_dep();
-> -			 *				  p->state = TASK_WAKING
-> -			 *
-> -			 * Where __schedule() and ttwu() have matching control dependencies.
-> -			 *
-> -			 * After this, schedule() must not care about p->state any more.
-> -			 */
-> -			deactivate_task(rq, prev, DEQUEUE_SLEEP | DEQUEUE_NOCLOCK);
-> -
-> -			if (prev->in_iowait) {
-> -				atomic_inc(&rq->nr_iowait);
-> -				delayacct_blkio_start();
-> -			}
-> -		}
-> +		try_to_deactivate_task(rq, prev, prev_state);
->   		switch_count = &prev->nvcsw;
->   	}
->   
+diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
+index 67064f47a4cb..1cf9f16e56cc 100644
+--- a/drivers/gpu/drm/stm/ltdc.c
++++ b/drivers/gpu/drm/stm/ltdc.c
+@@ -838,6 +838,12 @@ ltdc_crtc_mode_valid(struct drm_crtc *crtc,
+ 	int target_max = target + CLK_TOLERANCE_HZ;
+ 	int result;
+ 
++	if (ldev->lvds_clk) {
++		result = clk_round_rate(ldev->lvds_clk, target);
++		DRM_DEBUG_DRIVER("lvds pixclk rate target %d, available %d\n",
++				 target, result);
++	}
++
+ 	result = clk_round_rate(ldev->pixel_clk, target);
+ 
+ 	DRM_DEBUG_DRIVER("clk rate target %d, available %d\n", target, result);
+@@ -1898,6 +1904,8 @@ void ltdc_suspend(struct drm_device *ddev)
+ 	clk_disable_unprepare(ldev->pixel_clk);
+ 	if (ldev->bus_clk)
+ 		clk_disable_unprepare(ldev->bus_clk);
++	if (ldev->lvds_clk)
++		clk_disable_unprepare(ldev->lvds_clk);
+ }
+ 
+ int ltdc_resume(struct drm_device *ddev)
+@@ -1918,6 +1926,12 @@ int ltdc_resume(struct drm_device *ddev)
+ 			return -ENODEV;
+ 		}
+ 	}
++	if (ldev->lvds_clk) {
++		if (clk_prepare_enable(ldev->lvds_clk)) {
++			DRM_ERROR("Unable to prepare lvds clock\n");
++			return -ENODEV;
++		}
++	}
+ 
+ 	return 0;
+ }
+@@ -1989,6 +2003,10 @@ int ltdc_load(struct drm_device *ddev)
+ 		}
+ 	}
+ 
++	ldev->lvds_clk = devm_clk_get(dev, "lvds");
++	if (IS_ERR(ldev->lvds_clk))
++		ldev->lvds_clk = NULL;
++
+ 	rstc = devm_reset_control_get_exclusive(dev, NULL);
+ 
+ 	mutex_init(&ldev->err_lock);
+diff --git a/drivers/gpu/drm/stm/ltdc.h b/drivers/gpu/drm/stm/ltdc.h
+index 155d8e4a7c6b..662650a0fae2 100644
+--- a/drivers/gpu/drm/stm/ltdc.h
++++ b/drivers/gpu/drm/stm/ltdc.h
+@@ -44,6 +44,7 @@ struct ltdc_device {
+ 	void __iomem *regs;
+ 	struct regmap *regmap;
+ 	struct clk *pixel_clk;	/* lcd pixel clock */
++	struct clk *lvds_clk;	/* lvds pixel clock */
+ 	struct clk *bus_clk;	/* bus clock */
+ 	struct mutex err_lock;	/* protecting error_status */
+ 	struct ltdc_caps caps;
+-- 
+2.25.1
 
