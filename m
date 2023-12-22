@@ -1,241 +1,97 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92A5257B
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 00:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7b7aacf63b9so87079739f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 16:59:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703206763; x=1703811563;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rCgJHboiS9j0tbid535+fkMH29D8a78hCvLmshto5cE=;
-        b=MYuLcXvJ9i3unSxR40CFvqkVdqIaFDEIDBg7LT8u6UiaorRuixmrCmrdf6VFAmoW1Y
-         2HsTHOC05cWpa53oPAkCm5AYvoek1XAaztzMOMBYaS37+gcH0q26pp8zO8/lghMnnZ56
-         058GV3DZRsbIK2w965Uldi6sk9VqNgGcVmycLTkGeQZd5gXG7sLs44yJVXzNAlaC69nr
-         Hdm5LYs25vrSI6LXMjSRzXXbIkHrmyCHyFCLQBTVn2WRVio2YGst34GF9vDW7F+FWhOS
-         TKQ4xmOj1RgohSC++tuC5gafLSfsLUGM1V3dNKP6tWa+lqAmRhXjaCJ0R7uLCLQFeBk/
-         Rf7A==
-X-Gm-Message-State: AOJu0YzmTQZ90/my65a7g7GmfeDMjJKwxpAkMsjin25Q0m5Oxd0DwrLx
-	U9Kb0wQBtNDYJy0Q3zCJppI00+8vkrgdJlHRj1beW6wGaxyB
-X-Google-Smtp-Source: AGHT+IEsKZGM+gdh3bOV7ipRSlILSScvnym2zk9Pdjg6PvWsdaC/J/4cJgPKYxPydQbYFgDhXgFREw2KaoodTE/s1yYA3W9ng19g
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E1BDA31;
+	Fri, 22 Dec 2023 01:07:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0Vyz1YYc_1703207271;
+Received: from 30.240.112.165(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vyz1YYc_1703207271)
+          by smtp.aliyun-inc.com;
+          Fri, 22 Dec 2023 09:07:54 +0800
+Message-ID: <f8bff25f-714a-40ab-b450-5dee8d964463@linux.alibaba.com>
+Date: Fri, 22 Dec 2023 09:07:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:3888:b0:43c:ebeb:a152 with SMTP id
- b8-20020a056638388800b0043cebeba152mr60272jav.2.1703206762951; Thu, 21 Dec
- 2023 16:59:22 -0800 (PST)
-Date: Thu, 21 Dec 2023 16:59:22 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000015f553060d0eba97@google.com>
-Subject: [syzbot] [nilfs?] possible deadlock in nilfs_dirty_inode (2)
-From: syzbot <syzbot+903350d47ddb4cbb7f6f@syzkaller.appspotmail.com>
-To: konishi.ryusuke@gmail.com, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-nilfs@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    55cb5f43689d Merge tag 'trace-v6.7-rc6' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1167b176e80000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=314e9ad033a7d3a7
-dashboard link: https://syzkaller.appspot.com/bug?extid=903350d47ddb4cbb7f6f
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: i386
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-55cb5f43.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/ba0e1e5966ee/vmlinux-55cb5f43.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/4212fc08c5ac/bzImage-55cb5f43.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+903350d47ddb4cbb7f6f@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.7.0-rc6-syzkaller-00022-g55cb5f43689d #0 Not tainted
-------------------------------------------------------
-kswapd0/108 is trying to acquire lock:
-ffff888079954608 (sb_internal#4){.+.+}-{0:0}, at: nilfs_dirty_inode+0x1a0/0x270 fs/nilfs2/inode.c:1158
-
-but task is already holding lock:
-ffffffff8d11c740 (fs_reclaim){+.+.}-{0:0}, at: balance_pgdat+0x160/0x1a90 mm/vmscan.c:6746
-
-which lock already depends on the new lock.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 1/4] ACPI: APEI: set memory failure flags as
+ MF_ACTION_REQUIRED on synchronous events
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: bp@alien8.de, wangkefeng.wang@huawei.com, tanxiaofei@huawei.com,
+ mawupeng1@huawei.com, tony.luck@intel.com, linmiaohe@huawei.com,
+ naoya.horiguchi@nec.com, james.morse@arm.com, gregkh@linuxfoundation.org,
+ will@kernel.org, jarkko@kernel.org, linux-acpi@vger.kernel.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+ linux-edac@vger.kernel.org, acpica-devel@lists.linuxfoundation.org,
+ stable@vger.kernel.org, x86@kernel.org, justin.he@arm.com, ardb@kernel.org,
+ ying.huang@intel.com, ashish.kalra@amd.com, baolin.wang@linux.alibaba.com,
+ tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+ lenb@kernel.org, hpa@zytor.com, robert.moore@intel.com, lvying6@huawei.com,
+ xiexiuqi@huawei.com, zhuo.song@linux.alibaba.com
+References: <20221027042445.60108-1-xueshuai@linux.alibaba.com>
+ <20231218064521.37324-2-xueshuai@linux.alibaba.com>
+ <CAJZ5v0hnKP9S+5PfuO1EzvpSdHM09s0HidGjfinf491xkdop3g@mail.gmail.com>
+Content-Language: en-US
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <CAJZ5v0hnKP9S+5PfuO1EzvpSdHM09s0HidGjfinf491xkdop3g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
-the existing dependency chain (in reverse order) is:
 
--> #2 (fs_reclaim){+.+.}-{0:0}:
-       __fs_reclaim_acquire mm/page_alloc.c:3693 [inline]
-       fs_reclaim_acquire+0x100/0x150 mm/page_alloc.c:3707
-       might_alloc include/linux/sched/mm.h:303 [inline]
-       prepare_alloc_pages.constprop.0+0x155/0x550 mm/page_alloc.c:4339
-       __alloc_pages+0x193/0x2420 mm/page_alloc.c:4557
-       alloc_pages_mpol+0x258/0x5f0 mm/mempolicy.c:2133
-       folio_alloc+0x1e/0xe0 mm/mempolicy.c:2211
-       filemap_alloc_folio+0x3bb/0x490 mm/filemap.c:974
-       __filemap_get_folio+0x54c/0xaa0 mm/filemap.c:1918
-       pagecache_get_page+0x2c/0x250 mm/folio-compat.c:99
-       block_write_begin+0x38/0x490 fs/buffer.c:2223
-       nilfs_write_begin+0x9f/0x1a0 fs/nilfs2/inode.c:261
-       page_symlink+0x391/0x490 fs/namei.c:5187
-       nilfs_symlink+0x24f/0x3e0 fs/nilfs2/namei.c:153
-       vfs_symlink fs/namei.c:4464 [inline]
-       vfs_symlink+0x3e4/0x620 fs/namei.c:4448
-       do_symlinkat+0x25f/0x310 fs/namei.c:4490
-       __do_sys_symlinkat fs/namei.c:4506 [inline]
-       __se_sys_symlinkat fs/namei.c:4503 [inline]
-       __ia32_sys_symlinkat+0x97/0xc0 fs/namei.c:4503
-       do_syscall_32_irqs_on arch/x86/entry/common.c:165 [inline]
-       __do_fast_syscall_32+0x62/0xe0 arch/x86/entry/common.c:321
-       do_fast_syscall_32+0x33/0x70 arch/x86/entry/common.c:346
-       entry_SYSENTER_compat_after_hwframe+0x70/0x7a
+On 2023/12/21 21:55, Rafael J. Wysocki wrote:
+> On Mon, Dec 18, 2023 at 7:45 AM Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+>>
+>> There are two major types of uncorrected recoverable (UCR) errors :
+>>
+>> - Synchronous error: The error is detected and raised at the point of the
+>>   consumption in the execution flow, e.g. when a CPU tries to access
+>>   a poisoned cache line. The CPU will take a synchronous error exception
+>>   such as Synchronous External Abort (SEA) on Arm64 and Machine Check
+>>   Exception (MCE) on X86. OS requires to take action (for example, offline
+>>   failure page/kill failure thread) to recover this uncorrectable error.
+>>
+>> - Asynchronous error: The error is detected out of processor execution
+>>   context, e.g. when an error is detected by a background scrubber. Some data
+>>   in the memory are corrupted. But the data have not been consumed. OS is
+>>   optional to take action to recover this uncorrectable error.
+>>
+>> When APEI firmware first is enabled, a platform may describe one error
+>> source for the handling of synchronous errors (e.g. MCE or SEA notification
+>> ), or for handling asynchronous errors (e.g. SCI or External Interrupt
+>> notification). In other words, we can distinguish synchronous errors by
+>> APEI notification. For synchronous errors, kernel will kill the current
+>> process which accessing the poisoned page by sending SIGBUS with
+>> BUS_MCEERR_AR. In addition, for asynchronous errors, kernel will notify the
+>> process who owns the poisoned page by sending SIGBUS with BUS_MCEERR_AO in
+>> early kill mode. However, the GHES driver always sets mf_flags to 0 so that
+>> all synchronous errors are handled as asynchronous errors in memory failure.
+>>
+>> To this end, set memory failure flags as MF_ACTION_REQUIRED on synchronous
+>> events.
+>>
+>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>> Tested-by: Ma Wupeng <mawupeng1@huawei.com>
+>> Reviewed-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+>> Reviewed-by: Xiaofei Tan <tanxiaofei@huawei.com>
+>> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>> Reviewed-by: James Morse <james.morse@arm.com>
+> 
+> Applied as 6.8 material.
+> 
+> The other patches in the series still need to receive tags from the
+> APEI designated reviewers (as per MAINTAINERS).
+> 
+> Thanks!
+> 
 
--> #1 (&nilfs->ns_segctor_sem){++++}-{3:3}:
-       down_read+0x9a/0x330 kernel/locking/rwsem.c:1526
-       nilfs_transaction_begin+0x329/0xa40 fs/nilfs2/segment.c:223
-       nilfs_symlink+0x130/0x3e0 fs/nilfs2/namei.c:140
-       vfs_symlink fs/namei.c:4464 [inline]
-       vfs_symlink+0x3e4/0x620 fs/namei.c:4448
-       do_symlinkat+0x25f/0x310 fs/namei.c:4490
-       __do_sys_symlinkat fs/namei.c:4506 [inline]
-       __se_sys_symlinkat fs/namei.c:4503 [inline]
-       __ia32_sys_symlinkat+0x97/0xc0 fs/namei.c:4503
-       do_syscall_32_irqs_on arch/x86/entry/common.c:165 [inline]
-       __do_fast_syscall_32+0x62/0xe0 arch/x86/entry/common.c:321
-       do_fast_syscall_32+0x33/0x70 arch/x86/entry/common.c:346
-       entry_SYSENTER_compat_after_hwframe+0x70/0x7a
+Thank you :)
 
--> #0 (sb_internal#4){.+.+}-{0:0}:
-       check_prev_add kernel/locking/lockdep.c:3134 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3253 [inline]
-       validate_chain kernel/locking/lockdep.c:3869 [inline]
-       __lock_acquire+0x2433/0x3b20 kernel/locking/lockdep.c:5137
-       lock_acquire kernel/locking/lockdep.c:5754 [inline]
-       lock_acquire+0x1ae/0x520 kernel/locking/lockdep.c:5719
-       percpu_down_read include/linux/percpu-rwsem.h:51 [inline]
-       __sb_start_write include/linux/fs.h:1635 [inline]
-       sb_start_intwrite include/linux/fs.h:1757 [inline]
-       nilfs_transaction_begin+0x21e/0xa40 fs/nilfs2/segment.c:220
-       nilfs_dirty_inode+0x1a0/0x270 fs/nilfs2/inode.c:1158
-       __mark_inode_dirty+0x1e0/0xd60 fs/fs-writeback.c:2452
-       mark_inode_dirty_sync include/linux/fs.h:2311 [inline]
-       iput.part.0+0x5b/0x7b0 fs/inode.c:1800
-       iput+0x5c/0x80 fs/inode.c:1793
-       dentry_unlink_inode+0x292/0x430 fs/dcache.c:401
-       __dentry_kill+0x3b8/0x640 fs/dcache.c:607
-       shrink_dentry_list+0x11e/0x4a0 fs/dcache.c:1201
-       prune_dcache_sb+0xeb/0x150 fs/dcache.c:1282
-       super_cache_scan+0x327/0x540 fs/super.c:228
-       do_shrink_slab+0x428/0x1120 mm/shrinker.c:435
-       shrink_slab_memcg mm/shrinker.c:548 [inline]
-       shrink_slab+0xa83/0x1310 mm/shrinker.c:626
-       shrink_one+0x47d/0x7a0 mm/vmscan.c:4745
-       shrink_many mm/vmscan.c:4808 [inline]
-       lru_gen_shrink_node mm/vmscan.c:4923 [inline]
-       shrink_node+0x211c/0x3710 mm/vmscan.c:5863
-       kswapd_shrink_node mm/vmscan.c:6668 [inline]
-       balance_pgdat+0x9d2/0x1a90 mm/vmscan.c:6858
-       kswapd+0x5be/0xbf0 mm/vmscan.c:7118
-       kthread+0x2c6/0x3a0 kernel/kthread.c:388
-       ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
-       ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+I will wait more feedback of other patches from MAINTAINERS.
 
-other info that might help us debug this:
-
-Chain exists of:
-  sb_internal#4 --> &nilfs->ns_segctor_sem --> fs_reclaim
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(fs_reclaim);
-                               lock(&nilfs->ns_segctor_sem);
-                               lock(fs_reclaim);
-  rlock(sb_internal#4);
-
- *** DEADLOCK ***
-
-2 locks held by kswapd0/108:
- #0: ffffffff8d11c740 (fs_reclaim){+.+.}-{0:0}, at: balance_pgdat+0x160/0x1a90 mm/vmscan.c:6746
- #1: ffff8880799540e0 (&type->s_umount_key#68){++++}-{3:3}, at: super_trylock_shared fs/super.c:610 [inline]
- #1: ffff8880799540e0 (&type->s_umount_key#68){++++}-{3:3}, at: super_cache_scan+0x96/0x540 fs/super.c:203
-
-stack backtrace:
-CPU: 2 PID: 108 Comm: kswapd0 Not tainted 6.7.0-rc6-syzkaller-00022-g55cb5f43689d #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106
- check_noncircular+0x317/0x400 kernel/locking/lockdep.c:2187
- check_prev_add kernel/locking/lockdep.c:3134 [inline]
- check_prevs_add kernel/locking/lockdep.c:3253 [inline]
- validate_chain kernel/locking/lockdep.c:3869 [inline]
- __lock_acquire+0x2433/0x3b20 kernel/locking/lockdep.c:5137
- lock_acquire kernel/locking/lockdep.c:5754 [inline]
- lock_acquire+0x1ae/0x520 kernel/locking/lockdep.c:5719
- percpu_down_read include/linux/percpu-rwsem.h:51 [inline]
- __sb_start_write include/linux/fs.h:1635 [inline]
- sb_start_intwrite include/linux/fs.h:1757 [inline]
- nilfs_transaction_begin+0x21e/0xa40 fs/nilfs2/segment.c:220
- nilfs_dirty_inode+0x1a0/0x270 fs/nilfs2/inode.c:1158
- __mark_inode_dirty+0x1e0/0xd60 fs/fs-writeback.c:2452
- mark_inode_dirty_sync include/linux/fs.h:2311 [inline]
- iput.part.0+0x5b/0x7b0 fs/inode.c:1800
- iput+0x5c/0x80 fs/inode.c:1793
- dentry_unlink_inode+0x292/0x430 fs/dcache.c:401
- __dentry_kill+0x3b8/0x640 fs/dcache.c:607
- shrink_dentry_list+0x11e/0x4a0 fs/dcache.c:1201
- prune_dcache_sb+0xeb/0x150 fs/dcache.c:1282
- super_cache_scan+0x327/0x540 fs/super.c:228
- do_shrink_slab+0x428/0x1120 mm/shrinker.c:435
- shrink_slab_memcg mm/shrinker.c:548 [inline]
- shrink_slab+0xa83/0x1310 mm/shrinker.c:626
- shrink_one+0x47d/0x7a0 mm/vmscan.c:4745
- shrink_many mm/vmscan.c:4808 [inline]
- lru_gen_shrink_node mm/vmscan.c:4923 [inline]
- shrink_node+0x211c/0x3710 mm/vmscan.c:5863
- kswapd_shrink_node mm/vmscan.c:6668 [inline]
- balance_pgdat+0x9d2/0x1a90 mm/vmscan.c:6858
- kswapd+0x5be/0xbf0 mm/vmscan.c:7118
- kthread+0x2c6/0x3a0 kernel/kthread.c:388
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Cheers,
+Shuai
