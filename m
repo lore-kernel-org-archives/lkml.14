@@ -1,24 +1,16 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF7E17983
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 10:13:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+qCJUK0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA186C433C8;
-	Fri, 22 Dec 2023 10:13:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703240036;
-	bh=B3Fb3xaBgAJ3MicHOvgzp7hskRNgdGEtl2qTy05aZKc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=G+qCJUK04/auFikiWz2Ec6e1QyGnDMaDk/BjJ6UjmfbvmdGHIVtL/xid3226FLyey
-	 LZbEvlhvKqa0+cbCXc2jwqJF+BJ7IhhwGOgQBa9N+jaXHtUJUfXavuGyCVPb3xJ6uz
-	 LZnTnndvZLr2kUBgkd4EiaHDIyZeSeRQwqUcyUvIuM0/Xbr6ZY3u1cZ/512MFR5AGk
-	 ih5F8IZFArvpur1Gl1bwnujZa4+solwWvlXmpfGXi07qvy0CpsgQvqu7gYC/qiXKqZ
-	 EwsUZEEgOnGfSipSUoZNRHq87B6J74q9BiUxifiSrvmUkSjFC9eqiYZflVuj2QCk2K
-	 vZPVD2CPBystw==
-Message-ID: <15424f2b-601c-44b0-83a8-19d69d7c92cf@kernel.org>
-Date: Fri, 22 Dec 2023 12:13:53 +0200
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11045171C7
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 10:23:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94C2D2F4;
+	Fri, 22 Dec 2023 02:24:34 -0800 (PST)
+Received: from [10.57.87.46] (unknown [10.57.87.46])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 91F953F738;
+	Fri, 22 Dec 2023 02:23:45 -0800 (PST)
+Message-ID: <11171acd-dae7-475f-ab93-a890f0f0d273@arm.com>
+Date: Fri, 22 Dec 2023 10:23:43 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -26,32 +18,164 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 2/2] phy: ti: j721e-wiz: Add SGMII support in WIZ
- driver for J784S4
+Subject: Re: [PATCH v7 19/23] sched: Consolidate pick_*_task to
+ task_is_pushable helper
 Content-Language: en-US
-To: Chintan Vankar <c-vankar@ti.com>, Maxime Ripard <mripard@kernel.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Sinthu Raja <sinthu.raja@ti.com>, Andrew Davis <afd@ti.com>,
- Siddharth Vadapalli <s-vadapalli@ti.com>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Vinod Koul <vkoul@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
-References: <20231221102956.754617-1-c-vankar@ti.com>
- <20231221102956.754617-2-c-vankar@ti.com>
-From: Roger Quadros <rogerq@kernel.org>
-In-Reply-To: <20231221102956.754617-2-c-vankar@ti.com>
-Content-Type: text/plain; charset=UTF-8
+To: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>
+Cc: Joel Fernandes <joelaf@google.com>, Qais Yousef <qyousef@google.com>,
+ Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Valentin Schneider <vschneid@redhat.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Zimuzo Ezeozue <zezeozue@google.com>, Youssef Esmat
+ <youssefesmat@google.com>, Mel Gorman <mgorman@suse.de>,
+ Daniel Bristot de Oliveira <bristot@redhat.com>,
+ Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
+ Boqun Feng <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Xuewen Yan <xuewen.yan94@gmail.com>, K Prateek Nayak
+ <kprateek.nayak@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
+ kernel-team@android.com
+References: <20231220001856.3710363-1-jstultz@google.com>
+ <20231220001856.3710363-20-jstultz@google.com>
+From: Metin Kaya <metin.kaya@arm.com>
+In-Reply-To: <20231220001856.3710363-20-jstultz@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-
-On 21/12/2023 12:29, Chintan Vankar wrote:
-> Enable full rate divider configuration support for J784S4_WIZ_10G
-> for SGMII.
+On 20/12/2023 12:18 am, John Stultz wrote:
+> From: Connor O'Brien <connoro@google.com>
 > 
-> Signed-off-by: Chintan Vankar <c-vankar@ti.com>
+> This patch consolidates rt and deadline pick_*_task functions to
+> a task_is_pushable() helper
+> 
+> This patch was broken out from a larger chain migration
+> patch originally by Connor O'Brien.
+> 
+> Cc: Joel Fernandes <joelaf@google.com>
+> Cc: Qais Yousef <qyousef@google.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Cc: Valentin Schneider <vschneid@redhat.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ben Segall <bsegall@google.com>
+> Cc: Zimuzo Ezeozue <zezeozue@google.com>
+> Cc: Youssef Esmat <youssefesmat@google.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Waiman Long <longman@redhat.com>
+> Cc: Boqun Feng <boqun.feng@gmail.com>
+> Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> Cc: Metin Kaya <Metin.Kaya@arm.com>
+> Cc: Xuewen Yan <xuewen.yan94@gmail.com>
+> Cc: K Prateek Nayak <kprateek.nayak@amd.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: kernel-team@android.com
+> Signed-off-by: Connor O'Brien <connoro@google.com>
+> [jstultz: split out from larger chain migration patch,
+>   renamed helper function]
+> Signed-off-by: John Stultz <jstultz@google.com>
+> ---
+> v7:
+> * Split from chain migration patch
+> * Renamed function
+> ---
+>   kernel/sched/deadline.c | 10 +---------
+>   kernel/sched/rt.c       | 11 +----------
+>   kernel/sched/sched.h    | 10 ++++++++++
+>   3 files changed, 12 insertions(+), 19 deletions(-)
+> 
+> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+> index def1eb23318b..1f3bc50de678 100644
+> --- a/kernel/sched/deadline.c
+> +++ b/kernel/sched/deadline.c
+> @@ -2049,14 +2049,6 @@ static void task_fork_dl(struct task_struct *p)
+>   /* Only try algorithms three times */
+>   #define DL_MAX_TRIES 3
+>   
+> -static int pick_dl_task(struct rq *rq, struct task_struct *p, int cpu)
+> -{
+> -	if (!task_on_cpu(rq, p) &&
+> -	    cpumask_test_cpu(cpu, &p->cpus_mask))
+> -		return 1;
+> -	return 0;
+> -}
+> -
+>   /*
+>    * Return the earliest pushable rq's task, which is suitable to be executed
+>    * on the CPU, NULL otherwise:
+> @@ -2075,7 +2067,7 @@ static struct task_struct *pick_earliest_pushable_dl_task(struct rq *rq, int cpu
+>   	if (next_node) {
+>   		p = __node_2_pdl(next_node);
+>   
+> -		if (pick_dl_task(rq, p, cpu))
+> +		if (task_is_pushable(rq, p, cpu) == 1)
 
-Reviewed-by: Roger Quadros <rogerq@kernel.org>
+Nit: ` == 1` part is redundant, IMHO.
 
--- 
-cheers,
--roger
+>   			return p;
+>   
+>   		next_node = rb_next(next_node);
+> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> index cf0eb4aac613..15161de88753 100644
+> --- a/kernel/sched/rt.c
+> +++ b/kernel/sched/rt.c
+> @@ -1812,15 +1812,6 @@ static void put_prev_task_rt(struct rq *rq, struct task_struct *p)
+>   /* Only try algorithms three times */
+>   #define RT_MAX_TRIES 3
+>   
+> -static int pick_rt_task(struct rq *rq, struct task_struct *p, int cpu)
+> -{
+> -	if (!task_on_cpu(rq, p) &&
+> -	    cpumask_test_cpu(cpu, &p->cpus_mask))
+> -		return 1;
+> -
+> -	return 0;
+> -}
+> -
+>   /*
+>    * Return the highest pushable rq's task, which is suitable to be executed
+>    * on the CPU, NULL otherwise
+> @@ -1834,7 +1825,7 @@ static struct task_struct *pick_highest_pushable_task(struct rq *rq, int cpu)
+>   		return NULL;
+>   
+>   	plist_for_each_entry(p, head, pushable_tasks) {
+> -		if (pick_rt_task(rq, p, cpu))
+> +		if (task_is_pushable(rq, p, cpu) == 1)
+
+Ditto.
+
+>   			return p;
+>   	}
+>   
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 19afe532771f..ef3d327e267c 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -3554,6 +3554,16 @@ void push_task_chain(struct rq *rq, struct rq *dst_rq, struct task_struct *task)
+>   	set_task_cpu(task, dst_rq->cpu);
+>   	activate_task(dst_rq, task, 0);
+>   }
+> +
+> +static inline
+> +int task_is_pushable(struct rq *rq, struct task_struct *p, int cpu)
+
+Nit: I know the function is just renamed in this patch, but should we 
+change the return type to bool while we are at it?
+
+> +{
+> +	if (!task_on_cpu(rq, p) &&
+> +	    cpumask_test_cpu(cpu, &p->cpus_mask))
+> +		return 1;
+> +
+> +	return 0;
+> +}
+>   #endif
+>   
+>   #endif /* _KERNEL_SCHED_SCHED_H */
+
