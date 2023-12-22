@@ -1,44 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8BA1A23;
-	Fri, 22 Dec 2023 01:27:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CC36C433C8;
-	Fri, 22 Dec 2023 01:27:09 +0000 (UTC)
-Date: Thu, 21 Dec 2023 20:28:13 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, Linux
- selftests <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH v2] tracing/selftests: Add ownership modification tests
- for eventfs
-Message-ID: <20231221202813.38ef5664@gandalf.local.home>
-In-Reply-To: <20231222102148.2aa3863d7c11f3928549335a@kernel.org>
-References: <20231221194516.53e1ee43@gandalf.local.home>
-	<20231222102148.2aa3863d7c11f3928549335a@kernel.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711651C06;
+	Fri, 22 Dec 2023 01:27:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J3ysisfb"
+Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7ba8e33dd0cso43224939f.0;
+        Thu, 21 Dec 2023 17:27:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703208448; x=1703813248; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zy8g0lzs7eaKHdXsmVjSrLQ8rBtR4re0URoEliy+E2c=;
+        b=J3ysisfbARrGvLP5hd8lrZevjnmGNJwuFUmWWzxyMaT0RSs3ZZRlygfhLiwbUdJawd
+         Mjkly+AU0ksHDRLeV4psUpMJLSonLGA/cA/Z0loshvcnIfGeYrjwS++a5X9h90ZL9Hwe
+         Y2IEoYr23zPqi4d4wDEq947cFcgdsNscKtFZvuOcszlfHCXZ4hRxvuMCAdSSdgcHaQdM
+         SxaExlhGGG8xNwg+VBZBmqUSP/7Xj86jifAlOCvsRS0a3dW0NFzp6GRJF252YNSKFP4f
+         NU8JeBBPRu1v6/C3VYSIYFz8DdmohCyCJps/qNLXfGgNvRJgOxCeojx2KmncmNKr3sBv
+         36Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703208448; x=1703813248;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zy8g0lzs7eaKHdXsmVjSrLQ8rBtR4re0URoEliy+E2c=;
+        b=VJPGfbMyHxPa5seI+v7n2vUKbRYM+usoJmwTykamTd1LeboZMT2ZzfQkaRl4d/ejbt
+         tMYyrgWOxk2SV0HCAGH5Jb49DZW+ljObd/N49cueoKDoxp1ZG4pHE3tdlXle/Yp9FsBG
+         aX9AktAW/eg2dX7+/UHNLc7QzZyg5uigZZeXMRfgmPqI1x6M+zuW9X86T1NzrwiCEjGi
+         a15HU6shArzd7TW0ZRxI7NzyfmacNa5QvRtjZEw+dYNHyn+gTRqniEXcfCZHlRZfIIDx
+         glCE8xcO2ANsSQshXRjOX18tPuQhzAIceFLG/Ew50MTCysk080raelsxe1T2fc6zZn2j
+         f8Tg==
+X-Gm-Message-State: AOJu0YxU671PYNq81iAY8AJz1H+I0uC4N6Hqm0mKfhyfkNJ49UFH/tkP
+	Bq80QM6uHLl0ebqnGTKu3ESyHrw/kVwopxgG1wKUEUx3aek=
+X-Google-Smtp-Source: AGHT+IENIdhp+wVXGkDYH0RYIkfdROfEfqzYbfyIxwYeq1Y0iQANbD+H6pXUx/iczB5ACQ1EdYKX3pHgiXMN2c3RPe0=
+X-Received: by 2002:a5e:da4d:0:b0:7b7:f9fb:8766 with SMTP id
+ o13-20020a5eda4d000000b007b7f9fb8766mr607985iop.14.1703208448542; Thu, 21 Dec
+ 2023 17:27:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20231219080021.2048889-1-kcfeng0@nuvoton.com> <20231219080021.2048889-2-kcfeng0@nuvoton.com>
+ <170297774900.1297817.5593278746406765111.robh@kernel.org>
+ <CALz278aJ08fOU2XZMZJJ2Ocp+XwovJ0+nHK-=0dWqbXf+522OA@mail.gmail.com> <9035aff7-49e6-49cf-a8f8-619d3b53c4a5@linaro.org>
+In-Reply-To: <9035aff7-49e6-49cf-a8f8-619d3b53c4a5@linaro.org>
+From: Ban Feng <baneric926@gmail.com>
+Date: Fri, 22 Dec 2023 09:27:17 +0800
+Message-ID: <CALz278Z-KF+NurdXhOQjoP-RMhQfrshEyU=KkumN8Peus7Wdew@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: hwmon: Add NCT7363Y documentation
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, corbet@lwn.net, 
+	kwliu@nuvoton.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	jdelvare@suse.com, kcfeng0@nuvoton.com, krzysztof.kozlowski+dt@linaro.org, 
+	linux-hwmon@vger.kernel.org, openbmc@lists.ozlabs.org, robh+dt@kernel.org, 
+	Bonnie_Lo@wiwynn.com, conor+dt@kernel.org, DELPHINE_CHIU@wiwynn.com, 
+	linux@roeck-us.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 22 Dec 2023 10:21:48 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+Hi Krzysztof,
 
-> The testcase itself is OK but is there any way to identify the system
-> supports eventfs or not? I ran this test on v6.5.13 for checking then
-> it failed. We may need to skip (unsupported) this test for such case.
+On Thu, Dec 21, 2023 at 4:20=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 21/12/2023 01:44, Ban Feng wrote:
+> > Hi Rob,
+> >
+> > On Tue, Dec 19, 2023 at 5:22=E2=80=AFPM Rob Herring <robh@kernel.org> w=
+rote:
+> >>
+> >>
+> >> On Tue, 19 Dec 2023 16:00:20 +0800, baneric926@gmail.com wrote:
+> >>> From: Ban Feng <kcfeng0@nuvoton.com>
+> >>>
+> >>> Adding bindings for the Nuvoton NCT7363Y Fan Controller
+> >>>
+> >>> Signed-off-by: Ban Feng <kcfeng0@nuvoton.com>
+> >>> ---
+> >>>  .../bindings/hwmon/nuvoton,nct7363.yaml       | 62 +++++++++++++++++=
+++
+> >>>  MAINTAINERS                                   |  6 ++
+> >>>  2 files changed, 68 insertions(+)
+> >>>  create mode 100644 Documentation/devicetree/bindings/hwmon/nuvoton,n=
+ct7363.yaml
+> >>>
+> >>
+> >> My bot found errors running 'make DT_CHECKER_FLAGS=3D-m dt_binding_che=
+ck'
+> >> on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> >
+> > Our design is based on [1], and adds fan-common.yaml to
+>
+> Nothing in the patch or cover letter described the dependency.
+>
 
-Hmm, honestly, it should technically work on all past versions.
+ok, in v3, I'll attach a relevant patch and describe it in the cover letter=
+.
 
-I'll try it out to see what fails for 6.5.13. Perhaps there was another bug
-that the stable releases need fixing for?
-
--- Steve
+Thanks,
+Ban
