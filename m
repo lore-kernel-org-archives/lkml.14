@@ -1,141 +1,99 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05222F845;
-	Fri, 22 Dec 2023 20:14:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40B9A2FC43;
+	Fri, 22 Dec 2023 20:15:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C0neWqBr"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-50e49a0b5caso2682757e87.0;
-        Fri, 22 Dec 2023 12:14:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EhPsbGbz"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d3f29fea66so15122485ad.3;
+        Fri, 22 Dec 2023 12:15:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703276096; x=1703880896; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FyqcGT2sN92VNs6tvDhaYPiQfK5r7CcXxTuhzZh5y8Q=;
-        b=C0neWqBrtkq/gtGB6PkkEQN8sOUKlIhCMo035+kzmjH0Q3pXtLYIAxis15u1HfbMhY
-         zl6z8RaVTbrwBGsqIGV5kAcr6AJfWwe8d0iYSk8nAy44oYLxOpn64K67nV/Nqlz4Cogf
-         cCcVnxUT4UADSI626XMZjbr3RBBwujXwVuEvbnigFiuj76Tgx1+TLLBw8BByCmL5JMUR
-         a28b7xHDJtBUF9L4YMgpn2hmnF2GfoRrFuvh5voZWkQoJ6N03P8ObF8Gep2o4vaNHIxt
-         3DxnMbojq/0eVmENWuvG83RynCCJZ3nXknV7czHBx2SwAxJrhctWGZ1v095hrzAgPd0K
-         zNoA==
+        d=gmail.com; s=20230601; t=1703276117; x=1703880917; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XLrEctJKTdv+9DQYIiqT5d8pIz5ARZucJNkVZeQocxI=;
+        b=EhPsbGbznyrFnsnxKFD7I9YQhvIsBCpKTu5OtPzjG0kRtQwWOWBM8CFt/kydfDUJkS
+         ejV6isqlnrpqYTY2kri9yrkoVHgPerNUroJE3CIuJUj9vhiv7W2Kjt/UhhxivzmMewHL
+         D25KVe449O22LnrSVrub/oJ2qrRfzqYVl1aYM/CUloWuC9S6UsS6mqgoLshk9uJpbFEl
+         yKSW3e1VdCS1EXw0aSTr72OBQw9Lze6aJgPIZNYt7GseUCZE4MG34ArIHG9p1dAuTxFw
+         8Q90nyPkUjhVd1GgClvinYBNXEezgusg61rESU2My0McZjhJNJrDPCzHfEaOJksZxHQZ
+         HI2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703276096; x=1703880896;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FyqcGT2sN92VNs6tvDhaYPiQfK5r7CcXxTuhzZh5y8Q=;
-        b=ufduEkTT+I6rHF8+B0amVaTPRSXMrz2DvGR2Y2xfZU1fAsXz35YhBnuoPKCqeBgm0Y
-         VUEwahHxV2i0qt/dsCTNlCfAPvzAXByzyl37Fx57QxbY/1AlgCJVlgGlAg+/5RYuO6io
-         IYHtzKT4Mj9CQHm/l6oA+BzNKMY0LFMn01lvi0RY82wbH4X6QBYosf9cfi/it/XVdV82
-         DpZF3ovhn2e1H4lBk0KNiwBRR+yv413XI9TiNPOVT6xIPAJt5mD9WLI5AWhxw37uCin5
-         rOemKf/iP6jw/qikQjuN09mjVTf8x8f1dl4uczSNf32tYeRJmz51FEqXfxmerkHaQQk2
-         AL/w==
-X-Gm-Message-State: AOJu0Yz1lAlvyfVFVvFvB1NlR2wIwfGFqAnJpvkXMFxNnwu7fddFYfx4
-	dX6BN768OUHb1dCrnUhC6ec=
-X-Google-Smtp-Source: AGHT+IHWpBsM8wbop48hkzWW0SiXiXe3BoSZQM0QW/88GBDtenoNLaCXath99TrZaJbMHdcqiMIUMA==
-X-Received: by 2002:ac2:4c8c:0:b0:50e:386a:eedb with SMTP id d12-20020ac24c8c000000b0050e386aeedbmr769089lfl.70.1703276095452;
-        Fri, 22 Dec 2023 12:14:55 -0800 (PST)
-Received: from [10.0.0.42] (host-213-145-197-219.kaisa-laajakaista.fi. [213.145.197.219])
-        by smtp.gmail.com with ESMTPSA id h22-20020ac24db6000000b0050e7152daffsm48798lfe.182.2023.12.22.12.14.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Dec 2023 12:14:54 -0800 (PST)
-Message-ID: <4b5bd2c2-37c9-4cdf-934d-8bc6d6f73152@gmail.com>
-Date: Fri, 22 Dec 2023 22:16:11 +0200
+        d=1e100.net; s=20230601; t=1703276117; x=1703880917;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XLrEctJKTdv+9DQYIiqT5d8pIz5ARZucJNkVZeQocxI=;
+        b=xAxOThPvkUKFHszCTspVsDk/e3f1ja7/tHF4mqxT662IOOr/Jkuk+rzhrWfs/Ogpn/
+         IMYmxXugYE0U7lPDym8CbA4HXuga+k3LAE1J6G3qI7IwLn2zuTfxM9RMdh7c7uxvpqDg
+         qj+daYba3WRvySyrs9WsCECRciSkjU1RKa7XYfmKYnm67apxzn1xGZSeQZAd0aYtw9DF
+         Ocr77lr9L6+NRrLsDjv4pKvhw/c4La//SquAjHNJ/Tg7XzXoiHTodtk/IuOjHrQHYqZL
+         K8U9OdRAibXeMCUxyCx7Tlj0haZsO0QpxGreHaZ4nL4vD88CwKv/hli6V+isGyEqIPPB
+         iwRw==
+X-Gm-Message-State: AOJu0YyM9aay+74v45tVXeMVcnw6fwl7YAwFBg4RQd+vaDAT/8lKlxhX
+	DgsZqa0yPIXCGF2iO/V0Slg=
+X-Google-Smtp-Source: AGHT+IEIokT7TBCD1z0pxoBMQ+BF23UOr1l/aVdCm8o0pnIaamekIXFExQ3ix1pzgG1NcmHoUDZFlw==
+X-Received: by 2002:a17:902:7085:b0:1d4:8c4:5e07 with SMTP id z5-20020a170902708500b001d408c45e07mr1149471plk.23.1703276112357;
+        Fri, 22 Dec 2023 12:15:12 -0800 (PST)
+Received: from ubuntu.. ([202.166.220.102])
+        by smtp.gmail.com with ESMTPSA id b16-20020a170903229000b001cc1dff5b86sm3792746plh.244.2023.12.22.12.15.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Dec 2023 12:15:12 -0800 (PST)
+From: Dipendra Khadka <kdipendra88@gmail.com>
+To: hdegoede@redhat.com,
+	mchehab@kernel.org,
+	sakari.ailus@linux.intel.com,
+	gregkh@linuxfoundation.org,
+	hpa@redhat.com
+Cc: Dipendra Khadka <kdipendra88@gmail.com>,
+	linux-media@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [PATCH] staging: media: atomisp: pci: Fix spelling mistake in isp2400_input_system_global.h
+Date: Fri, 22 Dec 2023 20:15:03 +0000
+Message-Id: <20231222201503.2337-1-kdipendra88@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/4] Add APIs to request TX/RX DMA channels for thread
- ID
-To: Siddharth Vadapalli <s-vadapalli@ti.com>, vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, srk@ti.com, vigneshr@ti.com
-References: <20231218062640.2338453-1-s-vadapalli@ti.com>
-Content-Language: en-US
-From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-In-Reply-To: <20231218062640.2338453-1-s-vadapalli@ti.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Siddharth,
+The script checkpatch.pl reported a spelling error
+in isp2400_input_system_global.h as below:
 
-On 12/18/23 08:26, Siddharth Vadapalli wrote:
-> The existing APIs for requesting TX and RX DMA channels rely on parsing
-> a device-tree node to obtain the Channel/Thread IDs from their names.
-> However, it is possible to know the thread IDs by alternative means such
-> as being informed by Firmware on a remote core via RPMsg regarding the
-> allocated TX/RX DMA channel thread IDs. In such cases, the driver can be
-> probed by non device-tree methods such as RPMsg-bus, due to which it is not
-> necessary that the device using the DMA has a device-tree node
-> corresponding to it. Thus, add APIs to enable the driver to make use of
-> the existing DMA APIs even when there's no device-tree node.
-> 
-> Additionally, since the name of the device for the remote RX channel is
-> being set purely on the basis of the RX channel ID itself, it can result
-> in duplicate names when multiple flows are used on the same channel.
-> Avoid name duplication by including the flow in the name.
+'''
+WARNING: 'upto' may be misspelled - perhaps 'up to'?
+//MIPI allows upto 4 channels.
+              ^^^^
+'''
 
-Thank you for the updates,
-Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+This patch corrects a spelling error,
+changing "upto" to "up to".
 
-> Series is based on linux-next tagged next-20231215.
-> 
-> v2:
-> https://lore.kernel.org/r/20231212111011.1401641-1-s-vadapalli@ti.com/
-> Changes since v2:
-> - Rebased series on linux-next tagged next-20231215.
-> - Renamed the function "k3_udma_glue_request_tx_chn_by_id()" to
->   "k3_udma_glue_request_tx_chn_for_thread_id()" as suggested by:
->   Péter Ujfalusi <peter.ujfalusi@gmail.com>
-> - Similar to the above change, I have also renamed the function
->   "k3_udma_glue_request_remote_rx_chn_by_id()" to
->   "k3_udma_glue_request_remote_rx_chn_for_thread_id()".
-> - Updated the function prototypes in include/linux/dma/k3-udma-glue.h
->   accordingly.
-> - Updated the commit messages for patches 3/4 and 4/4 to match the
->   changes made to the function names.
-> 
-> v1:
-> https://lore.kernel.org/r/20231114083906.3143548-1-s-vadapalli@ti.com/
-> Changes since v1:
-> - Rebased series on linux-next tagged next-20231212.
-> - Updated commit messages with details regarding the use-case for which
->   the newly added APIs will be required.
-> - Removed unnecessary return value check within
->   "of_k3_udma_glue_parse_chn()" function in patch 1, since it will fall
->   through to "out_put_spec" anyway.
-> - Removed unnecessary return value check within
->   "of_k3_udma_glue_parse_chn_by_id()" function in patch 1, since it will
->   fall through to "out_put_spec" anyway.
-> - Moved patch 4 of v1 series to patch 2 of current series.
-> 
-> RFC Series:
-> https://lore.kernel.org/r/20231111121555.2656760-1-s-vadapalli@ti.com/
-> Changes since RFC Series:
-> - Rebased patches 1, 2 and 3 on linux-next tagged next-20231114.
-> - Added patch 4 to the series.
-> 
-> Regards,
-> Siddharth.
-> 
-> Siddharth Vadapalli (4):
->   dmaengine: ti: k3-udma-glue: Add function to parse channel by ID
->   dmaengine: ti: k3-udma-glue: Update name for remote RX channel device
->   dmaengine: ti: k3-udma-glue: Add function to request TX chan for
->     thread ID
->   dmaengine: ti: k3-udma-glue: Add function to request RX chan for
->     thread ID
-> 
->  drivers/dma/ti/k3-udma-glue.c    | 306 ++++++++++++++++++++++---------
->  include/linux/dma/k3-udma-glue.h |  10 +
->  2 files changed, 229 insertions(+), 87 deletions(-)
-> 
+Signed-off-by: Dipendra Khadka <kdipendra88@gmail.com>
+---
+ drivers/staging/media/atomisp/pci/isp2400_input_system_global.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/staging/media/atomisp/pci/isp2400_input_system_global.h b/drivers/staging/media/atomisp/pci/isp2400_input_system_global.h
+index 61f23814e2fd..3ff61faf0621 100644
+--- a/drivers/staging/media/atomisp/pci/isp2400_input_system_global.h
++++ b/drivers/staging/media/atomisp/pci/isp2400_input_system_global.h
+@@ -19,7 +19,7 @@
+ #define		N_CSI_PORTS (3)
+ //AM: Use previous define for this.
+ 
+-//MIPI allows upto 4 channels.
++//MIPI allows up to 4 channels.
+ #define		N_CHANNELS  (4)
+ // 12KB = 256bit x 384 words
+ #define		IB_CAPACITY_IN_WORDS (384)
 -- 
-Péter
+2.34.1
+
