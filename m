@@ -1,111 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D633C1CAAD;
-	Fri, 22 Dec 2023 15:07:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0574A23741;
+	Fri, 22 Dec 2023 15:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pj1auZeM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A24D4C433C8;
-	Fri, 22 Dec 2023 15:07:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703257640;
-	bh=lz9jX9ZQQWUL3HJ4uKy+xNfuOW6S4uTXYnJqWi7HVSs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Pj1auZeMLIYM9vAfcdZWY598ztp4RYNvw2gVvnfZEUqC2f0V9DwMDu1JcGNXtZEm8
-	 hsh+iRj3mrJBwcsO1dd7tlT6ot97BI0mX7a8vplphRtjiIl6dajoZat4fdHziamV0S
-	 g2mF3M7avj6MYEDrO8SMBKir2RNttPymcl8KMAQKaCkHCsCKZ2oap6l4e+tz+gtfXc
-	 bdXiTBJGz/6Suxl4oeJx43BTzHUhXliL3KdLo2NMisZVecGuUxMJvhvKtEwPDUdDNk
-	 GolJj07/sQ1UxmE6PTS25TYKhcc/plpi68fEFB0lP5H5oK1z7LqLxLykVNzEZfTet1
-	 rZChU9wO9lZPA==
-Date: Fri, 22 Dec 2023 15:07:14 +0000
-From: Conor Dooley <conor@kernel.org>
-To: "Jason-JH.Lin" <jason-jh.lin@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Jason-ch Chen <jason-ch.chen@mediatek.com>,
-	Johnson Wang <johnson.wang@mediatek.com>,
-	Singo Chang <singo.chang@mediatek.com>,
-	Nancy Lin <nancy.lin@mediatek.com>,
-	Shawn Sung <shawn.sung@mediatek.com>,
-	Project_Global_Chrome_Upstream_Group@mediatek.com
-Subject: Re: [PATCH v3 2/9] dt-bindings: mailbox: Add mboxes property for
- CMDQ secure driver
-Message-ID: <20231222-unpicked-jaundice-837baa3092ed@spud>
-References: <20231222045228.27826-1-jason-jh.lin@mediatek.com>
- <20231222045228.27826-3-jason-jh.lin@mediatek.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sS1lzdSK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+	:Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=UHLYB53YtGsTugfyc+sHmLVVrbGg0LS55c68Xz8vbHU=; b=sS1lzdSKCtbDDt5pryAreVWTDH
+	SjkKoxC7B15xtfkczw8hl1mfsQbLTllwOTvsAXunotk3Fp2hLQPGqlwbaVRFgsU0ZaAcyw6VQH9k1
+	kk2oEtaDSk0x88fUWX7NBy3ajJmxXiSLpCr+H/7QvpWjlhwAweh5KmPWDZEljN1iFlOqxQ2VknBah
+	Wlr233mRp7xfWL07mAdOfNycfh9hy4Vmab1nwypZqdomhnN5QFuas6w8rM6D0zdOlQYfkuS1eN4g4
+	xf7tOIbwqPtd8oS5XwjiPBQoJYrMUK5MnXGVXxw9sfXfr8TzwUqZ5dVcUotykFxtw2mfLOg0vKZON
+	E8ZhJhkw==;
+Received: from 2a02-8389-2341-5b80-39d3-4735-9a3c-88d8.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:39d3:4735:9a3c:88d8] helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rGh8X-006BLb-2P;
+	Fri, 22 Dec 2023 15:08:30 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: linux-mm@kvack.org
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Jan Kara <jack@suse.com>,
+	David Howells <dhowells@redhat.com>,
+	Brian Foster <bfoster@redhat.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jan Kara <jack@suse.cz>,
+	Dave Chinner <dchinner@redhat.com>
+Subject: [PATCH 01/17] writeback: fix done_index when hitting the wbc->nr_to_write
+Date: Fri, 22 Dec 2023 16:08:11 +0100
+Message-Id: <20231222150827.1329938-2-hch@lst.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20231222150827.1329938-1-hch@lst.de>
+References: <20231222150827.1329938-1-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5C0G5NxMMW7lzTZE"
-Content-Disposition: inline
-In-Reply-To: <20231222045228.27826-3-jason-jh.lin@mediatek.com>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
+When write_cache_pages finishes writing out a folio, it fails to update
+done_index to account for the number of pages in the folio just written.
+That means when range_cyclic writeback is restarted, it will be
+restarted at this folio instead of after it as it should.  Fix that
+by updating done_index before breaking out of the loop.
 
---5C0G5NxMMW7lzTZE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Acked-by: Dave Chinner <dchinner@redhat.com>
+---
+ mm/page-writeback.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Fri, Dec 22, 2023 at 12:52:21PM +0800, Jason-JH.Lin wrote:
-> Add mboxes to define a GCE loopping thread as a secure irq handler.
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index ee2fd6a6af4072..b13ea243edb6b2 100644
+--- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -2505,6 +2505,7 @@ int write_cache_pages(struct address_space *mapping,
+ 			 * keep going until we have written all the pages
+ 			 * we tagged for writeback prior to entering this loop.
+ 			 */
++			done_index = folio->index + nr;
+ 			wbc->nr_to_write -= nr;
+ 			if (wbc->nr_to_write <= 0 &&
+ 			    wbc->sync_mode == WB_SYNC_NONE) {
+-- 
+2.39.2
 
-> This property is only required if CMDQ secure driver is supported.
-
-What do drivers have to do with this? Either the mailbox channel exists
-or it does not. That said, I am not sure why this should be in DT in the
-first place, can't the driver for the mailbox controller reserve a
-channel for its own use?
-
-Thanks,
-Conor.
-
->=20
-> Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
-> ---
->  .../devicetree/bindings/mailbox/mediatek,gce-mailbox.yaml      | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/mailbox/mediatek,gce-mailb=
-ox.yaml b/Documentation/devicetree/bindings/mailbox/mediatek,gce-mailbox.ya=
-ml
-> index e4da0a58c943..0c17e1be99c2 100644
-> --- a/Documentation/devicetree/bindings/mailbox/mediatek,gce-mailbox.yaml
-> +++ b/Documentation/devicetree/bindings/mailbox/mediatek,gce-mailbox.yaml
-> @@ -56,6 +56,9 @@ properties:
->        include/dt-bindings/gce/<chip>-gce.h of each chips.
->      $ref: /schemas/types.yaml#/definitions/uint32-array
-> =20
-> +  mboxes:
-> +    maxItems: 1
-> +
->  required:
->    - compatible
->    - "#mbox-cells"
-> --=20
-> 2.18.0
->=20
-
---5C0G5NxMMW7lzTZE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZYWmIgAKCRB4tDGHoIJi
-0v7KAP9rXDTXnNEgdhcvQJISjTma+ULoi7AVf044gvTAiu+I4wEAhI0/WGXRcWI2
-sMsJ6dV7i7ItV4+IYNJ+EBRIZruR5Qw=
-=gZJH
------END PGP SIGNATURE-----
-
---5C0G5NxMMW7lzTZE--
