@@ -1,106 +1,168 @@
-Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 072C62374E;
-	Fri, 22 Dec 2023 15:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gaisler.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="p2o87jp7"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp.simply.com (Simply.com) with ESMTP id 4SxWPh4Sz5z6831;
-	Fri, 22 Dec 2023 16:27:20 +0100 (CET)
-Received: from [10.10.15.23] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(Client did not present a certificate)
-	by smtp.simply.com (Simply.com) with ESMTPSA id 4SxWPh0TQLz681j;
-	Fri, 22 Dec 2023 16:27:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
-	s=unoeuro; t=1703258840;
-	bh=m7I+N7YglnnDAb5DtR+LUfwkg0HkRzNLUluJIF+uoPM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=p2o87jp784kPbSta4a1986Wv2iStA5gze7ttrCbLhC6KgxlYUjGY/PIwPQbTB9ZNQ
-	 ngb13eNePXnFDkTX+E3eWmvLmTtffjg6qL12LR+Tw8vTHoaoELXiz+DYsKTMjm0GaZ
-	 ef2LvbQI6FRWQtn12eZpRwvwz2kHJ3puvEPVLwdM=
-Message-ID: <22f2a3af-0f61-4938-8546-d0308853b467@gaisler.com>
-Date: Fri, 22 Dec 2023 16:27:19 +0100
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4825D23768
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 15:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dF5I1J3t"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a2330a92ae6so249173466b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 07:34:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1703259247; x=1703864047; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ucQpKyhkJH6aCcPXYD2Sb2IO6f28+WRJaLTnE9HJbWo=;
+        b=dF5I1J3t17gOl3ijfs4UR7OCs0gFXy3bG0Cc8h34O9b8S+tVHylSkDzIDMosWh0FYH
+         fu4b4f7uCleVEO0Pzwp53/GQ9OuFUrM9qxDmguK+Fj/+70/L1jJu5OIY2RPv92WTMrJh
+         5Y9Sl9hKm2y+zZ9l83FgNMr/0Xtu9sjnEeVzM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703259247; x=1703864047;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ucQpKyhkJH6aCcPXYD2Sb2IO6f28+WRJaLTnE9HJbWo=;
+        b=szFr2M3UeGUisxaa3OZyVSg6KpkiVTVjWFVQKcEMHc141N48xe3uyYJzcNpOuqnYyp
+         ZaU4TSn2CWYmTXheLdC3zVYCRPVknjMbsGkT1xVQMml8p7PrELA9tWFgYHak5QHnjGwm
+         FsRU8Yq6HAw+ZGpUfTMVS70AEqx8PTr0Mw4LNDPi8tXkhyiIs/8tB1M3+f4ASgi6NGTd
+         CETcNrkbn2iQu2u/o4ZN7W2JAmSkBUahWARBICbmRiHZ50AJsrsdeGGcjRmu+rL8Q6mR
+         qYH/ac/hJqipfmNpZyzVc30C7W1tATNMbtXQnKevdHjwG+ImRE8f6M/P5a7D5qgo1HST
+         89Mw==
+X-Gm-Message-State: AOJu0Yy8XhKMHZH/FGJl3kKiGpWobgF1LvHGX6farOehv77ThY49ZPCv
+	2wIyiOSu4BC0Df5cIGSsQqG79DY3tXLXUo/6Z726JEFFL8Ri
+X-Google-Smtp-Source: AGHT+IHOWykweNm2fdFim3B7wYDMQs1cnkjwpBTjx4+1pc0N9FbG77g/oExWfn7IW5SEV2cC3Nlqzw==
+X-Received: by 2002:a17:906:5901:b0:a26:af1a:2bb6 with SMTP id h1-20020a170906590100b00a26af1a2bb6mr863748ejq.3.1703259246899;
+        Fri, 22 Dec 2023 07:34:06 -0800 (PST)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com. [209.85.128.43])
+        by smtp.gmail.com with ESMTPSA id x22-20020a170906135600b00a235f3b8259sm2122632ejb.186.2023.12.22.07.34.05
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Dec 2023 07:34:06 -0800 (PST)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-40d3b2c8517so48545e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 07:34:05 -0800 (PST)
+X-Received: by 2002:a05:600c:210d:b0:40d:3ab7:86e0 with SMTP id
+ u13-20020a05600c210d00b0040d3ab786e0mr104331wml.3.1703259244872; Fri, 22 Dec
+ 2023 07:34:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/27] sparc32: sunset sun4m and sun4d
-Content-Language: en-US
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Sam Ravnborg <sam@ravnborg.org>,
- Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
-Cc: Arnd Bergmann <arnd@kernel.org>, "David S . Miller"
- <davem@davemloft.net>, Helge Deller <deller@gmx.de>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Alan Stern <stern@rowland.harvard.edu>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, sparclinux@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-sound@vger.kernel.org
-References: <20231219-sam-sparc32-sunset-v3-v1-0-64bb44b598c5@ravnborg.org>
- <01ea8c41-88cd-4123-95c7-391640845fc3@app.fastmail.com>
- <e897e6d5a88ec2f9024c62f7bee5c13bfb2cab55.camel@physik.fu-berlin.de>
- <dbb60b13-565f-43b8-8cb8-6f8cd98b06df@app.fastmail.com>
- <3d733b57-884a-4755-a32a-74061b48e182@ilande.co.uk>
- <20231220152224.GA867968@ravnborg.org>
- <566d7867c746ac2a85f0fc42dd8e28eaffd45ed4.camel@physik.fu-berlin.de>
-From: Andreas Larsson <andreas@gaisler.com>
-In-Reply-To: <566d7867c746ac2a85f0fc42dd8e28eaffd45ed4.camel@physik.fu-berlin.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20231221135548.1.I10f326a9305d57ad32cee7f8d9c60518c8be20fb@changeid>
+ <CAEXTbpdUjCvLE+m3d1vSvsE2njRSk1Ou3bZZGEvD_7oYt4+k4Q@mail.gmail.com>
+In-Reply-To: <CAEXTbpdUjCvLE+m3d1vSvsE2njRSk1Ou3bZZGEvD_7oYt4+k4Q@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Fri, 22 Dec 2023 07:33:48 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=WDb7y-9dRgb0D=VxVB6EjUkcOJ+9D0Mp0-vw6wuKUHEg@mail.gmail.com>
+Message-ID: <CAD=FV=WDb7y-9dRgb0D=VxVB6EjUkcOJ+9D0Mp0-vw6wuKUHEg@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge: parade-ps8640: Wait for HPD when doing an AUX transfer
+To: Pin-yen Lin <treapking@chromium.org>
+Cc: dri-devel@lists.freedesktop.org, hsinyi@chromium.org, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	David Airlie <airlied@gmail.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Fri, Dec 22, 2023 at 2:29=E2=80=AFAM Pin-yen Lin <treapking@chromium.org=
+> wrote:
+>
+> Hi Douglas,
+>
+> On Fri, Dec 22, 2023 at 5:56=E2=80=AFAM Douglas Anderson <dianders@chromi=
+um.org> wrote:
+> >
+> > Unlike what is claimed in commit f5aa7d46b0ee ("drm/bridge:
+> > parade-ps8640: Provide wait_hpd_asserted() in struct drm_dp_aux"), if
+> > someone manually tries to do an AUX transfer (like via `i2cdump ${bus}
+> > 0x50 i`) while the panel is off we don't just get a simple transfer
+> > error. Instead, the whole ps8640 gets thrown for a loop and goes into
+> > a bad state.
+> >
+> > Let's put the function to wait for the HPD (and the magical 50 ms
+> > after first reset) back in when we're doing an AUX transfer. This
+> > shouldn't actually make things much slower (assuming the panel is on)
+> > because we should immediately poll and see the HPD high. Mostly this
+> > is just an extra i2c transfer to the bridge.
+> >
+> > Fixes: f5aa7d46b0ee ("drm/bridge: parade-ps8640: Provide wait_hpd_asser=
+ted() in struct drm_dp_aux")
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+> >
+> >  drivers/gpu/drm/bridge/parade-ps8640.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/bridge/parade-ps8640.c b/drivers/gpu/drm/b=
+ridge/parade-ps8640.c
+> > index 541e4f5afc4c..fb5e9ae9ad81 100644
+> > --- a/drivers/gpu/drm/bridge/parade-ps8640.c
+> > +++ b/drivers/gpu/drm/bridge/parade-ps8640.c
+> > @@ -346,6 +346,11 @@ static ssize_t ps8640_aux_transfer(struct drm_dp_a=
+ux *aux,
+> >         int ret;
+> >
+> >         pm_runtime_get_sync(dev);
+> > +       ret =3D _ps8640_wait_hpd_asserted(ps_bridge, 200 * 1000);
+> > +       if (ret) {
+> > +               pm_runtime_put_sync_suspend(dev);
+> > +               return ret;
+> > +       }
+> >         ret =3D ps8640_aux_transfer_msg(aux, msg);
+> >         pm_runtime_mark_last_busy(dev);
+> >         pm_runtime_put_autosuspend(dev);
+> > --
+> > 2.43.0.472.g3155946c3a-goog
+> >
+>
+> I think commit 9294914dd550 ("drm/bridge: parade-ps8640: Link device
+> to ensure suspend/resume order")  is trying to address the same
+> problem, but we see this issue here because the device link is missing
+> DL_FLAG_PM_RUNTIME. I prefer to add DL_FLAG_PM_RUNTIME here so we
+> don't need to add a _ps8640_wait_hpd_asserted() after every
+> pm_runtime_get_*() call.
+
+I disagree. We've had several discussions on the lists about this
+topic before, though since I'm technically on vacation right now I'm
+not going to go look them up. In general "pm_runtime" is not
+sufficient for powering up DRM components. While DRM components can
+use pm_runtime themselves (as we are doing here), powering up another
+DRM component by grabbing a pm_runtime reference isn't right. There is
+a reason for the complexity of the DRM prepare/enable and all the
+current debates about the right order to call components in prepare()
+just demonstrates further that a simple pm_runtime reference isn't
+enough.
+
+It can be noted that, with ${SUBJECT} patch we _aren't_ powering up
+the panel. I actually tested two cases on sc7180-lazor. In one case I
+just closed the lid, which powered off the panel, but the touchscreen
+kept the panel power rail on. In this case with my patch I could still
+read the panel EDID. I then hacked the touchscreen off. Now when I
+closed the lid I'd get a timeout. This is different than if we tried
+to get a pm_runtime reference to the panel.
 
 
-On 2023-12-20 18:25, John Paul Adrian Glaubitz wrote:
-> Hi Sam,
-> 
-> On Wed, 2023-12-20 at 16:22 +0100, Sam Ravnborg wrote:
->>> The leon3_generic machine is maintained by different people so I'd suggest
->>> contacting them: see [1] for their contact details. I see there is an
->>> avocado boot test for the leon3_generic machine included within the QEMU
->>> source tree, but it uses a downloadable image of HelenOS rather than Linux.
->>
->> Thanks for the pointer, I will try to reach out to them when I have
->> something a bit more solid than "it does not work".
->>
->> I tried to hack around a little in qemu and I have an idea where things
->> goes wrong. The leon_generic assumes another address layout than what is
->> used by the kernel, so the very first jump to a kernel address fails.
+> As a side note, I've verified both this patch and DL_FLAG_PM_RUNTIME
+> in our downstream v5.15 kernel and panel-edp driver. Both of them
+> successfully wait for HPD asserted when the timeout used to happen,
+> but the panel is black in that situation. That being said, this patch
+> still brings us to a better state. Originally, panel_edp_resume()
+> would return an error when the timeout occurs, so the panel-edp driver
+> is stuck at an unexpected state. With this patch or
+> DL_FLAG_PM_RUNTIME, the runtime PM callbacks won't fail and a system
+> suspend/resume brings the panel back.
 
-The MKLINUXIMG second stage bootloader sets up MMU tables and the SPARC
-OPENPROM interface for LEON systems, so you need to run the vmlinux
-image through that. You can find it (and our other Linux related
-releases) via https://gaisler.com/index.php/downloads/linux. The manual
-is at https://www.gaisler.com/doc/mklinuximg.pdf and the latest release at
-https://gaisler.com/anonftp/linux/linux-2.6/kernel/mklinuximg-2.0.15.tar.bz2
+OK. I'm going to shut off email for real this time while I enjoy some
+time off. Hopefully the above convinces you. Otherwise I guess we can
+continue to debate in mid-January.
 
-With a sparc-linux-gcc in the PATH (or using CROSS_COMPILE to point out
-a toolchain stem) you can do:
-
-mklinuximg vmlinux image.ram
-
-and then run the resulting image.ram in e.g. QEMU 8.2.0 with
-
-qemu-system-sparc -nographic -M leon3_generic -m 256 -kernel image.ram
-
-This at least boots the kernel and let me log in when quickly testing a
-few images with root filesystems in initramfs, admittedly with our
-kernel patches in place.
-
-
-> I would argue that before we start introducing larger changes to arch/sparc,
-> we should settle the maintainership question first. Once we have an active
-> maintainer again, we can have a more extended discussion about what to keep
-> and how to name things.
-I agree.
-
-Cheers,
-Andreas
-
+-Doug
