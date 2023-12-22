@@ -1,272 +1,143 @@
-Received: from smtp-fw-52002.amazon.com (smtp-fw-52002.amazon.com [52.119.213.150])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119E53309E;
-	Fri, 22 Dec 2023 19:53:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F932E826;
+	Fri, 22 Dec 2023 19:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="UnmFO7dg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1703274836; x=1734810836;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=a+3i4loybtPdN0BnSihZonArbdMyz7IERtq4xLgkTQM=;
-  b=UnmFO7dgnpQoIvHDXRPrXy5s8+CTuS4fPU/9ATOSqq6mp73kNjrpWCz8
-   CESTzsIfNwxpXTW15n1Q+pzr2YSdobCEDEZCLmDepUHXcnw3HsB3+E4a4
-   P+PBBh/icwJlUjldS+vV69tpyCTs7cMc8n2FSvcdSnDmDQSDDYZ7hLARW
-   U=;
-X-IronPort-AV: E=Sophos;i="6.04,297,1695686400"; 
-   d="scan'208";a="602627379"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-pdx-2b-m6i4x-f323d91c.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 19:53:53 +0000
-Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (pdx2-ws-svc-p26-lb5-vlan2.pdx.amazon.com [10.39.38.66])
-	by email-inbound-relay-pdx-2b-m6i4x-f323d91c.us-west-2.amazon.com (Postfix) with ESMTPS id 69E8040DFE;
-	Fri, 22 Dec 2023 19:53:38 +0000 (UTC)
-Received: from EX19MTAUWA001.ant.amazon.com [10.0.7.35:18182]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.15.218:2525] with esmtp (Farcaster)
- id bf3bafa8-c33b-453a-b6f8-9e29248b4425; Fri, 22 Dec 2023 19:53:38 +0000 (UTC)
-X-Farcaster-Flow-ID: bf3bafa8-c33b-453a-b6f8-9e29248b4425
-Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.204) with Microsoft SMTP Server
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jkFSNvX1"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BMFDr8U016516;
+	Fri, 22 Dec 2023 19:57:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=qcppdkim1; bh=wKKlRvQbCme2K+VxY2Ifk
+	mjSGoGwScWbkwBm8TgDddM=; b=jkFSNvX1a1Ls+3/vKYw/9KoxdgSVsxzoOUFk5
+	nljkKxhjFU+kQHcYCRuRqFsXRLjXfFuO/l0AtGO2HD8YIy6Yi3XxKph3Wz7YxnKZ
+	DL8xkU+mK+ypdP9d3Hn6uFrf7J5YrXN8Dtabk77cRv30o/VMMr9HGxhasR7Jnkcl
+	QY+rGI3KLn/cpmuuOXvUE1i1iBSkZPFqxS8ElHP2kfdm6Oyhcud6P4Em0qRzdx9M
+	26snaje1xXd59UEL2Sq7ThJxYLbqkvxg7CtxKXXcVCPKs4olpxaz3RRR2rrIwuZh
+	srRFWoCtpxQdg9scXeVLU1lzP3Ic2Js9hXWq3N0bj44MQrc2A==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3v57vg9h6w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 22 Dec 2023 19:57:56 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3BMJvtia021833
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 22 Dec 2023 19:57:55 GMT
+Received: from hu-akhilpo-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 22 Dec 2023 19:53:37 +0000
-Received: from dev-dsk-graf-1a-5ce218e4.eu-west-1.amazon.com (10.253.83.51) by
- EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 22 Dec 2023 19:53:33 +0000
-From: Alexander Graf <graf@amazon.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>, <x86@kernel.org>,
-	Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	"Rob Herring" <robh+dt@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-	"Andrew Morton" <akpm@linux-foundation.org>, Mark Rutland
-	<mark.rutland@arm.com>, "Tom Lendacky" <thomas.lendacky@amd.com>, Ashish
- Kalra <ashish.kalra@amd.com>, James Gowans <jgowans@amazon.com>, Stanislav
- Kinsburskii <skinsburskii@linux.microsoft.com>, <arnd@arndb.de>,
-	<pbonzini@redhat.com>, <madvenka@linux.microsoft.com>, Anthony Yznaga
-	<anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, David
- Woodhouse <dwmw@amazon.co.uk>, Benjamin Herrenschmidt
-	<benh@kernel.crashing.org>
-Subject: [PATCH v2 17/17] devicetree: Add bindings for ftrace KHO
-Date: Fri, 22 Dec 2023 19:51:44 +0000
-Message-ID: <20231222195144.24532-12-graf@amazon.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20231222195144.24532-1-graf@amazon.com>
-References: <20231222193607.15474-1-graf@amazon.com>
- <20231222195144.24532-1-graf@amazon.com>
+ 15.2.1118.40; Fri, 22 Dec 2023 11:57:50 -0800
+Date: Sat, 23 Dec 2023 01:27:47 +0530
+From: Akhil P Oommen <quic_akhilpo@quicinc.com>
+To: Rob Clark <robdclark@gmail.com>
+CC: <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
+        <linux-arm-msm@vger.kernel.org>, Rob Clark <robdclark@chromium.org>,
+        "David
+ Heidelberg" <david.heidelberg@collabora.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        "Konrad
+ Dybcio" <konrad.dybcio@linaro.org>,
+        Danylo Piliaiev <dpiliaiev@igalia.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        open list
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/msm/a6xx: Fix recovery vs runpm race
+Message-ID: <k5yte4b36j23p3pfqmflhpkfesyiwoczi3avs2vavvzb3i2oct@zhssj7u5a6og>
+References: <20231218155927.368881-1-robdclark@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ClientProxiedBy: EX19D035UWB003.ant.amazon.com (10.13.138.85) To
- EX19D020UWC004.ant.amazon.com (10.13.138.149)
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20231218155927.368881-1-robdclark@gmail.com>
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 49yidPqc0o0-vPdYGCd9NjzI6keTMM3p
+X-Proofpoint-ORIG-GUID: 49yidPqc0o0-vPdYGCd9NjzI6keTMM3p
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ phishscore=0 malwarescore=0 priorityscore=1501 mlxscore=0
+ lowpriorityscore=0 bulkscore=0 clxscore=1011 suspectscore=0 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2312220146
 
-With ftrace in KHO, we are creating an ABI between old kernel and new
-kernel about the state that they transfer. To ensure that we document
-that state and catch any breaking change, let's add its schema to the
-common devicetree bindings. This way, we can quickly reason about the
-state that gets passed.
+On Mon, Dec 18, 2023 at 07:59:24AM -0800, Rob Clark wrote:
+> 
+> From: Rob Clark <robdclark@chromium.org>
+> 
+> a6xx_recover() is relying on the gpu lock to serialize against incoming
+> submits doing a runpm get, as it tries to temporarily balance out the
+> runpm gets with puts in order to power off the GPU.  Unfortunately this
+> gets worse when we (in a later patch) will move the runpm get out of the
+> scheduler thread/work to move it out of the fence signaling path.
+> 
+> Instead we can just simplify the whole thing by using force_suspend() /
+> force_resume() instead of trying to be clever.
 
-Signed-off-by: Alexander Graf <graf@amazon.com>
----
- .../bindings/kho/ftrace/ftrace-array.yaml     | 46 +++++++++++++++
- .../bindings/kho/ftrace/ftrace-cpu.yaml       | 56 +++++++++++++++++++
- .../bindings/kho/ftrace/ftrace.yaml           | 48 ++++++++++++++++
- 3 files changed, 150 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/kho/ftrace/ftrace-array.yaml
- create mode 100644 Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.yaml
- create mode 100644 Documentation/devicetree/bindings/kho/ftrace/ftrace.yaml
+At some places, we take a pm_runtime vote and access the gpu
+registers assuming it will be powered until we drop the vote.  a6xx_get_timestamp()
+is an example. If we do a force suspend, it may cause bus errors from
+those threads. Now you have to serialize every place we do runtime_get/put with a
+mutex. Or is there a better way to handle the 'later patch' you
+mentioned?
 
-diff --git a/Documentation/devicetree/bindings/kho/ftrace/ftrace-array.yaml b/Documentation/devicetree/bindings/kho/ftrace/ftrace-array.yaml
-new file mode 100644
-index 000000000000..9960fefc292d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/kho/ftrace/ftrace-array.yaml
-@@ -0,0 +1,46 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/kho/ftrace/ftrace-array.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Ftrace trace array
-+
-+maintainers:
-+  - Alexander Graf <graf@amazon.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ftrace,array-v1
-+
-+  trace_flags:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Bitmap of all the trace flags that were enabled in the trace array at the
-+      point of serialization.
-+
-+# Subnodes will be of type "ftrace,cpu-v1", one each per CPU
-+additionalProperties: true
-+
-+required:
-+  - compatible
-+  - trace_flags
-+
-+examples:
-+  - |
-+    ftrace {
-+        compatible = "ftrace-v1";
-+        events = <1 1 2 2 3 3>;
-+
-+        global_trace {
-+          compatible = "ftrace,array-v1";
-+          trace_flags = < 0x3354601 >;
-+
-+          cpu0 {
-+            compatible = "ftrace,cpu-v1";
-+            cpu = < 0x00 >;
-+            mem = < 0x101000000ULL 0x38ULL 0x101000100ULL 0x1000ULL 0x101000038ULL 0x38ULL 0x101002000ULL 0x1000ULL>;
-+          };
-+        };
-+      };
-diff --git a/Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.yaml b/Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.yaml
-new file mode 100644
-index 000000000000..58c715e93f37
---- /dev/null
-+++ b/Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/kho/ftrace/ftrace-cpu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Ftrace per-CPU ring buffer contents
-+
-+maintainers:
-+  - Alexander Graf <graf@amazon.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ftrace,cpu-v1
-+
-+  cpu:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      CPU number of the CPU that this ring buffer belonged to when it was
-+      serialized.
-+
-+  mem:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    description:
-+      Array of { u64 phys_addr, u64 len } elements that describe a list of ring
-+      buffer pages. Each page consists of two elements. The first element
-+      describes the location of the struct buffer_page that contains metadata
-+      for a given ring buffer page, such as the ring's head indicator. The
-+      second element points to the ring buffer data page which contains the raw
-+      trace data.
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - cpu
-+  - mem
-+
-+examples:
-+  - |
-+    ftrace {
-+        compatible = "ftrace-v1";
-+        events = <1 1 2 2 3 3>;
-+
-+        global_trace {
-+          compatible = "ftrace,array-v1";
-+          trace_flags = < 0x3354601 >;
-+
-+          cpu0 {
-+            compatible = "ftrace,cpu-v1";
-+            cpu = < 0x00 >;
-+            mem = < 0x101000000ULL 0x38ULL 0x101000100ULL 0x1000ULL 0x101000038ULL 0x38ULL 0x101002000ULL 0x1000ULL>;
-+          };
-+        };
-+      };
-diff --git a/Documentation/devicetree/bindings/kho/ftrace/ftrace.yaml b/Documentation/devicetree/bindings/kho/ftrace/ftrace.yaml
-new file mode 100644
-index 000000000000..b87a64843af3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/kho/ftrace/ftrace.yaml
-@@ -0,0 +1,48 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/kho/ftrace/ftrace.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Ftrace core data
-+
-+maintainers:
-+  - Alexander Graf <graf@amazon.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ftrace-v1
-+
-+  events:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    description:
-+      Array of { u32 crc, u32 type } elements. Each element contains a unique
-+      identifier for an event, followed by the identifier that this event had
-+      in the previous kernel's trace buffers.
-+
-+# Other child nodes will be of type "ftrace,array-v1". Each of which describe
-+# a trace buffer
-+additionalProperties: true
-+
-+required:
-+  - compatible
-+  - events
-+
-+examples:
-+  - |
-+    ftrace {
-+        compatible = "ftrace-v1";
-+        events = <1 1 2 2 3 3>;
-+
-+        global_trace {
-+          compatible = "ftrace,array-v1";
-+          trace_flags = < 0x3354601 >;
-+
-+          cpu0 {
-+            compatible = "ftrace,cpu-v1";
-+            cpu = < 0x00 >;
-+            mem = < 0x101000000ULL 0x38ULL 0x101000100ULL 0x1000ULL 0x101000038ULL 0x38ULL 0x101002000ULL 0x1000ULL>;
-+          };
-+        };
-+      };
--- 
-2.40.1
+-Akhil.
 
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-
+> 
+> Reported-by: David Heidelberg <david.heidelberg@collabora.com>
+> Closes: https://gitlab.freedesktop.org/mesa/mesa/-/issues/10272
+> Fixes: abe2023b4cea ("drm/msm/gpu: Push gpu lock down past runpm")
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 12 ++----------
+>  1 file changed, 2 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> index 268737e59131..a5660d63535b 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> @@ -1244,12 +1244,7 @@ static void a6xx_recover(struct msm_gpu *gpu)
+>  	dev_pm_genpd_add_notifier(gmu->cxpd, &gmu->pd_nb);
+>  	dev_pm_genpd_synced_poweroff(gmu->cxpd);
+>  
+> -	/* Drop the rpm refcount from active submits */
+> -	if (active_submits)
+> -		pm_runtime_put(&gpu->pdev->dev);
+> -
+> -	/* And the final one from recover worker */
+> -	pm_runtime_put_sync(&gpu->pdev->dev);
+> +	pm_runtime_force_suspend(&gpu->pdev->dev);
+>  
+>  	if (!wait_for_completion_timeout(&gmu->pd_gate, msecs_to_jiffies(1000)))
+>  		DRM_DEV_ERROR(&gpu->pdev->dev, "cx gdsc didn't collapse\n");
+> @@ -1258,10 +1253,7 @@ static void a6xx_recover(struct msm_gpu *gpu)
+>  
+>  	pm_runtime_use_autosuspend(&gpu->pdev->dev);
+>  
+> -	if (active_submits)
+> -		pm_runtime_get(&gpu->pdev->dev);
+> -
+> -	pm_runtime_get_sync(&gpu->pdev->dev);
+> +	pm_runtime_force_resume(&gpu->pdev->dev);
+>  
+>  	gpu->active_submits = active_submits;
+>  	mutex_unlock(&gpu->active_lock);
+> -- 
+> 2.43.0
+> 
