@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5BC11189;
-	Fri, 22 Dec 2023 10:11:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218B811718
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 10:12:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n9RzoUvV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBB61C433C8;
-	Fri, 22 Dec 2023 10:11:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i1ttZV5w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21BB5C433C8;
+	Fri, 22 Dec 2023 10:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703239900;
-	bh=DJZ4k1+5+NhXW5nZgyHjVM9hVDuYw0xK75a9tiO1atE=;
+	s=k20201202; t=1703239957;
+	bh=219GP91d68zGoZ1cFfjVthGnJx/nc2d6y0Gb+Spz9BQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=n9RzoUvVcZrjnxzjCQSal+Zs9I4wNPrs+z4VIADy7FtrYOggK9pgfqq9ndUrcD2wA
-	 mKfWWbgm6ZAL4Ock8aTbBS8MYnQpf6bNhVKZIgiDtIlcw1cbxRiW9ef7soSYIIjDIX
-	 QXwq8NsPJPRH+KRRS4NNLDClEtB36lxZBiYmLTSiVG622rSksk7brBFW/Hu3E1LRD8
-	 5Fk29k8lKM9FgNh3zdqw6WUEabQx3OvRMFCNuRZEbeW8Hiz3hevNhheDlQzWhO4ZzC
-	 WgQAMezwFCbett1dOT0iCOYIpFdxRRpuiwBQwrXSKWfghrKg67J6caJXdkJLarEkY5
-	 R15Z6VPxBxL5g==
-Message-ID: <9d8abd54-b497-467e-b473-13df39c13a76@kernel.org>
-Date: Fri, 22 Dec 2023 12:11:37 +0200
+	b=i1ttZV5wTLS0aipOuZ7Vimv3aTekOWo4PtDf8LspdJB5Fi7GHxsWyWuGQiLMzjNzm
+	 ZuJbod0ykU39/qoXXw20zQ7Yv25NYxU1PqqGOY+dN2BS4tOSZpYIPGdUK85IDGJ6lJ
+	 HgnSyNjiD55DjaMp+geTO/sBNKHsYQZJRdllk5LaukY+6ZOutpnTSlnitR4E+hvw7B
+	 dQPsBNFAHPGigJSBwNZNw4yERYJe0QSYAqt9cwXii624qxeuCEWmgrKUGWHpRvEnnM
+	 imDcaUjSlP9xnyp1RbZWJlHypkiIbSohEIgzgipdO+QE021OKGiI34c6tlkIJ3Y1HX
+	 W+ULD/m0nkJfw==
+Message-ID: <09cd6d99-6a06-4920-9ed0-78661060b759@kernel.org>
+Date: Fri, 22 Dec 2023 12:12:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -26,34 +26,28 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/5] phy: cadence-torrent: Add USXGMII(156.25MHz) +
- SGMII/QSGMII(100MHz) multilink config for TI J7200
+Subject: Re: [RFC PATCH 1/2] phy: ti: gmii-sel: Enable SGMII mode for J784S4
 Content-Language: en-US
-To: Swapnil Jakhade <sjakhade@cadence.com>, vkoul@kernel.org,
- kishon@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, linux-phy@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: mparab@cadence.com, s-vadapalli@ti.com
-References: <20231221162051.2131202-1-sjakhade@cadence.com>
- <20231221162051.2131202-6-sjakhade@cadence.com>
+To: Chintan Vankar <c-vankar@ti.com>, Maxime Ripard <mripard@kernel.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Sinthu Raja <sinthu.raja@ti.com>, Andrew Davis <afd@ti.com>,
+ Siddharth Vadapalli <s-vadapalli@ti.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Vinod Koul <vkoul@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
+References: <20231221102956.754617-1-c-vankar@ti.com>
 From: Roger Quadros <rogerq@kernel.org>
-In-Reply-To: <20231221162051.2131202-6-sjakhade@cadence.com>
+In-Reply-To: <20231221102956.754617-1-c-vankar@ti.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 21/12/2023 18:20, Swapnil Jakhade wrote:
-> Add a separate compatible and registers map table for TI J7200.
-> TI J7200 uses Torrent SD0805 version which is a special version
-> derived from Torrent SD0801 with some differences in register
-> configurations.
+On 21/12/2023 12:29, Chintan Vankar wrote:
+> TI's J784S4 SoC supports SGMII mode with the CPSW9G instance of the CPSW
+> Ethernet Switch. Thus, enable it by adding SGMII mode to the list of the
+> corresponding extra_modes member.
 > 
-> Add register sequences for USXGMII(156.25MHz) + SGMII/QSGMII(100MHz)
-> multilink config for TI J7200. USXGMII uses PLL0 and SGMII/QSGMII
-> uses PLL1.
-> 
-> Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
+> Signed-off-by: Chintan Vankar <c-vankar@ti.com>
 
 Reviewed-by: Roger Quadros <rogerq@kernel.org>
 
