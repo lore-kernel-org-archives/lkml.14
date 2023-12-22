@@ -1,98 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12298FBFA;
-	Fri, 22 Dec 2023 10:35:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C97111727;
+	Fri, 22 Dec 2023 10:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mess.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p0sJpVtR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 034B0C433C8;
-	Fri, 22 Dec 2023 10:35:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703241320;
-	bh=l/sQfHQcuqnqBACJzeTrf6+jAOQAfvHbk4jdeRnVtzM=;
+	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="n48t/rWx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
+	t=1703241422; bh=cWqAUpWjhIOY5kW4clTqhVJSzMYq+y12OfFP6xGF06s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p0sJpVtRR29GpIBHcJqwMwuOAlukV/ZNIbULXHej4SixOGmTlZQc4nZNr4ZeJbkPb
-	 NgXdiZqyzOcBOXpEyzmrrbFTV/7WigIMtL4gbsRaj0x50CnaEnKxkQegOMEykUgS19
-	 /j9rHdnBTiyLJq3aMfKhZFMKAAuLF6Wd0oWAWLDsiTc1XApyDZfVyiRLwnafs01eco
-	 5y3iLc4lcRO3pFtIzPGwbC7JL0NHHkjqZgZG6f6oNPUtUn9EFMv2MSaHM2qRdfzEoT
-	 hdg0hBDN5LsGz3x8ht0oqn5syPaGvHKrrvlKsKMUnO+II6g/8fa5uDzUxw5IHvKg5b
-	 fAW4QYRC7UTDw==
-Date: Fri, 22 Dec 2023 11:35:17 +0100
-From: Wolfram Sang <wsa@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Naresh Solanki <naresh.solanki@9elements.com>,
-	Rob Herring <robh+dt@kernel.org>, Peter Rosin <peda@axentia.se>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Patrick Rudolph <patrick.rudolph@9elements.com>,
-	Rob Herring <robh@kernel.org>, linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH v5 1/2] dt-bindings: i2c: pca954x: Add custom
- properties for MAX7357
-Message-ID: <ZYVmZXpwgHJhS8Nf@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Naresh Solanki <naresh.solanki@9elements.com>,
-	Rob Herring <robh+dt@kernel.org>, Peter Rosin <peda@axentia.se>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Patrick Rudolph <patrick.rudolph@9elements.com>,
-	Rob Herring <robh@kernel.org>, linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231220082803.345153-1-naresh.solanki@9elements.com>
- <ZYNTfKLFGrLq8qGY@shikoro>
- <497e6eda-a416-415a-b468-fe764c14a8aa@linaro.org>
+	b=n48t/rWxle/8Ss7ZXz2Y/rmPUsOtQ/gcbgfbYCDE8IyGIJFMLOCrsRmW9bqqRERH4
+	 PoUct/FsAPmVOE8VbKbJvyTIwtFYuSRbW5DUxPAnDLVd505OtwuvF3BhOgsGthX4N8
+	 oLPi4ar/DP5eDffZTsR0cGQWdQ3gVEGqzCN3DWmCtvGNPUFXpM65865jQ+7GCUb6H/
+	 yCeeb6GVzliT8qJFuaFhhv8hSJLA+6d7aQfSCGsR9sDG0AfVkzKDqBmSWG215aq1sT
+	 eZbsgxU+UixcrJlcTCNscAqpV2zO5tspC3QNpSJRdj91rJJd6n3arZyYsGI1ggDv7Z
+	 GcBUQRQHYrzZw==
+Received: by gofer.mess.org (Postfix, from userid 1000)
+	id 2B1F31000FD; Fri, 22 Dec 2023 10:37:02 +0000 (GMT)
+Date: Fri, 22 Dec 2023 10:37:02 +0000
+From: Sean Young <sean@mess.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Thierry Reding <thierry.reding@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	linux-pwm@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v11] pwm: bcm2835: Allow PWM driver to be used in atomic
+ context
+Message-ID: <ZYVmzrRwgVOGinmy@gofer.mess.org>
+References: <20231220142426.1275052-1-sean@mess.org>
+ <fuku3b5ur6y4k4refd3vmeoenzjo6mwe3b3gtel34rhhhtvnsa@w4uktgbqsc3w>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="C/jQ9StvqT7gLVfz"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <497e6eda-a416-415a-b468-fe764c14a8aa@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fuku3b5ur6y4k4refd3vmeoenzjo6mwe3b3gtel34rhhhtvnsa@w4uktgbqsc3w>
+
+On Fri, Dec 22, 2023 at 11:30:47AM +0100, Uwe Kleine-König wrote:
+> Hello Sean,
+> 
+> On Wed, Dec 20, 2023 at 02:24:25PM +0000, Sean Young wrote:
+> > @@ -151,8 +153,26 @@ static int bcm2835_pwm_probe(struct platform_device *pdev)
+> >  		return dev_err_probe(&pdev->dev, PTR_ERR(pc->clk),
+> >  				     "clock not found\n");
+> >  
+> > +	ret = clk_rate_exclusive_get(pc->clk);
+> > +	if (ret)
+> > +		return dev_err_probe(&pdev->dev, ret,
+> > +				     "fail to get exclusive rate\n");
+> > +
+> > +	ret = devm_add_action_or_reset(&pdev->dev, devm_clk_rate_exclusive_put,
+> > +				       pc->clk);
+> > +	if (ret) {
+> > +		clk_rate_exclusive_put(pc->clk);
+> 
+> That clk_rate_exclusive_put() is wrong. If devm_add_action_or_reset()
+> fails that is already cared for.
+
+Yes, you're right. I missed that - should've checked.
+
+> Given that Thierry already applied this patch, getting this fixed in a
+> timely manner would be good.
+
+I'll send out a patch shortly, thanks for catching.
 
 
---C/jQ9StvqT7gLVfz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-> Some explanation was provided here:
-> https://lore.kernel.org/all/CABqG17g8QOgU7cObe=3D4EMLbEC1PeZWxdPXt7zzFs35=
-JGqpRbfg@mail.gmail.com/
->=20
-> AFAIU, these properties are board-design choice.
-
-Hey, thanks for the heads up. I agree that these options should not be
-"on" by default. I am still not fully convinced they serve as hardware
-description, though. Need to think about it some more...
-
-
---C/jQ9StvqT7gLVfz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmWFZmUACgkQFA3kzBSg
-KbZaqhAApHb6SPANoyxqls3zUBrxOTp7yb0HZiX68d5384zXqtxpp6F5vVe/CiJx
-WLKOMCMG/UkvPGDdkkZHTRgVXcgTvnFYb0xMKy1utDw5JGOXW+CmSV8BJhLRqMBV
-8JxhSFsPXCkhNVga6ClqF7jdgaSwwryNa8j20LBQglvzDMSNyWgJFmzbLJEUR/8U
-nkJUBjaGfprL/dN8KB/ZX8IveMjh1qzrL1gipJGkPF95ppK5JDi58ENx5fiotgIX
-zDVIaq1q74i3Ocf49lvQakMJ5gSf8Hr6Cl7kpfPoVWRDzZMzt3qlNia8Xkc5ZOc7
-0oi8pgr/ndmpzdr9ssMwDaikiBPtKb8D/xYWSOsMJCMpE45M1nZ/VThWYBqmcQrx
-GJjxerfIvnIuvX86q6xT7DhzsgxeTeTQR6bB5qcEigJ0k2kaxyZkpfjORpfz8T/Z
-Zn7GsA47knbYvLkE4T+8DAqJP6XJze8RB8wVXaDOQryBQtRCoXJqr16NspFlm+aK
-Ot5UK+Ak+ibfDdfs/wWPySEuYaU8Gc9KlM/BlLlzOIMCB8iZ7jgLk6OVnz0mMf9h
-SzNDT4abP/daUktwdj8X2I33aLYUZPKSG/LztXk2FmIoK+ZoXd/4UdDoKkGswE/m
-k50U4fFw4nBA6WoNXkU9oq6pKfIpxG6uKvgTJgrwgbI9oZJaNpo=
-=DO47
------END PGP SIGNATURE-----
-
---C/jQ9StvqT7gLVfz--
+Sean
