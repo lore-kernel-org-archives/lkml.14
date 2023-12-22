@@ -1,74 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3EB1D52F;
-	Fri, 22 Dec 2023 14:29:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB581A591
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 14:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OVkPEw0W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703255398; x=1734791398;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=suVjjCTSnC7KfiQTEv2ADRlfYvstLRrdTQT/YXGwxXo=;
-  b=OVkPEw0WEIjviDsQ7sdHAd+gKytYDBve9wLDpo5AkTdOkIl9OwRaztcu
-   gefej1jA5G8tl22QzLvEbbueK1r0qs9v4BqWPERjzKnMUw5GuFOrUOuJI
-   e+tJxrxEbfIaRNU1D+ODHB3lP3iQ6W3/uCkJR8LYIGiN2r+enbjHl0jQE
-   /wqt3ILqDj8jE4A2u3icrVe+/NFJwmBDsK84qgoI2VHUwo9oa0cqIAE/p
-   /kh+KrAEUUOcl12i02u3c0F6NTRucm7r20AZ6C/r8rzqDfsm+PZSdrtRE
-   70W1i0zN6GndM2cDnSMYvXdE7sqT7nDlAuSFAr4gH2/F5iCNF6JUvbVUr
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="376261662"
-X-IronPort-AV: E=Sophos;i="6.04,296,1695711600"; 
-   d="scan'208";a="376261662"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 06:29:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="950289620"
-X-IronPort-AV: E=Sophos;i="6.04,296,1695711600"; 
-   d="scan'208";a="950289620"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 06:29:55 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rGgUQ-00000008AkY-2ec4;
-	Fri, 22 Dec 2023 16:27:02 +0200
-Date: Fri, 22 Dec 2023 16:27:02 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] MAINTAINERS: split out the uAPI into a new section
-Message-ID: <ZYWctoOnMLcPFeKy@smile.fi.intel.com>
-References: <20231222141952.16254-1-brgl@bgdev.pl>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="iDkam2ew"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d03f03cda9so4860445ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 06:31:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1703255479; x=1703860279; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hCMljXl64bVf1xnNOYFSwE5VnW4uhjdgxZFrLklQSVY=;
+        b=iDkam2ewW1rguNd2uR+v6GcA5sZKsU4X7/Mfk7B/a6UFYOZsL3Y7wvl1sAAkqbu1Sm
+         WR0uSQo18jgoWlqIK7Ga05z8SlYpgEO351Oi+k7qtA0Og3K3MHol1jwLziR4B/BFItMf
+         XmibftlvvH6ZjIcoh+6Wl4viUKV6Nx9gBzJa6vDtPzTa2EfeGBGRvWWzUp1u9JgILMQE
+         +smx7v+rlqza02dPDgN9GsCFToSzuk2kbhOdeitAqlrDn9j7WH8vjQQbfnpqn05keFan
+         KpoTJJ5ECqYT5a1OZmMLofo8U6/r/Z4gsBy7mqwwXgxU7o8sqcBGb4+5MGCzUXp8w8iL
+         iETA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703255479; x=1703860279;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hCMljXl64bVf1xnNOYFSwE5VnW4uhjdgxZFrLklQSVY=;
+        b=QfpuWmJN7RepUwovIC0aXhihD0Qm31M4BMHT5y89knXNM991rXgDBB6+ERlZLmODAa
+         OS1W0QzxQz0+8XfDNk1F4j5O7CIclQmip98QMOhr6KLQ7F6JxwsajNCeThQ57eBa4DZg
+         RanVYCHfmW3LVrpxsuFk/7LiPbyg+jaD5HmGi2wS74PV/7g5xrd1Hjv81sEKcFgW/nG3
+         BRB2WJkVhjdQ/FsUViRIYcgnykmReEbznfWWzGtORRs1JPjKPNbNhgnWW7IfNPxZs5sL
+         RkTTocGqiUP/z1c4gcO5CpmlZa0KDsSdGqHwNScCYNacAwkF+O3h3TCWwXn0PVto9kJz
+         ONwQ==
+X-Gm-Message-State: AOJu0Yy8nIP1DGjgaiUCa4YSELid+qtRhKaUgCxu5h93dlmCq/XqSahd
+	4QzTrappIgDcY3pBOW0XkVzrIu50ROUjJw==
+X-Google-Smtp-Source: AGHT+IFjDQZwXvG5BR3N8L1gnXyEysJlRGKZyMYMuNqbRbFKqbNQ0c1vGGrP08A46agxxuuHnN9aHg==
+X-Received: by 2002:a17:903:244e:b0:1d3:e7cc:e2a6 with SMTP id l14-20020a170903244e00b001d3e7cce2a6mr2631936pls.0.1703255478759;
+        Fri, 22 Dec 2023 06:31:18 -0800 (PST)
+Received: from [192.168.1.150] ([198.8.77.194])
+        by smtp.gmail.com with ESMTPSA id p2-20020a170902e74200b001d33e65b3cdsm3520002plf.112.2023.12.22.06.31.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Dec 2023 06:31:17 -0800 (PST)
+Message-ID: <c4c2de2e-b816-41eb-8646-8e57b7ed7913@kernel.dk>
+Date: Fri, 22 Dec 2023 07:31:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231222141952.16254-1-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] io_uring: Statistics of the true utilization of sq
+ threads.
+Content-Language: en-US
+To: Xiaobing Li <xiaobing.li@samsung.com>
+Cc: asml.silence@gmail.com, linux-kernel@vger.kernel.org,
+ io-uring@vger.kernel.org, kun.dou@samsung.com, peiwei.li@samsung.com,
+ joshi.k@samsung.com, kundan.kumar@samsung.com, wenwen.chen@samsung.com,
+ ruyi.zhang@samsung.com
+References: <c3995796-8aab-45e1-ad59-d970373a4fab@kernel.dk>
+ <CGME20231222084334epcas5p10badfe3c82a6b8355c03f8d0aa192892@epcas5p1.samsung.com>
+ <20231222083530.11051-1-xiaobing.li@samsung.com>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20231222083530.11051-1-xiaobing.li@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Dec 22, 2023 at 03:19:52PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 12/22/23 1:35 AM, Xiaobing Li wrote:
+> On 12/18/23 15:53, Jens Axboe wrote:
+>> I think I'm convinced that the effectiveness of the chosen SQPOLL
+>> settings being exposed is useful, I'm just not sure fdinfo is the right
+>> place to do it. Is it going to be a problem that these are just
+>> perpetual stats, with no way to reset them? This means there's no way to
+>> monitor it for a period of time and get effectiveness for something
+>> specific, it'll always just count from when the ring was created.
+>>
+>> We could of course have the act of reading the stat also reset it, but
+>> maybe that'd be a bit odd?
+>>
+>> Alternatively, it could be exported differently, eg as a register opcode
+>> perhaps.
+>>
+>> Open to suggestions...
 > 
-> Kent Gibson is the author of the character device uAPI v2 and should be
-> Cc'ed on all patches aimed for it. Unfortunately this is not the case as
-> he's not listed in MAINTAINERS. Split the uAPI files into their own
-> section and make Kent the reviewer.
+> I thought carefully about your proposed reset stat, and I think it can be 
+> achieved by outputting "work_time" and "total_time".
+> eg:
+> Output at time t1:
+> SqMask: 0x3
+> SqHead: 1168417
+> SqTail: 1168418
+> SqWorkTime: t1_work
+> SqTotalTime: t1_total
+> 
+> Output at time t2:
+> SqMask: 0x3
+> SqHead: 1168417
+> SqTail: 1168418
+> SqWorkTime: t2_work
+> SqTotalTime: t2_total
+> 
+> Then we can manually calculate the utilization rate from t1 to t2:
+> (t2_work - t1_work) / (t2_total - t1_total)
+> 
+> Not sure what you think, but if you think it doesn't work, I'll look into 
+> other good ways to add the ability to reset.
 
-Cool! Thank you for doing this.
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Yep that would work, just leave the stats calculation to the tool
+querying it. Which is really how it should be.
+
+> In addition, on register opcode - generally it is used for resource like
+> buffers, handles etc.. I am not sure how that can help here. If you have
+> something in mind, could you please elaborate in more detail?
+
+It's also a bit of a dumping ground for any kind of out-of-band
+mechanism, so it would work fine for something like this too. But since
+we already have fdinfo and with your idea of just logging work and total
+time, then we should probably just stick with that.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Jens Axboe
 
