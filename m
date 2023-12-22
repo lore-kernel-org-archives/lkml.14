@@ -1,209 +1,216 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060D6FBE4;
-	Fri, 22 Dec 2023 09:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UpGsTDGR"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5545139bed4so560212a12.2;
-        Fri, 22 Dec 2023 01:53:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703238788; x=1703843588; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/MJR/JY0wBte1fc/3m6wZPMOWo6cUDvO9p3vgn75NkA=;
-        b=UpGsTDGRWIEYmd4IMnvpIuTf43oQUssTfd2eFgTlPx4BdMR99NtloFa+2YILyqwQuF
-         px17zNBN9Gs5FJ3ZOO0UYsrwr9Gw43xu22fs3nzrgF/yHC3MUOrnET54wStOnWG/848P
-         fB7ni3czKHbIS+5oLlCLJsNX7kb9uQ+TMiywA5TOFDCM/f0mDMVcvrkMN5bFeAXxebCa
-         DZkA08EfaeeqXzl1+pvvBjl27x3S3JYi/4Uvnucr9HI/SCEkdTG5klWc06dHOxLLHbQP
-         zDPjj7HksYySsUzFwcWxCKSp39qrtq//HAqkd8GhFr76i2yO33muRVihoJsbq5DkhAMg
-         0S+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703238788; x=1703843588;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/MJR/JY0wBte1fc/3m6wZPMOWo6cUDvO9p3vgn75NkA=;
-        b=PDWC6/1ifvWMqZ3kjc3kcslB2Ycewrap1607mqjQj6Vo2z8X2P5+wa+n6gc+Vt+DW4
-         m5GkZFRmLjIcg23b0l6OfzUmCSmy7DAta3GZtKHyMT8vhZh0I5vtJZHLWToebb5RN/E7
-         8k5+WwZIRAft0RC0NrIELNsbktyiQd8KaVDfd5bI0klDC9c07cAswTSnuZ1hSYjxuYUo
-         c1Gtb77dt83c8oxFc79CekCbxXFvggPAr0zY2hSlxwwQDDLnKlDFM0YiJjRQeuW6/KkU
-         CVG1toJm/Uiot9MIsukF4HjUN7Ysz1C8deZjaRUib7QhEq/EXORQzY/ToqccBjIQYNAD
-         maiw==
-X-Gm-Message-State: AOJu0YxNeepyXmBlFZ2Ww2nXx+kcvGX0mqihYiAc9ap9yQkbnWLqPdxM
-	2+Wc9io7NhtJgytiB+CvXtc=
-X-Google-Smtp-Source: AGHT+IGNZG6q+jBr/NjK3sVAaow4C1vwD4Ug2rmqwznnIuzhETk+TQFxXyO6gVVqYzj4smJwcg3xCQ==
-X-Received: by 2002:a17:906:7397:b0:a26:c595:62c7 with SMTP id f23-20020a170906739700b00a26c59562c7mr91716ejl.122.1703238788266;
-        Fri, 22 Dec 2023 01:53:08 -0800 (PST)
-Received: from eichest-laptop.lan ([2a02:168:af72:0:f05b:3f84:67d1:580])
-        by smtp.gmail.com with ESMTPSA id su24-20020a17090703d800b00a26ab41d0f7sm1311838ejb.26.2023.12.22.01.53.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Dec 2023 01:53:07 -0800 (PST)
-From: Stefan Eichenberger <eichest@gmail.com>
-To: nick@shmanahar.org,
-	dmitry.torokhov@gmail.com,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	nicolas.ferre@microchip.com,
-	alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev,
-	linus.walleij@linaro.org,
-	francesco.dolcini@toradex.com
-Cc: linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Stefan Eichenberger <stefan.eichenberger@toradex.com>
-Subject: [PATCH v2 2/2] Input: atmel_mxt_ts - support poweroff in suspend
-Date: Fri, 22 Dec 2023 10:52:58 +0100
-Message-Id: <20231222095258.33369-3-eichest@gmail.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20231222095258.33369-1-eichest@gmail.com>
-References: <20231222095258.33369-1-eichest@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A377D17735;
+	Fri, 22 Dec 2023 09:53:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
+	by fd01.gateway.ufhost.com (Postfix) with ESMTP id 1A6627FDC;
+	Fri, 22 Dec 2023 17:53:12 +0800 (CST)
+Received: from EXMBX061.cuchost.com (172.16.6.61) by EXMBX165.cuchost.com
+ (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 22 Dec
+ 2023 17:53:11 +0800
+Received: from [192.168.125.131] (113.72.145.47) by EXMBX061.cuchost.com
+ (172.16.6.61) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 22 Dec
+ 2023 17:53:11 +0800
+Message-ID: <ed66f0bb-69c7-4b00-9688-05a5102212e9@starfivetech.com>
+Date: Fri, 22 Dec 2023 17:44:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] dt-bindings: ASoC: Add Cadence I2S controller for
+ StarFive JH8100 SoC
+Content-Language: en-US
+To: Conor Dooley <conor@kernel.org>
+CC: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Claudiu Beznea <Claudiu.Beznea@microchip.com>, Jaroslav Kysela
+	<perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring
+	<robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+	<conor.dooley@microchip.com>, Walker Chen <walker.chen@starfivetech.com>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>
+References: <20231221033223.73201-1-xingyu.wu@starfivetech.com>
+ <20231221033223.73201-2-xingyu.wu@starfivetech.com>
+ <20231221-saddlebag-tricolor-d02a17d66795@spud>
+From: Xingyu Wu <xingyu.wu@starfivetech.com>
+In-Reply-To: <20231221-saddlebag-tricolor-d02a17d66795@spud>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX061.cuchost.com
+ (172.16.6.61)
+X-YovoleRuleAgent: yovoleflag
 
-From: Stefan Eichenberger <stefan.eichenberger@toradex.com>
+On 2023/12/21 21:53, Conor Dooley wrote:
+> Xingyu, Mark,
+> 
+> On Thu, Dec 21, 2023 at 11:32:22AM +0800, Xingyu Wu wrote:
+>> Add bindings for the Multi-Channel I2S controller of Cadence
+>> on the StarFive JH8100 SoC.
+>> 
+>> Signed-off-by: Xingyu Wu <xingyu.wu@starfivetech.com>
+>> ---
+>>  .../bindings/sound/cdns,jh8100-i2s.yaml       | 100 ++++++++++++++++++
+>>  1 file changed, 100 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/sound/cdns,jh8100-i2s.yaml
+>> 
+>> diff --git a/Documentation/devicetree/bindings/sound/cdns,jh8100-i2s.yaml b/Documentation/devicetree/bindings/sound/cdns,jh8100-i2s.yaml
+>> new file mode 100644
+>> index 000000000000..5d95d9ab3e45
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/sound/cdns,jh8100-i2s.yaml
+>> @@ -0,0 +1,100 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/sound/cdns,jh8100-i2s.yaml#
+> 
+> Filename matching the compatible please.
 
-Add a new device tree property to indicate that the device should be
-powered off in suspend mode. We have a shared regulator that powers the
-display, a USB hub and some other peripherals. The maXTouch controller
-doesn't normally disable the regulator in suspend mode, so our extra
-peripherals stay powered on. This is not desirable as it consumes more
-power. With this patch we add the option to disable the regulator in
-suspend mode for the maXTouch and accept the longer initialisation time.
+Noted.
 
-Signed-off-by: Stefan Eichenberger <stefan.eichenberger@toradex.com>
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 72 ++++++++++++++++++------
- 1 file changed, 55 insertions(+), 17 deletions(-)
+> 
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Cadence multi-channel I2S controller for StarFive JH8100 SoC
+>> +
+>> +description: |
+> 
+> You only need the | if there is formatting to preserve.
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 20094b9899f0..3f7f58f1c930 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -317,6 +317,7 @@ struct mxt_data {
- 	struct gpio_desc *reset_gpio;
- 	struct gpio_desc *wake_gpio;
- 	bool use_retrigen_workaround;
-+	bool poweroff_sleep;
+Will drop.
+
+> 
+>> +  The Cadence I2S Controller implements a function of the multi-channel
+>> +  (up to 8-channel) bus. It combines functions of a transmitter and a receiver.
+>> +  It is used in the StarFive JH8100 SoC.
+>> +
+>> +maintainers:
+>> +  - Xingyu Wu <xingyu.wu@starfivetech.com>
+>> +  - Walker Chen <walker.chen@starfivetech.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: starfive,jh8100-i2s
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    description: |
+>> +      The interrupt line number for the I2S controller. Add this
+>> +      parameter if the I2S controller that you are using does not
+>> +      support DMA.
+> 
+> You've got one i2s controller here, you should know if it supports DMA
+> or not.
+
+The I2S already supports interrupt handler, but if the SoC supports DMA controller to be use, it can optionally use DMA.
+
+> 
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: Bit clock
+>> +      - description: Main ICG clock
+>> +      - description: Inner master clock
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: bclk
+>> +      - const: icg
+>> +      - const: mclk_inner
+>> +
+>> +  resets:
+>> +    maxItems: 1
+>> +
+>> +  dmas:
+>> +    items:
+>> +      - description: TX DMA Channel
+>> +      - description: RX DMA Channel
+>> +    minItems: 1
+>> +
+>> +  dma-names:
+>> +    items:
+>> +      - const: tx
+>> +      - const: rx
+>> +    minItems: 1
+>> +
+>> +  cdns,i2s-max-channels:
+>> +    description: |
+>> +      Number of I2S max stereo channels supported by the hardware.
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    minimum: 1
+>> +    maximum: 8
+> 
+> Mark, is there no common property for this kind of thing? That said,
+> there's one device here so the number is known at present.
+> Another note, this property is not required, so it should have a
+> default.
+> 
+> It's kinda hard to know with this binding - it is touted as being for a
+> particular Cadence IP, and some aspects are pretty generic, but at the
+> same time there's only one device here so it's hard to tell what is
+> variable between implementations and what is not.
+> Are there no other implementations of this controller? Unless it is
+> brand new, I find that hard to believe.
+> 
+> Cheers,
+> Conor.
+> 
  
- 	/* Cached parameters from object table */
- 	u16 T5_address;
-@@ -2799,15 +2800,18 @@ static int mxt_configure_objects(struct mxt_data *data,
- 			dev_warn(dev, "Error %d updating config\n", error);
- 	}
- 
--	if (data->multitouch) {
--		error = mxt_initialize_input_device(data);
--		if (error)
--			return error;
--	} else {
--		dev_warn(dev, "No touch object detected\n");
--	}
-+	/* If input device is not already registered */
-+	if (!data->input_dev) {
-+		if (data->multitouch) {
-+			error = mxt_initialize_input_device(data);
-+			if (error)
-+				return error;
-+		} else {
-+			dev_warn(dev, "No touch object detected\n");
-+		}
- 
--	mxt_debug_init(data);
-+		mxt_debug_init(data);
-+	}
- 
- 	return 0;
- }
-@@ -3328,6 +3332,8 @@ static int mxt_probe(struct i2c_client *client)
- 		msleep(MXT_RESET_INVALID_CHG);
- 	}
- 
-+	data->poweroff_sleep = device_property_read_bool(&client->dev,
-+							 "atmel,poweroff-sleep");
- 	/*
- 	 * Controllers like mXT1386 have a dedicated WAKE line that could be
- 	 * connected to a GPIO or to I2C SCL pin, or permanently asserted low.
-@@ -3390,12 +3396,21 @@ static int mxt_suspend(struct device *dev)
- 	if (!input_dev)
- 		return 0;
- 
--	mutex_lock(&input_dev->mutex);
-+	if (!device_may_wakeup(dev) && data->poweroff_sleep) {
-+		if (data->reset_gpio)
-+			gpiod_set_value(data->reset_gpio, 1);
- 
--	if (input_device_enabled(input_dev))
--		mxt_stop(data);
-+		regulator_bulk_disable(ARRAY_SIZE(data->regulators),
-+				data->regulators);
-+		data->T44_address = 0;
-+	} else {
-+		mutex_lock(&input_dev->mutex);
-+
-+		if (input_device_enabled(input_dev))
-+			mxt_stop(data);
- 
--	mutex_unlock(&input_dev->mutex);
-+		mutex_unlock(&input_dev->mutex);
-+	}
- 
- 	disable_irq(data->irq);
- 
-@@ -3411,14 +3426,37 @@ static int mxt_resume(struct device *dev)
- 	if (!input_dev)
- 		return 0;
- 
--	enable_irq(data->irq);
-+	if (!device_may_wakeup(dev) && data->poweroff_sleep) {
-+		int ret;
- 
--	mutex_lock(&input_dev->mutex);
-+		ret = regulator_bulk_enable(ARRAY_SIZE(data->regulators),
-+				data->regulators);
-+		if (ret) {
-+			dev_err(dev, "failed to enable regulators: %d\n",
-+					ret);
-+			return ret;
-+		}
-+		msleep(MXT_BACKUP_TIME);
- 
--	if (input_device_enabled(input_dev))
--		mxt_start(data);
-+		if (data->reset_gpio) {
-+			/* Wait a while and then de-assert the RESET GPIO line */
-+			msleep(MXT_RESET_GPIO_TIME);
-+			gpiod_set_value(data->reset_gpio, 0);
-+			msleep(MXT_RESET_INVALID_CHG);
-+		}
- 
--	mutex_unlock(&input_dev->mutex);
-+		/* This also enables the irq again */
-+		mxt_initialize(data);
-+	} else {
-+		enable_irq(data->irq);
-+
-+		mutex_lock(&input_dev->mutex);
-+
-+		if (input_device_enabled(input_dev))
-+			mxt_start(data);
-+
-+		mutex_unlock(&input_dev->mutex);
-+	}
- 
- 	return 0;
- }
--- 
-2.40.1
+Sorry, It does not seem to be common property. The Cadence I2S supports 8 channels. There are four I2S controllers on the JH8100 SoC, and two of them just provide 4 channels to use, one of them just provide 2 channels.
+It seems to depend on the SoC.
+
+Thanks,
+Xingyu Wu
+
+>> +
+>> +  "#sound-dai-cells":
+>> +    const: 0
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +  - clock-names
+>> +  - resets
+>> +
+>> +oneOf:
+>> +  - required:
+>> +      - dmas
+>> +      - dma-names
+>> +  - required:
+>> +      - interrupts
+>> +
+>> +unevaluatedProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    i2s@122b0000 {
+>> +      compatible = "starfive,jh8100-i2s";
+>> +      reg = <0x122b0000 0x1000>;
+>> +      clocks = <&syscrg_ne 133>,
+>> +               <&syscrg_ne 170>,
+>> +               <&syscrg 50>;
+>> +      clock-names = "bclk", "icg",
+>> +                    "mclk_inner";
+>> +      resets = <&syscrg_ne 43>;
+>> +      dmas = <&dma 7>, <&dma 6>;
+>> +      dma-names = "tx", "rx";
+>> +      cdns,i2s-max-channels = <2>;
+>> +      #sound-dai-cells = <0>;
+>> +    };
+>> -- 
+>> 2.25.1
+>> 
+>> 
 
