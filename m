@@ -1,638 +1,76 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238B617992
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 10:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bSbRsXLS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1703239325;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YXfX12BE3LQm3hjKfwCrE87x4MbkwuEOmAkmWXpHcRM=;
-	b=bSbRsXLSTv0HUg8pgijrB5JNcPXb4Wax35ZQXnEOyA7wNOTh9dK4fFeIAgs+L8qYvyLJAf
-	/1O4sgbHbiDSC8C6fa3EhJBrGjanYx2OQWIO5JbOO1v2h7NbC8u1DOWp+sBFaehZs6AYxa
-	XI40K0GqeYn+bdL97MM9PMy8gV8MCec=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-610-0ww5qdeRMg6qNyXp_dvojw-1; Fri, 22 Dec 2023 05:02:03 -0500
-X-MC-Unique: 0ww5qdeRMg6qNyXp_dvojw-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-40d3b4606b3so12128385e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 02:02:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703239321; x=1703844121;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YXfX12BE3LQm3hjKfwCrE87x4MbkwuEOmAkmWXpHcRM=;
-        b=mcXAkVVc83c2+gVdSGCmeB+AM+x/nBO3YuAfs9vqhQVGfKwryj6mKZGZY0DpMfZPye
-         7/56eCe7pD5Fj0soPScZaqSB5RWI3x1Juosm6ZcPuhc3efPrCT+9eoTvHFaPttYhUFup
-         PuZqvz6tPnaahVqd1UT9qyDupZ9caMFmRcC9ppzL9L/0QYjfv7SBslOtwqr6Rwfl6NCL
-         mXv7mQ3HVwTa4n5Ib/9V1aoDqEBnwTM/9wNfxMrcUqVxxLYxVbNgtdlvApaMQaJopPgE
-         rGqOqjBqc1bXkUjBoTeYD9mLutKdqDRjFa6VLbMZdQKkbgNkLFaUCC/TaJqEQf6AP5Xq
-         Z2bg==
-X-Gm-Message-State: AOJu0YyYyc5zUmTOuPYiYEuOm1i1KLS2nlDRiSCRIXGsu5jTAVE/yW9M
-	IiHToZ5CbG2kXVbOTVQ3tT+y5x1hdsWs0r7XBnlj3RbH0Wj0xT5cXyxQChZD6uQLFvQrBcjbd1V
-	tAEjR6lQbNrVv/vvNrZcli9wR/oog07haswFE/Y0udK145b/g03uRlHiUWhrim1Nf69fcgzXqTM
-	vCw3Myi63dZ4W1YHE=
-X-Received: by 2002:a05:600c:46cb:b0:40c:6e8:610a with SMTP id q11-20020a05600c46cb00b0040c06e8610amr599041wmo.56.1703239320785;
-        Fri, 22 Dec 2023 02:02:00 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFMbzVJT1bjBf2e/+Ma0qCuN59AGZ45LTB53dTlG40IBb/JgrJ7HP28shzEPdsaAARRvafcmg==
-X-Received: by 2002:a05:600c:46cb:b0:40c:6e8:610a with SMTP id q11-20020a05600c46cb00b0040c06e8610amr599016wmo.56.1703239320287;
-        Fri, 22 Dec 2023 02:02:00 -0800 (PST)
-Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id bh20-20020a05600c3d1400b0040d15dcb77asm14183757wmb.23.2023.12.22.02.01.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Dec 2023 02:01:59 -0800 (PST)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: Maxime Ripard <mripard@kernel.org>,
-	Jocelyn Falempe <jfalempe@redhat.com>,
-	Peter Robinson <pbrobinson@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Conor Dooley <conor@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	David Airlie <airlied@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH v4 4/4] drm/ssd130x: Add support for the SSD133x OLED controller family
-Date: Fri, 22 Dec 2023 11:01:41 +0100
-Message-ID: <20231222100149.2641687-5-javierm@redhat.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231222100149.2641687-1-javierm@redhat.com>
-References: <20231222100149.2641687-1-javierm@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E085156C3;
+	Fri, 22 Dec 2023 10:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
+	by ex01.ufhost.com (Postfix) with ESMTP id 4C6C324E2DC;
+	Fri, 22 Dec 2023 18:03:37 +0800 (CST)
+Received: from EXMBX061.cuchost.com (172.16.6.61) by EXMBX165.cuchost.com
+ (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 22 Dec
+ 2023 18:03:37 +0800
+Received: from [192.168.125.131] (113.72.145.47) by EXMBX061.cuchost.com
+ (172.16.6.61) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 22 Dec
+ 2023 18:03:36 +0800
+Message-ID: <11c932a8-5596-4186-9c9d-ec8ca5a6ea35@starfivetech.com>
+Date: Fri, 22 Dec 2023 17:55:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] dt-bindings: ASoC: Add Cadence I2S controller for
+ StarFive JH8100 SoC
+Content-Language: en-US
+To: Mark Brown <broonie@kernel.org>, Conor Dooley <conor@kernel.org>
+CC: Liam Girdwood <lgirdwood@gmail.com>, Claudiu Beznea
+	<Claudiu.Beznea@microchip.com>, Jaroslav Kysela <perex@perex.cz>, "Takashi
+ Iwai" <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+	<conor.dooley@microchip.com>, Walker Chen <walker.chen@starfivetech.com>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>
+References: <20231221033223.73201-1-xingyu.wu@starfivetech.com>
+ <20231221033223.73201-2-xingyu.wu@starfivetech.com>
+ <20231221-saddlebag-tricolor-d02a17d66795@spud>
+ <f1210b31-25af-4cbd-b73e-2a72aa6c41bf@sirena.org.uk>
+From: Xingyu Wu <xingyu.wu@starfivetech.com>
+In-Reply-To: <f1210b31-25af-4cbd-b73e-2a72aa6c41bf@sirena.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX061.cuchost.com
+ (172.16.6.61)
+X-YovoleRuleAgent: yovoleflag
 
-The Solomon SSD133x controllers (such as the SSD1331) are used by RGB dot
-matrix OLED panels, add a modesetting pipeline to support the chip family.
+On 2023/12/21 21:58, Mark Brown wrote:
+> On Thu, Dec 21, 2023 at 01:53:00PM +0000, Conor Dooley wrote:
+>> On Thu, Dec 21, 2023 at 11:32:22AM +0800, Xingyu Wu wrote:
+> 
+>> > +  cdns,i2s-max-channels:
+>> > +    description: |
+>> > +      Number of I2S max stereo channels supported by the hardware.
+>> > +    $ref: /schemas/types.yaml#/definitions/uint32
+>> > +    minimum: 1
+>> > +    maximum: 8
+> 
+>> Mark, is there no common property for this kind of thing? That said,
+>> there's one device here so the number is known at present.
+>> Another note, this property is not required, so it should have a
+>> default.
+> 
+> I wouldn't expect this to be a property in the first place, as currently
+> presented this is specific to a single instance of the IP in a single
+> SoC.  In general this is something that is obvious from the compatible
+> and doesn't need a property, it's only plausibly useful for Cadence and
+> Designware which is a very short list of vendors.
 
-The SSD133x controllers support 256 (8-bit) and 65k (16-bit) color depths
-but only the 256-color mode (DRM_FORMAT_RGB332) is implemented for now.
+The Cadence I2S can support 8 channels. But on the JH8100 SoC, two instances of this just provide 4 channels to use, one just provides 2 channels, and the other one can provide 8 channels. Should I use the property name of 'jh8100,i2s-max-channels' instead for some special instances on the JH8100 SoC?
 
-Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
-Reviewed-by: Jocelyn Falempe <jfalempe@redhat.com>
----
-
-Changes in v4:
-- Fix typo in commit message (Jocelyn Falempe).
-
- drivers/gpu/drm/solomon/ssd130x-i2c.c |   5 +
- drivers/gpu/drm/solomon/ssd130x-spi.c |   7 +
- drivers/gpu/drm/solomon/ssd130x.c     | 370 ++++++++++++++++++++++++++
- drivers/gpu/drm/solomon/ssd130x.h     |   5 +-
- 4 files changed, 386 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/solomon/ssd130x-i2c.c b/drivers/gpu/drm/solomon/ssd130x-i2c.c
-index f2ccab9c06d9..a047dbec4e48 100644
---- a/drivers/gpu/drm/solomon/ssd130x-i2c.c
-+++ b/drivers/gpu/drm/solomon/ssd130x-i2c.c
-@@ -105,6 +105,11 @@ static const struct of_device_id ssd130x_of_match[] = {
- 		.compatible = "solomon,ssd1327",
- 		.data = &ssd130x_variants[SSD1327_ID],
- 	},
-+	/* ssd133x family */
-+	{
-+		.compatible = "solomon,ssd1331",
-+		.data = &ssd130x_variants[SSD1331_ID],
-+	},
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, ssd130x_of_match);
-diff --git a/drivers/gpu/drm/solomon/ssd130x-spi.c b/drivers/gpu/drm/solomon/ssd130x-spi.c
-index 84e035a7ab3f..84bfde31d172 100644
---- a/drivers/gpu/drm/solomon/ssd130x-spi.c
-+++ b/drivers/gpu/drm/solomon/ssd130x-spi.c
-@@ -142,6 +142,11 @@ static const struct of_device_id ssd130x_of_match[] = {
- 		.compatible = "solomon,ssd1327",
- 		.data = &ssd130x_variants[SSD1327_ID],
- 	},
-+	/* ssd133x family */
-+	{
-+		.compatible = "solomon,ssd1331",
-+		.data = &ssd130x_variants[SSD1331_ID],
-+	},
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, ssd130x_of_match);
-@@ -166,6 +171,8 @@ static const struct spi_device_id ssd130x_spi_table[] = {
- 	{ "ssd1322", SSD1322_ID },
- 	{ "ssd1325", SSD1325_ID },
- 	{ "ssd1327", SSD1327_ID },
-+	/* ssd133x family */
-+	{ "ssd1331", SSD1331_ID },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(spi, ssd130x_spi_table);
-diff --git a/drivers/gpu/drm/solomon/ssd130x.c b/drivers/gpu/drm/solomon/ssd130x.c
-index bef293922b98..447d0c7c88c6 100644
---- a/drivers/gpu/drm/solomon/ssd130x.c
-+++ b/drivers/gpu/drm/solomon/ssd130x.c
-@@ -119,6 +119,26 @@
- #define SSD130X_SET_VCOMH_VOLTAGE		0xbe
- #define SSD132X_SET_FUNCTION_SELECT_B		0xd5
- 
-+/* ssd133x commands */
-+#define SSD133X_SET_COL_RANGE			0x15
-+#define SSD133X_SET_ROW_RANGE			0x75
-+#define SSD133X_CONTRAST_A			0x81
-+#define SSD133X_CONTRAST_B			0x82
-+#define SSD133X_CONTRAST_C			0x83
-+#define SSD133X_SET_MASTER_CURRENT		0x87
-+#define SSD132X_SET_PRECHARGE_A			0x8a
-+#define SSD132X_SET_PRECHARGE_B			0x8b
-+#define SSD132X_SET_PRECHARGE_C			0x8c
-+#define SSD133X_SET_DISPLAY_START		0xa1
-+#define SSD133X_SET_DISPLAY_OFFSET		0xa2
-+#define SSD133X_SET_DISPLAY_NORMAL		0xa4
-+#define SSD133X_SET_MASTER_CONFIG		0xad
-+#define SSD133X_POWER_SAVE_MODE			0xb0
-+#define SSD133X_PHASES_PERIOD			0xb1
-+#define SSD133X_SET_CLOCK_FREQ			0xb3
-+#define SSD133X_SET_PRECHARGE_VOLTAGE		0xbb
-+#define SSD133X_SET_VCOMH_VOLTAGE		0xbe
-+
- #define MAX_CONTRAST 255
- 
- const struct ssd130x_deviceinfo ssd130x_variants[] = {
-@@ -180,6 +200,12 @@ const struct ssd130x_deviceinfo ssd130x_variants[] = {
- 		.default_width = 128,
- 		.default_height = 128,
- 		.family_id = SSD132X_FAMILY,
-+	},
-+	/* ssd133x family */
-+	[SSD1331_ID] = {
-+		.default_width = 96,
-+		.default_height = 64,
-+		.family_id = SSD133X_FAMILY,
- 	}
- };
- EXPORT_SYMBOL_NS_GPL(ssd130x_variants, DRM_SSD130X);
-@@ -589,6 +615,117 @@ static int ssd132x_init(struct ssd130x_device *ssd130x)
- 	return 0;
- }
- 
-+static int ssd133x_init(struct ssd130x_device *ssd130x)
-+{
-+	int ret;
-+
-+	/* Set color A contrast */
-+	ret = ssd130x_write_cmd(ssd130x, 2, SSD133X_CONTRAST_A, 0x91);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set color B contrast */
-+	ret = ssd130x_write_cmd(ssd130x, 2, SSD133X_CONTRAST_B, 0x50);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set color C contrast */
-+	ret = ssd130x_write_cmd(ssd130x, 2, SSD133X_CONTRAST_C, 0x7d);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set master current */
-+	ret = ssd130x_write_cmd(ssd130x, 2, SSD133X_SET_MASTER_CURRENT, 0x06);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set column start and end */
-+	ret = ssd130x_write_cmd(ssd130x, 3, SSD133X_SET_COL_RANGE, 0x00, ssd130x->width - 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set row start and end */
-+	ret = ssd130x_write_cmd(ssd130x, 3, SSD133X_SET_ROW_RANGE, 0x00, ssd130x->height - 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	/*
-+	 * Horizontal Address Increment
-+	 * Normal order SA,SB,SC (e.g. RGB)
-+	 * COM Split Odd Even
-+	 * 256 color format
-+	 */
-+	ret = ssd130x_write_cmd(ssd130x, 2, SSD13XX_SET_SEG_REMAP, 0x20);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set display start and offset */
-+	ret = ssd130x_write_cmd(ssd130x, 2, SSD133X_SET_DISPLAY_START, 0x00);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = ssd130x_write_cmd(ssd130x, 2, SSD133X_SET_DISPLAY_OFFSET, 0x00);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set display mode normal */
-+	ret = ssd130x_write_cmd(ssd130x, 1, SSD133X_SET_DISPLAY_NORMAL);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set multiplex ratio value */
-+	ret = ssd130x_write_cmd(ssd130x, 2, SSD13XX_SET_MULTIPLEX_RATIO, ssd130x->height - 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set master configuration */
-+	ret = ssd130x_write_cmd(ssd130x, 2, SSD133X_SET_MASTER_CONFIG, 0x8e);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set power mode */
-+	ret = ssd130x_write_cmd(ssd130x, 2, SSD133X_POWER_SAVE_MODE, 0x0b);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set Phase 1 and 2 period */
-+	ret = ssd130x_write_cmd(ssd130x, 2, SSD133X_PHASES_PERIOD, 0x31);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set clock divider */
-+	ret = ssd130x_write_cmd(ssd130x, 2, SSD133X_SET_CLOCK_FREQ, 0xf0);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set pre-charge A */
-+	ret = ssd130x_write_cmd(ssd130x, 2, SSD132X_SET_PRECHARGE_A, 0x64);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set pre-charge B */
-+	ret = ssd130x_write_cmd(ssd130x, 2, SSD132X_SET_PRECHARGE_B, 0x78);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set pre-charge C */
-+	ret = ssd130x_write_cmd(ssd130x, 2, SSD132X_SET_PRECHARGE_C, 0x64);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set pre-charge level */
-+	ret = ssd130x_write_cmd(ssd130x, 2, SSD133X_SET_PRECHARGE_VOLTAGE, 0x3a);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set VCOMH voltage */
-+	ret = ssd130x_write_cmd(ssd130x, 2, SSD133X_SET_VCOMH_VOLTAGE, 0x3e);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
- static int ssd130x_update_rect(struct ssd130x_device *ssd130x,
- 			       struct drm_rect *rect, u8 *buf,
- 			       u8 *data_array)
-@@ -753,6 +890,47 @@ static int ssd132x_update_rect(struct ssd130x_device *ssd130x,
- 	return ret;
- }
- 
-+static int ssd133x_update_rect(struct ssd130x_device *ssd130x,
-+			       struct drm_rect *rect, u8 *data_array,
-+			       unsigned int pitch)
-+{
-+	unsigned int x = rect->x1;
-+	unsigned int y = rect->y1;
-+	unsigned int columns = drm_rect_width(rect);
-+	unsigned int rows = drm_rect_height(rect);
-+	int ret;
-+
-+	/*
-+	 * The screen is divided in Segment and Common outputs, where
-+	 * COM0 to COM[N - 1] are the rows and SEG0 to SEG[M - 1] are
-+	 * the columns.
-+	 *
-+	 * Each Segment has a 8-bit pixel and each Common output has a
-+	 * row of pixels. When using the (default) horizontal address
-+	 * increment mode, each byte of data sent to the controller has
-+	 * a Segment (e.g: SEG0).
-+	 *
-+	 * When using the 256 color depth format, each pixel contains 3
-+	 * sub-pixels for color A, B and C. These have 3 bit, 3 bit and
-+	 * 2 bits respectively.
-+	 */
-+
-+	/* Set column start and end */
-+	ret = ssd130x_write_cmd(ssd130x, 3, SSD133X_SET_COL_RANGE, x, columns - 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set row start and end */
-+	ret = ssd130x_write_cmd(ssd130x, 3, SSD133X_SET_ROW_RANGE, y, rows - 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Write out update in one go since horizontal addressing mode is used */
-+	ret = ssd130x_write_data(ssd130x, data_array, pitch * rows);
-+
-+	return ret;
-+}
-+
- static void ssd130x_clear_screen(struct ssd130x_device *ssd130x, u8 *data_array)
- {
- 	unsigned int pages = DIV_ROUND_UP(ssd130x->height, SSD130X_PAGE_HEIGHT);
-@@ -805,6 +983,22 @@ static void ssd132x_clear_screen(struct ssd130x_device *ssd130x, u8 *data_array)
- 	ssd130x_write_data(ssd130x, data_array, columns * height);
- }
- 
-+static void ssd133x_clear_screen(struct ssd130x_device *ssd130x, u8 *data_array)
-+{
-+	const struct drm_format_info *fi = drm_format_info(DRM_FORMAT_RGB332);
-+	unsigned int pitch;
-+
-+	if (!fi)
-+		return;
-+
-+	pitch = drm_format_info_min_pitch(fi, 0, ssd130x->width);
-+
-+	memset(data_array, 0, pitch * ssd130x->height);
-+
-+	/* Write out update in one go since horizontal addressing mode is used */
-+	ssd130x_write_data(ssd130x, data_array, pitch * ssd130x->height);
-+}
-+
- static int ssd130x_fb_blit_rect(struct drm_framebuffer *fb,
- 				const struct iosys_map *vmap,
- 				struct drm_rect *rect,
-@@ -866,6 +1060,36 @@ static int ssd132x_fb_blit_rect(struct drm_framebuffer *fb,
- 	return ret;
- }
- 
-+static int ssd133x_fb_blit_rect(struct drm_framebuffer *fb,
-+				const struct iosys_map *vmap,
-+				struct drm_rect *rect, u8 *data_array,
-+				struct drm_format_conv_state *fmtcnv_state)
-+{
-+	struct ssd130x_device *ssd130x = drm_to_ssd130x(fb->dev);
-+	const struct drm_format_info *fi = drm_format_info(DRM_FORMAT_RGB332);
-+	unsigned int dst_pitch;
-+	struct iosys_map dst;
-+	int ret = 0;
-+
-+	if (!fi)
-+		return -EINVAL;
-+
-+	dst_pitch = drm_format_info_min_pitch(fi, 0, drm_rect_width(rect));
-+
-+	ret = drm_gem_fb_begin_cpu_access(fb, DMA_FROM_DEVICE);
-+	if (ret)
-+		return ret;
-+
-+	iosys_map_set_vaddr(&dst, data_array);
-+	drm_fb_xrgb8888_to_rgb332(&dst, &dst_pitch, vmap, fb, rect, fmtcnv_state);
-+
-+	drm_gem_fb_end_cpu_access(fb, DMA_FROM_DEVICE);
-+
-+	ssd133x_update_rect(ssd130x, rect, data_array, dst_pitch);
-+
-+	return ret;
-+}
-+
- static int ssd130x_primary_plane_atomic_check(struct drm_plane *plane,
- 					      struct drm_atomic_state *state)
- {
-@@ -964,6 +1188,29 @@ static int ssd132x_primary_plane_atomic_check(struct drm_plane *plane,
- 	return 0;
- }
- 
-+static int ssd133x_primary_plane_atomic_check(struct drm_plane *plane,
-+					      struct drm_atomic_state *state)
-+{
-+	struct drm_plane_state *plane_state = drm_atomic_get_new_plane_state(state, plane);
-+	struct drm_crtc *crtc = plane_state->crtc;
-+	struct drm_crtc_state *crtc_state = NULL;
-+	int ret;
-+
-+	if (crtc)
-+		crtc_state = drm_atomic_get_new_crtc_state(state, crtc);
-+
-+	ret = drm_atomic_helper_check_plane_state(plane_state, crtc_state,
-+						  DRM_PLANE_NO_SCALING,
-+						  DRM_PLANE_NO_SCALING,
-+						  false, false);
-+	if (ret)
-+		return ret;
-+	else if (!plane_state->visible)
-+		return 0;
-+
-+	return 0;
-+}
-+
- static void ssd130x_primary_plane_atomic_update(struct drm_plane *plane,
- 						struct drm_atomic_state *state)
- {
-@@ -1034,6 +1281,39 @@ static void ssd132x_primary_plane_atomic_update(struct drm_plane *plane,
- 	drm_dev_exit(idx);
- }
- 
-+static void ssd133x_primary_plane_atomic_update(struct drm_plane *plane,
-+						struct drm_atomic_state *state)
-+{
-+	struct drm_plane_state *plane_state = drm_atomic_get_new_plane_state(state, plane);
-+	struct drm_plane_state *old_plane_state = drm_atomic_get_old_plane_state(state, plane);
-+	struct drm_shadow_plane_state *shadow_plane_state = to_drm_shadow_plane_state(plane_state);
-+	struct drm_crtc_state *crtc_state = drm_atomic_get_new_crtc_state(state, plane_state->crtc);
-+	struct ssd130x_crtc_state *ssd130x_crtc_state =  to_ssd130x_crtc_state(crtc_state);
-+	struct drm_framebuffer *fb = plane_state->fb;
-+	struct drm_atomic_helper_damage_iter iter;
-+	struct drm_device *drm = plane->dev;
-+	struct drm_rect dst_clip;
-+	struct drm_rect damage;
-+	int idx;
-+
-+	if (!drm_dev_enter(drm, &idx))
-+		return;
-+
-+	drm_atomic_helper_damage_iter_init(&iter, old_plane_state, plane_state);
-+	drm_atomic_for_each_plane_damage(&iter, &damage) {
-+		dst_clip = plane_state->dst;
-+
-+		if (!drm_rect_intersect(&dst_clip, &damage))
-+			continue;
-+
-+		ssd133x_fb_blit_rect(fb, &shadow_plane_state->data[0], &dst_clip,
-+				     ssd130x_crtc_state->data_array,
-+				     &shadow_plane_state->fmtcnv_state);
-+	}
-+
-+	drm_dev_exit(idx);
-+}
-+
- static void ssd130x_primary_plane_atomic_disable(struct drm_plane *plane,
- 						 struct drm_atomic_state *state)
- {
-@@ -1082,6 +1362,30 @@ static void ssd132x_primary_plane_atomic_disable(struct drm_plane *plane,
- 	drm_dev_exit(idx);
- }
- 
-+static void ssd133x_primary_plane_atomic_disable(struct drm_plane *plane,
-+						 struct drm_atomic_state *state)
-+{
-+	struct drm_device *drm = plane->dev;
-+	struct ssd130x_device *ssd130x = drm_to_ssd130x(drm);
-+	struct drm_plane_state *plane_state = drm_atomic_get_new_plane_state(state, plane);
-+	struct drm_crtc_state *crtc_state;
-+	struct ssd130x_crtc_state *ssd130x_crtc_state;
-+	int idx;
-+
-+	if (!plane_state->crtc)
-+		return;
-+
-+	crtc_state = drm_atomic_get_new_crtc_state(state, plane_state->crtc);
-+	ssd130x_crtc_state = to_ssd130x_crtc_state(crtc_state);
-+
-+	if (!drm_dev_enter(drm, &idx))
-+		return;
-+
-+	ssd133x_clear_screen(ssd130x, ssd130x_crtc_state->data_array);
-+
-+	drm_dev_exit(idx);
-+}
-+
- /* Called during init to allocate the plane's atomic state. */
- static void ssd130x_primary_plane_reset(struct drm_plane *plane)
- {
-@@ -1144,6 +1448,12 @@ static const struct drm_plane_helper_funcs ssd130x_primary_plane_helper_funcs[]
- 		.atomic_check = ssd132x_primary_plane_atomic_check,
- 		.atomic_update = ssd132x_primary_plane_atomic_update,
- 		.atomic_disable = ssd132x_primary_plane_atomic_disable,
-+	},
-+	[SSD133X_FAMILY] = {
-+		DRM_GEM_SHADOW_PLANE_HELPER_FUNCS,
-+		.atomic_check = ssd133x_primary_plane_atomic_check,
-+		.atomic_update = ssd133x_primary_plane_atomic_update,
-+		.atomic_disable = ssd133x_primary_plane_atomic_disable,
- 	}
- };
- 
-@@ -1214,6 +1524,33 @@ static int ssd132x_crtc_atomic_check(struct drm_crtc *crtc,
- 	return 0;
- }
- 
-+static int ssd133x_crtc_atomic_check(struct drm_crtc *crtc,
-+				     struct drm_atomic_state *state)
-+{
-+	struct drm_device *drm = crtc->dev;
-+	struct ssd130x_device *ssd130x = drm_to_ssd130x(drm);
-+	struct drm_crtc_state *crtc_state = drm_atomic_get_new_crtc_state(state, crtc);
-+	struct ssd130x_crtc_state *ssd130x_state = to_ssd130x_crtc_state(crtc_state);
-+	const struct drm_format_info *fi = drm_format_info(DRM_FORMAT_RGB332);
-+	unsigned int pitch;
-+	int ret;
-+
-+	if (!fi)
-+		return -EINVAL;
-+
-+	ret = drm_crtc_helper_atomic_check(crtc, state);
-+	if (ret)
-+		return ret;
-+
-+	pitch = drm_format_info_min_pitch(fi, 0, ssd130x->width);
-+
-+	ssd130x_state->data_array = kmalloc(pitch * ssd130x->height, GFP_KERNEL);
-+	if (!ssd130x_state->data_array)
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-+
- /* Called during init to allocate the CRTC's atomic state. */
- static void ssd130x_crtc_reset(struct drm_crtc *crtc)
- {
-@@ -1275,6 +1612,10 @@ static const struct drm_crtc_helper_funcs ssd130x_crtc_helper_funcs[] = {
- 		.mode_valid = ssd130x_crtc_mode_valid,
- 		.atomic_check = ssd132x_crtc_atomic_check,
- 	},
-+	[SSD133X_FAMILY] = {
-+		.mode_valid = ssd130x_crtc_mode_valid,
-+		.atomic_check = ssd133x_crtc_atomic_check,
-+	},
- };
- 
- static const struct drm_crtc_funcs ssd130x_crtc_funcs = {
-@@ -1337,6 +1678,31 @@ static void ssd132x_encoder_atomic_enable(struct drm_encoder *encoder,
- 	ssd130x_power_off(ssd130x);
- }
- 
-+static void ssd133x_encoder_atomic_enable(struct drm_encoder *encoder,
-+					  struct drm_atomic_state *state)
-+{
-+	struct drm_device *drm = encoder->dev;
-+	struct ssd130x_device *ssd130x = drm_to_ssd130x(drm);
-+	int ret;
-+
-+	ret = ssd130x_power_on(ssd130x);
-+	if (ret)
-+		return;
-+
-+	ret = ssd133x_init(ssd130x);
-+	if (ret)
-+		goto power_off;
-+
-+	ssd130x_write_cmd(ssd130x, 1, SSD13XX_DISPLAY_ON);
-+
-+	backlight_enable(ssd130x->bl_dev);
-+
-+	return;
-+
-+power_off:
-+	ssd130x_power_off(ssd130x);
-+}
-+
- static void ssd130x_encoder_atomic_disable(struct drm_encoder *encoder,
- 					   struct drm_atomic_state *state)
- {
-@@ -1358,6 +1724,10 @@ static const struct drm_encoder_helper_funcs ssd130x_encoder_helper_funcs[] = {
- 	[SSD132X_FAMILY] = {
- 		.atomic_enable = ssd132x_encoder_atomic_enable,
- 		.atomic_disable = ssd130x_encoder_atomic_disable,
-+	},
-+	[SSD133X_FAMILY] = {
-+		.atomic_enable = ssd133x_encoder_atomic_enable,
-+		.atomic_disable = ssd130x_encoder_atomic_disable,
- 	}
- };
- 
-diff --git a/drivers/gpu/drm/solomon/ssd130x.h b/drivers/gpu/drm/solomon/ssd130x.h
-index 075c5c3ee75a..a4554018bb2a 100644
---- a/drivers/gpu/drm/solomon/ssd130x.h
-+++ b/drivers/gpu/drm/solomon/ssd130x.h
-@@ -25,7 +25,8 @@
- 
- enum ssd130x_family_ids {
- 	SSD130X_FAMILY,
--	SSD132X_FAMILY
-+	SSD132X_FAMILY,
-+	SSD133X_FAMILY
- };
- 
- enum ssd130x_variants {
-@@ -39,6 +40,8 @@ enum ssd130x_variants {
- 	SSD1322_ID,
- 	SSD1325_ID,
- 	SSD1327_ID,
-+	/* ssd133x family */
-+	SSD1331_ID,
- 	NR_SSD130X_VARIANTS
- };
- 
--- 
-2.43.0
-
+Best regards,
+Xingyu Wu
