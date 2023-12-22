@@ -1,216 +1,134 @@
-Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A377D17735;
-	Fri, 22 Dec 2023 09:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-	by fd01.gateway.ufhost.com (Postfix) with ESMTP id 1A6627FDC;
-	Fri, 22 Dec 2023 17:53:12 +0800 (CST)
-Received: from EXMBX061.cuchost.com (172.16.6.61) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 22 Dec
- 2023 17:53:11 +0800
-Received: from [192.168.125.131] (113.72.145.47) by EXMBX061.cuchost.com
- (172.16.6.61) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 22 Dec
- 2023 17:53:11 +0800
-Message-ID: <ed66f0bb-69c7-4b00-9688-05a5102212e9@starfivetech.com>
-Date: Fri, 22 Dec 2023 17:44:48 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0C8FBF2
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 10:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GyQnZWbb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1703239316;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oS+qjXh8HC10X0gWfxfO5QF2dd2RsmhOYMQoP9qGsHs=;
+	b=GyQnZWbbP9IGcyQ8hez6V5/yWfEv8WI6IrGyUQOPtx4lEpX1NeyqDAEA+uL++jCb98PaMp
+	bRSgyRjneP5ktWGMvfYsUobl5V4m2ovXoxdRvcLljOsvXVpbXqr9nJ+BDQlFo+2r7jsy2l
+	wUTZvAX04lukAV7j2at90AK2ZgZ37ZU=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-633-GOI2o3KONlqwtVO4M_ieQg-1; Fri, 22 Dec 2023 05:01:54 -0500
+X-MC-Unique: GOI2o3KONlqwtVO4M_ieQg-1
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-50e40182d1eso1564795e87.2
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 02:01:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703239312; x=1703844112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oS+qjXh8HC10X0gWfxfO5QF2dd2RsmhOYMQoP9qGsHs=;
+        b=WvsW593Ltr+ZV/uZ2Ozac9EV8QpErQ0IO5Kfi9Lv27m1pKDEqeNTS+SdC6STECOLFl
+         OD6zHRS8o6vE7gvY0KBHPXJlKQQEwQnIzr9wTgMNp0xndxpaHNNP02c7zcu17UsvIISQ
+         zHdoqKr1nu3nu43IxBycTfkKoNOe3tIc4uANdrCQV4nnsDIFK2Q04Nlhr62pF2NuNzAD
+         aRWcJsA2dCbjFX2L8APMVucgC08HC51b3YnzrDXIf3L/43V5RK3rplQf6ZuVU4/IzcPe
+         mE9iuM31oJYhyq0i1NrJGpQ/tBKTABeD5+ylTr2h57uk7WVtfIW5QTC8x7/jYjef+9IY
+         Nn0g==
+X-Gm-Message-State: AOJu0Yz9VQqDdutyWmjfwXOhvND5upAsm3w/7H/4ucScptU56qRugh2R
+	qNyhzq/lU2mtjjtDX2A9vE1EmfTkRk4TsHxIGCtdCZUir3g+20gJKECkbnLbS1MoprynW4Drckw
+	GzElt7ucRphlEe2V7zEe9OrMyYxhnln5lJwQl7z9xqPbGkKw0kn1sSOJ/72mQFD1E/ES9GLPmxY
+	8AotW+xVfDYzyIfJo=
+X-Received: by 2002:a19:675c:0:b0:50b:f2b0:8002 with SMTP id e28-20020a19675c000000b0050bf2b08002mr565070lfj.1.1703239312064;
+        Fri, 22 Dec 2023 02:01:52 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF3UUA6JbUM94lCnUrXw37J307GXHRb3FGcQu41FituqE8XKR8rvHDKTEOZVs6QkjodmX2xng==
+X-Received: by 2002:a19:675c:0:b0:50b:f2b0:8002 with SMTP id e28-20020a19675c000000b0050bf2b08002mr565039lfj.1.1703239311651;
+        Fri, 22 Dec 2023 02:01:51 -0800 (PST)
+Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
+        by smtp.gmail.com with ESMTPSA id h1-20020a05600c350100b0040d3f4b1c8esm4883265wmq.36.2023.12.22.02.01.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Dec 2023 02:01:51 -0800 (PST)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Maxime Ripard <mripard@kernel.org>,
+	Jocelyn Falempe <jfalempe@redhat.com>,
+	Peter Robinson <pbrobinson@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Conor Dooley <conor@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	David Airlie <airlied@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH v4 0/4] drm/solomon: Add support for the SSD133x controller family
+Date: Fri, 22 Dec 2023 11:01:37 +0100
+Message-ID: <20231222100149.2641687-1-javierm@redhat.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] dt-bindings: ASoC: Add Cadence I2S controller for
- StarFive JH8100 SoC
-Content-Language: en-US
-To: Conor Dooley <conor@kernel.org>
-CC: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-	Claudiu Beznea <Claudiu.Beznea@microchip.com>, Jaroslav Kysela
-	<perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring
-	<robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor.dooley@microchip.com>, Walker Chen <walker.chen@starfivetech.com>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>
-References: <20231221033223.73201-1-xingyu.wu@starfivetech.com>
- <20231221033223.73201-2-xingyu.wu@starfivetech.com>
- <20231221-saddlebag-tricolor-d02a17d66795@spud>
-From: Xingyu Wu <xingyu.wu@starfivetech.com>
-In-Reply-To: <20231221-saddlebag-tricolor-d02a17d66795@spud>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX061.cuchost.com
- (172.16.6.61)
-X-YovoleRuleAgent: yovoleflag
+Content-Transfer-Encoding: 8bit
 
-On 2023/12/21 21:53, Conor Dooley wrote:
-> Xingyu, Mark,
-> 
-> On Thu, Dec 21, 2023 at 11:32:22AM +0800, Xingyu Wu wrote:
->> Add bindings for the Multi-Channel I2S controller of Cadence
->> on the StarFive JH8100 SoC.
->> 
->> Signed-off-by: Xingyu Wu <xingyu.wu@starfivetech.com>
->> ---
->>  .../bindings/sound/cdns,jh8100-i2s.yaml       | 100 ++++++++++++++++++
->>  1 file changed, 100 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/sound/cdns,jh8100-i2s.yaml
->> 
->> diff --git a/Documentation/devicetree/bindings/sound/cdns,jh8100-i2s.yaml b/Documentation/devicetree/bindings/sound/cdns,jh8100-i2s.yaml
->> new file mode 100644
->> index 000000000000..5d95d9ab3e45
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/sound/cdns,jh8100-i2s.yaml
->> @@ -0,0 +1,100 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/sound/cdns,jh8100-i2s.yaml#
-> 
-> Filename matching the compatible please.
+Hello,
 
-Noted.
+This patch-set adds support for the family of SSD133x Solomon controllers,
+such as the SSD1331. These are used for RGB Dot Matrix OLED/PLED panels.
 
-> 
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Cadence multi-channel I2S controller for StarFive JH8100 SoC
->> +
->> +description: |
-> 
-> You only need the | if there is formatting to preserve.
+This is a v4 that addresses issues pointed out in v3:
 
-Will drop.
+https://lists.freedesktop.org/archives/dri-devel/2023-December/435686.html
 
-> 
->> +  The Cadence I2S Controller implements a function of the multi-channel
->> +  (up to 8-channel) bus. It combines functions of a transmitter and a receiver.
->> +  It is used in the StarFive JH8100 SoC.
->> +
->> +maintainers:
->> +  - Xingyu Wu <xingyu.wu@starfivetech.com>
->> +  - Walker Chen <walker.chen@starfivetech.com>
->> +
->> +properties:
->> +  compatible:
->> +    const: starfive,jh8100-i2s
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    description: |
->> +      The interrupt line number for the I2S controller. Add this
->> +      parameter if the I2S controller that you are using does not
->> +      support DMA.
-> 
-> You've got one i2s controller here, you should know if it supports DMA
-> or not.
+The patches were tested on a Waveshare SSD1331 display using glmark2-drm,
+fbcon, fbtests and the retroarch emulator. The binding schema were tested
+using the `make W=1 dt_binding_check` target.
 
-The I2S already supports interrupt handler, but if the SoC supports DMA controller to be use, it can optionally use DMA.
+Patch #1 and #2 are fixes for the DT binding schema of the existing SSD130x
+and SSD132x families.
 
-> 
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    items:
->> +      - description: Bit clock
->> +      - description: Main ICG clock
->> +      - description: Inner master clock
->> +
->> +  clock-names:
->> +    items:
->> +      - const: bclk
->> +      - const: icg
->> +      - const: mclk_inner
->> +
->> +  resets:
->> +    maxItems: 1
->> +
->> +  dmas:
->> +    items:
->> +      - description: TX DMA Channel
->> +      - description: RX DMA Channel
->> +    minItems: 1
->> +
->> +  dma-names:
->> +    items:
->> +      - const: tx
->> +      - const: rx
->> +    minItems: 1
->> +
->> +  cdns,i2s-max-channels:
->> +    description: |
->> +      Number of I2S max stereo channels supported by the hardware.
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    minimum: 1
->> +    maximum: 8
-> 
-> Mark, is there no common property for this kind of thing? That said,
-> there's one device here so the number is known at present.
-> Another note, this property is not required, so it should have a
-> default.
-> 
-> It's kinda hard to know with this binding - it is touted as being for a
-> particular Cadence IP, and some aspects are pretty generic, but at the
-> same time there's only one device here so it's hard to tell what is
-> variable between implementations and what is not.
-> Are there no other implementations of this controller? Unless it is
-> brand new, I find that hard to believe.
-> 
-> Cheers,
-> Conor.
-> 
- 
-Sorry, It does not seem to be common property. The Cadence I2S supports 8 channels. There are four I2S controllers on the JH8100 SoC, and two of them just provide 4 channels to use, one of them just provide 2 channels.
-It seems to depend on the SoC.
+Patch #3 adds a DT binding schema for the SSD133x controllers and patch #4
+extends the ssd130x DRM driver to support the SSD133x controller family.
 
-Thanks,
-Xingyu Wu
+Best regards,
+Javier
 
->> +
->> +  "#sound-dai-cells":
->> +    const: 0
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +  - resets
->> +
->> +oneOf:
->> +  - required:
->> +      - dmas
->> +      - dma-names
->> +  - required:
->> +      - interrupts
->> +
->> +unevaluatedProperties: false
->> +
->> +examples:
->> +  - |
->> +    i2s@122b0000 {
->> +      compatible = "starfive,jh8100-i2s";
->> +      reg = <0x122b0000 0x1000>;
->> +      clocks = <&syscrg_ne 133>,
->> +               <&syscrg_ne 170>,
->> +               <&syscrg 50>;
->> +      clock-names = "bclk", "icg",
->> +                    "mclk_inner";
->> +      resets = <&syscrg_ne 43>;
->> +      dmas = <&dma 7>, <&dma 6>;
->> +      dma-names = "tx", "rx";
->> +      cdns,i2s-max-channels = <2>;
->> +      #sound-dai-cells = <0>;
->> +    };
->> -- 
->> 2.25.1
->> 
->> 
+Changes in v4:
+- Fix typo in commit message (Jocelyn Falempe).
+- Add collected tags.
+
+Changes in v3:
+- Move solomon,ssd-common.yaml ref before the properties section and
+  width/height constraints after the other properties (Conor Dooley).
+
+Changes in v2:
+- Unconditionally set the width and height constraints (Conor Dooley).
+- Fix indentation in the DTS examples (Krzysztof Kozlowski).
+
+Javier Martinez Canillas (4):
+  dt-bindings: display: ssd1307fb: Add vendor prefix to width and height
+  dt-bindings: display: ssd132x: Add vendor prefix to width and height
+  dt-bindings: display: Add SSD133x OLED controllers
+  drm/ssd130x: Add support for the SSD133x OLED controller family
+
+ .../bindings/display/solomon,ssd1307fb.yaml   |  20 +-
+ .../bindings/display/solomon,ssd132x.yaml     |  12 +-
+ .../bindings/display/solomon,ssd133x.yaml     |  57 +++
+ drivers/gpu/drm/solomon/ssd130x-i2c.c         |   5 +
+ drivers/gpu/drm/solomon/ssd130x-spi.c         |   7 +
+ drivers/gpu/drm/solomon/ssd130x.c             | 370 ++++++++++++++++++
+ drivers/gpu/drm/solomon/ssd130x.h             |   5 +-
+ 7 files changed, 459 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/solomon,ssd133x.yaml
+
+-- 
+2.43.0
 
