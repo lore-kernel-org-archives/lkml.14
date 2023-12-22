@@ -1,148 +1,114 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3EEE944E;
-	Fri, 22 Dec 2023 07:46:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oltmanns.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oltmanns.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F33EC15D
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 07:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oltmanns.dev header.i=@oltmanns.dev header.b="yfTUqeG/"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4SxK9d5hNTz9t37;
-	Fri, 22 Dec 2023 08:46:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oltmanns.dev;
-	s=MBO0001; t=1703231173;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FquMzAHJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1703231192;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QReCVjp65CghleerQ4Gsba57ap8mMcMDnWkb8OUPQus=;
-	b=yfTUqeG/KzzUMlyxkh4Kr1ro6U3WNlOXHfwdMVxDWBWooswGbQ9Tf76tXJ/iDUuXhmukWP
-	SJgx93NSfrGhfjIcfrnJaBUhBMYKNjpU/tL0CDkZqR6eiOVv6egqgSp3reUif8cA9W8j10
-	hveCBXVvJUucNi2OxlfVRWZViA8CsXrEa+B9w6jm2VC/HDdNvGmDFkuTWft9ydWk74somG
-	GR7PfwtWATistc3dXQWwO/j0mUTDCIMdD5hVTeX4l+Ski4+Wjv5R02c/Bar5CgneCKfsss
-	n+AkM9pdMdi1lXHOxQqD1gZLXtA0ua/0D0kaD1DUq8C8HcrN3hW1TRiUrOwb+A==
-References: <20231218-pinephone-pll-fixes-v1-0-e238b6ed6dc1@oltmanns.dev>
- <13411739.uLZWGnKmhe@jernej-laptop> <87il4t9wi1.fsf@oltmanns.dev>
- <2174554.Mh6RI2rZIc@jernej-laptop>
-From: Frank Oltmanns <frank@oltmanns.dev>
-To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Samuel Holland
- <samuel@sholland.org>, Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
- Purism Kernel Team
- <kernel@puri.sm>, Ondrej Jirman <megi@xff.cz>, Neil Armstrong
- <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>,
- Sam Ravnborg <sam@ravnborg.org>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 4/5] clk: sunxi-ng: a64: Add constraints on PLL-VIDEO0's
- n/m ratio
-In-reply-to: <2174554.Mh6RI2rZIc@jernej-laptop>
-Date: Fri, 22 Dec 2023 08:46:01 +0100
-Message-ID: <87edfellxi.fsf@oltmanns.dev>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=8joa0SqsNw6lghVtjrUIlISHZyZgU8xVLriDEJzMbbU=;
+	b=FquMzAHJ+zcTVfeUbtR9TY0Z38R7TWI89Y4Gb55kI9+8inWgXJqVgUiaq7Sg/dY21/ZCxR
+	d7vUGz/t9k9MxfiocJk7AP5yZES9N7tXvejYMGG0+2Z5k0JAk4wwQ9Wzj+6W7YeIzMZDXy
+	5A7dEllcNE57H2oSsG7o6yo/aEmrPQQ=
+Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
+ [209.85.210.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-494-2OpfMAr-OsmGJ4JhEwhfzA-1; Fri, 22 Dec 2023 02:46:31 -0500
+X-MC-Unique: 2OpfMAr-OsmGJ4JhEwhfzA-1
+Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-6dbb0a1c894so1769866a34.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 23:46:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703231190; x=1703835990;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8joa0SqsNw6lghVtjrUIlISHZyZgU8xVLriDEJzMbbU=;
+        b=ud0znSaTqON0CkA5qcyu17B+tnue1GYkhdsDCLT5pmy9XRwqxvHf0rhbh8a9wrOxRT
+         CVVNDb12qbIHC6NuzsEUntJrgWS9O8YUwTLOKjj8CSUIqdx0C5ak3XByPDExl2u0BURS
+         29/+soXZTpdKMlK3qTqBQdIzKqFXl7l5e6ieKNpCDzzf4Coc2rXhreO4s/plgc890fv2
+         qxwwLwxJDbQcFRAlzXrny3PzP0WONoMwCdVsEZ9Bh5OYvrclA4PfNMx/TVSsbRptpv5X
+         /MEjf072/VM/WoBiZS8DOZMTMjj4VvxfR/kVzXlleM2pAdjo67NecKpe1q4vsnWpt2sI
+         ZFyg==
+X-Gm-Message-State: AOJu0YzWFFw0ZbR2oXNI8S9kkoHfnIQUa5Irxgzkrg1YO6UT9tiNNlAP
+	fhwHh8aTdeM6MKf4+hUNsGZMw4wF3JKiA4mct/WucioEXFsTIrkPWYHJQkyAvHDQ9eEO20Y5hyP
+	15SdZMZ821wv5iqt/o/1P81PfidYShlt5
+X-Received: by 2002:a05:6830:188:b0:6d8:7b83:b520 with SMTP id q8-20020a056830018800b006d87b83b520mr975571ota.22.1703231190621;
+        Thu, 21 Dec 2023 23:46:30 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHtPKXrNxbzqoFd8PBPnac2PBZhiVN9/33Wde7wZTDupuDnjdqviH8QQZhwIVNY+bNVq43CLg==
+X-Received: by 2002:a05:6830:188:b0:6d8:7b83:b520 with SMTP id q8-20020a056830018800b006d87b83b520mr975547ota.22.1703231190419;
+        Thu, 21 Dec 2023 23:46:30 -0800 (PST)
+Received: from localhost.localdomain ([2804:1b3:a802:7496:88a7:1b1a:a837:bebf])
+        by smtp.gmail.com with ESMTPSA id m2-20020a62f202000000b006d97eaba6cesm1527015pfh.21.2023.12.21.23.46.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Dec 2023 23:46:29 -0800 (PST)
+From: Leonardo Bras <leobras@redhat.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Kees Cook <keescook@chromium.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Leonardo Bras <leobras@redhat.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Andy Chiu <andy.chiu@sifive.com>,
+	Greg Ungerer <gerg@kernel.org>,
+	Vincent Chen <vincent.chen@sifive.com>,
+	Xiao Wang <xiao.w.wang@intel.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Kemeng Shi <shikemeng@huaweicloud.com>,
+	David Hildenbrand <david@redhat.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Qinglin Pan <panqinglin2020@iscas.ac.cn>,
+	Greentime Hu <greentime.hu@sifive.com>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
+	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Guo Ren <guoren@kernel.org>
+Cc: linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [RFC PATCH 0/4] Introduce & Optimize compat-mode helpers
+Date: Fri, 22 Dec 2023 04:46:00 -0300
+Message-ID: <20231222074605.452452-1-leobras@redhat.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 4SxK9d5hNTz9t37
+Content-Transfer-Encoding: 8bit
+
+I just saw the opportunity of optimizing the helper is_compat_task() by
+introducing a compile-time test, and it made possible to remove some
+#ifdef's without any loss of performance.
+
+I also saw the possibility of removing the direct check of task flags from
+general code, and concentrated it in asm/compat.h by creating a few more
+helpers, which in the end helped optimize code.
+
+Leonardo Bras (4):
+  riscv: Replace direct thread flag check with is_compat_task()
+  riscv: add compile-time test into is_compat_task()
+  riscv: Introduce is_compat_thread() into compat.h
+  riscv: Introduce set_compat_task() in asm/compat.h
+
+ arch/riscv/include/asm/compat.h    | 19 +++++++++++++++++++
+ arch/riscv/include/asm/elf.h       | 11 ++---------
+ arch/riscv/include/asm/pgtable.h   |  8 +-------
+ arch/riscv/include/asm/processor.h |  4 ++--
+ arch/riscv/kernel/ptrace.c         |  6 +++---
+ 5 files changed, 27 insertions(+), 21 deletions(-)
 
 
-On 2023-12-20 at 16:12:42 +0100, Jernej =C5=A0krabec <jernej.skrabec@gmail.=
-com> wrote:
-> Dne sreda, 20. december 2023 ob 08:09:28 CET je Frank Oltmanns napisal(a):
->>
->> On 2023-12-19 at 17:54:19 +0100, Jernej =C5=A0krabec <jernej.skrabec@gma=
-il.com> wrote:
->> > Dne ponedeljek, 18. december 2023 ob 14:35:22 CET je Frank Oltmanns na=
-pisal(a):
->> >> The Allwinner A64 manual lists the following constraint for the
->> >> PLL-VIDEO0 clock: 8 <=3D N/M <=3D 25
->> >>
->> >> Use this constraint.
->> >>
->> >> Signed-off-by: Frank Oltmanns <frank@oltmanns.dev>
->> >> ---
->> >>  drivers/clk/sunxi-ng/ccu-sun50i-a64.c | 8 ++++++--
->> >>  1 file changed, 6 insertions(+), 2 deletions(-)
->> >>
->> >> diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c b/drivers/clk/sunx=
-i-ng/ccu-sun50i-a64.c
->> >> index c034ac027d1c..75d839da446c 100644
->> >> --- a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
->> >> +++ b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
->> >> @@ -68,7 +68,8 @@ static SUNXI_CCU_NM_WITH_SDM_GATE_LOCK(pll_audio_ba=
-se_clk, "pll-audio-base",
->> >>  				       BIT(28),	/* lock */
->> >>  				       CLK_SET_RATE_UNGATE);
->> >>
->> >> -static SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK_MIN_MAX_CLOSEST(pll_video0_c=
-lk, "pll-video0",
->> >> +static SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK_MIN_MAX_FEAT_NM_RATIO(pll_vi=
-deo0_clk,
->> >> +						"pll-video0",
->> >>  						"osc24M", 0x010,
->> >>  						192000000,	/* Minimum rate */
->> >>  						1008000000,	/* Maximum rate */
->> >> @@ -80,7 +81,10 @@ static SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK_MIN_MAX_CL=
-OSEST(pll_video0_clk, "pll-vid
->> >>  						297000000,	/* frac rate 1 */
->> >>  						BIT(31),	/* gate */
->> >>  						BIT(28),	/* lock */
->> >> -						CLK_SET_RATE_UNGATE);
->> >> +						CLK_SET_RATE_UNGATE,
->> >> +						CCU_FEATURE_FRACTIONAL |
->> >> +						CCU_FEATURE_CLOSEST_RATE,
->> >
->> > Above flags are unrelated change, put them in new patch if needed.
->>
->> You might notice that I am using a new macro for initializing the
->> pll_video0_clk struct:
->> New: SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK_MIN_MAX_FEAT_NM_RATIO
->> Old: SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK_MIN_MAX_CLOSEST
->>
->> Setting the two CCU_FEATURE flags is part of the old initialization
->> macro.
->>
->> I'll add SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK_MIN_MAX_NM_RATIO_CLOSEST which
->> hopefully resolves the confusion.
->
-> I'm in doubt if we need so many macros. How many users of these macro we'=
-ll have?
-> I see that R40 SoC would also need same ratio limits, but other that that=
-, none?
+base-commit: 24e0d2e527a39f64caeb2e6be39ad5396fb2da5e
+-- 
+2.43.0
 
-Ok, IIUC no additional macro and we keep this part of the patch as is.
-
-Best regards,
-  Frank
-
->
-> Best regards,
-> Jernej
->
->>
->> Thanks,
->>   Frank
->>
->> >
->> > Best regards,
->> > Jernej
->> >
->> >> +						8, 25);		/* min/max nm ratio */
->> >>
->> >>  static SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK(pll_ve_clk, "pll-ve",
->> >>  					"osc24M", 0x018,
->> >>
->> >>
->>
