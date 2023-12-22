@@ -1,61 +1,169 @@
-Received: from voodoobox.net (matrix.voodoobox.net [172.105.149.185])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76FCBA3F;
-	Fri, 22 Dec 2023 06:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thedillows.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thedillows.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C1179D4
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 06:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thedillows.org header.i=@thedillows.org header.b="dXH9kDqj"
-Received: from [192.168.0.103] ([76.133.22.181])
-	(authenticated bits=0)
-	by voodoobox.net (8.14.4/8.14.4) with ESMTP id 3BM5c2xW028689
-	(version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 22 Dec 2023 00:38:03 -0500
-DKIM-Filter: OpenDKIM Filter v2.11.0 voodoobox.net 3BM5c2xW028689
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thedillows.org;
-	s=default; t=1703223485;
-	bh=BIetNQN2KFwX2v/ecFDd6ZNUmdmAnY6xrpyCv7uD/10=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:From;
-	b=dXH9kDqj/fJSNJGOFk6gsap67jxZdBObFWaMs4O/ltqiCfC4npBIDg3Gbz9+oCa5s
-	 tU5jSIYwT01Tu/OjaLWDv3TFIURpaAh1jkPPuzbp7IlQF9RKW78Zc9qCPubgq+WmZQ
-	 Iqt34FhRxIABWunyyVGh/pOYzdNaewaOX3qq3UwuplOrxiaKm5yY8vzNAIdtFGwM1O
-	 Z2TCwHH7/c73jk0kUPn0tj4SF0xv4iXgTAhhR4rvOwNUlZCgYCWQcjB8YtkGOthJaV
-	 p3piDiZTwQS6yj03wCmjOYgNdw3Z/9eN7jmH3vqqe7YP8owKSxJtTZ5jaMqho6fUy2
-	 h2f3YWF6IQfwA==
-Message-ID: <aaa613cf32a940eb26e6713650555a1efe181ea9.camel@thedillows.org>
-Subject: Re: [PATCH next] bonding: Extending LACP MUX State Machine to
- include a Collecting State.
-From: David Dillow <dave@thedillows.org>
-To: jay.vosburgh@canonical.com
-Cc: aahila@google.com, andy@greyhouse.net, daniel@iogearbox.net,
-        davem@davemloft.net, edumazet@google.com, herbert@gondor.apana.org.au,
-        kuba@kernel.org, linux-kernel@vger.kernel.org, maheshb@google.com,
-        martin.lau@kernel.org, netdev@vger.kernel.org, pabeni@redhat.com
-Date: Thu, 21 Dec 2023 21:38:01 -0800
-In-Reply-To: <21529.1703184528@famine>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.0-1 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cS2igrNA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703226470; x=1734762470;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references;
+  bh=hJZ0EKv2QD33t/EPcdMXeHcn3tCCkT2bruiT8sdwzJI=;
+  b=cS2igrNAMIXsuCXj+Xdm2m6flMC+m2W9r5k2pmjfmKYG0HFSNmBaOp39
+   ZF/v3fhmZzT/Wr4e+uHN3IReLuQrQ1BVJLOgqaoJnYZ0hrSOcrwjCjEE1
+   x9ZdaPYIo33zbJ1G/ZSUCOlREVu6lhOqkOTjUdx/MdQaN7vPA2Vz277aD
+   eATcGM+mDlC8/df7hj9LTTAJdHNojAWf4Y2jiOJYCF5imUrfLj6cJpHKF
+   MzaOdROMOvmJ3rL6P79iIKKUWMWIn7+TT7qUrFWo5uaaz1Uj7ud0nStZA
+   A321/4fpjaVNtqi1ENGkNxYYqdK4Yda4CbhEuFoUOyOrCmaa1xF5ZH5Cx
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="462519999"
+X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
+   d="scan'208";a="462519999"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 22:27:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="847362650"
+X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
+   d="scan'208";a="847362650"
+Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 22:27:45 -0800
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+To: naoya.horiguchi@nec.com
+Cc: linmiaohe@huawei.com,
+	akpm@linux-foundation.org,
+	tony.luck@intel.com,
+	ying.huang@intel.com,
+	fengwei.yin@intel.com,
+	qiuxu.zhuo@intel.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] mm: memory-failure: Make memory_failure_queue_delayed() helper
+Date: Fri, 22 Dec 2023 14:27:05 +0800
+Message-Id: <20231222062706.5221-1-qiuxu.zhuo@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20231215081204.8802-1-qiuxu.zhuo@intel.com>
+References: <20231215081204.8802-1-qiuxu.zhuo@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
 
-> I haven't read the patch in detail yet, but my overall question
-> is: why do we need this?  This adds significant complexity to the
-> state machine logic.  What real problem is this solving, i.e., what
-> examples do you have of systems where a port is "in a state where
-> it can receive incoming packets while not still distributing"?
+Introduce the memory_failure_queue_delayed() helper for deferred handling
+of memory failure tasks. This prepares for later re-splitting of a
+hardware-poisoned huge page.
 
-Any time we add a new link to an aggregator, or the bond selects a new
-aggegrator based on the selection policy, there is currently a race
-where we start distributing traffic before our partner (usually a
-switch) is ready to start collecting it, leading to dropped packets if
-we're running traffic over the bond. We reliably hit this window,
-making what should be a non-issue into a customer-visible packet-loss
-event. Implementing the full state machine closes the window and makes
-these maintenance events lossless.
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+---
+Prepares for the patch 2.
+
+ mm/memory-failure.c | 51 +++++++++++++++++++++++++--------------------
+ 1 file changed, 28 insertions(+), 23 deletions(-)
+
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index 660c21859118..8f2c11863bae 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -2385,28 +2385,12 @@ struct memory_failure_cpu {
+ 	DECLARE_KFIFO(fifo, struct memory_failure_entry,
+ 		      MEMORY_FAILURE_FIFO_SIZE);
+ 	spinlock_t lock;
+-	struct work_struct work;
++	struct delayed_work work;
+ };
+ 
+ static DEFINE_PER_CPU(struct memory_failure_cpu, memory_failure_cpu);
+ 
+-/**
+- * memory_failure_queue - Schedule handling memory failure of a page.
+- * @pfn: Page Number of the corrupted page
+- * @flags: Flags for memory failure handling
+- *
+- * This function is called by the low level hardware error handler
+- * when it detects hardware memory corruption of a page. It schedules
+- * the recovering of error page, including dropping pages, killing
+- * processes etc.
+- *
+- * The function is primarily of use for corruptions that
+- * happen outside the current execution context (e.g. when
+- * detected by a background scrubber)
+- *
+- * Can run in IRQ context.
+- */
+-void memory_failure_queue(unsigned long pfn, int flags)
++static void memory_failure_queue_delayed(unsigned long pfn, int flags, unsigned long delay)
+ {
+ 	struct memory_failure_cpu *mf_cpu;
+ 	unsigned long proc_flags;
+@@ -2418,13 +2402,34 @@ void memory_failure_queue(unsigned long pfn, int flags)
+ 	mf_cpu = &get_cpu_var(memory_failure_cpu);
+ 	spin_lock_irqsave(&mf_cpu->lock, proc_flags);
+ 	if (kfifo_put(&mf_cpu->fifo, entry))
+-		schedule_work_on(smp_processor_id(), &mf_cpu->work);
++		schedule_delayed_work_on(smp_processor_id(), &mf_cpu->work, delay);
+ 	else
+ 		pr_err("buffer overflow when queuing memory failure at %#lx\n",
+ 		       pfn);
+ 	spin_unlock_irqrestore(&mf_cpu->lock, proc_flags);
+ 	put_cpu_var(memory_failure_cpu);
+ }
++
++/**
++ * memory_failure_queue - Schedule handling memory failure of a page.
++ * @pfn: Page Number of the corrupted page
++ * @flags: Flags for memory failure handling
++ *
++ * This function is called by the low level hardware error handler
++ * when it detects hardware memory corruption of a page. It schedules
++ * the recovering of error page, including dropping pages, killing
++ * processes etc.
++ *
++ * The function is primarily of use for corruptions that
++ * happen outside the current execution context (e.g. when
++ * detected by a background scrubber)
++ *
++ * Can run in IRQ context.
++ */
++void memory_failure_queue(unsigned long pfn, int flags)
++{
++	memory_failure_queue_delayed(pfn, flags, 0);
++}
+ EXPORT_SYMBOL_GPL(memory_failure_queue);
+ 
+ static void memory_failure_work_func(struct work_struct *work)
+@@ -2434,7 +2439,7 @@ static void memory_failure_work_func(struct work_struct *work)
+ 	unsigned long proc_flags;
+ 	int gotten;
+ 
+-	mf_cpu = container_of(work, struct memory_failure_cpu, work);
++	mf_cpu = container_of(work, struct memory_failure_cpu, work.work);
+ 	for (;;) {
+ 		spin_lock_irqsave(&mf_cpu->lock, proc_flags);
+ 		gotten = kfifo_get(&mf_cpu->fifo, &entry);
+@@ -2457,8 +2462,8 @@ void memory_failure_queue_kick(int cpu)
+ 	struct memory_failure_cpu *mf_cpu;
+ 
+ 	mf_cpu = &per_cpu(memory_failure_cpu, cpu);
+-	cancel_work_sync(&mf_cpu->work);
+-	memory_failure_work_func(&mf_cpu->work);
++	cancel_delayed_work_sync(&mf_cpu->work);
++	memory_failure_work_func(&mf_cpu->work.work);
+ }
+ 
+ static int __init memory_failure_init(void)
+@@ -2470,7 +2475,7 @@ static int __init memory_failure_init(void)
+ 		mf_cpu = &per_cpu(memory_failure_cpu, cpu);
+ 		spin_lock_init(&mf_cpu->lock);
+ 		INIT_KFIFO(mf_cpu->fifo);
+-		INIT_WORK(&mf_cpu->work, memory_failure_work_func);
++		INIT_DELAYED_WORK(&mf_cpu->work, memory_failure_work_func);
+ 	}
+ 
+ 	register_sysctl_init("vm", memory_failure_table);
+-- 
+2.17.1
 
