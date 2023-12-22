@@ -1,81 +1,110 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD93B20FB
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 06:31:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63EDC7F7
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 06:34:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="loxT0zeP"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dbd4a10735eso1518240276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 22:31:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703226715; x=1703831515; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=vCM/h4yYLpqYLQHgVTJ6ZW6j4tyIyXT15IwAZIQWc30=;
-        b=loxT0zePEqx4ohyr82lOWFREUge4iYi39hPYgoWyffbqkKCSBO8E72u5zzCQhw3A7O
-         jBgn+fRYuA0tf2cxP5u/dRpR0LRbFo7tKijvklUGze/hYjB4qPXzWccDM1Cb/688OhUZ
-         dAdEDqAN7gKf9UjgOln5j5Hd0bUZP/V5yGIFkg8iZh94ZcFBrBEhrIeVQJdLeFj9PnTW
-         lWmrbUFBZddO9qYjIKVLOFOr0zvlreQofjt+sIZb769G8ek+DW4455oBkyrrD+rbqiXE
-         WuXh2XSpg5v8XMnQ3UAi1SMLqDamMZvVSxqkSOlLdBxcI1kE4H0qH1dsVIBLgmpso8t8
-         HK7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703226715; x=1703831515;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vCM/h4yYLpqYLQHgVTJ6ZW6j4tyIyXT15IwAZIQWc30=;
-        b=U5PHi1NQbMYJmYy0lSe2Pdb3WqBylaF4nw91P/TFyoj92JufQjmblPeZJ/WRc7B66m
-         ydD17DO+fzRLePOURvFTJtxdz9ESt0LvsQHIlxYlwnlaWizumHEhj3IdAIpNH3nVBDPE
-         Ahh7FQFJtevUSB92Ryl2B3Bo8HVvF1VAB6+VL8Ya5a2EvKazAqNQA7Oh8mawi7kumaYm
-         P+188KjS7/QFsRsZ7cpAdhLFy42O7f1NeIs5B1YJp3MA4RCtmSHGJQ4NzuM5DMJ+0gQe
-         xW80J7yF44jxRDLCDq0j0f6uZLmPWjqSBZU+zEYW+BidCZY8kuYaiOQNH1JfVjFkidZb
-         Tirg==
-X-Gm-Message-State: AOJu0Ywx4VtvdTJWtu/43xxnDPepS4NHfqlezPh8lK/I7sj6jWH8YyGi
-	NJzZrLrm72S2W3EHCHSIleMmC/6L+Buq02FhnhsYdKKwb7HS1g==
-X-Google-Smtp-Source: AGHT+IHWuCHREWIfwkcn+VELqW2vW8cFEReTiA2Ka8sG+C0iAo/h4D1Bm+ZdcD+w9WKZAgevrzb3L60bmxd8fcpm3mA=
-X-Received: by 2002:a25:ae47:0:b0:dbc:ef63:5e1c with SMTP id
- g7-20020a25ae47000000b00dbcef635e1cmr712464ybe.18.1703226714680; Thu, 21 Dec
- 2023 22:31:54 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="r/GZTszt";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="r/GZTszt"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 58B3421E06;
+	Fri, 22 Dec 2023 06:34:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1703226856; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=VFUHfu/Qkc0+Nl1x/C6KXchuZT5UUipWq5f5WbggtB4=;
+	b=r/GZTsztpU2245wi7imSr6/CUYZgnh/AaTtBj8LBBfxF50AmHclKom/0QJ0bNxUBdzAucQ
+	AK/7/RGeGn1qVmvrZyNkzs+Rx9dOz3NyO9HNdIKk8vlN/0CNC64Rd0D8hE/A1eI7rPs0L1
+	/I+Kvch8sOGY0nzKK890R0zuOGUgk8E=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1703226856; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=VFUHfu/Qkc0+Nl1x/C6KXchuZT5UUipWq5f5WbggtB4=;
+	b=r/GZTsztpU2245wi7imSr6/CUYZgnh/AaTtBj8LBBfxF50AmHclKom/0QJ0bNxUBdzAucQ
+	AK/7/RGeGn1qVmvrZyNkzs+Rx9dOz3NyO9HNdIKk8vlN/0CNC64Rd0D8hE/A1eI7rPs0L1
+	/I+Kvch8sOGY0nzKK890R0zuOGUgk8E=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 27BCE13AB5;
+	Fri, 22 Dec 2023 06:34:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 4K1jCOgthWWfXQAAD6G6ig
+	(envelope-from <jgross@suse.com>); Fri, 22 Dec 2023 06:34:16 +0000
+From: Juergen Gross <jgross@suse.com>
+To: torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	xen-devel@lists.xenproject.org,
+	sstabellini@kernel.org
+Subject: [GIT PULL] xen: branch for v6.7-rc7
+Date: Fri, 22 Dec 2023 07:34:15 +0100
+Message-Id: <20231222063415.17316-1-jgross@suse.com>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231220-sa8295p-gpu-v2-0-4763246b72c0@quicinc.com> <20231220-sa8295p-gpu-v2-7-4763246b72c0@quicinc.com>
-In-Reply-To: <20231220-sa8295p-gpu-v2-7-4763246b72c0@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Fri, 22 Dec 2023 08:31:43 +0200
-Message-ID: <CAA8EJpqswNNDUj3tJu6qTYN+g7LoG7L5gMgUQvZfb3cxZRnF+Q@mail.gmail.com>
-Subject: Re: [PATCH v2 7/8] arm64: dts: qcom: sa8295p-adp: Enable GPU
-To: Bjorn Andersson <quic_bjorande@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Taniya Das <quic_tdas@quicinc.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Johan Hovold <johan+linaro@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: *****
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Level: 
+X-Spamd-Bar: /
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [0.10 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	 FROM_HAS_DN(0.00)[];
+	 RCPT_COUNT_THREE(0.00)[4];
+	 R_MISSING_CHARSET(2.50)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 TO_DN_NONE(0.00)[];
+	 BROKEN_CONTENT_TYPE(1.50)[];
+	 DWL_DNSWL_MED(-2.00)[suse.com:dkim];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 DKIM_TRACE(0.00)[suse.com:+];
+	 MX_GOOD(-0.01)[];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-2.59)[98.17%]
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b="r/GZTszt"
+X-Spam-Score: 0.10
+X-Rspamd-Queue-Id: 58B3421E06
 
-On Fri, 22 Dec 2023 at 06:40, Bjorn Andersson <quic_bjorande@quicinc.com> wrote:
->
-> With the necessary support in place for supplying VDD_GFX from the
-> MAX20411 regulator, enable the GPU clock controller, GMU, Adreno SMMU
-> and the GPU on the SA8295P ADP.
->
-> Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/sa8295p-adp.dts | 29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
+Linus,
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Please git pull the following tag:
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-6.7a-rc7-tag
+
+xen: branch for v6.7-rc7
+
+It contains a single patch fixing a build issue for x86 32-bit configurations
+with CONFIG_XEN, which was introduced in the 6.7 development cycle.
 
 
--- 
-With best wishes
-Dmitry
+Thanks.
+
+Juergen
+
+ arch/x86/xen/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+Arnd Bergmann (1):
+      x86/xen: add CPU dependencies for 32-bit build
