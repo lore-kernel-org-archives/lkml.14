@@ -1,121 +1,210 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77261C2DA;
-	Fri, 22 Dec 2023 07:02:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WARE7cr4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5085C433C9;
-	Fri, 22 Dec 2023 07:02:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703228527;
-	bh=FTZxNnsf5zRiACFErRkNpYCam0ADV2KU0KAdPIyArD0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=WARE7cr4SI4nRwr+FibrE4XaqQyPXSvSh0BH8uLSH4E7rl1kiGDMS3vYylaVSvQms
-	 lfsKPT4QrPTMCjb6fDhjqLl+1bahCFHtOYd+Rg/z5vQNi7Mx3yLWFeqg9MWwwGJRni
-	 j/AOOCApmsehwcpcQOHhMpRtHgHe2c33JtU6VPBLBVObchU8c5oKOEC60KBf8EeynQ
-	 FQVZnW15GvHC8PTpjQxBUHQ00hWdadIjyPTVIKGl5j/yoLttL3VYBPw20ExLidrz5F
-	 taHFEXUCDOFjUV+CyN+lH/THg0iQFv6Pb+nF5ejwGnzd2eNJ4EJuzP57P7FAioLNmq
-	 lKsBBiEyEtoyA==
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-203ae9903a6so976440fac.0;
-        Thu, 21 Dec 2023 23:02:07 -0800 (PST)
-X-Gm-Message-State: AOJu0Yw6gcHfDI1p+O6q7tRa89Z2NiFzFy42nuiuKWh5aEk0fhR9H3Du
-	K66oHrupqIglVKJ7AKz52Z9+jHcxsk47T6zhbNs=
-X-Google-Smtp-Source: AGHT+IGkwa8CuwfmLz0N3NHtxQ091wU9T5JJIVH9oOBTRBOeIAZ4CUElYeQjbP5d5WcnAdhODCvDSrpTWGt4lrZfYZY=
-X-Received: by 2002:a05:6870:b6a4:b0:203:b191:aec2 with SMTP id
- cy36-20020a056870b6a400b00203b191aec2mr872650oab.55.1703228527244; Thu, 21
- Dec 2023 23:02:07 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E47C8C8;
+	Fri, 22 Dec 2023 07:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=alibuda@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0Vz-25.h_1703228777;
+Received: from 30.221.148.239(mailfrom:alibuda@linux.alibaba.com fp:SMTPD_---0Vz-25.h_1703228777)
+          by smtp.aliyun-inc.com;
+          Fri, 22 Dec 2023 15:06:19 +0800
+Message-ID: <1d3cb7fc-c1dc-a779-8952-cdbaaf696ce3@linux.alibaba.com>
+Date: Fri, 22 Dec 2023 15:06:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231122221814.139916-1-deller@kernel.org> <20231122221814.139916-2-deller@kernel.org>
- <CAK7LNAQ4C66NZpOwM6_pzdFbTx7LHfv40vJsNu3spPCEJKfOFw@mail.gmail.com>
- <CAK7LNARN985trrbxnCY0+wv5q2ie9PO0TvKet1aLBzDdP-xHPA@mail.gmail.com>
- <ZYUnkSF6hcyPq9tG@bombadil.infradead.org> <ZYUn9c4z9yFWMeH4@bombadil.infradead.org>
-In-Reply-To: <ZYUn9c4z9yFWMeH4@bombadil.infradead.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Fri, 22 Dec 2023 16:01:30 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASg+Z0Vx+9ORpuv_5RdgzH4RDfGNEz5nEz71S_j7H18eQ@mail.gmail.com>
-Message-ID: <CAK7LNASg+Z0Vx+9ORpuv_5RdgzH4RDfGNEz5nEz71S_j7H18eQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] linux/export: Fix alignment for 64-bit ksymtab entries
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: deller@kernel.org, linux-kernel@vger.kernel.org, 
-	Arnd Bergmann <arnd@arndb.de>, linux-modules@vger.kernel.org, linux-arch@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.15.1
+Subject: Re: [RFC nf-next v3 1/2] netfilter: bpf: support prog update
+Content-Language: en-US
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>,
+ Jozsef Kadlecsik <kadlec@netfilter.org>, Florian Westphal <fw@strlen.de>,
+ bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ Network Development <netdev@vger.kernel.org>, coreteam@netfilter.org,
+ netfilter-devel <netfilter-devel@vger.kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Alexei Starovoitov <ast@kernel.org>
+References: <1703081351-85579-1-git-send-email-alibuda@linux.alibaba.com>
+ <1703081351-85579-2-git-send-email-alibuda@linux.alibaba.com>
+ <CAADnVQK3Wk+pKbvc5_7jgaQ=qFq3y0ozgnn+dbW56DaHL2ExWQ@mail.gmail.com>
+From: "D. Wythe" <alibuda@linux.alibaba.com>
+In-Reply-To: <CAADnVQK3Wk+pKbvc5_7jgaQ=qFq3y0ozgnn+dbW56DaHL2ExWQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Dec 22, 2023 at 3:08=E2=80=AFPM Luis Chamberlain <mcgrof@kernel.org=
-> wrote:
+
+
+On 12/21/23 5:11 AM, Alexei Starovoitov wrote:
+> On Wed, Dec 20, 2023 at 6:09 AM D. Wythe <alibuda@linux.alibaba.com> wrote:
+>> From: "D. Wythe" <alibuda@linux.alibaba.com>
+>>
+>> To support the prog update, we need to ensure that the prog seen
+>> within the hook is always valid. Considering that hooks are always
+>> protected by rcu_read_lock(), which provide us the ability to
+>> access the prog under rcu.
+>>
+>> Signed-off-by: D. Wythe <alibuda@linux.alibaba.com>
+>> ---
+>>   net/netfilter/nf_bpf_link.c | 63 ++++++++++++++++++++++++++++++++++-----------
+>>   1 file changed, 48 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/net/netfilter/nf_bpf_link.c b/net/netfilter/nf_bpf_link.c
+>> index e502ec0..9bc91d1 100644
+>> --- a/net/netfilter/nf_bpf_link.c
+>> +++ b/net/netfilter/nf_bpf_link.c
+>> @@ -8,17 +8,8 @@
+>>   #include <net/netfilter/nf_bpf_link.h>
+>>   #include <uapi/linux/netfilter_ipv4.h>
+>>
+>> -static unsigned int nf_hook_run_bpf(void *bpf_prog, struct sk_buff *skb,
+>> -                                   const struct nf_hook_state *s)
+>> -{
+>> -       const struct bpf_prog *prog = bpf_prog;
+>> -       struct bpf_nf_ctx ctx = {
+>> -               .state = s,
+>> -               .skb = skb,
+>> -       };
+>> -
+>> -       return bpf_prog_run(prog, &ctx);
+>> -}
+>> +/* protect link update in parallel */
+>> +static DEFINE_MUTEX(bpf_nf_mutex);
+>>
+>>   struct bpf_nf_link {
+>>          struct bpf_link link;
+>> @@ -26,8 +17,20 @@ struct bpf_nf_link {
+>>          struct net *net;
+>>          u32 dead;
+>>          const struct nf_defrag_hook *defrag_hook;
+>> +       struct rcu_head head;
+> I have to point out the same issues as before, but
+> will ask them differently...
 >
-> On Thu, Dec 21, 2023 at 10:07:13PM -0800, Luis Chamberlain wrote:
-> >
-> > If we want to go bananas we could even get a graph of size of modules
+> Why do you think above rcu_head is necessary?
 >
-> Sorry I meant size of number of symbols Vs cost.
->
->  Luis
+>>   };
+>>
+>> +static unsigned int nf_hook_run_bpf(void *bpf_link, struct sk_buff *skb,
+>> +                                   const struct nf_hook_state *s)
+>> +{
+>> +       const struct bpf_nf_link *nf_link = bpf_link;
+>> +       struct bpf_nf_ctx ctx = {
+>> +               .state = s,
+>> +               .skb = skb,
+>> +       };
+>> +       return bpf_prog_run(rcu_dereference_raw(nf_link->link.prog), &ctx);
+>> +}
+>> +
+>>   #if IS_ENABLED(CONFIG_NF_DEFRAG_IPV4) || IS_ENABLED(CONFIG_NF_DEFRAG_IPV6)
+>>   static const struct nf_defrag_hook *
+>>   get_proto_defrag_hook(struct bpf_nf_link *link,
+>> @@ -126,8 +129,7 @@ static void bpf_nf_link_release(struct bpf_link *link)
+>>   static void bpf_nf_link_dealloc(struct bpf_link *link)
+>>   {
+>>          struct bpf_nf_link *nf_link = container_of(link, struct bpf_nf_link, link);
+>> -
+>> -       kfree(nf_link);
+>> +       kfree_rcu(nf_link, head);
+> Why is this needed ?
+> Have you looked at tcx_link_lops ?
+
+Introducing rcu_head/kfree_rcu is to address the situation where the 
+netfilter hooks might
+still access the link after bpf_nf_link_dealloc.
+
+                                                      nf_hook_run_bpf
+                                                      const struct 
+bpf_nf_link *nf_link = bpf_link;
+
+bpf_nf_link_release
+     nf_unregister_net_hook(nf_link->net, &nf_link->hook_ops);
+
+bpf_nf_link_dealloc
+     free(link)
+bpf_prog_run(link->prog);
 
 
+I had checked the tcx_link_lops ,it's seems it use the synchronize_rcu() 
+to solve the
+same problem, which is also the way we used in the first version.
 
-But, 1/4 is really a bug-fix, isn't it?
+https://lore.kernel.org/bpf/1702467945-38866-1-git-send-email-alibuda@linux.alibaba.com/
 
+However, we have received some opposing views, believing that this is a 
+bit overkill,
+so we decided to use kfree_rcu.
 
-ksymtab was previously 8-byte aligned for CONFIG_64BIT,
-but now is only 4-byte aligned.
+https://lore.kernel.org/bpf/20231213222415.GA13818@breakpoint.cc/
 
+>>   }
+>>
+>>   static int bpf_nf_link_detach(struct bpf_link *link)
+>> @@ -162,7 +164,34 @@ static int bpf_nf_link_fill_link_info(const struct bpf_link *link,
+>>   static int bpf_nf_link_update(struct bpf_link *link, struct bpf_prog *new_prog,
+>>                                struct bpf_prog *old_prog)
+>>   {
+>> -       return -EOPNOTSUPP;
+>> +       struct bpf_nf_link *nf_link = container_of(link, struct bpf_nf_link, link);
+>> +       int err = 0;
+>> +
+>> +       mutex_lock(&bpf_nf_mutex);
+> Why do you need this mutex?
+> What race does it solve?
 
-$ git show ddb5cdbafaaa^:include/linux/export.h |
-                              head -n66 | tail -n5
-struct kernel_symbol {
-        unsigned long value;
-        const char *name;
-        const char *namespace;
-};
+To avoid user update a link with differ prog at the same time. I noticed 
+that sys_bpf()
+doesn't seem to prevent being invoked by user at the same time. Have I 
+missed something?
 
+Best wishes,
+D. Wythe
+>> +
+>> +       if (nf_link->dead) {
+>> +               err = -EPERM;
+>> +               goto out;
+>> +       }
+>> +
+>> +       /* target old_prog mismatch */
+>> +       if (old_prog && link->prog != old_prog) {
+>> +               err = -EPERM;
+>> +               goto out;
+>> +       }
+>> +
+>> +       old_prog = link->prog;
+>> +       if (old_prog == new_prog) {
+>> +               /* don't need update */
+>> +               bpf_prog_put(new_prog);
+>> +               goto out;
+>> +       }
+>> +
+>> +       old_prog = xchg(&link->prog, new_prog);
+>> +       bpf_prog_put(old_prog);
+>> +out:
+>> +       mutex_unlock(&bpf_nf_mutex);
+>> +       return err;
+>>   }
+>>
+>>   static const struct bpf_link_ops bpf_nf_link_lops = {
+>> @@ -226,7 +255,11 @@ int bpf_nf_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+>>
+>>          link->hook_ops.hook = nf_hook_run_bpf;
+>>          link->hook_ops.hook_ops_type = NF_HOOK_OP_BPF;
+>> -       link->hook_ops.priv = prog;
+>> +
+>> +       /* bpf_nf_link_release & bpf_nf_link_dealloc() can ensures that link remains
+>> +        * valid at all times within nf_hook_run_bpf().
+>> +        */
+>> +       link->hook_ops.priv = link;
+>>
+>>          link->hook_ops.pf = attr->link_create.netfilter.pf;
+>>          link->hook_ops.priority = attr->link_create.netfilter.priority;
+>> --
+>> 1.8.3.1
+>>
 
-$ git show ddb5cdbafaaa^:include/asm-generic/export.h |
-                               head -23 | tail -8
-#ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
-#define KSYM_ALIGN 4
-#elif defined(CONFIG_64BIT)
-#define KSYM_ALIGN 8
-#else
-#define KSYM_ALIGN 4
-#endif
-
-
-
-
-In the old behavior, <linux/export.h> used C code
-for producing ksymtab, hence it was naturally
-aligned by the compiler. (unsigned long and pointer
-require 8-byte alignment for CONFIG_64BIT)
-
-
-<asm-generic/export.h> explicitly required
-8-byte alignment for CONFIG_64BIT.
-
-
-
-
-
-In the current behavior, <linux/export-internal.h>
-produces all ksymtab by using inline assembler,
-but it hard-codes ".balign 4".
-
-
-
-
-
-
-
-
-
-
-
---=20
-Best Regards
-Masahiro Yamada
