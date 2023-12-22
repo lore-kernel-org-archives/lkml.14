@@ -1,178 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772EC33D3;
-	Fri, 22 Dec 2023 00:34:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2115DC433C7;
-	Fri, 22 Dec 2023 00:34:47 +0000 (UTC)
-Date: Thu, 21 Dec 2023 19:35:51 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Shuah Khan
- <shuah@kernel.org>, Linux selftests <linux-kselftest@vger.kernel.org>
-Subject: [PATCH] tracing/selftests: Add ownership modification tests for
- eventfs
-Message-ID: <20231221193551.13a0b7bd@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41523A23;
+	Fri, 22 Dec 2023 00:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from fedori.lan (51b681e3.dsl.pool.telekom.hu [::ffff:81.182.129.227])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 0000000000071EE7.000000006584DA06.0013B20D; Fri, 22 Dec 2023 01:36:22 +0100
+From: Gergo Koteles <soyer@irl.hu>
+To: Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>,
+  Baojun Xu <baojun.xu@ti.com>, Jaroslav Kysela <perex@perex.cz>,
+  Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>,
+  Mark Brown <broonie@kernel.org>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+  alsa-devel@alsa-project.org, Gergo Koteles <soyer@irl.hu>,
+  stable@vger.kernel.org
+Subject: [PATCH 1/2] ALSA: hda/tas2781: move set_drv_data outside tasdevice_init
+Date: Fri, 22 Dec 2023 01:34:47 +0100
+Message-ID: <1398bd8bf3e935b1595a99128320e4a1913e210a.1703204848.git.soyer@irl.hu>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+allow driver specific driver data in tas2781-hda-i2c and tas2781-i2c
 
-As there were bugs found with the ownership of eventfs dynamic file
-creation. Add a test to test it.
-
-It will remount tracefs with a different gid and check the ownership of
-the eventfs directory, as well as the system and event directories. It
-will also check the event file directories.
-
-It then does a chgrp on each of these as well to see if they all get
-updated as expected.
-
-Then it remounts the tracefs file system back to the original group and
-makes sure that all the updated files and directories were reset back to
-the original ownership.
-
-It does the same for instances that change the ownership of he instance
-directory.
-
-Note, because the uid is not reset by a remount, it is tested for every
-file by switching it to a new owner and then back again.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Fixes: ef3bcde75d06 ("ASoC: tas2781: Add tas2781 driver")
+CC: stable@vger.kernel.org
+Signed-off-by: Gergo Koteles <soyer@irl.hu>
 ---
- .../ftrace/test.d/00basic/test_ownership.tc   | 113 ++++++++++++++++++
- 1 file changed, 113 insertions(+)
- create mode 100755 tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
+ sound/pci/hda/tas2781_hda_i2c.c   | 2 ++
+ sound/soc/codecs/tas2781-comlib.c | 2 --
+ sound/soc/codecs/tas2781-i2c.c    | 2 ++
+ 3 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-new file mode 100755
-index 000000000000..de8cdf6f207b
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-@@ -0,0 +1,113 @@
-+#!/bin/sh
-+# description: Test file and directory owership changes for eventfs
+diff --git a/sound/pci/hda/tas2781_hda_i2c.c b/sound/pci/hda/tas2781_hda_i2c.c
+index e4c54b2a012c..769604375745 100644
+--- a/sound/pci/hda/tas2781_hda_i2c.c
++++ b/sound/pci/hda/tas2781_hda_i2c.c
+@@ -659,6 +659,8 @@ static int tas2781_hda_i2c_probe(struct i2c_client *clt)
+ 	if (!tas_priv)
+ 		return -ENOMEM;
+ 
++	dev_set_drvdata(&clt->dev, tas_priv);
 +
-+original_group=`stat -c "%g" .`
-+original_owner=`stat -c "%u" .`
+ 	tas_priv->irq_info.irq = clt->irq;
+ 	ret = tas2781_read_acpi(tas_priv, device_name);
+ 	if (ret)
+diff --git a/sound/soc/codecs/tas2781-comlib.c b/sound/soc/codecs/tas2781-comlib.c
+index 933cd008e9f5..00e35169ae49 100644
+--- a/sound/soc/codecs/tas2781-comlib.c
++++ b/sound/soc/codecs/tas2781-comlib.c
+@@ -316,8 +316,6 @@ int tasdevice_init(struct tasdevice_priv *tas_priv)
+ 		tas_priv->tasdevice[i].cur_conf = -1;
+ 	}
+ 
+-	dev_set_drvdata(tas_priv->dev, tas_priv);
+-
+ 	mutex_init(&tas_priv->codec_lock);
+ 
+ out:
+diff --git a/sound/soc/codecs/tas2781-i2c.c b/sound/soc/codecs/tas2781-i2c.c
+index 55cd5e3c23a5..917b1c15f71d 100644
+--- a/sound/soc/codecs/tas2781-i2c.c
++++ b/sound/soc/codecs/tas2781-i2c.c
+@@ -689,6 +689,8 @@ static int tasdevice_i2c_probe(struct i2c_client *i2c)
+ 	if (!tas_priv)
+ 		return -ENOMEM;
+ 
++	dev_set_drvdata(&i2c->dev, tas_priv);
 +
-+mount_point=`stat -c '%m' .`
-+mount_options=`mount | grep "$mount_point" | sed -e 's/.*(\(.*\)).*/\1/'`
-+
-+# find another owner and group that is not the original
-+other_group=`tac /etc/group | grep -v ":$original_group:" | head -1 | cut -d: -f3`
-+other_owner=`tac /etc/passwd | grep -v ":$original_group:" | head -1 | cut -d: -f3`
-+
-+# Remove any group ownership already
-+new_options=`echo "$mount_options" | sed -e "s/gid=[0-9]*/gid=$other_group/"`
-+
-+if [ "$new_options" = "$mount_options" ]; then
-+	new_options="$mount_options,gid=$other_group"
-+	mount_options="$mount_options,gid=$original_group"
-+fi
-+
-+canary="events/timer events/timer/timer_cancel events/timer/timer_cancel/format"
-+
-+test() {
-+	file=$1
-+	test_group=$2
-+
-+	owner=`stat -c "%u" $file`
-+	group=`stat -c "%g" $file`
-+
-+	echo "testing $file $owner=$original_owner and $group=$test_group"
-+	if [ $owner -ne $original_owner ]; then
-+		exit_fail
-+	fi
-+	if [ $group -ne $test_group ]; then
-+		exit_fail
-+	fi
-+
-+	# Note, the remount does not update ownership so test going to and from owner
-+	echo "test owner $file to $other_owner"
-+	chown $other_owner $file
-+	owner=`stat -c "%u" $file`
-+	if [ $owner -ne $other_owner ]; then
-+		exit_fail
-+	fi
-+
-+	chown $original_owner $file
-+	owner=`stat -c "%u" $file`
-+	if [ $owner -ne $original_owner ]; then
-+		exit_fail
-+	fi
-+
-+}
-+
-+run_tests() {
-+	for d in "." "events" "events/sched" "events/sched/sched_switch" "events/sched/sched_switch/enable" $canary; do
-+		test "$d" $other_group
-+	done
-+
-+	chgrp $original_group events
-+	test "events" $original_group
-+	for d in "." "events/sched" "events/sched/sched_switch" "events/sched/sched_switch/enable" $canary; do
-+		test "$d" $other_group
-+	done
-+
-+	chgrp $original_group events/sched
-+	test "events/sched" $original_group
-+	for d in "." "events/sched/sched_switch" "events/sched/sched_switch/enable" $canary; do
-+		test "$d" $other_group
-+	done
-+
-+	chgrp $original_group events/sched/sched_switch
-+	test "events/sched/sched_switch" $original_group
-+	for d in "." "events/sched/sched_switch/enable" $canary; do
-+		test "$d" $other_group
-+	done
-+
-+	chgrp $original_group events/sched/sched_switch/enable
-+	test "events/sched/sched_switch/enable" $original_group
-+	for d in "." $canary; do
-+		test "$d" $other_group
-+	done
-+}
-+
-+mount -o remount,"$new_options" .
-+
-+run_tests
-+
-+mount -o remount,"$mount_options" .
-+
-+for d in "." "events" "events/sched" "events/sched/sched_switch" "events/sched/sched_switch/enable" $canary; do
-+	test "$d" $original_group
-+done
-+
-+# check instances as well
-+
-+chgrp $other_group instances
-+
-+instance="foo-$(mktemp -u XXXXX)"
-+
-+mkdir instances/$instance
-+
-+cd instances/$instance
-+
-+run_tests
-+
-+cd ../..
-+
-+rmdir instances/$instance
-+
-+chgrp $original_group instances
-+
-+exit 0
+ 	if (ACPI_HANDLE(&i2c->dev)) {
+ 		acpi_id = acpi_match_device(i2c->dev.driver->acpi_match_table,
+ 				&i2c->dev);
+
+base-commit: 916d051730ae48aef8b588fd096fefca4bc0590a
+prerequisite-patch-id: da39452ca686d78e5accad1c2c4aa22a5f5a6a65
 -- 
-2.42.0
+2.43.0
 
