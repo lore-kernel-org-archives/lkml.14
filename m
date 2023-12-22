@@ -1,113 +1,142 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5912AB64C
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 05:14:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721E46112
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 05:25:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WCx9S3m7"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d3fde109f2so70465ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 21:14:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1703222094; x=1703826894; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8EpVJPwV8xdpCi/BHsDHoW6FS2qv5qcoyo7OpZbQn6A=;
-        b=WCx9S3m7pk1lihD5xJoDSKjIa9xo9tRYe3zQ9eUez0o1qJW2zagmSpFDObFRmIOdTi
-         k9ox3oU6BN6FwFNEIhoJ4EnwYJ2XexVBJ9lrkW57IXwNsquUGo9b/yLgaPydp85awA3x
-         NY1E/d0fvasvkSRJaMbcPKQrwPbcYkTBBFKTMi9s8c2MEkl71AbPei+bAAmN6V9Sw509
-         fh4pHV8g9Acn0MfpYf2N3iEaWxWWIn/fVDGEY1L7Xb936i2pZ+UGlLOFaQzW0KvrMCDz
-         LksD8UqiJlhaXYAm7zWWeADf+Nm6vfy0Dg3PgScKI4my/ECTWEeUfk/AFDQDulrncwTz
-         cDrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703222094; x=1703826894;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8EpVJPwV8xdpCi/BHsDHoW6FS2qv5qcoyo7OpZbQn6A=;
-        b=DcHcmwGtmrPZ0BYJhiACMhe56WEHCh9/ry3c59UolRzKssaIHGAZVNtAzTd4uK2rUh
-         F9T2bYzGqxzfz8T3EgpzxF9ZxD7v2/B6Z8C/E7ufnRJFmyP/6i3XjjTNqtHXogkasmhV
-         6MjdQEEHVpniCx6BBoLfFLAvMNgz35/W04GDY9fT4jCn/zTpsg4vI1fk93sSbg6ttZst
-         +BLa5l0CwRqDo5ixE93dKQfyp/GOV92oCYNXcB9DWg+FzOYSUb/9h6IGO8o4ttn+0qod
-         gkO9GBEW531besfC2QEp2Lh515wRxuE02bAl/SD71M/0SbxhjDhA2n3FsrX40n0LO9aG
-         oGgw==
-X-Gm-Message-State: AOJu0Yya0eHh+h7R4e0saUcnjZRjTm4HDQTy58NK15yAGR8CLdu12cXE
-	T4al7UlIF52nRHdt4vrGnuseB8Z986gK
-X-Google-Smtp-Source: AGHT+IGwoh3X7adS7L4evXjC4NNt2+Ju49v+fiMnSiMHHPnVEmAeTX8TfE9pYRDSDNridjP5qtla6A==
-X-Received: by 2002:a17:903:2310:b0:1d3:dc24:31c with SMTP id d16-20020a170903231000b001d3dc24031cmr61138plh.3.1703222094173;
-        Thu, 21 Dec 2023 21:14:54 -0800 (PST)
-Received: from [2620:0:1008:15:a7bc:c7f0:fb7e:556d] ([2620:0:1008:15:a7bc:c7f0:fb7e:556d])
-        by smtp.gmail.com with ESMTPSA id y21-20020a17090ad71500b0028b43d3250csm2653671pju.43.2023.12.21.21.14.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 21:14:53 -0800 (PST)
-Date: Thu, 21 Dec 2023 21:14:52 -0800 (PST)
-From: David Rientjes <rientjes@google.com>
-To: Yu Zhao <yuzhao@google.com>
-cc: Henry Huang <henry.hj@antgroup.com>, yuanchu@google.com, 
-    akpm@linux-foundation.org, 
-    =?UTF-8?B?6LCI6Ym06ZSL?= <henry.tjf@antgroup.com>, 
-    linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-    =?UTF-8?B?5pyx6L6JKOiMtuawtCk=?= <teawater@antgroup.com>
-Subject: Re: [RFC v2] mm: Multi-Gen LRU: fix use mm/page_idle/bitmap
-In-Reply-To: <CAOUHufZwXBs4x7GeawrjZNEwTBdV=mf-DYrZuF4j=10URHwQTw@mail.gmail.com>
-Message-ID: <931f2e6d-30a1-5f10-e879-65cb11c89b85@google.com>
-References: <CAJj2-QGqDWGVHEwU+=8+ywEAQtK9QKGZCOhkyEgp8LEWbXDggQ@mail.gmail.com> <20231222024458.12441-1-henry.hj@antgroup.com> <CAOUHufZwXBs4x7GeawrjZNEwTBdV=mf-DYrZuF4j=10URHwQTw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0eo9Cvsx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
+	:Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=dsMR+WACwlCN6vo2Aferq2y6mgFg8ofBbNv8oumItv4=; b=0eo9CvsxjzpdF4U8hBbO9yLtRL
+	uH7OLXC6gHLsYCYHri2luyui/yGzD1l0Yls0YhM0QWEyjG8Xb64le1VcBc2AFFavd+aJkAhBp8HY+
+	kSjMRJEA1S5g2L1TcL6X8Rkz/BM7KnY1e233RDtwoCcmgjNMUurH+a88nkIa4efdl6hmdUZgE5lap
+	fij3uPbGitQYLy5E01roa3wQ6mP/ZE0DZRpjs5rO3DVuPBnIsGYAgb/lMg6PKryF9koOFSt0u/glN
+	y6VeCt+jD9rAUdJKude4AbmFuthCKyhyMJnVg0Rw3GMJFbGlyHB9iYj6rQHgUfYRpxoB15IPNrU08
+	KFhMwalQ==;
+Received: from [50.53.46.231] (helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rGY2D-004y0F-2j;
+	Fri, 22 Dec 2023 05:25:21 +0000
+From: Randy Dunlap <rdunlap@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 2/3] virt: vbox: linux: fix all kernel-doc warnings
+Date: Thu, 21 Dec 2023 21:25:20 -0800
+Message-ID: <20231222052521.14333-2-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20231222052521.14333-1-rdunlap@infradead.org>
+References: <20231222052521.14333-1-rdunlap@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="2003067076-520779642-1703222093=:711362"
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Use kernel-doc format for functions that are almost complete in their
+kernel-doc comments.
+For other functions, just change the comment to a common C comment.
+This prevents 7 kernel-doc warnings.
 
---2003067076-520779642-1703222093=:711362
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/virt/vboxguest/vboxguest_linux.c |   22 +++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-On Thu, 21 Dec 2023, Yu Zhao wrote:
-
-> > Thanks for replyting.
-> >
-> > On Fri, Dec 22, 2023 at 07:16 AM Yuanchu Xie wrote:
-> > > How does the shared memory get charged to the cgroups?
-> > > Does it all go to cgroup A or B exclusively, or do some pages get
-> > > charged to each one?
-> >
-> > Some pages get charged to cgroup A, and the other get charged to cgroup B.
-> 
-> Just a side note:
-> We can potentially "fix" this, but it doesn't mean this is a good
-> practice. In fact, I think this is an anti-pattern to memcgs:
-> resources should be preferably isolated between memcgs, or if a
-> resource has to be shared between memcgs, it should be charged in a
-> predetermined way, not randomly to one of the memcgs sharing it.
-> 
-
-Very interesting thread, a few questions for Henry to understand the 
-situation better:
-
- - is the lack of predeterministic charging a problem for you?  Are you
-   initially faulting it in a manner that charges it to the "right" memcg
-   and the refault of it after periodic reclaim can causing the charge to
-   appear "randomly," i.e. to whichever process happened to access it 
-   next?
-
- - are pages ever shared between different memcg hierarchies?  You 
-   mentioned sharing between processes in A and A/B, but I'm wondering
-   if there is sharing between two different memcg hierarchies where root
-   is the only common ancestor?
-
- - do you anticipate a shorter scan period at some point?  Proactively
-   reclaiming all memory colder than one hour is a long time :)  Are you
-   concerned at all about the cost of doing your current idle bit 
-   harvesting approach becoming too expensive if you significantly reduce
-   the scan period?
-
- - is proactive reclaim being driven by writing to memory.reclaim, by
-   enforcing a smaller memory.high, or something else?
-
-Looking forward to learning more about your particular issue.
---2003067076-520779642-1703222093=:711362--
+diff -- a/drivers/virt/vboxguest/vboxguest_linux.c b/drivers/virt/vboxguest/vboxguest_linux.c
+--- a/drivers/virt/vboxguest/vboxguest_linux.c
++++ b/drivers/virt/vboxguest/vboxguest_linux.c
+@@ -81,10 +81,11 @@ static int vbg_misc_device_user_open(str
+ }
+ 
+ /**
+- * Close device.
+- * Return: 0 on success, negated errno on failure.
++ * vbg_misc_device_close - Close device.
+  * @inode:		Pointer to inode info structure.
+  * @filp:		Associated file pointer.
++ *
++ * Return: %0 on success, negated errno on failure.
+  */
+ static int vbg_misc_device_close(struct inode *inode, struct file *filp)
+ {
+@@ -94,11 +95,12 @@ static int vbg_misc_device_close(struct
+ }
+ 
+ /**
+- * Device I/O Control entry point.
+- * Return: 0 on success, negated errno on failure.
++ * vbg_misc_device_ioctl - Device I/O Control entry point.
+  * @filp:		Associated file pointer.
+  * @req:		The request specified to ioctl().
+  * @arg:		The argument specified to ioctl().
++ *
++ * Return: %0 on success, negated errno on failure.
+  */
+ static long vbg_misc_device_ioctl(struct file *filp, unsigned int req,
+ 				  unsigned long arg)
+@@ -173,7 +175,7 @@ out:
+ 	return ret;
+ }
+ 
+-/** The file_operations structures. */
++/* The file_operations structures. */
+ static const struct file_operations vbg_misc_device_fops = {
+ 	.owner			= THIS_MODULE,
+ 	.open			= vbg_misc_device_open,
+@@ -193,7 +195,7 @@ static const struct file_operations vbg_
+ #endif
+ };
+ 
+-/**
++/*
+  * Called when the input device is first opened.
+  *
+  * Sets up absolute mouse reporting.
+@@ -206,7 +208,7 @@ static int vbg_input_open(struct input_d
+ 	return vbg_core_set_mouse_status(gdev, feat);
+ }
+ 
+-/**
++/*
+  * Called if all open handles to the input device are closed.
+  *
+  * Disables absolute reporting.
+@@ -218,7 +220,7 @@ static void vbg_input_close(struct input
+ 	vbg_core_set_mouse_status(gdev, 0);
+ }
+ 
+-/**
++/*
+  * Creates the kernel input device.
+  *
+  * Return: 0 on success, negated errno on failure.
+@@ -277,7 +279,7 @@ static struct attribute *vbg_pci_attrs[]
+ };
+ ATTRIBUTE_GROUPS(vbg_pci);
+ 
+-/**
++/*
+  * Does the PCI detection and init of the device.
+  *
+  * Return: 0 on success, negated errno on failure.
+@@ -453,7 +455,7 @@ void vbg_put_gdev(struct vbg_dev *gdev)
+ }
+ EXPORT_SYMBOL(vbg_put_gdev);
+ 
+-/**
++/*
+  * Callback for mouse events.
+  *
+  * This is called at the end of the ISR, after leaving the event spinlock, if
