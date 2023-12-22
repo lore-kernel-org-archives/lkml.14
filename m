@@ -1,169 +1,186 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C1179D4
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 06:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE21D306;
+	Fri, 22 Dec 2023 06:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cS2igrNA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703226470; x=1734762470;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=hJZ0EKv2QD33t/EPcdMXeHcn3tCCkT2bruiT8sdwzJI=;
-  b=cS2igrNAMIXsuCXj+Xdm2m6flMC+m2W9r5k2pmjfmKYG0HFSNmBaOp39
-   ZF/v3fhmZzT/Wr4e+uHN3IReLuQrQ1BVJLOgqaoJnYZ0hrSOcrwjCjEE1
-   x9ZdaPYIo33zbJ1G/ZSUCOlREVu6lhOqkOTjUdx/MdQaN7vPA2Vz277aD
-   eATcGM+mDlC8/df7hj9LTTAJdHNojAWf4Y2jiOJYCF5imUrfLj6cJpHKF
-   MzaOdROMOvmJ3rL6P79iIKKUWMWIn7+TT7qUrFWo5uaaz1Uj7ud0nStZA
-   A321/4fpjaVNtqi1ENGkNxYYqdK4Yda4CbhEuFoUOyOrCmaa1xF5ZH5Cx
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="462519999"
-X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
-   d="scan'208";a="462519999"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 22:27:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="847362650"
-X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
-   d="scan'208";a="847362650"
-Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 22:27:45 -0800
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-To: naoya.horiguchi@nec.com
-Cc: linmiaohe@huawei.com,
-	akpm@linux-foundation.org,
-	tony.luck@intel.com,
-	ying.huang@intel.com,
-	fengwei.yin@intel.com,
-	qiuxu.zhuo@intel.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] mm: memory-failure: Make memory_failure_queue_delayed() helper
-Date: Fri, 22 Dec 2023 14:27:05 +0800
-Message-Id: <20231222062706.5221-1-qiuxu.zhuo@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20231215081204.8802-1-qiuxu.zhuo@intel.com>
-References: <20231215081204.8802-1-qiuxu.zhuo@intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JS/5uxT7"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BM5jhkJ031026;
+	Fri, 22 Dec 2023 06:27:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	qcppdkim1; bh=BMcIK6+tF1WzlJAS4gMMrCiHhLdtiy0eQaT/jyXeihI=; b=JS
+	/5uxT7uDrSRYJPWV0Z7XzPGoZNq+eNaSl1O1vKQcpvQAPb606QF+lkBMmBDt2PTz
+	PmOBI32hu49IKDLpY5hkLua98muW6TB6YTP37SKGtaU1k9r9lFmcl9ebdv/oEO2A
+	4bga5DNimovymP/FTwirSAzywTONRIDmYsG1+0bCNgAdhMR2YGvFHnWfNrAySyMJ
+	aC+m7nbV9wAyi02PwAS4M4QcZr7P3N6uUKff8BMTwSlAGYP5ftrHBdhONpLRsZS7
+	J6UR/07sUow7DM8muwkD40nJaq8LxrAe/fV9RyxpNewUZreCcxsxGyAMMo3c/gO0
+	rzxagpminbRnzp2X9bCQ==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3v4pte23nq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 22 Dec 2023 06:27:47 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3BM6RkcN005155
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 22 Dec 2023 06:27:46 GMT
+Received: from hu-kriskura-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 21 Dec 2023 22:27:41 -0800
+From: Krishna Kurapati <quic_kriskura@quicinc.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, "Andy
+ Gross" <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Wesley Cheng <quic_wcheng@quicinc.com>,
+        "Conor
+ Dooley" <conor+dt@kernel.org>, Johan Hovold <johan@kernel.org>
+CC: <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <quic_ppratap@quicinc.com>, <quic_jackp@quicinc.com>,
+        Krishna Kurapati
+	<quic_kriskura@quicinc.com>
+Subject: [PATCH v4 2/2] usb: dwc3: qcom: Rename hs_phy_irq to qusb2_phy_irq
+Date: Fri, 22 Dec 2023 11:57:20 +0530
+Message-ID: <20231222062720.10128-3-quic_kriskura@quicinc.com>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20231222062720.10128-1-quic_kriskura@quicinc.com>
+References: <20231222062720.10128-1-quic_kriskura@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: D5PEjfAHsncdCM5NtbY4wkRKQZI1tjz-
+X-Proofpoint-ORIG-GUID: D5PEjfAHsncdCM5NtbY4wkRKQZI1tjz-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=661 adultscore=0
+ clxscore=1015 priorityscore=1501 malwarescore=0 impostorscore=0
+ phishscore=0 suspectscore=0 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2312220043
 
-Introduce the memory_failure_queue_delayed() helper for deferred handling
-of memory failure tasks. This prepares for later re-splitting of a
-hardware-poisoned huge page.
+For wakeup to work, driver needs to enable interrupts that depict what is
+happening on the DP/DM lines. On QUSB targets, this is identified by
+qusb2_phy whereas on SoCs using Femto PHY, separate {dp,dm}_hs_phy_irq's
+are used instead.
 
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+The implementation incorrectly names qusb2_phy interrupts as "hs_phy_irq".
+Clean this up so that driver would be using only qusb2/(dp & dm) for wakeup
+purposes.
+
+For devices running older kernels, this won't break any functionality
+because the interrupt configurations in QUSB2 PHY based SoCs is done
+by configuring QUSB2PHY_INTR_CTRL register in PHY address space and it was
+never armed properly right from the start.
+
+Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
 ---
-Prepares for the patch 2.
+ drivers/usb/dwc3/dwc3-qcom.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
- mm/memory-failure.c | 51 +++++++++++++++++++++++++--------------------
- 1 file changed, 28 insertions(+), 23 deletions(-)
-
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 660c21859118..8f2c11863bae 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -2385,28 +2385,12 @@ struct memory_failure_cpu {
- 	DECLARE_KFIFO(fifo, struct memory_failure_entry,
- 		      MEMORY_FAILURE_FIFO_SIZE);
- 	spinlock_t lock;
--	struct work_struct work;
-+	struct delayed_work work;
- };
+diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+index fdf6d5d3c2ad..dbd6a5b2b289 100644
+--- a/drivers/usb/dwc3/dwc3-qcom.c
++++ b/drivers/usb/dwc3/dwc3-qcom.c
+@@ -57,7 +57,7 @@ struct dwc3_acpi_pdata {
+ 	u32			qscratch_base_offset;
+ 	u32			qscratch_base_size;
+ 	u32			dwc3_core_base_size;
+-	int			hs_phy_irq_index;
++	int			qusb2_phy_irq_index;
+ 	int			dp_hs_phy_irq_index;
+ 	int			dm_hs_phy_irq_index;
+ 	int			ss_phy_irq_index;
+@@ -73,7 +73,7 @@ struct dwc3_qcom {
+ 	int			num_clocks;
+ 	struct reset_control	*resets;
  
- static DEFINE_PER_CPU(struct memory_failure_cpu, memory_failure_cpu);
+-	int			hs_phy_irq;
++	int			qusb2_phy_irq;
+ 	int			dp_hs_phy_irq;
+ 	int			dm_hs_phy_irq;
+ 	int			ss_phy_irq;
+@@ -372,7 +372,7 @@ static void dwc3_qcom_disable_wakeup_irq(int irq)
  
--/**
-- * memory_failure_queue - Schedule handling memory failure of a page.
-- * @pfn: Page Number of the corrupted page
-- * @flags: Flags for memory failure handling
-- *
-- * This function is called by the low level hardware error handler
-- * when it detects hardware memory corruption of a page. It schedules
-- * the recovering of error page, including dropping pages, killing
-- * processes etc.
-- *
-- * The function is primarily of use for corruptions that
-- * happen outside the current execution context (e.g. when
-- * detected by a background scrubber)
-- *
-- * Can run in IRQ context.
-- */
--void memory_failure_queue(unsigned long pfn, int flags)
-+static void memory_failure_queue_delayed(unsigned long pfn, int flags, unsigned long delay)
+ static void dwc3_qcom_disable_interrupts(struct dwc3_qcom *qcom)
  {
- 	struct memory_failure_cpu *mf_cpu;
- 	unsigned long proc_flags;
-@@ -2418,13 +2402,34 @@ void memory_failure_queue(unsigned long pfn, int flags)
- 	mf_cpu = &get_cpu_var(memory_failure_cpu);
- 	spin_lock_irqsave(&mf_cpu->lock, proc_flags);
- 	if (kfifo_put(&mf_cpu->fifo, entry))
--		schedule_work_on(smp_processor_id(), &mf_cpu->work);
-+		schedule_delayed_work_on(smp_processor_id(), &mf_cpu->work, delay);
- 	else
- 		pr_err("buffer overflow when queuing memory failure at %#lx\n",
- 		       pfn);
- 	spin_unlock_irqrestore(&mf_cpu->lock, proc_flags);
- 	put_cpu_var(memory_failure_cpu);
- }
-+
-+/**
-+ * memory_failure_queue - Schedule handling memory failure of a page.
-+ * @pfn: Page Number of the corrupted page
-+ * @flags: Flags for memory failure handling
-+ *
-+ * This function is called by the low level hardware error handler
-+ * when it detects hardware memory corruption of a page. It schedules
-+ * the recovering of error page, including dropping pages, killing
-+ * processes etc.
-+ *
-+ * The function is primarily of use for corruptions that
-+ * happen outside the current execution context (e.g. when
-+ * detected by a background scrubber)
-+ *
-+ * Can run in IRQ context.
-+ */
-+void memory_failure_queue(unsigned long pfn, int flags)
-+{
-+	memory_failure_queue_delayed(pfn, flags, 0);
-+}
- EXPORT_SYMBOL_GPL(memory_failure_queue);
+-	dwc3_qcom_disable_wakeup_irq(qcom->hs_phy_irq);
++	dwc3_qcom_disable_wakeup_irq(qcom->qusb2_phy_irq);
  
- static void memory_failure_work_func(struct work_struct *work)
-@@ -2434,7 +2439,7 @@ static void memory_failure_work_func(struct work_struct *work)
- 	unsigned long proc_flags;
- 	int gotten;
+ 	if (qcom->usb2_speed == USB_SPEED_LOW) {
+ 		dwc3_qcom_disable_wakeup_irq(qcom->dm_hs_phy_irq);
+@@ -389,7 +389,7 @@ static void dwc3_qcom_disable_interrupts(struct dwc3_qcom *qcom)
  
--	mf_cpu = container_of(work, struct memory_failure_cpu, work);
-+	mf_cpu = container_of(work, struct memory_failure_cpu, work.work);
- 	for (;;) {
- 		spin_lock_irqsave(&mf_cpu->lock, proc_flags);
- 		gotten = kfifo_get(&mf_cpu->fifo, &entry);
-@@ -2457,8 +2462,8 @@ void memory_failure_queue_kick(int cpu)
- 	struct memory_failure_cpu *mf_cpu;
+ static void dwc3_qcom_enable_interrupts(struct dwc3_qcom *qcom)
+ {
+-	dwc3_qcom_enable_wakeup_irq(qcom->hs_phy_irq, 0);
++	dwc3_qcom_enable_wakeup_irq(qcom->qusb2_phy_irq, 0);
  
- 	mf_cpu = &per_cpu(memory_failure_cpu, cpu);
--	cancel_work_sync(&mf_cpu->work);
--	memory_failure_work_func(&mf_cpu->work);
-+	cancel_delayed_work_sync(&mf_cpu->work);
-+	memory_failure_work_func(&mf_cpu->work.work);
- }
+ 	/*
+ 	 * Configure DP/DM line interrupts based on the USB2 device attached to
+@@ -542,19 +542,19 @@ static int dwc3_qcom_setup_irq(struct platform_device *pdev)
+ 	int irq;
+ 	int ret;
  
- static int __init memory_failure_init(void)
-@@ -2470,7 +2475,7 @@ static int __init memory_failure_init(void)
- 		mf_cpu = &per_cpu(memory_failure_cpu, cpu);
- 		spin_lock_init(&mf_cpu->lock);
- 		INIT_KFIFO(mf_cpu->fifo);
--		INIT_WORK(&mf_cpu->work, memory_failure_work_func);
-+		INIT_DELAYED_WORK(&mf_cpu->work, memory_failure_work_func);
+-	irq = dwc3_qcom_get_irq(pdev, "hs_phy_irq",
+-				pdata ? pdata->hs_phy_irq_index : -1);
++	irq = dwc3_qcom_get_irq(pdev, "qusb2_phy",
++				pdata ? pdata->qusb2_phy_irq_index : -1);
+ 	if (irq > 0) {
+ 		/* Keep wakeup interrupts disabled until suspend */
+ 		ret = devm_request_threaded_irq(qcom->dev, irq, NULL,
+ 					qcom_dwc3_resume_irq,
+ 					IRQF_ONESHOT | IRQF_NO_AUTOEN,
+-					"qcom_dwc3 HS", qcom);
++					"qcom_dwc3 QUSB2", qcom);
+ 		if (ret) {
+-			dev_err(qcom->dev, "hs_phy_irq failed: %d\n", ret);
++			dev_err(qcom->dev, "qusb2_phy_irq failed: %d\n", ret);
+ 			return ret;
+ 		}
+-		qcom->hs_phy_irq = irq;
++		qcom->qusb2_phy_irq = irq;
  	}
  
- 	register_sysctl_init("vm", memory_failure_table);
+ 	irq = dwc3_qcom_get_irq(pdev, "dp_hs_phy_irq",
+@@ -1058,7 +1058,7 @@ static const struct dwc3_acpi_pdata sdm845_acpi_pdata = {
+ 	.qscratch_base_offset = SDM845_QSCRATCH_BASE_OFFSET,
+ 	.qscratch_base_size = SDM845_QSCRATCH_SIZE,
+ 	.dwc3_core_base_size = SDM845_DWC3_CORE_SIZE,
+-	.hs_phy_irq_index = 1,
++	.qusb2_phy_irq_index = 1,
+ 	.dp_hs_phy_irq_index = 4,
+ 	.dm_hs_phy_irq_index = 3,
+ 	.ss_phy_irq_index = 2
+@@ -1068,7 +1068,7 @@ static const struct dwc3_acpi_pdata sdm845_acpi_urs_pdata = {
+ 	.qscratch_base_offset = SDM845_QSCRATCH_BASE_OFFSET,
+ 	.qscratch_base_size = SDM845_QSCRATCH_SIZE,
+ 	.dwc3_core_base_size = SDM845_DWC3_CORE_SIZE,
+-	.hs_phy_irq_index = 1,
++	.qusb2_phy_irq_index = 1,
+ 	.dp_hs_phy_irq_index = 4,
+ 	.dm_hs_phy_irq_index = 3,
+ 	.ss_phy_irq_index = 2,
 -- 
-2.17.1
+2.42.0
 
