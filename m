@@ -1,26 +1,26 @@
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104E92C855;
-	Fri, 22 Dec 2023 15:08:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8B12CCD9;
+	Fri, 22 Dec 2023 15:08:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A1L3KGi7"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JaAkdqZm"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=dcSwdTVvCQUQwEHV9ZU6DKJi2JGMjLPwvaIvkNqY5Tg=; b=A1L3KGi7p22WmVHYwn8JAqK2do
-	OXUFMCP8LJGy0Us0BB+qtD7uRWeU14L7juYdVzyoo741jIvkCVavCFPr7vn49oJnwBeb31GwyhyCL
-	XMkYwmZAir6Q8gmHFK6Gky8PEmPyGgyC/KQTwjJI/mv6W+LjQtY/VI5pXzlj9BZdnNVpCESlp38Vu
-	jDKhsTX0+/J0c5ijdwDmuwZyFecpwZm4RDeHS0BP2noVcUDK4cFWRWT1GMfPdyriBSS6BSTLFTFv6
-	PXWgGoOYcEAcl640qINBEZZbXhmFnZy7yHZ5tKGTOCGoGVoGeI9mHWUXUgs3+Q2npwJgqbpQmtJd7
-	K5IukuVA==;
+	bh=dVreMySeIHkVOAtpz+bbvTB1WjeCUE+T6e0OUt9+4gE=; b=JaAkdqZmOduEeNKqFX4Ku2J7NE
+	ZUlndRMyXJVHVpS3YBp+6lZQe4Hb/Oea/LNWPgl4QZ3Yd8ECfM3p5l6Uct6A8zEfAoOe+Z0jwyHJ7
+	0fm91BwTHShgOIQMcILm75blc7XQRH49G/JVXgOxWXo0dVFsqXpRBaEdyrPs0quk5x729W9gXmb98
+	e255UWRmLzkFgEPdttgBQuUTeEySgAg3MR6Ea+qCXmLfCd4NzBC6vD2F7y56dqROKEg04RYOnnN0N
+	lEHwOMZeqBxD5fPkSLKirvNRdxdMaUp/A77YEni/edJFRZ5TA6D0gHH4uUlkwB64Jons6MuMIPqUz
+	RJn1Yl1w==;
 Received: from 2a02-8389-2341-5b80-39d3-4735-9a3c-88d8.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:39d3:4735:9a3c:88d8] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGh8m-006BQI-21;
-	Fri, 22 Dec 2023 15:08:44 +0000
+	id 1rGh8u-006BUd-1I;
+	Fri, 22 Dec 2023 15:08:52 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: linux-mm@kvack.org
 Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
@@ -31,9 +31,9 @@ Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
 	linux-kernel@vger.kernel.org,
 	Jan Kara <jack@suse.cz>,
 	Dave Chinner <dchinner@redhat.com>
-Subject: [PATCH 07/17] writeback: Factor writeback_get_batch() out of write_cache_pages()
-Date: Fri, 22 Dec 2023 16:08:17 +0100
-Message-Id: <20231222150827.1329938-8-hch@lst.de>
+Subject: [PATCH 10/17] pagevec: Add ability to iterate a queue
+Date: Fri, 22 Dec 2023 16:08:20 +0100
+Message-Id: <20231222150827.1329938-11-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231222150827.1329938-1-hch@lst.de>
 References: <20231222150827.1329938-1-hch@lst.de>
@@ -48,123 +48,68 @@ X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-This simple helper will be the basis of the writeback iterator.
-To make this work, we need to remember the current index
-and end positions in writeback_control.
+Add a loop counter inside the folio_batch to let us iterate from 0-nr
+instead of decrementing nr and treating the batch as a stack.  It would
+generate some very weird and suboptimal I/O patterns for page writeback
+to iterate over the batch as a stack.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-[hch: heavily rebased, add helpers to get the tag and end index,
-      don't keep the end index in struct writeback_control]
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Jan Kara <jack@suse.cz>
 Acked-by: Dave Chinner <dchinner@redhat.com>
 ---
- include/linux/writeback.h |  1 +
- mm/page-writeback.c       | 49 +++++++++++++++++++++++++--------------
- 2 files changed, 32 insertions(+), 18 deletions(-)
+ include/linux/pagevec.h | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/include/linux/writeback.h b/include/linux/writeback.h
-index 390f2dd03cf27e..195393981ccb5c 100644
---- a/include/linux/writeback.h
-+++ b/include/linux/writeback.h
-@@ -81,6 +81,7 @@ struct writeback_control {
- 
- 	/* internal fields used by the ->writepages implementation: */
- 	struct folio_batch fbatch;
-+	pgoff_t index;
- 	int err;
- 
- #ifdef CONFIG_CGROUP_WRITEBACK
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index 564d5faf562ba7..798e5264dc0353 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -2383,6 +2383,29 @@ static void writeback_finish(struct address_space *mapping,
- 	}
+diff --git a/include/linux/pagevec.h b/include/linux/pagevec.h
+index 87cc678adc850b..fcc06c300a72c3 100644
+--- a/include/linux/pagevec.h
++++ b/include/linux/pagevec.h
+@@ -27,6 +27,7 @@ struct folio;
+  */
+ struct folio_batch {
+ 	unsigned char nr;
++	unsigned char i;
+ 	bool percpu_pvec_drained;
+ 	struct folio *folios[PAGEVEC_SIZE];
+ };
+@@ -40,12 +41,14 @@ struct folio_batch {
+ static inline void folio_batch_init(struct folio_batch *fbatch)
+ {
+ 	fbatch->nr = 0;
++	fbatch->i = 0;
+ 	fbatch->percpu_pvec_drained = false;
  }
  
-+static xa_mark_t wbc_to_tag(struct writeback_control *wbc)
-+{
-+	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
-+		return PAGECACHE_TAG_TOWRITE;
-+	return PAGECACHE_TAG_DIRTY;
-+}
-+
-+static pgoff_t wbc_end(struct writeback_control *wbc)
-+{
-+	if (wbc->range_cyclic)
-+		return -1;
-+	return wbc->range_end >> PAGE_SHIFT;
-+}
-+
-+static void writeback_get_batch(struct address_space *mapping,
-+		struct writeback_control *wbc)
-+{
-+	folio_batch_release(&wbc->fbatch);
-+	cond_resched();
-+	filemap_get_folios_tag(mapping, &wbc->index, wbc_end(wbc),
-+			wbc_to_tag(wbc), &wbc->fbatch);
-+}
-+
- /**
-  * write_cache_pages - walk the list of dirty pages of the given address space and write all of them.
-  * @mapping: address space structure to write
-@@ -2419,38 +2442,30 @@ int write_cache_pages(struct address_space *mapping,
- 		      void *data)
+ static inline void folio_batch_reinit(struct folio_batch *fbatch)
  {
- 	int error;
--	int nr_folios;
--	pgoff_t index;
- 	pgoff_t end;		/* Inclusive */
--	xa_mark_t tag;
+ 	fbatch->nr = 0;
++	fbatch->i = 0;
+ }
  
- 	if (wbc->range_cyclic) {
--		index = mapping->writeback_index; /* prev offset */
-+		wbc->index = mapping->writeback_index; /* prev offset */
- 		end = -1;
- 	} else {
--		index = wbc->range_start >> PAGE_SHIFT;
-+		wbc->index = wbc->range_start >> PAGE_SHIFT;
- 		end = wbc->range_end >> PAGE_SHIFT;
- 	}
--	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages) {
--		tag_pages_for_writeback(mapping, index, end);
--		tag = PAGECACHE_TAG_TOWRITE;
--	} else {
--		tag = PAGECACHE_TAG_DIRTY;
--	}
-+	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
-+		tag_pages_for_writeback(mapping, wbc->index, end);
+ static inline unsigned int folio_batch_count(struct folio_batch *fbatch)
+@@ -75,6 +78,21 @@ static inline unsigned folio_batch_add(struct folio_batch *fbatch,
+ 	return folio_batch_space(fbatch);
+ }
  
- 	folio_batch_init(&wbc->fbatch);
- 	wbc->err = 0;
++/**
++ * folio_batch_next - Return the next folio to process.
++ * @fbatch: The folio batch being processed.
++ *
++ * Use this function to implement a queue of folios.
++ *
++ * Return: The next folio in the queue, or NULL if the queue is empty.
++ */
++static inline struct folio *folio_batch_next(struct folio_batch *fbatch)
++{
++	if (fbatch->i == fbatch->nr)
++		return NULL;
++	return fbatch->folios[fbatch->i++];
++}
++
+ void __folio_batch_release(struct folio_batch *pvec);
  
--	while (index <= end) {
-+	while (wbc->index <= end) {
- 		int i;
- 
--		nr_folios = filemap_get_folios_tag(mapping, &index, end,
--				tag, &wbc->fbatch);
-+		writeback_get_batch(mapping, wbc);
- 
--		if (nr_folios == 0)
-+		if (wbc->fbatch.nr == 0)
- 			break;
- 
--		for (i = 0; i < nr_folios; i++) {
-+		for (i = 0; i < wbc->fbatch.nr; i++) {
- 			struct folio *folio = wbc->fbatch.folios[i];
- 			unsigned long nr;
- 
-@@ -2525,8 +2540,6 @@ int write_cache_pages(struct address_space *mapping,
- 				return error;
- 			}
- 		}
--		folio_batch_release(&wbc->fbatch);
--		cond_resched();
- 	}
- 
- 	writeback_finish(mapping, wbc, 0);
+ static inline void folio_batch_release(struct folio_batch *fbatch)
 -- 
 2.39.2
 
