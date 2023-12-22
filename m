@@ -1,124 +1,84 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8CE7BE5F
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 06:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xy7DJr4i"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6d099d316a8so1512505b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 22:20:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703226003; x=1703830803; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S9TfaeQ/e55ca5rREKZmd6+dLcKbLLpUfdI5rG0zE/E=;
-        b=Xy7DJr4iZodZhy8tYY6C8tIvuqm4loz/nwNQkgA707N4xSfS0CNUvUdhrhsSf2LFLz
-         3KB3JYRZm6FgrM7LJ5xZDDPhOJs1XBZ/O9yx5EzyahkTpD9vA8yDV7xETfrm3r1X/zNS
-         BH5QTZh9LooWm1Ki0cK8zFnC4UIxYHiB6mV2Bo0l+92i18EjhKgXc30bwJBAUP1xpC0V
-         tPpotDM9BKh3KufhJ6iZhjL82IBGp+0WJAIvcWR50p22UBLEcWPsAkExxdW969/2VL9K
-         OWFfHNAHgrt7LM39IY4D/F7DoTBAFSyhqe2ITtYFfEUtMJPkaKnLwQBr4NGdXpvBifz1
-         Pe+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703226003; x=1703830803;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S9TfaeQ/e55ca5rREKZmd6+dLcKbLLpUfdI5rG0zE/E=;
-        b=Z+Nzoj5E1uEaD8IrYKG82ZfGutQngLGgORZmqTmB/uf78Yg5bWfXzSkBvGZr6iYowP
-         P4sbIQbrKdgvQrScXiytc+PLVLGHLBxxSsSg9dhGcjYtLvyAO3IHKBLsjLtXsJfij1kG
-         FeuuLFQYe6rOULKWA00i7Y4X4pMT3Qr142SsTs7FRBLVVh1QL655AiKiW8hOfb8h47Uw
-         kXUC8B0l3E3L3O7g7shCmPrr4S82CBUVD0B+No6Uvl511pTS3madLL3PPsHGlq1TSQ45
-         3i7E14kC4lh5GSWeucsMxNCzPeb8HVrw3l+SLHUyT9n2qAbElK/QnDorhtIWZK+brTDB
-         cASg==
-X-Gm-Message-State: AOJu0Yzm/PGt3Np2bXbmHxXH311SeiccNJLE3CckGQ1+4BiL2Fih1B5d
-	F+zYIOdTaskt5Ilzd9wUz2QytMEDdK18D6hT6k4=
-X-Google-Smtp-Source: AGHT+IGYnf8qMcbRTBP8LBMIpA5ZyX4pFoKeRr9EZGX19R8VWbg9hhI87VLCqwbeti8d5IlZcvVXzHz4dWoCmVkg4Mw=
-X-Received: by 2002:a05:6a21:78a7:b0:195:3eb6:da1b with SMTP id
- bf39-20020a056a2178a700b001953eb6da1bmr120999pzc.72.1703226003030; Thu, 21
- Dec 2023 22:20:03 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFA279C4;
+	Fri, 22 Dec 2023 06:21:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 3BM6KXLd81950065, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 3BM6KXLd81950065
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 22 Dec 2023 14:20:34 +0800
+Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Fri, 22 Dec 2023 14:20:34 +0800
+Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
+ RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Fri, 22 Dec 2023 14:20:34 +0800
+Received: from RTEXMBS03.realtek.com.tw ([fe80::99d6:b187:8b72:6226]) by
+ RTEXMBS03.realtek.com.tw ([fe80::99d6:b187:8b72:6226%2]) with mapi id
+ 15.01.2507.035; Fri, 22 Dec 2023 14:20:34 +0800
+From: =?utf-8?B?SmFtZXMgVGFpIFvmiLTlv5fls7Bd?= <james.tai@realtek.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
+        "Rob
+ Herring" <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        kernel test robot
+	<lkp@intel.com>, Dan Carpenter <error27@gmail.com>
+Subject: RE: [PATCH v3 2/6] irqchip: Add interrupt controller support for Realtek DHC SoCs
+Thread-Topic: [PATCH v3 2/6] irqchip: Add interrupt controller support for
+ Realtek DHC SoCs
+Thread-Index: AQHaIocg6atZJ97H502y6uXXYTUFxrCfC+8AgASpsgCADjI3AIAC1ELQ
+Date: Fri, 22 Dec 2023 06:20:33 +0000
+Message-ID: <e96f77598aec446c9a68c01afe61cfd9@realtek.com>
+References: <20231129054339.3054202-1-james.tai@realtek.com>
+ <20231129054339.3054202-3-james.tai@realtek.com> <87cyvgsocp.ffs@tglx>
+ <d9556a14e8d64f83b89a2d1d231003f4@realtek.com> <87sf3wlwlz.ffs@tglx>
+In-Reply-To: <87sf3wlwlz.ffs@tglx>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+x-kse-serverinfo: RTEXDAG02.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231215115857.575697-1-ghanshyam1898@gmail.com> <87il4rlrw2.fsf@mail.lhotse>
-In-Reply-To: <87il4rlrw2.fsf@mail.lhotse>
-From: Ghanshyam Agrawal <ghanshyam1898@gmail.com>
-Date: Fri, 22 Dec 2023 11:49:26 +0530
-Message-ID: <CAG-Bmoejy6t-EHv96OTnGhvo-P82fhw5pSUM-LqLfh7Hgh5Qew@mail.gmail.com>
-Subject: Re: [PATCH] arch: powerpc: kernel: fixed some typos
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: mahesh@linux.ibm.com, oohall@gmail.com, npiggin@gmail.com, 
-	christophe.leroy@csgroup.eu, linuxppc-dev@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-On Thu, Dec 21, 2023 at 4:55=E2=80=AFPM Michael Ellerman <mpe@ellerman.id.a=
-u> wrote:
->
-> Ghanshyam Agrawal <ghanshyam1898@gmail.com> writes:
-> > Fixed some typos
-> >
-> > Signed-off-by: Ghanshyam Agrawal <ghanshyam1898@gmail.com>
-> > ---
-> >  arch/powerpc/kernel/eeh_pe.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> Please also fix the case in arch/powerpc/include/asm/eeh.h
->
-> The subject should use the correct prefix. You can see what it should be
-> using:
->
-> $ git log --oneline arch/powerpc/kernel/eeh_pe.c
->
-> Please give the patch a better subject, not "some typos", tell me what
-> misspelling you're fixing. Same comment for the commit description.
->
-> > diff --git a/arch/powerpc/kernel/eeh_pe.c b/arch/powerpc/kernel/eeh_pe.=
-c
-> > index e0ce81279624..8e0c1a8b8641 100644
-> > --- a/arch/powerpc/kernel/eeh_pe.c
-> > +++ b/arch/powerpc/kernel/eeh_pe.c
-> > @@ -24,10 +24,10 @@ static int eeh_pe_aux_size =3D 0;
-> >  static LIST_HEAD(eeh_phb_pe);
-> >
-> >  /**
-> > - * eeh_set_pe_aux_size - Set PE auxillary data size
-> > - * @size: PE auxillary data size
-> > + * eeh_set_pe_aux_size - Set PE auxiliary data size
-> > + * @size: PE auxiliary data size
->
-> While you're changing it you could also mention what the units of the
-> size are.
->
-> >   *
-> > - * Set PE auxillary data size
-> > + * Set PE auxiliary data size
->
-> This should gain a full stop at the end of the sentence.
->
-> >   */
-> >  void eeh_set_pe_aux_size(int size)
-> >  {
-> > --
-> > 2.25.1
->
->
-> cheers
-
-Hi Michael,
-
-Thank you very much for your suggestions. I will implement them
-and send a v2 patch.
-
-You mentioned I need to specify the units of "PE auxiliary data size".
-Is the unit BYTES? Sorry for the silly question, I am only beginning
-to contribute to the linux kernel.
-
-Thanks & Regards,
-Ghanshyam Agrawal
+SGkgVGhvbWFzLA0KDQo+Pj5PbiBXZWQsIE5vdiAyOSAyMDIzIGF0IDEzOjQzLCBKYW1lcyBUYWkg
+d3JvdGU6DQo+Pj4+ICtzdGF0aWMgaW5saW5lIHZvaWQgcmVhbHRla19pbnRjX2NsZWFyX2ludHNf
+Yml0KHN0cnVjdA0KPj4+PiArcmVhbHRla19pbnRjX2RhdGEgKmRhdGEsIGludCBiaXQpIHsNCj4+
+Pj4gKyAgICAgd3JpdGVsKEJJVChiaXQpICYgfjEsIGRhdGEtPmJhc2UgKyBkYXRhLT5pbmZvLT5p
+c3Jfb2Zmc2V0KTsNCj4+Pg0KPj4+VGhhdCAnJiB+MScgc29sdmVzIHdoYXQgYXNpZGUgb2YgcHJl
+dmVudGluZyBiaXQgMCBmcm9tIGJlaW5nIHdyaXR0ZW4/DQo+Pj4NCj4+IFRoZSBJU1IgcmVnaXN0
+ZXIgdXNlcyBiaXQgMCB0byBjbGVhciBvciBzZXQgSVNSIHN0YXR1cy4NCj4+IFdyaXRlIDAgdG8g
+Y2xlYXIgYml0cyBhbmQgd3JpdGUgMSB0byBzZXQgYml0cy4NCj4+IFRoZXJlZm9yZSwgdG8gY2xl
+YXIgdGhlIGludGVycnVwdCBzdGF0dXMsIGJpdCAwIHNob3VsZCBjb25zaXN0ZW50bHkgYmUNCj4+
+IHNldCB0byAnMCcuDQo+DQo+QW5kIGhvdyBkb2VzIEJJVChiaXQpIHdpdGggMSA8PSBiaXQgPD0g
+MzEgZW5kIHVwIGhhdmluZyBiaXQgMCBzZXQ/DQo+DQo+QWxzbyBhIGNvbW1lbnQgZXhwbGFpbmlu
+ZyB0aGUgcmVhc29uaW5nIGhlcmUgd291bGQgYmUgaGVscGZ1bC4NCg0KVG8gcGVyZm9ybSB0aGUg
+Y2xlYXJpbmcgYWN0aW9uIGluIHRoZSBJU1IgcmVnaXN0ZXIsIGl0J3MgZXNzZW50aWFsIHRoYXQg
+Yml0IDAgcmVtYWlucyBzZXQgdG8gMC4NClRoaXMgaXMgYmVjYXVzZSBiaXQgMCBpbiB0aGUgSVNS
+IHJlZ2lzdGVyIGhhcyBhIHNwZWNpZmljIGZ1bmN0aW9uIGZvciBjb250cm9sbGluZyB0aGUgaW50
+ZXJydXB0IHN0YXR1cy4NCldoZW4gQklUKGJpdCkgaXMgdXNlZCB3aXRoIDEgPD0gYml0IDw9IDMx
+LCBpdCBnZW5lcmF0ZXMgYSBiaXRtYXNrIHdpdGggb25seSB0aGF0IHBhcnRpY3VsYXIgYml0IHNl
+dCB0byAxLCBhbmQgYWxsIG90aGVyIGJpdHMsIGluY2x1ZGluZyBiaXQgMCwgc2V0IHRvIDAuDQpU
+aGUgJyYgfjEnIG9wZXJhdGlvbiBpcyB0aGVuIGFwcGxpZWQgdG8gZW5zdXJlIHRoYXQgZXZlbiBp
+ZiBiaXQgMCB3YXMgc29tZWhvdyBzZXQsIGl0IHdpbGwgYmUgY2xlYXJlZCwgbWFpbnRhaW5pbmcg
+dGhlIHJlZ2lzdGVyJ3MgZnVuY3Rpb25hbGl0eS4gDQoNCkZvciBleGFtcGxlLCBzdXBwb3NlIHRo
+ZSBjdXJyZW50IHZhbHVlIG9mIHRoZSBJU1IgcmVnaXN0ZXIgaXMgMHg0LCBhbmQgd2Ugd2FudCB0
+byBjbGVhciBiaXQgMy4NCkluIHRoYXQgY2FzZSwgd3JpdGluZyAweDQgKHdoaWNoIHJlcHJlc2Vu
+dHMgYml0IDMgc2V0IHRvIDEpIHRvIHRoZSBJU1IgcmVnaXN0ZXIgd2lsbCBjbGVhciBiaXQgMy4N
+Cg0KVGhhbmtzIGZvciB5b3VyIGZlZWRiYWNrLg0KDQpSZWdhcmRzLA0KSmFtZXMNCg0KDQo=
