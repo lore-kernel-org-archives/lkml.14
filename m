@@ -1,7 +1,7 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4E62E84F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BCC1EB43
 	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 22:51:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -9,27 +9,28 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rGoMM-0005cI-Bt; Fri, 22 Dec 2023 23:51:14 +0100
+	id 1rGoML-0005Zf-AD; Fri, 22 Dec 2023 23:51:13 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rGoMK-000qvH-JV; Fri, 22 Dec 2023 23:51:13 +0100
+	id 1rGoMJ-000qv1-PE; Fri, 22 Dec 2023 23:51:12 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rGoML-000FfS-1y;
-	Fri, 22 Dec 2023 23:51:13 +0100
+	id 1rGoMK-000FfC-2Y;
+	Fri, 22 Dec 2023 23:51:12 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
+Cc: Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
 	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
 	kernel@pengutronix.de
-Subject: [PATCH 07/13] irqchip/mvebu-pic: Convert to platform remove callback returning void
-Date: Fri, 22 Dec 2023 23:50:38 +0100
-Message-ID:  <df977ad4c02ff913b01cdd6c348e7fae3e08e651.1703284359.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 03/13] irqchip/imx-irqsteer: Convert to platform remove callback returning void
+Date: Fri, 22 Dec 2023 23:50:34 +0100
+Message-ID:  <c0e5afe62256860150d25bcf644f2b8d62794c86.1703284359.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <cover.1703284359.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1703284359.git.u.kleine-koenig@pengutronix.de>
@@ -40,7 +41,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1815; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=YEdXLtjjB7MdLkwVRjWTzbmlfH5H3E2yBwtLiqFjuN8=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlhhK/qY6qVh1CQvCesFeEHW82L2SThLnfZpHqn YQVEAd4ZOmJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZYYSvwAKCRCPgPtYfRL+ ToKsB/0YopidcAoPuZVZY8pzovI6MHDYU0tVfCD6UxIrJpBC2C6kFSoxYL7QN8up16WNvLYE2lR f1gTuaISvFVhWpGshqK81Awjdo4FwaBqZQMEgvVWG3niOKVIZ9WRi+DhoFSh0/uml6a3+Q3YZ5V zopiut6A9xnm6NHJuXcB08ukkBF1uFnSPgEnCk0tZs027gIymP93N83affj48eHQLFkzr74/Qhs gjiH+VFZ3cr4ae03XZq4s5kGp4pL2TS/Y1qVlDNxCQD6OtPxGjNIeo6Rj8xNBL5dr58IANxom1A 1uMIbpQ1Hk3z7J/0DZVCkbhf0PcGbknLCaPIJx0rR6vyLuc1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1880; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=xfWwPsMpemUSHTIcU/EikGDBKd36foZe+1G4fTs3hqo=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlhhK6Fur6CUd1UOKaLZ5K33vkMMIOKWjwsqHiH 25whVgrJMeJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZYYSugAKCRCPgPtYfRL+ TmM1B/0dtKRdQR04yQXFSmzwaKbsX5SOncdt4JztEDpjk9maci6FPNbO2abC9u92f4VLYrEnQbO WyEdYipdt3kPefqWG8bmhncSmyWaAK5Q95KMUDzm+zD66K5GQM9YjaZrGXyALfPMUAK2mHx5563 4aZblITVqigT8nGGU2xr0oI4OGTlBTBCJrYF65ypXXvXJbubUiMrnk/Pdfw2iHWkuLKvNH5Xcue SlDTOQuUDCUMGtkmkC7aS/xJfTHZGAP2gQwrLKx5ewD5ahv+L391QchrYo3AYQsLCRPeuWuj5qP 3eUQObHtwIkaRfDnEh9PCXgEqAXakiYb81I+xLYTBkygm3v1
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -63,38 +64,39 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/irqchip/irq-mvebu-pic.c | 6 ++----
+ drivers/irqchip/irq-imx-irqsteer.c | 6 ++----
  1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/irqchip/irq-mvebu-pic.c b/drivers/irqchip/irq-mvebu-pic.c
-index ef3d3646ccc2..57e3f99b61f5 100644
---- a/drivers/irqchip/irq-mvebu-pic.c
-+++ b/drivers/irqchip/irq-mvebu-pic.c
-@@ -167,14 +167,12 @@ static int mvebu_pic_probe(struct platform_device *pdev)
- 	return 0;
+diff --git a/drivers/irqchip/irq-imx-irqsteer.c b/drivers/irqchip/irq-imx-irqsteer.c
+index bd9543314539..05f6b5e8370d 100644
+--- a/drivers/irqchip/irq-imx-irqsteer.c
++++ b/drivers/irqchip/irq-imx-irqsteer.c
+@@ -231,7 +231,7 @@ static int imx_irqsteer_probe(struct platform_device *pdev)
+ 	return ret;
  }
  
--static int mvebu_pic_remove(struct platform_device *pdev)
-+static void mvebu_pic_remove(struct platform_device *pdev)
+-static int imx_irqsteer_remove(struct platform_device *pdev)
++static void imx_irqsteer_remove(struct platform_device *pdev)
  {
- 	struct mvebu_pic *pic = platform_get_drvdata(pdev);
+ 	struct irqsteer_data *irqsteer_data = platform_get_drvdata(pdev);
+ 	int i;
+@@ -243,8 +243,6 @@ static int imx_irqsteer_remove(struct platform_device *pdev)
+ 	irq_domain_remove(irqsteer_data->domain);
  
- 	on_each_cpu(mvebu_pic_disable_percpu_irq, pic, 1);
- 	irq_domain_remove(pic->domain);
+ 	clk_disable_unprepare(irqsteer_data->ipg_clk);
 -
 -	return 0;
  }
  
- static const struct of_device_id mvebu_pic_of_match[] = {
-@@ -185,7 +183,7 @@ MODULE_DEVICE_TABLE(of, mvebu_pic_of_match);
- 
- static struct platform_driver mvebu_pic_driver = {
- 	.probe  = mvebu_pic_probe,
--	.remove = mvebu_pic_remove,
-+	.remove_new = mvebu_pic_remove,
- 	.driver = {
- 		.name = "mvebu-pic",
- 		.of_match_table = mvebu_pic_of_match,
+ #ifdef CONFIG_PM
+@@ -312,6 +310,6 @@ static struct platform_driver imx_irqsteer_driver = {
+ 		.pm = &imx_irqsteer_pm_ops,
+ 	},
+ 	.probe = imx_irqsteer_probe,
+-	.remove = imx_irqsteer_remove,
++	.remove_new = imx_irqsteer_remove,
+ };
+ builtin_platform_driver(imx_irqsteer_driver);
 -- 
 2.42.0
 
