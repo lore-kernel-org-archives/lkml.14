@@ -1,94 +1,55 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE2425542
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 16:51:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE82524B5D
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 16:51:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="OoTtPvha"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1703263903;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5pp9nMgujJn+Cpq3o1955F8zPLtLYZQipTve8oj6tc8=;
-	b=OoTtPvha9uyqsBUq/zsp/Mn1p45thuXKeug1rXypmg8foySIO6I4Y1i1wTJf6uuPUsuxvu
-	rErQxsnFBRVH9OXK5B7AcNHQRNKAu86CrSEHIrxvUi9NiDOIZWV3OkccPZi9aYQnbJ7uCi
-	9Q91rM0EKTl/Q4IQkYe3w0AE0XnWd6eMFcdM+hlUm/bkQ7Ttf2frhOZKkj+q3XK9vcrV4j
-	mu310rciAwIJ+RO/q7TKloG2IIjcz2TU5V0fMnosxdYpxiY5ojGVxChHpyPT5yphfd0OuN
-	U9lHSEJ9AkEJtd1P7RUgQ4NUtsvZUJX2YLtazQGtwj/fBlJmLvu29ylq27dzgA==
-From: Diederik de Haas <didi.debian@cknow.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Sandy Huang <hjc@rock-chips.com>, Mark Yao <markyao0591@gmail.com>,
- Segfault <awarnecke002@hotmail.com>, Arnaud Ferraris <aferraris@debian.org>,
- Manuel Traut <manut@mecka.net>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, Manuel Traut <manut@mecka.net>
-Subject: Re: [PATCH 0/6] arm64: rockchip: Pine64 pinetab2 support
-Date: Fri, 22 Dec 2023 17:51:41 +0100
-Message-ID: <2631715.l0DajZZ3Y3@bagend>
-Organization: Connecting Knowledge
-In-Reply-To: <20231222-pinetab2-v1-0-e148a7f61bd1@mecka.net>
-References: <20231222-pinetab2-v1-0-e148a7f61bd1@mecka.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IPelxh78"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B4C34C433C8;
+	Fri, 22 Dec 2023 16:51:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703263917;
+	bh=Ue0MdyT4SH0otrhoJ4cn6K6f1XRqgoWtWCM044adwBM=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=IPelxh78Ii2g3sMi43ewXSCXIUrYX3hBFJ/k7ui9zDfTv55HWFRZvrQJRAzyl+z5S
+	 HvtfiBw739wX3AZqeLOVXkxevPe4keyqG2XT7N+hQkdPGcW03qU5xIeYn1I0xZdG26
+	 JVZ6IJXbnLKtkUoIU/6t1syI6h6fMJrixaAKi4L77gxJL8rEQRFoWYu0ddcCOzoKYi
+	 9uhlGwweJiO2ftsZmpTysj+TW71ubXgN1VtcPsaeR4CHjLsnyq7UswKYjlp2i7Poxn
+	 78vnbwp0oDoVF9z1SKZMMT2DoXHIpl9O2gpqTQ6bXtXYivAQ1m0Hd29hJq0ydvLLTB
+	 GLYTnYnyAYGuw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9AAB3C41620;
+	Fri, 22 Dec 2023 16:51:57 +0000 (UTC)
+Subject: Re: [GIT PULL] xen: branch for v6.7-rc7
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20231222063415.17316-1-jgross@suse.com>
+References: <20231222063415.17316-1-jgross@suse.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20231222063415.17316-1-jgross@suse.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-6.7a-rc7-tag
+X-PR-Tracked-Commit-Id: 93cd0597649844a0fe7989839a3202735fb3ae67
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b7bc7bce88bdf52ec2b47c576fb51269a521bd9a
+Message-Id: <170326391762.6925.1618445001287059665.pr-tracker-bot@kernel.org>
+Date: Fri, 22 Dec 2023 16:51:57 +0000
+To: Juergen Gross <jgross@suse.com>
+Cc: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org, sstabellini@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2286417.7pCFYIXMvo";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-X-Migadu-Flow: FLOW_OUT
 
---nextPart2286417.7pCFYIXMvo
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Diederik de Haas <didi.debian@cknow.org>
-Subject: Re: [PATCH 0/6] arm64: rockchip: Pine64 pinetab2 support
-Date: Fri, 22 Dec 2023 17:51:41 +0100
-Message-ID: <2631715.l0DajZZ3Y3@bagend>
-Organization: Connecting Knowledge
-In-Reply-To: <20231222-pinetab2-v1-0-e148a7f61bd1@mecka.net>
-References: <20231222-pinetab2-v1-0-e148a7f61bd1@mecka.net>
-MIME-Version: 1.0
+The pull request you sent on Fri, 22 Dec 2023 07:34:15 +0100:
 
-On Friday, 22 December 2023 12:05:40 CET Manuel Traut wrote:
-> [3]
-> https://salsa.debian.org/Mobian-team/devices/kernels/rockchip-linux/-/blob/
-> mobian-6.6/debian/patches/display/0018-drm-panel-add-BOE-TH101MB31IG002-28A-
-> driver.patch?ref_type=heads 
-> [4]
-> https://salsa.debian.org/Mobian-team/devices/kernels/rockchip-linux/-/blob/
-> mobian-6.6/debian/patches/device-tree/0134-arch-arm64-add-Pine64-PineTab2-de
-> vice-trees.patch?ref_type=heads
+> git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-6.7a-rc7-tag
 
-FWIW I believe the actual sources are from
-https://github.com/TuxThePenguin0/linux/commits/device/pine64-pinetab2_stable
---nextPart2286417.7pCFYIXMvo
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b7bc7bce88bdf52ec2b47c576fb51269a521bd9a
 
------BEGIN PGP SIGNATURE-----
+Thank you!
 
-iHUEABYIAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCZYW+nQAKCRDXblvOeH7b
-br9kAP9lep8IEbNMNDxvFBfaIg1bqdTUIItkkqVnhx+sEs2xjgD+NLX/sy1F2zYq
-tihWEexfx2PMq2zU2Xz+xGm2AJuoww8=
-=2R8f
------END PGP SIGNATURE-----
-
---nextPart2286417.7pCFYIXMvo--
-
-
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
