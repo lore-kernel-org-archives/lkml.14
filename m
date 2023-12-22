@@ -1,127 +1,121 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A549079D4
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 04:38:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF60D2115;
+	Fri, 22 Dec 2023 04:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y5U4iH1T"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d3fde109f2so65095ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 20:38:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1703219922; x=1703824722; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GyedNlCjbE+Q4bYx68krhasQrfrx8EhiaTfO6LvPL04=;
-        b=Y5U4iH1THZn/kJmXH69IG8NL7xbHR+tOnRv5VqNnIA3pw1RYtpGq7pQzj8+bn0W7G6
-         AyZDcRfWC2Xg1KYFnb+MpgtEAwaGOvi6L1Db0CMc84n7gTRJXu6VYu3R494hAJKgV3qC
-         7F9aYM0nrvdSO8aMWIc3rTGq1XjDYroi5/DGpozG7Gu91CIWTksLE6XF38S3I5n1zFbm
-         7KtvLhAayfQMrV/KsRIEGDovY3RUoDPfa/eMYBSSghxom6rPROmccyO7DJkXBzRCswoX
-         NlcIK3ObGdlcbC2j7p4ki8oMTzE3y17PZSyk0mNl2oN/MCc5XaqvB1HNQxT2ZGsdkarP
-         ZEjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703219922; x=1703824722;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GyedNlCjbE+Q4bYx68krhasQrfrx8EhiaTfO6LvPL04=;
-        b=Hu7gcM6HHuqRw9y3g84xMU7obbOp0KV/E2sPLdoGBB3/19t5hS/YC4qNSC5IHoSl/B
-         YZcb6lLmMQv7Y44VpkgYjyRLijt+LK/Wpv6BFWhCLlUZYabR+2TVbXyRAeHhlp2ajCWK
-         FMGP/pIvn24b2npSVXllEAaTXXsjQ4z8avUmzzVpcKfEojafGGNF6O1xwS51Ai8XaQ7F
-         Ic1voBozFb2UpysvXuO8Gfgsq7AMJ9+YN/Y3hSkpfAhJsb+nQlIZDJOK+PtQKT4xc8vW
-         YMt4N53zkS3Ksxlfv/aruNG0b9Qta6k08kyQ3+RnjLrIxlPKffE/cMEpYAEqyD/naAWu
-         UQOQ==
-X-Gm-Message-State: AOJu0Yy8WesPHLY6pf6xc/M/YnvVh5JoW+jfQGtzzbP08OcBoNtzRarv
-	Tu7LJ7jXdf9DasjYnkArpSByTHADTurpmj6mCf8Nzu+Iofv9S+Y=
-X-Google-Smtp-Source: AGHT+IGi06u5ImNRJFBga9p7VnAPha1sQjY12WynAwodGPZhh60I1bpfyFTprcdcFoDzb89iYeB4Vw==
-X-Received: by 2002:a17:903:18c:b0:1d4:1430:139f with SMTP id z12-20020a170903018c00b001d41430139fmr58061plg.25.1703219921743;
-        Thu, 21 Dec 2023 20:38:41 -0800 (PST)
-Received: from [2620:0:1008:15:184:1476:510:6ea1] ([2620:0:1008:15:184:1476:510:6ea1])
-        by smtp.gmail.com with ESMTPSA id ei8-20020a17090ae54800b0028bd9f88576sm2626083pjb.26.2023.12.21.20.38.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 20:38:41 -0800 (PST)
-Date: Thu, 21 Dec 2023 20:38:40 -0800 (PST)
-From: David Rientjes <rientjes@google.com>
-To: Dan Schatzberg <schatzberg.dan@gmail.com>
-cc: Johannes Weiner <hannes@cmpxchg.org>, 
-    Roman Gushchin <roman.gushchin@linux.dev>, 
-    Yosry Ahmed <yosryahmed@google.com>, Huan Yang <link@vivo.com>, 
-    linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org, 
-    Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>, 
-    Jonathan Corbet <corbet@lwn.net>, Michal Hocko <mhocko@kernel.org>, 
-    Shakeel Butt <shakeelb@google.com>, Muchun Song <muchun.song@linux.dev>, 
-    Andrew Morton <akpm@linux-foundation.org>, 
-    Kefeng Wang <wangkefeng.wang@huawei.com>, SeongJae Park <sj@kernel.org>, 
-    "Vishal Moola (Oracle)" <vishal.moola@gmail.com>, 
-    Nhat Pham <nphamcs@gmail.com>, Yue Zhao <findns94@gmail.com>
-Subject: Re: [PATCH v5 2/2] mm: add swapiness= arg to memory.reclaim
-In-Reply-To: <20231220152653.3273778-3-schatzberg.dan@gmail.com>
-Message-ID: <c93b217e-1983-1eb1-14ce-8377f94975a1@google.com>
-References: <20231220152653.3273778-1-schatzberg.dan@gmail.com> <20231220152653.3273778-3-schatzberg.dan@gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="A1StPiid"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BM1knkK024224;
+	Fri, 22 Dec 2023 04:39:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:references:in-reply-to:to
+	:cc; s=qcppdkim1; bh=IrdyNL+OAIoOltyN15xuXBxy8MwQgeybyKwfH0WdrZ8
+	=; b=A1StPiidFhrQHyk/Q7xZVRQ3cQQq1cwScdSjdQxWlPKBrhzJAvQRYsNeZvh
+	6D8Noe5XtKSFMZuP0CQHvJwpiUItMSz+GsAe4oo2HedKGpIB9KbPtZfxORrKPm1P
+	pNZzUwmJuw8wg0ZX0JRO1E281K+rWWqOVMKU5XsMNJ6zKX9ygGcXEEGIELm/NE5e
+	XYp1cgvo7pEZe53AUq25L3wyrNbPYpOZE3TG3USm51KcbbxkYyUEtDFbq0nU41Wh
+	8tBbQHBgtzCxdpk6uPwWYB0dPNMmhozEEld8+gP+3EKFItB1HOlgLz81HdiVk/1/
+	NIIiHxuDoA6DPtRRrz2pAKjOa8Q==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3v4kneagdq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 22 Dec 2023 04:39:26 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3BM4dPF1004697
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 22 Dec 2023 04:39:25 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 21 Dec
+ 2023 20:39:25 -0800
+From: Bjorn Andersson <quic_bjorande@quicinc.com>
+Date: Thu, 21 Dec 2023 20:39:25 -0800
+Subject: [PATCH v2 4/8] soc: qcom: rpmhpd: Drop SA8540P gfx.lvl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20231220-sa8295p-gpu-v2-4-4763246b72c0@quicinc.com>
+References: <20231220-sa8295p-gpu-v2-0-4763246b72c0@quicinc.com>
+In-Reply-To: <20231220-sa8295p-gpu-v2-0-4763246b72c0@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        Ulf Hansson
+	<ulf.hansson@linaro.org>,
+        Johan Hovold <johan+linaro@kernel.org>,
+        "Catalin
+ Marinas" <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        "Bjorn
+ Andersson" <quic_bjorande@quicinc.com>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>
+X-Mailer: b4 0.12.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1703219963; l=936;
+ i=quic_bjorande@quicinc.com; s=20230915; h=from:subject:message-id;
+ bh=lN0i6/rarBEWOzmJz25l6RRnIzvHTkR8xp7fIgAvpHE=;
+ b=wG40vfLr3ucRTnUHUoVu+77RwCHhgRUy+erqBPTFjTv1u/JvSMK58MeDeMWU+HWeac6clG/7EqzM
+ l7yONUjVCXrIjA+vI32lUKvg7YMSJJubc3YsTxw2Qs3QrDiplfXn
+X-Developer-Key: i=quic_bjorande@quicinc.com; a=ed25519;
+ pk=VkhObtljigy9k0ZUIE1Mvr0Y+E1dgBEH9WoLQnUtbIM=
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: T0mL0nXF26oMmu3QP4asyv2VIM50G78g
+X-Proofpoint-ORIG-GUID: T0mL0nXF26oMmu3QP4asyv2VIM50G78g
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ mlxlogscore=958 suspectscore=0 spamscore=0 mlxscore=0 priorityscore=1501
+ malwarescore=0 lowpriorityscore=0 phishscore=0 impostorscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2312220029
 
-On Wed, 20 Dec 2023, Dan Schatzberg wrote:
+On SA8295P and SA8540P gfx.lvl is not provdied by rpmh, but rather is
+handled by an external regulator (max20411). Drop gfx.lvl from the list
+of power-domains exposed on this platform.
 
-> Allow proactive reclaimers to submit an additional swappiness=<val>
-> argument to memory.reclaim. This overrides the global or per-memcg
-> swappiness setting for that reclaim attempt.
-> 
-> For example:
-> 
-> echo "2M swappiness=0" > /sys/fs/cgroup/memory.reclaim
-> 
-> will perform reclaim on the rootcg with a swappiness setting of 0 (no
-> swap) regardless of the vm.swappiness sysctl setting.
-> 
-> Userspace proactive reclaimers use the memory.reclaim interface to
-> trigger reclaim. The memory.reclaim interface does not allow for any way
-> to effect the balance of file vs anon during proactive reclaim. The only
-> approach is to adjust the vm.swappiness setting. However, there are a
-> few reasons we look to control the balance of file vs anon during
-> proactive reclaim, separately from reactive reclaim:
-> 
-> * Swapout should be limited to manage SSD write endurance. In near-OOM
-> situations we are fine with lots of swap-out to avoid OOMs. As these are
-> typically rare events, they have relatively little impact on write
-> endurance. However, proactive reclaim runs continuously and so its
-> impact on SSD write endurance is more significant. Therefore it is
-> desireable to control swap-out for proactive reclaim separately from
-> reactive reclaim
-> 
-> * Some userspace OOM killers like systemd-oomd[1] support OOM killing on
-> swap exhaustion. This makes sense if the swap exhaustion is triggered
-> due to reactive reclaim but less so if it is triggered due to proactive
-> reclaim (e.g. one could see OOMs when free memory is ample but anon is
-> just particularly cold). Therefore, it's desireable to have proactive
-> reclaim reduce or stop swap-out before the threshold at which OOM
-> killing occurs.
-> 
-> In the case of Meta's Senpai proactive reclaimer, we adjust
-> vm.swappiness before writes to memory.reclaim[2]. This has been in
-> production for nearly two years and has addressed our needs to control
-> proactive vs reactive reclaim behavior but is still not ideal for a
-> number of reasons:
-> 
-> * vm.swappiness is a global setting, adjusting it can race/interfere
-> with other system administration that wishes to control vm.swappiness.
-> In our case, we need to disable Senpai before adjusting vm.swappiness.
-> 
-> * vm.swappiness is stateful - so a crash or restart of Senpai can leave
-> a misconfigured setting. This requires some additional management to
-> record the "desired" setting and ensure Senpai always adjusts to it.
-> 
-> With this patch, we avoid these downsides of adjusting vm.swappiness
-> globally.
-> 
-> [1]https://www.freedesktop.org/software/systemd/man/latest/systemd-oomd.service.html
-> [2]https://github.com/facebookincubator/oomd/blob/main/src/oomd/plugins/Senpai.cpp#L585-L598
-> 
-> Signed-off-by: Dan Schatzberg <schatzberg.dan@gmail.com>
+Fixes: f68f1cb3437d ("soc: qcom: rpmhpd: add sc8280xp & sa8540p rpmh power-domains")
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+---
+ drivers/pmdomain/qcom/rpmhpd.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Acked-by: David Rientjes <rientjes@google.com>
+diff --git a/drivers/pmdomain/qcom/rpmhpd.c b/drivers/pmdomain/qcom/rpmhpd.c
+index 3078896b1300..27a73ff72614 100644
+--- a/drivers/pmdomain/qcom/rpmhpd.c
++++ b/drivers/pmdomain/qcom/rpmhpd.c
+@@ -217,7 +217,6 @@ static struct rpmhpd *sa8540p_rpmhpds[] = {
+ 	[SC8280XP_CX] = &cx,
+ 	[SC8280XP_CX_AO] = &cx_ao,
+ 	[SC8280XP_EBI] = &ebi,
+-	[SC8280XP_GFX] = &gfx,
+ 	[SC8280XP_LCX] = &lcx,
+ 	[SC8280XP_LMX] = &lmx,
+ 	[SC8280XP_MMCX] = &mmcx,
+
+-- 
+2.25.1
+
