@@ -1,53 +1,53 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2A4D314
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 07:46:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFB0FBF2
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 07:46:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Iq2zGoSK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VOqgnlPb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1703231199;
+	s=mimecast20190719; t=1703231204;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9dWOLJ/7H2GD4Bb9fMRINczeyfjJ7YRASwlhClz2V/8=;
-	b=Iq2zGoSKQSWdk4hTQMf8ktPKTSupPZE5YmvnaZlmwddmDIexjuLYAcNO1od/0VTl8MFDFD
-	L5Hy0OvpBDG5oaIgntWztH27Narxw1LVwZmClEQWCdTOvZwFwakmkglAGcbIdwuGMnu3Rc
-	IVtVbSF5oB0h735hpIoX5Wfk63E74XI=
-Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
- [209.85.167.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=fChu8SySxAk9bR4FCWD8rViiukJB4FWPqrqCbBPM0wY=;
+	b=VOqgnlPb7koRbqdmNp7zwu4MFdgWKsXehtMUmpNMvOac54cUPnSl/uTy5tLGf9Y7RqzRKb
+	wkIddCPpfTGOYVY22/9SvoHv96YJWg8M1sIeV4spTUWg28A7C5M0nyV62OvRiGA9qALJTv
+	i6Agmad/bUVySI3vGrIsFSTyBQuRvuk=
+Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com
+ [209.85.167.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-306-fOCNbyuzNSGv0oZDyO8J8A-1; Fri, 22 Dec 2023 02:46:37 -0500
-X-MC-Unique: fOCNbyuzNSGv0oZDyO8J8A-1
-Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-3bb879ac903so690234b6e.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 23:46:37 -0800 (PST)
+ us-mta-528-ov2EwXhaOC6oJINNVIaiXQ-1; Fri, 22 Dec 2023 02:46:43 -0500
+X-MC-Unique: ov2EwXhaOC6oJINNVIaiXQ-1
+Received: by mail-oi1-f197.google.com with SMTP id 5614622812f47-3b9dff5942fso1730067b6e.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 23:46:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703231196; x=1703835996;
+        d=1e100.net; s=20230601; t=1703231202; x=1703836002;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9dWOLJ/7H2GD4Bb9fMRINczeyfjJ7YRASwlhClz2V/8=;
-        b=V0330JZ6jl3/FJzkAmWi0pEKvPC1Bw4tbfhDnHbb84FxEMZi2UlBIM4Db8I4Umb0+8
-         aup+uIdPab8/upOoefMLN8p9XIsUYZ4cBLll97OLbBxmwV9pV3ShKDeDt8NsO3Lzpm9w
-         y7OvBGudO7Df+39T8g1DrvydWV633OKkfk6vSEgDKi0m6O/Ln3Zsuto+hZWk/SpRiCtV
-         ynmOxF7LeErM5UgUU1CpnU35mrDs7qmdOzaLucyPphwZEYWj2JRHwdmDVi5mxAcq73jU
-         xBeMyc0aS5dViiheVKC+9Vycww25HjCueuxhPxtqMgfwTCFtbTWQLOeFI36Ca2p0xO1/
-         DSWQ==
-X-Gm-Message-State: AOJu0Yy4GuAI+EBtney0fvfs3wa3aTc8teXYTPPxTfqfZ98rO4r5WGxX
-	YmwrNBMCj2bLVfmQyHiGYV3rydkjTFfAm/3J4He1LW57hFOUzvngimlOeMJrJNx01k5S5TimgZC
-	0FtCD9KTxAZe94FBA1HQTKTGK/bbd5/Wg
-X-Received: by 2002:a05:6808:218e:b0:3a8:7c67:7cd with SMTP id be14-20020a056808218e00b003a87c6707cdmr1261191oib.24.1703231196634;
-        Thu, 21 Dec 2023 23:46:36 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF6noE7Pu5xAXvjh6CjMsnvaqxm6CqicXC5ZlFE2NmSpCIPLtETaqNzkTmN5ZP4z5PF3/bRXQ==
-X-Received: by 2002:a05:6808:218e:b0:3a8:7c67:7cd with SMTP id be14-20020a056808218e00b003a87c6707cdmr1261182oib.24.1703231196440;
-        Thu, 21 Dec 2023 23:46:36 -0800 (PST)
+        bh=fChu8SySxAk9bR4FCWD8rViiukJB4FWPqrqCbBPM0wY=;
+        b=fuD38Irh04LN21FU7P9Y8saUaoEOQ0P6CJ1fsZGulplvuYiS9oxdsMnd66Qyp1mrgv
+         hcIxSuozNpwBteZKwuDpUTYxvIQ37VJPNs8k2KwtFwXavQopQXGNAfcEjHxXwMQwehKY
+         LrPxWjIzmNn/8WT1ZAHoo+CvnHfIKjOPzXCQ/MZ0xZpEH/y+qnBJ+nmMyopFo7pKrhcw
+         7u3KU+jelJ8zs9zrmUIyv47+RxaxUhpmjEcSaawDEv283p7N5i5m5nF+n1rOheJcEOMG
+         7r8wisiJOBi6pf58vD/eio6CQtYcSh2O+k+/zEFquqzrEt6zB8GgPOo3BicMdQ7r+nS5
+         CKXw==
+X-Gm-Message-State: AOJu0YwuNXEyrMquWHQIoIJJIIgCr/QiJLKmOx8pzoUiBt+SPpDKbcmo
+	kiL9mxN7Suat7HvCZw15G790Nv8X7W/va2FBR9PPvaYcOAoeSowuBs+ZkpE9BbmsihPOwSu84RD
+	myTk/ZH+Jtk3rpruXf93L3oquZuFtKv5U
+X-Received: by 2002:a05:6808:199e:b0:3af:9838:8494 with SMTP id bj30-20020a056808199e00b003af98388494mr1174140oib.20.1703231202597;
+        Thu, 21 Dec 2023 23:46:42 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFfty2NP0/+vK/Z37DtQxU8NTNsz0hOUOMzPkaafOkXIkbGg41CPwcD8fDjKPqNGVFT8AzCRw==
+X-Received: by 2002:a05:6808:199e:b0:3af:9838:8494 with SMTP id bj30-20020a056808199e00b003af98388494mr1174135oib.20.1703231202376;
+        Thu, 21 Dec 2023 23:46:42 -0800 (PST)
 Received: from localhost.localdomain ([2804:1b3:a802:7496:88a7:1b1a:a837:bebf])
-        by smtp.gmail.com with ESMTPSA id m2-20020a62f202000000b006d97eaba6cesm1527015pfh.21.2023.12.21.23.46.30
+        by smtp.gmail.com with ESMTPSA id m2-20020a62f202000000b006d97eaba6cesm1527015pfh.21.2023.12.21.23.46.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 23:46:35 -0800 (PST)
+        Thu, 21 Dec 2023 23:46:41 -0800 (PST)
 From: Leonardo Bras <leobras@redhat.com>
 To: Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
@@ -75,9 +75,9 @@ To: Paul Walmsley <paul.walmsley@sifive.com>,
 Cc: linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
-Subject: [RFC PATCH 1/4] riscv: Replace direct thread flag check with is_compat_task()
-Date: Fri, 22 Dec 2023 04:46:01 -0300
-Message-ID: <20231222074605.452452-2-leobras@redhat.com>
+Subject: [RFC PATCH 2/4] riscv: add compile-time test into is_compat_task()
+Date: Fri, 22 Dec 2023 04:46:02 -0300
+Message-ID: <20231222074605.452452-3-leobras@redhat.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20231222074605.452452-1-leobras@redhat.com>
 References: <20231222074605.452452-1-leobras@redhat.com>
@@ -89,44 +89,104 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There is some code that detects compat mode into a task by checking the
-flag directly, and other code that check using the helper is_compat_task().
+Currently several places will test for CONFIG_COMPAT before testing
+is_compat_task(), probably in order to avoid a run-time test into the task
+structure.
 
-Since the helper already exists, use it instead of checking the flags
-directly.
+Since is_compat_task() is an inlined function, it would be helpful to add a
+compile-time test of CONFIG_COMPAT, making sure it always returns zero when
+the option is not enabled during the kernel build.
+
+With this, the compiler is able to understand in build-time that
+is_compat_task() will always return 0, and optimize-out some of the extra
+code introduced by the option.
+
+This will also allow removing a lot #ifdefs that were introduced, and make
+the code more clean.
 
 Signed-off-by: Leonardo Bras <leobras@redhat.com>
 ---
- arch/riscv/include/asm/elf.h     | 2 +-
- arch/riscv/include/asm/pgtable.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/riscv/include/asm/compat.h    | 3 +++
+ arch/riscv/include/asm/elf.h       | 4 ----
+ arch/riscv/include/asm/pgtable.h   | 6 ------
+ arch/riscv/include/asm/processor.h | 4 ++--
+ 4 files changed, 5 insertions(+), 12 deletions(-)
 
+diff --git a/arch/riscv/include/asm/compat.h b/arch/riscv/include/asm/compat.h
+index 2ac955b51148f..91517b51b8e27 100644
+--- a/arch/riscv/include/asm/compat.h
++++ b/arch/riscv/include/asm/compat.h
+@@ -14,6 +14,9 @@
+ 
+ static inline int is_compat_task(void)
+ {
++	if (!IS_ENABLED(CONFIG_COMPAT))
++		return 0;
++
+ 	return test_thread_flag(TIF_32BIT);
+ }
+ 
 diff --git a/arch/riscv/include/asm/elf.h b/arch/riscv/include/asm/elf.h
-index 06c236bfab53b..59a08367fddd7 100644
+index 59a08367fddd7..2e88257cafaea 100644
 --- a/arch/riscv/include/asm/elf.h
 +++ b/arch/riscv/include/asm/elf.h
-@@ -54,7 +54,7 @@ extern bool compat_elf_check_arch(Elf32_Ehdr *hdr);
+@@ -53,13 +53,9 @@ extern bool compat_elf_check_arch(Elf32_Ehdr *hdr);
+ #define ELF_ET_DYN_BASE		((DEFAULT_MAP_WINDOW / 3) * 2)
  
  #ifdef CONFIG_64BIT
- #ifdef CONFIG_COMPAT
--#define STACK_RND_MASK		(test_thread_flag(TIF_32BIT) ? \
-+#define STACK_RND_MASK		(is_compat_task() ? \
+-#ifdef CONFIG_COMPAT
+ #define STACK_RND_MASK		(is_compat_task() ? \
  				 0x7ff >> (PAGE_SHIFT - 12) : \
  				 0x3ffff >> (PAGE_SHIFT - 12))
- #else
+-#else
+-#define STACK_RND_MASK		(0x3ffff >> (PAGE_SHIFT - 12))
+-#endif
+ #endif
+ 
+ /*
 diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index ab00235b018f8..1d472b31e0cfe 100644
+index 1d472b31e0cfe..ea5b269be223a 100644
 --- a/arch/riscv/include/asm/pgtable.h
 +++ b/arch/riscv/include/asm/pgtable.h
-@@ -882,7 +882,7 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
+@@ -127,16 +127,10 @@
+ #define VA_USER_SV48 (UL(1) << (VA_BITS_SV48 - 1))
+ #define VA_USER_SV57 (UL(1) << (VA_BITS_SV57 - 1))
  
- #ifdef CONFIG_COMPAT
- #define TASK_SIZE_32	(_AC(0x80000000, UL) - PAGE_SIZE)
--#define TASK_SIZE	(test_thread_flag(TIF_32BIT) ? \
-+#define TASK_SIZE	(is_compat_task() ? \
- 			 TASK_SIZE_32 : TASK_SIZE_64)
+-#ifdef CONFIG_COMPAT
+ #define MMAP_VA_BITS_64 ((VA_BITS >= VA_BITS_SV48) ? VA_BITS_SV48 : VA_BITS)
+ #define MMAP_MIN_VA_BITS_64 (VA_BITS_SV39)
+ #define MMAP_VA_BITS (is_compat_task() ? VA_BITS_SV32 : MMAP_VA_BITS_64)
+ #define MMAP_MIN_VA_BITS (is_compat_task() ? VA_BITS_SV32 : MMAP_MIN_VA_BITS_64)
+-#else
+-#define MMAP_VA_BITS ((VA_BITS >= VA_BITS_SV48) ? VA_BITS_SV48 : VA_BITS)
+-#define MMAP_MIN_VA_BITS (VA_BITS_SV39)
+-#endif /* CONFIG_COMPAT */
+-
  #else
- #define TASK_SIZE	TASK_SIZE_64
+ #include <asm/pgtable-32.h>
+ #endif /* CONFIG_64BIT */
+diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
+index f19f861cda549..ed32e53e55999 100644
+--- a/arch/riscv/include/asm/processor.h
++++ b/arch/riscv/include/asm/processor.h
+@@ -22,7 +22,7 @@
+ ({								\
+ 	unsigned long mmap_end;					\
+ 	typeof(addr) _addr = (addr);				\
+-	if ((_addr) == 0 || (IS_ENABLED(CONFIG_COMPAT) && is_compat_task())) \
++	if ((_addr) == 0 || is_compat_task())			\
+ 		mmap_end = STACK_TOP_MAX;			\
+ 	else if ((_addr) >= VA_USER_SV57)			\
+ 		mmap_end = STACK_TOP_MAX;			\
+@@ -39,7 +39,7 @@
+ 	typeof(addr) _addr = (addr);				\
+ 	typeof(base) _base = (base);				\
+ 	unsigned long rnd_gap = DEFAULT_MAP_WINDOW - (_base);	\
+-	if ((_addr) == 0 || (IS_ENABLED(CONFIG_COMPAT) && is_compat_task())) \
++	if ((_addr) == 0 || is_compat_task())			\
+ 		mmap_base = (_base);				\
+ 	else if (((_addr) >= VA_USER_SV57) && (VA_BITS >= VA_BITS_SV57)) \
+ 		mmap_base = VA_USER_SV57 - rnd_gap;		\
 -- 
 2.43.0
 
