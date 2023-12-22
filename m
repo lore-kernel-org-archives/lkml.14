@@ -1,52 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272102510C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 355AE28DDA;
 	Fri, 22 Dec 2023 16:51:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZLnP845Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E56AEC433CB;
-	Fri, 22 Dec 2023 16:51:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHecqjA6"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0ADD5C433C9;
+	Fri, 22 Dec 2023 16:51:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1703263918;
-	bh=IDPUDBR2Ipzl/WJ10g03nBf5fHrP2CJNVIuikxf8Ex8=;
+	bh=VHokONlHkHVHxLU/6YrMWl0oF+rGWN4DzsnhP43ofas=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=ZLnP845Z0rf6S+T1V2+3+q1WDPAWnKR2StDWtYVh427lJR3xqlQKNlm/ZlZDpmScb
-	 KCszF01kw4pnertr+6cjolIpYmsfwkv5Q4AasOFybhKWOGIwv08+9c5Ce9OFabcDPv
-	 KqeMCOhE/Q4ChQCbAMQ/lqYhA8tj8+iP1HdIaHyxKLZKoGm5LLCgBKLo7Uks+jP+9v
-	 dySd1J5NdkVXJoXV//PixNfMKFU0GdjaZDxg3L4uA3R+FRKSCwH9C/o0pSkl8wJhYa
-	 9YYlHvQJb20DdVtHlufTprEgcrsd2a6Rn86XE6D0FjDZr8TMmxBBys+ufL188j1zVf
-	 Ed69HtHgTDphw==
+	b=cHecqjA6nlhVCgQGkWqEL1XRyLVcoMoWkaLGCuI1V/b3aVWCwsVLTpb+e4hyG3mJn
+	 n4T8E2udpzkW3wmj7soLSsBNXeLC3otavvjmn/ckZ+cwUMuhIeaTkyEiLoE5xe1/fe
+	 DHY2Q65bJ8E373JD2BIX0kTR1XjHatq5Rw+ePqntoJS30EK93tLVBY/kVyQFd6jOA+
+	 WFz+C2FMtGwvWuiiKtSI/WkrYARjoKZbK2DT9r+Pnr9D/NN5MaUWwDHRHg1uA+2e1p
+	 lRYUQtroVJR+tfeQAtA6DA60/yNIVUAVf7D6LH2JAS4DAtxKbc/qzNUX6RX6Bjjv8R
+	 gv3xKvz8E6FVA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D07C3C41620;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id ED2F7DD4EE0;
 	Fri, 22 Dec 2023 16:51:57 +0000 (UTC)
-Subject: Re: [PULL REQUEST] i2c-for-6.7-rc8
+Subject: Re: [GIT PULL] sound fixes for 6.7-rc7
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZYVsIwvSLqnn/BRW@shikoro>
-References: <ZYVsIwvSLqnn/BRW@shikoro>
+In-Reply-To: <s5httoatcwn.wl-tiwai@suse.de>
+References: <s5httoatcwn.wl-tiwai@suse.de>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZYVsIwvSLqnn/BRW@shikoro>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git tags/i2c-for-6.7-rc8
-X-PR-Tracked-Commit-Id: b4cc1cbba5195a4dd497cf2f8f09e7807977d543
+X-PR-Tracked-Message-Id: <s5httoatcwn.wl-tiwai@suse.de>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-6.7-rc7
+X-PR-Tracked-Commit-Id: 916d051730ae48aef8b588fd096fefca4bc0590a
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2618280dedb2f3a35e51c158d31859276a8832b9
-Message-Id: <170326391784.6925.567006587401808970.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 5414aea7b7508d01235ea0c95064ad66395c3239
+Message-Id: <170326391796.6925.14650561582298257660.pr-tracker-bot@kernel.org>
 Date: Fri, 22 Dec 2023 16:51:57 +0000
-To: Wolfram Sang <wsa@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>, Bartosz Golaszewski <brgl@bgdev.pl>, Andi Shyti <andi.shyti@kernel.org>
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linux Sound Mailing List <linux-sound@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 22 Dec 2023 11:59:47 +0100:
+The pull request you sent on Fri, 22 Dec 2023 17:33:44 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git tags/i2c-for-6.7-rc8
+> git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-6.7-rc7
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2618280dedb2f3a35e51c158d31859276a8832b9
+https://git.kernel.org/torvalds/c/5414aea7b7508d01235ea0c95064ad66395c3239
 
 Thank you!
 
