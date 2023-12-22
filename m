@@ -1,181 +1,95 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11045171C7
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 10:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94C2D2F4;
-	Fri, 22 Dec 2023 02:24:34 -0800 (PST)
-Received: from [10.57.87.46] (unknown [10.57.87.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 91F953F738;
-	Fri, 22 Dec 2023 02:23:45 -0800 (PST)
-Message-ID: <11171acd-dae7-475f-ab93-a890f0f0d273@arm.com>
-Date: Fri, 22 Dec 2023 10:23:43 +0000
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A8214A82
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 10:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="doFUtE6l"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3b9f8c9307dso1460141b6e.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 02:24:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703240646; x=1703845446; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gqSwQxD2fbJPgUWI2ZYQp2p14IC1JkNGTdv/EQhR7s4=;
+        b=doFUtE6lEf0Y+/gNYJHbqFMUaVa2U0rS4Q/AGXQhPrXHoIYVMI1j2niy6Fx+oAL/tu
+         e/j7CYEIlTx5BmZjvwpi4VHrXkWTcsEUOQ2FTZ3u/azjBCHA2bC34h3ADhU0f6QoZuUJ
+         2gKhmuaULyCUFin9YtH4GiPOxbufzf2lNS8n5+9JflYT1afvcNtdbO3CWs9Ah2B96PLt
+         ClkqPWZFc4jqoKOKGI/Qy9VK/a98mYy/15aqt96tPyBXY7uTrMpV1q023yAD1O9VRXvM
+         qFEBGXIRyTIAPFed1imWxeH0YUkzZKCBYZgpeEIH8wu7lvGZgd1YoEZ2q9PYv/4va+Gt
+         14rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703240646; x=1703845446;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gqSwQxD2fbJPgUWI2ZYQp2p14IC1JkNGTdv/EQhR7s4=;
+        b=SdiIwQtO585SxJ1Ov22lrwcmFaf3+3U36rCeYO0QwAqV9ySBC3cZFQcAasW8APk4Tv
+         R4Ccd5TIQWI9RZws2TJDLQ7KidLHnq9CRRuqsM0w2w+8exfVlvn7jQYvDWbbcvvnp/bl
+         oBdfbkjQAL1ZyUlfmS20uNoKU7b4x/MOlg3fEmyvvMDIgVMEJpwT8MZ7FMKzx0XCIXfd
+         bEBgP350yx6EJeoo9x+vUxT3PR/kRHbQ9x9KgMKcK/RwrutkVIO5ckCQv4EUy0wIF23X
+         49A+EcUUsIZZuvUlrlGVNz7PMeYd5Op9fTWoFN9RTLlHlxNdgjZYx0RM6Tl3bgSn88fz
+         tcBg==
+X-Gm-Message-State: AOJu0YzSkzlGxGecAhmHoJkPtgSg4jDxdOPAOBt7pr8JX2vEArDC/IGi
+	+DmF9xvsfQgU4VkQf6igJHE=
+X-Google-Smtp-Source: AGHT+IEJa5V83giUnWT10v5sm3MCod/3MLsT57MZYMEmnJ7bVD0I31MCuTB3XHt55809YhFqtspSXg==
+X-Received: by 2002:a05:6808:2e4b:b0:3bb:721d:8ac9 with SMTP id gp11-20020a0568082e4b00b003bb721d8ac9mr1551420oib.18.1703240645875;
+        Fri, 22 Dec 2023 02:24:05 -0800 (PST)
+Received: from KASONG-MB2.tencent.com ([103.7.29.31])
+        by smtp.gmail.com with ESMTPSA id gx1-20020a056a001e0100b006d9912e9a77sm364074pfb.6.2023.12.22.02.24.03
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 22 Dec 2023 02:24:05 -0800 (PST)
+From: Kairui Song <ryncsn@gmail.com>
+To: linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Yu Zhao <yuzhao@google.com>,
+	linux-kernel@vger.kernel.org,
+	Kairui Song <kasong@tencent.com>
+Subject: [PATCH 0/3] mm, lru_gen: batch update pages when aging
+Date: Fri, 22 Dec 2023 18:22:52 +0800
+Message-ID: <20231222102255.56993-1-ryncsn@gmail.com>
+X-Mailer: git-send-email 2.43.0
+Reply-To: Kairui Song <kasong@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 19/23] sched: Consolidate pick_*_task to
- task_is_pushable helper
-Content-Language: en-US
-To: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>
-Cc: Joel Fernandes <joelaf@google.com>, Qais Yousef <qyousef@google.com>,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Valentin Schneider <vschneid@redhat.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Zimuzo Ezeozue <zezeozue@google.com>, Youssef Esmat
- <youssefesmat@google.com>, Mel Gorman <mgorman@suse.de>,
- Daniel Bristot de Oliveira <bristot@redhat.com>,
- Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
- Boqun Feng <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>,
- Xuewen Yan <xuewen.yan94@gmail.com>, K Prateek Nayak
- <kprateek.nayak@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
- kernel-team@android.com
-References: <20231220001856.3710363-1-jstultz@google.com>
- <20231220001856.3710363-20-jstultz@google.com>
-From: Metin Kaya <metin.kaya@arm.com>
-In-Reply-To: <20231220001856.3710363-20-jstultz@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 20/12/2023 12:18 am, John Stultz wrote:
-> From: Connor O'Brien <connoro@google.com>
-> 
-> This patch consolidates rt and deadline pick_*_task functions to
-> a task_is_pushable() helper
-> 
-> This patch was broken out from a larger chain migration
-> patch originally by Connor O'Brien.
-> 
-> Cc: Joel Fernandes <joelaf@google.com>
-> Cc: Qais Yousef <qyousef@google.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Cc: Valentin Schneider <vschneid@redhat.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ben Segall <bsegall@google.com>
-> Cc: Zimuzo Ezeozue <zezeozue@google.com>
-> Cc: Youssef Esmat <youssefesmat@google.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Waiman Long <longman@redhat.com>
-> Cc: Boqun Feng <boqun.feng@gmail.com>
-> Cc: "Paul E. McKenney" <paulmck@kernel.org>
-> Cc: Metin Kaya <Metin.Kaya@arm.com>
-> Cc: Xuewen Yan <xuewen.yan94@gmail.com>
-> Cc: K Prateek Nayak <kprateek.nayak@amd.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: kernel-team@android.com
-> Signed-off-by: Connor O'Brien <connoro@google.com>
-> [jstultz: split out from larger chain migration patch,
->   renamed helper function]
-> Signed-off-by: John Stultz <jstultz@google.com>
-> ---
-> v7:
-> * Split from chain migration patch
-> * Renamed function
-> ---
->   kernel/sched/deadline.c | 10 +---------
->   kernel/sched/rt.c       | 11 +----------
->   kernel/sched/sched.h    | 10 ++++++++++
->   3 files changed, 12 insertions(+), 19 deletions(-)
-> 
-> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-> index def1eb23318b..1f3bc50de678 100644
-> --- a/kernel/sched/deadline.c
-> +++ b/kernel/sched/deadline.c
-> @@ -2049,14 +2049,6 @@ static void task_fork_dl(struct task_struct *p)
->   /* Only try algorithms three times */
->   #define DL_MAX_TRIES 3
->   
-> -static int pick_dl_task(struct rq *rq, struct task_struct *p, int cpu)
-> -{
-> -	if (!task_on_cpu(rq, p) &&
-> -	    cpumask_test_cpu(cpu, &p->cpus_mask))
-> -		return 1;
-> -	return 0;
-> -}
-> -
->   /*
->    * Return the earliest pushable rq's task, which is suitable to be executed
->    * on the CPU, NULL otherwise:
-> @@ -2075,7 +2067,7 @@ static struct task_struct *pick_earliest_pushable_dl_task(struct rq *rq, int cpu
->   	if (next_node) {
->   		p = __node_2_pdl(next_node);
->   
-> -		if (pick_dl_task(rq, p, cpu))
-> +		if (task_is_pushable(rq, p, cpu) == 1)
+From: Kairui Song <kasong@tencent.com>
 
-Nit: ` == 1` part is redundant, IMHO.
+Currently when MGLRU ages, it moves the pages one by one and updates mm
+counter page by page, which is correct but the overhead can be optimized
+by batching these operations.
 
->   			return p;
->   
->   		next_node = rb_next(next_node);
-> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> index cf0eb4aac613..15161de88753 100644
-> --- a/kernel/sched/rt.c
-> +++ b/kernel/sched/rt.c
-> @@ -1812,15 +1812,6 @@ static void put_prev_task_rt(struct rq *rq, struct task_struct *p)
->   /* Only try algorithms three times */
->   #define RT_MAX_TRIES 3
->   
-> -static int pick_rt_task(struct rq *rq, struct task_struct *p, int cpu)
-> -{
-> -	if (!task_on_cpu(rq, p) &&
-> -	    cpumask_test_cpu(cpu, &p->cpus_mask))
-> -		return 1;
-> -
-> -	return 0;
-> -}
-> -
->   /*
->    * Return the highest pushable rq's task, which is suitable to be executed
->    * on the CPU, NULL otherwise
-> @@ -1834,7 +1825,7 @@ static struct task_struct *pick_highest_pushable_task(struct rq *rq, int cpu)
->   		return NULL;
->   
->   	plist_for_each_entry(p, head, pushable_tasks) {
-> -		if (pick_rt_task(rq, p, cpu))
-> +		if (task_is_pushable(rq, p, cpu) == 1)
+Batch moving also has a good effect on LRU ordering. Currently when
+MGLRU ages, it walks the LRU backward, and the protected pages are moved to
+the tail of newer gen one by one, which reverses the order of pages in
+LRU. Moving them in batches can help keep their order, only in a small
+scope though due to the scan limit of MAX_LRU_BATCH pages.
 
-Ditto.
+I noticed a higher performance gain if there are a lot of pages getting
+protected, but hard to reproduce, so instead I tested using a simpler
+benchmark, memtier, also for a more generic result. The main overhead
+here is not aging but the result is also looking good:
 
->   			return p;
->   	}
->   
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 19afe532771f..ef3d327e267c 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -3554,6 +3554,16 @@ void push_task_chain(struct rq *rq, struct rq *dst_rq, struct task_struct *task)
->   	set_task_cpu(task, dst_rq->cpu);
->   	activate_task(dst_rq, task, 0);
->   }
-> +
-> +static inline
-> +int task_is_pushable(struct rq *rq, struct task_struct *p, int cpu)
+Average result of 18 test runs:
 
-Nit: I know the function is just renamed in this patch, but should we 
-change the return type to bool while we are at it?
+Before:           44017.78 Ops/sec
+After patch 1-3:  44890.50 Ops/sec (+1.8%)
 
-> +{
-> +	if (!task_on_cpu(rq, p) &&
-> +	    cpumask_test_cpu(cpu, &p->cpus_mask))
-> +		return 1;
-> +
-> +	return 0;
-> +}
->   #endif
->   
->   #endif /* _KERNEL_SCHED_SCHED_H */
+Kairui Song (3):
+  mm, lru_gen: batch update counters on againg
+  mm, lru_gen: move pages in bulk when aging
+  mm, lru_gen: try to prefetch next page when canning LRU
+
+ mm/vmscan.c | 140 ++++++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 124 insertions(+), 16 deletions(-)
+
+-- 
+2.43.0
 
