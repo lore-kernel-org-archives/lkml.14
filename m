@@ -1,203 +1,185 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36A128DAE;
-	Fri, 22 Dec 2023 16:33:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wKWIY2vo";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="UFWvKtba";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wKWIY2vo";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="UFWvKtba"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9095E1FCF3;
-	Fri, 22 Dec 2023 16:33:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1703262825; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ASfyBiHGopBSHPsiBWh86SSl0tC2PpCWSmHou4sRjFQ=;
-	b=wKWIY2voTOHgcKt20XRhosPW5MIO99Cq0cC+l6Q6zw8kvwRZ0Jm1n0YRK6w9STiR6sgzLk
-	pJhRf097OtkwwrqrstVKClT2KeadhKn/Ai8KJxCz1VrsUhIfG5CmSQl/uqoi0sloXGKVqs
-	kAptiChXekgamjS6/jM3tJdOEVIDSUs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1703262825;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ASfyBiHGopBSHPsiBWh86SSl0tC2PpCWSmHou4sRjFQ=;
-	b=UFWvKtbatTEic60MrYwX8isazwz4LuO4QDbLQD1fSU45mC1L9dZqJUXkLQ/3ZNpj7xTHrc
-	VekBRQ/qjUHUjQBw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1703262825; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ASfyBiHGopBSHPsiBWh86SSl0tC2PpCWSmHou4sRjFQ=;
-	b=wKWIY2voTOHgcKt20XRhosPW5MIO99Cq0cC+l6Q6zw8kvwRZ0Jm1n0YRK6w9STiR6sgzLk
-	pJhRf097OtkwwrqrstVKClT2KeadhKn/Ai8KJxCz1VrsUhIfG5CmSQl/uqoi0sloXGKVqs
-	kAptiChXekgamjS6/jM3tJdOEVIDSUs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1703262825;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ASfyBiHGopBSHPsiBWh86SSl0tC2PpCWSmHou4sRjFQ=;
-	b=UFWvKtbatTEic60MrYwX8isazwz4LuO4QDbLQD1fSU45mC1L9dZqJUXkLQ/3ZNpj7xTHrc
-	VekBRQ/qjUHUjQBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5D96313997;
-	Fri, 22 Dec 2023 16:33:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id mGo5FWm6hWV7RAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 22 Dec 2023 16:33:45 +0000
-Date: Fri, 22 Dec 2023 17:33:44 +0100
-Message-ID: <s5httoatcwn.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Linux Sound Mailing List <linux-sound@vger.kernel.org>, Linux Kernel
- Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] sound fixes for 6.7-rc7
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7BD024B4D;
+	Fri, 22 Dec 2023 16:33:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32E88C433C9;
+	Fri, 22 Dec 2023 16:33:54 +0000 (UTC)
+Date: Fri, 22 Dec 2023 11:34:59 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, Linux
+ selftests <linux-kselftest@vger.kernel.org>
+Subject: [PATCH v4] tracing/selftests: Add ownership modification tests for
+ eventfs
+Message-ID: <20231222113459.4d645bfc@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.31 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 FROM_HAS_DN(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCPT_COUNT_FIVE(0.00)[5];
-	 DWL_DNSWL_LOW(-1.00)[suse.de:dkim];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MX_GOOD(-0.01)[];
-	 TO_DN_ALL(0.00)[];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[kernel.org,gmail.com,vger.kernel.org];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=wKWIY2vo;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=UFWvKtba
-X-Spam-Score: -3.31
-X-Rspamd-Queue-Id: 9095E1FCF3
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Linus,
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-please pull sound fixes for v6.7-rc7 from:
+As there were bugs found with the ownership of eventfs dynamic file
+creation. Add a test to test it.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-6.7-rc7
+It will remount tracefs with a different gid and check the ownership of
+the eventfs directory, as well as the system and event directories. It
+will also check the event file directories.
 
-The topmost commit is 916d051730ae48aef8b588fd096fefca4bc0590a
+It then does a chgrp on each of these as well to see if they all get
+updated as expected.
 
-----------------------------------------------------------------
+Then it remounts the tracefs file system back to the original group and
+makes sure that all the updated files and directories were reset back to
+the original ownership.
 
-sound fixes for 6.7-rc7
+It does the same for instances that change the ownership of he instance
+directory.
 
-Apparently there were so many kids wishing bug fixes that made Santa
-busy; here we have lots of fixes although it's a bit late.
-But all changes are device-specific, hence it should be relatively
-safe to apply.
+Note, because the uid is not reset by a remount, it is tested for every
+file by switching it to a new owner and then back again.
 
-Most of changes are for Cirrus codecs (for both ASoC and HD-audio),
-while the remaining are fixes for TI codecs, HD-audio and USB-audio
-quirks.
-
-----------------------------------------------------------------
-
-Charles Keepax (1):
-      ASoC: cs42l43: Don't enable bias sense during type detect
-
-Clément Villeret (1):
-      ALSA: hda/realtek: Add quirk for ASUS ROG GV302XA
-
-Curtis Malainey (1):
-      ASoC: SOF: mediatek: mt8186: Revert Add Google Steelix topology compatible
-
-Gergo Koteles (2):
-      ALSA: hda/tas2781: select program 0, conf 0 by default
-      ASoC: tas2781: check the validity of prm_no/cfg_no
-
-Ghanshyam Agrawal (1):
-      kselftest: alsa: fixed a print formatting warning
-
-Hans de Goede (2):
-      ASoC: Intel: bytcr_rt5640: Add quirk for the Medion Lifetab S10346
-      ASoC: Intel: bytcr_rt5640: Add new swapped-speakers quirk
-
-Jeremie Knuesel (1):
-      ALSA: usb-audio: Increase delay in MOTU M quirk
-
-Jerome Brunet (1):
-      ASoC: hdmi-codec: fix missing report for jack initial status
-
-Ricardo Rivera-Matos (3):
-      ASoC: cs35l45: Use modern pm_ops
-      ASoC: cs35l45: Prevent IRQ handling when suspending/resuming
-      ASoC: cs35l45: Prevents spinning during runtime suspend
-
-Richard Fitzgerald (1):
-      ASoC: Intel: soc-acpi-intel-mtl-match: Change CS35L56 prefixes to AMPn
-
-Shengjiu Wang (1):
-      ASoC: fsl_sai: Fix channel swap issue on i.MX8MP
-
-Stefan Binding (9):
-      ALSA: hda: cs35l41: Add config table to support many laptops without _DSD
-      ALSA: hda: cs35l41: Support additional ASUS ROG 2023 models
-      ALSA: hda/realtek: Add quirks for ASUS ROG 2023 models
-      ALSA: hda: cs35l41: Support additional ASUS Zenbook 2022 Models
-      ALSA: hda/realtek: Add quirks for ASUS Zenbook 2022 Models
-      ALSA: hda: cs35l41: Support additional ASUS Zenbook 2023 Models
-      ALSA: hda/realtek: Add quirks for ASUS Zenbook 2023 Models
-      ALSA: hda: cs35l41: Do not allow uninitialised variables to be freed
-      ALSA: hda: cs35l41: Only add SPI CS GPIO if SPI is enabled in kernel
-
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Tested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- sound/pci/hda/cs35l41_hda.c                       |   2 +
- sound/pci/hda/cs35l41_hda.h                       |   5 +-
- sound/pci/hda/cs35l41_hda_property.c              | 365 +++++++++++++++++++---
- sound/pci/hda/patch_realtek.c                     |  38 ++-
- sound/pci/hda/tas2781_hda_i2c.c                   |   4 +
- sound/soc/codecs/cs35l45-i2c.c                    |   2 +-
- sound/soc/codecs/cs35l45-spi.c                    |   2 +-
- sound/soc/codecs/cs35l45.c                        |  56 +++-
- sound/soc/codecs/cs42l43-jack.c                   |  21 +-
- sound/soc/codecs/hdmi-codec.c                     |  12 +-
- sound/soc/codecs/tas2781-fmwlib.c                 |  14 +-
- sound/soc/fsl/fsl_sai.c                           |   3 +
- sound/soc/intel/boards/bytcr_rt5640.c             |  31 +-
- sound/soc/intel/common/soc-acpi-intel-mtl-match.c |   8 +-
- sound/soc/sof/mediatek/mt8186/mt8186.c            |   3 -
- sound/usb/quirks.c                                |   4 +-
- tools/testing/selftests/alsa/mixer-test.c         |   2 +-
- 17 files changed, 477 insertions(+), 95 deletions(-)
+Changes since v3: https://lore.kernel.org/linux-trace-kernel/20231221211229.13398ef3@gandalf.local.home
+
+- Added missing SPDX and removed exec permission from file (Shuah Khan)
+
+ .../ftrace/test.d/00basic/test_ownership.tc   | 114 ++++++++++++++++++
+ 1 file changed, 114 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
+
+diff --git a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
+new file mode 100644
+index 000000000000..add7d5bf585d
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
+@@ -0,0 +1,114 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: Test file and directory owership changes for eventfs
++
++original_group=`stat -c "%g" .`
++original_owner=`stat -c "%u" .`
++
++mount_point=`stat -c '%m' .`
++mount_options=`mount | grep "$mount_point" | sed -e 's/.*(\(.*\)).*/\1/'`
++
++# find another owner and group that is not the original
++other_group=`tac /etc/group | grep -v ":$original_group:" | head -1 | cut -d: -f3`
++other_owner=`tac /etc/passwd | grep -v ":$original_owner:" | head -1 | cut -d: -f3`
++
++# Remove any group ownership already
++new_options=`echo "$mount_options" | sed -e "s/gid=[0-9]*/gid=$other_group/"`
++
++if [ "$new_options" = "$mount_options" ]; then
++	new_options="$mount_options,gid=$other_group"
++	mount_options="$mount_options,gid=$original_group"
++fi
++
++canary="events/timer events/timer/timer_cancel events/timer/timer_cancel/format"
++
++test() {
++	file=$1
++	test_group=$2
++
++	owner=`stat -c "%u" $file`
++	group=`stat -c "%g" $file`
++
++	echo "testing $file $owner=$original_owner and $group=$test_group"
++	if [ $owner -ne $original_owner ]; then
++		exit_fail
++	fi
++	if [ $group -ne $test_group ]; then
++		exit_fail
++	fi
++
++	# Note, the remount does not update ownership so test going to and from owner
++	echo "test owner $file to $other_owner"
++	chown $other_owner $file
++	owner=`stat -c "%u" $file`
++	if [ $owner -ne $other_owner ]; then
++		exit_fail
++	fi
++
++	chown $original_owner $file
++	owner=`stat -c "%u" $file`
++	if [ $owner -ne $original_owner ]; then
++		exit_fail
++	fi
++
++}
++
++run_tests() {
++	for d in "." "events" "events/sched" "events/sched/sched_switch" "events/sched/sched_switch/enable" $canary; do
++		test "$d" $other_group
++	done
++
++	chgrp $original_group events
++	test "events" $original_group
++	for d in "." "events/sched" "events/sched/sched_switch" "events/sched/sched_switch/enable" $canary; do
++		test "$d" $other_group
++	done
++
++	chgrp $original_group events/sched
++	test "events/sched" $original_group
++	for d in "." "events/sched/sched_switch" "events/sched/sched_switch/enable" $canary; do
++		test "$d" $other_group
++	done
++
++	chgrp $original_group events/sched/sched_switch
++	test "events/sched/sched_switch" $original_group
++	for d in "." "events/sched/sched_switch/enable" $canary; do
++		test "$d" $other_group
++	done
++
++	chgrp $original_group events/sched/sched_switch/enable
++	test "events/sched/sched_switch/enable" $original_group
++	for d in "." $canary; do
++		test "$d" $other_group
++	done
++}
++
++mount -o remount,"$new_options" .
++
++run_tests
++
++mount -o remount,"$mount_options" .
++
++for d in "." "events" "events/sched" "events/sched/sched_switch" "events/sched/sched_switch/enable" $canary; do
++	test "$d" $original_group
++done
++
++# check instances as well
++
++chgrp $other_group instances
++
++instance="$(mktemp -u test-XXXXXX)"
++
++mkdir instances/$instance
++
++cd instances/$instance
++
++run_tests
++
++cd ../..
++
++rmdir instances/$instance
++
++chgrp $original_group instances
++
++exit 0
+-- 
+2.42.0
 
