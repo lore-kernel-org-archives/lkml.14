@@ -1,286 +1,119 @@
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
+Received: from fallback17.i.mail.ru (fallback17.i.mail.ru [79.137.243.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7885F241F3
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 16:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237B824B3D
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 16:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inbox.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inbox.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="e6Dyp5tE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=lHxHAPV8xU6NSlMXnreFOq0+NF/9WrUOX/q9g6TvJ+E=;
-  b=e6Dyp5tEA6aNTOyXT1FfuyfnAbY5S8rZrghKUI5FUM7GR4FJ8mUg5QE/
-   IQWxFBIP/J2ZoU0wXIWsFvmvu0gDgcwGnR/OU8ah7I3fZcCLxmVShNC3L
-   xQ7EVkhpE/rAPUYKGMZr1WrVOzTHD9n6hN64M61KdiWkqZRLmqROgjOJE
-   k=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.04,296,1695679200"; 
-   d="scan'208";a="75208221"
-Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 17:18:01 +0100
-Date: Fri, 22 Dec 2023 17:18:00 +0100 (CET)
-From: Julia Lawall <julia.lawall@inria.fr>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-    Dietmar Eggemann <dietmar.eggemann@arm.com>, Mel Gorman <mgorman@suse.de>, 
-    linux-kernel@vger.kernel.org
-Subject: Re: EEVDF and NUMA balancing
-In-Reply-To: <CAKfTPtDCsLnDnVje9maP5s-L7TbtSu4CvF19xHOxbkvSNd7vZg@mail.gmail.com>
-Message-ID: <2359ab5-4556-1a73-9255-3fcf2fc57ec@inria.fr>
-References: <alpine.DEB.2.22.394.2310032059060.3220@hadrien> <alpine.DEB.2.22.394.2310041358420.3108@hadrien> <20231004120544.GA6307@noisy.programming.kicks-ass.net> <alpine.DEB.2.22.394.2310041822170.3108@hadrien> <20231004174801.GE19999@noisy.programming.kicks-ass.net>
- <alpine.DEB.2.22.394.2310041958380.3108@hadrien> <20231009102949.GC14330@noisy.programming.kicks-ass.net> <b8ab29de-1775-46e-dd75-cdf98be8b0@inria.fr> <CAKfTPtBhWwk9sf9F1=KwubiAWFDC2A9ZT-SSJ+tgFxme1cFmYA@mail.gmail.com> <alpine.DEB.2.22.394.2312182302310.3361@hadrien>
- <CAKfTPtALEFtrapi3Kk97KLGQN4259eEQEwwftVUK4RG42Vgoyw@mail.gmail.com> <98b3df1-79b7-836f-e334-afbdd594b55@inria.fr> <CAKfTPtCRN_eWgVdK2-h6E_ifJKwwJEtMjeNjB=5DXZFWyBS+tQ@mail.gmail.com> <93112fbe-30be-eab8-427c-5d4670a0f94e@inria.fr>
- <CAKfTPtAeFvrZxApK3RruWwCjMxbQvOkU+_YgZSo4QPT_AD6FxA@mail.gmail.com> <9dc451b5-9dd8-89f2-1c9c-7c358faeaad@inria.fr> <CAKfTPtDCsLnDnVje9maP5s-L7TbtSu4CvF19xHOxbkvSNd7vZg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=inbox.ru header.i=@inbox.ru header.b="wI5IBZ8q";
+	dkim=pass (2048-bit key) header.d=inbox.ru header.i=@inbox.ru header.b="ogZnb0/x"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru; s=mail4;
+	h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=tFX7RIj6C4VOXEVclZN5OjxZXLaRdz1+7SGbge9WIxs=;
+	t=1703261894;x=1703351894; 
+	b=wI5IBZ8qI73eWxO8Rukjh2mI9mufiGcdEtwsWalAfyh2PpOVN9rCUSa80TnuLUggppioQQ6vVPznmhytf/eyfTKCB83wBTY8PBPI3pL2qXBQ1n4IanRLh2Ofu4+P5LFkQvAjVg8C40f4sguGgVbUqKp/zNGQAY50f3JFPWUR/kOeh2rqnRFQ0TxJuPtUHdSYe7UTtA3bEjWvlJVFcOhQ3Oz74RTuB62nHx8l5S6JyC7Cthp5SETLvHzL9Ytw3fE4YGzAB3R57ZYrT1zzUiWJ9rszkAJaZHiezn/HhACY36F8GU98gw9XiKH+PDzOfl6DtEDR+fuGq2TP//9OGDfAHA==;
+Received: from [10.12.4.21] (port=52596 helo=smtp42.i.mail.ru)
+	by fallback17.i.mail.ru with esmtp (envelope-from <fido_max@inbox.ru>)
+	id 1rGhpv-00FFLQ-63
+	for linux-kernel@vger.kernel.org; Fri, 22 Dec 2023 18:53:19 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru;
+	s=mail4; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References
+	:Cc:To:Subject:MIME-Version:Date:Message-ID:From:Sender:Reply-To:To:Cc:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+	List-Archive:X-Cloud-Ids:Disposition-Notification-To;
+	bh=tFX7RIj6C4VOXEVclZN5OjxZXLaRdz1+7SGbge9WIxs=; t=1703260399; x=1703350399; 
+	b=ogZnb0/xHvzaQE75GbxHmpzAx6t+XiY4+odaxklkb2laoD5i7gNxVkYhArRjuz+zimsJAqP/qdb
+	+t54uhxRXh4EKNAv34r8ufSjfDEOJC+QJenjmbpBYJl1t/GEUki5MbNn1spD4yGZnyndwJi/KIEvV
+	k51Gw/PuK6m5ZdqVhXuBm/bdw4SuhS7fKPSvEERFqA07hotUbqFWvPUaYODsp5RyaGhPA0ku7T2lE
+	C7JBBO5CmH2kclKrTdmLQm6DAahzy5Lktv7Af99c0qGhaOdMDubLzJukLMnHDEpZ5xlCVm58iaoh3
+	g4etdAzIqtRKYtA3uM3IHC2NoFGsS1AvX+Uw==;
+Received: by smtp42.i.mail.ru with esmtpa (envelope-from <fido_max@inbox.ru>)
+	id 1rGhpg-00796u-0F; Fri, 22 Dec 2023 18:53:04 +0300
+Message-ID: <6fe34090-656d-491f-8173-217d20144166@inbox.ru>
+Date: Fri, 22 Dec 2023 18:53:03 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] riscv: set ARCH_DMA_DEFAULT_COHERENT if
+ RISCV_DMA_NONCOHERENT is not set
+Content-Language: en-US
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>, Conor Dooley <conor@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, robh@kernel.org, mpe@ellerman.id.au,
+ aou@eecs.berkeley.edu, palmer@dabbelt.com, paul.walmsley@sifive.com
+References: <20231221185152.327231-1-fido_max@inbox.ru>
+ <20231221-discount-decade-e306e5878c46@spud>
+ <f31d929c-fa0a-4046-be05-38e92afa5d92@flygoat.com>
+ <20231222041428.GA2803@lst.de>
+ <c53c22dd-c482-4808-bdd7-e81c01c04f9e@inbox.ru>
+ <20231222-outburst-spoiling-75082a7826dd@spud>
+ <be10eb21-a0ef-416e-9c0c-d53326996fba@inbox.ru>
+ <7bc138f7-d5e9-471a-ae82-d6c490645623@flygoat.com>
+From: Maxim Kochetkov <fido_max@inbox.ru>
+In-Reply-To: <7bc138f7-d5e9-471a-ae82-d6c490645623@flygoat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Mailru-Src: smtp
+X-4EC0790: 10
+X-7564579A: 78E4E2B564C1792B
+X-77F55803: 4F1203BC0FB41BD9F008C97756F746CA109546F350B61F5EDC408D7902253DD5182A05F5380850408BBE584FEAE74C4539FF6257257E6F732B69E9FC229A0382F9F108893D24C065
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7D3DF794D859AA4BFEA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F790063745476ED688D943148638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D8C6DD7975580F9310C78194386F3CEFB36F9789CCF6C18C3F8528715B7D10C86878DA827A17800CE78C592797616C97AB9FA2833FD35BB23D9E625A9149C048EE26055571C92BF10FF04B652EEC242312D2E47CDBA5A96583BD4B6F7A4D31EC0BC014FD901B82EE079FA2833FD35BB23D27C277FBC8AE2E8BE2CCD8F0CAA010FB389733CBF5DBD5E9B5C8C57E37DE458B9E9CE733340B9D5F3BBE47FD9DD3FB595F5C1EE8F4F765FC8C7ADC89C2F0B2A5E2021AF6380DFAD18AA50765F790063735872C767BF85DA227C277FBC8AE2E8BDCE939D40DBB93CA75ECD9A6C639B01B4E70A05D1297E1BBCB5012B2E24CD356
+X-C1DE0DAB: 0D63561A33F958A5A9DDD64047EE0ECD726471AB7954A9BFC5C376C41ADB842DF87CCE6106E1FC07E67D4AC08A07B9B0735DFC8FA7AC1207CB5012B2E24CD356
+X-C8649E89: 1C3962B70DF3F0ADBF74143AD284FC7177DD89D51EBB7742424CF958EAFF5D571004E42C50DC4CA955A7F0CF078B5EC49A30900B95165D34D041FB2E16F174C4814B294BBADEE008254CAADB2070B4D94B27FDBDE07EC7DA9DFAD9A56969026F1D7E09C32AA3244C5A6F8828DC41BDF772EC9D558279C71A35DA7DC5AF9B58C0AFF760E3CF2A505DB6C6411D86935C892AB2189BCAD71E73D640157F23F2FFE137E69C174A41D00C
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2bioj2irTGYQEnL3NODs1OB0pRw==
+X-Mailru-Sender: 689FA8AB762F7393590D8C940224AE33BFF2CCA92290786441A33AD183A5E18A98CC072019C18A892CA7F8C7C9492E1F2F5E575105D0B01ADBE2EF17B331888EEAB4BC95F72C04283CDA0F3B3F5B9367
+X-Mras: Ok
+X-7564579A: 646B95376F6C166E
+X-77F55803: 6242723A09DB00B46003E5D5A82ECDADC2F5468305071511C06403940444F9E8049FFFDB7839CE9E0BADB79DF678AC5C7542F321C104C84D7141874FD8F9EA385E883CF4852BFECB
+X-7FA49CB5: 0D63561A33F958A546C116D757D560B50E904A40390BE319D5DDF046E9BEDDEBCACD7DF95DA8FC8BD5E8D9A59859A8B64071617579528AACCC7F00164DA146DAFE8445B8C89999728AA50765F7900637006720155ACF5028389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC86FF1B927F95F3316F6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA775ECD9A6C639B01B78DA827A17800CE78DD9044B304389D4731C566533BA786AA5CC5B56E945C8DA
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2bioj2irTGYQEnL3RnJf2YMVcBQ==
+X-Mailru-MI: 8000000000000800
+X-Mras: Ok
 
 
 
-On Fri, 22 Dec 2023, Vincent Guittot wrote:
+On 22.12.2023 18:45, Jiaxun Yang wrote:
+> 
+> 
+> 在 2023/12/22 15:38, Maxim Kochetkov 写道:
+>>
+>>
+>> On 22.12.2023 17:54, Conor Dooley wrote:
+>>
+>>>> etc..) do not have this feature. These devices will use value from
+>>>> device_initialize(). And we have no possibility to change
+>>>> dma_default_coherent value by disabling ARCH_DMA_DEFAULT_COHERENT.
+>>>> Moreover, changing dma_default_coherent from false to true may cause
+>>>> regression for other devices.
+>>>
+>>> How can there be a regression when dma has been coherent by default for
+>>> the RISC-V kernel from day 1?
+>>
+>> Before ARCH_DMA_DEFAULT_COHERENT patch dma_default_coherent was used 
+>> unassigned as "false" in device_initialize():
+>> ..........
+>> #if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
+>>     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
+>>     defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
+>>     dev->dma_coherent = dma_default_coherent;
+>> #endif
+>> ..........
+>> And now it becomes "true". It may change behavior of other non-DT 
+>> drivers.
+> I don't see any problem here, default is default.
+> Actually leaving those device with  dev->dma_coherent = false is risky, 
+> because
+> we can't guarantee underlying cache flush functions are here.
+> 
+> If a non-dt device do need to override it, it should be done in 
+> arch_setup_dma_ops.
 
-> On Fri, 22 Dec 2023 at 16:00, Julia Lawall <julia.lawall@inria.fr> wrote:
-> >
-> >
-> >
-> > On Fri, 22 Dec 2023, Vincent Guittot wrote:
-> >
-> > > On Thu, 21 Dec 2023 at 19:20, Julia Lawall <julia.lawall@inria.fr> wrote:
-> > > >
-> > > >
-> > > >
-> > > > On Wed, 20 Dec 2023, Vincent Guittot wrote:
-> > > >
-> > > > > On Tue, 19 Dec 2023 at 18:51, Julia Lawall <julia.lawall@inria.fr> wrote:
-> > > > > >
-> > > > > > > > One CPU has 2 threads, and the others have one.  The one with two threads
-> > > > > > > > is returned as the busiest one.  But nothing happens, because both of them
-> > > > > > > > prefer the socket that they are on.
-> > > > > > >
-> > > > > > > This explains way load_balance uses migrate_util and not migrate_task.
-> > > > > > > One CPU with 2 threads can be overloaded
-> > > > > > >
-> > > > > > > ok, so it seems that your 1st problem is that you have 2 threads on
-> > > > > > > the same CPU whereas you should have an idle core in this numa node.
-> > > > > > > All cores are sharing the same LLC, aren't they ?
-> > > > > >
-> > > > > > Sorry, not following this.
-> > > > > >
-> > > > > > Socket 1 has N-1 threads, and thus an idle CPU.
-> > > > > > Socket 2 has N+1 threads, and thus one CPU with two threads.
-> > > > > >
-> > > > > > Socket 1 tries to steal from that one CPU with two threads, but that
-> > > > > > fails, because both threads prefer being on Socket 2.
-> > > > > >
-> > > > > > Since most (or all?) of the threads on Socket 2 perfer being on Socket 2.
-> > > > > > the only hope for Socket 1 to fill in its idle core is active balancing.
-> > > > > > But active balancing is not triggered because of migrate_util and because
-> > > > > > CPU_NEWLY_IDLE prevents the failure counter from ebing increased.
-> > > > >
-> > > > >  CPU_NEWLY_IDLE load_balance doesn't aims to do active load balance so
-> > > > > you should focus on the CPU_NEWLY_IDLE load_balance
-> > > >
-> > > > I'm still perplexed why a core that has been idle for 1 second or more is
-> > > > considered to be newly idle.
-> > >
-> > > CPU_NEWLY_IDLE load balance is called when the scheduler was
-> > > scheduling something that just migrated or went back to sleep and
-> > > doesn't have anything to schedule so it tries to  pull a task from
-> > > somewhere else.
-> > >
-> > > But you should still have some CPU_IDLE load balance according to your
-> > > description where one CPU of the socket remains idle and those will
-> > > increase the nr_balance_failed
-> >
-> > This happens.  But not often.
-> >
-> > > I'm surprised that you have mainly CPU_NEWLY_IDLE. Do you know the reason ?
-> >
-> > No.  They come from do_idle calling the scheduler.  I will look into why
-> > this happens so often.
->
-> Hmm, the CPU was idle and received a need resched which triggered the
-> scheduler but there was nothing to schedule so it goes back to idle
-> after running a newly_idle _load_balance.
-
-I spent quite some time thinking the same until I saw the following code
-in do_idle:
-
-preempt_set_need_resched();
-
-So I have the impression that do_idle sets need resched itself.
-
-julia
-
->
-> >
-> > >
-> > > >
-> > > > >
-> > > > > >
-> > > > > > The part that I am currently missing to understand is that when I convert
-> > > > > > CPU_NEWLY_IDLE to CPU_IDLE, it typically picks a CPU with only one thread
-> > > > > > as busiest.  I have the impression that the fbq_type intervenes to cause
-> > > > >
-> > > > > find_busiest_queue skips rqs which only have threads preferring being
-> > > > > in there. So it selects another rq with a thread that doesn't prefer
-> > > > > its current node.
-> > > > >
-> > > > > do you know what is the value of env->fbq_type ?
-> > > >
-> > > > I have seen one trace in which it is all.  There are 33 tasks on one
-> > > > socket, and they are all considered to have a preference for that socket.
-> > >
-> > > With env->fbq_type == all, load_balance and find_busiest_queue should
-> > > be able to select the actual busiest queue with 2 threads.
-> >
-> > That's what it does.  But nothing can be stolen because there is no active
-> > balancing.
->
-> My patch below should enable to pull a task from the 1st idle load
-> balance that fails
->
-> >
-> > >
-> > > But then I imagine that can_migrate/ migrate_degrades_locality
-> > > prevents to detach the task
-> >
-> > Exactly.
-> >
-> > julia
-> >
-> > > >
-> > > > But I have another trace in which it is regular.  There are 33 tasks on
-> > > > the socket, but only 32 have a preference.
-> > > >
-> > > > >
-> > > > > need_active_balance() probably needs a new condition for the numa case
-> > > > > where the busiest queue can't be selected and we have to trigger an
-> > > > > active load_balance on a rq with only 1 thread but that is not running
-> > > > > on its preferred node. Something like the untested below :
-> > > > >
-> > > > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > > > > index e5da5eaab6ce..de1474191488 100644
-> > > > > --- a/kernel/sched/fair.c
-> > > > > +++ b/kernel/sched/fair.c
-> > > > > @@ -11150,6 +11150,24 @@ imbalanced_active_balance(struct lb_env *env)
-> > > > >         return 0;
-> > > > >  }
-> > > > >
-> > > > > +static inline bool
-> > > > > +numa_active_balance(struct lb_env *env)
-> > > > > +{
-> > > > > +       struct sched_domain *sd = env->sd;
-> > > > > +
-> > > > > +       /*
-> > > > > +        * We tried to migrate only a !numa task or a task on wrong node but
-> > > > > +        * the busiest queue with such task has only 1 running task. Previous
-> > > > > +        * attempt has failed so force the migration of such task.
-> > > > > +        */
-> > > > > +       if ((env->fbq_type < all) &&
-> > > > > +           (env->src_rq->cfs.h_nr_running == 1) &&
-> > > > > +           (sd->nr_balance_failed > 0))
-> > > >
-> > > > The last condition will still be a problem because of CPU_NEWLY_IDLE.  The
-> > > > nr_balance_failed counter doesn't get incremented very often.
-> > >
-> > > It waits for at least 1 failed CPU_IDLE load_balance
-> > >
-> > > >
-> > > > julia
-> > > >
-> > > > > +               return 1;
-> > > > > +
-> > > > > +       return 0;
-> > > > > +}
-> > > > > +
-> > > > >  static int need_active_balance(struct lb_env *env)
-> > > > >  {
-> > > > >         struct sched_domain *sd = env->sd;
-> > > > > @@ -11176,6 +11194,9 @@ static int need_active_balance(struct lb_env *env)
-> > > > >         if (env->migration_type == migrate_misfit)
-> > > > >                 return 1;
-> > > > >
-> > > > > +       if (numa_active_balance(env))
-> > > > > +               return 1;
-> > > > > +
-> > > > >         return 0;
-> > > > >  }
-> > > > >
-> > > > >
-> > > > > > it to avoid the CPU with two threads that already prefer Socket 2.  But I
-> > > > > > don't know at the moment why that is the case.  In any case, it's fine to
-> > > > > > active balance from a CPU with only one thread, because Socket 2 will
-> > > > > > even itself out afterwards.
-> > > > > >
-> > > > > > >
-> > > > > > > You should not have more than 1 thread per CPU when there are N+1
-> > > > > > > threads on a node with N cores / 2N CPUs.
-> > > > > >
-> > > > > > Hmm, I think there is a miscommunication about cores and CPUs.  The
-> > > > > > machine has two sockets with 16 physical cores each, and thus 32
-> > > > > > hyperthreads.  There are 64 threads running.
-> > > > >
-> > > > > Ok, I have been confused by what you wrote previously:
-> > > > > " The context is that there are 2N threads running on 2N cores, one thread
-> > > > > gets NUMA balanced to the other socket, leaving N+1 threads on one socket
-> > > > > and N-1 threads on the other socket."
-> > > > >
-> > > > > I have assumed that there were N cores and 2N CPUs per socket as you
-> > > > > mentioned Intel Xeon 6130 in the commit message . My previous emails
-> > > > > don't apply at all with N CPUs per socket and the group_overloaded is
-> > > > > correct.
-> > > > >
-> > > > >
-> > > > >
-> > > > > >
-> > > > > > julia
-> > > > > >
-> > > > > > > This will enable the
-> > > > > > > load_balance to try to migrate a task instead of some util(ization)
-> > > > > > > and you should reach the active load balance.
-> > > > > > >
-> > > > > > > >
-> > > > > > > > > In theory you should have the
-> > > > > > > > > local "group_has_spare" and the busiest "group_fully_busy" (at most).
-> > > > > > > > > This means that no group should be overloaded and load_balance should
-> > > > > > > > > not try to migrate utli but only task
-> > > > > > > >
-> > > > > > > > I didn't collect information about the groups.  I will look into that.
-> > > > > > > >
-> > > > > > > > julia
-> > > > > > > >
-> > > > > > > > >
-> > > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > > and changing the above test to:
-> > > > > > > > > >
-> > > > > > > > > >         if ((env->migration_type == migrate_task || env->migration_type == migrate_util) &&
-> > > > > > > > > >             (sd->nr_balance_failed > sd->cache_nice_tries+2))
-> > > > > > > > > >
-> > > > > > > > > > seems to solve the problem.
-> > > > > > > > > >
-> > > > > > > > > > I will test this on more applications.  But let me know if the above
-> > > > > > > > > > solution seems completely inappropriate.  Maybe it violates some other
-> > > > > > > > > > constraints.
-> > > > > > > > > >
-> > > > > > > > > > I have no idea why this problem became more visible with EEVDF.  It seems
-> > > > > > > > > > to have to do with the time slices all turning out to be the same.  I got
-> > > > > > > > > > the same behavior in 6.5 by overwriting the timeslice calculation to
-> > > > > > > > > > always return 1.  But I don't see the connection between the timeslice and
-> > > > > > > > > > the behavior of the idle task.
-> > > > > > > > > >
-> > > > > > > > > > thanks,
-> > > > > > > > > > julia
-> > > > > > > > >
-> > > > > > >
-> > > > >
-> > >
->
+But arch_setup_dma_ops() is called only from of_dma_configure_id() and 
+acpi_dma_configure_id(). So it works only for DT and ACPI devices. What 
+about platform_device?
