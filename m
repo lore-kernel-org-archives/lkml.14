@@ -1,225 +1,210 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2726A79C4
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 06:28:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T57cdlim"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703226498; x=1734762498;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=PVyWQo3ntB08M03wvTL+weiYWAOMsxFUiFWQcHmTM50=;
-  b=T57cdlimDcRODlYPQ+5hW4hHpwjUn+qdiV8rtb9N0Y2IoTVVbMQHcYsY
-   RjZwKy0DCO5HYFPGTygvJVrPH5WYwbY8t3MddNsrtyjultZe+7IyOD80o
-   f0KIyFOfSgpqU8A5XgFUKRxI7HjnYxgQI4xnGVg8bYQKcpCdh7iGuloDO
-   Gu9WqjXCIAEmJq2TOJWtwySlxBZdof89rd7rCW7WHShDzJwRrOS/IPhjN
-   KxvubB2LLdH3SDPMAXZ3hEU3C5IczLDUAj4blaSIHlpPEkpRsL9EdU/ju
-   YvRCcCZv44UcW/JZdi+IfGiS1zr13q3txnnEQ22p0VNMenhUOlho8Im6p
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="462520034"
-X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
-   d="scan'208";a="462520034"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 22:28:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="847362716"
-X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
-   d="scan'208";a="847362716"
-Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 22:28:02 -0800
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-To: naoya.horiguchi@nec.com
-Cc: linmiaohe@huawei.com,
-	akpm@linux-foundation.org,
-	tony.luck@intel.com,
-	ying.huang@intel.com,
-	fengwei.yin@intel.com,
-	qiuxu.zhuo@intel.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] mm: memory-failure: Re-split hw-poisoned huge page on -EAGAIN
-Date: Fri, 22 Dec 2023 14:27:06 +0800
-Message-Id: <20231222062706.5221-2-qiuxu.zhuo@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20231222062706.5221-1-qiuxu.zhuo@intel.com>
-References: <20231215081204.8802-1-qiuxu.zhuo@intel.com>
- <20231222062706.5221-1-qiuxu.zhuo@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C85DC129
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 06:29:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 3BM6Si16080913;
+	Fri, 22 Dec 2023 14:28:44 +0800 (+08)
+	(envelope-from zhaoyang.huang@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4SxHJx4PqFz2Q05DN;
+	Fri, 22 Dec 2023 14:22:25 +0800 (CST)
+Received: from BJMBX01.spreadtrum.com (10.0.64.7) by BJMBX02.spreadtrum.com
+ (10.0.64.8) with Microsoft SMTP Server (TLS) id 15.0.1497.23; Fri, 22 Dec
+ 2023 14:28:43 +0800
+Received: from BJMBX01.spreadtrum.com ([fe80::54e:9a:129d:fac7]) by
+ BJMBX01.spreadtrum.com ([fe80::54e:9a:129d:fac7%16]) with mapi id
+ 15.00.1497.023; Fri, 22 Dec 2023 14:28:43 +0800
+From: =?utf-8?B?6buE5pyd6ZizIChaaGFveWFuZyBIdWFuZyk=?=
+	<zhaoyang.huang@unisoc.com>
+To: Yu Zhao <yuzhao@google.com>, Zhaoyang Huang <huangzhaoyang@gmail.com>
+CC: Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton
+	<akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?utf-8?B?5bq357qq5ruoIChTdGV2ZSBLYW5nKQ==?= <Steve.Kang@unisoc.com>
+Subject: reply: [RFC PATCH 1/1] mm: mark folio accessed in minor fault
+Thread-Topic: reply: [RFC PATCH 1/1] mm: mark folio accessed in minor fault
+Thread-Index: AQHaNKAbFnoLVF5PBkO1Xlt6kLCF+Q==
+Date: Fri, 22 Dec 2023 06:28:42 +0000
+Message-ID: <1703226522421.22653@unisoc.com>
+References: <20231220102948.1963798-1-zhaoyang.huang@unisoc.com>
+ <ZYL2rbD5UTz3s8gg@casper.infradead.org>
+ <CAGWkznFcMkkqsKJSyHJfts9ZiYsxxg_dFTccieQ4+boRDJgG4g@mail.gmail.com>
+ <ZYO6bLcCRYlo290g@casper.infradead.org>
+ <CAOUHufZ-hAAB+9iL3K-YokN4oVJoiC9dVQ+6zLu-M4Ag52TY5g@mail.gmail.com>
+ <CAGWkznGUvPeWkjcy42dudx_+n19dr7SU3B3GGO6JovXHB-Vyzg@mail.gmail.com>
+ <CAOUHufajdi7LjyJWNoDx7RP_i9mmN8j9dBqO7GC4A6YNPNnygw@mail.gmail.com>
+ <CAGWkznFb2vn_+2ho7BQ1cqVDx0cyFzoffS3_nk4hYUNuRSsVGw@mail.gmail.com>,<CAOUHufZYqeTyZ7e_QyHnEuo8V0Z-9BD5XyNsMMx8Xp1eK5aNkQ@mail.gmail.com>
+In-Reply-To: <CAOUHufZYqeTyZ7e_QyHnEuo8V0Z-9BD5XyNsMMx8Xp1eK5aNkQ@mail.gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-transport-fromentityheader: Hosted
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MAIL:SHSQR01.spreadtrum.com 3BM6Si16080913
 
-During the process of splitting a hw-poisoned huge page, it is possible
-for the reference count of the huge page to be increased by the threads
-within the affected process, leading to a failure in splitting the
-hw-poisoned huge page with an error code of -EAGAIN.
-
-This issue can be reproduced when doing memory error injection to a
-multiple-thread process, and the error occurs within a huge page.
-The call path with the returned -EAGAIN during the testing is shown below:
-
-  memory_failure()
-    try_to_split_thp_page()
-      split_huge_page()
-        split_huge_page_to_list() {
-          ...
-          Step A: can_split_folio() - Checked that the thp can be split.
-          Step B: unmap_folio()
-          Step C: folio_ref_freeze() - Failed and returned -EAGAIN.
-          ...
-        }
-
-The testing logs indicated that some huge pages were split successfully
-via the call path above (Step C was successful for these huge pages).
-However, some huge pages failed to split due to a failure at Step C, and
-it was observed that the reference count of the huge page increased between
-Step A and Step C.
-
-Testing has shown that after receiving -EAGAIN, simply re-splitting the
-hw-poisoned huge page within memory_failure() always results in the same
--EAGAIN. This is possible because memory_failure() is executed in the
-currently affected process. Before this process exits memory_failure() and
-is terminated, its threads could increase the reference count of the
-hw-poisoned page.
-
-Furthermore, if the h/w-poisoned huge page had been mapped for the victim
-application's text and was present in the file cache and it was failed to
-be split. When attempting to restart the process without splitting the
-h/w-poisoned huge page, the application restart failed. This was possible
-because its text was remapped to the hardware-poisoned huge page from the
-file cache, leading to its swift termination due to another MCE.
-
-To address this issue, leverage memory_failure_queue_delayed() to re-split
-the h/w-poisoned huge page by a kernel worker. By the time this worker
-begins re-splitting the h/w-poisoned huge page, the affected process has
-already been terminated, preventing its threads from increasing the
-reference count. Experimental results have consistently shown that this
-worker successfully re-splits these h/w-poisoned huge pages on its first
-attempt. After that the victim application restarted successfully.
-
-The kernel log (before):
-  [ 1116.862895] Memory failure: 0x4097fa7: recovery action for unsplit thp: Ignored
-
-  After that, the victim application may fail to restart.
-
-The kernel log (after):
-  [  405.195308] Memory failure: 0x410756b: recovery action for unsplit thp: Delayed
-  [  405.200267] Memory failure: 0x410756b: recovery action for clean LRU page: Recovered
-
-  After that, the victim application restarted successfully.
-
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
----
-v1->v2:
-
-  1. Include user-visible benefits in both the commit message and code comments.
-     [ Address Naoya Horiguchi's comment on the unclear user-visible benefits in v1. ]
-
-  2. Leverage memory_failure_queue_delayed() to re-split the h/w-poisoned huge page,
-     which makes the recovery action more complete.
-     [ Address Naoya Horiguchi's comment regarding the incomplete recovery in v1.
-       Address Miaohe's concern about the possibility of being freed when the worker is scheduled in v1. ]
-
- include/linux/mm.h  |  1 +
- mm/memory-failure.c | 54 ++++++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 52 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 418d26608ece..87bd67d0a046 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -3904,6 +3904,7 @@ enum mf_flags {
- 	MF_UNPOISON = 1 << 4,
- 	MF_SW_SIMULATED = 1 << 5,
- 	MF_NO_RETRY = 1 << 6,
-+	/* Bits {31:28} are reserved for encoding the THP split retry count. */
- };
- int mf_dax_kill_procs(struct address_space *mapping, pgoff_t index,
- 		      unsigned long count, int mf_flags);
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 8f2c11863bae..2334d0417258 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -2147,6 +2147,28 @@ static int memory_failure_dev_pagemap(unsigned long pfn, int flags,
- 	return rc;
- }
- 
-+static void memory_failure_queue_delayed(unsigned long pfn, int flags, unsigned long delay);
-+
-+#define MF_RETRY_CNT_MASK	GENMASK(31, 28)
-+#define MF_RETRY_CNT_SHIFT	28
-+#define MF_RETRY_CNT_GET(f)	(((f) & MF_RETRY_CNT_MASK) >> MF_RETRY_CNT_SHIFT)
-+#define MF_RETRY_CNT_SET(f, c)	(((f) & ~MF_RETRY_CNT_MASK) | ((c) << MF_RETRY_CNT_SHIFT))
-+
-+#define MAX_RETRY_CNT		10
-+#define INIT_DELAYED_MS		1
-+
-+static bool split_thp_delayed(unsigned long pfn, int flags)
-+{
-+	int cnt = MF_RETRY_CNT_GET(flags);
-+
-+	if (cnt >= MAX_RETRY_CNT)
-+		return false;
-+
-+	memory_failure_queue_delayed(pfn, MF_RETRY_CNT_SET(flags, cnt + 1),
-+				     msecs_to_jiffies(INIT_DELAYED_MS << cnt));
-+	return true;
-+}
-+
- /**
-  * memory_failure - Handle memory failure of a page.
-  * @pfn: Page Number of the corrupted page
-@@ -2211,7 +2233,7 @@ int memory_failure(unsigned long pfn, int flags)
- 	if (hugetlb)
- 		goto unlock_mutex;
- 
--	if (TestSetPageHWPoison(p)) {
-+	if (TestSetPageHWPoison(p) && !MF_RETRY_CNT_GET(flags)) {
- 		pr_err("%#lx: already hardware poisoned\n", pfn);
- 		res = -EHWPOISON;
- 		if (flags & MF_ACTION_REQUIRED)
-@@ -2275,8 +2297,34 @@ int memory_failure(unsigned long pfn, int flags)
- 		 * page is a valid handlable page.
- 		 */
- 		SetPageHasHWPoisoned(hpage);
--		if (try_to_split_thp_page(p) < 0) {
--			res = action_result(pfn, MF_MSG_UNSPLIT_THP, MF_IGNORED);
-+		res = try_to_split_thp_page(p);
-+		if (res < 0) {
-+			/*
-+			 * Re-attempting try_to_split_thp_page() here could consistently
-+			 * yield -EAGAIN, as the threads of the process may increment the
-+			 * reference count of the huge page before the process exits
-+			 * memory_failure() and terminates.
-+			 *
-+			 * Furthermore, if the h/w-poisoned huge page had been mapped for
-+			 * the victim application's text and was present in the file cache
-+			 * and it was failed to be split. When attempting to restart the
-+			 * application without splitting the h/w-poisoned huge page, the
-+			 * application restart failed. This was possible because its text
-+			 * was remapped to the hardware-poisoned huge page from the file
-+			 * cache, leading to its swift termination due to another MCE.
-+			 *
-+			 * Leverage memory_failure_queue_delayed() to re-split the h/w-poisoned
-+			 * huge page by a kernel worker. By the time this worker initiates
-+			 * the re-splitting and recovery process, the affected process has
-+			 * already been terminated, preventing its threads from incrementing
-+			 * the reference count. After re-splitting the h/w-poisoned huge page
-+			 * successfully (drop the text mapping), the application restart is
-+			 * successful.
-+			 */
-+			if (res == -EAGAIN && split_thp_delayed(pfn, flags))
-+				res = action_result(pfn, MF_MSG_UNSPLIT_THP, MF_DELAYED);
-+			else
-+				res = action_result(pfn, MF_MSG_UNSPLIT_THP, MF_IGNORED);
- 			goto unlock_mutex;
- 		}
- 		VM_BUG_ON_PAGE(!page_count(p), p);
--- 
-2.17.1
-
+Ck9uIFRodSwgRGVjIDIxLCAyMDIzIGF0IDEwOjUz4oCvUE0gWmhhb3lhbmcgSHVhbmcgPGh1YW5n
+emhhb3lhbmdAZ21haWwuY29tPiB3cm90ZToKPgo+IE9uIFRodSwgRGVjIDIxLCAyMDIzIGF0IDI6
+MzPigK9QTSBZdSBaaGFvIDx5dXpoYW9AZ29vZ2xlLmNvbT4gd3JvdGU6Cj4gPgo+ID4gT24gV2Vk
+LCBEZWMgMjAsIDIwMjMgYXQgMTE6MjjigK9QTSBaaGFveWFuZyBIdWFuZyA8aHVhbmd6aGFveWFu
+Z0BnbWFpbC5jb20+IHdyb3RlOgo+ID4gPgo+ID4gPiBPbiBUaHUsIERlYyAyMSwgMjAyMyBhdCAx
+Mjo1M+KAr1BNIFl1IFpoYW8gPHl1emhhb0Bnb29nbGUuY29tPiB3cm90ZToKPiA+ID4gPgo+ID4g
+PiA+IE9uIFdlZCwgRGVjIDIwLCAyMDIzIGF0IDk6MDnigK9QTSBNYXR0aGV3IFdpbGNveCA8d2ls
+bHlAaW5mcmFkZWFkLm9yZz4gd3JvdGU6Cj4gPiA+ID4gPgo+ID4gPiA+ID4gT24gVGh1LCBEZWMg
+MjEsIDIwMjMgYXQgMDk6NTg6MjVBTSArMDgwMCwgWmhhb3lhbmcgSHVhbmcgd3JvdGU6Cj4gPiA+
+ID4gPiA+IE9uIFdlZCwgRGVjIDIwLCAyMDIzIGF0IDEwOjE04oCvUE0gTWF0dGhldyBXaWxjb3gg
+PHdpbGx5QGluZnJhZGVhZC5vcmc+IHdyb3RlOgo+ID4gPiA+ID4gPiA+Cj4gPiA+ID4gPiA+ID4g
+T24gV2VkLCBEZWMgMjAsIDIwMjMgYXQgMDY6Mjk6NDhQTSArMDgwMCwgemhhb3lhbmcuaHVhbmcg
+d3JvdGU6Cj4gPiA+ID4gPiA+ID4gPiBGcm9tOiBaaGFveWFuZyBIdWFuZyA8emhhb3lhbmcuaHVh
+bmdAdW5pc29jLmNvbT4KPiA+ID4gPiA+ID4gPiA+Cj4gPiA+ID4gPiA+ID4gPiBJbmFjdGl2ZSBt
+YXBwZWQgZm9saW8gd2lsbCBiZSBwcm9tb3RlZCB0byBhY3RpdmUgb25seSB3aGVuIGl0IGlzCj4g
+PiA+ID4gPiA+ID4gPiBzY2FubmVkIGluIHNocmlua19pbmFjdGl2ZV9saXN0LCB3aGlsZSB0aGUg
+dmZzIGZvbGlvIHdpbGwgZG8gdGhpcwo+ID4gPiA+ID4gPiA+ID4gaW1taWRpYXRseSB3aGVuIGl0
+IGlzIGFjY2Vzc2VkLiBUaGVzZSB3aWxsIGludHJvZHVjZSB0d28gYWZmZWN0aW9uczoKPiA+ID4g
+PiA+ID4gPiA+Cj4gPiA+ID4gPiA+ID4gPiAxLiBOUl9BQ1RJVkVfRklMRSBpcyBub3QgYWNjdXJh
+dGUgYXMgZXhwZWN0ZWQuCj4gPiA+ID4gPiA+ID4gPiAyLiBMb3cgcmVjbGFpbWluZyBlZmZpY2ll
+bmN5IGNhdXNlZCBieSBkdW1teSBuYWN0aXZlIGZvbGlvIHdoaWNoIHNob3VsZAo+ID4gPiA+ID4g
+PiA+ID4gICAgYmUga2VwdCBhcyBlYXJsaWVyIGFzIHNocmlua19hY3RpdmVfbGlzdC4KPiA+ID4g
+PiA+ID4gPiA+Cj4gPiA+ID4gPiA+ID4gPiBJIHdvdWxkIGxpa2UgdG8gc3VnZ2VzdCBtYXJrIHRo
+ZSBmb2xpbyBiZSBhY2Nlc3NlZCBpbiBtaW5vciBmYXVsdCB0bwo+ID4gPiA+ID4gPiA+ID4gc29s
+dmUgdGhpcyBzaXR1YXRpb24uCj4gPiA+ID4gPiA+ID4KPiA+ID4gPiA+ID4gPiBUaGlzIGlzbid0
+IGdvaW5nIHRvIGJlIGFzIGVmZmVjdGl2ZSBhcyB5b3UgaW1hZ2luZS4gIEFsbW9zdCBhbGwgZmls
+ZQo+ID4gPiA+ID4gPiA+IGZhdWx0cyBhcmUgaGFuZGxlZCB0aHJvdWdoIGZpbGVtYXBfbWFwX3Bh
+Z2VzKCkuICBTbyBJIG11c3QgYXNrLCB3aGF0Cj4gPiA+ID4gPiA+ID4gdGVzdGluZyBoYXZlIHlv
+dSBkb25lIHdpdGggdGhpcyBwYXRjaD8KPiA+ID4gPiA+ID4gPgo+ID4gPiA+ID4gPiA+IEFuZCB3
+aGlsZSB5b3UncmUgZ2F0aGVyaW5nIGRhdGEsIHdoYXQgZWZmZWN0IHdvdWxkIHRoaXMgcGF0Y2gg
+aGF2ZSBvbiB5b3VyCj4gPiA+ID4gPiA+ID4gd29ya2xvYWRzPwo+ID4gPiA+ID4gPiBUaGFua3Mg
+Zm9yIGhlYWRzLXVwLCBJIGFtIG91dCBvZiBkYXRlIGZvciByZWFkYWhlYWQgbWVjaGFuaXNtLiBN
+eSBnb2FsCj4gPiA+ID4gPgo+ID4gPiA+ID4gSXQncyBub3QgYSB0ZXJyaWJseSBuZXcgbWVjaGFu
+aXNtIC4uLiBmaWxlbWFwX21hcF9wYWdlcygpIHdhcyBhZGRlZCBuaW5lCj4gPiA+ID4gPiB5ZWFy
+cyBhZ28gaW4gMjAxNCBieSBjb21taXQgZjE4MjAzNjFmODNkCj4gPiA+ID4gPgo+ID4gPiA+ID4g
+PiBpcyB0byBoYXZlIG1hcHBlZCBmaWxlIHBhZ2VzIGJlaGF2ZSBsaWtlIG90aGVyIHBhZ2VzIHdo
+aWNoIGNvdWxkIGJlCj4gPiA+ID4gPiA+IHByb21vdGVkIGltbWVkaWF0ZWx5IHdoZW4gdGhleSBh
+cmUgYWNjZXNzZWQuIEkgd2lsbCB1cGRhdGUgdGhlIHBhdGNoCj4gPiA+ID4gPiA+IGFuZCBwcm92
+aWRlIGJlbmNobWFyayBkYXRhIGluIG5ldyBwYXRjaCBzZXQuCj4gPiA+ID4gPgo+ID4gPiA+ID4g
+VW5kZXJzdG9vZC4gIEkgZG9uJ3Qga25vdyB0aGUgaGlzdG9yeSBvZiB0aGlzLCBzbyBJJ20gbm90
+IHN1cmUgaWYgdGhlCj4gPiA+ID4gPiBkZWNpc2lvbiB0byBub3QgbWFyayBmb2xpb3MgYXMgYWNj
+ZXNzZWQgaGVyZSB3YXMgaW50ZW50aW9uYWwgb3Igbm90Lgo+ID4gPiA+ID4gSSBzdXNwZWN0IGl0
+J3MgZW50aXJlbHkgdW5pbnRlbnRpb25hbC4KPiA+ID4gPgo+ID4gPiA+IEl0J3MgaW50ZW50aW9u
+YWwuIEZvciB0aGUgYWN0aXZlL2luYWN0aXZlIExSVSwgYWxsIGZvbGlvcyBzdGFydAo+ID4gPiA+
+IGluYWN0aXZlLiBUaGUgZmlyc3Qgc2NhbiBvZiBhIGZvbGlvIHRyYW5zZmVycyB0aGUgQS1iaXQg
+KGlmIGl0J3Mgc2V0Cj4gPiA+ID4gZHVyaW5nIHRoZSBpbml0aWFsIGZhdWx0KSB0byBQR19yZWZl
+cmVuY2VkOyB0aGUgc2Vjb25kIHNjYW4gb2YgdGhpcwo+ID4gPiA+IGZvbGlvLCBpZiB0aGUgQS1i
+aXQgaXMgc2V0IGFnYWluLCBtb3ZlcyBpdCB0byB0aGUgYWN0aXZlIGxpc3QuIFRoaXMKPiA+ID4g
+PiB3YXkgc2luZ2xlLXVzZSBmb2xpb3MsIGkuZS4sIGZvbGlvcyBtYXBwZWQgZm9yIGZpbGUgc3Ry
+ZWFtaW5nLCBjYW4gYmUKPiA+ID4gPiByZWNsYWltZWQgcXVpY2tseSwgc2luY2UgdGhleSBhcmUg
+ImRlbW90ZWQiIHJhdGhlciB0aGFuICJwcm9tb3RlZCIgb24KPiA+ID4gPiB0aGUgc2Vjb25kIHNj
+YW4uIFRoaXMgUkZDIHdvdWxkIHJlZ3Jlc3MgbWVtb3J5IHN0cmVhbWluZyB3b3JrbG9hZHMuCj4g
+PiA+IFRoYW5rcy4gUGxlYXNlIGNvcnJlY3QgbWUgaWYgSSBhbSB3cm9uZy4gSU1PLCB0aGVyZSB3
+aWxsIGJlIG5vCj4gPiA+IG1pbm9yLWZhdWx0IGZvciBzaW5nbGUtdXNlIGZvbGlvcwo+ID4KPiA+
+IFdoeSBub3Q/IFdoYXQgcHJldmVudHMgYSBzcGVjaWZpYyAqYWNjZXNzIHBhdHRlcm4qIGZyb20g
+dHJpZ2dlcmluZyBtaW5vciBmYXVsdHM/Cj4gUGxlYXNlIGZpbmQgdGhlIGZvbGxvd2luZyBjaGFy
+dCBmb3IgbWFwcGVkIHBhZ2Ugc3RhdGUgbWFjaGluZQo+IHRyYW5zZmljYXRpb24uCgo+IEknbSBu
+b3Qgc3VyZSB3aGF0IHlvdSBhcmUgYXNraW5nIG1lIHRvIGxvb2sgYXQgLS0gaXMgdGhlIGZvbGxv
+d2luZwo+IHRyeWluZyB0byBpbGx1c3RyYXRlIHNvbWV0aGluZyByZWxhdGVkIHRvIG15IHF1ZXN0
+aW9uIGFib3ZlPwoKc29ycnkgZm9yIG15IGZhdWx0IG9uIHRhYmxlIGdlbmVyYXRpb24sIHJlc2Vu
+ZCBpdCwgSSBhbSB0cnlpbmcgdG8gcHJlc2VudCBob3cgUkZDIHBlcmZvcm1zIGluIGEgcGFnZSdz
+IHN0YXQgdHJhbnNmZXIgCgoxLiBSRkMgYmVoYXZlcyB0aGUgc2FtZSBhcyB0aGUgbWFpbmxpbmUg
+aW4gKDEpKDIpCjIuIFZNX0VYRUMgbWFwcGVkIHBhZ2VzIGFyZSBhY3RpdmF0ZWQgZWFybGllciB0
+aGFuIG1haW5saW5lIHdoaWNoIGhlbHAgaW1wcm92ZSBzY2FuIGVmZmljaWVuY3kgaW4gKDMpKDQp
+CjMuIG5vbmUgVk1fRVhFQyBtYXBwZWQgcGFnZXMgYXJlIGRyb3BwZWQgYXMgdmZzIHBhZ2VzIGRv
+IGR1cmluZyAzcmQgc2Nhbi4KCigxKQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+MXN0IGFjY2VzcyAgICAgICAgIHNocmlua19hY3RpdmVfbGlzdCAgICAgICAgICAgICAgMXN0IHNj
+YW4oc2hpbmtfZm9saW9fbGlzdCkgICAgICAgMm5kIHNjYW4oc2hyaW5rX2ZvbGlvX2xpc3QnKQpt
+YWlubGluZSAgICAgICAgICAgICAgICAgICAgIElOQS9VTlIgICAgICAgICAgICAgICAgICAgICAg
+ICBOQSAgICAgICAgICAgICAgICAgICAgICAgICAgSU5BL1JFRiAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBEUk9QClJGQyAgICAgICAgICAgICAgICAgICAgICAgICAgIElOQS9VTlIgICAg
+ICAgICAgICAgICAgICAgICAgICBOQSAgICAgICAgICAgICAgICAgICAgICAgICAgIElOQS9SRUYg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBEUk9QCgooMikKICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIDFzdCBhY2Nlc3MgICAgICAgICAgICAgICAgIDJuZCBhY2Nlc3MgICAg
+ICAgICAgICAgICBzaHJpbmtfYWN0aXZlX2xpc3QgICAgICAgICAgMXN0IHNjYW4oc2hpbmtfZm9s
+aW9fbGlzdCkgCm1haW5saW5lICAgICAgICAgICAgICAgICAgICAgSU5BL1VOUiAgICAgICAgICAg
+ICAgICAgICAgIElOQS9VTlIgICAgICAgICAgICAgICAgICAgICAgIE5BICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgQUNUL1JFRgpSRkMgICAgICAgICAgICAgICAgICAgICAgICAgICBJ
+TkEvVU5SICAgICAgICAgICAgICAgICAgICAgSU5BL1JFRiAgICAgICAgICAgICAgICAgICAgICAg
+TkEgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBBQ1QvUkVGCgooMykKICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIDFzdCBhY2Nlc3MgICAgICAgIDFzdCBzY2FuKHNoaW5r
+X2ZvbGlvX2xpc3QpICAgICAgIDJuZCBhY2Nlc3MgICAgICAybmQgc2NhbihzaHJpbmtfYWN0aXZl
+X2xpc3QpICAgICAzcmQgY2FuKHNocmlua19mb2xpb19saXN0KQptYWlubGluZSAgICAgICAgICAg
+ICAgICAgICAgIElOQS9VTlIgICAgICAgICAgICAgICAgICAgIElOQS9SRUYgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBJTkEvUkVGICAgICAgICAgICAgICAgIE5BICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIEFDVC9SRUYKUkZDICAgICAgICAgICAgICAgICAgICAgICAgICAg
+SU5BL1VOUiAgICAgICAgICAgICAgICAgICAgSU5BL1JFRiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIEFDVC9SRUYgICAgICAgICAgICAgICAgQUNUL1JFRiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIE5BCihWTV9FWEVDKQpSRkMgICAgICAgICAgICAgICAgICAgICAgICAgICBJTkEvVU5SICAg
+ICAgICAgICAgICAgICAgICBJTkEvUkVGICAgICAgICAgICAgICAgICAgICAgICAgICAgQUNUL1JF
+RiAgICAgICAgICAgICAgICBJTkEvUkVGICAgICAgICAgICAgICAgICAgICAgICAgICAgIERST1AK
+KG5vbiBWTV9FWEVDKQoKKDQpCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxc3Qg
+YWNjZXNzICAgICAgICAgICAgICAgICAgIDJuZCBhY2Nlc3MgICAgICAgICAgICAgICAgICAgM3Jk
+IGFjY2VzcyAgICAgICAgICAxc3Qgc2NhbihzaHJpbmtfYWN0aXZlX2xpc3QpICAgMm5kIHNjYW4o
+c2hpbmtfZm9saW9fbGlzdCkKbWFpbmxpbmUgICAgICAgICAgICAgICAgICAgICBJTkEvVU5SICAg
+ICAgICAgICAgICAgICAgICAgICBJTkEvVU5SICAgICAgICAgICAgICAgICAgICAgICBJTkEvVU5S
+ICAgICAgICAgICAgICAgICAgICBOQSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFD
+VC9SRUYKUkZDICAgICAgICAgICAgICAgICAgICAgICAgICAgSU5BL1VOUiAgICAgICAgICAgICAg
+ICAgICAgICAgSU5BL1JFRiAgICAgICAgICAgICAgICAgICAgICAgICBBQ1QvUkVGICAgICAgICAg
+ICAgICAgICAgQUNUL1JFRiAgICAgICAgICAgICAgICAgICAgICAgTkEKKFZNX0VYRUMpClJGQyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIElOQS9VTlIgICAgICAgICAgICAgICAgICAgICAgIElO
+QS9SRUYgICAgICAgICAgICAgICAgICAgICAgICBBQ1QvUkVGICAgICAgICAgICAgICAgICAgIEFD
+VC9SRUYgICAgICAgICAgICAgICAgICAgICAgIE5BCihOb24gVk1fRVhFQykKCj4gV2UgY2FuIGZp
+bmQgdGhhdDoKPiAxLiBSRkMgYmVoYXZlcyB0aGUgc2FtZSBhcyB0aGUgbWFpbmxpbmUgaW4gKDEp
+KDIpCj4gMi4gVk1fRVhFQyBtYXBwZWQgcGFnZXMgYXJlIGFjdGl2YXRlZCBlYXJsaWVyIHRoYW4g
+bWFpbmxpbmUgd2hpY2ggaGVscAo+IGltcHJvdmUgc2NhbiBlZmZpY2llbmN5IGluICgzKSg0KQo+
+IDMuIG5vbmUgVk1fRVhFQyBtYXBwZWQgcGFnZXMgYXJlIGRyb3BwZWQgYXMgdmZzIHBhZ2VzIGRv
+IGR1cmluZyAzcmQgc2Nhbi4KPgo+ICgxKQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAxc3QgYWNjZXNzCj4gc2hyaW5rX2FjdGl2ZV9saXN0ICAgICAgICAgICAgICAxc3Qgc2Nh
+bihzaGlua19mb2xpb19saXN0KQo+IDJuZCBzY2FuKHNocmlua19mb2xpb19saXN0JykKPiBtYWlu
+bGluZSAgICAgICAgICAgICAgICAgICAgIElOQS9VTlIgICAgICAgICAgICAgICAgICAgICAgICBO
+QQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgSU5BL1JFRgo+IERST1AKPiBSRkMgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBJTkEvVU5SICAgICAgICAgICAgICAgICAgICAgICAgTkEKPiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBJTkEvUkVGCj4gRFJPUAo+Cj4gKDIpCj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIDFzdCBhY2Nlc3MgICAgICAgICAgICAgICAgICAg
+Mm5kCj4gYWNjZXNzICAgICAgICAgICAgICAgICAgICAgICAgc2hyaW5rX2FjdGl2ZV9saXN0ICAg
+ICAgICAgIDFzdAo+IHNjYW4oc2hpbmtfZm9saW9fbGlzdCkKPiBtYWlubGluZSAgICAgICAgICAg
+ICAgICAgICAgIElOQS9VTlIgICAgICAgICAgICAgICAgICAgICBJTkEvVU5SCj4gICAgICAgICAg
+ICAgICAgICAgICAgIE5BICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQUNUL1JFRgo+
+IFJGQyAgICAgICAgICAgICAgICAgICAgICAgICAgIElOQS9VTlIgICAgICAgICAgICAgICAgICAg
+ICBJTkEvUkVGCj4gICAgICAgICAgICAgICAgICAgICAgICAgTkEgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBBQ1QvUkVGCj4KPiAoMykKPiAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgMXN0IGFjY2Vzcwo+IHNocmlua19hY3RpdmVfbGlzdCAgICAgICAgMXN0IHNjYW4o
+c2hpbmtfZm9saW9fbGlzdCkgICAgICAgMm5kIGFjY2Vzcwo+ICAgICAgIDJuZCBzY2FuKHNocmlu
+a19hY3RpdmVfbGlzdCkgICAgIDNyZCBzY2FuKHNoaW5rX2ZvbGlvX2xpc3QpCj4gbWFpbmxpbmUg
+ICAgICAgICAgICAgICAgICAgICBJTkEvVU5SICAgICAgICAgICAgICAgICAgICAgICAgTkEKPiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIElOQS9SRUYgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBJTkEvUkVGCj4gICAgICAgICAgICAgICAgIE5BICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIEFDVC9SRUYKPiBSRkMgICAgICAgICAgICAgICAgICAgICAgICAgICBJTkEvVU5S
+ICAgICAgICAgICAgICAgICAgICAgICAgTkEKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICBJ
+TkEvUkVGICAgICAgICAgICAgICAgICAgICAgICAgICAgQUNUL1JFRgo+ICAgICAgICAgICAgICAg
+ICBBQ1QvUkVGICAgICAgICAgICAgICAgICAgICAgICAgICAgTkEKPiAoVk1fRVhFQykKPiBSRkMg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBJTkEvVU5SICAgICAgICAgICAgICAgICAgICAgICAg
+TkEKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICBJTkEvUkVGICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgQUNUL1JFRgo+ICAgICAgICAgICAgICAgICBJTkEvUkVGICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIERST1AKPiAobm9uIFZNX0VYRUMpCj4KPiAoNCkKPiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgMXN0IGFjY2VzcyAgICAgICAgICAgICAgICAgICAybmQKPiBh
+Y2Nlc3MgICAgICAgICAgICAgICAgICAgICAgICAgM3JkIGFjY2Vzcwo+IHNocmlua19hY3RpdmVf
+bGlzdCAgICAgICAgICAgICAgICAgICBzaGlua19mb2xpb19saXN0Cj4gbWFpbmxpbmUgICAgICAg
+ICAgICAgICAgICAgICBJTkEvVU5SICAgICAgICAgICAgICAgICAgICAgICBJTkEvVU5SCj4gICAg
+ICAgICAgICAgICAgICAgICAgICBJTkEvVU5SICAgICAgICAgICAgICAgICAgICAgICAgICBOQQo+
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFDVC9SRUYKPiBSRkMgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBJTkEvVU5SICAgICAgICAgICAgICAgICAgICAgICBJTkEvUkVGCj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgIEFDVC9SRUYgICAgICAgICAgICAgICAgICAgICAgICAgQUNUL1JF
+Rgo+ICAgICAgICAgICAgICAgICAgICAgICAgTkEKPiAoVk1fRVhFQykKPiBSRkMgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBJTkEvVU5SICAgICAgICAgICAgICAgICAgICAgICBJTkEvUkVGCj4g
+ICAgICAgICAgICAgICAgICAgICAgICAgIEFDVC9SRUYgICAgICAgICAgICAgICAgICAgICAgICAg
+QUNUL1JFRgo+ICAgICAgICAgICAgICAgICAgICAgICAgTkEKPiAoTm9uIFZNX0VYRUMpCj4gPgo+
+ID4gPiB3aGljaCBtZWFucyBSRkMgY291bGQgYmVoYXZlIHRoZQo+ID4gPiBzYW1lIGFzIG1haW5s
+aW5lIGRvZXMgbm93PyBJIHRoaW5rIGl0IGRvZXNuJ3QgbWFrZSBzZW5zZSB0byBoYXZlCj4gPiA+
+IG11bHRpcGxlLW1hcHBlZCBwYWdlcyBmaWxsZWQgaW4gcGFnZV9saXN0IHRvIHNocmlua19wYWdl
+X2xpc3Qgc2luY2Ugd2UKPiA+ID4gY2FuIGRpc3Rpbmd1aXNoIHRoZW0gaW4gYWR2YW5jZS4K
