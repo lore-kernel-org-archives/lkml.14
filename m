@@ -1,129 +1,139 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BEE417985;
-	Fri, 22 Dec 2023 12:03:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="G2BJGfNc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1703246590; x=1703851390; i=markus.elfring@web.de;
-	bh=+/jv+l30EGrAi9nYpLc4XLLYanHvltsf8lsVWJ+WBq8=;
-	h=X-UI-Sender-Class:Date:To:Cc:From:Subject;
-	b=G2BJGfNcZ5Dwi+GePNcsGfk9kf3cmYpUjdmzlUiup2V04tmzmrdaJE+HKtaTFDmy
-	 C9iQp9rfhg2NQYHKZNgQPYZKwe2sjR/XOQ9ff5sUMWBk4s8JtFtxWTOhJ2cqublPK
-	 Wzq5t9CQvJ7v6pb7gHoEv98ynTWEIBkX2FKA0XaFms5dxCldwO6SOcKV/rqtqJIoy
-	 udnlc46e/2LZfWsyFyN/33aw7qhyWFuMuPBXEfX/qfXLk4IQfqBorrbtyS9e7qEII
-	 S66iJC+xMmqwbX+gmL99MI0S0BJDZDilZ7LZFc6BL33RLf4/0yKhNtkIHk6jOwGnR
-	 u9rnlK7rGD14fPUG8Q==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MYcpt-1rlbDS3zIx-00Vn85; Fri, 22
- Dec 2023 13:03:10 +0100
-Message-ID: <01446ce9-c0e8-4467-8b2d-fd736bc5b8e4@web.de>
-Date: Fri, 22 Dec 2023 13:03:08 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099AB17992
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 12:07:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4SxQtg3Wp9z1FFJF;
+	Fri, 22 Dec 2023 20:03:39 +0800 (CST)
+Received: from kwepemi500024.china.huawei.com (unknown [7.221.188.100])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6FC711A0172;
+	Fri, 22 Dec 2023 20:07:25 +0800 (CST)
+Received: from huawei.com (10.175.103.91) by kwepemi500024.china.huawei.com
+ (7.221.188.100) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 22 Dec
+ 2023 20:07:24 +0800
+From: Zeng Heng <zengheng4@huawei.com>
+To: <mingo@redhat.com>, <will@kernel.org>, <peterz@infradead.org>,
+	<longman@redhat.com>, <boqun.feng@gmail.com>
+CC: <xiexiuqi@huawei.com>, <liwei391@huawei.com>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] locking/osq_lock: Avoid false sharing in optimistic_spin_node
+Date: Fri, 22 Dec 2023 20:10:40 +0800
+Message-ID: <20231222121040.2635879-1-zengheng4@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-GB
-To: Abel Vesa <abelvesa@kernel.org>, Fabio Estevam <festevam@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Peng Fan <peng.fan@nxp.com>,
- Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>,
- Stephen Boyd <sboyd@kernel.org>, kernel@pengutronix.de, linux-imx@nxp.com,
- linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kernel-janitors@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr,
- Kuan-Wei Chiu <visitorckw@gmail.com>
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] clk: imx: scu: Use common error handling code in
- imx_clk_scu_alloc_dev()
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:BGjso6szF5OPPe6YkYQSGx3cbiFicSuxRzUDu9gXysZ9LBV5Tvq
- Z6cTffdqrv7UHIX6aoglrjMVMIeKP5pSDKLNvjntsxJd+mL17ws3IVG0GKYnF+pS6T67QvK
- gr8PeMjPqAqlHHGSTj0e9Sv+JKROzNQdbR0YdGn46YScqYKsul9MgsPDHwT9q9FqJxmvmSL
- MRCmKAbKnhmhhobSBf3Qg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:C43S6QqDGms=;1AS+ngQDUXyBJhSI0PdTlWudgJL
- JisRmg3aLdq7ySUByZXyBe5ukinU/bozc+P/qge5y9ew5GD6hXlSanaVebEhIvK5moYeqaAyN
- jARiNJ8NQcxgL5JRcanHezbbpdhQauCgEfaO15WtywBI9L6/x2zhjYMhCJZzZTGtzt9a8aA+c
- IzsU18Tsew5MQZ1kKLmcWE5KK9WraLVAaOCzV2j4dd1SrfPHO1I+7LKYNX54eH3wjRgEokM0H
- cltYoCZ/ZQOINV0WjgYBJnK/41T4yBXRlY/jG+hffHdGCBp58di5Wm5Mnsa6yEDzezhx5g42o
- e+aVZlXPZCR5WFBKCiZc92bFrPTkLl8SMmS28l1/SzImDcxjIEAlJoj3cvZefNyesWt+d9YE8
- SY5xhEQKB9nKAbgbNhzXYxk1WqcgphKaXKwO5XPH6wjwBDqYA8L6dqh+9q2WzuMLMqLgevj+l
- guU5+wrpnwYus5cVqXlg602wFAg7k2EHbcCppeGzUxvSqJh5OhZNj1AE06NFw8aotxiljQkyp
- Ai3M13CeYSk3YtkA7oYLnsDxuyZlUa3QkTjHHRBkgv9ZOczKaCy0HLAhFGP+KHmjX1VJ+u2Bc
- SipmOzNgd0gKQog7Fb3Pp9SbjRWzuYe6B25KYb+Lgur8f82pJMzYzQ3c0NAyIP9bKenH/TWM8
- s4GEvRZlmLm/KqBNUsipS8f/JyLhHrlG1uQ+VEH1uMV+p+1MyLAXet8Fqo1kRaWhfXKKvKJgj
- a611lmi/E2kcO1J+mdPHaXo8EWR2fnD51ntCoonYMheu83cySK/J2XsB15IgGEeW1omMY1IZb
- rETu2YO1m6n3HTBmNc0u662Krt0AITpVXxvFAI6IuGxTSMcqKXAKU72osSR4sq4jARRe0qfi9
- qixcAizdkwON+ZXaKKztKXHISzLcATiSZzVAZfqyDIpoixdbaIltFsZpdU27izUtjh8ylcGkq
- JgjelfK58dYaRUc0BOsYkU4sjiU=
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemi500024.china.huawei.com (7.221.188.100)
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Fri, 22 Dec 2023 12:56:48 +0100
+Using the UnixBench test suite, we clearly find that osq_lock() cause
+extremely high overheads with perf tool in the File Copy items:
 
-Add a jump target so that a bit of exception handling can be better reused
-at the end of this function.
+Overhead  Shared Object            Symbol
+  94.25%  [kernel]                 [k] osq_lock
+   0.74%  [kernel]                 [k] rwsem_spin_on_owner
+   0.32%  [kernel]                 [k] filemap_get_read_batch
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/clk/imx/clk-scu.c | 22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+In response to this, we conducted an analysis and made some gains:
 
-diff --git a/drivers/clk/imx/clk-scu.c b/drivers/clk/imx/clk-scu.c
-index e48a904c0013..b1dd0c08e091 100644
-=2D-- a/drivers/clk/imx/clk-scu.c
-+++ b/drivers/clk/imx/clk-scu.c
-@@ -712,17 +712,13 @@ struct clk_hw *imx_clk_scu_alloc_dev(const char *nam=
-e,
- 	}
+In the prologue of osq_lock(), it set `cpu` member of percpu struct
+optimistic_spin_node with the local cpu id, after that the value of the
+percpu struct would never change in fact. Based on that, we can regard
+the `cpu` member as a constant variable.
 
- 	ret =3D platform_device_add_data(pdev, &clk, sizeof(clk));
--	if (ret) {
--		platform_device_put(pdev);
--		return ERR_PTR(ret);
--	}
-+	if (ret)
-+		goto put_device;
+In the meanwhile, other members of the percpu struct like next, prev and
+locked are frequently modified by osq_lock() and osq_unlock() which are
+called by rwsem, mutex and so on. However, that would invalidate the cache
+of the cpu member on other CPUs.
 
- 	ret =3D driver_set_override(&pdev->dev, &pdev->driver_override,
- 				  "imx-scu-clk", strlen("imx-scu-clk"));
--	if (ret) {
--		platform_device_put(pdev);
--		return ERR_PTR(ret);
--	}
-+	if (ret)
-+		goto put_device;
+Therefore, we can place padding here and split them into different cache
+lines to avoid cache misses when the next CPU is spinning to check other
+node's cpu member by vcpu_is_preempted().
 
- 	ret =3D imx_clk_scu_attach_pd(&pdev->dev, rsrc_id);
- 	if (ret)
-@@ -730,13 +726,15 @@ struct clk_hw *imx_clk_scu_alloc_dev(const char *nam=
-e,
- 			name, ret);
+Here provide the UnixBench full-core test result based on v6.6 as below:
+Machine Intel(R) Xeon(R) Gold 6248 CPU, 40 cores, 80 threads
+Run the command of "./Run -c 80 -i 3" over 20 times and take the average.
 
- 	ret =3D platform_device_add(pdev);
--	if (ret) {
--		platform_device_put(pdev);
--		return ERR_PTR(ret);
--	}
-+	if (ret)
-+		goto put_device;
+System Benchmarks Index Values           Without Patch   With Patch     Diff
+Dhrystone 2 using register variables         185518.38    185329.56   -0.10%
+Double-Precision Whetstone                    79330.46     79268.22   -0.08%
+Execl Throughput                               9725.14     10390.18    6.84%
+File Copy 1024 bufsize 2000 maxblocks          1658.42      2035.55   22.74%
+File Copy 256 bufsize 500 maxblocks            1086.54      1316.96   21.21%
+File Copy 4096 bufsize 8000 maxblocks          3610.42      4152.79   15.02%
+Pipe Throughput                               69325.18     69913.85    0.85%
+Pipe-based Context Switching                  14026.32     14703.07    4.82%
+Process Creation                               8329.94      8355.31    0.30%
+Shell Scripts (1 concurrent)                  38942.41     41518.39    6.61%
+Shell Scripts (8 concurrent)                  37762.35     40224.49    6.52%
+System Call Overhead                           4064.44      4004.45   -1.48%
+                                                                    ========
+System Benchmarks Index Score                 13634.17     14560.71    6.80%
 
- 	/* For API backwards compatiblilty, simply return NULL for success */
- 	return NULL;
+Signed-off-by: Zeng Heng <zengheng4@huawei.com>
+---
+v1->v2: fix compile issue
+
+ include/linux/osq_lock.h  | 10 +++++++++-
+ kernel/locking/osq_lock.c |  8 +++++++-
+ 2 files changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/osq_lock.h b/include/linux/osq_lock.h
+index 5581dbd3bd34..1883c31bf536 100644
+--- a/include/linux/osq_lock.h
++++ b/include/linux/osq_lock.h
+@@ -2,6 +2,8 @@
+ #ifndef __LINUX_OSQ_LOCK_H
+ #define __LINUX_OSQ_LOCK_H
+
++#include <linux/cache.h>
 +
-+put_device:
-+	platform_device_put(pdev);
-+	return ERR_PTR(ret);
- }
+ /*
+  * An MCS like lock especially tailored for optimistic spinning for sleeping
+  * lock implementations (mutex, rwsem, etc).
+@@ -9,7 +11,13 @@
+ struct optimistic_spin_node {
+ 	struct optimistic_spin_node *next, *prev;
+ 	int locked; /* 1 if lock acquired */
+-	int cpu; /* encoded CPU # + 1 value */
++
++	CACHELINE_PADDING(_pad1_);
++	/*
++	 * Stores an encoded CPU # + 1 value.
++	 * Only read by other cpus, so split into different cache lines.
++	 */
++	int cpu;
+ };
 
- void imx_clk_scu_unregister(void)
-=2D-
-2.43.0
+ struct optimistic_spin_queue {
+diff --git a/kernel/locking/osq_lock.c b/kernel/locking/osq_lock.c
+index d5610ad52b92..17618d62343f 100644
+--- a/kernel/locking/osq_lock.c
++++ b/kernel/locking/osq_lock.c
+@@ -96,7 +96,13 @@ bool osq_lock(struct optimistic_spin_queue *lock)
+
+ 	node->locked = 0;
+ 	node->next = NULL;
+-	node->cpu = curr;
++	/*
++	 * After this cpu member is initialized for the first time, it
++	 * would no longer change in fact. That could avoid cache misses
++	 * when spin and access the cpu member by other CPUs.
++	 */
++	if (node->cpu != curr)
++		node->cpu = curr;
+
+ 	/*
+ 	 * We need both ACQUIRE (pairs with corresponding RELEASE in
+--
+2.25.1
 
