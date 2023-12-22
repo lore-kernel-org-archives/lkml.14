@@ -1,144 +1,261 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556A333CE6
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 23:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dilger.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dilger.ca
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9B835EE2
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 23:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20230601.gappssmtp.com header.i=@dilger-ca.20230601.gappssmtp.com header.b="k9DvNeSF"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5c6839373f8so1585768a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 15:22:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20230601.gappssmtp.com; s=20230601; t=1703287351; x=1703892151; darn=vger.kernel.org;
-        h=references:to:cc:in-reply-to:date:subject:mime-version:message-id
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=o8Gxr2TTVHcLRuDspv6E8NM+79Hh0/v74/4HhPV7JuY=;
-        b=k9DvNeSFtTi+vtCqhDj7t10Nvx0QDGeZh/v+ogrZOwBhBHCsWMelO/jwyq0JuZMREA
-         nRweCi567BbgEDeKSzvKm9TbSHKk2ygZDoGQN2opMIe/BjQEFDDAMtzQ05YhEqWHVcvb
-         P4DHlCf3PQzJ5VUKTgeefYkffLLnPn6e+f2zpv1qZ+errtalTLr/IIuL3WRab9WZLZMa
-         4J05tqA96HEMoNeL0ztW+b7SFp/seUzjt3tEgn0MMIwel7z/mVkbt77d+X2322AIdBfM
-         x3LMMcLRkAtAMJjRRv8Kl4nsLQuVr00eNa/LBKO9cU1qX67paeKUuqC6dHg1mHfqwHNB
-         Q87A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703287351; x=1703892151;
-        h=references:to:cc:in-reply-to:date:subject:mime-version:message-id
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o8Gxr2TTVHcLRuDspv6E8NM+79Hh0/v74/4HhPV7JuY=;
-        b=TSlx2PiALohwpdSBzGG8AOjI9wy5HJFduH89A6duwZg62QvuitItvmbw+WO2Im4SjX
-         wIcINgkyzspFHHhtImiCOydhJ3tn2CDtrA2SG6oVqQtS/vrH4s4UWl1RgF202POBNwir
-         xKQU6Fjs+uhTrOb4zuK7d7vS9O0oQHTKHam6SVRZEXaawMTj+i4FQHVHKNrRmHrwt+np
-         tqLYZRq2Ff4gNbK0FV0jm0tDNr7Qmfdk/SXzBCjFEIuNH5lbxJ6zAHsYbbjrygqxloik
-         WjvSiTGGgav1PfRhZgRQQxuj93Y6JlgPrMtMtl6PHhouaZrIfKuCS+tzBQhnljVOa5mR
-         +jvg==
-X-Gm-Message-State: AOJu0YzsGKyKuh9kp7g+nNj1TLlBwDtXUUk856cP5xhIShtMoyPl+Ezm
-	70H+Q4XOr8e8IQR/9PY/RosWYCRU2LSRdQ==
-X-Google-Smtp-Source: AGHT+IEF0sC78738oz40zbK9j1a7TNFK3Ja2lqrFOIVBZIGiOiPi8b2DKos8QOSVL5NLT2UHxlLvYQ==
-X-Received: by 2002:a05:6a21:a5aa:b0:195:61de:b72 with SMTP id gd42-20020a056a21a5aa00b0019561de0b72mr138327pzc.11.1703287351165;
-        Fri, 22 Dec 2023 15:22:31 -0800 (PST)
-Received: from cabot.adilger.int (S01068c763f81ca4b.cg.shawcable.net. [70.77.200.158])
-        by smtp.gmail.com with ESMTPSA id i18-20020aa787d2000000b006d9a039272asm79820pfo.82.2023.12.22.15.22.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 22 Dec 2023 15:22:30 -0800 (PST)
-From: Andreas Dilger <adilger@dilger.ca>
-Message-Id: <A0551254-5464-429A-9D7E-98065BB544D7@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_9EC47313-BC83-46B4-80D3-BB34DE69435F";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gTRAkQ2i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703287394; x=1734823394;
+  h=date:from:to:cc:subject:message-id;
+  bh=6dA/pEMGyR0oXpkvmv6dQhMrqB6awVDP7KcSqNP7tnc=;
+  b=gTRAkQ2iaAI7bToMUr1BUAkADyId+uu+YJ/9lu+jvUM1vM6KirCVb7Uc
+   CGNPDuXHdKbhZ3QN0WkkdCHdCLxqAyjPug42uA26rfPBx4ZV6+XUT7kkb
+   L4ivxSamRi1XlyfQ9bjmSEFJyRVHZmldYoptJD01V9IZgGQt9A0yXFv5r
+   BDxXxvl65dPSvJx5SzTugtiTtpvt1ObXPW0DWclsG+Tnt35DJx2TeLvqM
+   1aJ2sxOpYO4+IkvWWC1HB9LWPGfcLUR+DVYSpqrzEW1CB5oEd6d5ZJhG5
+   +/w4qFZY2sRb3EBWY0JBlTK4Rqrvn0dZQsCS83Rz7RUZRisorsN/YATmd
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="381145969"
+X-IronPort-AV: E=Sophos;i="6.04,297,1695711600"; 
+   d="scan'208";a="381145969"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 15:23:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="847620413"
+X-IronPort-AV: E=Sophos;i="6.04,297,1695711600"; 
+   d="scan'208";a="847620413"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by fmsmga004.fm.intel.com with ESMTP; 22 Dec 2023 15:23:12 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rGor8-0009yd-26;
+	Fri, 22 Dec 2023 23:23:05 +0000
+Date: Sat, 23 Dec 2023 07:19:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:core/entry] BUILD SUCCESS
+ 221a164035fd8b554a44bd7c4bf8e7715a497561
+Message-ID: <202312230711.lU6lMPBK-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH] checkpatch: ignore deleted lines for comment context
-Date: Fri, 22 Dec 2023 16:22:29 -0700
-In-Reply-To: <2b294dc33ea64d1d605cf146741d92677b13006a.camel@perches.com>
-Cc: Andy Whitcroft <apw@canonical.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-To: Joe Perches <joe@perches.com>
-References: <20231222230551.95425-1-adilger@whamcloud.com>
- <2b294dc33ea64d1d605cf146741d92677b13006a.camel@perches.com>
-X-Mailer: Apple Mail (2.3273)
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core/entry
+branch HEAD: 221a164035fd8b554a44bd7c4bf8e7715a497561  entry: Move syscall_enter_from_user_mode() to header file
 
---Apple-Mail=_9EC47313-BC83-46B4-80D3-BB34DE69435F
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain;
-	charset=us-ascii
+elapsed time: 1501m
 
-On Dec 22, 2023, at 4:15 PM, Joe Perches <joe@perches.com> wrote:
-> 
-> On Fri, 2023-12-22 at 16:05 -0700, Andreas Dilger wrote:
->> From: Andreas Dilger <adilger@dilger.ca>
->> 
->> Don't consider lines being removed by a patch as part of a comment.
->> Otherwise, false "WARNING: memory barrier without comment" and similar
->> issues can be reported when a comment does exist on the previous line.
->> 
->> For example, a change like below was previously incorrectly flagged:
->> 
->> 	/* matched by smp_store_release() in some_function() */
->> -	if (smp_load_acquire(&list->tail) == head))
->> +	if (smp_load_acquire(&list->tail) == head) && flags == 0)
->> 
->> Signed-off-by: Andreas Dilger <adilger@dilger.ca>
-> 
-> OK, but:
-> 
->> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> []
->> @@ -1972,7 +1972,8 @@ sub ctx_locate_comment {
->> 	$current_comment = '';
->> 	for (my $linenr = $first_line; $linenr < $end_line; $linenr++) {
->> 		my $line = $rawlines[$linenr - 1];
->> -		#warn "           $line\n";
->> +		#warn "LINE($linenr): $line\n";
-> 
-> This is a superfluous change
+configs tested: 195
+configs skipped: 2
 
-Sure, I can resubmit without it if you want.  I found it helpful when
-debugging why this code didn't work in the first place...
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> 
->> +		next if ($line =~ /^-/); # ignore lines removed by patch
->> 		if ($linenr == $first_line and $line =~ m@^.\s*\*@) {
->> 			$in_comment = 1;
->> 		}
-> 
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              alldefconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                                 defconfig   gcc  
+arc                        nsim_700_defconfig   gcc  
+arc                   randconfig-001-20231222   gcc  
+arc                   randconfig-001-20231223   gcc  
+arc                   randconfig-002-20231222   gcc  
+arc                   randconfig-002-20231223   gcc  
+arm                               allnoconfig   gcc  
+arm                          exynos_defconfig   gcc  
+arm                            mps2_defconfig   gcc  
+arm                       omap2plus_defconfig   gcc  
+arm                         orion5x_defconfig   clang
+arm                          pxa910_defconfig   gcc  
+arm                   randconfig-001-20231222   gcc  
+arm                   randconfig-002-20231222   gcc  
+arm                   randconfig-003-20231222   gcc  
+arm                   randconfig-004-20231222   gcc  
+arm                        spear6xx_defconfig   gcc  
+arm                         wpcm450_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20231222   gcc  
+arm64                 randconfig-002-20231222   gcc  
+arm64                 randconfig-003-20231222   gcc  
+arm64                 randconfig-004-20231222   gcc  
+csky                              allnoconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20231222   gcc  
+csky                  randconfig-001-20231223   gcc  
+csky                  randconfig-002-20231222   gcc  
+csky                  randconfig-002-20231223   gcc  
+hexagon                          allmodconfig   clang
+hexagon                          allyesconfig   clang
+i386                             allmodconfig   clang
+i386                              allnoconfig   clang
+i386                             allyesconfig   clang
+i386                  randconfig-011-20231222   clang
+i386                  randconfig-011-20231223   gcc  
+i386                  randconfig-012-20231222   clang
+i386                  randconfig-012-20231223   gcc  
+i386                  randconfig-013-20231222   clang
+i386                  randconfig-013-20231223   gcc  
+i386                  randconfig-014-20231222   clang
+i386                  randconfig-014-20231223   gcc  
+i386                  randconfig-015-20231222   clang
+i386                  randconfig-015-20231223   gcc  
+i386                  randconfig-016-20231222   clang
+i386                  randconfig-016-20231223   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20231222   gcc  
+loongarch             randconfig-001-20231223   gcc  
+loongarch             randconfig-002-20231222   gcc  
+loongarch             randconfig-002-20231223   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                          hp300_defconfig   gcc  
+m68k                       m5208evb_defconfig   gcc  
+m68k                           virt_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                      maltasmvp_defconfig   gcc  
+mips                        maltaup_defconfig   clang
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20231222   gcc  
+nios2                 randconfig-001-20231223   gcc  
+nios2                 randconfig-002-20231222   gcc  
+nios2                 randconfig-002-20231223   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20231222   gcc  
+parisc                randconfig-001-20231223   gcc  
+parisc                randconfig-002-20231222   gcc  
+parisc                randconfig-002-20231223   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   clang
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                      arches_defconfig   gcc  
+powerpc                   currituck_defconfig   gcc  
+powerpc                      ep88xc_defconfig   gcc  
+powerpc                      mgcoge_defconfig   gcc  
+powerpc                   motionpro_defconfig   gcc  
+powerpc                 mpc832x_rdb_defconfig   clang
+powerpc                      pcm030_defconfig   gcc  
+powerpc               randconfig-001-20231222   gcc  
+powerpc               randconfig-002-20231222   gcc  
+powerpc               randconfig-003-20231222   gcc  
+powerpc                     redwood_defconfig   gcc  
+powerpc                     stx_gp3_defconfig   gcc  
+powerpc                     tqm8560_defconfig   gcc  
+powerpc                        warp_defconfig   gcc  
+powerpc64             randconfig-001-20231222   gcc  
+powerpc64             randconfig-002-20231222   gcc  
+powerpc64             randconfig-003-20231222   gcc  
+riscv                            allmodconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                    nommu_virt_defconfig   clang
+riscv                 randconfig-001-20231222   gcc  
+riscv                 randconfig-002-20231222   gcc  
+riscv                          rv32_defconfig   clang
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                  randconfig-001-20231223   gcc  
+s390                  randconfig-002-20231223   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                        apsh4ad0a_defconfig   gcc  
+sh                                  defconfig   gcc  
+sh                ecovec24-romimage_defconfig   gcc  
+sh                             espt_defconfig   gcc  
+sh                          polaris_defconfig   gcc  
+sh                    randconfig-001-20231222   gcc  
+sh                    randconfig-001-20231223   gcc  
+sh                    randconfig-002-20231222   gcc  
+sh                    randconfig-002-20231223   gcc  
+sh                          rsk7264_defconfig   gcc  
+sh                          sdk7780_defconfig   gcc  
+sh                           se7619_defconfig   gcc  
+sh                   secureedge5410_defconfig   gcc  
+sh                            titan_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                       sparc32_defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20231222   gcc  
+sparc64               randconfig-001-20231223   gcc  
+sparc64               randconfig-002-20231222   gcc  
+sparc64               randconfig-002-20231223   gcc  
+um                               allmodconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20231222   gcc  
+um                    randconfig-002-20231222   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           alldefconfig   gcc  
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20231222   gcc  
+x86_64       buildonly-randconfig-002-20231222   gcc  
+x86_64       buildonly-randconfig-003-20231222   gcc  
+x86_64       buildonly-randconfig-004-20231222   gcc  
+x86_64       buildonly-randconfig-005-20231222   gcc  
+x86_64       buildonly-randconfig-006-20231222   gcc  
+x86_64                                  kexec   gcc  
+x86_64                randconfig-011-20231222   gcc  
+x86_64                randconfig-012-20231222   gcc  
+x86_64                randconfig-013-20231222   gcc  
+x86_64                randconfig-014-20231222   gcc  
+x86_64                randconfig-015-20231222   gcc  
+x86_64                randconfig-016-20231222   gcc  
+x86_64                randconfig-071-20231222   gcc  
+x86_64                randconfig-072-20231222   gcc  
+x86_64                randconfig-073-20231222   gcc  
+x86_64                randconfig-074-20231222   gcc  
+x86_64                randconfig-075-20231222   gcc  
+x86_64                randconfig-076-20231222   gcc  
+x86_64                           rhel-8.3-bpf   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                  cadence_csp_defconfig   gcc  
+xtensa                randconfig-001-20231222   gcc  
+xtensa                randconfig-001-20231223   gcc  
+xtensa                randconfig-002-20231222   gcc  
+xtensa                randconfig-002-20231223   gcc  
+xtensa                    smp_lx200_defconfig   gcc  
 
-
-Cheers, Andreas
-
-
-
-
-
-
---Apple-Mail=_9EC47313-BC83-46B4-80D3-BB34DE69435F
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAmWGGjUACgkQcqXauRfM
-H+B1fg/9HrL3HAO+54BMABfLd0piwVWdoOf3aVx0JEqkjFJhIXWeQbGr3Hct7ccf
-nQPMc1QOt9lWMeeTkbog1IMqg8W0tE+Xv5IKkjb7QrwVcWaP27VD7ctlD6qEs5Xe
-jasDBzdig/Vgxd8bfelaeM9hFJMSAxC9cwmnBUQ8OXFo8X3//ieIQfHycC0K9MTI
-TuHqkHiON85JM3aE/j0iyjKS5owYxKyonJ8+B1J+Nwxqu961LRRpnpoISKO/Je/3
-9b2it8kzIBJgRQjNxgxrQXNXSTgsZeRmdZ8b0aw8PAjkOTk9e6hJl4mQeSTwi8rx
-FvjpXbDd9sJ4BNGRhmOq1VmoOwTun8yKc+Cgv1LizuVFByy2F4AsIUILxFv7MbpF
-G5G8CE2O1BqX4Qkmg/m+27yEvjAaDZuY+DyOnCxdoil6LlJPDF429JyS/9jHUlI5
-Q2sV/XKjWmE01q9XxlZZ5dUfIKl4ekYuH0DFTqoimAQyuiZmjIuf8qr7SM4WXHnz
-ZTKiPlFyK3DTTv6mSY/MjNw+HZHzpEHc6CAGHZexF3x+o5cuopShAnleMrQy28xU
-JeCAFDLSjlp//Fizn3CaKT2afDi3LpKH4wzhhPMxVvoLm5bkGTO+peAfh29RvVTe
-4PKi695DlHJtOzROVaLGGDI5+WnVEn8BwOZ96jEGgdsYSZwQ5UU=
-=3Scm
------END PGP SIGNATURE-----
-
---Apple-Mail=_9EC47313-BC83-46B4-80D3-BB34DE69435F--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
