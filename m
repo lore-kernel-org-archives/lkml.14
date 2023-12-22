@@ -1,209 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D9B5390;
-	Fri, 22 Dec 2023 04:50:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 146EC568B;
+	Fri, 22 Dec 2023 04:52:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="buDEjzPz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9BE5C433CD;
-	Fri, 22 Dec 2023 04:50:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703220657;
-	bh=0LsfsZZzBusgIAD3qQmmUaG27xjYEQSKO7z6xMBhlSE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=buDEjzPzJl2oOTCG4mR5hrq0Y5hBjbDkESelrGra7PVruT0KoN7WXmZfLmgG/pGo6
-	 gO01+22n2/ktkp/IFnlDdlCkSqaFbtWbXPPkYBiu6eeE80rL5QVYNcNvA9jfU2KGq6
-	 EU7Q6oo27Zm3n338viOKmNTfUKyULO6C1WpEXCJwVOh24KCDhrM5IW7jF1xar2CgWR
-	 AbehwW4SSzEr21ppi49PQ4t+hWsGc/rMH2zD8RqastjxFe6+CkDHwq0AnSVqXwlF+j
-	 2JCgvEMZEhw0zBZg70qUZBSHbsAMBCd9qZ5mj6rXCwZ/UKrgtxGC2lw9DsMTJVACX5
-	 BxdmWvEWsu/Nw==
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-54c79968ffbso1562202a12.3;
-        Thu, 21 Dec 2023 20:50:57 -0800 (PST)
-X-Gm-Message-State: AOJu0YwxUWYog0366hfUij633lwBBYOzFw0p3hO8JHM1XmSMrE2KxYME
-	0w1uZ2J5bm6sI/Sr7yivTqPNdYQrzCMKwTy+FIc=
-X-Google-Smtp-Source: AGHT+IGWvwT64VgFovv+c7qqHAeH9Td6lUqhBKTKZF7USauEgYd1T/2cWvULuhrGCPCvy2nROY7kM+DKUTSU9Jfz6Q0=
-X-Received: by 2002:a17:906:82:b0:a23:6fe5:affe with SMTP id
- 2-20020a170906008200b00a236fe5affemr414814ejc.62.1703220656295; Thu, 21 Dec
- 2023 20:50:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mL88mk/A"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5cd870422c8so845807a12.0;
+        Thu, 21 Dec 2023 20:52:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703220758; x=1703825558; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wy4FnoE63HSTWvD7t5BrS3SLWIs+Za9UBHpe2htpsf0=;
+        b=mL88mk/Ay4AbPlmgljpJAFanfevk/JJW9EmHJynmdQ82+uysWq1CaGrMUQTNJUq2bG
+         +Z4kfD/740R275ni5kSxyYxk8qvanDppRIVSTXzsSYics9lkcNv5YVBTlgxZwp2mqnCi
+         UzcZDzTAGr86fvb6aAbqXHD8bnuJwTNocdYJjBsEIjv+kz7ufB11Fjv6b8AO28AibM3+
+         7r0iBtdZoDX10FfG8BnHdBIDgox4KSKz3W6HTlKsGv3DL5wESVVgOWVKN4XBTBRoaZ9k
+         fuxuzumFf4EizVWXSztm7UOF2PQwOyooAumQnWLBA7kA5Q/LBkYOIZrBnBJmsAEIAPUq
+         OQBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703220758; x=1703825558;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wy4FnoE63HSTWvD7t5BrS3SLWIs+Za9UBHpe2htpsf0=;
+        b=Y4swRmsAeenJanF/92crwmtyT1G3m6VQzNoeBu8MGnvHeHjZwtpcXG15go0i8Nn3LB
+         Lq39t+MWcM+2PzGTGb+sNiAZDoeSV6cOFZZrVrPmwDyrdlRCd1P3+Gd4Xa8xj1XfobtN
+         59K3MiDlSF7lZnH3u81k/BIgwkEF1fB+MpsIJOnAZgBuyYxiKSUKzYrJCya9DA9fvOeE
+         BTrmQ+JTs0Ov97VjKc9ZA3VVVptXp65GZ7Q0ikeMeFzO3PJF5yLnlc2dX8WRtl4nWjpb
+         RxQmuY749r0J6U7Th/fvwUqvM/gO/6nKS7Bn3/sVxjMMoc9n4aDI1ddFQGWpoFhQaPUZ
+         Ht2w==
+X-Gm-Message-State: AOJu0Yzfk5/6NI92UMWVDGchqlHrVh56/H8p8J4oEEjDD40PaVQKxXNU
+	N+Zq2W6YJGDgCYyVqvwdLLo=
+X-Google-Smtp-Source: AGHT+IGaoBIq/qvdS23N9Qu7zQF2cx9KfQFiOSRvMlkefdp7esZHfzsigVMBtlFZzudBZ56vi9g3XQ==
+X-Received: by 2002:a05:6a20:258f:b0:194:f21e:209c with SMTP id k15-20020a056a20258f00b00194f21e209cmr576302pzd.102.1703220758240;
+        Thu, 21 Dec 2023 20:52:38 -0800 (PST)
+Received: from g2039B650.. ([106.39.42.144])
+        by smtp.gmail.com with ESMTPSA id sm18-20020a17090b2e5200b002868abc0e6dsm6554259pjb.11.2023.12.21.20.52.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Dec 2023 20:52:37 -0800 (PST)
+From: Gui-Dong Han <2045gemini@gmail.com>
+To: song@kernel.org,
+	yukuai3@huawei.com
+Cc: linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	baijiaju1990@outlook.com,
+	Gui-Dong Han <2045gemini@gmail.com>,
+	BassCheck <bass@buaa.edu.cn>
+Subject: [PATCH v2] md/raid5: fix atomicity violation in raid5_cache_count
+Date: Fri, 22 Dec 2023 12:52:24 +0800
+Message-Id: <20231222045224.4439-1-2045gemini@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231221154702.2267684-1-guoren@kernel.org> <20231221154702.2267684-3-guoren@kernel.org>
- <ZYUD4C1aXWt2oFJo@LeoBras> <CAJF2gTSiaNWkXS6rc+3OSZfnFqG2d7btzjrd-L1mBgAVu3ym3A@mail.gmail.com>
- <ZYUT22KmGJ1tJSWx@LeoBras>
-In-Reply-To: <ZYUT22KmGJ1tJSWx@LeoBras>
-From: Guo Ren <guoren@kernel.org>
-Date: Fri, 22 Dec 2023 12:50:44 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTRptBZyYbnY-mjn-AuQwVnekQtGY8nAOV7KVWLCY1WBcw@mail.gmail.com>
-Message-ID: <CAJF2gTRptBZyYbnY-mjn-AuQwVnekQtGY8nAOV7KVWLCY1WBcw@mail.gmail.com>
-Subject: Re: [PATCH V2 2/4] riscv: mm: Fixup compat arch_get_mmap_end
-To: Leonardo Bras <leobras@redhat.com>
-Cc: linux-kernel@vger.kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
-	alexghiti@rivosinc.com, charlie@rivosinc.com, xiao.w.wang@intel.com, 
-	david@redhat.com, panqinglin2020@iscas.ac.cn, rick.p.edgecombe@intel.com, 
-	willy@infradead.org, bjorn@rivosinc.com, conor.dooley@microchip.com, 
-	cleger@rivosinc.com, linux-riscv@lists.infradead.org, 
-	Guo Ren <guoren@linux.alibaba.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Dec 22, 2023 at 12:43=E2=80=AFPM Leonardo Bras <leobras@redhat.com>=
- wrote:
->
-> On Fri, Dec 22, 2023 at 12:26:19PM +0800, Guo Ren wrote:
-> > On Fri, Dec 22, 2023 at 11:35=E2=80=AFAM Leonardo Bras <leobras@redhat.=
-com> wrote:
-> > >
-> > > On Thu, Dec 21, 2023 at 10:46:59AM -0500, guoren@kernel.org wrote:
-> > > > From: Guo Ren <guoren@linux.alibaba.com>
-> > > >
-> > > > When the task is in COMPAT mode, the arch_get_mmap_end should be 2G=
-B,
-> > > > not TASK_SIZE_64. The TASK_SIZE has contained is_compat_mode()
-> > > > detection, so change the definition of STACK_TOP_MAX to TASK_SIZE
-> > > > directly.
-> > >
-> > > ok
-> > >
-> > > >
-> > > > Cc: stable@vger.kernel.org
-> > > > Fixes: add2cc6b6515 ("RISC-V: mm: Restrict address space for sv39,s=
-v48,sv57")
-> > > > Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-> > > > Signed-off-by: Guo Ren <guoren@kernel.org>
-> > > > ---
-> > > >  arch/riscv/include/asm/processor.h | 6 ++----
-> > > >  1 file changed, 2 insertions(+), 4 deletions(-)
-> > > >
-> > > > diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/includ=
-e/asm/processor.h
-> > > > index f19f861cda54..1f538fc4448d 100644
-> > > > --- a/arch/riscv/include/asm/processor.h
-> > > > +++ b/arch/riscv/include/asm/processor.h
-> > > > @@ -16,15 +16,13 @@
-> > > >
-> > > >  #ifdef CONFIG_64BIT
-> > > >  #define DEFAULT_MAP_WINDOW   (UL(1) << (MMAP_VA_BITS - 1))
-> > > > -#define STACK_TOP_MAX                TASK_SIZE_64
-> > > > +#define STACK_TOP_MAX                TASK_SIZE
-> > >
-> > > It means STACK_TOP_MAX will be in 64BIT:
-> > > - TASK_SIZE_32 if compat_mode=3Dy
-> > > - TASK_SIZE_64 if compat_mode=3Dn
-> > >
-> > > Makes sense for me.
-> > >
-> > > >
-> > > >  #define arch_get_mmap_end(addr, len, flags)                  \
-> > > >  ({                                                           \
-> > > >       unsigned long mmap_end;                                 \
-> > > >       typeof(addr) _addr =3D (addr);                            \
-> > > > -     if ((_addr) =3D=3D 0 || (IS_ENABLED(CONFIG_COMPAT) && is_comp=
-at_task())) \
-> > > > -             mmap_end =3D STACK_TOP_MAX;                       \
-> > > > -     else if ((_addr) >=3D VA_USER_SV57)                       \
-> > > > +     if ((_addr) =3D=3D 0 || (_addr) >=3D VA_USER_SV57)           =
- \
-> > > >               mmap_end =3D STACK_TOP_MAX;                       \
-> > > >       else if ((((_addr) >=3D VA_USER_SV48)) && (VA_BITS >=3D VA_BI=
-TS_SV48)) \
-> > > >               mmap_end =3D VA_USER_SV48;                        \
-> > >
-> > >
-> > > I don't think I got this change, or how it's connected to the commit =
-msg.
-> > The above is just code simplification; if STACK_TOP_MAX is TASK_SIZE, t=
-hen
-> >
-> >      if ((_addr) =3D=3D 0 || (IS_ENABLED(CONFIG_COMPAT) && is_compat_ta=
-sk())) \
-> >              mmap_end =3D STACK_TOP_MAX;                       \
-> >     else if ((_addr) >=3D VA_USER_SV57)                       \
-> >
-> > is equal to:
-> >
-> >      if ((_addr) =3D=3D 0 || (_addr) >=3D VA_USER_SV57)            \
->
-> I am failing to understand exactly how are they equal.
-> I mean, what in your STACK_TOP_MAX change made them equal?
-#define STACK_TOP_MAX TASK_SIZE
-#define TASK_SIZE       (is_compat_task() ? TASK_SIZE_32 : TASK_SIZE_64)
+In raid5_cache_count():
+	if (conf->max_nr_stripes < conf->min_nr_stripes)
+		return 0;
+	return conf->max_nr_stripes - conf->min_nr_stripes;
+The current check is ineffective, as the values could change immediately
+after being checked.
 
->
-> See below, the behavior changed:
-> >
-> > >
-> > > Before:
-> > > - addr =3D=3D 0, or addr > 2^57, or compat: mmap_end =3D STACK_TOP_MA=
-X
-> > > - 2^48 < addr < 2^57: mmap_end =3D 2^48
-> > > - 0 < addr < 2^48 : mmap_end =3D 2^39
-> > >
-> > > Now:
-> > > - addr =3D=3D 0, or addr > 2^57: mmap_end =3D STACK_TOP_MAX
-> > > - 2^48 < addr < 2^57: mmap_end =3D 2^48
-> > > - 0 < addr < 2^48 : mmap_end =3D 2^39
-> > >
-> > > IIUC compat mode addr will be < 2^32, so will always have mmap_end =
-=3D 2^39
-> > > if addr !=3D 0. Is that desireable?
-> > > (if not, above change is unneeded)
-> > >
->
-> ^
->
-> With your change on STACK_TOP_MAX only (not changing arch_get_mmap_end),
-> you would have:
->
-> - compat_mode & (0 < addr < 2^32)       -> mmap_end =3D 2^32
-compat_mode      -> mmap_end =3D 2^32
+In raid5_set_cache_size():
+	...
+	conf->min_nr_stripes = size;
+	...
+	while (size > conf->max_nr_stripes)
+		conf->min_nr_stripes = conf->max_nr_stripes;
+	...
 
-> - non-compat, addr =3D=3D 0, or addr > 2^57 -> mmap_end =3D TASK_SIZE_64
-> - non-compat, (2^48 < addr < 2^57)      -> mmap_end =3D 2^48
-> - non-compat, (0 < addr < 2^48)         -> mmap_end =3D 2^39
->
-> Which seems more likely, based on Charlie comments.
->
-> Thanks,
-> Leo
->
-> > > Also, unrelated to the change:
-> > > - 2^48 < addr < 2^57: mmap_end =3D 2^48
-> > > Is the above correct?
-> > > It looks like it should be 2^57 instead, and a new if clause for
-> > > 2^32 < addr < 2^48 should have mmap_end =3D 2^48.
-> > >
-> > > Do I get it wrong?
-> > Maybe I should move this into the optimization part.
-> >
-> > >
-> > > (I will send an RFC 'fixing' the code the way I am whinking it should=
- look
-> > > like)
-> > >
-> > > Thanks,
-> > > Leo
-> > >
-> > >
-> > >
-> > >
-> > >
-> > > > --
-> > > > 2.40.1
-> > > >
-> > >
-> >
-> >
-> > --
-> > Best Regards
-> >  Guo Ren
-> >
->
+Due to intermediate value updates in raid5_set_cache_size(), concurrent
+execution of raid5_cache_count() and raid5_set_cache_size() may lead to
+inconsistent reads of conf->max_nr_stripes and conf->min_nr_stripes.
+The current checks are ineffective as values could change immediately
+after being checked, raising the risk of conf->min_nr_stripes exceeding
+conf->max_nr_stripes and potentially causing an integer overflow.
 
+This possible bug is found by an experimental static analysis tool
+developed by our team. This tool analyzes the locking APIs to extract
+function pairs that can be concurrently executed, and then analyzes the
+instructions in the paired functions to identify possible concurrency bugs
+including data races and atomicity violations. The above possible bug is
+reported when our tool analyzes the source code of Linux 6.2.
 
---=20
-Best Regards
- Guo Ren
+To resolve this issue, it is suggested to introduce local variables
+'min_stripes' and 'max_stripes' in raid5_cache_count() to ensure the
+values remain stable throughout the check. Adding locks in
+raid5_cache_count() fails to resolve atomicity violations, as
+raid5_set_cache_size() may hold intermediate values of
+conf->min_nr_stripes while unlocked. With this patch applied, our tool no
+longer reports the bug, with the kernel configuration allyesconfig for
+x86_64. Due to the lack of associated hardware, we cannot test the patch
+in runtime testing, and just verify it according to the code logic.
+
+Fixes: edbe83ab4c27e ("md/raid5: allow the stripe_cache to grow and ...")
+Reported-by: BassCheck <bass@buaa.edu.cn>
+Signed-off-by: Gui-Dong Han <2045gemini@gmail.com>
+
+---
+v2:
+* In this patch v2, we've updated to use READ_ONCE() instead of direct
+reads for accessing max_nr_stripes and min_nr_stripes, since read and
+write can concurrent.
+  Thank Yu Kuai for helpful advice.
+---
+ drivers/md/raid5.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index 8497880135ee..9037e46de0e2 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -7391,10 +7391,12 @@ static unsigned long raid5_cache_count(struct shrinker *shrink,
+ {
+ 	struct r5conf *conf = shrink->private_data;
+ 
+-	if (conf->max_nr_stripes < conf->min_nr_stripes)
++	int max_stripes = READ_ONCE(conf->max_nr_stripes);
++	int min_stripes = READ_ONCE(conf->min_nr_stripes);
++	if (max_stripes < min_stripes)
+ 		/* unlikely, but not impossible */
+ 		return 0;
+-	return conf->max_nr_stripes - conf->min_nr_stripes;
++	return max_stripes - min_stripes;
+ }
+ 
+ static struct r5conf *setup_conf(struct mddev *mddev)
+-- 
+2.34.1
+
