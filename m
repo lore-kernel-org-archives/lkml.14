@@ -1,74 +1,59 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from irl.hu (irl.hu [95.85.9.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE23186C
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 00:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-35fc8389a58so12815415ab.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 16:07:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703203633; x=1703808433;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CPKlspD/ZSfWixUM8SglUnOrdGxitKBWwWP9lEY6reA=;
-        b=WCQrGvReLb/x8+3cu+B11Prbw83c2ZNNsvKIO8Fl9W/Bf8yo2Q6s5Fn3AXR+mE7ura
-         1c8r/u3eUQTxuqnbR5sCPtiZpCC6dFguOMBcevQIz8EtLiMK6C9d5eoWP2KQ4hpAHbYw
-         /VE+uWKr1bjVn8lTiObbXmxIJzQpRaO+rlAxITcp61CKPEMU0mOKM/8qi+Cy6W6vnkJs
-         qLJ/QbbFdF2GJwACFzOgbPapgWgm6fwNe9CaAy+1ex83etfKvrgs1cV2K5wbFI9ZW1j6
-         Lni3QQ/wDFNzdGiAmtrKtyveInH2E/7rY5ckdCiG7vUpfJ/HQEMJc3wVUf66KgUxZkWM
-         Iwbw==
-X-Gm-Message-State: AOJu0YxhkzRznK+SzkFxsnTcZNsAz3DT/FhNaeW9UlGrp1G4RgWQKb9t
-	2oAUD16TuU/y7hOTaGY/vLojycg8pfsG0ymmuAgtGm8HKdqs
-X-Google-Smtp-Source: AGHT+IGp4EqZUrHByv3JGf43xAerJwTcxk7SI0VR2iqYxAwG4CXwcStL3oz6hWVlRYsEgalewjyBe1u+W1Enno9VvFUHqbv56nQK
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791FF18E;
+	Fri, 22 Dec 2023 00:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from fedori.lan (51b681e3.dsl.pool.telekom.hu [::ffff:81.182.129.227])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 0000000000071DC1.000000006584D45A.0013B197; Fri, 22 Dec 2023 01:12:09 +0100
+From: Gergo Koteles <soyer@irl.hu>
+To: Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>,
+  Baojun Xu <baojun.xu@ti.com>, Jaroslav Kysela <perex@perex.cz>,
+  Takashi Iwai <tiwai@suse.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+  alsa-devel@alsa-project.org, Gergo Koteles <soyer@irl.hu>
+Subject: [PATCH] ALSA: hda/tas2781: fix typos in comment
+Date: Fri, 22 Dec 2023 01:11:54 +0100
+Message-ID: <ead5609d63e71e8e87c13e1767decca5b272d696.1703203812.git.soyer@irl.hu>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d0c:b0:35f:d4dc:1b1e with SMTP id
- i12-20020a056e021d0c00b0035fd4dc1b1emr54224ila.5.1703203633408; Thu, 21 Dec
- 2023 16:07:13 -0800 (PST)
-Date: Thu, 21 Dec 2023 16:07:13 -0800
-In-Reply-To: <0000000000006fd14305f00bdc84@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008cb1ee060d0dffa7@google.com>
-Subject: Re: [syzbot] kernel BUG in ext4_do_writepages
-From: syzbot <syzbot+d1da16f03614058fdc48@syzkaller.appspotmail.com>
-To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
 
-This bug is marked as fixed by commit:
-ext4: fix race condition between buffer write and page_mkwrite
+Correct typos.
 
-But I can't find it in the tested trees[1] for more than 90 days.
-Is it a correct commit? Please update it by replying:
-
-#syz fix: exact-commit-title
-
-Until then the bug is still considered open and new crashes with
-the same signature are ignored.
-
-Kernel: Linux
-Dashboard link: https://syzkaller.appspot.com/bug?extid=d1da16f03614058fdc48
-
+Signed-off-by: Gergo Koteles <soyer@irl.hu>
 ---
-[1] I expect the commit to be present in:
+ sound/pci/hda/tas2781_hda_i2c.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-1. for-kernelci branch of
-git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
+diff --git a/sound/pci/hda/tas2781_hda_i2c.c b/sound/pci/hda/tas2781_hda_i2c.c
+index fb802802939e..8f63e3099d3e 100644
+--- a/sound/pci/hda/tas2781_hda_i2c.c
++++ b/sound/pci/hda/tas2781_hda_i2c.c
+@@ -421,9 +421,9 @@ static void tas2781_apply_calib(struct tasdevice_priv *tas_priv)
+ 	}
+ }
+ 
+-/* Update the calibrate data, including speaker impedance, f0, etc, into algo.
++/* Update the calibration data, including speaker impedance, f0, etc, into algo.
+  * Calibrate data is done by manufacturer in the factory. These data are used
+- * by Algo for calucating the speaker temperature, speaker membrance excursion
++ * by Algo for calculating the speaker temperature, speaker membrane excursion
+  * and f0 in real time during playback.
+  */
+ static int tas2781_save_calibration(struct tasdevice_priv *tas_priv)
 
-2. master branch of
-git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git
+base-commit: c7e37b07cc7564a07125ae48c11fd1ca2bcbeae2
+-- 
+2.43.0
 
-3. master branch of
-git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git
-
-4. main branch of
-git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git
-
-The full list of 9 trees can be found at
-https://syzkaller.appspot.com/upstream/repos
