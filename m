@@ -1,168 +1,106 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89D32C188;
-	Fri, 22 Dec 2023 17:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74AAF2C185
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 17:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YZvAyPix"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-336746c7b6dso1673114f8f.0;
-        Fri, 22 Dec 2023 09:42:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VpSe0/Jd"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dbdbe917d39so2073621276.2
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 09:42:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703266943; x=1703871743; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1703266943; x=1703871743; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xcMMn1wo5ecoqzzFfZ/NThvc+Exg7NREzlaFXx0npiA=;
-        b=YZvAyPixlMQtq36mNN6T+kSNM7T7SmI6b26dVE07xaIQZYnOd0+dLrGLEUN+7BlGYt
-         UlK1tUjkk9yJWWJ6H3+h9wFKkiCwQSksJItdCErFEdh1/1kFus7BS4byporKRp/zWeGL
-         08VYTlh86qyMw2nKfF995t8FaiHRg2B7Rb6Gz8Q9wN+PMxsHm9P+3fMySvfRrdpm+ETD
-         +yo3HUERartESOzrJVKPa9Bp8JQCEk1I7p59/A8ZZff46b7Gfbvs+cDJgEMsY/iZhXtg
-         iTpvRdYNibIdzCQQD7BJAvE+fcmIY3pe1k2UdkMCZvg6YJskkjV+wnTH3fpaTCR30Ylm
-         Slvg==
+        bh=sORYQjvjhn91mhHWmml7PbQMB+VcO/Ox7jN+qS08qmM=;
+        b=VpSe0/Jd5nXGG62u0Ae6fVsFugDUcoVPeh+s9yLQo6l4ZbeXQlFdwPQPvOQ8Hlr8Kt
+         5OetozNsCSQUUHHpnZ1uy4NQpPGqxDrRtV42ATp3H5JpDebOvjvZLe++6m0zqAdL4RJ5
+         YSXCpbblvH0Sj/P/Vt+YnoujtyKDRvd/1blj6by9nyatK2uhfIfJKqBuoNVOEKUGvwh1
+         zHjBS+l/sWwVIUCyPJhhZNbGG3c0s6c6H/FZJOowldLDuiBzeCqogOC2zHVfYHP4ynE7
+         rpLvnFfjOb6ZXXmun2q5YjkhO8GuQUwla3uWY7c58T8kqw1mAWeEsXhcCj+CE5uDVVAs
+         OSfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1703266943; x=1703871743;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xcMMn1wo5ecoqzzFfZ/NThvc+Exg7NREzlaFXx0npiA=;
-        b=WGi32pBxN1XKu/sp6uJgFiXg2Tz5WvvvfTKFKQzCbW4T/WEfA8RnMohEoDsCirk/jr
-         RIlxx2S+BelInDkCIAH7r9IspKTUO3OXl5i1GToO7p9BFfoQANlTqYyOmHdsoYFFLWSV
-         Gf0lIHezvSBWpkUrdgjZNY7SxV8QGjcmLZyQfsWPQy1Ax4Zncfisxsk0YZF00GpYs26L
-         RNkNLgmd7ol5NUHajUKLjR+OCsIsab/LBQFU7WIPSsUNKoWV3OrrP/74yhVbQsSbWU6U
-         k1KvpNIQA7gg/AQUa9VFibttTBZfaAmokg5GtUtup2CajYR8HMeGgQuo8I/vJ2DGPjAS
-         Lmeg==
-X-Gm-Message-State: AOJu0YxWDUW3IKsv24k6dOImoDZj1MxNtmL7MguV1FHlImZQeD+uiRlA
-	i7u3UdMELgKkHV1oV0gYDA==
-X-Google-Smtp-Source: AGHT+IH55tOdjFEvsimvQ0AWwkhlparYzELlSEvcxba6ID4XqVa/0ncC9dCVT9baJ10rAbzbikAuQg==
-X-Received: by 2002:a5d:6546:0:b0:336:7794:4475 with SMTP id z6-20020a5d6546000000b0033677944475mr992813wrv.109.1703266943072;
-        Fri, 22 Dec 2023 09:42:23 -0800 (PST)
-Received: from U4.lan ([2a02:810b:f40:4300:f3ae:2788:7e03:f44])
-        by smtp.gmail.com with ESMTPSA id w10-20020adfec4a000000b00336670abdcasm4777116wrn.40.2023.12.22.09.42.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Dec 2023 09:42:22 -0800 (PST)
-From: Alex Bee <knaerzche@gmail.com>
-To: Sandy Huang <hjc@rock-chips.com>,
-	=?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Alex Bee <knaerzche@gmail.com>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v4 01/29] dt-bindings: display: rockchip,inno-hdmi: Document RK3128 compatible
-Date: Fri, 22 Dec 2023 18:41:52 +0100
-Message-ID: <20231222174220.55249-2-knaerzche@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231222174220.55249-1-knaerzche@gmail.com>
-References: <20231222174220.55249-1-knaerzche@gmail.com>
+        bh=sORYQjvjhn91mhHWmml7PbQMB+VcO/Ox7jN+qS08qmM=;
+        b=h3cQj9tSfEftKCP6rBXwnc0J/biwkGtOXcB9DRpANnKfGxTNGgZA+CqiZMVgophGob
+         hJjrVx9KP5rz7cReNi7fYsLvH5RwuFFAeC0neOBdpTjBKqYB8X5SpYo3CTl09V+CHuVG
+         Mmw4RRTjIp2VkqwwswvkbaP624U/SY4XYHYvWoo4uoyr+O1Wgy09GHCduna3GZBoac7C
+         skBeEiqsES+g9R+AL6Dok/t3MBv/lKk/pnNfoMebjvpiPH9ZVBjTZ7Gk8ACN6vXFjg2R
+         sR13nulMHF/atjywVDr1huyfjsoZEFZJr4Y17vM+E013usX3jD894nKLLbfvg1L8MFaX
+         ioGA==
+X-Gm-Message-State: AOJu0YwC06/DavTSyuOG2x4KHQJWt82UHTLzHfu+qsJ1eZwHasNQCsfC
+	v9a4EoPbM9bd3AT/tLF0EWPba/pHoldHdnyeyfS94V7kfMMoFPr9LdRihRp+Ffs=
+X-Google-Smtp-Source: AGHT+IEPyD9jGVm07hqjtuuMcVr/kIdFIZwi5RVJ0LxxpraRGb6Srxhqt/JNYhC0I9XOqK9ADOwhPpHrjOa2o3mQ16g=
+X-Received: by 2002:a25:830f:0:b0:dbd:5baa:366d with SMTP id
+ s15-20020a25830f000000b00dbd5baa366dmr1412617ybk.54.1703266943410; Fri, 22
+ Dec 2023 09:42:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231222141952.16254-1-brgl@bgdev.pl>
+In-Reply-To: <20231222141952.16254-1-brgl@bgdev.pl>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 22 Dec 2023 18:42:12 +0100
+Message-ID: <CACRpkdb32EpsHMMR2vSQg51NzCVAnEFTXpsWWMvwY0mCVpnXLw@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: split out the uAPI into a new section
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kent Gibson <warthog618@gmail.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The integration for this SoC is different from the currently existing: It
-needs it's PHY's reference clock rate to calculate the DDC bus frequency
-correctly. The controller is also part of a powerdomain, so this gets added
-as an mandatory property for this variant.
+On Fri, Dec 22, 2023 at 3:19=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Signed-off-by: Alex Bee <knaerzche@gmail.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
----
-changes in v2:
- - clarify that the controller itself is part of the powerdomain
- - simplify clock-names
- - made power-domains property only allowed (and required) for new variant
+> Kent Gibson is the author of the character device uAPI v2 and should be
+> Cc'ed on all patches aimed for it. Unfortunately this is not the case as
+> he's not listed in MAINTAINERS. Split the uAPI files into their own
+> section and make Kent the reviewer.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  MAINTAINERS | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9104430e148e..2867da6e233d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9006,8 +9006,6 @@ R:        Andy Shevchenko <andy@kernel.org>
+>  L:     linux-gpio@vger.kernel.org
+>  S:     Maintained
+>  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
+> -F:     Documentation/ABI/obsolete/sysfs-gpio
+> -F:     Documentation/ABI/testing/gpio-cdev
+>  F:     Documentation/admin-guide/gpio/
+>  F:     Documentation/devicetree/bindings/gpio/
+>  F:     Documentation/driver-api/gpio/
+> @@ -9016,6 +9014,17 @@ F:       include/dt-bindings/gpio/
+>  F:     include/linux/gpio.h
+>  F:     include/linux/gpio/
+>  F:     include/linux/of_gpio.h
+> +
+> +GPIO UAPI
+> +M:     Linus Walleij <linus.walleij@linaro.org>
 
-changes in v3:
- - collect RB
+Uh, I don't know if I'm competent at this point, I think Kent and you
+are the proper maintainers of the UAPI.
 
-changes in v4:
- - none
+With me dropped from the UAPI:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
- .../display/rockchip/rockchip,inno-hdmi.yaml  | 40 ++++++++++++++++++-
- 1 file changed, 38 insertions(+), 2 deletions(-)
+(OK I know I wrote v1 but think of that just makes me feel ashamed
+these days wrt where it has gone since in v2.)
 
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,inno-hdmi.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,inno-hdmi.yaml
-index 96889c86849a..be78dcfa1c76 100644
---- a/Documentation/devicetree/bindings/display/rockchip/rockchip,inno-hdmi.yaml
-+++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,inno-hdmi.yaml
-@@ -14,6 +14,7 @@ properties:
-   compatible:
-     enum:
-       - rockchip,rk3036-inno-hdmi
-+      - rockchip,rk3128-inno-hdmi
- 
-   reg:
-     maxItems: 1
-@@ -22,10 +23,19 @@ properties:
-     maxItems: 1
- 
-   clocks:
--    maxItems: 1
-+    minItems: 1
-+    items:
-+      - description: The HDMI controller main clock
-+      - description: The HDMI PHY reference clock
- 
-   clock-names:
--    const: pclk
-+    minItems: 1
-+    items:
-+      - const: pclk
-+      - const: ref
-+
-+  power-domains:
-+    maxItems: 1
- 
-   ports:
-     $ref: /schemas/graph.yaml#/properties/ports
-@@ -55,6 +65,32 @@ required:
-   - pinctrl-names
-   - ports
- 
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: rockchip,rk3036-inno-hdmi
-+
-+    then:
-+      properties:
-+        power-domains: false
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: rockchip,rk3128-inno-hdmi
-+
-+    then:
-+      properties:
-+        clocks:
-+          minItems: 2
-+        clock-names:
-+          minItems: 2
-+      required:
-+        - power-domains
-+
- additionalProperties: false
- 
- examples:
--- 
-2.43.0
-
+Yours,
+Linus Walleij
