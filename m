@@ -1,102 +1,125 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BCC1EB43
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 22:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rGoML-0005Zf-AD; Fri, 22 Dec 2023 23:51:13 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rGoMJ-000qv1-PE; Fri, 22 Dec 2023 23:51:12 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rGoMK-000FfC-2Y;
-	Fri, 22 Dec 2023 23:51:12 +0100
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kernel@pengutronix.de
-Subject: [PATCH 03/13] irqchip/imx-irqsteer: Convert to platform remove callback returning void
-Date: Fri, 22 Dec 2023 23:50:34 +0100
-Message-ID:  <c0e5afe62256860150d25bcf644f2b8d62794c86.1703284359.git.u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <cover.1703284359.git.u.kleine-koenig@pengutronix.de>
-References: <cover.1703284359.git.u.kleine-koenig@pengutronix.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83F52F845
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 22:55:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GdzGwPnP"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7812bed1c86so73881885a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 14:55:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1703285754; x=1703890554; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=d1lUNN/ZbBeQ7+FcfsIqCm9ReLmWHKbxibhu/nClqx0=;
+        b=GdzGwPnPOolXyfqoauhgSJHTC7wFVPYNeN7lwEVdLtQZzyIlCZmgKGHHxQ6A1rYMWK
+         glcfCm4v8nrSkWXm4ajujn/6/xDbPN9Vnfpt/mRUxMp+5JhSgfTLXjP+w1f1YKwBzLba
+         a6O3TG7t9YeQ2MyfsWBSQp77Iu39Grg4hau/g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703285754; x=1703890554;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d1lUNN/ZbBeQ7+FcfsIqCm9ReLmWHKbxibhu/nClqx0=;
+        b=XtYX9BAHHtkT2kTsO6BUoW7UlwLtnkAGfjMAQk3xWGJYotuVNmMTuBFoi4NImL+v+u
+         Sa8NrZ3ypmFipa9LxW7R5zUTKFfMf4k1GmYFQy2t1nS964AwdAYJNl/W1r3D/QTjtAIE
+         K6LIK/eGqivJ1y5peKqqokmntLJqq+U6hoQ7waKahfq7arFDrbC0axdqdufsLEqmp/pj
+         iP/XQi6ey3emRPxnuezZP5dlEq3JDFHTdw3MtLKjtBYN5YOw5CoBquUmC9mJFF4XRkwr
+         uU3Yu5NNlEh5QhVxK27+M+pvc0xrCCzL5PfbLF4ra7isI82NX/vuD5XJYfPzmJ41l92b
+         Ot9g==
+X-Gm-Message-State: AOJu0YzFX6KWxRSiKQjLfYeJ/cpXt9WMJ1iFQ7Etfirm/+16ikcfsM/W
+	QTs7PTwUEJS67KmIPxXV4jdeVXDFhPyHh08hBotO9dIC9g==
+X-Google-Smtp-Source: AGHT+IGjtzvi/gpUak/rigoRG9O8ppJhWBs/DZTP6zm2L9kkkJ0lMp+Xth+1Mtv3n2QDjSmMIq26Ww==
+X-Received: by 2002:a05:620a:11b9:b0:781:123c:4995 with SMTP id c25-20020a05620a11b900b00781123c4995mr2294398qkk.65.1703285754719;
+        Fri, 22 Dec 2023 14:55:54 -0800 (PST)
+Received: from denia.c.googlers.com (228.221.150.34.bc.googleusercontent.com. [34.150.221.228])
+        by smtp.gmail.com with ESMTPSA id b22-20020a05620a271600b0077f2cbc971csm1649012qkp.121.2023.12.22.14.55.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Dec 2023 14:55:54 -0800 (PST)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Fri, 22 Dec 2023 22:55:49 +0000
+Subject: [PATCH v2] usb: core: Add quirk for Logitech Rallybar
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1880; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=xfWwPsMpemUSHTIcU/EikGDBKd36foZe+1G4fTs3hqo=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlhhK6Fur6CUd1UOKaLZ5K33vkMMIOKWjwsqHiH 25whVgrJMeJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZYYSugAKCRCPgPtYfRL+ TmM1B/0dtKRdQR04yQXFSmzwaKbsX5SOncdt4JztEDpjk9maci6FPNbO2abC9u92f4VLYrEnQbO WyEdYipdt3kPefqWG8bmhncSmyWaAK5Q95KMUDzm+zD66K5GQM9YjaZrGXyALfPMUAK2mHx5563 4aZblITVqigT8nGGU2xr0oI4OGTlBTBCJrYF65ypXXvXJbubUiMrnk/Pdfw2iHWkuLKvNH5Xcue SlDTOQuUDCUMGtkmkC7aS/xJfTHZGAP2gQwrLKx5ewD5ahv+L391QchrYo3AYQsLCRPeuWuj5qP 3eUQObHtwIkaRfDnEh9PCXgEqAXakiYb81I+xLYTBkygm3v1
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20231222-rallybar-v2-1-5849d62a9514@chromium.org>
+X-B4-Tracking: v=1; b=H4sIAPQThmUC/23MQQ6CMBCF4auQWVtDByTqynsYFqUdYBKgZKqNh
+ PTuVtYu/5eXb4dAwhTgXuwgFDmwX3LgqQA7mmUgxS43YImVRkQlZpq2zojSN0ulbWp3oQbyfRX
+ q+XNQzzb3yOHlZTvkqH/rHyRqpdUVOzS1q3TZ9A87ip/5PZ+9DNCmlL4qWb/RowAAAA==
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Alan Stern <stern@rowland.harvard.edu>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>
+X-Mailer: b4 0.12.3
 
-The .remove() callback for a platform driver returns an int which makes
-many driver authors wrongly assume it's possible to do error handling by
-returning an error code. However the value returned is ignored (apart
-from emitting a warning) and this typically results in resource leaks.
+Logitech Rallybar devices, despite behaving as UVC camera, they have a
+different power management system than the rest of the other Logitech
+cameras.
 
-To improve here there is a quest to make the remove callback return
-void. In the first step of this quest all drivers are converted to
-.remove_new(), which already returns void. Eventually after all drivers
-are converted, .remove_new() will be renamed to .remove().
+USB_QUIRK_RESET_RESUME causes undesired USB disconnects, that make the
+device unusable.
 
-Trivially convert this driver from always returning zero in the remove
-callback to the void returning variant.
+These are the only two devices that have this behavior, and we do not
+have the list of devices that require USB_QUIRK_RESET_RESUME, so lets
+create a new lit for them that un-apply the USB_QUIRK_RESET_RESUME
+quirk.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Fixes: e387ef5c47dd ("usb: Add USB_QUIRK_RESET_RESUME for all Logitech UVC webcams")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- drivers/irqchip/irq-imx-irqsteer.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Tested with a Rallybar Mini with an Acer Chromebook Spin 513
+---
+Changes in v2:
+- Add Fixes tag
+- Add UVC maintainer as Cc
+- Link to v1: https://lore.kernel.org/r/20231222-rallybar-v1-1-82b2a4d3106f@chromium.org
+---
+ drivers/usb/core/quirks.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/irqchip/irq-imx-irqsteer.c b/drivers/irqchip/irq-imx-irqsteer.c
-index bd9543314539..05f6b5e8370d 100644
---- a/drivers/irqchip/irq-imx-irqsteer.c
-+++ b/drivers/irqchip/irq-imx-irqsteer.c
-@@ -231,7 +231,7 @@ static int imx_irqsteer_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
--static int imx_irqsteer_remove(struct platform_device *pdev)
-+static void imx_irqsteer_remove(struct platform_device *pdev)
- {
- 	struct irqsteer_data *irqsteer_data = platform_get_drvdata(pdev);
- 	int i;
-@@ -243,8 +243,6 @@ static int imx_irqsteer_remove(struct platform_device *pdev)
- 	irq_domain_remove(irqsteer_data->domain);
- 
- 	clk_disable_unprepare(irqsteer_data->ipg_clk);
--
--	return 0;
- }
- 
- #ifdef CONFIG_PM
-@@ -312,6 +310,6 @@ static struct platform_driver imx_irqsteer_driver = {
- 		.pm = &imx_irqsteer_pm_ops,
- 	},
- 	.probe = imx_irqsteer_probe,
--	.remove = imx_irqsteer_remove,
-+	.remove_new = imx_irqsteer_remove,
+diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
+index 15e9bd180a1d..8fa8de50e7f0 100644
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -553,6 +553,14 @@ static const struct usb_device_id usb_interface_quirk_list[] = {
+ 	{ }  /* terminating entry must be last */
  };
- builtin_platform_driver(imx_irqsteer_driver);
+ 
++static const struct usb_device_id usb_interface_unsupported_quirk_list[] = {
++	/* Logitech Rallybar VC systems*/
++	{ USB_DEVICE(0x046d, 0x089b), .driver_info = USB_QUIRK_RESET_RESUME },
++	{ USB_DEVICE(0x046d, 0x08d3), .driver_info = USB_QUIRK_RESET_RESUME },
++
++	{ }  /* terminating entry must be last */
++};
++
+ static const struct usb_device_id usb_amd_resume_quirk_list[] = {
+ 	/* Lenovo Mouse with Pixart controller */
+ 	{ USB_DEVICE(0x17ef, 0x602e), .driver_info = USB_QUIRK_RESET_RESUME },
+@@ -718,6 +726,8 @@ void usb_detect_interface_quirks(struct usb_device *udev)
+ 	u32 quirks;
+ 
+ 	quirks = usb_detect_static_quirks(udev, usb_interface_quirk_list);
++	quirks &= ~usb_detect_static_quirks(udev,
++					usb_interface_unsupported_quirk_list);
+ 	if (quirks == 0)
+ 		return;
+ 
+
+---
+base-commit: c0f65a7c112b3cfa691cead54bcf24d6cc2182b5
+change-id: 20231222-rallybar-19ce0c64d5e6
+
+Best regards,
 -- 
-2.42.0
+Ricardo Ribalda <ribalda@chromium.org>
 
