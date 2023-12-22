@@ -1,290 +1,130 @@
-Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D51217745;
-	Fri, 22 Dec 2023 11:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
-	by ex01.ufhost.com (Postfix) with ESMTP id 2B40024E2E2;
-	Fri, 22 Dec 2023 19:18:50 +0800 (CST)
-Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX166.cuchost.com
- (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 22 Dec
- 2023 19:18:49 +0800
-Received: from [192.168.125.85] (113.72.145.47) by EXMBX171.cuchost.com
- (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 22 Dec
- 2023 19:18:48 +0800
-Message-ID: <025408dd-cc00-4744-8a41-cbd18209ed8b@starfivetech.com>
-Date: Fri, 22 Dec 2023 19:18:48 +0800
+Received: from smtp.cecloud.com (unknown [1.203.97.240])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35BE6168BE
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 11:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cestc.cn
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.cecloud.com (Postfix) with ESMTP id C3ECD900113;
+	Fri, 22 Dec 2023 19:12:28 +0800 (CST)
+X-MAIL-GRAY:0
+X-MAIL-DELIVERY:1
+X-ANTISPAM-LEVEL:2
+X-ABS-CHECKED:0
+Received: from localhost.localdomain (unknown [111.48.69.247])
+	by smtp.cecloud.com (postfix) whith ESMTP id P9454T281468735582576S1703243547845870_;
+	Fri, 22 Dec 2023 19:12:28 +0800 (CST)
+X-IP-DOMAINF:1
+X-RL-SENDER:zhangyanjun@cestc.cn
+X-SENDER:zhangyanjun@cestc.cn
+X-LOGIN-NAME:zhangyanjun@cestc.cn
+X-FST-TO:kbusch@kernel.org
+X-RCPT-COUNT:7
+X-LOCAL-RCPT-COUNT:1
+X-MUTI-DOMAIN-COUNT:0
+X-SENDER-IP:111.48.69.247
+X-ATTACHMENT-NUM:0
+X-UNIQUE-TAG:<d9b099448f4e925c4519e296732a31b9>
+X-System-Flag:0
+From: zhangyanjun@cestc.cn
+To: kbusch@kernel.org,
+	axboe@kernel.dk,
+	hch@lst.de,
+	sagi@grimberg.me
+Cc: linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	zhangyanjun@cestc.cn
+Subject: [RFC] nvme-tcp: fix a possible double-free after failed to send request
+Date: Fri, 22 Dec 2023 19:12:25 +0800
+Message-Id: <20231222111225.72015-1-zhangyanjun@cestc.cn>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 15/21] PCI: microchip: Add event irqchip field to host
- port and add PLDA irqchip
-Content-Language: en-US
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-CC: Conor Dooley <conor@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
-	<kw@linux.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>, Daire McNamara <daire.mcnamara@microchip.com>, "Emil
- Renner Berthing" <emil.renner.berthing@canonical.com>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-	<linux-pci@vger.kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
-	"Palmer Dabbelt" <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-	"Philipp Zabel" <p.zabel@pengutronix.de>, Mason Huo
-	<mason.huo@starfivetech.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Kevin Xie <kevin.xie@starfivetech.com>
-References: <20231214072839.2367-1-minda.chen@starfivetech.com>
- <20231214072839.2367-16-minda.chen@starfivetech.com>
- <8c417157-8884-4e91-8912-0344e71f82c2@starfivetech.com>
- <ZYRaqYTcxWJGwWG8@lpieralisi>
-From: Minda Chen <minda.chen@starfivetech.com>
-In-Reply-To: <ZYRaqYTcxWJGwWG8@lpieralisi>
-Content-Type: text/plain; charset="UTF-8"
-X-ClientProxiedBy: EXCAS063.cuchost.com (172.16.6.23) To EXMBX171.cuchost.com
- (172.16.6.91)
-X-YovoleRuleAgent: yovoleflag
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
+From: Yanjun Zhang <zhangyanjun@cestc.cn>
 
+In storage clusters constructed by nvme-tcp driver, we have encountered
+the following crash on the host kernel severval times.
 
-On 2023/12/21 23:32, Lorenzo Pieralisi wrote:
-> On Thu, Dec 21, 2023 at 06:56:22PM +0800, Minda Chen wrote:
->>=20
->>=20
->> On 2023/12/14 15:28, Minda Chen wrote:
->> > PolarFire PCIE event IRQs includes PLDA local interrupts and PolarFi=
-re
->> > their own IRQs. PolarFire PCIe event irq_chip ops using an event_des=
-c to
->> > unify different IRQ register addresses. On PLDA sides, PLDA irqchip =
-codes
->> > only require to set PLDA local interrupt register. So the PLDA irqch=
-ip ops
->> > codes can not be extracted from PolarFire codes.
->> >=20
->> > To support PLDA its own event IRQ process, implements PLDA irqchip o=
-ps and
->> > add event irqchip field to struct pcie_plda_rp.
->> >=20
->> > Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
->> > ---
->> >  .../pci/controller/plda/pcie-microchip-host.c | 65 ++++++++++++++++=
-++-
->> >  drivers/pci/controller/plda/pcie-plda.h       |  3 +
->> >  2 files changed, 67 insertions(+), 1 deletion(-)
->> >=20
->> Hi Conor
->>    Could you take time to review this patch?  For I using event irq ch=
-ip instead of event ops and the whole patch have been changed.  I think i=
-t's better=20
->>    And I added the implementation of PLDA event irqchip  and make it e=
-asier to claim the necessity of the modification.
->>    If you approve this, I will add back the review tag. Thanks
->>=20
->> Hi Lorenzo
->>    Have you reviewed this patch=EF=BC=9F Does the commit message and t=
-he codes are can be approved =EF=BC=9FThanks
->>=20
->=20
-> Please wrap the lines at 75 columns in length.
->=20
-OK
-> I have not reviewed but I am still struggling to understand the
-> commit log, I apologise, I can try to review the series and figure
-> out what the patch is doing but I would appreciate if commits logs
-> could be made easier to parse.
->=20
-> Thanks,
-> Lorenzo
->=20
+[248514.030873] nvme nvme1: failed to send request -13
+[248514.035916] ------------[ cut here ]------------
+[248514.035918] kernel BUG at mm/slub.c:379!
+[248514.037647] invalid opcode: 0000 [#1] SMP NOPTI
+[248514.039416] CPU: 0 PID: 9 Comm: kworker/0:1H Kdump: loaded Tainted: G S                5.15.67-6.cl9.x86_64 #1
+[248514.041376] Hardware name: CECLOUD CeaStor 16114/BC13MBSBC, BIOS 1.37 02/24/2023
+[248514.043433] Workqueue: nvme_tcp_wq nvme_tcp_io_work [nvme_tcp]
+[248514.045576] RIP: 0010:__slab_free+0x16a/0x320
+[248514.047751] Code: 24 20 e8 69 28 78 00 44 8b 44 24 0c 4c 8b 54 24 10 44 0f b6 5c 24 1b 0f b6 74 24 1c 48 89 04 24 4c 8b 4c 24 20 e9 28 ff ff ff <0f> 0b 41 f7 46 08 00 0d 21 00 75 a0 4d 85 ed 75 9b 80 4c 24 5b 80
+[248514.052500] RSP: 0018:ff51b1a6c0273bf0 EFLAGS: 00010246
+[248514.054798] RAX: ff2378e68268b800 RBX: 0000000080080004 RCX: ff2378e68268b000
+[248514.057038] RDX: ff2378e68268b000 RSI: ffca59110c09a200 RDI: ff2378a480034d00
+[248514.059245] RBP: ff51b1a6c0273c90 R08: 0000000000000001 R09: ffffffffc0901a0a
+[248514.061386] R10: ff2378e68268b000 R11: ffffffff86e06000 R12: ffca59110c09a200
+[248514.063423] R13: ff2378e68268b000 R14: ff2378a480034d00 R15: 0000000000000078
+[248514.065428] FS:  0000000000000000(0000) GS:ff2378d32fe00000(0000) knlGS:0000000000000000
+[248514.067456] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[248514.069531] CR2: 00007f4759e1c800 CR3: 0000001b5e5a6005 CR4: 0000000000771ef0
+[248514.071706] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[248514.073916] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[248514.076130] PKRU: 55555554
+[248514.078392] Call Trace:
+[248514.080640]  <TASK>
+[248514.082898]  ? sk_stream_alloc_skb+0x66/0x2e0
+[248514.085231]  ? tcp_skb_entail+0x11d/0x130
+[248514.087595]  ? tcp_build_frag+0xf0/0x390
+[248514.089980]  ? nvme_complete_rq+0x1a/0x1f0 [nvme_core]
+[248514.092433]  kfree+0x215/0x240
+[248514.094918]  nvme_complete_rq+0x1a/0x1f0 [nvme_core]
+[248514.097469]  nvme_tcp_recv_pdu+0x534/0x570 [nvme_tcp]
+[248514.100070]  nvme_tcp_recv_skb+0x4f/0x23e [nvme_tcp]
+[248514.102699]  ? nvme_tcp_recv_pdu+0x570/0x570 [nvme_tcp]
+[248514.105317]  tcp_read_sock+0xa0/0x270
+[248514.107958]  nvme_tcp_try_recv+0x65/0xa0 [nvme_tcp]
+[248514.110666]  ? nvme_tcp_try_send+0x16b/0x200 [nvme_tcp]
+[248514.113431]  nvme_tcp_io_work+0x4d/0xa0 [nvme_tcp]
+[248514.116247]  process_one_work+0x1e8/0x390
+[248514.119085]  worker_thread+0x53/0x3d0
+[248514.121980]  ? process_one_work+0x390/0x390
+[248514.124887]  kthread+0x124/0x150
+[248514.127835]  ? set_kthread_struct+0x50/0x50
+[248514.130836]  ret_from_fork+0x1f/0x30
+[248514.133841]  </TASK>
 
-The commit message it is not good.
+By analyzing the vmcore, we know the direct cause is that the slab object
+request->special_vec was freed twicely. According to the error message
+"nvme nvme1: failed to send request -13" and nvme_tcp_request->state =
+NVME_TCP_SEND_DATA, the pdu has been send by nvme_tcp_try_send_cmd_pdu.
+And the nvme_tcp_fail_request would execute nvme_complete_rq after failed
+to send data. Then the nvme_tcp_recv_pdu may receive the responding pdu
+and the nvme_tcp_process_nvme_cqe would complete the request again. To
+avoid this slab object double-free issuse, we try to make the following
+code modifications, can you give some suggestions, thanks!
 
-I draw a graph about the PCIe global event interrupt domain
-(related to patch 10- 16).
-Actually all these interrupts patches are for extracting the common=20
-PLDA codes to pcie-plda-host.c and do not change microchip's codes logic.
- =20
-            +----------------------------------------------------------+
-            |    microchip  Global event interrupt domain              |
-            +-----------------------------------+-----------+----------+
-            |                                   | microchip | PLDA     |
-            |                                   | event num |(StarFive)|
-            |                                   |           |event num |
-            +-----------------------------------+-----------+----------+
-            |                                   | 0         |          |
-            |                                   |           |          |
-(mc pcie    |microchip platform event interrupt |           |          |
-int line)   |                                   |           |          |
-------------|                                   |           |          |
-            |                                   |10         |          |
-            +-----------------------------------+-----------+----------+
-            | PLDA host DMA interrupt           |11         |          |
-            | (int number is not fixed, defined |           |          |
-            |  by vendor)                       |14         |          |
-         +--+-----------------------------------+---------- +----------+-=
+Signed-off-by: Yanjun Zhang <zhangyanjun@cestc.cn>
+---
+ drivers/nvme/host/tcp.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index 08805f027..84f724558 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -581,6 +581,9 @@ static int nvme_tcp_process_nvme_cqe(struct nvme_tcp_queue *queue,
+ 		return -EINVAL;
+ 	}
+ 
++	if (!blk_mq_request_started(rq))
++		return 0;
 +
-         |  |  PLDA event interrupt             |15         |0         | =
-|
-         |  |  (int number is fixed)            |           |          | =
-|
----------|--|                                   |           |          | =
-|
-(Starfive|  |                                   |           |          | =
-|
-pcie int |  |   +------------------+            |           |          | =
-|
-line)    |  |   |INTx event domain |            |           |          | =
-|
-         |  |   +------------------+            |           |          | =
-|
-         |  |                                   |           |          | =
-|
-         |  |   +------------------+            |           |          | =
-|
-         |  |   |MSI event domain  |            |           |          | =
-|
-         |  |   +------------------+            |           |          | =
-|
-         |  |                                   |27         |12        | =
-|
-         |  +---------------------------------+-+-----------+----------+ =
-|
-         | extract PLDA event part to common PLDA file.                  =
-|
-         +---------------------------------------------------------------=
-+
+ 	req = blk_mq_rq_to_pdu(rq);
+ 	if (req->status == cpu_to_le16(NVME_SC_SUCCESS))
+ 		req->status = cqe->status;
+-- 
+2.31.1
 
 
->> > diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/dri=
-vers/pci/controller/plda/pcie-microchip-host.c
->> > index fd0d92c3d03f..ff40c1622173 100644
->> > --- a/drivers/pci/controller/plda/pcie-microchip-host.c
->> > +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
->> > @@ -771,6 +771,63 @@ static struct irq_chip mc_event_irq_chip =3D {
->> >  	.irq_unmask =3D mc_unmask_event_irq,
->> >  };
->> > > +static u32 plda_hwirq_to_mask(int hwirq)
->> > +{
->> > +	u32 mask;
->> > +
->> > +	if (hwirq < EVENT_PM_MSI_INT_INTX)
->> > +		mask =3D BIT(hwirq + A_ATR_EVT_POST_ERR_SHIFT);
->> > +	else if (hwirq =3D=3D EVENT_PM_MSI_INT_INTX)
->> > +		mask =3D PM_MSI_INT_INTX_MASK;
->> > +	else
->> > +		mask =3D BIT(hwirq + PM_MSI_TO_MASK_OFFSET);
->> > +
->> > +	return mask;
->> > +}
->> > +
->> > +static void plda_ack_event_irq(struct irq_data *data)
->> > +{
->> > +	struct plda_pcie_rp *port =3D irq_data_get_irq_chip_data(data);
->> > +
->> > +	writel_relaxed(plda_hwirq_to_mask(data->hwirq),
->> > +		       port->bridge_addr + ISTATUS_LOCAL);
->> > +}
->> > +
->> > +static void plda_mask_event_irq(struct irq_data *data)
->> > +{
->> > +	struct plda_pcie_rp *port =3D irq_data_get_irq_chip_data(data);
->> > +	u32 mask, val;
->> > +
->> > +	mask =3D plda_hwirq_to_mask(data->hwirq);
->> > +
->> > +	raw_spin_lock(&port->lock);
->> > +	val =3D readl_relaxed(port->bridge_addr + IMASK_LOCAL);
->> > +	val &=3D ~mask;
->> > +	writel_relaxed(val, port->bridge_addr + IMASK_LOCAL);
->> > +	raw_spin_unlock(&port->lock);
->> > +}
->> > +
->> > +static void plda_unmask_event_irq(struct irq_data *data)
->> > +{
->> > +	struct plda_pcie_rp *port =3D irq_data_get_irq_chip_data(data);
->> > +	u32 mask, val;
->> > +
->> > +	mask =3D plda_hwirq_to_mask(data->hwirq);
->> > +
->> > +	raw_spin_lock(&port->lock);
->> > +	val =3D readl_relaxed(port->bridge_addr + IMASK_LOCAL);
->> > +	val |=3D mask;
->> > +	writel_relaxed(val, port->bridge_addr + IMASK_LOCAL);
->> > +	raw_spin_unlock(&port->lock);
->> > +}
->> > +
->> > +static struct irq_chip plda_event_irq_chip =3D {
->> > +	.name =3D "PLDA PCIe EVENT",
->> > +	.irq_ack =3D plda_ack_event_irq,
->> > +	.irq_mask =3D plda_mask_event_irq,
->> > +	.irq_unmask =3D plda_unmask_event_irq,
->> > +};
->> > +
->> >  static const struct plda_event_ops plda_event_ops =3D {
->> >  	.get_events =3D plda_get_events,
->> >  };
->> > @@ -778,7 +835,9 @@ static const struct plda_event_ops plda_event_op=
-s =3D {
->> >  static int plda_pcie_event_map(struct irq_domain *domain, unsigned =
-int irq,
->> >  			       irq_hw_number_t hwirq)
->> >  {
->> > -	irq_set_chip_and_handler(irq, &mc_event_irq_chip, handle_level_irq=
-);
->> > +	struct plda_pcie_rp *port =3D (void *)domain->host_data;
->> > +
->> > +	irq_set_chip_and_handler(irq, port->event_irq_chip, handle_level_i=
-rq);
->> >  	irq_set_chip_data(irq, domain->host_data);
->> > =20
->> >  	return 0;
->> > @@ -963,6 +1022,9 @@ static int plda_init_interrupts(struct platform=
-_device *pdev,
->> >  	if (!port->event_ops)
->> >  		port->event_ops =3D &plda_event_ops;
->> > =20
->> > +	if (!port->event_irq_chip)
->> > +		port->event_irq_chip =3D &plda_event_irq_chip;
->> > +
->> >  	ret =3D plda_pcie_init_irq_domains(port);
->> >  	if (ret) {
->> >  		dev_err(dev, "failed creating IRQ domains\n");
->> > @@ -1040,6 +1102,7 @@ static int mc_platform_init(struct pci_config_=
-window *cfg)
->> >  		return ret;
->> > =20
->> >  	port->plda.event_ops =3D &mc_event_ops;
->> > +	port->plda.event_irq_chip =3D &mc_event_irq_chip;
->> > =20
->> >  	/* Address translation is up; safe to enable interrupts */
->> >  	ret =3D plda_init_interrupts(pdev, &port->plda, &mc_event);
->> > diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/c=
-ontroller/plda/pcie-plda.h
->> > index dd8bc2750bfc..24ac50c458dc 100644
->> > --- a/drivers/pci/controller/plda/pcie-plda.h
->> > +++ b/drivers/pci/controller/plda/pcie-plda.h
->> > @@ -128,6 +128,8 @@
->> >   * DMA end : reserved for vendor implement
->> >   */
->> > =20
->> > +#define PM_MSI_TO_MASK_OFFSET			19
->> > +
->> >  struct plda_pcie_rp;
->> > =20
->> >  struct plda_event_ops {
->> > @@ -150,6 +152,7 @@ struct plda_pcie_rp {
->> >  	raw_spinlock_t lock;
->> >  	struct plda_msi msi;
->> >  	const struct plda_event_ops *event_ops;
->> > +	const struct irq_chip *event_irq_chip;
->> >  	void __iomem *bridge_addr;
->> >  	int num_events;
->> >  };
+
