@@ -1,370 +1,222 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66DAA2374C
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 07:32:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE23241F3;
+	Fri, 22 Dec 2023 07:33:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cHTeEEHD"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20231222073254epoutp04e6cece7f3f92a2a7c47b9a4e869223ec~jFwBvuXuB1596515965epoutp04A
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 07:32:54 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20231222073254epoutp04e6cece7f3f92a2a7c47b9a4e869223ec~jFwBvuXuB1596515965epoutp04A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1703230374;
-	bh=gdF/wOMKugvH3378GVUkXSQTheU2+tEf4koM7BLSTqc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cHTeEEHD4GNkzWNv6eTZqmKPtPXdJKUZPn/655lcCQOFn2Z6uQmJfSn1Th03+STr/
-	 Ho6KlLBKpF15Aso4B3fAmwrWCpQBvaa7ZfyV7pDeZTYLeKn9JTVcy1UFqlnJibpGBi
-	 m9vq38tx4NtPjfT+hZ2qsOct3qDZcOUmZh2V6hRk=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20231222073253epcas5p412bcd55be87879719d1db2fdf5a4af8e~jFwBAl_tL2514625146epcas5p4K;
-	Fri, 22 Dec 2023 07:32:53 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.177]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4SxJtD5PGNz4x9Q1; Fri, 22 Dec
-	2023 07:32:52 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	C9.74.08567.4AB35856; Fri, 22 Dec 2023 16:32:52 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20231222062248epcas5p4623168200a168ae2f895df4221368d66~jEy0En_fu0903809038epcas5p4h;
-	Fri, 22 Dec 2023 06:22:48 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20231222062248epsmtrp1088c62ec57e799bad9ace7097f36eaf2~jEy0DmXzk1655116551epsmtrp1W;
-	Fri, 22 Dec 2023 06:22:48 +0000 (GMT)
-X-AuditID: b6c32a44-3abff70000002177-e8-65853ba4252f
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	51.FE.18939.73B25856; Fri, 22 Dec 2023 15:22:48 +0900 (KST)
-Received: from green245.sa.corp.samsungelectronics.net (unknown
-	[107.99.41.245]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20231222062244epsmtip26cf587d2c278da63c0ced776226aa9da~jEywWeSb_0303503035epsmtip2O;
-	Fri, 22 Dec 2023 06:22:44 +0000 (GMT)
-From: Nitesh Shetty <nj.shetty@samsung.com>
-To: Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>, Alasdair
-	Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, Mikulas Patocka
-	<mpatocka@redhat.com>, dm-devel@lists.linux.dev, Keith Busch
-	<kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg
-	<sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>, Alexander Viro
-	<viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>
-Cc: martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-	nitheshshetty@gmail.com, anuj1072538@gmail.com, gost.dev@samsung.com,
-	mcgrof@kernel.org, Nitesh Shetty <nj.shetty@samsung.com>, Hannes Reinecke
-	<hare@suse.de>, Damien Le Moal <damien.lemoal@opensource.wdc.com>, Anuj
-	Gupta <anuj20.g@samsung.com>, Vincent Fu <vincent.fu@samsung.com>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-nvme@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH v19 12/12] null_blk: add support for copy offload
-Date: Fri, 22 Dec 2023 11:43:06 +0530
-Message-Id: <20231222061313.12260-13-nj.shetty@samsung.com>
-X-Mailer: git-send-email 2.35.1.500.gb896f729e2
-In-Reply-To: <20231222061313.12260-1-nj.shetty@samsung.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RNctBg06"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B9EAC4339A;
+	Fri, 22 Dec 2023 07:33:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703230431;
+	bh=Js9mFxTjdS4RHFZpNBXtXK6UQmUyniFDMRqPYxNV2eg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=RNctBg06iYouMH4L4/MssBF3378c6afk5bZldsSRRoGlhTLtifHs32uP1W+jh5hqp
+	 PHpNMllnYSSRYxfQteW3ai3iZFEseY5ykq8srZcdMbQPVNtrJZ/xRRHfFBbZ095lFb
+	 JmABN870GsH9dg0bomEMIiOH/G5rDevKUnQClH5jH2T8refPqxiLBUpMoqtS3EY4tV
+	 QWEyROR86b8FIFZOuiYKCCCo6o637d9YNLsn2sskt8PRPABS4sLPD7JdeZBia8M6Ks
+	 GeeA88ntPVZvPAhq/E0PVeFDgyv/Gb7LGDRgSTcKhkDJmTmg90r55yeebiQhkwDqgr
+	 ntE1rSaaMNcYA==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5534abbc637so1816249a12.0;
+        Thu, 21 Dec 2023 23:33:51 -0800 (PST)
+X-Gm-Message-State: AOJu0YzYrF0yS5cB54Me1Dw72wW9S8SD5Q2GFwkuzf8R+7L/frGRWmj1
+	pDB/3qvkPJwruMm1c9OofeLVUgwauQehtm5p3Z8=
+X-Google-Smtp-Source: AGHT+IE2yNM9a0cZI0Nm4o6zCMPlXO4o3RDUDZJLeKMQNH/z94tua866L0WRp1To+KH5fA5/N9922XwtnwbyxYIZYCo=
+X-Received: by 2002:a17:906:b3a4:b0:a1d:7792:cdbe with SMTP id
+ uh36-20020a170906b3a400b00a1d7792cdbemr438891ejc.146.1703230429499; Thu, 21
+ Dec 2023 23:33:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Ta1BUZRie75yzZxca6gCin4SJa0moXBaX7eOWMlw8TQ5DpcboD9zgCAzs
-	xb1Ixjgutw0hASUcWeMiMAlIy8jN5SKjkFyzrQRcYYDSxQxCAlM0Atr1oPnveZ/ved7bNy8P
-	d6jhOvMSpCpGIRUn8UlbornL3c2jMiCT8a44twXV9XfjaO7xIoHS8pdwdGksj0TTXfMAma99
-	CdDiTSOOysqLCXTnWguG2svPYKj60g0MnekcBmhySIehqyPb0AVtJYHar/YR6FbrNyQq/XaS
-	i3JuG0h0sWcZQ6b8SYBOZw1hyGBOBah5sRRH+ulZAvWOvInu5WQBZFzq4exyoVt0Y1zaOH6Z
-	oG/dVNP1NSdJuqHyBP2goQjQbXc0JF2RW8ChT6U/JOmWzAkOPTc5QtCzHUMkndtYA+iGgRT6
-	Uf1bdL15BoukDiQGxjPiWEbhykhjZLEJ0rgg/oefRIdE+4q8BR4CP/Qe31UqljBB/NA9kR7h
-	CUmWDfFdj4qT1BYqUqxU8r3eD1TI1CrGNV6mVAXxGXlsklwo91SKJUq1NM5Tyqj8Bd7ePr4W
-	4aHE+Kn+blL+c/jnVU9+5WqA3j8b8HiQEsJnJ12ygS3PgWoDcPziAMkG8wAWrpi4LwPzn/OW
-	wOa547e0Uox9aAGw1tQH2CATg8bUGa41L0ltgwMrPKthDVWLw5bLAqsGp57isKKnh7RqHKlg
-	WFISadUQ1Duw+ayWY8V2VADM67tOsO15wbwJeyttY6F//6diVWIP+4rMhBXj1EaY3nQet6aH
-	VJcNHP3uJGAbDYWPHxUSLHaEUz2NqwM4wz/ytKs4GVZ/XUWy5gwAdbd1q+adMLM/D7c2gVPu
-	sK7Vi6U3wMJ+PcYWfh2eWjRjLG8HDSUv8GZYW1dGsng9HF5IXcU0LB/Q4uyucgHMvqvD8oGr
-	7pWBdK8MpPu/dBnAa8B6Rq6UxDExvnKBlEl++ckxMkk9eH40W0MNwFS67NkJMB7oBJCH89fY
-	ybZnMA52seJjXzAKWbRCncQoO4GvZeGncWenGJnl6qSqaIHQz1soEomEfjtEAv46u+nM4lgH
-	Kk6sYhIZRs4oXvgwno2zBst4Y/vkbColGmwwp3S4rWPCtRlr3/YJRvuznl73SIg4qpsoQIl7
-	c47L/o1KvrDb3se88CBNrt3b/33auX1RQXM1IXP6wzs2930cUDcsdc8YmVhbWTBTHTHqWP5D
-	zfF9URXL8Zuc/XI0kuLXXP7K8t3yUdsV46eDNiFmv186ME5YeliT05A9RrgUF5btMUzd0F35
-	27/RKDIcWXm46aAhy/bEhiOOo6KlFP2xQ88iHN9tHOT8KDJNud2f2T0bKFTualcYzx8ujDA5
-	bZTYj98b14yfHVkprQ796aA+fudn2m5+a9F+nyr13Wxpn1tv7oLW7kCjS1rTE/X9gKrerzTp
-	OWEfBLeP8QllvFiwFVcoxf8B7C2wGr0EAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SfyyUcQDG+77ve++9bt32dlTfcstc9Q86as2+xVJrtTfK0toqrXF450d3
-	2F1KtBLHSeUulnLidKcTDeUk59c4ScRUNxWSLDeVFaU03fTjWFv/PXs+nz1/PRQuGCFWU7Hx
-	J1h5vEQqInlEfYfIbQPyzGR9lJMA1fQ8wtGX73YCpWvmcXRnRE2iyY6vAI23qQCy9/XjqFRf
-	TKDBNjOGmvV5GKq404mhPMsLgGwDWgy1DHmim1llBGpu6SaQtfEGiXRGGxddfNlAovKuXxh6
-	pbEBdCV7AEMN4+cBqrfrcFQ9OUWgx0Ou6N3FbID657s424WMWTvCZfrf3CMYa18SU1t5gWRM
-	ZeeY96ZCwDQNppGMITefw1zO+Ewy5sxRDvPFNkQwU60DJJNbVwkY05NUZqZ2DVM7/gnbT4fy
-	/KNYaexJVu69LZwX87HnEZn4bHfy7dm33DRQvTUHOFGQ3gzH0nVYDuBRAvoBgKqnH8hFsAoa
-	5x/ii9kZVvya4C5KGRi8PjxB5ACKImlP+OQ35ehd6AYczlVlLCzhdDYBn9a3cB2SM70DlpTs
-	dwwR9HpYX5DFcWQ+7QfV3e0LO5D2hurRZY7a6W898dOwoAjorbB7wkQu6stgd+E44cg47QYz
-	7hfhGkBr/0Pa/1ApwCrBcjZRIYuWRSZuFCskMkVSfLQ4MkFWCxYe4HGgARhr5sUWgFHAAiCF
-	i1z4CV5KVsCPkpxOYeUJYfIkKauwAFeKEK3kr5VeiBLQ0ZIT7HGWTWTl/yhGOa1Ow652Vqzr
-	1XQFTrl37ak5ONint/i6r+vYZOfdTqraUjK7dAspMcwEufgp248RRYfyW5Pj3hXmlllvxVnV
-	BpVK7rtiZcC0NWX9SS/zDbUHiggQ9ynJMY/Xn9+6iavSi8MvaQvdmyaLOjX+4e1+wm9jISap
-	Mz/C+qKRa7Pq65qb1mRrp30iBWLtcG+ysmff0V0681mj4fKOgvIjJfbpoL0puw/f5bwJUY66
-	n7nedO2H9HX/R1e9sb1GuIuaWxVYGpB1yll2TBEdlBomDhXFpcZ2KpRh56qfW5bkN89tzznC
-	TRHuEc7WxfirhjPFmw7ofhcJy2fY2JCbZ4uDd+58mOUfLCIUMZKNHrhcIfkDEazyDnADAAA=
-X-CMS-MailID: 20231222062248epcas5p4623168200a168ae2f895df4221368d66
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20231222062248epcas5p4623168200a168ae2f895df4221368d66
-References: <20231222061313.12260-1-nj.shetty@samsung.com>
-	<CGME20231222062248epcas5p4623168200a168ae2f895df4221368d66@epcas5p4.samsung.com>
+References: <20231221154702.2267684-1-guoren@kernel.org> <20231221154702.2267684-2-guoren@kernel.org>
+ <ZYTriK9hjOFQou9Z@LeoBras> <CAJF2gTT=EQzsuYMHr3FLb82Gi325PqWMEOAzfc6fg=go+gKP_g@mail.gmail.com>
+ <ZYUHg3kIMYdNSOSr@ghost> <ZYUReEZWcZVv1kxP@LeoBras>
+In-Reply-To: <ZYUReEZWcZVv1kxP@LeoBras>
+From: Guo Ren <guoren@kernel.org>
+Date: Fri, 22 Dec 2023 15:33:38 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTS6MntY1sa+VqQ-hXbrGRaXOKqSY86xwe1-G1fVZHn7gQ@mail.gmail.com>
+Message-ID: <CAJF2gTS6MntY1sa+VqQ-hXbrGRaXOKqSY86xwe1-G1fVZHn7gQ@mail.gmail.com>
+Subject: Re: [PATCH V2 1/4] riscv: mm: Fixup compat mode boot failure
+To: Leonardo Bras <leobras@redhat.com>
+Cc: Charlie Jenkins <charlie@rivosinc.com>, linux-kernel@vger.kernel.org, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, alexghiti@rivosinc.com, 
+	xiao.w.wang@intel.com, david@redhat.com, panqinglin2020@iscas.ac.cn, 
+	rick.p.edgecombe@intel.com, willy@infradead.org, bjorn@rivosinc.com, 
+	conor.dooley@microchip.com, cleger@rivosinc.com, 
+	linux-riscv@lists.infradead.org, Guo Ren <guoren@linux.alibaba.com>, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Implementation is based on existing read and write infrastructure.
-copy_max_bytes: A new configfs and module parameter is introduced, which
-can be used to set hardware/driver supported maximum copy limit.
-Only request based queue mode will support for copy offload.
-Added tracefs support to copy IO tracing.
+On Fri, Dec 22, 2023 at 12:33=E2=80=AFPM Leonardo Bras <leobras@redhat.com>=
+ wrote:
+>
+> On Thu, Dec 21, 2023 at 07:50:27PM -0800, Charlie Jenkins wrote:
+> > On Fri, Dec 22, 2023 at 10:57:16AM +0800, Guo Ren wrote:
+> > > On Fri, Dec 22, 2023 at 9:51=E2=80=AFAM Leonardo Bras <leobras@redhat=
+.com> wrote:
+> > > >
+> > > > Hello Guo Ren,
+> > > >
+> > > > On Thu, Dec 21, 2023 at 10:46:58AM -0500, guoren@kernel.org wrote:
+> > > > > From: Guo Ren <guoren@linux.alibaba.com>
+> > > > >
+> > > > > In COMPAT mode, the STACK_TOP is 0x80000000, but the TASK_SIZE is
+> > > > > 0x7fff000. When the user stack is upon 0x7fff000, it will cause a=
+ user
+> > > > > segment fault. Sometimes, it would cause boot failure when the wh=
+ole
+> > > > > rootfs is rv32.
+> > > >
+> > > > Checking if I get the scenario:
+> > > >
+> > > > In pgtable.h:
+> > > > #ifdef CONFIG_64BIT
+> > > > #define TASK_SIZE_64    (PGDIR_SIZE * PTRS_PER_PGD / 2)
+> > > > #define TASK_SIZE_MIN   (PGDIR_SIZE_L3 * PTRS_PER_PGD / 2)
+> > > >
+> > > > #ifdef CONFIG_COMPAT
+> > > > #define TASK_SIZE_32    (_AC(0x80000000, UL) - PAGE_SIZE)
+> > > > #define TASK_SIZE       (test_thread_flag(TIF_32BIT) ? \
+> > > >                          TASK_SIZE_32 : TASK_SIZE_64)
+> > > > #else
+> > > > [...]
+> > > >
+> > > > Meaning CONFIG_COMPAT is only available in CONFIG_64BIT, and TASK_S=
+IZE in
+> > > > compat mode is either TASK_SIZE_32 or TASK_SIZE_64 depending on the=
+ thread_flag.
+> > > >
+> > > > from processor.h:
+> > > > #ifdef CONFIG_64BIT
+> > > > #define DEFAULT_MAP_WINDOW      (UL(1) << (MMAP_VA_BITS - 1))
+> > > > #define STACK_TOP_MAX           TASK_SIZE_64
+> > > > [...]
+> > > > #define STACK_TOP               DEFAULT_MAP_WINDOW
+> > > >
+> > > >
+> > > > where:
+> > > > #define MMAP_VA_BITS (is_compat_task() ? VA_BITS_SV32 : MMAP_VA_BIT=
+S_64)
+> > > > with MMAP_VA_BITS_64 being either 48 or 37.
+> > > >
+> > > > In compat mode,
+> > > > STACK_TOP =3D 1 << (32 - 1)       -> 0x80000000
+> > > > TASK_SIZE =3D 0x8000000 - 4k      -> 0x7ffff000
+> > > >
+> > > > IIUC, your suggestion is to make TASK_SIZE =3D STACK_TOP in compat =
+mode only.
+> > > Yes, it causes the problem, which causes the boot to fail.
+> >
+> > I think what Leonardo is getting at is that it is odd that it would
+> > cause boot issues if TASK_SIZE is not equal STACK_TOP. This seems
+> > indicative of a different problem. While this may fix the issue, it
+> > should be valid for TASK_SIZE to be less than STACK_TOP.
+> >
+> > - Charlie
+> >
+>
+> That is also a good point, but I am not that acquainted to this to
+> actually propose this.
+>
+> I was thinking more on these questions:
+> Is TASK_SIZE and STACK_TOP related somehow?
+> If so, would not be better to describe one in terms of the other, like
+> #define TASK_SIZE (STACK_TOP - PAGE_SIZE)
+TASK_SIZE means the maximum user address space, so it's the limitation
+to any kind of mmap or stack ...
+So STACK_TOP <=3D TASK_SIZE
 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Suggested-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Signed-off-by: Anuj Gupta <anuj20.g@samsung.com>
-Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
-Signed-off-by: Vincent Fu <vincent.fu@samsung.com>
----
- Documentation/block/null_blk.rst  |  5 ++
- drivers/block/null_blk/main.c     | 97 ++++++++++++++++++++++++++++++-
- drivers/block/null_blk/null_blk.h |  1 +
- drivers/block/null_blk/trace.h    | 23 ++++++++
- 4 files changed, 123 insertions(+), 3 deletions(-)
+Follow your idea. The question is:
+#define TASK_SIZE ((UL(1) << (VA_BITS - 1)) - PAGE_SIZE)
 
-diff --git a/Documentation/block/null_blk.rst b/Documentation/block/null_blk.rst
-index 4dd78f24d10a..6153e02fcf13 100644
---- a/Documentation/block/null_blk.rst
-+++ b/Documentation/block/null_blk.rst
-@@ -149,3 +149,8 @@ zone_size=[MB]: Default: 256
- zone_nr_conv=[nr_conv]: Default: 0
-   The number of conventional zones to create when block device is zoned.  If
-   zone_nr_conv >= nr_zones, it will be reduced to nr_zones - 1.
-+
-+copy_max_bytes=[size in bytes]: Default: COPY_MAX_BYTES
-+  A module and configfs parameter which can be used to set hardware/driver
-+  supported maximum copy offload limit.
-+  COPY_MAX_BYTES(=128MB at present) is defined in fs.h
-diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.c
-index 1b40c674f62b..e6f476ad45a6 100644
---- a/drivers/block/null_blk/main.c
-+++ b/drivers/block/null_blk/main.c
-@@ -160,6 +160,10 @@ static int g_max_sectors;
- module_param_named(max_sectors, g_max_sectors, int, 0444);
- MODULE_PARM_DESC(max_sectors, "Maximum size of a command (in 512B sectors)");
- 
-+static unsigned long g_copy_max_bytes = BLK_COPY_MAX_BYTES;
-+module_param_named(copy_max_bytes, g_copy_max_bytes, ulong, 0444);
-+MODULE_PARM_DESC(copy_max_bytes, "Maximum size of a copy command (in bytes)");
-+
- static unsigned int nr_devices = 1;
- module_param(nr_devices, uint, 0444);
- MODULE_PARM_DESC(nr_devices, "Number of devices to register");
-@@ -412,6 +416,7 @@ NULLB_DEVICE_ATTR(home_node, uint, NULL);
- NULLB_DEVICE_ATTR(queue_mode, uint, NULL);
- NULLB_DEVICE_ATTR(blocksize, uint, NULL);
- NULLB_DEVICE_ATTR(max_sectors, uint, NULL);
-+NULLB_DEVICE_ATTR(copy_max_bytes, uint, NULL);
- NULLB_DEVICE_ATTR(irqmode, uint, NULL);
- NULLB_DEVICE_ATTR(hw_queue_depth, uint, NULL);
- NULLB_DEVICE_ATTR(index, uint, NULL);
-@@ -553,6 +558,7 @@ static struct configfs_attribute *nullb_device_attrs[] = {
- 	&nullb_device_attr_queue_mode,
- 	&nullb_device_attr_blocksize,
- 	&nullb_device_attr_max_sectors,
-+	&nullb_device_attr_copy_max_bytes,
- 	&nullb_device_attr_irqmode,
- 	&nullb_device_attr_hw_queue_depth,
- 	&nullb_device_attr_index,
-@@ -659,7 +665,8 @@ static ssize_t memb_group_features_show(struct config_item *item, char *page)
- 			"poll_queues,power,queue_mode,shared_tag_bitmap,size,"
- 			"submit_queues,use_per_node_hctx,virt_boundary,zoned,"
- 			"zone_capacity,zone_max_active,zone_max_open,"
--			"zone_nr_conv,zone_offline,zone_readonly,zone_size\n");
-+			"zone_nr_conv,zone_offline,zone_readonly,zone_size,"
-+			"copy_max_bytes\n");
- }
- 
- CONFIGFS_ATTR_RO(memb_group_, features);
-@@ -725,6 +732,7 @@ static struct nullb_device *null_alloc_dev(void)
- 	dev->queue_mode = g_queue_mode;
- 	dev->blocksize = g_bs;
- 	dev->max_sectors = g_max_sectors;
-+	dev->copy_max_bytes = g_copy_max_bytes;
- 	dev->irqmode = g_irqmode;
- 	dev->hw_queue_depth = g_hw_queue_depth;
- 	dev->blocking = g_blocking;
-@@ -1274,6 +1282,81 @@ static int null_transfer(struct nullb *nullb, struct page *page,
- 	return err;
- }
- 
-+static inline int nullb_setup_copy(struct nullb *nullb, struct request *req,
-+				   bool is_fua)
-+{
-+	sector_t sector_in = 0, sector_out = 0;
-+	loff_t offset_in, offset_out;
-+	void *in, *out;
-+	ssize_t chunk, rem = 0;
-+	struct bio *bio;
-+	struct nullb_page *t_page_in, *t_page_out;
-+	u16 seg = 1;
-+	int status = -EIO;
-+
-+	if (blk_rq_nr_phys_segments(req) != BLK_COPY_MAX_SEGMENTS)
-+		return status;
-+
-+	/*
-+	 * First bio contains information about destination and last bio
-+	 * contains information about source.
-+	 */
-+	__rq_for_each_bio(bio, req) {
-+		if (seg == blk_rq_nr_phys_segments(req)) {
-+			sector_in = bio->bi_iter.bi_sector;
-+			if (rem != bio->bi_iter.bi_size)
-+				return status;
-+		} else {
-+			sector_out = bio->bi_iter.bi_sector;
-+			rem = bio->bi_iter.bi_size;
-+		}
-+		seg++;
-+	}
-+
-+	trace_nullb_copy_op(req, sector_out << SECTOR_SHIFT,
-+			    sector_in << SECTOR_SHIFT, rem);
-+
-+	spin_lock_irq(&nullb->lock);
-+	while (rem > 0) {
-+		chunk = min_t(size_t, nullb->dev->blocksize, rem);
-+		offset_in = (sector_in & SECTOR_MASK) << SECTOR_SHIFT;
-+		offset_out = (sector_out & SECTOR_MASK) << SECTOR_SHIFT;
-+
-+		if (null_cache_active(nullb) && !is_fua)
-+			null_make_cache_space(nullb, PAGE_SIZE);
-+
-+		t_page_in = null_lookup_page(nullb, sector_in, false,
-+					     !null_cache_active(nullb));
-+		if (!t_page_in)
-+			goto err;
-+		t_page_out = null_insert_page(nullb, sector_out,
-+					      !null_cache_active(nullb) ||
-+					      is_fua);
-+		if (!t_page_out)
-+			goto err;
-+
-+		in = kmap_local_page(t_page_in->page);
-+		out = kmap_local_page(t_page_out->page);
-+
-+		memcpy(out + offset_out, in + offset_in, chunk);
-+		kunmap_local(out);
-+		kunmap_local(in);
-+		__set_bit(sector_out & SECTOR_MASK, t_page_out->bitmap);
-+
-+		if (is_fua)
-+			null_free_sector(nullb, sector_out, true);
-+
-+		rem -= chunk;
-+		sector_in += chunk >> SECTOR_SHIFT;
-+		sector_out += chunk >> SECTOR_SHIFT;
-+	}
-+
-+	status = 0;
-+err:
-+	spin_unlock_irq(&nullb->lock);
-+	return status;
-+}
-+
- static int null_handle_rq(struct nullb_cmd *cmd)
- {
- 	struct request *rq = cmd->rq;
-@@ -1283,13 +1366,16 @@ static int null_handle_rq(struct nullb_cmd *cmd)
- 	sector_t sector = blk_rq_pos(rq);
- 	struct req_iterator iter;
- 	struct bio_vec bvec;
-+	bool fua = rq->cmd_flags & REQ_FUA;
-+
-+	if (op_is_copy(req_op(rq)))
-+		return nullb_setup_copy(nullb, rq, fua);
- 
- 	spin_lock_irq(&nullb->lock);
- 	rq_for_each_segment(bvec, rq, iter) {
- 		len = bvec.bv_len;
- 		err = null_transfer(nullb, bvec.bv_page, len, bvec.bv_offset,
--				     op_is_write(req_op(rq)), sector,
--				     rq->cmd_flags & REQ_FUA);
-+				    op_is_write(req_op(rq)), sector, fua);
- 		if (err) {
- 			spin_unlock_irq(&nullb->lock);
- 			return err;
-@@ -2074,6 +2160,9 @@ static int null_validate_conf(struct nullb_device *dev)
- 		return -EINVAL;
- 	}
- 
-+	if (dev->queue_mode == NULL_Q_BIO)
-+		dev->copy_max_bytes = 0;
-+
- 	return 0;
- }
- 
-@@ -2193,6 +2282,8 @@ static int null_add_dev(struct nullb_device *dev)
- 		dev->max_sectors = queue_max_hw_sectors(nullb->q);
- 	dev->max_sectors = min(dev->max_sectors, BLK_DEF_MAX_SECTORS);
- 	blk_queue_max_hw_sectors(nullb->q, dev->max_sectors);
-+	blk_queue_max_copy_hw_sectors(nullb->q,
-+				      dev->copy_max_bytes >> SECTOR_SHIFT);
- 
- 	if (dev->virt_boundary)
- 		blk_queue_virt_boundary(nullb->q, PAGE_SIZE - 1);
-diff --git a/drivers/block/null_blk/null_blk.h b/drivers/block/null_blk/null_blk.h
-index 929f659dd255..e82e53a2e2df 100644
---- a/drivers/block/null_blk/null_blk.h
-+++ b/drivers/block/null_blk/null_blk.h
-@@ -107,6 +107,7 @@ struct nullb_device {
- 	unsigned int queue_mode; /* block interface */
- 	unsigned int blocksize; /* block size */
- 	unsigned int max_sectors; /* Max sectors per command */
-+	unsigned long copy_max_bytes; /* Max copy offload length in bytes */
- 	unsigned int irqmode; /* IRQ completion handler */
- 	unsigned int hw_queue_depth; /* queue depth */
- 	unsigned int index; /* index of the disk, only valid with a disk */
-diff --git a/drivers/block/null_blk/trace.h b/drivers/block/null_blk/trace.h
-index 91446c34eac2..2f2c1d1c2b48 100644
---- a/drivers/block/null_blk/trace.h
-+++ b/drivers/block/null_blk/trace.h
-@@ -70,6 +70,29 @@ TRACE_EVENT(nullb_report_zones,
- );
- #endif /* CONFIG_BLK_DEV_ZONED */
- 
-+TRACE_EVENT(nullb_copy_op,
-+		TP_PROTO(struct request *req,
-+			 sector_t dst, sector_t src, size_t len),
-+		TP_ARGS(req, dst, src, len),
-+		TP_STRUCT__entry(
-+				 __array(char, disk, DISK_NAME_LEN)
-+				 __field(enum req_op, op)
-+				 __field(sector_t, dst)
-+				 __field(sector_t, src)
-+				 __field(size_t, len)
-+		),
-+		TP_fast_assign(
-+			       __entry->op = req_op(req);
-+			       __assign_disk_name(__entry->disk, req->q->disk);
-+			       __entry->dst = dst;
-+			       __entry->src = src;
-+			       __entry->len = len;
-+		),
-+		TP_printk("%s req=%-15s: dst=%llu, src=%llu, len=%lu",
-+			  __print_disk_name(__entry->disk),
-+			  blk_op_str(__entry->op),
-+			  __entry->dst, __entry->src, __entry->len)
-+);
- #endif /* _TRACE_NULLB_H */
- 
- #undef TRACE_INCLUDE_PATH
--- 
-2.35.1.500.gb896f729e2
+Do we need to reserve one page between userspace & kernel?
 
+
+>
+> Or the other way around.
+>
+> I mean, if they have any relation it would be much easier to represent th=
+em
+> that way, and it would avoid having two magical numbers.
+>
+> Thanks!
+> Leo
+>
+> > >
+> > > >
+> > > > Then why not:
+> > > > #ifdef CONFIG_COMPAT
+> > > > #define TASK_SIZE_32    STACK_TOP
+> > > Yes, it's the solution that I think at first. But I didn't find any
+> > > problem with 0x7ffff000 ~ 0x80000000, and then I removed this gap to
+> > > unify it with Sv39 and Sv48.
+> > >
+> > > >
+> > > > With some comments explaining why there is no need to reserve a PAG=
+E_SIZE
+> > > > in the TASK_SIZE_32.
+> > > At first, I wanted to put a invalid page between the user & kernel
+> > > space, but it seems useless.
+> > >
+> > > >
+> > > > Does that make sense?
+> > > >
+> > > > Thanks!
+> > > > Leo
+> > > >
+> > > > >
+> > > > > Freeing unused kernel image (initmem) memory: 2236K
+> > > > > Run /sbin/init as init process
+> > > > > Starting init: /sbin/init exists but couldn't execute it (error -=
+14)
+> > > > > Run /etc/init as init process
+> > > > > ...
+> > > > >
+> > > > > Cc: stable@vger.kernel.org
+> > > > > Fixes: add2cc6b6515 ("RISC-V: mm: Restrict address space for sv39=
+,sv48,sv57")
+> > > > > Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+> > > > > Signed-off-by: Guo Ren <guoren@kernel.org>
+> > > > > ---
+> > > > >  arch/riscv/include/asm/pgtable.h | 2 +-
+> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/includ=
+e/asm/pgtable.h
+> > > > > index ab00235b018f..74ffb2178f54 100644
+> > > > > --- a/arch/riscv/include/asm/pgtable.h
+> > > > > +++ b/arch/riscv/include/asm/pgtable.h
+> > > > > @@ -881,7 +881,7 @@ static inline pte_t pte_swp_clear_exclusive(p=
+te_t pte)
+> > > > >  #define TASK_SIZE_MIN        (PGDIR_SIZE_L3 * PTRS_PER_PGD / 2)
+> > > > >
+> > > > >  #ifdef CONFIG_COMPAT
+> > > > > -#define TASK_SIZE_32 (_AC(0x80000000, UL) - PAGE_SIZE)
+> > > > > +#define TASK_SIZE_32 (_AC(0x80000000, UL))
+> > > >
+> > > >
+> > > >
+> > > >
+> > > > >  #define TASK_SIZE    (test_thread_flag(TIF_32BIT) ? \
+> > > > >                        TASK_SIZE_32 : TASK_SIZE_64)
+> > > > >  #else
+> > > > > --
+> > > > > 2.40.1
+> > > > >
+> > > >
+> > >
+> > >
+> > > --
+> > > Best Regards
+> > >  Guo Ren
+> >
+>
+
+
+--
+Best Regards
+ Guo Ren
