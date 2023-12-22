@@ -1,200 +1,130 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8299447
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 05:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52EB79C4;
+	Fri, 22 Dec 2023 05:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e4b/goL8"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-50e659880a9so981380e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Dec 2023 21:53:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703224410; x=1703829210; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qCXnfWI0LxEg9yxOXziwsaTzEl1G0IzRUjonaTXiIjk=;
-        b=e4b/goL8krh6cBW9gYUGAksGR0uLhzjgb1TiMIGueM5uc9JtEDDMrevs8E5Z/TyScx
-         CuE1gnVrQgUR1jw3zvNnWqccGry+Rrw7JekmVPCXZyzi0jHitvEF+Pmyn5f1sE7m/mw7
-         5Dq4C91BeK+l1cpLPjWB7XbjfK98L41+oj6uhSoPhNgzUdoZdzJpY8ix5fWD1aLEHWZ1
-         8GHCCxBWyJkFRZhbgWeIRbjWf6gs70f4+RZNGeaX+PHB1262dc/aKAs9CdBbxijSIjMe
-         SDGjSI8ZVaSOz97Vru0N3a0IZ5Xwds0Y+w7lmWDXLEKEgPNuIDyDGuzg2IezP8qoUTU9
-         f04A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703224410; x=1703829210;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qCXnfWI0LxEg9yxOXziwsaTzEl1G0IzRUjonaTXiIjk=;
-        b=PFa8JT7JXRn3f5oEXvHXq8YcoG3B293Onb69ChL14LbhJJoquJFXVxsw14wz4xbK3J
-         Gi9pFDxpsdKyGgGcL1N+ElcUDHIrVlVrGJGSxNeMQDzHxvT6A9k4vVJJP6qcJy5Jf3Kc
-         pamhmW4WOBnmSSup+ryt/6dJBHlXQ9DFP4Ju20jfBqNx9zT9e7Ebbc5pO+L1fHpenvdK
-         Hi2pVdlU8fD81cEr+cg7IfrQ2I3WGaYxy4YdLz8MjcS1B9u5UstM/2t1XI+H4+nLZibr
-         HcWLkFoF1T1yfhqwvOZH016emweBNsNjonoqAVq2tQmvXy8XU+gvZ20p1CZPy2Z9FAJl
-         iENw==
-X-Gm-Message-State: AOJu0YzqfAPFYav4Hv1eYJ363eHrqtgER5ttxDTmTXWDsXeftyFPe4RY
-	PYabSI0KNeU5/woLSKU9xO7IcL2aTVvVKITbkFqw3hFZKrs=
-X-Google-Smtp-Source: AGHT+IHKTJQV20SqN966boq3YGZXb9F2xuhOMuEW9nnI1UdL30Ja2FCgktsO8PUQmrOO9RXatIMRUO6e7i1G/X8p2rQ=
-X-Received: by 2002:a19:7611:0:b0:50e:4b94:61b0 with SMTP id
- c17-20020a197611000000b0050e4b9461b0mr367462lff.56.1703224410197; Thu, 21 Dec
- 2023 21:53:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3DUILVz5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=mANM6RUEEd5RIcHHpg3Hi1iLZpC1YP27KzcxuzjOh/Y=; b=3DUILVz5D+yojTQiI8YhKFDEes
+	RkuBVNdqwSfU/ewrJeUGXNbrBWrdCRZ5akxQPW82mqBSsLTwSSr1P+ahAMZ6je0Odj6ntomwSu/+7
+	+O+pCgjbsd5ej0oJp3flIEhRQ17EKu8pqDnfEWzpIBUC0xXBJWwcUb6CWyTCVp8GVK4JMJIZUQjkr
+	jUFIBrAoCXnOf8txjXVcGMc3tQOh1e08qlG9YCAfgz1HvvCVuq0mPdvm+CtcX/Z5HXxVOvAWhz7Vl
+	+yMKBe6abozVqg81Rylf3xOpcu/OZ7qMC4v757bQuY49AoPbLZ0gonzDqKIHm6m1DxIVTIt17gms9
+	A549XPhw==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rGYYp-0052LL-1D;
+	Fri, 22 Dec 2023 05:59:03 +0000
+Date: Thu, 21 Dec 2023 21:59:03 -0800
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: deller@kernel.org
+Cc: linux-kernel@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, linux-modules@vger.kernel.org,
+	linux-arch@vger.kernel.org
+Subject: Re: [PATCH 2/4] modules: Ensure 64-bit alignment on __ksymtab_*
+ sections
+Message-ID: <ZYUlpxlg/WooxGWZ@bombadil.infradead.org>
+References: <20231122221814.139916-1-deller@kernel.org>
+ <20231122221814.139916-3-deller@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231220102948.1963798-1-zhaoyang.huang@unisoc.com>
- <ZYL2rbD5UTz3s8gg@casper.infradead.org> <CAGWkznFcMkkqsKJSyHJfts9ZiYsxxg_dFTccieQ4+boRDJgG4g@mail.gmail.com>
- <ZYO6bLcCRYlo290g@casper.infradead.org> <CAOUHufZ-hAAB+9iL3K-YokN4oVJoiC9dVQ+6zLu-M4Ag52TY5g@mail.gmail.com>
- <CAGWkznGUvPeWkjcy42dudx_+n19dr7SU3B3GGO6JovXHB-Vyzg@mail.gmail.com> <CAOUHufajdi7LjyJWNoDx7RP_i9mmN8j9dBqO7GC4A6YNPNnygw@mail.gmail.com>
-In-Reply-To: <CAOUHufajdi7LjyJWNoDx7RP_i9mmN8j9dBqO7GC4A6YNPNnygw@mail.gmail.com>
-From: Zhaoyang Huang <huangzhaoyang@gmail.com>
-Date: Fri, 22 Dec 2023 13:53:18 +0800
-Message-ID: <CAGWkznFb2vn_+2ho7BQ1cqVDx0cyFzoffS3_nk4hYUNuRSsVGw@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/1] mm: mark folio accessed in minor fault
-To: Yu Zhao <yuzhao@google.com>
-Cc: Matthew Wilcox <willy@infradead.org>, "zhaoyang.huang" <zhaoyang.huang@unisoc.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, steve.kang@unisoc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231122221814.139916-3-deller@kernel.org>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-On Thu, Dec 21, 2023 at 2:33=E2=80=AFPM Yu Zhao <yuzhao@google.com> wrote:
->
-> On Wed, Dec 20, 2023 at 11:28=E2=80=AFPM Zhaoyang Huang <huangzhaoyang@gm=
-ail.com> wrote:
-> >
-> > On Thu, Dec 21, 2023 at 12:53=E2=80=AFPM Yu Zhao <yuzhao@google.com> wr=
-ote:
-> > >
-> > > On Wed, Dec 20, 2023 at 9:09=E2=80=AFPM Matthew Wilcox <willy@infrade=
-ad.org> wrote:
-> > > >
-> > > > On Thu, Dec 21, 2023 at 09:58:25AM +0800, Zhaoyang Huang wrote:
-> > > > > On Wed, Dec 20, 2023 at 10:14=E2=80=AFPM Matthew Wilcox <willy@in=
-fradead.org> wrote:
-> > > > > >
-> > > > > > On Wed, Dec 20, 2023 at 06:29:48PM +0800, zhaoyang.huang wrote:
-> > > > > > > From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-> > > > > > >
-> > > > > > > Inactive mapped folio will be promoted to active only when it=
- is
-> > > > > > > scanned in shrink_inactive_list, while the vfs folio will do =
-this
-> > > > > > > immidiatly when it is accessed. These will introduce two affe=
-ctions:
-> > > > > > >
-> > > > > > > 1. NR_ACTIVE_FILE is not accurate as expected.
-> > > > > > > 2. Low reclaiming efficiency caused by dummy nactive folio wh=
-ich should
-> > > > > > >    be kept as earlier as shrink_active_list.
-> > > > > > >
-> > > > > > > I would like to suggest mark the folio be accessed in minor f=
-ault to
-> > > > > > > solve this situation.
-> > > > > >
-> > > > > > This isn't going to be as effective as you imagine.  Almost all=
- file
-> > > > > > faults are handled through filemap_map_pages().  So I must ask,=
- what
-> > > > > > testing have you done with this patch?
-> > > > > >
-> > > > > > And while you're gathering data, what effect would this patch h=
-ave on your
-> > > > > > workloads?
-> > > > > Thanks for heads-up, I am out of date for readahead mechanism. My=
- goal
-> > > >
-> > > > It's not a terribly new mechanism ... filemap_map_pages() was added=
- nine
-> > > > years ago in 2014 by commit f1820361f83d
-> > > >
-> > > > > is to have mapped file pages behave like other pages which could =
-be
-> > > > > promoted immediately when they are accessed. I will update the pa=
-tch
-> > > > > and provide benchmark data in new patch set.
-> > > >
-> > > > Understood.  I don't know the history of this, so I'm not sure if t=
-he
-> > > > decision to not mark folios as accessed here was intentional or not=
-.
-> > > > I suspect it's entirely unintentional.
-> > >
-> > > It's intentional. For the active/inactive LRU, all folios start
-> > > inactive. The first scan of a folio transfers the A-bit (if it's set
-> > > during the initial fault) to PG_referenced; the second scan of this
-> > > folio, if the A-bit is set again, moves it to the active list. This
-> > > way single-use folios, i.e., folios mapped for file streaming, can be
-> > > reclaimed quickly, since they are "demoted" rather than "promoted" on
-> > > the second scan. This RFC would regress memory streaming workloads.
-> > Thanks. Please correct me if I am wrong. IMO, there will be no
-> > minor-fault for single-use folios
->
-> Why not? What prevents a specific *access pattern* from triggering minor =
-faults?
-Please find the following chart for mapped page state machine
-transfication. We can find that:
-1. RFC behaves the same as the mainline in (1)(2)
-2. VM_EXEC mapped pages are activated earlier than mainline which help
-improve scan efficiency in (3)(4)
-3. none VM_EXEC mapped pages are dropped as vfs pages do during 3rd scan.
+On Wed, Nov 22, 2023 at 11:18:12PM +0100, deller@kernel.org wrote:
+> From: Helge Deller <deller@gmx.de>
+> 
+> On 64-bit architectures without CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
+> (e.g. ppc64, ppc64le, parisc, s390x,...) the __KSYM_REF() macro stores
+> 64-bit pointers into the __ksymtab* sections.
+> Make sure that those sections will be correctly aligned at module link time,
+> otherwise unaligned memory accesses may happen at runtime.
 
-(1)
-                                  1st access
-shrink_active_list              1st scan(shink_folio_list)
-2nd scan(shrink_folio_list')
-mainline                     INA/UNR                        NA
-                          INA/REF
-DROP
-RFC                           INA/UNR                        NA
-                           INA/REF
-DROP
+The ramifications are not explained there. You keep sending me patches
+with this and we keep doing a nose dive on this. It means I have to do
+more work. So as I had suggested with your patch which I merged in
+commit 87c482bdfa79 ("modules: Ensure natural alignment for
+.altinstructions and __bug_table sections") please clarify the
+impact of not merging this patch. Also last time you noticed the
+misalignment due to a faulty exception handler, please mention how
+you found this out now.
 
-(2)
-                                  1st access                   2nd
-access                        shrink_active_list          1st
-scan(shink_folio_list)
-mainline                     INA/UNR                     INA/UNR
-                      NA                                 ACT/REF
-RFC                           INA/UNR                     INA/REF
-                        NA                                 ACT/REF
+And since this is not your first patch on the exact related subject
+I'd appreciate if you can show me perf stat results differences between
+having and not having this patch merged. Why? Because we talk about
+a performance penalthy, but we are not saying how much, and since this
+is an ongoing thing, we might as well have a tool belt with ways to
+measure such performance impact to bring clarity and value to this
+and future related patches.
 
-(3)
-                                  1st access
-shrink_active_list        1st scan(shink_folio_list)       2nd access
-      2nd scan(shrink_active_list)     3rd scan(shink_folio_list)
-mainline                     INA/UNR                        NA
-                          INA/REF                           INA/REF
-                NA                                     ACT/REF
-RFC                           INA/UNR                        NA
-                           INA/REF                           ACT/REF
-                ACT/REF                           NA
-(VM_EXEC)
-RFC                           INA/UNR                        NA
-                           INA/REF                           ACT/REF
-                INA/REF                            DROP
-(non VM_EXEC)
+> The __kcrctab* sections store 32-bit entities, so use ALIGN(4) for those.
 
-(4)
-                                  1st access                   2nd
-access                         3rd access
-shrink_active_list                   shink_folio_list
-mainline                     INA/UNR                       INA/UNR
-                       INA/UNR                          NA
-                           ACT/REF
-RFC                           INA/UNR                       INA/REF
-                         ACT/REF                         ACT/REF
-                       NA
-(VM_EXEC)
-RFC                           INA/UNR                       INA/REF
-                         ACT/REF                         ACT/REF
-                       NA
-(Non VM_EXEC)
->
-> > which means RFC could behave the
-> > same as mainline does now? I think it doesn't make sense to have
-> > multiple-mapped pages filled in page_list to shrink_page_list since we
-> > can distinguish them in advance.
+I've given some thought about how to test this. Sadly perf kallsysms
+just opens the /proc/kallsysms file, but that's fine, we need our own
+test.
+
+I think a 3 new simple modules selftest would do it and running perf
+stat on it. One module, let us call it module A which constructs its own
+name space prefix for its exported symbols and has tons of silly symbols
+for arbitrary data, whatever. We then have module B which refers to a
+few arbitrary symbols from module A, hopefully spread out linearly, so
+if module A had 10,000 symbols, we'd have module A refer to a symbol
+ever 1,000 symbols. Finally we want a symbol C which has say, 50,000
+symbols all of which will not be used at all by the first two modules,
+but the selftest will load module C first, prior to calling modprobe B.
+
+We'll stress test this way two calls which use find_symbol():
+
+1) Upon load of B it will trigger simplify_symbols() to look for the
+symbol it uses from the module A with tons of symbols. That's an
+indirect way for us to call resolve_symbol_wait() from module A without
+having to use symbol_get() which want to remove as exported as it is
+just a hack which should go away. Our goal is for us to test
+resolve_symbol() which will call find_symbol() and that will eventually
+look for the symbol on module A with:
+
+  find_exported_symbol_in_section()
+
+That uses bsearch() so a binary search for the symbol and we'd end up
+hitting the misalignments here. Binary search will at worst be O(log(n))
+and so the only way to aggreviate the search will be to add tons of
+symbols to A, and have B use a few of them.
+
+2) When you load B, userspace will at first load A as depmod will inform
+userspace A goes before B. Upon B's load towards the end right before
+we call module B's init routine we get complete_formation() called on
+the module. That will first check for duplicate symbols with the call
+to verify_exported_symbols(). That is when we'll force iteration on
+module C's insane symbol list.
+
+The selftests just runs
+
+perf stat -e pick-your-poison-for-misalignments tools/testing/selftests/kmod/ksymtab.sh
+
+Where ksymtab.sh is your new script which calls:
+
+modprobe C
+modprobe B
+
+I say pick-your-poison-for-misalignments because I am not sure what is
+best here.
+
+Thoughts?
+
+> Signed-off-by: Helge Deller <deller@gmx.de>
+> Cc: <stable@vger.kernel.org> # v6.0+
+
+That's a stretch without any data, don't you think?
+
+ Luis
