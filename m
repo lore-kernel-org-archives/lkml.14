@@ -1,186 +1,225 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE21D306;
-	Fri, 22 Dec 2023 06:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2726A79C4
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 06:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JS/5uxT7"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BM5jhkJ031026;
-	Fri, 22 Dec 2023 06:27:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=BMcIK6+tF1WzlJAS4gMMrCiHhLdtiy0eQaT/jyXeihI=; b=JS
-	/5uxT7uDrSRYJPWV0Z7XzPGoZNq+eNaSl1O1vKQcpvQAPb606QF+lkBMmBDt2PTz
-	PmOBI32hu49IKDLpY5hkLua98muW6TB6YTP37SKGtaU1k9r9lFmcl9ebdv/oEO2A
-	4bga5DNimovymP/FTwirSAzywTONRIDmYsG1+0bCNgAdhMR2YGvFHnWfNrAySyMJ
-	aC+m7nbV9wAyi02PwAS4M4QcZr7P3N6uUKff8BMTwSlAGYP5ftrHBdhONpLRsZS7
-	J6UR/07sUow7DM8muwkD40nJaq8LxrAe/fV9RyxpNewUZreCcxsxGyAMMo3c/gO0
-	rzxagpminbRnzp2X9bCQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3v4pte23nq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 Dec 2023 06:27:47 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3BM6RkcN005155
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 Dec 2023 06:27:46 GMT
-Received: from hu-kriskura-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 21 Dec 2023 22:27:41 -0800
-From: Krishna Kurapati <quic_kriskura@quicinc.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, "Andy
- Gross" <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Wesley Cheng <quic_wcheng@quicinc.com>,
-        "Conor
- Dooley" <conor+dt@kernel.org>, Johan Hovold <johan@kernel.org>
-CC: <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <quic_ppratap@quicinc.com>, <quic_jackp@quicinc.com>,
-        Krishna Kurapati
-	<quic_kriskura@quicinc.com>
-Subject: [PATCH v4 2/2] usb: dwc3: qcom: Rename hs_phy_irq to qusb2_phy_irq
-Date: Fri, 22 Dec 2023 11:57:20 +0530
-Message-ID: <20231222062720.10128-3-quic_kriskura@quicinc.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231222062720.10128-1-quic_kriskura@quicinc.com>
-References: <20231222062720.10128-1-quic_kriskura@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T57cdlim"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703226498; x=1734762498;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references;
+  bh=PVyWQo3ntB08M03wvTL+weiYWAOMsxFUiFWQcHmTM50=;
+  b=T57cdlimDcRODlYPQ+5hW4hHpwjUn+qdiV8rtb9N0Y2IoTVVbMQHcYsY
+   RjZwKy0DCO5HYFPGTygvJVrPH5WYwbY8t3MddNsrtyjultZe+7IyOD80o
+   f0KIyFOfSgpqU8A5XgFUKRxI7HjnYxgQI4xnGVg8bYQKcpCdh7iGuloDO
+   Gu9WqjXCIAEmJq2TOJWtwySlxBZdof89rd7rCW7WHShDzJwRrOS/IPhjN
+   KxvubB2LLdH3SDPMAXZ3hEU3C5IczLDUAj4blaSIHlpPEkpRsL9EdU/ju
+   YvRCcCZv44UcW/JZdi+IfGiS1zr13q3txnnEQ22p0VNMenhUOlho8Im6p
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="462520034"
+X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
+   d="scan'208";a="462520034"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 22:28:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="847362716"
+X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
+   d="scan'208";a="847362716"
+Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 22:28:02 -0800
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+To: naoya.horiguchi@nec.com
+Cc: linmiaohe@huawei.com,
+	akpm@linux-foundation.org,
+	tony.luck@intel.com,
+	ying.huang@intel.com,
+	fengwei.yin@intel.com,
+	qiuxu.zhuo@intel.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] mm: memory-failure: Re-split hw-poisoned huge page on -EAGAIN
+Date: Fri, 22 Dec 2023 14:27:06 +0800
+Message-Id: <20231222062706.5221-2-qiuxu.zhuo@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20231222062706.5221-1-qiuxu.zhuo@intel.com>
+References: <20231215081204.8802-1-qiuxu.zhuo@intel.com>
+ <20231222062706.5221-1-qiuxu.zhuo@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: D5PEjfAHsncdCM5NtbY4wkRKQZI1tjz-
-X-Proofpoint-ORIG-GUID: D5PEjfAHsncdCM5NtbY4wkRKQZI1tjz-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=661 adultscore=0
- clxscore=1015 priorityscore=1501 malwarescore=0 impostorscore=0
- phishscore=0 suspectscore=0 mlxscore=0 lowpriorityscore=0 bulkscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2312220043
 
-For wakeup to work, driver needs to enable interrupts that depict what is
-happening on the DP/DM lines. On QUSB targets, this is identified by
-qusb2_phy whereas on SoCs using Femto PHY, separate {dp,dm}_hs_phy_irq's
-are used instead.
+During the process of splitting a hw-poisoned huge page, it is possible
+for the reference count of the huge page to be increased by the threads
+within the affected process, leading to a failure in splitting the
+hw-poisoned huge page with an error code of -EAGAIN.
 
-The implementation incorrectly names qusb2_phy interrupts as "hs_phy_irq".
-Clean this up so that driver would be using only qusb2/(dp & dm) for wakeup
-purposes.
+This issue can be reproduced when doing memory error injection to a
+multiple-thread process, and the error occurs within a huge page.
+The call path with the returned -EAGAIN during the testing is shown below:
 
-For devices running older kernels, this won't break any functionality
-because the interrupt configurations in QUSB2 PHY based SoCs is done
-by configuring QUSB2PHY_INTR_CTRL register in PHY address space and it was
-never armed properly right from the start.
+  memory_failure()
+    try_to_split_thp_page()
+      split_huge_page()
+        split_huge_page_to_list() {
+          ...
+          Step A: can_split_folio() - Checked that the thp can be split.
+          Step B: unmap_folio()
+          Step C: folio_ref_freeze() - Failed and returned -EAGAIN.
+          ...
+        }
 
-Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
+The testing logs indicated that some huge pages were split successfully
+via the call path above (Step C was successful for these huge pages).
+However, some huge pages failed to split due to a failure at Step C, and
+it was observed that the reference count of the huge page increased between
+Step A and Step C.
+
+Testing has shown that after receiving -EAGAIN, simply re-splitting the
+hw-poisoned huge page within memory_failure() always results in the same
+-EAGAIN. This is possible because memory_failure() is executed in the
+currently affected process. Before this process exits memory_failure() and
+is terminated, its threads could increase the reference count of the
+hw-poisoned page.
+
+Furthermore, if the h/w-poisoned huge page had been mapped for the victim
+application's text and was present in the file cache and it was failed to
+be split. When attempting to restart the process without splitting the
+h/w-poisoned huge page, the application restart failed. This was possible
+because its text was remapped to the hardware-poisoned huge page from the
+file cache, leading to its swift termination due to another MCE.
+
+To address this issue, leverage memory_failure_queue_delayed() to re-split
+the h/w-poisoned huge page by a kernel worker. By the time this worker
+begins re-splitting the h/w-poisoned huge page, the affected process has
+already been terminated, preventing its threads from increasing the
+reference count. Experimental results have consistently shown that this
+worker successfully re-splits these h/w-poisoned huge pages on its first
+attempt. After that the victim application restarted successfully.
+
+The kernel log (before):
+  [ 1116.862895] Memory failure: 0x4097fa7: recovery action for unsplit thp: Ignored
+
+  After that, the victim application may fail to restart.
+
+The kernel log (after):
+  [  405.195308] Memory failure: 0x410756b: recovery action for unsplit thp: Delayed
+  [  405.200267] Memory failure: 0x410756b: recovery action for clean LRU page: Recovered
+
+  After that, the victim application restarted successfully.
+
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 ---
- drivers/usb/dwc3/dwc3-qcom.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+v1->v2:
 
-diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-index fdf6d5d3c2ad..dbd6a5b2b289 100644
---- a/drivers/usb/dwc3/dwc3-qcom.c
-+++ b/drivers/usb/dwc3/dwc3-qcom.c
-@@ -57,7 +57,7 @@ struct dwc3_acpi_pdata {
- 	u32			qscratch_base_offset;
- 	u32			qscratch_base_size;
- 	u32			dwc3_core_base_size;
--	int			hs_phy_irq_index;
-+	int			qusb2_phy_irq_index;
- 	int			dp_hs_phy_irq_index;
- 	int			dm_hs_phy_irq_index;
- 	int			ss_phy_irq_index;
-@@ -73,7 +73,7 @@ struct dwc3_qcom {
- 	int			num_clocks;
- 	struct reset_control	*resets;
+  1. Include user-visible benefits in both the commit message and code comments.
+     [ Address Naoya Horiguchi's comment on the unclear user-visible benefits in v1. ]
+
+  2. Leverage memory_failure_queue_delayed() to re-split the h/w-poisoned huge page,
+     which makes the recovery action more complete.
+     [ Address Naoya Horiguchi's comment regarding the incomplete recovery in v1.
+       Address Miaohe's concern about the possibility of being freed when the worker is scheduled in v1. ]
+
+ include/linux/mm.h  |  1 +
+ mm/memory-failure.c | 54 ++++++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 52 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 418d26608ece..87bd67d0a046 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -3904,6 +3904,7 @@ enum mf_flags {
+ 	MF_UNPOISON = 1 << 4,
+ 	MF_SW_SIMULATED = 1 << 5,
+ 	MF_NO_RETRY = 1 << 6,
++	/* Bits {31:28} are reserved for encoding the THP split retry count. */
+ };
+ int mf_dax_kill_procs(struct address_space *mapping, pgoff_t index,
+ 		      unsigned long count, int mf_flags);
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index 8f2c11863bae..2334d0417258 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -2147,6 +2147,28 @@ static int memory_failure_dev_pagemap(unsigned long pfn, int flags,
+ 	return rc;
+ }
  
--	int			hs_phy_irq;
-+	int			qusb2_phy_irq;
- 	int			dp_hs_phy_irq;
- 	int			dm_hs_phy_irq;
- 	int			ss_phy_irq;
-@@ -372,7 +372,7 @@ static void dwc3_qcom_disable_wakeup_irq(int irq)
++static void memory_failure_queue_delayed(unsigned long pfn, int flags, unsigned long delay);
++
++#define MF_RETRY_CNT_MASK	GENMASK(31, 28)
++#define MF_RETRY_CNT_SHIFT	28
++#define MF_RETRY_CNT_GET(f)	(((f) & MF_RETRY_CNT_MASK) >> MF_RETRY_CNT_SHIFT)
++#define MF_RETRY_CNT_SET(f, c)	(((f) & ~MF_RETRY_CNT_MASK) | ((c) << MF_RETRY_CNT_SHIFT))
++
++#define MAX_RETRY_CNT		10
++#define INIT_DELAYED_MS		1
++
++static bool split_thp_delayed(unsigned long pfn, int flags)
++{
++	int cnt = MF_RETRY_CNT_GET(flags);
++
++	if (cnt >= MAX_RETRY_CNT)
++		return false;
++
++	memory_failure_queue_delayed(pfn, MF_RETRY_CNT_SET(flags, cnt + 1),
++				     msecs_to_jiffies(INIT_DELAYED_MS << cnt));
++	return true;
++}
++
+ /**
+  * memory_failure - Handle memory failure of a page.
+  * @pfn: Page Number of the corrupted page
+@@ -2211,7 +2233,7 @@ int memory_failure(unsigned long pfn, int flags)
+ 	if (hugetlb)
+ 		goto unlock_mutex;
  
- static void dwc3_qcom_disable_interrupts(struct dwc3_qcom *qcom)
- {
--	dwc3_qcom_disable_wakeup_irq(qcom->hs_phy_irq);
-+	dwc3_qcom_disable_wakeup_irq(qcom->qusb2_phy_irq);
- 
- 	if (qcom->usb2_speed == USB_SPEED_LOW) {
- 		dwc3_qcom_disable_wakeup_irq(qcom->dm_hs_phy_irq);
-@@ -389,7 +389,7 @@ static void dwc3_qcom_disable_interrupts(struct dwc3_qcom *qcom)
- 
- static void dwc3_qcom_enable_interrupts(struct dwc3_qcom *qcom)
- {
--	dwc3_qcom_enable_wakeup_irq(qcom->hs_phy_irq, 0);
-+	dwc3_qcom_enable_wakeup_irq(qcom->qusb2_phy_irq, 0);
- 
- 	/*
- 	 * Configure DP/DM line interrupts based on the USB2 device attached to
-@@ -542,19 +542,19 @@ static int dwc3_qcom_setup_irq(struct platform_device *pdev)
- 	int irq;
- 	int ret;
- 
--	irq = dwc3_qcom_get_irq(pdev, "hs_phy_irq",
--				pdata ? pdata->hs_phy_irq_index : -1);
-+	irq = dwc3_qcom_get_irq(pdev, "qusb2_phy",
-+				pdata ? pdata->qusb2_phy_irq_index : -1);
- 	if (irq > 0) {
- 		/* Keep wakeup interrupts disabled until suspend */
- 		ret = devm_request_threaded_irq(qcom->dev, irq, NULL,
- 					qcom_dwc3_resume_irq,
- 					IRQF_ONESHOT | IRQF_NO_AUTOEN,
--					"qcom_dwc3 HS", qcom);
-+					"qcom_dwc3 QUSB2", qcom);
- 		if (ret) {
--			dev_err(qcom->dev, "hs_phy_irq failed: %d\n", ret);
-+			dev_err(qcom->dev, "qusb2_phy_irq failed: %d\n", ret);
- 			return ret;
+-	if (TestSetPageHWPoison(p)) {
++	if (TestSetPageHWPoison(p) && !MF_RETRY_CNT_GET(flags)) {
+ 		pr_err("%#lx: already hardware poisoned\n", pfn);
+ 		res = -EHWPOISON;
+ 		if (flags & MF_ACTION_REQUIRED)
+@@ -2275,8 +2297,34 @@ int memory_failure(unsigned long pfn, int flags)
+ 		 * page is a valid handlable page.
+ 		 */
+ 		SetPageHasHWPoisoned(hpage);
+-		if (try_to_split_thp_page(p) < 0) {
+-			res = action_result(pfn, MF_MSG_UNSPLIT_THP, MF_IGNORED);
++		res = try_to_split_thp_page(p);
++		if (res < 0) {
++			/*
++			 * Re-attempting try_to_split_thp_page() here could consistently
++			 * yield -EAGAIN, as the threads of the process may increment the
++			 * reference count of the huge page before the process exits
++			 * memory_failure() and terminates.
++			 *
++			 * Furthermore, if the h/w-poisoned huge page had been mapped for
++			 * the victim application's text and was present in the file cache
++			 * and it was failed to be split. When attempting to restart the
++			 * application without splitting the h/w-poisoned huge page, the
++			 * application restart failed. This was possible because its text
++			 * was remapped to the hardware-poisoned huge page from the file
++			 * cache, leading to its swift termination due to another MCE.
++			 *
++			 * Leverage memory_failure_queue_delayed() to re-split the h/w-poisoned
++			 * huge page by a kernel worker. By the time this worker initiates
++			 * the re-splitting and recovery process, the affected process has
++			 * already been terminated, preventing its threads from incrementing
++			 * the reference count. After re-splitting the h/w-poisoned huge page
++			 * successfully (drop the text mapping), the application restart is
++			 * successful.
++			 */
++			if (res == -EAGAIN && split_thp_delayed(pfn, flags))
++				res = action_result(pfn, MF_MSG_UNSPLIT_THP, MF_DELAYED);
++			else
++				res = action_result(pfn, MF_MSG_UNSPLIT_THP, MF_IGNORED);
+ 			goto unlock_mutex;
  		}
--		qcom->hs_phy_irq = irq;
-+		qcom->qusb2_phy_irq = irq;
- 	}
- 
- 	irq = dwc3_qcom_get_irq(pdev, "dp_hs_phy_irq",
-@@ -1058,7 +1058,7 @@ static const struct dwc3_acpi_pdata sdm845_acpi_pdata = {
- 	.qscratch_base_offset = SDM845_QSCRATCH_BASE_OFFSET,
- 	.qscratch_base_size = SDM845_QSCRATCH_SIZE,
- 	.dwc3_core_base_size = SDM845_DWC3_CORE_SIZE,
--	.hs_phy_irq_index = 1,
-+	.qusb2_phy_irq_index = 1,
- 	.dp_hs_phy_irq_index = 4,
- 	.dm_hs_phy_irq_index = 3,
- 	.ss_phy_irq_index = 2
-@@ -1068,7 +1068,7 @@ static const struct dwc3_acpi_pdata sdm845_acpi_urs_pdata = {
- 	.qscratch_base_offset = SDM845_QSCRATCH_BASE_OFFSET,
- 	.qscratch_base_size = SDM845_QSCRATCH_SIZE,
- 	.dwc3_core_base_size = SDM845_DWC3_CORE_SIZE,
--	.hs_phy_irq_index = 1,
-+	.qusb2_phy_irq_index = 1,
- 	.dp_hs_phy_irq_index = 4,
- 	.dm_hs_phy_irq_index = 3,
- 	.ss_phy_irq_index = 2,
+ 		VM_BUG_ON_PAGE(!page_count(p), p);
 -- 
-2.42.0
+2.17.1
 
