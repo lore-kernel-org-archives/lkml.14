@@ -1,85 +1,150 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80A9DF42;
-	Fri, 22 Dec 2023 08:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68100101EE
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 08:43:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BeKwTsJw"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d3dee5f534so19715595ad.1;
-        Fri, 22 Dec 2023 00:43:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703234597; x=1703839397; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iEUyZsx1RFbSwcEw8c3ANFWhuGTAtkuoqqLQilnp4zE=;
-        b=BeKwTsJw3g5a/IPwHHonsZlMQtyRxFvieqcmiq1Anx1JKw9XGZ8KJXxvATYq3OZ9D+
-         yn1RWZ9ehXBLeFAD6SP6OzWqsfw/RR4lq35OYNyXglHV+yYW4NJjUcp+zPWBPtGJ/E0S
-         H+MCzs3v4HAJxZEELbLovoENkelo0HAE5yfwR6MM7OTtTr3JqkQQkYiaJfQZzFGWDyXx
-         89pWjGsXTW6+zL3N0BPVhvvhzdN63k+w3E7OmvWZKfO9C5tdvR5OLVsFO7DE16iUuOn1
-         c84t8nJSealwiibxjGXgvgmjSkF7zIjchW6hLlaPbAhtlY52ZysamGmSTLvi4ixl6gqD
-         o5jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703234597; x=1703839397;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iEUyZsx1RFbSwcEw8c3ANFWhuGTAtkuoqqLQilnp4zE=;
-        b=D/0AIVBuVJ07xtyQeOZlnEHDwS0Y8+z0r0DMdayqaiIqk5ifuUHPUOhB+rxtx5dYU8
-         wUtDdseczKfZdmW5mj/YaPDiCuFseRb+1F+lGLprOto7XBzytDanG8Z90J4ckEGond+X
-         RsFtTHZWUXeieyi4wvMIjBw1lpZjO7CMKmVxzJv7AxjVpJacXyGIN141odjDXng+eX9j
-         bI67t6U/mQsMvEZZiGht4wwa6B1ajAF1qXwoNxHd0Eci3DiPwj+Q81Bepecu4wP8+6nn
-         OXPwUuMAiq6RclwavlXr3NMoWq3ebCcGM8Nv8LBR1kvbuYKIFE2IRRU1bH90mShFg2L6
-         k5mg==
-X-Gm-Message-State: AOJu0YxbCEyma6CYRvMPIVLU9sYBR/Q+zBLLQo/g1B6yF4ifT9n3kA+2
-	GHU3lRYGEUG1eyAlJOFh7BI=
-X-Google-Smtp-Source: AGHT+IHrpQsrggaKmfmv1uB9n08kCC/Cs17bwN6uju3OJHHg3jjSx3hhXltw63wbVH/iiAwh6FH3Yg==
-X-Received: by 2002:a17:903:210d:b0:1d4:1809:7b86 with SMTP id o13-20020a170903210d00b001d418097b86mr903439ple.53.1703234596813;
-        Fri, 22 Dec 2023 00:43:16 -0800 (PST)
-Received: from localhost ([121.167.227.144])
-        by smtp.gmail.com with ESMTPSA id x5-20020a170902ec8500b001d04d730687sm2919062plg.103.2023.12.22.00.43.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Dec 2023 00:43:15 -0800 (PST)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Fri, 22 Dec 2023 17:43:13 +0900
-From: Tejun Heo <tj@kernel.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Greg KH <greg@kroah.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: duplicate patchs in the cgroup tree
-Message-ID: <ZYVMIamGdgG0AsyD@mac>
-References: <20231222142049.397619e5@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Lu4DGMyn"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20231222084345epoutp04a5e0f65a2e070ff522b7c9ee91115ce5~jGt4aJX0n1517815178epoutp04n
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 08:43:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20231222084345epoutp04a5e0f65a2e070ff522b7c9ee91115ce5~jGt4aJX0n1517815178epoutp04n
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1703234625;
+	bh=QLHE1NWjOSqv7IcomIQ0/EwcPB2puIgo8yJ3Dddp2Zc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Lu4DGMynHAQ9GSBxyvA+6cOspkaJAtQ9NvAdgXWrfTAUW1mJD1JN6phR051AQfA6Y
+	 eVPMk14AncvjHy5f9ibfk8ekrlLfAajOwjQapq/lTJYdeEwESpCcQIUwbgrWjxtUjA
+	 5vbUexHyOi0TQ/meTVfnkOdL7qqKD96oSLQWmMBg=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20231222084344epcas5p322b603419f8014a2912fd0f2a1e499d6~jGt30oR3Z3175031750epcas5p3h;
+	Fri, 22 Dec 2023 08:43:44 +0000 (GMT)
+Received: from epsmges5p2new.samsung.com (unknown [182.195.38.179]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4SxLRz1srHz4x9QC; Fri, 22 Dec
+	2023 08:43:43 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	7C.83.10009.F3C45856; Fri, 22 Dec 2023 17:43:43 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20231222084334epcas5p10badfe3c82a6b8355c03f8d0aa192892~jGtuMQb7R0112901129epcas5p1j;
+	Fri, 22 Dec 2023 08:43:34 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20231222084334epsmtrp2cd814b82c44ad3152f22017b180248b5~jGtuLjEd53200432004epsmtrp2-;
+	Fri, 22 Dec 2023 08:43:34 +0000 (GMT)
+X-AuditID: b6c32a4a-ff1ff70000002719-7d-65854c3fead8
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	FB.26.18939.63C45856; Fri, 22 Dec 2023 17:43:34 +0900 (KST)
+Received: from AHRE124.. (unknown [109.105.118.124]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20231222084332epsmtip11a985a5fde17393198ddc06dc8d1b5e1~jGtss24GQ2187121871epsmtip1N;
+	Fri, 22 Dec 2023 08:43:32 +0000 (GMT)
+From: Xiaobing Li <xiaobing.li@samsung.com>
+To: axboe@kernel.dk
+Cc: asml.silence@gmail.com, linux-kernel@vger.kernel.org,
+	io-uring@vger.kernel.org, kun.dou@samsung.com, peiwei.li@samsung.com,
+	joshi.k@samsung.com, kundan.kumar@samsung.com, wenwen.chen@samsung.com,
+	ruyi.zhang@samsung.com, xiaobing.li@samsung.com
+Subject: Re: Re: [PATCH v5] io_uring: Statistics of the true utilization of
+ sq threads.
+Date: Fri, 22 Dec 2023 16:35:30 +0800
+Message-Id: <20231222083530.11051-1-xiaobing.li@samsung.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <c3995796-8aab-45e1-ad59-d970373a4fab@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231222142049.397619e5@canb.auug.org.au>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEJsWRmVeSWpSXmKPExsWy7bCmpq69T2uqwexzHBZzVm1jtFh9t5/N
+	4l3rORaLo//fsln86r7LaLH1y1dWi8u75rBZPNvLafHl8Hd2i7MTPrBaTN2yg8mio+UyowOP
+	x85Zd9k9Lp8t9ejbsorR4/MmuQCWqGybjNTElNQihdS85PyUzLx0WyXv4HjneFMzA0NdQ0sL
+	cyWFvMTcVFslF58AXbfMHKDDlBTKEnNKgUIBicXFSvp2NkX5pSWpChn5xSW2SqkFKTkFJgV6
+	xYm5xaV56Xp5qSVWhgYGRqZAhQnZGa/+rGYveMJd8anjLXsD4yrOLkZODgkBE4m+wx+ZQWwh
+	gd2MEpN7i7sYuYDsT4wSP2fcZodz1i2axQrTsfbmXHaIjp2MErvXKUMUvWSUuLjsP9goNgFt
+	ievrusAaRASEJfZ3tLKAFDEL/GWUmPDyN1iRsECkxO6eQ2CTWARUJW73/wSL8wrYSDQe/wi1
+	TV5i/8GzYHFOAVuJd0ufskPUCEqcnPmEBcRmBqpp3jqbGWSBhMBPdomdl28xdTFyADkuEn+m
+	80LMEZZ4dXwLO4QtJfH53V42CLtY4kjPd1aI3gZGiem3r0IVWUv8u7KHBWQOs4CmxPpd+hBh
+	WYmpp9YxQezlk+j9/YQJIs4rsWMejK0qsfrSQxYIW1ridcNvqLiHxNevF6BBOoFRYtXqv8wT
+	GBVmIflnFpJ/ZiGsXsDIvIpRMrWgODc9tdi0wCgvtRwey8n5uZsYwYlVy2sH48MHH/QOMTJx
+	MB5ilOBgVhLhzddpSRXiTUmsrEotyo8vKs1JLT7EaAoM8InMUqLJ+cDUnlcSb2hiaWBiZmZm
+	YmlsZqgkzvu6dW6KkEB6YklqdmpqQWoRTB8TB6dUA5Mrc+uK2tjj87252KftDtCbKWmsdP7J
+	WT6n47rc7Q1ZYuKLUh4ZpLkcuZl7zbBrf+PJkEq5qzl/K18nisgLWEzeleFwefuXt86qz1ck
+	xU64dE2rUbtJqOvKBR8f64WL32fni3FUps9KfN4Zqp49n3e+gtyDyrJ/SxMcHXdkTnNmVdRY
+	IP+gMnjPnAMOn/xYGJO4+r+6NlopN294sDsgR/+ixd2Niy6EfkoJeHNtFvv3+MnMc38ssVpd
+	nbZ3okHcxWkGaw95PffdtulUReOW37fy3ux7UFnnu01GJEVMPWPHj/Amv7thPfYNryO3MJuE
+	C7wX9WG7P7Nv+50pi3lEWqMFFV5Ge3gy3PacrhLzUYmlOCPRUIu5qDgRAFyss8Y1BAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCLMWRmVeSWpSXmKPExsWy7bCSnK6ZT2uqwfV9fBZzVm1jtFh9t5/N
+	4l3rORaLo//fsln86r7LaLH1y1dWi8u75rBZPNvLafHl8Hd2i7MTPrBaTN2yg8mio+UyowOP
+	x85Zd9k9Lp8t9ejbsorR4/MmuQCWKC6blNSczLLUIn27BK6MV39Wsxc84a741PGWvYFxFWcX
+	IyeHhICJxNqbc9m7GLk4hAS2M0rMaDnB1MXIAZSQlvjzpxyiRlhi5b/nUDXPGSUmzPzFDJJg
+	E9CWuL6uixXEFgEq2t/RygJiMwt0Mkm8/qwHYgsLhEusm3eVDcRmEVCVuN3/E6yXV8BGovH4
+	R1aIBfIS+w+eBYtzCthKvFv6lB3EFgKqmfRhPitEvaDEyZlPoObLSzRvnc08gVFgFpLULCSp
+	BYxMqxhFUwuKc9NzkwsM9YoTc4tL89L1kvNzNzGCA14raAfjsvV/9Q4xMnEwHmKU4GBWEuHN
+	12lJFeJNSaysSi3Kjy8qzUktPsQozcGiJM6rnNOZIiSQnliSmp2aWpBaBJNl4uCUamDidMy4
+	3Lm2YmP81F3Ou8LeXkphr0ms9WA3v/n95t2c5Y4yOY6Tru8SzJ/zq9Xv/U0mvu8KzteWTlY4
+	/IYv0vLk0tp5xSElQezTqn5ct2Bf/aVobrDAU2G19ReC/ad373fW+72nsL8mkEPmn7iWYzHf
+	3ngl+WMTOAX8rsxZvZW1qLL8eTQDp7i2X+5Mm41fuPOyUm9vi3ZlnBW1tE/3xsf6p1528S0R
+	Ypb/Tz1cd5Xd/rG1Qc7biB6NPmX+5YuajRpPuK0K7/+6wrG4758Zu/arvBf/fLsjrv08Y1Hp
+	rfKEUcngVUvF362Tq9ZZbedYdTf0x6QoxVnxPI5HeMLuyM+/7PJZ3q8hY0VAValpshJLcUai
+	oRZzUXEiAHE8fRfnAgAA
+X-CMS-MailID: 20231222084334epcas5p10badfe3c82a6b8355c03f8d0aa192892
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20231222084334epcas5p10badfe3c82a6b8355c03f8d0aa192892
+References: <c3995796-8aab-45e1-ad59-d970373a4fab@kernel.dk>
+	<CGME20231222084334epcas5p10badfe3c82a6b8355c03f8d0aa192892@epcas5p1.samsung.com>
 
-On Fri, Dec 22, 2023 at 02:20:49PM +1100, Stephen Rothwell wrote:
-> Hi all,
+On 12/18/23 15:53, Jens Axboe wrote:
+> I think I'm convinced that the effectiveness of the chosen SQPOLL
+> settings being exposed is useful, I'm just not sure fdinfo is the right
+> place to do it. Is it going to be a problem that these are just
+> perpetual stats, with no way to reset them? This means there's no way to
+> monitor it for a period of time and get effectiveness for something
+> specific, it'll always just count from when the ring was created.
 > 
-> The following commit is also in the driver-core tree as a different commit
-> (but the same patchs):
+> We could of course have the act of reading the stat also reset it, but
+> maybe that'd be a bit odd?
 > 
->   2bf46683842b ("kernel/cgroup: use kernfs_create_dir_ns()")
+> Alternatively, it could be exported differently, eg as a register opcode
+> perhaps.
 > 
-> This is commit
-> 
->   fe3de0102bc8 ("kernel/cgroup: use kernfs_create_dir_ns()")
-> 
-> in the driver-core tree.
+> Open to suggestions...
 
-Sorry about that. Missed that the patches were applied to the driver-core
-tree. Reverted from cgroup (it was top of the tree anyway).
+I thought carefully about your proposed reset stat, and I think it can be 
+achieved by outputting "work_time" and "total_time".
+eg:
+Output at time t1:
+SqMask: 0x3
+SqHead: 1168417
+SqTail: 1168418
+SqWorkTime: t1_work
+SqTotalTime: t1_total
 
-Thanks.
+Output at time t2:
+SqMask: 0x3
+SqHead: 1168417
+SqTail: 1168418
+SqWorkTime: t2_work
+SqTotalTime: t2_total
 
--- 
-tejun
+Then we can manually calculate the utilization rate from t1 to t2:
+(t2_work - t1_work) / (t2_total - t1_total)
+
+Not sure what you think, but if you think it doesn't work, I'll look into 
+other good ways to add the ability to reset.
+
+In addition, on register opcode - generally it is used for resource like
+buffers, handles etc.. I am not sure how that can help here. If you have
+something in mind, could you please elaborate in more detail?
