@@ -1,35 +1,35 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD4DC8EE
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 08:53:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56185D2E0
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 08:56:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DeOknbP3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="07bJfujK"
-Date: Fri, 22 Dec 2023 09:52:59 +0100
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PnjnlHLJ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FzsUqX4Z"
+Date: Fri, 22 Dec 2023 09:56:12 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1703235180;
+	s=2020; t=1703235373;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QZXloMgiRAVOPGoz8o3+D3AfE1mP2CVP2wrPR3Txq90=;
-	b=DeOknbP32wPly1lxHHUwpkQwFo5JYFNCAfabmS89lHve80HRgvb9qfYzCLAIM5Holl42Gg
-	+E6QU+hZ8/iuUhosE5DlNXDDDwBOzoSqsUH6d8JWk/BKyh9TSrgF0IJb7xqM0fg8JpxcV5
-	PMtljzUAXChM/dRfxrhqQ+8BeHjkrbJ29lQujWQ+YLUCfh1moCzFfRuJXcVpmlXALMryhU
-	kq6xG7QO54lt0bENADixnD8FCtza9BO3nWPC1RuEXtL6r96jB+6XUr+iYNrTlptEy7avNe
-	nxE0YYi7kdGHfbYmAwaBrBlm90TfCsn3VhPBleMy9VvdqiwQb017vEnn2hBvLQ==
+	bh=q3redX9Xkb6f0sXtn4IBQJXwcECuz/h2jAN8Zswb/Ak=;
+	b=PnjnlHLJS6BBdtyryRr/PESPeARtK9TKgadyPwiff1nyuxYRHeeRvnNycFp3pdCz3Vq7bt
+	A+pjmFHm3hlstqHjIWbAvIEtNuAJpfoCEPv13zpPOpGcZACU/YE+TyzdgPLkQA5lsXPocQ
+	HvGowIbPyZ65UpATcdH/Q8Yd3f7/t41DuErWE9haWY2/pnf8l0Y0Z2KzAxBpDwLqcf5NWT
+	gLA9rlKBsc1aCs0vh48ZzmHWaG3xEqV9MpA6SrwbolFFJnOtBYe/eB9MkRx7zAfjD++2pF
+	0nr90cVDoBfeD0E7L4P3QpbJrfO3ET76/Y2SEPnTSa+4wZ7x5dDKUnoKZDiqsg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1703235180;
+	s=2020e; t=1703235373;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QZXloMgiRAVOPGoz8o3+D3AfE1mP2CVP2wrPR3Txq90=;
-	b=07bJfujKq7VXX9O0XCx8hI2QOL8Zd4st/APr85k24IXoH+Hgyad2TfVLpdwuuo8W/P1pUB
-	KyPd3fC+DIVu8fCg==
+	bh=q3redX9Xkb6f0sXtn4IBQJXwcECuz/h2jAN8Zswb/Ak=;
+	b=FzsUqX4Z+qibIbYvppdc02MM06srn1Bxl/rDU3yXthxvPk6NizoMPxh97jnE+JbZhARklz
+	pO5lmx3IBubVL5AA==
 From: Nam Cao <namcao@linutronix.de>
 To: Ryan England <rcengland@gmail.com>
 Cc: Larry Finger <Larry.Finger@lwfinger.net>, Florian Schilhabel
@@ -37,9 +37,10 @@ Cc: Larry Finger <Larry.Finger@lwfinger.net>, Florian Schilhabel
  <gregkh@linuxfoundation.org>, linux-staging@lists.linux.dev,
  linux-kernel@vger.kernel.org, outreachy@lists.linux.dev
 Subject: Re: [PATCH v2] staging: rtl8712: fix open parentheses alignment
-Message-ID: <20231222095259.75f145cf@namcao>
-In-Reply-To: <ZYSemFbzTlgLROMc@kernel.ryanengland.xyz>
+Message-ID: <20231222095612.589463ef@namcao>
+In-Reply-To: <20231222095259.75f145cf@namcao>
 References: <ZYSemFbzTlgLROMc@kernel.ryanengland.xyz>
+	<20231222095259.75f145cf@namcao>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,45 +50,12 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 21 Dec 2023 20:22:48 +0000 Ryan England <rcengland@gmail.com> wrote:
+On Fri, 22 Dec 2023 09:52:59 +0100 Nam Cao <namcao@linutronix.de> wrote:
+> Note that, because you CAN you 100 characters, does not mean you MUST use 100
+> characters.
 
-> Adhere to Linux kernel coding style.
-> 
-> Reported by checkpatch:
-> 
-> CHECK: Alignment should match open parenthesis
-> 
-> Signed-off-by: Ryan England <rcengland@gmail.com>
-> ---
-> Made corrections give the 100 line limit. Resending v2 as no change was
-> made other than including this comment below ---. Thank you for the
-> correction. Here's to learning with every submission.
-> 
->  drivers/staging/rtl8712/os_intfs.c            |   3 +-
->  drivers/staging/rtl8712/rtl8712_efuse.c       |   9 +-
->  drivers/staging/rtl8712/rtl8712_recv.c        |   3 +-
->  drivers/staging/rtl8712/rtl8712_xmit.c        |  60 +++---
->  drivers/staging/rtl8712/rtl871x_cmd.c         | 159 +++++---------
->  drivers/staging/rtl8712/rtl871x_cmd.h         |  37 ++--
->  drivers/staging/rtl8712/rtl871x_ioctl_linux.c | 203 +++++++-----------
->  7 files changed, 173 insertions(+), 301 deletions(-)
-> 
-> diff --git a/drivers/staging/rtl8712/os_intfs.c b/drivers/staging/rtl8712/os_intfs.c
-> index b18e6d9c832b..7554613fe7e1 100644
-> --- a/drivers/staging/rtl8712/os_intfs.c
-> +++ b/drivers/staging/rtl8712/os_intfs.c
-> @@ -221,8 +221,7 @@ struct net_device *r8712_init_netdev(void)
->  
->  static u32 start_drv_threads(struct _adapter *padapter)
->  {
-> -	padapter->cmd_thread = kthread_run(r8712_cmd_thread, padapter, "%s",
-> -					  padapter->pnetdev->name);
-> +	padapter->cmd_thread = kthread_run(r8712_cmd_thread, padapter, "%s", padapter->pnetdev->name);
-
-Your description claims to fix "CHECK: Alignment should match open
-parenthesis", but this one is already aligned, isn't it?
-
-Note that, because you CAN you 100 characters, does not mean you MUST use 100
+I don't know why I wrote it this way. What I meant to say is that it is
+probably not worth it to change the code only to make sure they use all 100
 characters.
 
 Best regards,
