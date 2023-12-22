@@ -1,31 +1,31 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA1E2EAFA
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 22:51:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930282F503
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 22:51:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rGoMK-0005ZU-RX; Fri, 22 Dec 2023 23:51:12 +0100
+	id 1rGoMM-0005cR-8Y; Fri, 22 Dec 2023 23:51:14 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rGoMJ-000quv-CD; Fri, 22 Dec 2023 23:51:12 +0100
+	id 1rGoMK-000qvL-PB; Fri, 22 Dec 2023 23:51:13 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rGoMK-000Ff4-1G;
-	Fri, 22 Dec 2023 23:51:12 +0100
+	id 1rGoML-000FfW-2Y;
+	Fri, 22 Dec 2023 23:51:13 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Thomas Gleixner <tglx@linutronix.de>
 Cc: linux-kernel@vger.kernel.org,
 	kernel@pengutronix.de
-Subject: [PATCH 01/13] irqchip/imgpdc: Convert to platform remove callback returning void
-Date: Fri, 22 Dec 2023 23:50:32 +0100
-Message-ID:  <472fc6f6bcd54b73f8af206d079a80cb8744d0ca.1703284359.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 08/13] irqchip/pruss-intc: Convert to platform remove callback returning void
+Date: Fri, 22 Dec 2023 23:50:39 +0100
+Message-ID:  <071057cfdc0bc52c574f74156b410c0337adb69c.1703284359.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <cover.1703284359.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1703284359.git.u.kleine-koenig@pengutronix.de>
@@ -36,7 +36,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1698; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=ikkg4JLsV23pZpK+eXaO/MNjdovcQlGL4kRwoXR9+eQ=; b=owGbwMvMwMXY3/A7olbonx/jabUkhtQ2oR3rk4JSF9mdDfhk+6o3Y+ZUM7XqrHiNO2F7OyxE9 /SJdnZ1MhqzMDByMciKKbLYN67JtKqSi+xc++8yzCBWJpApDFycAjARh0L2f6pVXTPsjf3vRq78 p+1ab/Lj7GY5e+nkh3f1Uybzusz9GnX456zNSZ/uzZ1X5Bh4sq8mf9a5ktPlV0qdXh66VGqzhP2 6dPc7C21nPmm1xrUbe9dK+MTFsUyelS1zzDBgk96b5HW+yg45l5peTLTKYZ5+gpnZal2xjv2zx2 nqniUVk74b+dw4Z5n+PJl1bvh8Fctc9Zj/G1amROiFzys+InujQfKD/QbvGYExWXlhTh+W/Zy+v yP0Zte5A/3qF89VfZoZyXf80dzY3IPRUluKQ3fpHvd6aZD0gclp2SO3iZFMDzvmmpvZxme09cbW eUlLsZf+jl9jH/7EQtz9oePi/1lml3bHLD79zENFi9kRAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1947; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=zqHuEaXEImwnlCY9D26ACfYfCkuRPJSjdQSURwFRoRw=; b=owGbwMvMwMXY3/A7olbonx/jabUkhtQ2oQOndrv++VI/M4H9w4wjfYf+qlmx3z0/zTJTOSrA/ JHM2ZTYTkZjFgZGLgZZMUUW+8Y1mVZVcpGda/9dhhnEygQyhYGLUwAmkt7H/oej4u+LBMdiBTGt taGZh1Q+6npnKR2q0xM/8rryX8CFqKd3U3pSDufzVPZenBRauOL3nczPNotFi6pKpytkOtW8Cbh dXRvrcPlJi9h2Xhat01NCdXySb8paZ5mmeabeufOp/aiKp5zILcUpfi1sNb8+P7577uKnrxcS69 9/Xj9lsY5BzNe0syKb196s8fyavO3QWakftxftqnbz/Zykfv5EEu/DlwuNH+XnRUbNtbTT7v0dn Z5ooVQek9KnX8H8zeugl4p6gKfv/UTJ8xmCZ5e7nflYkMh8nz2sqna1mP0+s5XbPn2ymr5btWCz 7xaDbxcdZputDmiNZP5REsTR2e+y/nCE2Ywo10Nu9Zn7AA==
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -59,36 +59,40 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/irqchip/irq-imgpdc.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/irqchip/irq-pruss-intc.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/irqchip/irq-imgpdc.c b/drivers/irqchip/irq-imgpdc.c
-index 5831be454673..be7451c52f3b 100644
---- a/drivers/irqchip/irq-imgpdc.c
-+++ b/drivers/irqchip/irq-imgpdc.c
-@@ -461,12 +461,11 @@ static int pdc_intc_probe(struct platform_device *pdev)
+diff --git a/drivers/irqchip/irq-pruss-intc.c b/drivers/irqchip/irq-pruss-intc.c
+index 0f64ecb9b1f4..6daefa7c87bf 100644
+--- a/drivers/irqchip/irq-pruss-intc.c
++++ b/drivers/irqchip/irq-pruss-intc.c
+@@ -599,7 +599,7 @@ static int pruss_intc_probe(struct platform_device *pdev)
  	return ret;
  }
  
--static int pdc_intc_remove(struct platform_device *pdev)
-+static void pdc_intc_remove(struct platform_device *pdev)
+-static int pruss_intc_remove(struct platform_device *pdev)
++static void pruss_intc_remove(struct platform_device *pdev)
  {
- 	struct pdc_intc_priv *priv = platform_get_drvdata(pdev);
+ 	struct pruss_intc *intc = platform_get_drvdata(pdev);
+ 	u8 max_system_events = intc->soc_config->num_system_events;
+@@ -616,8 +616,6 @@ static int pruss_intc_remove(struct platform_device *pdev)
+ 		irq_dispose_mapping(irq_find_mapping(intc->domain, hwirq));
  
- 	irq_domain_remove(priv->domain);
+ 	irq_domain_remove(intc->domain);
+-
 -	return 0;
  }
  
- static const struct of_device_id pdc_intc_match[] = {
-@@ -480,7 +479,7 @@ static struct platform_driver pdc_intc_driver = {
- 		.of_match_table	= pdc_intc_match,
+ static const struct pruss_intc_match_data pruss_intc_data = {
+@@ -650,7 +648,7 @@ static struct platform_driver pruss_intc_driver = {
+ 		.suppress_bind_attrs = true,
  	},
- 	.probe = pdc_intc_probe,
--	.remove = pdc_intc_remove,
-+	.remove_new = pdc_intc_remove,
+ 	.probe  = pruss_intc_probe,
+-	.remove = pruss_intc_remove,
++	.remove_new = pruss_intc_remove,
  };
+ module_platform_driver(pruss_intc_driver);
  
- static int __init pdc_intc_init(void)
 -- 
 2.42.0
 
