@@ -1,47 +1,47 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06392377A
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 15:01:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E5B241FD
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 15:01:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HMaP8UZT"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-50e44c1b35fso2349363e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 07:01:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MU0DWe9w"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a235e394758so216947466b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 07:01:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703257309; x=1703862109; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1703257310; x=1703862110; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rY+Ix+0Edhw9Of7v8MceePDnv6PKZ0qWKEzNHi94emw=;
-        b=HMaP8UZTsP+ppUX+FHaBN4lutrWq8+IbrcXH9B+0bxInxU0gPWg8Faly0ZaCGQnn6w
-         qac+Zq5sUd58lRqpz+oIo4v5aLBClriS2+EfM9hW7nHzWcSHy3YoNDeWe1VWadJ0PBPP
-         GfbgOhUFKIMI2x3SOnDPmXXxKc/Ly06VZbzJFPUMmfGBDJ8cyyrYf1sx0v0z4MXbOKJz
-         jNRtHFYw4ABSo9OmL4PwfDT25HBqW7+Ox/8VPCP2g2lkZUAYBVzh3fZ42oxxdOKTMd7Z
-         rO/i7SFLp0qdpgUCnkPWJPrfqe5YvC2PsKnsYQ7Bbp1+ZRZQIhNSeFtWXJNjadnwCLKn
-         MQ6A==
+        bh=+d2F5ydtA1OobfJmI2hpIshuNT6ymaNJ4rjSuqNR8IA=;
+        b=MU0DWe9w6pHEuxKA32Jx7HPsnmZMaUdvYgQovU+9LEgQV68hwfB63pdAz7yxYwydMg
+         QzLWoh+nhFgCajpXrXFyd9K3tBM0LWzIDJSGU+dAVMCfb5uDOAEKVUOSzbJNm9xT5ehC
+         OxaKNUVwqj2mPJ/xoEMUw/rUtSb/6Jmr9E5D6SgdyDLjb1fBnicKAlL35hwlqLNpVdVx
+         aklooGxr0CefoTStBiRg+W+mT8oulBXzADBT/OmRNMMx5uoCRus3LetIAqR6moWTwQuc
+         HXygHPbp0sxVjNEaPq5b4jCOcHw5nhraElt9k9wMP585qrx+/rHAE6e5OVaMLXAVWjqK
+         9hDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703257309; x=1703862109;
+        d=1e100.net; s=20230601; t=1703257310; x=1703862110;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rY+Ix+0Edhw9Of7v8MceePDnv6PKZ0qWKEzNHi94emw=;
-        b=wPBsS4hxdl48xv3wDoHse6hl8jr/y6g26cND8dXVfeWugW8E/3Ptde6stRIX6CigLP
-         oqPYuTWTZyqmDF5kljDHBWfRw4HZ4C1RqD6y3yXP98whayaR5CYS3QBJApN7ftlViEtf
-         krzQmkmdmt8g6Zh0pgsiKjM1YhoQuhZPmTLVybvsGpyTRU2ESpXeCrfgY7xMJaVV0V6k
-         h/nl7n6NtPTJDCA80TqQh5yIs0/OGsKAh3SA152ubyuwF0DlT8rXckcdwkJxednM2hqD
-         5SkZk+4Mm0bRBTHFZWDVegzh03lyXsg1Nc6sFTSn/3A+3IoPCckUggbGpE+lIbaYdCNV
-         Sk1w==
-X-Gm-Message-State: AOJu0YzifXNoIEvVOUR8pHwrTbK90Xz3xCeDTJFzKyyrWVWs2j/WtVVp
-	Qz2FbpqQxF7AIW3H8li5l7b0yujilnfV9w==
-X-Google-Smtp-Source: AGHT+IERJW4T91WGiP+wu8qoU0QkN4X16TMIuviArBP6wKljKiUI/SdehMnQ9+X+6SnuqpYnMufOlA==
-X-Received: by 2002:a05:6512:104a:b0:50e:6a31:127a with SMTP id c10-20020a056512104a00b0050e6a31127amr770806lfb.31.1703257306354;
-        Fri, 22 Dec 2023 07:01:46 -0800 (PST)
+        bh=+d2F5ydtA1OobfJmI2hpIshuNT6ymaNJ4rjSuqNR8IA=;
+        b=Wxi/VYDT5g9Mg71xHLSoFFTuKJNPxEP66c4eA8udv++VGmPwhl+zmsMeBmX8+UPsnH
+         pgZKXy4zL9oHV9bb65fE83RXXRcXNyyDoNvdewrdntno83QIQaoERrU0PL2ib/0uouCn
+         5O7NtMpgGpJPA1GWfVJ1tRvG1UGpgZ83Bs0kxGcHuJmHGgVTpyDHwdti+3a+AdngsBae
+         OVy2erzMYBhyodCUmTFIoZKzXMe0GGInM0h0jMN41gzT8l+DB3BmsRzC2/F8idRYKn+8
+         v9rLy2HFLMovqIOEOiViN7Vn/mze7ATE65Zmr0YB+ouRMel4B/KwFL02+0VWe6bw+fKN
+         zTZQ==
+X-Gm-Message-State: AOJu0YxH7Zh8hLnYyzT7LemN2xjIBU9WI9au+ixvRIwMo7ODMvg5nA5W
+	tNOe6qfOd7xxgKcJlgfzGqe9tWY8hae1uQ==
+X-Google-Smtp-Source: AGHT+IFzDificB3UdraTqz1VX5y4HhiRlv+QgDqloc5aGPlnfsgxfIGccPb4+aYc8yFdDUFdm5GSDw==
+X-Received: by 2002:a17:906:18:b0:a23:4589:75b0 with SMTP id 24-20020a170906001800b00a23458975b0mr808715eja.100.1703257310132;
+        Fri, 22 Dec 2023 07:01:50 -0800 (PST)
 Received: from krzk-bin.. ([78.10.206.178])
-        by smtp.gmail.com with ESMTPSA id h1-20020a17090791c100b00a26af35c171sm1275671ejz.0.2023.12.22.07.01.44
+        by smtp.gmail.com with ESMTPSA id h1-20020a17090791c100b00a26af35c171sm1275671ejz.0.2023.12.22.07.01.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Dec 2023 07:01:45 -0800 (PST)
+        Fri, 22 Dec 2023 07:01:49 -0800 (PST)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
@@ -63,9 +63,9 @@ To: Bjorn Andersson <andersson@kernel.org>,
 Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
 	Sean Anderson <sean.anderson@seco.com>
-Subject: [PATCH 2/4] reset: add GPIO-based reset controller
-Date: Fri, 22 Dec 2023 16:01:31 +0100
-Message-Id: <20231222150133.732662-3-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 4/4] ASoC: codecs: wsa884x: Allow sharing reset GPIO
+Date: Fri, 22 Dec 2023 16:01:33 +0100
+Message-Id: <20231222150133.732662-5-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231222150133.732662-1-krzysztof.kozlowski@linaro.org>
 References: <20231222150133.732662-1-krzysztof.kozlowski@linaro.org>
@@ -77,181 +77,123 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add simple driver to control GPIO-based resets using the reset
-controller API for the cases when the GPIOs are shared and reset should
-be coordinated.  The driver is expected to be used by reset core
-framework for ad-hoc reset controllers.
+On some boards with multiple WSA8840/WSA8845 speakers, the reset
+(shutdown) GPIO is shared between two speakers.  Use the reset
+controller framework and its "reset-gpio" driver to handle this case.
+This allows bring-up and proper handling of all WSA884x speakers on
+X1E80100-CRD board.
 
 Cc: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Sean Anderson <sean.anderson@seco.com>
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- MAINTAINERS                |   5 ++
- drivers/reset/Kconfig      |   9 ++++
- drivers/reset/Makefile     |   1 +
- drivers/reset/reset-gpio.c | 105 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 120 insertions(+)
- create mode 100644 drivers/reset/reset-gpio.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7fe27cd60e1b..a0fbd4814bc7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8866,6 +8866,11 @@ F:	Documentation/i2c/muxes/i2c-mux-gpio.rst
- F:	drivers/i2c/muxes/i2c-mux-gpio.c
- F:	include/linux/platform_data/i2c-mux-gpio.h
+---
+
+If previous patches are fine, then this commit is independent and could
+be taken via ASoC.
+---
+ sound/soc/codecs/wsa884x.c | 52 ++++++++++++++++++++++++++++++--------
+ 1 file changed, 42 insertions(+), 10 deletions(-)
+
+diff --git a/sound/soc/codecs/wsa884x.c b/sound/soc/codecs/wsa884x.c
+index f2653df84e4a..49ae7712e6ef 100644
+--- a/sound/soc/codecs/wsa884x.c
++++ b/sound/soc/codecs/wsa884x.c
+@@ -13,6 +13,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
++#include <linux/reset.h>
+ #include <linux/slab.h>
+ #include <linux/soundwire/sdw.h>
+ #include <linux/soundwire/sdw_registers.h>
+@@ -699,6 +700,7 @@ struct wsa884x_priv {
+ 	struct sdw_stream_runtime *sruntime;
+ 	struct sdw_port_config port_config[WSA884X_MAX_SWR_PORTS];
+ 	struct gpio_desc *sd_n;
++	struct reset_control *sd_reset;
+ 	bool port_prepared[WSA884X_MAX_SWR_PORTS];
+ 	bool port_enable[WSA884X_MAX_SWR_PORTS];
+ 	unsigned int variant;
+@@ -1799,9 +1801,22 @@ static struct snd_soc_dai_driver wsa884x_dais[] = {
+ 	},
+ };
  
-+GENERIC GPIO RESET DRIVER
-+M:	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-+S:	Maintained
-+F:	drivers/reset/reset-gpio.c
+-static void wsa884x_gpio_powerdown(void *data)
++static void wsa884x_reset_powerdown(void *data)
+ {
+-	gpiod_direction_output(data, 1);
++	struct wsa884x_priv *wsa884x = data;
 +
- GENERIC HDLC (WAN) DRIVERS
- M:	Krzysztof Halasa <khc@pm.waw.pl>
- S:	Maintained
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index ccd59ddd7610..bb1b5a326eb7 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -66,6 +66,15 @@ config RESET_BRCMSTB_RESCAL
- 	  This enables the RESCAL reset controller for SATA, PCIe0, or PCIe1 on
- 	  BCM7216.
++	if (wsa884x->sd_reset)
++		reset_control_assert(wsa884x->sd_reset);
++	else
++		gpiod_direction_output(wsa884x->sd_n, 1);
++}
++
++static void wsa884x_reset_deassert(struct wsa884x_priv *wsa884x)
++{
++	if (wsa884x->sd_reset)
++		reset_control_deassert(wsa884x->sd_reset);
++	else
++		gpiod_direction_output(wsa884x->sd_n, 0);
+ }
  
-+config RESET_GPIO
-+	tristate "GPIO reset controller"
-+	help
-+	  This enables a generic reset controller for resets attached via
-+	  GPIOs.  Typically for OF platforms this driver expects "reset-gpios"
-+	  property.
-+
-+	  If compiled as module, it will be called reset-gpio.
-+
- config RESET_HSDK
- 	bool "Synopsys HSDK Reset Driver"
- 	depends on HAS_IOMEM
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 8270da8a4baa..fd8b49fa46fc 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_RESET_BCM6345) += reset-bcm6345.o
- obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
- obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
- obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
-+obj-$(CONFIG_RESET_GPIO) += reset-gpio.o
- obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
- obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
- obj-$(CONFIG_RESET_INTEL_GW) += reset-intel-gw.o
-diff --git a/drivers/reset/reset-gpio.c b/drivers/reset/reset-gpio.c
-new file mode 100644
-index 000000000000..6952996dbc9f
---- /dev/null
-+++ b/drivers/reset/reset-gpio.c
-@@ -0,0 +1,105 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+
-+struct reset_gpio_priv {
-+	struct reset_controller_dev rc;
-+	struct gpio_desc *reset;
-+};
-+
-+static inline struct reset_gpio_priv
-+*rc_to_reset_gpio(struct reset_controller_dev *rc)
+ static void wsa884x_regulator_disable(void *data)
+@@ -1809,6 +1824,26 @@ static void wsa884x_regulator_disable(void *data)
+ 	regulator_bulk_disable(WSA884X_SUPPLIES_NUM, data);
+ }
+ 
++static int wsa884x_get_reset(struct device *dev, struct wsa884x_priv *wsa884x)
 +{
-+	return container_of(rc, struct reset_gpio_priv, rc);
-+}
-+
-+static int reset_gpio_assert(struct reset_controller_dev *rc, unsigned long id)
-+{
-+	struct reset_gpio_priv *priv = rc_to_reset_gpio(rc);
-+
-+	gpiod_set_value_cansleep(priv->reset, 1);
-+
-+	return 0;
-+}
-+
-+static int reset_gpio_deassert(struct reset_controller_dev *rc,
-+			       unsigned long id)
-+{
-+	struct reset_gpio_priv *priv = rc_to_reset_gpio(rc);
-+
-+	gpiod_set_value_cansleep(priv->reset, 0);
-+
-+	return 0;
-+}
-+
-+static int reset_gpio_status(struct reset_controller_dev *rc, unsigned long id)
-+{
-+	struct reset_gpio_priv *priv = rc_to_reset_gpio(rc);
-+
-+	return gpiod_get_value_cansleep(priv->reset);
-+}
-+
-+static const struct reset_control_ops reset_gpio_ops = {
-+	.assert = reset_gpio_assert,
-+	.deassert = reset_gpio_deassert,
-+	.status = reset_gpio_status,
-+};
-+
-+static int reset_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node **platdata = dev_get_platdata(dev);
-+	struct reset_gpio_priv *priv;
-+
-+	if (!platdata && !*platdata)
-+		return -EINVAL;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, &priv->rc);
-+	device_set_node(dev, of_fwnode_handle(*platdata));
++	wsa884x->sd_reset = devm_reset_control_get_optional_shared(dev, NULL);
++	if (IS_ERR(wsa884x->sd_reset))
++		return dev_err_probe(dev, PTR_ERR(wsa884x->sd_reset),
++				     "Failed to get reset\n");
 +
 +	/*
-+	 * Need to get non-exclusive because it is used in reset core as cookie
-+	 * to find existing controllers.  However the actual use is exclusive.
++	 * Backwards compatible way for powerdown-gpios, does not handle
++	 * sharing GPIO properly.
 +	 */
-+	priv->reset = devm_gpiod_get(dev, "reset",
-+				     GPIOD_OUT_HIGH);
-+	if (IS_ERR(priv->reset))
-+		return dev_err_probe(dev, PTR_ERR(priv->reset),
-+				     "Could not get reset gpios\n");
++	wsa884x->sd_n = devm_gpiod_get_optional(dev, "powerdown",
++						GPIOD_OUT_HIGH);
++	if (IS_ERR(wsa884x->sd_n))
++		return dev_err_probe(dev, PTR_ERR(wsa884x->sd_n),
++				     "Shutdown Control GPIO not found\n");
 +
-+	priv->rc.ops = &reset_gpio_ops;
-+	priv->rc.owner = THIS_MODULE;
-+	priv->rc.dev = dev;
-+	priv->rc.cookie = priv->reset;
-+	priv->rc.nr_resets = 1;
-+
-+	return devm_reset_controller_register(dev, &priv->rc);
++	return 0;
 +}
 +
-+static const struct platform_device_id reset_gpio_ids[] = {
-+	{ .name = "reset-gpio", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(platform, reset_gpio_ids);
-+
-+static struct platform_driver reset_gpio_driver = {
-+	.probe		= reset_gpio_probe,
-+	.id_table	= reset_gpio_ids,
-+	.driver	= {
-+		.name = "reset-gpio",
-+	},
-+};
-+module_platform_driver(reset_gpio_driver);
-+
-+MODULE_AUTHOR("Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>");
-+MODULE_DESCRIPTION("Generic GPIO reset driver");
-+MODULE_LICENSE("GPL");
+ static int wsa884x_probe(struct sdw_slave *pdev,
+ 			 const struct sdw_device_id *id)
+ {
+@@ -1838,11 +1873,9 @@ static int wsa884x_probe(struct sdw_slave *pdev,
+ 	if (ret)
+ 		return ret;
+ 
+-	wsa884x->sd_n = devm_gpiod_get_optional(dev, "powerdown",
+-						GPIOD_OUT_HIGH);
+-	if (IS_ERR(wsa884x->sd_n))
+-		return dev_err_probe(dev, PTR_ERR(wsa884x->sd_n),
+-				     "Shutdown Control GPIO not found\n");
++	ret = wsa884x_get_reset(dev, wsa884x);
++	if (ret)
++		return ret;
+ 
+ 	dev_set_drvdata(dev, wsa884x);
+ 	wsa884x->slave = pdev;
+@@ -1858,9 +1891,8 @@ static int wsa884x_probe(struct sdw_slave *pdev,
+ 	pdev->prop.sink_dpn_prop = wsa884x_sink_dpn_prop;
+ 	pdev->prop.scp_int1_mask = SDW_SCP_INT1_BUS_CLASH | SDW_SCP_INT1_PARITY;
+ 
+-	/* Bring out of reset */
+-	gpiod_direction_output(wsa884x->sd_n, 0);
+-	ret = devm_add_action_or_reset(dev, wsa884x_gpio_powerdown, wsa884x->sd_n);
++	wsa884x_reset_deassert(wsa884x);
++	ret = devm_add_action_or_reset(dev, wsa884x_reset_powerdown, wsa884x);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.34.1
 
