@@ -1,211 +1,123 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA91D306;
-	Fri, 22 Dec 2023 04:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6419AB64C;
+	Fri, 22 Dec 2023 04:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="eY6sUOpf"
-X-UUID: eaf843a4a08511eeba30773df0976c77-20231222
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Vo7/8SdJTy6PD+1QaQcWVlel/mcBE+WmrpBeWZ3cneU=;
-	b=eY6sUOpfqyatahaw++pVC3GYiWQy2Fnm/0hvpaa+q7USWTpWbv8kdifzzNNrRxNcIPiB2aCBJ21jAT3mkbUEN6z3QTjhICQNONEbI0C3lGsaQjvUU/uQirmISkrC1SojrUYM3zDhhprs7Kr1QzO0w8pof5jlp6/zEoOVupPFRPQ=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:c68073c6-e522-4887-ac6c-70643eeae8cc,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:5d391d7,CLOUDID:a4b8738d-e2c0-40b0-a8fe-7c7e47299109,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,
-	DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: eaf843a4a08511eeba30773df0976c77-20231222
-Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw02.mediatek.com
-	(envelope-from <jason-jh.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 2030041288; Fri, 22 Dec 2023 12:52:32 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Fri, 22 Dec 2023 12:52:31 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Fri, 22 Dec 2023 12:52:31 +0800
-From: Jason-JH.Lin <jason-jh.lin@mediatek.com>
-To: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Matthias Brugger
-	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Chun-Kuang Hu
-	<chunkuang.hu@kernel.org>
-CC: Conor Dooley <conor+dt@kernel.org>, Mauro Carvalho Chehab
-	<mchehab@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-media@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	Jason-ch Chen <jason-ch.chen@mediatek.com>, Johnson Wang
-	<johnson.wang@mediatek.com>, "Jason-JH . Lin" <jason-jh.lin@mediatek.com>,
-	Singo Chang <singo.chang@mediatek.com>, Nancy Lin <nancy.lin@mediatek.com>,
-	Shawn Sung <shawn.sung@mediatek.com>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH v3 7/9] mailbox: mediatek: Move reuseable definition to header for secure driver
-Date: Fri, 22 Dec 2023 12:52:26 +0800
-Message-ID: <20231222045228.27826-8-jason-jh.lin@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20231222045228.27826-1-jason-jh.lin@mediatek.com>
-References: <20231222045228.27826-1-jason-jh.lin@mediatek.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jJtwuhWS"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-5c66b093b86so1908737a12.0;
+        Thu, 21 Dec 2023 20:56:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703221002; x=1703825802; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dWqsP0YUMP6a7cu2oaHJUgxIQ36xA/a/DzZjUjmtwic=;
+        b=jJtwuhWS2xg0MEYz3cR/aqAo3s3e0dWU1gHyI30l2FbspXwQYH1cMftsZUewH4RsLn
+         c7qd5Uk6SU9zynEcb2I5Eb4dclM9AP1IikOP27+oE+/CAY82x0U+M2Cxz8tGxCsKX41c
+         Rflrs7YZvRT98aWupOvUx1COMrujMhSHrENbBm+IFbZvfIJDaD1BYntHEmwURTh/g8oV
+         l3xkbB69A9J4JHOj15rjHdiXt0o50rGaMXqTk7S5/OAG/Kw6WqZCT8ufqdmmsPMgBwkP
+         8Px5dRSheUEOWXjz3YoqdmjUHTXWtrbCH96ochvX+wujo+rd7hXr/dQmrop2v3hwFxKv
+         rAuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703221002; x=1703825802;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dWqsP0YUMP6a7cu2oaHJUgxIQ36xA/a/DzZjUjmtwic=;
+        b=cCUL1aSBlIAU2X0OIVFxHUJ6Jm+h9hV9casF5m6waMPQOuX4oGyuBUdsIBeOhKKc2H
+         QlO4gVXP+ns3srQbHdgIwRSjfvAu/lBi4DFgi51Il3d+4ERNmYOahmzX3F6Q/JFMgC8+
+         31QLxnZHSaJ5MfZjEFyNBdu2iq5uJ5QjW0NfuppfQa9Mkpj7zgUDx/HdC+USsY33fsT4
+         69KnOEWZxDLN0JltjW+2BSh8C5vcVtORWS+8eTzoXH3g1HyrVhzGeKUhNGumyxbpS6Qt
+         lNT3JrZvOxUMU0abkHIXCSamytZd4wkh8U8CXVxdxrhKQT6nneIUxgLxTPnBQwLibvFY
+         XZVg==
+X-Gm-Message-State: AOJu0YwGgZEDDBcryjr3H18Dx5SYLgMbkVvfxGE3gSM0YIvR6Qr1h2US
+	1fOCQhV4KWCkdkpUfTJEfTwPTjCp6NHuuk9NGcA=
+X-Google-Smtp-Source: AGHT+IGVJQsE6p52eLFhSLFIKzi97L31nRMNk+0XS/0jAbSL9nFWpk19E7VqjdYceCuuABPSwaacuEqItbhpCkg3+dk=
+X-Received: by 2002:a17:90a:d158:b0:28b:8fe8:3e95 with SMTP id
+ t24-20020a17090ad15800b0028b8fe83e95mr2051176pjw.29.1703221001685; Thu, 21
+ Dec 2023 20:56:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--8.411300-8.000000
-X-TMASE-MatchedRID: K02MXwpCiCtLbaTfilVXfTPDkSOzeDWWf6/Md8Lb2l/1gF7PCEF9bli5
-	r+TKtIsr64Ta3P14gV2y7ec+ITUwMzW+K/PcvqBra0aUozXm0DYh9mNF8ZPJ2Cz+5QCTrE/sgK6
-	qCGa1Z9euDlY3VLd7CFn74Xleqcq0QBI3/CURWxx05zsoB1UKTqk89YpdLgI7DpCUEeEFm7AtiD
-	c0qML5ZNwAFNNtZv2wtcF3I8fd45iXBXaJoB9JZxRFJJyf5BJe3QfwsVk0UbuGrPnef/I+eqzZI
-	n3r7BwhnZgsMwbJ9WzENc1hpwdtvClyqLZvurBwC8XKjsVbJjU=
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--8.411300-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP: ACEFB8A57DD322DB60FA41F160643FA22A28B778E24856E957B2F5837CA286092000:8
-X-MTK: N
+References: <20231221104343.5557-1-2045gemini@gmail.com> <abc324aa-1ccc-c8fd-1437-a77465f6e4be@huaweicloud.com>
+ <CAOPYjvbfGZObUa+P5Bo_syLMpyMNEPU6SNm6xJPSqSZYREmNfw@mail.gmail.com>
+ <CAOPYjvYhEzeF3vdd9GXCX+k_-OmsE1yP7VNozcMt4vOyFLDAfw@mail.gmail.com> <ae9fc764-4765-8c13-8d59-56bc8582c094@huaweicloud.com>
+In-Reply-To: <ae9fc764-4765-8c13-8d59-56bc8582c094@huaweicloud.com>
+From: 20 39 <2045gemini@gmail.com>
+Date: Fri, 22 Dec 2023 12:56:06 +0800
+Message-ID: <CAOPYjvaDCFhFCSc+LhpDRq2ZB0jOP8xx0t3OVL95C3WfG-NimA@mail.gmail.com>
+Subject: Re: [PATCH] md/raid5: fix atomicity violation in raid5_cache_count
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: song@kernel.org, linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	baijiaju1990@outlook.com, BassCheck <bass@buaa.edu.cn>, 
+	"yukuai (C)" <yukuai3@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-To support CMDQ secure driver, move some reuseable definition to header.
-- define: e.g. CMDQ_GCE_NUM_MAX, CMDQ_THR_BASE, CMDQ_THR_SIZE.
-- struct: e.g. cmdq_thread, cmdq, cmdq_task.
-- include: e.g. <linux/clk.h>.
+Hi,
+We've updated to use READ_ONCE() in PATCH v2, Thank you for helpful advice.
+Best regards,
+Han
 
-Add "#include <linux/mailbox_controller.h>" for the function that takes
-"struct mbox_chan * chan" as a parameter. That may occur a build error
-if secure driver header includes the mtk-cmdq-mailbox.h.
-- function: e.g. cmdq_get_shift_pa(struct mbox_chan *chan).
-
-Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
----
- drivers/mailbox/mtk-cmdq-mailbox.c       | 30 ---------------------
- include/linux/mailbox/mtk-cmdq-mailbox.h | 33 ++++++++++++++++++++++++
- 2 files changed, 33 insertions(+), 30 deletions(-)
-
-diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index 5390b6488ebc..04321f7e10c3 100644
---- a/drivers/mailbox/mtk-cmdq-mailbox.c
-+++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -3,7 +3,6 @@
- // Copyright (c) 2018 MediaTek Inc.
- 
- #include <linux/bitops.h>
--#include <linux/clk.h>
- #include <linux/clk-provider.h>
- #include <linux/dma-mapping.h>
- #include <linux/errno.h>
-@@ -22,13 +21,10 @@
- 
- #define CMDQ_OP_CODE_MASK		(0xff << CMDQ_OP_CODE_SHIFT)
- #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
--#define CMDQ_GCE_NUM_MAX		(2)
- 
- #define CMDQ_CURR_IRQ_STATUS		0x10
- #define CMDQ_SYNC_TOKEN_UPDATE		0x68
- #define CMDQ_THR_SLOT_CYCLES		0x30
--#define CMDQ_THR_BASE			0x100
--#define CMDQ_THR_SIZE			0x80
- #define CMDQ_THR_WARM_RESET		0x00
- #define CMDQ_THR_ENABLE_TASK		0x04
- #define CMDQ_THR_SUSPEND_TASK		0x08
-@@ -59,32 +55,6 @@
- #define CMDQ_JUMP_BY_OFFSET		0x10000000
- #define CMDQ_JUMP_BY_PA			0x10000001
- 
--struct cmdq_thread {
--	struct mbox_chan	*chan;
--	void __iomem		*base;
--	struct list_head	task_busy_list;
--	u32			priority;
--};
--
--struct cmdq_task {
--	struct cmdq		*cmdq;
--	struct list_head	list_entry;
--	dma_addr_t		pa_base;
--	struct cmdq_thread	*thread;
--	struct cmdq_pkt		*pkt; /* the packet sent from mailbox client */
--};
--
--struct cmdq {
--	struct mbox_controller	mbox;
--	void __iomem		*base;
--	int			irq;
--	u32			irq_mask;
--	const struct gce_plat	*pdata;
--	struct cmdq_thread	*thread;
--	struct clk_bulk_data	clocks[CMDQ_GCE_NUM_MAX];
--	bool			suspended;
--};
--
- struct gce_plat {
- 	u32 thread_nr;
- 	u8 shift;
-diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-index f78a08e7c6ed..43eae45a08c9 100644
---- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-+++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-@@ -7,10 +7,17 @@
- #ifndef __MTK_CMDQ_MAILBOX_H__
- #define __MTK_CMDQ_MAILBOX_H__
- 
-+#include <linux/clk.h>
-+#include <linux/mailbox_controller.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/types.h>
- 
-+#define CMDQ_GCE_NUM_MAX		2
-+
-+#define CMDQ_THR_BASE			0x100
-+#define CMDQ_THR_SIZE			0x80
-+
- #define CMDQ_INST_SIZE			8 /* instruction is 64-bit */
- #define CMDQ_SUBSYS_SHIFT		16
- #define CMDQ_OP_CODE_SHIFT		24
-@@ -79,6 +86,32 @@ struct cmdq_pkt {
- 	bool			loop;
- };
- 
-+struct cmdq_thread {
-+	struct mbox_chan	*chan;
-+	void __iomem		*base;
-+	struct list_head	task_busy_list;
-+	u32			priority;
-+};
-+
-+struct cmdq {
-+	struct mbox_controller	mbox;
-+	void __iomem		*base;
-+	int			irq;
-+	u32			irq_mask;
-+	const struct gce_plat	*pdata;
-+	struct cmdq_thread	*thread;
-+	struct clk_bulk_data	clocks[CMDQ_GCE_NUM_MAX];
-+	bool			suspended;
-+};
-+
-+struct cmdq_task {
-+	struct cmdq		*cmdq;
-+	struct list_head	list_entry;
-+	dma_addr_t		pa_base;
-+	struct cmdq_thread	*thread;
-+	struct cmdq_pkt		*pkt; /* the packet sent from mailbox client */
-+};
-+
- u8 cmdq_get_shift_pa(struct mbox_chan *chan);
- 
- #endif /* __MTK_CMDQ_MAILBOX_H__ */
--- 
-2.18.0
-
+Yu Kuai <yukuai1@huaweicloud.com> =E4=BA=8E2023=E5=B9=B412=E6=9C=8822=E6=97=
+=A5=E5=91=A8=E4=BA=94 10:53=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Hi,
+>
+> =E5=9C=A8 2023/12/22 10:34, 20 39 =E5=86=99=E9=81=93:
+> > Hi Kuai,
+> >
+> > Thank you for your patience. This email is essentially the same as my
+> > previous one, only now adjusted to plain text format. I apologize for
+> > any inconvenience caused earlier.
+> >
+> > Thanks for your email and the insightful points you've raised. Let me
+> > clarify a few aspects regarding the raid5_cache_count() and
+> > raid5_set_cache_size() functions.
+> >
+> > 1. Callback Function in setup_conf(): You mentioned that
+> > raid5_cache_count() is called from setup_conf() where reconfig_mutex
+> > is held. While this is true, it's important to note that
+> > raid5_cache_count() is actually initialized as a callback function in
+> > setup_conf(), as described in /include/linux/shrinker.h. This means it
+> > could be invoked later in a context where the reconfig_mutex isn't
+> > necessarily held. The documentation in shrinker.h indicates potential
+> > invocation scenarios beyond the initial setup context.
+>
+> Yes, you're right. I misread the code. Then this patch looks good to me,
+> just one nit below.
+>
+> >>>> @@ -7390,11 +7390,12 @@ static unsigned long raid5_cache_count(struc=
+t shrinker *shrink,
+> >>>>                                       struct shrink_control *sc)
+> >>>>    {
+> >>>>        struct r5conf *conf =3D shrink->private_data;
+> >>>> -
+> >>>> -     if (conf->max_nr_stripes < conf->min_nr_stripes)
+> >>>> +     int max_stripes =3D conf->max_nr_stripes;
+> >>>> +     int min_stripes =3D conf->min_nr_stripes;
+>
+> Since read and write can concurrent, I'll suggest to use READ_ONCE() and
+> WRITE_ONCE() for max/min_nr_stripes.
+>
+> Thanks,
+> Kuai
+> >>>> +     if (max_stripes < min_stripes)
+> >>>>                /* unlikely, but not impossible */
+> >>>>                return 0;
+> >>>> -     return conf->max_nr_stripes - conf->min_nr_stripes;
+> >>>> +     return max_stripes - min_stripes;
+> >>>>    }
+> >>>>
+> >>>>    static struct r5conf *setup_conf(struct mddev *mddev)
+> >>>>
+> >>>
+> > .
+> >
+>
