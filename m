@@ -1,66 +1,63 @@
-Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2218CFBE2;
-	Fri, 22 Dec 2023 09:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-	by ex01.ufhost.com (Postfix) with ESMTP id 6A19C24E2E6;
-	Fri, 22 Dec 2023 17:19:40 +0800 (CST)
-Received: from EXMBX061.cuchost.com (172.16.6.61) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 22 Dec
- 2023 17:19:40 +0800
-Received: from [192.168.125.131] (113.72.145.47) by EXMBX061.cuchost.com
- (172.16.6.61) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 22 Dec
- 2023 17:19:39 +0800
-Message-ID: <c94b377a-1e21-4361-ae82-ca84d1dce60a@starfivetech.com>
-Date: Fri, 22 Dec 2023 17:11:17 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 080ABDF42
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 09:21:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HhvmNcVF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62CAFC433C8;
+	Fri, 22 Dec 2023 09:21:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703236886;
+	bh=lS5AXFMR/oA1w2ewrBpyK0zMvQfBfEvtG0ka4k7g5OQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HhvmNcVFQlhrA3YzfgfJlUsClmlAdlKlnEeQMz02ys1ywmYBKTzYXRusZ6P8mbu1N
+	 QbE0jD+TwsMJOU1hMPOrY034LF6l9lQIXKX9HYFvAHYc2P8A0QKnspEe1KbcgElTyD
+	 U2Zi3yfdyh228bg1AQ0V7B3tJ0gyJy/eaj4dHA0WeGY4d34HJ99qj1M8xl4UNqsaP+
+	 J+RF78UUTZjltvyPMLfqA17n9TVR+LdryhCFMxOWPIk8akTfruy5zUeSYahXLWS36u
+	 dFnJeI/9IAwzMmyynDIjlBtyNfXHyOfonE82wAoIOExpY0P+6UCOfC0jpEouL+KECA
+	 NSyAyqfV8rxCg==
+Date: Fri, 22 Dec 2023 14:51:19 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: "Mukunda,Vijendar" <vijendar.mukunda@amd.com>
+Cc: broonie@kernel.org, alsa-devel@alsa-project.org,
+	Basavaraj.Hiregoudar@amd.com, Sunil-kumar.Dommati@amd.com,
+	pierre-louis.bossart@linux.intel.com, vinod.koul@intel.com,
+	venkataprasad.potturu@amd.com,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Sanyog Kale <sanyog.r.kale@intel.com>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/12] drivers: soundwire: refactor soundwire pads enable
+Message-ID: <ZYVVD2mL5kAePXDE@matsya>
+References: <20231221073558.3181911-1-Vijendar.Mukunda@amd.com>
+ <20231221073558.3181911-5-Vijendar.Mukunda@amd.com>
+ <ZYRqEbVADgU4fNtB@matsya>
+ <6d98c43d-fb90-4cfa-a22e-8fd6d5a6eb50@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] ASoC: starfive: Add drivers of Cadence
- Multi-Channel I2S Controller
-To: Mark Brown <broonie@kernel.org>
-CC: Liam Girdwood <lgirdwood@gmail.com>, Claudiu Beznea
-	<Claudiu.Beznea@microchip.com>, Jaroslav Kysela <perex@perex.cz>, "Takashi
- Iwai" <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor.dooley@microchip.com>, Walker Chen <walker.chen@starfivetech.com>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>
-References: <20231221033223.73201-1-xingyu.wu@starfivetech.com>
- <20231221033223.73201-3-xingyu.wu@starfivetech.com>
- <861f9b28-863d-48b0-8491-add4a286597e@sirena.org.uk>
-Content-Language: en-US
-From: Xingyu Wu <xingyu.wu@starfivetech.com>
-In-Reply-To: <861f9b28-863d-48b0-8491-add4a286597e@sirena.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX061.cuchost.com
- (172.16.6.61)
-X-YovoleRuleAgent: yovoleflag
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6d98c43d-fb90-4cfa-a22e-8fd6d5a6eb50@amd.com>
 
-On 2023/12/21 20:55, Mark Brown wrote:
-> On Thu, Dec 21, 2023 at 11:32:23AM +0800, Xingyu Wu wrote:
-> 
->>  sound/soc/starfive/cdns-jh8100-i2s-pcm.c | 262 ++++++++
->>  sound/soc/starfive/cdns-jh8100-i2s.c     | 727 +++++++++++++++++++++++
->>  sound/soc/starfive/cdns-jh8100-i2s.h     | 171 ++++++
-> 
-> If this is a Cadence IP why is the entire driver SoC specific?
+On 22-12-23, 12:45, Mukunda,Vijendar wrote:
+> On 21/12/23 22:08, Vinod Koul wrote:
 
-This a new driver about this Cadence I2S controller. Should I create a new folder and file like this:
+> > so the code is copied from a GPL declared file to now and GPL + BSD one!
+> > Have you had lawyers look into this... why change one file license ?
+> As per recommendations from our legal team, we have updated the license as dual
+> one for amd_init.c file.
+> We have also observed that license terms should be updated for other files as
+> well (amd_manager.c, amd_manager.h & sdw_amd.h) as dual one, which we have
+> planned to submit as a supplement patch.
 
-sound/soc/cdns/cdns-i2s*
+Lets change that first before we move code from one license file to
+another
 
-and I use different compatible to support other SoC like JH8100?
+Btw why would you want to do the change of license form GPL to dual?
 
-Best regards,
-Xingyu Wu
+-- 
+~Vinod
