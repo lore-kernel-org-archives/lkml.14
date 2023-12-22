@@ -1,96 +1,67 @@
-Received: from helios.alatek.com.pl (helios.alatek.com.pl [85.14.123.227])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8830733CDA;
-	Fri, 22 Dec 2023 23:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alatek.krakow.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alatek.krakow.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9185233CDF
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 23:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iwanders.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iwanders.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=alatek.krakow.pl header.i=@alatek.krakow.pl header.b="YD2U7Fjc"
-Received: from localhost (localhost [127.0.0.1])
-	by helios.alatek.com.pl (Postfix) with ESMTP id 754EB2D2069A;
-	Sat, 23 Dec 2023 00:17:39 +0100 (CET)
-Received: from helios.alatek.com.pl ([127.0.0.1])
- by localhost (helios.alatek.com.pl [127.0.0.1]) (amavis, port 10032)
- with ESMTP id UQjBv7TfVS_c; Sat, 23 Dec 2023 00:17:35 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by helios.alatek.com.pl (Postfix) with ESMTP id F04BC2D20699;
-	Sat, 23 Dec 2023 00:17:34 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 helios.alatek.com.pl F04BC2D20699
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alatek.krakow.pl;
-	s=99EE5E86-D06A-11EC-BE24-DBCCD0A148D3; t=1703287055;
-	bh=dKwuJE/p8RRTNPJmOWDd2RM8yZsZtfB+uaBsiCI6SDY=;
-	h=From:To:Date:Message-Id:MIME-Version;
-	b=YD2U7Fjc8wqNsYnZ4NjXrRJWtf8dNNvKp9nd7OW8jIZm+YwNLcoIy9aSc55BhVQQl
-	 xxAV+XXOhN4tErC2HOMWw8M2gROfgILKTYtrNxoxQWT5evjL3mjpiuDJmGZijo8fha
-	 PQZrIdR/HUe6H0G8E7oKKgDxOgWQdriazcAma3JGs56OJ7yXwAZlsBGWaoX2owzDlk
-	 lG2RI3PYrrh2i7DuT6s/EAIOoIYO/R1Kt2mvByKJosxRkwNj3hCgOtJaoEnuDEN9Ud
-	 mPrra2vO1ugam8aR4sUmseU/+zC14Q9tNSBy+bMj3Xo+PQfUG03kPAp+jWw46XhFFG
-	 JecDVXsIbgV1g==
-X-Virus-Scanned: amavis at alatek.com.pl
-Received: from helios.alatek.com.pl ([127.0.0.1])
- by localhost (helios.alatek.com.pl [127.0.0.1]) (amavis, port 10026)
- with ESMTP id tkTwjA1T9G-8; Sat, 23 Dec 2023 00:17:34 +0100 (CET)
-Received: from localhost.localdomain (unknown [10.125.125.1])
-	by helios.alatek.com.pl (Postfix) with ESMTPSA id 68A792D20696;
-	Sat, 23 Dec 2023 00:17:34 +0100 (CET)
-From: Jan Kuliga <jankul@alatek.krakow.pl>
-To: lizhi.hou@amd.com,
-	brian.xu@amd.com,
-	raj.kumar.rampelli@amd.com,
-	vkoul@kernel.org,
-	michal.simek@amd.com,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: jankul@alatek.krakow.pl,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] dmaengine: xilinx: xdma: Fix kernel-doc warnings
-Date: Sat, 23 Dec 2023 00:17:28 +0100
-Message-Id: <20231222231728.7156-1-jankul@alatek.krakow.pl>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=iwanders.net header.i=@iwanders.net header.b="HEk8CCyX"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-42784b919b9so16904391cf.3
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 15:20:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=iwanders.net; s=google; t=1703287225; x=1703892025; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7Jg7LMcYWmIaO2CCXqAm9eI5kBh+J6fmP6S0jJw0ctc=;
+        b=HEk8CCyXVpRTXfZspfj39SUyS4DU/eQMnZmT1tGeQI1AnYYGZ5io0zrwQIVezuMlsA
+         lFLn2Q6ou44DLBmfg5eS/4ioHHmqTxfW5SlSLUx0z4amDEG8U4BvXQfRp8PyS6X5ytMB
+         XZ88VD0noTiU/PKiTO06Jq/hWTTlU9i4CDu2g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703287225; x=1703892025;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7Jg7LMcYWmIaO2CCXqAm9eI5kBh+J6fmP6S0jJw0ctc=;
+        b=nrSpkyOJHZezSWiU6dBtDQKQkL0aK6cTYQKB7saLq7YBK4wyUzzDgMFUudqQmXTlVc
+         ZkJdE3aIAsSj+RBYIKiXktU5Yq+fRMOkAb+bg3ckva8H+ThNEPC2jtC3OMdGpNb/oXZu
+         R1TDfx4h7dnZ40QJzcJOV/EuIv8rSa3dVkZtdu6I53kvcmhLp0ypxlpQ3btnmJSHlSmt
+         RQyOF8/F4ehScBD9iJtfRYEDRg1/IsSBGFOEea3QaotL2ij5PCVQOb+85X6U2SHC45J+
+         Li4mx37lE5a79p0UOTpHuTVbKD7tg6rCtflnsJiP2T8KdNF3T12/La+ZQFY1LY4Mg23O
+         Boyw==
+X-Gm-Message-State: AOJu0YwD7xdgA7mvB/g3aXpGAS9UVx6tCnlmw0FAWKD1o/sKGgaRXspO
+	Yb4dGU4Z6v/05wSca6G0at6VOm0xj1boRQ==
+X-Google-Smtp-Source: AGHT+IExPRV0xYIbsvxIADUup4X9pzFtDEINzww7SWOX1CCloC1or5IhgO/WejPOcQTfeBlzLDDffA==
+X-Received: by 2002:a05:622a:1012:b0:403:a8fa:b4f5 with SMTP id d18-20020a05622a101200b00403a8fab4f5mr2938148qte.4.1703287225620;
+        Fri, 22 Dec 2023 15:20:25 -0800 (PST)
+Received: from eagle.lan (24-246-30-234.cable.teksavvy.com. [24.246.30.234])
+        by smtp.gmail.com with ESMTPSA id df24-20020a05622a0ed800b004275e9cdf15sm2226878qtb.11.2023.12.22.15.20.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Dec 2023 15:20:25 -0800 (PST)
+From: Ivor Wanders <ivor@iwanders.net>
+To: linux@roeck-us.net
+Cc: corbet@lwn.net,
+	ivor@iwanders.net,
+	jdelvare@suse.com,
+	linux-doc@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	luzmaximilian@gmail.com,
+	rdunlap@infradead.org
+Subject: Re: [PATCH v2] hwmon: clarify intent of fan min/max
+Date: Fri, 22 Dec 2023 18:20:14 -0500
+Message-Id: <20231222232014.4561-1-ivor@iwanders.net>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <632bd36b-1652-4c74-9d78-ddea6ce77a00@roeck-us.net>
+References: <632bd36b-1652-4c74-9d78-ddea6ce77a00@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
 
-Replace hyphens with colons where necessary.
+> NACK, because that text would be required for _all_ hwmon sysfs
+> attributes which simply does not make sense to me.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202312230634.3AIMQ3OP-lkp@i=
-ntel.com/
-Signed-off-by: Jan Kuliga <jankul@alatek.krakow.pl>
----
- drivers/dma/xilinx/xdma.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Fair enough, thank you for your time and comments.
 
-diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
-index 4ebc90b41bdb..927c68ed6bbc 100644
---- a/drivers/dma/xilinx/xdma.c
-+++ b/drivers/dma/xilinx/xdma.c
-@@ -548,11 +548,11 @@ static void xdma_synchronize(struct dma_chan *chan)
-=20
- /**
-  * xdma_fill_descs - Fill hardware descriptors with contiguous memory bl=
-ock addresses
-- * @sw_desc - tx descriptor state container
-- * @src_addr - Value for a ->src_addr field of a first descriptor
-- * @dst_addr - Value for a ->dst_addr field of a first descriptor
-- * @size - Total size of a contiguous memory block
-- * @filled_descs_num - Number of filled hardware descriptors for corresp=
-onding sw_desc
-+ * @sw_desc: tx descriptor state container
-+ * @src_addr: Value for a ->src_addr field of a first descriptor
-+ * @dst_addr: Value for a ->dst_addr field of a first descriptor
-+ * @size: Total size of a contiguous memory block
-+ * @filled_descs_num: Number of filled hardware descriptors for correspo=
-nding sw_desc
-  */
- static inline u32 xdma_fill_descs(struct xdma_desc *sw_desc, u64 src_add=
-r,
- 				  u64 dst_addr, u32 size, u32 filled_descs_num)
---=20
-2.34.1
-
+~Ivor
