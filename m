@@ -1,45 +1,45 @@
 Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1841035EEB;
-	Fri, 22 Dec 2023 17:42:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CFA635F1C;
+	Fri, 22 Dec 2023 17:42:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DVq0kSZ3"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-336746a545fso1256661f8f.0;
-        Fri, 22 Dec 2023 09:42:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DqPUl6h+"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-33666fb9318so1833376f8f.2;
+        Fri, 22 Dec 2023 09:42:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703266954; x=1703871754; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1703266955; x=1703871755; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fVOgOlLPAvEr0sLISb9E6/KYZz//LU2ejxtiVGPulEQ=;
-        b=DVq0kSZ3Gi2uNQEj24tCvX8m5HTjKxRFhMlYeehzN2dKuam8p1auBI0t/REFkWvLjS
-         /6VuLMr/vVs/8uPIEUs+xmsW99QJ+wLi2K697ZMF6OUlGRRHVbXdc1Yi7hrdDK9sPziz
-         2bS0FJ/8z+3+IltDrNPscv0J7orEuxe060N/rfyHWfvDGVWSMaLHmm4CHrLs1CVuKmkN
-         W6/gE8RE9j1AjVWsIEYXUrJ4tmXl41dXdb+mzR9BYW1Gx7xln8qNLWt7zkUK8oBwC0AV
-         XNA8wt/dDEq+bVo3QB1jJ8ZdHx/eyU7qfxH0qamOoxivHpt6spa9lkjMQCuiY+8tw4s9
-         GJsQ==
+        bh=EoHup+tJ34Km8AW+9n07V9L+jLAh9fwpCrHBqqRCe/E=;
+        b=DqPUl6h+jeKUhEhX7g3uF44PAkkTMAUGKkL1G4MuZGHH/QiQWJr0L1TZCpHo/RCP1h
+         0wocgZocYFrVYY5KPYizuXdGZdRbbYHdOY4zroZ/NPxJFxXpKXk+i4sRKlqRqVSFl56A
+         qHQHYN7psI/Kv8VjbiH7xY1QsostTvRT41QZeeT3vAqTVS9RPcaQf4FEkCWNYhw025qE
+         RfV+XzBBN4Bce27+ZiOsLljtKvWFnivvIYiSrcmUtHcbnMl8jgfzLLq/kOvjUPp23kMY
+         DXwwkHfpyLxUpILDGZTFurMMqCey+q5d2J0xf30vA77njMSD21W7iQY168oU1dXZZ6Ta
+         kJcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703266954; x=1703871754;
+        d=1e100.net; s=20230601; t=1703266955; x=1703871755;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fVOgOlLPAvEr0sLISb9E6/KYZz//LU2ejxtiVGPulEQ=;
-        b=t/PRUDPpUqq4KaHEOH9giibOPvYo18HyD8h5Jx8pmBFLK30C7/BcXNfHGcExnblhn5
-         KtvFnVveeXF6uN5k6l5q0UIPI/KN89iUu0J9WowCAzb29XZc4QeR+L9fq44uJ5qw2KgH
-         AgOsNHWGwm4DXqWnNvBoyiHN8aWrw+3K6MFeZzPs+ei9L1s/28XDwMtpbxBQdzPJ6nVD
-         xzajJH30IdWIkg2+iOQ9LwsFlztmagpuI3wqJYr2MA7X7uWdDQFsusiWuPOKyF472ML2
-         SZn4vuXu3vti3L280USW4MMYiFmnDC4xstnAoNxQwBvuN9vJv3YfTEZoza7n+4LbNl9l
-         3q3g==
-X-Gm-Message-State: AOJu0Yy1uLkHqWEI1HefKNqtMgQtTPrWSED99uFn+M2tctHJ7rpQ149O
-	6pxoHTj5ZH1GcQw3exX0+w==
-X-Google-Smtp-Source: AGHT+IG0VO/bIXEiwSNnQQTPGjLRg14lP+2fe564PcKz/X7g3SD2+YUJXu7x0ci0ig2sXjCTtOJ87A==
-X-Received: by 2002:adf:f74a:0:b0:336:8030:214d with SMTP id z10-20020adff74a000000b003368030214dmr748542wrp.19.1703266954331;
+        bh=EoHup+tJ34Km8AW+9n07V9L+jLAh9fwpCrHBqqRCe/E=;
+        b=c/MJok5O1A9nwdzJUOwe+MJMs8Ooq1MUqowm0mCNzevSZFiTBvyAQptCA9Owc8khKi
+         Lkrr+D17Xrqzl5D4VX1zzbu7L3D956ONlXBz0wg+Ik34uA9hGY3Bfgkv1lLoL4+q+COd
+         KDNHAYNZimfVuZLf6bGkDAbHqjpp9wWb+h8iUQ5Zdpb9juhH14dthIddBOfLIHiclLwz
+         XBehu+ZtHqq5YY9TlnRecYpKd3OihWvSjcN30PuDvV7yjQyRor1Fb+vbkRsJDuyiX6Tm
+         Vq9KGTvGVHiq84K3TK4aBBXT3hsXnIcaYa9w5KJlSSxGgGe4wXLMqv0hdUKFqTvCKfSR
+         APtQ==
+X-Gm-Message-State: AOJu0Yz7kmzS33qPiANxFoJ3A2ShW7xGNTwLt4h47cIleucALvvKQJJz
+	Dd7NVpJjVsmZrMi2r3L+Zg==
+X-Google-Smtp-Source: AGHT+IEnGIoJqNWWyiWZwjEzr0L5g9377mlPC0xqKPYwtqdze7Um6irPMyQs814kV87bqN1XpP/smQ==
+X-Received: by 2002:a5d:400f:0:b0:336:8063:e066 with SMTP id n15-20020a5d400f000000b003368063e066mr798319wrp.52.1703266954984;
         Fri, 22 Dec 2023 09:42:34 -0800 (PST)
 Received: from U4.lan ([2a02:810b:f40:4300:f3ae:2788:7e03:f44])
-        by smtp.gmail.com with ESMTPSA id w10-20020adfec4a000000b00336670abdcasm4777116wrn.40.2023.12.22.09.42.33
+        by smtp.gmail.com with ESMTPSA id w10-20020adfec4a000000b00336670abdcasm4777116wrn.40.2023.12.22.09.42.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 22 Dec 2023 09:42:34 -0800 (PST)
 From: Alex Bee <knaerzche@gmail.com>
@@ -59,9 +59,9 @@ Cc: David Airlie <airlied@gmail.com>,
 	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Alex Bee <knaerzche@gmail.com>
-Subject: [PATCH v4 17/29] drm/rockchip: inno_hdmi: Drop irq struct member
-Date: Fri, 22 Dec 2023 18:42:08 +0100
-Message-ID: <20231222174220.55249-18-knaerzche@gmail.com>
+Subject: [PATCH v4 18/29] drm/rockchip: inno_hdmi: Remove useless include
+Date: Fri, 22 Dec 2023 18:42:09 +0100
+Message-ID: <20231222174220.55249-19-knaerzche@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20231222174220.55249-1-knaerzche@gmail.com>
 References: <20231222174220.55249-1-knaerzche@gmail.com>
@@ -73,7 +73,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The struct member irq isn't used anywhere. Drop it.
+The inclusion syscon.h isn't used anywhere. Remove it.
 
 Signed-off-by: Alex Bee <knaerzche@gmail.com>
 Reviewed-by: Maxime Ripard <mripard@kernel.org>
@@ -91,17 +91,17 @@ changes in v4:
  1 file changed, 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/rockchip/inno_hdmi.c b/drivers/gpu/drm/rockchip/inno_hdmi.c
-index 51c1a69dfcc0..138cd4287dea 100644
+index 138cd4287dea..c306db90832a 100644
 --- a/drivers/gpu/drm/rockchip/inno_hdmi.c
 +++ b/drivers/gpu/drm/rockchip/inno_hdmi.c
-@@ -45,7 +45,6 @@ struct inno_hdmi_i2c {
- struct inno_hdmi {
- 	struct device *dev;
- 
--	int irq;
- 	struct clk *pclk;
- 	void __iomem *regs;
- 
+@@ -10,7 +10,6 @@
+ #include <linux/delay.h>
+ #include <linux/err.h>
+ #include <linux/hdmi.h>
+-#include <linux/mfd/syscon.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
 -- 
 2.43.0
 
