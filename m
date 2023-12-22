@@ -1,148 +1,126 @@
-Received: from mail.avm.de (mail.avm.de [212.42.244.94])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp56.i.mail.ru (smtp56.i.mail.ru [95.163.41.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA83210F2;
-	Fri, 22 Dec 2023 14:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9BFE200CC
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 14:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inbox.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inbox.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="a5bnrp3+"
-Received: from mail-auth.avm.de (unknown [IPv6:2001:bf0:244:244::71])
-	by mail.avm.de (Postfix) with ESMTPS;
-	Fri, 22 Dec 2023 15:30:00 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
-	t=1703255400; bh=vamAEQWaMS2pzzbZEbLWxeCL7hYWTn3s5bEZy3E82pg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a5bnrp3+1W/cTQ6j0tdZvUWkhO9WpkuPNr9Qwaq/3qqAcntteC2dbsQ6qDV+FzG8l
-	 cXe5GHOICDv/UxobCqmkACyrU8dF42DzbZbQHODYc2MNWp5C10jbEXh5a+Dn3ZUtQp
-	 nigVNdxgUk2uaeqEBCOTMlGslR2fxpEh4Nb1tS+I=
-Received: from buildd.core.avm.de (buildd-sv-01.avm.de [172.16.0.225])
-	by mail-auth.avm.de (Postfix) with ESMTPA id 40E8C8041D;
-	Fri, 22 Dec 2023 15:30:00 +0100 (CET)
-Received: by buildd.core.avm.de (Postfix, from userid 1000)
-	id 34007180C9F; Fri, 22 Dec 2023 15:30:00 +0100 (CET)
-Date: Fri, 22 Dec 2023 15:30:00 +0100
-From: Nicolas Schier <n.schier@avm.de>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Nicolas Schier <nicolas@fjasle.eu>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] kbuild: deb-pkg: do not query DEB_HOST_MULTIARCH
-Message-ID: <ZYWdaCiNFsseZWWS@buildd.core.avm.de>
-Mail-Followup-To: Masahiro Yamada <masahiroy@kernel.org>,
-	linux-kbuild@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	linux-kernel@vger.kernel.org
-References: <20231219181957.1449958-1-masahiroy@kernel.org>
+	dkim=pass (2048-bit key) header.d=inbox.ru header.i=@inbox.ru header.b="ExlnJcmV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru;
+	s=mail4; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References
+	:Cc:To:Subject:MIME-Version:Date:Message-ID:From:Sender:Reply-To:To:Cc:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+	List-Archive:X-Cloud-Ids:Disposition-Notification-To;
+	bh=Nf9azq1dr1z2dpFM9eMLA/tB6ok0rLUWyMMPYho3Nds=; t=1703255985; x=1703345985; 
+	b=ExlnJcmVqWPK2YskFp10s/Fz78k+7eS7EUEBL5angc3bGoJDlzWAq9JAs9GwTgPtjK94Bd184Go
+	/6x+3W09KA3UnXE4oaYDOB6ht4rEUeQee29YA9AyeE4p4hv4PrA8H3qGn7t/E/zM8EusHnFrAHsdh
+	oixtFK0MjxGU7qYychBeWw4wm6oX4V9yqB/tHfoyqONBgkJ5RPsKvor8EjrQtTnCTyk4fDTu+0NaH
+	U6Y3iMOZm6D6ki6QkxPYe4MkGkOvgY2Vhsy83bhyrHrYKyw/7+b+eZEjDGj1YBYZtdqQ/80dlpViS
+	EjOZRKeOvQoly7x19+F479jQ8z0Coeq2BEug==;
+Received: by smtp56.i.mail.ru with esmtpa (envelope-from <fido_max@inbox.ru>)
+	id 1rGggZ-002Msc-0P; Fri, 22 Dec 2023 17:39:35 +0300
+Message-ID: <c53c22dd-c482-4808-bdd7-e81c01c04f9e@inbox.ru>
+Date: Fri, 22 Dec 2023 17:39:34 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20231219181957.1449958-1-masahiroy@kernel.org>
-Organization: AVM GmbH
-X-purgate-ID: 149429::1703255400-7166592C-4C547590/0/0
-X-purgate-type: clean
-X-purgate-size: 3222
-X-purgate-Ad: Categorized by eleven eXpurgate (R) http://www.eleven.de
-X-purgate: This mail is considered clean (visit http://www.eleven.de for further information)
-X-purgate: clean
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] riscv: set ARCH_DMA_DEFAULT_COHERENT if
+ RISCV_DMA_NONCOHERENT is not set
+To: Christoph Hellwig <hch@lst.de>, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ robh@kernel.org, mpe@ellerman.id.au, aou@eecs.berkeley.edu,
+ palmer@dabbelt.com, paul.walmsley@sifive.com, Conor Dooley <conor@kernel.org>
+References: <20231221185152.327231-1-fido_max@inbox.ru>
+ <20231221-discount-decade-e306e5878c46@spud>
+ <f31d929c-fa0a-4046-be05-38e92afa5d92@flygoat.com>
+ <20231222041428.GA2803@lst.de>
+Content-Language: en-US
+From: Maxim Kochetkov <fido_max@inbox.ru>
+In-Reply-To: <20231222041428.GA2803@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp56.i.mail.ru; auth=pass smtp.auth=fido_max@inbox.ru smtp.mailfrom=fido_max@inbox.ru
+X-Mailru-Src: smtp
+X-7564579A: 646B95376F6C166E
+X-77F55803: 4F1203BC0FB41BD9F008C97756F746CAA89CC280A9C73C8312970F1BEE6B7403182A05F5380850405CF697BA74B6A9674E373B0751E947592A9A657C7DC718F9C700AD7340762BFD
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE70386A6136E33FD82EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006377E85B0EC44E8FD73EA1F7E6F0F101C6723150C8DA25C47586E58E00D9D99D84E1BDDB23E98D2D38B73AB1701401CD8713C30587881FF020BBA20AE9EC107FDF020879F7C8C5043D14489FFFB0AA5F4BF1661749BA6B9773578FCF50C7EAF9C588941B15DA834481FA18204E546F3947CFA486DC37A503D0BF6B57BC7E64490618DEB871D839B7333395957E7521B51C2DFABB839C843B9C08941B15DA834481F8AA50765F790063741F7343E26298569389733CBF5DBD5E9B5C8C57E37DE458B9E9CE733340B9D5F3BBE47FD9DD3FB595F5C1EE8F4F765FC2EE5AD8F952D28FBE2021AF6380DFAD18AA50765F790063735872C767BF85DA227C277FBC8AE2E8B08F9A42B2210255C75ECD9A6C639B01B4E70A05D1297E1BBCB5012B2E24CD356
+X-C1DE0DAB: 0D63561A33F958A5422B6D5EE5F5B38D9D624E766B6FDA5FEE6E75F450048A99F87CCE6106E1FC07E67D4AC08A07B9B0DB8A315C1FF4794DBDAD6C7F3747799A
+X-C8649E89: 1C3962B70DF3F0ADBF74143AD284FC7177DD89D51EBB7742DC8270968E61249B1004E42C50DC4CA955A7F0CF078B5EC49A30900B95165D34CAFBC0A7A4BEEE01EF0AC99BFA6B3341E98FB265FC4AF88B1E2C477CFBF0BD0176E9627D99F0F6D91D7E09C32AA3244CEBDF470873A2F30615B62B3E339914E151E887DA02A9F7BFAFF760E3CF2A505DB6C6411D86935C892AB2189BCAD71E73D640157F23F2FFE137E69C174A41D00C
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2bioj2irTGYQEnL0n463ASQOuOg==
+X-Mailru-Sender: 689FA8AB762F7393590D8C940224AE3337E863210FDBA5BD78E186746C83CDCF98CC072019C18A892CA7F8C7C9492E1F2F5E575105D0B01ADBE2EF17B331888EEAB4BC95F72C04283CDA0F3B3F5B9367
+X-Mras: Ok
 
-On Wed, Dec 20, 2023 at 03:19:55AM +0900, Masahiro Yamada wrote:
-> Since commit 491b146d4c13 ("kbuild: builddeb: Eliminate debian/arch
-> use"), the direct execution of debian/rules fails with:
+
+
+On 22.12.2023 07:14, Christoph Hellwig wrote:
+> On Thu, Dec 21, 2023 at 10:27:33PM +0000, Jiaxun Yang wrote:
+>>
+>>
+>> 在 2023/12/21 20:29, Conor Dooley 写道:
+>>> + Christoph
+>>>
+>>> I don't think this patch is correct. Regardless of whether we support
+>>> cache management operations, DMA is assumed to be coherent unless
+>>> peripherals etc are specified to otherwise in DT (or however ACPI deals
+>>> with that kind of thing).
+>>>
+>>> What problem are you trying to solve here?
+>>>
+>>> On Thu, Dec 21, 2023 at 09:51:52PM +0300, Maxim Kochetkov wrote:
+>>>> Not all the RISCV are DMA coherent by default.
+>>
+>> Sorry for chime in here.
+>> IMO if your platform is not coherent by default, just insert
+>> "dma-noncoherent"
+>> at devicetree root node.
 > 
->   dpkg-architecture: error: unknown option 'DEB_HOST_MULTIARCH'
+> Exactly.  ARCH_DMA_DEFAULT_COHERENTis a setting that just says for
+> a given architecture assumes coherent unless otherwise specified,
+> which has historically been the case for mips.  Not setting it means
+> non-coherent unless specified, which has historially been the case
+> for arm.
 > 
-> I am not sure how important to support such a use case, but at least
-> the current code:
+> RISC-V starte out without support for non-coherent DMA, and high ups
+> in RISCV still told me in 2019 that RISC-V doesn't need cache
+> management instructions because no new hardware would ever not be
+> dma coherent.  Yeah, right..
 > 
->   dpkg-architecture -a$DEB_HOST_ARCH -qDEB_HOST_MULTIARCH
+> Anyay, Linux for RISC-V has historically been coherent only and then
+> coherent default, so this option is wrong, and you need to mark
+> you platform as non-coherent by inserting dma-noncoherent somewhere.
 > 
-> ... looks weird because:
-> 
->  - For this code to work correctly, DEB_HOST_ARCH must be defined.
->    In this case, DEB_HOST_MULTIARCH is likely defined, so there is no
->    need to query DEB_HOST_MULTIARCH in the first place. This is likely
->    the case where the package build was initiated by dpkg-buildpackage.
-> 
->  - If DEB_HOST_MULTIARCH is undefined, DEB_HOST_ARCH is likely undefined.
->    So, you cannot query DEB_HOST_MULTIARCH in this way. This is mostly
->    the case where debian/rules is directly executed.
-> 
-> If we want to run debian/rules directly, we can revert 491b146d4c13 or
-> add code to remember DEB_HOST_MULTIARCH, but I chose to remove the
-> useless code for now.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
+Conor, Christoph, Jiaxun, thanks for quick feedback!
 
-thanks.  Fixing the non-functional things is obviously a good thing.
-
-Reviewed-by: Nicolas Schier <n.schier@avm.de>
-
-
-Iff we'd like to be able to call debian/rules directly, do we really
-have to remember DEB_HOST_MULTIARCH, or just DEB_HOST_ARCH?
-
-In the latter case, might this be a sufficient way to allow calling
-debian/rules again?
-
-diff --git a/scripts/package/debian/rules b/scripts/package/debian/rules
-index 3dafa9496c63..e3e0001e7556 100755
---- a/scripts/package/debian/rules
-+++ b/scripts/package/debian/rules
-@@ -3,7 +3,9 @@
- 
- include debian/rules.vars
- 
--srctree ?= .
-+DEB_HOST_ARCH ?= $(shell cat debian/arch)
-+
-+srctree ?= $(or $(wildcard source), .)
- 
- ifneq (,$(filter-out parallel=1,$(filter parallel=%,$(DEB_BUILD_OPTIONS))))
-     NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
-
-
-... but the more I think about it, I am not convinced that we want to
-use the debian/arch file.  Actually I think it would be nice if we
-strive for an architecture independent source package instead of
-engraving the architecture even more.
-
-
-Nevertheless, your patch looks good to me.
-
-Kind regards,
-Nicolas
-
-
-
-> 
->  scripts/package/builddeb | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/scripts/package/builddeb b/scripts/package/builddeb
-> index 2fe51e6919da..2eb4910f0ef3 100755
-> --- a/scripts/package/builddeb
-> +++ b/scripts/package/builddeb
-> @@ -171,9 +171,8 @@ install_libc_headers () {
->  
->  	# move asm headers to /usr/include/<libc-machine>/asm to match the structure
->  	# used by Debian-based distros (to support multi-arch)
-> -	host_arch=$(dpkg-architecture -a$DEB_HOST_ARCH -qDEB_HOST_MULTIARCH)
-> -	mkdir $pdir/usr/include/$host_arch
-> -	mv $pdir/usr/include/asm $pdir/usr/include/$host_arch/
-> +	mkdir "$pdir/usr/include/${DEB_HOST_MULTIARCH}"
-> +	mv "$pdir/usr/include/asm" "$pdir/usr/include/${DEB_HOST_MULTIARCH}"
->  }
->  
->  rm -f debian/files
-> -- 
-> 2.40.1
-> 
+The problem is very simple:
+For non mips platforms dma_default_coherent is used at 
+of_dma_is_coherent() and device_initialize().
+of_dma_is_coherent() affects only DT devices. And we can override it 
+with "dma-coherent"/"dma-noncoherent". ACPI devices can specify by
+"attr == DEV_DMA_COHERENT". But all other devices (platform_device, usb, 
+etc..) do not have this feature. These devices will use value from 
+device_initialize(). And we have no possibility to change 
+dma_default_coherent value by disabling ARCH_DMA_DEFAULT_COHERENT.
+Moreover, changing dma_default_coherent from false to true may cause 
+regression for other devices. That is why I suggest possibility to 
+disable ARCH_DMA_DEFAULT_COHERENT by RISCV_DMA_NONCOHERENT option.
+It will works like for PPC:
+.....
+config PPC
+	bool
+	default y
+	#
+	# Please keep this list sorted alphabetically.
+	#
+	select ARCH_32BIT_OFF_T if PPC32
+	select ARCH_DISABLE_KASAN_INLINE	if PPC_RADIX_MMU
+	select ARCH_DMA_DEFAULT_COHERENT	if !NOT_COHERENT_CACHE
+.....
+Doesn't the option RISCV_DMA_NONCOHERENT say the DMA should be 
+non-coherent by default?
