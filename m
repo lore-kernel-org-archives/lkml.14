@@ -1,104 +1,88 @@
-Received: from mail-m12814.netease.com (mail-m12814.netease.com [103.209.128.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC6C1774D
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 12:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=easystack.cn
-Received: from fedora.. (unknown [211.103.144.18])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 8979C4C02B1;
-	Fri, 22 Dec 2023 20:18:59 +0800 (CST)
-From: fuqiang wang <fuqiang.wang@easystack.cn>
-To: Baoquan He <bhe@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] x86/kexec: fix potential cmem->ranges out of bounds
-Date: Fri, 22 Dec 2023 20:18:53 +0800
-Message-ID: <20231222121855.148215-1-fuqiang.wang@easystack.cn>
-X-Mailer: git-send-email 2.42.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9001C18AE4
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 12:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WWX9Demk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703248677; x=1734784677;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=A7tECuFw+sheNvoT1sQ2bfBSYHt5SbkgnADaRBKyPlY=;
+  b=WWX9DemkCA+IvQWrY1aiRmbiIBNM38sEdOiXmd1ArCIUDlDxFs8Cx1Yh
+   2Vqm3IbhSY9FiIB+hKwEFZQBc1Vo6gcAy8gK/m1b/6MmLyFeOjAHBcxk6
+   qjkMhoHpI9jfJVLhwJfncYMqoROFDkZCcGAhJOkCJ/jLVVd+NlqzppR/T
+   bMbYtdnOxciW/9Dw9OuOhXoX38lxFacfFabElOuF2gcUKYibY15AZ/MCA
+   iKVYsEZFhhIXGUnqrOoxHOLbIn30sDonnB8ff3ilRk+ijWVv58csdD/qZ
+   QHYZlJqav1Za+ZkkAoxhQf2snJ5cHeOj6HjFBsDUbNqVmr4PNPctTCJZ4
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="3355051"
+X-IronPort-AV: E=Sophos;i="6.04,296,1695711600"; 
+   d="scan'208";a="3355051"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 04:37:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="1024185181"
+X-IronPort-AV: E=Sophos;i="6.04,296,1695711600"; 
+   d="scan'208";a="1024185181"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 04:37:55 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rGemm-000000088z9-0p0D;
+	Fri, 22 Dec 2023 14:37:52 +0200
+Date: Fri, 22 Dec 2023 14:37:51 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v1 1/1] pvpanic: Don't use "proxy" headers
+Message-ID: <ZYWDHzG0zDTbMwEH@smile.fi.intel.com>
+References: <20231221144447.2762077-1-andriy.shevchenko@linux.intel.com>
+ <c37fecee-f5b2-497f-a48d-2a2faf6697d9@t-8ch.de>
+ <ZYSD3C6fKvWUulXC@smile.fi.intel.com>
+ <f3e4f74b-c532-48f6-990f-232208268c04@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZThkaVkIYHh0YGUxOSxlPTFUZERMWGhIXJBQOD1
-	lXWRgSC1lBWUlKSlVKS0hVSk9PVUpDWVdZFhoPEhUdFFlBWU9LSFVKTU9JTE5VSktLVUpCS0tZBg
-	++
-X-HM-Tid: 0a8c9176eee0022ekunm8979c4c02b1
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PiI6EQw5Hzc5OSg2LygOFTgu
-	TBMwChFVSlVKTEtISU9MTk9LTkJLVTMWGhIXVR0OChIaFRxVDBoVHDseGggCCA8aGBBVGBVFWVdZ
-	EgtZQVlJSkpVSktIVUpPT1VKQ1lXWQgBWUFITkxKNwY+
+In-Reply-To: <f3e4f74b-c532-48f6-990f-232208268c04@t-8ch.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-In memmap_exclude_ranges(), there will exclude elfheader from
-crashk_res. In the current x86 architecture code, the elfheader is
-always allocated at crashk_res.start. It seems that there won't be a
-split a new range. But it depends on the allocation position of
-elfheader in crashk_res. To avoid potential out of bounds in future, add
-a extra slot.
+On Fri, Dec 22, 2023 at 12:08:51AM +0100, Thomas Weißschuh wrote:
+> On 2023-12-21 20:28:44+0200, Andy Shevchenko wrote:
+> > On Thu, Dec 21, 2023 at 06:48:49PM +0100, Thomas Weißschuh  wrote:
+> > > Dec 21, 2023 15:44:55 Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
 
-The similar issue also exists in fill_up_crash_elf_data(). The range to
-be excluded is [0, 1M], start (0) is special and will not appear in the
-middle of existing cmem->ranges[]. But in order to lest the low 1M could
-be changed in the future, add a extra slot too.
+...
 
-Previously discussed link:
-[1] https://lore.kernel.org/kexec/ZXk2oBf%2FT1Ul6o0c@MiWiFi-R3L-srv/
-[2] https://lore.kernel.org/kexec/273284e8-7680-4f5f-8065-c5d780987e59@easystack.cn/
-[3] https://lore.kernel.org/kexec/ZYQ6O%2F57sHAPxTHm@MiWiFi-R3L-srv/
+> > > Note:
+> > > This also drops the unused include of the UAPI header
+> > > which could be mentioned in the changelog.
+> > 
+> > Isn't it implied?
+> 
+> It's not covered by the subject. The message itself is fine.
 
-Signed-off-by: fuqiang wang <fuqiang.wang@easystack.cn>
----
- arch/x86/kernel/crash.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+Ah, I thought you are talking about the body of the message.
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index c92d88680dbf..97d33a6fc4fb 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -149,8 +149,18 @@ static struct crash_mem *fill_up_crash_elf_data(void)
- 	/*
- 	 * Exclusion of crash region and/or crashk_low_res may cause
- 	 * another range split. So add extra two slots here.
-+	 *
-+	 * Exclusion of low 1M may not cause another range split, because the
-+	 * range of exclude is [0, 1M] and the condition for splitting a new
-+	 * region is that the start, end parameters are both in a certain
-+	 * existing region in cmem and cannot be equal to existing region's
-+	 * start or end. Obviously, the start of [0, 1M] cannot meet this
-+	 * condition.
-+	 *
-+	 * But in order to lest the low 1M could be changed in the future,
-+	 * (e.g. [stare, 1M]), add a extra slot.
- 	 */
--	nr_ranges += 2;
-+	nr_ranges += 3;
- 	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
- 	if (!cmem)
- 		return NULL;
-@@ -282,9 +292,16 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 	struct crash_memmap_data cmd;
- 	struct crash_mem *cmem;
- 
--	cmem = vzalloc(struct_size(cmem, ranges, 1));
-+	/*
-+	 * In the current x86 architecture code, the elfheader is always
-+	 * allocated at crashk_res.start. But it depends on the allocation
-+	 * position of elfheader in crashk_res. To avoid potential out of
-+	 * bounds in future, add a extra slot.
-+	 */
-+	cmem = vzalloc(struct_size(cmem, ranges, 2));
- 	if (!cmem)
- 		return -ENOMEM;
-+	cmem->max_nr_ranges = 2;
- 
- 	memset(&cmd, 0, sizeof(struct crash_memmap_data));
- 	cmd.params = params;
+> But it's only a tiny nitpick anyways.
+
+Yes, I don't think we need a new iteration due to this.
+
+Thank you for the review!
+
 -- 
-2.42.0
+With Best Regards,
+Andy Shevchenko
+
 
