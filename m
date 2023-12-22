@@ -1,92 +1,90 @@
-Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B162E18E06;
-	Fri, 22 Dec 2023 13:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mess.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C1F18E06
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 13:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="ZgoNLsVw";
-	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="VafF22rQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
-	t=1703250800; bh=89OZzKPrOWnbF93jHg/V6IGPFL+n8RBW8Lb7Yb5GP3c=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ZgoNLsVwejtfEEUxarnPO5OUXt7j0DyskEcV3OBW5zXpnMkWOPyY5hfC3SZmwkRNT
-	 qf3DpVAzifjqcB1Egh2IhBSW8EKsQr/sM3lPA/RJuZqNKHrIJVlfvIQHQlYrolHDka
-	 27IQ2fu6YQmDpiO8foXWGv4MYJHqBCiKwhWYlwIQcZD80hG8QGEdtw3SPjjsXlBe6V
-	 8M1C8oMziPR6e5yliA11WzXCsai5Zt8BhSTb8z8ZvLeWirhToONNmoS0i2T0p0BjJT
-	 ydYXj8KRBgY1tY1msy8bMGaap/g9q1iQQ1CFfWD3Hj8yrYhuzTdkIStEPxMzZ80tMu
-	 dO2CmmN5Hc9OA==
-Received: by gofer.mess.org (Postfix, from userid 501)
-	id 8C70A1000CC; Fri, 22 Dec 2023 13:13:20 +0000 (GMT)
-X-Spam-Level: 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
-	t=1703250799; bh=89OZzKPrOWnbF93jHg/V6IGPFL+n8RBW8Lb7Yb5GP3c=;
-	h=From:To:Cc:Subject:Date:From;
-	b=VafF22rQzDieWkoFdDRCISBS3swdw/eEWiMtQBk2d55rgzy1xMQ6vCFNwLNE4M3zg
-	 FPUkpTN06l4BX2Y1unllPtAs77d2tenQMPddF7de0IgSuC6zEk4POkn6Ebp/L1UxSa
-	 c2BhgeMpg33wqEyIJNf6ZqOCYxm/BCeW8c9kbpTi0XxYGVmNwCFvp1yCtEnYJDYIr9
-	 AMDez4kc8DzGUVrrZguvRXbogl7GAknGNO/tdzlNtcirGk1LwvqzApKTrGWeo7FjvL
-	 tksiuxhX+MT3YPVZrJ5OJVyMYnxL9wOZFeYYbis3uo+Liq598aRUA8waixyQnnpFHq
-	 8fCDDq6oWyP4A==
-Received: from localhost.localdomain (bigcore.local [IPv6:2a02:8011:d000:212:ca7f:54ff:fe51:14d6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by gofer.mess.org (Postfix) with ESMTPSA id 1E4971000CC;
-	Fri, 22 Dec 2023 13:13:19 +0000 (GMT)
-From: Sean Young <sean@mess.org>
-To: Thierry Reding <thierry.reding@gmail.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Sean Young <sean@mess.org>
-Cc: linux-pwm@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] pwm: bcm2835: Remove duplicate call to clk_rate_exclusive_put()
-Date: Fri, 22 Dec 2023 13:13:11 +0000
-Message-ID: <20231222131312.174491-1-sean@mess.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="djF4ytLB"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-28abca51775so1134477a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 05:20:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703251243; x=1703856043; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6WT4MjJ9bS77O5qTpD5figlXHQdMav7Y2fGf4WbcZiI=;
+        b=djF4ytLBHYzZBBXVlYcWehnbyO2HkxiBg2qtm9Bi4aHEXA8PE+84DcJ5Yd+zyQyhYS
+         pxHKuT4hQLMR0yOMyeEgbew6/myrN4bh54lk/brPW7YMxufJQo0MFUaXb0cq4Bsk11RU
+         F4B6zOiedqfrijpH3yrmceQ3a1lsT3cJGp1R5z5ziOUtC0nHLXyMAq1GFagzmgOR5iDS
+         DtPiRKCAlDTAb7RrvWw9YFrELTvdOi8o1P1OMP3UX+d+vI6h3x7zdkUd0lhg5DCuT+RX
+         El2qTmq7TvFRihDscGX+um4kyPKgRFp/PKR/birvR0NGe6OtTUWcHSRHDbI06E23endc
+         APrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703251243; x=1703856043;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6WT4MjJ9bS77O5qTpD5figlXHQdMav7Y2fGf4WbcZiI=;
+        b=VI08croSS6b+eybMNcaAlkkdAluiWH0BtLgcRC5Ii8/Q/dp+BZhFd6qN/LvH6ONp4k
+         4f+VpDZZ2Qpx3DwGbMnuum/swz5GP17hARJUUdtuIn7yb4Z7uKwI75FTq8JXd3RAIiEk
+         Skir5X7wiZ75mjMyCc7fevGLismKGrLkp3QF/pRbh15N0su9NQVdo/hK0jvKY+jfHZRz
+         85fuVDvKTgnTeCS0ie+6ISkgsUYpgBB2iLykZykwxQBGouMCUGglQC3S6bSA4Eb9Aij7
+         +Eh5ahplXx8bIyUN4k7qiSeGgFn1RXHL/nkFd5x77yAapQ374yKdkQ4ZrssowzYf6Br4
+         n1cQ==
+X-Gm-Message-State: AOJu0YwElpDI5/c/o3pvpZJTcP8bzJeG+Uz0J37ky5Pv9yOQv9cDPbRk
+	ZSiGBlE9WpSLks0grYYVCLSx3bKgLZI=
+X-Google-Smtp-Source: AGHT+IHwN7ttdc36kO6cjjpCx99jIHOvvfzu+69mfoVOfHGuh6eea0V34pCRS+MxhMLrxr3KkHUItQ==
+X-Received: by 2002:a17:90a:c213:b0:28a:dcd2:7bea with SMTP id e19-20020a17090ac21300b0028adcd27beamr720337pjt.32.1703251242835;
+        Fri, 22 Dec 2023 05:20:42 -0800 (PST)
+Received: from code.. ([144.202.108.46])
+        by smtp.gmail.com with ESMTPSA id y21-20020a17090ad71500b0028b43d3250csm3563166pju.43.2023.12.22.05.20.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Dec 2023 05:20:42 -0800 (PST)
+From: Yuntao Wang <ytcoode@gmail.com>
+To: akpm@linux-foundation.org
+Cc: bhe@redhat.com,
+	ebiederm@xmission.com,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	ytcoode@gmail.com
+Subject: Re: [PATCH] kexec_core: fix the assignment to kimage->control_page
+Date: Fri, 22 Dec 2023 21:20:33 +0800
+Message-ID: <20231222132033.92651-1-ytcoode@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20231221141258.7113f9b2599ea6d3b6638e08@linux-foundation.org>
+References: <20231221141258.7113f9b2599ea6d3b6638e08@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-devm_add_action_or_reset() already calls the action in the error case.
+On Thu, 21 Dec 2023 14:12:58 -0800, Andrew Morton <akpm@linux-foundation.org> wrote:
 
-Reported-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Closes: https://lore.kernel.org/linux-pwm/fuku3b5ur6y4k4refd3vmeoenzjo6mwe3b3gtel34rhhhtvnsa@w4uktgbqsc3w/
-Fixes: fcc760729359 ("pwm: bcm2835: Allow PWM driver to be used in atomic context")
-Signed-off-by: Sean Young <sean@mess.org>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pwm/pwm-bcm2835.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+> On Thu, 21 Dec 2023 12:23:08 +0800 Yuntao Wang <ytcoode@gmail.com> wrote:
+> 
+> > image->control_page represents the starting address for allocating the next
+> > control page, while hole_end represents the address of the last valid byte
+> > of the currently allocated control page.
+> > 
+> > Therefore, after successfully allocating a control page, image->control_page
+> > should be updated to `hole_end + 1`, rather than hole_end.
+> 
+> Thanks.  Again, please include a description of the userspace-visible effects of the bug.
 
-diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
-index 307c0bd5f885..283cf27f25ba 100644
---- a/drivers/pwm/pwm-bcm2835.c
-+++ b/drivers/pwm/pwm-bcm2835.c
-@@ -160,10 +160,8 @@ static int bcm2835_pwm_probe(struct platform_device *pdev)
- 
- 	ret = devm_add_action_or_reset(&pdev->dev, devm_clk_rate_exclusive_put,
- 				       pc->clk);
--	if (ret) {
--		clk_rate_exclusive_put(pc->clk);
-+	if (ret)
- 		return ret;
--	}
- 
- 	pc->rate = clk_get_rate(pc->clk);
- 	if (!pc->rate)
--- 
-2.43.0
+This bug actually does not affect the correctness of allocating control
+pages, because image->control_page is currently only used in
+kimage_alloc_crash_control_pages(), and this function, when allocating
+control pages, will first align image->control_page up to the nearest
+`(1 << order) << PAGE_SHIFT` boundary, then use this value as the starting
+address of the next control page. This ensures that the newly allocated
+control page will use the correct starting address and not overlap with
+previously allocated control pages.
 
+Although it does not affect the correctness of the final result, it is
+better for us to set image->control_page to the correct value, in case it
+might be used elsewhere in the future, potentially causing errors.
