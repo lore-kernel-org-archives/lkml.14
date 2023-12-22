@@ -1,130 +1,84 @@
-Received: from mail-m17204.xmail.ntesmail.com (mail-m17204.xmail.ntesmail.com [45.195.17.204])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D07D18026
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 12:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=easystack.cn
-Received: from [10.9.0.94] (unknown [211.103.144.18])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id AC02A4C0275;
-	Fri, 22 Dec 2023 19:41:36 +0800 (CST)
-Message-ID: <ba124f2b-3292-4c5d-b5f6-b078ce289838@easystack.cn>
-Date: Fri, 22 Dec 2023 19:41:36 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AC918026;
+	Fri, 22 Dec 2023 12:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KCHkJWRO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7788CC433C7;
+	Fri, 22 Dec 2023 12:24:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703247847;
+	bh=5JEbd/0MfkqBn9EcZaazmNPVjZ1aK33sdc1b4Cp4oj4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KCHkJWROWNx4DEjAnaNatwrpAXjQFrlSUJOrOs2KHXBXLKWYRH1h4a/WbuvA4d09+
+	 QyVFjAe0veZUhZ1mgjFItkQM2fXXhvyhfnBenMXLZvf7KG8hwZuq7YzVWpQ0soxSPa
+	 wgwNheuAlzRsJ4yay9zocZWfjEbXFZ53Xam8QcHGFwj8Ozb+7KDHdAyzBtBqIzUQvw
+	 lnGj0noKdGZyqecQpEPH94H4CphrJegrhDdhrZRnu7sQjqMqN49I9JOkb9VvgOJNPC
+	 f/eVscRrHDb8ZPS4Ff1JtE8xPxyxQDHVhtJW/UN8svHbA8LueZrE7cG1oF6F4ztMKY
+	 uifkqV0LImykg==
+Date: Fri, 22 Dec 2023 12:24:01 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: lgirdwood@gmail.com,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Dmitry Rokosov <ddrokosov@sberdevices.ru>
+Subject: Re: [RFC PATCH v1] regulator: pwm-regulator: Fix continuous
+ get_voltage for disabled PWM
+Message-ID: <9bea64d5-8689-48f0-a081-5da60434e6c0@sirena.org.uk>
+References: <20231221211222.1380658-1-martin.blumenstingl@googlemail.com>
+ <0c99b575-5cf2-4bd6-8cfd-af19f5fd58da@sirena.org.uk>
+ <CAFBinCDJnVzE2sMwu52MQGTKW7dtCuUoj63ZZHhJPJO0+dZDkg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] x86/kexec: Fix potential out of bounds in
- crash_setup_memmap_entries()
-Content-Language: en-US
-To: Baoquan He <bhe@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
- Yuntao Wang <ytcoode@gmail.com>, kexec@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20231220055733.100325-1-fuqiang.wang@easystack.cn>
- <20231220055733.100325-2-fuqiang.wang@easystack.cn>
- <ZYQ6O/57sHAPxTHm@MiWiFi-R3L-srv>
-From: fuqiang wang <fuqiang.wang@easystack.cn>
-In-Reply-To: <ZYQ6O/57sHAPxTHm@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkaHh1IVk1CGR9PGRoYTU1NHlUZERMWGhIXJBQOD1
-	lXWRgSC1lBWUlKSlVKS0hVSk9PVUpDWVdZFhoPEhUdFFlBWU9LSFVKTU9JTE5VSktLVUpCS0tZBg
-	++
-X-HM-Tid: 0a8c9154b5f7022ekunmac02a4c0275
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NhQ6HBw4LzczNShCEkgpHkIt
-	OhhPCgJVSlVKTEtISU9OSUJMTU9DVTMWGhIXVR0OChIaFRxVDBoVHDseGggCCA8aGBBVGBVFWVdZ
-	EgtZQVlJSkpVSktIVUpPT1VKQ1lXWQgBWUFPQkhPNwY+
-
-在 2023/12/21 21:14, Baoquan He 写道:
-
-> On 12/20/23 at 01:57pm, fuqiang wang wrote:
->> In memmap_exclude_ranges(), there will exclude elfheader from
->> crashk_res. In the current x86 architecture code, the elfheader is
->> always allocated at crashk_res.start. It seems that there won't be a
->> split a new range. But it depends on the allocation position of
->> elfheader in crashk_res. To avoid potential out of bounds in future, Set
->> the array size to 2.
-> If so, I would suggest to add extra slot for low 1M too in
-> fill_up_crash_elf_data() lest the low 1M could be changed in the future,
-> e.g [start, 1M].
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="juKFXjvLaxOmiLZO"
+Content-Disposition: inline
+In-Reply-To: <CAFBinCDJnVzE2sMwu52MQGTKW7dtCuUoj63ZZHhJPJO0+dZDkg@mail.gmail.com>
+X-Cookie: Familiarity breeds attempt.
 
 
-Hi Baoquan
+--juKFXjvLaxOmiLZO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This seems to be better for future maintenance. Thank you for your suggestion.
+On Thu, Dec 21, 2023 at 11:42:29PM +0100, Martin Blumenstingl wrote:
 
->> But similar issue will not exist in fill_up_crash_elf_data(). Because
->> the range to be excluded is [0, 1M], start (0) is special and will not
->> appear in the middle of existing cmem->ranges[]. I added a comment to
->> explain it.
->>
->> Signed-off-by: fuqiang wang <fuqiang.wang@easystack.cn>
->> ---
->>   arch/x86/kernel/crash.c | 20 ++++++++++++++------
->>   1 file changed, 14 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
->> index c92d88680dbf..1c15d0884c90 100644
->> --- a/arch/x86/kernel/crash.c
->> +++ b/arch/x86/kernel/crash.c
->> @@ -149,6 +149,13 @@ static struct crash_mem *fill_up_crash_elf_data(void)
->>   	/*
->>   	 * Exclusion of crash region and/or crashk_low_res may cause
->>   	 * another range split. So add extra two slots here.
->> +	 *
->> +	 * Exclusion of low 1M may not cause another range split, because the
->> +	 * range of exclude is [0, 1M] and the condition for splitting a new
->> +	 * region is that the start, end parameters are both in a certain
->> +	 * existing region in cmem and cannot be equal to existing region's
->> +	 * start or end. Obviously, the start of [0, 1M] cannot meet this
->> +	 * condition.
->>   	 */
->>   	nr_ranges += 2;
->>   	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
->> @@ -282,9 +289,15 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
->>   	struct crash_memmap_data cmd;
->>   	struct crash_mem *cmem;
->>   
->> -	cmem = vzalloc(struct_size(cmem, ranges, 1));
->> +	cmem = vzalloc(struct_size(cmem, ranges, 2));
->>   	if (!cmem)
->>   		return -ENOMEM;
->> +	cmem->max_nr_ranges = 2;
->> +
->> +	/* Exclude some ranges from crashk_res and add rest to memmap */
->> +	ret = memmap_exclude_ranges(image, cmem, crashk_res.start, crashk_res.end);
->> +	if (ret)
->> +		goto out;
->>   
->>   	memset(&cmd, 0, sizeof(struct crash_memmap_data));
->>   	cmd.params = params;
->> @@ -320,11 +333,6 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
->>   		add_e820_entry(params, &ei);
->>   	}
->>   
->> -	/* Exclude some ranges from crashk_res and add rest to memmap */
->> -	ret = memmap_exclude_ranges(image, cmem, crashk_res.start, crashk_res.end);
->> -	if (ret)
->> -		goto out;
-> And you didn't mention moving above code block up in log. I would
-> suggest keeping it as is because it looks more reasonable to be adjacent
-> to the following cmem->ranges[] handling.
+> The vendor BSP includes a custom u-boot with lots of relevant
+> information for which there's seemingly no documentation.
+> It seems that 1.1V is what should be used during normal operation.
+> 0.86V is what can be used during system suspend (when power to the
+> Cortex-A5 cores is turned off and an integrated ARC core is taking
+> over for wakeup purposes).
+> Hence the supported voltage range of 0.86..1.1V
 
-Yes, baoquan, keeping it as it is may be more coherent.I will post a new patch later.
+That sounds like the constraints are wrong actually, if 0.86V can only
+be used during system suspend then it shouldn't be in the valid voltage
+range - the suspend voltage doesn't need to be in the range used during
+normal operation.  If we might use it during runtime suspend then it
+does need to be there though.
 
-Thanks
-fuqiang
+--juKFXjvLaxOmiLZO
+Content-Type: application/pgp-signature; name="signature.asc"
 
->> -
->>   	for (i = 0; i < cmem->nr_ranges; i++) {
->>   		ei.size = cmem->ranges[i].end - cmem->ranges[i].start + 1;
->>   
->> -- 
->> 2.42.0
->>
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWFf+AACgkQJNaLcl1U
+h9DTWgf/fUEmRlyJxxj7iLDuRYL+wIRD8ml/KWBIrzLV0ywoeLasM4HG3AgPcOlo
+gk4P9Zo3xCf2smtb/Dqal7hjM6i/DvKFNN/u4aQiVZdBA9v1LL+Qtd+ZSfs4/f49
+/l8mGJn5/S9FDZroHkIaVVyJMIucUua3dLfGdFA0Wpmcufd+W6TYYCuy1nx4zF+8
+d++E/GpQY6O/sZdb5McjKcN/17ylJo29NgyTRRtT6lwua+jTeDzEv0iOSEENwjUl
+Wws4Vg79aFs0amAtbLjuKKPQEEgQWNcpRB2Ge52JsFT/69ol9mBeAozdCTgFbP5j
+Dr3W71uo+hsk9kjSnL/ZmcjRnmjCog==
+=ijuO
+-----END PGP SIGNATURE-----
+
+--juKFXjvLaxOmiLZO--
