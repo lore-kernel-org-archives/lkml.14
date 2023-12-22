@@ -1,31 +1,31 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E812EAFD
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 22:51:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A9A2F848
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 22:51:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rGoML-0005aA-FC; Fri, 22 Dec 2023 23:51:13 +0100
+	id 1rGoMN-0005kS-D2; Fri, 22 Dec 2023 23:51:15 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rGoMJ-000qv5-VE; Fri, 22 Dec 2023 23:51:13 +0100
+	id 1rGoML-000qve-Pv; Fri, 22 Dec 2023 23:51:14 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rGoMK-000FfG-39;
-	Fri, 22 Dec 2023 23:51:12 +0100
+	id 1rGoMM-000Ffq-2d;
+	Fri, 22 Dec 2023 23:51:14 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Thomas Gleixner <tglx@linutronix.de>
 Cc: linux-kernel@vger.kernel.org,
 	kernel@pengutronix.de
-Subject: [PATCH 04/13] irqchip/keystone: Convert to platform remove callback returning void
-Date: Fri, 22 Dec 2023 23:50:35 +0100
-Message-ID:  <4c852a3359aa06bedcf3a10f3fd8c1e008cc5a3a.1703284359.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 13/13] irqchip/ts4800: Convert to platform remove callback returning void
+Date: Fri, 22 Dec 2023 23:50:44 +0100
+Message-ID:  <0bdce86b50e5aa50cffbc4add332cbfbad87521e.1703284359.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <cover.1703284359.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1703284359.git.u.kleine-koenig@pengutronix.de>
@@ -36,7 +36,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1968; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=+EDCUP6ePG/o+3slA3AQpIK7gkTvq8KdHgzdFcR2yug=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlhhK7wEMzZpDvgUxYeqw07y4uj4q89h2lKndDj gIK7Plj5u2JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZYYSuwAKCRCPgPtYfRL+ Tql4CACibtjb7MoMPwK/QFusOJrRV/PTZB0AK1KY73AwyE6W0xfcGAHQMsdXhy6e71UZL6JpVr/ P920+t1qHobfHNZHgpZMFLOiRlIEHWJ4KVpEUuNxHSUa9zQzNpPZLpKwmgnhSlXTzT6+XU/tmXj HQCLEVFfT0v9XcYCiJ57oFu1dFDXsOXr0yVzztk8s6WKL8j2Hr1MrRFki+WTWN/Lo8MPGOrPHG0 nL7V4RHDcGysnieTH3mg7tEdoyOfir/aPgFD8bIDR1GwXf4NLgXhahVBXdH+MTBdQdLr8nG/8nL 8dmlDQ9FhM9/o6EzydOvIOwWginPpiCLxDr7j06R6z48wDUp
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1756; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=9P+LbVGo/TTFNAJ4I3GeO7ieNbGzcoms9p3NIoglRlk=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlhhLGp3MhPzeMepy+cjVPc+NFm3S9EHw6HmeBh C7a4Nuop7OJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZYYSxgAKCRCPgPtYfRL+ TmboB/9qmaYqiy97cqHTGGuAQvFVvZN4gGMqto4Kaaf0xFalfX9pPt9PfNIz/7t+QxpeotlQFgS /46uwjiI6Y6L1SPM/zHhu4nCz1w45mE6n3UKrpUa6uzDhRBPSmgD9IMBSFP8UUDDXM4gzVipw/i QLqjO/jZ8fVNs/JTgSgCBHY+az5lkrqaY5LuuceqGDp/CIx9hAzAJbpm8gF0gn5ATmpKIiUISf4 Y1xADOcIOkLrJ/ExX815lXkXnH2NhgyPkH0air7oi+r0ajNbIjAVhpELfUB7r1WLf78cDRpHA9H LXGXg6e5DbirV+XyQ/LNyzCg5NLQsC/CG7EHB42w4kO/Mipv
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -59,39 +59,37 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/irqchip/irq-keystone.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/irqchip/irq-ts4800.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/irqchip/irq-keystone.c b/drivers/irqchip/irq-keystone.c
-index a36396db4b08..30f1979fa124 100644
---- a/drivers/irqchip/irq-keystone.c
-+++ b/drivers/irqchip/irq-keystone.c
-@@ -190,7 +190,7 @@ static int keystone_irq_probe(struct platform_device *pdev)
+diff --git a/drivers/irqchip/irq-ts4800.c b/drivers/irqchip/irq-ts4800.c
+index b2d61d4f6fe6..c69a819f099c 100644
+--- a/drivers/irqchip/irq-ts4800.c
++++ b/drivers/irqchip/irq-ts4800.c
+@@ -139,13 +139,11 @@ static int ts4800_ic_probe(struct platform_device *pdev)
  	return 0;
  }
  
--static int keystone_irq_remove(struct platform_device *pdev)
-+static void keystone_irq_remove(struct platform_device *pdev)
+-static int ts4800_ic_remove(struct platform_device *pdev)
++static void ts4800_ic_remove(struct platform_device *pdev)
  {
- 	struct keystone_irq_device *kirq = platform_get_drvdata(pdev);
- 	int hwirq;
-@@ -201,7 +201,6 @@ static int keystone_irq_remove(struct platform_device *pdev)
- 		irq_dispose_mapping(irq_find_mapping(kirq->irqd, hwirq));
+ 	struct ts4800_irq_data *data = platform_get_drvdata(pdev);
  
- 	irq_domain_remove(kirq->irqd);
+ 	irq_domain_remove(data->domain);
+-
 -	return 0;
  }
  
- static const struct of_device_id keystone_irq_dt_ids[] = {
-@@ -212,7 +211,7 @@ MODULE_DEVICE_TABLE(of, keystone_irq_dt_ids);
+ static const struct of_device_id ts4800_ic_of_match[] = {
+@@ -156,7 +154,7 @@ MODULE_DEVICE_TABLE(of, ts4800_ic_of_match);
  
- static struct platform_driver keystone_irq_device_driver = {
- 	.probe		= keystone_irq_probe,
--	.remove		= keystone_irq_remove,
-+	.remove_new	= keystone_irq_remove,
- 	.driver		= {
- 		.name	= "keystone_irq",
- 		.of_match_table	= of_match_ptr(keystone_irq_dt_ids),
+ static struct platform_driver ts4800_ic_driver = {
+ 	.probe  = ts4800_ic_probe,
+-	.remove = ts4800_ic_remove,
++	.remove_new = ts4800_ic_remove,
+ 	.driver = {
+ 		.name = "ts4800-irqc",
+ 		.of_match_table = ts4800_ic_of_match,
 -- 
 2.42.0
 
