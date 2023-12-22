@@ -1,159 +1,108 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mail115-63.sinamail.sina.com.cn (mail115-63.sinamail.sina.com.cn [218.30.115.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C4231642B;
-	Fri, 22 Dec 2023 11:07:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eg4ADUhr"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BM9dLe2023587;
-	Fri, 22 Dec 2023 11:07:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references; s=
-	qcppdkim1; bh=/FYaBKtPH0tgnXy7Wvh2r7LXp3sE8okO7iF1J8MDHfo=; b=eg
-	4ADUhrZzRzkBGkQacGqwu3O5/LBlEsxnL587Uje9A3bEzHWtSOso70Vo+Y7ByAgF
-	xhHAeJU/uRC4bfsENu5BXE6GSwKeOPJDiA+BZltQd9IZJSG4Mwxkb9cFNVE0hyEB
-	SQTejPB+PtLbtChHO/sHDgdkHo4ARN3X4bn7Qp9h9Y4JYZGEz7W2FZzXfJMO3aRZ
-	NO5qEuIr67Wvw4te+X39bpp2Mz4U7T6nIO74lsn/Q34wMwmeLKLK46pchZ7mBgZ4
-	DBTMbwTEHpr6HynAgcrS2JoDqFzx2nL/lfnCzO0uXCuvpkCm8rJfdlEaIjxWjPwE
-	IrX+4juRuuUKitY9VEnA==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3v580sg93s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 Dec 2023 11:07:22 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 3BMB7Jno019230;
-	Fri, 22 Dec 2023 11:07:19 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 3v14ymvpvc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 22 Dec 2023 11:07:19 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BMB7JsX019221;
-	Fri, 22 Dec 2023 11:07:19 GMT
-Received: from hu-maiyas-hyd.qualcomm.com (hu-riteshk-hyd.qualcomm.com [10.147.241.247])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3BMB7I9Z019220;
-	Fri, 22 Dec 2023 11:07:19 +0000
-Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 2314801)
-	id E43FA5299C9; Fri, 22 Dec 2023 16:37:17 +0530 (+0530)
-From: Ritesh Kumar <quic_riteshk@quicinc.com>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc: Ritesh Kumar <quic_riteshk@quicinc.com>, neil.armstrong@linaro.org,
-        quic_jesszhan@quicinc.com, sam@ravnborg.org,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, quic_abhinavk@quicinc.com,
-        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com
-Subject: [v1 1/2] dt-bindings: display: panel: Add Truly NT36672E LCD DSI panel
-Date: Fri, 22 Dec 2023 16:37:09 +0530
-Message-Id: <20231222110710.19397-2-quic_riteshk@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20231222110710.19397-1-quic_riteshk@quicinc.com>
-References: <20231222110710.19397-1-quic_riteshk@quicinc.com>
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: GXeXJK-z1UuCZ9YIf9iElw3QUG_WJ_bA
-X-Proofpoint-GUID: GXeXJK-z1UuCZ9YIf9iElw3QUG_WJ_bA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 phishscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0
- lowpriorityscore=0 clxscore=1015 priorityscore=1501 bulkscore=0
- adultscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2312220079
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D502156C4
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 11:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([113.88.50.137])
+	by sina.com (10.75.12.45) with ESMTP
+	id 65856DEA00007A4D; Fri, 22 Dec 2023 19:07:25 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 7738631457808
+X-SMAIL-UIID: 261EA0277E8A4FDE9FC65B27B17B9A2A-20231222-190725-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+ec9b5cce58002d184fb6@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] WARNING: ODEBUG bug in advance_sched
+Date: Fri, 22 Dec 2023 19:07:13 +0800
+Message-Id: <20231222110713.1245-1-hdanton@sina.com>
+In-Reply-To: <000000000000f3d57d060d0556a1@google.com>
+References: <000000000000f3d57d060d0556a1@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Document Truly NT36672E FHD+ LCD DSI panel.
+On Thu, 21 Dec 2023 05:47:25 -0800
+> HEAD commit:    1a44b0073b92 Merge tag 'ovl-fixes-6.7-rc7' of git://git.ke..
+> git tree:       upstream
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1465cbd6e80000
 
-Signed-off-by: Ritesh Kumar <quic_riteshk@quicinc.com>
----
- .../display/panel/truly,nt36672e.yaml         | 66 +++++++++++++++++++
- 1 file changed, 66 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/truly,nt36672e.yaml
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  master
 
-diff --git a/Documentation/devicetree/bindings/display/panel/truly,nt36672e.yaml b/Documentation/devicetree/bindings/display/panel/truly,nt36672e.yaml
-new file mode 100644
-index 000000000000..39ab05c5b103
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/truly,nt36672e.yaml
-@@ -0,0 +1,66 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/truly,nt36672e.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Truly NT36672E LCD DSI Panel
-+
-+maintainers:
-+  - Ritesh Kumar <quic_riteshk@quicinc.com>
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    const: truly,nt36672e
-+
-+  reg:
-+    maxItems: 1
-+    description: DSI virtual channel
-+
-+  vddi-supply: true
-+  avdd-supply: true
-+  avee-supply: true
-+  port: true
-+  reset-gpios: true
-+  backlight: true
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - vddi-supply
-+  - avdd-supply
-+  - avee-supply
-+  - reset-gpios
-+  - port
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    dsi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        panel@0 {
-+            compatible = "truly,nt36672e";
-+            reg = <0>;
-+
-+            reset-gpios = <&tlmm 44 GPIO_ACTIVE_HIGH>;
-+
-+            vddi-supply = <&vreg_l8c_1p8>;
-+            avdd-supply = <&disp_avdd>;
-+            avee-supply = <&disp_avee>;
-+
-+            backlight = <&pwm_backlight>;
-+
-+            port {
-+                panel0_in: endpoint {
-+                    remote-endpoint = <&dsi0_out>;
-+                };
-+            };
-+        };
-+    };
-+...
--- 
-2.17.1
-
+--- x/net/sched/sch_taprio.c
++++ y/net/sched/sch_taprio.c
+@@ -1941,6 +1941,9 @@ static int taprio_change(struct Qdisc *s
+ 
+ 	/* Protects against enqueue()/dequeue() */
+ 	spin_lock_bh(qdisc_lock(sch));
++	spin_lock_irqsave(&q->current_entry_lock, flags);
++	oper = rtnl_dereference(q->oper_sched);
++	admin = rtnl_dereference(q->admin_sched);
+ 
+ 	if (tb[TCA_TAPRIO_ATTR_TXTIME_DELAY]) {
+ 		if (!TXTIME_ASSIST_IS_ENABLED(q->flags)) {
+@@ -1981,17 +1984,12 @@ static int taprio_change(struct Qdisc *s
+ 	} else {
+ 		setup_first_end_time(q, new_admin, start);
+ 
+-		/* Protects against advance_sched() */
+-		spin_lock_irqsave(&q->current_entry_lock, flags);
+-
+ 		taprio_start_sched(sch, start, new_admin);
+ 
+ 		rcu_assign_pointer(q->admin_sched, new_admin);
+ 		if (admin)
+ 			call_rcu(&admin->rcu, taprio_free_sched_cb);
+ 
+-		spin_unlock_irqrestore(&q->current_entry_lock, flags);
+-
+ 		if (FULL_OFFLOAD_IS_ENABLED(q->flags))
+ 			taprio_offload_config_changed(q);
+ 	}
+@@ -2004,6 +2002,7 @@ static int taprio_change(struct Qdisc *s
+ 				   "Size table not specified, frame length estimations may be inaccurate");
+ 
+ unlock:
++	spin_unlock_irqrestore(&q->current_entry_lock, flags);
+ 	spin_unlock_bh(qdisc_lock(sch));
+ 
+ free_sched:
+@@ -2393,7 +2392,9 @@ static int taprio_dump(struct Qdisc *sch
+ 	struct sched_gate_list *oper, *admin;
+ 	struct tc_mqprio_qopt opt = { 0 };
+ 	struct nlattr *nest, *sched_nest;
++	unsigned long flags;
+ 
++	spin_lock_irqsave(&q->current_entry_lock, flags);
+ 	oper = rtnl_dereference(q->oper_sched);
+ 	admin = rtnl_dereference(q->admin_sched);
+ 
+@@ -2436,6 +2437,7 @@ static int taprio_dump(struct Qdisc *sch
+ 	nla_nest_end(skb, sched_nest);
+ 
+ done:
++	spin_unlock_irqrestore(&q->current_entry_lock, flags);
+ 	return nla_nest_end(skb, nest);
+ 
+ admin_error:
+@@ -2445,6 +2447,7 @@ options_error:
+ 	nla_nest_cancel(skb, nest);
+ 
+ start_error:
++	spin_unlock_irqrestore(&q->current_entry_lock, flags);
+ 	return -ENOSPC;
+ }
+ 
+--
