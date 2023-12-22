@@ -1,147 +1,173 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135A033CFA;
-	Fri, 22 Dec 2023 23:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D81B341B1
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 23:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jH76MHds"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703288165; x=1734824165;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=5lXU4Zx0LwUlfSo9nAOyDB6xfslI8gJovnHRYo3QpeA=;
-  b=jH76MHdskDA1xkLSxDqskwvsCEm/qVCtXiGyX2UQJh0/QycOIYRX9AKg
-   WFfLtQLhwLKG9h/Nn4NR7AiMbc/zf717MCvpPyKfXMBO3O4pc58HZuAz8
-   C9t6PdLP7y1+s9Ya50rjnR+6uHl4PL8Ib46iNR4Sb9ZXyXdNq437x80DE
-   /Y9wYoQrtPv+VmGhAOmjeZP/dmPYSQLhCxanK8MqLXc0ChN2Rq2IR+GSs
-   xkoDx8daVgap0hwzY3nMQRMrqC0VxJ1Kx1b+M8fvY3lV9WOyBlWHd5zAJ
-   8iE2HbQgRYTsr6NGtxgqjbWT1yNEDI2Hijcc7oT0rlqafxsWxNz7PXDlk
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="3007607"
-X-IronPort-AV: E=Sophos;i="6.04,297,1695711600"; 
-   d="scan'208";a="3007607"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 15:36:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="777190812"
-X-IronPort-AV: E=Sophos;i="6.04,297,1695711600"; 
-   d="scan'208";a="777190812"
-Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.93.26.36]) ([10.93.26.36])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 15:36:01 -0800
-Message-ID: <07285ebd-ae7f-4c4a-a926-8c52a2da8da6@linux.intel.com>
-Date: Sat, 23 Dec 2023 07:35:58 +0800
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="BhX1fWLh"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-da7ea62e76cso2278219276.3
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 15:40:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1703288404; x=1703893204; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xtZ7DoTLW1exe07faZsWlns7AQkFSE4d8R8G8FL+W54=;
+        b=BhX1fWLha23oq5ZIgDUjH9vv1lGlwIVCi3GLw0JwRo0aG7XwYZv85+77LskHdlQo1D
+         bwsIkS7xpvTFw8oAdgSv29mGaUrAvP5Wx/261gIhM/6zMeo8k42oB/b9HryLnDsJE8Cx
+         GUytWtYtsKa24oI4PUJff9pGZFK90skjIWVkJFW+GNQC5Y5dcuxibGnU6oiPOsX5oH/h
+         Y0L+oVrW5PSmYh7FetSM7oaX5V8tDNInJlKAZiXQBMZ6OpYSMCX46FBWXE+jLXKCAYan
+         dodQ1jF0leo+SSkWoD+CU1evbVt2XuUFoQbJacILMO5Q4u2CKs4FahH5T3D6g3H192Ug
+         jr5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703288404; x=1703893204;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xtZ7DoTLW1exe07faZsWlns7AQkFSE4d8R8G8FL+W54=;
+        b=Cj/+NdbRH0elq3eW7HTXPmt31aH9tFqqNEwbozOMsWTZAQ6n7GiHU4jXAiojR3EwYW
+         tsDyriTxA6xgi2yXcvYmBcrCucJsjVHWFd6/+RRkEvrdckhFJ9A/wy/Efpp2anBZze6H
+         XB9EQ4RXPJbBpozIA+i2L0tTBVeMyABAnpd3f1Ud9zHg8KaL3iIJxz7JT8ZuvKVxz47K
+         92N7juGVS3OhXQgUZdRaqommKQgCFWf+cGrpU0DmnzV6qokAhDYtQ8ajUPCUhWkCVVR1
+         UeDNNTf+E7cjoHLMS4IqLfykvfdik+/6IG+dPchFngv4oFG8lNUygwXm/TRa0BPn5UaA
+         FcfA==
+X-Gm-Message-State: AOJu0YxOaTXP+3XVqegycJ3LmPIibMXLpxcR1GNEOofI0fjZ7zXVfEY7
+	7MpJXtGAC5ntVSh4KRGUhfRK5Kkc5wzD7PJnGF7f2vZgAeO9
+X-Google-Smtp-Source: AGHT+IFJ56Y4CS1sroZ1McDCZ+aO7O7hN62WOIlrr6chYjjZ1T/kSBIrM5eXZxDJkKi8QxYqJszlIDxKoUo1/cuCEUA=
+X-Received: by 2002:a25:db4b:0:b0:db7:dacf:ed65 with SMTP id
+ g72-20020a25db4b000000b00db7dacfed65mr1422088ybf.70.1703288404352; Fri, 22
+ Dec 2023 15:40:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v5 3/3] iommu/vt-d: abort the devTLB invalidation
- waiting if device is removed
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-To: bhelgaas@google.com, baolu.lu@linux.intel.com, dwmw2@infradead.org,
- will@kernel.org, robin.murphy@arm.com, lukas@wunner.de
-Cc: linux-pci@vger.kernel.org, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20231222104108.18499-1-haifeng.zhao@linux.intel.com>
- <20231222104108.18499-4-haifeng.zhao@linux.intel.com>
-In-Reply-To: <20231222104108.18499-4-haifeng.zhao@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20231213143813.6818-1-michael.weiss@aisec.fraunhofer.de>
+ <20231213143813.6818-4-michael.weiss@aisec.fraunhofer.de> <20231215-golfanlage-beirren-f304f9dafaca@brauner>
+ <61b39199-022d-4fd8-a7bf-158ee37b3c08@aisec.fraunhofer.de>
+ <20231215-kubikmeter-aufsagen-62bf8d4e3d75@brauner> <CAADnVQKeUmV88OfQOfiX04HjKbXq7Wfcv+N3O=5kdL4vic6qrw@mail.gmail.com>
+ <20231216-vorrecht-anrief-b096fa50b3f7@brauner> <CAADnVQK7MDUZTUxcqCH=unrrGExCjaagfJFqFPhVSLUisJVk_Q@mail.gmail.com>
+ <20231218-chipsatz-abfangen-d62626dfb9e2@brauner>
+In-Reply-To: <20231218-chipsatz-abfangen-d62626dfb9e2@brauner>
+From: Paul Moore <paul@paul-moore.com>
+Date: Fri, 22 Dec 2023 18:39:53 -0500
+Message-ID: <CAHC9VhSZDMWJ_kh+RaB6dsPLQjkrjDY4bVkqsFDG3JtjinT_bQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 3/3] devguard: added device guard for mknod in
+ non-initial userns
+To: Christian Brauner <brauner@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, 
+	=?UTF-8?Q?Michael_Wei=C3=9F?= <michael.weiss@aisec.fraunhofer.de>, 
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Quentin Monnet <quentin@isovalent.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, 
+	LSM List <linux-security-module@vger.kernel.org>, gyroidos@aisec.fraunhofer.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 12/22/2023 6:41 PM, Ethan Zhao wrote:
-> Even the devTLB invalidation request is just submitted and waiting it
-> to be done/timeout in qi_submit_sync(), it is possible device is removed
-> or powered-off. try to break it out in such rare but possible case.
+On Mon, Dec 18, 2023 at 7:30=E2=80=AFAM Christian Brauner <brauner@kernel.o=
+rg> wrote:
+> I'm not generally opposed to kfuncs ofc but here it just seems a bit
+> pointless. What we want is to keep SB_I_{NODEV,MANAGED_DEVICES} confined
+> to alloc_super(). The only central place it's raised where we control
+> all locking and logic. So it doesn't even have to appear in any
+> security_*() hooks.
 >
-> This patch is sent for more comment. not tested, only passed compiling.
+> diff --git a/security/security.c b/security/security.c
+> index 088a79c35c26..bf440d15615d 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -1221,6 +1221,33 @@ int security_sb_alloc(struct super_block *sb)
+>         return rc;
+>  }
 >
-> Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
-> ---
->   drivers/iommu/intel/dmar.c  |  3 ++-
->   drivers/iommu/intel/iommu.c | 36 ++++++++++++++++++++++++++++++++++++
->   2 files changed, 38 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
-> index 23cb80d62a9a..d8637ab93387 100644
-> --- a/drivers/iommu/intel/dmar.c
-> +++ b/drivers/iommu/intel/dmar.c
-> @@ -1422,7 +1422,8 @@ int qi_submit_sync(struct intel_iommu *iommu, struct qi_desc *desc,
->   	 */
->   	writel(qi->free_head << shift, iommu->reg + DMAR_IQT_REG);
->   
-> -	while (qi->desc_status[wait_index] != QI_DONE) {
-> +	while (qi->desc_status[wait_index] != QI_DONE &&
-> +			qi->desc_status[wait_index] != QI_ABORT) {
-
-Another way is checking pci_device_is_present() here and bail out,
-
-how about it ?
-
->   		/*
->   		 * We will leave the interrupts disabled, to prevent interrupt
->   		 * context to queue another cmd while a cmd is already submitted
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index 897159dba47d..33075d0688bc 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -4472,10 +4472,46 @@ static struct iommu_device *intel_iommu_probe_device(struct device *dev)
->   	return &iommu->iommu;
->   }
->   
-> +static void intel_iommu_abort_devtlib_invalidate(struct device *dev)
+> +/*
+> + * security_sb_device_access() - Let LSMs handle device access
+> + * @sb: filesystem superblock
+> + *
+> + * Let an LSM take over device access management for this superblock.
+> + *
+> + * Return: Returns 1 if LSMs handle device access, 0 if none does and -E=
+RRNO on
+> + *         failure.
+> + */
+> +int security_sb_device_access(struct super_block *sb)
 > +{
-> +	struct device_domain_info *info = dev_iommu_priv_get(dev);
-> +	struct intel_iommu *iommu = info->iommu;
-> +	struct q_inval *qi = iommu->qi;
-> +	struct qi_desc *desc, *idesc;
-> +	int index, offset, shift;
-> +	u16 sid, qdep, pfsid
-> +	unsigned long flags;
+> +       int thisrc;
+> +       int rc =3D LSM_RET_DEFAULT(sb_device_access);
+> +       struct security_hook_list *hp;
 > +
-> +	if (!dev_is_pci(info->dev) || !info->ats_enabled || !qi)
-> +		return;
-> +	if (!pci_dev_is_disconnected(to_pci_dev(dev)))
-> +		return;
+> +       hlist_for_each_entry(hp, &security_hook_heads.sb_device_access, l=
+ist) {
+> +               thisrc =3D hp->hook.sb_device_access(sb);
+> +               if (thisrc < 0)
+> +                       return thisrc;
+> +               /* At least one LSM claimed device access management. */
+> +               if (thisrc =3D=3D 1)
+> +                       rc =3D 1;
+> +       }
 > +
-> +	sid = info->bus << 8 | info->devfn;
-> +	qdep = info->ats_qdep;
-> +	pfsid = info->pfsid;
-> +
-> +	raw_spin_lock_irqsave(&qi->q_lock, flags);
-> +	for (index = 1; index < QI_LENGTH; index++) {
-> +		offset = index << shift;
-> +		desc = qi->desc + offset;
-> +		if (desc->qw0 & QI_IWD_TYPE) {
-> +			offset = (index-1) << shift;
-> +			idesc = qi->desc + offset;
-> +			if (idesc->qw0 & QI_DEV_EIOTLB_SID(sid)) {
-> +				if (qi->desc_status[index] == QI_IN_USE)
-> +					qi->desc_status[index] = QI_ABORT;
-> +			}
-> +		}
-> +	}
-> +	raw_spin_unlock_irqrestore(&qi->q_lock, flags);
-> +
+> +       return rc;
 > +}
->   static void intel_iommu_release_device(struct device *dev)
->   {
->   	struct device_domain_info *info = dev_iommu_priv_get(dev);
->   
-> +	intel_iommu_abort_devtlib_invalidate(dev);
 
-Wonder if there is lock something prevent pciehp_ist() supprise_removal
+I worry that this hook, and the way it is plumbed into alloc_super()
+below, brings us back to the problem of authoritative LSM hooks which
+is something I can't support at this point in time.  The same can be
+said for a LSM directly flipping bits in the superblock struct.
 
-interrupt response re-enter to get here when another safe_removal is in 
-process,
+The LSM should not grant any additional privilege, either directly in
+the LSM code, or indirectly via the caller; the LSM should only
+restrict operations which would have otherwise been allowed.
 
-if so ,  see above
+The LSM should also refrain from modifying any kernel data structures
+that do not belong directly to the LSM.  A LSM caller may modify
+kernel data structures that it owns based on the result of the LSM
+hook, so long as those modifications do not grant additional privilege
+as described above.
 
->   	dmar_remove_one_dev_info(dev);
->   	intel_pasid_free_table(dev);
->   	intel_iommu_debugfs_remove_dev(info);
+> diff --git a/fs/super.c b/fs/super.c
+> index 076392396e72..2295c0f76e56 100644
+> --- a/fs/super.c
+> +++ b/fs/super.c
+> @@ -325,7 +325,7 @@ static struct super_block *alloc_super(struct file_sy=
+stem_type *type, int flags,
+>  {
+>         struct super_block *s =3D kzalloc(sizeof(struct super_block),  GF=
+P_USER);
+>         static const struct super_operations default_op;
+> -       int i;
+> +       int err, i;
+>
+>         if (!s)
+>                 return NULL;
+> @@ -362,8 +362,16 @@ static struct super_block *alloc_super(struct file_s=
+ystem_type *type, int flags,
+>         }
+>         s->s_bdi =3D &noop_backing_dev_info;
+>         s->s_flags =3D flags;
+> -       if (s->s_user_ns !=3D &init_user_ns)
+> +
+> +       err =3D security_sb_device_access(s);
+> +       if (err < 0)
+> +               goto fail;
+> +
+> +       if (err)
+> +               s->s_iflags |=3D SB_I_MANAGED_DEVICES;
+> +       else if (s->s_user_ns !=3D &init_user_ns)
+>                 s->s_iflags |=3D SB_I_NODEV;
+> +
+>         INIT_HLIST_NODE(&s->s_instances);
+>         INIT_HLIST_BL_HEAD(&s->s_roots);
+>         mutex_init(&s->s_sync_lock);
+
+--=20
+paul-moore.com
