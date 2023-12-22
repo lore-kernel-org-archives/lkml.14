@@ -1,147 +1,293 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE61BF9DA;
-	Fri, 22 Dec 2023 08:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5663FC8C8
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 08:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="19jzXM/c"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 3BM8gWRR020437;
-	Fri, 22 Dec 2023 09:46:04 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=geMwC/2ntrBKDmWRx2A6oK+EjPDa7RQe5GUkgEu5yMA=; b=19
-	jzXM/cdHYRiNxPeaXV9jlu54ksQqvS/HkDVNh9fbrMOGaGAv3jpGrybJL+HhrVuc
-	ocFnig6wO69DtuqybcCbfaOs+AF/JAxXEP7PZLRhVpDNOjd9t9yqJUuiqZy57XPF
-	qZJUes8XzS+jMRr0K6pm9+dLrV3RQUaYaT6nhGlsdWG9o85usXvA1KdLR9/IOf5A
-	AAV39EcbTHmyRo9r962D7sGIy7h9WakKLgeB0OFWPstsbcK4ndsaIHSfH9ZXhE0g
-	YfDNeq0WSYQrzHYRfxeARZhE0hTrDrIzcrMjcb35barCTBO+L5sMLgL0ki1sAJQp
-	H+H+Omhfylvf2wOt6hPw==
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3v1442bj0f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 Dec 2023 09:46:04 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BD515100060;
-	Fri, 22 Dec 2023 09:46:00 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6C53A20B23A;
-	Fri, 22 Dec 2023 09:46:00 +0100 (CET)
-Received: from [10.252.15.82] (10.252.15.82) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 22 Dec
- 2023 09:45:59 +0100
-Message-ID: <5c5fde3c-8073-430c-b9e6-b3e6d84eddee@foss.st.com>
-Date: Fri, 22 Dec 2023 09:45:59 +0100
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="LwORYRx8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1703234915; x=1734770915;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=oWIp5InUGyUzaylWZZL5A5hNc9Ub4HLtupMi0ioFdMs=;
+  b=LwORYRx8paCLkq9EwBpPWT6TeBITPzYDInyrsMlMcmeCB6SnXVOWdOM9
+   Qxx5ACSjI2AqzaA/hywQZ1DrRIw3lyz1dVv3ividTJjDr24Ou/3US5VcY
+   LKRuoa32Jw25PgOvSkZOi/EOTmqrUGo4E60k3AItSaTLFpEkcmyW4KM4o
+   1/EsWtYfqTA+MN0jOGT1ZR9ja27ndSd8OExHizt/QlbpxQkzrXXZpjlRZ
+   qmKcQ48X5VLzM8AsiJwDzcfS6WaxpnuXf3RCqVnQ3/8SRx0FFXdRcLYND
+   42cdbNvklb8K0ypb0SdXgEF+JosuBFXBE6gDc6yIn821tUSRFaau8s43f
+   A==;
+X-IronPort-AV: E=Sophos;i="6.04,294,1695679200"; 
+   d="scan'208";a="34649929"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 22 Dec 2023 09:48:32 +0100
+Received: from [192.168.2.128] (SCHIFFERM-M2.tq-net.de [10.121.53.15])
+	by vtuxmail01.tq-net.de (Postfix) with ESMTPA id B4A8D280075;
+	Fri, 22 Dec 2023 09:48:31 +0100 (CET)
+Message-ID: <b4eae5a8f451a3d253521a61b9625e3d7634f430.camel@ew.tq-group.com>
+Subject: Re: [PATCH] powerpc/6xx: set High BAT Enable flag on G2 cores
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Nicholas Piggin <npiggin@gmail.com>, "Aneesh Kumar K.V"
+ <aneesh.kumar@kernel.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
+ "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux@ew.tq-group.com" <linux@ew.tq-group.com>,  Michael Ellerman
+ <mpe@ellerman.id.au>
+Date: Fri, 22 Dec 2023 09:48:31 +0100
+In-Reply-To: <2fad9563-09ee-4017-8a67-5958475d56c8@csgroup.eu>
+References: <20231221124538.159706-1-matthias.schiffer@ew.tq-group.com>
+	 <2fad9563-09ee-4017-8a67-5958475d56c8@csgroup.eu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v1 2/8] dt-bindings: display: add dt-bindings for
- STM32 LVDS device
-Content-Language: en-US
-To: Rob Herring <robh@kernel.org>
-CC: Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Philippe Cornu
-	<philippe.cornu@foss.st.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Jessica Zhang
-	<quic_jesszhan@quicinc.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Rob Herring <robh+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Lad Prabhakar
-	<prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Philipp Zabel
-	<p.zabel@pengutronix.de>,
-        <dri-devel@lists.freedesktop.org>, Conor Dooley
-	<conor+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Daniel
- Vetter <daniel@ffwll.ch>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Thomas
- Zimmermann <tzimmermann@suse.de>,
-        Laurent Pinchart
-	<laurent.pinchart@ideasonboard.com>,
-        Yannick Fertre
-	<yannick.fertre@foss.st.com>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        David Airlie <airlied@gmail.com>
-References: <20231221124339.420119-1-raphael.gallais-pou@foss.st.com>
- <20231221124339.420119-3-raphael.gallais-pou@foss.st.com>
- <170316995910.3869238.14321525013510097521.robh@kernel.org>
-From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
-In-Reply-To: <170316995910.3869238.14321525013510097521.robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-22_04,2023-12-21_02,2023-05-22_02
 
-Hi Rob
+On Thu, 2023-12-21 at 13:57 +0000, Christophe Leroy wrote:
+>=20
+>=20
+> Le 21/12/2023 =C3=A0 13:45, Matthias Schiffer a =C3=A9crit=C2=A0:
+> > MMU_FTR_USE_HIGH_BATS is set for G2-based cores (G2_LE, e300cX), but th=
+e
+> > high BATs need to be enabled in HID2 to work. Add register definitions
+> > and introduce a G2 variant of __setup_cpu_603.
+>=20
+> Well spotted.
+>=20
+> I have a mpc8321, hence e300c2. I never had the problem you had.
+>=20
+> But ... looks like U-boot configuration has CONFIG_HID2_HBE so that's=20
+> set by U-boot indeed, that's the reason why I never had that problem.
 
-On 12/21/23 15:45, Rob Herring wrote:
-> On Thu, 21 Dec 2023 13:43:33 +0100, Raphael Gallais-Pou wrote:
->> Add dt-binding file for "st,stm32-lvds" compatible.
->>
->> Signed-off-by: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
->> ---
->>  .../bindings/display/st,stm32-lvds.yaml       | 114 ++++++++++++++++++
->>  1 file changed, 114 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/display/st,stm32-lvds.yaml
->>
-> My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-> on your patch (DT_CHECKER_FLAGS is new in v5.13):
->
-> yamllint warnings/errors:
->
-> dtschema/dtc warnings/errors:
-> Documentation/devicetree/bindings/display/st,stm32-lvds.example.dts:18:18: fatal error: dt-bindings/bus/stm32mp25_sys_bus.h: No such file or directory
->    18 |         #include <dt-bindings/bus/stm32mp25_sys_bus.h>
->       |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> compilation terminated.
-> make[2]: *** [scripts/Makefile.lib:419: Documentation/devicetree/bindings/display/st,stm32-lvds.example.dtb] Error 1
-> make[2]: *** Waiting for unfinished jobs....
-> make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1424: dt_binding_check] Error 2
-> make: *** [Makefile:234: __sub-make] Error 2
-
-This is because I forgot to remove this line from the example. I'll remove it in V2.
+I'll extend the commit message to mention that U-Boot setting in v2.
 
 
-Thanks,
+>=20
+> >=20
+> > This fixes boot on CPUs like the MPC5200B with STRICT_KERNEL_RWX enable=
+d.
+> >=20
+> > Fixes: e4d6654ebe6e ("powerpc/mm/32s: rework mmu_mapin_ram()")
+> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> > ---
+> >   arch/powerpc/include/asm/cpu_setup.h      |  1 +
+> >   arch/powerpc/include/asm/reg.h            |  2 ++
+> >   arch/powerpc/kernel/cpu_setup_6xx.S       | 25 ++++++++++++++++++++++=
+-
+> >   arch/powerpc/kernel/cpu_specs_book3s_32.h | 10 ++++-----
+> >   4 files changed, 32 insertions(+), 6 deletions(-)
+> >=20
+> >=20
+> > I have only tested this on the MPC5200B (G2_LE), but according to the
+> > e300 manual, e300cX cores should behave the same.
+> >=20
+> > The Fixes tag is the best I could come up with - I believe that the
+> > underlying issue of setting USE_HIGH_BATS without actually enabling the=
+m
+> > is as old as Linux's PowerPC implementation, but the specific code
+> > causing the boot failure was added in the mentioned commit.
+>=20
+> Agreed, before that only BATs 0 to 3 were used anyway.
+> There was also BAT 4 used by platforms/embedded6xx/wii.c  , but that's=
+=20
+> probably not a G2 ?
+>=20
+> >=20
+> > Another issue I found in the code is that
+> > arch/powerpc/platforms/52xx/lite5200_sleep.S uses the SPRN_HID2 definit=
+ion
+> > which does not refer to HID2 on the 5200... but that will be for someon=
+e
+> > else to fix, if there is still anyone left using that platform.
+>=20
+> Maybe file an issue for it at https://github.com/linuxppc/issues/issues=
+=20
+> if you don't plan to fix it ?
+>=20
+> By the way, it looks like the SPRN_HID2 definition we have is very=20
+> specific to the IBM 750.
+>=20
 
-Raphaël
+IBM 750GX even - googling for IBM 750 came up with several other cores that=
+ either don't have HID2,
+or have it at a different SPR.
 
 
-> doc reference errors (make refcheckdocs):
+> MPC 750 has SPRN_HID2 as 1011 =3D=3D 0x3f3 like others.
+
+> >=20
+> >=20
+> > diff --git a/arch/powerpc/include/asm/cpu_setup.h b/arch/powerpc/includ=
+e/asm/cpu_setup.h
+> > index 30e2fe3895024..68d804e74d221 100644
+> > --- a/arch/powerpc/include/asm/cpu_setup.h
+> > +++ b/arch/powerpc/include/asm/cpu_setup.h
+> > @@ -35,6 +35,7 @@ void __setup_cpu_750fx(unsigned long offset, struct c=
+pu_spec *spec);
+> >   void __setup_cpu_7400(unsigned long offset, struct cpu_spec *spec);
+> >   void __setup_cpu_7410(unsigned long offset, struct cpu_spec *spec);
+> >   void __setup_cpu_745x(unsigned long offset, struct cpu_spec *spec);
+> > +void __setup_cpu_g2(unsigned long offset, struct cpu_spec *spec);
+> >=20
+> >   void __setup_cpu_ppc970(unsigned long offset, struct cpu_spec *spec);
+> >   void __setup_cpu_ppc970MP(unsigned long offset, struct cpu_spec *spec=
+);
+> > diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/=
+reg.h
+> > index 4ae4ab9090a2d..f5641fcd1da85 100644
+> > --- a/arch/powerpc/include/asm/reg.h
+> > +++ b/arch/powerpc/include/asm/reg.h
+> > @@ -617,6 +617,8 @@
+> >   #endif
+> >   #define SPRN_HID2      0x3F8           /* Hardware Implementation Reg=
+ister 2 */
+>=20
+> Should that HID2 be renamed to SPRN_HID2_750 to avoid confusion ?
+
+Makes sense (should the suffix be "750GX"?). I can also add a FIXME comment=
+ to lite5200_sleep.S as
+part of the rename.
+
+
 >
-> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20231221124339.420119-3-raphael.gallais-pou@foss.st.com
->
-> The base for the series is generally the latest rc1. A different dependency
-> should be noted in *this* patch.
->
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> date:
->
-> pip3 install dtschema --upgrade
->
-> Please check and re-submit after running the above command yourself. Note
-> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-> your schema. However, it must be unset to test all examples with your schema.
->
+> >   #define SPRN_HID2_GEKKO        0x398           /* Gekko HID2 Register=
+ */
+> > +#define SPRN_HID2_G2   0x3F3           /* G2 HID2 Register */
+> > +#define  HID2_HBE_G2   (1<<18)         /* High BAT Enable (G2) */
+> >   #define SPRN_IABR      0x3F2   /* Instruction Address Breakpoint Regi=
+ster */
+> >   #define SPRN_IABR2     0x3FA           /* 83xx */
+> >   #define SPRN_IBCR      0x135           /* 83xx Insn Breakpoint Contro=
+l Reg */
+> > diff --git a/arch/powerpc/kernel/cpu_setup_6xx.S b/arch/powerpc/kernel/=
+cpu_setup_6xx.S
+> > index f29ce3dd6140f..c67d32e04df9c 100644
+> > --- a/arch/powerpc/kernel/cpu_setup_6xx.S
+> > +++ b/arch/powerpc/kernel/cpu_setup_6xx.S
+> > @@ -81,6 +81,20 @@ _GLOBAL(__setup_cpu_745x)
+> >          bl      setup_745x_specifics
+> >          mtlr    r5
+> >          blr
+> > +_GLOBAL(__setup_cpu_g2)
+> > +       mflr    r5
+> > +BEGIN_MMU_FTR_SECTION
+> > +       li      r10,0
+> > +       mtspr   SPRN_SPRG_603_LRU,r10           /* init SW LRU tracking=
+ */
+> > +END_MMU_FTR_SECTION_IFSET(MMU_FTR_NEED_DTLB_SW_LRU)
+>=20
+> MMU_FTR_NEED_DTLB_SW_LRU is dedicated to e300 core. You should also=20
+> remove it from __setup_cpu_603
+
+Will do, thanks.
+
+>=20
+> > +
+> > +BEGIN_FTR_SECTION
+> > +       bl      __init_fpu_registers
+> > +END_FTR_SECTION_IFCLR(CPU_FTR_FPU_UNAVAILABLE)
+> > +       bl      setup_common_caches
+> > +       bl      setup_g2_hid2
+> > +       mtlr    r5
+> > +       blr
+> >=20
+> >   /* Enable caches for 603's, 604, 750 & 7400 */
+> >   SYM_FUNC_START_LOCAL(setup_common_caches)
+> > @@ -115,6 +129,16 @@ SYM_FUNC_START_LOCAL(setup_604_hid0)
+> >          blr
+> >   SYM_FUNC_END(setup_604_hid0)
+> >=20
+> > +/* Enable high BATs for G2 (G2_LE, e300cX) */
+> > +SYM_FUNC_START_LOCAL(setup_g2_hid2)
+> > +       mfspr   r11,SPRN_HID2_G2
+> > +       oris    r11,r11,HID2_HBE_G2@h
+> > +       mtspr   SPRN_HID2_G2,r11
+> > +       sync
+> > +       isync
+> > +       blr
+> > +SYM_FUNC_END(setup_g2_hid2)
+> > +
+> >   /* 7400 <=3D rev 2.7 and 7410 rev =3D 1.0 suffer from some
+> >    * erratas we work around here.
+> >    * Moto MPC710CE.pdf describes them, those are errata
+> > @@ -495,4 +519,3 @@ _GLOBAL(__restore_cpu_setup)
+> >          mtcr    r7
+> >          blr
+> >   _ASM_NOKPROBE_SYMBOL(__restore_cpu_setup)
+> > -
+> > diff --git a/arch/powerpc/kernel/cpu_specs_book3s_32.h b/arch/powerpc/k=
+ernel/cpu_specs_book3s_32.h
+> > index 3714634d194a1..83f054fcf837c 100644
+> > --- a/arch/powerpc/kernel/cpu_specs_book3s_32.h
+> > +++ b/arch/powerpc/kernel/cpu_specs_book3s_32.h
+> > @@ -69,7 +69,7 @@ static struct cpu_spec cpu_specs[] __initdata =3D {
+> >                  .mmu_features           =3D MMU_FTR_USE_HIGH_BATS,
+> >                  .icache_bsize           =3D 32,
+> >                  .dcache_bsize           =3D 32,
+> > -               .cpu_setup              =3D __setup_cpu_603,
+> > +               .cpu_setup              =3D __setup_cpu_g2,
+> >                  .machine_check          =3D machine_check_generic,
+> >                  .platform               =3D "ppc603",
+> >          },
+> > @@ -83,7 +83,7 @@ static struct cpu_spec cpu_specs[] __initdata =3D {
+> >                  .mmu_features           =3D MMU_FTR_USE_HIGH_BATS,
+> >                  .icache_bsize           =3D 32,
+> >                  .dcache_bsize           =3D 32,
+> > -               .cpu_setup              =3D __setup_cpu_603,
+> > +               .cpu_setup              =3D __setup_cpu_g2,
+> >                  .machine_check          =3D machine_check_83xx,
+> >                  .platform               =3D "ppc603",
+> >          },
+> > @@ -96,7 +96,7 @@ static struct cpu_spec cpu_specs[] __initdata =3D {
+> >                  .mmu_features           =3D MMU_FTR_USE_HIGH_BATS | MM=
+U_FTR_NEED_DTLB_SW_LRU,
+> >                  .icache_bsize           =3D 32,
+> >                  .dcache_bsize           =3D 32,
+> > -               .cpu_setup              =3D __setup_cpu_603,
+> > +               .cpu_setup              =3D __setup_cpu_g2,
+> >                  .machine_check          =3D machine_check_83xx,
+> >                  .platform               =3D "ppc603",
+> >          },
+> > @@ -109,7 +109,7 @@ static struct cpu_spec cpu_specs[] __initdata =3D {
+> >                  .mmu_features           =3D MMU_FTR_USE_HIGH_BATS | MM=
+U_FTR_NEED_DTLB_SW_LRU,
+> >                  .icache_bsize           =3D 32,
+> >                  .dcache_bsize           =3D 32,
+> > -               .cpu_setup              =3D __setup_cpu_603,
+> > +               .cpu_setup              =3D __setup_cpu_g2,
+> >                  .machine_check          =3D machine_check_83xx,
+> >                  .num_pmcs               =3D 4,
+> >                  .platform               =3D "ppc603",
+> > @@ -123,7 +123,7 @@ static struct cpu_spec cpu_specs[] __initdata =3D {
+> >                  .mmu_features           =3D MMU_FTR_USE_HIGH_BATS | MM=
+U_FTR_NEED_DTLB_SW_LRU,
+> >                  .icache_bsize           =3D 32,
+> >                  .dcache_bsize           =3D 32,
+> > -               .cpu_setup              =3D __setup_cpu_603,
+> > +               .cpu_setup              =3D __setup_cpu_g2,
+> >                  .machine_check          =3D machine_check_83xx,
+> >                  .num_pmcs               =3D 4,
+> >                  .platform               =3D "ppc603",
+> > --
+> > TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, =
+Germany
+> > Amtsgericht M=C3=BCnchen, HRB 105018
+> > Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan=
+ Schneider
+> > https://www.tq-group.com/
+
+--=20
+TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
+any
+Amtsgericht M=C3=BCnchen, HRB 105018
+Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
+neider
+https://www.tq-group.com/
