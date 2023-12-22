@@ -1,162 +1,352 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5F5199;
-	Fri, 22 Dec 2023 00:03:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-552ff8d681aso4453166a12.1;
-        Thu, 21 Dec 2023 16:03:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703203431; x=1703808231;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nygtSlgImLShah/s0hAhy7POXlHZHpSLLGdVCujY6W8=;
-        b=fvadG6tvlul2FFD6D1ONxK3hTJV4ZqV8oWJx5KA38pUCghnJHdAXSXcRzEmyWMxViB
-         r1YQ4fFJ+FOcWWnBU+o1ZInmgv/tBs8VPMHClSAkWM/rZJGhydfgC4j0HyemhR2VVBnf
-         5p7C7Jjt33qK9VWE51+OjL2DWE+xq4MXjfpgRbSJjbeNfAGqhdUQUT2ANCYY6pM0qVPJ
-         VJTjivgJ9clIk8foix43ZHu6IKxQXtAAVNS/KoYlqivQMDX7QkcdeRN3qZJ+It8ofJU0
-         Fpi+wc+vShafVaACWr//GXyD2vH0eNwvgTpLQD3SSxgzDvG1Xc6cNqJvBsZRtftmuKvg
-         i+cQ==
-X-Gm-Message-State: AOJu0YzB1lgOv9Ps0Pt/VHcUWfm8rdCPzdYo+qT17VdPqRwsYgWeuVq5
-	/ED9LcnpMS/Io6k7lQsBqNhjE8v8LVw1CKDq9MU=
-X-Google-Smtp-Source: AGHT+IG8IlMJeTeY+mkgS8SDi6dEQXj+9Y691k0Bl+YR2l7JoKuaw9ZX71zKICOUydiynZwIvihTwQ==
-X-Received: by 2002:a17:906:2092:b0:a26:a980:d5b5 with SMTP id 18-20020a170906209200b00a26a980d5b5mr404727ejq.8.1703203430525;
-        Thu, 21 Dec 2023 16:03:50 -0800 (PST)
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com. [209.85.218.52])
-        by smtp.gmail.com with ESMTPSA id l3-20020a170907914300b00a1b7769f834sm1493699ejs.81.2023.12.21.16.03.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Dec 2023 16:03:49 -0800 (PST)
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a2696852965so403750766b.0;
-        Thu, 21 Dec 2023 16:03:49 -0800 (PST)
-X-Received: by 2002:a17:906:1042:b0:a23:3767:28ad with SMTP id
- j2-20020a170906104200b00a23376728admr512450ejj.70.1703203429756; Thu, 21 Dec
- 2023 16:03:49 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C93D191;
+	Fri, 22 Dec 2023 00:06:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11AC8C433C8;
+	Fri, 22 Dec 2023 00:06:53 +0000 (UTC)
+Date: Thu, 21 Dec 2023 19:07:57 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Dongliang Cui
+ <cuidongliang390@gmail.com>, Hongyu Jin  <hongyu.jin@unisoc.com>
+Subject: [PATCH v2] eventfs: Fix file and directory uid and gid ownership
+Message-ID: <20231221190757.7eddbca9@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231107-brcmfmac-wpa3-v1-1-4c7db8636680@marcan.st>
- <170281231651.2255653.7498073085103487666.kvalo@kernel.org>
- <18c80d15e30.279b.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
- <1b51997f-2994-46e8-ac58-90106d1c486d@marcan.st> <c392f901-789a-42e2-8cf7-5e246365a1ca@broadcom.com>
- <CAGRGNgW0h_uqHn0rKwGx0L41R+YgzgWPEh83kSKVCeqfCDeOug@mail.gmail.com> <C3F2FB99-C022-4BEE-8F1C-8B6F0E14DAA1@holtmann.org>
-In-Reply-To: <C3F2FB99-C022-4BEE-8F1C-8B6F0E14DAA1@holtmann.org>
-From: Neal Gompa <neal@gompa.dev>
-Date: Thu, 21 Dec 2023 19:03:12 -0500
-X-Gmail-Original-Message-ID: <CAEg-Je98F8BqczZR+8dBT9-a8Tb3n3L5+TdWJsGfFDUFt=Lf7g@mail.gmail.com>
-Message-ID: <CAEg-Je98F8BqczZR+8dBT9-a8Tb3n3L5+TdWJsGfFDUFt=Lf7g@mail.gmail.com>
-Subject: Re: [PATCH] wifi: brcmfmac: cfg80211: Use WSEC to set SAE password
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: Julian Calaby <julian.calaby@gmail.com>, 
-	Arend van Spriel <arend.vanspriel@broadcom.com>, Kalle Valo <kvalo@kernel.org>, 
-	Hector Martin <marcan@marcan.st>, Arend van Spriel <aspriel@gmail.com>, 
-	Franky Lin <franky.lin@broadcom.com>, Hante Meuleman <hante.meuleman@broadcom.com>, 
-	Daniel Berlin <dberlin@dberlin.org>, linux-wireless@vger.kernel.org, 
-	brcm80211-dev-list.pdl@broadcom.com, SHA-cyfmac-dev-list@infineon.com, 
-	linux-kernel@vger.kernel.org, asahi@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Dec 21, 2023 at 3:40=E2=80=AFPM Marcel Holtmann <marcel@holtmann.or=
-g> wrote:
->
-> Hi Julian,
->
-> >>>>>> Using the WSEC command instead of sae_password seems to be the sup=
-ported
-> >>>>>> mechanism on newer firmware, and also how the brcmdhd driver does =
-it.
-> >>>>>>
-> >>>>>> According to user reports [1], the sae_password codepath doesn't a=
-ctually
-> >>>>>> work on machines with Cypress chips anyway, so no harm in removing=
- it.
-> >>>>>>
-> >>>>>> This makes WPA3 work with iwd, or with wpa_supplicant pending a su=
-pport
-> >>>>>> patchset [2].
-> >>>>>>
-> >>>>>> [1] https://rachelbythebay.com/w/2023/11/06/wpa3/
-> >>>>>> [2] http://lists.infradead.org/pipermail/hostap/2023-July/041653.h=
-tml
-> >>>>>>
-> >>>>>> Signed-off-by: Hector Martin <marcan@marcan.st>
-> >>>>>> Reviewed-by: Neal Gompa <neal@gompa.dev>
-> >>>>>
-> >>>>> Arend, what do you think?
-> >>>>>
-> >>>>> We recently talked about people testing brcmfmac patches, has anyon=
-e else
-> >>>>> tested this?
-> >>>>
-> >>>> Not sure I already replied so maybe I am repeating myself. I would p=
-refer
-> >>>> to keep the Cypress sae_password path as well although it reportedly=
- does
-> >>>> not work. The vendor support in the driver can be used to accommodat=
-e for
-> >>>> that. The other option would be to have people with Cypress chipset =
-test
-> >>>> this patch. If that works for both we can consider dropping the
-> >>>> sae_password path.
-> >>>>
-> >>>> Regards,
-> >>>> Arend
-> >>>
-> >>> So, if nobody from Cypress chimes in ever, and nobody cares nor tests
-> >>> Cypress chipsets, are we keeping any and all existing Cypress code-pa=
-ths
-> >>> as bitrotting code forever and adding gratuitous conditionals every t=
-ime
-> >>> any functionality needs to change "just in case it breaks Cypress" ev=
-en
-> >>> though it has been tested compatible on Broadcom chipsets/firmware?
-> >>>
-> >>> Because that's not sustainable long term.
-> >>
-> >> You should look into WEXT just for the fun of it. If it were up to me
-> >> and a bunch of other people that would have been gone decades ago. May=
-be
-> >> a bad example if the sae_password is indeed not working, but the Cypre=
-ss
-> >> chipset is used in RPi3 and RPi4 so there must be a couple of users.
-> >
-> > There are reports that WPA3 is broken on the Cypress chipsets the
-> > Raspberry Pis are using and this patch fixes it:
-> > https://rachelbythebay.com/w/2023/11/06/wpa3/
-> >
-> > Based on that, it appears that all known users of WPA3 capable
-> > hardware with this driver require this fix.
->
-> the Pis are all using an outdated firmware. In their distro they put the
-> firmware already under the alternates systems, but it just lacks the SAE
-> offload support that is required to make WPA3 work. The linux-firmware
-> version does the trick nicely.
->
-> I documented what I did to make this work on Pi5 (note that I normally
-> use Fedora on Pi4 and thus never encountered this issue)
->
-> https://holtmann.dev/enabling-wpa3-on-raspberry-pi/
->
-> However you need to use iwd and not hope that you get a wpa_supplicant
-> released version that will work.
->
-> So whole game of wpa_supplicant is vendor specific to the company that
-> provides the driver is also insane, but that is another story. Use iwd
-> and you can most likely have WPA3 support if you have the right firmware.
->
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-wpa_supplicant is perfectly fine if the necessary patches are
-backported, as Fedora has done:
-https://src.fedoraproject.org/rpms/wpa_supplicant/c/99f4bf2096d3976cee01c49=
-9d7a30c1376f5f0f7
+It was reported that when mounting the tracefs file system with a gid
+other than root, the ownership did not carry down to the eventfs directory
+due to the dynamic nature of it.
 
+A fix was done to solve this, but it had two issues.
 
+(a) if the attr passed into update_inode_attr() was NULL, it didn't do
+    anything. This is true for files that have not had a chown or chgrp
+    done to itself or any of its sibling files, as the attr is allocated
+    for all children when any one needs it.
 
---
-=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
-=BC=81/ Always, there's only one truth!
+ # umount /sys/kernel/tracing
+ # mount -o rw,seclabel,relatime,gid=1000 -t tracefs nodev /mnt
+
+ # ls -ld /mnt/events/sched
+drwxr-xr-x 28 root rostedt 0 Dec 21 13:12 /mnt/events/sched/
+
+ # ls -ld /mnt/events/sched/sched_switch
+drwxr-xr-x 2 root rostedt 0 Dec 21 13:12 /mnt/events/sched/sched_switch/
+
+But when checking the files:
+
+ # ls -l /mnt/events/sched/sched_switch
+total 0
+-rw-r----- 1 root root 0 Dec 21 13:12 enable
+-rw-r----- 1 root root 0 Dec 21 13:12 filter
+-r--r----- 1 root root 0 Dec 21 13:12 format
+-r--r----- 1 root root 0 Dec 21 13:12 hist
+-r--r----- 1 root root 0 Dec 21 13:12 id
+-rw-r----- 1 root root 0 Dec 21 13:12 trigger
+
+(b) When the attr does not denote the UID or GID, it defaulted to using
+    the parent uid or gid. This is incorrect as changing the parent
+    uid or gid will automatically change all its children.
+
+ # chgrp tracing /mnt/events/timer
+
+ # ls -ld /mnt/events/timer
+drwxr-xr-x 2 root tracing 0 Dec 21 14:34 /mnt/events/timer
+
+ # ls -l /mnt/events/timer
+total 0
+-rw-r----- 1 root root    0 Dec 21 14:35 enable
+-rw-r----- 1 root root    0 Dec 21 14:35 filter
+drwxr-xr-x 2 root tracing 0 Dec 21 14:35 hrtimer_cancel
+drwxr-xr-x 2 root tracing 0 Dec 21 14:35 hrtimer_expire_entry
+drwxr-xr-x 2 root tracing 0 Dec 21 14:35 hrtimer_expire_exit
+drwxr-xr-x 2 root tracing 0 Dec 21 14:35 hrtimer_init
+drwxr-xr-x 2 root tracing 0 Dec 21 14:35 hrtimer_start
+drwxr-xr-x 2 root tracing 0 Dec 21 14:35 itimer_expire
+drwxr-xr-x 2 root tracing 0 Dec 21 14:35 itimer_state
+drwxr-xr-x 2 root tracing 0 Dec 21 14:35 tick_stop
+drwxr-xr-x 2 root tracing 0 Dec 21 14:35 timer_cancel
+drwxr-xr-x 2 root tracing 0 Dec 21 14:35 timer_expire_entry
+drwxr-xr-x 2 root tracing 0 Dec 21 14:35 timer_expire_exit
+drwxr-xr-x 2 root tracing 0 Dec 21 14:35 timer_init
+drwxr-xr-x 2 root tracing 0 Dec 21 14:35 timer_start
+
+At first it was thought that this could be easily fixed by just making the
+default ownership of the superblock when it was mounted. But this does not
+handle the case of:
+
+ # chgrp tracing instances
+ # mkdir instances/foo
+
+If the superblock was used, then the group ownership would be that of what
+it was when it was mounted, when it should instead be "tracing".
+
+Instead, set a flag for the top level eventfs directory ("events") to flag
+which eventfs_inode belongs to it.
+
+Since the "events" directory's dentry and inode are never freed, it does
+not need to use its attr field to restore its mode and ownership. Use the
+this eventfs_inode's attr as the default ownership for all the files and
+directories underneath it.
+
+When the events eventfs_inode is created, it sets its ownership to its
+parent uid and gid. As the events directory is created at boot up before
+it gets mounted, this will always be uid=0 and gid=0. If it's created via
+an instance, then it will take the ownership of the instance directory.
+
+When the file system is mounted, it will update all the gids if one is
+specified. This will have a callback to update the events evenfs_inode's
+default entries.
+
+When a file or directory is created under the events directory, it will
+walk the ei->dentry parents until it finds the evenfs_inode that belongs
+to the events directory to retrieve the default uid and gid values.
+
+Link: https://lore.kernel.org/all/CAHk-=wiwQtUHvzwyZucDq8=Gtw+AnwScyLhpFswrQ84PjhoGsg@mail.gmail.com/
+
+Cc: stable@vger.kernel.org
+Fixes: 0dfc852b6fe3 ("eventfs: Have event files and directories default to parent uid and gid")
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v1: https://lore.kernel.org/linux-trace-kernel/20231221173812.51fe6113@gandalf.local.home
+
+- While writing kselftests to test ownership, I found a bug. The remount
+  option allows for an update of the gid. If it is specified, then all
+  dentries are traversed in tracefs and eventfs and the gid is updated.
+
+  The bug is that a eventfs that does not have a dentry, but had its gid
+  updated, the old gid is still stored, and when the dentry is created, it
+  will use the stored gid.
+
+  Instead, check all eventfs_inodes that do not have a dentry, and traverse
+  its children to make sure their gids are updated as well.
+
+ fs/tracefs/event_inode.c | 105 +++++++++++++++++++++++++++++++++++----
+ fs/tracefs/inode.c       |   6 +++
+ fs/tracefs/internal.h    |   2 +
+ 3 files changed, 103 insertions(+), 10 deletions(-)
+
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 2ccc849a5bda..6e005a83114f 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -113,7 +113,14 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	 * determined by the parent directory.
+ 	 */
+ 	if (dentry->d_inode->i_mode & S_IFDIR) {
+-		update_attr(&ei->attr, iattr);
++		/*
++		 * The events directory dentry is never freed, unless its
++		 * part of an instance that is deleted. It's attr is the
++		 * default for its child files and directories.
++		 * Do not update it. It's not used for its own mode or ownership
++		 */
++		if (!ei->is_events)
++			update_attr(&ei->attr, iattr);
+ 
+ 	} else {
+ 		name = dentry->d_name.name;
+@@ -148,28 +155,93 @@ static const struct file_operations eventfs_file_operations = {
+ 	.release	= eventfs_release,
+ };
+ 
++/* Return the evenfs_inode of the "events" directory */
++static struct eventfs_inode *eventfs_find_events(struct dentry *dentry)
++{
++	struct eventfs_inode *ei;
++
++	mutex_lock(&eventfs_mutex);
++	do {
++		/* The parent always has an ei, except for events itself */
++		ei = dentry->d_parent->d_fsdata;
++
++		/*
++		 * If the ei is being freed, the ownership of the children
++		 * doesn't matter.
++		 */
++		if (ei->is_freed) {
++			ei = NULL;
++			break;
++		}
++
++		dentry = ei->dentry;
++	} while (!ei->is_events);
++	mutex_unlock(&eventfs_mutex);
++
++	return ei;
++}
++
+ static void update_inode_attr(struct dentry *dentry, struct inode *inode,
+ 			      struct eventfs_attr *attr, umode_t mode)
+ {
+-	if (!attr) {
+-		inode->i_mode = mode;
++	struct eventfs_inode *events_ei = eventfs_find_events(dentry);
++
++	if (!events_ei)
++		return;
++
++	inode->i_mode = mode;
++	inode->i_uid = events_ei->attr.uid;
++	inode->i_gid = events_ei->attr.gid;
++
++	if (!attr)
+ 		return;
+-	}
+ 
+ 	if (attr->mode & EVENTFS_SAVE_MODE)
+ 		inode->i_mode = attr->mode & EVENTFS_MODE_MASK;
+-	else
+-		inode->i_mode = mode;
+ 
+ 	if (attr->mode & EVENTFS_SAVE_UID)
+ 		inode->i_uid = attr->uid;
+-	else
+-		inode->i_uid = d_inode(dentry->d_parent)->i_uid;
+ 
+ 	if (attr->mode & EVENTFS_SAVE_GID)
+ 		inode->i_gid = attr->gid;
+-	else
+-		inode->i_gid = d_inode(dentry->d_parent)->i_gid;
++}
++
++static void update_gid(struct eventfs_inode *ei, kgid_t gid, int level)
++{
++	struct eventfs_inode *ei_child;
++
++	/* at most we have events/system/event */
++	if (WARN_ON_ONCE(level > 3))
++		return;
++
++	ei->attr.gid = gid;
++
++	if (ei->entry_attrs) {
++		for (int i = 0; i < ei->nr_entries; i++) {
++			ei->entry_attrs[i].gid = gid;
++		}
++	}
++
++	/*
++	 * Only eventfs_inode with dentries are updated, make sure
++	 * all eventfs_inodes are updated. If one of the children
++	 * do not have a dentry, this function must traverse it.
++	 */
++	list_for_each_entry_srcu(ei_child, &ei->children, list,
++				 srcu_read_lock_held(&eventfs_srcu)) {
++		if (!ei_child->dentry)
++			update_gid(ei_child, gid, level + 1);
++	}
++}
++
++void eventfs_update_gid(struct dentry *dentry, kgid_t gid)
++{
++	struct eventfs_inode *ei = dentry->d_fsdata;
++	int idx;
++
++	idx = srcu_read_lock(&eventfs_srcu);
++	update_gid(ei, gid, 0);
++	srcu_read_unlock(&eventfs_srcu, idx);
+ }
+ 
+ /**
+@@ -860,6 +932,8 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+ 	struct eventfs_inode *ei;
+ 	struct tracefs_inode *ti;
+ 	struct inode *inode;
++	kuid_t uid;
++	kgid_t gid;
+ 
+ 	if (security_locked_down(LOCKDOWN_TRACEFS))
+ 		return NULL;
+@@ -884,11 +958,20 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+ 	ei->dentry = dentry;
+ 	ei->entries = entries;
+ 	ei->nr_entries = size;
++	ei->is_events = 1;
+ 	ei->data = data;
+ 	ei->name = kstrdup_const(name, GFP_KERNEL);
+ 	if (!ei->name)
+ 		goto fail;
+ 
++	/* Save the ownership of this directory */
++	uid = d_inode(dentry->d_parent)->i_uid;
++	gid = d_inode(dentry->d_parent)->i_gid;
++
++	/* This is used as the default ownership of the files and directories */
++	ei->attr.uid = uid;
++	ei->attr.gid = gid;
++
+ 	INIT_LIST_HEAD(&ei->children);
+ 	INIT_LIST_HEAD(&ei->list);
+ 
+@@ -897,6 +980,8 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+ 	ti->private = ei;
+ 
+ 	inode->i_mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
++	inode->i_uid = uid;
++	inode->i_gid = gid;
+ 	inode->i_op = &eventfs_root_dir_inode_operations;
+ 	inode->i_fop = &eventfs_file_operations;
+ 
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index ae648deed019..62524b20964e 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -210,6 +210,7 @@ static void set_gid(struct dentry *parent, kgid_t gid)
+ 	next = this_parent->d_subdirs.next;
+ resume:
+ 	while (next != &this_parent->d_subdirs) {
++		struct tracefs_inode *ti;
+ 		struct list_head *tmp = next;
+ 		struct dentry *dentry = list_entry(tmp, struct dentry, d_child);
+ 		next = tmp->next;
+@@ -218,6 +219,11 @@ static void set_gid(struct dentry *parent, kgid_t gid)
+ 
+ 		change_gid(dentry, gid);
+ 
++		/* If this is the events directory, update that too */
++		ti = get_tracefs(dentry->d_inode);
++		if (ti && (ti->flags & TRACEFS_EVENT_INODE))
++			eventfs_update_gid(dentry, gid);
++
+ 		if (!list_empty(&dentry->d_subdirs)) {
+ 			spin_unlock(&this_parent->d_lock);
+ 			spin_release(&dentry->d_lock.dep_map, _RET_IP_);
+diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+index ccee18ca66c7..899e447778ac 100644
+--- a/fs/tracefs/internal.h
++++ b/fs/tracefs/internal.h
+@@ -62,6 +62,7 @@ struct eventfs_inode {
+ 		struct rcu_head		rcu;
+ 	};
+ 	unsigned int			is_freed:1;
++	unsigned int			is_events:1;
+ 	unsigned int			nr_entries:31;
+ };
+ 
+@@ -77,6 +78,7 @@ struct inode *tracefs_get_inode(struct super_block *sb);
+ struct dentry *eventfs_start_creating(const char *name, struct dentry *parent);
+ struct dentry *eventfs_failed_creating(struct dentry *dentry);
+ struct dentry *eventfs_end_creating(struct dentry *dentry);
++void eventfs_update_gid(struct dentry *dentry, kgid_t gid);
+ void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry);
+ 
+ #endif /* _TRACEFS_INTERNAL_H */
+-- 
+2.42.0
+
