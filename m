@@ -1,239 +1,215 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B2A4699;
-	Fri, 22 Dec 2023 02:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE64EB8;
+	Fri, 22 Dec 2023 02:36:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cmF8ynSe"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6d099d316a8so1401720b3a.0;
-        Thu, 21 Dec 2023 18:35:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703212534; x=1703817334; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1F41gjk22/8XF7wdrXN44EAASWHCnE2ogjFxGWtoeVo=;
-        b=cmF8ynSew7zcmjSGiCsRNJj/qgNz5hYEErOYwUFwchZdDa6Rab0OmCjjiagRRCISoS
-         zEmL4LnivWarSa4qkp6OQzRyLdNAA+NU9JR1DDzlqyHMHGqouHFvGt1ag1zl35A6W5Am
-         /w6HgVe1fxY+Tv78Bz1JcRDtNJ0N+84WWc5TqMAe9/Q45xDrJQIwf0KIoxHfvzdbYf4r
-         YsINjz8Fe5iJn+beiTeCfrt2n57bDuKpzt8uevewGhfYuiBzdJzc1ZBcAzO9hK0/PaYY
-         EB9qLKKlqVOpBMn8lr5vLvKnH933YTJO6xNqKs0T/Mr4ZrwOnkVTAePdcHBu2AmioQAj
-         jaKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703212534; x=1703817334;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1F41gjk22/8XF7wdrXN44EAASWHCnE2ogjFxGWtoeVo=;
-        b=mnsbDqgTfO+ou1uFYRFKkr4b6oxvZ/rOWsgj9c9Tmwzcni4/iyLhUQHKJmXNxVjsNd
-         aU+vv4p+/2oqCqC7eWBowKLu3plobhBBw8Ji0A/cqvYSioRI0EWWdQRX8doa5YmyRjex
-         8fQdwqTJ07/aoqdmdxQwJ4/2qD6+M4z815uxFo+hHsYgU5Uj+MsOJvYSgk8QLd0GAOqz
-         Bv82RgB3+c2Z9Gc4zSSD6xLtbqakZv1W70OjIAlsNJmDKsqwXMeiKLhdwim8Efw80zgq
-         zotnRTr2GROAn35GDus0H5Io7DSzXYMN2rO+KGKmxcj9jggiSRrjk7BcEDxmIAMgmr4x
-         vMQw==
-X-Gm-Message-State: AOJu0Yz388RLypRTBI7HSZZFxBk/KUB0Pd/Xmbqs9xZfbTkZQb6Keevm
-	+mmq/waOkkdxadKoDVlM0+PUQqjFFZozpXJPDtY=
-X-Google-Smtp-Source: AGHT+IFaxueBZdOz7yKsg8T921Wxw3cuSAsbW2/yV/5x/MNgKMSqpEbErIlv/Vq6whgkoNOYGl8uV+RtUTPx2BT24UI=
-X-Received: by 2002:a05:6a21:78a0:b0:195:2c0f:e28c with SMTP id
- bf32-20020a056a2178a000b001952c0fe28cmr655954pzc.102.1703212533761; Thu, 21
- Dec 2023 18:35:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uvKT6nVf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3634C433C7;
+	Fri, 22 Dec 2023 02:36:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703212568;
+	bh=4YxpCLDfd1k1s8/rpC3WKr38gI6Epu4ObWxhbNChjn8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=uvKT6nVfVjS7D9F0wnDoUDniJlkzacWvpcRUGtXLhiWuMjC9/uCV4C/l1rCstUz+T
+	 kE23aMje+vrNqo7ZYIDFPoYZAECtn30St10BPcw7VQ33poe/aRmKRxH+we+PJhOCP5
+	 gmVQYlsiTicKzylthmDA1MIm1MaThTBp5GgH3zb1frc3uGKxlGZoUOWCJLWSCqQ2HS
+	 xrlbLm/7FgDxZ5b+VW3eFWHhC2Js/6egmUDjkpdQ/ZL3icb6nCJQwjaBW/SjAG+D6r
+	 gjM3hF8EpLmJPzVaLGiWxG0Gj71gViXSqGczDEh1lqcaUlx1x0i17YUloC7nTz0OtN
+	 HJN+yUWLt0M9A==
+Date: Fri, 22 Dec 2023 11:36:03 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, Linux
+ selftests <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH v3] tracing/selftests: Add ownership modification tests
+ for eventfs
+Message-Id: <20231222113603.96bf082a416abf8a56a26ddc@kernel.org>
+In-Reply-To: <20231221211229.13398ef3@gandalf.local.home>
+References: <20231221211229.13398ef3@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231221104343.5557-1-2045gemini@gmail.com> <abc324aa-1ccc-c8fd-1437-a77465f6e4be@huaweicloud.com>
- <CAOPYjvbfGZObUa+P5Bo_syLMpyMNEPU6SNm6xJPSqSZYREmNfw@mail.gmail.com>
-In-Reply-To: <CAOPYjvbfGZObUa+P5Bo_syLMpyMNEPU6SNm6xJPSqSZYREmNfw@mail.gmail.com>
-From: 20 39 <2045gemini@gmail.com>
-Date: Fri, 22 Dec 2023 10:34:58 +0800
-Message-ID: <CAOPYjvYhEzeF3vdd9GXCX+k_-OmsE1yP7VNozcMt4vOyFLDAfw@mail.gmail.com>
-Subject: Re: [PATCH] md/raid5: fix atomicity violation in raid5_cache_count
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: song@kernel.org, linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	baijiaju1990@outlook.com, BassCheck <bass@buaa.edu.cn>, 
-	"yukuai (C)" <yukuai3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Kuai,
+On Thu, 21 Dec 2023 21:12:29 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Thank you for your patience. This email is essentially the same as my
-previous one, only now adjusted to plain text format. I apologize for
-any inconvenience caused earlier.
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> As there were bugs found with the ownership of eventfs dynamic file
+> creation. Add a test to test it.
+> 
+> It will remount tracefs with a different gid and check the ownership of
+> the eventfs directory, as well as the system and event directories. It
+> will also check the event file directories.
+> 
+> It then does a chgrp on each of these as well to see if they all get
+> updated as expected.
+> 
+> Then it remounts the tracefs file system back to the original group and
+> makes sure that all the updated files and directories were reset back to
+> the original ownership.
+> 
+> It does the same for instances that change the ownership of he instance
+> directory.
+> 
+> Note, because the uid is not reset by a remount, it is tested for every
+> file by switching it to a new owner and then back again.
+> 
 
-Thanks for your email and the insightful points you've raised. Let me
-clarify a few aspects regarding the raid5_cache_count() and
-raid5_set_cache_size() functions.
+Thanks for update!
 
-1. Callback Function in setup_conf(): You mentioned that
-raid5_cache_count() is called from setup_conf() where reconfig_mutex
-is held. While this is true, it's important to note that
-raid5_cache_count() is actually initialized as a callback function in
-setup_conf(), as described in /include/linux/shrinker.h. This means it
-could be invoked later in a context where the reconfig_mutex isn't
-necessarily held. The documentation in shrinker.h indicates potential
-invocation scenarios beyond the initial setup context.
-
-2. Comment on Unlikely Scenario: Regarding the comment in the code /*
-unlikely, but not impossible */, it seems to acknowledge the
-possibility of a race condition where conf->max_nr_stripes is less
-than conf->min_nr_stripes. This comment implies that previous
-developers might have noticed potential issues with race conditions,
-even if they are considered unlikely.
-
-3. Use of Local Variables Instead of Locks: In addressing this issue,
-my approach doesn't involve introducing additional locks, which could
-potentially lead to deadlocks or other concurrency problems. Instead,
-I've opted to store the values in local variables to ensure that the
-check remains effective and consistent throughout its execution. This
-modification aims to prevent reading intermediate values that might
-lead to incorrect calculations, without introducing new locking
-complexities.
-
-I'm looking forward to any further insights or suggestions you might
-have on this matter.
-
-Best regards,
-Han
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Tested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 
-20 39 <2045gemini@gmail.com> =E4=BA=8E2023=E5=B9=B412=E6=9C=8822=E6=97=A5=
-=E5=91=A8=E4=BA=94 10:21=E5=86=99=E9=81=93=EF=BC=9A
->
-> Hi Kuai,
->
-> Thanks for your email and the insightful points you've raised. Let me cla=
-rify a few aspects regarding the raid5_cache_count() and raid5_set_cache_si=
-ze() functions.
->
-> 1. Callback Function in setup_conf(): You mentioned that raid5_cache_coun=
-t() is called from setup_conf() where reconfig_mutex is held. While this is=
- true, it's important to note that raid5_cache_count() is actually initiali=
-zed as a callback function in setup_conf(), as described in /include/linux/=
-shrinker.h. This means it could be invoked later in a context where the rec=
-onfig_mutex isn't necessarily held. The documentation in shrinker.h indicat=
-es potential invocation scenarios beyond the initial setup context.
->
-> 2. Comment on Unlikely Scenario: Regarding the comment in the code /* unl=
-ikely, but not impossible */, it seems to acknowledge the possibility of a =
-race condition where conf->max_nr_stripes is less than conf->min_nr_stripes=
-. This comment implies that previous developers might have noticed potentia=
-l issues with race conditions, even if they are considered unlikely.
->
-> 3. Use of Local Variables Instead of Locks: In addressing this issue, my =
-approach doesn't involve introducing additional locks, which could potentia=
-lly lead to deadlocks or other concurrency problems. Instead, I've opted to=
- store the values in local variables to ensure that the check remains effec=
-tive and consistent throughout its execution. This modification aims to pre=
-vent reading intermediate values that might lead to incorrect calculations,=
- without introducing new locking complexities.
->
-> I'm looking forward to any further insights or suggestions you might have=
- on this matter.
->
-> Best regards,
-> Han
->
-> Yu Kuai <yukuai1@huaweicloud.com> =E4=BA=8E2023=E5=B9=B412=E6=9C=8822=E6=
-=97=A5=E5=91=A8=E4=BA=94 09:37=E5=86=99=E9=81=93=EF=BC=9A
->>
->> Hi,
->>
->> =E5=9C=A8 2023/12/21 18:43, Gui-Dong Han =E5=86=99=E9=81=93:
->> > In raid5_cache_count():
->> >       if (conf->max_nr_stripes < conf->min_nr_stripes)
->> >               return 0;
->> >       return conf->max_nr_stripes - conf->min_nr_stripes;
->> > The current check is ineffective, as the values could change immediate=
-ly
->> > after being checked.
->> >
->> > In raid5_set_cache_size():
->> >       ...
->> >       conf->min_nr_stripes =3D size;
->> >       ...
->> >       while (size > conf->max_nr_stripes)
->> >               conf->min_nr_stripes =3D conf->max_nr_stripes;
->> >       ...
->> >
->>
->> raid5_cache_count() is called from setup_conf() where reconfig_mtuex is
->> held.
->>
->> raid5_set_cache_size() is called from:
->> 1) raid5_store_stripe_cache_size(), reconfig_mutex is held
->> 2) r5l_start() from raid5_add_disk(), reconfig_mutex is held
->> 3) raid_ctr(), reconfig_mutex is held
->>
->> So, how can they concurrent in the first place?
->>
->> Thanks,
->> Kuai
->>
->> > Due to intermediate value updates in raid5_set_cache_size(), concurren=
-t
->> > execution of raid5_cache_count() and raid5_set_cache_size() may lead t=
-o
->> > inconsistent reads of conf->max_nr_stripes and conf->min_nr_stripes.
->> > The current checks are ineffective as values could change immediately
->> > after being checked, raising the risk of conf->min_nr_stripes exceedin=
-g
->> > conf->max_nr_stripes and potentially causing an integer overflow.
->> >
->> > This possible bug is found by an experimental static analysis tool
->> > developed by our team. This tool analyzes the locking APIs to extract
->> > function pairs that can be concurrently executed, and then analyzes th=
-e
->> > instructions in the paired functions to identify possible concurrency =
-bugs
->> > including data races and atomicity violations. The above possible bug =
-is
->> > reported when our tool analyzes the source code of Linux 6.2.
->> >
->> > To resolve this issue, it is suggested to introduce local variables
->> > 'min_stripes' and 'max_stripes' in raid5_cache_count() to ensure the
->> > values remain stable throughout the check. Adding locks in
->> > raid5_cache_count() fails to resolve atomicity violations, as
->> > raid5_set_cache_size() may hold intermediate values of
->> > conf->min_nr_stripes while unlocked. With this patch applied, our tool=
- no
->> > longer reports the bug, with the kernel configuration allyesconfig for
->> > x86_64. Due to the lack of associated hardware, we cannot test the pat=
-ch
->> > in runtime testing, and just verify it according to the code logic.
->> >
->> > Fixes: edbe83ab4c27e ("md/raid5: allow the stripe_cache to grow and ..=
-.")
->> > Reported-by: BassCheck <bass@buaa.edu.cn>
->> > Signed-off-by: Gui-Dong Han <2045gemini@gmail.com>
->> > ---
->> >   drivers/md/raid5.c | 7 ++++---
->> >   1 file changed, 4 insertions(+), 3 deletions(-)
->> >
->> > diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
->> > index 8497880135ee..62ebf33402cc 100644
->> > --- a/drivers/md/raid5.c
->> > +++ b/drivers/md/raid5.c
->> > @@ -7390,11 +7390,12 @@ static unsigned long raid5_cache_count(struct =
-shrinker *shrink,
->> >                                      struct shrink_control *sc)
->> >   {
->> >       struct r5conf *conf =3D shrink->private_data;
->> > -
->> > -     if (conf->max_nr_stripes < conf->min_nr_stripes)
->> > +     int max_stripes =3D conf->max_nr_stripes;
->> > +     int min_stripes =3D conf->min_nr_stripes;
->> > +     if (max_stripes < min_stripes)
->> >               /* unlikely, but not impossible */
->> >               return 0;
->> > -     return conf->max_nr_stripes - conf->min_nr_stripes;
->> > +     return max_stripes - min_stripes;
->> >   }
->> >
->> >   static struct r5conf *setup_conf(struct mddev *mddev)
->> >
->>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+> Changes since v2: https://lore.kernel.org/linux-trace-kernel/20231221194516.53e1ee43@gandalf.local.home
+> 
+> - Changed the instance test name from "foo-$(mktemp -u XXXXX)" to
+>   "$(mktemp -u test-XXXXXX)" as Masami reported that busybox mktemp only
+>   works with 6 Xs and not 5. Also changed "foo" to "test" and placed it
+>   into the mktemp format.
+> 
+>  .../ftrace/test.d/00basic/test_ownership.tc   | 113 ++++++++++++++++++
+>  1 file changed, 113 insertions(+)
+>  create mode 100755 tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
+> new file mode 100755
+> index 000000000000..4c20be3a714a
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
+> @@ -0,0 +1,113 @@
+> +#!/bin/sh
+> +# description: Test file and directory owership changes for eventfs
+> +
+> +original_group=`stat -c "%g" .`
+> +original_owner=`stat -c "%u" .`
+> +
+> +mount_point=`stat -c '%m' .`
+> +mount_options=`mount | grep "$mount_point" | sed -e 's/.*(\(.*\)).*/\1/'`
+> +
+> +# find another owner and group that is not the original
+> +other_group=`tac /etc/group | grep -v ":$original_group:" | head -1 | cut -d: -f3`
+> +other_owner=`tac /etc/passwd | grep -v ":$original_owner:" | head -1 | cut -d: -f3`
+> +
+> +# Remove any group ownership already
+> +new_options=`echo "$mount_options" | sed -e "s/gid=[0-9]*/gid=$other_group/"`
+> +
+> +if [ "$new_options" = "$mount_options" ]; then
+> +	new_options="$mount_options,gid=$other_group"
+> +	mount_options="$mount_options,gid=$original_group"
+> +fi
+> +
+> +canary="events/timer events/timer/timer_cancel events/timer/timer_cancel/format"
+> +
+> +test() {
+> +	file=$1
+> +	test_group=$2
+> +
+> +	owner=`stat -c "%u" $file`
+> +	group=`stat -c "%g" $file`
+> +
+> +	echo "testing $file $owner=$original_owner and $group=$test_group"
+> +	if [ $owner -ne $original_owner ]; then
+> +		exit_fail
+> +	fi
+> +	if [ $group -ne $test_group ]; then
+> +		exit_fail
+> +	fi
+> +
+> +	# Note, the remount does not update ownership so test going to and from owner
+> +	echo "test owner $file to $other_owner"
+> +	chown $other_owner $file
+> +	owner=`stat -c "%u" $file`
+> +	if [ $owner -ne $other_owner ]; then
+> +		exit_fail
+> +	fi
+> +
+> +	chown $original_owner $file
+> +	owner=`stat -c "%u" $file`
+> +	if [ $owner -ne $original_owner ]; then
+> +		exit_fail
+> +	fi
+> +
+> +}
+> +
+> +run_tests() {
+> +	for d in "." "events" "events/sched" "events/sched/sched_switch" "events/sched/sched_switch/enable" $canary; do
+> +		test "$d" $other_group
+> +	done
+> +
+> +	chgrp $original_group events
+> +	test "events" $original_group
+> +	for d in "." "events/sched" "events/sched/sched_switch" "events/sched/sched_switch/enable" $canary; do
+> +		test "$d" $other_group
+> +	done
+> +
+> +	chgrp $original_group events/sched
+> +	test "events/sched" $original_group
+> +	for d in "." "events/sched/sched_switch" "events/sched/sched_switch/enable" $canary; do
+> +		test "$d" $other_group
+> +	done
+> +
+> +	chgrp $original_group events/sched/sched_switch
+> +	test "events/sched/sched_switch" $original_group
+> +	for d in "." "events/sched/sched_switch/enable" $canary; do
+> +		test "$d" $other_group
+> +	done
+> +
+> +	chgrp $original_group events/sched/sched_switch/enable
+> +	test "events/sched/sched_switch/enable" $original_group
+> +	for d in "." $canary; do
+> +		test "$d" $other_group
+> +	done
+> +}
+> +
+> +mount -o remount,"$new_options" .
+> +
+> +run_tests
+> +
+> +mount -o remount,"$mount_options" .
+> +
+> +for d in "." "events" "events/sched" "events/sched/sched_switch" "events/sched/sched_switch/enable" $canary; do
+> +	test "$d" $original_group
+> +done
+> +
+> +# check instances as well
+> +
+> +chgrp $other_group instances
+> +
+> +instance="$(mktemp -u test-XXXXXX)"
+> +
+> +mkdir instances/$instance
+> +
+> +cd instances/$instance
+> +
+> +run_tests
+> +
+> +cd ../..
+> +
+> +rmdir instances/$instance
+> +
+> +chgrp $original_group instances
+> +
+> +exit 0
+> -- 
+> 2.42.0
+> 
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
