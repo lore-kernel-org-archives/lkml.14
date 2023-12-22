@@ -1,26 +1,26 @@
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7212C1B5;
-	Fri, 22 Dec 2023 15:08:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104E92C855;
+	Fri, 22 Dec 2023 15:08:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yIAvYy07"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A1L3KGi7"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=3uxekAKYtWjU4xunWw9AHOgXL8ikM7hINi+MFUVXD1Q=; b=yIAvYy07YYVywxCYNd4RPpUC2z
-	hov+bjdw7XI7TCb4f222lmJzvS4zTCCXlwyPjJvhMKKBCYuLTj719RJP03bEqb7Ny/AEXGYoBrHcJ
-	bQlB9PsdksaKg3Kudutgim4vY/WWFKu+9i5EiMoYzhnkQ2fMUEncbFuxCNqzsW6Qo2DuXMnVs1neU
-	4eh+YkvnDEvwvL3fOe1ac3QeobScCtYlB/jENSX9n2lKGLzBwJBD4XxjurornDUhLw7t0P15+/sNC
-	Hl3HtLu61rDDl8jjubtzUWofoOftxS277w6sKdRzINQQXfSfWcYjG92SuUr1GMB27Gab9/JW6O5bL
-	q6JhGxDQ==;
+	bh=dcSwdTVvCQUQwEHV9ZU6DKJi2JGMjLPwvaIvkNqY5Tg=; b=A1L3KGi7p22WmVHYwn8JAqK2do
+	OXUFMCP8LJGy0Us0BB+qtD7uRWeU14L7juYdVzyoo741jIvkCVavCFPr7vn49oJnwBeb31GwyhyCL
+	XMkYwmZAir6Q8gmHFK6Gky8PEmPyGgyC/KQTwjJI/mv6W+LjQtY/VI5pXzlj9BZdnNVpCESlp38Vu
+	jDKhsTX0+/J0c5ijdwDmuwZyFecpwZm4RDeHS0BP2noVcUDK4cFWRWT1GMfPdyriBSS6BSTLFTFv6
+	PXWgGoOYcEAcl640qINBEZZbXhmFnZy7yHZ5tKGTOCGoGVoGeI9mHWUXUgs3+Q2npwJgqbpQmtJd7
+	K5IukuVA==;
 Received: from 2a02-8389-2341-5b80-39d3-4735-9a3c-88d8.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:39d3:4735:9a3c:88d8] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGh8r-006BSh-23;
-	Fri, 22 Dec 2023 15:08:50 +0000
+	id 1rGh8m-006BQI-21;
+	Fri, 22 Dec 2023 15:08:44 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: linux-mm@kvack.org
 Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
@@ -31,9 +31,9 @@ Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
 	linux-kernel@vger.kernel.org,
 	Jan Kara <jack@suse.cz>,
 	Dave Chinner <dchinner@redhat.com>
-Subject: [PATCH 09/17] writeback: Simplify the loops in write_cache_pages()
-Date: Fri, 22 Dec 2023 16:08:19 +0100
-Message-Id: <20231222150827.1329938-10-hch@lst.de>
+Subject: [PATCH 07/17] writeback: Factor writeback_get_batch() out of write_cache_pages()
+Date: Fri, 22 Dec 2023 16:08:17 +0100
+Message-Id: <20231222150827.1329938-8-hch@lst.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231222150827.1329938-1-hch@lst.de>
 References: <20231222150827.1329938-1-hch@lst.de>
@@ -48,148 +48,123 @@ X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-Collapse the two nested loops into one.  This is needed as a step
-towards turning this into an iterator.
-
-Note that this drops the "index <= end" check in the previous outer loop
-and just relies on filemap_get_folios_tag() to return 0 entries when
-index > end.  This actually has a subtle implication when end == -1
-because then the returned index will be -1 as well and thus if there is
-page present on index -1, we could be looping indefinitely. But as the
-comment in filemap_get_folios_tag documents this as already broken anyway
-we should not worry about it here either.  The fix for that would
-probably a change to the filemap_get_folios_tag() calling convention.
+This simple helper will be the basis of the writeback iterator.
+To make this work, we need to remember the current index
+and end positions in writeback_control.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-[hch: updated the commit log based on feedback from Jan Kara]
+[hch: heavily rebased, add helpers to get the tag and end index,
+      don't keep the end index in struct writeback_control]
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Jan Kara <jack@suse.cz>
 Acked-by: Dave Chinner <dchinner@redhat.com>
 ---
- mm/page-writeback.c | 94 ++++++++++++++++++++++-----------------------
- 1 file changed, 46 insertions(+), 48 deletions(-)
+ include/linux/writeback.h |  1 +
+ mm/page-writeback.c       | 49 +++++++++++++++++++++++++--------------
+ 2 files changed, 32 insertions(+), 18 deletions(-)
 
+diff --git a/include/linux/writeback.h b/include/linux/writeback.h
+index 390f2dd03cf27e..195393981ccb5c 100644
+--- a/include/linux/writeback.h
++++ b/include/linux/writeback.h
+@@ -81,6 +81,7 @@ struct writeback_control {
+ 
+ 	/* internal fields used by the ->writepages implementation: */
+ 	struct folio_batch fbatch;
++	pgoff_t index;
+ 	int err;
+ 
+ #ifdef CONFIG_CGROUP_WRITEBACK
 diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index fe508548482217..d62bc3498ed975 100644
+index 564d5faf562ba7..798e5264dc0353 100644
 --- a/mm/page-writeback.c
 +++ b/mm/page-writeback.c
-@@ -2475,6 +2475,7 @@ int write_cache_pages(struct address_space *mapping,
+@@ -2383,6 +2383,29 @@ static void writeback_finish(struct address_space *mapping,
+ 	}
+ }
+ 
++static xa_mark_t wbc_to_tag(struct writeback_control *wbc)
++{
++	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
++		return PAGECACHE_TAG_TOWRITE;
++	return PAGECACHE_TAG_DIRTY;
++}
++
++static pgoff_t wbc_end(struct writeback_control *wbc)
++{
++	if (wbc->range_cyclic)
++		return -1;
++	return wbc->range_end >> PAGE_SHIFT;
++}
++
++static void writeback_get_batch(struct address_space *mapping,
++		struct writeback_control *wbc)
++{
++	folio_batch_release(&wbc->fbatch);
++	cond_resched();
++	filemap_get_folios_tag(mapping, &wbc->index, wbc_end(wbc),
++			wbc_to_tag(wbc), &wbc->fbatch);
++}
++
+ /**
+  * write_cache_pages - walk the list of dirty pages of the given address space and write all of them.
+  * @mapping: address space structure to write
+@@ -2419,38 +2442,30 @@ int write_cache_pages(struct address_space *mapping,
+ 		      void *data)
  {
  	int error;
+-	int nr_folios;
+-	pgoff_t index;
  	pgoff_t end;		/* Inclusive */
-+	int i = 0;
+-	xa_mark_t tag;
  
  	if (wbc->range_cyclic) {
- 		wbc->index = mapping->writeback_index; /* prev offset */
-@@ -2489,63 +2490,60 @@ int write_cache_pages(struct address_space *mapping,
+-		index = mapping->writeback_index; /* prev offset */
++		wbc->index = mapping->writeback_index; /* prev offset */
+ 		end = -1;
+ 	} else {
+-		index = wbc->range_start >> PAGE_SHIFT;
++		wbc->index = wbc->range_start >> PAGE_SHIFT;
+ 		end = wbc->range_end >> PAGE_SHIFT;
+ 	}
+-	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages) {
+-		tag_pages_for_writeback(mapping, index, end);
+-		tag = PAGECACHE_TAG_TOWRITE;
+-	} else {
+-		tag = PAGECACHE_TAG_DIRTY;
+-	}
++	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
++		tag_pages_for_writeback(mapping, wbc->index, end);
+ 
  	folio_batch_init(&wbc->fbatch);
  	wbc->err = 0;
  
--	while (wbc->index <= end) {
--		int i;
--
--		writeback_get_batch(mapping, wbc);
-+	for (;;) {
-+		struct folio *folio;
-+		unsigned long nr;
+-	while (index <= end) {
++	while (wbc->index <= end) {
+ 		int i;
  
-+		if (i == wbc->fbatch.nr) {
-+			writeback_get_batch(mapping, wbc);
-+			i = 0;
-+		}
- 		if (wbc->fbatch.nr == 0)
+-		nr_folios = filemap_get_folios_tag(mapping, &index, end,
+-				tag, &wbc->fbatch);
++		writeback_get_batch(mapping, wbc);
+ 
+-		if (nr_folios == 0)
++		if (wbc->fbatch.nr == 0)
  			break;
  
--		for (i = 0; i < wbc->fbatch.nr; i++) {
--			struct folio *folio = wbc->fbatch.folios[i];
--			unsigned long nr;
-+		folio = wbc->fbatch.folios[i++];
+-		for (i = 0; i < nr_folios; i++) {
++		for (i = 0; i < wbc->fbatch.nr; i++) {
+ 			struct folio *folio = wbc->fbatch.folios[i];
+ 			unsigned long nr;
  
--			folio_lock(folio);
--			if (!folio_prepare_writeback(mapping, wbc, folio)) {
--				folio_unlock(folio);
--				continue;
--			}
-+		folio_lock(folio);
-+		if (!folio_prepare_writeback(mapping, wbc, folio)) {
-+			folio_unlock(folio);
-+			continue;
-+		}
- 
--			trace_wbc_writepage(wbc, inode_to_bdi(mapping->host));
-+		trace_wbc_writepage(wbc, inode_to_bdi(mapping->host));
- 
--			error = writepage(folio, wbc, data);
--			nr = folio_nr_pages(folio);
--			wbc->nr_to_write -= nr;
-+		error = writepage(folio, wbc, data);
-+		nr = folio_nr_pages(folio);
-+		wbc->nr_to_write -= nr;
- 
--			/*
--			 * Handle the legacy AOP_WRITEPAGE_ACTIVATE magic return
--			 * value.  Eventually all instances should just unlock
--			 * the folio themselves and return 0;
--			 */
--			if (error == AOP_WRITEPAGE_ACTIVATE) {
--				folio_unlock(folio);
--				error = 0;
--			}
--		
--			if (error && !wbc->err)
--				wbc->err = error;
-+		/*
-+		 * Handle the legacy AOP_WRITEPAGE_ACTIVATE magic return value.
-+		 * Eventually all instances should just unlock the folio
-+		 * themselves and return 0;
-+		 */
-+		if (error == AOP_WRITEPAGE_ACTIVATE) {
-+			folio_unlock(folio);
-+			error = 0;
-+		}
- 
--			/*
--			 * For integrity sync  we have to keep going until we
--			 * have written all the folios we tagged for writeback
--			 * prior to entering this loop, even if we run past
--			 * wbc->nr_to_write or encounter errors.  This is
--			 * because the file system may still have state to clear
--			 * for each folio.   We'll eventually return the first
--			 * error encountered.
--			 *
--			 * For background writeback just push done_index past
--			 * this folio so that we can just restart where we left
--			 * off and media errors won't choke writeout for the
--			 * entire file.
--			 */
--			if (wbc->sync_mode == WB_SYNC_NONE &&
--			    (wbc->err || wbc->nr_to_write <= 0)) {
--				writeback_finish(mapping, wbc,
--						folio->index + nr);
--				return error;
--			}
-+		if (error && !wbc->err)
-+			wbc->err = error;
-+
-+		/*
-+		 * For integrity sync  we have to keep going until we have
-+		 * written all the folios we tagged for writeback prior to
-+		 * entering this loop, even if we run past wbc->nr_to_write or
-+		 * encounter errors.  This is because the file system may still
-+		 * have state to clear for each folio.   We'll eventually return
-+		 * the first error encountered.
-+		 *
-+		 * For background writeback just push done_index past this folio
-+		 * so that we can just restart where we left off and media
-+		 * errors won't choke writeout for the entire file.
-+		 */
-+		if (wbc->sync_mode == WB_SYNC_NONE &&
-+		    (wbc->err || wbc->nr_to_write <= 0)) {
-+			writeback_finish(mapping, wbc, folio->index + nr);
-+			return error;
+@@ -2525,8 +2540,6 @@ int write_cache_pages(struct address_space *mapping,
+ 				return error;
+ 			}
  		}
+-		folio_batch_release(&wbc->fbatch);
+-		cond_resched();
  	}
  
+ 	writeback_finish(mapping, wbc, 0);
 -- 
 2.39.2
 
