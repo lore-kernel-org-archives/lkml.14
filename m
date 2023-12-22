@@ -1,260 +1,227 @@
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106E222F11
-	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 15:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5779E23743
+	for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 15:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="OZ9yRMOA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hhgiFGbw"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a1fae88e66eso231923066b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 22 Dec 2023 07:01:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Jj8mVutA027m4WNSC+dj5xkmD3A52ft923Sv9ACRSwQ=;
-  b=OZ9yRMOAbS085k2WEqKfxU6jGRuMHy8hVRk6TgnP2+0S+/RyBG31QFVj
-   1/b+AUdxXnJoclFU6K76AmtkdYwhOHtnfkr628LkOBVae+pTwb/UWSvxc
-   CWt1XgJveJv3vvZma4lXVkkTFGwET2EJHA7DgMMwb3PK4WKwVhCKrv35o
-   M=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.04,296,1695679200"; 
-   d="scan'208";a="75199834"
-Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 16:00:36 +0100
-Date: Fri, 22 Dec 2023 16:00:35 +0100 (CET)
-From: Julia Lawall <julia.lawall@inria.fr>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-    Dietmar Eggemann <dietmar.eggemann@arm.com>, Mel Gorman <mgorman@suse.de>, 
-    linux-kernel@vger.kernel.org
-Subject: Re: EEVDF and NUMA balancing
-In-Reply-To: <CAKfTPtAeFvrZxApK3RruWwCjMxbQvOkU+_YgZSo4QPT_AD6FxA@mail.gmail.com>
-Message-ID: <9dc451b5-9dd8-89f2-1c9c-7c358faeaad@inria.fr>
-References: <alpine.DEB.2.22.394.2310032059060.3220@hadrien> <20231003215159.GJ1539@noisy.programming.kicks-ass.net> <alpine.DEB.2.22.394.2310041358420.3108@hadrien> <20231004120544.GA6307@noisy.programming.kicks-ass.net> <alpine.DEB.2.22.394.2310041822170.3108@hadrien>
- <20231004174801.GE19999@noisy.programming.kicks-ass.net> <alpine.DEB.2.22.394.2310041958380.3108@hadrien> <20231009102949.GC14330@noisy.programming.kicks-ass.net> <b8ab29de-1775-46e-dd75-cdf98be8b0@inria.fr> <CAKfTPtBhWwk9sf9F1=KwubiAWFDC2A9ZT-SSJ+tgFxme1cFmYA@mail.gmail.com>
- <alpine.DEB.2.22.394.2312182302310.3361@hadrien> <CAKfTPtALEFtrapi3Kk97KLGQN4259eEQEwwftVUK4RG42Vgoyw@mail.gmail.com> <98b3df1-79b7-836f-e334-afbdd594b55@inria.fr> <CAKfTPtCRN_eWgVdK2-h6E_ifJKwwJEtMjeNjB=5DXZFWyBS+tQ@mail.gmail.com>
- <93112fbe-30be-eab8-427c-5d4670a0f94e@inria.fr> <CAKfTPtAeFvrZxApK3RruWwCjMxbQvOkU+_YgZSo4QPT_AD6FxA@mail.gmail.com>
+        d=linaro.org; s=google; t=1703257304; x=1703862104; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TIsLTUxJE1cxBBiiifVCcvawbyJ4lrohtOQb+rAqVac=;
+        b=hhgiFGbwHUwz52j8mNsxeXgT1VIxJE8NIpT0RNJvC97hWVt/cBgE6Yc8NELwVLReyI
+         Zy7Cl3m/UUH9vrvfbXPRA8qk7CrhoeVZACNkX1+bWAAIrDO+lY+k25qeJ+bffRVdARxV
+         tlDWIiKYTVEyZ8MIjs0J+ECescmIeL/HctVW/llmsbrlmlRmw1RnZB6PlpyrmQ12aggr
+         DiFUCWenO4pkNdPiALv6N1gVFKHgyg9x04H9pFZ0bK9Gi6p/zRDo0JyLU+bnI/iK6NTK
+         sVTh2s1e4ogikW0a1kQ7VbZhV/cUJgjIlPlQKqMLivSIDbj/lbjF2dUy3H8K0g8FW3xs
+         Y2tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703257304; x=1703862104;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TIsLTUxJE1cxBBiiifVCcvawbyJ4lrohtOQb+rAqVac=;
+        b=GVOnwB5U9EzkOD8q8BfsmVq+1zg25mlu5PX21IrOdUqk82J6wrL6YGDxHwDMc6R+t3
+         uihVrbV4ZMVTE3lrH/MzMxSd26SSopxfBRZuWeXUbUCNiEW20goEn4cMnO3Erme3/UI/
+         QpXdBHHQDXPctyibtJXPPa8rzEcUFX1BRsRD4+NnVYnBRkChzx+61TD9ypRlXwftuDuI
+         ZhxvT7ue5ohqD61xDc2o7NpusHN8S2kKIYZmVryi8ptLAO1K8mXstjWMN1IOjIJKObZW
+         y0cpChklHtQC1Wmyp2bDAxlXix12ZIuNz5jl/OYfaVYEM5VpMFxRN7TZI5jqkDFvBCDG
+         A1tA==
+X-Gm-Message-State: AOJu0YwaoPaz8F989Fk2PizpiNiZB/MR+81CG3ulczdCJ4UgDzPJn53C
+	itxA8hjF3LOXFuIAkGhTceWN8vQqaJWy1w==
+X-Google-Smtp-Source: AGHT+IFOVAFE/3mSgxDg8r0BmeFffXjHPsKVAmnpzZGOR+G92xcuwjc1mM3+0AL59eOzOUdBtOOHBQ==
+X-Received: by 2002:a17:906:eb51:b0:a26:858b:b76e with SMTP id mc17-20020a170906eb5100b00a26858bb76emr831943ejb.105.1703257304630;
+        Fri, 22 Dec 2023 07:01:44 -0800 (PST)
+Received: from krzk-bin.. ([78.10.206.178])
+        by smtp.gmail.com with ESMTPSA id h1-20020a17090791c100b00a26af35c171sm1275671ejz.0.2023.12.22.07.01.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Dec 2023 07:01:44 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Banajit Goswami <bgoswami@quicinc.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	linux-arm-msm@vger.kernel.org,
+	alsa-devel@alsa-project.org,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Sean Anderson <sean.anderson@seco.com>
+Subject: [PATCH 1/4] reset: instantiate reset GPIO controller for shared reset-gpios
+Date: Fri, 22 Dec 2023 16:01:30 +0100
+Message-Id: <20231222150133.732662-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231222150133.732662-1-krzysztof.kozlowski@linaro.org>
+References: <20231222150133.732662-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
+Devices sharing a reset GPIO could use the reset framework for
+coordinated handling of that shared GPIO line.  We have several cases of
+such needs, at least for Devicetree-based platforms.
 
+If Devicetree-based device requests a reset line which is missing but
+there is a reset-gpios property, instantiate a new "reset-gpio" platform
+device which will handle such reset line.  This allows seamless handling
+of such shared reset-gpios without need of changing Devicetree binding [1].
 
-On Fri, 22 Dec 2023, Vincent Guittot wrote:
+The "reset-gpio" driver follows shortly.
 
-> On Thu, 21 Dec 2023 at 19:20, Julia Lawall <julia.lawall@inria.fr> wrote:
-> >
-> >
-> >
-> > On Wed, 20 Dec 2023, Vincent Guittot wrote:
-> >
-> > > On Tue, 19 Dec 2023 at 18:51, Julia Lawall <julia.lawall@inria.fr> wrote:
-> > > >
-> > > > > > One CPU has 2 threads, and the others have one.  The one with two threads
-> > > > > > is returned as the busiest one.  But nothing happens, because both of them
-> > > > > > prefer the socket that they are on.
-> > > > >
-> > > > > This explains way load_balance uses migrate_util and not migrate_task.
-> > > > > One CPU with 2 threads can be overloaded
-> > > > >
-> > > > > ok, so it seems that your 1st problem is that you have 2 threads on
-> > > > > the same CPU whereas you should have an idle core in this numa node.
-> > > > > All cores are sharing the same LLC, aren't they ?
-> > > >
-> > > > Sorry, not following this.
-> > > >
-> > > > Socket 1 has N-1 threads, and thus an idle CPU.
-> > > > Socket 2 has N+1 threads, and thus one CPU with two threads.
-> > > >
-> > > > Socket 1 tries to steal from that one CPU with two threads, but that
-> > > > fails, because both threads prefer being on Socket 2.
-> > > >
-> > > > Since most (or all?) of the threads on Socket 2 perfer being on Socket 2.
-> > > > the only hope for Socket 1 to fill in its idle core is active balancing.
-> > > > But active balancing is not triggered because of migrate_util and because
-> > > > CPU_NEWLY_IDLE prevents the failure counter from ebing increased.
-> > >
-> > >  CPU_NEWLY_IDLE load_balance doesn't aims to do active load balance so
-> > > you should focus on the CPU_NEWLY_IDLE load_balance
-> >
-> > I'm still perplexed why a core that has been idle for 1 second or more is
-> > considered to be newly idle.
->
-> CPU_NEWLY_IDLE load balance is called when the scheduler was
-> scheduling something that just migrated or went back to sleep and
-> doesn't have anything to schedule so it tries to  pull a task from
-> somewhere else.
->
-> But you should still have some CPU_IDLE load balance according to your
-> description where one CPU of the socket remains idle and those will
-> increase the nr_balance_failed
+Link: https://lore.kernel.org/all/YXi5CUCEi7YmNxXM@robh.at.kernel.org/
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Sean Anderson <sean.anderson@seco.com>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ drivers/reset/core.c             | 70 +++++++++++++++++++++++++++-----
+ include/linux/reset-controller.h |  2 +
+ 2 files changed, 61 insertions(+), 11 deletions(-)
 
-This happens.  But not often.
+diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+index 4d5a78d3c085..a1f0f515a7e0 100644
+--- a/drivers/reset/core.c
++++ b/drivers/reset/core.c
+@@ -10,9 +10,12 @@
+ #include <linux/export.h>
+ #include <linux/kernel.h>
+ #include <linux/kref.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_gpio.h>
+ #include <linux/acpi.h>
++#include <linux/platform_device.h>
+ #include <linux/reset.h>
+ #include <linux/reset-controller.h>
+ #include <linux/slab.h>
+@@ -813,13 +816,59 @@ static void __reset_control_put_internal(struct reset_control *rstc)
+ 	kref_put(&rstc->refcnt, __reset_control_release);
+ }
+ 
++static int __reset_add_reset_gpio_device(struct device_node *node,
++					 const struct gpio_desc **out)
++{
++	struct platform_device *pdev;
++	int gpio;
++
++	/* Don't care about deprecated '-gpio' suffix. */
++	gpio = of_get_named_gpio(node, "reset-gpios", 0);
++	if (!gpio_is_valid(gpio))
++		return gpio;
++
++	pdev = platform_device_register_data(NULL, "reset-gpio",
++					     PLATFORM_DEVID_AUTO, &node,
++					     sizeof(node));
++	if (!IS_ERR(pdev))
++		*out = gpio_to_desc(gpio);
++
++	return PTR_ERR_OR_ZERO(pdev);
++}
++
++static struct reset_controller_dev *__reset_find_rcdev(const struct of_phandle_args *args,
++						       const void *cookie)
++{
++	struct reset_controller_dev *r, *rcdev;
++
++	lockdep_assert_held(&reset_list_mutex);
++
++	rcdev = NULL;
++	list_for_each_entry(r, &reset_controller_list, list) {
++		if (args && args->np) {
++			if (args->np == r->of_node) {
++				rcdev = r;
++				break;
++			}
++		} else if (cookie) {
++			if (cookie == r->cookie) {
++				rcdev = r;
++				break;
++			}
++		}
++	}
++
++	return rcdev;
++}
++
+ struct reset_control *
+ __of_reset_control_get(struct device_node *node, const char *id, int index,
+ 		       bool shared, bool optional, bool acquired)
+ {
++	const struct gpio_desc *gpio = NULL;
++	struct of_phandle_args args = {0};
+ 	struct reset_control *rstc;
+-	struct reset_controller_dev *r, *rcdev;
+-	struct of_phandle_args args;
++	struct reset_controller_dev *rcdev;
+ 	int rstc_id;
+ 	int ret;
+ 
+@@ -839,17 +888,16 @@ __of_reset_control_get(struct device_node *node, const char *id, int index,
+ 					 index, &args);
+ 	if (ret == -EINVAL)
+ 		return ERR_PTR(ret);
+-	if (ret)
+-		return optional ? NULL : ERR_PTR(ret);
++	if (ret) {
++		ret = __reset_add_reset_gpio_device(node, &gpio);
++		if (ret)
++			return optional ? NULL : ERR_PTR(ret);
++
++		args.args_count = 1; /* reset-gpio has only one reset line */
++	}
+ 
+ 	mutex_lock(&reset_list_mutex);
+-	rcdev = NULL;
+-	list_for_each_entry(r, &reset_controller_list, list) {
+-		if (args.np == r->of_node) {
+-			rcdev = r;
+-			break;
+-		}
+-	}
++	rcdev = __reset_find_rcdev(&args, gpio);
+ 
+ 	if (!rcdev) {
+ 		rstc = ERR_PTR(-EPROBE_DEFER);
+diff --git a/include/linux/reset-controller.h b/include/linux/reset-controller.h
+index 0fa4f60e1186..c0a99a8ea29e 100644
+--- a/include/linux/reset-controller.h
++++ b/include/linux/reset-controller.h
+@@ -61,6 +61,7 @@ struct reset_control_lookup {
+  * @dev: corresponding driver model device struct
+  * @of_node: corresponding device tree node as phandle target
+  * @of_reset_n_cells: number of cells in reset line specifiers
++ * @cookie: for reset-gpios controllers: corresponding GPIO instead of of_node
+  * @of_xlate: translation function to translate from specifier as found in the
+  *            device tree to id as given to the reset control ops, defaults
+  *            to :c:func:`of_reset_simple_xlate`.
+@@ -74,6 +75,7 @@ struct reset_controller_dev {
+ 	struct device *dev;
+ 	struct device_node *of_node;
+ 	int of_reset_n_cells;
++	const void *cookie;
+ 	int (*of_xlate)(struct reset_controller_dev *rcdev,
+ 			const struct of_phandle_args *reset_spec);
+ 	unsigned int nr_resets;
+-- 
+2.34.1
 
-> I'm surprised that you have mainly CPU_NEWLY_IDLE. Do you know the reason ?
-
-No.  They come from do_idle calling the scheduler.  I will look into why
-this happens so often.
-
->
-> >
-> > >
-> > > >
-> > > > The part that I am currently missing to understand is that when I convert
-> > > > CPU_NEWLY_IDLE to CPU_IDLE, it typically picks a CPU with only one thread
-> > > > as busiest.  I have the impression that the fbq_type intervenes to cause
-> > >
-> > > find_busiest_queue skips rqs which only have threads preferring being
-> > > in there. So it selects another rq with a thread that doesn't prefer
-> > > its current node.
-> > >
-> > > do you know what is the value of env->fbq_type ?
-> >
-> > I have seen one trace in which it is all.  There are 33 tasks on one
-> > socket, and they are all considered to have a preference for that socket.
->
-> With env->fbq_type == all, load_balance and find_busiest_queue should
-> be able to select the actual busiest queue with 2 threads.
-
-That's what it does.  But nothing can be stolen because there is no active
-balancing.
-
->
-> But then I imagine that can_migrate/ migrate_degrades_locality
-> prevents to detach the task
-
-Exactly.
-
-julia
-
-> >
-> > But I have another trace in which it is regular.  There are 33 tasks on
-> > the socket, but only 32 have a preference.
-> >
-> > >
-> > > need_active_balance() probably needs a new condition for the numa case
-> > > where the busiest queue can't be selected and we have to trigger an
-> > > active load_balance on a rq with only 1 thread but that is not running
-> > > on its preferred node. Something like the untested below :
-> > >
-> > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > > index e5da5eaab6ce..de1474191488 100644
-> > > --- a/kernel/sched/fair.c
-> > > +++ b/kernel/sched/fair.c
-> > > @@ -11150,6 +11150,24 @@ imbalanced_active_balance(struct lb_env *env)
-> > >         return 0;
-> > >  }
-> > >
-> > > +static inline bool
-> > > +numa_active_balance(struct lb_env *env)
-> > > +{
-> > > +       struct sched_domain *sd = env->sd;
-> > > +
-> > > +       /*
-> > > +        * We tried to migrate only a !numa task or a task on wrong node but
-> > > +        * the busiest queue with such task has only 1 running task. Previous
-> > > +        * attempt has failed so force the migration of such task.
-> > > +        */
-> > > +       if ((env->fbq_type < all) &&
-> > > +           (env->src_rq->cfs.h_nr_running == 1) &&
-> > > +           (sd->nr_balance_failed > 0))
-> >
-> > The last condition will still be a problem because of CPU_NEWLY_IDLE.  The
-> > nr_balance_failed counter doesn't get incremented very often.
->
-> It waits for at least 1 failed CPU_IDLE load_balance
->
-> >
-> > julia
-> >
-> > > +               return 1;
-> > > +
-> > > +       return 0;
-> > > +}
-> > > +
-> > >  static int need_active_balance(struct lb_env *env)
-> > >  {
-> > >         struct sched_domain *sd = env->sd;
-> > > @@ -11176,6 +11194,9 @@ static int need_active_balance(struct lb_env *env)
-> > >         if (env->migration_type == migrate_misfit)
-> > >                 return 1;
-> > >
-> > > +       if (numa_active_balance(env))
-> > > +               return 1;
-> > > +
-> > >         return 0;
-> > >  }
-> > >
-> > >
-> > > > it to avoid the CPU with two threads that already prefer Socket 2.  But I
-> > > > don't know at the moment why that is the case.  In any case, it's fine to
-> > > > active balance from a CPU with only one thread, because Socket 2 will
-> > > > even itself out afterwards.
-> > > >
-> > > > >
-> > > > > You should not have more than 1 thread per CPU when there are N+1
-> > > > > threads on a node with N cores / 2N CPUs.
-> > > >
-> > > > Hmm, I think there is a miscommunication about cores and CPUs.  The
-> > > > machine has two sockets with 16 physical cores each, and thus 32
-> > > > hyperthreads.  There are 64 threads running.
-> > >
-> > > Ok, I have been confused by what you wrote previously:
-> > > " The context is that there are 2N threads running on 2N cores, one thread
-> > > gets NUMA balanced to the other socket, leaving N+1 threads on one socket
-> > > and N-1 threads on the other socket."
-> > >
-> > > I have assumed that there were N cores and 2N CPUs per socket as you
-> > > mentioned Intel Xeon 6130 in the commit message . My previous emails
-> > > don't apply at all with N CPUs per socket and the group_overloaded is
-> > > correct.
-> > >
-> > >
-> > >
-> > > >
-> > > > julia
-> > > >
-> > > > > This will enable the
-> > > > > load_balance to try to migrate a task instead of some util(ization)
-> > > > > and you should reach the active load balance.
-> > > > >
-> > > > > >
-> > > > > > > In theory you should have the
-> > > > > > > local "group_has_spare" and the busiest "group_fully_busy" (at most).
-> > > > > > > This means that no group should be overloaded and load_balance should
-> > > > > > > not try to migrate utli but only task
-> > > > > >
-> > > > > > I didn't collect information about the groups.  I will look into that.
-> > > > > >
-> > > > > > julia
-> > > > > >
-> > > > > > >
-> > > > > > >
-> > > > > > > >
-> > > > > > > > and changing the above test to:
-> > > > > > > >
-> > > > > > > >         if ((env->migration_type == migrate_task || env->migration_type == migrate_util) &&
-> > > > > > > >             (sd->nr_balance_failed > sd->cache_nice_tries+2))
-> > > > > > > >
-> > > > > > > > seems to solve the problem.
-> > > > > > > >
-> > > > > > > > I will test this on more applications.  But let me know if the above
-> > > > > > > > solution seems completely inappropriate.  Maybe it violates some other
-> > > > > > > > constraints.
-> > > > > > > >
-> > > > > > > > I have no idea why this problem became more visible with EEVDF.  It seems
-> > > > > > > > to have to do with the time slices all turning out to be the same.  I got
-> > > > > > > > the same behavior in 6.5 by overwriting the timeslice calculation to
-> > > > > > > > always return 1.  But I don't see the connection between the timeslice and
-> > > > > > > > the behavior of the idle task.
-> > > > > > > >
-> > > > > > > > thanks,
-> > > > > > > > julia
-> > > > > > >
-> > > > >
-> > >
->
