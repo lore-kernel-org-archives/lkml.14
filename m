@@ -1,442 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2409468;
-	Fri, 22 Dec 2023 06:26:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DD58C14;
+	Fri, 22 Dec 2023 06:27:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Ha0xCEu3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63446C433C7;
-	Fri, 22 Dec 2023 06:26:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1703226366;
-	bh=RcsFW1L2WrpJyYwQYLw00Ia10eHMAhJtzWgVW/ZE2EY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Ha0xCEu3Fh1I2oApz9I+MyAz5Gk7OMFZjsCV2IZnqwQx3ubfkKhKFQiHfFp5Zfm6G
-	 QVQwM/ORAIbFM/94hwStez9jWsVKVj+Q2KgpktnaLMz38mXITmFoHfSikHPF2Ibv9g
-	 WSqBdaI7lmGaJfZQtFSdvo/axxVCSML3njwcQbuQ=
-Date: Thu, 21 Dec 2023 22:26:05 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Arnd Bergmann <arnd@arndb.de>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, David Miller <davem@davemloft.net>
-Subject: Re: linux-next: build failure after merge of the mm tree
-Message-Id: <20231221222605.7295cd886dd551b9bf95d4e9@linux-foundation.org>
-In-Reply-To: <20231222111649.7802e7d7@canb.auug.org.au>
-References: <20231127144418.54daad5d@canb.auug.org.au>
-	<20231222111649.7802e7d7@canb.auug.org.au>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TM4NEC9H"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BM5mW7F003027;
+	Fri, 22 Dec 2023 06:27:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=j5XwD2n
+	ohrKKhFWODuR1ibJ1aX8B8Ad7wFkNwxCktDA=; b=TM4NEC9HhtPZ2PD8h2XrpxY
+	dz3oagU63d1mxg+d4l3uxJzPkJayZbZy8lwmvAusSPQCEjazbcdAZw7XXVacLGZ7
+	nuNqtQ6s+8nyCj25H8Qu5Ux1R/NvjNUMs7aN2rbNjXThpgzyk6Ev0g6WiaqEmW9a
+	g5fmDM7FIgJoXXawzpE/ERvLFKQBM9bpf49cbDH6t9IZe2xgk4eV4uM1qirzwRkq
+	ubGd8wD567MaUYxaUF0UbkJaMzpbxrcOlcFXZo6AyM+9sWajyQLeY4WDCTYph5u8
+	YHli9ABlcmSf5UOv4GhM3h72l+jGzRiw+1aUlw9R8VbXtqP9MEXxT8QOzkhGhdA=
+	=
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3v4pte23ne-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 22 Dec 2023 06:27:35 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3BM6RY2p010977
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 22 Dec 2023 06:27:34 GMT
+Received: from hu-kriskura-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 21 Dec 2023 22:27:29 -0800
+From: Krishna Kurapati <quic_kriskura@quicinc.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, "Andy
+ Gross" <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Wesley Cheng <quic_wcheng@quicinc.com>,
+        "Conor
+ Dooley" <conor+dt@kernel.org>, Johan Hovold <johan@kernel.org>
+CC: <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <quic_ppratap@quicinc.com>, <quic_jackp@quicinc.com>,
+        Krishna Kurapati
+	<quic_kriskura@quicinc.com>
+Subject: [PATCH v4 0/2] Refine USB interrupt vectors on Qualcomm platforms
+Date: Fri, 22 Dec 2023 11:57:18 +0530
+Message-ID: <20231222062720.10128-1-quic_kriskura@quicinc.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: SY8pA9hbuLf6lQpvI5EVhI_1ec22flDc
+X-Proofpoint-ORIG-GUID: SY8pA9hbuLf6lQpvI5EVhI_1ec22flDc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=981 adultscore=0
+ clxscore=1011 priorityscore=1501 malwarescore=0 impostorscore=0
+ phishscore=0 suspectscore=0 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2312220043
 
-On Fri, 22 Dec 2023 11:16:49 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+Qualcomm targets define the following interrupts for usb wakeup:
+{dp/dm}_hs_phy_irq, hs_phy_irq, pwr_event, ss_phy_irq.
 
-> Hi all,
-> 
-> On Mon, 27 Nov 2023 14:44:18 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > After merging the mm tree, today's linux-next build (sparc64 defconfig)
-> > failed like this:
-> > 
-> > arch/sparc/vdso/vclock_gettime.c:254:1: warning: no previous prototype for '__vdso_clock_gettime' [-Wmissing-prototypes]
-> >   254 | __vdso_clock_gettime(clockid_t clock, struct __kernel_old_timespec *ts)
-> > 
->
-> ...
->
-> > So I turned off -Werrror in the lib directory as well which added this:
-> > 
-> > arch/sparc/lib/ucmpdi2.c:5:11: warning: no previous prototype for '__ucmpdi2' [-Wmissing-prototypes]
-> >     5 | word_type __ucmpdi2(unsigned long long a, unsigned long long b)
-> >       |           ^~~~~~~~~
-> 
-> Is anything being done about the above warnings?
+But QUSB2 Phy based targets have another interrupt which gets triggered
+in response to J/K states on dp/dm pads. Its functionality is replaced
+by dp/dm interrupts on Femto/m31/eusb2 phy based targets for wakeup
+purposes. Exceptions are some targets like SDM845/SDM670/SM6350 where
+dp/dm irq's are used although they are qusb2 phy targets.
 
-OK, here's sparc64.  I'll do sparc32 in a bit.
+Currently in QUSB2 Phy based DT's, te qusb2_phy interrupt is named and
+used as "hs_phy_irq" when in fact it is a different interrupt (used by
+HW validation folks for debug purposes and not used on any downstream
+target qusb/non-qusb).
 
+On some non-QUSB2 targets (like sm8450/sm8550), the pwr_event IRQ was
+named as hs_phy_irq and actual pwr_event_irq was skipped.
 
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: sparc64: fix up fallout from enabling -Wmissing-prototypes
-Date: Thu Dec 21 04:33:25 PM PST 2023
+This series tries to address the discrepancies in the interrupt numbering
+adding the missing interrupts and correcting the existing ones.
 
-Fix sparc64 allmodconfig build errors caused by enabling
--Wmissing-prototypes.
+This series has been compared with downstream counter part and hw specifics
+to ensure the numbering is right. Since there is not functionality change
+the code has been only compile tested.
 
-- Symbols only used from assembly were given local prototypes
+Changes in v4:
+Udpated commit text indicating why pwr_event interrupt was added as the first
+one and fixed some typos present in v3.
+While at it, rebase on top of latest linux-next fixing merge conflicts.
 
-- A couple of missing inclusions were added
+Changes in v3:
+Separated out the DT changes and pushed only bindings and driver update.
+Modified order of irq descriptions to match them with permutations defined.
+Fixed nitpicks mentioned by reviewers in v2.
 
-- Define some functions to be static
+Changes in v2:
+Removed additional compatibles added for different targets in v1.
+Specified permuations of interrupts possible for QC targets and regrouped
+interrupts for most of the DT's.
 
-- vmemmap_free() is only needed if CONFIG_MEMORY_HOTPLUG
+Link to v3:
+https://patchwork.kernel.org/project/linux-arm-msm/cover/20231211121124.4194-1-quic_kriskura@quicinc.com/
 
-- add new arch/sparc/include/asm/irq_work.h for arch_irq_work_raise()
+Link to v2:
+https://lore.kernel.org/all/20231204100950.28712-1-quic_kriskura@quicinc.com/
 
-- move prom_cif_init() prototype to header, fix longstanding
-  prom_cif_init() borkage.
+Link to v1: (providing patchwork link since threading was broken in v1)
+https://patchwork.kernel.org/project/linux-arm-msm/cover/20231122191259.3021-1-quic_kriskura@quicinc.com/
 
-- various function declarations were moved from .c into shared .h
+Krishna Kurapati (2):
+  The high speed related interrupts present on QC targets are as
+    follows:
+  usb: dwc3: qcom: Rename hs_phy_irq to qusb2_phy_irq
 
-Fixes: c6345dfa6e3e ("Makefile.extrawarn: turn on missing-prototypes globally")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: "David S. Miller" <davem@davemloft.net>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
+ .../devicetree/bindings/usb/qcom,dwc3.yaml    | 138 ++++++++----------
+ drivers/usb/dwc3/dwc3-qcom.c                  |  22 +--
+ 2 files changed, 70 insertions(+), 90 deletions(-)
 
- arch/sparc/include/asm/floppy_64.h |    4 +++-
- arch/sparc/include/asm/irq_work.h  |   10 ++++++++++
- arch/sparc/include/asm/openprom.h  |    2 ++
- arch/sparc/kernel/adi_64.c         |    6 +++---
- arch/sparc/kernel/asm-offsets.c    |    4 +++-
- arch/sparc/kernel/pci_sun4v.c      |    2 +-
- arch/sparc/kernel/setup_64.c       |    2 +-
- arch/sparc/kernel/time_64.c        |    2 ++
- arch/sparc/kernel/traps_64.c       |    7 ++++---
- arch/sparc/kernel/uprobes.c        |    1 +
- arch/sparc/mm/init_64.c            |    2 ++
- arch/sparc/power/hibernate.c       |    1 +
- arch/sparc/prom/init_64.c          |    2 --
- arch/sparc/prom/misc_64.c          |    2 +-
- arch/sparc/prom/p1275.c            |    2 +-
- arch/sparc/vdso/vclock_gettime.c   |   10 ++++++++++
- arch/sparc/vdso/vma.c              |    2 +-
- drivers/mtd/maps/sun_uflash.c      |    2 +-
- drivers/sbus/char/bbc_i2c.c        |    3 ---
- drivers/sbus/char/bbc_i2c.h        |    3 +++
- 20 files changed, 50 insertions(+), 19 deletions(-)
-
---- a/arch/sparc/vdso/vclock_gettime.c~arch-sparc-fix-up-fallout-from-enabling-wmissing-prototypes
-+++ a/arch/sparc/vdso/vclock_gettime.c
-@@ -250,6 +250,8 @@ notrace static int do_monotonic_coarse(s
- 	return 0;
- }
- 
-+int __vdso_clock_gettime(clockid_t clock, struct __kernel_old_timespec *ts);
-+
- notrace int
- __vdso_clock_gettime(clockid_t clock, struct __kernel_old_timespec *ts)
- {
-@@ -278,6 +280,9 @@ int
- clock_gettime(clockid_t, struct __kernel_old_timespec *)
- 	__attribute__((weak, alias("__vdso_clock_gettime")));
- 
-+int
-+__vdso_clock_gettime_stick(clockid_t clock, struct __kernel_old_timespec *ts);
-+
- notrace int
- __vdso_clock_gettime_stick(clockid_t clock, struct __kernel_old_timespec *ts)
- {
-@@ -303,6 +308,8 @@ __vdso_clock_gettime_stick(clockid_t clo
- 	return vdso_fallback_gettime(clock, ts);
- }
- 
-+int __vdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz);
-+
- notrace int
- __vdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
- {
-@@ -339,6 +346,9 @@ int
- gettimeofday(struct __kernel_old_timeval *, struct timezone *)
- 	__attribute__((weak, alias("__vdso_gettimeofday")));
- 
-+int
-+__vdso_gettimeofday_stick(struct __kernel_old_timeval *tv, struct timezone *tz);
-+
- notrace int
- __vdso_gettimeofday_stick(struct __kernel_old_timeval *tv, struct timezone *tz)
- {
---- a/arch/sparc/kernel/asm-offsets.c~arch-sparc-fix-up-fallout-from-enabling-wmissing-prototypes
-+++ a/arch/sparc/kernel/asm-offsets.c
-@@ -19,6 +19,7 @@
- #include <asm/hibernate.h>
- 
- #ifdef CONFIG_SPARC32
-+int sparc32_foo(void);
- int sparc32_foo(void)
- {
- 	DEFINE(AOFF_thread_fork_kpsr,
-@@ -26,6 +27,7 @@ int sparc32_foo(void)
- 	return 0;
- }
- #else
-+int sparc64_foo(void);
- int sparc64_foo(void)
- {
- #ifdef CONFIG_HIBERNATION
-@@ -45,6 +47,7 @@ int sparc64_foo(void)
- }
- #endif
- 
-+int foo(void);
- int foo(void)
- {
- 	BLANK();
-@@ -57,4 +60,3 @@ int foo(void)
- 	/* DEFINE(NUM_USER_SEGMENTS, TASK_SIZE>>28); */
- 	return 0;
- }
--
---- a/arch/sparc/prom/misc_64.c~arch-sparc-fix-up-fallout-from-enabling-wmissing-prototypes
-+++ a/arch/sparc/prom/misc_64.c
-@@ -162,7 +162,7 @@ unsigned char prom_get_idprom(char *idbu
- 	return 0xff;
- }
- 
--int prom_get_mmu_ihandle(void)
-+static int prom_get_mmu_ihandle(void)
- {
- 	phandle node;
- 	int ret;
---- a/arch/sparc/kernel/traps_64.c~arch-sparc-fix-up-fallout-from-enabling-wmissing-prototypes
-+++ a/arch/sparc/kernel/traps_64.c
-@@ -22,6 +22,7 @@
- #include <linux/kdebug.h>
- #include <linux/ftrace.h>
- #include <linux/reboot.h>
-+#include <linux/cpu.h>
- #include <linux/gfp.h>
- #include <linux/context_tracking.h>
- 
-@@ -249,7 +250,7 @@ void sun4v_insn_access_exception_tl1(str
- 	sun4v_insn_access_exception(regs, addr, type_ctx);
- }
- 
--bool is_no_fault_exception(struct pt_regs *regs)
-+static bool is_no_fault_exception(struct pt_regs *regs)
- {
- 	unsigned char asi;
- 	u32 insn;
-@@ -2031,7 +2032,7 @@ static void sun4v_log_error(struct pt_re
- /* Handle memory corruption detected error which is vectored in
-  * through resumable error trap.
-  */
--void do_mcd_err(struct pt_regs *regs, struct sun4v_error_entry ent)
-+static void do_mcd_err(struct pt_regs *regs, struct sun4v_error_entry ent)
- {
- 	if (notify_die(DIE_TRAP, "MCD error", regs, 0, 0x34,
- 		       SIGSEGV) == NOTIFY_STOP)
-@@ -2149,7 +2150,7 @@ static unsigned long sun4v_get_vaddr(str
- /* Attempt to handle non-resumable errors generated from userspace.
-  * Returns true if the signal was handled, false otherwise.
-  */
--bool sun4v_nonresum_error_user_handled(struct pt_regs *regs,
-+static bool sun4v_nonresum_error_user_handled(struct pt_regs *regs,
- 				  struct sun4v_error_entry *ent) {
- 
- 	unsigned int attrs = ent->err_attrs;
---- a/arch/sparc/mm/init_64.c~arch-sparc-fix-up-fallout-from-enabling-wmissing-prototypes
-+++ a/arch/sparc/mm/init_64.c
-@@ -2641,10 +2641,12 @@ int __meminit vmemmap_populate(unsigned
- 	return 0;
- }
- 
-+#ifdef CONFIG_MEMORY_HOTPLUG
- void vmemmap_free(unsigned long start, unsigned long end,
- 		struct vmem_altmap *altmap)
- {
- }
-+#endif
- #endif /* CONFIG_SPARSEMEM_VMEMMAP */
- 
- /* These are actually filled in at boot time by sun4{u,v}_pgprot_init() */
---- a/arch/sparc/vdso/vma.c~arch-sparc-fix-up-fallout-from-enabling-wmissing-prototypes
-+++ a/arch/sparc/vdso/vma.c
-@@ -243,7 +243,7 @@ static int stick_patch(const struct vdso
-  * Allocate pages for the vdso and vvar, and copy in the vdso text from the
-  * kernel image.
-  */
--int __init init_vdso_image(const struct vdso_image *image,
-+static int __init init_vdso_image(const struct vdso_image *image,
- 			   struct vm_special_mapping *vdso_mapping, bool elf64)
- {
- 	int cnpages = (image->size) / PAGE_SIZE;
---- a/arch/sparc/kernel/setup_64.c~arch-sparc-fix-up-fallout-from-enabling-wmissing-prototypes
-+++ a/arch/sparc/kernel/setup_64.c
-@@ -599,7 +599,7 @@ static void __init init_sparc64_elf_hwca
- 		pause_patch();
- }
- 
--void __init alloc_irqstack_bootmem(void)
-+static void __init alloc_irqstack_bootmem(void)
- {
- 	unsigned int i, node;
- 
---- a/arch/sparc/kernel/time_64.c~arch-sparc-fix-up-fallout-from-enabling-wmissing-prototypes
-+++ a/arch/sparc/kernel/time_64.c
-@@ -35,6 +35,8 @@
- #include <linux/platform_device.h>
- #include <linux/ftrace.h>
- 
-+#include <linux/sched/clock.h>
-+
- #include <asm/oplib.h>
- #include <asm/timer.h>
- #include <asm/irq.h>
---- a/arch/sparc/power/hibernate.c~arch-sparc-fix-up-fallout-from-enabling-wmissing-prototypes
-+++ a/arch/sparc/power/hibernate.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/mm.h>
-+#include <linux/suspend.h>
- 
- #include <asm/hibernate.h>
- #include <asm/visasm.h>
---- a/arch/sparc/kernel/adi_64.c~arch-sparc-fix-up-fallout-from-enabling-wmissing-prototypes
-+++ a/arch/sparc/kernel/adi_64.c
-@@ -121,7 +121,7 @@ adi_not_found:
- 		mdesc_release(hp);
- }
- 
--tag_storage_desc_t *find_tag_store(struct mm_struct *mm,
-+static tag_storage_desc_t *find_tag_store(struct mm_struct *mm,
- 				   struct vm_area_struct *vma,
- 				   unsigned long addr)
- {
-@@ -153,7 +153,7 @@ tag_storage_desc_t *find_tag_store(struc
- 	return tag_desc;
- }
- 
--tag_storage_desc_t *alloc_tag_store(struct mm_struct *mm,
-+static tag_storage_desc_t *alloc_tag_store(struct mm_struct *mm,
- 				    struct vm_area_struct *vma,
- 				    unsigned long addr)
- {
-@@ -296,7 +296,7 @@ out:
- 	return tag_desc;
- }
- 
--void del_tag_store(tag_storage_desc_t *tag_desc, struct mm_struct *mm)
-+static void del_tag_store(tag_storage_desc_t *tag_desc, struct mm_struct *mm)
- {
- 	unsigned long flags;
- 	unsigned char *tags = NULL;
---- /dev/null
-+++ a/arch/sparc/include/asm/irq_work.h
-@@ -0,0 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef __ASM_SPARC_IRQ_WORK_H
-+#define __ASM_SPARC_IRQ_WORK_H
-+
-+#include <asm-generic/irq_work.h>
-+
-+extern void arch_irq_work_raise(void);
-+
-+#endif /* __ASM_SPARC_IRQ_WORK_H */
---- a/arch/sparc/include/asm/floppy_64.h~arch-sparc-fix-up-fallout-from-enabling-wmissing-prototypes
-+++ a/arch/sparc/include/asm/floppy_64.h
-@@ -197,6 +197,7 @@ static void sun_fd_enable_dma(void)
- 	pdma_areasize = pdma_size;
- }
- 
-+irqreturn_t sparc_floppy_irq(int irq, void *dev_cookie);
- irqreturn_t sparc_floppy_irq(int irq, void *dev_cookie)
- {
- 	if (likely(doing_pdma)) {
-@@ -434,7 +435,8 @@ static int sun_pci_fd_eject(int drive)
- 	return -EINVAL;
- }
- 
--void sun_pci_fd_dma_callback(struct ebus_dma_info *p, int event, void *cookie)
-+static void
-+sun_pci_fd_dma_callback(struct ebus_dma_info *p, int event, void *cookie)
- {
- 	floppy_interrupt(0, NULL);
- }
---- a/arch/sparc/prom/init_64.c~arch-sparc-fix-up-fallout-from-enabling-wmissing-prototypes
-+++ a/arch/sparc/prom/init_64.c
-@@ -27,8 +27,6 @@ phandle prom_chosen_node;
-  * It gets passed the pointer to the PROM vector.
-  */
- 
--extern void prom_cif_init(void *);
--
- void __init prom_init(void *cif_handler)
- {
- 	phandle node;
---- a/arch/sparc/prom/p1275.c~arch-sparc-fix-up-fallout-from-enabling-wmissing-prototypes
-+++ a/arch/sparc/prom/p1275.c
-@@ -49,7 +49,7 @@ void p1275_cmd_direct(unsigned long *arg
- 	local_irq_restore(flags);
- }
- 
--void prom_cif_init(void *cif_handler, void *cif_stack)
-+void prom_cif_init(void *cif_handler)
- {
- 	p1275buf.prom_cif_handler = (void (*)(long *))cif_handler;
- }
---- a/arch/sparc/include/asm/openprom.h~arch-sparc-fix-up-fallout-from-enabling-wmissing-prototypes
-+++ a/arch/sparc/include/asm/openprom.h
-@@ -275,6 +275,8 @@ struct linux_prom_pci_intmask {
- 	unsigned int interrupt;
- };
- 
-+extern void prom_cif_init(void *cif_handler);
-+
- #endif /* !(__ASSEMBLY__) */
- 
- #endif /* !(__SPARC_OPENPROM_H) */
---- a/arch/sparc/kernel/pci_sun4v.c~arch-sparc-fix-up-fallout-from-enabling-wmissing-prototypes
-+++ a/arch/sparc/kernel/pci_sun4v.c
-@@ -256,7 +256,7 @@ range_alloc_fail:
- 	return NULL;
- }
- 
--unsigned long dma_4v_iotsb_bind(unsigned long devhandle,
-+static unsigned long dma_4v_iotsb_bind(unsigned long devhandle,
- 				unsigned long iotsb_num,
- 				struct pci_bus *bus_dev)
- {
---- a/arch/sparc/kernel/uprobes.c~arch-sparc-fix-up-fallout-from-enabling-wmissing-prototypes
-+++ a/arch/sparc/kernel/uprobes.c
-@@ -234,6 +234,7 @@ int arch_uprobe_post_xol(struct arch_upr
- /* Handler for uprobe traps.  This is called from the traps table and
-  * triggers the proper die notification.
-  */
-+void uprobe_trap(struct pt_regs *regs, unsigned long trap_level);
- asmlinkage void uprobe_trap(struct pt_regs *regs,
- 			    unsigned long trap_level)
- {
---- a/drivers/sbus/char/bbc_i2c.c~arch-sparc-fix-up-fallout-from-enabling-wmissing-prototypes
-+++ a/drivers/sbus/char/bbc_i2c.c
-@@ -358,9 +358,6 @@ fail:
- 	return NULL;
- }
- 
--extern int bbc_envctrl_init(struct bbc_i2c_bus *bp);
--extern void bbc_envctrl_cleanup(struct bbc_i2c_bus *bp);
--
- static int bbc_i2c_probe(struct platform_device *op)
- {
- 	struct bbc_i2c_bus *bp;
---- a/drivers/sbus/char/bbc_i2c.h~arch-sparc-fix-up-fallout-from-enabling-wmissing-prototypes
-+++ a/drivers/sbus/char/bbc_i2c.h
-@@ -82,4 +82,7 @@ extern int bbc_i2c_readb(struct bbc_i2c_
- extern int bbc_i2c_write_buf(struct bbc_i2c_client *, char *buf, int len, int off);
- extern int bbc_i2c_read_buf(struct bbc_i2c_client *, char *buf, int len, int off);
- 
-+extern int bbc_envctrl_init(struct bbc_i2c_bus *bp);
-+extern void bbc_envctrl_cleanup(struct bbc_i2c_bus *bp);
-+
- #endif /* _BBC_I2C_H */
---- a/drivers/mtd/maps/sun_uflash.c~arch-sparc-fix-up-fallout-from-enabling-wmissing-prototypes
-+++ a/drivers/mtd/maps/sun_uflash.c
-@@ -47,7 +47,7 @@ struct map_info uflash_map_templ = {
- 	.bankwidth =	UFLASH_BUSWIDTH,
- };
- 
--int uflash_devinit(struct platform_device *op, struct device_node *dp)
-+static int uflash_devinit(struct platform_device *op, struct device_node *dp)
- {
- 	struct uflash_dev *up;
- 
-_
+-- 
+2.42.0
 
