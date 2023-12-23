@@ -1,39 +1,39 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8891D554;
-	Sat, 23 Dec 2023 18:29:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF814208B9;
+	Sat, 23 Dec 2023 18:29:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pXCUiTZ3"
-X-UUID: 39d91052a1c111eeba30773df0976c77-20231224
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="o7i19TwW"
+X-UUID: 39146dbaa1c111eea5db2bebc7c28f94-20231224
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=SzoPn8uxMb6pfB9NNf9fBM1vsuCNX8c3U3b+FwXjf1I=;
-	b=pXCUiTZ3fEBE0FqbxoNlwT/7hUImXfQ2HwkiF6/WPffyXnVBH9szGT6f6HaKIZSnz9cGN91u3BCQSMZ1jZH0uCUF9kA3RVjAAyIhKUr+jiiUua/bF8BD7fLX50cYcMqmOPLjdyFNhWRfUDLX9jk3dA+rG69+dTOie7fZA+DPAE8=;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=FohLHuwR5pWdFIMjeWFuNauxCDTVDMuBv6CLayuSkdU=;
+	b=o7i19TwWSPnGXLZjtjM5TVSuA1gtR4UHekbuW2p5ESKZTDO/epopG1ToQkd6EbvRmYG+WeV8A/QLvdxymumwOjLP//o54UECOojC68hadD83mHDzVVsssBoDBat31HUblmTrL+tsSsJSPYNLXr0OQvy1j+O50sPnG7Up+6HEZoI=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:8b69b4ca-9b54-4a5a-947a-a5c807fc8279,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:-30,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-55
-X-CID-META: VersionHash:5d391d7,CLOUDID:b55d7f8d-e2c0-40b0-a8fe-7c7e47299109,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:2,IP:nil,UR
-	L:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,D
-	KR:0,DKP:0,BRR:0,BRE:0
+X-CID-O-INFO: VERSION:1.1.35,REQID:7846d6e5-0e7f-48e5-a98a-17249b80b703,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:5d391d7,CLOUDID:74c0692e-1ab8-4133-9780-81938111c800,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:
+	NO,DKR:0,DKP:0,BRR:0,BRE:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 39d91052a1c111eeba30773df0976c77-20231224
-Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw02.mediatek.com
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
+X-UUID: 39146dbaa1c111eea5db2bebc7c28f94-20231224
+Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw01.mediatek.com
 	(envelope-from <jason-jh.lin@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1385279366; Sun, 24 Dec 2023 02:29:36 +0800
+	with ESMTP id 1647488399; Sun, 24 Dec 2023 02:29:35 +0800
 Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
+ mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Sun, 24 Dec 2023 02:29:35 +0800
+ 15.2.1118.26; Sun, 24 Dec 2023 02:29:34 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
  mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Sun, 24 Dec 2023 02:29:35 +0800
+ 15.2.1118.26 via Frontend Transport; Sun, 24 Dec 2023 02:29:33 +0800
 From: Jason-JH.Lin <jason-jh.lin@mediatek.com>
 To: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
 	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
@@ -48,10 +48,11 @@ CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<jason-jh.lin@mediatek.com>, Singo Chang <singo.chang@mediatek.com>, Nancy
  Lin <nancy.lin@mediatek.com>, Shawn Sung <shawn.sung@mediatek.com>,
 	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Jeffrey Kardatzke
-	<jkardatzke@google.com>
-Subject: [PATCH v3 07/11] drm/mediatek: Add secure layer config support for ovl
-Date: Sun, 24 Dec 2023 02:29:28 +0800
-Message-ID: <20231223182932.27683-8-jason-jh.lin@mediatek.com>
+	<jkardatzke@google.com>, CK Hu <ck.hu@mediatek.com>, Nicolas Boichat
+	<drinkcat@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v3 01/11] drm/mediatek: Add interface to allocate MediaTek GEM buffer.
+Date: Sun, 24 Dec 2023 02:29:22 +0800
+Message-ID: <20231223182932.27683-2-jason-jh.lin@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20231223182932.27683-1-jason-jh.lin@mediatek.com>
 References: <20231223182932.27683-1-jason-jh.lin@mediatek.com>
@@ -64,152 +65,205 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-MTK: N
 
-Add secure layer config support for ovl.
+From: CK Hu <ck.hu@mediatek.com>
 
-TODO:
-1. Move DISP_REG_OVL_SECURE setting to secure world.
-2. Change the parameter register address in mtk_ddp_sec_write()
-   from "u32 addr" to "struct cmdq_client_reg *cmdq_reg".
+Add an interface to allocate MediaTek GEM buffers, allow the IOCTLs
+to be used by render nodes.
+This patch also sets the RENDER driver feature.
 
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
+Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
+Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
+Tested-by: Daniel Kurtz <djkurtz@chromium.org>
+Tested-by: Pi-Hsun Shih <pihsun@chromium.org>
 ---
- drivers/gpu/drm/mediatek/mtk_disp_drv.h     |  2 ++
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c     | 31 +++++++++++++++++++--
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 29 +++++++++++++++++++
- 3 files changed, 60 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c | 13 ++++++
+ drivers/gpu/drm/mediatek/mtk_drm_gem.c | 39 +++++++++++++++++
+ drivers/gpu/drm/mediatek/mtk_drm_gem.h | 12 ++++++
+ include/uapi/drm/mediatek_drm.h        | 58 ++++++++++++++++++++++++++
+ 4 files changed, 122 insertions(+)
+ create mode 100644 include/uapi/drm/mediatek_drm.h
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_drv.h b/drivers/gpu/drm/mediatek/mtk_disp_drv.h
-index 1311562d25cc..77054adcd9cf 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_drv.h
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_drv.h
-@@ -9,6 +9,7 @@
- #include <linux/soc/mediatek/mtk-cmdq.h>
- #include <linux/soc/mediatek/mtk-mmsys.h>
- #include <linux/soc/mediatek/mtk-mutex.h>
-+#include "mtk_drm_ddp_comp.h"
- #include "mtk_drm_plane.h"
- #include "mtk_mdp_rdma.h"
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+index 2b0c35cacbc6..5d2a39e491aa 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+@@ -24,6 +24,7 @@
+ #include <drm/drm_of.h>
+ #include <drm/drm_probe_helper.h>
+ #include <drm/drm_vblank.h>
++#include <drm/mediatek_drm.h>
  
-@@ -82,6 +83,7 @@ void mtk_ovl_clk_disable(struct device *dev);
- void mtk_ovl_config(struct device *dev, unsigned int w,
- 		    unsigned int h, unsigned int vrefresh,
- 		    unsigned int bpc, struct cmdq_pkt *cmdq_pkt);
-+u64 mtk_ovl_get_sec_port(struct mtk_ddp_comp *comp, unsigned int idx);
- int mtk_ovl_layer_check(struct device *dev, unsigned int idx,
- 			struct mtk_plane_state *mtk_state);
- void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-index 2bffe4245466..c18f76412a2e 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-@@ -46,6 +46,7 @@
- #define DISP_REG_OVL_ADDR(ovl, n)		((ovl)->data->addr + 0x20 * (n))
- #define DISP_REG_OVL_HDR_ADDR(ovl, n)		((ovl)->data->addr + 0x20 * (n) + 0x04)
- #define DISP_REG_OVL_HDR_PITCH(ovl, n)		((ovl)->data->addr + 0x20 * (n) + 0x08)
-+#define DISP_REG_OVL_SECURE			0x0fc0
- 
- #define GMC_THRESHOLD_BITS	16
- #define GMC_THRESHOLD_HIGH	((1 << GMC_THRESHOLD_BITS) / 4)
-@@ -126,8 +127,19 @@ struct mtk_disp_ovl {
- 	const struct mtk_disp_ovl_data	*data;
- 	void				(*vblank_cb)(void *data);
- 	void				*vblank_cb_data;
-+	resource_size_t			regs_pa;
- };
- 
-+u64 mtk_ovl_get_sec_port(struct mtk_ddp_comp *comp, unsigned int idx)
-+{
-+	if (comp->id == DDP_COMPONENT_OVL0)
-+		return BIT_ULL(CMDQ_SEC_DISP_OVL0);
-+	else if (comp->id == DDP_COMPONENT_OVL1)
-+		return BIT_ULL(CMDQ_SEC_DISP_OVL1);
-+
-+	return 0;
-+}
-+
- static irqreturn_t mtk_disp_ovl_irq_handler(int irq, void *dev_id)
- {
- 	struct mtk_disp_ovl *priv = dev_id;
-@@ -449,8 +461,22 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
- 			      DISP_REG_OVL_SRC_SIZE(idx));
- 	mtk_ddp_write_relaxed(cmdq_pkt, offset, &ovl->cmdq_reg, ovl->regs,
- 			      DISP_REG_OVL_OFFSET(idx));
--	mtk_ddp_write_relaxed(cmdq_pkt, addr, &ovl->cmdq_reg, ovl->regs,
--			      DISP_REG_OVL_ADDR(ovl, idx));
-+
-+	if (state->pending.is_secure) {
-+		const struct drm_format_info *fmt_info = drm_format_info(fmt);
-+		unsigned int buf_size = (pending->height - 1) * pending->pitch +
-+					pending->width * fmt_info->cpp[0];
-+
-+		mtk_ddp_write_mask(cmdq_pkt, BIT(idx), &ovl->cmdq_reg, ovl->regs,
-+				   DISP_REG_OVL_SECURE, BIT(idx));
-+		mtk_ddp_sec_write(cmdq_pkt, ovl->regs_pa + DISP_REG_OVL_ADDR(ovl, idx),
-+				  pending->addr, CMDQ_IWC_H_2_MVA, 0, buf_size, 0);
-+	} else {
-+		mtk_ddp_write_mask(cmdq_pkt, 0, &ovl->cmdq_reg, ovl->regs,
-+				   DISP_REG_OVL_SECURE, BIT(idx));
-+		mtk_ddp_write_relaxed(cmdq_pkt, addr, &ovl->cmdq_reg, ovl->regs,
-+				      DISP_REG_OVL_ADDR(ovl, idx));
-+	}
- 
- 	if (is_afbc) {
- 		mtk_ddp_write_relaxed(cmdq_pkt, hdr_addr, &ovl->cmdq_reg, ovl->regs,
-@@ -529,6 +555,7 @@ static int mtk_disp_ovl_probe(struct platform_device *pdev)
- 	}
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	priv->regs_pa = res->start;
- 	priv->regs = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(priv->regs)) {
- 		dev_err(dev, "failed to ioremap ovl\n");
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-index 3046c0409353..6aed7647dfc0 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-@@ -111,6 +111,34 @@ void mtk_ddp_write_mask(struct cmdq_pkt *cmdq_pkt, unsigned int value,
- #endif
+ #include "mtk_drm_crtc.h"
+ #include "mtk_drm_ddp_comp.h"
+@@ -569,6 +570,14 @@ static void mtk_drm_kms_deinit(struct drm_device *drm)
+ 	component_unbind_all(drm->dev, drm);
  }
  
-+void mtk_ddp_sec_write(struct cmdq_pkt *cmdq_pkt, u32 addr, u64 base,
-+		       const enum cmdq_iwc_addr_metadata_type type,
-+		       const u32 offset, const u32 size, const u32 port)
-+{
-+#if IS_REACHABLE(CONFIG_MTK_CMDQ)
-+	if (!cmdq_pkt)
-+		return;
++static const struct drm_ioctl_desc mtk_ioctls[] = {
++	DRM_IOCTL_DEF_DRV(MTK_GEM_CREATE, mtk_gem_create_ioctl,
++			  DRM_UNLOCKED | DRM_AUTH | DRM_RENDER_ALLOW),
++	DRM_IOCTL_DEF_DRV(MTK_GEM_MAP_OFFSET,
++			  mtk_gem_map_offset_ioctl,
++			  DRM_UNLOCKED | DRM_AUTH | DRM_RENDER_ALLOW),
++};
 +
-+	/* secure buffer will be 4K alignment */
-+	cmdq_sec_pkt_write(cmdq_pkt, addr, base, type,
-+			   offset, ALIGN(size, PAGE_SIZE), port);
-+#endif
-+}
-+
-+void mtk_ddp_sec_write(struct cmdq_pkt *cmdq_pkt, u32 addr, u64 base,
-+		       const enum cmdq_iwc_addr_metadata_type type,
-+		       const u32 offset, const u32 size, const u32 port)
-+{
-+#if IS_REACHABLE(CONFIG_MTK_CMDQ)
-+	if (!cmdq_pkt)
-+		return;
-+
-+	/* secure buffer will be 4K alignment */
-+	cmdq_sec_pkt_write(cmdq_pkt, addr, base, type,
-+			   offset, ALIGN(size, PAGE_SIZE), port);
-+#endif
-+}
-+
- static int mtk_ddp_clk_enable(struct device *dev)
- {
- 	struct mtk_ddp_comp_dev *priv = dev_get_drvdata(dev);
-@@ -365,6 +393,7 @@ static const struct mtk_ddp_comp_funcs ddp_ovl = {
- 	.bgclr_in_off = mtk_ovl_bgclr_in_off,
- 	.get_formats = mtk_ovl_get_formats,
- 	.get_num_formats = mtk_ovl_get_num_formats,
-+	.get_sec_port = mtk_ovl_get_sec_port,
- };
+ DEFINE_DRM_GEM_FOPS(mtk_drm_fops);
  
- static const struct mtk_ddp_comp_funcs ddp_postmask = {
+ /*
+@@ -590,6 +599,10 @@ static const struct drm_driver mtk_drm_driver = {
+ 
+ 	.gem_prime_import = mtk_drm_gem_prime_import,
+ 	.gem_prime_import_sg_table = mtk_gem_prime_import_sg_table,
++
++	.ioctls = mtk_ioctls,
++	.num_ioctls = ARRAY_SIZE(mtk_ioctls),
++
+ 	.fops = &mtk_drm_fops,
+ 
+ 	.name = DRIVER_NAME,
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_gem.c b/drivers/gpu/drm/mediatek/mtk_drm_gem.c
+index 4f2e3feabc0f..30e347adcbe9 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_gem.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_gem.c
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <linux/dma-buf.h>
++#include <drm/mediatek_drm.h>
+ 
+ #include <drm/drm.h>
+ #include <drm/drm_device.h>
+@@ -283,3 +284,41 @@ void mtk_drm_gem_prime_vunmap(struct drm_gem_object *obj,
+ 	mtk_gem->kvaddr = NULL;
+ 	kfree(mtk_gem->pages);
+ }
++
++int mtk_gem_map_offset_ioctl(struct drm_device *drm, void *data,
++			     struct drm_file *file_priv)
++{
++	struct drm_mtk_gem_map_off *args = data;
++
++	return drm_gem_dumb_map_offset(file_priv, drm, args->handle,
++				       &args->offset);
++}
++
++int mtk_gem_create_ioctl(struct drm_device *dev, void *data,
++			 struct drm_file *file_priv)
++{
++	struct mtk_drm_gem_obj *mtk_gem;
++	struct drm_mtk_gem_create *args = data;
++	int ret;
++
++	mtk_gem = mtk_drm_gem_create(dev, args->size, false);
++	if (IS_ERR(mtk_gem))
++		return PTR_ERR(mtk_gem);
++
++	/*
++	 * allocate a id of idr table where the obj is registered
++	 * and handle has the id what user can see.
++	 */
++	ret = drm_gem_handle_create(file_priv, &mtk_gem->base, &args->handle);
++	if (ret)
++		goto err_handle_create;
++
++	/* drop reference from allocate - handle holds it now. */
++	drm_gem_object_put(&mtk_gem->base);
++
++	return 0;
++
++err_handle_create:
++	mtk_drm_gem_free_object(&mtk_gem->base);
++	return ret;
++}
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_gem.h b/drivers/gpu/drm/mediatek/mtk_drm_gem.h
+index 78f23b07a02e..90f3d2916ec5 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_gem.h
++++ b/drivers/gpu/drm/mediatek/mtk_drm_gem.h
+@@ -46,4 +46,16 @@ int mtk_drm_gem_prime_vmap(struct drm_gem_object *obj, struct iosys_map *map);
+ void mtk_drm_gem_prime_vunmap(struct drm_gem_object *obj,
+ 			      struct iosys_map *map);
+ 
++/*
++ * request gem object creation and buffer allocation as the size
++ * that it is calculated with framebuffer information such as width,
++ * height and bpp.
++ */
++int mtk_gem_create_ioctl(struct drm_device *dev, void *data,
++			 struct drm_file *file_priv);
++
++/* get buffer offset to map to user space. */
++int mtk_gem_map_offset_ioctl(struct drm_device *dev, void *data,
++			     struct drm_file *file_priv);
++
+ #endif
+diff --git a/include/uapi/drm/mediatek_drm.h b/include/uapi/drm/mediatek_drm.h
+new file mode 100644
+index 000000000000..f4d47577c94e
+--- /dev/null
++++ b/include/uapi/drm/mediatek_drm.h
+@@ -0,0 +1,58 @@
++/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
++/*
++ * Copyright (c) 2015 MediaTek Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef _UAPI_MEDIATEK_DRM_H
++#define _UAPI_MEDIATEK_DRM_H
++
++#include <drm/drm.h>
++
++/**
++ * struct drm_mtk_gem_create - User-desired buffer creation information structure.
++ *
++ * @size: user-desired memory allocation size.
++ *	- this size value would be page-aligned internally.
++ * @flags: user request for setting memory type or cache attributes.
++ * @handle: returned a handle to created gem object.
++ *	- this handle will be set by gem module of kernel side.
++ */
++struct drm_mtk_gem_create {
++	uint64_t size;
++	uint32_t flags;
++	uint32_t handle;
++};
++
++/**
++ * struct drm_mtk_gem_map_off - A structure for getting buffer offset.
++ *
++ * @handle: a pointer to gem object created.
++ * @pad: just padding to be 64-bit aligned.
++ * @offset: relatived offset value of the memory region allocated.
++ *     - this value should be set by user.
++ */
++struct drm_mtk_gem_map_off {
++	uint32_t handle;
++	uint32_t pad;
++	uint64_t offset;
++};
++
++#define DRM_MTK_GEM_CREATE		0x00
++#define DRM_MTK_GEM_MAP_OFFSET		0x01
++
++#define DRM_IOCTL_MTK_GEM_CREATE	DRM_IOWR(DRM_COMMAND_BASE + \
++		DRM_MTK_GEM_CREATE, struct drm_mtk_gem_create)
++
++#define DRM_IOCTL_MTK_GEM_MAP_OFFSET	DRM_IOWR(DRM_COMMAND_BASE + \
++		DRM_MTK_GEM_MAP_OFFSET, struct drm_mtk_gem_map_off)
++
++#endif /* _UAPI_MEDIATEK_DRM_H */
 -- 
 2.18.0
 
