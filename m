@@ -1,84 +1,155 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2630320310;
-	Sat, 23 Dec 2023 19:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBA214F6F
+	for <linux-kernel@vger.kernel.org>; Sat, 23 Dec 2023 19:14:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yd1OQr+z"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-28beb1d946fso2274869a91.0;
-        Sat, 23 Dec 2023 11:12:03 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="h9zhOmGd"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a234938c7f3so297898166b.2
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Dec 2023 11:14:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703358723; x=1703963523; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=y4pzyN944tMgsUdo0/fVxnKFBqDFkjcWL3Qdyx8hsEE=;
-        b=Yd1OQr+zLXa736p2ufHsm2fEA/2bIVekzSfRy7kS94Ur1bA4Qg/PZRYat3r+JuqFGm
-         hnZfNU4VJhfVuJ8uzFwlrdlEWUDJ7w4DJ0xr0ATTLqD102/trE1mOI2wQhfEk1V94KiD
-         zS/7hqZQmvtxFYOdxvflZovqe5q9dp1cZ4utElQNLVU6xZloRw3DYDK0utD2PTWeTDFe
-         AiDovetVX52XtKd3Iwd0CuyFwIe9TALzRsRPCRoY9JfSaZOKFvxas0MH1Vub17BOYvnv
-         NeEtVIG7Om+Bd72X6tesOHgdfDTwYUlczxeWj+SUxvnpfViVMF91KaDDxT9VlUhBh5xc
-         9lsQ==
+        d=linux-foundation.org; s=google; t=1703358891; x=1703963691; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=vmydVtrXfV1+PhmHNSQyFxq8qaU40/ai4YL8AqJQUW0=;
+        b=h9zhOmGdFF54SdpXCiR/ZzlNN2oVk84XjIJ9YqqbLKJnNlOXhiNalL5kEap2ujMrNs
+         7dgG9zmOO9Oc7jrnKFC95f1T++ellpH520Krm5oqyc/IT6QJtq0AAQcX6BoANosNIRco
+         6BGvGVG7fBiHSPyvaevyvVGthEIRiZLaCc0lE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703358723; x=1703963523;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1703358891; x=1703963691;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=y4pzyN944tMgsUdo0/fVxnKFBqDFkjcWL3Qdyx8hsEE=;
-        b=OLI/fnRqoGXYM5ZhusVDO2ahJNP5ekLXEy6HKu0HsQMxUDmzEgWEwzPf6fnyklTjg+
-         zrwVW2YRqMlnRnsBc07YIP3gwvIXonMhb41YAKWjIkDC8ovPmv7/b7NunMc3LrgXcW6g
-         3K6qPbu0KhLXQJrq9dq7FawcI09kzc6nvdcw89UXOa9rE8oIA+hGB8iukgd7y0sQn+JF
-         OgUgCnSEWtG9CQ6SQI6OIv+jM0v4Ii4ucLKUBYsnrmU/1fDPKgRYxrcR51wOVaKHN4JX
-         llC0E4yyU2ux66PUB+kts0yRzsr/P05eMxL0XHSyptAsBl8/KTgRSXKVAUL+fxgfvqRi
-         gv9Q==
-X-Gm-Message-State: AOJu0Yxscdr5e0ofqUUjiUKROQDaE31CiIEdODcAiqHjKxCqE+3t8165
-	ouDobmv+l+uKt+mRlnXR7Ak=
-X-Google-Smtp-Source: AGHT+IHmixcKdl0lA1Ct/3u5qYBe7W7f24qTu04G3SA9qn6gkHBjIm/NQWD4XmcTgRUhkN9e/lbYvw==
-X-Received: by 2002:a17:902:f7c1:b0:1d3:5fc4:f4cc with SMTP id h1-20020a170902f7c100b001d35fc4f4ccmr3523921plw.29.1703358723287;
-        Sat, 23 Dec 2023 11:12:03 -0800 (PST)
-Received: from attreyee-HP-Pavilion-Laptop-14-ec0xxx.. ([27.5.150.118])
-        by smtp.gmail.com with ESMTPSA id m5-20020a170902db8500b001d04c097d32sm5402100pld.270.2023.12.23.11.12.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Dec 2023 11:12:02 -0800 (PST)
-From: attreyee-muk <tintinm2017@gmail.com>
-To: wsa@kernel.org
-Cc: attreyee-muk <tintinm2017@gmail.com>,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] Documentation/i2c: fix spelling error in i2c-address-translators i2c-address-translators
-Date: Sun, 24 Dec 2023 00:38:53 +0530
-Message-Id: <20231223190852.27108-1-tintinm2017@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        bh=vmydVtrXfV1+PhmHNSQyFxq8qaU40/ai4YL8AqJQUW0=;
+        b=n0CY1BlLUafzeWf9q9w81fkkftjEdYJtGasdn2uaC64furCX9z6i0bvd0naKYfgN79
+         8l3eKGlc11kpBofht3iIj+I4R0HGyB1LBIxiTaQtB82IVYgfGS1a8FLICsKGrZ8hqyaY
+         /aL30h7LMgFIDEWyg5ZEbT1y04QsU8xFTOyy+hlGvUhDCzFxrhA/tA8h+mEUWcy3KCrl
+         a3K1+0ZHmu7U4MpGIsXWHx4LVuLoh3Ozxkqd9anOQR0jiDNEmtpfzF4R9XUvc47vGYbS
+         ufzdmnRhGfNk3v+SDW2MhH9m3ctD/Lh332wf8zz4xXgOrwxijVGJSiAhwpej3ZFpj0XM
+         ytfA==
+X-Gm-Message-State: AOJu0Yx2d+KKkmX7+jrdowHxoCaPSF1Q5YtR6BYa0TJ3n4z2jd0qx8X4
+	BllwLDCOdcmX79mEiRg907aD/UddYvguWW3UiwnPKxKh6VTp2A==
+X-Google-Smtp-Source: AGHT+IGkOf7vjrCLFGgS7D7fX4jZmdkV69Uh4oDP/cYpogvNLruVNk81w5swDwK8o4w7Ndc9KFekiQ==
+X-Received: by 2002:a17:906:1d1:b0:a23:6c74:52cd with SMTP id 17-20020a17090601d100b00a236c7452cdmr1244228ejj.3.1703358891125;
+        Sat, 23 Dec 2023 11:14:51 -0800 (PST)
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com. [209.85.218.51])
+        by smtp.gmail.com with ESMTPSA id fb20-20020a1709073a1400b00a26a061ae1esm3232430ejc.97.2023.12.23.11.14.49
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 23 Dec 2023 11:14:50 -0800 (PST)
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-9fa45e75ed9so299166166b.1
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Dec 2023 11:14:49 -0800 (PST)
+X-Received: by 2002:a17:906:73d5:b0:a23:3bf5:bc73 with SMTP id
+ n21-20020a17090673d500b00a233bf5bc73mr1443998ejl.58.1703358889639; Sat, 23
+ Dec 2023 11:14:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1843374.1703172614@warthog.procyon.org.uk> <20231223172858.GI201037@kernel.org>
+In-Reply-To: <20231223172858.GI201037@kernel.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 23 Dec 2023 11:14:32 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgJz36ZE66_8gXjP_TofkkugXBZEpTr_Dtc_JANsH1SEw@mail.gmail.com>
+Message-ID: <CAHk-=wgJz36ZE66_8gXjP_TofkkugXBZEpTr_Dtc_JANsH1SEw@mail.gmail.com>
+Subject: Re: [GIT PULL] afs, dns: Fix dynamic root interaction with negative DNS
+To: Simon Horman <horms@kernel.org>
+Cc: David Howells <dhowells@redhat.com>, Markus Suvanto <markus.suvanto@gmail.com>, 
+	Marc Dionne <marc.dionne@auristor.com>, Wang Lei <wang840925@gmail.com>, 
+	Jeff Layton <jlayton@redhat.com>, Steve French <smfrench@gmail.com>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	linux-afs@lists.infradead.org, keyrings@vger.kernel.org, 
+	linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	ceph-devel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Edward Adam Davis <eadavis@qq.com>
+Content-Type: multipart/mixed; boundary="0000000000008aede3060d322575"
 
-Correct to "stretched" from "streched" in "keeps clock streched on bus A
-waiting for reply"
+--0000000000008aede3060d322575
+Content-Type: text/plain; charset="UTF-8"
 
-Signed-off-by: Attreyee Mukherjee <tintinm2017@gmail.com>
----
- Documentation/i2c/i2c-address-translators.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Sat, 23 Dec 2023 at 09:29, Simon Horman <horms@kernel.org> wrote:
+>
+>
+>         if (data[0] == 0) {
+>                 /* It may be a server list. */
+> -               if (datalen <= sizeof(*bin))
+> +               if (datalen <= sizeof(*v1))
+>                         return -EINVAL;
+>
+>                 bin = (const struct dns_payload_header *)data;
 
-diff --git a/Documentation/i2c/i2c-address-translators.rst b/Documentation/i2c/i2c-address-translators.rst
-index b22ce9f41ecf..6845c114e472 100644
---- a/Documentation/i2c/i2c-address-translators.rst
-+++ b/Documentation/i2c/i2c-address-translators.rst
-@@ -71,7 +71,7 @@ Transaction:
-  - Physical I2C transaction on bus A, slave address 0x20
-  - ATR chip detects transaction on address 0x20, finds it in table,
-    propagates transaction on bus B with address translated to 0x10,
--   keeps clock streched on bus A waiting for reply
-+   keeps clock stretched on bus A waiting for reply
-  - Slave X chip (on bus B) detects transaction at its own physical
-    address 0x10 and replies normally
-  - ATR chip stops clock stretching and forwards reply on bus A,
--- 
-2.34.1
+Ugh, I hate how it checks the size of a *different* structure than the
+one it then assigns the pointer to.
 
+So I get the feeling that we should get rid of 'bin' entirely, and
+just use the 'v1' pointer, since it literally checks that that is what
+it is, and then the size check matches the thing we're casting things
+to.
+
+So then "bin->xyz" becomes "v1->hdr.xyz".
+
+Yes, the patch becomes a bit bigger, but I think the end result is a
+whole lot more obvious and maintainable.
+
+I'd also move the remaining 'v1' variable declaration to the inner
+context where it's actually used.
+
+IOW, I personally would be much happier with a patch like the attached, but I
+
+ (a) don't want to take credit for this, since my change is purely syntactic
+
+ (b) have not tested this patch apart from checking that it compiles
+in at least one config
+
+so honestly, I'd love to see this patch come back to me with sign-offs
+and tested-bys by the actual people who noticed this.
+
+Hmm?
+
+                 Linus
+
+--0000000000008aede3060d322575
+Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
+Content-Disposition: attachment; filename="patch.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_lqifv8pp0>
+X-Attachment-Id: f_lqifv8pp0
+
+IG5ldC9kbnNfcmVzb2x2ZXIvZG5zX2tleS5jIHwgMTkgKysrKysrKysrLS0tLS0tLS0tLQogMSBm
+aWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0
+IGEvbmV0L2Ruc19yZXNvbHZlci9kbnNfa2V5LmMgYi9uZXQvZG5zX3Jlc29sdmVyL2Ruc19rZXku
+YwppbmRleCAyYTZkMzYzNzYzYTIuLmYxOGNhMDJhYTk1YSAxMDA2NDQKLS0tIGEvbmV0L2Ruc19y
+ZXNvbHZlci9kbnNfa2V5LmMKKysrIGIvbmV0L2Ruc19yZXNvbHZlci9kbnNfa2V5LmMKQEAgLTkx
+LDggKzkxLDYgQEAgY29uc3Qgc3RydWN0IGNyZWQgKmRuc19yZXNvbHZlcl9jYWNoZTsKIHN0YXRp
+YyBpbnQKIGRuc19yZXNvbHZlcl9wcmVwYXJzZShzdHJ1Y3Qga2V5X3ByZXBhcnNlZF9wYXlsb2Fk
+ICpwcmVwKQogewotCWNvbnN0IHN0cnVjdCBkbnNfc2VydmVyX2xpc3RfdjFfaGVhZGVyICp2MTsK
+LQljb25zdCBzdHJ1Y3QgZG5zX3BheWxvYWRfaGVhZGVyICpiaW47CiAJc3RydWN0IHVzZXJfa2V5
+X3BheWxvYWQgKnVwYXlsb2FkOwogCXVuc2lnbmVkIGxvbmcgZGVycm5vOwogCWludCByZXQ7CkBA
+IC0xMDMsMjcgKzEwMSwyOCBAQCBkbnNfcmVzb2x2ZXJfcHJlcGFyc2Uoc3RydWN0IGtleV9wcmVw
+YXJzZWRfcGF5bG9hZCAqcHJlcCkKIAkJcmV0dXJuIC1FSU5WQUw7CiAKIAlpZiAoZGF0YVswXSA9
+PSAwKSB7CisJCWNvbnN0IHN0cnVjdCBkbnNfc2VydmVyX2xpc3RfdjFfaGVhZGVyICp2MTsKKwog
+CQkvKiBJdCBtYXkgYmUgYSBzZXJ2ZXIgbGlzdC4gKi8KLQkJaWYgKGRhdGFsZW4gPD0gc2l6ZW9m
+KCpiaW4pKQorCQlpZiAoZGF0YWxlbiA8PSBzaXplb2YoKnYxKSkKIAkJCXJldHVybiAtRUlOVkFM
+OwogCi0JCWJpbiA9IChjb25zdCBzdHJ1Y3QgZG5zX3BheWxvYWRfaGVhZGVyICopZGF0YTsKLQkJ
+a2VudGVyKCJbJXUsJXVdLCV1IiwgYmluLT5jb250ZW50LCBiaW4tPnZlcnNpb24sIGRhdGFsZW4p
+OwotCQlpZiAoYmluLT5jb250ZW50ICE9IEROU19QQVlMT0FEX0lTX1NFUlZFUl9MSVNUKSB7CisJ
+CXYxID0gKGNvbnN0IHN0cnVjdCBkbnNfc2VydmVyX2xpc3RfdjFfaGVhZGVyICopZGF0YTsKKwkJ
+a2VudGVyKCJbJXUsJXVdLCV1IiwgdjEtPmhkci5jb250ZW50LCB2MS0+aGRyLnZlcnNpb24sIGRh
+dGFsZW4pOworCQlpZiAodjEtPmhkci5jb250ZW50ICE9IEROU19QQVlMT0FEX0lTX1NFUlZFUl9M
+SVNUKSB7CiAJCQlwcl93YXJuX3JhdGVsaW1pdGVkKAogCQkJCSJkbnNfcmVzb2x2ZXI6IFVuc3Vw
+cG9ydGVkIGNvbnRlbnQgdHlwZSAoJXUpXG4iLAotCQkJCWJpbi0+Y29udGVudCk7CisJCQkJdjEt
+Pmhkci5jb250ZW50KTsKIAkJCXJldHVybiAtRUlOVkFMOwogCQl9CiAKLQkJaWYgKGJpbi0+dmVy
+c2lvbiAhPSAxKSB7CisJCWlmICh2MS0+aGRyLnZlcnNpb24gIT0gMSkgewogCQkJcHJfd2Fybl9y
+YXRlbGltaXRlZCgKIAkJCQkiZG5zX3Jlc29sdmVyOiBVbnN1cHBvcnRlZCBzZXJ2ZXIgbGlzdCB2
+ZXJzaW9uICgldSlcbiIsCi0JCQkJYmluLT52ZXJzaW9uKTsKKwkJCQl2MS0+aGRyLnZlcnNpb24p
+OwogCQkJcmV0dXJuIC1FSU5WQUw7CiAJCX0KIAotCQl2MSA9IChjb25zdCBzdHJ1Y3QgZG5zX3Nl
+cnZlcl9saXN0X3YxX2hlYWRlciAqKWJpbjsKIAkJaWYgKCh2MS0+c3RhdHVzICE9IEROU19MT09L
+VVBfR09PRCAmJgogCQkgICAgIHYxLT5zdGF0dXMgIT0gRE5TX0xPT0tVUF9HT09EX1dJVEhfQkFE
+KSkgewogCQkJaWYgKHByZXAtPmV4cGlyeSA9PSBUSU1FNjRfTUFYKQo=
+--0000000000008aede3060d322575--
