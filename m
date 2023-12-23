@@ -1,38 +1,61 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1E46108;
-	Sat, 23 Dec 2023 06:39:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4SxvfB0YpCz4f3lVH;
-	Sat, 23 Dec 2023 14:39:30 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 5E0EF1A0787;
-	Sat, 23 Dec 2023 14:39:35 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgCXmhCjgIZlBfyaEQ--.4053S7;
-	Sat, 23 Dec 2023 14:39:35 +0800 (CST)
-From: linan666@huaweicloud.com
-To: axboe@kernel.dk,
-	geliang.tang@suse.com,
-	xni@redhat.com,
-	colyli@suse.de
-Cc: ira.weiny@intel.com,
-	linux-block@vger.kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58F68F56;
+	Sat, 23 Dec 2023 06:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DcDZEPw+"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6dbcc5d78eeso610105a34.3;
+        Fri, 22 Dec 2023 22:42:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703313720; x=1703918520; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Opo0R05OB5wID6sQJu4dx2K7wLhXLYuO4epgLQz9yZE=;
+        b=DcDZEPw+UdSVjSCR3kvMThhyXvrqUg4ZXC1nNA9zbHwpTWYSl+ZTR4au90UK91cMTQ
+         94oOJn+bCDJ5fw35YWwuacljX0y0jl8FYwRuABD1aCfna0E1CzvD0inqFQ2GnuQJW1g8
+         0AWS/TT79DwK2HFnqkoVMd7fPaWsidgBn5+S/et7VBflcyUgsrwkQUxlkaKkRnDujmw3
+         Q+MvoQpbkuCut6m/5lvAJuZKSG2WulWxTsBl+E//+/majAssSLpTOlTPKnoNHf3LQhmz
+         XIJcr53F83NWGInNduppofSqNAy6plflroCzWTgo9/l8ZRsZqHYmBe5C9o9zP9v1UfIl
+         VLcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703313720; x=1703918520;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Opo0R05OB5wID6sQJu4dx2K7wLhXLYuO4epgLQz9yZE=;
+        b=qYAN0Gn+LA5kAJzKzkH4aqQix/qgHZhCJUujh4/MoJokb2QGC9+ISTP9iJReRJX6kL
+         nk5RFDDjlIScKIbB/3F3qMeVHq0czB8842t4YpPulwMcmqkizWtJYscNIT3mxaX5rKmD
+         rPt619h67n3GwQITwvGtn3LJ8SVMGUJ25L+ecu1Rje52UDjXHZzp2z1xKlJ/W0qdFIki
+         pAcHHW6gmtF1BA9HOy85F5LW7c3AaBml6LW1V1glJ0zEDpJHuVmp5gcDvt8cmEzjSZNS
+         1ZYFLuMUgLu+dSjsLU7DL/jIN1spxd/qR5bnYZt4du7pUy/XqcEMqOkxwUvAoDCSLUxW
+         eqJg==
+X-Gm-Message-State: AOJu0YxIpcfYPj0eJGVgwmaHQLMg6T2HxO6zPOdW4a0/sTFDfCMRI8kJ
+	iD5h0mReunDS76rIoGAqjBM=
+X-Google-Smtp-Source: AGHT+IGbvtCMw5QMbF5aP6/UdVWZWEKE1p3xJRB03uLf1/uxV2A9/CYxiwT4/8kX/82sgTUfK53q/Q==
+X-Received: by 2002:a05:6358:7e05:b0:172:fdd5:805 with SMTP id o5-20020a0563587e0500b00172fdd50805mr2924464rwm.27.1703313720528;
+        Fri, 22 Dec 2023 22:42:00 -0800 (PST)
+Received: from localhost.localdomain ([2400:1a00:b060:2b26:f462:e3d9:c28:4c99])
+        by smtp.gmail.com with ESMTPSA id a15-20020a17090ad80f00b0028c35076de0sm423230pjv.35.2023.12.22.22.41.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Dec 2023 22:42:00 -0800 (PST)
+From: Dipendra Khadka <kdipendra88@gmail.com>
+To: hdegoede@redhat.com,
+	mchehab@kernel.org,
+	sakari.ailus@linux.intel.com,
+	gregkh@linuxfoundation.org,
+	hpa@redhat.com
+Cc: Dipendra Khadka <kdipendra88@gmail.com>,
+	linux-media@vger.kernel.org,
+	linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	linan666@huaweicloud.com,
-	yukuai3@huawei.com,
-	yi.zhang@huawei.com,
-	houtao1@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH 3/4] badblocks: fix slab-out-of-bounds in _badblocks_check()
-Date: Sat, 23 Dec 2023 14:37:27 +0800
-Message-Id: <20231223063728.3229446-4-linan666@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231223063728.3229446-1-linan666@huaweicloud.com>
-References: <20231223063728.3229446-1-linan666@huaweicloud.com>
+	linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [PATCH] staging: media/atomisp/pci: Fix spelling mistakes in sh_css_mipi.c
+Date: Sat, 23 Dec 2023 12:26:52 +0545
+Message-Id: <20231223064152.79712-1-kdipendra88@gmail.com>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,54 +63,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgCXmhCjgIZlBfyaEQ--.4053S7
-X-Coremail-Antispam: 1UD129KBjvdXoWrtFy8CFW7Zw13ur18uw1rJFb_yoWfuwc_Ca
-	4UtF95Xrs5Jry3CrnIy3WUXrWftF1UCFnYkw1UJrn5XF48tF4DJa98Jr1UXrn5WFWUG3s0
-	vrWfXrWfZr1I9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbBkFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUWwA2048vs2IY02
-	0Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
-	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2vY
-	z4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c
-	02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE
-	4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4
-	IIrI8v6xkF7I0E8cxan2IY04v7M4kE6xkIj40Ew7xC0wCF04k20xvY0x0EwIxGrwCFx2Iq
-	xVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r
-	106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AK
-	xVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7
-	xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_
-	Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU9Z23UUUUU=
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-From: Li Nan <linan122@huawei.com>
+codespell reported following spelling mistake
+in sh_css_mipi.c as below:
 
-prev_badblocks() will return -1 if checked range start < p[0]. Accessing
-p[-1] will cause bug as below:
+'''
+./sh_css_mipi.c:177: separatelly ==> separately
+./sh_css_mipi.c:540: ofset ==> offset, of set
+'''
+This patch fixes these spelling mistakes by changing
+"separatelly" to "separately" and "ofset" to "offset".
 
-  BUG: KASAN: slab-out-of-bounds in badblocks_check+0x2c4
-
-Fix it by checking 'prev' before accessing badblocks->page.
-
-Fixes: 3ea3354cb9f0 ("badblocks: improve badblocks_check() for multiple ranges handling")
-Signed-off-by: Li Nan <linan122@huawei.com>
+Signed-off-by: Dipendra Khadka <kdipendra88@gmail.com>
 ---
- block/badblocks.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/media/atomisp/pci/sh_css_mipi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/block/badblocks.c b/block/badblocks.c
-index 054d05b93641..71a3e43351da 100644
---- a/block/badblocks.c
-+++ b/block/badblocks.c
-@@ -1316,7 +1316,7 @@ static int _badblocks_check(struct badblocks *bb, sector_t s, int sectors,
- 		goto out;
- 	}
+diff --git a/drivers/staging/media/atomisp/pci/sh_css_mipi.c b/drivers/staging/media/atomisp/pci/sh_css_mipi.c
+index b7c1e164ee24..6e11fd771938 100644
+--- a/drivers/staging/media/atomisp/pci/sh_css_mipi.c
++++ b/drivers/staging/media/atomisp/pci/sh_css_mipi.c
+@@ -174,7 +174,7 @@ ia_css_mipi_frame_calculate_size(const unsigned int width,
+ 	mem_words = ((embedded_data_size_words + 7) >> 3) +
+ 	mem_words_for_first_line +
+ 	(((height + 1) >> 1) - 1) * mem_words_per_odd_line +
+-	/* ceil (height/2) - 1 (first line is calculated separatelly) */
++	/* ceil (height/2) - 1 (first line is calculated separately) */
+ 	(height      >> 1) * mem_words_per_even_line + /* floor(height/2) */
+ 	mem_words_for_EOF;
  
--	if (overlap_front(bb, prev, &bad)) {
-+	if (prev >= 0 && overlap_front(bb, prev, &bad)) {
- 		if (set == 0) {
- 			*first_bad = BB_OFFSET(p[prev]);
- 			*bad_sectors = BB_LEN(p[prev]);
+@@ -537,7 +537,7 @@ send_mipi_frames(struct ia_css_pipe *pipe)
+ 
+ 	/* Hand-over the SP-internal mipi buffers */
+ 	for (i = 0; i < my_css.num_mipi_frames[port]; i++) {
+-		/* Need to include the ofset for port. */
++		/* Need to include the offset for port. */
+ 		sh_css_update_host2sp_mipi_frame(port * NUM_MIPI_FRAMES_PER_STREAM + i,
+ 						 my_css.mipi_frames[port][i]);
+ 		sh_css_update_host2sp_mipi_metadata(port * NUM_MIPI_FRAMES_PER_STREAM + i,
 -- 
-2.39.2
+2.39.2 (Apple Git-143)
 
