@@ -1,105 +1,86 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F552946D;
-	Sat, 23 Dec 2023 08:35:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fd0P1YEt"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BN1v9Hw021930;
-	Sat, 23 Dec 2023 08:35:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2023-11-20; bh=wYElaZP0jYvrtQvw/F9wl/AViI12hWXfvWUUyi6xrQQ=;
- b=fd0P1YEtuIqoufODQozUfoT64nwDjrwmBRkQrz6ZPidqonEMWzuGVibSKZHawWmh/DCO
- 5FWLSn501MV+s5jCfDZ87tIFNRkezXZpAlHxUfCTDXSJt/qggUf7TdWW1WeHXbzAEeQr
- 8pSbunrnVUxTwqT/X0/8nH1wgzDnkX6kTW6bBzhizp9t2DrBSFsLYdGu6yYWoyVKZGIu
- j3i/FpOhU7nCDIv+Wu07rZgaqRo0B/7H58h66WFYfsQbb+H8JwokVGelAvdfRrdlLlKr
- SZ1lcT2F1ZWymRcBdNsQYco6UMb97lrzD9WWaMgJ5JZ96O6yqoF+lV4RkOe85a91kOp2 sg== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3v5pb40c43-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 23 Dec 2023 08:35:15 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3BN60WMA001881;
-	Sat, 23 Dec 2023 08:35:14 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3v5p03mfek-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 23 Dec 2023 08:35:14 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BN8ZDbB003235;
-	Sat, 23 Dec 2023 08:35:13 GMT
-Received: from localhost.localdomain (dhcp-10-175-32-220.vpn.oracle.com [10.175.32.220])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3v5p03mfa0-1;
-	Sat, 23 Dec 2023 08:35:13 +0000
-From: Vegard Nossum <vegard.nossum@oracle.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vegard Nossum <vegard.nossum@oracle.com>,
-        Randy Dunlap <rdunlap@infradead.org>, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 1/2] crypto: shash - remove excess kerneldoc members
-Date: Sat, 23 Dec 2023 09:34:58 +0100
-Message-Id: <20231223083459.3025561-1-vegard.nossum@oracle.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21757D51A;
+	Sat, 23 Dec 2023 08:35:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rGxTq-00062q-4m; Sat, 23 Dec 2023 09:35:34 +0100
+Message-ID: <3035e75a-9be0-4bc3-8d4a-6e52c207f277@leemhuis.info>
+Date: Sat, 23 Dec 2023 09:35:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-22_15,2023-12-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0 spamscore=0
- suspectscore=0 adultscore=0 mlxscore=0 bulkscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2312230065
-X-Proofpoint-ORIG-GUID: IRiAeJPyUxWjBP9iwMOCIFNSXoS2H3o9
-X-Proofpoint-GUID: IRiAeJPyUxWjBP9iwMOCIFNSXoS2H3o9
+User-Agent: Mozilla Thunderbird
+Subject: Re: Bug in commit aa511ff8218b ("badblocks: switch to the improved
+ badblock handling
+Content-Language: en-US, de-DE
+To: Ira Weiny <ira.weiny@intel.com>, Coly Li <colyli@suse.de>
+Cc: Dan Williams <dan.j.williams@intel.com>, Jens Axboe <axboe@kernel.dk>,
+ Xiao Ni <xni@redhat.com>, Geliang Tang <geliang.tang@suse.com>,
+ Hannes Reinecke <hare@suse.de>, NeilBrown <neilb@suse.de>,
+ Vishal L Verma <vishal.l.verma@intel.com>, linux-block@vger.kernel.org,
+ nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <6585d5fda5183_9f731294b9@iweiny-mobl.notmuch>
+From: "Linux regression tracking #adding (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <6585d5fda5183_9f731294b9@iweiny-mobl.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1703320539;46daaa1a;
+X-HE-SMSGID: 1rGxTq-00062q-4m
 
-Commit 42808e5dc602 ("crypto: hash - Count error stats differently")
-moved some fields from 'struct shash_alg' into HASH_ALG_COMMON but
-didn't remove the corresponding kerneldoc members, which results in
-these warnings when running 'make htmldocs':
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
 
-  ./include/crypto/hash.h:248: warning: Excess struct member 'digestsize' description in 'shash_alg'
-  ./include/crypto/hash.h:248: warning: Excess struct member 'statesize' description in 'shash_alg'
-  ./include/crypto/hash.h:248: warning: Excess struct member 'stat' description in 'shash_alg'
-  ./include/crypto/hash.h:248: warning: Excess struct member 'base' description in 'shash_alg'
+On 22.12.23 19:31, Ira Weiny wrote:
+> Coly,
+> 
+> Yesterday I noticed that a few of our nvdimm tests were failing.  I bisected
+> the problem to the following commit.
+> 
+> aa511ff8218b ("badblocks: switch to the improved badblock handling code") 
+> 
+> Reverting this patch fixed our tests.
+> 
+> I've also dug into the code a bit and I believe the algorithm for
+> badblocks_check() is broken (not yet sure about the other calls).  At the
+> very least I see the bb->p pointer being indexed with '-1'.  :-(
+> 
+> I did notice that this work was due to a bug report in badblock_set().
+> Therefore, I'm not sure of that severity of that fix is vs a revert.  But
+> at this point I'm not seeing an easy fix so I'm in favor of a revert.
 
-HASH_ALG_COMMON already has the documentation for all these fields.
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-Fixes: 42808e5dc602 ("crypto: hash - Count error stats differently")
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
----
- include/crypto/hash.h | 4 ----
- 1 file changed, 4 deletions(-)
+#regzbot ^introduced aa511ff8218b
+#regzbot title badblocks: nvdimm tests were failing after switch to
+impoved code
+#regzbot ignore-activity
 
-diff --git a/include/crypto/hash.h b/include/crypto/hash.h
-index c7bdbece27cc..5d61f576cfc8 100644
---- a/include/crypto/hash.h
-+++ b/include/crypto/hash.h
-@@ -212,13 +212,9 @@ struct shash_desc {
-  *	      This is a counterpart to @init_tfm, used to remove
-  *	      various changes set in @init_tfm.
-  * @clone_tfm: Copy transform into new object, may allocate memory.
-- * @digestsize: see struct ahash_alg
-- * @statesize: see struct ahash_alg
-  * @descsize: Size of the operational state for the message digest. This state
-  * 	      size is the memory size that needs to be allocated for
-  *	      shash_desc.__ctx
-- * @stat: Statistics for hash algorithm.
-- * @base: internally used
-  * @halg: see struct hash_alg_common
-  * @HASH_ALG_COMMON: see struct hash_alg_common
-  */
--- 
-2.34.1
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
 
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
