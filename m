@@ -1,121 +1,328 @@
-Received: from mx2.securetransport.de (mx2.securetransport.de [188.68.39.254])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B09D29E;
-	Sat, 23 Dec 2023 13:00:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dh-electronics.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dh-electronics.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CA5D2E9;
+	Sat, 23 Dec 2023 13:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dh-electronics.com header.i=@dh-electronics.com header.b="ber4JF9p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dh-electronics.com;
-	s=dhelectronicscom; t=1703335752;
-	bh=2AL9EkMODIBVJGJbx3Gh0BfWjwQ/b5wCzhm/T5+d5/8=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-	b=ber4JF9pWUjwwgv27824vvfyqJ/0PG/uu6DXJdEMji/c//YHrZiUzOgVQxxaUNJtj
-	 dZj3myBmHm4JmPbujggslzrP/oIgXELnBM/ccKqBtmlKreuq0abI06MECT0mA7YXPi
-	 kbIqey0IvR38Zgv8zXl9zBu8BU62Pks2wtKmmcm+0lfiCBLUBK0FJ/0a6EYzBiADJ9
-	 dMZeT9VuZLMD5XlfMH4nFKTSwapXPIpAdZFKQGDCFpu7lvwIePheLgRoHjD/AzB53I
-	 hWDm1p+d7AT8kcd8piWA4yHE9ltsEGTxGaO9jCngCOwY4JGq9LYVHBCc+f4oxgB6TT
-	 LSCwDE/3663Pw==
-X-secureTransport-forwarded: yes
-From: Christoph Niedermaier <cniedermaier@dh-electronics.com>
-Complaints-To: abuse@cubewerk.de
-To: Lukas Wunner <lukas@wunner.de>
-CC: Crescent CY Hsieh <crescentcy.hsieh@moxa.com>, Andy Shevchenko
-	<andriy.shevchenko@linux.intel.com>, Lino Sanfilippo <LinoSanfilippo@gmx.de>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, Rob Herring
-	<robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-	=?utf-8?B?SWxwbyBKw6RydmluZW4=?= <ilpo.jarvinen@linux.intel.com>,
-	"brenda.streiff@ni.com" <brenda.streiff@ni.com>, Tomas Paukrt
-	<tomaspaukrt@email.cz>
-Subject: RE: [PATCH 1/2] dt-bindings: serial: rs485: add rs485-mux-gpios
- binding
-Thread-Topic: [PATCH 1/2] dt-bindings: serial: rs485: add rs485-mux-gpios
- binding
-Thread-Index: AQHaH/jBESSZN4JU2UOxi81YCMKNnLCN1MYggA6QRICABHVPgIADOxKAgASJVgCAABWukIALRm2AgAAjTdA=
-Date: Sat, 23 Dec 2023 12:49:01 +0000
-Message-ID: <f41f5ddcb52140b6a579043a5abce751@dh-electronics.com>
-References: <20231120151056.148450-1-linux@rasmusvillemoes.dk>
- <20231120151056.148450-2-linux@rasmusvillemoes.dk>
- <20231122145344.GA18949@wunner.de>
- <3b8548b1-b8a9-0c9e-4040-5cfda06a85c6@gmx.de>
- <ec66d25162de4cbc92720df1e7008fe8@dh-electronics.com>
- <5c140498-69e3-4187-8703-db0c41e7ca89@gmx.de>
- <fe28eb93-daa1-41af-a005-f21aa87e1984@gmx.de>
- <ZXcJr4VS_uGr_6TV@smile.fi.intel.com>
- <ZXrX4mQXPLum0jL3@moxa-ThinkCentre-M90t>
- <b35730df8288469fbaf67b5ceae4eece@dh-electronics.com>
- <20231221155305.GA13673@wunner.de>
-In-Reply-To: <20231221155305.GA13673@wunner.de>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="PWmHDjTf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1703336667;
+	bh=QIFTlx0/h4eMkvfCrLEwf90gYDcjbMTcia87lLAOfJM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PWmHDjTf6Ci0CjazKvRhcbJ8v8a92SOpCUDy8iAiPa08z9MOtnvWbuOU1f71WFYw1
+	 JAmCcpbf6eoLrNBp/kFWMvIv1fwKKhlMU6pUivbqeWCqzrEI4CzETux1MVoAOe5613
+	 fj8goLXA5NDjC+8Gtuk8No0S8b+UguiKHHBN7jCg=
+Date: Sat, 23 Dec 2023 14:04:27 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Joel Granados <j.granados@samsung.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, 
+	Kees Cook <keescook@chromium.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Iurii Zaikin <yzaikin@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 13/18] sysctl: move sysctl type to ctl_table_header
+Message-ID: <930d06d4-ece0-4b75-b7ce-dba486a0d404@t-8ch.de>
+References: <20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net>
+ <20231204-const-sysctl-v2-13-7a5060b11447@weissschuh.net>
+ <ZW+lQqOSYFfeh8z2@bombadil.infradead.org>
+ <4a93cdb4-031c-4f77-8697-ce7fb42afa4a@t-8ch.de>
+ <CAB=NE6UCP05MgHF85TK+t2yvbOoaW_8Yu6QEyaYMdJcGayVjFQ@mail.gmail.com>
+ <CGME20231206055317eucas1p204b75bda8cb2fc068dea0fc5bcfcf0b2@eucas1p2.samsung.com>
+ <0450d705-3739-4b6d-a1f2-b22d54617de1@t-8ch.de>
+ <20231221120919.pz3xhbzh7c57cjsb@localhost>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231221120919.pz3xhbzh7c57cjsb@localhost>
 
-RnJvbTogTHVrYXMgV3VubmVyIFttYWlsdG86bHVrYXNAd3VubmVyLmRlXQ0KU2VudDogVGh1cnNk
-YXksIERlY2VtYmVyIDIxLCAyMDIzIDQ6NTMgUE0NCj4gDQo+IE9uIFRodSwgRGVjIDE0LCAyMDIz
-IGF0IDAxOjQxOjQ3UE0gKzAwMDAsIENocmlzdG9waCBOaWVkZXJtYWllciB3cm90ZToNCj4+IEkg
-d2lsbCBzdW1tYXJpemUgdGhlIGN1cnJlbnQgc2l0dWF0aW9uIGZyb20gbXkgcG9pbnQgb2Ygdmll
-dywgbWF5YmUgaXQgaGVscHM6DQo+Pg0KPj4gUlMtMjMyOg0KPj4gICAtIEZ1bGwgRHVwbGV4IFBv
-aW50LXRvLVBvaW50IGNvbm5lY3Rpb24NCj4+ICAgLSBObyB0cmFuc2NlaXZlciBjb250cm9sIHdp
-dGggUlRTDQo+PiAgIC0gTm8gdGVybWluYXRpb24NCj4+ICAgLSBObyBleHRyYSBzdHJ1Y3QgaW4g
-dXNlDQo+Pg0KPj4gUlMtNDIyOg0KPj4gICAtIEZ1bGwgRHVwbGV4IFBvaW50LXRvLVBvaW50IGNv
-bm5lY3Rpb24NCj4+ICAgLSBObyB0cmFuc2NlaXZlciBjb250cm9sIHdpdGggUlRTIG5lZWRlZA0K
-Pj4gICAtIFRlcm1pbmF0aW9uIHBvc3NpYmxlDQo+PiAgIC0gRXh0cmEgc3RydWN0IHNlcmlhbF9y
-czQ4NSBuZWVkZWQgaWYgdGVybWluYXRpb24gaXMgdXNlZA0KPj4gID0+IFJTLTQyMiBjYW4gYmUg
-dXNlZCBpbiBSUy0yMzIgb3BlcmF0aW9uLCBidXQgaWYgYSB0ZXJtaW5hdGlvbiBzaG91bGQgYmUN
-Cj4+ICAgICBzd2l0Y2hhYmxlIHRoZSBSUzQ4NSBmbGFnIGhhcyB0byBiZSBlbmFibGVkLiBCdXQg
-dGhlbiBhbHNvIHRyYW5zY2VpdmVyDQo+PiAgICAgY29udHJvbCB3aWxsIGJlIGVuYWJsZWQuIE5v
-dCBhIHZlcnkgc2F0aXNmeWluZyBzaXR1YXRpb24uDQo+IA0KPiBXZWxsIHdoeSBkb24ndCB3ZSBq
-dXN0IGFsbG93IGVuYWJsaW5nIG9yIGRpc2FibGluZyBSUy00ODUgdGVybWluYXRpb24NCj4gaW5k
-ZXBlbmRlbnRseSBmcm9tIHRoZSBTRVJfUlM0ODVfRU5BQkxFRCBiaXQgaW4gc3RydWN0IHNlcmlh
-bF9yczQ4NT8NCj4gDQo+IEp1c3QgbGV0IHRoZSB1c2VyIGlzc3VlIGEgVElPQ1NSUzQ4NSBpb2N0
-bCB0byB0b2dnbGUgdGVybWluYXRpb24gZXZlbg0KPiBpZiBpbiBSUy0yMzIgbW9kZSBhbmQgdXNl
-IHRoYXQgbW9kZSBmb3IgUlMtNDIyLg0KPiANCj4gTG9va3MgbGlrZSB0aGUgc2ltcGxlc3Qgc29s
-dXRpb24gdG8gbWUuDQoNClNvdW5kcyBub3QgYmFkLiBUaGUgdGVybWluYXRpb24gc2hvdWxkIG9u
-bHkgZGVwZW5kIG9uIHdoZXRoZXIgdGhlIEdQSU8gaXMNCmdpdmVuIG9yIG5vdC4gDQoNCklycmVz
-cGVjdGl2ZSBvZiB0aGlzLCBJIHRoaW5rIHRoZSBMaW5vcyBpZGVhIG9mIGFuIFJTLTQyMiBtb2Rl
-IGlzIG5vdCBiYWQuDQpUaGlzIGFsbG93cyB5b3UgdG8gdGFrZSBjYXJlIG9mIHNwZWNpYWwgZmVh
-dHVyZXMgdGhhdCB3ZXJlIHByZXZpb3VzbHkNCm92ZXJsb29rZWQuIEZvciBleGFtcGxlLCBoYXJk
-d2FyZSBmbG93IGNvbnRyb2wgY2FuIGJlIHN3aXRjaGVkIG9mZiBzbyB0aGF0DQp0aGlzIGRvZXMg
-bm90IGNhdXNlIGFueSBwcm9ibGVtcy4NCg0KPj4gUlMtNDg1ICgyLXdpcmUpIHZlcnkgY29tbW9u
-Og0KPj4gICAtIEhhbGYgRHVwbGV4IFJTLTQ4NSBidXMNCj4+ICAgLSBUcmFuc2NlaXZlciBjb250
-cm9sIHdpdGggUlRTIGlzIG5lZWRlZA0KPj4gICAtIFRlcm1pbmF0aW9uIHBvc3NpYmxlDQo+PiAg
-IC0gRXh0cmEgc3RydWN0IHNlcmlhbF9yczQ4NSBpcyBuZWVkZWQNCj4+ICA9PiBSUy00ODUgaGFz
-IHRvIGJlIGVuYWJsZWQgYW5kIGNvbmZpZ3VyZWQ6DQo+PiAgICAgLSBTZXQgU0VSX1JTNDg1X0VO
-QUJMRUQNCj4+ICAgICAtIFNldCBTRVJfUlM0ODVfUlRTX09OX1NFTkQgb3IgU0VSX1JTNDg1X1JU
-U19BRlRFUl9TRU5EDQo+PiAgICAgLSBTZXQvY2xlYXIgU0VSX1JTNDg1X1JYX0RVUklOR19UWCBk
-ZXBlbmRpbmcgb24gd2hldGhlcg0KPj4gICAgICAgdGhlIHJlY2VpdmVyIHBhdGggc2hvdWxkIGJl
-IG9uIG9yIG9mZiBkdXJpbmcgc2VuZGluZy4NCj4+ICAgICAgIElmIGl0J3Mgc2V0IGl0IGFsbG93
-cyB0byBtb25pdG9yIHRoZSBzZW5kaW5nIG9uIHRoZSBidXMNCj4+ICAgICAgIGFuZCBkZXRlY3Qg
-d2hldGhlciBhbm90aGVyIGJ1cyBkZXZpY2UgaXMgdHJhbnNtaXR0aW5nDQo+PiAgICAgICBhdCB0
-aGUgc2FtZSB0aW1lLg0KPj4gICAgIC0gU2V0L2NsZWFyIFNFUl9SUzQ4NV9URVJNSU5BVEVfQlVT
-IGZvciBidXMgdGVybWluYXRpb24uDQo+Pg0KPj4gUlMtNDg1ICg0LXdpcmUpIGxpdHRsZSB1c2Vk
-Og0KPj4gICAtIEZ1bGwgRHVwbGV4IFJTLTQ4NSBidXMNCj4+ICAgLSBUcmFuc2NlaXZlciBjb250
-cm9sIHdpdGggUlRTIGlzIG5lZWRlZA0KPj4gICAtIFRlcm1pbmF0aW9uIHBvc3NpYmxlDQo+PiAg
-IC0gRXh0cmEgc3RydWN0IHNlcmlhbF9yczQ4NSBpcyBuZWVkZWQNCj4+ICA9PiBSUy00ODUgaGFz
-IHRvIGJlIGVuYWJsZWQgYW5kIGNvbmZpZ3VyZWQ6DQo+PiAgICAgLSBTZXQgU0VSX1JTNDg1X0VO
-QUJMRUQNCj4+ICAgICAtIFNldCBTRVJfUlM0ODVfUlRTX09OX1NFTkQgb3IgU0VSX1JTNDg1X1JU
-U19BRlRFUl9TRU5EDQo+PiAgICAgLSBTZXQgU0VSX1JTNDg1X1JYX0RVUklOR19UWCwgYXMgdGhl
-IHJlY2VpdmVyIHNob3VsZCBhbHdheXMNCj4+ICAgICAgIGJlIGVuYWJsZWQgaW5kZXBlbmRlbnRs
-eSBvZiBUWCwgYmVjYXVzZSBUWCBhbmQgUlggYXJlDQo+PiAgICAgICBzZXBhcmF0ZWQgZnJvbSBl
-YWNoIG90aGVyIGJ5IHRoZWlyIG93biB3aXJlcy4NCj4+ICAgICAtIFNldC9jbGVhciBTRVJfUlM0
-ODVfVEVSTUlOQVRFX0JVUyBmb3IgYnVzIHRlcm1pbmF0aW9uLg0KPiANCj4gVGhhbmtzIGZvciB0
-aGF0IG92ZXJ2aWV3LCBJIGZvdW5kIGl0IHZlcnkgaGVscGZ1bC4NCj4gDQo+IE9uZSBzbWFsbCBh
-ZGRlbmR1bTogIEhhcmR3YXJlIGZsb3cgY29udHJvbC4gIE9ubHkgcG9zc2libGUgd2l0aA0KPiBS
-Uy0yMzIuICBEb2Vzbid0IHdvcmsgaW4gYW55IG9mIHRoZSBvdGhlciBtb2RlcywgcmlnaHQ/DQoN
-CllvdSBhcmUgcmlnaHQgSSBmb3Jnb3QgdG8gbWVudGlvbiBpdC4NCg0KUmVnYXJkcyBhbmQgTWVy
-cnkgQ2hyaXN0bWFzDQpDaHJpc3RvcGgNCg==
+Hi Joel,
+
+On 2023-12-21 13:09:19+0100, Joel Granados wrote:
+> I had some available cycles today and wanted to look at the patch that
+> you sent. I could not apply it on top of 6.7-rc6. Have you thought about
+> taking this out of your "constification" series and posting it as
+> something that comes before the const stuff?
+
+Yes, I am planning to submit this standalone. But I need to do some more
+investigation to properly handle the existing comments.
+
+FYI this out-of-series patch is meant to be applied on top of the rest
+of the series.
+
+
+Another question:
+
+When did you write this mail?
+
+The Date header says it's from the 21st but I only received it today
+(the 23rd). All other mail headers also say that it was only sent on
+23rd. The same seems to happen with your other mails, too.
+
+Thomas
+
+> On Wed, Dec 06, 2023 at 06:53:10AM +0100, Thomas Weißschuh wrote:
+> > On 2023-12-05 14:50:01-0800, Luis Chamberlain wrote:
+> > > On Tue, Dec 5, 2023 at 2:41 PM Thomas Weißschuh <linux@weissschuh.net> wrote:
+> > > >
+> > > > On 2023-12-05 14:33:38-0800, Luis Chamberlain wrote:
+> > > > > On Mon, Dec 04, 2023 at 08:52:26AM +0100, Thomas Weißschuh wrote:
+> > > > > > @@ -231,7 +231,8 @@ static int insert_header(struct ctl_dir *dir, struct ctl_table_header *header)
+> > > > > >             return -EROFS;
+> > > > > >
+> > > > > >     /* Am I creating a permanently empty directory? */
+> > > > > > -   if (sysctl_is_perm_empty_ctl_header(header)) {
+> > > > > > +   if (header->ctl_table == sysctl_mount_point ||
+> > > > > > +       sysctl_is_perm_empty_ctl_header(header)) {
+> > > > > >             if (!RB_EMPTY_ROOT(&dir->root))
+> > > > > >                     return -EINVAL;
+> > > > > >             sysctl_set_perm_empty_ctl_header(dir_h);
+> > > > >
+> > > > > While you're at it.
+> > > >
+> > > > This hunk is completely gone in v3/the code that you merged.
+> > > 
+> > > It is worse in that it is not obvious:
+> > > 
+> > > +       if (table == sysctl_mount_point)
+> > > +               sysctl_set_perm_empty_ctl_header(head);
+> > > 
+> > > > Which kind of unsafety do you envision here?
+> > > 
+> > > Making the code obvious during patch review hy this is needed /
+> > > special, and if we special case this, why not remove enum, and make it
+> > > specific to only that one table. The catch is that it is not
+> > > immediately obvious that we actually call
+> > > sysctl_set_perm_empty_ctl_header() in other places, and it begs the
+> > > question if this can be cleaned up somehow.
+> > 
+> > Making it specific won't work because the flag needs to be transferred
+> > from the leaf table to the table representing the directory.
+> > 
+> > What do you think of the aproach taken in the attached patch?
+> > (On top of current sysctl-next, including my series)
+> > 
+> > Note: Current sysctl-next ist still based on v6.6.
+> 
+> > From 2fb9887fb2a5024c2620f2d694bc6dcc32afde67 Mon Sep 17 00:00:00 2001
+> > From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+> > Date: Wed, 6 Dec 2023 06:17:22 +0100
+> > Subject: [PATCH] sysctl: simplify handling of permanently empty directories
+> > 
+> > ---
+> >  fs/proc/proc_sysctl.c  | 76 +++++++++++++++++++-----------------------
+> >  include/linux/sysctl.h | 13 ++------
+> >  2 files changed, 36 insertions(+), 53 deletions(-)
+> > 
+> > diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+> > index c92e9b972ada..c4d6d09b0e68 100644
+> > --- a/fs/proc/proc_sysctl.c
+> > +++ b/fs/proc/proc_sysctl.c
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/bpf-cgroup.h>
+> >  #include <linux/mount.h>
+> >  #include <linux/kmemleak.h>
+> > +#include <linux/cleanup.h>
+> >  #include "internal.h"
+> >  
+> >  #define list_for_each_table_entry(entry, header)	\
+> > @@ -29,32 +30,6 @@ static const struct inode_operations proc_sys_inode_operations;
+> >  static const struct file_operations proc_sys_dir_file_operations;
+> >  static const struct inode_operations proc_sys_dir_operations;
+> >  
+> > -/* Support for permanently empty directories */
+> > -static const struct ctl_table sysctl_mount_point[] = {
+> > -	{ }
+> > -};
+> > -
+> > -/**
+> > - * register_sysctl_mount_point() - registers a sysctl mount point
+> > - * @path: path for the mount point
+> > - *
+> > - * Used to create a permanently empty directory to serve as mount point.
+> > - * There are some subtle but important permission checks this allows in the
+> > - * case of unprivileged mounts.
+> > - */
+> > -struct ctl_table_header *register_sysctl_mount_point(const char *path)
+> > -{
+> > -	return register_sysctl(path, sysctl_mount_point);
+> > -}
+> > -EXPORT_SYMBOL(register_sysctl_mount_point);
+> > -
+> > -#define sysctl_is_perm_empty_ctl_header(hptr)		\
+> > -	(hptr->type == SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY)
+> > -#define sysctl_set_perm_empty_ctl_header(hptr)		\
+> > -	(hptr->type = SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY)
+> > -#define sysctl_clear_perm_empty_ctl_header(hptr)		\
+> > -	(hptr->type = SYSCTL_TABLE_TYPE_DEFAULT)
+> > -
+> >  void proc_sys_poll_notify(struct ctl_table_poll *poll)
+> >  {
+> >  	if (!poll)
+> > @@ -199,8 +174,6 @@ static void init_header(struct ctl_table_header *head,
+> >  	head->set = set;
+> >  	head->parent = NULL;
+> >  	head->node = node;
+> > -	if (table == sysctl_mount_point)
+> > -		sysctl_set_perm_empty_ctl_header(head);
+> >  	INIT_HLIST_HEAD(&head->inodes);
+> >  	if (node) {
+> >  		const struct ctl_table *entry;
+> > @@ -228,17 +201,9 @@ static int insert_header(struct ctl_dir *dir, struct ctl_table_header *header)
+> >  
+> >  
+> >  	/* Is this a permanently empty directory? */
+> > -	if (sysctl_is_perm_empty_ctl_header(dir_h))
+> > +	if (dir->permanently_empty)
+> >  		return -EROFS;
+> >  
+> > -	/* Am I creating a permanently empty directory? */
+> > -	if (header->ctl_table_size > 0 &&
+> > -	    sysctl_is_perm_empty_ctl_header(header)) {
+> > -		if (!RB_EMPTY_ROOT(&dir->root))
+> > -			return -EINVAL;
+> > -		sysctl_set_perm_empty_ctl_header(dir_h);
+> > -	}
+> > -
+> >  	dir_h->nreg++;
+> >  	header->parent = dir;
+> >  	err = insert_links(header);
+> > @@ -254,8 +219,6 @@ static int insert_header(struct ctl_dir *dir, struct ctl_table_header *header)
+> >  	erase_header(header);
+> >  	put_links(header);
+> >  fail_links:
+> > -	if (header->ctl_table == sysctl_mount_point)
+> > -		sysctl_clear_perm_empty_ctl_header(dir_h);
+> >  	header->parent = NULL;
+> >  	drop_sysctl_table(dir_h);
+> >  	return err;
+> > @@ -442,6 +405,7 @@ static struct inode *proc_sys_make_inode(struct super_block *sb,
+> >  		struct ctl_table_header *head, const struct ctl_table *table)
+> >  {
+> >  	struct ctl_table_root *root = head->root;
+> > +	struct ctl_dir *ctl_dir;
+> >  	struct inode *inode;
+> >  	struct proc_inode *ei;
+> >  
+> > @@ -475,7 +439,9 @@ static struct inode *proc_sys_make_inode(struct super_block *sb,
+> >  		inode->i_mode |= S_IFDIR;
+> >  		inode->i_op = &proc_sys_dir_operations;
+> >  		inode->i_fop = &proc_sys_dir_file_operations;
+> > -		if (sysctl_is_perm_empty_ctl_header(head))
+> > +
+> > +		ctl_dir = container_of(head, struct ctl_dir, header);
+> > +		if (ctl_dir->permanently_empty)
+> >  			make_empty_dir_inode(inode);
+> >  	}
+> >  
+> > @@ -1214,8 +1180,7 @@ static bool get_links(struct ctl_dir *dir,
+> >  	struct ctl_table_header *tmp_head;
+> >  	const struct ctl_table *entry, *link;
+> >  
+> > -	if (header->ctl_table_size == 0 ||
+> > -	    sysctl_is_perm_empty_ctl_header(header))
+> > +	if (header->ctl_table_size == 0 || dir->permanently_empty)
+> >  		return true;
+> >  
+> >  	/* Are there links available for every entry in table? */
+> > @@ -1536,6 +1501,33 @@ void unregister_sysctl_table(struct ctl_table_header * header)
+> >  }
+> >  EXPORT_SYMBOL(unregister_sysctl_table);
+> >  
+> > +/**
+> > + * register_sysctl_mount_point() - registers a sysctl mount point
+> > + * @path: path for the mount point
+> > + *
+> > + * Used to create a permanently empty directory to serve as mount point.
+> > + * There are some subtle but important permission checks this allows in the
+> > + * case of unprivileged mounts.
+> > + */
+> > +struct ctl_table_header *register_sysctl_mount_point(const char *path)
+> > +{
+> > +	struct ctl_dir *dir = sysctl_mkdir_p(&sysctl_table_root.default_set.dir, path);
+> > +
+> > +	if (IS_ERR(dir))
+> > +		return NULL;
+> > +
+> > +	guard(spinlock)(&sysctl_lock);
+> > +
+> > +	if (!RB_EMPTY_ROOT(&dir->root)) {
+> > +		drop_sysctl_table(&dir->header);
+> > +		return NULL;
+> > +	}
+> > +
+> > +	dir->permanently_empty = true;
+> > +	return &dir->header;
+> > +}
+> > +EXPORT_SYMBOL(register_sysctl_mount_point);
+> > +
+> >  void setup_sysctl_set(struct ctl_table_set *set,
+> >  	struct ctl_table_root *root,
+> >  	int (*is_seen)(struct ctl_table_set *))
+> > diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+> > index 7c96d5abafc7..329e68d484ed 100644
+> > --- a/include/linux/sysctl.h
+> > +++ b/include/linux/sysctl.h
+> > @@ -177,23 +177,14 @@ struct ctl_table_header {
+> >  	struct ctl_dir *parent;
+> >  	struct ctl_node *node;
+> >  	struct hlist_head inodes; /* head for proc_inode->sysctl_inodes */
+> > -	/**
+> > -	 * enum type - Enumeration to differentiate between ctl target types
+> > -	 * @SYSCTL_TABLE_TYPE_DEFAULT: ctl target with no special considerations
+> > -	 * @SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY: Used to identify a permanently
+> > -	 *                                       empty directory target to serve
+> > -	 *                                       as mount point.
+> > -	 */
+> > -	enum {
+> > -		SYSCTL_TABLE_TYPE_DEFAULT,
+> > -		SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY
+> > -	} type;
+> >  };
+> >  
+> >  struct ctl_dir {
+> >  	/* Header must be at the start of ctl_dir */
+> >  	struct ctl_table_header header;
+> >  	struct rb_root root;
+> > +	/* Permanently empty directory target to serve as mount point. */
+> > +	bool permanently_empty;
+> >  };
+> >  
+> >  struct ctl_table_set {
+> > 
+> > base-commit: a6fd07f80ab7bd94edb4d56c35e61117ffb9957e
+> > prerequisite-patch-id: 0000000000000000000000000000000000000000
+> > prerequisite-patch-id: 13932e9add940cb65c71e04b5efdfcd3622fd27e
+> > prerequisite-patch-id: 2e4d88f7b8aaa805598f0e87a3ea726825bb4264
+> > prerequisite-patch-id: 674a680d9cb138cd34cfd0e1a4ec3a5d1c220078
+> > prerequisite-patch-id: e27c92582aa20b1dfb122c172b336dbaf9d6508a
+> > prerequisite-patch-id: 9b409a34ab6a4d8d8c5225ba9a72db3116e3c8b3
+> > prerequisite-patch-id: 86ff15a81d850ebda16bb707491251f4b705e4fd
+> > prerequisite-patch-id: b7ab65512ac9acfb2dd482b0271b399467afc56d
+> > prerequisite-patch-id: 0354922fbf2508a89f3e9d9a4e274fc98deb2e93
+> > prerequisite-patch-id: b71389e82026ffc19cbb717bba1a014ad6cab6da
+> > prerequisite-patch-id: fbb0201f89bf6c41d0585af867bdeec8d51649b2
+> > prerequisite-patch-id: e3b4b5b69b4eadf87ed97beb8c03a471e7628cb9
+> > prerequisite-patch-id: 3fbc9745cf3f28872b3e63f6d1f6e2fd7598be8a
+> > prerequisite-patch-id: ba2b190c2e54cfb505a282e688c2222712f0acd7
+> > prerequisite-patch-id: 47e5ca730748bb7bf9248a9e711045d8c1028199
+> > prerequisite-patch-id: dcd9f87f00290d2f9be83e404f8883eb90c5fb1c
+> > prerequisite-patch-id: d4629be1a61585ab821da2d2850f246761f72f25
+> > prerequisite-patch-id: f740190f4b94e57cbf3659f220d94483713341a1
+> > prerequisite-patch-id: 301c2e530e2af4568267e19247d4a49ac2a9871d
+> > -- 
+> > 2.43.0
+> > 
+> 
+> 
+> -- 
+> 
+> Joel Granados
+
+
