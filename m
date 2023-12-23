@@ -1,59 +1,67 @@
 Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7196A168A8;
-	Sat, 23 Dec 2023 22:08:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4866171A7;
+	Sat, 23 Dec 2023 22:09:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="JfFC1iuP"
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="JE+Rf86o"
 Received: from localhost (unknown [IPv6:2601:280:5e00:7e19::646])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 8D8D34E5;
-	Sat, 23 Dec 2023 22:08:55 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 8D8D34E5
+	by ms.lwn.net (Postfix) with ESMTPSA id E499A7DA;
+	Sat, 23 Dec 2023 22:09:53 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net E499A7DA
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1703369335; bh=huOwuWYusX/7wW3EH8MurgaAXdURnOfG8Q1+QitNm0U=;
+	t=1703369394; bh=OXOIVnxtmX39z47YuVWgbI8eYICUPrpgSK3IgT0gudM=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=JfFC1iuPyXau/7zdwYxy2Of+19JT9XbDjGYb9RnuvyQFnhkv6vqWNPnl+JHr3Jw6s
-	 SjA30fUpvZK36Mtsn4tnXPXHLr/9JEGy5zmBx4lGyfgB1fDuODtN5aaPxj4ISV9Def
-	 QMjP3a+BHdcvTqz2s661fhbkS+GA0n11NsBrmOP1spplt4WuXy2ER2uHF4/D3tLaxI
-	 /dYlUVpSL6jWYVxcTX9Ka+d2SEwSrE65an4G1dHEn8ac+2KfmB+BXdZd19hAU2k/nu
-	 8l5gqIuR95e201dj9YUQ5VJ6rFTXnGhMhK2h/KwytbfV3SEXfnqjOwr2M3x02qkYK4
-	 vS0Gtg+cRWfXg==
+	b=JE+Rf86ooM+2gjN6Ba9hufEzLnh2j13L/+CVudlo0CT5NNyeiqX1VqO/eebNz9MkH
+	 LW+hXfqdbRb/WkErsh6BEEYFcymkEL1FRhJwfCal9BsavPeVVpyUej13bVeBnA250O
+	 UcBPLuCuEMeUvitGQ7fs+B3+7JGJh2+Tpd855mHWy1FkuLVzEGfj6Y3C4Ld7ehiYJu
+	 IpzezmjHpn/iyLl+jQA8jpMlaxqJTGmdo+2mN2RQOJyPVRvdlQpsMOzKJQgmQFy1A7
+	 TXZLSOe3ntINdlKr5cVvImLG66fsaIYwfSA+guNEjhFdMi8HpYzLwa7zL3j7iCpsNH
+	 JOvBIOk9Bm97g==
 From: Jonathan Corbet <corbet@lwn.net>
-To: attreyee-muk <tintinm2017@gmail.com>, jpoimboe@kernel.org,
- jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com,
- joe.lawrence@redhat.com
-Cc: attreyee-muk <tintinm2017@gmail.com>, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [PATCH] Documentation/livepatch: Update terminology in livepatch
-In-Reply-To: <20231223205813.32083-1-tintinm2017@gmail.com>
-References: <20231223205813.32083-1-tintinm2017@gmail.com>
-Date: Sat, 23 Dec 2023 15:08:54 -0700
-Message-ID: <87o7eg607d.fsf@meer.lwn.net>
+To: Randy Dunlap <rdunlap@infradead.org>, attreyee-muk
+ <tintinm2017@gmail.com>, bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Documentation/PCI: fix spelling mistake in boot-interrupts
+In-Reply-To: <6026d9b5-dd6f-43f8-acc7-9cc77bdb3df3@infradead.org>
+References: <20231223184412.25598-1-tintinm2017@gmail.com>
+ <6026d9b5-dd6f-43f8-acc7-9cc77bdb3df3@infradead.org>
+Date: Sat, 23 Dec 2023 15:09:53 -0700
+Message-ID: <87jzp4605q.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-attreyee-muk <tintinm2017@gmail.com> writes:
+Randy Dunlap <rdunlap@infradead.org> writes:
 
-> Update the sentence in livepatch.rst to: "Functions are there for a reason. Take some input parameters, acquire or release locks, read, process, and write some data in a defined way."
+> Hi,
 >
-> Signed-off-by: Attreyee Mukherjee <tintinm2017@gmail.com>
-> ---
->  Documentation/livepatch/livepatch.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On 12/23/23 10:44, attreyee-muk wrote:
+>> Correct to =E2=80=9Cre-enabled=E2=80=9D from =E2=80=9Creenabled=E2=80=9D.
+>>=20
+>> Signed-off-by: Attreyee Mukherjee <tintinm2017@gmail.com>
+>
+> Is "reenabled" confusing? I don't have a problem with it, but
+> one web page [1] says that it's OK to use "re-" if not having
+> the hyphen can be confusing.
+>
+> [1] https://www.grammarbook.com/blog/hyphens/hyphens-with-the-prefix-re/
+>
+> OTOH, some web sites say the "reenable" is OK, at least as an
+> alternative spelling.
 
-So this is a classic example of saying what you have done, but not why.
-What makes this a change that we want?
-
-Also, please wrap your changelogs to a reasonable line length.
+Either is probably fine; so I'm not quite sure why this is worth
+changing?
 
 Thanks,
 
