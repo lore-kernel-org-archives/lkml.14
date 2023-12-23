@@ -1,107 +1,116 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BA711C8A
-	for <linux-kernel@vger.kernel.org>; Sat, 23 Dec 2023 15:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: from mecka.net (mecka.net [159.69.159.214])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8EDEDF4D;
+	Sat, 23 Dec 2023 15:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mecka.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mecka.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbbPgjTH"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40d41555f9dso22179445e9.2
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Dec 2023 07:13:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703344414; x=1703949214; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+7RZjFb+nij+zY4Pr94c1OS3SH59BuL/+qyNrJdQ5ag=;
-        b=gbbPgjTHKdPviU/9QrInoxgU2C/7/bIlEygJoC8fJjBOSpHTppoPUEhCRMyZ6l7xD6
-         nmMOY2YOlQ+3UGr3YWdCE9+b3ugGS9lCKxwshcvczzpfGDLkp3juliriSx/lLmUdM+UL
-         cq5tI9NHWGj50FnAl8gd1NRR2GCemnWkbACiCQ7c+t9D1QXtsUSTW2jYgRW9FB8ZKEIo
-         dpIk7gYx7u0P9otlrfprI1q97atW5RLJzdAv4eBOeLbOBAIcn1lO56pc5PiWQThfXlvA
-         WsayVzq6AEnUbtQoAxIreupTknvQRCYyYuNSkjLmpvqTsfg3wz4fYAgWf0KFzg/qFp1X
-         z5Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703344414; x=1703949214;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+7RZjFb+nij+zY4Pr94c1OS3SH59BuL/+qyNrJdQ5ag=;
-        b=R3xwl1UwZj5nOEB3uTfqX5XPr5bXV0EMoJttMixieV5WuIk+PJxGKhEV5OtIPpX0J1
-         t3aM2tOpCUdoTkGROyqaHhdY/1LTu3DeG+jIU9DMJb9dXsQZqa5VWkMQUINnrziTSbup
-         A3Skt7HULj4TOd6l5UdxX8qWQJWkf9+cj8E28Mac1vXRXT2tV3GixVGa+FGZDp5SkyEm
-         7veXkRy1xepVxEeEr38/cXwmvujkScZ/QHv96am7i1ig84IMcRN0RPiiQqLAl3iRbhBm
-         Brtm3jnBJhEVNTYwjPsM6LBPS96nmzDVlERI7Npue2Vqronq6CK5JCxmucB9KzzPzzb0
-         qRJQ==
-X-Gm-Message-State: AOJu0YyOd1N8TGkupfyZum/8UH5ifmDeDaVtqI2WDq2ZegmUAHwLiX7A
-	NfT+hMTkI8/6j3EYaTcsx3o2bYRX1oalk48ZpYI=
-X-Google-Smtp-Source: AGHT+IEFK/Y1UR42XOxBItq4BK6z+twGv8PfA7HsXO8dlqD2hfT5pSad5X0+YLw+5gEHRgHpU0GJOlkE8+oxSUcZdMk=
-X-Received: by 2002:a05:600c:a47:b0:40d:1257:36fd with SMTP id
- c7-20020a05600c0a4700b0040d125736fdmr1711349wmq.93.1703344413892; Sat, 23 Dec
- 2023 07:13:33 -0800 (PST)
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mecka.net header.i=@mecka.net header.b="A/Y10Bnz"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mecka.net; s=2016.11;
+	t=1703344837; bh=gjmk34cgD8+7am+EzGIKiXzgLsLe0EolSOD4WblBzXo=;
+	h=From:Subject:Date:To:Cc:From;
+	b=A/Y10BnzEC6vegjs4Djnb775+rgfUD+izHRI2vOAXaddj9y+xDeWc1cCiVOXsSaDr
+	 9FeTvsE1pggSdnnKBMrZM1XcwqFMA35s7yU1u3OsMyRrGInTmyThVMwigLRrD4/Wpa
+	 pL4WSlewSef/lucS2PHuGwIYwINkPf68X6K/DpiDBSo41GsfI/tsW6E5h1Mrh8nAlA
+	 awl06zHCw4fCkUfcfmijp/dkunt87aRRbdZg72AxyBL5JDzHdsLgdfhd7HYsM71XAj
+	 B+7VLnRShQUQ3uga0jdxgQ2fGrLNKQNXdbxxezczjqBUZNHKPmzVL0sBh6wvAwoOi+
+	 2dHkN48NQicfw==
+Received: from arthur.fritz.box (unknown [185.147.11.134])
+	by mecka.net (Postfix) with ESMTPSA id 13CDF371958;
+	Sat, 23 Dec 2023 16:20:37 +0100 (CET)
+From: Manuel Traut <manut@mecka.net>
+Subject: [PATCH v2 0/4] arm64: rockchip: Pine64 pinetab2 support
+Date: Sat, 23 Dec 2023 16:20:14 +0100
+Message-Id: <20231223-pinetab2-v2-0-ec1856d0030e@mecka.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231221130930.32634-1-ruipengqi7@gmail.com> <e9aa311f-6f13-410e-bb35-20320275668c@linaro.org>
- <CADHLONGLZaZT4Ot56AnxOf=ROrTWvge5=NUx5uqKqJhpJibfOQ@mail.gmail.com> <6fe05804-da74-45cd-a6f1-df4644671d99@linaro.org>
-In-Reply-To: <6fe05804-da74-45cd-a6f1-df4644671d99@linaro.org>
-From: ruipeng qi <ruipengqi7@gmail.com>
-Date: Sat, 23 Dec 2023 23:13:22 +0800
-Message-ID: <CADHLONE2YnBJGJUp2-vn_XEpc7+quTMWF7y1zpV0ygeL2VpQxA@mail.gmail.com>
-Subject: Re: [PATCH 1/7] [RFC PATCH 1/7] osdump: Add one new os minidump module
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: catalin.marinas@arm.com, will@kernel.org, bhe@redhat.com, 
-	vgoyal@redhat.com, dyoung@redhat.com, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, zalbassam@google.com, dianders@chromium.org, 
-	mark.rutland@arm.com, lecopzer.chen@mediatek.com, maz@kernel.org, 
-	arnd@arndb.de, yury.norov@gmail.com, brauner@kernel.org, mcgrof@kernel.org, 
-	maninder1.s@samsung.com, michael.christie@oracle.com, samitolvanen@google.com, 
-	linux-arm-kernel@lists.infradead.org, qiruipeng@lixiang.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAK76hmUC/22MQQ7CIBBFr9LMWgwzmmJceQ/TBZTBToy0gYZoG
+ u4udu3y/f/yNsichDNcuw0SF8kyxwZ06GCcbHywEt8YSNMJiUgtEnm1jlSw1hjW6F0foOlL4iD
+ vPXUfGk+S1zl99nLB3/onUlBpxXi+WBN6dB5vLx6f9thuGGqtX90PBjmgAAAA
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Sandy Huang <hjc@rock-chips.com>, Mark Yao <markyao0591@gmail.com>, 
+ Diederik de Haas <didi.debian@cknow.org>, 
+ Segfault <awarnecke002@hotmail.com>, Arnaud Ferraris <aferraris@debian.org>, 
+ Danct12 <danct12@riseup.net>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, Manuel Traut <manut@mecka.net>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.12.4
 
-On Sat, Dec 23, 2023 at 10:23=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+This adds support for the BOE TH101MB31IG002 LCD Panel used in Pinetab2 [1] and
+Pinetab-V [2] as well as the devictrees for the Pinetab2 v0.1 and v2.0.
 
-> > Qcom minidump can dump some logs like dmsg, some status like IRQ or
-> > Run queue. This can help to learn some information when the issue occur=
-s,
-> > which will help to find out the root cause. But what it dumps are limit=
-ed, it
-> > doesn't dump w and lock if they are not local data.
->
-> So add missing features to it. I don't think you got my comment and keep
-> arguing on the same thing repeated for upstream submissions many times.
-> We do not want multiple vendor solutions. Every vendor wants his work
-> and does not care about integrating or reusing other pieces.
->
-> >
-> > For osdump, it dumps objects stored in slab, datas in bss, data segment=
-s,
-> > some data alloced with memblock, data stored in local stack, and so on.
-> > In a word, it dumps almost all of the key data in the kernel. Besides, =
-you
-> > can use the crash tool to analyze the dump file.
->
-> I don't see a problem why minidump cannot do it.
-Qcom minidump allows one kernel client to register its region to dump, and =
-then
-driver will create and maintain one elf head for it.
-But osdump will dump thousands of non-continuous regions. If you register o=
-ne
-by one, and add an elf head for each, it will cause heavy overhead. So it s=
-tore
-data in binary, and reassemble a standard elf format file offline for debug=
-.
+The BOE LCD Panel patch was retrieved from [3]. The function-name prefix has
+been adapted and the LCD init section was simplified.
 
-Sir, I am not really familiar with Qcom minidump, and some options may be w=
-rong.
-But do you think it is ok to integrate osdump to Qcom? Looking forward to y=
-our
-suggestions!
+The Pinetab2 devicetree patch was retrieved from [4]. Some renaming was needed
+to pass the dtb-checks, the brightness-levels are specified as range and steps
+instead of a list of values.
 
-Best Regards
-Ruipeng
+[5] was also used as source for this queue.
+
+The last to patches fix some dtb-checker warnings that showed up with the new
+device-trees.
+
+[1] https://wiki.pine64.org/wiki/PineTab2
+[2] https://wiki.pine64.org/wiki/PineTab-V
+[3] https://salsa.debian.org/Mobian-team/devices/kernels/rockchip-linux/-/blob/mobian-6.6/debian/patches/display/0018-drm-panel-add-BOE-TH101MB31IG002-28A-driver.patch?ref_type=heads
+[4] https://salsa.debian.org/Mobian-team/devices/kernels/rockchip-linux/-/blob/mobian-6.6/debian/patches/device-tree/0134-arch-arm64-add-Pine64-PineTab2-device-trees.patch?ref_type=heads
+[5] https://github.com/dreemurrs-embedded/linux-pinetab2/tree/v6.6.7-danctnix1
+
+Signed-off-by: Manuel Traut <manut@mecka.net>
+---
+Changes in v2:
+- Removed dtb-checker fixups, cause I am not sure if they are correct
+- Applied review comments for dt bindings
+- pinetab2 dts:
+    * Remove unverified WLAN entries, as in [5]
+    * Simplify flash LED definition, as in [5]
+    * Fix headphone detection and sound routing, as in [5]
+    * Fix CRU clock configuration
+- BOE TH101MB31IG002 LCD Panel:
+    * Reworked prepare/enable unprepare/disable, as in [5]
+- Replaced nicknames by realnames in author and signed-offs
+
+- Link to v1: https://lore.kernel.org/r/20231222-pinetab2-v1-0-e148a7f61bd1@mecka.net
+
+---
+Alexander Warnecke (2):
+      drm/panel: Add driver for BOE TH101MB31IG002-28A panel
+      arm64: dts: rockchip: Add devicetree for Pine64 Pinetab2
+
+Manuel Traut (2):
+      dt-bindings: display: panel: Add BOE TH101MB31IG002-28A panel
+      dt-bindings: arm64: rockchip: Add Pine64 Pinetab2
+
+ .../devicetree/bindings/arm/rockchip.yaml          |   8 +
+ .../display/panel/boe,th101mb31ig002-28a.yaml      |  58 ++
+ arch/arm64/boot/dts/rockchip/Makefile              |   2 +
+ .../boot/dts/rockchip/rk3566-pinetab2-v0.1.dts     |  26 +
+ .../boot/dts/rockchip/rk3566-pinetab2-v2.0.dts     |  46 +
+ arch/arm64/boot/dts/rockchip/rk3566-pinetab2.dtsi  | 979 +++++++++++++++++++++
+ drivers/gpu/drm/panel/Kconfig                      |  11 +
+ drivers/gpu/drm/panel/Makefile                     |   1 +
+ .../gpu/drm/panel/panel-boe-th101mb31ig002-28a.c   | 348 ++++++++
+ 9 files changed, 1479 insertions(+)
+---
+base-commit: 5254c0cbc92d2a08e75443bdb914f1c4839cdf5a
+change-id: 20231222-pinetab2-faa77e01db6f
+
+Best regards,
+-- 
+Manuel Traut <manut@mecka.net>
+
