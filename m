@@ -1,149 +1,92 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC7663A0;
-	Sat, 23 Dec 2023 06:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13BD36FB0;
+	Sat, 23 Dec 2023 07:06:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dH9CZyN0";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZTCk+Bi9";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dH9CZyN0";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZTCk+Bi9"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6DC751F385;
-	Sat, 23 Dec 2023 06:52:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1703314344; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IcADzLsu4UG9h7eTRNClgqYQhedNX7PtYm9QClv1mDI=;
-	b=dH9CZyN06WYxbgOoDak8TeuI26yWDtVD9KuyNVFU6Hesc/P+I6zw2XKWMQ2BtnD4PtEm/p
-	8U/QQkAku7ZTz8XAczMwIzxxJAG0+5kZBFQHoSuV2Utqwjl023r5VfeZzPpMyZoRp2Dmph
-	Hsb2aKaHNDWZBC0avB+B352s3uPylVE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1703314344;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IcADzLsu4UG9h7eTRNClgqYQhedNX7PtYm9QClv1mDI=;
-	b=ZTCk+Bi9OLhZbthwCWcA53e/dPVfYLQ9Eh3UOzRVTJPVtcql9uBb4IufM0zqBR333//uKY
-	LocEerPpiZuCd5Cg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1703314344; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IcADzLsu4UG9h7eTRNClgqYQhedNX7PtYm9QClv1mDI=;
-	b=dH9CZyN06WYxbgOoDak8TeuI26yWDtVD9KuyNVFU6Hesc/P+I6zw2XKWMQ2BtnD4PtEm/p
-	8U/QQkAku7ZTz8XAczMwIzxxJAG0+5kZBFQHoSuV2Utqwjl023r5VfeZzPpMyZoRp2Dmph
-	Hsb2aKaHNDWZBC0avB+B352s3uPylVE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1703314344;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IcADzLsu4UG9h7eTRNClgqYQhedNX7PtYm9QClv1mDI=;
-	b=ZTCk+Bi9OLhZbthwCWcA53e/dPVfYLQ9Eh3UOzRVTJPVtcql9uBb4IufM0zqBR333//uKY
-	LocEerPpiZuCd5Cg==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id A47AE139C4;
-	Sat, 23 Dec 2023 06:52:20 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id YuolFaSDhmXjOwAAn2gu4w
-	(envelope-from <colyli@suse.de>); Sat, 23 Dec 2023 06:52:20 +0000
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IrYroaZS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703315161; x=1734851161;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Ua3gxrBq+A2K7dRFw6+hA5zFQS4btKUO72Ob8/lSyp0=;
+  b=IrYroaZSNYjBOsJ71k/70dCRMTdUs1orKd0H6sFRdoTUODkcFuBC/YvV
+   W6zQ08cQWCMQLtzU4/9w/25/0UmUXz7U+snSMpoZDmEe/WC3LWtQxKvMX
+   dKbNFJOo7rwajjPusBYdaQRjkD2Hajm7vL0jcBPhGT943Pi02cvkf/as8
+   vUz9fA8Agse3jZQMkRbbYU7Mge+ipmYu+wVfX7Nx56/XTC41oMdClXe+K
+   hBTygMNqQa5AA4z4LDBYmd+mWYsCYLm94w7jeaKW9b82+R+de32GSd7OS
+   l+CVjF3YtDktq+ICaXVOLL8MnwZ6GwJe/FxSb2E/Bs8U1EuiXD9n3h7gg
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="460515996"
+X-IronPort-AV: E=Sophos;i="6.04,298,1695711600"; 
+   d="scan'208";a="460515996"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 23:06:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.04,298,1695711600"; 
+   d="scan'208";a="18971455"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by orviesa002.jf.intel.com with ESMTP; 22 Dec 2023 23:05:56 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rGw4x-000AOj-2Z;
+	Sat, 23 Dec 2023 07:05:50 +0000
+Date: Sat, 23 Dec 2023 15:04:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: LeoLiu-oc <LeoLiu-oc@zhaoxin.com>, olivia@selenic.com,
+	herbert@gondor.apana.org.au, jiajie.ho@starfivetech.com,
+	conor.dooley@microchip.com, martin@kaiser.cx, mmyangfl@gmail.com,
+	jenny.zhang@starfivetech.com, robh@kernel.org,
+	l.stelmach@samsung.com, ardb@kernel.org,
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, CobeChen@zhaoxin.com,
+	TonyWWang@zhaoxin.com, YunShen@zhaoxin.com, LeoLiu@zhaoxin.com,
+	LeoLiuoc <LeoLiu-oc@zhaoxin.com>
+Subject: Re: [PATCH v3] hwrng: add Zhaoxin rng driver base on rep_xstore
+ instruction
+Message-ID: <202312231428.55tEgXSQ-lkp@intel.com>
+References: <20231221062602.799432-1-LeoLiu-oc@zhaoxin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.300.61.1.2\))
-Subject: Re: Bug in commit aa511ff8218b ("badblocks: switch to the improved
- badblock handling
-From: Coly Li <colyli@suse.de>
-In-Reply-To: <6585d5fda5183_9f731294b9@iweiny-mobl.notmuch>
-Date: Sat, 23 Dec 2023 14:52:07 +0800
-Cc: Dan Williams <dan.j.williams@intel.com>,
- Jens Axboe <axboe@kernel.dk>,
- Xiao Ni <xni@redhat.com>,
- Geliang Tang <geliang.tang@suse.com>,
- Hannes Reinecke <hare@suse.de>,
- NeilBrown <neilb@suse.de>,
- Vishal L Verma <vishal.l.verma@intel.com>,
- linux-block@vger.kernel.org,
- nvdimm@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <270BD884-EF31-491C-9339-5D9ADF3BC694@suse.de>
-References: <6585d5fda5183_9f731294b9@iweiny-mobl.notmuch>
-To: Ira Weiny <ira.weiny@intel.com>
-X-Mailer: Apple Mail (2.3774.300.61.1.2)
-X-Spam-Level: 
-X-Spam-Level: 
-X-Spamd-Result: default: False [0.37 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 BAYES_HAM(-0.03)[55.02%];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 MV_CASE(0.50)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_SEVEN(0.00)[11];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[]
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Score: 0.37
-X-Spam-Flag: NO
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231221062602.799432-1-LeoLiu-oc@zhaoxin.com>
 
+Hi LeoLiu-oc,
 
+kernel test robot noticed the following build errors:
 
-> 2023=E5=B9=B412=E6=9C=8823=E6=97=A5 02:31=EF=BC=8CIra Weiny =
-<ira.weiny@intel.com> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> Coly,
->=20
-> Yesterday I noticed that a few of our nvdimm tests were failing.  I =
-bisected
-> the problem to the following commit.
->=20
-> aa511ff8218b ("badblocks: switch to the improved badblock handling =
-code")=20
->=20
-> Reverting this patch fixed our tests.
->=20
-> I've also dug into the code a bit and I believe the algorithm for
-> badblocks_check() is broken (not yet sure about the other calls).  At =
-the
-> very least I see the bb->p pointer being indexed with '-1'.  :-(
->=20
-> I did notice that this work was due to a bug report in badblock_set().
-> Therefore, I'm not sure of that severity of that fix is vs a revert.  =
-But
-> at this point I'm not seeing an easy fix so I'm in favor of a revert.
+[auto build test ERROR on char-misc/char-misc-testing]
+[also build test ERROR on char-misc/char-misc-next char-misc/char-misc-linus herbert-cryptodev-2.6/master linus/master v6.7-rc6 next-20231222]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Hi Ira,
+url:    https://github.com/intel-lab-lkp/linux/commits/LeoLiu-oc/hwrng-add-Zhaoxin-rng-driver-base-on-rep_xstore-instruction/20231222-174625
+base:   char-misc/char-misc-testing
+patch link:    https://lore.kernel.org/r/20231221062602.799432-1-LeoLiu-oc%40zhaoxin.com
+patch subject: [PATCH v3] hwrng: add Zhaoxin rng driver base on rep_xstore instruction
+config: i386-defconfig (https://download.01.org/0day-ci/archive/20231223/202312231428.55tEgXSQ-lkp@intel.com/config)
+compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231223/202312231428.55tEgXSQ-lkp@intel.com/reproduce)
 
-Thanks for the information reported. Let me look into the situation now.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202312231428.55tEgXSQ-lkp@intel.com/
 
-Coly Li
+All errors (new ones prefixed by >>):
 
+   ld: drivers/char/hw_random/via-rng.o: in function `via_rng_mod_init':
+>> via-rng.c:(.init.text+0x2): undefined reference to `via_rng_cpu_ids'
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
