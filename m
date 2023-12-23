@@ -1,98 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96465D50C
-	for <linux-kernel@vger.kernel.org>; Sat, 23 Dec 2023 10:28:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QBXvlP9O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23DD7C433C7
-	for <linux-kernel@vger.kernel.org>; Sat, 23 Dec 2023 10:28:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703327291;
-	bh=ctHEpimfxLcuXX95GH24/nPgVGOHcffPObfL4O6j4Hk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QBXvlP9ONJuhdxfj613kDrwQ7eZQSUFPMMfpO4yBZ9dvVqgV0f5Z8jeLMsT+q/dvZ
-	 xWbPTQ0gOoEcgO0agDiK8BW28AQiuR1SEM1orIPXdzdgGrIybm06BT1iWB90eUeZoC
-	 FPncM3BTMxb8NHOJaJY87v9enzQKqL7JKgl/nQ07xH+Qh3VPL3dOgXkgtzR1uFs6pG
-	 sO/jo6QhlGoc9QgZUgyGwuoxuhiL//HaDJYytul0cqd0u23sjsPzSMvGOAPA+CJMji
-	 1IhZtuQHmPjHRxvp5OT+fuBg3b7nUFA3vP9O7BZD5J22C7/tv3Gfe0NiJ3b6beYxKI
-	 qYj0d4i4YrMbg==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-554265b5b1eso2505819a12.3
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Dec 2023 02:28:11 -0800 (PST)
-X-Gm-Message-State: AOJu0YxpZOZTVn4sujybhopB7fPU6ut5zOzFAQ9V+Pq0D5tgbbtMOmF6
-	l++lzyum/JSGti5Uqnl51FcDjJ8FBpaTvMd53wQ=
-X-Google-Smtp-Source: AGHT+IGikFYtOPP9NxAnNs3zACvl2eKEEFeZBVB6ky6IGaswsA0Jdl93XbH7wdb838n8a80UOI3S0ndhMvUdUED3wgE=
-X-Received: by 2002:a05:6402:1643:b0:553:53da:b3d8 with SMTP id
- s3-20020a056402164300b0055353dab3d8mr808932edx.94.1703327289568; Sat, 23 Dec
- 2023 02:28:09 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB8E946D
+	for <linux-kernel@vger.kernel.org>; Sat, 23 Dec 2023 10:31:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-228-U5G35-zWOAaFHs2mKPMClw-1; Sat, 23 Dec 2023 10:31:31 +0000
+X-MC-Unique: U5G35-zWOAaFHs2mKPMClw-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sat, 23 Dec
+ 2023 10:31:16 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Sat, 23 Dec 2023 10:31:16 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Guo Ren' <guoren@kernel.org>
+CC: Leonardo Bras <leobras@redhat.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "paul.walmsley@sifive.com"
+	<paul.walmsley@sifive.com>, "palmer@dabbelt.com" <palmer@dabbelt.com>,
+	"alexghiti@rivosinc.com" <alexghiti@rivosinc.com>, "charlie@rivosinc.com"
+	<charlie@rivosinc.com>, "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
+	"david@redhat.com" <david@redhat.com>, "panqinglin2020@iscas.ac.cn"
+	<panqinglin2020@iscas.ac.cn>, "rick.p.edgecombe@intel.com"
+	<rick.p.edgecombe@intel.com>, "willy@infradead.org" <willy@infradead.org>,
+	"bjorn@rivosinc.com" <bjorn@rivosinc.com>, "conor.dooley@microchip.com"
+	<conor.dooley@microchip.com>, "cleger@rivosinc.com" <cleger@rivosinc.com>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Guo Ren
+	<guoren@linux.alibaba.com>
+Subject: RE: [PATCH V2 4/4] riscv: mm: Optimize TASK_SIZE definition
+Thread-Topic: [PATCH V2 4/4] riscv: mm: Optimize TASK_SIZE definition
+Thread-Index: AQHaNMmXQnV6P1CryUOzF1IfQQ8rsbC1Lv+wgAD9mACAAH0Z4A==
+Date: Sat, 23 Dec 2023 10:31:15 +0000
+Message-ID: <9d4d15e8e3e944b8bd18e8bc1d54f59c@AcuMS.aculab.com>
+References: <20231221154702.2267684-1-guoren@kernel.org>
+ <20231221154702.2267684-5-guoren@kernel.org> <ZYUZ8QUJxCL93Fgv@LeoBras>
+ <CAJF2gTTX7AjexoRUw=ZS34HEWno7H3zvnXA+Q7TYsztNU=k2cg@mail.gmail.com>
+ <e3f1521a9f04463587d07d0c99534d5a@AcuMS.aculab.com>
+ <CAJF2gTRD827Fbs_2FxBP=Z8yudfAAqG6dA+a9eq74RMOz2WDnw@mail.gmail.com>
+In-Reply-To: <CAJF2gTRD827Fbs_2FxBP=Z8yudfAAqG6dA+a9eq74RMOz2WDnw@mail.gmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231222044554.25656-1-rdunlap@infradead.org> <CAAhV-H6pXSuj+bpf=skMYLQh8znboT6YxAA4UXokwm60-aXa8Q@mail.gmail.com>
-In-Reply-To: <CAAhV-H6pXSuj+bpf=skMYLQh8znboT6YxAA4UXokwm60-aXa8Q@mail.gmail.com>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sat, 23 Dec 2023 18:27:59 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5-ORE2zGT2oZu+dusfzoXfn6mpSDsyE4wo+3XYVUpovg@mail.gmail.com>
-Message-ID: <CAAhV-H5-ORE2zGT2oZu+dusfzoXfn6mpSDsyE4wo+3XYVUpovg@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: signal.c: add header file to fix build error
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org, WANG Xuerui <kernel@xen0n.name>, 
-	loongarch@lists.linux.dev, Kent Overstreet <kent.overstreet@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-On Fri, Dec 22, 2023 at 12:59=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org=
-> wrote:
->
-> Hi, Randy,
->
-> I cannot reproduce it with the default config file.
-Oh, I know, this error only occurs in linux-next, but I think this
-patch should be squashed into "rseq: Split out rseq.h from sched.h".
-Or as a fix applied to the bcachefs tree rather than the loongarch
-tree.
+RnJvbTogR3VvIFJlbg0KPiBTZW50OiAyMyBEZWNlbWJlciAyMDIzIDAyOjUzDQo+IA0KPiBPbiBG
+cmksIERlYyAyMiwgMjAyMyBhdCA3OjUy4oCvUE0gRGF2aWQgTGFpZ2h0IDxEYXZpZC5MYWlnaHRA
+YWN1bGFiLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBGcm9tOiBHdW8gUmVuDQo+ID4gPiBTZW50OiAy
+MiBEZWNlbWJlciAyMDIzIDExOjI1DQo+ID4gLi4uDQo+ID4gPiA+ID4gKyNkZWZpbmUgVEFTS19T
+SVpFICAgIChpc19jb21wYXRfdGFzaygpID8gXA0KPiA+ID4gPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgVEFTS19TSVpFXzMyIDogVEFTS19TSVpFXzY0KQ0KPiA+ID4gSSB3b3VsZCByZW1vdmUg
+aXNfY29tcGF0X3Rhc2soKSBpbiB0aGUgbmV4dCB2ZXJzaW9uIGJlY2F1c2UgeW91ciBwYXRjaA0K
+PiA+ID4gY29udGFpbnMgdGhhdC4NCj4gPg0KPiA+IERvZXMgVEFTS19TSVpFIGdldCB1c2VkIGlu
+IGFjY2Vzc19vaygpID8NCj4gPiBJZiBzbyB0aGUgcmVwZWF0ZWQgZXhwYW5zaW9uIG9mIHRoYXQg
+J21lc3MnIHdpbGwgc2xvdyB0aGluZ3MgZG93bi4NCj4gPg0KPiA+IE9UT0ggYWNjZXNzX29rKHB0
+ciwgbGVuKSBjYW4ganVzdCBjaGVjayAocHRyIHwgKHB0ciArIGxlbikpIDwgMCkNCj4gPiBhbmQg
+cmVseSBvbiB0aGUgcGFnZSBmYXVsdHMgZm9yIGV2ZXJ5dGhpbmcgZWxzZS4NCj4gT3IgZG8geW91
+IHdhbnQgdG8gZGlzY3VzcyB0aGUgYmFkIHNpZGUgZWZmZWN0IG9mIGlzX2NvbXBhdF90YXNrKCk/
+DQo+IA0KPiBZZXMsIHRlc3RfdGhyZWFkX2ZsYWcoVElGXzMyQklUKSB3b3VsZCBzbG93IGRvd24g
+YWNjZXNzX29rKCkuIEJ1dCBpZg0KPiB3ZSB1c2UgVEFTS19TSVpFX01BWCwgVkFfQklUUyBzdGls
+bCBuZWVkcyBwZ3RhYmxlX2w1X2VuYWJsZWQsDQo+IHBndGFibGVfbDRfZW5hYmxlZCBkZXRlY3Rh
+dGlvbiBmb3IgcmlzY3YuDQo+IA0KPiBJdCdzIG5vdCBvbmx5IGZvciBjb21wYXQgbW9kZSwgYnV0
+IGFsc28gU3YzOSwgU3Y0OCwgU3Y1Ny4gQWxsIHRyZWF0DQo+IFRBU0tfU0laRV9NQVggYXMgMHg4
+MDAwMDAwMDAwMDAwMDAwLCByaWdodD8gVGhlbjoNCj4gYWNjZXNzX29rKHB0ciwgbGVuKSBjYW4g
+anVzdCBjaGVjayAocHRyIHwgKHB0ciArIGxlbikpIDwgMCkNCj4gDQo+IEl0J3MgYW5vdGhlciBm
+ZWF0dXJlIGFuZCBkb2VzIG5vdCByZWxhdGUgdG8gY29tcGF0IG1vZGUuDQoNCkNvbXBhdCBtb2Rl
+IGp1c3QgbWFrZXMgaXQgd29yc2UuLi4NCg0KT25lIHBvc3NpYmlsaXR5IHdvdWxkIGJlIHRvIHNh
+dmUgdGhlIHRhc2sncyBtYXggdXNlciBhZGRyZXNzDQppbiB0aGUgdGFzayBzdHJ1Y3R1cmUgaXRz
+ZWxmIC0gdGhhdCB3b3VsZCBzYXZlIGFsbCB0aGUgY29uZGl0aW9uYWxzDQphdCBhIGNvc3Qgb2Yg
+YW4gZXh0cmEgdmFsdWUgaW4gdGhlIHRhc2sgc3RydWN0dXJlLg0KDQpUaGVyZSBpcyBhbHNvIHRo
+ZSBxdWVzdGlvbiBvZiB3aGV0aGVyIGEgbm9ybWFsbHkgNjQtYml0IHRhc2sNCmNhbiBhY3R1YWxs
+eSBtYWtlIHRoZSBjb21wYXQgbW1hcCgpIHN5c3RlbSBjYWxsPw0KT24geDg2IHRoYXQgaXMgY2Vy
+dGFpbmx5IHBvc3NpYmxlIChJSVJDIHdpbmUgZG9lcyBpdCksIHg4Ng0KdXNlcnNwYWNlIGNhbiBm
+bGlwIGJldHdlZW4gMzJiaXQgYW5kIDYzYml0IG1vZGUgd2l0aG91dCBhDQpzeXN0ZW0gY2FsbC4N
+Cg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2Fk
+LCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5v
+OiAxMzk3Mzg2IChXYWxlcykNCg==
 
-Huacai
-
->
-> Huacai
->
-> On Fri, Dec 22, 2023 at 12:46=E2=80=AFPM Randy Dunlap <rdunlap@infradead.=
-org> wrote:
-> >
-> > loongarch's signal.c uses rseq_signal_deliver() so it should
-> > pull in the appropriate header to prevent a build error:
-> >
-> > ../arch/loongarch/kernel/signal.c: In function 'handle_signal':
-> > ../arch/loongarch/kernel/signal.c:1034:9: error: implicit declaration o=
-f function 'rseq_signal_deliver' [-Werror=3Dimplicit-function-declaration]
-> >  1034 |         rseq_signal_deliver(ksig, regs);
-> >       |         ^~~~~~~~~~~~~~~~~~~
-> >
-> > Fixes: b74baf4ad05b ("LoongArch: Add signal handling support")
-> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> > Cc: Huacai Chen <chenhuacai@kernel.org>
-> > Cc: WANG Xuerui <kernel@xen0n.name>
-> > Cc: loongarch@lists.linux.dev
-> > Cc: Kent Overstreet <kent.overstreet@gmail.com>
-> > ---
-> > v2: repair Cc: list
-> >
-> >  arch/loongarch/kernel/signal.c |    1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff -- a/arch/loongarch/kernel/signal.c b/arch/loongarch/kernel/signal=
-.c
-> > --- a/arch/loongarch/kernel/signal.c
-> > +++ b/arch/loongarch/kernel/signal.c
-> > @@ -15,6 +15,7 @@
-> >  #include <linux/context_tracking.h>
-> >  #include <linux/entry-common.h>
-> >  #include <linux/irqflags.h>
-> > +#include <linux/rseq.h>
-> >  #include <linux/sched.h>
-> >  #include <linux/mm.h>
-> >  #include <linux/personality.h>
