@@ -1,525 +1,136 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F6622F1C;
-	Sat, 23 Dec 2023 18:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EF914AAC
+	for <linux-kernel@vger.kernel.org>; Sat, 23 Dec 2023 18:32:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CSBCkckc"
-X-UUID: 3a0bb2dca1c111eea5db2bebc7c28f94-20231224
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=z8IJeLEHV82I31cRxo/+hzIbsybMhJ5nnzyn3n6C0iU=;
-	b=CSBCkckcldjir/e1f41nA4zUBauzTt7XzBslrkDMuLW60pb56PX7m9PVXdEejhd88uOLbsv1IpD0II4EEwYcjXFAY4LELp/6muBfCOGOKnKYCBPZgtFBf8eTQxV6J/q/Y7ZQldp9kSshSkqSZCoxJDOlsWGklp6ipn9tbiH010Y=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:523b2e7f-5211-4fc0-bf78-848d10e2defd,IP:0,U
-	RL:0,TC:0,Content:0,EDM:-30,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-30
-X-CID-META: VersionHash:5d391d7,CLOUDID:ed711882-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:2,IP:nil,UR
-	L:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:N
-	O,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 3a0bb2dca1c111eea5db2bebc7c28f94-20231224
-Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
-	(envelope-from <jason-jh.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1013931400; Sun, 24 Dec 2023 02:29:36 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Sun, 24 Dec 2023 02:29:35 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Sun, 24 Dec 2023 02:29:35 +0800
-From: Jason-JH.Lin <jason-jh.lin@mediatek.com>
-To: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Chun-Kuang Hu
-	<chunkuang.hu@kernel.org>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	<dri-devel@lists.freedesktop.org>, <linux-media@vger.kernel.org>,
-	<linaro-mm-sig@lists.linaro.org>, Jason-ch Chen <jason-ch.chen@mediatek.com>,
-	Johnson Wang <johnson.wang@mediatek.com>, "Jason-JH . Lin"
-	<jason-jh.lin@mediatek.com>, Singo Chang <singo.chang@mediatek.com>, Nancy
- Lin <nancy.lin@mediatek.com>, Shawn Sung <shawn.sung@mediatek.com>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Jeffrey Kardatzke
-	<jkardatzke@google.com>
-Subject: [PATCH v3 09/11] drm/mediatek: Add secure flow support to mediatek-drm
-Date: Sun, 24 Dec 2023 02:29:30 +0800
-Message-ID: <20231223182932.27683-10-jason-jh.lin@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20231223182932.27683-1-jason-jh.lin@mediatek.com>
-References: <20231223182932.27683-1-jason-jh.lin@mediatek.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oNLiFwjz"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3368d1c7b23so2054013f8f.0
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Dec 2023 10:32:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703356364; x=1703961164; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ymqOumckHRX9oQyr84P1Hen9nHtiSxQv3+kFcM5hxqQ=;
+        b=oNLiFwjzxt3tIaarc4UWBqBbasvSPQhGupvc5C1MFkRV9U2rDptunxZAUilPBBgk3i
+         bu4sIlx46DNtMZjT5rP5gXUrEoPo9BaOdjKiefkQL3xywfg19Qa8f9Qw9NtV9ptVU5/D
+         PYGDYjqSXZfdU9atZ+jyjM5ivlY8sDgDGoJfKiRNfMhuFIYwNoxBzH2nFEAgnWggKuhb
+         xUBdv2GmDN5V5q5GwMKj/iI9dMMctj8Fy6oluCwAV0t83E114tYToQs2CfrXPUM+nv7I
+         rbqf9WEYfFxkhuT7TIRuhJIQhGDCYeEQMGnXpMH5rsbxf5z0w6ylh6JtIGKa+f5RFnoy
+         aqnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703356364; x=1703961164;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ymqOumckHRX9oQyr84P1Hen9nHtiSxQv3+kFcM5hxqQ=;
+        b=CvP7VDhC6EtNRopexCAbZ4iAoCW70ZeqTSUYL+keELcpnHsB84SZtgiJ3yLcqGoyWc
+         8/bpkd33iPzOEaivkFLbJKP/pUsIGTi5fyEsEkUa9CbLIXgsn+3q0BIhupsqP2OTU5rv
+         nSXa3U4wHTTX/QIe/zsfQEmFCL2uAhSmjL39+Ild/cEbgAmXHqezfUnbF8124NNbKXQB
+         TCUZfJsauvxuau5zRR1voxqSfianWRk1P5BIdUsheeehngcptwSAbsH1ZFjElSnFNa1B
+         zh0vIo4ysK066XcpPh+XuIAVJ9jNrJUgIu8UckSHGdfzA8m5fzdyBz/MbeO0ok6BQwVp
+         qpVg==
+X-Gm-Message-State: AOJu0YxNE6BP+ArBUg+dFZDqucYZJmYAxWPy50lSwtR1vDbEq3BJXUsJ
+	0ZvMKy58EQpRpCo6d1qJWYUCsAIIxfd+Rg==
+X-Google-Smtp-Source: AGHT+IFG/I+3QBn+vhny0zKSE/HFbh4hq/Dnk8cosqYeo2NR33s88Tt2bTc/VRuuYPjwFnyA3EoGkQ==
+X-Received: by 2002:a5d:558f:0:b0:336:8b8f:e048 with SMTP id i15-20020a5d558f000000b003368b8fe048mr1721642wrv.135.1703356364499;
+        Sat, 23 Dec 2023 10:32:44 -0800 (PST)
+Received: from [192.168.0.22] ([78.10.206.178])
+        by smtp.gmail.com with ESMTPSA id az16-20020a170907905000b00a26ac53c2b7sm2645464ejc.98.2023.12.23.10.32.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 23 Dec 2023 10:32:43 -0800 (PST)
+Message-ID: <9cf495b8-eaa6-4dfc-9286-ba07f09c1f76@linaro.org>
+Date: Sat, 23 Dec 2023 19:32:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK: N
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] dt-bindings: display: panel: Add BOE
+ TH101MB31IG002-28A panel
+To: Manuel Traut <manut@mecka.net>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>,
+ Sam Ravnborg <sam@ravnborg.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Sandy Huang <hjc@rock-chips.com>, Mark Yao <markyao0591@gmail.com>,
+ Diederik de Haas <didi.debian@cknow.org>, Segfault
+ <awarnecke002@hotmail.com>, Arnaud Ferraris <aferraris@debian.org>,
+ Danct12 <danct12@riseup.net>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org
+References: <20231223-pinetab2-v2-0-ec1856d0030e@mecka.net>
+ <20231223-pinetab2-v2-1-ec1856d0030e@mecka.net>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20231223-pinetab2-v2-1-ec1856d0030e@mecka.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-To add secure flow support for mediatek-drm, each crtc have to
-create a secure cmdq mailbox channel. Then cmdq packets with
-display HW configuration will be sent to secure cmdq mailbox channel
-and configured in the secure world.
+On 23/12/2023 16:20, Manuel Traut wrote:
+> Add bindings for the BOE TH101MB31IG002-28A LCD panel. It is
+> used e.g. in the Pine64 Pinetab2 and PinetabV.
+> 
+> Signed-off-by: Manuel Traut <manut@mecka.net>
 
-Each crtc have to use secure cmdq interface to configure some secure
-settings for display HW before sending cmdq packets to secure cmdq
-mailbox channel.
 
-If any of fb get from current drm_atomic_state is secure, then crtc
-will switch to the secure flow to configure display HW.
-If all fbs are not secure in current drm_atomic_state, then crtc will
-switch to the normal flow.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-TODO:
-1. Remove get sec larb port interface in ddp_comp, ovl and ovl_adaptor.
-2. Verify instruction for enabling/disabling dapc and larb port in TEE
-   drop the sec_engine flags in normal world.
-
-Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
----
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c  | 272 ++++++++++++++++++++++-
- drivers/gpu/drm/mediatek/mtk_drm_crtc.h  |   1 +
- drivers/gpu/drm/mediatek/mtk_drm_plane.c |   7 +
- 3 files changed, 269 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-index db43f9dff912..79617c0f016d 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-@@ -56,6 +56,11 @@ struct mtk_drm_crtc {
- 	u32				cmdq_event;
- 	u32				cmdq_vblank_cnt;
- 	wait_queue_head_t		cb_blocking_queue;
-+
-+	struct cmdq_client		sec_cmdq_client;
-+	struct cmdq_pkt			sec_cmdq_handle;
-+	bool				sec_cmdq_working;
-+	wait_queue_head_t		sec_cb_blocking_queue;
- #endif
- 
- 	struct device			*mmsys_dev;
-@@ -69,6 +74,7 @@ struct mtk_drm_crtc {
- 	/* lock for display hardware access */
- 	struct mutex			hw_lock;
- 	bool				config_updating;
-+	bool				sec_on;
- };
- 
- struct mtk_crtc_state {
-@@ -111,6 +117,154 @@ static void mtk_drm_finish_page_flip(struct mtk_drm_crtc *mtk_crtc)
- 	}
- }
- 
-+void mtk_crtc_disable_secure_state(struct drm_crtc *crtc)
-+{
-+#if IS_REACHABLE(CONFIG_MTK_CMDQ)
-+	enum cmdq_sec_scenario sec_scn = CMDQ_SEC_SCNR_MAX;
-+	int i;
-+	struct mtk_ddp_comp *ddp_first_comp;
-+	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
-+	u64 sec_engine = 0; /* for hw engine write output secure fb */
-+	u64 sec_port = 0; /* for larb port read input secure fb */
-+
-+	mutex_lock(&mtk_crtc->hw_lock);
-+
-+	if (!mtk_crtc->sec_cmdq_client.chan) {
-+		pr_err("crtc-%d secure mbox channel is NULL\n", drm_crtc_index(crtc));
-+		goto err;
-+	}
-+
-+	if (!mtk_crtc->sec_on) {
-+		pr_debug("crtc-%d is already disabled!\n", drm_crtc_index(crtc));
-+		goto err;
-+	}
-+
-+	mbox_flush(mtk_crtc->sec_cmdq_client.chan, 0);
-+	mtk_crtc->sec_cmdq_handle.cmd_buf_size = 0;
-+
-+	if (mtk_crtc->sec_cmdq_handle.sec_data) {
-+		struct cmdq_sec_data *sec_data;
-+
-+		sec_data = mtk_crtc->sec_cmdq_handle.sec_data;
-+		sec_data->addr_metadata_cnt = 0;
-+		sec_data->addr_metadatas = (uintptr_t)NULL;
-+	}
-+
-+	/*
-+	 * Secure path only support DL mode, so we just wait
-+	 * the first path frame done here
-+	 */
-+	cmdq_pkt_wfe(&mtk_crtc->sec_cmdq_handle, mtk_crtc->cmdq_event, false);
-+
-+	ddp_first_comp = mtk_crtc->ddp_comp[0];
-+	for (i = 0; i < mtk_crtc->layer_nr; i++) {
-+		struct drm_plane *plane = &mtk_crtc->planes[i];
-+
-+		sec_port |= mtk_ddp_comp_layer_get_sec_port(ddp_first_comp, i);
-+
-+		/* make sure secure layer off before switching secure state */
-+		if (!mtk_plane_fb_is_secure(plane->state->fb)) {
-+			struct mtk_plane_state *plane_state = to_mtk_plane_state(plane->state);
-+
-+			plane_state->pending.enable = false;
-+			mtk_ddp_comp_layer_config(ddp_first_comp, i, plane_state,
-+						  &mtk_crtc->sec_cmdq_handle);
-+		}
-+	}
-+
-+	/* Disable secure path */
-+	if (drm_crtc_index(crtc) == 0)
-+		sec_scn = CMDQ_SEC_SCNR_PRIMARY_DISP_DISABLE;
-+	else if (drm_crtc_index(crtc) == 1)
-+		sec_scn = CMDQ_SEC_SCNR_SUB_DISP_DISABLE;
-+
-+	cmdq_sec_pkt_set_data(&mtk_crtc->sec_cmdq_handle, sec_engine, sec_engine, sec_scn);
-+
-+	cmdq_pkt_finalize(&mtk_crtc->sec_cmdq_handle);
-+	dma_sync_single_for_device(mtk_crtc->sec_cmdq_client.chan->mbox->dev,
-+				   mtk_crtc->sec_cmdq_handle.pa_base,
-+				   mtk_crtc->sec_cmdq_handle.cmd_buf_size,
-+				   DMA_TO_DEVICE);
-+
-+	mtk_crtc->sec_cmdq_working = true;
-+	mbox_send_message(mtk_crtc->sec_cmdq_client.chan, &mtk_crtc->sec_cmdq_handle);
-+	mbox_client_txdone(mtk_crtc->sec_cmdq_client.chan, 0);
-+
-+	// Wait for sec state to be disabled by cmdq
-+	wait_event_timeout(mtk_crtc->sec_cb_blocking_queue,
-+			   !mtk_crtc->sec_cmdq_working,
-+			   msecs_to_jiffies(500));
-+
-+	mtk_crtc->sec_on = false;
-+	pr_debug("crtc-%d disable secure plane!\n", drm_crtc_index(crtc));
-+
-+err:
-+	mutex_unlock(&mtk_crtc->hw_lock);
-+#endif
-+}
-+
-+#if IS_REACHABLE(CONFIG_MTK_CMDQ)
-+static void mtk_crtc_enable_secure_state(struct drm_crtc *crtc)
-+{
-+	enum cmdq_sec_scenario sec_scn = CMDQ_SEC_SCNR_MAX;
-+	int i;
-+	struct mtk_ddp_comp *ddp_first_comp;
-+	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
-+	u64 sec_engine = 0; /* for hw engine write output secure fb */
-+	u64 sec_port = 0; /* for larb port read input secure fb */
-+
-+	cmdq_pkt_wfe(&mtk_crtc->sec_cmdq_handle, mtk_crtc->cmdq_event, false);
-+
-+	ddp_first_comp = mtk_crtc->ddp_comp[0];
-+	for (i = 0; i < mtk_crtc->layer_nr; i++)
-+		if (mtk_crtc->planes[i].type == DRM_PLANE_TYPE_CURSOR)
-+			sec_port |= mtk_ddp_comp_layer_get_sec_port(ddp_first_comp, i);
-+
-+	if (drm_crtc_index(crtc) == 0)
-+		sec_scn = CMDQ_SEC_SCNR_PRIMARY_DISP;
-+	else if (drm_crtc_index(crtc) == 1)
-+		sec_scn = CMDQ_SEC_SCNR_SUB_DISP;
-+
-+	cmdq_sec_pkt_set_data(&mtk_crtc->sec_cmdq_handle, sec_engine, sec_port, sec_scn);
-+
-+	pr_debug("crtc-%d enable secure plane!\n", drm_crtc_index(crtc));
-+}
-+#endif
-+
-+static void mtk_drm_crtc_plane_switch_sec_state(struct drm_crtc *crtc,
-+						struct drm_atomic_state *state)
-+{
-+#if IS_REACHABLE(CONFIG_MTK_CMDQ)
-+	bool sec_on[MAX_CRTC] = {0};
-+	int i;
-+	struct drm_crtc_state *crtc_state;
-+	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
-+	struct drm_plane *plane;
-+	struct drm_plane_state *old_plane_state;
-+
-+	for_each_old_plane_in_state(state, plane, old_plane_state, i) {
-+		if (!plane->state->crtc)
-+			continue;
-+
-+		if (plane->state->fb &&
-+		    mtk_plane_fb_is_secure(plane->state->fb) &&
-+		    mtk_crtc->sec_cmdq_client.chan)
-+			sec_on[drm_crtc_index(plane->state->crtc)] = true;
-+	}
-+
-+	for_each_old_crtc_in_state(state, crtc, crtc_state, i) {
-+		mtk_crtc = to_mtk_crtc(crtc);
-+
-+		if (!sec_on[i])
-+			mtk_crtc_disable_secure_state(crtc);
-+
-+		mutex_lock(&mtk_crtc->hw_lock);
-+		mtk_crtc->sec_on = true;
-+		mutex_unlock(&mtk_crtc->hw_lock);
-+	}
-+#endif
-+}
-+
- #if IS_REACHABLE(CONFIG_MTK_CMDQ)
- static int mtk_drm_cmdq_pkt_create(struct cmdq_client *client, struct cmdq_pkt *pkt,
- 				   size_t size)
-@@ -146,22 +300,33 @@ static void mtk_drm_cmdq_pkt_destroy(struct cmdq_pkt *pkt)
- 	dma_unmap_single(client->chan->mbox->dev, pkt->pa_base, pkt->buf_size,
- 			 DMA_TO_DEVICE);
- 	kfree(pkt->va_base);
-+	kfree(pkt->sec_data);
- }
- #endif
- 
- static void mtk_drm_crtc_destroy(struct drm_crtc *crtc)
- {
- 	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
-+	struct mtk_drm_private *priv = crtc->dev->dev_private;
- 	int i;
- 
-+	priv = priv->all_drm_private[drm_crtc_index(crtc)];
-+
- 	mtk_mutex_put(mtk_crtc->mutex);
- #if IS_REACHABLE(CONFIG_MTK_CMDQ)
- 	mtk_drm_cmdq_pkt_destroy(&mtk_crtc->cmdq_handle);
-+	mtk_drm_cmdq_pkt_destroy(&mtk_crtc->sec_cmdq_handle);
- 
- 	if (mtk_crtc->cmdq_client.chan) {
- 		mbox_free_channel(mtk_crtc->cmdq_client.chan);
- 		mtk_crtc->cmdq_client.chan = NULL;
- 	}
-+
-+	if (mtk_crtc->sec_cmdq_client.chan) {
-+		device_link_remove(priv->dev, mtk_crtc->sec_cmdq_client.chan->mbox->dev);
-+		mbox_free_channel(mtk_crtc->sec_cmdq_client.chan);
-+		mtk_crtc->sec_cmdq_client.chan = NULL;
-+	}
- #endif
- 
- 	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++) {
-@@ -288,13 +453,18 @@ static void ddp_cmdq_cb(struct mbox_client *cl, void *mssg)
- {
- 	struct cmdq_cb_data *data = mssg;
- 	struct cmdq_client *cmdq_cl = container_of(cl, struct cmdq_client, client);
--	struct mtk_drm_crtc *mtk_crtc = container_of(cmdq_cl, struct mtk_drm_crtc, cmdq_client);
-+	struct mtk_drm_crtc *mtk_crtc;
- 	struct mtk_crtc_state *state;
- 	unsigned int i;
- 
- 	if (data->sta < 0)
- 		return;
- 
-+	if (!data->pkt || !data->pkt->sec_data)
-+		mtk_crtc = container_of(cmdq_cl, struct mtk_drm_crtc, cmdq_client);
-+	else
-+		mtk_crtc = container_of(cmdq_cl, struct mtk_drm_crtc, sec_cmdq_client);
-+
- 	state = to_mtk_crtc_state(mtk_crtc->base.state);
- 
- 	state->pending_config = false;
-@@ -323,6 +493,11 @@ static void ddp_cmdq_cb(struct mbox_client *cl, void *mssg)
- 		mtk_crtc->pending_async_planes = false;
- 	}
- 
-+	if (mtk_crtc->sec_cmdq_working) {
-+		mtk_crtc->sec_cmdq_working = false;
-+		wake_up(&mtk_crtc->sec_cb_blocking_queue);
-+	}
-+
- 	mtk_crtc->cmdq_vblank_cnt = 0;
- 	wake_up(&mtk_crtc->cb_blocking_queue);
- }
-@@ -549,7 +724,8 @@ static void mtk_drm_crtc_update_config(struct mtk_drm_crtc *mtk_crtc,
- 				       bool needs_vblank)
- {
- #if IS_REACHABLE(CONFIG_MTK_CMDQ)
--	struct cmdq_pkt *cmdq_handle = &mtk_crtc->cmdq_handle;
-+	struct cmdq_client cmdq_client;
-+	struct cmdq_pkt *cmdq_handle;
- #endif
- 	struct drm_crtc *crtc = &mtk_crtc->base;
- 	struct mtk_drm_private *priv = crtc->dev->dev_private;
-@@ -587,14 +763,36 @@ static void mtk_drm_crtc_update_config(struct mtk_drm_crtc *mtk_crtc,
- 		mtk_mutex_release(mtk_crtc->mutex);
- 	}
- #if IS_REACHABLE(CONFIG_MTK_CMDQ)
--	if (mtk_crtc->cmdq_client.chan) {
-+	if (mtk_crtc->sec_on) {
-+		mbox_flush(mtk_crtc->sec_cmdq_client.chan, 0);
-+		mtk_crtc->sec_cmdq_handle.cmd_buf_size = 0;
-+
-+		if (mtk_crtc->sec_cmdq_handle.sec_data) {
-+			struct cmdq_sec_data *sec_data;
-+
-+			sec_data = mtk_crtc->sec_cmdq_handle.sec_data;
-+			sec_data->addr_metadata_cnt = 0;
-+			sec_data->addr_metadatas = (uintptr_t)NULL;
-+		}
-+
-+		mtk_crtc_enable_secure_state(crtc);
-+
-+		cmdq_client = mtk_crtc->sec_cmdq_client;
-+		cmdq_handle = &mtk_crtc->sec_cmdq_handle;
-+	} else if (mtk_crtc->cmdq_client.chan) {
- 		mbox_flush(mtk_crtc->cmdq_client.chan, 2000);
--		cmdq_handle->cmd_buf_size = 0;
-+		mtk_crtc->cmdq_handle.cmd_buf_size = 0;
-+
-+		cmdq_client =  mtk_crtc->cmdq_client;
-+		cmdq_handle = &mtk_crtc->cmdq_handle;
-+	}
-+
-+	if (cmdq_client.chan) {
- 		cmdq_pkt_clear_event(cmdq_handle, mtk_crtc->cmdq_event);
- 		cmdq_pkt_wfe(cmdq_handle, mtk_crtc->cmdq_event, false);
- 		mtk_crtc_ddp_config(crtc, cmdq_handle);
- 		cmdq_pkt_finalize(cmdq_handle);
--		dma_sync_single_for_device(mtk_crtc->cmdq_client.chan->mbox->dev,
-+		dma_sync_single_for_device(cmdq_client.chan->mbox->dev,
- 					   cmdq_handle->pa_base,
- 					   cmdq_handle->cmd_buf_size,
- 					   DMA_TO_DEVICE);
-@@ -607,8 +805,8 @@ static void mtk_drm_crtc_update_config(struct mtk_drm_crtc *mtk_crtc,
- 		 */
- 		mtk_crtc->cmdq_vblank_cnt = 3;
- 
--		mbox_send_message(mtk_crtc->cmdq_client.chan, cmdq_handle);
--		mbox_client_txdone(mtk_crtc->cmdq_client.chan, 0);
-+		mbox_send_message(cmdq_client.chan, cmdq_handle);
-+		mbox_client_txdone(cmdq_client.chan, 0);
- 	}
- #endif
- 	mtk_crtc->config_updating = false;
-@@ -750,6 +948,8 @@ static void mtk_drm_crtc_atomic_disable(struct drm_crtc *crtc,
- 	if (!mtk_crtc->enabled)
- 		return;
- 
-+	mtk_crtc_disable_secure_state(crtc);
-+
- 	/* Set all pending plane state to disabled */
- 	for (i = 0; i < mtk_crtc->layer_nr; i++) {
- 		struct drm_plane *plane = &mtk_crtc->planes[i];
-@@ -790,6 +990,8 @@ static void mtk_drm_crtc_atomic_begin(struct drm_crtc *crtc,
- 	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
- 	unsigned long flags;
- 
-+	mtk_drm_crtc_plane_switch_sec_state(crtc, state);
-+
- 	if (mtk_crtc->event && mtk_crtc_state->base.event)
- 		DRM_ERROR("new event while there is still a pending event\n");
- 
-@@ -1082,8 +1284,7 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
- 		if (ret) {
- 			dev_dbg(dev, "mtk_crtc %d failed to get mediatek,gce-events property\n",
- 				drm_crtc_index(&mtk_crtc->base));
--			mbox_free_channel(mtk_crtc->cmdq_client.chan);
--			mtk_crtc->cmdq_client.chan = NULL;
-+			goto cmdq_err;
- 		} else {
- 			ret = mtk_drm_cmdq_pkt_create(&mtk_crtc->cmdq_client,
- 						      &mtk_crtc->cmdq_handle,
-@@ -1091,14 +1292,63 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
- 			if (ret) {
- 				dev_dbg(dev, "mtk_crtc %d failed to create cmdq packet\n",
- 					drm_crtc_index(&mtk_crtc->base));
--				mbox_free_channel(mtk_crtc->cmdq_client.chan);
--				mtk_crtc->cmdq_client.chan = NULL;
-+				goto cmdq_err;
- 			}
- 		}
- 
- 		/* for sending blocking cmd in crtc disable */
- 		init_waitqueue_head(&mtk_crtc->cb_blocking_queue);
- 	}
-+
-+	mtk_crtc->sec_cmdq_client.client.dev = mtk_crtc->mmsys_dev;
-+	mtk_crtc->sec_cmdq_client.client.tx_block = false;
-+	mtk_crtc->sec_cmdq_client.client.knows_txdone = true;
-+	mtk_crtc->sec_cmdq_client.client.rx_callback = ddp_cmdq_cb;
-+	mtk_crtc->sec_cmdq_client.chan =
-+			mbox_request_channel(&mtk_crtc->sec_cmdq_client.client, i + 1);
-+	if (IS_ERR(mtk_crtc->sec_cmdq_client.chan)) {
-+		dev_err(dev, "mtk_crtc %d failed to create sec mailbox client\n",
-+			drm_crtc_index(&mtk_crtc->base));
-+		mtk_crtc->sec_cmdq_client.chan = NULL;
-+	}
-+
-+	if (mtk_crtc->sec_cmdq_client.chan) {
-+		struct device_link *link;
-+
-+		/* add devlink to cmdq dev to make sure suspend/resume order is correct */
-+		link = device_link_add(priv->dev, mtk_crtc->sec_cmdq_client.chan->mbox->dev,
-+				       DL_FLAG_PM_RUNTIME | DL_FLAG_STATELESS);
-+		if (!link) {
-+			dev_err(priv->dev, "Unable to link dev=%s\n",
-+				dev_name(mtk_crtc->sec_cmdq_client.chan->mbox->dev));
-+			ret = -ENODEV;
-+			goto cmdq_err;
-+		}
-+
-+		ret = mtk_drm_cmdq_pkt_create(&mtk_crtc->sec_cmdq_client,
-+					      &mtk_crtc->sec_cmdq_handle,
-+					      PAGE_SIZE);
-+		if (ret) {
-+			dev_dbg(dev, "mtk_crtc %d failed to create cmdq secure packet\n",
-+				drm_crtc_index(&mtk_crtc->base));
-+			goto cmdq_err;
-+		}
-+
-+		/* for sending blocking cmd in crtc disable */
-+		init_waitqueue_head(&mtk_crtc->sec_cb_blocking_queue);
-+	}
-+
-+cmdq_err:
-+	if (ret) {
-+		if (mtk_crtc->cmdq_client.chan) {
-+			mbox_free_channel(mtk_crtc->cmdq_client.chan);
-+			mtk_crtc->cmdq_client.chan = NULL;
-+		}
-+		if (mtk_crtc->sec_cmdq_client.chan) {
-+			mbox_free_channel(mtk_crtc->sec_cmdq_client.chan);
-+			mtk_crtc->sec_cmdq_client.chan = NULL;
-+		}
-+	}
- #endif
- 
- 	if (conn_routes) {
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.h b/drivers/gpu/drm/mediatek/mtk_drm_crtc.h
-index 1f988ff1bf9f..cf8433846108 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.h
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.h
-@@ -21,6 +21,7 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
- 			int priv_data_index,
- 			const struct mtk_drm_route *conn_routes,
- 			unsigned int num_conn_routes);
-+void mtk_crtc_disable_secure_state(struct drm_crtc *crtc);
- int mtk_drm_crtc_plane_check(struct drm_crtc *crtc, struct drm_plane *plane,
- 			     struct mtk_plane_state *state);
- void mtk_drm_crtc_async_update(struct drm_crtc *crtc, struct drm_plane *plane,
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_plane.c b/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-index d4d515627ca4..96293c632d67 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_plane.c
-@@ -287,6 +287,13 @@ static void mtk_plane_atomic_disable(struct drm_plane *plane,
- 	mtk_plane_state->pending.enable = false;
- 	wmb(); /* Make sure the above parameter is set before update */
- 	mtk_plane_state->pending.dirty = true;
-+
-+	if (mtk_plane_state->pending.is_secure) {
-+		struct drm_plane_state *old_state = drm_atomic_get_old_plane_state(state, plane);
-+
-+		if (old_state->crtc)
-+			mtk_crtc_disable_secure_state(old_state->crtc);
-+	}
- }
- 
- static void mtk_plane_atomic_update(struct drm_plane *plane,
--- 
-2.18.0
+Best regards,
+Krzysztof
 
