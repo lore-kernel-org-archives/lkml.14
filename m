@@ -1,134 +1,165 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B06D300;
-	Sat, 23 Dec 2023 13:40:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB910D2F8;
+	Sat, 23 Dec 2023 13:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="bQ4xY7K0"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BNDe5eZ030737;
-	Sat, 23 Dec 2023 05:40:05 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=pfpt0220; bh=lX8YURiG
-	ITqZVl4eN7Nqst0RXg0e6i6f6bCuPtfWJjo=; b=bQ4xY7K0uJ+5IN4lwNGg5NQH
-	wDpd8z+uEWhRowkhGzWN7VdQH/HQf4nlI9ahl9ilWKr/rFmuG9lc/Ua+Y8jyecma
-	r8ysEd0C7/0pbfB7Iq2Yc7cnoD5SCrmTrfTxLMTT4bbQsTHmHwxB9jLsMPq5IDNp
-	oyK5L6LrBTOeSb5TH9cJrgUlpxRzGFuxdrwLq7tiYr5anCgZIuON0HoJ2QxYqEXT
-	6aBDWha8QYVMf7tgR9E8/6h8TOoxTNSrQK2Irn+fCfzESIgTKpcr1H7AY7VJ+79N
-	TAKKatfHpdqQyGVvCqPVOEdcJ0Cgii4uDaukSKlm1TGBeJyAUeZVsaRVKkrmkA==
-Received: from dc5-exch01.marvell.com ([199.233.59.181])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3v5wspg81x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-	Sat, 23 Dec 2023 05:40:04 -0800 (PST)
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sat, 23 Dec
- 2023 05:40:03 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
- Transport; Sat, 23 Dec 2023 05:40:03 -0800
-Received: from ubuntu-PowerEdge-T110-II.sclab.marvell.com (unknown [10.106.27.86])
-	by maili.marvell.com (Postfix) with ESMTP id 5864F3F707C;
-	Sat, 23 Dec 2023 05:40:02 -0800 (PST)
-From: Shinas Rasheed <srasheed@marvell.com>
-To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <hgani@marvell.com>, <vimleshk@marvell.com>, <sedara@marvell.com>,
-        <srasheed@marvell.com>, <egallen@redhat.com>, <mschmidt@redhat.com>,
-        <pabeni@redhat.com>, <kuba@kernel.org>, <horms@kernel.org>,
-        <wizhao@redhat.com>, <kheib@redhat.com>, <konguyen@redhat.com>
-Subject: [PATCH net-next v2 0/8] add octeon_ep_vf driver
-Date: Sat, 23 Dec 2023 05:39:52 -0800
-Message-ID: <20231223134000.2906144-1-srasheed@marvell.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=linosanfilippo@gmx.de header.b="ObBGU/k0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1703338861; x=1703943661; i=linosanfilippo@gmx.de;
+	bh=Nx79P5r9ZG4XWH364YUty3qUZDD0HnQKSxhIi0fdzVw=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=ObBGU/k0yLfyAmsvhGxGA6b6Z6FZad/JaBqfmGqD7e9cMCG3T3havj6uOd2KGhBa
+	 9FsFtcdjG19AuqBzK9Bhu45DTjcsF2jHvbYjcd5HyfkMDVQqPEKvSQeKRhOmuaDHX
+	 B9izGzWPCnSZ8tcux+fJttbOSsklHkogyiz2QZCeV1oEDjh2Dd6AbzYcMqYa/SeRn
+	 VhUtBDbbGSXoLJzTMntVFzNzOrkhUB4vDOPHadJd90BpCsbEIfFshuMSBRimDWE2g
+	 USo9rMSaZW5MwP+1xCZ1PVvVRmsAP9fH8TxYaGW8FdSlw55zU6fxERMfgJxrmohWt
+	 GR5IC43bHcsbGDOfCw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.2.42] ([84.162.31.30]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M6Daq-1rNf1Q34XY-006dXe; Sat, 23
+ Dec 2023 14:41:00 +0100
+Message-ID: <0ec4c423-3d18-4a29-b78e-938366ece117@gmx.de>
+Date: Sat, 23 Dec 2023 14:40:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: WWI6X4cPuudqvOLDttD9gXiMQ0GttIIj
-X-Proofpoint-ORIG-GUID: WWI6X4cPuudqvOLDttD9gXiMQ0GttIIj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: serial: rs485: add rs485-mux-gpios
+ binding
+Content-Language: en-US
+To: Christoph Niedermaier <cniedermaier@dh-electronics.com>,
+ Lukas Wunner <lukas@wunner.de>
+Cc: Crescent CY Hsieh <crescentcy.hsieh@moxa.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "brenda.streiff@ni.com" <brenda.streiff@ni.com>,
+ Tomas Paukrt <tomaspaukrt@email.cz>
+References: <20231120151056.148450-1-linux@rasmusvillemoes.dk>
+ <20231120151056.148450-2-linux@rasmusvillemoes.dk>
+ <20231122145344.GA18949@wunner.de>
+ <3b8548b1-b8a9-0c9e-4040-5cfda06a85c6@gmx.de>
+ <ec66d25162de4cbc92720df1e7008fe8@dh-electronics.com>
+ <5c140498-69e3-4187-8703-db0c41e7ca89@gmx.de>
+ <fe28eb93-daa1-41af-a005-f21aa87e1984@gmx.de>
+ <ZXcJr4VS_uGr_6TV@smile.fi.intel.com>
+ <ZXrX4mQXPLum0jL3@moxa-ThinkCentre-M90t>
+ <b35730df8288469fbaf67b5ceae4eece@dh-electronics.com>
+ <20231221155305.GA13673@wunner.de>
+ <f41f5ddcb52140b6a579043a5abce751@dh-electronics.com>
+From: Lino Sanfilippo <LinoSanfilippo@gmx.de>
+In-Reply-To: <f41f5ddcb52140b6a579043a5abce751@dh-electronics.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:pDuxbI2WkztYdDHTvdtbHa9gMg0Ipu6a+RUE+KnN0eUnEFwvrZz
+ tmCBZhBatoxG2hFNFv63J2fl9h1CGuqKcr5Fz4EpVV3f5JAeGjod4y+A6QPXiOTvpSYbI8H
+ jsJkSEIEIaSoPy8rrkpuIuWfVH+vQCMZ82jVhWCwlYs5nNW1/byjjSKoUOEv+YfvXR1/WOM
+ 907n0Fv35z6j0Xj4f6OUg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:CQfeTTCeB3M=;7DSS5miEAD5mnX//uy0ojZCR59n
+ zZ5cq5Zy2SEPcDK8m7g8nSs8nC/6sfz/YAd4WKPORlryUE+mgIkaW/3vpmz+n4Jh72WAdHA6s
+ ge/D0R4QTt30vEQ4hjt2yULSMdZAul4Z4T8LOgBV5Cdvlfz1zQ8uY5LSWjFF4jMIcaTh5UCvt
+ 7RXhGm2VaWYYCyWwGOJmV32H2O+bSKMk7aAi/+Qc+hfu6utbRxUUeeIhrdsRIflbWZJw6baQu
+ uyttVQbgtOCMrOYeeAktPrssiKADZBkErmBXQzMHenbpuqMfUnENV6FpNDgqdPcMVOwWEap6k
+ AP/0CHnpJ3clcpuR7e3Sia4qq46FbnE8IfDc0O4t5nNyWNOfp14fXjDhXvdLVJC3/aRU8ARwe
+ 8zoKFMq8WfsoZfSDbGVlie1SanabLVgPlGjdjVO9xFW/naVbA6JBWlBJ/8fKZ32VP3/BsTSJH
+ E5er+RcEwVP66PHgJRClJrB4rMbp4WDRRq7MEiW8QROLBR4l+giU5VWL0Zse/n2Mb9qGhOBwO
+ bVi3HNU5JAcoW660SXneTSjTIK88IV4GR5Z0CEkpW+pqeHQyVaPemFyrtgMX7Xq9Mc5Mn9zQD
+ 083j2edxz135yvf+Alsgr8V03rHCDtSpmdgRBsQLs2hSVIvi9/uREN2KzaTYPlr7n7sJevGIo
+ dfXAL1BrQUG4WqokO3KgoUkw5xp6bEClhCI5RKP/FeCJp7shRx3rMX6ADMFFSox1MPBX+bHKd
+ rHX17jDwvmtmmSPZnkFQjEeJuirq95sz/4YE8gtSKAYEm1uJe61lw0f1w3OV7LNEC9sPRY6TM
+ pl2Ojufbo45lcndQ0SC6rpnOxuvmMYB2my/S6a3DIfjRVnRR+wGipIpNfG/dEtSrnlW1LnSSm
+ z6BRaVfdUY6fwpZlOTWANGmV9bR3/1aKs17sTjySd4OB2YpRxaVGAscxtihmxW2XmspGNwtEp
+ ejNZNg==
 
-This driver implements networking functionality of Marvell's Octeon
-PCI Endpoint NIC VF.
 
-This driver support following devices:
- * Network controller: Cavium, Inc. Device b203
- * Network controller: Cavium, Inc. Device b403
- * Network controller: Cavium, Inc. Device b103
- * Network controller: Cavium, Inc. Device b903
- * Network controller: Cavium, Inc. Device ba03
- * Network controller: Cavium, Inc. Device bc03
- * Network controller: Cavium, Inc. Device bd03
 
-Changes:
-V2:
-  - Removed linux/version.h header file from inclusion in
-    octep_vf_main.c
-  - Corrected Makefile entry to include building octep_vf_mbox.c in
-    [6/8] patch.
-  - Removed redundant vzalloc pointer cast and vfree pointer check in
-    [6/8] patch.
+On 23.12.23 13:49, Christoph Niedermaier wrote:
+> From: Lukas Wunner [mailto:lukas@wunner.de]
+> Sent: Thursday, December 21, 2023 4:53 PM
+>>
+>> On Thu, Dec 14, 2023 at 01:41:47PM +0000, Christoph Niedermaier wrote:
+>>> I will summarize the current situation from my point of view, maybe it=
+ helps:
+>>>
+>>> RS-232:
+>>>   - Full Duplex Point-to-Point connection
+>>>   - No transceiver control with RTS
+>>>   - No termination
+>>>   - No extra struct in use
+>>>
+>>> RS-422:
+>>>   - Full Duplex Point-to-Point connection
+>>>   - No transceiver control with RTS needed
+>>>   - Termination possible
+>>>   - Extra struct serial_rs485 needed if termination is used
+>>>  =3D> RS-422 can be used in RS-232 operation, but if a termination sho=
+uld be
+>>>     switchable the RS485 flag has to be enabled. But then also transce=
+iver
+>>>     control will be enabled. Not a very satisfying situation.
+>>
+>> Well why don't we just allow enabling or disabling RS-485 termination
+>> independently from the SER_RS485_ENABLED bit in struct serial_rs485?
+>>
+>> Just let the user issue a TIOCSRS485 ioctl to toggle termination even
+>> if in RS-232 mode and use that mode for RS-422.
+>>
+>> Looks like the simplest solution to me.
+>
+> Sounds not bad. The termination should only depend on whether the GPIO i=
+s
+> given or not.
+>
+> Irrespective of this, I think the Linos idea of an RS-422 mode is not ba=
+d.
+> This allows you to take care of special features that were previously
+> overlooked. For example, hardware flow control can be switched off so th=
+at
+> this does not cause any problems.
+>
 
-V1: https://lore.kernel.org/all/20231221092844.2885872-1-srasheed@marvell.com/
+Also note, that RS232 and RS422 may NOT always be the same from driver per=
+spective.
+Take a look at 8250_excar.c for example. That driver has to configure the =
+hardware
+accordingly when switching from RS232 to RS422 (see iot2040_rs485_config()=
+).
 
-Shinas Rasheed (8):
-  octeon_ep_vf: Add driver framework and device initialization
-  octeon_ep_vf: add hardware configuration APIs
-  octeon_ep_vf: add VF-PF mailbox communication.
-  octeon_ep_vf: add Tx/Rx ring resource setup and cleanup
-  octeon_ep_vf: add support for ndo ops
-  octeon_ep_vf: add Tx/Rx processing and interrupt support
-  octeon_ep_vf: add ethtool support
-  octeon_ep_vf: update MAINTAINERS
+While a SER_RS485_MODE_RS422 flag set by userspace could work to switch to=
+ RS422, I
+still think that the cleanest solution would be another ioctl TIOCSRS422 w=
+ith a
+parameter like
 
- .../device_drivers/ethernet/index.rst         |    1 +
- .../ethernet/marvell/octeon_ep_vf.rst         |   24 +
- MAINTAINERS                                   |    9 +
- drivers/net/ethernet/marvell/Kconfig          |    1 +
- drivers/net/ethernet/marvell/Makefile         |    1 +
- .../net/ethernet/marvell/octeon_ep_vf/Kconfig |   19 +
- .../ethernet/marvell/octeon_ep_vf/Makefile    |   10 +
- .../marvell/octeon_ep_vf/octep_vf_cn9k.c      |  488 +++++++
- .../marvell/octeon_ep_vf/octep_vf_cnxk.c      |  500 +++++++
- .../marvell/octeon_ep_vf/octep_vf_config.h    |  160 +++
- .../marvell/octeon_ep_vf/octep_vf_ethtool.c   |  307 ++++
- .../marvell/octeon_ep_vf/octep_vf_main.c      | 1230 +++++++++++++++++
- .../marvell/octeon_ep_vf/octep_vf_main.h      |  338 +++++
- .../marvell/octeon_ep_vf/octep_vf_mbox.c      |  430 ++++++
- .../marvell/octeon_ep_vf/octep_vf_mbox.h      |  166 +++
- .../marvell/octeon_ep_vf/octep_vf_regs_cn9k.h |  154 +++
- .../marvell/octeon_ep_vf/octep_vf_regs_cnxk.h |  162 +++
- .../marvell/octeon_ep_vf/octep_vf_rx.c        |  511 +++++++
- .../marvell/octeon_ep_vf/octep_vf_rx.h        |  224 +++
- .../marvell/octeon_ep_vf/octep_vf_tx.c        |  331 +++++
- .../marvell/octeon_ep_vf/octep_vf_tx.h        |  276 ++++
- 21 files changed, 5342 insertions(+)
- create mode 100644 Documentation/networking/device_drivers/ethernet/marvell/octeon_ep_vf.rst
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/Kconfig
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/Makefile
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_cn9k.c
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_cnxk.c
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_config.h
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_ethtool.c
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.h
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_mbox.c
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_mbox.h
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_regs_cn9k.h
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_regs_cnxk.h
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_rx.c
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_rx.h
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.c
- create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.h
+struct serial_rs422 {
+       __u32   flags;
+#define SER_RS422_ENABLED              (1 << 0)
+#define SER_RS422_TERMINATE_BUS        (1 << 1)
+	__u32 	padding[7]
+};
 
--- 
-2.25.1
+The SER_RS485_MODE_RS422 flag could still be used internally as a hint to =
+the driver.
+That solution would also be expandable if needed. I planned to send a patc=
+h that implements this
+as a RFC to the mailing list (maybe in the next few days).
+
+Regards,
+Lino
+
 
