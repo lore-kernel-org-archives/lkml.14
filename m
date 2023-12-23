@@ -1,54 +1,57 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4F011CA3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5A912E5E;
 	Sat, 23 Dec 2023 16:09:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R2IpT6/n";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qT4zZPFc"
-Date: Sat, 23 Dec 2023 16:09:50 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eBPWeh7M";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/DnBW8/O"
+Date: Sat, 23 Dec 2023 16:09:54 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1703347791;
+	s=2020; t=1703347794;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=NwgA6LdUqAO3XVfytZbrjuE7sIziL0RwjlTrMLwIR6w=;
-	b=R2IpT6/nOIgu8teYJIo587WExji0zq2g6kWyrIldLrMSbv1Yw6DGBBHKyoSh7egcWaFxXN
-	BX0PoyzXr2n+766A93BaWsmRQfk3MrN4j4NxLWEc89LXutUFyCaokspEloTzWSk7br+Hv7
-	NWQ9qJCL5RrlzOx6mYNs/YLG7b6ud6PmbrsVKXVs4HpdK4BWtSfYIybohGRkv8uERsv/7i
-	bENv9wSt7aeUV6+3HmzRVQYpEn6nUD3jjUBzUS/lmkGzLYUMdvCsquXacCXCFZzoSnmUxn
-	jx8rVSKMAHZqsCdgSVcPQOi5ftaRONF9GGP8geS8lFHBv3wobIHHSdCgzcM7qg==
+	bh=daGgmxq1Q7sIM0XiiBa1w/Df41CqQbVCnY7n5nRIWZU=;
+	b=eBPWeh7M44Hmb5kvmlPIizB6ZtmWWnNzfWvOW+BoWzTbfVepRC0K5tmff0Gb9AMnKmqGnh
+	dXz73Y/EVVydxP+cts+SWwmYcO2SDTHt6H+Ey9DTlWyWWKBwceGf9Ginde578KSJTw9kaN
+	iAKFuMg2nzW9+RsgjEdMZ4jHw9dx/zRuOlheHzuvA7lpgj0ThG9QuEBa2O/ktK3g7WRoCW
+	eopAsa/2CAM2TcvD/dt3S9V+mUJASWUMVx6rspejmHLsVGF/SEw3ZTVtKE047PU/cV5Jtf
+	BAJQml/3blnIRX+ggPbibTIjiGS5JxxZQlDPgL4mv00KatPK0Q1qNwObNpNQYA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1703347791;
+	s=2020e; t=1703347794;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=NwgA6LdUqAO3XVfytZbrjuE7sIziL0RwjlTrMLwIR6w=;
-	b=qT4zZPFcjGbP6a6CgxbSsBugejfH+dql0SJAa8um2nohod809m5Fb2uQveigbj6n5RR8jv
-	LLTJQAwFskQtljDw==
+	bh=daGgmxq1Q7sIM0XiiBa1w/Df41CqQbVCnY7n5nRIWZU=;
+	b=/DnBW8/OoEeiWKl1004zAdHKWIBIhsjXDYCuEXnmLyRTcfR+SipNa3VM9gjtexiqAs0TDh
+	uWsqbqxPkwNzxeBQ==
 From: "tip-bot2 for Vincent Guittot" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] arm64/amu: Use capacity_ref_freq() to set AMU ratio
+Subject: [tip: sched/core] cpufreq/schedutil: Use a fixed reference frequency
 Cc: Vincent Guittot <vincent.guittot@linaro.org>,
- Ingo Molnar <mingo@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>,
- Will Deacon <will@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20231211104855.558096-8-vincent.guittot@linaro.org>
-References: <20231211104855.558096-8-vincent.guittot@linaro.org>
+ Ingo Molnar <mingo@kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20231211104855.558096-4-vincent.guittot@linaro.org>
+References: <20231211104855.558096-4-vincent.guittot@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170334779091.398.13322969154683634281.tip-bot2@tip-bot2>
+Message-ID: <170334779405.398.10634104096869499211.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,146 +61,79 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     1f023007f5e782bda19ad9104830c404fd622c5d
-Gitweb:        https://git.kernel.org/tip/1f023007f5e782bda19ad9104830c404fd622c5d
+Commit-ID:     b3edde44e5d4504c23a176819865cd603fd16d6c
+Gitweb:        https://git.kernel.org/tip/b3edde44e5d4504c23a176819865cd603fd16d6c
 Author:        Vincent Guittot <vincent.guittot@linaro.org>
-AuthorDate:    Mon, 11 Dec 2023 11:48:55 +01:00
+AuthorDate:    Mon, 11 Dec 2023 11:48:51 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 23 Dec 2023 15:52:36 +01:00
+CommitterDate: Sat, 23 Dec 2023 15:52:35 +01:00
 
-arm64/amu: Use capacity_ref_freq() to set AMU ratio
+cpufreq/schedutil: Use a fixed reference frequency
 
-Use the new capacity_ref_freq() method to set the ratio that is used by AMU for
-computing the arch_scale_freq_capacity().
-This helps to keep everything aligned using the same reference for
-computing CPUs capacity.
+cpuinfo.max_freq can change at runtime because of boost as an example. This
+implies that the value could be different than the one that has been
+used when computing the capacity of a CPU.
 
-The default value of the ratio (stored in per_cpu(arch_max_freq_scale))
-ensures that arch_scale_freq_capacity() returns max capacity until it is
-set to its correct value with the cpu capacity and capacity_ref_freq().
+The new arch_scale_freq_ref() returns a fixed and coherent reference
+frequency that can be used when computing a frequency based on utilization.
+
+Use this arch_scale_freq_ref() when available and fallback to
+policy otherwise.
 
 Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-Acked-by: Will Deacon <will@kernel.org>
-Link: https://lore.kernel.org/r/20231211104855.558096-8-vincent.guittot@linaro.org
+Tested-by: Lukasz Luba <lukasz.luba@arm.com>
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Link: https://lore.kernel.org/r/20231211104855.558096-4-vincent.guittot@linaro.org
 ---
- arch/arm64/kernel/topology.c  | 26 +++++++++++++-------------
- drivers/base/arch_topology.c  | 12 +++++++++++-
- include/linux/arch_topology.h |  1 +
- 3 files changed, 25 insertions(+), 14 deletions(-)
+ kernel/sched/cpufreq_schedutil.c | 26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-index 817d788..1a2c72f 100644
---- a/arch/arm64/kernel/topology.c
-+++ b/arch/arm64/kernel/topology.c
-@@ -82,7 +82,12 @@ int __init parse_acpi_topology(void)
- #undef pr_fmt
- #define pr_fmt(fmt) "AMU: " fmt
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index 4ee8ad7..95c3c09 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -115,6 +115,28 @@ static void sugov_deferred_update(struct sugov_policy *sg_policy)
+ }
  
--static DEFINE_PER_CPU_READ_MOSTLY(unsigned long, arch_max_freq_scale);
-+/*
-+ * Ensure that amu_scale_freq_tick() will return SCHED_CAPACITY_SCALE until
-+ * the CPU capacity and its associated frequency have been correctly
-+ * initialized.
+ /**
++ * get_capacity_ref_freq - get the reference frequency that has been used to
++ * correlate frequency and compute capacity for a given cpufreq policy. We use
++ * the CPU managing it for the arch_scale_freq_ref() call in the function.
++ * @policy: the cpufreq policy of the CPU in question.
++ *
++ * Return: the reference CPU frequency to compute a capacity.
 + */
-+static DEFINE_PER_CPU_READ_MOSTLY(unsigned long, arch_max_freq_scale) =  1UL << (2 * SCHED_CAPACITY_SHIFT);
- static DEFINE_PER_CPU(u64, arch_const_cycles_prev);
- static DEFINE_PER_CPU(u64, arch_core_cycles_prev);
- static cpumask_var_t amu_fie_cpus;
-@@ -112,14 +117,14 @@ static inline bool freq_counters_valid(int cpu)
- 	return true;
- }
- 
--static int freq_inv_set_max_ratio(int cpu, u64 max_rate, u64 ref_rate)
-+void freq_inv_set_max_ratio(int cpu, u64 max_rate)
- {
--	u64 ratio;
-+	u64 ratio, ref_rate = arch_timer_get_rate();
- 
- 	if (unlikely(!max_rate || !ref_rate)) {
--		pr_debug("CPU%d: invalid maximum or reference frequency.\n",
-+		WARN_ONCE(1, "CPU%d: invalid maximum or reference frequency.\n",
- 			 cpu);
--		return -EINVAL;
-+		return;
- 	}
- 
- 	/*
-@@ -139,12 +144,10 @@ static int freq_inv_set_max_ratio(int cpu, u64 max_rate, u64 ref_rate)
- 	ratio = div64_u64(ratio, max_rate);
- 	if (!ratio) {
- 		WARN_ONCE(1, "Reference frequency too low.\n");
--		return -EINVAL;
-+		return;
- 	}
- 
--	per_cpu(arch_max_freq_scale, cpu) = (unsigned long)ratio;
--
--	return 0;
-+	WRITE_ONCE(per_cpu(arch_max_freq_scale, cpu), (unsigned long)ratio);
- }
- 
- static void amu_scale_freq_tick(void)
-@@ -195,10 +198,7 @@ static void amu_fie_setup(const struct cpumask *cpus)
- 		return;
- 
- 	for_each_cpu(cpu, cpus) {
--		if (!freq_counters_valid(cpu) ||
--		    freq_inv_set_max_ratio(cpu,
--					   cpufreq_get_hw_max_freq(cpu) * 1000ULL,
--					   arch_timer_get_rate()))
-+		if (!freq_counters_valid(cpu))
- 			return;
- 	}
- 
-diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-index 1aa76b5..5aaa086 100644
---- a/drivers/base/arch_topology.c
-+++ b/drivers/base/arch_topology.c
-@@ -344,6 +344,10 @@ bool __init topology_parse_cpu_capacity(struct device_node *cpu_node, int cpu)
- 	return !ret;
- }
- 
-+void __weak freq_inv_set_max_ratio(int cpu, u64 max_rate)
++static __always_inline
++unsigned long get_capacity_ref_freq(struct cpufreq_policy *policy)
 +{
++	unsigned int freq = arch_scale_freq_ref(policy->cpu);
++
++	if (freq)
++		return freq;
++
++	if (arch_scale_freq_invariant())
++		return policy->cpuinfo.max_freq;
++
++	return policy->cur;
 +}
 +
- #ifdef CONFIG_ACPI_CPPC_LIB
- #include <acpi/cppc_acpi.h>
++/**
+  * get_next_freq - Compute a new frequency for a given cpufreq policy.
+  * @sg_policy: schedutil policy object to compute the new frequency for.
+  * @util: Current CPU utilization.
+@@ -140,9 +162,9 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
+ 				  unsigned long util, unsigned long max)
+ {
+ 	struct cpufreq_policy *policy = sg_policy->policy;
+-	unsigned int freq = arch_scale_freq_invariant() ?
+-				policy->cpuinfo.max_freq : policy->cur;
++	unsigned int freq;
  
-@@ -381,6 +385,9 @@ void topology_init_cpu_capacity_cppc(void)
- 	}
++	freq = get_capacity_ref_freq(policy);
+ 	freq = map_util_freq(util, freq, max);
  
- 	for_each_possible_cpu(cpu) {
-+		freq_inv_set_max_ratio(cpu,
-+				       per_cpu(capacity_freq_ref, cpu) * HZ_PER_KHZ);
-+
- 		capacity = raw_capacity[cpu];
- 		capacity = div64_u64(capacity << SCHED_CAPACITY_SHIFT,
- 				     capacity_scale);
-@@ -422,8 +429,11 @@ init_cpu_capacity_callback(struct notifier_block *nb,
- 
- 	cpumask_andnot(cpus_to_visit, cpus_to_visit, policy->related_cpus);
- 
--	for_each_cpu(cpu, policy->related_cpus)
-+	for_each_cpu(cpu, policy->related_cpus) {
- 		per_cpu(capacity_freq_ref, cpu) = policy->cpuinfo.max_freq;
-+		freq_inv_set_max_ratio(cpu,
-+				       per_cpu(capacity_freq_ref, cpu) * HZ_PER_KHZ);
-+	}
- 
- 	if (cpumask_empty(cpus_to_visit)) {
- 		topology_normalize_cpu_scale();
-diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
-index 32c24ff..a63d61c 100644
---- a/include/linux/arch_topology.h
-+++ b/include/linux/arch_topology.h
-@@ -99,6 +99,7 @@ void update_siblings_masks(unsigned int cpu);
- void remove_cpu_topology(unsigned int cpuid);
- void reset_cpu_topology(void);
- int parse_acpi_topology(void);
-+void freq_inv_set_max_ratio(int cpu, u64 max_rate);
- #endif
- 
- #endif /* _LINUX_ARCH_TOPOLOGY_H_ */
+ 	if (freq == sg_policy->cached_raw_freq && !sg_policy->need_freq_update)
