@@ -1,314 +1,106 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDB8D264
-	for <linux-kernel@vger.kernel.org>; Sat, 23 Dec 2023 12:45:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hL8OhLs8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1703335547;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sLJFSQIp7fhvFcRrwCoza2064ZaOYLPHw4qUqiS9L7g=;
-	b=hL8OhLs8g5BMoyntu3aL9YUVlG/G1HK0kldGcLR00hpzh10ul05CeXXRZ93vouHh29S9y9
-	cIZRCRbadUfy3fSPK18oOEzhr5GtJdqrouh5EH5Vdf4u1MMGW1NbB7hq/sAgsQ797AH9QR
-	lIVyzGlebfWsLWN1NMAhX+x1iNvYscU=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-591-6F-FJhf0N32RKNG88fMekA-1; Sat, 23 Dec 2023 07:45:36 -0500
-X-MC-Unique: 6F-FJhf0N32RKNG88fMekA-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-40d2fa6b23eso23376975e9.2
-        for <linux-kernel@vger.kernel.org>; Sat, 23 Dec 2023 04:45:35 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21EFD28B
+	for <linux-kernel@vger.kernel.org>; Sat, 23 Dec 2023 12:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-35fc6d9af8bso29205915ab.0
+        for <linux-kernel@vger.kernel.org>; Sat, 23 Dec 2023 04:49:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703335535; x=1703940335;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sLJFSQIp7fhvFcRrwCoza2064ZaOYLPHw4qUqiS9L7g=;
-        b=Mor17DFR3fBrm18Xtc+Hwq+0vJB6Bl6Ru8a4uh+Vn23H/4t5+WKtJJhU5X8ypnTEQl
-         oo/XnsWjsX/03sX/saSoh7qQtzT/rFElfov6/5bO2o4MgWPMHJNP2eKFStTDLvBoAVbJ
-         l+2BxDDS8e2c2/19hwsQydfv9egNlZHzD06m6l5oIi2/sJC3nQbWIsF5LFj7hRZ8iVdo
-         G39CTPIBnx74PCWoRFhi5rJkfMbHjDWLnJmvRfojqiic7aFtUCzFrof6fI3MgparHWVq
-         9LERoW+ITWcTLIduYXKEUgWhite3YF5EUbknkpP5h/EUZYl3X4XVp9p6jCerwN7107/5
-         8TVQ==
-X-Gm-Message-State: AOJu0Yx03O6rY1P5zq1fiIMN/bL0iZXncS6itXWEK49Un/TDSMYxvcLE
-	LagGmsGF0d51eDPc7X1ek50zdANEDpHSXjnhhBU+IBNXnSLuvP2D1zynFbUfCmePsk9XVDQH4eH
-	RT93NMot4EmH8Q3XW0WSC/7ZeICOkvQIC
-X-Received: by 2002:a05:600c:5405:b0:40d:4502:741c with SMTP id he5-20020a05600c540500b0040d4502741cmr993930wmb.125.1703335534958;
-        Sat, 23 Dec 2023 04:45:34 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG/uwyO8H99ZELdCyDLDo/sXgLdn7RQB2aBdzj4SaKIZW+k1CAkDFaKjT3blQp8tsVXKBEzgg==
-X-Received: by 2002:a05:600c:5405:b0:40d:4502:741c with SMTP id he5-20020a05600c540500b0040d4502741cmr993917wmb.125.1703335534465;
-        Sat, 23 Dec 2023 04:45:34 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id j1-20020a170906094100b00a26ae006522sm2302712ejd.122.2023.12.23.04.45.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 23 Dec 2023 04:45:33 -0800 (PST)
-Message-ID: <a1128471-bbff-4124-a7e5-44de4b1730b7@redhat.com>
-Date: Sat, 23 Dec 2023 13:45:32 +0100
+        d=1e100.net; s=20230601; t=1703335758; x=1703940558;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8jPlsN7Ml/+XR4qokePSVPYK/NjAAU4vFSo45xfBkHM=;
+        b=KlxB0Xgtn5SuG1GtyFQaLc6GHf3n8FjPPEEAX0h46agMotZyreKUdfq1fKiTjaXqih
+         9+66YRLzWjXVHGTgkI7giK1bvGBKIrvOV3fEgEhaY92oNxZUGumBEftoRpI0feu4KzIb
+         PSOLUAm2tx1qkttZ/+0d9ewRh/l6wKOzKfUooQundONj4jLFxlbM3V8CfusaQC4IAn2x
+         ikLbzBgQ4WpAkEggTv5lsmPloVK9J5YY+1bEwfgS94NjFvemZ60PgrdsvY+qkQWQOTbf
+         bo+JdQHlRGynxtqUc7G1uKHrgS5ZPUlsZX8EilEXbMehpQoWj0IdKZCelXDg/hsK2l20
+         aDmA==
+X-Gm-Message-State: AOJu0YzW1lo/is4K+gZ2YHKW/5bIWQokQjzuGB7vNG9k3g77pZj6j+fL
+	DnOiSL5sTBb7IHbV2fDT2tYIk5rcsXKum8GRz9vf5pVIZwDl
+X-Google-Smtp-Source: AGHT+IGKjtDVv/BwNjkyahYD1ta4x0QVryvLbcYlokVC/ReU3y+mA3PBbk7B3gA+dsjpbiDflxKoXE4BFahG5lO+JqFcrt4j7CMo
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Ideas for a generic solution to support accelerometer lis3lv02d
- in Dell laptops/notebooks?
-Content-Language: en-US, nl
-To: Paul Menzel <pmenzel@molgen.mpg.de>, Jean Delvare <jdelvare@suse.com>,
- Andi Shyti <andi.shyti@kernel.org>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
- Wolfram Sang <wsa@kernel.org>, linux-i2c@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>,
- Kai-Heng Feng <kai.heng.feng@canonical.com>, Marius Hoch
- <mail@mariushoch.de>, Mario Limonciello <mario.limonciello@amd.com>,
- Dell.Client.Kernel@dell.com, Greg KH <gregkh@linuxfoundation.org>
-References: <4820e280-9ca4-4d97-9d21-059626161bfc@molgen.mpg.de>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <4820e280-9ca4-4d97-9d21-059626161bfc@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:174c:b0:35f:c187:ea04 with SMTP id
+ y12-20020a056e02174c00b0035fc187ea04mr354022ill.3.1703335758089; Sat, 23 Dec
+ 2023 04:49:18 -0800 (PST)
+Date: Sat, 23 Dec 2023 04:49:18 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000cb54de060d2cc266@google.com>
+Subject: [syzbot] [riscv?] kernel panic: Kernel stack overflow (2)
+From: syzbot <syzbot+5c1ebfe49c5e8e998e75@syzkaller.appspotmail.com>
+To: aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, palmer@dabbelt.com, paul.walmsley@sifive.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Paul,
+Hello,
 
-On 12/23/23 10:39, Paul Menzel wrote:
-> Dear Linux folks,
-> 
-> 
-> Currently, on Dell systems with the accelerometer lis3lv02d, its I²C address needs to be added to `dell_lis3lv02d_devices[]` in `drivers/i2c/busses/i2c-i801.c`.
-> 
-> In Linux 6.7-rc6 that array has nine elements, so only a small fraction of all Dell notebooks is listed. Searching the Linux logs uploaded to the Linux hardware database from May 2023 [1], there are around 129 devices without support in the Linux kernel version the upload was done with.
-> 
-> Do you know, how the Microsoft Windows driver is doing this? Is it hard-coded there too, or can it be deduced somehow, for example from the ACPI tables?
-> 
-> I added some Kai-Heng and Hans to Cc as they might have contact. Dell offers or offered quite a few of the models with official Ubuntu support, so I would have hoped to have a generic solution for this. Maybe Mario can also forward it to the Dell team.
+syzbot found the following issue on:
 
-Interesting question.
+HEAD commit:    3b5c14361d61 riscv: Fix set_direct_map_default_noflush() t..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git fixes
+console output: https://syzkaller.appspot.com/x/log.txt?x=16d5ffd6e80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a5c1ede998d7cef2
+dashboard link: https://syzkaller.appspot.com/bug?extid=5c1ebfe49c5e8e998e75
+compiler:       riscv64-linux-gnu-gcc (Debian 12.2.0-13) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: riscv64
 
-So there are really 2 issues here:
+Unfortunately, I don't have any reproducer for this issue yet.
 
-a. The probe problem you are describing
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/a741b348759c/non_bootable_disk-3b5c1436.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/11e6a4fa8d50/vmlinux-3b5c1436.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6570c8642590/Image-3b5c1436.xz
 
-b. The support for the lis3lv02d is using an old misc-char + input(evdev)
-   userspace API defined in:
-   drivers/platform/x86/dell/dell-smo8800.c
-   drivers/misc/lis3lv02d/lis3lv02d[_i2c].c
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+5c1ebfe49c5e8e998e75@syzkaller.appspotmail.com
 
-   where as it really should be using the IIO interface like
-   almost all other accelerometer chips are doing. There even
-   already is a driver for this:
-   drivers/iio/accel/st_accel[_i2c].c
-
-Here is what I believe should be done to fix this:
-
-1. The handling of instantiating the i2c-client really does NOT
-   belong in drivers/i2c/busses/i2c-i801.c instead some code
-   should be added to drivers/platform/x86/dell/dell-smo8800.c
-   for finding the right i2c-bus and then the code to instantiate
-   the i2c_client for the lis3lv02d device should be moved to
-   drivers/platform/x86/dell/dell-smo8800.c .
-
-2. Add a "probe_i2c_address" bool module option and when this
-   is set try to read the WHO_AM_I register, see
-   drivers/misc/lis3lv02d/lis3lv02d.c
-   and if this succeeds and gives a known model id then
-   continue with the found i2c_address. This should first
-   try address 0x29 which seems to be the most common and
-   then try 0x18 and then give up.
-
-   This should also modify the dmesg "Accelerometer lis3lv02d is
-   present on SMBus but its address is unknown, skipping registration\n"
-
-   message to hint at trying to use the probe_i2c_address option
-   with a remark that this could theoretically be dangerous for
-   the laptop.
-
-   And likewise when probe_i2c_address option is set and the
-   laptop model is not in the DMI list then on successful
-   probe print a message to please report the i2c-address upstream.
-
-   This should resolve (a) from above.
-
-3. Once we have the i2c-client instantiation in dell-smo8800.c
-   we can add a "use_misc_lis3lv02d" boolean module option there
-   which defaults to false.
-
-   And then if we know the i2c-address and use_misc_lis3lv02d is false:
-   2.1 register the i2c_client with "lis3lv02dl_accel"
-       as type instead of "lis3lv02dl", note I think we may need
-       to use different type-s depending on the WHO_AM_I register
-       value, the st_accel.c code needs to be checked for this.
-   2.2 pass the interrupt to the i2c_client driver by setting
-       it in board_info
-   2.3 do not register the dell-smo8800.c IRQ handler
-       (the i2c_client will own the IRQ)
-   2.4 do not register the dell-smo8800.c misc char device
-
-   This solves (b) from above giving us a more standard accel
-   userspace interface. We do need to evaluate how this
-   impacts iio-sensor-proxy though, since this now may start
-   doing screen-rotation based on this!
-
-If you plan to work on this please let me know. I think
-the trickiest issue is going to be to find the right i2c-bus
-in dell-smo8800.c.
-
-Regards,
-
-Hans
+ s11: ff60000008bd0a9c t3 : ff20000002078140 t4 : ffffffff80159674
+ t5 : 1fe400000040f028 t6 : ff6000000f44c1b8
+status: 0000000200000100 badaddr: ff20000002077f60 cause: 000000000000000f
+Kernel panic - not syncing: Kernel stack overflow
+CPU: 1 PID: 5612 Comm: kworker/1:4 Not tainted 6.7.0-rc1-syzkaller-g3b5c14361d61 #0
+Hardware name: riscv-virtio,qemu (DT)
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+[<ffffffff8000c1e6>] dump_backtrace+0x2e/0x3c arch/riscv/kernel/stacktrace.c:121
+[<ffffffff836ee406>] show_stack+0x34/0x40 arch/riscv/kernel/stacktrace.c:127
+[<ffffffff8372f66a>] __dump_stack lib/dump_stack.c:88 [inline]
+[<ffffffff8372f66a>] dump_stack_lvl+0xe8/0x154 lib/dump_stack.c:106
+[<ffffffff8372f6f2>] dump_stack+0x1c/0x24 lib/dump_stack.c:113
+[<ffffffff836eef04>] panic+0x2ae/0x67a kernel/panic.c:344
+[<ffffffff8000be62>] walk_stackframe+0x0/0x2f2 arch/riscv/kernel/traps.c:412
+[<ffffffff8015a3b2>] mark_usage kernel/locking/lockdep.c:4586 [inline]
+[<ffffffff8015a3b2>] __lock_acquire+0xd3e/0x310a kernel/locking/lockdep.c:5090
+SMP: stopping secondary CPUs
+Rebooting in 86400 seconds..
 
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-> [1]: https://github.com/linuxhw/Dmesg
-> 
-> 
-> PS: Dell devices in Linux hardware database with accelerometer:
-> 
-> linux-hardware-dmesg/Notebook/Dell (main)$ git grep -l ccelerome | cut -d '/' -f 1,2 | sort -u
-> Inspiron/Inspiron 11 - 3147
-> Inspiron/Inspiron 5520
-> Inspiron/Inspiron 7547
-> Inspiron/Inspiron 7548
-> Latitude/Latitude 12 Rugged Extreme
-> Latitude/Latitude 2110
-> Latitude/Latitude 2120
-> Latitude/Latitude 3330
-> Latitude/Latitude 3380
-> Latitude/Latitude 3400
-> Latitude/Latitude 3470
-> Latitude/Latitude 3480
-> Latitude/Latitude 3490
-> Latitude/Latitude 3500
-> Latitude/Latitude 3570
-> Latitude/Latitude 3580
-> Latitude/Latitude 3590
-> Latitude/Latitude 5280
-> Latitude/Latitude 5290
-> Latitude/Latitude 5400
-> Latitude/Latitude 5401
-> Latitude/Latitude 5410
-> Latitude/Latitude 5411
-> Latitude/Latitude 5414
-> Latitude/Latitude 5420 Rugged
-> Latitude/Latitude 5424 Rugged
-> Latitude/Latitude 5480
-> Latitude/Latitude 5490
-> Latitude/Latitude 5491
-> Latitude/Latitude 5500
-> Latitude/Latitude 5501
-> Latitude/Latitude 5510
-> Latitude/Latitude 5511
-> Latitude/Latitude 5531
-> Latitude/Latitude 5580
-> Latitude/Latitude 5590
-> Latitude/Latitude 5591
-> Latitude/Latitude 7214
-> Latitude/Latitude 7414
-> Latitude/Latitude 7424 Rugged Extreme
-> Latitude/Latitude E4310
-> Latitude/Latitude E5270
-> Latitude/Latitude E5410
-> Latitude/Latitude E5420
-> Latitude/Latitude E5420m
-> Latitude/Latitude E5430 non-vPro
-> Latitude/Latitude E5430 vPro
-> Latitude/Latitude E5440
-> Latitude/Latitude E5470
-> Latitude/Latitude E5510
-> Latitude/Latitude E5520
-> Latitude/Latitude E5520m
-> Latitude/Latitude E5530 non-vPro
-> Latitude/Latitude E5530 vPro
-> Latitude/Latitude E5540
-> Latitude/Latitude E5570
-> Latitude/Latitude E6220
-> Latitude/Latitude E6230
-> Latitude/Latitude E6320
-> Latitude/Latitude E6330
-> Latitude/Latitude E6410
-> Latitude/Latitude E6420
-> Latitude/Latitude E6430
-> Latitude/Latitude E6430s
-> Latitude/Latitude E6440
-> Latitude/Latitude E64406342Q0286-
-> Latitude/Latitude E6510
-> Latitude/Latitude E6520
-> Latitude/Latitude E6530
-> Latitude/Latitude E6540
-> Latitude/Latitude E7440
-> Latitude/Latitude XT3
-> Precision/Precision 3510
-> Precision/Precision 3520
-> Precision/Precision 3530
-> Precision/Precision 3540
-> Precision/Precision 3541
-> Precision/Precision 3550
-> Precision/Precision 3551
-> Precision/Precision 3571
-> Precision/Precision 5510
-> Precision/Precision 5520
-> Precision/Precision 5530
-> Precision/Precision 5540
-> Precision/Precision 7510
-> Precision/Precision 7520
-> Precision/Precision 7530
-> Precision/Precision 7540
-> Precision/Precision 7710
-> Precision/Precision 7720
-> Precision/Precision 7730
-> Precision/Precision 7740
-> Precision/Precision M2800
-> Precision/Precision M3800
-> Precision/Precision M4500
-> Precision/Precision M4600
-> Precision/Precision M4700
-> Precision/Precision M4800
-> Precision/Precision M6600
-> Precision/Precision M6700
-> Precision/Precision M6800
-> Studio/Studio 1458
-> Studio/Studio 1557
-> Studio/Studio 1558
-> Studio/Studio 1569
-> Studio/Studio 1747
-> Studio/Studio 1749
-> Unidentified/Unidentified System
-> Vostro/Vostro 3300
-> Vostro/Vostro 3350
-> Vostro/Vostro 3400
-> Vostro/Vostro 3500
-> Vostro/Vostro 3550
-> Vostro/Vostro 3560
-> Vostro/Vostro 3700
-> Vostro/Vostro 5468
-> Vostro/Vostro 5471
-> Vostro/Vostro 5568
-> Vostro/Vostro 7580
-> Vostro/Vostro V130
-> Vostro/Vostro V131
-> XPS/XPS 15 7590
-> XPS/XPS 15 9530
-> XPS/XPS 15 9550
-> XPS/XPS 15 9560
-> XPS/XPS 15 9570
-> XPS/XPS L401X
-> XPS/XPS L412Z
-> XPS/XPS L421X
-> XPS/XPS L501X
-> XPS/XPS L521X
-> XPS/XPS L701X
-> 
-> Unsupported:
-> 
-> $ git grep ccelerome | grep "is present on SMBus" | cut -d '/' -f 1,2 | sort -u | wc -l
-> 129
-> 
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
+If you want to undo deduplication, reply with:
+#syz undup
