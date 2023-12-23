@@ -1,29 +1,28 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A52815482;
-	Sat, 23 Dec 2023 19:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C377C14F62;
+	Sat, 23 Dec 2023 19:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="t/UBIEnj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1703359224; x=1703964024; i=markus.elfring@web.de;
-	bh=8Z2UWZfzwEDJ7zyg5026yhkAS0hTMuV2wF4BEAAq9kI=;
-	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
-	 In-Reply-To;
-	b=t/UBIEnjvN7oB2bLLPsljeNxUqzFoOzsE4QDzqSCJCT4qjZ5OkeI4PtPH4ljvZqf
-	 YMwYjZOL+1iCxOq2qK+7k3d5sHs0/xdmj4DEfeCID+xyYH2bBVp5SU65XHf5Mkz5R
-	 WQpxXme1hPC2ytox8SsFv4iuUzJcluig9q5FvvpbjqHE/DAjg0RRbbeBcWcPRtkcz
-	 B68xFK+/Y/h5tq0YVnwggj7fsB/uKKcefoVO4wKzc3LmHpk0iVBPRzgouXDk4L2wo
-	 8bYAxHszh3mo7VokvyMQHQ6JsIktTgkSnXkJ35GtA0gWNNOZEikb8PyhDpdmn9YyW
-	 56vUHm+aQaC/HA2QtA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N14ta-1rA9Gk1bMA-012k71; Sat, 23
- Dec 2023 20:20:24 +0100
-Message-ID: <1f1c21cf-c34c-418c-b00c-8e6474f12612@web.de>
-Date: Sat, 23 Dec 2023 20:20:23 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G4FW24Ex"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=bRLpzdTf4eP01ezZZbOp5iMx6vc++e4xQlNDveXlmv4=; b=G4FW24Exlise4J0+5CQMoM+SQu
+	eZoeZu+8GthVNw2JizSGuG4voe7XdcEtG7tOv90Co69UxwPO44c+ZAI7VwLIJmSGR72cqqwYw4e1q
+	MzHtlqjdCqPZiEutX4CNJbw5ighqoF5eLqlRI+j138qvSxjNZpD8qp7JoQx/l3Hs8oDTZk7Lt4ZI4
+	Dq5R9kYASbhyUBQVFFr1ISQ7qAWohTNM0efqX5fIo/9zUdGG8o8HkhS7gq7H8JJIQydtt2LYJE1ON
+	ZPB5Vq4sxZaNIGbXlLpQ4KwksJsrlwZkDM6Fkh0HfMoEnHobqNlabL39Sz/sbRPeVoPl+8jvZE/vX
+	7vS1Wo3A==;
+Received: from [50.53.46.231] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rH7cZ-008Njc-38;
+	Sat, 23 Dec 2023 19:25:16 +0000
+Message-ID: <520e15c0-9815-4bd1-b4b9-17a79d49938e@infradead.org>
+Date: Sat, 23 Dec 2023 11:25:15 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -31,81 +30,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: [PATCH 1/2] powerpc/powernv/vas: One function call less in
- vas_window_alloc() after error detection
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-To: linuxppc-dev@lists.ozlabs.org, kernel-janitors@vger.kernel.org,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Michael Ellerman <mpe@ellerman.id.au>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Nicholas Piggin <npiggin@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr
-References: <7be66990-de9e-488b-ad6d-fafd1c7bb34c@web.de>
-In-Reply-To: <7be66990-de9e-488b-ad6d-fafd1c7bb34c@web.de>
+Subject: Re: [PATCH] Documentation/PCI: fix spelling mistake in msi-howto
+Content-Language: en-US
+To: attreyee-muk <tintinm2017@gmail.com>, bhelgaas@google.com, corbet@lwn.net
+Cc: linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20231223184720.25645-1-tintinm2017@gmail.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20231223184720.25645-1-tintinm2017@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:PUZbbeRbt872OFeEXt9lEIn6ld+RqZBajG+dMGfiFv6L0AVghxM
- EirMQ786ltRpWXGQhVE0xl7H5xadbtnvbZb4IQsQOPy0Wb6/4zdbbuUHYoLQdG5mWhHBw0I
- zXGAz72cNkVS2hENSQ69tkYsbF3syfbS8S957H5pltWdGr6Sb1HVau+idUfaoxGy/Kv721n
- bUFHjuaFVb4uh9UggISBQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:sRhiRg8KBnE=;3gh1F8RKi1A1XBfWCxrCMFStW86
- g2+Afm0rgbdJcl0jdkSvChRNZIjHRm59WkygVdikuNzy2701I4ltV4W5PnDzt26VOg9k5kdMO
- Dh4Cq568qqQQFQn0Ee9JduIu+XayPiijIBe1hiLdNTe23f9vBPfzwU/6dJy1BDDMTndxuOgJl
- sKW70/lDemFNUnCOBIBHXa5wzVdafefxL2ocd2DWACtoMPxWUmPSRab6nUgg6yjx4bazK+qbW
- y8dE34CTcXhhPrYxDPG0P3yoQrFNgz3hV6/R7Tc52SV9L6Nc6PfKD09vg+ZJuqpLMRapg2GdL
- NxRQmasHCQql7JSnCsU7LkG6TQO7m9Gjtn0daqHAZ9REWol/Zu2/Ag1tmj95oUO2bPvprbh5P
- t4qWzcMf+xN3SSK+bpH5butBFWKBJoCRGqHq4QkAIrugTOUC8a0ny6cIIxuBqCGVJCJN/3rbR
- YtIhyDt/1QuoBHuC+PKF/wyK1zIcQ/KC6jjmFG5M7rZ+ozd2KHszq7Hw3iGLISiaLXdgz+IIb
- 8sOKeWqlP7ybPXmZdXRedDdJx8Ls8tv7vFODK/54caYSCg/Km3HoTmemztsTJ5Un1dGdld4Y9
- 7FvGjGagZgui7IDCkhfOILp8GcXFFj+xZQVbmIkkRCB41Q6Pg4h4T/4Lc/hXct3YQ5E1A3Q4b
- cEx6PiMN5UIHOr5clOkgFMWU1gkXlHy0Q/Z273rzco5qGpAs9Tw2ZL34TwilpWwHlRQP8urfh
- NL8vfFUHai683txyUZedqnNv0x6Y2Ef/wq8EEoWqpzbLykjNr0mWE5qweeL8UGoKqolN2D5OQ
- bONt5GAegXVuA/mk8eRCrwUyJfi3pBAWaJMWMgfeb0rRFOCKCr6o3zcX1sg4GS97uhg70Zvfm
- Uie1U+/gmDl8p8TevuxVw3V8vP5WMzqYzAeVfKcTZCvljc4UVdBlnlwMXBtfzi/a2bbz+S23c
- D7woujjRuruYUtUv6+xm2nrnQVo=
+Content-Transfer-Encoding: 7bit
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sat, 23 Dec 2023 19:35:13 +0100
 
-The kfree() function was called in one case by the
-vas_window_alloc() function during error handling
-even if the passed variable contained a null pointer.
-This issue was detected by using the Coccinelle software.
 
-Thus use another label.
+On 12/23/23 10:47, attreyee-muk wrote:
+> Correct the spelling of "buses" from "busses" in msi-howto.rst
+> 
+> Signed-off-by: Attreyee Mukherjee <tintinm2017@gmail.com>
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- arch/powerpc/platforms/powernv/vas-window.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+OK.
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
 
-diff --git a/arch/powerpc/platforms/powernv/vas-window.c b/arch/powerpc/pl=
-atforms/powernv/vas-window.c
-index b664838008c1..b51219b4b698 100644
-=2D-- a/arch/powerpc/platforms/powernv/vas-window.c
-+++ b/arch/powerpc/platforms/powernv/vas-window.c
-@@ -545,7 +545,7 @@ static struct pnv_vas_window *vas_window_alloc(struct =
-vas_instance *vinst)
+Thanks.
 
- 	window =3D kzalloc(sizeof(*window), GFP_KERNEL);
- 	if (!window)
--		goto out_free;
-+		goto release_window_id;
+> ---
+>  Documentation/PCI/msi-howto.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/PCI/msi-howto.rst b/Documentation/PCI/msi-howto.rst
+> index c9400f02333b..783d30b7bb42 100644
+> --- a/Documentation/PCI/msi-howto.rst
+> +++ b/Documentation/PCI/msi-howto.rst
+> @@ -236,7 +236,7 @@ including a full 'lspci -v' so we can add the quirks to the kernel.
+>  Disabling MSIs below a bridge
+>  -----------------------------
+>  
+> -Some PCI bridges are not able to route MSIs between busses properly.
+> +Some PCI bridges are not able to route MSIs between buses properly.
+>  In this case, MSIs must be disabled on all devices behind the bridge.
+>  
+>  Some bridges allow you to enable MSIs by changing some bits in their
 
- 	window->vinst =3D vinst;
- 	window->vas_win.winid =3D winid;
-@@ -559,6 +559,7 @@ static struct pnv_vas_window *vas_window_alloc(struct =
-vas_instance *vinst)
-
- out_free:
- 	kfree(window);
-+release_window_id:
- 	vas_release_window_id(&vinst->ida, winid);
- 	return ERR_PTR(-ENOMEM);
- }
-=2D-
-2.43.0
-
+-- 
+#Randy
+https://people.kernel.org/tglx/notes-about-netiquette
+https://subspace.kernel.org/etiquette.html
