@@ -1,73 +1,89 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BE712E4C;
-	Sat, 23 Dec 2023 18:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A688412E52;
+	Sat, 23 Dec 2023 18:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Nn/AMTzb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description;
-	bh=2jvNDXBO9ivO7Sbb6M9wuLWRhd9V7Vh386CcaKq/gbA=; b=Nn/AMTzbqY49PyYek9j2d26g+H
-	yQ+KCwJaG7makEqJX6BjgyDrtCykhSX9c95HVI/8xEAiMufewHZhxOXqxLvXpq06iUop/qzIvQ+Y4
-	KZHVXcT/Be05KciZ+nSXztbKE/HB5qlmalVx+sE5NpxRMZCAmIjQ2k/LM4l7zJ4CoUMN7Yl4X0rBg
-	MSCl3pUJbRrQdv8BV6O/DZzVqtoBDCa9xXk/1JlFCpAYIbNhWzVCSuSni/rj+VRxRm35wgr0wXPqh
-	EXI8x2qOMublIiNP5rxvyYr0oDgx8Mhxnw/babgISXyoSxT3xJMX9WFemA33SGopEDphB9GxsM2Ix
-	Sb8vT71Q==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rH6gv-008I1E-0j;
-	Sat, 23 Dec 2023 18:25:41 +0000
-Date: Sat, 23 Dec 2023 10:25:41 -0800
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Kees Cook <keescook@chromium.org>,
-	Joel Granados <j.granados@samsung.com>,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] sysctl: delete unused define SYSCTL_PERM_EMPTY_DIR
-Message-ID: <ZYcmJTsgDdptxBHS@bombadil.infradead.org>
-References: <20231223-sysctl-perm-empty-dir-v1-1-194edd9b09dd@weissschuh.net>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="nqqpei5f"
+X-UUID: 393d5716a1c111eeba30773df0976c77-20231224
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=xd+2WO9L3pcsQ8gq+8BvWBHvGNLSUJUNSJhwoT5EhA4=;
+	b=nqqpei5fLHNXYAHPRZvKJiFbDJNBOeXXrJCmrUmO6BiONrY+dsyhsRQcHwRc1Z/NbADPChWFnQ8xIwy3MzXBzY3t/gjSobXlGFHZG6+JdVp0by5kr/Tl9HIp5PkL6dakEVmJ3+Bd6PNBmf1sTqkmtNuuj2vkgz3CXgAFI/qd/WI=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:c5b610cb-7e2d-4968-b785-eb49cf11ae7d,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:5d391d7,CLOUDID:70c0692e-1ab8-4133-9780-81938111c800,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,
+	DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 393d5716a1c111eeba30773df0976c77-20231224
+Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw02.mediatek.com
+	(envelope-from <jason-jh.lin@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1801608358; Sun, 24 Dec 2023 02:29:35 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Sun, 24 Dec 2023 02:29:34 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Sun, 24 Dec 2023 02:29:34 +0800
+From: Jason-JH.Lin <jason-jh.lin@mediatek.com>
+To: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Chun-Kuang Hu
+	<chunkuang.hu@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	<dri-devel@lists.freedesktop.org>, <linux-media@vger.kernel.org>,
+	<linaro-mm-sig@lists.linaro.org>, Jason-ch Chen <jason-ch.chen@mediatek.com>,
+	Johnson Wang <johnson.wang@mediatek.com>, "Jason-JH . Lin"
+	<jason-jh.lin@mediatek.com>, Singo Chang <singo.chang@mediatek.com>, Nancy
+ Lin <nancy.lin@mediatek.com>, Shawn Sung <shawn.sung@mediatek.com>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Jeffrey Kardatzke
+	<jkardatzke@google.com>
+Subject: [PATCH v3 02/11] drm/mediatek/uapi: Add DRM_MTK_GEM_CREATE_ENCRYPTED flag
+Date: Sun, 24 Dec 2023 02:29:23 +0800
+Message-ID: <20231223182932.27683-3-jason-jh.lin@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20231223182932.27683-1-jason-jh.lin@mediatek.com>
+References: <20231223182932.27683-1-jason-jh.lin@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231223-sysctl-perm-empty-dir-v1-1-194edd9b09dd@weissschuh.net>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Content-Type: text/plain
+X-MTK: N
 
-On Sat, Dec 23, 2023 at 02:53:47PM +0100, Thomas Weißschuh wrote:
-> It seems it was never used.
-> 
-> Fixes: 2f2665c13af4 ("sysctl: replace child with an enumeration")
-> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-> ---
-> This was originally part of the sysctl-const series [0], but it doesn't
-> really belong in there.
-> To slim down that series as much as possible, submit this patch on its
-> own.
-> 
-> [0] https://lore.kernel.org/lkml/20231204-const-sysctl-v2-2-7a5060b11447@weissschuh.net/
+Add DRM_MTK_GEM_CREATE_ENCRYPTED flag to allow user to allocate
+a secure buffer to support secure video path feature.
 
-Applied, and pushed! BTW:
-
-$ b4 am -s
-20231223-sysctl-perm-empty-dir-v1-1-194edd9b09dd@weissschuh.net
-Grabbing thread from
-lore.kernel.org/all/20231223-sysctl-perm-empty-dir-v1-1-194edd9b09dd@weissschuh.net/t.mbox.gz
-Analyzing 1 messages in the thread
-Checking attestation on all messages, may take a moment...
+Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
 ---
-✓ [PATCH] sysctl: delete unused define SYSCTL_PERM_EMPTY_DIR
-+ Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
-✗ No key: ed25519/linux@weissschuh.net
-✓ Signed: DKIM/weissschuh.net
+ include/uapi/drm/mediatek_drm.h | 1 +
+ 1 file changed, 1 insertion(+)
 
- Luis
+diff --git a/include/uapi/drm/mediatek_drm.h b/include/uapi/drm/mediatek_drm.h
+index f4d47577c94e..189d20301205 100644
+--- a/include/uapi/drm/mediatek_drm.h
++++ b/include/uapi/drm/mediatek_drm.h
+@@ -48,6 +48,7 @@ struct drm_mtk_gem_map_off {
+ 
+ #define DRM_MTK_GEM_CREATE		0x00
+ #define DRM_MTK_GEM_MAP_OFFSET		0x01
++#define DRM_MTK_GEM_CREATE_ENCRYPTED	0x02
+ 
+ #define DRM_IOCTL_MTK_GEM_CREATE	DRM_IOWR(DRM_COMMAND_BASE + \
+ 		DRM_MTK_GEM_CREATE, struct drm_mtk_gem_create)
+-- 
+2.18.0
 
