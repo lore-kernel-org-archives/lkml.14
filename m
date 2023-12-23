@@ -1,39 +1,39 @@
 Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732DA2208A;
-	Sat, 23 Dec 2023 18:29:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F7A225A6;
+	Sat, 23 Dec 2023 18:29:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="DIh3bXCt"
-X-UUID: 38ff171ca1c111eea5db2bebc7c28f94-20231224
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="r24UaKmH"
+X-UUID: 3a82dd08a1c111eea5db2bebc7c28f94-20231224
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=3gOWOBV0rgKU+/PmGI3xj46A8m8R3ijvR09XFgFjDzI=;
-	b=DIh3bXCtN/fYiNVanoR0oH/u095iil8OqB/bV4Ft11zdeqJ12vybbNzJidSozVn3CCkudYBJgiujZct5pog0dsIYcYxeUk9MW/azE3v4dg9N9yzYKPcmSofJJUpYyb5VE7BroAW9Mfmq2QGMqUayH05wxOaRld/LAncd4v8lU8U=;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=9Q8RSiyjSUfHILmoW4urj0AJtB2OmdXHTaWG7QUm9as=;
+	b=r24UaKmH/FI/yIQky0l3ENlyXwCdAlVWFVRxAcU2CFEM6HPhL/NkoBDSrdO5hKb/R02Uxz3llbrDowVx7hdZEd1tQRz9jbjy+QBWFtlO2u4tWGXoF3o+Z55VjNf1Ioruchc4PanXjxC5hkc4U3qs0xmXga9tsQ/1A2YPUdlhhlU=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:9436a27a-c04f-4c20-8cee-848bfa2f11fc,IP:0,U
+X-CID-O-INFO: VERSION:1.1.35,REQID:932576f9-4e5a-4c83-9471-840984a4b0bd,IP:0,U
 	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
 	release,TS:0
-X-CID-META: VersionHash:5d391d7,CLOUDID:a65d7f8d-e2c0-40b0-a8fe-7c7e47299109,B
+X-CID-META: VersionHash:5d391d7,CLOUDID:ba5d7f8d-e2c0-40b0-a8fe-7c7e47299109,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,
+	RL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,
 	DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
-X-UUID: 38ff171ca1c111eea5db2bebc7c28f94-20231224
-Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw01.mediatek.com
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 3a82dd08a1c111eea5db2bebc7c28f94-20231224
+Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw01.mediatek.com
 	(envelope-from <jason-jh.lin@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1914793848; Sun, 24 Dec 2023 02:29:35 +0800
+	with ESMTP id 1170136593; Sun, 24 Dec 2023 02:29:37 +0800
 Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Sun, 24 Dec 2023 02:29:33 +0800
+ 15.2.1118.26; Sun, 24 Dec 2023 02:29:36 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
  mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Sun, 24 Dec 2023 02:29:33 +0800
+ 15.2.1118.26 via Frontend Transport; Sun, 24 Dec 2023 02:29:35 +0800
 From: Jason-JH.Lin <jason-jh.lin@mediatek.com>
 To: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
 	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
@@ -45,15 +45,16 @@ CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<dri-devel@lists.freedesktop.org>, <linux-media@vger.kernel.org>,
 	<linaro-mm-sig@lists.linaro.org>, Jason-ch Chen <jason-ch.chen@mediatek.com>,
 	Johnson Wang <johnson.wang@mediatek.com>, "Jason-JH . Lin"
-	<jason-jh.lin@mediatek.com>, Singo Chang <singo.chang@mediatek.com>, Nancy
- Lin <nancy.lin@mediatek.com>, Shawn Sung <shawn.sung@mediatek.com>,
+	<jason-jh.lin@mediatek.com>, Singo Chang <singo.chang@mediatek.com>, "Nancy
+ Lin" <nancy.lin@mediatek.com>, Shawn Sung <shawn.sung@mediatek.com>,
 	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Jeffrey Kardatzke
-	<jkardatzke@google.com>, Jason-jh Lin
-	<jason-jh.lin@mediatek.corp-partner.google.com>
-Subject: [PATCH v3 00/11] Add mediate-drm secure flow for SVP
-Date: Sun, 24 Dec 2023 02:29:21 +0800
-Message-ID: <20231223182932.27683-1-jason-jh.lin@mediatek.com>
+	<jkardatzke@google.com>
+Subject: [PATCH v3 11/11] arm64: dts: mt8195: Add secure mbox settings for vdosys
+Date: Sun, 24 Dec 2023 02:29:32 +0800
+Message-ID: <20231223182932.27683-12-jason-jh.lin@mediatek.com>
 X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20231223182932.27683-1-jason-jh.lin@mediatek.com>
+References: <20231223182932.27683-1-jason-jh.lin@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,117 +62,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-AS-Result: No-10--0.491300-8.000000
+X-TMASE-MatchedRID: hnk2xlnUc9YCNMj/7qB/g11tpWYE7Ops31GU/N5W5BDOb3+o8TfeDuLz
+	NWBegCW2wgn7iDBesS0nRE+fI6etkuizN9J3NgBH8RJ/GoffvHkPcq5zA38+/6zzbOcnWu8Z9mP
+	29bcY/jAyNkLr5kiba29MNrHNAnxNgFAkt5cKyJCWOeeZGiKp5ICE5xpCtDRTUbJFyh4XXyqYo/
+	TPOlMB4bCh3zE4wqa8DUCRr8oin+k=
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--0.491300-8.000000
+X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
+X-TM-SNTS-SMTP:
+	717D133535D00CDDC830E6143AA284E0754963BD2A23C955C3A4D68E41B2C6A02000:8
 X-MTK: N
 
-From: Jason-jh Lin <jason-jh.lin@mediatek.corp-partner.google.com>
+Add a secure mailbox channel to support secure video path on
+vdosys0 and vdosys1.
 
-Memory Definitions:
-secure memory - Memory allocated in the TEE (Trusted Execution
-Environment) which is inaccessible in the REE (Rich Execution
-Environment, i.e. linux kernel/userspace).
-secure handle - Integer value which acts as reference to 'secure
-memory'. Used in communication between TEE and REE to reference
-'secure memory'.
-secure buffer - 'secure memory' that is used to store decrypted,
-compressed video or for other general purposes in the TEE.
-secure surface - 'secure memory' that is used to store graphic buffers.
-
-Memory Usage in SVP:
-The overall flow of SVP starts with encrypted video coming in from an
-outside source into the REE. The REE will then allocate a 'secure
-buffer' and send the corresponding 'secure handle' along with the
-encrypted, compressed video data to the TEE. The TEE will then decrypt
-the video and store the result in the 'secure buffer'. The REE will
-then allocate a 'secure surface'. The REE will pass the 'secure
-handles' for both the 'secure buffer' and 'secure surface' into the
-TEE for video decoding. The video decoder HW will then decode the
-contents of the 'secure buffer' and place the result in the 'secure
-surface'. The REE will then attach the 'secure surface' to the overlay
-plane for rendering of the video.
-
-Everything relating to ensuring security of the actual contents of the
-'secure buffer' and 'secure surface' is out of scope for the REE and
-is the responsibility of the TEE.
-
-DRM driver handles allocation of gem objects that are backed by a 'secure
-surface' and for displaying a 'secure surface' on the overlay plane.
-This introduces a new flag for object creation called
-DRM_MTK_GEM_CREATE_ENCRYPTED which indicates it should be a 'secure
-surface'. All changes here are in MediaTek specific code.
+Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
 ---
-TODO:
-1) Remove get sec larb port interface in ddp_comp, ovl and ovl_adaptor.
-2) Verify instruction for enabling/disabling dapc and larb port in TEE
-   drop the sec_engine flags in normal world and.
-3) Move DISP_REG_OVL_SECURE setting to secure world for mtk_disp_ovl.c.
-4) Change the parameter register address in mtk_ddp_sec_write()
-   from "u32 addr" to "struct cmdq_client_reg *cmdq_reg".
-5) Implement setting mmsys routing table in the secure world series.
----
-Based on 5 series and 1 patch:
-[1] v3 dma-buf: heaps: Add MediaTek secure heap
-- https://patchwork.kernel.org/project/linux-mediatek/list/?series=809023
-[2] v3 add driver to support secure video decoder
-- https://patchwork.kernel.org/project/linux-mediatek/list/?series=807308
-[3] v4 soc: mediatek: Add register definitions for GCE
-- https://patchwork.kernel.org/project/linux-mediatek/patch/20231212121957.19231-2-shawn.sung@mediatek.com/
-[4] v2 Add CMDQ driver support for mt8188
-- https://patchwork.kernel.org/project/linux-mediatek/list/?series=810302
-[5] Add mediatek,gce-events definition to mediatek,gce-mailbox bindings
-- https://patchwork.kernel.org/project/linux-mediatek/list/?series=810938
-[6] v3 Add CMDQ secure driver for SVP
-- https://patchwork.kernel.org/project/linux-mediatek/list/?series=812379
----
-Change in v3:
-1. fix kerneldoc problems
-2. fix typo in title and commit message
-3. adjust naming for secure variable
-4. add the missing part for is_suecure plane implementation
-5. use BIT_ULL macro to replace bit shifting
-6. move modification of ovl_adaptor part to the correct patch
-7. add TODO list in commit message
-8. add commit message for using share memory to store execute count
+ arch/arm64/boot/dts/mediatek/mt8195.dtsi | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Change in v2:
-
-1. remove the DRIVER_RDNDER flag for mtk_drm_ioctl
-2. move cmdq_insert_backup_cookie into client driver
-3. move secure gce node define from mt8195-cherry.dtsi to mt8195.dtsi
----
-CK Hu (1):
-  drm/mediatek: Add interface to allocate MediaTek GEM buffer.
-
-Jason-JH.Lin (10):
-  drm/mediatek/uapi: Add DRM_MTK_GEM_CREATE_ENCRYPTED flag
-  drm/mediatek: Add secure buffer control flow to mtk_drm_gem
-  drm/mediatek: Add secure identify flag and funcution to mtk_drm_plane
-  drm/mediatek: Add mtk_ddp_sec_write to config secure buffer info
-  drm/mediatek: Add get_sec_port interface to mtk_ddp_comp
-  drm/mediatek: Add secure layer config support for ovl
-  drm/mediatek: Add secure layer config support for ovl_adaptor
-  drm/mediatek: Add secure flow support to mediatek-drm
-  drm/mediatek: Add cmdq_insert_backup_cookie before secure pkt finalize
-  arm64: dts: mt8195: Add secure mbox settings for vdosys
-
- arch/arm64/boot/dts/mediatek/mt8195.dtsi      |   6 +-
- drivers/gpu/drm/mediatek/mtk_disp_drv.h       |   3 +
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c       |  31 +-
- .../gpu/drm/mediatek/mtk_disp_ovl_adaptor.c   |  15 +
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c       | 274 +++++++++++++++++-
- drivers/gpu/drm/mediatek/mtk_drm_crtc.h       |   1 +
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c   |  30 ++
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h   |  14 +
- drivers/gpu/drm/mediatek/mtk_drm_drv.c        |  13 +
- drivers/gpu/drm/mediatek/mtk_drm_gem.c        | 122 ++++++++
- drivers/gpu/drm/mediatek/mtk_drm_gem.h        |  16 +
- drivers/gpu/drm/mediatek/mtk_drm_plane.c      |  26 ++
- drivers/gpu/drm/mediatek/mtk_drm_plane.h      |   2 +
- drivers/gpu/drm/mediatek/mtk_mdp_rdma.c       |  11 +-
- drivers/gpu/drm/mediatek/mtk_mdp_rdma.h       |   2 +
- include/uapi/drm/mediatek_drm.h               |  59 ++++
- 16 files changed, 607 insertions(+), 18 deletions(-)
- create mode 100644 include/uapi/drm/mediatek_drm.h
-
+diff --git a/arch/arm64/boot/dts/mediatek/mt8195.dtsi b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+index e0ac2e9f5b72..416d575be123 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8195.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+@@ -2621,7 +2621,8 @@
+ 		vdosys0: syscon@1c01a000 {
+ 			compatible = "mediatek,mt8195-vdosys0", "mediatek,mt8195-mmsys", "syscon";
+ 			reg = <0 0x1c01a000 0 0x1000>;
+-			mboxes = <&gce0 0 CMDQ_THR_PRIO_4>;
++			mboxes = <&gce0 0 CMDQ_THR_PRIO_4>,
++				 <&gce0 8 CMDQ_THR_PRIO_4>; /* secure mbox */
+ 			#clock-cells = <1>;
+ 		};
+ 
+@@ -2806,7 +2807,8 @@
+ 		vdosys1: syscon@1c100000 {
+ 			compatible = "mediatek,mt8195-vdosys1", "syscon";
+ 			reg = <0 0x1c100000 0 0x1000>;
+-			mboxes = <&gce0 1 CMDQ_THR_PRIO_4>;
++			mboxes = <&gce0 1 CMDQ_THR_PRIO_4>,
++				 <&gce0 9 CMDQ_THR_PRIO_4>; /* secure mbox */;
+ 			mediatek,gce-client-reg = <&gce0 SUBSYS_1c10XXXX 0x0000 0x1000>;
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
 -- 
 2.18.0
 
