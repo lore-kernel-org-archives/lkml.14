@@ -1,23 +1,30 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3800246AD
-	for <linux-kernel@vger.kernel.org>; Sat, 23 Dec 2023 04:59:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id C624168B05; Sat, 23 Dec 2023 05:59:12 +0100 (CET)
-Date: Sat, 23 Dec 2023 05:59:12 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Maxim Kochetkov <fido_max@inbox.ru>, Conor Dooley <conor@kernel.org>,
-	Christoph Hellwig <hch@lst.de>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, robh@kernel.org, mpe@ellerman.id.au,
-	aou@eecs.berkeley.edu, palmer@dabbelt.com, paul.walmsley@sifive.com
-Subject: Re: [PATCH 1/1] riscv: set ARCH_DMA_DEFAULT_COHERENT if
- RISCV_DMA_NONCOHERENT is not set
-Message-ID: <20231223045912.GA21836@lst.de>
-References: <20231221185152.327231-1-fido_max@inbox.ru> <20231221-discount-decade-e306e5878c46@spud> <f31d929c-fa0a-4046-be05-38e92afa5d92@flygoat.com> <20231222041428.GA2803@lst.de> <c53c22dd-c482-4808-bdd7-e81c01c04f9e@inbox.ru> <20231222-outburst-spoiling-75082a7826dd@spud> <be10eb21-a0ef-416e-9c0c-d53326996fba@inbox.ru> <7bc138f7-d5e9-471a-ae82-d6c490645623@flygoat.com> <6fe34090-656d-491f-8173-217d20144166@inbox.ru> <a25d3736-f6ca-478d-8e58-69a7c0e529f7@flygoat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB2D6FD7
+	for <linux-kernel@vger.kernel.org>; Sat, 23 Dec 2023 05:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pePV5y5+"
+Date: Sat, 23 Dec 2023 00:00:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1703307635;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nHi2s1ywhHyj2ikLzCZWLKuKjtJbPgi5kAvkTiqjfVk=;
+	b=pePV5y5+NpL7hzm8DfIAqLqHLKbxFtmxbSoMLO8EfHJP15sUi5pst1+SnlACvXp8cujFJO
+	2lICnakFS267jhMyqNSwv4mGNVDgjxrn1sPP/wPsygbCOg6qJAIFHtevYfJXKP9ijbhEUu
+	IhxZjA4oc8Sf64TOz/oye6tdLouYRAU=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+Cc: ntfs3@lists.linux.dev, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 0/8] fs/ntfs3: Bugfix and refactoring
+Message-ID: <t6cy5hu6cxsnawvlxsl4xlcqskkq2njeapjpwy4eku2kchgnue@w4cura2wu4pn>
+References: <e41f6717-7c70-edf2-2d3a-8034840d14c5@paragon-software.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -26,25 +33,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a25d3736-f6ca-478d-8e58-69a7c0e529f7@flygoat.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <e41f6717-7c70-edf2-2d3a-8034840d14c5@paragon-software.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Dec 22, 2023 at 04:01:43PM +0000, Jiaxun Yang wrote:
->>
->> But arch_setup_dma_ops() is called only from of_dma_configure_id() and 
->> acpi_dma_configure_id(). So it works only for DT and ACPI devices. What 
->> about platform_device?
->
-> Ah I see, that's the problem, in MIPS's use case all DMA capable devices
-> are following platform's default coherency. For RISC-V we assume all device 
-> are enabled by ACPI or DT.
->
-> Perhaps you can override it in driver, but that will make drivers platform 
-> dependent.
->
-> I'll leave this question to Christoph.
+On Mon, Jul 03, 2023 at 11:23:49AM +0400, Konstantin Komarov wrote:
+> This series contains various fixes and refactoring for ntfs3.
+> Added more checks in record.
 
-I've already said it.  You must not have DMA capable devices that aren't
-declared in ACPI or OF, just like on any modern Linux platform.
-
-What devices are you concerned about anyway Maxim?
+I don't write explanations for all of my commits, but... zero?
