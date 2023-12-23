@@ -1,166 +1,190 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from forward502b.mail.yandex.net (forward502b.mail.yandex.net [178.154.239.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62D4CA48;
-	Sat, 23 Dec 2023 08:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31728BE5;
+	Sat, 23 Dec 2023 08:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maquefel.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="U5hcdZWS"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BN8SCv8002400;
-	Sat, 23 Dec 2023 08:32:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=QSXg0r0K7t8xw6d3E7LKmmEWgDR6KIgpGP+y4KnM42k=; b=U5
-	hcdZWSkbsMJlWZO3+otp9BxZjOTZR/QCOtjsl1vssVdVv/OZ8c8OpM1LD+fGi8ks
-	upMQEXyjOArH/jHIRSCU3ZUQIccIRDpKpC67U5YZRht5vCezlGx1m5KbI6c9wsSn
-	Dfb1LlN9NDU9MfHskX1kp84sT85UJuP2pOEtIzS5q5sGqj/TlMq06IK6jTP8ZtTz
-	y5gfREx5XAb5nUH4S6U4dDl8vErl12aj2S5LghzKZ+cwqqEE6UzdVerGdfTlcUWM
-	aOeE0t/sU/BZQdf37YLRSbQFy8+YLW12EMgc3IjOf6x0wDJkwiW2pg0mGYdxwBpu
-	PqhAbUNXoPSgxona+Iqw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3v5n8p0hf0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 23 Dec 2023 08:32:56 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3BN8WtQe008970
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 23 Dec 2023 08:32:55 GMT
-Received: from [10.216.46.13] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Sat, 23 Dec
- 2023 00:32:53 -0800
-Message-ID: <61d4f3f6-dc91-449a-9666-67f1eaca414c@quicinc.com>
-Date: Sat, 23 Dec 2023 14:02:50 +0530
+	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="Fe/6ZeJw"
+Received: from mail-nwsmtp-smtp-production-main-39.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-39.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:1f89:0:640:43d3:0])
+	by forward502b.mail.yandex.net (Yandex) with ESMTP id 07A9F5EB34;
+	Sat, 23 Dec 2023 11:35:09 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-39.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 7ZLe5boZnCg0-PzfkPJLc;
+	Sat, 23 Dec 2023 11:35:08 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail;
+	t=1703320508; bh=l8ib/tByu50rmfZCGTXI/YxhNvqeAxWyJnLOAm2kp4o=;
+	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
+	b=Fe/6ZeJwEztu5u9j1ebfvOz4GTyj99AXzKQN2eL2P3Tb+QnAVINnEHwjfkVeXa9rV
+	 R+3TCw2Dyh47WbGXTMsU5TcoF0RQbDXRjyi1u4/jaEJ7TKEVIJ5IpfPNvAlVT3LM6w
+	 22Hbm2wK58vEJSv9mNb3EaOxZ5eY54R1gv0O9aTk=
+Authentication-Results: mail-nwsmtp-smtp-production-main-39.myt.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
+Message-ID: <466da2894d7d5f2a23047c812dd34b52034402f8.camel@maquefel.me>
+Subject: Re: [PATCH v6 04/40] clk: ep93xx: add DT support for Cirrus EP93xx
+From: Nikita Shubin <nikita.shubin@maquefel.me>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>,  linux-kernel@vger.kernel.org,
+ linux-clk@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Date: Sat, 23 Dec 2023 11:35:07 +0300
+In-Reply-To: <ZXns9klLAhuK-Alz@smile.fi.intel.com>
+References: <20231212-ep93xx-v6-0-c307b8ac9aa8@maquefel.me>
+	 <20231212-ep93xx-v6-4-c307b8ac9aa8@maquefel.me>
+	 <ZXns9klLAhuK-Alz@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.48.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] usb: dwc3: gadget: Ignore dwc3 interrupt if GEVNTCOUNT
- reads corrupt value
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "quic_ppratap@quicinc.com" <quic_ppratap@quicinc.com>,
-        "quic_jackp@quicinc.com" <quic_jackp@quicinc.com>
-References: <20231221151620.16030-1-quic_kriskura@quicinc.com>
- <20231222221907.l7s5olt6uubwfjlh@synopsys.com>
-Content-Language: en-US
-From: Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>
-In-Reply-To: <20231222221907.l7s5olt6uubwfjlh@synopsys.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Wp-8x-NR9tJeRJ7Py9K1UlqhkMmbjhMa
-X-Proofpoint-ORIG-GUID: Wp-8x-NR9tJeRJ7Py9K1UlqhkMmbjhMa
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=875
- impostorscore=0 clxscore=1015 malwarescore=0 priorityscore=1501
- spamscore=0 mlxscore=0 suspectscore=0 adultscore=0 phishscore=0
- bulkscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2311290000 definitions=main-2312230065
 
+SGVsbG8gQW5keSEKCk9uIFdlZCwgMjAyMy0xMi0xMyBhdCAxOTo0MiArMDIwMCwgQW5keSBTaGV2
+Y2hlbmtvIHdyb3RlOgo+IE9uIFR1ZSwgRGVjIDEyLCAyMDIzIGF0IDExOjIwOjIxQU0gKzAzMDAs
+IE5pa2l0YSBTaHViaW4gd3JvdGU6Cj4gPiBSZXdyaXRlIEVQOTN4eCBjbG9jayBkcml2ZXIgbG9j
+YXRlZCBpbiBhcmNoL2FybS9tYWNoLWVwOTN4eC9jbG9jay5jCj4gPiB0cnlpbmcgdG8gZG8gZXZl
+cnl0aGluZyB0aGUgZGV2aWNlIHRyZWUgd2F5Ogo+ID4gCj4gPiAtIHByb3ZpZGUgY2xvY2sgYWNj
+ZXMgdmlhIG9mCj4gPiAtIGRyb3AgY2xrX2h3X3JlZ2lzdGVyX2Nsa2Rldgo+ID4gLSBkcm9wIGlu
+aXQgY29kZSBhbmQgdXNlIG1vZHVsZV9hdXhpbGlhcnlfZHJpdmVyCj4gCj4gLi4uCj4gCj4gPiAr
+I2RlZmluZSBFUDkzWFhfSTJTQ0xLRElWX1NESVbCoMKgwqDCoMKgwqDCoMKgwqDCoCgxIDw8IDE2
+KQo+IAo+IEJJVCgpID8KPiAKPiAuLi4KPiAKPiA+ICtzdGF0aWMgdTggZXA5M3h4X211eF9nZXRf
+cGFyZW50KHN0cnVjdCBjbGtfaHcgKmh3KQo+ID4gK3sKPiA+ICvCoMKgwqDCoMKgwqDCoHN0cnVj
+dCBlcDkzeHhfY2xrICpjbGsgPSBlcDkzeHhfY2xrX2Zyb20oaHcpOwo+ID4gK8KgwqDCoMKgwqDC
+oMKgc3RydWN0IGVwOTN4eF9jbGtfcHJpdiAqcHJpdiA9IGVwOTN4eF9wcml2X2Zyb20oY2xrKTsK
+PiA+ICvCoMKgwqDCoMKgwqDCoHUzMiB2YWw7Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgwqByZWdt
+YXBfcmVhZChwcml2LT5tYXAsIGNsay0+cmVnLCAmdmFsKTsKPiA+ICsKPiA+ICvCoMKgwqDCoMKg
+wqDCoHZhbCAmPSBFUDkzWFhfU1lTQ09OX0NMS0RJVl9NQVNLOwo+ID4gKwo+ID4gK8KgwqDCoMKg
+wqDCoMKgc3dpdGNoICh2YWwpIHsKPiA+ICvCoMKgwqDCoMKgwqDCoGNhc2UgRVA5M1hYX1NZU0NP
+Tl9DTEtESVZfRVNFTDoKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm4g
+MTsgLyogUExMMSAqLwo+ID4gK8KgwqDCoMKgwqDCoMKgY2FzZSBFUDkzWFhfU1lTQ09OX0NMS0RJ
+Vl9NQVNLOgo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiAyOyAvKiBQ
+TEwyICovCj4gCj4gPiArwqDCoMKgwqDCoMKgwqBkZWZhdWx0Ogo+ID4gK8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoGJyZWFrOwo+ID4gK8KgwqDCoMKgwqDCoMKgfTsKPiA+ICsKPiA+ICvC
+oMKgwqDCoMKgwqDCoHJldHVybiAwOyAvKiBYVEFMSSAqLwo+IAo+IFlvdSBtYXkgcmV0dXJuIGRp
+cmVjdGx5IGZyb20gZGVmYXVsdC4KPiAKPiA+ICt9Cj4gCj4gLi4uCj4gCj4gPiArc3RhdGljIGlu
+dCBlcDkzeHhfbXV4X3NldF9wYXJlbnRfbG9jayhzdHJ1Y3QgY2xrX2h3ICpodywgdTggaW5kZXgp
+Cj4gPiArewo+ID4gK8KgwqDCoMKgwqDCoMKgc3RydWN0IGVwOTN4eF9jbGsgKmNsayA9IGVwOTN4
+eF9jbGtfZnJvbShodyk7Cj4gPiArwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgZXA5M3h4X2Nsa19wcml2
+ICpwcml2ID0gZXA5M3h4X3ByaXZfZnJvbShjbGspOwo+ID4gK8KgwqDCoMKgwqDCoMKgdW5zaWdu
+ZWQgbG9uZyBmbGFnczsKPiA+ICvCoMKgwqDCoMKgwqDCoHUzMiB2YWw7Cj4gPiArCj4gPiArwqDC
+oMKgwqDCoMKgwqBpZiAoaW5kZXggPj0gMykKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqByZXR1cm4gLUVJTlZBTDsKPiAKPiA+ICvCoMKgwqDCoMKgwqDCoHNwaW5fbG9ja19pcnFz
+YXZlKCZwcml2LT5sb2NrLCBmbGFncyk7Cj4gCj4gV2h5IG5vdCBndWFyZCgpID8KPiAKPiA+ICvC
+oMKgwqDCoMKgwqDCoHJlZ21hcF9yZWFkKHByaXYtPm1hcCwgY2xrLT5yZWcsICZ2YWwpOwo+ID4g
+K8KgwqDCoMKgwqDCoMKgdmFsICY9IH4oRVA5M1hYX1NZU0NPTl9DTEtESVZfTUFTSyk7Cj4gPiAr
+wqDCoMKgwqDCoMKgwqB2YWwgfD0gaW5kZXggPiAwID8gRVA5M1hYX1NZU0NPTl9DTEtESVZfRVNF
+TCA6IDA7Cj4gPiArwqDCoMKgwqDCoMKgwqB2YWwgfD0gaW5kZXggPiAxID8gRVA5M1hYX1NZU0NP
+Tl9DTEtESVZfUFNFTCA6IDA7Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgwqBlcDkzeHhfY2xrX3dy
+aXRlKHByaXYsIGNsay0+cmVnLCB2YWwpOwo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoMKgc3Bpbl91
+bmxvY2tfaXJxcmVzdG9yZSgmcHJpdi0+bG9jaywgZmxhZ3MpOwo+ID4gKwo+ID4gK8KgwqDCoMKg
+wqDCoMKgcmV0dXJuIDA7Cj4gPiArfQo+IAo+IC4uLgo+IAo+ID4gK3N0YXRpYyBib29sIGlzX2Jl
+c3QodW5zaWduZWQgbG9uZyByYXRlLCB1bnNpZ25lZCBsb25nIG5vdywKPiA+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB1bnNpZ25lZCBsb25nIGJlc3QpCj4gPiArewo+
+ID4gK8KgwqDCoMKgwqDCoMKgcmV0dXJuIGFic19kaWZmKHJhdGUsIG5vdykgPCBhYnNfZGlmZihy
+YXRlLCBiZXN0KTsKPiAKPiBIYXZlIHlvdSBpbmNsdWRlZCBuZWNlc3NhcnkgaGVhZGVyIGZvciB0
+aGlzPwo+IAo+ID4gK30KPiAKPiAuLi4KPiAKPiA+ICtzdGF0aWMgaW50IGVwOTN4eF9tdXhfZGV0
+ZXJtaW5lX3JhdGUoc3RydWN0IGNsa19odyAqaHcsCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgY2xrX3JhdGVf
+cmVxdWVzdCAqcmVxKQo+ID4gK3sKPiA+ICvCoMKgwqDCoMKgwqDCoHVuc2lnbmVkIGxvbmcgYmVz
+dF9yYXRlID0gMCwgYWN0dWFsX3JhdGUsIG1jbGtfcmF0ZTsKPiA+ICvCoMKgwqDCoMKgwqDCoHVu
+c2lnbmVkIGxvbmcgcmF0ZSA9IHJlcS0+cmF0ZTsKPiAKPiA+ICvCoMKgwqDCoMKgwqDCoHN0cnVj
+dCBjbGtfaHcgKnBhcmVudF9iZXN0ID0gTlVMTDsKPiAKPiBTdHJpY3RseSBzcGVha2luZyB5b3Ug
+ZG9uJ3QgbmVlZCBhbiBhc3NpZ25tZW50IGhlcmUgYXMgeW91IGNhbgo+IGNvbXBhcmUgdGhlIGxv
+b3AKPiB2YXJpYWJsZSB2YWx1ZSBhZ2FpbnN0IHRoZSBtYXhpbXVtLiBCdXQgSSBkb24ndCBrbm93
+IGhvdyBoZWF2ZSB0aGUKPiByZXNwZWN0aXZlCj4gQ0xrIGNhbGwgaXMgYW5kIGlmIGl0IGhhcyBu
+byBzaWRlLWVmZmVjdHMgZHVlIHRvIG9wZXJhdGlvbnMgaW5zaWRlCj4gdGhlIGxvb3AgYm9keS4K
+PiAKPiA+ICvCoMKgwqDCoMKgwqDCoHVuc2lnbmVkIGxvbmcgcGFyZW50X3JhdGVfYmVzdDsKPiA+
+ICvCoMKgwqDCoMKgwqDCoHVuc2lnbmVkIGxvbmcgcGFyZW50X3JhdGU7Cj4gPiArwqDCoMKgwqDC
+oMKgwqBpbnQgZGl2LCBwZGl2Owo+ID4gK8KgwqDCoMKgwqDCoMKgdW5zaWduZWQgaW50IGk7Cj4g
+PiArCj4gPiArwqDCoMKgwqDCoMKgwqAvKgo+ID4gK8KgwqDCoMKgwqDCoMKgICogVHJ5IHRoZSB0
+d28gcGxsJ3MgYW5kIHRoZSBleHRlcm5hbCBjbG9jawo+IAo+IEVpdGhlciBjb21tYSArICdiJyBv
+ciBtaXNzaW5nIHBlcmlvZC4KPiAKPiA+ICvCoMKgwqDCoMKgwqDCoCAqIEJlY2F1c2UgdGhlIHZh
+bGlkIHByZWRpdmlkZXJzIGFyZSAyLCAyLjUgYW5kIDMsIHdlCj4gPiBtdWx0aXBseQo+ID4gK8Kg
+wqDCoMKgwqDCoMKgICogYWxsIHRoZSBjbG9ja3MgYnkgMiB0byBhdm9pZCBmbG9hdGluZyBwb2lu
+dCBtYXRoLgo+ID4gK8KgwqDCoMKgwqDCoMKgICoKPiA+ICvCoMKgwqDCoMKgwqDCoCAqIFRoaXMg
+aXMgYmFzZWQgb24gdGhlIGFsZ29yaXRobSBpbiB0aGUgZXA5M3h4IHJhc3Rlcgo+ID4gZ3VpZGU6
+Cj4gPiArwqDCoMKgwqDCoMKgwqAgKiBodHRwOi8vYmUtYS1tYXZlcmljay5jb20vZW4vcHVicy9h
+cHBOb3RlL0FOMjY5UkVWMS5wZGYKPiA+ICvCoMKgwqDCoMKgwqDCoCAqCj4gPiArwqDCoMKgwqDC
+oMKgwqAgKi8KPiA+ICvCoMKgwqDCoMKgwqDCoGZvciAoaSA9IDA7IGkgPCBjbGtfaHdfZ2V0X251
+bV9wYXJlbnRzKGh3KTsgaSsrKSB7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+c3RydWN0IGNsa19odyAqcGFyZW50ID0KPiA+IGNsa19od19nZXRfcGFyZW50X2J5X2luZGV4KGh3
+LCBpKTsKPiA+ICsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwYXJlbnRfcmF0
+ZSA9IGNsa19od19nZXRfcmF0ZShwYXJlbnQpOwo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoG1jbGtfcmF0ZSA9IHBhcmVudF9yYXRlICogMjsKPiA+ICsKPiA+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAvKiBUcnkgZWFjaCBwcmVkaXZpZGVyIHZhbHVlICovCj4gPiAr
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZm9yIChwZGl2ID0gNDsgcGRpdiA8PSA2OyBw
+ZGl2KyspIHsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgZGl2ID0gRElWX1JPVU5EX0NMT1NFU1QobWNsa19yYXRlLCByYXRlICoKPiA+IHBkaXYpOwo+
+IAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAo
+IWluX3JhbmdlKGRpdiwgMSwgMTI3KSkKPiAKPiBTYW1lIGhlYWRlciBhcyBmb3IgYWJzX2RpZmYo
+KT8KPiAKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoGNvbnRpbnVlOwo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBhY3R1YWxfcmF0ZSA9IERJVl9ST1VORF9DTE9TRVNU
+KG1jbGtfcmF0ZSwKPiA+IHBkaXYgKiBkaXYpOwo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAoaXNfYmVzdChyYXRlLCBhY3R1YWxfcmF0ZSwgYmVz
+dF9yYXRlKSkKPiA+IHsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGJlc3RfcmF0ZSA9IGFjdHVhbF9yYXRlOwo+ID4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgcGFyZW50X3JhdGVfYmVzdCA9IHBhcmVudF9yYXRlOwo+ID4gK8KgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcGFyZW50X2Jlc3Qg
+PSBwYXJlbnQ7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoH0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9Cj4gCj4gKDEpCj4gCj4g
+PiArwqDCoMKgwqDCoMKgwqB9Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgwqBpZiAoIXBhcmVudF9i
+ZXN0KQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiAtRUlOVkFMOwo+
+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoMKgcmVxLT5iZXN0X3BhcmVudF9yYXRlID0gcGFyZW50X3Jh
+dGVfYmVzdDsKPiA+ICvCoMKgwqDCoMKgwqDCoHJlcS0+YmVzdF9wYXJlbnRfaHcgPSBwYXJlbnRf
+YmVzdDsKPiA+ICvCoMKgwqDCoMKgwqDCoHJlcS0+cmF0ZSA9IGJlc3RfcmF0ZTsKPiA+ICsKPiA+
+ICvCoMKgwqDCoMKgwqDCoHJldHVybiAwOwo+ID4gK30KPiAKPiAuLi4KPiAKPiA+ICvCoMKgwqDC
+oMKgwqDCoG1jbGtfcmF0ZSA9IHBhcmVudF9yYXRlICogMjsKPiA+ICsKPiA+ICvCoMKgwqDCoMKg
+wqDCoGZvciAocGRpdiA9IDQ7IHBkaXYgPD0gNjsgcGRpdisrKSB7Cj4gPiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgZGl2ID0gRElWX1JPVU5EX0NMT1NFU1QobWNsa19yYXRlLCByYXRl
+ICogcGRpdik7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWYgKCFpbl9yYW5n
+ZShkaXYsIDEsIDEyNykpCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoGNvbnRpbnVlOwo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoGFjdHVhbF9yYXRlID0gRElWX1JPVU5EX0NMT1NFU1QobWNsa19yYXRlLCBwZGl2ICoKPiA+
+IGRpdik7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWYgKGFicyhhY3R1YWxf
+cmF0ZSAtIHJhdGUpIDwgcmF0ZV9lcnIpIHsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgbnBkaXYgPSBwZGl2IC0gMzsKPiA+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbmRpdiA9IGRpdjsKPiA+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmF0ZV9lcnIgPSBhYnMoYWN0
+dWFsX3JhdGUgLSByYXRlKTsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9Cj4g
+PiArwqDCoMKgwqDCoMKgwqB9Cj4gCj4gTG9va3MgdmVyeSBzaW1pbGFyIHRvICgxKS4gQ2FuIGJl
+IGRlZHVwbGljYXRlZD8KCkl0IHdhcyBteSB0aG91Z2h0IG9uIGZpcnN0IGl0ZXJhdGlvbnMgb2Yg
+Y2xrLCB1bmZvcnR1bmF0ZWx5IGkgZG9uJ3Qgc2VlCmFueSBnb29kIHdheSB0byBjb21iaW5lIHRo
+ZW06CgotIG11eF9kZXRlcm1pbmVfcmF0ZSBpcyBzZWFyY2hpbmcgdGhlIGJlc3QgcGFyZW50IHRo
+YXQgbWVldCB0aGUKY3JpdGVyaWEKLSBzZXRfcmF0ZSBpcyBzZWFyY2hpbmcgdGhlIGFjdHVhbCBk
+aXZpZGVycyB0byB3cml0ZSwgc28gZGlmZmVyZW5jZSBpcwptaW5pbXVtCgpDb21iaW5pbmcgdGhl
+bSBpbnRvIG9uZSBkb2Vzbid0IG1ha2UgaXQgbW9yZSB1bmRlcnN0YW5kYWJsZS4KCj4gCj4gLi4u
+Cj4gCj4gPiArwqDCoMKgwqDCoMKgwqAvKgo+ID4gK8KgwqDCoMKgwqDCoMKgICogQ2xlYXIgb2xk
+IGRpdmlkZXJzCj4gPiArwqDCoMKgwqDCoMKgwqAgKiBCaXQgNyBpcyByZXNlcnZlZCBiaXQgaW4g
+YWxsIENsa0RpdiByZWdpc3RlcnMKPiAKPiBNaXNzaW5nIHBlcmlvZHMuCj4gCj4gPiArwqDCoMKg
+wqDCoMKgwqAgKi8KPiAKPiAuLi4KPiAKPiA+ICtzdGF0aWMgdW5zaWduZWQgbG9uZyBjYWxjX3Bs
+bF9yYXRlKHU2NCByYXRlLCB1MzIgY29uZmlnX3dvcmQpCj4gPiArewo+ID4gK8KgwqDCoMKgwqDC
+oMKgcmF0ZSAqPSAoKGNvbmZpZ193b3JkID4+IDExKSAmIEdFTk1BU0soNCwgMCkpICsgMTvCoMKg
+wqDCoMKgwqAvKgo+ID4gWDFGQkQgKi8KPiA+ICvCoMKgwqDCoMKgwqDCoHJhdGUgKj0gKChjb25m
+aWdfd29yZCA+PiA1KSAmIEdFTk1BU0soNSwgMCkpICsgMTvCoMKgwqDCoMKgwqDCoC8qCj4gPiBY
+MkZCRCAqLwo+ID4gK8KgwqDCoMKgwqDCoMKgZG9fZGl2KHJhdGUsIChjb25maWdfd29yZCAmIEdF
+Tk1BU0soNCwgMCkpICsgMSk7wqDCoMKgwqDCoMKgwqDCoC8qCj4gPiBYMklQRCAqLwo+IAo+ID4g
+K8KgwqDCoMKgwqDCoMKgcmF0ZSA+Pj0gKChjb25maWdfd29yZCA+PiAxNikgJiBHRU5NQVNLKDEs
+IDApKTvCoMKgwqDCoMKgwqDCoMKgwqAvKgo+ID4gUFMgKi8KPiAKPiBPdXRlciBwYXJlbnRoZXNl
+cyBhcmUgcmVkdW5kYW50Lgo+IAo+ID4gK8KgwqDCoMKgwqDCoMKgcmV0dXJuIHJhdGU7Cj4gPiAr
+fQo+IAo+IC4uLgo+IAo+ID4gK8KgwqDCoMKgwqDCoMKgLyoKPiA+ICvCoMKgwqDCoMKgwqDCoCAq
+IEVQOTN4eCBTU1AgY2xvY2sgcmF0ZSB3YXMgZG91YmxlZCBpbiB2ZXJzaW9uIEUyLiBGb3IKPiA+
+IG1vcmUgaW5mb3JtYXRpb24KPiA+ICvCoMKgwqDCoMKgwqDCoCAqIHNlZToKPiA+ICvCoMKgwqDC
+oMKgwqDCoCAqwqDCoMKgwqAgaHR0cDovL3d3dy5jaXJydXMuY29tL2VuL3B1YnMvYXBwTm90ZS9B
+TjI3M1JFVjQucGRmCj4gCj4gQ2FuIHlvdSBwb2ludCB0byB0aGUgc3BlY2lmaWMgc2VjdGlvbj8g
+TGlrZQo+IAo+IMKgwqDCoMKgwqDCoMKgwqAgKiBzZWUgc2VjdGlvbiAxLjIuMyAiRm9vIGJhciI6
+Cj4gCj4gPiArwqDCoMKgwqDCoMKgwqAgKi8KPiAKPiAuLi4KPiAKPiA+ICvCoMKgwqDCoMKgwqDC
+oC8qIHRvdWNoc2NyZWVuL2FkYyBjbG9jayAqLwo+IAo+IEFEQwo+IAo+IC4uLgo+IAo+ID4gK8Kg
+wqDCoMKgwqDCoMKgLyoKPiA+ICvCoMKgwqDCoMKgwqDCoCAqIE9uIHJlc2V0IFBESVYgYW5kIFZE
+SVYgaXMgc2V0IHRvIHplcm8sIHdoaWxlIFBESVYgemVybwo+ID4gK8KgwqDCoMKgwqDCoMKgICog
+bWVhbnMgY2xvY2sgZGlzYWJsZSwgVkRJViBzaG91bGRuJ3QgYmUgemVyby4KPiA+ICvCoMKgwqDC
+oMKgwqDCoCAqIFNvIHdlIHNldCBib3RoIHZpZGVvIGFuZCBpczIgZGl2aWRlcnMgdG8gbWluaW11
+bS4KPiAKPiBpMnM/Cj4gCj4gPiArwqDCoMKgwqDCoMKgwqAgKiBFTkEgLSBFbmFibGUgQ0xLIGRp
+dmlkZXIuCj4gPiArwqDCoMKgwqDCoMKgwqAgKiBQRElWIC0gMDAgLSBEaXNhYmxlIGNsb2NrCj4g
+PiArwqDCoMKgwqDCoMKgwqAgKiBWRElWIC0gYXQgbGVhc3QgMgo+ID4gK8KgwqDCoMKgwqDCoMKg
+ICovCj4gCgo=
 
-
-On 12/23/2023 3:49 AM, Thinh Nguyen wrote:
-> On Thu, Dec 21, 2023, Krishna Kurapati wrote:
->> In the current implementation, the check_event_buf call reads the
->> GEVNTCOUNT register to determine the amount of event data generated
->> and copies it from ev->buf to ev->cache after masking interrupt.
->>
->> During copy if the amount of data to be copied is more than
->> (length - lpos), we fill the ev->cache till the end of 4096 byte
->> buffer allocated and then start filling from the top (lpos = 0).
->>
->> In one instance of SMMU crash it is observed that GEVNTCOUNT register
->> reads more than 4096 bytes:
->>
->> dwc3_readl   base=0xffffffc0091dc000  offset=50188  value=63488
->>
->> (offset = 50188 -> 0xC40C)  -> reads 63488 bytes
->>
->> As per crash dump:
->> dwc->lpos = 2056
->>
->> and evt->buf is at 0xFFFFFFC009185000 and the crash is at
->> 0xFFFFFFC009186000. The diff which is exactly 0x1000 bytes.
->>
->> We first memcpy 2040 bytes from (buf + lpos) to (buf + 0x1000).
->>
->> And then we copy the rest of the data (64388 - 2040) from beginning
->> of dwc->ev_buf. While doing so we go beyond bounds as we are trying
->> to memcpy 62348 bytes into a 4K buffer resulting in crash.
->>
->> Fix this by ignoring the interrupt when GEVNTCOUNT register reads a
->> value more than the event ring allocated.
->>
->> Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
->> ---
->> Changes in v2:
->> Instead of fixing amount of data being copied from ring, ignored
->> the interrupt when count is corrupt as per suggestion from Thinh.
->>
->> Link to v1:
->> https://urldefense.com/v3/__https://lore.kernel.org/all/20230521100330.22478-1-quic_kriskura@quicinc.com/__;!!A4F2R9G_pg!ewM3u9Pdk8yD9eU24sOuQqmhm8M2VpGXH8zALqVWGKffGbcJxrtyKKlUPuh8SS2arqO09DjnC9atC3bemEpx-g5UQMllbA$
->>
->>   drivers/usb/dwc3/gadget.c | 10 +++++++++-
->>   1 file changed, 9 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
->> index 858fe4c299b7..e27933fdcce3 100644
->> --- a/drivers/usb/dwc3/gadget.c
->> +++ b/drivers/usb/dwc3/gadget.c
->> @@ -4451,6 +4451,7 @@ static irqreturn_t dwc3_thread_interrupt(int irq, void *_evt)
->>   static irqreturn_t dwc3_check_event_buf(struct dwc3_event_buffer *evt)
->>   {
->>   	struct dwc3 *dwc = evt->dwc;
->> +	int ret = IRQ_WAKE_THREAD;
-> 
-> irqreturn_t instead of int?
-> 
->>   	u32 amount;
->>   	u32 count;
->>   
->> @@ -4480,6 +4481,12 @@ static irqreturn_t dwc3_check_event_buf(struct dwc3_event_buffer *evt)
->>   	if (!count)
->>   		return IRQ_NONE;
->>   
->> +	if (count > evt->length) {
->> +		dev_err(dwc->dev, "GEVTCOUNT corrupt\n");
->> +		ret = IRQ_NONE;
->> +		goto done;
->> +	}
->> +
->>   	evt->count = count;
->>   	evt->flags |= DWC3_EVENT_PENDING;
->>   
->> @@ -4493,9 +4500,10 @@ static irqreturn_t dwc3_check_event_buf(struct dwc3_event_buffer *evt)
->>   	if (amount < count)
->>   		memcpy(evt->cache, evt->buf, count - amount);
->>   
->> +done:
->>   	dwc3_writel(dwc->regs, DWC3_GEVNTCOUNT(0), count);
-> 
-> Don't update the GEVNTCOUNT if the read is invalid. We're not processing
-> any event, so we should not write back the "count" that we did not
-> process.
-> 
->>   
-Thanks for the review Thinh.
-
-If we don't update, won't the register always be non-zero ? It will keep 
-triggering the dwc3_interrupt unnecessarily right ?
-
-Regards,
-Krishna,
