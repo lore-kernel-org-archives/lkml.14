@@ -1,55 +1,57 @@
 Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D36D266
-	for <linux-kernel@vger.kernel.org>; Sun, 24 Dec 2023 18:44:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A91D281;
+	Sun, 24 Dec 2023 18:44:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="po65WuYV"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="iPbb4Hd6"
 Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20231224184439euoutp011a772c025fd288a9bc2c49c17bbc1252~j2NHLFIMX2830328303euoutp01P;
-	Sun, 24 Dec 2023 18:44:39 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20231224184439euoutp011a772c025fd288a9bc2c49c17bbc1252~j2NHLFIMX2830328303euoutp01P
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20231224184446euoutp015ac5c80edaab85d6ed1b8d9e4ffc622a~j2NNx6Ghd2830328303euoutp01Q;
+	Sun, 24 Dec 2023 18:44:46 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20231224184446euoutp015ac5c80edaab85d6ed1b8d9e4ffc622a~j2NNx6Ghd2830328303euoutp01Q
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1703443479;
-	bh=zvs4L5xA1gJXnSnFiXh0mNywjNNpsNFRAhl3ngQ3knM=;
+	s=mail20170921; t=1703443486;
+	bh=WmcNjH8U2O7BNNusUw4ykQSItiB592m8UIqj92lf+W0=;
 	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=po65WuYVekF5REzHrDPU8m9gCPWH/R7HB2va8nbj5Y6feN9JbFMkIZs/6PMSgZRPx
-	 QhSIjpkbr9+zTIAtjFjCYw1GhMINU2T7l/Rh4d9rZ5qnEqvYxsAJOb7d7hUXXVUvcN
-	 1xKCbkcPfjC52v4ZsugCD7XntPVA6mo3S7JWKB5w=
+	b=iPbb4Hd6pw1RSGqsW6WtdrVT4VM9L7kfZvNor26xAvM2Y3UjK5f3215Uf/pe+NENE
+	 SDqcp2+9ab/DFwirsJbOJneN4oCRJgAFEczmqXeMpII7R9pLZ9xk2MrZaJM8c4sOcq
+	 RKrNTZyGC0xqxfe538C8xdZGZANX0y/sfzk6nFK8=
 Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
 	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20231224184439eucas1p11bb12583bcbd327b042616edb21d0575~j2NG5o0vg2785527855eucas1p1c;
-	Sun, 24 Dec 2023 18:44:39 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges2new.samsung.com (EUCPMTA) with SMTP id 81.1D.09814.71C78856; Sun, 24
-	Dec 2023 18:44:39 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	20231224184445eucas1p1a2549dbccace8ee24aa67b0df4d00305~j2NMuzocw0250402504eucas1p10;
+	Sun, 24 Dec 2023 18:44:45 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges2new.samsung.com (EUCPMTA) with SMTP id 82.1D.09814.D1C78856; Sun, 24
+	Dec 2023 18:44:45 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
 	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20231224184438eucas1p1daf091669f36e799df6542b90af6739e~j2NF4WRep1881118811eucas1p1O;
-	Sun, 24 Dec 2023 18:44:38 +0000 (GMT)
+	20231224184444eucas1p14bd6fff17d018ffc3a8f69c38ead0663~j2NMBygGh1881118811eucas1p1R;
+	Sun, 24 Dec 2023 18:44:44 +0000 (GMT)
 Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20231224184438eusmtrp2e75fd47ac8c6f51ba6f53addc32667ce~j2NF35n1W1283112831eusmtrp2t;
-	Sun, 24 Dec 2023 18:44:38 +0000 (GMT)
-X-AuditID: cbfec7f4-727ff70000002656-17-65887c1783cc
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20231224184444eusmtrp1d600ecb75d207ef448e4b518e13a3f4c~j2NMBUQW81680216802eusmtrp1O;
+	Sun, 24 Dec 2023 18:44:44 +0000 (GMT)
+X-AuditID: cbfec7f4-727ff70000002656-23-65887c1d6f87
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 28.53.09274.61C78856; Sun, 24
-	Dec 2023 18:44:38 +0000 (GMT)
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 68.53.09274.C1C78856; Sun, 24
+	Dec 2023 18:44:44 +0000 (GMT)
 Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
 	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20231224184438eusmtip19371f5936cd28c8e1a109c805822900b~j2NFq1r0R3266432664eusmtip15;
-	Sun, 24 Dec 2023 18:44:38 +0000 (GMT)
+	20231224184444eusmtip1036607261462726616b94b2ddd7a608b~j2NL14pWb0070000700eusmtip1w;
+	Sun, 24 Dec 2023 18:44:44 +0000 (GMT)
 Received: from localhost (106.210.248.246) by CAMSVWEXC02.scsc.local
 	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Sun, 24 Dec 2023 18:44:37 +0000
-Date: Sun, 24 Dec 2023 19:44:02 +0100
+	Sun, 24 Dec 2023 18:44:43 +0000
+Date: Sat, 23 Dec 2023 14:12:24 +0100
 From: Joel Granados <j.granados@samsung.com>
 To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-CC: Luis Chamberlain <mcgrof@kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] scripts: check-sysctl-docs: adapt to new API
-Message-ID: <20231224184402.of6cc2tczajmnbri@localhost>
+CC: Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>,
+	Iurii Zaikin <yzaikin@google.com>, <linux-kernel@vger.kernel.org>,
+	<linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] sysctl: remove struct ctl_path
+Message-ID: <20231223131224.phe54a3smekirek3@localhost>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,206 +59,121 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="jvjkiodbs7ntsrn5"
+	protocol="application/pgp-signature"; boundary="6e4yjwcz57irya7w"
 Content-Disposition: inline
-In-Reply-To: <20231220-sysctl-check-v1-1-420ced4a69d7@weissschuh.net>
+In-Reply-To: <20231220-sysctl-paths-v1-1-e123e3e704db@weissschuh.net>
 X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
 	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHKsWRmVeSWpSXmKPExsWy7djPc7riNR2pBpcWCVpc3jWHzeL3j2dM
-	FjcmPGV0YPbYtKqTzePzJjmP/u5j7AHMUVw2Kak5mWWpRfp2CVwZ3+/MYC3YrVXx6usO1gbG
-	t4pdjJwcEgImEi2X9jB2MXJxCAmsYJR4v/EuO4TzBchZ/gvK+cwo8eJ1D1AZO1jL7TiI8HJG
-	iUu/ZjPC1WyffJsJwtnKKHHlzEQ2kB0sAqoSf6d+ZQSx2QR0JM6/ucMMYosI2Eis/PYZaAMH
-	B7OAh8TeCaEgYWEBR4kzz7ayg9i8AuYSC6dvgLIFJU7OfMICYjMLVEhM/bmHFaJVWmL5Pw6Q
-	MKeAq8T1fZuZIT5Tlrj56x2UXStxasstsNMkBF5wSPR/fsgCkXCRWL7rIpQtLPHq+BZ2CFtG
-	4v/O+VANkxkl9v/7wA7hrGaUWNb4lQmiylqi5coTqA5HiaV7lrOAXCQhwCdx460gxKF8EpO2
-	TWeGCPNKdLQJQVSrSay+94ZlAqPyLCSvzULy2iyE1yDCehI3pk5hwxDWlli28DUzhG0rsW7d
-	e5YFjOyrGMVTS4tz01OLjfJSy/WKE3OLS/PS9ZLzczcxApPR6X/Hv+xgXP7qo94hRiYOxkOM
-	KkDNjzasvsAoxZKXn5eqJMIrq9iRKsSbklhZlVqUH19UmpNafIhRmoNFSZxXNUU+VUggPbEk
-	NTs1tSC1CCbLxMEp1cBUs2R/xbGL35M33Kq+Yfx8F8ezQJ+AGRclRSbMOXr31mNeR9U+ff5d
-	jxuqeo9k/5/idqON6cKqdwt2KMyUL7n6Z/aD9WvsjfpeywnzP1pRd+wV+7Kf5guCY5VaTmxR
-	Wat+91F77JW2qf6Lz+QohRxxb7rvK5d/yTU/nitn/6tla3bmSGyN32U+jaX+9c6lS632CjxI
-	m9+7r0auJlOwSVC3eX/xk9fC9nNcExcLn9w480v205B5e7Xc0z/OSn0suWViSvdMIRf35Ovb
-	laSeH/2i+TQsZ85zFcMN0YIzjH457Tzyt9bg4y1rL/7MrRdt35VM+NtgfiHWJf7YDw911mmc
-	J0rVKmoms6ZlqfBcfVCSpsRSnJFoqMVcVJwIAIYpGT/BAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFIsWRmVeSWpSXmKPExsVy+t/xu7piNR2pBit/sltc3jWHzeL3j2dM
-	FjcmPGV0YPbYtKqTzePzJjmP/u5j7AHMUXo2RfmlJakKGfnFJbZK0YYWRnqGlhZ6RiaWeobG
-	5rFWRqZK+nY2Kak5mWWpRfp2CXoZN689YyrYqVWx88kN1gbG14pdjOwcEgImErfjuhi5OIQE
-	ljJKHN92m62LkRMoLCOx8ctVVghbWOLPtS42iKKPjBI3z81lh3C2Mko8WXebBaSKRUBV4u/U
-	r4wgNpuAjsT5N3eYQWwRARuJld8+AzVwcDALeEjsnRAKEhYWcJQ482wrO4jNK2AusXD6BqiZ
-	MxglVt28CJUQlDg58wnYfGaBMolXS59AzZGWWP6PAyTMKeAqcX3fZmaIQ5Ulbv56B2XXSnz+
-	+4xxAqPwLCSTZiGZNAthEkRYR2Ln1jtsGMLaEssWvmaGsG0l1q17z7KAkX0Vo0hqaXFuem6x
-	kV5xYm5xaV66XnJ+7iZGYERuO/Zzyw7Gla8+6h1iZOJgPMSoAtT5aMPqC4xSLHn5ealKIryy
-	ih2pQrwpiZVVqUX58UWlOanFhxhNgYE4kVlKNDkfmCrySuINzQxMDU3MLA1MLc2MlcR5PQs6
-	EoUE0hNLUrNTUwtSi2D6mDg4pRqY6iMPvis+OO/hTUGHyrh/e89FvFvU89Zlk53bW4MNGVpr
-	fvXfFprTLCui1ZDqpjBP/O3MHV2foqUyVj9fdPKaf9D6qd92a1jqH62WTZCwWb4idLHJQe69
-	c0KnXTn+QCDwalWMo6CMC5uo3y73PCs5YUYh7kM51y8a/Zkz89/rlnfH2Mv2rHz4e5nZMssz
-	YXF5bpVp7/ZK55+/cnJO78Q7FQGhjn3aGis+lE641RW5Uqx1bu2310vvXJbxemHlqhaQ+LZ2
-	/wSzPWs2s/dOZp7ouqxoB4eYxr7GfRv/vvivbsu0bOIprvNM3xsnHomeasme2qrIH+W+KPN8
-	8tLI7PmbOoXevvO2mCf05Nr7BBtZHyWW4oxEQy3mouJEAHFV87FdAwAA
-X-CMS-MailID: 20231224184438eucas1p1daf091669f36e799df6542b90af6739e
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrOKsWRmVeSWpSXmKPExsWy7djP87qyNR2pBidOylqc6c612LP3JIvF
+	5V1z2Cx+/3jGZHFjwlNGi2U7/RzYPGY3XGTxWLCp1GPTqk42j8+b5Dz6u4+xB7BGcdmkpOZk
+	lqUW6dslcGVsf32VuWC5UMXBC3uZGhh/83cxcnJICJhIvO9YxN7FyMUhJLCCUeLqmt/MEM4X
+	Roljhz+yQDifGSXubNjBDNOyZHMLK0RiOaPEpVl7mOCqXsw6BdWylVHi6JTZrCAtLAKqEkdf
+	XGYHsdkEdCTOv7kDNkpEwEZi5bfPYNuZBTYzSnyb8BtoFAeHsICxxPZ36SA1vALmEo/372aD
+	sAUlTs58wgJiMwtUSPy8uIcNpJxZQFpi+T8OkDCngKtEQ+MVNohLlSVu/noHdXWtxKktt8AO
+	lRCYzClxYs0cqCIXifbja5kgbGGJV8e3sEPYMhKnJ/ewQDUwSuz/94EdwlnNKLGs8StUh7VE
+	y5UnUB2OEt0zbjKCXCQhwCdx460gxKF8EpO2TWeGCPNKdLQJQVSrSay+94ZlAqPyLCSvzULy
+	2iyE1yDCehI3pk7BFNaWWLbwNTOEbSuxbt17lgWM7KsYxVNLi3PTU4uN8lLL9YoTc4tL89L1
+	kvNzNzEC09fpf8e/7GBc/uqj3iFGJg7GQ4wqQM2PNqy+wCjFkpefl6okwiur2JEqxJuSWFmV
+	WpQfX1Sak1p8iFGag0VJnFc1RT5VSCA9sSQ1OzW1ILUIJsvEwSnVwGTr87bPdWriX9c9G7nf
+	dxi8n6z/Kkzo6xbRhdN3qXtZnyuT0V3tf+3dtehyWYEJDAlfQ4yt+ZJc//MUGmnnncv1tlt2
+	YuZ9w67/3relui7GCdl9yWWZMEnk65fz0yrWV29zLGjdfPV7lseX06XX7cVl2n5W3Dn+jGdp
+	2cPP1ikK25ddWrDJd1H7TbltP/YybfB5Uqayy2TJI616gz8v0uqnV7/wnhK2Ze2qIq16d5bl
+	/9Q+uE1tqOlVurXtya/IBo/c5XMWiF4RtE9WECqOOj7ncYzjXl4+8ft5swVf8vpHyuU0tpx4
+	vcfONHDRHDMHthNX6ti9d52b7qz8rGuOR4CIwb1UK1N7vV792V0lUUosxRmJhlrMRcWJAE1N
+	KvHaAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEIsWRmVeSWpSXmKPExsVy+t/xu7oyNR2pBr/u6lmc6c612LP3JIvF
+	5V1z2Cx+/3jGZHFjwlNGi2U7/RzYPGY3XGTxWLCp1GPTqk42j8+b5Dz6u4+xB7BG6dkU5ZeW
+	pCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZmSrp29mkpOZklqUW6dsl6GXs/XyPpWCpUMXf
+	p49YGhh/8ncxcnJICJhILNncwgpiCwksZZTY/TERIi4jsfHLVVYIW1jiz7Uuti5GLqCaj4wS
+	P++tZIdwtjJK/DlxlhGkikVAVeLoi8vsIDabgI7E+Td3mEFsEQEbiZXfPoM1MAtsZpT4NuE3
+	UxcjB4ewgLHE9nfpIDW8AuYSj/fvhtowg1HizZuXjBAJQYmTM5+wgNjMAmUS8y6tZwTpZRaQ
+	llj+jwMkzCngKtHQeIUN4lJliZu/3jFD2LUSn/8+Y5zAKDwLyaRZSCbNQpgEEdaR2Ln1DhuG
+	sLbEsoWvmSFsW4l1696zLGBkX8UoklpanJueW2ykV5yYW1yal66XnJ+7iREYwduO/dyyg3Hl
+	q496hxiZOBgPMaoAdT7asPoCoxRLXn5eqpIIr6xiR6oQb0piZVVqUX58UWlOavEhRlNgKE5k
+	lhJNzgemlrySeEMzA1NDEzNLA1NLM2MlcV7Pgo5EIYH0xJLU7NTUgtQimD4mDk6pBqZtlTHy
+	vh8/h/XMEQjbfP+p72sj98yajdv4DLojzm57p+NpGf5R5SZPVoawM0OR9gkXljmbl1o3/T5n
+	nMsbZfpt34uZDyI+KjFq9s47v/I9Fzf3nCM6L3NKmLVnVMaHOnQcsWuR5p1d8Hf6kni+Mp1J
+	e3JE1kxXaGn+L9A4UWp7UuGV9SuKdjCufTv3W5XQCedFa5fLdbWJlpwS3hdxiOnNg/lHDu66
+	o/jvucm+PMkpR/6KdEx50/Cg8lDjlV+l3+YzfTspHtHltfmE+2upsiuRmzP3tS3TO/HM8cvT
+	JrMz7qaVvHrCTxa8fGHR3qZnk5Nkwl4Y31iX3mNx9L7Fds9zJqnVvlfWuxi88t8jUqnEUpyR
+	aKjFXFScCAC4eQKZdQMAAA==
+X-CMS-MailID: 20231224184444eucas1p14bd6fff17d018ffc3a8f69c38ead0663
 X-Msg-Generator: CA
-X-RootMTR: 20231220213032eucas1p2889cb35ee41ed155ce68e75b02892582
+X-RootMTR: 20231220212343eucas1p2f905cf62bec100412a4ecdabe8916619
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20231220213032eucas1p2889cb35ee41ed155ce68e75b02892582
-References: <CGME20231220213032eucas1p2889cb35ee41ed155ce68e75b02892582@eucas1p2.samsung.com>
-	<20231220-sysctl-check-v1-1-420ced4a69d7@weissschuh.net>
+X-CMS-RootMailID: 20231220212343eucas1p2f905cf62bec100412a4ecdabe8916619
+References: <CGME20231220212343eucas1p2f905cf62bec100412a4ecdabe8916619@eucas1p2.samsung.com>
+	<20231220-sysctl-paths-v1-1-e123e3e704db@weissschuh.net>
 
---jvjkiodbs7ntsrn5
+--6e4yjwcz57irya7w
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 20, 2023 at 10:30:26PM +0100, Thomas Wei=DFschuh wrote:
-> The script expects the old sysctl_register_paths() API which was removed
-> some time ago. Adapt it to work with the new
-> sysctl_register()/sysctl_register_sz()/sysctl_register_init() APIs.
+On Wed, Dec 20, 2023 at 10:23:35PM +0100, Thomas Wei=DFschuh wrote:
+> All usages of this struct have been removed from the kernel tree.
 >=20
-> In its reference invocation the script won't be able to parse the tables
-> from ipc/ipc_sysctl.c as they are using dynamically built tables which
-> are to complex to parse.
+> The struct is still referenced by scripts/check-sysctl-docs but that
+> script is broken anyways as it only supports the register_sysctl_paths()
+> API and not the currently used register_sysctl() one.
 >=20
-> Note that the script is already prepared for a potential constification
-> of the ctl_table structs.
->=20
+> Fixes: 0199849acd07 ("sysctl: remove register_sysctl_paths()")
 > Signed-off-by: Thomas Wei=DFschuh <linux@weissschuh.net>
 > ---
->  scripts/check-sysctl-docs | 42 ++++++++++++------------------------------
->  1 file changed, 12 insertions(+), 30 deletions(-)
+>  include/linux/sysctl.h | 5 -----
+>  1 file changed, 5 deletions(-)
 >=20
-> diff --git a/scripts/check-sysctl-docs b/scripts/check-sysctl-docs
-> index 4f163e0bf6a4..bd18ab4b950b 100755
-> --- a/scripts/check-sysctl-docs
-> +++ b/scripts/check-sysctl-docs
-> @@ -8,7 +8,7 @@
->  # Example invocation:
->  #	scripts/check-sysctl-docs -vtable=3D"kernel" \
->  #		Documentation/admin-guide/sysctl/kernel.rst \
-> -#		$(git grep -l register_sysctl_)
-> +#		$(git grep -l register_sysctl)
->  #
->  # Specify -vdebug=3D1 to see debugging information
+> diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+> index 61b40ea81f4d..8084e9132833 100644
+> --- a/include/linux/sysctl.h
+> +++ b/include/linux/sysctl.h
+> @@ -210,11 +210,6 @@ struct ctl_table_root {
+>  	int (*permissions)(struct ctl_table_header *head, struct ctl_table *tab=
+le);
+>  };
 > =20
-> @@ -20,14 +20,12 @@ BEGIN {
->  }
-> =20
->  # The following globals are used:
-> -# children: maps ctl_table names and procnames to child ctl_table names
->  # documented: maps documented entries (each key is an entry)
->  # entries: maps ctl_table names and procnames to counts (so
->  #          enumerating the subkeys for a given ctl_table lists its
->  #          procnames)
->  # files: maps procnames to source file names
->  # paths: maps ctl_path names to paths
-> -# curpath: the name of the current ctl_path struct
->  # curtable: the name of the current ctl_table struct
->  # curentry: the name of the current proc entry (procname when parsing
->  #           a ctl_table, constructed path when parsing a ctl_path)
-> @@ -94,44 +92,24 @@ FNR =3D=3D NR {
-> =20
->  # Stage 2: process each file and find all sysctl tables
->  BEGINFILE {
-> -    delete children
->      delete entries
->      delete paths
-Why did you leave paths? As I read it you remove the use of paths and
-now this is not needed any longer.
-
-> -    curpath =3D ""
->      curtable =3D ""
->      curentry =3D ""
->      if (debug) print "Processing file " FILENAME
->  }
-> =20
-> -/^static struct ctl_path/ {
-> -    match($0, /static struct ctl_path ([^][]+)/, tables)
-> -    curpath =3D tables[1]
-> -    if (debug) print "Processing path " curpath
-> -}
+> -/* struct ctl_path describes where in the hierarchy a table is added */
+> -struct ctl_path {
+> -	const char *procname;
+> -};
 > -
-> -/^static struct ctl_table/ {
-> -    match($0, /static struct ctl_table ([^][]+)/, tables)
-> -    curtable =3D tables[1]
-> +/^static( const)? struct ctl_table/ {
-> +    match($0, /static( const)? struct ctl_table ([^][]+)/, tables)
-Would these regular expressions match lines that have more than one
-spaces before const?
-
-> +    curtable =3D tables[2]
->      if (debug) print "Processing table " curtable
->  }
+>  #define register_sysctl(path, table)	\
+>  	register_sysctl_sz(path, table, ARRAY_SIZE(table))
 > =20
->  /^};$/ {
-> -    curpath =3D ""
->      curtable =3D ""
->      curentry =3D ""
->  }
-> =20
-> -curpath && /\.procname[\t ]*=3D[\t ]*".+"/ {
-> -    match($0, /.procname[\t ]*=3D[\t ]*"([^"]+)"/, names)
-> -    if (curentry) {
-> -	curentry =3D curentry "/" names[1]
-> -    } else {
-> -	curentry =3D names[1]
-> -    }
-> -    if (debug) print "Setting path " curpath " to " curentry
-> -    paths[curpath] =3D curentry
-> -}
-> -
->  curtable && /\.procname[\t ]*=3D[\t ]*".+"/ {
->      match($0, /.procname[\t ]*=3D[\t ]*"([^"]+)"/, names)
->      curentry =3D names[1]
-> @@ -140,10 +118,14 @@ curtable && /\.procname[\t ]*=3D[\t ]*".+"/ {
->      file[curentry] =3D FILENAME
->  }
-> =20
-> -/\.child[\t ]*=3D/ {
-> -    child =3D trimpunct($NF)
-> -    if (debug) print "Linking child " child " to table " curtable " entr=
-y " curentry
-> -    children[curtable][curentry] =3D child
-> +/register_sysctl.*/ {
-> +    match($0, /register_sysctl(|_init|_sz)\("([^"]+)" *, *([^,)]+)/, tab=
-les)
-> +    if (debug) print "Registering table " tables[3] " at " tables[2]
-> +    if (tables[2] =3D=3D table) {
-> +        for (entry in entries[tables[3]]) {
-> +            printentry(entry)
-> +        }
-> +    }
->  }
-> =20
->  END {
 >=20
 > ---
 > base-commit: 1a44b0073b9235521280e19d963b6dfef7888f18
-> change-id: 20231220-sysctl-check-8802651d945d
+> change-id: 20231220-sysctl-paths-474697856a3f
 >=20
 > Best regards,
 > --=20
 > Thomas Wei=DFschuh <linux@weissschuh.net>
 >=20
 
+LGTM
+Reviewed-by: Joel Granados <j.granados@samsung.com>
+
 --=20
 
 Joel Granados
 
---jvjkiodbs7ntsrn5
+--6e4yjwcz57irya7w
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmWIe+MACgkQupfNUreW
-QU+nAgv8CxhzHsN++0uY7h36mOFVhZN/c1cDkKd4EnQ0qMdB0g8/POd7J8oyjG70
-v8aVx/NUmaM5hOGHlyp3oyosGYhB5RfYDMvaJuMGr+ilU6ViXz8l7H6hkZXX6vaj
-OkCwPS/uBHLLRh4TmarACmFngnL/qZE6YFIJY0Qw1BCMuYNtjgLfABVyOaDflVLk
-fnZ/+6mou3bSfFXDKW4oWfOtS8LTg82wUfqCPweh0o9gVt73eCZ3iwHphfz5fhtF
-nEpocfvBJN1kl04uDoc4oGFH6zJkB5yrSsIDOTmqdBL+UpcfE4/DRbMbMCXPriU1
-wCB1kv7bqYNf85Pr7d/e1cvZcC0gll19pRo92DjUKwwRHL/bVNk154S2tzOnjhqG
-DEk2eze69U+sXw4yrPCptzsloph4at2z8MmfVl22A0h1CpDOWVuswqHbJANbCAYj
-rn1fulPptsaEALMD0tStcIrivhPZzpngMgrLzhZp8eetN7c0rcZQyApjbYC6FHGV
-gXTMzI22
-=eqMn
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmWG3K4ACgkQupfNUreW
+QU/WVwv/TO2btpnDtp9v97DpO8pENbO9EQa2espWDa3fGysdCTiumu7W45gzF6s+
+r/gf+iukRudvW0qf2AmS7RoHYy22cm2L3DkAyCrSA/wiJj3CQ5VDF6LoWDP+xMsW
+pLWatMhJWeB3lO3h4ox4h1EN+XR55nzvmxo/RNupMp6MnUjbVa2Nk0PgqY+VGrZm
+rPRHeFBBPgnZ8hTB8NhuCP4dQrMp9N1V/CxZY3+Qd5Pr3fCpvbnfYMj4KKLLyxSa
+qvXYIN1GSY9VXkHt088ExRQWEKvxa9E0ifkw1gfEgQeFGcaU3S8wl9SfhabZcr72
+ShRpbw1sdn3YiIvbY67nXbs+W1KLC+ORcXgPhMM8+Pb8lIHDoVNMNcRSWiIw0aRC
+omJCv/sGe7edb9NMITU3IAFfJvtDQ1iL5xILHzhKueRqFT78Js3jfZa8ibH2gTPc
+X582f/AC8ccQcoJwHaa1KZzPUe3sBgV+tjuJ+pfBO9jd17j2IXAhQoVaPB0Oribp
+uuqU9bka
+=w0Uf
 -----END PGP SIGNATURE-----
 
---jvjkiodbs7ntsrn5--
+--6e4yjwcz57irya7w--
