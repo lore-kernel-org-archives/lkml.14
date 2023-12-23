@@ -1,96 +1,81 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0EB120325;
-	Sat, 23 Dec 2023 13:42:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D14CD50C;
+	Sat, 23 Dec 2023 13:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="GJp9ItfW"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BNCwl3n002659;
-	Sat, 23 Dec 2023 05:42:11 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	pfpt0220; bh=sT/f1hfl/EBvfxZWGVwC5G1MjcRtNUfR5ptF8nvX4cQ=; b=GJp
-	9ItfWp0JUqlQ+MZvoFTS6cyttVbQ+QU/GP8gJ8qMo3kQVVOjctSQokm/rxFWoOff
-	lrZpRraAFzSLYL92GnzK4o+hmMqSaxZBNxjerqcWcuPQ+lps7SycSwjTn5V/AGqG
-	R75nY1VCYA7n8cO1v4SB0sd0/HiaNf1xiRwDRwi0Ep6ZYuDTNRPVB4PIwIp96FEA
-	tmFpC0OoENg5xjyg2fG6Alytr/2wiz7uqyzs/JUn4sSjIVIQvDuRMm2anTLgMTLF
-	OkTWnhN0GLhuuEm8+1VvmpFeXJjgRmgT3JwTUGleNlAUPs2i3W3WxRjdPXS50N+m
-	nrmsx+tEckQT41eLt5g==
-Received: from dc5-exch02.marvell.com ([199.233.59.182])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3v5yxnr24s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-	Sat, 23 Dec 2023 05:42:11 -0800 (PST)
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sat, 23 Dec
- 2023 05:42:09 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
- Transport; Sat, 23 Dec 2023 05:42:09 -0800
-Received: from ubuntu-PowerEdge-T110-II.sclab.marvell.com (unknown [10.106.27.86])
-	by maili.marvell.com (Postfix) with ESMTP id BC27A3F706B;
-	Sat, 23 Dec 2023 05:42:08 -0800 (PST)
-From: Shinas Rasheed <srasheed@marvell.com>
-To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <hgani@marvell.com>, <vimleshk@marvell.com>, <sedara@marvell.com>,
-        <srasheed@marvell.com>, <egallen@redhat.com>, <mschmidt@redhat.com>,
-        <pabeni@redhat.com>, <kuba@kernel.org>, <horms@kernel.org>,
-        <wizhao@redhat.com>, <kheib@redhat.com>, <konguyen@redhat.com>
-Subject: [PATCH net-next v2 8/8] octeon_ep_vf: update MAINTAINERS
-Date: Sat, 23 Dec 2023 05:40:00 -0800
-Message-ID: <20231223134000.2906144-9-srasheed@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20231223134000.2906144-1-srasheed@marvell.com>
-References: <20231223134000.2906144-1-srasheed@marvell.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="qkAK/xX4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1703339632;
+	bh=Ee0tYNZexbPVXAGBvkDgOutqhhXAAC/AoPNZbvbdlwM=;
+	h=From:Date:Subject:To:Cc:From;
+	b=qkAK/xX4+e5Fm9Cwe7OnOwVnV3kjMEg9u3ylyIVLiBHA3e1ArPhlQtGagyQ2lCdIK
+	 HTAfOuwONryfUtIjex6bSDxVWMBj330uWDv1H+TO6tHtyrd0fCxDvz22RMRV2EBWd1
+	 Jji8iFDS7WkCgIZh+BRrcu9IfeAPGdzwKCkO8o4I=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Sat, 23 Dec 2023 14:53:47 +0100
+Subject: [PATCH] sysctl: delete unused define SYSCTL_PERM_EMPTY_DIR
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: wfpRzWlVS99DIinwqhbAoF1JFygcwCaP
-X-Proofpoint-GUID: wfpRzWlVS99DIinwqhbAoF1JFygcwCaP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+Message-Id: <20231223-sysctl-perm-empty-dir-v1-1-194edd9b09dd@weissschuh.net>
+X-B4-Tracking: v=1; b=H4sIAGrmhmUC/x3MSQqAMAxA0atI1gZsK1a8irhwiBpwKImIIt7d4
+ vIt/n9ASZgUquQBoZOV9y3CpAn0c7tNhDxEg82sM9Y61Fv7Y8FAsiKt4bhxYEHfetPl5MrCdxD
+ bIDTy9X/r5n0/9/DM6mcAAAA=
+To: Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>, 
+ Joel Granados <j.granados@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1703339632; l=1129;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=Ee0tYNZexbPVXAGBvkDgOutqhhXAAC/AoPNZbvbdlwM=;
+ b=gJ/VXmLeL0bESGRyabJyAwZYHRnxzRKg56eMMUH5IRbfzzw5lW+AHQX9vifII3taleCjDsyZc
+ 6Kg/7BD5jDpD/nwKYUSTSJGlNgKSh2r6CXmQydMIHR32kin7ikCdMgN
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-add MAINTAINERS for octeon_ep_vf driver.
+It seems it was never used.
 
-Signed-off-by: Shinas Rasheed <srasheed@marvell.com>
+Fixes: 2f2665c13af4 ("sysctl: replace child with an enumeration")
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
-V2:
-  - No changes
+This was originally part of the sysctl-const series [0], but it doesn't
+really belong in there.
+To slim down that series as much as possible, submit this patch on its
+own.
 
-V1: https://lore.kernel.org/all/20231221092844.2885872-9-srasheed@marvell.com/
+[0] https://lore.kernel.org/lkml/20231204-const-sysctl-v2-2-7a5060b11447@weissschuh.net/
+---
+ include/linux/sysctl.h | 2 --
+ 1 file changed, 2 deletions(-)
 
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index dda78b4ce707..42e144c5b1e3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12858,6 +12858,15 @@ L:	netdev@vger.kernel.org
- S:	Supported
- F:	drivers/net/ethernet/marvell/octeon_ep
+diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+index 61b40ea81f4d..26a38161c28f 100644
+--- a/include/linux/sysctl.h
++++ b/include/linux/sysctl.h
+@@ -255,8 +255,6 @@ extern int unaligned_enabled;
+ extern int unaligned_dump_stack;
+ extern int no_unaligned_warning;
  
-+MARVELL OCTEON ENDPOINT VF DRIVER
-+M:	Veerasenareddy Burru <vburru@marvell.com>
-+M:	Sathesh Edara <sedara@marvell.com>
-+M:	Shinas Rasheed <srasheed@marvell.com>
-+M:	Satananda Burla <sburla@marvell.com>
-+L:	netdev@vger.kernel.org
-+S:	Supported
-+F:	drivers/net/ethernet/marvell/octeon_ep_vf
-+
- MARVELL OCTEONTX2 PHYSICAL FUNCTION DRIVER
- M:	Sunil Goutham <sgoutham@marvell.com>
- M:	Geetha sowjanya <gakula@marvell.com>
+-#define SYSCTL_PERM_EMPTY_DIR	(1 << 0)
+-
+ #else /* CONFIG_SYSCTL */
+ 
+ static inline void register_sysctl_init(const char *path, struct ctl_table *table)
+
+---
+base-commit: a6fd07f80ab7bd94edb4d56c35e61117ffb9957e
+change-id: 20231223-sysctl-perm-empty-dir-7a71b4e3867b
+
+Best regards,
 -- 
-2.25.1
+Thomas Weißschuh <linux@weissschuh.net>
 
