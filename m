@@ -1,26 +1,25 @@
 Received: from mecka.net (mecka.net [159.69.159.214])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7053CDF4E;
-	Sat, 23 Dec 2023 15:20:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2F45DF60;
+	Sat, 23 Dec 2023 15:20:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mecka.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mecka.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mecka.net header.i=@mecka.net header.b="KmfjTpyi"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mecka.net header.i=@mecka.net header.b="ZINjSLDV"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mecka.net; s=2016.11;
-	t=1703344838; bh=eKk/DlnzPtMcPQxfNWOgU5Nu4ITnGNL+vBoe3BdXNpk=;
+	t=1703344839; bh=vgxRANyqwlVPMwtKO8SOOWvi4Qkx3vypc5+xq1xEr0U=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=KmfjTpyirTuxzhN5kRBez0UKDeoEjWwsTPqJcC7UyM0Dbm2SsePYa0PdDCdwRQa7t
-	 HbmDD+u3sGyw933zqnKQPS5iIeq1iOYNH/nycrjrqVFrCpFM2aQifwDEJ/xhUBlYy3
-	 Vv2InnjAmQ33kf7A+5Fhxks+crunKFtDd3xKQbVXGLjXq4sP7QGf8H53ttuzS/21NS
-	 6LbWAPEXsbGEahhdeLE2gOA0Na+Orhs4S9EZ2s4eJ0MxL7IyBnmUO507W4ZX4N9i2l
-	 gQ1ZfqqJQbDiUz2r6pCsQKsR2ALANPlt6jGZXjGznRWcqVGGym8It2XtH3z6XdS7A2
-	 D6nWj6rgRqamg==
+	b=ZINjSLDVY0OoHXbxsj9YVKlz0LOOm9CBTp/aoSExKjl06wgL0kU4GkIObtM7RUXki
+	 S3/p5U8JKktj5a4hl9yv7EfH5KGQCEhlKjqk/RMKqWE0bsOH2rZ3Xudn270WM8lU64
+	 mUNga7cCa7tXazKqjHKYP0A2a38TLB7xq8/jQlqVju6i+6+eHAe3gnPYdoKTAYzqra
+	 JIakXUHd5/plWKjpuF1pZSm21uFpLCDMmOX2dSu1xL7I5zg5bUnGBGkZ8LVj5sjcwO
+	 3VuFw3d7BgvSblpUof1N3XK3ifq1tM99pnH7xhpZ4s5hdpc7yJjWB6lqyuzKOjRPsu
+	 mSdCy6tV9075w==
 Received: from arthur.fritz.box (unknown [185.147.11.134])
-	by mecka.net (Postfix) with ESMTPSA id BD3B6371959;
-	Sat, 23 Dec 2023 16:20:37 +0100 (CET)
+	by mecka.net (Postfix) with ESMTPSA id 1F08237195B;
+	Sat, 23 Dec 2023 16:20:39 +0100 (CET)
 From: Manuel Traut <manut@mecka.net>
-Date: Sat, 23 Dec 2023 16:20:15 +0100
-Subject: [PATCH v2 1/4] dt-bindings: display: panel: Add BOE
- TH101MB31IG002-28A panel
+Date: Sat, 23 Dec 2023 16:20:17 +0100
+Subject: [PATCH v2 3/4] dt-bindings: arm64: rockchip: Add Pine64 Pinetab2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -29,7 +28,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231223-pinetab2-v2-1-ec1856d0030e@mecka.net>
+Message-Id: <20231223-pinetab2-v2-3-ec1856d0030e@mecka.net>
 References: <20231223-pinetab2-v2-0-ec1856d0030e@mecka.net>
 In-Reply-To: <20231223-pinetab2-v2-0-ec1856d0030e@mecka.net>
 To: Neil Armstrong <neil.armstrong@linaro.org>, 
@@ -46,81 +45,38 @@ To: Neil Armstrong <neil.armstrong@linaro.org>,
  Danct12 <danct12@riseup.net>
 Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, Manuel Traut <manut@mecka.net>
+ linux-rockchip@lists.infradead.org, Manuel Traut <manut@mecka.net>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.12.4
 
-Add bindings for the BOE TH101MB31IG002-28A LCD panel. It is
-used e.g. in the Pine64 Pinetab2 and PinetabV.
+Add devicvetree binding documentation for Pine64 Pinetab2
+which uses the Rockchip RK3566 SoC.
 
 Signed-off-by: Manuel Traut <manut@mecka.net>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- .../display/panel/boe,th101mb31ig002-28a.yaml      | 58 ++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
+ Documentation/devicetree/bindings/arm/rockchip.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/boe,th101mb31ig002-28a.yaml b/Documentation/devicetree/bindings/display/panel/boe,th101mb31ig002-28a.yaml
-new file mode 100644
-index 000000000000..32df26cbfeed
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/boe,th101mb31ig002-28a.yaml
-@@ -0,0 +1,58 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/boe,th101mb31ig002-28a.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index 5f7c6c4aad8f..96d54b0587ab 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -635,6 +635,14 @@ properties:
+           - const: pine64,pinenote
+           - const: rockchip,rk3566
+ 
++      - description: Pine64 PineTab2
++        items:
++          - enum:
++              - pine64,pinetab2-v0.1
++              - pine64,pinetab2-v2.0
++          - const: pine64,pinetab2
++          - const: rockchip,rk3566
 +
-+title: BOE TH101MB31IG002-28A WXGA DSI Display Panel
-+
-+maintainers:
-+  - Manuel Traut <manut@mecka.net>
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+        # BOE TH101MB31IG002-28A 10.1" WXGA TFT LCD panel
-+      - boe,th101mb31ig002-28a
-+
-+  reg: true
-+  backlight: true
-+  enable-gpios: true
-+  power-supply: true
-+  port: true
-+  rotation: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - enable-gpios
-+  - power-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    dsi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        panel@0 {
-+            compatible = "boe,th101mb31ig002-28a";
-+            reg = <0>;
-+            backlight = <&backlight_lcd0>;
-+            enable-gpios = <&gpio 45 GPIO_ACTIVE_HIGH>;
-+            rotation = <90>;
-+            power-supply = <&vcc_3v3>;
-+            port {
-+                panel_in_dsi: endpoint {
-+                    remote-endpoint = <&dsi_out_con>;
-+                };
-+            };
-+        };
-+    };
-+
-+...
+       - description: Pine64 PinePhonePro
+         items:
+           - const: pine64,pinephone-pro
 
 -- 
 2.43.0
