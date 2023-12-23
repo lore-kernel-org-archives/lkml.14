@@ -1,102 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B808612E4C
-	for <linux-kernel@vger.kernel.org>; Sat, 23 Dec 2023 17:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2FD812E4C;
+	Sat, 23 Dec 2023 17:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KzE/niUB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703353505; x=1734889505;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=OAbqxZDtd9+asHVF9eYtJ6Rad/iHUbqPA8H637Y5JGE=;
-  b=KzE/niUBlRi1H95ppqHaGpZEx7oMILisy6T6HQv7cCKtzeWtEwWQ2QY+
-   HVbFN08muPKWUKOCC62tPzCooUcsieA3kcZ+c7mcW9jzEaeee/T9ZLE3n
-   14vENU21hgBXIHOqhuHeXNR0iNMiZFNf1YMhlqkBOISVuiHwpAnJHlcdr
-   1vPcS5Rq9D5YpyRjaALKPVL1QRA5WyHOIvX8xWLgoB1kckPcvFTFiOTr1
-   wjGfCqSjbL4y13CrK/fvdDf5+qXdjZLrIIINuMIqtPGdnE05EB7F5JNpi
-   1WfCa6ilxZu6+Ih2TSHn1A44SPNcQLxTjbQsaw2eUxEZwH2QHa7p9pRGu
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10933"; a="3024464"
-X-IronPort-AV: E=Sophos;i="6.04,299,1695711600"; 
-   d="scan'208";a="3024464"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2023 09:45:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10933"; a="780893987"
-X-IronPort-AV: E=Sophos;i="6.04,299,1695711600"; 
-   d="scan'208";a="780893987"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga007.fm.intel.com with ESMTP; 23 Dec 2023 09:45:02 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rH63W-000BHB-1Z;
-	Sat, 23 Dec 2023 17:44:59 +0000
-Date: Sun, 24 Dec 2023 01:44:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: arch/x86/kernel/callthunks.c:332:35: warning: '%lu' directive
- writing between 1 and 10 bytes into a region of size 7
-Message-ID: <202312240105.1Spxsb0Y-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nc64KeSX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=OAZZUJXpLeNstNwhdG1ZZmqbS7rxoqyh/Hlt8uKIHOs=; b=nc64KeSXNthZ6WGe2F1XWhtqKm
+	SiRqKdO3PAaFlrhP/n06Vwro4sYOiilPM5RS99Bbx6eSfhxQWHibWaYrhWzfE1lgv3jKWo3hO8SLZ
+	Qeu2vvG/MQ5rTKFxBEOTEz8B2gEJZ4MibHYsG/owiD5n+ZnbpXm87+UdpDsD0rytc9XTKWWtwZlUt
+	bw4ZX3gEYtruHjcJx0FwwdpqXLUvZ1Tyhd4u1IjKt4KlS9DJFMouc4Hgo19d0hhMuO6mZMl/wNt73
+	4HF4TDF2SKetyC5XiqTCJdMatmil+6cB0UQZFdyOuJcxpcweZQD18CglYTJixlcL26NVMitfw+8aK
+	PPdZNB3A==;
+Received: from [50.53.46.231] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rH64G-008EuA-1t;
+	Sat, 23 Dec 2023 17:45:44 +0000
+Message-ID: <7d7fab4f-71e0-4bc2-b622-c2048c32b3f6@infradead.org>
+Date: Sat, 23 Dec 2023 09:45:44 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Thomas,
-
-FYI, the error/warning still remains.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   5254c0cbc92d2a08e75443bdb914f1c4839cdf5a
-commit: f5c1bb2afe93396d41c5cbdcb909b08a75b8dde4 x86/calldepth: Add ret/call counting for debug
-date:   1 year, 2 months ago
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20231224/202312240105.1Spxsb0Y-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231224/202312240105.1Spxsb0Y-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312240105.1Spxsb0Y-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   arch/x86/kernel/callthunks.c: In function 'callthunks_debugfs_init':
->> arch/x86/kernel/callthunks.c:332:35: warning: '%lu' directive writing between 1 and 10 bytes into a region of size 7 [-Wformat-overflow=]
-     332 |                 sprintf(name, "cpu%lu", cpu);
-         |                                   ^~~
-   arch/x86/kernel/callthunks.c:332:31: note: directive argument in the range [0, 4294967294]
-     332 |                 sprintf(name, "cpu%lu", cpu);
-         |                               ^~~~~~~~
-   arch/x86/kernel/callthunks.c:332:17: note: 'sprintf' output between 5 and 14 bytes into a destination of size 10
-     332 |                 sprintf(name, "cpu%lu", cpu);
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] crypto: shash - remove excess kerneldoc members
+To: Vegard Nossum <vegard.nossum@oracle.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Jonathan Corbet <corbet@lwn.net>
+References: <20231223083459.3025561-1-vegard.nossum@oracle.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20231223083459.3025561-1-vegard.nossum@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-vim +332 arch/x86/kernel/callthunks.c
 
-   321	
-   322	static int __init callthunks_debugfs_init(void)
-   323	{
-   324		struct dentry *dir;
-   325		unsigned long cpu;
-   326	
-   327		dir = debugfs_create_dir("callthunks", NULL);
-   328		for_each_possible_cpu(cpu) {
-   329			void *arg = (void *)cpu;
-   330			char name [10];
-   331	
- > 332			sprintf(name, "cpu%lu", cpu);
+On 12/23/23 00:34, Vegard Nossum wrote:
+> Commit 42808e5dc602 ("crypto: hash - Count error stats differently")
+> moved some fields from 'struct shash_alg' into HASH_ALG_COMMON but
+> didn't remove the corresponding kerneldoc members, which results in
+> these warnings when running 'make htmldocs':
+> 
+>   ./include/crypto/hash.h:248: warning: Excess struct member 'digestsize' description in 'shash_alg'
+>   ./include/crypto/hash.h:248: warning: Excess struct member 'statesize' description in 'shash_alg'
+>   ./include/crypto/hash.h:248: warning: Excess struct member 'stat' description in 'shash_alg'
+>   ./include/crypto/hash.h:248: warning: Excess struct member 'base' description in 'shash_alg'
+> 
+> HASH_ALG_COMMON already has the documentation for all these fields.
+> 
+> Fixes: 42808e5dc602 ("crypto: hash - Count error stats differently")
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
+
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+
+Thanks.
+
+> ---
+>  include/crypto/hash.h | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/include/crypto/hash.h b/include/crypto/hash.h
+> index c7bdbece27cc..5d61f576cfc8 100644
+> --- a/include/crypto/hash.h
+> +++ b/include/crypto/hash.h
+> @@ -212,13 +212,9 @@ struct shash_desc {
+>   *	      This is a counterpart to @init_tfm, used to remove
+>   *	      various changes set in @init_tfm.
+>   * @clone_tfm: Copy transform into new object, may allocate memory.
+> - * @digestsize: see struct ahash_alg
+> - * @statesize: see struct ahash_alg
+>   * @descsize: Size of the operational state for the message digest. This state
+>   * 	      size is the memory size that needs to be allocated for
+>   *	      shash_desc.__ctx
+> - * @stat: Statistics for hash algorithm.
+> - * @base: internally used
+>   * @halg: see struct hash_alg_common
+>   * @HASH_ALG_COMMON: see struct hash_alg_common
+>   */
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+#Randy
+https://people.kernel.org/tglx/notes-about-netiquette
+https://subspace.kernel.org/etiquette.html
