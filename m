@@ -1,222 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CFDA746B
-	for <linux-kernel@vger.kernel.org>; Sun, 24 Dec 2023 16:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCD1D27A;
+	Sun, 24 Dec 2023 16:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="keBXuevC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703435910; x=1734971910;
-  h=date:from:to:cc:subject:message-id;
-  bh=BQ1bvdoZZ5E+5p0j8NZPA8gXkxG3r2ZSFoxxh9Oy8Ok=;
-  b=keBXuevC0WQwahb3ArF/29+TC3t9mK9g6v+X7UyyzGr3HWiNBZ0i6RGx
-   JAHnQjzA32MtOuTinksPCu3u4aS4rYIGC8jUDpUbH68DO3fLlfyhYN8eu
-   D+IIsvqbbTVhAu/8xtR99FzDb4Vkax16me0UvYeGF7tARuBufCPxtSCv2
-   pSbq2BYCv0MCOkEPemvP0wrtjyzb2Mo3aTZkQkpGzI+27rTyfInLaEakL
-   0cxtzJEpUYlkC9C3+cbUFhIfaxCqD/g2wJ5SDwpv5zsulIWHSaxzTBv9D
-   P4znUUbnjbmWkKVai5AZep1sgIocrnMLGFovLu+o7hDEMbaUcVjFblNQA
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="3508396"
-X-IronPort-AV: E=Sophos;i="6.04,301,1695711600"; 
-   d="scan'208";a="3508396"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Dec 2023 08:38:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="843492463"
-X-IronPort-AV: E=Sophos;i="6.04,301,1695711600"; 
-   d="scan'208";a="843492463"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga008.fm.intel.com with ESMTP; 24 Dec 2023 08:38:28 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rHRTr-000CQ1-0t;
-	Sun, 24 Dec 2023 16:37:56 +0000
-Date: Mon, 25 Dec 2023 00:36:53 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:sched/core] BUILD SUCCESS
- fbb66ce0b1d670c72def736a13ac9176b860df4e
-Message-ID: <202312250050.xmuTCoyt-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="M1W+/3hU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1703435921; x=1704040721; i=markus.elfring@web.de;
+	bh=CAB4VQvQ8vvQgycqUYcZEZDvRj1YXXBaD0h2ZtqUKNk=;
+	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
+	 In-Reply-To;
+	b=M1W+/3hU0SXqPb0RjBVtvbE+VZL1bLI4eHMUM8OglLo7SrFbIPZzStzubCBn0/8j
+	 TvZ2oD8WHtwqnbMyhDL6w9hVD1ZCUNeBqGn8baenssLx5nVa5xykeCUyzAC8b8A23
+	 87S78NeOLg0W8eNAer/4d2gx9c7kMnedGAwZ/LEBmXrQPJ1y0L6ogAmfMYEI9tcZv
+	 m3wjVlNU3yK3Lka9WaD/NSIYtid2sR2xsev74/7rvx+maBtk8BwA/TprgpeDJjhvf
+	 pBKuVQ79V7swSyThB+TfgI40EDhCN7MN8Al90K4c5jNToh4iwOwvLfcDcFEHSxb0l
+	 KwgD30iO6Ig8ws2vGQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N4N98-1rAODG3JJO-011YvB; Sun, 24
+ Dec 2023 17:38:40 +0100
+Message-ID: <6f3b159f-a3cc-4072-aae8-9792c9d274cd@web.de>
+Date: Sun, 24 Dec 2023 17:38:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH 02/10] clk: ti: Less function calls in of_dra7_apll_setup()
+ after error detection
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+To: linux-omap@vger.kernel.org, linux-clk@vger.kernel.org,
+ kernel-janitors@vger.kernel.org,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>,
+ Stephen Boyd <sboyd@kernel.org>, Tero Kristo <kristo@kernel.org>,
+ Tony Lindgren <tony@atomide.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr
+References: <20849a8e-e0f5-46df-ad8a-9eae6cbe337b@web.de>
+In-Reply-To: <20849a8e-e0f5-46df-ad8a-9eae6cbe337b@web.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:0iUr9rY3KOdtRUuHpaTnIE9UM3Ofnc+IVxrPkfGbkvwxqOwawbz
+ 7QZbl4YM2pyuLyOwskzMe0smfHmXUXiO1mrMToTpXvdOPL1Zexz3liAbnWZ9XgTBe0/ghkw
+ GhWbDDprQR3vy9WUrd0pVptMrpZTaFNFx4s7yzGMFHg0Wc+4jWnwVlwcmL1kbH5a9TLvtGJ
+ UMvosAlxJlr3lByLehkzQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:wNYY4Bv+5RY=;k4r5glqF+IDQmcblxV+FmhkJKeC
+ akNtHh7j9RuPCJ5AJRHcRrx3X4xmH+j7MKnqiN75sZCvJ1vxYrHgvgmeM3GVZLS2LgcWou4NT
+ sn8kQ9hEoseFSLsELpIPloXGyQKPov3sGs8TO4njzi88kO31F8dF2QB2ydayDoBfl90LsNd45
+ rIXCtQ3bgAnY64XQKRUvm3gBrr6FAZVzdJYhlSgdIXlcCw1ILRhLCRPonOdIWnHqaqeT1jtqw
+ dRCjHDn5EfS2nrTlpGooS5taw8uclJkjLjIuApTFfenktBqTLwPjH2hrvCRUx9VL4qGskFJ46
+ fyeYtOSM3xeMespOU8ggufJZ9WpltmfUGq95mXLCy/SXAY7YdfNgFVqEY1n/Y/nZkx9LetJj4
+ r5eIvDf+hjdHFYC8OWzShsa1yRllAYYJi2hkQBPDjyLV0wnV6EPS91noF9SbAvpvZUq4HENvI
+ N6vgMVrFddPViKeS23l0ekktFFcdJRkC+hzR9KnD/cGyf6gUHjSQFIZO0rwxtjY4ukzp8PgVP
+ PZIychVq9YU1O3/9omGBVT21wL6EtDyPPKIfQvryw1K+j0RiMG3dDVnWRoRyhSVXHg+sKfaCH
+ TIWrGS+6o83gXD+e8B/pQfjjDQl3sQy1jJUGqj5Zf4WfLoV6vZIEGEd8hBf5gyY3HcQkDMYHD
+ ELWJCthfCZi4knZVf0vWO4fT/mpCUF+N+QzOstY2klU7cF5cwgqESet52Cs1X7KMYX8GIZZEI
+ 9S3CfFknzZe4SqtE1Mlf+7htqS/0OyoOuPYv8KBrmFsWQH2KdXVF2GIwDQ0n3gg4dz0kUvZMz
+ d8LW3mUsrzyYs1bythnlYZrnFU3Z/n0cJwlArRezZ3yDTo29bTFmZ6PGpUQEw3UBU4hvwHxf1
+ NZ0HOBspcHL0nl+S7RMRybsRIXCyw8BCUU097mRDAK4U6Tz0wDeiZ7fCUpTi5QEDHtcE4DkF+
+ MD4p9g==
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/core
-branch HEAD: fbb66ce0b1d670c72def736a13ac9176b860df4e  sched/fair: Remove unused 'next_buddy_marked' local variable in check_preempt_wakeup_fair()
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Sun, 24 Dec 2023 12:27:09 +0100
 
-elapsed time: 1454m
+The kfree() function was called in up to four cases by
+the of_dra7_apll_setup() function during error handling
+even if the passed variable contained a null pointer.
+This issue was detected by using the Coccinelle software.
 
-configs tested: 156
-configs skipped: 1
+* Split a condition check.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+* Adjust jump targets.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                               defconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                                 defconfig   gcc  
-arc                         haps_hs_defconfig   gcc  
-arc                        nsim_700_defconfig   gcc  
-arc                   randconfig-001-20231224   gcc  
-arc                   randconfig-002-20231224   gcc  
-arc                        vdk_hs38_defconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                           h3600_defconfig   gcc  
-arm                      jornada720_defconfig   gcc  
-arm                            qcom_defconfig   gcc  
-arm                   randconfig-001-20231224   gcc  
-arm                   randconfig-002-20231224   gcc  
-arm                   randconfig-003-20231224   gcc  
-arm                   randconfig-004-20231224   gcc  
-arm                        shmobile_defconfig   gcc  
-arm                         wpcm450_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20231224   gcc  
-arm64                 randconfig-002-20231224   gcc  
-arm64                 randconfig-003-20231224   gcc  
-arm64                 randconfig-004-20231224   gcc  
-csky                              allnoconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20231224   gcc  
-csky                  randconfig-002-20231224   gcc  
-hexagon                          allmodconfig   clang
-hexagon                          allyesconfig   clang
-i386                             allmodconfig   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   clang
-i386                                defconfig   gcc  
-i386                  randconfig-011-20231224   clang
-i386                  randconfig-012-20231224   clang
-i386                  randconfig-013-20231224   clang
-i386                  randconfig-014-20231224   clang
-i386                  randconfig-015-20231224   clang
-i386                  randconfig-016-20231224   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20231224   gcc  
-loongarch             randconfig-002-20231224   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                          amiga_defconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                           virt_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                  decstation_64_defconfig   gcc  
-mips                     loongson2k_defconfig   gcc  
-mips                      loongson3_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20231224   gcc  
-nios2                 randconfig-002-20231224   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20231224   gcc  
-parisc                randconfig-002-20231224   gcc  
-parisc64                         alldefconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                    amigaone_defconfig   gcc  
-powerpc               randconfig-001-20231224   gcc  
-powerpc               randconfig-002-20231224   gcc  
-powerpc               randconfig-003-20231224   gcc  
-powerpc                     tqm8555_defconfig   gcc  
-powerpc                        warp_defconfig   gcc  
-powerpc64             randconfig-001-20231224   gcc  
-powerpc64             randconfig-002-20231224   gcc  
-powerpc64             randconfig-003-20231224   gcc  
-riscv                            allmodconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20231224   gcc  
-riscv                 randconfig-002-20231224   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                          debug_defconfig   gcc  
-s390                                defconfig   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                        edosk7760_defconfig   gcc  
-sh                               j2_defconfig   gcc  
-sh                            migor_defconfig   gcc  
-sh                    randconfig-001-20231224   gcc  
-sh                    randconfig-002-20231224   gcc  
-sh                          rsk7201_defconfig   gcc  
-sh                           se7751_defconfig   gcc  
-sh                            shmin_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20231224   gcc  
-sparc64               randconfig-002-20231224   gcc  
-um                               allmodconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20231224   gcc  
-um                    randconfig-002-20231224   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20231224   gcc  
-x86_64       buildonly-randconfig-002-20231224   gcc  
-x86_64       buildonly-randconfig-003-20231224   gcc  
-x86_64       buildonly-randconfig-004-20231224   gcc  
-x86_64       buildonly-randconfig-005-20231224   gcc  
-x86_64       buildonly-randconfig-006-20231224   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                randconfig-011-20231224   gcc  
-x86_64                randconfig-012-20231224   gcc  
-x86_64                randconfig-013-20231224   gcc  
-x86_64                randconfig-014-20231224   gcc  
-x86_64                randconfig-015-20231224   gcc  
-x86_64                randconfig-016-20231224   gcc  
-x86_64                randconfig-071-20231224   gcc  
-x86_64                randconfig-072-20231224   gcc  
-x86_64                randconfig-073-20231224   gcc  
-x86_64                randconfig-074-20231224   gcc  
-x86_64                randconfig-075-20231224   gcc  
-x86_64                randconfig-076-20231224   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                  audio_kc705_defconfig   gcc  
-xtensa                randconfig-001-20231224   gcc  
-xtensa                randconfig-002-20231224   gcc  
+* Delete four initialisations which became unnecessary
+  with this refactoring.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/clk/ti/apll.c | 28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/clk/ti/apll.c b/drivers/clk/ti/apll.c
+index 929c021f0cdb..d2be672521a3 100644
+=2D-- a/drivers/clk/ti/apll.c
++++ b/drivers/clk/ti/apll.c
+@@ -177,17 +177,22 @@ static void __init omap_clk_register_apll(void *user=
+,
+
+ static void __init of_dra7_apll_setup(struct device_node *node)
+ {
+-	struct dpll_data *ad =3D NULL;
+-	struct clk_hw_omap *clk_hw =3D NULL;
+-	struct clk_init_data *init =3D NULL;
+-	const char **parent_names =3D NULL;
++	struct dpll_data *ad;
++	struct clk_hw_omap *clk_hw;
++	struct clk_init_data *init =3D kzalloc(sizeof(*init), GFP_KERNEL);
++	const char **parent_names;
+ 	int ret;
+
+-	ad =3D kzalloc(sizeof(*ad), GFP_KERNEL);
++	if (!init)
++		return;
++
+ 	clk_hw =3D kzalloc(sizeof(*clk_hw), GFP_KERNEL);
+-	init =3D kzalloc(sizeof(*init), GFP_KERNEL);
+-	if (!ad || !clk_hw || !init)
+-		goto cleanup;
++	if (!clk_hw)
++		goto free_init;
++
++	ad =3D kzalloc(sizeof(*ad), GFP_KERNEL);
++	if (!ad)
++		goto free_clk_hw;
+
+ 	clk_hw->dpll_data =3D ad;
+ 	clk_hw->hw.init =3D init;
+@@ -198,12 +203,12 @@ static void __init of_dra7_apll_setup(struct device_=
+node *node)
+ 	init->num_parents =3D of_clk_get_parent_count(node);
+ 	if (init->num_parents < 1) {
+ 		pr_err("dra7 apll %pOFn must have parent(s)\n", node);
+-		goto cleanup;
++		goto free_ad;
+ 	}
+
+ 	parent_names =3D kcalloc(init->num_parents, sizeof(char *), GFP_KERNEL);
+ 	if (!parent_names)
+-		goto cleanup;
++		goto free_ad;
+
+ 	of_clk_parent_fill(node, parent_names, init->num_parents);
+
+@@ -223,8 +228,11 @@ static void __init of_dra7_apll_setup(struct device_n=
+ode *node)
+
+ cleanup:
+ 	kfree(parent_names);
++free_ad:
+ 	kfree(ad);
++free_clk_hw:
+ 	kfree(clk_hw);
++free_init:
+ 	kfree(init);
+ }
+ CLK_OF_DECLARE(dra7_apll_clock, "ti,dra7-apll-clock", of_dra7_apll_setup)=
+;
+=2D-
+2.43.0
+
