@@ -1,88 +1,125 @@
-Received: from out203-205-221-205.mail.qq.com (out203-205-221-205.mail.qq.com [203.205.221.205])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017AB2101;
-	Sun, 24 Dec 2023 11:59:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D14F2101
+	for <linux-kernel@vger.kernel.org>; Sun, 24 Dec 2023 12:00:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="eUqsMIbq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1703419144; bh=bwVnJ7f9d4R+HLmdVsQRUR+32VmNaaFUOK0l/TVS0aI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=eUqsMIbqrNUpihWBZuPqLp+yfPFfwqKQXlcYlCaCpwhqTJJ8uMLiTK1H54530nwL8
-	 RrPUPxb+7Q8nyYU8PTX4Ny32DvNSoSqKc6gjwUIryBzYaD0BKBBHnQeWSqx/Xwhq+q
-	 uHKmM9y3jZ633JOpa81HnhUupX6kfXOG/j8AFNtM=
-Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
-	by newxmesmtplogicsvrszb6-0.qq.com (NewEsmtp) with SMTP
-	id D3B898C9; Sun, 24 Dec 2023 19:52:59 +0800
-X-QQ-mid: xmsmtpt1703418779tale22qig
-Message-ID: <tencent_DABB2333139E8D1BCF4B5D1B2725FABA9108@qq.com>
-X-QQ-XMAILINFO: NV9lVvsB36OpktO1KCwTUj4smAG+MtweeaJdLuOyDS/Po3/TqA7ngDgHIjmPzH
-	 /eOFFFXBWyCNn5bC1+d+Ma2OAKtSQg3d7UgqoYZwpkUbtJc5FNKGwuUauV85azMolsjjQn96txSD
-	 sWRvXZNjM/mTQh+gPjgXt0RnJvNJ7mOCVfAXbzpPtQzflxe9fzyXBdwtaFMdBFt7tjLBjrOz7nZJ
-	 wgvyEL6RnoRaRtj4uUO+tAKmsrRHOp/gUUwWDH8UJ6phxhY4YPsPgiUMuNx8M8OzPlTNl1pHwfju
-	 KH6GPdeiOJWr33Cy73LJJj9eKsLqDw/EONIapusAgRb+5haKQy/bdR69M23UKYh3X3u02LW4vx2y
-	 eMz13UuAKQkwKaWevatCqBOs9EU1uJQhxZuGcJe82h11UH2t/YQFZmZ5mtiHPY7C2ciAYT7b4q6p
-	 pPcUym10L9S3WPIKhyPN+Ijz9nhTHQ8ZfPCN8d4GJRS1OIKXLGVT/30Pki9Fpkg0sJ/tDAYsUA0h
-	 I8vetm5mdpTh3TCazPjHKoO9mu8v9XnMWXCSdMibdcImciNZMNskdELV/geuJ1iFKA/qgNQ5EoQf
-	 H2aSJIIUxVt4v19GndQ+F1KeNmcV9XwfFl5ZyYEski62C1HTDbbcSb0wiMf5zKgYCAY+WIHjN0rG
-	 AP94jJ7BUOM86aAKFyIZxh6TizNE4rYM3tRoaiMhOYX5khRL4ZZlBXWvO7QJi3hQDYUmZaOjRDes
-	 jw7TnP3du919JMXseJGvDmaoi8E4IVJbgPXMII15mFOGokwenqjucHVVKQgQryXNl3QwbaFvInOh
-	 ZLBlj+FPk4YgOdlvk4YBkrxvHyF/LeSKMy0iNKOZyM64gDO/cii5UEd5G7o5fEaotddgkGOE50g+
-	 y3Fj8boC/xKmKn+FRl5HJ7LIcCx7nGlFeDU7+v/YSdZAqIdVRVD4W475ECBjrQBP4IjfZVqSPCnw
-	 JUK7UL/lk=
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+2c4a3b922a860084cc7f@syzkaller.appspotmail.com
-Cc: adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com,
-	tytso@mit.edu
-Subject: [PATCH] ext4: fix WARNING in lock_two_nondirectories
-Date: Sun, 24 Dec 2023 19:53:00 +0800
-X-OQ-MSGID: <20231224115259.3685280-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <000000000000e17185060c8caaad@google.com>
-References: <000000000000e17185060c8caaad@google.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="3n1vTJij"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 3BO4cBcU030250;
+	Sun, 24 Dec 2023 13:00:03 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:subject:from:to:cc:date:in-reply-to:references
+	:content-type:content-transfer-encoding:mime-version; s=
+	selector1; bh=ChpdCsWyAay6RJb9rD1FHOJqQQuXIx6a0mUEUWYCSc4=; b=3n
+	1vTJijvATirIJj/YvlTEu8pERihJ9tKDj70qI5dZQbBE3475jlurmUYE2PWVUQFU
+	onBfe3+pZTmhNQMHXjXl0O0C7rH0F9zWSOQxbxo9AMsv3Zi4nGb/FpHe68Y4816U
+	VIQFD3RJIU8snQdbmLH/pKu3k123i4x5a7r/xs6z0ZiIMmQ04GnvGpUFGMnDCGD+
+	c0B6UMly0/WOFNQhP0BoOuBRjadY49rcONaP9TWl47o28gNL4OXz03+yCpUZeqZv
+	95OBgk3oYlvOf3LXC8D4QkDgL5972QLFuJb0QNp2f9rAfSt8J7GsqKNfqesuYs7N
+	11N8+6dZBb3PLYi/TccA==
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3v5nukk3pb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 24 Dec 2023 13:00:03 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1BB0A10005C;
+	Sun, 24 Dec 2023 13:00:01 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 10D042138EC;
+	Sun, 24 Dec 2023 13:00:01 +0100 (CET)
+Received: from [192.168.8.15] (10.252.24.226) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Sun, 24 Dec
+ 2023 13:00:00 +0100
+Message-ID: <0e586f3d05a03bd5d9a8bfead55162e14a6aa4de.camel@foss.st.com>
+Subject: Re: [Linux-stm32] [PATCH 12/13] irqchip/stm32-exti: Convert to
+ platform remove callback returning void
+From: Antonio Borneo <antonio.borneo@foss.st.com>
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+CC: Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <kernel@pengutronix.de>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date: Sun, 24 Dec 2023 12:59:58 +0100
+In-Reply-To: <ac551b89025bafadce05102b94596f8cd3564a32.1703284359.git.u.kleine-koenig@pengutronix.de>
+References: <cover.1703284359.git.u.kleine-koenig@pengutronix.de>
+	 <ac551b89025bafadce05102b94596f8cd3564a32.1703284359.git.u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-24_06,2023-12-22_01,2023-05-22_02
 
-If inode is the ext4 boot loader inode, then when it is a directory, the inode
-should also be set to bad inode.
+On Fri, 2023-12-22 at 23:50 +0100, Uwe Kleine-K=C3=B6nig wrote:
+> The .remove() callback for a platform driver returns an int which makes
+> many driver authors wrongly assume it's possible to do error handling by
+> returning an error code. However the value returned is ignored (apart
+> from emitting a warning) and this typically results in resource leaks.
+>=20
+> To improve here there is a quest to make the remove callback return
+> void. In the first step of this quest all drivers are converted to
+> .remove_new(), which already returns void. Eventually after all drivers
+> are converted, .remove_new() will be renamed to .remove().
+>=20
+> Trivially convert this driver from always returning zero in the remove
+> callback to the void returning variant.
+>=20
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 
-Reported-and-tested-by: syzbot+2c4a3b922a860084cc7f@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- fs/ext4/inode.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Reviewed-by: Antonio Borneo <antonio.borneo@foss.st.com>
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 61277f7f8722..b311f610f008 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -4944,8 +4944,12 @@ struct inode *__ext4_iget(struct super_block *sb, unsigned long ino,
- 		inode->i_fop = &ext4_file_operations;
- 		ext4_set_aops(inode);
- 	} else if (S_ISDIR(inode->i_mode)) {
--		inode->i_op = &ext4_dir_inode_operations;
--		inode->i_fop = &ext4_dir_operations;
-+		if (ino == EXT4_BOOT_LOADER_INO)
-+			make_bad_inode(inode);
-+		else {
-+			inode->i_op = &ext4_dir_inode_operations;
-+			inode->i_fop = &ext4_dir_operations;
-+		}
- 	} else if (S_ISLNK(inode->i_mode)) {
- 		/* VFS does not allow setting these so must be corruption */
- 		if (IS_APPEND(inode) || IS_IMMUTABLE(inode)) {
--- 
-2.43.0
+Regards,
+Antonio
+
+> ---
+> =C2=A0drivers/irqchip/irq-stm32-exti.c | 5 ++---
+> =C2=A01 file changed, 2 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32=
+-exti.c
+> index 971240e2e31b..c61a97caafc9 100644
+> --- a/drivers/irqchip/irq-stm32-exti.c
+> +++ b/drivers/irqchip/irq-stm32-exti.c
+> @@ -898,10 +898,9 @@ static void stm32_exti_remove_irq(void *data)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0irq_domain_remove(domain)=
+;
+> =C2=A0}
+> =C2=A0
+> -static int stm32_exti_remove(struct platform_device *pdev)
+> +static void stm32_exti_remove(struct platform_device *pdev)
+> =C2=A0{
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0stm32_exti_h_syscore_dein=
+it();
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return 0;
+> =C2=A0}
+> =C2=A0
+> =C2=A0static int stm32_exti_probe(struct platform_device *pdev)
+> @@ -991,7 +990,7 @@ MODULE_DEVICE_TABLE(of, stm32_exti_ids);
+> =C2=A0
+> =C2=A0static struct platform_driver stm32_exti_driver =3D {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.probe=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=3D stm32_exti_probe,
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.remove=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=3D stm32_exti_remove,
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.remove_new=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=3D stm32_exti_remove,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.driver=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=3D {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0.name=C2=A0=C2=A0=C2=A0=3D "stm32_exti",
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0.of_match_table =3D stm32_exti_ids,
 
