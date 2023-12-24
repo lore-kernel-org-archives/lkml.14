@@ -1,50 +1,50 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E7EDF61
-	for <linux-kernel@vger.kernel.org>; Sun, 24 Dec 2023 15:44:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F9DFC1C
+	for <linux-kernel@vger.kernel.org>; Sun, 24 Dec 2023 15:44:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H8tRSTo1"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a2358a75b69so570845866b.1
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Dec 2023 07:44:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WO0jspmp"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a22f59c6ae6so396342566b.1
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Dec 2023 07:44:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703432675; x=1704037475; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1703432677; x=1704037477; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=8/bJ3x7ddMTFAEm0aZqxS1jFQ1MSMuIev3UEL4KwkkM=;
-        b=H8tRSTo1IHSxPKRu2n7clvIT9XNCZvWnBrfdjRyk9MV6lDYlpJjvxoPCOT1DQfVI5D
-         7ut33XCZ6ZJoFAnadfy+Tav2R6scOGsRQ2KT2MP9fS15PTDHpiFdmukII4UPNj9GJTlI
-         bQKjAtxIpuLOA1decMKYKdGoIVAuwBMDeTFVIAquutquRYwh8bn5KPUKR/qBNzPlxWc2
-         uxpO1FB8zc6G9QNWyiS276AnlbX92+d9RYnois/sWQz5hFRf9VI0ui9tivqcpd20M18m
-         QxxyRtqwtAw6HBcwl4oAcZpce8wTbm4i3BNcIP996JuJJxd/fYEpZjwxpcO/wS0+Kth6
-         UFsQ==
+        bh=x1jw5Pl/l7koZ4WxO994EDqCfyQrw/Sp0GtB+qrS8sM=;
+        b=WO0jspmpLfxm+jEXSp467n3LbnZfs1OHxM6X4Q6Ut5KjmEQE96WNgX8I26RiNxT9z5
+         R9f7rcjdhaI26bMV7uNilYgXYYxixVA0EDZmpz55cn/PPa1zEjPt9394G35wvoeb1Uqv
+         1lFvZe4fF+tqZDygZlBHgAD7WSa8U/BVw82tBOjeyutdKIfdVWr8ZpOeVzKtO91po32R
+         fthuLMrfjNmmmOg3V3rnL6LOf5o8t1X9C0YMRT2RS7ntyblaYWwwkI0t95GO8CMsihMc
+         e9WdRgZzgsFartNQX8LPuTw7LRc+eGFbzkADOoovfFMG6cHJvkPNAFISEZCfJUsA9InL
+         vtGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703432675; x=1704037475;
+        d=1e100.net; s=20230601; t=1703432677; x=1704037477;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8/bJ3x7ddMTFAEm0aZqxS1jFQ1MSMuIev3UEL4KwkkM=;
-        b=VlYDYyNMzuiM/oUf20LHRhvbwjFDdeBw5NnGa2tYBd5QHL+Fzo6qiQrN5kkECshnID
-         xi/6drIm6jWjujq35NUwaKlmmGc8zPod+9mjJT5VvHUgIt1pYAekwRCX3tCeF631CYoI
-         m4sjrTFdQhlwGRa+cpwINtvZVE3OvhmNH8pzAyH5WQ6Jmzyo1eFyqKsx/uH5zq39dMDC
-         VBHYGF4fegYuwBMUF6BE7+qiGyTXb0wGw2Ua5dWlpUa+oWucevsc7I8i1Dm7M0HgkL5F
-         YPclr4ReAFsOQEIFYzhCEDNIQrC54BN4dYWCsyQkUL3NwXVv8fFKJRq3Tkf0BkbfgxUd
-         uRJg==
-X-Gm-Message-State: AOJu0YzK/azQbvLgYyfpoIAeuaXnIxMWGhdcLSsLKkw7Llv0RBaSrI09
-	ce0Up9tfv0mwR31gvXWH5FD6LkFIRQN/Gw==
-X-Google-Smtp-Source: AGHT+IFMytQlUGsUHr2lW0AyF5yYtyjd47XaMcqL33aA0ICawVecLpDO9lpGweLKnEUzEiLSvrTzLw==
-X-Received: by 2002:a17:906:947:b0:a23:5939:759e with SMTP id j7-20020a170906094700b00a235939759emr4476446ejd.26.1703432674625;
-        Sun, 24 Dec 2023 07:44:34 -0800 (PST)
+        bh=x1jw5Pl/l7koZ4WxO994EDqCfyQrw/Sp0GtB+qrS8sM=;
+        b=IpPDqnNn9g2cu+YqF0GEznnazg9G0HQv989uidSxTEvoA2NZKoQtph3wJP5h2zA3aB
+         HPq9O00ZLmR6tsa+BDpfgVhx0xRPauQdsnqcHMtzpbmUBAMJcysspxx8MdWdg9/DvpEg
+         KUlAngspDVhEZWQe1+7y/8iqGJ9kUh5R3u0gN4OSS04RW5sa3J9zqnZfXjvOY/06Mxcq
+         dJ79bA5xOjdHWif1koD5XAhSmlGcA5RgoDu5zbX83rTwIgWrO3JAXnV+f/Zd9T/a28Qm
+         w6SAg9ykTqF/wJNsab7y6rgt8K//lBpRTUw7Fc6oOHLe1S40+O3paTpdBgdg43+OyXzl
+         qYpQ==
+X-Gm-Message-State: AOJu0Yy5/TI5KZP+jHKxWf3dM6q802aC6LHIXefL7aI/6HmZnx13PBxf
+	kXsbakhFWi7dsEQKHk1WtjxKSGKG9uaiZg==
+X-Google-Smtp-Source: AGHT+IGEZuRTW9lR28kyRWxFyvxDVysVplZ4MC3jv1gqpwB+nQ5N4lvYN4ureL64S8WJoFh2wnm0cg==
+X-Received: by 2002:a17:906:704:b0:a23:7175:30b4 with SMTP id y4-20020a170906070400b00a23717530b4mr1066672ejb.99.1703432677136;
+        Sun, 24 Dec 2023 07:44:37 -0800 (PST)
 Received: from [127.0.1.1] ([78.10.206.178])
-        by smtp.gmail.com with ESMTPSA id ge12-20020a170907908c00b00a26ac403032sm3325901ejb.65.2023.12.24.07.44.33
+        by smtp.gmail.com with ESMTPSA id ge12-20020a170907908c00b00a26ac403032sm3325901ejb.65.2023.12.24.07.44.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Dec 2023 07:44:34 -0800 (PST)
+        Sun, 24 Dec 2023 07:44:36 -0800 (PST)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Sun, 24 Dec 2023 16:44:03 +0100
-Subject: [PATCH 04/15] media: s5p-mfc: constify fw_name strings
+Date: Sun, 24 Dec 2023 16:44:05 +0100
+Subject: [PATCH 06/15] media: s5p-mfc: constify s5p_mfc_variant structures
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231224-n-s5p-mfc-const-v1-4-a3b246470fe4@linaro.org>
+Message-Id: <20231224-n-s5p-mfc-const-v1-6-a3b246470fe4@linaro.org>
 References: <20231224-n-s5p-mfc-const-v1-0-a3b246470fe4@linaro.org>
 In-Reply-To: <20231224-n-s5p-mfc-const-v1-0-a3b246470fe4@linaro.org>
 To: Marek Szyprowski <m.szyprowski@samsung.com>, 
@@ -66,45 +66,99 @@ Cc: Aakarsh Jain <aakarsh.jain@samsung.com>, linux-fsd@tesla.coma,
  linux-kernel@vger.kernel.org, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=905;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2821;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=tO3hUFAQxvu9Nowg3KG0FpRXiKXEajVYfAhfC6NTrBs=;
- b=owEBfgKB/ZANAwAKAcE3ZuaGi4PXAcsmYgBliFHR3/m9xlHNEWUuIN7445o6ljNQikRjBXqCP
- jBYeuSSJCaJAkQEAAEKAC4WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZYhR0RAca3J6a0BrZXJu
- ZWwub3JnAAoJEME3ZuaGi4PXs34P/1LyaSaTZfYQ+m9JIOPVFI7kTxlPEOsIc6leETIFxYTpnj8
- bdblNXLebn//vRhCMsFHxb6igV3W0i9r0i+eQr1w6NyW5U0oQzJkCxaVqJAGpn2UBV/P6Ic7XSG
- Hb/7lfUUw6eRPAjN9UHkY2rGdXgFZzo6Ukj6wabijN3QWo4csDd67xE7QSAThvdem24/ZidjeGG
- 90uYwu6UEwOYPPsFCh0U/rQ2NG8zg3FTPQbxjmXeV5JfKx+jzR+rMOeNW/4aKx4C2PXZmukEagZ
- KJIoPweguMie3wjaGdpaWJOvgqALLdQq8dT3kdVgYKWyboU5x0a6hblhwjtXpok187ccrU5HBMU
- 4Zcy6tywsnQwOQU50/DpnxrTsm7kQQTZRqDx14rMu+x+WfV6lqxwE8J10Qp5S2LJK2+8z47wEgh
- gtNqz3G5Dp8OgGpX0zLjGZlFR4jfAbWPxTpCeVcxMWGLnwqrwCOOHKQxennJMwPk1hqpeffvZLk
- M1Sis/KKadAPfRLSsXzmu0Grp6liuxgTtYzWgbtQlpz7VUU6z0ETCxrkKcXBfTbonbmJlsBY8Y4
- EPb8K7TqBZ3V1bzzIABU12x9+MAP7ocqhC37C7Asu9NGKS4k5LnqKmr2qnS1HGocehDjWUy97or
- RSNfsWkUqYy8aH2yK6s4msFT7OdTvE5F/jt4b
+ bh=VD48s/FZBGnruY4hNL+cZT1tYdqrtcBQSYEZMzctcmA=;
+ b=owEBfgKB/ZANAwAKAcE3ZuaGi4PXAcsmYgBliFHTpKrlORLm6EMBe/5Niv6kNveFGfvGQVija
+ oIoiG3SlTSJAkQEAAEKAC4WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZYhR0xAca3J6a0BrZXJu
+ ZWwub3JnAAoJEME3ZuaGi4PXqQoQAINBCZEQEkwebideTGctzDGqaI0X/nEm94f2eYrj2ZMHOKw
+ Nm+IkB2SIMPr8GLFBXgAsNA3bGe2uxkrp6yxcZY8xGadPODmLJzcDJwlrJhSC0Br3rDk1X+BOd0
+ srAugnCJZF7WtoQY23TGJKebKDQF/AKWLtKGFCNuXyDvQRL9Ortqi2EjCsnjKHRHxAd0HcAo1V+
+ Wdzcjv+94JITLoJqI+OD5HisRDvtrprzp5EJfZslyKugnCjBGQmqhG3H+qVLMGiq3gQamrVWgXd
+ ygKAdd2+L+IHZpyf7EAdtxp+pjq3YqMW8++KMjqzwmbaW1lLUiz/84QC+zxTI8GIomF6SOUWzqR
+ UVFU+EedkeTszKxWpEXmPZ3WWP+/c3CaxTHPODI9M+MY3HO2CnpjbFLIZWZIWfnUS688WS/3vZ1
+ jvvma+Exnwi1jrNznhuBLDVPJj1fRmNMhjQjbqXzyrR08PKNNpAkFagTHxxSAdJ81yOyq6HUbFB
+ h6crBEuA2wtSS0zfZKHD9v5I0c4LAMRXuk5dAW73q0jHyYM16G+CtZMwjop/2ZF6+IBCJD6yUiq
+ +hP9f2ZTbDUbQqdmueVl7d47ouXuYRCP98ZBftK5tUrxqDJydlWGorYqeDgOT0dfK7lw/4gNOdH
+ uTAlmZuEH0AVv4rWC3A23PcvwNP4SVrHFyQBk
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Constify stored pointers to firmware names for code safety.  These are
-not modified by the driver.
+Static "s5p_mfc_variant" structures are not modified by the driver, so
+they can be made const for code safety.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- drivers/media/platform/samsung/s5p-mfc/s5p_mfc_common.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/samsung/s5p-mfc/s5p_mfc.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/media/platform/samsung/s5p-mfc/s5p_mfc_common.h b/drivers/media/platform/samsung/s5p-mfc/s5p_mfc_common.h
-index 5304f42c8c72..f33a755327ef 100644
---- a/drivers/media/platform/samsung/s5p-mfc/s5p_mfc_common.h
-+++ b/drivers/media/platform/samsung/s5p-mfc/s5p_mfc_common.h
-@@ -227,7 +227,7 @@ struct s5p_mfc_variant {
- 	unsigned int port_num;
- 	u32 version_bit;
- 	struct s5p_mfc_buf_size *buf_size;
--	char	*fw_name[MFC_FW_MAX_VERSIONS];
-+	const char	*fw_name[MFC_FW_MAX_VERSIONS];
- 	const char	*clk_names[MFC_MAX_CLOCKS];
- 	int		num_clocks;
- 	bool		use_clock_gating;
+diff --git a/drivers/media/platform/samsung/s5p-mfc/s5p_mfc.c b/drivers/media/platform/samsung/s5p-mfc/s5p_mfc.c
+index 6af7b812c5df..5d10c1cb8b92 100644
+--- a/drivers/media/platform/samsung/s5p-mfc/s5p_mfc.c
++++ b/drivers/media/platform/samsung/s5p-mfc/s5p_mfc.c
+@@ -1529,7 +1529,7 @@ static const struct s5p_mfc_buf_size buf_size_v5 = {
+ 	.priv	= &mfc_buf_size_v5,
+ };
+ 
+-static struct s5p_mfc_variant mfc_drvdata_v5 = {
++static const struct s5p_mfc_variant mfc_drvdata_v5 = {
+ 	.version	= MFC_VERSION,
+ 	.version_bit	= MFC_V5_BIT,
+ 	.port_num	= MFC_NUM_PORTS,
+@@ -1554,7 +1554,7 @@ static const struct s5p_mfc_buf_size buf_size_v6 = {
+ 	.priv	= &mfc_buf_size_v6,
+ };
+ 
+-static struct s5p_mfc_variant mfc_drvdata_v6 = {
++static const struct s5p_mfc_variant mfc_drvdata_v6 = {
+ 	.version	= MFC_VERSION_V6,
+ 	.version_bit	= MFC_V6_BIT,
+ 	.port_num	= MFC_NUM_PORTS_V6,
+@@ -1583,7 +1583,7 @@ static const struct s5p_mfc_buf_size buf_size_v7 = {
+ 	.priv	= &mfc_buf_size_v7,
+ };
+ 
+-static struct s5p_mfc_variant mfc_drvdata_v7 = {
++static const struct s5p_mfc_variant mfc_drvdata_v7 = {
+ 	.version	= MFC_VERSION_V7,
+ 	.version_bit	= MFC_V7_BIT,
+ 	.port_num	= MFC_NUM_PORTS_V7,
+@@ -1593,7 +1593,7 @@ static struct s5p_mfc_variant mfc_drvdata_v7 = {
+ 	.num_clocks	= 1,
+ };
+ 
+-static struct s5p_mfc_variant mfc_drvdata_v7_3250 = {
++static const struct s5p_mfc_variant mfc_drvdata_v7_3250 = {
+ 	.version        = MFC_VERSION_V7,
+ 	.version_bit    = MFC_V7_BIT,
+ 	.port_num       = MFC_NUM_PORTS_V7,
+@@ -1617,7 +1617,7 @@ static const struct s5p_mfc_buf_size buf_size_v8 = {
+ 	.priv	= &mfc_buf_size_v8,
+ };
+ 
+-static struct s5p_mfc_variant mfc_drvdata_v8 = {
++static const struct s5p_mfc_variant mfc_drvdata_v8 = {
+ 	.version	= MFC_VERSION_V8,
+ 	.version_bit	= MFC_V8_BIT,
+ 	.port_num	= MFC_NUM_PORTS_V8,
+@@ -1627,7 +1627,7 @@ static struct s5p_mfc_variant mfc_drvdata_v8 = {
+ 	.num_clocks	= 1,
+ };
+ 
+-static struct s5p_mfc_variant mfc_drvdata_v8_5433 = {
++static const struct s5p_mfc_variant mfc_drvdata_v8_5433 = {
+ 	.version	= MFC_VERSION_V8,
+ 	.version_bit	= MFC_V8_BIT,
+ 	.port_num	= MFC_NUM_PORTS_V8,
+@@ -1652,7 +1652,7 @@ static const struct s5p_mfc_buf_size buf_size_v10 = {
+ 	.priv   = &mfc_buf_size_v10,
+ };
+ 
+-static struct s5p_mfc_variant mfc_drvdata_v10 = {
++static const struct s5p_mfc_variant mfc_drvdata_v10 = {
+ 	.version        = MFC_VERSION_V10,
+ 	.version_bit    = MFC_V10_BIT,
+ 	.port_num       = MFC_NUM_PORTS_V10,
 
 -- 
 2.34.1
