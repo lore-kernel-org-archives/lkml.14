@@ -1,39 +1,38 @@
 Received: from mail.subdimension.ro (skycaves.subdimension.ro [172.104.132.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D63C568C;
-	Sun, 24 Dec 2023 14:35:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE732C8FD;
+	Sun, 24 Dec 2023 14:35:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=subdimension.ro
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=subdimension.ro
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=subdimension.ro header.i=@subdimension.ro header.b="AADHLrC3"
+	dkim=pass (1024-bit key) header.d=subdimension.ro header.i=@subdimension.ro header.b="T8f1YLlR"
 Received: from localhost.localdomain (unknown [188.24.94.216])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(Client did not present a certificate)
-	by mail.subdimension.ro (Postfix) with ESMTPSA id B437E28B53A;
-	Sun, 24 Dec 2023 14:35:10 +0000 (UTC)
+	by mail.subdimension.ro (Postfix) with ESMTPSA id 4B76E28B594;
+	Sun, 24 Dec 2023 14:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=subdimension.ro;
-	s=skycaves; t=1703428511;
-	bh=FYSVyc6a7gii4XVzcpbGbqQQ/0VcN0hGzmBnFOnWCwg=;
+	s=skycaves; t=1703428512;
+	bh=u4MBcXGQ5BHNLiXLVpwRBu5az/Wm1HwVbxxZebHWSRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=AADHLrC3QN1GkN+tXoceO2jYNkiS/M17KCoF4UyPfPmanJkoyLdPrYmVX/951q+Ob
-	 z7b7T4Ujxa1UglFABi+t4y0Ht4SRzyFrIBTPzoBiyDZ4TpAZQPLpTKzr+GL+HQoSSK
-	 Rf0y94yYuKLMKlSnKiQT8v1uGsFCy6YwNAwrwxQk=
+	b=T8f1YLlRqHBCeeEuUgxiKMENmQ1qjKyp03rZ9a9ItAp4OC1IeRB+1hWM2f64AhMWx
+	 jMO2YM0PCEhzMcnU63iOAhl20roIr1NtXD/Z+gtkjUv+71k3eiQQ6ciXD4JuUSr72U
+	 oEjQmxFMUSaaJLi95ecCxHwDBve/RQrUbhlzpiEI=
 From: Petre Rodan <petre.rodan@subdimension.ro>
 To: linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Petre Rodan <petre.rodan@subdimension.ro>,
 	Andreas Klinger <ak@it-klinger.de>,
 	Jonathan Cameron <jic23@kernel.org>,
 	Lars-Peter Clausen <lars@metafoo.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Subject: [PATCH v2 03/10] dt-bindings: iio: pressure: honeywell,mprls0025pa.yaml add spi bus
-Date: Sun, 24 Dec 2023 16:34:48 +0200
-Message-ID: <20231224143500.10940-4-petre.rodan@subdimension.ro>
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Angel Iglesias <ang.iglesiasg@gmail.com>,
+	Matti Vaittinen <mazziesaccount@gmail.com>
+Subject: [PATCH v2 07/10] iio: pressure: mprls0025pa.c whitespace cleanup
+Date: Sun, 24 Dec 2023 16:34:52 +0200
+Message-ID: <20231224143500.10940-8-petre.rodan@subdimension.ro>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20231224143500.10940-1-petre.rodan@subdimension.ro>
 References: <20231224143500.10940-1-petre.rodan@subdimension.ro>
@@ -45,70 +44,126 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add spi based example.
+Fix indentation and whitespace in code that will not get refactored.
 
-Add spi-max-frequency property required by chip specifications.
-
-Add additional maintainer.
+Make URL inside comment copy-paste friendly.
 
 Signed-off-by: Petre Rodan <petre.rodan@subdimension.ro>
 Signed-off-by: Andreas Klinger <ak@it-klinger.de>
 ---
- .../iio/pressure/honeywell,mprls0025pa.yaml   | 26 +++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+ drivers/iio/pressure/mprls0025pa.c | 38 ++++++++++++++----------------
+ 1 file changed, 18 insertions(+), 20 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/pressure/honeywell,mprls0025pa.yaml b/Documentation/devicetree/bindings/iio/pressure/honeywell,mprls0025pa.yaml
-index e4021306d187..430496b047c7 100644
---- a/Documentation/devicetree/bindings/iio/pressure/honeywell,mprls0025pa.yaml
-+++ b/Documentation/devicetree/bindings/iio/pressure/honeywell,mprls0025pa.yaml
-@@ -8,12 +8,12 @@ title: Honeywell mprls0025pa pressure sensor
+diff --git a/drivers/iio/pressure/mprls0025pa.c b/drivers/iio/pressure/mprls0025pa.c
+index 63c46592956f..e14cdee7989f 100644
+--- a/drivers/iio/pressure/mprls0025pa.c
++++ b/drivers/iio/pressure/mprls0025pa.c
+@@ -5,10 +5,7 @@
+  * Copyright (c) Andreas Klinger <ak@it-klinger.de>
+  *
+  * Data sheet:
+- *  https://prod-edam.honeywell.com/content/dam/honeywell-edam/sps/siot/en-us/
+- *    products/sensors/pressure-sensors/board-mount-pressure-sensors/
+- *    micropressure-mpr-series/documents/
+- *    sps-siot-mpr-series-datasheet-32332628-ciid-172626.pdf
++ *  https://prod-edam.honeywell.com/content/dam/honeywell-edam/sps/siot/en-us/products/sensors/pressure-sensors/board-mount-pressure-sensors/micropressure-mpr-series/documents/sps-siot-mpr-series-datasheet-32332628-ciid-172626.pdf
+  *
+  * 7-bit I2C default slave address: 0x18
+  */
+@@ -84,9 +81,9 @@ struct mpr_func_spec {
+ };
 
- maintainers:
-   - Andreas Klinger <ak@it-klinger.de>
-+  - Petre Rodan <petre.rodan@subdimension.ro>
+ static const struct mpr_func_spec mpr_func_spec[] = {
+-	[MPR_FUNCTION_A] = {.output_min = 1677722, .output_max = 15099494},
+-	[MPR_FUNCTION_B] = {.output_min =  419430, .output_max =  3774874},
+-	[MPR_FUNCTION_C] = {.output_min = 3355443, .output_max = 13421773},
++	[MPR_FUNCTION_A] = { .output_min = 1677722, .output_max = 15099494 },
++	[MPR_FUNCTION_B] = { .output_min =  419430, .output_max =  3774874 },
++	[MPR_FUNCTION_C] = { .output_min = 3355443, .output_max = 13421773 },
+ };
 
- description: |
-   Honeywell pressure sensor of model mprls0025pa.
+ struct mpr_chan {
+@@ -273,7 +270,7 @@ static irqreturn_t mpr_trigger_handler(int irq, void *p)
+ 		goto err;
 
--  This sensor has an I2C and SPI interface. Only the I2C interface is
--  implemented.
-+  This sensor has an I2C and SPI interface. Both are supported.
+ 	iio_push_to_buffers_with_timestamp(indio_dev, &data->chan,
+-						iio_get_time_ns(indio_dev));
++					   iio_get_time_ns(indio_dev));
 
-   There are many models with different pressure ranges available. The vendor
-   calls them "mpr series". All of them have the identical programming model and
-@@ -88,6 +88,9 @@ properties:
-       Maximum pressure value the sensor can measure in pascal.
-       To be specified only if honeywell,pressure-triplet is not set.
+ err:
+ 	mutex_unlock(&data->lock);
+@@ -355,15 +352,16 @@ static int mpr_probe(struct i2c_client *client)
 
-+  spi-max-frequency:
-+    maximum: 800000
+ 	if (dev_fwnode(dev)) {
+ 		ret = device_property_read_u32(dev, "honeywell,pmin-pascal",
+-								&data->pmin);
++					       &data->pmin);
+ 		if (ret)
+ 			return dev_err_probe(dev, ret,
+-				"honeywell,pmin-pascal could not be read\n");
++				   "honeywell,pmin-pascal could not be read\n");
 +
-   vdd-supply:
-     description: provide VDD power to the sensor.
+ 		ret = device_property_read_u32(dev, "honeywell,pmax-pascal",
+-								&data->pmax);
++					       &data->pmax);
+ 		if (ret)
+ 			return dev_err_probe(dev, ret,
+-				"honeywell,pmax-pascal could not be read\n");
++				   "honeywell,pmax-pascal could not be read\n");
+ 		ret = device_property_read_u32(dev,
+ 				"honeywell,transfer-function", &func);
+ 		if (ret)
+@@ -384,14 +382,14 @@ static int mpr_probe(struct i2c_client *client)
 
-@@ -135,3 +138,22 @@ examples:
-             vdd-supply = <&vcc_3v3>;
-         };
-     };
-+  - |
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        pressure@0 {
-+            compatible = "honeywell,mprls0025pa";
-+            reg = <0>;
-+            spi-max-frequency = <800000>;
-+            reset-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
-+            interrupt-parent = <&gpio0>;
-+            interrupts = <30 IRQ_TYPE_EDGE_RISING>;
-+
-+            honeywell,pressure-triplet = "0015PA";
-+            honeywell,transfer-function = <1>;
-+            vdd-supply = <&vcc_3v3>;
-+        };
-+    };
-+...
+ 	/* use 64 bit calculation for preserving a reasonable precision */
+ 	scale = div_s64(((s64)(data->pmax - data->pmin)) * NANO,
+-						data->outmax - data->outmin);
++			data->outmax - data->outmin);
+ 	data->scale = div_s64_rem(scale, NANO, &data->scale2);
+ 	/*
+ 	 * multiply with NANO before dividing by scale and later divide by NANO
+ 	 * again.
+ 	 */
+ 	offset = ((-1LL) * (s64)data->outmin) * NANO -
+-			div_s64(div_s64((s64)data->pmin * NANO, scale), NANO);
++		  div_s64(div_s64((s64)data->pmin * NANO, scale), NANO);
+ 	data->offset = div_s64_rem(offset, NANO, &data->offset2);
+
+ 	if (data->irq > 0) {
+@@ -399,27 +397,27 @@ static int mpr_probe(struct i2c_client *client)
+ 				IRQF_TRIGGER_RISING, client->name, data);
+ 		if (ret)
+ 			return dev_err_probe(dev, ret,
+-				"request irq %d failed\n", data->irq);
++					  "request irq %d failed\n", data->irq);
+ 	}
+
+ 	data->gpiod_reset = devm_gpiod_get_optional(dev, "reset",
+-							GPIOD_OUT_HIGH);
++						    GPIOD_OUT_HIGH);
+ 	if (IS_ERR(data->gpiod_reset))
+ 		return dev_err_probe(dev, PTR_ERR(data->gpiod_reset),
+-						"request reset-gpio failed\n");
++				     "request reset-gpio failed\n");
+
+ 	mpr_reset(data);
+
+ 	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
+-						mpr_trigger_handler, NULL);
++					      mpr_trigger_handler, NULL);
+ 	if (ret)
+ 		return dev_err_probe(dev, ret,
+-					"iio triggered buffer setup failed\n");
++				     "iio triggered buffer setup failed\n");
+
+ 	ret = devm_iio_device_register(dev, indio_dev);
+ 	if (ret)
+ 		return dev_err_probe(dev, ret,
+-					"unable to register iio device\n");
++				     "unable to register iio device\n");
+
+ 	return 0;
+ }
 --
 2.41.0
 
