@@ -1,53 +1,72 @@
-Received: from gauss.telenet-ops.be (gauss.telenet-ops.be [195.130.132.49])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF765382
-	for <linux-kernel@vger.kernel.org>; Sun, 24 Dec 2023 10:33:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
-	by gauss.telenet-ops.be (Postfix) with ESMTPS id 4Sycg46ywnz4wyT7
-	for <linux-kernel@vger.kernel.org>; Sun, 24 Dec 2023 11:27:44 +0100 (CET)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:2c7f:22eb:441d:ee2f])
-	by albert.telenet-ops.be with bizsmtp
-	id SATc2B00B38ZHRX06ATdsi; Sun, 24 Dec 2023 11:27:37 +0100
-Received: from geert (helo=localhost)
-	by ramsan.of.borg with local-esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rHLho-00DICc-Su
-	for linux-kernel@vger.kernel.org;
-	Sun, 24 Dec 2023 11:27:36 +0100
-Date: Sun, 24 Dec 2023 11:27:36 +0100 (CET)
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-To: linux-kernel@vger.kernel.org
-Subject: Re: Build regressions/improvements in v6.7-rc7
-In-Reply-To: <20231224100204.2059683-1-geert@linux-m68k.org>
-Message-ID: <3fc2de68-3226-7370-813c-19ad472dc@linux-m68k.org>
-References: <CAHk-=wjDbR1oNZtqTNE4n8MHbzi028JFKSCvyW88hw+0GO=P+A@mail.gmail.com> <20231224100204.2059683-1-geert@linux-m68k.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1002565;
+	Sun, 24 Dec 2023 10:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="r5nbBjjQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1703414559;
+	bh=CvQyVonapKKk7Y2udUySpLUKu8fg/y974JE5CTZbnLw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=r5nbBjjQBCmoBku/WyLKJHrLXLY047GLxht3tv8tE5DnKboMF0v2MBN/yGPLbdQB5
+	 2tXQQ/z9c0qr/zoJlI2IdXT22wQKF7NdrG+isjbH8jekau20F+y4puZdJLdGIvFlmL
+	 +6tD93OTt/y4Xzw9ZK7joTNAepbkMY3xdIEG9K2I=
+Date: Sun, 24 Dec 2023 11:42:38 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>, 
+	Joel Granados <j.granados@samsung.com>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] sysctl: delete unused define SYSCTL_PERM_EMPTY_DIR
+Message-ID: <966d0fd3-9a01-48d3-a146-4ce18c7a21ad@t-8ch.de>
+References: <20231223-sysctl-perm-empty-dir-v1-1-194edd9b09dd@weissschuh.net>
+ <ZYcmJTsgDdptxBHS@bombadil.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZYcmJTsgDdptxBHS@bombadil.infradead.org>
 
-On Sun, 24 Dec 2023, Geert Uytterhoeven wrote:
-> JFYI, when comparing v6.7-rc7[1] to v6.7-rc6[3], the summaries are:
->  - build errors: +0/-7
+On 2023-12-23 10:25:41-0800, Luis Chamberlain wrote:
+> On Sat, Dec 23, 2023 at 02:53:47PM +0100, Thomas Weißschuh wrote:
+> > It seems it was never used.
+> > 
+> > Fixes: 2f2665c13af4 ("sysctl: replace child with an enumeration")
+> > Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> > ---
+> > This was originally part of the sysctl-const series [0], but it doesn't
+> > really belong in there.
+> > To slim down that series as much as possible, submit this patch on its
+> > own.
+> > 
+> > [0] https://lore.kernel.org/lkml/20231204-const-sysctl-v2-2-7a5060b11447@weissschuh.net/
+> 
+> Applied, and pushed! BTW:
 
-The usual SH ICE crickets.
+Thanks!
 
-> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/861deac3b092f37b2c5e6871732f3e11486f7082/ (237 out of 239 configs)
-> [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/ceb6a6f023fd3e8b07761ed900352ef574010bcb/ (237 out of 239 configs)
+> $ b4 am -s 20231223-sysctl-perm-empty-dir-v1-1-194edd9b09dd@weissschuh.net
+> Grabbing thread from
+> lore.kernel.org/all/20231223-sysctl-perm-empty-dir-v1-1-194edd9b09dd@weissschuh.net/t.mbox.gz
+> Analyzing 1 messages in the thread
+> Checking attestation on all messages, may take a moment...
+> ---
+> ✓ [PATCH] sysctl: delete unused define SYSCTL_PERM_EMPTY_DIR
+> + Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+> ---
+> ✗ No key: ed25519/linux@weissschuh.net
+> ✓ Signed: DKIM/weissschuh.net
 
-Gr{oetje,eeting}s,
+b4 needs a manual import of contributor keys for it to validate them:
 
- 						Geert
+https://b4.docs.kernel.org/en/latest/maintainer/kr.html
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
- 							    -- Linus Torvalds
+Thomas
