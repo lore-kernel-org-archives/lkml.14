@@ -1,109 +1,103 @@
-Received: from mx.mrman314.tech (unknown [135.0.77.242])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AEF7D2F1;
-	Sun, 24 Dec 2023 18:13:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mrman314.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mrman314.tech
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4792F43
+	for <linux-kernel@vger.kernel.org>; Sun, 24 Dec 2023 18:15:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mrman314.tech header.i=@mrman314.tech header.b="isElspyB"
-Received: from mail.mrman314.tech (localhost [127.0.0.1])
-	by mx.mrman314.tech (Postfix) with ESMTPSA id 177872F406D0;
-	Sun, 24 Dec 2023 13:04:34 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mrman314.tech;
-	s=default; t=1703441075;
-	bh=R0Ct9LAMRoC93PP14kNc4aB4j0kJN4qE7SAVSIp+0no=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=isElspyBcHBK12K9W1c/zyGQSPfY4sZMH2Rrjb+1JEE7SIEeGSy3V9Ku5R/75T6vy
-	 hElhmYBoRmVgGc8AV3gAIXEALU4MeXURiUNROuBWRCuaawPB6qyooycpvJI5cjgCDo
-	 +usDtlj2PWPPlme8qtGmMXadjFBqRXMmZhztYxdw=
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ce4HsjkX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5670C433B7
+	for <linux-kernel@vger.kernel.org>; Sun, 24 Dec 2023 18:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703441732;
+	bh=eqOb3iB/FSfPM+WPp3VGjSZeorAH0Qt9bX0VFZDl2AU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Ce4HsjkX7JIGhzwaHr6JlIK4nz4aPJNLB5r6sTbh/lAWOKkaoGy+/Wj5e3wpGpiuw
+	 Hq1XxUAXqBft9Z54xPzKoqkfhaEUuA+jY2HyvRQZ7F7YGXgY2JalbTzJ+RuxOdqdi2
+	 dCcA2ZbDB764iiYOyyy/O7pnVBezMGdruAz4mSANczrCKctpoIUei/4MVcBz9HSi5n
+	 /egYgiGZLzqrJK8OgxgLDadOvok95sd6lknh+BYxj9Mnq27kIgE2qJcNvfS5y7SCeO
+	 C7Kfq10UClHJsJ85rTETzXIU/XgEDkgfw4MjLsHAN/exPZz5vl8yfnujWJfPAfac/m
+	 kB0T1A/f9Xt5Q==
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6d9a795cffbso493755b3a.0
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Dec 2023 10:15:32 -0800 (PST)
+X-Gm-Message-State: AOJu0YwSYGZJr8kQnHVMK28XfHwSiihzmbIY1rZx5pX+1M5y6iRhOT7D
+	gdmyPSQFpxpIdEqSRnDpwLWDlXUUQOHAS8w4QKSkDaC+cW2j
+X-Google-Smtp-Source: AGHT+IHJ6UydbFRiuIig5ov2qQT2o6s3FOHf75u/hCNiHZkXTKwzNnmb1qI7vsTxZ6KFn5Nz2oLXEBNRhgC7bPwK5Ec=
+X-Received: by 2002:aa7:8c16:0:b0:6d9:8ddc:37e0 with SMTP id
+ c22-20020aa78c16000000b006d98ddc37e0mr3796818pfd.28.1703441731988; Sun, 24
+ Dec 2023 10:15:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sun, 24 Dec 2023 13:04:33 -0500
-From: Felix Zhang <mrman@mrman314.tech>
-To: Aditya Garg <gargaditya08@live.com>
-Cc: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, marcel@holtmann.org,
- johan.hedberg@gmail.com, luiz.dentz@gmail.com, Orlando Chamberlain
- <orlandoch.dev@gmail.com>, Kerem Karabay <kekrby@gmail.com>, Aun-Ali Zaidi
- <admin@kodeit.net>, Asahi Linux <asahi@lists.linux.dev>, LKML
- <linux-kernel@vger.kernel.org>, linux-bluetooth@vger.kernel.org
-Subject: Re: [REGRESSION] Bluetooth is not working on Macs with BCM4377 chip
- starting from kernel 6.5
-In-Reply-To: <22582194-DE99-45E5-ABEE-C1C7900DA523@live.com>
-References: <22582194-DE99-45E5-ABEE-C1C7900DA523@live.com>
-Message-ID: <956280a5c2e931b13d784ec5fca38156@mrman314.tech>
-X-Sender: mrman@mrman314.tech
-Organization: MrMan
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20231221-async-free-v1-1-94b277992cb0@kernel.org>
+ <20231222115208.ab4d2aeacdafa4158b14e532@linux-foundation.org>
+ <ZYYY1VBKdLHH-Kl3@google.com> <f6bf2c8d-c37a-dab7-8ef8-38a35240edb6@google.com>
+ <CAF8kJuOafpWhKSR96Lsdig_HqtLA79eeHUx9MxBzFGi95XyzuA@mail.gmail.com> <0a052cb1-a5c5-4bee-5bd5-fd5569765012@google.com>
+In-Reply-To: <0a052cb1-a5c5-4bee-5bd5-fd5569765012@google.com>
+From: Chris Li <chrisl@kernel.org>
+Date: Sun, 24 Dec 2023 10:15:20 -0800
+X-Gmail-Original-Message-ID: <CAF8kJuM59_12VNZ9d4oXZiLbAQC4LGLXODHqZw+7jiCJYva6YQ@mail.gmail.com>
+Message-ID: <CAF8kJuM59_12VNZ9d4oXZiLbAQC4LGLXODHqZw+7jiCJYva6YQ@mail.gmail.com>
+Subject: Re: [PATCH] mm: swap: async free swap slot cache entries
+To: David Rientjes <rientjes@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, Wei Xu <weixugc@google.com>, Yu Zhao <yuzhao@google.com>, 
+	Greg Thelen <gthelen@google.com>, Chun-Tse Shao <ctshao@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Yosry Ahmed <yosryahmed@google.com>, 
+	Brain Geffon <bgeffon@google.com>, Minchan Kim <minchan@kernel.org>, Michal Hocko <mhocko@suse.com>, 
+	Mel Gorman <mgorman@techsingularity.net>, Huang Ying <ying.huang@intel.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, Kairui Song <kasong@tencent.com>, 
+	Zhongkun He <hezhongkun.hzk@bytedance.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Barry Song <v-songbaohua@oppo.com>, Hugh Dickins <hughd@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2023-11-13 15:57, Aditya Garg wrote:
-> Starting from kernel 6.5, a regression in the kernel is causing 
-> Bluetooth to not work on T2 Macs with BCM4377 chip.
-> 
-> Journalctl of kernel 6.4.8 which has Bluetooth working is given here: 
-> https://pastebin.com/u9U3kbFJ
-> 
-> Journalctl of kernel 6.5.2, which has Bluetooth broken is given here: 
-> https://pastebin.com/aVHNFMRs
-> 
-> Also, the bug hasn’t been fixed even in 6.6.1, as reported by users.
-> 
-> Some relevant bits imo:
-> 
->     • Sep 19 21:24:36 RudyUbuMbp kernel: hci_bcm4377 0000:73:00.1: 
-> can't disable ASPM; OS doesn't have ASPM control
-> 
->     • Nov 14 01:29:28 RudyUbuMbp kernel: Call Trace:
->     • Nov 14 01:29:28 RudyUbuMbp kernel: <TASK>
->     • Nov 14 01:29:28 RudyUbuMbp kernel: dump_stack_lvl+0x48/0x70
->     • Nov 14 01:29:28 RudyUbuMbp kernel: dump_stack+0x10/0x20
->     • Nov 14 01:29:28 RudyUbuMbp kernel: 
-> __ubsan_handle_shift_out_of_bounds+0x156/0x310
->     • Nov 14 01:29:28 RudyUbuMbp kernel: ? ttwu_do_activate+0x80/0x290
->     • Nov 14 01:29:28 RudyUbuMbp kernel: ? raw_spin_rq_unlock+0x10/0x40
->     • Nov 14 01:29:28 RudyUbuMbp kernel: ? try_to_wake_up+0x292/0x6c0
->     • Nov 14 01:29:28 RudyUbuMbp kernel: ? sched_slice+0x76/0x140
->     • Nov 14 01:29:28 RudyUbuMbp kernel: ? reweight_entity+0x15c/0x170
->     • Nov 14 01:29:28 RudyUbuMbp kernel: __reg_op.cold+0x14/0x38
->     • Nov 14 01:29:28 RudyUbuMbp kernel: bitmap_release_region+0xe/0x20
->     • Nov 14 01:29:28 RudyUbuMbp kernel: bcm4377_handle_ack+0x8c/0x130 
-> [hci_bcm4377]
->     • Nov 14 01:29:28 RudyUbuMbp kernel: 
-> bcm4377_poll_completion_ring+0x196/0x330 [hci_bcm4377]
->     • Nov 14 01:29:28 RudyUbuMbp kernel: ? 
-> rcu_gp_kthread_wake+0x57/0x90
->     • Nov 14 01:29:28 RudyUbuMbp kernel: bcm4377_irq+0x77/0x140 
-> [hci_bcm4377]
->     • Nov 14 01:29:28 RudyUbuMbp kernel: 
-> __handle_irq_event_percpu+0x4c/0x1b0
->     • Nov 14 01:29:28 RudyUbuMbp kernel: handle_irq_event+0x39/0x80
->     • Nov 14 01:29:28 RudyUbuMbp kernel: handle_edge_irq+0x8c/0x250
->     • Nov 14 01:29:28 RudyUbuMbp kernel: __common_interrupt+0x4f/0x110
->     • Nov 14 01:29:28 RudyUbuMbp kernel: common_interrupt+0x45/0xb0
->     • Nov 14 01:29:28 RudyUbuMbp kernel: asm_common_interrupt+0x27/0x40
->     • Nov 14 01:29:28 RudyUbuMbp kernel: RIP: 0033:0x7f17b5fd8bca
+On Sat, Dec 23, 2023 at 7:01=E2=80=AFPM David Rientjes <rientjes@google.com=
+> wrote:
+>
+> On Sat, 23 Dec 2023, Chris Li wrote:
+>
+> > > How do you quantify the impact of the delayed swap_entry_free()?
+> > >
+> > > Since the free and memcg uncharge are now delayed, is there not the
+> > > possibility that we stay under memory pressure for longer?  (Assuming=
+ at
+> > > least some users are swapping because of memory pressure.)
+> > >
+> > > I would assume that since the free and uncharge itself is delayed tha=
+t in
+> > > the pathological case we'd actually be swapping *more* until the asyn=
+c
+> > > worker can run.
+> >
+> > Thanks for raising this interesting question.
+> >
+> > First of all, the swap_entry_free() does not impact "memory.current".
+> > It reduces "memory.swap.current". Technically it is the swap pressure
+> > not memory pressure that suffers the extra delay.
+> >
+> > Secondly, we are talking about delaying up to 64 swap entries for a
+> > few microseconds.
+>
+> What guarantees that the async freeing happens within a few microseconds?
 
-It seems that the BCM4377 chip stopped working on my MacBookAir9,1 (and 
-possibly other T2 devices with the BCM4377) after the logic in the 
-Bluetooth core was changed in this commit: 
-https://github.com/torvalds/linux/commit/6945795bc81ab7be22750ecfb365056688f2fada
+Linux kernel typically doesn't provide RT scheduling guarantees. You
+can change microseconds to milliseconds, my following reasoning still
+holds.
 
-Due to the HCI_QUIRK_USE_BDADDR_PROPERTY being always set in 
-drivers/bluetooth/hci_bcm4377.c, the chip would be left unconfigured, as 
-per the commit mentioned prior.  On the M1 Macs, it seems that the 
-device would be configured in the devicetree.  However, that is not the 
-case on T2 Macs.  In order to circumvent this issue, a flag can be added 
-to prevent the bit from being set on the BCM4377, while setting it on 
-the other devices.  I have not submitted a patch yet, but you can view 
-and use the patch with the latest kernel source here: 
-https://github.com/MrMan314/linux-t2-patches/blob/main/9004-bcm4377-fix-bdaddr-property.patch
+>
+> > Where the swap slot cache itself delays the freeing
+> > of the entries for an arbitrary amount of time. It is not freed until
+> > the cache is full of 64 entries. This delay can be seconds or even
+> > minutes. Adding a few microseconds of  extra delay to existing seconds
+> > delay really makes no difference from the swap pressure point of view.
 
-I would also like to thank kekrby (https://github.com/kekrby) for 
-helping me with the patch.
+Let me rephrase it. The swap slots cache itself has arbiturely delayed
+on freeing the swap slots, the slot is not free until 64 entries are
+reached. Adding a few milliseconds to the current swap slot freeing
+delay does not significantly change current behavior from swap
+pressure point of view.
+
+Chris
