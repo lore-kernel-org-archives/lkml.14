@@ -1,31 +1,32 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5ADCDDB6;
-	Sun, 24 Dec 2023 19:54:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4110CEAE8;
+	Sun, 24 Dec 2023 19:54:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Received: from i5e86193c.versanet.de ([94.134.25.60] helo=phil.lan)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1rHUYl-0006HY-95; Sun, 24 Dec 2023 20:54:51 +0100
+	id 1rHUYj-0006HY-Hb; Sun, 24 Dec 2023 20:54:49 +0100
 From: Heiko Stuebner <heiko@sntech.de>
-To: Rob Herring <robh+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Trevor Woerner <twoerner@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+To: Andy Yan <andyshrk@163.com>
 Cc: Heiko Stuebner <heiko@sntech.de>,
-	linux-arm-kernel@lists.infradead.org,
+	Andy Yan <andy.yan@rock-chips.com>,
 	linux-rockchip@lists.infradead.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: rockchip: rk3308-rock-pi-s cleanup
-Date: Sun, 24 Dec 2023 20:54:48 +0100
-Message-Id: <170344745822.2405994.1040172386629808336.b4-ty@sntech.de>
+	linux-arm-kernel@lists.infradead.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	robh+dt@kernel.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	zhengxing@rock-chips.com
+Subject: Re: (subset) [PATCH v2 0/3] Fix mainline support for rk3036 kylin board
+Date: Sun, 24 Dec 2023 20:54:44 +0100
+Message-Id: <170344745821.2405994.10562040784600617888.b4-ty@sntech.de>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231219173814.1569-1-twoerner@gmail.com>
-References: <20231219173814.1569-1-twoerner@gmail.com>
+In-Reply-To: <20231218105523.2478315-1-andyshrk@163.com>
+References: <20231218105523.2478315-1-andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,18 +36,22 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Tue, 19 Dec 2023 12:38:13 -0500, Trevor Woerner wrote:
-> Perform the following cleanups on a previous patch:
-> - indent lines after "gpio-line-names"
-> - fix D0-D8 -> D0-D7
-> - sort phandle references
+On Mon, 18 Dec 2023 18:55:20 +0800, Andy Yan wrote:
+> From: Andy Yan <andy.yan@rock-chips.com>
 > 
 > 
+> When I want to test some patch of inno hdmi driver on
+> mainline, I found the support of rk3036 kylin board
+> was broken by somehow:
+> 
+> [...]
 
 Applied, thanks!
 
-[1/1] arm64: dts: rockchip: rk3308-rock-pi-s cleanup
-      commit: 085021cc825ed90a6ddc4406f608fb8a85745f81
+[2/3] ARM: dts: rockchip: Add stdout-path for rk3036 kylin
+      commit: 1df4bc6908b2739f7ff28a1775729730d1addf16
+[3/3] ARM: dts: rockchip: Remove rockchip,default-sample-phase from rk3036.dtsi
+      commit: bb0b255fb6f14b1620566d7d32c43adaca09c5e5
 
 Best regards,
 -- 
