@@ -1,150 +1,156 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EFCB2105
-	for <linux-kernel@vger.kernel.org>; Sun, 24 Dec 2023 10:50:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606FF20FA
+	for <linux-kernel@vger.kernel.org>; Sun, 24 Dec 2023 11:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="Nv0o5wXe"
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id E597C3F593
-	for <linux-kernel@vger.kernel.org>; Sun, 24 Dec 2023 10:50:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1703415022;
-	bh=dRjx8VHHb0t27RVkqdYIaU34XdXmnq6meYjdKYyMtPA=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=Nv0o5wXe+/6CHPZ0yR7/04fuoAY63q8UP3xFEEvaR8giEz/Z6EamC0wAb8CLZcjpU
-	 6wyjuIvSAoBUAScW5WnxaK3LtBof2//srbDBF4TsdRTuG2LS1v2lkCKc9k/tmtAz2m
-	 cRkOA6K09B1yMcpTHl04tHQ7q/F6hX5bIy1FAMawq1N4uHFRJ2vP4cQ77fQ9suStd7
-	 ftp7L1SlzO9xsbg5XZm0Cr6jbXdg5a3sEwPOSXg6x5f6yZaOH3wRSur4ODPz3XHyhY
-	 ANtuCglCjtO1cf3DYpyT9PraJU5dQn9jn4diTbrhXweDlhTin3aTQOPCxx9VNvE82p
-	 V/4tKE4hZ57iA==
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4278740faedso39889451cf.0
-        for <linux-kernel@vger.kernel.org>; Sun, 24 Dec 2023 02:50:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQCa7gAl"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-67f33cf014cso26167926d6.0
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Dec 2023 03:39:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703417942; x=1704022742; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LrP1BOh8R9a54b7OYq/9y4AFoHBEUH9+IlCKTqH8hjA=;
+        b=DQCa7gAl09ZPdBdfRoWzJVNF+BJRq1N0/Eta87hjnrxrbPgeOsWoW48Df3zJwuGqtE
+         MxaZWZD0lxlK9hHWBsIL8LYGcidYIJo5WkKim1Z37ySpcaOMpNnCRBafCTUPiafBMg8X
+         FsrpIS8oztiTyE5LzgSKIOG/p8KKeCl9MlzWy6N0zi7U2a6X6dYvWvhFqNhOTtUN/WS7
+         kCVoZ6osZ3K4VPD0Q9W3L2qAoiZrgLEpZjKeqDQUxQsZjkOJyC43Wp52yl9zbla1LfY7
+         UGCtMV0h8h+kCMM5Reqix2ZGbtsjjNK8oSDrmGhjOOsT7lol0K4iTMdU/OHbhge+l1er
+         FKuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703415022; x=1704019822;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dRjx8VHHb0t27RVkqdYIaU34XdXmnq6meYjdKYyMtPA=;
-        b=m8EXe323eTseho+F1lyIg8QAV6Ao69FZHzlhtsy4DEO9uK1poZpJPUkCxITcmetUvf
-         R3Ov2es7o+tJEwl1W4a2M9o/4DBgnDRpiGtXoXjSBT0lYM/2e0U/OH/GRc/GIM7iAlgV
-         1D6W6YVWhAGxUyT1e1u2UKxuYtyglF84Zb4n7ChCubbQlTbsXd6+sTN4sf3Aq9qCNkW9
-         ojvV2KGczX5TEzDrAtVAJauGRoiVW8z5IXne8NdNAv+FdwSBe6sIbKF887gve6B3h0XO
-         yPiSIVrcmMrWFFgusATgOU2mhJ7fSMVdd6Yr9YHNoNH8EtfW1vsWiK2nem3aY3qhFS5W
-         E8gA==
-X-Gm-Message-State: AOJu0Yxi2VknHgi85Kt+nfKyQ3AxCn0cpe625i+cdacDsWsSYGPKPRzG
-	7yGQ9+kz1odODzwf4XrVTq2s+i4C7vwBlAHCavMgMIWryEoOxSThGR8VbFgkhbV018s+wpatmLG
-	wXgIPc2N25Fj5DfaOvsAIObREdMMuf3NdfbOZBt3vegw5/yxyG2tj81Egkl4ynblm
-X-Received: by 2002:a05:622a:182:b0:425:76df:7e6f with SMTP id s2-20020a05622a018200b0042576df7e6fmr5609347qtw.119.1703415021914;
-        Sun, 24 Dec 2023 02:50:21 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGJ96r2eapvbnKdZyEB77jqFXRuTWzy2bUJJjzd8WXSuigvwDiMsomMEGU5kDYipZ+1aQleLT61MirQghPeNG0=
-X-Received: by 2002:a05:622a:182:b0:425:76df:7e6f with SMTP id
- s2-20020a05622a018200b0042576df7e6fmr5609335qtw.119.1703415021493; Sun, 24
- Dec 2023 02:50:21 -0800 (PST)
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Sun, 24 Dec 2023 02:50:21 -0800
-From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-In-Reply-To: <20231222094548.54103-5-william.qiu@starfivetech.com>
-References: <20231222094548.54103-1-william.qiu@starfivetech.com> <20231222094548.54103-5-william.qiu@starfivetech.com>
+        d=1e100.net; s=20230601; t=1703417942; x=1704022742;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LrP1BOh8R9a54b7OYq/9y4AFoHBEUH9+IlCKTqH8hjA=;
+        b=u8ACw1yBYzBe0wJxK86kdWeXVz8CKNiEsPmyOq9ncwwU+K4AWRmcwxPKNh64xxczGb
+         4AYdJ2MVoTO3nvUcL+6sX8ar2Iq4LvMUy1CNY+6JyuCvcuGjXkKq2A2c5Ly5YcnLUiiM
+         Q3kL79oXgQpPy5BApk2Q4T+FIbMZp4UiHnevBcQg5ncGfZ+2lU0SpNrFWSCR/BXQ7Tsf
+         qoAEhWt1aO3TOPRLbhdk/1rKroNnJSZv5/+aIIED/rAPkSQJCgm5EDwjmlJjWxHCdpcj
+         qRxd+vcdy0aNTiYqeXuEls3moYtEaHwSybPGOTrRkhQHpHOZWjbEyKeHtlXfy5WMJnAM
+         cS0Q==
+X-Gm-Message-State: AOJu0YxN5g/0ueTrSbEwbV6DBeK1oMymzGbiW+uSEju+WZeDOXeS/M6w
+	Kl1uBmyTum0ueqtDwcKlgueTQ57ERS2fA0NWGVs=
+X-Google-Smtp-Source: AGHT+IGNm3S5cTeFhbTKiXdmSFgxFcUSRLyB6W+G6WqqVmizeayIFFhYuG7CKTdEPKPpsJrGv4RJMKlbbLV2Ah0Lc+U=
+X-Received: by 2002:a05:6214:62a:b0:67a:a714:d963 with SMTP id
+ a10-20020a056214062a00b0067aa714d963mr6533435qvx.55.1703417942085; Sun, 24
+ Dec 2023 03:39:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Sun, 24 Dec 2023 02:50:21 -0800
-Message-ID: <CAJM55Z8aGviAN0FzEPYtOuV_8q=OvVpNbid195BJTfVMnrA7aA@mail.gmail.com>
-Subject: Re: [PATCH v10 4/4] riscv: dts: starfive: jh7110: Add PWM node and
- pins configuration
-To: William Qiu <william.qiu@starfivetech.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-pwm@vger.kernel.org
-Cc: Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh+dt@kernel.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Hal Feng <hal.feng@starfivetech.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+MIME-Version: 1.0
+References: <CALOAHbDXWNbxeQEOhGW5m6bd3cLW_jnE2q6XgSpRBHzxt1GOeg@mail.gmail.com>
+ <20231223053634.942784-1-wudaemon@163.com>
+In-Reply-To: <20231223053634.942784-1-wudaemon@163.com>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Sun, 24 Dec 2023 19:38:25 +0800
+Message-ID: <CALOAHbBdisp6opG5b0kt8skh9g5OKwXANTV2_0SLS54AMK-b1Q@mail.gmail.com>
+Subject: Re: [PATCH v2] sched/rt: Fix rt task's sched latency statistics error
+ in sched_stat_wait trace_point
+To: Junwen Wu <wudaemon@163.com>
+Cc: bristot@redhat.com, bsegall@google.com, dietmar.eggemann@arm.com, 
+	juri.lelli@redhat.com, linux-kernel@vger.kernel.org, mgorman@suse.de, 
+	mingo@redhat.com, peterz@infradead.org, rostedt@goodmis.org, 
+	vincent.guittot@linaro.org, vschneid@redhat.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-William Qiu wrote:
-> Add OpenCores PWM controller node and add PWM pins configuration
-> on VisionFive 2 board.
+On Sat, Dec 23, 2023 at 1:38=E2=80=AFPM Junwen Wu <wudaemon@163.com> wrote:
 >
-> Signed-off-by: William Qiu <william.qiu@starfivetech.com>
+> >It seems DL has the same issue. Pls. also fix it in update_stats_dequeue=
+_dl().
+> >And add the Fixes tag in the commit log:
+> >Fixes: 57a5c2dafca8 ("sched/rt: Support schedstats for RT sched class")
+> >Fixes: b5eb4a5f6521 ("sched/dl: Support schedstats for deadline sched cl=
+ass")
+>
+> ok, the PATCH v3 below is ok?
+>
+> Subject: [PATCH v3] sched/stats: Fix rt/dl task's sched latency statistic=
+s
+>  error in sched_stat_wait trace_point
+>
+> When enable sched_stat_wait trace_point, some rt tasks sched latency so l=
+ong, like this,
+> sched_stat_wait: comm=3Drcu_preempt pid=3D14 delay=3D4936139545261 [ns]
+> Rt task has low latency, it must have a bug. When rt task balance off sou=
+rce cpu,
+> dequeue operation not update the sched_statistics, so follow update_stats=
+_wait_end_fair
+> update method, so do dl tasks.
+>
+> Fixes: 57a5c2dafca8 ("sched/rt: Support schedstats for RT sched class")
+> Fixes: b5eb4a5f6521 ("sched/dl: Support schedstats for deadline sched cla=
+ss")
+> Signed-off-by: Junwen Wu <wudaemon@163.com>
 
-Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Acked-by: Yafang Shao <laoar.shao@gmail.com>
 
 > ---
->  .../jh7110-starfive-visionfive-2.dtsi         | 22 +++++++++++++++++++
->  arch/riscv/boot/dts/starfive/jh7110.dtsi      |  9 ++++++++
->  2 files changed, 31 insertions(+)
+>  kernel/sched/deadline.c | 8 +++++++-
+>  kernel/sched/rt.c       | 7 +++++++
+>  2 files changed, 14 insertions(+), 1 deletion(-)
 >
-> diff --git a/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi b/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
-> index b89e9791efa7..e08af8a830ab 100644
-> --- a/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
-> +++ b/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
-> @@ -323,6 +323,12 @@ reserved-data@600000 {
->  	};
->  };
+> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+> index b28114478b82..29223163ee22 100644
+> --- a/kernel/sched/deadline.c
+> +++ b/kernel/sched/deadline.c
+> @@ -1558,10 +1558,16 @@ update_stats_dequeue_dl(struct dl_rq *dl_rq, stru=
+ct sched_dl_entity *dl_se,
+>                         int flags)
+>  {
+>         struct task_struct *p =3D dl_task_of(dl_se);
+> +       struct rq *rq =3D rq_of_dl_rq(dl_rq);
 >
-> +&pwm {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pwm_pins>;
-> +	status = "okay";
-> +};
-> +
->  &spi0 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&spi0_pins>;
-> @@ -513,6 +519,22 @@ GPOEN_ENABLE,
->  		};
->  	};
+>         if (!schedstat_enabled())
+>                 return;
+> -
+> +       /*
+> +        * Mark the end of the wait period
+> +        * if dequeueing a waiting task.
+> +        */
+> +       if (p && (p !=3D rq->curr))
+> +                update_stats_wait_end_dl(dl_rq, dl_se);
+>         if ((flags & DEQUEUE_SLEEP)) {
+>                 unsigned int state;
 >
-> +	pwm_pins: pwm-0 {
-> +		pwm-pins {
-> +			pinmux = <GPIOMUX(46, GPOUT_SYS_PWM_CHANNEL0,
-> +					      GPOEN_SYS_PWM0_CHANNEL0,
-> +					      GPI_NONE)>,
-> +				 <GPIOMUX(59, GPOUT_SYS_PWM_CHANNEL1,
-> +					      GPOEN_SYS_PWM0_CHANNEL1,
-> +					      GPI_NONE)>;
-> +			bias-disable;
-> +			drive-strength = <12>;
-> +			input-disable;
-> +			input-schmitt-disable;
-> +			slew-rate = <0>;
-> +		};
-> +	};
-> +
->  	spi0_pins: spi0-0 {
->  		mosi-pins {
->  			pinmux = <GPIOMUX(52, GPOUT_SYS_SPI0_TXD,
-> diff --git a/arch/riscv/boot/dts/starfive/jh7110.dtsi b/arch/riscv/boot/dts/starfive/jh7110.dtsi
-> index 45213cdf50dc..1b782f2c1395 100644
-> --- a/arch/riscv/boot/dts/starfive/jh7110.dtsi
-> +++ b/arch/riscv/boot/dts/starfive/jh7110.dtsi
-> @@ -829,6 +829,15 @@ i2stx1: i2s@120c0000 {
->  			status = "disabled";
->  		};
+> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> index 6aaf0a3d6081..6a2600213991 100644
+> --- a/kernel/sched/rt.c
+> +++ b/kernel/sched/rt.c
+> @@ -1360,12 +1360,19 @@ update_stats_dequeue_rt(struct rt_rq *rt_rq, stru=
+ct sched_rt_entity *rt_se,
+>                         int flags)
+>  {
+>         struct task_struct *p =3D NULL;
+> +       struct rq *rq =3D rq_of_rt_se(rt_se);
 >
-> +		pwm: pwm@120d0000 {
-> +			compatible = "starfive,jh7110-pwm", "opencores,pwm-v1";
-> +			reg = <0x0 0x120d0000 0x0 0x10000>;
-> +			clocks = <&syscrg JH7110_SYSCLK_PWM_APB>;
-> +			resets = <&syscrg JH7110_SYSRST_PWM_APB>;
-> +			#pwm-cells = <3>;
-> +			status = "disabled";
-> +		};
-> +
->  		sfctemp: temperature-sensor@120e0000 {
->  			compatible = "starfive,jh7110-temp";
->  			reg = <0x0 0x120e0000 0x0 0x10000>;
+>         if (!schedstat_enabled())
+>                 return;
+>
+>         if (rt_entity_is_task(rt_se))
+>                 p =3D rt_task_of(rt_se);
+> +        /*
+> +         * Mark the end of the wait period
+> +         * if dequeueing a waiting task.
+> +         */
+> +       if (p && (p !=3D rq->curr))
+> +               update_stats_wait_end_rt(rt_rq, rt_se);
+>
+>         if ((flags & DEQUEUE_SLEEP) && p) {
+>                 unsigned int state;
+>
 > --
-> 2.34.1
+> Best regards
 >
+
+
+--=20
+Regards
+Yafang
