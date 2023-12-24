@@ -1,123 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D5E23A8;
-	Sun, 24 Dec 2023 11:45:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3290A23C8
+	for <linux-kernel@vger.kernel.org>; Sun, 24 Dec 2023 11:49:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XtlV18KW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703418303; x=1734954303;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SMd6CE+ZnQSEB4njXtyEKZAOcZ4cjDK8fUe+BpN1ozY=;
-  b=XtlV18KWRXXmQLZkWNxctKyXTsSd9elvvouO15nCzJt+Bz96BdoudfdG
-   IpB2BQGIz30choUC2QSe6OMK+GMlsLnvy/V2EFYC24puCixgZEPfoTLgm
-   cx/ThlxZWTzr4sWsKGQC2/HM2M2vfbQ2lYI8P6ZCVwvgOetpYuxEwub0P
-   5g+HrN7lqCeVK0nflJ5LMLNKaD9Sk8omSu3Ahe1yGwXATqslLdaCMFpam
-   nH6GcxgyGYW2q+Ti+kSp/Zu0TiEzgUIdcKcRO2fvEmayRIfQyJOoHJZ5p
-   J3lcCqRkuAU96g26er0ItzRmlfLhChonb85dPaNnL7U6k7DulCVhzAgHc
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10933"; a="3068592"
-X-IronPort-AV: E=Sophos;i="6.04,301,1695711600"; 
-   d="scan'208";a="3068592"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Dec 2023 03:45:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10933"; a="900967322"
-X-IronPort-AV: E=Sophos;i="6.04,301,1695711600"; 
-   d="scan'208";a="900967322"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 24 Dec 2023 03:44:59 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rHMuU-000CCY-04;
-	Sun, 24 Dec 2023 11:44:46 +0000
-Date: Sun, 24 Dec 2023 19:36:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sreenath Vijayan <sreenath.vijayan@sony.com>, linux-doc@vger.kernel.org,
-	linux-serial@vger.kernel.org, corbet@lwn.net,
-	gregkh@linuxfoundation.org, jirislaby@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	anandakumar.balasubramaniam@sony.com,
-	Sreenath Vijayan <sreenath.vijayan@sony.com>,
-	Shimoyashiki Taichi <taichi.shimoyashiki@sony.com>
-Subject: Re: [PATCH] tty/sysrq: Dump kernel ring buffer messages via sysrq
-Message-ID: <202312241947.B2xJpFET-lkp@intel.com>
-References: <20231221133953.1507021-1-sreenath.vijayan@sony.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aYixHiYJ"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a2340c803c6so364098066b.0
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Dec 2023 03:49:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703418560; x=1704023360; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mzCr6s+sUXGJX1TCqlhYC9rStKOi8VqlAp3Rk3HIOR0=;
+        b=aYixHiYJQ4MJKLPry86OaWhN8UifopydlOUmHLtWUrO7gEt0qfhNaOZaGhTqRxtyd4
+         jhEg9fdcEx57VGMg6YGMpO0tJEseNgjA9jCKXc5B8V9zPIfEthIdN3yY5oAeeww/8sTJ
+         011JU3WB2V00wWCevTQeqIt11D5/SntmO4dqB5u8ZIhZhEUnNH1g//LAohD3nhWRuCF8
+         AfcKM7p/Z+/+p/p3oQaAin6XB26xf7YPuSpc/Sj8Lz7Ef13n10naOZXyT5g8JL3RCSac
+         ne0DhpFYEtQlUR9NDPg6u44NG+Qi2Ui6beg7jfOQ/oOG4COURdO6kquTF/74TxQTnGOt
+         5JIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703418560; x=1704023360;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mzCr6s+sUXGJX1TCqlhYC9rStKOi8VqlAp3Rk3HIOR0=;
+        b=aJXyc6QwyJl2WN/prqfJkU+bHt93a/2TYwYb17U+xg+McYdY5NYCHLrdGo0SrLvWVT
+         n23989RuJyEAbYGYUkj5tQEbcDdSVcadKgTA5R4Ujt8oj9JMi/R8LJx8LGTYPcF+l4MH
+         SQC491ZRDxHA7lZ+Y4jmFHHQHYAosPKpx+vFuCjGNuCq7QrHPFGD3k7TlTU/s7TFYEss
+         AbO+l/faO4EKmgcsf/rSwVAaBf64hhE/cqy7UysUKXEggZF1UZ2yvsYOfXppRfTyopUv
+         nmOubgVqOgpaUpUsQCRmT9WIVLqeLbNdrPevfLWLW2dMqoYXouLlPg/RVSk+jQ7Nrbeb
+         01ow==
+X-Gm-Message-State: AOJu0Yy0FchxzxjMXgagUP62CaBU9PbG6aAqLdk6Agz3YHdwtjcgZbIJ
+	0IabFtzAWNl/jrJXLvNXQbiu4lcD3cpzEg==
+X-Google-Smtp-Source: AGHT+IGM0Y5645Zu1dPEnmVTVdZQEYcTnX/kb5UWJ1OjgBXkx1ByEUy4wQqaFm7kp+mEJGJUiKU+5Q==
+X-Received: by 2002:a50:d49b:0:b0:552:85f4:ed39 with SMTP id s27-20020a50d49b000000b0055285f4ed39mr2643458edi.38.1703418559839;
+        Sun, 24 Dec 2023 03:49:19 -0800 (PST)
+Received: from krzk-bin.. ([78.10.206.178])
+        by smtp.gmail.com with ESMTPSA id z23-20020aa7c657000000b0054ccac03945sm4999771edr.12.2023.12.24.03.49.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Dec 2023 03:49:19 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	linux-media@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 01/12] media: fimc-lite: drop unused flite_hw_set_camera_polarity()
+Date: Sun, 24 Dec 2023 12:49:05 +0100
+Message-Id: <20231224114916.111433-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231221133953.1507021-1-sreenath.vijayan@sony.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Sreenath,
+Function flite_hw_set_camera_polarity() is not defined, so drop its
+declaration from the header.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ drivers/media/platform/samsung/exynos4-is/fimc-lite-reg.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-[auto build test WARNING on tty/tty-testing]
-[also build test WARNING on tty/tty-next tty/tty-linus linus/master v6.7-rc7 next-20231222]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Sreenath-Vijayan/tty-sysrq-Dump-kernel-ring-buffer-messages-via-sysrq/20231222-172636
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tty-testing
-patch link:    https://lore.kernel.org/r/20231221133953.1507021-1-sreenath.vijayan%40sony.com
-patch subject: [PATCH] tty/sysrq: Dump kernel ring buffer messages via sysrq
-config: csky-defconfig (https://download.01.org/0day-ci/archive/20231224/202312241947.B2xJpFET-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231224/202312241947.B2xJpFET-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312241947.B2xJpFET-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/tty/sysrq.c: In function 'dmesg_dump_callback':
->> drivers/tty/sysrq.c:479:1: warning: the frame size of 1048 bytes is larger than 1024 bytes [-Wframe-larger-than=]
-     479 | }
-         | ^
-
-
-vim +479 drivers/tty/sysrq.c
-
-   454	
-   455	static void dmesg_dump_callback(struct work_struct *work)
-   456	{
-   457		struct kmsg_dump_iter iter;
-   458		size_t len;
-   459		char buf[1024];
-   460		struct console *con;
-   461		int cookie;
-   462	
-   463		kmsg_dump_rewind(&iter);
-   464		while (kmsg_dump_get_line(&iter, 1, buf, sizeof(buf), &len)) {
-   465			/*
-   466			 * Since using printk() or pr_*() will append the message to the
-   467			 * kernel ring buffer, they cannot be used to display the retrieved
-   468			 * message. Hence console_write() of serial drivers is used.
-   469			 */
-   470			console_lock();
-   471			cookie = console_srcu_read_lock();
-   472			for_each_console_srcu(con) {
-   473				if ((console_srcu_read_flags(con) & CON_ENABLED) && con->write)
-   474					con->write(con, buf, len);
-   475			}
-   476			console_srcu_read_unlock(cookie);
-   477			console_unlock();
-   478		}
- > 479	}
-   480	
-
+diff --git a/drivers/media/platform/samsung/exynos4-is/fimc-lite-reg.h b/drivers/media/platform/samsung/exynos4-is/fimc-lite-reg.h
+index c5656e902750..3b8af3ce1838 100644
+--- a/drivers/media/platform/samsung/exynos4-is/fimc-lite-reg.h
++++ b/drivers/media/platform/samsung/exynos4-is/fimc-lite-reg.h
+@@ -134,8 +134,6 @@ void flite_hw_capture_start(struct fimc_lite *dev);
+ void flite_hw_capture_stop(struct fimc_lite *dev);
+ void flite_hw_set_camera_bus(struct fimc_lite *dev,
+ 			     struct fimc_source_info *s_info);
+-void flite_hw_set_camera_polarity(struct fimc_lite *dev,
+-				  struct fimc_source_info *cam);
+ void flite_hw_set_window_offset(struct fimc_lite *dev, struct flite_frame *f);
+ void flite_hw_set_source_format(struct fimc_lite *dev, struct flite_frame *f);
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
