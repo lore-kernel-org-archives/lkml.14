@@ -1,328 +1,256 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A25804
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 02:59:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5081CA56
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 02:59:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KiMcly+1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EsZnE/OH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703473177; x=1735009177;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=dbIgb9FvzQi+yY5LSqrrWc60CVIz7MdAxHOcztqNnNw=;
-  b=KiMcly+1tlHtrao4Ca57vbYnQwPSmTCtO6/axeepvhHKWyIMXa4asIYI
-   CQl/wEmsOGXHhExgpb+Cnd5R7cRkV02E5TbVyV5WMLq7YOwB9ytb1E0HL
-   QKjSKrhInKLsfKkhZGPgjw2FNJkyEdSXLL3LJIYA1TN/xFMFHtA8Ecl0K
-   3EEgjw0/1YTUIUzTb0X1LANdzhToKiF+e05TrFHGBZ1IKtLAF0mKNfrS5
-   Z/kbuZoywfrzPNps2RCPMNiJRxSX4RMTcV3Y+Rm77u4XBHfQ6xVIkS3ix
-   nrzaGXFtl4j7I51CT5hB+6hfQ40Xa45hzDZ2qQQtzvtGsR7XUd0bUKqw4
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="393424343"
+  t=1703473181; x=1735009181;
+  h=message-id:date:subject:to:references:from:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=5ZBijNNf8XVC7loItM8ajzSY6Ov6uzebyZN2+5TIfiY=;
+  b=EsZnE/OHdcbcNtSjHqPtC4BT3DM67nD1e8iu1KIWKphq+WUXKSQVBif1
+   GdA7cTC3we+1XrwrvIwzcBaMYYOi5FdCyLaoK77KB2ah2grvcQykWnJKE
+   pqkP5kRe78SHlzjFgDhsd02idVOHQdJMtTCYlOxUj/W2P1wwhVwBfW4qp
+   D6CU0gmN+jT+T+Eyay6st0o4V2qFTpUDLhhoLPd2oPayPZx7D8gHkKL4Z
+   qFgxpTRjERn7YfoHGiVo46QxPtVDBqjd7he4homURaCOPsJpMocD8cPr3
+   9HSsTFufxvLua7TXpftBYr5mNs8lXJ9gwPF6eNVUv1bMxvWwj5yWiyhI2
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="482438523"
 X-IronPort-AV: E=Sophos;i="6.04,302,1695711600"; 
-   d="scan'208";a="393424343"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Dec 2023 18:59:37 -0800
+   d="scan'208";a="482438523"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Dec 2023 18:59:40 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="1109052249"
+X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="950886098"
 X-IronPort-AV: E=Sophos;i="6.04,302,1695711600"; 
-   d="scan'208";a="1109052249"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 24 Dec 2023 18:59:35 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rHb9K-000Crd-2e;
-	Mon, 25 Dec 2023 02:57:52 +0000
-Date: Mon, 25 Dec 2023 10:56:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: David Francis <David.Francis@amd.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Harry Wentland <harry.wentland@amd.com>
-Subject: drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:296:34:
- sparse: sparse: incorrect type in assignment (different base types)
-Message-ID: <202312251037.69jiZ034-lkp@intel.com>
+   d="scan'208";a="950886098"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orsmga005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 24 Dec 2023 18:59:39 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 24 Dec 2023 18:59:39 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Sun, 24 Dec 2023 18:59:39 -0800
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.41) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Sun, 24 Dec 2023 18:59:38 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=noN3qgjs64M32PyLAT5mmrldEDvSjM67bxcbCOFdJYLw9QWWIFBKpKM6DkxLBWRzqg7nRzlVHpks+FloPQnFBgbqnKJdhzm92A2+J2HOoCE8L4oXct20SYym8jO+OEfCrF4odWmHWW/ImnZzeMEsEvuOJ3FQX+SmHVB3n1VLeXj/tVHT/mby/pCw1hcjdQL8YOCIlMcKaTBy4rHxXuFXjC0UThM56XMvzORVgxL5F1mJwVzZIz9BmtngignDal0yrv2L+xdoR0LBKrxHKuaDlpe/Gu4NbJJkd7SB72gYHoo6y7nAYNE9WiwL1+VVTjjj2f/1bFlksX7Fjya7/B88tA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QZbNJYW000gdTMoSMLvg8bUfKnneEg72QjRBGJwQWxI=;
+ b=GFcarrCHq7TB7cZXYhVWel9sfsIRHPJFOKP/R2dyi6EPRe9VO2iqmicLN5lIN8HqO1P63a7D5/oRFdgdLKkF7DvvFEncxAgxauSy09ZUv06GLrrtLIAS3EiNiNJPkbooLCJhHXREew6kf67MlcozuP94O8NCpZNNtql9bfaR8dX/KhMKAZKWHwCOeVhF3/z0EGEgZ+cS2Q8TI8ax3GI8olLj/0kiMBXieOTf+ZGu9lHmBYgVEczjOvS65EyEHMPjwXE6fwcZsjFOb1QTjYie3m2hCWxGbSSZlIBVoeJBgYc3DZrQ4oe97SrDm2Q5ZIQmQNi+t9/ntUrTNTKz9B7C5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM4PR11MB5469.namprd11.prod.outlook.com (2603:10b6:5:399::13)
+ by SA1PR11MB5804.namprd11.prod.outlook.com (2603:10b6:806:237::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.26; Mon, 25 Dec
+ 2023 02:59:36 +0000
+Received: from DM4PR11MB5469.namprd11.prod.outlook.com
+ ([fe80::ab4c:76d3:b700:26fb]) by DM4PR11MB5469.namprd11.prod.outlook.com
+ ([fe80::ab4c:76d3:b700:26fb%7]) with mapi id 15.20.7113.026; Mon, 25 Dec 2023
+ 02:59:36 +0000
+Message-ID: <a77781a4-2d3c-403a-88a6-57242c7f0246@intel.com>
+Date: Mon, 25 Dec 2023 10:59:16 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 1/3] iommu/intel: Use page->refcount to count number of
+ entries in IOMMU
+To: Pasha Tatashin <pasha.tatashin@soleen.com>, <akpm@linux-foundation.org>,
+	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, <rientjes@google.com>,
+	<dwmw2@infradead.org>, <baolu.lu@linux.intel.com>, <joro@8bytes.org>,
+	<will@kernel.org>, <robin.murphy@arm.com>, <iommu@lists.linux.dev>
+References: <20231221031915.619337-1-pasha.tatashin@soleen.com>
+ <20231221031915.619337-2-pasha.tatashin@soleen.com>
+Content-Language: en-US
+From: "Liu, Jingqi" <jingqi.liu@intel.com>
+In-Reply-To: <20231221031915.619337-2-pasha.tatashin@soleen.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI2P153CA0005.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:4:140::11) To DM4PR11MB5469.namprd11.prod.outlook.com
+ (2603:10b6:5:399::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR11MB5469:EE_|SA1PR11MB5804:EE_
+X-MS-Office365-Filtering-Correlation-Id: e428e1ca-434f-440e-4f1a-08dc04f58705
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: s0moKTCloXNLY8UzUDRT0vcEvOST9YtDsp+tVY4X/jXICMYAeSwDoe9Pprgp6ufheeyRQaReLs8T4Dn4jnVMNYaJmum85oo/tY/b8PkAz8K+ROBeBrcLNspXpWpiEiChCEqTHMPpitctBy3xG+ssdKkfznB3qe5FGwq9joFjWMNBs7kijTnjuooscwjTiG8e7H1EcyciwstYUjWGlXXKBHOKtoJXs5YFXsRzv2ZBgFVIvvmBGj2T85RvCUUggfUbPJSsUhNWaCo13sHUVZINvzKgVDrSxnMQ5CcOONlSnk8oFleOTbxt8WGJ7xV/2TqnZqFdGT+1F56bSq80c5V8yru2KbNS4CpgEnj5uopOcWSVp2Lgy4ft9KF5l8OyGd83J0l5cmWxtzjp2dFPPuEtlNIKUjIhx2VOZhtCkXkd2wmKXzArmYw9xXyyNGfUgBpC2WMVUb2dUmCCXCW6oJaRXPBOuX5Ym69pLgd6wD4TWUvnAuxoof97KFMg/sfJwiEnvis2xdkDERG1V8iuPkKXuWATRPREKF+eRdXMUdQ//ghup7+wXw3maVD/L1fZsyaJdEyA5Bsk8Kom/RISSbFLcpU3tzqDAx9XKKB/xegYB7/Ad9S24M7OjGT5LmrM7F6EPy2gVr3vkhMPPKtm2mK11T4TDpTl9bzpIN7zFHywMik=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5469.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(136003)(366004)(39860400002)(346002)(230922051799003)(451199024)(1800799012)(64100799003)(186009)(83380400001)(41300700001)(2616005)(26005)(38100700002)(82960400001)(316002)(8936002)(8676002)(7416002)(5660300002)(2906002)(478600001)(6666004)(6512007)(53546011)(6506007)(66476007)(66556008)(66946007)(6486002)(31696002)(86362001)(36756003)(31686004)(921011)(43740500002)(45980500001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?czBUS0ZCMEM4Zzc2Yk9CMXJDanhsQkU4K01PZGcwQWxYV3JTeENrbWlUY2Z1?=
+ =?utf-8?B?ak1XdGhSTjRhVnBZUUlWQ2x0L1dGUXJIM0xqWDUvemNMK2RGclkwT25hUTVy?=
+ =?utf-8?B?dFB5WGlHYWF2Vjh0TU5qeTBncld2Um5sVW4zeWpJMXRydXZ6aWJha3h5aFJs?=
+ =?utf-8?B?NXl6NUEwZmRlbEVlSzJBcU1DV005bGcrSFpXMmp1VWRWQVBVTGpjU2JKcndJ?=
+ =?utf-8?B?RDhsRnpGN2pTUWoxODZUUzFJZ2JuaDc3cGxzWkY5T2F4SmovU1NoSnMzWHRP?=
+ =?utf-8?B?QUR5eG9iQnBZZ2lXWncvdU8yaHBDa3YwYjNxcmkwNTUxbjViWFhXdjZ1Nnlz?=
+ =?utf-8?B?N00xYjQ3d2ZWelcrUGNISUZjM1ZFZlpHOU84S2p3c1dmK2thVCtKNFlJV1B6?=
+ =?utf-8?B?L1J1RGhYYW11SUFSaWFxL3VpYWhLMUkvNlVuaElQTXVKcXBUWVpGV1p1YmJF?=
+ =?utf-8?B?MEpGU2xZWVREbDF3RWJnS3RmcHdxaHNkRi9XelcwMXdYSmU0STdrajJlTlI3?=
+ =?utf-8?B?UitUSDdQQ3I3dHd3SkhzZkJ0NkpIUmZjSHJSR2xHeUFaUkZGalUvNjhINEd4?=
+ =?utf-8?B?ems5NHk1NWVkUnpSK0doRS8vaGRtc0YwOXVML3pNNExPVjJiRDN3c2Q1TG9k?=
+ =?utf-8?B?SFFZamw5bjJxMHlzSFp6QXUySlJkNldUY1UxTnd6bkIrT29KUWVMcnBFSWV4?=
+ =?utf-8?B?VGNhelpBNW4ydWRXZExQUjZzcHZMQ0hvaDZRZkxLa1pCb3d6RU1HYVNRYUpy?=
+ =?utf-8?B?OEtjQTZjblN2d0IraVJHR1ZXTXh5cUdkR3duN3VuMUsxcUUveDhwUGRoQWNF?=
+ =?utf-8?B?WEtESW1FdVQ3a0xEMUpIN3pqbGUwcnFvN3FiOCtYaXltTE1vWHN0NXJTdTkv?=
+ =?utf-8?B?VzY4V25XSHlrRVNDN1FRdDJmVDJ1aTNsMCtXYndEUWdsYzJpVzBUSHFwTzcz?=
+ =?utf-8?B?OXB0YlJKaTlpdWVPdGVaMisrclFPRnJaclRZckxoVTkxeE82WThkcTVzcGVz?=
+ =?utf-8?B?SDJNWEVPNnU4TEVDSVBQL1RTQmtidER0TWczZ05QM29QSndVbkhHb1pxOEZ0?=
+ =?utf-8?B?cWpEenlOdE9LY0lSRUVrd1JHQlFWazlCbFJrcEhlcWNiZ1dxN2NNTHlNQ0px?=
+ =?utf-8?B?VVRWTHZUcXJ4ZzNFY0VjSUMrTkdEb0pISndhaGllNHMwUG9WY2MzbCswRnN4?=
+ =?utf-8?B?VkNIRndYSE55ODV6K0xXSE1CRE95R0dzU1llNlhDMHVqeUJUWXB3d3R1azR0?=
+ =?utf-8?B?VUNlc0hjTFJQWG1Ra0dod3JRZzJ3OVhBYk9mdHYrUitOcGU0dGpxa3hSZmZa?=
+ =?utf-8?B?aU80V21vL1JvRmREOUtpN09DM3psejNpcVFEWVY1akEzSXdTQnZqQ2dzNC84?=
+ =?utf-8?B?YmpDYlFRbFhkS3dSWW9BUUNLeGVjR1lxaU8zOFpqeldRS1kybStic3Q5V0cy?=
+ =?utf-8?B?Y0x5VjB4NkxXZnpUcVF1OFVjUWhBWjBNN1NyZWZNWHVlYUl6MHJlakFoVmlh?=
+ =?utf-8?B?UDBHTmRVRzR0dHVYUkRvUEdkMmNhQVZibFh4eU0wRTNRdCt2U0tMZ1dhL2t0?=
+ =?utf-8?B?YUMwYTJ5ZXpIUWl6NEdlYUVGTXNhdk94dkxiSkg3WEJHcGhHRlhNZ1VCSXNP?=
+ =?utf-8?B?eDc5RXk2aVZWYUV5a05zdkN1Y0tza3Mvek9KQUY3MGsxd3pSTXAxYTNmOEpQ?=
+ =?utf-8?B?a2FyWWs1UFlUOGhKeW1HdGMyMWFSQkRaTEFuOE1FeFVhY3lIOG02OGlCRVVV?=
+ =?utf-8?B?MjI2ekRockd1OTlha0pKZkNxdjRqb01LaHNGVjlub1l5dkJoQjVSbXNVSFdC?=
+ =?utf-8?B?MkxEaXUreklkM0JiQTVGUVR0bkhRSk0xRnlaZkYyaE1maXphZzR5TnBOTDls?=
+ =?utf-8?B?THh1bExyK24wSkdGQ1QvcW9GNUkvS3RGYXJYTDNnRGNTSUszcWY5bitwTmho?=
+ =?utf-8?B?VUVuTForRzFIWDlieWJYMUhrNzNxb1h5SXROVktobUdtc2FuUXI4M0QyV05j?=
+ =?utf-8?B?NXV3Zldsc1VnRExoSGdoU1lLc1pwamUrZm1YMjFMQ0dvYnpTWkRYb1A3aXZM?=
+ =?utf-8?B?N2liSk1RN1JRanlOaU5ndlBwY1VzSmZ5OFl0bVdVVnQ5RnR2YUpab3V5QVBu?=
+ =?utf-8?Q?UNNYGEH3t6Umn/PUoznQxPZ77?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: e428e1ca-434f-440e-4f1a-08dc04f58705
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5469.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Dec 2023 02:59:36.2106
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KlSE2cWH3UcIMIEvrl6j4gnLbrtT2ufchjB7Yzr6oZnzWFWmjMARjKorypyLp3WwwjLoFtZZ/hIzVnTnCiKIsg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB5804
+X-OriginatorOrg: intel.com
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   861deac3b092f37b2c5e6871732f3e11486f7082
-commit: bbf854dc3570eb0a2b9d851f21e363e1570c717e drm/amd/display: Load DMCU IRAM
-date:   5 years ago
-config: x86_64-randconfig-x051-20230813 (https://download.01.org/0day-ci/archive/20231225/202312251037.69jiZ034-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231225/202312251037.69jiZ034-lkp@intel.com/reproduce)
+On 12/21/2023 11:19 AM, Pasha Tatashin wrote:
+> In order to be able to efficiently free empty page table levels, count the
+> number of entries in each page table my incremeanting and decremeanting
+s/incremeanting/incrementing
+s/decremeanting/decrementing
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312251037.69jiZ034-lkp@intel.com/
+> refcount every time a PTE is inserted or removed form the page table.
+s/form/from
 
-sparse warnings: (new ones prefixed by >>)
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:163:35: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short [addressable] [assigned] [usertype] blRampReduction @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:163:35: sparse:     expected unsigned short [addressable] [assigned] [usertype] blRampReduction
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:163:35: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:165:31: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short [addressable] [assigned] [usertype] blRampStart @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:165:31: sparse:     expected unsigned short [addressable] [assigned] [usertype] blRampStart
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:165:31: sparse:     got restricted __be16 [usertype]
->> drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:296:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:296:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:296:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:297:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:297:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:297:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:298:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:298:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:298:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:299:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:299:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:299:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:300:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:300:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:300:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:301:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:301:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:301:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:302:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:302:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:302:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:303:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:303:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:303:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:304:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:304:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:304:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:305:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:305:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:305:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:306:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:306:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:306:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:307:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:307:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:307:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:308:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:308:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:308:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:309:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:309:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:309:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:310:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:310:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:310:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:311:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:311:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:311:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:312:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:312:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:312:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:313:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:313:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:313:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:314:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:314:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:314:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:315:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:315:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:315:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:316:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:316:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:316:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:317:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:317:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:317:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:318:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:318:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:318:34: sparse:     got restricted __be16 [usertype]
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:319:34: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __be16 [usertype] @@
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:319:34: sparse:     expected unsigned short
-   drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:319:34: sparse:     got restricted __be16 [usertype]
-   In file included from drivers/gpu/drm/amd/amdgpu/../display/dc/dc_types.h:29,
-                    from drivers/gpu/drm/amd/amdgpu/../display/dc/dm_services_types.h:30,
-                    from drivers/gpu/drm/amd/amdgpu/../display/dc/inc/hw/dmcu.h:28,
-                    from drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.h:28,
-                    from drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c:25:
-   drivers/gpu/drm/amd/amdgpu/../display/include/fixed31_32.h:76:32: warning: 'dc_fixpt_ln2_div_2' defined but not used [-Wunused-const-variable=]
-      76 | static const struct fixed31_32 dc_fixpt_ln2_div_2 = { 1488522236LL };
-         |                                ^~~~~~~~~~~~~~~~~~
-   drivers/gpu/drm/amd/amdgpu/../display/include/fixed31_32.h:75:32: warning: 'dc_fixpt_ln2' defined but not used [-Wunused-const-variable=]
-      75 | static const struct fixed31_32 dc_fixpt_ln2 = { 2977044471LL };
-         |                                ^~~~~~~~~~~~
-   drivers/gpu/drm/amd/amdgpu/../display/include/fixed31_32.h:74:32: warning: 'dc_fixpt_e' defined but not used [-Wunused-const-variable=]
-      74 | static const struct fixed31_32 dc_fixpt_e = { 11674931555LL };
-         |                                ^~~~~~~~~~
-   drivers/gpu/drm/amd/amdgpu/../display/include/fixed31_32.h:73:32: warning: 'dc_fixpt_two_pi' defined but not used [-Wunused-const-variable=]
-      73 | static const struct fixed31_32 dc_fixpt_two_pi = { 26986075409LL };
-         |                                ^~~~~~~~~~~~~~~
-   drivers/gpu/drm/amd/amdgpu/../display/include/fixed31_32.h:72:32: warning: 'dc_fixpt_pi' defined but not used [-Wunused-const-variable=]
-      72 | static const struct fixed31_32 dc_fixpt_pi = { 13493037705LL };
-         |                                ^~~~~~~~~~~
-   drivers/gpu/drm/amd/amdgpu/../display/include/fixed31_32.h:67:32: warning: 'dc_fixpt_zero' defined but not used [-Wunused-const-variable=]
-      67 | static const struct fixed31_32 dc_fixpt_zero = { 0 };
-         |                                ^~~~~~~~~~~~~
+> 
+> For this to work correctly, add two helper function:
+> dma_clear_pte and dma_set_pte where counting is performed,
+> 
+> Also, modify the code so every page table entry is always updated using the
+> two new functions.
+> 
+> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> ---
+>   drivers/iommu/intel/iommu.c | 40 +++++++++++++++++++++---------------
+>   drivers/iommu/intel/iommu.h | 41 +++++++++++++++++++++++++++++++------
+>   2 files changed, 58 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index 897159dba47d..4688ef797161 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -949,7 +949,7 @@ static struct dma_pte *pfn_to_dma_pte(struct dmar_domain *domain,
+>   			if (domain->use_first_level)
+>   				pteval |= DMA_FL_PTE_XD | DMA_FL_PTE_US | DMA_FL_PTE_ACCESS;
+>   
+> -			if (cmpxchg64(&pte->val, 0ULL, pteval))
+> +			if (dma_set_pte(pte, pteval))
+>   				/* Someone else set it while we were thinking; use theirs. */
+>   				free_pgtable_page(tmp_page);
+>   			else
+> @@ -1021,7 +1021,8 @@ static void dma_pte_clear_range(struct dmar_domain *domain,
+>   			continue;
+>   		}
+>   		do {
+> -			dma_clear_pte(pte);
+> +			if (dma_pte_present(pte))
+> +				dma_clear_pte(pte);
+>   			start_pfn += lvl_to_nr_pages(large_page);
+>   			pte++;
+>   		} while (start_pfn <= last_pfn && !first_pte_in_page(pte));
+> @@ -1062,7 +1063,8 @@ static void dma_pte_free_level(struct dmar_domain *domain, int level,
+>   		 */
+>   		if (level < retain_level && !(start_pfn > level_pfn ||
+>   		      last_pfn < level_pfn + level_size(level) - 1)) {
+> -			dma_clear_pte(pte);
+> +			if (dma_pte_present(pte))
+> +				dma_clear_pte(pte);
+>   			domain_flush_cache(domain, pte, sizeof(*pte));
+>   			free_pgtable_page(level_pte);
+>   		}
+> @@ -1093,12 +1095,13 @@ static void dma_pte_free_pagetable(struct dmar_domain *domain,
+>   	}
+>   }
+>   
+> -/* When a page at a given level is being unlinked from its parent, we don't
+> -   need to *modify* it at all. All we need to do is make a list of all the
+> -   pages which can be freed just as soon as we've flushed the IOTLB and we
+> -   know the hardware page-walk will no longer touch them.
+> -   The 'pte' argument is the *parent* PTE, pointing to the page that is to
+> -   be freed. */
+> +/*
+> + * A given page at a given level is being unlinked from its parent.
+> + * We need to make a list of all the pages which can be freed just as soon as
+> + * we've flushed the IOTLB and we know the hardware page-walk will no longer
+> + * touch them. The 'pte' argument is the *parent* PTE, pointing to the page
+> + * that is to be freed.
+> + */
+>   static void dma_pte_list_pagetables(struct dmar_domain *domain,
+>   				    int level, struct dma_pte *pte,
+>   				    struct list_head *freelist)
+> @@ -1106,17 +1109,20 @@ static void dma_pte_list_pagetables(struct dmar_domain *domain,
+>   	struct page *pg;
+>   
+>   	pg = pfn_to_page(dma_pte_addr(pte) >> PAGE_SHIFT);
+> -	list_add_tail(&pg->lru, freelist);
+> -
+> -	if (level == 1)
+> -		return;
+> -
+>   	pte = page_address(pg);
+> +
+>   	do {
+> -		if (dma_pte_present(pte) && !dma_pte_superpage(pte))
+> -			dma_pte_list_pagetables(domain, level - 1, pte, freelist);
+> +		if (dma_pte_present(pte)) {
+> +			if (level > 1 && !dma_pte_superpage(pte)) {
+> +				dma_pte_list_pagetables(domain, level - 1, pte,
+> +							freelist);
+> +			}
+> +			dma_clear_pte(pte);
+> +		}
+>   		pte++;
+>   	} while (!first_pte_in_page(pte));
+> +
+> +	list_add_tail(&pg->lru, freelist);
+>   }
+>   
+How about calculating the page decrement when the pages in the freelist 
+are really freed in iommu_free_pgtbl_pages() ?
 
-vim +296 drivers/gpu/drm/amd/amdgpu/../display/modules/power/power_helpers.c
+Thanks,
+Jingqi
 
-   145	
-   146	bool dmcu_load_iram(struct dmcu *dmcu,
-   147		struct dmcu_iram_parameters params)
-   148	{
-   149		struct iram_table_v_2 ram_table;
-   150		unsigned int set = params.set;
-   151	
-   152		if (dmcu == NULL)
-   153			return false;
-   154	
-   155		if (!dmcu->funcs->is_dmcu_initialized(dmcu))
-   156			return true;
-   157	
-   158		memset(&ram_table, 0, sizeof(ram_table));
-   159	
-   160		ram_table.flags = 0x0;
-   161		ram_table.deviation_gain = 0xb3;
-   162	
- > 163		ram_table.blRampReduction =
-   164			cpu_to_be16(params.backlight_ramping_reduction);
-   165		ram_table.blRampStart =
-   166			cpu_to_be16(params.backlight_ramping_start);
-   167	
-   168		ram_table.min_reduction[0][0] = min_reduction_table[abm_config[set][0]];
-   169		ram_table.min_reduction[1][0] = min_reduction_table[abm_config[set][0]];
-   170		ram_table.min_reduction[2][0] = min_reduction_table[abm_config[set][0]];
-   171		ram_table.min_reduction[3][0] = min_reduction_table[abm_config[set][0]];
-   172		ram_table.min_reduction[4][0] = min_reduction_table[abm_config[set][0]];
-   173		ram_table.max_reduction[0][0] = max_reduction_table[abm_config[set][0]];
-   174		ram_table.max_reduction[1][0] = max_reduction_table[abm_config[set][0]];
-   175		ram_table.max_reduction[2][0] = max_reduction_table[abm_config[set][0]];
-   176		ram_table.max_reduction[3][0] = max_reduction_table[abm_config[set][0]];
-   177		ram_table.max_reduction[4][0] = max_reduction_table[abm_config[set][0]];
-   178	
-   179		ram_table.min_reduction[0][1] = min_reduction_table[abm_config[set][1]];
-   180		ram_table.min_reduction[1][1] = min_reduction_table[abm_config[set][1]];
-   181		ram_table.min_reduction[2][1] = min_reduction_table[abm_config[set][1]];
-   182		ram_table.min_reduction[3][1] = min_reduction_table[abm_config[set][1]];
-   183		ram_table.min_reduction[4][1] = min_reduction_table[abm_config[set][1]];
-   184		ram_table.max_reduction[0][1] = max_reduction_table[abm_config[set][1]];
-   185		ram_table.max_reduction[1][1] = max_reduction_table[abm_config[set][1]];
-   186		ram_table.max_reduction[2][1] = max_reduction_table[abm_config[set][1]];
-   187		ram_table.max_reduction[3][1] = max_reduction_table[abm_config[set][1]];
-   188		ram_table.max_reduction[4][1] = max_reduction_table[abm_config[set][1]];
-   189	
-   190		ram_table.min_reduction[0][2] = min_reduction_table[abm_config[set][2]];
-   191		ram_table.min_reduction[1][2] = min_reduction_table[abm_config[set][2]];
-   192		ram_table.min_reduction[2][2] = min_reduction_table[abm_config[set][2]];
-   193		ram_table.min_reduction[3][2] = min_reduction_table[abm_config[set][2]];
-   194		ram_table.min_reduction[4][2] = min_reduction_table[abm_config[set][2]];
-   195		ram_table.max_reduction[0][2] = max_reduction_table[abm_config[set][2]];
-   196		ram_table.max_reduction[1][2] = max_reduction_table[abm_config[set][2]];
-   197		ram_table.max_reduction[2][2] = max_reduction_table[abm_config[set][2]];
-   198		ram_table.max_reduction[3][2] = max_reduction_table[abm_config[set][2]];
-   199		ram_table.max_reduction[4][2] = max_reduction_table[abm_config[set][2]];
-   200	
-   201		ram_table.min_reduction[0][3] = min_reduction_table[abm_config[set][3]];
-   202		ram_table.min_reduction[1][3] = min_reduction_table[abm_config[set][3]];
-   203		ram_table.min_reduction[2][3] = min_reduction_table[abm_config[set][3]];
-   204		ram_table.min_reduction[3][3] = min_reduction_table[abm_config[set][3]];
-   205		ram_table.min_reduction[4][3] = min_reduction_table[abm_config[set][3]];
-   206		ram_table.max_reduction[0][3] = max_reduction_table[abm_config[set][3]];
-   207		ram_table.max_reduction[1][3] = max_reduction_table[abm_config[set][3]];
-   208		ram_table.max_reduction[2][3] = max_reduction_table[abm_config[set][3]];
-   209		ram_table.max_reduction[3][3] = max_reduction_table[abm_config[set][3]];
-   210		ram_table.max_reduction[4][3] = max_reduction_table[abm_config[set][3]];
-   211	
-   212		ram_table.bright_pos_gain[0][0] = 0x20;
-   213		ram_table.bright_pos_gain[0][1] = 0x20;
-   214		ram_table.bright_pos_gain[0][2] = 0x20;
-   215		ram_table.bright_pos_gain[0][3] = 0x20;
-   216		ram_table.bright_pos_gain[1][0] = 0x20;
-   217		ram_table.bright_pos_gain[1][1] = 0x20;
-   218		ram_table.bright_pos_gain[1][2] = 0x20;
-   219		ram_table.bright_pos_gain[1][3] = 0x20;
-   220		ram_table.bright_pos_gain[2][0] = 0x20;
-   221		ram_table.bright_pos_gain[2][1] = 0x20;
-   222		ram_table.bright_pos_gain[2][2] = 0x20;
-   223		ram_table.bright_pos_gain[2][3] = 0x20;
-   224		ram_table.bright_pos_gain[3][0] = 0x20;
-   225		ram_table.bright_pos_gain[3][1] = 0x20;
-   226		ram_table.bright_pos_gain[3][2] = 0x20;
-   227		ram_table.bright_pos_gain[3][3] = 0x20;
-   228		ram_table.bright_pos_gain[4][0] = 0x20;
-   229		ram_table.bright_pos_gain[4][1] = 0x20;
-   230		ram_table.bright_pos_gain[4][2] = 0x20;
-   231		ram_table.bright_pos_gain[4][3] = 0x20;
-   232		ram_table.bright_neg_gain[0][1] = 0x00;
-   233		ram_table.bright_neg_gain[0][2] = 0x00;
-   234		ram_table.bright_neg_gain[0][3] = 0x00;
-   235		ram_table.bright_neg_gain[1][0] = 0x00;
-   236		ram_table.bright_neg_gain[1][1] = 0x00;
-   237		ram_table.bright_neg_gain[1][2] = 0x00;
-   238		ram_table.bright_neg_gain[1][3] = 0x00;
-   239		ram_table.bright_neg_gain[2][0] = 0x00;
-   240		ram_table.bright_neg_gain[2][1] = 0x00;
-   241		ram_table.bright_neg_gain[2][2] = 0x00;
-   242		ram_table.bright_neg_gain[2][3] = 0x00;
-   243		ram_table.bright_neg_gain[3][0] = 0x00;
-   244		ram_table.bright_neg_gain[3][1] = 0x00;
-   245		ram_table.bright_neg_gain[3][2] = 0x00;
-   246		ram_table.bright_neg_gain[3][3] = 0x00;
-   247		ram_table.bright_neg_gain[4][0] = 0x00;
-   248		ram_table.bright_neg_gain[4][1] = 0x00;
-   249		ram_table.bright_neg_gain[4][2] = 0x00;
-   250		ram_table.bright_neg_gain[4][3] = 0x00;
-   251		ram_table.dark_pos_gain[0][0] = 0x00;
-   252		ram_table.dark_pos_gain[0][1] = 0x00;
-   253		ram_table.dark_pos_gain[0][2] = 0x00;
-   254		ram_table.dark_pos_gain[0][3] = 0x00;
-   255		ram_table.dark_pos_gain[1][0] = 0x00;
-   256		ram_table.dark_pos_gain[1][1] = 0x00;
-   257		ram_table.dark_pos_gain[1][2] = 0x00;
-   258		ram_table.dark_pos_gain[1][3] = 0x00;
-   259		ram_table.dark_pos_gain[2][0] = 0x00;
-   260		ram_table.dark_pos_gain[2][1] = 0x00;
-   261		ram_table.dark_pos_gain[2][2] = 0x00;
-   262		ram_table.dark_pos_gain[2][3] = 0x00;
-   263		ram_table.dark_pos_gain[3][0] = 0x00;
-   264		ram_table.dark_pos_gain[3][1] = 0x00;
-   265		ram_table.dark_pos_gain[3][2] = 0x00;
-   266		ram_table.dark_pos_gain[3][3] = 0x00;
-   267		ram_table.dark_pos_gain[4][0] = 0x00;
-   268		ram_table.dark_pos_gain[4][1] = 0x00;
-   269		ram_table.dark_pos_gain[4][2] = 0x00;
-   270		ram_table.dark_pos_gain[4][3] = 0x00;
-   271		ram_table.dark_neg_gain[0][0] = 0x00;
-   272		ram_table.dark_neg_gain[0][1] = 0x00;
-   273		ram_table.dark_neg_gain[0][2] = 0x00;
-   274		ram_table.dark_neg_gain[0][3] = 0x00;
-   275		ram_table.dark_neg_gain[1][0] = 0x00;
-   276		ram_table.dark_neg_gain[1][1] = 0x00;
-   277		ram_table.dark_neg_gain[1][2] = 0x00;
-   278		ram_table.dark_neg_gain[1][3] = 0x00;
-   279		ram_table.dark_neg_gain[2][0] = 0x00;
-   280		ram_table.dark_neg_gain[2][1] = 0x00;
-   281		ram_table.dark_neg_gain[2][2] = 0x00;
-   282		ram_table.dark_neg_gain[2][3] = 0x00;
-   283		ram_table.dark_neg_gain[3][0] = 0x00;
-   284		ram_table.dark_neg_gain[3][1] = 0x00;
-   285		ram_table.dark_neg_gain[3][2] = 0x00;
-   286		ram_table.dark_neg_gain[3][3] = 0x00;
-   287		ram_table.dark_neg_gain[4][0] = 0x00;
-   288		ram_table.dark_neg_gain[4][1] = 0x00;
-   289		ram_table.dark_neg_gain[4][2] = 0x00;
-   290		ram_table.dark_neg_gain[4][3] = 0x00;
-   291		ram_table.iir_curve[0] = 0x65;
-   292		ram_table.iir_curve[1] = 0x65;
-   293		ram_table.iir_curve[2] = 0x65;
-   294		ram_table.iir_curve[3] = 0x65;
-   295		ram_table.iir_curve[4] = 0x65;
- > 296		ram_table.crgb_thresh[0] = cpu_to_be16(0x13b6);
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
