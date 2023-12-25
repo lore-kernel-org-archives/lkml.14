@@ -1,106 +1,94 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532C35101A
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 11:44:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-35fffb6fe5bso9658625ab.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 03:44:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703504662; x=1704109462;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+4B/Y7Xktu4R9H20QOxdF1wSqBgogP+skocSpp48Db4=;
-        b=Ty+kV+76CBF8XhEHfIsORltfNuQYukHACcK8zOfuNQip6aoRSZeleAHHZU1HlEiRzO
-         FctI2S+q+CqTMbAdDS2tGFfHAoUiznb/7MRU9zADSNm0Ptpb5uSIKQ3q9EZdzXQ2IROd
-         uW3+Tmuvu+/UiVVmX1FdmeyZezKmNgtzUWmrCwpaf9EUh3NukoaNAa4NrIdwkKx11vR6
-         Y6VWqlr9MnC6o1zHj4dkqQh/NlfCGPOEtbx+PE5cAW1gWzFvcV1wWxnTcyk8ScqyQ3vc
-         neYWfHqZsaPBVbnFwiTihmx0wWS91O1pP0YUVOdWRa+pLFulkR5GU2bRP/pHjhO3zIsm
-         U0OA==
-X-Gm-Message-State: AOJu0YyGT34rmP4VRke7owO41KZB9QCWQrQAg4+E0Gs5xQ7irLNy3jSD
-	ofOM3wEEnlQFowJ6GxYPjylbkGlQwjtnt4cOPlfSU5+xEu6n
-X-Google-Smtp-Source: AGHT+IHaveJWoksd6OmAz16IH8OBR507StI7t0n1so1emX0Df7n/TSZQvXgA7VDePMLu/+1gNd9nHstYYdygCbudf4IrpUP+2Mr4
+Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D253051027;
+	Mon, 25 Dec 2023 11:47:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from luzhipeng.223.5.5.5 (unknown [125.120.146.113])
+	by mail-app3 (Coremail) with SMTP id cC_KCgCnHHC0a4llSthxAQ--.18589S2;
+	Mon, 25 Dec 2023 19:47:01 +0800 (CST)
+From: Zhipeng Lu <alexious@zju.edu.cn>
+To: alexious@zju.edu.cn
+Cc: Simon Horman <horms@kernel.org>,
+	Edward Cree <ecree.xilinx@gmail.com>,
+	Martin Habets <habetsm.xilinx@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-net-drivers@amd.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net] [v2] sfc: fix a double-free bug in efx_probe_filters
+Date: Mon, 25 Dec 2023 19:29:14 +0800
+Message-Id: <20231225112915.3544581-1-alexious@zju.edu.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c28:b0:35f:9ada:73a8 with SMTP id
- m8-20020a056e021c2800b0035f9ada73a8mr779075ilh.2.1703504662539; Mon, 25 Dec
- 2023 03:44:22 -0800 (PST)
-Date: Mon, 25 Dec 2023 03:44:22 -0800
-In-Reply-To: <000000000000e8099a060cee1003@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000048b478060d541670@google.com>
-Subject: Re: [syzbot] [perf?] WARNING in perf_event_open
-From: syzbot <syzbot+07144c543a5c002c7305@syzkaller.appspotmail.com>
-To: acme@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org, 
-	netdev@vger.kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com, 
-	xrivendell7@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cC_KCgCnHHC0a4llSthxAQ--.18589S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tFWDZF48ZrWfAFy8Kry8Xwb_yoW8GF4xpa
+	yYk342gr1rXF15W3WkJ34kZF98AayDXa47WFnIkw4fuw1qyrn8Cw1Sqaya9ryDArW3Aa1a
+	vwnYyr1UZ3ZxAFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
+	JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
+	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
+	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHU
+	DUUUUU=
+X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
 
-syzbot has found a reproducer for the following issue on:
+In efx_probe_filters, the channel->rps_flow_id is freed in a
+efx_for_each_channel marco  when success equals to 0.
+However, after the following call chain:
 
-HEAD commit:    5abde6246522 bpf: Avoid unnecessary use of comma operator ..
-git tree:       bpf-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=122f1609e80000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8f565e10f0b1e1fc
-dashboard link: https://syzkaller.appspot.com/bug?extid=07144c543a5c002c7305
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14857e81e80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1126ac36e80000
+ef100_net_open
+  |-> efx_probe_filters
+  |-> ef100_net_stop
+        |-> efx_remove_filters
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/a270020a37dc/disk-5abde624.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/6b0eb142c0ea/vmlinux-5abde624.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d6ceb3e9bf6a/bzImage-5abde624.xz
+The channel->rps_flow_id is freed again in the efx_for_each_channel of
+efx_remove_filters, triggering a double-free bug.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+07144c543a5c002c7305@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 5061 at kernel/events/core.c:1950 perf_event_validate_size kernel/events/core.c:1950 [inline]
-WARNING: CPU: 0 PID: 5061 at kernel/events/core.c:1950 __do_sys_perf_event_open+0x2748/0x2c70 kernel/events/core.c:12655
-Modules linked in:
-CPU: 0 PID: 5061 Comm: syz-executor128 Not tainted 6.7.0-rc5-syzkaller-01540-g5abde6246522 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
-RIP: 0010:perf_event_validate_size kernel/events/core.c:1950 [inline]
-RIP: 0010:__do_sys_perf_event_open+0x2748/0x2c70 kernel/events/core.c:12655
-Code: ff 48 8d b8 a8 00 00 00 e8 55 07 cf 08 bf 01 00 00 00 89 c3 89 c6 e8 47 71 d5 ff 83 eb 01 0f 84 2d ed ff ff e8 c9 75 d5 ff 90 <0f> 0b 90 e9 1f ed ff ff e8 bb 75 d5 ff be 03 00 00 00 48 89 ef e8
-RSP: 0018:ffffc9000398fd90 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: 00000000ffffffff RCX: ffffffff81b227c9
-RDX: ffff8880794c3b80 RSI: ffffffff81b227d7 RDI: 0000000000000005
-RBP: ffff888017e68608 R08: 0000000000000005 R09: 0000000000000001
-R10: 0000000000000000 R11: ffffffff915ec900 R12: ffff888024db5800
-R13: 1ffff92000731fbd R14: ffff8880794c3b80 R15: ffff888017e68608
-FS:  0000555555ca6380(0000) GS:ffff8880b9800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000002000006c CR3: 0000000059a59000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0x40/0x110 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-RIP: 0033:0x7fddcf7ef369
-Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffc7c42b4a8 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
-RAX: ffffffffffffffda RBX: 00007ffc7c42b688 RCX: 00007fddcf7ef369
-RDX: 00000000ffffffff RSI: 0000000000000000 RDI: 0000000020000000
-RBP: 00007fddcf862610 R08: 0000000000000000 R09: 0000000000000000
-R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000000001
-R13: 00007ffc7c42b678 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
-
-
+Fixes: a9dc3d5612ce ("sfc_ef100: RX filter table management and related gubbins")
+Reviewed-by: Simon Horman <horms@kernel.org>
+Reviewed-by: Edward Cree <ecree.xilinx@gmail.com>
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
 ---
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+Changelog:
+
+v2: Correct the call-chain description in commit message and change
+patch subject.
+---
+ drivers/net/ethernet/sfc/rx_common.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/sfc/rx_common.c b/drivers/net/ethernet/sfc/rx_common.c
+index d2f35ee15eff..fac227d372db 100644
+--- a/drivers/net/ethernet/sfc/rx_common.c
++++ b/drivers/net/ethernet/sfc/rx_common.c
+@@ -823,8 +823,10 @@ int efx_probe_filters(struct efx_nic *efx)
+ 		}
+ 
+ 		if (!success) {
+-			efx_for_each_channel(channel, efx)
++			efx_for_each_channel(channel, efx) {
+ 				kfree(channel->rps_flow_id);
++				channel->rps_flow_id = NULL;
++			}
+ 			efx->type->filter_table_remove(efx);
+ 			rc = -ENOMEM;
+ 			goto out_unlock;
+-- 
+2.34.1
+
