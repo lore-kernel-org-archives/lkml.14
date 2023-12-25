@@ -1,94 +1,172 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138722E41A;
-	Mon, 25 Dec 2023 10:20:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0270E2E41A
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 10:21:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="njxlL7Ss"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1703499619; x=1704104419; i=markus.elfring@web.de;
-	bh=BcDjKBOyEaRKAxrqJ8HhD9NG+93EcGaceaR8TsHG4xc=;
-	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
-	 In-Reply-To;
-	b=njxlL7SsWq3EoKB7t/Stasqu/iiTq+qCDkeVWW0/9HtseAk/GOLk5ethgcI2gcTt
-	 B5H0dLfJmNZa9TrD/nGl0zsSLEBuevJ1XHeWDmXl7qHJYbFJXMpU/psZmIbOBcVXK
-	 xQgTBdyuajcPq7j5rKQu7AZjKbudA2ipENUZqm2s3f/i6sw59D5TPq/1Hmevvqj15
-	 13fcmAFP9ikphFnmWyN5ntPfs0z0w5MNGsI0A12YbrrZkHGM2ZgOy14m5lD1S+c6d
-	 cfXx5XIvWcesJ9b1FaNm8Kamh7c1t9avy3NcCOogGx6GjvOnyFjXNAb6t2dNG5fN6
-	 x9i4gb4pMI+gj72EiQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MWz8v-1rjzMA2EUD-00XEuK; Mon, 25
- Dec 2023 11:20:19 +0100
-Message-ID: <04ced4fa-90b5-4dd7-8f50-2f898b2c0855@web.de>
-Date: Mon, 25 Dec 2023 11:20:18 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="li2DkUGV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EECB5C433C8;
+	Mon, 25 Dec 2023 10:21:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703499709;
+	bh=i1SHljfWffchKYIbBiC+XAF1L/ESbbhX8W1UTDP5DLo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=li2DkUGVp9xq9yTJP0kHPw1M24XeclXEsWzag2D3ZMeVYn5LzYk51j+oGOdBtGisL
+	 bC6BZOszdWI1I1zAD1clav5bZppi6co2RoAz0joDC7LILXVoGU98L3YMlu558g+VBR
+	 we++UoZFECEmYGoUOmQ6gua+dQBNTfrh4M5PpWO8o9cPysnhOxiX4UhvuS0nNtBlls
+	 GyxQFaG1sm1Djec1ZSZQ+g4mFqfV364A1bQfqkAKfvbU8oM2jdCpHeE8TxweyE4uzL
+	 Lzz8NvqQqfRvz1tUhdqrlOW5SKUl4W4ulrkXcWk6QgN5W6aXKS5FUS4NObbnxq72Md
+	 Kxx1dZ2Wczkng==
+Date: Mon, 25 Dec 2023 18:09:11 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Anton Blanchard <antonb@tenstorrent.com>
+Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: Improve exception and system call latency
+Message-ID: <ZYlUxxeEmvewNzyL@xhacker>
+References: <20231225040018.1660554-1-antonb@tenstorrent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH 2/3] dmaengine: timb_dma: Improve a size determination in
- td_alloc_init_desc()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-To: dmaengine@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Vinod Koul <vkoul@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr
-References: <ebd531dd-60e3-4ac3-821e-aa9890960283@web.de>
-In-Reply-To: <ebd531dd-60e3-4ac3-821e-aa9890960283@web.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Hj+qur51bNboQvrcogJaAioT17jm3VMz9CFbZ6eqKgDxp9sPq3v
- IV5MHrUZQYKCpcBdE18ug+tw4+ty1LiaE29qw3xnn2FYGrLUa26k3TOgQPDQWkO1u0mtQ0j
- 2E72Wh6j/y1CYPwhaYjGTjmjvdcAB8vNwxCKDCkCTuqMy+yW6A22nTZLq8/n2nmoff6ijgv
- 2EMq14MgnJDhDnp6sXY0g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:EechiKC28UA=;Avaih5tdOdZMgr/C+RawOPJ/OYI
- hYAadsHCz8Zdqx78XOgZrEtDT56dqhsT2AU9NKxcF5+HhzCvnOehzkgLI/JFnOPX2OeiICYMg
- izn2Xhj+qRneoJQ7TbEs6ebZItXTH+SmH8Hzs8qZv1qc/hWk1WmQIjTzN7GSVsj6cWTNuweOi
- 8HlhABAvO7XG+Z62u/YSetdFK3fO5VoY+EXaRWPsQtA3dk2VEAxtFd0LK/iRKR4qsb2eRbyd9
- 2by6EQc75pvclmCaYge+Hga3wQT8jIua77L7kgJzyeiy3drArTULhzoLz26yfrofUWT3b4x9D
- w+A1B+W0eOV//sUMuNiMz6ZCaKz/xwkHbjpJNH94SlRC+TzjKOS3968VseQjrRemqpzqBdQsS
- QHpqSK0REDz3doOtBwUuvyuL8LItkQNM9FlRAtdRqCBT265AG1UOteUgBraMR4fjHln8S6xN8
- dmN37eRWGmsqUlsWS3Wo1eXV2H2P8keXRmO1OUIk2RJCV2ML7hb9VDARLWF7Gneg3C0/CUcr3
- dsMML2P5nceDpesSCfuYhS+i3guv/NyV7A9IurMEBxgq1jJkpLY1BJbLxK1YGKMnl+szQzFCS
- onzYdHxoCEswNPTEKQZii0/eFkEzxxR1XVYlVu+Y+9MGuNY8Xv1p48hxyPHSCMWTHmk+b+Ot7
- 31iXQUuyb1kENTNO4Mls/Vv6rW2X1+hmgI/diazCEDUToODgqExarvjMPX95cTbKV8KnAByfE
- Xp2G3cZ5cc7caLfi6TTtH57b1l51ipCPuchjKppqsO+KoMfcQduv3IDQUAEcbWAMWKtVRURTc
- ylK/bQJ8XKcFDGXgcU7AwQvli1AY0SHAchwNh0sh9vi3zLi/7nOHlFQmK+C9qmAMQkgL5wkRr
- BKvQ8HXlqHaacDoSB2jOM2ZD8EjuVbrg7OKajEQJPGQ8+w3CuVLyaGUNqVcYhId3ObhRI8Kgo
- so3qbT8p6m0SA+mA/B6lR8wAmxk=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20231225040018.1660554-1-antonb@tenstorrent.com>
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Mon, 25 Dec 2023 10:50:10 +0100
+On Sun, Dec 24, 2023 at 08:00:18PM -0800, Anton Blanchard wrote:
+> Many CPUs implement return address branch prediction as a stack. The
+> RISCV architecture refers to this as a return address stack (RAS). If
+> this gets corrupted then the CPU will mispredict at least one but
+> potentally many function returns.
+> 
+> There are two issues with the current RISCV exception code:
+> 
+> - We are using the alternate link stack (x5/t0) for the indirect branch
+>   which makes the hardware think this is a function return. This will
+>   corrupt the RAS.
+> 
+> - We modify the return address of handle_exception to point to
+>   ret_from_exception. This will also corrupt the RAS.
+> 
+> Testing the null system call latency before and after the patch:
+> 
+> Visionfive2 (StarFive JH7110 / U74)
+> baseline: 189.87 ns
+> patched:  176.76 ns
+> 
+> Lichee pi 4a (T-Head TH1520 / C910)
+> baseline: 666.58 ns
+> patched:  636.90 ns
+> 
+> Just over 7% on the U74 and just over 4% on the C910.
 
-Replace the specification of a data structure by a pointer dereference
-as the parameter for the operator "sizeof" to make the corresponding size
-determination a bit safer according to the Linux coding style convention.
+Nice improvement!
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/dma/timb_dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Signed-off-by: Anton Blanchard <antonb@tenstorrent.com>
+> ---
+> 
+> This introduces some complexity in the stackframe walk code. PowerPC
+> resolves the multiple exception exit paths issue by placing a value into
+> the exception stack frame (basically the word "REGS") that the stack frame
+> code can look for. Perhaps something to look at.
+> 
+>  arch/riscv/kernel/entry.S      | 21 ++++++++++++++-------
+>  arch/riscv/kernel/stacktrace.c | 14 +++++++++++++-
+>  2 files changed, 27 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+> index 54ca4564a926..89af35edbf6c 100644
+> --- a/arch/riscv/kernel/entry.S
+> +++ b/arch/riscv/kernel/entry.S
+> @@ -84,7 +84,6 @@ SYM_CODE_START(handle_exception)
+>  	scs_load_current_if_task_changed s5
+>  
+>  	move a0, sp /* pt_regs */
+> -	la ra, ret_from_exception
+>  
+>  	/*
+>  	 * MSB of cause differentiates between
+> @@ -93,7 +92,10 @@ SYM_CODE_START(handle_exception)
+>  	bge s4, zero, 1f
+>  
+>  	/* Handle interrupts */
+> -	tail do_irq
+> +	call do_irq
+> +.globl ret_from_irq_exception
+> +ret_from_irq_exception:
+> +	j ret_from_exception
+>  1:
+>  	/* Handle other exceptions */
+>  	slli t0, s4, RISCV_LGPTR
+> @@ -101,11 +103,16 @@ SYM_CODE_START(handle_exception)
+>  	la t2, excp_vect_table_end
+>  	add t0, t1, t0
+>  	/* Check if exception code lies within bounds */
+> -	bgeu t0, t2, 1f
+> -	REG_L t0, 0(t0)
+> -	jr t0
+> -1:
+> -	tail do_trap_unknown
+> +	bgeu t0, t2, 3f
+> +	REG_L t1, 0(t0)
+> +2:	jalr ra,t1
 
-diff --git a/drivers/dma/timb_dma.c b/drivers/dma/timb_dma.c
-index abcab0b1ad3b..fc1f67bf9c06 100644
-=2D-- a/drivers/dma/timb_dma.c
-+++ b/drivers/dma/timb_dma.c
-@@ -325,7 +325,7 @@ static struct timb_dma_desc *td_alloc_init_desc(struct=
- timb_dma_chan *td_chan)
- 	struct timb_dma_desc *td_desc;
- 	int err;
+can be simplified to
+	jalr t1
 
--	td_desc =3D kzalloc(sizeof(struct timb_dma_desc), GFP_KERNEL);
-+	td_desc =3D kzalloc(sizeof(*td_desc), GFP_KERNEL);
- 	if (!td_desc)
- 		return NULL;
+with the above change,
+Reviewed-by: Jisheng Zhang <jszhang@kernel.org>
 
-=2D-
-2.43.0
-
+> +.globl ret_from_other_exception
+> +ret_from_other_exception:
+> +	j ret_from_exception
+> +3:
+> +
+> +	la t1, do_trap_unknown
+> +	j 2b
+>  SYM_CODE_END(handle_exception)
+>  
+>  /*
+> diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
+> index 64a9c093aef9..b9cd131bbc4c 100644
+> --- a/arch/riscv/kernel/stacktrace.c
+> +++ b/arch/riscv/kernel/stacktrace.c
+> @@ -17,6 +17,18 @@
+>  #ifdef CONFIG_FRAME_POINTER
+>  
+>  extern asmlinkage void ret_from_exception(void);
+> +extern asmlinkage void ret_from_irq_exception(void);
+> +extern asmlinkage void ret_from_other_exception(void);
+> +
+> +static inline bool is_exception_frame(unsigned long pc)
+> +{
+> +	if ((pc == (unsigned long)ret_from_exception) ||
+> +	    (pc == (unsigned long)ret_from_irq_exception) ||
+> +	    (pc == (unsigned long)ret_from_other_exception))
+> +		return true;
+> +
+> +	return false;
+> +}
+>  
+>  void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
+>  			     bool (*fn)(void *, unsigned long), void *arg)
+> @@ -62,7 +74,7 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
+>  			fp = frame->fp;
+>  			pc = ftrace_graph_ret_addr(current, NULL, frame->ra,
+>  						   &frame->ra);
+> -			if (pc == (unsigned long)ret_from_exception) {
+> +			if (is_exception_frame(pc)) {
+>  				if (unlikely(!__kernel_text_address(pc) || !fn(arg, pc)))
+>  					break;
+>  
+> -- 
+> 2.25.1
+> 
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
