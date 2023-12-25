@@ -1,103 +1,95 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D96552F9C
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 18:13:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rHpS2-00024Y-Ur; Mon, 25 Dec 2023 19:13:18 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rHpS0-001TaU-OR; Mon, 25 Dec 2023 19:13:17 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rHpS1-000xT8-2T;
-	Mon, 25 Dec 2023 19:13:17 +0100
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de,
-	linux-pwm@vger.kernel.org
-Subject: [PATCH v2 1/2] bus: ts-nbus: Convert to atomic pwm API
-Date: Mon, 25 Dec 2023 19:12:52 +0100
-Message-ID:  <ca6d8b6de73ac4b2b612b04eb8ea85cdc3aebc0e.1703527372.git.u.kleine-koenig@pengutronix.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C29253E24;
+	Mon, 25 Dec 2023 18:14:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LkZSt71s"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40d41555f9dso39654355e9.2;
+        Mon, 25 Dec 2023 10:14:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703528042; x=1704132842; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rz81Z+AsrglFOvFGWIx/vdHHlB2ARV8OVKRT2IbjlJE=;
+        b=LkZSt71std6SfDismfeOiJg2rVTb6A5Tiq21rf2QC07dKNoEhwVyGph5Ccf/7CGAdd
+         /+MNJvuJ27e14eUgd3oWGrdvpgFaH/mixO3seBDqINH/y+aZFerIYtqvhPAJD9+kzoBf
+         g5Kof0hLry4nBruiXp08RwqRC3yjJPSLc16sWieebFzIWZZiQ7g8OvKTvylR1dUfO///
+         D1Bj9BmFQovJnGG3IVMr447VAzNo9rE+2+ZzWS7XdBHUbRfDFIsKaGPzQZmLdbTWk0Uu
+         OBl05AhqINihs0J1ckBh9fYgl90Xx8wdJbfDLVb8S22jCmtRif9/Xf6LoTVJT6dDpOal
+         dYRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703528042; x=1704132842;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rz81Z+AsrglFOvFGWIx/vdHHlB2ARV8OVKRT2IbjlJE=;
+        b=YerrxOXeXRowrE1LRs1GYHy0ot1n6IFM+CDhzc1Ot3hzXnoinSwOYU3ArEvggGJaBO
+         kNdiLRQXqRygnaDG6KWO5okFbs76ieBHabLXTe0sKxBc0u+5G+kPEJEBgsB1fFvHYtc4
+         dKbaDAyQQJGiBluoMsBQUr2qtERj9oJLFSHRgPDzDCSQZwukhj/m+SqrDHS/rPBCC3+4
+         cZhH8D5YSN5e8XjTzGGE9NwdPUj1Q+UZBHi3nuI9Cdx5vcBG/rLuhMG5YsnA10HJChjR
+         +g3K5HsgtTgIgnTJzeYf/08uyVZ8XPWMTBks2WiqDFqkNGgh4JvHXzBnRvveOT+zNoC9
+         7zYg==
+X-Gm-Message-State: AOJu0Yxzys7tS7gGysU35STEWC9jADMkOrGNjuvBSAj0oBjzv765qcCQ
+	4CAwWpZRtbHE1A0IUDg01o8=
+X-Google-Smtp-Source: AGHT+IHsCJppzurm5GNWQBN+9kFR/KLp8m/kudotLA7VKadEEEmMdxDHCJg6uOmq586jCvIkIzsTeQ==
+X-Received: by 2002:a05:600c:1390:b0:40c:6c80:efa4 with SMTP id u16-20020a05600c139000b0040c6c80efa4mr3641775wmf.35.1703528042273;
+        Mon, 25 Dec 2023 10:14:02 -0800 (PST)
+Received: from localhost.localdomain ([2a02:842a:1ce:5301:f733:18af:2fff:3d3d])
+        by smtp.gmail.com with ESMTPSA id jg7-20020a05600ca00700b0040c46719966sm25640085wmb.25.2023.12.25.10.14.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Dec 2023 10:14:02 -0800 (PST)
+From: Dorian Cruveiller <doriancruveiller@gmail.com>
+To: perex@perex.cz,
+	tiwai@suse.com,
+	sbinding@opensource.cirrus.com,
+	kailang@realtek.com,
+	luke@ljones.dev,
+	andy.chi@canonical.com,
+	shenghao-ding@ti.com,
+	ruinairas1992@gmail.com,
+	l.guzenko@web.de,
+	yangyuchi66@gmail.com,
+	vitalyr@opensource.cirrus.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Dorian Cruveiller <doriancruveiller@gmail.com>
+Subject: [PATCH] Add support for cirrus cs35l41 sound amplifier
+Date: Mon, 25 Dec 2023 19:13:52 +0100
+Message-ID: <20231225181352.185455-1-doriancruveiller@gmail.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1703527372.git.u.kleine-koenig@pengutronix.de>
-References: <cover.1703527372.git.u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1441; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=61dg6kJV4BhcvrrnMUjQLyQd3kNaWCq2zXIx0/k9U3g=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlicYrApVp2AghnOZRenfLlyNCDj11FmxSGu9Tm SyzdkyY+PeJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZYnGKwAKCRCPgPtYfRL+ ToNKCACAbl7r+yqdYqOTwZnl/WI1HPX8dJjgKDztfwqjRdX289u0rz3IxHS+WV3yldixYTSV/zD cAzGJxECh7drgCgzQG89WyYnL3Jm71lmEqD/ax77fxCcWWHVCqvgTIOz6Jp9Bu8cpSL3NQ5iUzM lP9IoTAmIz0nXyZEJKgW80W/K7c3XI6N35mYz9N1xoqVOdvoluXCvOPywN2lxPIy1dNvt/tRL0g m2Z+HhGb0c2+oaU1fWh6Wezew7lVtOzxq7R1/UmwRJcMby79Y8tRkaRjt1kU3aZ94E6ZThG2q3H F6DyWXl20cCqaMPIkmwMkhJNODzL3oFKGFrnmn98IwRnJQv4
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-With this change the PWM hardware is only configured once (instead of
-three times).
+Link up the realtek audio chip to the cirrus cs35l41 sound amplifier chip
+on 2 two models of the Lenovo legion slim 7 gen 8 (2023). These models are
+16IRH8 and 16APH8.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Dorian Cruveiller <doriancruveiller@gmail.com>
 ---
- drivers/bus/ts-nbus.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ sound/pci/hda/patch_realtek.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/bus/ts-nbus.c b/drivers/bus/ts-nbus.c
-index 4fa932cb0915..19c5d1f4e4d7 100644
---- a/drivers/bus/ts-nbus.c
-+++ b/drivers/bus/ts-nbus.c
-@@ -273,7 +273,7 @@ EXPORT_SYMBOL_GPL(ts_nbus_write);
- static int ts_nbus_probe(struct platform_device *pdev)
- {
- 	struct pwm_device *pwm;
--	struct pwm_args pargs;
-+	struct pwm_state state;
- 	struct device *dev = &pdev->dev;
- 	struct ts_nbus *ts_nbus;
- 	int ret;
-@@ -296,25 +296,22 @@ static int ts_nbus_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	pwm_get_args(pwm, &pargs);
--	if (!pargs.period) {
-+	pwm_init_state(pwm, &state);
-+	if (!state.period) {
- 		dev_err(&pdev->dev, "invalid PWM period\n");
- 		return -EINVAL;
- 	}
- 
--	/*
--	 * FIXME: pwm_apply_args() should be removed when switching to
--	 * the atomic PWM API.
--	 */
--	pwm_apply_args(pwm);
--	ret = pwm_config(pwm, pargs.period, pargs.period);
-+	state.duty_cycle = state.period;
-+	state.enabled = true;
-+
-+	ret = pwm_apply_state(pwm, &state);
- 	if (ret < 0)
- 		return ret;
- 
- 	/*
- 	 * we can now start the FPGA and populate the peripherals.
- 	 */
--	pwm_enable(pwm);
- 	ts_nbus->pwm = pwm;
- 
- 	/*
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index c3a756528886..d8c8bb4c71b7 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -10208,6 +10208,8 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x17aa, 0x3819, "Lenovo 13s Gen2 ITL", ALC287_FIXUP_13S_GEN2_SPEAKERS),
+ 	SND_PCI_QUIRK(0x17aa, 0x3820, "Yoga Duet 7 13ITL6", ALC287_FIXUP_YOGA7_14ITL_SPEAKERS),
+ 	SND_PCI_QUIRK(0x17aa, 0x3824, "Legion Y9000X 2020", ALC285_FIXUP_LEGION_Y9000X_SPEAKERS),
++	SND_PCI_QUIRK(0x17aa, 0x38b4, "Legion Slim 7 16IRH8", ALC287_FIXUP_CS35L41_I2C_2),
++	SND_PCI_QUIRK(0x17aa, 0x38b7, "Legion Slim 7 16APH8", ALC287_FIXUP_CS35L41_I2C_2),
+ 	SND_PCI_QUIRK(0x17aa, 0x3827, "Ideapad S740", ALC285_FIXUP_IDEAPAD_S740_COEF),
+ 	SND_PCI_QUIRK(0x17aa, 0x3834, "Lenovo IdeaPad Slim 9i 14ITL5", ALC287_FIXUP_YOGA7_14ITL_SPEAKERS),
+ 	SND_PCI_QUIRK(0x17aa, 0x383d, "Legion Y9000X 2019", ALC285_FIXUP_LEGION_Y9000X_SPEAKERS),
 -- 
 2.43.0
 
