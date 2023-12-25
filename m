@@ -1,134 +1,156 @@
-Received: from out28-79.mail.aliyun.com (out28-79.mail.aliyun.com [115.124.28.79])
+Received: from out28-66.mail.aliyun.com (out28-66.mail.aliyun.com [115.124.28.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C04D179A2
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 09:57:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BE510A32;
+	Mon, 25 Dec 2023 10:11:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sjterm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sjterm.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07447141|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.157524-0.0058014-0.836675;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047187;MF=fuyao@sjterm.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.VsS8aFT_1703497925;
-Received: from localhost(mailfrom:fuyao@sjterm.com fp:SMTPD_---.VsS8aFT_1703497925)
+X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07467577|-1;BR=01201311R751ec;CH=green;DM=|CONTINUE|false|;DS=SPAM|spam_ad|0.839325-0.000325292-0.160349;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047213;MF=fuyao@sjterm.com;NM=1;PH=DS;RN=16;RT=16;SR=0;TI=SMTPD_---.VsSYimv_1703499085;
+Received: from localhost(mailfrom:fuyao@sjterm.com fp:SMTPD_---.VsSYimv_1703499085)
           by smtp.aliyun-inc.com;
-          Mon, 25 Dec 2023 17:52:06 +0800
-Date: Mon, 25 Dec 2023 17:52:05 +0800
+          Mon, 25 Dec 2023 18:11:25 +0800
+Date: Mon, 25 Dec 2023 18:11:24 +0800
 From: fuyao <fuyao@sjterm.com>
 To: Andre Przywara <andre.przywara@arm.com>
-Cc: fuyao <fuyao1697@cyg.com>, Lee Jones <lee@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
+Cc: fuyao <fuyao1697@cyg.com>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
 	Jernej Skrabec <jernej.skrabec@gmail.com>,
 	Samuel Holland <samuel@sholland.org>,
+	Alexandre TORGUE <alexandre.torgue@st.com>,
+	Enric Balletbo i Serra <eballetbo@gmail.com>,
+	Baruch Siach <baruch@tkos.co.il>,
+	Paul Barker <paul.barker@sancloud.com>, devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
-	maijianzhang <maijianzhang@allwinnertech.com>
-Subject: Re: [PATCH RESEND] iio: adc: sun4i-gpadc-iio: adaptation interrupt
- number
-Message-ID: <ZYlQxccd-_1kyHt5@debian.cyg>
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] ARM: dts: sun8i: r40: open the regulator aldo1
+Message-ID: <ZYlVTFrWkPaci92K@debian.cyg>
 Mail-Followup-To: Andre Przywara <andre.przywara@arm.com>,
-	fuyao <fuyao1697@cyg.com>, Lee Jones <lee@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
+	fuyao <fuyao1697@cyg.com>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
 	Jernej Skrabec <jernej.skrabec@gmail.com>,
 	Samuel Holland <samuel@sholland.org>,
+	Alexandre TORGUE <alexandre.torgue@st.com>,
+	Enric Balletbo i Serra <eballetbo@gmail.com>,
+	Baruch Siach <baruch@tkos.co.il>,
+	Paul Barker <paul.barker@sancloud.com>, devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
-	maijianzhang <maijianzhang@allwinnertech.com>
-References: <YxmR5SPPY18O7LaG@google.com>
- <YwdhTlk+9h+9Mrwm@scg>
- <20231220115412.65bbc8c7@donnerap.manchester.arm.com>
+	linux-kernel@vger.kernel.org
+References: <ZYKjYypuAx7gNuam@debian.cyg>
+ <20231220150400.0f32e2a5@donnerap.manchester.arm.com>
+ <ZYOhAQi7XeLUuAC9@debian.cyg>
+ <20231221103906.1830ef94@donnerap.manchester.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231220115412.65bbc8c7@donnerap.manchester.arm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231221103906.1830ef94@donnerap.manchester.arm.com>
 Organization: work_work_work
 
-On Wed, Dec 20, 2023 at 11:54:12AM +0000, Andre Przywara wrote:
-> On Wed, 20 Dec 2023 15:23:17 +0800
-> fuyao <fuyao1697@cyg.com> wrote:
+On Thu, Dec 21, 2023 at 10:39:06AM +0000, Andre Przywara wrote:
+> On Thu, 21 Dec 2023 10:20:49 +0800
+> fuyao <fuyao@sjterm.com> wrote:
 > 
 > Hi,
 > 
-> > __platform_get_irq_byname determinies whether the interrupt
-> > number is 0 and returns EINVAL.
+> thanks for the reply!
 > 
-> can you please say what this fixes, exactly? Is something not working at
-> the moment? Can you please provide parts of the error message?
+> > On Wed, Dec 20, 2023 at 03:04:00PM +0000, Andre Przywara wrote:
+> > > On Wed, 20 Dec 2023 16:18:43 +0800
+> > > fuyao <fuyao1697@cyg.com> wrote:
+> > > 
+> > > Hi,
+> > >   
+> > > > the aldo1 is connect regulator pin which power the TV.  
+> > > 
+> > > What do you mean with that? That ALDO1 is connected to VCC-TVOUT and/or
+> > > VCC-TVIN on the R40 SoC?  
+> > 
+> > The ALDO1 is connected to VCC-TVOUT on the R40 Soc.
 > 
-
-With open MFD_SUN4I_GPADC and SUN4I_GPADC, It happens:
-
-[    0.185068] ------------[ cut here ]------------
-[    0.185093] WARNING: CPU: 3 PID: 1 at drivers/base/platform.c:451 __platform_get_irq_byname+0xb8/0xc4
-[    0.185131] 0 is an invalid IRQ number
-[    0.185140] Modules linked in:
-[    0.185160] CPU: 3 PID: 1 Comm: swapper/0 Not tainted 6.7.0-rc6 #9
-[    0.185179] Hardware name: Allwinner sun8i Family
-[    0.185203]  unwind_backtrace from show_stack+0x10/0x14
-[    0.185234]  show_stack from dump_stack_lvl+0x48/0x54
-[    0.185262]  dump_stack_lvl from __warn+0xcc/0x1ac
-[    0.185285]  __warn from warn_slowpath_fmt+0xb4/0x168
-[    0.185304]  warn_slowpath_fmt from __platform_get_irq_byname+0xb8/0xc4
-[    0.185328]  __platform_get_irq_byname from platform_get_irq_byname+0x10/0x38
-[    0.185354]  platform_get_irq_byname from sun4i_irq_init+0x40/0xdc
-[    0.185382]  sun4i_irq_init from sun4i_gpadc_probe+0x1cc/0x310
-[    0.185403]  sun4i_gpadc_probe from platform_probe+0x98/0xc0
-[    0.185426]  platform_probe from really_probe+0x10c/0x374
-[    0.185450]  really_probe from __driver_probe_device+0x90/0x188
-[    0.185473]  __driver_probe_device from driver_probe_device+0x3c/0x198
-[    0.185496]  driver_probe_device from __driver_attach+0x118/0x1b4
-[    0.185518]  __driver_attach from bus_for_each_dev+0x104/0x148
-[    0.185540]  bus_for_each_dev from bus_add_driver+0x164/0x25c
-[    0.185560]  bus_add_driver from driver_register+0x70/0x118
-[    0.185582]  driver_register from do_one_initcall+0xcc/0x29c
-[    0.185605]  do_one_initcall from do_initcall_level+0x80/0x8c
-[    0.185630]  do_initcall_level from do_initcalls+0x50/0x80
-[    0.185653]  do_initcalls from kernel_init_freeable+0xb0/0xfc
-[    0.185675]  kernel_init_freeable from kernel_init+0x14/0x1b4
-[    0.185698]  kernel_init from ret_from_fork+0x14/0x28
-[    0.185720] Exception stack(0xf0825fb0 to 0xf0825ff8)
-[    0.185737] 5fa0:                                     00000000 00000000 00000000 00000000
-[    0.185756] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    0.185775] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[    0.185788] ---[ end trace 0000000000000000 ]---
-[    0.185804] sun4i-gpadc-iio sun6i-a31-gpadc-iio.0: error -EINVAL: IRQ FIFO_DATA_PENDING not found
-[    0.185828] sun4i-gpadc-iio: probe of sun6i-a31-gpadc-iio.0 failed with error -22
-
-The gpadc-iio can not request irq.
-
-> And maybe expand the explanation a bit more? For instance mention that the
-> identifiers are used as IRQ resource numbers, where 0 is treated specially.
+> Ah, thanks for the confirmation.
 > 
-
-thanks
-
-> Cheers,
+> > > > The USB core use TV ref as reference Voltage.  
+> > > 
+> > > The USB core in the SoC? So pin VCC-USB, which requires 3.3V, the same
+> > > voltage as the TV pins?
+> > > Which means this doesn't really have much to do with TV, it's just that
+> > > USB and also "TV" are supplied by ALDO1?  
+> > 
+> > The internal USB PHY requires a reference voltage. It seems that in
+> > order to save costs, the reference voltage of the TVOUT module is used.
+> 
+> Do you mean a USB *reference* voltage that is separate from the USB PHY
+> power supply voltage, so pin VCC-USB on the SoC? And that it is internally
+> connected to some TV-OUT related circuits? So that would apply to all
+> devices using the R40 SoC then?
+yes, The usb need a power from TV module insides.
+> 
+> Or is it simply that the SoC pins VCC-TVOUT and VCC-USB are connected
+> together, on this SoM?
+no
+> Do you have access to some schematic? I couldn't find one online easily,
+> so cannot check this myself.
+> 
+It has up to https://file.io/VSUL4FDrapDY
+> Thanks,
 > Andre
 > 
+> > > > Signed-off-by: fuyao <fuyao1697@cyg.com>
+> > > > ---
+> > > >  arch/arm/boot/dts/allwinner/sun8i-r40-feta40i.dtsi | 7 +++++++
+> > > >  1 file changed, 7 insertions(+)
+> > > > 
+> > > > diff --git a/arch/arm/boot/dts/allwinner/sun8i-r40-feta40i.dtsi b/arch/arm/boot/dts/allwinner/sun8i-r40-feta40i.dtsi
+> > > > index 9f39b5a2bb35..8906170461df 100644
+> > > > --- a/arch/arm/boot/dts/allwinner/sun8i-r40-feta40i.dtsi
+> > > > +++ b/arch/arm/boot/dts/allwinner/sun8i-r40-feta40i.dtsi
+> > > > @@ -42,6 +42,13 @@ &pio {
+> > > >  	vcc-pg-supply = <&reg_dldo1>;
+> > > >  };
+> > > >  
+> > > > +&reg_aldo1 {
+> > > > +	regulator-always-on;  
+> > > 
+> > > So did USB never work before, with the DT as in mainline?
+> > >   
 > > 
-> > Signed-off-by: fuyao <fuyao1697@cyg.com>
-> > Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
-> > ---
-> >  include/linux/mfd/sun4i-gpadc.h | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > The USB can work, but is unstable. Occasionally disconnected because of
+> > the D+/D- electrical characteristics.
 > > 
-> > diff --git a/include/linux/mfd/sun4i-gpadc.h b/include/linux/mfd/sun4i-gpadc.h
-> > index ea0ccf33a459..021f820f9d52 100644
-> > --- a/include/linux/mfd/sun4i-gpadc.h
-> > +++ b/include/linux/mfd/sun4i-gpadc.h
-> > @@ -81,8 +81,8 @@
-> >  #define SUN4I_GPADC_TEMP_DATA				0x20
-> >  #define SUN4I_GPADC_DATA				0x24
-> >  
-> > -#define SUN4I_GPADC_IRQ_FIFO_DATA			0
-> > -#define SUN4I_GPADC_IRQ_TEMP_DATA			1
-> > +#define SUN4I_GPADC_IRQ_FIFO_DATA			1
-> > +#define SUN4I_GPADC_IRQ_TEMP_DATA			2
-> >  
-> >  /* 10s delay before suspending the IP */
-> >  #define SUN4I_GPADC_AUTOSUSPEND_DELAY			10000
-> 
+> > > For always-on regulators it would be good to see some rationale why this
+> > > cannot be referenced by its consumer. If it is really supplying the USB
+> > > core, that would be a reason, because we don't have a good way of
+> > > describing this.
+> > >   
+> > > > +	regulator-min-microvolt = <3300000>;
+> > > > +	regulator-max-microvolt = <3300000>;
+> > > > +	regulator-name = "vcc-aldo1";  
+> > > 
+> > > Regulators should be named after their users, so use something like:
+> > > 	regulator-name = "vcc-3v3-tv-usb";
+> > >   
+> > 
+> > thanks.
+> > 
+> > > That then also serves as documentation of why this is always on.
+> > > 
+> > > Cheers,
+> > > Andre
+> > >   
+> > > > +};
+> > > > +
+> > > >  &reg_aldo2 {
+> > > >  	regulator-always-on;
+> > > >  	regulator-min-microvolt = <1800000>;  
+> > >   
+> > 
 
 -- 
-CYG Technology.
+fuyao [付尧]
