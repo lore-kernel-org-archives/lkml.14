@@ -1,94 +1,96 @@
-Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D253051027;
-	Mon, 25 Dec 2023 11:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from luzhipeng.223.5.5.5 (unknown [125.120.146.113])
-	by mail-app3 (Coremail) with SMTP id cC_KCgCnHHC0a4llSthxAQ--.18589S2;
-	Mon, 25 Dec 2023 19:47:01 +0800 (CST)
-From: Zhipeng Lu <alexious@zju.edu.cn>
-To: alexious@zju.edu.cn
-Cc: Simon Horman <horms@kernel.org>,
-	Edward Cree <ecree.xilinx@gmail.com>,
-	Martin Habets <habetsm.xilinx@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-net-drivers@amd.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net] [v2] sfc: fix a double-free bug in efx_probe_filters
-Date: Mon, 25 Dec 2023 19:29:14 +0800
-Message-Id: <20231225112915.3544581-1-alexious@zju.edu.cn>
-X-Mailer: git-send-email 2.34.1
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E99851028
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 11:55:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XQCBBETL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703505313; x=1735041313;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=XWQ4keVBh9cgWXfKOdckPYZe1qq7Gir5fRY0k1ymAyk=;
+  b=XQCBBETLWot5iCQ8Pr0S5wbrAuKKPz3IDmr2ZTjcU6e/ESkQMFSCS0An
+   fQO6Co33F3zDIqz2qABKGTjX4PrzY+IlYLqioW3IfazC8q3fifdQxnHAz
+   4xLNexz8YEk1qawZeED6i74L/A7pCLDYwrjKxvA98sT/k4TBr9Xgmh6rB
+   pfzdvjhuMpOEUNoK8N/C107Tg+kevUcQaAA5rXP/uUDR1bFdXt4kDI+qx
+   ytVG26pZiMZKzHsB/g1PRBB0V1PdgFaX8a/aWLOrmJPUBSSZRw+fk8R5Z
+   sooNaZMLDc+uo0FWV2mnJFIHLgLXlvel+hzVzM9u/D2614px6V5NREpWv
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="482459916"
+X-IronPort-AV: E=Sophos;i="6.04,303,1695711600"; 
+   d="scan'208";a="482459916"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Dec 2023 03:55:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.04,303,1695711600"; 
+   d="scan'208";a="12186495"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by fmviesa002.fm.intel.com with ESMTP; 25 Dec 2023 03:55:11 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rHjY5-000DH7-0r;
+	Mon, 25 Dec 2023 11:55:09 +0000
+Date: Mon, 25 Dec 2023 19:54:09 +0800
+From: kernel test robot <lkp@intel.com>
+To: NeilBrown <neilb@suse.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Anna Schumaker <Anna.Schumaker@netapp.com>
+Subject: net/sunrpc/auth.c:725:34: sparse: sparse: incorrect type in
+ initializer (different address spaces)
+Message-ID: <202312251922.sGIFj35A-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cC_KCgCnHHC0a4llSthxAQ--.18589S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tFWDZF48ZrWfAFy8Kry8Xwb_yoW8GF4xpa
-	yYk342gr1rXF15W3WkJ34kZF98AayDXa47WFnIkw4fuw1qyrn8Cw1Sqaya9ryDArW3Aa1a
-	vwnYyr1UZ3ZxAFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
-	JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFyl
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
-	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHU
-	DUUUUU=
-X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-In efx_probe_filters, the channel->rps_flow_id is freed in a
-efx_for_each_channel marco  when success equals to 0.
-However, after the following call chain:
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   861deac3b092f37b2c5e6871732f3e11486f7082
+commit: 5e16923b432bfe79fdfb7cd95ed8e63f6438b663 NFS/SUNRPC: don't lookup machine credential until rpcauth_bindcred().
+date:   5 years ago
+config: x86_64-randconfig-x001-20230717 (https://download.01.org/0day-ci/archive/20231225/202312251922.sGIFj35A-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231225/202312251922.sGIFj35A-lkp@intel.com/reproduce)
 
-ef100_net_open
-  |-> efx_probe_filters
-  |-> ef100_net_stop
-        |-> efx_remove_filters
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202312251922.sGIFj35A-lkp@intel.com/
 
-The channel->rps_flow_id is freed again in the efx_for_each_channel of
-efx_remove_filters, triggering a double-free bug.
+sparse warnings: (new ones prefixed by >>)
+>> net/sunrpc/auth.c:725:34: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct cred const *cred @@     got struct cred const [noderef] __rcu *extern [addressable] [toplevel] cred @@
+   net/sunrpc/auth.c:725:34: sparse:     expected struct cred const *cred
+   net/sunrpc/auth.c:725:34: sparse:     got struct cred const [noderef] __rcu *extern [addressable] [toplevel] cred
+   net/sunrpc/auth.c: note: in included file:
+   include/linux/slab.h:332:43: sparse: sparse: dubious: x & !y
+   include/linux/slab.h:332:43: sparse: sparse: dubious: x & !y
 
-Fixes: a9dc3d5612ce ("sfc_ef100: RX filter table management and related gubbins")
-Reviewed-by: Simon Horman <horms@kernel.org>
-Reviewed-by: Edward Cree <ecree.xilinx@gmail.com>
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
----
-Changelog:
+vim +725 net/sunrpc/auth.c
 
-v2: Correct the call-chain description in commit message and change
-patch subject.
----
- drivers/net/ethernet/sfc/rx_common.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+   718	
+   719	static struct rpc_cred *
+   720	rpcauth_bind_machine_cred(struct rpc_task *task, int lookupflags)
+   721	{
+   722		struct rpc_auth *auth = task->tk_client->cl_auth;
+   723		struct auth_cred acred = {
+   724			.principal = task->tk_client->cl_principal,
+ > 725			.cred = init_task.cred,
+   726		};
+   727	
+   728		if (!acred.principal)
+   729			return NULL;
+   730		dprintk("RPC: %5u looking up %s machine cred\n",
+   731			task->tk_pid, task->tk_client->cl_auth->au_ops->au_name);
+   732		return auth->au_ops->lookup_cred(auth, &acred, lookupflags);
+   733	}
+   734	
 
-diff --git a/drivers/net/ethernet/sfc/rx_common.c b/drivers/net/ethernet/sfc/rx_common.c
-index d2f35ee15eff..fac227d372db 100644
---- a/drivers/net/ethernet/sfc/rx_common.c
-+++ b/drivers/net/ethernet/sfc/rx_common.c
-@@ -823,8 +823,10 @@ int efx_probe_filters(struct efx_nic *efx)
- 		}
- 
- 		if (!success) {
--			efx_for_each_channel(channel, efx)
-+			efx_for_each_channel(channel, efx) {
- 				kfree(channel->rps_flow_id);
-+				channel->rps_flow_id = NULL;
-+			}
- 			efx->type->filter_table_remove(efx);
- 			rc = -ENOMEM;
- 			goto out_unlock;
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
