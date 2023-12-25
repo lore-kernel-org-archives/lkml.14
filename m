@@ -1,97 +1,144 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7E2524CB;
-	Mon, 25 Dec 2023 17:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB0351C36
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 17:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="r32ESMkz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1703525780; x=1704130580; i=markus.elfring@web.de;
-	bh=6YbgzX4IlCp5KaOe1RjzChWQs5gtWK+ZeLnQ6EfDZlc=;
-	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
-	 In-Reply-To;
-	b=r32ESMkzGobCaa+TbXSVG8ctXjGd5HH5sZKeKPmp6YZK9Vw2Wp0MQHkwKI3TDsNt
-	 7IBNMJLrbOIalQcTJPrbEqbDv9QxZR5lQSsVvD5dZN4MSZ+WFZxBjkVhh5AmNiphP
-	 0U+6K/aM2e0VPZqo2NRrusfowrLH7dcB8SJDct12W8oVi4zgurjRFi8HFoXzUrq1u
-	 wCg9e7D1umq9PmvcHnsaDuLv7UH5ad9srjeIOAwYcbCzCkEHlnVruzwZ7O3yHVrCW
-	 9bndfhVeph5PcmClXTKu/cWNtOghOXHbscnMXGAaln4GuuUidfSGtVVF1poBIhx+7
-	 p/qudgR5k1aYJEEpXw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MPKFD-1rcTt31g33-00PlHa; Mon, 25
- Dec 2023 18:36:20 +0100
-Message-ID: <e4c0344e-81b0-47d0-b115-ca7f5590009c@web.de>
-Date: Mon, 25 Dec 2023 18:36:19 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MgXmlNGu"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dbe165485d4so56123276.0
+        for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 09:38:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703525897; x=1704130697; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+qVYfNb+ln88k2U8sDJhGRbrHOCr6KMYYSe1kdUIoOQ=;
+        b=MgXmlNGuIHbsGFKwqLbGEkup41RdZXo9/2VTEWfVn3UwvgxEi7O932ltRypM2oDWSy
+         /k0OJF/sIWHs1xFIgoL8byuIwJVMzzZm2RjSdbGtE2iHkoV7wego6KEiDfr8OCooRRJJ
+         cb8Vxv6y61ZtLfHtYhsyYsggoCoW8l/UjDRgoEg4iVImVI//tuIlgm0lh0+jth5gRvDI
+         mLi0liiW7pgDhH1UKBmvcXEgG1A/8sAlAyPtYCTz2hB16uDKy2jMpK6Hn4udIIdwyTmX
+         rDhgaq+gCWFXCNtzJcr/jXhiU963m6R1DWhA4VZUlAb42eJELRLS1viNAk2izPyJQxIw
+         JArQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703525897; x=1704130697;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+qVYfNb+ln88k2U8sDJhGRbrHOCr6KMYYSe1kdUIoOQ=;
+        b=MyUz+sAR/4qSIcaJV61LryUmUrXO33AumunBCSQ/SaBCEEiZ5vUOUs0kL6fmdvrqlb
+         8fLywrgXrm9YmKxfogN+ss80f2YiFzZnSv95INASzHcotcIPla7WvP0j2MokhLFdhitN
+         V/i7LrveOhEdZZ6sCfQVzRssSa8Z2EyTE4hEa85vQzkovylDz9jpECtfc4+ybVSUqoXY
+         CE0objH0AUj4j8mDEDfLxjFJs5WXsY3OgfYMoxLPBJ0hWV4qZ7I1umeYzd33NLergCxk
+         vsYB8ICvHlXtPC3o7gNxW9D8KQkImU2FiHikmdplO1BHEBAbq+Fuf+4vuk+IRxn2clgK
+         lFlQ==
+X-Gm-Message-State: AOJu0YwvqMlCOFF4kc+BIjYNdTXpi/J0HOSU2LGgjJujmLEvK4tH/+KP
+	Pz0tNTrTc45f+pnDMVfB08Q7V7nJMCE=
+X-Google-Smtp-Source: AGHT+IGb2bnivbva6Krwe+FHUjAACqT0ftn2lC0hbe4UAiLyWzXW7cFZ4l8r+PZG+Mg1X4EHqLsYFg==
+X-Received: by 2002:a05:690c:290b:b0:5e9:fa4a:fd56 with SMTP id eg11-20020a05690c290b00b005e9fa4afd56mr2133759ywb.13.1703525897109;
+        Mon, 25 Dec 2023 09:38:17 -0800 (PST)
+Received: from localhost ([2601:344:8301:57f0:3e97:6886:45bb:11c4])
+        by smtp.gmail.com with ESMTPSA id gz1-20020a05690c470100b005eae538dd1asm2640058ywb.27.2023.12.25.09.38.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Dec 2023 09:38:16 -0800 (PST)
+Date: Mon, 25 Dec 2023 09:38:15 -0800
+From: Yury Norov <yury.norov@gmail.com>
+To: Ming Lei <ming.lei@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v3 2/7] lib/group_cpus: optimize inner loop in
+ grp_spread_init_one()
+Message-ID: <ZYm+B2m9gOTLOedE@yury-ThinkPad>
+References: <20231212042108.682072-1-yury.norov@gmail.com>
+ <20231212042108.682072-3-yury.norov@gmail.com>
+ <ZXgsDcM21H/2BTck@fedora>
+ <ZXiSk9J2ZBdsTnk0@yury-ThinkPad>
+ <ZXj1mGAKz5cWy+Nr@fedora>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH 2/7] EDAC/amd64: Delete an unnecessary variable initialisation
- in amd64_edac_init()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-To: linux-edac@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Robert Richter
- <rric@kernel.org>, Tony Luck <tony.luck@intel.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr,
- Muralidhara M K <muralidhara.mk@amd.com>
-References: <8c9e2c01-9ed0-4392-af40-4e8eb393cb67@web.de>
-In-Reply-To: <8c9e2c01-9ed0-4392-af40-4e8eb393cb67@web.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Cwcco78JixBvWs3sejkpE1/Op33Uc5UEd2qPxoLTasMwqfRd/u+
- 2Xe//62EaQWi/BGoga/Kf5B4juLF8Qja7neUpiUujsEqDaCDy3coL6clkDyV9/B96K8ipf6
- jHjPHn2JWPbTtFF1gE9lp+S3nzb47GmCCZAPyYQZDEdBRimYdI8j8uKnnfTfzMeK8Gjn7Fo
- TpIUegBgedkf08+kfVryg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:KkYp2qCitf4=;2S7BX8fX6dNziIhWeaAu3J7ZMNO
- LvgHHGbUyT8spp1asXU8Dw0TJ/cd5uIM0cNisH4OvLet2BHItSg2egbsP9/0l/S4mtTQfrwpy
- qLEmImBwSJKw9bGcBFu9wYTHwG4FQTH8WjfJo8GKQXAQ+y/+Ebv10zc/3qO2K3qd7WOK4ikkj
- UQ8S8tO6XYjrMNNwvJWeL7ZkHQEjW8fMHewEJZkt/MjVYY75bfh2a40gi1hlPoiLdiTTKHbYn
- YhQB4FUHPHis10bZK713fqA8tY4hRY92fnUiWhtjXHAl2eckyGji+kLTGbBK/G97YofQIT0f4
- FzChciIrpGT3erPLBYe8f2nkEvb/nvltQ8nPF6FTEF/37WJTdFgT7Vfw2/r7UFx6sUy1iwr4i
- 8T8HXhRgB/cCeyjqjss0ppeX2qsH9J8K2l5NiqAMvyM2rs5wauw9M61Ne5xpUwkL1n2+fOI8J
- ql042PMK06KBEJkND8/ju7Bpj2W9OI2ArYiQ3NCYLo4l6+g/A9VHnYLTbq2avlCtX7wS8bpCH
- EoNhMogMInwWuFqlEfNcxl4OMV09ktcSAq6GYDezhFFs+TZPXp9o51asbY02nVviDs55pCCTf
- 4FP8QFd/WgzNnWBA6xhFdgMrH9absOWATDeRBXmlZEHxzqnc2k/u+W+85GWk+fwS5rAsQBDUo
- Hy9bs4xvm25eQM3jOqQkM5hz5MsHEZ0Ef5EgJHmK48KODaAreSA+b2kv8rpwJMnjUge2wtlpz
- J/QN9tzt/mKVkX1Z8UUw3VuVF+Vppkpt4svO4i9gDxh47Wj47B5daIx9X3LIIihn9NvZvSsmH
- WfoxAC0iublxZUjUemxuR+4aDP5PqPzoLWYJnUMmuj2t5uzgl8XbkSo2i1V+tb8+sYr+NKgUK
- VdpGcQMT7A7J0eE/CoJeZBEMKoHQtjcM0KMLfyTYWrQVF2WPpn390gYtluHA8AawOnSie5pAk
- 0AIq0g==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZXj1mGAKz5cWy+Nr@fedora>
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Mon, 25 Dec 2023 16:33:22 +0100
+On Wed, Dec 13, 2023 at 08:06:48AM +0800, Ming Lei wrote:
+> On Tue, Dec 12, 2023 at 09:04:19AM -0800, Yury Norov wrote:
+> > On Tue, Dec 12, 2023 at 05:46:53PM +0800, Ming Lei wrote:
+> > > On Mon, Dec 11, 2023 at 08:21:02PM -0800, Yury Norov wrote:
+> > > > The loop starts from the beginning every time we switch to the next
+> > > > sibling mask. This is the Schlemiel the Painter's style of coding
+> > > > because we know for sure that nmsk is clear up to current CPU, and we
+> > > > can just continue from the next CPU.
+> > > > 
+> > > > Also, we can do it nicer if leverage the dedicated for_each() iterator,
+> > > > and simplify the logic of clearing a bit in nmsk.
+> > > > 
+> > > > Signed-off-by: Yury Norov <yury.norov@gmail.com>
+> > > > ---
+> > > >  lib/group_cpus.c | 13 ++++++-------
+> > > >  1 file changed, 6 insertions(+), 7 deletions(-)
+> > > > 
+> > > > diff --git a/lib/group_cpus.c b/lib/group_cpus.c
+> > > > index ee272c4cefcc..10dead3ab0e0 100644
+> > > > --- a/lib/group_cpus.c
+> > > > +++ b/lib/group_cpus.c
+> > > > @@ -30,14 +30,13 @@ static void grp_spread_init_one(struct cpumask *irqmsk, struct cpumask *nmsk,
+> > > >  
+> > > >  		/* If the cpu has siblings, use them first */
+> > > >  		siblmsk = topology_sibling_cpumask(cpu);
+> > > > -		for (sibl = -1; cpus_per_grp > 0; ) {
+> > > > -			sibl = cpumask_next(sibl, siblmsk);
+> > > > -			if (sibl >= nr_cpu_ids)
+> > > > -				break;
+> > > > -			if (!cpumask_test_and_clear_cpu(sibl, nmsk))
+> > > > -				continue;
+> > > > +		sibl = cpu + 1;
+> > > 
+> > > It doesn't have to 'cpu + 1', see below comment.
+> > > 
+> > > > +
+> > > > +		for_each_cpu_and_from(sibl, siblmsk, nmsk) {
+> > > > +			cpumask_clear_cpu(sibl, nmsk);
+> > > >  			cpumask_set_cpu(sibl, irqmsk);
+> > > > -			cpus_per_grp--;
+> > > > +			if (cpus_per_grp-- == 0)
+> > > 
+> > > 			if (--cpus_per_grp == 0)
+> >  
+> > That's right, I'll send a new version this weekend.
+> > 
+> > > > +				return;
+> > > 
+> > > I think for_each_cpu_and() should work just fine, cause cpu has been cleared
+> > > from nmsk, so the change can be something like, then patch 1 isn't
+> > > necessary.
+> >  
+> > It works just fine except that it's O(N^2), where O(N) is easily
+> > achievable. Again, it's not about performance, it's about coding
+> > habits.
+> 
+> Both for_each_cpu_and() and for_each_cpu_and_from() are O(N), aren't
+> they? Given both two are based on find_next_and_bit().
 
-The variable =E2=80=9Cerr=E2=80=9D will eventually be set to an appropriat=
-e value
-a bit later. Thus omit the explicit initialisation at the beginning.
-
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/edac/amd64_edac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index f912cbadefa4..8a27a4af7121 100644
-=2D-- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -4396,7 +4396,7 @@ MODULE_DEVICE_TABLE(x86cpu, amd64_cpuids);
- static int __init amd64_edac_init(void)
- {
- 	const char *owner;
--	int err =3D -ENODEV;
-+	int err;
- 	int i;
-
- 	if (ghes_get_devices())
-=2D-
-2.43.0
-
+for_each_cpu_and() is the same Schlemiel the Painter's code, as the
+plain for() was.
+ 
+> for_each_cpu_and() is simpler and more readable, and more
+> importantly, we can save one single-user public helper.
+> 
+> >  
+> > > 		for_each_cpu_and(sibl, siblmsk, nmsk) {
+> > > 			cpumask_clear_cpu(sibl, nmsk);
+> > >   			cpumask_set_cpu(sibl, irqmsk);
+> > > 			if (--cpus_per_grp == 0)
+> > > 				return;
+> > > 		}
+> 
+> 
+> Thanks,
+> Ming
