@@ -1,156 +1,165 @@
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2071.outbound.protection.outlook.com [40.107.20.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94057DDD6
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 07:58:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0120015B0;
+	Mon, 25 Dec 2023 08:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="WecyzIm8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:subject:message-id:mime-version;
-  bh=dD0bUVWTY8SwBG2Vb0rtdcxWd/KeOad5hG/gzoZpvzM=;
-  b=WecyzIm8FcbCLsH0G80Y7wNSYoCZtGGxVA09Gz5p0XC6rUpHSpPtYX6e
-   zM/V8xYwP7s7Cw6DP+TRMdSMH0FPf34I84WP6uUJbKsiP49SFzg0J+Kl6
-   Fdy8QoucjYgwikrOhrMNO4r1ppTQ+ddp3viNEICcYFMo9x+Y3hwPmwVxS
-   8=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.04,302,1695679200"; 
-   d="scan'208";a="75310300"
-Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Dec 2023 08:58:47 +0100
-Date: Mon, 25 Dec 2023 08:58:46 +0100 (CET)
-From: Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To: =?ISO-8859-2?Q?Rafa=B3_Mi=B3ecki?= <rafal@milecki.pl>, 
-    Miquel Raynal <miquel.raynal@bootlin.com>, linux-kernel@vger.kernel.org, 
-    oe-kbuild-all@lists.linux.dev
-Subject: drivers/mtd/mtdcore.c:577:1-23: WARNING: Function "for_each_child_of_node"
- should have of_node_put() before break around line 594. (fwd)
-Message-ID: <alpine.DEB.2.22.394.2312250857060.3331@hadrien>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BuyfL0lv"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jHIFr0QMd8WJLs5iLLdZKoaLLm2i57oF4DoTJt9LpSPW6vuQwFJYXpAmDI3M56AquKqvgl5d2UXkeOLPBMsaDFItgNnYzpF0rcdMfZ9BFIZjnTzRlknp29CLVVHg8OfOS6TRRGTRqOMVRDty7wxPTe9/+E2ym8sf3yJ9qnG5nfbEZh+MVAux1vt/RTOxK0/WxE3yrH2FRA6rxTlw4RJkDsPCnHqWERQzRfXu5L14eKYOn4zMmijNg68C4IT0FQ8ZP4QEanUZ83DHDmSA+DhTWHWnruxg3ndltHARsVLF9PP8h0awruxyA0I6NtMd5gPKK7x4I+7Y4S0LbnpyB5gsvg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=X+eM8lvNvRlnae/G7ZMO0TDgODGjMvjnUOoYW8Odyog=;
+ b=cdJl7UBkIA9h8/JeFg4SGLEX2R/FSxOe+9Lh1zhmaV/Msvh9/TSQSDN97HIuny1a7BlcxV6Ydkrl6qIPI4TAzOCLN6MiiTFcMTMoPhC0nYiX+80x2sSLlJ6Yz2V1jSJDyi1J53V3sQbnPyRJ/g5zMBioVdtoUdR7t6ZlwR294Xrmf6DLN6gUdi74BWz30bIdNVZ15q89tPso1blAw2UL5LIrSjilhcVS5drP0XX2+RS/m0Fclpy5qD6tTWO42olrWBjBSy1wBCHuL9oUq0UZy+CDGYTcYhlv8PC+SchYv3CDdRm6I9OSyT3RCu62swg5+8PDuIomSNgf28S03uwDUg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X+eM8lvNvRlnae/G7ZMO0TDgODGjMvjnUOoYW8Odyog=;
+ b=BuyfL0lvXtfxn3Lbr2/VEIBaEDefurii3WSH5cUJEuhMXUYtJ5jjGfo5Luu5CWc1c4xlO0g14I3na9F8u5poLudw+PcYsJzjKp+X15xHIT9CRUMpDmb0r74SAbWnTw4vYvwGM3hOdBpZwG/XWp+3fDqH2MvOSYbsiRkETW3t5Ls=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DB9PR04MB9498.eurprd04.prod.outlook.com (2603:10a6:10:360::21)
+ by DUZPR04MB9727.eurprd04.prod.outlook.com (2603:10a6:10:4b1::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.26; Mon, 25 Dec
+ 2023 08:06:42 +0000
+Received: from DB9PR04MB9498.eurprd04.prod.outlook.com
+ ([fe80::2a3c:9a90:b09f:293c]) by DB9PR04MB9498.eurprd04.prod.outlook.com
+ ([fe80::2a3c:9a90:b09f:293c%3]) with mapi id 15.20.7113.026; Mon, 25 Dec 2023
+ 08:06:42 +0000
+From: Chancel Liu <chancel.liu@nxp.com>
+To: shengjiu.wang@gmail.com,
+	Xiubo.Lee@gmail.com,
+	festevam@gmail.com,
+	nicoleotsuka@gmail.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	alsa-devel@alsa-project.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-sound@vger.kernel.org
+Cc: Chancel Liu <chancel.liu@nxp.com>
+Subject: [PATCH] ASoC: fsl_rpmsg: Fix error handler with pm_runtime_enable
+Date: Mon, 25 Dec 2023 17:06:08 +0900
+Message-ID: <20231225080608.967953-1-chancel.liu@nxp.com>
+X-Mailer: git-send-email 2.42.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SGXP274CA0006.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b8::18)
+ To DB9PR04MB9498.eurprd04.prod.outlook.com (2603:10a6:10:360::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1931466063-1703491126=:3331"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB9PR04MB9498:EE_|DUZPR04MB9727:EE_
+X-MS-Office365-Filtering-Correlation-Id: 44b992ed-ec12-463b-da4f-08dc05206e0e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	48a3mshOtRHLH2BvaCpxRmPwDs2UDTCpnalg2QG3sNNmhp17v6x8sNCWmv2xJ8XQWgWJHDnx986s0eVLTF3cy/9leE7XyebkiCzJhzPBOqILD9Epn7+SdXAHDq5wMaV1NRP33TgKiwgC8Bt2SihpyzbeCoNlp7fgT7xr3Mzeg/oMrPxbaPS9ikffQRP8/OCXWeY8s/2NnKu0H7CEBdMRQ7ekkHJpyO15IXPT56Ry0GtLH5pNjTvuGeCFbT38QKV8N7DAI26sB1AAIdWXFgvploHafPzQOgdY6/dbJE7og5qu8QVDfHYTkT8lh0lvcrWwjHw27sowyrOnn0PQVlDwGT4V+F74dKGOcBY2do3iTFz+by4tVgV/VdFxCl0//qeG0HCg2+HzFPfaAUP5jcTl/OYR4Jir4zQGGsGZtZ76vcPVdoLpqBDywp7bk4o8KR+Gkd2lYzl1FKL4epHPRN904Az7ztsQCH8/bw0PkmO72iuFg9K931jtBvVRwpaKsx1W1e3MG1XthefJBsggzK83ZZCJL/1iRqqGFYMiChXHYmt/F0pgUXxX+0xnMOGqotaC2Mj8jEJ2kwZX7FZcrHo7mNhf9xU9xqA5qt3ZaaKVXeIDKPr8B/7D/FJljsMOoNZE
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9498.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(396003)(39860400002)(376002)(136003)(366004)(230922051799003)(451199024)(64100799003)(1800799012)(186009)(86362001)(1076003)(2616005)(26005)(52116002)(6666004)(6512007)(6506007)(41300700001)(38100700002)(83380400001)(36756003)(44832011)(7416002)(6486002)(5660300002)(66946007)(38350700005)(8936002)(8676002)(4326008)(316002)(66556008)(921011)(66476007)(478600001)(2906002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Tx742bQIOc3LOxc2k1K/VhsMLFbfAfJTlpqlNEr+ePLQ+jEgN+VNEk4y036B?=
+ =?us-ascii?Q?dIFZrf5YBZc+gZIwiMzxllYUfWFM3kxTyY2WR2SvPQZG0H83ec2bp4fbNS2M?=
+ =?us-ascii?Q?9Zzk8/Q9SG/ID6raOeJ0mFzGq4B3DE8znYtPM+EkI0+r70fdmXAkJ+VViO++?=
+ =?us-ascii?Q?qvmaPpUWbhZ5X+POnE8pVNorinnt33ArfvzYdCgnWY2tFGA19pq1mUe8UUa0?=
+ =?us-ascii?Q?s0wn0hNblAZwIJv/XTWr2hqgNR0+ANtjn+4qq9cfQVjNzpXpyAUTj0pGZU9K?=
+ =?us-ascii?Q?a7mIFc7i8Iu5JN5LEtiNs28QdbhVwPPz9DGPSgNQ85pJn9OUpGsTcmpMQFJm?=
+ =?us-ascii?Q?zjio1bW4D/rz5pKYJlDz0Q2Nqw8NyRzOwNRudfFShUiD6hNRfdCoZRVeF6P1?=
+ =?us-ascii?Q?Q1t1hh+CEYefuZvNym34hkHZ367jh6Z8ppDyU7OkWYp5kenvnVIZYz9SJMdy?=
+ =?us-ascii?Q?ayTdqPC/2E6V+xS2FwjGCIWi7oSlFJsQPhehR/B3kWShZ2nsYw9Yo1h/40mw?=
+ =?us-ascii?Q?gCQhBjxtdVcQHD6oWqKJSN5hOlWVAH6Gl9dC7E7PIODO5EDTiVOntypcfF9l?=
+ =?us-ascii?Q?s28nER4Dhw7wTD6zW6y9dP+ryAD6xreLZ56R5X2i99Xz8WfhUXQsRP9D7k7G?=
+ =?us-ascii?Q?MIfrDYQVqEYjegxYTGAJjK3g9C+bkRkP8k6mOXPPFSFXPRTvDNwNxTAGKoo/?=
+ =?us-ascii?Q?rEyXdDsfbMY4Sf2VErbVwe+1kSz4irIn+JHBcbtb2Z8LrX+HSlRUMnlHdExi?=
+ =?us-ascii?Q?/7uTyGPZoti18UW0+pTyZedwKDNOtOnK2guTE5oNsLpO5EL8v1M9rxoRmMxa?=
+ =?us-ascii?Q?Zzsbj/guKvChoAsSVdiXAbv29TkHPmLW4zMziv7JyAhVBJauBjBj4bp1bP9J?=
+ =?us-ascii?Q?3a+Fj/jEhI+Z24pRHUACvQ0xdQqnd/OBfCZ3mPTnOQ8Yg5M2zTuRYJSOeAkj?=
+ =?us-ascii?Q?Tk3twEyYbjVvv3vxq/Fs1tNid92Io7lVivDLHNa2qgJgtI3qNZfYvnCj992e?=
+ =?us-ascii?Q?Y05n1A2tIU4hczEwAi/orDqVHbTgwaf1rTl2+eU4GuS0SwFNT3yhKK0/rBh7?=
+ =?us-ascii?Q?tltNFXHR3QkzQbzO0KLPvc0b8reHSaBNd/1TfQEYBfGHXEoBtECjihXG9PMn?=
+ =?us-ascii?Q?PAACTcrjWU++f5TQAaYFObyLLYsOeuFPQ0QYvScIyozU1YIoorpZibffAVX3?=
+ =?us-ascii?Q?NC7hMon97Qp1TGq4CsgGcYPRsHc+3lxBIXSLbjjlQgGCfHfv5i88Uu3Yo1Zr?=
+ =?us-ascii?Q?KkPW49mdJdtiZfa2IfmBl19p/QkNBXMXDm/Appgi1FX9m99gzomCyOoKGL7X?=
+ =?us-ascii?Q?/WacUnfwyFXPznC861xGtK3S2u+/Y6aX5HS2gQ38DGtFN+DqNkmq94TCpXD4?=
+ =?us-ascii?Q?36v5vF+fkn2NZmQ/tVEbFt+2Z2Qtlvp0+NhylQsgGMWZKmGSZ6k3hUkO5xE2?=
+ =?us-ascii?Q?Bbyl5EI3gN8lWnkk3zpLYGXZ+f+Xo7Ax9NWfE8N/hAglRltc8BUhAAzYRYKu?=
+ =?us-ascii?Q?RHrUrv83rOm0WzaGh92DHc/6m6qzXwNR+CjNuGGiVShH24LQnIQj4ec5aDio?=
+ =?us-ascii?Q?8Q+OigL8E7H/WP77WIXYKJusaTPcY5T9zzcUHdJA?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44b992ed-ec12-463b-da4f-08dc05206e0e
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9498.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Dec 2023 08:06:42.4991
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Mb6plim/JhOOPycSyqHKc3KqSzNaH5A6Xl/yNZ9Jb6dobQma4jr6GwFbjHiNq7bMx407NVE10OCjWTQfpRUFxg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DUZPR04MB9727
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+There is error message when defer probe happens:
 
---8323329-1931466063-1703491126=:3331
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+fsl_rpmsg rpmsg_audio: Unbalanced pm_runtime_enable!
 
-Hello,
+Fix the error handler with pm_runtime_enable.
 
-Actually, I think that the of_node_put on line 598 should move to line
-594.  If the loop terminates normally, positions will be the loop header,
-and it will not be apporpriate to call of node put on it.
+Fixes: b73d9e6225e8 ("ASoC: fsl_rpmsg: Add CPU DAI driver for audio base on rpmsg")
+Signed-off-by: Chancel Liu <chancel.liu@nxp.com>
+---
+ sound/soc/fsl/fsl_rpmsg.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-julia
-
----------- Forwarded message ----------
-Date: Mon, 25 Dec 2023 05:23:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: oe-kbuild@lists.linux.dev
-Cc: lkp@intel.com, Julia Lawall <julia.lawall@inria.fr>
-Subject: drivers/mtd/mtdcore.c:577:1-23: WARNING: Function
-    "for_each_child_of_node" should have of_node_put() before break around line
-    594.
-
-BCC: lkp@intel.com
-CC: oe-kbuild-all@lists.linux.dev
-CC: linux-kernel@vger.kernel.org
-TO: "Rafał Miłecki" <rafal@milecki.pl>
-CC: Miquel Raynal <miquel.raynal@bootlin.com>
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   861deac3b092f37b2c5e6871732f3e11486f7082
-commit: 2df11f00100d7278185a9dbefa20ba3f5d32401d mtd: core: try to find OF node for every MTD partition
-date:   1 year, 2 months ago
-:::::: branch date: 21 hours ago
-:::::: commit date: 1 year, 2 months ago
-config: loongarch-randconfig-r062-20231222 (https://download.01.org/0day-ci/archive/20231225/202312250546.ISzglvM2-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 13.2.0
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Julia Lawall <julia.lawall@inria.fr>
-| Closes: https://lore.kernel.org/r/202312250546.ISzglvM2-lkp@intel.com/
-
-cocci warnings: (new ones prefixed by >>)
->> drivers/mtd/mtdcore.c:577:1-23: WARNING: Function "for_each_child_of_node" should have of_node_put() before break around line 594.
-
-vim +/for_each_child_of_node +577 drivers/mtd/mtdcore.c
-
-c4dfa25ab307a2 Alban Bedel       2018-11-13  548
-ad9b10d1eaada1 Christian Marangi 2022-06-22  549  static void mtd_check_of_node(struct mtd_info *mtd)
-ad9b10d1eaada1 Christian Marangi 2022-06-22  550  {
-ad9b10d1eaada1 Christian Marangi 2022-06-22  551  	struct device_node *partitions, *parent_dn, *mtd_dn = NULL;
-ad9b10d1eaada1 Christian Marangi 2022-06-22  552  	const char *pname, *prefix = "partition-";
-ad9b10d1eaada1 Christian Marangi 2022-06-22  553  	int plen, mtd_name_len, offset, prefix_len;
-ad9b10d1eaada1 Christian Marangi 2022-06-22  554
-ad9b10d1eaada1 Christian Marangi 2022-06-22  555  	/* Check if MTD already has a device node */
-c5f5d0cd40e3bc Rafał Miłecki     2022-10-04  556  	if (mtd_get_of_node(mtd))
-ad9b10d1eaada1 Christian Marangi 2022-06-22  557  		return;
-ad9b10d1eaada1 Christian Marangi 2022-06-22  558
-7ec4cdb321738d Tetsuo Handa      2022-07-25  559  	if (!mtd_is_partition(mtd))
-7ec4cdb321738d Tetsuo Handa      2022-07-25  560  		return;
-c5f5d0cd40e3bc Rafał Miłecki     2022-10-04  561
-c5f5d0cd40e3bc Rafał Miłecki     2022-10-04  562  	parent_dn = of_node_get(mtd_get_of_node(mtd->parent));
-ad9b10d1eaada1 Christian Marangi 2022-06-22  563  	if (!parent_dn)
-ad9b10d1eaada1 Christian Marangi 2022-06-22  564  		return;
-ad9b10d1eaada1 Christian Marangi 2022-06-22  565
-2df11f00100d72 Rafał Miłecki     2022-10-04  566  	if (mtd_is_partition(mtd->parent))
-2df11f00100d72 Rafał Miłecki     2022-10-04  567  		partitions = of_node_get(parent_dn);
-2df11f00100d72 Rafał Miłecki     2022-10-04  568  	else
-ad9b10d1eaada1 Christian Marangi 2022-06-22  569  		partitions = of_get_child_by_name(parent_dn, "partitions");
-ad9b10d1eaada1 Christian Marangi 2022-06-22  570  	if (!partitions)
-ad9b10d1eaada1 Christian Marangi 2022-06-22  571  		goto exit_parent;
-ad9b10d1eaada1 Christian Marangi 2022-06-22  572
-ad9b10d1eaada1 Christian Marangi 2022-06-22  573  	prefix_len = strlen(prefix);
-ad9b10d1eaada1 Christian Marangi 2022-06-22  574  	mtd_name_len = strlen(mtd->name);
-ad9b10d1eaada1 Christian Marangi 2022-06-22  575
-ad9b10d1eaada1 Christian Marangi 2022-06-22  576  	/* Search if a partition is defined with the same name */
-ad9b10d1eaada1 Christian Marangi 2022-06-22 @577  	for_each_child_of_node(partitions, mtd_dn) {
-ad9b10d1eaada1 Christian Marangi 2022-06-22  578  		/* Skip partition with no/wrong prefix */
-c5f5d0cd40e3bc Rafał Miłecki     2022-10-04  579  		if (!of_node_name_prefix(mtd_dn, prefix))
-ad9b10d1eaada1 Christian Marangi 2022-06-22  580  			continue;
-ad9b10d1eaada1 Christian Marangi 2022-06-22  581
-ad9b10d1eaada1 Christian Marangi 2022-06-22  582  		/* Label have priority. Check that first */
-c5f5d0cd40e3bc Rafał Miłecki     2022-10-04  583  		if (!of_property_read_string(mtd_dn, "label", &pname)) {
-c5f5d0cd40e3bc Rafał Miłecki     2022-10-04  584  			offset = 0;
-c5f5d0cd40e3bc Rafał Miłecki     2022-10-04  585  		} else {
-c5f5d0cd40e3bc Rafał Miłecki     2022-10-04  586  			pname = mtd_dn->name;
-ad9b10d1eaada1 Christian Marangi 2022-06-22  587  			offset = prefix_len;
-ad9b10d1eaada1 Christian Marangi 2022-06-22  588  		}
-ad9b10d1eaada1 Christian Marangi 2022-06-22  589
-ad9b10d1eaada1 Christian Marangi 2022-06-22  590  		plen = strlen(pname) - offset;
-ad9b10d1eaada1 Christian Marangi 2022-06-22  591  		if (plen == mtd_name_len &&
-ad9b10d1eaada1 Christian Marangi 2022-06-22  592  		    !strncmp(mtd->name, pname + offset, plen)) {
-2df11f00100d72 Rafał Miłecki     2022-10-04  593  			mtd_set_of_node(mtd, mtd_dn);
-ad9b10d1eaada1 Christian Marangi 2022-06-22 @594  			break;
-ad9b10d1eaada1 Christian Marangi 2022-06-22  595  		}
-ad9b10d1eaada1 Christian Marangi 2022-06-22  596  	}
-ad9b10d1eaada1 Christian Marangi 2022-06-22  597
-ad9b10d1eaada1 Christian Marangi 2022-06-22  598  	of_node_put(partitions);
-ad9b10d1eaada1 Christian Marangi 2022-06-22  599  exit_parent:
-ad9b10d1eaada1 Christian Marangi 2022-06-22  600  	of_node_put(parent_dn);
-ad9b10d1eaada1 Christian Marangi 2022-06-22  601  }
-ad9b10d1eaada1 Christian Marangi 2022-06-22  602
-
-:::::: The code at line 577 was first introduced by commit
-:::::: ad9b10d1eaada169bd764abcab58f08538877e26 mtd: core: introduce of support for dynamic partitions
-
-:::::: TO: Christian Marangi <ansuelsmth@gmail.com>
-:::::: CC: Miquel Raynal <miquel.raynal@bootlin.com>
-
+diff --git a/sound/soc/fsl/fsl_rpmsg.c b/sound/soc/fsl/fsl_rpmsg.c
+index 5c5c04ce9db7..00852f174a69 100644
+--- a/sound/soc/fsl/fsl_rpmsg.c
++++ b/sound/soc/fsl/fsl_rpmsg.c
+@@ -238,7 +238,7 @@ static int fsl_rpmsg_probe(struct platform_device *pdev)
+ 	ret = devm_snd_soc_register_component(&pdev->dev, &fsl_component,
+ 					      &fsl_rpmsg_dai, 1);
+ 	if (ret)
+-		return ret;
++		goto err_pm_disable;
+ 
+ 	rpmsg->card_pdev = platform_device_register_data(&pdev->dev,
+ 							 "imx-audio-rpmsg",
+@@ -248,16 +248,22 @@ static int fsl_rpmsg_probe(struct platform_device *pdev)
+ 	if (IS_ERR(rpmsg->card_pdev)) {
+ 		dev_err(&pdev->dev, "failed to register rpmsg card\n");
+ 		ret = PTR_ERR(rpmsg->card_pdev);
+-		return ret;
++		goto err_pm_disable;
+ 	}
+ 
+ 	return 0;
++
++err_pm_disable:
++	pm_runtime_disable(&pdev->dev);
++	return ret;
+ }
+ 
+ static void fsl_rpmsg_remove(struct platform_device *pdev)
+ {
+ 	struct fsl_rpmsg *rpmsg = platform_get_drvdata(pdev);
+ 
++	pm_runtime_disable(&pdev->dev);
++
+ 	if (rpmsg->card_pdev)
+ 		platform_device_unregister(rpmsg->card_pdev);
+ }
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
---8323329-1931466063-1703491126=:3331--
+2.42.0
+
