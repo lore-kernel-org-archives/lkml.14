@@ -1,88 +1,60 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC40B7E;
-	Mon, 25 Dec 2023 00:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 3BP0JADt83527188, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 3BP0JADt83527188
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 25 Dec 2023 08:19:10 +0800
-Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2375.32; Mon, 25 Dec 2023 08:19:10 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS01.realtek.com.tw (172.21.6.94) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 25 Dec 2023 08:19:10 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::40c2:6c24:2df4:e6c7]) by
- RTEXMBS04.realtek.com.tw ([fe80::40c2:6c24:2df4:e6c7%5]) with mapi id
- 15.01.2375.007; Mon, 25 Dec 2023 08:19:10 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: "Colin King (gmail)" <colin.i.king@gmail.com>,
-        Kalle Valo
-	<kvalo@kernel.org>,
-        "linux-wireless@vger.kernel.org"
-	<linux-wireless@vger.kernel.org>
-CC: "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH][next] wifi: rtw89: mac: Fix spelling mistakes "notfify" -> "notify"
-Thread-Topic: [PATCH][next] wifi: rtw89: mac: Fix spelling mistakes "notfify"
- -> "notify"
-Thread-Index: AQHaM09teBRraq9bkEuzuVAKvhnc67C0cglAgABAZoCABHZpYA==
-Date: Mon, 25 Dec 2023 00:19:10 +0000
-Message-ID: <c43fe18df3cb488e9a3bdf38221e0a1b@realtek.com>
-References: <20231220141831.10063-1-colin.i.king@gmail.com>
- <2839b824a2a04aab9514ce89b3735e52@realtek.com>
- <75cd2090-857e-4082-bbc1-e3726235bda1@gmail.com>
-In-Reply-To: <75cd2090-857e-4082-bbc1-e3726235bda1@gmail.com>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-x-kse-serverinfo: RTEXMBS01.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B757E
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 00:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i5e86193c.versanet.de ([94.134.25.60] helo=phil.fritz.box)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1rHYiR-0007kx-97; Mon, 25 Dec 2023 01:21:07 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: Andy Yan <andyshrk@163.com>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	hjc@rock-chips.com,
+	s.hauer@pengutronix.de,
+	linux-arm-kernel@lists.infradead.org,
+	Andy Yan <andy.yan@rock-chips.com>,
+	broonie@kernel.org,
+	m.szyprowski@samsung.com,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH] drm/rockchip: vop2: Avoid use regmap_reinit_cache at runtime
+Date: Mon, 25 Dec 2023 01:21:04 +0100
+Message-Id: <170346364423.2455794.3597954899361458023.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20231217084415.2373043-1-andyshrk@163.com>
+References: <20231217084415.2373043-1-andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-Antivirus-Interceptor-Info: fallback
-X-KSE-AntiSpam-Interceptor-Info: fallback
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQ29saW4gS2luZyAoZ21h
-aWwpIDxjb2xpbi5pLmtpbmdAZ21haWwuY29tPg0KPiBTZW50OiBGcmlkYXksIERlY2VtYmVyIDIy
-LCAyMDIzIDg6MDkgUE0NCj4gVG86IFBpbmctS2UgU2hpaCA8cGtzaGloQHJlYWx0ZWsuY29tPjsg
-S2FsbGUgVmFsbyA8a3ZhbG9Aa2VybmVsLm9yZz47IGxpbnV4LXdpcmVsZXNzQHZnZXIua2VybmVs
-Lm9yZw0KPiBDYzoga2VybmVsLWphbml0b3JzQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVs
-QHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIXVtuZXh0XSB3aWZpOiBydHc4
-OTogbWFjOiBGaXggc3BlbGxpbmcgbWlzdGFrZXMgIm5vdGZpZnkiIC0+ICJub3RpZnkiDQo+IA0K
-PiBPbiAyMi8xMi8yMDIzIDAwOjE5LCBQaW5nLUtlIFNoaWggd3JvdGU6DQo+ID4NCj4gPg0KPiA+
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+PiBGcm9tOiBDb2xpbiBJYW4gS2luZyA8
-Y29saW4uaS5raW5nQGdtYWlsLmNvbT4NCj4gPj4gU2VudDogV2VkbmVzZGF5LCBEZWNlbWJlciAy
-MCwgMjAyMyAxMDoxOSBQTQ0KPiA+PiBUbzogUGluZy1LZSBTaGloIDxwa3NoaWhAcmVhbHRlay5j
-b20+OyBLYWxsZSBWYWxvIDxrdmFsb0BrZXJuZWwub3JnPjsgbGludXgtd2lyZWxlc3NAdmdlci5r
-ZXJuZWwub3JnDQo+ID4+IENjOiBrZXJuZWwtamFuaXRvcnNAdmdlci5rZXJuZWwub3JnOyBsaW51
-eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+ID4+IFN1YmplY3Q6IFtQQVRDSF1bbmV4dF0gd2lm
-aTogcnR3ODk6IG1hYzogRml4IHNwZWxsaW5nIG1pc3Rha2VzICJub3RmaWZ5IiAtPiAibm90aWZ5
-Ig0KPiA+Pg0KPiA+PiBUaGVyZSBhcmUgdHdvIHNwZWxsaW5nIG1pc3Rha2VzIGluIHJ0dzg5X2Vy
-ciBlcnJvciBtZXNzYWdlcy4gRml4IHRoZXNlDQo+ID4+IGFuZCBhbHNvIGFkZCBzcGFjZSBiZXR3
-ZWVuIFtFUlJdIGFuZCBtZXNzYWdlIHRleHQuDQo+ID4+DQo+ID4+IFNpZ25lZC1vZmYtYnk6IENv
-bGluIElhbiBLaW5nIDxjb2xpbi5pLmtpbmdAZ21haWwuY29tPg0KPiA+DQo+ID4gQWNrZWQtYnk6
-IFBpbmctS2UgU2hpaCA8cGtzaGloQHJlYWx0ZWsuY29tPg0KPiA+DQo+ID4gVGhhbmtzIGZvciB0
-aGUgY29ycmVjdG5lc3MuIENvdWxkIEkga25vdyB0aGUgdG9vbCB5b3UgdXNlZCB0byBmaW5kIG91
-dCB0aGVzZQ0KPiA+IHR5cG8/DQo+IA0KPiBTdXJlLA0KPiANCj4gaHR0cHM6Ly9naXRodWIuY29t
-L0NvbGluSWFuS2luZy9rZXJuZWxzY2FuDQo+IA0KPiBJdCBuZWVkcyB0aGUgYW1lcmljYW4gZGlj
-dGlvbmFyeSwgaW5zdGFsbGVkIGluIC91c3Ivc2hhcmUvZGljdCBlLmcuDQo+IGFwdC1nZXQgaW5z
-dGFsbCB3YW1lcmljYW4NCj4gDQo+IGFuZCB0aGVuIHNwZWxsY2hlY2sgd2l0aDoNCj4gDQo+IC4v
-a2VybmVsc2NhbiAtayBwYXRoLXRvLWNvZGUteW91LXdhbnQtdG8tc2Nhbg0KDQpUaGFua3MgZm9y
-IHRoZSB0b29sLiA6LSkNCkkgd2lsbCB0cnkgdG8gc2NhbiBteSBkcml2ZXIgYmVmb3JlIHNlbmRp
-bmcgb3V0IHBhdGNoZXMuIA0KDQpQaW5nLUtlDQoNCg0K
+On Sun, 17 Dec 2023 16:44:15 +0800, Andy Yan wrote:
+> From: Andy Yan <andy.yan@rock-chips.com>
+> 
+> Marek Report a possible irq lock inversion dependency warning when
+> commit 81a06f1d02e5 ("Revert "drm/rockchip: vop2: Use regcache_sync()
+> to fix suspend/resume"") lands linux-next.
+> 
+> I can reproduce this warning with:
+> CONFIG_PROVE_LOCKING=y
+> CONFIG_DEBUG_LOCKDEP=y
+> 
+> [...]
+
+Applied, thanks!
+
+[1/1] drm/rockchip: vop2: Avoid use regmap_reinit_cache at runtime
+      commit: 3ee348eb36f14e9303a7e9757efb91b0bbf3f7a9
+
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
