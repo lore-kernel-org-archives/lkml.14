@@ -1,125 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from out28-82.mail.aliyun.com (out28-82.mail.aliyun.com [115.124.28.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ABFF179BA
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 09:52:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AJF0+Of+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703497931; x=1735033931;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=8qe17QdRMGOxCWU+QJIagv0oAbWOr2qmE954N73ToO4=;
-  b=AJF0+Of+FKDOzPGAS2/8ij7uSdJ9w9JuV1YMs+rdOrrjyOQiWKqQ2u0+
-   iCuVwXYvoea66vpeoIolKlCah08l4sjtkLyIIA8drzeZmxSUx6PTeeSw2
-   n803/Sq/q69r1ciE9+OqlYAgh8nbdFqNL3PLkbawbTFMbt8E8c+IvXDvf
-   JvyaKVC4tRPEUPn/xCqq9YJb3tNKHZYNSq0/OYsYhzpJ8wZR94iS+24zy
-   4L4UqsdEfleM7iXZwLcYbyfEfw/y77tUS5yqfjGJIXPdCELiWAY70G434
-   QhHhSz+6WD9um0dIpYuWsqi3wG0yfh567sGYsrnQwdZaDw3QxNhizh1ik
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="3112746"
-X-IronPort-AV: E=Sophos;i="6.04,302,1695711600"; 
-   d="scan'208";a="3112746"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Dec 2023 01:52:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="1024873310"
-X-IronPort-AV: E=Sophos;i="6.04,302,1695711600"; 
-   d="scan'208";a="1024873310"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga006.fm.intel.com with ESMTP; 25 Dec 2023 01:52:07 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rHhcz-000DC8-0p;
-	Mon, 25 Dec 2023 09:52:05 +0000
-Date: Mon, 25 Dec 2023 17:51:48 +0800
-From: kernel test robot <lkp@intel.com>
-To: Aditi Ghag <aditi.ghag@isovalent.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Martin KaFai Lau <martin.lau@kernel.org>
-Subject: WARN: resolve_btfids: unresolved symbol bpf_sock_destroy
-Message-ID: <202312251746.AJnSCuzj-lkp@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E6401798A
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 09:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sjterm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sjterm.com
+X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07944658|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0484377-0.000797998-0.950764;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047199;MF=fuyao@sjterm.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.VsRwBJW_1703498043;
+Received: from localhost(mailfrom:fuyao@sjterm.com fp:SMTPD_---.VsRwBJW_1703498043)
+          by smtp.aliyun-inc.com;
+          Mon, 25 Dec 2023 17:54:03 +0800
+Date: Mon, 25 Dec 2023 17:54:03 +0800
+From: fuyao <fuyao@sjterm.com>
+To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
+	Lee Jones <lee@kernel.org>
+Cc: Andre Przywara <andre.przywara@arm.com>, Lee Jones <lee@kernel.org>,
+	fuyao <fuyao1697@cyg.com>, Chen-Yu Tsai <wens@csie.org>,
+	Samuel Holland <samuel@sholland.org>,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+	maijianzhang <maijianzhang@allwinnertech.com>
+Subject: Re: [PATCH RESEND] iio: adc: sun4i-gpadc-iio: adaptation interrupt
+ number
+Message-ID: <ZYlROwtUv1iZr5Kj@debian.cyg>
+Mail-Followup-To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
+	Lee Jones <lee@kernel.org>, Andre Przywara <andre.przywara@arm.com>,
+	fuyao <fuyao1697@cyg.com>, Chen-Yu Tsai <wens@csie.org>,
+	Samuel Holland <samuel@sholland.org>,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+	maijianzhang <maijianzhang@allwinnertech.com>
+References: <YxmR5SPPY18O7LaG@google.com>
+ <20231220115412.65bbc8c7@donnerap.manchester.arm.com>
+ <20231221152553.GM10102@google.com>
+ <4953611.0VBMTVartN@jernej-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4953611.0VBMTVartN@jernej-laptop>
+Organization: work_work_work
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   861deac3b092f37b2c5e6871732f3e11486f7082
-commit: 4ddbcb886268af8d12a23e6640b39d1d9c652b1b bpf: Add bpf_sock_destroy kfunc
-date:   7 months ago
-config: mips-randconfig-r001-20230703 (https://download.01.org/0day-ci/archive/20231225/202312251746.AJnSCuzj-lkp@intel.com/config)
-compiler: mips64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231225/202312251746.AJnSCuzj-lkp@intel.com/reproduce)
+On Fri, Dec 22, 2023 at 06:54:53PM +0100, Jernej Škrabec wrote:
+> Dne četrtek, 21. december 2023 ob 16:25:53 CET je Lee Jones napisal(a):
+> > On Wed, 20 Dec 2023, Andre Przywara wrote:
+> > 
+> > > On Wed, 20 Dec 2023 15:23:17 +0800
+> > > fuyao <fuyao1697@cyg.com> wrote:
+> > > 
+> > > Hi,
+> > > 
+> > > > __platform_get_irq_byname determinies whether the interrupt
+> > > > number is 0 and returns EINVAL.
+> > > 
+> > > can you please say what this fixes, exactly? Is something not working at
+> > > the moment? Can you please provide parts of the error message?
+> > > 
+> > > And maybe expand the explanation a bit more? For instance mention that the
+> > > identifiers are used as IRQ resource numbers, where 0 is treated specially.
+> > > 
+> > > Cheers,
+> > > Andre
+> > > 
+> > > > 
+> > > > Signed-off-by: fuyao <fuyao1697@cyg.com>
+> > 
+> > You have to use your full real name as well.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312251746.AJnSCuzj-lkp@intel.com/
+> 
+> Isn't that enough after
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d4563201f33a022fc0353033d9dfeb1606a88330 ?
 
-All warnings (new ones prefixed by >>):
+Thanks
 
-   WARN: resolve_btfids: unresolved symbol unix_sock
-   WARN: resolve_btfids: unresolved symbol bpf_cpumask
-   WARN: resolve_btfids: unresolved symbol bpf_xdp_metadata_rx_timestamp
-   WARN: resolve_btfids: unresolved symbol bpf_xdp_metadata_rx_hash
-   WARN: resolve_btfids: unresolved symbol bpf_xdp_ct_lookup
-   WARN: resolve_btfids: unresolved symbol bpf_xdp_ct_alloc
-   WARN: resolve_btfids: unresolved symbol bpf_task_under_cgroup
-   WARN: resolve_btfids: unresolved symbol bpf_task_release
-   WARN: resolve_btfids: unresolved symbol bpf_task_from_pid
-   WARN: resolve_btfids: unresolved symbol bpf_task_acquire
->> WARN: resolve_btfids: unresolved symbol bpf_sock_destroy
-   WARN: resolve_btfids: unresolved symbol bpf_skb_set_fou_encap
-   WARN: resolve_btfids: unresolved symbol bpf_skb_get_fou_encap
-   WARN: resolve_btfids: unresolved symbol bpf_skb_ct_lookup
-   WARN: resolve_btfids: unresolved symbol bpf_skb_ct_alloc
-   WARN: resolve_btfids: unresolved symbol bpf_refcount_acquire_impl
-   WARN: resolve_btfids: unresolved symbol bpf_rdonly_cast
-   WARN: resolve_btfids: unresolved symbol bpf_rcu_read_unlock
-   WARN: resolve_btfids: unresolved symbol bpf_rcu_read_lock
-   WARN: resolve_btfids: unresolved symbol bpf_rbtree_remove
-   WARN: resolve_btfids: unresolved symbol bpf_rbtree_first
-   WARN: resolve_btfids: unresolved symbol bpf_rbtree_add_impl
-   WARN: resolve_btfids: unresolved symbol bpf_obj_new_impl
-   WARN: resolve_btfids: unresolved symbol bpf_obj_drop_impl
-   WARN: resolve_btfids: unresolved symbol bpf_modify_return_test
-   WARN: resolve_btfids: unresolved symbol bpf_list_push_front_impl
-   WARN: resolve_btfids: unresolved symbol bpf_list_push_back_impl
-   WARN: resolve_btfids: unresolved symbol bpf_list_pop_front
-   WARN: resolve_btfids: unresolved symbol bpf_list_pop_back
-   WARN: resolve_btfids: unresolved symbol bpf_kfunc_call_test_release
-   WARN: resolve_btfids: unresolved symbol bpf_kfunc_call_memb_release
-   WARN: resolve_btfids: unresolved symbol bpf_iter_num_next
-   WARN: resolve_btfids: unresolved symbol bpf_iter_num_new
-   WARN: resolve_btfids: unresolved symbol bpf_iter_num_destroy
-   WARN: resolve_btfids: unresolved symbol bpf_dynptr_slice_rdwr
-   WARN: resolve_btfids: unresolved symbol bpf_dynptr_slice
-   WARN: resolve_btfids: unresolved symbol bpf_dynptr_size
-   WARN: resolve_btfids: unresolved symbol bpf_dynptr_is_rdonly
-   WARN: resolve_btfids: unresolved symbol bpf_dynptr_is_null
-   WARN: resolve_btfids: unresolved symbol bpf_dynptr_from_xdp
-   WARN: resolve_btfids: unresolved symbol bpf_dynptr_clone
-   WARN: resolve_btfids: unresolved symbol bpf_dynptr_adjust
-   WARN: resolve_btfids: unresolved symbol bpf_ct_set_timeout
-   WARN: resolve_btfids: unresolved symbol bpf_ct_set_status
-   WARN: resolve_btfids: unresolved symbol bpf_ct_set_nat_info
-   WARN: resolve_btfids: unresolved symbol bpf_ct_release
-   WARN: resolve_btfids: unresolved symbol bpf_ct_insert_entry
-   WARN: resolve_btfids: unresolved symbol bpf_ct_change_timeout
-   WARN: resolve_btfids: unresolved symbol bpf_ct_change_status
-   WARN: resolve_btfids: unresolved symbol bpf_cgroup_release
-   WARN: resolve_btfids: unresolved symbol bpf_cgroup_from_id
-   WARN: resolve_btfids: unresolved symbol bpf_cgroup_ancestor
-   WARN: resolve_btfids: unresolved symbol bpf_cgroup_acquire
-   WARN: resolve_btfids: unresolved symbol bpf_cast_to_kern_ctx
+> 
+> Best regards,
+> Jernej
+> 
+> > 
+> > > > Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+> > > > ---
+> > > >  include/linux/mfd/sun4i-gpadc.h | 4 ++--
+> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > > 
+> > > > diff --git a/include/linux/mfd/sun4i-gpadc.h b/include/linux/mfd/sun4i-gpadc.h
+> > > > index ea0ccf33a459..021f820f9d52 100644
+> > > > --- a/include/linux/mfd/sun4i-gpadc.h
+> > > > +++ b/include/linux/mfd/sun4i-gpadc.h
+> > > > @@ -81,8 +81,8 @@
+> > > >  #define SUN4I_GPADC_TEMP_DATA				0x20
+> > > >  #define SUN4I_GPADC_DATA				0x24
+> > > >  
+> > > > -#define SUN4I_GPADC_IRQ_FIFO_DATA			0
+> > > > -#define SUN4I_GPADC_IRQ_TEMP_DATA			1
+> > > > +#define SUN4I_GPADC_IRQ_FIFO_DATA			1
+> > > > +#define SUN4I_GPADC_IRQ_TEMP_DATA			2
+> > > >  
+> > > >  /* 10s delay before suspending the IP */
+> > > >  #define SUN4I_GPADC_AUTOSUSPEND_DELAY			10000
+> > > 
+> > 
+> > 
+> 
+> 
+> 
+> 
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+CYG Technology.
