@@ -1,355 +1,156 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAED5DF54;
-	Mon, 25 Dec 2023 07:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hisilicon.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Sz9JM0qxGz1wpH5;
-	Mon, 25 Dec 2023 15:58:27 +0800 (CST)
-Received: from kwepemi500006.china.huawei.com (unknown [7.221.188.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id 03EA61A019B;
-	Mon, 25 Dec 2023 15:58:32 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.2) by
- kwepemi500006.china.huawei.com (7.221.188.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 25 Dec 2023 15:57:17 +0800
-From: Junxian Huang <huangjunxian6@hisilicon.com>
-To: <jgg@ziepe.ca>, <leon@kernel.org>
-CC: <linux-rdma@vger.kernel.org>, <linuxarm@huawei.com>,
-	<linux-kernel@vger.kernel.org>, <huangjunxian6@hisilicon.com>
-Subject: [PATCH for-next 6/6] RDMA/hns: Simplify 'struct hns_roce_hem' allocation
-Date: Mon, 25 Dec 2023 15:53:30 +0800
-Message-ID: <20231225075330.4116470-7-huangjunxian6@hisilicon.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20231225075330.4116470-1-huangjunxian6@hisilicon.com>
-References: <20231225075330.4116470-1-huangjunxian6@hisilicon.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94057DDD6
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 07:58:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="WecyzIm8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:subject:message-id:mime-version;
+  bh=dD0bUVWTY8SwBG2Vb0rtdcxWd/KeOad5hG/gzoZpvzM=;
+  b=WecyzIm8FcbCLsH0G80Y7wNSYoCZtGGxVA09Gz5p0XC6rUpHSpPtYX6e
+   zM/V8xYwP7s7Cw6DP+TRMdSMH0FPf34I84WP6uUJbKsiP49SFzg0J+Kl6
+   Fdy8QoucjYgwikrOhrMNO4r1ppTQ+ddp3viNEICcYFMo9x+Y3hwPmwVxS
+   8=;
+Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.04,302,1695679200"; 
+   d="scan'208";a="75310300"
+Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Dec 2023 08:58:47 +0100
+Date: Mon, 25 Dec 2023 08:58:46 +0100 (CET)
+From: Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To: =?ISO-8859-2?Q?Rafa=B3_Mi=B3ecki?= <rafal@milecki.pl>, 
+    Miquel Raynal <miquel.raynal@bootlin.com>, linux-kernel@vger.kernel.org, 
+    oe-kbuild-all@lists.linux.dev
+Subject: drivers/mtd/mtdcore.c:577:1-23: WARNING: Function "for_each_child_of_node"
+ should have of_node_put() before break around line 594. (fwd)
+Message-ID: <alpine.DEB.2.22.394.2312250857060.3331@hadrien>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemi500006.china.huawei.com (7.221.188.68)
+Content-Type: multipart/mixed; boundary="8323329-1931466063-1703491126=:3331"
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-'struct hns_roce_hem' is used to refer to the last level of
-dma buffer managed by the hw, pointed by a single BA(base
-address) in the previous level of BT(base table), so the dma
-buffer in 'struct hns_roce_hem' must be contiguous.
+--8323329-1931466063-1703491126=:3331
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-Right now the size of dma buffer in 'struct hns_roce_hem' is
-decided by mhop->buf_chunk_size in get_hem_table_config(),
-which ensure the mhop->buf_chunk_size is power of two of
-PAGE_SIZE, so there will be only one contiguous dma buffer
-allocated in hns_roce_alloc_hem(), which means hem->chunk_list
-and chunk->mem for linking multi dma buffers is unnecessary.
+Hello,
 
-This patch removes the hem->chunk_list and chunk->mem and other
-related macro and function accordingly.
+Actually, I think that the of_node_put on line 598 should move to line
+594.  If the loop terminates normally, positions will be the loop header,
+and it will not be apporpriate to call of node put on it.
 
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Junxian Huang <huangjunxian6@hisilicon.com>
----
- drivers/infiniband/hw/hns/hns_roce_hem.c   | 95 +++++-----------------
- drivers/infiniband/hw/hns/hns_roce_hem.h   | 56 +------------
- drivers/infiniband/hw/hns/hns_roce_hw_v2.c |  9 +-
- 3 files changed, 24 insertions(+), 136 deletions(-)
+julia
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hem.c b/drivers/infiniband/hw/hns/hns_roce_hem.c
-index c4ac06a33869..a4b3f19161dc 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hem.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hem.c
-@@ -249,61 +249,34 @@ int hns_roce_calc_hem_mhop(struct hns_roce_dev *hr_dev,
- }
- 
- static struct hns_roce_hem *hns_roce_alloc_hem(struct hns_roce_dev *hr_dev,
--					       int npages,
- 					       unsigned long hem_alloc_size,
- 					       gfp_t gfp_mask)
- {
--	struct hns_roce_hem_chunk *chunk = NULL;
- 	struct hns_roce_hem *hem;
--	struct scatterlist *mem;
- 	int order;
- 	void *buf;
- 
- 	WARN_ON(gfp_mask & __GFP_HIGHMEM);
- 
-+	order = get_order(hem_alloc_size);
-+	if (PAGE_SIZE << order != hem_alloc_size) {
-+		dev_err(hr_dev->dev, "invalid hem_alloc_size: %lu!\n",
-+			hem_alloc_size);
-+		return NULL;
-+	}
-+
- 	hem = kmalloc(sizeof(*hem),
- 		      gfp_mask & ~(__GFP_HIGHMEM | __GFP_NOWARN));
- 	if (!hem)
- 		return NULL;
- 
--	INIT_LIST_HEAD(&hem->chunk_list);
--
--	order = get_order(hem_alloc_size);
--
--	while (npages > 0) {
--		if (!chunk) {
--			chunk = kmalloc(sizeof(*chunk),
--				gfp_mask & ~(__GFP_HIGHMEM | __GFP_NOWARN));
--			if (!chunk)
--				goto fail;
--
--			sg_init_table(chunk->mem, HNS_ROCE_HEM_CHUNK_LEN);
--			chunk->npages = 0;
--			chunk->nsg = 0;
--			memset(chunk->buf, 0, sizeof(chunk->buf));
--			list_add_tail(&chunk->list, &hem->chunk_list);
--		}
-+	buf = dma_alloc_coherent(hr_dev->dev, hem_alloc_size,
-+				 &hem->dma, gfp_mask);
-+	if (!buf)
-+		goto fail;
- 
--		while (1 << order > npages)
--			--order;
--
--		/*
--		 * Alloc memory one time. If failed, don't alloc small block
--		 * memory, directly return fail.
--		 */
--		mem = &chunk->mem[chunk->npages];
--		buf = dma_alloc_coherent(hr_dev->dev, PAGE_SIZE << order,
--				&sg_dma_address(mem), gfp_mask);
--		if (!buf)
--			goto fail;
--
--		chunk->buf[chunk->npages] = buf;
--		sg_dma_len(mem) = PAGE_SIZE << order;
--
--		++chunk->npages;
--		++chunk->nsg;
--		npages -= 1 << order;
--	}
-+	hem->buf = buf;
-+	hem->size = hem_alloc_size;
- 
- 	return hem;
- 
-@@ -314,20 +287,10 @@ static struct hns_roce_hem *hns_roce_alloc_hem(struct hns_roce_dev *hr_dev,
- 
- void hns_roce_free_hem(struct hns_roce_dev *hr_dev, struct hns_roce_hem *hem)
- {
--	struct hns_roce_hem_chunk *chunk, *tmp;
--	int i;
--
- 	if (!hem)
- 		return;
- 
--	list_for_each_entry_safe(chunk, tmp, &hem->chunk_list, list) {
--		for (i = 0; i < chunk->npages; ++i)
--			dma_free_coherent(hr_dev->dev,
--				   sg_dma_len(&chunk->mem[i]),
--				   chunk->buf[i],
--				   sg_dma_address(&chunk->mem[i]));
--		kfree(chunk);
--	}
-+	dma_free_coherent(hr_dev->dev, hem->size, hem->buf, hem->dma);
- 
- 	kfree(hem);
- }
-@@ -415,7 +378,6 @@ static int alloc_mhop_hem(struct hns_roce_dev *hr_dev,
- {
- 	u32 bt_size = mhop->bt_chunk_size;
- 	struct device *dev = hr_dev->dev;
--	struct hns_roce_hem_iter iter;
- 	gfp_t flag;
- 	u64 bt_ba;
- 	u32 size;
-@@ -456,16 +418,15 @@ static int alloc_mhop_hem(struct hns_roce_dev *hr_dev,
- 	 */
- 	size = table->type < HEM_TYPE_MTT ? mhop->buf_chunk_size : bt_size;
- 	flag = GFP_KERNEL | __GFP_NOWARN;
--	table->hem[index->buf] = hns_roce_alloc_hem(hr_dev, size >> PAGE_SHIFT,
--						    size, flag);
-+	table->hem[index->buf] = hns_roce_alloc_hem(hr_dev, size, flag);
- 	if (!table->hem[index->buf]) {
- 		ret = -ENOMEM;
- 		goto err_alloc_hem;
- 	}
- 
- 	index->inited |= HEM_INDEX_BUF;
--	hns_roce_hem_first(table->hem[index->buf], &iter);
--	bt_ba = hns_roce_hem_addr(&iter);
-+	bt_ba = table->hem[index->buf]->dma;
-+
- 	if (table->type < HEM_TYPE_MTT) {
- 		if (mhop->hop_num == 2)
- 			*(table->bt_l1[index->l1] + mhop->l2_idx) = bt_ba;
-@@ -586,7 +547,6 @@ int hns_roce_table_get(struct hns_roce_dev *hr_dev,
- 	}
- 
- 	table->hem[i] = hns_roce_alloc_hem(hr_dev,
--				       table->table_chunk_size >> PAGE_SHIFT,
- 				       table->table_chunk_size,
- 				       GFP_KERNEL | __GFP_NOWARN);
- 	if (!table->hem[i]) {
-@@ -725,7 +685,6 @@ void *hns_roce_table_find(struct hns_roce_dev *hr_dev,
- 			  struct hns_roce_hem_table *table,
- 			  unsigned long obj, dma_addr_t *dma_handle)
- {
--	struct hns_roce_hem_chunk *chunk;
- 	struct hns_roce_hem_mhop mhop;
- 	struct hns_roce_hem *hem;
- 	unsigned long mhop_obj = obj;
-@@ -734,7 +693,6 @@ void *hns_roce_table_find(struct hns_roce_dev *hr_dev,
- 	int offset, dma_offset;
- 	void *addr = NULL;
- 	u32 hem_idx = 0;
--	int length;
- 	int i, j;
- 
- 	mutex_lock(&table->mutex);
-@@ -767,23 +725,8 @@ void *hns_roce_table_find(struct hns_roce_dev *hr_dev,
- 	if (!hem)
- 		goto out;
- 
--	list_for_each_entry(chunk, &hem->chunk_list, list) {
--		for (i = 0; i < chunk->npages; ++i) {
--			length = sg_dma_len(&chunk->mem[i]);
--			if (dma_handle && dma_offset >= 0) {
--				if (length > (u32)dma_offset)
--					*dma_handle = sg_dma_address(
--						&chunk->mem[i]) + dma_offset;
--				dma_offset -= length;
--			}
--
--			if (length > (u32)offset) {
--				addr = chunk->buf[i] + offset;
--				goto out;
--			}
--			offset -= length;
--		}
--	}
-+	*dma_handle = hem->dma + dma_offset;
-+	addr = hem->buf + offset;
- 
- out:
- 	mutex_unlock(&table->mutex);
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hem.h b/drivers/infiniband/hw/hns/hns_roce_hem.h
-index 7d23d3c51da4..6fb51db9682b 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hem.h
-+++ b/drivers/infiniband/hw/hns/hns_roce_hem.h
-@@ -56,10 +56,6 @@ enum {
- 	HEM_TYPE_TRRL,
- };
- 
--#define HNS_ROCE_HEM_CHUNK_LEN	\
--	 ((256 - sizeof(struct list_head) - 2 * sizeof(int)) /	 \
--	 (sizeof(struct scatterlist) + sizeof(void *)))
--
- #define check_whether_bt_num_3(type, hop_num) \
- 	(type < HEM_TYPE_MTT && hop_num == 2)
- 
-@@ -72,25 +68,13 @@ enum {
- 	(type >= HEM_TYPE_MTT && hop_num == 1) || \
- 	(type >= HEM_TYPE_MTT && hop_num == HNS_ROCE_HOP_NUM_0))
- 
--struct hns_roce_hem_chunk {
--	struct list_head	 list;
--	int			 npages;
--	int			 nsg;
--	struct scatterlist	 mem[HNS_ROCE_HEM_CHUNK_LEN];
--	void			 *buf[HNS_ROCE_HEM_CHUNK_LEN];
--};
--
- struct hns_roce_hem {
--	struct list_head chunk_list;
-+	void *buf;
-+	dma_addr_t dma;
-+	unsigned long size;
- 	refcount_t refcount;
- };
- 
--struct hns_roce_hem_iter {
--	struct hns_roce_hem		 *hem;
--	struct hns_roce_hem_chunk	 *chunk;
--	int				 page_idx;
--};
--
- struct hns_roce_hem_mhop {
- 	u32	hop_num;
- 	u32	buf_chunk_size;
-@@ -133,38 +117,4 @@ void *hns_roce_hem_list_find_mtt(struct hns_roce_dev *hr_dev,
- 				 struct hns_roce_hem_list *hem_list,
- 				 int offset, int *mtt_cnt);
- 
--static inline void hns_roce_hem_first(struct hns_roce_hem *hem,
--				      struct hns_roce_hem_iter *iter)
--{
--	iter->hem = hem;
--	iter->chunk = list_empty(&hem->chunk_list) ? NULL :
--				 list_entry(hem->chunk_list.next,
--					    struct hns_roce_hem_chunk, list);
--	iter->page_idx = 0;
--}
--
--static inline int hns_roce_hem_last(struct hns_roce_hem_iter *iter)
--{
--	return !iter->chunk;
--}
--
--static inline void hns_roce_hem_next(struct hns_roce_hem_iter *iter)
--{
--	if (++iter->page_idx >= iter->chunk->nsg) {
--		if (iter->chunk->list.next == &iter->hem->chunk_list) {
--			iter->chunk = NULL;
--			return;
--		}
--
--		iter->chunk = list_entry(iter->chunk->list.next,
--					 struct hns_roce_hem_chunk, list);
--		iter->page_idx = 0;
--	}
--}
--
--static inline dma_addr_t hns_roce_hem_addr(struct hns_roce_hem_iter *iter)
--{
--	return sg_dma_address(&iter->chunk->mem[iter->page_idx]);
--}
--
- #endif /* _HNS_ROCE_HEM_H */
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-index 94e9e6a237cf..de56dc6e3226 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
-@@ -4058,7 +4058,6 @@ static int hns_roce_v2_set_hem(struct hns_roce_dev *hr_dev,
- 			       struct hns_roce_hem_table *table, int obj,
- 			       u32 step_idx)
- {
--	struct hns_roce_hem_iter iter;
- 	struct hns_roce_hem_mhop mhop;
- 	struct hns_roce_hem *hem;
- 	unsigned long mhop_obj = obj;
-@@ -4095,12 +4094,8 @@ static int hns_roce_v2_set_hem(struct hns_roce_dev *hr_dev,
- 
- 	if (check_whether_last_step(hop_num, step_idx)) {
- 		hem = table->hem[hem_idx];
--		for (hns_roce_hem_first(hem, &iter);
--		     !hns_roce_hem_last(&iter); hns_roce_hem_next(&iter)) {
--			bt_ba = hns_roce_hem_addr(&iter);
--			ret = set_hem_to_hw(hr_dev, obj, bt_ba, table->type,
--					    step_idx);
--		}
-+
-+		ret = set_hem_to_hw(hr_dev, obj, hem->dma, table->type, step_idx);
- 	} else {
- 		if (step_idx == 0)
- 			bt_ba = table->bt_l0_dma_addr[i];
+---------- Forwarded message ----------
+Date: Mon, 25 Dec 2023 05:23:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: oe-kbuild@lists.linux.dev
+Cc: lkp@intel.com, Julia Lawall <julia.lawall@inria.fr>
+Subject: drivers/mtd/mtdcore.c:577:1-23: WARNING: Function
+    "for_each_child_of_node" should have of_node_put() before break around line
+    594.
+
+BCC: lkp@intel.com
+CC: oe-kbuild-all@lists.linux.dev
+CC: linux-kernel@vger.kernel.org
+TO: "Rafał Miłecki" <rafal@milecki.pl>
+CC: Miquel Raynal <miquel.raynal@bootlin.com>
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   861deac3b092f37b2c5e6871732f3e11486f7082
+commit: 2df11f00100d7278185a9dbefa20ba3f5d32401d mtd: core: try to find OF node for every MTD partition
+date:   1 year, 2 months ago
+:::::: branch date: 21 hours ago
+:::::: commit date: 1 year, 2 months ago
+config: loongarch-randconfig-r062-20231222 (https://download.01.org/0day-ci/archive/20231225/202312250546.ISzglvM2-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 13.2.0
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Julia Lawall <julia.lawall@inria.fr>
+| Closes: https://lore.kernel.org/r/202312250546.ISzglvM2-lkp@intel.com/
+
+cocci warnings: (new ones prefixed by >>)
+>> drivers/mtd/mtdcore.c:577:1-23: WARNING: Function "for_each_child_of_node" should have of_node_put() before break around line 594.
+
+vim +/for_each_child_of_node +577 drivers/mtd/mtdcore.c
+
+c4dfa25ab307a2 Alban Bedel       2018-11-13  548
+ad9b10d1eaada1 Christian Marangi 2022-06-22  549  static void mtd_check_of_node(struct mtd_info *mtd)
+ad9b10d1eaada1 Christian Marangi 2022-06-22  550  {
+ad9b10d1eaada1 Christian Marangi 2022-06-22  551  	struct device_node *partitions, *parent_dn, *mtd_dn = NULL;
+ad9b10d1eaada1 Christian Marangi 2022-06-22  552  	const char *pname, *prefix = "partition-";
+ad9b10d1eaada1 Christian Marangi 2022-06-22  553  	int plen, mtd_name_len, offset, prefix_len;
+ad9b10d1eaada1 Christian Marangi 2022-06-22  554
+ad9b10d1eaada1 Christian Marangi 2022-06-22  555  	/* Check if MTD already has a device node */
+c5f5d0cd40e3bc Rafał Miłecki     2022-10-04  556  	if (mtd_get_of_node(mtd))
+ad9b10d1eaada1 Christian Marangi 2022-06-22  557  		return;
+ad9b10d1eaada1 Christian Marangi 2022-06-22  558
+7ec4cdb321738d Tetsuo Handa      2022-07-25  559  	if (!mtd_is_partition(mtd))
+7ec4cdb321738d Tetsuo Handa      2022-07-25  560  		return;
+c5f5d0cd40e3bc Rafał Miłecki     2022-10-04  561
+c5f5d0cd40e3bc Rafał Miłecki     2022-10-04  562  	parent_dn = of_node_get(mtd_get_of_node(mtd->parent));
+ad9b10d1eaada1 Christian Marangi 2022-06-22  563  	if (!parent_dn)
+ad9b10d1eaada1 Christian Marangi 2022-06-22  564  		return;
+ad9b10d1eaada1 Christian Marangi 2022-06-22  565
+2df11f00100d72 Rafał Miłecki     2022-10-04  566  	if (mtd_is_partition(mtd->parent))
+2df11f00100d72 Rafał Miłecki     2022-10-04  567  		partitions = of_node_get(parent_dn);
+2df11f00100d72 Rafał Miłecki     2022-10-04  568  	else
+ad9b10d1eaada1 Christian Marangi 2022-06-22  569  		partitions = of_get_child_by_name(parent_dn, "partitions");
+ad9b10d1eaada1 Christian Marangi 2022-06-22  570  	if (!partitions)
+ad9b10d1eaada1 Christian Marangi 2022-06-22  571  		goto exit_parent;
+ad9b10d1eaada1 Christian Marangi 2022-06-22  572
+ad9b10d1eaada1 Christian Marangi 2022-06-22  573  	prefix_len = strlen(prefix);
+ad9b10d1eaada1 Christian Marangi 2022-06-22  574  	mtd_name_len = strlen(mtd->name);
+ad9b10d1eaada1 Christian Marangi 2022-06-22  575
+ad9b10d1eaada1 Christian Marangi 2022-06-22  576  	/* Search if a partition is defined with the same name */
+ad9b10d1eaada1 Christian Marangi 2022-06-22 @577  	for_each_child_of_node(partitions, mtd_dn) {
+ad9b10d1eaada1 Christian Marangi 2022-06-22  578  		/* Skip partition with no/wrong prefix */
+c5f5d0cd40e3bc Rafał Miłecki     2022-10-04  579  		if (!of_node_name_prefix(mtd_dn, prefix))
+ad9b10d1eaada1 Christian Marangi 2022-06-22  580  			continue;
+ad9b10d1eaada1 Christian Marangi 2022-06-22  581
+ad9b10d1eaada1 Christian Marangi 2022-06-22  582  		/* Label have priority. Check that first */
+c5f5d0cd40e3bc Rafał Miłecki     2022-10-04  583  		if (!of_property_read_string(mtd_dn, "label", &pname)) {
+c5f5d0cd40e3bc Rafał Miłecki     2022-10-04  584  			offset = 0;
+c5f5d0cd40e3bc Rafał Miłecki     2022-10-04  585  		} else {
+c5f5d0cd40e3bc Rafał Miłecki     2022-10-04  586  			pname = mtd_dn->name;
+ad9b10d1eaada1 Christian Marangi 2022-06-22  587  			offset = prefix_len;
+ad9b10d1eaada1 Christian Marangi 2022-06-22  588  		}
+ad9b10d1eaada1 Christian Marangi 2022-06-22  589
+ad9b10d1eaada1 Christian Marangi 2022-06-22  590  		plen = strlen(pname) - offset;
+ad9b10d1eaada1 Christian Marangi 2022-06-22  591  		if (plen == mtd_name_len &&
+ad9b10d1eaada1 Christian Marangi 2022-06-22  592  		    !strncmp(mtd->name, pname + offset, plen)) {
+2df11f00100d72 Rafał Miłecki     2022-10-04  593  			mtd_set_of_node(mtd, mtd_dn);
+ad9b10d1eaada1 Christian Marangi 2022-06-22 @594  			break;
+ad9b10d1eaada1 Christian Marangi 2022-06-22  595  		}
+ad9b10d1eaada1 Christian Marangi 2022-06-22  596  	}
+ad9b10d1eaada1 Christian Marangi 2022-06-22  597
+ad9b10d1eaada1 Christian Marangi 2022-06-22  598  	of_node_put(partitions);
+ad9b10d1eaada1 Christian Marangi 2022-06-22  599  exit_parent:
+ad9b10d1eaada1 Christian Marangi 2022-06-22  600  	of_node_put(parent_dn);
+ad9b10d1eaada1 Christian Marangi 2022-06-22  601  }
+ad9b10d1eaada1 Christian Marangi 2022-06-22  602
+
+:::::: The code at line 577 was first introduced by commit
+:::::: ad9b10d1eaada169bd764abcab58f08538877e26 mtd: core: introduce of support for dynamic partitions
+
+:::::: TO: Christian Marangi <ansuelsmth@gmail.com>
+:::::: CC: Miquel Raynal <miquel.raynal@bootlin.com>
+
 -- 
-2.30.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+--8323329-1931466063-1703491126=:3331--
