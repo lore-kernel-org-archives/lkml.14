@@ -1,47 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E457805
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 02:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5224B1877
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 02:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gu915Kgi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703472544; x=1735008544;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=XvAvnMtEeu8/4YXReexVsLTnVFqbZ2J/iPfLSByHwQU=;
-  b=gu915KgiiyjtP8Q9Ov5LMGXtvh5sDRzb0sAEVP5IRUCtBp3Pc7qvV6OE
-   Xii15OOH0qZzCbOOQPmb79Cj9JvOXVhxiM8ft0bzHUqwnAcrffylRzDj7
-   A/dDl0co/W8W4DnkxjHgvvQ8crHd/W3wSjEpG05pc1ze7xjgWw5C4+mYa
-   KL77FcGrs5xX9PjAMapzxf0fRfAFpMVhsQclgrjlK9At0uEm6B1BkMHm6
-   GUJLhItq50hETZxj6pKik7QeFgWqMbh/D7CnBIY8Vpi/RLKVXDf89Ynap
-   /KzR76BY9eE7pdUFmZVdJ+G5ILS7BgS/B57PmsYaZ5HPkf6SzrISpR1DR
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="381242190"
-X-IronPort-AV: E=Sophos;i="6.04,302,1695711600"; 
-   d="scan'208";a="381242190"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Dec 2023 18:49:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="901090737"
-X-IronPort-AV: E=Sophos;i="6.04,302,1695711600"; 
-   d="scan'208";a="901090737"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 24 Dec 2023 18:49:01 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rHb1X-000CrL-33;
-	Mon, 25 Dec 2023 02:49:00 +0000
-Date: Mon, 25 Dec 2023 10:46:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ralph Campbell <rcampbell@nvidia.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Ben Skeggs <bskeggs@redhat.com>
-Subject: drivers/gpu/drm/nouveau/nouveau_svm.c:829:13: warning: variable
- 'ret' set but not used
-Message-ID: <202312251018.JVE0C0kT-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="ersVXDjS"
+Received: from cwcc.thunk.org (pool-173-48-113-111.bstnma.fios.verizon.net [173.48.113.111])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 3BP2n6wB016557
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 24 Dec 2023 21:49:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1703472549; bh=OdpFpqqpJ89dj3MYT6e+L3YmSv6NrIhp5NNwXxiXfpI=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=ersVXDjSrH6gZn90dOHWFqQOl4XSj93gjAOQ43HaEgbw8F2nMBnX39IR1oj6frqun
+	 p61Zmw0KLT7bINJtuKHp1H136TBDdKc7Xe5RGEYxByfzmDNsNv8Vr6zo2RExIQeV0+
+	 A2Oq+RfEZ1+L8mINKsYx3XVjP1iZSnWk1NZ0SpOKkXwJetRBXiWDpD7Jmkzv9Q8tgJ
+	 jvQVp+h/J8UFe4QdgeypF7Nz8BLP2aeERtGkp7k9MKFnyQdBnOIf5+3FP0j48UhKtE
+	 +po+W6Y+9oD8htGFwXCicrv98Y4jnaxFYX8xWH4Y6J40rG78h7QCyrcBnXeUn1INUK
+	 4nIUtm8fOpZ8g==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+	id C35A115C18E6; Sun, 24 Dec 2023 21:49:06 -0500 (EST)
+Date: Sun, 24 Dec 2023 21:49:06 -0500
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Baokun Li <libaokun1@huawei.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, Edward Adam Davis <eadavis@qq.com>,
+        syzbot+2c4a3b922a860084cc7f@syzkaller.appspotmail.com,
+        adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, yangerkun <yangerkun@huawei.com>
+Subject: Re: [PATCH] ext4: fix WARNING in lock_two_nondirectories
+Message-ID: <20231225024906.GD491196@mit.edu>
+References: <000000000000e17185060c8caaad@google.com>
+ <tencent_DABB2333139E8D1BCF4B5D1B2725FABA9108@qq.com>
+ <fb653ebf-0225-00b3-df05-6b685a727b41@huawei.com>
+ <20231225020754.GE1674809@ZenIV>
+ <a4d6ca25-cb8d-f3f9-ed4e-3a55378fdfde@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,56 +47,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <a4d6ca25-cb8d-f3f9-ed4e-3a55378fdfde@huawei.com>
 
-Hi Ralph,
+On Mon, Dec 25, 2023 at 10:33:20AM +0800, Baokun Li wrote:
+> Since in the current logic we update the boot loader file via
+> swap_inode_boot_loader(), however the boot loader inode on disk
+> may be uninitialized and may be garbage data, so we allow to get a
+> bad boot loader inode and then initialize it and swap it with the boot
+> loader file to be set.
+> When reinitializing the bad boot loader inode, something like an
+> inode type conversion may occur.
 
-FYI, the error/warning still remains.
+Yes, but the boot laoder inode is *either* all zeros, or a regular
+file.  If it's a directory, then it's a malicious syzbot trying to
+mess with our minds.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   861deac3b092f37b2c5e6871732f3e11486f7082
-commit: e3d8b08904694e9ccae5163d0bb7d35fa66e5bdc drm/nouveau/svm: map pages after migration
-date:   3 years, 7 months ago
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20231225/202312251018.JVE0C0kT-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231225/202312251018.JVE0C0kT-lkp@intel.com/reproduce)
+Aside from the warning, it's pretty harmless, but it will very likely
+result in a corrupted file system --- but the file system was
+corrupted in the first place.  So who cares?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312251018.JVE0C0kT-lkp@intel.com/
+Just check to make sure that i_mode is either 0, or regular file, and
+return EFSCORRUPTEd, and we're done.
 
-All warnings (new ones prefixed by >>):
-
-   drivers/gpu/drm/nouveau/nouveau_svm.c: In function 'nouveau_pfns_map':
->> drivers/gpu/drm/nouveau/nouveau_svm.c:829:13: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
-     829 |         int ret;
-         |             ^~~
-
-
-vim +/ret +829 drivers/gpu/drm/nouveau/nouveau_svm.c
-
-   823	
-   824	void
-   825	nouveau_pfns_map(struct nouveau_svmm *svmm, struct mm_struct *mm,
-   826			 unsigned long addr, u64 *pfns, unsigned long npages)
-   827	{
-   828		struct nouveau_pfnmap_args *args = nouveau_pfns_to_args(pfns);
- > 829		int ret;
-   830	
-   831		args->p.addr = addr;
-   832		args->p.size = npages << PAGE_SHIFT;
-   833	
-   834		mutex_lock(&svmm->mutex);
-   835	
-   836		svmm->vmm->vmm.object.client->super = true;
-   837		ret = nvif_object_ioctl(&svmm->vmm->vmm.object, args, sizeof(*args) +
-   838					npages * sizeof(args->p.phys[0]), NULL);
-   839		svmm->vmm->vmm.object.client->super = false;
-   840	
-   841		mutex_unlock(&svmm->mutex);
-   842	}
-   843	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+   	     		      	  	 	       - Ted
