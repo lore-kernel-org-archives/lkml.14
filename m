@@ -1,123 +1,105 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE3DB537FB;
-	Mon, 25 Dec 2023 17:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A220D52F6C;
+	Mon, 25 Dec 2023 17:47:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lkpaX9Hg"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BPHdLd5001550;
-	Mon, 25 Dec 2023 17:44:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:to:cc; s=qcppdkim1; bh=H1m
-	7EdXOp3XE9uXDUxzf5EPHgYuqg/AyUCZ1zDiRrCM=; b=lkpaX9Hgx/3z+dywrH1
-	Ig/OCPJfKggv5xTjUtG1VZGw9wV2UOlm7iI2YrskOPapy9MM7+5UuKJ6ijDJHha7
-	w0M35txQ/8VofpDsmr4hbdIPvjnqDVbxX/VgvtTP0pP19q2uy8j7kwYkKNojUqcG
-	qnHb4cBwsvjOfHh+nxbCvWn/k/tGhstKiRjalPNWdbXtKB+tJvT5BBjcRaYQc+qL
-	nUbAFBhe9rH3/CG6v6K0hYZ+TMDMuQVd5dN8GrSJGZuwadUzThanajukZxnL/lty
-	BChuGKQB4WpT1hTvobbWgn/g76wvzlG+172eboaksd+3RPJI7DHQKEIT4EKlJwOL
-	dqA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3v5pvnm0ew-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Dec 2023 17:44:45 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3BPHiipI008884
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 25 Dec 2023 17:44:44 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 25 Dec
- 2023 09:44:44 -0800
-From: Bjorn Andersson <quic_bjorande@quicinc.com>
-Date: Mon, 25 Dec 2023 09:40:35 -0800
-Subject: [PATCH] scripts/decode_stacktrace.sh: Strip unexpected CR from
- lines
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="GiO7qeHC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1703526384; x=1704131184; i=markus.elfring@web.de;
+	bh=yZfNVyN4f4vfAqTUZd3nhSOWUqIAg4Bk9xRcEkmGZ5M=;
+	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
+	 In-Reply-To;
+	b=GiO7qeHCXutEbfDxFIdz4So3jEDLAuTIEVpxo6C6Hd7t9H3wD2azDaACSutB62aQ
+	 YwqXdfHwqdzHRLMyn0Z2L1I+524QFb6MXZCjg7gR+CrtHia7VmbV6QlGEIxmjPM1w
+	 3JJAj9p+eRGZ/kCBzT/Ma9GcDjJqa2X9FDKu/VdvBRaqolrAh32WOTUNASbU+mnLn
+	 4L6GnoftHVl4140LMk7mGlMRx5csm6qinrSpYKkEEkoXZKr2ewbbu5yqZZqtqWYHl
+	 GLBShQsPoandcv0O205o3ggQYErKlhypAoOb/Fl8vumw0Ra5luK1E4floSkx+i/B9
+	 98H/MVwTv4CnuD3jyA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MS17h-1rgJlD0Q8J-00TZ2O; Mon, 25
+ Dec 2023 18:46:24 +0100
+Message-ID: <15936ac5-5380-42fa-b13a-e6b2ccf92490@web.de>
+Date: Mon, 25 Dec 2023 18:46:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20231225-decode-stacktrace-cr-v1-1-9f306f38cdde@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAJK+iWUC/x2N0QrCMAwAf2Xk2YBtUZi/Ij6kaeqCo5N0E2Hs3
- w0+3sFxO3QxlQ63YQeTj3ZdmkM4DcATtaegFmeI55hCjBcswksR7CvxazViQTZMNY8SElUer+B
- ppi6YjRpPHrdtnl2+Tap+/6/74zh+SP+3lHsAAAA=
-To: Andrew Morton <akpm@linux-foundation.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Bjorn
- Andersson" <quic_bjorande@quicinc.com>
-X-Mailer: b4 0.12.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1703526284; l=1550;
- i=quic_bjorande@quicinc.com; s=20230915; h=from:subject:message-id;
- bh=Y7SC2X3LfD2fZj8ETm1az70ZeJOt1T61E7890gEJ8JQ=;
- b=5ys5nezc7ifnaiTKu0XGpWpT1QfhDKEDErMKCPeJHiyahReyFPcdW38q0NG1NaX4Sgm428iBZYe6
- raxWYSNnCbBnegHH75QpSVAmAb0TzHxVJnjD9WraL8GAM4fSWNYz
-X-Developer-Key: i=quic_bjorande@quicinc.com; a=ed25519;
- pk=VkhObtljigy9k0ZUIE1Mvr0Y+E1dgBEH9WoLQnUtbIM=
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: sSrVI96a6k5LK26x7ISbRAlt1hqtBezy
-X-Proofpoint-ORIG-GUID: sSrVI96a6k5LK26x7ISbRAlt1hqtBezy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- phishscore=0 mlxscore=0 mlxlogscore=487 spamscore=0 impostorscore=0
- malwarescore=0 suspectscore=0 lowpriorityscore=0 clxscore=1011
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2312250140
+User-Agent: Mozilla Thunderbird
+Subject: =?UTF-8?Q?=5BPATCH_7/7=5D_EDAC/amd64=3A_Move_an_assignment_for_the_?=
+ =?UTF-8?B?dmFyaWFibGUg4oCcRjPigJ0gaW4gcHJvYmVfb25lX2luc3RhbmNlKCk=?=
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+To: linux-edac@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Robert Richter
+ <rric@kernel.org>, Tony Luck <tony.luck@intel.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr,
+ Muralidhara M K <muralidhara.mk@amd.com>
+References: <8c9e2c01-9ed0-4392-af40-4e8eb393cb67@web.de>
+In-Reply-To: <8c9e2c01-9ed0-4392-af40-4e8eb393cb67@web.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:66u+l/NmUncqbzV4DyhYiHKTFwdL8r80fp0lKBBqJ4Se1lKH36E
+ GRmsALRYZzIW/mZQat/0+0+7qD1JqwkFqKB1IjRWouz9CCsUT3Q1Xn7MOSCIkdWAg0LlRPY
+ fsTP51u3VQUz6c4p72SnFchlNUCxKVUE8v9BRvw3ZqJem/eJCNJIHoqdnUGko/13jb6Fh+Z
+ mZXcmp6jjjDEZmDhtHGSA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:vZ18hv2qYMk=;dqmj3WTTTp6yGfjGEUHWNrWEOJU
+ yt2QYNCgE0N5ixA/hQm26un+3Uzx029yhuNPS8eyYQw44Mb9/856Jvi328c4KjUHx5dyB31jR
+ bmQ2FLL2iH/meS+Rh/adpIgGW/wu6NKPnCL1n9eLMFoMKLUiXz99Puwjz+1dL1O+HhzLz09RI
+ A1KVzV80mW2YKtageXbFY1VuXlFlRTwBFlMVv9mfCYleqvgeZtSeicfXqAjxLWBC52umcmN6A
+ VbfKqgIdcyB0RvK3WcxnhKqiSppA9Rj9NQHlNLOWFEfhgv7BYXr+yJsb33sEskYCjVOBQS3D8
+ qOhCwOPRytdLEhbUcUKuE8lcCyrxrZh2Sd4onQBKsy14OIm5VEOqrmTDaGtuGL0v88whKKnZd
+ cG5JQ+K1EVxYAxb/veAHWtOso9f8rcFMKdy7KVMcdI52hawN77L/rsBzhPcm2fkhnUl3WOadn
+ oyEbKEYKCi0pKtThDZgALTSqvpXYbW5YlpPsr8xG8pIJUmW6hvVnjhDU10WW6kOfRg/BsLvcq
+ 9E/Mx9nbddgtpIySrnAlnZRBqJwx3Ifb9mNWZh3k74FGuyijm1pN44+kUspkS4aXRNfOZOVoL
+ VdhYNpARcU7Bjwa8UuvZ8T2eG+rGoHQ4a/tr0JOLGYuFWqgD6/8PUXT0ZphRPRxu3oznk93/4
+ dU89SApnK96KCVuqQyZxNc72NhFenzVvgyuHzktkaSUWEJoQuv1ianExWedXUF6deXzfPOBc8
+ N/e7UX5+zQPnQ3lSs8t69XhGz7JuWprKS7yKoI6D4JI3NceCYFiQPmSuPfLVbNn1gmxnmODz8
+ 9/cHwOAKOz4buRNFxA7tQDa6NeDtKW+PuZHDGW5oHAPrn+ED9yrxpP+j/qe0UVwXjRGaCclnj
+ j9s0TbFd4HatEHu3M2S5HVO+aJ3f4aVFFuaXI7lGhF7GL7TnHuUqnlMudtL//4VMqTBzw4xhY
+ J/d6AQ==
 
-When the kernel log is acquired over a serial cable it is not uncommon
-for the log to contain carriage return characters, in addition to the
-expected line feeds.
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Mon, 25 Dec 2023 17:54:33 +0100
 
-When this output is feed into decode_stacktrace.sh, handle_line() fails
-to strip the trailing ']' off the module name, which results in
-find_module() not being able to find the referred to kernel module. This
-is reported to the user as:
+Move one assignment for a local variable so that its setting will only
+be performed immediately before this pointer is used.
 
-  WARNING! Modules path isn't set, but is needed to parse this symbol
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/edac/amd64_edac.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-The solution is to reconfigure the serial port, or to strip the carriage
-returns from the log, but this isn't obvious from the error reported by
-the script.
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index 698cde573847..91e0abdf762f 100644
+=2D-- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -4263,7 +4263,7 @@ static bool instance_has_memory(struct amd64_pvt *pv=
+t)
 
-Instead, make decode_stacktrace.sh more user friendly by stripping the
-trailing carriage return.
+ static int probe_one_instance(unsigned int nid)
+ {
+-	struct pci_dev *F3 =3D node_to_amd_nb(nid)->misc;
++	struct pci_dev *F3;
+ 	struct amd64_pvt *pvt;
+ 	struct ecc_settings *s;
+ 	int ret;
+@@ -4281,6 +4281,7 @@ static int probe_one_instance(unsigned int nid)
+ 	}
 
-Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
----
- scripts/decode_stacktrace.sh | 3 +++
- 1 file changed, 3 insertions(+)
+ 	pvt->mc_node_id	=3D nid;
++	F3 =3D node_to_amd_nb(nid)->misc;
+ 	pvt->F3 =3D F3;
 
-diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
-index 564c5632e1a2..cb980b144ca1 100755
---- a/scripts/decode_stacktrace.sh
-+++ b/scripts/decode_stacktrace.sh
-@@ -291,6 +291,9 @@ handle_line() {
- }
- 
- while read line; do
-+	# Strip unexpected carriage return at end of line
-+	line=${line%$'\r'}
-+
- 	# Let's see if we have an address in the line
- 	if [[ $line =~ \[\<([^]]+)\>\] ]] ||
- 	   [[ $line =~ [^+\ ]+\+0x[0-9a-f]+/0x[0-9a-f]+ ]]; then
-
----
-base-commit: 39676dfe52331dba909c617f213fdb21015c8d10
-change-id: 20231225-decode-stacktrace-cr-3fb9e13afc96
-
-Best regards,
--- 
-Bjorn Andersson <quic_bjorande@quicinc.com>
+ 	ret =3D per_family_init(pvt);
+=2D-
+2.43.0
 
