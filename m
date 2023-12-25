@@ -1,239 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327DB29B4
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 04:54:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A577510EE
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 05:21:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jozbum0Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77FAFC433CC;
-	Mon, 25 Dec 2023 04:54:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703480097;
-	bh=6XpfAVFOAhuOEVj65LCeIoXPY0Gh1KiNb/Z3XmVwtL0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Jozbum0Q/fdcDqQiB55TcCxgyo/ld5j3NiVIyavjUoZCjmDITUYvfSoktcEfqZDYm
-	 mkC0SQ4pQdcN/ov8EfaafmTTO/k/2HGyVDc/5pTkpdtHezaUNRwez/H9DX5kgQYTmM
-	 F+p4cBLepUCvQK+Xr95SD6HfEaB0S5n6KhAj3EkQoaE12Y2MkTv/Zsx91T/kccZdAb
-	 xQat64yxzEgNYd16DF2dUQPW2UHhBuUPyVhlysL49m6z0FPVZ8TcNRwBR9RRMP9d9k
-	 wuezVnDoaRokWyF/r27e2kVZy6KIOgqu5H+HF83G0BjnBA8QoLH3a94LfTcetypgy2
-	 ehU3rhFvFjLbw==
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Eric Biggers <ebiggers@kernel.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Qingfang DENG <dqfext@gmail.com>
-Subject: [PATCH v4 2/2] riscv: select DCACHE_WORD_ACCESS for efficient unaligned access HW
-Date: Mon, 25 Dec 2023 12:42:07 +0800
-Message-Id: <20231225044207.3821-3-jszhang@kernel.org>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20231225044207.3821-1-jszhang@kernel.org>
-References: <20231225044207.3821-1-jszhang@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dy7j46Xj"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-35ffc781b3bso106215ab.1
+        for <linux-kernel@vger.kernel.org>; Sun, 24 Dec 2023 21:21:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1703481665; x=1704086465; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JTMbzj7ozG/NFL0qtSoENzSfcq7X8aUmLe01ANOMZhU=;
+        b=dy7j46XjHpt3CNhwoBgx0rqRd7SMl1Ty4plfvMBeAjGrK4Z7qNMpkFTvFjf03Bxpfl
+         +zbomv7KyAYJ07U+Y6NO3SFuROPsrP/m/gYjXTGaLbhS/zZFba4kigW+kAtHi1Smv9Kp
+         R34CumOvVsle4XG/PYaSSR9F1K3nwJe2M96gzv2QrUmbSBqfQyaoM+H5NdyLaG2Rao/6
+         hjz+aFivyEArXWvQ5PUp3zkkHry+RZ9s9I6wfy1t1ACqlR2iiIOZWL6vbA7cG2c9IaPC
+         z03Uey52XdokI+934xV45ooJkj3/leD70nNIrXOWBvRqyqXAhFdR33O4wfk2UPwBFlZB
+         7TZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703481665; x=1704086465;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JTMbzj7ozG/NFL0qtSoENzSfcq7X8aUmLe01ANOMZhU=;
+        b=ClJ5L3z/Z07W9C63a5lOEmNaNtCKVDP/mevZIDJuonDXVzgRzXLSQMONG5fl3jtu2N
+         4SLweXjlA+3OruUfCtgVQZabVGMtWXqgyeL5Csmu7OZu8W1p1drATAB5EuPgcvFUOpXa
+         xnCmoN2hg7RNv07s80plCk3Df2SIoniKTwBvOp71FZzoINkxewboCA01Jezb4y1ONgFb
+         STlqgCeia/eVCmeGn9+hM11+nRPRq7WnZVU+E2iCQfU8ITdzD28sSorzGK+8o0ICOiKY
+         mEHXC6d9dQrJZgmDvq8RY9x+MkoKY4NQj62I0Ubj7G/bs327tFBwFzZej3PNYU1TEEs0
+         OoyA==
+X-Gm-Message-State: AOJu0YyHT//tomo9Z2FUhYCEQr9RWF6AppWYwXzJt53pXrk8ru2g3Y9M
+	Zshkmksl3vrQHYToXDfb1zzZ0Fw5i5j7
+X-Google-Smtp-Source: AGHT+IGSKPMU74vf1sgsIw8ea8H5OTZUG/+a6Dc87BWf2D/h73XmwrsQjqU62nU/eoayj69tQUV2DA==
+X-Received: by 2002:a05:6e02:d0c:b0:35f:79b5:b980 with SMTP id g12-20020a056e020d0c00b0035f79b5b980mr370882ilj.27.1703481664705;
+        Sun, 24 Dec 2023 21:21:04 -0800 (PST)
+Received: from [2620:0:1008:15:1457:193a:aad7:2606] ([2620:0:1008:15:1457:193a:aad7:2606])
+        by smtp.gmail.com with ESMTPSA id n12-20020a17090ac68c00b0028ae54d988esm7634768pjt.48.2023.12.24.21.21.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Dec 2023 21:21:03 -0800 (PST)
+Date: Sun, 24 Dec 2023 21:21:03 -0800 (PST)
+From: David Rientjes <rientjes@google.com>
+To: Gang Li <ligang.bdlg@bytedance.com>
+cc: Mike Kravetz <mike.kravetz@oracle.com>, Gang Li <gang.li@linux.dev>, 
+    David Hildenbrand <david@redhat.com>, Muchun Song <muchun.song@linux.dev>, 
+    Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 0/5] hugetlb: parallelize hugetlb page init on
+ boot
+In-Reply-To: <4c6de257-ebb4-e9ad-4092-b81a8039aff4@google.com>
+Message-ID: <76becfc1-e609-e3e8-2966-4053143170b6@google.com>
+References: <20231208025240.4744-1-gang.li@linux.dev> <996ba32c-78f0-1807-5e64-af5841a820e7@google.com> <20231212230813.GB7043@monkey> <55c6c1f6-0792-61c3-86ed-4729d4a3fdf5@google.com> <46bc7aa3-4b08-4e5f-9563-485ee17e2785@bytedance.com>
+ <4c6de257-ebb4-e9ad-4092-b81a8039aff4@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-DCACHE_WORD_ACCESS uses the word-at-a-time API for optimised string
-comparisons in the vfs layer.
+On Thu, 21 Dec 2023, David Rientjes wrote:
 
-This patch implements support for load_unaligned_zeropad in much the
-same way as has been done for arm64.
+> > Hi,
+> > 
+> > On 2023/12/13 08:10, David Rientjes wrote:
+> > > On 6.6 I measured "hugepagesz=1G hugepages=11776" on as 12TB host to be
+> > > 77s this time around.
+> > 
+> > Thanks for your test! Is this the total kernel boot time, or just the
+> > hugetlb initialization time?
+> > 
+> 
+> Ah, sorry for not being specific.  It's just the hugetlb preallocation of 
+> 11776 1GB hugetlb pages, total boot takes a few more minutes.
+> 
 
-Here is the test program and step:
+I had to apply this to get the patch series to compile on 6.7-rc7:
 
- $ cat tt.c
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <unistd.h>
-
- #define ITERATIONS 1000000
-
- #define PATH "123456781234567812345678123456781"
-
- int main(void)
+diff --git a/kernel/padata.c b/kernel/padata.c
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -485,7 +485,7 @@ void __init padata_do_multithreaded(struct padata_mt_job *job)
+ 	struct padata_work my_work, *pw;
+ 	struct padata_mt_job_state ps;
+ 	LIST_HEAD(works);
+-	int nworks, nid;
++	int nworks, nid = 0;
+ 
+ 	if (job->size == 0)
+ 		return;
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -3300,7 +3300,7 @@ int alloc_bootmem_huge_page(struct hstate *h, int nid)
+ int __alloc_bootmem_huge_page(struct hstate *h, int nid)
  {
-         unsigned long i;
-         struct stat buf;
+ 	struct huge_bootmem_page *m = NULL; /* initialize for clang */
+-	int nr_nodes, node;
++	int nr_nodes, node = NUMA_NO_NODE;
+ 
+ 	/* do node specific alloc */
+ 	if (nid != NUMA_NO_NODE) {
 
-         for (i = 0; i < ITERATIONS; i++)
-                 stat(PATH, &buf);
+With that, I compared "hugepagesz=1G hugepages=11776" before and after on 
+a 12TB host with eight NUMA nodes.
 
-         return 0;
- }
+Compared to 77s of total initialization time before, with this series I 
+measured 18.3s.
 
- $ gcc -O2 tt.c
- $ touch 123456781234567812345678123456781
- $ time ./a.out
+Feel free to add this into the changelog once the initialization issues 
+are fixed up and I'm happy to ack it.
 
-Per my test on T-HEAD C910 platforms, the above test performance is
-improved by about 7.5%.
-
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
----
- arch/riscv/Kconfig                      |  1 +
- arch/riscv/include/asm/asm-extable.h    | 15 ++++++++++++
- arch/riscv/include/asm/word-at-a-time.h | 27 +++++++++++++++++++++
- arch/riscv/mm/extable.c                 | 31 +++++++++++++++++++++++++
- 4 files changed, 74 insertions(+)
-
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index afcc5fdc16f7..e34863c5a8ed 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -654,6 +654,7 @@ config RISCV_MISALIGNED
- config RISCV_EFFICIENT_UNALIGNED_ACCESS
- 	bool "Assume the CPU supports fast unaligned memory accesses"
- 	depends on NONPORTABLE
-+	select DCACHE_WORD_ACCESS if MMU
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
- 	help
- 	  Say Y here if you want the kernel to assume that the CPU supports
-diff --git a/arch/riscv/include/asm/asm-extable.h b/arch/riscv/include/asm/asm-extable.h
-index 00a96e7a9664..0c8bfd54fc4e 100644
---- a/arch/riscv/include/asm/asm-extable.h
-+++ b/arch/riscv/include/asm/asm-extable.h
-@@ -6,6 +6,7 @@
- #define EX_TYPE_FIXUP			1
- #define EX_TYPE_BPF			2
- #define EX_TYPE_UACCESS_ERR_ZERO	3
-+#define EX_TYPE_LOAD_UNALIGNED_ZEROPAD	4
- 
- #ifdef CONFIG_MMU
- 
-@@ -47,6 +48,11 @@
- #define EX_DATA_REG_ZERO_SHIFT	5
- #define EX_DATA_REG_ZERO	GENMASK(9, 5)
- 
-+#define EX_DATA_REG_DATA_SHIFT	0
-+#define EX_DATA_REG_DATA	GENMASK(4, 0)
-+#define EX_DATA_REG_ADDR_SHIFT	5
-+#define EX_DATA_REG_ADDR	GENMASK(9, 5)
-+
- #define EX_DATA_REG(reg, gpr)						\
- 	"((.L__gpr_num_" #gpr ") << " __stringify(EX_DATA_REG_##reg##_SHIFT) ")"
- 
-@@ -62,6 +68,15 @@
- #define _ASM_EXTABLE_UACCESS_ERR(insn, fixup, err)			\
- 	_ASM_EXTABLE_UACCESS_ERR_ZERO(insn, fixup, err, zero)
- 
-+#define _ASM_EXTABLE_LOAD_UNALIGNED_ZEROPAD(insn, fixup, data, addr)		\
-+	__DEFINE_ASM_GPR_NUMS							\
-+	__ASM_EXTABLE_RAW(#insn, #fixup,					\
-+			  __stringify(EX_TYPE_LOAD_UNALIGNED_ZEROPAD),		\
-+			  "("							\
-+			    EX_DATA_REG(DATA, data) " | "			\
-+			    EX_DATA_REG(ADDR, addr)				\
-+			  ")")
-+
- #endif /* __ASSEMBLY__ */
- 
- #else /* CONFIG_MMU */
-diff --git a/arch/riscv/include/asm/word-at-a-time.h b/arch/riscv/include/asm/word-at-a-time.h
-index 7c086ac6ecd4..f3f031e34191 100644
---- a/arch/riscv/include/asm/word-at-a-time.h
-+++ b/arch/riscv/include/asm/word-at-a-time.h
-@@ -9,6 +9,7 @@
- #define _ASM_RISCV_WORD_AT_A_TIME_H
- 
- 
-+#include <asm/asm-extable.h>
- #include <linux/kernel.h>
- 
- struct word_at_a_time {
-@@ -45,4 +46,30 @@ static inline unsigned long find_zero(unsigned long mask)
- /* The mask we created is directly usable as a bytemask */
- #define zero_bytemask(mask) (mask)
- 
-+#ifdef CONFIG_DCACHE_WORD_ACCESS
-+
-+/*
-+ * Load an unaligned word from kernel space.
-+ *
-+ * In the (very unlikely) case of the word being a page-crosser
-+ * and the next page not being mapped, take the exception and
-+ * return zeroes in the non-existing part.
-+ */
-+static inline unsigned long load_unaligned_zeropad(const void *addr)
-+{
-+	unsigned long ret;
-+
-+	/* Load word from unaligned pointer addr */
-+	asm(
-+	"1:	" REG_L " %0, %2\n"
-+	"2:\n"
-+	_ASM_EXTABLE_LOAD_UNALIGNED_ZEROPAD(1b, 2b, %0, %1)
-+	: "=&r" (ret)
-+	: "r" (addr), "m" (*(unsigned long *)addr));
-+
-+	return ret;
-+}
-+
-+#endif	/* CONFIG_DCACHE_WORD_ACCESS */
-+
- #endif /* _ASM_RISCV_WORD_AT_A_TIME_H */
-diff --git a/arch/riscv/mm/extable.c b/arch/riscv/mm/extable.c
-index 35484d830fd6..dd1530af3ef1 100644
---- a/arch/riscv/mm/extable.c
-+++ b/arch/riscv/mm/extable.c
-@@ -27,6 +27,14 @@ static bool ex_handler_fixup(const struct exception_table_entry *ex,
- 	return true;
- }
- 
-+static inline unsigned long regs_get_gpr(struct pt_regs *regs, unsigned int offset)
-+{
-+	if (unlikely(!offset || offset > MAX_REG_OFFSET))
-+		return 0;
-+
-+	return *(unsigned long *)((unsigned long)regs + offset);
-+}
-+
- static inline void regs_set_gpr(struct pt_regs *regs, unsigned int offset,
- 				unsigned long val)
- {
-@@ -50,6 +58,27 @@ static bool ex_handler_uaccess_err_zero(const struct exception_table_entry *ex,
- 	return true;
- }
- 
-+static bool
-+ex_handler_load_unaligned_zeropad(const struct exception_table_entry *ex,
-+				  struct pt_regs *regs)
-+{
-+	int reg_data = FIELD_GET(EX_DATA_REG_DATA, ex->data);
-+	int reg_addr = FIELD_GET(EX_DATA_REG_ADDR, ex->data);
-+	unsigned long data, addr, offset;
-+
-+	addr = regs_get_gpr(regs, reg_addr * sizeof(unsigned long));
-+
-+	offset = addr & 0x7UL;
-+	addr &= ~0x7UL;
-+
-+	data = *(unsigned long *)addr >> (offset * 8);
-+
-+	regs_set_gpr(regs, reg_data * sizeof(unsigned long), data);
-+
-+	regs->epc = get_ex_fixup(ex);
-+	return true;
-+}
-+
- bool fixup_exception(struct pt_regs *regs)
- {
- 	const struct exception_table_entry *ex;
-@@ -65,6 +94,8 @@ bool fixup_exception(struct pt_regs *regs)
- 		return ex_handler_bpf(ex, regs);
- 	case EX_TYPE_UACCESS_ERR_ZERO:
- 		return ex_handler_uaccess_err_zero(ex, regs);
-+	case EX_TYPE_LOAD_UNALIGNED_ZEROPAD:
-+		return ex_handler_load_unaligned_zeropad(ex, regs);
- 	}
- 
- 	BUG();
--- 
-2.40.0
-
+Thanks!
