@@ -1,29 +1,31 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D720524B8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1409151C43
 	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 15:03:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4SzLk0441qzMp2j;
-	Mon, 25 Dec 2023 23:02:48 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4SzLjy4BVtz1Q6wB;
+	Mon, 25 Dec 2023 23:02:46 +0800 (CST)
 Received: from dggpemd200001.china.huawei.com (unknown [7.185.36.224])
-	by mail.maildlp.com (Postfix) with ESMTPS id 37E5018001C;
-	Mon, 25 Dec 2023 23:03:09 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 39189140336;
+	Mon, 25 Dec 2023 23:03:10 +0800 (CST)
 Received: from huawei.com (10.175.104.67) by dggpemd200001.china.huawei.com
  (7.185.36.224) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1258.28; Mon, 25 Dec
- 2023 23:03:08 +0800
+ 2023 23:03:09 +0800
 From: ZhaoLong Wang <wangzhaolong1@huawei.com>
 To: <richard@nod.at>, <miquel.raynal@bootlin.com>, <vigneshr@ti.com>
 CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
 	<chengzhihao1@huawei.com>, <wangzhaolong1@huawei.com>, <yi.zhang@huawei.com>,
 	<yangerkun@huawei.com>
-Subject: [PATCH V6 0/5] 
-Date: Mon, 25 Dec 2023 23:00:44 +0800
-Message-ID: <20231225150049.183756-1-wangzhaolong1@huawei.com>
+Subject: [PATCH V6 2/5] ubi: Split io_failures into write_failure and erase_failure
+Date: Mon, 25 Dec 2023 23:00:46 +0800
+Message-ID: <20231225150049.183756-3-wangzhaolong1@huawei.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20231225150049.183756-1-wangzhaolong1@huawei.com>
+References: <20231225150049.183756-1-wangzhaolong1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,57 +37,94 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
  dggpemd200001.china.huawei.com (7.185.36.224)
 
-The kernel provides a powerful fault injection framework, which
-provides rich configurable fault injection attributes during runtime.
-So it can be used to improve the fault injection capability of the 
-UBI driver.
+The emulate_io_failures debugfs entry controls both write
+failure and erase failure. This patch split io_failures
+to write_failure and erase_failure.
 
-This series of patches refactors the existing fault injection interface
-and add some fault injection types to help testers and developers
-find potential problems in the code.
+Signed-off-by: ZhaoLong Wang <wangzhaolong1@huawei.com>
+Reviewed-by: Zhihao Cheng <chengzhihao1@huawei.com>
+---
+ drivers/mtd/ubi/debug.c | 13 +++++++++----
+ drivers/mtd/ubi/debug.h | 14 ++++++++------
+ 2 files changed, 17 insertions(+), 10 deletions(-)
 
-This series of patches enhance the existing fault injection interface
-and retain the old debugfs interface, and add some fault injection types
-to help testers and developers look for potential problems in the code.
-
-v2:
- - Retain the old fault injection interface.
-
-v3:
- 1. Corrects the initialization of the error mask, which should start at 1.
- 2. Change the read format of the mask value to readable hexadecimal.
- 3. The interface definition style is consistent when when adding the new interface.
- 4. Redundant macros are removed.
- 5. Correct the fault injection hook position error: ubi_io_read_data -> ubi_io_write_data.
- 6. UBI_IO_BITFLIPS is returned in ubi_io_read() in advance to prevent the 
-    return value from being overwritten.
- 7. In the last commit, an example of the use of fail_function is given.
-
-v4:
- - Delete redundant space characters.
+diff --git a/drivers/mtd/ubi/debug.c b/drivers/mtd/ubi/debug.c
+index fd101ad6f12f..186306228b4d 100644
+--- a/drivers/mtd/ubi/debug.c
++++ b/drivers/mtd/ubi/debug.c
+@@ -14,7 +14,8 @@
  
-v5:
- - Delete the redundant semicolon of the first patch.
+ #ifdef CONFIG_MTD_UBI_FAULT_INJECTION
+ static DECLARE_FAULT_ATTR(fault_bitflips_attr);
+-static DECLARE_FAULT_ATTR(fault_io_failures_attr);
++static DECLARE_FAULT_ATTR(fault_write_failure_attr);
++static DECLARE_FAULT_ATTR(fault_erase_failure_attr);
+ static DECLARE_FAULT_ATTR(fault_power_cut_attr);
  
-v6:
- - Check the patch completely and fix English syntax errors.
-
-ZhaoLong Wang (5):
-  ubi: Use the fault injection framework to enhance the fault injection
-    capability
-  ubi: Split io_failures into write_failure and erase_failure
-  ubi: Add six fault injection type for testing
-  ubi: Reserve sufficient buffer length for the input mask
-  mtd: Add several functions to the fail_function list
-
- drivers/mtd/mtdcore.c   |   5 +
- drivers/mtd/ubi/Kconfig |   9 ++
- drivers/mtd/ubi/debug.c | 108 ++++++++++++--
- drivers/mtd/ubi/debug.h | 304 +++++++++++++++++++++++++++++++++++++---
- drivers/mtd/ubi/io.c    |  86 +++++++++++-
- drivers/mtd/ubi/ubi.h   |  45 +++---
- 6 files changed, 498 insertions(+), 59 deletions(-)
-
+ #define FAIL_ACTION(name, fault_attr)			\
+@@ -24,7 +25,8 @@ bool should_fail_##name(void)				\
+ }
+ 
+ FAIL_ACTION(bitflips,		fault_bitflips_attr)
+-FAIL_ACTION(io_failures,	fault_io_failures_attr)
++FAIL_ACTION(write_failure,	fault_write_failure_attr)
++FAIL_ACTION(erase_failure,	fault_erase_failure_attr)
+ FAIL_ACTION(power_cut,		fault_power_cut_attr)
+ #endif
+ 
+@@ -245,8 +247,11 @@ static void dfs_create_fault_entry(struct dentry *parent)
+ 	fault_create_debugfs_attr("emulate_bitflips", dir,
+ 				  &fault_bitflips_attr);
+ 
+-	fault_create_debugfs_attr("emulate_io_failures", dir,
+-				  &fault_io_failures_attr);
++	fault_create_debugfs_attr("emulate_write_failure", dir,
++				  &fault_write_failure_attr);
++
++	fault_create_debugfs_attr("emulate_erase_failure", dir,
++				  &fault_erase_failure_attr);
+ 
+ 	fault_create_debugfs_attr("emulate_power_cut", dir,
+ 				  &fault_power_cut_attr);
+diff --git a/drivers/mtd/ubi/debug.h b/drivers/mtd/ubi/debug.h
+index f2f499feff49..8cdd25eee013 100644
+--- a/drivers/mtd/ubi/debug.h
++++ b/drivers/mtd/ubi/debug.h
+@@ -92,10 +92,12 @@ static inline int ubi_dbg_erase_failure(const struct ubi_device *ubi)
+ /* Emulate bit-flips */
+ #define MASK_BITFLIPS				(1 << 2)
+ /* Emulates -EIO during write/erase */
+-#define MASK_IO_FAILURE				(1 << 3)
++#define MASK_WRITE_FAILURE			(1 << 3)
++#define MASK_ERASE_FAILURE			(1 << 4)
+ 
+ extern bool should_fail_bitflips(void);
+-extern bool should_fail_io_failures(void);
++extern bool should_fail_write_failure(void);
++extern bool should_fail_erase_failure(void);
+ extern bool should_fail_power_cut(void);
+ 
+ static inline bool ubi_dbg_fail_bitflip(const struct ubi_device *ubi)
+@@ -107,15 +109,15 @@ static inline bool ubi_dbg_fail_bitflip(const struct ubi_device *ubi)
+ 
+ static inline bool ubi_dbg_fail_write(const struct ubi_device *ubi)
+ {
+-	if (ubi->dbg.emulate_failures & MASK_IO_FAILURE)
+-		return should_fail_io_failures();
++	if (ubi->dbg.emulate_failures & MASK_WRITE_FAILURE)
++		return should_fail_write_failure();
+ 	return false;
+ }
+ 
+ static inline bool ubi_dbg_fail_erase(const struct ubi_device *ubi)
+ {
+-	if (ubi->dbg.emulate_failures & MASK_IO_FAILURE)
+-		return should_fail_io_failures();
++	if (ubi->dbg.emulate_failures & MASK_ERASE_FAILURE)
++		return should_fail_erase_failure();
+ 	return false;
+ }
+ 
 -- 
 2.39.2
 
