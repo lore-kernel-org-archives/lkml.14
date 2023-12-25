@@ -1,192 +1,176 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239BD52F98
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 18:06:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCwQg5S1"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2cc3f5e7451so40113541fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 10:06:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703527572; x=1704132372; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YfSdFLH0c+OXnYpo+8JLybKgdvKYAok3Q5sSWeoNCus=;
-        b=VCwQg5S1OgcegNAVx5wvrliv4OpH/LgP7rKuqpo1xQEwczsKKpKcxvoNpN44rTG2C4
-         8l1UTJFejRSvGXn+rMI2vd6BGB7U2LtwpBqjPweBJStd3hZYZj5OOS+dA5rfnGzzkOSc
-         I+lFSorCtLzMYlYJI69MqBScj+kouUATzgz7gl1ey81CyMQM5w3c+KFvopNR5KiJ+b5v
-         CSDXSKpm9ARio9MTOnug9CzkGNnxgQ0FmZXCfjJLZDt/0B/qq4ZysbC6GJ+6A2BLE0g3
-         t6XA+CBwIjg2YeYFE2E2jESCNoK1lGOBiBYwcj6WSJ5sXgpVvmUnINAVueI7z6N47xY4
-         EyiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703527572; x=1704132372;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YfSdFLH0c+OXnYpo+8JLybKgdvKYAok3Q5sSWeoNCus=;
-        b=hzRPwzTphEli0EMNYAT5vJc30CMYSjq/a6AuT6idgzE4t4aF3IXZaZHSpbatUp3WAg
-         irV9Hd9WRae2SnJMVgzlZIIZ1vpdpQw6WLPmQjivhSpAUzvB9ZZtBMCbfvgx/7ll86a5
-         kk/w8hEgbmI0pUpDfwsSDn1Rt2lXu+WHNTotapza66axohudD041j7QBZX047rIn4mWB
-         vsmovSYBlxQyqPN0fLBy00HW16C0HWMauMzKj+xzsmNgwGKt/b7w8VbRs04bSBXdsbZC
-         Jl3Xrwti+t0zpPPPQeg9VWLBi8U1bmtqyTSInwkNxSV+wu021E2z3J+l3ZynCg53yyR9
-         6nLQ==
-X-Gm-Message-State: AOJu0YzZNe8zLsujz1iu5pt8xfl96yeyAinoRSt8nUCeCo9A+i9seapw
-	spLQ4jwGWkFDELUfXrJbMsHwAPL2NXgYWHr80f9ru/nxDVsEkwns
-X-Google-Smtp-Source: AGHT+IGBqQFu2Rj7+H2ZRZ57EQXXxx7NMlETetd0SdwSLPfSIj07JtLQw9iiR1c804gfE5oo664NI0GKyA+aP1uNKFE=
-X-Received: by 2002:a2e:3209:0:b0:2cc:6cba:ae7f with SMTP id
- y9-20020a2e3209000000b002cc6cbaae7fmr2446844ljy.92.1703527571746; Mon, 25 Dec
- 2023 10:06:11 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D93452F99
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 18:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rHpS2-00024Z-Ur; Mon, 25 Dec 2023 19:13:18 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rHpS1-001TaX-2O; Mon, 25 Dec 2023 19:13:18 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rHpS2-000xTC-0G;
+	Mon, 25 Dec 2023 19:13:18 +0100
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de,
+	linux-pwm@vger.kernel.org
+Subject: [PATCH v2 2/2] bus: ts-nbus: Improve error reporting
+Date: Mon, 25 Dec 2023 19:12:53 +0100
+Message-ID:  <6543044bcf6f53d7807ea8c8e92de5d05405b5e4.1703527372.git.u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1703527372.git.u.kleine-koenig@pengutronix.de>
+References: <cover.1703527372.git.u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231222102255.56993-1-ryncsn@gmail.com> <20231222102255.56993-2-ryncsn@gmail.com>
- <CAOUHufYtSQnrVBC6OEXpT=LJW=L4J1Uw1yXpPrzaUhPWauo_3A@mail.gmail.com>
-In-Reply-To: <CAOUHufYtSQnrVBC6OEXpT=LJW=L4J1Uw1yXpPrzaUhPWauo_3A@mail.gmail.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Tue, 26 Dec 2023 02:05:53 +0800
-Message-ID: <CAMgjq7Bi19ou-c7rDZH+RMRMcV7Z49-xJh5KmFCfGy8XqCyREA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] mm, lru_gen: batch update counters on againg
-To: Yu Zhao <yuzhao@google.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4331; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=Ra+uYWwhblxNzXJQDojcVngsE0ksUba1CDXh77gitc4=; b=owEBbAGT/pANAwAKAY+A+1h9Ev5OAcsmYgBlicYtP4Bsv6XoCUWLumYfdlBcOH/lmL/J3wdW3 gS/l1WuwrmJATIEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZYnGLQAKCRCPgPtYfRL+ TgVZB/inikIMAJsyIcXqIsf+Mthfnbuh/VpeyC4TXTzX4nObrfoVM6qotd6i5szlkJCT8NORSlU FIRsV3e14JrBGnVcOPwQL/39HR8sllkf9IjYLBblUWTpD1WOKpcXEH9IxUPgMTnbjccSEeXCCfG f01VYSeRndcWXvtopjJ1HrltCbgk7hCP/QLLUCr4m6Vb8wSOgWdOda6SDWxieHVMpBhVhXfUfyd cbYte5MoKCbraJdx9CGzKQB03xHnpUdIVBMdFW5JlKKo+6XjpPSdC7Vz4y/YNKnGXWBHziLIsGR sQiO+ZwyY5W0STa3sLIGkbkYJCxzchvLJTDP3cbSp5ZADis=
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Yu Zhao <yuzhao@google.com> =E4=BA=8E2023=E5=B9=B412=E6=9C=8825=E6=97=A5=E5=
-=91=A8=E4=B8=80 15:29=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Fri, Dec 22, 2023 at 3:24=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wr=
-ote:
-> >
-> > From: Kairui Song <kasong@tencent.com>
-> >
-> > When lru_gen is aging, it will update mm counters page by page,
-> > which causes a higher overhead if age happens frequently or there
-> > are a lot of pages in one generation getting moved.
-> > Optimize this by doing the counter update in batch.
-> >
-> > Although most __mod_*_state has its own caches the overhead
-> > is still observable.
-> >
-> > Tested in a 4G memcg on a EPYC 7K62 with:
-> >
-> >   memcached -u nobody -m 16384 -s /tmp/memcached.socket \
-> >     -a 0766 -t 16 -B binary &
-> >
-> >   memtier_benchmark -S /tmp/memcached.socket \
-> >     -P memcache_binary -n allkeys \
-> >     --key-minimum=3D1 --key-maximum=3D16000000 -d 1024 \
-> >     --ratio=3D1:0 --key-pattern=3DP:P -c 2 -t 16 --pipeline 8 -x 6
-> >
-> > Average result of 18 test runs:
-> >
-> > Before: 44017.78 Ops/sec
-> > After:  44687.08 Ops/sec (+1.5%)
-> >
-> > Signed-off-by: Kairui Song <kasong@tencent.com>
-> > ---
-> >  mm/vmscan.c | 64 +++++++++++++++++++++++++++++++++++++++++++++--------
-> >  1 file changed, 55 insertions(+), 9 deletions(-)
->
-> Usually most reclaim activity happens in kswapd, e.g., from the
-> MongoDB benchmark (--duration=3D900):
-> pgscan_kswapd 11294317
-> pgscan_direct 128
-> And kswapd always has current->reclaim_state->mm_walk. So the
-> following should bring the vast majority of the improvement (assuming
-> it's not noise) with far less code change:
+Using dev_err_probe() brings several improvements:
 
-Hi Yu,
+ - emits the symbolic error code
+ - properly handles EPROBE_DEFER
+ - combines error message generation and return value handling
 
-This won't work for the fault path (eg. the memtier test):
-Samples: 30K of event 'cycles', Event count (approx.): 69411674954
-  Children      Self  Command          Shared Object               Symbol
--   85.95%     0.69%  memcached        [kernel.vmlinux]            [k]
-asm_exc_page_fault
-   - 85.25% asm_exc_page_fault
-      - 85.00% exc_page_fault
-         - 84.81% do_user_addr_fault
-            - 84.01% handle_mm_fault
-               - 83.70% __handle_mm_fault
-                  - 82.57% do_swap_page
-                     - 61.66% mem_cgroup_swapin_charge_folio
-                        - 61.11% charge_memcg
-                           - 60.76% try_charge_memcg
-                              - 60.68% try_to_free_mem_cgroup_pages
-                                   do_try_to_free_pages
-                                 - shrink_node
-                                    - 60.51% shrink_lruvec
-                                       - 60.45% try_to_shrink_lruvec
-                                          + 60.42% evict_folios
-                     + 10.00% __swap_entry_free
-                     + 3.81% swap_read_folio_bdev_sync
-                     + 1.49% __pte_offset_map_lock
-                     + 0.92% swap_cache_get_folio
-                     + 0.80% folio_add_lru
-                     + 0.75% vma_alloc_folio
-                     + 0.60% swap_read_folio
-                  + 0.73% do_anonymous_page
-              0.54% lock_vma_under_rcu
+While at it add error messages to two error paths that were silent
+before.
 
-And:
-sudo cat /sys/kernel/debug/lru_gen_full | grep -A 25 benchmark
-memcg    72 /benchmark
- node     0
-        218       3283          1x          0x
-                     0          0           0           0           0
-         0           0
-                     1          0           0           0           0
-         0           0
-                     2          0           0           0           0
-         0           0
-                     3          0           0           0           0
-         0           0
-                                0           0           0           0
-         0           0
-        219       2472       2756           0
-                     0      14775r     303395e          0p          2r
-         2e          0p
-                     1          0r          0e          0p          0r
-         0e          0p
-                     2          0r          0e          0p          0r
-         0e          0p
-                     3          0r          0e      15262p          0r
-         0e          0p
-                                0           0           0           0
-         0           0
-        220       1652     456032          22
-                     0          0           0           0           0
-         0           0
-                     1          0           0           0           0
-         0           0
-                     2          0           0           0           0
-         0           0
-                     3          0           0           0           0
-         0           0
-                                0           0           0           0
-         0           0
-        221        808     578570          13
-                     0      15665R     309071T          0           0R
-         1T          0
-                     1          0R          0T          0           0R
-         0T          0
-                     2          0R          0T          0           0R
-         0T          0
-                     3          0R      15364T          0           0R
-         0T          0
-                          9191594L    3532525O    2425411Y      94393N
-     18515F      10578A
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/bus/ts-nbus.c | 66 ++++++++++++++++++-------------------------
+ 1 file changed, 28 insertions(+), 38 deletions(-)
 
-It ages fast.
+diff --git a/drivers/bus/ts-nbus.c b/drivers/bus/ts-nbus.c
+index 19c5d1f4e4d7..baf22a82c47a 100644
+--- a/drivers/bus/ts-nbus.c
++++ b/drivers/bus/ts-nbus.c
+@@ -39,45 +39,39 @@ struct ts_nbus {
+ /*
+  * request all gpios required by the bus.
+  */
+-static int ts_nbus_init_pdata(struct platform_device *pdev, struct ts_nbus
+-		*ts_nbus)
++static int ts_nbus_init_pdata(struct platform_device *pdev,
++			      struct ts_nbus *ts_nbus)
+ {
+ 	ts_nbus->data = devm_gpiod_get_array(&pdev->dev, "ts,data",
+ 			GPIOD_OUT_HIGH);
+-	if (IS_ERR(ts_nbus->data)) {
+-		dev_err(&pdev->dev, "failed to retrieve ts,data-gpio from dts\n");
+-		return PTR_ERR(ts_nbus->data);
+-	}
++	if (IS_ERR(ts_nbus->data))
++		return dev_err_probe(&pdev->dev, PTR_ERR(ts_nbus->data),
++				     "failed to retrieve ts,data-gpio from dts\n");
+ 
+ 	ts_nbus->csn = devm_gpiod_get(&pdev->dev, "ts,csn", GPIOD_OUT_HIGH);
+-	if (IS_ERR(ts_nbus->csn)) {
+-		dev_err(&pdev->dev, "failed to retrieve ts,csn-gpio from dts\n");
+-		return PTR_ERR(ts_nbus->csn);
+-	}
++	if (IS_ERR(ts_nbus->csn))
++		return dev_err_probe(&pdev->dev, PTR_ERR(ts_nbus->csn),
++			      "failed to retrieve ts,csn-gpio from dts\n");
+ 
+ 	ts_nbus->txrx = devm_gpiod_get(&pdev->dev, "ts,txrx", GPIOD_OUT_HIGH);
+-	if (IS_ERR(ts_nbus->txrx)) {
+-		dev_err(&pdev->dev, "failed to retrieve ts,txrx-gpio from dts\n");
+-		return PTR_ERR(ts_nbus->txrx);
+-	}
++	if (IS_ERR(ts_nbus->txrx))
++		return dev_err_probe(&pdev->dev, PTR_ERR(ts_nbus->txrx),
++				     "failed to retrieve ts,txrx-gpio from dts\n");
+ 
+ 	ts_nbus->strobe = devm_gpiod_get(&pdev->dev, "ts,strobe", GPIOD_OUT_HIGH);
+-	if (IS_ERR(ts_nbus->strobe)) {
+-		dev_err(&pdev->dev, "failed to retrieve ts,strobe-gpio from dts\n");
+-		return PTR_ERR(ts_nbus->strobe);
+-	}
++	if (IS_ERR(ts_nbus->strobe))
++		return dev_err_probe(&pdev->dev, PTR_ERR(ts_nbus->strobe),
++				     "failed to retrieve ts,strobe-gpio from dts\n");
+ 
+ 	ts_nbus->ale = devm_gpiod_get(&pdev->dev, "ts,ale", GPIOD_OUT_HIGH);
+-	if (IS_ERR(ts_nbus->ale)) {
+-		dev_err(&pdev->dev, "failed to retrieve ts,ale-gpio from dts\n");
+-		return PTR_ERR(ts_nbus->ale);
+-	}
++	if (IS_ERR(ts_nbus->ale))
++		return dev_err_probe(&pdev->dev, PTR_ERR(ts_nbus->ale),
++				     "failed to retrieve ts,ale-gpio from dts\n");
+ 
+ 	ts_nbus->rdy = devm_gpiod_get(&pdev->dev, "ts,rdy", GPIOD_IN);
+-	if (IS_ERR(ts_nbus->rdy)) {
+-		dev_err(&pdev->dev, "failed to retrieve ts,rdy-gpio from dts\n");
+-		return PTR_ERR(ts_nbus->rdy);
+-	}
++	if (IS_ERR(ts_nbus->rdy))
++		return dev_err_probe(&pdev->dev, PTR_ERR(ts_nbus->rdy),
++				     "failed to retrieve ts,rdy-gpio from dts\n");
+ 
+ 	return 0;
+ }
+@@ -289,25 +283,20 @@ static int ts_nbus_probe(struct platform_device *pdev)
+ 		return ret;
+ 
+ 	pwm = devm_pwm_get(dev, NULL);
+-	if (IS_ERR(pwm)) {
+-		ret = PTR_ERR(pwm);
+-		if (ret != -EPROBE_DEFER)
+-			dev_err(dev, "unable to request PWM\n");
+-		return ret;
+-	}
++	if (IS_ERR(pwm))
++		return dev_err_probe(dev, PTR_ERR(pwm),
++				     "unable to request PWM\n");
+ 
+ 	pwm_init_state(pwm, &state);
+-	if (!state.period) {
+-		dev_err(&pdev->dev, "invalid PWM period\n");
+-		return -EINVAL;
+-	}
++	if (!state.period)
++		return dev_err_probe(dev, -EINVAL, "invalid PWM period\n");
+ 
+ 	state.duty_cycle = state.period;
+ 	state.enabled = true;
+ 
+ 	ret = pwm_apply_state(pwm, &state);
+ 	if (ret < 0)
+-		return ret;
++		return dev_err_probe(dev, ret, "failed to configure PWM\n");
+ 
+ 	/*
+ 	 * we can now start the FPGA and populate the peripherals.
+@@ -321,7 +310,8 @@ static int ts_nbus_probe(struct platform_device *pdev)
+ 
+ 	ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
+ 	if (ret < 0)
+-		return ret;
++		return dev_err_probe(dev, ret,
++				     "failed to populate platform devices on bus\n");
+ 
+ 	dev_info(dev, "initialized\n");
+ 
+-- 
+2.43.0
 
-It's hard to share the code with mm_walk, because in next patch, it
-tries to move the pages in bulk, there is no such logic for mm_walk.
-
-It's not very effective with this benchmark indeed, I'll update with
-some other tests.
