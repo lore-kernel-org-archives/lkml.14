@@ -1,28 +1,28 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B0F15AF
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 07:13:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963AED297
+	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 07:13:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Sz8H55DLPzvSZZ;
-	Mon, 25 Dec 2023 15:12:17 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Sz8Gk1cS8z1R60X;
+	Mon, 25 Dec 2023 15:11:58 +0800 (CST)
 Received: from dggpemd200001.china.huawei.com (unknown [7.185.36.224])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6377218005E;
-	Mon, 25 Dec 2023 15:13:17 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 62BFB140258;
+	Mon, 25 Dec 2023 15:13:16 +0800 (CST)
 Received: from huawei.com (10.175.104.67) by dggpemd200001.china.huawei.com
  (7.185.36.224) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1258.28; Mon, 25 Dec
- 2023 15:13:16 +0800
+ 2023 15:13:15 +0800
 From: ZhaoLong Wang <wangzhaolong1@huawei.com>
 To: <richard@nod.at>, <miquel.raynal@bootlin.com>, <vigneshr@ti.com>
 CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
 	<chengzhihao1@huawei.com>, <wangzhaolong1@huawei.com>, <yi.zhang@huawei.com>,
 	<yangerkun@huawei.com>
-Subject: [PATCH v5 4/5] ubi: Reserve sufficient buffer length for the input mask
-Date: Mon, 25 Dec 2023 15:10:54 +0800
-Message-ID: <20231225071055.1721000-5-wangzhaolong1@huawei.com>
+Subject: [PATCH v5 2/5] ubi: Split io_failures into write_failure and erase_failure
+Date: Mon, 25 Dec 2023 15:10:52 +0800
+Message-ID: <20231225071055.1721000-3-wangzhaolong1@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231225071055.1721000-1-wangzhaolong1@huawei.com>
 References: <20231225071055.1721000-1-wangzhaolong1@huawei.com>
@@ -37,38 +37,94 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  dggpemd200001.china.huawei.com (7.185.36.224)
 
-Because the mask received by the emulate_failures interface
-is a 32-bit unsigned integer, ensure that there is sufficient
-buffer length to receive and display this value.
+The emulate_io_failures debugfs entry controls both write
+failure and erase failure. This patch split io_failures
+to write_failure and erase_failure.
 
 Signed-off-by: ZhaoLong Wang <wangzhaolong1@huawei.com>
 Reviewed-by: Zhihao Cheng <chengzhihao1@huawei.com>
 ---
- drivers/mtd/ubi/debug.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mtd/ubi/debug.c | 13 +++++++++----
+ drivers/mtd/ubi/debug.h | 14 ++++++++------
+ 2 files changed, 17 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/mtd/ubi/debug.c b/drivers/mtd/ubi/debug.c
-index e8aa1827f23a..b4f40cd2bdaf 100644
+index 81682bd72eb9..3ce5265e3a16 100644
 --- a/drivers/mtd/ubi/debug.c
 +++ b/drivers/mtd/ubi/debug.c
-@@ -332,7 +332,7 @@ static ssize_t dfs_file_read(struct file *file, char __user *user_buf,
- 	struct dentry *dent = file->f_path.dentry;
- 	struct ubi_device *ubi;
- 	struct ubi_debug_info *d;
--	char buf[8];
-+	char buf[16];
- 	int val;
+@@ -14,7 +14,8 @@
  
- 	ubi = ubi_get_device(ubi_num);
-@@ -400,7 +400,7 @@ static ssize_t dfs_file_write(struct file *file, const char __user *user_buf,
- 	struct ubi_device *ubi;
- 	struct ubi_debug_info *d;
- 	size_t buf_size;
--	char buf[8] = {0};
-+	char buf[16] = {0};
- 	int val;
+ #ifdef CONFIG_MTD_UBI_FAULT_INJECTION
+ static DECLARE_FAULT_ATTR(fault_bitflips_attr);
+-static DECLARE_FAULT_ATTR(fault_io_failures_attr);
++static DECLARE_FAULT_ATTR(fault_write_failure_attr);
++static DECLARE_FAULT_ATTR(fault_erase_failure_attr);
+ static DECLARE_FAULT_ATTR(fault_power_cut_attr);
  
- 	ubi = ubi_get_device(ubi_num);
+ #define FAIL_ACTION(name, fault_attr)			\
+@@ -24,7 +25,8 @@ bool should_fail_##name(void)				\
+ }
+ 
+ FAIL_ACTION(bitflips,		fault_bitflips_attr)
+-FAIL_ACTION(io_failures,	fault_io_failures_attr)
++FAIL_ACTION(write_failure,	fault_write_failure_attr)
++FAIL_ACTION(erase_failure,	fault_erase_failure_attr)
+ FAIL_ACTION(power_cut,		fault_power_cut_attr)
+ #endif
+ 
+@@ -245,8 +247,11 @@ static void dfs_create_fault_entry(struct dentry *parent)
+ 	fault_create_debugfs_attr("emulate_bitflips", dir,
+ 				  &fault_bitflips_attr);
+ 
+-	fault_create_debugfs_attr("emulate_io_failures", dir,
+-				  &fault_io_failures_attr);
++	fault_create_debugfs_attr("emulate_write_failure", dir,
++				  &fault_write_failure_attr);
++
++	fault_create_debugfs_attr("emulate_erase_failure", dir,
++				  &fault_erase_failure_attr);
+ 
+ 	fault_create_debugfs_attr("emulate_power_cut", dir,
+ 				  &fault_power_cut_attr);
+diff --git a/drivers/mtd/ubi/debug.h b/drivers/mtd/ubi/debug.h
+index 92553299c685..2d7004ec78d3 100644
+--- a/drivers/mtd/ubi/debug.h
++++ b/drivers/mtd/ubi/debug.h
+@@ -92,10 +92,12 @@ static inline int ubi_dbg_erase_failure(const struct ubi_device *ubi)
+ /* Emulate bit-flips */
+ #define MASK_BITFLIPS				(1 << 2)
+ /* Emulates -EIO during write/erase */
+-#define MASK_IO_FAILURE				(1 << 3)
++#define MASK_WRITE_FAILURE			(1 << 3)
++#define MASK_ERASE_FAILURE			(1 << 4)
+ 
+ extern bool should_fail_bitflips(void);
+-extern bool should_fail_io_failures(void);
++extern bool should_fail_write_failure(void);
++extern bool should_fail_erase_failure(void);
+ extern bool should_fail_power_cut(void);
+ 
+ static inline bool ubi_dbg_fail_bitflip(const struct ubi_device *ubi)
+@@ -107,15 +109,15 @@ static inline bool ubi_dbg_fail_bitflip(const struct ubi_device *ubi)
+ 
+ static inline bool ubi_dbg_fail_write(const struct ubi_device *ubi)
+ {
+-	if (ubi->dbg.emulate_failures & MASK_IO_FAILURE)
+-		return should_fail_io_failures();
++	if (ubi->dbg.emulate_failures & MASK_WRITE_FAILURE)
++		return should_fail_write_failure();
+ 	return false;
+ }
+ 
+ static inline bool ubi_dbg_fail_erase(const struct ubi_device *ubi)
+ {
+-	if (ubi->dbg.emulate_failures & MASK_IO_FAILURE)
+-		return should_fail_io_failures();
++	if (ubi->dbg.emulate_failures & MASK_ERASE_FAILURE)
++		return should_fail_erase_failure();
+ 	return false;
+ }
+ 
 -- 
 2.39.2
 
