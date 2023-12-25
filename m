@@ -1,132 +1,177 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6AF46524;
-	Wed, 27 Dec 2023 17:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBE846B81;
+	Wed, 27 Dec 2023 17:17:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FJcskC8o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703697433; x=1735233433;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2K3uY8b+MqHzdwOGeEWgpRZaazlE1adyV7pu9tW3Sx8=;
-  b=FJcskC8otDJ/Tn6ogbDHMnX6EgNqfUyyIeOUjGtqSItsz3xxEjViNZLX
-   CfYFkjaklQ9GGFrO77muR/WyfP+RVSrOKdE3Gnk8OAr9LrxdF4WHn5QJe
-   /jMGKysrGAckOqU3JRGKep52cGvP1xerp/IwBkZY2oVbiKhLsTRwXqt6B
-   l2SGOv/xJKqjjuVrWCQ0Dwd1SOO7KrYjuszCIwYAYWWMJmPVeOMhBmO9x
-   OfGqBGr/W6LEn4U+kTnc7ON5MOla1i+f5WQA/r/RK395JqDNjBbDKhl5H
-   o+Q9Ch/T4EtzELP2AeiutYHOyPQTxtULof2zDYZaWq1TItWilEuF7oTwH
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="376610460"
-X-IronPort-AV: E=Sophos;i="6.04,309,1695711600"; 
-   d="scan'208";a="376610460"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 09:17:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="896957026"
-X-IronPort-AV: E=Sophos;i="6.04,309,1695711600"; 
-   d="scan'208";a="896957026"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 09:17:08 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1rIXWj-00000009TNK-0vG1;
-	Wed, 27 Dec 2023 19:17:05 +0200
-Date: Wed, 27 Dec 2023 19:17:04 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Mark Hasemeyer <markhas@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Raul Rangel <rrangel@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>, linux-acpi@vger.kernel.org,
-	linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v3 03/24] i2c: acpi: Modify i2c_acpi_get_irq() to use
- resource
-Message-ID: <ZYxcEGz4yCJj0O5H@smile.fi.intel.com>
-References: <20231226192149.1830592-1-markhas@chromium.org>
- <20231226122113.v3.3.Ib65096357993ff602e7dd0000dd59a36571c48d8@changeid>
+	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="ntejb9aF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
+	t=1703697016; bh=EzO2Os7VBSDtEWCulDHnrYefncJjDEnsfBW7sIfrJgM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=ntejb9aFOsla7Wbzu3LBmdgowdkG2XjS3H4uZiDm0ZAv5bAuKExQ3Oo5YL/wLjGHt
+	 LQDd6GiV4fNyK+zQb4ZkcFBC+ZsK7/sSCc0LtNzv5bT41/cwsX7aPkitfMzAc1vgiU
+	 BsLufPnd9g16HjnIiahMMLSIt79Ig9nBohB+D7Lk=
+From: Luca Weiss <luca@z3ntu.xyz>
+To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] drm/msm/adreno: Add A305B support
+Date: Mon, 25 Dec 2023 22:12:56 +0100
+Message-ID: <2709745.mvXUDI8C0e@z3ntu.xyz>
+In-Reply-To: <20231130-msm8226-gpu-v1-2-6bb2f1b29e49@z3ntu.xyz>
+References:
+ <20231130-msm8226-gpu-v1-0-6bb2f1b29e49@z3ntu.xyz>
+ <20231130-msm8226-gpu-v1-2-6bb2f1b29e49@z3ntu.xyz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231226122113.v3.3.Ib65096357993ff602e7dd0000dd59a36571c48d8@changeid>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Dec 26, 2023 at 12:21:07PM -0700, Mark Hasemeyer wrote:
-> The i2c_acpi_irq_context structure provides redundant information that
-> can be provided with struct resource.
+On Donnerstag, 30. November 2023 21:35:19 CET Luca Weiss wrote:
+> Add support for the Adreno 305B GPU that is found in MSM8226(v2) SoC.
+> Previously this was mistakenly claimed to be supported but using wrong
+> a configuration.
 > 
-> Refactor i2c_acpi_get_irq() to use struct resource instead of struct
-> i2c_acpi_irq_context.
-
-...
-
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> In MSM8226v1 there's also a A305B but with chipid 0x03000510 which
+> should work with the same configuration but due to lack of hardware for
+> testing this is not added.
 > 
-> Signed-off-by: Mark Hasemeyer <markhas@chromium.org>
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
 
-No blank line.
+Hi all,
 
-...
+Any chance this can be picked up for v6.8? The dts patch has already been 
+picked up :)
 
->  	ret = acpi_dev_get_resources(adev, &resource_list,
-> -				     i2c_acpi_add_irq_resource, &irq_ctx);
-> +				     i2c_acpi_add_irq_resource, r);
->  	if (ret < 0)
->  		return ret;
->  
->  	acpi_dev_free_resource_list(&resource_list);
->  
-> -	if (irq_ctx.irq == -ENOENT) {
-> -		ret = acpi_dev_get_gpio_irq_resource(adev, NULL, 0, &irqres);
-> -		if (ret)
-> -			return ret;
-> -		irq_ctx.irq = irqres.start;
-> -		irq_ctx.wake_capable = irqres.flags & IORESOURCE_IRQ_WAKECAPABLE;
-> -	}
-> -
-> -	if (irq_ctx.irq < 0)
-> -		return irq_ctx.irq;
-> +	if (!r->flags)
-> +		ret = acpi_dev_get_gpio_irq_resource(adev, NULL, 0, r);
->  
-> -	if (wake_capable)
-> -		*wake_capable = irq_ctx.wake_capable;
-> +	if (!r->flags)
-> +		return ret;
->  
-> -	return irq_ctx.irq;
-> +	return r->start;
+Regards
+Luca
 
-Wondering if we can refactor above as
+> ---
+>  drivers/gpu/drm/msm/adreno/a3xx_gpu.c      | 15 ++++++++++++---
+>  drivers/gpu/drm/msm/adreno/adreno_device.c | 15 +++++++++++----
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.h    |  5 +++++
+>  3 files changed, 28 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
+> b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c index c86b377f6f0d..5fc29801c4c7
+> 100644
+> --- a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
+> @@ -134,6 +134,13 @@ static int a3xx_hw_init(struct msm_gpu *gpu)
+>  		/* Set up AOOO: */
+>  		gpu_write(gpu, REG_A3XX_VBIF_OUT_AXI_AOOO_EN, 0x0000003c);
+>  		gpu_write(gpu, REG_A3XX_VBIF_OUT_AXI_AOOO, 0x003c003c);
+> +	} else if (adreno_is_a305b(adreno_gpu)) {
+> +		gpu_write(gpu, REG_A3XX_VBIF_IN_RD_LIM_CONF0, 0x00181818);
+> +		gpu_write(gpu, REG_A3XX_VBIF_IN_WR_LIM_CONF0, 0x00181818);
+> +		gpu_write(gpu, REG_A3XX_VBIF_OUT_RD_LIM_CONF0, 
+0x00000018);
+> +		gpu_write(gpu, REG_A3XX_VBIF_OUT_WR_LIM_CONF0, 
+0x00000018);
+> +		gpu_write(gpu, REG_A3XX_VBIF_DDR_OUT_MAX_BURST, 
+0x00000303);
+> +		gpu_write(gpu, REG_A3XX_VBIF_ROUND_ROBIN_QOS_ARB, 0x0003);
+>  	} else if (adreno_is_a306(adreno_gpu)) {
+>  		gpu_write(gpu, REG_A3XX_VBIF_ROUND_ROBIN_QOS_ARB, 0x0003);
+>  		gpu_write(gpu, REG_A3XX_VBIF_OUT_RD_LIM_CONF0, 
+0x0000000a);
+> @@ -230,7 +237,9 @@ static int a3xx_hw_init(struct msm_gpu *gpu)
+>  	gpu_write(gpu, REG_A3XX_UCHE_CACHE_MODE_CONTROL_REG, 0x00000001);
+> 
+>  	/* Enable Clock gating: */
+> -	if (adreno_is_a306(adreno_gpu))
+> +	if (adreno_is_a305b(adreno_gpu))
+> +		gpu_write(gpu, REG_A3XX_RBBM_CLOCK_CTL, 0xaaaaaaaa);
+> +	else if (adreno_is_a306(adreno_gpu))
+>  		gpu_write(gpu, REG_A3XX_RBBM_CLOCK_CTL, 0xaaaaaaaa);
+>  	else if (adreno_is_a320(adreno_gpu))
+>  		gpu_write(gpu, REG_A3XX_RBBM_CLOCK_CTL, 0xbfffffff);
+> @@ -333,7 +342,7 @@ static int a3xx_hw_init(struct msm_gpu *gpu)
+>  				
+AXXX_CP_QUEUE_THRESHOLDS_CSQ_IB1_START(2) |
+>  				
+AXXX_CP_QUEUE_THRESHOLDS_CSQ_IB2_START(6) |
+>  				
+AXXX_CP_QUEUE_THRESHOLDS_CSQ_ST_START(14));
+> -	} else if (adreno_is_a330(adreno_gpu)) {
+> +	} else if (adreno_is_a330(adreno_gpu) || 
+adreno_is_a305b(adreno_gpu)) {
+>  		/* NOTE: this (value take from downstream android driver)
+>  		 * includes some bits outside of the known bitfields.  But
+>  		 * A330 has this "MERCIU queue" thing too, which might
+> @@ -559,7 +568,7 @@ struct msm_gpu *a3xx_gpu_init(struct drm_device *dev)
+>  		goto fail;
+> 
+>  	/* if needed, allocate gmem: */
+> -	if (adreno_is_a330(adreno_gpu)) {
+> +	if (adreno_is_a330(adreno_gpu) || adreno_is_a305b(adreno_gpu)) {
+>  		ret = adreno_gpu_ocmem_init(&adreno_gpu->base.pdev->dev,
+>  					    adreno_gpu, &a3xx_gpu-
+>ocmem);
+>  		if (ret)
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c
+> b/drivers/gpu/drm/msm/adreno/adreno_device.c index
+> f62ab5257e66..7028d5449956 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
+> @@ -55,10 +55,17 @@ static const struct adreno_info gpulist[] = {
+>  		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
+>  		.init  = a2xx_gpu_init,
+>  	}, {
+> -		.chip_ids = ADRENO_CHIP_IDS(
+> -			0x03000512,
+> -			0x03000520
+> -		),
+> +		.chip_ids = ADRENO_CHIP_IDS(0x03000512),
+> +		.family = ADRENO_3XX,
+> +		.fw = {
+> +			[ADRENO_FW_PM4] = "a330_pm4.fw",
+> +			[ADRENO_FW_PFP] = "a330_pfp.fw",
+> +		},
+> +		.gmem  = SZ_128K,
+> +		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
+> +		.init  = a3xx_gpu_init,
+> +	}, {
+> +		.chip_ids = ADRENO_CHIP_IDS(0x03000520),
+>  		.family = ADRENO_3XX,
+>  		.revn  = 305,
+>  		.fw = {
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+> b/drivers/gpu/drm/msm/adreno/adreno_gpu.h index 80b3f6312116..c654f21499bb
+> 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+> @@ -247,6 +247,11 @@ static inline bool adreno_is_a305(const struct
+> adreno_gpu *gpu) return adreno_is_revn(gpu, 305);
+>  }
+> 
+> +static inline bool adreno_is_a305b(const struct adreno_gpu *gpu)
+> +{
+> +	return gpu->info->chip_ids[0] == 0x03000512;
+> +}
+> +
+>  static inline bool adreno_is_a306(const struct adreno_gpu *gpu)
+>  {
+>  	/* yes, 307, because a305c is 306 */
 
-	if (r->flags)
-		return r->start;
 
-	ret = acpi_dev_get_gpio_irq_resource(adev, NULL, 0, r);
-	if (ret)
-		return ret;
-
-	return r->start;
-
-Note also the 'if (ret)' check, the check for flags to return ret seems
-counter intuitive and possible prone to errors in the future.
-
--- 
-With Best Regards,
-Andy Shevchenko
 
 
