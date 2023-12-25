@@ -1,80 +1,89 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861067E8
-	for <linux-kernel@vger.kernel.org>; Mon, 25 Dec 2023 01:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C197A654;
+	Mon, 25 Dec 2023 01:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="oFBQLMks"
-Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BP1spln032372;
-	Sun, 24 Dec 2023 17:54:54 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	PPS06212021; bh=BC5nEToYFRQxAGVkchZjdAh38Xp+fvw5oJSslrhXXw4=; b=
-	oFBQLMksC1r/w4albSQn9Th7dNqCp8qALwPbTdpr6Sd0WsVuakvk7vKdEHanvEen
-	GHghui2fUIZ8H1AzkfyACAsVky7x8YF00neAqDM4qV34jpaSbjeyYHI2IK2PBQVB
-	12d9aaBEv9c4zMzdvz+pRdHHZv5uyE2xf2VkyPQiT2gulFE0UKHb0Yf6tzs4ovTe
-	XM/aCeBridbZbchMoauW4G/6kV0Znv2xQfKXZv/s4azI2ubh763/Nji13PUqTM/s
-	psFT+jHjOepGHUN/7lvOQ3uhNVppWp60or0Heh0ajVBdY9xgordLbSXugT3ckUDe
-	hEcGxwl/gEWvppcoeH8v+g==
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3v5uq4h2ay-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Sun, 24 Dec 2023 17:54:54 -0800 (PST)
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Sun, 24 Dec 2023 17:54:57 -0800
-Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Sun, 24 Dec 2023 17:54:56 -0800
-From: Lizhi Xu <lizhi.xu@windriver.com>
-To: <syzbot+a3981d3c93cde53224be@syzkaller.appspotmail.com>
-CC: <syzkaller-bugs@googlegroups.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [syzbot] [reiserfs?] possible deadlock in __run_timers
-Date: Mon, 25 Dec 2023 09:54:51 +0800
-Message-ID: <20231225015451.2518934-1-lizhi.xu@windriver.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000b26907060cb9f1f5@google.com>
-References: <000000000000b26907060cb9f1f5@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UsVRw5ph"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703469385; x=1735005385;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=lJKBmsKSaf98v268MnuzYweQaXuBoMMN5q9WBA7B5FA=;
+  b=UsVRw5phpGbz5AtiqAZpdovaKYWADSoPiLE6PshFWeJ5XkX8AxAw4K/B
+   0Bs21TLfpDPuCvuRNkFxx9xKETonZLKMJUrWvuGnaUnEvejqh8DfGFbqQ
+   vrZq9pd6xeNk5j6pNG3cEOS3mR2zP05v5elNtdjdNDuhUJDv0mFhBo3Wp
+   UAAk2PRogWvu0zw4Qz9ivgfQuVpSmQQHli0zUcs6KfaIxdspnLS6bOtRY
+   mYoaE8+LFW+Ix3AuHtUx7G3rIKPAlWA3Iun+bGCJGRiuHFyBkW2XapdsY
+   uYM0db4TMyHdOxrcegqeoTg//96akU4QsV5ku5L/ARkhi2m4TPV8TcK7W
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="3074620"
+X-IronPort-AV: E=Sophos;i="6.04,302,1695711600"; 
+   d="scan'208";a="3074620"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Dec 2023 17:56:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="950875903"
+X-IronPort-AV: E=Sophos;i="6.04,302,1695711600"; 
+   d="scan'208";a="950875903"
+Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.93.26.36]) ([10.93.26.36])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Dec 2023 17:56:21 -0800
+Message-ID: <ad68bfe2-15e5-4d82-a7f4-ce78399fecd7@linux.intel.com>
+Date: Mon, 25 Dec 2023 09:56:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: pvSjyBBZDeBiqOgHsZpDkubC0nywlvwn
-X-Proofpoint-ORIG-GUID: pvSjyBBZDeBiqOgHsZpDkubC0nywlvwn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-16_25,2023-11-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- impostorscore=0 spamscore=0 bulkscore=0 malwarescore=0 clxscore=1015
- phishscore=0 lowpriorityscore=0 mlxlogscore=720 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2312250013
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v6 2/4] iommu/vt-d: don's issue devTLB flush request
+ when device is disconnected
+To: Lukas Wunner <lukas@wunner.de>
+Cc: bhelgaas@google.com, baolu.lu@linux.intel.com, dwmw2@infradead.org,
+ will@kernel.org, robin.murphy@arm.com, linux-pci@vger.kernel.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20231224050657.182022-1-haifeng.zhao@linux.intel.com>
+ <20231224050657.182022-3-haifeng.zhao@linux.intel.com>
+ <20231224103225.GA31197@wunner.de>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+In-Reply-To: <20231224103225.GA31197@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 88035e5694a8
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 2989b57e154a..9daa5d695dbd 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -941,8 +941,11 @@ static void worker_enter_idle(struct worker *worker)
- 	/* idle_list is LIFO */
- 	list_add(&worker->entry, &pool->idle_list);
- 
--	if (too_many_workers(pool) && !timer_pending(&pool->idle_timer))
-+	if (too_many_workers(pool) && !timer_pending(&pool->idle_timer)) {
-+		raw_spin_unlock_irq(&pool->lock);
- 		mod_timer(&pool->idle_timer, jiffies + IDLE_WORKER_TIMEOUT);
-+		raw_spin_lock_irq(&pool->lock);
-+	}
- 
- 	/* Sanity check nr_running. */
- 	WARN_ON_ONCE(pool->nr_workers == pool->nr_idle && pool->nr_running);
+On 12/24/2023 6:32 PM, Lukas Wunner wrote:
+> On Sun, Dec 24, 2023 at 12:06:55AM -0500, Ethan Zhao wrote:
+>> --- a/drivers/iommu/intel/pasid.c
+>> +++ b/drivers/iommu/intel/pasid.c
+>> @@ -481,6 +481,9 @@ devtlb_invalidation_with_pasid(struct intel_iommu *iommu,
+>>   	if (!info || !info->ats_enabled)
+>>   		return;
+>>   
+>> +	if (pci_dev_is_disconnected(to_pci_dev(dev)))
+>> +		return;
+>> +
+>>   	sid = info->bus << 8 | info->devfn;
+>>   	qdep = info->ats_qdep;
+>>   	pfsid = info->pfsid;
+> Do you even need this or is patch [4/4] sufficient?
+> Is there a benefit to the hunk above on top of patch [4/4]?
+
+this is enough for purely surprise_removal or safe_removal,
+
+it is better to not send "ATS invalidation request" than sent,
+
+then check device state later.
+
+
+Thanks,
+
+Ethan
+
+> Thanks,
+>
+> Lukas
+>
