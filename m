@@ -1,514 +1,493 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 871E6F4E0;
-	Tue, 26 Dec 2023 22:58:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D0F5662;
+	Tue, 26 Dec 2023 23:11:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nZSPrHQx"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BQMpvFi015277;
-	Tue, 26 Dec 2023 22:57:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=EC9GG/d3VhKi5zBly4dEMV4dBCnylliZgybv1p8LOfk=; b=nZ
-	SPrHQxcI/+FSjC7CtOY0s0Y7Z1IxbAsaL8Nv80s1KQNSzwefwEKiIBPCCLpOz6qR
-	FEDxG/Ye+4PUGJE9dZHwdS2VY57namR9ZaJnbADrxXcjMg/W5TnTiNN8GwXgAkwm
-	OGrLdiPimUA2TZzZJ7CSOgXz2yrdSJpZhEwmbxmyJdUVGmPMTNwew854x5TVqmvE
-	GEFiK7SXKDprh0sFTpmRgxHeJpWIpQyaYbaTphAvAXI2poux+CTRG0nJj0OBphlq
-	3/SNMzv/2nkoxW1i7j1+WFpezAxpq78MaPJVn7va3zIWgpJtllNepS61b3tDTR2E
-	dSqDevBFrMuAg+Rfie4g==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3v80kfrtbr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Dec 2023 22:57:02 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3BQMv1wO006879
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Dec 2023 22:57:01 GMT
-Received: from [10.110.123.205] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 26 Dec
- 2023 14:56:59 -0800
-Message-ID: <342bf5a0-8454-4fd6-be45-462f1e31e606@quicinc.com>
-Date: Tue, 26 Dec 2023 14:56:58 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BbaXA2ji"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7bafda3999cso28404539f.0;
+        Tue, 26 Dec 2023 15:11:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703632284; x=1704237084; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WCyfgx8ovyJ7U1LbSmUAr5Kyf+tK9qDTiokRJovEwb8=;
+        b=BbaXA2jihwpiJf8dZPsoPHIn+uq7yxnveub9S6KjDYANrsBvi4CGZxT3WQTp4DNzau
+         cp3pO/fsuwe+q8JW3Va8Fet98Abrbo7tRjKySNZeWXVQQIsIKPDP0BZlzvQhWHGT/wow
+         st9tPlXvbV1cBzCctMDcUJITxa1F6A4KkWYWbbetpM7/i4S2qGv5IoMjMAUFNfNmESsO
+         wy3tN/Uibm4VK/E/PjdO/WLglwymhnuy7LP+LYYTQqwK6CgjJ119hiTWB7hzWQzNtCME
+         QV7Hk9xHod0i8UYC3EKHLhJrgJSM46usnc+CpouEDuC/KCZZeCflyTJL5oGLYFA3tS0d
+         i1qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703632284; x=1704237084;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WCyfgx8ovyJ7U1LbSmUAr5Kyf+tK9qDTiokRJovEwb8=;
+        b=ofi39GdjYma6VJpDuNG9k5QoURGV69oHlhHPQx8HZENbWfsf0tEHZSFtBPlWXV3TmZ
+         5ySQn+PZR8oD8yfGMhExjSTq+UCVWsOc80kCqeMduR6FHknyERAAUZRo7Tgnngln/MKS
+         /b0sadaQNn/6KxPY7B4RNI8wxmJI4+DKHzVtM+Kynb3PDWY5kAzXN24N404xmTqWipTz
+         h0tih968ewFtJpvn+HfAUxNl7vMpjUK5/GASzFVLkI5VeoEl4TrW93hl5ZvQNMC8yFrH
+         Q8hiDbeAVdRkIL53ApugRaUcDRBKv/aoOJTUO4ZP7O1lA/sQPF7iKQoZsE59uQjOwysm
+         K2Aw==
+X-Gm-Message-State: AOJu0YwtXE7Kwazixhd911/Gw1mM9c/5lUafDDssEMQZH08QyNtpgP2y
+	6e4yucNFn4NO4xTIhDEIyD/JWKW6H/uuEHx23Sc=
+X-Google-Smtp-Source: AGHT+IHGRRX1u8MPLcPKf3PviP15n0V+psjKXLHErfH/ObVI1/dHhY83mSNF0BVs03Ie+YEe2YXK8+MOr6ao/ZYNA5k=
+X-Received: by 2002:a6b:7215:0:b0:7b7:fe53:ebdb with SMTP id
+ n21-20020a6b7215000000b007b7fe53ebdbmr8873659ioc.32.1703632284073; Tue, 26
+ Dec 2023 15:11:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] drm/panel: Add driver for BOE TH101MB31IG002-28A
- panel
-Content-Language: en-US
-To: Manuel Traut <manut@mecka.net>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard
-	<mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie
-	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring
-	<robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
-        Sandy Huang <hjc@rock-chips.com>, Mark Yao
-	<markyao0591@gmail.com>,
-        Diederik de Haas <didi.debian@cknow.org>,
-        Segfault
-	<awarnecke002@hotmail.com>,
-        Arnaud Ferraris <aferraris@debian.org>, Danct12
-	<danct12@riseup.net>
-CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-rockchip@lists.infradead.org>
-References: <20231223-pinetab2-v2-0-ec1856d0030e@mecka.net>
- <20231223-pinetab2-v2-2-ec1856d0030e@mecka.net>
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-In-Reply-To: <20231223-pinetab2-v2-2-ec1856d0030e@mecka.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: TumLrRfuEae19PVbY2IC7D6l1nIji7Kn
-X-Proofpoint-GUID: TumLrRfuEae19PVbY2IC7D6l1nIji7Kn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- mlxlogscore=999 malwarescore=0 clxscore=1011 priorityscore=1501 mlxscore=0
- spamscore=0 lowpriorityscore=0 adultscore=0 bulkscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2311290000
- definitions=main-2312260175
+References: <0000000000000b05cd060d6b5511@google.com> <CAKEwX=OmWYivf7dg_izW8pn5s5q15+nx-vRMsV47T_qG=dep_Q@mail.gmail.com>
+ <CAF8kJuPLEXEXG+4esR6MbRa3iirTrJ7-w3YCorB9iD=gnQ+G3A@mail.gmail.com>
+In-Reply-To: <CAF8kJuPLEXEXG+4esR6MbRa3iirTrJ7-w3YCorB9iD=gnQ+G3A@mail.gmail.com>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Tue, 26 Dec 2023 15:11:12 -0800
+Message-ID: <CAKEwX=PaFmreqmNrisatSN1=k2kRiYgDksgDze-t=GBD=0iJDg@mail.gmail.com>
+Subject: Re: [syzbot] [crypto?] general protection fault in
+ scatterwalk_copychunks (5)
+To: Chris Li <chrisl@kernel.org>
+Cc: syzbot <syzbot+3eff5e51bf1db122a16e@syzkaller.appspotmail.com>, 
+	akpm@linux-foundation.org, davem@davemloft.net, herbert@gondor.apana.org.au, 
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, yosryahmed@google.com, 
+	zhouchengming@bytedance.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Dec 26, 2023 at 2:32=E2=80=AFPM Chris Li <chrisl@kernel.org> wrote:
+>
+> Hi Nhat,
+>
+> Thanks for the first stab on this bug.
+>
+> On Tue, Dec 26, 2023 at 1:08=E2=80=AFPM Nhat Pham <nphamcs@gmail.com> wro=
+te:
+> >
+> > On Tue, Dec 26, 2023 at 7:28=E2=80=AFAM syzbot
+> > <syzbot+3eff5e51bf1db122a16e@syzkaller.appspotmail.com> wrote:
+> > >
+> > > Hello,
+> > >
+> > > syzbot found the following issue on:
+> > >
+> > > HEAD commit:    39676dfe5233 Add linux-next specific files for 202312=
+22
+> > > git tree:       linux-next
+> > > console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D172080a1e=
+80000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3Df3761490b=
+734dc96
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=3D3eff5e51bf1=
+db122a16e
+> > > compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils f=
+or Debian) 2.40
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D178f6e2=
+6e80000
+> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D15c399e9e=
+80000
+> > >
+> > > Downloadable assets:
+> > > disk image: https://storage.googleapis.com/syzbot-assets/360542c2ca67=
+/disk-39676dfe.raw.xz
+> > > vmlinux: https://storage.googleapis.com/syzbot-assets/900dfb21ca8a/vm=
+linux-39676dfe.xz
+> > > kernel image: https://storage.googleapis.com/syzbot-assets/c94a2a3ea0=
+e0/bzImage-39676dfe.xz
+> > >
+> > > The issue was bisected to:
+> > >
+> > > commit 7bc134496bbbaacb0d4423b819da4eca850a839d
+> > > Author: Chengming Zhou <zhouchengming@bytedance.com>
+> > > Date:   Mon Dec 18 11:50:31 2023 +0000
+> > >
+> > >     mm/zswap: change dstmem size to one page
+> > >
+> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D15f60c=
+36e80000
+> > > final oops:     https://syzkaller.appspot.com/x/report.txt?x=3D17f60c=
+36e80000
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=3D13f60c36e=
+80000
+> > >
+> > > IMPORTANT: if you fix the issue, please add the following tag to the =
+commit:
+> > > Reported-by: syzbot+3eff5e51bf1db122a16e@syzkaller.appspotmail.com
+> > > Fixes: 7bc134496bbb ("mm/zswap: change dstmem size to one page")
+> > >
+> > > general protection fault, probably for non-canonical address 0xdffffc=
+0000000001: 0000 [#1] PREEMPT SMP KASAN
+> > > KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f=
+]
+> > > CPU: 0 PID: 5065 Comm: syz-executor140 Not tainted 6.7.0-rc6-next-202=
+31222-syzkaller #0
+> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BI=
+OS Google 11/17/2023
+> > > RIP: 0010:scatterwalk_start include/crypto/scatterwalk.h:63 [inline] =
+<=3D=3D=3D=3D=3D=3D=3D=3D=3D This is the offending line.
+> > > RIP: 0010:scatterwalk_pagedone include/crypto/scatterwalk.h:83 [inlin=
+e]
+> > > RIP: 0010:scatterwalk_pagedone include/crypto/scatterwalk.h:72 [inlin=
+e]
+> > > RIP: 0010:scatterwalk_copychunks+0x3e0/0x560 crypto/scatterwalk.c:50
+>
+> This is the call stack with an inline function. Very nice annotations
+> on the inline function expansions call stacks.
+>
+> > > Code: f0 48 c1 e8 03 80 3c 08 00 0f 85 81 01 00 00 49 8d 44 24 08 4d =
+89 26 48 bf 00 00 00 00 00 fc ff df 48 89 44 24 10 48 c1 e8 03 <0f> b6 04 3=
+8 84 c0 74 08 3c 03 0f 8e 47 01 00 00 48 8b 44 24 08 41
+> > > RSP: 0018:ffffc90003a8ecf0 EFLAGS: 00010202
+> > > RAX: 0000000000000001 RBX: 0000000000000000 RCX: dffffc0000000000
+> > > RDX: ffff88802785d940 RSI: ffffffff8465df74 RDI: dffffc0000000000
+> > > RBP: 0000000000001000 R08: 0000000000000005 R09: 0000000000000000
+> > > R10: 0000000000000002 R11: 82d8bd1b6060f805 R12: 0000000000000000
+> > > R13: 0000000000000014 R14: ffffc90003a8ed88 R15: 0000000000001000
+> > > FS:  00005555565c5380(0000) GS:ffff8880b9800000(0000) knlGS:000000000=
+0000000
+> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > CR2: 0000000000d5e538 CR3: 0000000079f3a000 CR4: 00000000003506f0
+> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > Call Trace:
+> > >  <TASK>
+> > >  scatterwalk_map_and_copy+0x151/0x1d0 crypto/scatterwalk.c:67
+> > >  scomp_acomp_comp_decomp+0x3a3/0x780 crypto/scompress.c:149
+> >
+> > Looks like it's this line:
+> >
+> > scatterwalk_map_and_copy(scratch->dst, req->dst, 0, req->dlen,1);
+>
+> Yes indeed.
+>
+> The offending instruction is actually this one:
+>
+> The inlined part of the call stack:
+> RIP: 0010:scatterwalk_start include/crypto/scatterwalk.h:63 [inline]
+> <=3D=3D=3D=3D=3D=3D=3D=3D=3D This is the offending line.
+> static inline void scatterwalk_start(struct scatter_walk *walk,
+>      struct scatterlist *sg)
+> {
+> walk->sg =3D sg;
+> walk->offset =3D sg->offset; <=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =
+RIP pointer
+> }
+>
+> RIP: 0010:scatterwalk_pagedone include/crypto/scatterwalk.h:83 [inline]
+>
+> static inline void scatterwalk_pagedone(struct scatter_walk *walk, int ou=
+t,
+> unsigned int more)
+> {
+> if (out) {
+> struct page *page;
+>
+> page =3D sg_page(walk->sg) + ((walk->offset - 1) >> PAGE_SHIFT);
+> flush_dcache_page(page);
+> }
+>
+> if (more && walk->offset >=3D walk->sg->offset + walk->sg->length)
+> scatterwalk_start(walk, sg_next(walk->sg)); <=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> }
+>
+> RIP: 0010:scatterwalk_pagedone include/crypto/scatterwalk.h:72 [inline]
+> RIP: 0010:scatterwalk_copychunks+0x3e0/0x560 crypto/scatterwalk.c:50
+>
+> void scatterwalk_copychunks(void *buf, struct scatter_walk *walk,
+>     size_t nbytes, int out)
+> {
+> for (;;) {
+> unsigned int len_this_page =3D scatterwalk_pagelen(walk);
+> u8 *vaddr;
+>
+> if (len_this_page > nbytes)
+> len_this_page =3D nbytes;
+>
+> if (out !=3D 2) {
+> vaddr =3D scatterwalk_map(walk);
+> memcpy_dir(buf, vaddr, len_this_page, out);
+> scatterwalk_unmap(vaddr);
+> }
+>
+> scatterwalk_advance(walk, len_this_page);
+>
+> if (nbytes =3D=3D len_this_page)
+> break;
+>
+> buf +=3D len_this_page;
+> nbytes -=3D len_this_page;
+>
+> scatterwalk_pagedone(walk, out & 1, 1); <=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> }
+> }
+>
+> then the unlined portion of the call stack:
+>  scatterwalk_map_and_copy+0x151/0x1d0 crypto/scatterwalk.c:67
+>
+> void scatterwalk_map_and_copy(void *buf, struct scatterlist *sg,
+>       unsigned int start, unsigned int nbytes, int out)
+> {
+> struct scatter_walk walk;
+> struct scatterlist tmp[2];
+>
+> if (!nbytes)
+> return;
+>
+> sg =3D scatterwalk_ffwd(tmp, sg, start);
+>
+> scatterwalk_start(&walk, sg);
+> scatterwalk_copychunks(buf, &walk, nbytes, out); <=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> scatterwalk_done(&walk, out, 0);
+> }
+>
+>  scomp_acomp_comp_decomp+0x3a3/0x780 crypto/scompress.c:149
+> if (dir)
+> ret =3D crypto_scomp_compress(scomp, scratch->src, req->slen,
+>     scratch->dst, &req->dlen, *ctx);
+> else
+> ret =3D crypto_scomp_decompress(scomp, scratch->src, req->slen,
+>       scratch->dst, &req->dlen, *ctx);
+> if (!ret) {
+> if (!req->dst) {
+> req->dst =3D sgl_alloc(req->dlen, GFP_ATOMIC, NULL);
+> if (!req->dst) {
+> ret =3D -ENOMEM;
+> goto out;
+> }
+> }
+> scatterwalk_map_and_copy(scratch->dst, req->dst, 0, req->dlen,
+> <=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> 1);
+> }
+>
+>  crypto_acomp_compress include/crypto/acompress.h:302 [inline]
+>  zswap_store+0x98b/0x2430 mm/zswap.c:1666
+>  swap_writepage+0x8e/0x220 mm/page_io.c:198
+>  pageout+0x399/0x9e0 mm/vmscan.c:656
+>  shrink_folio_list+0x2f47/0x3ea0 mm/vmscan.c:1319
+>  reclaim_folio_list+0xe4/0x3a0 mm/vmscan.c:2104
+>  reclaim_pages+0x483/0x6a0 mm/vmscan.c:2140
+>  madvise_cold_or_pageout_pte_range+0x129e/0x1f70 mm/madvise.c:526
+>  walk_pmd_range mm/pagewalk.c:143 [inline]
+> >
+> > My guess is dlen here exceeds 1 page - maybe the data is
+> > incompressible, so the output exceeds the original input? Based on the
+> > included kernel config, the algorithm used here is lzo, and it seems
+> > that can happen for this particular compressor:
+> >
+> > https://github.com/nemequ/lzo/blob/master/doc/LZO.FAQ#L200C1-L203C1
+> > https://github.com/nemequ/lzo/blob/master/doc/LZO.TXT#L157C2-L157C62
+>
+> The decompressed output can be bigger than input. However, here we
+> specify the output size limit to be one page. The decompressor should
+> not output more than the 1 page of the dst buffer.
+>
+> I did check the  lzo1x_decompress_safe() function.
 
+I think you meant lzo1x_1_do_compress() right? This error happens on
+the zswap_store() path, so it is a compression bug.
 
-On 12/23/2023 7:20 AM, Manuel Traut wrote:
-> From: Alexander Warnecke <awarnecke002@hotmail.com>
-> 
-> The BOE TH101MB31IG002-28A panel is a WXGA panel.
-> It is used in Pine64 Pinetab2 and PinetabV.
-> 
-> Signed-off-by: Alexander Warnecke <awarnecke002@hotmail.com>
-> Signed-off-by: Manuel Traut <manut@mecka.net>
-> ---
->   drivers/gpu/drm/panel/Kconfig                      |  11 +
->   drivers/gpu/drm/panel/Makefile                     |   1 +
->   .../gpu/drm/panel/panel-boe-th101mb31ig002-28a.c   | 348 +++++++++++++++++++++
->   3 files changed, 360 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-> index 99e14dc212ec..927ddd10e688 100644
-> --- a/drivers/gpu/drm/panel/Kconfig
-> +++ b/drivers/gpu/drm/panel/Kconfig
-> @@ -67,6 +67,17 @@ config DRM_PANEL_BOE_HIMAX8279D
->   	  24 bit RGB per pixel. It provides a MIPI DSI interface to
->   	  the host and has a built-in LED backlight.
->   
-> +config DRM_PANEL_BOE_TH101MB31UIG002_28A
-> +	tristate "Boe TH101MB31UIG002-28A panel"
-> +	depends on OF
-> +	depends on DRM_MIPI_DSI
-> +	depends on BACKLIGHT_CLASS_DEVICE
-> +	help
-> +	  Say Y here if you want to enable support for Boe
-> +	  TH101MB31UIG002-28A TFT-LCD modules. The panel has a 800x1280
-> +	  resolution and uses 24 bit RGB per pixel. It provides a MIPI DSI
-> +	  interface to the host and has a built-in LED backlight.
-> +
->   config DRM_PANEL_BOE_TV101WUM_NL6
->   	tristate "BOE TV101WUM and AUO KD101N80 45NA 1200x1920 panel"
->   	depends on OF
-> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-> index d10c3de51c6d..dd6e1ac9d0a2 100644
-> --- a/drivers/gpu/drm/panel/Makefile
-> +++ b/drivers/gpu/drm/panel/Makefile
-> @@ -5,6 +5,7 @@ obj-$(CONFIG_DRM_PANEL_ASUS_Z00T_TM5P5_NT35596) += panel-asus-z00t-tm5p5-n35596.
->   obj-$(CONFIG_DRM_PANEL_AUO_A030JTN01) += panel-auo-a030jtn01.o
->   obj-$(CONFIG_DRM_PANEL_BOE_BF060Y8M_AJ0) += panel-boe-bf060y8m-aj0.o
->   obj-$(CONFIG_DRM_PANEL_BOE_HIMAX8279D) += panel-boe-himax8279d.o
-> +obj-$(CONFIG_DRM_PANEL_BOE_TH101MB31UIG002_28A) += panel-boe-th101mb31ig002-28a.o
->   obj-$(CONFIG_DRM_PANEL_BOE_TV101WUM_NL6) += panel-boe-tv101wum-nl6.o
->   obj-$(CONFIG_DRM_PANEL_DSI_CM) += panel-dsi-cm.o
->   obj-$(CONFIG_DRM_PANEL_LVDS) += panel-lvds.o
-> diff --git a/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c b/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c
-> new file mode 100644
-> index 000000000000..ffe4047b7434
-> --- /dev/null
-> +++ b/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c
-> @@ -0,0 +1,348 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2023 Alexander Warnecke <awarnecke002@hotmail.com>
-> + * Copyright (c) 2023 Manuel Traut <manut@mecka.net>
-> + * Copyright (c) 2023 Dang Huynh <danct12@riseup.net>
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/regulator/consumer.h>
-> +
-> +#include <drm/drm_connector.h>
-> +#include <drm/drm_mipi_dsi.h>
-> +#include <drm/drm_modes.h>
-> +#include <drm/drm_panel.h>
-> +
-> +struct boe_th101mb31ig002 {
-> +	struct drm_panel panel;
-> +	bool enabled;
-> +	bool prepared;
+> It is supposed to use the  NEED_OP(x) check before it stores the output b=
+uffer.
 
-Hi Manuel,
+I can't seem to find any check in compression code. But that function
+is 300 LoC, with no comment :)
 
-Sorry, I responded to the v1 instead of the latest version. Carrying my 
-comment over to here:
+> However I do find one place that seems to be missing that check, at
+> least it is not obvious to me how that check is effective. I will
+> paste it here let other experts take a look as well:
+> Line 228:
+>
+> if (op - m_pos >=3D 8) {
+> unsigned char *oe =3D op + t;
+> if (likely(HAVE_OP(t + 15))) {
+> do {
+> COPY8(op, m_pos);
+> op +=3D 8;
+> m_pos +=3D 8;
+> COPY8(op, m_pos);
+> op +=3D 8;
+> m_pos +=3D 8;
+> } while (op < oe);
+> op =3D oe;
+> if (HAVE_IP(6)) {
+> state =3D next;
+> COPY4(op, ip); <=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D This COPY4 does not have
+> obvious NEED_OP() check. As far as I can tell, this output is not
+> converted by the above HAVE_OP(t + 15)) check, which means to protect
+> the unaligned two 8 byte stores inside the "do while" loops.
+> op +=3D next;
+> ip +=3D next;
+> continue;
+> }
+> } else {
+> NEED_OP(t);
+> do {
+> *op++ =3D *m_pos++;
+> } while (op < oe);
+> }
+> } else
+>
+>
+> >
+> > Not 100% sure about linux kernel's implementation though. I'm no
+> > compression expert :)
+>
+> Me neither. Anyway, if it is a decompression issue. For this bug, it
+> is good to have some debug print assert to check that after
+> decompression, the *dlen is not bigger than the original output
+> length. If it does blow over the decompression buffer, it is a bug
+> that needs to be fixed in the decompression function side, not the
+> zswap code.
 
-If I remember correctly, commit d2aacaf07395bd798373cbec6af05fff4147aff3 
-should have introduced prepared/enabled do the drm_panel struct.
+But regardless, I agree. We should enforce the condition that the
+output should not exceed the given buffer's size, and gracefully fails
+if it does (i.e returns an interpretable error code as opposed to just
+walking off the cliff like this).
 
-Thanks,
+I imagine that many compression use-cases are best-effort
+optimization, i.e it's fine to fail. zswap is exactly this - do your
+best to compress the data, but if it's too incompressible, failure is
+acceptable (we have plenty of fallback options - swapping, keeping the
+page in memory, etc.).
 
-Jessica Zhang
+Furthermore, this is a bit of a leaky abstraction - currently there's
+no contract on how much bigger can the "compressed" output be with
+respect to the input. It's compression algorithm-dependent, which
+defeats the point of the abstraction. In zswap case, 2 * PAGE_SIZE is
+just a rule of thumb - now imagine we use a compression algorithm that
+behaves super well in most of the cases, but would output 3 *
+PAGE_SIZE in some edge cases. This will still break the code. Better
+to give the caller the ability to bound the output size, and
+gracefully fail if that bound cannot be respected for a particular
+input.
 
-> +
-> +	struct mipi_dsi_device *dsi;
-> +
-> +	struct regulator *power;
-> +	struct gpio_desc *enable;
-> +	struct gpio_desc *reset;
-> +
-> +	enum drm_panel_orientation orientation;
-> +};
-> +
-> +static void boe_th101mb31ig002_reset(struct boe_th101mb31ig002 *ctx)
-> +{
-> +	gpiod_direction_output(ctx->reset, 0);
-> +	usleep_range(10, 100);
-> +	gpiod_direction_output(ctx->reset, 1);
-> +	usleep_range(10, 100);
-> +	gpiod_direction_output(ctx->reset, 0);
-> +	usleep_range(5000, 6000);
-> +}
-> +
-> +static int boe_th101mb31ig002_enable(struct drm_panel *panel)
-> +{
-> +	struct boe_th101mb31ig002 *ctx = container_of(panel,
-> +						      struct boe_th101mb31ig002,
-> +						      panel);
-> +	struct mipi_dsi_device *dsi = ctx->dsi;
-> +	struct device *dev = &dsi->dev;
-> +	int ret;
-> +
-> +	if (ctx->enabled)
-> +		return 0;
-> +
-> +	mipi_dsi_dcs_write_seq(dsi, 0xE0, 0xAB, 0xBA);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xE1, 0xBA, 0xAB);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xB1, 0x10, 0x01, 0x47, 0xFF);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xB2, 0x0C, 0x14, 0x04, 0x50, 0x50, 0x14);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xB3, 0x56, 0x53, 0x00);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xB4, 0x33, 0x30, 0x04);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xB6, 0xB0, 0x00, 0x00, 0x10, 0x00, 0x10,
-> +				    0x00);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xB8, 0x05, 0x12, 0x29, 0x49, 0x48, 0x00,
-> +				    0x00);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xB9, 0x7C, 0x65, 0x55, 0x49, 0x46, 0x36,
-> +				    0x3B, 0x24, 0x3D, 0x3C, 0x3D, 0x5C, 0x4C,
-> +				    0x55, 0x47, 0x46, 0x39, 0x26, 0x06, 0x7C,
-> +				    0x65, 0x55, 0x49, 0x46, 0x36, 0x3B, 0x24,
-> +				    0x3D, 0x3C, 0x3D, 0x5C, 0x4C, 0x55, 0x47,
-> +				    0x46, 0x39, 0x26, 0x06);
-> +	mipi_dsi_dcs_write_seq(dsi, 0x00, 0xFF, 0x87, 0x12, 0x34, 0x44, 0x44,
-> +				    0x44, 0x44, 0x98, 0x04, 0x98, 0x04, 0x0F,
-> +				    0x00, 0x00, 0xC1);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xC1, 0x54, 0x94, 0x02, 0x85, 0x9F, 0x00,
-> +				    0x7F, 0x00, 0x54, 0x00);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xC2, 0x17, 0x09, 0x08, 0x89, 0x08, 0x11,
-> +				    0x22, 0x20, 0x44, 0xFF, 0x18, 0x00);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xC3, 0x86, 0x46, 0x05, 0x05, 0x1C, 0x1C,
-> +				    0x1D, 0x1D, 0x02, 0x1F, 0x1F, 0x1E, 0x1E,
-> +				    0x0F, 0x0F, 0x0D, 0x0D, 0x13, 0x13, 0x11,
-> +				    0x11, 0x00);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xC4, 0x07, 0x07, 0x04, 0x04, 0x1C, 0x1C,
-> +				    0x1D, 0x1D, 0x02, 0x1F, 0x1F, 0x1E, 0x1E,
-> +				    0x0E, 0x0E, 0x0C, 0x0C, 0x12, 0x12, 0x10,
-> +				    0x10, 0x00);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xC6, 0x2A, 0x2A);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xC8, 0x21, 0x00, 0x31, 0x42, 0x34, 0x16);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xCA, 0xCB, 0x43);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xCD, 0x0E, 0x4B, 0x4B, 0x20, 0x19, 0x6B,
-> +				    0x06, 0xB3);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xD2, 0xE3, 0x2B, 0x38, 0x00);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xD4, 0x00, 0x01, 0x00, 0x0E, 0x04, 0x44,
-> +				    0x08, 0x10, 0x00, 0x00, 0x00);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xE6, 0x80, 0x01, 0xFF, 0xFF, 0xFF, 0xFF,
-> +				    0xFF, 0xFF);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xF0, 0x12, 0x03, 0x20, 0x00, 0xFF);
-> +	mipi_dsi_dcs_write_seq(dsi, 0xF3, 0x00);
-> +
-> +	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to exit sleep mode: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	msleep(120);
-> +
-> +	ret = mipi_dsi_dcs_set_display_on(dsi);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to set panel on: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ctx->enabled = true;
-> +
-> +	return 0;
-> +}
-> +
-> +static int boe_th101mb31ig002_disable(struct drm_panel *panel)
-> +{
-> +	struct boe_th101mb31ig002 *ctx = container_of(panel,
-> +						      struct boe_th101mb31ig002,
-> +						      panel);
-> +	struct mipi_dsi_device *dsi = ctx->dsi;
-> +	struct device *dev = &dsi->dev;
-> +	int ret;
-> +
-> +	if (!ctx->enabled)
-> +		return 0;
-> +
-> +	ret = mipi_dsi_dcs_set_display_off(dsi);
-> +	if (ret < 0)
-> +		dev_err(dev, "Failed to set panel off: %d\n", ret);
-> +
-> +	msleep(120);
-> +
-> +	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
-> +	if (ret < 0)
-> +		dev_err(dev, "Failed to enter sleep mode: %d\n", ret);
-> +
-> +	ctx->enabled = false;
-> +
-> +	return 0;
-> +}
-> +
-> +static int boe_th101mb31ig002_unprepare(struct drm_panel *panel)
-> +{
-> +	struct boe_th101mb31ig002 *ctx = container_of(panel,
-> +						      struct boe_th101mb31ig002,
-> +						      panel);
-> +
-> +	if (!ctx->prepared)
-> +		return 0;
-> +
-> +	gpiod_set_value_cansleep(ctx->reset, 1);
-> +	gpiod_set_value_cansleep(ctx->enable, 0);
-> +	regulator_disable(ctx->power);
-> +
-> +	ctx->prepared = false;
-> +
-> +	return 0;
-> +}
-> +
-> +static int boe_th101mb31ig002_prepare(struct drm_panel *panel)
-> +{
-> +	struct boe_th101mb31ig002 *ctx = container_of(panel,
-> +						      struct boe_th101mb31ig002,
-> +						      panel);
-> +	struct device *dev = &ctx->dsi->dev;
-> +	int ret;
-> +
-> +	if (ctx->prepared)
-> +		return 0;
-> +
-> +	ret = regulator_enable(ctx->power);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to enable power supply: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	gpiod_set_value_cansleep(ctx->enable, 1);
-> +	msleep(50);
-> +	boe_th101mb31ig002_reset(ctx);
-> +	boe_th101mb31ig002_enable(panel);
-> +
-> +	ctx->prepared = true;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct drm_display_mode boe_th101mb31ig002_default_mode = {
-> +	.clock		= 73500,
-> +	.hdisplay	= 800,
-> +	.hsync_start	= 800 + 64,
-> +	.hsync_end	= 800 + 64 + 16,
-> +	.htotal		= 800 + 64 + 16 + 64,
-> +	.vdisplay	= 1280,
-> +	.vsync_start	= 1280 + 2,
-> +	.vsync_end	= 1280 + 2 + 4,
-> +	.vtotal		= 1280 + 2 + 4 + 12,
-> +	.width_mm	= 135,
-> +	.height_mm	= 216,
-> +	.type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
-> +};
-> +
-> +static int boe_th101mb31ig002_get_modes(struct drm_panel *panel,
-> +					struct drm_connector *connector)
-> +{
-> +	struct boe_th101mb31ig002 *ctx = container_of(panel,
-> +						      struct boe_th101mb31ig002,
-> +						      panel);
-> +	struct drm_display_mode *mode;
-> +
-> +	mode = drm_mode_duplicate(connector->dev,
-> +				  &boe_th101mb31ig002_default_mode);
-> +	if (!mode) {
-> +		dev_err(panel->dev, "Failed to add mode %ux%u@%u\n",
-> +			boe_th101mb31ig002_default_mode.hdisplay,
-> +			boe_th101mb31ig002_default_mode.vdisplay,
-> +			drm_mode_vrefresh(&boe_th101mb31ig002_default_mode));
-> +		return -ENOMEM;
-> +	}
-> +
-> +	drm_mode_set_name(mode);
-> +
-> +	connector->display_info.bpc = 8;
-> +	connector->display_info.width_mm = mode->width_mm;
-> +	connector->display_info.height_mm = mode->height_mm;
-> +
-> +	/*
-> +	 * TODO: Remove once all drm drivers call
-> +	 * drm_connector_set_orientation_from_panel()
-> +	 */
-> +	drm_connector_set_panel_orientation(connector, ctx->orientation);
-> +
-> +	drm_mode_probed_add(connector, mode);
-> +
-> +	return 1;
-> +}
-> +
-> +static enum drm_panel_orientation
-> +boe_th101mb31ig002_get_orientation(struct drm_panel *panel)
-> +{
-> +	struct boe_th101mb31ig002 *ctx = container_of(panel,
-> +						      struct boe_th101mb31ig002,
-> +						      panel);
-> +
-> +	return ctx->orientation;
-> +}
-> +
-> +static const struct drm_panel_funcs boe_th101mb31ig002_funcs = {
-> +	.prepare = boe_th101mb31ig002_prepare,
-> +	.unprepare = boe_th101mb31ig002_unprepare,
-> +	.enable = boe_th101mb31ig002_enable,
-> +	.disable = boe_th101mb31ig002_disable,
-> +	.get_modes = boe_th101mb31ig002_get_modes,
-> +	.get_orientation = boe_th101mb31ig002_get_orientation,
-> +};
-> +
-> +static int boe_th101mb31ig002_dsi_probe(struct mipi_dsi_device *dsi)
-> +{
-> +	struct boe_th101mb31ig002 *ctx;
-> +	int ret;
-> +
-> +	ctx = devm_kzalloc(&dsi->dev, sizeof(*ctx), GFP_KERNEL);
-> +	if (!ctx)
-> +		return -ENOMEM;
-> +
-> +	ctx->enabled = false;
-> +	ctx->prepared = false;
-> +
-> +	mipi_dsi_set_drvdata(dsi, ctx);
-> +	ctx->dsi = dsi;
-> +
-> +	dsi->lanes = 4;
-> +	dsi->format = MIPI_DSI_FMT_RGB888;
-> +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO_BURST |
-> +			  MIPI_DSI_MODE_NO_EOT_PACKET |
-> +			  MIPI_DSI_MODE_LPM;
-> +
-> +	ctx->power = devm_regulator_get(&dsi->dev, "power");
-> +	if (IS_ERR(ctx->power))
-> +		return dev_err_probe(&dsi->dev, PTR_ERR(ctx->power),
-> +				     "Failed to get power regulator\n");
-> +
-> +	ctx->enable = devm_gpiod_get(&dsi->dev, "enable", GPIOD_OUT_LOW);
-> +	if (IS_ERR(ctx->enable))
-> +		return dev_err_probe(&dsi->dev, PTR_ERR(ctx->enable),
-> +				     "Failed to get enable GPIO\n");
-> +
-> +	ctx->reset = devm_gpiod_get(&dsi->dev, "reset", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(ctx->reset))
-> +		return dev_err_probe(&dsi->dev, PTR_ERR(ctx->reset),
-> +				     "Failed to get reset GPIO\n");
-> +
-> +	ret = of_drm_get_panel_orientation(dsi->dev.of_node,
-> +					   &ctx->orientation);
-> +	if (ret)
-> +		return dev_err_probe(&dsi->dev, ret,
-> +				     "Failed to get orientation\n");
-> +
-> +	drm_panel_init(&ctx->panel, &dsi->dev, &boe_th101mb31ig002_funcs,
-> +		       DRM_MODE_CONNECTOR_DSI);
-> +
-> +	ret = drm_panel_of_backlight(&ctx->panel);
-> +	if (ret)
-> +		return ret;
-> +
-> +	drm_panel_add(&ctx->panel);
-> +
-> +	ret = mipi_dsi_attach(dsi);
-> +	if (ret < 0) {
-> +		dev_err_probe(&dsi->dev, ret,
-> +			      "Failed to attach panel to DSI host\n");
-> +		drm_panel_remove(&ctx->panel);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void boe_th101mb31ig002_dsi_remove(struct mipi_dsi_device *dsi)
-> +{
-> +	struct boe_th101mb31ig002 *ctx = mipi_dsi_get_drvdata(dsi);
-> +
-> +	mipi_dsi_detach(dsi);
-> +	drm_panel_remove(&ctx->panel);
-> +}
-> +
-> +static const struct of_device_id boe_th101mb31ig002_of_match[] = {
-> +	{ .compatible = "boe,th101mb31ig002-28a", },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, boe_th101mb31ig002_of_match);
-> +
-> +static struct mipi_dsi_driver boe_th101mb31ig002_driver = {
-> +	.driver = {
-> +		.name = "boe-th101mb31ig002-28a",
-> +		.of_match_table = boe_th101mb31ig002_of_match,
-> +	},
-> +	.probe = boe_th101mb31ig002_dsi_probe,
-> +	.remove = boe_th101mb31ig002_dsi_remove,
-> +};
-> +module_mipi_dsi_driver(boe_th101mb31ig002_driver);
-> +
-> +MODULE_AUTHOR("Alexander Warnecke <awarnecke002@hotmail.com>");
-> +MODULE_DESCRIPTION("BOE TH101MB31IG002-28A MIPI-DSI LCD panel");
-> +MODULE_LICENSE("GPL");
-> 
-> -- 
-> 2.43.0
-> 
+>
+> Chris
+>
+> >
+> > If this is the case though, perhaps we can't reduce the output buffer
+> > size to 1 page after all, unless we contractually obligate the output
+> > size to be <=3D input size (i.e new function in the compression API).
+> >
+> >
+> > >  crypto_acomp_compress include/crypto/acompress.h:302 [inline]
+> > >  zswap_store+0x98b/0x2430 mm/zswap.c:1666
+> > >  swap_writepage+0x8e/0x220 mm/page_io.c:198
+> > >  pageout+0x399/0x9e0 mm/vmscan.c:656
+> > >  shrink_folio_list+0x2f47/0x3ea0 mm/vmscan.c:1319
+> > >  reclaim_folio_list+0xe4/0x3a0 mm/vmscan.c:2104
+> > >  reclaim_pages+0x483/0x6a0 mm/vmscan.c:2140
+> > >  madvise_cold_or_pageout_pte_range+0x129e/0x1f70 mm/madvise.c:526
+> > >  walk_pmd_range mm/pagewalk.c:143 [inline]
+> > >  walk_pud_range mm/pagewalk.c:221 [inline]
+> > >  walk_p4d_range mm/pagewalk.c:256 [inline]
+> > >  walk_pgd_range+0xa48/0x1870 mm/pagewalk.c:293
+> > >  __walk_page_range+0x630/0x770 mm/pagewalk.c:395
+> > >  walk_page_range+0x626/0xa80 mm/pagewalk.c:521
+> > >  madvise_pageout_page_range mm/madvise.c:585 [inline]
+> > >  madvise_pageout+0x32c/0x820 mm/madvise.c:612
+> > >  madvise_vma_behavior+0x1cc/0x1b50 mm/madvise.c:1031
+> > >  madvise_walk_vmas+0x1cf/0x2c0 mm/madvise.c:1260
+> > >  do_madvise+0x333/0x660 mm/madvise.c:1440
+> > >  __do_sys_madvise mm/madvise.c:1453 [inline]
+> > >  __se_sys_madvise mm/madvise.c:1451 [inline]
+> > >  __x64_sys_madvise+0xa9/0x110 mm/madvise.c:1451
+> > >  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+> > >  do_syscall_64+0x40/0x110 arch/x86/entry/common.c:83
+> > >  entry_SYSCALL_64_after_hwframe+0x62/0x6a
+> > > RIP: 0033:0x7f15a5e14b69
+> > > Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 =
+89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f=
+0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+> > > RSP: 002b:00007ffde7b4a5c8 EFLAGS: 00000246 ORIG_RAX: 000000000000001=
+c
+> > > RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f15a5e14b69
+> > > RDX: 0000000000000015 RSI: 0000000000c00304 RDI: 0000000020000000
+> > > RBP: 0000000000000000 R08: 00005555565c6610 R09: 00005555565c6610
+> > > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+> > > R13: 00007ffde7b4a808 R14: 0000000000000001 R15: 0000000000000001
+> > >  </TASK>
+> > > Modules linked in:
+> > > ---[ end trace 0000000000000000 ]---
+> > > RIP: 0010:scatterwalk_start include/crypto/scatterwalk.h:63 [inline]
+> > > RIP: 0010:scatterwalk_pagedone include/crypto/scatterwalk.h:83 [inlin=
+e]
+> > > RIP: 0010:scatterwalk_pagedone include/crypto/scatterwalk.h:72 [inlin=
+e]
+> > > RIP: 0010:scatterwalk_copychunks+0x3e0/0x560 crypto/scatterwalk.c:50
+> > > Code: f0 48 c1 e8 03 80 3c 08 00 0f 85 81 01 00 00 49 8d 44 24 08 4d =
+89 26 48 bf 00 00 00 00 00 fc ff df 48 89 44 24 10 48 c1 e8 03 <0f> b6 04 3=
+8 84 c0 74 08 3c 03 0f 8e 47 01 00 00 48 8b 44 24 08 41
+> > > RSP: 0018:ffffc90003a8ecf0 EFLAGS: 00010202
+> > > RAX: 0000000000000001 RBX: 0000000000000000 RCX: dffffc0000000000
+> > > RDX: ffff88802785d940 RSI: ffffffff8465df74 RDI: dffffc0000000000
+> > > RBP: 0000000000001000 R08: 0000000000000005 R09: 0000000000000000
+> > > R10: 0000000000000002 R11: 82d8bd1b6060f805 R12: 0000000000000000
+> > > R13: 0000000000000014 R14: ffffc90003a8ed88 R15: 0000000000001000
+> > > FS:  00005555565c5380(0000) GS:ffff8880b9800000(0000) knlGS:000000000=
+0000000
+> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > CR2: 0000000000d5e538 CR3: 0000000079f3a000 CR4: 00000000003506f0
+> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > ----------------
+> > > Code disassembly (best guess):
+> > >    0:   f0 48 c1 e8 03          lock shr $0x3,%rax
+> > >    5:   80 3c 08 00             cmpb   $0x0,(%rax,%rcx,1)
+> > >    9:   0f 85 81 01 00 00       jne    0x190
+> > >    f:   49 8d 44 24 08          lea    0x8(%r12),%rax
+> > >   14:   4d 89 26                mov    %r12,(%r14)
+> > >   17:   48 bf 00 00 00 00 00    movabs $0xdffffc0000000000,%rdi
+> > >   1e:   fc ff df
+> > >   21:   48 89 44 24 10          mov    %rax,0x10(%rsp)
+> > >   26:   48 c1 e8 03             shr    $0x3,%rax
+> > > * 2a:   0f b6 04 38             movzbl (%rax,%rdi,1),%eax <-- trappin=
+g instruction
+> > >   2e:   84 c0                   test   %al,%al
+> > >   30:   74 08                   je     0x3a
+> > >   32:   3c 03                   cmp    $0x3,%al
+> > >   34:   0f 8e 47 01 00 00       jle    0x181
+> > >   3a:   48 8b 44 24 08          mov    0x8(%rsp),%rax
+> > >   3f:   41                      rex.B
+> > >
+> > >
+> > > ---
+> > > This report is generated by a bot. It may contain errors.
+> > > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > >
+> > > syzbot will keep track of this issue. See:
+> > > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > > For information about bisection process see: https://goo.gl/tpsmEJ#bi=
+section
+> > >
+> > > If the report is already addressed, let syzbot know by replying with:
+> > > #syz fix: exact-commit-title
+> > >
+> > > If you want syzbot to run the reproducer, reply with:
+> > > #syz test: git://repo/address.git branch-or-commit-hash
+> > > If you attach or paste a git patch, syzbot will apply it before testi=
+ng.
+> > >
+> > > If you want to overwrite report's subsystems, reply with:
+> > > #syz set subsystems: new-subsystem
+> > > (See the list of subsystem names on the web dashboard)
+> > >
+> > > If the report is a duplicate of another one, reply with:
+> > > #syz dup: exact-subject-of-another-report
+> > >
+> > > If you want to undo deduplication, reply with:
+> > > #syz undup
+> >
