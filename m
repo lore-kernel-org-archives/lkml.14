@@ -1,93 +1,144 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1865E4CE09;
-	Tue, 26 Dec 2023 09:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hisilicon.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4SzpzZ1Vgpz1Q6q7;
-	Tue, 26 Dec 2023 17:16:10 +0800 (CST)
-Received: from kwepemi500006.china.huawei.com (unknown [7.221.188.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id CA6C31800B9;
-	Tue, 26 Dec 2023 17:16:34 +0800 (CST)
-Received: from [10.67.120.168] (10.67.120.168) by
- kwepemi500006.china.huawei.com (7.221.188.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 26 Dec 2023 17:16:34 +0800
-Message-ID: <fbd65691-b0a2-0963-96fc-7e09a66cd203@hisilicon.com>
-Date: Tue, 26 Dec 2023 17:16:33 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E68D4CE0D
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 09:18:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wyNTCM4K"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-554dbe1857dso1301727a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 01:18:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703582329; x=1704187129; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=N7CJGDVpwk2q4Bu189RvHi0uzgfTc1G3i6UZd7KlCTw=;
+        b=wyNTCM4KqZlhFmbNFTKgFfwkdrneEfTFsTFDuZqj8XvhvsUpaEZ3HNz3BQnki94VXQ
+         xm9gaapA0axeCdDMSbR1tNJ4iB5Pt5cZ20EZGWO8WV9MbDBKF0WQVqXPHwSEC9foNMY5
+         FcnVf3UQ+DAEodDz5Td4hKt+amaqXteASHHnL5WtXzD1EZ/O8JqII42YeiqCX/7Uk0/+
+         3W0lAlJKy3gJsx/42Bb3SEqHfX7rpBRfxQT8/zPCTl6WJbZZC2p5muCl4D+RqLZVkV1t
+         OLJh7FMKeuc+30bJ8yyAonpkdExxB8LgDP8ZHIRMBfisfhJ+/RoXTFPepSySA3rWJdph
+         YeaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703582329; x=1704187129;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=N7CJGDVpwk2q4Bu189RvHi0uzgfTc1G3i6UZd7KlCTw=;
+        b=tHhwnKfmRW8BwbJumbGyAlprCUlrqsWqCoFY5nJLz1aksqkFfysAGOuEJIc9xLmhAJ
+         YOl+1kN4odBIVYZUiPaN04znunT2ki4x4mHG5RqARj0Ef1WRdyz2vY1np1/NteOklv70
+         VID5Fi2NTQJ9/I4MxCwXzA5CSVMYvrPpGTWO+gSWJ8TRCUehyGGNOpRQ0+r1mU7a6DuX
+         ciQzjQ+QmJH5od5AKH63zZLAeBvUrO1NK+LxIYLLKGEpJgz81AaFqmYOMzBO+P1vnEu9
+         GSy5HL/+Vup/b8Hkg33CB7b3jgL3mv+UF+55BfTVATutsK/MtAUdPDVr1IsBO7lDepWb
+         CNKw==
+X-Gm-Message-State: AOJu0YyjYt0/7Z2SuPoBpQ9acFCGccqM3wv3bOuzeuzOHshZMBMiGGwv
+	j71KQY5Yl7P/tvJzl3q09tFes48YekVyeQ==
+X-Google-Smtp-Source: AGHT+IEX6ADtvaCu+2814O+QX4Sbk1wJd75iUaMo/9P8sQGS7RACdukmwlSR2wWlCXTfU9T4IdRGOQ==
+X-Received: by 2002:a50:8d1e:0:b0:554:49e2:c7a with SMTP id s30-20020a508d1e000000b0055449e20c7amr3856599eds.27.1703582328804;
+        Tue, 26 Dec 2023 01:18:48 -0800 (PST)
+Received: from [192.168.0.22] ([78.10.206.178])
+        by smtp.gmail.com with ESMTPSA id 8-20020a0564021f4800b005545dffa0bdsm5127869edz.13.2023.12.26.01.18.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Dec 2023 01:18:48 -0800 (PST)
+Message-ID: <9715ed9d-7edf-430c-808c-00e7748bc59a@linaro.org>
+Date: Tue, 26 Dec 2023 10:18:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.0
-Subject: Re: [PATCH for-next 4/6] RDMA/hns: Support flexible pagesize
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: iio: adc: rtq6056: add support for the
+ whole RTQ6056 family
 Content-Language: en-US
-To: Leon Romanovsky <leon@kernel.org>
-CC: <jgg@ziepe.ca>, <linux-rdma@vger.kernel.org>, <linuxarm@huawei.com>,
-	<linux-kernel@vger.kernel.org>
-References: <20231225075330.4116470-1-huangjunxian6@hisilicon.com>
- <20231225075330.4116470-5-huangjunxian6@hisilicon.com>
- <20231226085202.GA13350@unreal>
-From: Junxian Huang <huangjunxian6@hisilicon.com>
-In-Reply-To: <20231226085202.GA13350@unreal>
-Content-Type: text/plain; charset="UTF-8"
+To: cy_huang@richtek.com, Jonathan Cameron <jic23@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <1703562468-29052-1-git-send-email-cy_huang@richtek.com>
+ <1703562468-29052-2-git-send-email-cy_huang@richtek.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
+ m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
+ HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
+ XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
+ mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
+ v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
+ cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
+ rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
+ qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
+ aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
+ gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
+ dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
+ NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
+ hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
+ oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
+ H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
+ yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
+ 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
+ 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
+ +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
+ FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
+ 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
+ DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
+ oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
+ 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
+ Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
+ qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
+ /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
+ qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
+ EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
+ KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
+ fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <1703562468-29052-2-git-send-email-cy_huang@richtek.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemi500006.china.huawei.com (7.221.188.68)
 
-
-
-On 2023/12/26 16:52, Leon Romanovsky wrote:
-> On Mon, Dec 25, 2023 at 03:53:28PM +0800, Junxian Huang wrote:
->> From: Chengchang Tang <tangchengchang@huawei.com>
->>
->> In the current implementation, a fixed page size is used to
->> configure the PBL, which is not flexible enough and is not
->> conducive to the performance of the HW.
->>
->> Signed-off-by: Chengchang Tang <tangchengchang@huawei.com>
->> Signed-off-by: Junxian Huang <huangjunxian6@hisilicon.com>
->> ---
->>  drivers/infiniband/hw/hns/hns_roce_alloc.c  |   6 -
->>  drivers/infiniband/hw/hns/hns_roce_device.h |   9 ++
->>  drivers/infiniband/hw/hns/hns_roce_mr.c     | 168 +++++++++++++++-----
->>  3 files changed, 139 insertions(+), 44 deletions(-)
+On 26/12/2023 04:47, cy_huang@richtek.com wrote:
+> From: ChiYuan Huang <cy_huang@richtek.com>
 > 
-> I'm wonder if the ib_umem_find_best_pgsz() API should be used instead.
-> What is missing there?
+> Add compatible support for RTQ6053 and RTQ6059.
 > 
-> Thanks
+> Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+> ---
+>  .../devicetree/bindings/iio/adc/richtek,rtq6056.yaml         | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/richtek,rtq6056.yaml b/Documentation/devicetree/bindings/iio/adc/richtek,rtq6056.yaml
+> index 88e008629ea8..d1e1f36d1972 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/richtek,rtq6056.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/richtek,rtq6056.yaml
+> @@ -25,7 +25,10 @@ description: |
+>  
+>  properties:
+>    compatible:
+> -    const: richtek,rtq6056
+> +    enum:
+> +      - richtek,rtq6053
+> +      - richtek,rtq6056
 
-Actually this API is used for umem.
-For kmem, we add hns_roce_find_buf_best_pgsz() to do a similar job.
+Aren't these devices compatible? Your driver change says they are, so
+express compatibility with list here (and oneOf).
 
-+static int get_best_page_shift(struct hns_roce_dev *hr_dev,
-+			       struct hns_roce_mtr *mtr,
-+			       struct hns_roce_buf_attr *buf_attr)
-+{
-+	unsigned int page_sz;
-+
-+	if (!buf_attr->adaptive || buf_attr->type != MTR_PBL)
-+		return 0;
-+
-+	if (mtr->umem)
-+		page_sz = ib_umem_find_best_pgsz(mtr->umem,
-+						 hr_dev->caps.page_size_cap,
-+						 buf_attr->iova);
-+	else
-+		page_sz = hns_roce_find_buf_best_pgsz(hr_dev, mtr->kmem);
-+
-+	if (!page_sz)
-+		return -EINVAL;
-+
-+	buf_attr->page_shift = order_base_2(page_sz);
-+	return 0;
-+}
 
-Thanks,
-Junxian
+Best regards,
+Krzysztof
+
