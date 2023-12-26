@@ -1,80 +1,93 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A091B4F210;
-	Tue, 26 Dec 2023 15:54:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="jyuaWvs7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1703606055; x=1704210855; i=markus.elfring@web.de;
-	bh=CqUJd5RIIJKCSzBgNfve9F6+tVJsVgjVa3IJQgjQIYk=;
-	h=X-UI-Sender-Class:Date:To:Cc:From:Subject;
-	b=jyuaWvs7kl/orRAaXmBavd7ZWEUjrUPiBzRAdNzOi5+kkIRPBXCzLa8TtpmuKqHW
-	 pWSfHVy79UJzhdQKuo8i2By1NbjO5yzN23R6otgCU03zUqeH+0Ajlb6HTchMsLn6A
-	 rNl46ekm1pQ/TX5oTQ4J8yHVn1swNC9pmZ2o5DJFyRIQnV2oULl8+QaTpYqQOzfB+
-	 9nokJX6oGLny6FP4Ix7qhmffC6CA39oSX8+2NKVw02jjsd29Aw4lJvHidUF89/vkS
-	 KDAsgZxkVXfZgdB+RRAp/knjAO2rR7qjmklOqF+8DnyZm0P9/aJAXrifYKpZvuB6A
-	 RjyX5BjX7dFGrseejg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MMGuC-1raEL32Nvi-00JQqP; Tue, 26
- Dec 2023 16:54:15 +0100
-Message-ID: <12b3e9cb-3241-40cc-b7a4-43c45b9eedc9@web.de>
-Date: Tue, 26 Dec 2023 16:54:13 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1ECF4F612
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 15:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Subject: [PATCH v4 0/6] mm/zswap: dstmem reuse optimizations and cleanups
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: dri-devel@lists.freedesktop.org, kernel-janitors@vger.kernel.org,
- Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>,
- Luben Tuikov <ltuikov89@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
-Content-Language: en-GB
-Cc: LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH 0/2] drm/sched: Adjustments for drm_sched_init()
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:5jqictNmemXsoho2KQ9xaqACp/mEdtmanumDIspEEQZ3A8n+v6X
- 7UCTt+Xz3y5vOIU1kzIsUBK/jllN/W6VuXUAcF9kZLoLBppfIM9hN4qtH9FbGaZovPePNt9
- SblB9leG8gRs1OhXqk/dtAClQz/8l2KRC8VpSnmC6YGaqL7DZsdtZctYFcRJyH9MgckFtcu
- udWUBOnzVHqdfhotq0xDg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:IyoyNYxZGRw=;EspgbdmU/SfrRwagWhiRYJrGEOv
- jf+aUEPc30EgVxnjKOYnLC1VUxI/IR1zGnvj5UsOs9NmpzfB6PUNiDniUDoLNDVbu1qovC7nm
- Ktr809LRCrOciwqQlOwnlvE78V57jA3a9lu0ilFXe9QZ0b1eeHQldfeBMaLiECmK9INVDQ1k8
- FRicbVKt/anbPfXglt68+XRDQ2eUVb7FwVqla1qcQY92bqGLRq2NfbzZxvnBF5O6uMeg5+T3V
- pvqg0vPF0g3p8wmmmLc3NDug7wDu3IisNr1FDqrkqI95gmyJNZoNQmyVxdhFqVgkTcreGRd9r
- cYpRy+DkAJ35lBHiCm0D0UQB9/d6pCll3VlGDLo/cyrSWaVZVWfUPS+3FbfiJra79t9yedgI5
- LfWNSePf5Yon8+3RyKCxOmzdoLP3IedxMlGsX2JVXk/7XkHl7534r3rMKi6brCB3OJgKt/Nft
- oOPA7UPCEc8pbf9zfztCovL1Pi/MPDs9IaWNvUEej8uez/yJQALMtSRutW8zUoy8RpXbCu2tS
- 5QfxVB8VSfevn6Wtb38W03fgv6sXa/5WjgWKj7YUvUG1tEn19FVUjsi/gko1P5Bqtz+ogZ5cs
- 3Gwlxp1KcbRpBR3dice4xC7TUchhcV6fbS/10SpIopOS9maKu5BhRS426wU4UaTbMecNPNzEE
- 4C7kHLHx7SPt9lapNSA9pbqU6iRrNjpsZTvns0YTS5cWBDEyE3M2zU3jn6M+/OKrOmYX2l05N
- 37EPeoTFJupAvk/bRIGWoqnt+KA1LmMOWIYownOadD/n9sfrcZUCFAX5uzhqTDuvD89RorQPn
- ksD1V5sYaqQfP2oHdZlz5Uf9Y9CwGiPmzSS3lqzRbiLMdq1Bt9RGQeYJ5PcLczbnx8XmcZbzg
- 4mSOuiH3MNj2wcKWQjux7UkRdn5OmzrHcLHiiXCVjJ6DPE3aPmhDi4VJtX8srx97GqS4aicHr
- 9o6rMA==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-b4-tracking: H4sIAB/3imUC/33NywrCMBAF0F8pWRvJq4+48j/ExTQZbcC2ktRILf13B5eiXQ33wj2zsIQxYGKHYm
+ ERc0hhHCiYXcFcB8MVefCUmRJKSyU1f6Un3LlPU489941qLmWltdCe0aSFhLyNMLiORsPjdqOyC2ka
+ 4/x5kSWd0x8tSy54Y6uawMp6YY7tPKEnDfdu7NmZsKy2AEWAByi9BTQS6l+A3gI0AQbBCdtagw6/gX Vd31Uw7PQzAQAA
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <zhouchengming@bytedance.com>
+Date: Tue, 26 Dec 2023 15:54:07 +0000
+Message-Id: <20231213-zswap-dstmem-v4-0-f228b059dd89@bytedance.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Seth Jennings <sjenning@redhat.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Vitaly Wool <vitaly.wool@konsulko.com>, Nhat Pham <nphamcs@gmail.com>, Chris Li <chriscli@google.com>,
+ Yosry Ahmed <yosryahmed@google.com>, Dan Streetman <ddstreet@ieee.org>
+Cc: linux-kernel@vger.kernel.org, Chengming Zhou <zhouchengming@bytedance.com>, linux-mm@kvack.org,
+ Nhat Pham <nphamcs@gmail.com>, Yosry Ahmed <yosryahmed@google.com>, Chris Li <chrisl@kernel.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1703606082; l=2468;
+ i=zhouchengming@bytedance.com; s=20231204; h=from:subject:message-id;
+ bh=YQTxvUwsZzqyH52o9J1hnYzVus+yan/sec/bpXl9qAA=;
+ b=vtscZKZGioQki3CX7H/cGeD1VGNfoxL3URCIQMIxd7QzKGd3qrywLLvUUXdtpdCeOU9lmh3Ng
+ d+07cNETScAA7d8uf9HF1edMEzA2Rk8z++NIbW4xC6ZQstVMAFOSu1Q
+X-Developer-Key: i=zhouchengming@bytedance.com; a=ed25519;
+ pk=xFTmRtMG3vELGJBUiml7OYNdM393WOMv0iWWeQEVVdA=
+X-Migadu-Flow: FLOW_OUT
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Tue, 26 Dec 2023 16:48:48 +0100
+Hi everyone,
 
-A few update suggestions were taken into account
-from static source code analysis.
+Changes in v4:
+- Collect Reviewed-by and Acked-by tags.
+- Fold in the comment fix in zswap_writeback_entry() from Yosry Ahmed.
+- Add patch to change per-cpu mutex and dstmem to per-acomp_ctx.
+- Just rename crypto_acomp_ctx->dstmem field to buffer.
+- Link to v3: https://lore.kernel.org/r/20231213-zswap-dstmem-v3-0-4eac09b94ece@bytedance.com
 
-Markus Elfring (2):
-  One function call less after error detection
-  Return an error code only as a constant
+Changes in v3:
+- Collect Reviewed-by tag.
+- Drop the __zswap_store() refactoring part.
+- Link to v2: https://lore.kernel.org/r/20231213-zswap-dstmem-v2-0-daa5d9ae41a7@bytedance.com
 
- drivers/gpu/drm/scheduler/sched_main.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+Changes in v2:
+- Add more changelog and test data about changing dstmem to one page.
+- Reorder patches to put dstmem reusing and __zswap_load() refactoring
+  together, still refactor after dstmem reusing since we don't want
+  to handle __zswap_load() failure due to memory allocation failure
+  in zswap_writeback_entry().
+- Append a patch to directly use percpu mutex and buffer in load/store
+  and refactor out __zswap_store() to simplify zswap_store().
+- Link to v1: https://lore.kernel.org/r/20231213-zswap-dstmem-v1-0-896763369d04@bytedance.com
 
-=2D-
-2.43.0
+This series is split from [1] to only include zswap dstmem reuse
+optimizations and cleanups, the other part of rbtree breakdown will
+be deferred to retest after the rbtree converted to xarray.
 
+And the problem this series tries to optimize is that zswap_load()
+and zswap_writeback_entry() have to malloc a temporary memory to
+support !zpool_can_sleep_mapped(). We can avoid it by reusing the
+percpu crypto_acomp_ctx->dstmem, which is also used by zswap_store()
+and protected by the same percpu crypto_acomp_ctx->mutex.
+
+[1] https://lore.kernel.org/all/20231206-zswap-lock-optimize-v1-0-e25b059f9c3a@bytedance.com/
+
+Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+---
+Chengming Zhou (6):
+      mm/zswap: change dstmem size to one page
+      mm/zswap: reuse dstmem when decompress
+      mm/zswap: refactor out __zswap_load()
+      mm/zswap: cleanup zswap_load()
+      mm/zswap: cleanup zswap_writeback_entry()
+      mm/zswap: change per-cpu mutex and buffer to per-acomp_ctx
+
+ include/linux/cpuhotplug.h |   1 -
+ mm/zswap.c                 | 246 +++++++++++++--------------------------------
+ 2 files changed, 71 insertions(+), 176 deletions(-)
+---
+base-commit: 1f242c1964cf9b8d663a2fd72159b296205a8126
+change-id: 20231213-zswap-dstmem-d828f563303d
+
+Best regards,
+-- 
+Chengming Zhou <zhouchengming@bytedance.com>
