@@ -1,211 +1,133 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2088.outbound.protection.outlook.com [40.107.94.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678102574D
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 16:40:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB31A45026;
+	Wed, 27 Dec 2023 16:41:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=memverge.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XHIUEj2o"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DF4C240009;
-	Wed, 27 Dec 2023 16:40:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1703695226;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=WV2Dkh4X6V9DETcF8K3WF1QMiYnpkJSaG2LYRTpmYig=;
-	b=XHIUEj2ofv8PqSFwvq9hnXalcBEcZEYyJnwS8hG+vB9cbdwLcB8/uEYHxxxRTZAITpxOK0
-	TkpQAN/U+eY/6mQTBTar/OO+bOGS53u3mHpugJl2fIfKOP+IFiX1Rjo+U8Rzt4Cs+HMeGe
-	USFcCDSEmtkvOQ5enbywBFS02zQ7UMEcPD42jKfR1ZhpqS25ElLISZFu6gj/FBiw1RdZHy
-	/qN5W8WGaQt0lH/h+PZ2LejSfTI5EXjmsPN2VgYH6j+OS9uuFMIvqktyW8UGzKHRVhS9wW
-	d0o+l/i0j9ghAzi6bZP7N8S91KqulpbVFDp/TgeQytIGls26IgPXGVfQS5GTvA==
-Date: Wed, 27 Dec 2023 17:40:23 +0100
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
- Tudor Ambarus <Tudor.Ambarus@linaro.org>, Vignesh Raghavendra
- <vigneshr@ti.com>, Frieder Schrempf <frieder.schrempf@kontron.de>, Michael
- Walle <michael@walle.cc>, Pratyush Yadav <pratyush@kernel.org>,
- linux-kernel@vger.kernel.org
-Subject: [GIT PULL] mtd: Changes for v6.8
-Message-ID: <20231227174023.346ec9fb@xps-13>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="qQeefBJm"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Oknz5d5J98lHJAQTx6cG5JRqITBt4AAy92CMOBXxlBYstwDFDtjlujRG9e/pxP6wzqxCmkRfcSZXfaU9LmOrLGDZ1g4ZO1x9phlspegl2JRG+lO2fXnzlwEaNIW/CyqNSGTIR6zK0Awp/BmSk1NT5Kj3gf3tr++AxyUKFsWrImO2FakMlR7ggBClyYAviHd5rfh1cRG7wWfQ+4NHLkybl/iYrey/fLMdDFxDK9BX39Qep2S/5UFgPlyKm6KNHxrISAXWQMTNqAIA5nepy3Kp625n42GLArfqoilU4CC4VBhEeFYfQmmtLEcVM5f0Lf9iy/I3bOj2xu4cwqz6AuVSDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zIJo9Ct4jBIJ1AVfs3m25acIbzGYsAkqBsjceiMrTHU=;
+ b=nNVH7qL9vE6vCX81EHYGmBL/8XTTXjTLOwcaBEO0O/ZIh6iAsiwduCkBSwLHJ0W1wQPN42SoOSUw6dcAPctNK1t1qa0fuG+Gy4a4cmhzE+I+sZcRaMBYH38yhtcYEdNyse8zPmeq0KyVR0rXdzkwruqkp70U25lbJOzKBAZPkqe535Hq79Sf+qT8RmQ+EZdG5fgzyLLPsrvUQIwiP7z4cNKDua6oGHL7wiuwpiNvuLQq5qnkDu9xIq7Tq+zfP7BbP65aH5yh+9VOc9z9Jil6id+1WFal4M8MlCF8gT+GSjup6hlGYi6KmYf8iQHm4mQH3hxhMNzza+Kch+tAO+qaGQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zIJo9Ct4jBIJ1AVfs3m25acIbzGYsAkqBsjceiMrTHU=;
+ b=qQeefBJmwNmSeMWkP7SlB2Tym03gFitlc/KDw1wYZ3e3gTo8Z/+m3DlB4LCHak9Jirdjcx/zhq39fBmDE2BL3WqL6GcYV2YYjyp3nkcdhGQ7j/9kUbQsA5RaAii5IQmjr7YvsY+tniS11KZpuoiSE2M2LQ4FV6gunLbGQEZA11k=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
+ by MW4PR17MB6007.namprd17.prod.outlook.com (2603:10b6:303:1be::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.27; Wed, 27 Dec
+ 2023 16:41:22 +0000
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::381c:7f11:1028:15f4]) by SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::381c:7f11:1028:15f4%5]) with mapi id 15.20.7113.027; Wed, 27 Dec 2023
+ 16:41:22 +0000
+Date: Tue, 26 Dec 2023 03:06:01 -0500
+From: Gregory Price <gregory.price@memverge.com>
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: Gregory Price <gourry.memverge@gmail.com>, linux-mm@kvack.org,
+	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	x86@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
+	tglx@linutronix.de, luto@kernel.org, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com, mhocko@kernel.org,
+	tj@kernel.org, corbet@lwn.net, rakie.kim@sk.com,
+	hyeongtak.ji@sk.com, honggyu.kim@sk.com, vtavarespetr@micron.com,
+	peterz@infradead.org, jgroves@micron.com, ravis.opensrc@micron.com,
+	sthanneeru@micron.com, emirakhur@micron.com, Hasan.Maruf@amd.com,
+	seungjun.ha@samsung.com,
+	Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>
+Subject: Re: [PATCH v5 02/11] mm/mempolicy: introduce
+ MPOL_WEIGHTED_INTERLEAVE for weighted interleaving
+Message-ID: <ZYqJaXaFCKvuwu3H@memverge.com>
+References: <20231223181101.1954-1-gregory.price@memverge.com>
+ <20231223181101.1954-3-gregory.price@memverge.com>
+ <8734vof3kq.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <ZYp6ZRLZQVtTHest@memverge.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZYp6ZRLZQVtTHest@memverge.com>
+X-ClientProxiedBy: BYAPR01CA0023.prod.exchangelabs.com (2603:10b6:a02:80::36)
+ To SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|MW4PR17MB6007:EE_
+X-MS-Office365-Filtering-Correlation-Id: 17f121a5-d16e-46b6-8970-08dc06faa8ad
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	RR2mG3WLgthAt8fOfDfZS4nGAKw1esUciI4LHk9W8pGrH0m49ZVKlQPKZr4sPs8NYagAtKxUi/HzO7Dfa/Pat2xtMM+VTH6m1jkQ29ML7JFS1pHmF1VSh3TntY2Pv0umDSPujCIwVUSD77Pm0SzFF1v2VNIzIdCw7sQleV07KUvLPlVmECzB6HEjpZGxzAURUh88dO3G5B0dk+rqVcUeyluFZ2c3UrpnOz0PfLkNEkqGXM/lD/O+LGzFVgiV9nPQMXJECSJzuuc+K2BwUabH7smrLqG6oPAFZUTbxkz2Mn82qVfmytmfNVngpHh5WRT7E3Kk1MzmGOGssb7m9U6wpQiQk/hmC5+sZJsM0lVM5P8tLrwf8P/jsEmOasIThwTjiV/EbNuTlAOTt0GNWIBK4NE5TjItHH2KAJojaY9F7yJLOx8jZj4DYILTfu6/jn6uej6Ghflvfo7WcZWiMJUMLYDsCGE66600ZXfkYHKsJzxwouF/czlx4+VrrxN0d5xGwMz2aYG1pXRW0TbJbDzowthPCqwy271YLZZDXYsf0jH20sMYFX0vXzHw8noc0RwrrxRO6rvyAN/Jm/HfDBGhRywrQNuzq8Teo8qgADltpx4=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(346002)(366004)(136003)(39850400004)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(6506007)(2616005)(26005)(86362001)(36756003)(7406005)(38100700002)(4326008)(8676002)(44832011)(5660300002)(7416002)(6512007)(6916009)(6486002)(66556008)(66946007)(316002)(54906003)(66476007)(478600001)(41300700001)(8936002)(4744005)(2906002)(6666004)(16393002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Pzzh2MKzW2aX74emyV/M6UMC4IO7gXtLA2f55978OhecDq0SoPiqjuc0YOjc?=
+ =?us-ascii?Q?eGpOuQONKa2BGdY2cAvXItTMjTXwsHcAuTFr+sraELL4us8AZWmodUgK/QlE?=
+ =?us-ascii?Q?sh8Cwc8ro9mkvKAW4bcZ/v1gvxQZiBHkelJHQVh6GtyUCDs6JmPu367zYfbS?=
+ =?us-ascii?Q?J/L24Nu9KUHQS0KHMLdEX/ZSbqX+z9JgJojCDntTadTOyNRj/iqY1S65LQ+W?=
+ =?us-ascii?Q?rLLKMA42/MrYMHXxaYpFZW/Q+gfZRgpMNhbgIm+vuzABxqNfFTgrht2jaU89?=
+ =?us-ascii?Q?OoDnAGFI8Nxe+D0bNcbaM8RgLyxI6HPHTAKIMkquwdd6Zd8y9TdhW3LQD37C?=
+ =?us-ascii?Q?r+peQIgT4AOmODXZcfm9H4vs+59l9sgJOfZ3LB8aR7/u0XCM8xWpYXW3GdOs?=
+ =?us-ascii?Q?OAMhbLFpJtP28l/W3HC4ZyS9As+R1b3D9O40yU3HGzSyBKzN0xq5GXvqT29X?=
+ =?us-ascii?Q?NCSX+s5xRbERqjlGVAA9kw06cjw7bN78VkxSRH1dyBJ3C6nQDqBmqaqa0LRo?=
+ =?us-ascii?Q?ki9dcqasnMtsgeDKhy7MQgiz0t8EgZjTR1FiM1YEjDJAsCtKdyctE5NUv56e?=
+ =?us-ascii?Q?Bj+swfn2edvobkJyF+Iy1umbAu63ud8UEyjS25XLhE7TQZH8jO+syVuY+rGt?=
+ =?us-ascii?Q?sEMQh4h5uOF1+8wZeySf91kT8Ab2NgXLMVKLlLLk4h1h1+shR8eYtz1KqYm1?=
+ =?us-ascii?Q?itnKBrb9xrRoEfco3zWogThvLn8yR2seRbrOfSTHSNTpy5/OTk59dzlR3UnA?=
+ =?us-ascii?Q?Z19BUXXMbLivyW4uS426GPrEaqhMVK6vfn4kzUe9P15Wx9HEGW/wR/4z4sT6?=
+ =?us-ascii?Q?+JO2h8lQ2lTrsNdO40QD/aF5zvPJFESoa5K/7lKfqfmKtupcejlathpF9y9q?=
+ =?us-ascii?Q?TW/kZkqI+ON7TJLrrkoUsl0HzCZt7Ps82AnOY2PIqT0PP6vsutEIjeIHLD4A?=
+ =?us-ascii?Q?8pOHgpYXbUF0Wr0eRLr1Rnod2H0WGUZXu1IuVJDHfu25zXp1vGVaxDXfq6Pd?=
+ =?us-ascii?Q?M2oEUwKIERqydqDG90q1WWQAVjaSpjjKW/dNEKpLBxNYMYwy7r5Sdc1CNcLD?=
+ =?us-ascii?Q?FnaKJJ7XJ3B1u713GdxwvuJYOUc/MqsDWIXz82ittKn9aI/2asf0beyXCIE9?=
+ =?us-ascii?Q?4DqaaCxaQEDjfgCrMGlsaaWgDPFzZFtZ847TtB0EIm0idkuz6FWCTcJoBGYI?=
+ =?us-ascii?Q?m6tByt3GFtgTn5jJ9Sdm0/Xo3WrJzZxZQWub8MUMu7/2lyQwGICSsBG+jOIz?=
+ =?us-ascii?Q?pYCmq9kmzzGljrIm7PAY319FxH4AkO2OP4JPuGC7wyjEqhA4eFdz4vSu1VGD?=
+ =?us-ascii?Q?ANZqVtFD5jXM4R0pSIkHNAoE8Jd4zmMWuVXudY5PUm9wwybd+5DvcH2AhCKH?=
+ =?us-ascii?Q?GzG5ZCf4pPr6JlxmiT002Mvc7Xd3+/8IKcxSfhsBo0RIao/U6mUA5WXs3CmB?=
+ =?us-ascii?Q?Sk1VFLk2zeDC5HhGnAx25wyd/jU3R7ifQ4fK1mVkOpWff0U8RWDnMAi6FiVa?=
+ =?us-ascii?Q?zFa1k/kDcn/Rm8qOLyMh9yDXawsOBvuFlBi70fDz+nCog+v83pQ9NUcZOtNX?=
+ =?us-ascii?Q?JmuoRHdu5YYSf5xxpSUtnBvGaa7DPjxIVFZPTRo8wdbs0AGhqpY1FSJIY/sO?=
+ =?us-ascii?Q?nA=3D=3D?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17f121a5-d16e-46b6-8970-08dc06faa8ad
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Dec 2023 16:41:22.2531
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JwTWaCspUqQgzHzOiXY8TMnvGftm6jmGck3EemkC25b4aLCVqPTrsmV+nPdOqifOD/c0sQvYLXiFfVdIfwmtydO1U8ZGOHGwdBOe42h8f9c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR17MB6007
 
-Hello Linus,
+On Tue, Dec 26, 2023 at 02:01:57AM -0500, Gregory Price wrote:
+> > 
+> > If pol->wil.cur_weight == 0, prev_node will be used without being
+> > initialized below.
+> > 
+> 
+> pol->wil.cur_weight is not used below.
+> 
 
-A bit in advance, here is the MTD PR for the opening merge
-window for v6.8-rc1.
+disregard, i misread your comment. prev_node should be initialized, to 
+NO_NUMA_NODE.  Will fix.
 
-Thanks,
-Miqu=C3=A8l
-
-The following changes since commit b85ea95d086471afb4ad062012a4d73cd328fa86:
-
-  Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git tags/mtd/for-=
-6.8
-
-for you to fetch changes up to 98d4fda8f2d4bc3fb97958d2ef4c90e161a628f2:
-
-  Merge tag 'nand/for-6.8' into mtd/next (2023-12-22 12:45:52 +0100)
-
-----------------------------------------------------------------
-* MTD
-
-Apart from preventing the mtdblk to run on top of ftl or ubiblk (which
-may cause security issues and has no meaning anyway), there are a few
-misc fixes.
-
-* Raw NAND
-
-Two meaningful changes this time. The conversion of the brcmnand driver
-to the ->exec_op() API, this series brought additional changes to the
-core in order to help controller drivers to handle themselves the WP pin
-during destructive operations when relevant.
-
-There is also a series bringing important fixes to the sequential read
-feature.
-
-As always, there is as well a whole bunch of miscellaneous W=3D1 fixes,
-together with a few runtime fixes (double free, timeout value, OOB
-layout, missing register initialization) and the usual load of remove
-callbacks turned into void (which led to switch the txx9ndfmc driver to
-use module_platform_driver()).
-
-* SPI NOR
-
-SPI NOR comes with die erase support for multi die flashes, with new
-octal protocols (1-1-8 and 1-8-8) parsed from SFDP and with an updated
-documentation about what the contributors shall consider when proposing
-flash additions or updates.
-
-Michael Walle stepped out from the reviewer role to maintainer.
-
-----------------------------------------------------------------
-Arseniy Krasnov (2):
-      mtd: rawnand: meson: initialize clock register
-      mtd: rawnand: meson: handle OOB buffer according OOB layout
-
-Boris Brezillon (1):
-      mtd: rawnand: Add destructive operation
-
-David Regan (3):
-      mtd: rawnand: NAND controller write protect
-      mtd: rawnand: brcmnand: pass host struct to bcmnand_ctrl_poll_status
-      mtd: rawnand: brcmnand: exec_op implementation
-
-Dinghao Liu (1):
-      mtd: rawnand: diskonchip: fix a potential double free in doc_probe
-
-Fabio Estevam (1):
-      mtd: spi-nor: micron-st: Add support for mt25qu01g
-
-JaimeLiao (2):
-      mtd: spi-nor: sysfs: hide the flash name if not set
-      mtd: spi-nor: sfdp: get the 1-1-8 and 1-8-8 protocol from SFDP
-
-Michael Walle (2):
-      MAINTAINERS: spi-nor: add myself as maintainer
-      MAINTAINERS: change my mail to the kernel.org one
-
-Miquel Raynal (11):
-      mtd: rawnand: pl353: Fix kernel doc
-      mtd: rawnand: rockchip: Rename a structure
-      mtd: rawnand: rockchip: Add missing title to a kernel doc comment
-      mtd: ssfdc: Remove an unused variable
-      mtd: maps: vmu-flash: Fix the (mtd core) switch to ref counters
-      mtd: rawnand: Prevent crossing LUN boundaries during sequential reads
-      mtd: rawnand: Fix core interference with sequential reads
-      mtd: rawnand: Prevent sequential reads with on-die ECC engines
-      mtd: rawnand: Clarify conditions to enable continuous reads
-      Merge tag 'spi-nor/for-6.8' into mtd/next
-      Merge tag 'nand/for-6.8' into mtd/next
-
-Randy Dunlap (1):
-      mtd: rawnand: s3c2410: fix Excess struct member description kernel-do=
-c warnings
-
-Ronald Monthero (1):
-      mtd: rawnand: Increment IFC_TIMEOUT_MSECS for nand controller response
-
-Stefan Wahren (1):
-      dt-bindings: mtd: partitions: u-boot: Fix typo
-
-Tudor Ambarus (10):
-      mtd: spi-nor: use kernel sized types instead of c99 types
-      docs: mtd: spi-nor: add sections about flash additions and testing
-      docs: mtd: spi-nor: drop obsolete info
-      mtd: spi-nor: add erase die (chip) capability
-      mtd: spi-nor: spansion: enable die erase for multi die flashes
-      mtd: spi-nor: micron-st: enable die erase for multi die flashes
-      mtd: spi-nor: remove NO_CHIP_ERASE flag
-      mtd: spi-nor: print flash ID instead of name
-      mtd: spi-nor: mark the flash name as obsolete
-      mtd: spi-nor: drop superfluous debug prints
-
-Uwe Kleine-K=C3=B6nig (4):
-      mtd: rawnand: brcmnand: Convert to platform remove callback returning=
- void
-      mtd: rawnand: txx9ndfmc: Switch to module_platform_driver()
-      mtd: rawnand: txx9ndfmc: Drop if block with always false condition
-      mtd: rawnand: txx9ndfmc: Convert to platform remove callback returnin=
-g void
-
-ZhaoLong Wang (1):
-      mtd: Fix gluebi NULL pointer dereference caused by ftl notifier
-
- Documentation/ABI/testing/sysfs-bus-spi-devices-spi-nor      |   3 +
- Documentation/devicetree/bindings/mtd/partitions/u-boot.yaml |   2 +-
- Documentation/driver-api/mtd/spi-nor.rst                     | 262 +++++++=
-++++++++++++++++++++++++++++++++++++++++++++++----------------
- MAINTAINERS                                                  |   8 +--
- drivers/mtd/maps/vmu-flash.c                                 |   2 +-
- drivers/mtd/mtd_blkdevs.c                                    |   4 +-
- drivers/mtd/nand/raw/brcmnand/bcm63138_nand.c                |   2 +-
- drivers/mtd/nand/raw/brcmnand/bcm6368_nand.c                 |   2 +-
- drivers/mtd/nand/raw/brcmnand/bcma_nand.c                    |   2 +-
- drivers/mtd/nand/raw/brcmnand/brcmnand.c                     | 408 +++++++=
-+++++++++++++++++++++++++++++++++++++++------------------------------------=
--------------------------
- drivers/mtd/nand/raw/brcmnand/brcmnand.h                     |   2 +-
- drivers/mtd/nand/raw/brcmnand/brcmstb_nand.c                 |   2 +-
- drivers/mtd/nand/raw/brcmnand/iproc_nand.c                   |   2 +-
- drivers/mtd/nand/raw/diskonchip.c                            |  10 +--
- drivers/mtd/nand/raw/fsl_ifc_nand.c                          |   2 +-
- drivers/mtd/nand/raw/meson_nand.c                            |   8 ++-
- drivers/mtd/nand/raw/nand_base.c                             |  99 +++++++=
-++++++++++++++-----
- drivers/mtd/nand/raw/pl35x-nand-controller.c                 |   2 +-
- drivers/mtd/nand/raw/rockchip-nand-controller.c              |   7 +-
- drivers/mtd/nand/raw/s3c2410.c                               |   2 -
- drivers/mtd/nand/raw/txx9ndfmc.c                             |  13 ++--
- drivers/mtd/spi-nor/atmel.c                                  |  16 ++---
- drivers/mtd/spi-nor/core.c                                   | 170 +++++++=
-++++++++++++++++++--------------------
- drivers/mtd/spi-nor/core.h                                   |  24 +++----
- drivers/mtd/spi-nor/debugfs.c                                |   2 +-
- drivers/mtd/spi-nor/micron-st.c                              |  59 +++++++=
-+++++++--
- drivers/mtd/spi-nor/sfdp.c                                   |  29 ++++++++
- drivers/mtd/spi-nor/sfdp.h                                   |   7 ++
- drivers/mtd/spi-nor/spansion.c                               |   4 +-
- drivers/mtd/spi-nor/sst.c                                    |   6 +-
- drivers/mtd/spi-nor/swp.c                                    |  25 ++++---
- drivers/mtd/spi-nor/sysfs.c                                  |   2 +
- drivers/mtd/ssfdc.c                                          |   1 -
- include/linux/mtd/rawnand.h                                  |  15 ++++
- 34 files changed, 740 insertions(+), 464 deletions(-)
+~Gregory
