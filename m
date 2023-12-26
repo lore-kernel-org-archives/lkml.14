@@ -1,79 +1,87 @@
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A701847
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 19:49:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104CC1FAD
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 19:54:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V6LlcVTW"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XpLq3aLs"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=ltxuMlZ+kzMrrPIVGOVBbv3q97GGQmn2uNwiw82Dnkw=; b=V6LlcVTWVAYjZSAsOOdj6x+I+1
-	mGidUToj2wg3ebKpsXdNW34qYqNIxH77CgoRKyeo2kAo5ihhWE3Kg0Iu5tFQYG99bkraAHcXKxxvD
-	885NWv/GWxjRbcBtwvJ+nBAMSN6bbFuR27xFg1jRj/jRL6SeEv/0vVLdgi3GwsCWR6pPq0lMly58T
-	rOUp7Dk2+LH8tv5lR04UKuKKnTRru+7Ga9Dvpqb/iiD2lqpzzcHG3xEH2DkNVzAwIjBR+7LKpWU3g
-	ciX4Bfu4QgLbBjbDBHWBHxUgnDh5UbS1nSqbcy6maMPN8ctiKf4JGDesxVLI7D3G09YcjJh/o6mPz
-	I2AGz7Wg==;
-Received: from [50.53.46.231] (helo=[192.168.254.15])
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
+	:Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=21wQk0jscaODvVpni8xGD2rI9Yw0sdDCJDIjv7Nhv4I=; b=XpLq3aLsCCrZgGbZlZvPF1X29W
+	+mNLf0pIpRdl9uXlg5v2B4xunqNfItuRfvYHwuJ3QlDjBW4Dre5/37V49wEqp6OapAtv0ckX4qauh
+	53h/0Sbl5uk7e3n7zkFjeBeG/ieSwEr7tW4Vz8PdCe68Oq7BxQEjxxYJxwB0xI2z9gqd9YG1ZOS1B
+	45Kwgx8DMQ6mQ4QJhMNVCnmZS3kbAgmRfPge80uVU3vwemz6ErFonguSqjaowmB4SQZza0ZGNnqxX
+	VxqM3nRB9F5sSdL3g+lJCcLYLJlOBrFEEweINTDDJZV00m4qaLhRSIPjvmZP5/VA4ZVy2tyY0HRNw
+	QzNr26fA==;
+Received: from [50.53.46.231] (helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rIDQx-00DSmS-1T;
-	Tue, 26 Dec 2023 19:49:47 +0000
-Message-ID: <0579ecd5-1335-4010-a32c-77dd4caf3411@infradead.org>
-Date: Tue, 26 Dec 2023 11:49:47 -0800
+	id 1rIDVZ-00DT1I-2F;
+	Tue, 26 Dec 2023 19:54:33 +0000
+From: Randy Dunlap <rdunlap@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+	intel-gfx@lists.freedesktop.org,
+	Jonathan Corbet <corbet@lwn.net>,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH v2 2/4] drm/i915/gt: reconcile Excess struct member kernel-doc warnings
+Date: Tue, 26 Dec 2023 11:54:30 -0800
+Message-ID: <20231226195432.10891-2-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20231226195432.10891-1-rdunlap@infradead.org>
+References: <20231226195432.10891-1-rdunlap@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] drm/i915/perf: reconcile Excess struct member
- kernel-doc warnings
-Content-Language: en-US
-To: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc: linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
- intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-References: <20231221032029.30942-1-rdunlap@infradead.org>
- <20231221032029.30942-4-rdunlap@infradead.org> <ZYsH757tT6sdSjDI@intel.com>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <ZYsH757tT6sdSjDI@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Document nested struct members with full names as described in
+Documentation/doc-guide/kernel-doc.rst.
 
+intel_gsc.h:34: warning: Excess struct member 'gem_obj' description in 'intel_gsc'
 
-On 12/26/23 09:05, Rodrigo Vivi wrote:
-> On Wed, Dec 20, 2023 at 07:20:29PM -0800, Randy Dunlap wrote:
->> Document nested struct members with full names as described in
->> Documentation/doc-guide/kernel-doc.rst.
->>
->> i915_perf_types.h:341: warning: Excess struct member 'ptr_lock' description in 'i915_perf_stream'
->> i915_perf_types.h:341: warning: Excess struct member 'head' description in 'i915_perf_stream'
->> i915_perf_types.h:341: warning: Excess struct member 'tail' description in 'i915_perf_stream'
->> 3 warnings as Errors
->>
->> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->> Cc: Jani Nikula <jani.nikula@linux.intel.com>
->> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
->> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
->> Cc: Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
->> Cc: intel-gfx@lists.freedesktop.org
->> Cc: Jonathan Corbet <corbet@lwn.net>
->> Cc: dri-devel@lists.freedesktop.org
-> 
-> 
-> for the series:
-> Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> 
-> I'm afraid patchwork was down when you sent this out.
-> Could you please rebase and resend? Just to ensure
-> our CI doesn't complain and then we push it.
-> 
+Also add missing field member descriptions.
 
-Will do. Thanks.
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
+Cc: intel-gfx@lists.freedesktop.org
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: dri-devel@lists.freedesktop.org
+Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+---
+v2: add Reviewed-by: Rodrigo
+    rebase and resend due to (i915) patchwork being down
 
--- 
-#Randy
+ drivers/gpu/drm/i915/gt/intel_gsc.h |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff -- a/drivers/gpu/drm/i915/gt/intel_gsc.h b/drivers/gpu/drm/i915/gt/intel_gsc.h
+--- a/drivers/gpu/drm/i915/gt/intel_gsc.h
++++ b/drivers/gpu/drm/i915/gt/intel_gsc.h
+@@ -21,8 +21,11 @@ struct mei_aux_device;
+ /**
+  * struct intel_gsc - graphics security controller
+  *
+- * @gem_obj: scratch memory GSC operations
+- * @intf : gsc interface
++ * @intf :	gsc interface
++ * @intf.adev :	MEI aux. device for this @intf
++ * @intf.gem_obj : scratch memory GSC operations
++ * @intf.irq :	IRQ for this device (%-1 for no IRQ)
++ * @intf.id :	this interface's id number/index
+  */
+ struct intel_gsc {
+ 	struct intel_gsc_intf {
