@@ -1,84 +1,65 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2058.outbound.protection.outlook.com [40.107.243.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8E745961;
-	Wed, 27 Dec 2023 15:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48104594F;
+	Wed, 27 Dec 2023 15:42:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=memverge.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="axOKTS2T";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="jw1d7JZC"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BRAi9GZ013108;
-	Wed, 27 Dec 2023 15:36:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=corp-2023-11-20;
- bh=3gAPham7yKoef2CorylpEEEFBlveUtPkODbnL7mGGF4=;
- b=axOKTS2TxNUYK8jfJLV0Mx0H/aI+1qmr+oclBYWHdWld9uG704JI591kkBeH23clhSFN
- 2/Rk3YMd6xe1Wx7IFQU4+5HEkPPM3EBCgcV1RQaNDOc44S7FVKjwEZK1cTz9UwCmSvuD
- 2cQ6/DWd0kucyaP0TC5NWbxw9tXpwUrL2Zz+Lktq/jvKw/J4Cld+zdGZ3RvmIFU5DB+4
- P+DR0u1kLrV+ZayA8dQ2hlycFGo1NQVL6GV/75RdCnBYBLz68tFCnkZNkFX6tvhctqdr
- eNW6GuPyBCvcd9mBv2uqwQHpmTEh2CQ+pLuvbnCqWu6ROxmm+N6G+bHD1bdEPurnWCSV gA== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3v5pb44wav-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 27 Dec 2023 15:36:43 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3BRFRqen010967;
-	Wed, 27 Dec 2023 15:36:43 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3v5p0apxvy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 27 Dec 2023 15:36:43 +0000
+	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="yEgtBfpr"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DmfTAwI3yQfO8qMzwEWCqziA5fRvuvgjZS/dRo+OAU+QDQOgRsuSR627E+5hyx3aMJBT56Nlq/D27Iy2e89P+tgbcvE4xW07YlJerpO6l2rGL9/p6gL5daeZEA9969w1u/RbEM8EJ8SXHw6/lzj+elfAFYl9+Ph964KqXLlJ5k6bbGJu3A1BVnXtWbvq54tyKQV8z4TEG0T2XTXXYvVrwGDP1KvMsSZxwpF51sfQ67GPsUOWnbJ4irUF70cY3TKQYNQBgvwCdxalQ/SaiZkBx9uUCTUGttETWxqoSrMteUHsNp9ajES7gluxLxOw9a89jhfRyR0lUVDK2dZjCTCHHA==
+ b=JSSkc1zuSdVQBvssN4JMXdsqdsY4GcT6JWW6JbDcq3s7l4TyR2pwbNfUfsjycFaol8hhd3uiI8ZtIVw3Zk5uCAbZ+SNuz35bgbkynCLQEk/WGLyXnEw0PuMQ3pA1qbh6xhMXYL+w/XZes5R/CZCp92wnRHeSW8Yyd48NJeyP+mfxElm9ictlzuye1t8shQMmSxX7YQzf/L4000uU4VY5lnkHnO3CJcPP9Db9Kr1WXOzyNG9k6jBaXHeQmBz1yodiMNErK5G5Ui3NyADO2k8whIaOAY1cu/GHkOFvK7ezR+KfdCRupkNTt0QXMplD3GXjxYvJEAipsvoxhgUQEhel1w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3gAPham7yKoef2CorylpEEEFBlveUtPkODbnL7mGGF4=;
- b=SYQW1QserYkyFpKPHF+Wp6QN0vmG0gnSWj+WgcAw8Gu+DvpaDiPjwzVSI79m2FG8/XYe+Z9civwH96oytQRssrMAV4XqrtrKb1hWQkATTlmAipL6R9ncLWOtWykdpIyuTDo9zku1h9kN/LzEc44t/7ajMqBejbMgxhUHk5tqtDsRt74qQLsK/PwFbpNh9KxKGLaGNN4jKs3NjJZxXJnBJrL9MY184G6t3Z6lCxR1QHsb7vtheyboLk9eJE/GEYWxqhD41PFJnHcdvGk6edXu6VMx5Dn+rEWOZC6dpCSXN9DDmmitQSddrBlazIEPgcdypOrqUAATjFszv9ml21LgHQ==
+ bh=lV/r3wrzv/P1cpHKGf1oE/q17CRSaA7h4lEzm91iBvQ=;
+ b=Z5qbIOL0NyJhvcK2ZCs2v3mfhhXmulMN4TeI2v1PkWN3GQyQxrzwRtOVpN1cirLI4anFalyvftDLUKVFO8EoqvOQPdAfJnjl5Vga27/I/LFedjDlK20g3mjJU6yoi5VPpOGzWM5vXMlf8tB1J9oYNNJ7sp8w5VvO4nhvexehet27ea0rMdQKUzC0Fey5VfqNGi6KaKhWhaOZ+48fv5abg2RWxOOTNeMgBzLNnL34QySrvvvQhQPMHLsudPmbghde4lWeLTylQz0U1TlqSeyhwPVEIfrEl+L7cK2oXFUkiRDxh0uQaYHx9SBgVNuk8kR9Ao2OTCGzgCM8051urQ6gig==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
+ dkim=pass header.d=memverge.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3gAPham7yKoef2CorylpEEEFBlveUtPkODbnL7mGGF4=;
- b=jw1d7JZCrNdH3NcuX+vhMeBT9T8ow24NFqepvTmbU6w0Qqon/Ekpc30jqU+0v3MPtw3QDJBLBq6dLV1IahfGrFTatvEQEXfl8f7aSRMIcAulSMVmkmGmGebVXFHeiodi8j3opdM8d5VjUt+bUi/eMmGaZoGZhiyQVQBBVPoltr8=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by CYXPR10MB7976.namprd10.prod.outlook.com (2603:10b6:930:df::22) with
+ bh=lV/r3wrzv/P1cpHKGf1oE/q17CRSaA7h4lEzm91iBvQ=;
+ b=yEgtBfprCs2+LD3Jo/G4VjyeuJNZEvlgGc3KPDHWOrD0VehIrbnarerLdllvRx9KtDVs9wLoFhcHrPEVq34lVr3jmYuQYV/SCuwacVZX+di9U+Pu5aXv5IWETxo+4CpzPoEiRKmnbZjnS2Ju97dxFEus6+ZGMw2unbie19a4Uv0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=memverge.com;
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
+ by CY8PR17MB6577.namprd17.prod.outlook.com (2603:10b6:930:72::6) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.27; Wed, 27 Dec
- 2023 15:36:38 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::360b:b3c0:c5a9:3b3c]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::360b:b3c0:c5a9:3b3c%4]) with mapi id 15.20.7135.019; Wed, 27 Dec 2023
- 15:36:38 +0000
-Date: Wed, 27 Dec 2023 10:36:35 -0500
-From: Chuck Lever <chuck.lever@oracle.com>
-To: alexious@zju.edu.cn
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>, Jeff Layton <jlayton@kernel.org>,
-        Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Simo Sorce <simo@redhat.com>,
-        Steve Dickson <steved@redhat.com>, Kevin Coffman <kwc@citi.umich.edu>,
-        linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] SUNRPC: fix a memleak in gss_import_v2_context
-Message-ID: <ZYxEg3g8NIwcDZWM@tissot.1015granger.net>
-References: <20231224082035.3538560-1-alexious@zju.edu.cn>
- <ZYhivG2MxmtePvo3@tissot.1015granger.net>
- <45874bb1.58022.18ca55b2eab.Coremail.alexious@zju.edu.cn>
+ 2023 15:42:13 +0000
+Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::381c:7f11:1028:15f4]) by SJ0PR17MB5512.namprd17.prod.outlook.com
+ ([fe80::381c:7f11:1028:15f4%5]) with mapi id 15.20.7113.027; Wed, 27 Dec 2023
+ 15:42:13 +0000
+Date: Tue, 26 Dec 2023 02:01:57 -0500
+From: Gregory Price <gregory.price@memverge.com>
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: Gregory Price <gourry.memverge@gmail.com>, linux-mm@kvack.org,
+	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	x86@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
+	tglx@linutronix.de, luto@kernel.org, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com, mhocko@kernel.org,
+	tj@kernel.org, corbet@lwn.net, rakie.kim@sk.com,
+	hyeongtak.ji@sk.com, honggyu.kim@sk.com, vtavarespetr@micron.com,
+	peterz@infradead.org, jgroves@micron.com, ravis.opensrc@micron.com,
+	sthanneeru@micron.com, emirakhur@micron.com, Hasan.Maruf@amd.com,
+	seungjun.ha@samsung.com,
+	Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>
+Subject: Re: [PATCH v5 02/11] mm/mempolicy: introduce
+ MPOL_WEIGHTED_INTERLEAVE for weighted interleaving
+Message-ID: <ZYp6ZRLZQVtTHest@memverge.com>
+References: <20231223181101.1954-1-gregory.price@memverge.com>
+ <20231223181101.1954-3-gregory.price@memverge.com>
+ <8734vof3kq.fsf@yhuang6-desk2.ccr.corp.intel.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <45874bb1.58022.18ca55b2eab.Coremail.alexious@zju.edu.cn>
-X-ClientProxiedBy: CH0PR03CA0341.namprd03.prod.outlook.com
- (2603:10b6:610:11a::18) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+In-Reply-To: <8734vof3kq.fsf@yhuang6-desk2.ccr.corp.intel.com>
+X-ClientProxiedBy: SJ0PR03CA0362.namprd03.prod.outlook.com
+ (2603:10b6:a03:3a1::7) To SJ0PR17MB5512.namprd17.prod.outlook.com
+ (2603:10b6:a03:394::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,152 +67,189 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CYXPR10MB7976:EE_
-X-MS-Office365-Filtering-Correlation-Id: bd55c30a-fa3e-4716-a083-08dc06f19dfa
+X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|CY8PR17MB6577:EE_
+X-MS-Office365-Filtering-Correlation-Id: ce2f5ab2-42cc-416c-27d8-08dc06f2656e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	DpOZcWCq2zkuWYXcI7fhXOUo8nFJebUeNXjUaDZ1BM/7Hatb1FIi4TeE+EulqMQHQ6PDegbDI44pZA9XOi+uM+TL9BJTl7+WOgnqdjT9jFdAg69sN2x58M+17gQ8pfBAaHIvprz1wF9Ics4gAuVjRolG0QqxpJbejglaqbJBZv9KQPVOGtat+BQZ4U0GaRLGnI7gaSIhChDrRmKSTudy593hdr+c+u6FGHwkWkD3HUX1dUXnRhTYh+CIqUjaZeUbfBzd2i9vDTSIFsv2DfF3D8T+om0kpCkryPf0ZE9o1LhPcWzhmfB9b552+/iB8QVS8Xr1YAu/el3uv1O2kbzaobd2K3yIDSw2ac8nA1/hPo7FdLRoCbVuQpfI5U+hzrMAqaTjv6YrmQS7u49xLnIwFGOfYoTNemLcT5Kb1jPaua7oEAtoAoL0F5wryMuej/bzc2mPKQuz/d/8GR1xED6Rt3v5BaDZt/oa2MsphX8PEpyx/zDmmQ9ffFL6qucJzOad4z4WudVq9jJ7qqHot7Qqp5aiOOUdmPkNuZ5oroDxo1WEh5gYHDjwTLgVEpue1R6q
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(376002)(396003)(366004)(346002)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(66899024)(6916009)(6666004)(6512007)(6506007)(6486002)(66946007)(66556008)(66476007)(86362001)(9686003)(316002)(26005)(38100700002)(83380400001)(41300700001)(5660300002)(2906002)(7416002)(8936002)(478600001)(44832011)(4326008)(54906003)(8676002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info:
+	Nm1B0v2UmFowLmbgxX3TNFd457UVbINZGbzWRbmGFpZYNVhf22QbLUHDyMaTrK2lkhrjrNLYg5ccU1byHhug+m/VygQonT+UThhyltWC7FquMskuNUnad7sSMS35znAgZeEPEClkTOjBO8f8F2SKpfgRDZAvIPHsRP4+HJr2zegIlwWBXY4v+YIpi2879dlUA3dPpTPKIZbw3/PWpZmVqeLMgCxBWizG71v1Ui4dxC/gdNlsugzvw2piktVcqf0I2BEuRXNvsEByqNY43q3fXUwoh53w/4eBSMkHaMykq+b+Y+JMWDH98NhG8cG/0EDLRKd6EdvxHXWZ1oboiCbx/Nr3+CEMIZinjrfoPeuBxJklXxbLKXAYa2PA70nceU2fmGfJiAMJNlgwcjUTp88SKt+WRD5n5yOHDLaCWzm3jE6t7XGDwdzuxDW/mdN7MZEwozBLTxdNe/uf4mcQ9ST7t6eLgcKR8sBNVlDEQ7//St+g5o2x09qVCWerpWW9uGL/AXz0TdNi4Gh3DPwtLPzdsTxP/FLqSHHpH3Gb8uPGvotSgLpDhf/pmkj50T8AYirsZi/uCnaDHzBPSJwbKGsblIuAKo1ZJWvtvskFUSV8CvREHr1EWrcwUboTvfsP3j64
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(346002)(376002)(39840400004)(396003)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(2616005)(4326008)(6512007)(26005)(8676002)(66946007)(54906003)(66476007)(66556008)(316002)(6916009)(83380400001)(6666004)(6506007)(38100700002)(8936002)(478600001)(6486002)(86362001)(44832011)(5660300002)(7416002)(7406005)(2906002)(36756003)(41300700001)(16393002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?9r3BpIjHNN/34MwxMin1TdQgGVjw6hgwENMk0ttwJjwZyz4wC64wZRKSkO72?=
- =?us-ascii?Q?pllwKLoYoMempbu16gw4cYXPFgZSNeiL01h4Q1Z+fINfnXDVwJO01wwnHyNs?=
- =?us-ascii?Q?22OA8sD2Skk3gzoNdgXnZ/KR6fkHhagOrqieF8cBoxsLN77oMin5ah2xJkno?=
- =?us-ascii?Q?d9yS9fMYDhhGdY7ViVe5WvlFddS+CuGb8loRO7LD4zHuPZTXDAmS/k5q2MHO?=
- =?us-ascii?Q?bND2nKxCSYYFE3pzqOOyuj8Q2bGDMdlOXVlCC/XBYnP8mx4ufe/jvvK53yqb?=
- =?us-ascii?Q?nla0i3B9OHa8uojp3Ji5eGiu6+JZKClvOP2UPMxfDn6xdIgtXHOOz+h0S8kx?=
- =?us-ascii?Q?njY3k7sMYkoOivpgac0ieJaYIlaJ2IpfHRWXmNlz9Nm3fN+jU39lJo8irDsG?=
- =?us-ascii?Q?Pu7UsiynCLNSHhO9r5/nCK9Bl1t+oLK1W25M/WeP0JZ+JNPmdDOZfc3b3DxJ?=
- =?us-ascii?Q?wKUP+hVp1nZ4hhPY0qe+5UXBFfMkpDR9OCnbjFm/gkPT1+sXiBJehJCflImU?=
- =?us-ascii?Q?gf10jDmqv2wwq1EGHcSccQ9l27HC6n+L/hHP97O5ivJW51O4XpHkeXrtTgMf?=
- =?us-ascii?Q?H7fYlQqEopLQx+QbQ5K2ela343XKamt9tdnVbsLGfG5+y1QvOZeyeaSJ64FK?=
- =?us-ascii?Q?D9HBXh4+/6oXZ8eUkYDPtGznKrUUzjRJOpfnewzJCl3H3gugafDOb5AEtEz/?=
- =?us-ascii?Q?YuREWZ6J0cebTQMCdh3f8z6xJhm84KjsIrNXmEIP7+xSCM8zN/Xz8fHRYP/n?=
- =?us-ascii?Q?OQNQCZRUc+gIM/pmk40aowMhpnNDN7/HfxxUlgmMSpRxMQeICjm7DU/iOnTe?=
- =?us-ascii?Q?CKUHp/CunqQvo3piHTVsylg3nXRGvucEZWWLUkFGmYme7Y6HSgVx4eTwjd28?=
- =?us-ascii?Q?plBIUSOuuga0eyKdg9gSdSm1N3ir7mEqzZhW99OHKHksW9gKSfZHTfOtWIUb?=
- =?us-ascii?Q?l5FNBb0BU381kwwFK38b2MZ/5O3l6D7r0HN4OtVPWkxhAp+n0BlczUqLEDF/?=
- =?us-ascii?Q?GKVLKNxUnJpTCZhdYvlkGGQdAqoyCb1ZNkyrizVNQrNXgA1nf1r9FBUbc/nU?=
- =?us-ascii?Q?2uO7dq9JDjP1jWAq03BLn+rR/OLoBEzt2LzxbltGVHCQFyYsgsfmxI5heOp0?=
- =?us-ascii?Q?tIFzKtugFllWpPMZZWEzqpG85Dc8jb7N3JpYWl1o6Iktg5ggtB8CMRKg2lWN?=
- =?us-ascii?Q?Q9FAk95Yi3hhlz3Rs8js56SH6bK4h1Xjd6r/pYmYQ/8CkeTqJSgfQDA1FcjW?=
- =?us-ascii?Q?TgpzhE5MivF5kwIpJnuNH0AxUo67+4OQYdbMSQFz9/ijGL1DzLFpLIuVMGUk?=
- =?us-ascii?Q?ifkjSSpTY0PPSFy8ZC8oMme+I5+5NX6BWcIOr1QiROS/1yU/LORXISItyluX?=
- =?us-ascii?Q?T/+sYkAUdHhxa8ny7xirhxOMNcrwk/k9PZTdFSk2Nd3+v5dUtFgfJTUOUxBZ?=
- =?us-ascii?Q?O9OTEXDHe2eOovqYidJI44vkBKNl0pBa8tY/EMWEKNWnOJRQiMDn+ZLvSQ0r?=
- =?us-ascii?Q?5CaGFY5HvT7XwWhxPU3Rt2Fven4tDEUGItXvo9g7CtL0PoB2srox5sg7tgq4?=
- =?us-ascii?Q?iASVep76R4dvYpKuiUwctN3PF7xZkdbh4wNGZpZBT93nDl8sKxsd65jPa9vg?=
- =?us-ascii?Q?Mg=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	yy9PmUw1b5nPTc1ncsPWcyk6T8wd4CADGz5PsAU7kdEIxDE2skDoMFsPeiQXnohXecTtU29nelohVPJh2Nmcyxfk6WJ0e67EzEVyS5Y9Wc8SMMevZpQx5XJvnDu5/LlcdOCGjjliNJ+LZ+YqXkauoQDau7xnj6EW2b3VHkT9jHFFlgDd+O0w4C2G/QwsDa2dpaUUcZ7SjjserCj3a88XvyUCEoawp8jqt7+F3Np4k3VlzcrYCVkgzRDyekM5Zzfz0RXpWERmyFZ6O3/34q0M3Uf1ULsZZxoL3HWLdKxFmH5EpNZ5tf97DiSaWVzt20j203uXH4a8hWEwbG782g6eAznVrK7KyLmyPer26s7XdmzixJP+b8VhOpl6udE5Aqm4QC7BKMDIs5BKIkeJ3L+IFCLFb+1OJR0Q31j3LCgiku+cc63VSPTlu1P85pgLMTaf9NB2fPqnld1VqtgMnTDnAuT7r/3h6YiGrVmRlr6Mi11rWYqCv7CtZZ0/3L8i2SDQJ9UEBG+GS19fKxUJQOeIVb6Hoc5rjy7BnbpRuNMGnIXqodLEDORIL0vkhXdW6t1da9igGvjWCV5/Vr8YnwRcrWfvb5GpoKtPyGPO5g6itQE=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bd55c30a-fa3e-4716-a083-08dc06f19dfa
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?BZSFl38f5Hmiq22pASl6SDhMkbWNFN/FwD1hEU6qKJkcJ57BVoDOUU6AIbZh?=
+ =?us-ascii?Q?xTc//WMbmpFBayokTsYcByhZoTO1fAbKKU0rQsWvWl11pb86ftEBOAAqokLE?=
+ =?us-ascii?Q?gOahcgwVP2ovx8np0E3MUzGVlHxpztDq9YzcXghquJ0dyCw0S0D5jUzt8wdz?=
+ =?us-ascii?Q?FJ1wwMm1oTKx9AYZWcBAoi7Au+WQ+TsXpsjLUVqaF244QdGeNuPXHAi1CFxo?=
+ =?us-ascii?Q?poaWr40CZDZbzPN6Wc1gAZ9vuH2Zxm0OjwhLltA8pwiH6q1mSmAUHDvSddhs?=
+ =?us-ascii?Q?VYV4p/BrdvIzhqrYPjPFcUELsomI9nB8of0UpbXNWOeOr2KfkvyNxF5bNnih?=
+ =?us-ascii?Q?Ld6CxknQY/1QCDq2l6+VEH2S1H/Xt4qPajuXviq3pJQSWebySq0HrAiERJBQ?=
+ =?us-ascii?Q?AyyVY5xyzz8/bQfh0wBW0EXGCjk2vmxxtmVGJaYuF15ii3xaslJ3WEhhDmWG?=
+ =?us-ascii?Q?6voRkji0Zo2feTrpQfZzNSr09Yv2QosR0tUD135jViZYIvWFKUrzXEIUdiAC?=
+ =?us-ascii?Q?IkKtdlYqwOrNo2LQEmsJv0GoC+v6F5z1Tr8iT7R328t5vUJ/e2nd5lVJox7B?=
+ =?us-ascii?Q?W59I3EbzaQ9dcShCxUWx67MDKAIWzmuq40LYTSnjTqrWV1CfyBS1Mj/LTIrA?=
+ =?us-ascii?Q?bvXCDIhjMwKIWf9wUUwNbQrZMzEH10quwgJ5anhzmxhsxZJ4zrKn2mY3oYKl?=
+ =?us-ascii?Q?KsRbmWvPF6N9sZ0xOeN4P6hsQ16h98Cu4257eCe+VIkuO0hQF/JsNwoNFmfy?=
+ =?us-ascii?Q?UE7cQm/sIloV4h1qcYemFGylrizLUF+b1urJLgPtHpmLTglFnKxtpv1iDj6z?=
+ =?us-ascii?Q?uO8rmAaREI7Q1qCRA3OTQBKnxVfLLpHPgCAP8abK9ox3Cff9Rw4U35rWdQCI?=
+ =?us-ascii?Q?FjsjjGCyC8K0IbY5a/uZ0mGqszSw2jxYLdA+argOn6ARzM1yL2n3UQuozKvV?=
+ =?us-ascii?Q?cEOgOHV/CcaB/BLcVWS1rCl726u/XxGQactqke4OiFsT/K+prYI1JmswPC2q?=
+ =?us-ascii?Q?L0SnL1gtRq54HGtrHzkX2c/iu02JDSWIcVfaIscjREmedcua/vNORWwbFU6w?=
+ =?us-ascii?Q?kV9e+MLGcE4iE5hEJKUgO0OQpRqw+wTTUksxY0cd6OQLlmsBJesO5U40TdUt?=
+ =?us-ascii?Q?4TBtKC/zEdi6nB4VVOIWWJi+icrg9qC+gTyv8//A3j8eVfFeyflJLeOK+zLp?=
+ =?us-ascii?Q?yMGOgBC/UT9tJtmyYX9wILTf3aIVANTC4INZCNGuim/M5v7pPcUoYZqBRxar?=
+ =?us-ascii?Q?Aq5JYgtLLF83VEWBXqIWhTafXsz8uZrZFzIGERz79gFn0M8MsqRboQswtNhP?=
+ =?us-ascii?Q?TPzdT+oD4t7+69VwP9ybLGOj2MIHGfUBu84shAB65r3Uoz0TjmnS40RKfPLq?=
+ =?us-ascii?Q?WaUli35nbLyIt2lJGNzkBp1si1zNmfuWkt5yIfLyGdlUra5OxVLOK9yUTy+r?=
+ =?us-ascii?Q?t1mtAMe/ta6HAPDXZtIZ74FXSVHJtBONicOwyDRbG8y0t/UQyCntmH5+osQ7?=
+ =?us-ascii?Q?Q2Ii8I2ofSZUzJbSUGTAtXFWgz67r5HgMm30F5jVORYic3xBqlXgW6HQP7ia?=
+ =?us-ascii?Q?7MjrL/Qb/8GhfTWRsInMtFanGf9Q/UklVUvLI2sVHdaGt92ZjFC5b+LogBJX?=
+ =?us-ascii?Q?5Q=3D=3D?=
+X-OriginatorOrg: memverge.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce2f5ab2-42cc-416c-27d8-08dc06f2656e
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Dec 2023 15:36:38.8582
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Dec 2023 15:42:13.5523
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4Imd92t4sHfLbxLT2x17Mj8N2DjcVeiDOnI0aXZlZfH5FSU/ri78VuOONu2yFCSMXHqcSXV9P9bdtihHSRNKBw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR10MB7976
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-27_10,2023-12-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 mlxlogscore=940
- bulkscore=0 adultscore=0 phishscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2312270114
-X-Proofpoint-ORIG-GUID: dInAuHTnf_ZfJj-qPz14K3-WAKE2TXC7
-X-Proofpoint-GUID: dInAuHTnf_ZfJj-qPz14K3-WAKE2TXC7
+X-MS-Exchange-CrossTenant-UserPrincipalName: J2PzBkEhcMNspzWJW55h0AcnfFx2sbMgw6jSzlJ0VPWP4j+cyeeTBvi+VQ31xx/4FPEsFzpv6PVyw1ACbyr3bOdpGx+Q4LubBWE7wkVh7AI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR17MB6577
 
-On Tue, Dec 26, 2023 at 05:01:05PM +0800, alexious@zju.edu.cn wrote:
-> > On Sun, Dec 24, 2023 at 04:20:33PM +0800, Zhipeng Lu wrote:
-> > > The ctx->mech_used.data allocated by kmemdup is not freed in neither
-> > > gss_import_v2_context nor it only caller radeon_driver_open_kms.
-> > > Thus, this patch reform the last call of gss_import_v2_context to the
-> > > gss_krb5_import_ctx_v2, preventing the memleak while keepping the return
-> > > formation.
-> > > 
-> > > Fixes: 47d848077629 ("gss_krb5: handle new context format from gssd")
-> > > Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
-> > > ---
-> > >  net/sunrpc/auth_gss/gss_krb5_mech.c | 9 ++++++++-
-> > >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/net/sunrpc/auth_gss/gss_krb5_mech.c b/net/sunrpc/auth_gss/gss_krb5_mech.c
-> > > index e31cfdf7eadc..1e54bd63e3f0 100644
-> > > --- a/net/sunrpc/auth_gss/gss_krb5_mech.c
-> > > +++ b/net/sunrpc/auth_gss/gss_krb5_mech.c
-> > > @@ -398,6 +398,7 @@ gss_import_v2_context(const void *p, const void *end, struct krb5_ctx *ctx,
-> > >  	u64 seq_send64;
-> > >  	int keylen;
-> > >  	u32 time32;
-> > > +	int ret;
-> > >  
-> > >  	p = simple_get_bytes(p, end, &ctx->flags, sizeof(ctx->flags));
-> > >  	if (IS_ERR(p))
-> > > @@ -450,8 +451,14 @@ gss_import_v2_context(const void *p, const void *end, struct krb5_ctx *ctx,
-> > >  	}
-> > >  	ctx->mech_used.len = gss_kerberos_mech.gm_oid.len;
-> > >  
-> > > -	return gss_krb5_import_ctx_v2(ctx, gfp_mask);
-> > > +	ret = gss_krb5_import_ctx_v2(ctx, gfp_mask);
-> > > +	if (ret) {
-> > > +		p = ERR_PTR(ret);
-> > > +		goto out_free;
-> > > +	};
-> > >  
-> > > +out_free:
-> > > +	kfree(ctx->mech_used.data);
-> > 
-> > If the caller's error flow does not invoke
-> > gss_krb5_delete_sec_context(), then I would expect more than just
-> > mech_used.data would be leaked. What if, instead, you changed
-> > gss_krb5_import_sec_context() like this (untested):
-> > 
-> > 471         ret = gss_import_v2_context(p, end, ctx, gfp_mask);
-> > 472         memzero_explicit(&ctx->Ksess, sizeof(ctx->Ksess));
-> > 473         if (ret) {      
-> >    -                kfree(ctx);                      
-> >    +                gss_krb5_delete_sec_context(ctx);
-> > 475                 return ret;
-> > 476         }    
-> > 
-> > Obviously you would need to add a forward declaration of
-> > gss_krb5_import_sec_context() to make this compile. The question
-> > is whether gss_krb5_delete_sec_context() will deal with a partially-
-> > initialized @ctx.
+On Wed, Dec 27, 2023 at 04:32:37PM +0800, Huang, Ying wrote:
+> Gregory Price <gourry.memverge@gmail.com> writes:
 > 
-> Since the ctx is allocated just in gss_krb5_import_sec_context, 
-> together with that all of gss_krb5_import_sec_context, gss_import_v2_context(with this patch)
-> and gss_krb5_import_ctx_v2 are allocation-free balanced. It seems that we don't need to 
-> release anything else by invoking gss_krb5_delete_sec_context.
+> > +static unsigned int weighted_interleave_nid(struct mempolicy *pol, pgoff_t ilx)
+> > +{
+> > +	nodemask_t nodemask = pol->nodes;
+> > +	unsigned int target, weight_total = 0;
+> > +	int nid;
+> > +	unsigned char weights[MAX_NUMNODES];
 > 
-> If I miss something leaked, please let me know.
-
-I see, if gss_krb5_import_ctx_v2() fails, it releases the ciphers
-and hashes via out_free. So no leak there.
-
-A nicer approach would be to handle that clean up in
-gss_krb5_import_sec_context(): less code duplication.
-
-But you're right, it's not broken today.
-
-
-> > How did you find this leak, and what kind of testing was done to
-> > confirm the fix is safe?
+> MAX_NUMNODSE could be as large as 1024.  1KB stack space may be too
+> large?
 > 
-> I found this memleak by static analysis. 
-> The safety issue can't be solved by automatic tools as far as I know.
-> So I check patches manuelly before sending patches.
 
-Can you give some details about how you check the patches?
+I've been struggling with a good solution to this.  We need a local copy
+of weights to prevent weights from changing out from under us during
+allocation (which may take quite some time), but it seemed unwise to
+to allocate 1KB heap in this particular path.
 
+Is my concern unfounded?  If so, I can go ahead and add the allocation
+code.
 
--- 
-Chuck Lever
+> > +	unsigned char weight;
+> > +
+> > +	barrier();
+> 
+> Memory barrier needs comments.
+> 
+
+Barrier is to stabilize nodemask on the stack, but yes i'll carry the
+comment from interleave_nid into this barrier as well.
+
+> > +
+> > +	/* first ensure we have a valid nodemask */
+> > +	nid = first_node(nodemask);
+> > +	if (nid == MAX_NUMNODES)
+> > +		return nid;
+> 
+> It appears that this isn't necessary, because we can check whether
+> weight_total == 0 after the next loop.
+> 
+
+fair, will snip.
+
+> > +
+> > +	/* Then collect weights on stack and calculate totals */
+> > +	for_each_node_mask(nid, nodemask) {
+> > +		weight = iw_table[nid];
+> > +		weight_total += weight;
+> > +		weights[nid] = weight;
+> > +	}
+> > +
+> > +	/* Finally, calculate the node offset based on totals */
+> > +	target = (unsigned int)ilx % weight_total;
+> 
+> Why use type casting?
+> 
+
+Artifact of old prototypes, snipped.
+
+> > +
+> > +	/* Stabilize the nodemask on the stack */
+> > +	barrier();
+> 
+> I don't think barrier() is needed to wait for memory operations for
+> stack.  It's usually used for cross-processor memory order.
+>
+
+This is present in the old interleave code.  To the best of my
+understanding, the concern is for mempolicy->nodemask rebinding that can
+occur when cgroups.cpusets.mems_allowed changes.
+
+so we can't iterate over (mempolicy->nodemask), we have to take a local
+copy.
+
+My *best* understanding of the barrier here is to prevent the compiler
+from reordering operations such that it attempts to optimize out the
+local copy (or do lazy-fetch).
+
+It is present in the original interleave code, so I pulled it forward to
+this, but I have not tested whether this is a bit paranoid or not.
+
+from `interleave_nid`:
+
+ /*
+  * The barrier will stabilize the nodemask in a register or on
+  * the stack so that it will stop changing under the code.
+  *
+  * Between first_node() and next_node(), pol->nodes could be changed
+  * by other threads. So we put pol->nodes in a local stack.
+  */
+ barrier();
+
+> > +		/* Otherwise we adjust nr_pages down, and continue from there */
+> > +		rem_pages -= pol->wil.cur_weight;
+> > +		pol->wil.cur_weight = 0;
+> > +		prev_node = node;
+> 
+> If pol->wil.cur_weight == 0, prev_node will be used without being
+> initialized below.
+> 
+
+pol->wil.cur_weight is not used below.
+
+> > +	}
+> > +
+> > +	/* Now we can continue allocating as if from 0 instead of an offset */
+> > +	rounds = rem_pages / weight_total;
+> > +	delta = rem_pages % weight_total;
+> > +	for (i = 0; i < nnodes; i++) {
+> > +		node = next_node_in(prev_node, nodes);
+> > +		weight = weights[node];
+> > +		node_pages = weight * rounds;
+> > +		if (delta) {
+> > +			if (delta > weight) {
+> > +				node_pages += weight;
+> > +				delta -= weight;
+> > +			} else {
+> > +				node_pages += delta;
+> > +				delta = 0;
+> > +			}
+> > +		}
+> > +		/* We may not make it all the way around */
+> > +		if (!node_pages)
+> > +			break;
+> > +		/* If an over-allocation would occur, floor it */
+> > +		if (node_pages + total_allocated > nr_pages) {
+> 
+> Why is this possible?
+> 
+
+this may have been a paranoid artifact from an early prototype, will
+snip and validate.
+
+~Gregory
