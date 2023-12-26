@@ -1,125 +1,67 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B574F880
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 17:27:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDE14F88A
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 17:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="NANZXvQs"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4277e7146abso42815991cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 09:27:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1703611624; x=1704216424; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qF6xW1bdeiaI+KNkFjHq71eA86SN7AHEznnIaUPRnMI=;
-        b=NANZXvQs76I4zfIEF/R/Gv4JxV+OmPnaFxBTbtf4hRuJ57nKFXpVMmMBLf+3/lri1U
-         M2leRqU+B9ICxcaFWlc0oClARdpEr9Y4NDGxzMnB313EoyHQ4BOaqAFqr6jGh9tFO0Qf
-         3agpfcgIl1y5J834dQO0w7OdSAdMnOO+1BW+1DN1XExLnQ1786VaCa2Tgh80/Db6gqvO
-         w9bayRvvJuRDQI+C5UVnIOnFxmRtz8nASIMFQzB/zRCYbFw8K7+J8MGGxnlPsrr8dffS
-         rxyXRZ8V0joY2TsPfOWzW4UaPtxAeRNmWj0J/9j6wwEepwtRserDEnny+tibIuV3G7IN
-         /4MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703611624; x=1704216424;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qF6xW1bdeiaI+KNkFjHq71eA86SN7AHEznnIaUPRnMI=;
-        b=PrWFvZEI8EnLnvRwCE/avO4oPvu25H9iAjRYcC5UZbqIbzED1Ukoiit3Jzp4ZD5g26
-         qc3LtGq7n5F6N5NjKa/5as0xklz8R3+q0iQTEgGfwpmKKPMVDzfrgJEeA0KaQhJNcYuq
-         0iKc9XcKgdxMdpVi+34FEaicmQ7s7UpDrJNQ692ahyQ4LOmg6ExcEO4ac0MHG4WA5kr+
-         zera9eFtzODe+9eVcffUndDoDgcQLMyjd3DAEgOCNLFrmFK28xLXg9TJGu5yHijqYn09
-         zTlauqGRqwlv74Fdf33B30qhwE/vT/CAdpsCH/r8CxMvlDcWQoDy3SfUYtkRKJWXhT/K
-         VNGw==
-X-Gm-Message-State: AOJu0Ywr5rbh+nx3aeO8Egbjdn1aghHSmUJMGv6+cNhHIm5wFxxhlKts
-	iWPumG2tQecMLEH9p9PsOzDDizEbkgahk1Nktn45cUJr1WPwBA==
-X-Google-Smtp-Source: AGHT+IH6JuPA8UpnDuV4pxNWx2qfVnI+AAQgcgG4cJ+LVKws3skpVkqpE1GlHsFAzqe0zp/iS42nIMznuVlXnxn82Uk=
-X-Received: by 2002:a05:622a:11d1:b0:427:a316:a26a with SMTP id
- n17-20020a05622a11d100b00427a316a26amr11771992qtk.69.1703611624440; Tue, 26
- Dec 2023 09:27:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="f6UTDfbs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:Subject:From:Cc:To:
+	In-Reply-To:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=qvwULKpW9AEQXDAvZ1gmJ02oIqJTvUgecJ2rclE5OwM=; b=f6UTDfbsqtgs1Ev0cLQUG2TDxK
+	8K61gLHlVnKoRueYgujdK5JQvXiO6W6VmhDutsaPiTxS1aT74V81/5ufK4Bd/hHxeYq2cAGo/mu/r
+	5bvRSESR3xqB979V4tz48V1XhWXQE6tJVEIM91ywz/XH6HhomxiZBTTMVXfJPQr/O95YL+EFDIsqo
+	Ym2HJIINWhEqEGkZIbhHvl7hr5W0eExqv5H0b5i5CjB8+o1IjDwmTq+Gg8mmxsH2KiG+1X7l/44MP
+	l4I+fpx2CZCkT0ExSMG889TXcROTl5xjXd9vuXxs3XUFpgVrd+DW4aNm5zVyCCBIOn7XA/9JpTX6H
+	fO71d3Qw==;
+Received: from [177.68.247.242] (helo=[192.168.1.60])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1rIAkK-000cMN-T4; Tue, 26 Dec 2023 17:57:37 +0100
+Message-ID: <1c54063e-8ad2-5be3-85fe-519f5a944d20@igalia.com>
+Date: Tue, 26 Dec 2023 13:57:30 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231211154644.4103495-1-pasha.tatashin@soleen.com>
- <3d415ab4-e8c7-7e72-0379-952370612bdd@google.com> <CA+CK2bA2vZp3e+HHfB-sdLsPUYghMxvKcWURktDtNjwPL79Csw@mail.gmail.com>
- <b1049bfa-68c4-e237-30a9-1514a378c7f1@google.com>
-In-Reply-To: <b1049bfa-68c4-e237-30a9-1514a378c7f1@google.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Tue, 26 Dec 2023 12:26:27 -0500
-Message-ID: <CA+CK2bBxbvO-osm5XKk4VkaXYgfZXkDAtfayaYJ-vXo=QFqGPA@mail.gmail.com>
-Subject: Re: [PATCH] vmstat: don't auto expand the sysfs files
-To: David Rientjes <rientjes@google.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, akpm@linux-foundation.org, 
-	surenb@google.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	souravpanda@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Content-Language: en-US
+In-Reply-To: <9bfb4c4bd1415a8ce527a913730672508a8e8330.camel@perches.com>
+To: Steven Rostedt <rostedt@goodmis.org>, joe@perches.com,
+ vincent.whitchurch@axis.com
+Cc: jbaron@akamai.com, Ingo Molnar <mingo@redhat.com>, drinkcat@chromium.org,
+ kernel@axis.com, "corbet@lwn.net" <corbet@lwn.net>,
+ Petr Mladek <pmladek@suse.com>, sergey.senozhatsky@gmail.com,
+ john.ogness@linutronix.de, linux-kernel <linux-kernel@vger.kernel.org>,
+ gpiccoli@igalia.com
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Subject: Re: Re: [PATCH v3 2/2] dynamic debug: allow printing to trace event
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Dec 24, 2023 at 4:26=E2=80=AFPM David Rientjes <rientjes@google.com=
-> wrote:
->
-> On Thu, 14 Dec 2023, Pasha Tatashin wrote:
->
-> > > > Whenever a new fields are added one of the following: node_stat_ite=
-m
-> > > > numa_stat_item zone_stat_item, the /sys/devices/system/node/nodeX/v=
-mstat
-> > > > files are auto expanded.
-> > > >
-> > > > This is a problem, as sysfs files should be only one value per file=
-.
-> > >
-> > > Does this patch address the one-value-per-file issue?  (I think that =
-ship
-> > > has sailed for vmstat.)
-> >
-> > That ship has sailed for vmstat, this patch addresses what was asked
-> > by GregKH: not to add new values to vmstat, as not to make the
-> > existing problem even worse. The sysfs file system has a one page
-> > limit per file. The developers will decide how to export the new items
-> > added to node_stat, numa_stat, zone_stat individually. Each new item
-> > can be exported in its own files, and must have its own documentation
-> > about interface stability, value meaning, and expectations when the
-> > stat file is absent.
-> >
->
-> As of at least 6.5, /proc/vmstat is a strict superset of the per-node
-> vmstat.  Why is that a problem?
+[First of all, apologies for necro'ing this thread - for those that
+somehow deleted the full thread of their clients, here is the link:
+https://lore.kernel.org/lkml/20200825153338.17061-1-vincent.whitchurch@axis.com/]
 
-The intent of this series is to stop auto expanding
-/sys/devices/system/node/nodeX/vmstat as sysfs should only be one
-value per file, and the task is not to make things worse. /proc/vmstat
-is mostly ok, however we might not need to auto expand it as well, to
-avoid situations where removing a field becomes a problem, and we have
-to keep it in the file forever, like what we do with nr_unstable.
+So, I would like to reopen this discussion. Is there any reason this
+feature wasn't merged Joe? Can we improve something in order to get it
+into mainline?
 
-> There's great benefit to being able to use the sample implementations to
-> parse either /proc/vmstat *or* the per-node vmstat and without needing to
-> read the per-node vmstat plus some new set of sysfs files that are
-> one-value-per-file.  The per-node vmstat will always be multiple values,
-> in fact it's a key value pair.
+I'm saying that 'cause I almost implemented this myself here, I have the
+same use case as Vicent's - but thankfully, I searched before and he
+already implemented that. As per my understanding, there was no
+objection from Steven, right?
 
-Yes, but that file is already large, and soon can overflow a page
-size, instead of converting it to a binary format, let's add new items
-as one item per-file.
+Thanks in advance! And happy holidays =)
+Cheers,
 
-> I have to think that doing anything else for vmstat is just adding
-> complexity (like this patch) and actually making it *harder* on userspace
-> to read the data it needs.
->
-> Yes, the per-node vmstat likely shouldn't be in sysfs at all but it
-> appears to have been added there 13+ years ago because it was a convenien=
-t
-> place to add a per-node variant.  That's not ideal, but owell.
 
-It is up-to GregKH who requested this change. Greg, specifically
-requested not to add new fields into per-node vmstat, and we are
-adding new fields with per-page metadata series, and IOMMU accounting
-series as these files are auto-expanded without this series.
-
-Pasha
+Guilherme
