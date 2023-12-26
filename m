@@ -1,106 +1,85 @@
-Received: from riemann.telenet-ops.be (riemann.telenet-ops.be [195.130.137.80])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB874E1C6
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 11:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
-	by riemann.telenet-ops.be (Postfix) with ESMTPS id 4Szszj2lrmz4x94y
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 12:31:29 +0100 (CET)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:9b4b:afc4:afcc:abac])
-	by andre.telenet-ops.be with bizsmtp
-	id SzXL2B0092KswmB01zXLCU; Tue, 26 Dec 2023 12:31:22 +0100
-Received: from geert (helo=localhost)
-	by ramsan.of.borg with local-esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rI5ea-00DRWR-Fl;
-	Tue, 26 Dec 2023 12:31:20 +0100
-Date: Tue, 26 Dec 2023 12:31:20 +0100 (CET)
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-To: Jie Wang <jie.wang@intel.com>
-cc: herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org, 
-    qat-linux@intel.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] crypto: qat - add support for 420xx devices
-In-Reply-To: <20231215100147.1703641-6-jie.wang@intel.com>
-Message-ID: <c6662ee1-9c2a-49fb-917f-2a3586f636b4@linux-m68k.org>
-References: <20231215100147.1703641-1-jie.wang@intel.com> <20231215100147.1703641-6-jie.wang@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A798D4CE18;
+	Tue, 26 Dec 2023 11:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W3MC5N9y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC86FC433C8;
+	Tue, 26 Dec 2023 11:38:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703590741;
+	bh=MX3UBJgXM8lU6r9sZry71NogLPti+4Vn4Dz7Ag2mntw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=W3MC5N9y4YzONV9v0TyhYpCR1aSRJdSoygocJE7bFIA2aTSBCC6QJGPnQBEUQEZSu
+	 nA2vW7p+aIk4gTX2zT8/csS9f4RTormMRUxi6PxYnT1mPAubDC/6e4+twmp1kc4ysE
+	 bLgksSvuh6Dv/SwCoLnQ/Kb9Is9McoVnax30x39RDDS+BorwKpfIs70wM/7rLZ1oHh
+	 ZbOlYXEPtPvryY2U9SZWaE8vLhgE/3csGSNw8E514zngSWGVpSw6R1KnE63BltuoTn
+	 JpqVM7mlgthDFqM7XkPkFla8wT6iGoPYOzOcV5s8hyxNrVoCW0IAPJWAdHkQS3RnU5
+	 in7qcgdBrOZig==
+Received: (nullmailer pid 2315537 invoked by uid 1000);
+	Tue, 26 Dec 2023 11:38:58 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-447575269-1703590280=:3203928"
+From: Rob Herring <robh@kernel.org>
+To: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+Cc: inochiama@outlook.com, aou@eecs.berkeley.edu, conor@kernel.org, linux-rtc@vger.kernel.org, chao.wei@sophgo.com, krzysztof.kozlowski+dt@linaro.org, unicorn_wang@outlook.com, linux-kernel@vger.kernel.org, palmer@dabbelt.com, conor+dt@kernel.org, a.zummo@towertech.it, dlan@gentoo.org, paul.walmsley@sifive.com, alexandre.belloni@bootlin.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20231226100431.331616-2-qiujingbao.dlmu@gmail.com>
+References: <20231226100431.331616-1-qiujingbao.dlmu@gmail.com>
+ <20231226100431.331616-2-qiujingbao.dlmu@gmail.com>
+Message-Id: <170359073827.2315471.1581188151554847748.robh@kernel.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: mfd: sophgo: add MFD subsys
+ support for Sophgo CV1800 series SoC
+Date: Tue, 26 Dec 2023 05:38:58 -0600
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323329-447575269-1703590280=:3203928
-Content-Type: text/plain; charset=ISO-8859-15; format=flowed
-Content-Transfer-Encoding: 8BIT
+On Tue, 26 Dec 2023 18:04:28 +0800, Jingbao Qiu wrote:
+> Add devicetree binding for Sophgo CV1800 SoC MFD subsys.
+> 
+> Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+> ---
+>  .../bindings/mfd/sophgo,cv1800-subsys.yaml    | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/sophgo,cv1800-subsys.yaml
+> 
 
- 	Hi Jie,
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-On Fri, 15 Dec 2023, Jie Wang wrote:
-> Add support for 420xx devices by including a new device driver that
-> supports such devices, updates to the firmware loader and capabilities.
->
-> Compared to 4xxx devices, 420xx devices have more acceleration engines
-> (16 service engines and 1 admin) and support the wireless cipher
-> algorithms ZUC and Snow 3G.
->
-> Signed-off-by: Jie Wang <jie.wang@intel.com>
-> Co-developed-by: Dong Xie <dong.xie@intel.com>
-> Signed-off-by: Dong Xie <dong.xie@intel.com>
-> Reviewed-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+yamllint warnings/errors:
 
-Thanks for your patch, which is now commit fcf60f4bcf54952c ("crypto:
-qat - add support for 420xx devices") in crypto/master
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/sophgo,cv1800-subsys.yaml:
+Error in referenced schema matching $id: http://devicetree.org/schemas/rtc/sophgo,cv1800-rtc.yaml
+Documentation/devicetree/bindings/mfd/sophgo,cv1800-subsys.example.dts:25:18: fatal error: dt-bindings/clock/sophgo,cv1800.h: No such file or directory
+   25 |         #include <dt-bindings/clock/sophgo,cv1800.h>
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[2]: *** [scripts/Makefile.lib:419: Documentation/devicetree/bindings/mfd/sophgo,cv1800-subsys.example.dtb] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1424: dt_binding_check] Error 2
+make: *** [Makefile:234: __sub-make] Error 2
 
-> --- a/drivers/crypto/intel/qat/Kconfig
-> +++ b/drivers/crypto/intel/qat/Kconfig
-> @@ -59,6 +59,17 @@ config CRYPTO_DEV_QAT_4XXX
-> 	  To compile this as a module, choose M here: the module
-> 	  will be called qat_4xxx.
->
-> +config CRYPTO_DEV_QAT_420XX
-> +	tristate "Support for Intel(R) QAT_420XX"
-> +	depends on PCI && (!CPU_BIG_ENDIAN || COMPILE_TEST)
+doc reference errors (make refcheckdocs):
 
-These dependencies suggest that the QAT_420XX device can be present and
-used on any little-endian system that supports PCIe (arm64, MIPS,
-PowerPC, RISC-V, ...).
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20231226100431.331616-2-qiujingbao.dlmu@gmail.com
 
-However, [1] says QAT is only present on intel Atom® C5000, P5300, and
-P5700 processors, implying the dependency should rather be
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-     depends on PCI && (X86_64 || COMPILE_TEST)
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-Which one is correct?
+pip3 install dtschema --upgrade
 
-[1] https://www.intel.com/content/www/us/en/architecture-and-technology/intel-quick-assist-technology-overview.html
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
-> +	select CRYPTO_DEV_QAT
-> +	help
-> +	  Support for Intel(R) QuickAssist Technology QAT_420xx
-> +	  for accelerating crypto and compression workloads.
-> +
-> +	  To compile this as a module, choose M here: the module
-> +	  will be called qat_420xx.
-> +
-> config CRYPTO_DEV_QAT_DH895xCCVF
-> 	tristate "Support for Intel(R) DH895xCC Virtual Function"
-> 	depends on PCI && (!CPU_BIG_ENDIAN || COMPILE_TEST)
-
-Gr{oetje,eeting}s,
-
- 						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
- 							    -- Linus Torvalds
---8323329-447575269-1703590280=:3203928--
