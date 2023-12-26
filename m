@@ -1,108 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36146442E;
-	Tue, 26 Dec 2023 19:40:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9AD4C67;
+	Tue, 26 Dec 2023 19:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RFu/e+JW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4920C433C8;
-	Tue, 26 Dec 2023 19:40:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703619607;
-	bh=VdzXZVqMOKGhvwNwMXvswZIyJ8DA6T8nwMQ7xFwsHv4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=RFu/e+JWiObWOJx9KIZT9o9FClFdgV0+lxK7WI5/6askgSyKlVXfPq82Z+l0qVBla
-	 Dt9YcYriIiinnT8WZ/fzus6zssV4lOTy5/ZLJYRdmcq2GxE0yPBFylpTWrRyM8UBiX
-	 Hu1DEtkzxta7nQP0bytHqipuOb+T1nP9cMS7kCLzz08uWYjGAkhlWDCkzAnc+AIQl2
-	 J2YIER106f4hyLrKHm8off+pz1t8FVQJbUXTs+9dQ9burMY2G2A21sssz94b7StHne
-	 avXwDiRFLJcdm9vbmcdLPK4NVN/Ez2DwNSKBf4AD/wDOMqGNpTMPN/5OHoY0Q2pvJf
-	 RCNanfgfvF+vw==
-Received: (nullmailer pid 2887138 invoked by uid 1000);
-	Tue, 26 Dec 2023 19:40:03 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ztqRwRly"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=9U5copr9xDoJG160dopatrz4QWoLK4jdJ0iC5TUWcmE=; b=ztqRwRlybhDpub6IodCHbbzPi6
+	qy3cy2/4BA6/kQXhUwl0foKUgdQsutlj/fWmfRjW+GdY6mKD7Jl4ttVHRJnoN2K9lsfmOo2Ga0wfL
+	U3DwCwgEE5VNXSVsEEc4IY9q7+fnnHmBCUbvyR9Wh9TUD8IbtwU1bzK3yGNxOhfZww8Oie1zxlJgv
+	5hWLFX8kSwFo8cTbdNv3F78SjD4D2gGHwnbwDC3GpZOGZy/VC91sl8p9+i7BvVPFuKKkOvRJk0J8O
+	CiGBV0M497hCwIE1o+oVlVWfLLky1Pu+CZghVtuYIElgEczEJ3MsbFVNOj9SrtpYKN+HgPQhyKlaI
+	w7KIhhlw==;
+Received: from [50.53.46.231] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rIDKK-00DST5-1d;
+	Tue, 26 Dec 2023 19:42:56 +0000
+Message-ID: <92cedbf6-0313-4ff7-96a7-ddd40506b82e@infradead.org>
+Date: Tue, 26 Dec 2023 11:42:54 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Josua Mayer <josua@solid-run.com>
-Cc: Gregory Clement <gregory.clement@bootlin.com>, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, linux-arm-kernel@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
-In-Reply-To: <20231226-support-clearfog-gtr-l8-sfp-v3-3-fd1ac2d6bf2e@solid-run.com>
-References: <20231226-support-clearfog-gtr-l8-sfp-v3-0-fd1ac2d6bf2e@solid-run.com>
- <20231226-support-clearfog-gtr-l8-sfp-v3-3-fd1ac2d6bf2e@solid-run.com>
-Message-Id: <170361960357.2887119.16192958166206698998.robh@kernel.org>
-Subject: Re: [PATCH v3 3/8] dt-bindings: marvell: a38x: add solidrun armada
- 388 clearfog boards
-Date: Tue, 26 Dec 2023 13:40:03 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] ring-buffer/Documentation: Add documentation on
+ buffer_percent file
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+References: <20231226130149.4685c838@gandalf.local.home>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20231226130149.4685c838@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-On Tue, 26 Dec 2023 19:11:34 +0100, Josua Mayer wrote:
-> Add DT compatible for SolidRun Armada-388 based Clearfog Base and Pro
-> boards, which are already in place in-tree.
+
+On 12/26/23 10:01, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> There are already 3 distinct dts in tree for these *two* boards,
-> declaring particular compatible strings:
-> - armada-388-clearfog.dts:
->   compatible = "solidrun,clearfog-a1", "marvell,armada388",
->                "marvell,armada385, "marvell,armada380";
-> - armada-388-clearfog-base.dts:
->   compatible = "solidrun,clearfog-base-a1", "solidrun,clearfog-a1",
->                "marvell,armada388", "marvell,armada385,
->                "marvell,armada380";
-> - armada-388-clearfog-pro.dts:
->   compatible = "solidrun,clearfog-base-a1", "solidrun,clearfog-a1",
->                "marvell,armada388", "marvell,armada385,
->                "marvell,armada380";
+> When the buffer_percent file was added to the kernel, the documentation
+> should have been updated to document what that file does.
 > 
-> This has historic reasons, the first entry is a legacy name for the
-> "pro" version, old versions of u-boot built when only one variant
-> existed explicitly boot by this name.
-> 
-> Note that both compatibles and model field include the string "A1".
-> At least up to revision 2.0 of the board, this had been printed
-> on the pcb. However in marketing material and conversations it is
-> usually omitted. "Clearfog Pro" and "Clearfog Pro A1" always mean
-> exactly the same product.
-> 
-> Technically Base and Pro variants are similar enough that they can
-> successfully boot with each other's dts. Hence it makes (some)
-> sense for them to share the "clearfog-a1" compatible.
-> 
-> Add bindings for the explicit variants including base / pro suffix.
-> The legacy "armada-388-clearfog.dts" is not supported by these
-> bindings" as it does not make sense having two bindings for one board.
-> 
-> Signed-off-by: Josua Mayer <josua@solid-run.com>
+> Fixes: 03329f9939781 ("tracing: Add tracefs file buffer_percentage")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->  .../devicetree/bindings/arm/marvell/armada-38x.yaml          | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+> Changes since v1: https://lore.kernel.org/all/20231226123525.71a6d0fb@gandalf.local.home/
 > 
+> - Fixed some grammar issues.
+> 
+>  Documentation/trace/ftrace.rst | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+> index 933e7efb9f1b..84b810a6cf76 100644
+> --- a/Documentation/trace/ftrace.rst
+> +++ b/Documentation/trace/ftrace.rst
+> @@ -180,6 +180,21 @@ of ftrace. Here is a list of some of the key files:
+>  	Only active when the file contains a number greater than 0.
+>  	(in microseconds)
+>  
+> +  buffer_percent:
+> +
+> +	This is the water-mark for how much the ring buffer needs to be filled
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+                    watermark
+please
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/arm/marvell/armada-38x.yaml:46:14: [warning] wrong indentation: expected 14 but found 13 (indentation)
+> +	before a waiter is woken up. That is, if an application calls a
+> +	blocking read syscall on one of the per_cpu trace_pipe_raw files, it
+> +	will block until the given amount of data specified by buffer_percent
+> +	is in the ring buffer before it wakes the reader up. This also
+> +	controls how the splice system calls are blocked on this file.
+> +
+> +	0   - means to wake up as soon as there is any data in the ring buffer.
+> +	50  - means to wake up when roughly half of the ring buffer sub-buffers
+> +	      are full.
+> +	100 - means to block until the ring buffer is totally full and is
+> +	      about to start overwriting the older data.
+> +
+>    buffer_size_kb:
+>  
+>  	This sets or displays the number of kilobytes each CPU
 
-dtschema/dtc warnings/errors:
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20231226-support-clearfog-gtr-l8-sfp-v3-3-fd1ac2d6bf2e@solid-run.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+-- 
+#Randy
+https://people.kernel.org/tglx/notes-about-netiquette
+https://subspace.kernel.org/etiquette.html
