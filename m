@@ -1,145 +1,125 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB8C4F892
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 17:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B574F880
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 17:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vbjh+6Jg"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20231226172244epoutp04975420c38f9101facdfcea05fc4a23d0~kcYKDAs-B2152621526epoutp04h
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 17:22:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20231226172244epoutp04975420c38f9101facdfcea05fc4a23d0~kcYKDAs-B2152621526epoutp04h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1703611364;
-	bh=aaKnFjErDRwPo8xwraoeFxPD1Aq9gkcKBsNh5h9LLCM=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=vbjh+6Jgt/PQcJl7p30N2Oj6+xIlQcGLxpUTAeqbjhFiCxCNDMjSrB993D8iFuLZ2
-	 Pg0KHMCgMnqVgIMD+dv1LsVWmE7AjzW8pO+A4z98kdezqi8Gw8F0j/oQASVBap41bv
-	 wLkX+/D+Ab4GQEoAH9uq+SCC+S61vSJwgjmbOJvI=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20231226172243epcas5p4e7158081ccb8296a8c5ea88215061f21~kcYJiZXj12557625576epcas5p43;
-	Tue, 26 Dec 2023 17:22:43 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.177]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4T01my28X9z4x9Pp; Tue, 26 Dec
-	2023 17:22:42 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	7F.BF.10009.2EB0B856; Wed, 27 Dec 2023 02:22:42 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20231226165709epcas5p4294e1ad972e355d0a4bab6d2593a8c2e~kcB085LaY1187911879epcas5p4H;
-	Tue, 26 Dec 2023 16:57:09 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20231226165709epsmtrp13d63feb8ab858af68ae549208503adb8~kcB0723PF1935419354epsmtrp1I;
-	Tue, 26 Dec 2023 16:57:09 +0000 (GMT)
-X-AuditID: b6c32a4a-261fd70000002719-d9-658b0be2c75d
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	55.0D.18939.5E50B856; Wed, 27 Dec 2023 01:57:09 +0900 (KST)
-Received: from FDSFTE353 (unknown [107.122.81.138]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20231226165707epsmtip24e332aa274a047d0aa8963be24c3e8f9~kcBy7iRSy1432914329epsmtip2k;
-	Tue, 26 Dec 2023 16:57:07 +0000 (GMT)
-From: "Varada Pavani" <v.pavani@samsung.com>
-To: "'Krzysztof Kozlowski'" <krzysztof.kozlowski@linaro.org>,
-	<mturquette@baylibre.com>, <sboyd@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <s.nawrocki@samsung.com>,
-	<tomasz.figa@gmail.com>
-Cc: <linux-samsung-soc@vger.kernel.org>, <alim.akhtar@samsung.com>,
-	<aswani.reddy@samsung.com>, <pankaj.dubey@samsung.com>
-In-Reply-To: <cb9a6bd4-6c99-4409-9cc7-73b600eb8fce@linaro.org>
-Subject: RE: [PATCH 1/2] dt-bindings: clock: Fix spelling mistake in
- 'tesla,fsd-clock.yaml'
-Date: Tue, 26 Dec 2023 22:27:06 +0530
-Message-ID: <003d01da381c$908906f0$b19b14d0$@samsung.com>
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="NANZXvQs"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4277e7146abso42815991cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 09:27:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1703611624; x=1704216424; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qF6xW1bdeiaI+KNkFjHq71eA86SN7AHEznnIaUPRnMI=;
+        b=NANZXvQs76I4zfIEF/R/Gv4JxV+OmPnaFxBTbtf4hRuJ57nKFXpVMmMBLf+3/lri1U
+         M2leRqU+B9ICxcaFWlc0oClARdpEr9Y4NDGxzMnB313EoyHQ4BOaqAFqr6jGh9tFO0Qf
+         3agpfcgIl1y5J834dQO0w7OdSAdMnOO+1BW+1DN1XExLnQ1786VaCa2Tgh80/Db6gqvO
+         w9bayRvvJuRDQI+C5UVnIOnFxmRtz8nASIMFQzB/zRCYbFw8K7+J8MGGxnlPsrr8dffS
+         rxyXRZ8V0joY2TsPfOWzW4UaPtxAeRNmWj0J/9j6wwEepwtRserDEnny+tibIuV3G7IN
+         /4MQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703611624; x=1704216424;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qF6xW1bdeiaI+KNkFjHq71eA86SN7AHEznnIaUPRnMI=;
+        b=PrWFvZEI8EnLnvRwCE/avO4oPvu25H9iAjRYcC5UZbqIbzED1Ukoiit3Jzp4ZD5g26
+         qc3LtGq7n5F6N5NjKa/5as0xklz8R3+q0iQTEgGfwpmKKPMVDzfrgJEeA0KaQhJNcYuq
+         0iKc9XcKgdxMdpVi+34FEaicmQ7s7UpDrJNQ692ahyQ4LOmg6ExcEO4ac0MHG4WA5kr+
+         zera9eFtzODe+9eVcffUndDoDgcQLMyjd3DAEgOCNLFrmFK28xLXg9TJGu5yHijqYn09
+         zTlauqGRqwlv74Fdf33B30qhwE/vT/CAdpsCH/r8CxMvlDcWQoDy3SfUYtkRKJWXhT/K
+         VNGw==
+X-Gm-Message-State: AOJu0Ywr5rbh+nx3aeO8Egbjdn1aghHSmUJMGv6+cNhHIm5wFxxhlKts
+	iWPumG2tQecMLEH9p9PsOzDDizEbkgahk1Nktn45cUJr1WPwBA==
+X-Google-Smtp-Source: AGHT+IH6JuPA8UpnDuV4pxNWx2qfVnI+AAQgcgG4cJ+LVKws3skpVkqpE1GlHsFAzqe0zp/iS42nIMznuVlXnxn82Uk=
+X-Received: by 2002:a05:622a:11d1:b0:427:a316:a26a with SMTP id
+ n17-20020a05622a11d100b00427a316a26amr11771992qtk.69.1703611624440; Tue, 26
+ Dec 2023 09:27:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20231211154644.4103495-1-pasha.tatashin@soleen.com>
+ <3d415ab4-e8c7-7e72-0379-952370612bdd@google.com> <CA+CK2bA2vZp3e+HHfB-sdLsPUYghMxvKcWURktDtNjwPL79Csw@mail.gmail.com>
+ <b1049bfa-68c4-e237-30a9-1514a378c7f1@google.com>
+In-Reply-To: <b1049bfa-68c4-e237-30a9-1514a378c7f1@google.com>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Tue, 26 Dec 2023 12:26:27 -0500
+Message-ID: <CA+CK2bBxbvO-osm5XKk4VkaXYgfZXkDAtfayaYJ-vXo=QFqGPA@mail.gmail.com>
+Subject: Re: [PATCH] vmstat: don't auto expand the sysfs files
+To: David Rientjes <rientjes@google.com>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, akpm@linux-foundation.org, 
+	surenb@google.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	souravpanda@google.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQIfKK3XePgr9siDWfg9PTfJIXwAgwFsxK7RAliZkDKwE7uEIA==
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIJsWRmVeSWpSXmKPExsWy7bCmhu4j7u5Ug9ZrnBYP5m1jszi0eSu7
-	xZq955gs5h85x2rR9+Ihs8Xe10Cxjz33WC0u75rDZjHj/D4mi4unXC0Wbf3CbnH4TTurxb9r
-	G1ksVu36w+jA5/H+Riu7x85Zd9k9Nq3qZPO4c20Pm0ffllWMHp83yQWwRWXbZKQmpqQWKaTm
-	JeenZOal2yp5B8c7x5uaGRjqGlpamCsp5CXmptoqufgE6Lpl5gBdq6RQlphTChQKSCwuVtK3
-	synKLy1JVcjILy6xVUotSMkpMCnQK07MLS7NS9fLSy2xMjQwMDIFKkzIzmg+3cRWcJSr4tTz
-	HsYGxt2cXYycHBICJhLPep8ydTFycQgJ7GaUmHr8OyuE84lR4vTOpcxwzoEtIA5Ey8W5k1hA
-	bCGBnYwST1Z7QRS9ALKn/WADSbAJ6EjsfrkcbJSIwH4miTuvjzKBJJgFaiROr30BVMTBwSlg
-	JzHpfgZIWFggVuLZuVfsIDaLgKrEo5XHwMp5BSwlFrc3M0LYghInZz5hgRijLbFs4WuogxQk
-	fj5dxgpiiwg4Saw8PZ0NokZc4ujPHrAPJATOcEj8fN7JDtHgIvH2xSYWCFtY4tXxLVBxKYmX
-	/W3sILdJCCRLtH/ihgjnSFzavYoJwraXOHBlDgtICbOApsT6XfoQYVmJqafWQX3IJ9H7+wlU
-	Oa/EjnkwtpLEzh0ToGwJiaer17BNYFSaheSzWUg+m4Xkg1kI2xYwsqxilEwtKM5NTy02LTDK
-	Sy2Hx3dyfu4mRnBa1vLawfjwwQe9Q4xMHIyHGCU4mJVEeGUVO1KFeFMSK6tSi/Lji0pzUosP
-	MZoCg3sis5Rocj4wM+SVxBuaWBqYmJmZmVgamxkqifO+bp2bIiSQnliSmp2aWpBaBNPHxMEp
-	1cBUOUlW772wASPD0xWJUgEXUiM4Z1u8XXci83h25+XvSjbx85kXnWk+46ab/2o1U+JXm6dz
-	HaZLvpR+pPz8odWZjutZMduy35zZu8g556vlBrH2P6++cQeWHdzidFYyxavzgfmc21OZdzyZ
-	wmN+duKlDQfiVVbLnLzzcNWGKy2nph69VvWnUupYltVG77tzUxZXv7C/Jlh763mA/H+9tYqy
-	iSsPxPE9F5KZ7/jAYdvFYBnWpJN/WWSP+WS9s9BekR3NP+NrZTbLw9hvn95npshP2fxU/Ihk
-	0xqm50921LifnpjHe+6Xc73Tk5In89K+r2kWFNk68cbahVGzF3A8ecTEt2dn1vcWcWaxK2tU
-	J90KnazEUpyRaKjFXFScCADqkrblVAQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBIsWRmVeSWpSXmKPExsWy7bCSvO5T1u5Ug+8X9CwezNvGZnFo81Z2
-	izV7zzFZzD9yjtWi78VDZou9r4FiH3vusVpc3jWHzWLG+X1MFhdPuVos2vqF3eLwm3ZWi3/X
-	NrJYrNr1h9GBz+P9jVZ2j52z7rJ7bFrVyeZx59oeNo++LasYPT5vkgtgi+KySUnNySxLLdK3
-	S+DKmHdmP1PBZc6Ki7v72BsYV3J0MXJySAiYSFycO4mli5GLQ0hgO6PEpmPbWSASEhI7v7Uy
-	Q9jCEiv/PWeHKHrGKHHz1CFGkASbgI7E7pfLWUESIgLHmSTWHG8EG8Us0MAoMfn+N2aIlr2M
-	EpcePQEq4+DgFLCTmHQ/A6RbWCBaovXvTrAVLAKqEo9WHmMCsXkFLCUWtzczQtiCEidnPgE7
-	iVlAW6L3YSsjjL1s4Wuo8xQkfj5dxgpiiwg4Saw8PZ0NokZc4ujPHuYJjMKzkIyahWTULCSj
-	ZiFpWcDIsopRNLWgODc9N7nAUK84Mbe4NC9dLzk/dxMjODK1gnYwLlv/V+8QIxMH4yFGCQ5m
-	JRFeWcWOVCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8yjmdKUIC6YklqdmpqQWpRTBZJg5OqQam
-	HX84Yqxe3Vrz682dpydyVvUXXt9VkmVfvXDtAhVz1p6Osqsb37L7r4r14f6zslTfnHXuTLX5
-	DKWTQy0Se0MKDERWWH2tjrn31nWTgMap7XKmPzN75YWUKpwluMtf+H1Pjrhe++qAS+SDqica
-	rWcnxzycsyQ9N/3ttRsH/d42lsQtXrH9jM/a3uWh01rK/rvZFmwvOXkgU7BBNupXz3lL4fVB
-	HY+q3l7ublIqj9XprSjdIjBv5uPzeZNXnxIXaC++HHvasaKjZP18jbDQpH+T53v1H6zcZnsg
-	SYZ3SSPnFh1buYmKn682bHoe8e61umKgVtDtcoErMQ2S72cfF5G5umFK+dUHopef/rBzZe9T
-	YinOSDTUYi4qTgQA6sG/UDsDAAA=
-X-CMS-MailID: 20231226165709epcas5p4294e1ad972e355d0a4bab6d2593a8c2e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20231219115856epcas5p371abeb4264f60309e597b90954e6d58c
-References: <CGME20231219115856epcas5p371abeb4264f60309e597b90954e6d58c@epcas5p3.samsung.com>
-	<20231219115834.65720-1-v.pavani@samsung.com>
-	<cb9a6bd4-6c99-4409-9cc7-73b600eb8fce@linaro.org>
 
-Hi Krzysztof,
+On Sun, Dec 24, 2023 at 4:26=E2=80=AFPM David Rientjes <rientjes@google.com=
+> wrote:
+>
+> On Thu, 14 Dec 2023, Pasha Tatashin wrote:
+>
+> > > > Whenever a new fields are added one of the following: node_stat_ite=
+m
+> > > > numa_stat_item zone_stat_item, the /sys/devices/system/node/nodeX/v=
+mstat
+> > > > files are auto expanded.
+> > > >
+> > > > This is a problem, as sysfs files should be only one value per file=
+.
+> > >
+> > > Does this patch address the one-value-per-file issue?  (I think that =
+ship
+> > > has sailed for vmstat.)
+> >
+> > That ship has sailed for vmstat, this patch addresses what was asked
+> > by GregKH: not to add new values to vmstat, as not to make the
+> > existing problem even worse. The sysfs file system has a one page
+> > limit per file. The developers will decide how to export the new items
+> > added to node_stat, numa_stat, zone_stat individually. Each new item
+> > can be exported in its own files, and must have its own documentation
+> > about interface stability, value meaning, and expectations when the
+> > stat file is absent.
+> >
+>
+> As of at least 6.5, /proc/vmstat is a strict superset of the per-node
+> vmstat.  Why is that a problem?
 
------Original Message-----
-From: Krzysztof Kozlowski =5Bmailto:krzysztof.kozlowski=40linaro.org=5D=20
-Sent: 19 December 2023 17:37
-To: Varada Pavani <v.pavani=40samsung.com>; mturquette=40baylibre.com; sboy=
-d=40kernel.org; krzysztof.kozlowski+dt=40linaro.org; conor+dt=40kernel.org;=
- linux-clk=40vger.kernel.org; devicetree=40vger.kernel.org; linux-kernel=40=
-vger.kernel.org; s.nawrocki=40samsung.com; tomasz.figa=40gmail.com
-Cc: linux-samsung-soc=40vger.kernel.org; alim.akhtar=40samsung.com; aswani.=
-reddy=40samsung.com; pankaj.dubey=40samsung.com
-Subject: Re: =5BPATCH 1/2=5D dt-bindings: clock: Fix spelling mistake in 't=
-esla,fsd-clock.yaml'
+The intent of this series is to stop auto expanding
+/sys/devices/system/node/nodeX/vmstat as sysfs should only be one
+value per file, and the task is not to make things worse. /proc/vmstat
+is mostly ok, however we might not need to auto expand it as well, to
+avoid situations where removing a field becomes a problem, and we have
+to keep it in the file forever, like what we do with nr_unstable.
 
-On 19/12/2023 12:58, Varada Pavani wrote:
-> Fix typo 'inteernal' to 'internal' in 'Documentation/devicetree/=20
-> bindings/clock/tesla,fsd-clock.yaml'.
->=20
-> Signed-off-by: Varada Pavani <v.pavani=40samsung.com>
-> ---
->  Documentation/devicetree/bindings/clock/tesla,fsd-clock.yaml =7C 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> There's great benefit to being able to use the sample implementations to
+> parse either /proc/vmstat *or* the per-node vmstat and without needing to
+> read the per-node vmstat plus some new set of sysfs files that are
+> one-value-per-file.  The per-node vmstat will always be multiple values,
+> in fact it's a key value pair.
 
-Are there any other typos in that file or in other Samsung clock bindings?
+Yes, but that file is already large, and soon can overflow a page
+size, instead of converting it to a binary format, let's add new items
+as one item per-file.
 
-I couldn=E2=80=99t=20find=20any=20other=20typos=20in=20current=20file=20and=
-=20also=20in=20other=20Samsung=20clock=20bindings.=0D=0A=0D=0AThanks=20for=
-=20the=20review=21=0D=0A=0D=0ABest=20regards,=0D=0AKrzysztof=0D=0A=0D=0A=0D=
-=0A
+> I have to think that doing anything else for vmstat is just adding
+> complexity (like this patch) and actually making it *harder* on userspace
+> to read the data it needs.
+>
+> Yes, the per-node vmstat likely shouldn't be in sysfs at all but it
+> appears to have been added there 13+ years ago because it was a convenien=
+t
+> place to add a per-node variant.  That's not ideal, but owell.
+
+It is up-to GregKH who requested this change. Greg, specifically
+requested not to add new fields into per-node vmstat, and we are
+adding new fields with per-page metadata series, and IOMMU accounting
+series as these files are auto-expanded without this series.
+
+Pasha
