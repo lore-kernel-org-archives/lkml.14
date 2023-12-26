@@ -1,114 +1,122 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888E94F210;
-	Tue, 26 Dec 2023 15:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="FCGmIfEi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1703606290; x=1704211090; i=markus.elfring@web.de;
-	bh=UsBoPuZPdqnwWrn8IhaxnLaYVK5pnPZrOKNApu8djQA=;
-	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
-	 In-Reply-To;
-	b=FCGmIfEiJPrC8OBQ9kHS5k/aWkC20OdHyG9Je0vmrj+6/Vtue12cVYPQSJYrewj6
-	 uSNOaUtB31vmAU7i7pAcLxAWh9zSGBlhGsb+zeG4pZfmPbLkz8xLM79VdVZHU6Dfp
-	 sVKvk3m56IRfESXcjbXjfwJ0hzQkwsl6Gnly8ZMT8hperGSwgyJnaHrtkvaZYjer0
-	 tuyBYiiyrXxYi1lhE0UZ0a+VVCKycuUXJ2FnWEdVBMW+U2RxFe5FAsiFNGG0HOtSt
-	 wOne3iDLl7oZd07khpKMvqJ2+rciTejn+J1SsuhW2mX445ElbY/pwHn02y05Eed10
-	 QWfPPra8AeYbAnwjpw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N3Gga-1r8ZQh3d5e-0109x3; Tue, 26
- Dec 2023 16:58:09 +0100
-Message-ID: <85f8004e-f0c9-42d9-8c59-30f1b4e0b89e@web.de>
-Date: Tue, 26 Dec 2023 16:58:09 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737664EB5E
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 15:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-35fcbbd1dbaso59298035ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 07:59:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703606358; x=1704211158;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+XAHfzCY2l4/t5LyLZa95F6bjsF+rh1JT6QeBJ4CZyQ=;
+        b=Krd8CdS+KYjojHIlQAkVgx0J6kvyGQv0+59x+r2iVjhY6CEoRKSPWyWP8nNTMBfefQ
+         HT8hFepDokWeudUbh2Ge2imnXvyajObOO2nXqL4YfdY02eEvYuJCqsxB2gAFzTyV4vOZ
+         hjthM5MFLNRhsXS+QiDZgApUXBs5BoiFeMg/x+GovQovPHyIx3FatP/+AYKy5SLapgQs
+         V9PVkGSKmT7JOUdkKjvWzXY0rbW+qSFjpVCRhaYiuxOullyaYXBFUefa/yua8DnJtrVU
+         nXU6VIEnieyuEaROQxpP5aNvs5QEDUaC2wUOWpuEL8i3z8tkQT/JdKEfLhGLYFzot7IY
+         ASNQ==
+X-Gm-Message-State: AOJu0YzXwFZfy5YstvVKqkc+JLatP4SH9fMwKGT4CW6EZ94LxNJqux0O
+	WpZz/MXfAkqB+URK7B1Ocuz4uEpnPRGRZgc0PbIqQ9q/D8HP
+X-Google-Smtp-Source: AGHT+IEtumes5QgYFtPVtRktd3AiKw9U4mnm5yC+ORzoy9/rTFylOSEDWtwqYC6KJ9GiAYGjc2kFZVfEGZieciISIxGojetOWLiU
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH 2/2] drm/sched: Return an error code only as a constant in
- drm_sched_init()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-To: dri-devel@lists.freedesktop.org, kernel-janitors@vger.kernel.org,
- Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>,
- Luben Tuikov <ltuikov89@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr
-References: <12b3e9cb-3241-40cc-b7a4-43c45b9eedc9@web.de>
-In-Reply-To: <12b3e9cb-3241-40cc-b7a4-43c45b9eedc9@web.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:vj7nPubO/RtGZEW4DXmzQkH71f56f8vMzM5kuMez9/zuKsQ8EX4
- K02qYH4QSrdZS5YpEBjlzkaAL8PHX2R8OGLpKOdxwqXU02rFIWtgKSrsHhrIWCbWmX5OxWn
- zRinZwnnZ6PBinF6bxElAAgsaEk/jv7J5lcKGn+WjsPW8LsILG3Yu+opM3fcTVDUfPJCnI3
- r+eYb9cvQ5i04R94niE3A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:YyuitqbQW/U=;Kfwc98S8YFQzqqgDFSOv1ipPVfx
- 2jb0vX4kV9xuSkxnHnDHhvmHuvwvJ5Uv7nPMH4SYE5edYIjosRAf2y+/a5Kdv5qbidquv8Mh6
- PCzTF2ONHNSh7jZTmpgAnsPfRhtv4YYZ1rVZzcrFr/HnMG43TUvVVFPeEeiHZ8v6h0N4hLoN3
- d5otP0tsJLWZmhQl5cNqoDp/0aAWU20oD1o8+xalenJhh7qbsKbbDFgtCKicoF4NLGRmQ88lf
- 8Bb6SpyXpd0kN5he+3YO+YEnO8UV3dmz8VWv5SVQphn60jNLIDJS1u6iROic5GptURJyvRpw1
- VPKPbIdyArJvp+Q4jlUOzLIwnTZBJILQjlBP9xalU03XP0CKJxsRMZQRMd3Aq+v9zisDPCjDc
- FisV9VDss6bicviXTra0J+moNy5WO5iMOcd3s/fXcwThXknjb0GomztuZGZbDZFy4zf0Twyon
- 5G3cQoCzKuOWeDJuR3Xt5329nYpb1xRDzUsJnJTQprtevTQJ/acvrcmshldKQ5dcHqM06gpEF
- 0j+hXqe4rvheMpLOa+LWg6b2Q1vXQSZrm7GZ/BHN44FIvGC4V+SnkdkC8r8H0e9ER58oYb89Y
- s5dtUdavEcP1qCM0+63IqmHokE+SZBK6GQeOA7d/vj0Kg+ks929O2q7gpTIwp6gf1PkDoRF/r
- 6Uor71voT+hNFQxF0RM2cMoNdu1u7Lp7imGzH7gaELzR3OGgjLx/xlpGC6EtMfTTEjKTrvPxf
- jorq+JCoOsYUG4Pt2X0uKyZvpzwCkKGLfd+Vuov5ZCd9SliTNF4NrjznvJrx+48nFlJbZYHkL
- CKKMU7o0i/JrKkvOdj4Y3y0AbT30FKXTbw6wOOP3VHs2hj5nhDb1QQefAMPByNqQ7LNddJVqt
- 2tZTB70AfK7EbM645fu8ExaSby1N6q8m/xAAEQK7eMp2cpljuKL6IbAk2TqNJdC1ZcQ2e+DcR
- cUsKFw==
+X-Received: by 2002:a05:6e02:b48:b0:360:ba:613d with SMTP id
+ f8-20020a056e020b4800b0036000ba613dmr527989ilu.3.1703606358551; Tue, 26 Dec
+ 2023 07:59:18 -0800 (PST)
+Date: Tue, 26 Dec 2023 07:59:18 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d6b55e060d6bc390@google.com>
+Subject: [syzbot] [kernel?] KMSAN: uninit-value in profile_hits (3)
+From: syzbot <syzbot+b1a83ab2a9eb9321fbdd@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, ebiederm@xmission.com, glider@google.com, 
+	linux-kernel@vger.kernel.org, paskripkin@gmail.com, 
+	penguin-kernel@I-love.SAKURA.ne.jp, rostedt@goodmis.org, 
+	syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Tue, 26 Dec 2023 16:37:37 +0100
+Hello,
 
-Return an error code without storing it in an intermediate variable.
+syzbot found the following issue on:
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/gpu/drm/scheduler/sched_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+HEAD commit:    1978a14f70af x86: kmsan: enable KMSAN builds for x86
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=13b7a95b700000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d830111cc3be873
+dashboard link: https://syzkaller.appspot.com/bug?extid=b1a83ab2a9eb9321fbdd
+compiler:       clang version 14.0.0 (/usr/local/google/src/llvm-git-monorepo 2b554920f11c8b763cd9ed9003f4e19b919b8e1f), GNU ld (GNU Binutils for Debian) 2.35.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14b5476b700000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=142c9237700000
 
-diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/sche=
-duler/sched_main.c
-index b99d4e9ff109..1abbcdf38430 100644
-=2D-- a/drivers/gpu/drm/scheduler/sched_main.c
-+++ b/drivers/gpu/drm/scheduler/sched_main.c
-@@ -1249,7 +1249,7 @@ int drm_sched_init(struct drm_gpu_scheduler *sched,
- 		   long timeout, struct workqueue_struct *timeout_wq,
- 		   atomic_t *score, const char *name, struct device *dev)
- {
--	int i, ret;
-+	int i;
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+b1a83ab2a9eb9321fbdd@syzkaller.appspotmail.com
 
- 	sched->ops =3D ops;
- 	sched->credit_limit =3D credit_limit;
-@@ -1285,7 +1285,7 @@ int drm_sched_init(struct drm_gpu_scheduler *sched,
+=====================================================
+BUG: KMSAN: uninit-value in do_profile_hits kernel/profile.c:236 [inline]
+BUG: KMSAN: uninit-value in profile_hits+0xaf2/0x1260 kernel/profile.c:326
+ do_profile_hits kernel/profile.c:236 [inline]
+ profile_hits+0xaf2/0x1260 kernel/profile.c:326
+ profile_hit include/linux/profile.h:58 [inline]
+ profile_tick+0x241/0x250 kernel/profile.c:336
+ tick_sched_handle kernel/time/tick-sched.c:227 [inline]
+ tick_sched_timer+0x4bd/0x610 kernel/time/tick-sched.c:1428
+ __run_hrtimer+0x49f/0xc50 kernel/time/hrtimer.c:1685
+ __hrtimer_run_queues kernel/time/hrtimer.c:1749 [inline]
+ hrtimer_interrupt+0x7f7/0x2100 kernel/time/hrtimer.c:1811
+ local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1086 [inline]
+ __sysvec_apic_timer_interrupt+0x178/0x5e0 arch/x86/kernel/apic/apic.c:1103
+ sysvec_apic_timer_interrupt+0x9d/0xc0 arch/x86/kernel/apic/apic.c:1097
+ asm_sysvec_apic_timer_interrupt+0x12/0x20
+ __raw_spin_unlock_irq include/linux/spinlock_api_smp.h:160 [inline]
+ _raw_spin_unlock_irq+0x36/0x60 kernel/locking/spinlock.c:202
+ spin_unlock_irq include/linux/spinlock.h:399 [inline]
+ __set_current_blocked+0xb0c/0xb90 kernel/signal.c:3051
+ sigprocmask kernel/signal.c:3085 [inline]
+ __do_sys_rt_sigprocmask kernel/signal.c:3162 [inline]
+ __se_sys_rt_sigprocmask+0x438/0x5b0 kernel/signal.c:3145
+ __x64_sys_rt_sigprocmask+0x11e/0x170 kernel/signal.c:3145
+ do_syscall_x64 arch/x86/entry/common.c:51 [inline]
+ do_syscall_64+0x54/0xd0 arch/x86/entry/common.c:81
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
 
- 		sched->own_submit_wq =3D true;
- 	}
--	ret =3D -ENOMEM;
-+
- 	sched->sched_rq =3D kmalloc_array(num_rqs, sizeof(*sched->sched_rq),
- 					GFP_KERNEL | __GFP_ZERO);
- 	if (!sched->sched_rq)
-@@ -1321,7 +1321,7 @@ int drm_sched_init(struct drm_gpu_scheduler *sched,
- 	if (sched->own_submit_wq)
- 		destroy_workqueue(sched->submit_wq);
- 	drm_err(sched, "%s: Failed to setup GPU scheduler--out of memory\n", __f=
-unc__);
--	return ret;
-+	return -ENOMEM;
- }
- EXPORT_SYMBOL(drm_sched_init);
+Local variable iter.i created at:
+ new_sync_read fs/read_write.c:393 [inline]
+ vfs_read+0xb8a/0x1980 fs/read_write.c:481
+ ksys_read+0x28b/0x510 fs/read_write.c:619
 
-=2D-
-2.43.0
+CPU: 1 PID: 3474 Comm: sshd Not tainted 5.17.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+=====================================================
 
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
