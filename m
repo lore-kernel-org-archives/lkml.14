@@ -1,75 +1,169 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8400715CB;
-	Tue, 26 Dec 2023 00:20:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4A03205;
+	Tue, 26 Dec 2023 00:20:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EGulxQ0a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3ECEC433CA;
-	Tue, 26 Dec 2023 00:20:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N57gJGGK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA9F4C433CD;
+	Tue, 26 Dec 2023 00:20:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703550029;
-	bh=viWaVDgZggRIC+o1djZ9IF495Y7uvJgX50ROW6lgb8E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=EGulxQ0aRmTNruUx3GKzXeud8BJciXVftEVkUSyTpcOIM3yhzQuVhvCx5B9WS1ARx
-	 bg41Z/eMW1yPZASeWOrhYDYnZTdeW044e9NidLVmOIAnzU5UhyMCIZKgYgrtedg6dc
-	 2xDec3CDR5P8CE7J6UeZsWwU3Mtg+td3ATN0DqSmA0R9nWvUsETe5phgQXIL5Mul+L
-	 EPrIfxggPTVih0FGqZPxlxbOthFTyJ+nbXCzfr1U2twCPPGyrbUqBRk+B0TSr7IrO3
-	 9RNrFlvNi3Hm8nDBzg/XqV8g5GBnPKu3Wd9gM9Tb3mIexbcPpplmAQqhUe2gGD8mcY
-	 yZtgOYUUuThaQ==
-Date: Tue, 26 Dec 2023 09:20:23 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt
- <rostedt@goodmis.org>, Florent Revest <revest@chromium.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v5 11/34] function_graph: Have the instances use their
- own ftrace_ops for filtering
-Message-Id: <20231226092023.2383d0d05c1120c094302685@kernel.org>
-In-Reply-To: <170290522555.220107.1435543481968270637.stgit@devnote2>
-References: <170290509018.220107.1347127510564358608.stgit@devnote2>
-	<170290522555.220107.1435543481968270637.stgit@devnote2>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1703550032;
+	bh=oBckVlw1lB1B5lSRO8mFEoh2gdCREBT4gVg3mQrp1lc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=N57gJGGKALpOtihQqHYKefyfUenLoIGD+J1dTsRtJ8O/FnjlgyovfDjtG0BFWAyfG
+	 SNaWqvY25NOhmI/ST211Rk1+xfcvAZ4jRBkP8FmA7ppAH9LN6Www42/VzK3Lvupgc0
+	 JfabEKeN5QhAiRhOBaatvVJgf6HZ2F+5WV1WvgcIqluEZ7v4kQQXvupbBP7DYr08T+
+	 K+DOCRf5cO3S8LpalRK3AZpVZOaZLGsAUuRfqiWlUSTlOoTzKJkIVstLAcIJwNC1Ke
+	 ghI2dCGmEsGhQzh5M4TDWgoE86NSlteix5QWQIr7H6OBDawnOd2SGw8mRyfeQ8Gp+j
+	 4omRXNgXNVy+w==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Shang Ye <yesh25@mail2.sysu.edu.cn>,
+	gurevitch <mail@gurevit.ch>,
+	Egor Ignatov <egori@altlinux.org>,
+	Anton Zhilyaev <anton@cpp.in>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Sasha Levin <sashal@kernel.org>,
+	rrangel@chromium.org,
+	linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 03/39] Input: atkbd - skip ATKBD_CMD_GETID in translated mode
+Date: Mon, 25 Dec 2023 19:18:53 -0500
+Message-ID: <20231226002021.4776-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20231226002021.4776-1-sashal@kernel.org>
+References: <20231226002021.4776-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.8
+Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Hans de Goede <hdegoede@redhat.com>
 
-On Mon, 18 Dec 2023 22:13:46 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+[ Upstream commit 936e4d49ecbc8c404790504386e1422b599dec39 ]
 
-> @@ -408,15 +395,51 @@ int function_graph_enter(unsigned long ret, unsigned long func,
->  	return -EBUSY;
->  }
->  
-> +/* This is called from ftrace_graph_func() via ftrace */
-> +int function_graph_enter_ops(unsigned long ret, unsigned long func,
-> +			     unsigned long frame_pointer, unsigned long *retp,
-> +			     struct fgraph_ops *gops)
-> +{
-> +	struct ftrace_graph_ent trace;
-> +	int index;
-> +	int type;
-> +
+There have been multiple reports of keyboard issues on recent laptop models
+which can be worked around by setting i8042.dumbkbd, with the downside
+being this breaks the capslock LED.
 
-Here,  I found that this needs to check whether the fgraph_array[gops->idx]
-is still valid or not. When unregistering the fgraph, fgraph_array[idx] is
-cleared (with fgraph_stub) and disable ftrace. So there is a chance to hit
-this and it will mess up the shadow stack because gops->idx is already invalid.
+It seems that these issues are caused by recent laptops getting confused by
+ATKBD_CMD_GETID. Rather then adding and endless growing list of quirks for
+this, just skip ATKBD_CMD_GETID alltogether on laptops in translated mode.
 
-Thank you,
+The main goal of sending ATKBD_CMD_GETID is to skip binding to ps/2
+mice/touchpads and those are never used in translated mode.
 
+Examples of laptop models which benefit from skipping ATKBD_CMD_GETID:
+
+* "HP Laptop 15s-fq2xxx", "HP laptop 15s-fq4xxx" and "HP Laptop 15-dy2xxx"
+  models the kbd stops working for the first 2 - 5 minutes after boot
+  (waiting for EC watchdog reset?)
+
+* On "HP Spectre x360 13-aw2xxx" atkbd fails to probe the keyboard
+
+* At least 9 different Lenovo models have issues with ATKBD_CMD_GETID, see:
+  https://github.com/yescallop/atkbd-nogetid
+
+This has been tested on:
+
+1. A MSI B550M PRO-VDH WIFI desktop, where the i8042 controller is not
+   in translated mode when no keyboard is plugged in and with a ps/2 kbd
+   a "AT Translated Set 2 keyboard" /dev/input/event# node shows up
+
+2. A Lenovo ThinkPad X1 Yoga gen 8 (always has a translated set 2 keyboard)
+
+Reported-by: Shang Ye <yesh25@mail2.sysu.edu.cn>
+Closes: https://lore.kernel.org/linux-input/886D6167733841AE+20231017135318.11142-1-yesh25@mail2.sysu.edu.cn/
+Closes: https://github.com/yescallop/atkbd-nogetid
+Reported-by: gurevitch <mail@gurevit.ch>
+Closes: https://lore.kernel.org/linux-input/2iAJTwqZV6lQs26cTb38RNYqxvsink6SRmrZ5h0cBUSuf9NT0tZTsf9fEAbbto2maavHJEOP8GA1evlKa6xjKOsaskDhtJWxjcnrgPigzVo=@gurevit.ch/
+Reported-by: Egor Ignatov <egori@altlinux.org>
+Closes: https://lore.kernel.org/all/20210609073333.8425-1-egori@altlinux.org/
+Reported-by: Anton Zhilyaev <anton@cpp.in>
+Closes: https://lore.kernel.org/linux-input/20210201160336.16008-1-anton@cpp.in/
+Closes: https://bugzilla.redhat.com/show_bug.cgi?id=2086156
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20231115174625.7462-1-hdegoede@redhat.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/input/keyboard/atkbd.c | 46 +++++++++++++++++++++++++++++++---
+ 1 file changed, 42 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/input/keyboard/atkbd.c b/drivers/input/keyboard/atkbd.c
+index c92e544c792df..786f00f6b7fd8 100644
+--- a/drivers/input/keyboard/atkbd.c
++++ b/drivers/input/keyboard/atkbd.c
+@@ -765,6 +765,44 @@ static void atkbd_deactivate(struct atkbd *atkbd)
+ 			ps2dev->serio->phys);
+ }
+ 
++#ifdef CONFIG_X86
++static bool atkbd_is_portable_device(void)
++{
++	static const char * const chassis_types[] = {
++		"8",	/* Portable */
++		"9",	/* Laptop */
++		"10",	/* Notebook */
++		"14",	/* Sub-Notebook */
++		"31",	/* Convertible */
++		"32",	/* Detachable */
++	};
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(chassis_types); i++)
++		if (dmi_match(DMI_CHASSIS_TYPE, chassis_types[i]))
++			return true;
++
++	return false;
++}
++
++/*
++ * On many modern laptops ATKBD_CMD_GETID may cause problems, on these laptops
++ * the controller is always in translated mode. In this mode mice/touchpads will
++ * not work. So in this case simply assume a keyboard is connected to avoid
++ * confusing some laptop keyboards.
++ *
++ * Skipping ATKBD_CMD_GETID ends up using a fake keyboard id. Using a fake id is
++ * ok in translated mode, only atkbd_select_set() checks atkbd->id and in
++ * translated mode that is a no-op.
++ */
++static bool atkbd_skip_getid(struct atkbd *atkbd)
++{
++	return atkbd->translated && atkbd_is_portable_device();
++}
++#else
++static inline bool atkbd_skip_getid(struct atkbd *atkbd) { return false; }
++#endif
++
+ /*
+  * atkbd_probe() probes for an AT keyboard on a serio port.
+  */
+@@ -794,12 +832,12 @@ static int atkbd_probe(struct atkbd *atkbd)
+  */
+ 
+ 	param[0] = param[1] = 0xa5;	/* initialize with invalid values */
+-	if (ps2_command(ps2dev, param, ATKBD_CMD_GETID)) {
++	if (atkbd_skip_getid(atkbd) || ps2_command(ps2dev, param, ATKBD_CMD_GETID)) {
+ 
+ /*
+- * If the get ID command failed, we check if we can at least set the LEDs on
+- * the keyboard. This should work on every keyboard out there. It also turns
+- * the LEDs off, which we want anyway.
++ * If the get ID command was skipped or failed, we check if we can at least set
++ * the LEDs on the keyboard. This should work on every keyboard out there.
++ * It also turns the LEDs off, which we want anyway.
+  */
+ 		param[0] = 0;
+ 		if (ps2_command(ps2dev, param, ATKBD_CMD_SETLEDS))
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.43.0
+
