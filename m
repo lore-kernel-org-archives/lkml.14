@@ -1,78 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FB4137B;
-	Tue, 26 Dec 2023 00:20:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8400715CB;
+	Tue, 26 Dec 2023 00:20:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A5p6hFXD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96F24C433C8;
-	Tue, 26 Dec 2023 00:20:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EGulxQ0a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3ECEC433CA;
+	Tue, 26 Dec 2023 00:20:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703550028;
-	bh=uPwRkFZ7rJy+O8GUDoosbiTpnSRCgs1QbDUokowEznM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A5p6hFXDQQDeiCokKHDEyigyLH/jZ7NkWKvpkQ/aCZpSUMKoiSnH1+wKJBXOkYCIM
-	 LB3SbErVzuKU91iLNbrOxyaRsiGBmix2IgjBrabBZTkDFvRx3ZXO/nRbRZdGkNshit
-	 nPSxZM5/mtfZSLXVAvYryppgChwL/etO3k9PlfAP787ZelgUDp6wneivAukti6pq01
-	 K2EfnvokftuAgeCeNfiqKlyD29jw+IHhOtoAxYmGSpbbkNzIAopmvKtzRK5+DVe7vX
-	 UIJ7AaazAL9JomtXFTV1dJKIbGgbEsZioGZNLZINgrYAtewsFVLVNfcnHESQ/xkx4x
-	 kS3vRKJfcyPpg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Sasha Levin <sashal@kernel.org>,
-	Steen.Hegelund@microchip.com,
-	robh@kernel.org,
-	dlemoal@kernel.org
-Subject: [PATCH AUTOSEL 6.6 02/39] reset: hisilicon: hi6220: fix Wvoid-pointer-to-enum-cast warning
-Date: Mon, 25 Dec 2023 19:18:52 -0500
-Message-ID: <20231226002021.4776-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231226002021.4776-1-sashal@kernel.org>
-References: <20231226002021.4776-1-sashal@kernel.org>
+	s=k20201202; t=1703550029;
+	bh=viWaVDgZggRIC+o1djZ9IF495Y7uvJgX50ROW6lgb8E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=EGulxQ0aRmTNruUx3GKzXeud8BJciXVftEVkUSyTpcOIM3yhzQuVhvCx5B9WS1ARx
+	 bg41Z/eMW1yPZASeWOrhYDYnZTdeW044e9NidLVmOIAnzU5UhyMCIZKgYgrtedg6dc
+	 2xDec3CDR5P8CE7J6UeZsWwU3Mtg+td3ATN0DqSmA0R9nWvUsETe5phgQXIL5Mul+L
+	 EPrIfxggPTVih0FGqZPxlxbOthFTyJ+nbXCzfr1U2twCPPGyrbUqBRk+B0TSr7IrO3
+	 9RNrFlvNi3Hm8nDBzg/XqV8g5GBnPKu3Wd9gM9Tb3mIexbcPpplmAQqhUe2gGD8mcY
+	 yZtgOYUUuThaQ==
+Date: Tue, 26 Dec 2023 09:20:23 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Florent Revest <revest@chromium.org>,
+ linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
+ Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
+ Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v5 11/34] function_graph: Have the instances use their
+ own ftrace_ops for filtering
+Message-Id: <20231226092023.2383d0d05c1120c094302685@kernel.org>
+In-Reply-To: <170290522555.220107.1435543481968270637.stgit@devnote2>
+References: <170290509018.220107.1347127510564358608.stgit@devnote2>
+	<170290522555.220107.1435543481968270637.stgit@devnote2>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Hi,
 
-[ Upstream commit b5ec294472794ed9ecba0cb4b8208372842e7e0d ]
+On Mon, 18 Dec 2023 22:13:46 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-'type' is an enum, thus cast of pointer on 64-bit compile test with W=1
-causes:
+> @@ -408,15 +395,51 @@ int function_graph_enter(unsigned long ret, unsigned long func,
+>  	return -EBUSY;
+>  }
+>  
+> +/* This is called from ftrace_graph_func() via ftrace */
+> +int function_graph_enter_ops(unsigned long ret, unsigned long func,
+> +			     unsigned long frame_pointer, unsigned long *retp,
+> +			     struct fgraph_ops *gops)
+> +{
+> +	struct ftrace_graph_ent trace;
+> +	int index;
+> +	int type;
+> +
 
-  hi6220_reset.c:166:9: error: cast to smaller integer type 'enum hi6220_reset_ctrl_type' from 'const void *' [-Werror,-Wvoid-pointer-to-enum-cast]
+Here,  I found that this needs to check whether the fgraph_array[gops->idx]
+is still valid or not. When unregistering the fgraph, fgraph_array[idx] is
+cleared (with fgraph_stub) and disable ftrace. So there is a chance to hit
+this and it will mess up the shadow stack because gops->idx is already invalid.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Link: https://lore.kernel.org/r/20230810091300.70197-1-krzysztof.kozlowski@linaro.org
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/reset/hisilicon/hi6220_reset.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thank you,
 
-diff --git a/drivers/reset/hisilicon/hi6220_reset.c b/drivers/reset/hisilicon/hi6220_reset.c
-index 8d1fce18ded78..5c3267acd2b1c 100644
---- a/drivers/reset/hisilicon/hi6220_reset.c
-+++ b/drivers/reset/hisilicon/hi6220_reset.c
-@@ -163,7 +163,7 @@ static int hi6220_reset_probe(struct platform_device *pdev)
- 	if (!data)
- 		return -ENOMEM;
- 
--	type = (enum hi6220_reset_ctrl_type)of_device_get_match_data(dev);
-+	type = (uintptr_t)of_device_get_match_data(dev);
- 
- 	regmap = syscon_node_to_regmap(np);
- 	if (IS_ERR(regmap)) {
 -- 
-2.43.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
