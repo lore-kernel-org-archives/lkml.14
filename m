@@ -1,269 +1,114 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B90153E26
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 15:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <zhouchengming@bytedance.com>
-Date: Tue, 26 Dec 2023 15:54:13 +0000
-Subject: [PATCH v4 6/6] mm/zswap: change per-cpu mutex and buffer to per-acomp_ctx
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F624F5E6;
+	Tue, 26 Dec 2023 15:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="m6qaxfUa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1703606191; x=1704210991; i=markus.elfring@web.de;
+	bh=uWBMhje7ZnzueSLD7LuYeqWtZzVY1uT5I4jy8esiVbk=;
+	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
+	 In-Reply-To;
+	b=m6qaxfUaiAQ/owAQgBLoODQqGpf2+ppC7/X2Z8mm5JlP/stKKFIzyHU1Ksje0D+Y
+	 nywqF1yvOm0qlSpLarVuWBK31QHGAfgz+oeHD5pvvP7REk4usU1hAWYEciLkK9WqA
+	 AZ+9AqGbs24tMhv0GAohedrTWLxqaKTkjjqB05JIJLlYzgR92XI73+LwZfBjVXJYd
+	 whsv27bM/WxFpPfLW7hlpAYbWtZ9UfHWOXLtOAwyoQp+BQJ2TJ9BCUw1apL4zFZVR
+	 iSDM6uMbhiu+IBH/W6qVTQYigWCjylm/ja0V5Z9o3MvgGrjAWi2fSHPzc0hoRmb17
+	 5o+Eew0h5NOTNI8rBg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MVrg7-1rjp0s2pAz-00Rv8A; Tue, 26
+ Dec 2023 16:56:31 +0100
+Message-ID: <85066512-983d-480c-a44d-32405ab1b80e@web.de>
+Date: Tue, 26 Dec 2023 16:56:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20231213-zswap-dstmem-v4-6-f228b059dd89@bytedance.com>
-References: <20231213-zswap-dstmem-v4-0-f228b059dd89@bytedance.com>
-In-Reply-To: <20231213-zswap-dstmem-v4-0-f228b059dd89@bytedance.com>
-To: Andrew Morton <akpm@linux-foundation.org>, Seth Jennings <sjenning@redhat.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Vitaly Wool <vitaly.wool@konsulko.com>, Nhat Pham <nphamcs@gmail.com>, Chris Li <chriscli@google.com>,
- Yosry Ahmed <yosryahmed@google.com>, Dan Streetman <ddstreet@ieee.org>
-Cc: linux-kernel@vger.kernel.org, Chengming Zhou <zhouchengming@bytedance.com>, linux-mm@kvack.org,
- Nhat Pham <nphamcs@gmail.com>, Yosry Ahmed <yosryahmed@google.com>, Chris Li <chrisl@kernel.org>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1703606082; l=7176;
- i=zhouchengming@bytedance.com; s=20231204; h=from:subject:message-id;
- bh=eozKHlUpbkn5zdclwtiNUF72Ti9iB66PKm56EsjFhvY=;
- b=ZHdimCEH7YHQg7J/zZG0lpD8VDQR5PJsQQJTk4mFBZYPUirIGkxxEFhs+8NzqRUaI5EO7+GWo
- uZGuipzU28YBtj82Nq4HzIbIEAvGbfNtgvhtYTNlPP6vi7n5vBhjtn8
-X-Developer-Key: i=zhouchengming@bytedance.com; a=ed25519;
- pk=xFTmRtMG3vELGJBUiml7OYNdM393WOMv0iWWeQEVVdA=
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH 1/2] drm/sched: One function call less in drm_sched_init()
+ after error detection
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+To: dri-devel@lists.freedesktop.org, kernel-janitors@vger.kernel.org,
+ Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>,
+ Luben Tuikov <ltuikov89@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr
+References: <12b3e9cb-3241-40cc-b7a4-43c45b9eedc9@web.de>
+In-Reply-To: <12b3e9cb-3241-40cc-b7a4-43c45b9eedc9@web.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:kFHY9yzY0ytYPPNU9cHVZlo/ERarFH9Ioj7KihE9pad6kKHxIsk
+ ar7pLsPSyAM659MpM2okcf9zWYIir43459sPBCIw8RFGfPE2vfDLenLDFBrVaj//o0/MUx7
+ Tmit/ZcHm7Ezwnppn4xKBRiv1j9wbAzOUXe+/xzfTQ72d7VLa4ySFCK7ApzFSrVhaJKhfDG
+ /ynRvpJKJSLxAs5hKgIpA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:N9GZXRsOf+Q=;QML2pte76YXDPlKHPaBzAAwpJSc
+ SXf7TY/2ebPLuHjIFTcB4EMl0/eTkBOpr34V/BEH8GljMMlV2D9saR5zF/s9xhYmHOKZIju1d
+ uP5zqwr2y+gn2yUP4YU1cF+UUtJCfMRDLgm7VFPBFv+B1WwSIk3JEkWW3datKMZMB6QTC3Ao2
+ jOtfAtd8mf08LwLPCLKalPPjWtUz2B6OkZKZuIYJIvBDcVBMco6kyNBIF31ILr03TUXAQs7Dm
+ Cyd4xFg4B8P4eoxF7EnDX0lR3Gc6HcdjcGc30NfajJ9PThCazXNufcCWxIYYwh65y+7AY2fPt
+ PTTvgsypNAH7vigHKFitd1lFt/kgv+Z8OKxUpM4NrdpM6YMis0++afgWk1Z50WO4KFrYmCA7D
+ cULfbWjOnc1Axnima1T4dSLJMeAdZhPaoQMNsb89Hvil9I8i8H0teUEptDRt7LtVnml1Xv/Q4
+ R3Z0nUFGqnd8NSDB6AwFZgBD1MKrVP32KA8VYcOTiVfOhVeLpugqTNk9mSPDst92uPk+xQmXG
+ fMAjhLjqyf9NqNOCviXyJRvRuN4lMn1AyNZnsaAyQfuSrZ+hZAMBLulEDLpG09iFMUynJeBL9
+ 62ooIfW5SBvqa56s+tFxyC/7mE+iycFUjMznrbuHsbs4nxxWEyMG1yHkzEg06AyAnuP0It8kV
+ GgimqiRBXmyEm1UG7UiaJoGWlOENPo9U9RW3X5UhuabE5Ac7LiR5XVMiMr85twnmq2suSt+HF
+ RZNTsjXn/N8D4aRlHD/mPBqsC7TlynxJEQVDaaw6jbbCnmaxxgMj6Vqg6pSbnxG8lXW+jU6G3
+ zJB9TR/WzO9zCqfSMjzbCygPxjGeXrg+FAJECSJzJ+WBPcRsw3998Ium9dSH4U/S1dt/dy3t5
+ RVJjcMc8WxDDWhe2AC4UMSUeuqLGU7VOLYyXlzkWm3y/QP5inuvyhdha/8aWD3+nW8UZSgfH7
+ B8glyA==
 
-First of all, we need to rename acomp_ctx->dstmem field to buffer,
-since we are now using for purposes other than compression.
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Tue, 26 Dec 2023 16:30:25 +0100
 
-Then we change per-cpu mutex and buffer to per-acomp_ctx, since
-them belong to the acomp_ctx and are necessary parts when used
-in the compress/decompress contexts.
+The kfree() function was called in one case by the
+drm_sched_init() function during error handling
+even if the passed data structure member contained a null pointer.
+This issue was detected by using the Coccinelle software.
 
-So we can remove the old per-cpu mutex and dstmem.
+Thus adjust a jump target.
 
-Acked-by: Chris Li <chrisl@kernel.org> (Google)
-Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
----
- include/linux/cpuhotplug.h |  1 -
- mm/zswap.c                 | 98 +++++++++++++---------------------------------
- 2 files changed, 28 insertions(+), 71 deletions(-)
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/gpu/drm/scheduler/sched_main.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index efc0c0b07efb..c3e06e21766a 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -124,7 +124,6 @@ enum cpuhp_state {
- 	CPUHP_ARM_BL_PREPARE,
- 	CPUHP_TRACE_RB_PREPARE,
- 	CPUHP_MM_ZS_PREPARE,
--	CPUHP_MM_ZSWP_MEM_PREPARE,
- 	CPUHP_MM_ZSWP_POOL_PREPARE,
- 	CPUHP_KVM_PPC_BOOK3S_PREPARE,
- 	CPUHP_ZCOMP_PREPARE,
-diff --git a/mm/zswap.c b/mm/zswap.c
-index 40ee9f109f98..8014509736ad 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -166,8 +166,8 @@ struct crypto_acomp_ctx {
- 	struct crypto_acomp *acomp;
- 	struct acomp_req *req;
- 	struct crypto_wait wait;
--	u8 *dstmem;
--	struct mutex *mutex;
-+	u8 *buffer;
-+	struct mutex mutex;
- };
- 
- /*
-@@ -694,63 +694,26 @@ static void zswap_alloc_shrinker(struct zswap_pool *pool)
- /*********************************
- * per-cpu code
- **********************************/
--static DEFINE_PER_CPU(u8 *, zswap_dstmem);
--/*
-- * If users dynamically change the zpool type and compressor at runtime, i.e.
-- * zswap is running, zswap can have more than one zpool on one cpu, but they
-- * are sharing dtsmem. So we need this mutex to be per-cpu.
-- */
--static DEFINE_PER_CPU(struct mutex *, zswap_mutex);
--
--static int zswap_dstmem_prepare(unsigned int cpu)
--{
--	struct mutex *mutex;
--	u8 *dst;
--
--	dst = kmalloc_node(PAGE_SIZE, GFP_KERNEL, cpu_to_node(cpu));
--	if (!dst)
--		return -ENOMEM;
--
--	mutex = kmalloc_node(sizeof(*mutex), GFP_KERNEL, cpu_to_node(cpu));
--	if (!mutex) {
--		kfree(dst);
--		return -ENOMEM;
--	}
--
--	mutex_init(mutex);
--	per_cpu(zswap_dstmem, cpu) = dst;
--	per_cpu(zswap_mutex, cpu) = mutex;
--	return 0;
--}
--
--static int zswap_dstmem_dead(unsigned int cpu)
--{
--	struct mutex *mutex;
--	u8 *dst;
--
--	mutex = per_cpu(zswap_mutex, cpu);
--	kfree(mutex);
--	per_cpu(zswap_mutex, cpu) = NULL;
--
--	dst = per_cpu(zswap_dstmem, cpu);
--	kfree(dst);
--	per_cpu(zswap_dstmem, cpu) = NULL;
--
--	return 0;
--}
--
- static int zswap_cpu_comp_prepare(unsigned int cpu, struct hlist_node *node)
- {
- 	struct zswap_pool *pool = hlist_entry(node, struct zswap_pool, node);
- 	struct crypto_acomp_ctx *acomp_ctx = per_cpu_ptr(pool->acomp_ctx, cpu);
- 	struct crypto_acomp *acomp;
- 	struct acomp_req *req;
-+	int ret;
+diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/sche=
+duler/sched_main.c
+index 550492a7a031..b99d4e9ff109 100644
+=2D-- a/drivers/gpu/drm/scheduler/sched_main.c
++++ b/drivers/gpu/drm/scheduler/sched_main.c
+@@ -1289,7 +1289,7 @@ int drm_sched_init(struct drm_gpu_scheduler *sched,
+ 	sched->sched_rq =3D kmalloc_array(num_rqs, sizeof(*sched->sched_rq),
+ 					GFP_KERNEL | __GFP_ZERO);
+ 	if (!sched->sched_rq)
+-		goto Out_free;
++		goto Out_check_own;
+ 	sched->num_rqs =3D num_rqs;
+ 	for (i =3D DRM_SCHED_PRIORITY_KERNEL; i < sched->num_rqs; i++) {
+ 		sched->sched_rq[i] =3D kzalloc(sizeof(*sched->sched_rq[i]), GFP_KERNEL)=
+;
+@@ -1314,9 +1314,10 @@ int drm_sched_init(struct drm_gpu_scheduler *sched,
+ Out_unroll:
+ 	for (--i ; i >=3D DRM_SCHED_PRIORITY_KERNEL; i--)
+ 		kfree(sched->sched_rq[i]);
+-Out_free:
 +
-+	mutex_init(&acomp_ctx->mutex);
-+
-+	acomp_ctx->buffer = kmalloc_node(PAGE_SIZE, GFP_KERNEL, cpu_to_node(cpu));
-+	if (!acomp_ctx->buffer)
-+		return -ENOMEM;
- 
- 	acomp = crypto_alloc_acomp_node(pool->tfm_name, 0, 0, cpu_to_node(cpu));
- 	if (IS_ERR(acomp)) {
- 		pr_err("could not alloc crypto acomp %s : %ld\n",
- 				pool->tfm_name, PTR_ERR(acomp));
--		return PTR_ERR(acomp);
-+		ret = PTR_ERR(acomp);
-+		goto acomp_fail;
- 	}
- 	acomp_ctx->acomp = acomp;
- 
-@@ -758,8 +721,8 @@ static int zswap_cpu_comp_prepare(unsigned int cpu, struct hlist_node *node)
- 	if (!req) {
- 		pr_err("could not alloc crypto acomp_request %s\n",
- 		       pool->tfm_name);
--		crypto_free_acomp(acomp_ctx->acomp);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto req_fail;
- 	}
- 	acomp_ctx->req = req;
- 
-@@ -772,10 +735,13 @@ static int zswap_cpu_comp_prepare(unsigned int cpu, struct hlist_node *node)
- 	acomp_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
- 				   crypto_req_done, &acomp_ctx->wait);
- 
--	acomp_ctx->mutex = per_cpu(zswap_mutex, cpu);
--	acomp_ctx->dstmem = per_cpu(zswap_dstmem, cpu);
--
- 	return 0;
-+
-+req_fail:
-+	crypto_free_acomp(acomp_ctx->acomp);
-+acomp_fail:
-+	kfree(acomp_ctx->buffer);
-+	return ret;
- }
- 
- static int zswap_cpu_comp_dead(unsigned int cpu, struct hlist_node *node)
-@@ -788,6 +754,7 @@ static int zswap_cpu_comp_dead(unsigned int cpu, struct hlist_node *node)
- 			acomp_request_free(acomp_ctx->req);
- 		if (!IS_ERR_OR_NULL(acomp_ctx->acomp))
- 			crypto_free_acomp(acomp_ctx->acomp);
-+		kfree(acomp_ctx->buffer);
- 	}
- 
- 	return 0;
-@@ -1400,12 +1367,12 @@ static void __zswap_load(struct zswap_entry *entry, struct page *page)
- 	u8 *src;
- 
- 	acomp_ctx = raw_cpu_ptr(entry->pool->acomp_ctx);
--	mutex_lock(acomp_ctx->mutex);
-+	mutex_lock(&acomp_ctx->mutex);
- 
- 	src = zpool_map_handle(zpool, entry->handle, ZPOOL_MM_RO);
- 	if (!zpool_can_sleep_mapped(zpool)) {
--		memcpy(acomp_ctx->dstmem, src, entry->length);
--		src = acomp_ctx->dstmem;
-+		memcpy(acomp_ctx->buffer, src, entry->length);
-+		src = acomp_ctx->buffer;
- 		zpool_unmap_handle(zpool, entry->handle);
- 	}
- 
-@@ -1415,7 +1382,7 @@ static void __zswap_load(struct zswap_entry *entry, struct page *page)
- 	acomp_request_set_params(acomp_ctx->req, &input, &output, entry->length, PAGE_SIZE);
- 	BUG_ON(crypto_wait_req(crypto_acomp_decompress(acomp_ctx->req), &acomp_ctx->wait));
- 	BUG_ON(acomp_ctx->req->dlen != PAGE_SIZE);
--	mutex_unlock(acomp_ctx->mutex);
-+	mutex_unlock(&acomp_ctx->mutex);
- 
- 	if (zpool_can_sleep_mapped(zpool))
- 		zpool_unmap_handle(zpool, entry->handle);
-@@ -1636,9 +1603,9 @@ bool zswap_store(struct folio *folio)
- 	/* compress */
- 	acomp_ctx = raw_cpu_ptr(entry->pool->acomp_ctx);
- 
--	mutex_lock(acomp_ctx->mutex);
-+	mutex_lock(&acomp_ctx->mutex);
- 
--	dst = acomp_ctx->dstmem;
-+	dst = acomp_ctx->buffer;
- 	sg_init_table(&input, 1);
- 	sg_set_page(&input, page, PAGE_SIZE, 0);
- 
-@@ -1681,7 +1648,7 @@ bool zswap_store(struct folio *folio)
- 	buf = zpool_map_handle(zpool, handle, ZPOOL_MM_WO);
- 	memcpy(buf, dst, dlen);
- 	zpool_unmap_handle(zpool, handle);
--	mutex_unlock(acomp_ctx->mutex);
-+	mutex_unlock(&acomp_ctx->mutex);
- 
- 	/* populate entry */
- 	entry->swpentry = swp_entry(type, offset);
-@@ -1724,7 +1691,7 @@ bool zswap_store(struct folio *folio)
- 	return true;
- 
- put_dstmem:
--	mutex_unlock(acomp_ctx->mutex);
-+	mutex_unlock(&acomp_ctx->mutex);
- put_pool:
- 	zswap_pool_put(entry->pool);
- freepage:
-@@ -1899,13 +1866,6 @@ static int zswap_setup(void)
- 		goto cache_fail;
- 	}
- 
--	ret = cpuhp_setup_state(CPUHP_MM_ZSWP_MEM_PREPARE, "mm/zswap:prepare",
--				zswap_dstmem_prepare, zswap_dstmem_dead);
--	if (ret) {
--		pr_err("dstmem alloc failed\n");
--		goto dstmem_fail;
--	}
--
- 	ret = cpuhp_setup_state_multi(CPUHP_MM_ZSWP_POOL_PREPARE,
- 				      "mm/zswap_pool:prepare",
- 				      zswap_cpu_comp_prepare,
-@@ -1937,8 +1897,6 @@ static int zswap_setup(void)
- 	if (pool)
- 		zswap_pool_destroy(pool);
- hp_fail:
--	cpuhp_remove_state(CPUHP_MM_ZSWP_MEM_PREPARE);
--dstmem_fail:
- 	kmem_cache_destroy(zswap_entry_cache);
- cache_fail:
- 	/* if built-in, we aren't unloaded on failure; don't allow use */
+ 	kfree(sched->sched_rq);
+ 	sched->sched_rq =3D NULL;
++Out_check_own:
+ 	if (sched->own_submit_wq)
+ 		destroy_workqueue(sched->submit_wq);
+ 	drm_err(sched, "%s: Failed to setup GPU scheduler--out of memory\n", __f=
+unc__);
+=2D-
+2.43.0
 
--- 
-b4 0.10.1
