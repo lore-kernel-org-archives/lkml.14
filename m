@@ -1,116 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE9F1E4B6;
-	Tue, 26 Dec 2023 16:31:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4948445009
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 16:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T4V8YiHI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EC97C433C8;
-	Tue, 26 Dec 2023 16:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703608296;
-	bh=YwEGjY0TfNva5Qu9+ELcM3v8DLlN155ZNPZzPxqOLts=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=T4V8YiHIkemEOaWlTNQx+LEOydX29SS2YujpDP6mG9EJ3iFB7JZ0p1a5h4anrDwim
-	 hVC17D8AWzOu9GGsi02dvzL2lZOoY9Wng6Ngv/L3OAZo16WU4yEMuZFAj+YjIiuMYJ
-	 S59vNwJnxTUz8TLoktzjGnEeO5h9kX1IoortA92nXFw817pdjozy7Fd3Ax7q7B3Gey
-	 E6GX5xqQzSJXGYHbi01yYmTjmxzNkqMaxJIlH+WD9RRpwfygVrEvhI5xWmYjVwHR7L
-	 VdhSYgT6YVpPftA4oEipww60wRZCi2gwnDP+MbLXKLZ7reIznK/KiEEfm4S+w7tS5Q
-	 vGVGgOfkeFfnQ==
-Date: Tue, 26 Dec 2023 16:31:28 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Petre Rodan <petre.rodan@subdimension.ro>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Andreas Klinger <ak@it-klinger.de>,
- Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>
-Subject: Re: [PATCH v2 01/10] dt-bindings: iio: pressure:
- honeywell,mprls0025pa.yaml fix
-Message-ID: <20231226163128.09bf0f4e@jic23-huawei>
-In-Reply-To: <20231226162839.5ceddc9e@jic23-huawei>
-References: <20231224143500.10940-1-petre.rodan@subdimension.ro>
-	<20231224143500.10940-2-petre.rodan@subdimension.ro>
-	<20231226162839.5ceddc9e@jic23-huawei>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="nNoDAqAr"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7ba9356f562so30715339f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 08:32:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1703608336; x=1704213136; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rnzU4WJmQxmkUC7bQNo5RhC0emWFKZu0JZ9NLV6mjrw=;
+        b=nNoDAqArTCsBjQa8myfnZiluXBclw83OvSNqYUgvHtNm0Z3ZPCoDtq9x1LeOmyy80Z
+         lUacv05wKoLoD4W2crAZd31whxR7p2zKo2XAV7p2HLVp2zdSjdbBh4hkqdSf2AQTRIBT
+         erHtHBTnrsygHLzZavBAygOEzJXgbzC093NFKO46bG2+D5qPWlYTPC1OWE1NqfUUPxgL
+         mAy5rU1dYtKIp0+bAnjJXpGeuEgWkg7GrZ6HVdBXntttFmZffPRsFMjk076jvymdbyNP
+         70UOmSrRaGylwRcDV1Fh98yTMfUpNS1vgfxn144FB9T0FRyzXsSiyctmIwyR9viPOFOe
+         0lbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703608336; x=1704213136;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rnzU4WJmQxmkUC7bQNo5RhC0emWFKZu0JZ9NLV6mjrw=;
+        b=apRaZ2re2i+2SJJMx7cqQUxaWoh72tdd+gEXN1HeVkEzC4Wqamx3aSJP3hHD82JXC4
+         2Vb8yEOgaO5JTJaNqrLn2owT7OL0W9pzFft9RcW5WBRoqijASNoClhnAMQWKfwPCp/PH
+         0Iw653NnDlIRSgCSXvVX5o15KnuRlujPyeRTsys9da7kypfufJ//lfVj53obAtUralsu
+         kl9Op+F9KLlzXYkYAC1IwVHxZ2twD7zDIqXhWrsaG/n75cxe4/kdjMhNXF474WgpcMaZ
+         pGkaLXopzOrr86Vmv7OC5dFypnZ7tys4r2n+uPst/5ytJ30dhqdaPwvaCiyyu/nkGJzY
+         Stlw==
+X-Gm-Message-State: AOJu0YxeBA1/M148b0/9hx1THQm2A0IPKjZ8Kav7RhRqkEl0Qwr1LDel
+	W+FsH+Lk/fTHhgfGbid3MY0OyVEHz2tP/g==
+X-Google-Smtp-Source: AGHT+IHoNkKVl94LC8Wx0njrXqNfmcz/RkWU2KDFwE5BRUwhMl21Wyoe41r6NIPjLq7PoF9EIPI9gQ==
+X-Received: by 2002:a05:6602:179e:b0:7ba:c855:9cf7 with SMTP id y30-20020a056602179e00b007bac8559cf7mr4948137iox.2.1703608336402;
+        Tue, 26 Dec 2023 08:32:16 -0800 (PST)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id cq13-20020a056638478d00b0046923416e7asm3197603jab.175.2023.12.26.08.32.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Dec 2023 08:32:15 -0800 (PST)
+From: Jens Axboe <axboe@kernel.dk>
+To: Xiaobing Li <xiaobing.li@samsung.com>
+Cc: asml.silence@gmail.com, linux-kernel@vger.kernel.org, 
+ io-uring@vger.kernel.org, kun.dou@samsung.com, peiwei.li@samsung.com, 
+ joshi.k@samsung.com, kundan.kumar@samsung.com, wenwen.chen@samsung.com, 
+ ruyi.zhang@samsung.com, cliang01.li@samsung.com, xue01.he@samsung.com
+In-Reply-To: <20231225054438.44581-1-xiaobing.li@samsung.com>
+References: <CGME20231225055252epcas5p43ae8016d329b160f688def7b4f9d4ddb@epcas5p4.samsung.com>
+ <20231225054438.44581-1-xiaobing.li@samsung.com>
+Subject: Re: [PATCH v6] io_uring: Statistics of the true utilization of sq
+ threads.
+Message-Id: <170360833542.1229482.7687326255574388809.b4-ty@kernel.dk>
+Date: Tue, 26 Dec 2023 09:32:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-
-On Tue, 26 Dec 2023 16:28:39 +0000
-Jonathan Cameron <jic23@kernel.org> wrote:
-
-> On Sun, 24 Dec 2023 16:34:46 +0200
-> Petre Rodan <petre.rodan@subdimension.ro> wrote:
-> 
-> > Define enum inside the honeywell,transfer-function property block.
-> > 
-> > Set the correct irq edge in the example block.
-> > Based on the datasheet, in table 13 on page 11:
-> > "End-of-conversion indicator: This pin is set high when a measurement
-> > and calculation have been completed and the data is ready to be
-> > clocked out"
-> > 
-> > Add description on End-of-conversion interrupt.
-> > 
-> > Signed-off-by: Petre Rodan <petre.rodan@subdimension.ro>
-> > Signed-off-by: Andreas Klinger <ak@it-klinger.de>  
-> What's the relationship between Andreas and this patch?
-> 
-> Petre seems to have sent it so either Andreas should have a Co-authored-by or
-Co-developed-by: that is.
+X-Mailer: b4 0.13-dev-7edf1
 
 
-> should be the author... Or not there at all
+On Mon, 25 Dec 2023 13:44:38 +0800, Xiaobing Li wrote:
+> Count the running time and actual IO processing time of the sqpoll
+> thread, and output the statistical data to fdinfo.
 > 
-> Thanks,
+> Variable description:
+> "work_time" in the code represents the sum of the jiffies of the sq
+> thread actually processing IO, that is, how many milliseconds it
+> actually takes to process IO. "total_time" represents the total time
+> that the sq thread has elapsed from the beginning of the loop to the
+> current time point, that is, how many milliseconds it has spent in
+> total.
 > 
-> Jonathan
-> 
-> > ---
-> >  .../bindings/iio/pressure/honeywell,mprls0025pa.yaml       | 7 ++++++-
-> >  1 file changed, 6 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/pressure/honeywell,mprls0025pa.yaml b/Documentation/devicetree/bindings/iio/pressure/honeywell,mprls0025pa.yaml
-> > index d9e903fbfd99..84ced4e5a7da 100644
-> > --- a/Documentation/devicetree/bindings/iio/pressure/honeywell,mprls0025pa.yaml
-> > +++ b/Documentation/devicetree/bindings/iio/pressure/honeywell,mprls0025pa.yaml
-> > @@ -42,6 +42,10 @@ properties:
-> >      maxItems: 1
-> > 
-> >    interrupts:
-> > +    description:
-> > +      Optional interrupt for indicating End-of-conversion.
-> > +      If not present, the driver loops for a while until the received status
-> > +      byte indicates correct measurement.
-> >      maxItems: 1
-> > 
-> >    reset-gpios:
-> > @@ -65,6 +69,7 @@ properties:
-> >        1 - A, 10% to 90% of 2^24 (1677722 .. 15099494)
-> >        2 - B, 2.5% to 22.5% of 2^24 (419430 .. 3774874)
-> >        3 - C, 20% to 80% of 2^24 (3355443 .. 13421773)
-> > +    enum: [1, 2, 3]
-> >      $ref: /schemas/types.yaml#/definitions/uint32
-> > 
-> >    vdd-supply:
-> > @@ -93,7 +98,7 @@ examples:
-> >              reg = <0x18>;
-> >              reset-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
-> >              interrupt-parent = <&gpio3>;
-> > -            interrupts = <21 IRQ_TYPE_EDGE_FALLING>;
-> > +            interrupts = <21 IRQ_TYPE_EDGE_RISING>;
-> >              honeywell,pmin-pascal = <0>;
-> >              honeywell,pmax-pascal = <172369>;
-> >              honeywell,transfer-function = <1>;
-> > --
-> > 2.41.0
-> >   
-> 
-> 
+> [...]
+
+Applied, thanks!
+
+[1/1] io_uring: Statistics of the true utilization of sq threads.
+      commit: 9f7e5872eca81d7341e3ec222ebdc202ff536655
+
+Best regards,
+-- 
+Jens Axboe
+
+
 
