@@ -1,39 +1,19 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5961FA4
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 19:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P/F1XcCX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=Rr4zZlZeeGcP+0FJ74qNZJLVzA73VMRgRJ8o8EqCzVc=; b=P/F1XcCXAwd3b4bw3Mr/MUXT2T
-	3O9/8xY0wu0NlfzE/qJVusvjUWYE3KTZYVj1VnnHXMvKzrmmKzEILj09hftfpzlOSr0Daf/epeHTa
-	X9Pr+zCXq2Eqh38mMbT65HuI5aCrk1JFx0wGLW9y0zTSbHgEDFNybxZWfUICYmZg3R1iKewvldvcN
-	25mZ/jv6SU0IfcCgVRRPZNHMmKZHvzByutV8WR5aXRlRpiPVo2R8t3fuUd7EhWm8/XOxMAXw5SkNi
-	e//MsNrqKKT0h7P2C7m7wneAu5drw+wCPpV1TNuHk/LM7hxjJ+bffGwus4yBElMzdyL0jx9QHmtl1
-	/Hrv5kAw==;
-Received: from [50.53.46.231] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rIDVZ-00DT1I-17;
-	Tue, 26 Dec 2023 19:54:33 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4C423C6
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 20:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
+Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
+	by mx.skole.hr (mx.skole.hr) with ESMTP id 4299384035
+	for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 21:01:30 +0100 (CET)
+From: =?UTF-8?q?Duje=20Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
 To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-	intel-gfx@lists.freedesktop.org,
-	Jonathan Corbet <corbet@lwn.net>,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH v2 1/4] drm/i915/gem: reconcile Excess struct member kernel-doc warnings
-Date: Tue, 26 Dec 2023 11:54:29 -0800
-Message-ID: <20231226195432.10891-1-rdunlap@infradead.org>
+Cc: =?UTF-8?q?Duje=20Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Subject: [PATCH RFC] soc: pxa: ssp: Cast to enum pxa_ssp_type instead of int
+Date: Tue, 26 Dec 2023 21:01:12 +0100
+Message-ID: <20231226200113.31551-1-duje.mihanovic@skole.hr>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -41,41 +21,41 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Document nested struct members with full names as described in
-Documentation/doc-guide/kernel-doc.rst.
+On ARM64 platforms, id->data is a 64-bit value and casting it to a
+32-bit integer causes build errors. Cast it to the corresponding enum
+instead.
 
-i915_gem_context_types.h:420: warning: Excess struct member 'lock' description in 'i915_gem_context'
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc: Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
-Cc: intel-gfx@lists.freedesktop.org
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: dri-devel@lists.freedesktop.org
-Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
 ---
-v2: add Reviewed-by: Rodrigo
-    rebase and resend due to (i915) patchwork being down
-
- drivers/gpu/drm/i915/gem/i915_gem_context_types.h |    4 ++--
+This patch is necessary for my Marvell PXA1908 series to compile successfully
+with allyesconfig:
+https://lore.kernel.org/all/20231102-pxa1908-lkml-v7-0-cabb1a0cb52b@skole.hr/
+---
+ drivers/soc/pxa/ssp.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff -- a/drivers/gpu/drm/i915/gem/i915_gem_context_types.h b/drivers/gpu/drm/i915/gem/i915_gem_context_types.h
---- a/drivers/gpu/drm/i915/gem/i915_gem_context_types.h
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_context_types.h
-@@ -412,9 +412,9 @@ struct i915_gem_context {
+diff --git a/drivers/soc/pxa/ssp.c b/drivers/soc/pxa/ssp.c
+index a1e8a07f7275..e2ffd8fd7e13 100644
+--- a/drivers/soc/pxa/ssp.c
++++ b/drivers/soc/pxa/ssp.c
+@@ -152,11 +152,11 @@ static int pxa_ssp_probe(struct platform_device *pdev)
+ 	if (dev->of_node) {
+ 		const struct of_device_id *id =
+ 			of_match_device(of_match_ptr(pxa_ssp_of_ids), dev);
+-		ssp->type = (int) id->data;
++		ssp->type = (enum pxa_ssp_type) id->data;
+ 	} else {
+ 		const struct platform_device_id *id =
+ 			platform_get_device_id(pdev);
+-		ssp->type = (int) id->driver_data;
++		ssp->type = (enum pxa_ssp_type) id->driver_data;
  
- 	/** @stale: tracks stale engines to be destroyed */
- 	struct {
--		/** @lock: guards engines */
-+		/** @stale.lock: guards engines */
- 		spinlock_t lock;
--		/** @engines: list of stale engines */
-+		/** @stale.engines: list of stale engines */
- 		struct list_head engines;
- 	} stale;
- };
+ 		/* PXA2xx/3xx SSP ports starts from 1 and the internal pdev->id
+ 		 * starts from 0, do a translation here
+-- 
+2.43.0
+
+
