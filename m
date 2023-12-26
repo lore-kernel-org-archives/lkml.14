@@ -1,70 +1,68 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mail-m6035.netease.com (mail-m6035.netease.com [210.79.60.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0AC4C3BD;
-	Tue, 26 Dec 2023 06:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A384C3C4;
+	Tue, 26 Dec 2023 07:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xvTXLOrh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=kkgklDeXRuhCQW767gm/kiIxt834TUdRq1zskO/SUKE=; b=xvTXLOrhrpyxzm/nxWY/ILl0N/
-	QwKSw3UC8qJkByrAA9kO9T2rX4cbqE/6NLralyTz97Ml89Ly9utPeqW0TdhnS1SqbLO9ixT+ABdfT
-	/lg8Jx4Y9nso7eggfKdVEooRpoPf3xkmSiBFDP+szt/Kt2FgiWKM6CMCMIONyfWAGs8+SW4VLVbSj
-	FNke/bw0pdMwPbqDiguH2OpmH/1NWITlM9CLM2lS0CcpvG5bFWs6Lj+/VXB6ECF7WZpCXU0fs8mC1
-	CrEd66DOVJBWepQ3Ru4q+Rq8tiPwZrGclJtTXuCuL88RwGZ+4+f/GLctXrjsa+vIOD4a62xw1jSQb
-	U+oVevPQ==;
-Received: from [50.53.46.231] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rI1Ia-00BpNA-0w;
-	Tue, 26 Dec 2023 06:52:20 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Jani Nikula <jani.nikula@intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org
-Subject: [PATCH] kernel-doc: handle a void function without producing a warning
-Date: Mon, 25 Dec 2023 22:52:19 -0800
-Message-ID: <20231226065219.319-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="NUbaH8WP"
+DKIM-Signature: a=rsa-sha256;
+	b=NUbaH8WPk7Gp/LNITR7TS7RPV6Zq7I7EWqJlbmY7yyofcqBSrLKaMG5A6uvIA40dLawouKfgAavs8GqJ3VYqXH6Cm7IrzkxkYw1mOLbkisX8cXVn8cCEqPzg8z5Y5htrBdQm/30sMN+ISjZJ+bTObheCAjPr+oYP5/A6QkOe6f0=;
+	s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=gywcpbvFq4giP2vj7hMAbUeXdCN7KyEFaon8oL7guFQ=;
+	h=date:mime-version:subject:message-id:from;
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by mail-m12773.qiye.163.com (Hmail) with ESMTPA id 1AFC32C0564;
+	Tue, 26 Dec 2023 15:20:02 +0800 (CST)
+From: William Wu <william.wu@rock-chips.com>
+To: hminas@synopsys.com,
+	gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	william.wu@rock-chips.com,
+	frank.wang@rock-chips.com,
+	jianwei.zheng@rock-chips.com,
+	yangbin@rock-chips.com
+Subject: [PATCH] usb: dwc2: Disable clock gating feature on Rockchip SoCs
+Date: Tue, 26 Dec 2023 15:19:59 +0800
+Message-Id: <1703575199-23638-1-git-send-email-william.wu@rock-chips.com>
+X-Mailer: git-send-email 2.0.0
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUJPSFZIGk9JQ0wdTB8dSk1VEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk1PSUxOVUpLS1VKQk
+	tLWQY+
+X-HM-Tid: 0a8ca4fea9f1b249kuuu1afc32c0564
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OT46Pzo*KDw2KxURMRQXTiI8
+	MT1PFB1VSlVKTEtITkxOSUtISklLVTMWGhIXVQwSFxcSGhZVDA47CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFKTUtDNwY+
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Currently a void function can produce a warning:
-  main.c:469: warning: contents before sections
+The DWC2 IP on the Rockchip SoCs doesn't support clock gating.
+When a clock gating is enabled, system hangs.
 
-This one is from arch/x86/kernel/cpu/sgx/main.c (which is not included
-in any produced kernel documentation output).
-
-Handle this by setting $in_doc_sect to 1 whenever any recognized
-document section name is processed.
-
-Fixes: f624adef3d0b ("kernel-doc: limit the "section header:" detection to a select few")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jani Nikula <jani.nikula@intel.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org
+Signed-off-by: William Wu <william.wu@rock-chips.com>
 ---
- scripts/kernel-doc |    1 +
+ drivers/usb/dwc2/params.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff -- a/scripts/kernel-doc b/scripts/kernel-doc
---- a/scripts/kernel-doc
-+++ b/scripts/kernel-doc
-@@ -2126,6 +2126,7 @@ sub process_body($$) {
-     }
+diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
+index fb03162..eb677c3 100644
+--- a/drivers/usb/dwc2/params.c
++++ b/drivers/usb/dwc2/params.c
+@@ -130,6 +130,7 @@ static void dwc2_set_rk_params(struct dwc2_hsotg *hsotg)
+ 	p->lpm_clock_gating = false;
+ 	p->besl = false;
+ 	p->hird_threshold_en = false;
++	p->no_clock_gating = true;
+ }
  
-     if (/$doc_sect/i) { # case insensitive for supported section names
-+	$in_doc_sect = 1;
- 	$newsection = $1;
- 	$newcontents = $2;
- 
+ static void dwc2_set_ltq_params(struct dwc2_hsotg *hsotg)
+-- 
+2.0.0
+
