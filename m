@@ -1,243 +1,272 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B2B1A700
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 04:47:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48ADA4AF6F;
+	Tue, 26 Dec 2023 04:49:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="i5MLp8QI"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20231226044740epoutp03e5186fc95638e8a878b09bfbd4b4be54~kSE55TBJP0557505575epoutp03U
-	for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 04:47:40 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20231226044740epoutp03e5186fc95638e8a878b09bfbd4b4be54~kSE55TBJP0557505575epoutp03U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1703566060;
-	bh=Nug3/f8Q4/ibNrOlixZTRYPd3Tv54vqC7fn1zAFy6bQ=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=i5MLp8QIy3pCNWdGMHVHsUkSYy8Ds6NSv5EbfPsTbNM4pQeX3YdcjHVekRqPK7cPm
-	 fROT2x81T9GNGl5j+Rf1ujSyLwqQgQX4dbjrQ9sWASZ62f0d+mDtmrXI1b008hqzwc
-	 16CRbxmqmVZrqhOF/RBQpMilxJGgARimMVCfS23A=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20231226044740epcas5p2707bd502c2f1b2753cc5b8a053511ecf~kSE5iDUWR2236222362epcas5p2w;
-	Tue, 26 Dec 2023 04:47:40 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.179]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4Szj1l2K3yz4x9Pv; Tue, 26 Dec
-	2023 04:47:39 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	69.B6.09634.BEA5A856; Tue, 26 Dec 2023 13:47:39 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20231225055252epcas5p43ae8016d329b160f688def7b4f9d4ddb~j-UiUgA7e2655526555epcas5p42;
-	Mon, 25 Dec 2023 05:52:52 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20231225055252epsmtrp1035a41da09cadae0e41218bbe02795d0~j-UiTlafq3004930049epsmtrp1A;
-	Mon, 25 Dec 2023 05:52:52 +0000 (GMT)
-X-AuditID: b6c32a49-eebff700000025a2-f8-658a5aebd68e
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	A1.A3.07368.4B819856; Mon, 25 Dec 2023 14:52:52 +0900 (KST)
-Received: from localhost.localdomain (unknown [109.105.118.124]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20231225055250epsmtip2369aa83565ac7aebec79ef864bf5ce60~j-UgepQ100550205502epsmtip2O;
-	Mon, 25 Dec 2023 05:52:50 +0000 (GMT)
-From: Xiaobing Li <xiaobing.li@samsung.com>
-To: axboe@kernel.dk
-Cc: asml.silence@gmail.com, linux-kernel@vger.kernel.org,
-	io-uring@vger.kernel.org, kun.dou@samsung.com, peiwei.li@samsung.com,
-	joshi.k@samsung.com, kundan.kumar@samsung.com, wenwen.chen@samsung.com,
-	ruyi.zhang@samsung.com, cliang01.li@samsung.com, xue01.he@samsung.com,
-	Xiaobing Li <xiaobing.li@samsung.com>
-Subject: [PATCH v6] io_uring: Statistics of the true utilization of sq
- threads.
-Date: Mon, 25 Dec 2023 13:44:38 +0800
-Message-ID: <20231225054438.44581-1-xiaobing.li@samsung.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QRjfS7tx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703566144; x=1735102144;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=gK24pVcSXHIch97o9NTTKL4nXKaeoYIdbdXfZSG5Q7M=;
+  b=QRjfS7txZcN52o70WBlBS6PvSGeP+al9ElE1TgGG2L5xD0b8z+Kr9Two
+   yWRFuZ9gll/+7mwNxCRo7w95DX4IeoZstB6XtO65Ite/+X+wnuRbtnDcv
+   xjEptHxoQM/PoBO9K3pWWOnOUbkx/JU0flUTJMnhAESlzvzU76JccA7AT
+   HDI5JHrO/4BjGoZMqK7WrspypdxKiBaLejZ+yLlvVbKFCrVudaZEnGUIG
+   DdFgjTRtZh5xi2jfWCHvb7NxoCNARIbOaCaJH06pF/d0vWEefYKx4XdE3
+   wtDWx3YQYCLC4BhVtUVCKHphZ431P4N/ylbCmMeIZg3ueIFySL4EdG23P
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="399105987"
+X-IronPort-AV: E=Sophos;i="6.04,304,1695711600"; 
+   d="scan'208";a="399105987"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Dec 2023 20:49:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10934"; a="727654180"
+X-IronPort-AV: E=Sophos;i="6.04,304,1695711600"; 
+   d="scan'208";a="727654180"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Dec 2023 20:49:02 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 25 Dec 2023 20:49:02 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 25 Dec 2023 20:49:01 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Mon, 25 Dec 2023 20:49:01 -0800
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.100)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 25 Dec 2023 20:49:01 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Y5KoHcVqq4KxuM/zI9C4rSfG9kBsb1AcEdaCK57O+vENdUcrS427SfEVx4ywaooxLGD0c9juFSNPlsBucQs6XOo9dxWKSMm9l9KnRkJRaMwvprmaQ41kYyQ1lHlIB7htnnG+Ph+ij1gUv30ByNjHyXzPs15L8l5CBdnl+sQH4LkqaI72/VKZ9YktlX4vt07I48UXAEgxqb6QW8t4mc097rDIKJzEuKTD2UwFJDBcBPKNXueNN2zeY6E2KYNeIWZJnq5Kn1vbjNog56/zfvr5BTyG7+iScmrnATXSYPxBDjlTKnYNeq6BsMAibDE0wzWI0z7Lfo63Adb0vNOGaMQAVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9Wl9el5Nk0LtwQ6+6whOGTVvZLUTemC4oZ+YaElXreE=;
+ b=mLFOgElJ08CWcX6In0EzARR/4mtONmY/oaRFGdMT+8/+Qr+2n1x+0xNz9V3WKQDl+dTxNbTeQBKK9QMm2bAwCXQppTDsVE/F1uCrcqqEJ28KWxadl02RT2p/eBn9nSPo2fC8V/UJK/EAezmadGt+vAcCPEPUS6xYMcozKaDxJn0ZRP6EeL+x50udFEq123/MhyIvGZ6dF0P8PyQT1sJWRjgQV3TnUKFK+UZTKZOwN56jTcFh8tp8CEAEUAhC8VHCD7QPK9NMl4sk4tk9Gco8tTcBb5K+rp5sWVKPwYKD9WGyWRTOmsEHKOniK2wY5nGuNMUMF5kajP8RuyUGL4KnPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS0PR11MB7529.namprd11.prod.outlook.com (2603:10b6:8:141::20)
+ by BN9PR11MB5451.namprd11.prod.outlook.com (2603:10b6:408:100::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.27; Tue, 26 Dec
+ 2023 04:48:54 +0000
+Received: from DS0PR11MB7529.namprd11.prod.outlook.com
+ ([fe80::e4ae:3948:1f55:547d]) by DS0PR11MB7529.namprd11.prod.outlook.com
+ ([fe80::e4ae:3948:1f55:547d%5]) with mapi id 15.20.7113.027; Tue, 26 Dec 2023
+ 04:48:53 +0000
+Message-ID: <cbd97b49-37b5-4445-a8b5-717b8ce99f59@intel.com>
+Date: Tue, 26 Dec 2023 12:51:39 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 9/9] iommu/vt-d: Add iotlb flush for nested domain
+Content-Language: en-US
+To: "Tian, Kevin" <kevin.tian@intel.com>, "joro@8bytes.org" <joro@8bytes.org>,
+	"alex.williamson@redhat.com" <alex.williamson@redhat.com>, "jgg@nvidia.com"
+	<jgg@nvidia.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
+CC: "cohuck@redhat.com" <cohuck@redhat.com>, "eric.auger@redhat.com"
+	<eric.auger@redhat.com>, "nicolinc@nvidia.com" <nicolinc@nvidia.com>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "mjrosato@linux.ibm.com"
+	<mjrosato@linux.ibm.com>, "chao.p.peng@linux.intel.com"
+	<chao.p.peng@linux.intel.com>, "yi.y.sun@linux.intel.com"
+	<yi.y.sun@linux.intel.com>, "peterx@redhat.com" <peterx@redhat.com>,
+	"jasowang@redhat.com" <jasowang@redhat.com>,
+	"shameerali.kolothum.thodi@huawei.com"
+	<shameerali.kolothum.thodi@huawei.com>, "lulu@redhat.com" <lulu@redhat.com>,
+	"suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, "Duan,
+ Zhenzhong" <zhenzhong.duan@intel.com>, "joao.m.martins@oracle.com"
+	<joao.m.martins@oracle.com>, "Zeng, Xin" <xin.zeng@intel.com>, "Zhao, Yan Y"
+	<yan.y.zhao@intel.com>, "j.granados@samsung.com" <j.granados@samsung.com>
+References: <20231221153948.119007-1-yi.l.liu@intel.com>
+ <20231221153948.119007-10-yi.l.liu@intel.com>
+ <BN9PR11MB5276A45F5355A6DAA8CBE5738C94A@BN9PR11MB5276.namprd11.prod.outlook.com>
+From: Yi Liu <yi.l.liu@intel.com>
+In-Reply-To: <BN9PR11MB5276A45F5355A6DAA8CBE5738C94A@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG3P274CA0006.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::18)
+ To DS0PR11MB7529.namprd11.prod.outlook.com (2603:10b6:8:141::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAJsWRmVeSWpSXmKPExsWy7bCmpu7rqK5Ug4W3+CzmrNrGaLH6bj+b
-	xem/j1ks3rWeY7E4+v8tm8Wv7ruMFlu/fGW1uLxrDpvFs72cFl8Of2e3ODvhA6vF1C07mCw6
-	Wi4zWnRdOMXmwOexc9Zddo/LZ0s9+rasYvT4vEkugCUq2yYjNTEltUghNS85PyUzL91WyTs4
-	3jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DXLTMH6EQlhbLEnFKgUEBicbGSvp1NUX5pSapCRn5x
-	ia1SakFKToFJgV5xYm5xaV66Xl5qiZWhgYGRKVBhQnbGjtUz2QpaFCp6FixgaWC8JtnFyMkh
-	IWAiMfvwS5YuRi4OIYHdjBIbum8yQzifGCVuvZ/ICuF8Y5S42dPLDNNyZW4rVMteRomfZzug
-	qr4ySiz808IKUsUmoC1xfV0XmC0iICyxvwOig1lgD5PE9nsH2UASwgKBEotvdIMVsQioSuya
-	soGpi5GDg1fARuLxFXuIbfISi3csB9vMKyAocXLmExYQmxko3rx1NtRFnRwSvdesIWwXiakb
-	+hghbGGJV8e3sEPYUhIv+9ug7GKJIz3fwY6WEGhglJh++ypUwlri35U9LCA3MAtoSqzfpQ8R
-	lpWYemodE8RePone30+YIOK8EjvmwdiqEqsvPWSBsKUlXjf8hop7SBzY/RgsLiQQK7Hr21L2
-	CYzys5C8MwvJO7MQNi9gZF7FKJlaUJybnlpsWmCYl1oOj9nk/NxNjOCkquW5g/Hugw96hxiZ
-	OBgPMUpwMCuJ8MoqdqQK8aYkVlalFuXHF5XmpBYfYjQFBvFEZinR5HxgWs8riTc0sTQwMTMz
-	M7E0NjNUEud93To3RUggPbEkNTs1tSC1CKaPiYNTqoHJ/9Hvx6e5MxZKvud+oLiovv589P49
-	PVc+SXdUBTXq1GW0t0y2PlgZGhZnciT93bFZ3g41r1hr/8xjlMnwOOGvW1XHJpjLKiNxRmym
-	+3HGhFbxD+YeIdX+5/xebrphZs63JIfzq2ai/Gq5RbUb10V1OJWuVb1hs5HPyHHFkz96m/Lv
-	T3FnnXz+vEtF3MlFX15JTXy5uXdvJkt6pfHk6m1inRP9Yo4vmr78arGh3M9bCsbGu5xFk5xz
-	6s2tj95a1RG0zSTtyr5mW4eKadLPOr/uETFolFHYVDajhiv14BUT+VCLxpVzdmo72RXWX2kR
-	3rdIUT7jlA1Hsp62YSH3qakGHU9nf3lsvvpq5u5DWkosxRmJhlrMRcWJABzF3WUzBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHLMWRmVeSWpSXmKPExsWy7bCSvO4Wic5Ug8tnWSzmrNrGaLH6bj+b
-	xem/j1ks3rWeY7E4+v8tm8Wv7ruMFlu/fGW1uLxrDpvFs72cFl8Of2e3ODvhA6vF1C07mCw6
-	Wi4zWnRdOMXmwOexc9Zddo/LZ0s9+rasYvT4vEkugCWKyyYlNSezLLVI3y6BK2PH6plsBS0K
-	FT0LFrA0MF6T7GLk5JAQMJG4MreVBcQWEtjNKDFlqVgXIwdQXFriz59yiBJhiZX/nrN3MXIB
-	lXxmlHi+fzMTSIJNQFvi+rouVhBbBKhofwfEHGaBU0wS7b9cQWxhAX+J3bfugtWzCKhK7Jqy
-	gQlkPq+AjcTjK/YQ8+UlFu9Yzgxi8woISpyc+YQFpIRZQF1i/TwhiInyEs1bZzNPYOSfhaRq
-	FkLVLCRVCxiZVzFKphYU56bnJhsWGOallusVJ+YWl+al6yXn525iBEeBlsYOxnvz/+kdYmTi
-	YDzEKMHBrCTCK6vYkSrEm5JYWZValB9fVJqTWnyIUZqDRUmc13DG7BQhgfTEktTs1NSC1CKY
-	LBMHp1QDE4/wzeN/vt54L7x+dgnvui+BBadjE/iSn0b+FfGqUrpcnH0/csHi5HTR5fuPTPix
-	J6fl9OVdvzivMXjIf1p+/kF/aDxj14aCxE617cue3uwM19ay53kiJbn0x/cJRoETLRx6xAV5
-	Nu/a9KciyVTfv+qc1bQJLy2jeV1OvA0u+Mzq8silaOJCzTPmm5ecDpdJjVF9qJK2/q9Pw50P
-	NUt/cnyu3+zO9nnT1ZrIVibpmCCrbvvuKxli3GUzDv79MMFJvvGKYpHx5NxXeZ+f6nTZPjhg
-	KWezReOf0ayDL1YZzfVkSpRKOsH472Os18J6jYT53FvP2t7Z8dXX9KXPwbJjXmEc3pbM1ptq
-	Gr9PO/g9UYmlOCPRUIu5qDgRAFG4wlPxAgAA
-X-CMS-MailID: 20231225055252epcas5p43ae8016d329b160f688def7b4f9d4ddb
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20231225055252epcas5p43ae8016d329b160f688def7b4f9d4ddb
-References: <CGME20231225055252epcas5p43ae8016d329b160f688def7b4f9d4ddb@epcas5p4.samsung.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB7529:EE_|BN9PR11MB5451:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6355fe0c-2610-49b0-38f9-08dc05cdf58a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: VVMrOIbbGBxm03bMuF/X67hpCfXO8jRc82yeDw4EqFChtF5+5w/vDv9f84SvfX/CcHNSKjsZT3awRIKm84wyUSoUHB2SiP0t9XFxFDu2UYSbroIaWjrRcmKmzK+k7zDuuECFHChr98aNRbS8Lpx3Jd85dqHxXHVfGa0xgJUSOGzWTXwWgohlrdEZj8TqYuab4HWyrUa8QoLsG1Orwo1Ji4EcbYJ7J3upj8jwuY8PxbHl3loydt1duQZZXc45BpjmlZyrIY374BMXr/nyU7kTgn1GZ278+QUDq7dQGR8ds7cIFW8/F/fUy1CPMxOxdIxtD1ezgYtoeItxa2j2oprlUROfvtqOUkAaeotQfkr2w+WVkEqjakG4oeyYuTvMlA2SKUSswFSg4bDcYUXYhq5ow1fEHGu740MeUn6L6X/YD2V4azs2AKb99tXL5NoICuJIVW+vJSZjK7lO4eu6H+3Z3o51fNnB0c/kvRsTmaf9TdOzl7wyzLECGwg+K/8fn+ua5YEALNDBi+yNjIYaU5HeDDhCOiGnLA1iJhJwizSNbolW5IPFpQRR8eheCpWSKE4UDnm2boH4bOVsdRQ5ILanZVmTf8UxGoZjm29CCg6u3dSxHQQOpMPKj7jW8E349GHjrm+BVK83BvR90Nr/tO/Z9Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB7529.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(39860400002)(136003)(396003)(346002)(366004)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(83380400001)(82960400001)(36756003)(31696002)(86362001)(41300700001)(38100700002)(5660300002)(7416002)(8936002)(66556008)(66476007)(316002)(66946007)(54906003)(4326008)(8676002)(53546011)(110136005)(2616005)(6512007)(6506007)(26005)(478600001)(6486002)(2906002)(6666004)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?L01RNUcxekU0TVNBZzF2bTZMWjhPNm9kdjd2WDBkQm1iWlJVSHlvZXpBcE1S?=
+ =?utf-8?B?eFVuSGpSZjFVQnRvTkZDSGNwVVRPYkFheFdkeDBGMEk5dVFTWnRXODBrcnZT?=
+ =?utf-8?B?T2JlZkN2YWhZdDYvUVpOZWtoOHhxbkxrVU1jZDRLVCtraHJyL3o4SnR5amZP?=
+ =?utf-8?B?cUNwWXVXc3M5QnRpSEwxemZ6enpVWU51WXhqNVdVMVZkd29vWWYrOWR2ZDZj?=
+ =?utf-8?B?bUNmZk1IZ0s0QkNndU1kUjErRmhqdjFEWVh4RzNEeW94Y1JxTGpzd1A2aDRy?=
+ =?utf-8?B?QjBnRTBEWXF0NnovekJia00zQ1c1L3RiU1pQcE5uNTJLTzZPMmtjZG1ZZkVo?=
+ =?utf-8?B?VjZEb09ZKzR0UHJMbW9aaHdFVjJOVktJcEhXZXpvRStZWFhjOGwzUzJmOUYw?=
+ =?utf-8?B?Q1ZaME1POStmQmovRHJsMWZaRjNwYi8vUGRkT2tuVzlrS1R3TGxWSUgyVXVB?=
+ =?utf-8?B?bnB0VnNPUDNDUjJWQW9KaFJoV1EvSEVxSDlUQlJUYUZFdDlmRTdqNUhhV1M0?=
+ =?utf-8?B?OEVYb29LbE8zMEtpZ0V3dENCanZjQjgvTHVHcGszem9pR3RrU213VzFxa2NZ?=
+ =?utf-8?B?Sjd6SFFyOVFyU01lUVN5eXBacXJBV1ZvclZQbCsxaEdhN2paKzZqdDlsVjJu?=
+ =?utf-8?B?MUJYc3M5Vml0d0pOb1VHNno4S0tXUFlFWStxL0ptYldWTFYxQUtWZEoxV3RE?=
+ =?utf-8?B?UEJoenZjR0J0bndCTTRLTzlvZ3RKSW4zUG1ub3I1K0JxNEttSm1WeUlvOERG?=
+ =?utf-8?B?S28wdVhpVjhnME81RlJsMjYya3JaUUhMRFRLWm9ibDU4YTMwNFgzbzlTZWpD?=
+ =?utf-8?B?Y3IweEhhR2N4WUtRaUpkc0grNXpXTFFTSUgyTVNQSGxaM0tLYnRrVXZWZytR?=
+ =?utf-8?B?cVF5cXUzZEhYYzhabE83eFpySEZkUmdqU3Raa2dXUXk2L3VISlJ5K1ZtcGZu?=
+ =?utf-8?B?VmFWc3hGdFdURVF0ajNQd2xIWExXQVpSVVc5TnlOc0R1RGJpcEFtRGdRd3ZY?=
+ =?utf-8?B?ZnVVa20zYjlHY1BXd1ZBVnZwYnVSMjN0cnorbjg0QUk5MCtGbmUrdVcxaXdG?=
+ =?utf-8?B?SmQ0Y21xa2w4V2srWGx4V3lBN2JNRVBaYWVYVklhYzRLMzREeFJnUHFvdElx?=
+ =?utf-8?B?b1FEOXoyUk42K2tCeGpWTzdiaVpERENMdW5UWTIvcmtwb0pBQStmUjVoR2Rr?=
+ =?utf-8?B?RUtLU2dTZm5wZytmVkU0d1ZjYWpHa1ZibGVkbDdqKzlNVlgvcnJXdXlVQ2Vx?=
+ =?utf-8?B?dVp0TlNkQmk5Z2c3Z000WFNqK2w2bzhqRHMycE0yaXVNSFZ3NWpmdkZmMzNm?=
+ =?utf-8?B?MTFKRUEyRGFyR2ZvR2txdDBMTVluNDdVV0lQZXJxNi9PL2VSZGtSRUJhbEdq?=
+ =?utf-8?B?TCt1UE9JL3doV2t5R1pQcnp3QUN2L0I1VnZuYU4rSnlQa1Z2RHh0SzM4Y0lV?=
+ =?utf-8?B?RkpIdlFySUMxOXBGdHlaU1Y2OE1LZXdXTUJBWmNDNUJyVU81N1NHQURoVGIv?=
+ =?utf-8?B?NWpnSHRqMEhhTG4vNVRkcldWbTFOd01rbHRScDVRZjQweTNVbE41QzV0WTJO?=
+ =?utf-8?B?TzR4MWRGZEdodjVyaURGdW9UUndKZHVLRFNncVJsMGdwK05GQU5nU0c1UXNH?=
+ =?utf-8?B?U2JLYVovMmpsY01IQ29MKzdRd29BSUJDdGxldk1yQjRTWEx6Uk1zMkRlekRq?=
+ =?utf-8?B?a3gycXY5a0pncFNxZWpCT1JCRU1NZlRRSm1VUlNRMmh2Z2E2Q0NNWFlhdmVy?=
+ =?utf-8?B?UFJVMm9EUUxhUjhsdnF4MTBiZU1aM3cwVFdTM3FoenkxcFMxMG82VmRCMHly?=
+ =?utf-8?B?Mk1jNkVLRzZDUFF4TTFJcDdCdGxEbEdEdlJYWEl5dFA0a2xlUW5aMk8vMU9v?=
+ =?utf-8?B?UmF5UmZQS1pvZytYM1lPK0RrUGltZG5kSzdDYnlqeHlzaG90SE1lUGVJYlAy?=
+ =?utf-8?B?Z2loeDdhakdITkkwRGQwUUdNaVN2UCtKaTVJekcrcWhuWG1uMXpYZlJhN1A2?=
+ =?utf-8?B?ZFJicGlxYWszV2lKeEloMXB2ZFR4YjR2TzFtWFd2NjdGaWNWZGFGQ1ZvSUVl?=
+ =?utf-8?B?c2V2L0tmeWloVHFxQyt3bUw0azMvRGU3V3VtbGduSFNZS05UVjA4d25ra3ZO?=
+ =?utf-8?Q?GjLKC2I5qwIg40VjAvB31oPuX?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6355fe0c-2610-49b0-38f9-08dc05cdf58a
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7529.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Dec 2023 04:48:53.2766
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kxI+RNWOp21CSmOxdEfwt1uelzPK1kl7moswTkGaesCS4zjt8HxnEUE27Bi9y8lqVs8BYzXFtT/ubJsAcyvIJw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR11MB5451
+X-OriginatorOrg: intel.com
 
-Count the running time and actual IO processing time of the sqpoll
-thread, and output the statistical data to fdinfo.
+On 2023/12/22 14:57, Tian, Kevin wrote:
+>> From: Liu, Yi L <yi.l.liu@intel.com>
+>> Sent: Thursday, December 21, 2023 11:40 PM
+>>
+>> +
+>> +static void intel_nested_flush_cache(struct dmar_domain *domain, u64
+>> addr,
+>> +				     unsigned long npages, u32 *error)
+>> +{
+>> +	struct iommu_domain_info *info;
+>> +	unsigned long i;
+>> +	unsigned mask;
+>> +	u32 fault = 0;
+>> +
+>> +	if (npages == U64_MAX)
+>> +		mask = 64 - VTD_PAGE_SHIFT;
+>> +	else
+>> +		mask = ilog2(__roundup_pow_of_two(npages));
+>> +
+>> +	xa_for_each(&domain->iommu_array, i, info) {
+>> +		nested_flush_pasid_iotlb(info->iommu, domain, addr,
+>> npages, 0);
+> 
+> so IOMMU_VTD_INV_FLAGS_LEAF is defined but ignored?
 
-Variable description:
-"work_time" in the code represents the sum of the jiffies of the sq
-thread actually processing IO, that is, how many milliseconds it
-actually takes to process IO. "total_time" represents the total time
-that the sq thread has elapsed from the beginning of the loop to the
-current time point, that is, how many milliseconds it has spent in
-total.
+yeah... it is. It is named as ih in the driver code. But it appears only
+the below code is set ih. When calling iommu_flush_iotlb_psi(), the 5th
+parameter (ih) may be true.
 
-The test results are as follows:
-Every 0.5s: cat /proc/23112/fdinfo/6 | grep Sq
-SqMask: 0x3
-SqHead: 1168417
-SqTail: 1168418
-CachedSqHead:   1168418
-SqThread:       23112
-SqThreadCpu:    55
-SqWorkTime:     12423
-SqTotalTime:    12843
+static int intel_iommu_memory_notifier(struct notifier_block *nb,
+				       unsigned long val, void *v)
+{
+	struct memory_notify *mhp = v;
+	unsigned long start_vpfn = mm_to_dma_pfn(mhp->start_pfn);
+	unsigned long last_vpfn = mm_to_dma_pfn(mhp->start_pfn +
+			mhp->nr_pages - 1);
 
-changes：
-v6:
- - Replace the percentages in the fdinfo output with the actual running
-time and the time actually processing IO
+	switch (val) {
+	case MEM_GOING_ONLINE:
+		if (iommu_domain_identity_map(si_domain,
+					      start_vpfn, last_vpfn)) {
+			pr_warn("Failed to build identity map for [%lx-%lx]\n",
+				start_vpfn, last_vpfn);
+			return NOTIFY_BAD;
+		}
+		break;
 
-v5：
- - list the changes in each iteration.
+	case MEM_OFFLINE:
+	case MEM_CANCEL_ONLINE:
+		{
+			struct dmar_drhd_unit *drhd;
+			struct intel_iommu *iommu;
+			LIST_HEAD(freelist);
 
-v4：
- - Resubmit the patch based on removing sq->lock
+			domain_unmap(si_domain, start_vpfn, last_vpfn, &freelist);
 
-v3：
- - output actual working time as a percentage of total time
- - detailed description of the meaning of each variable
- - added test results
+			rcu_read_lock();
+			for_each_active_iommu(iommu, drhd)
+				iommu_flush_iotlb_psi(iommu, si_domain,
+					start_vpfn, mhp->nr_pages,
+					list_empty(&freelist), 0);
+			rcu_read_unlock();
+			put_pages_list(&freelist);
+		}
+		break;
+	}
 
-v2：
- - output the total statistical time and work time to fdinfo
+	return NOTIFY_OK;
+}
 
-v1：
- - initial version
- - Statistics of total time and work time
+> 
+>> +
+>> +		if (domain->has_iotlb_device)
+>> +			continue;
+>> +
+>> +		nested_flush_dev_iotlb(domain, addr, mask, &fault);
+>> +		if (fault & (DMA_FSTS_ITE | DMA_FSTS_ICE))
+>> +			break;
+> 
+> here you may add a note that we don't plan to forward invalidation
+> queue error (i.e. IQE) to the caller as it's caused only by driver
+> internal bug.
 
-Signed-off-by: Xiaobing Li <xiaobing.li@samsung.com>
----
- io_uring/fdinfo.c | 6 ++++++
- io_uring/sqpoll.c | 8 ++++++++
- io_uring/sqpoll.h | 2 ++
- 3 files changed, 16 insertions(+)
+yes.
 
-diff --git a/io_uring/fdinfo.c b/io_uring/fdinfo.c
-index 976e9500f651..82d3d9471bac 100644
---- a/io_uring/fdinfo.c
-+++ b/io_uring/fdinfo.c
-@@ -64,6 +64,8 @@ __cold void io_uring_show_fdinfo(struct seq_file *m, struct file *f)
- 	unsigned int sq_shift = 0;
- 	unsigned int sq_entries, cq_entries;
- 	int sq_pid = -1, sq_cpu = -1;
-+	unsigned long work_time = 0;
-+	unsigned long total_time = 0;
- 	bool has_lock;
- 	unsigned int i;
- 
-@@ -147,10 +149,14 @@ __cold void io_uring_show_fdinfo(struct seq_file *m, struct file *f)
- 
- 		sq_pid = sq->task_pid;
- 		sq_cpu = sq->sq_cpu;
-+		work_time = sq->work_time;
-+		total_time = sq->total_time;
- 	}
- 
- 	seq_printf(m, "SqThread:\t%d\n", sq_pid);
- 	seq_printf(m, "SqThreadCpu:\t%d\n", sq_cpu);
-+	seq_printf(m, "SqWorkTime:\t%lu\n", work_time);
-+	seq_printf(m, "SqTotalTime:\t%lu\n", total_time);
- 	seq_printf(m, "UserFiles:\t%u\n", ctx->nr_user_files);
- 	for (i = 0; has_lock && i < ctx->nr_user_files; i++) {
- 		struct file *f = io_file_from_index(&ctx->file_table, i);
-diff --git a/io_uring/sqpoll.c b/io_uring/sqpoll.c
-index 65b5dbe3c850..9b74e344c52a 100644
---- a/io_uring/sqpoll.c
-+++ b/io_uring/sqpoll.c
-@@ -225,6 +225,7 @@ static int io_sq_thread(void *data)
- 	struct io_ring_ctx *ctx;
- 	unsigned long timeout = 0;
- 	char buf[TASK_COMM_LEN];
-+	unsigned long sq_start, sq_work_begin, sq_work_end;
- 	DEFINE_WAIT(wait);
- 
- 	snprintf(buf, sizeof(buf), "iou-sqp-%d", sqd->task_pid);
-@@ -241,6 +242,7 @@ static int io_sq_thread(void *data)
- 	}
- 
- 	mutex_lock(&sqd->lock);
-+	sq_start = jiffies;
- 	while (1) {
- 		bool cap_entries, sqt_spin = false;
- 
-@@ -251,6 +253,7 @@ static int io_sq_thread(void *data)
- 		}
- 
- 		cap_entries = !list_is_singular(&sqd->ctx_list);
-+		sq_work_begin = jiffies;
- 		list_for_each_entry(ctx, &sqd->ctx_list, sqd_list) {
- 			int ret = __io_sq_thread(ctx, cap_entries);
- 
-@@ -260,6 +263,11 @@ static int io_sq_thread(void *data)
- 		if (io_run_task_work())
- 			sqt_spin = true;
- 
-+		sq_work_end = jiffies;
-+		sqd->total_time = sq_work_end - sq_start;
-+		if (sqt_spin == true)
-+			sqd->work_time += sq_work_end - sq_work_begin;
-+
- 		if (sqt_spin || !time_after(jiffies, timeout)) {
- 			if (sqt_spin)
- 				timeout = jiffies + sqd->sq_thread_idle;
-diff --git a/io_uring/sqpoll.h b/io_uring/sqpoll.h
-index 8df37e8c9149..92b4b07220fa 100644
---- a/io_uring/sqpoll.h
-+++ b/io_uring/sqpoll.h
-@@ -16,6 +16,8 @@ struct io_sq_data {
- 	pid_t			task_pid;
- 	pid_t			task_tgid;
- 
-+	unsigned long		work_time;
-+	unsigned long		total_time;
- 	unsigned long		state;
- 	struct completion	exited;
- };
+> 
+>> +
+>> +		if (!IS_ALIGNED(inv_entry.addr, VTD_PAGE_SIZE) ||
+>> +		    ((inv_entry.npages == U64_MAX) && inv_entry.addr)) {
+>> +			ret = -EINVAL;
+>> +			break;
+>> +		}
+>> +
+> 
+> why is [non-zero-addr, U64_MAX] an error? Is it explicitly stated to
+> be not supported by underlying helpers?
+
+no such limitation by underlying helpers. But in such case, the 
+addr+npages*PAGE_SIZE would exceed U64_MAX, this seems a bit
+strange. But I'm fine to relax the check since the underlying helper
+only checks npages when determining paid-selective or not.
+
 -- 
-2.43.0
-
+Regards,
+Yi Liu
