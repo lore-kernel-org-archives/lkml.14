@@ -1,65 +1,32 @@
-Received: from smtp-200-110.mailtrap.live (smtp-200-110.mailtrap.live [5.181.200.110])
+Received: from mail115-24.sinamail.sina.com.cn (mail115-24.sinamail.sina.com.cn [218.30.115.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885C444381
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 11:08:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=tomzanna.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dnpw5703xzovsw6w.tomzanna.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smtp.mailtrap.live header.i=@smtp.mailtrap.live header.b="mi65+ORg";
-	dkim=pass (2048-bit key) header.d=tomzanna.com header.i=@tomzanna.com header.b="hAcAYe3X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=smtp.mailtrap.live; s=rwmt2;
-	h=content-transfer-encoding:mime-version:references:in-reply-to:message-id:date:
-	 subject:cc:to:from:feedback-id:from;
-	bh=sjZ5PCBt3D6/F+ea/52Yl440+MaFKi3LYeY4qE+sGwg=;
-	b=mi65+ORg4i2xzRK2zfahumJwUlQab5pFAdf3t/ype3St49VcqTkhm15gPfC++3YrUJsiKLVZU5WHb
-	 HoubKn5KIXl276IVVpnp+cI19BHncxCLNgRdcJI1aVHm2B4dc4qWgDnN0nUz+IquhMOXfHUTEMlFxQ
-	 bOI918P365AevRlQRt1Tzuo7L0gXzLiGfcty4Dik3PEo8I/r5wZr6eEKfYSC4AMJA1zTTUeora3DCG
-	 pmmuszcEv3IaO3waVnzxrE4bHLzd689gzizzzwr2N3uP/AzgSwZBGE65jKncCm8XLF014rntofJRZ0
-	 7mG+rwJqEbALQ9REQpHqhrMUK7NHJCA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=tomzanna.com; s=rwmt2;
-	h=content-transfer-encoding:mime-version:references:in-reply-to:message-id:date:
-	 subject:cc:to:from:feedback-id:from;
-	bh=sjZ5PCBt3D6/F+ea/52Yl440+MaFKi3LYeY4qE+sGwg=;
-	b=hAcAYe3XwPVW381whTL3e9fdc43hYKvr5VNGFEDD0vVtXxlXRRNk11Tk5dYSss7Ve+tUJqqW2lItI
-	 yffb1XUBsXK1b/VYVq1egF0SZ8z6amzpEBQO9wmX2lhOzzXBCDHK3CPs8lE8a4wv3o1KuGRpNPwHq4
-	 LKPzvJUAPsIgEvmJdVyuMDSsbh9R3gRWno0YLodtreLbXTfDiiJ6hj6SVPwnpaMwcB8b372ERI0rFg
-	 PTg7FmIv8q1UmqgcC+cQDuFhyz2uKSXDVToEqZpFSvUPYcHHA23Hx2ApVMlWXaS4XCf7v3TCVUwjTI
-	 GJ9EDbjzgs58nUmPE2k59107wLtlWtA==
-X-Report-Abuse-To: abuse@mailtrap.io
-Received: from tomzanna.com by smtp.mailtrap.live with ESMTPSA
- 9a053d86-a4a4-11ee-9113-0a7c3e8c2873; Wed, Dec 27 2023 10:42:23 GMT
-Feedback-ID: default:73696:transactional:mailtrap.io
-X-MT-Message: 9ea3f0c0-a4a4-11ee-0000-f10c5eea18c1
-X-MT-Domain: 6f3581fd-7900-47b4-af84-713a10caaa6f
-X-MT-Account: 173bcdf6-cb1f-4895-a024-3acc438f33ef
-From: Tommaso Zanotti <kernel@tomzanna.com>
-To: broonie@kernel.org
-Cc: Basavaraj.Hiregoudar@amd.com,
-	Sunil-kumar.Dommati@amd.com,
-	Syed.SabaKareem@amd.com,
-	Vijendar.Mukunda@amd.com,
-	alsa-devel@alsa-project.org,
-	bagasdotme@gmail.com,
-	kuninori.morimoto.gx@renesas.com,
-	lgirdwood@gmail.com,
-	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	mario.limonciello@amd.com,
-	nicolas.ferre@microchip.com,
-	perex@perex.cz,
-	posteuca@mutex.one,
-	tiwai@suse.com,
-	u.kleine-koenig@pengutronix.de,
-	venkataprasad.potturu@amd.com
-Subject: Re: [RESEND] ASoC: amd: acp: add pm ops support for renoir platform.
-Date: Wed, 27 Dec 2023 11:42:09 +0100
-Message-ID: <20231227104209.6281-1-kernel@tomzanna.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <170267843699.316482.4350897389116089852.b4-ty@kernel.org>
-References: <170267843699.316482.4350897389116089852.b4-ty@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F2B44370
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 11:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([113.88.49.138])
+	by sina.com (10.75.12.45) with ESMTP
+	id 658C057900006A4D; Wed, 27 Dec 2023 19:07:40 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 19226231457834
+X-SMAIL-UIID: 4A2157A538B04E3C8B67991E9A073358-20231227-190740-1
+From: Hillf Danton <hdanton@sina.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>,
+	Maria Yu <quic_aiquny@quicinc.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel: Introduce a write lock/unlock wrapper for tasklist_lock
+Date: Wed, 27 Dec 2023 19:07:27 +0800
+Message-Id: <20231227110727.1546-1-hdanton@sina.com>
+In-Reply-To: <ZYs8Yp/7TovnVMLC@casper.infradead.org>
+References: <20231213101745.4526-1-quic_aiquny@quicinc.com> <ZXnaNSrtaWbS2ivU@casper.infradead.org> <20231226104652.1491-1-hdanton@sina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,24 +35,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Marc,
-first time writing on a kernel mailing list here.
+On Tue, 26 Dec 2023 20:49:38 +0000 Matthew Wilcox <willy@infradead.org>
+> On Tue, Dec 26, 2023 at 06:46:52PM +0800, Hillf Danton wrote:
+> > On Wed, 13 Dec 2023 12:27:05 -0600 Eric W. Biederman <ebiederm@xmission.com>
+> > > Matthew Wilcox <willy@infradead.org> writes:
+> > > > I think the right way to fix this is to pass a boolean flag to
+> > > > queued_write_lock_slowpath() to let it know whether it can re-enable
+> > > > interrupts while checking whether _QW_WAITING is set.
+> > 
+> > 	lock(&lock->wait_lock)
+> > 	enable irq
+> > 	int
+> > 	lock(&lock->wait_lock)
+> > 
+> > You are adding chance for recursive locking.
+> 
+> Did you bother to read queued_read_lock_slowpath() before writing this email?
 
-> All being well this means that it will be integrated into the linux-next
-> tree (usually sometime in the next 24 hours) and sent to Linus during
-> the next merge window (or sooner if it is a bug fix)
+Nope but it matters nothing in this case.
+> 
+>         if (unlikely(in_interrupt())) {
+>                 /*
+>                  * Readers in interrupt context will get the lock immediately
+>                  * if the writer is just waiting (not holding the lock yet),
+>                  * so spin with ACQUIRE semantics until the lock is available
+>                  * without waiting in the queue.
+>                  */
+>                 atomic_cond_read_acquire(&lock->cnts, !(VAL & _QW_LOCKED));
+>                 return;
 
-I noticed that this patch is scheduled to land in mainline on 6.8.
-However, it was the second of a two-part bugfix for a regression introduced
-in 6.6-rc1. You can find more info here:
-- https://lore.kernel.org/lkml/87a5v8szhc.fsf@mutex.one/
-- https://linux-regtracking.leemhuis.info/regzbot/regression/lore/87a5v8szhc.fsf@mutex.one/
+This is the lock acquirer for read in irq context, and it rolls out the red
+carpet for write acquirer in irq, right Willy?
 
-Would be feasible to ship this patch already in the next 6.7-rc?
-Because with the stable 6.7 some Huawei laptops will finally receive audio
-support but due to this regression a workaround in user space is necessary.
+Feel free to ignore the following leg works.
 
-Cheers,
-Tommaso
+	/* Set the waiting flag to notify readers that a writer is pending */
+	atomic_or(_QW_WAITING, &lock->cnts);
 
+	enable irq;
+
+	/* When no more readers or writers, set the locked flag */
+	do {
+		cnts = atomic_cond_read_relaxed(&lock->cnts, VAL == _QW_WAITING);
+	} while (!atomic_try_cmpxchg_acquire(&lock->cnts, &cnts, _QW_LOCKED));
+
+	int
+	atomic_cond_read_acquire(&lock->cnts, !(VAL & _QW_LOCKED));
+	deadlock
+	disable irq;
+
+Though the case below is safe, it looks not pretty but clumsy.
+
+	/* Set the waiting flag to notify readers that a writer is pending */
+	atomic_or(_QW_WAITING, &lock->cnts);
+
+	/* When no more readers or writers, set the locked flag */
+	do {
+		enable irq;
+
+		cnts = atomic_cond_read_relaxed(&lock->cnts, VAL == _QW_WAITING);
+
+		disable irq;
+
+	} while (!atomic_try_cmpxchg_acquire(&lock->cnts, &cnts, _QW_LOCKED));
 
