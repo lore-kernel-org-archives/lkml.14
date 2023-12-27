@@ -1,208 +1,270 @@
-Received: from sender4-op-o10.zoho.com (sender4-op-o10.zoho.com [136.143.188.10])
+Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [203.110.167.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93875290B;
-	Wed, 27 Dec 2023 03:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="TIEzljUC"
-ARC-Seal: i=1; a=rsa-sha256; t=1703649446; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ci+N34DZ/1jEYg/YaTh1Eju9R2R0ILw6v8amLrTBwPkYhKO1dT0NHYL/tn7Ah4jRNW17627qYYYTRcUzIFM/jVDBbLwwgjbv8ivgaLERkeWgZKyiEafZ6aUzirheDdEYESRagsVgigsMKoZJGphbwyJsr2cBl1DJt+4Qqq2bYRM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1703649446; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=PDs/5RyQrkv8/uvBnzQ1A3NQ3kJYbwWBLDAWvp3dC/g=; 
-	b=LrkgA3sU1xiV7M3lI1Up+vd42ynvNWHNhE4s4yVw84ICVq3+issXa1nYZmJPhmzlIj7WdoEc+Ma6VS4s0Q9I3MoZyJusIgny4AKGvjxXV94f8tq8NbjB63shOjJlpTuJsbGNWKjxWHLx6zujZCMApKbeMJ7bBqe014ZdU7f9D1Y=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=icenowy.me;
-	spf=pass  smtp.mailfrom=uwu@icenowy.me;
-	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1703649446;
-	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=PDs/5RyQrkv8/uvBnzQ1A3NQ3kJYbwWBLDAWvp3dC/g=;
-	b=TIEzljUCMSZFCXIRUzbbLkkGvEQThEuyOy5WvEjPHPZ9AIslNARA6SDTyNz+2B4u
-	gMdeLyfsZ23226ihMGECXJ0KArV0G85ZeDPWGHHzXsetMCxo/RrkFVPa0NhAh/VoIoy
-	2flbuVZQQQxqUslAKC8jxJskifGKJHpBgskwvYaFoppODCw8vfSLQsXmugDm7DZe9TS
-	wy6WsmdaIfO8APQ9qV4oKH845/0WmYoK2pCQWJgPxDHC5adABo7/yDvxiaYXb9ZxBkU
-	b+zbHU3PO5bXf3iPFi6x0jdzgPu5vC8VNkLmPXAQznA34Qj5pp1QfBocznBR+SAx++y
-	eDzVxShNgg==
-Received: from edelgard.fodlan.icenowy.me (120.85.97.19 [120.85.97.19]) by mx.zohomail.com
-	with SMTPS id 1703649444779355.6452133422597; Tue, 26 Dec 2023 19:57:24 -0800 (PST)
-Message-ID: <94bdac9b7347893cfa787b3f8c95215d4b7b4c12.camel@icenowy.me>
-Subject: Re: [v3 4/6] drm/vs: Add KMS crtc&plane
-From: Icenowy Zheng <uwu@icenowy.me>
-To: Keith Zhao <keith.zhao@starfivetech.com>, "devicetree@vger.kernel.org"
-	 <devicetree@vger.kernel.org>, "dri-devel@lists.freedesktop.org"
-	 <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
-	 <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org"
-	 <linux-riscv@lists.infradead.org>
-Cc: "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, 
- "suijingfeng@loongson.cn" <suijingfeng@loongson.cn>, "tzimmermann@suse.de"
- <tzimmermann@suse.de>,  "paul.walmsley@sifive.com"
- <paul.walmsley@sifive.com>, "mripard@kernel.org" <mripard@kernel.org>, 
- Xingyu Wu <xingyu.wu@starfivetech.com>, Jack Zhu
- <jack.zhu@starfivetech.com>, "palmer@dabbelt.com" <palmer@dabbelt.com>,
- "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
- William Qiu <william.qiu@starfivetech.com>,  Shengyang Chen
- <shengyang.chen@starfivetech.com>, Changhuang Liang
- <changhuang.liang@starfivetech.com>
-Date: Wed, 27 Dec 2023 11:57:17 +0800
-In-Reply-To: <580e13ab-a73e-4ce7-999a-8a8685faf2dd@starfivetech.com>
-References: <20231204123315.28456-1-keith.zhao@starfivetech.com>
-	 <20231204123315.28456-5-keith.zhao@starfivetech.com>
-	 <7acd5af8fd4c5bf6ee0614f72cf6cb6751c89dc3.camel@icenowy.me>
-	 <580e13ab-a73e-4ce7-999a-8a8685faf2dd@starfivetech.com>
-Organization: Anthon Open-Source Community
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E2B3C16
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 03:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
+X-ASG-Debug-ID: 1703649534-1eb14e0c7f05670001-xx1T2L
+Received: from ZXSHMBX3.zhaoxin.com (ZXSHMBX3.zhaoxin.com [10.28.252.165]) by mx2.zhaoxin.com with ESMTP id ol8BZVWtAkBcDxpH (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Wed, 27 Dec 2023 11:58:54 +0800 (CST)
+X-Barracuda-Envelope-From: LeoLiu-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
+Received: from ZXBJMBX02.zhaoxin.com (10.29.252.6) by ZXSHMBX3.zhaoxin.com
+ (10.28.252.165) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 27 Dec
+ 2023 11:58:54 +0800
+Received: from xin.lan (10.32.64.1) by ZXBJMBX02.zhaoxin.com (10.29.252.6)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 27 Dec
+ 2023 11:58:51 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
+From: LeoLiu-oc <LeoLiu-oc@zhaoxin.com>
+X-Barracuda-RBL-Trusted-Forwarder: 10.29.252.6
+To: <olivia@selenic.com>, <herbert@gondor.apana.org.au>,
+	<jiajie.ho@starfivetech.com>, <conor.dooley@microchip.com>,
+	<martin@kaiser.cx>, <mmyangfl@gmail.com>, <jenny.zhang@starfivetech.com>,
+	<robh@kernel.org>, <l.stelmach@samsung.com>, <ardb@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>
+CC: <CobeChen@zhaoxin.com>, <TonyWWang@zhaoxin.com>, <YunShen@zhaoxin.com>,
+	<LeoLiu@zhaoxin.com>, LeoLiuoc <LeoLiu-oc@zhaoxin.com>
+Subject: [PATCH v5] hwrng: add Zhaoxin rng driver base on rep_xstore instruction
+Date: Wed, 27 Dec 2023 11:58:51 +0800
+X-ASG-Orig-Subj: [PATCH v5] hwrng: add Zhaoxin rng driver base on rep_xstore instruction
+Message-ID: <20231227035851.818569-1-LeoLiu-oc@zhaoxin.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231107070900.496827-1-LeoLiu-oc@zhaoxin.com>
+References: <20231107070900.496827-1-LeoLiu-oc@zhaoxin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
+ ZXBJMBX02.zhaoxin.com (10.29.252.6)
+X-Barracuda-Connect: ZXSHMBX3.zhaoxin.com[10.28.252.165]
+X-Barracuda-Start-Time: 1703649534
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 6453
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.118617
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------------------------
 
-=E5=9C=A8 2023-12-07=E6=98=9F=E6=9C=9F=E5=9B=9B=E7=9A=84 19:31 +0800=EF=BC=
-=8CKeith Zhao=E5=86=99=E9=81=93=EF=BC=9A
->=20
->=20
-> On 2023/12/7 16:41, Icenowy Zheng wrote:
-> > =E5=9C=A8 2023-12-04=E6=98=9F=E6=9C=9F=E4=B8=80=E7=9A=84 20:33 +0800=EF=
-=BC=8CKeith Zhao=E5=86=99=E9=81=93=EF=BC=9A
-> > *snip*
-> >=20
-> > > +static void update_cursor_plane(struct vs_dc *dc, struct
-> > > vs_plane
-> > > *plane,
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct drm_plane *drm_plane,
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct drm_atomic_state
-> > > *drm_state)
-> > > +{
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct drm_plane_state *st=
-ate =3D
-> > > drm_atomic_get_new_plane_state(drm_state,
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0
-> > > =C2=A0=C2=A0=C2=A0=C2=A0
-> > > =C2=A0 drm_plane);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct vs_plane_state *pla=
-ne_state =3D
-> > > to_vs_plane_state(state);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct drm_framebuffer *dr=
-m_fb =3D state->fb;
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct dc_hw_cursor cursor=
-;
-> > > +
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cursor.address =3D plane_s=
-tate->dma_addr[0];
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cursor.x =3D state->crtc_x=
-;
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cursor.y =3D state->crtc_y=
-;
-> >=20
-> > From my experiments on poking with registers on T-Head TH1520 (also
-> > uses DC8200 display controller and a similar driver), the DC8200
-> > hardware have a different definition of cursor position X and Y
-> > with
-> > the CRTC plane state.
-> >=20
-> > For CRTC plane state, hot_x and hot_y are only provided as
-> > reference,
-> > and the cursor should be displayed with its (0,0) drawn to (crtc_x,
-> > crtc_y) ([XY]_crtc are values specified in CRTC state, the right
-> > part
-> > of the assignments here), when the cursor is moved to (0,0) but the
-> > hot
-> > point is not (0,0), it could be negative.
-> >=20
-> > However, for DC8200 registers definition, cursor XY position could
-> > not
-> > be negative -- the cursor will disappear then; because in its
-> > definition, the cursor XY position should be where the cursor is
-> > pointing to, instead of its (0,0). DC8200 will draw (0,0) of the
-> > cursor
-> > to (x - hot_x, y - hot_y). So to met the expectation of the KMS
-> > plane
-> > settings, the DC8200 position should be set to (crtc_x + hot_x,
-> > crtc_y
-> > + hot_y) instead. Thus these two lines of code should be:
-> >=20
-> > ```
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cursor.x =3D state->crtc_x +=
- drm_fb->hot_x;
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cursor.y =3D state->crtc_y +=
- drm_fb->hot_y;
-> > ```
+From: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
 
-Well I realized that this change is not correct too: when moving the
-mouse cursor with the screen rotated, the mouse cursor will disappear
-at some screen border.
+Add support for Zhaoxin hardware random number generator.
+This driver base on rep_xstore instruction and uses the same
+X86_FEATURE_XSTORE as via-rng driver. Therefore, modify the x86_cpu_id
+array in the via-rng driver, so that the corresponding driver can be
+correctly loader on respective platforms.
 
-My current idea is:
+v1 -> v2:
+1. Fix assembler code errors
+2. Remove redundant CPU model check codes
 
-As the CRTC hot point is just a reference, we can just ignore it, and
-use the HW hot point to implement negative cursor position.
+v2 -> v3:
+1. Optimize code details based on the kernel style
 
-The patch is like the follow:
+v3 -> v4:
+1. Fix a typographical error
 
--    cursor.x =3D state->crtc_x;
--    cursor.y =3D state->crtc_y;
--    cursor.hot_x =3D drm_fb->hot_x;
--    cursor.hot_y =3D drm_fb->hot_y;
-+    if (state->crtc_x > 0) {
-+        cursor.x =3D state->crtc_x;
-+        cursor.hot_x =3D 0;
-+    } else {
-+        cursor.hot_x =3D -state->crtc_x;
-+        cursor.x =3D 0;
-+    }
-+    if (state->crtc_y > 0) {
-+        cursor.y =3D state->crtc_y;
-+        cursor.hot_y =3D 0;
-+    } else {
-+        cursor.hot_y =3D -state->crtc_y;
-+        cursor.y =3D 0;
-+    }
+v4 -> v5:
+1. Modified the definition and declaration of the x86_cpu_id table
 
-drm_fb could just be removed in this function then because it's no
-longer needed (it's used to get the cursor's hot point, which we
-ignored now).
+Signed-off-by: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
+---
+ drivers/char/hw_random/Kconfig       | 12 ++++
+ drivers/char/hw_random/Makefile      |  1 +
+ drivers/char/hw_random/via-rng.c     | 10 +--
+ drivers/char/hw_random/zhaoxin-rng.c | 93 ++++++++++++++++++++++++++++
+ 4 files changed, 111 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/char/hw_random/zhaoxin-rng.c
 
-> >=20
-> >=20
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cursor.hot_x =3D drm_fb->h=
-ot_x;
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cursor.hot_y =3D drm_fb->h=
-ot_y;
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cursor.display_id =3D to_v=
-s_display_id(dc, state->crtc);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0update_cursor_size(state, =
-&cursor);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cursor.enable =3D true;
-> > > +
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0dc_hw_update_cursor(&dc->h=
-w, cursor.display_id, &cursor);
-> > > +}
-> > *snip
-> hello Icenowy:
-> you are deep understanding on dc8200.
-> by the way of practice
-> I tested this change on the debian desktop, is there a way to compare
-> the cursor behavior change?
-> Thanks
->=20
->=20
->=20
+diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+index 442c40efb200..3c1c4fa1203c 100644
+--- a/drivers/char/hw_random/Kconfig
++++ b/drivers/char/hw_random/Kconfig
+@@ -152,6 +152,18 @@ config HW_RANDOM_VIA
+ 
+ 	  If unsure, say Y.
+ 
++config HW_RANDOM_ZHAOXIN
++	tristate "Zhaoxin HW Random Number Generator support"
++	depends on X86
++	help
++	  This driver provides kernel-side support for the Random Number
++	  Generator hardware found on Zhaoxin based motherboards.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called zhaoxin-rng.
++
++	  If unsure, say Y.
++
+ config HW_RANDOM_IXP4XX
+ 	tristate "Intel IXP4xx NPU HW Pseudo-Random Number Generator support"
+ 	depends on ARCH_IXP4XX || COMPILE_TEST
+diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
+index 32549a1186dc..ef5b3ae0794d 100644
+--- a/drivers/char/hw_random/Makefile
++++ b/drivers/char/hw_random/Makefile
+@@ -14,6 +14,7 @@ obj-$(CONFIG_HW_RANDOM_GEODE) += geode-rng.o
+ obj-$(CONFIG_HW_RANDOM_N2RNG) += n2-rng.o
+ n2-rng-y := n2-drv.o n2-asm.o
+ obj-$(CONFIG_HW_RANDOM_VIA) += via-rng.o
++obj-$(CONFIG_HW_RANDOM_ZHAOXIN) += zhaoxin-rng.o
+ obj-$(CONFIG_HW_RANDOM_EXYNOS) += exynos-trng.o
+ obj-$(CONFIG_HW_RANDOM_IXP4XX) += ixp4xx-rng.o
+ obj-$(CONFIG_HW_RANDOM_OMAP) += omap-rng.o
+diff --git a/drivers/char/hw_random/via-rng.c b/drivers/char/hw_random/via-rng.c
+index a9a0a3b09c8b..4288e1114fc9 100644
+--- a/drivers/char/hw_random/via-rng.c
++++ b/drivers/char/hw_random/via-rng.c
+@@ -35,7 +35,7 @@
+ #include <asm/cpufeature.h>
+ #include <asm/fpu/api.h>
+ 
+-
++static struct x86_cpu_id via_rng_cpu_id[];
+ 
+ 
+ enum {
+@@ -135,7 +135,7 @@ static int via_rng_init(struct hwrng *rng)
+ 	 * is always enabled if CPUID rng_en is set.  There is no
+ 	 * RNG configuration like it used to be the case in this
+ 	 * register */
+-	if (((c->x86 == 6) && (c->x86_model >= 0x0f))  || (c->x86 > 6)){
++	if ((c->x86 == 6) && (c->x86_model >= 0x0f)) {
+ 		if (!boot_cpu_has(X86_FEATURE_XSTORE_EN)) {
+ 			pr_err(PFX "can't enable hardware RNG "
+ 				"if XSTORE is not enabled\n");
+@@ -196,7 +196,7 @@ static int __init via_rng_mod_init(void)
+ {
+ 	int err;
+ 
+-	if (!boot_cpu_has(X86_FEATURE_XSTORE))
++	if (!x86_match_cpu(via_rng_cpu_id))
+ 		return -ENODEV;
+ 
+ 	pr_info("VIA RNG detected\n");
+@@ -217,8 +217,8 @@ static void __exit via_rng_mod_exit(void)
+ }
+ module_exit(via_rng_mod_exit);
+ 
+-static struct x86_cpu_id __maybe_unused via_rng_cpu_id[] = {
+-	X86_MATCH_FEATURE(X86_FEATURE_XSTORE, NULL),
++static struct x86_cpu_id via_rng_cpu_id[] = {
++	X86_MATCH_VENDOR_FAM_FEATURE(CENTAUR, 6, X86_FEATURE_XSTORE, NULL),
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(x86cpu, via_rng_cpu_id);
+diff --git a/drivers/char/hw_random/zhaoxin-rng.c b/drivers/char/hw_random/zhaoxin-rng.c
+new file mode 100644
+index 000000000000..5b4586c6dc8a
+--- /dev/null
++++ b/drivers/char/hw_random/zhaoxin-rng.c
+@@ -0,0 +1,93 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * RNG driver for Zhaoxin RNGs
++ *
++ * Copyright 2023 (c) Zhaoxin Semiconductor Co., Ltd
++ */
++
++#include <asm/cpu_device_id.h>
++#include <asm/fpu/api.h>
++#include <crypto/padlock.h>
++#include <linux/cpufeature.h>
++#include <linux/delay.h>
++#include <linux/hw_random.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++
++enum {
++	ZHAOXIN_RNG_CHUNK_8		= 0x00, /* 64 rand bits, 64 stored bits */
++	ZHAOXIN_RNG_CHUNK_4		= 0x01, /* 32 rand bits, 32 stored bits */
++	ZHAOXIN_RNG_CHUNK_2		= 0x02, /* 16 rand bits, 32 stored bits */
++	ZHAOXIN_RNG_CHUNK_1		= 0x03, /*  8 rand bits, 32 stored bits */
++	ZHAOXIN_RNG_MAX_SIZE	= (128 * 1024),
++};
++
++static int zhaoxin_rng_init(struct hwrng *rng)
++{
++	if (!boot_cpu_has(X86_FEATURE_XSTORE_EN)) {
++		pr_err(PFX "can't enable hardware RNG if XSTORE is not enabled\n");
++		return -ENODEV;
++	}
++
++	return 0;
++}
++
++static inline int rep_xstore(size_t size, size_t factor, void *result)
++{
++	asm(".byte 0xf3, 0x0f, 0xa7, 0xc0"
++		: "=m"(*(size_t *)result), "+c"(size), "+d"(factor), "+D"(result));
++
++	return 0;
++}
++
++static int zhaoxin_rng_read(struct hwrng *rng, void *data, size_t max, bool wait)
++{
++	if (max > ZHAOXIN_RNG_MAX_SIZE)
++		max = ZHAOXIN_RNG_MAX_SIZE;
++
++	rep_xstore(max, ZHAOXIN_RNG_CHUNK_1, data);
++
++	return max;
++}
++
++static struct hwrng zhaoxin_rng = {
++	.name = "zhaoxin",
++	.init = zhaoxin_rng_init,
++	.read = zhaoxin_rng_read,
++};
++
++static struct x86_cpu_id zhaoxin_rng_cpu_ids[] = {
++	X86_MATCH_VENDOR_FAM_FEATURE(ZHAOXIN, 6, X86_FEATURE_XSTORE, NULL),
++	X86_MATCH_VENDOR_FAM_FEATURE(ZHAOXIN, 7, X86_FEATURE_XSTORE, NULL),
++	X86_MATCH_VENDOR_FAM_FEATURE(CENTAUR, 7, X86_FEATURE_XSTORE, NULL),
++	{}
++};
++MODULE_DEVICE_TABLE(x86cpu, zhaoxin_rng_cpu_ids);
++
++static int __init zhaoxin_rng_mod_init(void)
++{
++	int err;
++
++	if (!x86_match_cpu(zhaoxin_rng_cpu_ids))
++		return -ENODEV;
++
++	pr_info("Zhaoxin RNG detected\n");
++
++	err = hwrng_register(&zhaoxin_rng);
++	if (err)
++		pr_err(PFX "RNG registering failed (%d)\n", err);
++
++	return err;
++}
++module_init(zhaoxin_rng_mod_init);
++
++static void __exit zhaoxin_rng_mod_exit(void)
++{
++	hwrng_unregister(&zhaoxin_rng);
++}
++module_exit(zhaoxin_rng_mod_exit);
++
++MODULE_DESCRIPTION("H/W RNG driver for Zhaoxin CPUs");
++MODULE_AUTHOR("YunShen@zhaoxin.com");
++MODULE_LICENSE("GPL");
+-- 
+2.34.1
 
