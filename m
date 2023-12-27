@@ -1,114 +1,110 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904A32D787;
-	Wed, 27 Dec 2023 10:07:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="nzD+b5Td"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1703671610; x=1704276410; i=markus.elfring@web.de;
-	bh=jn1IbyEVOZrfvN7XBCt9j+uuHZsv/fW9fsgamye8t/8=;
-	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
-	 In-Reply-To;
-	b=nzD+b5TdpN+n+8NxtQNY4AU5fCw+GUxGO+l30gVKS2BB8EQS/oIGaanY0qd1le67
-	 z5ONw168vZxrvn5SQUI6/jy4XFBEECPLA8z7KB4J193PprPn8nDnKlMhPyBqskpaH
-	 e9UFE4MD16FpGve+SIHiCYc4j+USRnTTPRHijmRnAtVf12cI7EfnxPNqFIL6ag8O0
-	 U88kXehW0ybP7ZZGpJ1Xkg2c83OhMvMIPmvhCRHQK2DP2JKOqJT2QlREWVnIwjaib
-	 Bj/rSJ7HVtJ8cOJXihsZQSe8DPFDGogQL6jsb89dI37j8lpHv2ElejRJXi8y6tdSs
-	 c1xaKXfPTidhkNd19g==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M2Phi-1rGmeK2Ir0-004HkY; Wed, 27
- Dec 2023 11:06:50 +0100
-Message-ID: <3c6ebb2b-b3d5-4698-aa89-9960872cbb4c@web.de>
-Date: Wed, 27 Dec 2023 11:06:49 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E1552C688;
+	Wed, 27 Dec 2023 10:09:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7350E1A0FC8;
+	Wed, 27 Dec 2023 11:09:37 +0100 (CET)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 39E1B1A06E1;
+	Wed, 27 Dec 2023 11:09:37 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 72BF4181D0E5;
+	Wed, 27 Dec 2023 18:09:35 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: pierre-louis.bossart@linux.intel.com,
+	lgirdwood@gmail.com,
+	peter.ujfalusi@linux.intel.com,
+	yung-chuan.liao@linux.intel.com,
+	ranjani.sridharan@linux.intel.com,
+	daniel.baluta@nxp.com,
+	kai.vehmanen@linux.intel.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	linux-imx@nxp.com,
+	sound-open-firmware@alsa-project.org,
+	linux-sound@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	shengjiu.wang@gmail.com
+Subject: [PATCH] ASoC: SOF: imx: Add SNDRV_PCM_INFO_BATCH flag
+Date: Wed, 27 Dec 2023 17:27:43 +0800
+Message-Id: <1703669263-13832-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: =?UTF-8?Q?=5BPATCH_2/2=5D_scsi=3A_message=3A_fusion=3A_Move_an_assi?=
- =?UTF-8?Q?gnment_for_the_variable_=E2=80=9Cphy=5Finfo=E2=80=9D_in_mptsas=5F?=
- =?UTF-8?B?ZmluZF9waHlpbmZvX2J5X3BoeXNfZGlza19udW0oKQ==?=
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-To: linux-scsi@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
- kernel-janitors@vger.kernel.org, Sathya Prakash
- <sathya.prakash@broadcom.com>, Sreekanth Reddy
- <sreekanth.reddy@broadcom.com>,
- Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr
-References: <c8b0d40c-2f48-46fa-8311-258985e9eee3@web.de>
-In-Reply-To: <c8b0d40c-2f48-46fa-8311-258985e9eee3@web.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:gkazMb/O4l2GzERn48IcvpwT5y8HvZR1g45mK2lRunaPBwbiMdd
- TRJ8HoTpw/tsxHi5+rASq8Op6y7D41VS3CrLChjltMjsYIdfY6ToXfF/i6HBQJIDjWI1QOm
- nk/r6J69+UBrf8TjzIotfhmZXVBDkUhT1qrJg825ztHtHcjo+22VfAY/w9w3cYl0qu8Ppf9
- VnDUk9T3JCK+TeziBuCTg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:xMCx7VgZ08M=;IAkFRS512RJ3iuU4GJ7SK9fOEKu
- Gqy65n38ZJpJYi7mBsUhtWPhM1vMlT4lg9/7Bp0uOp7L1AiDvG9j7aS5UWbEWuSKlVrNTyegO
- lq+T3Wjul3GOBU2d0zJZaob9emJIfVEuvmJbU03JHlJG4ILhiSrZr7YCvpvaiINtbLktpOLOh
- ujB9RXqwLmda1sQ6cAWJYpWRL7n3R4y1pcnBd0SO7lqydhngJv2K8E09gndhxFfT1GqA+wWWu
- V1gzqW52bxzYykEaIb3kMpXpzz6Lm4oslsGpxBWD2JotW9FI29Vkt3x09PvVTaNgb9e3E7lTS
- bpDr5bZlWRCqi94mqGR6vY3P4ARWPtWh2xQpbTiVNxFl/mEavOU+Egg7spifMEPhSLUpFiwZX
- xg+YJvVb5yEQI8N05KE/y7syNkvXrqvNWqFmpID466PrsCz3Vmt1xHLE6B4IHMGyx5cP04E1h
- NcOdSNOhsCnbpiOJNJOdN/vJdACLZXenyZrtmMLabYisyl9blyCb1KB3z3SPuxJ//RNFCKgQK
- WzvVtHuKtStfguYEV5rETXTXDO+o8QfbpnxDz6elU9OEV1J+bdSUdjdh+0COSPQQ58sFow+4E
- OuPU5E4QWmBXReDnJsjQKwxpMSEm9WjA74T3bgZIHqdTyOazFUFmzgZVtIL+/T9M9+qnrgaQL
- x0TTwLD8BNVRMx3I1ysaWy6WkwreHuKegXI4tVjU5Ar0Qb0bn1G1sZIWlnrvRIBBtgsMkDKde
- ehn5uCf2E+R0QRBNNPc9Z/uhwFkc9F5yjmguiwXTqSGnFOHc4riSIN0M5EN/Z8odwOeLhLwCJ
- wGHtQmJOqPFIvpXpxx6aawibzxXg0JVqs/A6UMRAuFz7xF0dbfxpyCZWi8YWouMeh3DfbYV4w
- 8hKAAKcW1NdDth4mthohG30ypbyeCQLEYWh9RABBpfpYJKTSLtegW+conJQy1Vdk185yY751Z
- ifBF9Jttev8m7ncWCL47erxIwR8=
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Wed, 27 Dec 2023 10:42:03 +0100
+The sof imx pcm device is a device which should support
+double buffering.
 
-Move one assignment for the variable =E2=80=9Cphy_info=E2=80=9D closer to =
-the place
-where this pointer is used.
+Found this issue with pipewire. When there is no
+SNDRV_PCM_INFO_BATCH flag in driver, the pipewire will
+set headroom to be zero, and because sof pcm device
+don't support residue report, when the latency setting
+is small, the "delay" always larger than "target" in
+alsa-pcm.c, that reading next period data is not
+scheduled on time.
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/message/fusion/mptsas.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+With SNDRV_PCM_INFO_BATCH flag in driver, the pipewire
+will select a smaller period size for device, then
+the task of reading next period data will be scheduled
+on time.
 
-diff --git a/drivers/message/fusion/mptsas.c b/drivers/message/fusion/mpts=
-as.c
-index 452635a50c4c..02f7d11fd828 100644
-=2D-- a/drivers/message/fusion/mptsas.c
-+++ b/drivers/message/fusion/mptsas.c
-@@ -4169,14 +4169,13 @@ static struct mptsas_phyinfo *
- mptsas_find_phyinfo_by_phys_disk_num(MPT_ADAPTER *ioc, u8 phys_disk_num,
- 	u8 channel, u8 id)
- {
--	struct mptsas_phyinfo *phy_info =3D NULL;
-+	struct mptsas_phyinfo *phy_info;
- 	struct mptsas_portinfo *port_info;
- 	RaidPhysDiskPage1_t *phys_disk;
- 	int num_paths;
- 	u64 sas_address =3D 0;
- 	int i;
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ sound/soc/sof/imx/imx8.c    | 1 +
+ sound/soc/sof/imx/imx8m.c   | 1 +
+ sound/soc/sof/imx/imx8ulp.c | 1 +
+ 3 files changed, 3 insertions(+)
 
--	phy_info =3D NULL;
- 	if (!ioc->raid_data.pIocPg3)
- 		return NULL;
- 	/* dual port support */
-@@ -4190,6 +4189,7 @@ mptsas_find_phyinfo_by_phys_disk_num(MPT_ADAPTER *io=
-c, u8 phys_disk_num,
- 		goto lock_mutex;
-
- 	mpt_raid_phys_disk_pg1(ioc, phys_disk_num, phys_disk);
-+	phy_info =3D NULL;
- 	for (i =3D 0; i < num_paths; i++) {
- 		if ((phys_disk->Path[i].Flags & 1) !=3D 0)
- 			/* entry no longer valid */
-=2D-
-2.43.0
+diff --git a/sound/soc/sof/imx/imx8.c b/sound/soc/sof/imx/imx8.c
+index 170740bce839..d777e70250ef 100644
+--- a/sound/soc/sof/imx/imx8.c
++++ b/sound/soc/sof/imx/imx8.c
+@@ -603,6 +603,7 @@ static struct snd_sof_dsp_ops sof_imx8x_ops = {
+ 			SNDRV_PCM_INFO_MMAP_VALID |
+ 			SNDRV_PCM_INFO_INTERLEAVED |
+ 			SNDRV_PCM_INFO_PAUSE |
++			SNDRV_PCM_INFO_BATCH |
+ 			SNDRV_PCM_INFO_NO_PERIOD_WAKEUP
+ };
+ 
+diff --git a/sound/soc/sof/imx/imx8m.c b/sound/soc/sof/imx/imx8m.c
+index f088fd1a672b..1b976fa500aa 100644
+--- a/sound/soc/sof/imx/imx8m.c
++++ b/sound/soc/sof/imx/imx8m.c
+@@ -472,6 +472,7 @@ static struct snd_sof_dsp_ops sof_imx8m_ops = {
+ 		SNDRV_PCM_INFO_MMAP_VALID |
+ 		SNDRV_PCM_INFO_INTERLEAVED |
+ 		SNDRV_PCM_INFO_PAUSE |
++		SNDRV_PCM_INFO_BATCH |
+ 		SNDRV_PCM_INFO_NO_PERIOD_WAKEUP,
+ };
+ 
+diff --git a/sound/soc/sof/imx/imx8ulp.c b/sound/soc/sof/imx/imx8ulp.c
+index ca6edb85ff71..2badca75782b 100644
+--- a/sound/soc/sof/imx/imx8ulp.c
++++ b/sound/soc/sof/imx/imx8ulp.c
+@@ -463,6 +463,7 @@ static struct snd_sof_dsp_ops sof_imx8ulp_ops = {
+ 			SNDRV_PCM_INFO_MMAP_VALID |
+ 			SNDRV_PCM_INFO_INTERLEAVED |
+ 			SNDRV_PCM_INFO_PAUSE |
++			SNDRV_PCM_INFO_BATCH |
+ 			SNDRV_PCM_INFO_NO_PERIOD_WAKEUP,
+ 
+ 	/* PM */
+-- 
+2.34.1
 
