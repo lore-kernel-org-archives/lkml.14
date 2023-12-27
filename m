@@ -1,130 +1,76 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7D249891
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 16:27:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rIWk9-00059l-Ry; Wed, 27 Dec 2023 17:26:53 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rIWjw-001tZH-HS; Wed, 27 Dec 2023 17:26:41 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rIWjx-001Wmd-1d;
-	Wed, 27 Dec 2023 17:26:41 +0100
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Sudeep Holla <sudeep.holla@arm.com>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Thierry Reding <treding@nvidia.com>,
-	Hao Ge <gehao@kylinos.cn>,
-	Rob Herring <robh@kernel.org>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Gabriel Somlo <somlo@cmu.edu>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Kieran Bingham <kieran.bingham@ideasonboard.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	=?utf-8?q?Marek_Beh=C3=BAn?= <kabel@kernel.org>,
-	Michal Simek <michal.simek@amd.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jay Buddhabhatti <jay.buddhabhatti@amd.com>,
-	Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Nava kishore Manne <nava.kishore.manne@amd.com>,
-	Rajan Vaja <rajan.vaja@xilinx.com>,
-	Dhaval Shah <dhaval.r.shah@amd.com>,
-	Marek Vasut <marex@denx.de>
-Cc: kernel@pengutronix.de,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Brian Norris <briannorris@chromium.org>,
-	Julius Werner <jwerner@chromium.org>,
-	chrome-platform@lists.linux.dev,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	linux-mediatek@lists.infradead.org,
-	qemu-devel@nongnu.org,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	linux-rpi-kernel@lists.infradead.org
-Subject: [PATCH 00/11] firmware: Convert to platform remove callback returning void
-Date: Wed, 27 Dec 2023 17:26:24 +0100
-Message-ID: <cover.1703693980.git.u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E4946454;
+	Wed, 27 Dec 2023 16:30:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R5ppuGc3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703694609; x=1735230609;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=T4ZSeN9/8jL/yNrTDLrgwzo3w9DAS+9wlmLrwIMp3C8=;
+  b=R5ppuGc3pSt7+eXb0AvqqswsvTUXHtTrYn+AASV6kXtin6xejliGowjX
+   gSiGnZA4avEzQTo993vepEVhfOSvgVa9KKtt32JknW6kv3K+MtDWKld+5
+   LjGluUT29aP+RIACBQG4rZkbdCGWDcrPCvUIArQUWKLMgrBc6erncJ2fO
+   XdQF2zRb48fxc6lmvoYhel2C1x7aCGlPEqIonOwGooXW+dfCKJJxt/0ei
+   FWUVtvQUfM9hJr9wLbDFmhBb1zb+z3uV2coA3Uj3zVQRF7Qhsb9tQL3JX
+   Ny1yy/I/lxC1kjXvNEAGN7aPMlmEWiW0NI7TGD+BR7Z/TH/p80cWWRyrT
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="3293578"
+X-IronPort-AV: E=Sophos;i="6.04,309,1695711600"; 
+   d="scan'208";a="3293578"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 08:30:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="951534508"
+X-IronPort-AV: E=Sophos;i="6.04,309,1695711600"; 
+   d="scan'208";a="951534508"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 08:30:04 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rIWnB-00000009Sn6-1TEW;
+	Wed, 27 Dec 2023 18:30:01 +0200
+Date: Wed, 27 Dec 2023 18:30:01 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Petre Rodan <petre.rodan@subdimension.ro>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andreas Klinger <ak@it-klinger.de>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Angel Iglesias <ang.iglesiasg@gmail.com>,
+	Matti Vaittinen <mazziesaccount@gmail.com>
+Subject: Re: [PATCH v2 04/10] iio: pressure: mprls0025pa.c fix off-by-one enum
+Message-ID: <ZYxRCWFs0KdrkziG@smile.fi.intel.com>
+References: <20231224143500.10940-1-petre.rodan@subdimension.ro>
+ <20231224143500.10940-5-petre.rodan@subdimension.ro>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2285; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=tI3zkKx4Ui/NNKJl8C0bvrZtoud3+4uqGjgMG21LlTs=; b=owGbwMvMwMXY3/A7olbonx/jabUkhtSeAKNH8tevhnB8dlzNPIGlymlxs/6VfQ7Zsacbwi4eS m/jlu3vZDRmYWDkYpAVU2Sxb1yTaVUlF9m59t9lmEGsTCBTGLg4BWAiCa/Z/9cn838+oXFr/z2L FyUtR2cw+haX73S48WmTZ9FOuTgxrrTr8lYvFvFx7OX2yc6QnvUtSviR/N5ft82FOnsDUv9/tlj eskLcWs9N+PqrufauLGUqGWY6t7dqca28cfdQXvW8eTafm1bPVv/j/rpm78XrGxiCbzm0Nz68YO xYtWSa6gaNrIybLSzGNhHeZXLT1Xi9D6/vOe708zk3d33rrux1X9LsXZa8jhJnuhPyVLryz8MFO mk27O+F0mfK/qlxOduSf3JesLWJY8PtiEbdO8E/TrfNvvdeuetgsmG4TjtXXIrBqWN7Lir2hcbv 2R3tYjRPK7tZ8KNkyfbGmcUVh0wfbwlTWRz6K+jbg5pZAA==
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231224143500.10940-5-petre.rodan@subdimension.ro>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hello,
+On Sun, Dec 24, 2023 at 04:34:49PM +0200, Petre Rodan wrote:
+> Fix off-by-one error in transfer-function property.
+> The honeywell,transfer-function property takes values between 1-3 so
+> make sure the proper enum gets used.
 
-this series converts all platform drivers below drivers/firmware that
-make use of .remove() to use .remove_new() instead.
+> Signed-off-by: Petre Rodan <petre.rodan@subdimension.ro>
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
 
-See commit 5c5a7680e67b ("platform: Provide a remove callback that
-returns no value") for an extended explanation and the eventual goal.
-The TL;DR; is to make it harder for driver authors to leak resources
-without noticing. The drivers here get it right though and so can be
-converted trivially.
+Submitter's SoB always goes last, this is written in Submitting Patches document.
 
-This is merge window material. There doesn't seem to be a maintainer for
-all of drivers/firmware and I don't know how patch application works
-there usually.  All patches are pairwise independent, so they can be
-applied individually.
-
-Best regards
-Uwe
-
-Uwe Kleine-König (11):
-  firmware: arm_scmi: Convert to platform remove callback returning void
-  firmware: arm_scpi: Convert to platform remove callback returning void
-  firmware: coreboot_table: Convert to platform remove callback returning void
-  firmware: imx-dsp: Convert to platform remove callback returning void
-  firmware: mtk-adsp-ipc: Convert to platform remove callback returning void
-  firmware: qemu_fw_cfg: Convert to platform remove callback returning void
-  firmware: raspberrypi: Convert to platform remove callback returning void
-  firmware: stratix10-rsu: Convert to platform remove callback returning void
-  firmware: stratix10-svc: Convert to platform remove callback returning void
-  firmware: turris-mox-rwtm: Convert to platform remove callback returning void
-  firmware: zynqmp: Convert to platform remove callback returning void
-
- drivers/firmware/arm_scmi/driver.c       | 6 ++----
- drivers/firmware/arm_scpi.c              | 6 ++----
- drivers/firmware/google/coreboot_table.c | 5 ++---
- drivers/firmware/imx/imx-dsp.c           | 6 ++----
- drivers/firmware/mtk-adsp-ipc.c          | 6 ++----
- drivers/firmware/qemu_fw_cfg.c           | 5 ++---
- drivers/firmware/raspberrypi.c           | 6 ++----
- drivers/firmware/stratix10-rsu.c         | 5 ++---
- drivers/firmware/stratix10-svc.c         | 6 ++----
- drivers/firmware/turris-mox-rwtm.c       | 6 ++----
- drivers/firmware/xilinx/zynqmp.c         | 6 ++----
- 11 files changed, 22 insertions(+), 41 deletions(-)
-
-base-commit: 39676dfe52331dba909c617f213fdb21015c8d10
 -- 
-2.43.0
+With Best Regards,
+Andy Shevchenko
+
 
