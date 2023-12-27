@@ -1,234 +1,103 @@
-Received: from mail.tkos.co.il (hours.tkos.co.il [84.110.109.230])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC5E4595B;
-	Wed, 27 Dec 2023 15:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tkos.co.il
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8C04594F
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 15:18:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b="NDqdcjcT"
-Received: from tarshish.tkos.co.il (unknown [10.0.8.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.tkos.co.il (Postfix) with ESMTPS id 43D39440F19;
-	Wed, 27 Dec 2023 17:02:43 +0200 (IST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
-	s=default; t=1703689363;
-	bh=NDjhIXrijySlyAenotxkN/N6ucKkMmhIuT0+ciVsprY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NDqdcjcTK2m+7XK61ZGidZ5CHtBbiSX38xo6izGJCY26bma2wq7IBWT4vz000eUw1
-	 GBbwyf7OQe+WaevbOBXI+5vavzS5FexuGsu1cTgMYyNCTp1yxO8Kx5jqkppNWa6Z8j
-	 G/94uSrvb6kFeiuJzbR3wWgZFMCTFEAZXRRD5jqHa1q3iQwABRitbkrY3IBwFqBRM9
-	 ZlogSwyK6XNcbZ5B6kSPEuHxCz0+ItVYTRfoquADxy8KvWxqqP11b4ScQU54jhnxXU
-	 S5X08TEbiHVEdcVcv7WEld7Zmelmi5aa6tL4Gh5BrEponHpbVWgdEmUQ1qNIAqcQTZ
-	 dZT3UDYjbT/8A==
-From: Baruch Siach <baruch@tkos.co.il>
-To: Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Cc: Baruch Siach <baruch@tkos.co.il>,
-	Robin Murphy <robin.murphy@arm.com>,
-	iommu@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Petr=20Tesa=C5=99=C3=ADk?= <petr@tesarici.cz>,
-	Ramon Fried <ramon@neureality.ai>
-Subject: [PATCH RFC 1/4] of: get dma area lower limit
-Date: Wed, 27 Dec 2023 17:04:25 +0200
-Message-ID: <be71fbb0963584b8c401423d9dd2fba2511bd5b4.1703683642.git.baruch@tkos.co.il>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1703683642.git.baruch@tkos.co.il>
-References: <cover.1703683642.git.baruch@tkos.co.il>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cnDMjclf"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a26ea1e88b7so266641866b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 07:18:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703690337; x=1704295137; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mLqxqDFp3g+3ctBYsDTo10ZcgpJFg083E8N42zGHui8=;
+        b=cnDMjclfrAtGi/lioxq7wyTONEk9+6IkpcRrhimtTkpBi+c0wJ/gtqGG+RBT6aQah8
+         husp6Z5F8Y9vpRk9VSI1EbrETCCl/6ybnxRN8YBj29s/p974UDJH/jo5/XPN0mP1BEbP
+         zHBU3CuFdzyV/6PGyCjGueOmqo/5ZwKbtopjV+7/jzCPTaIh18TPI5gb/LyodqkEnK87
+         pM1/3gqm5y1FbUS1eF6rh3jSUIByKksvb7m5TZ6+0ix6Ye+i9jx2ArhXH7CYAr5MnKfE
+         jBJ9KnXiADQzzfqh6LAEl3XxswIu9n3SdZ4te2FN0PIDOmqityuiuOMlDRpqgbj1A5i8
+         7kkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703690337; x=1704295137;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mLqxqDFp3g+3ctBYsDTo10ZcgpJFg083E8N42zGHui8=;
+        b=VXLW1JAY94tAU0PxDD67V9K1euxX2YRMWAyx6K7SjlLFXc9t+aqn5WL2l9FryBmivf
+         XWEfyp6Xojb5o0FZQyOinATMcQzH08z9YQ4UmtF6pj3ddgBnXxPfq7hCGExEgzdgkkGF
+         SP2kGEfusrl351zGq9kKHD0zIGrJD1NYKIdvOLoNN1cTZ3WXLzl8xtR3Z7un5P2Ku0/f
+         NZJ5i/FqctESsOEv6pvPbMuhsOMzClkpuhtsOqh1w8+jDCdcdVwOXXWD++kVDMHxsCzo
+         C8kInxpzh+N5igu3xDefekDoh96nAlI/ZoEKxuEUMYebwJRKo5OzreLddQUL3+j7me59
+         ZfVg==
+X-Gm-Message-State: AOJu0YxBevAmo/X90P4AHZrdbLN6TP9c95ddMGVsod8+OTI0wP5MPAOk
+	Yeeyy8iV6nIbt6wtiPDcjGSgsEu0Zdh2Lw==
+X-Google-Smtp-Source: AGHT+IEaKfAy25WQK5eNyuq98+hX1R8ubfyxj5LoJG9Q7+1uQ/ZypYr7jJNdkN01lBGF2xlwWxDSkQ==
+X-Received: by 2002:a17:906:73c6:b0:a27:59a1:e0a2 with SMTP id n6-20020a17090673c600b00a2759a1e0a2mr262385ejl.29.1703690337230;
+        Wed, 27 Dec 2023 07:18:57 -0800 (PST)
+Received: from [10.167.154.1] (178235179028.dynamic-4-waw-k-1-3-0.vectranet.pl. [178.235.179.28])
+        by smtp.gmail.com with ESMTPSA id gi16-20020a1709070c9000b00a19b7362dcfsm6652072ejc.139.2023.12.27.07.18.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Dec 2023 07:18:56 -0800 (PST)
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Date: Wed, 27 Dec 2023 16:18:54 +0100
+Subject: [PATCH] pmdomain: core: Print a message when unused power domains
+ are disabled
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20231227-topic-pmdomain_spam-v1-1-ff0410086b36@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAF1AjGUC/x2N2wrCQAwFf6Xk2UAbQcVfEZHsNmsD3QsbFaH03
+ w0+zhyGs4FJVzG4Dht0+ahpLQ7TYYC4cHkK6uwMNNJxIjrjqzaN2PJcM2t5WOOMJJeTbyGNlMD
+ LwCYYOpe4eFve6+qydUn6/V/d7vv+A074gn56AAAA
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1703690336; l=954;
+ i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
+ bh=HOZ0tQ5XhpJRiYiK8g2v+oe13TgirBOq/Tfiaulf0Ik=;
+ b=nysMJgbMvUy50OtruHiNQ2kL3c7am2LQt/62JQFIG7jsF27bNqouTR0XbOwsJUFbqapBgK5HA
+ Zm7WZGoaxbWBI0r0Luv5UOKGQ4u3mM3mQVBee9h8DFA/PBWQf04fg+o
+X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-of_dma_get_max_cpu_address() returns the highest CPU address that
-devices can use for DMA. The implicit assumption is that all CPU
-addresses below that limit are suitable for DMA. However the
-'dma-ranges' property this code uses also encodes a lower limit for DMA
-that is potentially non zero.
+In a similar spirit to commit 12ca59b91d04 ("clk: Print an info line
+before disabling unused clocks"), print the message in both ignore AND
+cleanup cases to better inform the user (and more importantly, the
+developer) when it happens.
 
-Rename to of_dma_get_cpu_limits(), and extend to retrieve also the lower
-limit for the same 'dma-ranges' property describing the high limit.
-
-Update callers of of_dma_get_max_cpu_address(). No functional change
-intended.
-
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 ---
- arch/arm64/mm/init.c  |  4 +++-
- drivers/of/address.c  | 38 +++++++++++++++++++++++++++-----------
- drivers/of/unittest.c |  8 ++++----
- include/linux/of.h    | 11 ++++++++---
- 4 files changed, 42 insertions(+), 19 deletions(-)
+ drivers/pmdomain/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 74c1db8ce271..d6c723ae6fb0 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -136,11 +136,13 @@ static void __init zone_sizes_init(void)
- 	unsigned long max_zone_pfns[MAX_NR_ZONES]  = {0};
- 	unsigned int __maybe_unused acpi_zone_dma_bits;
- 	unsigned int __maybe_unused dt_zone_dma_bits;
-+	phys_addr_t __maybe_unused max_cpu_address;
- 	phys_addr_t __maybe_unused dma32_phys_limit = max_zone_phys(32);
- 
- #ifdef CONFIG_ZONE_DMA
- 	acpi_zone_dma_bits = fls64(acpi_iort_dma_get_max_cpu_address());
--	dt_zone_dma_bits = fls64(of_dma_get_max_cpu_address(NULL));
-+	of_dma_get_cpu_limits(NULL, &max_cpu_address, NULL);
-+	dt_zone_dma_bits = fls64(max_cpu_address);
- 	zone_dma_bits = min3(32U, dt_zone_dma_bits, acpi_zone_dma_bits);
- 	arm64_dma_phys_limit = max_zone_phys(zone_dma_bits);
- 	max_zone_pfns[ZONE_DMA] = PFN_DOWN(arm64_dma_phys_limit);
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index b59956310f66..51fa52bbe911 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -965,21 +965,25 @@ int of_dma_get_range(struct device_node *np, const struct bus_dma_region **map)
- #endif /* CONFIG_HAS_DMA */
- 
- /**
-- * of_dma_get_max_cpu_address - Gets highest CPU address suitable for DMA
-+ * of_dma_get_cpu_limits - Gets highest CPU address suitable for DMA
-  * @np: The node to start searching from or NULL to start from the root
-+ * @max: Pointer to high address limit or NULL if not needed
-+ * @min: Pointer to low address limit or NULL if not needed
-  *
-  * Gets the highest CPU physical address that is addressable by all DMA masters
-- * in the sub-tree pointed by np, or the whole tree if NULL is passed. If no
-- * DMA constrained device is found, it returns PHYS_ADDR_MAX.
-+ * in the sub-tree pointed by np, or the whole tree if @np in NULL. If no
-+ * DMA constrained device is found, @*max is PHYS_ADDR_MAX, and @*low is 0.
-  */
--phys_addr_t __init of_dma_get_max_cpu_address(struct device_node *np)
-+void __init of_dma_get_cpu_limits(struct device_node *np,
-+		phys_addr_t *max, phys_addr_t *min)
- {
- 	phys_addr_t max_cpu_addr = PHYS_ADDR_MAX;
- 	struct of_range_parser parser;
--	phys_addr_t subtree_max_addr;
-+	phys_addr_t min_cpu_addr = 0;
- 	struct device_node *child;
- 	struct of_range range;
- 	const __be32 *ranges;
-+	u64 cpu_start = 0;
- 	u64 cpu_end = 0;
- 	int len;
- 
-@@ -989,21 +993,33 @@ phys_addr_t __init of_dma_get_max_cpu_address(struct device_node *np)
- 	ranges = of_get_property(np, "dma-ranges", &len);
- 	if (ranges && len) {
- 		of_dma_range_parser_init(&parser, np);
--		for_each_of_range(&parser, &range)
--			if (range.cpu_addr + range.size > cpu_end)
-+		for_each_of_range(&parser, &range) {
-+			if (range.cpu_addr + range.size > cpu_end) {
- 				cpu_end = range.cpu_addr + range.size - 1;
-+				cpu_start = range.cpu_addr;
-+			}
-+		}
- 
--		if (max_cpu_addr > cpu_end)
-+		if (max_cpu_addr > cpu_end) {
- 			max_cpu_addr = cpu_end;
-+			min_cpu_addr = cpu_start;
-+		}
+diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
+index a1f6cba3ae6c..69902797a5bb 100644
+--- a/drivers/pmdomain/core.c
++++ b/drivers/pmdomain/core.c
+@@ -1100,6 +1100,7 @@ static int __init genpd_power_off_unused(void)
+ 		return 0;
  	}
  
- 	for_each_available_child_of_node(np, child) {
--		subtree_max_addr = of_dma_get_max_cpu_address(child);
--		if (max_cpu_addr > subtree_max_addr)
-+		phys_addr_t subtree_max_addr, subtree_min_addr;
-+
-+		of_dma_get_cpu_limits(child, &subtree_max_addr, &subtree_min_addr);
-+		if (max_cpu_addr > subtree_max_addr) {
- 			max_cpu_addr = subtree_max_addr;
-+			min_cpu_addr = subtree_min_addr;
-+		}
- 	}
++	pr_info("genpd: Disabling unused power domains\n");
+ 	mutex_lock(&gpd_list_lock);
  
--	return max_cpu_addr;
-+	if (max)
-+		*max = max_cpu_addr;
-+	if (min)
-+		*min = min_cpu_addr;
- }
- 
- /**
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index e9e90e96600e..21d273a05ba6 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -908,7 +908,7 @@ static void __init of_unittest_changeset(void)
- #endif
- }
- 
--static void __init of_unittest_dma_get_max_cpu_address(void)
-+static void __init of_unittest_dma_get_cpu_limits(void)
- {
- 	struct device_node *np;
- 	phys_addr_t cpu_addr;
-@@ -922,9 +922,9 @@ static void __init of_unittest_dma_get_max_cpu_address(void)
- 		return;
- 	}
- 
--	cpu_addr = of_dma_get_max_cpu_address(np);
-+	of_dma_get_cpu_limits(np, &cpu_addr, NULL);
- 	unittest(cpu_addr == 0x4fffffff,
--		 "of_dma_get_max_cpu_address: wrong CPU addr %pad (expecting %x)\n",
-+		 "of_dma_get_cpu_limits: wrong CPU addr %pad (expecting %x)\n",
- 		 &cpu_addr, 0x4fffffff);
- }
- 
-@@ -4104,7 +4104,7 @@ static int __init of_unittest(void)
- 	of_unittest_changeset();
- 	of_unittest_parse_interrupts();
- 	of_unittest_parse_interrupts_extended();
--	of_unittest_dma_get_max_cpu_address();
-+	of_unittest_dma_get_cpu_limits();
- 	of_unittest_parse_dma_ranges();
- 	of_unittest_pci_dma_ranges();
- 	of_unittest_bus_ranges();
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 6a9ddf20e79a..629b402d81bf 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -445,7 +445,8 @@ int of_map_id(struct device_node *np, u32 id,
- 	       const char *map_name, const char *map_mask_name,
- 	       struct device_node **target, u32 *id_out);
- 
--phys_addr_t of_dma_get_max_cpu_address(struct device_node *np);
-+void of_dma_get_cpu_limits(struct device_node *np, phys_addr_t *max,
-+		phys_addr_t *min);
- 
- struct kimage;
- void *of_kexec_alloc_and_setup_fdt(const struct kimage *image,
-@@ -865,9 +866,13 @@ static inline int of_map_id(struct device_node *np, u32 id,
- 	return -EINVAL;
- }
- 
--static inline phys_addr_t of_dma_get_max_cpu_address(struct device_node *np)
-+static inline void of_dma_get_cpu_limits(struct device_node *np,
-+		phys_addr_t *max, phys_addr_t *min)
- {
--	return PHYS_ADDR_MAX;
-+	if (max)
-+		*max = PHYS_ADDR_MAX;
-+	if (min)
-+		*min = 0;
- }
- 
- static inline const void *of_device_get_match_data(const struct device *dev)
+ 	list_for_each_entry(genpd, &gpd_list, gpd_list_node)
+
+---
+base-commit: 39676dfe52331dba909c617f213fdb21015c8d10
+change-id: 20231227-topic-pmdomain_spam-2e86227bf02f
+
+Best regards,
 -- 
-2.43.0
+Konrad Dybcio <konrad.dybcio@linaro.org>
 
