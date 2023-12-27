@@ -1,100 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF936105;
-	Wed, 27 Dec 2023 06:21:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166F56AA3
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 06:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WtcfljAs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 209CEC433C7;
-	Wed, 27 Dec 2023 06:21:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703658093;
-	bh=uSrf39EJ3m2nWoWySm/WpjS4Iw8WDsXjJGD5Xt+c8eo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WtcfljAsXrB0OyllKXtg8mhcJCrl06MXO3isk1FLVmuY3tbWgcgunFO+vIq9Q1Q3L
-	 K/+AJOPVdbx24Z2iBvA52ig2KUk4TEj7Dv8csNFB47ZA87F2CTMNnRkPllXEB3NBpZ
-	 u6slESNZ6jbV+VDGCvbGYZBJZLgbxQ9SRxMCfJ7Zhx7ZqEA2BhdLi/btvtM+pGwVAi
-	 ZVoGcRq1uTnqHo6Y18LlCVOSJxFFejK1Tdh+Ef7HXFPUTseOHbYbZ7ux91Q7HVOD/X
-	 ryIInmXuPMukYIsb+/9X4+lxNn0Y9/iXWuNWCgh79eNHX5AdyNfSHrVKw54Go4jKzQ
-	 PH4JI00KI7wEA==
-Date: Wed, 27 Dec 2023 11:51:23 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Andrew Halaney <ahalaney@redhat.com>
-Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Hannes Reinecke <hare@suse.de>, Janek Kotas <jank@cadence.com>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Avri Altman <avri.altman@wdc.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Can Guo <quic_cang@quicinc.com>, Will Deacon <will@kernel.org>,
-	linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d/jJP4jv"
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3ba14203a34so5096194b6e.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 22:23:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703658215; x=1704263015; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AP6TTZGYZvR9kHCkhdIlC9uA60kF06pnesaOZz6qvzM=;
+        b=d/jJP4jvI0YJ4tRlbejSoCruKhDe8WxJ4b+np4WVj5bV4/F6ZYAGi2HVC+fynbIPzJ
+         3u/m6oNy7yX2hJX+IsMLKEDFWlnGUI6aSzC49MI88R7ofd75bHxYzqKh6pvCWL1/zFbX
+         CkoY/Vkc5dDhjm8SLw2y0O1COm8gni1OkRcDEFSRX4VLTdYiBkccjxslUAzvBo5Ul601
+         YmyH2oLjIbLh1So66q1lWBOwMzcLDGQR11aqrbBTXABcvI+3caobxa6DVKtPr2XEjb+h
+         cBnHJVkA9GszREdCr2FK1BkbTGr/rCw+EY5CuxyLUCsDxWeZbtabf43la0J0UCfqEjb8
+         +mxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703658215; x=1704263015;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AP6TTZGYZvR9kHCkhdIlC9uA60kF06pnesaOZz6qvzM=;
+        b=Ujp5/epcKb/QFhxQdDp3PSv43v96aozVLo0vTQsB/433QzebcjZTyyvEYxws/ZIkMj
+         /wGOhcO7LbMid1G6tGgTe5RtssBhz8BqqTdoRZUqxhZ4+N2pxzg6wyzWdAo+07tZscd4
+         luRO6wcEwy9WO3FXhEaYD/mJ2Ft31bfCU2rEewxZx8nvQjMuyYYMyHacffwwW8ge0O2J
+         mOpE2PS4wrLPMN0scL9YdMYbOy4eo5+pio31Iea4RAJxWwQp37bsUUCCr7LgdAZHEgg8
+         GrvgdfTZUzIPqwO9DrA4tflBUzYrbMSZPvHHt++sLrVBSO9aaUFTcUlAUs4RrpQmrNeV
+         wjtA==
+X-Gm-Message-State: AOJu0Yy7P9m0t4azMfC9WSxw3AsYjAbuGxyLMvlF1+g2gvQv85dpt/ox
+	yD7jamtIDMjx8y/T/E7Jf2c=
+X-Google-Smtp-Source: AGHT+IEQnS7vuOvg/nAGGlBYshazr+OpTFsczOIxBKICvJiuY0y9UfgggJ7L/wkKYVZkauUyHhxH2Q==
+X-Received: by 2002:a05:6808:1598:b0:3bb:c930:47fe with SMTP id t24-20020a056808159800b003bbc93047femr46219oiw.46.1703658215139;
+        Tue, 26 Dec 2023 22:23:35 -0800 (PST)
+Received: from arm4c24g.vcn09251619.oraclevcn.com ([144.24.45.176])
+        by smtp.gmail.com with ESMTPSA id b19-20020a056a000cd300b006d99125b114sm8028907pfv.65.2023.12.26.22.23.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Dec 2023 22:23:34 -0800 (PST)
+From: Xiaobing Luo <luoxiaobing0926@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Xiaobing Luo <luoxiaobing0926@gmail.com>,
+	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v3 11/11] scsi: ufs: core: Perform read back before
- writing run/stop regs
-Message-ID: <20231227062123.GI2814@thinkpad>
-References: <20231221-ufs-reset-ensure-effect-before-delay-v3-0-2195a1b66d2e@redhat.com>
- <20231221-ufs-reset-ensure-effect-before-delay-v3-11-2195a1b66d2e@redhat.com>
+Subject: [PATCH] mm/cma: change print format of pointer in pr_debug() With %p, the pointer will be hashed and print (____ptrval____) instead.
+Date: Wed, 27 Dec 2023 06:18:25 +0000
+Message-Id: <20231227061825.116177-1-luoxiaobing0926@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231221-ufs-reset-ensure-effect-before-delay-v3-11-2195a1b66d2e@redhat.com>
 
-On Thu, Dec 21, 2023 at 01:09:57PM -0600, Andrew Halaney wrote:
-> Currently a wmb() is used to ensure that writes to the
-> UTP_TASK_REQ_LIST_BASE* regs are completed prior to following writes to
-> the run/stop registers.
-> 
-> wmb() ensure that the write completes, but completion doesn't mean that
-> it isn't stored in a buffer somewhere. The recommendation for
-> ensuring the bits have taken effect on the device is to perform a read
-> back to force it to make it all the way to the device. This is
-> documented in device-io.rst and a talk by Will Deacon on this can
-> be seen over here:
-> 
->     https://youtu.be/i6DayghhA8Q?si=MiyxB5cKJXSaoc01&t=1678
-> 
-> Let's do that to ensure the bits hit the device. Because the wmb()'s
-> purpose wasn't to add extra ordering (on top of the ordering guaranteed
-> by writel()/readl()), it can safely be removed.
-> 
-> Fixes: 897efe628d7e ("scsi: ufs: add missing memory barriers")
-> Signed-off-by: Andrew Halaney <ahalaney@redhat.com>
-> ---
->  drivers/ufs/core/ufshcd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-> index caebd589e08c..7c1975a1181f 100644
-> --- a/drivers/ufs/core/ufshcd.c
-> +++ b/drivers/ufs/core/ufshcd.c
-> @@ -4726,7 +4726,7 @@ int ufshcd_make_hba_operational(struct ufs_hba *hba)
->  	 * Make sure base address and interrupt setup are updated before
->  	 * enabling the run/stop registers below.
->  	 */
-> -	wmb();
-> +	ufshcd_readl(hba, REG_UTP_TASK_REQ_LIST_BASE_H);
+ [    0.070467] cma: cma_alloc(cma (____ptrval____), count 256, align 8)
+ [    0.073003] cma: cma_alloc(): returned (____ptrval____)
 
-I don't think the readback is really needed here. Because, the dependency is
-with UTP registers and both should be in the same domain. So there is no way the
-following write can happen before prior UTP write completion.
+Use 0x%px instead of %p to print the pointer. Then the print will be like:
 
-- Mani
+ [    0.054963] cma: cma_alloc(cma 0xffffffde9ad42a60, count 256, align 8)
+ [    0.057385] cma: cma_alloc(): returned 0xfffffffe003b0000
 
->  
->  	/*
->  	 * UCRDY, UTMRLDY and UTRLRDY bits must be 1
-> 
-> -- 
-> 2.43.0
-> 
+Signed-off-by: Xiaobing Luo <luoxiaobing0926@gmail.com>
+---
+ mm/cma.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
+diff --git a/mm/cma.c b/mm/cma.c
+index 2b2494fd6b59..4559f903df8f 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -440,7 +440,7 @@ struct page *cma_alloc(struct cma *cma, unsigned long count,
+ 	if (!cma || !cma->count || !cma->bitmap)
+ 		goto out;
+ 
+-	pr_debug("%s(cma %p, name: %s, count %lu, align %d)\n", __func__,
++	pr_debug("%s(cma 0x%px, name: %s, count %lu, align %d)\n", __func__,
+ 		(void *)cma, cma->name, count, align);
+ 
+ 	if (!count)
+@@ -487,7 +487,7 @@ struct page *cma_alloc(struct cma *cma, unsigned long count,
+ 		if (ret != -EBUSY)
+ 			break;
+ 
+-		pr_debug("%s(): memory range at pfn 0x%lx %p is busy, retrying\n",
++		pr_debug("%s(): memory range at pfn 0x%lx 0x%px is busy, retrying\n",
+ 			 __func__, pfn, pfn_to_page(pfn));
+ 
+ 		trace_cma_alloc_busy_retry(cma->name, pfn, pfn_to_page(pfn),
+@@ -514,7 +514,7 @@ struct page *cma_alloc(struct cma *cma, unsigned long count,
+ 		cma_debug_show_areas(cma);
+ 	}
+ 
+-	pr_debug("%s(): returned %p\n", __func__, page);
++	pr_debug("%s(): returned 0x%px\n", __func__, page);
+ out:
+ 	if (page) {
+ 		count_vm_event(CMA_ALLOC_SUCCESS);
+@@ -539,7 +539,7 @@ bool cma_pages_valid(struct cma *cma, const struct page *pages,
+ 	pfn = page_to_pfn(pages);
+ 
+ 	if (pfn < cma->base_pfn || pfn >= cma->base_pfn + cma->count) {
+-		pr_debug("%s(page %p, count %lu)\n", __func__,
++		pr_debug("%s(page 0x%px, count %lu)\n", __func__,
+ 						(void *)pages, count);
+ 		return false;
+ 	}
+@@ -565,7 +565,7 @@ bool cma_release(struct cma *cma, const struct page *pages,
+ 	if (!cma_pages_valid(cma, pages, count))
+ 		return false;
+ 
+-	pr_debug("%s(page %p, count %lu)\n", __func__, (void *)pages, count);
++	pr_debug("%s(page 0x%px, count %lu)\n", __func__, (void *)pages, count);
+ 
+ 	pfn = page_to_pfn(pages);
+ 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.34.1
+
