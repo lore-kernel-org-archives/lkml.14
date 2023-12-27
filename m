@@ -1,109 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C109522C;
-	Wed, 27 Dec 2023 06:27:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078075666;
+	Wed, 27 Dec 2023 06:28:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L/qWPKvS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E25BC433C8;
-	Wed, 27 Dec 2023 06:27:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703658423;
-	bh=1aL1UjeuTN6ZyivWuNsZk/rd0snWq7SDPeGNQ5MhZWM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L/qWPKvSzoa6dDByZYJmBYGK9sPkGQ/Awk9Sb68jnWX6jkHPf/sQq71k8JRLbhw9q
-	 zgxqu9jzrEBz9Ulc2uRcXfGyraUzk92ZSkynnglqLFHwB94XRY8oJ/h65zvf1dpFwk
-	 3XAI4I8sArc+pTKRIpBrWlmA5/fvEo3ML7gA+oyT2G3MR4lbo5VEesGCRWfAOs0RU+
-	 Tt7KPhC0x8cbM8cZrQFqjcwlTXTkrJ1HakxOczAAU/g8HrtZ3hkSkLFNcy033qSIhR
-	 EsmC0xyoTl10qmcMbA5JDA4+KvXdljahO6UUOK8vdvwIi5knxpmLtvi2UebCDUUGQv
-	 sCEF8rc9sz3BA==
-Date: Wed, 27 Dec 2023 14:26:58 +0800
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Mark Hasemeyer <markhas@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	Raul Rangel <rrangel@chromium.org>,
-	Benson Leung <bleung@chromium.org>,
-	Bhanu Prakash Maiya <bhanumaiya@chromium.org>,
-	Chen-Yu Tsai <wenst@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>, Lee Jones <lee@kernel.org>,
-	Prashant Malani <pmalani@chromium.org>,
-	Rob Barnes <robbarnes@google.com>,
-	Stephen Boyd <swboyd@chromium.org>, chrome-platform@lists.linux.dev
-Subject: Re: [PATCH v3 24/24] platform/chrome: cros_ec: Use PM subsystem to
- manage wakeirq
-Message-ID: <ZYvDshfJ-jnWNEY5@google.com>
-References: <20231226192149.1830592-1-markhas@chromium.org>
- <20231226122113.v3.24.Ieee574a0e94fbaae01fd6883ffe2ceeb98d7df28@changeid>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kxc8sU71"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703658481; x=1735194481;
+  h=from:to:cc:subject:date:message-id;
+  bh=suBVpZrIX+26A1y1ne4PDB74bdL7C3LwazkehHNtqYs=;
+  b=kxc8sU71AVh2l8de40/YCvbZf3UzME2g04h9aNGVtcxlCzqCkdV5aIP+
+   l//1Y6jbP+muy6pgyP4SB53rhSQ7/3sZZAzcvQ3XA4SHkO6SZDhrKGUFd
+   Vx8YQJeYmNFGBOJq9MS3x9jS9Ns8QuJlOQLZhcGOz/xnRKSYEudUUc7Px
+   UGhonHARNhjczyu/HXfcluQtSLvYvdtzLaQ9YLk2GcBQ6d8b3sHNzMapa
+   coxrMfiZZ6a5Tvi5aPo4COrzAxX4sIbRR0tpKQkhOl+Gaj0kf4bFehbg8
+   OXbObHsRTEXdfB3cKzySrUhgz71hlcaYcO3XME3VohJN23/DzOURZGdOR
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10935"; a="427584069"
+X-IronPort-AV: E=Sophos;i="6.04,308,1695711600"; 
+   d="scan'208";a="427584069"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Dec 2023 22:28:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10935"; a="1025316079"
+X-IronPort-AV: E=Sophos;i="6.04,308,1695711600"; 
+   d="scan'208";a="1025316079"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by fmsmga006.fm.intel.com with ESMTP; 26 Dec 2023 22:27:59 -0800
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Chen Yu <yu.c.chen@intel.com>,
+	Len Brown <len.brown@intel.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Zhao Liu <zhao1.liu@intel.com>,
+	stable@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Subject: [PATCH 0/4] thermal: intel: hfi: Fix memory corruption on resume from hibernation
+Date: Tue, 26 Dec 2023 22:29:36 -0800
+Message-Id: <20231227062940.10780-1-ricardo.neri-calderon@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231226122113.v3.24.Ieee574a0e94fbaae01fd6883ffe2ceeb98d7df28@changeid>
 
-On Tue, Dec 26, 2023 at 12:21:28PM -0700, Mark Hasemeyer wrote:
-> The cros ec driver is manually managing the wake IRQ by calling
-> enable_irq_wake()/disable_irq_wake() during suspend/resume.
-> 
-> Modify the driver to use the power management subsystem to manage the
-> wakeirq.
-> 
-> Rather than assuming that the IRQ is wake capable, use the underlying
-> firmware/device tree to determine whether or not to enable it as a wake
-> source. Some Chromebooks rely solely on the ec_sync pin to wake the AP
-> but do not specify the interrupt as wake capable in the ACPI _CRS. For
-> LPC/ACPI based systems a DMI quirk is introduced listing boards whose
-> firmware should not be trusted to provide correct wake capable values.
-> For device tree base systems, it is not an issue as the relevant device
-> tree entries have been updated and DTS is built from source for each
-> ChromeOS update.
-> 
-> Signed-off-by: Mark Hasemeyer <markhas@chromium.org>
+Hi,
 
-The patch overall looks good to me.
+Memory corruption may occur if the location of the HFI memory buffer is not
+restored when resuming from hibernation or suspend-to-memory.
 
-With some minor comments:
-Acked-by: Tzung-Bi Shih <tzungbi@kernel.org>
+During a normal boot, the kernel allocates a memory buffer and gives it to
+the hardware for reporting updates in the HFI table. The same allocation
+process is done by a restore kernel when resuming from suspend or
+hibernation.
 
-> diff --git a/drivers/platform/chrome/cros_ec_uart.c b/drivers/platform/chrome/cros_ec_uart.c
-[...]
->  static int cros_ec_uart_acpi_probe(struct cros_ec_uart *ec_uart)
->  {
-[...]
->  	/* Retrieve GpioInt and translate it to Linux IRQ number */
-> -	ret = acpi_dev_gpio_irq_get(adev, 0);
-> +	ret = acpi_dev_get_gpio_irq_resource(adev, NULL, 0, &irqres);
->  	if (ret < 0)
->  		return ret;
->  
-> -	ec_uart->irq = ret;
-> -	dev_dbg(&ec_uart->serdev->dev, "IRQ number %d\n", ec_uart->irq);
-> +	ec_uart->irq = irqres.start;
+The location of the memory that the restore kernel allocates may differ
+from that allocated by the image kernel. To prevent memory corruption (the
+hardware keeps using the memory buffer from the restore kernel), it is
+necessary to disable HFI before transferring control to the image kernel.
+Once running, the image kernel must restore the location of the HFI memory
+and enable HFI.
 
-How about keep using `ret`?
+The patchset addresses the described bug on systems with one or more HFI
+instances (i.e., packages) using CPU hotplug callbacks and a suspend
+notifier.
 
-> @@ -301,7 +306,14 @@ static int cros_ec_uart_probe(struct serdev_device *serdev)
->  
->  	serdev_device_set_client_ops(serdev, &cros_ec_uart_client_ops);
->  
-> -	return cros_ec_register(ec_dev);
-> +	/* Register a new cros_ec device */
-> +	ret = cros_ec_register(ec_dev);
-> +	if (ret) {
-> +		dev_err(dev, "Couldn't register ec_dev (%d)\n", ret);
-> +		return ret;
-> +	}
+I tested this patchset on Meteor Lake and Sapphire Rapids. The systems
+completed 3500 (in two separate tests of 1500 and 2000 repeats) and
+1000 hibernate-resume cycles, respectively. I tested it using Rafael's
+testing branch as on 20th December 2023.
 
-It doesn't need the change after moving device_init_wakeup() and
-dev_pm_set_wake_irq() into cros_ec_register().
+Thanks and BR,
+Ricardo
 
-Drop it?
+Ricardo Neri (4):
+  thermal: intel: hfi: Refactor enabling code into helper functions
+  thermal: intel: hfi: Enable an HFI instance from its first online CPU
+  thermal: intel: hfi: Disable an HFI instance when all its CPUs go
+    offline
+  thermal: intel: hfi: Add a suspend notifier
+
+ drivers/thermal/intel/intel_hfi.c | 142 ++++++++++++++++++++++++------
+ 1 file changed, 116 insertions(+), 26 deletions(-)
+
+-- 
+2.25.1
+
