@@ -1,87 +1,125 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B87199AF
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 09:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7b7facde6f7so594702639f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 01:18:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703668706; x=1704273506;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AlwDskA2iMpMQVUSwQ/WnNn62Sn2F2OBeZ/jPc+/pVk=;
-        b=gtyKErMWFVAVZch0K3vL1Dua45vbh0miqiwkpUldU0DgAUmZVdGBrhOPgv/k27KA87
-         R5K0WpEr5lCZEfyRS2Q3Klxq3LP1C32NB4OR2tiSv8o4GVaVLm50NR838PChq+Ok165X
-         5iUaTSkjH0c6YozmnILcQh+KiBRZOCKhn4t0YV+848dcuKd+LJx2bIdnMMAdHgQ+jKQY
-         oLLLwkesCokl+o0LbruUkN3y6zDKprNsb5jv9oIGAwfx2sg+IJ86ihdn4+hJF9fDaFCp
-         8lYV1xJetuI+NJLed0Pu8oa90hRoKHIa7oStZCXMY2PUu1iBxXGIo9Ry8tv168qTggX0
-         e6Fg==
-X-Gm-Message-State: AOJu0YxbjcS5n3euz2NHnX1CGIjLE8M7q4zrFEO9B6pRT7DXeotRz9PL
-	gzbomQKpan9oI5iWWQ9sGPafOizDnvxap4oI87usPLsMtEws/3k=
-X-Google-Smtp-Source: AGHT+IFAdDOzYNIj0dLVpmIr+xe9CCVI9dZ1GdUvIxlEHRSBA6dBZvB8P0qOpv/wGNN+XMIDkryDHJUCXw2IWxF3hUczc4xr9nZM
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03DC224F5;
+	Wed, 27 Dec 2023 09:19:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.1.104] (178.176.74.67) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Wed, 27 Dec
+ 2023 12:19:42 +0300
+Subject: Re: [PATCH v4 1/3] dt-bindings: usb: mtk-xhci: add a property for
+ Gen1 isoc-in transfer issue
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+	<matthias.bgg@gmail.com>, Mathias Nyman <mathias.nyman@intel.com>,
+	<linux-usb@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Eddie Hung <eddie.hung@mediatek.com>, Macpaul
+ Lin <macpaul.lin@mediatek.com>
+References: <20231227060316.8539-1-chunfeng.yun@mediatek.com>
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <1e5772b3-2e71-069c-5794-ded2ee72222f@omp.ru>
+Date: Wed, 27 Dec 2023 12:19:42 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d13:b0:35f:f01e:bb25 with SMTP id
- i19-20020a056e021d1300b0035ff01ebb25mr786160ila.6.1703668706535; Wed, 27 Dec
- 2023 01:18:26 -0800 (PST)
-Date: Wed, 27 Dec 2023 01:18:26 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000117048060d7a4879@google.com>
-Subject: [syzbot] Monthly net report (Dec 2023)
-From: syzbot <syzbot+lista2146b62862a7fa40918@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20231227060316.8539-1-chunfeng.yun@mediatek.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 12/27/2023 08:58:14
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 59
+X-KSE-AntiSpam-Info: Lua profiles 182370 [Dec 27 2023]
+X-KSE-AntiSpam-Info: Version: 6.1.0.3
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {relay has no DNS name}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.74.67 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info:
+	127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;178.176.74.67:7.1.2;omp.ru:7.1.1
+X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.74.67
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 59
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 12/27/2023 09:04:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 12/27/2023 6:29:00 AM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-Hello net maintainers/developers,
+On 12/27/23 9:03 AM, Chunfeng Yun wrote:
 
-This is a 31-day syzbot report for the net subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/net
+> For Gen1 isoc-in endpoint on controller before about SSUSB IPM v1.6.0, it
+> still send out unexpected ACK after receiving a short packet in burst
+> transfer, this will cause an exception on connected device, specially for
+> a 4k camera.
+> Add a quirk property "rx-fifo-depth" to work around this hardware issue,
+> prefer to use 3k bytes;
+> The side-effect is that may cause performance drop about 10%, including
 
-During the period, 11 new issues were detected and 4 were fixed.
-In total, 73 issues are still open and 1360 have been fixed so far.
+   That it may cause?
 
-Some of the still happening issues:
+> bulk transfer.
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+> v4: change rx-fifo size in bytes
+> v3: add fifo depth unit, change the value range from 0-3 to 1-4
+> v2: change 'mediatek,rxfifo-depth' to 'rx-fifo-depth'
+> ---
+>  .../devicetree/bindings/usb/mediatek,mtk-xhci.yaml    | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.yaml b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.yaml
+> index e9644e333d78..9f621f2209df 100644
+> --- a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.yaml
+> +++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.yaml
+> @@ -124,6 +124,17 @@ properties:
+>        defined in the xHCI spec on MTK's controller.
+>      default: 5000
+>  
+> +  rx-fifo-depth:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      It is a quirk used to work around Gen1 isoc-in endpoint transfer issue
+> +      that still send out unexpected ACK after device finish the burst transfer
 
-Ref  Crashes Repro Title
-<1>  15039   Yes   KMSAN: uninit-value in aes_encrypt (4)
-                   https://syzkaller.appspot.com/bug?extid=828dfc12440b4f6f305d
-<2>  3912    Yes   KMSAN: uninit-value in eth_type_trans (2)
-                   https://syzkaller.appspot.com/bug?extid=0901d0cc75c3d716a3a3
-<3>  932     Yes   possible deadlock in __dev_queue_xmit (3)
-                   https://syzkaller.appspot.com/bug?extid=3b165dac15094065651e
-<4>  863     Yes   INFO: task hung in switchdev_deferred_process_work (2)
-                   https://syzkaller.appspot.com/bug?extid=8ecc009e206a956ab317
-<5>  691     Yes   INFO: task hung in rfkill_global_led_trigger_worker (2)
-                   https://syzkaller.appspot.com/bug?extid=2e39bc6569d281acbcfb
-<6>  600     Yes   INFO: task hung in rtnetlink_rcv_msg
-                   https://syzkaller.appspot.com/bug?extid=8218a8a0ff60c19b8eae
-<7>  411     Yes   WARNING in kcm_write_msgs
-                   https://syzkaller.appspot.com/bug?extid=52624bdfbf2746d37d70
-<8>  378     Yes   INFO: rcu detected stall in corrupted (4)
-                   https://syzkaller.appspot.com/bug?extid=aa7d098bd6fa788fae8e
-<9>  263     Yes   INFO: rcu detected stall in tc_modify_qdisc
-                   https://syzkaller.appspot.com/bug?extid=9f78d5c664a8c33f4cce
-<10> 254     Yes   BUG: corrupted list in p9_fd_cancelled (2)
-                   https://syzkaller.appspot.com/bug?extid=1d26c4ed77bc6c5ed5e6
+   Finishes.
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> +      with a short packet and cause an exception, specially on a 4K camera
+> +      device, it happens on controller before about IPM v1.6.0; the side-effect
+> +      is that may cause performance drop about 10%, include bulk transfer,
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+   That it may cause? And including?
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
+[...]
 
-You may send multiple commands in a single email message.
+MBR, Sergey
