@@ -1,7 +1,7 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E33D49F8D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9B34A980
 	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 21:03:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -9,27 +9,28 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rIb3L-0000sJ-2D; Wed, 27 Dec 2023 22:02:59 +0100
+	id 1rIb3M-0000sn-1M; Wed, 27 Dec 2023 22:03:00 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rIb3J-001wFB-HN; Wed, 27 Dec 2023 22:02:58 +0100
+	id 1rIb3J-001wFJ-Uq; Wed, 27 Dec 2023 22:02:59 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rIb3K-001ZVk-1k;
+	id 1rIb3K-001ZVs-36;
 	Wed, 27 Dec 2023 22:02:58 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
+Cc: Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
 	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
 	kernel@pengutronix.de
-Subject: [PATCH 08/12] mailbox: qcom-ipcc: Convert to platform remove callback returning void
-Date: Wed, 27 Dec 2023 22:02:36 +0100
-Message-ID:  <515f199e83af8a6295d38f0127be230bbbd6098b.1703710628.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 10/12] mailbox: sun6i-msgbox: Convert to platform remove callback returning void
+Date: Wed, 27 Dec 2023 22:02:38 +0100
+Message-ID:  <2db7ef94aa35587980697405ec373e0b7bb70466.1703710628.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1703710628.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1703710628.git.u.kleine-koenig@pengutronix.de>
@@ -40,7 +41,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1791; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=dQ7xAWwAr+m6oeIQoY8ovO5/17i2OHqeN97W+/12Du4=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBljJDufzD2oU8+z6pomHH+G4A8o2UtNr9z9PhPb vptCsZeZieJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZYyQ7gAKCRCPgPtYfRL+ Tq7pB/9Dmb/jKMl6/r477Ic9N1qIMXfrf4k1YWh8kVn7VLU0tzEVL5PeORJkHj5yqzysrPTJyTf G88OGmEFNY5XtxMN/p4IpCnkixdN0ZR1EWm6uCQhsLhJwwwsuGsJodiXkfDT6fSjIedCH7nDyAE dZcXeVoWOjztd+8ps5A3NYZkXGg7gAQP40tblN6PIIwMocxKsGLNhKtt71tsf61wu9SMTUMmgwl QwyWpfrV1MOUrtwmwW+DHBh2a6TvxNX7iWVBRYnzFIpdGj/OqHJURKPOdMYNXifhfstSrbWcQCI r78rzCbFkV3luWKwxJVYlsYlLH64Q9wlWKDEUgllPAHT4bMn
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1881; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=N/W8lZej+FeOqTdwnnoNmYqEIad8ynzkdcOjXSzw2ts=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBljJDwoMJLjfKm4Cc4/ADr3P0UTr8GXSsZIJG6W H2DM2dIZ4+JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZYyQ8AAKCRCPgPtYfRL+ TsNlCAC5RWomH9b61vsKXO9seVB+66mp+g78kJnbVAs+m+UWgdssUkxqjQl0IZqc0OlSudVdslX IjnVHkdr/ZzzYZVJVgcTzR4JNZhouUYJDLnKihWTElEo8ye0FJxgHAV9LiHuSoH8NBPRx4vlWOI 1RhV+oIdSY6PtwA5hL6W6T7El2gulfzOCdKPq/q0nawWkBKRj3PEbof8Y5LXTeF+0AV4H/Ip6YR PNVh8GG59D3SPnPZZHLaJYRxWlGwbM/xAJhISVju1WUjnJ7FuoJbXhxMux/7E5dNjCVJ5Dsa2Mr yjFXCkWDvipZ6lhZZsg/qGnz7wXC2tlUUaziuZWURgX0ZjHE
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -63,38 +64,39 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/mailbox/qcom-ipcc.c | 6 ++----
+ drivers/mailbox/sun6i-msgbox.c | 6 ++----
  1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/mailbox/qcom-ipcc.c b/drivers/mailbox/qcom-ipcc.c
-index f597a1bd5684..d537cc9c4d4b 100644
---- a/drivers/mailbox/qcom-ipcc.c
-+++ b/drivers/mailbox/qcom-ipcc.c
-@@ -326,14 +326,12 @@ static int qcom_ipcc_probe(struct platform_device *pdev)
+diff --git a/drivers/mailbox/sun6i-msgbox.c b/drivers/mailbox/sun6i-msgbox.c
+index 7f8d931042d3..3dcc54dc83b2 100644
+--- a/drivers/mailbox/sun6i-msgbox.c
++++ b/drivers/mailbox/sun6i-msgbox.c
+@@ -287,15 +287,13 @@ static int sun6i_msgbox_probe(struct platform_device *pdev)
  	return ret;
  }
  
--static int qcom_ipcc_remove(struct platform_device *pdev)
-+static void qcom_ipcc_remove(struct platform_device *pdev)
+-static int sun6i_msgbox_remove(struct platform_device *pdev)
++static void sun6i_msgbox_remove(struct platform_device *pdev)
  {
- 	struct qcom_ipcc *ipcc = platform_get_drvdata(pdev);
+ 	struct sun6i_msgbox *mbox = platform_get_drvdata(pdev);
  
- 	disable_irq_wake(ipcc->irq);
- 	irq_domain_remove(ipcc->irq_domain);
+ 	mbox_controller_unregister(&mbox->controller);
+ 	/* See the comment in sun6i_msgbox_probe about the reset line. */
+ 	clk_disable_unprepare(mbox->clk);
 -
 -	return 0;
  }
  
- static const struct of_device_id qcom_ipcc_of_match[] = {
-@@ -348,7 +346,7 @@ static const struct dev_pm_ops qcom_ipcc_dev_pm_ops = {
+ static const struct of_device_id sun6i_msgbox_of_match[] = {
+@@ -310,7 +308,7 @@ static struct platform_driver sun6i_msgbox_driver = {
+ 		.of_match_table = sun6i_msgbox_of_match,
+ 	},
+ 	.probe  = sun6i_msgbox_probe,
+-	.remove = sun6i_msgbox_remove,
++	.remove_new = sun6i_msgbox_remove,
+ };
+ module_platform_driver(sun6i_msgbox_driver);
  
- static struct platform_driver qcom_ipcc_driver = {
- 	.probe = qcom_ipcc_probe,
--	.remove = qcom_ipcc_remove,
-+	.remove_new = qcom_ipcc_remove,
- 	.driver = {
- 		.name = "qcom-ipcc",
- 		.of_match_table = qcom_ipcc_of_match,
 -- 
 2.43.0
 
