@@ -1,59 +1,96 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D86E47F69;
-	Wed, 27 Dec 2023 20:41:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.4.0)
- id 954e4a2bde97b9af; Wed, 27 Dec 2023 21:41:45 +0100
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id AB00B668E17;
-	Wed, 27 Dec 2023 21:41:44 +0100 (CET)
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Greg KH <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org
-Cc: Youngmin Nam <youngmin.nam@samsung.com>, rafael@kernel.org, linux-kernel@vger.kernel.org, d7271.choe@samsung.com, janghyuck.kim@samsung.com, hyesoo.yu@samsung.com, Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH v1 0/3] PM: sleep: Fix possible device suspend-resume deadlocks
-Date: Wed, 27 Dec 2023 21:35:53 +0100
-Message-ID: <6019796.lOV4Wx5bFT@kreacher>
-In-Reply-To: <5754861.DvuYhMxLoT@kreacher>
-References: <CGME20231227084252epcas2p3b063f7852f81f82cd0a31afd7f404db4@epcas2p3.samsung.com> <2023122701-mortify-deed-4e66@gregkh> <5754861.DvuYhMxLoT@kreacher>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 148CE47F4D
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 20:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bh1Qn2j2"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-5eb072c0b69so25836087b3.0
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 12:46:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1703709967; x=1704314767; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=fVDgWJyq2vOmIjdOR8AJqO+EWu6/v9sa3TFBqXWfDD0=;
+        b=Bh1Qn2j23YiFbcAtOLLtfFC05EtX8S9vc9G1g+aAjMtysKRaLtL+hMxsLUYixE00Os
+         h6z0KKr6K+AjhGry6UswPFWITrGAU3PWkkKhVam5GJnvDg7d08Y3f/A3LG/omsMSUCVr
+         WJr0+RHyDjSLVNmgNZZ8psgp0mVRVsCRkCh/o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703709967; x=1704314767;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fVDgWJyq2vOmIjdOR8AJqO+EWu6/v9sa3TFBqXWfDD0=;
+        b=wBNx96S3kMR4EzYxE8p4UD6UZ6ox+17nBlDhmY1jcNhVhC4mx46mBqzwVt8g3LC+ca
+         /tmqNHkwzHc0IQEpiW8sDffYFe6eBXqw6leSgQyH+43EehBlGxWI4P60Qgf15b6Vfsb5
+         VpwkohAyXWT96HP4uzFWlOsvYHRrSS62IT2k73Bv7+/eLDlSqijpQSVN/qM3QFI9GeUF
+         iNFo1cgN0Tt8UGabM/m6NO3KpubAndNjLanDxRE9kO+ogyUwU0D9hhjmy897WonYQ/rq
+         BFlDgDTH2dyzoq6nedKPqvqCXj8ABLdQ1SkXpg5k0hIpBB5WRYIcDFzsOP9GMtGOebln
+         Ra+A==
+X-Gm-Message-State: AOJu0YyGM3FRbNfSKJk8/pjWI1YI2QNth9zKif1YOcvCXsaU9vJkv3ew
+	5LG43KjVhGlxLvTQGe/1JZboupPPVA6A7lnEQJgMDCsGB+0b
+X-Google-Smtp-Source: AGHT+IEFqMT0cNiuNHYB4w/tWOWcrd94D2AcGcmnGOnqQ7+bMGPqypdIdUBb9fxsCLohmVCwiJXtBlug6m8t4Hajfgs=
+X-Received: by 2002:a0d:ca4d:0:b0:5e7:a5c4:d9db with SMTP id
+ m74-20020a0dca4d000000b005e7a5c4d9dbmr5847203ywd.51.1703709967172; Wed, 27
+ Dec 2023 12:46:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+References: <20231226192149.1830592-1-markhas@chromium.org>
+ <20231226122113.v3.24.Ieee574a0e94fbaae01fd6883ffe2ceeb98d7df28@changeid> <ZYvDshfJ-jnWNEY5@google.com>
+In-Reply-To: <ZYvDshfJ-jnWNEY5@google.com>
+From: Mark Hasemeyer <markhas@chromium.org>
+Date: Wed, 27 Dec 2023 13:45:56 -0700
+Message-ID: <CANg-bXB0k-Z1PjAuW=vX3oR7T02g3z+d7ppdzfL-Cj7T+EQ6EA@mail.gmail.com>
+Subject: Re: [PATCH v3 24/24] platform/chrome: cros_ec: Use PM subsystem to
+ manage wakeirq
+To: Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, 
+	Andy Shevchenko <andriy.shevchenko@intel.com>, Raul Rangel <rrangel@chromium.org>, 
+	Benson Leung <bleung@chromium.org>, Bhanu Prakash Maiya <bhanumaiya@chromium.org>, 
+	Chen-Yu Tsai <wenst@chromium.org>, Guenter Roeck <groeck@chromium.org>, Lee Jones <lee@kernel.org>, 
+	Prashant Malani <pmalani@chromium.org>, Rob Barnes <robbarnes@google.com>, 
+	Stephen Boyd <swboyd@chromium.org>, chrome-platform@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvkedrvddvledgudegudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpeefudduuedtuefgleffudeigeeitdeufeelvdejgefftdethffhhfethfeljefgteenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohephihouhhnghhmihhnrdhnrghmsehsrghmshhunhhgrdgtohhmpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegujedvjedurdgthhhovgesshgrmhhsuhhnghdrtghomh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=10 Fuz1=10 Fuz2=10
 
-Hi Everyone,
+> >       /* Retrieve GpioInt and translate it to Linux IRQ number */
+> > -     ret = acpi_dev_gpio_irq_get(adev, 0);
+> > +     ret = acpi_dev_get_gpio_irq_resource(adev, NULL, 0, &irqres);
+> >       if (ret < 0)
+> >               return ret;
+> >
+> > -     ec_uart->irq = ret;
+> > -     dev_dbg(&ec_uart->serdev->dev, "IRQ number %d\n", ec_uart->irq);
+> > +     ec_uart->irq = irqres.start;
+>
+> How about keep using `ret`?
 
-As reported here
+The return value for 'acpi_dev_get_gpio_irq_resource' is different: 0
+on success, negative errno on failure.
 
-https://lore.kernel.org/linux-pm/ZYvjiqX6EsL15moe@perf/
+> > @@ -301,7 +306,14 @@ static int cros_ec_uart_probe(struct serdev_device *serdev)
+> >
+> >       serdev_device_set_client_ops(serdev, &cros_ec_uart_client_ops);
+> >
+> > -     return cros_ec_register(ec_dev);
+> > +     /* Register a new cros_ec device */
+> > +     ret = cros_ec_register(ec_dev);
+> > +     if (ret) {
+> > +             dev_err(dev, "Couldn't register ec_dev (%d)\n", ret);
+> > +             return ret;
+> > +     }
+>
+> It doesn't need the change after moving device_init_wakeup() and
+> dev_pm_set_wake_irq() into cros_ec_register().
+>
+> Drop it?
 
-the device suspend-resume code running during system-wide PM transitions
-deadlock on low memory, because it attempts to acquire a mutex that's
-already held by it in those cases.
-
-This series addresses the issue by changing the resume code behavior
-to directly run the device PM functions synchronously if they cannot
-be scheduled for asynchronous executions (patch [3/3]).
-
-For this purpose, the async code is rearranged (patch [1/3]) and a
-new variant of async_schedule_dev() is introduced (patch [2/3]).
-
-Thanks!
-
-
-
+Will do.
