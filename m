@@ -1,62 +1,26 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75FD45961
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 13:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C41A446C6;
+	Wed, 27 Dec 2023 13:10:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="hiV6n+4q"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-336c9acec03so1593440f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 05:08:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1703682510; x=1704287310; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ocsSiEqBdtanIffaaT52Hpat/4WnkDj2kMGWbB3pX8E=;
-        b=hiV6n+4q8Z0ZFX2ngX+LspAOsc5eVlPs0eU7Crk1XUHoFi5u4/paBB3Zspkf/NPIpj
-         uVC3JxdQoSJJXSzYr/1ZtEoEKSzy/0MzBeTrLDmjp6vROdjmyPbp1u6qLf3Fng/tcewk
-         yBgDIsP30+CBRDqjFdIgJVi4LpCUHEKzYkD1JhuLjDiq+AmVSnf4Ibb0tN01DEXqW3Tx
-         RvcL7KUNN00NYV17+LJIdytKap7f+qCdUSngiz3FD1Ueu93W4aepWrTqR4l2PGxZYdDm
-         /iP1XAeXi+nLPmn4SQdlN74VsLH3MasRlkiCFqDAfpyShUG+k3TMbsSf/WLyCXChho5f
-         58ZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703682510; x=1704287310;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ocsSiEqBdtanIffaaT52Hpat/4WnkDj2kMGWbB3pX8E=;
-        b=nnN5zcposafRTyc18uVFKTN7mff+5C2+iIohiAOu4Ww/Gey8LgTYLMHqvYcyTAmCgF
-         tnp7etEXseGwzDh1Rk7uc13V4+aG0qUhpGslaFF0XW03v8UxcbU6BCsSrBF03z/E0Zqc
-         7Y72jvpfnHbIenNIo44edGcDpbTcD8BcImB0id257L2ac7qvYqFM7cPjFvEdys+RuH0p
-         6nLG9hdBZLabiKNgthQV3h1i+pNjDcTO+JH5GUH4T8UA/BCdaqTlM/eI5K17WUFzvSvh
-         LXiVpozwCsiLA+w3SrSxUCvRkuQ7vrHHcen8VRzvMzr39zltEGw/PLejiG5vynW2COiT
-         7hig==
-X-Gm-Message-State: AOJu0YzxP70NzIJHzKLXg4rPoGu0mjfhgXP7qaN/2w9XvQyC74DNgyOl
-	SRPPNSWqdPf/CACrNS6iTy8FdsMtd/oVNg==
-X-Google-Smtp-Source: AGHT+IFqg6rBequ445Nl+pCxjvGGT3EEDoFOIFQGo8u/WAIGCWjYYgshK4g+8oDoULLXedhnF5ap4Q==
-X-Received: by 2002:a5d:6d06:0:b0:336:c159:d3df with SMTP id e6-20020a5d6d06000000b00336c159d3dfmr3250890wrq.87.1703682509846;
-        Wed, 27 Dec 2023 05:08:29 -0800 (PST)
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.5])
-        by smtp.gmail.com with ESMTPSA id c6-20020adfe706000000b0033342338a24sm14906263wrm.6.2023.12.27.05.08.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Dec 2023 05:08:29 -0800 (PST)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: geert+renesas@glider.be,
-	magnus.damm@gmail.com,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org
-Cc: linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	claudiu.beznea@tuxon.dev,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH] arm64: dts: renesas: rzg3s-smarc: Add gpio keys
-Date: Wed, 27 Dec 2023 15:08:10 +0200
-Message-Id: <20231227130810.2744550-1-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fY+uziUA"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7A0F4C433C7;
+	Wed, 27 Dec 2023 13:10:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703682625;
+	bh=/jsWEPfzeo0DxCOUj3q2rwi1CbPQUhzjHOz5xIFG8uY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=fY+uziUA8JOkaA3P+LSDCmuJMy4n5M6CSiVFeQ+2ojamq24ltnqdg8+T/u9hGug2n
+	 snhuNv/hVbA6w8tbeAjbcklbptVdwuZWkgnwm+4zkrWRvTXSuVMhiKmnv8vIYgywtd
+	 wNQ6LCJRJP4d1ZRsJH+gPfvxj3TNuBfQXgwIlaHp12B318o9a5Zbubv6l9fc6gJdGD
+	 OeDdRMZcmJ0E/ZkBmgf/vx6u0SfE86R3NJ7Gm0xm2+jBQMvpKpajFujVXSyQc4hc87
+	 d4p1KxRSyCj4f1peOZH4UPfTq5IATm6D3GCEK4G3R9nyR9TOXMc3lV+Tk/bvW4fH6M
+	 NKj3d332WxRfQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 65DD6E333D9;
+	Wed, 27 Dec 2023 13:10:25 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,96 +28,62 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v9 0/9] Add MACsec support for TJA11XX C45 PHYs
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170368262541.3726.479057551410543516.git-patchwork-notify@kernel.org>
+Date: Wed, 27 Dec 2023 13:10:25 +0000
+References: <20231219145333.240323-1-radu-nicolae.pirea@oss.nxp.com>
+In-Reply-To: <20231219145333.240323-1-radu-nicolae.pirea@oss.nxp.com>
+To: Radu Pirea (NXP OSS) <radu-nicolae.pirea@oss.nxp.com>
+Cc: sd@queasysnail.net, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, andrew@lunn.ch, hkallweit1@gmail.com,
+ linux@armlinux.org.uk, richardcochran@gmail.com,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ sebastian.tobuschat@oss.nxp.com, andrei.botila@oss.nxp.com
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Hello:
 
-RZ SMARC Carrier II board has 3 user buttons called USER_SW1, USER_SW2,
-USER_SW3. Add a DT node in device tree to propertly instantiate the
-gpio-keys driver for these buttons.
+This series was applied to netdev/net-next.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi | 53 ++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+On Tue, 19 Dec 2023 16:53:24 +0200 you wrote:
+> This is the MACsec support for TJA11XX PHYs. The MACsec block encrypts
+> the ethernet frames on the fly and has no buffering. This operation will
+> grow the frames by 32 bytes. If the frames are sent back to back, the
+> MACsec block will not have enough room to insert the SecTAG and the ICV
+> and the frames will be dropped.
+> 
+> To mitigate this, the PHY can parse a specific ethertype with some
+> padding bytes and replace them with the SecTAG and ICV. These padding
+> bytes might be dummy or might contain information about TX SC that must
+> be used to encrypt the frame.
+> 
+> [...]
 
-diff --git a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
-index 214520137230..deb2ad37bb2e 100644
---- a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
-+++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
-@@ -6,6 +6,7 @@
-  */
- 
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
- #include <dt-bindings/pinctrl/rzg2l-pinctrl.h>
- 
- / {
-@@ -14,6 +15,37 @@ aliases {
- 		mmc1 = &sdhi1;
- 	};
- 
-+	keys {
-+		compatible = "gpio-keys";
-+
-+		key-1 {
-+			interrupts = <RZG2L_GPIO(18, 0) IRQ_TYPE_EDGE_FALLING>;
-+			interrupt-parent = <&pinctrl>;
-+			linux,code = <KEY_1>;
-+			label = "USER_SW1";
-+			wakeup-source;
-+			debounce-interval = <20>;
-+		};
-+
-+		key-2 {
-+			interrupts = <RZG2L_GPIO(0, 1) IRQ_TYPE_EDGE_FALLING>;
-+			interrupt-parent = <&pinctrl>;
-+			linux,code = <KEY_2>;
-+			label = "USER_SW2";
-+			wakeup-source;
-+			debounce-interval = <20>;
-+		};
-+
-+		key-3 {
-+			interrupts = <RZG2L_GPIO(0, 3) IRQ_TYPE_EDGE_FALLING>;
-+			interrupt-parent = <&pinctrl>;
-+			linux,code = <KEY_3>;
-+			label = "USER_SW3";
-+			wakeup-source;
-+			debounce-interval = <20>;
-+		};
-+	};
-+
- 	vcc_sdhi1: regulator-vcc-sdhi1 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "SDHI1 Vcc";
-@@ -35,6 +67,27 @@ vccq_sdhi1: regulator-vccq-sdhi1 {
- };
- 
- &pinctrl {
-+	key-1-gpio-hog {
-+		gpio-hog;
-+		gpios = <RZG2L_GPIO(18, 0) GPIO_ACTIVE_LOW>;
-+		input;
-+		line-name = "key-1-gpio-irq";
-+	};
-+
-+	key-2-gpio-hog {
-+		gpio-hog;
-+		gpios = <RZG2L_GPIO(0, 1) GPIO_ACTIVE_LOW>;
-+		input;
-+		line-name = "key-2-gpio-irq";
-+	};
-+
-+	key-3-gpio-hog {
-+		gpio-hog;
-+		gpios = <RZG2L_GPIO(0, 3) GPIO_ACTIVE_LOW>;
-+		input;
-+		line-name = "key-3-gpio-irq";
-+	};
-+
- 	scif0_pins: scif0 {
- 		pinmux = <RZG2L_PORT_PINMUX(6, 3, 1)>, /* RXD */
- 			 <RZG2L_PORT_PINMUX(6, 4, 1)>; /* TXD */
+Here is the summary with links:
+  - [net-next,v9,1/9] net: rename dsa_realloc_skb to skb_ensure_writable_head_tail
+    https://git.kernel.org/netdev/net-next/c/90abde49ea85
+  - [net-next,v9,2/9] net: macsec: use skb_ensure_writable_head_tail to expand the skb
+    https://git.kernel.org/netdev/net-next/c/b34ab3527b96
+  - [net-next,v9,3/9] net: macsec: move sci_to_cpu to macsec header
+    https://git.kernel.org/netdev/net-next/c/b1c036e835b6
+  - [net-next,v9,4/9] net: macsec: documentation for macsec_context and macsec_ops
+    https://git.kernel.org/netdev/net-next/c/eb97b9bd38f9
+  - [net-next,v9,5/9] net: macsec: revert the MAC address if mdo_upd_secy fails
+    https://git.kernel.org/netdev/net-next/c/25a00d0cd691
+  - [net-next,v9,6/9] net: macsec: introduce mdo_insert_tx_tag
+    https://git.kernel.org/netdev/net-next/c/a73d8779d61a
+  - [net-next,v9,7/9] net: phy: nxp-c45-tja11xx: add MACsec support
+    https://git.kernel.org/netdev/net-next/c/a868b486cb88
+  - [net-next,v9,8/9] net: phy: nxp-c45-tja11xx: add MACsec statistics
+    https://git.kernel.org/netdev/net-next/c/31a99fc06b0b
+  - [net-next,v9,9/9] net: phy: nxp-c45-tja11xx: implement mdo_insert_tx_tag
+    https://git.kernel.org/netdev/net-next/c/dc1a00380aa6
+
+You are awesome, thank you!
 -- 
-2.39.2
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
