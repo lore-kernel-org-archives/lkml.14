@@ -1,125 +1,224 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE7745C0A
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 17:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mojatatu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mojatatu.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mojatatu-com.20230601.gappssmtp.com header.i=@mojatatu-com.20230601.gappssmtp.com header.b="RbgWAKUF"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dbdb8e032f7so4265482276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 09:03:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mojatatu-com.20230601.gappssmtp.com; s=20230601; t=1703696581; x=1704301381; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LGGpmDyCOAVTfPuNyeaql2/nHGZzSIk1f0fzagp9sTE=;
-        b=RbgWAKUFmDHOkoAFKurx+OYuL0dcskN7eTAQZ2pfoH15mz2grBFy81e791IqdWOi/d
-         XA/mkaDbeMBoPXPywbESXtPvra4p0NGG7istnFBZgHR0zp/+t56Uhhvbf2GwIvH+cx+K
-         Hsyq8TqJG9qgWdvVkaOl69OkDIL8SG0GQVSdK3XjUe4mG4lG4ZQLSaj+EcGwi3W1tA7d
-         puNNWrFNQD0NUHE7vKFNkdmPgN/8BRxSZHgxn4uhrLtPiesz/iCgi223Q3ngTqCQ2yHz
-         yCocBvHbJ5jR8tr2dzxdHwIJ9JKN/N6LUdYz0SmCtrIbyw/ZZnqbCS4fQkINOeQT2PqN
-         7u8g==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84AAB46521;
+	Wed, 27 Dec 2023 17:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-593f182f263so1107882eaf.0;
+        Wed, 27 Dec 2023 09:04:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703696581; x=1704301381;
+        d=1e100.net; s=20230601; t=1703696646; x=1704301446;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LGGpmDyCOAVTfPuNyeaql2/nHGZzSIk1f0fzagp9sTE=;
-        b=NtbZV/nUDHMxTbRpjue0KSovDtbLWG+45unVkm/CqdhLy/kNGOSXr+e8Y2e562ASFk
-         Mw5T9mK0HPzKchkVbZo0KuYlSDXpoJvp7D2LAU1OlutOeESPlBNu/e1wotpCfnFQmgsV
-         0nR4y+D9VUOWJRgA92E1pX7PLL8uSrRh641VNeIVSAsSs01og3ZrXGBIOqyM55VuTMEi
-         Fw5E3d4Qm2hXBPy4VOdGcKpR8Zv0o5A4X6ZKc97400MW0gd4MPPCd5a1tvfQOOPevkz9
-         hgelxCvlHGArfyXC7PvysiqUvyfRf34hWbF7WkjBcbIG046//I3vco9lvDx34RQ1OLkO
-         tPLw==
-X-Gm-Message-State: AOJu0YxsZ392WkBedhyKM62kCN5AtCak3vQO4RCOODlUMv8O3jPXFbZI
-	1HDl4qOFCANqLqeRHwlLlfJth+nvJPFXUyXvbA3ehlsHCDrP
-X-Google-Smtp-Source: AGHT+IHTvTD/jP8fxBI/SM3MB9o4zJ5KrqIwobuhiEM5CRa1hOMcDWlEB3sCgezF8eB8Yh4CNzmFkxw8iFwFY/KK4e4=
-X-Received: by 2002:a5b:9d1:0:b0:db7:daec:ec5a with SMTP id
- y17-20020a5b09d1000000b00db7daecec5amr6380156ybq.33.1703696581102; Wed, 27
- Dec 2023 09:03:01 -0800 (PST)
+        bh=ChF2D9NuT+aryC9LIMkklXUUM4qM6A4dzbxpF9Dkw5Y=;
+        b=S0ymUDVZJf8ldiOgXGya3BW4hV/HBeTINh+QalV9yX5RbGTxsLjlx8l/qG/O89u7U/
+         X25KDQXd+bRIOx579UrXp5DoR3f1+t+2ht79b2pryR60ZABBca+e7WWdbFvea17i3O8+
+         wcnqxA6zvNMFZUso6Tf39l4yeEvTB+dP/7C0tAohzaOtCOuouqB+5fDIc3LB+dxuakPw
+         sgfqFcAjg+BRPB0WA6bizrjJcYtiKla0fFxYqbPk8uklMp99GdhefkfMTAdGSAPgV/sp
+         mYhSNflEJh0EmCR/3FQktwvRFkRaRrO+Hi0DoPxJ62jbmv0OehqUzzGyYsIj+gH2Kzuj
+         uzmw==
+X-Gm-Message-State: AOJu0YymX2HBltTR7DW6p4RCIbXEpZB01BWbRKhC9EGtWsfzywX2MgOz
+	loMvAoI6BnqxHnwcFSrHDQBsL8QCmoAzLcPFrVE=
+X-Google-Smtp-Source: AGHT+IFVqwsopcL3FWguuGTYMy2Bpr8eEz81q/YxplhwEAyn7vCzQwSbkj+x7JRglbxNnSL/PeJ0coTY4MtFswVM8nA=
+X-Received: by 2002:a4a:c719:0:b0:594:c433:66e6 with SMTP id
+ n25-20020a4ac719000000b00594c43366e6mr3541007ooq.0.1703696646434; Wed, 27 Dec
+ 2023 09:04:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231224165413.831486-1-linma@zju.edu.cn> <CAM0EoMm8F3UE3N-PBZmJHQpYYjiV23JKf6jGsvzzWs0PBd+AWQ@mail.gmail.com>
- <6aab36aa.56337.18ca3c6af7a.Coremail.linma@zju.edu.cn>
-In-Reply-To: <6aab36aa.56337.18ca3c6af7a.Coremail.linma@zju.edu.cn>
-From: Jamal Hadi Salim <jhs@mojatatu.com>
-Date: Wed, 27 Dec 2023 12:02:49 -0500
-Message-ID: <CAM0EoMmBp6SWDGhPkusnx0jh4y=1k9ggS+5UpV+0MtEccDgyXw@mail.gmail.com>
-Subject: Re: [PATCH net v1] net/sched: cls_api: complement tcf_tfilter_dump_policy
-To: Lin Ma <linma@zju.edu.cn>
-Cc: xiyou.wangcong@gmail.com, jiri@resnulli.us, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231205063537.872834-1-li.meng@amd.com> <20231205063537.872834-5-li.meng@amd.com>
+ <CAJZ5v0ju-Thhz2_rQVbTosTsBaRoyQW2kjtPWWTsiT_Yi2DbsQ@mail.gmail.com>
+ <CAJZ5v0hMAZxvuMWK3dNeOL9FRTrVW7j7PzCFwcp9+0K87y-L0A@mail.gmail.com>
+ <CAJZ5v0gYj6C_-m7dD_aN-FWiuLn6bG9MRTe_c7SryTtJJN7FKA@mail.gmail.com>
+ <DM4PR12MB635185821F31AFB0D2655D01F798A@DM4PR12MB6351.namprd12.prod.outlook.com>
+ <DM4PR12MB6351C4ADE9E48A06482027B0F79FA@DM4PR12MB6351.namprd12.prod.outlook.com>
+In-Reply-To: <DM4PR12MB6351C4ADE9E48A06482027B0F79FA@DM4PR12MB6351.namprd12.prod.outlook.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 27 Dec 2023 18:03:48 +0100
+Message-ID: <CAJZ5v0iriUv8ZMLYz43AB88rQL2DdP3Wn8WwF00XWhZyce+eYw@mail.gmail.com>
+Subject: Re: [PATCH V12 4/7] cpufreq: Add a notification message that the
+ highest perf has changed
+To: "Meng, Li (Jassmine)" <Li.Meng@amd.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, 
+	"Huang, Ray" <Ray.Huang@amd.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, 
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, 
+	"Fontenot, Nathan" <Nathan.Fontenot@amd.com>, "Sharma, Deepak" <Deepak.Sharma@amd.com>, 
+	"Deucher, Alexander" <Alexander.Deucher@amd.com>, 
+	"Limonciello, Mario" <Mario.Limonciello@amd.com>, "Huang, Shimmer" <Shimmer.Huang@amd.com>, 
+	"Yuan, Perry" <Perry.Yuan@amd.com>, "Du, Xiaojian" <Xiaojian.Du@amd.com>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Borislav Petkov <bp@alien8.de>, 
+	Oleksandr Natalenko <oleksandr@natalenko.name>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 25, 2023 at 8:39=E2=80=AFPM Lin Ma <linma@zju.edu.cn> wrote:
+On Wed, Dec 27, 2023 at 2:40=E2=80=AFAM Meng, Li (Jassmine) <Li.Meng@amd.co=
+m> wrote:
 >
-> Hello Jamal,
+> [AMD Official Use Only - General]
 >
+> Hi Rafael:
+>
+> > -----Original Message-----
+> > From: Meng, Li (Jassmine)
+> > Sent: Tuesday, December 26, 2023 4:27 PM
+> > To: Rafael J. Wysocki <rafael@kernel.org>
+> > Cc: Rafael J . Wysocki <rafael.j.wysocki@intel.com>; Huang, Ray
+> > <Ray.Huang@amd.com>; linux-pm@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; x86@kernel.org; linux-acpi@vger.kernel.org; Shu=
+ah
+> > Khan <skhan@linuxfoundation.org>; linux-kselftest@vger.kernel.org;
+> > Fontenot, Nathan <Nathan.Fontenot@amd.com>; Sharma, Deepak
+> > <Deepak.Sharma@amd.com>; Deucher, Alexander
+> > <Alexander.Deucher@amd.com>; Limonciello, Mario
+> > <Mario.Limonciello@amd.com>; Huang, Shimmer
+> > <Shimmer.Huang@amd.com>; Yuan, Perry <Perry.Yuan@amd.com>; Du,
+> > Xiaojian <Xiaojian.Du@amd.com>; Viresh Kumar <viresh.kumar@linaro.org>;
+> > Borislav Petkov <bp@alien8.de>; Oleksandr Natalenko
+> > <oleksandr@natalenko.name>
+> > Subject: RE: [PATCH V12 4/7] cpufreq: Add a notification message that t=
+he
+> > highest perf has changed
 > >
-> > Can you clarify what "heap data leak" you are referring to?
-> > As much as i can see any reference to NLA_TCA_CHAIN is checked for
-> > presence before being put to use. So far that reason I  dont see how
-> > this patch qualifies as "net". It looks like an enhancement to me
-> > which should target net-next, unless i am missing something obvious.
+> > Hi Rafael:
 > >
+> > > -----Original Message-----
+> > > From: Rafael J. Wysocki <rafael@kernel.org>
+> > > Sent: Tuesday, December 12, 2023 9:44 PM
+> > > To: Meng, Li (Jassmine) <Li.Meng@amd.com>
+> > > Cc: Rafael J . Wysocki <rafael.j.wysocki@intel.com>; Huang, Ray
+> > > <Ray.Huang@amd.com>; linux-pm@vger.kernel.org; linux-
+> > > kernel@vger.kernel.org; x86@kernel.org; linux-acpi@vger.kernel.org;
+> > > Shuah Khan <skhan@linuxfoundation.org>;
+> > > linux-kselftest@vger.kernel.org; Fontenot, Nathan
+> > > <Nathan.Fontenot@amd.com>; Sharma, Deepak
+> > <Deepak.Sharma@amd.com>;
+> > > Deucher, Alexander <Alexander.Deucher@amd.com>; Limonciello, Mario
+> > > <Mario.Limonciello@amd.com>; Huang, Shimmer
+> > <Shimmer.Huang@amd.com>;
+> > > Yuan, Perry <Perry.Yuan@amd.com>; Du, Xiaojian
+> > <Xiaojian.Du@amd.com>;
+> > > Viresh Kumar <viresh.kumar@linaro.org>; Borislav Petkov
+> > > <bp@alien8.de>; Oleksandr Natalenko <oleksandr@natalenko.name>
+> > > Subject: Re: [PATCH V12 4/7] cpufreq: Add a notification message that
+> > > the highest perf has changed
+> > >
+> > > Caution: This message originated from an External Source. Use proper
+> > > caution when opening attachments, clicking links, or responding.
+> > >
+> > >
+> > > On Wed, Dec 6, 2023 at 10:13=E2=80=AFPM Rafael J. Wysocki <rafael@ker=
+nel.org>
+> > > wrote:
+> > > >
+> > > > On Wed, Dec 6, 2023 at 9:58=E2=80=AFPM Rafael J. Wysocki <rafael@ke=
+rnel.org>
+> > > wrote:
+> > > > >
+> > > > > On Tue, Dec 5, 2023 at 7:38=E2=80=AFAM Meng Li <li.meng@amd.com> =
+wrote:
+> > > > > >
+> > > > > > ACPI 6.5 section 8.4.6.1.1.1 specifies that Notify event 0x85
+> > > > > > can be emmitted to cause the the OSPM to re-evaluate the highes=
+t
+> > > > > > performance
+> > > > >
+> > > > > Typos above.  Given the number of iterations of this patch, this
+> > > > > is kind of disappointing.
+> > > > >
+> > > > > > register. Add support for this event.
+> > > > >
+> > > > > Also it would be nice to describe how this is supposed to work at
+> > > > > least roughly, so it is not necessary to reverse-engineer the
+> > > > > patch to find out that.
+> > > > >
+> > > > > > Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
+> > > > > > Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+> > > > > > Reviewed-by: Huang Rui <ray.huang@amd.com>
+> > > > > > Reviewed-by: Perry Yuan <perry.yuan@amd.com>
+> > > > > > Signed-off-by: Meng Li <li.meng@amd.com>
+> > > > > > Link:
+> > > > > >
+> > > https://uefi.org/specs/ACPI/6.5/05_ACPI_Software_Programming_Model
+> > > > > > .html#processor-device-notification-values
+> > > > > > ---
+> > > > > >  drivers/acpi/processor_driver.c |  6 ++++++
+> > > > > >  drivers/cpufreq/cpufreq.c       | 13 +++++++++++++
+> > > > > >  include/linux/cpufreq.h         |  5 +++++
+> > > > > >  3 files changed, 24 insertions(+)
+> > > > > >
+> > > > > > diff --git a/drivers/acpi/processor_driver.c
+> > > > > > b/drivers/acpi/processor_driver.c index
+> > > > > > 4bd16b3f0781..29b2fb68a35d
+> > > > > > 100644
+> > > > > > --- a/drivers/acpi/processor_driver.c
+> > > > > > +++ b/drivers/acpi/processor_driver.c
+> > > > > > @@ -27,6 +27,7 @@
+> > > > > >  #define ACPI_PROCESSOR_NOTIFY_PERFORMANCE 0x80
+> > > > > >  #define ACPI_PROCESSOR_NOTIFY_POWER    0x81
+> > > > > >  #define ACPI_PROCESSOR_NOTIFY_THROTTLING       0x82
+> > > > > > +#define ACPI_PROCESSOR_NOTIFY_HIGEST_PERF_CHANGED
+> > 0x85
+> > > > > >
+> > > > > >  MODULE_AUTHOR("Paul Diefenbaugh");
+> > > MODULE_DESCRIPTION("ACPI
+> > > > > > Processor Driver"); @@ -83,6 +84,11 @@ static void
+> > > > > > acpi_processor_notify(acpi_handle handle, u32 event, void *data=
+)
+> > > > > >                 acpi_bus_generate_netlink_event(device->pnp.dev=
+ice_class,
+> > > > > >                                                   dev_name(&dev=
+ice->dev), event, 0);
+> > > > > >                 break;
+> > > > > > +       case ACPI_PROCESSOR_NOTIFY_HIGEST_PERF_CHANGED:
+> > > > > > +               cpufreq_update_highest_perf(pr->id);
+> > > > >
+> > > > > And the design appears to be a bit ad-hoc here.
+> > > > >
+> > > > > Because why does it have anything to do with cpufreq?
+> > > >
+> > > > Well, clearly, cpufreq can be affected by this, but why would it be
+> > > > not affected the same way as in the
+> > > ACPI_PROCESSOR_NOTIFY_PERFORMANCE
+> > > > case?
+> > > >
+> > > > That is, why isn't cpufreq_update_limits() the right thing to do?
+> > >
+> > > Seriously, I'm not going to apply this patch so long as my comments
+> > > above are not addressed.
+> > [Meng, Li (Jassmine)]
+> > Sorry for the delayed reply to the email.
+> > BIOS/AGESA is responsible to issue the Notify 0x85 to OS that the prefe=
+rred
+> > core has changed.
+> > It will only affect the ranking of the preferred core, not the impact p=
+olicy
+> > limits.
+> > AMD P-state driver will set the priority of the cores based on the pref=
+erred
+> > core ranking, and prioritize selecting higher priority core to run the =
+task.
+> [Meng, Li (Jassmine)]
+> From ACPI v6.5, Table 5.197 Processor Device Notification Values:
+> Hex value               Description
+> 0x80                    Performance Present Capabilities Changed. Used to=
+ notify OSPM that the number of supported processor performance states has =
+changed. This notification causes OSPM to re-evaluate the _PPC object. See =
+Section 8.4.5.3 for more information.
 >
-> Sure, thanks for your reply, (and merry Christmas :D).
-> I didn't mention the detail as I consider the commit message in
-> `5e2424708da7` could make a point. In short, the code
+> 0x85                    Highest Performance Changed. Used to notify OSPM =
+that the value of the CPPC Highest Performance Register has changed.
 >
-> ```
-> if (tca[TCA_CHAIN] && nla_get_u32(tca[TCA_CHAIN])
-> ```
->
-> only checks if the attribute TCA_CHAIN exists but never checks about
-> the attribute length because that attribute is parsed by the function
-> nlmsg_parse_deprecated which will parse an attribute even not described
-> in the given policy (here, the tcf_tfilter_dump_policy).
->
-> Moreover, the netlink message is allocated via netlink_alloc_large_skb
-> (see net/netlink/af_netlink.c) that does not clear out the heap buffer.
-> Hence a malicious user could send a malicious TCA_CHAIN attribute here
-> without putting any payload and the above `nla_get_u32` could dereference
-> a dirty data that is sprayed by the user.
->
-> Other place gets TCA_CHAIN with provide policy rtm_tca_policy that has a
-> description.
->
-> ```
-> [TCA_CHAIN]             =3D { .type =3D NLA_U32 },
-> ```
->
-> and this patch aims to do so.
->
-> Unfortunately, I have not opened the exploit for CVE-2023-3773
-> (https://access.redhat.com/security/cve/cve-2023-3773) yet but the idea
-> is similar and you can take it as an example.
->
+> I think they are different notify events, so they need different function=
+s to handle these events.
 
-Sorry, still trying to follow your reasoning that this is a "net issue":
-As you point out, the skb will have enough space to carry the 32 bit
-value. Worst case is we read garbage. And the dump, using this garbage
-chain index,  will not find the chain or will find some unintended
-chain. Am i missing something?
+But they effectively mean pretty much the same thing: the highest
+available performance state of the CPU has changed.
 
-Can you send me a repro (privately) that actually causes the "heap
-data leak" if you have one?
-
-cheers,
-jamal
-
-
-> > cheers,
-> > jamal
-> >
->
-> Regards
-> Lin
+Why would the response need to be different?
