@@ -1,83 +1,104 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A648345956
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 14:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B590C45BE5
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 14:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fW2QWVSl"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-55372c1338bso5480873a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 06:36:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tp8eydQe"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40d5aa35b60so11414275e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 06:36:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1703687762; x=1704292562; darn=vger.kernel.org;
-        h=mime-version:user-agent:references:message-id:in-reply-to:subject
-         :cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wR0fA2efkJESrqqJYNa2oQGAt/YmCKg3TrlURKizJ00=;
-        b=fW2QWVSlSNLZwDTVrc5/lullVMXvChtN70fFK9aEFyE7WTKMHsI8TeuPTzR+YgEErr
-         j5w9Gb2iGUDo/DPvqUdW2jd3RalrOfyXZuakf3yfWsbTSRbOFyRpP24CBEM0JItRsiPN
-         rca2c2+sixXnX/5nyXjWDxs0H6kIu7YQhtdva7RFBSC7s0s9BO03QlXqv6NJIBX4a+0l
-         Z2vpTaR0lEM+ZTKQvcoWLt0FVXaBT7l+rdJmfF3R9K4WPWXwYenW3VORkS6T2HRZnNIy
-         k0uw8RMgJOx7dvWju4A8X/IFbqfG5BRLqw13TVjW6koU5XyImzGnqzsFxlSZWqfs5gsB
-         qeeA==
+        d=linaro.org; s=google; t=1703687769; x=1704292569; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=k6zNqclS7J7Qh9osUCxcjQJENaFPWi0hRNSckfQHr2A=;
+        b=tp8eydQewNHvl4cLlXYMMB3vUKeGbvDLkdrzJj5kJYqcPZdy3HKwtLEUiEcPoblfVF
+         nOFEDc2+xNJYIl6aujnRHjbOPAc40eNQEzFqPMVuKdY5wZUp//TJ3bqzkJlbQB7kYZqr
+         Gi0ja8tG916amDIMwCtA98Wh+rTDSufeeA0vuFW+qK9vBuGTzeLVvIDbK/F3e4HqaeF4
+         R9EvU8Q6J2KkbVtBGJwwCnHAPb14XYh6XxlvR7xbBeP1Yu/NjMTEyltVlDvunlKieAPi
+         0eqkfV+sqdbnCCKjehpKiMkWcsZ6iwhAuEUuzzdsS+aARahjWU+qiZg42Lt5ShX8dZA2
+         15JQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703687762; x=1704292562;
-        h=mime-version:user-agent:references:message-id:in-reply-to:subject
-         :cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wR0fA2efkJESrqqJYNa2oQGAt/YmCKg3TrlURKizJ00=;
-        b=djKCzkLfancAz73Q4TFi/I7iqzlcfDB8ySZCpyGHlkwphaYWDcxALcPt+V5pKsPiHH
-         f+iTOzWNsSDd9ikqJmpdjby6BHSq0jHupLXxHeT+bv2v+BJB7AFRH2RE4+Ip7KYcz7Gy
-         ERCDWWm0DCw7ECapdWNtVxQ7AqgOFHZu3HrZTVvsM8u7QifGEZ8WBWcpcyMnyJwUA/ZP
-         FPP0v/xmJQP2BHJgcthbBP3jfu90I4prO1Byrm8BrNzvIaO5rVFkXa6vnFKY9D9fYHEp
-         H2M6I5KOF1vtT/ug0Zt9QyljPIVCjVsdvGUfqZv/35AgGlC6hQIUPlw3voeOHmiIQLMK
-         oBIg==
-X-Gm-Message-State: AOJu0YytcEPxE9BIPrKAhPq8r40kAFmlZMxzu4TPJ9trQ1qRAFZy4KC9
-	COzoLvorJfqZ6ze19x1ahEEzmocmCF0xnw==
-X-Google-Smtp-Source: AGHT+IE9Q5JNB6Xn8MbtzTVI7wKdq/jzC7JpsJwbZ89E2w9tZ9KE/hSvKM4257pTwBaIWTef/FR9OQ==
-X-Received: by 2002:a50:c2c2:0:b0:555:56bc:c966 with SMTP id u2-20020a50c2c2000000b0055556bcc966mr438593edf.22.1703687761964;
-        Wed, 27 Dec 2023 06:36:01 -0800 (PST)
-Received: from localhost (nat2.prg.suse.com. [195.250.132.146])
-        by smtp.gmail.com with ESMTPSA id fe1-20020a056402390100b005544105f461sm7399656edb.29.2023.12.27.06.36.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 Dec 2023 06:36:01 -0800 (PST)
-From: Jiri Kosina <jkosina@suse.com>
-X-Google-Original-From: Jiri Kosina <jikos@kernel.org>
-Date: Wed, 27 Dec 2023 15:36:02 +0100 (CET)
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-cc: Zhengqiao Xia <xiazhengqiao@huaqin.corp-partner.google.com>, 
-    linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com, 
-    robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-    benjamin.tissoires@redhat.com, linus.walleij@linaro.org, 
-    dianders@chromium.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: HID: i2c-hid: elan: Introduce Ilitek
- ili2901
-In-Reply-To: <e304aec7-5835-4f4f-89cb-bc3e1dfb78d4@linaro.org>
-Message-ID: <nycvar.YFH.7.76.2312271535440.24250@cbobk.fhfr.pm>
-References: <20231227085013.1317-1-xiazhengqiao@huaqin.corp-partner.google.com> <20231227085013.1317-2-xiazhengqiao@huaqin.corp-partner.google.com> <e304aec7-5835-4f4f-89cb-bc3e1dfb78d4@linaro.org>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        d=1e100.net; s=20230601; t=1703687769; x=1704292569;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k6zNqclS7J7Qh9osUCxcjQJENaFPWi0hRNSckfQHr2A=;
+        b=DzTEih4figIQlcN1BsyWje953PZcGsk8x4xur/fhtPN3g6oEOmGC74VLjg3gLlZqek
+         NcGtkGgzUpXYDUi5RqGnevzupiu+sinKx4hX38AqXtcPoNJtWapeLRu828xD6t2xlQDg
+         4ATW7TV1Ty22ZAgeDcyvQV9DbqkKWN2sZ2VABah258+1IB0/SxvLmVK/ZfY9sTAYik+f
+         sjSblUPhBbBhwJZql+rYxgmImFDY0NBsA3ch8tR3D/AYWEAXMo695CUmNlY9lplDnNvp
+         Ri9hkcn4hlnjgVIO2DGo7Rt6h9ixGsIlvBgOvYqq7zfxRSJfneLT121vumS8+Z1Ro7+r
+         6oLw==
+X-Gm-Message-State: AOJu0YwhLMBx4iBc8/nAy0SRb70pSK9bXkX11EPOCqrR65ht4Hz5aW7k
+	vWOg/Ja3XPvcpv0r7dWIiZok0QDomNuozQ==
+X-Google-Smtp-Source: AGHT+IFwG8UV4lJV8XAn3gHqm5NfmlKcd46dS6QpUygLIozQ74rCGCj7SlyeDim5yGrro+kAh6lC3Q==
+X-Received: by 2002:a05:600c:4d96:b0:40d:5c83:c74c with SMTP id v22-20020a05600c4d9600b0040d5c83c74cmr462301wmp.38.1703687768955;
+        Wed, 27 Dec 2023 06:36:08 -0800 (PST)
+Received: from mai.. (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id i16-20020a05600c355000b0040d5a5c523csm5686544wmq.1.2023.12.27.06.36.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Dec 2023 06:36:06 -0800 (PST)
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: tglx@linutronix.de
+Cc: kernel test robot <lkp@intel.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	linux-kernel@vger.kernel.org (open list:CLOCKSOURCE, CLOCKEVENT DRIVERS),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE)
+Subject: [PATCH] clocksource/drivers/imx: Fix -Wunused-but-set-variable warning
+Date: Wed, 27 Dec 2023 15:35:46 +0100
+Message-Id: <20231227143546.2823683-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Wed, 27 Dec 2023, Krzysztof Kozlowski wrote:
+All warnings (new ones prefixed by >>):
 
-> > The Ilitek ili2901 touch screen chip same as Elan eKTH6915 controller
-> > has a reset gpio. The difference is that they have different
-> > post_power_delay_ms and post_gpio_reset_on_delay_ms.
-> > Ilitek ili2901 also uses 3.3V power supply.
-> 
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+   drivers/clocksource/timer-imx-gpt.c: In function 'mxc_timer_interrupt':
+>> drivers/clocksource/timer-imx-gpt.c:279:18: warning: variable 'tstat' set but not used [-Wunused-but-set-variable]
+     279 |         uint32_t tstat;
+         |                  ^~~~~
 
-Thanks. I will take it together with the HID patch through my tree, if 
-that's fine with you.
+vim +/tstat +279 drivers/clocksource/timer-imx-gpt.c
 
+The change remove the tstats assignment but not the reading of the
+register, assuming the register may be a ROR (Reset On Read) which
+happens in the driver's interrupt registers.
+
+Fixes: df181e382816 ("clocksource/drivers/imx-gpt: Add support for ARM64")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202312231803.XzPddRa5-lkp@intel.com/
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ drivers/clocksource/timer-imx-gpt.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/clocksource/timer-imx-gpt.c b/drivers/clocksource/timer-imx-gpt.c
+index 6a878d227a13..489e69169ed4 100644
+--- a/drivers/clocksource/timer-imx-gpt.c
++++ b/drivers/clocksource/timer-imx-gpt.c
+@@ -258,9 +258,8 @@ static irqreturn_t mxc_timer_interrupt(int irq, void *dev_id)
+ {
+ 	struct clock_event_device *ced = dev_id;
+ 	struct imx_timer *imxtm = to_imx_timer(ced);
+-	uint32_t tstat;
+ 
+-	tstat = readl_relaxed(imxtm->base + imxtm->gpt->reg_tstat);
++	readl_relaxed(imxtm->base + imxtm->gpt->reg_tstat);
+ 
+ 	imxtm->gpt->gpt_irq_acknowledge(imxtm);
+ 
 -- 
-Jiri Kosina
-SUSE Labs
+2.34.1
 
