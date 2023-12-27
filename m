@@ -1,33 +1,33 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D024643A
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 16:26:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A654643C
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 16:26:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rIWjz-00059n-UU; Wed, 27 Dec 2023 17:26:43 +0100
+	id 1rIWk0-00059r-38; Wed, 27 Dec 2023 17:26:44 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rIWjw-001tZN-S1; Wed, 27 Dec 2023 17:26:41 +0100
+	id 1rIWjx-001tZZ-Qh; Wed, 27 Dec 2023 17:26:42 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rIWjx-001Wml-2q;
-	Wed, 27 Dec 2023 17:26:41 +0100
+	id 1rIWjy-001Wn1-2g;
+	Wed, 27 Dec 2023 17:26:42 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Sudeep Holla <sudeep.holla@arm.com>
+To: Gabriel Somlo <somlo@cmu.edu>,
+	"Michael S. Tsirkin" <mst@redhat.com>
 Cc: kernel@pengutronix.de,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
+	qemu-devel@nongnu.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 02/11] firmware: arm_scpi: Convert to platform remove callback returning void
-Date: Wed, 27 Dec 2023 17:26:26 +0100
-Message-ID:  <e7b4bc389949c3613a358bd8e57d70d7acd5552b.1703693980.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 06/11] firmware: qemu_fw_cfg: Convert to platform remove callback returning void
+Date: Wed, 27 Dec 2023 17:26:30 +0100
+Message-ID:  <8d7d86a24ea36985845c17b6da0933fedbf99ad8.1703693980.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1703693980.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1703693980.git.u.kleine-koenig@pengutronix.de>
@@ -38,7 +38,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1768; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=FF/nyDTSJyTf9/tBea2/MLsCLR8e7FBGnIR1tjwpPwI=; b=owGbwMvMwMXY3/A7olbonx/jabUkhtSeABNWkSWxW+K3Zy7f/dCWS2W3brhfZqL89Gt5ajz3n 5/l2prWyWjMwsDIxSArpshi37gm06pKLrJz7b/LMINYmUCmMHBxCsBEHnGz/48sWTf7KcOmybfe 6BUIBmfaXZRuiGbcW2vINcnP0l/77oLDb7z+TfNinhh9aNmrp32nlbf9CS1b9eLnjSLtPh8jq6K pW+LaUxP5XGsnOU9eumqKqafE/PQnXK7ZmfvmBFapsng1TrmyoCdjDfuziWci8u+uLjzX4PwqsV wnQ85VxDLp5Y76eSvOezcF5ifFVPF1ap7pqJu0+pLRhy0Rx28rK2fJWk6o/v1y1iLuO9XcChqfT px/lipww4XdyNNbwadtHtvdEmmPnVL39vK0WKUlWCVWlK18tq0j+cUcnqCTKY1WtrO+3mFt4yyW iu0PVPBe9DBh39LfF8NqRdtUuDUXTluk2cBntu/aDtlbAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1964; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=Nuh2zfgdzxmPQm9xjM7Qd8aGlwMSzi2SytLozr/ldNI=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBljFA4SiZA8Czr5oUw4pC3X33baRdQ2zK8UNaGd qJkOIfRcM+JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZYxQOAAKCRCPgPtYfRL+ TiVtB/9jFGL9M1pmYrAxhcbUa8Fjt8yPqmgn+z7SvuziuDVEWqFHjFWJ8VQZBJ5zynq/yVPl1f6 urdnJg6eOFNj0PYq6BeEZ0EBhieCqObdsqUavigZblPpdxkoUx+3OknYd6j30HbZY3oT2XIJb7g z8LpDGjq3AtUsQvnbSDQnY2Yo/6iw96gEaXu2oAj6UECO8y+KSbYOOhmw320RX5KTlY0lrGlFl1 JHVQBU5OErrYaujF0lFh2gCB3ZMzwHWgidVCDjnKmdMZShf75AeOFCD20INk02WCoNgbKOxzM6S iYLX9UIsbnWxPSzM3Y6UDLK4MeGi4N/dEn96Fg/SHu+Ia7E2
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -61,40 +61,39 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/firmware/arm_scpi.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/firmware/qemu_fw_cfg.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/firmware/arm_scpi.c b/drivers/firmware/arm_scpi.c
-index 3f123f592cb4..94a6b4e667de 100644
---- a/drivers/firmware/arm_scpi.c
-+++ b/drivers/firmware/arm_scpi.c
-@@ -863,7 +863,7 @@ static void scpi_free_channels(void *data)
- 		mbox_free_channel(info->channels[i].chan);
+diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
+index 1448f61173b3..03da9a4354f8 100644
+--- a/drivers/firmware/qemu_fw_cfg.c
++++ b/drivers/firmware/qemu_fw_cfg.c
+@@ -731,7 +731,7 @@ static int fw_cfg_sysfs_probe(struct platform_device *pdev)
+ 	return err;
  }
  
--static int scpi_remove(struct platform_device *pdev)
-+static void scpi_remove(struct platform_device *pdev)
+-static int fw_cfg_sysfs_remove(struct platform_device *pdev)
++static void fw_cfg_sysfs_remove(struct platform_device *pdev)
  {
- 	int i;
- 	struct scpi_drvinfo *info = platform_get_drvdata(pdev);
-@@ -874,8 +874,6 @@ static int scpi_remove(struct platform_device *pdev)
- 		kfree(info->dvfs[i]->opps);
- 		kfree(info->dvfs[i]);
- 	}
--
+ 	pr_debug("fw_cfg: unloading.\n");
+ 	fw_cfg_sysfs_cache_cleanup();
+@@ -739,7 +739,6 @@ static int fw_cfg_sysfs_remove(struct platform_device *pdev)
+ 	fw_cfg_io_cleanup();
+ 	fw_cfg_kset_unregister_recursive(fw_cfg_fname_kset);
+ 	fw_cfg_kobj_cleanup(fw_cfg_sel_ko);
 -	return 0;
  }
  
- #define MAX_SCPI_XFERS		10
-@@ -1048,7 +1046,7 @@ static struct platform_driver scpi_driver = {
- 		.dev_groups = versions_groups,
- 	},
- 	.probe = scpi_probe,
--	.remove = scpi_remove,
-+	.remove_new = scpi_remove,
- };
- module_platform_driver(scpi_driver);
+ static const struct of_device_id fw_cfg_sysfs_mmio_match[] = {
+@@ -758,7 +757,7 @@ MODULE_DEVICE_TABLE(acpi, fw_cfg_sysfs_acpi_match);
  
+ static struct platform_driver fw_cfg_sysfs_driver = {
+ 	.probe = fw_cfg_sysfs_probe,
+-	.remove = fw_cfg_sysfs_remove,
++	.remove_new = fw_cfg_sysfs_remove,
+ 	.driver = {
+ 		.name = "fw_cfg",
+ 		.of_match_table = fw_cfg_sysfs_mmio_match,
 -- 
 2.43.0
 
