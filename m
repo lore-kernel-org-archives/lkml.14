@@ -1,30 +1,30 @@
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7259146421;
-	Wed, 27 Dec 2023 16:24:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90EF946433;
+	Wed, 27 Dec 2023 16:24:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LLE/ie3s"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 61BCAFF80A;
-	Wed, 27 Dec 2023 16:24:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WrtPjIS4"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A39ACFF813;
+	Wed, 27 Dec 2023 16:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1703694246;
+	t=1703694247;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0aKAZ4+oQD1PYhRwQMVll+Mirw6+weCzuJQn880wOA8=;
-	b=LLE/ie3s5S95NCZQj5F2R2OEfpHxn1RYqHfx3kpQVkE3RSDhZ9mxDnyD0cgXE3VaGu0RLo
-	C8T18fwvnSelrKD4h6LWGi4FTO/QHxDYCyL1MgkiLmuy4a30TY3FcmMsi4xu8ASqNA5axL
-	X+LuI0ZtqMhFhYqtNDeHdI23WEmnw2ZqlqYzr8jynTU4wWgfiLHeB/TnxmCMraOR6GB/GL
-	b186o3yWNqEN+uuNGTWQJtwcwxBN7tmPGYgBudUz4LTaOMfO7UgB+pU4CfZwbbnIG/iqob
-	6yThO5CKXEUA2lMPz+RDxtJqekW4fVR/RycauvpQxgIYSyWmz25dgnFrbFQIuA==
+	bh=ajMlmmADQpbId/4q2D+R6BVoYQJ6HpDQcxBpO0cBCYw=;
+	b=WrtPjIS4+b54w4j5gPlsT1ruj6Q/Kwap/2g2nMdPZ4Oj2oTlQxVCvvwxFeIMC0VwJUof0N
+	oRX5vBwN/1QgBx1pvfKwxVtOjS5YAUbiOR9wv0ErXE7RCmqVAcMCmTRocaSx+74zl7Ww+F
+	6LS+KcvD0MztZeM7yUJ7bIfPB/LzwfwY6LK3Xgn1eGiMyDEQbJC21Ea10jwg0ya6jTd/8i
+	pLqrs47cd3XB1FRF2mcWm2lkioc44ux8I6eX68eRpWjN/+iEAnMzN78d5gb6Soy+PMlaE2
+	oA8M7MiFYJve5k0/f/tbtwa9NU1U8bFr9qMfrVmVVCBVxpNpHg6lZF2c1cEiVw==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Wed, 27 Dec 2023 17:23:52 +0100
-Subject: [PATCH v2 2/6] clk: fixed-factor: add fwname-based constructor
- functions
+Date: Wed, 27 Dec 2023 17:23:54 +0100
+Subject: [PATCH v2 4/6] dt-bindings: clock: mobileye,eyeq5-clk: add
+ bindings
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,7 +33,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20231227-mbly-clk-v2-2-a05db63c380f@bootlin.com>
+Message-Id: <20231227-mbly-clk-v2-4-a05db63c380f@bootlin.com>
 References: <20231227-mbly-clk-v2-0-a05db63c380f@bootlin.com>
 In-Reply-To: <20231227-mbly-clk-v2-0-a05db63c380f@bootlin.com>
 To: Gregory CLEMENT <gregory.clement@bootlin.com>, 
@@ -51,209 +51,133 @@ Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
 X-Mailer: b4 0.12.4
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-Add four functions to register clk_hw based on the fw_name field in
-clk_parent_data, ie the value in the DT property `clock-names`.
-
-There are variants for devm or not and passing an accuracy or not
-passing one:
-
- - clk_hw_register_fixed_factor_fwname
- - clk_hw_register_fixed_factor_with_accuracy_fwname
- - devm_clk_hw_register_fixed_factor_fwname
- - devm_clk_hw_register_fixed_factor_with_accuracy_fwname
-
-The `struct clk_parent_data` init is extracted from
-__clk_hw_register_fixed_factor to each calling function. It is required
-to allow each function to pass whatever field they want, not only index.
+Add DT schema bindings for the EyeQ5 clock controller driver.
 
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
- drivers/clk/clk-fixed-factor.c | 76 ++++++++++++++++++++++++++++++++++--------
- include/linux/clk-provider.h   | 14 ++++++++
- 2 files changed, 76 insertions(+), 14 deletions(-)
+ .../bindings/clock/mobileye,eyeq5-clk.yaml         | 50 ++++++++++++++++++++++
+ .../bindings/soc/mobileye/mobileye,eyeq5-olb.yaml  |  4 ++
+ MAINTAINERS                                        |  2 +
+ include/dt-bindings/clock/mobileye,eyeq5-clk.h     | 22 ++++++++++
+ 4 files changed, 78 insertions(+)
 
-diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
-index bc2644a9bd7d..5fa03ae1bbdb 100644
---- a/drivers/clk/clk-fixed-factor.c
-+++ b/drivers/clk/clk-fixed-factor.c
-@@ -91,13 +91,12 @@ static void devm_clk_hw_register_fixed_factor_release(struct device *dev, void *
- static struct clk_hw *
- __clk_hw_register_fixed_factor(struct device *dev, struct device_node *np,
- 		const char *name, const char *parent_name,
--		const struct clk_hw *parent_hw, int index,
-+		const struct clk_hw *parent_hw, const struct clk_parent_data *pdata,
- 		unsigned long flags, unsigned int mult, unsigned int div,
- 		unsigned long acc, unsigned int fixflags, bool devm)
- {
- 	struct clk_fixed_factor *fix;
- 	struct clk_init_data init = { };
--	struct clk_parent_data pdata = { .index = index };
- 	struct clk_hw *hw;
- 	int ret;
- 
-@@ -128,7 +127,7 @@ __clk_hw_register_fixed_factor(struct device *dev, struct device_node *np,
- 	else if (parent_hw)
- 		init.parent_hws = &parent_hw;
- 	else
--		init.parent_data = &pdata;
-+		init.parent_data = pdata;
- 	init.num_parents = 1;
- 
- 	hw = &fix->hw;
-@@ -165,7 +164,8 @@ struct clk_hw *devm_clk_hw_register_fixed_factor_index(struct device *dev,
- 		const char *name, unsigned int index, unsigned long flags,
- 		unsigned int mult, unsigned int div)
- {
--	return __clk_hw_register_fixed_factor(dev, NULL, name, NULL, NULL, index,
-+	const struct clk_parent_data pdata = { .index = index };
-+	return __clk_hw_register_fixed_factor(dev, NULL, name, NULL, NULL, &pdata,
- 					      flags, mult, div, 0, 0, true);
- }
- EXPORT_SYMBOL_GPL(devm_clk_hw_register_fixed_factor_index);
-@@ -187,8 +187,9 @@ struct clk_hw *devm_clk_hw_register_fixed_factor_parent_hw(struct device *dev,
- 		const char *name, const struct clk_hw *parent_hw,
- 		unsigned long flags, unsigned int mult, unsigned int div)
- {
-+	const struct clk_parent_data pdata = { .index = -1 };
- 	return __clk_hw_register_fixed_factor(dev, NULL, name, NULL, parent_hw,
--					      -1, flags, mult, div, 0, 0, true);
-+					      &pdata, flags, mult, div, 0, 0, true);
- }
- EXPORT_SYMBOL_GPL(devm_clk_hw_register_fixed_factor_parent_hw);
- 
-@@ -196,9 +197,9 @@ struct clk_hw *clk_hw_register_fixed_factor_parent_hw(struct device *dev,
- 		const char *name, const struct clk_hw *parent_hw,
- 		unsigned long flags, unsigned int mult, unsigned int div)
- {
--	return __clk_hw_register_fixed_factor(dev, NULL, name, NULL,
--					      parent_hw, -1, flags, mult, div,
--					      0, 0, false);
-+	const struct clk_parent_data pdata = { .index = -1 };
-+	return __clk_hw_register_fixed_factor(dev, NULL, name, NULL, parent_hw,
-+					      &pdata, flags, mult, div, 0, 0, false);
- }
- EXPORT_SYMBOL_GPL(clk_hw_register_fixed_factor_parent_hw);
- 
-@@ -206,11 +207,34 @@ struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
- 		const char *name, const char *parent_name, unsigned long flags,
- 		unsigned int mult, unsigned int div)
- {
--	return __clk_hw_register_fixed_factor(dev, NULL, name, parent_name, NULL, -1,
--					      flags, mult, div, 0, 0, false);
-+	const struct clk_parent_data pdata = { .index = -1 };
-+	return __clk_hw_register_fixed_factor(dev, NULL, name, parent_name, NULL,
-+					      &pdata, flags, mult, div, 0, 0, false);
- }
- EXPORT_SYMBOL_GPL(clk_hw_register_fixed_factor);
- 
-+struct clk_hw *clk_hw_register_fixed_factor_fwname(struct device *dev,
-+		struct device_node *np, const char *name, const char *fw_name,
-+		unsigned long flags, unsigned int mult, unsigned int div)
-+{
-+	const struct clk_parent_data pdata = { .index = -1, .fw_name = fw_name };
-+	return __clk_hw_register_fixed_factor(dev, np, name, NULL, NULL,
-+			&pdata, flags, mult, div, 0, 0, false);
-+}
-+EXPORT_SYMBOL_GPL(clk_hw_register_fixed_factor_fwname);
+diff --git a/Documentation/devicetree/bindings/clock/mobileye,eyeq5-clk.yaml b/Documentation/devicetree/bindings/clock/mobileye,eyeq5-clk.yaml
+new file mode 100644
+index 000000000000..64b114a52cd9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/mobileye,eyeq5-clk.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/mobileye,eyeq5-clk.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+struct clk_hw *clk_hw_register_fixed_factor_with_accuracy_fwname(struct device *dev,
-+		struct device_node *np, const char *name, const char *fw_name,
-+		unsigned long flags, unsigned int mult, unsigned int div,
-+		unsigned long acc)
-+{
-+	const struct clk_parent_data pdata = { .index = -1, .fw_name = fw_name };
-+	return __clk_hw_register_fixed_factor(dev, np, name, NULL, NULL,
-+			&pdata, flags, mult, div, acc,
-+			CLK_FIXED_FACTOR_FIXED_ACCURACY, false);
-+}
-+EXPORT_SYMBOL_GPL(clk_hw_register_fixed_factor_with_accuracy_fwname);
++title: Mobileye EyeQ5 clock controller
 +
- struct clk *clk_register_fixed_factor(struct device *dev, const char *name,
- 		const char *parent_name, unsigned long flags,
- 		unsigned int mult, unsigned int div)
-@@ -253,16 +277,40 @@ struct clk_hw *devm_clk_hw_register_fixed_factor(struct device *dev,
- 		const char *name, const char *parent_name, unsigned long flags,
- 		unsigned int mult, unsigned int div)
- {
--	return __clk_hw_register_fixed_factor(dev, NULL, name, parent_name, NULL, -1,
--			flags, mult, div, 0, 0, true);
-+	const struct clk_parent_data pdata = { .index = -1 };
-+	return __clk_hw_register_fixed_factor(dev, NULL, name, parent_name, NULL,
-+			&pdata, flags, mult, div, 0, 0, true);
- }
- EXPORT_SYMBOL_GPL(devm_clk_hw_register_fixed_factor);
- 
-+struct clk_hw *devm_clk_hw_register_fixed_factor_fwname(struct device *dev,
-+		struct device_node *np, const char *name, const char *fw_name,
-+		unsigned long flags, unsigned int mult, unsigned int div)
-+{
-+	const struct clk_parent_data pdata = { .index = -1, .fw_name = fw_name };
-+	return __clk_hw_register_fixed_factor(dev, np, name, NULL, NULL,
-+			&pdata, flags, mult, div, 0, 0, true);
-+}
-+EXPORT_SYMBOL_GPL(devm_clk_hw_register_fixed_factor_fwname);
++description:
++  The EyeQ5 clock controller handles 10 read-only PLLs derived from the main
++  crystal clock. It also exposes one divider clock, a child of one of the PLLs.
++  Its registers live in a shared region called OLB.
 +
-+struct clk_hw *devm_clk_hw_register_fixed_factor_with_accuracy_fwname(struct device *dev,
-+		struct device_node *np, const char *name, const char *fw_name,
-+		unsigned long flags, unsigned int mult, unsigned int div,
-+		unsigned long acc)
-+{
-+	const struct clk_parent_data pdata = { .index = -1, .fw_name = fw_name };
-+	return __clk_hw_register_fixed_factor(dev, np, name, NULL, NULL,
-+			&pdata, flags, mult, div, acc,
-+			CLK_FIXED_FACTOR_FIXED_ACCURACY, true);
-+}
-+EXPORT_SYMBOL_GPL(devm_clk_hw_register_fixed_factor_with_accuracy_fwname);
++maintainers:
++  - Grégory Clement <gregory.clement@bootlin.com>
++  - Théo Lebrun <theo.lebrun@bootlin.com>
++  - Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
 +
- #ifdef CONFIG_OF
- static struct clk_hw *_of_fixed_factor_clk_setup(struct device_node *node)
- {
- 	struct clk_hw *hw;
- 	const char *clk_name = node->name;
-+	const struct clk_parent_data pdata = { .index = 0 };
- 	u32 div, mult;
- 	int ret;
++properties:
++  compatible:
++    const: mobileye,eyeq5-clk
++
++  "#clock-cells":
++    const: 1
++
++  clocks:
++    maxItems: 1
++    description:
++      Input parent clock to all PLLs. Expected to be the main crystal.
++
++  clock-names:
++    items:
++      - const: ref
++
++required:
++  - compatible
++  - "#clock-cells"
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    clock-controller {
++      compatible = "mobileye,eyeq5-clk";
++      #clock-cells = <1>;
++      clocks = <&xtal>;
++      clock-names = "ref";
++    };
+diff --git a/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.yaml b/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.yaml
+index b148a49b08f1..b4ba6f0c9f32 100644
+--- a/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.yaml
++++ b/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.yaml
+@@ -28,6 +28,10 @@ properties:
+   reg-io-width:
+     const: 4
  
-@@ -280,8 +328,8 @@ static struct clk_hw *_of_fixed_factor_clk_setup(struct device_node *node)
++  clock-controller:
++    $ref: /schemas/clock/mobileye,eyeq5-clk.yaml#
++    type: object
++
+ required:
+   - compatible
+   - reg
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d955b1e80e53..280892bdb5de 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14552,11 +14552,13 @@ M:	Gregory CLEMENT <gregory.clement@bootlin.com>
+ M:	Théo Lebrun <theo.lebrun@bootlin.com>
+ L:	linux-mips@vger.kernel.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/clock/mobileye,eyeq5-clk.yaml
+ F:	Documentation/devicetree/bindings/mips/mobileye.yaml
+ F:	Documentation/devicetree/bindings/soc/mobileye/
+ F:	arch/mips/boot/dts/mobileye/
+ F:	arch/mips/configs/generic/board-eyeq5.config
+ F:	arch/mips/generic/board-epm5.its.S
++F:	include/dt-bindings/clock/mobileye,eyeq5-clk.h
+ F:	include/dt-bindings/soc/mobileye,eyeq5.h
  
- 	of_property_read_string(node, "clock-output-names", &clk_name);
- 
--	hw = __clk_hw_register_fixed_factor(NULL, node, clk_name, NULL, NULL, 0,
--					    0, mult, div, 0, 0, false);
-+	hw = __clk_hw_register_fixed_factor(NULL, node, clk_name, NULL, NULL,
-+					    &pdata, 0, mult, div, 0, 0, false);
- 	if (IS_ERR(hw)) {
- 		/*
- 		 * Clear OF_POPULATED flag so that clock registration can be
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 7ddc952c8c67..4a537260f655 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -1116,10 +1116,24 @@ void clk_unregister_fixed_factor(struct clk *clk);
- struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
- 		const char *name, const char *parent_name, unsigned long flags,
- 		unsigned int mult, unsigned int div);
-+struct clk_hw *clk_hw_register_fixed_factor_fwname(struct device *dev,
-+		struct device_node *np, const char *name, const char *fw_name,
-+		unsigned long flags, unsigned int mult, unsigned int div);
-+struct clk_hw *clk_hw_register_fixed_factor_with_accuracy_fwname(struct device *dev,
-+		struct device_node *np, const char *name, const char *fw_name,
-+		unsigned long flags, unsigned int mult, unsigned int div,
-+		unsigned long acc);
- void clk_hw_unregister_fixed_factor(struct clk_hw *hw);
- struct clk_hw *devm_clk_hw_register_fixed_factor(struct device *dev,
- 		const char *name, const char *parent_name, unsigned long flags,
- 		unsigned int mult, unsigned int div);
-+struct clk_hw *devm_clk_hw_register_fixed_factor_fwname(struct device *dev,
-+		struct device_node *np, const char *name, const char *fw_name,
-+		unsigned long flags, unsigned int mult, unsigned int div);
-+struct clk_hw *devm_clk_hw_register_fixed_factor_with_accuracy_fwname(struct device *dev,
-+		struct device_node *np, const char *name, const char *fw_name,
-+		unsigned long flags, unsigned int mult, unsigned int div,
-+		unsigned long acc);
- struct clk_hw *devm_clk_hw_register_fixed_factor_index(struct device *dev,
- 		const char *name, unsigned int index, unsigned long flags,
- 		unsigned int mult, unsigned int div);
+ MODULE SUPPORT
+diff --git a/include/dt-bindings/clock/mobileye,eyeq5-clk.h b/include/dt-bindings/clock/mobileye,eyeq5-clk.h
+new file mode 100644
+index 000000000000..7aa974354bb6
+--- /dev/null
++++ b/include/dt-bindings/clock/mobileye,eyeq5-clk.h
+@@ -0,0 +1,22 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * Copyright (C) 2023 Mobileye Vision Technologies Ltd.
++ */
++
++#ifndef _DT_BINDINGS_CLOCK_MOBILEYE_EYEQ5_CLK_H
++#define _DT_BINDINGS_CLOCK_MOBILEYE_EYEQ5_CLK_H
++
++#define EQ5C_PLL_CPU	0
++#define EQ5C_PLL_VMP	1
++#define EQ5C_PLL_PMA	2
++#define EQ5C_PLL_VDI	3
++#define EQ5C_PLL_DDR0	4
++#define EQ5C_PLL_PCI	5
++#define EQ5C_PLL_PER	6
++#define EQ5C_PLL_PMAC	7
++#define EQ5C_PLL_MPC	8
++#define EQ5C_PLL_DDR1	9
++
++#define EQ5C_DIV_OSPI	10
++
++#endif
 
 -- 
 2.43.0
