@@ -1,134 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mail.codeweavers.com (mail.codeweavers.com [4.36.192.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590484988C
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 22:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA6E38DC8
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 22:36:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeweavers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="avgTaL6L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703716135; x=1735252135;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uLvKxjmPAQNCDQWSKf+PXALi8yQg+Zp/bXNKwKOpNE4=;
-  b=avgTaL6LgrfYq76ybT8bFtorhTN0/LgbOpU00OEtCjAIh3vOztsYlnwj
-   aF/xjRjtjbCjx+TSAimSxWVqHquMNVZ1Z96E0KBmsSf3jXIM/0bw11hi2
-   dyf7uRfUKIqyvIcTX0Ahz1t0Ww56UOlu6bI4rvFnqI0+D8jPoxmx1E3ID
-   fYfJuXUSDLyhjYik16O2yfSi+2Bq1fwC6e+BjRJuRiVB8fl/7JJZhcN7K
-   Q43E1RET95ONx02UFOJZ1z+UOMpdLhuVyGUgJHasGElOuOqC9d9Ei9PTH
-   jrcmxOQafdaElhjdHPmaEOrV0V+UoUKDB3u9cRm6Zt42tPrCd3goq62wr
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="3335458"
-X-IronPort-AV: E=Sophos;i="6.04,310,1695711600"; 
-   d="scan'208";a="3335458"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 14:28:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="778340767"
-X-IronPort-AV: E=Sophos;i="6.04,310,1695711600"; 
-   d="scan'208";a="778340767"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 27 Dec 2023 14:28:50 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rIcOO-000FnF-1P;
-	Wed, 27 Dec 2023 22:28:48 +0000
-Date: Thu, 28 Dec 2023 06:28:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: andrey.konovalov@linux.dev, Marco Elver <elver@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Alexander Potapenko <glider@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH mm] kasan: stop leaking stack trace handles
-Message-ID: <202312280603.WqS3sWfa-lkp@intel.com>
-References: <20231226225121.235865-1-andrey.konovalov@linux.dev>
+	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="ZA9sKaLZ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codeweavers.com; s=s1; h=Message-ID:Date:Subject:To:From:Cc:Sender;
+	bh=crCdZvciDTPmcSncvl8IIv33ew0qDiUotCooh2fwT2k=; b=ZA9sKaLZO6iO3UwXGfb5k8w8DT
+	88bFEa8Ti0KRH8tJE3k2gU7PZGo4mviGPf3jVbGp+nMleNqQlQVUiJnKt7ARaW95GQZXfCs2uN5Ol
+	dYIyRUU353slFTXIMkO5j1uPC22yJ0mSXZQJyI+A7yOoV/8od4f817iKi+a05HE7AA4PXRFRxk1tf
+	3hjcc/skuiHHeIxjBPtuw6S2bd2qGPdUUxtRqsGmo82ZwZqEnmi/yLodqjbLls86Xx+FFhAYNOAZ8
+	d7BVOavlY5effW7qRDeNj93VzTFNQPsDTZWNEvCXdk5w05uXdLgcwA+4btjUNgWxgWT9F/yJmI1Bw
+	MAMYzNzQ==;
+Received: from [10.69.139.10] (helo=uriel.localnet)
+	by mail.codeweavers.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <zfigura@codeweavers.com>)
+	id 1rIcGW-0046rc-2c;
+	Wed, 27 Dec 2023 16:20:41 -0600
+From: Elizabeth Figura <zfigura@codeweavers.com>
+To: x86@kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, wine-devel@winehq.org
+Subject: x86 SGDT emulation for Wine
+Date: Wed, 27 Dec 2023 16:20:37 -0600
+Message-ID: <2285758.taCxCBeP46@uriel>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231226225121.235865-1-andrey.konovalov@linux.dev>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Hi,
+Hello all,
 
-kernel test robot noticed the following build warnings:
+There is a Windows 98 program, a game called Nuclear Strike, which wants to do 
+some amount of direct VGA access. Part of this is port I/O, which naturally 
+throws SIGILL that we can trivially catch and emulate in Wine. The other part 
+is direct access to the video memory at 0xa0000, which in general isn't a 
+problem to catch and virtualize as well.
 
-[auto build test WARNING on akpm-mm/mm-everything]
-[cannot apply to linus/master v6.7-rc7 next-20231222]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+However, this program is a bit creative about how it accesses that memory; 
+instead of just writing to 0xa0000 directly, it looks up a segment descriptor 
+whose base is at 0xa0000 and then uses the %es override to write bytes. In 
+pseudo-C, what it does is:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/andrey-konovalov-linux-dev/kasan-stop-leaking-stack-trace-handles/20231227-065314
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20231226225121.235865-1-andrey.konovalov%40linux.dev
-patch subject: [PATCH mm] kasan: stop leaking stack trace handles
-config: arm-randconfig-002-20231227 (https://download.01.org/0day-ci/archive/20231228/202312280603.WqS3sWfa-lkp@intel.com/config)
-compiler: ClangBuiltLinux clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231228/202312280603.WqS3sWfa-lkp@intel.com/reproduce)
+int get_vga_selector()
+{
+    sgdt(&gdt_size, &gdt_ptr);
+    sldt(&ldt_segment);
+    ++gdt_size;
+    descriptor = gdt_ptr;
+    while (descriptor->base != 0xa0000)
+    {
+        ++descriptor;
+        gdt_size -= sizeof(*descriptor);
+        if (!gdt_size)
+            break;
+    }
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312280603.WqS3sWfa-lkp@intel.com/
+    if (gdt_size)
+        return (descriptor - gdt_ptr) << 3;
 
-All warnings (new ones prefixed by >>):
+    descriptor = gdt_ptr[ldt_segment >> 3]->base;
+    ldt_size = gdt_ptr[ldt_segment >> 3]->limit + 1;
+    while (descriptor->base != 0xa0000)
+    {
+        ++descriptor;
+        ldt_size -= sizeof(*descriptor);
+        if (!ldt_size)
+            break;
+    }
 
->> mm/kasan/generic.c:506:6: warning: no previous prototype for function 'release_alloc_meta' [-Wmissing-prototypes]
-     506 | void release_alloc_meta(struct kasan_alloc_meta *meta)
-         |      ^
-   mm/kasan/generic.c:506:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-     506 | void release_alloc_meta(struct kasan_alloc_meta *meta)
-         | ^
-         | static 
->> mm/kasan/generic.c:517:6: warning: no previous prototype for function 'release_free_meta' [-Wmissing-prototypes]
-     517 | void release_free_meta(const void *object, struct kasan_free_meta *meta)
-         |      ^
-   mm/kasan/generic.c:517:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-     517 | void release_free_meta(const void *object, struct kasan_free_meta *meta)
-         | ^
-         | static 
-   2 warnings generated.
+    if (ldt_size)
+        return (descriptor - ldt_ptr) << 3;
+
+    return 0;
+}
 
 
-vim +/release_alloc_meta +506 mm/kasan/generic.c
+Currently we emulate IDT access. On a read fault, we execute sidt ourselves, 
+check if the read address falls within the IDT, and return some dummy data 
+from the exception handler if it does [1]. We can easily enough implement GDT 
+access as well this way, and there is even an out-of-tree patch written some 
+years ago that does this, and helps the game run.
 
-   505	
- > 506	void release_alloc_meta(struct kasan_alloc_meta *meta)
-   507	{
-   508		/* Evict the stack traces from stack depot. */
-   509		stack_depot_put(meta->alloc_track.stack);
-   510		stack_depot_put(meta->aux_stack[0]);
-   511		stack_depot_put(meta->aux_stack[1]);
-   512	
-   513		/* Zero out alloc meta to mark it as invalid. */
-   514		__memset(meta, 0, sizeof(*meta));
-   515	}
-   516	
- > 517	void release_free_meta(const void *object, struct kasan_free_meta *meta)
-   518	{
-   519		/* Check if free meta is valid. */
-   520		if (*(u8 *)kasan_mem_to_shadow(object) != KASAN_SLAB_FREE_META)
-   521			return;
-   522	
-   523		/* Evict the stack trace from the stack depot. */
-   524		stack_depot_put(meta->free_track.stack);
-   525	
-   526		/* Mark free meta as invalid. */
-   527		*(u8 *)kasan_mem_to_shadow(object) = KASAN_SLAB_FREE;
-   528	}
-   529	
+However, there are two problems that I have observed or anticipated:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+(1) On systems with UMIP, the kernel emulates sgdt instructions and returns a 
+consistent address which we can guarantee is invalid. However, it also returns 
+a size of zero. The program doesn't expect this (cf. the way the loop is 
+written above) and I believe will effectively loop forever in that case, or 
+until it finds the VGA selector or hits invalid memory.
+
+    I see two obvious ways to fix this: either adjust the size of the fake 
+kernel GDT, or provide a switch to stop emulating and let Wine handle it. The 
+latter may very well a more sustainable option in the long term (although I'll 
+admit I can't immediately come up with a reason why, other than "we might need 
+to raise the size yet again".)
+
+    Does anyone have opinions on this particular topic? I can look into 
+writing a patch but I'm not sure what the best approach is.
+
+(2) On 64-bit systems without UMIP, sgdt returns a truncated address when in 
+32-bit mode. This truncated address in practice might point anywhere in the 
+address space, including to valid memory.
+
+    In order to fix this, we would need the kernel to guarantee that the GDT 
+base points to an address whose bottom 32 bits we can guarantee are 
+inaccessible. This is relatively easy to achieve ourselves by simply mapping 
+those pages as noaccess, but it also means that those pages can't overlap 
+something we need; we already go to pains to make sure that certain parts of 
+the address space are free. Broadly anything above the 2G boundary *should* be 
+okay though. Is this feasible?
+
+    We could also just decide we don't care about systems without UMIP, but 
+that seems a bit unfortunate; it's not that old of a feature. But I also have 
+no idea how hard it would be to make this kind of a guarantee on the kernel 
+side.
+
+    This is also, theoretically, a problem for the IDT, except that on the 
+machines I've tested, the IDT is always at 0xfffffe0000000000. That's not 
+great either (it's certainly caused some weirdness and confusion when 
+debugging, when we unexpectedly catch an unrelated null pointer access) but it 
+seems to work in practice.
+
+--Zeb
+
+[1] https://source.winehq.org/git/wine.git/blob/HEAD:/dlls/krnl386.exe16/
+instr.c#l702
+
+
