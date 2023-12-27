@@ -1,49 +1,62 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB1344C75;
-	Wed, 27 Dec 2023 13:08:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75FD45961
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 13:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="F3gYODER"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1703682502;
-	bh=HmyjXOD56zgdLDRREs3MjGe7P0nir2jbpaxQCaL5xWM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=F3gYODER8pnUeQQ4RhLeIl6uvFvnY5Kj4qdCHil+dk8eUti5rjTBXHPwGODNyeUXB
-	 b3Q7x61UzMh1jmHWbY57TCn82zA9F9jO5qq2+ulGLMBvp+nkmebVfqR0/Eo03zsXdv
-	 /rVoVxh36fVTjOj9AFzL3uDEDC6FQ7qNA76WyDHQXIKKqcbF6Sz6B7SeKkd3SJcwbB
-	 Z7/eqpws2ldOOcJYhXTdpjZ+6OLl+V7/Hj7gqqkPRzqIqu0FXmH6EefEoK/TmrynHd
-	 AI+91XTt2WlGifOOQBrXietyLWSQ5hOG+qWbeD4630xepTpxi8M3Z4ObrcTF4yLBL3
-	 ygfT9/x4Ga2uA==
-Received: from eugen-station.. (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: ehristev)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B7CC137802F2;
-	Wed, 27 Dec 2023 13:08:21 +0000 (UTC)
-From: Eugen Hristev <eugen.hristev@collabora.com>
-To: bin.liu@mediatek.com,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Allen-KH Cheng <allen-kh.cheng@mediatek.com>,
-	Hsin-Yi Wang <hsinyi@chromium.org>,
-	Max Staudt <mstaudt@chromium.org>,
-	Ricardo Ribalda <ribalda@chromium.org>,
-	Eugen Hristev <eugen.hristev@collabora.com>
-Subject: [PATCH 2/2] arm64: dts: mediatek: mt8186: Add jpgenc node
-Date: Wed, 27 Dec 2023 15:08:12 +0200
-Message-Id: <20231227130812.148914-2-eugen.hristev@collabora.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231227130812.148914-1-eugen.hristev@collabora.com>
-References: <20231227130812.148914-1-eugen.hristev@collabora.com>
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="hiV6n+4q"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-336c9acec03so1593440f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 05:08:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1703682510; x=1704287310; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ocsSiEqBdtanIffaaT52Hpat/4WnkDj2kMGWbB3pX8E=;
+        b=hiV6n+4q8Z0ZFX2ngX+LspAOsc5eVlPs0eU7Crk1XUHoFi5u4/paBB3Zspkf/NPIpj
+         uVC3JxdQoSJJXSzYr/1ZtEoEKSzy/0MzBeTrLDmjp6vROdjmyPbp1u6qLf3Fng/tcewk
+         yBgDIsP30+CBRDqjFdIgJVi4LpCUHEKzYkD1JhuLjDiq+AmVSnf4Ibb0tN01DEXqW3Tx
+         RvcL7KUNN00NYV17+LJIdytKap7f+qCdUSngiz3FD1Ueu93W4aepWrTqR4l2PGxZYdDm
+         /iP1XAeXi+nLPmn4SQdlN74VsLH3MasRlkiCFqDAfpyShUG+k3TMbsSf/WLyCXChho5f
+         58ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703682510; x=1704287310;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ocsSiEqBdtanIffaaT52Hpat/4WnkDj2kMGWbB3pX8E=;
+        b=nnN5zcposafRTyc18uVFKTN7mff+5C2+iIohiAOu4Ww/Gey8LgTYLMHqvYcyTAmCgF
+         tnp7etEXseGwzDh1Rk7uc13V4+aG0qUhpGslaFF0XW03v8UxcbU6BCsSrBF03z/E0Zqc
+         7Y72jvpfnHbIenNIo44edGcDpbTcD8BcImB0id257L2ac7qvYqFM7cPjFvEdys+RuH0p
+         6nLG9hdBZLabiKNgthQV3h1i+pNjDcTO+JH5GUH4T8UA/BCdaqTlM/eI5K17WUFzvSvh
+         LXiVpozwCsiLA+w3SrSxUCvRkuQ7vrHHcen8VRzvMzr39zltEGw/PLejiG5vynW2COiT
+         7hig==
+X-Gm-Message-State: AOJu0YzxP70NzIJHzKLXg4rPoGu0mjfhgXP7qaN/2w9XvQyC74DNgyOl
+	SRPPNSWqdPf/CACrNS6iTy8FdsMtd/oVNg==
+X-Google-Smtp-Source: AGHT+IFqg6rBequ445Nl+pCxjvGGT3EEDoFOIFQGo8u/WAIGCWjYYgshK4g+8oDoULLXedhnF5ap4Q==
+X-Received: by 2002:a5d:6d06:0:b0:336:c159:d3df with SMTP id e6-20020a5d6d06000000b00336c159d3dfmr3250890wrq.87.1703682509846;
+        Wed, 27 Dec 2023 05:08:29 -0800 (PST)
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.5])
+        by smtp.gmail.com with ESMTPSA id c6-20020adfe706000000b0033342338a24sm14906263wrm.6.2023.12.27.05.08.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Dec 2023 05:08:29 -0800 (PST)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: geert+renesas@glider.be,
+	magnus.damm@gmail.com,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org
+Cc: linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	claudiu.beznea@tuxon.dev,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH] arm64: dts: renesas: rzg3s-smarc: Add gpio keys
+Date: Wed, 27 Dec 2023 15:08:10 +0200
+Message-Id: <20231227130810.2744550-1-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,45 +65,95 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Allen-KH Cheng <allen-kh.cheng@mediatek.com>
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Add JPEG encoder node.
+RZ SMARC Carrier II board has 3 user buttons called USER_SW1, USER_SW2,
+USER_SW3. Add a DT node in device tree to propertly instantiate the
+gpio-keys driver for these buttons.
 
-Signed-off-by: Allen-KH Cheng <allen-kh.cheng@mediatek.com>
-Reviewed-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Reviewed-by: Max Staudt <mstaudt@chromium.org>
-Tested-by: Max Staudt <mstaudt@chromium.org>
-Reviewed-by: Ricardo Ribalda <ribalda@chromium.org>
-[eugen.hristev@collabora.com: minor cleanup]
-Signed-off-by: Eugen Hristev <eugen.hristev@collabora.com>
+Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8186.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi | 53 ++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8186.dtsi b/arch/arm64/boot/dts/mediatek/mt8186.dtsi
-index e451b6c8cd9e..ef1b269f9184 100644
---- a/arch/arm64/boot/dts/mediatek/mt8186.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8186.dtsi
-@@ -2054,6 +2054,19 @@ venc: video-encoder@17020000 {
- 			mediatek,scp = <&scp>;
- 		};
+diff --git a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
+index 214520137230..deb2ad37bb2e 100644
+--- a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
++++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
+@@ -6,6 +6,7 @@
+  */
  
-+		jpgenc: jpgenc@17030000 {
-+			compatible = "mediatek,mt8186-jpgenc", "mediatek,mtk-jpgenc";
-+			reg = <0 0x17030000 0 0x10000>;
-+			interrupts = <GIC_SPI 245 IRQ_TYPE_LEVEL_HIGH 0>;
-+			clocks = <&vencsys CLK_VENC_CKE2_JPGENC>;
-+			clock-names = "jpgenc";
-+			power-domains = <&spm MT8186_POWER_DOMAIN_VENC>;
-+			iommus = <&iommu_mm IOMMU_PORT_L7_JPGENC_Y_RDMA>,
-+				 <&iommu_mm IOMMU_PORT_L7_JPGENC_C_RDMA>,
-+				 <&iommu_mm IOMMU_PORT_L7_JPGENC_Q_TABLE>,
-+				 <&iommu_mm IOMMU_PORT_L7_JPGENC_BSDMA>;
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
+ #include <dt-bindings/pinctrl/rzg2l-pinctrl.h>
+ 
+ / {
+@@ -14,6 +15,37 @@ aliases {
+ 		mmc1 = &sdhi1;
+ 	};
+ 
++	keys {
++		compatible = "gpio-keys";
++
++		key-1 {
++			interrupts = <RZG2L_GPIO(18, 0) IRQ_TYPE_EDGE_FALLING>;
++			interrupt-parent = <&pinctrl>;
++			linux,code = <KEY_1>;
++			label = "USER_SW1";
++			wakeup-source;
++			debounce-interval = <20>;
 +		};
 +
- 		camsys: clock-controller@1a000000 {
- 			compatible = "mediatek,mt8186-camsys";
- 			reg = <0 0x1a000000 0 0x1000>;
++		key-2 {
++			interrupts = <RZG2L_GPIO(0, 1) IRQ_TYPE_EDGE_FALLING>;
++			interrupt-parent = <&pinctrl>;
++			linux,code = <KEY_2>;
++			label = "USER_SW2";
++			wakeup-source;
++			debounce-interval = <20>;
++		};
++
++		key-3 {
++			interrupts = <RZG2L_GPIO(0, 3) IRQ_TYPE_EDGE_FALLING>;
++			interrupt-parent = <&pinctrl>;
++			linux,code = <KEY_3>;
++			label = "USER_SW3";
++			wakeup-source;
++			debounce-interval = <20>;
++		};
++	};
++
+ 	vcc_sdhi1: regulator-vcc-sdhi1 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "SDHI1 Vcc";
+@@ -35,6 +67,27 @@ vccq_sdhi1: regulator-vccq-sdhi1 {
+ };
+ 
+ &pinctrl {
++	key-1-gpio-hog {
++		gpio-hog;
++		gpios = <RZG2L_GPIO(18, 0) GPIO_ACTIVE_LOW>;
++		input;
++		line-name = "key-1-gpio-irq";
++	};
++
++	key-2-gpio-hog {
++		gpio-hog;
++		gpios = <RZG2L_GPIO(0, 1) GPIO_ACTIVE_LOW>;
++		input;
++		line-name = "key-2-gpio-irq";
++	};
++
++	key-3-gpio-hog {
++		gpio-hog;
++		gpios = <RZG2L_GPIO(0, 3) GPIO_ACTIVE_LOW>;
++		input;
++		line-name = "key-3-gpio-irq";
++	};
++
+ 	scif0_pins: scif0 {
+ 		pinmux = <RZG2L_PORT_PINMUX(6, 3, 1)>, /* RXD */
+ 			 <RZG2L_PORT_PINMUX(6, 4, 1)>; /* TXD */
 -- 
-2.34.1
+2.39.2
 
