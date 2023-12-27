@@ -1,172 +1,92 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02olkn2067.outbound.protection.outlook.com [40.92.44.67])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5993D45024;
-	Wed, 27 Dec 2023 12:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256BF45001;
+	Wed, 27 Dec 2023 12:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mx0b-0016f401.pphosted.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="L0ekbM4a"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U7kYHfcCCCk9NBVSQS7WDEQapeXpSiCpGfgb4RCaEh0xV6/YyqRrenin2hnw06QGKdVJ40fWj8b/Be3hwIj/jf9Xf/QMy2M9piFmre+bla/7ZYtOQkRoHtBkAIVIwCFYyV2rmCX0htHBNehCMVCr2FybjD+nor17bzH831QBTD2kFEdJ8Y3kOipBczFi5bv/33zZwZjhEd91tyeL++CvjQwzy4dDgMB+zkeVh4hDpqPbn5ehpiWX7HR8Kzn3HDSx/7FAeMjSTexKx6lpazt38nf3VzEhpureNFcQiEjxcLDMc6gtpCgp4fkMbD1cooCdEsBtEW3X+IVeBlwPGaDbxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8WKmhN3oaum3h6LjZNz9y6Z8Qcj6KEDtaGLhzDG39to=;
- b=oPsrWjk/j1Ewc9eBP13EVwtF/H6b6CppMZ8M5uJYQMVZKJ+fJG7lEvzil7dhrjofugKofTip2AEXsGK5mBTuQ1wzFrhIbxd6O7EHDW3M2MV/nb0vvC4+PVsHvNoRtQOvqTRcDESOm6pKTovngW8OrY37/cKI2m9zsaOyyN+KtVV2uam2YEUAKFc9tj65QHkpR3L6JcX7F0lFrow3sS6s2TqOFJFpGQajxMCVjXTtOfb0b92p4py0oDhbENy6GWEzvJ6AetYEvxruXm71fjbWer2Fcq6TVTDFRl/fILSBTsYp+PFccdbyXrmc/nRr9CMY1tADhEHOAAVvE6qNSc/YcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8WKmhN3oaum3h6LjZNz9y6Z8Qcj6KEDtaGLhzDG39to=;
- b=L0ekbM4avvAerkWF5nHE9yZ4+ZuyOZZPSDK1JosL0DgtWTsu5CLpx1g/KWqTVR2Ad9cUm3/6GUnrZo0bet5Avekn+/926Os9DTxYLEwNTHrd+++VUwwg7gcuswLfFVHUu05UuE7ZQ8gqMfZC6iICZYbux2fbT26svdyklQGLOOzD6PGyrtf/JijrKufjgu002iZ+MFNrjatcGsfiAHGTQy0eGsFwPz1W0KS3futJa+q+3b7GfrQRmQrfN87eB85njipv0ZBv3KPfAMEnIhSD0EQ4oWmmXlHn/84l+qjGTuv/6aOL+sVsZ61myZwjZfrjyRhFVTZmLqkGheB30Y6THA==
-Received: from MW4PR84MB3145.NAMPRD84.PROD.OUTLOOK.COM (2603:10b6:303:1e1::10)
- by SJ2PR84MB3537.NAMPRD84.PROD.OUTLOOK.COM (2603:10b6:a03:569::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.19; Wed, 27 Dec
- 2023 12:31:39 +0000
-Received: from MW4PR84MB3145.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::6761:2623:329a:27d6]) by MW4PR84MB3145.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::6761:2623:329a:27d6%4]) with mapi id 15.20.7113.027; Wed, 27 Dec 2023
- 12:31:39 +0000
-From: Youling Tang <youling.tang@outlook.com>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	Baoquan He <bhe@redhat.com>,
-	loongarch@lists.linux.dev,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Youling Tang <tangyouling@kylinos.cn>
-Subject: [PATCH v2 2/2] docs: kdump: Update the crashkernel description for LoongArch
-Date: Wed, 27 Dec 2023 20:24:53 +0800
-Message-ID:
- <MW4PR84MB31451636462DB3F4FAEA3C8E819FA@MW4PR84MB3145.NAMPRD84.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20231227122453.8108-1-youling.tang@outlook.com>
-References: <20231227122453.8108-1-youling.tang@outlook.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [f0nd0XLLkSjQ3RafDmSuUUnnZ76rGGWvuhAJk5TQJIg=]
-X-ClientProxiedBy: SI2P153CA0001.APCP153.PROD.OUTLOOK.COM (2603:1096:4:140::7)
- To MW4PR84MB3145.NAMPRD84.PROD.OUTLOOK.COM (2603:10b6:303:1e1::10)
-X-Microsoft-Original-Message-ID:
- <20231227122453.8108-2-youling.tang@outlook.com>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Fqxkr07q"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BR6g9G8007435;
+	Wed, 27 Dec 2023 04:33:23 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	pfpt0220; bh=AyR61wXIiz22J6XT2KA/KC4IPW9Adjj9ZSNInPNcDJ0=; b=Fqx
+	kr07qQSA7PT89yvojwOIk8G9mBNaB5+Otj/HASMPTt4gfD2lKPlGNoMF9TWaWcX5
+	4QUDMOq6hhpAsJpNJLkHA4nKHPaM6M0fz8BMj8BYltrKmXx4Tym7cr17vmeBzjjg
+	8+v4uzlC4GqI+MDXvGCkkmjjRJ1bCOo/kv3cbjpt93g3ecE+9qkOWy5bEj/DtoFL
+	DLEmZTbTMs5VgjomvpuhyYNISFX7OGy2fYpACk/SVUP6GTJZ9IvzF6gQc18ejPdN
+	o9aHXbl+H1NJ5Cvh0YfhDmsO5641iywF830d+3/EDdme4KrP/eTLu9+1Ov9B8Sto
+	/Iz7x4xhLwVhXSRpa2A==
+Received: from dc5-exch02.marvell.com ([199.233.59.182])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3v5yxp0a5t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+	Wed, 27 Dec 2023 04:33:20 -0800 (PST)
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Wed, 27 Dec
+ 2023 04:33:18 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
+ Transport; Wed, 27 Dec 2023 04:33:17 -0800
+Received: from dc3lp-swdev041.marvell.com (dc3lp-swdev041.marvell.com [10.6.60.191])
+	by maili.marvell.com (Postfix) with ESMTP id E8A515B6937;
+	Wed, 27 Dec 2023 04:33:11 -0800 (PST)
+From: Elad Nachman <enachman@marvell.com>
+To: <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <andrew@lunn.ch>, <gregory.clement@bootlin.com>,
+        <sebastian.hesselbarth@gmail.com>, <huziji@marvell.com>,
+        <ulf.hansson@linaro.org>, <catalin.marinas@arm.com>, <will@kernel.org>,
+        <adrian.hunter@intel.com>, <thunder.leizhen@huawei.com>,
+        <bhe@redhat.com>, <akpm@linux-foundation.org>, <yajun.deng@linux.dev>,
+        <chris.zjh@huawei.com>, <linux-mmc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC: <enachman@marvell.com>, <cyuval@marvell.com>
+Subject: [PATCH 2/4] dt-bindings: mmc: add Marvell ac5
+Date: Wed, 27 Dec 2023 14:32:55 +0200
+Message-ID: <20231227123257.1170590-3-enachman@marvell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20231227123257.1170590-1-enachman@marvell.com>
+References: <20231227123257.1170590-1-enachman@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW4PR84MB3145:EE_|SJ2PR84MB3537:EE_
-X-MS-Office365-Filtering-Correlation-Id: c78d6f71-e142-4c09-3715-08dc06d7c5ce
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	yf53k3uOw4szmkcMbX5CFp8Wv9065HJILz8TbbOyCJRvgZIx/n0WK8sv93ZrOHw02xFi7NhoyU10qX6hhZbHiHPBcA2GINZPjMYwFPuCGNgKgXyt2Az+kD29VVNWfiJ8UKAHMUFSV2mqwHDMJK1EgxNn8S6bpN+flba/g5TgDjDtDIIp6dgIOh+oVZklrE3OGWRs7wL+Cs/HN17xrb6+uAZbast5QwPUg005+2nNWvd1lhHU5ay0LMpIKETcuE+zXFKIv8ptvl+stzMdtO635/c8c3TuY2bG32X7sMyifZULGXUYBwTFwVWs6Tc74SbNemEKSMEEsLbt2VyDpGpIk3YeNBPsBNCaGZx9NK+okjNaej/WpPSfJPrnuh+Y5CXnVJQdS+FPEy7yJ/6gePunAERiLXmjflIho4xPDc2ma6ghyZQrNnuHcyXuHdR53Vvm9as9O6eFlzg8KAkv7skC8K15hlHdlMWy8ZRLbu6HI23qblj9dzVR7oPUFEVW6HHTPZDAG3jL2LYUjTEEWDcvnsdbfg5emGwlmWIsOXWm4RyAGPdSG86ha2o3Dl77v5kQ
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?URw4ATaiS0EV2eomLohqho0xpWrsbpUz6FL1aY+Tf/oWQidMOHooW0be2KDK?=
- =?us-ascii?Q?MUhUoc3cvw7UGUGggR8KU4h6WMIO6MiUweA62t+180dn1SfxUOxD0thbgxrZ?=
- =?us-ascii?Q?GdhV5gwxyvSrXNBh+cuDgNZEdpPzbygHzPZ6G9h8K5L48228ZaaM0dqoudPd?=
- =?us-ascii?Q?IW3FuSQeclsVtlpcMO9DXGHY919OdVmTiN+R9vevwTnbXGvus3YGTO3PsSsB?=
- =?us-ascii?Q?P0xIGUQ7kn7ts7BW29UUcI1FLQAt9KlKq39zmwucNCjiQYJX8kEIfHzVC9S+?=
- =?us-ascii?Q?KrGrTprZmcDBJb+H7RShJFCIo9XtVfX0lqZ7AxXY2JwwgP7f4hmLApvicOxI?=
- =?us-ascii?Q?DLQ/oTkDfa5oxeKiCz7cMxyWt3+y3e7OmtfiwbzaL2K0xOjDB4DByILR1K3F?=
- =?us-ascii?Q?iHBGz/LhUJI0ciJ5R7dz7CqCg1MEWrfo6avO5jNgXcOXpOK3UD4BsjomdOg/?=
- =?us-ascii?Q?sNCWFTTygzFJqdPHLrI3PeLAuBk0BemQBujybkaC1OWRSuoBsAStpa5R3dVR?=
- =?us-ascii?Q?hvfU79SuN+0b09N03osksl7z6N/pSjtJaJEvnHOvCAw5vB3vBZZBlXsIRamw?=
- =?us-ascii?Q?Aj5fdRAdoAk0KQJ9c6UPBhcCXRIZxBcmi6lHAUNV2bb0J4KUNuXrE8tdVkYp?=
- =?us-ascii?Q?5cg7jH6syo1fSvqKuHKubPILvlLqkrokN1JA5d2ZvKAYj7gc2bfz0XqXMYRD?=
- =?us-ascii?Q?+4mcXTmig36WWVmnWw+AZuOPwi+q6XSOrGSWig7zbuEqxLkITMWWuhNlkKfm?=
- =?us-ascii?Q?JfHHu2dVz4sFBhlCyh8QnBQiinsMZ2Qzev9xkMOWvDbhvaeSVBpIbQHYWh31?=
- =?us-ascii?Q?T/wsGIAxBT0b97Qio8xRmshNGZMgOAwPQ7qa7ck/g9bjgWBDcNvmt/WDGXa9?=
- =?us-ascii?Q?pvEWMBM1I0O1GYfmdlzG4zT3MoMnD2VZKe1AxCDVniOX0eRo/y/NlCJGIsD4?=
- =?us-ascii?Q?9NiqWQxccogVBILU4Pe18P99t0AZeXro4qM0lOM24FMQOI/bLEBKNvpOff50?=
- =?us-ascii?Q?pwMtt4+Mb1zAYVqppuS+llxHRVv+8hwAfwOGcktO+/lZNKMewDL+ugE4tRkh?=
- =?us-ascii?Q?8uqYbpPvfuI94vX75W5xCWez9OF2RGJrIpvEahQ35/nPf6PfZP0KJYTbYBlL?=
- =?us-ascii?Q?nkapoS/0B0dENR+sx/9y8b+aCkg3RS1N8iQ4HLss5TVqqxhDGZPGeNBv4HUL?=
- =?us-ascii?Q?BRtQfH5mKrvV6LB08Pv8N7I6lu5lDBTAatJyIgp3VA14ILJIj6Psqh0nwrM?=
- =?us-ascii?Q?=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c78d6f71-e142-4c09-3715-08dc06d7c5ce
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR84MB3145.NAMPRD84.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Dec 2023 12:31:38.9742
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR84MB3537
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: GCD9rNl3OXNNyd3NGLlHc9V8yELlGl5x
+X-Proofpoint-GUID: GCD9rNl3OXNNyd3NGLlHc9V8yELlGl5x
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
 
-From: Youling Tang <tangyouling@kylinos.cn>
+From: Elad Nachman <enachman@marvell.com>
 
-Now "crashkernel=" parameter on LoongArch has been updated to support
-crashkernel=X,[high,low].
+Add dt bindings for Marvell ac5 eMMC controller
 
-Here update the parameter description accordingly.
-
-Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+Signed-off-by: Elad Nachman <enachman@marvell.com>
 ---
- .../admin-guide/kernel-parameters.txt         | 24 ++++++++++---------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 65731b060e3f..f2633dd87a97 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -877,9 +877,9 @@
- 			memory region [offset, offset + size] for that kernel
- 			image. If '@offset' is omitted, then a suitable offset
- 			is selected automatically.
--			[KNL, X86-64, ARM64, RISCV] Select a region under 4G first, and
--			fall back to reserve region above 4G when '@offset'
--			hasn't been specified.
-+			[KNL, X86-64, ARM64, RISCV, LoongArch] Select a region
-+			under 4G first, and fall back to reserve region above
-+			4G when '@offset' hasn't been specified.
- 			See Documentation/admin-guide/kdump/kdump.rst for further details.
+diff --git a/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.yaml b/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.yaml
+index 3a8e74894ae0..50c6de8bf0bc 100644
+--- a/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.yaml
++++ b/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.yaml
+@@ -34,6 +34,9 @@ properties:
+           - const: marvell,armada-3700-sdhci
+           - const: marvell,sdhci-xenon
  
- 	crashkernel=range1:size1[,range2:size2,...][@offset]
-@@ -890,25 +890,27 @@
- 			Documentation/admin-guide/kdump/kdump.rst for an example.
- 
- 	crashkernel=size[KMG],high
--			[KNL, X86-64, ARM64, RISCV] range could be above 4G.
-+			[KNL, X86-64, ARM64, RISCV, LoongArch] range could be
-+			above 4G.
- 			Allow kernel to allocate physical memory region from top,
- 			so could be above 4G if system have more than 4G ram
- 			installed. Otherwise memory region will be allocated
- 			below 4G, if available.
- 			It will be ignored if crashkernel=X is specified.
- 	crashkernel=size[KMG],low
--			[KNL, X86-64, ARM64, RISCV] range under 4G. When crashkernel=X,high
--			is passed, kernel could allocate physical memory region
--			above 4G, that cause second kernel crash on system
--			that require some amount of low memory, e.g. swiotlb
--			requires at least 64M+32K low memory, also enough extra
--			low memory is needed to make sure DMA buffers for 32-bit
--			devices won't run out. Kernel would try to allocate
-+			[KNL, X86-64, ARM64, RISCV, LoongArch] range under 4G.
-+			When crashkernel=X,high is passed, kernel could allocate
-+			physical memory region above 4G, that cause second kernel
-+			crash on system that require some amount of low memory,
-+			e.g. swiotlb requires at least 64M+32K low memory, also
-+			enough extra low memory is needed to make sure DMA buffers
-+			for 32-bit devices won't run out. Kernel would try to allocate
- 			default	size of memory below 4G automatically. The default
- 			size is	platform dependent.
- 			  --> x86: max(swiotlb_size_or_default() + 8MiB, 256MiB)
- 			  --> arm64: 128MiB
- 			  --> riscv: 128MiB
-+			  --> loongarch: 128MiB
- 			This one lets the user specify own low range under 4G
- 			for second kernel instead.
- 			0: to disable low allocation.
++      - items:
++          - const: marvell,ac5-sdhci
++          - const: marvell,armada-ap806-sdhci
+   reg:
+     minItems: 1
+     maxItems: 2
 -- 
-2.40.0
+2.25.1
 
