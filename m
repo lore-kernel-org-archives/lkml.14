@@ -1,31 +1,31 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D547A47F79
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 21:02:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5684B47F78
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 21:02:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rIb3J-0000mc-Nc; Wed, 27 Dec 2023 22:02:57 +0100
+	id 1rIb3J-0000mE-6J; Wed, 27 Dec 2023 22:02:57 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rIb3I-001wEw-7j; Wed, 27 Dec 2023 22:02:57 +0100
+	id 1rIb3H-001wEo-Md; Wed, 27 Dec 2023 22:02:56 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rIb3J-001ZVU-0m;
-	Wed, 27 Dec 2023 22:02:57 +0100
+	id 1rIb3I-001ZVM-2I;
+	Wed, 27 Dec 2023 22:02:56 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Jassi Brar <jassisinghbrar@gmail.com>
 Cc: linux-kernel@vger.kernel.org,
 	kernel@pengutronix.de
-Subject: [PATCH 04/12] mailbox: mailbox-test: Convert to platform remove callback returning void
-Date: Wed, 27 Dec 2023 22:02:32 +0100
-Message-ID:  <919a9e77958e3a9fee3e473fd714c4add2991b33.1703710628.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 02/12] mailbox: bcm-pdc: Convert to platform remove callback returning void
+Date: Wed, 27 Dec 2023 22:02:30 +0100
+Message-ID:  <44de4bb380b6af0be33eaf8cf96d767ed7608a36.1703710628.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1703710628.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1703710628.git.u.kleine-koenig@pengutronix.de>
@@ -36,7 +36,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1875; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=2Acds6dO5piUOAVFehlpJWz3DbSbQSTHBdOgG/XhSGc=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBljJDqNnoboat7qdmB2aD1OkkF8K0e5IDZbr7Lb NgGvZfkKPKJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZYyQ6gAKCRCPgPtYfRL+ TrtbB/kBNSNYr6CiYZ5+Iqb+3kPQ5dPw3J3J17sxWCdHG2fK1X3m7VoIK6/E2QiRHQDMjthjFdg 1HDhwGWDkklLUXI5okyKPtdeWPHixZXx1joX8U9Zfm3AqmUlPen+bl6HypkPDENKqwUn9Z78Cwp skP7eDM0aCZ3zWk2G5u4rY6GlO7vtvTJLQTAADtS2ein/bi2V3KJixCQ96ss87nXXE72jR4QGyS /Gu0AuWDVay78xUapUcBsladtb7IzUNGmn4Y1PnjTwThtNx6ZtRiLf/+IeJFK9HUyYPGLJP9yTi z0dKoLmKwQOCsR+jxXlUMd8NBSZDrxR/Svh1b35sSKK+DUvE
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1741; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=jveChMb3h44uByjcawnGUpyLJqMmp76ass0nnH1hY1A=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBljJDn9BM0ryFt/JmZOCM418wpd3Zmu3v/321/P Jf/1Sq+17qJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZYyQ5wAKCRCPgPtYfRL+ TnbMB/4+AiEoxUh4Rj3VweDs+RMtUOGfU48l2YhH2whN8mjFzIAIUrGWD1FPU1pWsVgejCeGcur ++/ur4Y+cw1CSQX1UXjG4Bh6GtrMxxHxX9c/j0ElXYRi3MkKKZDL7j60owkY2jJiTOZo86hMLie osli7TD/G2Wc9455gUr+hYc2xeMT5i/ZpHCakvPGNXDQ9tb+42b3h9qyWzsmcvyKgW8Xk10+yB4 4ccmNxkf6rg7U/kZnsZM6sxNiGryMiNuqdUlgq3XMwtSkJBAiwjbAV98aZTPFK8aL+yU/3dAOvs n/KCoRFLdmXgVVqQMxv/hI2lED7vfaXec4jFRRa3dGLaJX39
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -59,40 +59,36 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/mailbox/mailbox-test.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/mailbox/bcm-pdc-mailbox.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mailbox/mailbox-test.c b/drivers/mailbox/mailbox-test.c
-index 22d6018ceec3..3386b4e72551 100644
---- a/drivers/mailbox/mailbox-test.c
-+++ b/drivers/mailbox/mailbox-test.c
-@@ -418,7 +418,7 @@ static int mbox_test_probe(struct platform_device *pdev)
- 	return 0;
+diff --git a/drivers/mailbox/bcm-pdc-mailbox.c b/drivers/mailbox/bcm-pdc-mailbox.c
+index 778faeced81e..1768d3d5aaa0 100644
+--- a/drivers/mailbox/bcm-pdc-mailbox.c
++++ b/drivers/mailbox/bcm-pdc-mailbox.c
+@@ -1605,7 +1605,7 @@ static int pdc_probe(struct platform_device *pdev)
+ 	return err;
  }
  
--static int mbox_test_remove(struct platform_device *pdev)
-+static void mbox_test_remove(struct platform_device *pdev)
+-static int pdc_remove(struct platform_device *pdev)
++static void pdc_remove(struct platform_device *pdev)
  {
- 	struct mbox_test_device *tdev = platform_get_drvdata(pdev);
+ 	struct pdc_state *pdcs = platform_get_drvdata(pdev);
  
-@@ -428,8 +428,6 @@ static int mbox_test_remove(struct platform_device *pdev)
- 		mbox_free_channel(tdev->tx_channel);
- 	if (tdev->rx_channel)
- 		mbox_free_channel(tdev->rx_channel);
--
+@@ -1617,12 +1617,11 @@ static int pdc_remove(struct platform_device *pdev)
+ 
+ 	dma_pool_destroy(pdcs->rx_buf_pool);
+ 	dma_pool_destroy(pdcs->ring_pool);
 -	return 0;
  }
  
- static const struct of_device_id mbox_test_match[] = {
-@@ -444,7 +442,7 @@ static struct platform_driver mbox_test_driver = {
- 		.of_match_table = mbox_test_match,
- 	},
- 	.probe  = mbox_test_probe,
--	.remove = mbox_test_remove,
-+	.remove_new = mbox_test_remove,
- };
- module_platform_driver(mbox_test_driver);
- 
+ static struct platform_driver pdc_mbox_driver = {
+ 	.probe = pdc_probe,
+-	.remove = pdc_remove,
++	.remove_new = pdc_remove,
+ 	.driver = {
+ 		   .name = "brcm-iproc-pdc-mbox",
+ 		   .of_match_table = pdc_mbox_of_match,
 -- 
 2.43.0
 
