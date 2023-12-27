@@ -1,104 +1,79 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B590C45BE5
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 14:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE934502C;
+	Wed, 27 Dec 2023 14:43:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tp8eydQe"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40d5aa35b60so11414275e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 06:36:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703687769; x=1704292569; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=k6zNqclS7J7Qh9osUCxcjQJENaFPWi0hRNSckfQHr2A=;
-        b=tp8eydQewNHvl4cLlXYMMB3vUKeGbvDLkdrzJj5kJYqcPZdy3HKwtLEUiEcPoblfVF
-         nOFEDc2+xNJYIl6aujnRHjbOPAc40eNQEzFqPMVuKdY5wZUp//TJ3bqzkJlbQB7kYZqr
-         Gi0ja8tG916amDIMwCtA98Wh+rTDSufeeA0vuFW+qK9vBuGTzeLVvIDbK/F3e4HqaeF4
-         R9EvU8Q6J2KkbVtBGJwwCnHAPb14XYh6XxlvR7xbBeP1Yu/NjMTEyltVlDvunlKieAPi
-         0eqkfV+sqdbnCCKjehpKiMkWcsZ6iwhAuEUuzzdsS+aARahjWU+qiZg42Lt5ShX8dZA2
-         15JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703687769; x=1704292569;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=k6zNqclS7J7Qh9osUCxcjQJENaFPWi0hRNSckfQHr2A=;
-        b=DzTEih4figIQlcN1BsyWje953PZcGsk8x4xur/fhtPN3g6oEOmGC74VLjg3gLlZqek
-         NcGtkGgzUpXYDUi5RqGnevzupiu+sinKx4hX38AqXtcPoNJtWapeLRu828xD6t2xlQDg
-         4ATW7TV1Ty22ZAgeDcyvQV9DbqkKWN2sZ2VABah258+1IB0/SxvLmVK/ZfY9sTAYik+f
-         sjSblUPhBbBhwJZql+rYxgmImFDY0NBsA3ch8tR3D/AYWEAXMo695CUmNlY9lplDnNvp
-         Ri9hkcn4hlnjgVIO2DGo7Rt6h9ixGsIlvBgOvYqq7zfxRSJfneLT121vumS8+Z1Ro7+r
-         6oLw==
-X-Gm-Message-State: AOJu0YwhLMBx4iBc8/nAy0SRb70pSK9bXkX11EPOCqrR65ht4Hz5aW7k
-	vWOg/Ja3XPvcpv0r7dWIiZok0QDomNuozQ==
-X-Google-Smtp-Source: AGHT+IFwG8UV4lJV8XAn3gHqm5NfmlKcd46dS6QpUygLIozQ74rCGCj7SlyeDim5yGrro+kAh6lC3Q==
-X-Received: by 2002:a05:600c:4d96:b0:40d:5c83:c74c with SMTP id v22-20020a05600c4d9600b0040d5c83c74cmr462301wmp.38.1703687768955;
-        Wed, 27 Dec 2023 06:36:08 -0800 (PST)
-Received: from mai.. (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id i16-20020a05600c355000b0040d5a5c523csm5686544wmq.1.2023.12.27.06.36.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Dec 2023 06:36:06 -0800 (PST)
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: tglx@linutronix.de
-Cc: kernel test robot <lkp@intel.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	linux-kernel@vger.kernel.org (open list:CLOCKSOURCE, CLOCKEVENT DRIVERS),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE)
-Subject: [PATCH] clocksource/drivers/imx: Fix -Wunused-but-set-variable warning
-Date: Wed, 27 Dec 2023 15:35:46 +0100
-Message-Id: <20231227143546.2823683-1-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="fImLcrjO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1703688187; x=1704292987; i=markus.elfring@web.de;
+	bh=qJhNb+kflSF1W8E0uefEQKaq7Lmn3gr9mOpVQlydGAM=;
+	h=X-UI-Sender-Class:Date:To:From:Subject:Cc;
+	b=fImLcrjOQv1M2gBUJ9+AmQ7HgWVkmqfCT+qA2E0bzmefyQ1fc0RDrY6btGR6wAmj
+	 XQDgLCeEAbUZ0XjZ3yrMtCWIxn8grVwBpOzEs+OZwzVcycVJV5pwjC247+913WwlR
+	 GjW9CNOvKox5pkXuyOP7QloxefEqcNj0GiNaiRwrAoigKZVfEwTWnY/vjPrru0hs1
+	 WZF29NqLX2V+D6dnH4ADubzW9BhoVDErIaZpZZ7SB5rVy3Dlt6AFB9Q7HFSKViH1v
+	 4jN4TlQwZgSEbblJkRnwHfL8XnDNzylPZ1bXseUINk99OmoGgvb/DcT4GNYvfzWS3
+	 UezFww1+5QauPMe2fA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MSIJA-1rgk433024-00T993; Wed, 27
+ Dec 2023 15:43:07 +0100
+Message-ID: <74183091-4c8d-4c92-b3f9-cebaacb41efd@web.de>
+Date: Wed, 27 Dec 2023 15:43:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+To: linux-mtd@lists.infradead.org, kernel-janitors@vger.kernel.org,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH 0/3] mtd: ssfdc: Adjustments for ssfdcr_add_mtd()
+Cc: LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:HyvYsn29WwCEI9xxdv9RQGBTPB/DqqDr8z3qCvI7bVdjZ4jHkC3
+ G/wKAnFyAhII39qmEr7wJVgY8mbhx2o8NQUlZg9VZTJ+8K/W7J1cjSj15ih7EUUP8/Ef9Bw
+ EJ5lrihMreoB6jRMk86Qwdu4o5BtYc4+6Rbdb79usx+U3HWsK1bKfI2khRJh/NB0dezmFc1
+ SunLP6mSJ4DVppCx803NA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:1fr8eEQ0tJU=;pBK/5erE819ePtx/PcpEJfmbBdC
+ 200Muo8GOIF0KMNeeBy/acJwSq4RAVKjmjqpewB5sjoLYfJ1mGaBiZfd7xHIrLKCrii8bve9z
+ GQjPWrJzv5mAKEqkiq5E1w8G7K+GTF3224TeasdccPY7Op9SGXYa3wHIF2DRWPHrtjux6p5eI
+ D8OUupxkvGkA7cJKTiBJyLvYy+gAfT5f7uALSKJPDeaISaAPP1YSf5dlC/k9/uZBKmeCaV58j
+ hh0dlhV3SwyNlNVdFQM6oO3Nzq6+w0uIH2rbAJbEidGIzRsnHjZVXieMCGWuEZo3qW7Wv1DLB
+ tFVG29Ch422AIH8ar4RdY3k0MdHuY8f7CgVY+YV18h+4O5iCqkqZolIB/zImNtbUuk93I7r/Z
+ DxPUKEocaCFK3yzQ5ytc8gmua8vD6bkgccjrNEXTI4UUlhEHQ8YV82F0WZh+WnFdX+x0RrleA
+ MZOUonFJnmXsVY6dLcz80YCMKB4mKkPqUCaxtxEODQjgyhLnNv/zEbsqWGHE0dzmvmfXEjXzh
+ /LUd3+ngayatFTYSfrzp9vXZ+gvpnFZyRJQ1YSS7kC8lTAJFkXh3qGcYlexO24FfSb4arFyKA
+ gPJKpJW29MA4uWygLgjZnXL1EbVpTtrpFo2+TfjvoLD90uKF8o89DZDTZlTPU14+L+uE6R+Fv
+ T756oa1ZqbIBUtlB6wmpYBDb028VvNGjWxzjMiu2KZMKYhS50rnllD79BnPiJK6BmpYDDffTm
+ dKrhlOAwjdKImggd5MDPQAgAl+L5HdDy+dI0IZ7fkJPMeMftMK9ReJFnlw8hGPiB2MPYyS9Pl
+ adWtq6/Pedqu65yG7Soll2sVODuh0HyPR+MIu/u2+vUroJv8cNGi0g4vja8KI6uNaxZpAGd8h
+ f7NG7z7DFxmzgV+XsCasXFSdVTeft9xP1Zw7xVdI7mNbTwixjpeUcWDT+SRE0JBzzkW3BPpw9
+ +HKOPw==
 
-All warnings (new ones prefixed by >>):
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Wed, 27 Dec 2023 15:38:42 +0100
 
-   drivers/clocksource/timer-imx-gpt.c: In function 'mxc_timer_interrupt':
->> drivers/clocksource/timer-imx-gpt.c:279:18: warning: variable 'tstat' set but not used [-Wunused-but-set-variable]
-     279 |         uint32_t tstat;
-         |                  ^~~~~
+A few update suggestions were taken into account
+from static source code analysis.
 
-vim +/tstat +279 drivers/clocksource/timer-imx-gpt.c
+Markus Elfring (3):
+  One function call less after error detection
+  Fix indentation
+  Improve a size determination
 
-The change remove the tstats assignment but not the reading of the
-register, assuming the register may be a ROR (Reset On Read) which
-happens in the driver's interrupt registers.
+ drivers/mtd/ssfdc.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Fixes: df181e382816 ("clocksource/drivers/imx-gpt: Add support for ARM64")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202312231803.XzPddRa5-lkp@intel.com/
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- drivers/clocksource/timer-imx-gpt.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/clocksource/timer-imx-gpt.c b/drivers/clocksource/timer-imx-gpt.c
-index 6a878d227a13..489e69169ed4 100644
---- a/drivers/clocksource/timer-imx-gpt.c
-+++ b/drivers/clocksource/timer-imx-gpt.c
-@@ -258,9 +258,8 @@ static irqreturn_t mxc_timer_interrupt(int irq, void *dev_id)
- {
- 	struct clock_event_device *ced = dev_id;
- 	struct imx_timer *imxtm = to_imx_timer(ced);
--	uint32_t tstat;
- 
--	tstat = readl_relaxed(imxtm->base + imxtm->gpt->reg_tstat);
-+	readl_relaxed(imxtm->base + imxtm->gpt->reg_tstat);
- 
- 	imxtm->gpt->gpt_irq_acknowledge(imxtm);
- 
--- 
-2.34.1
+=2D-
+2.43.0
 
