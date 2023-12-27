@@ -1,110 +1,85 @@
-Received: from out28-81.mail.aliyun.com (out28-81.mail.aliyun.com [115.124.28.81])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F1B1FC8
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 02:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sjterm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sjterm.com
-X-Alimail-AntiSpam:AC=CONTINUE;BC=0.1100688|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0502652-0.000180865-0.949554;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047206;MF=fuyao@sjterm.com;NM=1;PH=DS;RN=9;RT=9;SR=0;TI=SMTPD_---.VtpmuEK_1703642477;
-Received: from localhost(mailfrom:fuyao@sjterm.com fp:SMTPD_---.VtpmuEK_1703642477)
-          by smtp.aliyun-inc.com;
-          Wed, 27 Dec 2023 10:01:18 +0800
-Date: Wed, 27 Dec 2023 10:01:17 +0800
-From: Fuyao Kashizuku <fuyao@sjterm.com>
-To: Lee Jones <lee@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Andre Przywara <andre.przywara@arm.com>
-Cc: Jianzhang Mai <maijianzhang@allwinnertech.com>
-Subject: [PATCH] mfd: sun4i-gpadc: adaptation interrupt number
-Message-ID: <ZYuFbUUus9apiCpq@debian.cyg>
-Mail-Followup-To: Lee Jones <lee@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Andre Przywara <andre.przywara@arm.com>,
-	Jianzhang Mai <maijianzhang@allwinnertech.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDFA01FBF;
+	Wed, 27 Dec 2023 02:08:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eaATy6iu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=0BrVlmPWKKehalFtZAOefANVneodTEBVxjiVx9T21Ik=; b=eaATy6iuQDpLZmSfhgLojVqkOW
+	8hNB0H+nUKUrtlvOD1ikpqu02BBDQY35mB0bINmH2RcbgH7UAjEloGkHHABQfrxnEMTLyssiu+78m
+	rNYtNC+D0lpNxLbS+VM//TYYqL9pcUC/P1tR1cgur7syVQqyKVQIxrvXQ1TW0/k+f0Voex0bLLMhp
+	QfnlqMuhblsVAohyH1OEW6dPgdDBZCkbPQP6drJZ0JVB1gFbTTtliow+9GpT/Y15AlGWZ58cVl/db
+	cExPFNepTdIp3HGJZTcSbTQEvso4Jvkv4ukX/YMVL5ShE0ortTmhztDANPhycCalvLHRLwwaPoAgD
+	lLrUKnkA==;
+Received: from [50.53.46.231] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rIJLK-00Do0t-0p;
+	Wed, 27 Dec 2023 02:08:22 +0000
+Message-ID: <007b0b3c-26c8-4a59-b2d6-017ccb656694@infradead.org>
+Date: Tue, 26 Dec 2023 18:08:21 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Organization: work_work_work
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] drivers/isdn/hardware/mISDN/w6692.c: Fix spelling typo
+ in comment
+Content-Language: en-US
+To: YouHong Li <liyouhong@kylinos.cn>, isdn@linux-pingi.de
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ k2ci <kernel-bot@kylinos.cn>, Simon Horman <horms@kernel.org>
+References: <20231227013753.286177-1-liyouhong@kylinos.cn>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20231227013753.286177-1-liyouhong@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The identifiers are used as IRQ resource numbers, where 0 is treated
-specially.
 
-This fixes sun4i-gpadc-iio probe failed when request irq.
 
-The backstack:
-	WARNING: CPU: 3 PID: 1 at drivers/base/platform.c:451
-	__platform_get_irq_byname+0xb8/0xc4
-	0 is an invalid IRQ number
-	Modules linked in:
-	CPU: 3 PID: 1 Comm: swapper/0 Not tainted 6.7.0-rc6 #9
-	Hardware name: Allwinner sun8i Family
-	 unwind_backtrace
-	 show_stack
-	 dump_stack_lvl
-	 __warn
-	 warn_slowpath_fmt
-	 __platform_get_irq_byname
-	 platform_get_irq_byname
-	 sun4i_irq_init
-	 sun4i_gpadc_probe
-	 platform_probe
-	 really_probe
-	 __driver_probe_device
-	 driver_probe_device
-	 __driver_attach
-	 bus_for_each_dev
-	 bus_add_driver
-	 driver_register
-	 do_one_initcall
-	 do_initcall_level
-	 do_initcalls
-	 kernel_init_freeable
-	 kernel_init
+On 12/26/23 17:37, YouHong Li wrote:
+> Fix spelling typo in comment.
+> 
+> Reported-by: k2ci <kernel-bot@kylinos.cn>
+> Signed-off-by: YouHong Li <liyouhong@kylinos.cn>
+> Reviewed-by: Simon Horman <horms@kernel.org>
+> 
+> ---
+> v1->v2
+> 	*Fix spelling typo in comment oscilator ==> oscillator
+> ---
+> diff --git a/drivers/isdn/hardware/mISDN/w6692.c b/drivers/isdn/hardware/mISDN/w6692.c
+> index 6f60aced11c5..69d23e732e85 100644
+> --- a/drivers/isdn/hardware/mISDN/w6692.c
+> +++ b/drivers/isdn/hardware/mISDN/w6692.c
+> @@ -788,7 +788,7 @@ w6692_irq(int intno, void *dev_id)
+>  	spin_lock(&card->lock);
+>  	ista = ReadW6692(card, W_ISTA);
+>  	if ((ista | card->imask) == card->imask) {
+> -		/* possible a shared  IRQ reqest */
+> +		/* possible a shared  IRQ request */
 
-Log reports:
-sun4i-gpadc-iio sun6i-a31-gpadc-iio.0: error -EINVAL: IRQ FIFO_DATA_PENDING
-not found
-sun4i-gpadc-iio: probe of sun6i-a31-gpadc-iio.0 failed with error -22
+or		   possibly
 
-Signed-off-by: Fuyao Kashizuku <fuyao@sjterm.com>
----
-Changes in v2:
- - Fix the commit message.
- - Add the backstack.
- - Add the log reports.
- - Use the correct full name and email address.
- - Correct the subsystem to mfd.
- - Link to v1: https://lore.kernel.org/lkml/YwdhTlk+9h+9Mrwm@scg/
+>  		spin_unlock(&card->lock);
+>  		return IRQ_NONE;
+>  	}
+> @@ -873,7 +873,7 @@ static void initW6692(struct w6692_hw *card)
+>  	/* enable peripheral */
+>  	if (card->subtype == W6692_USR) {
+>  		/* seems that USR implemented some power control features
+> -		 * Pin 79 is connected to the oscilator circuit so we
+> +		 * Pin 79 is connected to the oscillator circuit so we
+>  		 * have to handle it here
+>  		 */
+>  		card->pctl = 0x80;
 
- include/linux/mfd/sun4i-gpadc.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/mfd/sun4i-gpadc.h b/include/linux/mfd/sun4i-gpadc.h
-index ea0ccf33a459..021f820f9d52 100644
---- a/include/linux/mfd/sun4i-gpadc.h
-+++ b/include/linux/mfd/sun4i-gpadc.h
-@@ -81,8 +81,8 @@
- #define SUN4I_GPADC_TEMP_DATA				0x20
- #define SUN4I_GPADC_DATA				0x24
- 
--#define SUN4I_GPADC_IRQ_FIFO_DATA			0
--#define SUN4I_GPADC_IRQ_TEMP_DATA			1
-+#define SUN4I_GPADC_IRQ_FIFO_DATA			1
-+#define SUN4I_GPADC_IRQ_TEMP_DATA			2
- 
- /* 10s delay before suspending the IP */
- #define SUN4I_GPADC_AUTOSUSPEND_DELAY			10000
 -- 
-2.39.2
-
+#Randy
