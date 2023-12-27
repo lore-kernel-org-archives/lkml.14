@@ -1,145 +1,213 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E514844C94
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 19:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tanzirh.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WKqzoTRn"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dbdb14f811cso6498458276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 11:36:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1703705770; x=1704310570; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=x/ThKy08dAX7RrEKVD7KhsQu3ictNFmWXD3vtZ7e4Tg=;
-        b=WKqzoTRnckjS414vpORgulBMvNowrjOvm7jNxMY96Kz1b0144JHw/3ihSHH9VdT+NM
-         Ua9xbcEZvHcYygnMeLiwtG9VKcKyjEqNettbXeLAkA0hHCQWUkNK0f2u8lohY54wReLP
-         sIe4SxHN0D+HZXIEsTJZtL6Ia2AHsQ0Ogk8hYdkuZnUfAcv54cPRI9ghohKzgMIqzWhS
-         h6P1nBhnjYE2IuA+X+s87Pxde84F867Gs6dbCifnDxvXgddvH5cXrTqXKlyMBsbLyzh8
-         pYXD7TUa7pEF9OGPHRqiNMXyN42xKUgx17G+HAHr4kjx46nuKKpUPFYWCCNQicqBAH0P
-         AVdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703705770; x=1704310570;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=x/ThKy08dAX7RrEKVD7KhsQu3ictNFmWXD3vtZ7e4Tg=;
-        b=TmmHcbmZTcFvzILZ/QgkMnBanNStcGEPIE+i9b6HCvhUD2nDTQ4icbj+qVtP6RQRTY
-         XqmeLKEGGZWor731damgnw+POFP4n0wblIxNNv+IE2aJJbH50wvYFtOGs/JgL5+w8bjl
-         JyZVizg4FygE3oe1QTkSqzverdkOtxvW4KHP2X4hMkKkUntGuTV+oK9ZMrgJS0NKso1O
-         gg0lfSAvuY2FVqw5+VZVMRNH6ndQrKkhWy/BekmfKpU0jQPvbGcmoIFZ6A3LWNbb4PL3
-         4bfjuXDuqqaymxmJNJA8E+x1nVJ36EwpIIia282pPfGVmsdQainiWrxZdRd3dJG7u+S3
-         1HtA==
-X-Gm-Message-State: AOJu0YzClFGpGr+rZ3tTNvq+OJY5f/KGShHyW70OSj5dE2D4hWFYzWn9
-	yMbfiphyCr4m8unYSxtNctrDyABo16AEOj+yg0k=
-X-Google-Smtp-Source: AGHT+IEnR5iCTlWA9t9gJQznTmXxFYuyouA6WQsNSewS+Yi7VXzqygHc/8mxfOHC/KHZwphEam/fb6SB0ptK
-X-Received: from tanz.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:c4a])
- (user=tanzirh job=sendgmr) by 2002:a05:6902:1366:b0:db5:41e9:aa1c with SMTP
- id bt6-20020a056902136600b00db541e9aa1cmr3672945ybb.11.1703705769840; Wed, 27
- Dec 2023 11:36:09 -0800 (PST)
-Date: Wed, 27 Dec 2023 19:36:06 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF4247762;
+	Wed, 27 Dec 2023 19:39:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 5.4.0)
+ id eba26f2d8613ebb7; Wed, 27 Dec 2023 19:39:21 +0100
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 14B55668E12;
+	Wed, 27 Dec 2023 19:39:21 +0100 (CET)
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Youngmin Nam <youngmin.nam@samsung.com>, Greg KH <gregkh@linuxfoundation.org>
+Cc: rafael@kernel.org, len.brown@intel.com, pavel@ucw.cz, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, d7271.choe@samsung.com, janghyuck.kim@samsung.com, hyesoo.yu@samsung.com
+Subject: Re: [BUG] mutex deadlock of dpm_resume() in low memory situation
+Date: Wed, 27 Dec 2023 19:39:20 +0100
+Message-ID: <5754861.DvuYhMxLoT@kreacher>
+In-Reply-To: <2023122701-mortify-deed-4e66@gregkh>
+References: <CGME20231227084252epcas2p3b063f7852f81f82cd0a31afd7f404db4@epcas2p3.samsung.com> <ZYvjiqX6EsL15moe@perf> <2023122701-mortify-deed-4e66@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAKV8jGUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI2NDIyMz3bKyxCLdNMu0NAMDI8PUZAszJaDSgqLUtMwKsDHRsbW1ADPxVEd WAAAA
-X-Developer-Key: i=tanzirh@google.com; a=ed25519; pk=UeRjcUcv5W9AeLGEbAe2+0LptQpcY+o1Zg0LHHo7VN4=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1703705768; l=2394;
- i=tanzirh@google.com; s=20231204; h=from:subject:message-id;
- bh=YYOS+rg4MrrHOITm+EcUL4mypN0hMEPdxC8NbfelIpQ=; b=DiawcQGLgjpTFfTk9TNt560wSfiOIuKafQrpSwZnJDDrCbjM6ID4yqX9ji3LYZPkj+EidFO4B
- SToX4Jb65DlC0tKhWY0JgYIZyAximZIXJVWm0R4iz/Zr6bL5mybcEe5
-X-Mailer: b4 0.12.4
-Message-ID: <20231227-vvar-v1-1-d2396e789179@google.com>
-Subject: [PATCH] x86/vdso: shrink vdso/vma.i via IWYU
-From: Tanzir Hasan <tanzirh@google.com>
-To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-kernel@vger.kernel.org, Nick Desaulniers <nnn@google.com>, 
-	Tanzir Hasan <tanzirh@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvkedrvddvledguddujecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedvffeuiedtgfdvtddugeeujedtffetteegfeekffdvfedttddtuefhgeefvdejhfenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopedutddprhgtphhtthhopeihohhunhhgmhhinhdrnhgrmhesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhgvnhdrsghrohifnhesihhnthgvlhdrtghomhdprhgtphhtthhopehprghvvghlsehutgifrdgtiidprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=10 Fuz1=10 Fuz2=10
 
-This diff uses an open source tool include-what-you-use (IWYU) to modify
-the include list, changing indirect includes to direct includes. IWYU is
-implemented using the IWYUScripts github repository which is a tool that
-is currently undergoing development. These changes seek to improve build
-times.
+On Wednesday, December 27, 2023 5:08:40 PM CET Greg KH wrote:
+> On Wed, Dec 27, 2023 at 05:42:50PM +0900, Youngmin Nam wrote:
+> > Could you look into this issue ?
+> 
+> Can you submit a patch that resolves the issue for you, as you have a
+> way to actually test this out?  That would be the quickest way to get it
+> resolved, and to help confirm that this is even an issue at all.
 
-This change to vdso/vma.c resulted in a preprocessed size of
-lib/string.i from 66348 lines to 54596 lines (-19%) for the x86
-defconfig.
+Something like the appended patch should be sufficient to address this AFAICS.
 
-Signed-off-by: Tanzir Hasan <tanzirh@google.com>
+I haven't tested it yet (will do so shortly), so all of the usual disclaimers
+apply.
+
+I think that it can be split into 2 patches, but for easier testing here
+it goes in one piece.
+
+Fixes: f2a424f6c613 ("PM / core: Introduce dpm_async_fn() helper")
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- arch/x86/entry/vdso/vma.c | 28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
+ drivers/base/power/main.c |   12 ++++--
+ include/linux/async.h     |    2 +
+ kernel/async.c            |   85 ++++++++++++++++++++++++++++++++++------------
+ 3 files changed, 73 insertions(+), 26 deletions(-)
 
-diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
-index 7645730dc228..fa601437b2c5 100644
---- a/arch/x86/entry/vdso/vma.c
-+++ b/arch/x86/entry/vdso/vma.c
-@@ -4,27 +4,32 @@
-  *
-  * This contains most of the x86 vDSO kernel-side code.
-  */
--#include <linux/mm.h>
-+#include <linux/bug.h>
-+#include <linux/build_bug.h>
-+#include <linux/compiler.h>
-+#include <linux/elf.h>
-+#include <linux/errno.h>
- #include <linux/err.h>
--#include <linux/sched.h>
--#include <linux/sched/task_stack.h>
--#include <linux/slab.h>
- #include <linux/init.h>
--#include <linux/random.h>
--#include <linux/elf.h>
--#include <linux/cpu.h>
-+#include <linux/kstrtox.h>
-+#include <linux/mm.h>
-+#include <linux/mm_types.h>
-+#include <linux/mmap_lock.h>
- #include <linux/ptrace.h>
-+#include <linux/random.h>
-+#include <linux/sched.h>
-+#include <linux/sched/task_stack.h>
-+#include <linux/stddef.h>
-+#include <linux/thread_info.h>
- #include <linux/time_namespace.h>
-+#include <linux/types.h>
- 
- #include <asm/pvclock.h>
- #include <asm/vgtod.h>
--#include <asm/proto.h>
- #include <asm/vdso.h>
- #include <asm/vvar.h>
--#include <asm/tlb.h>
- #include <asm/page.h>
--#include <asm/desc.h>
--#include <asm/cpufeature.h>
-+#include <asm/mmu.h>
- #include <clocksource/hyperv_timer.h>
- 
- #undef _ASM_X86_VVAR_H
-@@ -57,7 +62,6 @@ int __init init_vdso_image(const struct vdso_image *image)
+Index: linux-pm/kernel/async.c
+===================================================================
+--- linux-pm.orig/kernel/async.c
++++ linux-pm/kernel/async.c
+@@ -145,6 +145,39 @@ static void async_run_entry_fn(struct wo
+ 	wake_up(&async_done);
  }
  
- static const struct vm_special_mapping vvar_mapping;
--struct linux_binprm;
++static async_cookie_t __async_schedule_node_domain(async_func_t func,
++						   void *data, int node,
++						   struct async_domain *domain,
++						   struct async_entry *entry)
++{
++	async_cookie_t newcookie;
++	unsigned long flags;
++
++	INIT_LIST_HEAD(&entry->domain_list);
++	INIT_LIST_HEAD(&entry->global_list);
++	INIT_WORK(&entry->work, async_run_entry_fn);
++	entry->func = func;
++	entry->data = data;
++	entry->domain = domain;
++
++	spin_lock_irqsave(&async_lock, flags);
++
++	/* allocate cookie and queue */
++	newcookie = entry->cookie = next_cookie++;
++
++	list_add_tail(&entry->domain_list, &domain->pending);
++	if (domain->registered)
++		list_add_tail(&entry->global_list, &async_global_pending);
++
++	atomic_inc(&entry_count);
++	spin_unlock_irqrestore(&async_lock, flags);
++
++	/* schedule for execution */
++	queue_work_node(node, system_unbound_wq, &entry->work);
++
++	return newcookie;
++}
++
+ /**
+  * async_schedule_node_domain - NUMA specific version of async_schedule_domain
+  * @func: function to execute asynchronously
+@@ -186,29 +219,8 @@ async_cookie_t async_schedule_node_domai
+ 		func(data, newcookie);
+ 		return newcookie;
+ 	}
+-	INIT_LIST_HEAD(&entry->domain_list);
+-	INIT_LIST_HEAD(&entry->global_list);
+-	INIT_WORK(&entry->work, async_run_entry_fn);
+-	entry->func = func;
+-	entry->data = data;
+-	entry->domain = domain;
+-
+-	spin_lock_irqsave(&async_lock, flags);
+-
+-	/* allocate cookie and queue */
+-	newcookie = entry->cookie = next_cookie++;
+-
+-	list_add_tail(&entry->domain_list, &domain->pending);
+-	if (domain->registered)
+-		list_add_tail(&entry->global_list, &async_global_pending);
+-
+-	atomic_inc(&entry_count);
+-	spin_unlock_irqrestore(&async_lock, flags);
+-
+-	/* schedule for execution */
+-	queue_work_node(node, system_unbound_wq, &entry->work);
  
- static vm_fault_t vdso_fault(const struct vm_special_mapping *sm,
- 		      struct vm_area_struct *vma, struct vm_fault *vmf)
+-	return newcookie;
++	return __async_schedule_node_domain(func, data, node, domain, entry);
+ }
+ EXPORT_SYMBOL_GPL(async_schedule_node_domain);
+ 
+@@ -232,6 +244,35 @@ async_cookie_t async_schedule_node(async
+ EXPORT_SYMBOL_GPL(async_schedule_node);
+ 
+ /**
++ * async_schedule_dev_nocall - A simplified variant of async_schedule_dev()
++ * @func: function to execute asynchronously
++ * @dev: device argument to be passed to function
++ *
++ * @dev is used as both the argument for the function and to provide NUMA
++ * context for where to run the function.
++ *
++ * If the asynchronous execution of @func is scheduled successfully, return
++ * true. Otherwise, do nothing and return false, unlike async_schedule_dev()
++ * that will run the function synchronously then.
++ */
++bool async_schedule_dev_nocall(async_func_t func, struct device *dev)
++{
++	struct async_entry *entry;
++
++	entry = kzalloc(sizeof(struct async_entry), GFP_KERNEL);
++
++	/* Give up if there is no memory or too much work. */
++	if (!entry || atomic_read(&entry_count) > MAX_WORK) {
++		kfree(entry);
++		return false;
++	}
++
++	__async_schedule_node_domain(func, dev, dev_to_node(dev),
++				     &async_dfl_domain, entry);
++	return true;
++}
++
++/**
+  * async_synchronize_full - synchronize all asynchronous function calls
+  *
+  * This function waits until all asynchronous function calls have been done.
+Index: linux-pm/include/linux/async.h
+===================================================================
+--- linux-pm.orig/include/linux/async.h
++++ linux-pm/include/linux/async.h
+@@ -90,6 +90,8 @@ async_schedule_dev(async_func_t func, st
+ 	return async_schedule_node(func, dev, dev_to_node(dev));
+ }
+ 
++bool async_schedule_dev_nocall(async_func_t func, struct device *dev);
++
+ /**
+  * async_schedule_dev_domain - A device specific version of async_schedule_domain
+  * @func: function to execute asynchronously
+Index: linux-pm/drivers/base/power/main.c
+===================================================================
+--- linux-pm.orig/drivers/base/power/main.c
++++ linux-pm/drivers/base/power/main.c
+@@ -668,11 +668,15 @@ static bool dpm_async_fn(struct device *
+ {
+ 	reinit_completion(&dev->power.completion);
+ 
+-	if (is_async(dev)) {
+-		get_device(dev);
+-		async_schedule_dev(func, dev);
++	if (!is_async(dev))
++		return false;
++
++	get_device(dev);
++
++	if (async_schedule_dev_nocall(func, dev))
+ 		return true;
+-	}
++
++	put_device(dev);
+ 
+ 	return false;
+ }
 
----
-base-commit: fbafc3e621c3f4ded43720fdb1d6ce1728ec664e
-change-id: 20231226-vvar-f9ff0021ec86
 
-Best regards,
--- 
-Tanzir Hasan <tanzirh@google.com>
 
