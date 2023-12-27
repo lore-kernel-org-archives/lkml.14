@@ -1,255 +1,234 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2058.outbound.protection.outlook.com [40.107.243.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48104594F;
-	Wed, 27 Dec 2023 15:42:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=memverge.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4916A45964;
+	Wed, 27 Dec 2023 15:43:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="yEgtBfpr"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JSSkc1zuSdVQBvssN4JMXdsqdsY4GcT6JWW6JbDcq3s7l4TyR2pwbNfUfsjycFaol8hhd3uiI8ZtIVw3Zk5uCAbZ+SNuz35bgbkynCLQEk/WGLyXnEw0PuMQ3pA1qbh6xhMXYL+w/XZes5R/CZCp92wnRHeSW8Yyd48NJeyP+mfxElm9ictlzuye1t8shQMmSxX7YQzf/L4000uU4VY5lnkHnO3CJcPP9Db9Kr1WXOzyNG9k6jBaXHeQmBz1yodiMNErK5G5Ui3NyADO2k8whIaOAY1cu/GHkOFvK7ezR+KfdCRupkNTt0QXMplD3GXjxYvJEAipsvoxhgUQEhel1w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lV/r3wrzv/P1cpHKGf1oE/q17CRSaA7h4lEzm91iBvQ=;
- b=Z5qbIOL0NyJhvcK2ZCs2v3mfhhXmulMN4TeI2v1PkWN3GQyQxrzwRtOVpN1cirLI4anFalyvftDLUKVFO8EoqvOQPdAfJnjl5Vga27/I/LFedjDlK20g3mjJU6yoi5VPpOGzWM5vXMlf8tB1J9oYNNJ7sp8w5VvO4nhvexehet27ea0rMdQKUzC0Fey5VfqNGi6KaKhWhaOZ+48fv5abg2RWxOOTNeMgBzLNnL34QySrvvvQhQPMHLsudPmbghde4lWeLTylQz0U1TlqSeyhwPVEIfrEl+L7cK2oXFUkiRDxh0uQaYHx9SBgVNuk8kR9Ao2OTCGzgCM8051urQ6gig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lV/r3wrzv/P1cpHKGf1oE/q17CRSaA7h4lEzm91iBvQ=;
- b=yEgtBfprCs2+LD3Jo/G4VjyeuJNZEvlgGc3KPDHWOrD0VehIrbnarerLdllvRx9KtDVs9wLoFhcHrPEVq34lVr3jmYuQYV/SCuwacVZX+di9U+Pu5aXv5IWETxo+4CpzPoEiRKmnbZjnS2Ju97dxFEus6+ZGMw2unbie19a4Uv0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by CY8PR17MB6577.namprd17.prod.outlook.com (2603:10b6:930:72::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.27; Wed, 27 Dec
- 2023 15:42:13 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::381c:7f11:1028:15f4]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::381c:7f11:1028:15f4%5]) with mapi id 15.20.7113.027; Wed, 27 Dec 2023
- 15:42:13 +0000
-Date: Tue, 26 Dec 2023 02:01:57 -0500
-From: Gregory Price <gregory.price@memverge.com>
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Gregory Price <gourry.memverge@gmail.com>, linux-mm@kvack.org,
-	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-	x86@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
-	tglx@linutronix.de, luto@kernel.org, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com, mhocko@kernel.org,
-	tj@kernel.org, corbet@lwn.net, rakie.kim@sk.com,
-	hyeongtak.ji@sk.com, honggyu.kim@sk.com, vtavarespetr@micron.com,
-	peterz@infradead.org, jgroves@micron.com, ravis.opensrc@micron.com,
-	sthanneeru@micron.com, emirakhur@micron.com, Hasan.Maruf@amd.com,
-	seungjun.ha@samsung.com,
-	Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>
-Subject: Re: [PATCH v5 02/11] mm/mempolicy: introduce
- MPOL_WEIGHTED_INTERLEAVE for weighted interleaving
-Message-ID: <ZYp6ZRLZQVtTHest@memverge.com>
-References: <20231223181101.1954-1-gregory.price@memverge.com>
- <20231223181101.1954-3-gregory.price@memverge.com>
- <8734vof3kq.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8734vof3kq.fsf@yhuang6-desk2.ccr.corp.intel.com>
-X-ClientProxiedBy: SJ0PR03CA0362.namprd03.prod.outlook.com
- (2603:10b6:a03:3a1::7) To SJ0PR17MB5512.namprd17.prod.outlook.com
- (2603:10b6:a03:394::19)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="foVj4Ffv"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-78109a21144so454966185a.0;
+        Wed, 27 Dec 2023 07:43:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703691815; x=1704296615; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TBCXKxvUXWJQToqFmz1xAaXGNoJI0qbk9JjCq2X05Fg=;
+        b=foVj4FfvNwZUY9T6gprfxlcylO6MYYUZgE8E2WGycnH5KYEEoi3zkGJ2dAGQt6XxuA
+         eSbrxRmt4Kz/1uYPEPkDpok3tO/iWMW100agURyVGxvBXGCpxGUXc8wkAi5sm8jRsucW
+         AmXMRoD5x7CxlGf6/wjXTrpkSR5rAdxUd4GjUd7WR51d5hLizeShQPo3QNj4hdIwjhiC
+         9OzRJSPs7fbrWRRLSRZjcve34GJRsuZEX50x8aZe0y28HexiGEqR84++daxkNugNoFB6
+         PSysov/qPdJqLLPyH5CJH9QLrjdeb/Zvz2jwJj+N1pgXJi2ieac5DHvascZnrzM1OE14
+         N0sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703691815; x=1704296615;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=TBCXKxvUXWJQToqFmz1xAaXGNoJI0qbk9JjCq2X05Fg=;
+        b=hCJXSjcEsYNLv7B3sW883eI9aFJbZn0kFLcjXzNtGqgI/Mly247RcJHoycUQArShnB
+         8fnFO53Q3bkmbw6QYfTWB8lqggJk9ZwbwmP2yxFOsApWypl8OoWz2JforrN7ct+6G6EX
+         Y/BwFOZei2U0c4qVUzHOHAg8ONDbWpPHaP7g03DaxIPuQJZcjH/+eNauGLJ94tDwMMCI
+         0QrG9k5ce7kw65JuZO/Oj/xj1aLxn2UroA186JFm+gDtfoWpzYrSnqzPn4H15Bzb/zpj
+         1iO7WADBdyun0J3OlcsXF3PbTFd9P2MnmM7Aq4M9ZSg8/CA2QjBeD5i/pWPxmjSRLmyi
+         76vQ==
+X-Gm-Message-State: AOJu0YwzYCl/FiMWyT+G8jbpu88e8kbrasJ7tpLpQQdD0fy4Ap3sUihm
+	gMkLvW93rg/jfBpI2fdovv4=
+X-Google-Smtp-Source: AGHT+IG9tJpj8kWpbPMBMwXnggcWk7l+AJHgsEEDNt2oG3A0S9U97AQlK74BQGim4xwZyRHz6paKoA==
+X-Received: by 2002:a05:620a:f14:b0:781:65d9:ec8b with SMTP id v20-20020a05620a0f1400b0078165d9ec8bmr759485qkl.100.1703691815106;
+        Wed, 27 Dec 2023 07:43:35 -0800 (PST)
+Received: from localhost (48.230.85.34.bc.googleusercontent.com. [34.85.230.48])
+        by smtp.gmail.com with ESMTPSA id h15-20020a05620a21cf00b007816608002asm227720qka.19.2023.12.27.07.43.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Dec 2023 07:43:34 -0800 (PST)
+Date: Wed, 27 Dec 2023 10:43:34 -0500
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>, 
+ Maciej Fijalkowski <maciej.fijalkowski@intel.com>, 
+ Michal Kubiak <michal.kubiak@intel.com>, 
+ Larysa Zaremba <larysa.zaremba@intel.com>, 
+ Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ intel-wired-lan@lists.osuosl.org, 
+ netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+Message-ID: <658c46269aa52_a33e629442@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20231223025554.2316836-2-aleksander.lobakin@intel.com>
+References: <20231223025554.2316836-1-aleksander.lobakin@intel.com>
+ <20231223025554.2316836-2-aleksander.lobakin@intel.com>
+Subject: Re: [PATCH RFC net-next 01/34] idpf: reuse libie's definitions of
+ parsed ptype structures
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|CY8PR17MB6577:EE_
-X-MS-Office365-Filtering-Correlation-Id: ce2f5ab2-42cc-416c-27d8-08dc06f2656e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Nm1B0v2UmFowLmbgxX3TNFd457UVbINZGbzWRbmGFpZYNVhf22QbLUHDyMaTrK2lkhrjrNLYg5ccU1byHhug+m/VygQonT+UThhyltWC7FquMskuNUnad7sSMS35znAgZeEPEClkTOjBO8f8F2SKpfgRDZAvIPHsRP4+HJr2zegIlwWBXY4v+YIpi2879dlUA3dPpTPKIZbw3/PWpZmVqeLMgCxBWizG71v1Ui4dxC/gdNlsugzvw2piktVcqf0I2BEuRXNvsEByqNY43q3fXUwoh53w/4eBSMkHaMykq+b+Y+JMWDH98NhG8cG/0EDLRKd6EdvxHXWZ1oboiCbx/Nr3+CEMIZinjrfoPeuBxJklXxbLKXAYa2PA70nceU2fmGfJiAMJNlgwcjUTp88SKt+WRD5n5yOHDLaCWzm3jE6t7XGDwdzuxDW/mdN7MZEwozBLTxdNe/uf4mcQ9ST7t6eLgcKR8sBNVlDEQ7//St+g5o2x09qVCWerpWW9uGL/AXz0TdNi4Gh3DPwtLPzdsTxP/FLqSHHpH3Gb8uPGvotSgLpDhf/pmkj50T8AYirsZi/uCnaDHzBPSJwbKGsblIuAKo1ZJWvtvskFUSV8CvREHr1EWrcwUboTvfsP3j64
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(346002)(376002)(39840400004)(396003)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(2616005)(4326008)(6512007)(26005)(8676002)(66946007)(54906003)(66476007)(66556008)(316002)(6916009)(83380400001)(6666004)(6506007)(38100700002)(8936002)(478600001)(6486002)(86362001)(44832011)(5660300002)(7416002)(7406005)(2906002)(36756003)(41300700001)(16393002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?BZSFl38f5Hmiq22pASl6SDhMkbWNFN/FwD1hEU6qKJkcJ57BVoDOUU6AIbZh?=
- =?us-ascii?Q?xTc//WMbmpFBayokTsYcByhZoTO1fAbKKU0rQsWvWl11pb86ftEBOAAqokLE?=
- =?us-ascii?Q?gOahcgwVP2ovx8np0E3MUzGVlHxpztDq9YzcXghquJ0dyCw0S0D5jUzt8wdz?=
- =?us-ascii?Q?FJ1wwMm1oTKx9AYZWcBAoi7Au+WQ+TsXpsjLUVqaF244QdGeNuPXHAi1CFxo?=
- =?us-ascii?Q?poaWr40CZDZbzPN6Wc1gAZ9vuH2Zxm0OjwhLltA8pwiH6q1mSmAUHDvSddhs?=
- =?us-ascii?Q?VYV4p/BrdvIzhqrYPjPFcUELsomI9nB8of0UpbXNWOeOr2KfkvyNxF5bNnih?=
- =?us-ascii?Q?Ld6CxknQY/1QCDq2l6+VEH2S1H/Xt4qPajuXviq3pJQSWebySq0HrAiERJBQ?=
- =?us-ascii?Q?AyyVY5xyzz8/bQfh0wBW0EXGCjk2vmxxtmVGJaYuF15ii3xaslJ3WEhhDmWG?=
- =?us-ascii?Q?6voRkji0Zo2feTrpQfZzNSr09Yv2QosR0tUD135jViZYIvWFKUrzXEIUdiAC?=
- =?us-ascii?Q?IkKtdlYqwOrNo2LQEmsJv0GoC+v6F5z1Tr8iT7R328t5vUJ/e2nd5lVJox7B?=
- =?us-ascii?Q?W59I3EbzaQ9dcShCxUWx67MDKAIWzmuq40LYTSnjTqrWV1CfyBS1Mj/LTIrA?=
- =?us-ascii?Q?bvXCDIhjMwKIWf9wUUwNbQrZMzEH10quwgJ5anhzmxhsxZJ4zrKn2mY3oYKl?=
- =?us-ascii?Q?KsRbmWvPF6N9sZ0xOeN4P6hsQ16h98Cu4257eCe+VIkuO0hQF/JsNwoNFmfy?=
- =?us-ascii?Q?UE7cQm/sIloV4h1qcYemFGylrizLUF+b1urJLgPtHpmLTglFnKxtpv1iDj6z?=
- =?us-ascii?Q?uO8rmAaREI7Q1qCRA3OTQBKnxVfLLpHPgCAP8abK9ox3Cff9Rw4U35rWdQCI?=
- =?us-ascii?Q?FjsjjGCyC8K0IbY5a/uZ0mGqszSw2jxYLdA+argOn6ARzM1yL2n3UQuozKvV?=
- =?us-ascii?Q?cEOgOHV/CcaB/BLcVWS1rCl726u/XxGQactqke4OiFsT/K+prYI1JmswPC2q?=
- =?us-ascii?Q?L0SnL1gtRq54HGtrHzkX2c/iu02JDSWIcVfaIscjREmedcua/vNORWwbFU6w?=
- =?us-ascii?Q?kV9e+MLGcE4iE5hEJKUgO0OQpRqw+wTTUksxY0cd6OQLlmsBJesO5U40TdUt?=
- =?us-ascii?Q?4TBtKC/zEdi6nB4VVOIWWJi+icrg9qC+gTyv8//A3j8eVfFeyflJLeOK+zLp?=
- =?us-ascii?Q?yMGOgBC/UT9tJtmyYX9wILTf3aIVANTC4INZCNGuim/M5v7pPcUoYZqBRxar?=
- =?us-ascii?Q?Aq5JYgtLLF83VEWBXqIWhTafXsz8uZrZFzIGERz79gFn0M8MsqRboQswtNhP?=
- =?us-ascii?Q?TPzdT+oD4t7+69VwP9ybLGOj2MIHGfUBu84shAB65r3Uoz0TjmnS40RKfPLq?=
- =?us-ascii?Q?WaUli35nbLyIt2lJGNzkBp1si1zNmfuWkt5yIfLyGdlUra5OxVLOK9yUTy+r?=
- =?us-ascii?Q?t1mtAMe/ta6HAPDXZtIZ74FXSVHJtBONicOwyDRbG8y0t/UQyCntmH5+osQ7?=
- =?us-ascii?Q?Q2Ii8I2ofSZUzJbSUGTAtXFWgz67r5HgMm30F5jVORYic3xBqlXgW6HQP7ia?=
- =?us-ascii?Q?7MjrL/Qb/8GhfTWRsInMtFanGf9Q/UklVUvLI2sVHdaGt92ZjFC5b+LogBJX?=
- =?us-ascii?Q?5Q=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce2f5ab2-42cc-416c-27d8-08dc06f2656e
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Dec 2023 15:42:13.5523
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: J2PzBkEhcMNspzWJW55h0AcnfFx2sbMgw6jSzlJ0VPWP4j+cyeeTBvi+VQ31xx/4FPEsFzpv6PVyw1ACbyr3bOdpGx+Q4LubBWE7wkVh7AI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR17MB6577
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Dec 27, 2023 at 04:32:37PM +0800, Huang, Ying wrote:
-> Gregory Price <gourry.memverge@gmail.com> writes:
+Alexander Lobakin wrote:
+> idpf's in-kernel parsed ptype structure is almost identical to the one
+> used in the previous Intel drivers, which means it can be converted to
+> use libie's definitions and even helpers. The only difference is that
+> it doesn't use a constant table, rather than one obtained from the
+> device.
+> Remove the driver counterpart and use libie's helpers for hashes and
+> checksums. This slightly optimizes skb fields processing due to faster
+> checks.
 > 
-> > +static unsigned int weighted_interleave_nid(struct mempolicy *pol, pgoff_t ilx)
-> > +{
-> > +	nodemask_t nodemask = pol->nodes;
-> > +	unsigned int target, weight_total = 0;
-> > +	int nid;
-> > +	unsigned char weights[MAX_NUMNODES];
+> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+> ---
+>  drivers/net/ethernet/intel/Kconfig            |   1 +
+>  drivers/net/ethernet/intel/idpf/idpf.h        |   2 +-
+>  drivers/net/ethernet/intel/idpf/idpf_main.c   |   1 +
+>  .../ethernet/intel/idpf/idpf_singleq_txrx.c   |  87 +++++++--------
+>  drivers/net/ethernet/intel/idpf/idpf_txrx.c   | 101 ++++++------------
+>  drivers/net/ethernet/intel/idpf/idpf_txrx.h   |  88 +--------------
+>  .../net/ethernet/intel/idpf/idpf_virtchnl.c   |  54 ++++++----
+>  7 files changed, 110 insertions(+), 224 deletions(-)
 > 
-> MAX_NUMNODSE could be as large as 1024.  1KB stack space may be too
-> large?
-> 
+> diff --git a/drivers/net/ethernet/intel/Kconfig b/drivers/net/ethernet/intel/Kconfig
+> index c7da7d05d93e..0db1aa36866e 100644
+> --- a/drivers/net/ethernet/intel/Kconfig
+> +++ b/drivers/net/ethernet/intel/Kconfig
+> @@ -378,6 +378,7 @@ config IDPF
+>  	tristate "Intel(R) Infrastructure Data Path Function Support"
+>  	depends on PCI_MSI
+>  	select DIMLIB
+> +	select LIBIE
+>  	select PAGE_POOL
+>  	select PAGE_POOL_STATS
+>  	help
+> diff --git a/drivers/net/ethernet/intel/idpf/idpf.h b/drivers/net/ethernet/intel/idpf/idpf.h
+> index 0acc125decb3..8342df0f4f3d 100644
+> --- a/drivers/net/ethernet/intel/idpf/idpf.h
+> +++ b/drivers/net/ethernet/intel/idpf/idpf.h
+> @@ -385,7 +385,7 @@ struct idpf_vport {
+>  	u16 num_rxq_grp;
+>  	struct idpf_rxq_group *rxq_grps;
+>  	u32 rxq_model;
+> -	struct idpf_rx_ptype_decoded rx_ptype_lkup[IDPF_RX_MAX_PTYPE];
+> +	struct libie_rx_ptype_parsed rx_ptype_lkup[IDPF_RX_MAX_PTYPE];
+>  
+>  	struct idpf_adapter *adapter;
+>  	struct net_device *netdev;
+> diff --git a/drivers/net/ethernet/intel/idpf/idpf_main.c b/drivers/net/ethernet/intel/idpf/idpf_main.c
+> index e1febc74cefd..6471158e6f6b 100644
+> --- a/drivers/net/ethernet/intel/idpf/idpf_main.c
+> +++ b/drivers/net/ethernet/intel/idpf/idpf_main.c
+> @@ -7,6 +7,7 @@
+>  #define DRV_SUMMARY	"Intel(R) Infrastructure Data Path Function Linux Driver"
+>  
+>  MODULE_DESCRIPTION(DRV_SUMMARY);
+> +MODULE_IMPORT_NS(LIBIE);
+>  MODULE_LICENSE("GPL");
+>  
+>  /**
+> diff --git a/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c b/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c
+> index 8122a0cc97de..e58e08c9997d 100644
+> --- a/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c
+> +++ b/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c
+> @@ -636,75 +636,64 @@ static bool idpf_rx_singleq_is_non_eop(struct idpf_queue *rxq,
+>   * @rxq: Rx ring being processed
+>   * @skb: skb currently being received and modified
+>   * @csum_bits: checksum bits from descriptor
+> - * @ptype: the packet type decoded by hardware
+> + * @parsed: the packet type parsed by hardware
+>   *
+>   * skb->protocol must be set before this function is called
+>   */
+>  static void idpf_rx_singleq_csum(struct idpf_queue *rxq, struct sk_buff *skb,
+> -				 struct idpf_rx_csum_decoded *csum_bits,
+> -				 u16 ptype)
+> +				 struct idpf_rx_csum_decoded csum_bits,
+> +				 struct libie_rx_ptype_parsed parsed)
+>  {
+> -	struct idpf_rx_ptype_decoded decoded;
+>  	bool ipv4, ipv6;
+>  
+>  	/* check if Rx checksum is enabled */
+> -	if (unlikely(!(rxq->vport->netdev->features & NETIF_F_RXCSUM)))
+> +	if (!libie_has_rx_checksum(rxq->vport->netdev, parsed))
+>  		return;
+>  
+>  	/* check if HW has decoded the packet and checksum */
+> -	if (unlikely(!(csum_bits->l3l4p)))
+> +	if (unlikely(!csum_bits.l3l4p))
+>  		return;
+>  
+> -	decoded = rxq->vport->rx_ptype_lkup[ptype];
+> -	if (unlikely(!(decoded.known && decoded.outer_ip)))
+> +	if (unlikely(parsed.outer_ip == LIBIE_RX_PTYPE_OUTER_L2))
+>  		return;
+>  
+> -	ipv4 = IDPF_RX_PTYPE_TO_IPV(&decoded, IDPF_RX_PTYPE_OUTER_IPV4);
+> -	ipv6 = IDPF_RX_PTYPE_TO_IPV(&decoded, IDPF_RX_PTYPE_OUTER_IPV6);
+> +	ipv4 = parsed.outer_ip == LIBIE_RX_PTYPE_OUTER_IPV4;
+> +	ipv6 = parsed.outer_ip == LIBIE_RX_PTYPE_OUTER_IPV6;
+>  
+>  	/* Check if there were any checksum errors */
+> -	if (unlikely(ipv4 && (csum_bits->ipe || csum_bits->eipe)))
+> +	if (unlikely(ipv4 && (csum_bits.ipe || csum_bits.eipe)))
+>  		goto checksum_fail;
+>  
+>  	/* Device could not do any checksum offload for certain extension
+>  	 * headers as indicated by setting IPV6EXADD bit
+>  	 */
+> -	if (unlikely(ipv6 && csum_bits->ipv6exadd))
+> +	if (unlikely(ipv6 && csum_bits.ipv6exadd))
+>  		return;
+>  
+>  	/* check for L4 errors and handle packets that were not able to be
+>  	 * checksummed due to arrival speed
+>  	 */
+> -	if (unlikely(csum_bits->l4e))
+> +	if (unlikely(csum_bits.l4e))
+>  		goto checksum_fail;
+>  
+> -	if (unlikely(csum_bits->nat && csum_bits->eudpe))
+> +	if (unlikely(csum_bits.nat && csum_bits.eudpe))
+>  		goto checksum_fail;
+>  
+>  	/* Handle packets that were not able to be checksummed due to arrival
+>  	 * speed, in this case the stack can compute the csum.
+>  	 */
+> -	if (unlikely(csum_bits->pprs))
+> +	if (unlikely(csum_bits.pprs))
+>  		return;
+>  
+>  	/* If there is an outer header present that might contain a checksum
+>  	 * we need to bump the checksum level by 1 to reflect the fact that
+>  	 * we are indicating we validated the inner checksum.
+>  	 */
+> -	if (decoded.tunnel_type >= IDPF_RX_PTYPE_TUNNEL_IP_GRENAT)
+> +	if (parsed.tunnel_type >= LIBIE_RX_PTYPE_TUNNEL_IP_GRENAT)
+>  		skb->csum_level = 1;
+>  
+> -	/* Only report checksum unnecessary for ICMP, TCP, UDP, or SCTP */
+> -	switch (decoded.inner_prot) {
+> -	case IDPF_RX_PTYPE_INNER_PROT_ICMP:
+> -	case IDPF_RX_PTYPE_INNER_PROT_TCP:
+> -	case IDPF_RX_PTYPE_INNER_PROT_UDP:
+> -	case IDPF_RX_PTYPE_INNER_PROT_SCTP:
+> -		skb->ip_summed = CHECKSUM_UNNECESSARY;
+> -		return;
+> -	default:
+> -		return;
+> -	}
+> +	skb->ip_summed = CHECKSUM_UNNECESSARY;
+> +	return;
 
-I've been struggling with a good solution to this.  We need a local copy
-of weights to prevent weights from changing out from under us during
-allocation (which may take quite some time), but it seemed unwise to
-to allocate 1KB heap in this particular path.
+Is it intentional to change from CHECKSUM_NONE to CHECKSUM_UNNECESSARY
+in the default case?
 
-Is my concern unfounded?  If so, I can go ahead and add the allocation
-code.
-
-> > +	unsigned char weight;
-> > +
-> > +	barrier();
-> 
-> Memory barrier needs comments.
-> 
-
-Barrier is to stabilize nodemask on the stack, but yes i'll carry the
-comment from interleave_nid into this barrier as well.
-
-> > +
-> > +	/* first ensure we have a valid nodemask */
-> > +	nid = first_node(nodemask);
-> > +	if (nid == MAX_NUMNODES)
-> > +		return nid;
-> 
-> It appears that this isn't necessary, because we can check whether
-> weight_total == 0 after the next loop.
-> 
-
-fair, will snip.
-
-> > +
-> > +	/* Then collect weights on stack and calculate totals */
-> > +	for_each_node_mask(nid, nodemask) {
-> > +		weight = iw_table[nid];
-> > +		weight_total += weight;
-> > +		weights[nid] = weight;
-> > +	}
-> > +
-> > +	/* Finally, calculate the node offset based on totals */
-> > +	target = (unsigned int)ilx % weight_total;
-> 
-> Why use type casting?
-> 
-
-Artifact of old prototypes, snipped.
-
-> > +
-> > +	/* Stabilize the nodemask on the stack */
-> > +	barrier();
-> 
-> I don't think barrier() is needed to wait for memory operations for
-> stack.  It's usually used for cross-processor memory order.
->
-
-This is present in the old interleave code.  To the best of my
-understanding, the concern is for mempolicy->nodemask rebinding that can
-occur when cgroups.cpusets.mems_allowed changes.
-
-so we can't iterate over (mempolicy->nodemask), we have to take a local
-copy.
-
-My *best* understanding of the barrier here is to prevent the compiler
-from reordering operations such that it attempts to optimize out the
-local copy (or do lazy-fetch).
-
-It is present in the original interleave code, so I pulled it forward to
-this, but I have not tested whether this is a bit paranoid or not.
-
-from `interleave_nid`:
-
- /*
-  * The barrier will stabilize the nodemask in a register or on
-  * the stack so that it will stop changing under the code.
-  *
-  * Between first_node() and next_node(), pol->nodes could be changed
-  * by other threads. So we put pol->nodes in a local stack.
-  */
- barrier();
-
-> > +		/* Otherwise we adjust nr_pages down, and continue from there */
-> > +		rem_pages -= pol->wil.cur_weight;
-> > +		pol->wil.cur_weight = 0;
-> > +		prev_node = node;
-> 
-> If pol->wil.cur_weight == 0, prev_node will be used without being
-> initialized below.
-> 
-
-pol->wil.cur_weight is not used below.
-
-> > +	}
-> > +
-> > +	/* Now we can continue allocating as if from 0 instead of an offset */
-> > +	rounds = rem_pages / weight_total;
-> > +	delta = rem_pages % weight_total;
-> > +	for (i = 0; i < nnodes; i++) {
-> > +		node = next_node_in(prev_node, nodes);
-> > +		weight = weights[node];
-> > +		node_pages = weight * rounds;
-> > +		if (delta) {
-> > +			if (delta > weight) {
-> > +				node_pages += weight;
-> > +				delta -= weight;
-> > +			} else {
-> > +				node_pages += delta;
-> > +				delta = 0;
-> > +			}
-> > +		}
-> > +		/* We may not make it all the way around */
-> > +		if (!node_pages)
-> > +			break;
-> > +		/* If an over-allocation would occur, floor it */
-> > +		if (node_pages + total_allocated > nr_pages) {
-> 
-> Why is this possible?
-> 
-
-this may have been a paranoid artifact from an early prototype, will
-snip and validate.
-
-~Gregory
+I suppose so, as idpf_rx_csum (the splitq equivalent) does the same
+(bar CHECKSUM_COMPLETE depending on descriptor bit).
