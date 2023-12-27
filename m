@@ -1,124 +1,91 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-200-110.mailtrap.live (smtp-200-110.mailtrap.live [5.181.200.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1A444367;
-	Wed, 27 Dec 2023 11:06:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885C444381
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 11:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=tomzanna.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dnpw5703xzovsw6w.tomzanna.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="izwMHxgy"
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3bb732e7d78so3944796b6e.0;
-        Wed, 27 Dec 2023 03:06:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=smtp.mailtrap.live header.i=@smtp.mailtrap.live header.b="mi65+ORg";
+	dkim=pass (2048-bit key) header.d=tomzanna.com header.i=@tomzanna.com header.b="hAcAYe3X"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703675171; x=1704279971; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EevuVU7B1VpO5whOxzp7/7YeGnwHG8aglB1XAt3LupU=;
-        b=izwMHxgyAHcRsrrwS4nmGZJV+BWlE6t1c99jaEhhuIko5r/vNc4R4p2wCyYkkY42O0
-         eo1pRigBKyZ/BRkzVI70IBGmYu+r4m9VIpEgYB76hJF2OQv8+iQgZRkv/LHBJ0wSzmCY
-         wAS5fX7t4I8gRoCKu1IRPpxXZhAQvLiWifnxXMnFkoTJPFRX7DjwwVel67MRf3eRDiZ+
-         zhnzRfW7Az1du9LWOuzLp+xHtyoRHKEpWL4MGPOxcBp85Bh7R6Fpuiov/R1gaWb3PJV4
-         rMCmOLCmafD9kALIiYMETEoWrFLzAFDnrn6D73N3v1UMma10Or117UATgZX10sdQcRGA
-         vbqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703675171; x=1704279971;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EevuVU7B1VpO5whOxzp7/7YeGnwHG8aglB1XAt3LupU=;
-        b=e7dMTTKNK0fn+hY/j5y8SUmSBYtE8Fit4h5e1IKdT7ML/iNYGbdcLOn0xdKW+2Xir1
-         d5CJt6F7Id6wNjt6yrnuf2CzLflZ+rjaQYb1FsRJ25tSINupDL2kWFYnkTwMQg+DJVJ3
-         AomRK8vdYMFhjITTfpjBcsAVCcZsHuJucBkXf3YTgoddZz/I9wxk3WmZhF7nEuAjgKIu
-         wwqvS84FH25coTAs2OyLvXZqed9bN+aKt0pUaK0ztCsKH5bxLnl8a1lIDFWtQEa3IDM1
-         RzGOU2ds+StgfnKFvDdX3M9J4BgDD/wLJtiZlCuNzQxrNvv3aDzaEdT/o3IXLODZ2GdI
-         IDgw==
-X-Gm-Message-State: AOJu0YwCJBv/i5kEZEmWrFMskrC6WWcLu5buWAseYwjRzJxXF2R/hjPV
-	GXH4dwyE56PFqD7eIXJiKIFjnk0kyClGhKQKjoE=
-X-Google-Smtp-Source: AGHT+IE7c6RgoZ0Rzso0lnnv2BvbhdfJLe/NdPlCqK22iQiH4myB+Nhp1ElUFDpaxlfq6LyBoERNAR4yV0lCKmpIwgA=
-X-Received: by 2002:a05:6808:3c93:b0:3bb:c935:3e0e with SMTP id
- gs19-20020a0568083c9300b003bbc9353e0emr416570oib.73.1703675171409; Wed, 27
- Dec 2023 03:06:11 -0800 (PST)
+	d=smtp.mailtrap.live; s=rwmt2;
+	h=content-transfer-encoding:mime-version:references:in-reply-to:message-id:date:
+	 subject:cc:to:from:feedback-id:from;
+	bh=sjZ5PCBt3D6/F+ea/52Yl440+MaFKi3LYeY4qE+sGwg=;
+	b=mi65+ORg4i2xzRK2zfahumJwUlQab5pFAdf3t/ype3St49VcqTkhm15gPfC++3YrUJsiKLVZU5WHb
+	 HoubKn5KIXl276IVVpnp+cI19BHncxCLNgRdcJI1aVHm2B4dc4qWgDnN0nUz+IquhMOXfHUTEMlFxQ
+	 bOI918P365AevRlQRt1Tzuo7L0gXzLiGfcty4Dik3PEo8I/r5wZr6eEKfYSC4AMJA1zTTUeora3DCG
+	 pmmuszcEv3IaO3waVnzxrE4bHLzd689gzizzzwr2N3uP/AzgSwZBGE65jKncCm8XLF014rntofJRZ0
+	 7mG+rwJqEbALQ9REQpHqhrMUK7NHJCA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=tomzanna.com; s=rwmt2;
+	h=content-transfer-encoding:mime-version:references:in-reply-to:message-id:date:
+	 subject:cc:to:from:feedback-id:from;
+	bh=sjZ5PCBt3D6/F+ea/52Yl440+MaFKi3LYeY4qE+sGwg=;
+	b=hAcAYe3XwPVW381whTL3e9fdc43hYKvr5VNGFEDD0vVtXxlXRRNk11Tk5dYSss7Ve+tUJqqW2lItI
+	 yffb1XUBsXK1b/VYVq1egF0SZ8z6amzpEBQO9wmX2lhOzzXBCDHK3CPs8lE8a4wv3o1KuGRpNPwHq4
+	 LKPzvJUAPsIgEvmJdVyuMDSsbh9R3gRWno0YLodtreLbXTfDiiJ6hj6SVPwnpaMwcB8b372ERI0rFg
+	 PTg7FmIv8q1UmqgcC+cQDuFhyz2uKSXDVToEqZpFSvUPYcHHA23Hx2ApVMlWXaS4XCf7v3TCVUwjTI
+	 GJ9EDbjzgs58nUmPE2k59107wLtlWtA==
+X-Report-Abuse-To: abuse@mailtrap.io
+Received: from tomzanna.com by smtp.mailtrap.live with ESMTPSA
+ 9a053d86-a4a4-11ee-9113-0a7c3e8c2873; Wed, Dec 27 2023 10:42:23 GMT
+Feedback-ID: default:73696:transactional:mailtrap.io
+X-MT-Message: 9ea3f0c0-a4a4-11ee-0000-f10c5eea18c1
+X-MT-Domain: 6f3581fd-7900-47b4-af84-713a10caaa6f
+X-MT-Account: 173bcdf6-cb1f-4895-a024-3acc438f33ef
+From: Tommaso Zanotti <kernel@tomzanna.com>
+To: broonie@kernel.org
+Cc: Basavaraj.Hiregoudar@amd.com,
+	Sunil-kumar.Dommati@amd.com,
+	Syed.SabaKareem@amd.com,
+	Vijendar.Mukunda@amd.com,
+	alsa-devel@alsa-project.org,
+	bagasdotme@gmail.com,
+	kuninori.morimoto.gx@renesas.com,
+	lgirdwood@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	mario.limonciello@amd.com,
+	nicolas.ferre@microchip.com,
+	perex@perex.cz,
+	posteuca@mutex.one,
+	tiwai@suse.com,
+	u.kleine-koenig@pengutronix.de,
+	venkataprasad.potturu@amd.com
+Subject: Re: [RESEND] ASoC: amd: acp: add pm ops support for renoir platform.
+Date: Wed, 27 Dec 2023 11:42:09 +0100
+Message-ID: <20231227104209.6281-1-kernel@tomzanna.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <170267843699.316482.4350897389116089852.b4-ty@kernel.org>
+References: <170267843699.316482.4350897389116089852.b4-ty@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <0000000000000b05cd060d6b5511@google.com> <20231227093523.2735484-1-chengming.zhou@linux.dev>
-In-Reply-To: <20231227093523.2735484-1-chengming.zhou@linux.dev>
-From: Barry Song <21cnbao@gmail.com>
-Date: Wed, 27 Dec 2023 19:05:57 +0800
-Message-ID: <CAGsJ_4yDS+RMGf1DbCTfDzRTt83t7nugwNGiNWNO8tsZ75Th5Q@mail.gmail.com>
-Subject: Re: [PATCH v2] crypto: scompress - fix req->dst buffer overflow
-To: chengming.zhou@linux.dev
-Cc: akpm@linux-foundation.org, chrisl@kernel.org, davem@davemloft.net, 
-	herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nphamcs@gmail.com, 
-	syzkaller-bugs@googlegroups.com, yosryahmed@google.com, 
-	zhouchengming@bytedance.com, 
-	syzbot+3eff5e51bf1db122a16e@syzkaller.appspotmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Dec 27, 2023 at 5:35=E2=80=AFPM <chengming.zhou@linux.dev> wrote:
->
-> From: Chengming Zhou <zhouchengming@bytedance.com>
->
-> The req->dst buffer size should be checked before copying from the
-> scomp_scratch->dst to avoid req->dst buffer overflow problem.
->
-> Fixes: 1ab53a77b772 ("crypto: acomp - add driver-side scomp interface")
-> Reported-by: syzbot+3eff5e51bf1db122a16e@syzkaller.appspotmail.com
-> Closes: https://lore.kernel.org/all/0000000000000b05cd060d6b5511@google.c=
-om/
-> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
-> ---
-> v2:
->  - change error code to ENOSPC.
+Hi Marc,
+first time writing on a kernel mailing list here.
 
-Reviewed-by: Barry Song <v-songbaohua@oppo.com>
+> All being well this means that it will be integrated into the linux-next
+> tree (usually sometime in the next 24 hours) and sent to Linus during
+> the next merge window (or sooner if it is a bug fix)
+
+I noticed that this patch is scheduled to land in mainline on 6.8.
+However, it was the second of a two-part bugfix for a regression introduced
+in 6.6-rc1. You can find more info here:
+- https://lore.kernel.org/lkml/87a5v8szhc.fsf@mutex.one/
+- https://linux-regtracking.leemhuis.info/regzbot/regression/lore/87a5v8szhc.fsf@mutex.one/
+
+Would be feasible to ship this patch already in the next 6.7-rc?
+Because with the stable 6.7 some Huawei laptops will finally receive audio
+support but due to this regression a workaround in user space is necessary.
+
+Cheers,
+Tommaso
 
 
-> ---
->  crypto/scompress.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/crypto/scompress.c b/crypto/scompress.c
-> index 442a82c9de7d..b108a30a7600 100644
-> --- a/crypto/scompress.c
-> +++ b/crypto/scompress.c
-> @@ -117,6 +117,7 @@ static int scomp_acomp_comp_decomp(struct acomp_req *=
-req, int dir)
->         struct crypto_scomp *scomp =3D *tfm_ctx;
->         void **ctx =3D acomp_request_ctx(req);
->         struct scomp_scratch *scratch;
-> +       unsigned int dlen;
->         int ret;
->
->         if (!req->src || !req->slen || req->slen > SCOMP_SCRATCH_SIZE)
-> @@ -128,6 +129,8 @@ static int scomp_acomp_comp_decomp(struct acomp_req *=
-req, int dir)
->         if (!req->dlen || req->dlen > SCOMP_SCRATCH_SIZE)
->                 req->dlen =3D SCOMP_SCRATCH_SIZE;
->
-> +       dlen =3D req->dlen;
-> +
->         scratch =3D raw_cpu_ptr(&scomp_scratch);
->         spin_lock(&scratch->lock);
->
-> @@ -145,6 +148,9 @@ static int scomp_acomp_comp_decomp(struct acomp_req *=
-req, int dir)
->                                 ret =3D -ENOMEM;
->                                 goto out;
->                         }
-> +               } else if (req->dlen > dlen) {
-> +                       ret =3D -ENOSPC;
-> +                       goto out;
->                 }
->                 scatterwalk_map_and_copy(scratch->dst, req->dst, 0, req->=
-dlen,
->                                          1);
-> --
-> 2.40.1
->
