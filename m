@@ -1,308 +1,150 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2047.outbound.protection.outlook.com [40.107.237.47])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E9445BF9;
-	Wed, 27 Dec 2023 16:22:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=memverge.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91EAD46420;
+	Wed, 27 Dec 2023 16:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="HPDU71Nm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EoDHcm9ySJ7WN51Rqm49aRBigfK6xOKD9Ux3nnIZuhLJz4LCpBiMXp7eWIU1ipz4tP/NHCTle1nvRs9G1qKdYmrUn7F4qcdy1N6otDfi5wXWKvvZFAQguYGVNmsNbUJ+LLGJpNIFh/BJlmNOKKyTQxVsrxZC1ueni7ZcJ6DmkgVch2N7y6srWBNGWwi4iUifGhSxmP3lHhtigIJI9v901E9bOfc4vzHI9MI4IxvL249rDEkSAjCcS1xso65DM9gBaXUrb1RVY+l2l7sXUVlKmzRGsnf05/4EBPKdh1PTmXTGbB46ZzEmZqPQgESYKfTVOsAn4LA1DOasMVze5rTVIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YPdSZ3wzhqFjSlR4l/lPUXQ+naNPFoQsQtaZD3rTkoo=;
- b=mOWmZzzzFt736x8RzQTpYd9gDvuvoc6gWeIvuAGgEWAgkiDGSPqSrFxNGboFVOjizicrBvAWaFHVaMKDPaFxG4zH8aCO7ApFOZ/KOn69mYn12CY8NodF6DLTxCIgouYI9FT6gIxn3np5h1oy/7Kt/BhexLjRJJrUQI6EEEL4vdpUSoxLSSAFiuVHrxxcMc1DjybDzgh4PY+FNXTUqa02+3CqhpMLgGJcjEUYTgQb9uJFsdurPkw4eQp66UuAjwHbHOGSPp5HtSKUd2pbCoTUJpL9pmpZcrMcSjJKDhoDM+PMAAblMXoKN91f//g4gH9N2HV5qbzD+z9aDr7v5oT0xQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YPdSZ3wzhqFjSlR4l/lPUXQ+naNPFoQsQtaZD3rTkoo=;
- b=HPDU71NmbCujlxRcjSGOXgcdp6J8u1+4RDpLoENjcmUxyAd8WIM/VZ/liMhqcEGMWqOeU9Ss3419BAKowYP/oiCzZK+9R58D4RTNqY88DIKggrPNrF5mRHux44Zbi3Ahgxt5EZeyeZ28mlcfeJ2/iZzCVUARSPK4zjldxCGiW/o=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by SJ0PR17MB4725.namprd17.prod.outlook.com (2603:10b6:a03:376::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.27; Wed, 27 Dec
- 2023 16:22:15 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::381c:7f11:1028:15f4]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::381c:7f11:1028:15f4%5]) with mapi id 15.20.7113.027; Wed, 27 Dec 2023
- 16:22:15 +0000
-Date: Tue, 26 Dec 2023 02:45:18 -0500
-From: Gregory Price <gregory.price@memverge.com>
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Gregory Price <gourry.memverge@gmail.com>, linux-mm@kvack.org,
-	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-	x86@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
-	tglx@linutronix.de, luto@kernel.org, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com, mhocko@kernel.org,
-	tj@kernel.org, corbet@lwn.net, rakie.kim@sk.com,
-	hyeongtak.ji@sk.com, honggyu.kim@sk.com, vtavarespetr@micron.com,
-	peterz@infradead.org, jgroves@micron.com, ravis.opensrc@micron.com,
-	sthanneeru@micron.com, emirakhur@micron.com, Hasan.Maruf@amd.com,
-	seungjun.ha@samsung.com, Johannes Weiner <hannes@cmpxchg.org>,
-	Hasan Al Maruf <hasanalmaruf@fb.com>, Hao Wang <haowang3@fb.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Zhongkun He <hezhongkun.hzk@bytedance.com>,
-	Frank van der Linden <fvdl@google.com>,
-	John Groves <john@jagalactic.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v5 00/11] mempolicy2, mbind2, and weighted interleave
-Message-ID: <ZYqEjsaqseI68EyJ@memverge.com>
-References: <20231223181101.1954-1-gregory.price@memverge.com>
- <87frzqg1jp.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87frzqg1jp.fsf@yhuang6-desk2.ccr.corp.intel.com>
-X-ClientProxiedBy: BYAPR01CA0007.prod.exchangelabs.com (2603:10b6:a02:80::20)
- To SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="P+g8MeCj"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F184DFF812;
+	Wed, 27 Dec 2023 16:24:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1703694244;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ez0pbpdiJcFmloOhz2QpvcxjF2T6EB87V9C6wGzmJm8=;
+	b=P+g8MeCjZsDHxr7svBYTlxSZqen7NafmP862OWo5RRPSzTBYzEBLZS9oQ9JObibdf8UkC0
+	we1v1j7ntez0pf+D7eSL5v69jeRIIdMtAkuKDy7KyDjDm8PC67mqiVHPsQf5M6vj+iwz6a
+	TWqLlFHlNaTIJh1p8hhmMStB0TB/f3FWfM/B5IBUOGDMN9gNcBy4GHsnQPOUjHTtq+q7Fo
+	0BxlST2Vc4Oetq/LHBh5aqVeOJVQ+pTLSjSAhTjzykk+UggoL69G4JfjfJMufDKgPVjtLH
+	onp4wW6eP3gCyUMEnv9dIIAMaknqVhrT+Ue5XQ0UAtlZXqKENTlx93S71zipWA==
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: [PATCH v2 0/6] Add support for Mobileye EyeQ5 clock controller
+Date: Wed, 27 Dec 2023 17:23:50 +0100
+Message-Id: <20231227-mbly-clk-v2-0-a05db63c380f@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|SJ0PR17MB4725:EE_
-X-MS-Office365-Filtering-Correlation-Id: 280b7e9f-d8c7-4a40-dd94-08dc06f7fd09
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	PkdJPdcmHA4NtPVpZoTmsjiWo8msjeclDXSVZ2O6wbFU/YvgF4fizZ87OnlLlD6CDYlTITz7//kfTdQ7cG/oaPj3OhJWUQ/jNsLKgwGxKWDuQIsDaMkTpK0/M6EmJuvnw+cRTddEX+wYFAr00bP7UqDhYdhzbIgzuVdv0uEQwI0vWhCBcD9vpqv4DLkPHCg2j1CClt5gp/nMPguzUBTP7oQ4Wkakv68ADtNPvLls2BioaLIMWOf0vL2vlQWyem/fnTABMtYDdVnBE7Bs3COKHbGapqKMglwOrnODpEEPqY7ylBmIF6l93LZM2Mz/vKmtyAIz9K1NFSCy1HPHoFYQQ7fzmFjjeIrvyPJBRvwGr3Dmkqo0oNhWjTWzGVmRvimlBdFTTkJ5UANbiZh5xfDh3jq0/CGwEwAS+UtfcnUJ3bLqko43ziRTBP8DoS2NcXMKxRKvrusIprwQpE3649MBm/wCjE14VlAl5e4rXu9Xzj1UG1B8k2qRPj2PEzwJF4iA7otyXf//AFcHK4C843aYEMORdw89ZrVOtxODDzEt+gEOyuaqKFiw7rM2+b4cbWmy3cdTDrPEaFuDdq6A6BdXulIrcbsHzLWR2zTzlkAtEJo=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(366004)(396003)(39850400004)(346002)(376002)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(2616005)(26005)(6512007)(83380400001)(8676002)(4326008)(6916009)(66556008)(54906003)(316002)(66476007)(66946007)(6506007)(966005)(6486002)(38100700002)(86362001)(8936002)(478600001)(44832011)(5660300002)(7416002)(7406005)(2906002)(36756003)(41300700001)(16393002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?4/SEXUQX/+LcIwszLNTrnj5/7t0pqP+NPpQQr2NNeY0Cxs41mjaaa0hJZEf6?=
- =?us-ascii?Q?W2+yUnK5oRi81wng/ZV593IPKYpghwnHykWMUaovPmZOv1pBEIDOzRJKV71E?=
- =?us-ascii?Q?J0fUe2AeETUR12CJxswT0jecpqnEkVrvMU1iCfW3D4BfRM2z/x/Jk/SLlQXb?=
- =?us-ascii?Q?g1dPv/XumKToRxPgu8yLeHPdZ89sWnA+1voOuRy+HIu21cRzXxuDEDdMGNG+?=
- =?us-ascii?Q?QoB0nLVOxYChszEhnffCy4Qs6b7iLjvzFyzUgw0Jr1ci0oQMh9ob6OV3l6zI?=
- =?us-ascii?Q?ZcLHIlxOzBZw6/uyQg3lAxIe8ro7ivOif8od1fbboaU1Pd80QUAjhUrO45ES?=
- =?us-ascii?Q?nLwjcCaSrFECHe/jNEyVR1C+JuptU7pGhu0OiTNrnJxonMuoYylkK0oM+LkY?=
- =?us-ascii?Q?gS9+q3GhTxCJIcRe8WDCLHqWHTX1dMVvwT5sEt0WV2OIOz7DKq3TDSN6CoLK?=
- =?us-ascii?Q?tA39lPIXfRMCBTHPCpgXBD2Ryr4WYaK33ufp7YlbAumr+sOe8PHJ9YUZm3Qa?=
- =?us-ascii?Q?9zmmx2MAXBqdBeS+pcNvfZZkYwVlDUjLyevaUsAlijpSge4gIEnifEMH6rms?=
- =?us-ascii?Q?tDMa6DYRTJGbpzTUIJBKJcyzPbVEb5YvkQgN9J4atIj29YNTYUZpIL8ZJrLI?=
- =?us-ascii?Q?b9dKLGZZFs89oDkvgiW614YwRQcCQltEJO/NFkzTKLAClZmSivvLLzYFDvM+?=
- =?us-ascii?Q?R49XCxV5wf+2C9SI5TAgVNwlHgElCXsrdTajPBI53JaK/G5u7NlQ7BsHYr+5?=
- =?us-ascii?Q?IKaYVNhjZFRSF2y9XrrHv5uGtV+l0B60eCyALJNmQfpPgSy20HXdayesYGbE?=
- =?us-ascii?Q?0IHLBHEssWvHXDKEMwxwmJPlRzWnayKG5atRl6/DU2JtRhtVd842W0J4PeLs?=
- =?us-ascii?Q?l4Q4r2F6Y+yqvXAgkQHHCjA/3CI2VYFtF3htLrh0oSvoEZ6Ik+2kimy6rqxm?=
- =?us-ascii?Q?bH0gJyuyse+BDehK/j8aNBL8TWcYIToJBNRZCCB9hNrlcFMc5Hqq6O/2nfEm?=
- =?us-ascii?Q?8CtFKjUUvEcDRWovXawzM9xHhQA8oLgjW8IOXar3DCkWtxst0fbb1zr5htaz?=
- =?us-ascii?Q?0dWk/kU/PlA9JbcwelzYljPrGEBq3yfoO2V+iORViPVKriYWLK/1zsuGAB5T?=
- =?us-ascii?Q?/Vp2gOTue5r6my+0paToNHcyDAoWMhYjPNIIC9Sxfu8PETF8CwnKdM8Op5na?=
- =?us-ascii?Q?38ouDXJ25ewMbkyBkMHJ9fMlWfDo30sLMZlC/YPYfRKVHNw2LglvNy1OkBr7?=
- =?us-ascii?Q?qNdaUPLxI/96T2Slu1c01WWrRiQnVDMYspcTOZnBU774ZXqF8SQtNty5kyQ+?=
- =?us-ascii?Q?+QhlLjRzfctxzMDEBG6+Y6QSQBn4hp+QV40jBX06MzVLN+Aha3oQu3/81JRw?=
- =?us-ascii?Q?Paf5Af/n22VSDCe+hngH4hVvea8h4QAkY2NcmX48T5Vm982f6INGVH9zPAnp?=
- =?us-ascii?Q?2J92D7ShSMeOXElQhVJVn6di7o21LuVJlhaSAVNTdwKEKdmX2FQ0SCr7/0Fk?=
- =?us-ascii?Q?7uAlPWL3pwfzd2h2ga3StPDfKEvf58pIpmFpcoOS+sB19YweT494B3nNWQ2G?=
- =?us-ascii?Q?O8ooduetOOHzPZL7FZT0xff15WzKDWIYhnAfDFBKOMMgYQu6u4LGIotd4YIk?=
- =?us-ascii?Q?8Q=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 280b7e9f-d8c7-4a40-dd94-08dc06f7fd09
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Dec 2023 16:22:15.3564
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zm884rhV+/41dyantHAHvMSTpviNUukaocAHDcfANZgNQeU8b0YDTy/0TQhy3pzfxYyD8suatNGG/KpvFG9yipd2NDQ2ES+3Yed84HMX5O0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR17MB4725
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAJZPjGUC/3WOSw6CMBBAr0K6tqbT8imuvIdhQctUGoGalhAJ4
+ e4WXBiNLmbxJvNeZiEBvcVATslCPE42WDdE4IeE6LYerkhtE5lwxgXEob3qZqq7G5WFxkzzFAy
+ TJJ7fPRr72FOXKnJrw+j8vJcn2LavCAj2jkxAGZW5MgBl0YDAs3Ju7Oxw1K7fqn8UJZBlTa5Kh
+ fVPhYP8UtI0/psCk4blH0q1rusTffPRAAgBAAA=
+To: Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: b4 0.12.4
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-On Mon, Dec 25, 2023 at 03:54:18PM +0800, Huang, Ying wrote:
-> Gregory Price <gourry.memverge@gmail.com> writes:
-> 
-> > For example, the stream benchmark demonstrates that default interleave
-> > is actively harmful, where weighted interleave is beneficial.
-> >
-> > Hardware: 1-socket 8 channel DDR5 + 1 CXL expander in PCIe x16
-> > Default interleave : -78% (slower than DRAM)
-> > Global weighting   : -6% to +4% (workload dependant)
-> > Targeted weights   : +2.5% to +4% (consistently better than DRAM)
-> >
-> > If nothing else, this shows how awful round-robin interleave is.
-> 
-> I guess the performance of the default policy, local (fast memory)
-> first, may be even better in some situation?  For example, before the
-> bandwidth of DRAM is saturated?
-> 
+Hi,
 
-Yes - but it's more complicated than that.
+We replace fixed clocks as declared in the initial platform support
+series [1] by read-only clocks exposed by the clock driver implemented
+here. Write-ability is supported by the hardware but not implemented,
+it could be added later-on if the need appears.
 
-Global weighting here means we did `numactl -w --interleave ...`, which
-means *all* memory regions will be interleaved.  Code, stack, heap, etc.
+We expose ten PLLs that derive directly from the main crystal. Also, a
+divider clock is exposed as a child clock of one of the PLLs.
 
-Targeted weights means we used mbind2() with local weights, which only
-targted specific heap regions.
+The platform devicetree has many more clock nodes but those are
+fixed-factors that are not hardware controllable; we therefore do not
+deal with them.
 
-The default policy was better than global weighting likely as a result
-of things like stack/code being distributed to higher latency memory
-produced a measurable overhead.
+This is V2. Full changelog below. Major changes are:
 
-To provide this, we only applied weights to bandwidth driving regions,
-and as a result we demonstrated a measurable performance increase.
+ - Switch to a platform driver.
+ - Switch to declaring PLLs as fixed-factor.
+ - Point to the parent clk using the fw_name field in clk_parent_data.
+ - The above two points means we add support in fixed-factor to (1) allow
+   fixed accuracy rather than parent accuracy and (2) add new register
+   prototypes to point to the parent clk using fw_name.
 
-So yes, the defautl policy may be better in some situations - but that
-will be true of any policy.
+[1]: https://lore.kernel.org/lkml/20231212163459.1923041-1-gregory.clement@bootlin.com/
 
-> I understand that you may want to limit the memory usage of the fast
-> memory too.  But IMHO, that is another requirements.  That should be
-> enforced by something like per-node memory limit.
-> 
+Have a nice day,
+Théo Lebrun
 
-This interface does not limit memory usage of a particular node, it 
-distributes data according to the requested policy.
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+---
+Changes in v2:
+- Drop [PATCH 1/5] that was taken by Stephen for clk-next.
+- Add accuracy support to fixed-factor that is enabled with a flag.
+  Register prototypes were added to exploit this feature.
+- Add fw_name support to fixed-factor. This allows pointing to parent
+  clocks using the value in `clock-names` in the DT. Register
+  prototypes were added for that.
+- Bindings were modified to be less dumb: a binding was added for OLB
+  and the clock-controller is a child property of it. Removed the
+  possibility of pointing to OLB using a phandle. $nodename is the
+  generic `clock-controller` and not custom `clocks`. Fix dt-bindings
+  examples.
+- Fix commit message for the driver patch. Add details, remove useless
+  fluff.
+- Squash both driver commits together.
+- Declare a platform_driver instead of using CLK_OF_DECLARE_DRIVER. This
+  also means using `dev_*` for logging, removing `pr_fmt`. We add a
+  pointer to device in the private structure.
+- Use fixed-factor instead of fixed-rate for PLLs. We don't grab a
+  reference to the parent clk, instead using newly added fixed-factor
+  register prototypes and fwname.
+- NULL is not an error when registering PLLs anymore.
+- Now checking the return value of of_clk_add_hw_provider for errors.
+- Fix includes.
+- Remove defensive conditional at start of eq5c_pll_parse_registers.
+- Rename clk_hw_to_ospi_priv to clk_to_priv to avoid confusion: it is
+  not part of the clk_hw_* family of symbols.
+- Fix negative returns in eq5c_ospi_div_set_rate. It was a typo
+  highlighted by Stephen Boyd.
+- Declare eq5c_ospi_div_ops as static.
+- In devicetree, move the OLB node prior to the UARTs, as platform
+  device probe scheduling is dependent on devicetree ordering. This is
+  required to declare the driver as a platform driver, else it
+  CLK_OF_DECLARE_DRIVER is required.
+- In device, create a core0-timer-clk fixed clock to feed to the GIC
+  timer. It requires a clock earlier than platform bus type init.
+- Link to v1: https://lore.kernel.org/r/20231218-mbly-clk-v1-0-44ce54108f06@bootlin.com
 
-Nuanced distinction, but important.  If nodes become exhausted, tasks
-are still free to allocate memory from any node in the nodemask, even if
-it violates the requested mempolicy.
+---
+Théo Lebrun (6):
+      clk: fixed-factor: add optional accuracy support
+      clk: fixed-factor: add fwname-based constructor functions
+      dt-bindings: soc: mobileye: add EyeQ5 OLB system controller
+      dt-bindings: clock: mobileye,eyeq5-clk: add bindings
+      clk: eyeq5: add platform driver
+      MIPS: mobileye: eyeq5: use OLB clocks controller
 
-This is consistent with the existing behavior of mempolicy.
+ .../bindings/clock/mobileye,eyeq5-clk.yaml         |  50 +++
+ .../bindings/soc/mobileye/mobileye,eyeq5-olb.yaml  |  48 +++
+ MAINTAINERS                                        |   4 +
+ .../{eyeq5-fixed-clocks.dtsi => eyeq5-clocks.dtsi} |  54 ++--
+ arch/mips/boot/dts/mobileye/eyeq5.dtsi             |  23 +-
+ drivers/clk/Kconfig                                |  11 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-eyeq5.c                            | 348 +++++++++++++++++++++
+ drivers/clk/clk-fixed-factor.c                     |  94 +++++-
+ include/dt-bindings/clock/mobileye,eyeq5-clk.h     |  22 ++
+ include/linux/clk-provider.h                       |  26 +-
+ 11 files changed, 621 insertions(+), 60 deletions(-)
+---
+base-commit: daf471f1ce94536da77948fac81d5c85ae12dbfa
+change-id: 20231023-mbly-clk-87ce5c241f08
 
-> > =====================================================================
-> > (Patches 3-6) Refactoring mempolicy for code-reuse
-> >
-> > To avoid multiple paths of mempolicy creation, we should refactor the
-> > existing code to enable the designed extensibility, and refactor
-> > existing users to utilize the new interface (while retaining the
-> > existing userland interface).
-> >
-> > This set of patches introduces a new mempolicy_args structure, which
-> > is used to more fully describe a requested mempolicy - to include
-> > existing and future extensions.
-> >
-> > /*
-> >  * Describes settings of a mempolicy during set/get syscalls and
-> >  * kernel internal calls to do_set_mempolicy()
-> >  */
-> > struct mempolicy_args {
-> >     unsigned short mode;            /* policy mode */
-> >     unsigned short mode_flags;      /* policy mode flags */
-> >     int home_node;                  /* mbind: use MPOL_MF_HOME_NODE */
-> >     nodemask_t *policy_nodes;       /* get/set/mbind */
-> >     unsigned char *il_weights;      /* for mode MPOL_WEIGHTED_INTERLEAVE */
-> > };
-> 
-> According to
-> 
-> https://www.geeksforgeeks.org/difference-between-argument-and-parameter-in-c-c-with-examples/
-> 
-> it appears that "parameter" are better than "argument" for struct name
-> here.  It appears that current kernel source supports this too.
-> 
-> $ grep 'struct[\t ]\+[a-zA-Z0-9]\+_param' -r include/linux | wc -l
-> 411
-> $ grep 'struct[\t ]\+[a-zA-Z0-9]\+_arg' -r include/linux | wc -l
-> 25
-> 
+Best regards,
+-- 
+Théo Lebrun <theo.lebrun@bootlin.com>
 
-Will change.
-
-> > This arg structure will eventually be utilized by the following
-> > interfaces:
-> >     mpol_new() - new mempolicy creation
-> >     do_get_mempolicy() - acquiring information about mempolicy
-> >     do_set_mempolicy() - setting the task mempolicy
-> >     do_mbind()         - setting a vma mempolicy
-> >
-> > do_get_mempolicy() is completely refactored to break it out into
-> > separate functionality based on the flags provided by get_mempolicy(2)
-> >     MPOL_F_MEMS_ALLOWED: acquires task->mems_allowed
-> >     MPOL_F_ADDR: acquires information on vma policies
-> >     MPOL_F_NODE: changes the output for the policy arg to node info
-> >
-> > We refactor the get_mempolicy syscall flatten the logic based on these
-> > flags, and aloow for set_mempolicy2() to re-use the underlying logic.
-> >
-> > The result of this refactor, and the new mempolicy_args structure, is
-> > that extensions like 'sys_set_mempolicy_home_node' can now be directly
-> > integrated into the initial call to 'set_mempolicy2', and that more
-> > complete information about a mempolicy can be returned with a single
-> > call to 'get_mempolicy2', rather than multiple calls to 'get_mempolicy'
-> >
-> >
-> > =====================================================================
-> > (Patches 7-10) set_mempolicy2, get_mempolicy2, mbind2
-> >
-> > These interfaces are the 'extended' counterpart to their relatives.
-> > They use the userland 'struct mpol_args' structure to communicate a
-> > complete mempolicy configuration to the kernel.  This structure
-> > looks very much like the kernel-internal 'struct mempolicy_args':
-> >
-> > struct mpol_args {
-> >         /* Basic mempolicy settings */
-> >         __u16 mode;
-> >         __u16 mode_flags;
-> >         __s32 home_node;
-> >         __u64 pol_maxnodes;
-> 
-> I understand that we want to avoid hole in struct.  But I still feel
-> uncomfortable to use __u64 for a small.  But I don't have solution too.
-> Anyone else has some idea?
->
-
-maxnode has been an `unsigned long` in every other interface for quite
-some time.  Seems better to keep this consistent rather than it suddenly
-become `unsigned long` over here and `unsigned short` over there.
-
-> >         __aligned_u64 pol_nodes;
-> >         __aligned_u64 *il_weights;      /* of size pol_maxnodes */
-> 
-> Typo?  Should be,
-> 
-
-derp derp
-
-> >
-> > The 'flags' argument for mbind2 is the same as 'mbind', except with
-> > the addition of MPOL_MF_HOME_NODE to denote whether the 'home_node'
-> > field should be utilized.
-> >
-> > The 'flags' argument for get_mempolicy2 allows for MPOL_F_ADDR to
-> > allow operating on VMA policies, but MPOL_F_NODE and MPOL_F_MEMS_ALLOWED
-> > behavior has been omitted, since get_mempolicy() provides this already.
-> 
-> I still think that it's a good idea to make it possible to deprecate
-> get_mempolicy().  How about use a union as follows?
-> 
-> struct mpol_mems_allowed {
->          __u64 maxnodes;
->          __aligned_u64 nodemask;
-> };
-> 
-> union mpol_info {
->         struct mpol_args args;
->         struct mpol_mems_allowed mems_allowed;
->         __s32 node;
-> };
-> 
-
-See my other email.  I've come around to see mems_allowed as a wart that
-needs to be removed.  The same information is already available via
-sysfs cpusets.mems and cpusets.mems_effective.
-
-Additionally, mems_allowed isn't even technically part of the mempolicy,
-so if we did want an interface to acquire the infomation, you'd prefer
-to just implement a stand-alone syscall.
-
-The sysfs interface seems sufficient though.
-
-
-`policy_node` is a similar "why does this even exist" type feature,
-except that it can still be used from get_mempolicy() and if there is an
-actual reason to extend it to get_mempolicy2() it can be added to
-mpol_params.
-
-~Gregory
