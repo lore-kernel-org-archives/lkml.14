@@ -1,129 +1,148 @@
-Received: from mail-m49208.qiye.163.com (mail-m49208.qiye.163.com [45.254.49.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA9F446B3;
-	Wed, 27 Dec 2023 11:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=senarytech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=senarytech.com
-Received: from book-ThinkStation-P328.. (unknown [61.183.143.78])
-	by mail-m12756.qiye.163.com (Hmail) with ESMTPA id 459A0DC0636;
-	Wed, 27 Dec 2023 15:10:20 +0800 (CST)
-From: bo liu <bo.liu@senarytech.com>
-To: perex@perex.cz,
-	tiwai@suse.com
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bo liu <bo.liu@senarytech.com>
-Subject: [PATCH 2/3] Fix headset auto detect fail in cx8070 and SN6140
-Date: Wed, 27 Dec 2023 15:10:07 +0800
-Message-Id: <20231227071008.13665-2-bo.liu@senarytech.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231227071008.13665-1-bo.liu@senarytech.com>
-References: <20231227071008.13665-1-bo.liu@senarytech.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89E2446C1
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 12:01:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S0CRtHiq"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3333b46f26aso4966916f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 04:01:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703678461; x=1704283261; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UF+JV9eb4czi5JaBf8vCv5H4lt5fbpCs4afLQ9zGvZM=;
+        b=S0CRtHiqciH0gOKv07b+IaFbfKdLgxgsGbN+f5CPXoXShAZ4XKwHSTdXfQzDeh8THa
+         Ggead+0N+kjibsKbFvAdVdeFwu1ar6SD3un6KfTAK413fFc1Hk6mQz1iSOso0VLi4xB1
+         FCK3ZppOTOXUAp0sqUO5U8bSd0BlQd6oLGH0m8Ib26D+pPyC+aZEKNKM+/zSFChcFkp6
+         4M+pO+FvP3JrBo+iDfgzDZ/0/n9L4p98NKhx2oqriJlu6mOyzZgAhxMhWghGwGhHSa4k
+         70e3PSCNQBpEDhQ+0Rbch18k+J9g5OkuedmIIWqC8wg7c4PgNVGQrmdLALWIfixbv6UA
+         DUWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703678461; x=1704283261;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UF+JV9eb4czi5JaBf8vCv5H4lt5fbpCs4afLQ9zGvZM=;
+        b=RMM2bAdB1itPKhumbjSG4MYQdmVQjXWOZq3pYjE9+D2DdalAZ4J+xbMEPEY2T/C902
+         0sTFmrGEA4Od9JycLLgrqAR5pQeB9PuuOqmQH3HOw8UDbKyo2ol9PMr/3/WxdryG4bA8
+         D8Aveo8+sRfqa7U5THVWk9Ybl4CM64g2Xj7gJVwTKtzg88cDZlN+IsQJRgx0QlK/qErc
+         6C6mHi0u/bwH/IuBkt+0VvTBVL1k4oi4eOrqR2WaAlulRhX3L7BXG/t2Zlo9GhUkdAMn
+         hh22CVujJGk92HQHp4C9ygFxK9ZyAIJiqnDW8p+KeRjaoQ61E95rnPybhr6fneazhrzc
+         g2fA==
+X-Gm-Message-State: AOJu0YwZSCmNHiDaOyPQj6yZThID4seBnE5aYw4W190ux+AZC+7rEQSc
+	hMO9tnTI45FDoZ5Ud/PYm3m7HQpw/zmezw==
+X-Google-Smtp-Source: AGHT+IGqhsJy3mNPl0wibUd8DDQn58tDdFf3JQ4V/OB08j6DK3qw17Xymjgt8z3NeMI92jpHps8cTw==
+X-Received: by 2002:a5d:598b:0:b0:336:ef13:301e with SMTP id n11-20020a5d598b000000b00336ef13301emr1104933wri.14.1703678461016;
+        Wed, 27 Dec 2023 04:01:01 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.218.27])
+        by smtp.gmail.com with ESMTPSA id e18-20020a056000121200b0033660aabe76sm14597968wrx.39.2023.12.27.04.00.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Dec 2023 04:00:59 -0800 (PST)
+Message-ID: <e9541a57-07de-456a-a12f-7f09482fbbc4@linaro.org>
+Date: Wed, 27 Dec 2023 13:00:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZQ0gdVkhMTBoaSUNJSE5MQ1UTARMWGhIXJBQOD1
-	lXWRgSC1lBWU1KVUpDSFVKT0hVTENZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
-X-HM-Tid: 0a8caa1c2524b223kuuu459a0dc0636
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NTo6Dio5MDwrAQkJODg#HAxL
-	IyJPFAlVSlVKTEtITU1KS0lKSU9JVTMWGhIXVRkUVRcSDjsIHhUaCQIPHhgTVRgUFkVZV1kSC1lB
-	WU1KVUpDSFVKT0hVTENZV1kIAVlBT0lOSDcG
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 15/16] dt-bindings: imx6q-pcie: Add iMX95 pcie endpoint
+ compatible string
+Content-Language: en-US
+To: Frank Li <Frank.li@nxp.com>
+Cc: bhelgaas@google.com, conor+dt@kernel.org, devicetree@vger.kernel.org,
+ festevam@gmail.com, helgaas@kernel.org, hongxing.zhu@nxp.com,
+ imx@lists.linux.dev, kernel@pengutronix.de,
+ krzysztof.kozlowski+dt@linaro.org, kw@linux.com, l.stach@pengutronix.de,
+ linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+ s.hauer@pengutronix.de, shawnguo@kernel.org
+References: <20231224183242.1675372-1-Frank.Li@nxp.com>
+ <20231224183242.1675372-16-Frank.Li@nxp.com>
+ <6a61f325-a58b-4aa6-9a0a-7a3086f63829@linaro.org>
+ <ZYr7Y+mJea6fChjS@lizhi-Precision-Tower-5810>
+ <0233cf48-93cb-4f19-ad1d-e3e1835c1fef@linaro.org>
+ <ZYtLPQgMVUSNduLG@lizhi-Precision-Tower-5810>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <ZYtLPQgMVUSNduLG@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-CX8070 and SN6140 will get wrong headset type when use OMTP headset,
-then the headset mic will not work.
+On 26/12/2023 22:53, Frank Li wrote:
+>>> DTB_CHECK report error after I remove it. linux,pci-domain is only define
+>>> in pci, not pci-ep.
+>>
+>> Ah, thank you, indeed.
+>>
+>>>
+>>> So I add comments about this. linux,pci-domain was resued ad controller id.
+>>
+>> However maybe there is reason why it is not for endpoints. The
+>> description is saying it is valid only for host bridge, so maybe it
+>> should not be used for endpoint case?
+> 
+> EP side, it is not PCI bus. So it is reasonable that linux,pci-doamin not
+> in EP side.
+> 
+> iMX6 host driver(and other some host controller drivers) already use it as
+> "controller id". EP driver is mostly reused with host bridge drivers. I
+> think needn't create new property such as "controller_id" for EP only.
+> 
+> A comments should be enough for this case.
 
-Signed-off-by: bo liu <bo.liu@senarytech.com>
----
- sound/pci/hda/patch_conexant.c | 35 +++++++++++++++++-----------------
- 1 file changed, 17 insertions(+), 18 deletions(-)
+Hm, ok, seems fine for me. I don't know PCI good enough to judge, so
+unless Rob or Conor say something else, it looks good.
 
-diff --git a/sound/pci/hda/patch_conexant.c b/sound/pci/hda/patch_conexant.c
-index 2d58595bfbdd..9ebc0709a202 100644
---- a/sound/pci/hda/patch_conexant.c
-+++ b/sound/pci/hda/patch_conexant.c
-@@ -184,11 +184,10 @@ static int cx_auto_init(struct hda_codec *codec)
- 		snd_hda_codec_write(codec, 0x1c, 0, 0x4f0, 0x0eb);
- 		/* fix reboot headset recognize fail issue */
- 		mic_persent = snd_hda_codec_read(codec, 0x19, 0, 0xf09, 0x0);
--		if (mic_persent&0x80000000) {
-+		if (mic_persent&0x80000000) 
- 			snd_hda_codec_write(codec, 0x19, 0, 0x707, 0x24);
--		} else {
-+		else
- 			snd_hda_codec_write(codec, 0x19, 0, 0x707, 0x20);
--		}
- 		break;
- 	}
- 
-@@ -209,46 +208,46 @@ static void cx_auto_free(struct hda_codec *codec)
- 	cx_auto_shutdown(codec);
- 	snd_hda_gen_free(codec);
- }
-- 
-+
- static int headset_present_flag;
- static void cx_jack_unsol_event(struct hda_codec *codec, unsigned int res)
- {
--	unsigned int val,phone_present,mic_persent,phone_tag,mic_tag;
-+	unsigned int val, phone_present, mic_persent,phone_tag, mic_tag;
- 	unsigned int count=0;
--	
-+
- 	switch (codec->core.vendor_id) {
- 	case 0x14f11f86:
- 	case 0x14f11f87:
- 		/* check hp&mic tag to process headset pulgin&plugout */
- 		phone_tag = snd_hda_codec_read(codec, 0x16, 0, 0xf08, 0x0);
- 		mic_tag = snd_hda_codec_read(codec, 0x19, 0, 0xf08, 0x0);
--		if((phone_tag&(res>>26)) || (mic_tag&(res>>26))) {
--			//msleep(600);
-+		if ((phone_tag&(res>>26)) || (mic_tag&(res>>26))) {
- 			phone_present = snd_hda_codec_read(codec, 0x16, 0, 0xf09, 0x0);
--			if(!(phone_present&0x80000000)) {/* headphone plugout */
-+			if (!(phone_present&0x80000000)) {/* headphone plugout */
- 				headset_present_flag = 0;
- 				snd_hda_codec_write(codec, 0x19, 0, 0x707, 0x20);
- 				break;
- 			}
- 			if (headset_present_flag == 0) {
- 				headset_present_flag = 1;
--			} else if(headset_present_flag == 1) {
-+			} else if (headset_present_flag == 1) {
- 				mic_persent = snd_hda_codec_read(codec, 0x19, 0, 0xf09, 0x0);
--				if ((phone_present&0x80000000)&&(mic_persent&0x80000000)) {/* headset is present */
-+				/* headset is present */
-+				if ((phone_present&0x80000000) && (mic_persent&0x80000000)) {
- 					/* wait headset detect done */
- 					do {
--						val = snd_hda_codec_read(codec, 0x1c, 0, 0xca0, 0x0);
--						if(val&0x080) {
-+						val = snd_hda_codec_read(codec, 0x1c,
-+									0, 0xca0, 0x0);
-+						if (val&0x080)
- 							break;
--						}
--						msleep(10);
-+						msleep(20);
- 						count += 1;
--					} while(count > 5);
-+					} while (count > 3);
- 					val = snd_hda_codec_read(codec, 0x1c, 0, 0xcb0, 0x0);
--					if(val&0x800) {
-+					if (val&0x800) {
- 						codec_dbg(codec, "headset plugin, type is CTIA\n");
- 						snd_hda_codec_write(codec, 0x19, 0, 0x707, 0x24);
--					} else if(val&0x400) {
-+					} else if (val&0x400) {
- 						codec_dbg(codec, "headset plugin, type is OMTP\n");
- 						snd_hda_codec_write(codec, 0x19, 0, 0x707, 0x24);
- 					} else {
--- 
-2.34.1
+Best regards,
+Krzysztof
 
