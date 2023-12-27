@@ -1,155 +1,161 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D52210F;
-	Wed, 27 Dec 2023 02:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5EB23A6
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 02:30:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oLRreVyP"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BR2GhNc014632;
-	Wed, 27 Dec 2023 02:18:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=9/HQZGbtop8fnbO6JTfa5TBQcnEZlTaVzl4vyS/b3NM=; b=oL
-	RreVyPEXewp0FfHLtQhJTS3XmbFiPc/8OJX/7WXFT6d7f0ed8UHOQctQXtnadZ12
-	CrhuHMUAVIGJqc2++AuriOx+v7gMNbLXAf6E1UQgdWNKLP8NJVQ9+juVsyB6Wfj1
-	uKPmMsGAXax1HiXWMG1M8vkJwLwUWDsXQWh0amtUh4PRRfXMcYgawvOxtFli6l2B
-	pnhDV/B2D4MIKl3TshsQ+FilZIOYRqnv6B+hOd426d2YFZ0pU5BoVDFqVO6sKMHJ
-	yLY3y60a8pZ4cCwGbCHiXBhqgIMOZIyGfCD45CqcG/7zAbUxoIgGz7CPQJDYSiAQ
-	yuUds9JpgBsATLxzVgig==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3v7c9jk6qu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 27 Dec 2023 02:18:25 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3BR2IOhe001070
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 27 Dec 2023 02:18:24 GMT
-Received: from [10.216.28.88] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 26 Dec
- 2023 18:18:18 -0800
-Message-ID: <a2108be4-5f35-4625-9c80-e7d6db978bab@quicinc.com>
-Date: Wed, 27 Dec 2023 07:48:14 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ae9MPyRg"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6d9cdd0a5e6so290953b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 26 Dec 2023 18:30:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703644233; x=1704249033; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0xBQFRljuS9xylNChmSTG+Qfitf8PreuDOuqdWWJFaE=;
+        b=Ae9MPyRguV//17mqaLkjZo7QQ98Q4zIijbMI6XIRNAdpJlsrvYxtXNoAyHVPq2isUr
+         lT2VJSp75tztppMYpRAMgpDrhGTGBtF9Xkrz1mPdxwL3hEDpqFfUIaCj6j0+T4AMG/ch
+         viaf9yGWV0A08P5hLjRs+1jcVJqWedbsJ+mHD3hKwSOwpcW4JyreGpVIV24WulqskZAw
+         gOzwsQF1FB9HcLpJp0Ybk4orFNZa/wQtK2jd9UU5YNTSA1f9oIHVt8Rtu3mCjCIxp4LR
+         RYD8cekJbcccIvaiUm8PBm+TsU6d/+6gn4oFrdbTQHi+psSUh5wZPD3f6FMmbu4M3WCK
+         j50A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703644233; x=1704249033;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0xBQFRljuS9xylNChmSTG+Qfitf8PreuDOuqdWWJFaE=;
+        b=MQOIgLZjvSKUePU42NKAyClhwNbdadRQGUMrED09UPbeMOkDA4b7PtVIiev/sRV4tu
+         8rAg5+L6KlvaQKv3+Lu1MWBZuD4N2u+aDoC2LOlksKxu40Ynhy+AUiYO+NHQIEozsGY3
+         efj7wNclMUJarylp/SbPdCnZZN2rgzQlcVw+5r56/nm+Ic7U3mOsb+9ME6QfGlVvZMhO
+         HqFYenWuSoFJTTTs37PBrA9f7cNy5ZCr/033Pyes4dtxxPIWv4q/clH0BN8ElbRvMTyl
+         L9/osL+eSvB1JoxY8HjVBc5RzxNtjSAxii5ESe78bmwN4yKOtof+k2hn5I/flAOv3GWP
+         jdjw==
+X-Gm-Message-State: AOJu0YwfNwyssh8EMbiOb1MFXaSBhLq/fQGI6ouM6gQVmTfBaQ356NhS
+	5XxFev88GfcIkuG8e5cbG/MQtUvSLMd22w==
+X-Google-Smtp-Source: AGHT+IG+MdvAkbNYUXMrY+Ex/TfjFJSwXDbSpWCZpzIXMEpnK2Ai7ihhFdQ35uuh+PBi/Ud8dCq35Q==
+X-Received: by 2002:a05:6a20:160c:b0:195:edf4:9e8f with SMTP id l12-20020a056a20160c00b00195edf49e8fmr674581pzj.66.1703644232903;
+        Tue, 26 Dec 2023 18:30:32 -0800 (PST)
+Received: from archie.me ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id l13-20020a170902d34d00b001d4752f540esm1744485plk.198.2023.12.26.18.30.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Dec 2023 18:30:32 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id A304610205C65; Wed, 27 Dec 2023 09:30:29 +0700 (WIB)
+Date: Wed, 27 Dec 2023 09:30:29 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Marcelo Mendes Spessoto Junior <marcelomspessoto@gmail.com>,
+	harry.wentland@amd.com, sunpeng.li@amd.com,
+	Rodrigo.Siqueira@amd.com
+Cc: Linux AMDGPU <amd-gfx@lists.freedesktop.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Removing duplicate copyright text
+Message-ID: <ZYuMRZU85plJiVWO@archie.me>
+References: <20231226235741.4376-1-marcelomspessoto@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/2] dt-bindings: usb: dwc3: Clean up hs_phy_irq in
- binding
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Konrad Dybcio" <konrad.dybcio@linaro.org>,
-        Wesley Cheng
-	<quic_wcheng@quicinc.com>,
-        Johan Hovold <johan@kernel.org>,
-        Bjorn Andersson
-	<quic_bjorande@quicinc.com>
-CC: <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Thinh Nguyen
-	<Thinh.Nguyen@synopsys.com>, <quic_ppratap@quicinc.com>,
-        <quic_jackp@quicinc.com>, Andy Gross <agross@kernel.org>
-References: <20231222063648.11193-1-quic_kriskura@quicinc.com>
- <20231222063648.11193-2-quic_kriskura@quicinc.com>
- <e6419898-0d77-4286-a04b-7240eb90d8df@linaro.org>
- <268f9f54-8b2a-42bb-9a5d-10bd930cb282@quicinc.com>
- <55c478c7-abcc-4487-b81c-479df47d5666@linaro.org>
- <67c7c84c-c631-468e-ae67-1c31d41a605b@quicinc.com>
- <efdf2923-4669-409f-b5c4-d5b95009309f@linaro.org>
- <a284c13d-b55a-467d-8756-c41b0f913df3@quicinc.com>
- <1f8fdd47-0c48-4ccd-9352-41c830ec9240@linaro.org>
-Content-Language: en-US
-From: Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>
-In-Reply-To: <1f8fdd47-0c48-4ccd-9352-41c830ec9240@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: U96yhAiXlMwworn7unip6mWtyMVWfE6e
-X-Proofpoint-ORIG-GUID: U96yhAiXlMwworn7unip6mWtyMVWfE6e
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 bulkscore=0 spamscore=0 adultscore=0 phishscore=0
- suspectscore=0 mlxscore=0 mlxlogscore=507 lowpriorityscore=0 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2312270016
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ZGVgynaKhqIN2HVd"
+Content-Disposition: inline
+In-Reply-To: <20231226235741.4376-1-marcelomspessoto@gmail.com>
 
 
+--ZGVgynaKhqIN2HVd
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 12/27/2023 12:34 AM, Krzysztof Kozlowski wrote:
-> On 26/12/2023 16:03, Krishna Kurapati PSSNV wrote:
->>
->>
->> On 12/26/2023 5:52 PM, Krzysztof Kozlowski wrote:
->>
->>>>>
->>>>> This does not answer why, you sc8280xp and x1e80100 not get one optional
->>>>> interrupt. I asked "why" you are doing this change. Why do you need it?
->>>>> What is the rationale?
->>>>>
->>>>> Then I grunted about unmanageable commit, because all my troubles to
->>>>> review it are the effect of it: it is very difficult to read. It is also
->>>>> difficult for you, because you keep making here mistakes. So if you
->>>>> cannot write this commit properly and I cannot review it, then it is way
->>>>> over-complicated, don't you think? But this is still second problem
->>>>> here, don't ignore the fist - "why?"
->>>>
->>>> HI Krzysztof,
->>>>
->>>>     Thanks for the review.
->>>>     To answer the question,
->>>>
->>>> "why ?" : The interrupts have been mis-interpreted on many platforms or
->>>> many interrupts are missing.
->>>
->>> I asked about these two specific platforms. Please explain these
->>> changes. Above is so generic that tells me nothing.
->>>
->>
->> Is the question, "Why do x1e80100 and sc8280 don't have hs_phy_irq ?"
-> 
->   No, not entirely, the question was why these have flexible number of
-> IRQs (last one optional)?
-> 
-> 
->> If so, I checked the SC8280 HW specifics and I see one small error. The
->> name was printed wrong. I got it from another source. Will move sc8280
->> to list having 5 interrupts. As per x1e80100, I wasn't able to get my
->> hands on the hw specifics and I followed the following link by Abel Vesa:
->>
->> https://lore.kernel.org/r/20231214-x1e80100-usb-v1-1-c22be5c0109e@linaro.org
->>
->> As per the above patch, x1e80100 had only 4 interrupts.
-> 
-> Hm, ok, you say "4" but your patch says "minItems: 3". 3 != 4.
-> 
+On Tue, Dec 26, 2023 at 08:57:41PM -0300, Marcelo Mendes Spessoto Junior wr=
+ote:
+> Signed-off-by: Marcelo Mendes Spessoto Junior <marcelomspessoto@gmail.com>
+>=20
+> The file display/modules/inc/mod_freesync.h has two identical AMD
+> Copyright texts. This simple patch aims to remove the duplicate one.
 
-Actually, you are right. We don't need the max/min items as we are sure 
-that the targets mentioned under this have 4 interrupts definitively.
+Hi Marcelo,
 
-But the optional interrupt was put in just in case any target comes in 
-that has no ss_phy and no hs_phy and has only the other 3 interrupts. 
-Since those targets are not present currently, I will remove the max/min 
-items from this.
+The patch subject should have a subsystem prefix (e.g. the full subject
+should have been "[PATCH] drm/amdgpu: mod_freesync: Remove duplicate
+copyright boilerplate").
 
-Thanks for the catch. Sorry for bothering you with a couple of mails 
-because I didn't understand the question you were trying to ask.
+For patch description, I'd like to write it as "mod_freesync header file
+has duplicated copyright boilerplate. Drop the duplicate". And make
+sure that your Signed-off-by: trailer is on the bottom of description,
+before triple dashes (`git commit -s` does it for you).
 
-Regards,
-Krishna,
+>=20
+> ---
+>  .../amd/display/modules/inc/mod_freesync.h    | 28 -------------------
+>  1 file changed, 28 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/amd/display/modules/inc/mod_freesync.h b/dri=
+vers/gpu/drm/amd/display/modules/inc/mod_freesync.h
+> index afe1f6cce..cc3dc9b58 100644
+> --- a/drivers/gpu/drm/amd/display/modules/inc/mod_freesync.h
+> +++ b/drivers/gpu/drm/amd/display/modules/inc/mod_freesync.h
+> @@ -1,31 +1,3 @@
+> -/*
+> - * Copyright 2016 Advanced Micro Devices, Inc.
+> - *
+> - * Permission is hereby granted, free of charge, to any person obtaining=
+ a
+> - * copy of this software and associated documentation files (the "Softwa=
+re"),
+> - * to deal in the Software without restriction, including without limita=
+tion
+> - * the rights to use, copy, modify, merge, publish, distribute, sublicen=
+se,
+> - * and/or sell copies of the Software, and to permit persons to whom the
+> - * Software is furnished to do so, subject to the following conditions:
+> - *
+> - * The above copyright notice and this permission notice shall be includ=
+ed in
+> - * all copies or substantial portions of the Software.
+> - *
+> - * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRE=
+SS OR
+> - * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILI=
+TY,
+> - * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SH=
+ALL
+> - * THE COPYRIGHT HOLDER(S) OR AUTHOR(S) BE LIABLE FOR ANY CLAIM, DAMAGES=
+ OR
+> - * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+> - * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> - * OTHER DEALINGS IN THE SOFTWARE.
+> - *
+> - * Authors: AMD
+> - *
+> - */
+> -
+> -
+> -
+> -
+>  /*
+>   * Copyright 2016 Advanced Micro Devices, Inc.
+>   *
+
+The diff itself LGTM.
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--ZGVgynaKhqIN2HVd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZYuMQgAKCRD2uYlJVVFO
+o0qFAP48gatzxW12gHZZvhcbCTjbLWlzeSScerZ+QyttfS1K4QEAxEaqJj86R9nS
+X7dnpFXXjKu+pZ+rN8LzhrBwEQgndQk=
+=xonQ
+-----END PGP SIGNATURE-----
+
+--ZGVgynaKhqIN2HVd--
