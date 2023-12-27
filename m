@@ -1,136 +1,129 @@
-Received: from nikam.ms.mff.cuni.cz (nikam.ms.mff.cuni.cz [195.113.20.16])
+Received: from mail-m49208.qiye.163.com (mail-m49208.qiye.163.com [45.254.49.208])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C134446AC;
-	Wed, 27 Dec 2023 11:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gimli.ms.mff.cuni.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gimli.ms.mff.cuni.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gimli.ms.mff.cuni.cz header.i=@gimli.ms.mff.cuni.cz header.b="g8fPewqr"
-Received: from gimli.ms.mff.cuni.cz (gimli.ms.mff.cuni.cz [195.113.20.176])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by nikam.ms.mff.cuni.cz (Postfix) with ESMTPS id 3CA2D28C548;
-	Wed, 27 Dec 2023 12:55:58 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gimli.ms.mff.cuni.cz;
-	s=gen1; t=1703678158;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LdH2yBNiK/xMMpgPKeteq1/bIi2Aa4FzaW/rE8c1K0A=;
-	b=g8fPewqrOpd0ltQq7evxQAYLjxvt6JHIvnXsqPHpz7Uk+5zDvmL3colK6SKofAJqmqV+cF
-	gpOUX6gosI9DIGESXkflAyZ/B94h31STzpdC1hCFRZ7KT1ymPt5xnnMK2UQIFwJILmE2d5
-	MXfkxO2/jRLRIU4M8HR4Lnn145yQ5C0=
-Received: from localhost (internet5.mraknet.com [185.200.108.250])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: karelb)
-	by gimli.ms.mff.cuni.cz (Postfix) with ESMTPSA id 1FA3544D1F0;
-	Wed, 27 Dec 2023 12:55:58 +0100 (CET)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA9F446B3;
+	Wed, 27 Dec 2023 11:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=senarytech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=senarytech.com
+Received: from book-ThinkStation-P328.. (unknown [61.183.143.78])
+	by mail-m12756.qiye.163.com (Hmail) with ESMTPA id 459A0DC0636;
+	Wed, 27 Dec 2023 15:10:20 +0800 (CST)
+From: bo liu <bo.liu@senarytech.com>
+To: perex@perex.cz,
+	tiwai@suse.com
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bo liu <bo.liu@senarytech.com>
+Subject: [PATCH 2/3] Fix headset auto detect fail in cx8070 and SN6140
+Date: Wed, 27 Dec 2023 15:10:07 +0800
+Message-Id: <20231227071008.13665-2-bo.liu@senarytech.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231227071008.13665-1-bo.liu@senarytech.com>
+References: <20231227071008.13665-1-bo.liu@senarytech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 27 Dec 2023 12:55:57 +0100
-Message-Id: <CXZ3I4X6XODY.1PMT2LS10M50M@gimli.ms.mff.cuni.cz>
-From: "Karel Balej" <karelb@gimli.ms.mff.cuni.cz>
-Cc: "Conor Dooley" <conor.dooley@microchip.com>, "Dmitry Torokhov"
- <dmitry.torokhov@gmail.com>, "Rob Herring" <robh+dt@kernel.org>, "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Henrik Rydberg" <rydberg@bitmath.org>,
- <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, =?utf-8?q?Duje_Mihanovi=C4=87?=
- <duje.mihanovic@skole.hr>, <~postmarketos/upstreaming@lists.sr.ht>,
- <phone-devel@vger.kernel.org>, "Karel Balej" <balejk@matfyz.cz>, "Conor
- Dooley" <conor@kernel.org>
-Subject: Re: [PATCH v3 2/5] dt-bindings: input/touchscreen: Add compatible
- for IST3038B
-To: "Markuss Broks" <markuss.broks@gmail.com>
-References: <20231202125948.10345-1-karelb@gimli.ms.mff.cuni.cz>
- <20231202125948.10345-3-karelb@gimli.ms.mff.cuni.cz>
- <20231203-outskirts-reformat-e0a833903841@spud>
- <0a035c62-9d35-4f85-b1f3-bcb7dea17d52@gmail.com>
- <20231204-stooge-impotent-fe8d2d9177e4@wendy>
- <CXJOLS2I8WH7.1IMVJGPUNG4VB@gimli.ms.mff.cuni.cz>
- <20231209-casing-music-bded1c7b5475@spud>
-In-Reply-To: <20231209-casing-music-bded1c7b5475@spud>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZQ0gdVkhMTBoaSUNJSE5MQ1UTARMWGhIXJBQOD1
+	lXWRgSC1lBWU1KVUpDSFVKT0hVTENZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
+X-HM-Tid: 0a8caa1c2524b223kuuu459a0dc0636
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NTo6Dio5MDwrAQkJODg#HAxL
+	IyJPFAlVSlVKTEtITU1KS0lKSU9JVTMWGhIXVRkUVRcSDjsIHhUaCQIPHhgTVRgUFkVZV1kSC1lB
+	WU1KVUpDSFVKT0hVTENZV1kIAVlBT0lOSDcG
 
-Markuss,
+CX8070 and SN6140 will get wrong headset type when use OMTP headset,
+then the headset mic will not work.
 
-On Sat Dec 9, 2023 at 11:58 AM CET, Conor Dooley wrote:
-> On Sat, Dec 09, 2023 at 10:05:27AM +0100, Karel Balej wrote:
-> > On Mon Dec 4, 2023 at 1:52 PM CET, Conor Dooley wrote:
-> > > On Mon, Dec 04, 2023 at 02:40:44PM +0200, Markuss Broks wrote:
-> > > > On 12/3/23 13:20, Conor Dooley wrote:
-> > > > > On Sat, Dec 02, 2023 at 01:48:33PM +0100, Karel Balej wrote:
-> > > > > > From: Markuss Broks <markuss.broks@gmail.com>
-> > > > > >=20
-> > > > > > Imagis IST3038B is a variant (firmware?) of Imagis IST3038 IC,
-> > > > > > add the compatible for it to the IST3038C bindings.
-> > > > > This one is better, but would be well served by mentioning what
-> > > > > specifically is different (register addresses or firmware command=
-s?)
-> > > >=20
-> > > > I don't think anyone knows this other than Imagis itself. I would g=
-uess it's
-> > > > different hardware, since register addresses are indeed different, =
-but on
-> > > > the other hand, there is a possibility that firmware on the MCU cou=
-ld be
-> > > > responding to those commands. I suppose "... IST3038B is a hardware=
- variant
-> > > > of ... IST3038" would be more correct.
-> > >
-> > > Only Imagis might know the specifics, but you (plural) have made driv=
-er
-> > > changes so you know what is different in terms of the programming mod=
-el.
-> > > I'm just asking for you to mention how the programming model varies i=
-n
-> > > the commit message. Otherwise I can't know whether you should have ad=
-ded
-> > > a fallback compatible, without going and reading your driver change. =
-The
-> > > commit message for the bindings should stand on its own merit in that
-> > > regard.
-> > > "Variant" alone does not suffice, as many variants of devices have a
-> > > compatible programming model, be that for a subset of features or
-> > > complete compatibility.
-> > >
-> > > > The reason why I think it could be firmware-defined is because we h=
-ave a lot
-> > > > of variants (30xxA, 30xxB, 30xxC, plain 30xx), and the numbers usua=
-lly mean
-> > > > feature level/completeness, e.g. some don't support the touch press=
-ure or
-> > > > touchkeys, and we don't know what A/B/C/none means.
-> > >
-> > > Ultimately whether it is due to firmware or the hardware isn't
-> > > particular important, just mention what is incompatibly different.
-> >=20
-> > I propose to update the commit description as such:
-> >=20
-> > 	Imagis IST3038B is a variant (firmware?) of Imagis IST3038 IC
-> > 	differing from IST3038C in its register interface. Add the
-> > 	compatible for it to the IST3038C bindings.
+Signed-off-by: bo liu <bo.liu@senarytech.com>
+---
+ sound/pci/hda/patch_conexant.c | 35 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 18 deletions(-)
 
-is this change OK with you?
+diff --git a/sound/pci/hda/patch_conexant.c b/sound/pci/hda/patch_conexant.c
+index 2d58595bfbdd..9ebc0709a202 100644
+--- a/sound/pci/hda/patch_conexant.c
++++ b/sound/pci/hda/patch_conexant.c
+@@ -184,11 +184,10 @@ static int cx_auto_init(struct hda_codec *codec)
+ 		snd_hda_codec_write(codec, 0x1c, 0, 0x4f0, 0x0eb);
+ 		/* fix reboot headset recognize fail issue */
+ 		mic_persent = snd_hda_codec_read(codec, 0x19, 0, 0xf09, 0x0);
+-		if (mic_persent&0x80000000) {
++		if (mic_persent&0x80000000) 
+ 			snd_hda_codec_write(codec, 0x19, 0, 0x707, 0x24);
+-		} else {
++		else
+ 			snd_hda_codec_write(codec, 0x19, 0, 0x707, 0x20);
+-		}
+ 		break;
+ 	}
+ 
+@@ -209,46 +208,46 @@ static void cx_auto_free(struct hda_codec *codec)
+ 	cx_auto_shutdown(codec);
+ 	snd_hda_gen_free(codec);
+ }
+- 
++
+ static int headset_present_flag;
+ static void cx_jack_unsol_event(struct hda_codec *codec, unsigned int res)
+ {
+-	unsigned int val,phone_present,mic_persent,phone_tag,mic_tag;
++	unsigned int val, phone_present, mic_persent,phone_tag, mic_tag;
+ 	unsigned int count=0;
+-	
++
+ 	switch (codec->core.vendor_id) {
+ 	case 0x14f11f86:
+ 	case 0x14f11f87:
+ 		/* check hp&mic tag to process headset pulgin&plugout */
+ 		phone_tag = snd_hda_codec_read(codec, 0x16, 0, 0xf08, 0x0);
+ 		mic_tag = snd_hda_codec_read(codec, 0x19, 0, 0xf08, 0x0);
+-		if((phone_tag&(res>>26)) || (mic_tag&(res>>26))) {
+-			//msleep(600);
++		if ((phone_tag&(res>>26)) || (mic_tag&(res>>26))) {
+ 			phone_present = snd_hda_codec_read(codec, 0x16, 0, 0xf09, 0x0);
+-			if(!(phone_present&0x80000000)) {/* headphone plugout */
++			if (!(phone_present&0x80000000)) {/* headphone plugout */
+ 				headset_present_flag = 0;
+ 				snd_hda_codec_write(codec, 0x19, 0, 0x707, 0x20);
+ 				break;
+ 			}
+ 			if (headset_present_flag == 0) {
+ 				headset_present_flag = 1;
+-			} else if(headset_present_flag == 1) {
++			} else if (headset_present_flag == 1) {
+ 				mic_persent = snd_hda_codec_read(codec, 0x19, 0, 0xf09, 0x0);
+-				if ((phone_present&0x80000000)&&(mic_persent&0x80000000)) {/* headset is present */
++				/* headset is present */
++				if ((phone_present&0x80000000) && (mic_persent&0x80000000)) {
+ 					/* wait headset detect done */
+ 					do {
+-						val = snd_hda_codec_read(codec, 0x1c, 0, 0xca0, 0x0);
+-						if(val&0x080) {
++						val = snd_hda_codec_read(codec, 0x1c,
++									0, 0xca0, 0x0);
++						if (val&0x080)
+ 							break;
+-						}
+-						msleep(10);
++						msleep(20);
+ 						count += 1;
+-					} while(count > 5);
++					} while (count > 3);
+ 					val = snd_hda_codec_read(codec, 0x1c, 0, 0xcb0, 0x0);
+-					if(val&0x800) {
++					if (val&0x800) {
+ 						codec_dbg(codec, "headset plugin, type is CTIA\n");
+ 						snd_hda_codec_write(codec, 0x19, 0, 0x707, 0x24);
+-					} else if(val&0x400) {
++					} else if (val&0x400) {
+ 						codec_dbg(codec, "headset plugin, type is OMTP\n");
+ 						snd_hda_codec_write(codec, 0x19, 0, 0x707, 0x24);
+ 					} else {
+-- 
+2.34.1
 
->
->
-> SGTM. You can add
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> with that commit message update.
->
-> Thanks,
-> Conor.
-
-Kind regards,
-K. B.
