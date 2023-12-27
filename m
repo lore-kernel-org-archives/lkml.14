@@ -1,37 +1,41 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF4D47F41
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 16:26:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5AB448CD9
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 16:27:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rIWk0-00059y-0b; Wed, 27 Dec 2023 17:26:44 +0100
+	id 1rIWk0-0005Bf-PT; Wed, 27 Dec 2023 17:26:44 +0100
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rIWjy-001tZc-14; Wed, 27 Dec 2023 17:26:43 +0100
+	id 1rIWjy-001tZq-Se; Wed, 27 Dec 2023 17:26:43 +0100
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rIWjz-001Wn5-08;
+	id 1rIWjz-001WnN-2r;
 	Wed, 27 Dec 2023 17:26:43 +0100
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Kieran Bingham <kieran.bingham@ideasonboard.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Rob Herring <robh@kernel.org>
+To: Michal Simek <michal.simek@amd.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jay Buddhabhatti <jay.buddhabhatti@amd.com>,
+	Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Nava kishore Manne <nava.kishore.manne@amd.com>,
+	Rajan Vaja <rajan.vaja@xilinx.com>,
+	Rob Herring <robh@kernel.org>,
+	Dhaval Shah <dhaval.r.shah@amd.com>,
+	Marek Vasut <marex@denx.de>
 Cc: kernel@pengutronix.de,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	linux-rpi-kernel@lists.infradead.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 07/11] firmware: raspberrypi: Convert to platform remove callback returning void
-Date: Wed, 27 Dec 2023 17:26:31 +0100
-Message-ID:  <5df31ef3c069f45634631c9c639bbb60ab1d4798.1703693980.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH 11/11] firmware: zynqmp: Convert to platform remove callback returning void
+Date: Wed, 27 Dec 2023 17:26:35 +0100
+Message-ID:  <b5a82472a6d61608c2cd7728ca364f6c88a821c3.1703693980.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1703693980.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1703693980.git.u.kleine-koenig@pengutronix.de>
@@ -42,7 +46,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1900; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=8OnFnV9+Q+XjHGFocc6jyNJphVm9oGZbvop0yAJNf9o=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBljFA5eCGsDsplPuScmklfE3nyikx3e0+FJY3l8 BL3mj5KWsuJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZYxQOQAKCRCPgPtYfRL+ TrYJB/wKMxZ0dVeqePWzIe13JUFhLVI4QUjz0EFQb5Rn475cfqK+B7i3dx0wcVewGUkDahlovG2 tdfvhL//8Gt6HvqFq2H+aCEBbKA4BHa48gkArRdq6xQEZDt5z0rQld5osnTbW0IDOdPoYaNuxo5 mkLOex1INSKouwkConwu8R0j9KDoV2neCB/vd0WEhYl0KpkvNgNdCBWBvMxmtoqSGdvAjb9+zb7 qwYQ7p93oWEIF4p9nBNulGEjF14nU7UlVrhmDf7OSOreQ02WFGTaYPacVKdTH9dxk/m5za93xoD 3zuzyc/kgU28KdvmxsL8G2Y1/r2et4CQOAkdyHhWt/k34anG
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1949; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=5lA5AskgyOWj5RlJyQL/1YZMBAmaOueb91fZw7g7wBk=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBljFA+SOL/OLAdfMhQjjJrd6i8QwhOba6xFIvvF 9XxF7gr7VqJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZYxQPgAKCRCPgPtYfRL+ Tr/0B/43t00D3aB2EI/DNiEEuY+18Axew5V9CICgtxrn/vfQ8Yk5ViKo9PuE1Ee5VBjRwbh0bpP JYG7GNO2F7JcSXMEOEgxIs17hku48vv+Qabv4ho0F1TtgwWiOWxaX2n6yTt8FkbKXykKoV8nEW6 vSR53TvZNvtyIpP59/0KAIs7//PMmtpBfP37i+0JUmDvIH1ypp0rlDDZH+tP9Zjg5kwnv0QCtH/ YoBdzx7xDa5QfcjvFmYVuedqXmDX8n1ratrsNABJKYmaVbMnFIO9qWZiZVc7Xollxdmk9JFHXzi M1F+jOJ8BFTCXyiVfelpt9t0eIk7Gcb4yU+IDf4MHG7rR3+N
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -65,40 +69,39 @@ callback to the void returning variant.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/firmware/raspberrypi.c | 6 ++----
+ drivers/firmware/xilinx/zynqmp.c | 6 ++----
  1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberrypi.c
-index 4cd290a60fba..322aada20f74 100644
---- a/drivers/firmware/raspberrypi.c
-+++ b/drivers/firmware/raspberrypi.c
-@@ -317,7 +317,7 @@ static void rpi_firmware_shutdown(struct platform_device *pdev)
- 	rpi_firmware_property(fw, RPI_FIRMWARE_NOTIFY_REBOOT, NULL, 0);
+diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+index a55dfd9bae6b..73cae6ef83ec 100644
+--- a/drivers/firmware/xilinx/zynqmp.c
++++ b/drivers/firmware/xilinx/zynqmp.c
+@@ -1929,7 +1929,7 @@ static int zynqmp_firmware_probe(struct platform_device *pdev)
+ 	return of_platform_populate(dev->of_node, NULL, NULL, dev);
  }
  
--static int rpi_firmware_remove(struct platform_device *pdev)
-+static void rpi_firmware_remove(struct platform_device *pdev)
+-static int zynqmp_firmware_remove(struct platform_device *pdev)
++static void zynqmp_firmware_remove(struct platform_device *pdev)
  {
- 	struct rpi_firmware *fw = platform_get_drvdata(pdev);
+ 	struct pm_api_feature_data *feature_data;
+ 	struct hlist_node *tmp;
+@@ -1944,8 +1944,6 @@ static int zynqmp_firmware_remove(struct platform_device *pdev)
+ 	}
  
-@@ -327,8 +327,6 @@ static int rpi_firmware_remove(struct platform_device *pdev)
- 	rpi_clk = NULL;
- 
- 	rpi_firmware_put(fw);
+ 	platform_device_unregister(em_dev);
 -
 -	return 0;
  }
  
- static const struct of_device_id rpi_firmware_of_match[] = {
-@@ -406,7 +404,7 @@ static struct platform_driver rpi_firmware_driver = {
+ static const struct of_device_id zynqmp_firmware_of_match[] = {
+@@ -1962,6 +1960,6 @@ static struct platform_driver zynqmp_firmware_driver = {
+ 		.dev_groups = zynqmp_firmware_groups,
  	},
- 	.probe		= rpi_firmware_probe,
- 	.shutdown	= rpi_firmware_shutdown,
--	.remove		= rpi_firmware_remove,
-+	.remove_new	= rpi_firmware_remove,
+ 	.probe = zynqmp_firmware_probe,
+-	.remove = zynqmp_firmware_remove,
++	.remove_new = zynqmp_firmware_remove,
  };
- module_platform_driver(rpi_firmware_driver);
- 
+ module_platform_driver(zynqmp_firmware_driver);
 -- 
 2.43.0
 
