@@ -1,146 +1,148 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2045.outbound.protection.outlook.com [40.107.93.45])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A260347761;
-	Wed, 27 Dec 2023 19:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=memverge.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=memverge.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 566E647F46;
+	Wed, 27 Dec 2023 19:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=memverge.com header.i=@memverge.com header.b="awjCQzKk"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IKVuGxYMr2aO1NbJ6WFsgbmvKGfLcROnJiimAf/ONPY7z6fZftqbdX2LWLZd3I1y0xuppHJkQabOHuIAKOxLW9kEkdAFF6XoLudBqH19W5zTFxmJnpD9MmBtuazyqTMKHuBO09LFnzAUfbHActVqVmfcQ31Pm+EeTfpDZPyllYHRI5hgPyspCMB2gC+q+++KnamI4ebUOsOnLCi5aQc4vHnCWdqPzKwQ50UOo2VOtlcAfV4oJjaL9pYVCDK36FSLCKECcJri73kzydtpUdNTVp/rB20ayWd5PgyoLcSLGKvsp6GjNqWBXnkMHf3mMm8VRRr02D90B+tk/av2ypcs8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mtjAlTX2HzUw5cC2SujbNKCIunnZGkeGftLbnj0MQzU=;
- b=fHULR3lznkl6SR6zNJdNzhnXae7BaZEzAPQAAEmH+k7VhWJRF9JIZ2WBnfqyLNPfsjIdXTWT3qA1cT9UMVTSPAbYpozyX7iywBNmc+mMEn3LOkylpMntmZ4nfcFNPX1DirbnDeH13dJ0A5WtdMcETy7pCGtx7ndHZKx9bnqztUAzKXJiaByTjAxZM+CJI4+Okm5HHanwW6S9cxCgdyyetjHCpFEuU0dxoHv9XR/41fqJfw95bSRWnnxJeVJ+URkxDpYTbqbBGNf4AY4ayTu0J2fo37PnVniaDDIRptPPUENTQfCGaq6mC5S2TsTytnU98Hi7I3CaBAiRTNaSZHABUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mtjAlTX2HzUw5cC2SujbNKCIunnZGkeGftLbnj0MQzU=;
- b=awjCQzKknGDS4ROKDrWtet97dh9K7MxfDPRNip55o1ZFqqn1SNeAO3upZF0i9+m+9RuahTwJLnapjgy591oSpQjmh8w46mgG6LRH3wwoI4N5h3aa5sDWlL5JBnJUi0U5eQTpR0Vx5pAh0xtqIPku3/9LoaLhlJr2DTxYpVUwqdA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
- by DM4PR17MB6939.namprd17.prod.outlook.com (2603:10b6:8:181::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.18; Wed, 27 Dec
- 2023 19:52:20 +0000
-Received: from SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::381c:7f11:1028:15f4]) by SJ0PR17MB5512.namprd17.prod.outlook.com
- ([fe80::381c:7f11:1028:15f4%5]) with mapi id 15.20.7113.027; Wed, 27 Dec 2023
- 19:52:19 +0000
-Date: Tue, 26 Dec 2023 06:32:54 -0500
-From: Gregory Price <gregory.price@memverge.com>
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Gregory Price <gourry.memverge@gmail.com>, linux-mm@kvack.org,
-	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-	x86@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
-	tglx@linutronix.de, luto@kernel.org, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com, mhocko@kernel.org,
-	tj@kernel.org, corbet@lwn.net, rakie.kim@sk.com,
-	hyeongtak.ji@sk.com, honggyu.kim@sk.com, vtavarespetr@micron.com,
-	peterz@infradead.org, jgroves@micron.com, ravis.opensrc@micron.com,
-	sthanneeru@micron.com, emirakhur@micron.com, Hasan.Maruf@amd.com,
-	seungjun.ha@samsung.com,
-	Srinivasulu Thanneeru <sthanneeru.opensrc@micron.com>
-Subject: Re: [PATCH v5 02/11] mm/mempolicy: introduce
- MPOL_WEIGHTED_INTERLEAVE for weighted interleaving
-Message-ID: <ZYq55i03DIYCuC0u@memverge.com>
-References: <20231223181101.1954-1-gregory.price@memverge.com>
- <20231223181101.1954-3-gregory.price@memverge.com>
- <8734vof3kq.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <ZYp6ZRLZQVtTHest@memverge.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZYp6ZRLZQVtTHest@memverge.com>
-X-ClientProxiedBy: BYAPR01CA0045.prod.exchangelabs.com (2603:10b6:a03:94::22)
- To SJ0PR17MB5512.namprd17.prod.outlook.com (2603:10b6:a03:394::19)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cCxQQR7A"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BRIHbjw029653;
+	Wed, 27 Dec 2023 19:52:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=ml9Y5Mp7YdpzZxYWY9a5OHUJel0QH3chfwN4pcEKVZ4=;
+ b=cCxQQR7Adipzvo04b1hbj1njHzFvhA5mi8CuFR0zgHwEy60S8BstbBs+Tnb6crzQLEmM
+ mVsUvf4VRP4qI4BnbGBn4lFGkCl+i8fV5/fZZecq4acHSc2flrOtn8XCLKsmq60hghIU
+ 2reVJWW797st4vtRiq+PbgpCY9rjoHiCVhyWxHVaju8NowHdjGx1Zc4pKbGcdzCQA0Yd
+ GnictM5Q8Lkn2MUPEIU+zjzvWu+DUXfP8D63blBdEUW2R4VYb961PupqxEdAgy1rw/X1
+ TuZapMkjPr5k6PwF4TU5NyQdVrYAWWo9EDysa9HS17uu+PIp3cBidBHFo8nZC6K5WMJF uw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v8k4s0ftm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 27 Dec 2023 19:52:46 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BRJjY6o031310;
+	Wed, 27 Dec 2023 19:52:45 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v8k4s0ft5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 27 Dec 2023 19:52:45 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BRIbSL5017169;
+	Wed, 27 Dec 2023 19:52:44 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3v6c3k3p7t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 27 Dec 2023 19:52:44 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BRJqhnl30474594
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 27 Dec 2023 19:52:43 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 78AA058050;
+	Wed, 27 Dec 2023 19:52:43 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 24D6958045;
+	Wed, 27 Dec 2023 19:52:41 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.140.144])
+	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 27 Dec 2023 19:52:41 +0000 (GMT)
+Message-ID: <3bcc924ed59ecdc5fda5ab8aceeed9450a54c829.camel@linux.ibm.com>
+Subject: Re: [PATCH v8 19/24] ima: Move to LSM infrastructure
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Casey Schaufler <casey@schaufler-ca.com>,
+        Roberto Sassu
+ <roberto.sassu@huaweicloud.com>,
+        viro@zeniv.linux.org.uk, brauner@kernel.org, chuck.lever@oracle.com,
+        jlayton@kernel.org, neilb@suse.de, kolga@netapp.com,
+        Dai.Ngo@oracle.com, tom@talpey.com, paul@paul-moore.com,
+        jmorris@namei.org, serge@hallyn.com, dmitry.kasatkin@gmail.com,
+        dhowells@redhat.com, jarkko@kernel.org, stephen.smalley.work@gmail.com,
+        eparis@parisplace.org, shuah@kernel.org, mic@digikod.net
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Roberto Sassu
+	 <roberto.sassu@huawei.com>
+Date: Wed, 27 Dec 2023 14:52:40 -0500
+In-Reply-To: <42fcd014-733b-41b2-9c7b-658533cd01a3@schaufler-ca.com>
+References: <20231214170834.3324559-1-roberto.sassu@huaweicloud.com>
+	 <20231214170834.3324559-20-roberto.sassu@huaweicloud.com>
+	 <c6c2d413f340d858e43aa3837abdf80cb8be9d84.camel@linux.ibm.com>
+	 <42fcd014-733b-41b2-9c7b-658533cd01a3@schaufler-ca.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR17MB5512:EE_|DM4PR17MB6939:EE_
-X-MS-Office365-Filtering-Correlation-Id: e86497ec-4eaa-4e48-1dfe-08dc071555d0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	azhoa98W2TmDNFX7YPBhdSW3Q+USs/98wnpOrXgeo3jYnW1dmG6yw4mpj6fRr8ya0H1zOxCqu9fy1WVhvDqPBilZB3XMX+tpV6b67fWCMdc94dje9bc0Fq0GLx9CgOu647ZGnsZD8M8v6B2YQQUx2f+JzMhNOyH8eWPdH+aQ2qnWHETWu1nPgHPrXfdgr1JONE/kpf9oSKmnsKyOxyyvPMWV94Rssv4fcz2yJ73oouWwYnfJsj3UWl5z3qnYezpa/0qdhaFRn8sXUMCQ7cbgWVWOcifYaJ4FeqBmAveGsi41x0GYs7Hui9vunyIc47rwBsI2I27Gos0BllWYic8hMbh1QrPCSXSDosCW1BiIST7DVeMm51Olfewr+kd4Vu7tw57RczlqiFe48vtYjAehZDH9oGC05SYfPWFfOpSlFi5mz6uW9Maykouj8mMoKXw+DMJ4+OFTwFQg/2S6yBXxTLrAIE4J0H7gvYOxtSFNTsGpY+J+i2fF5zn7LXJiQJtX/Eh5Di0LXJNHNZLbpgRmaUUJSr4mX7mjZgs8GaLhk1Rr8GzH/2EUvUsqmJnKcN60dREVO+0ZQt3pEyWAvtIjlKCSq7nzfUyjKkJd1g5VnXGgi21KoqC8TPvSj0l6Kd/m
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR17MB5512.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39850400004)(376002)(366004)(396003)(136003)(346002)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(36756003)(6916009)(6666004)(6506007)(6486002)(66946007)(66556008)(66476007)(86362001)(6512007)(38100700002)(26005)(5660300002)(2616005)(41300700001)(8936002)(4744005)(7406005)(44832011)(2906002)(478600001)(4326008)(8676002)(7416002)(54906003)(316002)(16393002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Xuj8GFvvxUBEl8iE9MqV23Y0gq5q3la1yfi03L/68cLHr2BzjNoqbxO8jR1/?=
- =?us-ascii?Q?rIn8saXfe0FREsqGAe+IuxWR1rsJbylOuwVgepSw6gpcZGC0EeyySWvmtRDI?=
- =?us-ascii?Q?ZoTE6NY6eNG6heC++Nlo+MyNch48bMYV+WSUL0OROBEMLcTyfJ0tsE24wkmV?=
- =?us-ascii?Q?KczpRJgQjcJinSGC/GEu3pktBIheCCyxkXwu+RMiSqVCtg+44KOe5dBXNpy3?=
- =?us-ascii?Q?IiIBoLIaS1PNGgVTIOj0MD3IN/2FLnJ2WmnuM+WFnns+Xs9GTR2U1+hvIOGn?=
- =?us-ascii?Q?pmYzJ7pNZGJ/bbMJI2Q2j3ER3sxTWyD1V2oDygeqbmjDvlOY/xmekVlSKH0K?=
- =?us-ascii?Q?c8R4bH1NZyyD7+sr8UP4vcOUSOGUdfTQdemR6+u6qAGXyx1yjdTZvTpHzoDH?=
- =?us-ascii?Q?m7HSZD6XfPGCqGGJaOvp0FvAtwtJ+3Qb5B342t4aN8ygsgUtJ4atyuYSorYM?=
- =?us-ascii?Q?euD04WDm1JdC8emk39OMAYCn0WbxBQxqp/u0y0MORnXSbZdL3Ag2jRz1r8IT?=
- =?us-ascii?Q?Ept5gjqsBmV5FhHx0R+J5mT8myUfWLklq9M6Lv0I0PCSFBmc7YyOgj2NV3Bq?=
- =?us-ascii?Q?Ocj71NeQ1+V/C778ftGELsBy1RYlFxLcDi0UNuH6irwTu9cnl2p5wU88Kbbh?=
- =?us-ascii?Q?WMI7Cqe9pxnNzZl75X+TrXvl049Bsanv2NQb9Z3dVz2kTq5CLrYV4DXf+OeR?=
- =?us-ascii?Q?S3L372yDEPdIYrNBSR0pW9AWZbfcq1fMxoGdZAJII4XIDpceySrwPgo+fFDg?=
- =?us-ascii?Q?FyUQtIfoHMVIDnZO0p7fHqTxTgfWHFOKaRaqhuUnnDn1OA7ZA39sZZDC4xlQ?=
- =?us-ascii?Q?JVnkQe1oSGJr01A8TIURxsNe1gwPBp9HMk7x47d/3kMp+/Qrks+QjeWd60FW?=
- =?us-ascii?Q?CGeD0WMtn150OUz/mU6VJQsramF4V/SvdEHrB7VIzfUiAeGA2Gn6krBhh3/5?=
- =?us-ascii?Q?8csEzjKZK0/aLGzMWnziEMHGYvEKoJh31GDpqx4uAF/bE8sapFHQMFNjK+Oy?=
- =?us-ascii?Q?3LDF82DbJvyYeM6pcbofMxsILf5A+DH86JbscbBvEV1/w/trctbJjVWULfmZ?=
- =?us-ascii?Q?oqjPVUad9mhWiqo1Z2ASwdWcQ6/tTwNbXg1no8CPTS/6ziATtWJcbwDEA34M?=
- =?us-ascii?Q?TMPVHcSny+lsz0W2UozZuIVDUbOzcDqsbAIVrQ+gCPRgmftYFpPFjPVYDQMZ?=
- =?us-ascii?Q?OLdbW1EpRKcBFe1yf2Mmf1fQddk37Xsxe+mCLUsWRCGr3ks6ZiGzWVa7/jDp?=
- =?us-ascii?Q?Pw/ME2NU5Jjp448NgH00gn7rkjzSJ+2wozLzm+nTJopID3+cwUjBHzIX/SS9?=
- =?us-ascii?Q?a93gY9WSSiFp8xhHAJ+QeEMfC+6AScZ/qVEUeZrxPDZ4gNbdUX8cfVPWObN/?=
- =?us-ascii?Q?WXxrBmfvP8w3ZE9otM1HIZvhf0otUYiKhvWYU4zleW/c2IWDsKAesv96KnJ0?=
- =?us-ascii?Q?FwDB/vyF12boUPRlrAzktNVyQXD+MVNPxpWwp0xwtuf/C6X4ejXA0dyNu80k?=
- =?us-ascii?Q?1UrIxb23OdMrnB/Gd3F2wukwrqS4QtTm6QtYCZ5vQtJKJ/HT979lXiVSNnaK?=
- =?us-ascii?Q?SO1EQoeidTPb0o/ctkT9GdEBFEcNJ3YOBVYVDdC5CBUraX4CotxwIdlWdMR7?=
- =?us-ascii?Q?DQ=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e86497ec-4eaa-4e48-1dfe-08dc071555d0
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR17MB5512.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Dec 2023 19:52:19.7089
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: A4G2XUfLVQro0x8advvzpB+eXVO2qdGYaMGShVc7L66e8SzMfeLrZaLoqbf1FnYDOOtQx23CqW8oHSi+iGTbWppwwKfrQXAq8hHcVc7mTE8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR17MB6939
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: XBClGj1OPCFWocoUzsTfrNGAaQ8RZ3_H
+X-Proofpoint-GUID: _q93-Q7mH-WcyRhsNjOS9QLpRu8jibHP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-27_12,2023-12-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ spamscore=0 bulkscore=0 lowpriorityscore=0 mlxlogscore=792 mlxscore=0
+ impostorscore=0 malwarescore=0 priorityscore=1501 clxscore=1015
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2312270146
 
-On Tue, Dec 26, 2023 at 02:01:57AM -0500, Gregory Price wrote:
-> On Wed, Dec 27, 2023 at 04:32:37PM +0800, Huang, Ying wrote:
-> > Gregory Price <gourry.memverge@gmail.com> writes:
+On Tue, 2023-12-26 at 12:14 -0800, Casey Schaufler wrote:
+> On 12/26/2023 10:14 AM, Mimi Zohar wrote:
+> > On Thu, 2023-12-14 at 18:08 +0100, Roberto Sassu wrote:
+> >> From: Roberto Sassu <roberto.sassu@huawei.com>
+> >>
+> >> Move hardcoded IMA function calls (not appraisal-specific functions) from
+> >> various places in the kernel to the LSM infrastructure, by introducing a
+> >> new LSM named 'ima' (at the end of the LSM list and always enabled like
+> >> 'integrity').
+> >>
+> >> Having IMA before EVM in the Makefile is sufficient to preserve the
+> >> relative order of the new 'ima' LSM in respect to the upcoming 'evm' LSM,
+> >> and thus the order of IMA and EVM function calls as when they were
+> >> hardcoded.
+> >>
+> >> Make moved functions as static (except ima_post_key_create_or_update(),
+> >> which is not in ima_main.c), and register them as implementation of the
+> >> respective hooks in the new function init_ima_lsm().
+> >>
+> >> A slight difference is that IMA and EVM functions registered for the
+> >> inode_post_setattr, inode_post_removexattr, path_post_mknod,
+> >> inode_post_create_tmpfile, inode_post_set_acl and inode_post_remove_acl
+> >> won't be executed for private inodes. Since those inodes are supposed to be
+> >> fs-internal, they should not be of interest of IMA or EVM. The S_PRIVATE
+> >> flag is used for anonymous inodes, hugetlbfs, reiserfs xattrs, XFS scrub
+> >> and kernel-internal tmpfs files.
+> >>
+> >> Conditionally register ima_post_path_mknod() if CONFIG_SECURITY_PATH is
+> >> enabled, otherwise the path_post_mknod hook won't be available.
+> > Up to this point, enabling CONFIG_SECURITY_PATH was not required.  By
+> > making it conditional on CONFIG_SECURITY_PATH, anyone enabling IMA will
+> > also need to enable CONFIG_SECURITY_PATH.  Without it, new files will
+> > not be tagged as a "new" file.
+> >
+> > Casey, Paul, how common is it today not to enable CONFIG_SECURITY_PATH?
+> > Will enabling it just for IMA be a problem?
 > 
-> Barrier is to stabilize nodemask on the stack, but yes i'll carry the
-> comment from interleave_nid into this barrier as well.
+> Landlock, AppArmor and TOMOYO require it. Fedora enables Landlock and Ubuntu
+> enables AppArmor. I expect that, except for "minimal" distributions, you
+> won't get any push back. If a distribution is striving for minimal, it's not
+> going to use IMA.
 > 
-> > > +
-> > > +	/* first ensure we have a valid nodemask */
-> > > +	nid = first_node(nodemask);
-> > > +	if (nid == MAX_NUMNODES)
-> > > +		return nid;
-> > 
-> > It appears that this isn't necessary, because we can check whether
-> > weight_total == 0 after the next loop.
-> > 
-> 
-> fair, will snip.
-> 
+> It makes me wonder if eliminating CONFIG_SECURITY_PATH might not be a
+> rational alternative.
 
-Follow up - this is only possible if the nodemask is invalid / has no
-nodes, so it's better to check for this explicitly.  If nodemask is
-valid, then it's not possible to have a weight_total of 0, because
-weights cannot be 0.
+Embedded systems were the first to use IMA for file signature
+verification, not distros.               Could they have enabled
+SELinux, lockdown, and IMA?
 
-~Gregory
+Mimi
+
