@@ -1,86 +1,123 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CD3F4F3
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 09:02:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA3C24B2A;
+	Wed, 27 Dec 2023 09:03:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pjet2F3p"
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6dbb650ad59so3176857a34.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 01:02:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WjyB78eV"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-40d514cbba3so36347925e9.1;
+        Wed, 27 Dec 2023 01:03:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703667773; x=1704272573; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=62EGL1QvBkU3z3zaiHwmHMdg6GkLmVh2kc3PbxBdNDI=;
-        b=Pjet2F3pwjGVRoXm8OlbgS8kx/DBw1ofPlJC9BnkkiBUiMnblkUiPCUUprvKitY9uX
-         GsyTf77zJf0UiuunpootwQ/pl9KTQ8g1mbXs+GgnOZ7uZUNrcDnL1v+hub32Ni93s6yP
-         siKwEYvcFZEt+1DITWarUFG6VStL6z3ZgLjTyY5QAFkCPACGussr/bSeYthOHsD7IwLi
-         Nj3NxUCUq75jTuEJsAqwjwk5Gqc30rJT2+ePNYYROkYbzxt9rg/acSXmJBl60DzxANiz
-         WgtpelSirmdcpBL5evxuY1kYwQ9djpmcZGL991fBgg2zXxDbcCAhPTBH52tfTymVk39C
-         q8lQ==
+        d=gmail.com; s=20230601; t=1703667784; x=1704272584; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=z63r7pTq+SRGl9GETybyvgqCF34V04xy6H98jsuZPZI=;
+        b=WjyB78eVUW0jNKrhcEjddivwhRngwIyVYc6jwaxeW9rdgBgNBtB2dhrdDT9LSON4jX
+         xA58WHUVehWFkxBlmIcjm12vPKm81ZxgwjbchCxUlEn4LB+ygsnZV5qzia9RfQaJk38i
+         yA9zSQ5z1QOEup6HZrMwIxtU2Rf37nmTv34+vGn1UMiz0tByVi2/ILpHjzNwYRBGoq7l
+         IhnECBkjHSxMHu06AHRilRPYyeTwdoPvwReBbHn1VVzIk9h0NyXZrjwrMJ+8BURr+xIE
+         bsCffrak7AS3jbsU0qbrYqxTloC608ldgC/TccibaHMBaFhtkyUildxSn+T96UUXuc/v
+         +HdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703667773; x=1704272573;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=62EGL1QvBkU3z3zaiHwmHMdg6GkLmVh2kc3PbxBdNDI=;
-        b=u2Fcawl0Id+RIoC594rxX+tYkm6C3fiPI22R+qKBIK2MpZ8LoF8fc+QX8pV14fPzUR
-         c2iWcuMj3lBhTYQAiW57V1Y2p1Kx6fyqv6F2IXHIk81nhrrrdpZL4lGXQ8KIPn5T+14g
-         KGJspkWPpZDtZOPPf5lEh1VVdzWWS3Q226AHaeMXUg5187gCB71jGEr/7YV/hSb7UWqY
-         koEbq8aEMg3VIj4ccn96tiZJ23XcEWZ7frtmSjgXpvTEDQYT/NkZ5JZ4qjtUo1jf8xXo
-         yQ8T612xa6Fonkeqx/iShaQIVRe7Bxihx9SBDvAMaM7GjUuITBLXZ3Od8/YbOokQNxhh
-         kTzA==
-X-Gm-Message-State: AOJu0YyfBOte6MTWYq/7z5+DOx6+/N8sZGg+YZPIp7gVg4eoFqVG2RKt
-	hjvZJqaNkk0kTYG7F4sThU0olY5cSrRLXvG/Y5/sZD8hpQ19PuHNr0g=
-X-Google-Smtp-Source: AGHT+IGBoCA0pq5mKruv+7MymaPk+7QWuEARqDwNctU7hLR4p2vurtc9iFIAovqe0bZoGcIrzN+5S3jAdBj7Avd9zAQ=
-X-Received: by 2002:a05:6830:22ce:b0:6dc:36:2f91 with SMTP id
- q14-20020a05683022ce00b006dc00362f91mr927458otc.33.1703667772756; Wed, 27 Dec
- 2023 01:02:52 -0800 (PST)
+        d=1e100.net; s=20230601; t=1703667784; x=1704272584;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=z63r7pTq+SRGl9GETybyvgqCF34V04xy6H98jsuZPZI=;
+        b=dmP5TswD1PS5K/v10pC25DuQPMQtVfGjqdi2aO47a+ghcTaJ4Yw+5/uRPtz4r7rW16
+         E/M/j0wcsXX4hUPutxRnvXe7AqOq49kMw2ehPySZaV1CjRwp6qkD5ieA6WH4DeaFWWoM
+         UBbSUup1t4N1Gh8grcni0plQWlb0y8ETRXmLLqanBgBLdEHWmHsoJDWTLWLUnAKYzUeJ
+         2CTR2vOUME8AuMiBpx4VdJcVKUmX1Mhxgv96FtaJIeeBgroVX/GHLgf5BM2mCvnaej0A
+         2q43BtQyVXXijaWXISyeoeVPSi52B5Trync+0YuVg9YCmg+Ie4rYoZNkXY07GulhFMeq
+         LR/w==
+X-Gm-Message-State: AOJu0YwdVaS17cJ/2xsCEYRg4RqdBV4s1TQV7FyWqPPMAiJni4cuxLRq
+	4EKjNQGZNAaP4v4g8CNmhYo=
+X-Google-Smtp-Source: AGHT+IHnuyc35+3QB7TWpnYL1hpXdfnP14Z+QTgo+E3w6csqT773gDAld+ldCoxjApvJfhAQ2a0YiQ==
+X-Received: by 2002:a05:600c:538a:b0:40d:2cdb:c99d with SMTP id hg10-20020a05600c538a00b0040d2cdbc99dmr4595418wmb.46.1703667783651;
+        Wed, 27 Dec 2023 01:03:03 -0800 (PST)
+Received: from localhost.localdomain (host-95-250-248-68.retail.telecomitalia.it. [95.250.248.68])
+        by smtp.googlemail.com with ESMTPSA id c9-20020a056000104900b003368849129dsm13616525wrx.15.2023.12.27.01.03.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Dec 2023 01:03:03 -0800 (PST)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	William Zhang <william.zhang@broadcom.com>,
+	Anand Gore <anand.gore@broadcom.com>,
+	Kursad Oney <kursad.oney@broadcom.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+	=?UTF-8?q?Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>,
+	Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	netdev@vger.kernel.org
+Subject: [net-next PATCH v5 0/5] net: phy: generic polarity + LED support for qca808x
+Date: Wed, 27 Dec 2023 10:02:26 +0100
+Message-Id: <20231227090231.4246-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Zhang Zhiyu <zhiyuzhang999@gmail.com>
-Date: Wed, 27 Dec 2023 17:02:41 +0800
-Message-ID: <CALf2hKsJjDY3OhtMCxhHh7rS=2S4Oq9Ns=t-NFq1MPD=f0K02Q@mail.gmail.com>
-Subject: A bug was found in Linux Kernel 6.6+: KASAN: slab-use-after-free in
- iommufd_test (with POC)
-To: linux-kernel@vger.kernel.org, iommu@lists.linux.dev, jgg@ziepe.ca, 
-	kevin.tian@intel.com, joro@8bytes.org, will@kernel.org, robin.murphy@arm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi upstream community,
+This small series add LEDs support for qca808x.
 
-I am fuzzing a LTS version of Linux kernel 6.6 with my modified
-syzkaller and I find a bug named "KASAN: slab-use-after-free in
-iommufd_test". By analyzing the call trace in bug report, I address
-the root cause of this bug at drivers/iommu/iommufd. An iommufd_object
-is allocated in one task through
-iommufd_fops_ioctl->iommufd_ioas_alloc_ioctl->iommufd_ioas_alloc and
-freed in another task through iommufd_fops_ioctl->iommufd_destroy.
-Then when the kernel invokes the calls
-iommufd_fops_ioctl->iommufd_test->iommufd_test_add_reserved->iommufd_put_object,
-an use-after-free read will occur. Detailed report, log, repro, config
-can be found in this google drive link:
-https://drive.usercontent.google.com/download?id=1nDJWUstYJNcC1zJ6q1rhB5zB0uV2yGvg&export=download&authuser=0&confirm=t
+QCA808x apply on PHY reset a strange polarity settings and require
+some tweak to apply a more common configuration found on devices.
+On adding support for it, it was pointed out that a similar
+feature is also being implemented for a marvell PHY where
+LED polarity is set per LED (and not global) and also have
+a special mode where the LED is tristated.
 
-The steps to reproduce the bug:
-1. compile the kernel 6.6 with provided Linux-6.6.config
-2. boot a qemu vm that runs the compiled kernel
-3. scp the repro.c (repro.prog is not recommended) to the vm and
-compile it with gcc -pthread repro.c -o repro
-4. execute ./repro and you will see the output stucks for a while and
-then KASAN is triggered and kernel panic.
-5. you can speed up the crash by setting up another ssh shell to
-execute ./repro again.
+The first 3 patch are to generalize this as we expect more PHY
+in the future to have a similar configuration.
 
-I have reproduced it on 6.6 and 6.6.1 (but haven't verified on the
-latest ver 6.6.8 yet). I didn't find any related reports on the
-internet, which indicates that it may be a 0day. Hope the upstream can
-help check and fix it. And I'll be happy to assist if needed.
+The implementation is extensible to support additional special
+mode in the future with minimal changes and don't create regression
+on already implemented PHY drivers.
 
-Best,
-Zhiyu Zhang
+(changelog present in single patch)
+
+Christian Marangi (5):
+  dt-bindings: net: phy: Make LED active-low property common
+  dt-bindings: net: phy: Document LED inactive high impedance mode
+  net: phy: add support for PHY LEDs polarity modes
+  dt-bindings: net: Document QCA808x PHYs
+  net: phy: at803x: add LED support for qca808x
+
+ .../devicetree/bindings/leds/common.yaml      |  12 +
+ .../bindings/leds/leds-bcm63138.yaml          |   4 -
+ .../bindings/leds/leds-bcm6328.yaml           |   4 -
+ .../devicetree/bindings/leds/leds-bcm6358.txt |   2 -
+ .../bindings/leds/leds-pwm-multicolor.yaml    |   4 -
+ .../devicetree/bindings/leds/leds-pwm.yaml    |   5 -
+ .../devicetree/bindings/net/qca,qca808x.yaml  |  54 +++
+ drivers/net/phy/at803x.c                      | 333 ++++++++++++++++++
+ drivers/net/phy/phy_device.c                  |  12 +
+ include/linux/phy.h                           |  22 ++
+ 10 files changed, 433 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/qca,qca808x.yaml
+
+-- 
+2.40.1
+
