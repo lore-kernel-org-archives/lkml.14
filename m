@@ -1,96 +1,128 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 148CE47F4D
-	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 20:46:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923F1481A5
+	for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 20:46:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bh1Qn2j2"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-5eb072c0b69so25836087b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 12:46:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1703709967; x=1704314767; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fVDgWJyq2vOmIjdOR8AJqO+EWu6/v9sa3TFBqXWfDD0=;
-        b=Bh1Qn2j23YiFbcAtOLLtfFC05EtX8S9vc9G1g+aAjMtysKRaLtL+hMxsLUYixE00Os
-         h6z0KKr6K+AjhGry6UswPFWITrGAU3PWkkKhVam5GJnvDg7d08Y3f/A3LG/omsMSUCVr
-         WJr0+RHyDjSLVNmgNZZ8psgp0mVRVsCRkCh/o=
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eggVdzBz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1703709986;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ETSoQRxfgvbQsUGVfMARPpHrfpkDsi6rR1IIAc9SXNw=;
+	b=eggVdzBz8duLUZds+RAkxIzWzEHU2P1626IROI5McHc4gMbHWIpI0pSl5tP7PHX/l5G+Mz
+	Y1h5wH55yVIJA4M8s2laHPhh8O/CTumQYkzXAkxVHOr4Sa+Q/y6LhIMbFWIcquOqsuamqm
+	Xs2J7w5ZT9qCvYD5ZvUM2qDA0whHa+k=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-360-ML2QJNDjNx24pHzzbAMkmw-1; Wed, 27 Dec 2023 15:46:25 -0500
+X-MC-Unique: ML2QJNDjNx24pHzzbAMkmw-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-40d17446f11so63619825e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 12:46:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703709967; x=1704314767;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fVDgWJyq2vOmIjdOR8AJqO+EWu6/v9sa3TFBqXWfDD0=;
-        b=wBNx96S3kMR4EzYxE8p4UD6UZ6ox+17nBlDhmY1jcNhVhC4mx46mBqzwVt8g3LC+ca
-         /tmqNHkwzHc0IQEpiW8sDffYFe6eBXqw6leSgQyH+43EehBlGxWI4P60Qgf15b6Vfsb5
-         VpwkohAyXWT96HP4uzFWlOsvYHRrSS62IT2k73Bv7+/eLDlSqijpQSVN/qM3QFI9GeUF
-         iNFo1cgN0Tt8UGabM/m6NO3KpubAndNjLanDxRE9kO+ogyUwU0D9hhjmy897WonYQ/rq
-         BFlDgDTH2dyzoq6nedKPqvqCXj8ABLdQ1SkXpg5k0hIpBB5WRYIcDFzsOP9GMtGOebln
-         Ra+A==
-X-Gm-Message-State: AOJu0YyGM3FRbNfSKJk8/pjWI1YI2QNth9zKif1YOcvCXsaU9vJkv3ew
-	5LG43KjVhGlxLvTQGe/1JZboupPPVA6A7lnEQJgMDCsGB+0b
-X-Google-Smtp-Source: AGHT+IEFqMT0cNiuNHYB4w/tWOWcrd94D2AcGcmnGOnqQ7+bMGPqypdIdUBb9fxsCLohmVCwiJXtBlug6m8t4Hajfgs=
-X-Received: by 2002:a0d:ca4d:0:b0:5e7:a5c4:d9db with SMTP id
- m74-20020a0dca4d000000b005e7a5c4d9dbmr5847203ywd.51.1703709967172; Wed, 27
- Dec 2023 12:46:07 -0800 (PST)
+        d=1e100.net; s=20230601; t=1703709983; x=1704314783;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ETSoQRxfgvbQsUGVfMARPpHrfpkDsi6rR1IIAc9SXNw=;
+        b=JJ3ArVGrkJVZeHJ+VsWhDBGU5qqOQoAIms6cGvWIwQ69ObL+ZOE+tLok+snfnLdICJ
+         uZl9oNNj66vYW7asEiiLMBlN0IQhXaRTaK3+ClUXTeaYvjj2HyQZeONFwmWMAFoXKUL/
+         /0rAWfiHYn5NdNUDU+9HkHuM34btP6hG0axf0Hl3Pt/EbulDsgHzGDyJyCPN9yjO69D2
+         4r0VmdUgvIIuuGWwRTwYwV9sVLgZTGlmtXWYdfgLd12HK/cU1a83G+0x7mrHlqNmpWUa
+         qR4lR3W5I+zWWdZVjE2Ord+s3dFHrQWMpajXehFq/zqiRChTnXlb1f1uF7TrH4iKU24x
+         s6kQ==
+X-Gm-Message-State: AOJu0Yxkf2YkIbaQ+coo09pIM8bE9BHKEA+yC+OEsjfNAQgSQarup6nH
+	5T/eF5sAujMCH7AwCgzX7ql8gTQM9EDGK9qleRZFMdbj8Rij/4jTwdoYeCKokroEnNM6XPsu6mN
+	CdZKKrjI8EjlPMHufyFfuV0rtavXmZ3gE
+X-Received: by 2002:a05:600c:3d8a:b0:40d:54a0:29ce with SMTP id bi10-20020a05600c3d8a00b0040d54a029cemr2947550wmb.133.1703709982997;
+        Wed, 27 Dec 2023 12:46:22 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEOg5pnHMb6g7uRWA+2wauaFdkDulAIcmWbfUnDij749D0a6xHeNCmxQJQ6CFmWnRMRA0neGQ==
+X-Received: by 2002:a05:600c:3d8a:b0:40d:54a0:29ce with SMTP id bi10-20020a05600c3d8a00b0040d54a029cemr2947547wmb.133.1703709982647;
+        Wed, 27 Dec 2023 12:46:22 -0800 (PST)
+Received: from redhat.com ([2.55.177.189])
+        by smtp.gmail.com with ESMTPSA id bd6-20020a05600c1f0600b0040d5335079dsm14836616wmb.47.2023.12.27.12.46.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Dec 2023 12:46:21 -0800 (PST)
+Date: Wed, 27 Dec 2023 15:46:18 -0500
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Gabriel Somlo <somlo@cmu.edu>, kernel@pengutronix.de,
+	qemu-devel@nongnu.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 06/11] firmware: qemu_fw_cfg: Convert to platform remove
+ callback returning void
+Message-ID: <20231227154549-mutt-send-email-mst@kernel.org>
+References: <cover.1703693980.git.u.kleine-koenig@pengutronix.de>
+ <8d7d86a24ea36985845c17b6da0933fedbf99ad8.1703693980.git.u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231226192149.1830592-1-markhas@chromium.org>
- <20231226122113.v3.24.Ieee574a0e94fbaae01fd6883ffe2ceeb98d7df28@changeid> <ZYvDshfJ-jnWNEY5@google.com>
-In-Reply-To: <ZYvDshfJ-jnWNEY5@google.com>
-From: Mark Hasemeyer <markhas@chromium.org>
-Date: Wed, 27 Dec 2023 13:45:56 -0700
-Message-ID: <CANg-bXB0k-Z1PjAuW=vX3oR7T02g3z+d7ppdzfL-Cj7T+EQ6EA@mail.gmail.com>
-Subject: Re: [PATCH v3 24/24] platform/chrome: cros_ec: Use PM subsystem to
- manage wakeirq
-To: Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, 
-	Andy Shevchenko <andriy.shevchenko@intel.com>, Raul Rangel <rrangel@chromium.org>, 
-	Benson Leung <bleung@chromium.org>, Bhanu Prakash Maiya <bhanumaiya@chromium.org>, 
-	Chen-Yu Tsai <wenst@chromium.org>, Guenter Roeck <groeck@chromium.org>, Lee Jones <lee@kernel.org>, 
-	Prashant Malani <pmalani@chromium.org>, Rob Barnes <robbarnes@google.com>, 
-	Stephen Boyd <swboyd@chromium.org>, chrome-platform@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8d7d86a24ea36985845c17b6da0933fedbf99ad8.1703693980.git.u.kleine-koenig@pengutronix.de>
 
-> >       /* Retrieve GpioInt and translate it to Linux IRQ number */
-> > -     ret = acpi_dev_gpio_irq_get(adev, 0);
-> > +     ret = acpi_dev_get_gpio_irq_resource(adev, NULL, 0, &irqres);
-> >       if (ret < 0)
-> >               return ret;
-> >
-> > -     ec_uart->irq = ret;
-> > -     dev_dbg(&ec_uart->serdev->dev, "IRQ number %d\n", ec_uart->irq);
-> > +     ec_uart->irq = irqres.start;
->
-> How about keep using `ret`?
+On Wed, Dec 27, 2023 at 05:26:30PM +0100, Uwe Kleine-König wrote:
+> The .remove() callback for a platform driver returns an int which makes
+> many driver authors wrongly assume it's possible to do error handling by
+> returning an error code. However the value returned is ignored (apart
+> from emitting a warning) and this typically results in resource leaks.
+> 
+> To improve here there is a quest to make the remove callback return
+> void. In the first step of this quest all drivers are converted to
+> .remove_new(), which already returns void. Eventually after all drivers
+> are converted, .remove_new() will be renamed to .remove().
+> 
+> Trivially convert this driver from always returning zero in the remove
+> callback to the void returning variant.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-The return value for 'acpi_dev_get_gpio_irq_resource' is different: 0
-on success, negative errno on failure.
+I don't mind.
 
-> > @@ -301,7 +306,14 @@ static int cros_ec_uart_probe(struct serdev_device *serdev)
-> >
-> >       serdev_device_set_client_ops(serdev, &cros_ec_uart_client_ops);
-> >
-> > -     return cros_ec_register(ec_dev);
-> > +     /* Register a new cros_ec device */
-> > +     ret = cros_ec_register(ec_dev);
-> > +     if (ret) {
-> > +             dev_err(dev, "Couldn't register ec_dev (%d)\n", ret);
-> > +             return ret;
-> > +     }
->
-> It doesn't need the change after moving device_init_wakeup() and
-> dev_pm_set_wake_irq() into cros_ec_register().
->
-> Drop it?
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
 
-Will do.
+> ---
+>  drivers/firmware/qemu_fw_cfg.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
+> index 1448f61173b3..03da9a4354f8 100644
+> --- a/drivers/firmware/qemu_fw_cfg.c
+> +++ b/drivers/firmware/qemu_fw_cfg.c
+> @@ -731,7 +731,7 @@ static int fw_cfg_sysfs_probe(struct platform_device *pdev)
+>  	return err;
+>  }
+>  
+> -static int fw_cfg_sysfs_remove(struct platform_device *pdev)
+> +static void fw_cfg_sysfs_remove(struct platform_device *pdev)
+>  {
+>  	pr_debug("fw_cfg: unloading.\n");
+>  	fw_cfg_sysfs_cache_cleanup();
+> @@ -739,7 +739,6 @@ static int fw_cfg_sysfs_remove(struct platform_device *pdev)
+>  	fw_cfg_io_cleanup();
+>  	fw_cfg_kset_unregister_recursive(fw_cfg_fname_kset);
+>  	fw_cfg_kobj_cleanup(fw_cfg_sel_ko);
+> -	return 0;
+>  }
+>  
+>  static const struct of_device_id fw_cfg_sysfs_mmio_match[] = {
+> @@ -758,7 +757,7 @@ MODULE_DEVICE_TABLE(acpi, fw_cfg_sysfs_acpi_match);
+>  
+>  static struct platform_driver fw_cfg_sysfs_driver = {
+>  	.probe = fw_cfg_sysfs_probe,
+> -	.remove = fw_cfg_sysfs_remove,
+> +	.remove_new = fw_cfg_sysfs_remove,
+>  	.driver = {
+>  		.name = "fw_cfg",
+>  		.of_match_table = fw_cfg_sysfs_mmio_match,
+> -- 
+> 2.43.0
+
