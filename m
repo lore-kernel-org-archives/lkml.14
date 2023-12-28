@@ -1,81 +1,32 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D24D2FC
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 12:58:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M47tJ9iB"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40d60a96533so12070705e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 04:58:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703768295; x=1704373095; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5OWSKyLISurEYSJL0AfE6kVglHBwO6tL8w6QTNbZ9XM=;
-        b=M47tJ9iBUUH6ifLw+VPVzidwPUoLbXy8pv6uHHe7Yfo1LWlXEzbuP74S03gzTWhpX4
-         j+8tEDIp70xUp2++r/CI6pibj/x11xtnuE7+WpjOKJQShR/dtg5EHcthZrFvm9CQAbMo
-         hOq2UOueBJvzn/n1a2ybBAdVg7YzBcSX+0RQzw1QWpzhhPtb+sqygkvSNxE3RPVc+uIJ
-         ZL21rUyCsND9Tk/gxdwF5Y0keOTZV6eXRSQcWywLMdYelr17L/zWbCpVyZpSmMOT0I2X
-         ineu0uq2gAIKBmXeMVjvdHZptEXDi7Hlk0wF4ZRJd9gAfiBZjkjId/oF3NDZHujtjoxI
-         MDEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703768295; x=1704373095;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5OWSKyLISurEYSJL0AfE6kVglHBwO6tL8w6QTNbZ9XM=;
-        b=A90YFEUoQ8EinNj5KkDeWvo+0m17pO9FqzNuqaRdmIr+M3F8DRQ/h5dDmdcQEOVzbv
-         buPcRHB0TqAu1soa3rNdwS2BxuMsm6AVENT0+7Vo420FnKu5ribkKFNkMHok8SAdMZE4
-         DmZpWeqLLz05RGW/HmKYhttWDzUrqvOl3f/PZmQ1wJORL+A5dcOZjethQam9cliihskr
-         0UtuQldIKn5pmog2zr4405YKPcSKAjjVTH3J9AFoMmMsS72Mn6d2iPzrTIZ9Df1WiFiQ
-         3SqY8oZe9SKFVulU9PzHf+wRh2Oh4snuR1wHMBbzmf6pygYHpRSwl8OYwjnKCOwM/Md3
-         fSiw==
-X-Gm-Message-State: AOJu0Yw83SfspQiC0YAd4nTGZpckyw3ZVvutbWe1sgxQJkTYpGkklK2b
-	TPXG4oB7JfB953Pb9cYufzDCN1q0qfk7rgj/BZcB1JNM45b6zQ==
-X-Google-Smtp-Source: AGHT+IF+JcXUazhQEFnY8zblZiKZ0crjBJb5N4O9tWky+IPg7qflkMQr4x88vx79F00HdtQ6mesyQg==
-X-Received: by 2002:a05:600c:5489:b0:40d:6045:b1ff with SMTP id iv9-20020a05600c548900b0040d6045b1ffmr1167130wmb.126.1703768295262;
-        Thu, 28 Dec 2023 04:58:15 -0800 (PST)
-Received: from ta2.c.googlers.com.com (216.131.76.34.bc.googleusercontent.com. [34.76.131.216])
-        by smtp.gmail.com with ESMTPSA id h9-20020a05600c350900b0040d5aca25f1sm8615807wmq.17.2023.12.28.04.58.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Dec 2023 04:58:14 -0800 (PST)
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-To: peter.griffin@linaro.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	conor+dt@kernel.org,
-	andi.shyti@kernel.org,
-	alim.akhtar@samsung.com,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	s.nawrocki@samsung.com,
-	tomasz.figa@gmail.com,
-	cw00.choi@samsung.com,
-	arnd@arndb.de,
-	semen.protsenko@linaro.org
-Cc: andre.draszik@linaro.org,
-	saravanak@google.com,
-	willmcvicker@google.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DAE0107AC;
+	Thu, 28 Dec 2023 12:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4T17pq2G2yz4f3lDn;
+	Thu, 28 Dec 2023 20:58:11 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id BE3FD1A05BF;
+	Thu, 28 Dec 2023 20:58:16 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgBHlQvmcI1lvcx3Ew--.36075S4;
+	Thu, 28 Dec 2023 20:58:16 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: song@kernel.org,
+	yukuai3@huawei.com,
+	neilb@suse.de
+Cc: linux-raid@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	kernel-team@android.com,
-	Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: [PATCH v2 05/12] tty: serial: samsung: set UPIO_MEM32 iotype for gs101
-Date: Thu, 28 Dec 2023 12:57:58 +0000
-Message-ID: <20231228125805.661725-6-tudor.ambarus@linaro.org>
-X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
-In-Reply-To: <20231228125805.661725-1-tudor.ambarus@linaro.org>
-References: <20231228125805.661725-1-tudor.ambarus@linaro.org>
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH RESEND -next 0/3] md: some minor cleanups
+Date: Thu, 28 Dec 2023 20:55:50 +0800
+Message-Id: <20231228125553.2697765-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,104 +34,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgBHlQvmcI1lvcx3Ew--.36075S4
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUU5E7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2js
+	IEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
+	5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeV
+	CFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l
+	42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
+	WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAK
+	I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
+	4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-GS101's Connectivity Peripheral blocks (peric0/1 blocks) which
-include the I3C and USI (I2C, SPI, UART) only allow 32-bit
-register accesses.
+From: Yu Kuai <yukuai3@huawei.com>
 
-Instead of specifying the reg-io-width = 4 everywhere, for each node,
-the requirement should be deduced from the compatible.
+Hi, Song! this patchset is rebased from mainline tree, because I
+didn't found commit f52f5c71f3d4 ("md: fix stopping sync thread") in
+md-next or for-6.8/block branch.
 
-Infer UPIO_MEM32 iotype from the "google,gs101-uart" compatible.
-Update the uart info name to be GS101 specific in order to
-differentiate from the other exynos platforms. All the other settings
-are not changed.
+Yu Kuai (3):
+  md: remove redundant check of 'mddev->sync_thread'
+  md: remove redundant md_wakeup_thread()
+  md: use interruptible apis in idle/frozen_sync_thread()
 
-exynos_fifoszdt_serial_drv_data was replaced by gs101_serial_drv_data
-because the iotype restriction is gs101 specific and there was no other
-user of exynos_fifoszdt_serial_drv_data.
+ drivers/md/md.c    | 139 ++++++++++++++++++++++++---------------------
+ drivers/md/raid5.c |   6 +-
+ 2 files changed, 75 insertions(+), 70 deletions(-)
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
----
-v2: new patch
-
- drivers/tty/serial/samsung_tty.c | 38 +++++++++++++++++++++++---------
- 1 file changed, 28 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
-index 97ce4b2424af..938127179acf 100644
---- a/drivers/tty/serial/samsung_tty.c
-+++ b/drivers/tty/serial/samsung_tty.c
-@@ -2497,25 +2497,43 @@ static const struct s3c24xx_serial_drv_data exynos850_serial_drv_data = {
- 	.fifosize = { 256, 64, 64, 64 },
- };
- 
--/*
-- * Common drv_data struct for platforms that specify samsung,uart-fifosize in
-- * device tree.
-- */
--static const struct s3c24xx_serial_drv_data exynos_fifoszdt_serial_drv_data = {
--	EXYNOS_COMMON_SERIAL_DRV_DATA(),
-+static const struct s3c24xx_serial_drv_data gs101_serial_drv_data = {
-+	.info = {
-+		.name		= "Google GS101 UART",
-+		.type		= TYPE_S3C6400,
-+		.port_type	= PORT_S3C6400,
-+		.iotype		= UPIO_MEM32,
-+		.has_divslot	= 1,
-+		.rx_fifomask	= S5PV210_UFSTAT_RXMASK,
-+		.rx_fifoshift	= S5PV210_UFSTAT_RXSHIFT,
-+		.rx_fifofull	= S5PV210_UFSTAT_RXFULL,
-+		.tx_fifofull	= S5PV210_UFSTAT_TXFULL,
-+		.tx_fifomask	= S5PV210_UFSTAT_TXMASK,
-+		.tx_fifoshift	= S5PV210_UFSTAT_TXSHIFT,
-+		.def_clk_sel	= S3C2410_UCON_CLKSEL0,
-+		.num_clks	= 1,
-+		.clksel_mask	= 0,
-+		.clksel_shift	= 0,
-+	},
-+	.def_cfg = {
-+		.ucon		= S5PV210_UCON_DEFAULT,
-+		.ufcon		= S5PV210_UFCON_DEFAULT,
-+		.has_fracval	= 1,
-+	},
-+	/* samsung,uart-fifosize must be specified in the device tree. */
- 	.fifosize = { 0 },
- };
- 
- #define EXYNOS4210_SERIAL_DRV_DATA (&exynos4210_serial_drv_data)
- #define EXYNOS5433_SERIAL_DRV_DATA (&exynos5433_serial_drv_data)
- #define EXYNOS850_SERIAL_DRV_DATA (&exynos850_serial_drv_data)
--#define EXYNOS_FIFOSZDT_DRV_DATA (&exynos_fifoszdt_serial_drv_data)
-+#define GS101_SERIAL_DRV_DATA (&gs101_serial_drv_data)
- 
- #else
- #define EXYNOS4210_SERIAL_DRV_DATA NULL
- #define EXYNOS5433_SERIAL_DRV_DATA NULL
- #define EXYNOS850_SERIAL_DRV_DATA NULL
--#define EXYNOS_FIFOSZDT_DRV_DATA NULL
-+#define GS101_SERIAL_DRV_DATA NULL
- #endif
- 
- #ifdef CONFIG_ARCH_APPLE
-@@ -2603,7 +2621,7 @@ static const struct platform_device_id s3c24xx_serial_driver_ids[] = {
- 		.driver_data	= (kernel_ulong_t)ARTPEC8_SERIAL_DRV_DATA,
- 	}, {
- 		.name		= "gs101-uart",
--		.driver_data	= (kernel_ulong_t)EXYNOS_FIFOSZDT_DRV_DATA,
-+		.driver_data	= (kernel_ulong_t)GS101_SERIAL_DRV_DATA,
- 	},
- 	{ },
- };
-@@ -2626,7 +2644,7 @@ static const struct of_device_id s3c24xx_uart_dt_match[] = {
- 	{ .compatible = "axis,artpec8-uart",
- 		.data = ARTPEC8_SERIAL_DRV_DATA },
- 	{ .compatible = "google,gs101-uart",
--		.data = EXYNOS_FIFOSZDT_DRV_DATA },
-+		.data = GS101_SERIAL_DRV_DATA },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, s3c24xx_uart_dt_match);
 -- 
-2.43.0.472.g3155946c3a-goog
+2.39.2
 
