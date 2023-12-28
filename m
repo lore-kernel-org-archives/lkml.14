@@ -1,95 +1,54 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C77F4E1;
-	Thu, 28 Dec 2023 13:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cP++dU7l"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d3ef33e68dso40191615ad.1;
-        Thu, 28 Dec 2023 05:17:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703769428; x=1704374228; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yN/BwR58sjs6Z6HNo7x/JKwvYgjONzYk0BGkAM4zBTw=;
-        b=cP++dU7l5K23F16rYhlsogkj0dJtZJCvNtVYdyTjBBHkjRb66U3XV4AK0jX33kJqHS
-         bPOOnHUuhmhg7J8YGUdJpHgfm/L1yWcF6o2FGHolmOzrIhmTVHm3gNzVAOJuB0PSNYIK
-         r9cMkwtvftKbTYJ2cVd1c/KHEQ21KINi2ZMC81Ua0Vl5ExLsnjQAUl9NSscJhbHSDf+E
-         6pDxTDpB+WrB9ju/fP9qdlDmPKbofpGhpIbarR4fIcEi3t5XQzJ7W8iWpnZ8Qt4yv76e
-         +Tjl1yArr6V6Gpa5ya+I+IiQg71WoW255gxfpk1XSIBqwXvHIUPRuWAVxaXzBlolMWKj
-         pfWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703769428; x=1704374228;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yN/BwR58sjs6Z6HNo7x/JKwvYgjONzYk0BGkAM4zBTw=;
-        b=qOs74FatyujBwn3l9jHdoKKcnaxt8MpFHAOwx888esrYeMukwSYKv1ZI/F7tdXGjz/
-         rkpeEq2OeknqT/dXuy5GqZK+tG5OM8IhWM0/B50OxWpl7V6JRfhZQ2V8YlDIiKwVSxyy
-         FNNaO3PyoJHMixLGvtZLmdwVcjZzSZXItqgKEHHBpROKcbFoN7A2WSL6xv6luq2mzLcO
-         lyqEBTLSizDwerNRUFTSx/TC0PvJFdya3hbKkh3iIWbN4U+wzX+BKFYwORm6eUiW6nw4
-         5FH36mgcx/WVDGu5MAiGpfoBn+bfvl6xXhTZzLWzuRoShn7yUIC7QMO68tFUpqbIlTrC
-         ZUoQ==
-X-Gm-Message-State: AOJu0YwKv7l/XT3TdII29F6waWQyhRUCmYvFbRnmXeOs/hZaw37jTSuv
-	8xYMguprrVaJG6HswJf9FUc=
-X-Google-Smtp-Source: AGHT+IF+99H9vFulPcHP15rmUhxkM0gfuVWxtxhJUptQjIgcwPzGk7WYL5NXp8Vf+AEfz6qattXg1g==
-X-Received: by 2002:a17:902:784c:b0:1d4:7855:cdf6 with SMTP id e12-20020a170902784c00b001d47855cdf6mr3456088pln.30.1703769428408;
-        Thu, 28 Dec 2023 05:17:08 -0800 (PST)
-Received: from localhost.localdomain ([2408:8207:2540:8c00:3708:559:ea20:9883])
-        by smtp.gmail.com with ESMTPSA id m10-20020a170902db0a00b001d0b4693539sm13864221plx.189.2023.12.28.05.17.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Dec 2023 05:17:08 -0800 (PST)
-From: Jianfeng Liu <liujianfeng1994@gmail.com>
-To: ezequiel@vanguardiasur.com.ar,
-	p.zabel@pengutronix.de,
-	mchehab@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	heiko@sntech.de,
-	sfr@canb.auug.org.au
-Cc: liujianfeng1994@gmail.com,
-	linux-media@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 3/3] dt-bindings: media: rockchip-vpu: Add RK3588 compatible
-Date: Thu, 28 Dec 2023 21:16:17 +0800
-Message-Id: <20231228131617.3411561-4-liujianfeng1994@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231228131617.3411561-1-liujianfeng1994@gmail.com>
-References: <20231228131617.3411561-1-liujianfeng1994@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D178465;
+	Thu, 28 Dec 2023 13:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id A42FD3000D5B0;
+	Thu, 28 Dec 2023 14:18:02 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 964802913A9; Thu, 28 Dec 2023 14:18:02 +0100 (CET)
+Date: Thu, 28 Dec 2023 14:18:02 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Steven Haigh <netwiz@crc.id.au>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	f.ebner@proxmox.com
+Subject: Re: Qemu KVM thread spins at 100% CPU usage on scsi hot-unplug
+ (kernel 6.6.8 guest)
+Message-ID: <20231228131802.GA21994@wunner.de>
+References: <3a7656ab-df4c-4d57-8866-661beffcddd7@crc.id.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3a7656ab-df4c-4d57-8866-661beffcddd7@crc.id.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Add compatible for rk3588 Hantro G1 vpu decoder.
+On Thu, Dec 28, 2023 at 01:03:10PM +1100, Steven Haigh wrote:
+> At some point in kernel 6.6.x, SCSI hotplug in qemu VMs broke. This was
+> mostly fixed in the following commit to release 6.6.8:
+> 	commit 5cc8d88a1b94b900fd74abda744c29ff5845430b
+> 	Author: Bjorn Helgaas <bhelgaas@google.com>
+> 	Date:   Thu Dec 14 09:08:56 2023 -0600
+> 	Revert "PCI: acpiphp: Reassign resources on bridge if necessary"
+> 
+> After this commit, the SCSI block device is hotplugged correctly, and a device node as /dev/sdX appears within the qemu VM.
+> 
+> New problem:
+> 
+> When the same SCSI block device is hot-unplugged, the QEMU KVM process will
+> spin at 100% CPU usage. The guest shows no CPU being used via top, but the
+> host will continue to spin in the KVM thread until the VM is rebooted.
 
-Signed-off-by: Jianfeng Liu <liujianfeng1994@gmail.com>
----
- Documentation/devicetree/bindings/media/rockchip-vpu.yaml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/media/rockchip-vpu.yaml b/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
-index c57e1f488..ba41446f6 100644
---- a/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
-+++ b/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
-@@ -25,6 +25,7 @@ properties:
-           - rockchip,px30-vpu
-           - rockchip,rk3568-vpu
-           - rockchip,rk3588-av1-vpu
-+          - rockchip,rk3588-vpu
-       - items:
-           - const: rockchip,rk3188-vpu
-           - const: rockchip,rk3066-vpu
--- 
-2.34.1
-
+Find out the PID of the qemu process on the host, then cat /proc/$PID/stack
+to see where the CPU time is spent.
