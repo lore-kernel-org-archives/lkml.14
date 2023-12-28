@@ -1,97 +1,103 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DCECF51F;
-	Thu, 28 Dec 2023 17:28:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2CDF9C1;
+	Thu, 28 Dec 2023 17:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="iN6+QnsI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1703784488; x=1704389288; i=markus.elfring@web.de;
-	bh=bZIUiXqM0iUtPLxaSty3O0T6RhxO0I6eQJgl62PzlfM=;
-	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
-	 In-Reply-To;
-	b=iN6+QnsIE6tetReld5k2uZNh3q6iuqTtJ0Xk4Ge5+1qaZzgkMa47VEgPFy8BIAwm
-	 vJ1WttlhVpCGpVysvCA+SLydzJ/7UaM9wp2FGLSjIluiwLLz4XvOo66VzAY5kIF/o
-	 kSTmgshI//10mM928uiCZslT79GyJB/JJlhee9dCcMo3mNE9Qi4nbUVpCeihuixOL
-	 kxGvlQebmRoV6bKDTw4b8ImuorIFmqlpPYBTH/na9KHfe4F8JCrdEQiygrRBPQ8es
-	 2DGErXjCXqEBy31OfTCgr4/J2W5wA/GbRrIL3PXVV9RQ9B2KGnQZvTc2W/UASXZi/
-	 MKVHX15fAo4O/3DE6A==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mm9Va-1qsKql3sG0-00i55t; Thu, 28
- Dec 2023 18:28:07 +0100
-Message-ID: <98f99041-e089-4253-9195-6a26b986658e@web.de>
-Date: Thu, 28 Dec 2023 18:28:06 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TxFCCc0f"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-68009cb4669so24795546d6.1;
+        Thu, 28 Dec 2023 09:30:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703784626; x=1704389426; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=N4Z7YQkAwcysiA9pCezffCW5EWUHNwwvsbHz268u+54=;
+        b=TxFCCc0fNgbCiRRiz9OQFBDdFev1mIb8nlmUGljdUQqOACMlCNFTEZL7ejw7lm+Zme
+         SY2LewswnZgif7MixB1lJceRqtHkHerwfaTWza0X5ltUZV4DFVOeKgGVGyCpQ0RNmrdC
+         zKszS/1GdTGruOAuPILF1C1pfPiLXpl0CpgT3NIb4z0nvs8vwAdL5EthusizeqUjDwJ1
+         Ah53h0YJfGYE+bZ4kRlhvMBA4B8mQebwDYYRitz1DxzxgkFoXw1lpton7gp4lz/dL87Q
+         hcTdQWdhNv+NUwnDl3aISJsEzzGdXwU/m6rklxVC/DbMt2uExU/rtGZ8snhJeZWZ3wzU
+         yGWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703784626; x=1704389426;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=N4Z7YQkAwcysiA9pCezffCW5EWUHNwwvsbHz268u+54=;
+        b=j7KRUu/LRtIsZtdqf23mKzq01Np9cvglUP2AkPRprd1YU/1HI6S2JM55Va1nXgNNrk
+         WCkKALeFExz4OqeNPXmu63kYi5Yve4DOP7mkw871MWHCzrQBavMRBqD62tbjC63tm65l
+         tQyDxai+x9rzE2K777Aj2y1L1F7WZ9LFXUbefWPU+w7TkTy0j8wgWraDn1lSrsAwja+s
+         D1o9f7Gt9xP7Vxhoig3uKXvcPogfg+r4Ze+NifyMzsW6iKl3+w8AwR4oIx0sUhxGbmCw
+         TTYJDmQblVeCqmfaOdGw7T1YctSTQQS+rwQsB9M/U29ycH6crIQFZhvCF2uToae3Hq4N
+         oOrA==
+X-Gm-Message-State: AOJu0Yy4g53KNk19Qs0WyqILu/kjvhbuP8Kg7/8u7LPG93ZI0aBo9L7a
+	lsl9iEWH0XBo8grbAXwGNTM=
+X-Google-Smtp-Source: AGHT+IH1asPUVNlDf2zYCLocNWw/DPbpdqhnc7Umuc9yND5MTYpiYP5Pk0oH9N3IonyIP77uoBbtGA==
+X-Received: by 2002:a0c:d7cd:0:b0:67f:f29f:93d6 with SMTP id g13-20020a0cd7cd000000b0067ff29f93d6mr6401646qvj.129.1703784625812;
+        Thu, 28 Dec 2023 09:30:25 -0800 (PST)
+Received: from localhost.localdomain (107-015-241-140.res.spectrum.com. [107.15.241.140])
+        by smtp.gmail.com with ESMTPSA id da7-20020a05621408c700b0067f2c03d4adsm6392917qvb.100.2023.12.28.09.30.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Dec 2023 09:30:25 -0800 (PST)
+From: John Clark <inindev@gmail.com>
+To: "Rob Herring" <robh+dt@kernel.org>,
+	"Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+	"Conor Dooley" <conor+dt@kernel.org>,
+	"Heiko Stuebner" <heiko@sntech.de>,
+	linux-rockchip@lists.infradead.org
+Cc: "Thomas McKahan" <tmckahan@singleboardsolutions.com>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	John Clark <inindev@gmail.com>
+Subject: [PATCH v2] arm64: dts: rockchip: nanopc-t6 sdmmc device tuning
+Date: Thu, 28 Dec 2023 17:29:35 +0000
+Message-ID: <20231228173011.2863-1-inindev@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH 4/4] scsi: lpfc: Delete an unnecessary variable initialisation
- in lpfc_sli_read_link_ste()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-To: linux-scsi@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Dick Kennedy <dick.kennedy@broadcom.com>,
- James Smart <james.smart@broadcom.com>,
- "James E. J. Bottomley" <jejb@linux.ibm.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <48a127e8-ca4f-4fc4-81b7-226080fba720@web.de>
-In-Reply-To: <48a127e8-ca4f-4fc4-81b7-226080fba720@web.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:STSMzfYc67LKhAslNGaZdX4bp6OTa7800mET5EYlhf7vUhCK6Lm
- Ifqyt7MS+yD6MlIY/3dNgCFbV6/dDcnWYSmWrabZ7L8YoIB9RbqaRvL5ING8Ku9Xv26bGd3
- iif/S0BKAFaf/rIl0b7wbKgm01nrQMYWHBFuMm58B/2e6WK7mMoMa/len0eorM8rua5rosz
- CgtspMAQ5PSUUaJF16AVQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:gGJWmcBxQXs=;U1pG/0wNPXece0P+dqVanmQytTQ
- WLCrpq0mp/1yuggSzMAAQf4MCI6fPGsDYbTSoZ2Sx+HM7+52S5wOP6BGNW9/kOXaHs5K1aLhc
- c02hcybWUpDx4ejZ+BMsA7b6sWPD42BMQRQoS9cHp7vv3h8dZ5jOb3RXYGdsxjrYAX9aIJ46f
- NMD8UXU4KVdzSk01vCdv/odEJBlFB7mk75I2eljDK7vQlXyvG+j4C03aPGHKH9hi/DYgtoHED
- L0PRnODx9oSdo5XGfopg+/bNj095vs9phJGDBOvG8l1Nt3sc1dr6/1nAVArsmC/7DzRsfuSEi
- s6YQvjBwpqMfn+xF3VP0ffpPTZ+NXbKDrjzlsDjv4HmUVrSEcaFCXKXU7gHVze+m3oYR8DX+l
- cTZ/lT8OdxOv9fZY059MqdTL3IxFEOZJB2mZDQTwwcf5chnBBhFFMuUqPja7iuCBBBgt2F92m
- 8uCX7w6qyH5KuAgdUuGKA3GKIEIHrQm3vlvOV3L1EsjMHeOpytVU0oX2FuekbfX578+N7RMux
- GWEPeaz3ZiO1ubPm8GFFLSMTW5coWY7jswgi2tu5NNvPgD/zCh9CF2S66FaMi/nmJZVDANhmX
- IV0pK4sEkSCqs63DyIs1HMzp5OzpXiBxlkEta112NzC5Jp+55ATQS3LJEI/tHmyoX/7dFZW4p
- HUYGoMahxVavBFUIN5J2Ft31Lop3PwmC3FUqfvKWPDTcm0atX/kqUsIVcSI8tXMCNZiqTTgQ5
- +WkaU9VRLSA7TV9ywZ7HnaIbtx9b3xRKDhbnipJIDQNv6Z5SAXR6kOPOCJmDjuhiyqOcNO1Z0
- /LhNO6TWX+rXPjrwwSXSRa6ZrS7PW/vvn/v2ZNIbYNtHMHSE6fS+1IDVJO+/J4vfOpBqljCZz
- ByKxcSQfX8qC/Wbol1kaTDNongA6tj+B8Y1SaXCho7qwX8xtpH8EYb5YkR0ixXj9zIbXIdeNM
- CVq95abh9gFa99myyIBDpPySwUI=
+Content-Transfer-Encoding: 8bit
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Thu, 28 Dec 2023 18:00:11 +0100
+drop max-frequency = <200000000> as it is already defined in rk3588s.dtsi
+order no-sdio & no-mmc properties while we are here
 
-The variable =E2=80=9Crgn23_data=E2=80=9D will be reassigned by a followin=
-g statement.
-Thus omit the explicit initialisation at the beginning.
+Signed-off-by: John Clark <inindev@gmail.com>
+---
+Changes since v1:
+Additional scenarios need to be tested for proposed regulator and
+cd-gpios changes. Withdrawing those submissions for now.
+- removed proposed vcc3v3_sd_s0 regulator
+- removed proposed cd-gpios
+---
+ arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dts | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/scsi/lpfc/lpfc_sli.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 8de598c9e03b..1ce5671a7e07 100644
-=2D-- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -20694,7 +20694,7 @@ lpfc_sli4_get_config_region23(struct lpfc_hba *phb=
-a, char *rgn23_data)
- void
- lpfc_sli_read_link_ste(struct lpfc_hba *phba)
- {
--	uint8_t *rgn23_data =3D NULL;
-+	uint8_t *rgn23_data;
- 	uint32_t if_type, data_size, sub_tlv_len, tlv_offset;
- 	uint32_t offset =3D 0;
-
-=2D-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dts b/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dts
+index e83b71510a47..d7722772ecd8 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dts
+@@ -536,13 +536,12 @@ &sdhci {
+ };
+ 
+ &sdmmc {
+-	max-frequency = <200000000>;
+-	no-sdio;
+-	no-mmc;
+ 	bus-width = <4>;
+ 	cap-mmc-highspeed;
+ 	cap-sd-highspeed;
+ 	disable-wp;
++	no-mmc;
++	no-sdio;
+ 	sd-uhs-sdr104;
+ 	vmmc-supply = <&vcc_3v3_s3>;
+ 	vqmmc-supply = <&vccio_sd_s0>;
+-- 
 2.43.0
 
