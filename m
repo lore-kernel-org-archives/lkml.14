@@ -1,82 +1,83 @@
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874A710A00
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 22:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF791096A;
+	Thu, 28 Dec 2023 22:09:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="tJEcP401"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1703800865; bh=FbL3XUQGG36I/6CQH5chH65yLqnCzzZleBtliZ9ep7U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=tJEcP401mJjpcbXt420oAZpUf1FU2VZx8zswdQH0x4WEFsc97949GCf6Dg+9O48WG
-	 tF+rX5VJjyLXIT47jlEin2LE7ZJbxStcAhqWo9jVIrzkMoyToZE2j6oF6bRsoZCP0B
-	 7qGwSxpj1rTdx8+yQMAbVg3kRfkVCUcvejOsgiTs=
-Received: from pek-lxu-l1.wrs.com ([2408:8409:7810:45b:788d:ee9e:1fba:da17])
-	by newxmesmtplogicsvrszc5-1.qq.com (NewEsmtp) with SMTP
-	id 431E6FF; Fri, 29 Dec 2023 06:01:03 +0800
-X-QQ-mid: xmsmtpt1703800863tzhjl841d
-Message-ID: <tencent_A16363296CC3BF645C7762576306DA737405@qq.com>
-X-QQ-XMAILINFO: MeB5Wo+JmnrbHp8YhYt8pWysVqY3GasZv29YWYaWew/nKzDLAGXgaDJ5CvCkaR
-	 3mYZFkcuVzwPo2b4UME4SEAQTfA57bazxtsI6vwJpC2SjLbMiKjrzrpuyjTPL/8UBgjUmX5g4P+B
-	 NUJKwXAxa+n+tbPJanGMJAKE1dB6VTEQD9DEYxz/1eBtfL4aI+xJOX0J3eO6zQbL9Vc/ovNez5ka
-	 1c7YpQBwsTLtbNzay3GvE2O+izAGLkfOoPZ4IasOv95vAtbAyEktobET/V298kYsB6y4Hokx4guO
-	 2sxO4toPPYvlsfoe9rxoT3XrxBg3hbxToPyD6xjR9xoU7f0mydiDNdxB4GtjfzlNui92jbfU027P
-	 VbMFoA5yKrRpgiGLhaE9ABmeLaWVR12u4+oAQi5bfxGchYeTDhceox3Zh+qTASOXlDhqlnzahR3X
-	 xcnuaw8pWireTRwcxTYHDn1Yky2fxBZ0xXYaRif5k9zkix5TbgPHiS8z7M03tLUR4OFeY5eFdk3A
-	 8+DRg5tDYUV6fxZ1xpX1ue4uHHT9z3dJdoqYOgs4hE/tdfLTh2Gs8HAeUv3Bp66tpFrPbqIHhdOu
-	 4Jgj5e4getyNtXhbvrBG96Cd7nJ4MP2k92RvmZh15IvNMZB9RKm+eWlp75jrR1OzZFFTCM5xitg9
-	 onMog4s3OduCBDdoBXWNlPM23k/FIhG2bNN/7U4RWU4pQ2CTO7TLKp65elHYHK9C8NeFKndW1XWP
-	 FV39W1Rf9HCWVctxNfsCiLLi3ELdsvSqYAL1fQ8JoWP9T2WNQkXeZ5D02CVMdYNgrElWrXjvi4VG
-	 swBNHZD1QPlkvYUWkuwS7e/oHCxideSvtCB+Cp97vxTmHeQcRALKtOwwO5F/8Fe7FrwO97/MQz2h
-	 9e41k4M2JqrJMFX5FzlSrt/OsqeFJEDxHKwNFgzKHNmZNHS796BDeD5bT41xWklWJlDS3AzKwR
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+55ad87f38795d6787521@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [hfs?] KMSAN: uninit-value in __hfsplus_ext_cache_extent
-Date: Fri, 29 Dec 2023 06:01:03 +0800
-X-OQ-MSGID: <20231228220102.215226-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000002cf943060d8f4e3c@google.com>
-References: <0000000000002cf943060d8f4e3c@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CPel9GsK"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ccabf5a4beso50675181fa.2;
+        Thu, 28 Dec 2023 14:09:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703801380; x=1704406180; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MuNkt2PB+Z062eBAg21yz2J6ycJCgagCNtoRGXOXMpA=;
+        b=CPel9GsK3m3ZFosGQ6tUsiSqA4GgAvh8G+lluYZqzKXXCpWxv2bEvocKQfnXVQPmh0
+         8QFwyDF09pvvdLIVLeW1BmfZcPVz0eJg+CLeY6pa00QLTQ2FaAYtJkEPGKiANhMehLVV
+         dvL8m49Tpbna8BFNRvLspwVzF2SUbXLHY3pa2GszrxxqW8Y6DjN4OpArzQ2aGht3sYpa
+         9dpYzT0kv/3mEsrNvhunLbl/l8F5/EC1kPyTiUGFdIdkZNSxQHJ3Y9L6fask7UiGgPTG
+         0KFcL8lUCPr4oD2Dmzvp/2XSVmbGYLcmj9uox7cJWraNAUGIlNzRPqyR+VjS1CeeN6a+
+         u6+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703801380; x=1704406180;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MuNkt2PB+Z062eBAg21yz2J6ycJCgagCNtoRGXOXMpA=;
+        b=ExVTWlKIZRkQo7uwgc2N5XioRyuBSiX09crjVCIsvMxolZoHmRljGLC0M4ictCGV/1
+         RDhK9CG4xtzcPCcvx4A37yg22e2Y714JSf3upYqJOo5tX7GoN48e1AhWbnP25Qt41JmJ
+         3q5XpicidLxfM2N4ocloOqqiyI/sO9lFkSX/YWDgsvzmkUvlcHFjXd5BHiMcEZ/oeRea
+         2PqzNY+gMRWPLXaut0XLHhKdEQ4bX4D7URPVhzPAFi+Es0XlF+8Qm8Ppj9dA0PRJqrR1
+         8xpMXjXBulvMH3SyOjMgRr4sPvMbKw7oDGj2ci+cT3mMP6RHKhgmoI8joYUWw4e0IFEK
+         ujEg==
+X-Gm-Message-State: AOJu0YxrMwJSGZcGYozvr0o7XD8pfis/Crsaq+vLinoL4Rdh1Pp9ipsp
+	jEk3quKDlocBswb2OOY78K47x75E/wPMpo9DcJM=
+X-Google-Smtp-Source: AGHT+IGEyl0Mtl9HJ4bO8JI/BbyhwfKXLqzO5WlKp4E/jZf2T6ZAlaDT1C0o4AtB08bJVkEURCgyjFQ8P1ruKciqDjc=
+X-Received: by 2002:a2e:8883:0:b0:2cc:a532:a6e3 with SMTP id
+ k3-20020a2e8883000000b002cca532a6e3mr2278203lji.15.1703801380097; Thu, 28 Dec
+ 2023 14:09:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Steve French <smfrench@gmail.com>
+Date: Thu, 28 Dec 2023 16:09:28 -0600
+Message-ID: <CAH2r5msxiNuCoXCvEF0X=7gdxD4-_X=E0b8mE_k7e=8HHz-VpQ@mail.gmail.com>
+Subject: [GIT PULL] ksmbd server fix
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Namjae Jeon <linkinjeon@kernel.org>, CIFS <linux-cifs@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-please test uninit-value in __hfsplus_ext_cache_extent
+Please pull the following changes since commit
+ceb6a6f023fd3e8b07761ed900352ef574010bcb:
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git fbafc3e621c3
+  Linux 6.7-rc6 (2023-12-17 15:19:28 -0800)
 
-diff --git a/fs/hfsplus/bfind.c b/fs/hfsplus/bfind.c
-index ca2ba8c9f82e..9d4ffff6d42e 100644
---- a/fs/hfsplus/bfind.c
-+++ b/fs/hfsplus/bfind.c
-@@ -23,6 +23,7 @@ int hfs_find_init(struct hfs_btree *tree, struct hfs_find_data *fd)
- 		return -ENOMEM;
- 	fd->search_key = ptr;
- 	fd->key = ptr + tree->max_key_len + 2;
-+	fd->key->ext.fork_type = 0;
- 	hfs_dbg(BNODE_REFS, "find_init: %d (%p)\n",
- 		tree->cnid, __builtin_return_address(0));
- 	switch (tree->cnid) {
-diff --git a/fs/hfsplus/extents.c b/fs/hfsplus/extents.c
-index 3c572e44f2ad..6681e3a24f29 100644
---- a/fs/hfsplus/extents.c
-+++ b/fs/hfsplus/extents.c
-@@ -206,7 +206,7 @@ static inline int __hfsplus_ext_cache_extent(struct hfs_find_data *fd,
- static int hfsplus_ext_read_extent(struct inode *inode, u32 block)
- {
- 	struct hfsplus_inode_info *hip = HFSPLUS_I(inode);
--	struct hfs_find_data fd;
-+	struct hfs_find_data fd = { 0 };
- 	int res;
- 
- 	if (block >= hip->cached_start &&
+are available in the Git repository at:
 
+  git://git.samba.org/ksmbd.git tags/6.7rc7-smb3-srv-fix
+
+for you to fetch changes up to d10c77873ba1e9e6b91905018e29e196fd5f863d:
+
+  ksmbd: fix slab-out-of-bounds in smb_strndup_from_utf16()
+(2023-12-27 22:55:36 -0600)
+
+----------------------------------------------------------------
+ksmbd server fix, also for stable
+ - address possible slab out of bounds in parsing of open requests
+----------------------------------------------------------------
+Namjae Jeon (1):
+      ksmbd: fix slab-out-of-bounds in smb_strndup_from_utf16()
+
+ fs/smb/server/smb2misc.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
+
+
+-- 
+Thanks,
+
+Steve
