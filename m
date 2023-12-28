@@ -1,192 +1,246 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FF71FDC;
-	Thu, 28 Dec 2023 05:42:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B801FDD
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 05:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TwsBOJFt"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BS4QWWb001581;
-	Thu, 28 Dec 2023 05:42:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references; s=
-	qcppdkim1; bh=cuR4EwC1nbWYU9VZ+F23XRwCskQ3HdcANY3zrRt+aMw=; b=Tw
-	sBOJFtQKbGFism3UKB2yEe89vYNVnXRbHTXpdSOjHmGSJY0q3VMvKr3sAYOrhXua
-	Xa8WVaQIph8nPNMnlaqm1eTa3aekYaxrEuDBB1l+PPYf4oFldyvqLcPCgi9nsocX
-	eBQsqL8reaF/1ykJFnh6YKmgcsH5mXL/ubiZrzyyvF3SsieIXrOE0S/aWpFNXZpJ
-	vydszvE2gZen1TKEKXnXtcLwSG3S984Rc7phlGHdaoYcXpWeX3Iu5Z0LSNDPl+rq
-	HOt37IkPMqMtq3/UxHYiygrBuWHNwZLRgdUOyf/P+JRs6Ho7n7PF9H0jnFnDrbus
-	5TvZDBr7eO3uUl89J2CQ==
-Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3v8atftm8k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 28 Dec 2023 05:42:43 +0000 (GMT)
-Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 3BS5geWt015297;
-	Thu, 28 Dec 2023 05:42:40 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTP id 3v5rmkwkaq-1;
-	Thu, 28 Dec 2023 05:42:40 +0000
-Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BS5geh1015291;
-	Thu, 28 Dec 2023 05:42:40 GMT
-Received: from cbsp-sh-gv.qualcomm.com (CBSP-SH-gv.ap.qualcomm.com [10.231.249.68])
-	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTP id 3BS5gdHi015290;
-	Thu, 28 Dec 2023 05:42:40 +0000
-Received: by cbsp-sh-gv.qualcomm.com (Postfix, from userid 4098150)
-	id 0F7E956F0; Thu, 28 Dec 2023 13:42:39 +0800 (CST)
-From: Qiang Yu <quic_qianyu@quicinc.com>
-To: agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        vkoul@kernel.org, kishon@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-kernel@vger.kernel.org, quic_cang@quicinc.com,
-        quic_mrana@quicinc.com, quic_qianyu@quicinc.com
-Subject: [PATCH 1/2] phy: qcom: qmp-pcie: Update PCIe1 PHY settings for SM8550
-Date: Thu, 28 Dec 2023 13:42:36 +0800
-Message-Id: <1703742157-69840-2-git-send-email-quic_qianyu@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1703742157-69840-1-git-send-email-quic_qianyu@quicinc.com>
-References: <1703742157-69840-1-git-send-email-quic_qianyu@quicinc.com>
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 3Xaf2Xclvu_f02ngsWv5ybWQF7e3Krrc
-X-Proofpoint-GUID: 3Xaf2Xclvu_f02ngsWv5ybWQF7e3Krrc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 bulkscore=0 clxscore=1015 mlxlogscore=648 malwarescore=0
- suspectscore=0 spamscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2312280043
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="juu8/ozp"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3bbd453dfaeso58446b6e.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 21:46:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1703742397; x=1704347197; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EQDr6Z7QmW8Ie5koy5Oa0ii9ZyG87dfdK/7a84RIhNw=;
+        b=juu8/ozp7Kmwmfu086yRxn09J5achGFTxVbXLv0JU6i3p/tLbXYen9MDJTN0QhKQBb
+         qu6CHQocJitV7p+aD+nkF41UwaxiVip/6R5NugjWx3y1Mpe8CGDrIzqRLRQ2Xv8b73g1
+         8EiRJ2gTi07i3h3D9DZclbd1acAWnaTr71ub4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703742397; x=1704347197;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EQDr6Z7QmW8Ie5koy5Oa0ii9ZyG87dfdK/7a84RIhNw=;
+        b=u8gSWwRCNTfQhJc0ipwI352B1f0xPTjfwNa+SRDj91oP/vac8LbcLjxD269DHz2zzx
+         Z8N3pVhCSXIX+/Gis1KlPFeGRd2zfYTmnD6WTkeaCegUgsdc5Qk6RuVWd1u2sQ/FQQhV
+         JNeaIixsPXy1dL/7KmPnlCbcWorfUIrp5ay4a0cp3RZ7b8+GMLytplBiFhGQ59NKynmU
+         eeSYAF23fgA8UhTFZvVhm4zfrn3229XX1ye9vHig+gg8TgP0zqPsy3GpRfBzZW1jOcr4
+         JVA4B2brMCQUZXII1GEiQXUwmmemrE4ba0I4vqd93t1s5PodXioZp0G9fUUhqBQtflUA
+         Un5Q==
+X-Gm-Message-State: AOJu0YwuNvzxlm98Ez+knCA5J1uKtBI8P9BsKo38HUa2cNiAwYz6UZzs
+	yTKyS89qMQ4QWlSx9hqX/VHzXVoRo/h0
+X-Google-Smtp-Source: AGHT+IGtb4PJPjrPu/b6afh8QGn62xF8h39xwqqmWOdmEZcp7X5gd0rz2kIYzeuI46Vv+KN/TtEoSA==
+X-Received: by 2002:a05:6808:1a19:b0:3bb:8197:4fb with SMTP id bk25-20020a0568081a1900b003bb819704fbmr9634730oib.75.1703742396878;
+        Wed, 27 Dec 2023 21:46:36 -0800 (PST)
+Received: from basement.c.googlers.com.com (112.157.221.35.bc.googleusercontent.com. [35.221.157.112])
+        by smtp.gmail.com with ESMTPSA id 6-20020aa79106000000b006d8fb8c3968sm12590663pfh.190.2023.12.27.21.46.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Dec 2023 21:46:36 -0800 (PST)
+From: Tomasz Figa <tfiga@chromium.org>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jesse Taube <Mr.Bossman075@gmail.com>,
+	Tomasz Figa <tfiga@chromium.org>
+Subject: [PATCH] kconfig: menuconfig: Make hidden options show as dim
+Date: Thu, 28 Dec 2023 14:46:30 +0900
+Message-ID: <20231228054630.3595093-1-tfiga@chromium.org>
+X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-From: Can Guo <quic_cang@quicinc.com>
+When hidden options are toggled on (using 'z'), the number of options
+on the screen can be overwhelming and may make it hard to distinguish
+between available and hidden ones. Make them easier to distinguish by
+displaying the hidden one as dim (using the A_DIM curses attribute).
 
-Align PCIe1 PHY settings with SM8550 latest PCIe PHY Hardware Programming
-Guide.
-
-Signed-off-by: Can Guo <quic_cang@quicinc.com>
-Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
+Signed-off-by: Tomasz Figa <tfiga@chromium.org>
 ---
- drivers/phy/qualcomm/phy-qcom-qmp-pcie.c               | 16 +++++++++++-----
- drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6_20.h     |  2 ++
- drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_20.h          |  1 +
- drivers/phy/qualcomm/phy-qcom-qmp-qserdes-txrx-v6_20.h |  2 ++
- 4 files changed, 16 insertions(+), 5 deletions(-)
+ scripts/kconfig/lxdialog/dialog.h  |  3 +++
+ scripts/kconfig/lxdialog/menubox.c | 11 +++++++----
+ scripts/kconfig/lxdialog/util.c    | 10 ++++++++++
+ scripts/kconfig/mconf.c            | 18 ++++++++++++++++++
+ 4 files changed, 38 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-index 2af7115..5f87ebc 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-@@ -1823,10 +1823,9 @@ static const struct qmp_phy_init_tbl sm8550_qmp_gen4x2_pcie_serdes_tbl[] = {
- 
- static const struct qmp_phy_init_tbl sm8550_qmp_gen4x2_pcie_ln_shrd_tbl[] = {
- 	QMP_PHY_INIT_CFG(QSERDES_V6_LN_SHRD_RXCLK_DIV2_CTRL, 0x01),
--	QMP_PHY_INIT_CFG(QSERDES_V6_LN_SHRD_RX_Q_EN_RATES, 0xe),
- 	QMP_PHY_INIT_CFG(QSERDES_V6_LN_SHRD_DFE_DAC_ENABLE1, 0x00),
--	QMP_PHY_INIT_CFG(QSERDES_V6_LN_SHRD_TX_ADAPT_POST_THRESH1, 0x00),
--	QMP_PHY_INIT_CFG(QSERDES_V6_LN_SHRD_TX_ADAPT_POST_THRESH2, 0x1f),
-+	QMP_PHY_INIT_CFG(QSERDES_V6_LN_SHRD_TX_ADAPT_POST_THRESH1, 0x02),
-+	QMP_PHY_INIT_CFG(QSERDES_V6_LN_SHRD_TX_ADAPT_POST_THRESH2, 0x0d),
- 	QMP_PHY_INIT_CFG(QSERDES_V6_LN_SHRD_RX_MODE_RATE_0_1_B0, 0x12),
- 	QMP_PHY_INIT_CFG(QSERDES_V6_LN_SHRD_RX_MODE_RATE_0_1_B1, 0x12),
- 	QMP_PHY_INIT_CFG(QSERDES_V6_LN_SHRD_RX_MODE_RATE_0_1_B2, 0xdb),
-@@ -1843,6 +1842,7 @@ static const struct qmp_phy_init_tbl sm8550_qmp_gen4x2_pcie_ln_shrd_tbl[] = {
- 	QMP_PHY_INIT_CFG(QSERDES_V6_LN_SHRD_RX_MARG_COARSE_THRESH4_RATE3, 0x1f),
- 	QMP_PHY_INIT_CFG(QSERDES_V6_LN_SHRD_RX_MARG_COARSE_THRESH5_RATE3, 0x1f),
- 	QMP_PHY_INIT_CFG(QSERDES_V6_LN_SHRD_RX_MARG_COARSE_THRESH6_RATE3, 0x1f),
-+	QMP_PHY_INIT_CFG(QSERDES_V6_LN_SHRD_RX_SUMMER_CAL_SPD_MODE, 0x5b),
+diff --git a/scripts/kconfig/lxdialog/dialog.h b/scripts/kconfig/lxdialog/dialog.h
+index a501abf9fa31..d2ebdc6e2e28 100644
+--- a/scripts/kconfig/lxdialog/dialog.h
++++ b/scripts/kconfig/lxdialog/dialog.h
+@@ -128,6 +128,7 @@ void item_add_str(const char *fmt, ...);
+ void item_set_tag(char tag);
+ void item_set_data(void *p);
+ void item_set_selected(int val);
++void item_set_hidden(int val);
+ int item_activate_selected(void);
+ void *item_data(void);
+ char item_tag(void);
+@@ -139,6 +140,7 @@ struct dialog_item {
+ 	char tag;
+ 	void *data;	/* pointer to menu item - used by menubox+checklist */
+ 	int selected;	/* Set to 1 by dialog_*() function if selected. */
++	int hidden;	/* Set to 1 if hidden. */
  };
  
- static const struct qmp_phy_init_tbl sm8550_qmp_gen4x2_pcie_tx_tbl[] = {
-@@ -1855,13 +1855,15 @@ static const struct qmp_phy_init_tbl sm8550_qmp_gen4x2_pcie_tx_tbl[] = {
- };
+ /* list of lialog_items */
+@@ -157,6 +159,7 @@ int item_n(void);
+ const char *item_str(void);
+ int item_is_selected(void);
+ int item_is_tag(char tag);
++int item_is_hidden(void);
+ #define item_foreach() \
+ 	for (item_cur = item_head ? item_head: item_cur; \
+ 	     item_cur && (item_cur != &item_nil); item_cur = item_cur->next)
+diff --git a/scripts/kconfig/lxdialog/menubox.c b/scripts/kconfig/lxdialog/menubox.c
+index 0e333284e947..2cf1f24f67b6 100644
+--- a/scripts/kconfig/lxdialog/menubox.c
++++ b/scripts/kconfig/lxdialog/menubox.c
+@@ -51,9 +51,9 @@ static int menu_width, item_x;
+  * Print menu item
+  */
+ static void do_print_item(WINDOW * win, const char *item, int line_y,
+-			  int selected, int hotkey)
++			  int selected, int hotkey, int hidden)
+ {
+-	int j;
++	int j, attrs;
+ 	char *menu_item = malloc(menu_width + 1);
  
- static const struct qmp_phy_init_tbl sm8550_qmp_gen4x2_pcie_rx_tbl[] = {
--	QMP_PHY_INIT_CFG(QSERDES_V6_20_RX_UCDR_FO_GAIN_RATE_2, 0x0a),
-+	QMP_PHY_INIT_CFG(QSERDES_V6_20_RX_UCDR_FO_GAIN_RATE_2, 0x0c),
- 	QMP_PHY_INIT_CFG(QSERDES_V6_20_RX_UCDR_FO_GAIN_RATE_3, 0x0a),
-+	QMP_PHY_INIT_CFG(QSERDES_V6_20_RX_UCDR_SO_GAIN_RATE_2, 0x04),
- 	QMP_PHY_INIT_CFG(QSERDES_V6_20_RX_UCDR_PI_CONTROLS, 0x16),
- 	QMP_PHY_INIT_CFG(QSERDES_V6_20_RX_UCDR_SO_ACC_DEFAULT_VAL_RATE3, 0x00),
- 	QMP_PHY_INIT_CFG(QSERDES_V6_20_RX_IVCM_CAL_CTRL2, 0x80),
- 	QMP_PHY_INIT_CFG(QSERDES_V6_20_RX_IVCM_POSTCAL_OFFSET, 0x7c),
- 	QMP_PHY_INIT_CFG(QSERDES_V6_20_RX_DFE_3, 0x05),
-+	QMP_PHY_INIT_CFG(QSERDES_V6_20_RX_TX_ADPT_CTRL, 0x10),
- 	QMP_PHY_INIT_CFG(QSERDES_V6_20_RX_VGA_CAL_MAN_VAL, 0x0a),
- 	QMP_PHY_INIT_CFG(QSERDES_V6_20_RX_GM_CAL, 0x0d),
- 	QMP_PHY_INIT_CFG(QSERDES_V6_20_RX_EQU_ADAPTOR_CNTRL4, 0x0b),
-@@ -1883,11 +1885,13 @@ static const struct qmp_phy_init_tbl sm8550_qmp_gen4x2_pcie_rx_tbl[] = {
- 	QMP_PHY_INIT_CFG(QSERDES_V6_20_RX_MODE_RATE3_B4, 0x78),
- 	QMP_PHY_INIT_CFG(QSERDES_V6_20_RX_MODE_RATE3_B5, 0x76),
- 	QMP_PHY_INIT_CFG(QSERDES_V6_20_RX_MODE_RATE3_B6, 0xff),
-+	QMP_PHY_INIT_CFG(QSERDES_V6_20_VGA_CAL_CNTRL1, 0x00),
- };
+ 	strncpy(menu_item, item, menu_width - item_x);
+@@ -64,7 +64,10 @@ static void do_print_item(WINDOW * win, const char *item, int line_y,
+ 	wattrset(win, dlg.menubox.atr);
+ 	wmove(win, line_y, 0);
+ 	wclrtoeol(win);
+-	wattrset(win, selected ? dlg.item_selected.atr : dlg.item.atr);
++	attrs = selected ? dlg.item_selected.atr : dlg.item.atr;
++	if (hidden)
++		attrs |= A_DIM;
++	wattrset(win, attrs);
+ 	mvwaddstr(win, line_y, item_x, menu_item);
+ 	if (hotkey) {
+ 		wattrset(win, selected ? dlg.tag_key_selected.atr
+@@ -81,7 +84,7 @@ static void do_print_item(WINDOW * win, const char *item, int line_y,
+ #define print_item(index, choice, selected)				\
+ do {									\
+ 	item_set(index);						\
+-	do_print_item(menu, item_str(), choice, selected, !item_is_tag(':')); \
++	do_print_item(menu, item_str(), choice, selected, !item_is_tag(':'), item_is_hidden()); \
+ } while (0)
  
- static const struct qmp_phy_init_tbl sm8550_qmp_gen4x2_pcie_pcs_tbl[] = {
-+	QMP_PHY_INIT_CFG(QPHY_V6_20_PCS_G12S1_TXDEEMPH_M6DB, 0x17),
- 	QMP_PHY_INIT_CFG(QPHY_V6_20_PCS_G3S2_PRE_GAIN, 0x2e),
--	QMP_PHY_INIT_CFG(QPHY_V6_20_PCS_COM_ELECIDLE_DLY_SEL, 0x25),
-+	QMP_PHY_INIT_CFG(QPHY_V6_20_PCS_RX_SIGDET_LVL, 0xcc),
- 	QMP_PHY_INIT_CFG(QPHY_V6_20_PCS_EQ_CONFIG4, 0x00),
- 	QMP_PHY_INIT_CFG(QPHY_V6_20_PCS_EQ_CONFIG5, 0x22),
- 	QMP_PHY_INIT_CFG(QPHY_V6_20_PCS_TX_RX_CONFIG1, 0x04),
-@@ -1898,6 +1902,8 @@ static const struct qmp_phy_init_tbl sm8550_qmp_gen4x2_pcie_pcs_misc_tbl[] = {
- 	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_20_PCS_ENDPOINT_REFCLK_DRIVE, 0xc1),
- 	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_20_PCS_OSC_DTCT_ATCIONS, 0x00),
- 	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_20_PCS_EQ_CONFIG1, 0x16),
-+	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_20_PCS_G3_RXEQEVAL_TIME, 0x27),
-+	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_20_PCS_G4_RXEQEVAL_TIME, 0x27),
- 	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_20_PCS_EQ_CONFIG5, 0x02),
- 	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_20_PCS_G4_PRE_GAIN, 0x2e),
- 	QMP_PHY_INIT_CFG(QPHY_PCIE_V6_20_PCS_RX_MARGINING_CONFIG1, 0x03),
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6_20.h b/drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6_20.h
-index e3eb087..dfcecf3 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6_20.h
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6_20.h
-@@ -12,6 +12,8 @@
- #define QPHY_PCIE_V6_20_PCS_ENDPOINT_REFCLK_DRIVE	0x01c
- #define QPHY_PCIE_V6_20_PCS_OSC_DTCT_ATCIONS		0x090
- #define QPHY_PCIE_V6_20_PCS_EQ_CONFIG1			0x0a0
-+#define QPHY_PCIE_V6_20_PCS_G3_RXEQEVAL_TIME		0x0f0
-+#define QPHY_PCIE_V6_20_PCS_G4_RXEQEVAL_TIME		0x0f4
- #define QPHY_PCIE_V6_20_PCS_EQ_CONFIG5			0x108
- #define QPHY_PCIE_V6_20_PCS_G4_PRE_GAIN			0x15c
- #define QPHY_PCIE_V6_20_PCS_RX_MARGINING_CONFIG1	0x17c
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_20.h b/drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_20.h
-index 9c3f1e4..4d9615c 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_20.h
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_20.h
-@@ -7,6 +7,7 @@
- #define QCOM_PHY_QMP_PCS_V6_20_H_
+ /*
+diff --git a/scripts/kconfig/lxdialog/util.c b/scripts/kconfig/lxdialog/util.c
+index 3f78fb265136..58d6ee96f7ec 100644
+--- a/scripts/kconfig/lxdialog/util.c
++++ b/scripts/kconfig/lxdialog/util.c
+@@ -635,6 +635,11 @@ void item_set_selected(int val)
+ 	item_cur->node.selected = val;
+ }
  
- /* Only for QMP V6_20 PHY - USB/PCIe PCS registers */
-+#define QPHY_V6_20_PCS_G12S1_TXDEEMPH_M6DB		0x170
- #define QPHY_V6_20_PCS_G3S2_PRE_GAIN			0x178
- #define QPHY_V6_20_PCS_RX_SIGDET_LVL			0x190
- #define QPHY_V6_20_PCS_COM_ELECIDLE_DLY_SEL		0x1b8
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-txrx-v6_20.h b/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-txrx-v6_20.h
-index 6ed5339..7bac5d5 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-txrx-v6_20.h
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp-qserdes-txrx-v6_20.h
-@@ -23,6 +23,8 @@
- #define QSERDES_V6_20_RX_DFE_1					0xac
- #define QSERDES_V6_20_RX_DFE_2					0xb0
- #define QSERDES_V6_20_RX_DFE_3					0xb4
-+#define QSERDES_V6_20_RX_TX_ADPT_CTRL				0xd4
-+#define QSERDES_V6_20_VGA_CAL_CNTRL1				0xe0
- #define QSERDES_V6_20_RX_VGA_CAL_MAN_VAL			0xe8
- #define QSERDES_V6_20_RX_GM_CAL					0x10c
- #define QSERDES_V6_20_RX_EQU_ADAPTOR_CNTRL4			0x120
++void item_set_hidden(int val)
++{
++	item_cur->node.hidden = val;
++}
++
+ int item_activate_selected(void)
+ {
+ 	item_foreach()
+@@ -698,3 +703,8 @@ int item_is_tag(char tag)
+ {
+ 	return (item_cur->node.tag == tag);
+ }
++
++int item_is_hidden(void)
++{
++	return (item_cur->node.hidden != 0);
++}
+diff --git a/scripts/kconfig/mconf.c b/scripts/kconfig/mconf.c
+index eccc87a441e7..090121a1e5b6 100644
+--- a/scripts/kconfig/mconf.c
++++ b/scripts/kconfig/mconf.c
+@@ -539,6 +539,8 @@ static void build_conf(struct menu *menu)
+ 						  menu_is_empty(menu) ? "----" : "--->");
+ 				item_set_tag('m');
+ 				item_set_data(menu);
++				if (!visible)
++					item_set_hidden(TRUE);
+ 				if (single_menu_mode && menu->data)
+ 					goto conf_childs;
+ 				return;
+@@ -548,6 +550,8 @@ static void build_conf(struct menu *menu)
+ 					item_make("   %*c*** %s ***", indent + 1, ' ', prompt);
+ 					item_set_tag(':');
+ 					item_set_data(menu);
++					if (!visible)
++						item_set_hidden(TRUE);
+ 				}
+ 				break;
+ 			default:
+@@ -556,6 +560,8 @@ static void build_conf(struct menu *menu)
+ 					item_make("---%*c%s", indent + 1, ' ', prompt);
+ 					item_set_tag(':');
+ 					item_set_data(menu);
++					if (!visible)
++						item_set_hidden(TRUE);
+ 				}
+ 			}
+ 		} else
+@@ -591,10 +597,14 @@ static void build_conf(struct menu *menu)
+ 			}
+ 			item_set_tag('t');
+ 			item_set_data(menu);
++			if (!visible)
++				item_set_hidden(TRUE);
+ 		} else {
+ 			item_make("   ");
+ 			item_set_tag(def_menu ? 't' : ':');
+ 			item_set_data(menu);
++			if (!visible)
++				item_set_hidden(TRUE);
+ 		}
+ 
+ 		item_add_str("%*c%s", indent + 1, ' ', menu_get_prompt(menu));
+@@ -615,6 +625,8 @@ static void build_conf(struct menu *menu)
+ 			item_make("---%*c%s", indent + 1, ' ', menu_get_prompt(menu));
+ 			item_set_tag(':');
+ 			item_set_data(menu);
++			if (!visible)
++				item_set_hidden(TRUE);
+ 			goto conf_childs;
+ 		}
+ 		child_count++;
+@@ -632,6 +644,8 @@ static void build_conf(struct menu *menu)
+ 					item_make("-%c-", val == no ? ' ' : '*');
+ 				item_set_tag('t');
+ 				item_set_data(menu);
++				if (!visible)
++					item_set_hidden(TRUE);
+ 				break;
+ 			case S_TRISTATE:
+ 				switch (val) {
+@@ -648,6 +662,8 @@ static void build_conf(struct menu *menu)
+ 					item_make("-%c-", ch);
+ 				item_set_tag('t');
+ 				item_set_data(menu);
++				if (!visible)
++					item_set_hidden(TRUE);
+ 				break;
+ 			default:
+ 				tmp = 2 + strlen(sym_get_string_value(sym)); /* () = 2 */
+@@ -660,6 +676,8 @@ static void build_conf(struct menu *menu)
+ 					     "" : " (NEW)");
+ 				item_set_tag('s');
+ 				item_set_data(menu);
++				if (!visible)
++					item_set_hidden(TRUE);
+ 				goto conf_childs;
+ 			}
+ 		}
 -- 
-2.7.4
+2.43.0.472.g3155946c3a-goog
 
