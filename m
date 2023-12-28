@@ -1,165 +1,200 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497D11094A;
-	Thu, 28 Dec 2023 16:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BFC107B0;
+	Thu, 28 Dec 2023 16:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RzDCblR/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703782706; x=1735318706;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=WYw+ej8p75zSV2PmRVDEXfp4ji6lrtgJzEwDsDP49x0=;
-  b=RzDCblR/5VtUnlVh9tyGo2ztgfg7fST3j6IOU18rCVQU3gZzyKdQNqh+
-   O69b9TtU02E7F1ojIHVyyUFh4Xpl0NBV5dDLpP4ep7yCDWrDkGYLCMVaS
-   Jsq2bQnQpcHg6axtu45IwzLNNFCPG+7jVR1C+6EjsGowZbmlPh9/t8lOD
-   sODrxH/Qc4ByrYBgPoQiW7YcjjG81OqaNs72HEO9RRgv0bnBB2vJj+VTh
-   2GA9Pwfowef8wobV4Zkzu/gcBDN3ar2rITlvD3lJSlevcN5BS5Cvr18eF
-   ZMCIeNXqY4eoZ+HeEOjCq2E9nv7+QwFsO7kk94iSQqvIu0JCBdLPaNEsS
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="9958072"
-X-IronPort-AV: E=Sophos;i="6.04,312,1695711600"; 
-   d="scan'208";a="9958072"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2023 08:58:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="951847269"
-X-IronPort-AV: E=Sophos;i="6.04,312,1695711600"; 
-   d="scan'208";a="951847269"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.94.250.171])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2023 08:58:19 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-pci@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Igor Mammedov <imammedo@redhat.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 6/7] resource: Export find_empty_resource_slot()
-Date: Thu, 28 Dec 2023 18:57:06 +0200
-Message-Id: <20231228165707.3447-7-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20231228165707.3447-1-ilpo.jarvinen@linux.intel.com>
-References: <20231228165707.3447-1-ilpo.jarvinen@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="g4obSGsG"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 40D4660003;
+	Thu, 28 Dec 2023 16:58:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
+	t=1703782701;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iLzd7A9jFskmhen4DUM2XT5CFAIISUlx1M90s2C0fRs=;
+	b=g4obSGsGdqga49bgW8wAunpOtYZ0THRFsYWaK4w7Af0B0xPCc90zQ+86HdcMGVvPoU7I6N
+	JGcMDWFjCwKDXP0yaOMFncICV1yeNYsgLN2sQ7kT/0RgBZE8XZiabUaGSXvAO6+4InerMj
+	8GZlnaSpqzmhSxJgexjcgeXJUNgJlCm7ukiB0jp4wY3c64hVw8JXZ1raAnyFONxmba3ZkP
+	MzawQwY8euzM3riMX9gGKIe7QL6Lhtteg/Zaxj9+D3UV9UdVUZJ43MTP4+khVGmvU8f5wC
+	gF08+DBfiPO1pnR7eKy9mk2nGHJMIUYxHZnKZzSsngDLFfzfBI9zHfmTkMb2ZA==
+Message-ID: <d2a7cc7e-bb27-472f-8921-5579a894c71d@arinc9.com>
+Date: Thu, 28 Dec 2023 19:58:13 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next] net: dsa: mt7530: register OF node for internal
+ MDIO bus
+To: Vladimir Oltean <olteanv@gmail.com>
+Cc: Daniel Golle <daniel@makrotopia.org>,
+ Landen Chao <Landen.Chao@mediatek.com>, DENG Qingfang <dqfext@gmail.com>,
+ Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
+ Florian Fainelli <f.fainelli@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ David Bauer <mail@david-bauer.net>, mithat.guner@xeront.com,
+ erkin.bozoglu@xeront.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20231220173539.59071-1-arinc.unal@arinc9.com>
+ <20231220173539.59071-1-arinc.unal@arinc9.com>
+ <20231221151607.ujobhh4aet4obxdz@skbuf>
+ <6600c6b1-2230-4963-940c-8b95a01750fd@arinc9.com>
+ <20231227191154.6jkqdlqdxciidpfw@skbuf>
+ <bdbe24b2-30f6-48fa-b6eb-a1ae3afe9076@arinc9.com>
+ <20231227200217.kdltxpmhvlp6z4cd@skbuf>
+Content-Language: en-US
+From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+In-Reply-To: <20231227200217.kdltxpmhvlp6z4cd@skbuf>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-GND-Sasl: arinc.unal@arinc9.com
 
-PCI bridge window logic needs to find out in advance to the actual
-allocation if there is an empty slot big enough to fit the window.
+On 27.12.2023 23:02, Vladimir Oltean wrote:
+> On Wed, Dec 27, 2023 at 10:51:08PM +0300, Arınç ÜNAL wrote:
+>> I didn't realise ds->user_mii_bus is also used to store irq mapping for
+>> each PHY.
+> 
+> It needs to, if the MDIO bus does not have an OF description through
+> which PHYs can have an 'interrupts' property. But if there is an OF
+> description for the MDIO bus and the PHYs, I think it is strange to
+> expect PHYs to have interrupts if they aren't described in OF.
+> 
+>> Should we agree that user_mii_bus is needed for all cases or make
+>> another way to store the irq mappings?
+> 
+> I looked at the upstream device trees:
+> - users of arch/mips/boot/dts/ralink/mt7621.dtsi
+> - arch/arm/boot/dts/mediatek/mt7623n-bananapi-bpi-r2.dts
+> - arch/arm/boot/dts/mediatek/mt7623n-rfb-emmc.dts
+> - arch/arm/boot/dts/mediatek/mt7623a.dtsi
+> - arch/arm64/boot/dts/rockchip/rk3568-bpi-r2-pro.dts
+> - arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3.dts
+> - arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
+> - arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+> 
+> and without exception, none of these have the MDIO bus described in OF.
+> I'm not sure about other device trees. But it may well be that the
+> situation where "MDIO buses present in OF need an IRQ mapping for their
+> PHYs" does not need to be handled.
 
-Export find_empty_resource_slot() for the purpose. Also move the struct
-resource_constraint into generic header to be able to use the new
-interface.
+As Daniel stated on a previous submission of this patch, being able to
+reference the PHYs on the switch MDIO bus is mandatory on MT7988 as
+calibration data from NVMEM for each PHY is required, so defining the MDIO
+bus is required to support MT7988. Therefore, we should support interrupts
+on device trees with the switch MDIO bus defined.
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/ioport.h | 22 ++++++++++++++++++++++
- kernel/resource.c      | 25 ++++---------------------
- 2 files changed, 26 insertions(+), 21 deletions(-)
+The implementation below follows this logic:
 
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index 26bfd9515653..b6ed244bc4b9 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -205,6 +205,24 @@ typedef resource_size_t (*resource_alignf)(void *data,
- 					   resource_size_t size,
- 					   resource_size_t align);
- 
-+/**
-+ * resource_constraint - constraints to be met while searching empty resource slots
-+ * @min:		The minimum address for the memory range
-+ * @max:		The maximum address for the memory range
-+ * @align:		Alignment for the start address of the empty slot
-+ * @alignf:		Additional alignment constraints callback
-+ * @alignf_data:	Data provided for @alignf callback
-+ *
-+ * Contains the range and alignment constraints that have to be met during
-+ * find_empty_resource_slot(). @alignf can be NULL indicating no alignment
-+ * beyond @align is necessary.
-+ */
-+struct resource_constraint {
-+	resource_size_t min, max, align;
-+	resource_alignf alignf;
-+	void *alignf_data;
-+};
+No switch MDIO bus defined: Register the MDIO bus, set the interrupts for
+PHYs if "interrupt-controller" is defined at the switch node.
+
+Switch MDIO bus defined: Register the MDIO bus, set the interrupts for PHYs
+if ["interrupt-controller" is defined at the switch node and "interrupts"
+is defined at the PHY nodes under the switch MDIO bus node].
+
+I think this approach fits your description so I'd like to agree that this
+should be the way for all DSA subdrivers. Please let me know what you
+think.
+
+diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+index 391c4dbdff42..bbd230a73ead 100644
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -2155,15 +2155,21 @@ mt7530_setup_mdio(struct mt7530_priv *priv)
+  {
+  	struct dsa_switch *ds = priv->ds;
+  	struct device *dev = priv->dev;
++	struct device_node *np, *mnp;
+  	struct mii_bus *bus;
+  	static int idx;
+  	int ret;
+  
++	np = priv->dev->of_node;
++	mnp = of_get_child_by_name(np, "mdio");
 +
- /* PC/ISA/whatever - the normal PC address spaces: IO and memory */
- extern struct resource ioport_resource;
- extern struct resource iomem_resource;
-@@ -278,6 +296,10 @@ static inline bool resource_union(const struct resource *r1, const struct resour
- 	return true;
- }
- 
-+int find_empty_resource_slot(struct resource *root, struct resource *new,
-+			     resource_size_t size,
-+			     struct resource_constraint *constraint);
+  	bus = devm_mdiobus_alloc(dev);
+  	if (!bus)
+  		return -ENOMEM;
+  
+-	ds->user_mii_bus = bus;
++	if (mnp == NULL)
++		ds->user_mii_bus = bus;
 +
- /* Convenience shorthand with allocation */
- #define request_region(start,n,name)		__request_region(&ioport_resource, (start), (n), (name), 0)
- #define request_muxed_region(start,n,name)	__request_region(&ioport_resource, (start), (n), (name), IORESOURCE_MUXED)
-diff --git a/kernel/resource.c b/kernel/resource.c
-index f0e4d57d0c35..c1bbb0943d9c 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -46,24 +46,6 @@ struct resource iomem_resource = {
- };
- EXPORT_SYMBOL(iomem_resource);
- 
--/**
-- * resource_constraint - constraints to be met while searching empty resource slots
-- * @min:		The minimum address for the memory range
-- * @max:		The maximum address for the memory range
-- * @align:		Alignment for the start address of the empty slot
-- * @alignf:		Additional alignment constraints callback
-- * @alignf_data:	Data provided for @alignf callback
-- *
-- * Contains the range and alignment constraints that have to be met during
-- * find_empty_resource_slot(). @alignf can be NULL indicating no alignment
-- * beyond @align is necessary.
-- */
--struct resource_constraint {
--	resource_size_t min, max, align;
--	resource_alignf alignf;
--	void *alignf_data;
--};
--
- static DEFINE_RWLOCK(resource_lock);
- 
- static struct resource *next_resource(struct resource *p, bool skip_children)
-@@ -650,12 +632,13 @@ next:		if (!this || this->end == root->end)
-  * * %0		- if successful, @new members start, end, and flags are altered.
-  * * %-EBUSY	- if no empty slot was found.
-  */
--static int find_empty_resource_slot(struct resource *root, struct resource *new,
--				    resource_size_t size,
--				    struct resource_constraint *constraint)
-+int find_empty_resource_slot(struct resource *root, struct resource *new,
-+			     resource_size_t size,
-+			     struct resource_constraint *constraint)
- {
- 	return  __find_empty_resource_slot(root, NULL, new, size, constraint);
- }
-+EXPORT_SYMBOL_GPL(find_empty_resource_slot);
- 
- /**
-  * reallocate_resource - allocate a slot in the resource tree given range & alignment.
--- 
-2.30.2
+  	bus->priv = priv;
+  	bus->name = KBUILD_MODNAME "-mii";
+  	snprintf(bus->id, MII_BUS_ID_SIZE, KBUILD_MODNAME "-%d", idx++);
+@@ -2174,10 +2180,11 @@ mt7530_setup_mdio(struct mt7530_priv *priv)
+  	bus->parent = dev;
+  	bus->phy_mask = ~ds->phys_mii_mask;
+  
+-	if (priv->irq)
++	if (priv->irq && mnp == NULL)
+  		mt7530_setup_mdio_irq(priv);
+  
+-	ret = devm_mdiobus_register(dev, bus);
++	ret = devm_of_mdiobus_register(dev, bus, mnp);
++	of_node_put(mnp);
+  	if (ret) {
+  		dev_err(dev, "failed to register MDIO bus: %d\n", ret);
+  		if (priv->irq)
 
+With this device tree:
+
+switch {
+	interrupt-controller;
+}
+
+[    1.420534] mt7530-mdio mdio-bus:1f lan1 (uninitialized): PHY [mt7530-0:00] driver [MediaTek MT7530 PHY] (irq=17)
+[    1.433224] mt7530-mdio mdio-bus:1f lan2 (uninitialized): PHY [mt7530-0:01] driver [MediaTek MT7530 PHY] (irq=18)
+[    1.445338] mt7530-mdio mdio-bus:1f lan3 (uninitialized): PHY [mt7530-0:02] driver [MediaTek MT7530 PHY] (irq=19)
+[    1.457472] mt7530-mdio mdio-bus:1f lan4 (uninitialized): PHY [mt7530-0:03] driver [MediaTek MT7530 PHY] (irq=20)
+[    1.469587] mt7530-mdio mdio-bus:1f wan (uninitialized): PHY [mt7530-0:04] driver [MediaTek MT7530 PHY] (irq=21)
+
+With this device tree:
+
+switch {
+	interrupt-controller;
+
+	mdio {
+		phy {
+			reg = <0>;
+		}
+	}
+}
+
+[    1.413101] mt7530-mdio mdio-bus:1f lan1 (uninitialized): PHY [mt7530-0:00] driver [MediaTek MT7530 PHY] (irq=POLL)
+[    1.429954] mt7530-mdio mdio-bus:1f lan2 (uninitialized): PHY [mt7530-0:01] driver [MediaTek MT7530 PHY] (irq=POLL)
+[    1.443704] mt7530-mdio mdio-bus:1f lan3 (uninitialized): PHY [mt7530-0:02] driver [MediaTek MT7530 PHY] (irq=POLL)
+[    1.455876] mt7530-mdio mdio-bus:1f lan4 (uninitialized): PHY [mt7530-0:03] driver [MediaTek MT7530 PHY] (irq=POLL)
+[    1.468079] mt7530-mdio mdio-bus:1f wan (uninitialized): PHY [mt7530-0:04] driver [MediaTek MT7530 PHY] (irq=POLL)
+
+With this device tree:
+
+switch {
+	interrupt-controller;
+
+	mdio {
+		phy {
+			reg = <0>;
+			interrupts = <0>;
+		}
+	}
+}
+
+[    1.420534] mt7530-mdio mdio-bus:1f lan1 (uninitialized): PHY [mt7530-0:00] driver [MediaTek MT7530 PHY] (irq=17)
+[    1.433224] mt7530-mdio mdio-bus:1f lan2 (uninitialized): PHY [mt7530-0:01] driver [MediaTek MT7530 PHY] (irq=18)
+[    1.445338] mt7530-mdio mdio-bus:1f lan3 (uninitialized): PHY [mt7530-0:02] driver [MediaTek MT7530 PHY] (irq=19)
+[    1.457472] mt7530-mdio mdio-bus:1f lan4 (uninitialized): PHY [mt7530-0:03] driver [MediaTek MT7530 PHY] (irq=20)
+[    1.469587] mt7530-mdio mdio-bus:1f wan (uninitialized): PHY [mt7530-0:04] driver [MediaTek MT7530 PHY] (irq=21)
+
+Arınç
