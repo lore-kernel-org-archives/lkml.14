@@ -1,51 +1,50 @@
 Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7B8D2F5;
-	Thu, 28 Dec 2023 15:00:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D011D526;
+	Thu, 28 Dec 2023 15:00:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="cAc+P5Do"
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Spwhd9EY"
 Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8C70640E01AC;
-	Thu, 28 Dec 2023 15:00:14 +0000 (UTC)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 66BC140E01A1;
+	Thu, 28 Dec 2023 14:54:31 +0000 (UTC)
 X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
-	reason="fail (body has been altered)" header.d=alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
 Received: from mail.alien8.de ([127.0.0.1])
 	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id PxZX2y-fzCBl; Thu, 28 Dec 2023 15:00:11 +0000 (UTC)
+	with ESMTP id ng2B1LZRXrFL; Thu, 28 Dec 2023 14:54:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1703775611; bh=iCf2bVGTYJt2X/04rIA1mBGQdKeeLuRm/0eyYuGvT8U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cAc+P5DoPPIhu9aIIq7QBENuq7kcTN+QuxEJ8iw+bNlxdDLz1cTyoswJH++A9qxXB
-	 ST5BlFiur7ISSB1GrFKmGBYtwDj9ZWIxUh78sFhYQpWCuZMSLoqD3I9j6JrBFNjBLn
-	 uVl+dKIxYMPqz675k4abm+27WRPpcC+roRmNu2r66jkj/TGLOm6mNliGV4A3JTb4fQ
-	 GKVn2+pkAJ4NXLwo0ba8VK6Bb59sonXYB0b0lIGWiBJjf/GAGQifuDJ1IHvm9Cdvec
-	 YpEVH5LZLeBhN1PXVHyinjNpdJq30EVJvDgXClX0Rw5eXrgkhAeu6Wj7jQDHR/b3qN
-	 clxp+GJtZG2AqklR6afVPecmKhHl0k/LqCGe9rjExBSFBh8wm83SLW0l52ecWjuGk3
-	 ktogUJZQm+0uUwyD/IEPM4ho6BUhBpT6kHvIgPo2fcwWssujCVVj9xCRHifzwIyFFP
-	 IaVaREC9+rM15SXZshTxNgW/LPm5jw5LmmbsdBnwlNVuIskBPEmQ2RHR7PChZvJpVk
-	 CAUkwrRQSQhiSRqsS/AFWNpWMB8TcT9r6DcXjkbPEUWXOi40NMUSYTO/nHpu8PMVjI
-	 okHeJL47yrcOOnxM/u+/P3HUPN4FdSM2M4hI8m/JvahfdmhynCaw1Z8TcJEUWQQqxk
-	 5YjqJfOrgVPN/KbBTGEBjf18=
+	t=1703775268; bh=jcyDiPI487B6t/5OUI/W6GwQkhmDmtuv3TJj+zdWb2c=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Spwhd9EYHOOjpPmVPBFMW1p7OvIGjZHMzE5re9j+NS083HAxWSuaULrkF2O/p96np
+	 g/+UB+yjwCCtM0ZRXfslJNnNYku5hUNRlfe/l0E+2ecZYw6t8ruvGyH3AwmMZAwmyF
+	 Jorqe8Jez7HaqToDpefqGR+VdgB9ZOfmhTFLWyYCb+EAmR30uCvyw0G9s9siOjWCqP
+	 Y/Cg1I9pkGldj9lOusmR+JY10kVg0qAH3li2Ib6B1Pnn1I0BnXKdP/f2SlcjDWv+UH
+	 8EHI9iI7MdQZRmzvdu1aHBVoqyqY6+RC66XnHpT56suQ6fd+1rkkPCgJxvbvGcqQJI
+	 7QFx7UAAqnPg9IBubEpjYejrPTlZKBDP2ahzWT2Z9PQ+9TVxbl0TTAUOMMhVYk2+xr
+	 0ssAyea+WQQjLHDeXQh2IDCM4nH20A3evPBFYzLZPRApN5b6BpaL6VGtLHedZOs3Tg
+	 EnR4YAbF7X9/+5tiKVNDq1yeAYoka82tMVbZNub6KpN4bS03+zRjSz/9T6YEYGSG3s
+	 p1xxOQH2dUE4vPSoeRAYiW+G6Lc4gduGXHG4R8gcn24f6f3am7lPsAYNwTmfUb6ziM
+	 IdTFbeGpUFbmgVptQo2qezc78mGoU4j16SLzqnGpjGVQTNXlQ3vbKEE0SvSSJ7Dk8e
+	 XTPABiVW1FDiDcsYUFEzgkOw=
 Received: from zn.tnic (pd9530f8c.dip0.t-ipconnect.de [217.83.15.140])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2537C40E00CB;
-	Thu, 28 Dec 2023 15:00:04 +0000 (UTC)
-Date: Thu, 28 Dec 2023 16:00:03 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: tony.luck@intel.com, linux-kernel@vger.kernel.org,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>, linux-edac@vger.kernel.org
-Subject: Re: [PATCH] EDAC: constantify the struct bus_type usage
-Message-ID: <20231228150003.GAZY2Nc38sAIa0bat/@fat_crate.local>
-References: <2023121909-tribute-punctuate-4b22@gregkh>
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5BEEB40E00CB;
+	Thu, 28 Dec 2023 14:54:23 +0000 (UTC)
+Date: Thu, 28 Dec 2023 15:54:16 +0100
+From: "Borislav Petkov (AMD)" <bp@alien8.de>
+To: linux-pm@vger.kernel.org, forza@tnonline.net
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	lkml <linux-kernel@vger.kernel.org>
+Subject: [PATCH] cpuidle: haltpoll: Do not enable interrupts when entering
+ idle
+Message-ID: <20231228145416.GAZY2MGLY6THMkAZ2W@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,40 +53,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <2023121909-tribute-punctuate-4b22@gregkh>
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 19, 2023 at 02:13:10PM +0100, Greg Kroah-Hartman wrote:
-> In many places in the edac code, struct bus_type pointers are passed
-> around and then eventually sent to the driver core, which can handle a
-> constant pointer.  So constantify all of the edac usage of these as wel=
-l
-> because the data in them is never modified by the edac code either.
+Hi,
 
-"constantify", huh? Not enough words in the English language so let's do
-new ones?
+I think PeterZ's massaging from
 
-:-)
+  https://lore.kernel.org/all/20230112194314.845371875@infradead.org/
 
-So what's the plan with this "constantification"?
+missed one.
 
-Because:
+@Forza, if you want to have your real name in the patch tags below and
+thus be part of git history, lemme know. If you don't want them there,
+either.
 
-drivers/edac/edac_module.c: In function =E2=80=98edac_subsys_init=E2=80=99=
-:
-drivers/edac/edac_module.c:80:38: warning: passing argument 1 of =E2=80=98=
-subsys_system_register=E2=80=99 discards =E2=80=98const=E2=80=99 qualifie=
-r from pointer target type [-Wdiscarded-qualifiers]
-   80 |         err =3D subsys_system_register(&edac_subsys, NULL);
-      |                                      ^~~~~~~~~~~~
-In file included from ./include/linux/edac.h:16,
-                 from drivers/edac/edac_module.c:13:
-./include/linux/device.h:75:45: note: expected =E2=80=98struct bus_type *=
-=E2=80=99 but argument is of type =E2=80=98const struct bus_type *=E2=80=99
-   75 | int subsys_system_register(struct bus_type *subsys,
-      |
+Thx.
 
---=20
+---
+From: Borislav Petkov (AMD) <bp@alien8.de>
+
+The cpuidle governors' ->enter() methods are supposed to be IRQ
+invariant:
+
+  5e26aa933911 ("cpuidle/poll: Ensure IRQs stay disabled after cpuidle_state::enter() calls")
+  bb7b11258561 ("cpuidle: Move IRQ state validation")
+
+Do that in the haltpoll governor too.
+
+Fixes: 5e26aa933911 ("cpuidle/poll: Ensure IRQs stay disabled after cpuidle_state::enter() calls")
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218245
+Reported-by: <forza@tnonline.net>
+Tested-by: <forza@tnonline.net>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+---
+ drivers/cpuidle/cpuidle-haltpoll.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
+index e66df22f9695..d8515d5c0853 100644
+--- a/drivers/cpuidle/cpuidle-haltpoll.c
++++ b/drivers/cpuidle/cpuidle-haltpoll.c
+@@ -25,13 +25,12 @@ MODULE_PARM_DESC(force, "Load unconditionally");
+ static struct cpuidle_device __percpu *haltpoll_cpuidle_devices;
+ static enum cpuhp_state haltpoll_hp_state;
+ 
+-static int default_enter_idle(struct cpuidle_device *dev,
+-			      struct cpuidle_driver *drv, int index)
++static __cpuidle int default_enter_idle(struct cpuidle_device *dev,
++					struct cpuidle_driver *drv, int index)
+ {
+-	if (current_clr_polling_and_test()) {
+-		local_irq_enable();
++	if (current_clr_polling_and_test())
+ 		return index;
+-	}
++
+ 	arch_cpu_idle();
+ 	return index;
+ }
+-- 
+2.42.0.rc0.25.ga82fb66fed25
+
+
+-- 
 Regards/Gruss,
     Boris.
 
