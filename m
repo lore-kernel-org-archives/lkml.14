@@ -1,211 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67ABD5687;
-	Thu, 28 Dec 2023 06:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8302522B
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 06:40:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PyFThM7D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703745492; x=1735281492;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=nOFscTCaP4g1hzS3AuKebAUApJGN72Ep2Nu8l5BonNA=;
-  b=PyFThM7D0H18Dd8pEh9s4BNECoBEJy1aGHCCmMcqAV3VEeHs22CLe6qe
-   7/7BTwsMinkm3vufMvzozgMDZ/iVs5GVQaNIm5d2QV03ZIt7os48Cu1xU
-   4cQUZtyrC5UnnrqxjsSSi5KiocVJ1YJqnuYaYKr82LKZ4spAPSheFq3rB
-   FwMRFhPEKxuzu6X/cs/obvMk0nDPNwtj8dczANT+DXcgCitiWciGQ1LWH
-   2q6wySj6d2nBFg3ZLflGfysxulnh/UOJ1deEv/MJhr+8QPGKkqOgsyjZD
-   nZQufB3r6WCDQJWiUUlUMaUIXNRmfnosvp6pkPLDztYzSiV6NeusJo/HC
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="396243030"
-X-IronPort-AV: E=Sophos;i="6.04,311,1695711600"; 
-   d="scan'208";a="396243030"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 22:38:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="901894836"
-X-IronPort-AV: E=Sophos;i="6.04,311,1695711600"; 
-   d="scan'208";a="901894836"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 27 Dec 2023 22:38:10 -0800
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 27 Dec 2023 22:38:09 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 27 Dec 2023 22:38:09 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
- edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 27 Dec 2023 22:38:09 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NDbNqUUlvqG2M6r37SpFLFgFI0gSzru0/fRALVfvQao/62IziP+PnHUHL3nnam6gulUiNyUxb7WpXdNYEcZISFmD/gIQmWB7NYdJjZdQ8D/a0DFER19KQpEgR/GG7KXi1lEaI5wa0HdUOLtBvIO4z7C2EFQDSy257hVlzkaItrmwYkej2878pz91HPuG5zo0QjLOuN00vpjb2AiszAucdF5Fxn+TVMY3w0C5qKTRhcXgmw+k7rCDNDzIeFjk6BfO4uC6jqn6rcHSxZfcPYG/3XRJ9w0rTZwIMIzE4h0k7ZQnhnEfOa7/HQe8GIEJHKF6wtOe1bRDSy2OzJUDRM9YNA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EzAPi7mKdTnOwJZ51S7YAYR2FrBlGhWgaiThaNakDtE=;
- b=U2NHCqoMZE/SZrdH469M6vyxLRw8k126otUY7AznBynSxNfLnS8LHEMUmDUuqGjO5zigs1tr02ZUGrfQuLIF/+dbphJyTVYRNUdKyYpGVr2mDDttfx5xaZYPgDgIc0p7T5W7wT6qlGKIzw4Uzzpz41Q8ILiJyozVr/+FClOEVS975tF8ShFwtal9kQzCdCxTyM4dr7gFi3L9CAyq6Y/sxKRhD1koqTSU7fQQp+lq6oIjBoKHaF5lTGObWj8e5Re3/IKD4J8DUsqJMxEJQsCJvw1Yr2FpVsCrF3uKxSYJRidAYqT20cuOf8+94D8h9DZF8QIa1I9t+X0cegut+vSH3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
- by SJ1PR11MB6228.namprd11.prod.outlook.com (2603:10b6:a03:459::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.29; Thu, 28 Dec
- 2023 06:38:08 +0000
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::a8e9:c80f:9484:f7cb]) by BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::a8e9:c80f:9484:f7cb%3]) with mapi id 15.20.7113.028; Thu, 28 Dec 2023
- 06:38:08 +0000
-From: "Tian, Kevin" <kevin.tian@intel.com>
-To: "Liu, Yi L" <yi.l.liu@intel.com>, "joro@8bytes.org" <joro@8bytes.org>,
-	"alex.williamson@redhat.com" <alex.williamson@redhat.com>, "jgg@nvidia.com"
-	<jgg@nvidia.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
-CC: "cohuck@redhat.com" <cohuck@redhat.com>, "eric.auger@redhat.com"
-	<eric.auger@redhat.com>, "nicolinc@nvidia.com" <nicolinc@nvidia.com>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "mjrosato@linux.ibm.com"
-	<mjrosato@linux.ibm.com>, "chao.p.peng@linux.intel.com"
-	<chao.p.peng@linux.intel.com>, "yi.y.sun@linux.intel.com"
-	<yi.y.sun@linux.intel.com>, "peterx@redhat.com" <peterx@redhat.com>,
-	"jasowang@redhat.com" <jasowang@redhat.com>,
-	"shameerali.kolothum.thodi@huawei.com"
-	<shameerali.kolothum.thodi@huawei.com>, "lulu@redhat.com" <lulu@redhat.com>,
-	"suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, "Duan,
- Zhenzhong" <zhenzhong.duan@intel.com>, "joao.m.martins@oracle.com"
-	<joao.m.martins@oracle.com>, "Zeng, Xin" <xin.zeng@intel.com>, "Zhao, Yan Y"
-	<yan.y.zhao@intel.com>, "j.granados@samsung.com" <j.granados@samsung.com>
-Subject: RE: [PATCH v8 09/10] iommufd: Add data structure for Intel VT-d
- stage-1 cache invalidation
-Thread-Topic: [PATCH v8 09/10] iommufd: Add data structure for Intel VT-d
- stage-1 cache invalidation
-Thread-Index: AQHaON/EULDpY/yduEi+JsXzzxonvrC+On9QgAAEfZA=
-Date: Thu, 28 Dec 2023 06:38:07 +0000
-Message-ID: <BN9PR11MB5276A53786CD3AF7F170E8B98C9EA@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20231227161354.67701-1-yi.l.liu@intel.com>
- <20231227161354.67701-10-yi.l.liu@intel.com> 
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|SJ1PR11MB6228:EE_
-x-ms-office365-filtering-correlation-id: 6afdc893-90a0-4c46-7196-08dc076f8dbf
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Z46FehdD0dpKrfVxkWh2+rq1V9V2xtfNql+omlGDDjB1kMtfpJ/76U6xFf7WRJVd6DRvlmElrb/RfKc2tsujWms1J5Vp89ut0WQJmjgnkoUFbP5/I2BfGfcYTQ3S+Ke0yn5Pgmbvib80Piomo2P37bcPE0sofiJWGvDgM4qav+wd7u3I9eHpR8cguBJhWLhmvUWOrixY3k8IakkfAZEGDTgsQhr+hvrd/NuGvF1+TtoXqMlCJujYaym5IfE1/VfIc0W5xklWarvTxDWVrv1YhnKlfjHALPbfuI1wVwgQsmvfMFtZa2Evp73pNJ/mgGS9NHnSOoEzvWkhukuaFvj6pL0emQie6P4E2Ij0dEsz5XwVPuyJgLFjwrs5pPEcgAVjUPmqR8TRFJHDtlBkIJJN094TFuobEJwmKdB/V6m2f2TRwn7LuY2197xA8CVobWKvA1qcT1aHNnUFxiU1EjvRodBSjtzhZDUo5A3/Chu1i6t88KAGqlwQnJSojn1vVNjApM6s2YZ3IT0jV6h/PzIwqgZcQyvFO6Sum7Nw2GkWk1U3+WwIDEej3V1ig3i0t3uoaO5y4SdEt3XD6B3MBqyrqWEG5h+i2SQ0c5MVY6rJtbvr98xtDUDjTOyRKe+27YJl
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(39860400002)(366004)(376002)(396003)(230922051799003)(186009)(64100799003)(1800799012)(451199024)(66476007)(66556008)(66446008)(76116006)(66946007)(5660300002)(2906002)(55016003)(4326008)(7416002)(52536014)(8676002)(8936002)(316002)(71200400001)(110136005)(54906003)(64756008)(41300700001)(38070700009)(9686003)(33656002)(7696005)(478600001)(26005)(6506007)(86362001)(122000001)(38100700002)(83380400001)(82960400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?HEcltbIGJvDR3LnijW8dLVIueRY8GZNb3EC2FvSOxcHc+MIogf6ZGBlF/yRk?=
- =?us-ascii?Q?xiOkbw9iYEhe3v0wRIXSO9ecW5z0x7l8HtU23cRYMTl3ILmKps0H979F1p00?=
- =?us-ascii?Q?FVRw0Sted6yTrt/mHIp8wyX2jSKpKSMkRl8FK5Qu0bdDYjgxuI/KpvNX2YTo?=
- =?us-ascii?Q?HPPglcroh8jWtw5p11+mXEfmMUxkOydo1gwsX7OKJhwnrMKlFCJRGu0j4bn9?=
- =?us-ascii?Q?FOZymGPhAQHxOA/OfKRyc1z9vwi8cDFaBSnwYvSmGvf4TVTCY9YKKdmqfO/G?=
- =?us-ascii?Q?gM+vQnbWVch+st36tD0niZhryYYqzhdB3v9ZR7BvSYLanSgYmUSPlD6YFPGO?=
- =?us-ascii?Q?Q8lLW8T1VWKO24+e1SelbAnJcwP56EBXipnbbbMADafGXbEU+E+cGh7FsrPx?=
- =?us-ascii?Q?xs9SxYZHA9goLEkiXlZGPqdIuY7St4QUPcrGWCr45Cpn2U4kln5Y1b2L9fYE?=
- =?us-ascii?Q?cu2pZII9m5hHb/PNeudLo5F/Dc8RnvVvtuE1DzSWkaZIa40TrZfwoFSrhZqo?=
- =?us-ascii?Q?uI+VmHKz69bUHNSmXf0koIl1d3z0M9LN5MN/C+V/zIPtMgPN8p33qMFqtApy?=
- =?us-ascii?Q?9OqgoyGYpBdmFPn/EBpIz75lTSxdRvkQ8Wk0Aat6S8Pu96tqV9CvASz4+YrF?=
- =?us-ascii?Q?INEhVj8I/RN1jFcfZu1dPNQ5GXdhU3ELs4PDi2OwSwx5QGvfzIDYayuuT7Ml?=
- =?us-ascii?Q?NfA5WVgdAEpdFwcQFI38H5nUyzpQNjnMdSCCVTmcl4FAL0tYi+Y46/iqzhVh?=
- =?us-ascii?Q?8eUSvCamjthPIJH/ITMl6jH/tXJ/bQU4Txbf0MKccgvrCH3mQZCZDi7SIZ9Z?=
- =?us-ascii?Q?DoMOcMi4zhfxQJXm3g/aGsUrGwGTtUkPXbb5+LQMhvi2lC14JUF2qPYMaz+V?=
- =?us-ascii?Q?4bKpNASGF1PrJ+aBayBtkioVaDbjDa6ouVdC2JmQ3d2SpVvpRAneVGhqGeNv?=
- =?us-ascii?Q?JMOfnW9eVQyhxEqLG6ZRZhl834k0vYUwImPaOfbWrzjZGZzkvCMcHjGjJAL9?=
- =?us-ascii?Q?XeQ8/WB4hDHkDDehlUYDbqSoRKVMoWNUK6bkfwYdz/tAw55jQTe7zaaZk+Ac?=
- =?us-ascii?Q?1TSwSTSYURcFT63o9famqVu6bdTbwdXBQsua+WZaQOnTdjJIHNbT9L5E1Ub0?=
- =?us-ascii?Q?F6Jci0NGw11j9qdtStLZ4d8IHkb4pOXCDn3pMYS8Fa4u4F0qdeSlHXnduEJ6?=
- =?us-ascii?Q?hLRG5Ntb3PL4YX1b4aMaTGYiEndvgrrZUJxXLedruGh31tRjKBnY+tG8z/3B?=
- =?us-ascii?Q?EToxxXgxhn0H4OlDX2ER/eO797Nzg2W0hPnRBZhj8gI51fKwN6cIFdgXEoqA?=
- =?us-ascii?Q?ho6i+HQl2fQJbvaJu1g5TF/YuvF0jGA9KZHm4jolEEhPzj0sto0HvDgbpzb/?=
- =?us-ascii?Q?aM0CREP6gkBrLu0ojj3n6JPCTOvmjkclPk2S9QZgPzwEDjDrXMQbpD4gPXMY?=
- =?us-ascii?Q?3Ap8ly3bb/zu/tI86ArPEKXdbc8tzkThM3c5z7ygwqpS7pQyWY7uMBcQjraR?=
- =?us-ascii?Q?1ysfzf7eKtJgEn/tl1+p/nmJM3i+L9vNpN9sTpKWO/4SieyEb5GBLI8Nnzk9?=
- =?us-ascii?Q?7QV2u5TUbH92V9W7t5GSFgtXPMI6qHzoC0vrMYQt?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YiU05am2"
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20231228064014epoutp04544f026e306ff263399df94b0554ce74~k65wFGwUq1183811838epoutp04E
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 06:40:14 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20231228064014epoutp04544f026e306ff263399df94b0554ce74~k65wFGwUq1183811838epoutp04E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1703745614;
+	bh=A7fONOiB2KcoiR2yR271Shvujvl1NUDkB7NXQKc2mM8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=YiU05am2wjYqfzGsSkuj8FGPeEjfOBX0vRQGkL3durl6Z5G2e/L8DRgoF9O6gElKD
+	 pbDyOEljuh2N+pn7kBPGirQtkE3O0NG3sTVMYoipdNYwX1Q8ywhvbVUuy/sIH3pRCr
+	 iCR2s9SUTbhY03QqsHCq7AGTj0JmkESZfCc+ioYg=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+	20231228064013epcas2p2a3ab0255fd527dbd438d70b6c2dca362~k65vWdxBw0352903529epcas2p2B;
+	Thu, 28 Dec 2023 06:40:13 +0000 (GMT)
+Received: from epsmgec2p1.samsung.com (unknown [182.195.36.100]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4T0zQh6srgz4x9Q7; Thu, 28 Dec
+	2023 06:40:12 +0000 (GMT)
+Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
+	epsmgec2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	49.63.08648.C481D856; Thu, 28 Dec 2023 15:40:12 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+	20231228064012epcas2p327ba8a0aae748cbf1a3122475ae9a8c1~k65uK7WZP2736327363epcas2p30;
+	Thu, 28 Dec 2023 06:40:12 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20231228064012epsmtrp22dac7d9f6d1bee8419fbd151b1d05eaa~k65uJ0QHS3252532525epsmtrp2z;
+	Thu, 28 Dec 2023 06:40:12 +0000 (GMT)
+X-AuditID: b6c32a43-4b3ff700000021c8-ea-658d184ca48f
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	D4.10.18939.C481D856; Thu, 28 Dec 2023 15:40:12 +0900 (KST)
+Received: from perf (unknown [10.229.95.91]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20231228064012epsmtip272cd714b4361500a1bf05d66beca29eb~k65t94Q_-0352703527epsmtip2e;
+	Thu, 28 Dec 2023 06:40:12 +0000 (GMT)
+Date: Thu, 28 Dec 2023 15:40:09 +0900
+From: Youngmin Nam <youngmin.nam@samsung.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: len.brown@intel.com, pavel@ucw.cz, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, d7271.choe@samsung.com,
+	janghyuck.kim@samsung.com, hyesoo.yu@samsung.com, "Rafael J. Wysocki"
+	<rjw@rjwysocki.net>, Greg KH <gregkh@linuxfoundation.org>, Youngmin Nam
+	<youngmin.nam@samsung.com>, hs.gil@samsung.com
+Subject: Re: [BUG] mutex deadlock of dpm_resume() in low memory situation
+Message-ID: <ZY0YSc4YoUPTmEMr@perf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6afdc893-90a0-4c46-7196-08dc076f8dbf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Dec 2023 06:38:08.0174
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eMOVhCFW5PYPWtctSfINdkIVfbFSuEe9H9vWAJ4X9LpnueYvwEjI+PIzBzqxzRdmoSYV95XwEssR3W9u/SGKsA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR11MB6228
-X-OriginatorOrg: intel.com
+In-Reply-To: <CAJZ5v0jupWr_89mttKMg-KGa6_dpu62JiUkUaueMfHVgeUXYWg@mail.gmail.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBJsWRmVeSWpSXmKPExsWy7bCmua6PRG+qweWFxhbX9k5kt2hevJ7N
+	Yuv8ecwWfzsvsFpsnlNsMWvKXiaLy7vmsFl87j3CaHH31FE2i7lfpjJbnDl9idVi8YFP7A48
+	Hov3vGTy2LSqk81j/9w17B5brrazePRtWcXosWL1d3aPz5vkAtijsm0yUhNTUosUUvOS81My
+	89JtlbyD453jTc0MDHUNLS3MlRTyEnNTbZVcfAJ03TJzgA5VUihLzCkFCgUkFhcr6dvZFOWX
+	lqQqZOQXl9gqpRak5BSYF+gVJ+YWl+al6+WlllgZGhgYmQIVJmRn/P18l7VgIl/FxMaNbA2M
+	i7i7GDk5JARMJBa9vsDYxcjFISSwg1Fi3+UTzBDOJ0aJWde/sMA5ffceM8O0fNk5HapqJ6PE
+	xq+tbBDOQ0aJ/8cugVWxCKhK/D3xAcxmE9CV2HbiHyOILSKgLbFk0VWwbmaB3UwSE5pPM4Ek
+	hAU8JZbM7Qdr4BVQllh16T8jhC0ocXLmExYQm1MgUOJy+0WwmyQE1nJInLtzD6iBA8hxkdi1
+	NwziPGGJV8e3sEPYUhKf3+1lg7CLJRru32KG6G1hlDh1/QXUP8YSs561M4LMYRbIlHg/Pxli
+	pLLEkVtga5kF+CQ6Dv9lhwjzSnS0CUE0qkn8mrKBEcKWkdi9eAXUQA+JvW8+MEHCpItJ4vrE
+	DSwTGOVmIflmFsIyCFNTYv0u/Vlgy+QlmrfOZoYIS0ss/8eBpGIBI9sqRrHUguLc9NRkowJD
+	eFwn5+duYgQnYS3nHYxX5v/TO8TIxMF4iFGCg1lJhPe4aE+qEG9KYmVValF+fFFpTmrxIUZT
+	YCxNZJYSTc4H5oG8knhDE0sDEzMzQ3MjUwNzJXHee61zU4QE0hNLUrNTUwtSi2D6mDg4pRqY
+	7mqvnpj1alOaU3zpX6f43WbdJ2q07ixNEZE5+LFsxhMWBoZ5zTqS3+f3b7irJm42VeTI2vmB
+	jEYhiiuutK+LufYkNP3lOQkzP4bTv+69tedfcuTRrt398xIWbTe1uK9RccuA++V3kcjZU3hU
+	biTa7ty28OH1DUuO1KX8bhJcacntwn6gbe3N8xM75cJtTu06dca3RX86b9wsmcKwmyxGJk1T
+	TA/cW/V/+V2OC+xfuh5MabkttqijPnMF39SdQoX5LRpSh5x8Q1qX1oeWn/P2fV7hdeHghm+R
+	ZQnfg/SUKxPv7l3Yq1abuVRw24z5sRqHcjhK3fmiF6Rb6vlVqPz8fkxE51PsLe6w9oSLSvlc
+	SizFGYmGWsxFxYkAllGReksEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgkeLIzCtJLcpLzFFi42LZdlhJXtdHojfVYPkmPotreyeyWzQvXs9m
+	sXX+PGaLv50XWC02zym2mDVlL5PF5V1z2Cw+9x5htLh76iibxdwvU5ktzpy+xGqx+MAndgce
+	j8V7XjJ5bFrVyeaxf+4ado8tV9tZPPq2rGL0WLH6O7vH501yAexRXDYpqTmZZalF+nYJXBmz
+	GyIKNnBXrJ92g7GB8S5HFyMnh4SAicSXndOZuxi5OIQEtjNKbHn1mBkiISNxe+VlVghbWOJ+
+	yxFWiKL7jBJ7NqwFK2IRUJX4e+IDmM0moCux7cQ/RhBbREBbYsmiq2BTmQX2MkkcvnoLbJKw
+	gKfEkrn9YA28AsoSqy79Z4SY2sMkcWfVOyaIhKDEyZlPWEBsZgF1iT/zLgE1cADZ0hLL/3FA
+	hOUlmrfOBpvDKRAocbn9IssERsFZSLpnIemehdA9C0n3AkaWVYyiqQXFuem5yQWGesWJucWl
+	eel6yfm5mxjBkaUVtINx2fq/eocYmTgYDzFKcDArifAeF+1JFeJNSaysSi3Kjy8qzUktPsQo
+	zcGiJM6rnNOZIiSQnliSmp2aWpBaBJNl4uCUamDq7ytduKdl/YtJMaY3Fzxass4n437Eiu9T
+	2NdHL+ly+bCn/goP50vlbWtXr4jVmRx2QG9Tw5zWZ1tnL1lV6NTirB1xY/U9Qb274ZOffIpu
+	WeUyW4/zdvfrsMdrchwe2J2+unlOy+MS7stbV0zyvzhzu8+5bOWtW1Js+DlFhPN2HW1Yfk9i
+	70+FH/L12/6av1m8+N/nS3Ma7gg3XnizyLFzOuvEf3NnGKlHuizQYksy++Yh+5A7t0CZvfKs
+	RmzO24xbV00er3B7dnuZi5Nw26xNxjXzDdavXPVIZsbjOyccIg1fBVRopGVeiV5fM/XCnYVf
+	jp6u+Ck7u9J6wpqQx98ucOz9ZcpgtleEZ52cTdeT2IVKLMUZiYZazEXFiQCdy6WaGwMAAA==
+X-CMS-MailID: 20231228064012epcas2p327ba8a0aae748cbf1a3122475ae9a8c1
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----OVq5TT9zsDSQAN86dWjJc6zPY8CEKIwxCZDtRM.ioT5ZEg4T=_151d76_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20231227084252epcas2p3b063f7852f81f82cd0a31afd7f404db4
+References: <CGME20231227084252epcas2p3b063f7852f81f82cd0a31afd7f404db4@epcas2p3.samsung.com>
+	<2023122701-mortify-deed-4e66@gregkh> <5754861.DvuYhMxLoT@kreacher>
+	<5755916.DvuYhMxLoT@kreacher>
+	<CAJZ5v0jupWr_89mttKMg-KGa6_dpu62JiUkUaueMfHVgeUXYWg@mail.gmail.com>
 
-> From: Tian, Kevin
-> Sent: Thursday, December 28, 2023 2:38 PM
->=20
-> > From: Liu, Yi L <yi.l.liu@intel.com>
-> > Sent: Thursday, December 28, 2023 12:14 AM
-> > +/**
-> > + * struct iommu_hwpt_vtd_s1_invalidate - Intel VT-d cache invalidation
-> > + *                                       (IOMMU_HWPT_INVALIDATE_DATA_V=
-TD_S1)
-> > + * @addr: The start address of the range to be invalidated. It needs t=
-o
-> > + *        be 4KB aligned.
-> > + * @npages: Number of contiguous 4K pages to be invalidated.
-> > + * @flags: Combination of enum iommu_hwpt_vtd_s1_invalidate_flags
-> > + * @hw_error: One of enum iommu_hwpt_vtd_s1_invalidate_error
-> > + *
-> > + * The Intel VT-d specific invalidation data for user-managed stage-1 =
-cache
-> > + * invalidation in nested translation. Userspace uses this structure t=
-o
-> > + * tell the impacted cache scope after modifying the stage-1 page tabl=
-e.
-> > + *
-> > + * Invalidating all the caches related to the page table by setting @a=
-ddr
-> > + * to be 0 and @npages to be U64_MAX.
-> > + *
-> > + * The device TLB will be invalidated automatically if ATS is enabled.
-> > + *
-> > + * The @hw_error is meaningful when the entry is handled by the kernel=
-.
-> > + * Check the entry_num output of IOMMU_HWPT_INVALIDATE ioctl to
-> > know the
-> > + * handled entries. @hw_error only covers the errors detected by
-> hardware.
-> > + * The software detected errors would go through the normal ioctl errn=
-o.
-> > + */
->=20
-> * An entry is considered 'handled' after it passes the audit and submitte=
-d
-> * to the IOMMU by the underlying driver. Check the @entry_num output of
-> * struct iommu_hwpt_invalidate for the number of handled entries. A
-> 'handled'
-> * request may still fail in hardware for various reasons, e.g. due to tim=
-eout
-> * on waiting for device response upon a device TLB invalidation request. =
-In
-> * such case the hardware error info is reported in the @hw_error field of=
- the
-> * handled entry.
+------OVq5TT9zsDSQAN86dWjJc6zPY8CEKIwxCZDtRM.ioT5ZEg4T=_151d76_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
 
-with that:
+On Wed, Dec 27, 2023 at 09:50:01PM +0100, Rafael J. Wysocki wrote:
+> On Wed, Dec 27, 2023 at 7:58 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >
+> > On Wednesday, December 27, 2023 7:39:20 PM CET Rafael J. Wysocki wrote:
+> > > On Wednesday, December 27, 2023 5:08:40 PM CET Greg KH wrote:
+> > > > On Wed, Dec 27, 2023 at 05:42:50PM +0900, Youngmin Nam wrote:
+> > > > > Could you look into this issue ?
+> > > >
+> > > > Can you submit a patch that resolves the issue for you, as you have a
+> > > > way to actually test this out?  That would be the quickest way to get it
+> > > > resolved, and to help confirm that this is even an issue at all.
+> > >
+> > > Something like the appended patch should be sufficient to address this AFAICS.
+> > >
+> > > I haven't tested it yet (will do so shortly), so all of the usual disclaimers
+> > > apply.
+> > >
+> > > I think that it can be split into 2 patches, but for easier testing here
+> > > it goes in one piece.
+> >
+> > Well, please scratch this, it will not handle "async" devices properly.
+> 
+> This
+> 
+> https://lore.kernel.org/linux-pm/6019796.lOV4Wx5bFT@kreacher/
+> 
+> should address the issue properly (it has been lightly tested).
+> 
+> Please give it a go and let me know if it works for you (on top of 6.7-rc7).
+> 
+Thanks for your help.
+Actually, this is very rare case on our side and it is the first time for us to see this issue.
+Anyway, let me test and let you know.
 
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+------OVq5TT9zsDSQAN86dWjJc6zPY8CEKIwxCZDtRM.ioT5ZEg4T=_151d76_
+Content-Type: text/plain; charset="utf-8"
+
+
+------OVq5TT9zsDSQAN86dWjJc6zPY8CEKIwxCZDtRM.ioT5ZEg4T=_151d76_--
