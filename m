@@ -1,125 +1,96 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF82810795;
-	Thu, 28 Dec 2023 15:32:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70900F4E3
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 15:32:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KVkU812U"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 3BSFUuqv100551;
-	Thu, 28 Dec 2023 09:30:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1703777456;
-	bh=nUT+e6SaWTQhh6iN7sxaO6r8+dJ5mAaZQM0ZgSDR6gM=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=KVkU812URm/TX4ItBgIguT/E9WTfZlLgOvnLl5ubo/nk5BtafjwvlPhFZZHGpQKwL
-	 2AGJQuU1sitT3Be8gGBSnnMDj11TQwYTatpDKbymTB3Q0ee9kFjsJAat24kdrakevn
-	 gfPRCOfjufmYca2Ftfy/EBgzsLflESf0t0adxJwM=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 3BSFUuXT030710
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 28 Dec 2023 09:30:56 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 28
- Dec 2023 09:30:56 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 28 Dec 2023 09:30:56 -0600
-Received: from LT5CG31242FY.dhcp.ti.com ([10.250.161.188])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 3BSFUSKp116497;
-	Thu, 28 Dec 2023 09:30:50 -0600
-From: Shenghao Ding <shenghao-ding@ti.com>
-To: <broonie@kernel.org>, <conor+dt@kernel.org>,
-        <krzysztof.kozlowski@linaro.org>
-CC: <robh+dt@kernel.org>, <andriy.shevchenko@linux.intel.com>,
-        <kevin-lu@ti.com>, <baojun.xu@ti.com>, <devicetree@vger.kernel.org>,
-        <lgirdwood@gmail.com>, <perex@perex.cz>,
-        <pierre-louis.bossart@linux.intel.com>, <13916275206@139.com>,
-        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <liam.r.girdwood@intel.com>, <soyer@irl.hu>, <tiwai@suse.de>,
-        <peeyush@ti.com>, <navada@ti.com>,
-        Shenghao Ding <shenghao-ding@ti.com>
-Subject: [PATCH v4 4/4] ASoC: tas2781: Add tas2563 into driver
-Date: Thu, 28 Dec 2023 23:30:23 +0800
-Message-ID: <20231228153024.1659-4-shenghao-ding@ti.com>
-X-Mailer: git-send-email 2.33.0.windows.2
-In-Reply-To: <20231228153024.1659-1-shenghao-ding@ti.com>
-References: <20231228153024.1659-1-shenghao-ding@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bV24B82m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DA57C433C7;
+	Thu, 28 Dec 2023 15:32:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703777577;
+	bh=LG5wfSfrHn99aGr2v7pF+1hWyoSHf6YdWgLzSdkpESY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=bV24B82mQKHqGjRSKXLYULLUfp7zHybS5xhk1FSm3DTpIpcPnZRKHf9FlpCpbzNhr
+	 k+uBiy+6ucOzWB8lI+gJok+Pl5pAPIWPsqVbsSnfQw+SJJfrCMaG0a+M0Q8znK6hgz
+	 9so5rJKSAs651AWD1mN4hsbxBLZ+y47bpmjVGhWzbiLUizTHWrJtI0XMZQ/hMABNHK
+	 s3cImwgPGu7aVK+H6Cm826b02aidEoMkd8LqTOompL4wMSPfcSgtxBYKb6tebA1sC2
+	 4s3MQAoHBfTj8XGt/9CqQZsc3Y8qpu2RLDhwf05KxpIN/piBJvLWb24u6EeJtMwGN0
+	 FAQ/FWD2Kl/RQ==
+Date: Thu, 28 Dec 2023 16:32:54 +0100
+From: Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
+To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@pengutronix.de>
+Cc: kernel@pengutronix.de, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/11] firmware: turris-mox-rwtm: Convert to platform
+ remove callback returning void
+Message-ID: <20231228163254.72b770ba@dellmb>
+In-Reply-To: <9074d1ad2e889425991fecad664781ae27b2418a.1703693980.git.u.kleine-koenig@pengutronix.de>
+References: <cover.1703693980.git.u.kleine-koenig@pengutronix.de>
+	<9074d1ad2e889425991fecad664781ae27b2418a.1703693980.git.u.kleine-koenig@pengutronix.de>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Move tas2563 from tas2562 driver to tas2781 driver to unbind tas2563 from
-tas2562 driver code and bind it to tas2781 driver code, because tas2563
-only work in bypass-DSP mode with tas2562 driver. In order to enable DSP
-mode for tas2563, it has been moved to tas2781 driver. As to the hardware
-part, such as register setting and DSP firmware, all these are stored in
-the binary firmware. What tas2781 drivder dooes is to parse the firmware
-and download it to the chip, then power on the chip. So, tas2781 driver
-can be resued as tas2563 driver. Only attention will be paid to downloading
-corresponding firmware.
+On Wed, 27 Dec 2023 17:26:34 +0100
+Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> wrote:
 
-Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
+> The .remove() callback for a platform driver returns an int which makes
+> many driver authors wrongly assume it's possible to do error handling by
+> returning an error code. However the value returned is ignored (apart
+> from emitting a warning) and this typically results in resource leaks.
+>=20
+> To improve here there is a quest to make the remove callback return
+> void. In the first step of this quest all drivers are converted to
+> .remove_new(), which already returns void. Eventually after all drivers
+> are converted, .remove_new() will be renamed to .remove().
+>=20
+> Trivially convert this driver from always returning zero in the remove
+> callback to the void returning variant.
+>=20
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> ---
+>  drivers/firmware/turris-mox-rwtm.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/firmware/turris-mox-rwtm.c b/drivers/firmware/turris=
+-mox-rwtm.c
+> index 2de0fb139ce1..31d962cdd6eb 100644
+> --- a/drivers/firmware/turris-mox-rwtm.c
+> +++ b/drivers/firmware/turris-mox-rwtm.c
+> @@ -554,7 +554,7 @@ static int turris_mox_rwtm_probe(struct platform_devi=
+ce *pdev)
+>  	return ret;
+>  }
+> =20
+> -static int turris_mox_rwtm_remove(struct platform_device *pdev)
+> +static void turris_mox_rwtm_remove(struct platform_device *pdev)
+>  {
+>  	struct mox_rwtm *rwtm =3D platform_get_drvdata(pdev);
+> =20
+> @@ -562,8 +562,6 @@ static int turris_mox_rwtm_remove(struct platform_dev=
+ice *pdev)
+>  	sysfs_remove_files(rwtm_to_kobj(rwtm), mox_rwtm_attrs);
+>  	kobject_put(rwtm_to_kobj(rwtm));
+>  	mbox_free_channel(rwtm->mbox);
+> -
+> -	return 0;
+>  }
+> =20
+>  static const struct of_device_id turris_mox_rwtm_match[] =3D {
+> @@ -576,7 +574,7 @@ MODULE_DEVICE_TABLE(of, turris_mox_rwtm_match);
+> =20
+>  static struct platform_driver turris_mox_rwtm_driver =3D {
+>  	.probe	=3D turris_mox_rwtm_probe,
+> -	.remove	=3D turris_mox_rwtm_remove,
+> +	.remove_new =3D turris_mox_rwtm_remove,
+>  	.driver	=3D {
+>  		.name		=3D DRIVER_NAME,
+>  		.of_match_table	=3D turris_mox_rwtm_match,
 
----
-Change in v4:
- - Add tas2563 to tas2781 driver.
- - Add more comments on why move tas2563 to tas2781 driver.
- - Provide rationale in terms of bindings and hardware, not in terms of driver.
-   Or at least not only.
- - In all cases, to make the lists ordered by a chip model, tas2563 is first,
-   tas2781 is second.
----
- sound/soc/codecs/tas2781-i2c.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/sound/soc/codecs/tas2781-i2c.c b/sound/soc/codecs/tas2781-i2c.c
-index 55cd5e3c23a5..bd5ef4ff96fe 100644
---- a/sound/soc/codecs/tas2781-i2c.c
-+++ b/sound/soc/codecs/tas2781-i2c.c
-@@ -1,13 +1,13 @@
- // SPDX-License-Identifier: GPL-2.0
- //
--// ALSA SoC Texas Instruments TAS2781 Audio Smart Amplifier
-+// ALSA SoC Texas Instruments TAS2563/TAS2781 Audio Smart Amplifier
- //
- // Copyright (C) 2022 - 2023 Texas Instruments Incorporated
- // https://www.ti.com
- //
--// The TAS2781 driver implements a flexible and configurable
-+// The TAS2563/TAS2781 driver implements a flexible and configurable
- // algo coefficient setting for one, two, or even multiple
--// TAS2781 chips.
-+// TAS2563/TAS2781 chips.
- //
- // Author: Shenghao Ding <shenghao-ding@ti.com>
- // Author: Kevin Lu <kevin-lu@ti.com>
-@@ -32,6 +32,7 @@
- #include <sound/tas2781-tlv.h>
- 
- static const struct i2c_device_id tasdevice_id[] = {
-+	{ "tas2563", TAS2563 },
- 	{ "tas2781", TAS2781 },
- 	{}
- };
-@@ -39,6 +40,7 @@ MODULE_DEVICE_TABLE(i2c, tasdevice_id);
- 
- #ifdef CONFIG_OF
- static const struct of_device_id tasdevice_of_match[] = {
-+	{ .compatible = "ti,tas2563" },
- 	{ .compatible = "ti,tas2781" },
- 	{},
- };
--- 
-2.34.1
-
+Reviewed-by: Marek Beh=C3=BAn <kabel@kernel.org>
