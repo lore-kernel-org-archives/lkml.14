@@ -1,97 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF0779E2;
-	Thu, 28 Dec 2023 13:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0378468;
+	Thu, 28 Dec 2023 13:21:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="azbnPFA9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703769641; x=1735305641;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=l3y/rOXTcNM/KMjrfFxiHVoiCGwjaWFGIo5EQtn4TYA=;
-  b=azbnPFA9iKLjRwZMhagY4BuGCHMWBj9/MJkb4noRbrltgUXPvAP2q7Gj
-   EfVmWk3mIj8hG3+JqPyUj1V3PXFTi26/0BCE6Xku7rheQeBolNGtrzc7+
-   4p0H76SXP+OaJ1NIuomJE/tyBwpYsfHUNbiLvDSQYvM+mR0w1JhJwagH/
-   Im7Z4w6tTG/4Q/Dj+P4w8HOtTjt+hzTRLhYtsksyyRBoUkgjiEa9QAIQx
-   Fa/Db4SfxWKgp+5xtb+icLT/YLyzteazlx7qVpqi+k0JK3BaKL2GLAYQo
-   1GA3g4fhzV6x2PjGy0VrRoptDMHrMpF05zeWrgtcH/+ogkGyF9FAb+13g
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="400355127"
-X-IronPort-AV: E=Sophos;i="6.04,312,1695711600"; 
-   d="scan'208";a="400355127"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2023 05:20:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="782039401"
-X-IronPort-AV: E=Sophos;i="6.04,312,1695711600"; 
-   d="scan'208";a="782039401"
-Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.249.169.62]) ([10.249.169.62])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2023 05:20:37 -0800
-Message-ID: <160a7f08-1e73-4468-80d8-6ac5974d81d3@linux.intel.com>
-Date: Thu, 28 Dec 2023 21:20:35 +0800
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WWeg/q28"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description;
+	bh=5WFJOinis3qnBF0y2Gbqc3b1zDBHhNI054O6/NG5o8I=; b=WWeg/q287JzG0bdYrkhQdR09yn
+	Z0iuMEGKu/O9WN2ICtTBHHPGgFWTMNYBLrKVBLJdchoHbsr51+emugvuNopT4oKVe7gFl1sPzJtrb
+	Qakz2NOKvDg1Uyl5WGmnzB3x3A8Ez6f1/qN+qG1IXHUa4Gj/lZGqj4vAEbHzXb4+C4QpwLxV4IUS0
+	mDr6anCHvAccaZd8XOg4VfrzbDeB1Nx6r9CKIDOVFmG0wxIhT7wQF1jOVdT0+jyOTRlk1NE8b5V2u
+	9lJf/DCDx8gFxd4erglO/6RGV41VziwT0uh6xXDc5deXge+QN0te14tpd1t3nxGQ+YwZDCqmKgY8c
+	R6aA1z4Q==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rIqK1-00GvJg-1y;
+	Thu, 28 Dec 2023 13:21:13 +0000
+Date: Thu, 28 Dec 2023 05:21:13 -0800
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Kees Cook <keescook@chromium.org>,
+	Joel Granados <j.granados@samsung.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH] sysctl: treewide: constify ctl_table_root::permissions
+Message-ID: <ZY12SeFBVb46iUg5@bombadil.infradead.org>
+References: <20231226-sysctl-const-permissions-v1-1-5cd3c91f6299@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v9 1/5] iommu/vt-d: add flush_target_dev member to
- struct intel_iommu and pass device info to all ATS Invalidation functions
-To: "Tian, Kevin" <kevin.tian@intel.com>,
- "bhelgaas@google.com" <bhelgaas@google.com>,
- "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
- "dwmw2@infradead.org" <dwmw2@infradead.org>,
- "will@kernel.org" <will@kernel.org>,
- "robin.murphy@arm.com" <robin.murphy@arm.com>,
- "lukas@wunner.de" <lukas@wunner.de>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20231228001646.587653-1-haifeng.zhao@linux.intel.com>
- <20231228001646.587653-2-haifeng.zhao@linux.intel.com>
- <BN9PR11MB5276126B3D950AA2F23520898C9EA@BN9PR11MB5276.namprd11.prod.outlook.com>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-In-Reply-To: <BN9PR11MB5276126B3D950AA2F23520898C9EA@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231226-sysctl-const-permissions-v1-1-5cd3c91f6299@weissschuh.net>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
+On Tue, Dec 26, 2023 at 01:08:48PM +0100, Thomas Weiﬂschuh wrote:
+> The permissions callback is not supposed to modify the ctl_table.
+> Enforce this expectation via the typesystem.
+> 
+> The patch was created with the following coccinelle script:
+> 
+>   virtual patch
+>   virtual context
+>   virtual report
 
-On 12/28/2023 4:10 PM, Tian, Kevin wrote:
->> From: Ethan Zhao <haifeng.zhao@linux.intel.com>
->> Sent: Thursday, December 28, 2023 8:17 AM
->>
->> @@ -181,6 +181,7 @@ static void __flush_svm_range_dev(struct intel_svm
->> *svm,
->>
->>   	qi_flush_piotlb(sdev->iommu, sdev->did, svm->pasid, address, pages,
->> ih);
->>   	if (info->ats_enabled) {
->> +		info->iommu->flush_target_dev = info->dev;
->>   		qi_flush_dev_iotlb_pasid(sdev->iommu, sdev->sid, info-
->>> pfsid,
->>   					 svm->pasid, sdev->qdep, address,
->>   					 order_base_2(pages));
-> this is wrong both in concept and function.
-Yes, wrong.
->
-> an iommu instance can be shared by many devices which may all have
-> ongoing ATS invalidation requests to handle. Using a per-iommu field
-> to store the flush target is limiting (and there is no lock protection at all).
->
-> if there is a real need of passing dev pointer to qi helpers, just change
-> the helper to accept an explicit parameter.
+Nit:
 
-seems the only way is to add parameter and refactor all affected
+The virtual stuff is not needed really, specially if you are not
+creating rules which depend on them, they are used mostly if you
+want to use coccicheck, but you could just simplify things further,
+by removing them, it is implied we are expected to just run coccinelle
+manually against the linux kernel tree.
 
-functions.
+So the above 3 virtual lines can be removed.
 
+>   @@
+>   identifier func, head, ctl;
+>   @@
+> 
+>   int func(
+>     struct ctl_table_header *head,
+>   - struct ctl_table *ctl)
+>   + const struct ctl_table *ctl)
+>   { ... }
+> 
+> (insert_entry() from fs/proc/proc_sysctl.c is a false-positive)
+> 
+> This change also is a step to put "struct ctl_table" into .rodata
+> throughout the kernel.
+> 
+> Signed-off-by: Thomas Weiﬂschuh <linux@weissschuh.net>
+> ---
+> The patch is meant to be merged via the sysctl tree.
+> 
+> This change was originally part of the sysctl-const series [0].
+> To slim down that series and reduce the message load on other
+> maintainers to a minimumble, submit this patch on its own.
+> 
+> [0] https://lore.kernel.org/lkml/20231204-const-sysctl-v2-2-7a5060b11447@weissschuh.net/
 
-Thanks,
+It does that since the diff stat is small build tests suffice to ensure
+in this case that no users exist which do modify the tables.
 
-Ethan
-
+  Luis
