@@ -1,322 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D214A10A05
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 14:32:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E3CC8F1
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 14:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bmSofWjk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3D12C433C7;
-	Thu, 28 Dec 2023 14:32:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703773934;
-	bh=DMeS2vfzkUxcLbmEcA5uRENvkQrQiVn9mfOWnIMYifg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bmSofWjk0tLqQQ+T/uhhNBEC6ty3d+LAw22mvhDfzpzvKQP57gUXHJYINWjxXLHfi
-	 OdV50N7uOKFuJ/CeavgeraTtHuEpfQPgpU85U3wBKYkj77N3uwVUBa757YBPIB82ZJ
-	 d+cj9/Tr3jkWLTgK3eliYkSwiOQQW88+4E7sU7twC75256VNtxSIAyr1toQVo8zCuD
-	 eIeT/p0sylF6om9W4XI9cN+L0kZ6ZKyfLtP0ccT4Y1DTzAzJvIetU5snF8pzNQBE5J
-	 ASJx60lx8Td8hIZsIWLAXg4yUekJ93KDjGCA1smBPUF2mSiMuzq5utz9n9H0Y6w6VL
-	 6wbb4xsA8lZrA==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>
-Subject: [PATCH v3 6/6] f2fs: introduce FAULT_BLKADDR_INCONSISTENCE
-Date: Thu, 28 Dec 2023 22:31:52 +0800
-Message-Id: <20231228143152.1543509-6-chao@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20231228143152.1543509-1-chao@kernel.org>
-References: <20231228143152.1543509-1-chao@kernel.org>
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="Eb6bljNs"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-427e83601c4so10203361cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 06:37:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google; t=1703774244; x=1704379044; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=VU21beHWoGJM/Oi2NFAV2MrwGlZZbvr3br6yMg4QftQ=;
+        b=Eb6bljNs2u44uqRtI3F141CcYYeJZC3I7ik1RRd01ohigNe0el8ZFd7Cnff6P4p5FO
+         aZAK6iTT9No1CYD8uJVofrbZE0hzm2tvFCR4F5VzJqv+AAV4p8dX7L9h4BpcNOXTe1/7
+         tpFSx98985TYua2Vzxoz4ao2I/2RsU0xL1A1Td4tHxbb4ylKrN7eXDL5mYKP+Tthw+Br
+         d9KV9wJqK0aPta7Mn4fLNoJ8+B6MOdlZNgDY2zK7EBeCCQtP5N5vWkeLWnyHYvENIiAq
+         f4PnXZt0fAiMifTf0Nfiecxl9T0/Og7/UUnXkTJVM7sUy4KojKg3/+Kt+V8Q9Bx952Wa
+         rECA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703774244; x=1704379044;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VU21beHWoGJM/Oi2NFAV2MrwGlZZbvr3br6yMg4QftQ=;
+        b=Zmxb35+xxslcPrInWLSvOt7MEgYXjJwAM3dve+FbYNJTMczTh8dwfniBf9ZiJ6dKK7
+         BiojkcNZGmf/4fgjSdboypDB/W3Yt66Lvt8CPdiv862ZZkWtEjZ50VP85R8hVYkuTemJ
+         b8gx5WcDozmLd+CYy0TClm22Fge47i4hwFKIUnryaFDtfypQ8RUwvNNRe0XLbZNPoKp7
+         xD5Kz1U6CzZrJ4VI3v2nT0Eig8wJvklZ6tP2rOz9hJm5FyJUBjsHO1786QWV+5fAU1FO
+         W/pcALlp3OIEeis1T9m/fQSDY51r/OJA49UkevM33u3chOsdz65LrBjL6zCXIjo1wTBr
+         L61A==
+X-Gm-Message-State: AOJu0Yw+ByXkQ6Zi+WFUpq32Bgmg1Thae8r1Ym+mico4sKF8E0brRle0
+	LfN/YHj7MpLJfUv7l/Qg6R5sXiH2DQbQAqN6SF/39dq4smQKzQ==
+X-Google-Smtp-Source: AGHT+IG/UmSKlDQRlBa0+Is4JntOVZHhkiYS93o0FbAPPReWbU+HuVGCau4VX0GkprQKsQRXjMZhGZwl3l+vLHMY8rQ=
+X-Received: by 2002:ac8:7f54:0:b0:41e:a62b:3d18 with SMTP id
+ g20-20020ac87f54000000b0041ea62b3d18mr11492563qtk.59.1703774244502; Thu, 28
+ Dec 2023 06:37:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231226200205.562565-1-pasha.tatashin@soleen.com> <ZYv3BIeEgY8LnH7U@archie.me>
+In-Reply-To: <ZYv3BIeEgY8LnH7U@archie.me>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Thu, 28 Dec 2023 09:36:48 -0500
+Message-ID: <CA+CK2bCSB46sZUrx+jsCCtGb-DFUuU9wvCaTamYtKnDAaG9eVA@mail.gmail.com>
+Subject: Re: [PATCH v3 00/10] IOMMU memory observability
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: akpm@linux-foundation.org, alim.akhtar@samsung.com, alyssa@rosenzweig.io, 
+	asahi@lists.linux.dev, baolu.lu@linux.intel.com, bhelgaas@google.com, 
+	cgroups@vger.kernel.org, corbet@lwn.net, david@redhat.com, 
+	dwmw2@infradead.org, hannes@cmpxchg.org, heiko@sntech.de, 
+	iommu@lists.linux.dev, jernej.skrabec@gmail.com, jonathanh@nvidia.com, 
+	joro@8bytes.org, krzysztof.kozlowski@linaro.org, linux-doc@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-rockchip@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-sunxi@lists.linux.dev, 
+	linux-tegra@vger.kernel.org, lizefan.x@bytedance.com, marcan@marcan.st, 
+	mhiramat@kernel.org, m.szyprowski@samsung.com, paulmck@kernel.org, 
+	rdunlap@infradead.org, robin.murphy@arm.com, samuel@sholland.org, 
+	suravee.suthikulpanit@amd.com, sven@svenpeter.dev, thierry.reding@gmail.com, 
+	tj@kernel.org, tomas.mudrunka@gmail.com, vdumpa@nvidia.com, wens@csie.org, 
+	will@kernel.org, yu-cheng.yu@intel.com, rientjes@google.com, 
+	Josh Don <joshdon@google.com>, YouHong Li <liyouhong@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
 
-We will encounter below inconsistent status when FAULT_BLKADDR type
-fault injection is on.
+> > This series encorporates suggestions that came from the discussion
+> > at LPC [2].
+> > ----------------------------------------------------------------------
+> > [1] https://github.com/soleen/iova_stress
+> > [2] https://lpc.events/event/17/contributions/1466
+> > ----------------------------------------------------------------------
+> > Previous versions
+> > v1: https://lore.kernel.org/all/20231128204938.1453583-1-pasha.tatashin@soleen.com
+> > v2: https://lore.kernel.org/linux-mm/20231130201504.2322355-1-pasha.tatashin@soleen.com
+> > ----------------------------------------------------------------------
+> >
+>
+> First of all, Merry Christmas and Happy New Year for all!
+>
+> And for this series, no observable regressions when booting the kernel with
+> the series applied.
+>
+> Tested-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
-Info: checkpoint state = d6 :  nat_bits crc fsck compacted_summary orphan_inodes sudden-power-off
-[ASSERT] (fsck_chk_inode_blk:1254)  --> ino: 0x1c100 has i_blocks: 000000c0, but has 191 blocks
-[FIX] (fsck_chk_inode_blk:1260)  --> [0x1c100] i_blocks=0x000000c0 -> 0xbf
-[FIX] (fsck_chk_inode_blk:1269)  --> [0x1c100] i_compr_blocks=0x00000026 -> 0x27
-[ASSERT] (fsck_chk_inode_blk:1254)  --> ino: 0x1cadb has i_blocks: 0000002f, but has 46 blocks
-[FIX] (fsck_chk_inode_blk:1260)  --> [0x1cadb] i_blocks=0x0000002f -> 0x2e
-[FIX] (fsck_chk_inode_blk:1269)  --> [0x1cadb] i_compr_blocks=0x00000011 -> 0x12
-[ASSERT] (fsck_chk_inode_blk:1254)  --> ino: 0x1c62c has i_blocks: 00000002, but has 1 blocks
-[FIX] (fsck_chk_inode_blk:1260)  --> [0x1c62c] i_blocks=0x00000002 -> 0x1
+Thank you for testing.
 
-After we inject fault into f2fs_is_valid_blkaddr() during truncation,
-a) it missed to increase @nr_free or @valid_blocks
-b) it can cause in blkaddr leak in truncated dnode
-Which may cause inconsistent status.
-
-This patch separates FAULT_BLKADDR_INCONSISTENCE from FAULT_BLKADDR,
-so that we can:
-a) use FAULT_BLKADDR_INCONSISTENCE in f2fs_truncate_data_blocks_range()
-to simulate inconsistent issue independently,
-b) FAULT_BLKADDR fault will not cause any inconsistent status, we can
-just use it to check error path handling in kernel side.
-
-Signed-off-by: Chao Yu <chao@kernel.org>
----
-v3:
-- rename FAULT_INCONSISTENCE as Jaegeuk's suggestion.
- Documentation/ABI/testing/sysfs-fs-f2fs | 47 +++++++++++++------------
- Documentation/filesystems/f2fs.rst      | 47 +++++++++++++------------
- fs/f2fs/checkpoint.c                    | 19 +++++++---
- fs/f2fs/f2fs.h                          |  3 ++
- fs/f2fs/file.c                          |  8 +++--
- fs/f2fs/super.c                         | 37 +++++++++----------
- 6 files changed, 91 insertions(+), 70 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
-index 4f1d4e636d67..039a16ebaaaf 100644
---- a/Documentation/ABI/testing/sysfs-fs-f2fs
-+++ b/Documentation/ABI/testing/sysfs-fs-f2fs
-@@ -686,29 +686,30 @@ Description:	Support configuring fault injection type, should be
- 		enabled with fault_injection option, fault type value
- 		is shown below, it supports single or combined type.
- 
--		===================      ===========
--		Type_Name                Type_Value
--		===================      ===========
--		FAULT_KMALLOC            0x000000001
--		FAULT_KVMALLOC           0x000000002
--		FAULT_PAGE_ALLOC         0x000000004
--		FAULT_PAGE_GET           0x000000008
--		FAULT_ALLOC_BIO          0x000000010 (obsolete)
--		FAULT_ALLOC_NID          0x000000020
--		FAULT_ORPHAN             0x000000040
--		FAULT_BLOCK              0x000000080
--		FAULT_DIR_DEPTH          0x000000100
--		FAULT_EVICT_INODE        0x000000200
--		FAULT_TRUNCATE           0x000000400
--		FAULT_READ_IO            0x000000800
--		FAULT_CHECKPOINT         0x000001000
--		FAULT_DISCARD            0x000002000
--		FAULT_WRITE_IO           0x000004000
--		FAULT_SLAB_ALLOC         0x000008000
--		FAULT_DQUOT_INIT         0x000010000
--		FAULT_LOCK_OP            0x000020000
--		FAULT_BLKADDR            0x000040000
--		===================      ===========
-+		===========================      ===========
-+		Type_Name                        Type_Value
-+		===========================      ===========
-+		FAULT_KMALLOC                    0x000000001
-+		FAULT_KVMALLOC                   0x000000002
-+		FAULT_PAGE_ALLOC                 0x000000004
-+		FAULT_PAGE_GET                   0x000000008
-+		FAULT_ALLOC_BIO                  0x000000010 (obsolete)
-+		FAULT_ALLOC_NID                  0x000000020
-+		FAULT_ORPHAN                     0x000000040
-+		FAULT_BLOCK                      0x000000080
-+		FAULT_DIR_DEPTH                  0x000000100
-+		FAULT_EVICT_INODE                0x000000200
-+		FAULT_TRUNCATE                   0x000000400
-+		FAULT_READ_IO                    0x000000800
-+		FAULT_CHECKPOINT                 0x000001000
-+		FAULT_DISCARD                    0x000002000
-+		FAULT_WRITE_IO                   0x000004000
-+		FAULT_SLAB_ALLOC                 0x000008000
-+		FAULT_DQUOT_INIT                 0x000010000
-+		FAULT_LOCK_OP                    0x000020000
-+		FAULT_BLKADDR                    0x000040000
-+		FAULT_BLKADDR_INCONSISTENCE      0x000080000
-+		===========================      ===========
- 
- What:		/sys/fs/f2fs/<disk>/discard_io_aware_gran
- Date:		January 2023
-diff --git a/Documentation/filesystems/f2fs.rst b/Documentation/filesystems/f2fs.rst
-index d32c6209685d..b7c5c3f6df1c 100644
---- a/Documentation/filesystems/f2fs.rst
-+++ b/Documentation/filesystems/f2fs.rst
-@@ -184,29 +184,30 @@ fault_type=%d		 Support configuring fault injection type, should be
- 			 enabled with fault_injection option, fault type value
- 			 is shown below, it supports single or combined type.
- 
--			 ===================	  ===========
--			 Type_Name		  Type_Value
--			 ===================	  ===========
--			 FAULT_KMALLOC		  0x000000001
--			 FAULT_KVMALLOC		  0x000000002
--			 FAULT_PAGE_ALLOC	  0x000000004
--			 FAULT_PAGE_GET		  0x000000008
--			 FAULT_ALLOC_BIO	  0x000000010 (obsolete)
--			 FAULT_ALLOC_NID	  0x000000020
--			 FAULT_ORPHAN		  0x000000040
--			 FAULT_BLOCK		  0x000000080
--			 FAULT_DIR_DEPTH	  0x000000100
--			 FAULT_EVICT_INODE	  0x000000200
--			 FAULT_TRUNCATE		  0x000000400
--			 FAULT_READ_IO		  0x000000800
--			 FAULT_CHECKPOINT	  0x000001000
--			 FAULT_DISCARD		  0x000002000
--			 FAULT_WRITE_IO		  0x000004000
--			 FAULT_SLAB_ALLOC	  0x000008000
--			 FAULT_DQUOT_INIT	  0x000010000
--			 FAULT_LOCK_OP		  0x000020000
--			 FAULT_BLKADDR		  0x000040000
--			 ===================	  ===========
-+			 ===========================      ===========
-+			 Type_Name                        Type_Value
-+			 ===========================      ===========
-+			 FAULT_KMALLOC                    0x000000001
-+			 FAULT_KVMALLOC                   0x000000002
-+			 FAULT_PAGE_ALLOC                 0x000000004
-+			 FAULT_PAGE_GET                   0x000000008
-+			 FAULT_ALLOC_BIO                  0x000000010 (obsolete)
-+			 FAULT_ALLOC_NID                  0x000000020
-+			 FAULT_ORPHAN                     0x000000040
-+			 FAULT_BLOCK                      0x000000080
-+			 FAULT_DIR_DEPTH                  0x000000100
-+			 FAULT_EVICT_INODE                0x000000200
-+			 FAULT_TRUNCATE                   0x000000400
-+			 FAULT_READ_IO                    0x000000800
-+			 FAULT_CHECKPOINT                 0x000001000
-+			 FAULT_DISCARD                    0x000002000
-+			 FAULT_WRITE_IO                   0x000004000
-+			 FAULT_SLAB_ALLOC                 0x000008000
-+			 FAULT_DQUOT_INIT                 0x000010000
-+			 FAULT_LOCK_OP                    0x000020000
-+			 FAULT_BLKADDR                    0x000040000
-+			 FAULT_BLKADDR_INCONSISTENCE      0x000080000
-+			 ===========================      ===========
- mode=%s			 Control block allocation mode which supports "adaptive"
- 			 and "lfs". In "lfs" mode, there should be no random
- 			 writes towards main area.
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index b0597a539fc5..84546f529cf0 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -170,12 +170,9 @@ static bool __is_bitmap_valid(struct f2fs_sb_info *sbi, block_t blkaddr,
- 	return exist;
- }
- 
--bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
-+static bool __f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
- 					block_t blkaddr, int type)
- {
--	if (time_to_inject(sbi, FAULT_BLKADDR))
--		return false;
--
- 	switch (type) {
- 	case META_NAT:
- 		break;
-@@ -230,6 +227,20 @@ bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
- 	return true;
- }
- 
-+bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
-+					block_t blkaddr, int type)
-+{
-+	if (time_to_inject(sbi, FAULT_BLKADDR))
-+		return false;
-+	return __f2fs_is_valid_blkaddr(sbi, blkaddr, type);
-+}
-+
-+bool f2fs_is_valid_blkaddr_raw(struct f2fs_sb_info *sbi,
-+					block_t blkaddr, int type)
-+{
-+	return __f2fs_is_valid_blkaddr(sbi, blkaddr, type);
-+}
-+
- /*
-  * Readahead CP/NAT/SIT/SSA/POR pages
-  */
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index ab710bb6d8b3..e0acfec0558d 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -61,6 +61,7 @@ enum {
- 	FAULT_DQUOT_INIT,
- 	FAULT_LOCK_OP,
- 	FAULT_BLKADDR,
-+	FAULT_BLKADDR_INCONSISTENCE,
- 	FAULT_MAX,
- };
- 
-@@ -3768,6 +3769,8 @@ struct page *f2fs_get_meta_page_retry(struct f2fs_sb_info *sbi, pgoff_t index);
- struct page *f2fs_get_tmp_page(struct f2fs_sb_info *sbi, pgoff_t index);
- bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
- 					block_t blkaddr, int type);
-+bool f2fs_is_valid_blkaddr_raw(struct f2fs_sb_info *sbi,
-+					block_t blkaddr, int type);
- int f2fs_ra_meta_pages(struct f2fs_sb_info *sbi, block_t start, int nrpages,
- 			int type, bool sync);
- void f2fs_ra_meta_pages_cond(struct f2fs_sb_info *sbi, pgoff_t index,
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 9f4e21b5916c..32a7a413584b 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -590,9 +590,13 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
- 		f2fs_set_data_blkaddr(dn, NULL_ADDR);
- 
- 		if (__is_valid_data_blkaddr(blkaddr)) {
--			if (!f2fs_is_valid_blkaddr(sbi, blkaddr,
--					DATA_GENERIC_ENHANCE))
-+			if (time_to_inject(sbi, FAULT_BLKADDR_INCONSISTENCE))
-+				continue;
-+			if (!f2fs_is_valid_blkaddr_raw(sbi, blkaddr,
-+						DATA_GENERIC_ENHANCE)) {
-+				f2fs_handle_error(sbi, ERROR_INVALID_BLKADDR);
- 				continue;
-+			}
- 			if (compressed_cluster)
- 				valid_blocks++;
- 		}
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 206d03c82d96..87a803f36a50 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -44,24 +44,25 @@ static struct kmem_cache *f2fs_inode_cachep;
- #ifdef CONFIG_F2FS_FAULT_INJECTION
- 
- const char *f2fs_fault_name[FAULT_MAX] = {
--	[FAULT_KMALLOC]		= "kmalloc",
--	[FAULT_KVMALLOC]	= "kvmalloc",
--	[FAULT_PAGE_ALLOC]	= "page alloc",
--	[FAULT_PAGE_GET]	= "page get",
--	[FAULT_ALLOC_NID]	= "alloc nid",
--	[FAULT_ORPHAN]		= "orphan",
--	[FAULT_BLOCK]		= "no more block",
--	[FAULT_DIR_DEPTH]	= "too big dir depth",
--	[FAULT_EVICT_INODE]	= "evict_inode fail",
--	[FAULT_TRUNCATE]	= "truncate fail",
--	[FAULT_READ_IO]		= "read IO error",
--	[FAULT_CHECKPOINT]	= "checkpoint error",
--	[FAULT_DISCARD]		= "discard error",
--	[FAULT_WRITE_IO]	= "write IO error",
--	[FAULT_SLAB_ALLOC]	= "slab alloc",
--	[FAULT_DQUOT_INIT]	= "dquot initialize",
--	[FAULT_LOCK_OP]		= "lock_op",
--	[FAULT_BLKADDR]		= "invalid blkaddr",
-+	[FAULT_KMALLOC]			= "kmalloc",
-+	[FAULT_KVMALLOC]		= "kvmalloc",
-+	[FAULT_PAGE_ALLOC]		= "page alloc",
-+	[FAULT_PAGE_GET]		= "page get",
-+	[FAULT_ALLOC_NID]		= "alloc nid",
-+	[FAULT_ORPHAN]			= "orphan",
-+	[FAULT_BLOCK]			= "no more block",
-+	[FAULT_DIR_DEPTH]		= "too big dir depth",
-+	[FAULT_EVICT_INODE]		= "evict_inode fail",
-+	[FAULT_TRUNCATE]		= "truncate fail",
-+	[FAULT_READ_IO]			= "read IO error",
-+	[FAULT_CHECKPOINT]		= "checkpoint error",
-+	[FAULT_DISCARD]			= "discard error",
-+	[FAULT_WRITE_IO]		= "write IO error",
-+	[FAULT_SLAB_ALLOC]		= "slab alloc",
-+	[FAULT_DQUOT_INIT]		= "dquot initialize",
-+	[FAULT_LOCK_OP]			= "lock_op",
-+	[FAULT_BLKADDR]			= "invalid blkaddr",
-+	[FAULT_BLKADDR_INCONSISTENCE]	= "inconsistent blkaddr",
- };
- 
- void f2fs_build_fault_attr(struct f2fs_sb_info *sbi, unsigned int rate,
--- 
-2.40.1
-
+Pasha
