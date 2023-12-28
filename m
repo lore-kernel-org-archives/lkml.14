@@ -1,145 +1,117 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847923D72
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 07:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108B14402
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 07:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=smartx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n9nZJ6kr"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-40d5336986cso43420305e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 23:23:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b="lJQK0Fmp"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d3f2985425so22996475ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 23:23:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703748191; x=1704352991; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/58gU3DDE9Mzoxuhx6QFwyc23nWled8CXSCAbfhzDYk=;
-        b=n9nZJ6kr1v2LJu5YtTI58nawfxWtnENBkFaU3zO/scfE7yz3PqYYTi9WWtW4JgMQ3+
-         J24RhsrImmlK+sDxCvz4Bw/q+9i+3OS9oujeTwZQjs/YzND14Z8imGdzn+yx8azQpALj
-         1ST/GVcL5WM49M8egkYGhME8yhVJYAtW/nrJMV/8IXQp5RqyzhNg49+cppViwW7D20yA
-         +UgUjpf52f9iuZSLOL9MQy2nQvyVnbchWU045xq+UsdkzVHwue5kxqN72bKIIiOqCLqT
-         jvAZ81WFjuBXLzYqdeoNq7azSVOh8UcSDhinzJgt20qPIX/SyOHMa7+BZg1twULOZ9Oa
-         bfdg==
+        d=smartx-com.20230601.gappssmtp.com; s=20230601; t=1703748230; x=1704353030; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5TS3IlhabUMeMhlcESxYLb6eSGYrLYo3Ig5rpjdUNeg=;
+        b=lJQK0FmpkI8IBwp7sozilAKZY6DXtsPivugsxbL7VXlZSGJK+vtTorKMVMOUYqvGiH
+         X38kRqOYMKZCAStleVnlAR2EV8st3Zh29pBgVOpnc3JI96Ex9MgQ9FKLNWk9etPRg5sf
+         bQhh4m4rpiAh1NMs/YvghXiM+Ug/ffBH8zJV+sIufHxXlJXpBoheeH8ZuQVNDLV9Wxxe
+         7Mo2hkhDSAQL/YRhB6Xxk4zFVXYLizyAvtACLHNgruUa0eSpQ8QCE2SSW/5XXu9UDHcw
+         o2VQA5ptEaxirBZ+7WuNc58h5gC+WydZTFuyvil5hz8i+RCSdGrLgB0fJ8RlWbAC0rHm
+         Cz0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703748191; x=1704352991;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/58gU3DDE9Mzoxuhx6QFwyc23nWled8CXSCAbfhzDYk=;
-        b=B3K0lazlDKW6O7Se4f9Dydo0V++xzO8pSeUyKWX4LJuxEFV2Q6fI948lozJ0cF9wnj
-         JmBix9Iag7afzsHBANGJX32TzWj/kinKga26azIT2KEiyddfDZ1QUmnnotHzOcJ3TiVa
-         iYtiqXa3WHWub//5Jd0WDYpMnIXm8fKQBXRcFYcCIdzjfFxR6dmKzBOdG33E7BYYDm6j
-         jPp2CvN0sfAAjsQ20zjDjTBEAhv21/kqaA9jkLs9WqEQ0yq0EZDK4EaiLGZH1StEb6mU
-         cK2gZHjd8tK0mzTNU50w3kck5xmimurNGom5in8GqPti3UU9C6nB72uCiFWfN+1NQWVW
-         es1Q==
-X-Gm-Message-State: AOJu0YyV6AZFNUYtqEV2H2p3Se0IfDQeOzH/5hp0uEzRJ5B/ItlaggkG
-	hwCYQzwfyBTe/MdmFlCkkTSkJKaHRQIEOg==
-X-Google-Smtp-Source: AGHT+IEhAf6uf/KEzH8QAvC90bD1RAo22QjeZOkmp+O+TgT9GEuFL80E63xrZpnZnEIMRxvyclCojQ==
-X-Received: by 2002:a05:600c:338a:b0:40d:3dbd:5afc with SMTP id o10-20020a05600c338a00b0040d3dbd5afcmr4766936wmp.151.1703748190765;
-        Wed, 27 Dec 2023 23:23:10 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.218.27])
-        by smtp.gmail.com with ESMTPSA id je17-20020a05600c1f9100b0040d1450ca7esm34324834wmb.7.2023.12.27.23.23.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Dec 2023 23:23:10 -0800 (PST)
-Message-ID: <db9b2786-29f7-4d45-9087-a9f85b770b6c@linaro.org>
-Date: Thu, 28 Dec 2023 08:23:08 +0100
+        d=1e100.net; s=20230601; t=1703748230; x=1704353030;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5TS3IlhabUMeMhlcESxYLb6eSGYrLYo3Ig5rpjdUNeg=;
+        b=NbJDp26rOQ6q1G2AiyOugV6CKVfKqiD3AR1b/QZdz/ggcCQjiloCJShOrLIkGSFyCQ
+         dbvhNoGAtKktCqFXAMfi/E3gRa769m5NL5sH2r8n6pCNBcFMSi0q6n7sXYOLnDHZZGu5
+         ttv4JvYs0mLLSyqVpTlYODV35k6LnCYGoThhMulIILu5dUWdyfTicskvIHsw78geMuj0
+         40Zd2JmjiIdWljznDYMBt+fMa0FP9lnu0HOQHWYzCvcTByNWJF6CD/dd/9pe1BrfuYwC
+         DwQEkJ9N8Y14oXKbJtCNhwhNwe2J1sQeU9mxGiUYFUSD/l4l0IL8entfU89Y0PVqC39P
+         2ZIw==
+X-Gm-Message-State: AOJu0Ywg1Pm1dErhqEd3KCTrTMLFCZ8pM9BJOFQlgTF+rpBmpIkza3ei
+	nwgANmWTQSXyQyyKwyNaLvC6t0j16GSSAw==
+X-Google-Smtp-Source: AGHT+IFyvLhzXFMJ5PbTZF/J8a62bVgxOg0ZB1uWE0WCuQw5a65QLBUpvBTSD0CYPdtp0b15f4cSuw==
+X-Received: by 2002:a17:902:c947:b0:1d4:3b8a:639a with SMTP id i7-20020a170902c94700b001d43b8a639amr2994233pla.124.1703748230281;
+        Wed, 27 Dec 2023 23:23:50 -0800 (PST)
+Received: from smtpclient.apple ([8.210.91.195])
+        by smtp.gmail.com with ESMTPSA id s5-20020a170902ea0500b001d45f92c436sm6347479plg.5.2023.12.27.23.23.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 Dec 2023 23:23:49 -0800 (PST)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/6] dt-bindings: clock: mobileye,eyeq5-clk: add
- bindings
-Content-Language: en-US
-To: =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
- Gregory CLEMENT <gregory.clement@bootlin.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
- linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>
-References: <20231227-mbly-clk-v2-0-a05db63c380f@bootlin.com>
- <20231227-mbly-clk-v2-4-a05db63c380f@bootlin.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231227-mbly-clk-v2-4-a05db63c380f@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.100.2.1.4\))
+Subject: Re: [PATCH] virtio_blk: set the default scheduler to none
+From: Li Feng <fengli@smartx.com>
+In-Reply-To: <20231227050544-mutt-send-email-mst@kernel.org>
+Date: Thu, 28 Dec 2023 15:25:10 +0800
+Cc: Paolo Bonzini <pbonzini@redhat.com>,
+ Jens Axboe <axboe@kernel.dk>,
+ Jason Wang <jasowang@redhat.com>,
+ Stefan Hajnoczi <stefanha@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+ linux-kernel <linux-kernel@vger.kernel.org>,
+ "open list:VIRTIO BLOCK AND SCSI DRIVERS" <virtualization@lists.linux.dev>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9679B268-5BD7-4731-86CC-6B5CF7CE2DF2@smartx.com>
+References: <20231207043118.118158-1-fengli@smartx.com>
+ <20231225092010-mutt-send-email-mst@kernel.org>
+ <AB23804D-FF38-47B8-ADC6-C0A19B7083CC@smartx.com>
+ <20231226103743-mutt-send-email-mst@kernel.org>
+ <2E148FC5-F9A9-4A86-99F1-8D0B93412181@smartx.com>
+ <20231227050544-mutt-send-email-mst@kernel.org>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+X-Mailer: Apple Mail (2.3774.100.2.1.4)
 
-On 27/12/2023 17:23, Théo Lebrun wrote:
-> Add DT schema bindings for the EyeQ5 clock controller driver.
-> 
-> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
-> ---
 
-Where is the dependency expressed, so maintainers understand it should
-go via one tree?
 
-> diff --git a/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.yaml b/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.yaml
-> index b148a49b08f1..b4ba6f0c9f32 100644
-> --- a/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.yaml
-> +++ b/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.yaml
-> @@ -28,6 +28,10 @@ properties:
->    reg-io-width:
->      const: 4
->  
-> +  clock-controller:
-> +    $ref: /schemas/clock/mobileye,eyeq5-clk.yaml#
-> +    type: object
+> On Dec 27, 2023, at 18:06, Michael S. Tsirkin <mst@redhat.com> wrote:
+>=20
+> On Wed, Dec 27, 2023 at 03:26:30PM +0800, Li Feng wrote:
+>>=20
+>>=20
+>>> On Dec 26, 2023, at 23:38, Michael S. Tsirkin <mst@redhat.com> =
+wrote:
+>>>=20
+>>> On Tue, Dec 26, 2023 at 05:01:40PM +0800, Li Feng wrote:
+>>>> I don't have ideas right now to answer Christoph/Paolo's question.
+>>>=20
+>>> Paolo did some testing on this thread and posted some concerns.
+>>> Do you disagree with his analysis?
+>>=20
+>> Paolo gave a very detailed data analysis. Indeed, in some low queue =
+depth
+>> scenarios, the data dropped somewhat. However, I suspect that it may =
+be=20
+>> caused by other problems (such as test fluctuations) rather than the =
+benefits=20
+>> brought by deadline.
+>=20
+> Maybe. I think it would be up to you to prove this then.
+Ok.
 
-This belongs to the MFD patch.
-
-Best regards,
-Krzysztof
+>=20
+>=20
+>> BTW, I think 128 queue depth test is a very important and common =
+performance
+>> test item for storage devices.
+>>=20
+>> Thanks,
+>> Li
+>>=20
+>>>=20
+>>> --=20
+>>> MST
+>>>=20
+>=20
 
