@@ -1,81 +1,34 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A981096B
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 12:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rzIo1duA"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40d5a41143fso20861245e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 04:58:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703768300; x=1704373100; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fJqndlg00hz3kS0K9Xt/wzcgwz2RWYotM3QsJXJKxvc=;
-        b=rzIo1duAxnP8EkArIztf8NaFeYQyVzaCFyqiOHwzDnvmL4l6j3bX2yfcL1SdwvfuYR
-         R7ccEfhXp0bIyJsnyKRtocDRnhhslmCllhuhCBGgy1R/yIzvD/UX1++KTRo+i5T9HUUg
-         Hc7Wp32lBdo5mJ98/Yga6oazzscaOYXJZq1vYBYi+uVXb+JHaV/6Mg/Q3FAWWcDcrd9Z
-         RW6h6hebPFpTeTLZqLOQLMoH9CthW0n6vOASz7EGpaiABlpz0izIduwluhvNCFFrKJ/F
-         eoweHjqIxIYGzQMqONqa/LAwH7ZqWOIP3QW5SGBmNOpVguvVBcr1dkZCFGglVYOaYKoY
-         v/Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703768300; x=1704373100;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fJqndlg00hz3kS0K9Xt/wzcgwz2RWYotM3QsJXJKxvc=;
-        b=mmh+tJKWQfutT+aHk4v7WXJeUiGzGGpsdvButIV3K4BG5hUUosW1kLHMfDk2sdwHeK
-         GmrnD60qaE3BbMFseTGhHacoeVFyvIetf81XnpuHBCeTkQ1IpTjW27RhJAilHadJlFxI
-         BMC8b4ia55zaUupydelqAkRAN2kkrrl0dhu0R/WMstLzaO6cGda6oeKkT1eF3WO+etRq
-         ka/5QhPYD6aCDI9heqMtDnoE+A8RFjAUx7/BUbpVtYnjLhM1MbCZFQFrj56NbuYiTVnA
-         HrVSZVhMiRZUEllACnD3/xXY9tFtfb+c77uQtyQZzIBRfdfLv8r9nSp1k7KvOh0391/o
-         oXTg==
-X-Gm-Message-State: AOJu0Yy/IXWkrlwutE4U7A9+dZthC/Ass982MBGPlh3ERLLkCzbzdElh
-	1jitRSOmfdikvM+o11TVKb5JyBjzONp6/g==
-X-Google-Smtp-Source: AGHT+IHl5TUZZLgMiTlie5qagsHCRsc5xzAp7JZjoJ6yG5wP+nbvBqQhFQDOaktrnm5ijLKALVeCGA==
-X-Received: by 2002:a05:600c:2192:b0:40d:71c1:9985 with SMTP id e18-20020a05600c219200b0040d71c19985mr81689wme.29.1703768300597;
-        Thu, 28 Dec 2023 04:58:20 -0800 (PST)
-Received: from ta2.c.googlers.com.com (216.131.76.34.bc.googleusercontent.com. [34.76.131.216])
-        by smtp.gmail.com with ESMTPSA id h9-20020a05600c350900b0040d5aca25f1sm8615807wmq.17.2023.12.28.04.58.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Dec 2023 04:58:20 -0800 (PST)
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-To: peter.griffin@linaro.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	conor+dt@kernel.org,
-	andi.shyti@kernel.org,
-	alim.akhtar@samsung.com,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	s.nawrocki@samsung.com,
-	tomasz.figa@gmail.com,
-	cw00.choi@samsung.com,
-	arnd@arndb.de,
-	semen.protsenko@linaro.org
-Cc: andre.draszik@linaro.org,
-	saravanak@google.com,
-	willmcvicker@google.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F8210946;
+	Thu, 28 Dec 2023 12:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4T17pr3CZQz4f3lDJ;
+	Thu, 28 Dec 2023 20:58:12 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id DDF2B1A017F;
+	Thu, 28 Dec 2023 20:58:17 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgBHlQvmcI1lvcx3Ew--.36075S7;
+	Thu, 28 Dec 2023 20:58:17 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: song@kernel.org,
+	yukuai3@huawei.com,
+	neilb@suse.de
+Cc: linux-raid@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	kernel-team@android.com,
-	Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: [PATCH v2 10/12] arm64: dts: exynos: gs101: update USI UART to use peric0 clocks
-Date: Thu, 28 Dec 2023 12:58:03 +0000
-Message-ID: <20231228125805.661725-11-tudor.ambarus@linaro.org>
-X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
-In-Reply-To: <20231228125805.661725-1-tudor.ambarus@linaro.org>
-References: <20231228125805.661725-1-tudor.ambarus@linaro.org>
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH -next 3/3] md: use interruptible apis in idle/frozen_sync_thread()
+Date: Thu, 28 Dec 2023 20:55:53 +0800
+Message-Id: <20231228125553.2697765-4-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20231228125553.2697765-1-yukuai1@huaweicloud.com>
+References: <20231228125553.2697765-1-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,59 +36,236 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgBHlQvmcI1lvcx3Ew--.36075S7
+X-Coremail-Antispam: 1UD129KBjvJXoW3JFyrKFyfAFW3Aw13Jr4Utwb_yoWxury3p3
+	yIgF98Ar45JrZ3Zr4DK3WkAayrZw1IqayDtry7Wa4fJw1fKrsrKFyY9a4UZFykCa4rAw4U
+	Ja1rJF4fCFZ7Wr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9m14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxGrwCFx2
+	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
+	6r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
+	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
+	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
+	0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUd8n5UUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Get rid of the dummy clock and start using the cmu_peric0 clocks
-for the usi_uart and serial_0 nodes.
+From: Yu Kuai <yukuai3@huawei.com>
 
-Tested the serial at 115200, 1000000 and 3000000 baudrates,
-everthing went fine.
+Before refactoring idle and frozen from action_store, interruptible apis
+is used so that hungtask warning won't be triggered if it takes too long
+to finish idle/frozen sync_thread. So change to use interruptible apis.
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+In order not to make stop_sync_thread() more complicated, factor out a
+helper prepare_to_stop_sync_thread() to replace stop_sync_thread().
+
+Also return error to user if idle/frozen_sync_thread() failed, otherwise
+user will be misleaded.
+
+Fixes: 130443d60b1b ("md: refactor idle/frozen_sync_thread() to fix deadlock")
+Fixes: 8e8e2518fcec ("md: Close race when setting 'action' to 'idle'.")
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
-v2: identify and use gate clocks instead of divider clocks
+ drivers/md/md.c | 105 ++++++++++++++++++++++++++++++------------------
+ 1 file changed, 67 insertions(+), 38 deletions(-)
 
- arch/arm64/boot/dts/exynos/google/gs101.dtsi | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-index c693791ae584..0e5b1b490b0b 100644
---- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-+++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-@@ -180,14 +180,6 @@ HERA_CPU_SLEEP: cpu-hera-sleep {
- 		};
- 	};
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 60f99768a1a9..9ea05de79fe4 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -4846,26 +4846,34 @@ action_show(struct mddev *mddev, char *page)
+ 	return sprintf(page, "%s\n", type);
+ }
  
--	/* TODO replace with CCF clock */
--	dummy_clk: clock-3 {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <12345>;
--		clock-output-names = "pclk";
--	};
++static bool sync_thread_stopped(struct mddev *mddev, int *sync_seq)
++{
++	if (!test_bit(MD_RECOVERY_RUNNING, &mddev->recovery))
++		return true;
++
++	if (sync_seq && *sync_seq != atomic_read(&mddev->sync_seq))
++		return true;
++
++	return false;
++}
++
+ /**
+- * stop_sync_thread() - wait for sync_thread to stop if it's running.
++ * prepare_to_stop_sync_thread() - prepare to stop sync_thread if it's running.
+  * @mddev:	the array.
+- * @locked:	if set, reconfig_mutex will still be held after this function
+- *		return; if not set, reconfig_mutex will be released after this
+- *		function return.
+- * @check_seq:	if set, only wait for curent running sync_thread to stop, noted
+- *		that new sync_thread can still start.
++ * @unlock:	whether or not caller want to release reconfig_mutex if
++ *		sync_thread is not running.
++ *
++ * Return true if sync_thread is running, release reconfig_mutex and do
++ * preparatory work to stop sync_thread, caller should wait for
++ * sync_thread_stopped() to return true. Return false if sync_thread is not
++ * running, reconfig_mutex will be released if @unlock is set.
+  */
+-static void stop_sync_thread(struct mddev *mddev, bool locked, bool check_seq)
++static bool prepare_to_stop_sync_thread(struct mddev *mddev, bool unlock)
+ {
+-	int sync_seq;
 -
- 	/* ect node is required to be present by bootloader */
- 	ect {
- 	};
-@@ -369,7 +361,8 @@ usi_uart: usi@10a000c0 {
- 			ranges;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--			clocks = <&dummy_clk>, <&dummy_clk>;
-+			clocks = <&cmu_peric0 CLK_GOUT_PERIC0_CLK_PERIC0_USI0_UART_CLK>,
-+				 <&cmu_peric0 CLK_GOUT_PERIC0_PERIC0_TOP1_IPCLK_0>;
- 			clock-names = "pclk", "ipclk";
- 			samsung,sysreg = <&sysreg_peric0 0x1020>;
- 			samsung,mode = <USI_V2_UART>;
-@@ -380,7 +373,8 @@ serial_0: serial@10a00000 {
- 				reg = <0x10a00000 0xc0>;
- 				interrupts = <GIC_SPI 634
- 					      IRQ_TYPE_LEVEL_HIGH 0>;
--				clocks = <&dummy_clk 0>, <&dummy_clk 0>;
-+				clocks = <&cmu_peric0 CLK_GOUT_PERIC0_CLK_PERIC0_USI0_UART_CLK>,
-+					 <&cmu_peric0 CLK_GOUT_PERIC0_PERIC0_TOP1_IPCLK_0>;
- 				clock-names = "uart", "clk_uart_baud0";
- 				samsung,uart-fifosize = <256>;
- 				status = "disabled";
+-	if (check_seq)
+-		sync_seq = atomic_read(&mddev->sync_seq);
+-
+ 	if (!test_bit(MD_RECOVERY_RUNNING, &mddev->recovery)) {
+-		if (!locked)
++		if (unlock)
+ 			mddev_unlock(mddev);
+-		return;
++		return false;
+ 	}
+ 
+ 	mddev_unlock(mddev);
+@@ -4879,53 +4887,67 @@ static void stop_sync_thread(struct mddev *mddev, bool locked, bool check_seq)
+ 	if (work_pending(&mddev->sync_work))
+ 		flush_work(&mddev->sync_work);
+ 
+-	wait_event(resync_wait,
+-		   !test_bit(MD_RECOVERY_RUNNING, &mddev->recovery) ||
+-		   (check_seq && sync_seq != atomic_read(&mddev->sync_seq)));
+-
+-	if (locked)
+-		mddev_lock_nointr(mddev);
++	return true;
+ }
+ 
+-static void idle_sync_thread(struct mddev *mddev)
++static int idle_sync_thread(struct mddev *mddev)
+ {
+-	mutex_lock(&mddev->sync_mutex);
++	int sync_seq = atomic_read(&mddev->sync_seq);
++	int err = mutex_lock_interruptible(&mddev->sync_mutex);
++
++	if (err)
++		return err;
+ 	clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+ 
+-	if (mddev_lock(mddev)) {
++	err = mddev_lock(mddev);
++	if (err) {
+ 		mutex_unlock(&mddev->sync_mutex);
+-		return;
++		return err;
+ 	}
+ 
+-	stop_sync_thread(mddev, false, true);
++	if (prepare_to_stop_sync_thread(mddev, true))
++		err = wait_event_interruptible(resync_wait,
++			   sync_thread_stopped(mddev, &sync_seq));
++
+ 	mutex_unlock(&mddev->sync_mutex);
++
++	return err;
+ }
+ 
+-static void frozen_sync_thread(struct mddev *mddev)
++static int frozen_sync_thread(struct mddev *mddev)
+ {
+-	mutex_lock(&mddev->sync_mutex);
++	int err = mutex_lock_interruptible(&mddev->sync_mutex);
++
++	if (err)
++		return err;
+ 	set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+ 
+-	if (mddev_lock(mddev)) {
++	err = mddev_lock(mddev);
++	if (err) {
+ 		mutex_unlock(&mddev->sync_mutex);
+-		return;
++		return err;
+ 	}
+ 
+-	stop_sync_thread(mddev, false, false);
++	if (prepare_to_stop_sync_thread(mddev, true))
++		err = wait_event_interruptible(resync_wait,
++			   sync_thread_stopped(mddev, NULL));
+ 	mutex_unlock(&mddev->sync_mutex);
++
++	return err;
+ }
+ 
+ static ssize_t
+ action_store(struct mddev *mddev, const char *page, size_t len)
+ {
++	int err = 0;
++
+ 	if (!mddev->pers || !mddev->pers->sync_request)
+ 		return -EINVAL;
+ 
+-
+ 	if (cmd_match(page, "idle"))
+-		idle_sync_thread(mddev);
++		err = idle_sync_thread(mddev);
+ 	else if (cmd_match(page, "frozen"))
+-		frozen_sync_thread(mddev);
++		err = frozen_sync_thread(mddev);
+ 	else if (test_bit(MD_RECOVERY_RUNNING, &mddev->recovery))
+ 		return -EBUSY;
+ 	else if (cmd_match(page, "resync"))
+@@ -4934,7 +4956,6 @@ action_store(struct mddev *mddev, const char *page, size_t len)
+ 		clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+ 		set_bit(MD_RECOVERY_RECOVER, &mddev->recovery);
+ 	} else if (cmd_match(page, "reshape")) {
+-		int err;
+ 		if (mddev->pers->start_reshape == NULL)
+ 			return -EINVAL;
+ 		err = mddev_lock(mddev);
+@@ -4980,7 +5001,7 @@ action_store(struct mddev *mddev, const char *page, size_t len)
+ 	set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
+ 	md_wakeup_thread(mddev->thread);
+ 	sysfs_notify_dirent_safe(mddev->sysfs_action);
+-	return len;
++	return err ? err : len;
+ }
+ 
+ static struct md_sysfs_entry md_scan_mode =
+@@ -6280,7 +6301,11 @@ static void md_clean(struct mddev *mddev)
+ 
+ static void __md_stop_writes(struct mddev *mddev)
+ {
+-	stop_sync_thread(mddev, true, false);
++	if (prepare_to_stop_sync_thread(mddev, false)) {
++		wait_event(resync_wait, sync_thread_stopped(mddev, NULL));
++		mddev_lock_nointr(mddev);
++	}
++
+ 	del_timer_sync(&mddev->safemode_timer);
+ 
+ 	if (mddev->pers && mddev->pers->quiesce) {
+@@ -6369,7 +6394,8 @@ static int md_set_readonly(struct mddev *mddev, struct block_device *bdev)
+ 		set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+ 	}
+ 
+-	stop_sync_thread(mddev, false, false);
++	if (prepare_to_stop_sync_thread(mddev, true))
++		wait_event(resync_wait, sync_thread_stopped(mddev, NULL));
+ 	wait_event(mddev->sb_wait,
+ 		   !test_bit(MD_SB_CHANGE_PENDING, &mddev->sb_flags));
+ 	mddev_lock_nointr(mddev);
+@@ -6421,7 +6447,10 @@ static int do_md_stop(struct mddev *mddev, int mode,
+ 		set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+ 	}
+ 
+-	stop_sync_thread(mddev, true, false);
++	if (prepare_to_stop_sync_thread(mddev, false)) {
++		wait_event(resync_wait, sync_thread_stopped(mddev, NULL));
++		mddev_lock_nointr(mddev);
++	}
+ 
+ 	mutex_lock(&mddev->open_mutex);
+ 	if ((mddev->pers && atomic_read(&mddev->openers) > !!bdev) ||
 -- 
-2.43.0.472.g3155946c3a-goog
+2.39.2
 
