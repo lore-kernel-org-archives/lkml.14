@@ -1,309 +1,148 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from IND01-BMX-obe.outbound.protection.outlook.com (mail-bmxind01olkn2013.outbound.protection.outlook.com [40.92.103.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB6F256C;
-	Thu, 28 Dec 2023 06:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 3BS69En741766958, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 3BS69En741766958
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 28 Dec 2023 14:09:14 +0800
-Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2375.32; Thu, 28 Dec 2023 14:09:14 +0800
-Received: from james-bs01.realtek.com.tw (172.21.190.247) by
- RTEXMBS03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 28 Dec 2023 14:09:13 +0800
-From: James Tai <james.tai@realtek.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
-        "Rob
- Herring" <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, James Tai <james.tai@realtek.com>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v4 6/6] irqchip: Introduce RTD1619B support using the Realtek common interrupt controller driver
-Date: Thu, 28 Dec 2023 14:08:25 +0800
-Message-ID: <20231228060825.1380439-7-james.tai@realtek.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20231228060825.1380439-1-james.tai@realtek.com>
-References: <20231228060825.1380439-1-james.tai@realtek.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14D923A7;
+	Thu, 28 Dec 2023 06:13:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="RvtAHtOM"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cBkqf6nuFo8oap8Yd8OtP/5y9WjZbWdpdX3O8X/MH186/iVOIY0/7tsNrdUJQ7GVSUl0PNTPZRU99iKNoziH064qFXiommu1W/I0pyYVDToSGB9OhHRn3Qf4aD+cW62v7Ir8YP8VuVe0ruEuybzG4xsfrGh5lZnYE5OeBLP73iXuYmDmm/6sURSkpZX4qxBSuA6F/1H7ZEBfp3R7rSzv8dY6gp6XW74p/I+ucdz99PXTn/hEcRekAapewQUzwnyGuUjC/nqohk8SuFd/Sc/Jh0EWF1JuQZfGfIGUdycwPt2dE3qAZWQD9CM1PxdIgxdi82pay3cSf7VJZRCNLfsxmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0Ws92o1rn9IM+BqjWFv6Bw8/aKAik9uQ2qxbzGhr/hI=;
+ b=c3KWPYVNKs8+xZdk/iTtl+5mOO4QXHPu21uGmD7NUYuqPVJNJ4gOH63/va2thh6YZpqhC1GjLpKFTs9WGdTyjKtY/CIPxyE+kXWZHK9bEjcWSRunMdvbRWVxPzeg650oUAYP4l9rj3/4HVeGhm2ynR7jJJX+MdCCjruzdb9HokJK208A/h5dc3ZxUX32Ib5N5wbxB8Mw/O1apaMLmc2ZrVdgNorrHCJu/rbV5UsC8hyvBp/PDo+PrFQGzesWu4xTQBl+jm7a1Y0bh4OvDjo3mAPovfJqoBVIWOErKYiEJNUaUDjEStNPcOCDHmVkRIUvsBPYiuF1VpBNy/keW/n9vw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0Ws92o1rn9IM+BqjWFv6Bw8/aKAik9uQ2qxbzGhr/hI=;
+ b=RvtAHtOMOInYTQ+fZwY/a5gwkc/PEtEt+bPNJcIBsSw7K8SZ1DdpGwlE+VxbhMCKJCf5Q74QaEKKEUHiHTtpvzTW7WcnWZ8B9Z5VO+lZo+JobMMWLsKEfiL+SrJhsUTCCCPCVGnhrn3aZV8dFY9CbljWyc/La/01ewxD/lx/MfCvYtPZRR5ZM3wxZrAV0636DMpoRo103+cAifJ1f7Db4LaDqoGt1nL4QjDP3Kwuw/D5688R/XuaC9ZWhysYWFsnKa5ui2OguAPl4vsO1CFqf5uXcjerBWXvv7l2xruGiefBAR2uAetk70GuGGyxsVuaELW7e7zDTDgm+ZUmrOraqA==
+Received: from MA0P287MB0217.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:b3::9) by
+ PN3P287MB1320.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:193::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7113.27; Thu, 28 Dec 2023 06:13:42 +0000
+Received: from MA0P287MB0217.INDP287.PROD.OUTLOOK.COM
+ ([fe80::6037:db64:7000:119f]) by MA0P287MB0217.INDP287.PROD.OUTLOOK.COM
+ ([fe80::6037:db64:7000:119f%7]) with mapi id 15.20.7135.019; Thu, 28 Dec 2023
+ 06:13:42 +0000
+From: Aditya Garg <gargaditya08@live.com>
+To: Johan Hovold <johan@kernel.org>
+CC: Felix Zhang <mrman@mrman314.tech>, "linux-bluetooth@vger.kernel.org"
+	<linux-bluetooth@vger.kernel.org>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>, "marcan@marcan.st" <marcan@marcan.st>,
+	"bagasdotme@gmail.com" <bagasdotme@gmail.com>, "sven@svenpeter.dev"
+	<sven@svenpeter.dev>, "alyssa@rosenzweig.io" <alyssa@rosenzweig.io>,
+	"marcel@holtmann.org" <marcel@holtmann.org>, "johan.hedberg@gmail.com"
+	<johan.hedberg@gmail.com>, "luiz.dentz@gmail.com" <luiz.dentz@gmail.com>,
+	"orlandoch.dev@gmail.com" <orlandoch.dev@gmail.com>, "kekrby@gmail.com"
+	<kekrby@gmail.com>, "admin@kodeit.net" <admin@kodeit.net>, "j@jannau.net"
+	<j@jannau.net>, "asahi@lists.linux.dev" <asahi@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] Bluetooth: Fix Bluetooth for BCM4377 on T2 Intel
+ MacBooks
+Thread-Topic: [PATCH v4] Bluetooth: Fix Bluetooth for BCM4377 on T2 Intel
+ MacBooks
+Thread-Index: AQHaN2/oF0vjfoypA0WLL/Bc2KeqL7C88eIAgAFJOkM=
+Date: Thu, 28 Dec 2023 06:13:42 +0000
+Message-ID:
+ <MA0P287MB0217E3282699E84E790DAC4DB89EA@MA0P287MB0217.INDP287.PROD.OUTLOOK.COM>
+References: <aaa107865f4cbd61f8f9006fd3e7ac43b5d1bdad.camel@mrman314.tech>
+ <ZYv95BOowY38NesX@hovoldconsulting.com>
+In-Reply-To: <ZYv95BOowY38NesX@hovoldconsulting.com>
+Accept-Language: en-IN, en-US
+Content-Language: en-IN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn: [5UftSdDZ9YovIuRHUOpcqnxIcrixjSdx/kUcvHUzZ01UEW0jg5iOgLsHQfNwxr9r]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MA0P287MB0217:EE_|PN3P287MB1320:EE_
+x-ms-office365-filtering-correlation-id: cdab0bcc-9d01-4814-9661-08dc076c2463
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ qpDc2uOfNpKV2V4H2A9cJrQyM49QjK2JnBGXkFROSPLQ4BHdKp5nvgDqLhWtZnbRb9Oh/kUL+y6QJw8o95q3AXKrWQZZAV0hLId7IsZ2Nr/iBLY8dyFy6C2fwXZ9y15RKu41HfeAk6eXWUBil2CKrCGoFaZDcGTAfq9rxZ5UQgEagxfJ7mt8dFD7xAmzh2YesVxLJXaTNOebemCX/BU0IDOq02bxhRSC/P7ndBzr3FanF7d7xjwrfDi3995otSMocvUbu5XYWyZv4BOcejJ3G7hzYwsQKub+rTTHcHLlO3F/UXF6DRwxNwPo42Wd5IZEoqyJW8sMljyVB5JRK/Fq4HyRGMh1aRiERtR6kDO1oFqgrW/UdxLs69wVMB3QOoX3wQiQXVqC09foT1LBGB5cJcq3ypWc4DD+vxc2L4BGXFLYgcMH07GS+8ncwPCjFjj6ZUyoowm7zdECIDuvTq+ki2XpTjRakGiCgyQhgDzH8T8FIvVDbgj70MVQYXDuxoaQMo8nibY5Z/Z+c8e1vuesAHk8BjhFqKeDlAHCAN0N9r6/7oP+O0VkHb1LyGgCXOtCZ2QZvM04xh04OpjryNZkPx3Uorv6IlGbM8/rijUzvbI=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?Q0Jkb29aTDZLYVpxQ2tjOCtjOTg5Z1hBZnhQOVh2WWVINGszaHQva29yMHRu?=
+ =?utf-8?B?RGh2Zk1RZVRTdy9Sb3ZuMTZlcWxVQjhrMGNVN1FTUTJGaGEvZHBheUpMS202?=
+ =?utf-8?B?UGRldnV6WHk5WTVROTh5STZYdXBYL2ZLOHZaSXgrd3VPalExV0VFWlBhbk5N?=
+ =?utf-8?B?RzdhUWtIazhEa3VNcmxJcHFZVlVacTNiWVQzb1dRcUFEU1FzbmgrQWxGeGk5?=
+ =?utf-8?B?R00yakpoYnlOR0wrUFMvcGpWVnNaWmg2SXRsV1J5dTdQK0d1d2xrTjVkYWRJ?=
+ =?utf-8?B?NWlFK0RraG1KVXZBcmczU01ZOGhUeWU2cXhrcG5yYy9SZDZLb1FzR3VzS2hz?=
+ =?utf-8?B?TFNKU1pIZlN0S0hDZnFYdzRxZDE0YkgvcVRjTUlzYTlqMDdsR1ZwK0s2blJn?=
+ =?utf-8?B?eFczQ3BsMEpHTXRiUXA5eHFIdUE5eUxxMWpyOEdyMG95NG1GaHNhcVJpcVpF?=
+ =?utf-8?B?Qzk1RjBBWmd6TFl2T3kwVmQwUlU2V1JTeWFteEYvQVA2L2pVaTFaUUU1YXVr?=
+ =?utf-8?B?N0dycjBYbkl1bnEvTmpWQkx1aWhDeG8zOFhrZ25yZGxSZ0VJM2FOTTIvTkRR?=
+ =?utf-8?B?SlpJYm52bkhYL3dZR1MrMWJmcVVieVpSa3I1anNrclVLUDBBZS9oMUxRZEtr?=
+ =?utf-8?B?VWlIR3FjSXJrMURmSnlHOFRaOTRJSmt6T2JTdTlheTBaQUUzK0R1T3A0R1c0?=
+ =?utf-8?B?WkhNNVVxdUxGUWVTbVVYYWdySjRpNXlYajJIOEZvcVB0WUh0a3hNRWNCYk9S?=
+ =?utf-8?B?RFhqMVFRVmo5aExibUowM1JoMk4vMkhxWlBUUzkxbEYvYURpdTRoMytHSC80?=
+ =?utf-8?B?S3l6elV5RitobnNkOUo1TGdBb2RNU2EvWk5qejdmNTNjeHByejNGRTBvb29L?=
+ =?utf-8?B?bnlLeHBZUnYrdjhEQ2Frc2M2Q09aRjkrUHNSUXFJaTVIMEtiL0xYQ0x3TmxL?=
+ =?utf-8?B?eFhabW1EYVArZmhiZGYrUG5ROGRHMGhIa0FkdU5sUzJHeTQ4QUUvOXdQajBn?=
+ =?utf-8?B?d21sRWdHREhjaGs2OTg2RTNOYzNvV0dWdFAyTlRkQzZWZjdaUzI2K0ZHUFU1?=
+ =?utf-8?B?dGRMSUt2bmtSK3ZuY0k2QWhlZGQ5U0tIVTdUQUdlV2ZOUWMwckFlUW1LNFBQ?=
+ =?utf-8?B?ZVRMN283dmtOS2piSSsyc0dKTjZielBVTHZRazFoZy9LTmNmVUZwSXhLNml2?=
+ =?utf-8?B?Y2lkVzhFb1NYM1hFNWRsbitSU1hrSmtZS0EzQnMzbndlVmxvYWdUSC9JWGI3?=
+ =?utf-8?B?cUJta2pOTEs3SytSOEFKaDBlazFMN1pNcEpLeFVLNVRuUWYrcmtwemdKR3pi?=
+ =?utf-8?B?R3BNUVhTTFdrcjZWTVJhRlNRVFdNc2ptbTd3WEdCbyt6cEhBL3hpVDhKOTFS?=
+ =?utf-8?B?TTdrNGUwWWtEdFQ0SzAwV3daMitnLzFMNXZsQTlSY0NTcGROaitXMDVza3E2?=
+ =?utf-8?B?bHBIMW8rRFdLa25ucUVUNTErZWptNEw5d3VKUmJMdERDaHRWVXcwR3p3WTlO?=
+ =?utf-8?B?ODNCYkNBWU00WURaQ0c1NnM0UnBwd3FhZlBmRjBZZ2FTOTBrNkpWaTNKZ0Iy?=
+ =?utf-8?B?Vk1wcXBpNkRxUy9jSUg2VDcyWjZpRWhvWS9PVXcvdkJRSXFQZjBXb01EUFNm?=
+ =?utf-8?B?MnhrM0lYYmtsVFpzcGoySnVpc01NRFIzS1RURGZmTXB3bDU1bk84dEMxT0N5?=
+ =?utf-8?B?empDY1A0Ym52N0JUZjVYT2FlUFNvZHVkOFZVR21KUGpVVFVXSlZvakJ3PT0=?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
- RTEXMBS03.realtek.com.tw (172.21.6.96)
-X-KSE-ServerInfo: RTEXMBS03.realtek.com.tw, 9
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-Antivirus-Interceptor-Info: fallback
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-Antivirus-Interceptor-Info: fallback
-X-KSE-AntiSpam-Interceptor-Info: fallback
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-bafef.templateTenant
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB0217.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: cdab0bcc-9d01-4814-9661-08dc076c2463
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Dec 2023 06:13:42.8084
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN3P287MB1320
 
-Add support for the RTD1619B platform.
-
-Signed-off-by: James Tai <james.tai@realtek.com>
----
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Marc Zyngier <maz@kernel.org>
-CC: linux-kernel@vger.kernel.org
-
-v3 to v4 change:
-- Replaced the 'core_initcall' with 'module_init'
-- Removed redundant header files
-- Moved the function of suspend and resume to common code
-- Improved the description of config
-
-v2 to v3 change:
-- Unchanged
-
-v1 to v2 change:
-- Resolved kernel test robot build warnings
-- Replaced magic number with macro
-- Fixed code style issues
-
- drivers/irqchip/Kconfig                |  10 ++
- drivers/irqchip/Makefile               |   1 +
- drivers/irqchip/irq-realtek-rtd1619b.c | 186 +++++++++++++++++++++++++
- 3 files changed, 197 insertions(+)
- create mode 100644 drivers/irqchip/irq-realtek-rtd1619b.c
-
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 9354445ea0bb..0dc2a16dce70 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -252,6 +252,16 @@ config REALTEK_RTD1325_INTC
- 
- 	  If unsure, say N.
- 
-+config REALTEK_RTD1619B_INTC
-+	tristate "Realtek RTD1619B interrupt controller"
-+	select REALTEK_DHC_INTC
-+	help
-+	  Enable support for the Realtek RTD1619B SoC Interrupt Controller.
-+	  Each Realtek DHC SoC has two sets of interrupt controllers, each
-+	  capable of handling up to 32 interrupts.
-+
-+	  If unsure, say N.
-+
- config RENESAS_INTC_IRQPIN
- 	bool "Renesas INTC External IRQ Pin Support" if COMPILE_TEST
- 	select IRQ_DOMAIN
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index eaa12928d60b..da308aefcb87 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -51,6 +51,7 @@ obj-$(CONFIG_REALTEK_DHC_INTC)		+= irq-realtek-intc-common.o
- obj-$(CONFIG_REALTEK_RTD1319_INTC)	+= irq-realtek-rtd1319.o
- obj-$(CONFIG_REALTEK_RTD1319D_INTC)	+= irq-realtek-rtd1319d.o
- obj-$(CONFIG_REALTEK_RTD1325_INTC)	+= irq-realtek-rtd1325.o
-+obj-$(CONFIG_REALTEK_RTD1619B_INTC)	+= irq-realtek-rtd1619b.o
- obj-$(CONFIG_RENESAS_INTC_IRQPIN)	+= irq-renesas-intc-irqpin.o
- obj-$(CONFIG_RENESAS_IRQC)		+= irq-renesas-irqc.o
- obj-$(CONFIG_RENESAS_RZA1_IRQC)		+= irq-renesas-rza1.o
-diff --git a/drivers/irqchip/irq-realtek-rtd1619b.c b/drivers/irqchip/irq-realtek-rtd1619b.c
-new file mode 100644
-index 000000000000..51e6b61e73df
---- /dev/null
-+++ b/drivers/irqchip/irq-realtek-rtd1619b.c
-@@ -0,0 +1,186 @@
-+// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-+/*
-+ * Realtek RTD1619B interrupt controller driver
-+ *
-+ * Copyright (c) 2023 Realtek Semiconductor Corporation
-+ */
-+
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+
-+#include "irq-realtek-intc-common.h"
-+
-+#define ISO_NMI_WDT_MASK     0x08008090
-+#define ISO_NORMAL_MASK      0xf7ff7f6e
-+#define MISC_NORMAL_MASK     0xffffded6
-+#define MISC_UART1_MASK      0x00000028
-+#define MISC_UART2_MASK      0x00002100
-+
-+#define ISO_ISR_EN_OFFSET    0x40
-+#define ISO_ISR_OFFSET       0
-+#define ISO_ISR_UMSK_OFFSET  0x4
-+#define MISC_ISR_EN_OFFSET   0x80
-+#define MISC_ISR_OFFSET      0xc
-+#define MISC_ISR_UMSK_OFFSET 0x8
-+
-+enum rtd1619b_iso_isr_bits {
-+	RTD1619B_ISO_ISR_TC3_SHIFT	   = 1,
-+	RTD1619B_ISO_ISR_UR0_SHIFT	   = 2,
-+	RTD1619B_ISO_ISR_LSADC0_SHIFT	   = 3,
-+	RTD1619B_ISO_ISR_WDOG1_NMI_SHIFT   = 4,
-+	RTD1619B_ISO_ISR_IRDA_SHIFT	   = 5,
-+	RTD1619B_ISO_ISR_SPI1_SHIFT	   = 6,
-+	RTD1619B_ISO_ISR_WDOG2_NMI_SHIFT   = 7,
-+	RTD1619B_ISO_ISR_I2C0_SHIFT	   = 8,
-+	RTD1619B_ISO_ISR_TC4_SHIFT	   = 9,
-+	RTD1619B_ISO_ISR_TC7_SHIFT	   = 10,
-+	RTD1619B_ISO_ISR_I2C1_SHIFT	   = 11,
-+	RTD1619B_ISO_ISR_HIFI_WAKEUP_SHIFT = 14,
-+	RTD1619B_ISO_ISR_WDOG4_NMI_SHIFT   = 15,
-+	RTD1619B_ISO_ISR_TC8_SHIFT	   = 16,
-+	RTD1619B_ISO_ISR_VFD_SHIFT	   = 17,
-+	RTD1619B_ISO_ISR_VTC_SHIFT	   = 18,
-+	RTD1619B_ISO_ISR_GPIOA_SHIFT	   = 19,
-+	RTD1619B_ISO_ISR_GPIODA_SHIFT	   = 20,
-+	RTD1619B_ISO_ISR_ISO_MISC_SHIFT	   = 21,
-+	RTD1619B_ISO_ISR_CBUS_SHIFT	   = 22,
-+	RTD1619B_ISO_ISR_ETN_SHIFT	   = 23,
-+	RTD1619B_ISO_ISR_USB_HOST_SHIFT	   = 24,
-+	RTD1619B_ISO_ISR_USB_U3_DRD_SHIFT  = 25,
-+	RTD1619B_ISO_ISR_USB_U2_DRD_SHIFT  = 26,
-+	RTD1619B_ISO_ISR_WDOG3_NMI_SHIFT   = 27,
-+	RTD1619B_ISO_ISR_PORB_HV_CEN_SHIFT = 28,
-+	RTD1619B_ISO_ISR_PORB_DV_CEN_SHIFT = 29,
-+	RTD1619B_ISO_ISR_PORB_AV_CEN_SHIFT = 30,
-+	RTD1619B_ISO_ISR_I2C1_REQ_SHIFT	   = 31,
-+};
-+
-+static const u32 rtd1619b_iso_isr_to_scpu_int_en_mask[32] = {
-+	[RTD1619B_ISO_ISR_SPI1_SHIFT]	     = BIT(1),
-+	[RTD1619B_ISO_ISR_UR0_SHIFT]	     = BIT(2),
-+	[RTD1619B_ISO_ISR_LSADC0_SHIFT]	     = BIT(3),
-+	[RTD1619B_ISO_ISR_IRDA_SHIFT]	     = BIT(5),
-+	[RTD1619B_ISO_ISR_I2C0_SHIFT]	     = BIT(8),
-+	[RTD1619B_ISO_ISR_I2C1_SHIFT]	     = BIT(11),
-+	[RTD1619B_ISO_ISR_VFD_SHIFT]	     = BIT(17),
-+	[RTD1619B_ISO_ISR_GPIOA_SHIFT]	     = BIT(19),
-+	[RTD1619B_ISO_ISR_GPIODA_SHIFT]	     = BIT(20),
-+	[RTD1619B_ISO_ISR_PORB_HV_CEN_SHIFT] = BIT(28),
-+	[RTD1619B_ISO_ISR_PORB_DV_CEN_SHIFT] = BIT(29),
-+	[RTD1619B_ISO_ISR_PORB_AV_CEN_SHIFT] = BIT(30),
-+	[RTD1619B_ISO_ISR_I2C1_REQ_SHIFT]    = BIT(31),
-+	[RTD1619B_ISO_ISR_WDOG1_NMI_SHIFT]   = IRQ_ALWAYS_ENABLED,
-+	[RTD1619B_ISO_ISR_WDOG2_NMI_SHIFT]   = IRQ_ALWAYS_ENABLED,
-+	[RTD1619B_ISO_ISR_WDOG3_NMI_SHIFT]   = IRQ_ALWAYS_ENABLED,
-+	[RTD1619B_ISO_ISR_WDOG4_NMI_SHIFT]   = IRQ_ALWAYS_ENABLED,
-+};
-+
-+enum rtd1619b_misc_isr_bits {
-+	RTD1619B_ISR_UR1_SHIFT	  = 3,
-+	RTD1619B_ISR_TC5_SHIFT	  = 4,
-+	RTD1619B_ISR_UR1_TO_SHIFT = 5,
-+	RTD1619B_ISR_TC0_SHIFT	  = 6,
-+	RTD1619B_ISR_TC1_SHIFT	  = 7,
-+	RTD1619B_ISR_UR2_SHIFT	  = 8,
-+	RTD1619B_ISR_UR2_TO_SHIFT = 13,
-+	RTD1619B_ISR_I2C5_SHIFT	  = 14,
-+	RTD1619B_ISR_I2C4_SHIFT	  = 15,
-+	RTD1619B_ISR_I2C3_SHIFT	  = 23,
-+	RTD1619B_ISR_SC0_SHIFT	  = 24,
-+	RTD1619B_ISR_SC1_SHIFT	  = 25,
-+	RTD1619B_ISR_SPI_SHIFT	  = 27,
-+	RTD1619B_ISR_FAN_SHIFT	  = 29,
-+};
-+
-+static const u32 rtd1619b_misc_isr_to_scpu_int_en_mask[32] = {
-+	[RTD1619B_ISR_UR1_SHIFT]    = BIT(3),
-+	[RTD1619B_ISR_UR1_TO_SHIFT] = BIT(5),
-+	[RTD1619B_ISR_UR2_TO_SHIFT] = BIT(6),
-+	[RTD1619B_ISR_UR2_SHIFT]    = BIT(7),
-+	[RTD1619B_ISR_I2C5_SHIFT]   = BIT(14),
-+	[RTD1619B_ISR_I2C4_SHIFT]   = BIT(15),
-+	[RTD1619B_ISR_SC0_SHIFT]    = BIT(24),
-+	[RTD1619B_ISR_SC1_SHIFT]    = BIT(25),
-+	[RTD1619B_ISR_SPI_SHIFT]    = BIT(27),
-+	[RTD1619B_ISR_I2C3_SHIFT]   = BIT(28),
-+	[RTD1619B_ISR_FAN_SHIFT]    = BIT(29),
-+};
-+
-+static struct realtek_intc_mask rtd1619b_intc_iso_cfgs[] = {
-+	{ ISO_NORMAL_MASK, },
-+	{ ISO_NMI_WDT_MASK, },
-+};
-+
-+static const struct realtek_intc_info rtd1619b_intc_iso_info = {
-+	.isr_offset		 = ISO_ISR_OFFSET,
-+	.scpu_int_en_offset	 = ISO_ISR_EN_OFFSET,
-+	.isr_to_scpu_int_en_mask = rtd1619b_iso_isr_to_scpu_int_en_mask,
-+	.subset_mask		 = rtd1619b_intc_iso_cfgs,
-+	.subset_num		 = ARRAY_SIZE(rtd1619b_intc_iso_cfgs),
-+};
-+
-+static struct realtek_intc_mask rtd1619b_intc_misc_cfgs[] = {
-+	{ MISC_NORMAL_MASK, },
-+	{ MISC_UART1_MASK, },
-+	{ MISC_UART2_MASK, },
-+};
-+
-+static const struct realtek_intc_info rtd1619b_intc_misc_info = {
-+	.isr_offset		 = MISC_ISR_OFFSET,
-+	.scpu_int_en_offset	 = MISC_ISR_EN_OFFSET,
-+	.isr_to_scpu_int_en_mask = rtd1619b_misc_isr_to_scpu_int_en_mask,
-+	.subset_mask		 = rtd1619b_intc_misc_cfgs,
-+	.subset_num		 = ARRAY_SIZE(rtd1619b_intc_misc_cfgs),
-+};
-+
-+static const struct of_device_id realtek_intc_rtd1619b_dt_matches[] = {
-+	{
-+		.compatible = "realtek,rtd1619b-intc-iso",
-+		.data = &rtd1619b_intc_iso_info,
-+	}, {
-+		.compatible = "realtek,rtd1619b-intc-misc",
-+		.data = &rtd1619b_intc_misc_info,
-+	},
-+	{ /* sentinel */ }
-+};
-+
-+static const struct dev_pm_ops realtek_intc_rtd1619b_pm_ops = {
-+	.suspend_noirq = realtek_intc_suspend,
-+	.resume_noirq  = realtek_intc_resume,
-+};
-+
-+static int rtd1619b_intc_probe(struct platform_device *pdev)
-+{
-+	const struct realtek_intc_info *info;
-+
-+	info = of_device_get_match_data(&pdev->dev);
-+	if (!info)
-+		return -EINVAL;
-+
-+	return realtek_intc_probe(pdev, info);
-+}
-+
-+static struct platform_driver realtek_intc_rtd1619b_driver = {
-+	.probe = rtd1619b_intc_probe,
-+	.driver = {
-+		.name = "realtek_intc_rtd1619b",
-+		.of_match_table = realtek_intc_rtd1619b_dt_matches,
-+		.suppress_bind_attrs = true,
-+		.pm = &realtek_intc_rtd1619b_pm_ops,
-+	},
-+};
-+
-+static int __init realtek_intc_rtd1619b_init(void)
-+{
-+	return platform_driver_register(&realtek_intc_rtd1619b_driver);
-+}
-+module_init(realtek_intc_rtd1619b_init);
-+
-+static void __exit realtek_intc_rtd1619b_exit(void)
-+{
-+	platform_driver_unregister(&realtek_intc_rtd1619b_driver);
-+}
-+module_exit(realtek_intc_rtd1619b_exit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("Realtek RTD1619B Interrupt Controller Driver");
--- 
-2.25.1
-
+SSBnb3QgaXQgdGVzdGVkIGJ5IGEgcGVyc29uIGFuZCBKb2hhbidzIHBhdGNoIHdvcmtzLg0KDQo+
+IE9uIDI3LURlYy0yMDIzLCBhdCA0OjA14oCvUE0sIEpvaGFuIEhvdm9sZCA8am9oYW5Aa2VybmVs
+Lm9yZz4gd3JvdGU6DQo+IA0KPiDvu79PbiBNb24sIERlYyAyNSwgMjAyMyBhdCAwMzoyMTowNFBN
+IC0wNTAwLCBGZWxpeCBaaGFuZyB3cm90ZToNCj4+IFN0YXJ0aW5nIHY2LjUsIEJsdWV0b290aCBk
+b2VzIG5vdCB3b3JrIGF0IGFsbCBvbiBteSBUMg0KPj4gTWFjQm9va0FpcjksMSB3aXRoIHRoZSBC
+Q000Mzc3IGNoaXAuICBXaGVuIEkgYm9vdCB1cCB0aGUgY29tcHV0ZXIsDQo+PiBnbyBpbnRvIGJs
+dWV0b290aGN0bCwgYW5kIHRoZW4gdHJ5IHRvIHJ1biBjb21tYW5kcyBsaWtlIHNjYW4gb24sDQo+
+PiBzaG93LCBsaXN0LCBpdCByZXR1cm5zICJObyBkZWZhdWx0IGNvbnRyb2xsZXIgYXZhaWxhYmxl
+LiIgIEkgaGF2ZQ0KPj4gdHJpZWQgcmVsb2FkaW5nIHRoZSBrZXJuZWwgbW9kdWxlLCBpbiB3aGlj
+aCB0aGUgbG9nIG91dHB1dHMNCj4+ICJ7QWRkZWQsUmVtb3ZlZH0gaGNpMCAodW5jb25maWd1cmVk
+KS4iICBXaXRoIHRoaXMgcGF0Y2gsIEkNCj4+IGFtIGFibGUgdG8gdXNlIEJsdWV0b290aCBhcyBu
+b3JtYWwgd2l0aG91dCBhbnkgZXJyb3JzIHJlZ2FyZGluZw0KPj4gaGNpMCBiZWluZyB1bmNvbmZp
+Z3VyZWQuICBIb3dldmVyLCBhbiBpc3N1ZSBpcyBzdGlsbCBwcmVzZW50DQo+PiB3aGVyZSBzb21l
+dGltZXMgaGNpX2JjbTQzNzcgd2lsbCBoYXZlIHRvIGJlIHJlbG9hZGVkIGluIG9yZGVyIHRvDQo+
+PiBnZXQgYmx1ZXRvb3RoIHRvIHdvcmsuICBJIGJlbGlldmUgdGhpcyB3YXMgc3RpbGwgcHJlc2Vu
+dCBiZWZvcmUNCj4+IHRoZSBwcmV2aW91c2x5IG1lbnRpb25lZCBjb21taXQuDQo+PiANCj4+IEkg
+d291bGQgYWxzbyBsaWtlIHRvIHRoYW5rIEtlcmVtIEthcmFiYXkgPGtla3JieUBnbWFpbC5jb20+
+IGZvcg0KPj4gYXNzaXN0aW5nIG1lIHdpdGggdGhpcyBwYXRjaC4NCj4+IA0KPj4gRml4ZXM6IDY5
+NDU3OTViYzgxYSAoIkJsdWV0b290aDogZml4IHVzZS1iZGFkZHItcHJvcGVydHkgcXVpcmsiKQ0K
+Pj4gQ2M6IDxzdGFibGVAdmdlci5rZXJuZWwub3JnPg0KPj4gU2lnbmVkLW9mZi1ieTogRmVsaXgg
+WmhhbmcgPG1ybWFuQG1ybWFuMzE0LnRlY2g+DQo+PiAtLS0NCj4+IHY0Og0KPj4gKiBBZGp1c3Qg
+dGhlIGZvcm1hdCB0byBwYXNzIHRoZSBDSSAoYWdhaW4pLg0KPj4gKiBTaG9ydGVuIGRlc2NyaXB0
+aW9uDQo+IA0KPiBBcyBleHBsYWluZWQgaGVyZToNCj4gDQo+ICAgIGh0dHBzOi8vbG9yZS5rZXJu
+ZWwub3JnL2FsbC9aWXY4dHAzZk1pQXFLOE9JQGhvdm9sZGNvbnN1bHRpbmcuY29tLw0KPiANCj4g
+SSBkb24ndCB0aGlzIGlzIG5lY2Vzc2FyaWx5IHRoZSByaWdodCBmaXguIFRoZSBCRF9BRERSIHF1
+aXJrIHByb3BlcnR5DQo+IHNob3VsZCBub3QgYmUgc2V0IHVuY29uZGl0aW9uYWxseSBidXQgaXQg
+aXMgc3RpbGwgbmVlZGVkIGZvciBkZXZpY2VzDQo+IHRoYXQgbGFjayBzdG9yYWdlIGZvciBhIHVu
+aXF1ZSBkZXZpY2UgYWRkcmVzcy4NCj4gDQo+IFNvIHRoZSBmb2xsb3dpbmcgZml4IGlzIG5lZWRl
+ZCBlaXRoZXIgd2F5IGFuZCBpcyBwcm9iYWJseSBhbGwgdGhhdCBpcw0KPiBuZWVkZWQgaGVyZToN
+Cj4gDQo+ICAgIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvMjAyMzEyMjcxMDEwMDMuMTA1
+MzQtMS1qb2hhbitsaW5hcm9Aa2VybmVsLm9yZy8NCj4gDQo+IEpvaGFuDQo=
