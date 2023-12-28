@@ -1,78 +1,54 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5A6279C6
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 11:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A2072F4;
-	Thu, 28 Dec 2023 03:54:49 -0800 (PST)
-Received: from bogus (unknown [10.57.74.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 71CFC3F5A1;
-	Thu, 28 Dec 2023 03:54:01 -0800 (PST)
-Date: Thu, 28 Dec 2023 11:50:53 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>
-Subject: Re: [PATCH 2/2] firmware/psci: Set
- pm_set_resume/suspend_via_firmware() on qcom
-Message-ID: <20231228115053.zlypgc5uxxvghi4a@bogus>
-References: <20231227-topic-psci_fw_sus-v1-0-6910add70bf3@linaro.org>
- <20231227-topic-psci_fw_sus-v1-2-6910add70bf3@linaro.org>
- <20231228102801.fzaubcjq5thfwgxg@bogus>
- <f34dd5de-9e56-4c58-b9bf-2356b41d17b1@linaro.org>
+Received: from mail115-80.sinamail.sina.com.cn (mail115-80.sinamail.sina.com.cn [218.30.115.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E11B7461
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 11:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([116.24.9.182])
+	by sina.com (10.75.12.45) with ESMTP
+	id 658D627100007CA9; Thu, 28 Dec 2023 19:56:37 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 29396431457300
+X-SMAIL-UIID: AEBE18E176FC4779AA7014AB7BFF9B11-20231228-195637-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+59dcc2e7283a6f5f5ba1@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [dri?] WARNING in drm_prime_destroy_file_private (2)
+Date: Thu, 28 Dec 2023 19:56:25 +0800
+Message-Id: <20231228115625.1757-1-hdanton@sina.com>
+In-Reply-To: <000000000000f4faa2060d83f582@google.com>
+References: <000000000000f4faa2060d83f582@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f34dd5de-9e56-4c58-b9bf-2356b41d17b1@linaro.org>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Dec 28, 2023 at 12:47:51PM +0100, Konrad Dybcio wrote:
-> On 28.12.2023 11:28, Sudeep Holla wrote:
-> > On Wed, Dec 27, 2023 at 11:15:31PM +0100, Konrad Dybcio wrote:
-> >> Most Qualcomm platforms implementing PSCI (ab)use CPU_SUSPEND for
-> >> entering various stages of suspend, across the SoC. These range from a
-> >> simple WFI to a full-fledged power collapse of the entire chip
-> >> (mostly, anyway).
-> >>
-> >> Some device drivers are curious to know whether "the firmware" (which is
-> >> often assumed to be ACPI) takes care of suspending or resuming the
-> >> platform. Set the flag that reports this behavior on the aforementioned
-> >> chips.
-> >>
-> >> Some newer Qualcomm chips ship with firmware that actually advertises
-> >> PSCI SYSTEM_SUSPEND, so the compatible list should only grow slightly.
-> >>
-> > 
-> > NACK, just use suspend-to-idle if SYSTEM_SUSPEND is not advertised. It is
-> > designed for such platforms especially on x86/ACPI which don't advertise
-> > Sx states. I see no reason why that doesn't work on ARM platforms as well.
->
-> Not sure if I got the message through well, but the bottom line is, on
-> Qualcomm platforms the "idle" states aren't actually just "idle" (read:
-> they're not like S0ix). All but the most shallow ones shut down quite a
-> chunk of the entire SoC, with the lowest ones being essentially S3 with
-> power being cut off from the entire chip, except for the memory rail.
->
+On Wed, 27 Dec 2023 12:51:18 -0800
+> HEAD commit:    5254c0cbc92d Merge tag 'block-6.7-2023-12-22' of git://git..
+> git tree:       upstream
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=155d5fd6e80000
 
-No I understood that and S2I is exactly what you need.
-Have you checked if S2I already works as intended on these platforms ?
-What extra do you achieve with this hack by advertising fake S2R ?
-S2I will have less latency compared to S2R and the mem_sleep will be
-automatically set to S2I if S2R is not supported, so no userspace impact
-as well.
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  master
 
-So please let us know what this change provide extra over S2I ? Until
-then my NACK still stands.
-
+--- x/drivers/gpu/drm/drm_file.c
++++ y/drivers/gpu/drm/drm_file.c
+@@ -287,6 +287,7 @@ void drm_file_free(struct drm_file *file
+ 	if (dev->driver->postclose)
+ 		dev->driver->postclose(dev, file);
+ 
++	drm_gem_release(dev, file);
+ 	drm_prime_destroy_file_private(&file->prime);
+ 
+ 	WARN_ON(!list_empty(&file->event_list));
 --
-Regards,
-Sudeep
