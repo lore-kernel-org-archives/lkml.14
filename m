@@ -1,34 +1,81 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F8210946;
-	Thu, 28 Dec 2023 12:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4T17pr3CZQz4f3lDJ;
-	Thu, 28 Dec 2023 20:58:12 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id DDF2B1A017F;
-	Thu, 28 Dec 2023 20:58:17 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgBHlQvmcI1lvcx3Ew--.36075S7;
-	Thu, 28 Dec 2023 20:58:17 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: song@kernel.org,
-	yukuai3@huawei.com,
-	neilb@suse.de
-Cc: linux-raid@vger.kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98EB10A28
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 12:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mkk3Pw39"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-50e80d40a41so2739913e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 04:58:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703768301; x=1704373101; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nshL/2BWW/EmympyN/DOS/o4W55HuW8fqdS5mFUVUCI=;
+        b=mkk3Pw39fpmwTjMyLFLDajaq7IFSKoh6S8NF5IWmxPF0e5N6KLtL8xDyJUzfAecCrp
+         FTpQbHEKN5xytknfDzurqYBORK8KoydCFJhkNc4hjLSOY+38T7pXN8rT6TvY4WlvDB/2
+         WG/a9PvTTeoMUl11PtTUV6nsArmOVZ3Beghc/2BQXiA5IS77eqjanHeci+dezSM+XAX2
+         XHGCAGkR/fmc6TTZE9147e7S4czbFX2ry/lXYqoItWDb6+6zW3QGxD78Hwoml/8O16OS
+         NieEe8ks2/gcnG1uKiVJ04dBWXpsxpF5w7Y2GS2fkFIh69YDnEEDO179WGhk/rClHTYW
+         9uIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703768301; x=1704373101;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nshL/2BWW/EmympyN/DOS/o4W55HuW8fqdS5mFUVUCI=;
+        b=RhQEogYz6KWhWq45EO98RqgVL0eSV6eF/CLC5qbtjp3Firf/BJBiRemMM6MnwWqdNl
+         AKkXDTGnjRQVndnB1dqm1YTY28GD/oAn31GjdFxIyKabD5fI6CdZgcXld+J4CR9hcZ8v
+         L1kh33az+JCkDzgAgOHde1twWHFGiSkDuKr/Uf3HpgCOKKV3MD33pOeu0ealHDPif5pH
+         UXPlFs5u/v/FgM6NQ5lCBF1+7QKfk+0ZPlpaPv7UykAfZ/HIxx0uQEPTzTE8mreQOoZi
+         sXcKoognLg9p7o2CcD+fctcbgrg94BfuJEeMdY93MwstuZMnKD1DQUDCOD5ku8JhYKDr
+         65gQ==
+X-Gm-Message-State: AOJu0YxkXzzwcCt7dcSBg5ETfLPdz8yV0PFyFeSuPAgaNpjqCq1AZQ9R
+	LT2+4A8YrBmh9gM1v/x8SDB3RQ3yZckdJg==
+X-Google-Smtp-Source: AGHT+IH1ngv6ejaU7/1CPrITKymTsj3xR3AtePeUh+QgKGYoFnMU100TN5ELJ0cgjYZTMENP3QXhKg==
+X-Received: by 2002:a05:6512:348c:b0:50e:7c73:f4f3 with SMTP id v12-20020a056512348c00b0050e7c73f4f3mr2253161lfr.9.1703768301689;
+        Thu, 28 Dec 2023 04:58:21 -0800 (PST)
+Received: from ta2.c.googlers.com.com (216.131.76.34.bc.googleusercontent.com. [34.76.131.216])
+        by smtp.gmail.com with ESMTPSA id h9-20020a05600c350900b0040d5aca25f1sm8615807wmq.17.2023.12.28.04.58.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Dec 2023 04:58:21 -0800 (PST)
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+To: peter.griffin@linaro.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	conor+dt@kernel.org,
+	andi.shyti@kernel.org,
+	alim.akhtar@samsung.com,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	s.nawrocki@samsung.com,
+	tomasz.figa@gmail.com,
+	cw00.choi@samsung.com,
+	arnd@arndb.de,
+	semen.protsenko@linaro.org
+Cc: andre.draszik@linaro.org,
+	saravanak@google.com,
+	willmcvicker@google.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH -next 3/3] md: use interruptible apis in idle/frozen_sync_thread()
-Date: Thu, 28 Dec 2023 20:55:53 +0800
-Message-Id: <20231228125553.2697765-4-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231228125553.2697765-1-yukuai1@huaweicloud.com>
-References: <20231228125553.2697765-1-yukuai1@huaweicloud.com>
+	linux-i2c@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	kernel-team@android.com,
+	Tudor Ambarus <tudor.ambarus@linaro.org>
+Subject: [PATCH v2 11/12] arm64: dts: exynos: gs101: define USI8 with I2C configuration
+Date: Thu, 28 Dec 2023 12:58:04 +0000
+Message-ID: <20231228125805.661725-12-tudor.ambarus@linaro.org>
+X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
+In-Reply-To: <20231228125805.661725-1-tudor.ambarus@linaro.org>
+References: <20231228125805.661725-1-tudor.ambarus@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,236 +83,64 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBHlQvmcI1lvcx3Ew--.36075S7
-X-Coremail-Antispam: 1UD129KBjvJXoW3JFyrKFyfAFW3Aw13Jr4Utwb_yoWxury3p3
-	yIgF98Ar45JrZ3Zr4DK3WkAayrZw1IqayDtry7Wa4fJw1fKrsrKFyY9a4UZFykCa4rAw4U
-	Ja1rJF4fCFZ7Wr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9m14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxGrwCFx2
-	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
-	6r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
-	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
-	0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUd8n5UUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-From: Yu Kuai <yukuai3@huawei.com>
+USI8 I2C is used to communicate with an eeprom found on the battery
+connector. Define USI8 in I2C configuration.
 
-Before refactoring idle and frozen from action_store, interruptible apis
-is used so that hungtask warning won't be triggered if it takes too long
-to finish idle/frozen sync_thread. So change to use interruptible apis.
+USI8 CONFIG register comes with a 0x0 reset value, meaning that USI8
+doesn't have a default protocol (I2C, SPI, UART) at reset. Thus the
+selection of the protocol is intentionally left for the board dts file.
 
-In order not to make stop_sync_thread() more complicated, factor out a
-helper prepare_to_stop_sync_thread() to replace stop_sync_thread().
-
-Also return error to user if idle/frozen_sync_thread() failed, otherwise
-user will be misleaded.
-
-Fixes: 130443d60b1b ("md: refactor idle/frozen_sync_thread() to fix deadlock")
-Fixes: 8e8e2518fcec ("md: Close race when setting 'action' to 'idle'.")
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 ---
- drivers/md/md.c | 105 ++++++++++++++++++++++++++++++------------------
- 1 file changed, 67 insertions(+), 38 deletions(-)
+v2:
+- identify and use gate clocks instead of dividers
+- move cells and pinctrl properties from dts to dtsi
+- move IRQ type constant on the previous line
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 60f99768a1a9..9ea05de79fe4 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -4846,26 +4846,34 @@ action_show(struct mddev *mddev, char *page)
- 	return sprintf(page, "%s\n", type);
- }
+ arch/arm64/boot/dts/exynos/google/gs101.dtsi | 29 ++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+index 0e5b1b490b0b..c6ae33016992 100644
+--- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
++++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+@@ -354,6 +354,35 @@ pinctrl_peric0: pinctrl@10840000 {
+ 			interrupts = <GIC_SPI 625 IRQ_TYPE_LEVEL_HIGH 0>;
+ 		};
  
-+static bool sync_thread_stopped(struct mddev *mddev, int *sync_seq)
-+{
-+	if (!test_bit(MD_RECOVERY_RUNNING, &mddev->recovery))
-+		return true;
++		usi8: usi@109700c0 {
++			compatible = "google,gs101-usi",
++				     "samsung,exynos850-usi";
++			reg = <0x109700c0 0x20>;
++			ranges;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			clocks = <&cmu_peric0 CLK_GOUT_PERIC0_PERIC0_TOP0_IPCLK_7>,
++				 <&cmu_peric0 CLK_GOUT_PERIC0_CLK_PERIC0_USI8_USI_CLK>;
++			clock-names = "pclk", "ipclk";
++			samsung,sysreg = <&sysreg_peric0 0x101c>;
++			status = "disabled";
 +
-+	if (sync_seq && *sync_seq != atomic_read(&mddev->sync_seq))
-+		return true;
++			hsi2c_8: i2c@10970000 {
++				compatible = "google,gs101-hsi2c",
++					     "samsung,exynosautov9-hsi2c";
++				reg = <0x10970000 0xc0>;
++				interrupts = <GIC_SPI 642 IRQ_TYPE_LEVEL_HIGH 0>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&hsi2c8_bus>;
++				clocks = <&cmu_peric0 CLK_GOUT_PERIC0_PERIC0_TOP0_IPCLK_7>,
++					 <&cmu_peric0 CLK_GOUT_PERIC0_CLK_PERIC0_USI8_USI_CLK>;
++				clock-names = "hsi2c", "hsi2c_pclk";
++				status = "disabled";
++			};
++		};
 +
-+	return false;
-+}
-+
- /**
-- * stop_sync_thread() - wait for sync_thread to stop if it's running.
-+ * prepare_to_stop_sync_thread() - prepare to stop sync_thread if it's running.
-  * @mddev:	the array.
-- * @locked:	if set, reconfig_mutex will still be held after this function
-- *		return; if not set, reconfig_mutex will be released after this
-- *		function return.
-- * @check_seq:	if set, only wait for curent running sync_thread to stop, noted
-- *		that new sync_thread can still start.
-+ * @unlock:	whether or not caller want to release reconfig_mutex if
-+ *		sync_thread is not running.
-+ *
-+ * Return true if sync_thread is running, release reconfig_mutex and do
-+ * preparatory work to stop sync_thread, caller should wait for
-+ * sync_thread_stopped() to return true. Return false if sync_thread is not
-+ * running, reconfig_mutex will be released if @unlock is set.
-  */
--static void stop_sync_thread(struct mddev *mddev, bool locked, bool check_seq)
-+static bool prepare_to_stop_sync_thread(struct mddev *mddev, bool unlock)
- {
--	int sync_seq;
--
--	if (check_seq)
--		sync_seq = atomic_read(&mddev->sync_seq);
--
- 	if (!test_bit(MD_RECOVERY_RUNNING, &mddev->recovery)) {
--		if (!locked)
-+		if (unlock)
- 			mddev_unlock(mddev);
--		return;
-+		return false;
- 	}
- 
- 	mddev_unlock(mddev);
-@@ -4879,53 +4887,67 @@ static void stop_sync_thread(struct mddev *mddev, bool locked, bool check_seq)
- 	if (work_pending(&mddev->sync_work))
- 		flush_work(&mddev->sync_work);
- 
--	wait_event(resync_wait,
--		   !test_bit(MD_RECOVERY_RUNNING, &mddev->recovery) ||
--		   (check_seq && sync_seq != atomic_read(&mddev->sync_seq)));
--
--	if (locked)
--		mddev_lock_nointr(mddev);
-+	return true;
- }
- 
--static void idle_sync_thread(struct mddev *mddev)
-+static int idle_sync_thread(struct mddev *mddev)
- {
--	mutex_lock(&mddev->sync_mutex);
-+	int sync_seq = atomic_read(&mddev->sync_seq);
-+	int err = mutex_lock_interruptible(&mddev->sync_mutex);
-+
-+	if (err)
-+		return err;
- 	clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
- 
--	if (mddev_lock(mddev)) {
-+	err = mddev_lock(mddev);
-+	if (err) {
- 		mutex_unlock(&mddev->sync_mutex);
--		return;
-+		return err;
- 	}
- 
--	stop_sync_thread(mddev, false, true);
-+	if (prepare_to_stop_sync_thread(mddev, true))
-+		err = wait_event_interruptible(resync_wait,
-+			   sync_thread_stopped(mddev, &sync_seq));
-+
- 	mutex_unlock(&mddev->sync_mutex);
-+
-+	return err;
- }
- 
--static void frozen_sync_thread(struct mddev *mddev)
-+static int frozen_sync_thread(struct mddev *mddev)
- {
--	mutex_lock(&mddev->sync_mutex);
-+	int err = mutex_lock_interruptible(&mddev->sync_mutex);
-+
-+	if (err)
-+		return err;
- 	set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
- 
--	if (mddev_lock(mddev)) {
-+	err = mddev_lock(mddev);
-+	if (err) {
- 		mutex_unlock(&mddev->sync_mutex);
--		return;
-+		return err;
- 	}
- 
--	stop_sync_thread(mddev, false, false);
-+	if (prepare_to_stop_sync_thread(mddev, true))
-+		err = wait_event_interruptible(resync_wait,
-+			   sync_thread_stopped(mddev, NULL));
- 	mutex_unlock(&mddev->sync_mutex);
-+
-+	return err;
- }
- 
- static ssize_t
- action_store(struct mddev *mddev, const char *page, size_t len)
- {
-+	int err = 0;
-+
- 	if (!mddev->pers || !mddev->pers->sync_request)
- 		return -EINVAL;
- 
--
- 	if (cmd_match(page, "idle"))
--		idle_sync_thread(mddev);
-+		err = idle_sync_thread(mddev);
- 	else if (cmd_match(page, "frozen"))
--		frozen_sync_thread(mddev);
-+		err = frozen_sync_thread(mddev);
- 	else if (test_bit(MD_RECOVERY_RUNNING, &mddev->recovery))
- 		return -EBUSY;
- 	else if (cmd_match(page, "resync"))
-@@ -4934,7 +4956,6 @@ action_store(struct mddev *mddev, const char *page, size_t len)
- 		clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
- 		set_bit(MD_RECOVERY_RECOVER, &mddev->recovery);
- 	} else if (cmd_match(page, "reshape")) {
--		int err;
- 		if (mddev->pers->start_reshape == NULL)
- 			return -EINVAL;
- 		err = mddev_lock(mddev);
-@@ -4980,7 +5001,7 @@ action_store(struct mddev *mddev, const char *page, size_t len)
- 	set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
- 	md_wakeup_thread(mddev->thread);
- 	sysfs_notify_dirent_safe(mddev->sysfs_action);
--	return len;
-+	return err ? err : len;
- }
- 
- static struct md_sysfs_entry md_scan_mode =
-@@ -6280,7 +6301,11 @@ static void md_clean(struct mddev *mddev)
- 
- static void __md_stop_writes(struct mddev *mddev)
- {
--	stop_sync_thread(mddev, true, false);
-+	if (prepare_to_stop_sync_thread(mddev, false)) {
-+		wait_event(resync_wait, sync_thread_stopped(mddev, NULL));
-+		mddev_lock_nointr(mddev);
-+	}
-+
- 	del_timer_sync(&mddev->safemode_timer);
- 
- 	if (mddev->pers && mddev->pers->quiesce) {
-@@ -6369,7 +6394,8 @@ static int md_set_readonly(struct mddev *mddev, struct block_device *bdev)
- 		set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
- 	}
- 
--	stop_sync_thread(mddev, false, false);
-+	if (prepare_to_stop_sync_thread(mddev, true))
-+		wait_event(resync_wait, sync_thread_stopped(mddev, NULL));
- 	wait_event(mddev->sb_wait,
- 		   !test_bit(MD_SB_CHANGE_PENDING, &mddev->sb_flags));
- 	mddev_lock_nointr(mddev);
-@@ -6421,7 +6447,10 @@ static int do_md_stop(struct mddev *mddev, int mode,
- 		set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
- 	}
- 
--	stop_sync_thread(mddev, true, false);
-+	if (prepare_to_stop_sync_thread(mddev, false)) {
-+		wait_event(resync_wait, sync_thread_stopped(mddev, NULL));
-+		mddev_lock_nointr(mddev);
-+	}
- 
- 	mutex_lock(&mddev->open_mutex);
- 	if ((mddev->pers && atomic_read(&mddev->openers) > !!bdev) ||
+ 		usi_uart: usi@10a000c0 {
+ 			compatible = "google,gs101-usi",
+ 				     "samsung,exynos850-usi";
 -- 
-2.39.2
+2.43.0.472.g3155946c3a-goog
 
