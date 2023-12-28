@@ -1,47 +1,47 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A4563CD
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 01:42:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7DD8C0A
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 01:42:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="R36n+Nhx"
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3bbd11777c2so97071b6e.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 17:42:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="BelVkE1g"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6d9af1f12d5so2545809b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 17:42:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1703727755; x=1704332555; darn=vger.kernel.org;
+        d=sifive.com; s=google; t=1703727758; x=1704332558; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7lB3PwOsXsU0eA+wVy54fia689m8tbEsIcyHsrS82lA=;
-        b=R36n+Nhxv2ci/t7udVXZLBbXXNdq+2qk4+dSW/KR48C9REzX+GNf1WuMlFuHzE7AJI
-         Bt0QG4ouo5TvpSX+PpCTXpBeYh8XO2hG0TXxZJG4H2zHNHZkQGoz5mUBDiu769b5X+Xm
-         G9Za+MuMqsJrE8IE4gJ9M1oGSTc5W7TeQin1Hml5GpqosqXr/dhyqeQ4CfK4GC3gxP4o
-         kNtOA8oHTB6nkFG9pqDpnkAG5F+TUMxovUVHoa0yUZMUWrBD8l8mxmJIKeVMWxR1Lv09
-         8eaD7oFgk3Wicha4tbOy4PjIxdbVjFLLjlZ39QsF07AaEnfX8sO29FMOYW+AoftaRl+W
-         7T7g==
+        bh=C2MND6WwIohPzgleMTaIy0ci/VPA95sqr1KaUSNr79k=;
+        b=BelVkE1gP+ExM/Q1wxZRzHWTPmAX9hejhcDS/DdsfhMuiNXUUN21wJ7qaIQMr2VEYw
+         OL8jL7/1pKXo+qtIKXYSvCTglFODibzGqQv0aW8wTgo5rxdfHR1dVqPoDWLiHjAbxU1i
+         4duCMKJTh562W2jiY692tdqEMNub3rEK713diQW9Wa0XsuJdJGNvUM7fX8sDT6pEi6qi
+         62i18E65meJ/pt3+NzS6yERSy3/tMobdVf7EyoWEaHt7IOpdndlDukkW1qEm6kQFqNoK
+         E2xupJVjmZHLjIbBdiAK3OAMw/DT5AxzLcuxqmyb2dcDFKBGTQHShJ4F+xCP2GHy5MqH
+         tZHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703727755; x=1704332555;
+        d=1e100.net; s=20230601; t=1703727758; x=1704332558;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7lB3PwOsXsU0eA+wVy54fia689m8tbEsIcyHsrS82lA=;
-        b=e9uAWfbmnJ0/2TcZhdPz/G26tQHLIiVO28j50SbJ411G7hIJCZ4dPudmP3NmPp6b31
-         +wmaNYS+o18HSsQJrOwiSgOAIQ9DCVoAF7+p8vX3gyw8YSqkGlEigxQDaFvMK+2LIrh+
-         xNjer/C9lKPJ9sez7auE7I/447vKwYH0W9Msvd62y+2qh+fUuMiTUSJsUzmFjpxq86v6
-         Qf0Ev4LzMZMr+fd6OoAwJPExG1kPZLDaTaEwwcndsxblDdut3O7cxIUgpiqlx9BJb6cz
-         8zaRSbvHJcjsnrQVYnPMn9m96ob2XA7UTKL35l+TZ5sDylVSgD012g1mxBRtdtmW87TK
-         4gpw==
-X-Gm-Message-State: AOJu0YwkSShGfHDRPwVIK5WCHkOfSJEuYqft0KofHIHZLc+F8pwoVvNV
-	8/ywzVtYAYGfLqEVfnVbhGPqhr9AwVLQDg==
-X-Google-Smtp-Source: AGHT+IGOumGBELysHMV6R76DMfrPeDaWnM5H7Bg8VEJaO8mkFNmjt6T/b5crzc3IAojRuB/OVWCSfQ==
-X-Received: by 2002:a05:6358:9213:b0:174:cf3a:749 with SMTP id d19-20020a056358921300b00174cf3a0749mr9824262rwb.36.1703727755495;
-        Wed, 27 Dec 2023 17:42:35 -0800 (PST)
+        bh=C2MND6WwIohPzgleMTaIy0ci/VPA95sqr1KaUSNr79k=;
+        b=PqOkovbQwg6Pox9dwhUoaYKIGhD60zpjZg5N2aFkxGyeTFPCmEBG+gj/+hSBRC2Qbk
+         9PLKINIhPDVZ8fyJZ01TndRr94tuPomrS+5IKL+vbExM8GwhRV59h7ICr7GVl3YdaqhJ
+         UzM68igLO1sVRaoOqfjdVT8BPNuOw4HH0M1WkhvdEyto0LRSOICS3F/GHYYAKK5k/UvU
+         obBSANZdN+g4ULWtThPXux9FlNfDf7BVhMuGUkIMefNDfAUgZT475LT6KxX82g0c1dUO
+         SiqDmMaTVZA2CpafQtrCiTcvljqgFnMf2na87kdo2j8Y3BQAVaOE1SwFQIYL/L0NYJp9
+         VUPQ==
+X-Gm-Message-State: AOJu0YwlmFc9IFpVtxhI9UXfztYW+smv0v8MGY1XwET45hrY/n5J0gZs
+	mJGtDyeela2GoCh3PLDRqd0WlJNWoItKVg==
+X-Google-Smtp-Source: AGHT+IH4D4FaW8lrpY0h3DIECH6biPm9X1kKWi/cQ/HZeBKv8oGcxXHDhKYBxQb0RNGiiNPH0EgWyA==
+X-Received: by 2002:a05:6a20:7fa9:b0:195:105d:f40f with SMTP id d41-20020a056a207fa900b00195105df40fmr11064267pzj.81.1703727758078;
+        Wed, 27 Dec 2023 17:42:38 -0800 (PST)
 Received: from sw06.internal.sifive.com ([4.53.31.132])
-        by smtp.gmail.com with ESMTPSA id g24-20020aa78758000000b006d49ed3effasm7335440pfo.63.2023.12.27.17.42.34
+        by smtp.gmail.com with ESMTPSA id g24-20020aa78758000000b006d49ed3effasm7335440pfo.63.2023.12.27.17.42.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Dec 2023 17:42:35 -0800 (PST)
+        Wed, 27 Dec 2023 17:42:37 -0800 (PST)
 From: Samuel Holland <samuel.holland@sifive.com>
 To: linux-arm-kernel@lists.infradead.org,
 	linuxppc-dev@lists.ozlabs.org,
@@ -53,9 +53,9 @@ Cc: loongarch@lists.linux.dev,
 	amd-gfx@lists.freedesktop.org,
 	linux-arch@vger.kernel.org,
 	Samuel Holland <samuel.holland@sifive.com>
-Subject: [PATCH v2 10/14] riscv: Add support for kernel-mode FPU
-Date: Wed, 27 Dec 2023 17:42:00 -0800
-Message-ID: <20231228014220.3562640-11-samuel.holland@sifive.com>
+Subject: [PATCH v2 12/14] drm/amd/display: Use ARCH_HAS_KERNEL_FPU_SUPPORT
+Date: Wed, 27 Dec 2023 17:42:02 -0800
+Message-ID: <20231228014220.3562640-13-samuel.holland@sifive.com>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20231228014220.3562640-1-samuel.holland@sifive.com>
 References: <20231228014220.3562640-1-samuel.holland@sifive.com>
@@ -67,119 +67,186 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This is motivated by the amdgpu DRM driver, which needs floating-point
-code to support recent hardware. That code is not performance-critical,
-so only provide a minimal non-preemptible implementation for now.
+Now that all previously-supported architectures select
+ARCH_HAS_KERNEL_FPU_SUPPORT, this code can depend on that symbol instead
+of the existing list of architectures. It can also take advantage of the
+common kernel-mode FPU API and method of adjusting CFLAGS.
 
 Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 ---
 
 Changes in v2:
- - Remove RISC-V architecture-specific preprocessor check
+ - Split altivec removal to a separate patch
+ - Use linux/fpu.h instead of asm/fpu.h in consumers
 
- arch/riscv/Kconfig                  |  1 +
- arch/riscv/Makefile                 |  3 +++
- arch/riscv/include/asm/fpu.h        | 16 ++++++++++++++++
- arch/riscv/kernel/Makefile          |  1 +
- arch/riscv/kernel/kernel_mode_fpu.c | 28 ++++++++++++++++++++++++++++
- 5 files changed, 49 insertions(+)
- create mode 100644 arch/riscv/include/asm/fpu.h
- create mode 100644 arch/riscv/kernel/kernel_mode_fpu.c
+ drivers/gpu/drm/amd/display/Kconfig           |  2 +-
+ .../gpu/drm/amd/display/amdgpu_dm/dc_fpu.c    | 27 ++------------
+ drivers/gpu/drm/amd/display/dc/dml/Makefile   | 36 ++-----------------
+ drivers/gpu/drm/amd/display/dc/dml2/Makefile  | 36 ++-----------------
+ 4 files changed, 7 insertions(+), 94 deletions(-)
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 24c1799e2ec4..4d4d1d64ce34 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -27,6 +27,7 @@ config RISCV
- 	select ARCH_HAS_GCOV_PROFILE_ALL
- 	select ARCH_HAS_GIGANTIC_PAGE
- 	select ARCH_HAS_KCOV
-+	select ARCH_HAS_KERNEL_FPU_SUPPORT if FPU
- 	select ARCH_HAS_MMIOWB
- 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	select ARCH_HAS_PMEM_API
-diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-index a74be78678eb..2e719c369210 100644
---- a/arch/riscv/Makefile
-+++ b/arch/riscv/Makefile
-@@ -81,6 +81,9 @@ KBUILD_CFLAGS += -march=$(shell echo $(riscv-march-y) | sed -E 's/(rv32ima|rv64i
+diff --git a/drivers/gpu/drm/amd/display/Kconfig b/drivers/gpu/drm/amd/display/Kconfig
+index 901d1961b739..5fcd4f778dc3 100644
+--- a/drivers/gpu/drm/amd/display/Kconfig
++++ b/drivers/gpu/drm/amd/display/Kconfig
+@@ -8,7 +8,7 @@ config DRM_AMD_DC
+ 	depends on BROKEN || !CC_IS_CLANG || ARM64 || RISCV || SPARC64 || X86_64
+ 	select SND_HDA_COMPONENT if SND_HDA_CORE
+ 	# !CC_IS_CLANG: https://github.com/ClangBuiltLinux/linux/issues/1752
+-	select DRM_AMD_DC_FP if (X86 || LOONGARCH || (PPC64 && ALTIVEC) || (ARM64 && KERNEL_MODE_NEON && !CC_IS_CLANG))
++	select DRM_AMD_DC_FP if ARCH_HAS_KERNEL_FPU_SUPPORT && (!ARM64 || !CC_IS_CLANG)
+ 	help
+ 	  Choose this option if you want to use the new display engine
+ 	  support for AMDGPU. This adds required support for Vega and
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c b/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c
+index 0de16796466b..e46f8ce41d87 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/dc_fpu.c
+@@ -26,16 +26,7 @@
  
- KBUILD_AFLAGS += -march=$(riscv-march-y)
+ #include "dc_trace.h"
  
-+# For C code built with floating-point support, exclude V but keep F and D.
-+CC_FLAGS_FPU  := -march=$(shell echo $(riscv-march-y) | sed -E 's/(rv32ima|rv64ima)([^v_]*)v?/\1\2/')
-+
- KBUILD_CFLAGS += -mno-save-restore
- KBUILD_CFLAGS += -DCONFIG_PAGE_OFFSET=$(CONFIG_PAGE_OFFSET)
+-#if defined(CONFIG_X86)
+-#include <asm/fpu/api.h>
+-#elif defined(CONFIG_PPC64)
+-#include <asm/switch_to.h>
+-#include <asm/cputable.h>
+-#elif defined(CONFIG_ARM64)
+-#include <asm/neon.h>
+-#elif defined(CONFIG_LOONGARCH)
+-#include <asm/fpu.h>
+-#endif
++#include <linux/fpu.h>
  
-diff --git a/arch/riscv/include/asm/fpu.h b/arch/riscv/include/asm/fpu.h
-new file mode 100644
-index 000000000000..91c04c244e12
---- /dev/null
-+++ b/arch/riscv/include/asm/fpu.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2023 SiFive
-+ */
-+
-+#ifndef _ASM_RISCV_FPU_H
-+#define _ASM_RISCV_FPU_H
-+
-+#include <asm/switch_to.h>
-+
-+#define kernel_fpu_available()	has_fpu()
-+
-+void kernel_fpu_begin(void);
-+void kernel_fpu_end(void);
-+
-+#endif /* ! _ASM_RISCV_FPU_H */
-diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-index fee22a3d1b53..662c483e338d 100644
---- a/arch/riscv/kernel/Makefile
-+++ b/arch/riscv/kernel/Makefile
-@@ -62,6 +62,7 @@ obj-$(CONFIG_MMU) += vdso.o vdso/
+ /**
+  * DOC: DC FPU manipulation overview
+@@ -87,16 +78,9 @@ void dc_fpu_begin(const char *function_name, const int line)
+ 	WARN_ON_ONCE(!in_task());
+ 	preempt_disable();
+ 	depth = __this_cpu_inc_return(fpu_recursion_depth);
+-
+ 	if (depth == 1) {
+-#if defined(CONFIG_X86) || defined(CONFIG_LOONGARCH)
++		BUG_ON(!kernel_fpu_available());
+ 		kernel_fpu_begin();
+-#elif defined(CONFIG_PPC64)
+-		if (!cpu_has_feature(CPU_FTR_FPU_UNAVAILABLE))
+-			enable_kernel_fp();
+-#elif defined(CONFIG_ARM64)
+-		kernel_neon_begin();
+-#endif
+ 	}
  
- obj-$(CONFIG_RISCV_MISALIGNED)	+= traps_misaligned.o
- obj-$(CONFIG_FPU)		+= fpu.o
-+obj-$(CONFIG_FPU)		+= kernel_mode_fpu.o
- obj-$(CONFIG_RISCV_ISA_V)	+= vector.o
- obj-$(CONFIG_SMP)		+= smpboot.o
- obj-$(CONFIG_SMP)		+= smp.o
-diff --git a/arch/riscv/kernel/kernel_mode_fpu.c b/arch/riscv/kernel/kernel_mode_fpu.c
-new file mode 100644
-index 000000000000..0ac8348876c4
---- /dev/null
-+++ b/arch/riscv/kernel/kernel_mode_fpu.c
-@@ -0,0 +1,28 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2023 SiFive
-+ */
-+
-+#include <linux/export.h>
-+#include <linux/preempt.h>
-+
-+#include <asm/csr.h>
-+#include <asm/fpu.h>
-+#include <asm/processor.h>
-+#include <asm/switch_to.h>
-+
-+void kernel_fpu_begin(void)
-+{
-+	preempt_disable();
-+	fstate_save(current, task_pt_regs(current));
-+	csr_set(CSR_SSTATUS, SR_FS);
-+}
-+EXPORT_SYMBOL_GPL(kernel_fpu_begin);
-+
-+void kernel_fpu_end(void)
-+{
-+	csr_clear(CSR_SSTATUS, SR_FS);
-+	fstate_restore(current, task_pt_regs(current));
-+	preempt_enable();
-+}
-+EXPORT_SYMBOL_GPL(kernel_fpu_end);
+ 	TRACE_DCN_FPU(true, function_name, line, depth);
+@@ -118,14 +102,7 @@ void dc_fpu_end(const char *function_name, const int line)
+ 
+ 	depth = __this_cpu_dec_return(fpu_recursion_depth);
+ 	if (depth == 0) {
+-#if defined(CONFIG_X86) || defined(CONFIG_LOONGARCH)
+ 		kernel_fpu_end();
+-#elif defined(CONFIG_PPC64)
+-		if (!cpu_has_feature(CPU_FTR_FPU_UNAVAILABLE))
+-			disable_kernel_fp();
+-#elif defined(CONFIG_ARM64)
+-		kernel_neon_end();
+-#endif
+ 	} else {
+ 		WARN_ON_ONCE(depth < 0);
+ 	}
+diff --git a/drivers/gpu/drm/amd/display/dc/dml/Makefile b/drivers/gpu/drm/amd/display/dc/dml/Makefile
+index 554c39024a40..be15d366b786 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
++++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
+@@ -25,40 +25,8 @@
+ # It provides the general basic services required by other DAL
+ # subcomponents.
+ 
+-ifdef CONFIG_X86
+-dml_ccflags-$(CONFIG_CC_IS_GCC) := -mhard-float
+-dml_ccflags := $(dml_ccflags-y) -msse
+-endif
+-
+-ifdef CONFIG_PPC64
+-dml_ccflags := -mhard-float
+-endif
+-
+-ifdef CONFIG_ARM64
+-dml_rcflags := -mgeneral-regs-only
+-endif
+-
+-ifdef CONFIG_LOONGARCH
+-dml_ccflags := -mfpu=64
+-dml_rcflags := -msoft-float
+-endif
+-
+-ifdef CONFIG_CC_IS_GCC
+-ifneq ($(call gcc-min-version, 70100),y)
+-IS_OLD_GCC = 1
+-endif
+-endif
+-
+-ifdef CONFIG_X86
+-ifdef IS_OLD_GCC
+-# Stack alignment mismatch, proceed with caution.
+-# GCC < 7.1 cannot compile code using `double` and -mpreferred-stack-boundary=3
+-# (8B stack alignment).
+-dml_ccflags += -mpreferred-stack-boundary=4
+-else
+-dml_ccflags += -msse2
+-endif
+-endif
++dml_ccflags := $(CC_FLAGS_FPU)
++dml_rcflags := $(CC_FLAGS_NO_FPU)
+ 
+ ifneq ($(CONFIG_FRAME_WARN),0)
+ ifeq ($(filter y,$(CONFIG_KASAN)$(CONFIG_KCSAN)),y)
+diff --git a/drivers/gpu/drm/amd/display/dc/dml2/Makefile b/drivers/gpu/drm/amd/display/dc/dml2/Makefile
+index 7b51364084b5..4f6c804a26ad 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml2/Makefile
++++ b/drivers/gpu/drm/amd/display/dc/dml2/Makefile
+@@ -24,40 +24,8 @@
+ #
+ # Makefile for dml2.
+ 
+-ifdef CONFIG_X86
+-dml2_ccflags-$(CONFIG_CC_IS_GCC) := -mhard-float
+-dml2_ccflags := $(dml2_ccflags-y) -msse
+-endif
+-
+-ifdef CONFIG_PPC64
+-dml2_ccflags := -mhard-float
+-endif
+-
+-ifdef CONFIG_ARM64
+-dml2_rcflags := -mgeneral-regs-only
+-endif
+-
+-ifdef CONFIG_LOONGARCH
+-dml2_ccflags := -mfpu=64
+-dml2_rcflags := -msoft-float
+-endif
+-
+-ifdef CONFIG_CC_IS_GCC
+-ifeq ($(call cc-ifversion, -lt, 0701, y), y)
+-IS_OLD_GCC = 1
+-endif
+-endif
+-
+-ifdef CONFIG_X86
+-ifdef IS_OLD_GCC
+-# Stack alignment mismatch, proceed with caution.
+-# GCC < 7.1 cannot compile code using `double` and -mpreferred-stack-boundary=3
+-# (8B stack alignment).
+-dml2_ccflags += -mpreferred-stack-boundary=4
+-else
+-dml2_ccflags += -msse2
+-endif
+-endif
++dml2_ccflags := $(CC_FLAGS_FPU)
++dml2_rcflags := $(CC_FLAGS_NO_FPU)
+ 
+ ifneq ($(CONFIG_FRAME_WARN),0)
+ ifeq ($(filter y,$(CONFIG_KASAN)$(CONFIG_KCSAN)),y)
 -- 
 2.42.0
 
