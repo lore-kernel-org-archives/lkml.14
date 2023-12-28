@@ -1,29 +1,49 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6B33C0B;
-	Thu, 28 Dec 2023 06:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5864463A8
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 06:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="MhX+D4dQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1703745568; x=1704350368; i=markus.elfring@web.de;
-	bh=CQ9zUoeIIRPWlBOHSTjI21uVE111Q+XjbfT31zxGskg=;
-	h=X-UI-Sender-Class:Date:From:Subject:To:Cc:References:
-	 In-Reply-To;
-	b=MhX+D4dQaTRR+Wp4MmEKg0TlR/voAK1KawY4y0Kmtt1iRjc96BYEgrsIyORIW42h
-	 BGj8vESq1+qATcYA4GPesp5Ni6H8/vmpKUXqB9nBmeWedZRgER7MDdqeEaCEKkLjT
-	 r+QAM4n8nVGpsUinTQQ7r2HyUbhd9/k/m1AwVuY4p4IU4FnB8KUdi181SvNjYrjBI
-	 6lm00WQHe7CmxrvIbSJ9bUWnnk3SMpaXg7tB2Xcz4/fwqjNCxpWNl13AO+fl17/XD
-	 Kr5TwPX/ZKlYa8QwUA44tKb3yEDveRC4nmiPmANceRQ2jqc3XaUwjRLX1545Ihkwm
-	 Q++93rc6AyyrT/kZ+g==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M3V6G-1rJIHV3Y6U-0015Fq; Thu, 28
- Dec 2023 07:39:27 +0100
-Message-ID: <a206cd2a-03ef-4c8b-8f8d-635e8a02e72a@web.de>
-Date: Thu, 28 Dec 2023 07:39:05 +0100
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="SSnhSY69"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6d0a679fca7so2238172b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 Dec 2023 22:41:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1703745687; x=1704350487; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JtOib/QJxTg8GX+g7Tz3ySApfqH2yKoafoUMfxDDf3Q=;
+        b=SSnhSY694ONyB1lTzjO6REj/a9iCTSPXKrH0bTICnvOm2J5OgUnxN/s9iKPI0R0IEg
+         irAB3rUiycl0HqkTKekXZOyILCgJcCNA4ATAC4A7yIa46lv0BWGyClXr9fn604/w7s45
+         /Z6wFqayes9Y0EClVLLTceul3Zu5HcZyKY/T5VqV6NXZ8hgLLcxnNGcrDvZt4NfVAUeU
+         tmHI7DbEVSvYB0leRa4vIRJYkQrXgTVcP29JLCN11KnmpF8OYJ5ZznI5yXGnc99FFzK0
+         UVoG9nhkIjcUmDrbko/XY2cuy7YBPYWC7Kj14zYueFo8CeAVkqoMjNFH798Qr8xtWy1L
+         oU1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703745687; x=1704350487;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JtOib/QJxTg8GX+g7Tz3ySApfqH2yKoafoUMfxDDf3Q=;
+        b=KIvEzSm13/vyg/Mu/Tp908FVnFwolYh4B1U8pdM8W6EO91dOEbD/YISMknQBBdoxPW
+         L+fJzvh4ab8sgJbjYnzrsaq5MRDjz0dXBmjwUnAVE9vZWQjCom+CLH2MTjvKJ95YUXPW
+         qvqbhHEqF7ztcwC4dkuBQm2joL/MzpJyO7rnU+p5tWY3tPyyhlfmwRsXpwQrDJbyMNP1
+         c06/7UwZCjJEbePVNs8oQvtLA+6iKz+xIx+cjk7iANZQcc5vEbXsI2c2U87aJqAab3R2
+         sjG8Igu+oN8r6+0b34QiG4F3ueeXsFe9CVxOAaXxAk0U0XD6Pr8rlFhXcH/IFl2iaalN
+         S1Tg==
+X-Gm-Message-State: AOJu0Yx2jBNxHuc3EbCSbvb6sFVzo3zNFvfv0ZUzoNQE+AHkKbkUDnHs
+	nJU3UPZMgQJfiIq0oX8xfj7ZaHj7n6X/zA==
+X-Google-Smtp-Source: AGHT+IG37mijfbwzfT4b5t490ZOCdhIBvBlcbw7GHnnk+iVu+C7IYJEYS27zRiEAxyMA3NEnRieqZA==
+X-Received: by 2002:a05:6a00:4585:b0:6d9:9f29:9dcd with SMTP id it5-20020a056a00458500b006d99f299dcdmr2630585pfb.45.1703745687585;
+        Wed, 27 Dec 2023 22:41:27 -0800 (PST)
+Received: from [10.255.185.101] ([139.177.225.235])
+        by smtp.gmail.com with ESMTPSA id h32-20020a63f920000000b005b9083b81f0sm12314663pgi.36.2023.12.27.22.41.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Dec 2023 22:41:27 -0800 (PST)
+Message-ID: <23b76f56-dd91-470b-9967-8482951e5364@bytedance.com>
+Date: Thu, 28 Dec 2023 14:41:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -31,65 +51,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: Re: [09/10] clk: ti: Less function calls in
- _ti_clkctrl_clk_register() after error detection
-To: kernel test robot <lkp@intel.com>, linux-omap@vger.kernel.org,
- linux-clk@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>,
- Stephen Boyd <sboyd@kernel.org>, Tero Kristo <kristo@kernel.org>,
- Tony Lindgren <tony@atomide.com>
-Cc: oe-kbuild-all@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
- cocci@inria.fr
-References: <b11039e4-69c6-4247-b4ba-c442b9427231@web.de>
- <202312281350.5H2Rhh67-lkp@intel.com>
-Content-Language: en-GB
-In-Reply-To: <202312281350.5H2Rhh67-lkp@intel.com>
+Subject: Re: [PATCH v4 1/6] mm/zswap: change dstmem size to one page
+Content-Language: en-US
+To: Nhat Pham <nphamcs@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Barry Song <21cnbao@gmail.com>, Seth Jennings <sjenning@redhat.com>,
+ Johannes Weiner <hannes@cmpxchg.org>, Vitaly Wool
+ <vitaly.wool@konsulko.com>, Chris Li <chriscli@google.com>,
+ Yosry Ahmed <yosryahmed@google.com>, Dan Streetman <ddstreet@ieee.org>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Chris Li <chrisl@kernel.org>
+References: <20231213-zswap-dstmem-v4-0-f228b059dd89@bytedance.com>
+ <20231213-zswap-dstmem-v4-1-f228b059dd89@bytedance.com>
+ <CAGsJ_4wuTZcGurby9h4PU2DwFaiEKB4bxuycaeyz3bPw3jSX3A@mail.gmail.com>
+ <af0a03d5-e536-41b7-9ab8-c5985794b7db@bytedance.com>
+ <20231227125853.2dd07cd61f8a8df95042677c@linux-foundation.org>
+ <CAKEwX=PDeez9D8t4WSe2qd753h=06ZSJwQ8TQDv1xLXB0cpn-Q@mail.gmail.com>
+From: Chengming Zhou <zhouchengming@bytedance.com>
+In-Reply-To: <CAKEwX=PDeez9D8t4WSe2qd753h=06ZSJwQ8TQDv1xLXB0cpn-Q@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:DvP9z21vMsNBbQJt43X0o5GZcDwyooJWWYTx1miGfTsjAJDm9kX
- RMebBTOHOA/Y3UiZsegNNb4nbDoTDKwVi0QdLSK6XEeeyN1oRCi9kvtfm6R64pnj8aIVPU5
- D2HKwNGODLa8Vy4H7ZZ19kK9AxkOtD1xF5e7cTM+zzDiBUND+dbS0qoh71szBUmd5kZB96I
- hw0NGGO6aEgwgeIMt86sw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:irS8BLfZwbs=;nqFf8TNcswZcxiA74aGtBUelV4W
- wPLFUNj9Y5LCKpgjRB5FcfIW56ElQ2n8No3Mz0qJmsKp7CJTLkGYPA+OKoCoDg99e67nykupF
- KpSV+r9k/fgCBat89n4CP8H+7w79DCBYKDURZWt5zBtFidlVEjK0KKUmx4F/fxnfcEw+wAuAg
- +J/KhYxaeUUlpbKvfA8pl1fDhWNUXnpD5x8x5PyQJVJwrWmFQJQWgB6gHF5e5tJpeVyEZDse0
- R2RMejLFBPLRr9XhrjsoRoEvWUsyLHcC+qRUe7EiFbQg42T+leSxKxNL0gHU+eJYOW5n2w+DJ
- gmDXRrqW99b7KkJh7WghhGBTJfbLiAo6shHSYtBhI6aWJtdvMXHTPoSistUCaP4Jjr8JwB+Hq
- A5qwohRaRlRXjCYWTxeh5A3+NeLkfYh0hJQIUEZ5YnkgxaZn9498LoIzj+ofmKEmbAkGVgN4W
- T37J+49AylfFtk3Bcui839UNbY3dJUAloHJ+yNQoRn7q5Ru4GNQGwX1Pw/NybnUTV6lNX2bf1
- G9koHh6MOi2mqgnJabHLBw7dlIJC0rV8cx2GNt++KewuO5BJLC6aniPGq3DLzyneGvNXJPtSR
- lzaS3OeGTLBbxt01C3K5ZQdtTrj5ZIvR1cCuzcbajtnrfrG87LozgIsgdcP6pRanPGt8GM1Zn
- k/L9rJ3zWGA5Uagli3s5EDjwL9NMBXaGiJzf6KqRtsQd5np3mppA4fdlnWS66/MdHNEJpMna7
- uNKF4L1v58q+hMMzPASNSRAXz0REqmImEIA7jUQe9uoVhgB7C3DuEp3AECTy2epta5GY38U2N
- yTyWJ0nqdzueADSiiqlxcbki9v+267z4ZSnfUyxWl1VpK3tQP/wovmKSXbfhmmcCGhKJxtGE0
- PJLzpWLAJiI+aZf5MNJf2THiWO78vioh01VmY/O2xpT3RC3sEo/ZErIXn4t1c1t5zmKqBVqjG
- F4f5jg==
+Content-Transfer-Encoding: 8bit
 
-=E2=80=A6
->    drivers/clk/ti/clkctrl.c: In function '_ti_clkctrl_clk_register':
->>> drivers/clk/ti/clkctrl.c:330:1: error: 'free_init_name' undeclared (fi=
-rst use in this function)
-=E2=80=A6
->    328	cleanup:
->    329		kfree(clkctrl_clk);
->  > 330	free_init_name;
->    331		kfree(init.name);
->    332		return ret;
-=E2=80=A6
+On 2023/12/28 07:21, Nhat Pham wrote:
+> On Wed, Dec 27, 2023 at 12:58 PM Andrew Morton
+> <akpm@linux-foundation.org> wrote:
+>>
+>> On Wed, 27 Dec 2023 14:11:06 +0800 Chengming Zhou <zhouchengming@bytedance.com> wrote:
+>>
+>>>> i remember there was an over-compression case,  that means the compressed
+>>>> data can be bigger than the source data. the similar thing is also done in zram
+>>>> drivers/block/zram/zcomp.c
+>>>
+>>> Right, there is a buffer overflow report[1] that I just +to you.
+>>
+>> What does "[1]" refer to?  Is there a bug report about this series?
+> 
+> I think Chengming was referring to this:
+> 
+> https://lore.kernel.org/lkml/0000000000000b05cd060d6b5511@google.com/
+> 
+> Syzkaller/syzbot found an edge case where the page's "compressed" form
+> was larger than one page, which tripped up the compression code (since
+> we reduced the compression buffer size to 1 page here).
 
-Will it become helpful to fix a typo for the delimiter of the shown label?
+Right, thanks Nhat!
 
-   Or:
+The reported bug can be fixed by a patch I posted:
+https://lore.kernel.org/all/20231227093523.2735484-1-chengming.zhou@linux.dev/
 
-Are you looking for further adjustments according to software design optio=
-ns
-which would be supported by the file =E2=80=9Ccleanup.h=E2=80=9D?
-https://elixir.bootlin.com/linux/v6.7-rc7/source/include/linux/cleanup.h
+Although this bug is fixed, we still have to revert the first patch to use
+2 pages buffer in zswap, since not all compressor drivers would respect the
+buffer size we passed in and may overflow our output buffer.
 
-Regards,
-Markus
+Barry Song has explained the background in:
+https://lore.kernel.org/all/CAGsJ_4xuuaPnQzkkQVaRyZL6ZdwkiQ_B7_c2baNaCKVg_O7ZQA@mail.gmail.com/
+
+I will send an updated series later.
+
+Thanks!
