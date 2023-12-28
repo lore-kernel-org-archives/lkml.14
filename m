@@ -1,34 +1,81 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9638A107B9;
-	Thu, 28 Dec 2023 12:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4T17pv6tjlz4f3jYr;
-	Thu, 28 Dec 2023 20:58:15 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 82C891A017B;
-	Thu, 28 Dec 2023 20:58:17 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgBHlQvmcI1lvcx3Ew--.36075S6;
-	Thu, 28 Dec 2023 20:58:17 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: song@kernel.org,
-	yukuai3@huawei.com,
-	neilb@suse.de
-Cc: linux-raid@vger.kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A981096B
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 12:58:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rzIo1duA"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40d5a41143fso20861245e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 04:58:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703768300; x=1704373100; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fJqndlg00hz3kS0K9Xt/wzcgwz2RWYotM3QsJXJKxvc=;
+        b=rzIo1duAxnP8EkArIztf8NaFeYQyVzaCFyqiOHwzDnvmL4l6j3bX2yfcL1SdwvfuYR
+         R7ccEfhXp0bIyJsnyKRtocDRnhhslmCllhuhCBGgy1R/yIzvD/UX1++KTRo+i5T9HUUg
+         Hc7Wp32lBdo5mJ98/Yga6oazzscaOYXJZq1vYBYi+uVXb+JHaV/6Mg/Q3FAWWcDcrd9Z
+         RW6h6hebPFpTeTLZqLOQLMoH9CthW0n6vOASz7EGpaiABlpz0izIduwluhvNCFFrKJ/F
+         eoweHjqIxIYGzQMqONqa/LAwH7ZqWOIP3QW5SGBmNOpVguvVBcr1dkZCFGglVYOaYKoY
+         v/Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703768300; x=1704373100;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fJqndlg00hz3kS0K9Xt/wzcgwz2RWYotM3QsJXJKxvc=;
+        b=mmh+tJKWQfutT+aHk4v7WXJeUiGzGGpsdvButIV3K4BG5hUUosW1kLHMfDk2sdwHeK
+         GmrnD60qaE3BbMFseTGhHacoeVFyvIetf81XnpuHBCeTkQ1IpTjW27RhJAilHadJlFxI
+         BMC8b4ia55zaUupydelqAkRAN2kkrrl0dhu0R/WMstLzaO6cGda6oeKkT1eF3WO+etRq
+         ka/5QhPYD6aCDI9heqMtDnoE+A8RFjAUx7/BUbpVtYnjLhM1MbCZFQFrj56NbuYiTVnA
+         HrVSZVhMiRZUEllACnD3/xXY9tFtfb+c77uQtyQZzIBRfdfLv8r9nSp1k7KvOh0391/o
+         oXTg==
+X-Gm-Message-State: AOJu0Yy/IXWkrlwutE4U7A9+dZthC/Ass982MBGPlh3ERLLkCzbzdElh
+	1jitRSOmfdikvM+o11TVKb5JyBjzONp6/g==
+X-Google-Smtp-Source: AGHT+IHl5TUZZLgMiTlie5qagsHCRsc5xzAp7JZjoJ6yG5wP+nbvBqQhFQDOaktrnm5ijLKALVeCGA==
+X-Received: by 2002:a05:600c:2192:b0:40d:71c1:9985 with SMTP id e18-20020a05600c219200b0040d71c19985mr81689wme.29.1703768300597;
+        Thu, 28 Dec 2023 04:58:20 -0800 (PST)
+Received: from ta2.c.googlers.com.com (216.131.76.34.bc.googleusercontent.com. [34.76.131.216])
+        by smtp.gmail.com with ESMTPSA id h9-20020a05600c350900b0040d5aca25f1sm8615807wmq.17.2023.12.28.04.58.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Dec 2023 04:58:20 -0800 (PST)
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+To: peter.griffin@linaro.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	conor+dt@kernel.org,
+	andi.shyti@kernel.org,
+	alim.akhtar@samsung.com,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	s.nawrocki@samsung.com,
+	tomasz.figa@gmail.com,
+	cw00.choi@samsung.com,
+	arnd@arndb.de,
+	semen.protsenko@linaro.org
+Cc: andre.draszik@linaro.org,
+	saravanak@google.com,
+	willmcvicker@google.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH -next 2/3] md: remove redundant md_wakeup_thread()
-Date: Thu, 28 Dec 2023 20:55:52 +0800
-Message-Id: <20231228125553.2697765-3-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231228125553.2697765-1-yukuai1@huaweicloud.com>
-References: <20231228125553.2697765-1-yukuai1@huaweicloud.com>
+	linux-i2c@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	kernel-team@android.com,
+	Tudor Ambarus <tudor.ambarus@linaro.org>
+Subject: [PATCH v2 10/12] arm64: dts: exynos: gs101: update USI UART to use peric0 clocks
+Date: Thu, 28 Dec 2023 12:58:03 +0000
+Message-ID: <20231228125805.661725-11-tudor.ambarus@linaro.org>
+X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
+In-Reply-To: <20231228125805.661725-1-tudor.ambarus@linaro.org>
+References: <20231228125805.661725-1-tudor.ambarus@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,164 +83,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBHlQvmcI1lvcx3Ew--.36075S6
-X-Coremail-Antispam: 1UD129KBjvJXoW3XF13Aw18XrWkZr48Gw1fXrb_yoW7Xw18pa
-	yfJF98Cr45A34fAFsrKa4DGa45Zr1jqFWDtrW3u3yrJ3WfKw4SgFyY9FyDJ3yvyaykZw45
-	Xa1rGF48Za4xWF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9m14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxGrwCFx2
-	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
-	6r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IY
-	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
-	0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUc6pPUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-From: Yu Kuai <yukuai3@huawei.com>
+Get rid of the dummy clock and start using the cmu_peric0 clocks
+for the usi_uart and serial_0 nodes.
 
-On the one hand, mddev_unlock() will call md_wakeup_thread()
-unconditionally; on the other hand, md_check_recovery() can't make
-progress if 'reconfig_mutex' can't be grabbed. Hence, it really doesn't
-make sense to wake up daemon thread while 'reconfig_mutex' is still
-grabbed.
+Tested the serial at 115200, 1000000 and 3000000 baudrates,
+everthing went fine.
 
-Remove all the md_wakup_thread() for 'mddev->thread' while
-'reconfig_mtuex' is still grabbed.
-
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 ---
- drivers/md/md.c | 20 ++------------------
- 1 file changed, 2 insertions(+), 18 deletions(-)
+v2: identify and use gate clocks instead of divider clocks
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 2208eed3baac..60f99768a1a9 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -2904,7 +2904,6 @@ static int add_bound_rdev(struct md_rdev *rdev)
- 		set_bit(MD_RECOVERY_RECOVER, &mddev->recovery);
- 	set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
- 	md_new_event();
--	md_wakeup_thread(mddev->thread);
- 	return 0;
- }
+ arch/arm64/boot/dts/exynos/google/gs101.dtsi | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+index c693791ae584..0e5b1b490b0b 100644
+--- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
++++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+@@ -180,14 +180,6 @@ HERA_CPU_SLEEP: cpu-hera-sleep {
+ 		};
+ 	};
  
-@@ -3019,10 +3018,8 @@ state_store(struct md_rdev *rdev, const char *buf, size_t len)
- 
- 			if (err == 0) {
- 				md_kick_rdev_from_array(rdev);
--				if (mddev->pers) {
-+				if (mddev->pers)
- 					set_bit(MD_SB_CHANGE_DEVS, &mddev->sb_flags);
--					md_wakeup_thread(mddev->thread);
--				}
- 				md_new_event();
- 			}
- 		}
-@@ -3052,7 +3049,6 @@ state_store(struct md_rdev *rdev, const char *buf, size_t len)
- 		clear_bit(BlockedBadBlocks, &rdev->flags);
- 		wake_up(&rdev->blocked_wait);
- 		set_bit(MD_RECOVERY_NEEDED, &rdev->mddev->recovery);
--		md_wakeup_thread(rdev->mddev->thread);
- 
- 		err = 0;
- 	} else if (cmd_match(buf, "insync") && rdev->raid_disk == -1) {
-@@ -3090,7 +3086,6 @@ state_store(struct md_rdev *rdev, const char *buf, size_t len)
- 		    !test_bit(Replacement, &rdev->flags))
- 			set_bit(WantReplacement, &rdev->flags);
- 		set_bit(MD_RECOVERY_NEEDED, &rdev->mddev->recovery);
--		md_wakeup_thread(rdev->mddev->thread);
- 		err = 0;
- 	} else if (cmd_match(buf, "-want_replacement")) {
- 		/* Clearing 'want_replacement' is always allowed.
-@@ -3220,7 +3215,6 @@ slot_store(struct md_rdev *rdev, const char *buf, size_t len)
- 		if (rdev->raid_disk >= 0)
- 			return -EBUSY;
- 		set_bit(MD_RECOVERY_NEEDED, &rdev->mddev->recovery);
--		md_wakeup_thread(rdev->mddev->thread);
- 	} else if (rdev->mddev->pers) {
- 		/* Activating a spare .. or possibly reactivating
- 		 * if we ever get bitmaps working here.
-@@ -6166,7 +6160,6 @@ int do_md_run(struct mddev *mddev)
- 	/* run start up tasks that require md_thread */
- 	md_start(mddev);
- 
--	md_wakeup_thread(mddev->thread);
- 	md_wakeup_thread(mddev->sync_thread); /* possibly kick off a reshape */
- 
- 	set_capacity_and_notify(mddev->gendisk, mddev->array_sectors);
-@@ -6187,7 +6180,6 @@ int md_start(struct mddev *mddev)
- 
- 	if (mddev->pers->start) {
- 		set_bit(MD_RECOVERY_WAIT, &mddev->recovery);
--		md_wakeup_thread(mddev->thread);
- 		ret = mddev->pers->start(mddev);
- 		clear_bit(MD_RECOVERY_WAIT, &mddev->recovery);
- 		md_wakeup_thread(mddev->sync_thread);
-@@ -6232,7 +6224,6 @@ static int restart_array(struct mddev *mddev)
- 	pr_debug("md: %s switched to read-write mode.\n", mdname(mddev));
- 	/* Kick recovery or resync if necessary */
- 	set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
--	md_wakeup_thread(mddev->thread);
- 	md_wakeup_thread(mddev->sync_thread);
- 	sysfs_notify_dirent_safe(mddev->sysfs_state);
- 	return 0;
-@@ -6376,7 +6367,6 @@ static int md_set_readonly(struct mddev *mddev, struct block_device *bdev)
- 	if (!test_bit(MD_RECOVERY_FROZEN, &mddev->recovery)) {
- 		did_freeze = 1;
- 		set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
--		md_wakeup_thread(mddev->thread);
- 	}
- 
- 	stop_sync_thread(mddev, false, false);
-@@ -6408,7 +6398,6 @@ static int md_set_readonly(struct mddev *mddev, struct block_device *bdev)
- 	if ((mddev->pers && !err) || did_freeze) {
- 		clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
- 		set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
--		md_wakeup_thread(mddev->thread);
- 		sysfs_notify_dirent_safe(mddev->sysfs_state);
- 	}
- 
-@@ -6430,7 +6419,6 @@ static int do_md_stop(struct mddev *mddev, int mode,
- 	if (!test_bit(MD_RECOVERY_FROZEN, &mddev->recovery)) {
- 		did_freeze = 1;
- 		set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
--		md_wakeup_thread(mddev->thread);
- 	}
- 
- 	stop_sync_thread(mddev, true, false);
-@@ -6444,7 +6432,6 @@ static int do_md_stop(struct mddev *mddev, int mode,
- 		if (did_freeze) {
- 			clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
- 			set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
--			md_wakeup_thread(mddev->thread);
- 		}
- 		return -EBUSY;
- 	}
-@@ -6985,9 +6972,7 @@ static int hot_remove_disk(struct mddev *mddev, dev_t dev)
- 
- 	md_kick_rdev_from_array(rdev);
- 	set_bit(MD_SB_CHANGE_DEVS, &mddev->sb_flags);
--	if (mddev->thread)
--		md_wakeup_thread(mddev->thread);
--	else
-+	if (!mddev->thread)
- 		md_update_sb(mddev, 1);
- 	md_new_event();
- 
-@@ -7069,7 +7054,6 @@ static int hot_add_disk(struct mddev *mddev, dev_t dev)
- 	 * array immediately.
- 	 */
- 	set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
--	md_wakeup_thread(mddev->thread);
- 	md_new_event();
- 	return 0;
- 
+-	/* TODO replace with CCF clock */
+-	dummy_clk: clock-3 {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <12345>;
+-		clock-output-names = "pclk";
+-	};
+-
+ 	/* ect node is required to be present by bootloader */
+ 	ect {
+ 	};
+@@ -369,7 +361,8 @@ usi_uart: usi@10a000c0 {
+ 			ranges;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			clocks = <&dummy_clk>, <&dummy_clk>;
++			clocks = <&cmu_peric0 CLK_GOUT_PERIC0_CLK_PERIC0_USI0_UART_CLK>,
++				 <&cmu_peric0 CLK_GOUT_PERIC0_PERIC0_TOP1_IPCLK_0>;
+ 			clock-names = "pclk", "ipclk";
+ 			samsung,sysreg = <&sysreg_peric0 0x1020>;
+ 			samsung,mode = <USI_V2_UART>;
+@@ -380,7 +373,8 @@ serial_0: serial@10a00000 {
+ 				reg = <0x10a00000 0xc0>;
+ 				interrupts = <GIC_SPI 634
+ 					      IRQ_TYPE_LEVEL_HIGH 0>;
+-				clocks = <&dummy_clk 0>, <&dummy_clk 0>;
++				clocks = <&cmu_peric0 CLK_GOUT_PERIC0_CLK_PERIC0_USI0_UART_CLK>,
++					 <&cmu_peric0 CLK_GOUT_PERIC0_PERIC0_TOP1_IPCLK_0>;
+ 				clock-names = "uart", "clk_uart_baud0";
+ 				samsung,uart-fifosize = <256>;
+ 				status = "disabled";
 -- 
-2.39.2
+2.43.0.472.g3155946c3a-goog
 
