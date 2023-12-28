@@ -1,57 +1,115 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E91C980B
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 10:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 640EE2F4;
-	Thu, 28 Dec 2023 02:31:56 -0800 (PST)
-Received: from bogus (unknown [10.57.74.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 89A653F5A1;
-	Thu, 28 Dec 2023 02:31:08 -0800 (PST)
-Date: Thu, 28 Dec 2023 10:28:01 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>
-Subject: Re: [PATCH 2/2] firmware/psci: Set
- pm_set_resume/suspend_via_firmware() on qcom
-Message-ID: <20231228102801.fzaubcjq5thfwgxg@bogus>
-References: <20231227-topic-psci_fw_sus-v1-0-6910add70bf3@linaro.org>
- <20231227-topic-psci_fw_sus-v1-2-6910add70bf3@linaro.org>
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06AAC63DB
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 10:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7ba9fee55d4so703824839f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 02:34:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703759668; x=1704364468;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=N0oCSfRy8XwUA44T0zAUXbingz0fhM4PCwluuYF0MN0=;
+        b=EaCOSlI5XojqDd4QM4uiIwjpOZOAMf6Cad42d3NsX/BXExY0pEJd902Nhei8eiMflh
+         n5trbrU/Qsbb2eiByXjtHtJXgVlgROIGQHNtOQrcz5FMXm3J8QAGhDdEEb9Wder22tMx
+         2r1v+S0m45hpIzWm2mTaR6f6kT+X2OQKEiwYEffKqV/v/9yo+5rJqYAVII7A/jIAF8gh
+         WsKol+w7xtCs9+PVLPjwU/wax0+OZon0lmLyg8HpwZwAACvfIul11o03FIFT5A03ziVs
+         WNaFpwxgUSkbvfUrzleJZ2BX50E6RKfOAz1npfWcfTu9DwEC9+6Bmg/hxW5F/4qD+vlS
+         2hEg==
+X-Gm-Message-State: AOJu0YxystFYEuxsYPkHxNUSywXsH0tW99YZ+7OD0jLNngMJBtOZfy1W
+	o+TQJMKlQB6kmOaP3gdE9YQT/wl6Ww+o9zh48MNPMl7tNqhV
+X-Google-Smtp-Source: AGHT+IGzkU8ICsFNgeWO4iMwAVO3MODGVzGlDeU6J/rYE3fRLIvnn0zpP26ixYu9X8V+8iYL6Mtid9xy6XQjpMWsk8M04Gd9o1Ii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231227-topic-psci_fw_sus-v1-2-6910add70bf3@linaro.org>
+X-Received: by 2002:a5d:814e:0:b0:7ba:d9c8:b97d with SMTP id
+ f14-20020a5d814e000000b007bad9c8b97dmr77030ioo.4.1703759668260; Thu, 28 Dec
+ 2023 02:34:28 -0800 (PST)
+Date: Thu, 28 Dec 2023 02:34:28 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000cf405f060d8f75a9@google.com>
+Subject: [syzbot] [udf?] KMSAN: uninit-value in udf_update_tag
+From: syzbot <syzbot+d31185aa54170f7fc1f5@syzkaller.appspotmail.com>
+To: jack@suse.com, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Dec 27, 2023 at 11:15:31PM +0100, Konrad Dybcio wrote:
-> Most Qualcomm platforms implementing PSCI (ab)use CPU_SUSPEND for
-> entering various stages of suspend, across the SoC. These range from a
-> simple WFI to a full-fledged power collapse of the entire chip
-> (mostly, anyway).
-> 
-> Some device drivers are curious to know whether "the firmware" (which is
-> often assumed to be ACPI) takes care of suspending or resuming the
-> platform. Set the flag that reports this behavior on the aforementioned
-> chips.
-> 
-> Some newer Qualcomm chips ship with firmware that actually advertises
-> PSCI SYSTEM_SUSPEND, so the compatible list should only grow slightly.
->
+Hello,
 
-NACK, just use suspend-to-idle if SYSTEM_SUSPEND is not advertised. It is
-designed for such platforms especially on x86/ACPI which don't advertise
-Sx states. I see no reason why that doesn't work on ARM platforms as well.
+syzbot found the following issue on:
 
--- 
-Regards,
-Sudeep
+HEAD commit:    861deac3b092 Linux 6.7-rc7
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=16e0171ae80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e0c7078a6b901aa3
+dashboard link: https://syzkaller.appspot.com/bug?extid=d31185aa54170f7fc1f5
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17561579e80000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1277e7a5e80000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/0ea60ee8ed32/disk-861deac3.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/6d69fdc33021/vmlinux-861deac3.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/f0158750d452/bzImage-861deac3.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/f35551f8a991/mount_0.gz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+d31185aa54170f7fc1f5@syzkaller.appspotmail.com
+
+=======================================================
+UDF-fs: INFO Mounting volume 'LinuxUDF', timestamp 2022/11/22 14:59 (1000)
+=====================================================
+BUG: KMSAN: uninit-value in crc_itu_t_byte include/linux/crc-itu-t.h:22 [inline]
+BUG: KMSAN: uninit-value in crc_itu_t+0x287/0x2e0 lib/crc-itu-t.c:60
+ crc_itu_t_byte include/linux/crc-itu-t.h:22 [inline]
+ crc_itu_t+0x287/0x2e0 lib/crc-itu-t.c:60
+ udf_update_tag+0x5c/0x2a0 fs/udf/misc.c:261
+ udf_rename+0x13dd/0x16a0 fs/udf/namei.c:877
+ vfs_rename+0x1a79/0x1fa0 fs/namei.c:4844
+ do_renameat2+0x1571/0x1ca0 fs/namei.c:4996
+ __do_sys_rename fs/namei.c:5042 [inline]
+ __se_sys_rename fs/namei.c:5040 [inline]
+ __x64_sys_rename+0xec/0x140 fs/namei.c:5040
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0x44/0x110 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x63/0x6b
+
+Local variable diriter created at:
+ udf_rename+0xbb/0x16a0 fs/udf/namei.c:768
+ vfs_rename+0x1a79/0x1fa0 fs/namei.c:4844
+
+CPU: 0 PID: 5011 Comm: syz-executor409 Not tainted 6.7.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
+=====================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
