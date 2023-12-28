@@ -1,115 +1,85 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F60CDDCE
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 15:09:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7b7fdde8b58so856090639f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 07:09:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703776143; x=1704380943;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qIENxlQM/yHYfnHfvYfBgYoMXgPAxd2HBB1RQCpglng=;
-        b=VQ0Z9d1Ke64wZM+WOiVAw+BwCiNTjZlmu3LfY15med6KtJ8jxRbQx/RtdoDSi0Coko
-         imSLKTWyaDEokJOj+j6S3tOj964zDf+QMEkAnyoOLfVhizH/P5jwUnKiTT4TzXuIB7R9
-         1fkkmErMbe7YnF73VggmGsNPdVaegRcidwN3tX+1do3b3TyiwUcWTsjbE01/sQE5fCR+
-         ozO4F8agW5QeikzJUluOoc9hRcb3asAqaqy9cCiHaBzhMM8otkHqLxPW/D6pI/Bl26Ln
-         O6KY3q5Xo2JAhAzqT/THZESbCUqbJagUTid0bduOikFYUKo2VlTp6EcQrLUtMlnM96Qc
-         EBpw==
-X-Gm-Message-State: AOJu0Yz34ccpa/STXb0SmfWfGWVgFNSdkIJkDW0NlTpXyVw8j8QrRjIV
-	4yFXG2PTQXl27Bgwd8kBOOwiBOGQQCThveHUqEnLs8/t84o4
-X-Google-Smtp-Source: AGHT+IE3NCJ80rf2P8hl5aRimWdUicWR1q0xtmYU9WxKhTyID956TMZAEfmDgOvKD2O8xF9Xr1O/S/g0E5GNhmI2qt8pjKd7sC8f
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90AD5F4F0;
+	Thu, 28 Dec 2023 15:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lyeXkaFp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89A99C433CA;
+	Thu, 28 Dec 2023 15:09:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703776179;
+	bh=jCI/YMfr+NrtHxo3qHYZpBjBqghFPe+6yiDfEv5LI1s=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lyeXkaFpTNlQ8A459Cp2D3+Mwy+bf2puUUc4xFDxB2odlSXM93Y+D6YBDw+BT8Jsk
+	 JryFCU4yiriOFCQqYIMScdhFTb7e/Qfr9jkTL+Hjsg9+sQGYlABZpI3cR6qymWfdaI
+	 rzRuCg7uIAwWSzUa9gHTu16fhm/009B7VcgKSPxkq2o2pIin+hO7LKju2O0xJ3PFr1
+	 +nqTsv8lVK01XPSJsTslTYjoIsbxQFIuKGFUaCDvoNPhQXhLbAz2juxWFk7Fo7OFSh
+	 F/BSyr/QNdbVmiyHi2NeNgGhrs1lGQDcTNJ8TYJOfaAfQdZrrLB3Mqi3a5/YJS5z5G
+	 5t/wud5LAAnSA==
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Andre Przywara <andre.przywara@arm.com>,
+	Icenowy Zheng <uwu@icenowy.me>
+Cc: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] arm64: dts: allwinner: h618: Add Sipeed Longan SoM 3H and Pi 3H board
+Date: Thu, 28 Dec 2023 22:56:45 +0800
+Message-Id: <20231228145647.1470-1-jszhang@kernel.org>
+X-Mailer: git-send-email 2.40.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1568:b0:35f:d9cc:1c9b with SMTP id
- k8-20020a056e02156800b0035fd9cc1c9bmr1826816ilu.0.1703776143631; Thu, 28 Dec
- 2023 07:09:03 -0800 (PST)
-Date: Thu, 28 Dec 2023 07:09:03 -0800
-In-Reply-To: <tencent_8E794F870DC725E80D9E92105DC45DE19907@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d16fcb060d934be7@google.com>
-Subject: Re: [syzbot] [erofs?] KMSAN: uninit-value in z_erofs_lz4_decompress (2)
-From: syzbot <syzbot+6c746eea496f34b3161d@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Add Sipeed Longan SoM 3H and Longan Pi 3H board support.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-KMSAN: uninit-value in z_erofs_lz4_decompress
+The Sipeed Longan SoM 3H is a system on module based on the Allwinner
+H618 SoC. The SoM features:
 
-loop0: detected capacity change from 0 to 16
-erofs: (device loop0): mounted with root inode @ nid 36.
-erofs: (device loop0): z_erofs_lz4_decompress_mem: failed to decompress -12 in[46, 4050] out[917]
-=====================================================
-BUG: KMSAN: uninit-value in hex_dump_to_buffer+0xae9/0x10f0 lib/hexdump.c:194
- hex_dump_to_buffer+0xae9/0x10f0 lib/hexdump.c:194
- print_hex_dump+0x13d/0x3e0 lib/hexdump.c:276
- z_erofs_lz4_decompress_mem fs/erofs/decompressor.c:252 [inline]
- z_erofs_lz4_decompress+0x28d0/0x2ae0 fs/erofs/decompressor.c:312
- z_erofs_decompress_pcluster fs/erofs/zdata.c:1290 [inline]
- z_erofs_decompress_queue+0x338c/0x6460 fs/erofs/zdata.c:1372
- z_erofs_runqueue+0x36cd/0x3830
- z_erofs_read_folio+0x435/0x810 fs/erofs/zdata.c:1843
- filemap_read_folio+0xce/0x370 mm/filemap.c:2323
- do_read_cache_folio+0x3b4/0x11e0 mm/filemap.c:3691
- read_cache_folio+0x60/0x80 mm/filemap.c:3723
- erofs_bread+0x286/0x6f0 fs/erofs/data.c:46
- erofs_find_target_block fs/erofs/namei.c:103 [inline]
- erofs_namei+0x2fe/0x1790 fs/erofs/namei.c:177
- erofs_lookup+0x100/0x3c0 fs/erofs/namei.c:206
- lookup_one_qstr_excl+0x233/0x520 fs/namei.c:1609
- filename_create+0x2fc/0x6d0 fs/namei.c:3876
- do_mkdirat+0x69/0x800 fs/namei.c:4121
- __do_sys_mkdirat fs/namei.c:4144 [inline]
- __se_sys_mkdirat fs/namei.c:4142 [inline]
- __x64_sys_mkdirat+0xc8/0x120 fs/namei.c:4142
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0x44/0x110 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
+- Four ARM Cortex-A53 cores, Mali-G31 MP2 GPU
+- 2/4 GiB LPDDR4 DRAM SoMs
+- AXP313a PMIC
+- eMMC
 
-Uninit was created at:
- __alloc_pages+0x9a4/0xe00 mm/page_alloc.c:4591
- alloc_pages_mpol+0x62b/0x9d0 mm/mempolicy.c:2133
- alloc_pages mm/mempolicy.c:2204 [inline]
- folio_alloc+0x1da/0x380 mm/mempolicy.c:2211
- filemap_alloc_folio+0xa5/0x430 mm/filemap.c:974
- do_read_cache_folio+0x163/0x11e0 mm/filemap.c:3655
- read_cache_folio+0x60/0x80 mm/filemap.c:3723
- erofs_bread+0x286/0x6f0 fs/erofs/data.c:46
- erofs_find_target_block fs/erofs/namei.c:103 [inline]
- erofs_namei+0x2fe/0x1790 fs/erofs/namei.c:177
- erofs_lookup+0x100/0x3c0 fs/erofs/namei.c:206
- lookup_one_qstr_excl+0x233/0x520 fs/namei.c:1609
- filename_create+0x2fc/0x6d0 fs/namei.c:3876
- do_mkdirat+0x69/0x800 fs/namei.c:4121
- __do_sys_mkdirat fs/namei.c:4144 [inline]
- __se_sys_mkdirat fs/namei.c:4142 [inline]
- __x64_sys_mkdirat+0xc8/0x120 fs/namei.c:4142
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0x44/0x110 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
+The Sipeed Longan PI 3H is a development board based on the above SoM.
+The board features:
+- Longan SoM 3H
+- Raspberry-Pi-1 compatible GPIO header
+- 2 USB 2.0 host port
+- 1 USB 2.0 type C port (power supply + OTG)
+- MicroSD slot
+- 1Gbps Ethernet port (via RTL8211 PHY)
+- HDMI port
+- WiFi/BT chip
 
-CPU: 1 PID: 5487 Comm: syz-executor.0 Not tainted 6.7.0-rc7-syzkaller-00003-gfbafc3e621c3-dirty #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
-=====================================================
+NOTE: I know it's too late for v6.8-rc1, but I want to send out this
+series so that the board users can easily get mainline support with two
+additional patches. I will send out v2 once v6.8-rc1 is out.
 
+Jisheng Zhang (2):
+  dt-bindings: arm: sunxi: Add Sipeed Longan Module 3H and Longan Pi 3H
+  arm64: dts: allwinner: h618: Add Sipeed Longan SoM 3H and Pi 3H board
+    support
 
-Tested on:
+ .../devicetree/bindings/arm/sunxi.yaml        |   7 +
+ arch/arm64/boot/dts/allwinner/Makefile        |   1 +
+ .../sun50i-h618-longan-module-3h.dtsi         |  82 +++++++++++
+ .../dts/allwinner/sun50i-h618-longanpi-3h.dts | 133 ++++++++++++++++++
+ 4 files changed, 223 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h618-longan-module-3h.dtsi
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h618-longanpi-3h.dts
 
-commit:         fbafc3e6 Merge tag 'for_linus' of git://git.kernel.org..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=12bcb509e80000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e0c7078a6b901aa3
-dashboard link: https://syzkaller.appspot.com/bug?extid=6c746eea496f34b3161d
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=16888cb5e80000
+-- 
+2.40.0
 
