@@ -1,279 +1,98 @@
-Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from out-176.mta0.migadu.com (out-176.mta0.migadu.com [91.218.175.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494C463C9;
-	Thu, 28 Dec 2023 09:46:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
-	by fd01.gateway.ufhost.com (Postfix) with ESMTP id D6DF07FDC;
-	Thu, 28 Dec 2023 17:46:11 +0800 (CST)
-Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX166.cuchost.com
- (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 28 Dec
- 2023 17:46:11 +0800
-Received: from [192.168.125.85] (183.27.97.107) by EXMBX171.cuchost.com
- (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 28 Dec
- 2023 17:46:10 +0800
-Message-ID: <196e61f9-2beb-413f-b2fd-4cd8e347ad60@starfivetech.com>
-Date: Thu, 28 Dec 2023 17:46:09 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB69163CD
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 09:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Subject: [PATCH v5 0/5] mm/zswap: dstmem reuse optimizations and cleanups
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 09/21] PCI: microchip: Move setup functions to
- pcie-plda-host.c
-Content-Language: en-US
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-CC: Conor Dooley <conor@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
-	<kw@linux.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>, Daire McNamara <daire.mcnamara@microchip.com>, "Emil
- Renner Berthing" <emil.renner.berthing@canonical.com>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-	<linux-pci@vger.kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
-	"Palmer Dabbelt" <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-	"Philipp Zabel" <p.zabel@pengutronix.de>, Mason Huo
-	<mason.huo@starfivetech.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Kevin Xie <kevin.xie@starfivetech.com>
-References: <20231214072839.2367-1-minda.chen@starfivetech.com>
- <20231214072839.2367-10-minda.chen@starfivetech.com>
- <ZYxHl+R40b7t4Xn2@lpieralisi>
-From: Minda Chen <minda.chen@starfivetech.com>
-In-Reply-To: <ZYxHl+R40b7t4Xn2@lpieralisi>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EXCAS064.cuchost.com (172.16.6.24) To EXMBX171.cuchost.com
- (172.16.6.91)
-X-YovoleRuleAgent: yovoleflag
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-b4-tracking: H4sIAMVDjWUC/33NTQrCMBAF4KtI1kby15q48h7iYpIZbcC20tSKSu/u4FK0q+E9eN+8RKEhUxG71U
+ sMNOWS+45DtV6J1EB3JpmRszDKWG20lc9yh6vEMrbUSvTGn6raWmVR8CRCIRkH6FLDo+52uXDZ5DL2
+ w+PzYtJ8Dn+0SUslfai3DNYBldvHx0jIGm1S34ojY5NZAgwDCFBhAHIatr8AuwRYBhxBUiEGR4l+AW 4JcAycjPFRVQHRh29gnuc3d8znDnQBAAA=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <zhouchengming@bytedance.com>
+Date: Thu, 28 Dec 2023 09:45:41 +0000
+Message-Id: <20231213-zswap-dstmem-v5-0-9382162bbf05@bytedance.com>
+To: Barry Song <21cnbao@gmail.com>, Yosry Ahmed <yosryahmed@google.com>, Nhat Pham <nphamcs@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Dan Streetman <ddstreet@ieee.org>, Vitaly Wool <vitaly.wool@konsulko.com>,
+ Johannes Weiner <hannes@cmpxchg.org>, Chris Li <chriscli@google.com>, Seth Jennings <sjenning@redhat.com>
+Cc: Yosry Ahmed <yosryahmed@google.com>, Nhat Pham <nphamcs@gmail.com>, Chris Li <chrisl@kernel.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Chengming Zhou <zhouchengming@bytedance.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1703756775; l=2769;
+ i=zhouchengming@bytedance.com; s=20231204; h=from:subject:message-id;
+ bh=HVI1JIYzdU7odrUyugqLS5ZpMBpfAXLpq1+kutx4nKw=;
+ b=0ZIIj3q0AvnJDzfu1QIRATwdEZ4lGT8Sp64+BP+0MmtVvY8NBjuizS6I0A5yqJURcKS/GmKSh
+ HqmUevQo/cEDsrYYuZujFQpKuvKBfv4KtWL89rCYgYtpKJ4J0+pifkM
+X-Developer-Key: i=zhouchengming@bytedance.com; a=ed25519;
+ pk=xFTmRtMG3vELGJBUiml7OYNdM393WOMv0iWWeQEVVdA=
+X-Migadu-Flow: FLOW_OUT
 
+Hi everyone,
 
+Changes in v5:
+- Drop the first patch and change to use 2 pages for acomp_ctx buffer.
+  Related report link: https://lore.kernel.org/lkml/0000000000000b05cd060d6b5511@google.com/
+- Add comment why we need 2 pages for compression in the last patch.
+- Link to v4: https://lore.kernel.org/r/20231213-zswap-dstmem-v4-0-f228b059dd89@bytedance.com
 
-On 2023/12/27 23:49, Lorenzo Pieralisi wrote:
-> On Thu, Dec 14, 2023 at 03:28:27PM +0800, Minda Chen wrote:
->> Move setup functions to common pcie-plda-host.c. So these two functions
->> can be re-used.
->> 
->> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
->> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
->> ---
->>  drivers/pci/controller/plda/Kconfig           |  4 +
->>  drivers/pci/controller/plda/Makefile          |  1 +
->>  .../pci/controller/plda/pcie-microchip-host.c | 59 --------------
->>  drivers/pci/controller/plda/pcie-plda-host.c  | 80 +++++++++++++++++++
->>  drivers/pci/controller/plda/pcie-plda.h       |  5 ++
->>  5 files changed, 90 insertions(+), 59 deletions(-)
->>  create mode 100644 drivers/pci/controller/plda/pcie-plda-host.c
->> 
->> diff --git a/drivers/pci/controller/plda/Kconfig b/drivers/pci/controller/plda/Kconfig
->> index 5cb3be4fc98c..e54a82ee94f5 100644
->> --- a/drivers/pci/controller/plda/Kconfig
->> +++ b/drivers/pci/controller/plda/Kconfig
->> @@ -3,10 +3,14 @@
->>  menu "PLDA-based PCIe controllers"
->>  	depends on PCI
->>  
->> +config PCIE_PLDA_HOST
->> +	bool
->> +
->>  config PCIE_MICROCHIP_HOST
->>  	tristate "Microchip AXI PCIe controller"
->>  	depends on PCI_MSI && OF
->>  	select PCI_HOST_COMMON
->> +	select PCIE_PLDA_HOST
->>  	help
->>  	  Say Y here if you want kernel to support the Microchip AXI PCIe
->>  	  Host Bridge driver.
->> diff --git a/drivers/pci/controller/plda/Makefile b/drivers/pci/controller/plda/Makefile
->> index e1a265cbf91c..4340ab007f44 100644
->> --- a/drivers/pci/controller/plda/Makefile
->> +++ b/drivers/pci/controller/plda/Makefile
->> @@ -1,2 +1,3 @@
->>  # SPDX-License-Identifier: GPL-2.0
->> +obj-$(CONFIG_PCIE_PLDA_HOST) += pcie-plda-host.o
->>  obj-$(CONFIG_PCIE_MICROCHIP_HOST) += pcie-microchip-host.o
->> diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
->> index 31ca8d44ee2a..2e79bcc7c0a5 100644
->> --- a/drivers/pci/controller/plda/pcie-microchip-host.c
->> +++ b/drivers/pci/controller/plda/pcie-microchip-host.c
->> @@ -838,65 +838,6 @@ static int mc_pcie_init_irq_domains(struct plda_pcie_rp *port)
->>  	return mc_allocate_msi_domains(port);
->>  }
->>  
->> -static void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
->> -				   phys_addr_t axi_addr, phys_addr_t pci_addr,
->> -				   size_t size)
->> -{
->> -	u32 atr_sz = ilog2(size) - 1;
->> -	u32 val;
->> -
->> -	if (index == 0)
->> -		val = PCIE_CONFIG_INTERFACE;
->> -	else
->> -		val = PCIE_TX_RX_INTERFACE;
->> -
->> -	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->> -	       ATR0_AXI4_SLV0_TRSL_PARAM);
->> -
->> -	val = lower_32_bits(axi_addr) | (atr_sz << ATR_SIZE_SHIFT) |
->> -			    ATR_IMPL_ENABLE;
->> -	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->> -	       ATR0_AXI4_SLV0_SRCADDR_PARAM);
->> -
->> -	val = upper_32_bits(axi_addr);
->> -	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->> -	       ATR0_AXI4_SLV0_SRC_ADDR);
->> -
->> -	val = lower_32_bits(pci_addr);
->> -	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->> -	       ATR0_AXI4_SLV0_TRSL_ADDR_LSB);
->> -
->> -	val = upper_32_bits(pci_addr);
->> -	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->> -	       ATR0_AXI4_SLV0_TRSL_ADDR_UDW);
->> -
->> -	val = readl(bridge_base_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
->> -	val |= (ATR0_PCIE_ATR_SIZE << ATR0_PCIE_ATR_SIZE_SHIFT);
->> -	writel(val, bridge_base_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
->> -	writel(0, bridge_base_addr + ATR0_PCIE_WIN0_SRC_ADDR);
->> -}
->> -
->> -static int plda_pcie_setup_iomems(struct pci_host_bridge *bridge,
->> -				  struct plda_pcie_rp *port)
->> -{
->> -	void __iomem *bridge_base_addr = port->bridge_addr;
->> -	struct resource_entry *entry;
->> -	u64 pci_addr;
->> -	u32 index = 1;
->> -
->> -	resource_list_for_each_entry(entry, &bridge->windows) {
->> -		if (resource_type(entry->res) == IORESOURCE_MEM) {
->> -			pci_addr = entry->res->start - entry->offset;
->> -			plda_pcie_setup_window(bridge_base_addr, index,
->> -					       entry->res->start, pci_addr,
->> -					       resource_size(entry->res));
->> -			index++;
->> -		}
->> -	}
->> -
->> -	return 0;
->> -}
->> -
->>  static inline void mc_clear_secs(struct mc_pcie *port)
->>  {
->>  	void __iomem *ctrl_base_addr = port->axi_base_addr + MC_PCIE_CTRL_ADDR;
->> diff --git a/drivers/pci/controller/plda/pcie-plda-host.c b/drivers/pci/controller/plda/pcie-plda-host.c
->> new file mode 100644
->> index 000000000000..19131181897f
->> --- /dev/null
->> +++ b/drivers/pci/controller/plda/pcie-plda-host.c
->> @@ -0,0 +1,80 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * PLDA PCIe XpressRich host controller driver
->> + *
->> + * Copyright (C) 2023 Microchip Co. Ltd
->> + *
->> + * Author: Daire McNamara <daire.mcnamara@microchip.com>
->> + */
->> +
->> +#include <linux/irqchip/chained_irq.h>
->> +#include <linux/irqdomain.h>
->> +#include <linux/msi.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_pci.h>
->> +#include <linux/pci_regs.h>
->> +#include <linux/pci-ecam.h>
->> +#include <linux/platform_device.h>
-> 
-> Do you really require these headers ? Not in this patch,
-> in later patches and that's why every header should be
-> added when it is really needed.
-> 
-> Lorenzo
-> 
-OK, I will change this. thanks.
->> +
->> +#include "pcie-plda.h"
->> +
->> +void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
->> +			    phys_addr_t axi_addr, phys_addr_t pci_addr,
->> +			    size_t size)
->> +{
->> +	u32 atr_sz = ilog2(size) - 1;
->> +	u32 val;
->> +
->> +	if (index == 0)
->> +		val = PCIE_CONFIG_INTERFACE;
->> +	else
->> +		val = PCIE_TX_RX_INTERFACE;
->> +
->> +	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->> +	       ATR0_AXI4_SLV0_TRSL_PARAM);
->> +
->> +	val = lower_32_bits(axi_addr) | (atr_sz << ATR_SIZE_SHIFT) |
->> +			    ATR_IMPL_ENABLE;
->> +	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->> +	       ATR0_AXI4_SLV0_SRCADDR_PARAM);
->> +
->> +	val = upper_32_bits(axi_addr);
->> +	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->> +	       ATR0_AXI4_SLV0_SRC_ADDR);
->> +
->> +	val = lower_32_bits(pci_addr);
->> +	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->> +	       ATR0_AXI4_SLV0_TRSL_ADDR_LSB);
->> +
->> +	val = upper_32_bits(pci_addr);
->> +	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
->> +	       ATR0_AXI4_SLV0_TRSL_ADDR_UDW);
->> +
->> +	val = readl(bridge_base_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
->> +	val |= (ATR0_PCIE_ATR_SIZE << ATR0_PCIE_ATR_SIZE_SHIFT);
->> +	writel(val, bridge_base_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
->> +	writel(0, bridge_base_addr + ATR0_PCIE_WIN0_SRC_ADDR);
->> +}
->> +EXPORT_SYMBOL_GPL(plda_pcie_setup_window);
->> +
->> +int plda_pcie_setup_iomems(struct pci_host_bridge *bridge,
->> +			   struct plda_pcie_rp *port)
->> +{
->> +	void __iomem *bridge_base_addr = port->bridge_addr;
->> +	struct resource_entry *entry;
->> +	u64 pci_addr;
->> +	u32 index = 1;
->> +
->> +	resource_list_for_each_entry(entry, &bridge->windows) {
->> +		if (resource_type(entry->res) == IORESOURCE_MEM) {
->> +			pci_addr = entry->res->start - entry->offset;
->> +			plda_pcie_setup_window(bridge_base_addr, index,
->> +					       entry->res->start, pci_addr,
->> +					       resource_size(entry->res));
->> +			index++;
->> +		}
->> +	}
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(plda_pcie_setup_iomems);
->> diff --git a/drivers/pci/controller/plda/pcie-plda.h b/drivers/pci/controller/plda/pcie-plda.h
->> index 363fcbbaf6ec..3deefd35fa5a 100644
->> --- a/drivers/pci/controller/plda/pcie-plda.h
->> +++ b/drivers/pci/controller/plda/pcie-plda.h
->> @@ -120,4 +120,9 @@ struct plda_pcie_rp {
->>  	void __iomem *bridge_addr;
->>  };
->>  
->> +void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
->> +			    phys_addr_t axi_addr, phys_addr_t pci_addr,
->> +			    size_t size);
->> +int plda_pcie_setup_iomems(struct pci_host_bridge *bridge,
->> +			   struct plda_pcie_rp *port);
->>  #endif
->> -- 
->> 2.17.1
->> 
+Changes in v4:
+- Collect Reviewed-by and Acked-by tags.
+- Fold in the comment fix in zswap_writeback_entry() from Yosry Ahmed.
+- Add patch to change per-cpu mutex and dstmem to per-acomp_ctx.
+- Just rename crypto_acomp_ctx->dstmem field to buffer.
+- Link to v3: https://lore.kernel.org/r/20231213-zswap-dstmem-v3-0-4eac09b94ece@bytedance.com
+
+Changes in v3:
+- Collect Reviewed-by tag.
+- Drop the __zswap_store() refactoring part.
+- Link to v2: https://lore.kernel.org/r/20231213-zswap-dstmem-v2-0-daa5d9ae41a7@bytedance.com
+
+Changes in v2:
+- Add more changelog and test data about changing dstmem to one page.
+- Reorder patches to put dstmem reusing and __zswap_load() refactoring
+  together, still refactor after dstmem reusing since we don't want
+  to handle __zswap_load() failure due to memory allocation failure
+  in zswap_writeback_entry().
+- Append a patch to directly use percpu mutex and buffer in load/store
+  and refactor out __zswap_store() to simplify zswap_store().
+- Link to v1: https://lore.kernel.org/r/20231213-zswap-dstmem-v1-0-896763369d04@bytedance.com
+
+This series is split from [1] to only include zswap dstmem reuse
+optimizations and cleanups, the other part of rbtree breakdown will
+be deferred to retest after the rbtree converted to xarray.
+
+And the problem this series tries to optimize is that zswap_load()
+and zswap_writeback_entry() have to malloc a temporary memory to
+support !zpool_can_sleep_mapped(). We can avoid it by reusing the
+percpu crypto_acomp_ctx->dstmem, which is also used by zswap_store()
+and protected by the same percpu crypto_acomp_ctx->mutex.
+
+[1] https://lore.kernel.org/all/20231206-zswap-lock-optimize-v1-0-e25b059f9c3a@bytedance.com/
+
+Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+---
+Chengming Zhou (5):
+      mm/zswap: reuse dstmem when decompress
+      mm/zswap: refactor out __zswap_load()
+      mm/zswap: cleanup zswap_load()
+      mm/zswap: cleanup zswap_writeback_entry()
+      mm/zswap: change per-cpu mutex and buffer to per-acomp_ctx
+
+ include/linux/cpuhotplug.h |   1 -
+ mm/zswap.c                 | 251 ++++++++++++++-------------------------------
+ 2 files changed, 76 insertions(+), 176 deletions(-)
+---
+base-commit: 1f242c1964cf9b8d663a2fd72159b296205a8126
+change-id: 20231213-zswap-dstmem-d828f563303d
+
+Best regards,
+-- 
+Chengming Zhou <zhouchengming@bytedance.com>
