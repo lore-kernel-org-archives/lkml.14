@@ -1,97 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D0AC8D2
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 14:31:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pqc9NNBE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703773884; x=1735309884;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=4YoiP5cx+oOE35Y5TkJFbWoAf3NNxqHps5Ad7oCP678=;
-  b=Pqc9NNBEcnN+OlinCW5FtxesjCnmiWIW2PyvFU+okRyULeuYoFWocDKZ
-   xYkGiZP62j0s6O/rs9U7fzvy95l9jmZ0A7lmN5MKhU7El/nNB4inmQXJi
-   K632pJwt2Lk+zL6XJVqXPVzwxn2c8pQiTocPKdlRFqHh7WipR4hRrvGXY
-   +gIg/ZS7Ps7OuGofFiGVR94JD9/QcUniLT1o3qeqceXKwghuvwPkdlVqd
-   4YQ0Lrp2Hc1MweHX4bIg6iRE+cXFJwwTvJWeis9E28vJvb3LazIuRYCHZ
-   a9A7P3JiJfMDS8BnItPbJ6MeNu56n96qJPzEKQKG8bYXXb1Nu2Q0/ijxm
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="427722222"
-X-IronPort-AV: E=Sophos;i="6.04,312,1695711600"; 
-   d="scan'208";a="427722222"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2023 06:31:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="728328070"
-X-IronPort-AV: E=Sophos;i="6.04,312,1695711600"; 
-   d="scan'208";a="728328070"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 28 Dec 2023 06:31:22 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rIrPs-000GXB-0A;
-	Thu, 28 Dec 2023 14:31:20 +0000
-Date: Thu, 28 Dec 2023 22:30:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Aswath Govindraju <a-govindraju@ti.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Vinod Koul <vkoul@kernel.org>
-Subject: drivers/mux/adg792a.c:134:34: warning: 'adg792a_of_match' defined
- but not used
-Message-ID: <202312282250.c3GseJPc-lkp@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD41BE56D
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 14:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-35ff7c81f4aso39752615ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 06:32:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703773924; x=1704378724;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3y+mx3ZbG/VWu7Syp53uyO6K/G7sLGcvq9q1dwWggrQ=;
+        b=oXt7Rpc/7vc66ebMzY2yfNWQVt2AmwyHYQg/ST18wKL03/ajx3qdad0/ugVeUd3PDI
+         6eLZ8FalSuSC/NkC4OybZwppFqOwh8a0NtgQ0GJqCrwLMRVPIja4xythOaXVR3fPkxwu
+         dF1Hcxe/50AbmVpN/9WurXPJ9+SPPh3ZlgTzd3JCvkwTCgHZyjEtXVPlXH6HsG6g/qPe
+         cHRABFdVSARPZFIY70eSy4XSvm3E/a+is3seoVMcOJjIGGFJLjuZac7qgy0lL9G3HQUD
+         0Fs2gXjOf7//J9Ofy3goXihcz1Xi+BA3boY/teSoIRrZhKAb/5Key54fkPlqCJLdeCzx
+         apEw==
+X-Gm-Message-State: AOJu0YxPYfUxwqxFge5qd7XtCcmGP8hO8fu32bsr3TOlMgWoKo0RJOwF
+	uGyflI8/G9X1xxCZj+MOcn60OI5lL5Ml2oneqOUQoRLQ+S/g
+X-Google-Smtp-Source: AGHT+IF7OfdjhSgYW/Gwwr44ZQs1Hfeh8f28otmwwoAlvVz9SRzd+G7ddgmbd8GKoQ106h8RAyfY0CPbM3ajxgLY81eAfSO6dlEj
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Received: by 2002:a05:6e02:1a07:b0:35f:eb20:3599 with SMTP id
+ s7-20020a056e021a0700b0035feb203599mr956226ild.2.1703773923904; Thu, 28 Dec
+ 2023 06:32:03 -0800 (PST)
+Date: Thu, 28 Dec 2023 06:32:03 -0800
+In-Reply-To: <tencent_5E3C1D3628961837D24ACA7447769967B009@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000831818060d92c78d@google.com>
+Subject: Re: [syzbot] [erofs?] KMSAN: uninit-value in z_erofs_lz4_decompress (2)
+From: syzbot <syzbot+6c746eea496f34b3161d@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Aswath,
+Hello,
 
-FYI, the error/warning still remains.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+KMSAN: uninit-value in z_erofs_lz4_decompress
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   f5837722ffecbbedf1b1dbab072a063565f0dad1
-commit: e4d4371253029528c02bfb43a46c252e1c3d035f phy: phy-can-transceiver: Add support for setting mux
-date:   1 year, 9 months ago
-config: x86_64-randconfig-c022-20230306 (https://download.01.org/0day-ci/archive/20231228/202312282250.c3GseJPc-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231228/202312282250.c3GseJPc-lkp@intel.com/reproduce)
+loop0: detected capacity change from 0 to 16
+erofs: (device loop0): mounted with root inode @ nid 36.
+erofs: (device loop0): z_erofs_lz4_decompress_mem: failed to decompress -12 in[46, 4050] out[917]
+=====================================================
+BUG: KMSAN: uninit-value in hex_dump_to_buffer+0xae9/0x10f0 lib/hexdump.c:194
+ hex_dump_to_buffer+0xae9/0x10f0 lib/hexdump.c:194
+ print_hex_dump+0x13d/0x3e0 lib/hexdump.c:276
+ z_erofs_lz4_decompress_mem fs/erofs/decompressor.c:252 [inline]
+ z_erofs_lz4_decompress+0x2624/0x2b30 fs/erofs/decompressor.c:311
+ z_erofs_decompress_pcluster fs/erofs/zdata.c:1290 [inline]
+ z_erofs_decompress_queue+0x338c/0x6460 fs/erofs/zdata.c:1372
+ z_erofs_runqueue+0x36cd/0x3830
+ z_erofs_read_folio+0x435/0x810 fs/erofs/zdata.c:1843
+ filemap_read_folio+0xce/0x370 mm/filemap.c:2323
+ do_read_cache_folio+0x3b4/0x11e0 mm/filemap.c:3691
+ read_cache_folio+0x60/0x80 mm/filemap.c:3723
+ erofs_bread+0x286/0x6f0 fs/erofs/data.c:46
+ erofs_find_target_block fs/erofs/namei.c:103 [inline]
+ erofs_namei+0x2fe/0x1790 fs/erofs/namei.c:177
+ erofs_lookup+0x100/0x3c0 fs/erofs/namei.c:206
+ lookup_one_qstr_excl+0x233/0x520 fs/namei.c:1609
+ filename_create+0x2fc/0x6d0 fs/namei.c:3876
+ do_mkdirat+0x69/0x800 fs/namei.c:4121
+ __do_sys_mkdirat fs/namei.c:4144 [inline]
+ __se_sys_mkdirat fs/namei.c:4142 [inline]
+ __x64_sys_mkdirat+0xc8/0x120 fs/namei.c:4142
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0x44/0x110 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x63/0x6b
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312282250.c3GseJPc-lkp@intel.com/
+Uninit was created at:
+ __alloc_pages+0x9a4/0xe00 mm/page_alloc.c:4591
+ alloc_pages_mpol+0x62b/0x9d0 mm/mempolicy.c:2133
+ alloc_pages mm/mempolicy.c:2204 [inline]
+ folio_alloc+0x1da/0x380 mm/mempolicy.c:2211
+ filemap_alloc_folio+0xa5/0x430 mm/filemap.c:974
+ do_read_cache_folio+0x163/0x11e0 mm/filemap.c:3655
+ read_cache_folio+0x60/0x80 mm/filemap.c:3723
+ erofs_bread+0x286/0x6f0 fs/erofs/data.c:46
+ erofs_find_target_block fs/erofs/namei.c:103 [inline]
+ erofs_namei+0x2fe/0x1790 fs/erofs/namei.c:177
+ erofs_lookup+0x100/0x3c0 fs/erofs/namei.c:206
+ lookup_one_qstr_excl+0x233/0x520 fs/namei.c:1609
+ filename_create+0x2fc/0x6d0 fs/namei.c:3876
+ do_mkdirat+0x69/0x800 fs/namei.c:4121
+ __do_sys_mkdirat fs/namei.c:4144 [inline]
+ __se_sys_mkdirat fs/namei.c:4142 [inline]
+ __x64_sys_mkdirat+0xc8/0x120 fs/namei.c:4142
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0x44/0x110 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x63/0x6b
 
-All warnings (new ones prefixed by >>):
-
->> drivers/mux/adg792a.c:134:34: warning: 'adg792a_of_match' defined but not used [-Wunused-const-variable=]
-     134 | static const struct of_device_id adg792a_of_match[] = {
-         |                                  ^~~~~~~~~~~~~~~~
+CPU: 0 PID: 5477 Comm: syz-executor.0 Not tainted 6.7.0-rc7-syzkaller-00003-gfbafc3e621c3-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
+=====================================================
 
 
-vim +/adg792a_of_match +134 drivers/mux/adg792a.c
+Tested on:
 
-afda08c4caa948 drivers/mux/mux-adg792a.c Peter Rosin 2017-05-14  133  
-afda08c4caa948 drivers/mux/mux-adg792a.c Peter Rosin 2017-05-14 @134  static const struct of_device_id adg792a_of_match[] = {
-afda08c4caa948 drivers/mux/mux-adg792a.c Peter Rosin 2017-05-14  135  	{ .compatible = "adi,adg792a", },
-afda08c4caa948 drivers/mux/mux-adg792a.c Peter Rosin 2017-05-14  136  	{ .compatible = "adi,adg792g", },
-afda08c4caa948 drivers/mux/mux-adg792a.c Peter Rosin 2017-05-14  137  	{ }
-afda08c4caa948 drivers/mux/mux-adg792a.c Peter Rosin 2017-05-14  138  };
-afda08c4caa948 drivers/mux/mux-adg792a.c Peter Rosin 2017-05-14  139  MODULE_DEVICE_TABLE(of, adg792a_of_match);
-afda08c4caa948 drivers/mux/mux-adg792a.c Peter Rosin 2017-05-14  140  
+commit:         fbafc3e6 Merge tag 'for_linus' of git://git.kernel.org..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=14751455e80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e0c7078a6b901aa3
+dashboard link: https://syzkaller.appspot.com/bug?extid=6c746eea496f34b3161d
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=128ea2a1e80000
 
-:::::: The code at line 134 was first introduced by commit
-:::::: afda08c4caa9489511557def51e322a5f2142a2f mux: adg792a: add mux controller driver for ADG792A/G
-
-:::::: TO: Peter Rosin <peda@axentia.se>
-:::::: CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
