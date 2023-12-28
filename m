@@ -1,96 +1,135 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70900F4E3
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 15:32:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D648F9C5
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 15:33:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bV24B82m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DA57C433C7;
-	Thu, 28 Dec 2023 15:32:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ipbAH/Wr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9075C433C8;
+	Thu, 28 Dec 2023 15:33:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703777577;
-	bh=LG5wfSfrHn99aGr2v7pF+1hWyoSHf6YdWgLzSdkpESY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bV24B82mQKHqGjRSKXLYULLUfp7zHybS5xhk1FSm3DTpIpcPnZRKHf9FlpCpbzNhr
-	 k+uBiy+6ucOzWB8lI+gJok+Pl5pAPIWPsqVbsSnfQw+SJJfrCMaG0a+M0Q8znK6hgz
-	 9so5rJKSAs651AWD1mN4hsbxBLZ+y47bpmjVGhWzbiLUizTHWrJtI0XMZQ/hMABNHK
-	 s3cImwgPGu7aVK+H6Cm826b02aidEoMkd8LqTOompL4wMSPfcSgtxBYKb6tebA1sC2
-	 4s3MQAoHBfTj8XGt/9CqQZsc3Y8qpu2RLDhwf05KxpIN/piBJvLWb24u6EeJtMwGN0
-	 FAQ/FWD2Kl/RQ==
-Date: Thu, 28 Dec 2023 16:32:54 +0100
-From: Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
-To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@pengutronix.de>
-Cc: kernel@pengutronix.de, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/11] firmware: turris-mox-rwtm: Convert to platform
- remove callback returning void
-Message-ID: <20231228163254.72b770ba@dellmb>
-In-Reply-To: <9074d1ad2e889425991fecad664781ae27b2418a.1703693980.git.u.kleine-koenig@pengutronix.de>
-References: <cover.1703693980.git.u.kleine-koenig@pengutronix.de>
-	<9074d1ad2e889425991fecad664781ae27b2418a.1703693980.git.u.kleine-koenig@pengutronix.de>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	s=k20201202; t=1703777622;
+	bh=5yDsdWwaOqkj18xvk96SZBr48BQYi9xMppuyMIAULmU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ipbAH/Wrp+ob6Xz/zB6i7pWjWD21xpgwi8d2rw2pVIqCBvEHGuX4I8jd+DJs0lhKG
+	 h2BBoxE8exC0WvB1G47rLd1XRlQ0YFDzg7Do22yyNTMQ7S9bsXy8UCTTPKZe+f2zmC
+	 0qmK9RaswodQXcH8JIraTOjvkOkhnDSM8UishL/tahB1aKFDWu8P2U2vxqqRP9XYJs
+	 OXE46j+jQDiLFoZ3KxrEF/TP9wU73NL2vZW/RsrfDfs4V23kbES0utEbpLxQ7m0eig
+	 qO/xhxNmiPib6F1CFcxs2wAwaPt7SLC4H6Hi19Hl+mW+s2ZvKbFvaHJLFC/WivTuS8
+	 BYL6quMrgPTfw==
+Message-ID: <19a1340f-0a0d-40a0-9d00-0faf171480f2@kernel.org>
+Date: Thu, 28 Dec 2023 23:33:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/6] f2fs: fix to restrict condition of compress inode
+ conversion
+Content-Language: en-US
+To: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+References: <20231210113547.3412782-1-chao@kernel.org>
+ <20231210113547.3412782-5-chao@kernel.org> <ZXeJKCNrxcit0eTC@google.com>
+ <5884e300-5384-4a49-9f8d-8cced50f4e6d@kernel.org>
+ <ZXjc_I6__dijbwvN@google.com>
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <ZXjc_I6__dijbwvN@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, 27 Dec 2023 17:26:34 +0100
-Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> wrote:
+On 2023/12/13 6:21, Jaegeuk Kim wrote:
+> On 12/12, Chao Yu wrote:
+>> On 2023/12/12 6:11, Jaegeuk Kim wrote:
+>>> On 12/10, Chao Yu wrote:
+>>>> This patch adds i_size check during compress inode conversion in order
+>>>> to avoid .page_mkwrite races w/ conversion.
+>>>
+>>> Which race condition do you see?
+>>
+>> Something like:
+>>
+>> - f2fs_setflags_common
+>>   - check S_ISREG && F2FS_HAS_BLOCKS
+>> 					- mkwrite
+>> 					 - f2fs_get_block_locked
+>> 					  : update metadata in old inode's disk layout
+> 
+> Don't we need to prevent setting this for mmapped file?
 
-> The .remove() callback for a platform driver returns an int which makes
-> many driver authors wrongly assume it's possible to do error handling by
-> returning an error code. However the value returned is ignored (apart
-> from emitting a warning) and this typically results in resource leaks.
->=20
-> To improve here there is a quest to make the remove callback return
-> void. In the first step of this quest all drivers are converted to
-> .remove_new(), which already returns void. Eventually after all drivers
-> are converted, .remove_new() will be renamed to .remove().
->=20
-> Trivially convert this driver from always returning zero in the remove
-> callback to the void returning variant.
->=20
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/firmware/turris-mox-rwtm.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/firmware/turris-mox-rwtm.c b/drivers/firmware/turris=
--mox-rwtm.c
-> index 2de0fb139ce1..31d962cdd6eb 100644
-> --- a/drivers/firmware/turris-mox-rwtm.c
-> +++ b/drivers/firmware/turris-mox-rwtm.c
-> @@ -554,7 +554,7 @@ static int turris_mox_rwtm_probe(struct platform_devi=
-ce *pdev)
->  	return ret;
->  }
-> =20
-> -static int turris_mox_rwtm_remove(struct platform_device *pdev)
-> +static void turris_mox_rwtm_remove(struct platform_device *pdev)
->  {
->  	struct mox_rwtm *rwtm =3D platform_get_drvdata(pdev);
-> =20
-> @@ -562,8 +562,6 @@ static int turris_mox_rwtm_remove(struct platform_dev=
-ice *pdev)
->  	sysfs_remove_files(rwtm_to_kobj(rwtm), mox_rwtm_attrs);
->  	kobject_put(rwtm_to_kobj(rwtm));
->  	mbox_free_channel(rwtm->mbox);
-> -
-> -	return 0;
->  }
-> =20
->  static const struct of_device_id turris_mox_rwtm_match[] =3D {
-> @@ -576,7 +574,7 @@ MODULE_DEVICE_TABLE(of, turris_mox_rwtm_match);
-> =20
->  static struct platform_driver turris_mox_rwtm_driver =3D {
->  	.probe	=3D turris_mox_rwtm_probe,
-> -	.remove	=3D turris_mox_rwtm_remove,
-> +	.remove_new =3D turris_mox_rwtm_remove,
->  	.driver	=3D {
->  		.name		=3D DRIVER_NAME,
->  		.of_match_table	=3D turris_mox_rwtm_match,
+Oh, we have used i_sem lock to prevent such race case, however
+we missed f2fs_disable_compressed_file():
 
-Reviewed-by: Marek Beh=C3=BAn <kabel@kernel.org>
+- f2fs_disable_compressed_file
+  - check inode_has_data
+						- f2fs_file_mmap
+						- mkwrite
+						 - f2fs_get_block_locked
+						 : update metadata in compressed
+						   inode's disk layout
+  - fi->i_flags &= ~F2FS_COMPR_FL
+  - clear_inode_flag(inode, FI_COMPRESSED_FILE);
+
+Thanks,
+
+> 
+>>   - set_compress_context
+>>
+>> Thanks,
+>>
+>>>
+>>>>
+>>>> Fixes: 4c8ff7095bef ("f2fs: support data compression")
+>>>> Signed-off-by: Chao Yu <chao@kernel.org>
+>>>> ---
+>>>>    fs/f2fs/f2fs.h | 8 +++++++-
+>>>>    fs/f2fs/file.c | 5 ++---
+>>>>    2 files changed, 9 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>>> index 65294e3b0bef..c9b8a1953913 100644
+>>>> --- a/fs/f2fs/f2fs.h
+>>>> +++ b/fs/f2fs/f2fs.h
+>>>> @@ -4397,13 +4397,19 @@ static inline int set_compress_context(struct inode *inode)
+>>>>    #endif
+>>>>    }
+>>>> +static inline bool inode_has_data(struct inode *inode)
+>>>> +{
+>>>> +	return (S_ISREG(inode->i_mode) &&
+>>>> +		(F2FS_HAS_BLOCKS(inode) || i_size_read(inode)));
+>>>> +}
+>>>> +
+>>>>    static inline bool f2fs_disable_compressed_file(struct inode *inode)
+>>>>    {
+>>>>    	struct f2fs_inode_info *fi = F2FS_I(inode);
+>>>>    	if (!f2fs_compressed_file(inode))
+>>>>    		return true;
+>>>> -	if (S_ISREG(inode->i_mode) && F2FS_HAS_BLOCKS(inode))
+>>>> +	if (inode_has_data(inode))
+>>>>    		return false;
+>>>>    	fi->i_flags &= ~F2FS_COMPR_FL;
+>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>>>> index 1a3c29a9a6a0..8af4b29c3e1a 100644
+>>>> --- a/fs/f2fs/file.c
+>>>> +++ b/fs/f2fs/file.c
+>>>> @@ -1922,8 +1922,7 @@ static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
+>>>>    			f2fs_down_write(&F2FS_I(inode)->i_sem);
+>>>>    			if (!f2fs_may_compress(inode) ||
+>>>> -					(S_ISREG(inode->i_mode) &&
+>>>> -					F2FS_HAS_BLOCKS(inode))) {
+>>>> +					inode_has_data(inode)) {
+>>>>    				f2fs_up_write(&F2FS_I(inode)->i_sem);
+>>>>    				return -EINVAL;
+>>>>    			}
+>>>> @@ -3996,7 +3995,7 @@ static int f2fs_ioc_set_compress_option(struct file *filp, unsigned long arg)
+>>>>    		goto out;
+>>>>    	}
+>>>> -	if (F2FS_HAS_BLOCKS(inode)) {
+>>>> +	if (inode_has_data(inode)) {
+>>>>    		ret = -EFBIG;
+>>>>    		goto out;
+>>>>    	}
+>>>> -- 
+>>>> 2.40.1
