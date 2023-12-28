@@ -1,101 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA25FF508;
-	Thu, 28 Dec 2023 16:47:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F99F4EC
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 16:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oZxQe0o4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57305C433C7;
-	Thu, 28 Dec 2023 16:47:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703782051;
-	bh=eEPrkCoBmJGFeF8k8PZ0nch647vPFgYklt+GE6KJF8c=;
-	h=From:Date:Subject:To:Cc:From;
-	b=oZxQe0o4z4py/g/JAnU2bXpaDz67VjjF4qVI9eF1Sbnd+2UbPtPFUTKfJIJv/aEoc
-	 AoPnqUZ1Jqou7m9NI+ROtYiE12vGTxqAcBdaWoc+iQ4mUvbczp3WH6CZPj+QVuq0VB
-	 vELdLFliSNO89M7qouKX19wCIee/TNAX4JGZzfB23VxU+D1cn1RyjtPCwZKdag1M3e
-	 dJqyJEVTmxkMXibNSy9yPJPlwK0GXTzfd28SDrJDa8E1+Bj7BlwA9lPTfMiy9+o4I0
-	 pHNxApaTODAzHo7SyaIEXNmXhGu6mPX73oJBgrmsdrhLjRHV328I8EMXpAwc8hTfdU
-	 jYfJdNyww3pnQ==
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-594cad5f69fso707776eaf.1;
-        Thu, 28 Dec 2023 08:47:31 -0800 (PST)
-X-Gm-Message-State: AOJu0Yzz3f5AhEyQsKR3X+w1GbhYHjNHghrPD//ncTR0s9IRRdTh56Zy
-	AB3abQTpIROAw87D2QOC9dtAA3WhkKlMxlINsCM=
-X-Google-Smtp-Source: AGHT+IH+96iI1AiBrU8satRMtbxv+G7Ll1c+rRR8i/DvMUjaf8UQIww7dEUcXGozV2xLv4RIiTqYiCyvOBwPPxjjgHU=
-X-Received: by 2002:a05:6870:1490:b0:204:ccc:b419 with SMTP id
- k16-20020a056870149000b002040cccb419mr4644191oab.2.1703782050678; Thu, 28 Dec
- 2023 08:47:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XjY3XksU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703782278; x=1735318278;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XYOTYJ77YKnUFrVlaJSxWr2I93Md1Ed7ac29wDvu4Fg=;
+  b=XjY3XksUTn12S+n8xcjUpru1jnLXPYoxRNT7Nu23x51x+i1cCCjzVXhy
+   LkwsNAEAwf76U1xOsc7u88BaoKFd0xCKb290HKrLSWPWMOG6uhxCc0y67
+   sRTspJqyA1pI0WmJorqA5eOEKqqIv3bU6RGBXA+KjTXKatgbXu3seSc+0
+   Ul8TuO0DEd3JztLMjevpC6uSkwVr8Aueq+u/Vqwd77NOEZbc0LCIIYjWf
+   RpIoHAtAk24M9nxAAAjQ05nMfPB8t/r5HYuG6rtYVZDLhYsnPiAb9UF/L
+   S6HeKjxTCdw2L9QknUxomETMLh48x9YOGCIr2ShPkqPB0nYM0yh4U7hQe
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="395455929"
+X-IronPort-AV: E=Sophos;i="6.04,312,1695711600"; 
+   d="scan'208";a="395455929"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2023 08:51:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="848987390"
+X-IronPort-AV: E=Sophos;i="6.04,312,1695711600"; 
+   d="scan'208";a="848987390"
+Received: from noblecat-mobl.ger.corp.intel.com (HELO localhost) ([10.252.35.63])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2023 08:51:15 -0800
+Date: Thu, 28 Dec 2023 15:04:37 +0100
+From: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+To: Yaxiong Tian <iambestgod@outlook.com>
+Cc: maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	Yaxiong Tian <tianyaxiong@kylinos.cn>
+Subject: Re: [PATCH] drm/debugfs: fix memory leak in
+ drm_debugfs_remove_files()
+Message-ID: <ZY2AdV1DP6YnSh6g@linux.intel.com>
+References: <PUZPR01MB4775A8F67AE31D6A4927E6B7D59EA@PUZPR01MB4775.apcprd01.prod.exchangelabs.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Fri, 29 Dec 2023 01:46:54 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASh0Y0qyi+vJGbNvvEnGW3-hH=QBf=aEpbtxE2N9JSodg@mail.gmail.com>
-Message-ID: <CAK7LNASh0Y0qyi+vJGbNvvEnGW3-hH=QBf=aEpbtxE2N9JSodg@mail.gmail.com>
-Subject: [GIT PULL] Kbuild fixes for v6.7-rc8
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PUZPR01MB4775A8F67AE31D6A4927E6B7D59EA@PUZPR01MB4775.apcprd01.prod.exchangelabs.com>
 
-Hello Linus,
+On Thu, Dec 28, 2023 at 04:07:40PM +0800, Yaxiong Tian wrote:
+> From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+> 
+> The dentry returned by debugfs_lookup() needs to be released by calling
+> dput() which is missing in drm_debugfs_remove_files(). Fix this by adding
+> dput().
+> 
+> Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
+Reviewed-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
 
-
-Please pull Kbuild fixes for v6.7-rc8.
-Thanks.
-
-
-
-
-The following changes since commit 2cc14f52aeb78ce3f29677c2de1f06c0e91471ab:
-
-  Linux 6.7-rc3 (2023-11-26 19:59:33 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-tags/kbuild-fixes-v6.7-2
-
-for you to fetch changes up to 753547de0daecbdbd1af3618987ddade325d9aaa:
-
-  linux/export: Ensure natural alignment of kcrctab array (2023-12-29
-01:25:58 +0900)
-
-----------------------------------------------------------------
-Kbuild fixes for v6.7 (2nd)
-
- - Revive proper alignment for the ksymtab and kcrctab sections
-
- - Fix gen_compile_commands.py tool to resolve symbolic links
-
- - Fix symbolic links to installed debug VDSO files
-
- - Update MAINTAINERS
-
-----------------------------------------------------------------
-Helge Deller (2):
-      linux/export: Fix alignment for 64-bit ksymtab entries
-      linux/export: Ensure natural alignment of kcrctab array
-
-Jialu Xu (1):
-      gen_compile_commands.py: fix path resolve with symlinks in it
-
-Masahiro Yamada (1):
-      kbuild: fix build ID symlinks to installed debug VDSO files
-
-Nathan Chancellor (1):
-      MAINTAINERS: Add scripts/clang-tools to Kbuild section
-
- MAINTAINERS                                 | 1 +
- include/linux/export-internal.h             | 6 +++++-
- scripts/Makefile.vdsoinst                   | 2 +-
- scripts/clang-tools/gen_compile_commands.py | 6 +++---
- 4 files changed, 10 insertions(+), 5 deletions(-)
-
-
---
-Best Regards
-Masahiro Yamada
+> ---
+>  drivers/gpu/drm/drm_debugfs.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugfs.c
+> index f4715a67e340..4d299152c302 100644
+> --- a/drivers/gpu/drm/drm_debugfs.c
+> +++ b/drivers/gpu/drm/drm_debugfs.c
+> @@ -277,6 +277,7 @@ int drm_debugfs_remove_files(const struct drm_info_list *files, int count,
+>  
+>  		drmm_kfree(minor->dev, d_inode(dent)->i_private);
+>  		debugfs_remove(dent);
+> +		dput(dent);
+>  	}
+>  	return 0;
+>  }
+> -- 
+> 2.25.1
+> 
