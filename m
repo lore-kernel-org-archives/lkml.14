@@ -1,90 +1,78 @@
-Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9850E1095F;
-	Thu, 28 Dec 2023 22:00:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0521095F
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 22:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="uJgMq1LK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
-	t=1703800801; bh=jRxI4sUcGXVzqRs0DmQVhY8OELVqC2WR+H20U6gi5PA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=uJgMq1LKFLUr5e7mCnCYPlG2CoGCPj6cY9l1P5tphocAHEn7ugK4NKErplKTJUX7w
-	 1TFJ2pZhvwEcHnnRl2IfCujQ8OU22Dqf2NhZYBQZN7DLv5jamw42q2fxnAaWNpqcZ3
-	 TjZGWQuYqVYXgX5SoOuuSF3ywIEXx6YODQcSCNjQ=
-From: Luca Weiss <luca@z3ntu.xyz>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Hardik Gajjar <hgajjar@de.adit-jv.com>, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org, Richard Acayan <mailingradian@gmail.com>
-Cc: Richard Acayan <mailingradian@gmail.com>,
- Thorsten Leemhuis <regressions@leemhuis.info>,
- Caleb Connolly <caleb.connolly@linaro.org>
-Subject:
- Re: [PATCH] usb: gadget: u_ether: Re-attach netif device to mirror detachment
-Date: Thu, 28 Dec 2023 22:59:59 +0100
-Message-ID: <4713072.LvFx2qVVIh@z3ntu.xyz>
-In-Reply-To: <20231218164532.411125-2-mailingradian@gmail.com>
-References: <20231218164532.411125-2-mailingradian@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iUTI1ESZ"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4279c2ada00so1572461cf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 14:01:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1703800892; x=1704405692; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=B9iLz1qExh8jOY0KccJqlCpjSYXXMCvG7v66ldMC2Rc=;
+        b=iUTI1ESZQtj+ItC0lgvWaJMMVegBaNmJghHgI8+CZ26UyeH87zECE5/iq6oOMuRdsz
+         LtZtfeZRIIcGd3v7ytW5pazAaN0PHPSK5PY07iGuvCKjScae7QtMp5TpPGDYBlsA+5Ib
+         DHpF7oZoruQkXbvtbVzMrY5AJpdC9gK+njSJnDazidTdRIi23igulSrXXh9IbZ7dw3fl
+         /OV4S8uSjnbF6WDbyGt42uU+x4wjP21xIvxfk08gpL4mTXEXdtxZ2Rt90i2StlMyoZcI
+         WRJzhcFuSYhdaYoMB0YHlMYc0hEYZru6bKzdeZDOngpYY625fFdxCqK4CJhmElVQcrHd
+         k7SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703800892; x=1704405692;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B9iLz1qExh8jOY0KccJqlCpjSYXXMCvG7v66ldMC2Rc=;
+        b=ttxsPoKBF8TZMZfIgLN8n5DUG+HfzrpAaYaxyq81UYbJV/2yZ/0+3cEF5p9sKshUBR
+         M2rh8PrB6rhP8BkusnKMsq6xQPz/OZPhDGb519ZaKRik8OXLPrs/4jLz36yv1Pgpy1N2
+         ZccQNjcUBMwhLX3pnps+GcJScEEQ4rnCNrP8jowijiZiRE5cBKv50M1v9qVGm2T6uhlm
+         MLhV12IsmAl3JuHyS3575NKQ3ceUKjC+jS6q8aN3RMu+09fBLGgyr/2KqAssB8VMiiLF
+         C4AVfADV+sQo8Mc1HxP7/vMZkXLndfQn5WEqPTRPeiecuEkaUe0yOYjbt42gqHykmHx+
+         y4XQ==
+X-Gm-Message-State: AOJu0YxbMI8QlVnqjJ+jFsbWErMEuQbXZQZ1GRO7WuE7tWqi4eaJDYoH
+	/QKZg0vsO3tWOpjEPEtL28YgkBklERn2I1ECo+oIQ+uHEI++
+X-Google-Smtp-Source: AGHT+IHjAASMo6HzHAzKdZISJhtS/pYGoNbxXDW9Ml1LOCJxXfnARL611hNUWxYQSATRkXlFJp0GYF3N2MkZ0L6kHTs=
+X-Received: by 2002:ac8:5dca:0:b0:425:9957:5fd7 with SMTP id
+ e10-20020ac85dca000000b0042599575fd7mr908328qtx.19.1703800892342; Thu, 28 Dec
+ 2023 14:01:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20231228-extable-v1-1-32a18c66b440@google.com> <20231228212511.GCZY3nt3gKI+aDvSF1@fat_crate.local>
+In-Reply-To: <20231228212511.GCZY3nt3gKI+aDvSF1@fat_crate.local>
+From: Tanzir Hasan <tanzirh@google.com>
+Date: Thu, 28 Dec 2023 14:01:20 -0800
+Message-ID: <CAE-cH4rEWU-+ovwo8_-i3b2F8pK17kORJ3gV5tnjnUpRJA+B0Q@mail.gmail.com>
+Subject: Re: [PATCH] x86/vdso: shrink vdso/extable.i via IWYU
+To: Borislav Petkov <bp@alien8.de>
+Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, 
+	Nick Desaulniers <nnn@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Montag, 18. Dezember 2023 17:45:33 CET Richard Acayan wrote:
-> In 6.7-rc1, there was a netif_device_detach call added to the
-> gether_disconnect function. This clears the __LINK_STATE_PRESENT bit of
-> the netif device and suppresses pings (ICMP messages) and TCP connection
-> requests from the connected host. If userspace temporarily disconnects
-> the gadget, such as by temporarily removing configuration in the gadget
-> configfs interface, network activity should continue to be processed
-> when the gadget is re-connected. Mirror the netif_device_detach call
-> with a netif_device_attach call in gether_connect to fix re-connecting
-> gadgets.
+Hi Boris,
 
-(+Cc Thorsten Leemhuis)
+> Maybe I'm missing something but this sounds like the build-time
+> "improvement" is so minute that you have to look at preprocessed sizes.
+>
+> Do you have any, more "noticeable" numbers to justify this churn?
 
-This appears to fix the regression on a 6.7-rc5-based build for
-qcom-msm8974pro-fairphone-fp2, that the NCM network gadget doesn't work.
-I've also heard reports from qcom-sdm845 and a PXA1908-based phone (if
-I see this correctly) about issues on 6.7.
+These changes are mainly targeted at reducing preprocessing size which is why
+it was brought up. You're not wrong about build times. The changes in build time
+are small. To build the original file as is, it takes .69 seconds on
+average on my
+devices. This changes it to be .55 seconds on average so ~17%.
 
-In postmarketOS on the device side the usb0 interface doesn't get the IP
-address assigned correctly it seems, but it seems to behave a bit
-inconsistently - but always broken.
+The intention with these changes is to add up the impact of these small changes
+over time to improve build time and also use more direct inclusions where
+possible.
 
-Anyways, with this patch everything looks good again. I hope this makes
-it for 6.7 final still.
-
-Tested-by: Luca Weiss <luca@z3ntu.xyz>
-
-
-> 
-> Link: https://gitlab.com/postmarketOS/pmaports/-/tree/6002e51b7090aeeb42947e0ca7ec22278d7227d0/main/postmarketos-base-ui/rootfs-usr-lib-NetworkManager-dispatcher.d-50-tethering.sh
-> Fixes: f49449fbc21e ("usb: gadget: u_ether: Replace netif_stop_queue with netif_device_detach")
-> Signed-off-by: Richard Acayan <mailingradian@gmail.com>
-> ---
->  drivers/usb/gadget/function/u_ether.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/usb/gadget/function/u_ether.c b/drivers/usb/gadget/function/u_ether.c
-> index 9d1c40c152d8..3c5a6f6ac341 100644
-> --- a/drivers/usb/gadget/function/u_ether.c
-> +++ b/drivers/usb/gadget/function/u_ether.c
-> @@ -1163,6 +1163,8 @@ struct net_device *gether_connect(struct gether *link)
-> if (netif_running(dev->net))
->  			eth_start(dev, GFP_ATOMIC);
-> 
-> +		netif_device_attach(dev->net);
-> +
->  	/* on error, disable any endpoints  */
->  	} else {
->  		(void) usb_ep_disable(link->out_ep);
-
-
-
-
+Best,
+Tanzir
