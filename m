@@ -1,279 +1,172 @@
-Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7524C883B
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 09:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <zhouchengming@bytedance.com>
-Date: Thu, 28 Dec 2023 09:45:46 +0000
-Subject: [PATCH v5 5/5] mm/zswap: change per-cpu mutex and buffer to per-acomp_ctx
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8428C8DB;
+	Thu, 28 Dec 2023 09:47:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="JEODCXGf";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Q+kQXi9i"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.nyi.internal (Postfix) with ESMTP id 172185C0085;
+	Thu, 28 Dec 2023 04:47:10 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Thu, 28 Dec 2023 04:47:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:message-id:mime-version
+	:reply-to:subject:subject:to:to; s=fm2; t=1703756830; x=
+	1703843230; bh=InsY1OZSAZnSuRG5SxIiyCXnOFO2J93RUtltbwwZBKQ=; b=J
+	EODCXGfaWH/RBkHZg+MRUqF14mEFLiGkf14+E4Owwcr9gcZY/MDgMh0K4ZwLuVZO
+	Vf6vvjrZDlISOgRZ9g1bd/X7f5YPiXR6UV/urfeRAzEliopi0TDWjUA+LCmxxNyj
+	s3FCRG7wh7i93JKXGmYeJNUpK8erAuFOrforPnOxfZG9XzlTtMnRKkzR/CSeWvDr
+	cdgmZ+vgApPg2fd2oXITlzVYbsS17tiOZWHcbfNVpU/atoRuHFdpXrCYvwCermAB
+	ruA4bt40t6hPIBK5FLSpEUA+ysgnWG5/zxXkLIWO6ufF711mi1TMHv4AhmFjilBD
+	Dn5WNeP0RU5qrbWijm+IA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm2; t=1703756830; x=1703843230; bh=InsY1OZSAZnSu
+	RG5SxIiyCXnOFO2J93RUtltbwwZBKQ=; b=Q+kQXi9iTox/LHxCTiogbP52BxlSn
+	AuAqbM6oHAU6oRIxONdnB24SftCQulLg30NCmtTkXPFnJ5soDBYFWlFTlRcEuGaN
+	AbKa+oCNavbBUPlRSWuQAr/LRj+heuP+CqMjk7KZtBxdfJdlOAjxKydk8/+fn6Ul
+	DO9HzATDcAT6LS41wtASf7UX9TE4yQxDdnUOaOxhN2DLji7433rmUM9hi9FRCZNr
+	MyuzfeWJrts/IstFwR6gkCfeWawTRKbXQ/71fXn+OqFxQW93o89DRNOQRzyMrSfw
+	a/sxh1sPy5UySogDK4w0MJoYP8Bvi/3Mxz+6/1c0kHNjTW4d3j+aXPFjA==
+X-ME-Sender: <xms:HUSNZc39K3WYZc-YiW5QMAka5XWh7gfHT7T8UFb3ThG_yavNn91nmg>
+    <xme:HUSNZXFas3AUsapFZmLAKT_AlBB6FjfLCtUMHafwuDsO4SEYZAW9gz7RYs1OorlMX
+    ZpPO43X2m9L3ZOOTDQ>
+X-ME-Received: <xmr:HUSNZU5gK3V14ecc6FSbK2IHQ8PLeMZNoO5wL1XmVQeufORXYLQbDOTvKLnyN9aj_Bxqyfl0VLpkkc_lWM91OipeDylLg16oAKyvL1-bz_BLF4ta5szwj0zikwK6Zg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdefuddgtdekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurheptgfghfgguffkffevvffosehtqhhmtdhhtdejnecuhfhrohhmpefuvhgvnhcu
+    rfgvthgvrhcuoehsvhgvnhesshhvvghnphgvthgvrhdruggvvheqnecuggftrfgrthhtvg
+    hrnhepleehkeehudelvefhteeltdelhfekiefgkefguddvheekjeehuedvtdeikefhgeel
+    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpehsvhgvnhesshhvvghnphgvthgvrhdruggvvh
+X-ME-Proxy: <xmx:HUSNZV2ByYyS1HTDH2irmFn-Zao3jF9vqBR0BgGZ08cjUU7zZ_5_zQ>
+    <xmx:HUSNZfFmBSCmTAfv-Wj9_SZy6mFWdQi8KmATinoeufcSHcPsxufPcA>
+    <xmx:HUSNZe_22-F5_YmMRyo28uLypzQog2athcPLRgJhU3qTY3BrIxfnhQ>
+    <xmx:HkSNZQIbd22bB8eWUI6N3DRwJGU1uQYSHMvHcIJGBWjtLtN5piajWw>
+Feedback-ID: i51094778:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 28 Dec 2023 04:47:09 -0500 (EST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From: Sven Peter <sven@svenpeter.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20231213-zswap-dstmem-v5-5-9382162bbf05@bytedance.com>
-References: <20231213-zswap-dstmem-v5-0-9382162bbf05@bytedance.com>
-In-Reply-To: <20231213-zswap-dstmem-v5-0-9382162bbf05@bytedance.com>
-To: Barry Song <21cnbao@gmail.com>, Yosry Ahmed <yosryahmed@google.com>, Nhat Pham <nphamcs@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>, Dan Streetman <ddstreet@ieee.org>, Vitaly Wool <vitaly.wool@konsulko.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Chris Li <chriscli@google.com>, Seth Jennings <sjenning@redhat.com>
-Cc: Yosry Ahmed <yosryahmed@google.com>, Nhat Pham <nphamcs@gmail.com>, Chris Li <chrisl@kernel.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Chengming Zhou <zhouchengming@bytedance.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1703756775; l=7667;
- i=zhouchengming@bytedance.com; s=20231204; h=from:subject:message-id;
- bh=4WwCjcTM4cvOikkhRW0eIrRaRjoJsRX6DvdiNXR+aoM=;
- b=zjkyeZ8GJvLmdKBjLPG2tkPu01IHk9nTR5X4BWfcrNSIJNqRsEvvUkf2037UBEjkA7VN2xRdg
- U2WvnDymn6ZCVI0TllIFnqKc5NdiqSdYpssVP3etAh5tKo+MGJxgduq
-X-Developer-Key: i=zhouchengming@bytedance.com; a=ed25519;
- pk=xFTmRtMG3vELGJBUiml7OYNdM393WOMv0iWWeQEVVdA=
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v3] Bluetooth: Fix Bluetooth for BCM4377 on T2 Intel MacBooks
+Message-Id: <AB87C916-9CF9-4B8C-AFF5-74CA4151C4FC@svenpeter.dev>
+Date: Thu, 28 Dec 2023 10:46:57 +0100
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>, Felix Zhang <mrman@mrman314.tech>,
+ linux-bluetooth@vger.kernel.org, stable@vger.kernel.org,
+ Johan Hovold <johan+linaro@kernel.org>, Hector Martin <marcan@marcan.st>,
+ Bagas Sanjaya <bagasdotme@gmail.com>,
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+ Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Orlando Chamberlain <orlandoch.dev@gmail.com>, kekrby@gmail.com,
+ admin@kodeit.net, Janne Grunau <j@jannau.net>,
+ Aditya Garg <gargaditya08@live.com>, asahi@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+X-Mailer: iPhone Mail (21B101)
 
-First of all, we need to rename acomp_ctx->dstmem field to buffer,
-since we are now using for purposes other than compression.
+=EF=BB=BFSending this again because Apple mail decided to default to HTML
+mails since the last update apparently *sigh*
 
-Then we change per-cpu mutex and buffer to per-acomp_ctx, since
-them belong to the acomp_ctx and are necessary parts when used
-in the compress/decompress contexts.
 
-So we can remove the old per-cpu mutex and dstmem.
 
-Acked-by: Chris Li <chrisl@kernel.org> (Google)
-Reviewed-by: Nhat Pham <nphamcs@gmail.com>
-Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
----
- include/linux/cpuhotplug.h |   1 -
- mm/zswap.c                 | 104 ++++++++++++++-------------------------------
- 2 files changed, 33 insertions(+), 72 deletions(-)
+=EF=BB=BFHi,
 
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index efc0c0b07efb..c3e06e21766a 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -124,7 +124,6 @@ enum cpuhp_state {
- 	CPUHP_ARM_BL_PREPARE,
- 	CPUHP_TRACE_RB_PREPARE,
- 	CPUHP_MM_ZS_PREPARE,
--	CPUHP_MM_ZSWP_MEM_PREPARE,
- 	CPUHP_MM_ZSWP_POOL_PREPARE,
- 	CPUHP_KVM_PPC_BOOK3S_PREPARE,
- 	CPUHP_ZCOMP_PREPARE,
-diff --git a/mm/zswap.c b/mm/zswap.c
-index e756b2af838b..7c18755c6e1c 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -166,8 +166,8 @@ struct crypto_acomp_ctx {
- 	struct crypto_acomp *acomp;
- 	struct acomp_req *req;
- 	struct crypto_wait wait;
--	u8 *dstmem;
--	struct mutex *mutex;
-+	u8 *buffer;
-+	struct mutex mutex;
- };
- 
- /*
-@@ -694,63 +694,26 @@ static void zswap_alloc_shrinker(struct zswap_pool *pool)
- /*********************************
- * per-cpu code
- **********************************/
--static DEFINE_PER_CPU(u8 *, zswap_dstmem);
--/*
-- * If users dynamically change the zpool type and compressor at runtime, i.e.
-- * zswap is running, zswap can have more than one zpool on one cpu, but they
-- * are sharing dtsmem. So we need this mutex to be per-cpu.
-- */
--static DEFINE_PER_CPU(struct mutex *, zswap_mutex);
--
--static int zswap_dstmem_prepare(unsigned int cpu)
--{
--	struct mutex *mutex;
--	u8 *dst;
--
--	dst = kmalloc_node(PAGE_SIZE * 2, GFP_KERNEL, cpu_to_node(cpu));
--	if (!dst)
--		return -ENOMEM;
--
--	mutex = kmalloc_node(sizeof(*mutex), GFP_KERNEL, cpu_to_node(cpu));
--	if (!mutex) {
--		kfree(dst);
--		return -ENOMEM;
--	}
--
--	mutex_init(mutex);
--	per_cpu(zswap_dstmem, cpu) = dst;
--	per_cpu(zswap_mutex, cpu) = mutex;
--	return 0;
--}
--
--static int zswap_dstmem_dead(unsigned int cpu)
--{
--	struct mutex *mutex;
--	u8 *dst;
--
--	mutex = per_cpu(zswap_mutex, cpu);
--	kfree(mutex);
--	per_cpu(zswap_mutex, cpu) = NULL;
--
--	dst = per_cpu(zswap_dstmem, cpu);
--	kfree(dst);
--	per_cpu(zswap_dstmem, cpu) = NULL;
--
--	return 0;
--}
--
- static int zswap_cpu_comp_prepare(unsigned int cpu, struct hlist_node *node)
- {
- 	struct zswap_pool *pool = hlist_entry(node, struct zswap_pool, node);
- 	struct crypto_acomp_ctx *acomp_ctx = per_cpu_ptr(pool->acomp_ctx, cpu);
- 	struct crypto_acomp *acomp;
- 	struct acomp_req *req;
-+	int ret;
-+
-+	mutex_init(&acomp_ctx->mutex);
-+
-+	acomp_ctx->buffer = kmalloc_node(PAGE_SIZE * 2, GFP_KERNEL, cpu_to_node(cpu));
-+	if (!acomp_ctx->buffer)
-+		return -ENOMEM;
- 
- 	acomp = crypto_alloc_acomp_node(pool->tfm_name, 0, 0, cpu_to_node(cpu));
- 	if (IS_ERR(acomp)) {
- 		pr_err("could not alloc crypto acomp %s : %ld\n",
- 				pool->tfm_name, PTR_ERR(acomp));
--		return PTR_ERR(acomp);
-+		ret = PTR_ERR(acomp);
-+		goto acomp_fail;
- 	}
- 	acomp_ctx->acomp = acomp;
- 
-@@ -758,8 +721,8 @@ static int zswap_cpu_comp_prepare(unsigned int cpu, struct hlist_node *node)
- 	if (!req) {
- 		pr_err("could not alloc crypto acomp_request %s\n",
- 		       pool->tfm_name);
--		crypto_free_acomp(acomp_ctx->acomp);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto req_fail;
- 	}
- 	acomp_ctx->req = req;
- 
-@@ -772,10 +735,13 @@ static int zswap_cpu_comp_prepare(unsigned int cpu, struct hlist_node *node)
- 	acomp_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
- 				   crypto_req_done, &acomp_ctx->wait);
- 
--	acomp_ctx->mutex = per_cpu(zswap_mutex, cpu);
--	acomp_ctx->dstmem = per_cpu(zswap_dstmem, cpu);
--
- 	return 0;
-+
-+req_fail:
-+	crypto_free_acomp(acomp_ctx->acomp);
-+acomp_fail:
-+	kfree(acomp_ctx->buffer);
-+	return ret;
- }
- 
- static int zswap_cpu_comp_dead(unsigned int cpu, struct hlist_node *node)
-@@ -788,6 +754,7 @@ static int zswap_cpu_comp_dead(unsigned int cpu, struct hlist_node *node)
- 			acomp_request_free(acomp_ctx->req);
- 		if (!IS_ERR_OR_NULL(acomp_ctx->acomp))
- 			crypto_free_acomp(acomp_ctx->acomp);
-+		kfree(acomp_ctx->buffer);
- 	}
- 
- 	return 0;
-@@ -1400,12 +1367,12 @@ static void __zswap_load(struct zswap_entry *entry, struct page *page)
- 	u8 *src;
- 
- 	acomp_ctx = raw_cpu_ptr(entry->pool->acomp_ctx);
--	mutex_lock(acomp_ctx->mutex);
-+	mutex_lock(&acomp_ctx->mutex);
- 
- 	src = zpool_map_handle(zpool, entry->handle, ZPOOL_MM_RO);
- 	if (!zpool_can_sleep_mapped(zpool)) {
--		memcpy(acomp_ctx->dstmem, src, entry->length);
--		src = acomp_ctx->dstmem;
-+		memcpy(acomp_ctx->buffer, src, entry->length);
-+		src = acomp_ctx->buffer;
- 		zpool_unmap_handle(zpool, entry->handle);
- 	}
- 
-@@ -1415,7 +1382,7 @@ static void __zswap_load(struct zswap_entry *entry, struct page *page)
- 	acomp_request_set_params(acomp_ctx->req, &input, &output, entry->length, PAGE_SIZE);
- 	BUG_ON(crypto_wait_req(crypto_acomp_decompress(acomp_ctx->req), &acomp_ctx->wait));
- 	BUG_ON(acomp_ctx->req->dlen != PAGE_SIZE);
--	mutex_unlock(acomp_ctx->mutex);
-+	mutex_unlock(&acomp_ctx->mutex);
- 
- 	if (zpool_can_sleep_mapped(zpool))
- 		zpool_unmap_handle(zpool, entry->handle);
-@@ -1636,13 +1603,17 @@ bool zswap_store(struct folio *folio)
- 	/* compress */
- 	acomp_ctx = raw_cpu_ptr(entry->pool->acomp_ctx);
- 
--	mutex_lock(acomp_ctx->mutex);
-+	mutex_lock(&acomp_ctx->mutex);
- 
--	dst = acomp_ctx->dstmem;
-+	dst = acomp_ctx->buffer;
- 	sg_init_table(&input, 1);
- 	sg_set_page(&input, page, PAGE_SIZE, 0);
- 
--	/* zswap_dstmem is of size (PAGE_SIZE * 2). Reflect same in sg_list */
-+	/*
-+	 * We need PAGE_SIZE * 2 here since there maybe over-compression case,
-+	 * and hardware-accelerators may won't check the dst buffer size, so
-+	 * giving the dst buffer with enough length to avoid buffer overflow.
-+	 */
- 	sg_init_one(&output, dst, PAGE_SIZE * 2);
- 	acomp_request_set_params(acomp_ctx->req, &input, &output, PAGE_SIZE, dlen);
- 	/*
-@@ -1682,7 +1653,7 @@ bool zswap_store(struct folio *folio)
- 	buf = zpool_map_handle(zpool, handle, ZPOOL_MM_WO);
- 	memcpy(buf, dst, dlen);
- 	zpool_unmap_handle(zpool, handle);
--	mutex_unlock(acomp_ctx->mutex);
-+	mutex_unlock(&acomp_ctx->mutex);
- 
- 	/* populate entry */
- 	entry->swpentry = swp_entry(type, offset);
-@@ -1725,7 +1696,7 @@ bool zswap_store(struct folio *folio)
- 	return true;
- 
- put_dstmem:
--	mutex_unlock(acomp_ctx->mutex);
-+	mutex_unlock(&acomp_ctx->mutex);
- put_pool:
- 	zswap_pool_put(entry->pool);
- freepage:
-@@ -1900,13 +1871,6 @@ static int zswap_setup(void)
- 		goto cache_fail;
- 	}
- 
--	ret = cpuhp_setup_state(CPUHP_MM_ZSWP_MEM_PREPARE, "mm/zswap:prepare",
--				zswap_dstmem_prepare, zswap_dstmem_dead);
--	if (ret) {
--		pr_err("dstmem alloc failed\n");
--		goto dstmem_fail;
--	}
--
- 	ret = cpuhp_setup_state_multi(CPUHP_MM_ZSWP_POOL_PREPARE,
- 				      "mm/zswap_pool:prepare",
- 				      zswap_cpu_comp_prepare,
-@@ -1938,8 +1902,6 @@ static int zswap_setup(void)
- 	if (pool)
- 		zswap_pool_destroy(pool);
- hp_fail:
--	cpuhp_remove_state(CPUHP_MM_ZSWP_MEM_PREPARE);
--dstmem_fail:
- 	kmem_cache_destroy(zswap_entry_cache);
- cache_fail:
- 	/* if built-in, we aren't unloaded on failure; don't allow use */
 
--- 
-b4 0.10.1
+> On Dec 27, 2023, at 11:30, Johan Hovold <johan@kernel.org> wrote:
+>=20
+> On Mon, Dec 25, 2023 at 09:26:05PM +0100, Paul Menzel wrote:
+>=20
+>> Thank you very much for the patch. I am adding Johan to Cc field.
+>=20
+> Thanks for the report. Guess I could use a break from the proverbial
+> eggnog.
+>=20
+>> Am 25.12.23 um 21:01 schrieb Felix Zhang:
+>>> Starting v6.5, Bluetooth does not work at all on my T2 MacBookAir9,1
+>>> with the BCM4377 chip.  When I boot up the computer, go into
+>> Somehow a blank line snug in above.
+>>> bluetoothctl, and then try to run commands like scan on, show, list,
+>>> it returns "No default controller available."  I have tried reloading
+>>> the
+>> It=E2=80=99d be great if you reflowed for 75 characters per line (also be=
+low).
+>>> kernel module, in which the log outputs "{Added,Removed} hci0
+>>> (unconfigured)."  With this patch, I am able to use Bluetooth as
+>>> normal
+>>> without any errors regarding hci0 being unconfigured.  However, an
+>>> issue is still present where sometimes hci_bcm4377 will have to be
+>>> reloaded in order to get bluetooth to work.  I believe this was still
+>>> present before the previously mentioned commit.
+>>> Due to the bit HCI_QUIRK_USE_BDADDR_PROPERTY being always set in
+>>> drivers/bluetooth/hci_bcm4377.c (line 2371), the chip would be left
+>>> unconfigured on kernels compiled after commit 6945795bc81a
+>>> ("Bluetooth:
+>>> fix use-bdaddr-property quirk") due to a change in its logic.  On the
+>>> M1 Macs, the device would be configured in the devicetree.  However,
+>>> that is not the case on T2 Macs.  Because the bluetooth adapter is
+>>> left
+>>> unconfigured, it is not usable in the operating system.  In order to
+>>> circumvent this issue, a flag is added to prevent the bit from being
+>>> set on the BCM4377, while setting it on the other devices.
+>=20
+> The commit you tracked this down to restored the original semantics for
+> HCI_QUIRK_USE_BDADDR_PROPERTY, which means that it should only be set
+> for devices with an invalid address.
+>=20
+> The Broadcom BCM4377 driver has so far been setting this flag
+> unconditionally which now potentially results in also valid addresses
+> being marked as invalid.
+>=20
+> I've just sent a patch that makes sure to only mark invalid addresses as
+> invalid:
+>=20
+> https://lore.kernel.org/lkml/20231227101003.10534-1-johan+linaro@kernel.or=
+g/
+>=20
+> Note however that the flag still needs to be set in case your device
+> lacks storage for a unique device address so you cannot simply drop it
+> for some device classes as you do below (unless you are certain that
+> these devices will always have a valid address).
+
+
+We do know that though.
+
+BCM4377 is present on Apple=E2=80=99s x86 Macs and always has internal stora=
+ge
+for the address. If the board comes up without an address there=E2=80=99s no=
+thing
+much we can do because the address isn=E2=80=99t provided by ACPI or anythin=
+g
+else and setting the invalid address quirk for that situation seems appropri=
+ate.
+
+BCM4378/4387 is present on Apple=E2=80=99s ARM Macs and never has internal s=
+torage.
+The address is always provided by our bootloader in the device tree.
+These should always unconditionally set HCI_QUIRK_USE_BDADDR_PROPERTY
+just like this patch does.
+
+
+Best,
+
+
+Sven=
+
