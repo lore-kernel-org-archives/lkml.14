@@ -1,251 +1,136 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFCD160
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 00:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0B6163;
+	Thu, 28 Dec 2023 00:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="dnzJmLie"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 3BRNoZcL858559
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 27 Dec 2023 15:50:35 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 3BRNoZcL858559
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2023121201; t=1703721036;
-	bh=xoySbFg4cib1NCEl/lEeSxfsizd5Cmz69MoRK5o8XPc=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=dnzJmLieJiYGlPCm0ZETLbyPUDhQ8p6gP2pKxpTAUX96q5x+/lkUFxGo4HrXnTKZu
-	 CXisl+jgWKcjL/kxtqJst4hzyfWJubtK9I21LTgizDwTBL/BaoASqxPl72o8R99f3W
-	 SN3l8BjdwKxG1j7AfShN2gqgrFzzSdMVgYtJ04hWnmNVBgKDILSahlbhJ2KGPbtI+U
-	 FPzLS7iCxnxKkgNXsg2XH8TkEQVW2Su7NCKjxAbjWFpub/lcNcpnIccTNKSiJp7722
-	 le2ENsnb5P0GKdfHpKJqFdefDXNsbjYJOaj/xGp3O6Y/yssXW58ZR3hPEkJ5LOW9Nx
-	 AMx9y9zUmfmyQ==
-Date: Wed, 27 Dec 2023 15:50:33 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Al Viro <viro@zeniv.linux.org.uk>, Tanzir Hasan <tanzirh@google.com>
-CC: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Nick Desaulniers <nnn@google.com>
-Subject: Re: [PATCH] x86/syscalls: shrink entry/syscall_32.i via IWYU
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20231227233444.GH1674809@ZenIV>
-References: <20231227-syscall32-v1-1-9621140d33bd@google.com> <20231227233444.GH1674809@ZenIV>
-Message-ID: <8B198413-0C9B-40A2-8478-F22206AAE6FA@zytor.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VNLdgiAa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703722613; x=1735258613;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=pEPhGIdAzdXnqprS1VxHiK2nZZHa3MutEC6C2Tanhjg=;
+  b=VNLdgiAa5H2223d+2OkrPhFfW9VnF0BCyyX0FeH1f3czdMlYMzGUTr0m
+   E/7I22IErsf3QJrs/gQo5ONZ8S4ymgz+KAh9YqsYF0Si2xXv1gMg/E/on
+   DF9lyQQjO+rSG8w7EDruWt5wBTKOHF/YHhwUJts2+k83qdOeLH5eEhhU+
+   fiQyXaI5IkGtmUlo3yzkOxMUyFofWVTvUc3c4EF5aTL5W9XICdbOvbDXY
+   dWHs1gG0wSchxI+GtfRsyx2Vl0CwKVH1dr2yDnEp8bN4Hja+O22+w6zy6
+   d5PY/zRPrJcs/2UsywuewbHKG4P7q/bW32HxlmDCxKKG9xEecP745ieEI
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="3800432"
+X-IronPort-AV: E=Sophos;i="6.04,310,1695711600"; 
+   d="scan'208";a="3800432"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 16:16:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="848812662"
+X-IronPort-AV: E=Sophos;i="6.04,310,1695711600"; 
+   d="scan'208";a="848812662"
+Received: from ply01-vm-store.bj.intel.com ([10.238.153.201])
+  by fmsmga004.fm.intel.com with ESMTP; 27 Dec 2023 16:16:48 -0800
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+To: bhelgaas@google.com,
+	baolu.lu@linux.intel.com,
+	dwmw2@infradead.org,
+	will@kernel.org,
+	robin.murphy@arm.com,
+	lukas@wunner.de
+Cc: linux-pci@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v8 0/5] fix vt-d hard lockup when hotplug ATS capable device
+Date: Wed, 27 Dec 2023 19:16:41 -0500
+Message-Id: <20231228001646.587653-1-haifeng.zhao@linux.intel.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On December 27, 2023 3:34:44 PM PST, Al Viro <viro@zeniv=2Elinux=2Eorg=2Euk=
-> wrote:
->On Wed, Dec 27, 2023 at 10:38:41PM +0000, Tanzir Hasan wrote:
->> This diff uses an open source tool include-what-you-use (IWYU) to modif=
-y
->> the include list, changing indirect includes to direct includes=2E IWYU=
- is
->> implemented using the IWYUScripts github repository which is a tool tha=
-t
->> is currently undergoing development=2E These changes seek to improve bu=
-ild
->> times=2E
->>=20
->> This change to entry/syscall_32=2Ec resulted in a preprocessed size of
->> entry/syscall_32=2Ei from 64002 lines to 47986 lines (-25%) for the x86
->> defconfig=2E
->>
->> Signed-off-by: Tanzir Hasan <tanzirh@google=2Ecom>
->> ---
->>  arch/x86/entry/syscall_32=2Ec | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>=20
->> diff --git a/arch/x86/entry/syscall_32=2Ec b/arch/x86/entry/syscall_32=
-=2Ec
->> index 8cfc9bc73e7f=2E=2E66db11fe8a1c 100644
->> --- a/arch/x86/entry/syscall_32=2Ec
->> +++ b/arch/x86/entry/syscall_32=2Ec
->> @@ -4,7 +4,7 @@
->>  #include <linux/linkage=2Eh>
->>  #include <linux/sys=2Eh>
->>  #include <linux/cache=2Eh>
->> -#include <linux/syscalls=2Eh>
->> +#include <linux/ptrace=2Eh>
->>  #include <asm/syscall=2Eh>
->
->Really?  What do we need linux/ptrace=2Eh for?  Because if it's
->struct pt_regs for the generated externs, we might as well have
->just said
->struct pt_regs;
->and that would be it=2E
->
-><digs around a bit>
->
->As the matter of fact, all you need out of those includes is this:
->
->struct pt_regs;
->typedef long (*sys_call_ptr_t)(const struct pt_regs *);
->extern const sys_call_ptr_t sys_call_table[];
->#if defined(CONFIG_X86_32)
->#define ia32_sys_call_table sys_call_table
->#else
->/*
-> * These may not exist, but still put the prototypes in so we
-> * can use IS_ENABLED()=2E
-> */
->extern const sys_call_ptr_t ia32_sys_call_table[];
->extern const sys_call_ptr_t x32_sys_call_table[];
->#endif
->
->That's _it_=2E  The same goes for syscall_64=2Ec and syscall_x32=2Ec=2E
->Oh, and lose the __visible/asmlinkage junk in there - none of that
->stuff is used from asm these days=2E  See the patch below -
->Untested But Should Work(tm):
->
->diff --git a/arch/x86/entry/common=2Ec b/arch/x86/entry/common=2Ec
->index d813160b14d8=2E=2E5c470806dd08 100644
->--- a/arch/x86/entry/common=2Ec
->+++ b/arch/x86/entry/common=2Ec
->@@ -36,6 +36,8 @@
-> #include <asm/syscall=2Eh>
-> #include <asm/irq_stack=2Eh>
->=20
->+#include "syscall=2Eh"
->+
-> #ifdef CONFIG_X86_64
->=20
-> static __always_inline bool do_syscall_x64(struct pt_regs *regs, int nr)
->diff --git a/arch/x86/entry/syscall=2Eh b/arch/x86/entry/syscall=2Eh
->new file mode 100644
->index 000000000000=2E=2E7c52df000ae0
->--- /dev/null
->+++ b/arch/x86/entry/syscall=2Eh
->@@ -0,0 +1,13 @@
->+struct pt_regs;
->+typedef long (*sys_call_ptr_t)(const struct pt_regs *);
->+extern const sys_call_ptr_t sys_call_table[];
->+#if defined(CONFIG_X86_32)
->+#define ia32_sys_call_table sys_call_table
->+#else
->+/*
->+ * These may not exist, but still put the prototypes in so we
->+ * can use IS_ENABLED()=2E
->+ */
->+extern const sys_call_ptr_t ia32_sys_call_table[];
->+extern const sys_call_ptr_t x32_sys_call_table[];
->+#endif
->diff --git a/arch/x86/entry/syscall_32=2Ec b/arch/x86/entry/syscall_32=2E=
-c
->index 8cfc9bc73e7f=2E=2Ea24a8922692f 100644
->--- a/arch/x86/entry/syscall_32=2Ec
->+++ b/arch/x86/entry/syscall_32=2Ec
->@@ -1,11 +1,7 @@
-> // SPDX-License-Identifier: GPL-2=2E0
-> /* System call table for i386=2E */
->=20
->-#include <linux/linkage=2Eh>
->-#include <linux/sys=2Eh>
->-#include <linux/cache=2Eh>
->-#include <linux/syscalls=2Eh>
->-#include <asm/syscall=2Eh>
->+#include "syscall=2Eh"
->=20
-> #ifdef CONFIG_IA32_EMULATION
-> #define __SYSCALL_WITH_COMPAT(nr, native, compat)	__SYSCALL(nr, compat)
->@@ -20,6 +16,6 @@
->=20
-> #define __SYSCALL(nr, sym) __ia32_##sym,
->=20
->-__visible const sys_call_ptr_t ia32_sys_call_table[] =3D {
->+const sys_call_ptr_t ia32_sys_call_table[] =3D {
-> #include <asm/syscalls_32=2Eh>
-> };
->diff --git a/arch/x86/entry/syscall_64=2Ec b/arch/x86/entry/syscall_64=2E=
-c
->index be120eec1fc9=2E=2E81bde061037b 100644
->--- a/arch/x86/entry/syscall_64=2Ec
->+++ b/arch/x86/entry/syscall_64=2Ec
->@@ -1,11 +1,7 @@
-> // SPDX-License-Identifier: GPL-2=2E0
-> /* System call table for x86-64=2E */
->=20
->-#include <linux/linkage=2Eh>
->-#include <linux/sys=2Eh>
->-#include <linux/cache=2Eh>
->-#include <linux/syscalls=2Eh>
->-#include <asm/syscall=2Eh>
->+#include "syscall=2Eh"
->=20
-> #define __SYSCALL(nr, sym) extern long __x64_##sym(const struct pt_regs =
-*);
-> #include <asm/syscalls_64=2Eh>
->@@ -13,6 +9,6 @@
->=20
-> #define __SYSCALL(nr, sym) __x64_##sym,
->=20
->-asmlinkage const sys_call_ptr_t sys_call_table[] =3D {
->+const sys_call_ptr_t sys_call_table[] =3D {
-> #include <asm/syscalls_64=2Eh>
-> };
->diff --git a/arch/x86/entry/syscall_x32=2Ec b/arch/x86/entry/syscall_x32=
-=2Ec
->index bdd0e03a1265=2E=2E7b5170a99b9a 100644
->--- a/arch/x86/entry/syscall_x32=2Ec
->+++ b/arch/x86/entry/syscall_x32=2Ec
->@@ -1,11 +1,7 @@
-> // SPDX-License-Identifier: GPL-2=2E0
-> /* System call table for x32 ABI=2E */
->=20
->-#include <linux/linkage=2Eh>
->-#include <linux/sys=2Eh>
->-#include <linux/cache=2Eh>
->-#include <linux/syscalls=2Eh>
->-#include <asm/syscall=2Eh>
->+#include "syscall=2Eh"
->=20
-> #define __SYSCALL(nr, sym) extern long __x64_##sym(const struct pt_regs =
-*);
-> #include <asm/syscalls_x32=2Eh>
->@@ -13,6 +9,6 @@
->=20
-> #define __SYSCALL(nr, sym) __x64_##sym,
->=20
->-asmlinkage const sys_call_ptr_t x32_sys_call_table[] =3D {
->+const sys_call_ptr_t x32_sys_call_table[] =3D {
-> #include <asm/syscalls_x32=2Eh>
-> };
->diff --git a/arch/x86/include/asm/syscall=2Eh b/arch/x86/include/asm/sysc=
-all=2Eh
->index f44e2f9ab65d=2E=2Ef301919b9187 100644
->--- a/arch/x86/include/asm/syscall=2Eh
->+++ b/arch/x86/include/asm/syscall=2Eh
->@@ -16,20 +16,6 @@
-> #include <asm/thread_info=2Eh>	/* for TS_COMPAT */
-> #include <asm/unistd=2Eh>
->=20
->-typedef long (*sys_call_ptr_t)(const struct pt_regs *);
->-extern const sys_call_ptr_t sys_call_table[];
->-
->-#if defined(CONFIG_X86_32)
->-#define ia32_sys_call_table sys_call_table
->-#else
->-/*
->- * These may not exist, but still put the prototypes in so we
->- * can use IS_ENABLED()=2E
->- */
->-extern const sys_call_ptr_t ia32_sys_call_table[];
->-extern const sys_call_ptr_t x32_sys_call_table[];
->-#endif
->-
-> /*
->  * Only the low 32 bits of orig_ax are meaningful, so we return int=2E
->  * This importantly ignores the high bits on 64-bit, so comparisons
+This patchset is used to fix vt-d hard lockup reported when surprise
+unplug ATS capable endpoint device connects to system via PCIe switch
+as following topology.                                               
+                                                                    
+     +-[0000:15]-+-00.0  Intel Corporation Ice Lake Memory Map/VT-d 
+     |           +-00.1  Intel Corporation Ice Lake Mesh 2 PCIe     
+     |           +-00.2  Intel Corporation Ice Lake RAS             
+     |           +-00.4  Intel Corporation Device 0b23              
+     |           \-01.0-[16-1b]----00.0-[17-1b]--+-00.0-[18]----00.0 
+                                           NVIDIA Corporation Device 2324 
+     |                                           +-01.0-[19]----00.0    
+                          Mellanox Technologies MT2910 Family [ConnectX-7]
+                                                                          
+User brought endpoint device 19:00.0's link down by flapping it's hotplug 
+capable slot 17:01.0 link control register, as sequence DLLSC response, 
+pciehp_ist() will unload device driver and power it off, durning device 
+driver is unloading an iommu device-TLB invalidation (Intel VT-d spec, or 
+'ATS Invalidation' in PCIe spec) request issued to that link down device, 
+thus a long time completion/timeout waiting in interrupt context causes   
+continuous hard lockup warnning and system hang.                         
+                                                                         
+Other detail, see every patch commit log.                                
+                                                                         
+patch [3&4] were tested by yehaorong@bytedance.com on stable v6.7-rc4.   
+patch [1-5] passed compiling on stable v6.7-rc6.                    
+                                                                         
+                                                                         
+change log:  
+v9:
+- unify all spelling of ATS Invalidation adhere to PCIe spec per Bjorn's
+  suggestion.                                                         
+v8:
+- add a patch to break the loop for timeout device-TLB invalidation, as
+  Bjorn said there is possibility device just no response but not gone.  
+v7:                                                                      
+- reorder patches and revise commit log per Bjorn's guide.              
+- other code and commit log revise per Lukas' suggestion.               
+- rebased to stable v6.7-rc6.                                           
+v6:                                                                     
+- add two patches to break out device-TLB invalidation if device is gone. 
+v5:                                                                       
+- add a patch try to fix the rare case (surprise remove a device in       
+  safe removal process). not work because surprise removal handling can't 
+  re-enter when another safe removal is in process.                       
+v4:                                                                       
+- move the PCI device state checking after ATS per Baolu's suggestion.    
+v3:                                                                       
+- fix commit description typo.                                            
+v2:                                                                       
+- revise commit[1] description part according to Lukas' suggestion.       
+- revise commit[2] description to clarify the issue's impact.             
+v1:                                                                       
+- https://lore.kernel.org/lkml/20231213034637.2603013-1-haifeng.zhao@     
+linux.intel.com/T/                                                        
+                                                                          
+                                                                          
+Thanks,                                                                   
+Ethan                             
 
-__visible is for LTO, no?
+Ethan Zhao (5):
+  iommu/vt-d: add flush_target_dev member to struct intel_iommu and pass
+    device info to all ATS Invalidation functions
+  iommu/vt-d: break out ATS Invalidation if target device is gone
+  PCI: make pci_dev_is_disconnected() helper public for other drivers
+  iommu/vt-d: don't issue ATS Invalidation request when device is
+    disconnected
+  iommu/vt-d: don't loop for timeout ATS Invalidation request
+    forever
+
+ drivers/iommu/intel/dmar.c  | 14 +++++++++++++-
+ drivers/iommu/intel/iommu.c |  1 +
+ drivers/iommu/intel/iommu.h |  2 ++
+ drivers/iommu/intel/pasid.c |  4 ++++
+ drivers/iommu/intel/svm.c   |  1 +
+ drivers/pci/pci.h           |  5 -----
+ include/linux/pci.h         |  5 +++++
+ 7 files changed, 26 insertions(+), 6 deletions(-)
+
+-- 
+2.31.1
+
