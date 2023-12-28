@@ -1,121 +1,129 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D011D526;
-	Thu, 28 Dec 2023 15:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A54BF4E3;
+	Thu, 28 Dec 2023 15:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Spwhd9EY"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 66BC140E01A1;
-	Thu, 28 Dec 2023 14:54:31 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id ng2B1LZRXrFL; Thu, 28 Dec 2023 14:54:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1703775268; bh=jcyDiPI487B6t/5OUI/W6GwQkhmDmtuv3TJj+zdWb2c=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Spwhd9EYHOOjpPmVPBFMW1p7OvIGjZHMzE5re9j+NS083HAxWSuaULrkF2O/p96np
-	 g/+UB+yjwCCtM0ZRXfslJNnNYku5hUNRlfe/l0E+2ecZYw6t8ruvGyH3AwmMZAwmyF
-	 Jorqe8Jez7HaqToDpefqGR+VdgB9ZOfmhTFLWyYCb+EAmR30uCvyw0G9s9siOjWCqP
-	 Y/Cg1I9pkGldj9lOusmR+JY10kVg0qAH3li2Ib6B1Pnn1I0BnXKdP/f2SlcjDWv+UH
-	 8EHI9iI7MdQZRmzvdu1aHBVoqyqY6+RC66XnHpT56suQ6fd+1rkkPCgJxvbvGcqQJI
-	 7QFx7UAAqnPg9IBubEpjYejrPTlZKBDP2ahzWT2Z9PQ+9TVxbl0TTAUOMMhVYk2+xr
-	 0ssAyea+WQQjLHDeXQh2IDCM4nH20A3evPBFYzLZPRApN5b6BpaL6VGtLHedZOs3Tg
-	 EnR4YAbF7X9/+5tiKVNDq1yeAYoka82tMVbZNub6KpN4bS03+zRjSz/9T6YEYGSG3s
-	 p1xxOQH2dUE4vPSoeRAYiW+G6Lc4gduGXHG4R8gcn24f6f3am7lPsAYNwTmfUb6ziM
-	 IdTFbeGpUFbmgVptQo2qezc78mGoU4j16SLzqnGpjGVQTNXlQ3vbKEE0SvSSJ7Dk8e
-	 XTPABiVW1FDiDcsYUFEzgkOw=
-Received: from zn.tnic (pd9530f8c.dip0.t-ipconnect.de [217.83.15.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5BEEB40E00CB;
-	Thu, 28 Dec 2023 14:54:23 +0000 (UTC)
-Date: Thu, 28 Dec 2023 15:54:16 +0100
-From: "Borislav Petkov (AMD)" <bp@alien8.de>
-To: linux-pm@vger.kernel.org, forza@tnonline.net
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	lkml <linux-kernel@vger.kernel.org>
-Subject: [PATCH] cpuidle: haltpoll: Do not enable interrupts when entering
- idle
-Message-ID: <20231228145416.GAZY2MGLY6THMkAZ2W@fat_crate.local>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UHomooy5"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 3BSF0Upq096255;
+	Thu, 28 Dec 2023 09:00:30 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1703775630;
+	bh=SWUI72zFfaZSzR3YlfrP+ppCc53V4yo2+PSn73pK1Bs=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To;
+	b=UHomooy5FpZvIKHjNvZgRtCg5HG0J24dh5w9n2qGf3PgEnoK0rpSVUcEb3RlXLosi
+	 QDyCdRHlkxjd1XWO3EUIuSysNWrkRtTizzwe8kdMxH4PktcyoGqmG8TNMT9+yE2RBn
+	 MHEiFQlLDhamTDYXkDo2xx54yQ3QrKCcSJIYn6gw=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 3BSF0Uww067178
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 28 Dec 2023 09:00:30 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 28
+ Dec 2023 09:00:30 -0600
+Received: from DLEE108.ent.ti.com ([fe80::922:4dc:27cc:b334]) by
+ DLEE108.ent.ti.com ([fe80::922:4dc:27cc:b334%17]) with mapi id
+ 15.01.2507.023; Thu, 28 Dec 2023 09:00:30 -0600
+From: "Brnich, Brandon" <b-brnich@ti.com>
+To: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Mauro
+ Carvalho Chehab" <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Nas Chung <nas.chung@chipsnmedia.com>,
+        Jackson Lee
+	<jackson.lee@chipsnmedia.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sebastian Fricke <sebastian.fricke@collabora.com>,
+        Dafna Hirschfeld
+	<dafna.hirschfeld@collabora.com>,
+        Robert Beckett <bob.beckett@collabora.com>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Geert Uytterhoeven
+	<geert@linux-m68k.org>
+CC: "Menon, Nishanth" <nm@ti.com>, "Etheridge, Darren" <detheridge@ti.com>
+Subject: RE: [PATCH v3 0/2] Update Wave521c Compatible for TI Devices
+Thread-Topic: [PATCH v3 0/2] Update Wave521c Compatible for TI Devices
+Thread-Index: AQHaLHTuykr9ezkXHUS14iKL4BJOWLC+4oXg
+Date: Thu, 28 Dec 2023 15:00:30 +0000
+Message-ID: <4dba82cd7e264356ad66cf230c61dd89@ti.com>
+References: <20231211205920.698939-1-b-brnich@ti.com>
+In-Reply-To: <20231211205920.698939-1-b-brnich@ti.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-exclaimer-md-config: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 
-Hi,
+Hello,
 
-I think PeterZ's massaging from
+> -----Original Message-----
+> Subject: [PATCH v3 0/2] Update Wave521c Compatible for TI Devices
+>=20
+> Hello All,
+>=20
+> There has been ongoing discussion[1] surrounding the issue of having K3
+> prefix included in the compatible for dt bindings. This series removes th=
+is
+> prefix from both the device tree binding as well as the driver. Updating =
+the
+> binding will not break the ABI at this point as the driver is still only =
+in linux-
+> next.
 
-  https://lore.kernel.org/all/20230112194314.845371875@infradead.org/
+I noticed this series has still not made it in linux-next. I assume this is=
+ because
+I improperly dropped the tags on the second patch [0] in the series between=
+ v2
+and v3. This series should only be applied before bindings make it into rel=
+ease,
+or the ABI breaks. Should I resend the series picking up proper tags this t=
+ime?
+Or is it too late for 6.8 at this point?
 
-missed one.
+[0] https://patchwork.kernel.org/project/linux-media/patch/20231211205920.6=
+98939-3-b-brnich@ti.com/
 
-@Forza, if you want to have your real name in the patch tags below and
-thus be part of git history, lemme know. If you don't want them there,
-either.
+>=20
+> Changes in v3:
+> - Update example in dt bindings to match new compatible
+>=20
+> Changes in v2:
+> - Include more context surrounding patch
+> - Fix style issues addressed by Krzysztof
+>=20
+> [1] https://lore.kernel.org/all/20231201063309.tingjc3cjhsqb6r7@confusing=
+/
+>=20
+>=20
+> Brandon Brnich (2):
+>   dt-bindings: media: Remove K3 Family Prefix from Compatible
+>   media: chips-media: wave5: Remove K3 References
+>=20
+>  Documentation/devicetree/bindings/media/cnm,wave521c.yaml | 4 ++--
+>  drivers/media/platform/chips-media/wave5/wave5-vpu.c      | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>=20
+> --
+> 2.34.1
 
-Thx.
+Thanks,
 
----
-From: Borislav Petkov (AMD) <bp@alien8.de>
+Brandon Brnich
 
-The cpuidle governors' ->enter() methods are supposed to be IRQ
-invariant:
-
-  5e26aa933911 ("cpuidle/poll: Ensure IRQs stay disabled after cpuidle_state::enter() calls")
-  bb7b11258561 ("cpuidle: Move IRQ state validation")
-
-Do that in the haltpoll governor too.
-
-Fixes: 5e26aa933911 ("cpuidle/poll: Ensure IRQs stay disabled after cpuidle_state::enter() calls")
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218245
-Reported-by: <forza@tnonline.net>
-Tested-by: <forza@tnonline.net>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
----
- drivers/cpuidle/cpuidle-haltpoll.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
-index e66df22f9695..d8515d5c0853 100644
---- a/drivers/cpuidle/cpuidle-haltpoll.c
-+++ b/drivers/cpuidle/cpuidle-haltpoll.c
-@@ -25,13 +25,12 @@ MODULE_PARM_DESC(force, "Load unconditionally");
- static struct cpuidle_device __percpu *haltpoll_cpuidle_devices;
- static enum cpuhp_state haltpoll_hp_state;
- 
--static int default_enter_idle(struct cpuidle_device *dev,
--			      struct cpuidle_driver *drv, int index)
-+static __cpuidle int default_enter_idle(struct cpuidle_device *dev,
-+					struct cpuidle_driver *drv, int index)
- {
--	if (current_clr_polling_and_test()) {
--		local_irq_enable();
-+	if (current_clr_polling_and_test())
- 		return index;
--	}
-+
- 	arch_cpu_idle();
- 	return index;
- }
--- 
-2.42.0.rc0.25.ga82fb66fed25
-
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
