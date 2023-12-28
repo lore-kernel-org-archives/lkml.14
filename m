@@ -1,28 +1,49 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FDC5671;
-	Thu, 28 Dec 2023 08:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97DB628E3;
+	Thu, 28 Dec 2023 08:44:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="VInzAuRr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1703752943; x=1704357743; i=markus.elfring@web.de;
-	bh=zmkIk95uAnIs9Eha5efh2mV5ML9QPD6Kxw6Fd4L0ayI=;
-	h=X-UI-Sender-Class:Date:To:From:Subject:Cc;
-	b=VInzAuRrkOQMpps9N+++fUF5AregOalMHU4QRqu4YesKz9EvgRS8WQvsJGNmYuMo
-	 r5Sf610vgM7T1HV0kUggWIiGcKIKAKXse2nmwVt5n2GBePiNTGp6GMD3q4Ve1QlI1
-	 w/w5mnkyPJsRux8Pm2V5csAc6cbP2z5F9nIVW4tYy1wFL14GVKliz5z1Gs6E1lAuf
-	 kZeZCrO0DWFR1y8q4RnmmHRkxlePqz30AkLmuyjgKKYKysHmlRWsLxhu/j7NJSe6O
-	 APAuZGG8S1pB0DEPmN4r/6SrNR0QwYYtPgg6liX2aMPQ0bT2o2zLM+vu2pwefC2eP
-	 hJA33wVwTsEKFZ5hTQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MA4bA-1rPtlV0tYI-00BlBh; Thu, 28
- Dec 2023 09:42:23 +0100
-Message-ID: <362ee824-fc53-4e19-9529-8b621657635b@web.de>
-Date: Thu, 28 Dec 2023 09:42:21 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dU6i4AvY"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d430bac207so23078875ad.0;
+        Thu, 28 Dec 2023 00:44:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703753041; x=1704357841; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/LAA70zXm10DEMc6Kjg+/EIPKIlRgUHAWPVMkU39I30=;
+        b=dU6i4AvYcfB4XSUjzMpcGIAaWwkbiOsafjjRJ6gyactoKg2WhmJ9SwdThrruk+9H+S
+         LFblKOLrXyxbQLDc1spcGmh1VzFQO5mei8SExt6/dUH/vviZOrCXN1UvJJNOXqEKvR1d
+         3zVC29mmr36dTGijRDHgVRxY/KKu74TNTH+vcv4YEIYFLstbuR8byN3jFE4SRQjA+GTl
+         6cSnYg8a02LcQUVk2BQdfIuT1lr8FjrsM8eNWWubYR4OV39vXaCjSlBFxQ8aXaRK9dgT
+         HNXrPkorRw2nb01OuGuPC5qPeGkwAF6nv03gyv71NC13RZI/nKm2o5JVjV8M4l9O1B3F
+         4X4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703753041; x=1704357841;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/LAA70zXm10DEMc6Kjg+/EIPKIlRgUHAWPVMkU39I30=;
+        b=JsnIIW0h9IJN8RkZvw+1gKOA9olscoou4i7ndPulIeFg4WTYsKI/fpLy+8G3qPpBdc
+         gU98E2iwwpdUW8Cki3gdacJ9GTucgWm8aR/UTBn+pjiMoXwUpQrFQIJAt7oGUxT80lXc
+         fVuHrw61cprnbKDmJNr5vQTvr7V4TaDyq8pNtRC/hbAEiNmeIEmTQiF7T9gac0vSbFKs
+         7KOUYZCRtkgmWs6TuqWuoJLZbhsQ9kRBKaX5dF7Phatb5pDPq5/NoEqatNRSmMdWQtpJ
+         y+gk4tyY5+1DoOSFsQGuMmlo8DRSjfDnC3hBDuGaB413PltgCsR8XrNCTssdaDc1rkft
+         D3cQ==
+X-Gm-Message-State: AOJu0Yzk+hIapv6wecNbUJU4ZZBjy3CFWdK3PynuRSVwBQ5/sq7krIyR
+	Z2cZyr5xr6BD6KCONlKhhhU=
+X-Google-Smtp-Source: AGHT+IGO2itkv+MUyVX3a5ZejUz/uivujcyirm9UN9HTmneFRG8FpKHBqElJbkLkEoCD0Eecttr+8A==
+X-Received: by 2002:a17:902:c244:b0:1d3:d1ee:9bea with SMTP id 4-20020a170902c24400b001d3d1ee9beamr11013979plg.53.1703753040903;
+        Thu, 28 Dec 2023 00:44:00 -0800 (PST)
+Received: from [192.168.159.133] ([37.175.83.47])
+        by smtp.gmail.com with ESMTPSA id f15-20020a170902684f00b001d3eaab64a3sm13726772pln.219.2023.12.28.00.43.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Dec 2023 00:44:00 -0800 (PST)
+Message-ID: <0cdb0461-ece3-4bfb-b058-9bf75c1f6fd3@gmail.com>
+Date: Thu, 28 Dec 2023 09:43:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -30,78 +51,61 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: platform-driver-x86@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] platform/x86/amd/pmf: Return directly after a failed
- apmf_if_call() in apmf_sbios_heartbeat_notify()
-Cc: LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:rDi8Bd+8M7STwBu7WjWgU68UfYwOYphhC9zo9TLUjNL2/gw4ycp
- J4dC2LEgVEZ0cy4oZuKBDKYc/rrlyV3gHUvEm7tx3Y8s7JwsP1rBFIBYtsc1HAKJLVinrMW
- 5GdwGEUlddGfgLCN/j6TMOPltug/QW9cSIQRzKetAXxOggTRSx0bs5VsUq6Ntph6V8Aa5iU
- wqhVApVWx09AJqMbdLo7A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:nkcMUES01yM=;nDLmN1ZD4ajl/27Ge923Xf1FUDM
- MP7MVJK28721tsglhTeWNgNnkqAfHa2BNDDbWRUT8eap3W58ga6tjws0Mmp/669BEFcKozGkl
- sZEuZEusG4MGTsc8/C42yFGVQXKND1zsok2rnjiqe3bwTzH+IfVkLNT3x78ONettyfbN6Ox9H
- d2ECedJZdFLF69Jy/L59MiW8hLxXQ8W6F3dEtgk38b8/2hrV8JcPXvDpuJKh91aX3ZA5icmEN
- RRh+NNW1KkFFEs0PfBZEmdksgrSgcP7Ik5zc/0zntnqR7uT614JmX9JOnh/DcIvihTA8PfB5G
- Fk8+1sS7pDLAp4PMZeWQw7z90W0IV6OZIs1Si9cvLBhCClcv0GJq6Nrg07gvT4NAtAipEW3hu
- GcnEGI5xjYgqQQX/uWDpfwKdQbjOr64zOovIlBIOMA/Zlbe3u0N3ZD2zhd9nyIzmm+d6Ql/7g
- +YHTC8AA9rr3LfMsL189/vl7AMfssb7UBj0//07wEuprvWCatqx6MgYTxEyNifTS8kgsnojio
- lkKlb5scziE3v915s6WdyWldPbMuo4XifACJxmnpVGTRegbVWf3v60ZZ6WXOdrpD5HOfTzuPo
- lf51sDc0XPAVSWMcQESKdsCLmuddMYF+ZKhELnXJ7MtyBKtWNyj5QFikjyGLReu0IitwdeBoR
- Z5wvK5STs82RUa8JTeDpJL/UCHzX3zGPeFqNWN/OUQE/XFa8WRNjeDgPqQC5SI0J02OBooV1I
- +f1NXCiD8pV40vgHLMXLJjbL98l/ykK4Jr8IuZJ/AmQ5qrMjSkW8ecU8Zumo3Y383NHjJdavr
- YGGVGfhElG/GBQaIGpUtAI4lxDpa7E/x2eySGjcRXwhb5AdV+9ZySacQDprD/4gvqZDOJykDc
- tzVJVj3oRpBJSXxDHrlBZtKBCoE4bTmfRm2vTS9WqYx6wy+ylmeQPIi/YQKPBY4vQCjCNtXMt
- rZsEJA==
+Subject: Re: [PATCH v2 1/1] net: phy: micrel: Add workaround for incomplete
+ autonegotiation
+Content-Language: en-US
+To: Asmaa Mnebhi <asmaa@nvidia.com>, davem@davemloft.net, marek.mojik@nic.cz,
+ netdev@vger.kernel.org
+Cc: davthompson@nvidia.com, linux-kernel@vger.kernel.org
+References: <20231227231657.15152-1-asmaa@nvidia.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ HGuUuzv+GKZ6nsysJw==
+In-Reply-To: <20231227231657.15152-1-asmaa@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Thu, 28 Dec 2023 09:30:54 +0100
 
-The kfree() function was called in one case by
-the apmf_sbios_heartbeat_notify() function during error handling
-even if the passed variable contained a null pointer.
-This issue was detected by using the Coccinelle software.
 
-* Thus return directly after a call of the function =E2=80=9Capmf_if_call=
-=E2=80=9D failed
-  at the beginning.
+On 12/28/2023 12:16 AM, Asmaa Mnebhi wrote:
+> Very rarely, the KSZ9031 fails to complete autonegotiation although it was
+> initiated via phy_start(). As a result, the link stays down. Restarting
+> autonegotiation when in this state solves the issue.
+> 
+> Signed-off-by: Asmaa Mnebhi <asmaa@nvidia.com>
 
-* Delete the label =E2=80=9Cout=E2=80=9D which became unnecessary with thi=
-s refactoring.
-
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/platform/x86/amd/pmf/acpi.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/am=
-d/pmf/acpi.c
-index 4ec7957eb707..eb367e38c5ab 100644
-=2D-- a/drivers/platform/x86/amd/pmf/acpi.c
-+++ b/drivers/platform/x86/amd/pmf/acpi.c
-@@ -135,11 +135,9 @@ static void apmf_sbios_heartbeat_notify(struct work_s=
-truct *work)
- 	dev_dbg(dev->dev, "Sending heartbeat to SBIOS\n");
- 	info =3D apmf_if_call(dev, APMF_FUNC_SBIOS_HEARTBEAT, NULL);
- 	if (!info)
--		goto out;
-+		return;
-
- 	schedule_delayed_work(&dev->heart_beat, msecs_to_jiffies(dev->hb_interva=
-l * 1000));
--
--out:
- 	kfree(info);
- }
-
-=2D-
-2.43.0
-
+Is there a Micrel errata associated with this work around that could be 
+referenced here?
+-- 
+Florian
