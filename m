@@ -1,34 +1,81 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0C5107AD;
-	Thu, 28 Dec 2023 12:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4T17pv4F0vz4f3k5f;
-	Thu, 28 Dec 2023 20:58:15 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 267D91A017F;
-	Thu, 28 Dec 2023 20:58:17 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgBHlQvmcI1lvcx3Ew--.36075S5;
-	Thu, 28 Dec 2023 20:58:16 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: song@kernel.org,
-	yukuai3@huawei.com,
-	neilb@suse.de
-Cc: linux-raid@vger.kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552D91094A
+	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 12:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VGRgjEtU"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40d5d8a6730so14305695e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 04:58:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703768299; x=1704373099; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9P18XFXxLojrY56K1R6dgW5XgUJGd1RI2KgrEMEdbt0=;
+        b=VGRgjEtUWQXaj45h2Kim36YsftjD3/lzrOlNAnGvcLcCCR4P1BndKG1WkmcaKn4krL
+         KzgaB3pHKJP5hbc5SWan+JB+gmYLPxOyX0ZvE8MRoY9Davrl21fm21nEmCchRXULzMKW
+         o61bqKoj18suCoBSNZGu59AmoTlGu1+Vmi2w3u86vVVkdKWlFCtsxLh2zJCGeAOH4G8a
+         h6qLZNpQFjh3ZfM9bPKQTXuYX1tPdhGgj8brdvLsbotZoaViRboa3klaadVDZjkFwwS/
+         i/zvAYf5TjhGjqh6709tTOlvn31WrdAXNVPij7FKyfoZv5z6OQgTFCznS1qPdzmrMNx6
+         r74g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703768299; x=1704373099;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9P18XFXxLojrY56K1R6dgW5XgUJGd1RI2KgrEMEdbt0=;
+        b=TzuXViS9SWK2P74AXVyh8Qbzu4QGOjrw8C9/Y7csSUVuOYcNIrL2IBWUgvUWSyKNSC
+         NoqY1xxiZxjZ+4/mRuB13U++7lj9PdHcWrvD61IJeNm/pc8SSiQSAuhy4owiNjOxWd+6
+         A9FKZ+BcYJCpnn7WbtjPxh0rvf3dRAzF4wH8NXzsUSrZeTq7doe0D67UmAAlHum0gsFe
+         RJH07R7bpXsR7ASkxV8syWmCkbc1d4lzM/IKvBST/DS1rnzJfaIPOwjilmGFCb9BNQgY
+         8q7Z4CILVNdqUOE87yHOwAWOjUkvqoq4T41NRqy5CApE/LzlqSsk2ZoQn9JozLNcQH9r
+         xOCw==
+X-Gm-Message-State: AOJu0Yyt0DReTqAVVp+ksJfiD1NIz5XY20Sf+EZf1WusXlYzc8y5H7jr
+	uZUdhlFELrqMnEcEVopvcHflVOAMUUCfJA==
+X-Google-Smtp-Source: AGHT+IEhfhBO50ykAwRsA55Z5OQSVWgKhNvX6SqkmYB+7qQHPv4Eq18tKnXzQa7B/fCe5uM8d1mYAg==
+X-Received: by 2002:a7b:ce98:0:b0:40d:5c58:fd7a with SMTP id q24-20020a7bce98000000b0040d5c58fd7amr1705829wmj.156.1703768299747;
+        Thu, 28 Dec 2023 04:58:19 -0800 (PST)
+Received: from ta2.c.googlers.com.com (216.131.76.34.bc.googleusercontent.com. [34.76.131.216])
+        by smtp.gmail.com with ESMTPSA id h9-20020a05600c350900b0040d5aca25f1sm8615807wmq.17.2023.12.28.04.58.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Dec 2023 04:58:19 -0800 (PST)
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+To: peter.griffin@linaro.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	conor+dt@kernel.org,
+	andi.shyti@kernel.org,
+	alim.akhtar@samsung.com,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	s.nawrocki@samsung.com,
+	tomasz.figa@gmail.com,
+	cw00.choi@samsung.com,
+	arnd@arndb.de,
+	semen.protsenko@linaro.org
+Cc: andre.draszik@linaro.org,
+	saravanak@google.com,
+	willmcvicker@google.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH -next 1/3] md: remove redundant check of 'mddev->sync_thread'
-Date: Thu, 28 Dec 2023 20:55:51 +0800
-Message-Id: <20231228125553.2697765-2-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231228125553.2697765-1-yukuai1@huaweicloud.com>
-References: <20231228125553.2697765-1-yukuai1@huaweicloud.com>
+	linux-i2c@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	kernel-team@android.com,
+	Tudor Ambarus <tudor.ambarus@linaro.org>
+Subject: [PATCH v2 09/12] arm64: dts: exynos: gs101: enable cmu-peric0 clock controller
+Date: Thu, 28 Dec 2023 12:58:02 +0000
+Message-ID: <20231228125805.661725-10-tudor.ambarus@linaro.org>
+X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
+In-Reply-To: <20231228125805.661725-1-tudor.ambarus@linaro.org>
+References: <20231228125805.661725-1-tudor.ambarus@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,130 +83,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgBHlQvmcI1lvcx3Ew--.36075S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxXw1DCw4xAF1UCw4rKrWUXFb_yoWrAr18pa
-	yIyF98Xr18Zry3XrWjy3WDXa45Zw1jgFZFyr93Wa48J3ZayF42kF45uFyUAFWkJas5Aa15
-	Zw1rJFW5ZFy09w7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9v14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
-	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
-	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxAIw28IcxkI7VAKI48JMxC20s
-	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
-	JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
-	v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xva
-	j40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
-	W8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbec_DUUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-From: Yu Kuai <yukuai3@huawei.com>
+Enable the cmu-peric0 clock controller. It feeds USI and I3c.
 
-The lifetime of sync_thread:
-
-1) Set MD_RECOVERY_NEEDED and wake up daemon thread (by ioctl/sysfs or
-   other events);
-2) Daemon thread woke up, md_check_recovery() found that
-   MD_RECOVERY_NEEDED is set:
-   a) try to grab reconfig_mutex;
-   b) set MD_RECOVERY_RUNNING;
-   c) clear MD_RECOVERY_NEEDED, and then queue sync_work;
-3) md_start_sync() choose sync_action, then register sync_thread;
-4) md_do_sync() is done, set MD_RECOVERY_DONE and wake up daemon thread;
-5) Daemon thread woke up, md_check_recovery() found that
-   MD_RECOVERY_DONE is set:
-   a) try to grab reconfig_mutex;
-   b) unregister sync_thread;
-   c) clear MD_RECOVERY_RUNNING and MD_RECOVERY_DONE;
-
-Hence there is no such case that MD_RECOVERY_RUNNING is not set, while
-sync_thread is registered.
-
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 ---
- drivers/md/md.c    | 14 ++++----------
- drivers/md/raid5.c |  6 ++----
- 2 files changed, 6 insertions(+), 14 deletions(-)
+v2: collect R-b
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 9bdd57324c37..2208eed3baac 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -3314,8 +3314,7 @@ static ssize_t new_offset_store(struct md_rdev *rdev,
- 	if (kstrtoull(buf, 10, &new_offset) < 0)
- 		return -EINVAL;
+ arch/arm64/boot/dts/exynos/google/gs101.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+index 2c27c3cb9237..c693791ae584 100644
+--- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
++++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+@@ -339,6 +339,18 @@ ppi_cluster2: interrupt-partition-2 {
+ 			};
+ 		};
  
--	if (mddev->sync_thread ||
--	    test_bit(MD_RECOVERY_RUNNING,&mddev->recovery))
-+	if (test_bit(MD_RECOVERY_RUNNING, &mddev->recovery))
- 		return -EBUSY;
- 	if (new_offset == rdev->data_offset)
- 		/* reset is always permitted */
-@@ -3993,8 +3992,7 @@ level_store(struct mddev *mddev, const char *buf, size_t len)
- 	 */
- 
- 	rv = -EBUSY;
--	if (mddev->sync_thread ||
--	    test_bit(MD_RECOVERY_RUNNING, &mddev->recovery) ||
-+	if (test_bit(MD_RECOVERY_RUNNING, &mddev->recovery) ||
- 	    mddev->reshape_position != MaxSector ||
- 	    mddev->sysfs_active)
- 		goto out_unlock;
-@@ -6388,7 +6386,6 @@ static int md_set_readonly(struct mddev *mddev, struct block_device *bdev)
- 
- 	mutex_lock(&mddev->open_mutex);
- 	if ((mddev->pers && atomic_read(&mddev->openers) > !!bdev) ||
--	    mddev->sync_thread ||
- 	    test_bit(MD_RECOVERY_RUNNING, &mddev->recovery)) {
- 		pr_warn("md: %s still in use.\n",mdname(mddev));
- 		err = -EBUSY;
-@@ -6441,7 +6438,6 @@ static int do_md_stop(struct mddev *mddev, int mode,
- 	mutex_lock(&mddev->open_mutex);
- 	if ((mddev->pers && atomic_read(&mddev->openers) > !!bdev) ||
- 	    mddev->sysfs_active ||
--	    mddev->sync_thread ||
- 	    test_bit(MD_RECOVERY_RUNNING, &mddev->recovery)) {
- 		pr_warn("md: %s still in use.\n",mdname(mddev));
- 		mutex_unlock(&mddev->open_mutex);
-@@ -7287,8 +7283,7 @@ static int update_size(struct mddev *mddev, sector_t num_sectors)
- 	 * of each device.  If num_sectors is zero, we find the largest size
- 	 * that fits.
- 	 */
--	if (test_bit(MD_RECOVERY_RUNNING, &mddev->recovery) ||
--	    mddev->sync_thread)
-+	if (test_bit(MD_RECOVERY_RUNNING, &mddev->recovery))
- 		return -EBUSY;
- 	if (!md_is_rdwr(mddev))
- 		return -EROFS;
-@@ -7325,8 +7320,7 @@ static int update_raid_disks(struct mddev *mddev, int raid_disks)
- 	if (raid_disks <= 0 ||
- 	    (mddev->max_disks && raid_disks >= mddev->max_disks))
- 		return -EINVAL;
--	if (mddev->sync_thread ||
--	    test_bit(MD_RECOVERY_RUNNING, &mddev->recovery) ||
-+	if (test_bit(MD_RECOVERY_RUNNING, &mddev->recovery) ||
- 	    test_bit(MD_RESYNCING_REMOTE, &mddev->recovery) ||
- 	    mddev->reshape_position != MaxSector)
- 		return -EBUSY;
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 26e1e8a5e941..e3a216e51e3f 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -7025,10 +7025,8 @@ raid5_store_stripe_size(struct mddev  *mddev, const char *page, size_t len)
- 	pr_debug("md/raid: change stripe_size from %lu to %lu\n",
- 			conf->stripe_size, new);
- 
--	if (mddev->sync_thread ||
--		test_bit(MD_RECOVERY_RUNNING, &mddev->recovery) ||
--		mddev->reshape_position != MaxSector ||
--		mddev->sysfs_active) {
-+	if (test_bit(MD_RECOVERY_RUNNING, &mddev->recovery) ||
-+	    mddev->reshape_position != MaxSector || mddev->sysfs_active) {
- 		err = -EBUSY;
- 		goto out_unlock;
- 	}
++		cmu_peric0: clock-controller@10800000 {
++			compatible = "google,gs101-cmu-peric0";
++			reg = <0x10800000 0x4000>;
++			#clock-cells = <1>;
++			clocks = <&ext_24_5m>,
++				 <&cmu_top CLK_DOUT_CMU_PERIC0_BUS>,
++				 <&cmu_top CLK_DOUT_CMU_PERIC0_IP>;
++			clock-names = "oscclk",
++				      "dout_cmu_peric0_bus",
++				      "dout_cmu_peric0_ip";
++		};
++
+ 		sysreg_peric0: syscon@10820000 {
+ 			compatible = "google,gs101-peric0-sysreg", "syscon";
+ 			reg = <0x10820000 0x10000>;
 -- 
-2.39.2
+2.43.0.472.g3155946c3a-goog
 
