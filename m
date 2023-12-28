@@ -1,76 +1,66 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3181104
-	for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 03:47:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dl94ql23"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703735243; x=1735271243;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=8+m+uqWzLht9Jkcg4p2SuWNA1HdjU9m0+M1AHAZCiJU=;
-  b=dl94ql23s9+L5QDrgmKt4s/wBqD4elBgrOk/zFQGm/64Ifca+SrLdA41
-   tkvxNSBQoINsXpN91y/Ddgc9L1RD5ZvlFFuXs4HJid0dhbA1+sqV7+0o4
-   9qKlzSxS9kesItjtJ6M6Fvginwzbti/GMFriGD8z8X8bApZWVQtB3sNkS
-   X+dAjliWtjJJkBktQatPRqf+R7vS3v4psFfKQbLV5P0bcGjxRlN0ndpLm
-   jES8ehHed8wRDQRKpB35EICRzO8FnjoIkETdSAZWVqbYwzctZIIEvdrDE
-   XXSDYP8PJn+L5t4dxOCA5dId81lSF5PnYCfza6L76C7cpnPeEF6BddjWT
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="396231219"
-X-IronPort-AV: E=Sophos;i="6.04,310,1695711600"; 
-   d="scan'208";a="396231219"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 19:47:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="754624593"
-X-IronPort-AV: E=Sophos;i="6.04,310,1695711600"; 
-   d="scan'208";a="754624593"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 27 Dec 2023 19:47:20 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rIhMb-000Fzx-39;
-	Thu, 28 Dec 2023 03:47:17 +0000
-Date: Thu, 28 Dec 2023 11:46:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Luca Weiss <luca.weiss@fairphone.com>
-Subject: panel-raydium-rm692e5.c:undefined reference to
- `drm_dsc_pps_payload_pack'
-Message-ID: <202312281138.PHn1Js8S-lkp@intel.com>
+Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 296571106;
+	Thu, 28 Dec 2023 03:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=richtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
+X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
+Received: from 192.168.10.47
+	by mg.richtek.com with MailGates ESMTPS Server V6.0(636808:0:AUTH_RELAY)
+	(envelope-from <cy_huang@richtek.com>)
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Thu, 28 Dec 2023 11:51:08 +0800 (CST)
+Received: from ex4.rt.l (192.168.10.47) by ex4.rt.l (192.168.10.47) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.27; Thu, 28 Dec
+ 2023 11:51:08 +0800
+Received: from linuxcarl2.richtek.com (192.168.10.154) by ex4.rt.l
+ (192.168.10.45) with Microsoft SMTP Server id 15.2.1258.27 via Frontend
+ Transport; Thu, 28 Dec 2023 11:51:08 +0800
+From: <cy_huang@richtek.com>
+To: Jonathan Cameron <jic23@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>
+CC: Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>,
+	ChiYuan Huang <cy_huang@richtek.com>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+	<u.kleine-koenig@pengutronix.de>, <linux-iio@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/2] dt-bindings: iio: adc: rtq6056: add support for the whole RTQ6056 family
+Date: Thu, 28 Dec 2023 11:51:06 +0800
+Message-ID: <4a318b480a606c59e834feda01745e33d7e803a3.1703734994.git.cy_huang@richtek.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <cover.1703734994.git.cy_huang@richtek.com>
+References: <cover.1703734994.git.cy_huang@richtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   f5837722ffecbbedf1b1dbab072a063565f0dad1
-commit: 988d0ff29ecf7ab750b9be29fddae588156c3d03 drm/panel: Add driver for BOE RM692E5 AMOLED panel
-date:   3 months ago
-config: csky-randconfig-001-20231228 (https://download.01.org/0day-ci/archive/20231228/202312281138.PHn1Js8S-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231228/202312281138.PHn1Js8S-lkp@intel.com/reproduce)
+From: ChiYuan Huang <cy_huang@richtek.com>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312281138.PHn1Js8S-lkp@intel.com/
+Add compatible support for RTQ6053 and RTQ6059.
 
-All errors (new ones prefixed by >>):
+Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+---
+ .../devicetree/bindings/iio/adc/richtek,rtq6056.yaml         | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-   csky-linux-ld: drivers/gpu/drm/panel/panel-raydium-rm692e5.o: in function `rm692e5_prepare':
->> panel-raydium-rm692e5.c:(.text+0xfc0): undefined reference to `drm_dsc_pps_payload_pack'
->> csky-linux-ld: panel-raydium-rm692e5.c:(.text+0x1090): undefined reference to `drm_dsc_pps_payload_pack'
-
+diff --git a/Documentation/devicetree/bindings/iio/adc/richtek,rtq6056.yaml b/Documentation/devicetree/bindings/iio/adc/richtek,rtq6056.yaml
+index 88e008629ea8..d1e1f36d1972 100644
+--- a/Documentation/devicetree/bindings/iio/adc/richtek,rtq6056.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/richtek,rtq6056.yaml
+@@ -25,7 +25,10 @@ description: |
+ 
+ properties:
+   compatible:
+-    const: richtek,rtq6056
++    enum:
++      - richtek,rtq6053
++      - richtek,rtq6056
++      - richtek,rtq6059
+ 
+   reg:
+     maxItems: 1
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
