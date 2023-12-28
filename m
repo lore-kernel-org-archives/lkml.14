@@ -1,67 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67AB46AA4;
-	Thu, 28 Dec 2023 10:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N0lbqOyo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32363C433C8;
-	Thu, 28 Dec 2023 10:47:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703760473;
-	bh=5Oj5V39vAkN1/+i+CrgR3hM1xoyNKUjIkt8y2kK2itI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N0lbqOyoJyeMAeYseh2byh6ANjb73lLSFoo/4Vf3UE84vYDk1TieZPcsFMbb0loqB
-	 J5c41nJjfroqg+lE9GGc0kOGcMTJxCy3AYauRg4GYPutMX/m+iGhLmhRqkfKY8IoEv
-	 HQ6gkkpXqpfaUSwSu7V7SK0kirgYW//TghKZrO0OFcZ8vFivTervREY8Iia7YzaARU
-	 4nrS8pD062BAXhO50kSt3MeaqULSjKL976XU3bOxCS4tcxu9/yoI/LjuylHOVl+oXi
-	 rYFTNFdvU8qGKDS84wZ+xsCp/I0UcygpkM55NDFDntoL8POVYFgAFXl/4qpQMmPknr
-	 lSRN3+TRLr3ug==
-Date: Thu, 28 Dec 2023 11:47:45 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: David Howells <dhowells@redhat.com>, Jeff Layton <jlayton@kernel.org>,
-	Steve French <smfrench@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	Christian Brauner <christian@brauner.io>, linux-cachefs@redhat.com,
-	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v5 15/40] netfs: Add support for DIO buffering
-Message-ID: <20231228-wohlbefinden-museen-c5efad4e0d84@brauner>
-References: <20231221132400.1601991-1-dhowells@redhat.com>
- <20231221132400.1601991-16-dhowells@redhat.com>
- <20231226165442.GA1202197@dev-arch.thelio-3990X>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28156AA8;
+	Thu, 28 Dec 2023 10:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 3BSAmIFg91892683, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 3BSAmIFg91892683
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 28 Dec 2023 18:48:18 +0800
+Received: from RTEXMBS05.realtek.com.tw (172.21.6.98) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.32; Thu, 28 Dec 2023 18:48:18 +0800
+Received: from RTEXH36505.realtek.com.tw (172.21.6.25) by
+ RTEXMBS05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Thu, 28 Dec 2023 18:48:17 +0800
+Received: from localhost.localdomain (172.21.252.101) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server id
+ 15.1.2375.32 via Frontend Transport; Thu, 28 Dec 2023 18:48:17 +0800
+From: Tzuyi Chang <tychang@realtek.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski
+	<brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>, Rob Herring
+	<robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, TY Chang <tychang@realtek.com>
+Subject: [PATCH v5 1/2] dt-bindings: gpio: realtek: Add realtek,rtd-gpio
+Date: Thu, 28 Dec 2023 18:47:59 +0800
+Message-ID: <20231228104800.24913-2-tychang@realtek.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20231228104800.24913-1-tychang@realtek.com>
+References: <20231228104800.24913-1-tychang@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20231226165442.GA1202197@dev-arch.thelio-3990X>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-KSE-ServerInfo: RTEXMBS05.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-> This will break the build with versions of clang that have support for
-> counted_by (as it has been reverted in main but reapplication to main is
-> being actively worked on) because while annotating pointers with this
-> attribute is a goal of the counted_by attribute, it is not ready yet.
-> Please consider removing this and adding a TODO to annotate it when
-> support is available.
+Add the device tree bindings for the Realtek DHC(Digital Home Center)
+RTD SoCs GPIO controllers.
 
-It's really unpleasant that we keep getting new attributes that we
-seemingly are encouraged to use and get sent patches for it. And then we
-learn a little later that that stuff isn't ready yet. It's annoying. I
-know it isn't your fault but it would be wise to be a little more
-careful. IOW, unless both clang and gcc do support that thing
-appropriately don't send patches to various subsystems for this.
+Signed-off-by: Tzuyi Chang <tychang@realtek.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+v4 to v5 change:
+    No change.
+v3 to v4 change:
+    1. Arrange the compatible list in alphanumerical order.
+v2 to v3 change:
+    1. Remove generic compatible and use SoC-specific compatible instead.
+v1 to v2 change:
+    1. Add description for DHC RTD SoCs.
+    2. Revise the compatible names.
+    3. Add descriptions for reg and interrupts properties.
+---
+ .../bindings/gpio/realtek,rtd-gpio.yaml       | 69 +++++++++++++++++++
+ 1 file changed, 69 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/realtek,rtd-gpio.yaml
 
-In any case, this is now fixed. I pulled an updated version from David.
+diff --git a/Documentation/devicetree/bindings/gpio/realtek,rtd-gpio.yaml b/Documentation/devicetree/bindings/gpio/realtek,rtd-gpio.yaml
+new file mode 100644
+index 000000000000..dd768db37a98
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/realtek,rtd-gpio.yaml
+@@ -0,0 +1,69 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2023 Realtek Semiconductor Corporation
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/realtek,rtd-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Realtek DHC GPIO controller
++
++maintainers:
++  - Tzuyi Chang <tychang@realtek.com>
++
++description:
++  The GPIO controller is designed for the Realtek DHC (Digital Home Center)
++  RTD series SoC family, which are high-definition media processor SoCs.
++
++properties:
++  compatible:
++    enum:
++      - realtek,rtd1295-misc-gpio
++      - realtek,rtd1295-iso-gpio
++      - realtek,rtd1315e-iso-gpio
++      - realtek,rtd1319-iso-gpio
++      - realtek,rtd1319d-iso-gpio
++      - realtek,rtd1395-iso-gpio
++      - realtek,rtd1619-iso-gpio
++      - realtek,rtd1619b-iso-gpio
++
++  reg:
++    items:
++      - description: GPIO controller registers
++      - description: GPIO interrupt registers
++
++  interrupts:
++    items:
++      - description: Interrupt number of the assert GPIO interrupt, which is
++                     triggered when there is a rising edge.
++      - description: Interrupt number of the deassert GPIO interrupt, which is
++                     triggered when there is a falling edge.
++
++  gpio-ranges: true
++
++  gpio-controller: true
++
++  "#gpio-cells":
++    const: 2
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - gpio-ranges
++  - gpio-controller
++  - "#gpio-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    gpio@100 {
++      compatible = "realtek,rtd1319d-iso-gpio";
++      reg = <0x100 0x100>,
++            <0x0 0xb0>;
++      interrupt-parent = <&iso_irq_mux>;
++      interrupts = <19>, <20>;
++      gpio-ranges = <&pinctrl 0 0 82>;
++      gpio-controller;
++      #gpio-cells = <2>;
++    };
+-- 
+2.43.0
+
