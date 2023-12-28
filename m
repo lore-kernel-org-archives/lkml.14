@@ -1,117 +1,122 @@
-Received: from box.trvn.ru (box.trvn.ru [194.87.146.52])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78AD01FDD;
-	Thu, 28 Dec 2023 06:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="ZTRdhT1y"
-Received: from authenticated-user (box.trvn.ru [194.87.146.52])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	by box.trvn.ru (Postfix) with ESMTPSA id 5E86E40564;
-	Thu, 28 Dec 2023 11:08:29 +0500 (+05)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
-	t=1703743710; bh=nOX6jjTicKxqmOSERrqk583i64MzTIyy5OLB82ZzTv8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZTRdhT1yd+lcRCUOlGTMlRLWUJP6aBO4M+m5XV3w8tint5euG4BSa94c+xsKq4+m/
-	 hSPud5i0yagcLi3Bcmd9w/QEi+HYqz3yu+GyhBZQi/f4TCd3xVSoYjZTjob+IVxTm3
-	 dLf/5BA6Wk+MKXn2WkKRQVmC9zfeZb7L2Ke3E+2bWfDzN+4WskCBxtVnPvv0Eai1uP
-	 Wi4vNJqj6uGhBWpAh4EDY2l1bxhi92kr4Hr5fyX7bjSBQ+uxjP2gmUCf5isnyRJz+R
-	 JwSu6yfUhYY9a1+27hT05cju82qtA7fDrvUGR9hcKAr1GZOKVNafGVLwHnUW5mrFzs
-	 1pbHn8COU8Zuw==
-Date: Thu, 28 Dec 2023 11:08:26 +0500
-From: Nikita Travkin <nikita@trvn.ru>
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Marcel Holtmann <marcel@holtmann.org>, 
-	Johan Hedberg <johan.hedberg@gmail.com>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Bjorn Andersson <quic_bjorande@quicinc.com>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org, Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, 
-	Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH] Bluetooth: qca: fix device-address endianness
-Message-ID: <grhpb3vyajjmceuwgna36g6k2esjtw6qrv35ldlwgdmlvjvuo5@2b3q27zxttxa>
-References: <20231227180306.6319-1-johan+linaro@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2C423A7;
+	Thu, 28 Dec 2023 06:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 3BS68mXQ21766832, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 3BS68mXQ21766832
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 28 Dec 2023 14:08:49 +0800
+Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.17; Thu, 28 Dec 2023 14:08:49 +0800
+Received: from james-bs01.realtek.com.tw (172.21.190.247) by
+ RTEXMBS03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 28 Dec 2023 14:08:48 +0800
+From: James Tai <james.tai@realtek.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
+        "Rob
+ Herring" <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, James Tai <james.tai@realtek.com>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v4 0/6] Initial support for the Realtek interrupt controller
+Date: Thu, 28 Dec 2023 14:08:19 +0800
+Message-ID: <20231228060825.1380439-1-james.tai@realtek.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231227180306.6319-1-johan+linaro@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
+ RTEXMBS03.realtek.com.tw (172.21.6.96)
+X-KSE-ServerInfo: RTEXMBS03.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-On Wed, Dec 27, 2023 at 07:03:06PM +0100, Johan Hovold wrote:
-> The WCN6855 firmware on the Lenovo ThinkPad X13s expects the Bluetooth
-> device address in MSB order when setting it using the
-> EDL_WRITE_BD_ADDR_OPCODE command.
-> 
-> Presumably, this is the case for all non-ROME devices which all use the
-> EDL_WRITE_BD_ADDR_OPCODE command for this (unlike the ROME devices which
-> use a different command and expect the address in LSB order).
-> 
-> Reverse the little-endian address before setting it to make sure that
-> the address can be configured using tools like btmgmt or using the
-> 'local-bd-address' devicetree property.
-> 
-> Note that this can potentially break systems with boot firmware which
-> has started relying on the broken behaviour and is incorrectly passing
-> the address via devicetree in MSB order.
-> 
-> Fixes: 5c0a1001c8be ("Bluetooth: hci_qca: Add helper to set device address")
-> Cc: stable@vger.kernel.org      # 5.1
-> Cc: Balakrishna Godavarthi <quic_bgodavar@quicinc.com>
-> Cc: Matthias Kaehlcke <mka@chromium.org>
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+Introduce an interrupt controller driver for Realtek DHC
+(Digital Home Center) SoCs.
 
-The same issue was present on sc7180 (qcom,wcn3991-bt) and this patch
-fixes it.
+Change log:
+v3 -> v4:
+- Adjusted the allOf block to add constraints on the interrupts per variant
+- Adjusted the error path and label
+- Added the 'irq_domain_remove' to the error path
+- Removed the 'devm_kfree' from the error path
+- Replaced the 'irq_of_parse_and_map' with 'of_irq_get'
+- Replaced the 'raw_spin_lock' with 'raw_spin_lock_irqsave'
+- Adjusted the return value of the 'realtek_intc_subset'
+- Replaced the '~1' with macro 'CLEAN_INTC_STATUS'
+- Improved code comments and description
+- Fixed coding style issues
+- Fixed the incorrect control register in mask and unmask functions
+- Changed the 'EXPORT_SYMBOL' to the 'EXPORT_SYMBOL_GPL'
+- Renamed the 'realtek_intc_subset_cfg' to 'realtek_intc_mask'
+- Removed unused and unnecessary code
+- Removed 'irq_enable' and 'irq_disable' callback
+- Replaced the 'core_initcall' with 'module_init'
+- Removed redundant header files
+- Moved the function of suspend and resume to common code
+- Improved the description of config
 
-Tested-by: Nikita Travkin <nikita@trvn.ru> # sc7180
+v2 -> v3:
+- Retested the bindings using the new version of the dtschema
+- Fixed the order of property items
+- Removed redundant files and replaced them with 'realtek,intc.yaml'
+- Replaced 'interrupts-extended' with 'interrupts'
+- Added a description for 'interrupts'
+- Reduced the example code
+- Resolved kernel test robot build warnings
 
-Thanks!
+v1 -> v2:
+- Tested the bindings using 'make dt_binding_check'
+- Fixed code style issues
+- Resolved kernel test robot build warnings
+- Replaced spin_lock_irqsave with raw_spin_lock
+- Replaced magic number with macro
+- Removed the realtek_intc_set_affinity function
 
-> ---
-> 
-> Hi Qualcomm people,
-> 
-> Could you please verify with your documentation that all non-ROME
-> devices expect the address provided in the EDL_WRITE_BD_ADDR_OPCODE
-> command in MSB order?
-> 
-> I assume this is not something that anyone would change between firmware
-> revisions, but if that turns out to be the case, we'd need to reverse
-> the address based on firmware revision or similar.
-> 
-> Johan
-> 
-> 
->  drivers/bluetooth/btqca.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-> index fdb0fae88d1c..29035daf21bc 100644
-> --- a/drivers/bluetooth/btqca.c
-> +++ b/drivers/bluetooth/btqca.c
-> @@ -826,11 +826,15 @@ EXPORT_SYMBOL_GPL(qca_uart_setup);
->  
->  int qca_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr)
->  {
-> +	bdaddr_t bdaddr_swapped;
->  	struct sk_buff *skb;
->  	int err;
->  
-> -	skb = __hci_cmd_sync_ev(hdev, EDL_WRITE_BD_ADDR_OPCODE, 6, bdaddr,
-> -				HCI_EV_VENDOR, HCI_INIT_TIMEOUT);
-> +	baswap(&bdaddr_swapped, bdaddr);
-> +
-> +	skb = __hci_cmd_sync_ev(hdev, EDL_WRITE_BD_ADDR_OPCODE, 6,
-> +				&bdaddr_swapped, HCI_EV_VENDOR,
-> +				HCI_INIT_TIMEOUT);
->  	if (IS_ERR(skb)) {
->  		err = PTR_ERR(skb);
->  		bt_dev_err(hdev, "QCA Change address cmd failed (%d)", err);
-> -- 
-> 2.41.0
+James Tai (6):
+  dt-bindings: interrupt-controller: Add support for Realtek DHC SoCs
+  irqchip: Add interrupt controller support for Realtek DHC SoCs
+  irqchip: Introduce RTD1319 support using the Realtek common interrupt
+    controller driver
+  irqchip: Introduce RTD1319D support using the Realtek common interrupt
+    controller driver
+  irqchip: Introduce RTD1325 support using the Realtek common interrupt
+    controller driver
+  irqchip: Introduce RTD1619B support using the Realtek common interrupt
+    controller driver
+
+ .../interrupt-controller/realtek,intc.yaml    | 131 +++++++++++
+ drivers/irqchip/Kconfig                       |  44 ++++
+ drivers/irqchip/Makefile                      |   5 +
+ drivers/irqchip/irq-realtek-intc-common.c     | 211 ++++++++++++++++++
+ drivers/irqchip/irq-realtek-intc-common.h     |  76 +++++++
+ drivers/irqchip/irq-realtek-rtd1319.c         | 187 ++++++++++++++++
+ drivers/irqchip/irq-realtek-rtd1319d.c        | 196 ++++++++++++++++
+ drivers/irqchip/irq-realtek-rtd1325.c         | 196 ++++++++++++++++
+ drivers/irqchip/irq-realtek-rtd1619b.c        | 186 +++++++++++++++
+ 9 files changed, 1232 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/realtek,intc.yaml
+ create mode 100644 drivers/irqchip/irq-realtek-intc-common.c
+ create mode 100644 drivers/irqchip/irq-realtek-intc-common.h
+ create mode 100644 drivers/irqchip/irq-realtek-rtd1319.c
+ create mode 100644 drivers/irqchip/irq-realtek-rtd1319d.c
+ create mode 100644 drivers/irqchip/irq-realtek-rtd1325.c
+ create mode 100644 drivers/irqchip/irq-realtek-rtd1619b.c
+
+-- 
+2.25.1
+
