@@ -1,66 +1,61 @@
-Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C9DD23B4
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 01:46:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=richtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
-X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
-Received: from 192.168.10.47
-	by mg.richtek.com with MailGates ESMTPS Server V6.0(636808:0:AUTH_RELAY)
-	(envelope-from <cy_huang@richtek.com>)
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Fri, 29 Dec 2023 09:46:03 +0800 (CST)
-Received: from ex3.rt.l (192.168.10.46) by ex4.rt.l (192.168.10.47) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.27; Fri, 29 Dec
- 2023 09:46:03 +0800
-Received: from linuxcarl2.richtek.com (192.168.10.154) by ex3.rt.l
- (192.168.10.45) with Microsoft SMTP Server id 15.2.1258.27 via Frontend
- Transport; Fri, 29 Dec 2023 09:46:03 +0800
-From: <cy_huang@richtek.com>
-To: Mark Brown <broonie@kernel.org>
-CC: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, ChiYuan Huang <cy_huang@richtek.com>,
-	<alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/2] ASoC: codecs: rtq9128: Fix PM_RUNTIME usage
-Date: Fri, 29 Dec 2023 09:46:01 +0800
-Message-ID: <bebd9e2bed9e0528a7fd9c528d785da02caf4f1a.1703813842.git.cy_huang@richtek.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1703813842.git.cy_huang@richtek.com>
-References: <cover.1703813842.git.cy_huang@richtek.com>
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF32137F;
+	Fri, 29 Dec 2023 02:08:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R271e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VzPxWSp_1703815688;
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0VzPxWSp_1703815688)
+          by smtp.aliyun-inc.com;
+          Fri, 29 Dec 2023 10:08:19 +0800
+From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To: irenic.rajneesh@gmail.com
+Cc: david.e.box@intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH] platform/x86/intel/pmc: make lnl_d3_fixup static
+Date: Fri, 29 Dec 2023 10:08:08 +0800
+Message-Id: <20231229020808.55840-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: ChiYuan Huang <cy_huang@richtek.com>
+The lnl_d3_fixup are not used outside the file lnl.c, so the
+modification is defined as static.
 
-If 'pm_runtime_resume_and_get' is used, must check the return value to
-prevent the active count not matched problem.
+drivers/platform/x86/intel/pmc/lnl.c:503:6: warning: no previous prototype for ‘lnl_d3_fixup’.
 
-Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=7811
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 ---
- sound/soc/codecs/rtq9128.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/platform/x86/intel/pmc/lnl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/rtq9128.c b/sound/soc/codecs/rtq9128.c
-index c22b047115cc..bda64f9eeb62 100644
---- a/sound/soc/codecs/rtq9128.c
-+++ b/sound/soc/codecs/rtq9128.c
-@@ -391,7 +391,11 @@ static int rtq9128_component_probe(struct snd_soc_component *comp)
- 	unsigned int val;
- 	int i, ret;
- 
--	pm_runtime_resume_and_get(comp->dev);
-+	ret = pm_runtime_resume_and_get(comp->dev);
-+	if (ret < 0) {
-+		dev_err(comp->dev, "Failed to resume device (%d)\n", ret);
-+		return ret;
-+	}
- 
- 	val = snd_soc_component_read(comp, RTQ9128_REG_EFUSE_DATA);
- 
+diff --git a/drivers/platform/x86/intel/pmc/lnl.c b/drivers/platform/x86/intel/pmc/lnl.c
+index 88b35931f5df..f18fdc68fd94 100644
+--- a/drivers/platform/x86/intel/pmc/lnl.c
++++ b/drivers/platform/x86/intel/pmc/lnl.c
+@@ -500,7 +500,7 @@ const struct pmc_reg_map lnl_socm_reg_map = {
+  * Set power state of select devices that do not have drivers to D3
+  * so that they do not block Package C entry.
+  */
+-void lnl_d3_fixup(void)
++static void lnl_d3_fixup(void)
+ {
+ 	pmc_core_set_device_d3(LNL_IPU_PCI_DEV);
+ 	pmc_core_set_device_d3(LNL_NPU_PCI_DEV);
 -- 
-2.34.1
+2.20.1.7.g153144c
 
