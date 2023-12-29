@@ -1,96 +1,129 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7D617CE
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 01:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0231388
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 01:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="JZIN6RQL"
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3bb7344a0e1so5468835b6e.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 17:40:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="Gvju+amL"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-28bcc273833so5421740a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 17:44:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=google; t=1703814004; x=1704418804; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X83wfcIZjdEzwkgoaoOF5TgcwBhLow4MMDfeVCMjkfI=;
-        b=JZIN6RQLPwWPrNYejknxjeb3NsRvRn5EOS6CM4zI6ZQ0XqQneJr6Fi0UENAed7XG6I
-         YwcBno33XYUt1huylG1ibVDWNSQwuwWR8qycMDQOikLeHCM0yqUiqpZWthLGymoRc9L0
-         werbAd1WSrGY1C7RHyU6vh0y28I1L7l52d/5E2n7Temu1EMFF/xFt/gLHzgpuSlsp3Dj
-         mMHOBYCkKTAFAhaQFSprsR+DWVIJJc5mM8Goq9/1IAzgMdIZh2z7PmOgWYPtfwn1537F
-         ZFIe0dXG3y7wULB1TKVqj8GzuNpBhSZNEe4A9LbtvoiejZJPWCtz2McRomeM5DsqeUI3
-         i4RA==
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1703814289; x=1704419089; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WNCVR8SMHnCHeEQ/yMeXXkUdP9Bs/RTaT2/RSyEx1Tc=;
+        b=Gvju+amLK1SWDCzrmCohjbd3fDyjKYopcQjuln/p70su+MGV689NW/Lpjve1AfMgDZ
+         3Lpnen4voluq9tu3z7SemfGVZeStKrnbWSeIZVNio72MJ0OSLTV7jkC1FB8O5ws9nxLw
+         iNn/Btn1asPDoGzeDxgfy403w2VNqkd3x6KDAciEHFeJEwp2Tq9f5JDlerxNiyb/sltK
+         l0jr7Jh4DMzQW6Vj25Sq1+neQRbbibTq5Ju77TwnUbYA4S5W2YfF+j4lkDfiQAFhkyhe
+         ufVEqgB+gKjq411/BuEYAl7tPMT/m3eWffCqbHRTZ3Q+qvsrwHh4e/HKC1sP1LlR7BNf
+         wERw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703814004; x=1704418804;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=X83wfcIZjdEzwkgoaoOF5TgcwBhLow4MMDfeVCMjkfI=;
-        b=bjRU0fjhSpw/Kcjbno2HAqyt1sj1jHWliMcO7LIEO9+Wz0d4cGEu2wSDhgh9+HzUym
-         RMntN+JL6MiNS+VZSZJyLxlE9qWkVSXWon9kxYGuI4kAlsqEcixY1teVFvoQ8tFlZmBB
-         i0FKbPTE6ABBX6cVWydYQYZuFnkSFQ3sHSECreiqUe1ry0U7x7ZvWO7zJweel9oflrN6
-         /OTZ05up6v1MPyNxFeFaBp15FOCJRpvVu5QET6ZYWpzgNVsxG9v41tsUv8MlYe+kYLmO
-         NngNo6Zmd/2gYZn50Y2bLAQBVLwFdDegeKwwVabJrEYojB2w/v3MpDD5zlizqSvm4UOX
-         4DtA==
-X-Gm-Message-State: AOJu0Yzb8RkZWOtOdQvanf/iVMjBxm1tDDB5pnhURw3ytXG6ZWaObBXw
-	Dfwb/Znyse1FOq343Qivdkn7XyoRkhJH
-X-Google-Smtp-Source: AGHT+IGF60wU+mSoalWd6UHlhEo308YpqtgcdbGQB135dpTj1IDi5N7qX5FYXhcD2SQ93Jv2z2NSnQ==
-X-Received: by 2002:a05:6808:318d:b0:3bb:a777:e891 with SMTP id cd13-20020a056808318d00b003bba777e891mr10630353oib.104.1703814004373;
-        Thu, 28 Dec 2023 17:40:04 -0800 (PST)
-Received: from smtpclient.apple (76-10-188-40.dsl.teksavvy.com. [76.10.188.40])
-        by smtp.gmail.com with ESMTPSA id p2-20020a056a0026c200b006d99170ab87sm11391939pfw.182.2023.12.28.17.40.02
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 Dec 2023 17:40:03 -0800 (PST)
-Content-Type: text/plain;
-	charset=us-ascii
+        d=1e100.net; s=20230601; t=1703814289; x=1704419089;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WNCVR8SMHnCHeEQ/yMeXXkUdP9Bs/RTaT2/RSyEx1Tc=;
+        b=atPVJP3+u2dPxblFMeYDmdODUqDTSPjWBYIljcOgA9rdNE06u5KrgiTkoTJRwHBhXY
+         QfcyIPpadUPWxbEnqy5vM6XzCCERVwDbVHVn3OVnmH27pneHONY5AmXi3SE7lhHVmR4R
+         +JuaUhoMjGZaSgKwWaDvkZ8KPyIuVM7MdC30PBqNQmLVeuobaE3COfSp17x9ceF8BGJx
+         M3zmPPk+3/GeODrt2qFMvBQiJ/AxD8uOqPVmOHDEalZafvbHXfUGtq5g5wUDVwX47Ldo
+         CdKnPE8+C8Wch7HAFSrk0sAW29ucJqDTa88WrktEHNujVcuCxckgkrFh6GFc4AP4SfNJ
+         1SLg==
+X-Gm-Message-State: AOJu0Yw1V6/HpRQYB8TtrQmymv1Iu9wYCL3o50E5jXpWU0Fcu9xt0DWb
+	FYZrcCs3+Uo0NtDI8vm8dMX/BgYmeGAyvXQ+LPz+esXVqSM=
+X-Google-Smtp-Source: AGHT+IHJ97SDIMc6/L9jYSipHJSv37tASQguwy1/ne3mvPNbcopocbR96EShTn3HW49dMkrd1Sk0UQ==
+X-Received: by 2002:a17:902:f7ca:b0:1d3:f067:a3f0 with SMTP id h10-20020a170902f7ca00b001d3f067a3f0mr11108857plw.107.1703814289238;
+        Thu, 28 Dec 2023 17:44:49 -0800 (PST)
+Received: from localhost ([12.44.203.122])
+        by smtp.gmail.com with ESMTPSA id pl18-20020a17090b269200b0028ae9a419f0sm19000570pjb.44.2023.12.28.17.44.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Dec 2023 17:44:48 -0800 (PST)
+Date: Thu, 28 Dec 2023 17:44:48 -0800 (PST)
+X-Google-Original-Date: Thu, 28 Dec 2023 17:44:25 PST (-0800)
+Subject:     Re: [v1 03/10] drivers/perf: riscv: Read upper bits of a firmware counter
+In-Reply-To: <20231218104107.2976925-4-atishp@rivosinc.com>
+CC: linux-kernel@vger.kernel.org, Atish Patra <atishp@rivosinc.com>,
+  aou@eecs.berkeley.edu, alexghiti@rivosinc.com, ajones@ventanamicro.com, anup@brainfault.org,
+  atishp@atishpatra.org, Conor Dooley <conor.dooley@microchip.com>, guoren@kernel.org, uwu@icenowy.me,
+  kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, linux-riscv@lists.infradead.org,
+  Mark Rutland <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Will Deacon <will@kernel.org>
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: Atish Patra <atishp@rivosinc.com>
+Message-ID: <mhng-94cdfcf4-01c1-493c-a23e-32bc8b391aad@palmer-ri-x1c9a>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
-Subject: Re: [PATCH] PCI: switchtec: Fix an error handling path in
- switchtec_pci_probe()
-From: Daniel Stodden <dns@arista.com>
-In-Reply-To: <20231228235626.GA1559849@bhelgaas>
-Date: Thu, 28 Dec 2023 17:39:50 -0800
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
- Logan Gunthorpe <logang@deltatee.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Dmitry Safonov <0x7f454c46@gmail.com>,
- linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org,
- linux-pci@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A483D7C9-07FD-40E8-93F5-5688AB6C9040@arista.com>
-References: <20231228235626.GA1559849@bhelgaas>
-To: Bjorn Helgaas <helgaas@kernel.org>
-X-Mailer: Apple Mail (2.3731.700.6)
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+On Mon, 18 Dec 2023 02:41:00 PST (-0800), Atish Patra wrote:
+> SBI v2.0 introduced a explicit function to read the upper 32 bits
+> for any firmwar counter width that is longer than 32bits.
+> This is only applicable for RV32 where firmware counter can be
+> 64 bit.
+>
+> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+> ---
+>  drivers/perf/riscv_pmu_sbi.c | 20 ++++++++++++++++----
+>  1 file changed, 16 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+> index 16acd4dcdb96..646604f8c0a5 100644
+> --- a/drivers/perf/riscv_pmu_sbi.c
+> +++ b/drivers/perf/riscv_pmu_sbi.c
+> @@ -35,6 +35,8 @@
+>  PMU_FORMAT_ATTR(event, "config:0-47");
+>  PMU_FORMAT_ATTR(firmware, "config:63");
+>
+> +static bool sbi_v2_available;
+> +
+>  static struct attribute *riscv_arch_formats_attr[] = {
+>  	&format_attr_event.attr,
+>  	&format_attr_firmware.attr,
+> @@ -488,16 +490,23 @@ static u64 pmu_sbi_ctr_read(struct perf_event *event)
+>  	struct hw_perf_event *hwc = &event->hw;
+>  	int idx = hwc->idx;
+>  	struct sbiret ret;
+> -	union sbi_pmu_ctr_info info;
+>  	u64 val = 0;
+> +	union sbi_pmu_ctr_info info = pmu_ctr_list[idx];
+>
+>  	if (pmu_sbi_is_fw_event(event)) {
+>  		ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_FW_READ,
+>  				hwc->idx, 0, 0, 0, 0, 0);
+> -		if (!ret.error)
+> -			val = ret.value;
+> +		if (ret.error)
+> +			return val;
+> +
+> +		val = ret.value;
+> +		if (IS_ENABLED(CONFIG_32BIT) && sbi_v2_available && info.width >= 32) {
+> +			ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_FW_READ_HI,
+> +					hwc->idx, 0, 0, 0, 0, 0);
+> +			if (!ret.error)
+> +				val |= ((u64)ret.value << 32);
+> +		}
+>  	} else {
+> -		info = pmu_ctr_list[idx];
+>  		val = riscv_pmu_ctr_read_csr(info.csr);
+>  		if (IS_ENABLED(CONFIG_32BIT))
+>  			val = ((u64)riscv_pmu_ctr_read_csr(info.csr + 0x80)) << 31 | val;
+> @@ -1108,6 +1117,9 @@ static int __init pmu_sbi_devinit(void)
+>  		return 0;
+>  	}
+>
+> +	if (sbi_spec_version >= sbi_mk_version(2, 0))
+> +		sbi_v2_available = true;
+> +
+>  	ret = cpuhp_setup_state_multi(CPUHP_AP_PERF_RISCV_STARTING,
+>  				      "perf/riscv/pmu:starting",
+>  				      pmu_sbi_starting_cpu, pmu_sbi_dying_cpu);
 
-
-
-> On Dec 28, 2023, at 3:56 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
->=20
-> [+to Daniel, can you take a look?  If you like this, I'd like to
-> squash it into df25461119d9 and credit Christophe since that's not
-> upstream yet]
-
-Thanks very much for fixing this, Christophe.
-
-The fix looks correct to me. If it can still fold into the previous =
-change, all the better.
-
-Best,
-Daniel
-
-PS: without trying to complicate this thread, does one know idr.[ch] =
-well enough to state
-whether ida_free() could have gone into stdev_release()? The way the two =
-idr_free calls have
-been placed looks intentional. But stdev_release would look more obvious =
-+ cleaner to me.
-Was only starting to wonder while reviewing the err_put side of this =
-patch.=
+Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
