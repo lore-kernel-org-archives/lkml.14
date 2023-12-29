@@ -1,145 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0337911C80
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 11:20:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429E611183;
+	Fri, 29 Dec 2023 11:25:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V/kC5OLc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1703848843;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LGLVCef4QzbvTALYo2ea2BIkPY+CGFifWhpyQpWq1Uc=;
-	b=V/kC5OLcoE8v01sE3bS8rdMBOFqWt4BA+OmmE7Q9qTBYp8HZ4HN8dWQhTuBUEchIqddIpN
-	29AuZDKjiC5ulJRk5Zaiiv/vcte/Qw/b4kMHdC1dymK+8+8oA4gePaAY4AHgXXR06c9P+m
-	0IrOy0L3mf1yMLUUZ1Kw4XOtIOziNJI=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-692-6oFwvhK6PPi7HLiFOMeUmw-1; Fri, 29 Dec 2023 06:20:36 -0500
-X-MC-Unique: 6oFwvhK6PPi7HLiFOMeUmw-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-40d76064581so2764825e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 03:20:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703848834; x=1704453634;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LGLVCef4QzbvTALYo2ea2BIkPY+CGFifWhpyQpWq1Uc=;
-        b=t7sXaj30HyoQAhSmwjKWNNSeir8ZjC20fQU9ozBMjq6S+ewS0JfGQasadDLnOOb5/W
-         Qm9GbcRL3EdGyaI1kY6C46CgAK/HCPpORUiB2iXwF4EicSkGHN/3Aoe14ZzNpO2Ydpav
-         JnGs2MO6cvW/TvrjOKw2sGiRFHNMSQiqsTdh0SsNrbL9FhG31lgNg1Ek+c9T/HlWT+NQ
-         JuZMgjFe1DQR/i3wIyZIDfiCMv0iJ0oeWWnU+HLwsxsxG4QoUFMx1ajiAjAsg5Dm9ZMc
-         wLGahsDAB5Ouzx9m7i/p7woYBcY589FA1jC3UmudtQ2sUuM0MsbyPGJzQYn6sLQQsPtL
-         sQ0A==
-X-Gm-Message-State: AOJu0YycKd4+EkILwM953+1HUEktHRoAIHi3Ej8pv135u939FkfGnSnE
-	IyhYOFSWngIwGDDEL8XgR8SxE7OJ5xl3/ekN0qg0ndEYF8E6vCfHUnYELvvoRTJcrvbfyYEleh3
-	E/fzxMsT41Wxl1SLnK8QZcHfd5PEmlthuLs+VlSuac1LTxpG+6bVp6EiTSHhd7wht4WWlpPaSnE
-	L4mTsxj8Lw/EwAPPY=
-X-Received: by 2002:a05:600c:4510:b0:40d:5722:2a0f with SMTP id t16-20020a05600c451000b0040d57222a0fmr4261010wmo.48.1703848834507;
-        Fri, 29 Dec 2023 03:20:34 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG5fMHEN5dB+koli23UjcZjZeepGNiOT2nHkTioE3ZWE19z7sXz94XioXuGlb4SaA2yPuAFaA==
-X-Received: by 2002:a05:600c:4510:b0:40d:5722:2a0f with SMTP id t16-20020a05600c451000b0040d57222a0fmr4260983wmo.48.1703848834168;
-        Fri, 29 Dec 2023 03:20:34 -0800 (PST)
-Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
-        by smtp.gmail.com with ESMTPSA id m19-20020a05600c4f5300b0040d5b849f38sm11297188wmq.0.2023.12.29.03.20.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Dec 2023 03:20:33 -0800 (PST)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Maxime Ripard <mripard@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Jocelyn Falempe <jfalempe@redhat.com>,
-	Conor Dooley <conor@kernel.org>,
-	Peter Robinson <pbrobinson@gmail.com>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	David Airlie <airlied@gmail.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IR+9Pbtz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9EA6C433C8;
+	Fri, 29 Dec 2023 11:25:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703849103;
+	bh=MieiRL5YdRkCYRdCXxYZ9gmxzPhKZ67/qsDP0kxrLek=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IR+9Pbtzwr09SaZmVGlv9yoDpz0bu/d6mWkxctCHahOojgGp7pfbNM0DxDS5tb+3y
+	 tOEMh3fQ6BiTfse0W+6wPYFRr3Ex0I8j2ndTRV3jASg6HrQQvgHn0hFlB8xCYKCSGd
+	 reMdwCIGWew6JxWL+9n2gzvPjI4reIWZY99troit764ZHHiRB6Lj+tazMMfyEQwQNa
+	 6XsqCC1wb8pcemSWwTndXT7hWgCcHMSiD49O2ps4sDlWQnPNqj6lPKOE8/ieMOOrHO
+	 ghBh9s6zaW1j8U2mzPxL40mueEaopWkYMKyX4TW2goce3aZc7vVmUy8vFJ4uhW3fZ7
+	 X5jf2rbaVMWcg==
+Received: from johan by xi.lan with local (Exim 4.96.2)
+	(envelope-from <johan@kernel.org>)
+	id 1rJAz1-0007Nf-2f;
+	Fri, 29 Dec 2023 12:24:56 +0100
+Date: Fri, 29 Dec 2023 12:24:55 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH v5 2/4] dt-bindings: display: ssd132x: Add vendor prefix to width and height
-Date: Fri, 29 Dec 2023 12:20:19 +0100
-Message-ID: <20231229112026.2797483-3-javierm@redhat.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231229112026.2797483-1-javierm@redhat.com>
-References: <20231229112026.2797483-1-javierm@redhat.com>
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Konrad Dybcio <konrad.dybcio@somainline.org>
+Subject: Re: [PATCH 1/3] arm64: dts: qcom: sc8280xp: Fix PCIe PHY
+ power-domains
+Message-ID: <ZY6sh8nlEUyEfL0u@hovoldconsulting.com>
+References: <20231227-topic-8280_pcie_dts-v1-0-13d12b1698ff@linaro.org>
+ <20231227-topic-8280_pcie_dts-v1-1-13d12b1698ff@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231227-topic-8280_pcie_dts-v1-1-13d12b1698ff@linaro.org>
 
-Commit 2d23e7d6bacb ("dt-bindings: display: Add SSD132x OLED controllers")
-used the wrong properties for width and height, instead of the correct
-"solomon,width" and "solomon,height" properties.
+On Wed, Dec 27, 2023 at 11:28:26PM +0100, Konrad Dybcio wrote:
+> The PCIe GDSCs are only related to the RCs. The PCIe PHYs on the other
+> hand, are powered by VDD_MX and their specific VDDA_PHY/PLL regulators.
 
-Fix this by adding the vendor prefix to the width and height properties.
+No, that does not seem to be entirely correct. I added the power-domains
+here precisely because they were needed to enable the PHYs.
 
-Fixes: 2d23e7d6bacb ("dt-bindings: display: Add SSD132x OLED controllers")
-Reported-by: Conor Dooley <conor@kernel.org>
-Closes: https://lore.kernel.org/dri-devel/20231218-example-envision-b41ca8efa251@spud/
-Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
+This is something I stumbled over when trying to figure out how to
+add support for the second lane pair (i.e. four-lane mode), and I just
+went back and confirmed that this is still the case.
 
-(no changes since v1)
+If you try to enable one of these PHYs without the corresponding GDSC
+being enabled, you end up with:
 
- .../devicetree/bindings/display/solomon,ssd132x.yaml | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+[   37.709324] ------------[ cut here ]------------
+[   37.718196] gcc_pcie_3b_aux_clk status stuck at 'off'
+[   37.718205] WARNING: CPU: 4 PID: 482 at drivers/clk/qcom/clk-branch.c:86 clk_branch_wait+0x144/0x15c
+	
+Now, you may or may not want to describe the above in the devicetree,
+but this makes it sound like you're trying to work around an issue with
+the current Linux implementation.
 
-diff --git a/Documentation/devicetree/bindings/display/solomon,ssd132x.yaml b/Documentation/devicetree/bindings/display/solomon,ssd132x.yaml
-index 37975ee61c5a..dd7939989cf4 100644
---- a/Documentation/devicetree/bindings/display/solomon,ssd132x.yaml
-+++ b/Documentation/devicetree/bindings/display/solomon,ssd132x.yaml
-@@ -30,9 +30,9 @@ allOf:
-             const: solomon,ssd1322
-     then:
-       properties:
--        width:
-+        solomon,width:
-           default: 480
--        height:
-+        solomon,height:
-           default: 128
- 
-   - if:
-@@ -42,9 +42,9 @@ allOf:
-             const: solomon,ssd1325
-     then:
-       properties:
--        width:
-+        solomon,width:
-           default: 128
--        height:
-+        solomon,height:
-           default: 80
- 
-   - if:
-@@ -54,9 +54,9 @@ allOf:
-             const: solomon,ssd1327
-     then:
-       properties:
--        width:
-+        solomon,width:
-           default: 128
--        height:
-+        solomon,height:
-           default: 128
- 
- unevaluatedProperties: false
--- 
-2.43.0
+> Fix the power-domains assignment to stop potentially toggling the GDSC
+> unnecessarily.
 
+Nothing is being toggled unnecessarily, and generally this is just
+another use count increment.
+
+> Fixes: 813e83157001 ("arm64: dts: qcom: sc8280xp/sa8540p: add PCIe2-4 nodes")
+
+So not sure a Fixes tag is warranted either.
+
+> @@ -1895,7 +1895,7 @@ pcie3b_phy: phy@1c0e000 {
+>  			assigned-clocks = <&gcc GCC_PCIE3B_PHY_RCHNG_CLK>;
+>  			assigned-clock-rates = <100000000>;
+>  
+> -			power-domains = <&gcc PCIE_3B_GDSC>;
+> +			power-domains = <&rpmhpd SC8280XP_MX>;
+>  
+>  			resets = <&gcc GCC_PCIE_3B_PHY_BCR>;
+>  			reset-names = "phy";
+
+Johan
