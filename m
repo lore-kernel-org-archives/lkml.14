@@ -1,63 +1,60 @@
-Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FFE747E
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 06:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
-	by fd01.gateway.ufhost.com (Postfix) with ESMTP id 2EBAE80B2;
-	Fri, 29 Dec 2023 14:54:17 +0800 (CST)
-Received: from EXMBX066.cuchost.com (172.16.7.66) by EXMBX166.cuchost.com
- (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 29 Dec
- 2023 14:54:16 +0800
-Received: from jsia-virtual-machine.localdomain (175.136.135.142) by
- EXMBX066.cuchost.com (172.16.6.66) with Microsoft SMTP Server (TLS) id
- 15.0.1497.42; Fri, 29 Dec 2023 14:54:13 +0800
-From: Sia Jee Heng <jeeheng.sia@starfivetech.com>
-To: <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
-CC: <rafael.j.wysocki@intel.com>, <ajones@ventanamicro.com>,
-	<conor.dooley@microchip.com>, <sunilvl@ventanamicro.com>,
-	<jeeheng.sia@starfivetech.com>, <aou@eecs.berkeley.edu>,
-	<palmer@dabbelt.com>, <paul.walmsley@sifive.com>
-Subject: [RFC v1 0/1] Enable SPCR table for console output on RISC-V
-Date: Fri, 29 Dec 2023 14:54:04 +0800
-Message-ID: <20231229065405.235625-1-jeeheng.sia@starfivetech.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809288BE7;
+	Fri, 29 Dec 2023 06:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hisilicon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hisilicon.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4T1bkN27M8zWl9c;
+	Fri, 29 Dec 2023 14:55:56 +0800 (CST)
+Received: from kwepemi500006.china.huawei.com (unknown [7.221.188.68])
+	by mail.maildlp.com (Postfix) with ESMTPS id 36855140485;
+	Fri, 29 Dec 2023 14:56:29 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.2) by
+ kwepemi500006.china.huawei.com (7.221.188.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 29 Dec 2023 14:56:28 +0800
+From: Junxian Huang <huangjunxian6@hisilicon.com>
+To: <jgg@ziepe.ca>, <leon@kernel.org>, <dsahern@gmail.com>,
+	<stephen@networkplumber.org>
+CC: <netdev@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+	<linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
+	<huangjunxian6@hisilicon.com>
+Subject: [PATCH iproute2-rc 0/2] Bugfixes for rdmatool
+Date: Fri, 29 Dec 2023 14:52:39 +0800
+Message-ID: <20231229065241.554726-1-huangjunxian6@hisilicon.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX066.cuchost.com
- (172.16.6.66)
-X-YovoleRuleAgent: yovoleflag
-Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemi500006.china.huawei.com (7.221.188.68)
 
-This patch will enable the SPCR table for RISC-V.
+Here are 2 bugfixes for rdmatool.
 
-Vendor will enable/disable the SPCR table in the firmware based on the
-platform design. However, in cases where the SPCR table is not usable,
-a kernel parameter could be used to specify the preferred console.
+Chengchang Tang (1):
+  rdma: Fix core dump when pretty is used
 
-This patch depends on Sunil's patch series, as indicated in [1] and
-the corresponding Qemu patch can be found at [2].
+wenglianfa (1):
+  rdma: Fix the error of accessing string variable outside the lifecycle
 
-[1] https://lore.kernel.org/lkml/20231219174526.2235150-1-sunilvl@ventana=
-micro.com/
-[2] https://lore.kernel.org/qemu-devel/20231228080616.158822-1-jeeheng.si=
-a@starfivetech.com/
+ rdma/res-cmid.c | 3 +--
+ rdma/res-cq.c   | 3 +--
+ rdma/res-ctx.c  | 3 +--
+ rdma/res-mr.c   | 3 +--
+ rdma/res-pd.c   | 3 +--
+ rdma/res-qp.c   | 3 +--
+ rdma/res-srq.c  | 3 +--
+ rdma/stat.c     | 3 +--
+ rdma/utils.c    | 6 +++++-
+ 9 files changed, 13 insertions(+), 17 deletions(-)
 
-Sia Jee Heng (1):
-  RISC-V: ACPI: Enable SPCR table for console output on RISC-V
-
- arch/riscv/kernel/acpi.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
---=20
-2.34.1
+--
+2.30.0
 
