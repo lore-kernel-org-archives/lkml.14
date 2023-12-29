@@ -1,83 +1,83 @@
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E98311C82;
-	Fri, 29 Dec 2023 13:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6EC11717;
+	Fri, 29 Dec 2023 14:04:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="po3U1yBC"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 0A2DD9C330F;
-	Fri, 29 Dec 2023 08:45:45 -0500 (EST)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id RDHQVC7hAZsW; Fri, 29 Dec 2023 08:45:44 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 8E1B49C3380;
-	Fri, 29 Dec 2023 08:45:44 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 8E1B49C3380
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1703857544; bh=Lyk686/x2Ez5b2w7VD1NWpu9PQmISjz21nS2j3Knoo8=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=po3U1yBCDfCq7u3iTDEhMpY8CICqIY+mxPesFY9awIGMWGOZBSA/zcCmtcejahKEW
-	 NxEnYNdHTH3keUrQoK5VIZddX58OzHZF1Hff7Os09Z1MeHnvX14ykUwhVJpfvaEphu
-	 2xtN3k4Jbr//2Z+G7Lww8H0I944uvqDPcHqGbqwVRz4rYcmOR/C+O3cMFszFNaU/BS
-	 CBGXnjsKjfYSoQysu3xVtrJmDCqOSNfRojHHrAVWVqlSXpcpAkfhfViPUEzCTNjpL2
-	 ynpe8QHWMOaX0o7K/AQ+KC3XVGR9c//FwgX16u/rbZpvEm9na8cOAcv0dqSrRfDxxz
-	 0b26rCZdsiuaA==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id sSUMGHPKYEW5; Fri, 29 Dec 2023 08:45:44 -0500 (EST)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [192.168.48.237])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 515039C330F;
-	Fri, 29 Dec 2023 08:45:44 -0500 (EST)
-Date: Fri, 29 Dec 2023 08:45:44 -0500 (EST)
-From: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
-To: Daniel Baluta <daniel.baluta@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, 
-	shengjiu wang <shengjiu.wang@gmail.com>, 
-	Xiubo Lee <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>, 
-	Nicolin Chen <nicoleotsuka@gmail.com>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	linux-sound <linux-sound@vger.kernel.org>, 
-	devicetree <devicetree@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	alsa-devel <alsa-devel@alsa-project.org>, 
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
-	Philip-Dylan Gleonec <philip-dylan.gleonec@savoirfairelinux.com>
-Message-ID: <361044647.7067.1703857544284.JavaMail.zimbra@savoirfairelinux.com>
-In-Reply-To: <347346270.284192.1702989565367.JavaMail.zimbra@savoirfairelinux.com>
-References: <20231218124058.2047167-1-elinor.montmasson@savoirfairelinux.com> <CAEnQRZAwk-USZqXwLOVuN3iTn7r-55BJH=Sqq5+2Od+DhrK0iw@mail.gmail.com> <347346270.284192.1702989565367.JavaMail.zimbra@savoirfairelinux.com>
-Subject: Re: [PATCHv3 RESEND 00/10] ASoC: fsl-asoc-card: compatibility
- integration of a generic codec use case for use with S/PDIF controller
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H3QogoUf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BF6BC433C7;
+	Fri, 29 Dec 2023 14:04:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703858671;
+	bh=RS++/zZD9ZVNCSWO024B7JK3uQdHY2c+T89L2z3zj+g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H3QogoUfFZCzvI/yftP9iQyhZgN8Z5VsKv5pR+rMkj74Ng5Nt+gFzKIGgGXDjfIGk
+	 1ml/0SFgVtp5/BAwag704Y2bXXuFk81ZBd9u+n1RDiKHu6pWvue1Mxo86w6qPFEOKR
+	 dFOWynnCyjq7o3U2XEBr5j2ijo0Er6XDkPECk2vnHc7BxefqySKJo+ABTTgV0T/1S3
+	 HUewrhFdMSvMoAIRLDJbbqsXZgjYnamu/TJY5dI8ZFb1BM97wgssfS4tQXzAgEwiSO
+	 lNJPCkjsOBRZfc2E5hphdK3pbVo2cWpN4rO2IrHTvO7lhypl82C/XYtPKxHcUjmiWT
+	 h9V3KPX0JZmkg==
+Received: from johan by xi.lan with local (Exim 4.96.2)
+	(envelope-from <johan@kernel.org>)
+	id 1rJDTL-0000Oa-2L;
+	Fri, 29 Dec 2023 15:04:23 +0100
+Date: Fri, 29 Dec 2023 15:04:23 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Stanimir Varbanov <svarbanov@mm-sol.com>,
+	Andrew Murray <amurray@thegoodpenguin.co.uk>,
+	Vinod Koul <vkoul@kernel.org>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] PCI: qcom: Reshuffle reset logic in 2_7_0 .init
+Message-ID: <ZY7R581pgn3uO6kk@hovoldconsulting.com>
+References: <20231227-topic-8280_pcie-v1-0-095491baf9e4@linaro.org>
+ <20231227-topic-8280_pcie-v1-1-095491baf9e4@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.8.15_GA_4581 (ZimbraWebClient - GC112 (Linux)/8.8.15_GA_4581)
-Thread-Topic: ASoC: fsl-asoc-card: compatibility integration of a generic codec use case for use with S/PDIF controller
-Thread-Index: lu32M+7WowvRn2WxYZZGeiz9hy0xKkRA+mdz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231227-topic-8280_pcie-v1-1-095491baf9e4@linaro.org>
 
-Hello
+On Wed, Dec 27, 2023 at 11:17:19PM +0100, Konrad Dybcio wrote:
+> At least on SC8280XP, if the PCIe reset is asserted, the corresponding
+> AUX_CLK will be stuck at 'off'.
 
-On Monday, 18 December, 2023 14:54:03, Daniel Baluta wrote 
-> I know this is extra-work but we would greatly appreciate if you first 
-> convert fsl-asoc-card.txt 
-> to yml format and then add your new properties. 
+No, this path is exercised on every boot without the aux clock ever
+being stuck at off. So something is clearly missing in this description.
+ 
+> Assert the reset (which may end up being a NOP if it was previously
+> asserted) and de-assert it back *before* turning on the clocks to avoid
+> such cases.
+> 
+> In addition to that, in case the clock bulk enable fails, assert the
+> RC reset back, as the hardware is in an unknown state at best.
 
-DT schema must have at least one maintainer in the "maintainers" field.
-Who should I put for fsl-asoc-card.yaml ?
+This is arguably a separate change, and not necessarily one that is
+correct either, so should at least go in a separate patch if it should
+be done at all.
 
-Best regards, 
-Elinor Montmasson 
+> Fixes: ed8cc3b1fc84 ("PCI: qcom: Add support for SDM845 PCIe controller")
 
+I think you're being way to liberal with your use of Fixes tags. To
+claim that this is a bug, you need to make a more convincing case for
+why you think so.
+
+Also note Qualcomm's vendor driver is similarly asserting reset after
+enabling the clocks.
+
+That driver does not seem to reset the controller on resume, though, in
+case that is relevant for your current experiments.
+
+Johan
