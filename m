@@ -1,7 +1,7 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F88315492;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4480D1548D;
 	Fri, 29 Dec 2023 22:55:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
@@ -9,7 +9,7 @@ Received: from i53875a56.versanet.de ([83.135.90.86] helo=phil.lan)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1rJLl9-0004VA-6G; Fri, 29 Dec 2023 23:55:19 +0100
+	id 1rJLl8-0004VA-7k; Fri, 29 Dec 2023 23:55:18 +0100
 From: Heiko Stuebner <heiko@sntech.de>
 To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Rob Herring <robh+dt@kernel.org>,
@@ -19,14 +19,14 @@ To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 Cc: Heiko Stuebner <heiko@sntech.de>,
 	linux-arm-kernel@lists.infradead.org,
 	Thomas McKahan <tmckahan@singleboardsolutions.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: dts: rockchip: nanopc-t6 sdmmc device tuning
-Date: Fri, 29 Dec 2023 23:55:15 +0100
-Message-Id: <170389050011.2630399.396518160692088358.b4-ty@sntech.de>
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] arm64: dts: rockchip: support poweroff on the rock-5b
+Date: Fri, 29 Dec 2023 23:55:13 +0100
+Message-Id: <170389050012.2630399.8754217298577818519.b4-ty@sntech.de>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231228173011.2863-1-inindev@gmail.com>
-References: <20231228173011.2863-1-inindev@gmail.com>
+In-Reply-To: <20231225222859.17153-1-inindev@gmail.com>
+References: <20231225222859.17153-1-inindev@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,16 +36,22 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Thu, 28 Dec 2023 17:29:35 +0000, John Clark wrote:
-> drop max-frequency = <200000000> as it is already defined in rk3588s.dtsi
-> order no-sdio & no-mmc properties while we are here
+On Mon, 25 Dec 2023 22:28:19 +0000, John Clark wrote:
+> Allow the rock-5b to poweroff its pmic. When issuing a "shutdown -h now"
+> on the rock-5b it reboots instead. Defining 'system-power-controller'
+> allows the rk806 to power down.
 > 
+> Commit c699fbfdfd54 ("arm64: dts: rockchip: Support poweroff on
+> NanoPC-T6") similarly resolves this issue for the nanopc-t6.
 > 
+> [...]
 
 Applied, thanks!
 
-[1/1] arm64: dts: rockchip: nanopc-t6 sdmmc device tuning
-      commit: 9e1faff1cbc877903d019a7943d37ddc5042704d
+[1/2] arm64: dts: rockchip: support poweroff on the rock-5b
+      commit: 7738f551173540b3daa63a91b384b167eacd24fd
+[2/2] arm64: dts: rockchip: correct gpio_pwrctrl1 typo
+      commit: aed6514c4e3aee843385ded4c5ee0921b51c30fa
 
 Best regards,
 -- 
