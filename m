@@ -1,184 +1,83 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6206D134A9
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 13:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E98311C82;
+	Fri, 29 Dec 2023 13:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="CFfUtJ/W"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2ccebd0377fso9287371fa.3
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 05:52:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="po3U1yBC"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 0A2DD9C330F;
+	Fri, 29 Dec 2023 08:45:45 -0500 (EST)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id RDHQVC7hAZsW; Fri, 29 Dec 2023 08:45:44 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 8E1B49C3380;
+	Fri, 29 Dec 2023 08:45:44 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 8E1B49C3380
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1703857949; x=1704462749; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I04AycXU2gthDovU4fhTPLpGwaRhcBOoWll3dN0DmSw=;
-        b=CFfUtJ/WP6Yl21Yn9J7mNsctuMeS7Mk8+AMzKP4/Q3Ap1JFStnfBnAK3ibgoHQj1vA
-         BgGkgYTYF1YGK8bHv4+1ZAHLp/bMGNuivxRA/ozG0lFbOob+YGXrQMHNr85vgoHRTKyF
-         MQSiu+VsZRE80Kst4ujygQnsc55v8sRHgv0Q0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703857949; x=1704462749;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I04AycXU2gthDovU4fhTPLpGwaRhcBOoWll3dN0DmSw=;
-        b=bBEtKFMeQhe5LTahgFYlQ5VPuTxjyvv6tP2JbiVxEND+s1n/bDrEH6R8Y9D1/WCsbb
-         HRj+XDOqyndlwQdhjXklq2UgVdhzK3x8e4kPlVmbV03s2BnWxXfSmfLxpoaMCyUYDc/j
-         2ABzetZuzV4RXPmrAm0MsqM2/mlIdVcJ2+9ZbSKOK+flZyhTd2zdp2UitbB34ogd3Ke8
-         HgNgjooU3qLxjyVNy15XeeYajYhNgbzkwFXhpMhV8SL97BxTfrpOE1F84PQkrU/i5j/5
-         mcVxMP3UiCYjAIf48ke5GGXjhOwiUUBhfxPpKCcmKSFiiyxLZ19czNDmj0/SKSK+zzwE
-         8ocQ==
-X-Gm-Message-State: AOJu0YwndEbWm1xtzgGUfvmEcDSYJv91A2ZcoWlLyWnDj5+4Qa3A1Izz
-	VNhIugj1jfvveJps4s1Fqbh+xc9j9qf5RQckO7L1z4P/Q9o=
-X-Google-Smtp-Source: AGHT+IHOtc5IkKmhCbd0Ze1jDDKCs0xUxs7gN1zGo15FKjOCb36qByeeIpxGR4YJYMTK8KBp1srJgg==
-X-Received: by 2002:a2e:3c19:0:b0:2cc:df53:5309 with SMTP id j25-20020a2e3c19000000b002ccdf535309mr798204lja.91.1703857949279;
-        Fri, 29 Dec 2023 05:52:29 -0800 (PST)
-Received: from dario-ThinkPad-T14s-Gen-2i.homenet.telecomitalia.it (host-79-49-57-70.retail.telecomitalia.it. [79.49.57.70])
-        by smtp.gmail.com with ESMTPSA id i16-20020aa7c710000000b00553b243b1a8sm11019160edq.92.2023.12.29.05.52.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Dec 2023 05:52:28 -0800 (PST)
-From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-amarula@amarulasolutions.com,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	David Airlie <airlied@gmail.com>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH 8/8] drm/panel: nt35510: support FRIDA FRD400B25025-A-CTK
-Date: Fri, 29 Dec 2023 14:51:23 +0100
-Message-ID: <20231229135154.675946-9-dario.binacchi@amarulasolutions.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231229135154.675946-1-dario.binacchi@amarulasolutions.com>
-References: <20231229135154.675946-1-dario.binacchi@amarulasolutions.com>
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1703857544; bh=Lyk686/x2Ez5b2w7VD1NWpu9PQmISjz21nS2j3Knoo8=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=po3U1yBCDfCq7u3iTDEhMpY8CICqIY+mxPesFY9awIGMWGOZBSA/zcCmtcejahKEW
+	 NxEnYNdHTH3keUrQoK5VIZddX58OzHZF1Hff7Os09Z1MeHnvX14ykUwhVJpfvaEphu
+	 2xtN3k4Jbr//2Z+G7Lww8H0I944uvqDPcHqGbqwVRz4rYcmOR/C+O3cMFszFNaU/BS
+	 CBGXnjsKjfYSoQysu3xVtrJmDCqOSNfRojHHrAVWVqlSXpcpAkfhfViPUEzCTNjpL2
+	 ynpe8QHWMOaX0o7K/AQ+KC3XVGR9c//FwgX16u/rbZpvEm9na8cOAcv0dqSrRfDxxz
+	 0b26rCZdsiuaA==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id sSUMGHPKYEW5; Fri, 29 Dec 2023 08:45:44 -0500 (EST)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [192.168.48.237])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 515039C330F;
+	Fri, 29 Dec 2023 08:45:44 -0500 (EST)
+Date: Fri, 29 Dec 2023 08:45:44 -0500 (EST)
+From: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
+To: Daniel Baluta <daniel.baluta@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, 
+	shengjiu wang <shengjiu.wang@gmail.com>, 
+	Xiubo Lee <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>, 
+	Nicolin Chen <nicoleotsuka@gmail.com>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	linux-sound <linux-sound@vger.kernel.org>, 
+	devicetree <devicetree@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	alsa-devel <alsa-devel@alsa-project.org>, 
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
+	Philip-Dylan Gleonec <philip-dylan.gleonec@savoirfairelinux.com>
+Message-ID: <361044647.7067.1703857544284.JavaMail.zimbra@savoirfairelinux.com>
+In-Reply-To: <347346270.284192.1702989565367.JavaMail.zimbra@savoirfairelinux.com>
+References: <20231218124058.2047167-1-elinor.montmasson@savoirfairelinux.com> <CAEnQRZAwk-USZqXwLOVuN3iTn7r-55BJH=Sqq5+2Od+DhrK0iw@mail.gmail.com> <347346270.284192.1702989565367.JavaMail.zimbra@savoirfairelinux.com>
+Subject: Re: [PATCHv3 RESEND 00/10] ASoC: fsl-asoc-card: compatibility
+ integration of a generic codec use case for use with S/PDIF controller
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.8.15_GA_4581 (ZimbraWebClient - GC112 (Linux)/8.8.15_GA_4581)
+Thread-Topic: ASoC: fsl-asoc-card: compatibility integration of a generic codec use case for use with S/PDIF controller
+Thread-Index: lu32M+7WowvRn2WxYZZGeiz9hy0xKkRA+mdz
 
-The initialization commands are taken from the STMicroelectronics driver
-found at https://github.com/STMicroelectronics/STM32CubeF7/blob/master/Drivers/BSP/Components/nt35510/
+Hello
 
-Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+On Monday, 18 December, 2023 14:54:03, Daniel Baluta wrote 
+> I know this is extra-work but we would greatly appreciate if you first 
+> convert fsl-asoc-card.txt 
+> to yml format and then add your new properties. 
 
----
+DT schema must have at least one maintainer in the "maintainers" field.
+Who should I put for fsl-asoc-card.yaml ?
 
- drivers/gpu/drm/panel/panel-novatek-nt35510.c | 75 +++++++++++++++++++
- 1 file changed, 75 insertions(+)
-
-diff --git a/drivers/gpu/drm/panel/panel-novatek-nt35510.c b/drivers/gpu/drm/panel/panel-novatek-nt35510.c
-index 2a5a624fe447..3cdcc75c4c76 100644
---- a/drivers/gpu/drm/panel/panel-novatek-nt35510.c
-+++ b/drivers/gpu/drm/panel/panel-novatek-nt35510.c
-@@ -1,6 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Novatek NT35510 panel driver
-+ * Copyright (C) 2023 Dario Binacchi <dario.binacchi@amarulasolutions.com>
-+ * Add support to Frida FRD400B25025-A-CTK panel.
-+ * Based on code by MCD Application Team (C) 2020 STMicroelectronics
-  * Copyright (C) 2020 Linus Walleij <linus.walleij@linaro.org>
-  * Based on code by Robert Teather (C) 2012 Samsung
-  *
-@@ -165,6 +168,49 @@ static const struct panel_init_cmd hydis_hva40wv1_init_cmds[] = {
- 	{},
- };
- 
-+static const struct panel_init_cmd frida_frd400b25025_init_cmds[] = {
-+	_INIT_DCS_CMD(0xF0, 0x55, 0xAA, 0x52, 0x08, 0x01),
-+	_INIT_DCS_CMD(0xB0, 0x03, 0x03, 0x03),
-+	_INIT_DCS_CMD(0xB6, 0x46, 0x46, 0x46),
-+	_INIT_DCS_CMD(0xB1, 0x03, 0x03, 0x03),
-+	_INIT_DCS_CMD(0xB7, 0x36, 0x36, 0x36),
-+	_INIT_DCS_CMD(0xB2, 0x00, 0x00, 0x02),
-+	_INIT_DCS_CMD(0xB8, 0x26, 0x26, 0x26),
-+	_INIT_DCS_CMD(0xBF, 0x01),
-+	_INIT_DCS_CMD(0xB3, 0x09, 0x09, 0x09),
-+	_INIT_DCS_CMD(0xB9, 0x36, 0x36, 0x36),
-+	_INIT_DCS_CMD(0xB5, 0x08, 0x08, 0x08),
-+	_INIT_DCS_CMD(0xBA, 0x26, 0x26, 0x26),
-+	_INIT_DCS_CMD(0xBC, 0x00, 0x80, 0x00),
-+	_INIT_DCS_CMD(0xBD, 0x00, 0x80, 0x00),
-+	_INIT_DCS_CMD(0xBE, 0x00, 0x50),
-+	_INIT_DCS_CMD(0xF0, 0x55, 0xAA, 0x52, 0x08, 0x00),
-+	_INIT_DCS_CMD(0xB1, 0xFC, 0x00),
-+	_INIT_DCS_CMD(0xB6, 0x03),
-+	_INIT_DCS_CMD(0xB5, 0x50),
-+	_INIT_DCS_CMD(0xB7, 0x00, 0x00),
-+	_INIT_DCS_CMD(0xB8, 0x01, 0x02, 0x02, 0x02),
-+	_INIT_DCS_CMD(0xBC, 0x00, 0x00, 0x00),
-+	_INIT_DCS_CMD(0xCC, 0x03, 0x00, 0x00),
-+	_INIT_DCS_CMD(0xBA, 0x01),
-+	_INIT_DCS_CMD(0x35, 0x00),
-+	_INIT_DCS_CMD(0x3A, 0x77),
-+	_INIT_DELAY_CMD(0xC8),
-+	_INIT_DCS_CMD(0x36, 0x00),
-+	_INIT_DCS_CMD(0x2A, 0x00, 0x00, 0x01, 0xDF),
-+	_INIT_DCS_CMD(0x2B, 0x00, 0x00, 0x03, 0x1F),
-+	_INIT_DCS_CMD(0x11),
-+	_INIT_DELAY_CMD(0x78),
-+	_INIT_DCS_CMD(0x3A, 0x77),
-+	_INIT_DCS_CMD(0x51, 0x7F, 0x00),
-+	_INIT_DCS_CMD(0x53, 0x2C),
-+	_INIT_DCS_CMD(0x55, 0x02),
-+	_INIT_DCS_CMD(0x5E, 0xFF),
-+	_INIT_DCS_CMD(0x29),
-+	_INIT_DCS_CMD(0x2C),
-+	{},
-+};
-+
- /**
-  * struct nt35510 - state container for the NT35510 panel
-  */
-@@ -606,7 +652,36 @@ static const struct nt35510_config nt35510_hydis_hva40wv1 = {
- 	.init_cmds = hydis_hva40wv1_init_cmds,
- };
- 
-+/*
-+ * The Frida FRD400B25025-A-CTK panel
-+ */
-+static const struct nt35510_config nt35510_frida_frd400b25025 = {
-+	.width_mm = 52,
-+	.height_mm = 86,
-+	.mode = {
-+		.clock = 23000,
-+		.hdisplay = 480,
-+		.hsync_start = 480 + 34, /* HFP = 34 */
-+		.hsync_end = 480 + 34 + 2, /* HSync = 2 */
-+		.htotal = 480 + 34 + 2 + 34, /* HBP = 34 */
-+		.vdisplay = 800,
-+		.vsync_start = 800 + 15, /* VFP = 15 */
-+		.vsync_end = 800 + 15 + 12, /* VSync = 12 */
-+		.vtotal = 800 + 15 + 12 + 15, /* VBP = 15 */
-+		.flags = 0,
-+	},
-+	.lanes = 2,
-+	.format = MIPI_DSI_FMT_RGB888,
-+	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST |
-+			MIPI_DSI_MODE_LPM,
-+	.init_cmds = frida_frd400b25025_init_cmds,
-+};
-+
- static const struct of_device_id nt35510_of_match[] = {
-+	{
-+		.compatible = "frida,frd400b25025",
-+		.data = &nt35510_frida_frd400b25025,
-+	},
- 	{
- 		.compatible = "hydis,hva40wv1",
- 		.data = &nt35510_hydis_hva40wv1,
--- 
-2.43.0
+Best regards, 
+Elinor Montmasson 
 
