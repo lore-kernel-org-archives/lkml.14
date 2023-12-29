@@ -1,150 +1,414 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ECEA8BE3
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 06:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4T1bGp2qrwzZfrF;
-	Fri, 29 Dec 2023 14:35:30 +0800 (CST)
-Received: from kwepemm000013.china.huawei.com (unknown [7.193.23.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7CBAB1402CA;
-	Fri, 29 Dec 2023 14:35:41 +0800 (CST)
-Received: from [10.174.178.46] (10.174.178.46) by
- kwepemm000013.china.huawei.com (7.193.23.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 29 Dec 2023 14:35:40 +0800
-Subject: Re: [PATCH mtd-utils 08/11] tests: ubifs_repair: Add corrupted images
-From: Zhihao Cheng <chengzhihao1@huawei.com>
-To: <david.oberhollenzer@sigma-star.at>, <richard@nod.at>,
-	<miquel.raynal@bootlin.com>, <s.hauer@pengutronix.de>,
-	<Tudor.Ambarus@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>
-References: <20231228013639.2827205-1-chengzhihao1@huawei.com>
- <20231228013639.2827205-9-chengzhihao1@huawei.com>
-Message-ID: <c903cd6d-17e9-d281-b2e6-1d005ba13a44@huawei.com>
-Date: Fri, 29 Dec 2023 14:35:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54AF723B8
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 06:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OlyGuQvP"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-5e7c1012a42so56167457b3.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 22:39:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1703831941; x=1704436741; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ncWe7dUBo4O/c5b3q+xH9kX+M3BU9J/5qXVDoWQ6hRU=;
+        b=OlyGuQvP/Pn78lHjoKlItISa9X1n81lwApfRYxfU3NNQAJbYt5IQf6OkCO2+YwMPb2
+         XwXz//FhMikBCnCO8jhlBdxWSQezCQM39Mqog7Iaq6nijlcwc8ZKHr2+fhGApE/wQrcp
+         MOo6SrtEiPVTCnfTWXXMN9+gP0xFsMaccrqSk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703831941; x=1704436741;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ncWe7dUBo4O/c5b3q+xH9kX+M3BU9J/5qXVDoWQ6hRU=;
+        b=lMPE8Yp+46N8ZXy4ihjBEnKW7/30yiodbjdQliGNqGk2HkFr/JV515cC2PNf4lNAPV
+         b96JuXQQRaB44SXHjZ8OBrrXPh5Ykb/qQdmM04O5M27/61aUtf3xhZu2gDJh1lGM7K+m
+         LMJQ+mAHZh9OKIf7/lpA9iByg6TkkmJmt7ESQvSDX5jEwAZG22K9cfU+hzaWZB0oxygE
+         xMiRJZ5zVFaDPeYu+RBdFXAJVEbowogmCOmFjDH6SwV7OLDaGixdvZ+OxND6D2Ewq9ZK
+         fKSQXaWAZYo6kKNaI/PNfxZ2fU/D18foMgq810d9txJ6WT7jnGCF2BeIXbdpKohyA2T7
+         mVGQ==
+X-Gm-Message-State: AOJu0Yw3MmK0jdKcs0C+jMBp7EWbMZxYOo9FvTGWao+dNZja7CyCe1el
+	xYQ4WSxHzoW4rwXD52y6CocVe7jpgG1hKlZJz0+LX6mzP8st
+X-Google-Smtp-Source: AGHT+IEJdV/1A4JP1OeUGiSOpRey9oFF/nlAlZcFgPe8HfCwst5LZ0Rkb0Rg1dR1bZzSjxWI35hth0uPLlY67scSbsQ=
+X-Received: by 2002:a05:690c:fc8:b0:5e7:ecd0:2040 with SMTP id
+ dg8-20020a05690c0fc800b005e7ecd02040mr8310159ywb.16.1703831941315; Thu, 28
+ Dec 2023 22:39:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20231228013639.2827205-9-chengzhihao1@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm000013.china.huawei.com (7.193.23.81)
+References: <20231202035511.487946-1-sjg@chromium.org> <20231202035511.487946-3-sjg@chromium.org>
+ <20231203153401.GV8402@pendragon.ideasonboard.com> <20231207142723.GA3187877@google.com>
+ <20231207143814.GD15521@pendragon.ideasonboard.com> <CAGXv+5Go_0pEVAOLQmRCc_a9-YUtZEmBfXtMuBupX_nb9iqwbw@mail.gmail.com>
+ <20231209152946.GC13421@pendragon.ideasonboard.com> <CAMuHMdVMZs6mnwWBgFwktO=8o=QzROv60cfZe085MhD6HxQjpQ@mail.gmail.com>
+ <CAGXv+5Est3FL-XcEL-vB-6zVNas0mqb2cNYa==Yb7W2SQU9xVQ@mail.gmail.com>
+ <CAK7LNATyD-PeNbaLTjJmU9=koqqE+V6QvFe09c2VrXopWvjpcw@mail.gmail.com> <CAK7LNAR7Fm-1yaZmyH78vG5yNbbW2Avjj5F63u+aST6JQoMd5A@mail.gmail.com>
+In-Reply-To: <CAK7LNAR7Fm-1yaZmyH78vG5yNbbW2Avjj5F63u+aST6JQoMd5A@mail.gmail.com>
+From: Simon Glass <sjg@chromium.org>
+Date: Fri, 29 Dec 2023 06:38:50 +0000
+Message-ID: <CAFLszTjfN8dzBNpr6+EVQiwen5BPoYtu8LJM3dCcd-sMP3=Nvw@mail.gmail.com>
+Subject: Re: [PATCH v9 2/2] arm64: boot: Support Flat Image Tree
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Chen-Yu Tsai <wenst@chromium.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org, 
+	Ahmad Fatoum <a.fatoum@pengutronix.de>, U-Boot Mailing List <u-boot@lists.denx.de>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Tom Rini <trini@konsulko.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Terrell <terrelln@fb.com>, Will Deacon <will@kernel.org>, 
+	linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, workflows@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-在 2023/12/28 9:36, Zhihao Cheng 写道:
-> diff --git a/tests/ubifs_repair-tests/images/xinode_mode.gz b/tests/ubifs_repair-tests/images/xinode_mode.gz
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..c86f69c7e3a716864035d1763ae533079727b8b2
-> GIT binary patch
-> literal 5386
-> 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
-> QVZvU0uJPWrOJvtS0f#f8%m4rY
->
-> literal 0
-> HcmV?d00001
->
-Hi, I find that  xinode_mode.gz is not displayed in patchwork 
-https://patchwork.ozlabs.org/project/linux-mtd/patch/20231228013639.2827205-9-chengzhihao1@huawei.com/, 
-maybe it is a bug in patchwork. You can download it from this mail or 
-https://lore.kernel.org/linux-mtd/20231228013639.2827205-9-chengzhihao1@huawei.com/
+Hi Masahiro,
 
+On Thu, Dec 14, 2023 at 7:34=E2=80=AFAM Masahiro Yamada <masahiroy@kernel.o=
+rg> wrote:
+>
+> On Thu, Dec 14, 2023 at 3:12=E2=80=AFPM Masahiro Yamada <masahiroy@kernel=
+.org> wrote:
+> >
+> > On Thu, Dec 14, 2023 at 1:03=E2=80=AFPM Chen-Yu Tsai <wenst@chromium.or=
+g> wrote:
+> > >
+> > > On Sun, Dec 10, 2023 at 1:31=E2=80=AFAM Geert Uytterhoeven <geert@lin=
+ux-m68k.org> wrote:
+> > > >
+> > > > Hi Laurent,
+> > > >
+> > > > On Sat, Dec 9, 2023 at 4:29=E2=80=AFPM Laurent Pinchart
+> > > > <laurent.pinchart@ideasonboard.com> wrote:
+> > > > > On Sat, Dec 09, 2023 at 10:13:59PM +0900, Chen-Yu Tsai wrote:
+> > > > > > On Thu, Dec 7, 2023 at 11:38=E2=80=AFPM Laurent Pinchart
+> > > > > > <laurent.pinchart@ideasonboard.com> wrote:
+> > > > > > > On Thu, Dec 07, 2023 at 10:27:23PM +0800, Chen-Yu Tsai wrote:
+> > > > > > > > On Sun, Dec 03, 2023 at 05:34:01PM +0200, Laurent Pinchart =
+wrote:
+> > > > > > > > > On Fri, Dec 01, 2023 at 08:54:42PM -0700, Simon Glass wro=
+te:
+> > > > > > > > > > Add a script which produces a Flat Image Tree (FIT), a =
+single file
+> > > > > > > > > > containing the built kernel and associated devicetree f=
+iles.
+> > > > > > > > > > Compression defaults to gzip which gives a good balance=
+ of size and
+> > > > > > > > > > performance.
+> > > > > > > > > >
+> > > > > > > > > > The files compress from about 86MB to 24MB using this a=
+pproach.
+> > > > > > > > > >
+> > > > > > > > > > The FIT can be used by bootloaders which support it, su=
+ch as U-Boot
+> > > > > > > > > > and Linuxboot. It permits automatic selection of the co=
+rrect
+> > > > > > > > > > devicetree, matching the compatible string of the runni=
+ng board with
+> > > > > > > > > > the closest compatible string in the FIT. There is no n=
+eed for
+> > > > > > > > > > filenames or other workarounds.
+> > > > > > > > > >
+> > > > > > > > > > Add a 'make image.fit' build target for arm64, as well.=
+ Use
+> > > > > > > > > > FIT_COMPRESSION to select a different algorithm.
+> > > > > > > > > >
+> > > > > > > > > > The FIT can be examined using 'dumpimage -l'.
+> > > > > > > > > >
+> > > > > > > > > > This features requires pylibfdt (use 'pip install libfd=
+t'). It also
+> > > > > > > > > > requires compression utilities for the algorithm being =
+used. Supported
+> > > > > > > > > > compression options are the same as the Image.xxx files=
+. For now there
+> > > > > > > > > > is no way to change the compression other than by editi=
+ng the rule for
+> > > > > > > > > > $(obj)/image.fit
+> > > > > > > > > >
+> > > > > > > > > > While FIT supports a ramdisk / initrd, no attempt is ma=
+de to support
+> > > > > > > > > > this here, since it must be built separately from the L=
+inux build.
+> > > > > > > > >
+> > > > > > > > > FIT images are very useful, so I think this is a very wel=
+come addition
+> > > > > > > > > to the kernel build system. It can get tricky though: giv=
+en the
+> > > > > > > > > versatile nature of FIT images, there can't be any
+> > > > > > > > > one-size-fits-them-all solution to build them, and striki=
+ng the right
+> > > > > > > > > balance between what makes sense for the kernel and the f=
+eatures that
+> > > > > > > > > users may request will probably lead to bikeshedding. As =
+we all love
+> > > > > > > > > bikeshedding, I thought I would start selfishly, with a p=
+ersonal use
+> > > > > > > > > case :-) This isn't a yak-shaving request though, I don't=
+ see any reason
+> > > > > > > > > to delay merging this series.
+> > > > > > > > >
+> > > > > > > > > Have you envisioned building FIT images with a subset of =
+DTBs, or adding
+> > > > > > > > > DTBOs ? Both would be fairly trivial extensions to this s=
+cript by
+> > > > > > > > > extending the supported command line arguments. It would =
+perhaps be more
+> > > > > > > > > difficult to integrate in the kernel build system though.=
+ This leads me
+> > > > > > > > > to a second question: would you consider merging extensio=
+ns to this
+> > > > > > > > > script if they are not used by the kernel build system, b=
+ut meant for
+> > > > > > > > > users who manually invoke the script ? More generally, is=
+ the script
+> > > > > > > >
+> > > > > > > > We'd also be interested in some customization, though in a =
+different way.
+> > > > > > > > We imagine having a rule file that says X compatible string=
+ should map
+> > > > > > > > to A base DTB, plus B and C DTBO for the configuration sect=
+ion. The base
+> > > > > > > > DTB would carry all common elements of some device, while t=
+he DTBOs
+> > > > > > > > carry all the possible second source components, like diffe=
+rent display
+> > > > > > > > panels or MIPI cameras for instance. This could drastically=
+ reduce the
+> > > > > > > > size of FIT images in ChromeOS by deduplicating all the com=
+mon stuff.
+> > > > > > >
+> > > > > > > Do you envision the "mapping" compatible string mapping to a =
+config
+> > > > > > > section in the FIT image, that would bundle the base DTB and =
+the DTBOs ?
+> > > > > >
+> > > > > > That's exactly the idea. The mapping compatible string could be=
+ untied
+> > > > > > from the base board's compatible string if needed (which we pro=
+bably do).
+> > > > > >
+> > > > > > So something like:
+> > > > > >
+> > > > > > config {
+> > > > > >     config-1 {
+> > > > > >         compatible =3D "google,krane-sku0";
+> > > > > >         fdt =3D "krane-baseboard", "krane-sku0-overlay";
+> > > > > >     };
+> > > > > > };
+> > > > > >
+> > > > > > With "krane-sku0-overlay" being an overlay that holds the diffe=
+rences
+> > > > > > between the SKUs, in this case the display panel and MIPI camer=
+a (not
+> > > > > > upstreamed) that applies to SKU0 in particular.
+> > > > >
+> > > > > The kernel DT makefiles already contain information on what overl=
+ays to
+> > > > > apply to what base boards, in order to test the overlays and prod=
+uce
+> > > > > "full" DTBs. Maybe that information could be leveraged to create =
+the
+> > > > > configurations in the FIT image ?
+> > > >
+> > > > Although the "full" DTBs created may only be a subset of all possib=
+le
+> > > > combinations (I believe Rob just started with creating one "full" D=
+TB
+> > > > for each overlay, cfr. the additions I made in commit a09c3e105a208=
+580
+> > > > ("arm64: dts: renesas: Apply overlays to base dtbs")), that could
+> > > > definitely be a start.
+> > > >
+> > > > Now, since the kernel build system already creates "full" DTBs, doe=
+s
+> > > > that mean that all of the base DTBs, overlays, and "full" DTBs will
+> > > > end up in the FIT image?
+> > >
+> > > I suppose we could add an option to the packing tool to be able to _n=
+ot_
+> > > add the "full" DTBs if they can also be assembled with a base DTB and
+> > > overlays. Think of it as a firmware compatibility option: if the firm=
+ware
+> > > supports overlays, then you almost always want the deconstructed part=
+s,
+> > > not the fully assembled ones. Vice versa.
+> > >
+> > > If we don't we could end up with two configurations that have the sam=
+e
+> > > compatible string?
+> >
+> >
+> > Right.
+> >
+> > We would end up with such situations because applying
+> > an overlay does not change the compatible string.
+> >
+> >
+> >
+> > With this code in arch/arm64/boot/dts/ti/Makefile:
+> >
+> > k3-am642-tqma64xxl-mbax4xxl-sdcard-dtbs :=3D \
+> >       k3-am642-tqma64xxl-mbax4xxl.dtb k3-am64-tqma64xxl-mbax4xxl-sdcard=
+.dtbo
+> > k3-am642-tqma64xxl-mbax4xxl-wlan-dtbs :=3D \
+> >       k3-am642-tqma64xxl-mbax4xxl.dtb k3-am64-tqma64xxl-mbax4xxl-wlan.d=
+tbo
+> >
+> >
+> >
+> >
+> > $ fdtdump  arch/arm64/boot/dts/ti/k3-am642-tqma64xxl-mbax4xxl-sdcard.dt=
+b
+> > 2>/dev/null| head -n15 | tail -n2
+> >     model =3D "TQ-Systems TQMa64xxL SoM on MBax4xxL carrier board";
+> >     compatible =3D "tq,am642-tqma6442l-mbax4xxl", "tq,am642-tqma6442l",
+> > "ti,am642";
+> >
+> >
+> > $ fdtdump  arch/arm64/boot/dts/ti/k3-am642-tqma64xxl-mbax4xxl-wlan.dtb
+> > 2>/dev/null| head -n15 | tail -n2
+> >     model =3D "TQ-Systems TQMa64xxL SoM on MBax4xxL carrier board";
+> >     compatible =3D "tq,am642-tqma6442l-mbax4xxl", "tq,am642-tqma6442l",
+> > "ti,am642";
+> >
+> >
+> >
+> >
+> >
+> > These two go into image.fit, but one of them is completely dead
+> > since there is no way to distinguish them.
+> >
+> >
+> > $ fdtdump  arch/arm64/boot/image.fit
+> >
+> >         ...
+> >
+> >         conf-10 {
+> >             compatible =3D "tq,am642-tqma6442l-mbax4xxl",
+> > "tq,am642-tqma6442l", "ti,am642";
+> >             description =3D "TQ-Systems TQMa64xxL SoM on MBax4xxL carri=
+er board";
+> >             fdt =3D "fdt-10";
+> >             kernel =3D "kernel";
+> >         };
+> >
+> >         ...
+> >
+> >         conf-25 {
+> >             compatible =3D "tq,am642-tqma6442l-mbax4xxl",
+> > "tq,am642-tqma6442l", "ti,am642";
+> >             description =3D "TQ-Systems TQMa64xxL SoM on MBax4xxL carri=
+er board";
+> >             fdt =3D "fdt-25";
+> >             kernel =3D "kernel";
+> >         };
+> >
+> >
+> >
+> >
+> >
+> > I agree with Chen-Yu.
+> >
+> > FIT should not include full DTBs.
+> >
+> > Bootloaders should assemble the final DTB
+> > from base and overlays on-the-fly.
+> >
+> >
+> > The FIT spec allows the "fdt" property to list
+> > multiple image nodes.
+> >
+> >
+> > o config-1
+> >  |- description =3D "configuration description"
+> >  |- kernel =3D "kernel sub-node unit name"
+> >  |- fdt =3D "fdt sub-node unit-name" [, "fdt overlay sub-node unit-name=
+", ...]
+> >  |- loadables =3D "loadables sub-node unit-name"
+> >  |- script =3D "
+> >  |- compatible =3D "vendor
+>
+>
+>
+>
+>
+> This is a question for U-Boot (and barebox).
+>
+>
+>
+>
+>    images {
+>           base {
+>                 ...
+>           };
+>
+>           addon1 {
+>                 ...
+>           };
+>
+>           addon2 {
+>                 ...
+>           };
+>     };
+>
+>     configurations {
+>           ...
+>           fdt =3D "base", "addon1", "addon2";
+>     };
+>
+>
+>
+>
+> Is U-Boot's "bootm" command able to dynamically construct
+> the full DTB from "base" + "addon1" + "addon2"
+> and pass to the kernel?
+>
+>
+>
+> When I used overlay from U-Boot command line last time,
+> I typed complicated commands, following this manual:
+> https://docs.u-boot.org/en/latest/usage/fdt_overlays.html
+>
+>
+
+So far this is not possible with bootm, no. But if we can add
+extensions to the FIT spec, then it should be possible to implement
+this.
+
+Is it (or will it be) possible to get Linux to build the DT + overlay
+combinations?
+
+>
+>
+> One more question to confirm if I can use this
+> for my practical use-cases.
+>
+> Is U-Boot able to handle FIT (includes kernel + DTs)
+> and a separate initrd?
+>
+>   # bootm  <fit-address>:<conf-name>  <ramdisk-address>
+>
+>
+> Presumably, it would be difficult to inject initramdisk
+> into image.fit later, so I am hoping bootm would work like that,
+> but I did not delve into U-Boot code.
+>
+>
+
+The ramdisk is handled by the FIT configuration. I suppose it would be
+possible to add a way to bypass the logic in select_ramdisk(), but I
+wonder what is the use case for this?
+
+>
+> If it works, is it possible to verify the integrity of initrd?
+> The kernel and DTs inside FIT will be verified, but not sure
+> if it is possible for ramdisk.
+
+I do have thoughts about a possible new FIT feature to allow external
+files, which could perhaps include an initrd.
+
+Regards,
+Simon
