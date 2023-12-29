@@ -1,226 +1,216 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862AE79CD;
-	Fri, 29 Dec 2023 06:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5546B8BF6;
+	Fri, 29 Dec 2023 06:34:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CwxcJagB"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d422c9f894so41365515ad.3;
-        Thu, 28 Dec 2023 22:31:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703831482; x=1704436282; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ls3yrjrYy9eVz9esBcykVo8gEjuUhZ/hfePG/jTt1JE=;
-        b=CwxcJagB2M3miJISiF2mB9aJSYZLUAIxq49eu5c4HAmWdglhbuU+f6eneR6hfU/5TA
-         0QCip0szM8wL1xTrdzrhxLCLGDcDi8VmCwgjKeZ/xtbXZHBD2oJFRyD+HnF9aKHBbv2a
-         HeCogeHDB9KzA1D+qe6LUnAw/L5+WJrNxPkUwLf+4HBvfNydUQkgPMmFrRBnLDDP3vub
-         +yXRPnFesFfKT8siXEDlW4+6fMd78SOTKfRqpZABAWEz3gtbzj46zAfa5SzSZTVT7429
-         nzPsXaMdYg9b5PFt0Xc9E6jCrCCiezW4UhAxnQMEJ7hMldZ34NEicGnWU9gGLkWo6XoR
-         RrRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703831482; x=1704436282;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ls3yrjrYy9eVz9esBcykVo8gEjuUhZ/hfePG/jTt1JE=;
-        b=ZemiogVU2Yvi6TVULXM/kFoTdGjRupobdePRxJb3NrxDUqLiL7NnHOP6R/hMiKILpj
-         dan2zBnuDRWcmlAwQgYWrgcx/21roddN5EzQjy2FqvIp2IK2yqutbh5i/uDnFZMA6O5p
-         LbrlED2GudN3jNFMS0rT1IeGFR25E0ArFqoIlVG+f81FudFtw+ByeiMjoQlVvde62Uxh
-         yecS6gjB9nj4AVX1nsdh70trTZ6L63ITsY8h/ZehcZRGQ4D2tnh2W6BrVQezRaYzUvS7
-         RJvfmhB0LfJfjjIRwKHKpHgJGg2isB/Myp9Ab+SkKV7LfHweBLwuY152Q6IhPBTJUw+K
-         dPVQ==
-X-Gm-Message-State: AOJu0YwzALinNYwvH+2F2UQhyPAMoHIgLIUEwSVaJS8esx7Pv8u8q5rD
-	h6fP1YzQWqusLSudlGjAvZc=
-X-Google-Smtp-Source: AGHT+IHR73hXbo8VTreL7pUXsGoZkNaRlHW8GJU+rM6EglxVXZbDVGKRLQrbU0OUMfWwx6xoLXaL4Q==
-X-Received: by 2002:a17:902:ce91:b0:1cf:f506:c98e with SMTP id f17-20020a170902ce9100b001cff506c98emr13315749plg.16.1703831481535;
-        Thu, 28 Dec 2023 22:31:21 -0800 (PST)
-Received: from localhost.localdomain ([2402:3a80:87c:f9e1:4c4c:39e1:4807:8b2c])
-        by smtp.gmail.com with ESMTPSA id jc14-20020a17090325ce00b001d07d83fdd0sm15009499plb.238.2023.12.28.22.31.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Dec 2023 22:31:21 -0800 (PST)
-From: pratikmanvar09@gmail.com
-To: thierry.reding@gmail.com,
-	u.kleine-koenig@pengutronix.de,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	linux-imx@nxp.com,
-	linux-pwm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Clark Wang <xiaoning.wang@nxp.com>,
-	Jun Li <jun.li@nxp.com>,
-	Pratik Manvar <pratik.manvar@ifm.com>
-Subject: [PATCH] pwm: imx27: workaround of the pwm output bug
-Date: Fri, 29 Dec 2023 12:00:07 +0530
-Message-ID: <20231229063013.1786-1-pratikmanvar09@gmail.com>
-X-Mailer: git-send-email 2.43.0.windows.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JEPk5Nbb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703831681; x=1735367681;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=a8s0a3xrlqR9Iq86F6A166ndYeSwZlA59BkkfAsv/Ws=;
+  b=JEPk5NbbMbIwRzzx5m/z8cXdcN2CJvs25wzJjfgkgAu1woQyPPwtxZtx
+   h5z2+1ri1w+AdDlcdVlPCkFDudCQuz04k689Hc5yl6ZnDBlgK+4LJSlyn
+   B4FNq6/rWTxLa3rP1fe1VaIg8CR7ifCE+kAgYBNFt+ibladDJL1pGR3Oq
+   nCxpM1yGrfxF8fRbXLQ9y+eKtGu7FWoDPtlrB4PjEo4bh8app999iXNfp
+   Xw+6iKnpDPVpuOTr5nkbQJfwGlzJjH3ZTBw+RRUZUj3R1hENcHyElSOsx
+   UcKveeNGhExyhTmuhLYHrWgJXeXqvnZSk786WWp1sLG34J4wj3IgW55Ao
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="463037401"
+X-IronPort-AV: E=Sophos;i="6.04,314,1695711600"; 
+   d="scan'208";a="463037401"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2023 22:34:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="1110095783"
+X-IronPort-AV: E=Sophos;i="6.04,314,1695711600"; 
+   d="scan'208";a="1110095783"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmsmga005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 28 Dec 2023 22:34:35 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 28 Dec 2023 22:34:35 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 28 Dec 2023 22:34:29 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Thu, 28 Dec 2023 22:34:29 -0800
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.169)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 28 Dec 2023 22:34:29 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W8OvzUWmDNOtQB8O9gjh+xtCKgQt/jJ7JCRx9pdomSFJMC6Ze7+sSdr8KyWKna/LeG67MMeBz7nvLrIyayNY7xJqSyCrZVZUL3QvPE0UXhyjVv5x4P0SisFup0SyYvE6MzOiG5mK7EtQKIyBDReOcUcVhLYulv+8yTjwShiVWEH8bWbPOlvoHbspyBJNrVBJsdTvK5GBAWKsataPsJgFU3Uqg6/ruBaMllooDLEUHuW6eyOq1Z757fbsu6Kkax5ri1kv8N4egqMgzbPBeteMpdUxQ8n4D3cJT6Bt/QvOB4ux7JzeeTVgguH2MbtFlVwPKfkSUmG5lrJXwdAseHzqHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9RdYaeTFrF/67KEig6vOB89aUJANYaeJHqW+nVNDdgs=;
+ b=jCwscj5tw1aVI3dUfqg9mQcFJKiMK7ro1ZOG+ja3za4uqt2wBxV5opwPlm9KNyTddkSFXo+nG0tK4JGB00/VLW4xjoH0IckxYD1lWExSdoG8MR7xq9DTvJVLan/v1cSLV3BE3Kr2R6TmgGhFngKnfRAkH/HzmrREo/5xR75+2XNMOE6h2xj+syIHatD9sZqLgljXtT1ed5UuA12bIYWpYGkhPLKPAotQ/dn1f+ypBrme1Vr/O/82X9Y5JU2Qutg7evL2QJ4MhX836YL381qP9LgtM1T+m2peRDZRpsY/Vepd8RlVyFX0JU9xi3wTvxHbALz01uCvbj0RAUPSSYsHqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS0PR11MB7529.namprd11.prod.outlook.com (2603:10b6:8:141::20)
+ by DM6PR11MB4737.namprd11.prod.outlook.com (2603:10b6:5:2a2::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.21; Fri, 29 Dec
+ 2023 06:34:27 +0000
+Received: from DS0PR11MB7529.namprd11.prod.outlook.com
+ ([fe80::e4ae:3948:1f55:547d]) by DS0PR11MB7529.namprd11.prod.outlook.com
+ ([fe80::e4ae:3948:1f55:547d%5]) with mapi id 15.20.7113.027; Fri, 29 Dec 2023
+ 06:34:27 +0000
+Message-ID: <fb1f6514-7e5e-4b42-b37c-c107f0277671@intel.com>
+Date: Fri, 29 Dec 2023 14:37:15 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 07/10] iommu/vt-d: Allow qi_submit_sync() to return the
+ QI faults
+Content-Language: en-US
+To: "Tian, Kevin" <kevin.tian@intel.com>, "joro@8bytes.org" <joro@8bytes.org>,
+	"alex.williamson@redhat.com" <alex.williamson@redhat.com>, "jgg@nvidia.com"
+	<jgg@nvidia.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
+CC: "cohuck@redhat.com" <cohuck@redhat.com>, "eric.auger@redhat.com"
+	<eric.auger@redhat.com>, "nicolinc@nvidia.com" <nicolinc@nvidia.com>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "mjrosato@linux.ibm.com"
+	<mjrosato@linux.ibm.com>, "chao.p.peng@linux.intel.com"
+	<chao.p.peng@linux.intel.com>, "yi.y.sun@linux.intel.com"
+	<yi.y.sun@linux.intel.com>, "peterx@redhat.com" <peterx@redhat.com>,
+	"jasowang@redhat.com" <jasowang@redhat.com>,
+	"shameerali.kolothum.thodi@huawei.com"
+	<shameerali.kolothum.thodi@huawei.com>, "lulu@redhat.com" <lulu@redhat.com>,
+	"suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, "Duan,
+ Zhenzhong" <zhenzhong.duan@intel.com>, "joao.m.martins@oracle.com"
+	<joao.m.martins@oracle.com>, "Zeng, Xin" <xin.zeng@intel.com>, "Zhao, Yan Y"
+	<yan.y.zhao@intel.com>, "j.granados@samsung.com" <j.granados@samsung.com>
+References: <20231228150629.13149-1-yi.l.liu@intel.com>
+ <20231228150629.13149-8-yi.l.liu@intel.com>
+ <BN9PR11MB52768F21FE29A81060ACA4AE8C9DA@BN9PR11MB5276.namprd11.prod.outlook.com>
+From: Yi Liu <yi.l.liu@intel.com>
+In-Reply-To: <BN9PR11MB52768F21FE29A81060ACA4AE8C9DA@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI2PR02CA0024.apcprd02.prod.outlook.com
+ (2603:1096:4:195::18) To DS0PR11MB7529.namprd11.prod.outlook.com
+ (2603:10b6:8:141::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB7529:EE_|DM6PR11MB4737:EE_
+X-MS-Office365-Filtering-Correlation-Id: 015a6b37-88f1-427b-58af-08dc08383462
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: lKlTTkrMAEJzBpXEuyBZNSlEDhYOtV0g/+ineN1WFQyVhGoCdmiVkosv2XWcXcC/wpE4hw0fyv1E6+wYeqRMPq6d3iQo+W7KU81OslJhAcijfKVm8ei715M5rbjJRzmiTPPGpazRD16/6gaKGfSKfhRAKfqZQVwiq8U78RTWELoxV24uJ/2L+lQVLRcWCBYWly4kZEcJkFARuH/15VSmKpj4wvt5NAN0oo91phQnC6++3rGAR4H0dqBZMbuGXnU+Q+5WwFj2Zg238vtA4SDGjzBuk94694xTbmfVP3ZQqwS75nerw1LV9YFChVQW8Ws5F3qDd9A8WLdV0tV7kDbCYKfL03G6YJBsVA8ziA1LBQ8/rSpmqGxLf41GTe8WRY976WW/Y7r7XGOZCVXDhRKvsbKGRMIiq+2Rtkg2jl0FTiocNMLRPKxjxhH79u42D24cy8CUKefbSUTTbV1oLlKeuqpozmFR4Vd5pN1URUCNF2cD9n4x8OaKCzNe7Q8qRT88mBt67MwsSqi8cOvyFzqk7d36ripM6fWyCg6qE4Tru4EkZAIDkMBTR0ms4CLb3WM7kJLmdInQedw342SWqYy0stl7R5AVPfxaa4jH14BhuzyM1lzP6z6t+hV8Ed4hWnmutIWutPo9hgtWNThAby5yTA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB7529.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(136003)(376002)(346002)(39860400002)(230922051799003)(451199024)(1800799012)(64100799003)(186009)(82960400001)(38100700002)(41300700001)(54906003)(31686004)(6486002)(110136005)(36756003)(316002)(8676002)(8936002)(66476007)(66946007)(66556008)(86362001)(2616005)(4326008)(26005)(31696002)(2906002)(6666004)(6506007)(6512007)(53546011)(5660300002)(478600001)(966005)(7416002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Zkg3YVpuK1BmZlc4K2QzYTdjSmJpUzdFb0JHN05DTE9GTjVDNkdWbWFuaEhD?=
+ =?utf-8?B?cFVWKzBOcHBzNCsySG9TbC9wL1ZLZE5HVjBSczBXVkFRaUlFOWV1cXQvTENH?=
+ =?utf-8?B?em9jZ1dFRjhLMTNzN2ErMnBEdGUwSy9xeXptT3ZGcTFoVHh6aitLOHJKWFlS?=
+ =?utf-8?B?OEdTUUlzMEtiU013RTlYOUNJSlBCWmFSRCtHODJuZlh4L0NUV0RoTjJCa2lv?=
+ =?utf-8?B?blZFc2NQV0hPZkgyYzFwYktUa0xmaVluclJDb29UNWZrdW5XcHc4Mi8vU0ZD?=
+ =?utf-8?B?amtJZ1dsUWZxcnV6djc2eXlsMnBjcGtiMHdXUWNYeTlKUE8xZGFpR1NhNGtY?=
+ =?utf-8?B?WVEvVVB3aEhZZ0VROUdPSFdFWGVxZEp6NHJqME1MMHArQURpc09aakZ0RzZD?=
+ =?utf-8?B?bTVtaHdBRkxBSGIrQ045YXN0dHlJTHB3eUF2OGRWSVVVVXk5QnVJYW93K0pU?=
+ =?utf-8?B?N21PWkVRdGx5TWRQZVNMZ0VZV0dBZXdHTWM5clQ0dU9MR3hncWs0bGN3Y1pT?=
+ =?utf-8?B?eU0vaHM1MnlpVEJSaWN3czIxdENPUUJud0ptdTZOM29TUDlWRGpjajI2Ky81?=
+ =?utf-8?B?ZlRWaXVTS3lPQmFkblg5aldOay9KR2d1N1lHeE5EVW9qS2NSVUtHa2p4S1M0?=
+ =?utf-8?B?VXRVblVJSk1kUGZoWWFtc0ZkemVKYVZzdVU5U3kvTlNRbEU0eWZSNmxNalRP?=
+ =?utf-8?B?SU9IcFQ1S3ZNUXF2V1JFZHJ5Tk1OMUZXWjRWUElQb3BsUWtwQmQ4VXI2QzdN?=
+ =?utf-8?B?eHgvc0t1S1BxdTNkL0ZCMjVkRlY3S3dVejRFb2ROSWEvMktGWkpreWk3eEhY?=
+ =?utf-8?B?QWowZDcvMThVUTVibFNsQXVlWW9lajhWMnpySmltb3QvUnNhL09zV2tpNFNp?=
+ =?utf-8?B?ZHZjN0pRRWJKS2dzSml1ZkdtUWlGWmhVVXZCdnNiWUlhMHZ4T3BTS3dTN2ps?=
+ =?utf-8?B?WWhxV2ZaNytxRkFLR2Y0YjBEVlRDWGdIZ01nQldOMXZuak43SXRpaU11a0RL?=
+ =?utf-8?B?aDVoV3lMTndwaW5vQjN5QkpaYVdNalBEYlBrOFMvNWwvZ1ZBSDYrRitDejdQ?=
+ =?utf-8?B?dnljTDA4T0lBaUVVdzB4TXJWL0RYTUo2aXlLZkkwaVNQL2g5RHNidjFtWktK?=
+ =?utf-8?B?c2Z4dStmc1MxRmJvRGIydWhVb0theHRaM1BVb1N0T0xNenVrR0NuTnNQK3lq?=
+ =?utf-8?B?ckZJV1NkVXlWaXo1VmNoS2Rjb0ZjV25OQSs2UUVkVE8vM2g3M2cwdUwxUUJz?=
+ =?utf-8?B?TmNGODFEb3pRWVFHSWlrRkl0V0JlRVg5ZytaOVVWTnFaT1lLdzY5NU1hOEYv?=
+ =?utf-8?B?SmFBT3RmRXJMTGpGZktTYU5SY0pvU0ppSU41UE0vcVpPUHIrQ2MrNjFDUFFw?=
+ =?utf-8?B?NHJvMmZ2L3JzQnBkQXJpSXVjZHR2UzFCK2o1NjZoeUI1UUdBb3JkZmFkdGhB?=
+ =?utf-8?B?MktyanlWRGI3NXRRa0hCWUh2WUhnaE0yNEhwTyt4L1YyeXA3dFVMUnF0TWZQ?=
+ =?utf-8?B?eVZya094d1pZd2dqVFBhUS9vZmphejE4NzZ5dTYxMG4zaWVFVWtpcDBtWW95?=
+ =?utf-8?B?cU54Qi9Qd3YrYzZla05NZW1wb3dnOCtXRHRiY3c0KzZ5V2p0c29qenFiU1F3?=
+ =?utf-8?B?WUtMZ3dVbDFUTXRwWW0zQk82cFZOcGF3MGxiZnZYQmNadDVpSDZiZEs5ZWli?=
+ =?utf-8?B?YkN4eU4xZENtL2FzTXJIUHFEWkxJUFVtb3JqVVFaSU42UFBHcWptV0pLcHE0?=
+ =?utf-8?B?S0E2MGlkbmFoSlJvR0pyU2dBYlRNdFVtVTJGV1ltWDl4d0RnUUVFOEszVUNr?=
+ =?utf-8?B?ZHRndUpoenJNZHZDZzg4SVZ3TTdyb0o1cWJDOG44S21CMkdZcEthYzhLWVZ3?=
+ =?utf-8?B?bkVmOUtnRFhFTlZ5eGdHSTZVNVFlZHNhTUpMQUdXZkhnYmN0ZElDN1JvbVdk?=
+ =?utf-8?B?d282cWlPb2JWZkFCZjRtbU1pN09pMXJ1OEx1S2hxVStoWHJ2TW9CZUV5NmZS?=
+ =?utf-8?B?c3lXSHJldzI4M01rUXVKTXlLbFFlSHVSUVVKeUVWTXZmUWgxbjNyamdsanRN?=
+ =?utf-8?B?bkRLV0gxaTFacGYwM2pOUmpTOXFjaDRFZ0JTd2ZsMHh6Rk5OWEJmNm45blda?=
+ =?utf-8?Q?7DufYGnjN7Jt8YZV/JpuJaBcy?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 015a6b37-88f1-427b-58af-08dc08383462
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7529.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Dec 2023 06:34:27.3848
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NtMdurQZw6DDBdGLhp+h6hgpMf9P52nimXF1R/r0hEf/aliDWgzlYkIm0nFwOc5XpcjPBZlUj39C8XF8vDYD0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4737
+X-OriginatorOrg: intel.com
 
-From: Clark Wang <xiaoning.wang@nxp.com>
+On 2023/12/29 10:52, Tian, Kevin wrote:
+>> From: Liu, Yi L <yi.l.liu@intel.com>
+>> Sent: Thursday, December 28, 2023 11:06 PM
+>>
+>> From: Lu Baolu <baolu.lu@linux.intel.com>
+>>
+>> This allows qi_submit_sync() to return back faults to callers.
+> 
+> this might be useful to add a note that the retry logic itself is being discussed
+> in a separate thread [1]. Here we keep it intact and just make sure no retry for
+> the newly added user domain cache invalidation.
+> 
+> [1] https://lore.kernel.org/all/20231228001646.587653-6-haifeng.zhao@linux.intel.com/
+> 
+>>
+>> -		if (qi->desc_status[wait_index] == QI_ABORT)
+>> +		if (qi->desc_status[wait_index] == QI_ABORT) {
+>> +			/*
+>> +			 * If the caller is interested in the error, no need
+>> +			 * to retry, just return the time out error to the
+>> +			 * caller.
+>> +			 */
+>> +			if (fsts)
+>> +				return -ETIMEDOUT;
+>> +		}
+>>   			return -EAGAIN;
+> 
+> indent should be adjusted and it changes the original logic which returns
+> -EAGAIN only if QI_ABORT is set for the wait_index.
 
-This fixes the pwm output bug when decrease the duty cycle.
-This is a limited workaround for the PWM IP issue TKT0577206.
+oops. this is a mistake. :) '}' should be after 'return -EAGAIN'
 
-Root cause:
-When the SAR FIFO is empty, the new write value will be directly applied
-to SAR even the current period is not over.
-If the new SAR value is less than the old one, and the counter is
-greater than the new SAR value, the current period will not filp the
-level. This will result in a pulse with a duty cycle of 100%.
+> the simpler form is:
+> 
+> 		/* No need to retry if the caller is interested in the timeout error */
+> 		if (qi->desc_status[wait_index] == QI_ABORT)
+> 			return fsts ? -ETIMEDOUT : -EAGAIN;
+> 
+> otherwise,
+> 
+> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
 
-Workaround:
-Add an old value SAR write before updating the new duty cycle to SAR.
-This will keep the new value is always in a not empty fifo, and can be
-wait to update after a period finished.
+sure.
 
-Limitation:
-This workaround can only solve this issue when the PWM period is longer
-than 2us(or <500KHz).
-
-Reviewed-by: Jun Li <jun.li@nxp.com>
-Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
-Link: https://github.com/nxp-imx/linux-imx/commit/16181cc4eee61d87cbaba0e5a479990507816317
-Tested-by: Pratik Manvar <pratik.manvar@ifm.com>
----
- drivers/pwm/pwm-imx27.c | 67 ++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 62 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-index 29a3089c534c..c21b2a9f02ae 100644
---- a/drivers/pwm/pwm-imx27.c
-+++ b/drivers/pwm/pwm-imx27.c
-@@ -21,11 +21,13 @@
- #include <linux/platform_device.h>
- #include <linux/pwm.h>
- #include <linux/slab.h>
-+#include <linux/spinlock.h>
- 
- #define MX3_PWMCR			0x00    /* PWM Control Register */
- #define MX3_PWMSR			0x04    /* PWM Status Register */
- #define MX3_PWMSAR			0x0C    /* PWM Sample Register */
- #define MX3_PWMPR			0x10    /* PWM Period Register */
-+#define MX3_PWMCNR			0x14    /* PWM Counter Register */
- 
- #define MX3_PWMCR_FWM			GENMASK(27, 26)
- #define MX3_PWMCR_STOPEN		BIT(25)
-@@ -91,6 +93,7 @@ struct pwm_imx27_chip {
- 	 * value to return in that case.
- 	 */
- 	unsigned int duty_cycle;
-+	spinlock_t lock;
- };
- 
- #define to_pwm_imx27_chip(chip)	container_of(chip, struct pwm_imx27_chip, chip)
-@@ -203,10 +206,10 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
- 
- 	sr = readl(imx->mmio_base + MX3_PWMSR);
- 	fifoav = FIELD_GET(MX3_PWMSR_FIFOAV, sr);
--	if (fifoav == MX3_PWMSR_FIFOAV_4WORDS) {
-+	if (fifoav >= MX3_PWMSR_FIFOAV_3WORDS) {
- 		period_ms = DIV_ROUND_UP_ULL(pwm_get_period(pwm),
- 					 NSEC_PER_MSEC);
--		msleep(period_ms);
-+		msleep(period_ms * (fifoav - 2));
- 
- 		sr = readl(imx->mmio_base + MX3_PWMSR);
- 		if (fifoav == FIELD_GET(MX3_PWMSR_FIFOAV, sr))
-@@ -217,13 +220,15 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
- static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			   const struct pwm_state *state)
- {
--	unsigned long period_cycles, duty_cycles, prescale;
-+	unsigned long period_cycles, duty_cycles, prescale, counter_check, flags;
- 	struct pwm_imx27_chip *imx = to_pwm_imx27_chip(chip);
-+	void __iomem *reg_sar = imx->mmio_base + MX3_PWMSAR;
-+	__force u32 sar_last, sar_current;
- 	struct pwm_state cstate;
- 	unsigned long long c;
- 	unsigned long long clkrate;
- 	int ret;
--	u32 cr;
-+	u32 cr, timeout = 1000;
- 
- 	pwm_get_state(pwm, &cstate);
- 
-@@ -264,7 +269,57 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 		pwm_imx27_sw_reset(chip);
- 	}
- 
--	writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
-+	/*
-+	 * This is a limited workaround. When the SAR FIFO is empty, the new
-+	 * write value will be directly applied to SAR even the current period
-+	 * is not over.
-+	 * If the new SAR value is less than the old one, and the counter is
-+	 * greater than the new SAR value, the current period will not filp
-+	 * the level. This will result in a pulse with a duty cycle of 100%.
-+	 * So, writing the current value of the SAR to SAR here before updating
-+	 * the new SAR value can avoid this issue.
-+	 *
-+	 * Add a spin lock and turn off the interrupt to ensure that the
-+	 * real-time performance can be guaranteed as much as possible when
-+	 * operating the following operations.
-+	 *
-+	 * 1. Add a threshold of 1.5us. If the time T between the read current
-+	 * count value CNR and the end of the cycle is less than 1.5us, wait
-+	 * for T to be longer than 1.5us before updating the SAR register.
-+	 * This is to avoid the situation that when the first SAR is written,
-+	 * the current cycle just ends and the SAR FIFO that just be written
-+	 * is emptied again.
-+	 *
-+	 * 2. Use __raw_writel() to minimize the interval between two writes to
-+	 * the SAR register to increase the fastest pwm frequency supported.
-+	 *
-+	 * When the PWM period is longer than 2us(or <500KHz), this workaround
-+	 * can solve this problem.
-+	 */
-+	if (duty_cycles < imx->duty_cycle) {
-+		c = clkrate * 1500;
-+		do_div(c, NSEC_PER_SEC);
-+		counter_check = c;
-+		sar_last = cpu_to_le32(imx->duty_cycle);
-+		sar_current = cpu_to_le32(duty_cycles);
-+
-+		spin_lock_irqsave(&imx->lock, flags);
-+		if (state->period >= 2000) {
-+			while ((period_cycles -
-+				readl_relaxed(imx->mmio_base + MX3_PWMCNR))
-+				< counter_check) {
-+				if (!--timeout)
-+					break;
-+			};
-+		}
-+		if (!(MX3_PWMSR_FIFOAV &
-+		      readl_relaxed(imx->mmio_base + MX3_PWMSR)))
-+			__raw_writel(sar_last, reg_sar);
-+		__raw_writel(sar_current, reg_sar);
-+		spin_unlock_irqrestore(&imx->lock, flags);
-+	} else
-+		writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
-+
- 	writel(period_cycles, imx->mmio_base + MX3_PWMPR);
- 
- 	/*
-@@ -325,6 +380,8 @@ static int pwm_imx27_probe(struct platform_device *pdev)
- 		return dev_err_probe(&pdev->dev, PTR_ERR(imx->clk_per),
- 				     "failed to get peripheral clock\n");
- 
-+	spin_lock_init(&imx->lock);
-+	imx->duty_cycle = 0;
- 	imx->chip.ops = &pwm_imx27_ops;
- 	imx->chip.dev = &pdev->dev;
- 	imx->chip.npwm = 1;
 -- 
-2.25.1
-
+Regards,
+Yi Liu
