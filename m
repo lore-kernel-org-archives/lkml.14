@@ -1,73 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315761428E
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 21:12:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9933FC433C8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4291014292;
+	Fri, 29 Dec 2023 21:12:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D875FC433CC;
 	Fri, 29 Dec 2023 21:12:46 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rJKAk-00000000Mbp-36dI;
-	Fri, 29 Dec 2023 16:13:38 -0500
-Message-ID: <20231229211314.081907608@goodmis.org>
+	id 1rJKAl-00000000Mcp-0HmC;
+	Fri, 29 Dec 2023 16:13:39 -0500
+Message-ID: <20231229211338.928136124@goodmis.org>
 User-Agent: quilt/0.67
-Date: Fri, 29 Dec 2023 16:13:14 -0500
+Date: Fri, 29 Dec 2023 16:13:16 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- Jiri Olsa <jolsa@kernel.org>
-Subject: [for-linus][PATCH 0/3] tracing: Fixes for v6.7-rc7
+ Jiri Olsa <jolsa@kernel.org>,
+ stable@vger.kernel.org
+Subject: [for-linus][PATCH 2/3] tracing: Fix blocked reader of snapshot buffer
+References: <20231229211314.081907608@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+
+If an application blocks on the snapshot or snapshot_raw files, expecting
+to be woken up when a snapshot occurs, it will not happen. Or it may
+happen with an unexpected result.
+
+That result is that the application will be reading the main buffer
+instead of the snapshot buffer. That is because when the snapshot occurs,
+the main and snapshot buffers are swapped. But the reader has a descriptor
+still pointing to the buffer that it originally connected to.
+
+This is fine for the main buffer readers, as they may be blocked waiting
+for a watermark to be hit, and when a snapshot occurs, the data that the
+main readers want is now on the snapshot buffer.
+
+But for waiters of the snapshot buffer, they are waiting for an event to
+occur that will trigger the snapshot and they can then consume it quickly
+to save the snapshot before the next snapshot occurs. But to do this, they
+need to read the new snapshot buffer, not the old one that is now
+receiving new data.
+
+Also, it does not make sense to have a watermark "buffer_percent" on the
+snapshot buffer, as the snapshot buffer is static and does not receive new
+data except all at once.
+
+Link: https://lore.kernel.org/linux-trace-kernel/20231228095149.77f5b45d@gandalf.local.home
+
+Cc: stable@vger.kernel.org
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Fixes: debdd57f5145f ("tracing: Make a snapshot feature available from userspace")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c |  3 ++-
+ kernel/trace/trace.c       | 20 +++++++++++++++++---
+ 2 files changed, 19 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 32c0dd2fd1c3..9286f88fcd32 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -949,7 +949,8 @@ void ring_buffer_wake_waiters(struct trace_buffer *buffer, int cpu)
+ 	/* make sure the waiters see the new index */
+ 	smp_wmb();
+ 
+-	rb_wake_up_waiters(&rbwork->work);
++	/* This can be called in any context */
++	irq_work_queue(&rbwork->work);
+ }
+ 
+ /**
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 199df497db07..a0defe156b57 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -1894,6 +1894,9 @@ update_max_tr(struct trace_array *tr, struct task_struct *tsk, int cpu,
+ 	__update_max_tr(tr, tsk, cpu);
+ 
+ 	arch_spin_unlock(&tr->max_lock);
++
++	/* Any waiters on the old snapshot buffer need to wake up */
++	ring_buffer_wake_waiters(tr->array_buffer.buffer, RING_BUFFER_ALL_CPUS);
+ }
+ 
+ /**
+@@ -1945,12 +1948,23 @@ update_max_tr_single(struct trace_array *tr, struct task_struct *tsk, int cpu)
+ 
+ static int wait_on_pipe(struct trace_iterator *iter, int full)
+ {
++	int ret;
++
+ 	/* Iterators are static, they should be filled or empty */
+ 	if (trace_buffer_iter(iter, iter->cpu_file))
+ 		return 0;
+ 
+-	return ring_buffer_wait(iter->array_buffer->buffer, iter->cpu_file,
+-				full);
++	ret = ring_buffer_wait(iter->array_buffer->buffer, iter->cpu_file, full);
++
++#ifdef CONFIG_TRACER_MAX_TRACE
++	/*
++	 * Make sure this is still the snapshot buffer, as if a snapshot were
++	 * to happen, this would now be the main buffer.
++	 */
++	if (iter->snapshot)
++		iter->array_buffer = &iter->tr->max_buffer;
++#endif
++	return ret;
+ }
+ 
+ #ifdef CONFIG_FTRACE_STARTUP_TEST
+@@ -8517,7 +8531,7 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
+ 
+ 		wait_index = READ_ONCE(iter->wait_index);
+ 
+-		ret = wait_on_pipe(iter, iter->tr->buffer_percent);
++		ret = wait_on_pipe(iter, iter->snapshot ? 0 : iter->tr->buffer_percent);
+ 		if (ret)
+ 			goto out;
+ 
+-- 
+2.42.0
 
 
-
-tracing fixes for v6.7-rc7:
-
-- Fix readers on blocked on the ring buffer when buffer_percent is
-  100%. They are supposed to wake up when the buffer is full, but
-  because the sub-buffer that the writer is on is never considered
-  "dirty" in the calculation, dirty pages will never equal nr_page.
-  Add +1 to the dirty count in order to count for the sub-buffer that
-  the writer is on.
-
-- When a reader is blocked on the "snapshot_raw" file, it is to be
-  woken up when a snapshot is done and be able to read the snapshot
-  buffer. But because the snapshot swaps the buffers (the main one
-  with the snapshot one), and the snapshot reader is waiting on the
-  old snapshot buffer, it was not woken up (because it is now on
-  the main buffer after the swap). Worse yet, when it reads the buffer
-  after a snapshot, it's not reading the snapshot buffer, it's reading
-  the live active main buffer.
-
-  Fix this by forcing a wakeup of all readers on the snapshot buffer when
-  a new snapshot happens, and then update the buffer that the reader
-  is reading to be back on the snapshot buffer.
-
-- Fix the modification of the direct_function hash. There was a race
-  when new functions were added to the direct_function hash as when
-  it moved function entries from the old hash to the new one, a direct
-  function trace could be hit and not see its entry.
-
-  This is fixed by allocating the new hash, copy all the old entries
-  onto it as well as the new entries, and then use rcu_assign_pointer()
-  to update the new direct_function hash with it.
-
-  This also fixes a memory leak in that code.
-
-Steven Rostedt (Google) (3):
-      ring-buffer: Fix wake ups when buffer_percent is set to 100
-      tracing: Fix blocked reader of snapshot buffer
-      ftrace: Fix modification of direct_function hash while in use
-
-----
- kernel/trace/ftrace.c      | 100 +++++++++++++++++++++------------------------
- kernel/trace/ring_buffer.c |  12 ++++--
- kernel/trace/trace.c       |  20 +++++++--
- 3 files changed, 73 insertions(+), 59 deletions(-)
