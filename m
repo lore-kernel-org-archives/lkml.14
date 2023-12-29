@@ -1,110 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A09510A36;
-	Fri, 29 Dec 2023 11:37:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76AE211181;
+	Fri, 29 Dec 2023 11:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bah1vHAg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703849826; x=1735385826;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jXpLHm3Y0MAniZ7pNG5aFvqoCCSnZ/QB13PROwYSaT8=;
-  b=bah1vHAgKd0F16QnKtzcmLBAg379AwRKSusj1s2II9twMOje6gkwGpWM
-   yNtfSOPQX94TfmtUVVjv05tgi+Bx74U+dU/flizPFmbvC/mAa8Yab5mQX
-   +Io+pkRXoZrw+ssI3EKjfBd1tZ9/i6oP9S6Ie9/VLqZBtS5caeQ93VYD+
-   WRsL9crS2fNhGlLzd2X5fQDh8hK0vtBFh2+eMUX9f45+NyedWRQI/Z3o2
-   PUK73ul/z9PWPItM8h3gasBnPwt2ooChlI23AzbKdeamZasGdVjQVfX7c
-   V/rc2wcHGkOqC0XMP3hCHqf+v5lyuhEYSc+dRETaKnkbJNlRq5gr2RWsB
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="381615577"
-X-IronPort-AV: E=Sophos;i="6.04,314,1695711600"; 
-   d="scan'208";a="381615577"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2023 03:37:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="771950637"
-X-IronPort-AV: E=Sophos;i="6.04,314,1695711600"; 
-   d="scan'208";a="771950637"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga007.jf.intel.com with ESMTP; 29 Dec 2023 03:36:59 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rJBAe-000HOd-0D;
-	Fri, 29 Dec 2023 11:36:56 +0000
-Date: Fri, 29 Dec 2023 19:35:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: Matthew Wilcox <willy@infradead.org>,
-	"Eric W. Biederman" <ebiederm@xmission.com>
-Cc: oe-kbuild-all@lists.linux.dev, Maria Yu <quic_aiquny@quicinc.com>,
-	kernel@quicinc.com, quic_pkondeti@quicinc.com, keescook@chromium.or,
-	viro@zeniv.linux.org.uk, brauner@kernel.org, oleg@redhat.com,
-	dhowells@redhat.com, jarkko@kernel.org, paul@paul-moore.com,
-	jmorris@namei.org, serge@hallyn.com, linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: Re: Re: [PATCH] kernel: Introduce a write lock/unlock wrapper for
- tasklist_lock
-Message-ID: <202312291936.G87eGfCo-lkp@intel.com>
-References: <ZY30k7OCtxrdR9oP@casper.infradead.org>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="dBX6iQY1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1703849868; x=1704454668; i=markus.elfring@web.de;
+	bh=JBK+I0+RWpVt/64+ENmmEbIiZBHu+wn1RAw0cM1AQC0=;
+	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
+	 In-Reply-To;
+	b=dBX6iQY144i8JIIiPa4nd36mumgVF/Az+KjQopmtaAXxAjpSikitbAh1IRBBTNUp
+	 qcH+Su7ppyswZbkykOk50n8z89XEDKs9xUSyzUcojJ1EXJsH+RDCK1GYQjre8Q5xq
+	 WGP6wgdsTGR4mc0xvfViCs8bGSS0W9JgnjKAwCg2nPRF3zZ/0YKf/qacLrvG2maYp
+	 zm37ZQ5Y/VcbahcLJ7tFvInt0z513xcY4D6nNtEonBoGOjv3UYHNJ3aCpLoB+aDm8
+	 XXi9m4amrIsP7U+KOibqeR1mQWvnnB669wB8hfgvygTpNozTQ9ntlKmjng0iF9pw3
+	 9NmknIHHt9fG0LFT0A==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MLAVc-1raIMY3NSs-00IcLc; Fri, 29
+ Dec 2023 12:37:48 +0100
+Message-ID: <8c9488b0-4d91-48ac-bee7-6454e3045a9f@web.de>
+Date: Fri, 29 Dec 2023 12:37:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZY30k7OCtxrdR9oP@casper.infradead.org>
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH 1/2] hugetlbfs: Improve a size determination in two functions
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+To: linux-mm@kvack.org, kernel-janitors@vger.kernel.org,
+ Muchun Song <muchun.song@linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <9ce3f553-24bc-4ecd-ac5e-7ba27caeff57@web.de>
+In-Reply-To: <9ce3f553-24bc-4ecd-ac5e-7ba27caeff57@web.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:0fmZJp4JlhAFSU+/KR4BIDEALzLIgB7Yzk/1jVkAKXarioNoWp9
+ LfcZBR4WpgfSElMkwfdr2Hs9mqEJru39lonItmW27YeBWTLgoLQv5uk2VGUbUrkIFQo9f8e
+ kUvNv/9VOy0b6BPOdP3TZnzN9QOwe4PXoA7BShRlU/0L4Knx0fxD/fQ6q9h1fwhS6CM5c+e
+ 6Sa9LHZEp/jeGlXjfkXRQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ZqJ9W1MrSY4=;WtGwAIo7u/RkWqQAQncXsE90bRH
+ BY1hXtTWszVKpfsn9IXuZ1/drNGI8vdPYhksYrqm2FqtsJ21s43NtRoY/74V00TzYhdq801fG
+ r8Mt4+GQb5O5Hv2YuaFqpYMnPmapVCdInlr5BfF3sCsDmkxfyCl9iCPhIzYxu3o5FVt2KgenO
+ ldJIajCiKDsAi4LkEJRu0B8E0PuIY5TvlyzF5hQNjX88mqmkzHKRcBAJvUkZFPi+igx+/5dM9
+ SqSJZIU1z2wzjALREUOq8z9fz2a4DT7lSYfdbRqkaIHoONCgSKfdwEYI46FaQ5Q+mgUQmbcqr
+ WB/s1HCx2al4jg2QNyFopRCCBqgckfnSPya0D+43x7229CCEaTTYnPL+7aXr6k7pC1qyA5bpU
+ Vvy++aSrfP8zcOBVy1sg7JJvZ3ERZxvx5PkzeeGgjZ4ANhEHzE22tWfyUjtncDKQxr0jy5GC2
+ mJk/mUjvjH4Wgxx2aikUhUN6Fos30jIjtpDAvE+yA8SH7dWibs6BTs/+EbYZubqZhg+QsCwLJ
+ 7zoE+bbo+uFOJnU9wW7FKE7diHFovRqil1qrB7fB1ZLs3s0jJC13QcjeWoLD1DVXi+KE+qlLr
+ eqvsTdyWqrYujzOpv0cxhrex8JrLQtC1fuFGlcTwXLop5iOWsr395dGHniqH2vuDdiLBaoTDn
+ BDIBOid11/fds3FWqi2krkYRTsXJH5fYxZfpDn36bRhO7aKL29f3b0n5M8agSE4CB/AmHQuAd
+ hCQBLEyB0APFJBEDaCLMXrxLnpV3kl8+WsmoXYinAXXple2GYa9XjYrgFBICXpJo1O0Sm0WEC
+ VNSmEUBHqRYihAKOXZJm3q2x6xWzmomwcJrV3TyzzJEKnaO92U1qPiXfUCa/XbmbM9Eb8pvR2
+ oj1pN/VoM/nbnQlKUf80n7GIAT2QMxsccxThZULMNgCjJ7/DIMYJC4ppeowW1pbyM0tFaVS97
+ cmuwnw==
 
-Hi Matthew,
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Fri, 29 Dec 2023 11:32:07 +0100
 
-kernel test robot noticed the following build errors:
+Replace the specification of data structures by pointer dereferences
+as the parameter for the operator =E2=80=9Csizeof=E2=80=9D to make the cor=
+responding size
+determination a bit safer according to the Linux coding style convention.
 
-[auto build test ERROR on tip/locking/core]
-[also build test ERROR on arnd-asm-generic/master brauner-vfs/vfs.all vfs-idmapping/for-next linus/master v6.7-rc7 next-20231222]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+This issue was detected by using the Coccinelle software.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Matthew-Wilcox/Re-PATCH-kernel-Introduce-a-write-lock-unlock-wrapper-for-tasklist_lock/20231229-062352
-base:   tip/locking/core
-patch link:    https://lore.kernel.org/r/ZY30k7OCtxrdR9oP%40casper.infradead.org
-patch subject: Re: [PATCH] kernel: Introduce a write lock/unlock wrapper for tasklist_lock
-config: i386-randconfig-011-20231229 (https://download.01.org/0day-ci/archive/20231229/202312291936.G87eGfCo-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231229/202312291936.G87eGfCo-lkp@intel.com/reproduce)
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ fs/hugetlbfs/inode.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312291936.G87eGfCo-lkp@intel.com/
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index ea5b8e57d904..24401a5046dd 100644
+=2D-- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -1460,7 +1460,7 @@ hugetlbfs_fill_super(struct super_block *sb, struct =
+fs_context *fc)
+ 	struct hugetlbfs_fs_context *ctx =3D fc->fs_private;
+ 	struct hugetlbfs_sb_info *sbinfo;
 
-All errors (new ones prefixed by >>):
+-	sbinfo =3D kmalloc(sizeof(struct hugetlbfs_sb_info), GFP_KERNEL);
++	sbinfo =3D kmalloc(sizeof(*sbinfo), GFP_KERNEL);
+ 	if (!sbinfo)
+ 		return -ENOMEM;
+ 	sb->s_fs_info =3D sbinfo;
+@@ -1530,7 +1530,7 @@ static int hugetlbfs_init_fs_context(struct fs_conte=
+xt *fc)
+ {
+ 	struct hugetlbfs_fs_context *ctx;
 
-   kernel/locking/spinlock_debug.c: In function 'do_raw_write_lock_irq':
->> kernel/locking/spinlock_debug.c:217:9: error: implicit declaration of function 'arch_write_lock_irq'; did you mean '_raw_write_lock_irq'? [-Werror=implicit-function-declaration]
-     217 |         arch_write_lock_irq(&lock->raw_lock);
-         |         ^~~~~~~~~~~~~~~~~~~
-         |         _raw_write_lock_irq
-   cc1: some warnings being treated as errors
+-	ctx =3D kzalloc(sizeof(struct hugetlbfs_fs_context), GFP_KERNEL);
++	ctx =3D kzalloc(sizeof(*ctx), GFP_KERNEL);
+ 	if (!ctx)
+ 		return -ENOMEM;
 
+=2D-
+2.43.0
 
-vim +217 kernel/locking/spinlock_debug.c
-
-   213	
-   214	void do_raw_write_lock_irq(rwlock_t *lock)
-   215	{
-   216		debug_write_lock_before(lock);
- > 217		arch_write_lock_irq(&lock->raw_lock);
-   218		debug_write_lock_after(lock);
-   219	}
-   220	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
