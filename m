@@ -1,112 +1,80 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00CBF7472;
-	Fri, 29 Dec 2023 06:45:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4T1bTz35djz1vqcK;
-	Fri, 29 Dec 2023 14:45:11 +0800 (CST)
-Received: from dggpeml500001.china.huawei.com (unknown [7.185.36.227])
-	by mail.maildlp.com (Postfix) with ESMTPS id 359C01A0197;
-	Fri, 29 Dec 2023 14:45:07 +0800 (CST)
-Received: from huawei.com (10.69.192.56) by dggpeml500001.china.huawei.com
- (7.185.36.227) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 29 Dec
- 2023 14:44:52 +0800
-From: Qi Tao <taoqi10@huawei.com>
-To: <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-	<liulongfang@huawei.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>
-Subject: [PATCH 4/4] crypto: hisilicon/sec - remove unused parameter
-Date: Fri, 29 Dec 2023 14:44:21 +0800
-Message-ID: <20231229064421.16981-5-taoqi10@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20231229064421.16981-1-taoqi10@huawei.com>
-References: <20231229064421.16981-1-taoqi10@huawei.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBA15669
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 06:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
+	by ex01.ufhost.com (Postfix) with ESMTP id BE36824E03E;
+	Fri, 29 Dec 2023 14:54:21 +0800 (CST)
+Received: from EXMBX066.cuchost.com (172.16.7.66) by EXMBX165.cuchost.com
+ (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 29 Dec
+ 2023 14:54:21 +0800
+Received: from jsia-virtual-machine.localdomain (175.136.135.142) by
+ EXMBX066.cuchost.com (172.16.6.66) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.42; Fri, 29 Dec 2023 14:54:17 +0800
+From: Sia Jee Heng <jeeheng.sia@starfivetech.com>
+To: <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
+CC: <rafael.j.wysocki@intel.com>, <ajones@ventanamicro.com>,
+	<conor.dooley@microchip.com>, <sunilvl@ventanamicro.com>,
+	<jeeheng.sia@starfivetech.com>, <aou@eecs.berkeley.edu>,
+	<palmer@dabbelt.com>, <paul.walmsley@sifive.com>
+Subject: [RFC v1 1/1] RISC-V: ACPI: Enable SPCR table for console output on RISC-V
+Date: Fri, 29 Dec 2023 14:54:05 +0800
+Message-ID: <20231229065405.235625-2-jeeheng.sia@starfivetech.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231229065405.235625-1-jeeheng.sia@starfivetech.com>
+References: <20231229065405.235625-1-jeeheng.sia@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpeml500001.china.huawei.com (7.185.36.227)
+X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX066.cuchost.com
+ (172.16.6.66)
+X-YovoleRuleAgent: yovoleflag
+Content-Transfer-Encoding: quoted-printable
 
-From: Wenkai Lin <linwenkai6@hisilicon.com>
+The ACPI SPCR code has been used to enable console output for ARM64 and
+X86. The same code can be reused for RISC-V.
 
-Unused parameter of static functions should be removed.
+Vendor will enable/disable the SPCR table in the firmware based on the
+platform design. However, in cases where the SPCR table is not usable,
+a kernel parameter could be used to specify the preferred console.
 
-Signed-off-by: Wenkai Lin <linwenkai6@hisilicon.com>
+Signed-off-by: Sia Jee Heng <jeeheng.sia@starfivetech.com>
 ---
- drivers/crypto/hisilicon/sec2/sec_crypto.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ arch/riscv/kernel/acpi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/crypto/hisilicon/sec2/sec_crypto.c b/drivers/crypto/hisilicon/sec2/sec_crypto.c
-index 5d4facf62c86..ee6cc2e483ab 100644
---- a/drivers/crypto/hisilicon/sec2/sec_crypto.c
-+++ b/drivers/crypto/hisilicon/sec2/sec_crypto.c
-@@ -485,8 +485,7 @@ static void sec_alg_resource_free(struct sec_ctx *ctx,
- 		sec_free_mac_resource(dev, qp_ctx->res);
- }
- 
--static int sec_alloc_qp_ctx_resource(struct hisi_qm *qm, struct sec_ctx *ctx,
--				     struct sec_qp_ctx *qp_ctx)
-+static int sec_alloc_qp_ctx_resource(struct sec_ctx *ctx, struct sec_qp_ctx *qp_ctx)
- {
- 	u16 q_depth = qp_ctx->qp->sq_depth;
- 	struct device *dev = ctx->dev;
-@@ -541,8 +540,7 @@ static void sec_free_qp_ctx_resource(struct sec_ctx *ctx, struct sec_qp_ctx *qp_
- 	kfree(qp_ctx->req_list);
- }
- 
--static int sec_create_qp_ctx(struct hisi_qm *qm, struct sec_ctx *ctx,
--			     int qp_ctx_id, int alg_type)
-+static int sec_create_qp_ctx(struct sec_ctx *ctx, int qp_ctx_id)
- {
- 	struct sec_qp_ctx *qp_ctx;
- 	struct hisi_qp *qp;
-@@ -561,7 +559,7 @@ static int sec_create_qp_ctx(struct hisi_qm *qm, struct sec_ctx *ctx,
- 	idr_init(&qp_ctx->req_idr);
- 	INIT_LIST_HEAD(&qp_ctx->backlog);
- 
--	ret = sec_alloc_qp_ctx_resource(qm, ctx, qp_ctx);
-+	ret = sec_alloc_qp_ctx_resource(ctx, qp_ctx);
- 	if (ret)
- 		goto err_destroy_idr;
- 
-@@ -614,7 +612,7 @@ static int sec_ctx_base_init(struct sec_ctx *ctx)
+diff --git a/arch/riscv/kernel/acpi.c b/arch/riscv/kernel/acpi.c
+index e619edc8b0cc..5ec2fdf9e09f 100644
+--- a/arch/riscv/kernel/acpi.c
++++ b/arch/riscv/kernel/acpi.c
+@@ -18,6 +18,7 @@
+ #include <linux/io.h>
+ #include <linux/memblock.h>
+ #include <linux/pci.h>
++#include <linux/serial_core.h>
+=20
+ int acpi_noirq =3D 1;		/* skip ACPI IRQ initialization */
+ int acpi_disabled =3D 1;
+@@ -151,6 +152,9 @@ void __init acpi_boot_table_init(void)
+ 		if (!param_acpi_force)
+ 			disable_acpi();
  	}
- 
- 	for (i = 0; i < sec->ctx_q_num; i++) {
--		ret = sec_create_qp_ctx(&sec->qm, ctx, i, 0);
-+		ret = sec_create_qp_ctx(ctx, i);
- 		if (ret)
- 			goto err_sec_release_qp_ctx;
- 	}
-@@ -750,9 +748,7 @@ static void sec_skcipher_uninit(struct crypto_skcipher *tfm)
- 	sec_ctx_base_uninit(ctx);
++
++	if (!acpi_disabled)
++		acpi_parse_spcr(earlycon_acpi_spcr_enable, true);
  }
- 
--static int sec_skcipher_3des_setkey(struct crypto_skcipher *tfm, const u8 *key,
--				    const u32 keylen,
--				    const enum sec_cmode c_mode)
-+static int sec_skcipher_3des_setkey(struct crypto_skcipher *tfm, const u8 *key, const u32 keylen)
- {
- 	struct sec_ctx *ctx = crypto_skcipher_ctx(tfm);
- 	struct sec_cipher_ctx *c_ctx = &ctx->c_ctx;
-@@ -843,7 +839,7 @@ static int sec_skcipher_setkey(struct crypto_skcipher *tfm, const u8 *key,
- 
- 	switch (c_alg) {
- 	case SEC_CALG_3DES:
--		ret = sec_skcipher_3des_setkey(tfm, key, keylen, c_mode);
-+		ret = sec_skcipher_3des_setkey(tfm, key, keylen);
- 		break;
- 	case SEC_CALG_AES:
- 	case SEC_CALG_SM4:
--- 
-2.33.0
+=20
+ static int acpi_parse_madt_rintc(union acpi_subtable_headers *header, co=
+nst unsigned long end)
+--=20
+2.34.1
 
