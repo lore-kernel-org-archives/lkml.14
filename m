@@ -1,142 +1,106 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB04125A4;
-	Fri, 29 Dec 2023 15:15:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD81125A3
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 15:18:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SY+yDSdr";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="O+VqTc0i";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qbPqNspp";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="QUehGdQG"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C90D221FE6;
-	Fri, 29 Dec 2023 15:15:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1703862916; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hx89e7Kld1LDfMIBU8m+wQLqkRWhiPf9+drw6fxpFmI=;
-	b=SY+yDSdr5Ol+2ixDn0Ouxohw+7zwFDFG8v0MxkkSkaXksdqNU1dF5Jl3SxmE9aWKO4SYcY
-	TcRmnbo8+WmoZiXCJjiVzmdxSsSd9achxymBVLeDmWHn3Lm94ln8QZox5sAenIbz17K4l+
-	uNGLluTbV+373KapARKcMaUEMVp5vak=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1703862916;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hx89e7Kld1LDfMIBU8m+wQLqkRWhiPf9+drw6fxpFmI=;
-	b=O+VqTc0iUW9SgWW0OaDokYY4LEF5uh3P1j6XpB/C7MSFYkV5XBLrtIAdxg+5cAmT+Rud1B
-	2GpXbq5zWpPMrdBA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1703862915; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hx89e7Kld1LDfMIBU8m+wQLqkRWhiPf9+drw6fxpFmI=;
-	b=qbPqNspptO3qhL+nXIk9Sueh2vtngKqRD0LMDltHDuBMqGmB1nyrsMyAfQJQrAJqnVa/Eb
-	RfquQwAnsq7QYITfXe+VeW15RWLqicY+u31LejkrC8/fhNVnd65dBgdwcR24K8VcO+h3wv
-	6cst2cwWEN9lu0HBVUMby7i69oTpsKY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1703862915;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hx89e7Kld1LDfMIBU8m+wQLqkRWhiPf9+drw6fxpFmI=;
-	b=QUehGdQGftgNhsQJgSWjrWQ67ONWWvdtZLBfyK9+q4RzkSGvjjR2eIrwm8UugSfJuix+7V
-	iH5mX2UWeWQR9TDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 91E23133E5;
-	Fri, 29 Dec 2023 15:15:15 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id aSTsIYPijmW3AwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 29 Dec 2023 15:15:15 +0000
-Date: Fri, 29 Dec 2023 16:15:15 +0100
-Message-ID: <87a5ptxcos.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: bo liu <bo.liu@senarytech.com>
-Cc: perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] Fix headset auto detect fail in cx8070 and SN6140
-In-Reply-To: <20231227071008.13665-1-bo.liu@senarytech.com>
-References: <20231227071008.13665-1-bo.liu@senarytech.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="bl3eD9EX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=BO59ay58b+3H0q4MiJOf8mCVwTT90IGD/0wSgqjT9uc=;
+  b=bl3eD9EXW1fFY03a3QeQo570zaXEj5RpUsoe9ogtj6CxcXQimeKbPEQS
+   6wZHmxnYA+l2ecFMnYl7vw5ufJIf4rWzvjjfxw68t/3KR5RbdpmvPqNix
+   4tW9vnzaTZrManLDPti3kNwxmEXkfhFfABkswt7HuOasAKbmEjTp/qIcB
+   k=;
+Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.04,315,1695679200"; 
+   d="scan'208";a="144313364"
+Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2023 16:18:23 +0100
+Date: Fri, 29 Dec 2023 16:18:22 +0100 (CET)
+From: Julia Lawall <julia.lawall@inria.fr>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+    Dietmar Eggemann <dietmar.eggemann@arm.com>, Mel Gorman <mgorman@suse.de>, 
+    linux-kernel@vger.kernel.org
+Subject: Re: EEVDF and NUMA balancing
+In-Reply-To: <edbd8ecd-148c-b366-fd46-3531dec39d49@inria.fr>
+Message-ID: <cecfd395-f067-99e1-bdd2-fec2ebc3db3@inria.fr>
+References: <alpine.DEB.2.22.394.2310032059060.3220@hadrien> <alpine.DEB.2.22.394.2310041958380.3108@hadrien> <20231009102949.GC14330@noisy.programming.kicks-ass.net> <b8ab29de-1775-46e-dd75-cdf98be8b0@inria.fr> <CAKfTPtBhWwk9sf9F1=KwubiAWFDC2A9ZT-SSJ+tgFxme1cFmYA@mail.gmail.com>
+ <alpine.DEB.2.22.394.2312182302310.3361@hadrien> <CAKfTPtALEFtrapi3Kk97KLGQN4259eEQEwwftVUK4RG42Vgoyw@mail.gmail.com> <98b3df1-79b7-836f-e334-afbdd594b55@inria.fr> <CAKfTPtCRN_eWgVdK2-h6E_ifJKwwJEtMjeNjB=5DXZFWyBS+tQ@mail.gmail.com>
+ <93112fbe-30be-eab8-427c-5d4670a0f94e@inria.fr> <CAKfTPtAeFvrZxApK3RruWwCjMxbQvOkU+_YgZSo4QPT_AD6FxA@mail.gmail.com> <9dc451b5-9dd8-89f2-1c9c-7c358faeaad@inria.fr> <CAKfTPtDCsLnDnVje9maP5s-L7TbtSu4CvF19xHOxbkvSNd7vZg@mail.gmail.com>
+ <2359ab5-4556-1a73-9255-3fcf2fc57ec@inria.fr> <6618dcfa-a42f-567c-2a9d-a76786683b29@inria.fr> <CAKfTPtDrULyOB9+RhjoPfCpHKVhx5kRf6dq79DSE6jZgsEairw@mail.gmail.com> <edbd8ecd-148c-b366-fd46-3531dec39d49@inria.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: *
-X-Spam-Level: 
-X-Spamd-Bar: /
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=qbPqNspp;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=QUehGdQG
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-0.75 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCPT_COUNT_FIVE(0.00)[5];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MX_GOOD(-0.01)[];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.24)[73.07%]
-X-Spam-Score: -0.75
-X-Rspamd-Queue-Id: C90D221FE6
-X-Spam-Flag: NO
-
-On Wed, 27 Dec 2023 08:10:06 +0100,
-bo liu wrote:
-> 
-> CX8070 and SN6140 will get wrong headset type when use OMTP headset, then the headset mic will not work.
-> 
-> Signed-off-by: bo liu <bo.liu@senarytech.com>
-
-Well, the patch series has a serious problem, unfortunately.
-
-Basically the patch that is submitted to the upstream should be in the
-final form.  But this series puts the coding style errors and then
-corrects multiple times in the series.  This is absolutely no-go.
-
-Create a "perfect patch", and submit it, instead.
-
-For that, you'll need to give a bit more detailed patch description.
-Currently it says nothing but the problem.  It doesn't mention how and
-what to be fixed / changed.  Ideally speaking, the patch should have a
-description that is self-explanatory.
-
-Last but not least, please put the proper subject prefix.
-In your case, it'd be like "ALSA: hda/conexant:".
-
-Please try to address the above points and resubmit.
 
 
-thanks,
 
-Takashi
+On Thu, 28 Dec 2023, Julia Lawall wrote:
+
+> > > > > > > I'm surprised that you have mainly CPU_NEWLY_IDLE. Do you know the reason ?
+> > > > > >
+> > > > > > No.  They come from do_idle calling the scheduler.  I will look into why
+> > > > > > this happens so often.
+> > > > >
+> > > > > Hmm, the CPU was idle and received a need resched which triggered the
+> > > > > scheduler but there was nothing to schedule so it goes back to idle
+> > > > > after running a newly_idle _load_balance.
+> > > >
+> > > > I spent quite some time thinking the same until I saw the following code
+> > > > in do_idle:
+> > > >
+> > > > preempt_set_need_resched();
+> > > >
+> > > > So I have the impression that do_idle sets need resched itself.
+> > >
+> > > But of course that code is only executed if need_resched is true.  But I
+> >
+> > Yes, that is your root cause. something, most probably in interrupt
+> > context, wakes up your CPU and expect to wake up a thread
+> >
+> > > don't know who would be setting need resched on each clock tick.
+> >
+> > that can be a timer, interrupt, ipi, rcu ...
+> > a trace should give you some hints
+>
+> I have the impression that it is the goal of calling nohz_csd_func on each
+> clock tick that causes the calls to need_resched.  If the idle process is
+> polling, call_function_single_prep_ipi just sets need_resched to get the
+> idle process to stop polling.  But there is no actual task that the idle
+> process should schedule.  The need_resched then prevents the idle process
+> from stealing, due to the CPU_NEWLY_IDLE flag, contradicting the whole
+> purpose of calling nohz_csd_func in the first place.
+
+Looking in more detail, do_idle contains the following after existing the
+polling loop:
+
+        flush_smp_call_function_queue();
+ 	schedule_idle();
+
+flush_smp_call_function_queue() does end up calling nohz_csd_func, but
+this has no impact, because it first checks that need_resched() is false,
+whereas it is currently true to cause existing the polling loop.  Removing
+that test causes:
+
+raise_softirq_irqoff(SCHED_SOFTIRQ);
+
+but that causes the load balancing code to be executed from a ksoftirqd
+task, which means that there is now no load imbalance.
+
+So the only chance to detect an imbalance does seem to be to have the load
+balance call be executed by the idle task, via schedule_idle(), as is
+done currently.  But that leads to the core being considered to be newly
+idle.
+
+julia
+
+
