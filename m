@@ -1,34 +1,48 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69ADC125B0
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 15:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5BF125AB;
+	Fri, 29 Dec 2023 15:43:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y8SykXx6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=jdfHfTT3DefZaMq66qHiHAagBb+Df8zEc06UQXPphJY=; b=Y8SykXx6aDVkOUvNGs7LHZBvjS
-	WPO/XLBxxmmajKPco0fpzW1xp3Unn9iAHP0p4dRlN5+iqblxtrAuk1+rC0RGQ1tcnKaNspLcfN7q2
-	WPqFZoPOq0rK3XiPQttLy8izJwFNctBM8hUJti91VSdWRv70+nUKYVUcEsc01D3gsYL20xGHEG64F
-	T88uQqhlfRrdhZ2DCeW5/D2fTc97+WbOxUOiJHNcjmJiAF4eK229P3yaJ/Bi5v9MDn/STs0oyHgIq
-	X7Fjmi5pI6UOTO6HsFn0wPX3T2iQk7GA2z5C0ha4wDV8VQdvZVC9XbX1fuSFt1Iec+wBEqR/k8PEd
-	6iv94jMA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1rJExP-006J5L-4A; Fri, 29 Dec 2023 15:39:31 +0000
-Date: Fri, 29 Dec 2023 15:39:31 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Malkoot Khan <engr.mkhan1990@gmail.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] mm/cma: Use 'unsigned int' for cma_area_count type
- clarity
-Message-ID: <ZY7oM8E5Mqqs5xHz@casper.infradead.org>
-References: <20231229153238.153627-1-engr.mkhan1990@gmail.com>
- <20231229153238.153627-2-engr.mkhan1990@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rFGfPfGe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06D96C433C7;
+	Fri, 29 Dec 2023 15:43:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703864626;
+	bh=cHBszsE5H32BHTyrznenF9Yp/nF4ekKNzOaOvnlvEqc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rFGfPfGePCynPG1iwxs8Brzg3+CXnuNzs5/CI7W71aRuI1tmsrzDyx9Ftw6YeIlVR
+	 gxDtFcuCbigwwm8jWN7QsxANVQF0J5390xMh1JkrhA3nT1fY9bBlRGRWGCTp1Gbi2V
+	 idG6joyQa004AoQd1UfdijsBzEf74iKZvLVVE85nq5Lu5XCPL4e/84t5rheMUoMH22
+	 rdwzXhzsfR8U6SgcdoE40+xDCG7I4xuL5Keq1227fzykiIwxiQjYwv1hzAWwPRNp9i
+	 Upqh1iH2nodqa0+dHUeZNg8/KO3QNlsKXoL7aXIEZ1fnYD6eTghy90Lod2LrpUH73z
+	 mqfTenABoRfkA==
+Received: from johan by xi.lan with local (Exim 4.96.2)
+	(envelope-from <johan@kernel.org>)
+	id 1rJF1N-0005jc-2J;
+	Fri, 29 Dec 2023 16:43:38 +0100
+Date: Fri, 29 Dec 2023 16:43:37 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Konrad Dybcio <konrad.dybcio@somainline.org>
+Subject: Re: [PATCH 2/3] arm64: dts: qcom: sc8280xp: Correct USB PHY power
+ domains
+Message-ID: <ZY7pKZ40oMQPIzGh@hovoldconsulting.com>
+References: <20231227-topic-8280_pcie_dts-v1-0-13d12b1698ff@linaro.org>
+ <20231227-topic-8280_pcie_dts-v1-2-13d12b1698ff@linaro.org>
+ <ZY7DEpaIgvfL_A11@hovoldconsulting.com>
+ <b730bf22-fa3a-4720-9fd1-79d2207d6812@linaro.org>
+ <ZY7I1brn0chtOzis@hovoldconsulting.com>
+ <11aa0b82-ddab-4b65-8f49-54e15e0ce44e@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,10 +51,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231229153238.153627-2-engr.mkhan1990@gmail.com>
+In-Reply-To: <11aa0b82-ddab-4b65-8f49-54e15e0ce44e@linaro.org>
 
-On Fri, Dec 29, 2023 at 03:32:38PM +0000, Malkoot Khan wrote:
-> Replace 'unsigned' with 'unsigned int' for the variable cma_area_count.
+On Fri, Dec 29, 2023 at 04:05:18PM +0100, Konrad Dybcio wrote:
+> On 29.12.2023 14:25, Johan Hovold wrote:
 
-Please don't run coding style tools over other people's code.  Such
-changes are generally unwelcome.
+> > On Fri, Dec 29, 2023 at 02:06:26PM +0100, Konrad Dybcio wrote:
+> >> On 29.12.2023 14:01, Johan Hovold wrote:
+> >>> On Wed, Dec 27, 2023 at 11:28:27PM +0100, Konrad Dybcio wrote:
+> > 
+> >>>> Fix the power-domains assignment to stop potentially toggling the GDSC
+> >>>> unnecessarily.
+> >>>
+> >>> Again, there's no additional toggling being done here, but yes, this may
+> >>> keep the domains enabled during suspend depending on how the driver is
+> >>> implemented.
+> > 
+> >> No, it can actually happen. (Some) QMP PHYs are referenced by the
+> >> DP hardware. If USB is disabled (or suspended), the DP being active
+> >> will hold these GDSCs enabled.
+> > 
+> > That's not a "toggling", is it? Also if the DP controller is a consumer of
+> > these PHY's why should it not prevent the PHYs from suspending?
+> 
+> As far as I'm concerned, "toggling" is the correct word for "switching it
+> on".. 
+
+Hmm, this doesn't make sense. The PHY power domain will be disabled when
+the PHY is suspended, regardless of the DP controller. But sure, a
+system with USB disabled, would end up with the USB GDSC on.
+
+> While the PHYs are indeed useful for getting displayport to work,
+> the USB controller itself may not be necessary there, so enabling its
+> power line would be a bit of a waste..
+
+Sure, if the PHYs truly don't need the USB PD then fine, this just
+doesn't seem to be case for PCIe, or at least the picture isn't as clear
+as your previous commit message suggested.
+
+Johan
