@@ -1,132 +1,149 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA1711703;
-	Fri, 29 Dec 2023 13:21:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7101A11702;
+	Fri, 29 Dec 2023 13:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RMnMj0P5";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SyPFXpl2";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RMnMj0P5";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SyPFXpl2"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 432E12209E;
-	Fri, 29 Dec 2023 13:21:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1703856091; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cTMDUEOCmZ1Qrqn6ErsZBP8qT5PCPSG5Mq6RwTP1Bt4=;
-	b=RMnMj0P5rvQ/ka9nSfCDw12NyZem5mnqje3ZDEwGG1K0eXn7bQRckZkcaJTGPOPSeFNbVJ
-	Q39Nnn6Lz+ZaTYvE8S1nkkjOqJTf2aCKAe0cJZc7h5wl4R+8erKZdRHKQql0hc4bxqW6g6
-	OdzrTPcBmkBYuJgEW3qlNNrLyLCwuzo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1703856091;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cTMDUEOCmZ1Qrqn6ErsZBP8qT5PCPSG5Mq6RwTP1Bt4=;
-	b=SyPFXpl2M4OlPpBwxtBcfhqgNx342x1l0WsN6k943jNbusrDcW8WwIIc3YZ5f9Zhmkq2FP
-	nAWoojXL1Cg4wqAw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1703856091; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cTMDUEOCmZ1Qrqn6ErsZBP8qT5PCPSG5Mq6RwTP1Bt4=;
-	b=RMnMj0P5rvQ/ka9nSfCDw12NyZem5mnqje3ZDEwGG1K0eXn7bQRckZkcaJTGPOPSeFNbVJ
-	Q39Nnn6Lz+ZaTYvE8S1nkkjOqJTf2aCKAe0cJZc7h5wl4R+8erKZdRHKQql0hc4bxqW6g6
-	OdzrTPcBmkBYuJgEW3qlNNrLyLCwuzo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1703856091;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cTMDUEOCmZ1Qrqn6ErsZBP8qT5PCPSG5Mq6RwTP1Bt4=;
-	b=SyPFXpl2M4OlPpBwxtBcfhqgNx342x1l0WsN6k943jNbusrDcW8WwIIc3YZ5f9Zhmkq2FP
-	nAWoojXL1Cg4wqAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 116B4133E5;
-	Fri, 29 Dec 2023 13:21:31 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id P590AtvHjmXUbgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 29 Dec 2023 13:21:31 +0000
-Date: Fri, 29 Dec 2023 14:21:30 +0100
-Message-ID: <87o7e9xhyd.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Zhipeng Lu <alexious@zju.edu.cn>
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [v2] ALSA: hdsp: fix some memleaks in snd_hdsp_hwdep_ioctl
-In-Reply-To: <20231227060322.3556052-1-alexious@zju.edu.cn>
-References: <20231227060322.3556052-1-alexious@zju.edu.cn>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EloIf3Iu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703856324; x=1735392324;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=VoKVzeNYvXYdu0nGsITJ3pkd4dyqg9TLeqCKzyy8vGA=;
+  b=EloIf3IuP8/CHejNs9jU8kAr0XPWeToOYZpmXxe0qRUjy/eQwioOUXVa
+   y/4TdWxmQVKHN8Qtj5BoYfE0OgW/AmJqRT8sXkzVQiAKOY0Z5hd/0UcPt
+   PjqZo4qOppiqK8a7VHMu+Qx/+ULJFNKYY5EnNBhVubM7lKMmi2pFt/V/5
+   qIno+I50YEU2VN+Bs7MR9KVoOYfEOB+OOUCKPQ17CFmB6SQBlP6GsQt+z
+   vSonOhy77cfp0SpWdb1wOYHaTyoD18dpZvhieUF8NL6AZgnrDWBLG7XgX
+   WpNPybioCS3S5C4Wix9pVRNvzDIPfHdiFcCRZij9GaEnuP3dYcuW+irDI
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="3949087"
+X-IronPort-AV: E=Sophos;i="6.04,315,1695711600"; 
+   d="scan'208";a="3949087"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2023 05:23:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="755032593"
+X-IronPort-AV: E=Sophos;i="6.04,315,1695711600"; 
+   d="scan'208";a="755032593"
+Received: from yujie-x299.sh.intel.com ([10.239.159.77])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2023 05:23:49 -0800
+From: Yujie Liu <yujie.liu@intel.com>
+To: netdev@vger.kernel.org,
+	Hangbin Liu <liuhangbin@gmail.com>
+Cc: Paolo Abeni <pabeni@redhat.com>,
+	David Ahern <dsahern@kernel.org>,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lkp@intel.com,
+	kernel test robot <oliver.sang@intel.com>
+Subject: [PATCH v2 net-next] selftests/net: change shebang to bash to support "source"
+Date: Fri, 29 Dec 2023 21:19:31 +0800
+Message-Id: <20231229131931.3961150-1-yujie.liu@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-2.86 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	 RCPT_COUNT_FIVE(0.00)[5];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MX_GOOD(-0.01)[];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-1.55)[92.09%];
-	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=RMnMj0P5;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=SyPFXpl2
-X-Spam-Score: -2.86
-X-Rspamd-Queue-Id: 432E12209E
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 27 Dec 2023 07:03:20 +0100,
-Zhipeng Lu wrote:
-> 
-> When snd_hdsp_load_firmware_from_cache and snd_hdsp_enable_io fails,
-> the hdsp->fw_uploaded needs to be free.Or there could be memleaks in
-> snd_hdsp_hwdep_ioctl.
-> 
-> Fixes: 90caaef6a1ce ("ALSA: hdsp: improve firmware caching")
-> Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+The patch set [1] added a general lib.sh in net selftests, and converted
+several test scripts to source the lib.sh.
 
-Thanks for the patch, but the patch description is misleading.
-The allocated object isn't really "leaked"; it's released at the
-removal of the driver.
+unicast_extensions.sh (converted in [1]) and pmtu.sh (converted in [2])
+have a /bin/sh shebang which may point to various shells in different
+distributions, but "source" is only available in some of them. For
+example, "source" is a built-it function in bash, but it cannot be
+used in dash.
 
-We may apply some optimization like you did, but then it should have a
-different description.
+Refer to other scripts that were converted together, simply change the
+shebang to bash to fix the following issues when the default /bin/sh
+points to other shells.
 
+# selftests: net: unicast_extensions.sh
+# ./unicast_extensions.sh: 31: source: not found
+# ###########################################################################
+# Unicast address extensions tests (behavior of reserved IPv4 addresses)
+# ###########################################################################
+# TEST: assign and ping within 240/4 (1 of 2) (is allowed)            [FAIL]
+# TEST: assign and ping within 240/4 (2 of 2) (is allowed)            [FAIL]
+# TEST: assign and ping within 0/8 (1 of 2) (is allowed)              [FAIL]
+# TEST: assign and ping within 0/8 (2 of 2) (is allowed)              [FAIL]
+# TEST: assign and ping inside 255.255/16 (is allowed)                [FAIL]
+# TEST: assign and ping inside 255.255.255/24 (is allowed)            [FAIL]
+# TEST: route between 240.5.6/24 and 255.1.2/24 (is allowed)          [FAIL]
+# TEST: route between 0.200/16 and 245.99/16 (is allowed)             [FAIL]
+# TEST: assign and ping lowest address (/24)                          [FAIL]
+# TEST: assign and ping lowest address (/26)                          [FAIL]
+# TEST: routing using lowest address                                  [FAIL]
+# TEST: assigning 0.0.0.0 (is forbidden)                              [ OK ]
+# TEST: assigning 255.255.255.255 (is forbidden)                      [ OK ]
+# TEST: assign and ping inside 127/8 (is forbidden)                   [ OK ]
+# TEST: assign and ping class D address (is forbidden)                [ OK ]
+# TEST: routing using class D (is forbidden)                          [ OK ]
+# TEST: routing using 127/8 (is forbidden)                            [ OK ]
+not ok 51 selftests: net: unicast_extensions.sh # exit=1
 
-thanks,
+v1 -> v2:
+  - Fix pmtu.sh which has the same issue as unicast_extensions.sh,
+    suggested by Hangbin
+  - Change the style of the "source" line to be consistent with other
+    tests, suggested by Hangbin
 
-Takashi
+Link: https://lore.kernel.org/all/20231202020110.362433-1-liuhangbin@gmail.com/ [1]
+Link: https://lore.kernel.org/all/20231219094856.1740079-1-liuhangbin@gmail.com/ [2]
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Signed-off-by: Yujie Liu <yujie.liu@intel.com>
+---
+ tools/testing/selftests/net/pmtu.sh               | 4 ++--
+ tools/testing/selftests/net/unicast_extensions.sh | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/tools/testing/selftests/net/pmtu.sh b/tools/testing/selftests/net/pmtu.sh
+index 175d3d1d773b..f10879788f61 100755
+--- a/tools/testing/selftests/net/pmtu.sh
++++ b/tools/testing/selftests/net/pmtu.sh
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0
+ #
+ # Check that route PMTU values match expectations, and that initial device MTU
+@@ -198,7 +198,7 @@
+ # - pmtu_ipv6_route_change
+ #	Same as above but with IPv6
+ 
+-source ./lib.sh
++source lib.sh
+ 
+ PAUSE_ON_FAIL=no
+ VERBOSE=0
+diff --git a/tools/testing/selftests/net/unicast_extensions.sh b/tools/testing/selftests/net/unicast_extensions.sh
+index b7a2cb9e7477..f52aa5f7da52 100755
+--- a/tools/testing/selftests/net/unicast_extensions.sh
++++ b/tools/testing/selftests/net/unicast_extensions.sh
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0
+ #
+ # By Seth Schoen (c) 2021, for the IPv4 Unicast Extensions Project
+@@ -28,7 +28,7 @@
+ # These tests provide an easy way to flip the expected result of any
+ # of these behaviors for testing kernel patches that change them.
+ 
+-source ./lib.sh
++source lib.sh
+ 
+ # nettest can be run from PATH or from same directory as this selftest
+ if ! which nettest >/dev/null; then
+
+base-commit: cd4d7263d58ab98fd4dee876776e4da6c328faa3
+-- 
+2.34.1
+
