@@ -1,192 +1,205 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97064134AA
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 17:59:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A833712B94
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 18:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=landley.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b9b8S3nV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1703872760;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yeKqaIlvVPoYPC4W0RMtxJ/Ybm4HjQYyUHUu8GgGRhQ=;
-	b=b9b8S3nVKyTH+PoeF9OS2jjhBthr1RqdzRTvV/CDAI/BL809id83k+SJukPrRsNubVRaEW
-	W9NK8D0mTrO20AHl84LKsM4rOy5l2f9c+IwtAeHfbpU/zthXzc+mwAoGDXg3MwQl46OKmI
-	G9u8DKkFm1bRTxRmnMvngMuHIa/RiY4=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-608-Qu68Deq4O3OAk3s3APu6jQ-1; Fri, 29 Dec 2023 12:59:13 -0500
-X-MC-Unique: Qu68Deq4O3OAk3s3APu6jQ-1
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-336f07b29e6so1435288f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 09:59:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=landley-net.20230601.gappssmtp.com header.i=@landley-net.20230601.gappssmtp.com header.b="HPy7A0gg"
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-593f7a1afd7so4253500eaf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 10:29:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=landley-net.20230601.gappssmtp.com; s=20230601; t=1703874555; x=1704479355; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AeSrtwQFurF3YcqKmZ2Gt/CZU5AB/xdcrHrq4YB+YYQ=;
+        b=HPy7A0ggUGfH6s1EnM0YCdJJ0d19olaHinlwhluoGFlYJXiDRibKwGt96axQmY19wJ
+         w8vZsLRzyYH17ORKm6HQCMPT8As8iwTABgywxDE06LHy83bej7xfDsfqdH6mIOaCM58R
+         T3zfNbyXitdTSpciZowZxe9PmH4wAayHVjQgpADubhrlmlZ48X4Yxpz8smGJystfTkPl
+         AI5JDl8rEw+Tf7vmw6agbj4wxPJKiMs2Se0VQTtI42JVHzId6ITi1ia3u5UoCg6Ajrx3
+         wgiWTOA5WIvOYfsvsag1+w570SWsOZ4UCKHm1OYf2LDMalb1MHaDMw19+k2PUMUODOc7
+         PZEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703872752; x=1704477552;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yeKqaIlvVPoYPC4W0RMtxJ/Ybm4HjQYyUHUu8GgGRhQ=;
-        b=Q5huEl2bdRUkVXWj5baxcwljSPTPrrHXGwSqf312PCzMhf0uGJIwOp5uAbxGR/4Jgf
-         ZedWdentR3FCHADDpdWW9KrqtSFq9TFj5sb/tZKtGuiL3pVxzduOL/iSuS+iGn8jEu9Z
-         es9k+pvHachtjAfucYA1BcdAmj47wr+CubrTGyqz2AFfiEM2kqoqh08PGoef742S54gk
-         +tAOauPCOCIUyCcXN2c6XgpYsqSEl21MtTLnCAMKiwX0U18y5j/3mtrjfiftiliymVaM
-         ZH3qO014GC5KToYLygzSI9ajAdXCyHEfox04dyI7YSJjx3MfVPHykvkaLMv6aozcZFR6
-         ZDXw==
-X-Gm-Message-State: AOJu0YzQuYajqMQUNF3xiPNZACvhKcPxJpsIaOEEh47nQYPSobLT8m2p
-	Z+HKBmdIpmYxZARdYDVXI27JV1noGN3gk58gQ3XqQYhobhazJ6Xp8Qws6INCelM2s4VtG/Zno7d
-	xVQs0vYGnWukZGOpifBXRaDoetQy7B/Pl1UiW93uguEO4AqbIva+QHbNb
-X-Received: by 2002:a05:600c:4fcc:b0:40d:5166:f08a with SMTP id o12-20020a05600c4fcc00b0040d5166f08amr4881315wmq.134.1703872752407;
-        Fri, 29 Dec 2023 09:59:12 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH4XYAdhzlSJ84JJ/WzhDuQ96mOPSB8f7l3hWPGmgxlugzFemQsCgqo6ZAvHVkBoJdvDXd+2f4GHras+R8DhBc=
-X-Received: by 2002:a05:600c:4fcc:b0:40d:5166:f08a with SMTP id
- o12-20020a05600c4fcc00b0040d5166f08amr4881309wmq.134.1703872752069; Fri, 29
- Dec 2023 09:59:12 -0800 (PST)
+        d=1e100.net; s=20230601; t=1703874555; x=1704479355;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AeSrtwQFurF3YcqKmZ2Gt/CZU5AB/xdcrHrq4YB+YYQ=;
+        b=hhosJkOkaaWoUdIvx9Ofrpik+GC6TCTcVSX02mMyQsUgLNA6hDxquOqbYRKjLvy1mP
+         rj194d1Qi4rjbt1gRGSsH2VxnPD6vGwAtgoe2ivJE+Qka/hY77BwI99AXSROF8EvIqkt
+         9TrpFX9/LBWfDuDfTe9u9SO3NeCL5L1QHOj+wDoB/vFGqvpR5FuA2PzFsMDJ8GRDPvSY
+         InsFa80uxhP9sc2KoWZNCPBtP09cO9525vPIHE/TFQIdjp7R6uF9LV9hre5soUG8jK96
+         o6ULxGdnggxl5ILNqD9G4M9wi5nZj3MQ0airlnUTFwOu0cZV05DTjIYMnTm6YOuWCvwt
+         KaHQ==
+X-Gm-Message-State: AOJu0YzTM9EF2a071Aawzgl9V6bzVtoZNAGmqa+SfxbUu4jVAG3iR31D
+	v4gsg1/X15HK504bfhtQVf3DWj8h6erN0Q==
+X-Google-Smtp-Source: AGHT+IHU72x2P2ARSJrsYr/9PdegL2CIZ35HgbWVZhDOtO8cPofDfaOEFOG6SoWrOxrtPxpcGj8jCw==
+X-Received: by 2002:a05:6820:613:b0:595:1c09:613a with SMTP id e19-20020a056820061300b005951c09613amr1158857oow.18.1703874555656;
+        Fri, 29 Dec 2023 10:29:15 -0800 (PST)
+Received: from [192.168.1.4] ([136.62.51.249])
+        by smtp.gmail.com with ESMTPSA id i1-20020a4aab01000000b0058ad7b0b1a8sm3526791oon.13.2023.12.29.10.29.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 Dec 2023 10:29:15 -0800 (PST)
+Message-ID: <0879141d-462c-7e94-7c87-7a5b5422b8ed@landley.net>
+Date: Fri, 29 Dec 2023 12:35:31 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAE8KmOw1DzOr-GvQ9E+Y5RCX1GQ1h1Bumk5pB++9=SjMUPHxBg@mail.gmail.com>
- <ZT_HeK7GXdY-6L3t@google.com> <CAE8KmOxKkojqrqWE1RMa4YY3=of1AEFcDth_6b2ZCHJHzb8nng@mail.gmail.com>
- <CAE8KmOxd-Xib+qfiiBepP-ydjSAn32gjOTdLLUqm-i5vgzTv8w@mail.gmail.com>
-In-Reply-To: <CAE8KmOxd-Xib+qfiiBepP-ydjSAn32gjOTdLLUqm-i5vgzTv8w@mail.gmail.com>
-From: Prasad Pandit <ppandit@redhat.com>
-Date: Fri, 29 Dec 2023 23:28:55 +0530
-Message-ID: <CAE8KmOyffXD4k69vRAFwesaqrBGzFY3i+kefbkHcQf4=jNYzOA@mail.gmail.com>
-Subject: Fwd: About patch bdedff263132 - KVM: x86: Route pending NMIs
-To: kvm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Sean Christopherson <seanjc@google.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v3] rootfs: Fix support for rootfstype= when root= is
+ given
+Content-Language: en-US
+To: Stefan Berger <stefanb@linux.ibm.com>, Askar Safin <safinaskar@gmail.com>
+Cc: gregkh@linuxfoundation.org, initramfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, zohar@linux.ibm.com
+References: <CAPnZJGDcNwPLbzC99qNQ+bRMwxPU-Z0xe=TD6DWQU=0MNyeftA@mail.gmail.com>
+ <d4b227de-d609-aef2-888b-203dbcf06707@landley.net>
+ <CAPnZJGBeV-E_AN8GnTfkaJvRtBmCeMYYCt+O0XMsc3kDULRuKg@mail.gmail.com>
+ <fb776d99-1956-4e1b-9afc-84f27ca40f46@linux.ibm.com>
+From: Rob Landley <rob@landley.net>
+In-Reply-To: <fb776d99-1956-4e1b-9afc-84f27ca40f46@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello Sean,
+On 12/29/23 10:39, Stefan Berger wrote:> On 12/21/23 17:58, Askar Safin wrote:
+>> Hi, Rob. And Stefan.
+>> 
+>> First of all, this patch got to linux-next (
+>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/?qt=author&q=Stefan+Berger
+>> ), so it seems it soon will be in mainline.
+>> 
+>> On Thu, Dec 21, 2023 at 12:24 PM Rob Landley <rob@landley.net> wrote:
+>>> Can you build tmpfs on a nommu system? Last I checked the plumbing expects swap,
+>>> but it's been a while...
+>> Okay, I agree, let's not remove ramfs.
+>> 
+>> Still, I don't like this (already applied) patch. init= and rdinit=
+>> are two different options,
 
-On Tue, 31 Oct 2023 at 17:45, Prasad Pandit <ppandit@redhat.com> wrote:
-> On Mon, 30 Oct 2023 at 20:41, Sean Christopherson <seanjc@google.com> wrote:
->>> -               kvm_make_request(KVM_REQ_NMI, vcpu);
->>> +               if (events->nmi.pending)
->>> +                       kvm_make_request(KVM_REQ_NMI, vcpu);
-> >
-> > This looks sane, but it should be unnecessary as KVM_REQ_NMI nmi_queued=0 should
-> > be a (costly) nop.  Hrm, unless the vCPU is in HLT, in which case KVM will treat
-> > a spurious KVM_REQ_NMI as a wake event.  When I made this change, my assumption
-> > was that userspace would set KVM_VCPUEVENT_VALID_NMI_PENDING iff there was
-> > relevant information to process.  But if I'm reading the code correctly, QEMU
-> > invokes KVM_SET_VCPU_EVENTS with KVM_VCPUEVENT_VALID_NMI_PENDING at the end of
-> > machine creation.
-> >
+Because they control two different things which are often used at the same time.
+(Debian has an initramfs that hands off to the final root filesystem, for
+example. Hence the initramfs-tools package that runs every time apt-get updates
+the kernel.)
 
-QEMU:
-qemu_thread_start
- kvm_start_vcpu_thread
-  kvm_vcpu_thread_fn
-   kvm_cpu_exec
-    kvm_arch_put_registers
-     kvm_put_vcpu_events (cpu=..., level=1)
+So being able to specify rdinit= to intercept the ramfs layer or init= to
+intercept the root= layer made sense, because they did different things.
 
-qemu_thread_start (args=0x559fdc852110) at ../util/qemu-thread-posix.c:534
- kvm_vcpu_thread_fn (arg=0x559fdc84cdc0) at ../accel/kvm/kvm-accel-ops.c:56
-  qemu_wait_io_event (cpu=0x559fdc84cdc0) at ../softmmu/cpus.c:435
-   qemu_wait_io_event_common (cpu=0x559fdc84cdc0) at ../softmmu/cpus.c:411
-    process_queued_cpu_work (cpu=0x559fdc84cdc0) at ../cpus-common.c:351
-     do_kvm_cpu_synchronize_post_reset (cpu=0x559fdc84cdc0, arg=...)
-at ../accel/kvm/kvm-all.c:2808
-      kvm_arch_put_registers (cpu=0x559fdc84cdc0, level=2) at
-../target/i386/kvm/kvm.c:4664
-       kvm_put_vcpu_events (cpu=0x559fdc84cdc0, level=2) at
-../target/i386/kvm/kvm.c:4308
+But the only reason to specify anything nontrivial for the initramfs
+_filesystem_ mount properties is because you intend to stay there. They don't
+get used together.
 
-qemu_thread_start (args=0x559fdc852110) at ../util/qemu-thread-posix.c:534
- kvm_vcpu_thread_fn (arg=0x559fdc84cdc0) at ../accel/kvm/kvm-accel-ops.c:56
-  qemu_wait_io_event (cpu=0x559fdc84cdc0) at ../softmmu/cpus.c:435
-   qemu_wait_io_event_common (cpu=0x559fdc84cdc0) at ../softmmu/cpus.c:411
-    process_queued_cpu_work (cpu=0x559fdc84cdc0) at ../cpus-common.c:351
-     do_kvm_cpu_synchronize_post_init (cpu=0x559fdc84cdc0, arg=...) at
-../accel/kvm/kvm-all.c:2819
-      kvm_arch_put_registers (cpu=0x559fdc84cdc0, level=3) at
-../target/i386/kvm/kvm.c:4664
-       kvm_put_vcpu_events (cpu=0x559fdc84cdc0, level=3) at
-../target/i386/kvm/kvm.c:4308
+>> and this is good.
 
-Kernel:
-  kvm_vcpu_ioctl
-   mutex_lock_killable(&vcpu->mutex)
-    kvm_arch_vcpu_ioctl(, KVM_SET_VCPU_EVENTS, ... )
-   mutex_unlock(&vcpu->mutex);
-     -> kvm_vcpu_ioctl_x86_set_vcpu_events()
+Eh, not really. Strange legacy decision we're now stuck with. The kernel only
+ever runs one init task per boot. If init= was _also_ checked to see which file
+to run out of initramfs (and the plumbing still justs silently fails and moves
+on if it's not found) then the debian script would have been forced to do INIT=
+or similar to override the overmounted root's init task separately from initrd's
+init task, making it clear a script (not the kernel) is making that decision.
 
-* Above are 3 different ways in which KVM_SET_VCPU_EVENTS ioctl(2) gets called.
-        QEMU/target/i386/kvm/kvm.c: kvm_put_vcpu_events()
-         if (level >= KVM_PUT_RESET_STATE) {
-             events.flags |= KVM_VCPUEVENT_VALID_NMI_PENDING;
-  But KVM_VCPUEVENT_VALID_NMI_PENDING is set only when level >=
-2(KVM_PUT_RESET_STATE). ie. in the first (level=1) case _NMI_PENDING
-is not set.
+But that would have been a user-visible change, and when initramfs was going in
+they were trying to avoid user-visible changes that would force sysadmins to
+learn new stuff because the plumbing changed out from under them. (Like the
+change you're proposing now would.)
 
-* In the real-time host set-up I have, KVM_VCPUEVENT_VALID_NMI_PENDING
-is called twice for each VCPU and after that kernel goes into what
-looks like a lock contention loop. Each time
-KVM_VCPUEVENT_VALID_NMI_PENDING is called with 'cpu->env->nmi_injected
-= 0' and  'cpu->env->nmi_pending = 0'.  ie. for each VCPU two NMI
-events are injected via - kvm_make_request(KVM_REQ_NMI, vcpu), when
-vcpu has no NMIs pending.
+>> So, I think we should
+>> have two different options. Analogously they should be rootfstype= and
+>> rdrootfstype=.
 
-# perf lock report -t
-                Name   acquired  contended     avg wait   total wait
-  max wait     min wait
+You can't have a root= type of initramfs or tmpfs. The specified values can't
+overlap. The plumbing I wrote responds to specific values but otherwise leaves
+it for later users.
 
-           CPU 3/KVM     154017     154017     62.19 us      9.58 s
- 101.01 us      1.49 us
-           CPU 9/KVM     152796     152796     62.67 us      9.58 s
-  95.92 us      1.49 us
-           CPU 7/KVM     151554     151554     63.16 us      9.57 s
- 102.70 us      1.48 us
-           CPU 1/KVM     151273     151273     65.30 us      9.88 s
-  98.88 us      1.52 us
-           CPU 6/KVM     151107     151107     63.34 us      9.57 s
- 107.64 us      1.50 us
-           CPU 8/KVM     151038     151038     63.37 us      9.57 s
- 102.93 us      1.51 us
-           CPU 2/KVM     150701     150701     63.52 us      9.57 s
-  99.24 us      1.50 us
-           CPU 5/KVM     150695     150695     63.56 us      9.58 s
- 142.15 us      1.50 us
-           CPU 4/KVM     150527     150527     63.60 us      9.57 s
- 102.04 us      1.44 us
-     qemu-system-x86        665        665     65.92 us     43.84 ms
- 100.67 us      1.55 us
-           CPU 0/KVM             2          2    210.46 us    420.92
-us    411.89 us      9.03 us
-     qemu-system-x86          1          1    404.91 us    404.91 us
- 404.91 us    404.91 us
-        TC tc-pc.ram               1          1    414.22 us    414.22
-us    414.22 us    414.22 us
-  === output for debug===
-bad: 10, total: 13
-bad rate: 76.92 %
-histogram of events caused bad sequence
-    acquire: 0
-   acquired: 10
-  contended: 0
-    release: 0
+>> https://salsa.debian.org/kernel-team/initramfs-tools/-/blob/cf964bfb4362019fd7fba1e839e403ff950dca8e/init#L103
+>> 
+>> As you can see, this shell script parses /proc/cmdline and assumes
+>> that rootfstype= always applies to real root.
 
+The script is running _in_ the initramfs, which is already loaded and running at
+that point. Meaning the _kernel_ will not parse root= at that point, userspace
+has to do it.
 
-* VCPU#0 thread seems to wait indefinitely to get
-qemu_mutex_iothread_lock() to make any progress. The proposed patch
-above to check 'events->nmi_pending' for non-zero value helps to fix
-this issue.
+>> So, if someone sets
+>> rootfstype= to tmpfs or ramfs, this will likely break this script.
 
-...wdyt?
+Which was the same 10 years ago?
 
-Thank you.
----
-  - Prasad
-PS: The kvm_make_request() routine has following comment, I wonder if
-this is what is happening with empty NMI events.
-         Request that don't require vCPU action should never be logged in
-         vcpu->requests.  The vCPU won't clear the request, so it will stay
-         logged indefinitely and prevent the vCPU from entering the guest.
+The script is running in a context where initramfs is not persistent, so
+overriding it to be a tmpfs has no benefit. (I mean you _can_... Nobody does,
+because we're gonna switch_root off of it.)
 
+And once code _is_ running in initramfs, the kernel's internal root= automounter
+will never run. The initramfs code can parse /proc/cmdline to use the same
+arguments as the kernel, or it could much more easily use the "any unrecognized
+arguments get set as environment variables in PID 1" and use ROOT= or similar,
+like many scripts do.
+
+Modifying kernel code that NEVER RUNS in the case you're pointing out seems
+silly to me.
+
+That said, the code I wrote is doing a strstr to see if the argument's there,
+but doesn't care what ELSE is there, so it could easily be
+"rootfstype=tmpfs,ext4" and have the userspace script also filter the argument
+for just what it's interested in, since at that point it's NOT THE KERNEL DOING IT.
+
+> Setting the kernel boot command line option rootfstype= to tmpfs or 
+> ramfs was possible so far and that's what the documentation and code 
+> supported so far as well. The bug surfaced when root= was provided, in 
+> which case it was ignored.
+
+No, as I explained when I wrote the initmpfs code in 2013 when you say root= you
+are explicitly requesting the kernel mount a second file system over rootfs
+(that's what root= MEANS), and thus don't bother making it a (more expensive)
+tmpfs because it's not sticking around.
+
+I did that to NOT invent new arguments, and work with existing systems. The new
+feature I added triggered when you _requested_ it.
+
+>> Yes, this will slightly break compatibility. I. e. this will make
+>> Linux always choose tmpfs if rdrootfstype= is not present. But I think
+> 
+> You may find someone who doesn't like this change, either, ...
+
+Yeah, me.
+
+>> there is nothing wrong with it. If a user cares, he will set
+>> rdrootfstype= . And early boot code will become a lot more clean and
+>> logical.
+>> 
+>> Rob, do you agree? Stefan, do you agree? Then I will write a patch,
+
+I think it's a bad idea.
+
+If a documentation change is needed, maybe clarify what root= means? That
+argument explicitly requests the kernel mount a second filesystem over rootfs
+after failing to launch init out of initramfs, so that rootfs will NOT be the /
+visible to PID 1.
+
+This is what it has ALWAYS meant. Back before initramfs was invented in the old
+initrd days, you didn't need to say root= if you provided an initial ramdisk
+with an init executable in it (except the old mechanism didn't want /init it
+wanted /linuxrc for no apparent reason), and if you DID say root= when the
+kernel launched PID 1 out of initrd the superfluous argument was ignored (never
+parsed) because the kernel setup code never made it far enough to check it.
+
+I also note that I never wired up "rootflags=" (see init/do_mounts.c
+root_data_setup) so it gets passed through to initmpfs, meaning you can't
+specify size= and thus it defaults to 50% of available memory as the enforced
+limit. That would be actually useful. (And no I don't really care if it's the
+original argument or a different one because it can't have any existing users to
+break yet, although once again the kernel CAN'T do both at once so having two is
+SILLY. The reason they're NOT wired up yet is ramfs takes no arguments, so only
+passing rootflags to tmpfs when you didn't specify a root= or when you tell it
+rootfstype=tmpfs makes sense, because then what you're passing better not be
+ext4 arguments because you're staying on initramfs and the kernel's root=
+plumbing doesn't run.)
+
+That's the actual missing feature here.
+
+Rob
