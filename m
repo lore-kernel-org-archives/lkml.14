@@ -1,75 +1,203 @@
-Received: from ixit.cz (ip-89-177-23-149.bb.vodafone.cz [89.177.23.149])
+Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D001125A3;
-	Fri, 29 Dec 2023 15:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ixit.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841C6125AD;
+	Fri, 29 Dec 2023 15:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="pgm0v+Kg"
-Received: from newone.congress.ccc.de (unknown [151.217.64.190])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ixit.cz (Postfix) with ESMTPSA id 924581638E3;
-	Fri, 29 Dec 2023 16:17:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
-	t=1703863072;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=xchHYDvWOZwi4vwJm8ifd1Jdh6d+pqsm1Jnha2iBM84=;
-	b=pgm0v+Kg8Qd87BjgSgGmLfviaMyUz+c6AABslJ6MQsLy1YbyL6XbPsbUEQUfHfsJR3qZBI
-	eL6ui06woQdKHiOdz2uBPIvNZ9AXFns1Jugzxud6JFQxe/GwiXwDZmHN85j1gg8VehfkE5
-	A3QhOfW/UoeTfDOWfc6K+PKArldoNvA=
-From: David Heidelberg <david@ixit.cz>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>
-Cc: David Heidelberg <david@ixit.cz>,
-	linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: PCI: qcom: delimit number of iommu-map entries
-Date: Fri, 29 Dec 2023 16:17:37 +0100
-Message-ID: <20231229151744.203828-1-david@ixit.cz>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="VJk4pzLZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HSB2MU1I"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.west.internal (Postfix) with ESMTP id 9C1AB3200906;
+	Fri, 29 Dec 2023 10:27:08 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Fri, 29 Dec 2023 10:27:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1703863628; x=1703950028; bh=a4DE6lOAy5
+	UJ7XbWIZJKIkOz1MpDU+Xi8bnPQlzva/A=; b=VJk4pzLZ3jsN5yrTVY9rB5MqEO
+	t63AaOm0BTOpekd7Yk9s0B23makvF6HrsB4oPnU8/WWXGGAMD0p5CIyhVm9k1U7t
+	HJl1Cj+4svu7FSbXuWjdoasn6RgjQtlQyetnuHffeKCOYSj6euS+Ya4YFSOm8FWS
+	gyHJ3kU0KM/WpQCA40aPPmqCO2sVR9BN2UOB4AOM4Vd7Q+JWo69W9J9XyBv8PPzA
+	EFG5EfJEluh2mmHqyUOlQ3G86j5AXK4JA3rL3cxx0MYvicCjCsMJEHOKCkBgv73K
+	rtjsl8vy3GVFwgUidTs14P+JKKZOFI4jpDAw1UK5vKlZRsQUeuCYirsuqg/Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1703863628; x=1703950028; bh=a4DE6lOAy5UJ7XbWIZJKIkOz1MpD
+	U+Xi8bnPQlzva/A=; b=HSB2MU1Ivw5qTw3eOQn25v23N3Fs3zRMA+fDYx66Q7Td
+	4+rSDlbfUNarkcSpiDlIy5VRZfu3JwxKZOn9KYWGg1JcvAGXSjAzyZ1DPIXloJ2p
+	d9h8ZtuPT9DHzjJyZ4UqEM8rioa75rCtVpXBrYkzkUqbPRXXktxzizocUkqwcPnO
+	iebyH6O3t2o3UNw/PMpq2FyiaUpcBTCN9SkfvNrgVZG5xLiotkfgGEuZh70INKP0
+	0DEPJGuqQbSLKWJs+zBXQxZ4aBiUeCaBPGTG38yXoIhyUZXwXxAE6KxwtVnVUQzm
+	DArXHKHQrcTgfcJFoOmevU1NDlFYK1m4dXQYFYUMGQ==
+X-ME-Sender: <xms:SuWOZTpWb9_0aUReToHlOMcJl5AzbVmlTSBsYBK74Qt02uYW2WbGiQ>
+    <xme:SuWOZdruTTvDd7wB24CFZ650mYjhVObddrZkUNGzhzKvakpuaZ9JWUWoLqxExFElR
+    TDiSvlDm3XN58ZBzJA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdeffedgjeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:SuWOZQPnHnkpSYg0-ssBQr-DVtIolpI9wCOPNYy4VUvzWZv-UPDLtg>
+    <xmx:SuWOZW56XCsfQRrmqjBFk2Llvuf9SwsRWwjK_9IvqWS2APbvgQMGlw>
+    <xmx:SuWOZS65Cgo2Qr-hgDn7YQJ_KgOYajCp-X94PZf3mCtCClnj0miJNw>
+    <xmx:TOWOZY6oVL3YAlf6hNZ3iwkZU2_bRgcXVAnINCIw8sexnwXb5GOIDg>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id A40F6B6008F; Fri, 29 Dec 2023 10:27:06 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-1364-ga51d5fd3b7-fm-20231219.001-ga51d5fd3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <f254c189-463e-43a3-bc09-9a8869ebf819@app.fastmail.com>
+In-Reply-To: <20231228122411.3189-1-maimon.sagi@gmail.com>
+References: <20231228122411.3189-1-maimon.sagi@gmail.com>
+Date: Fri, 29 Dec 2023 16:26:46 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Sagi Maimon" <maimon.sagi@gmail.com>,
+ "Richard Cochran" <richardcochran@gmail.com>,
+ "Andy Lutomirski" <luto@kernel.org>, datglx@linutronix.de,
+ "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ "Geert Uytterhoeven" <geert@linux-m68k.org>,
+ "Peter Zijlstra" <peterz@infradead.org>,
+ "Johannes Weiner" <hannes@cmpxchg.org>,
+ "Sohil Mehta" <sohil.mehta@intel.com>,
+ "Rick Edgecombe" <rick.p.edgecombe@intel.com>,
+ "Nhat Pham" <nphamcs@gmail.com>, "Palmer Dabbelt" <palmer@sifive.com>,
+ "Kees Cook" <keescook@chromium.org>, "Alexey Gladkov" <legion@kernel.org>,
+ "Mark Rutland" <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+ Linux-Arch <linux-arch@vger.kernel.org>, Netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH v3] posix-timers: add multi_clock_gettime system call
+Content-Type: text/plain
 
-The code or specific SoC doesn't seem to limit the number of iommu-map entries.
+On Thu, Dec 28, 2023, at 13:24, Sagi Maimon wrote:
+> Some user space applications need to read some clocks.
+> Each read requires moving from user space to kernel space.
+> The syscall overhead causes unpredictable delay between N clocks reads
+> Removing this delay causes better synchronization between N clocks.
+>
+> Introduce a new system call multi_clock_gettime, which can be used to measure
+> the offset between multiple clocks, from variety of types: PHC, virtual PHC
+> and various system clocks (CLOCK_REALTIME, CLOCK_MONOTONIC, etc).
+> The offset includes the total time that the driver needs to read the clock
+> timestamp.
+>
+> New system call allows the reading of a list of clocks - up to PTP_MAX_CLOCKS.
+> Supported clocks IDs: PHC, virtual PHC and various system clocks.
+> Up to PTP_MAX_SAMPLES times (per clock) in a single system call read.
+> The system call returns n_clocks timestamps for each measurement:
+> - clock 0 timestamp
+> - ...
+> - clock n timestamp
+>
+> Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
 
-Signed-off-by: David Heidelberg <david@ixit.cz>
----
- Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Hi Sagi,
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index eadba38171e1..c6111278162f 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -61,8 +61,7 @@ properties:
-     minItems: 1
-     maxItems: 8
- 
--  iommu-map:
--    maxItems: 2
-+  iommu-map: true
- 
-   # Common definitions for clocks, clock-names and reset.
-   # Platform constraints are described later.
--- 
-2.43.0
+Exposing an interface to read multiple clocks makes sense to me,
+but I wonder if the interface you use is too inflexible.
 
+> --- a/include/uapi/asm-generic/unistd.h
+> +++ b/include/uapi/asm-generic/unistd.h
+> @@ -828,9 +828,11 @@ __SYSCALL(__NR_futex_wake, sys_futex_wake)
+>  __SYSCALL(__NR_futex_wait, sys_futex_wait)
+>  #define __NR_futex_requeue 456
+>  __SYSCALL(__NR_futex_requeue, sys_futex_requeue)
+> +#define __NR_multi_clock_gettime 457
+> +__SYSCALL(__NR_multi_clock_gettime, sys_multi_clock_gettime)
+> 
+>  #undef __NR_syscalls
+> -#define __NR_syscalls 457
+> +#define __NR_syscalls 458
+
+Site note: hooking it up only here is sufficient for the
+code review but not for inclusion: once we have an agreement
+on the API, this should be added to all architectures at once.
+
+> +#define MULTI_PTP_MAX_CLOCKS 5 /* Max number of clocks */
+> +#define MULTI_PTP_MAX_SAMPLES 10 /* Max allowed offset measurement samples. */
+> +
+> +struct __ptp_multi_clock_get {
+> +	unsigned int n_clocks; /* Desired number of clocks. */
+> +	unsigned int n_samples; /* Desired number of measurements per clock. */
+> +	clockid_t clkid_arr[MULTI_PTP_MAX_CLOCKS]; /* list of clock IDs */
+> +	/*
+> +	 * Array of list of n_clocks clocks time samples n_samples times.
+> +	 */
+> +	struct  __kernel_timespec ts[MULTI_PTP_MAX_SAMPLES][MULTI_PTP_MAX_CLOCKS];
+> +};
+
+The fixed size arrays here seem to be an unnecessary limitation,
+both MULTI_PTP_MAX_SAMPLES and MULTI_PTP_MAX_CLOCKS are small
+enough that one can come up with scenarios where you would want
+a higher number, but at the same time the structure is already
+808 bytes long, which is more than you'd normally want to put
+on the kernel stack, and which may take a significant time to
+copy to and from userspace.
+
+Since n_clocks and n_samples are always inputs to the syscall,
+you can just pass them as register arguments and use a dynamically
+sized array instead.
+
+It's not clear to me what you gain from having the n_samples
+argument over just calling the syscall repeatedly. Does
+this offer a benefit for accuracy or is this just meant to
+avoid syscall overhead.
+> +SYSCALL_DEFINE1(multi_clock_gettime, struct __ptp_multi_clock_get 
+> __user *, ptp_multi_clk_get)
+> +{
+> +	const struct k_clock *kc;
+> +	struct timespec64 kernel_tp;
+> +	struct __ptp_multi_clock_get multi_clk_get;
+> +	unsigned int i, j;
+> +	int error;
+> +
+> +	if (copy_from_user(&multi_clk_get, ptp_multi_clk_get, 
+> sizeof(multi_clk_get)))
+> +		return -EFAULT;
+
+Here you copy the entire structure from userspace, but
+I don't actually see the .ts[] array on the stack being
+accessed later as you just copy to the user pointer
+directly.
+
+> +		for (i = 0; i < multi_clk_get.n_clocks; i++) {
+> +			kc = clockid_to_kclock(multi_clk_get.clkid_arr[i]);
+> +			if (!kc)
+> +				return -EINVAL;
+> +			error = kc->clock_get_timespec(multi_clk_get.clkid_arr[i], 
+> &kernel_tp);
+> +			if (!error && put_timespec64(&kernel_tp, (struct __kernel_timespec 
+> __user *)
+> +						     &ptp_multi_clk_get->ts[j][i]))
+> +				error = -EFAULT;
+> +		}
+
+The put_timespec64() and possibly the clockid_to_kclock() have
+some overhead that may introduce jitter, so it may be better to
+pull that out of the loop and have a fixed-size array
+of timespec64 values on the stack and then copy them
+at the end.
+
+On the other hand, this will still give less accuracy than the
+getcrosststamp() callback with ioctl(PTP_SYS_OFFSET_PRECISE),
+so either the last bit of accuracy isn't all that important,
+or you need to refine the interface to actually be an
+improvement over the chardev.
+
+      Arnd
