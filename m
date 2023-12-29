@@ -1,53 +1,76 @@
-Received: from out203-205-251-60.mail.qq.com (out203-205-251-60.mail.qq.com [203.205.251.60])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199D410A1B;
-	Fri, 29 Dec 2023 11:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F4710A1C
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 11:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="QJvn+Ikd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1703848181; bh=IWLItomP6GEXQZbCwu1A31BjXLnz2T16xYfN+yaLlRY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=QJvn+IkdOAsfSxK8m39N+yRtFLYxVqIHzWBqyj6n14fVL+q4JAUW7PmiUnfShmzUA
-	 jR6C+I2qw6yQgKK+dtmmugRUcM6uY8l9ITgBXpNF1dGRPmqX3DPNzvbe0pZufsJDOo
-	 z9P/GizC5IL0BN5PcGyTFWBAgl9FhUvHWaoKo8Dc=
-Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
-	by newxmesmtplogicsvrsza7-0.qq.com (NewEsmtp) with SMTP
-	id 266AE21D; Fri, 29 Dec 2023 19:09:38 +0800
-X-QQ-mid: xmsmtpt1703848178tler3y48n
-Message-ID: <tencent_8D66B23C9D36BA971637084BA27411767F09@qq.com>
-X-QQ-XMAILINFO: OKKHiI6c9SH39IW5HizR2sWu+zJcP3A71yxExmFmhU/mUvv0aGo++xNpfn7PSz
-	 H0JdlsXhnCdg4V1KzL6pRBg7xd7kL7/AxPr1KYTqzA65gJjwcp+tczR3xCtMYStXSX3M6BJ2UELk
-	 ynGqHqPXvkUTwWRwVRvGCphwYqBF8vS7dxaXTFrWJfBPS1DQleBFYVI4W4d8A5qH0mPpjKWbeLdr
-	 KSc0J/wSRsNEsrTvJWwz9gjGf1OaSUdv0EQabUK/7QhqKtelMwrvcMdFAzeap9f+jcAb9aVem2Xg
-	 WhpCpM/wV0wqhnbTOvInTkUOTJhMCCriMCiCji08CIYg/NCEGMZsRG+B2U7VmaydfSJJqbMubUFB
-	 XabmIqXi9BDpce7JuVMoWLdxY6PXkI2IzM5zRAAYusI5oXBWsFtCSzoSiOe6AHJ9SbKI4IgBwjWw
-	 F1ZlT8HEoHgmW4HqKeJvUVl9daW1wtoi9A8f9clR16R/cmJWPri1Uca+sVVNBU984s/WO8eB8Gib
-	 BLyOgKANBQYIbdIAZmxstFzHe6tzUk2hLFjFqVMLqn7A8/3vIlURrul+l5OWrtISAopif4YJywDP
-	 sLUiVXxo9SmyzNe2xjAZjUq5HgVBuXotNdWD9Wqp5MgERLGNzoiFz/bONnKhRDyKbH5vchdqaRev
-	 vSxDA2LOvEeyg60sHMUb8CLw2ppZz24JvqRA9lmqNn0au+F1jww4WqFVaNp+z64U/l0Hqir6f/W7
-	 vzM875o4UWzFBa0TvL1EA9G8vjSXW5E1pxw8kL7Gv69VtZ676B21KzFvs+TSmwHHMLTj9JUkpVkN
-	 2Xm6EW/hC0usa1YPs5bnJomcYOmm1CD5VU49SkphNlysdKDlYTA7IVr3jKylTFHO/5DEHVVK2ZlR
-	 SM1w98xfLlAmrpSaR3gBHsOb/WG5wbE+R6vRMqqXntmII7wXQuxErQTqIft4eaAg==
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+6c746eea496f34b3161d@syzkaller.appspotmail.com
-Cc: chao@kernel.org,
-	huyue2@coolpad.com,
-	jefflexu@linux.alibaba.com,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com,
-	xiang@kernel.org
-Subject: [PATCH] erofs: fix uninit-value in z_erofs_lz4_decompress
-Date: Fri, 29 Dec 2023 19:09:39 +0800
-X-OQ-MSGID: <20231229110938.1157837-2-eadavis@qq.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J2vw8F5X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1703848834;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=d3KNTkAHMEq6kRnLdtQoUQE4cKQn8zc78RB5qaLNfps=;
+	b=J2vw8F5Xn7HPWrlohulLK5HsK3290yElhIo7Z+Nbwe4Iahv5BOmTXOo7uFxZo4T4puBe3h
+	j/AZqjcUVzJQBISaqAI6B6WH7SIGE+dVvutIo66a6C2ZFh+ZBy7Emo3UXFg3XWKIk+pmVe
+	xnHrTmP494SbvAB8LHLhodZZBOjnUgk=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-441-NyMzKxuQMPKw7h1rjP5Now-1; Fri, 29 Dec 2023 06:20:33 -0500
+X-MC-Unique: NyMzKxuQMPKw7h1rjP5Now-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-50e86a0debcso2105324e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 03:20:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703848831; x=1704453631;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d3KNTkAHMEq6kRnLdtQoUQE4cKQn8zc78RB5qaLNfps=;
+        b=VePljNdMx7/lzI0EyD/YIL1QikZnF25b/so6EVaTgD4iyVzvWLERk+8WCUiNXlHbPh
+         u4gq1y45Pg2UFHTgpSKpf17XVR6QXYbomDxAeISME9Tt+OXu4kSDV9Ab1DyV+yFjZFog
+         zyIQj3pOgYXvoH/gmVvxzZURw7v/d1WxA1W9BMWqKUpCtUvlXzLbFF4QNRug9x1H9CMd
+         Wx5TUKxHXwKRBrSLQGBKfClrPsb2SsVugCYlxm6u5sfqZ00KVnOMPbCcol3sKofhKGn2
+         zGgxTIhzLmPXyZcnL6N8KlUwIAtUM8t2Ecs+5pDZjdrPR4jkEyaeP/fnXNv4NoFYzRrJ
+         WAXA==
+X-Gm-Message-State: AOJu0YxAdexH8HDXN+YrQ7LckJGN7Ku3cXp4Zwh6QyCB39+PK6tzq6Vn
+	3uGm0MumhoxmQy6MDsLv+3ltLhFCEYARvuIP+hQ5G9v47skdim5GRngpBqao8pz0d1+bR3/hHRW
+	JFFU14DyqqS8/FnrmeORnoQ4qzCF8Eoz/mPe/MfC0lh1KX89He2ffrobWHPx6NB2ffCmYbjVLIs
+	bdF4LQ1jbj1NbgHig=
+X-Received: by 2002:ac2:47e6:0:b0:50e:7702:a189 with SMTP id b6-20020ac247e6000000b0050e7702a189mr3613965lfp.22.1703848831603;
+        Fri, 29 Dec 2023 03:20:31 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHH/ywHRre541SoLTPy1QECA7NUgjNY8fcN4VeI019+xCIjYOchbO5JRtdR/qeeHiOlbvC6jw==
+X-Received: by 2002:ac2:47e6:0:b0:50e:7702:a189 with SMTP id b6-20020ac247e6000000b0050e7702a189mr3613937lfp.22.1703848830973;
+        Fri, 29 Dec 2023 03:20:30 -0800 (PST)
+Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
+        by smtp.gmail.com with ESMTPSA id m2-20020a05600c4f4200b0040d5c58c41dsm10315024wmq.24.2023.12.29.03.20.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Dec 2023 03:20:30 -0800 (PST)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Maxime Ripard <mripard@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Jocelyn Falempe <jfalempe@redhat.com>,
+	Conor Dooley <conor@kernel.org>,
+	Peter Robinson <pbrobinson@gmail.com>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	David Airlie <airlied@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH v5 0/4] drm/solomon: Add support for the SSD133x controller family
+Date: Fri, 29 Dec 2023 12:20:17 +0100
+Message-ID: <20231229112026.2797483-1-javierm@redhat.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000321c24060d7cfa1c@google.com>
-References: <000000000000321c24060d7cfa1c@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,29 +79,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When LZ4 decompression fails, the number of bytes read from out should be 
-inputsize plus the returned overflow value ret.
+Hello,
 
-Reported-and-tested-by: syzbot+6c746eea496f34b3161d@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- fs/erofs/decompressor.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+This patch-set adds support for the family of SSD133x Solomon controllers,
+such as the SSD1331. These are used for RGB Dot Matrix OLED/PLED panels.
 
-diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index 021be5feb1bc..8ac3f96676c4 100644
---- a/fs/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -250,7 +250,8 @@ static int z_erofs_lz4_decompress_mem(struct z_erofs_lz4_decompress_ctx *ctx,
- 		print_hex_dump(KERN_DEBUG, "[ in]: ", DUMP_PREFIX_OFFSET,
- 			       16, 1, src + inputmargin, rq->inputsize, true);
- 		print_hex_dump(KERN_DEBUG, "[out]: ", DUMP_PREFIX_OFFSET,
--			       16, 1, out, rq->outputsize, true);
-+			       16, 1, out, (ret < 0 && rq->inputsize > 0) ? 
-+			       (ret + rq->inputsize) : rq->outputsize, true);
- 
- 		if (ret >= 0)
- 			memset(out + ret, 0, rq->outputsize - ret);
+This is a v5 that is basically the same than the previous v4 but dropping
+support for I2C since the ssd133x family does not support that interface.
+
+The patches were tested on a Waveshare SSD1331 display using glmark2-drm,
+fbcon, fbtests and the retroarch emulator. The binding schema were tested
+using the `make W=1 dt_binding_check` target.
+
+Patch #1 and #2 are fixes for the DT binding schema of the existing SSD130x
+and SSD132x families.
+
+Patch #3 adds a DT binding schema for the SSD133x controllers and patch #4
+extends the ssd130x DRM driver to support the SSD133x controller family.
+
+Best regards,
+Javier
+
+Changes in v5:
+- Drop I2C example in DT binding schema due that bus not being supported.
+- Drop "solomon,ssd1331" entry from ssd130x-i2c due I2C bus not being supported.
+
+Changes in v4:
+- Fix typo in commit message (Jocelyn Falempe).
+- Add collected tags.
+
+Changes in v3:
+- Move solomon,ssd-common.yaml ref before the properties section and
+  width/height constraints after the other properties (Conor Dooley).
+
+Changes in v2:
+- Unconditionally set the width and height constraints (Conor Dooley).
+- Fix indentation in the DTS examples (Krzysztof Kozlowski).
+
+Javier Martinez Canillas (4):
+  dt-bindings: display: ssd1307fb: Add vendor prefix to width and height
+  dt-bindings: display: ssd132x: Add vendor prefix to width and height
+  dt-bindings: display: Add SSD133x OLED controllers
+  drm/ssd130x: Add support for the SSD133x OLED controller family
+
+ .../bindings/display/solomon,ssd1307fb.yaml   |  20 +-
+ .../bindings/display/solomon,ssd132x.yaml     |  12 +-
+ .../bindings/display/solomon,ssd133x.yaml     |  45 +++
+ drivers/gpu/drm/solomon/ssd130x-spi.c         |   7 +
+ drivers/gpu/drm/solomon/ssd130x.c             | 370 ++++++++++++++++++
+ drivers/gpu/drm/solomon/ssd130x.h             |   5 +-
+ 6 files changed, 442 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/solomon,ssd133x.yaml
+
 -- 
 2.43.0
 
