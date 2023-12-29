@@ -1,94 +1,77 @@
-Received: from mail115-100.sinamail.sina.com.cn (mail115-100.sinamail.sina.com.cn [218.30.115.100])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11AE110A36
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 11:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.88.48.91])
-	by sina.com (172.16.235.24) with ESMTP
-	id 658EAD7D0000196D; Fri, 29 Dec 2023 19:29:04 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 67760845089297
-X-SMAIL-UIID: A047209F4E7143C795FCEBC335F6BB0A-20231229-192904-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+59dcc2e7283a6f5f5ba1@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [dri?] WARNING in drm_prime_destroy_file_private (2)
-Date: Fri, 29 Dec 2023 19:28:51 +0800
-Message-Id: <20231229112851.2000-1-hdanton@sina.com>
-In-Reply-To: <000000000000f4faa2060d83f582@google.com>
-References: <000000000000f4faa2060d83f582@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3E010A2E;
+	Fri, 29 Dec 2023 11:36:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="enI5zDCb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1703849778; x=1704454578; i=markus.elfring@web.de;
+	bh=bT5iUlJtBnPgfkwMqM8aRFxOKOnLJ2N+sHYoEYyh7V4=;
+	h=X-UI-Sender-Class:Date:To:Cc:From:Subject;
+	b=enI5zDCbX5rYVHnR7JDklsELQf8i+V/dpaxEp1oyPuu/dbNGyxNQhk8xl3oMn18U
+	 cUHENFPfFnsinQawf4rYMYh9y+5HCl3exIUllB+yushuliX9NHYmivk5VCdDN9Xzl
+	 k7gm0gNrFAXwW6hLTK8pcEXk59JnXeDh3e6Gf8QDgnUPKhJ/BcnjQ8vcXjWMbC834
+	 3jUDqpHiTue51YApWSEOcWu11epCICRiUxfOfz8S4uUpAlFu3ZpkKawgBi9KtRl8S
+	 GTFO0saoG7ElmZfggAdQSYUeSv/rujUUi0WyX248RcSjCOoFGPVjQi9/qAauU68He
+	 Ktv3kPE5Lpx7UBMrbg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1M9ZeA-1rMUXm0Er6-00619G; Fri, 29
+ Dec 2023 12:36:18 +0100
+Message-ID: <9ce3f553-24bc-4ecd-ac5e-7ba27caeff57@web.de>
+Date: Fri, 29 Dec 2023 12:36:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+To: linux-mm@kvack.org, kernel-janitors@vger.kernel.org,
+ Muchun Song <muchun.song@linux.dev>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH 0/2] hugetlbfs: Adjustments for two function implementations
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:zmPL3zuCMseUMikKu19QGDmehHT65Bw9/KBE14p6VW8VcZbbwU9
+ kMz+gvKyg0RS7WjualXdj8hhNOBNOtbBozcD6Qv/4N/uLes/2gChUoUk6slayJ33ES9tiCr
+ YpUdQmwqcmsAeblm3zwFHm2No9DyuHQu3so+nimsij8aHohnax6FU1gOgggtg8SBmx2i2Ao
+ VQlJUXikmtCsv664qyjOw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:IR5K9XE0/K8=;J6XN6ruCw9rw7+bIfDOaCtu7NSF
+ TAgN9EanRBWN0tMe/2bHAc60yNnXHvJR2N094yHmsfL6nG7ZvBxwul0+vW1H2JkJ/T1mVIecv
+ lsBEGugr/9+5E/QLFe7oS+hRZUqlEFvkdHZgzq92665iceODLioZNT3tfS7YuTLTI5e9jLSHW
+ aHpHZe6WkviUSd+y56dwCrj4LECvsCIB24gag/Qgq2Rq565lVoYj1KY7yxPskC+cQexSGRJIN
+ V9XhAiMKxgAUBNTGvEgi7ufVAVKAJXoqm4TMM9yBwUxRtP6Nf17/vrj7U2cRoeb3yk2133gCb
+ fxx/dUBFL0KDgzszpnt9QHEXW3nlOLVU3u1nNMZdxk4R/EqV7QAGfEvwOmzP69h3EvEEvDOpW
+ eC5faQpJuRXiCFO3q2I55aZWDVynb+F610ZUriol8Zy8zrY6rfxb9MJYDBlV2jEJq1EYB1xbc
+ 7TkdjV3Bk5Dspa+CCtYkg6vDeejc64nEzCN1gpumHqZ+7BM2Zl3gZs0IigXn1Kprp4S5Z4dNx
+ vypKYDH51j04fQQKJCoVyddcyMp1fiulAcmVu5s0gqI3atuXJadiSDMe+D/fOVeHHzFGwMkfZ
+ AWLxtQl1dl9tOltzAlUST3uWJTwfbokxvKA8EgB9NEIod0a9x1IHKOeinu1S0VMxU2Y1vfYnj
+ 1VrjM26kyDxycVa8hE86AE69cP6awrghhkaP2C5QIx+bRCPmuRac084sqRzYWU+UO6e2nnVbH
+ 0S5ma8LMbvWH5Z1KWbSoySF0t7UgXHockF3kVq5qKCUCDiR4KT5evSv9CSrVXZlM829tggn4b
+ 7cjq4q/VIfLdQS2NsqNR/rNDdAQH3furkiP0o8ZudPHuDKYyGJoFoMOejYUi2XkYJ2zAHXsXb
+ yDd+gppsMCr+QrpriPeuFFB0pOTy7wubea9LnORVXFua7Bk/cgnQRxW7zQD+1pVi1mJiYCMD5
+ hUJ20w==
 
-On Wed, 27 Dec 2023 12:51:18 -0800
-> HEAD commit:    5254c0cbc92d Merge tag 'block-6.7-2023-12-22' of git://git..
-> git tree:       upstream
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=155d5fd6e80000
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Fri, 29 Dec 2023 12:32:12 +0100
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  master
+A few update suggestions were taken into account
+from static source code analysis.
 
---- a/drivers/gpu/drm/drm_file.c
-+++ b/drivers/gpu/drm/drm_file.c
-@@ -287,6 +287,7 @@ void drm_file_free(struct drm_file *file
- 	if (dev->driver->postclose)
- 		dev->driver->postclose(dev, file);
- 
-+	drm_prime_del_handles(&file->prime);
- 	drm_prime_destroy_file_private(&file->prime);
- 
- 	WARN_ON(!list_empty(&file->event_list));
---- a/drivers/gpu/drm/drm_internal.h
-+++ b/drivers/gpu/drm/drm_internal.h
-@@ -76,6 +76,7 @@ void drm_prime_init_file_private(struct
- void drm_prime_destroy_file_private(struct drm_prime_file_private *prime_fpriv);
- void drm_prime_remove_buf_handle(struct drm_prime_file_private *prime_fpriv,
- 				 uint32_t handle);
-+void drm_prime_del_handles(struct drm_prime_file_private *prime_fpriv);
- 
- /* drm_drv.c */
- struct drm_minor *drm_minor_acquire(unsigned int minor_id);
---- a/drivers/gpu/drm/drm_prime.c
-+++ b/drivers/gpu/drm/drm_prime.c
-@@ -185,6 +185,27 @@ static int drm_prime_lookup_buf_handle(s
- 	return -ENOENT;
- }
- 
-+void drm_prime_del_handles(struct drm_prime_file_private *prime_fpriv)
-+{
-+	struct drm_prime_member *member;
-+	struct rb_node *rb;
-+
-+	mutex_lock(&prime_fpriv->lock);
-+	for (;;) {
-+		rb = rb_first(&prime_fpriv->dmabufs);
-+		if (!rb)
-+			break;
-+		member = rb_entry(rb, struct drm_prime_member, handle_rb);
-+
-+		rb_erase(&member->handle_rb, &prime_fpriv->handles);
-+		rb_erase(&member->dmabuf_rb, &prime_fpriv->dmabufs);
-+
-+		dma_buf_put(member->dma_buf);
-+		kfree(member);
-+	}
-+	mutex_unlock(&prime_fpriv->lock);
-+}
-+
- void drm_prime_remove_buf_handle(struct drm_prime_file_private *prime_fpriv,
- 				 uint32_t handle)
- {
---
+Markus Elfring (2):
+  Improve a size determination in two functions
+  Improve exception handling in hugetlbfs_fill_super()
+
+ fs/hugetlbfs/inode.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+=2D-
+2.43.0
+
