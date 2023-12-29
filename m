@@ -1,107 +1,133 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2096.outbound.protection.outlook.com [40.107.117.96])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135D9749C
-	for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 03:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C4917C4
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 03:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V8wztx/e"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-555144cd330so3470098a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 Dec 2023 19:07:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703819239; x=1704424039; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=8NnLHCVjx9aqyP1ufwGEuN07V6WNPoP3NonBnRbDE3A=;
-        b=V8wztx/e2lBePMKg6XqRVSIbqLsMW9F8rcopqR0cvBebFrVlunl7pu0cwNL2vL235b
-         AS2TZjpkQVGdfuxMD86E7RuNqomXbDlrVohhjNuPOSGBvtM8/THIa5i1ggvXAEeu8a4d
-         H+TEHkxsTgchE31ssfOPygGj/vuNiXcLQAvCRdZv08uXWWRO5GFC2Am6f8Cdy+c46Zpp
-         s7AlzUr9KLm3woHJoaALoE6cFBatF54wCEGogIJcga7uW6NnH/GmtH0VaJbvAIj/Wh7/
-         OkrjlsDiGTHqGyy4ftHLQwGOhYyPXPr9MGFZ2gJJGwYcI4P7xIguiTwNWXdeBslsGcAE
-         RWWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703819239; x=1704424039;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8NnLHCVjx9aqyP1ufwGEuN07V6WNPoP3NonBnRbDE3A=;
-        b=XtnRvoA+ZWFMW0FZC4qyP7z/xwKi0wtDxZooDp1m5KmIhVPJK2gORWI7ZV99Xbc8No
-         e1MkC0cRpQrTSXnrkqt/q31+Drue5FtwBwSRV6OtRwZLp6hfJODnjhi+TluK+XhWbDLI
-         cz3A/8NlrqA52OWUfuoB0pmjdaynSYdQUomRtoe4Yzy1joK6+xBosMjuqu0UFs+j8D3n
-         ZWXCNwkxLw9OMFQZ/I+JBEVUAw6k2TcYoqhTN/K8iXLQduoKQm2jQ3dA+UXoM066GujQ
-         PhvpX6ntXrw9iwE9Zx5ADaXBxvnEKzlSrqqUjgSPXSE07U0ZKY8zXziWy6CtIo0c9+je
-         qIBg==
-X-Gm-Message-State: AOJu0YwPTKRXcReaxjxy0faNjxZOH4RKG861mqaWdkgRD/o12IZZTH9n
-	6GlN/5QpgGHLzhqHbb7dRuA=
-X-Google-Smtp-Source: AGHT+IElBK6U4XRwsZNBqnPMOP2+jxJmVGZAimwdzPZWUKZf0RDXeVXklA55ousF8ikpWajbspMeQA==
-X-Received: by 2002:a17:906:2cb:b0:a26:e363:2c9f with SMTP id 11-20020a17090602cb00b00a26e3632c9fmr3530202ejk.146.1703819239225;
-        Thu, 28 Dec 2023 19:07:19 -0800 (PST)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id y21-20020a170906559500b00a26e490e3f2sm4738337ejp.181.2023.12.28.19.07.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 Dec 2023 19:07:18 -0800 (PST)
-From: Wei Yang <richard.weiyang@gmail.com>
-To: gregkh@linuxfoundation.org,
-	masahiroy@kernel.org,
-	nicolas@fjasle.eu
-Cc: linux-kernel@vger.kernel.org,
-	Wei Yang <richard.weiyang@gmail.com>,
-	Jike Song <albcamus@gmail.com>
-Subject: [PATCH 4/4] scripts/tags.sh: remove find_sources
-Date: Fri, 29 Dec 2023 03:06:54 +0000
-Message-Id: <20231229030654.17474-4-richard.weiyang@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20231229030654.17474-1-richard.weiyang@gmail.com>
-References: <20231229030654.17474-1-richard.weiyang@gmail.com>
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="UzKkMzPw"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nGIx4SQDO9wMwddwA+Rtfs+2msxxjp1bSDLikmeK31C5Ho/ojnJwPaqUywG5xeZhWvNlYbiUxrMZFchPCtLE9hRFVqWJDJXBDE/Igp6CaLP+YtHb/QcaiPdOcbcYwQqKq7s93xpKp2J/XV/ogM1NvvcqD2y3zgwwba4/+J7M/b+Ysi0RHEgem76AK3qIbciX2kFmEOFXBIXOYMtov4O7fHSSnIe0uwCe1MKihHjyOdKGwI4F+kVgh/vcS5eIpYwCPK3ucNBzaHkaxvZbB7COhh5Gja38VmzXlEM1JIyB8YSmzxJfDHXcaVnYqC8aN07uP+TYs0rycdppBSaSh+AM/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4EpF9hvmVdzcrFSR5BcoJs2yQywPah5jHT+51PTUHvg=;
+ b=ZmsPhVv0QNIupbzWy8BaJ6vvdBkiJdxmfGAOXcdhcboQBtsjqSkJqrvQH/MDM6DiQ6/r3J7teHPny+iZmRHeyZ6x0IVHJ9iC2WMHVR1BbDcx/K+ZhWpXP4NWM2fArKoSFWHDK6JuW2H1zJ21mc0HMhk8JPS4RZdXIyZ6GFAF8E1TZHMTAxwFT+ivisU4Il9qq1B8XB3MRAq9g8dJe0bbrF74pgdBcCLC8r0rJGkoK82wB4x0qP2qzH6as5j36mO+bqdtw24FkiVsq6qfq5cj6PRm1tA+1DxB0zVh8QPf9DuHL1MxpvZjrabSl6TstJIPPNy8XSM2JKQsPNGC5hgMNQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4EpF9hvmVdzcrFSR5BcoJs2yQywPah5jHT+51PTUHvg=;
+ b=UzKkMzPwX97NzXbK8uBcTCbDFFVFIrQ0suUgxJzqIMZ/yWZ6NVYcJhN88JZ3r4aNP/BwJdP7VdDjs/A9PjYoVv3YrPcrIQM9SFu5pixI2ykKhMsfg24jpfGh1//95DsevZjjjOIBEeu070hAqXybjbg65byR4G3vzaZ8QIvgd8ZpBNElsayWkRu2uO7RjrEfH50NGlqLFms4p6Kgnjy2i1TJ5D3e60bn0HBnnB73f4JqEceLf5lKCiRW+vM1SqcgyfEKiVotkJitHANcWSVYd//vP3VSzfgDmU13krIQdqso21jexxli/qXjfjc+BGYGSsUkKKiG/05/nqiqQbSHFQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from PS2PR06MB3509.apcprd06.prod.outlook.com (2603:1096:300:67::17)
+ by TY0PR06MB5593.apcprd06.prod.outlook.com (2603:1096:400:31e::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.27; Fri, 29 Dec
+ 2023 03:14:56 +0000
+Received: from PS2PR06MB3509.apcprd06.prod.outlook.com
+ ([fe80::5cc4:b440:9894:d19]) by PS2PR06MB3509.apcprd06.prod.outlook.com
+ ([fe80::5cc4:b440:9894:d19%3]) with mapi id 15.20.7135.019; Fri, 29 Dec 2023
+ 03:14:55 +0000
+From: Wu Bo <bo.wu@vivo.com>
+To: Jaegeuk Kim <jaegeuk@kernel.org>,
+	Chao Yu <chao@kernel.org>
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Wu Bo <wubo.oduw@gmail.com>,
+	Wu Bo <bo.wu@vivo.com>
+Subject: [PATCH] f2fs: check free sections before disable checkpoint
+Date: Thu, 28 Dec 2023 20:25:07 -0700
+Message-Id: <20231229032507.2016012-1-bo.wu@vivo.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2P153CA0018.APCP153.PROD.OUTLOOK.COM (2603:1096:4:140::9)
+ To PS2PR06MB3509.apcprd06.prod.outlook.com (2603:1096:300:67::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PS2PR06MB3509:EE_|TY0PR06MB5593:EE_
+X-MS-Office365-Filtering-Correlation-Id: b40853f6-5bd8-4044-610b-08dc081c542c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Tm1L2fYWSafsSeKmPSToQvnStWWrYxh4k7X28yT/wIPc5NZH+6ny5rryYlb6YPVQ44Xk8/g04g9AentdXv4rDceWAU51mezIgLrJ63Hj9ZiNRRjthJ1H41ueguni8NBCxqNlQosPxFaiiDwQpKTAOWpRoDNNPdoJOp9Ar+AgVAuhFQQRHXbka7SjZNBN5nakwfnSuN/XnS98T8phSFPvxLAi46K9hNedQIN39iKMpgZDhj5zXbYgSHDSG/x62vXnmfhrFABHsDhrNktSa6iwFeGBfH2mRnLhRBLvK9BNGmJ98pv6gBh0P9/pj+o8KTTLEuukQrM5AF/NffTM4X4hh2dbniJl2FZaYC+pnZL80TvnNfHXaH0ZcD8IKt0BGytFCur98+tnQPAeP7VIDHQjSQN4V2HVrtOC2cTASB1x9vCYvkIaZgPovRNwqqdds1OPI9QCkHgGC6cebhdpL7dX3GHHFGJ6yhRQ4isC28ENXPgediPG84l/gnPpp2HCdfYVZykKqEGGOjW6zo95/SPFJ2vrlqzV7GjRHivDcm1bTo3y0sMCqvOyoWNI8Gn7hNS3Ef70BDo4dSKeLO9BU6pOAlH9J97J0nBVQaacn8GI+ak=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PS2PR06MB3509.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(396003)(346002)(376002)(39860400002)(366004)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(316002)(6486002)(54906003)(8676002)(8936002)(1076003)(2616005)(36756003)(26005)(6512007)(478600001)(107886003)(6506007)(86362001)(38100700002)(38350700005)(83380400001)(41300700001)(110136005)(6666004)(52116002)(4744005)(5660300002)(66946007)(2906002)(66476007)(66556008)(4326008);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?FBxW4OIIADQh2xNcfyooOLq+ZtwjwPi3w01qagzapVr42xsmOMWe0725GExM?=
+ =?us-ascii?Q?oDFT/hP/0P65OuM7wYEo67A1cLQVIao3NLeBKsyzjt5DCDUMe+JxOm0wQX1s?=
+ =?us-ascii?Q?g2FHqk0FT9whOnVOnUV1Xa1p0c0qyEKzIOWTZeZ2Pz3VPbTPLd8DSJ0xSta+?=
+ =?us-ascii?Q?Yx6zl3Bvou7nyDhjoRnaxGXQmkQNxIvYuQErCc7J/huao24I2imnHtWnh6vI?=
+ =?us-ascii?Q?G/GaqbNvukrNirYBQcJscRmMIi/akJqaKOmWtJgy+eIaV5b64vW/QN/P6AVn?=
+ =?us-ascii?Q?t8MPMY/IVgCgKw2QzqPOqe1zLO1witYrE+p1249cvN+XSVJ1SHBhgkMl2TWH?=
+ =?us-ascii?Q?Jb7g68fnBoUR1Ul/morfdqHv/wai7KIYoM4lZYM6+HyeIE7X/fiThMchKwDE?=
+ =?us-ascii?Q?I4RIaQj3+MD13N0T1yYEiR5wvNwMByyQ9RKCmwiz+m/2ojsQpPcfXDtA4x0I?=
+ =?us-ascii?Q?1voRWJkLrL6XNgkL5VLwlinfQ0qar9FGozMhH9YIGFRL3rK+8InxvqvV/dYG?=
+ =?us-ascii?Q?VjmCoJe6ni9Zo3zNgcCQ9DPO8AVXAVZBnPkRQSedeplbMaJqs6SPNzV9YEw3?=
+ =?us-ascii?Q?8FzzVMFLarVjX4MGKG4sSQdyeo3KEN4UQiWsQDuYq4TdJ+TsSGcSG8+4AINs?=
+ =?us-ascii?Q?okhiDQAuXRTF3qNSevZDNh0amZvpwTgItj48T19xVR7wZq5FenOgvPFp/A6y?=
+ =?us-ascii?Q?EotIcKU47qdVvyOW306ebRdTYbWWPhlNFs/YU6PmjRgfGZeX6sLA9sxgRAqI?=
+ =?us-ascii?Q?QRR/9MJPm5DMsHR2HJfZTHt3ETGf4iyhmZdags1IKUtepflSoWHV9Q0P3xhe?=
+ =?us-ascii?Q?g6TIV2VWBQqfzZTX4RA13OD8YWXZFHPhZCjHaajvqv4V+xDthh5SplCqMdN2?=
+ =?us-ascii?Q?7u55LpzZLX8nnJ7Pc9xzM94yvYO6RhrYa7zf91OUEIxqSVjL1XF9QnJh69kb?=
+ =?us-ascii?Q?mGd5Y3FCMyDMrOQxQSVYyS1Ix3mVQIzY97CMFTkJj3baUzWbBTce8aaUvprd?=
+ =?us-ascii?Q?pJqUeT9wzweYWTUneBT7wzAlz1xYWxqB1yiuQLoI04zVaPJHupZhZb/F+ig3?=
+ =?us-ascii?Q?vyIQhAbGD+vMqjSMnvKgomSDh1NsKGCT1deMIsFzqSJlj3Qpym0N+ARtMqtS?=
+ =?us-ascii?Q?/L4KofOkcoUWPJZUNnwD2Bx/ro4RjM92W55K2Q9dHUE+NaEE6VFSuG0kebhF?=
+ =?us-ascii?Q?iGH3IfvjXu/Vs6Mm1lmo7SoOT+EnQCrhuDUZzlz8Btcxc3O1+7Bj/BTSqd5p?=
+ =?us-ascii?Q?TAeuWgBN9zjKMxzjpEC+CMxrnLDZm5bHs2fg1clwAku6pbdNA+Z1GwbqtcgD?=
+ =?us-ascii?Q?KKxTIVTZ+/GfD6y+hY4KSuqaNGYV5AQMhiqHeZ9Jw73QEt4I6MrkOSCjAaHW?=
+ =?us-ascii?Q?MdQQzADl0SD0ul0ZFX1G1/D5ql1dZvSijz6M+D6uDCwtanJ0q10iO2cTOBW/?=
+ =?us-ascii?Q?IEbskJlOjM+Ipkc267V1l16faKlI9i2IHPjXPobpBdEglsXCP7W7X9weqGX5?=
+ =?us-ascii?Q?UVnWxC2panu1sxyD9eGVbhSlrVgiAWcsIq5hPUw2cXVWIK6yvLxtA/frbiTr?=
+ =?us-ascii?Q?Ql4aFhpEIkBHAgPLQGGIpA/wHnvGfh8+BKtKxdpp?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b40853f6-5bd8-4044-610b-08dc081c542c
+X-MS-Exchange-CrossTenant-AuthSource: PS2PR06MB3509.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Dec 2023 03:14:55.3853
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zHTe1rx6DuA5n0G6qaqSVcyDjEuzCECbv2nHrLmI7ASiRAwZ5VQU2DH4QBO7hFZsapzoG0k4I8k6ejYAlW91eQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY0PR06MB5593
 
-After commit '4f628248a578 kbuild: reintroduce ALLSOURCE_ARCHS support for
-tags/cscope', find_sources only invoke find_arch_sources.
+'f2fs_is_checkpoint_ready()' checks free sections. If there is not
+enough free sections, most f2fs operations will return -ENOSPC when
+checkpoint is disabled.
 
-Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-CC: Jike Song <albcamus@gmail.com>
+It would be better to check free sections before disable checkpoint.
+
+Signed-off-by: Wu Bo <bo.wu@vivo.com>
 ---
- scripts/tags.sh | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ fs/f2fs/segment.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/scripts/tags.sh b/scripts/tags.sh
-index 5061ec255291..45568fee0cbb 100755
---- a/scripts/tags.sh
-+++ b/scripts/tags.sh
-@@ -81,11 +81,6 @@ find_other_sources()
- 	       -name "$1" -not -type l -print;
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 727d016318f9..8f8c0bb75be1 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -906,6 +906,8 @@ int f2fs_disable_cp_again(struct f2fs_sb_info *sbi, block_t unusable)
+ 	if (is_sbi_flag_set(sbi, SBI_CP_DISABLED_QUICK) &&
+ 		dirty_segments(sbi) > ovp_hole_segs)
+ 		return -EAGAIN;
++	if (has_not_enough_free_secs(sbi, 0, 0))
++		return -EAGAIN;
+ 	return 0;
  }
  
--find_sources()
--{
--	find_arch_sources $1 "$2"
--}
--
- all_sources()
- {
- 	find_arch_include_sources ${SRCARCH} '*.[chS]'
-@@ -95,7 +90,7 @@ all_sources()
- 	find_include_sources '*.[chS]'
- 	for arch in $ALLSOURCE_ARCHS
- 	do
--		find_sources $arch '*.[chS]'
-+		find_arch_sources $arch '*.[chS]'
- 	done
- 	find_other_sources '*.[chS]'
- }
-@@ -125,7 +120,7 @@ all_kconfigs()
- 	find ${tree}arch/ -maxdepth 1 $ignore \
- 	       -name "Kconfig*" -not -type l -print;
- 	for arch in $ALLSOURCE_ARCHS; do
--		find_sources $arch 'Kconfig*'
-+		find_arch_sources $arch 'Kconfig*'
- 	done
- 	find_other_sources 'Kconfig*'
- }
 -- 
-2.34.1
+2.25.1
 
