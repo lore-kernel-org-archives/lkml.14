@@ -1,149 +1,75 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7101A11702;
-	Fri, 29 Dec 2023 13:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D0811C84;
+	Fri, 29 Dec 2023 13:25:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EloIf3Iu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703856324; x=1735392324;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=VoKVzeNYvXYdu0nGsITJ3pkd4dyqg9TLeqCKzyy8vGA=;
-  b=EloIf3IuP8/CHejNs9jU8kAr0XPWeToOYZpmXxe0qRUjy/eQwioOUXVa
-   y/4TdWxmQVKHN8Qtj5BoYfE0OgW/AmJqRT8sXkzVQiAKOY0Z5hd/0UcPt
-   PjqZo4qOppiqK8a7VHMu+Qx/+ULJFNKYY5EnNBhVubM7lKMmi2pFt/V/5
-   qIno+I50YEU2VN+Bs7MR9KVoOYfEOB+OOUCKPQ17CFmB6SQBlP6GsQt+z
-   vSonOhy77cfp0SpWdb1wOYHaTyoD18dpZvhieUF8NL6AZgnrDWBLG7XgX
-   WpNPybioCS3S5C4Wix9pVRNvzDIPfHdiFcCRZij9GaEnuP3dYcuW+irDI
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="3949087"
-X-IronPort-AV: E=Sophos;i="6.04,315,1695711600"; 
-   d="scan'208";a="3949087"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2023 05:23:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="755032593"
-X-IronPort-AV: E=Sophos;i="6.04,315,1695711600"; 
-   d="scan'208";a="755032593"
-Received: from yujie-x299.sh.intel.com ([10.239.159.77])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2023 05:23:49 -0800
-From: Yujie Liu <yujie.liu@intel.com>
-To: netdev@vger.kernel.org,
-	Hangbin Liu <liuhangbin@gmail.com>
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	David Ahern <dsahern@kernel.org>,
-	linux-kselftest@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XwkG7X7N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99B04C433C7;
+	Fri, 29 Dec 2023 13:25:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703856348;
+	bh=Qjdq/NiV7NMUTpVZdpiyOV0E08a+f4/G4AzkNI+HNQE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XwkG7X7NWOjzQloEY+Hjh4c45ux4z/YP8Jg6OlOLSrx7tZmUlFKpu0Zi2/YFmLYyP
+	 poQzjlQhQ7peboc5IRDUf2EhKIuWfLWVk+mOG1WBt/FxoGVpDuaG3qGsQ5/sBjO2QI
+	 XHBbz+fVH1jRT1bT4cY8xqtxpaZxI72AiC13ttVKyX32PG9XYxMV4IaT9fM/24n9WS
+	 lRE4H33qAluaYRPQzMmYMuWUAGS2ZHE9IKI1A7A/J1iYnPDFYZGqUq8J+xfmREdaPl
+	 YmRqWdfqHsKxqnERH0pjpA4v7EoJON3PXXygfFksqiYQBis8SQA3HvRUrjGG4/bwfM
+	 iNDt9QBsChqDw==
+Received: from johan by xi.lan with local (Exim 4.96.2)
+	(envelope-from <johan@kernel.org>)
+	id 1rJCrt-0000B0-2I;
+	Fri, 29 Dec 2023 14:25:41 +0100
+Date: Fri, 29 Dec 2023 14:25:41 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	lkp@intel.com,
-	kernel test robot <oliver.sang@intel.com>
-Subject: [PATCH v2 net-next] selftests/net: change shebang to bash to support "source"
-Date: Fri, 29 Dec 2023 21:19:31 +0800
-Message-Id: <20231229131931.3961150-1-yujie.liu@intel.com>
-X-Mailer: git-send-email 2.34.1
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Konrad Dybcio <konrad.dybcio@somainline.org>
+Subject: Re: [PATCH 2/3] arm64: dts: qcom: sc8280xp: Correct USB PHY power
+ domains
+Message-ID: <ZY7I1brn0chtOzis@hovoldconsulting.com>
+References: <20231227-topic-8280_pcie_dts-v1-0-13d12b1698ff@linaro.org>
+ <20231227-topic-8280_pcie_dts-v1-2-13d12b1698ff@linaro.org>
+ <ZY7DEpaIgvfL_A11@hovoldconsulting.com>
+ <b730bf22-fa3a-4720-9fd1-79d2207d6812@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b730bf22-fa3a-4720-9fd1-79d2207d6812@linaro.org>
 
-The patch set [1] added a general lib.sh in net selftests, and converted
-several test scripts to source the lib.sh.
+[ Please remember to trim your replies and add a newline before your
+  inline comments to make them readable. ]
 
-unicast_extensions.sh (converted in [1]) and pmtu.sh (converted in [2])
-have a /bin/sh shebang which may point to various shells in different
-distributions, but "source" is only available in some of them. For
-example, "source" is a built-it function in bash, but it cannot be
-used in dash.
+On Fri, Dec 29, 2023 at 02:06:26PM +0100, Konrad Dybcio wrote:
+> On 29.12.2023 14:01, Johan Hovold wrote:
+> > On Wed, Dec 27, 2023 at 11:28:27PM +0100, Konrad Dybcio wrote:
 
-Refer to other scripts that were converted together, simply change the
-shebang to bash to fix the following issues when the default /bin/sh
-points to other shells.
+> >> Fix the power-domains assignment to stop potentially toggling the GDSC
+> >> unnecessarily.
+> > 
+> > Again, there's no additional toggling being done here, but yes, this may
+> > keep the domains enabled during suspend depending on how the driver is
+> > implemented.
 
-# selftests: net: unicast_extensions.sh
-# ./unicast_extensions.sh: 31: source: not found
-# ###########################################################################
-# Unicast address extensions tests (behavior of reserved IPv4 addresses)
-# ###########################################################################
-# TEST: assign and ping within 240/4 (1 of 2) (is allowed)            [FAIL]
-# TEST: assign and ping within 240/4 (2 of 2) (is allowed)            [FAIL]
-# TEST: assign and ping within 0/8 (1 of 2) (is allowed)              [FAIL]
-# TEST: assign and ping within 0/8 (2 of 2) (is allowed)              [FAIL]
-# TEST: assign and ping inside 255.255/16 (is allowed)                [FAIL]
-# TEST: assign and ping inside 255.255.255/24 (is allowed)            [FAIL]
-# TEST: route between 240.5.6/24 and 255.1.2/24 (is allowed)          [FAIL]
-# TEST: route between 0.200/16 and 245.99/16 (is allowed)             [FAIL]
-# TEST: assign and ping lowest address (/24)                          [FAIL]
-# TEST: assign and ping lowest address (/26)                          [FAIL]
-# TEST: routing using lowest address                                  [FAIL]
-# TEST: assigning 0.0.0.0 (is forbidden)                              [ OK ]
-# TEST: assigning 255.255.255.255 (is forbidden)                      [ OK ]
-# TEST: assign and ping inside 127/8 (is forbidden)                   [ OK ]
-# TEST: assign and ping class D address (is forbidden)                [ OK ]
-# TEST: routing using class D (is forbidden)                          [ OK ]
-# TEST: routing using 127/8 (is forbidden)                            [ OK ]
-not ok 51 selftests: net: unicast_extensions.sh # exit=1
+> No, it can actually happen. (Some) QMP PHYs are referenced by the
+> DP hardware. If USB is disabled (or suspended), the DP being active
+> will hold these GDSCs enabled.
 
-v1 -> v2:
-  - Fix pmtu.sh which has the same issue as unicast_extensions.sh,
-    suggested by Hangbin
-  - Change the style of the "source" line to be consistent with other
-    tests, suggested by Hangbin
+That's not a "toggling", is it? Also if the DP controller is a consumer of
+these PHY's why should it not prevent the PHYs from suspending?
 
-Link: https://lore.kernel.org/all/20231202020110.362433-1-liuhangbin@gmail.com/ [1]
-Link: https://lore.kernel.org/all/20231219094856.1740079-1-liuhangbin@gmail.com/ [2]
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Signed-off-by: Yujie Liu <yujie.liu@intel.com>
----
- tools/testing/selftests/net/pmtu.sh               | 4 ++--
- tools/testing/selftests/net/unicast_extensions.sh | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/tools/testing/selftests/net/pmtu.sh b/tools/testing/selftests/net/pmtu.sh
-index 175d3d1d773b..f10879788f61 100755
---- a/tools/testing/selftests/net/pmtu.sh
-+++ b/tools/testing/selftests/net/pmtu.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
- #
- # Check that route PMTU values match expectations, and that initial device MTU
-@@ -198,7 +198,7 @@
- # - pmtu_ipv6_route_change
- #	Same as above but with IPv6
- 
--source ./lib.sh
-+source lib.sh
- 
- PAUSE_ON_FAIL=no
- VERBOSE=0
-diff --git a/tools/testing/selftests/net/unicast_extensions.sh b/tools/testing/selftests/net/unicast_extensions.sh
-index b7a2cb9e7477..f52aa5f7da52 100755
---- a/tools/testing/selftests/net/unicast_extensions.sh
-+++ b/tools/testing/selftests/net/unicast_extensions.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
- #
- # By Seth Schoen (c) 2021, for the IPv4 Unicast Extensions Project
-@@ -28,7 +28,7 @@
- # These tests provide an easy way to flip the expected result of any
- # of these behaviors for testing kernel patches that change them.
- 
--source ./lib.sh
-+source lib.sh
- 
- # nettest can be run from PATH or from same directory as this selftest
- if ! which nettest >/dev/null; then
-
-base-commit: cd4d7263d58ab98fd4dee876776e4da6c328faa3
--- 
-2.34.1
-
+Johan
