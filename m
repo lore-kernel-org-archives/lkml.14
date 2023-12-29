@@ -1,91 +1,116 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF177612A;
-	Fri, 29 Dec 2023 07:24:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4T1bzZ5NZlz4f3jR9;
-	Fri, 29 Dec 2023 15:07:22 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id CBE701A01C8;
-	Fri, 29 Dec 2023 15:07:25 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgDHFQwscI5l6ou9Ew--.50337S4;
-	Fri, 29 Dec 2023 15:07:25 +0800 (CST)
-From: Li Lingfeng <lilingfeng@huaweicloud.com>
-To: song@kernel.org
-Cc: linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com,
-	linan122@huawei.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	lilingfeng@huaweicloud.com,
-	lilingfeng3@huawei.com
-Subject: [PATCH] md: get rdev->mddev with READ_ONCE()
-Date: Fri, 29 Dec 2023 15:05:00 +0800
-Message-Id: <20231229070500.3602712-1-lilingfeng@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4F57472;
+	Fri, 29 Dec 2023 07:42:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nrj481SG"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5947cf2a4f6so2678607eaf.2;
+        Thu, 28 Dec 2023 23:42:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703835732; x=1704440532; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=belYaZw7nnlF1duW1TrklCfu9FOKWDv8WHvDDxzeUJc=;
+        b=nrj481SGXZSBjlF7AKoJ43fmiu3e73Oj6p8uXAJBXsKn8QjcRbM4psCtL9bx+qbjUA
+         XiG2l43elCb9rOOOY0khl7e485KStLjdpisbZWpbCoKgYekvwlfCn4kUV69l6Lwm8z5P
+         T4gJaN907m4dZ1ejWXEjwhDcJnOQLzaHRJCRYBVxZYOoY3JTxsgE/9LLAR0J3KSJ4IjB
+         fCZXMZJHA6PfQLXJy/sIeflLvLAgFS54xxF06YPqx8wAh1dND7Hx11b2F7H4cDLs2SzG
+         bD/et7v3zieNMHzAmGyaLyPF/bewUh8A1UBc8s7LqTWw1BU7UiO8uOEorVS6p0EPpZ1K
+         9jSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703835732; x=1704440532;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=belYaZw7nnlF1duW1TrklCfu9FOKWDv8WHvDDxzeUJc=;
+        b=k0LMyZGHHC5+6yCYQeF14pLys/4UVHbufH3xxdbfNtSZDoie5S02AzvI/QsYleCxH1
+         ddSYAmtjSacLZQufEkNMgByNonpuyOA38OpM4HRk3XKox1hR5+YYdfrUWw419zGwZ/Et
+         qcC95bmQ8wzbQnNTaanR5JBNlL5yODXDF1/wyv5ARsFNaAzrIsINNs0rMqAGYB/6qnCo
+         vkqDlkcXVxtMspPYC/geJBUG/SNQRam514ZSwPjUqgbxS47CQ1IoX00lVza2d1qAsa4E
+         UgD4rF68sOq60qDsgRFSfl+zuhVUxFURAEjc8sFIavotecinefb7QMgN2VdrlArLzRE9
+         0YkA==
+X-Gm-Message-State: AOJu0YwhNFlyypEcX58ibwlHqspNJbX+t+aOvsFgKsvB8PDUObR9tiTP
+	4QQw4qRQG1/UHbxDtEKpPVw=
+X-Google-Smtp-Source: AGHT+IEOnqTVZ1gPw9ajScbpZJ1Avm2rUUVUMeKV1/mi5nzQdguVdREReXdaWJ4QvZ/w7zAipfoY4w==
+X-Received: by 2002:a05:6358:3419:b0:174:df41:a412 with SMTP id h25-20020a056358341900b00174df41a412mr10684026rwd.40.1703835732252;
+        Thu, 28 Dec 2023 23:42:12 -0800 (PST)
+Received: from google.com ([2620:15c:9d:2:1995:632f:ef1e:946e])
+        by smtp.gmail.com with ESMTPSA id y8-20020a17090a784800b0028be9f86701sm15080059pjl.38.2023.12.28.23.42.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Dec 2023 23:42:11 -0800 (PST)
+Date: Thu, 28 Dec 2023 23:42:08 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: linux-input@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	Oliver Graute <oliver.graute@kococonnector.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	ye xingchen <ye.xingchen@zte.com.cn>,
+	LKML <linux-kernel@vger.kernel.org>, cocci@inria.fr
+Subject: Re: [PATCH] Input: usbtouchscreen - Return directly after a failed
+ kmalloc() in nexio_init()
+Message-ID: <ZY54UDosMHwj6D3Y@google.com>
+References: <9365c845-baa1-44d1-add9-ec8ca4d365eb@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDHFQwscI5l6ou9Ew--.50337S4
-X-Coremail-Antispam: 1UD129KBjvdXoWruw4xtw17ur4xZw43ZF1UJrb_yoWkKrcEgF
-	WYvryrG34agryxKr13Cw4Sv3s0yayvgwnrWFySqFZIyr98tFykAryruw15A3ya9F1fCFs8
-	KF1Ykr1aqFWrCjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbwAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxAIw28IcxkI7VAKI48J
-	MxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
-	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
-	0xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
-	v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
-	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUp6wZUUUUU=
-X-CM-SenderInfo: polox0xjih0w46kxt4xhlfz01xgou0bp/
+In-Reply-To: <9365c845-baa1-44d1-add9-ec8ca4d365eb@web.de>
 
-From: Li Lingfeng <lilingfeng3@huawei.com>
+On Tue, Dec 26, 2023 at 09:08:12PM +0100, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Tue, 26 Dec 2023 21:00:25 +0100
+> 
+> The kfree() function was called in one case by
+> the nexio_init() function during error handling
+> even if the passed variable contained a null pointer.
 
-Users may get rdev->mddev by sysfs while rdev is releasing.
-So use both READ_ONCE() and WRITE_ONCE() to prevent load/store tearing
-and to read/write mddev atomically.
+Which is perfectly valid thing to do, like free(), kfree() accepts NULL
+argument.
 
-Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
----
- drivers/md/md.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> This issue was detected by using the Coccinelle software.
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 9bdd57324c37..3b38a565bffa 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -2562,7 +2562,7 @@ static void md_kick_rdev_from_array(struct md_rdev *rdev)
- 	list_del_rcu(&rdev->same_set);
- 	pr_debug("md: unbind<%pg>\n", rdev->bdev);
- 	mddev_destroy_serial_pool(rdev->mddev, rdev);
--	rdev->mddev = NULL;
-+	WRITE_ONCE(rdev->mddev, NULL);
- 	sysfs_remove_link(&rdev->kobj, "block");
- 	sysfs_put(rdev->sysfs_state);
- 	sysfs_put(rdev->sysfs_unack_badblocks);
-@@ -3646,7 +3646,7 @@ rdev_attr_store(struct kobject *kobj, struct attribute *attr,
- 	struct kernfs_node *kn = NULL;
- 	bool suspend = false;
- 	ssize_t rv;
--	struct mddev *mddev = rdev->mddev;
-+	struct mddev *mddev = READ_ONCE(rdev->mddev);
- 
- 	if (!entry->store)
- 		return -EIO;
+This tells me precisely nothing.
+
+> 
+> Thus return directly after a call of the function “kmalloc” failed
+> at the beginning.
+
+This is simply a matter of preference, the original author preferred
+that style, I see no objective reason to change it.
+
+> 
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> ---
+>  drivers/input/touchscreen/usbtouchscreen.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/input/touchscreen/usbtouchscreen.c b/drivers/input/touchscreen/usbtouchscreen.c
+> index 60354ebc7242..1873c7918a78 100644
+> --- a/drivers/input/touchscreen/usbtouchscreen.c
+> +++ b/drivers/input/touchscreen/usbtouchscreen.c
+> @@ -977,7 +977,7 @@ static int nexio_init(struct usbtouch_usb *usbtouch)
+> 
+>  	buf = kmalloc(NEXIO_BUFSIZE, GFP_NOIO);
+>  	if (!buf)
+> -		goto out_buf;
+> +		return ret;
+> 
+>  	/* two empty reads */
+>  	for (i = 0; i < 2; i++) {
+> --
+> 2.43.0
+> 
+
+Thanks.
+
 -- 
-2.39.2
-
+Dmitry
