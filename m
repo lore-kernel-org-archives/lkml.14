@@ -1,131 +1,144 @@
-Received: from IND01-MAX-obe.outbound.protection.outlook.com (mail-maxind01on2055.outbound.protection.outlook.com [40.107.222.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69D0111B1;
-	Fri, 29 Dec 2023 13:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siliconsignals.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siliconsignals.io
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M4/drzrGX7RrMrJ6SCdv3dYLLN56/um2KCQkHf7UsS0SuhzVyRkfKo54ubZTftBWAEkZd9hnBxjYvpGcukXzhEpvUXeMZEsOeJZ5Mw5QlWBLX7esSSN8qJNBb/ZzAbtTlJeXnHNpUBnSyM1BkYCx9L3xHMGmcllezDXWM6bE2onZPYf0PH3+0l3n5+BSdfRhCxUQ/j87gosG1QruM6Fs26Rwg2eFXulHPsP4u/66YSdpYtL9LCaHCc7EI6p7zkc7i+uUpY0WQdT+7sa/Ht9kOPc2zYiW2chIhkJn2hvirVOS93q9znnoqkoWN/ADaMKxJoe60CLSVHqp1keTNly6Qw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ab/N8jxNsQ7ZFSg74wRxqWpYKOAEQeUIizGtUunjS00=;
- b=eykpGzLC/SwSQYTB/Fwo1+uPLNOH99uj6EdTRJP8T/t/bxwfy6Eetjai4dgvMdgK/3T32vZG9AKUGKbpbeAjy+2/t3V9jRU3xfzX3Awca/iDHNPsHVQe7SZKYfjOFue/znkPkM2TKWQ0WurcMmiEZFoO8DcbkA7+6EgGtcOVHQmF6ZQMd4eQk6R/6ZTowuiIURmpSveIsNQ1qZSL45J2XXsg5DtPloRaThC14hnpzBwwsBvfUMR5XUKp6UAimDTJfONKqmYwHwLHP6G/UkAPQ9yOMgvgv5mI+Ji5X7dyQJIV4th9GZCV5gQhabW8PQLSx6OhKjokaFVMJO64n1/BiA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siliconsignals.io; dmarc=pass action=none
- header.from=siliconsignals.io; dkim=pass header.d=siliconsignals.io; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siliconsignals.io;
-Received: from MA0PR01MB7145.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:31::9)
- by MAZPR01MB6989.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:50::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.21; Fri, 29 Dec
- 2023 13:02:59 +0000
-Received: from MA0PR01MB7145.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::eb15:266a:cd6a:e0f1]) by MA0PR01MB7145.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::eb15:266a:cd6a:e0f1%7]) with mapi id 15.20.7135.019; Fri, 29 Dec 2023
- 13:02:59 +0000
-From: Hardevsinh Palaniya <hardevsinh.palaniya@siliconsignals.io>
-To: haibo.chen@nxp.com,
-	ulf.hansson@linaro.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de
-Cc: hardevsinh.palaniya@siliconsignals.io,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	linux-mmc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] mmc: sdhci-esdhc-imx: Fix smatch errors
-Date: Fri, 29 Dec 2023 18:32:07 +0530
-Message-Id: <20231229130207.3539334-1-hardevsinh.palaniya@siliconsignals.io>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: PN3PR01CA0061.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:99::6) To MA0PR01MB7145.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:31::9)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D38111B1
+	for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 13:06:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mKEVaFcD"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-9fa45e75ed9so714760366b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 29 Dec 2023 05:06:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703855189; x=1704459989; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rKl2hv7xjGsCk4ipbW2TPD5NpXw4HvPQGvbNkejIlh4=;
+        b=mKEVaFcD/L2jaQ0hPvFrYEPYGCJswZBDPe0Ps+6c84ZAWBsa8q0Fx5Zsk06qwPM7Gx
+         gQV5DNeDWt2d6CBRVGVVUPPSiywHQ1SCGirRaEEFEhLQRcCfDf4yy6kHzQF5bQGJkGWy
+         WeKuRoI9qVL58g6as8+J+/tmD7/ONkfYp3wVhQHHgUhUzrTz6QNEa+YTyzwIXaRM03J/
+         RuibcVzwQl/P95jGDc9aUKkB99y1IPcwUYGWqjCdJAk4A3ZYFDQ08Ikk5PeECqWIRi0c
+         SCSnParoveJT7hXInk0OXwMVOMpf8WogBcP4w7vDwdOE8sQKFdByObzWfXQeWrsaHTST
+         s2Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703855189; x=1704459989;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rKl2hv7xjGsCk4ipbW2TPD5NpXw4HvPQGvbNkejIlh4=;
+        b=TDlXbXNKzds4i5kkdR22DF43TVG8bthBnJpl0oF2lsvuLHHLpYFjgHcxsAZFXNzT4a
+         hmgUoVR8kUs41yHFTh7sQCAYl9j2iG+gumUAXx9PMGm7S2g+My5PWZPR7ZTEYWrHnT5U
+         gOjRWyJSULwy+3DKgriTbKrjsCILOt7HrsdcLtduEPwc/stUkoI34xz//SOV4hsFNDzC
+         cwmXWw7QJu64Fa3388TqH68I2xYdcgHSQud+a824bf7Cg6pVagcomTsXf/Zm4lyE9DHq
+         LpkgpP+E7pweuOZktiTt+XimPcEHhcYBvqqOM0vZFEs9RuuH3zqs8pfRLniwSyzDKFNG
+         Ts1Q==
+X-Gm-Message-State: AOJu0YydXm0Cw6cH7XZd4v0514n1gL+9Ld+VIdzkrw3U4DtO9CECKo5B
+	XL7tvnhIAjK8fBIcjG9SSAOzD3wmlPLWhg==
+X-Google-Smtp-Source: AGHT+IG6nayuDtLATAJ3w9ufh+iosF+lV0OjwmqvmBhBKgXTlvxjbK7Wz8rK3l6GS4p8DMngFG204w==
+X-Received: by 2002:a17:906:7386:b0:a26:f18a:b31d with SMTP id f6-20020a170906738600b00a26f18ab31dmr2827006ejl.13.1703855189611;
+        Fri, 29 Dec 2023 05:06:29 -0800 (PST)
+Received: from [192.168.199.125] (178235179036.dynamic-4-waw-k-1-3-0.vectranet.pl. [178.235.179.36])
+        by smtp.gmail.com with ESMTPSA id fh24-20020a1709073a9800b00a26a5f83cecsm7927239ejc.79.2023.12.29.05.06.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 Dec 2023 05:06:29 -0800 (PST)
+Message-ID: <b730bf22-fa3a-4720-9fd1-79d2207d6812@linaro.org>
+Date: Fri, 29 Dec 2023 14:06:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MA0PR01MB7145:EE_|MAZPR01MB6989:EE_
-X-MS-Office365-Filtering-Correlation-Id: 136f07e0-3394-411f-4f78-08dc086e7b38
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	1c9Dc/7mady7ZuKmB0oNnJ75GbSjTpxk55xqkYuSw2muEumUb6pFea64Tecy7JZPkwZqXfrGED5K/H/flQVDWtdH6XARl2UIlLa9zPzSBUPGGPpNh7tViQY3nW75nluji1ST+vqdJzI1p6hwUE8iUDkFS2USCgXaaIxsyXf9NiqhkYf57m+iK75AwFuZ8EctKVy/jd6/QtAZrXNhizr30RjUaaWzKZSbiOCNajEAsgJar+V9k5iybpH9jh79U10NMl06hs/S+95vzT+H3haDulzwFZq35mvI7mpz/1oTc0/FgbTOaJzKhCIoiNqG0XgJ882GeqR+O3T4NVJnzDe1RvPU6WE8Vqzy1CMLkRLEbR+5n3uH/b6KEBEeSXVFbeQtL7f3liBM8ipEWrvwVrrj4gxGL2geL0T53+AR9hJxhsAwsoEbXUtBToEM+Pe7Rgz8HzcdHb/c2KafPh82gPIx/ActEk0G/x9qymyLlIaDi2vqfWEfoVZImzv9DB0UrcriXKrZtTzADHekvEGWHNZrauct+dRs0meIJsNRJypjYDEK9Mxm6OxXCldII9hxNgstwz6aj7/4DAi3m9lmzYaeGbT7jiKxlo93t34b/TRwnd4Dn1IFcTEX/eBfYeDxkNrl
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MA0PR01MB7145.INDPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(39830400003)(346002)(366004)(136003)(230922051799003)(64100799003)(1800799012)(186009)(451199024)(6512007)(6506007)(8936002)(66556008)(66476007)(86362001)(66946007)(6666004)(478600001)(52116002)(6486002)(2616005)(1076003)(26005)(36756003)(54906003)(316002)(38350700005)(7416002)(4744005)(4326008)(5660300002)(44832011)(8676002)(2906002)(38100700002)(41300700001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?+fq4hVbY06oE5xGVGXlDkvyGUzK3Ng12AiSDJzVc25pPzGrtHwzX7o7KtMOQ?=
- =?us-ascii?Q?M76nkkUIe50xUIkOyxBlizxWmj+rWOzC1Zt1bBxZTHGDBRSNV1ggRohDJecR?=
- =?us-ascii?Q?uIvmtfoUVyN9rh1SJKlQCpKnOnQ5NbcUZFMTHqHSTamSSJK3zp6YYQOeUdRf?=
- =?us-ascii?Q?O+hkLf7sLHnq8CDaVJMG05qYnTTCOexA/0ZO42sJ8cvsLgl6DaP4J41zbtgh?=
- =?us-ascii?Q?yqEtlCOw9gY4e6tGd+XgUResSsd/EQQZi3FBQfkZbXX2Mi2OWKFDQqC+5GnV?=
- =?us-ascii?Q?lgG1A4KjSkj9MusffjEMOMqMZr/9avWrztTaspfENoif4hn17sy9NkSLZT9j?=
- =?us-ascii?Q?aaChCRg49EmU7MsHwhg+y6bqSgWvGBNXVxnkQZUmlQP66WOw+6iJ/kJx2/aO?=
- =?us-ascii?Q?wMbb78bpJz+hMsT44Lm1tQy3rDc7r9u4NCGq3hsm+OILqtQYye65ExDpiZFD?=
- =?us-ascii?Q?ePQUNlnyeR+fQY0TaQiqJpPGJMzn4Vtwc8DhDIU8l5V1FAN4soL3teMpIb5n?=
- =?us-ascii?Q?hwpOB9mPyM6aOuvIT4R1JdI6UFNLa9LgluPMxtbFNJFbDbb9EBLnneZKbLA7?=
- =?us-ascii?Q?ZqOnkGXUOG9FiH9JjDyM/OrTMhOmkK17roh5Ws8qte2zrJmFbEiaYI3IHbAH?=
- =?us-ascii?Q?8NAbJ1p/i4RbyFyT49BQqed31DlRtpGs8kmdlYtLJBLX0OE0Va2mrF2PTRVG?=
- =?us-ascii?Q?jDA8glKp3sE3ugKoj+JC4JCKzHuIK+EmYCh07exT3QTirqd73e6QVu5RVDOa?=
- =?us-ascii?Q?PKakOALmx9nEV0jDUotxzqnioOWaVMLSfuFYkciZWepOSxbn9nsFLP92Zw1/?=
- =?us-ascii?Q?bi14bNDGr1v2wbq4dELvZDO2wsNMpV5AvDnlv14kam+exgpXKwui1FRsbCc2?=
- =?us-ascii?Q?Rowz+c+Ro56L6hm8OwPiArcHs4h/duR3426jwRLYkIeUySmHmwhk/7eVRxOU?=
- =?us-ascii?Q?tSmOsW3QgHfop7j2bOjszadFs8l44M0GwUDT8/SUQQlC+DN1JNT+nmSlYjiG?=
- =?us-ascii?Q?eCkW5n5ON7Jns03OdIDiqvczyYY7BPG5Vy3eYS7AxgFck3/qy+D3DsRois7m?=
- =?us-ascii?Q?/ueloKlb9pOGBuduPWaoDUPRqlE/Nb9YxSPHQ3MkAzJ7Cq7GS57hEfiRgXKO?=
- =?us-ascii?Q?iPq2l/H2kTkik6FJd3K3DoWfSmMcSLzN2fF6mpJVoPIcOwI5A/IeR8k1J6qT?=
- =?us-ascii?Q?youABa2RrefPlLrbIKSPhDMOPOd8tzdyClH/5ZrELQy/HYUBWjumALcjmlGl?=
- =?us-ascii?Q?TRPE5sWE47Exnk/ernO3buXrzEUlEs4W8dCAxmRPOww7NOQSI+MRrrHgbA6T?=
- =?us-ascii?Q?8Kve5R6XSVhEftGWCn0tdAlj+on0hHLKvoZ2+/93UyUvuKBDROiAP61jcYEY?=
- =?us-ascii?Q?H1Zr61+LN6t3NjMNBxdTVKY6cdlUoPXaiGu9vf+B+KPub4ly7b5wZf5oDDIP?=
- =?us-ascii?Q?MiwayYmFBjSvQ2VvnnySkqYT58NHtUkdd8h9qG1BUaHP8ADyb2t0VKS37Hfc?=
- =?us-ascii?Q?lgQk1pJ5RBfgnTKuh0U1rvcMtNdBFmbtlYx4645RvUFMJzgUqo1H5qCEKG55?=
- =?us-ascii?Q?zjq2R+oKnAsIT5BdIALVxeRGFNSIAoHUtatc6MQiS73bIGCI2nzyHBSzFxVk?=
- =?us-ascii?Q?TkRK5F/sud9LFpH55yX5RB6m8uOFC9W8RZAhqqOUrhCI?=
-X-OriginatorOrg: siliconsignals.io
-X-MS-Exchange-CrossTenant-Network-Message-Id: 136f07e0-3394-411f-4f78-08dc086e7b38
-X-MS-Exchange-CrossTenant-AuthSource: MA0PR01MB7145.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Dec 2023 13:02:58.8265
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 7ec5089e-a433-4bd1-a638-82ee62e21d37
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vLNZ4JdjqvWDRxsVAo1vGvuXR0sjjELwt9pAXKsxgMxBp93GZGbkUJdi+QH4NygySD8k2O20IyUNkcrUrcoM3T8H6Hx/M7/2R805SlrPwjU9KCErTR64eYzv2LAQMmRf
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MAZPR01MB6989
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] arm64: dts: qcom: sc8280xp: Correct USB PHY power
+ domains
+Content-Language: en-US
+To: Johan Hovold <johan@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Johan Hovold <johan+linaro@kernel.org>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Konrad Dybcio <konrad.dybcio@somainline.org>
+References: <20231227-topic-8280_pcie_dts-v1-0-13d12b1698ff@linaro.org>
+ <20231227-topic-8280_pcie_dts-v1-2-13d12b1698ff@linaro.org>
+ <ZY7DEpaIgvfL_A11@hovoldconsulting.com>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <ZY7DEpaIgvfL_A11@hovoldconsulting.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Resolve smatch errors in esdhc_executing_tuning()
+On 29.12.2023 14:01, Johan Hovold wrote:
+> On Wed, Dec 27, 2023 at 11:28:27PM +0100, Konrad Dybcio wrote:
+>> The USB GDSCs are only related to the controllers.
+> 
+> Are you sure?
+That's what I've been told from rather reliable sources.
 
-esdhc_executing_tuning() error: uninitialized symbol 'target_min'
-esdhc_executing_tuning() error: uninitialized symbol 'target_max'
+> 
+>> The PHYs on the other
+>> hand, are powered by VDD_MX and their specific VDDA_PHY/PLL regulators.
+>>
+>> Fix the power-domains assignment to stop potentially toggling the GDSC
+>> unnecessarily.
+> 
+> Again, there's no additional toggling being done here, but yes, this may
+> keep the domains enabled during suspend depending on how the driver is
+> implemented.
+No, it can actually happen. (Some) QMP PHYs are referenced by the
+DP hardware. If USB is disabled (or suspended), the DP being active
+will hold these GDSCs enabled.
 
-Signed-off-by: Hardevsinh Palaniya <hardevsinh.palaniya@siliconsignals.io>
-
-diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-index 40a6e2f8145a..839b60138f04 100644
---- a/drivers/mmc/host/sdhci-esdhc-imx.c
-+++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-@@ -1166,6 +1166,8 @@ static int esdhc_executing_tuning(struct sdhci_host *host, u32 opcode)
- 	min = ESDHC_TUNE_CTRL_MIN;
- 	max = ESDHC_TUNE_CTRL_MIN;
- 	target_win_length = 0;
-+	target_min = 0;
-+	target_max = 0;
- 	while (max < ESDHC_TUNE_CTRL_MAX) {
- 		/* find the mininum delay first which can pass tuning */
- 		while (min < ESDHC_TUNE_CTRL_MAX) {
--- 
-2.25.1
-
+Konrad
+> If that's the concern, then please spell that out too.
+> 
+>> Fixes: 152d1faf1e2f ("arm64: dts: qcom: add SC8280XP platform")
+> 
+> May not be needed either.
+> 
+>> @@ -2597,7 +2597,7 @@ usb_2_qmpphy0: phy@88ef000 {
+>>  				 <&gcc GCC_USB3UNIPHY_PHY_MP0_BCR>;
+>>  			reset-names = "phy", "phy_phy";
+>>  
+>> -			power-domains = <&gcc USB30_MP_GDSC>;
+>> +			power-domains = <&rpmhpd SC8280XP_MX>;
+> 
+> Johan
