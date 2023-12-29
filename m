@@ -1,106 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED1C11C8B;
-	Fri, 29 Dec 2023 14:52:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A948111C8B;
+	Fri, 29 Dec 2023 14:54:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yv+1D9+x"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LF1no2QX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703861563; x=1735397563;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=jcb3d1Eurdn7JoSDwWMgzToJsi8wV219/OcIstMM8H4=;
-  b=Yv+1D9+xExQnxR2A9GjWlNjNuXDTyNyqfWzLSnXpUsZbQHqjx6STDj7g
-   apjJpRzQCJPy/RY7cUvp9e6qej516P4nwh47rD6ZTovBDhcmgeW8Im+fD
-   1I9H5sppwU5nC8KinKGtrbHPwCP8d5diclmQJ4j6d78JUph3LnRYfJvBE
-   WADnk7gNzVRgToQFuxrkXDvd8hAGlnxObbYzVC6Ak0gEpzisQzvYt6fTF
-   V3B1HEw13lQMKc7e2L0lpCKcIzZfNSwEGDHH6fuKbCHfUWXW5oGYldwF/
-   xskcjIC1wkrT0pFKyTnd6TMUtmxO4GhV2zx5Fm+9vW0gEn1aIGj/QfDX2
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10938"; a="396379422"
+  t=1703861658; x=1735397658;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LmCz43UOG0d1OrqtwkVYhlzS+7VmCSgdz5lsHb1OANY=;
+  b=LF1no2QXFOzULbsBO6urV7VfERdVXga3DYmCRUjzAKwSf8sC/Q/qp6aS
+   CnfWe+G4hErLsMMZV28wAUv1d5fFKz0eDrcnWIUusF/kNdlGcDW1hQqlo
+   fgiLASbNzm72ZBkpIpy5vJQPhEZayouyV+wfjO8JVAAzduiLvSb9qq0/j
+   m5f3FBX7VfA8vMKS8ldJS5snyJBmw2ghm7D+z1tXzQbg0sx/Jd4kPaEyF
+   j/wnN/j2dQGVHoxv1qu77DgQjY41g+qcSiitiHhcFyi8/J23kz7T9qcTy
+   4OGN7wIl+PN9ixJlvi+QCWsOm+yY8krvMWHgYQAR0nydqNICAkLqh5toC
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10938"; a="376808414"
 X-IronPort-AV: E=Sophos;i="6.04,315,1695711600"; 
-   d="scan'208";a="396379422"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2023 06:52:42 -0800
+   d="scan'208";a="376808414"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2023 06:54:17 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10938"; a="771978949"
 X-IronPort-AV: E=Sophos;i="6.04,315,1695711600"; 
-   d="scan'208";a="20888995"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.48.133])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2023 06:52:39 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 1/1] net: mdio: mux-bcm-iproc: Use alignment helpers and SZ_4K
-Date: Fri, 29 Dec 2023 16:52:32 +0200
-Message-Id: <20231229145232.6163-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
+   d="scan'208";a="771978949"
+Received: from sgruszka-mobl.ger.corp.intel.com (HELO localhost) ([10.252.35.82])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2023 06:54:12 -0800
+Date: Fri, 29 Dec 2023 04:08:24 +0100
+From: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+	Greg KH <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org,
+	Youngmin Nam <youngmin.nam@samsung.com>,
+	linux-kernel@vger.kernel.org, d7271.choe@samsung.com,
+	janghyuck.kim@samsung.com, hyesoo.yu@samsung.com,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v1 2/3] async: Introduce async_schedule_dev_nocall()
+Message-ID: <ZY44KH2wGIUyIZp6@linux.intel.com>
+References: <CGME20231227084252epcas2p3b063f7852f81f82cd0a31afd7f404db4@epcas2p3.samsung.com>
+ <5754861.DvuYhMxLoT@kreacher>
+ <6019796.lOV4Wx5bFT@kreacher>
+ <4874693.GXAFRqVoOG@kreacher>
+ <ZY3auVvVzxwTmAX8@linux.intel.com>
+ <CAJZ5v0gns5zeLEk39NGwjLy40wzHAHDWYBYapWwQWcJ9jrF-3Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0gns5zeLEk39NGwjLy40wzHAHDWYBYapWwQWcJ9jrF-3Q@mail.gmail.com>
 
-Instead of open coding, use IS_ALIGNED() and ALIGN_DOWN() when dealing
-with alignment. Replace also literals with SZ_4K.
+On Fri, Dec 29, 2023 at 02:37:36PM +0100, Rafael J. Wysocki wrote:
+> > > +bool async_schedule_dev_nocall(async_func_t func, struct device *dev)
+> > > +{
+> > > +     struct async_entry *entry;
+> > > +
+> > > +     entry = kzalloc(sizeof(struct async_entry), GFP_KERNEL);
+> >
+> > Is GFP_KERNEL intended here ?
+> 
+> Yes, it is.
+> 
+> PM will be the only user of this, at least for now, and it all runs in
+> process context.
+> 
+> > I think it's not safe since will
+> > be called from device_resume_noirq() .
+> 
+> device_resume_noirq() runs in process context too.
+> 
+> The name is somewhat confusing (sorry about that) and it means that
+> hardirq handlers (for the majority of IRQs) don't run in that resume
+> phase, but interrupts are enabled locally on all CPUs (this is
+> required for wakeup handling, among other things).
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/net/mdio/mdio-mux-bcm-iproc.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Then my concern would be: if among devices with disabled IRQs are
+disk devices? Seems there are disk devices as well, and because
+GFP_KERNEL can start reclaiming memory by doing disk IO (write
+dirty pages for example), with disk driver interrupts disabled
+reclaiming process can not finish.
 
-diff --git a/drivers/net/mdio/mdio-mux-bcm-iproc.c b/drivers/net/mdio/mdio-mux-bcm-iproc.c
-index a750bd4c77a0..1ce7d67ba72e 100644
---- a/drivers/net/mdio/mdio-mux-bcm-iproc.c
-+++ b/drivers/net/mdio/mdio-mux-bcm-iproc.c
-@@ -2,6 +2,7 @@
- /*
-  * Copyright 2016 Broadcom
-  */
-+#include <linux/align.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/device.h>
-@@ -11,6 +12,7 @@
- #include <linux/of_mdio.h>
- #include <linux/phy.h>
- #include <linux/platform_device.h>
-+#include <linux/sizes.h>
- 
- #define MDIO_RATE_ADJ_EXT_OFFSET	0x000
- #define MDIO_RATE_ADJ_INT_OFFSET	0x004
-@@ -220,12 +222,12 @@ static int mdio_mux_iproc_probe(struct platform_device *pdev)
- 	md->base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
- 	if (IS_ERR(md->base))
- 		return PTR_ERR(md->base);
--	if (res->start & 0xfff) {
-+	if (!IS_ALIGNED(res->start, SZ_4K)) {
- 		/* For backward compatibility in case the
- 		 * base address is specified with an offset.
- 		 */
- 		dev_info(&pdev->dev, "fix base address in dt-blob\n");
--		res->start &= ~0xfff;
-+		res->start = ALIGN_DOWN(res->start, SZ_4K);
- 		res->end = res->start + MDIO_REG_ADDR_SPACE_SIZE - 1;
- 	}
- 
--- 
-2.39.2
+I do not see how such possible infinite waiting for disk IO
+scenario is prevented here, did I miss something?
 
+Regards
+Stanislaw
