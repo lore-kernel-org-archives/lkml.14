@@ -1,14 +1,14 @@
 Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E08B7F0;
-	Sat, 30 Dec 2023 00:09:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB55EDE;
+	Sat, 30 Dec 2023 00:10:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
 Received: from fedori.lan (51b6838a.dsl.pool.telekom.hu [::ffff:81.182.131.138])
   (AUTH: CRAM-MD5 soyer@irl.hu, )
   by irl.hu with ESMTPSA
-  id 0000000000071EF2.00000000658F5FD0.0014D4A7; Sat, 30 Dec 2023 01:09:51 +0100
+  id 00000000000720A0.00000000658F5FD1.0014D4C3; Sat, 30 Dec 2023 01:09:53 +0100
 From: Gergo Koteles <soyer@irl.hu>
 To: Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>,
   Baojun Xu <baojun.xu@ti.com>, Jaroslav Kysela <perex@perex.cz>,
@@ -16,9 +16,9 @@ To: Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>,
   Mark Brown <broonie@kernel.org>
 Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
   alsa-devel@alsa-project.org, Gergo Koteles <soyer@irl.hu>
-Subject: [PATCH v2 2/4] ALSA: hda/tas2781: add configurable global i2c address
-Date: Sat, 30 Dec 2023 01:09:43 +0100
-Message-ID: <a252f1efeed5049f027f01e699c9e10e1e05bf9e.1703891777.git.soyer@irl.hu>
+Subject: [PATCH v2 4/4] ALSA: hda/tas2781: add fixup for Lenovo 14ARB7
+Date: Sat, 30 Dec 2023 01:09:45 +0100
+Message-ID: <abce9ee55689523562feb72383377171a489ddc7.1703891777.git.soyer@irl.hu>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1703891777.git.soyer@irl.hu>
 References: <cover.1703891777.git.soyer@irl.hu>
@@ -32,49 +32,60 @@ Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
 
-Make the global i2c address configurable to support compatible amplifiers
-with different global i2c address.
+The 14ARB7 has two tas2563 amplifier on i2c.
+Connect it to the tas2781 driver.
 
 Signed-off-by: Gergo Koteles <soyer@irl.hu>
 ---
- include/sound/tas2781.h         | 2 ++
- sound/pci/hda/tas2781_hda_i2c.c | 3 ++-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/include/sound/tas2781.h b/include/sound/tas2781.h
-index e17ceab4fead..dde9f8120d4c 100644
---- a/include/sound/tas2781.h
-+++ b/include/sound/tas2781.h
-@@ -121,6 +121,8 @@ struct tasdevice_priv {
- 	bool force_fwload_status;
- 	bool playback_started;
- 	bool isacpi;
-+	unsigned int global_addr;
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 19040887ff67..67468f7d1c90 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6989,6 +6989,12 @@ static void tas2781_fixup_i2c(struct hda_codec *cdc,
+ 	 tas2781_generic_fixup(cdc, action, "i2c", "TIAS2781");
+ }
+ 
++static void yoga7_14arb7_fixup_i2c(struct hda_codec *cdc,
++	const struct hda_fixup *fix, int action)
++{
++	 tas2781_generic_fixup(cdc, action, "i2c", "INT8866");
++}
 +
- 	int (*fw_parse_variable_header)(struct tasdevice_priv *tas_priv,
- 		const struct firmware *fmw, int offset);
- 	int (*fw_parse_program_data)(struct tasdevice_priv *tas_priv,
-diff --git a/sound/pci/hda/tas2781_hda_i2c.c b/sound/pci/hda/tas2781_hda_i2c.c
-index 0f8d5f947f54..49477d17b07c 100644
---- a/sound/pci/hda/tas2781_hda_i2c.c
-+++ b/sound/pci/hda/tas2781_hda_i2c.c
-@@ -81,7 +81,7 @@ static int tas2781_get_i2c_res(struct acpi_resource *ares, void *data)
+ /* for alc295_fixup_hp_top_speakers */
+ #include "hp_x360_helper.c"
  
- 	if (i2c_acpi_get_i2c_resource(ares, &sb)) {
- 		if (tas_priv->ndev < TASDEVICE_MAX_CHANNELS &&
--			sb->slave_address != TAS2781_GLOBAL_ADDR) {
-+			sb->slave_address != tas_priv->global_addr) {
- 			tas_priv->tasdevice[tas_priv->ndev].dev_addr =
- 				(unsigned int)sb->slave_address;
- 			tas_priv->ndev++;
-@@ -699,6 +699,7 @@ static int tas2781_hda_i2c_probe(struct i2c_client *clt)
- 		device_name = "TIAS2781";
- 		tas_hda->priv->save_calibration = tas2781_save_calibration;
- 		tas_hda->priv->apply_calibration = tas2781_apply_calib;
-+		tas_hda->priv->global_addr = TAS2781_GLOBAL_ADDR;
- 	} else
- 		return -ENODEV;
- 
+@@ -7460,6 +7466,7 @@ enum {
+ 	ALC236_FIXUP_DELL_DUAL_CODECS,
+ 	ALC287_FIXUP_CS35L41_I2C_2_THINKPAD_ACPI,
+ 	ALC287_FIXUP_TAS2781_I2C,
++	ALC287_FIXUP_YOGA7_14ARB7_I2C,
+ 	ALC245_FIXUP_HP_MUTE_LED_COEFBIT,
+ 	ALC245_FIXUP_HP_X360_MUTE_LEDS,
+ 	ALC287_FIXUP_THINKPAD_I2S_SPK,
+@@ -9578,6 +9585,12 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC269_FIXUP_THINKPAD_ACPI,
+ 	},
++	[ALC287_FIXUP_YOGA7_14ARB7_I2C] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = yoga7_14arb7_fixup_i2c,
++		.chained = true,
++		.chain_id = ALC285_FIXUP_THINKPAD_HEADSET_JACK,
++	},
+ 	[ALC245_FIXUP_HP_MUTE_LED_COEFBIT] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc245_fixup_hp_mute_led_coefbit,
+@@ -10231,6 +10244,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x17aa, 0x3853, "Lenovo Yoga 7 15ITL5", ALC287_FIXUP_YOGA7_14ITL_SPEAKERS),
+ 	SND_PCI_QUIRK(0x17aa, 0x3855, "Legion 7 16ITHG6", ALC287_FIXUP_LEGION_16ITHG6),
+ 	SND_PCI_QUIRK(0x17aa, 0x3869, "Lenovo Yoga7 14IAL7", ALC287_FIXUP_YOGA9_14IAP7_BASS_SPK_PIN),
++	SND_PCI_QUIRK(0x17aa, 0x3870, "Lenovo Yoga 7 14ARB7", ALC287_FIXUP_YOGA7_14ARB7_I2C),
+ 	SND_PCI_QUIRK(0x17aa, 0x387d, "Yoga S780-16 pro Quad AAC", ALC287_FIXUP_TAS2781_I2C),
+ 	SND_PCI_QUIRK(0x17aa, 0x387e, "Yoga S780-16 pro Quad YC", ALC287_FIXUP_TAS2781_I2C),
+ 	SND_PCI_QUIRK(0x17aa, 0x3881, "YB9 dual power mode2 YC", ALC287_FIXUP_TAS2781_I2C),
 -- 
 2.43.0
 
