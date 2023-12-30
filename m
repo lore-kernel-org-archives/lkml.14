@@ -1,19 +1,32 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8637ABE65;
-	Sat, 30 Dec 2023 15:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1rJacF-0004OX-00; Sat, 30 Dec 2023 15:47:07 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id E81F9C028A; Sat, 30 Dec 2023 15:45:25 +0100 (CET)
-Date: Sat, 30 Dec 2023 15:45:25 +0100
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] MIPS: Allow vectored interrupt handler to reside
- everywhere for 64bit
-Message-ID: <ZZAtBdDIO2Oj+k3X@alpha.franken.de>
-References: <20231221125405.229100-1-tsbogend@alpha.franken.de>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87BAB8F65;
+	Sat, 30 Dec 2023 15:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IdlySp1m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4F18C433C7;
+	Sat, 30 Dec 2023 15:44:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703951066;
+	bh=rIx5TWsTspDkYObnDFFupr7if4KBR6HUkks9+m80IkQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IdlySp1mmmuB1ozWiZ5zXIVcjQhC2vI9Nkrv7uL2LgzrFEGQs+sfsHAqUspX33DmE
+	 A38qTbwB7eSMlaY4buhlSh8SYnGQ3+0Ak02ebfjnp5EDQdoovTgT9kdr/7GgOHXIw/
+	 oALvm9dgTqvlhFADgkqGekzKUqSMYq7quqB4gR7KW6N01US7gJvd0X/snD9syo1kS2
+	 rRWbAkBnT5wNeks3Xx7XJzn9h63wR26hz55Myz7bxlKIsT7ow1k/TZx1PjnkTp04CX
+	 PCEvFVqPQR/fhW2FIgctDGfx3cOZg2W8vlqtqkYIdn3U4bzr79LoDRM14VA7CnqYzo
+	 Wyynm7YJJqhgA==
+Date: Sat, 30 Dec 2023 17:44:22 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Lin Ma <linma@zju.edu.cn>
+Cc: jgg@ziepe.ca, gustavoars@kernel.org, bvanassche@acm.org,
+	markzhang@nvidia.com, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] RDMA/sa_query: use validate not parser in
+ ib_nl_is_good_resolve_resp
+Message-ID: <20231230154422.GB6849@unreal>
+References: <20231230051956.82499-1-linma@zju.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -22,25 +35,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231221125405.229100-1-tsbogend@alpha.franken.de>
+In-Reply-To: <20231230051956.82499-1-linma@zju.edu.cn>
 
-On Thu, Dec 21, 2023 at 01:54:03PM +0100, Thomas Bogendoerfer wrote:
-> Setting up vector interrupts worked only with handlers, which resided
-> in CKSEG0 space. This limits the kernel placement for 64bit platforms.
-> By patching in the offset into vi_handlers[] instead of the full
-> handler address, the vectored exception handler can load the
-> address by itself and jump to it.
+On Sat, Dec 30, 2023 at 01:19:56PM +0800, Lin Ma wrote:
+> The attributes array `tb` in ib_nl_is_good_resolve_resp is never used
+> after the parsing. Therefore use nla_validate_deprecated function here
+> for improvement.
+
+What did this change improve?
+
 > 
-> Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Signed-off-by: Lin Ma <linma@zju.edu.cn>
 > ---
->  arch/mips/kernel/genex.S | 8 ++++----
->  arch/mips/kernel/traps.c | 9 +++------
->  2 files changed, 7 insertions(+), 10 deletions(-)
-
-applied to mips-next.
-
-Thomas.
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+>  drivers/infiniband/core/sa_query.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
+> index 8175dde60b0a..c7407a53fcda 100644
+> --- a/drivers/infiniband/core/sa_query.c
+> +++ b/drivers/infiniband/core/sa_query.c
+> @@ -1047,14 +1047,13 @@ int ib_nl_handle_set_timeout(struct sk_buff *skb,
+>  
+>  static inline int ib_nl_is_good_resolve_resp(const struct nlmsghdr *nlh)
+>  {
+> -	struct nlattr *tb[LS_NLA_TYPE_MAX];
+>  	int ret;
+>  
+>  	if (nlh->nlmsg_flags & RDMA_NL_LS_F_ERR)
+>  		return 0;
+>  
+> -	ret = nla_parse_deprecated(tb, LS_NLA_TYPE_MAX - 1, nlmsg_data(nlh),
+> -				   nlmsg_len(nlh), ib_nl_policy, NULL);
+> +	ret = nla_validate_deprecated(nlmsg_data(nlh), nlmsg_len(nlh),
+> +				      LS_NLA_TYPE_MAX - 1, ib_nl_policy, NULL);
+>  	if (ret)
+>  		return 0;
+>  
+> -- 
+> 2.17.1
+> 
