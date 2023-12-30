@@ -1,102 +1,106 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B6F156FB
-	for <linux-kernel@vger.kernel.org>; Sat, 30 Dec 2023 13:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D2A8BED;
+	Sat, 30 Dec 2023 13:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r5E7LdNt"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2ccbbb5eb77so52696041fa.2
-        for <linux-kernel@vger.kernel.org>; Sat, 30 Dec 2023 05:04:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703941485; x=1704546285; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RUTCpmfzsSKDHjYlRAYYiQ/aykX/VSlVLVDx9q/aHss=;
-        b=r5E7LdNt4+H7YHlK867Sxo1w8ir7gZs+DiEJwR9jcDqnFmUhB6z2YPZr0jj6HTEtIe
-         L3DQKW0vcBmuvHtb99x4EaBqxlCQ1RjqFUNGzmtqCOyQ5frJJ+dIvnxksdzboKyPgH7r
-         9G6kWOG5TlXQ7U8v7uTtFNRC67EA37inJMiCRJHXZFwJ9kNoyo2jOxkO2Ey/1pBtIwZT
-         cC/NQGG7/96jU+arhumndGBcijxVXZH+AkbmHuOGxlXH9ttWvyP2vmtlbH2WVI0zKGip
-         7i6m11GOqS6vJf4YgDR4fsID7yyAm83ZBjCkakT7X2HRBg+hBeHIzedlT8zv/n7fS9Mj
-         CjyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703941485; x=1704546285;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RUTCpmfzsSKDHjYlRAYYiQ/aykX/VSlVLVDx9q/aHss=;
-        b=qvSsYm1GH32Ot/ZIoWEObxQHsqjcSoBDVjKHLmeJEkVlJhbDcCO4/h+8jxJJ+BE826
-         44kUhTKP5NXIzUV6wPNc1GIkcqtxDKIBy8+uKetr64uPGidDQJBBglJXPkiXXRlc5vfw
-         PlcFqqimg2OKWlVRIYdBN7yE/HdagtD4NOiX7yrraoo2ZLon25+wjnjZN0WHPwGa6xNP
-         WJ4i+VNSrjizSVx6JUV1hqHA/PGR5HPRiJbU23qUf74yuVyjaxut+qivXCXbbSzEukq0
-         gC/TDwFoRo+uGQ6Cdaeb/VmpKc0jlOWnq1JiPJGg2F/XBW2cbyx9YzZJKcz+bWpGXWVA
-         2Oaw==
-X-Gm-Message-State: AOJu0YwmARbYOTNKwyYJAlaAPlpfZCbV4/SS/+VXHf87aECtuxi2sB5U
-	+3bEnr7ILuP+ECc7Q3c5n4Op15X9zHbGohV2H+hbJyElqWs=
-X-Google-Smtp-Source: AGHT+IHU+x3djEpIT6wEg1juKyJq9AUeXR5FMYN7QxnnNiFJHJ45mcitVUhqemdbQz0AhCxu6WNxUw==
-X-Received: by 2002:a05:651c:124a:b0:2cc:eb47:225b with SMTP id h10-20020a05651c124a00b002cceb47225bmr1539686ljh.100.1703941485677;
-        Sat, 30 Dec 2023 05:04:45 -0800 (PST)
-Received: from [10.167.154.1] (178235179036.dynamic-4-waw-k-1-3-0.vectranet.pl. [178.235.179.36])
-        by smtp.gmail.com with ESMTPSA id ij14-20020a056402158e00b00554368c9ce8sm11359578edb.1.2023.12.30.05.04.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 Dec 2023 05:04:45 -0800 (PST)
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Date: Sat, 30 Dec 2023 14:04:14 +0100
-Subject: [PATCH v4 12/12] arm64: dts: qcom: sm6115: Add VDD_CX to GPU_CC
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="tvWaz0mf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1703943398; x=1704548198; i=markus.elfring@web.de;
+	bh=q+xMM/NgH5d7TuJc1tdVLKUPHj6VTivpdx+yAobBfvo=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=tvWaz0mfO3j4OhKsNXSmCHQ/gG7MakVZJ+GMLFHMi+CVoYv53cCsf8dEqO708e6T
+	 +Wj7NVD7POF4U+xSe2NKrVzjXnh0WArpRGPWewz69npV9QF2PupTkyYHbqC31HK/r
+	 Se8LD+5F1N//xNsvmCpIwdbXALSKunEXZO1Av6dPLSEf6YTo2l4FDqMWK5PZZ02mO
+	 sZItRIlXIAE1efdK4atAbJDnSzDKNwW8m00xLEpTPzlq8MjuvvWbmGBcA9IQ/TcQi
+	 z34ZZySp5gaiGghdWCE+tlF68J6zwVIHIzjkfaoHTAQ5zWZEHT/dd9oPrlmAE6h7r
+	 wJkSbVzuvS7/lQ/crw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.87.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MpCqh-1qt2j32EZT-00qNj1; Sat, 30
+ Dec 2023 14:36:38 +0100
+Message-ID: <a3825ab2-8987-4b85-9db0-642035789c49@web.de>
+Date: Sat, 30 Dec 2023 14:36:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230717-topic-branch_aon_cleanup-v4-12-32c293ded915@linaro.org>
-References: <20230717-topic-branch_aon_cleanup-v4-0-32c293ded915@linaro.org>
-In-Reply-To: <20230717-topic-branch_aon_cleanup-v4-0-32c293ded915@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@linaro.org>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1703941465; l=911;
- i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
- bh=WDI26IliceRlW0YgN7X8GrPWGyVd7988pOYar0kAAss=;
- b=tJe4w2odgxduiwNhQKpH46QG19PrXsyZwDwXtdiYCPIKhlwTuKNdbLk+C897zMdU2NNBJn+4H
- xur4Bw/li2rA+bk/fiiYRQpqhf06ASknrm080sAFAT5eDcoG0ZpU9Nm
-X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+User-Agent: Mozilla Thunderbird
+Subject: Re: scsi: ses: Move a label in ses_enclosure_data_process()
+Content-Language: en-GB
+To: James Bottomley <jejb@linux.ibm.com>, linux-scsi@vger.kernel.org,
+ kernel-janitors@vger.kernel.org,
+ "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <4616e325-e313-4078-9788-dd1e6e51b9e0@web.de>
+ <9d24844f30604f969ac10da456801f594ce72f2d.camel@linux.ibm.com>
+ <b65afa15-41e6-4d71-87bd-39fd688fa551@web.de>
+ <a35c6128d4449fec00238c909e5f6f45ebf4bcba.camel@linux.ibm.com>
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <a35c6128d4449fec00238c909e5f6f45ebf4bcba.camel@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:D/HuRqdR5vqL+JG5RyJ5etFWIUnI7SJOtWGQiiXxY9rPjyAZwJe
+ SEMQhkTtWj62LNmdBOpDSce68QJdjlRgmKlYX1Ybz4rD2sVw6ntK9UcxUaQ2/5o5hpVmWRh
+ jrDc/CS+uF7XC07ea82ZRZ/RwOcp/enJZvpSmdfsM/NWWoVUmHoZV+x5wL0XKP+sTAC4a+Q
+ +YnveLC93ajlmTeVcQa7w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:5UJyCjxbrcU=;r9spU924Fg/pPKmxs3Ci3gKTuYI
+ xGLm3pAms5++4J9TkEM6sJfydLA9VEB+9656vNRU9/8NBpTfZxNDx98fpHVWQsNfkuT5wRc33
+ pIJfN6WfhjHiY4UvknKfnCzIekPFv6vB0S4ubIw8uTa5SxGCMgkWazz5jJAVTKb5AUZ9Qolqo
+ kGCLMjd7iBHQwkg6ygYMcbrk0vEL1/B+5eb88uQBpefMVt6HX5SkpIE51BS8mfEBXu10i7mb+
+ zNknBW11nKH1ENTXeIe4wVZkfYcM1fcTxUt5It31OOfO11Q2n3fI4jPhJtZm+zJjjErKYsIWZ
+ +LOpsa4FGrkzuO5Gvqez0EJOt0ou3pbbUlLG9cr5stNCPZfdmScr6AXKq0wkuBlzCB/xDxE+B
+ w+QxsTNxGdDA2tGZfVzHoQBX/5meG+1bST4BU8Pyq05XtmzGCLL8CfuES53YRrtIfJ3D/giFg
+ LVS/UBAoh8uyjLUsWU0JvBsSW8UDI4t7Zm2COiNU+XaLFaWMQaGKqO8CXltW0QcTm7MBDr5h/
+ b1SiUOUsZ4NsaFmCEjgqScPxRqk14vf2I1YThZtV70didVMEGeDMM1FwNzXW6ZTHOQZRepqEm
+ uCpwR7Kgvrfn/8c8vja0Xd20vf3cu1vG7EEj9/tm8U/Dj0iOItPayS4L0NZZWdzNt9mHAEqlZ
+ NgfSYleHa4ZQnlz+U7NvEXK4iXTx2yjxLPDvfqgad1uWXbWVjAMhuJvQ7c4DvSvn0/mBWPfPt
+ jkMMZPB1COd5z59TgkcvJBB2ruX/fmBRPVv+xDOC5om6n5oSG0gyT/HjpCW3nFhZtOaLt2rZS
+ yoaEgmiGcLxGY13/EhuNB53ZhYzsJAcyavPa3gkWyAjSfcmkP9T26VggqYuOkVMuIl0hhowsk
+ fsdS/qmRjECDvAEl0OmOjNFTek6lnvBPBnMcXIZf/feNwnZlC6e/L0T0r6ynQhNqDD1++Bnjg
+ Ktt6rjoej662cV58CUI9P7lY7t0=
 
-The GPU_CC block is powered by VDD_CX. Link the power domain and
-provide a reasonable minimum vote (lowest available on the platform)
-to ensure the registers within are accessible.
+>> You probably know some advices from another information source.
+>>
+>> https://wiki.sei.cmu.edu/confluence/display/c/MEM12-C.+Consider+using+a=
++goto+chain+when+leaving+a+function+on+error+when+using+and+releasing+reso=
+urces
+>>
+>
+> Yes, but it's about using staged deallocation at the end of the
+> function instead of in the if loops.  That's to *simplify* the exit
+> chain and make the error legs less error prone because the teardown
+> isn't repeated in if bodies.  It has no bearing on what you just tried
+> to do.
 
-Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
----
- arch/arm64/boot/dts/qcom/sm6115.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+I got the impression that there is a general conflict involved
+according to different programming styles.
 
-diff --git a/arch/arm64/boot/dts/qcom/sm6115.dtsi b/arch/arm64/boot/dts/qcom/sm6115.dtsi
-index 30b140e1cec0..ec9a74acc69c 100644
---- a/arch/arm64/boot/dts/qcom/sm6115.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm6115.dtsi
-@@ -1723,6 +1723,8 @@ gpucc: clock-controller@5990000 {
- 			clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
- 				 <&gcc GCC_GPU_GPLL0_CLK_SRC>,
- 				 <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
-+			power-domains = <&rpmpd SM6115_VDDCX>;
-+			required-opps = <&rpmpd_opp_low_svs>;
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
- 			#power-domain-cells = <1>;
 
--- 
-2.43.0
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 If coccinelle
+>>> suddenly thinks this is a problem, it's coccinelle that needs
+>>> fixing.
+>>
+>> This software tool can help to point source code places out for
+>> further considerations. The search patterns are evolving accordingly.
+>
+> The pattern is wrong because kfree(NULL) exists as a teardown simplifica=
+tion.
 
+It might be convenient to view in this way.
+
+If you would dare to follow advice from goto chains in a strict way,
+I imagine that you can tend to stress the attention for more useful
+data processing a bit more than such a redundant function call.
+
+Regards,
+Markus
