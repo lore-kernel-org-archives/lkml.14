@@ -1,49 +1,47 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2083.outbound.protection.outlook.com [40.107.21.83])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2081.outbound.protection.outlook.com [40.107.21.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9064D9465;
-	Sat, 30 Dec 2023 15:44:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B4FBA29;
+	Sat, 30 Dec 2023 15:44:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=solid-run.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=solid-run.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b="LBcUV3zY"
+	dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b="hbWHH3NN"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WaCVOcpbQi/12iahUHwLvfn4iscuQWZnDN2qs4uaO0/BoE5TJUCAnCzoKjKnjjxQzSlJLdf3YOwYAT5yf54w62eSELnC7TKl18ZW3r5vuY+s3K9dewYknOSnjVZlh8iNZcLg6ZtsQNiqozwL8dIuPbaWlvO6q+IbnCBYg+bFMzZXrGUHyhzIfH+prrfj4+18ErC8B2ZJ8x3SkgSZIBKwUFlHArUjEzdX7GMLG5jls/UQrqcQL2sdVyhuxcRQ6NI2PcvXv5tv45lh4pjkeoXOCgiQT4kE40I4s5kwat2O46dCnL6t4JGOmm2kPENuK8BucUGKged5bua4bh3BDX7YUg==
+ b=Jj6h4ikFdJaG3dnpIYX/Ct78a15nzIh256vSxLpWKEIzNHi3dTBsiQmrSg26b1MbzY3UNP7KkbbAFjEF7Kik0pjYjSbskbPHcZjci4JgmRwQsPO/Jce5xUx8JLz2q+RCBJR1bMnieFNQOh7wVp1j6c7RafUTkpnbFPwtfjbZX7BEccXUhyVupqI0EXowyhddcJRauurPrEw0f0yBPVdA3wpgJzYp8wpxd9accVfZCraxaTOngHjd14b2+tN2FiLWybcKXQHxSHmm3E65YxCVVXF8as5xtOaKRDzkTtIuoA29+Ay7jiCzsMRZ32RVICYhugIvircX/v9fc9Ehkrov8A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tOdUbyZIg4N0pHwkxAftRnGuagmHBGntjCthFDV3DOw=;
- b=S8bkoNe1uzun2uCFpKey0cy3D9oCnVDZC3oCJqXSVLQW+INVaHMFlA1B0S0iPxKpbhNvd25v6YqiMb3XsEUdI34OG41F2VEAP34qNWFJaps/u69Z2dK5KVmdolT+R/4vx8TIrp0my4x9IPtiG/8USQP+8Qg2HPjss/xkODbWig513iOS0Y8XIKMW/3OkoFrZmmyYxpNfC36R6h8mgSr70zyVhl4M6J8Es94qbIhXjxw8fKHL04Ud+Thx0ggUwK3SupSf8MllGnkwDbK0GxgSWjKshn55fnglId4mL1qwjM/a/DBouAuzpaoLArCh2IiD8bLLA0c6gwEsa9oBXjQ9cQ==
+ bh=p1NsaxaShk3jcZW2dEcpiSOjsTZyOZyG+OapyaxdmG0=;
+ b=ghHXSK4yS3n6PJMybfT60raiVURjAqRPY9jlHoVpupeGxvO+UjDQEeiGZh4ofuBBtdtaiRzu7fZVU8vdKX57r4rPQ/Tf+ULPb0pY+U4wGpq44A7XtIHViVslJT11Z3GWvwVgrRYqBGRBspxRgTEGZGXrB0mmyVybMr60S4dB3JaFbvnXsKGEaBv7sUgFWXUZaiex2Ra8n3HRoupQeiFEHEIMd93oLyny2IyQ14y8SMQl8rTEGw7p5pYDli/KS98GydJHbYoEiIOb8/9xQ+yV9Y3r8rmlnxS6llpMGPV4gRqVPpf6coUhru8L7OY5CTyv6O8esTTrtt8XF/znl/ZG2Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=solid-run.com; dmarc=pass action=none
  header.from=solid-run.com; dkim=pass header.d=solid-run.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=solidrn.onmicrosoft.com; s=selector1-solidrn-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tOdUbyZIg4N0pHwkxAftRnGuagmHBGntjCthFDV3DOw=;
- b=LBcUV3zYXe4XomvjIWEkysaOVWxIvH1oqQdVyaRGbQ2ItF+Q1fB3DQNzN1u4f64pnXhs5vIrzHchZc6r71UzGa0FnDdjjrCMPY3eUNgQ3Lpm7E3yoZG7FntfRO22M7fv/augCVUDZ42Zk7vIXX0akA903AZ7jZQ/N8CrnK9XTmw=
+ bh=p1NsaxaShk3jcZW2dEcpiSOjsTZyOZyG+OapyaxdmG0=;
+ b=hbWHH3NN95jTAMXNd21iRTktelOVbtfERcUD7GLTqMnIJVyDclIl66G2kgCsNmq+AK7RESHdh4En/qdhsdcCTudiBBxPllCSCK5hzXptBmc6mlT+Qy2NCy+awxbmMab91WVGqsvfyHz3p0IAIpvy12Vk44OclV+r4OqMigkXja4=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=solid-run.com;
 Received: from AS8PR04MB8963.eurprd04.prod.outlook.com (2603:10a6:20b:42e::18)
  by DB8PR04MB6970.eurprd04.prod.outlook.com (2603:10a6:10:fa::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.22; Sat, 30 Dec
- 2023 15:44:45 +0000
+ 2023 15:44:47 +0000
 Received: from AS8PR04MB8963.eurprd04.prod.outlook.com
  ([fe80::4db1:aae8:c643:2e73]) by AS8PR04MB8963.eurprd04.prod.outlook.com
  ([fe80::4db1:aae8:c643:2e73%6]) with mapi id 15.20.7135.023; Sat, 30 Dec 2023
- 15:44:45 +0000
+ 15:44:47 +0000
 From: Josua Mayer <josua@solid-run.com>
-Subject: [PATCH v4 00/11] dt-bindings: marvell: a38x: add solidrun armada
+Date: Sat, 30 Dec 2023 16:44:37 +0100
+Subject: [PATCH v4 03/11] dt-bindings: marvell: a38x: add solidrun armada
  388 clearfog boards
-Date: Sat, 30 Dec 2023 16:44:34 +0100
-Message-Id: <20231230-support-clearfog-gtr-l8-sfp-v4-0-1d7f0e2c7128@solid-run.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAOI6kGUC/32PQQqDMBBFryJZdySZRGO76j1KF6lJNMUaSVRax
- LtXhYJ04fINvPeZiUQTnInkkkwkmNFF59sFxCkhZa3ayoDTCxOkyBliDnHoOh96KBujgvUVVH2
- ApoBoO9CFVEayTMlCkqXQBWPde6vf7gvXLvY+fLaxka3XX5cjwzOnKRM5CmDw9HFQ1+gbpyEMb
- Vr6F1kLI+4twQSXGU2znB5KfC8dvzByoGA1UyXq/GHR/Pfmef4CwqhUCjUBAAA=
+Message-Id: <20231230-support-clearfog-gtr-l8-sfp-v4-3-1d7f0e2c7128@solid-run.com>
+References: <20231230-support-clearfog-gtr-l8-sfp-v4-0-1d7f0e2c7128@solid-run.com>
+In-Reply-To: <20231230-support-clearfog-gtr-l8-sfp-v4-0-1d7f0e2c7128@solid-run.com>
 To: Andrew Lunn <andrew@lunn.ch>, 
  Gregory Clement <gregory.clement@bootlin.com>, 
  Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
@@ -64,148 +62,133 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: AS8PR04MB8963:EE_|DB8PR04MB6970:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1177cf65-5eb3-4508-4ca2-08dc094e3f2a
+X-MS-Office365-Filtering-Correlation-Id: d3b3d1e7-e6fb-4128-cd18-08dc094e400c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	AJRGe+zEfhm4TQwXxIltFYX+zGWyVqhU5a8u0/0x1jHNDRQBjgpzy875O8ln6c91yn8eEd0RpIMjijAopLsZ9agyBtdeZsEe+Ruv22wkQMTzs8cYSdR+ZdFnpMZ2SJtjkLu5kbwkD+puAAwQ8HEGpvCfak/MgluQke8nMI3BR6jA/rG84Q+5KOduVwRBwT1ZAmAdBVM9cGq+I6CCUZX2CRWOxUL6OKBOi/WYE61E6eGlQDY0qFMp4Ni8q6UwCp9M60YLLFZugt/S9k119/CljPckJQ630nAbKg3fajuxbcArgraOJ4fr/RrTLFnP1vjqqqTKbwmvYUwaqdiTi7f4oV7gdnpU32YjI7Z2WPi0qlYw8kr6T8e0RLSghzIgVDxaVPwERpZRn5l2DWNu/BIBlKlJgeR4iyb2zt2hGjdfc3fT+F6j/nZQGXLQiWx7HFsh1/B2znjLW/FlbTBltqFyNONvTqnXBmi/g8wP9PtF3s2eqDYtCnP/JULfWcMbFTUU2tHC6FtAE3eMMB9rY3IgYWjEvGI2fErDb+e+21+DWCsLQEOrPFZBa8yOf/LVhw8J7bWtV18h4z+1ttn8H4b8XqHoDsdA2j3fNTxK777N5L0=
+	nagR5ghT+StBqeH2p5xHcvTonkJPVjjWOaW26GJbTKRDbSyr9Y9Po7n+XD5TQ7ovopvbpK9puDOyN8fYkyZbNPFTBxl1a3EevAMlA0o4w16XgCu5ULWA+qpjwiKnWossBFIIY20YCERTdZbzHgXSEIfCrK/Mb6/p7iD0w3V1qbYiLcHuLRlryjUD2qARph8zXNusZNex6JAu1knPs/0kfchBKHOrOrTmYkHxSYX+ycST3DCn9cYgLMy5sLJQ/2eHZMgwc/qp1gncgfyjlpyTRAF7pdo9iifk2Wy8s7AqkJE8hNaCw6W1IGOowUXv/ohe5KksrWLnVu5F6BQbkuDo/t2lm2s6MaUEu3S2PG1SRrtCHOkXWd36G1iqMxa/INAssyl043D2TRiOHwC8C6NBhfbAFLVGlSNJQF3Hu7lwU6GGBUzpsD7GKsMXJhh9BCdDU/65g2l1k+VhMxe+GbzHiEB2NCqr+pCC8eCbTxWodAUdywlC6UEKsBgB3NgRu9/8vHWNWlNxF3uTBOKqSJGoynpPWv5afhHJ+Oj0CEL5VNv7G+s7EnoCq/6h6oygofoFA0Ja9Vxe+AQy1SiPgixIQfbvsNclzXnqf8j+qtyqLnnxnZscmHKzJBo/IYY7D0um
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8963.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(346002)(39830400003)(376002)(136003)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(2616005)(36756003)(2906002)(86362001)(107886003)(966005)(478600001)(66556008)(66476007)(66946007)(5660300002)(83380400001)(26005)(6486002)(110136005)(8936002)(8676002)(316002)(4326008)(6666004)(6506007)(6512007)(52116002)(38350700005)(41300700001)(38100700002);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8963.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(346002)(39830400003)(376002)(136003)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(2616005)(36756003)(2906002)(86362001)(107886003)(478600001)(66556008)(66476007)(66946007)(5660300002)(83380400001)(26005)(6486002)(110136005)(8936002)(8676002)(316002)(4326008)(6666004)(6506007)(6512007)(52116002)(38350700005)(41300700001)(38100700002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?R2gyWjlDQXVkRm8zTEEwRjdickx1WG13MFdtZ3o0ajRsajk0QXc2aUR6bnlq?=
- =?utf-8?B?WDJab3VJZ1Jkd1FjcHFiaDVmNWdNUTdVbW90WFp4VWJieFh1T3dBVVNSTk42?=
- =?utf-8?B?N2owRk56TXgwWDMwL2NlcW5XTGVHb1VzVmhRL1dldmkvU3hCOGpxTVl1UG9r?=
- =?utf-8?B?K1NLYnF6Z00rWGFIeFVJbFZEUXZNNkI3MWlQUkJvVlJlejN0L0k2ekR5WGtR?=
- =?utf-8?B?KzlZOExQeUE4TDdQMjJXeXN4NXVPc1NtZ3RpR3VvY1FpL0JKTmN6TVhpK05P?=
- =?utf-8?B?R3M1Ri9oWmNoRlBpU1d3UkI5YUpSNHdJbUJyMTJWWnRlMDVBNGhqK2xraVVj?=
- =?utf-8?B?aU1oWFVNWFZLY2d4amN2bmNwTW1EbU5MQTdCV1MvMzhidWdnR0NzTG5UMmpI?=
- =?utf-8?B?cHNkbGp3WUV3b2xraDJ3R25nL3R6THNFYU5rQTkrWWwrQWkrZXNKVXh0b21h?=
- =?utf-8?B?UEk2ZElKbzErK0NkTzZRejQyc09zN1RJZTRXZjZwMXZDdXBZbVg3eE1SeU9C?=
- =?utf-8?B?V29GcnlwenZqdG1DZnZ3ZDZjdDQrMy9aREVVb1F2WTlsUFp3LzB2OWhDdXVa?=
- =?utf-8?B?MUlCTk82Z3l4T0RHTm51L3dwOTd3WUdZd1pjOEdoOTljdTFubitoWW5HLzdr?=
- =?utf-8?B?U08xTXRoNzNES2ZFUFpmNWVKRHdvQ093L3gxU2pFSjBCSFRkcVIvUGgwSktl?=
- =?utf-8?B?dGxDMDl5RnJqN25lR2JkQzAvU1cxWFc1OFFtWk5nZkE0clUrNXl4Q2xkclRz?=
- =?utf-8?B?MzY3K1pSZmdoSTFaVU9YMmlzWWJBWHZvR3ZscW9ZSFlINVBhYVgxeUtubEhz?=
- =?utf-8?B?K3NSTFlKVnIzOS9xUS9CUWFyREZzUDBsWnlEUzV2WFpEU3p1Q01vK0tDZEta?=
- =?utf-8?B?Y3JFbmVveTREbTFmL3AwbS8zOXl1NVRVdkgrNDROY2FQYXpRcGkrUzhWWHpp?=
- =?utf-8?B?aDRIN2s0Y1hneFlyaXFXb3NRMFlzcW5aT3FQTURSOENzNWg5dDB4M0RlbFFO?=
- =?utf-8?B?UCsrVmU3dU9PMkYwNkJlUkZjd25MVzhYSVZWQ2N5NWhYOGRKZTYzYm1SMEZ2?=
- =?utf-8?B?RkUwNHJnL3k0ZVF1UmgrMnRDUytvZ2lSSVRRZ3R3STBGVFJzQjN0ZERHMDJR?=
- =?utf-8?B?UE9XMWJqalRyaFNMYXJBY2hLSTYxRlEyWDhFejJhYXB3Sm4rcnN6RVc3V0ZP?=
- =?utf-8?B?czJnUjd4U1o1NkV6ODhqRjYyQVVWSmtQcmdrejhlNnZvUWo5eFNQcHdDb1Z6?=
- =?utf-8?B?UUs5Uk1RRHVmWWNJT1F4T1A4RkZCYTNsa0F6WnFRdUFqUE5hSnh4MjlRRGJy?=
- =?utf-8?B?dlFhWVpsZzNzUklrc25rZDBZQzBGSkJjRisrRGxpMWMxdjlJeDdCWnZZYVha?=
- =?utf-8?B?QkpzblhXWGtpcTFmQTVuejc0K0FvMG1Nb0N2VmxZMUZKRFFiOENneGFrUVFE?=
- =?utf-8?B?K2hKVFE4S0hnSWF3dlNqMWErTVhJZHJQUnVubTI0UGR3ZjlLZkc1ODFlTXV6?=
- =?utf-8?B?c3lTSm1MUTdwVkFodC9vY21uT2ZnY0paNUtEemJCR0dTUTIzSEh3RXQ0MW5E?=
- =?utf-8?B?M3BwNGJHSVlHcmFQa1FvQjVEUEY1Qlk5SmwxOE9uZWZlMk9rSDhlSlpaRE1y?=
- =?utf-8?B?VkhYajlHQVUwbnNWbi9OSU5FMzdUMCtnZ3lkS1dwbS92V2V0Zk51YVg3RlBj?=
- =?utf-8?B?Z0o5TkdsSFV2UkQ5QWJxUlBORy9FMExOd25jbnJUUDRLcjk1cE9udXhKcVB6?=
- =?utf-8?B?eUdBUUo4WnF1L1RqN3V2VVJjMnFDeGNkZ0VnalpQdW90NWo2MmQ2d1VHb1lJ?=
- =?utf-8?B?K09HLzIyZGF4NENvSUsvYVlsYlgxVHNhZXAzU2RqSTE5UjV5ZHdWWFJ1L3BV?=
- =?utf-8?B?Mm14NE1NRkFNZFpsT0QrVDA3aXVJVDV3ajlObDAxaFZ0ZUhNMnliRTRteVhl?=
- =?utf-8?B?SFBNT3ZSaGRYMkFSS0g4bTZpd09aYlYzNGxtNWs0SnNIanJkMU4raHNsMXRn?=
- =?utf-8?B?Q0FJMGhlOXdBdEhiN2JHVG95UEE3ZVI3QjR3cXptYVg1d3Y2NTk1c2xCUmZi?=
- =?utf-8?B?MnpsR1RteDFDUUg0R1ZPb005TTFSTFJoSExLSmVJQVhPOHVQT2x0c3JycDVm?=
- =?utf-8?Q?wm56kTftuTNJbZrwH8fPdxl4/?=
+	=?utf-8?B?eWdXbkdRNnoza1YzV0wxUHFyM0ttQ1J5WmpTblY5eGdnQmp4Z1A4T1prRjlw?=
+ =?utf-8?B?WUdNemxkdDIwbEVSUEhWQWN3bGRFcU5UbVNoY1h1RCtnOFA0UXE4NTNvNXRY?=
+ =?utf-8?B?SnFsempIUHQ5Z3lNMnBsaWJqVVlaK2x5Q3FORDAyQjlpQlFsQUE4ZXhoUzlC?=
+ =?utf-8?B?OUZIUnZEaEZQaG5WR0Zrd054ZW82RGUwYTBhTU5XZElZckhwUGxHT1NpMklF?=
+ =?utf-8?B?MnJVdHVrQWFKTjdqdDRLa2tPRlorMDZlVXBJSDZ4Z3hvaTUyaGx6eHhlbHI4?=
+ =?utf-8?B?TnRlcCtwS2hRSC9naGQvaTZhM1ZFbUxDdjlCbmdDbUpCVnE3V216SlhDWWho?=
+ =?utf-8?B?bTRWUkVZWmg2blZuSWN6QkdNWnd3dW9VazNFTlJZSkZMd3lIc0pLTVplM2tQ?=
+ =?utf-8?B?Wkcrdkg5VEdNSERoR3hyb2pNZ3ZjZStQYUQxU1JzTXVIZm5VbFBXN3NjLzBp?=
+ =?utf-8?B?MEVKNkZxTVNqNU5CQ3picjM5cmQrV1Z3ZHVteXd1OG9nYWhVZjl6cU0xdDRi?=
+ =?utf-8?B?elY1VG5wM2cvejdGcVFIbUpVc01qV25QN01wMU5nN1hhZE5tTWsza1ZFZUtk?=
+ =?utf-8?B?UnU3TXRibEtHazhuMjZoc04wUEcxeWNkVGNLelVkcEVIeVZPMG5xRVdTbGZO?=
+ =?utf-8?B?RmtaaGRGYkRMeTRPMFVGYm9Va2NHQlE0MzNTZFAySXpkUHRueGwxNS9JZDBN?=
+ =?utf-8?B?cFBxZkhtZGFMbURxajZUV1JNNk9tMHN0Wk01dnB0S2RrV2lPNEx1L3hmK24y?=
+ =?utf-8?B?WFZ0OFpRbG5LZGhCbGtFRlUrSlE4M0hIRkFsMHNDeHpVRjBOVlhJckFmMUxS?=
+ =?utf-8?B?NkRieFh5bnJoTHRTNzBMVDRpdVRLTUp3TTh4eVhJQWdJakZOZ2tEbng0Sjgy?=
+ =?utf-8?B?QWRkbFRhUE8vVko1dVdPUjlkamNTdXJHeXhlbkFlaGh0Kzhvd1pBWDAwYnJo?=
+ =?utf-8?B?SmZKbXQ4eGFTTTJpMkNqZGVqNGVYMUl6eWxXYkJBVFdyRDFTek1Ma0Ixc1lS?=
+ =?utf-8?B?S3JhcmZhVlZ2N1cwMmRzSWpWUjV0QjBtREJ0Y0ExRStmRDdTY2hYZmpVUm5a?=
+ =?utf-8?B?dkFvaWNMbmRIZ3NLazJuWU9Ya2tEZ3FjSzJQQ0dDYzRGbmdvc3lIUGF3cmZU?=
+ =?utf-8?B?TURVeC9WOCt2NFI3YmozUVV1TEd0ODhrM2JTTlhWRExxbWswV1J3OFE0Wm8x?=
+ =?utf-8?B?Uy8wRm4vOVBJY0NXOTdZazBGRDY1VVhqRmxqUHBTeUUydTJ3aE82dHgxNFpV?=
+ =?utf-8?B?V0dDcnlVeXZkN1hMcDdwQnBkUkU5MXM2eGpQdzAvTURrd280YnVpZUNRMTFw?=
+ =?utf-8?B?cHBGQ3JOelNtdnJxUEFGaXd6c09ISXNGN0tOQnk5Zm85M2c4TlJiZUgzZ3ZK?=
+ =?utf-8?B?OXJmRGpseDdReUtDckxYczBIOHR3TVl2YXpOMU1GVzRRL1NMUEpnZHo1ZmRY?=
+ =?utf-8?B?anB3Qi9pRzVkZXRZb0tmQURuZEhLTnFXS3kvYzVMUnN1RCtVMFppQXd6d0o4?=
+ =?utf-8?B?N3cvK2NGYlZFdGNaVVV2WmlOazJ3Zk1FbVNDOUdTRm9qUUxGYUJIUnI4VjdW?=
+ =?utf-8?B?NFl3d21HQTh5N3JnTnV4azVlKzg1ZjJUbDB2dGd5VDdNM0FwU1h2MWZiU09P?=
+ =?utf-8?B?VGhUakpqVHhVb3lacnpUaU1NZktUQnBORUhVNzVWT3ZGNEJ2d3VOVHZuWGRz?=
+ =?utf-8?B?dGxhQTd5WkJMNHFwQ2tiOHNpemx6emRHRkdXVXlscmx1L2UwcldXOUdCL3lV?=
+ =?utf-8?B?d3MxYkZVMjBwNHU3VG9WZ1BDUjg1N0h0UGtUNlNVd0k5eUJwc09pdlJ3Mjlr?=
+ =?utf-8?B?aEMvbGw4RDVEQ0E4dzBiSEtKL0FSd25JTFhrSGROeCtkNjd1cjZBYkhVV3VX?=
+ =?utf-8?B?SGVWR0hOdTJnVnJHM2VZZllDSERXZHJwdGowaE1IekNjSFlBbkFNM1hEb1JU?=
+ =?utf-8?B?bTNQWDlNZ0ZKN2lWalVTREpMQkxwVk5PdTVyL2VuWjdxTmx5bFlLQ2J0TjVh?=
+ =?utf-8?B?Wm5NTDh0b2UwdmlKS1pvN0J5eVdNVDZ0Njdybjh4cGRvSUJsM2crbGIwbHp4?=
+ =?utf-8?B?THFhWnB0RDI0dlZ1WDAzWlZVeFZ5L0MrZ0tvaXludkhDc3IraVBud1EvWWZh?=
+ =?utf-8?Q?5KSMwT0pm1mI2noqZmWOuMe/n?=
 X-OriginatorOrg: solid-run.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1177cf65-5eb3-4508-4ca2-08dc094e3f2a
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3b3d1e7-e6fb-4128-cd18-08dc094e400c
 X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8963.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Dec 2023 15:44:45.4589
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Dec 2023 15:44:46.7746
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: a4a8aaf3-fd27-4e27-add2-604707ce5b82
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Dlwykbie1wR6DOqpq5p/ZSbe3J4U80D3Y6eLzrs8Plh8V9VqmjiGD5IfTvao0+jAUXxknc1eaEW4HH0UwrqEQw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: uyr68PnqPG7acckPG5nAbM+YRrYDBr8pPtDPAIk2Gq3VYmQ7qeY6CoFpeKwGdwfIMAKjWL0cDJ8016HWvsPSqw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6970
 
-Dear Maintainers,
+Add DT compatible for SolidRun Armada-388 based Clearfog Base and Pro
+boards, which are already in place in-tree.
 
-The initially merged device-tree for Clearfog GTR devices contained
-various subtle mistakes and omissions:
+There are already 3 distinct dts in tree for these *two* boards,
+declaring particular compatible strings:
+- armada-388-clearfog.dts:
+  compatible = "solidrun,clearfog-a1", "marvell,armada388",
+               "marvell,armada385, "marvell,armada380";
+- armada-388-clearfog-base.dts:
+  compatible = "solidrun,clearfog-base-a1", "solidrun,clearfog-a1",
+               "marvell,armada388", "marvell,armada385,
+               "marvell,armada380";
+- armada-388-clearfog-pro.dts:
+  compatible = "solidrun,clearfog-base-a1", "solidrun,clearfog-a1",
+               "marvell,armada388", "marvell,armada385,
+               "marvell,armada380";
 
-- missing board-specific compatible strings
-- missing pinctrl entries
-- missing second sfp connector
-- invalid sfp loss-of-signal gpio
-- mismatch of labels between dsa ports and enclosure
+This has historic reasons, the first entry is a legacy name for the
+"pro" version, old versions of u-boot built when only one variant
+existed explicitly boot by this name.
 
-Most notably this had caused functional issues with the sfp connectors.
+Note that both compatibles and model field include the string "A1".
+At least up to revision 2.0 of the board, this had been printed
+on the pcb. However in marketing material and conversations it is
+usually omitted. "Clearfog Pro" and "Clearfog Pro A1" always mean
+exactly the same product.
 
-This patch-set first deletes the invalid armada-38x dt-bindings.
-New bindings are added specifically for the Clearfog GTR boards,
-and for the already in-tree clearfog base, clearfog pro and helios-4
-boards' compatible strings.
+Technically Base and Pro variants are similar enough that they can
+successfully boot with each other's dts. Hence it makes (some)
+sense for them to share the "clearfog-a1" compatible.
 
-Secondly pinctrl nodes are added for all referenced gpios for independence
-from bootloader defaults. U-Boot is shared between armada-388 clearfog,
-and armada-385 clearfog gtr.
-
-Further remove an invalid io from the first sfp connector description,
-and add descriptions for the secondary sfp connector which is driven
-by dsa switch port number 9.
-
-Finally labels of dsa switch ports were updated to match the enclosure.
-That patch is not suitable for stable.
+Add bindings for the explicit variants including base / pro suffix.
+The legacy "armada-388-clearfog.dts" is not supported by these
+bindings" as it does not make sense having two bindings for one board.
 
 Signed-off-by: Josua Mayer <josua@solid-run.com>
 ---
-Changes in v4:
-- dropped invalid soc-only armada-38x (txt) bindings
-  (reported by Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>)
-- add bindings for armada 388 helios-4
-- updated yaml whitespace indentation count
-  (reported by Rob Hering's bot)
-- Link to v3: https://lore.kernel.org/r/20231226-support-clearfog-gtr-l8-sfp-v3-0-fd1ac2d6bf2e@solid-run.com
+ .../devicetree/bindings/arm/marvell/armada-38x.yaml       | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-Changes in v3:
-- armada-38x.yaml: removed '|', no need to prerserve formatting
-  (reported by Conor Dooley conor+dt@kernel.org)
-- update commit descriptions to clarify confusing board names and
-  compatible strings
-  (reported by Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>)
-- send to all relevant lists
-  (reported by Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>)
-- remove duplicate binding for clearfog / clearfog
-- Link to v2 (patches 0-2):
-  https://lore.kernel.org/r/20231224143750.5604-1-josua@solid-run.com
-- Link to v2 (patches 3-8):
-  https://lore.kernel.org/r/20231224143850.5671-3-josua@solid-run.com
+diff --git a/Documentation/devicetree/bindings/arm/marvell/armada-38x.yaml b/Documentation/devicetree/bindings/arm/marvell/armada-38x.yaml
+index 5af222e6db18..4950b840bf1c 100644
+--- a/Documentation/devicetree/bindings/arm/marvell/armada-38x.yaml
++++ b/Documentation/devicetree/bindings/arm/marvell/armada-38x.yaml
+@@ -15,17 +15,14 @@ properties:
+   compatible:
+     oneOf:
+ 
+-      - description: Armada 380 SoC
+-        items:
+-          - const: marvell,armada380
+-
+-      - description: Armada 385 SoC
+-        items:
+-          - const: marvell,armada385
+-          - const: marvell,armada380
++      - description:
++          SolidRun Armada 388 clearfog family single-board computers.
+ 
+-      - description: Armada 388 SoC
+         items:
++          - enum:
++              - solidrun,clearfog-base-a1
++              - solidrun,clearfog-pro-a1
++          - const: solidrun,clearfog-a1
+           - const: marvell,armada388
+           - const: marvell,armada385
+           - const: marvell,armada380
 
-Changes in v2:
-- removed changes changes to gpio numbers because they were wrong
-- added bindings documentation
-- Link to v1: https://lore.kernel.org/r/20231223212930.14624-1-josua@solid-run.com
-
----
-Josua Mayer (11):
-      dt-bindings: marvell: a38x: remove invalid txt bindings for armada 38x SoCs
-      dt-bindings: marvell: a38x: convert the soc compatibles description to yaml
-      dt-bindings: marvell: a38x: add solidrun armada 388 clearfog boards
-      dt-bindings: marvell: a38x: add kobol helios-4 board
-      dt-bindings: marvell: a38x: add solidrun armada 385 clearfog gtr boards
-      arm: dts: marvell: clearfog: add pro variant compatible in legacy dts
-      arm: dts: marvell: clearfog-gtr: add board-specific compatible strings
-      arm: dts: marvell: clearfog-gtr: sort pinctrl nodes alphabetically
-      arm: dts: marvell: clearfog-gtr: add missing pinctrl for all used gpios
-      arm: dts: marvell: clearfog-gtr-l8: add support for second sfp connector
-      arm: dts: marvell: clearfog-gtr-l8: align port numbers with enclosure
-
- .../devicetree/bindings/arm/marvell/armada-38x.txt | 27 -------
- .../bindings/arm/marvell/armada-38x.yaml           | 49 +++++++++++++
- .../dts/marvell/armada-385-clearfog-gtr-l8.dts     | 38 +++++++---
- .../dts/marvell/armada-385-clearfog-gtr-s4.dts     |  2 +
- .../boot/dts/marvell/armada-385-clearfog-gtr.dtsi  | 84 ++++++++++++++++------
- arch/arm/boot/dts/marvell/armada-388-clearfog.dts  |  5 +-
- 6 files changed, 146 insertions(+), 59 deletions(-)
----
-base-commit: 861deac3b092f37b2c5e6871732f3e11486f7082
-change-id: 20231226-support-clearfog-gtr-l8-sfp-d87ae715a787
-
-Sincerely,
 -- 
-Josua Mayer <josua@solid-run.com>
+2.35.3
 
