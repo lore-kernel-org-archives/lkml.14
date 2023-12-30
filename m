@@ -1,94 +1,134 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9654879DC
-	for <linux-kernel@vger.kernel.org>; Sat, 30 Dec 2023 11:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC96B79C2;
+	Sat, 30 Dec 2023 11:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="rKacEDg6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1703936984;
- bh=mxaMu8U3QMAFU/y35CQF9vSyxsVfW4Q2ekWUVTmfutI=;
- b=rKacEDg6gxzfbiW3OXa2U6qYs+s8uJAUyDyNJsMRBpJOc6OVocug9j4mzTWadABLEh+JCEQow
- gEWJ5yG+sYQ+aXjBBCPcfYtQHAYQX9ka0n/jAIb7KcmO5VtBj9O6Eggju9ONyGe2+KFIFoGWPKD
- KAK0IqRBrqssiHo22FqgOQpAKaWN9LrKXvG5taIryO8w0TAA7OpK5x8WhZ65KAIImF3aeOhnAiZ
- dnBMaFtoQ9udtJDHuHbPye4tSU2fwZFJxwFvAgCLV6IQSVKDVGIIJFgVs9ml3ZD0JblJ3mhQ5Ts
- 95jKBhbp9RZXRzFjQCi+MvQdixFe2sdmAX7SQ0IpREhg==
-Message-ID: <97faf49b-0109-439a-accf-251b502ad40b@kwiboo.se>
-Date: Sat, 30 Dec 2023 12:49:38 +0100
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Wp8cm74A";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="YPc66DdU";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Wp8cm74A";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="YPc66DdU"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D37CC21D74;
+	Sat, 30 Dec 2023 11:58:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1703937529; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VpRQsOoqVYZv+qicTdREYXiCPnaI1kN7KRMd0EK1Ppw=;
+	b=Wp8cm74AiiBBFO3bvILNvUkFMTypFl02xfk9uIwgnTaodkGVFs+JLTwBg4anasWZa1dGVX
+	eLXmz5F25Usd99JZWm3NnyXDdrjVfWHaDfhVJJCBeO7aAlelv7SX4keRI3gx5o52KxUNor
+	WqbLriejL8pAoYeIpo/rzAkzpwHG6G4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1703937529;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VpRQsOoqVYZv+qicTdREYXiCPnaI1kN7KRMd0EK1Ppw=;
+	b=YPc66DdURjNKPZml066q+HeJPwvFRiZIzhO4nzeIUhavduStu8z9hd3/q5fjdBIe7iQ1iw
+	g+hSuePVDZDX5wBw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1703937529; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VpRQsOoqVYZv+qicTdREYXiCPnaI1kN7KRMd0EK1Ppw=;
+	b=Wp8cm74AiiBBFO3bvILNvUkFMTypFl02xfk9uIwgnTaodkGVFs+JLTwBg4anasWZa1dGVX
+	eLXmz5F25Usd99JZWm3NnyXDdrjVfWHaDfhVJJCBeO7aAlelv7SX4keRI3gx5o52KxUNor
+	WqbLriejL8pAoYeIpo/rzAkzpwHG6G4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1703937529;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VpRQsOoqVYZv+qicTdREYXiCPnaI1kN7KRMd0EK1Ppw=;
+	b=YPc66DdURjNKPZml066q+HeJPwvFRiZIzhO4nzeIUhavduStu8z9hd3/q5fjdBIe7iQ1iw
+	g+hSuePVDZDX5wBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6B449136D1;
+	Sat, 30 Dec 2023 11:58:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id WSxpGPkFkGUtUAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Sat, 30 Dec 2023 11:58:49 +0000
+Date: Sat, 30 Dec 2023 12:58:49 +0100
+Message-ID: <87mstrx5om.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Dorian Cruveiller <doriancruveiller@gmail.com>
+Cc: perex@perex.cz,
+	tiwai@suse.com,
+	sbinding@opensource.cirrus.com,
+	kailang@realtek.com,
+	luke@ljones.dev,
+	andy.chi@canonical.com,
+	shenghao-ding@ti.com,
+	l.guzenko@web.de,
+	ruinairas1992@gmail.com,
+	yangyuchi66@gmail.com,
+	vitalyr@opensource.cirrus.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] ALSA:hda/realtek enable SND_PCI_QUIRK for Lenovo Legion Slim 7 Gen 8 (2023) serie
+In-Reply-To: <20231230114001.19855-1-doriancruveiller@gmail.com>
+References: <20231229230703.73876-1-doriancruveiller@gmail.com>
+	<20231230114001.19855-1-doriancruveiller@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] Add hantro g1 video decoder support for RK3588
-To: amazingfate <liujianfeng1994@gmail.com>, sigmaris@gmail.com
-Cc: ezequiel@vanguardiasur.com.ar, p.zabel@pengutronix.de,
- mchehab@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, heiko@sntech.de, sfr@canb.auug.org.au,
- linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <CAAXNxMT3f68-ptM7Crhrfmn7iwTyJc9pwz4Beob+5beVODaSHQ@mail.gmail.com>
- <20231230095228.3739806-1-liujianfeng1994@gmail.com>
-Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <20231230095228.3739806-1-liujianfeng1994@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Report-Abuse-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-ForwardEmail-Version: 0.4.40
-X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 149.28.215.223
-X-ForwardEmail-ID: 659003d74d40790198022670
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spam-Level: 
+X-Spamd-Result: default: False [0.89 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com,web.de];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[14];
+	 MID_CONTAINS_FROM(1.00)[];
+	 FREEMAIL_TO(0.00)[gmail.com];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[perex.cz,suse.com,opensource.cirrus.com,realtek.com,ljones.dev,canonical.com,ti.com,web.de,gmail.com,vger.kernel.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.01)[46.19%]
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Score: 0.89
+X-Spam-Flag: NO
 
-Hi,
-
-On 2023-12-30 10:52, amazingfate wrote:
-> Thanks for your test with fluster. I also tested on my rock-5b(rk3588)
-> and orangepi-3b(rk3566) which are sharing the same hantro g1 ip. I am
-> running on ubuntu jammy so I'm using gstreamer 1.20.1
+On Sat, 30 Dec 2023 12:40:01 +0100,
+Dorian Cruveiller wrote:
 > 
-> rk3566 and rk3588 are sharing the same results:
-> JVT-AVC_V1 test suite with decoder GStreamer-H.264-V4L2SL-Gst1.0:
->   Ran 112/135 tests successfully.
-> JVT-FR_EXT test suite with decoder GStreamer-H.264-V4L2SL-Gst1.0:
->   Ran 27/69 tests successfully.
-> VP8-TEST-VECTORS test suite with decoder GStreamer-VP8-V4L2SL-Gst1.0:
->   Ran 59/61 tests successfully.
+> Link up the realtek audio chip to the cirrus cs35l41 sound amplifier chip
+> on 4 models of the Lenovo legion slim 7 gen 8 (2023). These models are
+> 16IRH8 (2 differents subsystem id) and 16APH8 (2 differents subsystem ids).
 > 
-> H264 decoder test has less test case passing. I think that's because
-> of my low gstreamer version. If you have a rk356x board I guess you
-> will get the same result as rk3588. That should be the mainline support
-> status of hantro g1 decoder.
+> Subsystem ids list:
+>  - 17AA38B4
+>  - 17AA38B5
+>  - 17AA38B6
+>  - 17AA38B7
 > 
-> For ffmpeg at the moment fluster doesn't support v4l2-request decoder.
-> I tried Kwiboo's fork[1] but failed to pass tests with decoder
-> FFmpeg-H.264-V4L2-request. I can decode video with ffmpeg command like:
-> "ffmpeg -benchmark -hwaccel drm -hwaccel_output_format drm_prime -i Big_Buck_Bunny_1080_10s_30MB.mp4 -f null -"
+> Signed-off-by: Dorian Cruveiller <doriancruveiller@gmail.com>
 
-I have only tested this fork of fluster with ffmpeg 6.x, what version of
-ffmpeg did you test with? I was expecting it to also work on ffmpeg 5.x.
+Applied both patches now.  Thanks.
 
-Please also note that ffmpeg v4l2-request patches at [2] contain some
-NV15/NV20 ffmpeg pix_fmt patches that fail ffmpeg tests. They are not
-needed for decoding of 10-bit frames using rkvdec but they are required
-to be able to run fluster test suite JVT-FR_EXT on rkvdec. (hantro g1 do
-not support 10-bit frames on rk)
 
-[2] https://github.com/Kwiboo/FFmpeg/commits/v4l2-request-n6.1
-
-Regards,
-Jonas
-
-> 
-> [1] https://github.com/Kwiboo/fluster/tree/v4l2-request
-> 
-
+Takashi
