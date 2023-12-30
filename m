@@ -1,121 +1,204 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2076.outbound.protection.outlook.com [40.107.243.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7BA15AF6;
-	Sat, 30 Dec 2023 16:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A2381640C;
+	Sat, 30 Dec 2023 16:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="njIpK6EX"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40d5d898162so25886805e9.3;
-        Sat, 30 Dec 2023 08:28:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703953734; x=1704558534; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4PJjJ5P2lmakK/ZCpJsmjyUxZS9P8Pqa9ckPYMHsh98=;
-        b=njIpK6EX4WAvTD9sXchjT0Q12ITe15ln+pe4N1sJDh4F9rBsYOUsFWiIr6PX/vIECI
-         eNG2ny8oYrBGYrWOqDHrU+NuY3WPnwVdvf9l2JDmHm52LqSucnoJwQvFiC9NXiYy/ESj
-         RKm4zMHdV0FoA97TQHGUTpTwR0xNw++R5dF9qqDJttzcIyMmmMQYmuSK3zuxowJGO2F6
-         Qa0TbsouMpoEJV3bXvEkwk2i0wBmt7Iqoy9HqEtEsIjEzxjpdY+ZG5sMFBWeL9ymOCAX
-         +Gy1RLPtwvHnr6O8EwHU315OopjifJ+Aeha4SGMTzqs6othxBCuePkSMwv5tFnxs9rlt
-         Qo3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703953734; x=1704558534;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4PJjJ5P2lmakK/ZCpJsmjyUxZS9P8Pqa9ckPYMHsh98=;
-        b=DmistMR++75wNHFC8/0QPkkQ45drPS0jxkGI9GvEFPef7UP2aP/XBUV2G5uadp7tKh
-         oOIz6fjZWiuDyFc70Xf6FRscFyyrURbenYhLKgbroX2UktsFn6a+/vwblJotQhgMh0zS
-         nKMXBtnQJUlvoPleDbReXdV2MmOUJcDQQxHu7sloO9zgfIamjp9/jitHKPssBNJK96RO
-         v36pinU8MS9je6G7CdPnso6N5D8bJwNGESRM/Z+WqBngSPOSbleXp6oIPngU6k17aQXe
-         xgN5EQBfPXTtFwP500nZRZuittHARy5gJi7Qi2Bzp3AzNhxthljyeyDqCAEBa+4TqmgM
-         00JQ==
-X-Gm-Message-State: AOJu0Yyq2KxwB3M7J+1nFBC5vGUWHnfcoEN1RY8ruQCcUIwoZSIHfFpP
-	tNlypOXY/DRR3nZGvnmRlp4=
-X-Google-Smtp-Source: AGHT+IGcQKEXsZPFWWU+GHoaVIbz1+IkW4rvDfTElfSQJ0+HBgKHWuZERRpM0wdhbb4pcu/wWZ/9QQ==
-X-Received: by 2002:a05:600c:4e09:b0:40d:7b1f:e424 with SMTP id b9-20020a05600c4e0900b0040d7b1fe424mr1547015wmq.20.1703953733611;
-        Sat, 30 Dec 2023 08:28:53 -0800 (PST)
-Received: from [192.168.8.100] ([148.252.133.126])
-        by smtp.gmail.com with ESMTPSA id p2-20020a05600c1d8200b0040596352951sm43557299wms.5.2023.12.30.08.28.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 30 Dec 2023 08:28:53 -0800 (PST)
-Message-ID: <7967c7a9-3d17-44de-a170-2b5354460126@gmail.com>
-Date: Sat, 30 Dec 2023 16:27:17 +0000
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xD2z1hUM"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F0/ZHIoHTvl8USZtqxbBU3Usza+8xuWqp3s9uryAoXHgRATxEtlMxaKEZWNS/4zoSoG7dp0QrY1snCbgebkp/yLRjYXDhBY3/It1WJ4XHFK3rQYUtqv+xgOdlERQE0hfXqcaHJxXykiyF/K/r///0+JcdOVgI74tGhfPmk4BopmK9j5lbMJJvu3BnhI0sxMgBI2DbSjfw72cG0IxK2B0iqXAvIMctxQeYTO3dJK6juOv34FHwRdNr4+RlyRneCYFDHNzL1XJqIguBbKEL+ooYuQ3g9kkKqC8Hl+fM6EBeDxilFReMFOD3p6q2EAiWUux0PU46UpN4rUfTVewfbbAwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EBkuuwAMxgLT2/1D4+e0YMYOmHg0aHx1LaOEpXzh5DM=;
+ b=b4mD1h8SMYNGr6c35AA8Q3AqSAT1nWEjZAT4IXN0qVGzXSqWg3t6wqGPEGw9tV5QxlFVICGD2OFFJyf7VM6a87FriatsEEztUU3rplOzgsfAOsTwZ99697Se5w10zqEI/ABEueEvac8MdtXXdVkRAKrog7gizjFQuPd+E3w73epy47GigxiBGBZ2fOWGhmqBfY89k33/SwMWYlfJw9lE+HuqvF7r1uI+CzigqnyroN+p0UW6HgsoPFHDXooegbNYYjCLvxelmGcRREjx108BOSEDWEhfON/W5nMqpwngNI976J7JaiegTomcZzJ1ybMk3yvKZD/mFqq0eAdJw/4Egw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EBkuuwAMxgLT2/1D4+e0YMYOmHg0aHx1LaOEpXzh5DM=;
+ b=xD2z1hUMJXk71CiW+kqtZ7tdx8turCSTvXZnW2NZhvgsPwmgGDH/KAoeK1KhQ/XglE5HYNXKIlMx1KXS8Jgrv9J7eIABm4ATDNhEzZcTf8jh4KOjaLqh/KIVvwt+EmurljcxsfBTga6LNY4HCX2KzTauVMH3yOVh5ZgO8jYW/DQ=
+Received: from DS7PR05CA0092.namprd05.prod.outlook.com (2603:10b6:8:56::10) by
+ IA1PR12MB7565.namprd12.prod.outlook.com (2603:10b6:208:42f::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.22; Sat, 30 Dec
+ 2023 16:29:03 +0000
+Received: from DS1PEPF00017097.namprd05.prod.outlook.com
+ (2603:10b6:8:56:cafe::2a) by DS7PR05CA0092.outlook.office365.com
+ (2603:10b6:8:56::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.9 via Frontend
+ Transport; Sat, 30 Dec 2023 16:29:03 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS1PEPF00017097.mail.protection.outlook.com (10.167.18.101) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7159.9 via Frontend Transport; Sat, 30 Dec 2023 16:29:03 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Sat, 30 Dec
+ 2023 10:29:03 -0600
+From: Michael Roth <michael.roth@amd.com>
+To: <x86@kernel.org>
+CC: <kvm@vger.kernel.org>, <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
+	<linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<tglx@linutronix.de>, <mingo@redhat.com>, <jroedel@suse.de>,
+	<thomas.lendacky@amd.com>, <hpa@zytor.com>, <ardb@kernel.org>,
+	<pbonzini@redhat.com>, <seanjc@google.com>, <vkuznets@redhat.com>,
+	<jmattson@google.com>, <luto@kernel.org>, <dave.hansen@linux.intel.com>,
+	<slp@redhat.com>, <pgonda@google.com>, <peterz@infradead.org>,
+	<srinivas.pandruvada@linux.intel.com>, <rientjes@google.com>,
+	<tobin@ibm.com>, <bp@alien8.de>, <vbabka@suse.cz>, <kirill@shutemov.name>,
+	<ak@linux.intel.com>, <tony.luck@intel.com>,
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, <alpergun@google.com>,
+	<jarkko@kernel.org>, <ashish.kalra@amd.com>, <nikunj.dadhania@amd.com>,
+	<pankaj.gupta@amd.com>, <liam.merwick@oracle.com>, <zhi.a.wang@intel.com>,
+	Brijesh Singh <brijesh.singh@amd.com>, Jarkko Sakkinen <jarkko@profian.com>,
+	Ashish Kalra <Ashish.Kalra@amd.com>
+Subject: [PATCH v1 01/26] x86/cpufeatures: Add SEV-SNP CPU feature
+Date: Sat, 30 Dec 2023 10:19:29 -0600
+Message-ID: <20231230161954.569267-2-michael.roth@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20231230161954.569267-1-michael.roth@amd.com>
+References: <20231230161954.569267-1-michael.roth@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6] io_uring: Statistics of the true utilization of sq
- threads.
-Content-Language: en-US
-To: Jens Axboe <axboe@kernel.dk>, Xiaobing Li <xiaobing.li@samsung.com>
-Cc: linux-kernel@vger.kernel.org, io-uring@vger.kernel.org,
- kun.dou@samsung.com, peiwei.li@samsung.com, joshi.k@samsung.com,
- kundan.kumar@samsung.com, wenwen.chen@samsung.com, ruyi.zhang@samsung.com,
- cliang01.li@samsung.com, xue01.he@samsung.com
-References: <CGME20231225055252epcas5p43ae8016d329b160f688def7b4f9d4ddb@epcas5p4.samsung.com>
- <20231225054438.44581-1-xiaobing.li@samsung.com>
- <170360833542.1229482.7687326255574388809.b4-ty@kernel.dk>
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <170360833542.1229482.7687326255574388809.b4-ty@kernel.dk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF00017097:EE_|IA1PR12MB7565:EE_
+X-MS-Office365-Filtering-Correlation-Id: 65f9912a-3907-4544-83c5-08dc09546fc3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	4EGvFaMWuvDf6qX7lC7xwkmN/VL5fZB1Bu0gQ/13PXX7XAzFxKP4zfO/ThDS2qEgr2A7GLrcyfFg+ExZlJr5c5BdWTg2dfMVIDuGHPdYqlm8ZNt9Zt+srWAuIxulDsmWTMgfXelW09hcd7QCQqjFSkAk5vSPEtCpEUAtZCRRZZa7VOJ41OPRwlmex4yjSEAaDvHPcSqr6cklqAzay71R6AUst/ctNOdn9UH/e/ohI9H9b7WGvrdCGanepn0BiwNl0ieirzbwUIyoAYziEilAODbvPFd/qChjw3AdxRgAQPhamTkcghRRhTuOYm7kIIVG5vV6Holtt5s+T4RO46PrDJMN2Xnhhi5h9NtdsfAaqFkoZStqSJvKv9iwBcA+yM4oO9PY9LUdp1m/CniJo5jfO+vsaea0gCA6kyhsnDY9mn2ixlkYy1OsFbgBAyLOyvEQaoZe3FIs82q8bGRHNPlHrQSwlI374S6EeSRwpDRAewLq//PV7I5kdwIKT/OzDfzdQKMrU0GFJCmww2zhhodveCZKVScJFlV7qbT25906/315tQwBDMVTWclaflKyvMF9eGUGQcgsJnaxrN7kGBYR2v/IIDtJ7J3LRPBM/PB32FIBNe1HgN25y4ABJdCs28n973L9jLnDqhrJonOQE3kZiStTmkzTLnnaC5blbBqztG04R9pEWnew486ENm9RPNu6CZ0i6dKFY/+TNq65D3rVWhmF4qA2NpZsysWEdV3CdxLyhmNPY7I4OkCz5PgpkKpIyzILmybPVCpwlR4ANsK4gA==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(346002)(39860400002)(396003)(376002)(230922051799003)(64100799003)(186009)(82310400011)(451199024)(1800799012)(40470700004)(46966006)(36840700001)(40480700001)(40460700003)(336012)(2616005)(16526019)(83380400001)(426003)(1076003)(26005)(86362001)(81166007)(36756003)(82740400003)(356005)(47076005)(4326008)(44832011)(5660300002)(7406005)(7416002)(6666004)(36860700001)(54906003)(8936002)(8676002)(70206006)(70586007)(316002)(6916009)(2906002)(41300700001)(478600001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Dec 2023 16:29:03.5817
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 65f9912a-3907-4544-83c5-08dc09546fc3
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF00017097.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7565
 
-On 12/26/23 16:32, Jens Axboe wrote:
-> 
-> On Mon, 25 Dec 2023 13:44:38 +0800, Xiaobing Li wrote:
->> Count the running time and actual IO processing time of the sqpoll
->> thread, and output the statistical data to fdinfo.
->>
->> Variable description:
->> "work_time" in the code represents the sum of the jiffies of the sq
->> thread actually processing IO, that is, how many milliseconds it
->> actually takes to process IO. "total_time" represents the total time
->> that the sq thread has elapsed from the beginning of the loop to the
->> current time point, that is, how many milliseconds it has spent in
->> total.
->>
->> [...]
-> 
-> Applied, thanks!
-> 
-> [1/1] io_uring: Statistics of the true utilization of sq threads.
->        commit: 9f7e5872eca81d7341e3ec222ebdc202ff536655
+From: Brijesh Singh <brijesh.singh@amd.com>
 
-I don't believe the patch is near complete, there are still
-pending question that the author ignored (see replies to
-prev revisions).
+Add CPU feature detection for Secure Encrypted Virtualization with
+Secure Nested Paging. This feature adds a strong memory integrity
+protection to help prevent malicious hypervisor-based attacks like
+data replay, memory re-mapping, and more.
 
-Why it uses jiffies instead of some task run time?
-Consequently, why it's fine to account irq time and other
-preemption? (hint, it's not)
+Since enabling the SNP CPU feature imposes a number of additional
+requirements on host initialization and handling legacy firmware APIs
+for SEV/SEV-ES guests, only introduce the CPU feature bit so that the
+relevant handling can be added, but leave it disabled via a
+disabled-features mask.
 
-Why it can't be done with userspace and/or bpf? Why
-can't it be estimated by checking and tracking
-IORING_SQ_NEED_WAKEUP in userspace?
+Once all the necessary changes needed to maintain legacy SEV/SEV-ES
+support are introduced in subsequent patches, the SNP feature bit will
+be unmasked/enabled.
 
-What's the use case in particular? Considering that
-one of the previous revisions was uapi-less, something
-is really fishy here. Again, it's a procfs file nobody
-but a few would want to parse to use the feature.
+Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+Signed-off-by: Jarkko Sakkinen <jarkko@profian.com>
+Signed-off-by: Ashish Kalra <Ashish.Kalra@amd.com>
+Signed-off-by: Michael Roth <michael.roth@amd.com>
+---
+ arch/x86/include/asm/cpufeatures.h       | 1 +
+ arch/x86/include/asm/disabled-features.h | 4 +++-
+ arch/x86/kernel/cpu/amd.c                | 5 +++--
+ tools/arch/x86/include/asm/cpufeatures.h | 1 +
+ 4 files changed, 8 insertions(+), 3 deletions(-)
 
-Why it just keeps aggregating stats for the whole
-life time of the ring? If the workload changes,
-that would either totally screw the stats or would make
-it too inert to be useful. That's especially relevant
-for long running (days) processes. There should be a
-way to reset it so it starts counting anew.
-
-
-I say the patch has to be removed until all that is
-figured, but otherwise I'll just leave a NACK for
-history.
-
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 29cb275a219d..9492dcad560d 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -442,6 +442,7 @@
+ #define X86_FEATURE_SEV			(19*32+ 1) /* AMD Secure Encrypted Virtualization */
+ #define X86_FEATURE_VM_PAGE_FLUSH	(19*32+ 2) /* "" VM Page Flush MSR is supported */
+ #define X86_FEATURE_SEV_ES		(19*32+ 3) /* AMD Secure Encrypted Virtualization - Encrypted State */
++#define X86_FEATURE_SEV_SNP		(19*32+ 4) /* AMD Secure Encrypted Virtualization - Secure Nested Paging */
+ #define X86_FEATURE_V_TSC_AUX		(19*32+ 9) /* "" Virtual TSC_AUX */
+ #define X86_FEATURE_SME_COHERENT	(19*32+10) /* "" AMD hardware-enforced cache coherency */
+ #define X86_FEATURE_DEBUG_SWAP		(19*32+14) /* AMD SEV-ES full debug state swap support */
+diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
+index 702d93fdd10e..a864a5b208fa 100644
+--- a/arch/x86/include/asm/disabled-features.h
++++ b/arch/x86/include/asm/disabled-features.h
+@@ -117,6 +117,8 @@
+ #define DISABLE_IBT	(1 << (X86_FEATURE_IBT & 31))
+ #endif
+ 
++#define DISABLE_SEV_SNP		0
++
+ /*
+  * Make sure to add features to the correct mask
+  */
+@@ -141,7 +143,7 @@
+ 			 DISABLE_ENQCMD)
+ #define DISABLED_MASK17	0
+ #define DISABLED_MASK18	(DISABLE_IBT)
+-#define DISABLED_MASK19	0
++#define DISABLED_MASK19	(DISABLE_SEV_SNP)
+ #define DISABLED_MASK20	0
+ #define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 21)
+ 
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index 9f42d1c59e09..9a17165dfe84 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -592,8 +592,8 @@ static void early_detect_mem_encrypt(struct cpuinfo_x86 *c)
+ 	 *	      SME feature (set in scattered.c).
+ 	 *	      If the kernel has not enabled SME via any means then
+ 	 *	      don't advertise the SME feature.
+-	 *   For SEV: If BIOS has not enabled SEV then don't advertise the
+-	 *            SEV and SEV_ES feature (set in scattered.c).
++	 *   For SEV: If BIOS has not enabled SEV then don't advertise SEV and
++	 *	      any additional functionality based on it.
+ 	 *
+ 	 *   In all cases, since support for SME and SEV requires long mode,
+ 	 *   don't advertise the feature under CONFIG_X86_32.
+@@ -628,6 +628,7 @@ static void early_detect_mem_encrypt(struct cpuinfo_x86 *c)
+ clear_sev:
+ 		setup_clear_cpu_cap(X86_FEATURE_SEV);
+ 		setup_clear_cpu_cap(X86_FEATURE_SEV_ES);
++		setup_clear_cpu_cap(X86_FEATURE_SEV_SNP);
+ 	}
+ }
+ 
+diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
+index f4542d2718f4..e58bd69356ee 100644
+--- a/tools/arch/x86/include/asm/cpufeatures.h
++++ b/tools/arch/x86/include/asm/cpufeatures.h
+@@ -437,6 +437,7 @@
+ #define X86_FEATURE_SEV			(19*32+ 1) /* AMD Secure Encrypted Virtualization */
+ #define X86_FEATURE_VM_PAGE_FLUSH	(19*32+ 2) /* "" VM Page Flush MSR is supported */
+ #define X86_FEATURE_SEV_ES		(19*32+ 3) /* AMD Secure Encrypted Virtualization - Encrypted State */
++#define X86_FEATURE_SEV_SNP		(19*32+ 4) /* AMD Secure Encrypted Virtualization - Secure Nested Paging */
+ #define X86_FEATURE_V_TSC_AUX		(19*32+ 9) /* "" Virtual TSC_AUX */
+ #define X86_FEATURE_SME_COHERENT	(19*32+10) /* "" AMD hardware-enforced cache coherency */
+ #define X86_FEATURE_DEBUG_SWAP		(19*32+14) /* AMD SEV-ES full debug state swap support */
 -- 
-Pavel Begunkov
+2.25.1
+
