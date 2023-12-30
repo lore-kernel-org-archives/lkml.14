@@ -1,29 +1,24 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7499BE68;
-	Sat, 30 Dec 2023 20:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB2BC13D
+	for <linux-kernel@vger.kernel.org>; Sat, 30 Dec 2023 20:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Udxj252e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1703967021; x=1704571821; i=markus.elfring@web.de;
-	bh=4EGdtn/m/ZrZmRoMNxzHS5SQcI8bELVK6JHcnpRyjtU=;
-	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
-	 In-Reply-To;
-	b=Udxj252ekX00qz62jI/RwQoCSKYD3xKScCO9Ws3j3K1qwYb+H+8WV2s3D22UEalw
-	 74SOXcZf+MJS2TQRlnZbotcbNcqt63ZkxINz91eM17FvtIl3N/wB0W+ZSpqKTFXNk
-	 +2jl85kHgymWUVcyjiIttjnkPZko6rS+ng9Vd9lF4qgjHzV3q4xnHXm/bQ2G36Ea1
-	 EZHsHpKJbenkXnnKikGo9RbRtMRW4iItSeWOmPSDgcDgOBCGUGOoAHA+eiTvTRNm5
-	 +2Ip49WJN40g0vmrmgjusIXvn6sU0l2usg3cnAs+zmdOw72xt6G7a4qbw8d17MYu+
-	 3FVllP56s5KfPlRzAw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.87.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MrOdf-1qqtDO2Pp9-00o5BS; Sat, 30
- Dec 2023 21:10:21 +0100
-Message-ID: <02500028-e67a-4298-abb5-ff4fd66de044@web.de>
-Date: Sat, 30 Dec 2023 21:10:20 +0100
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="CwSvrHrV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1703967150;
+ bh=48uwgyUepoTSwyC5niR44R50rvv/N7Od8yW5FGvT5tM=;
+ b=CwSvrHrVc21lQQfqDKPX8TCsCabekBKSYC+SHd0X6ZS3dIaFBFvV4slhuGiHpCybwX02zt1VN
+ mDD2UQDU1B1e+K/hCXkMNJOX3BbVsh5zLDUJTTF1CV553y6fe23e8HN7CtT88ilOpQmVwD4U5jA
+ M/vu83g0v0WPu6PN5V+LqchpMRaXNTmZAKZ+mPuMqaCAk2FZVfkzkAMrGFXeJ3Wq/qPvLRXp8qS
+ fJpI9/+hPIrP9iD4ca3xK5qLVng4xWUTGZtVH1az5wyrT/4Yd6wiVMN0Nv8qAuzlx4bQd6OjFjg
+ aSKtUr5zXKcTjwOAqH7xqGktW6WMln/olg6T3FxBrm7w==
+Message-ID: <b9e6702d-4781-413b-8e4c-0b74272e9f22@kwiboo.se>
+Date: Sat, 30 Dec 2023 21:12:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -31,98 +26,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: [PATCH 3/5] bpf: Improve exception handling in bpf_core_apply()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-To: bpf@vger.kernel.org, netdev@vger.kernel.org,
- kernel-janitors@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
- Andrii Nakryiko <andrii@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Yonghong Song <yonghong.song@linux.dev>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <7011cdcc-4287-4e63-8bfa-f08710f670b1@web.de>
-In-Reply-To: <7011cdcc-4287-4e63-8bfa-f08710f670b1@web.de>
+Subject: Re: [PATCH v2 0/3] Add hantro g1 video decoder support for RK3588
+Content-Language: en-US
+To: amazingfate <liujianfeng1994@gmail.com>
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org,
+ ezequiel@vanguardiasur.com.ar, heiko@sntech.de,
+ krzysztof.kozlowski+dt@linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, mchehab@kernel.org,
+ p.zabel@pengutronix.de, robh+dt@kernel.org, sfr@canb.auug.org.au,
+ sigmaris@gmail.com
+References: <97faf49b-0109-439a-accf-251b502ad40b@kwiboo.se>
+ <20231230153159.3748580-1-liujianfeng1994@gmail.com>
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <20231230153159.3748580-1-liujianfeng1994@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Jj/BVAH9nKTRpviGnzkgzmM2W0xH7P05KPv2jiu6fqetx/OXSEp
- ALiC5Rp54eVC+xnBvwgTjDoULtRrdQWpaymrbxq2nxo+hwv28pGNc/YFquDDFomaPMiMLtH
- 8f5lcrR9IqJsIQgKfSZh2TyQihHe8/GwHyZ6rDNmr5b9YwEAltQG4y7ZimQlwaDEPPefdDY
- GtbL8uAxWRuS/uQm4wgzg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:chwhZ8dfETk=;CrwEg3QAt7JxpYRcCuvDrbxBfpf
- lPiCQqRGohBNgMMVrYYWtu2mvZVdNhiFR3810Rm+8NcfiuFcb2PQ7SzxHrnnGiAMtQ4OUFi9D
- v0hYNgd3F+sgVkxqXWnOsrNhWEB6Cq8rq6aZW9RgtnhQLLACvC062LK5eN1hcEPjMR0HIewiV
- g3WD75Dg8zxLWwYZrW36dMqqaub6aI9waLTH5Ppj1kz3eFZhkVDEHPmR4j1+Rg4YXZzpkK8xE
- /nsEPtOtNg4GrRjcogLHOiWNMbs9KJNiC0Sma2KBoWXUPhqvEDkGI4fJI5boGj/0yJzCNydIh
- EsF4AJT4ARnUnS7lz/MXgYdjEdkLeCRq8vo/BjKKM2rqrXDd2G7bXkSO/KDDKmRQGpZyoog7F
- 1tXxZRIDyEh37bCHtiLxegQh4THnI4s59aU4Gc6CD2yLYH6LbFe9x6OcFjfBQB7xQdrqdYWdr
- CU2Jdzz6Mb89ieSdgS5dDyrGsQkM5lxB7hL7oDz/KpKUs97W3qj66jHUV/XLfFyGMO5X+ZH0o
- qN7AWjodlPCk/gXBugt24LUJ6Z9RZFYlDQMq/uHAmbHqT7NWhUk0OPr3T8PUBx0j1BByTL5OQ
- ac1PchRLGJp0tcO8SnQjE1Yi4CHpvgof9pFhbruh+F7/hnFu40F3zDp27QSxMz+N6MowdAxeH
- jFLH2FHIJJ/SrypDLZzlT5R69JSgFNReu5qoYmiybtECDWjnXbkGf6/3+vnGzF6CVf1zn4D8s
- dULGIN/IXB4AY8kILRdI7oakBlzceTLtVJlspWkThxDD1Kxwg48RN7e6zxGgsZx31y9k9Fkdv
- pjCMfpUHJggnTC69TxNooT34leVXi10OtIFtm7ST+sGEiRRdwMWrxS8fDTHKod1yuaKZxkzyC
- uEdCo7FtGxmNsIi7RTJ0ZdH9Krlt6MV18oxFcnblAQT6XNJLsVffsEU6cnVy/qKiLpSZwfcSf
- 9nby4g==
+Content-Transfer-Encoding: 7bit
+X-Report-Abuse-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-ForwardEmail-Version: 0.4.40
+X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-ForwardEmail-ID: 659079ad220dc6bab27e429e
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sat, 30 Dec 2023 19:28:25 +0100
+Hi Jianfeng,
 
-The kfree() function was called in two cases by
-the bpf_core_apply() function during error handling
-even if the passed data structure member contained a null pointer.
-This issue was detected by using the Coccinelle software.
+On 2023-12-30 16:31, amazingfate wrote:
+> Hi Jonas,
+> 
+> On Sat, 30 Dec 2023 12:49:38 +0100, Jonas Karlman <jonas@kwiboo.se> wrote:
+>> I have only tested this fork of fluster with ffmpeg 6.x, what version of
+>> ffmpeg did you test with? I was expecting it to also work on ffmpeg 5.x.
+> 
+> I am using ffmpeg 6.0 with v4l2-request patches from libreelec[1].
 
-* Thus use another label.
+Great, that patch should match my v4l2-request-n6.0.1 branch [2],
+and does not have any NV15/NV20 ffmpeg pix fmt patches that could
+interfere.
 
-* Reorder function calls at the end.
+[2] https://github.com/Kwiboo/FFmpeg/commits/v4l2-request-n6.0.1/
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- kernel/bpf/btf.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+> Ffmpeg v4l2 decoder in fluster fork is using ffmpeg args:
+> "-hwaccel_device /dev/dri/renderD128"
+> which make the test fall with hantro g1 on rk3588. After removing it I
+> can run tests by ffmpeg v4l2-request decoder. 
 
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index 51e8b4bee0c8..e8391025d408 100644
-=2D-- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -8322,13 +8322,13 @@ int bpf_core_apply(struct bpf_core_ctx *ctx, const=
- struct bpf_core_relo *relo,
- 			bpf_log(ctx->log, "target candidate search failed for %d\n",
- 				relo->type_id);
- 			err =3D PTR_ERR(cc);
--			goto out;
-+			goto unlock_mutex;
- 		}
- 		if (cc->cnt) {
- 			cands.cands =3D kcalloc(cc->cnt, sizeof(*cands.cands), GFP_KERNEL);
- 			if (!cands.cands) {
- 				err =3D -ENOMEM;
--				goto out;
-+				goto unlock_mutex;
- 			}
- 		}
- 		for (i =3D 0; i < cc->cnt; i++) {
-@@ -8355,13 +8355,15 @@ int bpf_core_apply(struct bpf_core_ctx *ctx, const=
- struct bpf_core_relo *relo,
- 				  &targ_res);
+Thanks for confirming and testing again, and I fully understand why
+"-hwaccel_device /dev/dri/renderD128" caused issues on rk3588 :-)
 
- out:
--	kfree(specs);
- 	if (need_cands) {
- 		kfree(cands.cands);
-+unlock_mutex:
- 		mutex_unlock(&cand_cache_mutex);
- 		if (ctx->log->level & BPF_LOG_LEVEL2)
- 			print_cand_cache(ctx->log);
- 	}
-+
-+	kfree(specs);
- 	return err;
- }
+The commit "HACK: hwcontext_drm: do not require drm device" was required
+to run ffmpeg without a hwaccel_device, and I tested fluster without it.
 
-=2D-
-2.43.0
+Regards,
+Jonas
+
+> 
+> Rk3566 and rk3588 are sharing the same results:
+> JVT-AVC_V1 test suite with decoder FFmpeg-H.264-V4L2-request:
+>  Ran 127/135 tests successfully.
+> JVT-FR_EXT test suite with decoder FFmpeg-H.264-V4L2-request:
+>  Ran 44/69 tests successfully.
+> VP8-TEST-VECTORS test suite with decoder FFmpeg-VP8-V4L2-request:
+>  Ran 59/61 tests successfully.
+> 
+> [1] https://github.com/LibreELEC/LibreELEC.tv/blob/master/packages/multimedia/ffmpeg/patches/v4l2-request/ffmpeg-001-v4l2-request.patch
+> 
+> Regards,
+> Jianfeng
 
