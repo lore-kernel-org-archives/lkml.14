@@ -1,155 +1,146 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2088.outbound.protection.outlook.com [40.107.93.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A4DFC2E9;
-	Sat, 30 Dec 2023 17:36:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227B9BA31
+	for <linux-kernel@vger.kernel.org>; Sat, 30 Dec 2023 17:41:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="XLDAyPLO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=noxf8xEUz1X/mfbfLT3AknjoscWo5K/gAzS40VrPii2AbziRvmytBS1nf6/a7qNdZqR8yqa0j2OVUX441evNdS2tltUR81kZP02l8m1u107kN9zj8AOwiLB5Tmx+OE8S3wNE5M7XlG1NzR5yyvwnW8Ay/UHo0hdHFyYo07NKzLUKXcnAskuPOTt7wva/eL+SWiW9neDtJpv3kamtTFAKV3H651A4yVc73coEM2lP4k6vzU+SN7byl4dswBOcXPksuC5YLkzZr4tnv2t8E/ETgLsYNBPqYxGfIMy433SvZqyMNZendlCc4ub4vQv9HZyVy+2nkuBzXXC7ta6YmT4lpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BDCPJTqCpUJhpZ4QlcL8nQ30xiHgJU5MrcKeNbER+A8=;
- b=TpGIkONhD1puUv9eMT2z4JGtu1gYDIlyjAVBvod5/MYs6pGnFHWzBY/v92WkCE+OtXj5iaW4OyJI/Nloj2z38uSzKuFRPkOyHIvuagCQWvV9VQgJtRvHLCqMSZtI5N7CCyIm0FsjRyZQMR8zBCw7MMHgaXFegw1bIx7W3rk4Mmhu98eo8S8SWV5lGP9Z+HIq9wvp9rmzl85BYVYnWv+3zEi2sf0DdqqhF+dNWd2/jzD62BZgXLITIXPHP8dBvBIhCvaqJEA4EJprIRr9zWsFZT4A54L14O81Uu/eU7sARxZhDJ4a2X9EDPhaudjPne52Xf8lSVmHX50i+6VbhckwaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BDCPJTqCpUJhpZ4QlcL8nQ30xiHgJU5MrcKeNbER+A8=;
- b=XLDAyPLO8zWt9/g/JWkce5n1TUxrEe0uGBHrTSWD22E2ITGcOggk0sZG4ePsd7fSKa/LvHr+CF1Nmz3H6EcqWI2J1s1FhuRGtQcX1Mh66Pci38clW1ACBFK8SuVAExLPnuOJ9ZTGfxTZCqDw1g/kppyRFHvkY+eKZgK1owPWkBk=
-Received: from DS7PR03CA0112.namprd03.prod.outlook.com (2603:10b6:5:3b7::27)
- by LV3PR12MB9412.namprd12.prod.outlook.com (2603:10b6:408:211::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.22; Sat, 30 Dec
- 2023 17:36:31 +0000
-Received: from CY4PEPF0000FCC2.namprd03.prod.outlook.com
- (2603:10b6:5:3b7:cafe::48) by DS7PR03CA0112.outlook.office365.com
- (2603:10b6:5:3b7::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.20 via Frontend
- Transport; Sat, 30 Dec 2023 17:36:30 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000FCC2.mail.protection.outlook.com (10.167.242.104) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7159.9 via Frontend Transport; Sat, 30 Dec 2023 17:36:30 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Sat, 30 Dec
- 2023 11:36:29 -0600
-From: Michael Roth <michael.roth@amd.com>
-To: <kvm@vger.kernel.org>
-CC: <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
-	<linux-crypto@vger.kernel.org>, <x86@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<jroedel@suse.de>, <thomas.lendacky@amd.com>, <hpa@zytor.com>,
-	<ardb@kernel.org>, <pbonzini@redhat.com>, <seanjc@google.com>,
-	<vkuznets@redhat.com>, <jmattson@google.com>, <luto@kernel.org>,
-	<dave.hansen@linux.intel.com>, <slp@redhat.com>, <pgonda@google.com>,
-	<peterz@infradead.org>, <srinivas.pandruvada@linux.intel.com>,
-	<rientjes@google.com>, <dovmurik@linux.ibm.com>, <tobin@ibm.com>,
-	<bp@alien8.de>, <vbabka@suse.cz>, <kirill@shutemov.name>,
-	<ak@linux.intel.com>, <tony.luck@intel.com>,
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, <alpergun@google.com>,
-	<jarkko@kernel.org>, <ashish.kalra@amd.com>, <nikunj.dadhania@amd.com>,
-	<pankaj.gupta@amd.com>, <liam.merwick@oracle.com>, <zhi.a.wang@intel.com>,
-	Brijesh Singh <brijesh.singh@amd.com>
-Subject: [PATCH v11 08/35] KVM: x86: Define RMP page fault error bits for #NPF
-Date: Sat, 30 Dec 2023 11:23:24 -0600
-Message-ID: <20231230172351.574091-9-michael.roth@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20231230172351.574091-1-michael.roth@amd.com>
-References: <20231230172351.574091-1-michael.roth@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="OOcFk8Jl"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d3b84173feso15734995ad.1
+        for <linux-kernel@vger.kernel.org>; Sat, 30 Dec 2023 09:41:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1703958095; x=1704562895; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=y34Zd+Se6X3E/Vet+AZz0G3CVTbacRhGw9N0cZoQO6c=;
+        b=OOcFk8Jl4AzGJevah/snXDpHp3G/c6Jn42vVqzpzMaVrKU06qp4R18ItahPAKWwFaz
+         qHbDXJOGWwgDXT4BUc/+dG5OictyD1bK5+DLtKvBLYSfJ43NgSYK9oSblE5LriRazKuX
+         vW5UcaWkKNOEJ50KMjzARB+8mJmbMelVdVf9XNVmpQRCmt/o1ECOOP/BDl9zNW5L4J15
+         NLvS8l4R39L6WBrIvoiVG4VGGeZ0z+36SSprv2xi3N9/tSf6Lf7yE559+Je0K3k8gxo3
+         VS9fkLh+ra7bHnnEl15JR8Vsw9UjW3mWFpzkg17SXSUU+3uYANQnvydLUllUtOVoSs2J
+         2P5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703958095; x=1704562895;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y34Zd+Se6X3E/Vet+AZz0G3CVTbacRhGw9N0cZoQO6c=;
+        b=ogQSnTRARN1/NPNWjPJp6onxCyEGKIQwPyQvEH/FSpoKXClO8zywZjJnuQIRe2K3mV
+         L4pzXyWsxuwZl5yABblsSa9Du1fBS005b3sSmEDJHaf9oMrcHeAlmmZsYJC341qygIci
+         2ZGshdqRdWG8fyZiS7KoFj+YGX6aImF2fVpNaJGhg0UVv/0MhWtu7V14ItEegT8hwZzT
+         SkBkBAbpQOhqt3c++mqJgQGHqSNuMi0S9D/Y0nquoA+RfeyM5iRrQTCXYHHlr1el6rN6
+         AK5XoCKf48E9golr9SrlZpuoY6qUDIxdhSeaJLKMqZDmRxmZzfg3WKz2fxG4xC0HWoPt
+         C0QQ==
+X-Gm-Message-State: AOJu0YzUpv3VBZqk7ogX3kjBFI6kBRhGV8SJA5XJU1L+y1jeqNim9V6x
+	GQqbJV2ITu9xActa9n8kpe/GO3E1mPMV+w==
+X-Google-Smtp-Source: AGHT+IF0LrqayIADx35y34JnTk71imJfXkyXjc0gTdw+9eqnw0DLtUh8HZDdApgWeNeaBv6v062Lrw==
+X-Received: by 2002:a17:903:41cd:b0:1d3:cf95:fd4b with SMTP id u13-20020a17090341cd00b001d3cf95fd4bmr28630621ple.6.1703958095396;
+        Sat, 30 Dec 2023 09:41:35 -0800 (PST)
+Received: from [192.168.1.150] ([198.8.77.194])
+        by smtp.gmail.com with ESMTPSA id n10-20020a1709026a8a00b001ab39cd875csm17554544plk.133.2023.12.30.09.41.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 30 Dec 2023 09:41:34 -0800 (PST)
+Message-ID: <57b81a15-58ae-46c1-a1af-9117457a31c7@kernel.dk>
+Date: Sat, 30 Dec 2023 10:41:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC2:EE_|LV3PR12MB9412:EE_
-X-MS-Office365-Filtering-Correlation-Id: fc980c27-6a4d-4243-8ec3-08dc095ddc08
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	GdRg8ruTviy0V6Pzi1T+MG3pXD1VG678iTBd/fg3j4UnasdFznF7sZIhhyH1qp91Xoj3Tif0gw+Sir81uW6eb9IItx7FcpzIoGlrL2z7xKA5rbj1GXJEEUrIOW+924ypNmbghAbOLiwk4if5vbjlwH549fOdtRMXwNbQVUQFBRO2D7CntxnTQEbFvd7NsMlDZBNoQCRe8I+unulKsqg3+EMfoTvOJBrUF0KDQCOSYd3Ag7C8nXM8ChPcy3DaL0qrbYTtxBav1VmhdAFc3gYt+o618E5+SSJAjt8UBdgY0URslCVnA0Z3o4CL0TxEqySO42mpY1DNYaNzPSIMPUZwfk+QYyuXL6WAddLHCZZI1Gul9n1GYLjqSDg3V4UFZ7hWAUqNQIxiRWNgcO3tI5pPGygveUUEupgFhbsuXHc2QIPanZ8XlPYce71bKamYSZlDk2jmi+DaZKdZb4w1tp3yqe0lyQqZRHrO9WU9DzGHBSTyyTloBYGbd7x1UZ+6IPHQ9uoY91BT8ONaGXgEHKqvnuWhEEJSfgMmdNnZrHjQQxetcwsdum4zpTXmcCf2cZLBoSOcGSBUqTTXYZDqFz1H3YznfZERw14Kw9Vudk8evdYBhUlCdMMU9jlcsByTRyzJVud0SwIAjTXavYVApU6AuBEWRCKIJD+d5WL6Ff5y+zOCd/NttFHlZMqJeUeMI9oHcWcPWsVG0tzCryQA1O5Q/rrGN6+wzFWShkEAhLpNY+ySu5CY/gwA+B1T8c8xIZwBGSgaDNfrH8OEAF/DGirOmQ==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(346002)(136003)(39860400002)(376002)(230922051799003)(451199024)(1800799012)(64100799003)(82310400011)(186009)(40470700004)(46966006)(36840700001)(40480700001)(426003)(83380400001)(16526019)(1076003)(26005)(2616005)(40460700003)(336012)(478600001)(6666004)(47076005)(41300700001)(316002)(54906003)(70206006)(70586007)(6916009)(36756003)(44832011)(4326008)(8936002)(8676002)(36860700001)(356005)(81166007)(86362001)(82740400003)(2906002)(5660300002)(7416002)(7406005)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Dec 2023 17:36:30.6830
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc980c27-6a4d-4243-8ec3-08dc095ddc08
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000FCC2.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9412
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6] io_uring: Statistics of the true utilization of sq
+ threads.
+Content-Language: en-US
+To: Pavel Begunkov <asml.silence@gmail.com>,
+ Xiaobing Li <xiaobing.li@samsung.com>
+Cc: linux-kernel@vger.kernel.org, io-uring@vger.kernel.org,
+ kun.dou@samsung.com, peiwei.li@samsung.com, joshi.k@samsung.com,
+ kundan.kumar@samsung.com, wenwen.chen@samsung.com, ruyi.zhang@samsung.com,
+ cliang01.li@samsung.com, xue01.he@samsung.com
+References: <CGME20231225055252epcas5p43ae8016d329b160f688def7b4f9d4ddb@epcas5p4.samsung.com>
+ <20231225054438.44581-1-xiaobing.li@samsung.com>
+ <170360833542.1229482.7687326255574388809.b4-ty@kernel.dk>
+ <7967c7a9-3d17-44de-a170-2b5354460126@gmail.com>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <7967c7a9-3d17-44de-a170-2b5354460126@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Brijesh Singh <brijesh.singh@amd.com>
+On 12/30/23 9:27 AM, Pavel Begunkov wrote:
+> On 12/26/23 16:32, Jens Axboe wrote:
+>>
+>> On Mon, 25 Dec 2023 13:44:38 +0800, Xiaobing Li wrote:
+>>> Count the running time and actual IO processing time of the sqpoll
+>>> thread, and output the statistical data to fdinfo.
+>>>
+>>> Variable description:
+>>> "work_time" in the code represents the sum of the jiffies of the sq
+>>> thread actually processing IO, that is, how many milliseconds it
+>>> actually takes to process IO. "total_time" represents the total time
+>>> that the sq thread has elapsed from the beginning of the loop to the
+>>> current time point, that is, how many milliseconds it has spent in
+>>> total.
+>>>
+>>> [...]
+>>
+>> Applied, thanks!
+>>
+>> [1/1] io_uring: Statistics of the true utilization of sq threads.
+>>        commit: 9f7e5872eca81d7341e3ec222ebdc202ff536655
+> 
+> I don't believe the patch is near complete, there are still
+> pending question that the author ignored (see replies to
+> prev revisions).
 
-When SEV-SNP is enabled globally, the hardware places restrictions on all
-memory accesses based on the RMP entry, whether the hypervisor or a VM,
-performs the accesses. When hardware encounters an RMP access violation
-during a guest access, it will cause a #VMEXIT(NPF) with a number of
-additional bits set to indicate the reasons for the #NPF. Define those
-here.
+We can drop and defer, that's not an issue. It's still sitting top of
+branch.
 
-See APM2 section 16.36.10 for more details.
+Can you elaborate on the pending questions?
 
-Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-[mdr: add some additional details to commit message]
-Signed-off-by: Michael Roth <michael.roth@amd.com>
----
- arch/x86/include/asm/kvm_host.h | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> Why it uses jiffies instead of some task run time?
+> Consequently, why it's fine to account irq time and other
+> preemption? (hint, it's not)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index e38cab5dccae..843695217b4b 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -262,9 +262,13 @@ enum x86_intercept_stage;
- #define PFERR_FETCH_BIT 4
- #define PFERR_PK_BIT 5
- #define PFERR_SGX_BIT 15
-+#define PFERR_GUEST_RMP_BIT 31
- #define PFERR_GUEST_FINAL_BIT 32
- #define PFERR_GUEST_PAGE_BIT 33
- #define PFERR_IMPLICIT_ACCESS_BIT 48
-+#define PFERR_GUEST_ENC_BIT 34
-+#define PFERR_GUEST_SIZEM_BIT 35
-+#define PFERR_GUEST_VMPL_BIT 36
- 
- #define PFERR_PRESENT_MASK	BIT(PFERR_PRESENT_BIT)
- #define PFERR_WRITE_MASK	BIT(PFERR_WRITE_BIT)
-@@ -276,6 +280,10 @@ enum x86_intercept_stage;
- #define PFERR_GUEST_FINAL_MASK	BIT_ULL(PFERR_GUEST_FINAL_BIT)
- #define PFERR_GUEST_PAGE_MASK	BIT_ULL(PFERR_GUEST_PAGE_BIT)
- #define PFERR_IMPLICIT_ACCESS	BIT_ULL(PFERR_IMPLICIT_ACCESS_BIT)
-+#define PFERR_GUEST_RMP_MASK	BIT_ULL(PFERR_GUEST_RMP_BIT)
-+#define PFERR_GUEST_ENC_MASK	BIT_ULL(PFERR_GUEST_ENC_BIT)
-+#define PFERR_GUEST_SIZEM_MASK	BIT_ULL(PFERR_GUEST_SIZEM_BIT)
-+#define PFERR_GUEST_VMPL_MASK	BIT_ULL(PFERR_GUEST_VMPL_BIT)
- 
- #define PFERR_NESTED_GUEST_PAGE (PFERR_GUEST_PAGE_MASK |	\
- 				 PFERR_WRITE_MASK |		\
+Yeah that's a good point, might be better to use task run time. Jiffies
+is also an annoying metric to expose, as you'd need to then get the tick
+rate as well. Though I suspect the ratio is the interesting bit here.
+
+> Why it can't be done with userspace and/or bpf? Why
+> can't it be estimated by checking and tracking
+> IORING_SQ_NEED_WAKEUP in userspace?
+
+Asking people to integrate bpf for this is a bit silly imho. Tracking
+NEED_WAKEUP is also quite cumbersome and would most likely be higher
+overhead as well.
+
+> What's the use case in particular? Considering that
+> one of the previous revisions was uapi-less, something
+> is really fishy here. Again, it's a procfs file nobody
+> but a few would want to parse to use the feature.
+
+I brought this up earlier too, fdinfo is not a great API. For anything,
+really.
+
+> Why it just keeps aggregating stats for the whole
+> life time of the ring? If the workload changes,
+> that would either totally screw the stats or would make
+> it too inert to be useful. That's especially relevant
+> for long running (days) processes. There should be a
+> way to reset it so it starts counting anew.
+
+I don't see a problem there with the current revision, as the app can
+just remember the previous two numbers and do the appropriate math
+"since last time".
+
+> I say the patch has to be removed until all that is
+> figured, but otherwise I'll just leave a NACK for
+> history.
+
+That's fine, I can drop it for now and we can get the rest addressed.
+
 -- 
-2.25.1
+Jens Axboe
 
