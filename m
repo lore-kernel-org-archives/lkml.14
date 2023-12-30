@@ -1,425 +1,559 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1845A79DF;
-	Sat, 30 Dec 2023 12:03:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36A38473;
+	Sat, 30 Dec 2023 12:08:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bSIYVExP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3EADC433C9;
-	Sat, 30 Dec 2023 12:03:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703937833;
-	bh=r/tXXeAnCHvwEpo6MV27QydIsEHsS9gab9b2FMQ46lw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bSIYVExPSMmdhZNlM2OQW/NglPLY5lk1jBy32FLCj26Bd/thj7vw/RDqsvv02LJx1
-	 XjuWAbzw2SVByS8Rwx6i1VeMv7K96TOIDNhDN/9QOeX/sRdErhQ3Xae2mLfD/Ysb8I
-	 l9uoPoAAx2yXwDuTusoUE5CsYCtI/XIDskGOvkHm7YbKqg+MxcdCTSXEKgEAXqKlIR
-	 q3yxsbL3VcEQwXGdUt80mknfTlMzNj39tI2ZsDxKkIB0sZOI07ZoRIB2dNCtDaZUlq
-	 Ik24Srz8Vt5b4fv2cDqUcwbYUcIa7OERG/1OwYl/AXfSVyaIs6kKqymVBmkBAYJUjv
-	 S17zA06Oq7WrQ==
-Date: Sat, 30 Dec 2023 12:03:47 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: <cy_huang@richtek.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring
- <robh+dt@kernel.org>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
- <u.kleine-koenig@pengutronix.de>, <linux-iio@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] iio: adc: rtq6056: Add support for the whole
- RTQ6056 family
-Message-ID: <20231230120347.0816bd09@jic23-huawei>
-In-Reply-To: <74db15583a9a68701dbff5a1a967c0d987d6dfb6.1703762557.git.cy_huang@richtek.com>
-References: <cover.1703762557.git.cy_huang@richtek.com>
-	<74db15583a9a68701dbff5a1a967c0d987d6dfb6.1703762557.git.cy_huang@richtek.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DOMyPzwm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15CCAC433C7;
+	Sat, 30 Dec 2023 12:08:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1703938105;
+	bh=DJia6lfwP8M3JSLZyrWRKvnAMWYMnYvpbyN+0m4gUs8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DOMyPzwm3yH0IOE9E0a1FPT3X+p+ULpyRAZ8Pg6qPH8n6Toi1T4Lh2rNWMzO9Rspm
+	 ThM5n5x5UUDCzI0Nm/uWG/avlk6ZL2PizE73HGW1PjamHAeQpFemWfouQcIfe9vm6x
+	 SH8IBv7Fv8tTYC/JkJObNBlLMjxnKdWZbOE+0Kzo=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	linux@roeck-us.net,
+	shuah@kernel.org,
+	patches@kernelci.org,
+	lkft-triage@lists.linaro.org,
+	pavel@denx.de,
+	jonathanh@nvidia.com,
+	f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net,
+	rwarsow@gmx.de,
+	conor@kernel.org,
+	allen.lkml@gmail.com
+Subject: [PATCH 6.1 000/112] 6.1.70-rc1 review
+Date: Sat, 30 Dec 2023 11:58:33 +0000
+Message-ID: <20231230115806.714618407@linuxfoundation.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.70-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-6.1.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 6.1.70-rc1
+X-KernelTest-Deadline: 2024-01-01T11:58+00:00
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 28 Dec 2023 19:29:35 +0800
-<cy_huang@richtek.com> wrote:
+This is the start of the stable review cycle for the 6.1.70 release.
+There are 112 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-> From: ChiYuan Huang <cy_huang@richtek.com>
-> 
-> RTQ6053 and RTQ6059 are the same series of RTQ6056.
-> 
-> The respective differences with RTQ6056 are listed below
-> RTQ6053
-> - chip package type
-> 
-> RTQ6059
-> - Reduce the pinout for vbus sensing pin
-> - Some internal ADC scaling change
-> 
-> Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
-Hi ChiYuan,
+Responses should be made by Mon, 01 Jan 2024 11:57:43 +0000.
+Anything received after that time might be too late.
 
-Some comments inline, most focus on not mixing device specific features
-across code and data.  You always want them to be fully specified by
-the the device specific const struct directly not by code using an
-ID from there.  It ends up more readable and more flexible to have it
-all done via data or callbacks where things are a too complex for data.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.70-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+and the diffstat can be found below.
 
-Thanks,
+thanks,
 
-Jonathan
+greg k-h
 
-> ---
-> v2
-> - Remove rtq6053 in DT match table and make rtq6053 fallback compatible
->   with rtq6056
-> ---
->  drivers/iio/adc/rtq6056.c | 264 ++++++++++++++++++++++++++++++++++++--
->  1 file changed, 250 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/rtq6056.c b/drivers/iio/adc/rtq6056.c
-> index ad4cea6839b2..5587178cea83 100644
-> --- a/drivers/iio/adc/rtq6056.c
-> +++ b/drivers/iio/adc/rtq6056.c
-> @@ -39,6 +39,16 @@
->  #define RTQ6056_DEFAULT_CONFIG	0x4127
->  #define RTQ6056_CONT_ALLON	7
->  
-> +#define RTQ6059_DEFAULT_CONFIG	0x3C47
-> +#define RTQ6059_VBUS_LSB_OFFSET	3
-> +#define RTQ6059_AVG_BASE	8
-> +
-> +enum {
-> +	RICHTEK_DEV_RTQ6056 = 0,
-> +	RICHTEK_DEV_RTQ6059,
-> +	RICHTEK_DEV_MAX
-> +};
-> +
->  enum {
->  	RTQ6056_CH_VSHUNT = 0,
->  	RTQ6056_CH_VBUS,
-> @@ -50,16 +60,29 @@ enum {
->  enum {
->  	F_OPMODE = 0,
->  	F_VSHUNTCT,
-> +	F_SADC = F_VSHUNTCT,
+-------------
+Pseudo-Shortlog of commits:
 
-If the devices have different register fields, better to have different enums
-for them as well as that should result in less confusing code.
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 6.1.70-rc1
+
+Léo Lam <leo@leolam.fr>
+    wifi: nl80211: fix deadlock in nl80211_set_cqm_rssi (6.6.x)
+
+Johannes Berg <johannes.berg@intel.com>
+    wifi: cfg80211: fix CQM for non-range use
+
+Krister Johansen <kjlx@templeofstupid.com>
+    fuse: share lookup state between submount and its parent
+
+SeongJae Park <sj@kernel.org>
+    mm/damon/core: make damon_start() waits until kdamond_fn() starts
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/alternatives: Sync core before enabling interrupts
+
+Marc Zyngier <maz@kernel.org>
+    KVM: arm64: vgic: Force vcpu vgic teardown on vcpu destroy
+
+Marc Zyngier <maz@kernel.org>
+    KVM: arm64: vgic: Add a non-locking primitive for kvm_vgic_vcpu_destroy()
+
+Marc Zyngier <maz@kernel.org>
+    KVM: arm64: vgic: Simplify kvm_vgic_destroy()
+
+Yaxiong Tian <tianyaxiong@kylinos.cn>
+    thunderbolt: Fix memory leak in margining_port_remove()
+
+Herve Codina <herve.codina@bootlin.com>
+    lib/vsprintf: Fix %pfwf when current node refcount == 0
+
+xiongxin <xiongxin@kylinos.cn>
+    gpio: dwapb: mask/unmask IRQ when disable/enale it
+
+Tony Lindgren <tony@atomide.com>
+    bus: ti-sysc: Flush posted write only after srst_udelay
+
+Nam Cao <namcao@linutronix.de>
+    pinctrl: starfive: jh7100: ignore disabled device tree nodes
+
+Mikulas Patocka <mpatocka@redhat.com>
+    dm-integrity: don't modify bio's immutable bio_vec in integrity_metadata()
+
+Steven Rostedt (Google) <rostedt@goodmis.org>
+    tracing / synthetic: Disable events after testing in synth_event_gen_test_init()
+
+Alexander Atanasov <alexander.atanasov@virtuozzo.com>
+    scsi: core: Always send batch on reset or error handling command
+
+Martin K. Petersen <martin.petersen@oracle.com>
+    Revert "scsi: aacraid: Reply queue mapping to CPUs based on IRQ affinity"
+
+Geliang Tang <geliang.tang@linux.dev>
+    selftests: mptcp: join: fix subflow_send_ack lookup
+
+Ming Lei <ming.lei@redhat.com>
+    ublk: move ublk_cancel_dev() out of ub->mutex
+
+Konstantin Meskhidze <konstantin.meskhidze@huawei.com>
+    ubifs: fix possible dereference after free
+
+Naohiro Aota <naohiro.aota@wdc.com>
+    btrfs: zoned: no longer count fresh BG region as zone unusable
+
+Aric Cyr <aric.cyr@amd.com>
+    Revert "drm/amd/display: Do not set DRR on pipe commit"
+
+Li Lingfeng <lilingfeng3@huawei.com>
+    dm thin metadata: Fix ABBA deadlock by resetting dm_bufio_client
+
+Mauricio Faria de Oliveira <mfo@canonical.com>
+    loop: do not enforce max_loop hard limit by (new) default
+
+Heiko Stuebner <heiko.stuebner@vrull.eu>
+    RISC-V: Fix do_notify_resume / do_work_pending prototype
+
+JP Kobryn <inwardvessel@gmail.com>
+    9p: prevent read overrun in protocol dump tracepoint
+
+Ville Syrjälä <ville.syrjala@linux.intel.com>
+    drm/i915: Reject async flips with bigjoiner
+
+Paulo Alcantara <pc@manguebit.com>
+    smb: client: fix OOB in smbCalcSize()
+
+Paulo Alcantara <pc@manguebit.com>
+    smb: client: fix OOB in SMB2_query_info_init()
+
+Paulo Alcantara <pc@manguebit.com>
+    smb: client: fix potential OOB in cifs_dump_detail()
+
+Paulo Alcantara <pc@manguebit.com>
+    smb: client: fix OOB in cifsd when receiving compounded resps
+
+Fabio Estevam <festevam@denx.de>
+    dt-bindings: nvmem: mxs-ocotp: Document fsl,ocotp
+
+Ronald Wahl <ronald.wahl@raritan.com>
+    net: ks8851: Fix TX stall caused by TX buffer overrun
+
+Rouven Czerwinski <r.czerwinski@pengutronix.de>
+    net: rfkill: gpio: set GPIO direction
+
+Fedor Pchelkin <pchelkin@ispras.ru>
+    net: 9p: avoid freeing uninit memory in p9pdu_vreadf
+
+Christoffer Sandberg <cs@tuxedo.de>
+    Input: soc_button_array - add mapping for airplane mode button
+
+Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+    net: usb: ax88179_178a: avoid failed operations when device is disconnected
+
+Alex Lu <alex_lu@realsil.com.cn>
+    Bluetooth: Add more enc key size check
+
+Xiao Yao <xiaoyao@rock-chips.com>
+    Bluetooth: MGMT/SMP: Fix address type when using SMP over BREDR/LE
+
+Frédéric Danis <frederic.danis@collabora.com>
+    Bluetooth: L2CAP: Send reject on command corrupted request
+
+Hyunwoo Kim <v4bel@theori.io>
+    Bluetooth: af_bluetooth: Fix Use-After-Free in bt_sock_recvmsg
+
+Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+    Bluetooth: hci_event: Fix not checking if HCI_OP_INQUIRY has been sent
+
+Clément Villeret <clement.villeret@gmail.com>
+    ALSA: hda/realtek: Add quirk for ASUS ROG GV302XA
+
+Reinhard Speyerer <rspmn@arcor.de>
+    USB: serial: option: add Quectel RM500Q R13 firmware support
+
+Slark Xiao <slark_xiao@163.com>
+    USB: serial: option: add Foxconn T99W265 with new baseline
+
+Alper Ak <alperyasinak1@gmail.com>
+    USB: serial: option: add Quectel EG912Y module support
+
+Mark Glover <mark.glover@actisense.com>
+    USB: serial: ftdi_sio: update Actisense PIDs constant names
+
+Johannes Berg <johannes.berg@intel.com>
+    wifi: cfg80211: fix certs build to not depend on file order
+
+Chen-Yu Tsai <wens@kernel.org>
+    wifi: cfg80211: Add my certificate
+
+Tasos Sahanidis <tasos@tasossah.com>
+    usb-storage: Add quirk for incorrect WP on Kingston DT Ultimate 3.0 G3
+
+Jeremie Knuesel <knuesel@gmail.com>
+    ALSA: usb-audio: Increase delay in MOTU M quirk
+
+David Lechner <dlechner@baylibre.com>
+    iio: triggered-buffer: prevent possible freeing of wrong buffer
+
+Wadim Egorov <w.egorov@phytec.de>
+    iio: adc: ti_am335x_adc: Fix return value check of tiadc_request_dma()
+
+Javier Carrasco <javier.carrasco.cruz@gmail.com>
+    iio: common: ms_sensors: ms_sensors_i2c: fix humidity conversion time table
+
+Wei Yongjun <weiyongjun1@huawei.com>
+    scsi: bnx2fc: Fix skb double free in bnx2fc_rcv()
+
+Haoran Liu <liuhaoran14@163.com>
+    Input: ipaq-micro-keys - add error handling for devm_kmemdup
+
+Konrad Dybcio <konrad.dybcio@linaro.org>
+    interconnect: qcom: sm8250: Enable sync_state
+
+Su Hui <suhui@nfschina.com>
+    iio: imu: inv_mpu6050: fix an error code problem in inv_mpu6050_read_raw
+
+Mike Tipton <quic_mdtipton@quicinc.com>
+    interconnect: Treat xlate() returning NULL node as an error
+
+Ville Syrjälä <ville.syrjala@linux.intel.com>
+    drm/i915: Fix ADL+ tiled plane stride when the POT stride is smaller than the original
+
+Clint Taylor <clinton.a.taylor@intel.com>
+    drm/i915/mtl: Add MTL for remapping CCS FBs
+
+Ville Syrjälä <ville.syrjala@linux.intel.com>
+    drm/i915/dpt: Only do the POT stride remap when using DPT
+
+Ville Syrjälä <ville.syrjala@linux.intel.com>
+    drm/i915: Fix intel_atomic_setup_scalers() plane_state handling
+
+Ville Syrjälä <ville.syrjala@linux.intel.com>
+    drm/i915: Relocate intel_atomic_setup_scalers()
+
+Luca Coelho <luciano.coelho@intel.com>
+    drm/i915/mtl: limit second scaler vertical scaling in ver >= 14
+
+Maurizio Lombardi <mlombard@redhat.com>
+    nvme-pci: fix sleeping function called from interrupt context
+
+Kent Gibson <warthog618@gmail.com>
+    gpiolib: cdev: add gpio_device locking wrapper around gpio_ioctl()
+
+Alexis Lothoré <alexis.lothore@bootlin.com>
+    pinctrl: at91-pio4: use dedicated lock class for IRQ
+
+Arnd Bergmann <arnd@arndb.de>
+    x86/xen: add CPU dependencies for 32-bit build
+
+Quan Nguyen <quan@os.amperecomputing.com>
+    i2c: aspeed: Handle the coalesced stop conditions with the start conditions.
+
+Shengjiu Wang <shengjiu.wang@nxp.com>
+    ASoC: fsl_sai: Fix channel swap issue on i.MX8MP
+
+Jerome Brunet <jbrunet@baylibre.com>
+    ASoC: hdmi-codec: fix missing report for jack initial status
+
+David Howells <dhowells@redhat.com>
+    afs: Fix use-after-free due to get/remove race in volume tree
+
+David Howells <dhowells@redhat.com>
+    afs: Fix overwriting of result of DNS query
+
+David Howells <dhowells@redhat.com>
+    keys, dns: Allow key types (eg. DNS) to be reclaimed immediately on expiry
+
+Eric Dumazet <edumazet@google.com>
+    net: check dev->gso_max_size in gso_features_check()
+
+David Howells <dhowells@redhat.com>
+    afs: Fix dynamic root lookup DNS check
+
+David Howells <dhowells@redhat.com>
+    afs: Fix the dynamic root's d_delete to always delete unused dentries
+
+Liu Jian <liujian56@huawei.com>
+    net: check vlan filter feature in vlan_vids_add_by_dev() and vlan_vids_del_by_dev()
+
+Yury Norov <yury.norov@gmail.com>
+    net: mana: select PAGE_POOL
+
+Arnd Bergmann <arnd@arndb.de>
+    Bluetooth: hci_event: shut up a false-positive warning
+
+Ying Hsu <yinghsu@chromium.org>
+    Bluetooth: Fix deadlock in vhci_send_frame
+
+Eric Dumazet <edumazet@google.com>
+    net/rose: fix races in rose_kill_by_device()
+
+Zhipeng Lu <alexious@zju.edu.cn>
+    ethernet: atheros: fix a memleak in atl1e_setup_ring_resources
+
+Eric Dumazet <edumazet@google.com>
+    net: sched: ife: fix potential use-after-free
+
+Shigeru Yoshida <syoshida@redhat.com>
+    net: Return error from sk_stream_wait_connect() if sk_wait_event() fails
+
+Suman Ghosh <sumang@marvell.com>
+    octeontx2-pf: Fix graceful exit during PFC configuration failure
+
+Vladimir Oltean <vladimir.oltean@nxp.com>
+    net: mscc: ocelot: fix eMAC TX RMON stats for bucket 256-511 and above
+
+Rahul Rameshbabu <rrameshbabu@nvidia.com>
+    net/mlx5e: Correct snprintf truncation handling for fw_version buffer used by representors
+
+Rahul Rameshbabu <rrameshbabu@nvidia.com>
+    net/mlx5e: Correct snprintf truncation handling for fw_version buffer
+
+Moshe Shemesh <moshe@nvidia.com>
+    net/mlx5: Fix fw tracer first block check
+
+Dinghao Liu <dinghao.liu@zju.edu.cn>
+    net/mlx5e: fix a potential double-free in fs_udp_create_groups
+
+Shifeng Li <lishifeng@sangfor.com.cn>
+    net/mlx5e: Fix a race in command alloc flow
+
+Shay Drory <shayd@nvidia.com>
+    net/mlx5: Re-organize mlx5_cmd struct
+
+Tariq Toukan <tariqt@nvidia.com>
+    net/mlx5: Prevent high-rate FW commands from populating all slots
+
+Tariq Toukan <tariqt@nvidia.com>
+    net/mlx5: Introduce and use opcode getter in command interface
+
+Shifeng Li <lishifeng@sangfor.com.cn>
+    net/mlx5e: Fix slab-out-of-bounds in mlx5_query_nic_vport_mac_list()
+
+Vlad Buslov <vladbu@nvidia.com>
+    Revert "net/mlx5e: fix double free of encap_header"
+
+Vlad Buslov <vladbu@nvidia.com>
+    Revert "net/mlx5e: fix double free of encap_header in update funcs"
+
+Johannes Berg <johannes.berg@intel.com>
+    wifi: mac80211: mesh_plink: fix matches_local logic
+
+Johannes Berg <johannes.berg@intel.com>
+    wifi: mac80211: mesh: check element parsing succeeded
+
+Edward Adam Davis <eadavis@qq.com>
+    wifi: mac80211: check if the existing link config remains unchanged
+
+Johannes Berg <johannes.berg@intel.com>
+    wifi: iwlwifi: pcie: add another missing bh-disable for rxq->lock
+
+Heiko Carstens <hca@linux.ibm.com>
+    s390/vx: fix save/restore of fpu kernel context
+
+Geert Uytterhoeven <geert+renesas@glider.be>
+    reset: Fix crash when freeing non-existent optional resets
+
+Kunwu Chan <chentao@kylinos.cn>
+    ARM: OMAP2+: Fix null pointer dereference and memory leak in omap_soc_device_init
+
+Andrew Davis <afd@ti.com>
+    ARM: dts: dra7: Fix DRA7 L3 NoC node register size
+
+Hamza Mahfooz <hamza.mahfooz@amd.com>
+    drm/amd/display: fix hw rotated modes when PSR-SU is enabled
+
+Mario Limonciello <mario.limonciello@amd.com>
+    HID: i2c-hid: Add IDEA5002 to i2c_hid_acpi_blacklist[]
+
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    HID: i2c-hid: acpi: Unify ACPI ID tables format
+
+Jiri Olsa <jolsa@kernel.org>
+    bpf: Fix prog_array_map_poke_run map poke update
+
+Arnd Bergmann <arnd@arndb.de>
+    kasan: disable kasan_non_canonical_hook() for HW tags
 
 
->  	F_VBUSCT,
-> +	F_BADC = F_VBUSCT,
->  	F_AVG,
-> +	F_PGA = F_AVG,
->  	F_RESET,
->  	F_MAX_FIELDS
->  };
->  
-> +struct richtek_dev_data {
-> +	int dev_id;
+-------------
 
-It almost always turns out to be a bad idea to use a mixture of
-'data' in a structure like this and a device id plus special casing int he
-code.  Better to add more data to this structure or callbacks specific
-to the individual devices types.  So I shouldn't see a dev_id field in
-here at all.
+Diffstat:
 
-> +	int default_conv_time;
-> +	unsigned int default_config;
-> +	unsigned int calib_coefficient;
-> +	const struct reg_field *reg_fields;
-> +	const struct iio_chan_spec *channels;
-> +};
+ .../devicetree/bindings/nvmem/mxs-ocotp.yaml       |  10 +-
+ Makefile                                           |   4 +-
+ arch/arm/boot/dts/dra7.dtsi                        |   2 +-
+ arch/arm/mach-omap2/id.c                           |   5 +
+ arch/arm64/kvm/arm.c                               |   2 +-
+ arch/arm64/kvm/vgic/vgic-init.c                    |  47 ++--
+ arch/arm64/kvm/vgic/vgic-mmio-v3.c                 |   2 +-
+ arch/arm64/kvm/vgic/vgic.h                         |   1 +
+ arch/riscv/include/asm/signal.h                    |   2 +-
+ arch/s390/include/asm/fpu/api.h                    |   2 +-
+ arch/x86/kernel/alternative.c                      |   2 +-
+ arch/x86/net/bpf_jit_comp.c                        |  46 ++++
+ arch/x86/xen/Kconfig                               |   1 +
+ drivers/block/loop.c                               |  36 ++-
+ drivers/block/ublk_drv.c                           |  40 ++--
+ drivers/bluetooth/hci_vhci.c                       |  10 +-
+ drivers/bus/ti-sysc.c                              |  18 +-
+ drivers/gpio/gpio-dwapb.c                          |  12 +-
+ drivers/gpio/gpiolib-cdev.c                        |  16 +-
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  |   3 +
+ drivers/gpu/drm/amd/display/dc/dc_hw_types.h       |   1 +
+ .../drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c  |   3 +-
+ drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hubp.c  |  12 +-
+ drivers/gpu/drm/amd/display/dc/dcn30/dcn30_hwseq.c |   3 +
+ drivers/gpu/drm/i915/display/intel_atomic.c        | 193 +---------------
+ drivers/gpu/drm/i915/display/intel_atomic.h        |   4 -
+ drivers/gpu/drm/i915/display/intel_display.c       |  11 +
+ drivers/gpu/drm/i915/display/intel_fb.c            |  10 +-
+ drivers/gpu/drm/i915/display/skl_scaler.c          | 257 +++++++++++++++++++++
+ drivers/gpu/drm/i915/display/skl_scaler.h          |  10 +-
+ drivers/hid/i2c-hid/i2c-hid-acpi.c                 |  15 +-
+ drivers/i2c/busses/i2c-aspeed.c                    |  48 ++--
+ drivers/iio/adc/ti_am335x_adc.c                    |   4 +-
+ drivers/iio/buffer/industrialio-triggered-buffer.c |  10 +
+ drivers/iio/common/ms_sensors/ms_sensors_i2c.c     |   4 +-
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c         |   4 +-
+ drivers/input/keyboard/ipaq-micro-keys.c           |   3 +
+ drivers/input/misc/soc_button_array.c              |   5 +
+ drivers/interconnect/core.c                        |   3 +
+ drivers/interconnect/qcom/sm8250.c                 |   1 +
+ drivers/md/dm-bufio.c                              |   7 +
+ drivers/md/dm-integrity.c                          |  11 +-
+ drivers/md/dm-thin-metadata.c                      |  58 ++---
+ drivers/md/persistent-data/dm-block-manager.c      |   6 +
+ drivers/md/persistent-data/dm-block-manager.h      |   1 +
+ drivers/md/persistent-data/dm-space-map.h          |   3 +-
+ .../md/persistent-data/dm-transaction-manager.c    |   3 +
+ drivers/net/ethernet/atheros/atl1e/atl1e_main.c    |   5 +-
+ .../ethernet/marvell/octeontx2/nic/otx2_dcbnl.c    |  17 +-
+ drivers/net/ethernet/mellanox/mlx5/core/cmd.c      | 216 +++++++++--------
+ drivers/net/ethernet/mellanox/mlx5/core/debugfs.c  |   4 +-
+ .../ethernet/mellanox/mlx5/core/diag/fw_tracer.c   |   2 +-
+ .../mellanox/mlx5/core/en/fs_tt_redirect.c         |   1 +
+ .../net/ethernet/mellanox/mlx5/core/en/tc_tun.c    |  30 +--
+ .../net/ethernet/mellanox/mlx5/core/en_ethtool.c   |   2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en_rep.c   |   2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/vport.c    |   2 +-
+ drivers/net/ethernet/micrel/ks8851.h               |   3 +
+ drivers/net/ethernet/micrel/ks8851_common.c        |  20 +-
+ drivers/net/ethernet/micrel/ks8851_spi.c           |  42 ++--
+ drivers/net/ethernet/microsoft/Kconfig             |   1 +
+ drivers/net/ethernet/mscc/ocelot_stats.c           |   8 +-
+ drivers/net/usb/ax88179_178a.c                     |  23 +-
+ drivers/net/wireless/intel/iwlwifi/pcie/trans.c    |   4 +-
+ drivers/nvme/host/core.c                           |   3 +-
+ drivers/pinctrl/pinctrl-at91-pio4.c                |   8 +
+ drivers/pinctrl/starfive/pinctrl-starfive-jh7100.c |   4 +-
+ drivers/reset/core.c                               |   8 +-
+ drivers/scsi/aacraid/aacraid.h                     |   1 -
+ drivers/scsi/aacraid/commsup.c                     |   6 +-
+ drivers/scsi/aacraid/linit.c                       |  14 --
+ drivers/scsi/aacraid/src.c                         |  25 +-
+ drivers/scsi/bnx2fc/bnx2fc_fcoe.c                  |   9 +-
+ drivers/scsi/scsi_error.c                          |   2 +
+ drivers/thunderbolt/debugfs.c                      |   2 +-
+ drivers/usb/serial/ftdi_sio.c                      |   6 +-
+ drivers/usb/serial/ftdi_sio_ids.h                  |   6 +-
+ drivers/usb/serial/option.c                        |   5 +
+ drivers/usb/storage/unusual_devs.h                 |  11 +
+ fs/afs/cell.c                                      |   6 +-
+ fs/afs/dynroot.c                                   |  31 +--
+ fs/afs/internal.h                                  |   2 +
+ fs/afs/volume.c                                    |  26 ++-
+ fs/btrfs/free-space-cache.c                        |   8 +-
+ fs/btrfs/zoned.c                                   |  26 +--
+ fs/fuse/fuse_i.h                                   |  15 ++
+ fs/fuse/inode.c                                    |  75 +++++-
+ fs/smb/client/cifs_debug.c                         |  12 +-
+ fs/smb/client/cifsglob.h                           |   3 +-
+ fs/smb/client/connect.c                            |   7 +-
+ fs/smb/client/misc.c                               |   4 +
+ fs/smb/client/smb2ops.c                            |  19 +-
+ fs/smb/client/smb2pdu.c                            |  29 ++-
+ fs/ubifs/tnc.c                                     |   1 +
+ include/linux/bpf.h                                |   3 +
+ include/linux/damon.h                              |   3 +
+ include/linux/dm-bufio.h                           |   2 +
+ include/linux/kasan.h                              |   6 +-
+ include/linux/key-type.h                           |   1 +
+ include/linux/mlx5/driver.h                        |  20 +-
+ include/net/bluetooth/hci_core.h                   |   5 +
+ include/trace/events/9p.h                          |  11 +-
+ kernel/bpf/arraymap.c                              |  58 +----
+ kernel/trace/synth_event_gen_test.c                |  11 +
+ lib/vsprintf.c                                     |  11 +-
+ mm/damon/core.c                                    |   7 +
+ mm/kasan/report.c                                  |   4 +-
+ net/8021q/vlan_core.c                              |   9 +-
+ net/9p/protocol.c                                  |  17 +-
+ net/bluetooth/af_bluetooth.c                       |   7 +-
+ net/bluetooth/hci_event.c                          |  22 +-
+ net/bluetooth/l2cap_core.c                         |  21 +-
+ net/bluetooth/mgmt.c                               |  25 +-
+ net/bluetooth/smp.c                                |   7 +
+ net/core/dev.c                                     |   3 +
+ net/core/stream.c                                  |   2 +-
+ net/dns_resolver/dns_key.c                         |  10 +-
+ net/ife/ife.c                                      |   1 +
+ net/mac80211/cfg.c                                 |   4 +-
+ net/mac80211/mesh_plink.c                          |  16 +-
+ net/rfkill/rfkill-gpio.c                           |   8 +
+ net/rose/af_rose.c                                 |  39 +++-
+ net/wireless/certs/wens.hex                        |  87 +++++++
+ net/wireless/core.h                                |   1 +
+ net/wireless/nl80211.c                             |  56 +++--
+ security/keys/gc.c                                 |  31 ++-
+ security/keys/internal.h                           |  11 +-
+ security/keys/key.c                                |  15 +-
+ security/keys/proc.c                               |   2 +-
+ sound/pci/hda/patch_realtek.c                      |   1 +
+ sound/soc/codecs/hdmi-codec.c                      |  12 +-
+ sound/soc/fsl/fsl_sai.c                            |   3 +
+ sound/usb/quirks.c                                 |   4 +-
+ tools/testing/selftests/net/mptcp/mptcp_join.sh    |   8 +-
+ 134 files changed, 1494 insertions(+), 777 deletions(-)
 
-...
-
->  static int rtq6056_adc_read_channel(struct rtq6056_priv *priv,
->  				    struct iio_chan_spec const *ch,
->  				    int *val)
->  {
-> +	const struct richtek_dev_data *devdata = priv->devdata;
->  	struct device *dev = priv->dev;
->  	unsigned int addr = ch->address;
->  	unsigned int regval;
-> @@ -168,10 +282,18 @@ static int rtq6056_adc_read_channel(struct rtq6056_priv *priv,
->  		return ret;
->  
->  	/* Power and VBUS is unsigned 16-bit, others are signed 16-bit */
-> -	if (addr == RTQ6056_REG_BUSVOLT || addr == RTQ6056_REG_POWER)
-> +	switch (addr) {
-> +	case RTQ6056_REG_BUSVOLT:
-> +		if (devdata->dev_id == RICHTEK_DEV_RTQ6059)
-> +			regval >>= RTQ6059_VBUS_LSB_OFFSET;
-
-Store the offset as for other case below and apply it unconditionally. If it is
-zero then this is a noop.
-
-> +		fallthrough;
-> +	case RTQ6056_REG_POWER:
->  		*val = regval;
-> -	else
-> +		break;
-> +	default:
->  		*val = sign_extend32(regval, 16);
-
-Fallthrough stuff is harder to read so only use it when there is significant saving
-in code.  here just repeat the sign_extend32() in both cases.
-
-> +		break;
-> +	}
->  
->  	return IIO_VAL_INT;
->  }
-> @@ -199,6 +321,28 @@ static int rtq6056_adc_read_scale(struct iio_chan_spec const *ch, int *val,
->  	}
->  }
->  
-
->  static int rtq6056_adc_get_sample_freq(struct rtq6056_priv *priv,
->  				       struct iio_chan_spec const *ch, int *val)
->  {
-> @@ -292,11 +464,15 @@ static int rtq6056_adc_read_raw(struct iio_dev *indio_dev,
->  				int *val2, long mask)
->  {
->  	struct rtq6056_priv *priv = iio_priv(indio_dev);
-> +	const struct richtek_dev_data *devdata = priv->devdata;
->  
->  	switch (mask) {
->  	case IIO_CHAN_INFO_RAW:
->  		return rtq6056_adc_read_channel(priv, chan, val);
->  	case IIO_CHAN_INFO_SCALE:
-> +		if (devdata->dev_id == RICHTEK_DEV_RTQ6059)
-> +			return rtq6059_adc_read_scale(chan, val, val2);
-
-Provide a callback for this as for other examples below.
-
-> +
->  		return rtq6056_adc_read_scale(chan, val, val2);
->  	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
->  		*val = priv->avg_sample;
-> @@ -313,16 +489,28 @@ static int rtq6056_adc_read_avail(struct iio_dev *indio_dev,
->  				  const int **vals, int *type, int *length,
->  				  long mask)
->  {
-> +	struct rtq6056_priv *priv = iio_priv(indio_dev);
-> +	const struct richtek_dev_data *devdata = priv->devdata;
-> +
->  	switch (mask) {
->  	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		if (devdata->dev_id == RICHTEK_DEV_RTQ6059)
-> +			return -EINVAL;
-
-Shouldn't need this protection as the channels won't have relevant
-bitmap bit set and this will never be called.
-
-> +
->  		*vals = rtq6056_samp_freq_list;
->  		*type = IIO_VAL_INT;
->  		*length = ARRAY_SIZE(rtq6056_samp_freq_list);
->  		return IIO_AVAIL_LIST;
->  	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-> -		*vals = rtq6056_avg_sample_list;
-> +		if (devdata->dev_id == RICHTEK_DEV_RTQ6059) {
-> +			*vals = rtq6059_avg_sample_list;
-> +			*length = ARRAY_SIZE(rtq6059_avg_sample_list);
-Store all this in devdata.
-
-		*vals = devdata->avg_sample_list;
-		*length = devdata->avg_sample_list_length;
-
-> +		} else {
-> +			*vals = rtq6056_avg_sample_list;
-> +			*length = ARRAY_SIZE(rtq6056_avg_sample_list);
-> +		}
-> +
->  		*type = IIO_VAL_INT;
-> -		*length = ARRAY_SIZE(rtq6056_avg_sample_list);
->  		return IIO_AVAIL_LIST;
->  	default:
->  		return -EINVAL;
-> @@ -334,6 +522,7 @@ static int rtq6056_adc_write_raw(struct iio_dev *indio_dev,
->  				 int val2, long mask)
->  {
->  	struct rtq6056_priv *priv = iio_priv(indio_dev);
-> +	const struct richtek_dev_data *devdata = priv->devdata;
->  	int ret;
->  
->  	ret = iio_device_claim_direct_mode(indio_dev);
-> @@ -342,10 +531,16 @@ static int rtq6056_adc_write_raw(struct iio_dev *indio_dev,
->  
->  	switch (mask) {
->  	case IIO_CHAN_INFO_SAMP_FREQ:
-> -		ret = rtq6056_adc_set_samp_freq(priv, chan, val);
-> +		if (devdata->dev_id == RICHTEK_DEV_RTQ6059)
-> +			ret = -EINVAL;
-> +		else
-> +			ret = rtq6056_adc_set_samp_freq(priv, chan, val);
->  		break;
->  	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-> -		ret = rtq6056_adc_set_average(priv, val);
-> +		if (devdata->dev_id == RICHTEK_DEV_RTQ6059)
-> +			ret = rtq6059_adc_set_average(priv, val);
-> +		else
-> +			ret = rtq6056_adc_set_average(priv, val);
-
-Provide a callback in devdata so this becomes something like
-		ret = devdata->set_averate(priv, val);
-
->  		break;
->  	default:
-
-> +static const struct iio_info rtq6059_info = {
-> +	.attrs = &rtq6056_attribute_group,
-
-This is odd. you don't provide an access functions so you won't be able to read
-channels etc. It isn't used so I guess you should just get rid of it.
-
-> +};
-> +
->  static irqreturn_t rtq6056_buffer_trigger_handler(int irq, void *p)
->  {
->  	struct iio_poll_func *pf = p;
->  	struct iio_dev *indio_dev = pf->indio_dev;
->  	struct rtq6056_priv *priv = iio_priv(indio_dev);
-> +	const struct richtek_dev_data *devdata = priv->devdata;
->  	struct device *dev = priv->dev;
->  	struct {
->  		u16 vals[RTQ6056_MAX_CHANNEL];
-> @@ -469,6 +670,10 @@ static irqreturn_t rtq6056_buffer_trigger_handler(int irq, void *p)
->  		if (ret)
->  			goto out;
->  
-> +		if (devdata->dev_id == RICHTEK_DEV_RTQ6059 &&
-> +		    addr == RTQ6056_REG_BUSVOLT)
-
-Store an offset in the devdata->dev_id and this becomes something like.
-		if (addr == RTQ6056_REG_BUS_VOLT)
-			raw >>= devdata->vbus_offset;
-
-> +			raw >>= RTQ6059_VBUS_LSB_OFFSET;
-> +
->  		data.vals[i++] = raw;
->  	}
->  
-> @@ -528,20 +733,26 @@ static int rtq6056_probe(struct i2c_client *i2c)
->  	struct rtq6056_priv *priv;
->  	struct device *dev = &i2c->dev;
->  	struct regmap *regmap;
-> +	const struct richtek_dev_data *devdata;
->  	unsigned int vendor_id, shunt_resistor_uohm;
->  	int ret;
->  
->  	if (!i2c_check_functionality(i2c->adapter, I2C_FUNC_SMBUS_WORD_DATA))
->  		return -EOPNOTSUPP;
->  
-> +	devdata = device_get_match_data(dev);
-> +	if (!devdata)
-> +		return dev_err_probe(dev, -EINVAL, "Invalid dev data\n");
-> +
->  	indio_dev = devm_iio_device_alloc(dev, sizeof(*priv));
->  	if (!indio_dev)
->  		return -ENOMEM;
->  
->  	priv = iio_priv(indio_dev);
->  	priv->dev = dev;
-> -	priv->vshuntct_us = priv->vbusct_us = 1037;
-> +	priv->vshuntct_us = priv->vbusct_us = devdata->default_conv_time;
-
-I'd keep a _us postfix for default_conv_time to make the units of that
-self documenting as well.
-
->  	priv->avg_sample = 1;
-> +	priv->devdata = devdata;
->  	i2c_set_clientdata(i2c, priv);
->  
->  	regmap = devm_regmap_init_i2c(i2c, &rtq6056_regmap_config);
-> @@ -556,20 +767,26 @@ static int rtq6056_probe(struct i2c_client *i2c)
->  		return dev_err_probe(dev, ret,
->  				     "Failed to get manufacturer info\n");
->  
-> +	/* For RTQ6059, this vendor id value is meaningless */
-
-If that is the case, why are you checking it?
-I'd read that comment as meaning this will fail for RTQ6059
-
->  	if (vendor_id != RTQ6056_VENDOR_ID)
->  		return dev_err_probe(dev, -ENODEV,
->  				     "Invalid vendor id 0x%04x\n", vendor_id);
->  
->  	ret = devm_regmap_field_bulk_alloc(dev, regmap, priv->rm_fields,
-> -					   rtq6056_reg_fields, F_MAX_FIELDS);
-> +					   devdata->reg_fields, F_MAX_FIELDS);
->  	if (ret)
->  		return dev_err_probe(dev, ret, "Failed to init regmap field\n");
->  
->  	/*
-> +	 * RTQ6053 & RTQ6056:
->  	 * By default, configure average sample as 1, bus and shunt conversion
->  	 * time as 1037 microsecond, and operating mode to all on.
-> +	 *
-> +	 * RTQ6059:
-> +	 * By default, configure average sample as 1, bus and shunt conversion
-> +	 * time as 532 microsecond, and operating mode to all on.
-Move this documentation to where devdata->default_config is set. 
-It's device specific information, so put it in the device specific place not
-the main code flow.
-
->  	 */
-> -	ret = regmap_write(regmap, RTQ6056_REG_CONFIG, RTQ6056_DEFAULT_CONFIG);
-> +	ret = regmap_write(regmap, RTQ6056_REG_CONFIG, devdata->default_config);
->  	if (ret)
->  		return dev_err_probe(dev, ret,
->  				     "Failed to enable continuous sensing\n");
-> @@ -598,8 +815,8 @@ static int rtq6056_probe(struct i2c_client *i2c)
->  
->  	indio_dev->name = "rtq6056";
->  	indio_dev->modes = INDIO_DIRECT_MODE;
-> -	indio_dev->channels = rtq6056_channels;
-> -	indio_dev->num_channels = ARRAY_SIZE(rtq6056_channels);
-> +	indio_dev->channels = devdata->channels;
-> +	indio_dev->num_channels = RTQ6056_MAX_CHANNEL + 1;
-
-I'd embed the number of channels in devdata as well then the ARRAY_SIZE() code
-that is obviously correct can still be used (just with different things being
-counted depending on which channels are being used). The gain in readability
-is worth the tiny bit of extra code and data.
-
->  	indio_dev->info = &rtq6056_info;
->  
->  	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
-> @@ -640,8 +857,27 @@ static int rtq6056_runtime_resume(struct device *dev)
->  static DEFINE_RUNTIME_DEV_PM_OPS(rtq6056_pm_ops, rtq6056_runtime_suspend,
->  				 rtq6056_runtime_resume, NULL);
->  
-> +static const struct richtek_dev_data rtq6056_devdata = {
-> +	.dev_id = RICHTEK_DEV_RTQ6056,
-> +	.default_conv_time = 1037,
-> +	.calib_coefficient = 5120000,
-> +	.default_config = RTQ6056_DEFAULT_CONFIG,
-> +	.reg_fields = rtq6056_reg_fields,
-> +	.channels = rtq6056_channels,
-> +};
-> +
-> +static const struct richtek_dev_data rtq6059_devdata = {
-> +	.dev_id = RICHTEK_DEV_RTQ6059,
-As mentioned above, this mix of data and a dev_id is not a good design pattern.
-It tends to end up as insufficiently flexible as support for more devices is
-added to a driver - plus it scatters the device type specific stuff all through
-the driver rather than having it all in one place.
-
-> +	.default_conv_time = 532,
-> +	.calib_coefficient = 40960000,
-> +	.default_config = RTQ6059_DEFAULT_CONFIG,
-> +	.reg_fields = rtq6059_reg_fields,
-> +	.channels = rtq6059_channels,
-> +};
-> +
->  static const struct of_device_id rtq6056_device_match[] = {
-> -	{ .compatible = "richtek,rtq6056" },
-> +	{ .compatible = "richtek,rtq6056", .data = &rtq6056_devdata },
-> +	{ .compatible = "richtek,rtq6059", .data = &rtq6059_devdata },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(of, rtq6056_device_match);
 
