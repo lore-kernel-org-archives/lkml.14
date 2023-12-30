@@ -1,134 +1,210 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B50156EC;
-	Sat, 30 Dec 2023 16:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BA3C2C5;
+	Sat, 30 Dec 2023 16:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LX0cMnah"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fNVNV0jyxsmEvVyLgF2Svxz2XNXsutze1uuLhcNJMa00euVQlK5Fmq1lPH4wNl2R6Gh2uUcmXpFmudSA9aLppgx0R2ITadYfy4FRlPeUbolEqNTRe6++EXGacfe2axVoTrkzKuVswzQPaoOYJT2EUB1n9TgXBRHIoNS0R/8i1CuyF7//HD+EXSYTUAJpQbOK9Ce9OCTdpmcQCaujGLj2izHdy2Ew5iuHzQ2igZP7kmvwjM1Hwg5hjSUB9kiu0ZzEucdRVENyTgNI+zJZGQSJhjS9cP2bdv/rQ8S8GnEM0HGMEx7j3P77yOQSjYbqwY5V/wX4Ex/2USmtrltwDI6aGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tvsYf0n2GxElwqDzXGtfzBBHQRJyP8zKv4HrR1SkNBs=;
- b=IVazzJ5E1LbWWdE4AMSriJD3xhfvprx+gNfS+xTYPs1cUNTnZD54bVUXzv5feky0obigd4npV6NozelL0wiQ83WDeWaxaqS4hhYpMOlDAY5o+Jwv2swiQ47tjgkLIAGd3UvA/yhbHQTCI4a5/jAAAAuTdTkqO3sMCFHSnf1ueohJLKMiMF2Z36G68PnzWu6m1O9apKaYg6123UCmZkxuZyfU2OVeVWrvlPjUZSSxZMYSe91OQELwPPxLcSKsS39JMHIJIpxfrgiCgbi/Xbi0KZtNlTSg90GyfApK+x78jlCqvennhYfR7UBcJVF5C77FMUHG2LGziaCtqYkc6ncxvA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tvsYf0n2GxElwqDzXGtfzBBHQRJyP8zKv4HrR1SkNBs=;
- b=LX0cMnah+beOhxX7Wkpv6PLcyBAHhCBp+WIruAhj/n4OyhxNA8QI8GT4VtGnIL04smm9SYrwFUXjF3JNSfg5s+WdRWHUH2AvaBnFtlC15Lce0tP7lDxMaaZtiebbJZBYxdM7lOoN0b6Rvjk1yuyJa9+InfaBhpm6hImqDMaMP3g=
-Received: from SA9P223CA0028.NAMP223.PROD.OUTLOOK.COM (2603:10b6:806:26::33)
- by CH0PR12MB5299.namprd12.prod.outlook.com (2603:10b6:610:d6::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.22; Sat, 30 Dec
- 2023 16:30:27 +0000
-Received: from SN1PEPF0002BA4C.namprd03.prod.outlook.com
- (2603:10b6:806:26:cafe::b7) by SA9P223CA0028.outlook.office365.com
- (2603:10b6:806:26::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.27 via Frontend
- Transport; Sat, 30 Dec 2023 16:30:26 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF0002BA4C.mail.protection.outlook.com (10.167.242.69) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7159.9 via Frontend Transport; Sat, 30 Dec 2023 16:30:26 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Sat, 30 Dec
- 2023 10:30:26 -0600
-From: Michael Roth <michael.roth@amd.com>
-To: <x86@kernel.org>
-CC: <kvm@vger.kernel.org>, <linux-coco@lists.linux.dev>, <linux-mm@kvack.org>,
-	<linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<tglx@linutronix.de>, <mingo@redhat.com>, <jroedel@suse.de>,
-	<thomas.lendacky@amd.com>, <hpa@zytor.com>, <ardb@kernel.org>,
-	<pbonzini@redhat.com>, <seanjc@google.com>, <vkuznets@redhat.com>,
-	<jmattson@google.com>, <luto@kernel.org>, <dave.hansen@linux.intel.com>,
-	<slp@redhat.com>, <pgonda@google.com>, <peterz@infradead.org>,
-	<srinivas.pandruvada@linux.intel.com>, <rientjes@google.com>,
-	<tobin@ibm.com>, <bp@alien8.de>, <vbabka@suse.cz>, <kirill@shutemov.name>,
-	<ak@linux.intel.com>, <tony.luck@intel.com>,
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, <alpergun@google.com>,
-	<jarkko@kernel.org>, <ashish.kalra@amd.com>, <nikunj.dadhania@amd.com>,
-	<pankaj.gupta@amd.com>, <liam.merwick@oracle.com>, <zhi.a.wang@intel.com>,
-	Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
-Subject: [PATCH v1 05/26] x86/mtrr: Don't print errors if MtrrFixDramModEn is set when SNP enabled
-Date: Sat, 30 Dec 2023 10:19:33 -0600
-Message-ID: <20231230161954.569267-6-michael.roth@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20231230161954.569267-1-michael.roth@amd.com>
-References: <20231230161954.569267-1-michael.roth@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XrVT7byR"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5537114380bso6120977a12.3;
+        Sat, 30 Dec 2023 08:32:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703953929; x=1704558729; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rZB0c1TeByaHjk+7yG8Kc7dtPWL4o/WvzFcOuBAVwGI=;
+        b=XrVT7byRkAeSaKy13LOYHhT56epZIBWi0Dgehc2nT8SYnJk/8PD6hcZQX1VktOcC6N
+         2EL4MZvq3iWhOQkcNp1waDqySirDXY1G4JSwQscAWWZieMGlqQELZOfb87gzNbdPfkYi
+         xXeDTwNBgTR3yDxTcaBPD1TMIapqxHm9XWifXO+QL1iqR+kXennrlNBvkJZM7xK/Vjcb
+         54nv+CJN2h5K9P4HhwT8gdxN89+KcEa25TaozBVwEiVEFtuZYlPmwCp29+w8cbB7J1zR
+         Z/ViESnHf25wdIKf+v0RTRioH71MxjAoOhd1aMeGetsquKItmd5kd+jT/v2VRvtb+d5F
+         6+KA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703953929; x=1704558729;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rZB0c1TeByaHjk+7yG8Kc7dtPWL4o/WvzFcOuBAVwGI=;
+        b=ZQkka1fhJgwezxDxBRFKQKZ5FYAMH5ds3NLsXBOYqTArmkjhI5MXuXGexbj2QjeltC
+         znQww8RvLIV8NSgQyT/BOqFf0LnEtndqX2KVXeDkk3RyK0qqPczZFJGutoFLUhshWMyC
+         5y8+xNKSs3rXIkFtUqu622kfUh7e7yWvMJnSQe6rVNO9UzOdfCdsf+QGHS91nweIqHXU
+         fsu1sKhZ+lo1ToNknjHLKmTlZEEL0mL9H4lYjnfOg472axyKc166kiM54xqoE7WToj6T
+         Azn4DWxmJDGJ7w3pNQHBJ/+W5/3UMemFMAkEMBnLN07UYWaTLf4ovc9/LF7ymUDknqWr
+         NbLg==
+X-Gm-Message-State: AOJu0YzYERwyJ8/9tuX6tWckLzEBlFOhxFYAhekZnLmDwQ4NWZ0TGr1C
+	hery0YvP0ssVT+WILN/tmxgDkwlWtTY=
+X-Google-Smtp-Source: AGHT+IEkrWf8/u0yuKKsq51NUIrXaVARvOeWx2lti6Y3HCUj9rAcEb1sJKJh1XxDyx1PvzgkK7z/nA==
+X-Received: by 2002:a50:c11a:0:b0:555:6bef:7c3d with SMTP id l26-20020a50c11a000000b005556bef7c3dmr2043720edf.21.1703953929367;
+        Sat, 30 Dec 2023 08:32:09 -0800 (PST)
+Received: from ?IPV6:2a02:8071:b783:140:927c:82ba:d32d:99c1? ([2a02:8071:b783:140:927c:82ba:d32d:99c1])
+        by smtp.gmail.com with ESMTPSA id g6-20020a056402114600b005561ad0368fsm213251edw.12.2023.12.30.08.32.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 30 Dec 2023 08:32:08 -0800 (PST)
+Message-ID: <f564b1b4-d8d1-4809-9cc0-b01aa53570a0@gmail.com>
+Date: Sat, 30 Dec 2023 17:32:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF0002BA4C:EE_|CH0PR12MB5299:EE_
-X-MS-Office365-Filtering-Correlation-Id: 30e12e1e-62b1-490c-5e4c-08dc0954a156
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	pNqUTEasT68+PI7tuKei4cA2VnNa763bd30gN6xo6vb7b/Pvy4jWIz0jALTcxn5uvf9bC0yk7DdDMl9veJfkHAUAcY825WJdwOKbAi9x8YwuvLpUe6u1/NgvLFeNysE1nKAiD2FBkGqy3bpNqW9ts5js9DteHgHIQR5N/UHRMzKisRx4uy5W/UjCe9LLo1PtnMEK2zzQf7VUNhHJOu8azb9fe3+8NWxCszhWFJ5DiyZj3h2gaRDFYpRDF1IqsnIWXConHzMIYm7ie/oa9YP9SueNuQLzouqLW0FV6SH/Ps/leYgiZ9BcHoUx6x76hA2hRBfeuAmd/f0IaSTGfxj6NcRAzh7ec948Dzracre0xIqKPbtBIOgo/GS+cZh1qYUQpAf0nxX+sc0JilGvmO/s0BxFHh/wK/xUIcYHlwExNXcEs+a/e8mWRxvYU8AJ9kVcu1IVvFCqEvuX3BTmOmnfxk4wjtlZ7ONI40iEe68j3Y8tRh2KY5YWhrW9CTcObl9GWUL/KBXzh8cIQFczQANWvs7g329WTBA8LJa0+grUub2RxOoYeFXpuORtlmwRCttsVHrcm9AWPTsyRldCesN1oIF4M3XjPoo4ALZtHJCVCS9CAghVN++W8yAT/Dtdx4zVD+4pSoW+f4+eX6oXpqkos1VpjvJSGV6+VdNvqIM4dV7aQXD4SEQQjDi/IjYrW/ghux54lfDmzCZIFzzaN/YIfwcIHftr31PCCcSmpGFM/mBUdubcB5toAbGeV64pEGjKcOE55txIZ/Th2jvcci6LDQ==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(396003)(39860400002)(376002)(346002)(230922051799003)(186009)(1800799012)(64100799003)(82310400011)(451199024)(40470700004)(46966006)(36840700001)(36860700001)(966005)(478600001)(40460700003)(41300700001)(82740400003)(44832011)(356005)(6916009)(36756003)(4326008)(86362001)(316002)(54906003)(81166007)(70206006)(70586007)(6666004)(47076005)(336012)(426003)(16526019)(26005)(1076003)(40480700001)(83380400001)(8676002)(8936002)(2616005)(2906002)(5660300002)(7416002)(7406005)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Dec 2023 16:30:26.7993
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 30e12e1e-62b1-490c-5e4c-08dc0954a156
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF0002BA4C.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5299
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] hwmon: add fan speed monitoring driver for Surface
+ devices
+To: Ivor Wanders <ivor@iwanders.net>, Jean Delvare <jdelvare@suse.com>,
+ Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>,
+ Hans de Goede <hdegoede@redhat.com>, Mark Gross <markgross@kernel.org>
+Cc: linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20231228003444.5580-1-ivor@iwanders.net>
+ <20231228003444.5580-2-ivor@iwanders.net>
+Content-Language: en-US
+From: Maximilian Luz <luzmaximilian@gmail.com>
+In-Reply-To: <20231228003444.5580-2-ivor@iwanders.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+On 12/28/23 01:34, Ivor Wanders wrote:
+> Adds a driver that provides read only access to the fan speed for Microsoft
+> Surface Pro devices. The fan speed is always regulated by the EC and cannot
+> be influenced directly.
+> 
+> Signed-off-by: Ivor Wanders <ivor@iwanders.net>
+> Link: https://github.com/linux-surface/kernel/pull/144
+> ---
+> Changes in v2:
+>    - Removed all sysfs attributes except fan1_input. Simplified code
+>      and updated documentation accordingly.
+> ---
+>   Documentation/hwmon/index.rst       |   1 +
+>   Documentation/hwmon/surface_fan.rst |  25 +++++++
+>   MAINTAINERS                         |   8 +++
+>   drivers/hwmon/Kconfig               |  13 ++++
+>   drivers/hwmon/Makefile              |   1 +
+>   drivers/hwmon/surface_fan.c         | 105 ++++++++++++++++++++++++++++
+>   6 files changed, 153 insertions(+)
+>   create mode 100644 Documentation/hwmon/surface_fan.rst
+>   create mode 100644 drivers/hwmon/surface_fan.c
+> 
 
-SNP enabled platforms require the MtrrFixDramModeEn bit to be set across
-all CPUs when SNP is enabled. Therefore, don't print error messages when
-MtrrFixDramModeEn is set when bringing CPUs online.
+[...]
 
-Reported-by: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
-Closes: https://lore.kernel.org/kvm/68b2d6bf-bce7-47f9-bebb-2652cc923ff9@linux.microsoft.com/
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-Signed-off-by: Michael Roth <michael.roth@amd.com>
----
- arch/x86/kernel/cpu/mtrr/generic.c | 3 +++
- 1 file changed, 3 insertions(+)
+> diff --git a/drivers/hwmon/surface_fan.c b/drivers/hwmon/surface_fan.c
+> new file mode 100644
+> index 000000000..0160a585c
+> --- /dev/null
+> +++ b/drivers/hwmon/surface_fan.c
+> @@ -0,0 +1,105 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Surface Fan driver for Surface System Aggregator Module. It provides access
+> + * to the fan's rpm through the hwmon system.
+> + *
+> + * Copyright (C) 2023 Ivor Wanders <ivor@iwanders.net>
+> + */
+> +
+> +#include <linux/hwmon.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
 
-diff --git a/arch/x86/kernel/cpu/mtrr/generic.c b/arch/x86/kernel/cpu/mtrr/generic.c
-index d3524778a545..422a4ddc2ab7 100644
---- a/arch/x86/kernel/cpu/mtrr/generic.c
-+++ b/arch/x86/kernel/cpu/mtrr/generic.c
-@@ -108,6 +108,9 @@ static inline void k8_check_syscfg_dram_mod_en(void)
- 	      (boot_cpu_data.x86 >= 0x0f)))
- 		return;
- 
-+	if (cpu_feature_enabled(X86_FEATURE_SEV_SNP))
-+		return;
-+
- 	rdmsr(MSR_AMD64_SYSCFG, lo, hi);
- 	if (lo & K8_MTRRFIXRANGE_DRAM_MODIFY) {
- 		pr_err(FW_WARN "MTRR: CPU %u: SYSCFG[MtrrFixDramModEn]"
--- 
-2.25.1
+As far as I can see, linux/platform_device.h is not needed.
 
+Regards,
+Max
+
+> +#include <linux/surface_aggregator/device.h>
+> +#include <linux/types.h>
+> +
+> +// SSAM
+> +SSAM_DEFINE_SYNC_REQUEST_CL_R(__ssam_fan_rpm_get, __le16, {
+> +	.target_category = SSAM_SSH_TC_FAN,
+> +	.command_id      = 0x01,
+> +});
+> +
+> +// hwmon
+> +umode_t surface_fan_hwmon_is_visible(const void *drvdata,
+> +				     enum hwmon_sensor_types type, u32 attr,
+> +				     int channel)
+> +{
+> +	if (type != hwmon_fan)
+> +		return 0;
+> +
+> +	if (attr != hwmon_fan_input)
+> +		return 0;
+> +
+> +	return 0444;
+> +}
+> +
+> +static int surface_fan_hwmon_read(struct device *dev,
+> +				  enum hwmon_sensor_types type, u32 attr,
+> +				  int channel, long *val)
+> +{
+> +	struct ssam_device *sdev = dev_get_drvdata(dev);
+> +	__le16 value;
+> +
+> +	if (type != hwmon_fan)
+> +		return -EOPNOTSUPP;
+> +
+> +	if (attr != hwmon_fan_input)
+> +		return -EOPNOTSUPP;
+> +
+> +	if (__ssam_fan_rpm_get(sdev, &value))
+> +		return -EIO;
+> +
+> +	*val = le16_to_cpu(value);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct hwmon_channel_info *const surface_fan_info[] = {
+> +	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT),
+> +	NULL
+> +};
+> +
+> +static const struct hwmon_ops surface_fan_hwmon_ops = {
+> +	.is_visible = surface_fan_hwmon_is_visible,
+> +	.read = surface_fan_hwmon_read,
+> +};
+> +
+> +static const struct hwmon_chip_info surface_fan_chip_info = {
+> +	.ops = &surface_fan_hwmon_ops,
+> +	.info = surface_fan_info,
+> +};
+> +
+> +static int surface_fan_probe(struct ssam_device *sdev)
+> +{
+> +	struct device *hdev;
+> +
+> +	hdev = devm_hwmon_device_register_with_info(&sdev->dev, "fan", sdev,
+> +						    &surface_fan_chip_info,
+> +						    NULL);
+> +	if (IS_ERR(hdev))
+> +		return PTR_ERR(hdev);
+> +
+> +	ssam_device_set_drvdata(sdev, sdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct ssam_device_id ssam_fan_match[] = {
+> +	{ SSAM_SDEV(FAN, SAM, 0x01, 0x01) },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(ssam, ssam_fan_match);
+> +
+> +static struct ssam_device_driver surface_fan = {
+> +	.probe = surface_fan_probe,
+> +	.match_table = ssam_fan_match,
+> +	.driver = {
+> +		.name = "surface_fan",
+> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +};
+> +module_ssam_device_driver(surface_fan);
+> +
+> +MODULE_AUTHOR("Ivor Wanders <ivor@iwanders.net>");
+> +MODULE_DESCRIPTION("Fan Driver for Surface System Aggregator Module");
+> +MODULE_LICENSE("GPL");
