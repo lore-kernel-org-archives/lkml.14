@@ -1,64 +1,49 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3AB11C94
-	for <linux-kernel@vger.kernel.org>; Sat, 30 Dec 2023 22:39:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-56-J9DeA6IWNj20ulVSrrgVVg-1; Sat, 30 Dec 2023 22:39:20 +0000
-X-MC-Unique: J9DeA6IWNj20ulVSrrgVVg-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sat, 30 Dec
- 2023 22:39:02 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Sat, 30 Dec 2023 22:39:02 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Linus Torvalds' <torvalds@linux-foundation.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"peterz@infradead.org" <peterz@infradead.org>, "longman@redhat.com"
-	<longman@redhat.com>, "mingo@redhat.com" <mingo@redhat.com>,
-	"will@kernel.org" <will@kernel.org>, "boqun.feng@gmail.com"
-	<boqun.feng@gmail.com>, "xinhui.pan@linux.vnet.ibm.com"
-	<xinhui.pan@linux.vnet.ibm.com>, "virtualization@lists.linux-foundation.org"
-	<virtualization@lists.linux-foundation.org>, Zeng Heng <zengheng4@huawei.com>
-Subject: RE: [PATCH next 0/5] locking/osq_lock: Optimisations to osq_lock code
-Thread-Topic: [PATCH next 0/5] locking/osq_lock: Optimisations to osq_lock
- code
-Thread-Index: Ado6lJ8STYITmewCRxaK5t3V4duzKgAw3MqAAAYz05A=
-Date: Sat, 30 Dec 2023 22:39:02 +0000
-Message-ID: <1015f066d717465191c7b7599257f683@AcuMS.aculab.com>
-References: <73a4b31c9c874081baabad9e5f2e5204@AcuMS.aculab.com>
- <CAHk-=wg7PKm+9tv+60DTfZuu-Kh00uR8zKAGtTdUkSOXaLO1_g@mail.gmail.com>
-In-Reply-To: <CAHk-=wg7PKm+9tv+60DTfZuu-Kh00uR8zKAGtTdUkSOXaLO1_g@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC672D30B
+	for <linux-kernel@vger.kernel.org>; Sat, 30 Dec 2023 22:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Su/iHtyh"
+Date: Sat, 30 Dec 2023 17:40:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1703976061;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aPL9HjNhcVqPD8dzsIKc0xX7K6T9gIH6eRuhKS9PZT4=;
+	b=Su/iHtyheno4Z5KoWaDx1NjXQoKhZQy0RGX/pUoKnpNHF5/EF1cUEPQCOjEIJ/Q/knE1+v
+	s/yN2qRZ3JsdkBS4umWulBuCazHROxEaV1AQy5jrsIqa0jMXErwH6jK/HoHLEsjJU2cwqC
+	U27SIjX9pteeQ6EfZghdScH00Z/zmAA=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Daniel J Blueman <daniel@quora.org>
+Cc: linux-bcachefs@vger.kernel.org, 
+	Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: Stack corruption in bch2_nocow_write
+Message-ID: <2g6gw7ybne5d5u2ewsbfpsoxslw5vie3d6whlhrcmbombkyzqs@dd6tr3se6fu7>
+References: <CAMVG2su=Kt5mkyEHGh5D4YH+1xTUFX3BhOjf-D0bcRTntav3ng@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMVG2su=Kt5mkyEHGh5D4YH+1xTUFX3BhOjf-D0bcRTntav3ng@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMzAgRGVjZW1iZXIgMjAyMyAxOTo0MQ0KPiAN
-Cj4gT24gRnJpLCAyOSBEZWMgMjAyMyBhdCAxMjo1MiwgRGF2aWQgTGFpZ2h0IDxEYXZpZC5MYWln
-aHRAYWN1bGFiLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBEYXZpZCBMYWlnaHQgKDUpOg0KPiA+ICAg
-TW92ZSB0aGUgZGVmaW5pdGlvbiBvZiBvcHRpbWlzdGljX3NwaW5fbm9kZSBpbnRvIG9zZl9sb2Nr
-LmMNCj4gPiAgIENsYXJpZnkgb3NxX3dhaXRfbmV4dCgpDQo+IA0KPiBJIHRvb2sgdGhlc2UgdHdv
-IGFzIHByZXBhcmF0b3J5IGluZGVwZW5kZW50IHBhdGNoZXMsIHdpdGggdGhhdA0KPiBvc3Ffd2Fp
-dF9uZXh0KCkgY2xhcmlmaWNhdGlvbiBzcGxpdCBpbnRvIHR3by4NCj4gDQo+IEkgYWxzbyBkaWQg
-dGhlIHJlbmFtaW5nIHRoYXQgV2FpbWFuIGFza2VkIGZvci4NCg0KT2ssIEknbGwgdHJ5IHRvIHJl
-bW92ZSB0aGVtIGZyb20gYW55IHJlc3Bpbi4NCihPciBhdCBsZWFzdCBwdXQgdGhlbSBmaXJzdCEp
-DQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9h
-ZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBO
-bzogMTM5NzM4NiAoV2FsZXMpDQo=
+On Fri, Dec 29, 2023 at 07:43:13PM +0800, Daniel J Blueman wrote:
+> Hi Kent et al,
+> 
+> On Linux 6.7-rc7 from bcachefs master SHA f3608cbdfd built with UBSAN
+> [1], with a crafted workload [2] I'm able to trigger stack corruption
+> in bch2_nocow_write [3].
+> 
+> Let me know if you can't reproduce it and I'll check reproducibility
+> on another platform, and let me know for any patch testing.
 
+Can you give the bcachefs-testing branch a try?
