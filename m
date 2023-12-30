@@ -1,93 +1,115 @@
-Received: from forward501c.mail.yandex.net (forward501c.mail.yandex.net [178.154.239.209])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4442B8813;
-	Sat, 30 Dec 2023 11:28:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=6tel.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=6tel.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D58B7488;
+	Sat, 30 Dec 2023 11:29:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=6tel.net header.i=@6tel.net header.b="W8zgIgCt"
-Received: from mail-nwsmtp-smtp-production-main-46.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-46.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:12ac:0:640:b64e:0])
-	by forward501c.mail.yandex.net (Yandex) with ESMTP id 40E7360E6D;
-	Sat, 30 Dec 2023 14:18:28 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-46.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 3IVUxO8g5Ko0-5KxRwi7a;
-	Sat, 30 Dec 2023 14:18:27 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=6tel.net; s=mail;
-	t=1703935107; bh=n47Gea6rGFU10OYrbHw+VPcV6QRBypXud2PYckOKEwc=;
-	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=W8zgIgCtuNeM5x2ACniLjtz5qpWGIoyAWFaKAoiHL4ZQSorjY2WmZqsUwWX3nIbz2
-	 7WGgZ4V4rsE5bKYeW752PGYcQtDVlbkHF57zGNwogBabWnGFtk+pqAKWWIkbxCyluL
-	 218FQG1R4C3GO3sNmIyWmIZLxzpz5IXzEn71UH/I=
-Authentication-Results: mail-nwsmtp-smtp-production-main-46.myt.yp-c.yandex.net; dkim=pass header.i=@6tel.net
-From: efectn@6tel.net
-To: linux-rockchip@lists.infradead.org
-Cc: devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	heiko@sntech.de,
-	sebastian.reichel@collabora.com,
-	jonas@kwiboo.se,
-	inindev@gmail.com,
-	Muhammed Efe Cetin <efectn@protonmail.com>
-Subject: [PATCH v2 3/3] arm64: dts: rockchip: Add support for NanoPi R6C
-Date: Sat, 30 Dec 2023 14:18:01 +0300
-Message-ID: <0f9ee0baa6c9de4d54dd6d13957ca15a63ec934f.1703934548.git.efectn@protonmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1703934548.git.efectn@protonmail.com>
-References: <cover.1703934548.git.efectn@protonmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BpMv5QNJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DA75C433C7;
+	Sat, 30 Dec 2023 11:28:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703935740;
+	bh=ME7rmguraS+QpHkqvcm2mb6WLPZeSXv2g9gGYhHbKd4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=BpMv5QNJkSEJvW9tGPoVnTR2P/7BBPeGd2MRE1q/3tqKOeuO3DIMvoyeFk9THxxla
+	 AqDpasD4j3SAO+H4A8qidvEryGKwlRjemoK4od6FzfOpvYHqXh3aJLq+A++UuVLBW/
+	 +7bt5ACb5KZYuCez/AYXlEMJZit5LQ/yt+YWHqoyqcTFBU9KLW1mvfcAHq+ymH/g7+
+	 4ZxOnfSudeveWRJziqNNztCWAC4NstynHPE5fxvatEo7gkRqGaqMWnUKNc977iwYmR
+	 RRUAa3xUX0ViGOrlFw+Dv7m+mAFetaL5AeGVfnFpgpHXF/OA+Ff8zQcoSco5dJwKie
+	 gqg9z7Ej0ByMQ==
+Date: Sat, 30 Dec 2023 11:28:52 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Petre Rodan <petre.rodan@subdimension.ro>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Andreas Klinger <ak@it-klinger.de>,
+ Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>
+Subject: Re: [PATCH v2 01/10] dt-bindings: iio: pressure:
+ honeywell,mprls0025pa.yaml fix
+Message-ID: <20231230112852.2a9c3d64@jic23-huawei>
+In-Reply-To: <ZYvOJ9tlO1fp_QBT@sunspire>
+References: <20231224143500.10940-1-petre.rodan@subdimension.ro>
+	<20231224143500.10940-2-petre.rodan@subdimension.ro>
+	<20231226162839.5ceddc9e@jic23-huawei>
+	<ZYvOJ9tlO1fp_QBT@sunspire>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Muhammed Efe Cetin <efectn@protonmail.com>
+On Wed, 27 Dec 2023 09:11:35 +0200
+Petre Rodan <petre.rodan@subdimension.ro> wrote:
 
-NanoPi R6C is mostly same as R6S variant. It has M2 port instead of a
-NIC port and different led labeling.
+> Hello Cameron,
+> 
+> On Tue, Dec 26, 2023 at 04:28:39PM +0000, Jonathan Cameron wrote:
+> > On Sun, 24 Dec 2023 16:34:46 +0200
+> > Petre Rodan <petre.rodan@subdimension.ro> wrote:
+> >   
+> > > Define enum inside the honeywell,transfer-function property block.
+> > > 
+> > > Set the correct irq edge in the example block.
+> > > Based on the datasheet, in table 13 on page 11:
+> > > "End-of-conversion indicator: This pin is set high when a measurement
+> > > and calculation have been completed and the data is ready to be
+> > > clocked out"
+> > > 
+> > > Add description on End-of-conversion interrupt.
+> > > 
+> > > Signed-off-by: Petre Rodan <petre.rodan@subdimension.ro>
+> > > Signed-off-by: Andreas Klinger <ak@it-klinger.de>  
+> > What's the relationship between Andreas and this patch?
+> > 
+> > Petre seems to have sent it so either Andreas should have a Co-authored-by or
+> > should be the author... Or not there at all  
+> 
+> Andreas has written this driver as it is in the mainline tree right now and he
+> is marked as a maintainer for it.
+> A month back I told him about the enum off-by-one problem and also about my plan
+> of adding more features to the driver.
+> He was happy to accept my code and once I sent v1 of this patch to the list has
+> asked to work together for the v2 you see here. This has helped with cleaning up
+> the code. He requested the additional 'Signed-off-by' tag, but if you have a more
+> explicit one I will happily use it. 'Co-developed-by' it is.
 
-Signed-off-by: Muhammed Efe Cetin <efectn@protonmail.com>
----
- arch/arm64/boot/dts/rockchip/Makefile              |  1 +
- .../arm64/boot/dts/rockchip/rk3588s-nanopi-r6c.dts | 14 ++++++++++++++
- 2 files changed, 15 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3588s-nanopi-r6c.dts
+Yup, needs combination of Co-developed-by and a Sign off for this case as in
+effect both of you wrote the code.
 
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index 634b9be47..f2d13482e 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -115,3 +115,4 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-khadas-edge2.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-rock-5a.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-orangepi-5.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-nanopi-r6s.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-nanopi-r6c.dtb
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-nanopi-r6c.dts b/arch/arm64/boot/dts/rockchip/rk3588s-nanopi-r6c.dts
-new file mode 100644
-index 000000000..497bbb570
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3588s-nanopi-r6c.dts
-@@ -0,0 +1,14 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+
-+/dts-v1/;
-+
-+#include "rk3588s-nanopi-r6s.dts"
-+
-+/ {
-+	model = "FriendlyElec NanoPi R6C";
-+	compatible = "friendlyarm,nanopi-r6c", "rockchip,rk3588s";
-+};
-+
-+&lan2_led {
-+	label = "user_led";
-+};
--- 
-2.43.0
+> 
+> He also owns an i2c version of the sensor so he was able to make sure that the
+> original half of the driver still works after my refactor, hence the 'Tested-by'
+> tag in the last patch.
+
+That's fine.
+
+> 
+> please tell me how do the 'fixes'/feature/improvement tags/keywords look like?
+> are these to be added on the subject line, or should they reside near my
+> 'Signed-off-by' inside the email body? I probably missed the documentation where
+> these are covered :)
+See https://elixir.bootlin.com/linux/latest/source/Documentation/process/submitting-patches.rst
+for lots of detail.  The fixes tag has a particular format and goes in the main
+tag block. Lots of examples in tree so can just take a look at the git history for
+how to apply these rules in practice.
+
+> 
+> also, should I add a 'Reviewed-by:' you for 09/10 and 10/10 (the last two patches)?
+No. Tags should be explicitly given.  I tend not to give RB for stuff I'll pick up
+because they will have my SoB anyway as the person who applies the patches
+and that includes reviewing.
+
+In this case, Andreas asked for a tag to be included whereas I have not.
+
+Jonathan
+
+
+> 
+> best regards,
+> peter
 
