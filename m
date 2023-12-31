@@ -1,603 +1,301 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D856F9EA
-	for <linux-kernel@vger.kernel.org>; Sun, 31 Dec 2023 15:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4248F49
+	for <linux-kernel@vger.kernel.org>; Sun, 31 Dec 2023 15:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="h5/t7JPH"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-28c2b8d6f2aso2629427a91.2
-        for <linux-kernel@vger.kernel.org>; Sun, 31 Dec 2023 07:28:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1704036510; x=1704641310; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rj7SSogxzCOROqn86O2lcjv5NKV2ZOXp3SBjo/z8Ga0=;
-        b=h5/t7JPHpDMqU8BXdJU4fBPr3SJ9fVakFpcO3gjyMKXqybofnOZz0RXFqtqfA6yYk1
-         Dc2tTK/4ch5oHEjxwE5sOrwtn53sR1ymrK2ypJIRVNk05TN8yq2HLR8vijBb7nTgcw2P
-         zFPsViOpmYq3BSJ2OrwGej/8FUmGoHMvWKiOU58/w+gmE1RjXgXP3WKsGFEEuH4Ust4r
-         TaM8WYwfDvFtB8q5CIkmZ6Ddjan/WqiSR/6c9kon+L6h5g6Z//0s341PqVxTJFtLTc6A
-         5SrPZn+uSCLpsqxOlLVNtHJ71KIajvFXQsBNAdsyobdbY2L6w44kFft1cGojiGGkzfs/
-         dEjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704036510; x=1704641310;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rj7SSogxzCOROqn86O2lcjv5NKV2ZOXp3SBjo/z8Ga0=;
-        b=lsPVSMyFdD1sK1+uwojsQdjEeGLve0BHZvOWkuytQ/xNVFI6qLBMaMlo9EajfHDT9M
-         qelYD+bhA335KlyFjLecJriQliEnAUGdMShILQtrT1rpIpTdoTZSfubt9jtecLE97SUH
-         eBZFxsRX9Id9z1ZI1Qq5ohKdjF8QceOPDFsKMPFYQTZrR/785Qh/Hzwsy4I8KdEmcKCD
-         EriUqh5621bYovUH/nyD0zRD/aJD4pc7iLnif9sTpaEYVGMreXxyux60IcIaPjs4F032
-         cjzYk3YDwUsxuEoJZwiOozYAQGYX2Jh/WGGg+mzd+z70kmuMIMmrVMXvO/IoTHcgAAU8
-         Un2A==
-X-Gm-Message-State: AOJu0Yz8RH+hJF2SvFCY8ouoCcFccrZ8G+2UmBdB/9073a1QprIx3GaC
-	okjxyOLkYsYXxIG0x+Ui+hu1Bgnrjbs1rQ==
-X-Google-Smtp-Source: AGHT+IGnclcxmMOJR8aaB5AN+Sgak0SsCFCASSKiW+guzFyQWbm4sKfwNn9xsx8Ll66Hl5DoG2jQ3w==
-X-Received: by 2002:a17:902:c411:b0:1d4:70c7:aabf with SMTP id k17-20020a170902c41100b001d470c7aabfmr5249294plk.62.1704036509945;
-        Sun, 31 Dec 2023 07:28:29 -0800 (PST)
-Received: from localhost.localdomain ([49.216.222.63])
-        by smtp.gmail.com with ESMTPSA id n4-20020a170902e54400b001cc3c521affsm18624430plf.300.2023.12.31.07.28.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 31 Dec 2023 07:28:29 -0800 (PST)
-From: Jerry Shih <jerry.shih@sifive.com>
-To: paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	conor.dooley@microchip.com,
-	ebiggers@kernel.org,
-	ardb@kernel.org
-Cc: heiko@sntech.de,
-	phoebe.chen@sifive.com,
-	hongrong.hsu@sifive.com,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-crypto@vger.kernel.org
-Subject: [PATCH v4 11/11] RISC-V: crypto: add Zvkb accelerated ChaCha20 implementation
-Date: Sun, 31 Dec 2023 23:27:43 +0800
-Message-Id: <20231231152743.6304-12-jerry.shih@sifive.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20231231152743.6304-1-jerry.shih@sifive.com>
-References: <20231231152743.6304-1-jerry.shih@sifive.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lg88fDrq"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20231231153341euoutp02e3f8a54db01f98886709b13694a6937f~l9HXxEhtx0636106361euoutp02O;
+	Sun, 31 Dec 2023 15:33:41 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20231231153341euoutp02e3f8a54db01f98886709b13694a6937f~l9HXxEhtx0636106361euoutp02O
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1704036821;
+	bh=zWDLoByyB9Gs8PwBTCC+QNCWZ7LoPsLOrfqfxKDhMiY=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=lg88fDrq5IbCgaGZ/2/rI26T/5XVLb8tA0LUpXdiJB34GqikCFcrSI5GpTrb9lGri
+	 Gvd8UP14krGQBkBP04ZHyzR2au5IJDqaERMd/594EiEOY7mG0wa2pp3tNck4WszQ7K
+	 EwLUbCZ5I1mpN3ZgYY59+vgmusvAon4Jq9iKx6RM=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20231231153341eucas1p29e9cb4e69570f0cccf8bd3f26b5a026b~l9HXpw1M72718327183eucas1p2Y;
+	Sun, 31 Dec 2023 15:33:41 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+	eusmges2new.samsung.com (EUCPMTA) with SMTP id BB.37.09814.5D981956; Sun, 31
+	Dec 2023 15:33:41 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20231231153340eucas1p2acbbe93229fe31dd93f8d14be2f3efba~l9HXKJ7Z11877918779eucas1p2w;
+	Sun, 31 Dec 2023 15:33:40 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20231231153340eusmtrp2b607afe5baf4f228f6e7abc76018d091~l9HXJr9xE2909829098eusmtrp2d;
+	Sun, 31 Dec 2023 15:33:40 +0000 (GMT)
+X-AuditID: cbfec7f4-711ff70000002656-b4-659189d595c2
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 81.39.09274.4D981956; Sun, 31
+	Dec 2023 15:33:40 +0000 (GMT)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20231231153340eusmtip12a0a2fd052528f3fd18cf7a76220f4e9~l9HW6Geoc2421224212eusmtip1d;
+	Sun, 31 Dec 2023 15:33:40 +0000 (GMT)
+Received: from localhost (106.210.248.231) by CAMSVWEXC02.scsc.local
+	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Sun, 31 Dec 2023 15:33:39 +0000
+Date: Sun, 31 Dec 2023 15:34:55 +0100
+From: Joel Granados <j.granados@samsung.com>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+CC: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, Luis
+	Chamberlain <mcgrof@kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] scripts: check-sysctl-docs: adapt to new API
+Message-ID: <20231231143455.tvwb464awfzv5uti@localhost>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="few6xo3quqjzprh5"
+Content-Disposition: inline
+In-Reply-To: <8e54a5e4-731f-4b37-97f8-2c65a026fd6f@t-8ch.de>
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJKsWRmVeSWpSXmKPExsWy7djPc7pXOyemGmz+wGVxedccNovfP54x
+	WdyY8JTR4tDb6WwOLB6bVnWyecxecoPF4/MmOY/+7mPsASxRXDYpqTmZZalF+nYJXBmz3/5l
+	KphvUfFo0VzGBsaDel2MnBwSAiYSEy7cYO1i5OIQEljBKLFs4QUmkISQwBdGia4XNhCJz4wS
+	669tYIPpePTiCjtE0XJGiSO9IXBFLQcPskE4WxklFt2+wgJSxSKgKjH14VWwbjYBHYnzb+4w
+	g9giAuYSdw7OZgZpYBZoYZToXbIArEhYwFHizLOtYCt4gYqeft3KDGELSpyc+QRsKLNAhcST
+	l+uBbuUAsqUllv/jAAlzCthILLjYzgISlhBQlvj0PAHi6FqJU1tuMYGskhBo5pRYv+EaO0TC
+	ReLHvAtQnwlLvDq+BSouI/F/53yohsmMEvv/fWCHcFYDA6nxKxNElbVEy5UnUB2OEkv3LIfa
+	zCdx460gxJ18EpO2TWeGCPNKdLQJQVSrSay+94ZlAqPyLCSfzULy2SyEzyDCehI3pk5hwxDW
+	BsbZa2YI21Zi3br3LAsY2VcxiqeWFuempxYb5aWW6xUn5haX5qXrJefnbmIEpqjT/45/2cG4
+	/NVHvUOMTByMhxhVgJofbVh9gVGKJS8/L1VJhPfXzv5UId6UxMqq1KL8+KLSnNTiQ4zSHCxK
+	4ryqKfKpQgLpiSWp2ampBalFMFkmDk6pBqaF893lXnguaLnVxOnwesOtz46vwjhfW5hxpove
+	+bIxYZXOouPbCrk9ioRuWH3bIlO84+3a0/F3ZnGtZGBo7vh/61xgT02c4yqHeVob3oV8j/6Z
+	6HLthMyTw4x3s+csyle1v7/gkPEu/YRkyQYLlvxFDc1WzZPcV8lk3tLc98HZlHvNvhOFf512
+	yrn58KgrOVbPL1NfWaA5peLWS9WGG38XnNvldk6VeZ5N0T2bB+r92y/Ocvq5uiNL+7XtTN2T
+	f1Ia/h/hKviyw4it1n17e+GPrbPtu5LSL07kUVf7ldk89d1C/obg2bx2pi9E3yukLXCKai5T
+	X8a7aOa74srTn25c/a3uee72WgVmz9n/jn5TYinOSDTUYi4qTgQAGmUH/swDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGIsWRmVeSWpSXmKPExsVy+t/xu7pXOiemGmydqmpxedccNovfP54x
+	WdyY8JTR4tDb6WwOLB6bVnWyecxecoPF4/MmOY/+7mPsASxRejZF+aUlqQoZ+cUltkrRhhZG
+	eoaWFnpGJpZ6hsbmsVZGpkr6djYpqTmZZalF+nYJehmzuq8yF8y1qGg+c4W9gXG/XhcjJ4eE
+	gInEoxdX2LsYuTiEBJYySqybvZYZIiEjsfHLVVYIW1jiz7UuNoiij4wSa0/2gBUJCWxllOia
+	qwpiswioSkx9eJUNxGYT0JE4/+YOWI2IgLnEnYOzmUGamQVaGCXa2zpYQBLCAo4SZ55tZQex
+	eYGKnn7dygyx4QejxO2N06ESghInZz4Ba2AWKJP4f7iRqYuRA8iWllj+jwMkzClgI7HgYjsL
+	SFhCQFni0/MEiKNrJT7/fcY4gVF4FpJBs5AMmoUwCCKsI7Fz6x02DGFtiWULXzND2LYS69a9
+	Z1nAyL6KUSS1tDg3PbfYSK84Mbe4NC9dLzk/dxMjMFK3Hfu5ZQfjylcf9Q4xMnEwHmJUAep8
+	tGH1BUYplrz8vFQlEd5fO/tThXhTEiurUovy44tKc1KLDzGaAkNxIrOUaHI+MIXklcQbmhmY
+	GpqYWRqYWpoZK4nzehZ0JAoJpCeWpGanphakFsH0MXFwSjUwbTcw6Y2JvClsFLzw2b745e47
+	VslKJeZvltTzU/jOWxXJVmsgzbKD76z+3EPT1UvWGWYE3DgfMXmtYcOhkzERZxt9H/1yD2sR
+	PBAo/PmscP0izQ0TjphqJW05qnbxmmD85PvLj6axvAvYIpJyflkYw8V6T9HDcx+/3Xj43mtJ
+	3+/bmXm4Lh/+6WvxSMYxaN6qrLUrz1TNseM/YuGUMH1fa6m6vfWhqo0Z808VH+Ze4b1gw/RJ
+	b06l/hR++jxFcYZmyfars+/KfbKaWrxiccr+2/qmWzYkW8gGf1sUfcjPT4qxe1bCkYAjgf9n
+	8z5ee6f3/v59t2fFzWWY5nTK5KK/0xLx0z0HG6asvrsvp+PEwklKLMUZiYZazEXFiQAJhqmy
+	aQMAAA==
+X-CMS-MailID: 20231231153340eucas1p2acbbe93229fe31dd93f8d14be2f3efba
+X-Msg-Generator: CA
+X-RootMTR: 20231220213032eucas1p2889cb35ee41ed155ce68e75b02892582
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20231220213032eucas1p2889cb35ee41ed155ce68e75b02892582
+References: <CGME20231220213032eucas1p2889cb35ee41ed155ce68e75b02892582@eucas1p2.samsung.com>
+	<20231220-sysctl-check-v1-1-420ced4a69d7@weissschuh.net>
+	<20231224184402.of6cc2tczajmnbri@localhost>
+	<8e54a5e4-731f-4b37-97f8-2c65a026fd6f@t-8ch.de>
 
-Add a ChaCha20 vector implementation from OpenSSL(openssl/openssl#21923).
+--few6xo3quqjzprh5
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Jerry Shih <jerry.shih@sifive.com>
+On Sun, Dec 24, 2023 at 11:38:32PM +0100, Thomas Wei=DFschuh  wrote:
+> Dec 24, 2023 19:44:42 Joel Granados <j.granados@samsung.com>:
+>=20
+> > On Wed, Dec 20, 2023 at 10:30:26PM +0100, Thomas Wei=DFschuh wrote:
+> >> The script expects the old sysctl_register_paths() API which was remov=
+ed
+> >> some time ago. Adapt it to work with the new
+> >> sysctl_register()/sysctl_register_sz()/sysctl_register_init() APIs.
+> >>
+> >> In its reference invocation the script won't be able to parse the tabl=
+es
+> >> from ipc/ipc_sysctl.c as they are using dynamically built tables which
+> >> are to complex to parse.
+> >>
+> >> Note that the script is already prepared for a potential constification
+> >> of the ctl_table structs.
+> >>
+> >> Signed-off-by: Thomas Wei=DFschuh <linux@weissschuh.net>
+> >> ---
+> >> scripts/check-sysctl-docs | 42 ++++++++++++---------------------------=
 ---
-Changelog v4:
- - Use asm mnemonics for the instructions in vector crypto 1.0 extension.
- - Revert the usage of simd skcipher.
+> >> 1 file changed, 12 insertions(+), 30 deletions(-)
+> >>
+> >> diff --git a/scripts/check-sysctl-docs b/scripts/check-sysctl-docs
+> >> index 4f163e0bf6a4..bd18ab4b950b 100755
+> >> --- a/scripts/check-sysctl-docs
+> >> +++ b/scripts/check-sysctl-docs
+> >> @@ -8,7 +8,7 @@
+> >> # Example invocation:
+> >> #=A0 scripts/check-sysctl-docs -vtable=3D"kernel" \
+> >> #=A0=A0=A0=A0=A0 Documentation/admin-guide/sysctl/kernel.rst \
+> >> -#=A0=A0=A0=A0=A0 $(git grep -l register_sysctl_)
+> >> +#=A0=A0=A0=A0=A0 $(git grep -l register_sysctl)
+> >> #
+> >> # Specify -vdebug=3D1 to see debugging information
+> >>
+> >> @@ -20,14 +20,12 @@ BEGIN {
+> >> }
+> >>
+> >> # The following globals are used:
+> >> -# children: maps ctl_table names and procnames to child ctl_table nam=
+es
+> >> # documented: maps documented entries (each key is an entry)
+> >> # entries: maps ctl_table names and procnames to counts (so
+> >> #=A0=A0=A0=A0=A0=A0=A0=A0=A0 enumerating the subkeys for a given ctl_t=
+able lists its
+> >> #=A0=A0=A0=A0=A0=A0=A0=A0=A0 procnames)
+> >> # files: maps procnames to source file names
+> >> # paths: maps ctl_path names to paths
+> >> -# curpath: the name of the current ctl_path struct
+> >> # curtable: the name of the current ctl_table struct
+> >> # curentry: the name of the current proc entry (procname when parsing
+> >> #=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 a ctl_table, constructed path when par=
+sing a ctl_path)
+> >> @@ -94,44 +92,24 @@ FNR =3D=3D NR {
+> >>
+> >> # Stage 2: process each file and find all sysctl tables
+> >> BEGINFILE {
+> >> -=A0=A0=A0 delete children
+> >> =A0=A0=A0=A0 delete entries
+> >> =A0=A0=A0=A0 delete paths
+> > Why did you leave paths? As I read it you remove the use of paths and
+> > now this is not needed any longer.
+>=20
+> Good catch, I'll drop it for V2.
+>=20
+> >
+> >> -=A0=A0=A0 curpath =3D ""
+> >> =A0=A0=A0=A0 curtable =3D ""
+> >> =A0=A0=A0=A0 curentry =3D ""
+> >> =A0=A0=A0=A0 if (debug) print "Processing file " FILENAME
+> >> }
+> >>
+> >> -/^static struct ctl_path/ {
+> >> -=A0=A0=A0 match($0, /static struct ctl_path ([^][]+)/, tables)
+> >> -=A0=A0=A0 curpath =3D tables[1]
+> >> -=A0=A0=A0 if (debug) print "Processing path " curpath
+> >> -}
+> >> -
+> >> -/^static struct ctl_table/ {
+> >> -=A0=A0=A0 match($0, /static struct ctl_table ([^][]+)/, tables)
+> >> -=A0=A0=A0 curtable =3D tables[1]
+> >> +/^static( const)? struct ctl_table/ {
+> >> +=A0=A0=A0 match($0, /static( const)? struct ctl_table ([^][]+)/, tabl=
+es)
+> > Would these regular expressions match lines that have more than one
+> > spaces before const?
+>=20
+> No. But it is consistent with the other regexes.
+I would rather see a construct like "[\t ]+" for these cases so we avoid
+missing lines that do not have the linux kernel code conventions.
 
-Changelog v3:
- - Rename kconfig CRYPTO_CHACHA20_RISCV64 to CRYPTO_CHACHA_RISCV64.
- - Rename chacha20_encrypt() to riscv64_chacha20_encrypt().
- - Use asm mnemonics for the instructions in RVV 1.0 extension.
+I'm actually seeing some false positives here not related to the space
+before "const" but with the way we match. When I run
+`./scripts/check-sysctl-docs -vtable=3D"kernel" Documentation/admin-guide/s=
+ysctl/kernel.rst $(git grep -l register_sysctl)`
+after applying your patch, I get that "msgmni" has no implementation;
+but I can see that it is implemented in `vim ipc/ipc_sysctl.c`.
+The culprit is that this match does not consider the cases where we use
+kmemdup to create the ctl_tables. This is not related to your patch, but
+it is something you might consider addressing now that you are here.
 
-Changelog v2:
- - Do not turn on kconfig `CHACHA20_RISCV64` option by default.
- - Use simd skcipher interface.
- - Add `asmlinkage` qualifier for crypto asm function.
- - Reorder structure riscv64_chacha_alg_zvkb members initialization in
-   the order declared.
- - Use smaller iv buffer instead of whole state matrix as chacha20's
-   input.
----
- arch/riscv/crypto/Kconfig                |  12 +
- arch/riscv/crypto/Makefile               |   7 +
- arch/riscv/crypto/chacha-riscv64-glue.c  | 109 ++++++++
- arch/riscv/crypto/chacha-riscv64-zvkb.pl | 321 +++++++++++++++++++++++
- 4 files changed, 449 insertions(+)
- create mode 100644 arch/riscv/crypto/chacha-riscv64-glue.c
- create mode 100644 arch/riscv/crypto/chacha-riscv64-zvkb.pl
+Best
+>=20
+> >> +=A0=A0=A0 curtable =3D tables[2]
+> >> =A0=A0=A0=A0 if (debug) print "Processing table " curtable
+> >> }
+> >>
+> >> /^};$/ {
+> >> -=A0=A0=A0 curpath =3D ""
+> >> =A0=A0=A0=A0 curtable =3D ""
+> >> =A0=A0=A0=A0 curentry =3D ""
+> >> }
+> >>
+> >> -curpath && /\.procname[\t ]*=3D[\t ]*".+"/ {
+> >> -=A0=A0=A0 match($0, /.procname[\t ]*=3D[\t ]*"([^"]+)"/, names)
+> >> -=A0=A0=A0 if (curentry) {
+> >> -=A0=A0 curentry =3D curentry "/" names[1]
+> >> -=A0=A0=A0 } else {
+> >> -=A0=A0 curentry =3D names[1]
+> >> -=A0=A0=A0 }
+> >> -=A0=A0=A0 if (debug) print "Setting path " curpath " to " curentry
+> >> -=A0=A0=A0 paths[curpath] =3D curentry
+> >> -}
+> >> -
+> >> curtable && /\.procname[\t ]*=3D[\t ]*".+"/ {
+> >> =A0=A0=A0=A0 match($0, /.procname[\t ]*=3D[\t ]*"([^"]+)"/, names)
+> >> =A0=A0=A0=A0 curentry =3D names[1]
+> >> @@ -140,10 +118,14 @@ curtable && /\.procname[\t ]*=3D[\t ]*".+"/ {
+> >> =A0=A0=A0=A0 file[curentry] =3D FILENAME
+> >> }
+> >>
+> >> -/\.child[\t ]*=3D/ {
+> >> -=A0=A0=A0 child =3D trimpunct($NF)
+> >> -=A0=A0=A0 if (debug) print "Linking child " child " to table " curtab=
+le " entry " curentry
+> >> -=A0=A0=A0 children[curtable][curentry] =3D child
+> >> +/register_sysctl.*/ {
+> >> +=A0=A0=A0 match($0, /register_sysctl(|_init|_sz)\("([^"]+)" *, *([^,)=
+]+)/, tables)
+> >> +=A0=A0=A0 if (debug) print "Registering table " tables[3] " at " tabl=
+es[2]
+> >> +=A0=A0=A0 if (tables[2] =3D=3D table) {
+> >> +=A0=A0=A0=A0=A0=A0=A0 for (entry in entries[tables[3]]) {
+> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 printentry(entry)
+> >> +=A0=A0=A0=A0=A0=A0=A0 }
+> >> +=A0=A0=A0 }
+> >> }
+> >>
+> >> END {
+> >>
+> >> ---
+> >> base-commit: 1a44b0073b9235521280e19d963b6dfef7888f18
+> >> change-id: 20231220-sysctl-check-8802651d945d
+> >>
+> >> Best regards,
+> >> --
+> >> Thomas Wei=DFschuh <linux@weissschuh.net>
+> >>
+> >
+> > --
+> >
+> > Joel Granados
+>=20
 
-diff --git a/arch/riscv/crypto/Kconfig b/arch/riscv/crypto/Kconfig
-index 81dcae72c477..2a756f92871f 100644
---- a/arch/riscv/crypto/Kconfig
-+++ b/arch/riscv/crypto/Kconfig
-@@ -34,6 +34,18 @@ config CRYPTO_AES_BLOCK_RISCV64
- 	  - Zvkb vector crypto extension (CTR/XTS)
- 	  - Zvkg vector crypto extension (XTS)
- 
-+config CRYPTO_CHACHA_RISCV64
-+	tristate "Ciphers: ChaCha"
-+	depends on 64BIT && RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
-+	select CRYPTO_SIMD
-+	select CRYPTO_SKCIPHER
-+	select CRYPTO_LIB_CHACHA_GENERIC
-+	help
-+	  Length-preserving ciphers: ChaCha20 stream cipher algorithm
-+
-+	  Architecture: riscv64 using:
-+	  - Zvkb vector crypto extension
-+
- config CRYPTO_GHASH_RISCV64
- 	tristate "Hash functions: GHASH"
- 	depends on 64BIT && RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
-diff --git a/arch/riscv/crypto/Makefile b/arch/riscv/crypto/Makefile
-index b1f857695c1c..31021eb3929c 100644
---- a/arch/riscv/crypto/Makefile
-+++ b/arch/riscv/crypto/Makefile
-@@ -9,6 +9,9 @@ aes-riscv64-y := aes-riscv64-glue.o aes-riscv64-zvkned.o
- obj-$(CONFIG_CRYPTO_AES_BLOCK_RISCV64) += aes-block-riscv64.o
- aes-block-riscv64-y := aes-riscv64-block-mode-glue.o aes-riscv64-zvkned-zvbb-zvkg.o aes-riscv64-zvkned-zvkb.o
- 
-+obj-$(CONFIG_CRYPTO_CHACHA_RISCV64) += chacha-riscv64.o
-+chacha-riscv64-y := chacha-riscv64-glue.o chacha-riscv64-zvkb.o
-+
- obj-$(CONFIG_CRYPTO_GHASH_RISCV64) += ghash-riscv64.o
- ghash-riscv64-y := ghash-riscv64-glue.o ghash-riscv64-zvkg.o
- 
-@@ -36,6 +39,9 @@ $(obj)/aes-riscv64-zvkned-zvbb-zvkg.S: $(src)/aes-riscv64-zvkned-zvbb-zvkg.pl
- $(obj)/aes-riscv64-zvkned-zvkb.S: $(src)/aes-riscv64-zvkned-zvkb.pl
- 	$(call cmd,perlasm)
- 
-+$(obj)/chacha-riscv64-zvkb.S: $(src)/chacha-riscv64-zvkb.pl
-+	$(call cmd,perlasm)
-+
- $(obj)/ghash-riscv64-zvkg.S: $(src)/ghash-riscv64-zvkg.pl
- 	$(call cmd,perlasm)
- 
-@@ -54,6 +60,7 @@ $(obj)/sm4-riscv64-zvksed.S: $(src)/sm4-riscv64-zvksed.pl
- clean-files += aes-riscv64-zvkned.S
- clean-files += aes-riscv64-zvkned-zvbb-zvkg.S
- clean-files += aes-riscv64-zvkned-zvkb.S
-+clean-files += chacha-riscv64-zvkb.S
- clean-files += ghash-riscv64-zvkg.S
- clean-files += sha256-riscv64-zvknha_or_zvknhb-zvkb.S
- clean-files += sha512-riscv64-zvknhb-zvkb.S
-diff --git a/arch/riscv/crypto/chacha-riscv64-glue.c b/arch/riscv/crypto/chacha-riscv64-glue.c
-new file mode 100644
-index 000000000000..a7a2f0303afe
---- /dev/null
-+++ b/arch/riscv/crypto/chacha-riscv64-glue.c
-@@ -0,0 +1,109 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Port of the OpenSSL ChaCha20 implementation for RISC-V 64
-+ *
-+ * Copyright (C) 2023 SiFive, Inc.
-+ * Author: Jerry Shih <jerry.shih@sifive.com>
-+ */
-+
-+#include <asm/vector.h>
-+#include <crypto/internal/chacha.h>
-+#include <crypto/internal/skcipher.h>
-+#include <linux/crypto.h>
-+#include <linux/linkage.h>
-+#include <linux/module.h>
-+#include <linux/types.h>
-+
-+/* chacha20 using zvkb vector crypto extension */
-+asmlinkage void ChaCha20_ctr32_zvkb(u8 *out, const u8 *input, size_t len,
-+				    const u32 *key, const u32 *counter);
-+
-+static int riscv64_chacha20_encrypt(struct skcipher_request *req)
-+{
-+	u32 iv[CHACHA_IV_SIZE / sizeof(u32)];
-+	u8 block_buffer[CHACHA_BLOCK_SIZE];
-+	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
-+	const struct chacha_ctx *ctx = crypto_skcipher_ctx(tfm);
-+	struct skcipher_walk walk;
-+	unsigned int nbytes;
-+	unsigned int tail_bytes;
-+	int err;
-+
-+	iv[0] = get_unaligned_le32(req->iv);
-+	iv[1] = get_unaligned_le32(req->iv + 4);
-+	iv[2] = get_unaligned_le32(req->iv + 8);
-+	iv[3] = get_unaligned_le32(req->iv + 12);
-+
-+	err = skcipher_walk_virt(&walk, req, false);
-+	while (walk.nbytes) {
-+		nbytes = walk.nbytes & (~(CHACHA_BLOCK_SIZE - 1));
-+		tail_bytes = walk.nbytes & (CHACHA_BLOCK_SIZE - 1);
-+		kernel_vector_begin();
-+		if (nbytes) {
-+			ChaCha20_ctr32_zvkb(walk.dst.virt.addr,
-+					    walk.src.virt.addr, nbytes,
-+					    ctx->key, iv);
-+			iv[0] += nbytes / CHACHA_BLOCK_SIZE;
-+		}
-+		if (walk.nbytes == walk.total && tail_bytes > 0) {
-+			memcpy(block_buffer, walk.src.virt.addr + nbytes,
-+			       tail_bytes);
-+			ChaCha20_ctr32_zvkb(block_buffer, block_buffer,
-+					    CHACHA_BLOCK_SIZE, ctx->key, iv);
-+			memcpy(walk.dst.virt.addr + nbytes, block_buffer,
-+			       tail_bytes);
-+			tail_bytes = 0;
-+		}
-+		kernel_vector_end();
-+
-+		err = skcipher_walk_done(&walk, tail_bytes);
-+	}
-+
-+	return err;
-+}
-+
-+static struct skcipher_alg riscv64_chacha_alg_zvkb = {
-+	.setkey = chacha20_setkey,
-+	.encrypt = riscv64_chacha20_encrypt,
-+	.decrypt = riscv64_chacha20_encrypt,
-+	.min_keysize = CHACHA_KEY_SIZE,
-+	.max_keysize = CHACHA_KEY_SIZE,
-+	.ivsize = CHACHA_IV_SIZE,
-+	.chunksize = CHACHA_BLOCK_SIZE,
-+	.walksize = CHACHA_BLOCK_SIZE * 4,
-+	.base = {
-+		.cra_blocksize = 1,
-+		.cra_ctxsize = sizeof(struct chacha_ctx),
-+		.cra_priority = 300,
-+		.cra_name = "chacha20",
-+		.cra_driver_name = "chacha20-riscv64-zvkb",
-+		.cra_module = THIS_MODULE,
-+	},
-+};
-+
-+static inline bool check_chacha20_ext(void)
-+{
-+	return riscv_isa_extension_available(NULL, ZVKB) &&
-+	       riscv_vector_vlen() >= 128;
-+}
-+
-+static int __init riscv64_chacha_mod_init(void)
-+{
-+	if (check_chacha20_ext())
-+		return crypto_register_skcipher(&riscv64_chacha_alg_zvkb);
-+
-+	return -ENODEV;
-+}
-+
-+static void __exit riscv64_chacha_mod_fini(void)
-+{
-+	crypto_unregister_skcipher(&riscv64_chacha_alg_zvkb);
-+}
-+
-+module_init(riscv64_chacha_mod_init);
-+module_exit(riscv64_chacha_mod_fini);
-+
-+MODULE_DESCRIPTION("ChaCha20 (RISC-V accelerated)");
-+MODULE_AUTHOR("Jerry Shih <jerry.shih@sifive.com>");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS_CRYPTO("chacha20");
-diff --git a/arch/riscv/crypto/chacha-riscv64-zvkb.pl b/arch/riscv/crypto/chacha-riscv64-zvkb.pl
-new file mode 100644
-index 000000000000..279410d9e062
---- /dev/null
-+++ b/arch/riscv/crypto/chacha-riscv64-zvkb.pl
-@@ -0,0 +1,321 @@
-+#! /usr/bin/env perl
-+# SPDX-License-Identifier: Apache-2.0 OR BSD-2-Clause
-+#
-+# This file is dual-licensed, meaning that you can use it under your
-+# choice of either of the following two licenses:
-+#
-+# Copyright 2023-2023 The OpenSSL Project Authors. All Rights Reserved.
-+#
-+# Licensed under the Apache License 2.0 (the "License").  You may not use
-+# this file except in compliance with the License.  You can obtain a copy
-+# in the file LICENSE in the source distribution or at
-+# https://www.openssl.org/source/license.html
-+#
-+# or
-+#
-+# Copyright (c) 2023, Jerry Shih <jerry.shih@sifive.com>
-+# All rights reserved.
-+#
-+# Redistribution and use in source and binary forms, with or without
-+# modification, are permitted provided that the following conditions
-+# are met:
-+# 1. Redistributions of source code must retain the above copyright
-+#    notice, this list of conditions and the following disclaimer.
-+# 2. Redistributions in binary form must reproduce the above copyright
-+#    notice, this list of conditions and the following disclaimer in the
-+#    documentation and/or other materials provided with the distribution.
-+#
-+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+
-+# - RV64I
-+# - RISC-V Vector ('V') with VLEN >= 128
-+# - RISC-V Vector Cryptography Bit-manipulation extension ('Zvkb')
-+
-+use strict;
-+use warnings;
-+
-+use FindBin qw($Bin);
-+use lib "$Bin";
-+use lib "$Bin/../../perlasm";
-+
-+# $output is the last argument if it looks like a file (it has an extension)
-+# $flavour is the first argument if it doesn't look like a file
-+my $output  = $#ARGV >= 0 && $ARGV[$#ARGV] =~ m|\.\w+$| ? pop   : undef;
-+my $flavour = $#ARGV >= 0 && $ARGV[0] !~ m|\.|          ? shift : undef;
-+
-+$output and open STDOUT, ">$output";
-+
-+my $code = <<___;
-+.text
-+.option arch, +zvkb
-+___
-+
-+# void ChaCha20_ctr32_zvkb(unsigned char *out, const unsigned char *inp,
-+#                          size_t len, const unsigned int key[8],
-+#                          const unsigned int counter[4]);
-+################################################################################
-+my ( $OUTPUT, $INPUT, $LEN, $KEY, $COUNTER ) = ( "a0", "a1", "a2", "a3", "a4" );
-+my ( $T0 ) = ( "t0" );
-+my ( $CONST_DATA0, $CONST_DATA1, $CONST_DATA2, $CONST_DATA3 ) =
-+  ( "a5", "a6", "a7", "t1" );
-+my ( $KEY0, $KEY1, $KEY2,$KEY3, $KEY4, $KEY5, $KEY6, $KEY7,
-+     $COUNTER0, $COUNTER1, $NONCE0, $NONCE1
-+) = ( "s0", "s1", "s2", "s3", "s4", "s5", "s6",
-+    "s7", "s8", "s9", "s10", "s11" );
-+my ( $VL, $STRIDE, $CHACHA_LOOP_COUNT ) = ( "t2", "t3", "t4" );
-+my (
-+    $V0,  $V1,  $V2,  $V3,  $V4,  $V5,  $V6,  $V7,  $V8,  $V9,  $V10,
-+    $V11, $V12, $V13, $V14, $V15, $V16, $V17, $V18, $V19, $V20, $V21,
-+    $V22, $V23, $V24, $V25, $V26, $V27, $V28, $V29, $V30, $V31,
-+) = map( "v$_", ( 0 .. 31 ) );
-+
-+sub chacha_quad_round_group {
-+    my (
-+        $A0, $B0, $C0, $D0, $A1, $B1, $C1, $D1,
-+        $A2, $B2, $C2, $D2, $A3, $B3, $C3, $D3
-+    ) = @_;
-+
-+    my $code = <<___;
-+    # a += b; d ^= a; d <<<= 16;
-+    vadd.vv $A0, $A0, $B0
-+    vadd.vv $A1, $A1, $B1
-+    vadd.vv $A2, $A2, $B2
-+    vadd.vv $A3, $A3, $B3
-+    vxor.vv $D0, $D0, $A0
-+    vxor.vv $D1, $D1, $A1
-+    vxor.vv $D2, $D2, $A2
-+    vxor.vv $D3, $D3, $A3
-+    vror.vi $D0, $D0, 32 - 16
-+    vror.vi $D1, $D1, 32 - 16
-+    vror.vi $D2, $D2, 32 - 16
-+    vror.vi $D3, $D3, 32 - 16
-+    # c += d; b ^= c; b <<<= 12;
-+    vadd.vv $C0, $C0, $D0
-+    vadd.vv $C1, $C1, $D1
-+    vadd.vv $C2, $C2, $D2
-+    vadd.vv $C3, $C3, $D3
-+    vxor.vv $B0, $B0, $C0
-+    vxor.vv $B1, $B1, $C1
-+    vxor.vv $B2, $B2, $C2
-+    vxor.vv $B3, $B3, $C3
-+    vror.vi $B0, $B0, 32 - 12
-+    vror.vi $B1, $B1, 32 - 12
-+    vror.vi $B2, $B2, 32 - 12
-+    vror.vi $B3, $B3, 32 - 12
-+    # a += b; d ^= a; d <<<= 8;
-+    vadd.vv $A0, $A0, $B0
-+    vadd.vv $A1, $A1, $B1
-+    vadd.vv $A2, $A2, $B2
-+    vadd.vv $A3, $A3, $B3
-+    vxor.vv $D0, $D0, $A0
-+    vxor.vv $D1, $D1, $A1
-+    vxor.vv $D2, $D2, $A2
-+    vxor.vv $D3, $D3, $A3
-+    vror.vi $D0, $D0, 32 - 8
-+    vror.vi $D1, $D1, 32 - 8
-+    vror.vi $D2, $D2, 32 - 8
-+    vror.vi $D3, $D3, 32 - 8
-+    # c += d; b ^= c; b <<<= 7;
-+    vadd.vv $C0, $C0, $D0
-+    vadd.vv $C1, $C1, $D1
-+    vadd.vv $C2, $C2, $D2
-+    vadd.vv $C3, $C3, $D3
-+    vxor.vv $B0, $B0, $C0
-+    vxor.vv $B1, $B1, $C1
-+    vxor.vv $B2, $B2, $C2
-+    vxor.vv $B3, $B3, $C3
-+    vror.vi $B0, $B0, 32 - 7
-+    vror.vi $B1, $B1, 32 - 7
-+    vror.vi $B2, $B2, 32 - 7
-+    vror.vi $B3, $B3, 32 - 7
-+___
-+
-+    return $code;
-+}
-+
-+$code .= <<___;
-+.p2align 3
-+.globl ChaCha20_ctr32_zvkb
-+.type ChaCha20_ctr32_zvkb,\@function
-+ChaCha20_ctr32_zvkb:
-+    srli $LEN, $LEN, 6
-+    beqz $LEN, .Lend
-+
-+    addi sp, sp, -96
-+    sd s0, 0(sp)
-+    sd s1, 8(sp)
-+    sd s2, 16(sp)
-+    sd s3, 24(sp)
-+    sd s4, 32(sp)
-+    sd s5, 40(sp)
-+    sd s6, 48(sp)
-+    sd s7, 56(sp)
-+    sd s8, 64(sp)
-+    sd s9, 72(sp)
-+    sd s10, 80(sp)
-+    sd s11, 88(sp)
-+
-+    li $STRIDE, 64
-+
-+    #### chacha block data
-+    # "expa" little endian
-+    li $CONST_DATA0, 0x61707865
-+    # "nd 3" little endian
-+    li $CONST_DATA1, 0x3320646e
-+    # "2-by" little endian
-+    li $CONST_DATA2, 0x79622d32
-+    # "te k" little endian
-+    li $CONST_DATA3, 0x6b206574
-+
-+    lw $KEY0, 0($KEY)
-+    lw $KEY1, 4($KEY)
-+    lw $KEY2, 8($KEY)
-+    lw $KEY3, 12($KEY)
-+    lw $KEY4, 16($KEY)
-+    lw $KEY5, 20($KEY)
-+    lw $KEY6, 24($KEY)
-+    lw $KEY7, 28($KEY)
-+
-+    lw $COUNTER0, 0($COUNTER)
-+    lw $COUNTER1, 4($COUNTER)
-+    lw $NONCE0, 8($COUNTER)
-+    lw $NONCE1, 12($COUNTER)
-+
-+.Lblock_loop:
-+    vsetvli $VL, $LEN, e32, m1, ta, ma
-+
-+    # init chacha const states
-+    vmv.v.x $V0, $CONST_DATA0
-+    vmv.v.x $V1, $CONST_DATA1
-+    vmv.v.x $V2, $CONST_DATA2
-+    vmv.v.x $V3, $CONST_DATA3
-+
-+    # init chacha key states
-+    vmv.v.x $V4, $KEY0
-+    vmv.v.x $V5, $KEY1
-+    vmv.v.x $V6, $KEY2
-+    vmv.v.x $V7, $KEY3
-+    vmv.v.x $V8, $KEY4
-+    vmv.v.x $V9, $KEY5
-+    vmv.v.x $V10, $KEY6
-+    vmv.v.x $V11, $KEY7
-+
-+    # init chacha key states
-+    vid.v $V12
-+    vadd.vx $V12, $V12, $COUNTER0
-+    vmv.v.x $V13, $COUNTER1
-+
-+    # init chacha nonce states
-+    vmv.v.x $V14, $NONCE0
-+    vmv.v.x $V15, $NONCE1
-+
-+    # load the top-half of input data
-+    vlsseg8e32.v $V16, ($INPUT), $STRIDE
-+
-+    li $CHACHA_LOOP_COUNT, 10
-+.Lround_loop:
-+    addi $CHACHA_LOOP_COUNT, $CHACHA_LOOP_COUNT, -1
-+    @{[chacha_quad_round_group
-+      $V0, $V4, $V8, $V12,
-+      $V1, $V5, $V9, $V13,
-+      $V2, $V6, $V10, $V14,
-+      $V3, $V7, $V11, $V15]}
-+    @{[chacha_quad_round_group
-+      $V0, $V5, $V10, $V15,
-+      $V1, $V6, $V11, $V12,
-+      $V2, $V7, $V8, $V13,
-+      $V3, $V4, $V9, $V14]}
-+    bnez $CHACHA_LOOP_COUNT, .Lround_loop
-+
-+    # load the bottom-half of input data
-+    addi $T0, $INPUT, 32
-+    vlsseg8e32.v $V24, ($T0), $STRIDE
-+
-+    # add chacha top-half initial block states
-+    vadd.vx $V0, $V0, $CONST_DATA0
-+    vadd.vx $V1, $V1, $CONST_DATA1
-+    vadd.vx $V2, $V2, $CONST_DATA2
-+    vadd.vx $V3, $V3, $CONST_DATA3
-+    vadd.vx $V4, $V4, $KEY0
-+    vadd.vx $V5, $V5, $KEY1
-+    vadd.vx $V6, $V6, $KEY2
-+    vadd.vx $V7, $V7, $KEY3
-+    # xor with the top-half input
-+    vxor.vv $V16, $V16, $V0
-+    vxor.vv $V17, $V17, $V1
-+    vxor.vv $V18, $V18, $V2
-+    vxor.vv $V19, $V19, $V3
-+    vxor.vv $V20, $V20, $V4
-+    vxor.vv $V21, $V21, $V5
-+    vxor.vv $V22, $V22, $V6
-+    vxor.vv $V23, $V23, $V7
-+
-+    # save the top-half of output
-+    vssseg8e32.v $V16, ($OUTPUT), $STRIDE
-+
-+    # add chacha bottom-half initial block states
-+    vadd.vx $V8, $V8, $KEY4
-+    vadd.vx $V9, $V9, $KEY5
-+    vadd.vx $V10, $V10, $KEY6
-+    vadd.vx $V11, $V11, $KEY7
-+    vid.v $V0
-+    vadd.vx $V12, $V12, $COUNTER0
-+    vadd.vx $V13, $V13, $COUNTER1
-+    vadd.vx $V14, $V14, $NONCE0
-+    vadd.vx $V15, $V15, $NONCE1
-+    vadd.vv $V12, $V12, $V0
-+    # xor with the bottom-half input
-+    vxor.vv $V24, $V24, $V8
-+    vxor.vv $V25, $V25, $V9
-+    vxor.vv $V26, $V26, $V10
-+    vxor.vv $V27, $V27, $V11
-+    vxor.vv $V29, $V29, $V13
-+    vxor.vv $V28, $V28, $V12
-+    vxor.vv $V30, $V30, $V14
-+    vxor.vv $V31, $V31, $V15
-+
-+    # save the bottom-half of output
-+    addi $T0, $OUTPUT, 32
-+    vssseg8e32.v $V24, ($T0), $STRIDE
-+
-+    # update counter
-+    add $COUNTER0, $COUNTER0, $VL
-+    sub $LEN, $LEN, $VL
-+    # increase offset for `4 * 16 * VL = 64 * VL`
-+    slli $T0, $VL, 6
-+    add $INPUT, $INPUT, $T0
-+    add $OUTPUT, $OUTPUT, $T0
-+    bnez $LEN, .Lblock_loop
-+
-+    ld s0, 0(sp)
-+    ld s1, 8(sp)
-+    ld s2, 16(sp)
-+    ld s3, 24(sp)
-+    ld s4, 32(sp)
-+    ld s5, 40(sp)
-+    ld s6, 48(sp)
-+    ld s7, 56(sp)
-+    ld s8, 64(sp)
-+    ld s9, 72(sp)
-+    ld s10, 80(sp)
-+    ld s11, 88(sp)
-+    addi sp, sp, 96
-+
-+.Lend:
-+    ret
-+.size ChaCha20_ctr32_zvkb,.-ChaCha20_ctr32_zvkb
-+___
-+
-+print $code;
-+
-+close STDOUT or die "error closing STDOUT: $!";
--- 
-2.28.0
+--=20
 
+Joel Granados
+
+--few6xo3quqjzprh5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmWRe/8ACgkQupfNUreW
+QU/Megv/U4uErJsXXdamOXMGAbUJn/WI5oUjHGwnDGTobBSnAUBixHWK54EcpvVV
+0WlBWEDd/KvBiHZ9yVDbm47MY/cHaEZZOzxz6zbd/c3Pyl0iRQK9qszv/5rafive
+rjfHJ3Bz1v0rvkzZ86VJzEDhu13Xu5IOQHR6EO+v2iMK6SowL5OVWSZvq6in4zEE
+tQMDGM8dV2bmsGfzjPOa8ZgLVW5Ajan7vzpNU/x3eiKUQMRjJ9TOCHNHOe7Dl9ls
+utHx/+qAUrf+jU3SBqUiL7swejyPoT5hP3KDTktRDF1LH6oPZ0MGDMDXSW85v3zQ
+7tWLHhfRUr7YBwcUv4oD/BZNFmtJlIPFImsVNZ1pSahk4vBug6RQ3GH6fzz0R8mg
+UFXjzlqWi8H9ZFeN1Hg0IqMr9akPSVBUV0cQoTTUlUyjCTPrWZrjalibScogpeBp
+Wka6mldDh+G+9XAE0s56VU9BNjJpvzoZ5dfXQ9gB3T/mD8y4FVtIyNAjL4pvbY30
+66I11FsT
+=dTdi
+-----END PGP SIGNATURE-----
+
+--few6xo3quqjzprh5--
