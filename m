@@ -1,75 +1,116 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8236F8F57;
-	Sun, 31 Dec 2023 18:11:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF0CB64C
+	for <linux-kernel@vger.kernel.org>; Sun, 31 Dec 2023 18:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mx0b-0016f401.pphosted.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WXs9Dh37"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-35fd9e40039so44558075ab.1;
-        Sun, 31 Dec 2023 10:11:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704046278; x=1704651078; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CkS6xSdSRoL4hgkn+yQprbg+2tW+1a/M1t+s2IfgWqs=;
-        b=WXs9Dh37WpnMCuamfhLlIrZlrCMkHiIs6nEHCDgXrkZON1BYWic3OIMs0MsytqHinH
-         9WZYPc6lTrYIYdYyu8U/gPcX0I/2T2tN5jjWhGqR6MpQr+wk3YG3zuiR4eR8Tq+wbxjw
-         klxbrAXCsxvHNIYkg9pDZ2VteE+8l5RSSNA0KJ/2k8nKkcXBf8ONMkIr1uX8n/RTB800
-         25ByYo60wzb2s0v4acEGsJCfYvZ850tfELcg8goy1D1R8KSIYC8zqGgKlW9/cyGdaWvr
-         auYzhceBUW9wgmoBpZ/8Uzs7vpNl0Juejh92hN5yUGnAk4vVUYTIFC7gWDeQUzMZjmRD
-         vAiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704046278; x=1704651078;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CkS6xSdSRoL4hgkn+yQprbg+2tW+1a/M1t+s2IfgWqs=;
-        b=VHaiqstYtXc+6e+G3OsHAjwPgMQ7AW4tbrz4MkYE2uhxCQstGtcOHLkDyzwRJqnfx9
-         iEO/HgkEcvCLuEONASAqjIFGTJqOYQriPnZab2VMT5UO0OTNmPzVzlkjxVeIusMbTOkw
-         9gIpXkvVEZiXwfBRJ3n/wl0U3oAm7dvDDyDosXldMRaWlbONdfxC1M8P8UW2aCe3JhVf
-         GcngMPGG4oO8ZVy8YQWjTP/DyQuQZibm911yzTy7PZAuMlZ7rWrSu/iZ+uXlwSETrTrR
-         Ijo6IDBNYcwMpSVqAgGg+j9Spazuwu4XgSzudaoGGvR5pDequif2XCfymb2TEp51lcBv
-         tNGw==
-X-Gm-Message-State: AOJu0YzuQyI2we7trcN3qsl2gv6nZFwL68xFz932qUWkzsJt6VccMzgy
-	9RffKlc7u3YqP4Myweh12y5ry0GjcNo=
-X-Google-Smtp-Source: AGHT+IHSqh/K8sz5+BHmZsyiUJDnFyUKt786+fVsFRZCRQhpZNw1JJJIN3unbvfQ0zgJOHftDGm7Lw==
-X-Received: by 2002:a05:6e02:32c5:b0:35f:ff56:c0fd with SMTP id bl5-20020a056e0232c500b0035fff56c0fdmr21977604ilb.14.1704046278522;
-        Sun, 31 Dec 2023 10:11:18 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m24-20020a170902bb9800b001d4898862cesm6971868pls.211.2023.12.31.10.11.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 31 Dec 2023 10:11:17 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Sun, 31 Dec 2023 10:11:16 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Jean Delvare <jdelvare@suse.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwmon: (lm75) remove now-unused include
-Message-ID: <e0aa8b5a-166f-4932-b84c-f3e901e01aca@roeck-us.net>
-References: <20231228-hwmon-cleanup-include-v1-1-e36f65aee1f0@bootlin.com>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="VA1ix7i0"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BVHrrKY018660;
+	Sun, 31 Dec 2023 09:55:08 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=pfpt0220; bh=jMKL8CK5
+	TAF5lqK76hJDPrOMYORfitD8HX9CBiNZ/iA=; b=VA1ix7i0PvuM6t0kgsyIREPG
+	P9m4SKs8e5uS5bprXpSibVif/jHxmgyQC3RFzRmGTkqFg65z8KlFRt6rJb7czvAQ
+	rbSg/AgbiwSbtSCOyzNP5E+2+oVbrV9kguAhJalqbj8sevkel9HLK8z+YaVvxPTc
+	/VIX+ClMIyAnS3/09/0thrNAzybtUrDIAVVr8tMYyjecuBd9F7uaK64ziav0KEjr
+	7lEKwBtaVyD7N03eOMco+guhMW47s2vB7O1z9HbuF4HzeF5IsXbviriZkxawB9kI
+	RABc4NnXDssHgL7zb+ttN6uUyYPdH4aPuofGIhM1rYbx07dt+FJLxjE0gQu1qw==
+Received: from dc5-exch01.marvell.com ([199.233.59.181])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3vb5c30q82-6
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+	Sun, 31 Dec 2023 09:55:07 -0800 (PST)
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sun, 31 Dec
+ 2023 09:49:57 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
+ Transport; Sun, 31 Dec 2023 09:49:57 -0800
+Received: from dc3lp-swdev041.marvell.com (dc3lp-swdev041.marvell.com [10.6.60.191])
+	by maili.marvell.com (Postfix) with ESMTP id 596263F7044;
+	Sun, 31 Dec 2023 09:49:55 -0800 (PST)
+From: Elad Nachman <enachman@marvell.com>
+To: <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <vadym.kochan@plvision.eu>, <aviramd@marvell.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC: <enachman@marvell.com>
+Subject: [PATCH] mtd: rawnand: marvell: fix layouts
+Date: Sun, 31 Dec 2023 19:49:50 +0200
+Message-ID: <20231231174950.3272727-1-enachman@marvell.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231228-hwmon-cleanup-include-v1-1-e36f65aee1f0@bootlin.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: ImuojkOln7ya8hhiUhi0YtIKC_Di7ZAo
+X-Proofpoint-ORIG-GUID: ImuojkOln7ya8hhiUhi0YtIKC_Di7ZAo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
 
-On Thu, Dec 28, 2023 at 05:27:16PM +0100, Luca Ceresoli wrote:
-> Including hwmon-sysfs.h is not needed since sysfs code got removed from
-> this file in commit 08b024338166 ("hwmon: (lm75) Convert to use new hwmon
-> registration API").
-> 
-> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+From: Elad Nachman <enachman@marvell.com>
 
-Applied.
+Check in nand_base.c, nand_scan_tail() :
+if (ecc->steps * ecc->size != mtd->writesize)
+Fails for some NAND chips.
+Remove entries which cannot create integral
+multiplications, and adjust the number of chunks
+for entries which fails the above calculation to
+calculate correctly (this was previously done
+automatically before the check).
+Also fix spacing of the said table.
 
-Thanks,
-Guenter
+Fixes: 68c18dae6888 ("mtd: rawnand: marvell: add missing layouts")
+Signed-off-by: Elad Nachman <enachman@marvell.com>
+---
+ drivers/mtd/nand/raw/marvell_nand.c | 27 ++++++++++++---------------
+ 1 file changed, 12 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/mtd/nand/raw/marvell_nand.c b/drivers/mtd/nand/raw/marvell_nand.c
+index a46698744850..21f4469b5cda 100644
+--- a/drivers/mtd/nand/raw/marvell_nand.c
++++ b/drivers/mtd/nand/raw/marvell_nand.c
+@@ -285,21 +285,18 @@ struct marvell_hw_ecc_layout {
+ 
+ /* Layouts explained in AN-379_Marvell_SoC_NFC_ECC */
+ static const struct marvell_hw_ecc_layout marvell_nfc_layouts[] = {
+-	MARVELL_LAYOUT(  512,   512,  1,  1,  1,  512,  8,  8,  0,  0,  0),
+-	MARVELL_LAYOUT( 2048,   512,  1,  1,  1, 2048, 40, 24,  0,  0,  0),
+-	MARVELL_LAYOUT( 2048,   512,  4,  1,  1, 2048, 32, 30,  0,  0,  0),
+-	MARVELL_LAYOUT( 2048,   512,  8,  2,  1, 1024,  0, 30,1024,32, 30),
+-	MARVELL_LAYOUT( 2048,   512,  8,  2,  1, 1024,  0, 30,1024,64, 30),
+-	MARVELL_LAYOUT( 2048,   512,  12, 3,  2, 704,   0, 30,640,  0, 30),
+-	MARVELL_LAYOUT( 2048,   512,  16, 5,  4, 512,   0, 30,  0, 32, 30),
+-	MARVELL_LAYOUT( 4096,   512,  4,  2,  2, 2048, 32, 30,  0,  0,  0),
+-	MARVELL_LAYOUT( 4096,   512,  8,  5,  4, 1024,  0, 30,  0, 64, 30),
+-	MARVELL_LAYOUT( 4096,   512,  12, 6,  5, 704,   0, 30,576, 32, 30),
+-	MARVELL_LAYOUT( 4096,   512,  16, 9,  8, 512,   0, 30,  0, 32, 30),
+-	MARVELL_LAYOUT( 8192,   512,  4,  4,  4, 2048,  0, 30,  0,  0,  0),
+-	MARVELL_LAYOUT( 8192,   512,  8,  9,  8, 1024,  0, 30,  0, 160, 30),
+-	MARVELL_LAYOUT( 8192,   512,  12, 12, 11, 704,  0, 30,448,  64, 30),
+-	MARVELL_LAYOUT( 8192,   512,  16, 17, 16, 512,  0, 30,  0,  32, 30),
++	MARVELL_LAYOUT(512,   512,  1,  1,  1,  512,  8,  8,  0,  0,  0),
++	MARVELL_LAYOUT(2048,   512,  1,  1,  1, 2048, 40, 24,  0,  0,  0),
++	MARVELL_LAYOUT(2048,   512,  4,  1,  1, 2048, 32, 30,  0,  0,  0),
++	MARVELL_LAYOUT(2048,   512,  8,  2,  1, 1024,  0, 30, 1024, 32, 30),
++	MARVELL_LAYOUT(2048,   512,  8,  2,  1, 1024,  0, 30, 1024, 64, 30),
++	MARVELL_LAYOUT(2048,   512,  16, 4,  4, 512,   0, 30,  0, 32, 30),
++	MARVELL_LAYOUT(4096,   512,  4,  2,  2, 2048, 32, 30,  0,  0,  0),
++	MARVELL_LAYOUT(4096,   512,  8,  4,  4, 1024,  0, 30,  0, 64, 30),
++	MARVELL_LAYOUT(4096,   512,  16, 8,  8, 512,   0, 30,  0, 32, 30),
++	MARVELL_LAYOUT(8192,   512,  4,  4,  4, 2048,  0, 30,  0,  0,  0),
++	MARVELL_LAYOUT(8192,   512,  8,  8,  8, 1024,  0, 30,  0, 160, 30),
++	MARVELL_LAYOUT(8192,   512,  16, 16, 16, 512,  0, 30,  0,  32, 30),
+ };
+ 
+ /**
+-- 
+2.25.1
+
