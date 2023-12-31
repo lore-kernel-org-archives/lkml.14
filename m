@@ -1,67 +1,82 @@
-Received: from box.fidei.email (box.fidei.email [71.19.144.250])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3E58F42;
-	Sun, 31 Dec 2023 17:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dorminy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dorminy.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47CAE8F51;
+	Sun, 31 Dec 2023 17:40:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dorminy.me header.i=@dorminy.me header.b="vOKuWTbv"
-Received: from authenticated-user (box.fidei.email [71.19.144.250])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	by box.fidei.email (Postfix) with ESMTPSA id 419BF80A59;
-	Sun, 31 Dec 2023 12:26:59 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=dorminy.me; s=mail;
-	t=1704043620; bh=rBePiq3m19xLDYg1NFE6jjWigazxJvjaHtlPnRE8KQ0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=vOKuWTbv1uVpzjAVEcMw8DcLgEbWU3WJmkaVOO7tr8HLtA55nKeK2ACIhRU541JT/
-	 6+a2Kn2wuBlI19NsYzCdD5n0YdhORpAluSGO9jUJ49JzJWA1ZH8RccCakllvPPFRc8
-	 tcsz3zlHPCw2KZnz8d5AvjsVrQ5mvgEC/ciziHN36ClgzbLDKmjjPt2+T+8V0f0Uid
-	 LqlFoSOLDKGs/D1yMMBgrBnOVjYA8E669Wqo5zym9PH7bNlb8Mg1SC5607/CK9rCan
-	 DQxLabPoYRn3a6t26e3eDw40jrB0X5DONmQW0Hk2i2v/vayotvMvj5tId6vRppL23Z
-	 yJ6cdkqAbaoIA==
-Message-ID: <4c402f0f-1298-4dbb-b593-79e7e5233694@dorminy.me>
-Date: Sun, 31 Dec 2023 12:26:57 -0500
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="niqGUSXP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1704044422; x=1704649222; i=markus.elfring@web.de;
+	bh=NPejmCOhVVhAeW/4/SItFS461+EicOMoTP7nv0qyy4k=;
+	h=X-UI-Sender-Class:Date:To:Cc:From:Subject;
+	b=niqGUSXPx80pf7w0cvuEFbyKp2GhvjieQpJ0mguKM6G3KGtdm90J+kDte0Oq9bve
+	 d6vtW4XfQkg4qSK+JPNryuO20tu8l643m4Wppmq3lM4ueQix9/BnNlxth1AYUDgyj
+	 B3bSiRnD+UP9tpXH5dNKrNLBYK5ZgOve/0sXIZ0a9Rcgf4u5xCSvxkkGzlfFc1OZG
+	 ME8KznRelw+f9p7J6MttJHc/TJUP3fhe9GUuBfgLGLxjrIrwZSR6mIFh3zgnEJgsw
+	 VzyNtZJprlv6fu8+OV5FiRoUnbzLhdrO6zBfkQN95N/70+cw43PVbZYIeI+PFi56c
+	 bZQeT7DzL/qzQ2Bb1A==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.90.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mhnvw-1qgHGY2vVw-00dxR0; Sun, 31
+ Dec 2023 18:40:22 +0100
+Message-ID: <90679f69-951c-47b3-b86f-75fd9fde3da3@web.de>
+Date: Sun, 31 Dec 2023 18:40:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH RFC v2 00/16] btrfs: fscrypt integration status
-To: Stephen Andary <stephen@jamminmusic.com>
-Cc: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com, kernel-team@fb.com,
- linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- osandov@osandov.com
-References: <CAH6pm79WsviF-L3kq+peAiSgZsrHbNfPzeYWNEE6KU=TRhiyVw@mail.gmail.com>
-Content-Language: en-US
-From: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-In-Reply-To: <CAH6pm79WsviF-L3kq+peAiSgZsrHbNfPzeYWNEE6KU=TRhiyVw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+To: netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Anjali Kulkarni <anjali.k.kulkarni@oracle.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Kuniyuki Iwashima <kuniyu@amazon.com>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH 0/4] netlink: Adjustments for __netlink_kernel_create()
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:2kHjcRU1jatJr3ZHhfmK7Bv2YHs6RMDHFdhs4ty2v/3ww+RWMLH
+ 7p13feAyZkz6zdT6LKu4OS3tyN3TTlhLFDDA/QLSY92427v2ffRrQdKVt0tpHnlu8l2v4dL
+ 1BnoGiZ0A9LFvC+EP6f04OEmreqpo4QUgoWfJ/asAkP2k9oxf4Y2EWiPPnklqKhphLN+tek
+ BCZQkbpohRT1+/tGJUXZA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:9i+HhFko9CU=;TCSGrWbdPoZ0wLwyY7HEtukhnGl
+ 3FIUQT1ds0IzZXWJ91XJhwLQxzO+2sp4zqldGDglo5qxGqk7/uKu0Dim74Bjs/oS9EtXBZCPq
+ HhEeyyrCl98v0MOb28fs0wtDR8WRcCKdr+J0m6/XMYNtstGPx6jne1jlEZWJ0qJu81AJbg7AR
+ GpzT5lOayBpX61KtzUhvzKV/Eyp/M4ATa1jA+rdtGSfttrr993ldYrNrvHG/dzqJ+pZAn8Dhz
+ 5qQOPV6CHyWXW4Bj4N7sG/+AHHmPz882Dmhx1E+NESQ8cpRsMNKWc166zsLXo2YwskDCVgaTv
+ 1IlzEZipEVb5gpSBpL0krDjSh0Nwj9X94TTATzBlg8Hrdkzjp4FpgNrAh+u4ZGoIY2LdzTL5M
+ HZKh25ciRXNLsYbRxm3nUHu0PlmMEPaHkFPSvQkPwTqFVe+Nwqbq2H3bfaOoDrsb3V/K8L+E4
+ iMkLnIkz8NneqtHgweNtLiqU4SxYJgnv+W5DOE9GKvWK7A/rUPUqY3SiC4eMPDFqfAw3CfVO1
+ iGrZyHDXfjXkPD+QfurppniI6dMmsLZTJ/M65ZPonWj2jJcfUpDeGcjat8jjlnikvfoipyA5J
+ kzNPnc111PlKUUdFAsKuoZ0X0F7VSOOFrGIFwdHVFVtn5KNQgau769DVS/PlIgS2XaxYUnY+Y
+ 0jf5KPLov4RMIicd91V7VJ+TjVwJqfzKYqg7F73D9n+GXRPY03vKJ6IKpWdzTwK8Lp3RVVk5M
+ UW+wi+TrzVl81WRlceGFcJ0b1se2qdj9XWjIFZhN5VLNhSIEZ6Xkf9JiW6xqyBM3r2caCDK9O
+ qY6/U+jMtDOJJmISI4tvwS5AuE+sKZQR1gg6D1acxWxhI0sXtX8OqeRW1mRQVOifxuzop4XJ0
+ FK10QNfAqyJ3kkUMr6QOigobq4H0PeOphv6np3KsYhFn887amXubNM3WJKEV3JNoXtpmvAzQ/
+ kjy8EA==
 
-On 12/30/23 10:26, Stephen Andary wrote:
-> Happy Holidays. I stumbled on this public mailbox in an article, and 
-> would love to follow encryption progress in the new year.
-> Where is the best place to follow the current progress of fscrypt BTRFS 
-> integration?
-> 
-> Best,
-> Stephen
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Sun, 31 Dec 2023 18:26:38 +0100
 
-Current version of the patchset is 
-https://lore.kernel.org/linux-btrfs/cover.1697480198.git.josef@toxicpanda.com/ 
--- the patches are mailed to linux-btrfs and linux-fscrypt, I would 
-suggest subscribing to a mailing list linux-fscrypt (less traffic) andor 
-linux-btrfs at https://subspace.kernel.org/vger.kernel.org.html for 
-email updates.
+A few update suggestions were taken into account
+from static source code analysis.
 
-(You could also try using lei as described at 
-https://josefbacik.github.io/kernel/2021/10/18/lei-and-b4.html to look 
-for only relevant emails, but I don't personally know how to use lei to 
-do that.)
+Markus Elfring (4):
+  Improve exception handling
+  Move an assignment for the variable =E2=80=9Csk=E2=80=9D
+  Delete an unnecessary variable initialisation
+  Move an assignment for the variable =E2=80=9Ccb_mutex=E2=80=9D
 
-Thanks for the interest!
+ net/netlink/af_netlink.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-Sweet Tea
+=2D-
+2.43.0
+
