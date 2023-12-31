@@ -1,92 +1,121 @@
-Received: from bues.ch (bues.ch [80.190.117.144])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6FE184C;
-	Sun, 31 Dec 2023 09:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bues.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bues.ch
-Received: by bues.ch with esmtpsa (Exim 4.96)
-	(envelope-from <m@bues.ch>)
-	id 1rJsC1-0006qn-2M;
-	Sun, 31 Dec 2023 10:33:12 +0100
-Date: Sun, 31 Dec 2023 10:33:02 +0100
-From: Michael =?UTF-8?B?QsO8c2No?= <m@bues.ch>
-To: Rahul Rameshbabu <sergeantsagara@protonmail.com>
-Cc: Larry Finger <Larry.Finger@lwfinger.net>, Kalle Valo <kvalo@kernel.org>,
- linux-wireless@vger.kernel.org, b43-dev@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH wireless 3/5] wifi: b43: Stop/wake correct queue in PIO
- Tx path when QoS is disabled
-Message-ID: <20231231103302.04cc37ae@barney>
-In-Reply-To: <874jfzutm5.fsf@protonmail.com>
-References: <20231230045105.91351-1-sergeantsagara@protonmail.com>
- <20231230045105.91351-4-sergeantsagara@protonmail.com>
- <cb9dcb49-ad94-40df-9f01-a28df3daf6c3@lwfinger.net>
- <877ckvwk5v.fsf@protonmail.com>
- <ca357d13-7da9-490f-9e69-4674c6ede057@lwfinger.net>
- <874jfzutm5.fsf@protonmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5302186C
+	for <linux-kernel@vger.kernel.org>; Sun, 31 Dec 2023 09:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AAIm335N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704015499;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6GH49fe9P1LFfC/zNntRaTyPi/DVVoaN4qHiWXM/OtM=;
+	b=AAIm335NguKHy+dgaMyyv+clmi/kknrpO4zMxcv2uUi9jwKMbHaFhpee4E8sqkI8Fx+NNF
+	+MqGZuwzDeWv3E1YzW4U+nMskci/GhGp5g8HkhzYIRH7nDGegHOngKr8mLnRKZET/Yaj95
+	y1RqbgyYmjVNvs9RnGA/BIyz9TQYxtI=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-568-hjPEpgKaMDe0DofdINKG2w-1; Sun, 31 Dec 2023 04:38:16 -0500
+X-MC-Unique: hjPEpgKaMDe0DofdINKG2w-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-553a628773bso4097935a12.3
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Dec 2023 01:38:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704015495; x=1704620295;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6GH49fe9P1LFfC/zNntRaTyPi/DVVoaN4qHiWXM/OtM=;
+        b=BCv3HAoN94BXNXEToVwnYlk1BybNng0wHl0OVX62zZ5Fyg/4QJypxU7MSFj+RZsWXm
+         KG/fnYjeDKia3T86VR+KWZ0ddVq+xJ9tZ+pT0JQKHTBe+syx5iKzKqKTvLAGGRi/ggQw
+         3XRbxRCJWIA/JKmDSSZR4io75QCtb831A/nfY5ekeUEgyAUh3YillitfoFncQKSIZonI
+         2CFnT6f9FK3D1x/2VwVWNdaslLL3wzXMLAtGhncb/CIckK2C/6JsGKZflH++MeSpxXhG
+         LYgTSDGHqKNdlKXEDF0kixnnF0jp3Mw0gwTLQJ4Z8wfS5+iH4cdmsBIqgzEB+Eb2yQWz
+         4Wlw==
+X-Gm-Message-State: AOJu0YxszdwDh+6gnxcl0gHY10q+6pFTcuM8Pv1u98FdHIterEIDHCWk
+	1jko4VuPQtMShsvbcEs4FRgnJpFn3AUmyc403uKUx09azX3e33ni25r8gdpjNGShfqwOKPn5HEg
+	AnzkaBTok5iz+H/Qp0+xecgZM9b5p+1gT
+X-Received: by 2002:a50:d659:0:b0:554:4dde:6646 with SMTP id c25-20020a50d659000000b005544dde6646mr9319617edj.9.1704015495640;
+        Sun, 31 Dec 2023 01:38:15 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHsdLgr/QXBiJ4I44Y8+TgG/zaD+DgQPBwKYBPXU1QroyHu/Mjj3koypyIhrQjThHzW7bCHEg==
+X-Received: by 2002:a50:d659:0:b0:554:4dde:6646 with SMTP id c25-20020a50d659000000b005544dde6646mr9319610edj.9.1704015495186;
+        Sun, 31 Dec 2023 01:38:15 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id ew10-20020a056402538a00b005546ba152f4sm10900308edb.71.2023.12.31.01.38.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 31 Dec 2023 01:38:14 -0800 (PST)
+Message-ID: <e48ff1b3-73fc-4668-840e-129417ce2c08@redhat.com>
+Date: Sun, 31 Dec 2023 10:38:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/r=5bS5OUpR0X2s9laKNCGGE";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-
---Sig_/r=5bS5OUpR0X2s9laKNCGGE
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] staging: media: atomisp: Removed duplicate comment and
+ fixed comment format
+Content-Language: en-US, nl
+To: Jonathan Bergh <bergh.jonathan@gmail.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231014083545.173238-1-bergh.jonathan@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20231014083545.173238-1-bergh.jonathan@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-On Sun, 31 Dec 2023 00:02:32 +0000
-Rahul Rameshbabu <sergeantsagara@protonmail.com> wrote:
+Hi,
 
-> > Unfortunately, it is very difficult to get the parameters for fwcutter =
-from an
-> > x86 binary. Some of the other architectures are easier. =20
->=20
-> Just tried this with the x86 binary just because and ran into extraction
-> issues as expected. I could not find other architecture options from
-> Broadcom's download page, but I may not have been looking well enough...
->=20
->   =E2=9D=AF b43-fwcutter ./wlc_hybrid.o_shipped
->   Sorry, the input file is either wrong or not supported by b43-fwcutter.
->   This file has an unknown MD5sum 6889dbd24abf8006de5cc6eddd138518.
+On 10/14/23 10:35, Jonathan Bergh wrote:
+> Fixed the following issues:
+>  * Removed a duplicate comment
+>  * Fixed up minor comment format issue
+> 
+> Signed-off-by: Jonathan Bergh <bergh.jonathan@gmail.com>
 
-b43-fwcutter works only on known files. It has a table of hashes of these f=
-iles.
+Thank you for your patch.
 
-But there is a script that can be used to create a hash table entry for a .=
-o file:
-https://bues.ch/cgit/b43-tools.git/plain/fwcutter/mklist.py
+I have merged this in my media-atomisp branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/hansg/linux.git/log/?h=media-atomisp
 
-This probably doesn't work on x86 binaries, though.
-But maybe by reading the script you can get an idea how this works.
+And this patch will be included in my next
+pull-request to Mauro (to media subsystem maintainer)
 
---=20
-Michael B=C3=BCsch
-https://bues.ch/
+Regards,
 
---Sig_/r=5bS5OUpR0X2s9laKNCGGE
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Hans
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEEihRzkKVZOnT2ipsS9TK+HZCNiw4FAmWRNU4ACgkQ9TK+HZCN
-iw6dXxAAjoFT8JXQctX2icj9/t4AVoMQ9kgs5Y6Ki2W1B1tiVD/Pdee1QRb2lKiB
-zueFBGt7BCJ2jAD29LbgxUYb8BK2KVooAowFKG+m45bsB04PNccp0egbJ5hc62rz
-aAV2+4sag0EhAWtEExBt+POZKoRg2f7E7mLsEoe74e4oD+KNxhPy3vgzKOcctWxr
-Hecjv6VoDjDlPi5jMZ593tKUk1n9Tvel4zcSb/ThG/bInX9ZuqUCNBFwV9sRCLVH
-V4//tDqiBLOLDdJwU0NmEX72t0yiOeIohFvmThVJvEzxx0VKXZgjVuzsjjMQABNg
-1Hy1ITPhWcxkztIJGkSUaHBP7bZ+vzNg3PsE8MJ3gVhWa737UlQQNHg9oHO42xJ0
-Tlg3Ay5qQpZEI/d5F9RKij7/TJhUBQfTrhsCUFxBg95bPGZmpJBdSdOzo8GY1mo+
-5Kh2LTyoWID7X8rObDsoDyx8x2XIIVq0iwMQWyndaA0xC6ga5aIRkl+I3QMhN59z
-o35QAviJrpoRSoJZKWM7DuwENnvlCTSmHs1Qe8MLc8eHnoDrkAbacCftdpgjH5ds
-Q1kRhI7MLOB5KWBxoBIZD5crVUEBfWBW9uAk6elSA/W3FUoJLvbJqGDeXybu5hSy
-fJYSkbGNowtEJVGTeCVCgs9nvy/YZXU0tx0l4nxZ8epZMU1iAx4=
-=EDd5
------END PGP SIGNATURE-----
 
---Sig_/r=5bS5OUpR0X2s9laKNCGGE--
+> ---
+>  drivers/staging/media/atomisp/i2c/gc2235.h | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/staging/media/atomisp/i2c/gc2235.h b/drivers/staging/media/atomisp/i2c/gc2235.h
+> index 55ea422291ba..ade28950db73 100644
+> --- a/drivers/staging/media/atomisp/i2c/gc2235.h
+> +++ b/drivers/staging/media/atomisp/i2c/gc2235.h
+> @@ -74,9 +74,6 @@
+>  #define GC2235_COARSE_INTG_TIME_MIN 1
+>  #define GC2235_COARSE_INTG_TIME_MAX_MARGIN 6
+>  
+> -/*
+> - * GC2235 System control registers
+> - */
+>  /*
+>   * GC2235 System control registers
+>   */
+> @@ -167,7 +164,7 @@ enum gc2235_tok_type {
+>  	GC2235_TOK_MASK = 0xfff0
+>  };
+>  
+> -/**
+> +/*
+>   * struct gc2235_reg - MI sensor  register format
+>   * @type: type of the register
+>   * @reg: 8-bit offset to register
+
