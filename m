@@ -1,106 +1,117 @@
-Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4857F9
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jan 2024 02:49:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Bdgtk0Jz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1704077348; bh=KabU2A20PeH4SZvFCt9NizESfm+H7X76LgXU4kut9EA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Bdgtk0Jz8er9VwJV5A+nzjanappZ/3m3AY0LZ/azIcz/Kop8D9psWvKOVW+1ROotx
-	 ZbOZSdPqby+vmds+uMb+Cjoc7nR18wHrtWzy5fiNoDWobG53blIdMkIt9DujBVNl+v
-	 fx5VqM16htLqGEFqN6ZeCGVHGfOkx4sXVsryVnPY=
-Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
-	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
-	id AB9902DF; Mon, 01 Jan 2024 10:42:57 +0800
-X-QQ-mid: xmsmtpt1704076977tn6u9b761
-Message-ID: <tencent_1C4C8CE7D046CC52DC0664498C6ED52EDB06@qq.com>
-X-QQ-XMAILINFO: N7h1OCCDntuj9WoC9EoF/oqbsyZHeK7h3Ac31eb5jQGc0J4BZuiJJHd/po+Yky
-	 Rb+rrS66YsZJPgVn+QP+KM8m8bzWF+VF2/HNIH7v8ymN045MHASXVn/xi+1uOcP0MVE2qqkxNZZl
-	 V431AW7s8z0Y85lLJmqtyClpNFiEuVT2j7tsEQt/oxAl4kjqonnpW9yGYKrruTWYLGS+8QtMNQ/r
-	 fr3UjQ+M/R6ULUX0t99sdGKzgh9r7X8M/RGv+PTh2Hknq/0qDJRPMDjyGmHIuDfWnp1flQRLxHdP
-	 yORihYuAsZbeCb7LjvM83wOePoaJbiF7RBuwkKNiAVe6HwzuhzJ0WTNXZrj/QohIxXE0uBqpHxu/
-	 V9aRvPqqx1NDth57kqHu5NYqlkAvIt7qDp1gdAsSwkkaibhWTpvKehGnXmiSufTD9YbduUBx3OGo
-	 XQ9rNVVoFKfo3Wz0H6lf7Xu6FeR8fb1S9ZQH9tmR+9ApS59uALQlRwlOLcglO3zrqxM/aMGuG1sl
-	 n31K2A79eXcSQEy9D+O96zT/VXBsUIJFzc4AZmIGzJCE0XJJRkXTh+hQm+MrxQnRPSN5bNaQJY44
-	 1K5G+UQIncnjJiZzxdoLtaQZOJsAQJqYnjpidwDUagFWU1MD7ca5pqq6gGuqL4FlfZc45flzm2JT
-	 VEggB/1rw69KH8S2pe8GzObbZ8X/Oq3g49ZkptmBkNzNr0CBzRbq5JO6sh3iBaZpG2HT++JbDm4z
-	 JgSJ9V9xQe1X3dwaTMkaU73HMwb7LfUYUYOKHdbQOCPB7j8QrqEnESp8xIbRTR0cgkuFxzC1MN+h
-	 cpG2Qoltfkdc1ks+SN2v9IqTiRHwQM2ySulfaZvvQ8BCXXtcUH8qXCWyqPKNZyorbrmBytJuhHqC
-	 QN8SVa4cOe+lHc1ekCJOK6HOlMpW88zA5lD7zkCVdBq4eCfva53BL5/RCL27Sh8w==
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+9b4adfed366b14496e7e@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [dri?] [media?] memory leak in get_sg_table
-Date: Mon,  1 Jan 2024 10:42:58 +0800
-X-OQ-MSGID: <20240101024257.148635-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000009e6825060dd6c287@google.com>
-References: <0000000000009e6825060dd6c287@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6011C7F9
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jan 2024 03:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-35fedd5e6beso69714435ab.3
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Dec 2023 19:07:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704078424; x=1704683224;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cw35tYwONLgZqbqw4wi1+dVSu/2XDy+iD7y4RKCqUS0=;
+        b=pWneqJ8WFhiNbiOAKBG5ha0I0bdtqLqJoGG7AHHf7+bREWnsD8O8KAzgUWKNJErjkR
+         sxsOVXm8FxzVk7ViVa9SVcGQHdkisiU0V7qmlTPOpR/01QCXKLWS/QDTzVngIfLDiSJL
+         zn9z2DM/+dkB5fLg8PGNfO3FVW95Qk7Y2YIOg+MGV3tBcgCznd7CuJurBw0pTRiqIhFA
+         GV5VksPqztb4hlzQPOiG5m2l6f0Z2uX4s5A9ViXX1Mo1ceY++ONM6A1OEqpgx25XG279
+         Y9vY5wB/0pWWBY8Qyp4P+hTfm8km3AiG3w260W8IZZIccUHeqvfgP5Dae616IGj7K+Z5
+         +4cw==
+X-Gm-Message-State: AOJu0YztpRdW0T/LP5RmsiqzeQ75XbFJOnhPt7Qr/TKotaNv/2U1mjLH
+	/YFa1jo9WN3yOhWU0ywQ6xSdAYcP91lXQMUrkgrtwpdAdF4b
+X-Google-Smtp-Source: AGHT+IGrYYmuaweWz1RKz37Lzjw15vhx74NAAL9eIRFPRHp4E1+/+xhhnihd+99hcGkdjMEoxne3E+qUrMgKYRjoEWqFF1tZqs2l
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1785:b0:35f:eae9:3f26 with SMTP id
+ y5-20020a056e02178500b0035feae93f26mr2001600ilu.1.1704078424661; Sun, 31 Dec
+ 2023 19:07:04 -0800 (PST)
+Date: Sun, 31 Dec 2023 19:07:04 -0800
+In-Reply-To: <tencent_1C4C8CE7D046CC52DC0664498C6ED52EDB06@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002be800060dd9ad75@google.com>
+Subject: Re: [syzbot] [dri?] [media?] memory leak in get_sg_table
+From: syzbot <syzbot+9b4adfed366b14496e7e@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-please test memory leak in get_sg_table
+Hello,
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git fbafc3e621c3
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+memory leak in get_sg_table
 
-diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-index 21916bba77d5..709260211546 100644
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -471,8 +471,11 @@ static long dma_buf_ioctl(struct file *file,
- 
- 		if (sync.flags & DMA_BUF_SYNC_END)
- 			ret = dma_buf_end_cpu_access(dmabuf, direction);
--		else
-+		else {
-+			if (dmabuf->doing)
-+				return -EBUSY;
- 			ret = dma_buf_begin_cpu_access(dmabuf, direction);
-+		}
- 
- 		return ret;
- 
-diff --git a/drivers/dma-buf/udmabuf.c b/drivers/dma-buf/udmabuf.c
-index c40645999648..ed98c0319e03 100644
---- a/drivers/dma-buf/udmabuf.c
-+++ b/drivers/dma-buf/udmabuf.c
-@@ -152,6 +152,7 @@ static int begin_cpu_udmabuf(struct dma_buf *buf,
- 	struct device *dev = ubuf->device->this_device;
- 	int ret = 0;
- 
-+	buf->doing = true;
- 	if (!ubuf->sg) {
- 		ubuf->sg = get_sg_table(dev, buf, direction);
- 		if (IS_ERR(ubuf->sg)) {
-@@ -162,6 +163,7 @@ static int begin_cpu_udmabuf(struct dma_buf *buf,
- 		dma_sync_sg_for_cpu(dev, ubuf->sg->sgl, ubuf->sg->nents,
- 				    direction);
- 	}
-+	buf->doing = false;
- 
- 	return ret;
- }
-diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
-index 3f31baa3293f..4316ad0e6155 100644
---- a/include/linux/dma-buf.h
-+++ b/include/linux/dma-buf.h
-@@ -446,6 +446,7 @@ struct dma_buf {
- 		struct dma_buf *dmabuf;
- 	} *sysfs_entry;
- #endif
-+	bool doing;
- };
- 
- /**
+2024/01/01 02:58:28 executed programs: 1
+BUG: memory leak
+unreferenced object 0xffff88811b080600 (size 16):
+  comm "syz-executor.0", pid 5492, jiffies 4294944266 (age 13.620s)
+  hex dump (first 16 bytes):
+    80 22 25 1b 81 88 ff ff 04 00 00 00 04 00 00 00  ."%.............
+  backtrace:
+    [<ffffffff816346ed>] kmemleak_alloc_recursive include/linux/kmemleak.h:42 [inline]
+    [<ffffffff816346ed>] slab_post_alloc_hook mm/slab.h:766 [inline]
+    [<ffffffff816346ed>] slab_alloc_node mm/slub.c:3478 [inline]
+    [<ffffffff816346ed>] __kmem_cache_alloc_node+0x2dd/0x3f0 mm/slub.c:3517
+    [<ffffffff8157f315>] kmalloc_trace+0x25/0x90 mm/slab_common.c:1098
+    [<ffffffff82cfd82a>] kmalloc include/linux/slab.h:600 [inline]
+    [<ffffffff82cfd82a>] kzalloc include/linux/slab.h:721 [inline]
+    [<ffffffff82cfd82a>] get_sg_table.isra.0+0x2a/0xe0 drivers/dma-buf/udmabuf.c:93
+    [<ffffffff82cfd986>] begin_cpu_udmabuf+0x76/0xb0 drivers/dma-buf/udmabuf.c:157
+    [<ffffffff82cf114b>] dma_buf_begin_cpu_access+0x3b/0xc0 drivers/dma-buf/dma-buf.c:1405
+    [<ffffffff82cf1bd4>] dma_buf_ioctl+0x394/0x690 drivers/dma-buf/dma-buf.c:477
+    [<ffffffff816bf4a2>] vfs_ioctl fs/ioctl.c:51 [inline]
+    [<ffffffff816bf4a2>] __do_sys_ioctl fs/ioctl.c:871 [inline]
+    [<ffffffff816bf4a2>] __se_sys_ioctl fs/ioctl.c:857 [inline]
+    [<ffffffff816bf4a2>] __x64_sys_ioctl+0xf2/0x140 fs/ioctl.c:857
+    [<ffffffff84b71e2f>] do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+    [<ffffffff84b71e2f>] do_syscall_64+0x3f/0x110 arch/x86/entry/common.c:83
+    [<ffffffff84c0008b>] entry_SYSCALL_64_after_hwframe+0x63/0x6b
+
+BUG: memory leak
+unreferenced object 0xffff88811b252280 (size 128):
+  comm "syz-executor.0", pid 5492, jiffies 4294944266 (age 13.620s)
+  hex dump (first 32 bytes):
+    00 b1 52 04 00 ea ff ff 00 00 00 00 00 10 00 00  ..R.............
+    00 40 ac 14 01 00 00 00 00 10 00 00 00 00 00 00  .@..............
+  backtrace:
+    [<ffffffff816346ed>] kmemleak_alloc_recursive include/linux/kmemleak.h:42 [inline]
+    [<ffffffff816346ed>] slab_post_alloc_hook mm/slab.h:766 [inline]
+    [<ffffffff816346ed>] slab_alloc_node mm/slub.c:3478 [inline]
+    [<ffffffff816346ed>] __kmem_cache_alloc_node+0x2dd/0x3f0 mm/slub.c:3517
+    [<ffffffff8157f9bb>] __do_kmalloc_node mm/slab_common.c:1006 [inline]
+    [<ffffffff8157f9bb>] __kmalloc+0x4b/0x150 mm/slab_common.c:1020
+    [<ffffffff8251661f>] kmalloc_array include/linux/slab.h:637 [inline]
+    [<ffffffff8251661f>] sg_kmalloc lib/scatterlist.c:167 [inline]
+    [<ffffffff8251661f>] get_next_sg lib/scatterlist.c:402 [inline]
+    [<ffffffff8251661f>] sg_alloc_append_table_from_pages+0x35f/0x770 lib/scatterlist.c:526
+    [<ffffffff82516abc>] sg_alloc_table_from_pages_segment+0x8c/0x120 lib/scatterlist.c:586
+    [<ffffffff82cfd85e>] sg_alloc_table_from_pages include/linux/scatterlist.h:477 [inline]
+    [<ffffffff82cfd85e>] get_sg_table.isra.0+0x5e/0xe0 drivers/dma-buf/udmabuf.c:96
+    [<ffffffff82cfd986>] begin_cpu_udmabuf+0x76/0xb0 drivers/dma-buf/udmabuf.c:157
+    [<ffffffff82cf114b>] dma_buf_begin_cpu_access+0x3b/0xc0 drivers/dma-buf/dma-buf.c:1405
+    [<ffffffff82cf1bd4>] dma_buf_ioctl+0x394/0x690 drivers/dma-buf/dma-buf.c:477
+    [<ffffffff816bf4a2>] vfs_ioctl fs/ioctl.c:51 [inline]
+    [<ffffffff816bf4a2>] __do_sys_ioctl fs/ioctl.c:871 [inline]
+    [<ffffffff816bf4a2>] __se_sys_ioctl fs/ioctl.c:857 [inline]
+    [<ffffffff816bf4a2>] __x64_sys_ioctl+0xf2/0x140 fs/ioctl.c:857
+    [<ffffffff84b71e2f>] do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+    [<ffffffff84b71e2f>] do_syscall_64+0x3f/0x110 arch/x86/entry/common.c:83
+    [<ffffffff84c0008b>] entry_SYSCALL_64_after_hwframe+0x63/0x6b
+
+
+
+Tested on:
+
+commit:         fbafc3e6 Merge tag 'for_linus' of git://git.kernel.org..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=13cf2909e80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e81921f96ae24ec0
+dashboard link: https://syzkaller.appspot.com/bug?extid=9b4adfed366b14496e7e
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=14778665e80000
 
