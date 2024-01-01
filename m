@@ -1,38 +1,38 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A164A52;
-	Mon,  1 Jan 2024 03:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D2A1375
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jan 2024 04:08:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kTZTylDt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704080394; x=1735616394;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=TGBXTbeX8tde9ouDg3XSWCKQoZCnrld95jzC7rtlJzQ=;
-  b=kTZTylDtci4r9lxihY/c8bL5EONzJB7/jQJjnW5XZ0ShUTVpJjRp3fvS
-   7+KESNa29noghU2Br+MaPjnFt45fO2lFrf3wt1yfXU1rO16xSGUeIsSGi
-   Md1N5v1Dy+FKoRsd2U3wCG6iLRpXLMHqXFKlooSxZx0E801eqnoHB7X+w
-   78x+d5/lLIoGIChkS4aOI8Lg1oTubKQt2K6g8D4PzNVDqR7VHAZuAUqrN
-   lCC3dXaRjJ9YmpTrDOMi05rF+nKBCWLkLo+AqtTi9upJhiI9+8vCi6Jbm
-   w6XaMYlFkX5etbvdVUNL0l2OPa5wtYWMj1/LX7w8SxZSvb5orZA98f9nw
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10940"; a="15412198"
-X-IronPort-AV: E=Sophos;i="6.04,321,1695711600"; 
-   d="scan'208";a="15412198"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Dec 2023 19:39:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10940"; a="902785434"
-X-IronPort-AV: E=Sophos;i="6.04,321,1695711600"; 
-   d="scan'208";a="902785434"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
-  by orsmga004.jf.intel.com with ESMTP; 31 Dec 2023 19:39:47 -0800
-Message-ID: <50098edc-2bbb-4c8f-9360-6990f0f5d88a@linux.intel.com>
-Date: Mon, 1 Jan 2024 11:34:45 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cbPnmnRG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704082095;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=w3g91HopIn3gFGM2kCJmjXT4qR4+JT3oKKMT6KCXKZU=;
+	b=cbPnmnRGuhke03SSO0z8m5DODSKtry5f9bDnO1TkdEB0wB93tO7qnhYomAc5464PHexL1j
+	GdvZhlDzlZnKFOcVjtJW7TrPubojqnz8eK3CCr6o7SoLa2W/yv8o47T94J2tgL2tLb6oPd
+	EmpvxBD+F3H3z07VcliyTollpt6AvSQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-275-CX7x_yuuOU-MSH7no3qi7A-1; Sun, 31 Dec 2023 23:08:09 -0500
+X-MC-Unique: CX7x_yuuOU-MSH7no3qi7A-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A036B185A780;
+	Mon,  1 Jan 2024 04:08:08 +0000 (UTC)
+Received: from [10.22.16.25] (unknown [10.22.16.25])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id E6BCE51D5;
+	Mon,  1 Jan 2024 04:08:07 +0000 (UTC)
+Message-ID: <c617aa86-3b03-4e35-8c93-6d14d4e50398@redhat.com>
+Date: Sun, 31 Dec 2023 23:08:07 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,65 +40,57 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, "cohuck@redhat.com" <cohuck@redhat.com>,
- "eric.auger@redhat.com" <eric.auger@redhat.com>,
- "nicolinc@nvidia.com" <nicolinc@nvidia.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "mjrosato@linux.ibm.com" <mjrosato@linux.ibm.com>,
- "chao.p.peng@linux.intel.com" <chao.p.peng@linux.intel.com>,
- "yi.y.sun@linux.intel.com" <yi.y.sun@linux.intel.com>,
- "peterx@redhat.com" <peterx@redhat.com>,
- "jasowang@redhat.com" <jasowang@redhat.com>,
- "shameerali.kolothum.thodi@huawei.com"
- <shameerali.kolothum.thodi@huawei.com>, "lulu@redhat.com" <lulu@redhat.com>,
- "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
- "Duan, Zhenzhong" <zhenzhong.duan@intel.com>,
- "joao.m.martins@oracle.com" <joao.m.martins@oracle.com>,
- "Zeng, Xin" <xin.zeng@intel.com>, "Zhao, Yan Y" <yan.y.zhao@intel.com>,
- "j.granados@samsung.com" <j.granados@samsung.com>
-Subject: Re: [PATCH v8 07/10] iommu/vt-d: Allow qi_submit_sync() to return the
- QI faults
-To: "Tian, Kevin" <kevin.tian@intel.com>, "Liu, Yi L" <yi.l.liu@intel.com>,
- "joro@8bytes.org" <joro@8bytes.org>,
- "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
- "jgg@nvidia.com" <jgg@nvidia.com>,
- "robin.murphy@arm.com" <robin.murphy@arm.com>
-References: <20231227161354.67701-1-yi.l.liu@intel.com>
- <20231227161354.67701-8-yi.l.liu@intel.com>
- <BN9PR11MB5276429906ED56258BB433068C9EA@BN9PR11MB5276.namprd11.prod.outlook.com>
+Subject: Re: [PATCH next v2 1/5] locking/osq_lock: Defer clearing node->locked
+ until the slow osq_lock() path.
 Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <BN9PR11MB5276429906ED56258BB433068C9EA@BN9PR11MB5276.namprd11.prod.outlook.com>
+To: David Laight <David.Laight@ACULAB.COM>,
+ "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+ "'peterz@infradead.org'" <peterz@infradead.org>
+Cc: "'mingo@redhat.com'" <mingo@redhat.com>,
+ "'will@kernel.org'" <will@kernel.org>,
+ "'boqun.feng@gmail.com'" <boqun.feng@gmail.com>,
+ 'Linus Torvalds' <torvalds@linux-foundation.org>,
+ "'virtualization@lists.linux-foundation.org'"
+ <virtualization@lists.linux-foundation.org>,
+ 'Zeng Heng' <zengheng4@huawei.com>
+References: <2b4e8a5816a742d2bd23fdbaa8498e80@AcuMS.aculab.com>
+ <714ca2e587cf4cd485ae04e5afb8d5bb@AcuMS.aculab.com>
+From: Waiman Long <longman@redhat.com>
+In-Reply-To: <714ca2e587cf4cd485ae04e5afb8d5bb@AcuMS.aculab.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-On 12/28/23 2:17 PM, Tian, Kevin wrote:
->>   	raw_spin_lock_irqsave(&qi->q_lock, flags);
->>   	/*
->> @@ -1430,7 +1439,7 @@ int qi_submit_sync(struct intel_iommu *iommu,
->> struct qi_desc *desc,
->>   		 * a deadlock where the interrupt context can wait
->> indefinitely
->>   		 * for free slots in the queue.
->>   		 */
->> -		rc = qi_check_fault(iommu, index, wait_index);
->> +		rc = qi_check_fault(iommu, index, wait_index, fault);
->>   		if (rc)
->>   			break;
-> and as replied in another thread let's change qi_check_fault to return
-> -ETIMEDOUT to break the restart loop when fault pointer is valid.
 
-It's fine to break the retry loop when fault happens and the fault
-pointer is valid. Please don't forget to add an explanation comment
-around the code. Something like:
+On 12/31/23 16:51, David Laight wrote:
+> Since node->locked cannot be set before the assignment to prev->next
+> it is save to clear it in the slow path.
+>
+> Signed-off-by: David Laight <david.laight@aculab.com>
+> ---
+>   kernel/locking/osq_lock.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/locking/osq_lock.c b/kernel/locking/osq_lock.c
+> index 75a6f6133866..e0bc74d85a76 100644
+> --- a/kernel/locking/osq_lock.c
+> +++ b/kernel/locking/osq_lock.c
+> @@ -97,7 +97,6 @@ bool osq_lock(struct optimistic_spin_queue *lock)
+>   	int curr = encode_cpu(smp_processor_id());
+>   	int old;
+>   
+> -	node->locked = 0;
+>   	node->next = NULL;
+>   	node->cpu = curr;
+>   
+> @@ -111,6 +110,7 @@ bool osq_lock(struct optimistic_spin_queue *lock)
+>   	if (old == OSQ_UNLOCKED_VAL)
+>   		return true;
+>   
+> +	node->locked = 0;
+>   	prev = decode_cpu(old);
+>   	node->prev = prev;
+>   
 
-/*
-  * The caller is able to handle the fault by itself. The IOMMU driver
-  * should not attempt to retry this request.
-  */
+Reviewed-by: Waiman Long <longman@redhat.com>
 
-Best regards,
-baolu
