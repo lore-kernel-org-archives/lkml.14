@@ -1,110 +1,118 @@
-Received: from out203-205-221-242.mail.qq.com (out203-205-221-242.mail.qq.com [203.205.221.242])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A2E469E
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jan 2024 04:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C32A98BE0
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jan 2024 04:13:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="S8Zb/QSA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1704082179; bh=EAWbts1UfbZbtzWsloZ7v8ZRt6WChQIrav53bt3lJbw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=S8Zb/QSAEKJZpeCIPa/mpQT8ORIFsBbL+s7+r+x+lycZMhteMly9kBR9ZxVl4N+3j
-	 dyvOoUMX/eWUTZeQJVmEN0/+owOFncZl1xyB97rcNSyYk5B7g6IEqNIMibV90mbJZp
-	 zJJiqwATi/MCvdVT0t5aJeyGtz3WEJ5MJsK/sMZg=
-Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
-	by newxmesmtplogicsvrsza7-0.qq.com (NewEsmtp) with SMTP
-	id 5C22667; Mon, 01 Jan 2024 12:01:28 +0800
-X-QQ-mid: xmsmtpt1704081688t0x4yoqld
-Message-ID: <tencent_A9576F5763C6CBF3660361296723B2A44605@qq.com>
-X-QQ-XMAILINFO: MB5+LsFw85NoQTH+nO5NxAPtCrnSlZ01978F9e5VinuxsQzr2Nmn1gHa4JliGn
-	 elyCu32lQ0nscFZYDcpMw/4kNXCEUWtska3de0OSa1LbtrW97r4WOv0ds8ib4ZNZlexPG1xBu8/9
-	 CFwpbO2rTgf7MZAKnHfGZdHj8PTJPX4M8Ubyc3Scl6lvL7PN/48ipJW0cLhoJ8ynHQCNABcFd7QO
-	 xEkT78/AGZ+QnMnStR/pGsDz+MQYsHa6lR3Yg1no+JeZN6bEk1f+rec9M9fjKtP4LECzCi8TmADE
-	 nRPOvvHWQcSdcctJZVTbPXFAsow3krjUDZunmGDNnNvJJTfZruuMAG/ohDTMpCOdjBOloghqslUk
-	 hkAOwxVqb+rrXI9lT5D0gMkrWClFLkVvIMLdrVpSdMRRhjJo/3fDZg7/3Xuvh9OPIeClk/H9/uVF
-	 ekLb6+GtjpNUOIeOE1j7xZuOqUpf9I+O+xYd7i3Zj/xfvAJoyGAY7olHKYoDiZp5pTNRSIixwU+D
-	 FbSO4oRd2nznEWEd5M7uDnjMbzUZtueGz+FnzCOpbhAcGqQ29fg1YyAaVT877YletLCaz29y3aY6
-	 Wk/o9kXc+Uc1o6tQ5IrR4OrjHv/l8z4DwAy+MzPjTJDjEiS83O/VbJeFHW2P4Our2hJDdvWJq4zo
-	 NE4+H6b9TLu6WZj9FzBLB4tmiukt3nUBVBXxQDCsNUQn5Ci0rjW0CGtVx+gtDUkC/aEf1Ju2Kr8F
-	 NJZHzCad6fruJ/HILMl39T4WdjKP34W1nLpkp+fALdwUZjhnSWH8H5OH+NSlogDqYkuocT69cfG4
-	 C7ea1hFSLNfGonzRST7OF8padTBb2QR8DQWM6JpPx6MLTNCRR07AVwNSMSkQt9fWlRppQk904hPZ
-	 EEy6Ef7szu1uSoOshu9+tc934jSAaE9vG+KYut4SRp01mFKwZho0g7GGMYs5JxF71S+0tEEKrX
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+9b4adfed366b14496e7e@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [dri?] [media?] memory leak in get_sg_table
-Date: Mon,  1 Jan 2024 12:01:29 +0800
-X-OQ-MSGID: <20240101040128.213722-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000009e6825060dd6c287@google.com>
-References: <0000000000009e6825060dd6c287@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FuQOV7V8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704082408;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b2w6gP/r1kZh4IA5V7Iwl9YCEdVnK3Y0Y/TP+Gf1xTU=;
+	b=FuQOV7V8G0LGI//0iJ+8BDV/WfgQuIIKJUFJm+50h4qvV+u37Omt9mnXHyktHQ+u56hwdD
+	2Nc4SQRuCPne3e3fmHLV1qTlzwmboNVlLl1ClYY4Oz3BpLMIUVj1+RNReJNrkr8IkQItLE
+	RjOIObGR8RV+Q/kSAPJen0S7a/lMPEk=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-532-bK0lsNcVOzqeuZ2Qc6xYxQ-1; Sun, 31 Dec 2023 23:13:26 -0500
+X-MC-Unique: bK0lsNcVOzqeuZ2Qc6xYxQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 615D7185A781;
+	Mon,  1 Jan 2024 04:13:26 +0000 (UTC)
+Received: from [10.22.16.25] (unknown [10.22.16.25])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id E2ACC2166B31;
+	Mon,  1 Jan 2024 04:13:25 +0000 (UTC)
+Message-ID: <544f928d-4444-4b26-9da6-bdf0c4d9831b@redhat.com>
+Date: Sun, 31 Dec 2023 23:13:25 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH next v2 4/5] locking/osq_lock: Avoid writing to node->next
+ in the osq_lock() fast path.
+Content-Language: en-US
+To: David Laight <David.Laight@ACULAB.COM>,
+ "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+ "'peterz@infradead.org'" <peterz@infradead.org>
+Cc: "'mingo@redhat.com'" <mingo@redhat.com>,
+ "'will@kernel.org'" <will@kernel.org>,
+ "'boqun.feng@gmail.com'" <boqun.feng@gmail.com>,
+ 'Linus Torvalds' <torvalds@linux-foundation.org>,
+ "'virtualization@lists.linux-foundation.org'"
+ <virtualization@lists.linux-foundation.org>,
+ 'Zeng Heng' <zengheng4@huawei.com>
+References: <2b4e8a5816a742d2bd23fdbaa8498e80@AcuMS.aculab.com>
+ <06a11b2c7d784f2d80dc8e81c7175c57@AcuMS.aculab.com>
+From: Waiman Long <longman@redhat.com>
+In-Reply-To: <06a11b2c7d784f2d80dc8e81c7175c57@AcuMS.aculab.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-please test memory leak in get_sg_table
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git fbafc3e621c3
-
-diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-index 21916bba77d5..709260211546 100644
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -471,8 +471,11 @@ static long dma_buf_ioctl(struct file *file,
- 
- 		if (sync.flags & DMA_BUF_SYNC_END)
- 			ret = dma_buf_end_cpu_access(dmabuf, direction);
--		else
-+		else {
-+			if (dmabuf->doing)
-+				return -EBUSY;
- 			ret = dma_buf_begin_cpu_access(dmabuf, direction);
-+		}
- 
- 		return ret;
- 
-diff --git a/drivers/dma-buf/udmabuf.c b/drivers/dma-buf/udmabuf.c
-index c40645999648..ff49e5cf7d07 100644
---- a/drivers/dma-buf/udmabuf.c
-+++ b/drivers/dma-buf/udmabuf.c
-@@ -151,7 +151,10 @@ static int begin_cpu_udmabuf(struct dma_buf *buf,
- 	struct udmabuf *ubuf = buf->priv;
- 	struct device *dev = ubuf->device->this_device;
- 	int ret = 0;
-+	static DEFINE_MUTEX(lock);
- 
-+	mutex_lock(&lock);
-+	buf->doing = true;
- 	if (!ubuf->sg) {
- 		ubuf->sg = get_sg_table(dev, buf, direction);
- 		if (IS_ERR(ubuf->sg)) {
-@@ -162,6 +165,8 @@ static int begin_cpu_udmabuf(struct dma_buf *buf,
- 		dma_sync_sg_for_cpu(dev, ubuf->sg->sgl, ubuf->sg->nents,
- 				    direction);
- 	}
-+	buf->doing = false;
-+	mutex_unlock(&lock);
- 
- 	return ret;
- }
-diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
-index 3f31baa3293f..4316ad0e6155 100644
---- a/include/linux/dma-buf.h
-+++ b/include/linux/dma-buf.h
-@@ -446,6 +446,7 @@ struct dma_buf {
- 		struct dma_buf *dmabuf;
- 	} *sysfs_entry;
- #endif
-+	bool doing;
- };
- 
- /**
+On 12/31/23 16:54, David Laight wrote:
+> When osq_lock() returns false or osq_unlock() returns static
+> analysis shows that node->next should always be NULL.
+> This means that it isn't necessary to explicitly set it to NULL
+> prior to atomic_xchg(&lock->tail, curr) on extry to osq_lock().
+>
+> Just in case there a non-obvious race condition that can leave it
+> non-NULL check with WARN_ON_ONCE() and NULL if set.
+> Note that without this check the fast path (adding at the list head)
+> doesn't need to to access the per-cpu osq_node at all.
+>
+> Signed-off-by: David Laight <david.laight@aculab.com>
+> ---
+>   kernel/locking/osq_lock.c | 14 ++++++++++----
+>   1 file changed, 10 insertions(+), 4 deletions(-)
+>
+> diff --git a/kernel/locking/osq_lock.c b/kernel/locking/osq_lock.c
+> index 27324b509f68..35bb99e96697 100644
+> --- a/kernel/locking/osq_lock.c
+> +++ b/kernel/locking/osq_lock.c
+> @@ -87,12 +87,17 @@ osq_wait_next(struct optimistic_spin_queue *lock,
+>   
+>   bool osq_lock(struct optimistic_spin_queue *lock)
+>   {
+> -	struct optimistic_spin_node *node = this_cpu_ptr(&osq_node);
+> -	struct optimistic_spin_node *prev, *next;
+> +	struct optimistic_spin_node *node, *prev, *next;
+>   	int curr = encode_cpu(smp_processor_id());
+>   	int prev_cpu;
+>   
+> -	node->next = NULL;
+> +	/*
+> +	 * node->next should be NULL on entry.
+> +	 * Check just in case there is a race somewhere.
+> +	 * Note that this is probably an unnecessary cache miss in the fast path.
+> +	 */
+> +	if (WARN_ON_ONCE(raw_cpu_read(osq_node.next) != NULL))
+> +		raw_cpu_write(osq_node.next, NULL);
+>   
+>   	/*
+>   	 * We need both ACQUIRE (pairs with corresponding RELEASE in
+> @@ -104,8 +109,9 @@ bool osq_lock(struct optimistic_spin_queue *lock)
+>   	if (prev_cpu == OSQ_UNLOCKED_VAL)
+>   		return true;
+>   
+> -	node->prev_cpu = prev_cpu;
+> +	node = this_cpu_ptr(&osq_node);
+>   	prev = decode_cpu(prev_cpu);
+> +	node->prev_cpu = prev_cpu;
+>   	node->locked = 0;
+>   
+>   	/*
+Reviewed-by: Waiman Long <longman@redhat.com>
 
