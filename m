@@ -1,112 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27840210B
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jan 2024 02:29:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="deuTnnbh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DA4BC433C9
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Jan 2024 02:29:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704076174;
-	bh=NxcQt/1WVdElhgcHVwYbzLY/6vPTKg2Mr7ScZIEVR7w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=deuTnnbhP22cVt2mKII+KMjMY/MdkNY5Tvkb/5RpiAWGhNn7wEPfvUzw1PybSQpwh
-	 vru6kbn9xK/daV/HLaPB9JDtK7e2/N/4H4jV4tNeL+N1nYP6a5hudu7CPKLYDp2jXO
-	 +15rND5Phz5X1ycirGD85UrH+LzdzO93K5WljP4mRSeIuv4BbMaD69LEKj7bpIWDla
-	 4ausGfo+FDNdYsDEsaDIOhANCU0ywF1Au0WC/CKBjf43BQ9Xfb6pXnmVoJfM3Z6sIT
-	 Wzq40HjMvjxAV4nJCH53zj3MBKTaO40MRDQ13DmeYLwAVHLppyJ5C5+EMl7DsF+Grf
-	 eTT4b5/ocprvA==
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-55559e26ccfso4211518a12.3
-        for <linux-kernel@vger.kernel.org>; Sun, 31 Dec 2023 18:29:34 -0800 (PST)
-X-Gm-Message-State: AOJu0YxiY0Bj6wzZTuODEz0dr/MAm3RSAaK+nuezZKk9SUecQqXlRwnw
-	MLd8+RsubReCZBl4a+rrisk13EMhbE6yga+zew4=
-X-Google-Smtp-Source: AGHT+IFYhP/lTo9lpMwcHTK1Xjo1hbbfc1WD5tZJurTZJC1E2j/Mg8ZBMjQY1xh6HrQvXAx9kEtDW4p5Eh59NHPbY8c=
-X-Received: by 2002:a50:8e17:0:b0:54f:51cc:6570 with SMTP id
- 23-20020a508e17000000b0054f51cc6570mr6935713edw.63.1704076173099; Sun, 31 Dec
- 2023 18:29:33 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6447F9
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Jan 2024 02:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-35fd42a187bso59241645ab.0
+        for <linux-kernel@vger.kernel.org>; Sun, 31 Dec 2023 18:45:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704077105; x=1704681905;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kS7kDRo6FcBGmx7H+u1tlBLA+0dKmu0JrW5YNpFdNwg=;
+        b=sJlzfaUqwvtJuzpruCD/rgjWS35PR3F5nJ05+4udAvjgXCg/NLmeWLc7yFAHTYtAPd
+         wju2LX9z/xqWPEgCE8IcWTEb536ORcIu5BxopIOcxZodU+2r4ZNr//wBzM06nWhlH08B
+         Egq+9EB+K4BvsxIal1BId4W4H6evKbYQhAoBn/VxVWnPKHWrwA1qbCWdxBaK2wO53Bjz
+         ON/luhr7vy+4B8AI1PzyXJtsWHz3iAVB2Ailz10o8uqAYvkXEOwvsyezx/MQ0zy+m6lx
+         lkk5vgWPJbtvkRihpEDxg1N7lAJXfOwfvQCEwZNb+N14501+dUb+VT2cGFyHHXYoneCv
+         3nMg==
+X-Gm-Message-State: AOJu0YzES2DMlCwNxI8FOfHt8xsluWhl3t4+F8eOuqwGmvZnZnGbamYf
+	SBeFhYZpgwoCGEyRBlgSmpN0FbADfncL2VgReOIVxGcbHMhx
+X-Google-Smtp-Source: AGHT+IHWgIDaxGQvYi1VTahp2UD0hE1QPRb9wJ2oDiHh45bb6w7nY9rFJDruDzFCV5t69FfGrpwUWh5NNzRlmwLO5jv1I3vxSrB8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231231082955.16516-1-guoren@kernel.org> <20231231082955.16516-3-guoren@kernel.org>
-In-Reply-To: <20231231082955.16516-3-guoren@kernel.org>
-From: Guo Ren <guoren@kernel.org>
-Date: Mon, 1 Jan 2024 10:29:21 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTZeN+rfG6szdB+J1QySQ2tAadwpG_zt2cRir7Bn+Yh4g@mail.gmail.com>
-Message-ID: <CAJF2gTTZeN+rfG6szdB+J1QySQ2tAadwpG_zt2cRir7Bn+Yh4g@mail.gmail.com>
-Subject: Re: [PATCH V2 2/3] riscv: Add ARCH_HAS_PRETCHW support with Zibop
-To: paul.walmsley@sifive.com, palmer@dabbelt.com, guoren@kernel.org, 
-	panqinglin2020@iscas.ac.cn, bjorn@rivosinc.com, conor.dooley@microchip.com, 
-	leobras@redhat.com, peterz@infradead.org, keescook@chromium.org, 
-	wuwei2016@iscas.ac.cn, xiaoguang.xing@sophgo.com, chao.wei@sophgo.com, 
-	unicorn_wang@outlook.com, uwu@icenowy.me, jszhang@kernel.org, wefu@redhat.com, 
-	atishp@atishpatra.org, ajones@ventanamicro.com
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Guo Ren <guoren@linux.alibaba.com>
+X-Received: by 2002:a05:6e02:1b89:b0:35f:fc9d:3872 with SMTP id
+ h9-20020a056e021b8900b0035ffc9d3872mr614193ili.2.1704077105527; Sun, 31 Dec
+ 2023 18:45:05 -0800 (PST)
+Date: Sun, 31 Dec 2023 18:45:05 -0800
+In-Reply-To: <20240101022525.2537-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008b84f1060dd95e44@google.com>
+Subject: Re: [syzbot] [dri?] [media?] memory leak in get_sg_table
+From: syzbot <syzbot+9b4adfed366b14496e7e@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Dec 31, 2023 at 4:30=E2=80=AFPM <guoren@kernel.org> wrote:
->
-> From: Guo Ren <guoren@linux.alibaba.com>
->
-> Enable Linux prefetchw primitive with Zibop cpufeature, which preloads
-> cache line into L1 cache for the next write operation.
->
-> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-> Signed-off-by: Guo Ren <guoren@kernel.org>
-> ---
->  arch/riscv/include/asm/processor.h | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->
-> diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/=
-processor.h
-> index f19f861cda54..8d3a2ab37678 100644
-> --- a/arch/riscv/include/asm/processor.h
-> +++ b/arch/riscv/include/asm/processor.h
-> @@ -13,6 +13,9 @@
->  #include <vdso/processor.h>
->
->  #include <asm/ptrace.h>
-> +#include <asm/insn-def.h>
-> +#include <asm/alternative-macros.h>
-> +#include <asm/hwcap.h>
->
->  #ifdef CONFIG_64BIT
->  #define DEFAULT_MAP_WINDOW     (UL(1) << (MMAP_VA_BITS - 1))
-> @@ -106,6 +109,19 @@ static inline void arch_thread_struct_whitelist(unsi=
-gned long *offset,
->  #define KSTK_EIP(tsk)          (task_pt_regs(tsk)->epc)
->  #define KSTK_ESP(tsk)          (task_pt_regs(tsk)->sp)
->
-> +#ifdef CONFIG_RISCV_ISA_ZICBOP
-> +#define ARCH_HAS_PREFETCHW
-> +
-> +#define PREFETCHW_ASM(x)                                               \
-> +       ALTERNATIVE(__nops(1), CBO_PREFETCH_W(x, 0), 0,                 \
-> +                   RISCV_ISA_EXT_ZICBOP, CONFIG_RISCV_ISA_ZICBOP)
-The PREFETCHW_ASM(x) definition should be out of "ifdef
-CONFIG_RISCV_ISA_ZICBOP... #endif", because xchg_small may use this
-macro without CONFIG_RISCV_ISA_ZICBOP.
+Hello,
 
-> +
-> +
-> +static inline void prefetchw(const void *x)
-> +{
-> +       __asm__ __volatile__(PREFETCHW_ASM(%0) : : "r" (x) : "memory");
-> +}
-> +#endif /* CONFIG_RISCV_ISA_ZICBOP */
->
->  /* Do necessary setup to start up a newly executed thread. */
->  extern void start_thread(struct pt_regs *regs,
-> --
-> 2.40.1
->
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
+Reported-and-tested-by: syzbot+9b4adfed366b14496e7e@syzkaller.appspotmail.com
 
---=20
-Best Regards
- Guo Ren
+Tested on:
+
+commit:         610a9b8f Linux 6.7-rc8
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=115abdd9e80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dcb7609da8da79e3
+dashboard link: https://syzkaller.appspot.com/bug?extid=9b4adfed366b14496e7e
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=12c685b5e80000
+
+Note: testing is done by a robot and is best-effort only.
