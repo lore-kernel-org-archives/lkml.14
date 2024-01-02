@@ -1,159 +1,88 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F00312E60;
-	Tue,  2 Jan 2024 15:02:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6038214A8A;
+	Tue,  2 Jan 2024 15:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="llleeLZ1"
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 402Em3pb016145;
-	Tue, 2 Jan 2024 15:01:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=5DfTXPVd/eM6V5PQwyJZ3YoyiYCR8XXYxNPU2tae1Gc=;
- b=llleeLZ1ol24GiW0XrAG7Le+6pmHGHMQalKuApVuZL2WIy3jo7ljmy4hSE5e6tp+tZCI
- K7vlZFeuiv/E2XmsdfxAtzSKVINYWDfieCmkYkctRCNpabzr8+KUB2nXusJwdly7neN5
- DNcOW+UTBpzWVsNnqIEaKs6c+2ubgK1P6dhBA8MeGloaMYN1rkRDWjy7SiLytVhZg7dr
- kiohKNQcV/E2v2ncOXMdqzzU/jcx3YS7/IL4HqvoW719XvhLL4njoj2FH+7frvcgGe8w
- aqSd5B4bEN+IyyWlW9shHwpg5pYi8PvXItMzqx1RVihM7lXWpI0URdLT+YWSkEX0GMUz XA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vcmjmgd3s-1
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="baemNkk6"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4029fW3a029874;
+	Tue, 2 Jan 2024 08:57:36 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	PODMain02222019; bh=FQcaaKgZ25950Vl7J8BFcyjXBXxpMI4LcMtWcp/LUQ4=; b=
+	baemNkk63Npkm5ASJaDPZarieURaYMUb5EBWaDSsCbDd3iau6iUY+OkICL625Hae
+	0LoLd/oqqhYfR8m0QsFI+eZ/nFX/Y1pR7244KgWa7nuDPam8g0XvRmB6CUP3BN0G
+	rM5crt41MxvLBjlzObzAKvm3xqr8Z/Bfa4f60TqJ1h8Gu0iRrGKQ6bAMjjublj2+
+	xEU7Q0r6W8GM346NmPzU8T2h+L+OdkTpNrVj3c05xcaF1txR/TfjCkfjGJJ2gSLZ
+	6TSFr8fMCJt2aPfMez1dweQXJrOUQXqObdyS7GdAT2/7c0MNLb+lLvaIakmG/XNV
+	AVx3cw/ShN5FzVwr/SpRfA==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3vahg2b9t3-2
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jan 2024 15:01:48 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 402EnT7r021329;
-	Tue, 2 Jan 2024 15:01:46 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vcmjmgd2v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jan 2024 15:01:45 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 402F0adP017991;
-	Tue, 2 Jan 2024 15:01:44 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vayrkd6r0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jan 2024 15:01:44 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 402F1f3350790732
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 2 Jan 2024 15:01:41 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 889F62004D;
-	Tue,  2 Jan 2024 15:01:41 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3725820043;
-	Tue,  2 Jan 2024 15:01:40 +0000 (GMT)
-Received: from osiris (unknown [9.171.22.30])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue,  2 Jan 2024 15:01:40 +0000 (GMT)
-Date: Tue, 2 Jan 2024 16:01:38 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Sven Schnelle <svens@linux.ibm.com>
-Subject: Re: [PATCH v3 27/34] s390/irqflags: Do not instrument
- arch_local_irq_*() with KMSAN
-Message-ID: <20240102150138.6306-E-hca@linux.ibm.com>
-References: <20231213233605.661251-1-iii@linux.ibm.com>
- <20231213233605.661251-28-iii@linux.ibm.com>
+	Tue, 02 Jan 2024 08:57:36 -0600 (CST)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 2 Jan
+ 2024 14:57:35 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1118.40 via Frontend Transport; Tue, 2 Jan 2024 14:57:35 +0000
+Received: from aus-sw-rshr002.ad.cirrus.com (aus-sw-rshr002.ad.cirrus.com [141.131.145.53])
+	by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 0A3E446B;
+	Tue,  2 Jan 2024 14:57:33 +0000 (UTC)
+From: James Ogletree <jogletre@opensource.cirrus.com>
+To: 
+CC: James Ogletree <jogletre@opensource.cirrus.com>,
+        Dmitry Torokhov
+	<dmitry.torokhov@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "open
+ list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+	<linux-input@vger.kernel.org>,
+        "open list:DOCUMENTATION"
+	<linux-doc@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH RESEND 2/2] Documentation: Input: support pre-stored effects
+Date: Tue, 2 Jan 2024 14:56:13 +0000
+Message-ID: <20240102145614.127736-2-jogletre@opensource.cirrus.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240102145614.127736-1-jogletre@opensource.cirrus.com>
+References: <20240102145614.127736-1-jogletre@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231213233605.661251-28-iii@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: fwlCQf0fqngEyUEwz2n1oINtNGsURlEU
-X-Proofpoint-ORIG-GUID: 0BosCkKzyYZnSHJAxdZslg6QZCVj4M3P
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-02_04,2024-01-02_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 malwarescore=0 mlxscore=0 impostorscore=0
- mlxlogscore=968 suspectscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
- adultscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401020115
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: DtDe0HGe9jeXqCMREGTBRcJANEU_UcDL
+X-Proofpoint-ORIG-GUID: DtDe0HGe9jeXqCMREGTBRcJANEU_UcDL
+X-Proofpoint-Spam-Reason: safe
 
-On Thu, Dec 14, 2023 at 12:24:47AM +0100, Ilya Leoshkevich wrote:
-> KMSAN generates the following false positives on s390x:
-> 
-> [    6.063666] DEBUG_LOCKS_WARN_ON(lockdep_hardirqs_enabled())
-> [         ...]
-> [    6.577050] Call Trace:
-> [    6.619637]  [<000000000690d2de>] check_flags+0x1fe/0x210
-> [    6.665411] ([<000000000690d2da>] check_flags+0x1fa/0x210)
-> [    6.707478]  [<00000000006cec1a>] lock_acquire+0x2ca/0xce0
-> [    6.749959]  [<00000000069820ea>] _raw_spin_lock_irqsave+0xea/0x190
-> [    6.794912]  [<00000000041fc988>] __stack_depot_save+0x218/0x5b0
-> [    6.838420]  [<000000000197affe>] __msan_poison_alloca+0xfe/0x1a0
-> [    6.882985]  [<0000000007c5827c>] start_kernel+0x70c/0xd50
-> [    6.927454]  [<0000000000100036>] startup_continue+0x36/0x40
-> 
-> Between trace_hardirqs_on() and `stosm __mask, 3` lockdep thinks that
-> interrupts are on, but on the CPU they are still off. KMSAN
-> instrumentation takes spinlocks, giving lockdep a chance to see and
-> complain about this discrepancy.
-> 
-> KMSAN instrumentation is inserted in order to poison the __mask
-> variable. Disable instrumentation in the respective functions. They are
-> very small and it's easy to see that no important metadata updates are
-> lost because of this.
-> 
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-> ---
->  arch/s390/include/asm/irqflags.h | 18 +++++++++++++++---
->  drivers/s390/char/sclp.c         |  2 +-
->  2 files changed, 16 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/s390/include/asm/irqflags.h b/arch/s390/include/asm/irqflags.h
-> index 02427b205c11..7353a88b2ae2 100644
-> --- a/arch/s390/include/asm/irqflags.h
-> +++ b/arch/s390/include/asm/irqflags.h
-> @@ -37,12 +37,19 @@ static __always_inline void __arch_local_irq_ssm(unsigned long flags)
->  	asm volatile("ssm   %0" : : "Q" (flags) : "memory");
->  }
->  
-> -static __always_inline unsigned long arch_local_save_flags(void)
-> +#ifdef CONFIG_KMSAN
-> +#define ARCH_LOCAL_IRQ_ATTRIBUTES \
-> +	noinline notrace __no_sanitize_memory __maybe_unused
-> +#else
-> +#define ARCH_LOCAL_IRQ_ATTRIBUTES __always_inline
-> +#endif
-> +
-> +static ARCH_LOCAL_IRQ_ATTRIBUTES unsigned long arch_local_save_flags(void)
->  {
+Document FF_PRESTORED.
 
-Please change this to lower case and long single lines, so it matches the
-more common patterns:
+Signed-off-by: James Ogletree <jogletre@opensource.cirrus.com>
+---
+ Documentation/input/ff.rst | 1 +
+ 1 file changed, 1 insertion(+)
 
-#ifdef CONFIG_KMSAN
-#define __arch_local_irq_attributes noinline notrace __no_sanitize_memory __maybe_unused
-#else
-#define __arch_local_irq_attributes __always_inline
-#endif
+diff --git a/Documentation/input/ff.rst b/Documentation/input/ff.rst
+index 5a1da42c33b3..1e0d00a42f25 100644
+--- a/Documentation/input/ff.rst
++++ b/Documentation/input/ff.rst
+@@ -85,6 +85,7 @@ following bits:
+ - FF_FRICTION	can simulate friction
+ - FF_DAMPER	can simulate damper effects
+ - FF_RUMBLE	rumble effects
++- FF_PRESTORED  pre-stored effects
+ - FF_INERTIA    can simulate inertia
+ - FF_GAIN	gain is adjustable
+ - FF_AUTOCENTER	autocenter is adjustable
+-- 
+2.25.1
 
-static __arch_local_irq_attributes unsigned long arch_local_save_flags(void)
-
-...
