@@ -1,51 +1,51 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502B93D7F
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 05:17:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25F46AAB
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 05:17:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HQxyMkdo"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-50e7abe4be4so6900913e87.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jan 2024 21:17:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RJG/k5CR"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-50e7e6283bdso5758044e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jan 2024 21:17:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704172652; x=1704777452; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1704172653; x=1704777453; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ZvxKHQ7yTMefDm/HiqFwrhRsyS9CpyvAYzuZoPzniBQ=;
-        b=HQxyMkdoQgdmpUUwzkc6OUTLWskg8PWdGpx6KzpNejPkhib1xYQ3W4yIQmj5VFYRog
-         Y6iW3y3ycp0u888YP3BYqzFOQiFFGS4nzs4lk7AQGEQWxfCliQkclyJOLRrh+5H0KfLS
-         XpPB7teSVHKJuFc8lVUc306X8HT2fZnHK5YFm+sJd3u52G4AqJFj0Ho73OLKwm2g4rC3
-         VWzzuwQHsWFMiYv/bxQyGtiHP82Jmz8kkT5aA5CAyy+Z6YYJiGircXkz42XPgKmS1RcT
-         q7dQhJASNmRmEg7rr1fmUQYeoqonptekhPZtHvzAv1RcRvWLYoGXpzRosYJ8lUkv88qE
-         BuLA==
+        bh=jm71Sl4bq/gVK9I4iYE5wJXvP8h1ZXahjWXtpNyyhQE=;
+        b=RJG/k5CRyEfanD8odTLDCLv2uNLeA9lLaggCb1YGYKINfUkPiEU9M/g5QVQ4ICfYqx
+         EqPXvsw3eGiIF8SOZTvj5wuNlMv/AuZdcaFF7AtvANM6DBi0P2i6lWID5ws+d+R1rg/J
+         HtCxJqNAJy9wnGb0tvLHcsaQ23CcdXphKL804yeS9VXudqUU1STyCf5uVEUOjtr8UZaN
+         5F8H7fj7Ws1rp2MoyW16jOcoTlthQBsJqWmC/D92JoqbuTotgu6ONMdMtOKVYZSmP7uh
+         d6KnxTQ1qbJVK80hTVYgkNYwTn/W+o+yLTaRoD1RMCGz4vOjLVJ1pGe8wcX9qTj7jOyZ
+         0iEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704172652; x=1704777452;
+        d=1e100.net; s=20230601; t=1704172653; x=1704777453;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZvxKHQ7yTMefDm/HiqFwrhRsyS9CpyvAYzuZoPzniBQ=;
-        b=aDY2SeZCOtCpgPXAj3gqMK1Up94tLHD0Zhy4D8LDQ14i4sSpvyW9+8EbVmvW/SgS8n
-         jAEWSWZwB9T1+gLIpHzysK23gFVdXjU9+D3WPTpNC64LqCMhGXMXi+dmxvholABPtSg2
-         dDQRO9s7F3/w/YvEQy5CjMaeChQWvnS4aPopo5ABzLXW4+WZ2lEf9n33Ahcugbx7leif
-         YCJcmbWC1UQpeGkGnVT81pIzm1h8dc7Owk+/aRCu5uElY7dDyUI8nB1qCu242zK3FKWz
-         uN3er7CVH9BdyAkpEjraDTBSjmn5d9+oCIXD5nvuqUzNk5f8rMtAqUwCExuTySUqS38I
-         uCug==
-X-Gm-Message-State: AOJu0YzY6UysJt7AEXKaGOAYnAQsNs184nRRp2jjixrLG4wkpXaJlG4h
-	0FJePtbzZMa26EqYdDj63Ocubno2yedlMw==
-X-Google-Smtp-Source: AGHT+IE0MAaDmAUfIpozSDGED6dvvgDQvsW1NnsylxUiX13Nomm3Fjel4MtBeQWcob3qWGwzI7WGqw==
-X-Received: by 2002:a05:6512:618:b0:50e:7726:b6fc with SMTP id b24-20020a056512061800b0050e7726b6fcmr5930928lfe.26.1704172652557;
-        Mon, 01 Jan 2024 21:17:32 -0800 (PST)
+        bh=jm71Sl4bq/gVK9I4iYE5wJXvP8h1ZXahjWXtpNyyhQE=;
+        b=OKmSgMMXVMfFmcyhDeKJTyQut+4No+pDTtA3wnYjiq9CmK8OAzH807cNoT2pgL77zA
+         DrsCPOO5XtboORyHyhZShjv/CVaiVYfRA5hFeg3rPVZv9QJKUbnpcIinBFLVXNybMu8O
+         WG6O9SSI1zb/kqnPk2l0JOARHxbh+ByEqf2ZYSm3zQCAPcaVkLMUhBrn8RMpBl6EwDBz
+         IWOfsZfL/GPw3VkjQclOBiTgX1e1YSkAnluD2uRquELz/ynOq4T1ewxVnVluP026G8Jw
+         j5W/Mdg8f/B67KnxO10U5UZ3cW5pIStCyERXE01uOC4MEMYz9hYsSdUsPbxV6IN/KYRN
+         A4eA==
+X-Gm-Message-State: AOJu0YzrJ7oQM6QVT+JMweup3oeLSsq2JPBOMAQFu2SnUaJn4ntXG9H8
+	xw3nD/kbQIFbbDHQPoWkG+4SXgTkITS1ug==
+X-Google-Smtp-Source: AGHT+IH7jTteFOtAm+4UrlVmvLELUcVm5JvFn99L+SUC0RK5ZVzoSP/5//jVW7iUdhNqduxYGj4rxQ==
+X-Received: by 2002:a05:6512:e86:b0:50e:7b00:8c78 with SMTP id bi6-20020a0565120e8600b0050e7b008c78mr2808455lfb.144.1704172653769;
+        Mon, 01 Jan 2024 21:17:33 -0800 (PST)
 Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id r25-20020ac252b9000000b0050e810689e5sm2081827lfm.33.2024.01.01.21.17.32
+        by smtp.gmail.com with ESMTPSA id r25-20020ac252b9000000b0050e810689e5sm2081827lfm.33.2024.01.01.21.17.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jan 2024 21:17:32 -0800 (PST)
+        Mon, 01 Jan 2024 21:17:33 -0800 (PST)
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 02 Jan 2024 07:17:27 +0200
-Subject: [PATCH v7 07/22] ARM: dts: qcom: msm8974: use new compat string
- for L2 SAW2 unit
+Date: Tue, 02 Jan 2024 07:17:29 +0200
+Subject: [PATCH v7 09/22] ARM: dts: qcom: ipq4019: use SoC-specific
+ compatibles for SAW2 devices
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,7 +54,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240102-saw2-spm-regulator-v7-7-0472ec237f49@linaro.org>
+Message-Id: <20240102-saw2-spm-regulator-v7-9-0472ec237f49@linaro.org>
 References: <20240102-saw2-spm-regulator-v7-0-0472ec237f49@linaro.org>
 In-Reply-To: <20240102-saw2-spm-regulator-v7-0-0472ec237f49@linaro.org>
 To: Rob Herring <robh+dt@kernel.org>, 
@@ -64,38 +64,66 @@ To: Rob Herring <robh+dt@kernel.org>,
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-arm-msm@vger.kernel.org
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=803;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1572;
  i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=pmIu5TYOl3IwC9gUW2kxosa786wiXd+/rlhe+KqO8e4=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBlk5xkwid7GSuPth3cnNTJqkzYx/GuVnWx6AIFC
- bVT32AkF3KJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZZOcZAAKCRCLPIo+Aiko
- 1V2OB/0Rai3tIFjdeHCvo1KFqH8foCCgy01J0Y2GdcOwXSEqJsoN1YLsHcd+ogkuIGcvOhDRWKA
- 7tu/w/0FWHCOeNHt+hOsFud3qQCwq6iAO+SLsVJSNgFP7gCsM+Ow1JNk6+FS7OTzu+ANDmMTvvu
- uX5AtNQE8zCGQ82Es5955bV+hXz7U+3g4XtGUWhCH8Lw0UL35urLWuq9rat8agbCcEMcZohG3+s
- lGc2hVVq5GrhNHcfdC/eEs/Py/q1QQ2g27Beiql+tGRoXgZhBYRMB488WSLS7fUE+81ZXrn0Vv2
- LOCVYjtxWq72AISgMxdwIyLGMO0xyW25eSB7IU6pL4AegJ2z
+ bh=0zO90aeFdkE8V44pIeboxfUKrEZ0QGnGFIHf5D/o3yg=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBlk5xk5sN46hSvE/lzgH0D6s2dqO9OuyCt4hb2R
+ 2JgR8xpncuJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZZOcZAAKCRCLPIo+Aiko
+ 1W3+B/9QrS5lGfRNIR/A46/9xhKZoFDnsPLRJUN/dnt+LVDHKY9T06DQO3wp6JhZAXCYfkuWFd2
+ jor+S/IXAN76wG5fyNVTo/GUTBDW65BrrbTkSOtQCWqiDSUwGb0R1MCB2ZX+1/AcK35Fvg3hWoA
+ tKdnDvglsf4gBYK4VhPGjxmBynvCkua3lM36MVU4uR9v6ob3zCLELsHv1qZ/Zs96xclsVyX1ERY
+ yQOJB8P+J4aAZDD0u4sD4o+9WbaylTP5RAee4LrLj9fSXFiW8f7FZVP6f9RU9QQc02EQhUXhh/m
+ cR8ud2ZMJYnirNn8znSrk3QGrP9xs687mAxFc1TeFot2zQ3f
 X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Add SoC-specific compatibility strings to the L2 SAW2 unit. This is is
-to distinguish the SAW2 units related to L2 cache and the CPU cores.
+There is no such thing as a generic 'SAW2' device. Use device-specific
+compatible strings to describe the SAW2 devices.
 
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- arch/arm/boot/dts/qcom/qcom-msm8974.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/qcom/qcom-ipq4019.dtsi | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/qcom/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8974.dtsi
-index b1413983787c..16ee0baac27c 100644
---- a/arch/arm/boot/dts/qcom/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom/qcom-msm8974.dtsi
-@@ -347,7 +347,7 @@ apcs: syscon@f9011000 {
+diff --git a/arch/arm/boot/dts/qcom/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom/qcom-ipq4019.dtsi
+index f989bd741cd1..948c6fd91f62 100644
+--- a/arch/arm/boot/dts/qcom/qcom-ipq4019.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-ipq4019.dtsi
+@@ -351,31 +351,31 @@ acc3: power-manager@b0b8000 {
  		};
  
- 		saw_l2: power-controller@f9012000 {
+ 		saw0: regulator@b089000 {
 -			compatible = "qcom,saw2";
-+			compatible = "qcom,msm8974-saw2-v2.1-l2", "qcom,saw2";
- 			reg = <0xf9012000 0x1000>;
++			compatible = "qcom,ipq4019-saw2-cpu", "qcom,saw2";
+ 			reg = <0x0b089000 0x1000>, <0x0b009000 0x1000>;
+ 			regulator;
+ 		};
+ 
+ 		saw1: regulator@b099000 {
+-			compatible = "qcom,saw2";
++			compatible = "qcom,ipq4019-saw2-cpu", "qcom,saw2";
+ 			reg = <0x0b099000 0x1000>, <0x0b009000 0x1000>;
+ 			regulator;
+ 		};
+ 
+ 		saw2: regulator@b0a9000 {
+-			compatible = "qcom,saw2";
++			compatible = "qcom,ipq4019-saw2-cpu", "qcom,saw2";
+ 			reg = <0x0b0a9000 0x1000>, <0x0b009000 0x1000>;
+ 			regulator;
+ 		};
+ 
+ 		saw3: regulator@b0b9000 {
+-			compatible = "qcom,saw2";
++			compatible = "qcom,ipq4019-saw2-cpu", "qcom,saw2";
+ 			reg = <0x0b0b9000 0x1000>, <0x0b009000 0x1000>;
+ 			regulator;
+ 		};
+ 
+ 		saw_l2: regulator@b012000 {
+-			compatible = "qcom,saw2";
++			compatible = "qcom,ipq4019-saw2-l2", "qcom,saw2";
+ 			reg = <0xb012000 0x1000>;
  			regulator;
  		};
 
