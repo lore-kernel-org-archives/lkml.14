@@ -1,77 +1,58 @@
-Received: from libero.it (smtp-33-i2.italiaonline.it [213.209.12.33])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25FCD26A
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 10:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=inwind.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inwind.it
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFCE2D268;
+	Tue,  2 Jan 2024 10:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=inwind.it header.i=@inwind.it header.b="bn4nZhdY"
-Received: from [192.168.1.176] ([87.20.18.66])
-	by smtp-33.iol.local with ESMTPA
-	id KbmDraFda0IGyKbmDrPseW; Tue, 02 Jan 2024 11:13:37 +0100
-x-libjamoibt: 1601
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inwind.it; s=s2014;
-	t=1704190417; bh=O/zBqgBl5vL9jMlqXtMBXvRre2CeY3lfqNQQDtwpxhA=;
-	h=From;
-	b=bn4nZhdYLnk2gLACDeq1a31HaffOFely3Alxyam8vZNRv/UnOiypjSf9H38DJjoN7
-	 nO12w1ovx3Qhpw9MBPEa1ViMqWP6MDR1w2GonH++PnVejPEJ6oied39gnlGcGWvU2V
-	 hDbnRIdP6ZcPwoSHBzt4aL5qOW241Ik/XUxIotnNBE4SwBzdXXlIHdx7u+H9Pkwwvr
-	 mzmh7mrAKrP8E1Rj7doz0g/H11XhlGiDjFrlL3Y+V4klj3vzBIWdf0JL7EbdVTECMq
-	 /LyPcJpka0k38Ev7i4VAomdQh/ib+S/aXvS6JSpLkOGAH/pCsjpQShcN3XIKpbk9wy
-	 ywxyFqQs+oq7w==
-X-CNFS-Analysis: v=2.4 cv=WdjKKWtX c=1 sm=1 tr=0 ts=6593e1d1 cx=a_exe
- a=3SqfP+zelxMsqVWg0RdiUA==:117 a=3SqfP+zelxMsqVWg0RdiUA==:17
- a=IkcTkHD0fZMA:10 a=VwQbUJbxAAAA:8 a=B5Cm0-LDo6s1g1MxHbQA:9 a=QEXdDO2ut3YA:10
- a=zZCYzV9kfG8A:10 a=AjGcO6oz07-iQ99wixmX:22
-Message-ID: <55810ab0-c5a4-7ff7-4c8e-046b4ebbd567@inwind.it>
-Date: Tue, 2 Jan 2024 11:13:36 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sb5aHNMh"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=9XzDx6zZ6qJD2AqPIsRJuoeK0l+mVQ9Fy8pq/VyTgQM=; b=sb5aHNMhiZ0qDUzXBTFXlfZcgu
+	kobm8NLF+hVBiee4q3GhgkRaQw8wzIsvH0uynPzXhfimS7OvE8R/GpYmSKUrKOMgGyEZvRx+yfRkF
+	SAGfiyTOF/GTApBL3R8noyyhQVD60PFSovEXGXz0VrUimOwv1qpe7nepDDPrenMJTOScCdNz7mtbs
+	ogJnopbaKSLIhGgjab4Ew8nZRv0f1YgRajZ5vgy//W8a4pZbzpmnONzOgxhA+tOfC98J3bh61eqeQ
+	7LArNYPuQGCu52EePosEYuW37VF+nkHKtOjiWdYFLgLFFf7iAyNMFhatIf4KmoEvU89SZTiCi8QdC
+	BMpIMftg==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1rKbpo-009y51-79; Tue, 02 Jan 2024 10:17:20 +0000
+Date: Tue, 2 Jan 2024 10:17:20 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, Miklos Szeredi <miklos@szeredi.hu>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [2/2] virtiofs: Improve error handling in virtio_fs_get_tree()
+Message-ID: <ZZPisBFGvF/qp2eB@casper.infradead.org>
+References: <c5c14b02-660a-46e1-9eb3-1a16d7c84922@web.de>
+ <5745d81c-3c06-4871-9785-12a469870934@web.de>
+ <ZY6Iir/idOZBiREy@casper.infradead.org>
+ <54b353b6-949d-45a1-896d-bb5acb2ed4ed@web.de>
+ <ZY7V+ywWV/iKs4Hn@casper.infradead.org>
+ <691350ea-39e9-4031-a066-27d7064cd9d9@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.1
-Subject: Re: Unable to unsubscribe
-To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org
-References: <d90fd289-0535-c4ab-8dc0-5e0fb0a36a72@inwind.it>
- <20240102-laughing-tacky-bettong-d63ab6@lemur>
-Content-Language: it-IT
-From: Valerio Vanni <valerio.vanni@inwind.it>
-In-Reply-To: <20240102-laughing-tacky-bettong-d63ab6@lemur>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Antivirus: AVG (VPS 240102-0, 2/1/2024), Outbound message
-X-Antivirus-Status: Clean
-X-CMAE-Envelope: MS4xfMTn/stfcG8+XRhM9bksHKTle0KRV6gYCeahPgPhdztKuV96g5styuMzxMtwdQJ3yWrbRnwSTyuX/3F+S2lbVUKUYHPn2WV9zHzWo+moNDt5Y+aE46RZ
- ZY4aGDMC589lue6CGSYBnxLTr8dIVeRN5UU0eQiO9SvEgo0RgFhNTEp2/JGT/n1bwWIkiObodmSRXV7RekscdfoUH+lVigOPsapXvNKijwpL21YUX20Qb2G0
- CFCCrPbiOka204hMF9IwcA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <691350ea-39e9-4031-a066-27d7064cd9d9@web.de>
 
-Il 02/01/2024 06:35, Konstantin Ryabitsev ha scritto:
-
->> For linux-kernel I find:
->> linux-kernel+unsubscribe@vger.kernel.org
->>
->> I wrote two o three times, but nothing happens. I don't get any error oro
->> bounce messages. Simply, it doesn't work: I continue to receive messages.
+On Tue, Jan 02, 2024 at 10:35:17AM +0100, Markus Elfring wrote:
+> >>> So what?  kfree(NULL) is perfectly acceptable.
+> >>
+> >> I suggest to reconsider the usefulness of such a special function call.
+> >
+> > Can you be more explicit in your suggestion?
 > 
-> I see your unsubscription requests and I can see that we send a confirmation
-> message to you. Can you please check all of your folders? The subject is
-> "Confirm unsubscribe from linux-kernel@vger.kernel.org".
+> I hope that the change acceptance can grow for the presented transformation.
+> Are you looking for an improved patch description?
 
-I found them in SPAM folder. It's not downloaded with POP, now I've 
-looked with webmail.
-
-Now I see that many list messages are detected as SPAM from my provider.
-
-Thank you.
-
->> I wrote also to postmaster@vger.kernel.org, but got no answer.
-> 
-> It's holidays. :)
-
-:-)
-
+Do you consider more clarity in your argumentation?
