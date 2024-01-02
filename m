@@ -1,167 +1,91 @@
-Received: from mail-m127207.xmail.ntesmail.com (mail-m127207.xmail.ntesmail.com [115.236.127.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9499D5382;
-	Tue,  2 Jan 2024 08:34:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=senarytech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=senarytech.com
-Received: from book-ThinkStation-P328.. (unknown [61.183.143.78])
-	by mail-m12756.qiye.163.com (Hmail) with ESMTPA id 5D363DC083C;
-	Tue,  2 Jan 2024 14:05:08 +0800 (CST)
-From: bo liu <bo.liu@senarytech.com>
-To: perex@perex.cz,
-	tiwai@suse.com
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bo liu <bo.liu@senarytech.com>
-Subject: [PATCH] ALSA: hda/conexant: Fix headset auto detect fail in cx8070 and SN6140
-Date: Tue,  2 Jan 2024 14:04:57 +0800
-Message-Id: <20240102060457.4917-1-bo.liu@senarytech.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18D146B6;
+	Tue,  2 Jan 2024 08:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lmcIjbj7"
+Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-5451faa3aa7so1554843a12.0;
+        Tue, 02 Jan 2024 00:35:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704184508; x=1704789308; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Bs+RzqBf3EtYOScRDWfXPPQOOIsFVUV87Fz7UZN69Gc=;
+        b=lmcIjbj7mSQNvx72p2QK4LfzozcTICRwEYJxBgOAqYcwM8wuUsn7kvs3X1No1fuI3T
+         3Dz4Bax5+OudmvqKP+Iee5Thu0eWoiaQVkAHyP8SNn7PwWG1fV6/lJQmn4lRZkvp3m+Z
+         dNo9vq2mR15Au9G0/tGCLSiOH6J33kfNJTMaC/a4hoQiGpOnshy/wITudngqSZs3/5XA
+         578ubJl3QOz8ma0ozEKqmVAmhg/kPnNYMLeOO+8MZizYKPc2I0cq81oGVwPqzvGeFvdB
+         0xDm1ZkCmxj0MzVK5UsIaRpPmXqap3GT7xb/l6uAc+NQi7emQ3Phnyepe/utCEKa0UND
+         ow1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704184508; x=1704789308;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Bs+RzqBf3EtYOScRDWfXPPQOOIsFVUV87Fz7UZN69Gc=;
+        b=YncVTD0sovPlznryN5nx7z1VJx+Umm6Y77NITk8NOpTc3m49AHd80FLPVwDaHBQkI6
+         JIBFoTPq4Z0OV8LoNgJhBeaSYYdwtUXxwvpqaFsVh5xCEMF+dDIVoP8Pa9SLqKRVyqzs
+         2vta/gqMeJe1SCbN7Bg06aF/hTLfW+sIyzJ1sy+bwt+Is0k4Y0cNyINusX8LjMXF7UOA
+         ud2p3r9abz9myhljs+rD2SzvIpowdatmpGnnmyKK0osK3I8ZNSdJtND8pG59UbE0enym
+         FqCpx+UyOGGHuXElSSWkkLYOgXA6DNTmIWCnlyiNGqfZH0JPQemDUpFzTytU53AgbgfY
+         SQvQ==
+X-Gm-Message-State: AOJu0Yyym7y4hTBYFvqIBfHCpW2deiHfnM7zpzNN2bmQ75o4uf/mVnqr
+	WvQebtaG7MJ7PHwWzo8Gl+7NvIw1zmNOunBct3c=
+X-Google-Smtp-Source: AGHT+IF4e8DglVWhHc2y2IxCZ3Q0Ze/T2S8SQfR0giGQ71QVzpBTXlRdwcI6/Zcton810xIScU2ZBwK1eWr2JFQ8LP4=
+X-Received: by 2002:a17:907:1a55:b0:a26:a4e8:5454 with SMTP id
+ mf21-20020a1709071a5500b00a26a4e85454mr10288049ejc.0.1704184506262; Tue, 02
+ Jan 2024 00:35:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCGkJCVkMYH0pCHR4ZSEwYSFUTARMWGhIXJBQOD1
-	lXWRgSC1lBWU1KVUpDSFVKT0hVTENZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
-X-HM-Tid: 0a8cc8c69c0cb223kuuu5d363dc083c
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nxg6Tio*SzwyEUk6DUw3K0Ma
-	TUoKCzFVSlVKTEtPSkxOTktCSU1PVTMWGhIXVRkUVRcSDjsIHhUaCQIPHhgTVRgUFkVZV1kSC1lB
-	WU1KVUpDSFVKT0hVTENZV1kIAVlBTk9CTjcG
+References: <20230921090027.11136-1-Wenhua.Lin@unisoc.com> <20230921090027.11136-2-Wenhua.Lin@unisoc.com>
+ <ZQwny/NO8qjPU7AH@smile.fi.intel.com>
+In-Reply-To: <ZQwny/NO8qjPU7AH@smile.fi.intel.com>
+From: wenhua lin <wenhua.lin1994@gmail.com>
+Date: Tue, 2 Jan 2024 16:34:54 +0800
+Message-ID: <CAB9BWheUgc6banjt_eui3SeTb6EkZtkX7dPxFvswQ9_O-a7LrQ@mail.gmail.com>
+Subject: Re: [PATCH V2 1/4] gpio: sprd: In the sleep state, the eic debounce
+ clk must be forced open
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Wenhua Lin <Wenhua.Lin@unisoc.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Xiongpeng Wu <xiongpeng.wu@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When OMTP headset plugin the headset jack of CX8070 and SN6160 sound cards,
-the headset type detection circuit will recognize the headset type as CTIA.
-At this point, plugout and plugin the headset will get the correct headset
-type as OMTP.
-The reason for the failure of headset type recognition is that the sound
-card creation will enable the VREF voltage of the headset mic, which
-interferes with the headset type automatic detection circuit. Plugout and
-plugin the headset will restart the headset detection and get the correct
-headset type.
-The patch is disable the VREF voltage when the headset is not present, and
-will enable the VREF voltage when the headset is present.
+On Thu, Sep 21, 2023 at 7:25=E2=80=AFPM Andy Shevchenko <andy@kernel.org> w=
+rote:
+>
+> On Thu, Sep 21, 2023 at 05:00:24PM +0800, Wenhua Lin wrote:
+> > In the sleep state, Eic debounce has no clock and the clk of
+>
+> Eic --> The eic
+>
+> clk --> clock
+>
+> > debounce needs to be forced open, so that eic can wake up normally.
+>
+> > Fixes: 2788938b7946 ("gpio: eic-sprd: Make the irqchip immutable")
+> >
+> > Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
+>
+> The tag block mustn't have blank lines.
+>
 
-Signed-off-by: bo liu <bo.liu@senarytech.com>
----
- sound/pci/hda/patch_conexant.c | 72 +++++++++++++++++++++++++++++++++-
- 1 file changed, 71 insertions(+), 1 deletion(-)
+Thank you very much for your review.
+I will fix this issue in patch v3.
 
-diff --git a/sound/pci/hda/patch_conexant.c b/sound/pci/hda/patch_conexant.c
-index a889cccdd607..e24befa1fad9 100644
---- a/sound/pci/hda/patch_conexant.c
-+++ b/sound/pci/hda/patch_conexant.c
-@@ -166,6 +166,7 @@ static void cxt_init_gpio_led(struct hda_codec *codec)
- 
- static int cx_auto_init(struct hda_codec *codec)
- {
-+	unsigned int mic_persent;
- 	struct conexant_spec *spec = codec->spec;
- 	snd_hda_gen_init(codec);
- 	if (!spec->dynamic_eapd)
-@@ -174,6 +175,22 @@ static int cx_auto_init(struct hda_codec *codec)
- 	cxt_init_gpio_led(codec);
- 	snd_hda_apply_fixup(codec, HDA_FIXUP_ACT_INIT);
- 
-+	switch (codec->core.vendor_id) {
-+	case 0x14f11f86:
-+	case 0x14f11f87:
-+		/* fix some headset type recognize fail issue, such as EDIFIER headset */
-+		snd_hda_codec_write(codec, 0x1c, 0, 0x320, 0x010);
-+		snd_hda_codec_write(codec, 0x1c, 0, 0x3b0, 0xe10);
-+		snd_hda_codec_write(codec, 0x1c, 0, 0x4f0, 0x0eb);
-+		/* fix reboot headset type recognize fail issue */
-+		mic_persent = snd_hda_codec_read(codec, 0x19, 0, 0xf09, 0x0);
-+		if (mic_persent&0x80000000)
-+			snd_hda_codec_write(codec, 0x19, 0, 0x707, 0x24);
-+		else
-+			snd_hda_codec_write(codec, 0x19, 0, 0x707, 0x20);
-+		break;
-+	}
-+
- 	return 0;
- }
- 
-@@ -192,6 +209,58 @@ static void cx_auto_free(struct hda_codec *codec)
- 	snd_hda_gen_free(codec);
- }
- 
-+static int headset_present_flag;
-+static void cx_jack_unsol_event(struct hda_codec *codec, unsigned int res)
-+{
-+	unsigned int val, phone_present, mic_persent, phone_tag, mic_tag;
-+	unsigned int count = 0;
-+
-+	switch (codec->core.vendor_id) {
-+	case 0x14f11f86:
-+	case 0x14f11f87:
-+		/* check hp&mic tag to process headset pulgin&plugout */
-+		phone_tag = snd_hda_codec_read(codec, 0x16, 0, 0xf08, 0x0);
-+		mic_tag = snd_hda_codec_read(codec, 0x19, 0, 0xf08, 0x0);
-+		if ((phone_tag&(res>>26)) || (mic_tag&(res>>26))) {
-+			phone_present = snd_hda_codec_read(codec, 0x16, 0, 0xf09, 0x0);
-+			if (!(phone_present&0x80000000)) {/* headphone plugout */
-+				headset_present_flag = 0;
-+				snd_hda_codec_write(codec, 0x19, 0, 0x707, 0x20);
-+				break;
-+			}
-+			if (headset_present_flag == 0) {
-+				headset_present_flag = 1;
-+			} else if (headset_present_flag == 1) {
-+				mic_persent = snd_hda_codec_read(codec, 0x19, 0, 0xf09, 0x0);
-+				/* headset is present */
-+				if ((phone_present&0x80000000) && (mic_persent&0x80000000)) {
-+					/* wait headset detect done */
-+					do {
-+						msleep(20);
-+						val = snd_hda_codec_read(codec, 0x1c,
-+									0, 0xca0, 0x0);
-+						count += 1;
-+					} while ((count > 3) || (val&0x080));
-+					val = snd_hda_codec_read(codec, 0x1c, 0, 0xcb0, 0x0);
-+					if (val&0x800) {
-+						codec_dbg(codec, "headset plugin, type is CTIA\n");
-+						snd_hda_codec_write(codec, 0x19, 0, 0x707, 0x24);
-+					} else if (val&0x400) {
-+						codec_dbg(codec, "headset plugin, type is OMTP\n");
-+						snd_hda_codec_write(codec, 0x19, 0, 0x707, 0x24);
-+					} else {
-+						codec_dbg(codec, "headphone plugin\n");
-+					}
-+					headset_present_flag = 2;
-+				}
-+			}
-+		}
-+		break;
-+	}
-+
-+	snd_hda_jack_unsol_event(codec, res);
-+}
-+
- #ifdef CONFIG_PM
- static int cx_auto_suspend(struct hda_codec *codec)
- {
-@@ -205,7 +274,7 @@ static const struct hda_codec_ops cx_auto_patch_ops = {
- 	.build_pcms = snd_hda_gen_build_pcms,
- 	.init = cx_auto_init,
- 	.free = cx_auto_free,
--	.unsol_event = snd_hda_jack_unsol_event,
-+	.unsol_event = cx_jack_unsol_event,
- #ifdef CONFIG_PM
- 	.suspend = cx_auto_suspend,
- 	.check_power_status = snd_hda_gen_check_power_status,
-@@ -1042,6 +1111,7 @@ static int patch_conexant_auto(struct hda_codec *codec)
- 	codec->spec = spec;
- 	codec->patch_ops = cx_auto_patch_ops;
- 
-+	headset_present_flag = 0;
- 	cx_auto_parse_eapd(codec);
- 	spec->gen.own_eapd_ctl = 1;
- 
--- 
-2.34.1
-
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
