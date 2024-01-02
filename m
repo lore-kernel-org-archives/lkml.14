@@ -1,74 +1,74 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B52EDF9EF
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 13:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="w/zioODx"
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-4b3288df490so1137049e0c.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 05:17:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1704201422; x=1704806222; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KptT4kcLxqTUxKQoDuDLhTdKZCzvVtebQ5eypGHMHPE=;
-        b=w/zioODx+TFNd4J11IoNH2+B74JRzkxpplZ+Yithb4GBKiJGyqAh9sr4JV+XnlKx4O
-         0bpghXze4nvupYdrcw9TP2VbxFa4SI0abKXh2pLOgFSFsmfEgHp2QUpIfoAbupcgfZxU
-         /zMaY9NlBI36IPKKi8G7Q7g9pEqRtbZ5IgVn2hRy7Hk85Sp72gKJnGUMFNnxYpcQA0tr
-         a6BBKOv+yGlhsiT6c09RylxYKFkKuvGMFL1H19Wyeae5Pvev+cgtAbncVnk7mgtNYSNe
-         PLgro3vMqmhZVisFoWMBksLTV8eE+kwtbyTRfgCigoU40jZ/Ch8ghnomV0vOtaDeZ0Wo
-         XiuQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD68F9E6;
+	Tue,  2 Jan 2024 13:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5958d3f2d8aso270136eaf.1;
+        Tue, 02 Jan 2024 05:18:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704201422; x=1704806222;
+        d=1e100.net; s=20230601; t=1704201534; x=1704806334;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KptT4kcLxqTUxKQoDuDLhTdKZCzvVtebQ5eypGHMHPE=;
-        b=CbImzE+wpEDpc0t8sDb9qQ6H7IgjXq0DpcTN/4nhc52tCrwF3mteUM1kcQPY4NioVt
-         oZcHSv5y5CFKvs8Bg/lPr2VLf3DL2GVvWaLJMWcH2HL99DOYwGLG0OI+GsODGkUELR1+
-         x25AIzRisMfbFxY2Cf4SLoxvyhiQP5h+iKVzfe9pf7PxlYNqbRfKPn5ulx5WWusJ0Z28
-         k7uAIWEoc9m6swvnn+J7bkUILjG4zhEbmmAzKlr8e6hwl3sF0F0GMUzSNsQd+t2/RTr9
-         Z/DeQPTC1FUIyWduUL4EAQ+677ZLfEJBL6WrULQHQh1QSmj7OnoVhPx6ijob2b05nLCf
-         3ceQ==
-X-Gm-Message-State: AOJu0YxioMoJhMMpIW/OCPcfhgXUHv/9u4PLr4WL/aFDE3rm43CHm7Uy
-	mdf2Sgz0r2HnfIuTupykLpLS3GuYL7Ql5pRmoMSNR59Wf1ShQQ==
-X-Google-Smtp-Source: AGHT+IGAtC+6ICEBlvwZh78ZTUBEh3sVxOyQsJP6iMx0W8ZsVrOpEX9NxYclkYz1oOes1H8wpHAb9PTbhBCsbKAt0g8=
-X-Received: by 2002:a1f:1483:0:b0:4b7:8e59:4df3 with SMTP id
- 125-20020a1f1483000000b004b78e594df3mr456085vku.21.1704201421030; Tue, 02 Jan
- 2024 05:17:01 -0800 (PST)
+        bh=1Z/aZekOHHjZPa6W+lRfUU70kAOn6yYoCT3d0V22B6s=;
+        b=LnngeC/Ulg5L8H12/YVUsUM/qOxGeuv04apZmdLzImzt9MtQUU2UKon/ns3tKqMONF
+         pjnxR9XybHo4wA8dXGJefzCWkzWDAg46lyLk+E0yX8qrxH5V+X2lnHv2gBLWP3PIEh9T
+         loLamdecVU9lgQgu5graglljSmKOOLX8tySH0WzkHGWYKRZZikjMO6ZD/VBNsb8OhtGz
+         v60euh1XItjkpoJP+a5HGPkCv60V4lwtD13U68q3SkWkXoebbxsGNUUxZpoHh9Wt/XZo
+         O49VBuTiEIwKv98g0c4GCJiyf/A5U5P3m4dGHbQS54VavCVMBWvKNKndgxkKmOKUK/l/
+         wxRQ==
+X-Gm-Message-State: AOJu0YwWtECialLn6dzKAvP0Oo1DZckezqqVMPW87t5W5PByA22ks0Z/
+	DyzPf7qpHbQkZXuPurDvt/+ppB7ARDG8i/H+wAGo4YVs
+X-Google-Smtp-Source: AGHT+IHbWu7tF56Yvh8842MWCPhLy8fvp/UUcthGkkfA3I+BV2Bk0AeT9d8KQsJN4ahrUMpbPnhy7K2167sop+sBJ7g=
+X-Received: by 2002:a4a:da55:0:b0:595:e0dd:9f8a with SMTP id
+ f21-20020a4ada55000000b00595e0dd9f8amr1053638oou.1.1704201534446; Tue, 02 Jan
+ 2024 05:18:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231229130758.84214-1-emil.renner.berthing@canonical.com>
-In-Reply-To: <20231229130758.84214-1-emil.renner.berthing@canonical.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 2 Jan 2024 14:16:50 +0100
-Message-ID: <CAMRc=Me5fs0+L0_K5EhfKe9rQ-ZOvmBqy2=Dktvd6L5bDqksQA@mail.gmail.com>
-Subject: Re: [PATCH v1] gpio: dwapb: Use generic request, free and set_config
-To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Hoan Tran <hoan@os.amperecomputing.com>, Serge Semin <fancer.lancer@gmail.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
-	Jisheng Zhang <jszhang@kernel.org>, Drew Fustini <dfustini@baylibre.com>
+References: <CGME20231227084252epcas2p3b063f7852f81f82cd0a31afd7f404db4@epcas2p3.samsung.com>
+ <2023122701-mortify-deed-4e66@gregkh> <5754861.DvuYhMxLoT@kreacher> <6019796.lOV4Wx5bFT@kreacher>
+In-Reply-To: <6019796.lOV4Wx5bFT@kreacher>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 2 Jan 2024 14:18:43 +0100
+Message-ID: <CAJZ5v0j6vspzj00ZH66eHtcDP8_fUcaR+KNoaTA8qG1r0hkrVQ@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] PM: sleep: Fix possible device suspend-resume deadlocks
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Greg KH <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, 
+	Youngmin Nam <youngmin.nam@samsung.com>, rafael@kernel.org, linux-kernel@vger.kernel.org, 
+	d7271.choe@samsung.com, janghyuck.kim@samsung.com, hyesoo.yu@samsung.com, 
+	Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 29, 2023 at 2:08=E2=80=AFPM Emil Renner Berthing
-<emil.renner.berthing@canonical.com> wrote:
+On Wed, Dec 27, 2023 at 9:41=E2=80=AFPM Rafael J. Wysocki <rjw@rjwysocki.ne=
+t> wrote:
 >
-> This way GPIO will be denied on pins already claimed by other devices
-> and basic pin configuration (pull-up, pull-down etc.) can be done
-> through the userspace GPIO API.
+> Hi Everyone,
 >
-> Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-> ---
+> As reported here
+>
+> https://lore.kernel.org/linux-pm/ZYvjiqX6EsL15moe@perf/
+>
+> the device suspend-resume code running during system-wide PM transitions
+> deadlock on low memory, because it attempts to acquire a mutex that's
+> already held by it in those cases.
+>
+> This series addresses the issue by changing the resume code behavior
+> to directly run the device PM functions synchronously if they cannot
+> be scheduled for asynchronous executions (patch [3/3]).
+>
+> For this purpose, the async code is rearranged (patch [1/3]) and a
+> new variant of async_schedule_dev() is introduced (patch [2/3]).
 
-Applied, thanks!
+Given the lack of negative feedback, I've queued up this series for 6.8-rc1=
+.
 
-Bart
+Please let me know if there are any issues with that.
+
+Thanks!
