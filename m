@@ -1,207 +1,197 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9BBDDB6;
-	Tue,  2 Jan 2024 10:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590C4DDA6;
+	Tue,  2 Jan 2024 11:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OLRwXiX8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704192900; x=1735728900;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ernVMvHIdMmRyXTlOPbkeyMa4Sia/syaBuLWXeGaLU4=;
-  b=OLRwXiX8sBgIM3KaMwC90tnIY/z4vpvpGUZ03moqhmwVixJu1kB/kzeZ
-   3B+H/six6cVal5u8aZiCQvNXhzq1XnRzT4pb+/ovl3TQ16bL5odJlINtU
-   Q9nJTqXUd+zVfw0JphnWcvazIbpfbDU+cTphs1uYPmeQE/BG/HQjGAdi2
-   Cw0eqgbwZrXrPbRm9f3Dtxk526UQcCYcNhiaXtLqWsjNYCFLstm23fsXH
-   STX6cf35340gPvELB9hircQQ6vs4x2BZprOgLo5P6rdfeghBNg52XwGGL
-   0pMZxYNhvnV9LHBjuVosfrC4RI8BYCBWy0UWZGSEzXDpNgH/eoY614QQK
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10940"; a="396596699"
-X-IronPort-AV: E=Sophos;i="6.04,324,1695711600"; 
-   d="scan'208";a="396596699"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 02:54:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10940"; a="779660508"
-X-IronPort-AV: E=Sophos;i="6.04,324,1695711600"; 
-   d="scan'208";a="779660508"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.51.83])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 02:54:55 -0800
-Message-ID: <92621539-4ec5-4aa0-a7da-c6eb87ee1a52@intel.com>
-Date: Tue, 2 Jan 2024 12:54:54 +0200
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="BocdAxcO";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bIr9du0k"
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailout.nyi.internal (Postfix) with ESMTP id 4380C5C01B0;
+	Tue,  2 Jan 2024 06:01:56 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Tue, 02 Jan 2024 06:01:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
+	:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to; s=fm2; t=1704193316; x=1704279716; bh=ClsJU6F+GN
+	ksCC5vz1p80RASe2HA56v4MNN8n0S25W0=; b=BocdAxcO6RbdX0By3niK+IwKWy
+	JUaQDNhRPKOA3Bt4fnKbt+oXiW/EwJt1jUNDCW9pSZiYt/djv9dbJBWJFqLE5khD
+	lDcPb4ZK728wmhAzUV5yIAoHOsc4YeYnY5mE5wAuA+Nw6M6xNg1CV/BabEFxlDng
+	ri0cJIHQLDtY7DjwjyDIn16jnYDqWf0efMFCvDowdeQT0Hyxl65WKnhX7j4yagfG
+	9Tc9H/02FkPZSQg7TIniVrXAtHx0l/XddVlQ2BFxD1+i6uCKWUn+5QiLySJZMN6n
+	y2KVKA+1bFDQIIA7u1aIL6rXWoH56+vKEotD0dx1sTzV3u/yQzMMG7NFocKA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1704193316; x=1704279716; bh=ClsJU6F+GNksCC5vz1p80RASe2HA
+	56v4MNN8n0S25W0=; b=bIr9du0kRzaXU08/SYCd/I+ppMoNRkecwXNvFGevy9w6
+	zcifWzodcTXBsYVaqmWQ2JoigR1T/BNe99WXATI69AzFT3hT4Tcfi1yoZAu8GmwR
+	qnLgRJV/6IYTDFGOPk16KiZ5eILRpjOqU4BKLkNqxON2mHVzoFHGuObG0rZaQu9B
+	iKOiXOuwkHZlCqSyF2cWZKvEisCWTYDNQ5eTP/xHHMvdsJeBOVHs2DhYkTNI0vku
+	NKoT5r++RFXYT6aKAxGjXUMuh7vvY9nhhLCFz89fKgSZ6qpCI3CAAIvL9FcBM8uy
+	M/7IONBY3zuN4wekbOSFKAwyUGa7LL74bU0neSt0nQ==
+X-ME-Sender: <xms:JO2TZR0L1foW2F5_jA6etfOs9gzmyosxxXbB4xd9ozoqIPgOhAExVw>
+    <xme:JO2TZYHlY-FpsFJb2dVgOiUUbePjNs726Ao0QfJJF4EjffuQcOrfQ017rXz_EC6Rw
+    5WJLO9m8z0m-_CR-Fc>
+X-ME-Received: <xmr:JO2TZR72BiAuFvg49ZrWdaTdV4rlyiXe1sy2f9egyzEJpE0tXZKuXr8-LOt6_VhISIFfRGhnPGOngnGbkx8fKSW9zsbeKYFmxF2QRfXSwSj-0Zs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdegvddgvddtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    goufhushhpvggtthffohhmrghinhculdegledmnecujfgurhephffvvefufffkofgggfes
+    tdekredtredttdenucfhrhhomhepvfgrkhgrshhhihcuufgrkhgrmhhothhouceoohdqth
+    grkhgrshhhihesshgrkhgrmhhotggthhhirdhjpheqnecuggftrfgrthhtvghrnhepgeei
+    tdetvddtfeeuhffgfeffveefgfevtdduveevieettefgueeivdetvedugfeinecuffhomh
+    grihhnpehsuhhsvgdrtghomhdpkhgvrhhnvghlrdhorhhgpdhsohhurhgtvghfohhrghgv
+    rdhnvghtpdhrvgguhhgrthdrtghomhdplhgruhhntghhphgrugdrnhgvthenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghshhhi
+    sehsrghkrghmohgttghhihdrjhhp
+X-ME-Proxy: <xmx:JO2TZe0qoRB1Hg2pjAs_J0bRMXZo951lSmDGPt4GvehLNTF_4HbEgw>
+    <xmx:JO2TZUH57zX7m4NF1kCGn2a-5aLhALqUbE_IgNf4vXAC0DH9PnsQfg>
+    <xmx:JO2TZf8i8DfeIj1sL63G3Az3f7L6uEkJjEBAqtOmXzEjr5QYfZF1Gg>
+    <xmx:JO2TZZM4KVe8iPFoVveMXVPhJEJaPlfh-sZdK0W0FfWAFoOYPdK_KA>
+Feedback-ID: ie8e14432:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 2 Jan 2024 06:01:54 -0500 (EST)
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To: linux1394-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org
+Cc: adamg@pobox.com,
+	stable@vger.kernel.org,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Tobias Gruetzmacher <tobias-lists@23.gs>
+Subject: [PATCH v2] firewire: ohci: suppress unexpected system reboot in AMD Ryzen machines and ASM108x/VT630x PCIe cards
+Date: Tue,  2 Jan 2024 20:01:50 +0900
+Message-Id: <20240102110150.244475-1-o-takashi@sakamocchi.jp>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/2] mmc: add new sdhci reset sequence for brcm 74165b0
-Content-Language: en-US
-To: Kamal Dasu <kamal.dasu@broadcom.com>, ulf.hansson@linaro.org,
- linux-kernel@vger.kernel.org, alcooperx@gmail.com,
- linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- devicetree@vger.kernel.org
-Cc: f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
- Kamal Dasu <kdasu@broadcom.com>
-References: <20231220153031.38678-1-kamal.dasu@broadcom.com>
- <20231220153031.38678-3-kamal.dasu@broadcom.com>
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20231220153031.38678-3-kamal.dasu@broadcom.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 20/12/23 17:30, Kamal Dasu wrote:
-> From: Kamal Dasu <kdasu@broadcom.com>
-> 
-> 74165b0 shall use a new sdio controller core version which
-> requires a different reset sequence. For core reset we use
-> sdhci_reset. For CMD and/or DATA reset added a new function
-> to also enable SDHCI clocks SDHCI_CLOCK_CARD_EN
-> SDHCI_CLOCK_INT_EN along with the SDHCI_RESET_CMD and/or
-> SDHCI_RESET_DATA fields.
-> 
-> Signed-off-by: Kamal Dasu <kdasu@broadcom.com>
-> ---
->  drivers/mmc/host/sdhci-brcmstb.c | 67 +++++++++++++++++++++++++++++---
->  1 file changed, 62 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci-brcmstb.c
-> index c23251bb95f3..f171980b014e 100644
-> --- a/drivers/mmc/host/sdhci-brcmstb.c
-> +++ b/drivers/mmc/host/sdhci-brcmstb.c
-> @@ -6,6 +6,7 @@
->   */
->  
->  #include <linux/io.h>
-> +#include <linux/iopoll.h>
->  #include <linux/mmc/host.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> @@ -44,8 +45,13 @@ struct brcmstb_match_priv {
->  
->  static inline void enable_clock_gating(struct sdhci_host *host)
->  {
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_brcmstb_priv *priv = sdhci_pltfm_priv(pltfm_host);
->  	u32 reg;
->  
-> +	if (!(priv->flags & BRCMSTB_PRIV_FLAGS_GATE_CLOCK))
-> +		return;
-> +
->  	reg = sdhci_readl(host, SDHCI_VENDOR);
->  	reg |= SDHCI_VENDOR_GATE_SDCLK_EN;
->  	sdhci_writel(host, reg, SDHCI_VENDOR);
-> @@ -53,14 +59,51 @@ static inline void enable_clock_gating(struct sdhci_host *host)
->  
->  static void brcmstb_reset(struct sdhci_host *host, u8 mask)
->  {
-> -	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> -	struct sdhci_brcmstb_priv *priv = sdhci_pltfm_priv(pltfm_host);
-> -
->  	sdhci_and_cqhci_reset(host, mask);
->  
->  	/* Reset will clear this, so re-enable it */
-> -	if (priv->flags & BRCMSTB_PRIV_FLAGS_GATE_CLOCK)
-> -		enable_clock_gating(host);
-> +	enable_clock_gating(host);
-> +}
-> +
-> +static void brcmstb_sdhci_reset_cmd_data(struct sdhci_host *host, u8 mask)
-> +{
-> +	int ret;
-> +	u32 reg;
-> +	u32 new_mask = (mask &  (SDHCI_RESET_CMD | SDHCI_RESET_DATA)) << 24;
+VIA VT6306/6307/6308 provides PCI interface compliant to 1394 OHCI. When
+the hardware is combined with Asmedia ASM1083/1085 PCIe-to-PCI bus bridge,
+it appears that accesses to its 'Isochronous Cycle Timer' register (offset
+0xf0 on PCI I/O space) often causes unexpected system reboot in any type
+of AMD Ryzen machine (both 0x17 and 0x19 families). It does not appears in
+the other type of machine (AMD pre-Ryzen machine, Intel machine, at least),
+or in the other OHCI 1394 hardware (e.g. Texas Instruments).
 
-It looks slightly neater if longer lines comes first i.e.
+The issue explicitly appears at a commit dcadfd7f7c74 ("firewire: core:
+use union for callback of transaction completion") added to v6.5 kernel.
+It changed 1394 OHCI driver to access to the register every time to
+dispatch local asynchronous transaction. However, the issue exists in
+older version of kernel as long as it runs in AMD Ryzen machine, since
+the access to the register is required to maintain bus time. It is not
+hard to imagine that users experience the unexpected system reboot when
+generating bus reset by plugging any devices in, or reading the register
+by time-aware application programs; e.g. audio sample processing.
 
-	u32 new_mask = (mask &  (SDHCI_RESET_CMD | SDHCI_RESET_DATA)) << 24;
-	u32 reg;
-	int ret;
+This commit suppresses the unexpected system reboot in the combination of
+hardware. It avoids the access itself. As a result, the software stack can
+not provide the hardware time anymore to unit drivers, userspace
+applications, and nodes in the same IEEE 1394 bus. It brings apparent
+disadvantage since time-aware application programs require it, while
+time-unaware applications are available again; e.g. sbp2.
 
-> +
-> +	/*
-> +	 * SDHCI_CLOCK_CONTROL register CARD_EN and CLOCK_INT_EN bits shall
-> +	 * be set along with SOFTWARE_RESET register RESET_CMD or RESET_DATA
-> +	 * bits, hence access SDHCI_CLOCK_CONTROL register as 32-bit register
-> +	 */
-> +	new_mask |= SDHCI_CLOCK_CARD_EN | SDHCI_CLOCK_INT_EN;
-> +	reg = sdhci_readl(host, SDHCI_CLOCK_CONTROL);
-> +	sdhci_writel(host, reg | new_mask, SDHCI_CLOCK_CONTROL);
-> +
-> +	reg = sdhci_readb(host, SDHCI_SOFTWARE_RESET);
-> +	ret = readb_poll_timeout_atomic(host->ioaddr + SDHCI_SOFTWARE_RESET,
-> +					reg, reg & mask, 10, 10000);
+Cc: stable@vger.kernel.org
+Reported-by: Jiri Slaby <jirislaby@kernel.org>
+Closes: https://bugzilla.suse.com/show_bug.cgi?id=1215436
+Reported-by: Mario Limonciello <mario.limonciello@amd.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217994
+Reported-by: Tobias Gruetzmacher <tobias-lists@23.gs>
+Closes: https://sourceforge.net/p/linux1394/mailman/message/58711901/
+Closes: https://bugzilla.redhat.com/show_bug.cgi?id=2240973
+Closes: https://bugs.launchpad.net/linux/+bug/2043905
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+---
+ drivers/firewire/ohci.c | 51 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-The break condition does not seem the right way around.
-Also read_poll_timeout_atomic() seems neater e.g.
-
-	ret = read_poll_timeout_atomic(sdhci_readb, reg, !(reg & mask),
-				       10, 10000, false,
-				       host, SDHCI_SOFTWARE_RESET);
-
-
-> +
-> +	if (ret) {
-> +		pr_err("%s: Reset 0x%x never completed.\n",
-> +		       mmc_hostname(host->mmc), (int)mask);
-> +		sdhci_err_stats_inc(host, CTRL_TIMEOUT);
-> +		sdhci_dumpregs(host);
-> +	}
-> +}
-> +
-> +static void brcmstb_reset_74165b0(struct sdhci_host *host, u8 mask)
-> +{
-> +	/* take care of RESET_ALL as usual */
-> +	if (mask & SDHCI_RESET_ALL)
-> +		sdhci_and_cqhci_reset(host, SDHCI_RESET_ALL);
-> +
-> +	/* cmd and/or data treated differently on this core */
-> +	if (mask & (SDHCI_RESET_CMD | SDHCI_RESET_DATA))
-> +		brcmstb_sdhci_reset_cmd_data(host, mask);
-> +
-> +	/* Reset will clear this, so re-enable it */
-> +	enable_clock_gating(host);
->  }
->  
->  static void sdhci_brcmstb_hs400es(struct mmc_host *mmc, struct mmc_ios *ios)
-> @@ -162,6 +205,13 @@ static struct sdhci_ops sdhci_brcmstb_ops_7216 = {
->  	.set_uhs_signaling = sdhci_brcmstb_set_uhs_signaling,
->  };
->  
-> +static struct sdhci_ops sdhci_brcmstb_ops_74165b0 = {
-> +	.set_clock = sdhci_brcmstb_set_clock,
-> +	.set_bus_width = sdhci_set_bus_width,
-> +	.reset = brcmstb_reset_74165b0,
-> +	.set_uhs_signaling = sdhci_brcmstb_set_uhs_signaling,
-> +};
-> +
->  static struct brcmstb_match_priv match_priv_7425 = {
->  	.flags = BRCMSTB_MATCH_FLAGS_NO_64BIT |
->  	BRCMSTB_MATCH_FLAGS_BROKEN_TIMEOUT,
-> @@ -179,10 +229,17 @@ static const struct brcmstb_match_priv match_priv_7216 = {
->  	.ops = &sdhci_brcmstb_ops_7216,
->  };
->  
-> +static struct brcmstb_match_priv match_priv_74165b0 = {
-> +	.flags = BRCMSTB_MATCH_FLAGS_HAS_CLOCK_GATE,
-> +	.hs400es = sdhci_brcmstb_hs400es,
-> +	.ops = &sdhci_brcmstb_ops_74165b0,
-> +};
-> +
->  static const struct of_device_id __maybe_unused sdhci_brcm_of_match[] = {
->  	{ .compatible = "brcm,bcm7425-sdhci", .data = &match_priv_7425 },
->  	{ .compatible = "brcm,bcm7445-sdhci", .data = &match_priv_7445 },
->  	{ .compatible = "brcm,bcm7216-sdhci", .data = &match_priv_7216 },
-> +	{ .compatible = "brcm,bcm74165b0-sdhci", .data = &match_priv_74165b0 },
->  	{},
->  };
->  
+diff --git a/drivers/firewire/ohci.c b/drivers/firewire/ohci.c
+index 7e88fd489741..9db9290c3269 100644
+--- a/drivers/firewire/ohci.c
++++ b/drivers/firewire/ohci.c
+@@ -279,6 +279,51 @@ static char ohci_driver_name[] = KBUILD_MODNAME;
+ #define QUIRK_TI_SLLZ059		0x20
+ #define QUIRK_IR_WAKE			0x40
+ 
++// On PCI Express Root Complex in any type of AMD Ryzen machine, VIA VT6306/6307/6308 with Asmedia
++// ASM1083/1085 brings an inconvenience that the read accesses to 'Isochronous Cycle Timer' register
++// (at offset 0xf0 in PCI I/O space) often causes unexpected system reboot. The mechanism is not
++// clear, since the read access to the other registers is enough safe; e.g. 'Node ID' register,
++// while it is probable due to detection of any type of PCIe error.
++#define QUIRK_REBOOT_BY_CYCLE_TIMER_READ	0x80000000
++
++#if IS_ENABLED(CONFIG_X86)
++
++static bool has_reboot_by_cycle_timer_read_quirk(const struct fw_ohci *ohci)
++{
++	return !!(ohci->quirks & QUIRK_REBOOT_BY_CYCLE_TIMER_READ);
++}
++
++#define PCI_DEVICE_ID_ASMEDIA_ASM108X	0x1080
++
++static bool detect_vt630x_with_asm1083_on_amd_ryzen_machine(const struct pci_dev *pdev)
++{
++	const struct pci_dev *pcie_to_pci_bridge;
++
++	// Detect any type of AMD Ryzen machine.
++	if (!static_cpu_has(X86_FEATURE_ZEN))
++		return false;
++
++	// Detect VIA VT6306/6307/6308.
++	if (pdev->vendor != PCI_VENDOR_ID_VIA)
++		return false;
++	if (pdev->device != PCI_DEVICE_ID_VIA_VT630X)
++		return false;
++
++	// Detect Asmedia ASM1083/1085.
++	pcie_to_pci_bridge = pdev->bus->self;
++	if (pcie_to_pci_bridge->vendor != PCI_VENDOR_ID_ASMEDIA)
++		return false;
++	if (pcie_to_pci_bridge->device != PCI_DEVICE_ID_ASMEDIA_ASM108X)
++		return false;
++
++	return true;
++}
++
++#else
++#define has_reboot_by_cycle_timer_read_quirk(ohci) false
++#define detect_vt630x_with_asm1083_on_amd_ryzen_machine(pdev)	false
++#endif
++
+ /* In case of multiple matches in ohci_quirks[], only the first one is used. */
+ static const struct {
+ 	unsigned short vendor, device, revision, flags;
+@@ -1724,6 +1769,9 @@ static u32 get_cycle_time(struct fw_ohci *ohci)
+ 	s32 diff01, diff12;
+ 	int i;
+ 
++	if (has_reboot_by_cycle_timer_read_quirk(ohci))
++		return 0;
++
+ 	c2 = reg_read(ohci, OHCI1394_IsochronousCycleTimer);
+ 
+ 	if (ohci->quirks & QUIRK_CYCLE_TIMER) {
+@@ -3630,6 +3678,9 @@ static int pci_probe(struct pci_dev *dev,
+ 	if (param_quirks)
+ 		ohci->quirks = param_quirks;
+ 
++	if (detect_vt630x_with_asm1083_on_amd_ryzen_machine(dev))
++		ohci->quirks |= QUIRK_REBOOT_BY_CYCLE_TIMER_READ;
++
+ 	/*
+ 	 * Because dma_alloc_coherent() allocates at least one page,
+ 	 * we save space by using a common buffer for the AR request/
+-- 
+2.40.1
 
