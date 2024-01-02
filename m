@@ -1,88 +1,67 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0572B156D2;
-	Tue,  2 Jan 2024 18:07:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cMJUxUHJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=NjAb889JD++8fj8AizE8mZ+IbGGnU/Gx82bIJwsVBMI=; b=cMJUxUHJGIwEVliny7ThN+d3Ic
-	Dnpjnq4M21toBawVosS623+9/6L6qm/259WYTPv9nxSCWupEPmA9fitAcCO9mrEidPAA5CQaqFwzC
-	P4qWYqgPpsYacPUBcTn06DMI3ZM2O/lskPfCQIH1hW0I9+8n/ykuMV5c5qG2KvVQ4p1YbfvORxYA9
-	A+wIPQ8xs4JlNdDL92Xj3ePbBhMPeEwb+ueh+/SOKVHcJxIVZKC0g4pWNrufiXYuMXqw0bYS2vXS2
-	rO/R/hhIZneFxE1J17XhErMScyF4OWzZVxNPDqJPuIZHqKM4jucWtc6OUHOvRiAzH80t9K17vjGry
-	9p3oY10w==;
-Received: from [50.53.46.231] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rKjAg-008fZO-12;
-	Tue, 02 Jan 2024 18:07:22 +0000
-Message-ID: <44907c6b-c5bd-4e4a-a921-e4d3825539d8@infradead.org>
-Date: Tue, 2 Jan 2024 10:07:21 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E43156C3;
+	Tue,  2 Jan 2024 18:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=v0yd.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=v0yd.nl
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4T4LSM3qWKz9srQ;
+	Tue,  2 Jan 2024 19:08:19 +0100 (CET)
+From: =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>
+To: Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>,
+	linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH] Bluetooth: hci_sync: Check the correct flag before starting a scan
+Date: Tue,  2 Jan 2024 19:08:08 +0100
+Message-ID: <20240102180810.54515-1-verdre@v0yd.nl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: Tree for Jan 2 (riscv & KVM problem)
-Content-Language: en-US
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- KVM list <kvm@vger.kernel.org>, linux-riscv <linux-riscv@lists.infradead.org>
-References: <20240102165725.6d18cc50@canb.auug.org.au>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20240102165725.6d18cc50@canb.auug.org.au>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4T4LSM3qWKz9srQ
 
+There's a very confusing mistake in the code starting a HCI inquiry: We're
+calling hci_dev_test_flag() to test for HCI_INQUIRY, but hci_dev_test_flag()
+checks hdev->dev_flags instead of hdev->flags. HCI_INQUIRY is a bit that's
+set on hdev->flags, not on hdev->dev_flags though.
 
+HCI_INQUIRY equals the integer 7, and in hdev->dev_flags, 7 means
+HCI_BONDABLE, so we were actually checking for HCI_BONDABLE here.
 
-On 1/1/24 21:57, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Changes since 20231222:
-> 
+The mistake is only present in the synchronous code for starting an inquiry,
+not in the async one. Also devices are typically bondable while doing an
+inquiry, so that might be the reason why nobody noticed it so far.
 
-It is possible for a riscv randconfig to create a .config file with
-CONFIG_KVM enabled but CONFIG_HAVE_KVM is not set.
-Is that expected?
+Signed-off-by: Jonas Dreßler <verdre@v0yd.nl>
+---
+ net/bluetooth/hci_sync.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-CONFIG_HAVE_KVM_IRQCHIP=y
-CONFIG_HAVE_KVM_IRQ_ROUTING=y
-CONFIG_KVM_MMIO=y
-CONFIG_HAVE_KVM_MSI=y
-CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT=y
-CONFIG_HAVE_KVM_VCPU_ASYNC_IOCTL=y
-CONFIG_KVM_XFER_TO_GUEST_WORK=y
-CONFIG_KVM_GENERIC_HARDWARE_ENABLING=y
-CONFIG_KVM_GENERIC_MMU_NOTIFIER=y
-CONFIG_VIRTUALIZATION=y
-CONFIG_KVM=m
-
-Should arch/riscv/kvm/Kconfig: "config KVM" select HAVE_KVM
-along with the other selects there or should that "config KVM"
-depend on HAVE_KVM?
-
-
-The problem .config file causes build errors because EVENTFD
-is not set:
-
-../arch/riscv/kvm/../../../virt/kvm/eventfd.c: In function 'kvm_irqfd_assign':
-../arch/riscv/kvm/../../../virt/kvm/eventfd.c:335:19: error: implicit declaration of function 'eventfd_ctx_fileget'; did you mean 'eventfd_ctx_fdget'? [-Werror=implicit-function-declaration]
-  335 |         eventfd = eventfd_ctx_fileget(f.file);
-      |                   ^~~~~~~~~~~~~~~~~~~
-      |                   eventfd_ctx_fdget
-../arch/riscv/kvm/../../../virt/kvm/eventfd.c:335:17: warning: assignment to 'struct eventfd_ctx *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-  335 |         eventfd = eventfd_ctx_fileget(f.file);
-      |                 ^
-
-
+diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
+index c920de0a2..4a5949a0e 100644
+--- a/net/bluetooth/hci_sync.c
++++ b/net/bluetooth/hci_sync.c
+@@ -5554,7 +5554,7 @@ static int hci_inquiry_sync(struct hci_dev *hdev, u8 length)
+ 
+ 	bt_dev_dbg(hdev, "");
+ 
+-	if (hci_dev_test_flag(hdev, HCI_INQUIRY))
++	if (test_bit(HCI_INQUIRY, &hdev->flags))
+ 		return 0;
+ 
+ 	hci_dev_lock(hdev);
 -- 
-#Randy
+2.43.0
+
