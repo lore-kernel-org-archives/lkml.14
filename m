@@ -1,313 +1,257 @@
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C0E17983;
-	Tue,  2 Jan 2024 23:47:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBDC917988
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 23:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JtP6Yui8"
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3bbd6e377ceso3724542b6e.1;
-        Tue, 02 Jan 2024 15:47:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qQmf0p3Q"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5534180f0e9so2224a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 15:49:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704239232; x=1704844032; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1704239388; x=1704844188; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GMKDrv2TWQYS8eJw1X3WWb6f8xYVpaFTlWdcOrvjZdE=;
-        b=JtP6Yui8CEc+UFwKtMb5zlZqZKtstl74rqUjeoFna3k5wubAGUnzn2FZ58HougGRud
-         cW8dweO1Ozj/rnDBg5MlGJiQYSHuNSEXh5Ql0NBArq5TlHBIF9k16u8FNvS3k/cSlliE
-         frYfUL/J3JYoG67IkjwEqmHS10iT+PKfTmsu4gpO+k93qnpU6gsCYgldIkwPK1UGiPXF
-         RV9+J5ABbLpv4QDc0A0o8HBqUC0lwswU09CExNX70PQvYZMTkhySq9mu/+9KdRbgDECT
-         iWtkIEiqkff0KlkC+BWaQAL+L0btr5NIc9otpI9ic1PcFmwX+N/Epqn/iZybM0wLjleR
-         KjlQ==
+        bh=GtCri9auB/Q0wVXXcm5aP1kh1WsTIZcHi83DzvjBb0g=;
+        b=qQmf0p3QbELZptVm0RUAqHMRMmldx2Vo0R/L2b0f4eTOFzwWqSqa2GGoT6RaMMJHcL
+         9nkQM8anwMK5glENdDvjWSiXiRXYaCt4+/6jxKThOZFFlZuP69q+/FGTljn6KboUjSzR
+         npOp/+DlMrTgKs3Zzwpzj+5MgTrItX92aowwdRHngeHwerub5EG7ZqDc7FXkc5/d1kUq
+         2h0sXlAf8Zh6qDzSdCZRUlSU654+bIqXbeXNE/nym6g8qxskeL77WB/GOTCy3a1L5Hf+
+         kxfu9I96jPT+AHF2u+xDpL7tvA01BQR59hd4K6KQGrh5CdWzIbnz2Wi/0GL/GvMxTtWD
+         auqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704239232; x=1704844032;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=GMKDrv2TWQYS8eJw1X3WWb6f8xYVpaFTlWdcOrvjZdE=;
-        b=YNIxEQQk5ZNWdNXiUuuxrXvBVGJ6T7Ct2llZv9P0yr3REEUqwyfbm2vcwDGufk6Iet
-         gZ30kih4oEeDsY220G1Rr/n26GTgRBmH7gY8H9u6LPYpT9886I9kvjG9v8DUVTIMobax
-         5TsGgDhy5t0kJUNFxLWlzu9F7Y6tWDLs+c2S7S6UdKErJuf9yLz0pX48s5D7QhoY5bzF
-         BecJ2Rhy+DGlDaSoIt6y6bBnpbX9PaAmV5pFaMbgs8okEz2fz1ZUhsbcg/OAqZyH5z8N
-         ekU0cRzACi6BLR9uEMy5j6UWsKk1d5SkkZmY5cZJcw7JW1qPcxKITHE54/pOe2a50Uac
-         LVBg==
-X-Gm-Message-State: AOJu0Yw/DeqYLBIK+TIIvbSbPVGpXmL7i2Ns/OMAcGytSg5mX+A0XUYn
-	z7AW1M3VmNIacHd5n4057cw=
-X-Google-Smtp-Source: AGHT+IGE0vMKQ+WYeo2CAGrgEK2drSSEAo0VGfEugiSpQFAiEuMHoDBk8rh1SMJqlMSVeb7soWeSeA==
-X-Received: by 2002:a05:6808:4ce:b0:3ba:10b1:7a24 with SMTP id a14-20020a05680804ce00b003ba10b17a24mr17971954oie.105.1704239231933;
-        Tue, 02 Jan 2024 15:47:11 -0800 (PST)
-Received: from localhost ([98.97.37.198])
-        by smtp.gmail.com with ESMTPSA id h16-20020aa79f50000000b006d9ab1e15c3sm16974037pfr.129.2024.01.02.15.47.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jan 2024 15:47:11 -0800 (PST)
-Date: Tue, 02 Jan 2024 15:47:10 -0800
-From: John Fastabend <john.fastabend@gmail.com>
-To: Song Yoong Siang <yoong.siang.song@intel.com>, 
- Jesse Brandeburg <jesse.brandeburg@intel.com>, 
- Tony Nguyen <anthony.l.nguyen@intel.com>, 
- "David S . Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, 
- Richard Cochran <richardcochran@gmail.com>, 
- Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, 
- Jesper Dangaard Brouer <hawk@kernel.org>, 
- John Fastabend <john.fastabend@gmail.com>, 
- Stanislav Fomichev <sdf@google.com>, 
- Vinicius Costa Gomes <vinicius.gomes@intel.com>, 
- Florian Bezdeka <florian.bezdeka@siemens.com>
-Cc: intel-wired-lan@lists.osuosl.org, 
- netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- bpf@vger.kernel.org, 
- xdp-hints@xdp-project.net
-Message-ID: <6594a07eb3d4_11e8620810@john.notmuch>
-In-Reply-To: <20231215162158.951925-1-yoong.siang.song@intel.com>
-References: <20231215162158.951925-1-yoong.siang.song@intel.com>
-Subject: RE: [PATCH iwl-next,v1 1/1] igc: Add Tx hardware timestamp request
- for AF_XDP zero-copy packet
+        d=1e100.net; s=20230601; t=1704239388; x=1704844188;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GtCri9auB/Q0wVXXcm5aP1kh1WsTIZcHi83DzvjBb0g=;
+        b=aaijvVSUOQQqOWSOpUVVbJeGxA8y4xUnUSwpRK/Q+iPeC+F0SxZup7VcjtKzWIb/zI
+         0nJQJCKrkvLwe86BPEp87rStQyU4Cs7yr+EvAGw1AqAmJXozNUq39xSEo72/uM/VaTlh
+         ixDTBYdlo1d0jsp0Gc2l8Ou0W6YeWOB5cqjXX0UERUEVxjgt77Dk+fS8Nn2rHRREPjsd
+         VIMnE6LLllPNWufLk8gOIl7+vfQU7rB2+5sW65LgvKDcltAvYBjuU8fDZhXs1Cmrk1Tu
+         SjfjEs2AEG0S2nIgNDZsx+Vb/yA7qXfjbOGf0DY9XIwu6fRGPSsZIKWAl3c83Nz+8+lB
+         ZfAg==
+X-Gm-Message-State: AOJu0YxmMp+WwWXoyDTdVQXzgry/2Ph5ZpEvW02vH2GzxUyqmpNg65IQ
+	7h5m6HU48GN2kJ7m480n6M3QweN1bRoorWlTdh1Bca9uSFr6
+X-Google-Smtp-Source: AGHT+IGLzRfQSuZglF/+kGu5BJRT0gfs0HEEx2DIZYn1v0w0Z07C9waYBqr1tLLRL6Eoju2TMnitTc9n/3zrgF6hBCo=
+X-Received: by 2002:a50:d60b:0:b0:54c:f4fd:3427 with SMTP id
+ x11-20020a50d60b000000b0054cf4fd3427mr13814edi.7.1704239387819; Tue, 02 Jan
+ 2024 15:49:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20c9c21619aa44363c2c7503db1581cb816a1c0f.camel@redhat.com>
+ <CALMp9eSy2r+iUzqHV+V2mbPaPWfn=Y=a1aM+9C65PGtE0=nGqA@mail.gmail.com> <481be19e33915804c855a55181c310dd8071b546.camel@redhat.com>
+In-Reply-To: <481be19e33915804c855a55181c310dd8071b546.camel@redhat.com>
+From: Jim Mattson <jmattson@google.com>
+Date: Tue, 2 Jan 2024 15:49:32 -0800
+Message-ID: <CALMp9eQcRF_oS2rc_xF1H3=pfHB7ggts44obZgvh-K03UYJLSQ@mail.gmail.com>
+Subject: Re: RFC: NTP adjustments interfere with KVM emulation of TSC deadline timers
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Vitaly Kuznetsov <vkuznets@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Song Yoong Siang wrote:
-> This patch adds support to per-packet Tx hardware timestamp request to
-> AF_XDP zero-copy packet via XDP Tx metadata framework. Please note that
-> user needs to enable Tx HW timestamp capability via igc_ioctl() with
-> SIOCSHWTSTAMP cmd before sending xsk Tx timestamp request.
-> 
-> Same as implementation in RX timestamp XDP hints kfunc metadata, Timer 0
-> (adjustable clock) is used in xsk Tx hardware timestamp. i225/i226 have
-> four sets of timestamping registers. A pointer named "xsk_pending_ts"
-> is introduced to indicate the timestamping register is already occupied.
-> Furthermore, the mentioned pointer also being used to hold the transmit
-> completion until the tx hardware timestamp is ready. This is because for
-> i225/i226, the timestamp notification comes some time after the transmit
-> completion event. The driver will retrigger hardware irq to clean the
-> packet after retrieve the tx hardware timestamp.
-> 
-> Besides, a pointer named "xsk_meta" is added into igc_tx_timestamp_request
-> structure as a hook to the metadata location of the transmit packet. When
-> a Tx timestamp interrupt happens, the interrupt handler will copy the
-> value of Tx timestamp into metadata via xsk_tx_metadata_complete().
-> 
-> This patch is tested with tools/testing/selftests/bpf/xdp_hw_metadata
-> on Intel ADL-S platform. Below are the test steps and results.
-> 
-> Command on DUT:
-> sudo ./xdp_hw_metadata <interface name>
-> sudo hwstamp_ctl -i <interface name> -t 1 -r 1
-> sudo ./testptp -d /dev/ptp0 -s
-> 
-> Command on Link Partner:
-> echo -n xdp | nc -u -q1 <destination IPv4 addr> 9091
-> 
-> Result:
-> xsk_ring_cons__peek: 1
-> 0x555b112ae958: rx_desc[6]->addr=86110 addr=86110 comp_addr=86110 EoP
-> rx_hash: 0xBFDEC36E with RSS type:0x1
-> HW RX-time:   1677762429190040955 (sec:1677762429.1900) delta to User RX-time sec:0.0001 (100.124 usec)
-> XDP RX-time:   1677762429190123163 (sec:1677762429.1901) delta to User RX-time sec:0.0000 (17.916 usec)
-> 0x555b112ae958: ping-pong with csum=404e (want c59e) csum_start=34 csum_offset=6
-> 0x555b112ae958: complete tx idx=6 addr=6010
-> HW TX-complete-time:   1677762429190173323 (sec:1677762429.1902) delta to User TX-complete-time sec:0.0100 (10035.884 usec)
-> XDP RX-time:   1677762429190123163 (sec:1677762429.1901) delta to User TX-complete-time sec:0.0101 (10086.044 usec)
-> HW RX-time:   1677762429190040955 (sec:1677762429.1900) delta to HW TX-complete-time sec:0.0001 (132.368 usec)
-> 0x555b112ae958: complete rx idx=134 addr=86110
+On Tue, Jan 2, 2024 at 2:21=E2=80=AFPM Maxim Levitsky <mlevitsk@redhat.com>=
+ wrote:
+>
+> On Thu, 2023-12-21 at 11:09 -0800, Jim Mattson wrote:
+> > On Thu, Dec 21, 2023 at 8:52=E2=80=AFAM Maxim Levitsky <mlevitsk@redhat=
+.com> wrote:
+> > >
+> > > Hi!
+> > >
+> > > Recently I was tasked with triage of the failures of 'vmx_preemption_=
+timer'
+> > > that happen in our kernel CI pipeline.
+> > >
+> > >
+> > > The test usually fails because L2 observes TSC after the
+> > > preemption timer deadline, before the VM exit happens.
+> > >
+> > > This happens because KVM emulates nested preemption timer with HR tim=
+ers,
+> > > so it converts the preemption timer value to nanoseconds, taking in a=
+ccount
+> > > tsc scaling and host tsc frequency, and sets HR timer.
+> > >
+> > > HR timer however as I found out the hard way is bound to CLOCK_MONOTO=
+NIC,
+> > > and thus its rate can be adjusted by NTP, which means that it can run=
+ slower or
+> > > faster than KVM expects, which can result in the interrupt arriving e=
+arlier,
+> > > or late, which is what is happening.
+> > >
+> > > This is how you can reproduce it on an Intel machine:
+> > >
+> > >
+> > > 1. stop the NTP daemon:
+> > >       sudo systemctl stop chronyd.service
+> > > 2. introduce a small error in the system time:
+> > >       sudo date -s "$(date)"
+> > >
+> > > 3. start NTP daemon:
+> > >       sudo chronyd -d -n  (for debug) or start the systemd service ag=
+ain
+> > >
+> > > 4. run the vmx_preemption_timer test a few times until it fails:
+> > >
+> > >
+> > > I did some research and it looks like I am not the first to encounter=
+ this:
+> > >
+> > > From the ARM side there was an attempt to support CLOCK_MONOTONIC_RAW=
+ with
+> > > timer subsystem which was even merged but then reverted due to issues=
+:
+> > >
+> > > https://lore.kernel.org/all/1452879670-16133-3-git-send-email-marc.zy=
+ngier@arm.com/T/#u
+> > >
+> > > It looks like this issue was later worked around in the ARM code:
+> > >
+> > >
+> > > commit 1c5631c73fc2261a5df64a72c155cb53dcdc0c45
+> > > Author: Marc Zyngier <maz@kernel.org>
+> > > Date:   Wed Apr 6 09:37:22 2016 +0100
+> > >
+> > >     KVM: arm/arm64: Handle forward time correction gracefully
+> > >
+> > >     On a host that runs NTP, corrections can have a direct impact on
+> > >     the background timer that we program on the behalf of a vcpu.
+> > >
+> > >     In particular, NTP performing a forward correction will result in
+> > >     a timer expiring sooner than expected from a guest point of view.
+> > >     Not a big deal, we kick the vcpu anyway.
+> > >
+> > >     But on wake-up, the vcpu thread is going to perform a check to
+> > >     find out whether or not it should block. And at that point, the
+> > >     timer check is going to say "timer has not expired yet, go back
+> > >     to sleep". This results in the timer event being lost forever.
+> > >
+> > >     There are multiple ways to handle this. One would be record that
+> > >     the timer has expired and let kvm_cpu_has_pending_timer return
+> > >     true in that case, but that would be fairly invasive. Another is
+> > >     to check for the "short sleep" condition in the hrtimer callback,
+> > >     and restart the timer for the remaining time when the condition
+> > >     is detected.
+> > >
+> > >     This patch implements the latter, with a bit of refactoring in
+> > >     order to avoid too much code duplication.
+> > >
+> > >     Cc: <stable@vger.kernel.org>
+> > >     Reported-by: Alexander Graf <agraf@suse.de>
+> > >     Reviewed-by: Alexander Graf <agraf@suse.de>
+> > >     Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+> > >     Signed-off-by: Christoffer Dall <christoffer.dall@linaro.org>
+> > >
+> > >
+> > > So to solve this issue there are two options:
+> > >
+> > >
+> > > 1. Have another go at implementing support for CLOCK_MONOTONIC_RAW ti=
+mers.
+> > >    I don't know if that is feasible and I would be very happy to hear=
+ a feedback from you.
+> > >
+> > > 2. Also work this around in KVM. KVM does listen to changes in the ti=
+mekeeping system
+> > >   (kernel calls its update_pvclock_gtod), and it even notes rates of =
+both regular and raw clocks.
+> > >
+> > >   When starting a HR timer I can adjust its period for the difference=
+ in rates, which will in most
+> > >   cases produce more correct result that what we have now, but will s=
+till fail if the rate
+> > >   is changed at the same time the timer is started or before it expir=
+es.
+> > >
+> > >   Or I can also restart the timer, although that might cause more har=
+m than
+> > >   good to the accuracy.
+> > >
+> > >
+> > > What do you think?
+> >
+> > Is this what the "adaptive tuning" in the local APIC TSC_DEADLINE
+> > timer is all about (lapic_timer_advance_ns =3D -1)?
+>
+>
+> Hi,
+>
+> I don't think that 'lapic_timer_advance' is designed for that but it does
+> mask this problem somewhat.
+>
+> The goal of 'lapic_timer_advance' is to decrease time between deadline pa=
+ssing and start
+> of guest timer irq routine by making the deadline happen a bit earlier (b=
+y timer_advance_ns), and then busy-waiting
+> (hopefully only a bit) until the deadline passes, and then immediately do=
+ the VM entry.
+>
+> This way instead of overhead of VM exit and VM entry that both happen aft=
+er the deadline,
+> only the VM entry happens after the deadline.
+>
+>
+> In relation to NTP interference: If the deadline happens earlier than exp=
+ected, then
+> KVM will busy wait and decrease the 'timer_advance_ns', and next time the=
+ deadline
+> will happen a bit later thus adopting for the NTP adjustment somewhat.
+>
+> Note though that 'timer_advance_ns' variable is unsigned and adjust_lapic=
+_timer_advance can underflow
+> it, which can be fixed.
+>
+> Now if the deadline happens later than expected, then the guest will see =
+this happen,
+> but at least adjust_lapic_timer_advance should increase the 'timer_advanc=
+e_ns' so next
+> time the deadline will happen earlier which will also eventually hide the=
+ problem.
+>
+> So overall I do think that implementing the 'lapic_timer_advance' for nes=
+ted VMX preemption timer
+> is a good idea, especially since this feature is not really nested in som=
+e sense - the timer is
+> just delivered as a VM exit but it is always delivered to L1, so VMX pree=
+mption timer can
+> be seen as just an extra L1's deadline timer.
+>
+> I do think that nested VMX preemption timer should use its own value of t=
+imer_advance_ns, thus
+> we need to extract the common code and make both timers use it. Does this=
+ make sense?
 
-Curious was there any benchmarks run with and without this enabled?
+Alternatively, why not just use the hardware VMX-preemption timer to
+deliver the virtual VMX-preemption timer?
 
-> 
-> Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
-> ---
->  drivers/net/ethernet/intel/igc/igc.h      | 15 ++++
->  drivers/net/ethernet/intel/igc/igc_main.c | 88 ++++++++++++++++++++++-
->  drivers/net/ethernet/intel/igc/igc_ptp.c  | 42 ++++++++---
->  3 files changed, 134 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/igc/igc.h b/drivers/net/ethernet/intel/igc/igc.h
-> index ac7c861e83a0..c831dde01662 100644
-> --- a/drivers/net/ethernet/intel/igc/igc.h
-> +++ b/drivers/net/ethernet/intel/igc/igc.h
-> @@ -79,6 +79,9 @@ struct igc_tx_timestamp_request {
->  	u32 regl;              /* which TXSTMPL_{X} register should be used */
->  	u32 regh;              /* which TXSTMPH_{X} register should be used */
->  	u32 flags;             /* flags that should be added to the tx_buffer */
-> +	u8 xsk_queue_index;    /* Tx queue which requesting timestamp */
-> +	bool *xsk_pending_ts;  /* ref to tx ring for waiting timestamp event */
+Today, I believe that we only use the hardware VMX-preemption timer to
+deliver the virtual local APIC timer. However, it shouldn't be that
+hard to pick the first deadline of {VMX-preemption timer, local APIC
+timer} at each emulated VM-entry to L2.
 
-Is it really necessary to use a ref to a bool here if feels a
-bit odd to me? Is this just to block the tx completion on the timestamp?
-
-> +	struct xsk_tx_metadata_compl xsk_meta;	/* ref to xsk Tx metadata */
->  };
->  
->  struct igc_inline_rx_tstamps {
-> @@ -319,6 +322,9 @@ void igc_disable_tx_ring(struct igc_ring *ring);
->  void igc_enable_tx_ring(struct igc_ring *ring);
->  int igc_xsk_wakeup(struct net_device *dev, u32 queue_id, u32 flags);
->  
-> +/* AF_XDP TX metadata operations */
-> +extern const struct xsk_tx_metadata_ops igc_xsk_tx_metadata_ops;
-> +
->  /* igc_dump declarations */
->  void igc_rings_dump(struct igc_adapter *adapter);
->  void igc_regs_dump(struct igc_adapter *adapter);
-> @@ -528,6 +534,7 @@ struct igc_tx_buffer {
->  	DEFINE_DMA_UNMAP_ADDR(dma);
->  	DEFINE_DMA_UNMAP_LEN(len);
->  	u32 tx_flags;
-> +	bool xsk_pending_ts;
->  };
->  
->  struct igc_rx_buffer {
-> @@ -553,6 +560,14 @@ struct igc_xdp_buff {
->  	struct igc_inline_rx_tstamps *rx_ts; /* data indication bit IGC_RXDADV_STAT_TSIP */
->  };
->  
-> +struct igc_metadata_request {
-> +	struct xsk_tx_metadata *meta;
-> +	struct igc_adapter *adapter;
-> +	struct igc_ring *tx_ring;
-> +	bool *xsk_pending_ts;
-> +	u32 *cmd_type;
-> +};
-> +
->  struct igc_q_vector {
->  	struct igc_adapter *adapter;    /* backlink */
->  	void __iomem *itr_register;
-> diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-> index 61db1d3bfa0b..311c85f2d82d 100644
-> --- a/drivers/net/ethernet/intel/igc/igc_main.c
-> +++ b/drivers/net/ethernet/intel/igc/igc_main.c
-> @@ -1553,7 +1553,7 @@ static bool igc_request_tx_tstamp(struct igc_adapter *adapter, struct sk_buff *s
->  	for (i = 0; i < IGC_MAX_TX_TSTAMP_REGS; i++) {
->  		struct igc_tx_timestamp_request *tstamp = &adapter->tx_tstamp[i];
->  
-> -		if (tstamp->skb)
-> +		if (tstamp->skb || tstamp->xsk_pending_ts)
->  			continue;
->  
->  		tstamp->skb = skb_get(skb);
-> @@ -2878,6 +2878,71 @@ static void igc_update_tx_stats(struct igc_q_vector *q_vector,
->  	q_vector->tx.total_packets += packets;
-
-[...]
-
-> +static u64 igc_xsk_fill_timestamp(void *_priv)
-> +{
-> +	return *(u64 *)_priv;
-> +}
-> +
-> +const struct xsk_tx_metadata_ops igc_xsk_tx_metadata_ops = {
-> +	.tmo_request_timestamp		= igc_xsk_request_timestamp,
-> +	.tmo_fill_timestamp		= igc_xsk_fill_timestamp,
-> +};
-> +
->  static void igc_xdp_xmit_zc(struct igc_ring *ring)
->  {
->  	struct xsk_buff_pool *pool = ring->xsk_pool;
-> @@ -2899,6 +2964,8 @@ static void igc_xdp_xmit_zc(struct igc_ring *ring)
->  	budget = igc_desc_unused(ring);
->  
->  	while (xsk_tx_peek_desc(pool, &xdp_desc) && budget--) {
-> +		struct igc_metadata_request meta_req;
-> +		struct xsk_tx_metadata *meta = NULL;
->  		u32 cmd_type, olinfo_status;
->  		struct igc_tx_buffer *bi;
->  		dma_addr_t dma;
-> @@ -2909,14 +2976,23 @@ static void igc_xdp_xmit_zc(struct igc_ring *ring)
->  		olinfo_status = xdp_desc.len << IGC_ADVTXD_PAYLEN_SHIFT;
->  
->  		dma = xsk_buff_raw_get_dma(pool, xdp_desc.addr);
-> +		meta = xsk_buff_get_metadata(pool, xdp_desc.addr);
->  		xsk_buff_raw_dma_sync_for_device(pool, dma, xdp_desc.len);
-> +		bi = &ring->tx_buffer_info[ntu];
-> +
-> +		meta_req.adapter = netdev_priv(ring->netdev);
-> +		meta_req.tx_ring = ring;
-> +		meta_req.meta = meta;
-> +		meta_req.cmd_type = &cmd_type;
-> +		meta_req.xsk_pending_ts = &bi->xsk_pending_ts;
-> +		xsk_tx_metadata_request(meta, &igc_xsk_tx_metadata_ops,
-> +					&meta_req);
->  
->  		tx_desc = IGC_TX_DESC(ring, ntu);
->  		tx_desc->read.cmd_type_len = cpu_to_le32(cmd_type);
->  		tx_desc->read.olinfo_status = cpu_to_le32(olinfo_status);
->  		tx_desc->read.buffer_addr = cpu_to_le64(dma);
->  
-> -		bi = &ring->tx_buffer_info[ntu];
->  		bi->type = IGC_TX_BUFFER_TYPE_XSK;
->  		bi->protocol = 0;
->  		bi->bytecount = xdp_desc.len;
-> @@ -2979,6 +3055,13 @@ static bool igc_clean_tx_irq(struct igc_q_vector *q_vector, int napi_budget)
->  		if (!(eop_desc->wb.status & cpu_to_le32(IGC_TXD_STAT_DD)))
->  			break;
->  
-> +		/* Hold the completions while there's a pending tx hardware
-> +		 * timestamp request from XDP Tx metadata.
-> +		 */
-> +		if (tx_buffer->type == IGC_TX_BUFFER_TYPE_XSK &&
-> +		    tx_buffer->xsk_pending_ts)
-> +			break;
-> +
->  		/* clear next_to_watch to prevent false hangs */
->  		tx_buffer->next_to_watch = NULL;
->  
-> @@ -6819,6 +6902,7 @@ static int igc_probe(struct pci_dev *pdev,
->  
->  	netdev->netdev_ops = &igc_netdev_ops;
->  	netdev->xdp_metadata_ops = &igc_xdp_metadata_ops;
-> +	netdev->xsk_tx_metadata_ops = &igc_xsk_tx_metadata_ops;
->  	igc_ethtool_set_ops(netdev);
->  	netdev->watchdog_timeo = 5 * HZ;
->  
-> diff --git a/drivers/net/ethernet/intel/igc/igc_ptp.c b/drivers/net/ethernet/intel/igc/igc_ptp.c
-> index 885faaa7b9de..b722bca40309 100644
-> --- a/drivers/net/ethernet/intel/igc/igc_ptp.c
-> +++ b/drivers/net/ethernet/intel/igc/igc_ptp.c
-> @@ -11,6 +11,7 @@
->  #include <linux/ktime.h>
->  #include <linux/delay.h>
->  #include <linux/iopoll.h>
-> +#include <net/xdp_sock.h>
->  
->  #define INCVALUE_MASK		0x7fffffff
->  #define ISGN			0x80000000
-> @@ -555,8 +556,15 @@ static void igc_ptp_clear_tx_tstamp(struct igc_adapter *adapter)
->  	for (i = 0; i < IGC_MAX_TX_TSTAMP_REGS; i++) {
->  		struct igc_tx_timestamp_request *tstamp = &adapter->tx_tstamp[i];
->  
-> -		dev_kfree_skb_any(tstamp->skb);
-> -		tstamp->skb = NULL;
-> +		if (tstamp->skb) {
-> +			dev_kfree_skb_any(tstamp->skb);
-> +			tstamp->skb = NULL;
-> +		} else if (tstamp->xsk_pending_ts) {
-> +			*tstamp->xsk_pending_ts = false;
-> +			tstamp->xsk_pending_ts = NULL;
-
-If we really need this maybe a helper with set_tstamp and clear
-tstamp would be nice? But they seem to come in pairs its either
-false and NULL or true and set.
-
-> +			igc_xsk_wakeup(adapter->netdev, tstamp->xsk_queue_index,
-> +				       0);
-> +		}
->  	}
->  
->  	spin_unlock_irqrestore(&adapter->ptp_tx_lock, flags);
-> @@ -657,8 +665,15 @@ static int igc_ptp_set_timestamp_mode(struct igc_adapter *adapter,
-
-Thanks,
-John
+> Best regards,
+>         Maxim Levitsky
+>
+>
+> >  If so, can we
+> > leverage that for the VMX-preemption timer as well?
+> > > Best regards,
+> > >         Maxim Levitsky
+> > >
+> > >
+> > >
+>
+>
+>
+>
