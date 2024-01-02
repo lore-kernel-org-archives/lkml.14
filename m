@@ -1,130 +1,75 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2FF115AD8;
-	Tue,  2 Jan 2024 18:22:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D08156D9
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 18:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZMtYEv1X";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MxrJq0CO"
-Date: Tue, 02 Jan 2024 18:21:52 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1704219713;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SK5ZmdPni3oiwsprKqAA8w0COgY7F015Nt8bwwcDuKI=;
-	b=ZMtYEv1XmaV6l2LbJ88534WVYNKrmqnFdCAsHrHMHMHXh7oMLf1V2KQUX18+MaxlDt+NL7
-	I90yUfTKmuhl6BGIWMinTvscxBS1LSqkO3ulY8xQg0x6NfEwxg9ek5KXpFHcl9wkqvUGO7
-	0FTWrlUs3lknr9dOIMapcTH0VBkoNZXbnEM/jqL94uR5faqL4EsEj6RUrxRfaguxgl++vj
-	zMVT2R75gW/tU2lQhnqm54ozYTX3A0dxFSDAhWTkzFvJVNzRbSqg4eLFEK+4hr6xdyjHPM
-	DFXHCGCDqHkYhxfXiksjyxjTBzsEtEHgJsypLB2vYjmdno2vnOlD57+XKovSyA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1704219713;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SK5ZmdPni3oiwsprKqAA8w0COgY7F015Nt8bwwcDuKI=;
-	b=MxrJq0CO375g2Mw6LOtD0lJMj6RnoTPBqKIz2IyOzkSd3DAo6I/08nakRbnGSTqKHwyoRE
-	xeSshJg8Co+MABCg==
-From:
- tip-bot2 for Uwe =?utf-8?q?Kleine-K=C3=B6nig?= <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/sev] virt: sev-guest: Convert to platform remove callback
- returning void
-Cc: u.kleine-koenig@pengutronix.de, "Borislav Petkov (AMD)" <bp@alien8.de>,
- Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3C52826a50250304ab0af14c594009f7b901c2cd31=2E17035?=
- =?utf-8?q?96577=2Egit=2Eu=2Ekleine-koenig=40pengutronix=2Ede=3E?=
-References: =?utf-8?q?=3C52826a50250304ab0af14c594009f7b901c2cd31=2E170359?=
- =?utf-8?q?6577=2Egit=2Eu=2Ekleine-koenig=40pengutronix=2Ede=3E?=
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VeHJCx+X"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d42ed4cdc7so10225ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 10:27:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704220056; x=1704824856; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=b1iJ/PC7NOmh51+I0K/ABUi5e6j/sV3yKrMrNMnzSm4=;
+        b=VeHJCx+XC6NsVNtSDdq4nzwvE5QLApzOSD3LC6QAiks6l6hgrneosAL3sAgaVMOOES
+         8xHWKo0JZEBjfYgcBsaMy18H6oySwAleAgY7IswYQH3DVw8G/rgTtuBvHFgIXevnakL8
+         Qd4GsIICEk5UyprNbn3nuuHBuQXPl61VEtIa9I251HIvtMjat5Qwr3gR01Rthlg5aDvh
+         MP5KZel/e8SAM18eXoS8BJRvF1FGpaxrOQTBQfJCpget5NIcUAVfH7w8J8uDBQQ+YFlL
+         ZrpYAe6VmpVu2quIXJu4qJCrc55WTmabsdBasWnxEXpkc1U+mX6eexIkTmv+biC7oYl7
+         K4Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704220056; x=1704824856;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=b1iJ/PC7NOmh51+I0K/ABUi5e6j/sV3yKrMrNMnzSm4=;
+        b=rzkBM2ZHo3dsm12BjV2VdTsYBjT1JXyxfh9Z4JZzUgckI5RDFLMyWxCE1BL7wazk3r
+         raXWVUC86UUlI9nJDvfrxPAR6BJ+LXOJERCrqiCHXkKu9NoUUitOqGJw091PLOG/Y7mX
+         SiUHVkgeLuyKA6W9ecduqgk2qJC3Gj3/a23/1NbH81NV6clj+eb8V0mjJR0fOOJZiX/Z
+         RyrYUNT3lHeSvgrbqsRju39DeoDUgzLuEb4TTgvC6T06pyPzZQb5fFKD7Q3Y1WguHbQk
+         UMjU5gy6MYcIiKmIzqtH+V++/ZDI7hJec2qOZoFYRc4GbRmhRy2q7ixggp/JmBTw1DML
+         sRDw==
+X-Gm-Message-State: AOJu0YwnriBNEuMvJXvpOjNABuaxNn932HUuaNbBPJIjZ3i1p6PGocIW
+	7ar6+uvOrQ0NkgnkNNr1etj7isXBt2Gv
+X-Google-Smtp-Source: AGHT+IHOMqzyTbLqQB4plEq+ftykwfP/uDMXWaZhiDtsDLQcXDc5u4n5HeAdTpYbKpwo+95Zpg48bg==
+X-Received: by 2002:a17:903:1106:b0:1d3:6f65:e332 with SMTP id n6-20020a170903110600b001d36f65e332mr1173410plh.27.1704220056231;
+        Tue, 02 Jan 2024 10:27:36 -0800 (PST)
+Received: from [2620:0:1008:15:c73b:7876:89ec:9102] ([2620:0:1008:15:c73b:7876:89ec:9102])
+        by smtp.gmail.com with ESMTPSA id b24-20020a17090acc1800b0028ce507cd7dsm878217pju.55.2024.01.02.10.27.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jan 2024 10:27:35 -0800 (PST)
+Date: Tue, 2 Jan 2024 10:27:34 -0800 (PST)
+From: David Rientjes <rientjes@google.com>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+cc: Paolo Bonzini <pbonzini@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
+    Vitaly Kuznetsov <vkuznets@redhat.com>, 
+    Sean Christopherson <seanjc@google.com>, 
+    Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+    Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+    Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org, 
+    kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/sev: Fix SEV check in sev_map_percpu_data()
+In-Reply-To: <20240102133747.27053-1-kirill.shutemov@linux.intel.com>
+Message-ID: <cb702fe9-11a6-8a0c-925a-179cb3f6c516@google.com>
+References: <20240102133747.27053-1-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170421971260.398.3650838941459484381.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-The following commit has been merged into the x86/sev branch of tip:
+On Tue, 2 Jan 2024, Kirill A. Shutemov wrote:
 
-Commit-ID:     d642ef7111014805f2e21e9cddb0c0a93ae1313d
-Gitweb:        https://git.kernel.org/tip/d642ef7111014805f2e21e9cddb0c0a93ae=
-1313d
-Author:        Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-AuthorDate:    Tue, 26 Dec 2023 14:28:03 +01:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Tue, 02 Jan 2024 19:07:18 +01:00
+> The function sev_map_percpu_data() checks if it is running on an SEV
+> platform by checking the CC_ATTR_GUEST_MEM_ENCRYPT attribute. However,
+> this attribute is also defined for TDX.
+> 
+> To avoid false positives, add a cc_vendor check.
+> 
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
-virt: sev-guest: Convert to platform remove callback returning void
-
-The .remove() callback for a platform driver returns an int which makes
-many driver authors wrongly assume it's possible to do error handling by
-returning an error code. However the value returned is ignored (apart
-from emitting a warning) and this typically results in resource leaks.
-
-To improve here there is a quest to make the remove callback return
-void. In the first step of this quest all drivers are converted to
-.remove_new(), which already returns void. Eventually after all drivers
-are converted, .remove_new() will be renamed to .remove().
-
-Trivially convert this driver from always returning zero in the remove
-callback to the void returning variant.
-
-Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
-Link: https://lore.kernel.org/r/52826a50250304ab0af14c594009f7b901c2cd31.1703=
-596577.git.u.kleine-koenig@pengutronix.de
----
- drivers/virt/coco/sev-guest/sev-guest.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/virt/coco/sev-guest/sev-guest.c b/drivers/virt/coco/sev-=
-guest/sev-guest.c
-index bc564ad..87f2418 100644
---- a/drivers/virt/coco/sev-guest/sev-guest.c
-+++ b/drivers/virt/coco/sev-guest/sev-guest.c
-@@ -994,7 +994,7 @@ e_unmap:
- 	return ret;
- }
-=20
--static int __exit sev_guest_remove(struct platform_device *pdev)
-+static void __exit sev_guest_remove(struct platform_device *pdev)
- {
- 	struct snp_guest_dev *snp_dev =3D platform_get_drvdata(pdev);
-=20
-@@ -1003,8 +1003,6 @@ static int __exit sev_guest_remove(struct platform_devi=
-ce *pdev)
- 	free_shared_pages(snp_dev->request, sizeof(struct snp_guest_msg));
- 	deinit_crypto(snp_dev->crypto);
- 	misc_deregister(&snp_dev->misc);
--
--	return 0;
- }
-=20
- /*
-@@ -1013,7 +1011,7 @@ static int __exit sev_guest_remove(struct platform_devi=
-ce *pdev)
-  * with the SEV-SNP support, it is named "sev-guest".
-  */
- static struct platform_driver sev_guest_driver =3D {
--	.remove		=3D __exit_p(sev_guest_remove),
-+	.remove_new	=3D __exit_p(sev_guest_remove),
- 	.driver		=3D {
- 		.name =3D "sev-guest",
- 	},
+Acked-by: David Rientjes <rientjes@google.com>
