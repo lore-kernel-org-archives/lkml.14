@@ -1,75 +1,66 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD36FEAD6;
-	Tue,  2 Jan 2024 11:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37011C15;
-	Tue,  2 Jan 2024 03:46:33 -0800 (PST)
-Received: from [10.57.86.61] (unknown [10.57.86.61])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE0083F7A6;
-	Tue,  2 Jan 2024 03:45:44 -0800 (PST)
-Message-ID: <d9bea2d0-3869-4f08-8eb8-0ca33ce525ea@arm.com>
-Date: Tue, 2 Jan 2024 11:47:02 +0000
+Received: from cstnet.cn (smtp37.cstnet.cn [159.226.251.37])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE70FEAD3;
+	Tue,  2 Jan 2024 11:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iie.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iie.ac.cn
+Received: from mengjingzi$iie.ac.cn ( [121.195.114.118] ) by
+ ajax-webmail-APP-12 (Coremail) ; Tue, 2 Jan 2024 19:38:31 +0800 (GMT+08:00)
+Date: Tue, 2 Jan 2024 19:38:31 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: =?UTF-8?B?5a2f5pWs5ae/?= <mengjingzi@iie.ac.cn>
+To: gregkh@linuxfoundation.org, jirislaby@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: inappropriate capability checks in tty_ioctl()
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.15 build 20230921(8ad33efc)
+ Copyright (c) 2002-2024 www.mailtech.cn cnic.cn
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 15/23] PM: EM: Optimize em_cpu_energy() and remove
- division
-Content-Language: en-US
-To: Qais Yousef <qyousef@layalina.io>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- rafael@kernel.org, dietmar.eggemann@arm.com, rui.zhang@intel.com,
- amit.kucheria@verdurent.com, amit.kachhap@gmail.com,
- daniel.lezcano@linaro.org, viresh.kumar@linaro.org, len.brown@intel.com,
- pavel@ucw.cz, mhiramat@kernel.org, wvw@google.com
-References: <20231129110853.94344-1-lukasz.luba@arm.com>
- <20231129110853.94344-16-lukasz.luba@arm.com>
- <20231228180647.rwz4u7ebk5p2hjcr@airbuntu>
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <20231228180647.rwz4u7ebk5p2hjcr@airbuntu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Message-ID: <19ed91a4.10d80.18cc9f7d2ea.Coremail.mengjingzi@iie.ac.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:tgCowADXTs+39ZNlWUMCAA--.21635W
+X-CM-SenderInfo: pphqwyxlqj6xo6llvhldfou0/1tbiBwAEE2WTyAWMFwAAsw
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VW3Jw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-
-
-On 12/28/23 18:06, Qais Yousef wrote:
-> On 11/29/23 11:08, Lukasz Luba wrote:
-> 
->> @@ -220,8 +218,9 @@ static int em_compute_costs(struct device *dev, struct em_perf_state *table,
->>   				return -EINVAL;
->>   			}
->>   		} else {
->> -			power_res = table[i].power;
->> -			cost = div64_u64(fmax * power_res, table[i].frequency);
->> +			/* increase resolution of 'cost' precision */
->> +			power_res = table[i].power * 10;
-> 
-> Power is in uW, right? You're just taking advantage here that everything will
-> use this new cost field so you can add as many 0s to improve resolution without
-> impact elsewhere that care to compare using the same units?
-
-This code doesn't overwrite the 'power' field value. The 'cost' value is
-only used in EAS, so yes I just want to increase resolution there.
-
-I think you mixed 'power' and 'cost' fields. We don't compare 'cost'
-anywhere. We just use 'cost' in one place em_cpu_energy() and we
-multiply it (not compare it).
-
-> 
-> Did you see a problem or just being extra cautious here?
-
-There is no problem, 'cost' is a private coefficient for EAS only.
-
-> 
->> +			cost = power_res / table[i].performance;
->>   		}
->>   
->>   		table[i].cost = cost;
->> -- 
->> 2.25.1
->>
+SGkhCgpXZSB3b3VsZCBsaWtlIHRvIHByb3Bvc2UgYW4gYWRqdXN0bWVudCB0byB0aGUgY2FwYWJp
+bGl0eSBjaGVja3MgaW4gdGhlIHR0eV9pb2N0bCgpIGZ1bmN0aW9uLiBDdXJyZW50bHksIHRoZSBm
+dW5jdGlvbiB1c2VzIENBUF9TWVNfQURNSU4gdG8gcHJvdGVjdCB0aHJlZSBzdWJjb21tYW5kczog
+VElPQ0NPTlMsIFRJT0NTVEkgYW5kIFRJT0NWSEFOR1VQLiBXZSBwcm9wb3NlIHVwZGF0aW5nIHRo
+aXMgdG8gdXNlIENBUF9TWVNfVFRZX0NPTkZJRyBpbnN0ZWFkIGZvciB0aGUgZm9sbG93aW5nIHJl
+YXNvbnM6CgooMSkgQ0FQX1NZU19UVFlfQ09ORklHIGlzIG1vcmUgcmVsZXZhbnQgdG8gdGhlIGZ1
+bmN0aW9uczogVGhlIHRocmVlIHN1YmNvbW1hbmRzIGFyZSByZXNwb25zaWJsZSBmb3IgdHR5LXJl
+bGF0ZWQgZnVuY3Rpb25zOiByZWRpcmVjdGluZyBjb25zb2xlIG91dHB1dCAoVElPQ0NPTlMpLCBm
+YWtpbmcgaW5wdXQgdG8gYSB0ZXJtaW5hbCAoVElPQ1NUSSksIGFuZCBtYWtpbmcgdGhlIHRlcm1p
+bmFsIGJlIGh1bmcgdXAgKFRJT0NWSEFOR1VQKS4gQXMgdGhlIGRlZmluaXRpb25zIGluIHRoZSBj
+YXBhYmlsaXR5IG1hbnVhbCBwYWdlWzFdLCBDQVBfU1lTX1RUWV9DT05GSUcgaXMgc3BlY2lmaWNh
+bGx5IGRlc2lnbmVkIGZvciAiZW1wbG95aW5nIHZhcmlvdXMgcHJpdmlsZWdlZCBpb2N0bCgyKSBv
+cGVyYXRpb25zIG9uIHZpcnR1YWwgdGVybWluYWxzLiIgVGhpcyBhbGlnbnMgbW9yZSBjbG9zZWx5
+IHdpdGggdGhlIGludGVuZGVkIHVzYWdlIHNjZW5hcmlvIGNvbXBhcmVkIHRvIENBUF9TWVNfQURN
+SU4uCgooMikgQ29uc2lzdGVuY3k6IENBUF9TWVNfVFRZX0NPTkZJRyBpcyBhbHJlYWR5IGVtcGxv
+eWVkIGluIG90aGVyIHBhcnRzIG9mIHRoZSBrZXJuZWwgdG8gcHJvdGVjdCBUSU9DVkhBTkdVUC1s
+aWtlIGZ1bmN0aW9uYWxpdHkuIEZvciBpbnN0YW5jZSwgaW4gdHR5X2lvY3RsKCkgQ0FQX1NZU19B
+RE1JTiBpcyB1c2VkIGJlZm9yZSB0dHlfdmhhbmd1cCgpLCB3aGlsZSBpbiBTWVNDQUxMX0RFRklO
+RTAodmhhbmd1cCksIHdoaWNoIGxvY2F0ZWQgaW4gZnMvb3Blbi5jLCB0aGUgY2hlY2sgaXMgZG9u
+ZSB3aXRoIENBUF9TWVNfVFRZX0NPTkZJRyBiZWZvcmUgdHR5X3ZoYW5ndXAoKS4KCigzKSBNYWlu
+dGFpbmluZyBMZWFzdCBQcml2aWxlZ2U6IENBUF9TWVNfQVNNSU4gaXMgYWxyZWFkeSBvdmVybG9h
+ZGVkIGFuZCBrbm93biBhcyB0aGUgbmV3ICJyb290IlsyXS4gQWNjb3JkaW5nIHRvIHRoZSBtYW51
+YWwgcGFnZVsxXSDigJxkb24ndCBjaG9vc2UgQ0FQX1NZU19BRE1JTiBpZiB5b3UgY2FuIHBvc3Np
+Ymx5IGF2b2lkIGl04oCdLCBzd2l0Y2hpbmcgdG8gQ0FQX1NZU19UVFlfQ09ORklHIGNvdWxkIGJl
+IGhlbHBmdWwgZm9yIHN0YW5kYXJkaXppbmcgdGhlIHVzZSBvZiBjYXBhYmlsaXRpZXMgYW5kIGlt
+cGxlbWVudGluZyBsZWFzdCBwcml2aWxlZ2VzLiAKClRoaXMgaXNzdWUgZXhpc3RzIGluIHNldmVy
+YWwga2VybmVsIHZlcnNpb25zIGFuZCB3ZSBoYXZlIGNoZWNrZWQgaXQgb24gdGhlIGxhdGVzdCBz
+dGFibGUgcmVsZWFzZShMaW51eCA2LjYuOSkuIFdlIHdvdWxkIGFwcHJlY2lhdGUgeW91ciB0aG91
+Z2h0cyBhbmQgZmVlZGJhY2sgb24gdGhpcyBwcm9wb3NhbC4gVGhhbmsgeW91IGZvciB5b3VyIHRp
+bWUgYW5kIGNvbnNpZGVyYXRpb24uCgpCZXN0IHJlZ2FyZHMsCkppbmd6aQoKcmVmZXJlbmNlOgpb
+MV0gaHR0cHM6Ly93d3cubWFuNy5vcmcvbGludXgvbWFuLXBhZ2VzL21hbjcvY2FwYWJpbGl0aWVz
+LjcuaHRtbApbMl0gaHR0cHM6Ly9sd24ubmV0L0FydGljbGVzLzQ4NjMwNi8K
