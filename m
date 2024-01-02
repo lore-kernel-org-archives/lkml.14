@@ -1,257 +1,162 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88751F9C8
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 12:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iRzhq4E5"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dbd721384c0so7523818276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 04:05:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704197120; x=1704801920; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=r7dyv4CcIU9mcvBuepSVkLmk0uNvBhGYSbHRwghn+UA=;
-        b=iRzhq4E5qXsvFK2f52/mzrj8tkI/EnoNYTeVhNIs2CEZObhBI5z0Ep0NLleuFSHh30
-         M2ILvdX3fnKw79aZm0v9owhF/a7Fr1qOhdTPGqfCuoYP6NfEZcTOWxxQew4pZno5+2U+
-         cnNk2PdYqDAAEIURo9v00MdVJVuli8nHntMF9qT0nrhHEXvB0cXguAbacxudBnC7cyR7
-         gv+/I5+6qtFS4JiMF7YRyqpiI/C9/o3MLCikM+uvEjaKXGs3SHH5kM4ApUf+OG2JnOND
-         iSR2HIeEw+dXG6NFXCE8MgRbV3VH50O/JDX4EYQOlBAtZBXvwk1gQjKkbNI32dpPsTOa
-         JLZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704197120; x=1704801920;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r7dyv4CcIU9mcvBuepSVkLmk0uNvBhGYSbHRwghn+UA=;
-        b=YjNz3lsFb5f2g/lL0o8/sTw1+9WRZb3HZrzwQ0Cf2B0kV6JY2lUXCOktHzcKWx0QDM
-         2zOSFxTkX+DSs9ZxZdzgEwY/eyqCFPdo5f7vmutzAsVm2Rxoya6YOA3xzfXK+aV5zqcb
-         +APDSwvZVFNfSPLJl+7/imXwp51WkDGKXFUrb3MrxvxmkGxhxJjJv4e5U9qzrEs2tB8M
-         4fVPu1KwjRumTndGUMB+r690DcZDAb89co9eHmPa8+EsOsQrZFNd+9zn0xVCZuUMMb3U
-         32sb2VQJcdJb3FIDKb+9jC8jC6ervjLbULf8r8dVZFDnLyC6bi2WsWj6mgHY7yGjP1nv
-         6X9A==
-X-Gm-Message-State: AOJu0YzYZ12DB22/FcL8ykuQpF9xAHJGkOCEqU7lSJgPdOr5ah80WTiG
-	cEP6ljdpfC/wGiiOv5pyQVQOASp/5lpArV6CpUkWuxawrdj/2w==
-X-Google-Smtp-Source: AGHT+IEeXcgSMZejIaCJRLPq2x5vR0P7iAZihrqFzc//NjqYOvq4btaXpo77KUSX72yNiNFkRjmDTr0E4xzqSgpOy28=
-X-Received: by 2002:a25:b310:0:b0:dbd:986e:2e9f with SMTP id
- l16-20020a25b310000000b00dbd986e2e9fmr8149442ybj.91.1704197120329; Tue, 02
- Jan 2024 04:05:20 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430C0F9CC;
+	Tue,  2 Jan 2024 12:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4T4BQk51JVz1vrQt;
+	Tue,  2 Jan 2024 20:06:22 +0800 (CST)
+Received: from dggpemm500004.china.huawei.com (unknown [7.185.36.219])
+	by mail.maildlp.com (Postfix) with ESMTPS id 510671A0195;
+	Tue,  2 Jan 2024 20:06:20 +0800 (CST)
+Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
+ dggpemm500004.china.huawei.com (7.185.36.219) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 2 Jan 2024 20:06:20 +0800
+Received: from [10.67.121.229] (10.67.121.229) by
+ dggpemm500007.china.huawei.com (7.185.36.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 2 Jan 2024 20:06:19 +0800
+Subject: Re: [PATCH iproute2-rc 1/2] rdma: Fix core dump when pretty is used
+To: Leon Romanovsky <leon@kernel.org>
+References: <20231229065241.554726-1-huangjunxian6@hisilicon.com>
+ <20231229065241.554726-2-huangjunxian6@hisilicon.com>
+ <20231229092129.25a526c4@hermes.local>
+ <30d8c237-953a-8794-9baa-e21b31d4d88c@huawei.com>
+ <20240102083257.GB6361@unreal>
+CC: Stephen Hemminger <stephen@networkplumber.org>, Junxian Huang
+	<huangjunxian6@hisilicon.com>, <jgg@ziepe.ca>, <dsahern@gmail.com>,
+	<netdev@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+	<linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>
+From: Chengchang Tang <tangchengchang@huawei.com>
+Message-ID: <29146463-6d0e-21c5-af42-217cee760b3f@huawei.com>
+Date: Tue, 2 Jan 2024 20:06:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231231-hfpll-yaml-v1-0-359d44a4e194@z3ntu.xyz> <20231231-hfpll-yaml-v1-1-359d44a4e194@z3ntu.xyz>
-In-Reply-To: <20231231-hfpll-yaml-v1-1-359d44a4e194@z3ntu.xyz>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 2 Jan 2024 14:05:09 +0200
-Message-ID: <CAA8EJpqF=3n8vUrEzrGGLc4JtQ-s4EcOOr_NKC0rknwE0tuShw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: clock: qcom,hfpll: Convert to YAML
-To: Luca Weiss <luca@z3ntu.xyz>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20240102083257.GB6361@unreal>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500007.china.huawei.com (7.185.36.183)
 
-On Sun, 31 Dec 2023 at 16:49, Luca Weiss <luca@z3ntu.xyz> wrote:
->
-> Convert the .txt documentation to .yaml.
->
-> Take the liberty to change the compatibles for ipq8064, apq8064, msm8974
-> and msm8960 to follow the updated naming schema. These compatibles are
-> not used upstream yet.
->
-> Also add a compatible for QCS404 since that SoC upstream already uses
-> qcom,hfpll compatible but without an SoC-specific string.
->
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> ---
->  .../devicetree/bindings/clock/qcom,hfpll.txt       | 63 -----------------
->  .../devicetree/bindings/clock/qcom,hfpll.yaml      | 82 ++++++++++++++++++++++
->  2 files changed, 82 insertions(+), 63 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,hfpll.txt b/Documentation/devicetree/bindings/clock/qcom,hfpll.txt
-> deleted file mode 100644
-> index 5769cbbe76be..000000000000
-> --- a/Documentation/devicetree/bindings/clock/qcom,hfpll.txt
-> +++ /dev/null
-> @@ -1,63 +0,0 @@
-> -High-Frequency PLL (HFPLL)
-> -
-> -PROPERTIES
-> -
-> -- compatible:
-> -       Usage: required
-> -       Value type: <string>:
-> -               shall contain only one of the following. The generic
-> -               compatible "qcom,hfpll" should be also included.
-> -
-> -                        "qcom,hfpll-ipq8064", "qcom,hfpll"
-> -                        "qcom,hfpll-apq8064", "qcom,hfpll"
-> -                        "qcom,hfpll-msm8974", "qcom,hfpll"
-> -                        "qcom,hfpll-msm8960", "qcom,hfpll"
-> -                        "qcom,msm8976-hfpll-a53", "qcom,hfpll"
-> -                        "qcom,msm8976-hfpll-a72", "qcom,hfpll"
-> -                        "qcom,msm8976-hfpll-cci", "qcom,hfpll"
-> -
-> -- reg:
-> -       Usage: required
-> -       Value type: <prop-encoded-array>
-> -       Definition: address and size of HPLL registers. An optional second
-> -                   element specifies the address and size of the alias
-> -                   register region.
-> -
-> -- clocks:
-> -       Usage: required
-> -       Value type: <prop-encoded-array>
-> -       Definition: reference to the xo clock.
-> -
-> -- clock-names:
-> -       Usage: required
-> -       Value type: <stringlist>
-> -       Definition: must be "xo".
-> -
-> -- clock-output-names:
-> -       Usage: required
-> -       Value type: <string>
-> -       Definition: Name of the PLL. Typically hfpllX where X is a CPU number
-> -                   starting at 0. Otherwise hfpll_Y where Y is more specific
-> -                   such as "l2".
-> -
-> -Example:
-> -
-> -1) An HFPLL for the L2 cache.
-> -
-> -       clock-controller@f9016000 {
-> -               compatible = "qcom,hfpll-ipq8064", "qcom,hfpll";
-> -               reg = <0xf9016000 0x30>;
-> -               clocks = <&xo_board>;
-> -               clock-names = "xo";
-> -               clock-output-names = "hfpll_l2";
-> -       };
-> -
-> -2) An HFPLL for CPU0. This HFPLL has the alias register region.
-> -
-> -       clock-controller@f908a000 {
-> -               compatible = "qcom,hfpll-ipq8064", "qcom,hfpll";
-> -               reg = <0xf908a000 0x30>, <0xf900a000 0x30>;
-> -               clocks = <&xo_board>;
-> -               clock-names = "xo";
-> -               clock-output-names = "hfpll0";
-> -       };
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,hfpll.yaml b/Documentation/devicetree/bindings/clock/qcom,hfpll.yaml
-> new file mode 100644
-> index 000000000000..2cb4098012bc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,hfpll.yaml
-> @@ -0,0 +1,82 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/qcom,hfpll.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm High-Frequency PLL
-> +
-> +maintainers:
-> +  - Bjorn Andersson <andersson@kernel.org>
-> +
-> +description:
-> +  The HFPLL is used as CPU PLL on various Qualcomm SoCs.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - qcom,apq8064-hfpll
-> +          - qcom,ipq8064-hfpll
-> +          - qcom,msm8960-hfpll
 
-I think we should drop these entries. On msm8960 / apq8064 / ipq8064
-the HFPLLs are a part of GCC, so there is no need for a separate
-compat entry.
 
-> +          - qcom,msm8974-hfpll
-
-This one is good, the HFPLL is separate, next to the acc / saw
-
-> +          - qcom,msm8976-hfpll-a53
-> +          - qcom,msm8976-hfpll-a72
-> +          - qcom,msm8976-hfpll-cci
-
-Ok.
-
-> +          - qcom,qcs404-hfpll
-> +      - const: qcom,hfpll
-> +
-> +  reg:
-> +    items:
-> +      - description: Base address and size of the register region
-> +      - description: Optional base address and size of the alias register region
-> +    minItems: 1
-> +
-> +  '#clock-cells':
-> +    const: 0
-> +
-> +  clocks:
-> +    items:
-> +      - description: board XO clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: xo
-> +
-> +  clock-output-names:
-> +    description:
-> +      Name of the PLL. Typically hfpllX where X is a CPU number starting at 0.
-> +      Otherwise hfpll_Y where Y is more specific such as "l2".
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - '#clock-cells'
-> +  - clocks
-> +  - clock-names
-> +  - clock-output-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  # Example 1 - HFPLL for L2 cache
-> +  - |
-> +    clock-controller@f9016000 {
-> +        compatible = "qcom,ipq8064-hfpll", "qcom,hfpll";
-> +        reg = <0xf9016000 0x30>;
-> +        clocks = <&xo_board>;
-> +        clock-names = "xo";
-> +        clock-output-names = "hfpll_l2";
-> +        #clock-cells = <0>;
-> +    };
-> +  # Example 2 - HFPLL for CPU0
-> +  - |
-> +    clock-controller@f908a000 {
-> +        compatible = "qcom,ipq8064-hfpll", "qcom,hfpll";
-> +        reg = <0xf908a000 0x30>, <0xf900a000 0x30>;
-> +        clocks = <&xo_board>;
-> +        clock-names = "xo";
-> +        clock-output-names = "hfpll0";
-> +        #clock-cells = <0>;
-> +    };
+On 2024/1/2 16:32, Leon Romanovsky wrote:
+> On Tue, Jan 02, 2024 at 03:44:29PM +0800, Chengchang Tang wrote:
+>>
+>> On 2023/12/30 1:21, Stephen Hemminger wrote:
+>>> On Fri, 29 Dec 2023 14:52:40 +0800
+>>> Junxian Huang <huangjunxian6@hisilicon.com> wrote:
+>>>
+>>>> From: Chengchang Tang <tangchengchang@huawei.com>
+>>>>
+>>>> There will be a core dump when pretty is used as the JSON object
+>>>> hasn't been opened and closed properly.
+>>>>
+>>>> Before:
+>>>> $ rdma res show qp -jp -dd
+>>>> [ {
+>>>>       "ifindex": 1,
+>>>>       "ifname": "hns_1",
+>>>>       "port": 1,
+>>>>       "lqpn": 1,
+>>>>       "type": "GSI",
+>>>>       "state": "RTS",
+>>>>       "sq-psn": 0,
+>>>>       "comm": "ib_core"
+>>>> },
+>>>> "drv_sq_wqe_cnt": 128,
+>>>> "drv_sq_max_gs": 2,
+>>>> "drv_rq_wqe_cnt": 512,
+>>>> "drv_rq_max_gs": 1,
+>>>> rdma: json_writer.c:130: jsonw_end: Assertion `self->depth > 0' failed.
+>>>> Aborted (core dumped)
+>>>>
+>>>> After:
+>>>> $ rdma res show qp -jp -dd
+>>>> [ {
+>>>>           "ifindex": 2,
+>>>>           "ifname": "hns_2",
+>>>>           "port": 1,
+>>>>           "lqpn": 1,
+>>>>           "type": "GSI",
+>>>>           "state": "RTS",
+>>>>           "sq-psn": 0,
+>>>>           "comm": "ib_core",{
+>>>>               "drv_sq_wqe_cnt": 128,
+>>>>               "drv_sq_max_gs": 2,
+>>>>               "drv_rq_wqe_cnt": 512,
+>>>>               "drv_rq_max_gs": 1,
+>>>>               "drv_ext_sge_sge_cnt": 256
+>>>>           }
+>>>>       } ]
+>>>>
+>>>> Fixes: 331152752a97 ("rdma: print driver resource attributes")
+>>>> Signed-off-by: Chengchang Tang <tangchengchang@huawei.com>
+>>>> Signed-off-by: Junxian Huang <huangjunxian6@hisilicon.com>
+>>> This code in rdma seems to be miking json and newline functionality
+>>> which creates bug traps.
+>>>
+>>> Also the json should have same effective output in pretty and non-pretty mode.
+>>> It looks like since pretty mode add extra object layer, the nesting of {} would be
+>>> different.
+>>>
+>>> The conversion to json_print() was done but it isn't using same conventions
+>>> as ip or tc.
+>>>
+>>> The correct fix needs to go deeper and hit other things.
+>>>
+>> Hi, Stephen,
+>>
+>> The root cause of this issue is that close_json_object() is being called in
+>> newline_indent(), resulting in a mismatch
+>> of {}.
+>>
+>> When fixing this problem, I was unsure why a newline() is needed in pretty
+>> mode, so I simply kept this logic and
+>> solved the issue of open_json_object() and close_json_object() not matching.
+>> However, If the output of pretty mode
+>> and not-pretty mode should be the same, then this problem can be resolved by
+>> deleting this newline_indent().
+> Stephen didn't say that output of pretty and not-pretty should be the
+> same, but he said that JSON logic should be the same.
 >
-> --
-> 2.43.0
+> Thanks
+
+Hi, Leon,
+
+Thank you for your reply. But I'm not sure what you mean by JSON logic? 
+I understand that
+pretty and not-pretty JSON should have the same content, but just 
+difference display effects.
+Do you mean that they only need to have the same structure?
+
+Or, let's get back to this question. In the JSON format output, the 
+newline() here seems
+unnecessary, because json_print() can solve the line break problems 
+during printing.
+So I think the newline() here can be removed at least when outputting in 
+JSON format.
+
+Thanks,
+Chengchang Tang
 >
+>> I believe the original developer may not have realized that
+>> close_json_object() is being called in newline(), which leads
+>> to this problem. To improve the code's readability, I would try to strip out
+>> close_json_obejct() from newline().
+>>
+>> Thanks,
+>> Chengchang Tang
+>>
+> .
 >
 
-
--- 
-With best wishes
-Dmitry
