@@ -1,106 +1,93 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17B4568C;
-	Tue,  2 Jan 2024 09:09:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B3C568D;
+	Tue,  2 Jan 2024 09:12:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="P94UWCDe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1704186572;
-	bh=0IJc2UOGZ6oMEAmRyC8mL1X+nZIu6VgIRz8xHSvM2KI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=P94UWCDeEk5DKNB6KMkv3dEvRD8cI6BmKuy/6krHuaJB+1o+zwQoDoGEVvPdZdaaD
-	 8VcqkRQfLaqEvHgRFs7agU3FTdKAfkJlamVTamOQVIwdt3uSITjLpAetWlPu80wFZf
-	 uehhpHxvakYiX8ZVTA1yaTuC+CnAk83nY9E6433BXB/8Dj76LWc+nBQLEpnvdL5FFT
-	 3jCWAxT7A9JLv4GDNjxCiZ6usIkmyBpWZEdnPCvRwBIpdEYsPeyeyrZd+Wafw3eb3T
-	 Fjk8QOqTY53UaB+3ahZDRfpHG77yfGQfiQNVSI+HHhO2EY4wYIXPvZ5runNQEXVMxp
-	 B0uah6DH1q7vg==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 4C3C237804B2;
-	Tue,  2 Jan 2024 09:09:31 +0000 (UTC)
-Message-ID: <a288d5c8-6eb9-49f8-bcbc-f2b41e51c797@collabora.com>
-Date: Tue, 2 Jan 2024 10:09:30 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bPKWtbpt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704186723; x=1735722723;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=NyvPMiWn3WT/oZc8EH+SNeHjU8WnY+nEsLSZKALA/ow=;
+  b=bPKWtbptAPui07c3URUxb4MdOZTEVwLrCn7bpqavfXnLSzI1qHTW9M5Q
+   9t1haV9KH71skJ+Di4mes4yuIgb8wTJ4KnRpz7cie3w4UfXam1Fp+WFvm
+   KkNU/hXMNKcUcO8ppAorKrluSarOJEDgZd1jFJ3O65WXKxQWqlrlyvQAW
+   SfHHbLiJRjQ1TcukWOQfqzFD398G2J4Ox7K93cjv5nZhI6DhIHY9hhBmz
+   HMzNolRoHhPHhwgPfEODqj28+LU/W6IlHG54vAG3rvuvCidIgq4Rtdc+7
+   BGreGo7j1iFdvP5va39hhC6Vp+1zeESzgWxzJtXXWe/3bomigrxoEUJeN
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10940"; a="463258977"
+X-IronPort-AV: E=Sophos;i="6.04,324,1695711600"; 
+   d="scan'208";a="463258977"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 01:11:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10940"; a="923172841"
+X-IronPort-AV: E=Sophos;i="6.04,324,1695711600"; 
+   d="scan'208";a="923172841"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 02 Jan 2024 01:11:43 -0800
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	RD Babiera <rdbabiera@google.com>,
+	Chris Bainbridge <chris.bainbridge@gmail.com>
+Subject: [PATCH] Revert "usb: typec: class: fix typec_altmode_put_partner to put plugs"
+Date: Tue,  2 Jan 2024 11:11:41 +0200
+Message-ID: <20240102091142.2136472-1-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: mediatek: cherry: Add CPU supply
- dependency to cpufreq-hw
-To: Viresh Kumar <viresh.kumar@linaro.org>,
- =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, kernel@collabora.com,
- Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-References: <20231229212853.277334-1-nfraprado@collabora.com>
- <20231229212853.277334-2-nfraprado@collabora.com>
- <20240102061123.frvwltggqqh6m7pm@vireshk-i7>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20240102061123.frvwltggqqh6m7pm@vireshk-i7>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Il 02/01/24 07:11, Viresh Kumar ha scritto:
-> On 29-12-23, 18:28, Nícolas F. R. A. Prado wrote:
->> When the mediatek-cpufreq-hw driver enables the hardware (by
->> writing to REG_FREQ_ENABLE), if the regulator supplying the voltage to
->> the big CPUs hasn't probed yet, the platform hangs shortly after and
->> "rcu: INFO: rcu_preempt detected stalls on CPUs/tasks" are printed in
->> the log.
->>
->> To prevent this from happening, describe the big CPUs regulator in the
->> performance-controller DT node, so that devlink ensures the regulator
->> has been probed and configured before the frequency scaling hardware is
->> probed and enabled.
->>
->> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
->>
->> ---
->>
->>   arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi b/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
->> index dd5b89b73190..505da60eee90 100644
->> --- a/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
->> +++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi
->> @@ -502,6 +502,10 @@ &pcie1 {
->>   	pinctrl-0 = <&pcie1_pins_default>;
->>   };
->>   
->> +&performance {
->> +	big-cpus-supply = <&mt6315_6_vbuck1>;
->> +};
->> +
->>   &pio {
->>   	mediatek,rsel-resistance-in-si-unit;
->>   	pinctrl-names = "default";
-> 
-> I think the regulator needs to be mentioned in the CPU's node and not
-> here ?
-> 
+This reverts commit b17b7fe6dd5c6ff74b38b0758ca799cdbb79e26e.
 
-Even if the regulator voltage is being changed by firmware with cpufreq-hw, the
-actual regulators should go to each CPU node and not in the cpufreq driver node,
-I agree with Viresh.
+That commit messed up the reference counting, so it needs to
+be rethought.
 
-Besides, that's the same thing that we're doing with mediatek-cpufreq as well...
-and since we're talking about that, we should also do something about this such
-that we stop declaring `regulator-always-on` for CPU cores in devicetree, but
-this is probably slightly out of context for what you're trying to do here, so,
-read that as an "extra consideration" :-)
+Fixes: b17b7fe6dd5c ("usb: typec: class: fix typec_altmode_put_partner to put plugs")
+Cc: stable@vger.kernel.org
+Cc: RD Babiera <rdbabiera@google.com>
+Reported-by: Chris Bainbridge <chris.bainbridge@gmail.com>
+Closes: https://lore.kernel.org/lkml/CAP-bSRb3SXpgo_BEdqZB-p1K5625fMegRZ17ZkPE1J8ZYgEHDg@mail.gmail.com/
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+---
+ drivers/usb/typec/class.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Cheers,
-Angelo
+diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+index aeae8009b9e3..4d11f2b536fa 100644
+--- a/drivers/usb/typec/class.c
++++ b/drivers/usb/typec/class.c
+@@ -267,7 +267,7 @@ static void typec_altmode_put_partner(struct altmode *altmode)
+ 	if (!partner)
+ 		return;
+ 
+-	adev = &altmode->adev;
++	adev = &partner->adev;
+ 
+ 	if (is_typec_plug(adev->dev.parent)) {
+ 		struct typec_plug *plug = to_typec_plug(adev->dev.parent);
+@@ -497,8 +497,7 @@ static void typec_altmode_release(struct device *dev)
+ {
+ 	struct altmode *alt = to_altmode(to_typec_altmode(dev));
+ 
+-	if (!is_typec_port(dev->parent))
+-		typec_altmode_put_partner(alt);
++	typec_altmode_put_partner(alt);
+ 
+ 	altmode_id_remove(alt->adev.dev.parent, alt->id);
+ 	kfree(alt);
+-- 
+2.43.0
+
