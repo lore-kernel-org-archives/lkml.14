@@ -1,140 +1,83 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B8BFBEC;
-	Tue,  2 Jan 2024 11:39:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5f254d1a6daso9553087b3.2;
-        Tue, 02 Jan 2024 03:39:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704195576; x=1704800376;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uFi8eMSPsfOFqOHCg4hwloMdrYmzNBUBfM1xQ0dKIbA=;
-        b=PwoKqi6lndOXSnMN02Wi4fOxWcxCNJjQ/tjc/HDCcpJepMUf1FdEAZvL2Z/tX2sMjK
-         z5rLDYH9MwbMUPLmOwctgzyiPdBL/4YDa3vlYYQ5o+W3EBiUvN7bF5rD9zaroNTfpSL1
-         GgtVnMIAqcc9pavEmH84MhIL8TtGpoBLbIvy7kUi7qjb81v/qXlTO/ofcsCkgF3GZ+7i
-         owV7srOaHO8c+cKkPsvSlKiJ+m2ChMr7R+hnOZO+hFstxrM7t4xBE7uUqzv/jT1fYN9E
-         HnuwTGZOabFiTuKkrUmEoS4Dbxs9IwSD9J+bQpfff+ZYmZ0BDeasycWzfMgNB+CdiysF
-         FBlw==
-X-Gm-Message-State: AOJu0YyJfMuQcc0pSe3pDq/hJouxW8y7dXlXWFzrRiJz3svGGyKbChr6
-	GzWUV8VthhqsoMjqw5H5DMRisjxNx1bwxw==
-X-Google-Smtp-Source: AGHT+IGXq1AARTnEfk2PH5xz+CvZUSKTjqgCiCyt+CEGGi4Gik9hnPXj5+RYuZc1mkpEjUxkoFtTBw==
-X-Received: by 2002:a81:5784:0:b0:5ee:7d0f:4458 with SMTP id l126-20020a815784000000b005ee7d0f4458mr4336249ywb.56.1704195576581;
-        Tue, 02 Jan 2024 03:39:36 -0800 (PST)
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
-        by smtp.gmail.com with ESMTPSA id k28-20020a81ac1c000000b005ee999d3941sm5957031ywh.26.2024.01.02.03.39.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jan 2024 03:39:35 -0800 (PST)
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dbdacafe012so5830521276.1;
-        Tue, 02 Jan 2024 03:39:35 -0800 (PST)
-X-Received: by 2002:a05:6902:e08:b0:da0:5370:fdce with SMTP id
- df8-20020a0569020e0800b00da05370fdcemr9471148ybb.19.1704195574941; Tue, 02
- Jan 2024 03:39:34 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8E7E57E;
+	Tue,  2 Jan 2024 11:40:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HzJRxHYT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1704195641;
+	bh=MpPHydD9ZIIX01FNM+Nq91LUgvlpmfH+QdJMYety9OI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=HzJRxHYT7EuxuxhaoDFqTjkIvtw4kgvtj7t0dcdToCd0tNci8eLp0DfHuAkg2Y/r8
+	 CSpSwWFUvCNyYUQYil4fhxhgWercJkxZ2jrTsYuwqtbJNVdZ0/bKTJc/jzsEoxRuwk
+	 v+cTQTwC/MrC4SvGshfHZF61z3ji9hL74yXvAbcSgtY7f5u1+S9uxs06H5nzSGcTKx
+	 a02F+6kGix5oSXpei7kQCdKWkJN7kY89nIPWyQJ9jotWgMrQWDQl0qcmkh+DLdD+WO
+	 ewWdNCTl24HDj4FHX06T4+Fn6OPRE31W92Xf2u+1CV1rwjqM4xQF2bOIhwb2jEkYuC
+	 PfJFKUbd9K+lw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4T49s554Rcz4wch;
+	Tue,  2 Jan 2024 22:40:41 +1100 (AEDT)
+Date: Tue, 2 Jan 2024 22:40:27 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: errors fetching the irqchip trees
+Message-ID: <20240102224027.0804f167@canb.auug.org.au>
+In-Reply-To: <87ttnwt432.wl-maz@kernel.org>
+References: <20240102080233.20aca3ec@canb.auug.org.au>
+	<87ttnwt432.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231216024834.3510073-1-kent.overstreet@linux.dev>
- <20231216033552.3553579-1-kent.overstreet@linux.dev> <20231216033552.3553579-7-kent.overstreet@linux.dev>
- <CAMuHMdW29dAQh+j3s4Af1kMAFKSr2yz7M2L-fWd1uZfL7mEY1Q@mail.gmail.com> <20231220213957.zbslehrx4zkkbabq@moria.home.lan>
-In-Reply-To: <20231220213957.zbslehrx4zkkbabq@moria.home.lan>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 2 Jan 2024 12:39:23 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXsxh23cv-m3G+_9GxXy9wN5vJDp8C0x43KMLEQXy5SDg@mail.gmail.com>
-Message-ID: <CAMuHMdXsxh23cv-m3G+_9GxXy9wN5vJDp8C0x43KMLEQXy5SDg@mail.gmail.com>
-Subject: Re: [PATCH 50/50] Kill sched.h dependency on rcupdate.h
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-fsdevel@vger.kernel.org, tglx@linutronix.de, x86@kernel.org, 
-	tj@kernel.org, peterz@infradead.org, mathieu.desnoyers@efficios.com, 
-	paulmck@kernel.org, keescook@chromium.org, dave.hansen@linux.intel.com, 
-	mingo@redhat.com, will@kernel.org, longman@redhat.com, boqun.feng@gmail.com, 
-	brauner@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/Z9PmyM.UFFT07zDHr/CDV+v";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/Z9PmyM.UFFT07zDHr/CDV+v
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Hi Kent,
+Hi Marc,
 
-On Wed, Dec 20, 2023 at 10:40=E2=80=AFPM Kent Overstreet
-<kent.overstreet@linux.dev> wrote:
-> On Wed, Dec 20, 2023 at 12:59:44PM +0100, Geert Uytterhoeven wrote:
-> > On Sat, Dec 16, 2023 at 4:39=E2=80=AFAM Kent Overstreet
-> > <kent.overstreet@linux.dev> wrote:
-> > > by moving cond_resched_rcu() to rcupdate.h, we can kill another big
-> > > sched.h dependency.
-> > >
-> > > Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-> >
-> > Thanks for your patch, which is now commit dc00f26faea81dc0 ("Kill
-> > sched.h dependency on rcupdate.h") in next-20231220.
-> >
-> > Reported-by: noreply@ellerman.id.au
-> >
-> > $ make ARCH=3Dm68k defconfig arch/m68k/kernel/asm-offsets.i
-> > *** Default configuration is based on 'multi_defconfig'
-> > #
-> > # No change to .config
-> > #
-> >   UPD     include/config/kernel.release
-> >   UPD     include/generated/utsrelease.h
-> >   CC      arch/m68k/kernel/asm-offsets.s
-> > In file included from ./include/asm-generic/bug.h:7,
-> >                  from ./arch/m68k/include/asm/bug.h:32,
-> >                  from ./include/linux/bug.h:5,
-> >                  from ./include/linux/thread_info.h:13,
-> >                  from ./arch/m68k/include/asm/processor.h:11,
-> >                  from ./include/linux/sched.h:13,
-> >                  from arch/m68k/kernel/asm-offsets.c:15:
-> > ./arch/m68k/include/asm/processor.h: In function =E2=80=98set_fc=E2=80=
-=99:
-> > ./arch/m68k/include/asm/processor.h:91:15: error: implicit declaration
-> > of function =E2=80=98in_interrupt=E2=80=99 [-Werror=3Dimplicit-function=
--declaration]
-> >    91 |  WARN_ON_ONCE(in_interrupt());
-> >       |               ^~~~~~~~~~~~
-> > ./include/linux/once_lite.h:28:27: note: in definition of macro
-> > =E2=80=98DO_ONCE_LITE_IF=E2=80=99
-> >    28 |   bool __ret_do_once =3D !!(condition);   \
-> >       |                           ^~~~~~~~~
-> > ./arch/m68k/include/asm/processor.h:91:2: note: in expansion of macro
-> > =E2=80=98WARN_ON_ONCE=E2=80=99
-> >    91 |  WARN_ON_ONCE(in_interrupt());
-> >       |  ^~~~~~~~~~~~
-> > cc1: some warnings being treated as errors
-> > make[3]: *** [scripts/Makefile.build:116:
-> > arch/m68k/kernel/asm-offsets.s] Error 1
-> > make[2]: *** [Makefile:1191: prepare0] Error 2
-> > make[1]: *** [Makefile:350: __build_one_by_one] Error 2
-> > make: *** [Makefile:234: __sub-make] Error 2
+On Tue, 02 Jan 2024 10:36:01 +0000 Marc Zyngier <maz@kernel.org> wrote:
 >
-> Applying this fix:
->
-> commit 0d7bdfe9726b275c7e9398047763a144c790b575
-> Author: Kent Overstreet <kent.overstreet@linux.dev>
-> Date:   Wed Dec 20 16:39:21 2023 -0500
->
->     m68k: Fix missing include
->
->     Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+> Ah, my bad. I have recently removed myself from the irqchip
+> maintenance (see commit b673fe1a6229), and forgot to let you know,
+> apologies for that.
+>=20
+> Please drop these two branches from -next, as it is unlikely I will
+> resume any significant activity on that front in the near future. You
+> probably already pull from tip anyway.
 
-LGTM.
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
-
-Gr{oetje,eeting}s,
-
-                        Geert
+No worries, I will remove them tomorrow.
 
 --=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Cheers,
+Stephen Rothwell
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+--Sig_/Z9PmyM.UFFT07zDHr/CDV+v
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWT9isACgkQAVBC80lX
+0GwAvQf/buMQu3JQ9vfFtne/vz/+KbSBYT9MITW7ImQW/SE5gw/ZhaWWWqlHVh6x
+I+/QBBypLUbDq9IgYzHM39c0lCy3y8Rc1C3sGzeZ+VpxWnrYQDEsmg8tmD9Y5LQj
+7f6dEZpu+i7MnA6A6OtKHHAQAVxrZr1I45NxoHTYOaGwakOsW1mfuYC6d/lpPhXj
+8OQeMnHf88XW3UAbLwOyKJqeCHKuFPuQoKtidCtiyyh+iKO96NrlQH6pZ2zaDqiD
+GY8nTWHIxdQ6XeEyEdxODThJ+FcnH2zFVd92vLTJ4ZiblFCQk+kI981r+4OiZICe
+sBtumfSWDV731SOp3t4mk0yLxFqLJw==
+=G+hY
+-----END PGP SIGNATURE-----
+
+--Sig_/Z9PmyM.UFFT07zDHr/CDV+v--
