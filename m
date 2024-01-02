@@ -1,233 +1,108 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1314A14F88;
-	Tue,  2 Jan 2024 15:09:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C2E15AD3;
+	Tue,  2 Jan 2024 15:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hTLNFWDT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bwGArrMvyDRdHVGWSGqdD5WeRbD71PvJ9NduhlgwNy3B624k7LDZtONuy6Gg+YELhTCW5VbOkEOK2/toA2sZApZIxNFo+PQ6L9trfRsrjaI0P+0NKMxipqWh0Snr5GFA0Vyni9xGXnw7z1x09iYrkKTGy+3yYUKRmoHTiInYWOElezHKSihFdBhaUtPADaGKCERBxX3RdU4q1iETeBpZiZYCO4upur7F4FhwIHGjdvbEQKXb4A8y0sA8L24uaqJWqWSjIRN22XkqpPfGJhRojGkg5IrSG3rJWubfFC/V2bD+sI9+QuC8lZsvKoPJwAcdfco0YXOkwm5sQEdJKpZYgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=s4ieMc43pUACuw3w3rZ3xh8UeF78hdTi+7ed7aebbbI=;
- b=nvJkFFpMDci6BlL17QeuU8Jq5UKmDxpJHR/I6z9HaHdwIgEvlklS26E/CqbVoPSXZpmClxvn/R922CbzDq8jjTkDIZJ6f54BviefNf3xQfu9/ttRawHKLHeSipCMaeCCOxwJRtX9jh5L3iZfRRD41rNhEQAw45CFMoGrc+0NNMswZPFDUwkMDBLOAOg6n7E1LEVk7C/PSobtPgABLice3EPoewCDtCTTqp2A4jRayxcRz3ppizfGXUvDXnWpi8+Rq2MjIeo9GznxXyonQIHTFGDBHdfnfmlZnfpNBlrW20aRvcTJziEH+fejymCCj/SMwyvyQu3OOB1FocGijsWhsw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s4ieMc43pUACuw3w3rZ3xh8UeF78hdTi+7ed7aebbbI=;
- b=hTLNFWDTxqKogYo3vE6tQdTIcuWamLtvQPhpr8o1d7q3mRN8prmxLnmIZLCFeTbhtBm4iyry1POxItnSp3k4dJNWJ1lHq4YMELlDjm7O1a7ndr1UbN/+RGw7AbEHl+Jdtp+1mqnHbz9Q1p+mjL53dZWTDb27+jM0eS5yRHbEoiA=
-Received: from BY5PR03CA0023.namprd03.prod.outlook.com (2603:10b6:a03:1e0::33)
- by BL1PR12MB5333.namprd12.prod.outlook.com (2603:10b6:208:31f::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.25; Tue, 2 Jan
- 2024 15:09:47 +0000
-Received: from SJ1PEPF00001CDE.namprd05.prod.outlook.com
- (2603:10b6:a03:1e0:cafe::28) by BY5PR03CA0023.outlook.office365.com
- (2603:10b6:a03:1e0::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.21 via Frontend
- Transport; Tue, 2 Jan 2024 15:09:47 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00001CDE.mail.protection.outlook.com (10.167.242.6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7159.9 via Frontend Transport; Tue, 2 Jan 2024 15:09:47 +0000
-Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Tue, 2 Jan
- 2024 09:09:46 -0600
-From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-To: <linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>
-CC: Ard Biesheuvel <ardb@kernel.org>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Yazen Ghannam
-	<yazen.ghannam@amd.com>, Smita Koralahalli
-	<Smita.KoralahalliChannabasappa@amd.com>
-Subject: [PATCH 3/4] acpi/ghes, efi/cper: Recognize and process CXL Protocol Errors.
-Date: Tue, 2 Jan 2024 15:09:32 +0000
-Message-ID: <20240102150933.161009-4-Smita.KoralahalliChannabasappa@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240102150933.161009-1-Smita.KoralahalliChannabasappa@amd.com>
-References: <20240102150933.161009-1-Smita.KoralahalliChannabasappa@amd.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="svD4su6l"
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 402CRVvJ007618;
+	Tue, 2 Jan 2024 15:09:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=Z16gIvE6o/oyg7pKiGRgBezqdCKIKpf4AGEXuLsxRFw=;
+ b=svD4su6l/twu+Zu2qoE0Qtzc2tJbxOj/21Pxy3greVvKpkioWAWCsLUbw1JSvcpIJ1AG
+ 2PLbkB/D1Hcmp2UAVq3HHtelivWEgMRk9MOi5EcqcNupuCD7mH6rfg4VcMmig0ox5L8e
+ z4funDZikQnB/ApbXAUzG5HHAmGxM5qn8nu7yIM7g4jdJc1UAqIpAmdpZrm8y4VB6qjc
+ C0sAis8oUvaictM8VH3r4w3cQXUkVusrr/1G9FiB+zWhysS3SOTvXFyKvQSq9EKmB/SA
+ h72VMSwYOdaVKPHcGpvajT1xHoQ952aP5IkHkFT7JDByszskj5K2OsgJbHFJl/30qSaN Ug== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vcjghkfsn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jan 2024 15:09:34 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 402EKo8H022188;
+	Tue, 2 Jan 2024 15:09:34 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vcjghkfs7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jan 2024 15:09:34 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 402Ds1wG017834;
+	Tue, 2 Jan 2024 15:09:32 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vawwynnak-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jan 2024 15:09:32 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 402F9TLH19726960
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 2 Jan 2024 15:09:29 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5DA132004E;
+	Tue,  2 Jan 2024 15:09:29 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1E7A720040;
+	Tue,  2 Jan 2024 15:09:28 +0000 (GMT)
+Received: from osiris (unknown [9.171.22.30])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  2 Jan 2024 15:09:28 +0000 (GMT)
+Date: Tue, 2 Jan 2024 16:09:26 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Sven Schnelle <svens@linux.ibm.com>
+Subject: Re: [PATCH v3 32/34] s390/unwind: Disable KMSAN checks
+Message-ID: <20240102150926.6306-I-hca@linux.ibm.com>
+References: <20231213233605.661251-1-iii@linux.ibm.com>
+ <20231213233605.661251-33-iii@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CDE:EE_|BL1PR12MB5333:EE_
-X-MS-Office365-Filtering-Correlation-Id: f8d2e612-3d56-4166-0b03-08dc0ba4dc37
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	YHh6zms3NQ3q2crM1yKq+xhGPmL9h1nJR+Y6vb4mZvctEzf06Mokfqy717YUwZCFivb0cFAZCYPAQ3tuN8HRX6TtW/Fvh7aFELw0+FwZRlNRP52kn3BHE5Usb15ZT2nN1sIB0O4MHWBLRwhq3D5mT4G8y+0OYM6hEcciPh3EN08QDXPEQEdEoi2aSNgGdu/q5RYwfxJv4/ibYUQBhon5s4crLO+h1wXVlihiubIqqZqV+HIQwZFoPP0E0F3+JmiZ6CN7M+7Q100Bp+xU8jxZjol9a6YYLKlHGYilmbtSIrIid8c1DiO7goCAqYlz/TB4/iqIh+toYfjASRAOhWw6gcPosap2s3eZMYjjZBK/WLoEcfadq0wopWDoZO7iv4Fs2a5jX6TCvVLImwNmWFMe8Sqrb88fTtiN1KC7GXdGw3W2XF8i5YvQ8DxXBNPGudKMIzShC1Q5dDElLahH5tfmnk6MFgRpl4cCQgGtRcxQM0FdFPeAdFW9z2uY2MrkoPgTINWnLpma6TlGeyySSoexGfzfTQpEiK4mKCKHyYTXLsr9tNnMbHBi9AXcu+Lp7yJSsIFx1XwyRzpm56lSc+1SFUXrjsE9C8ssX6YNVNrNCFIDTyjEk+zI+c7wgq6diH1rEWOxhMGsx+BFBpW+PgJRA1102VxYqBW5opypm4Br2FhCCrFvheo+azpLc1bMqoxs0No25XjxjVd684FTCBUmoLg3s4649vuMrtYKvNN1DeECVHcQz+6YGTKc4PSfhW3NDMWv5n+m79YuG1DN9HFbYg==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(136003)(376002)(39860400002)(396003)(230922051799003)(64100799003)(186009)(82310400011)(1800799012)(451199024)(40470700004)(46966006)(36840700001)(70206006)(70586007)(36860700001)(4326008)(110136005)(316002)(8676002)(8936002)(54906003)(2616005)(1076003)(26005)(16526019)(6666004)(83380400001)(478600001)(426003)(47076005)(336012)(7696005)(2906002)(41300700001)(5660300002)(36756003)(82740400003)(81166007)(356005)(86362001)(40460700003)(40480700001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jan 2024 15:09:47.5654
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f8d2e612-3d56-4166-0b03-08dc0ba4dc37
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CDE.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5333
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231213233605.661251-33-iii@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: exHf4oBJB85XIi_IDJ_Zx4a73A6HiVoO
+X-Proofpoint-ORIG-GUID: 2sCBYVkslnYpbOQdpV7tqP0ZF1S161uX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-02_04,2024-01-02_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=425 lowpriorityscore=0 spamscore=0 mlxscore=0 impostorscore=0
+ phishscore=0 adultscore=0 clxscore=1015 suspectscore=0 bulkscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401020116
 
-UEFI v2.10 section N.2.13 defines a CPER record for CXL Protocol errors.
+On Thu, Dec 14, 2023 at 12:24:52AM +0100, Ilya Leoshkevich wrote:
+> The unwind code can read uninitialized frames. Furthermore, even in
+> the good case, KMSAN does not emit shadow for backchains. Therefore
+> disable it for the unwinding functions.
+> 
+> Reviewed-by: Alexander Potapenko <glider@google.com>
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+> ---
+>  arch/s390/kernel/unwind_bc.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-Add GHES support to detect CXL CPER Protocol record and cache error
-severity, device_id, serial number and a pointer to CXL RAS capability
-struct in struct cxl_cper_rec_data.
-
-Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
----
- drivers/acpi/apei/ghes.c        | 15 ++++++++++
- drivers/firmware/efi/cper_cxl.c | 52 +++++++++++++++++++++++++++++++++
- include/linux/cxl-event.h       |  6 ++++
- 3 files changed, 73 insertions(+)
-
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index d6a85fbc0a8b..6471584b2e79 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -714,6 +714,18 @@ static void cxl_cper_post_event(enum cxl_event_type event_type,
- 		cper_callback(event_type, &data);
- }
- 
-+void cxl_cper_handle_prot_err(struct acpi_hest_generic_data *gdata)
-+{
-+	struct cxl_cper_rec_data data;
-+
-+	memset(&data, 0, sizeof(data));
-+
-+	if (cxl_cper_handle_prot_err_info(gdata, &data))
-+		return;
-+
-+	data.severity = gdata->error_severity;
-+}
-+
- int cxl_cper_register_callback(cxl_cper_callback callback)
- {
- 	guard(rwsem_write)(&cxl_cper_rw_sem);
-@@ -768,6 +780,9 @@ static bool ghes_do_proc(struct ghes *ghes,
- 		else if (guid_equal(sec_type, &CPER_SEC_PROC_ARM)) {
- 			queued = ghes_handle_arm_hw_error(gdata, sev);
- 		}
-+		else if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR)) {
-+			cxl_cper_handle_prot_err(gdata);
-+		}
- 		else if (guid_equal(sec_type, &CPER_SEC_CXL_GEN_MEDIA_GUID)) {
- 			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
- 
-diff --git a/drivers/firmware/efi/cper_cxl.c b/drivers/firmware/efi/cper_cxl.c
-index 4fd8d783993e..3bc0b9f28c9e 100644
---- a/drivers/firmware/efi/cper_cxl.c
-+++ b/drivers/firmware/efi/cper_cxl.c
-@@ -8,6 +8,7 @@
-  */
- 
- #include <linux/cper.h>
-+#include <acpi/ghes.h>
- #include "cper_cxl.h"
- 
- #define PROT_ERR_VALID_AGENT_TYPE		BIT_ULL(0)
-@@ -176,3 +177,54 @@ void cper_print_prot_err(const char *pfx, const struct cper_sec_prot_err *prot_e
- 			       sizeof(cxl_ras->header_log), 0);
- 	}
- }
-+
-+int cxl_cper_handle_prot_err_info(struct acpi_hest_generic_data *gdata,
-+				  struct cxl_cper_rec_data *data)
-+{
-+	struct cper_sec_prot_err *prot_err = acpi_hest_get_payload(gdata);
-+	struct cper_cxl_event_devid *device_id = &data->rec.hdr.device_id;
-+	struct cper_cxl_event_sn *dev_serial_num =  &data->rec.hdr.dev_serial_num;
-+	size_t size = sizeof(*prot_err) + prot_err->dvsec_len;
-+
-+	if (!(prot_err->valid_bits & PROT_ERR_VALID_ERROR_LOG)) {
-+		pr_err(FW_WARN "Not a valid protocol error log\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!(prot_err->valid_bits & PROT_ERR_VALID_DEVICE_ID)) {
-+		pr_err(FW_WARN "Not a valid Device ID\n");
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * The device ID or agent address is only valid for CXL 1.1 device,
-+	 * CXL 2.0 device, CXL 2.0 Logical device, CXL 2.0 Fabric Manager
-+	 * Managed Logical Device, CXL Root Port, CXL Downstream Switch
-+	 * Port, or CXL Upstream Switch Port.
-+	 */
-+	if (prot_err->agent_type <= 0x7 && prot_err->agent_type != RCH_DP) {
-+		device_id->segment_num = prot_err->agent_addr.segment;
-+		device_id->bus_num = prot_err->agent_addr.bus;
-+		device_id->device_num = prot_err->agent_addr.device;
-+		device_id->func_num = prot_err->agent_addr.function;
-+	} else {
-+		pr_err(FW_WARN "Not a valid agent type\n");
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * The device serial number is only valid for CXL 1.1 device, CXL
-+	 * 2.0 device, CXL 2.0 Logical device, or CXL 2.0 Fabric Manager
-+	 * Managed Logical Device.
-+	 */
-+	if (!(prot_err->valid_bits & PROT_ERR_VALID_SERIAL_NUMBER) ||
-+	      prot_err->agent_type > 0x4 || prot_err->agent_type == RCH_DP)
-+		pr_warn(FW_WARN "No valid serial number present\n");
-+
-+	dev_serial_num->lower_dw = prot_err->dev_serial_num.lower_dw;
-+	dev_serial_num->upper_dw = prot_err->dev_serial_num.upper_dw;
-+
-+	data->cxl_ras = (struct cxl_ras_capability_regs *)((long)prot_err + size);
-+
-+	return 0;
-+}
-diff --git a/include/linux/cxl-event.h b/include/linux/cxl-event.h
-index 90d8390a73cb..7ba2dfd6619e 100644
---- a/include/linux/cxl-event.h
-+++ b/include/linux/cxl-event.h
-@@ -154,11 +154,17 @@ struct cxl_ras_capability_regs {
- 
- struct cxl_cper_rec_data {
- 	struct cxl_cper_event_rec rec;
-+	struct cxl_ras_capability_regs *cxl_ras;
-+	int severity;
- };
- 
- typedef void (*cxl_cper_callback)(enum cxl_event_type type,
- 				  struct cxl_cper_rec_data *data);
- 
-+struct acpi_hest_generic_data;
-+int cxl_cper_handle_prot_err_info(struct acpi_hest_generic_data *gdata,
-+				  struct cxl_cper_rec_data *data);
-+
- #ifdef CONFIG_ACPI_APEI_GHES
- int cxl_cper_register_callback(cxl_cper_callback callback);
- int cxl_cper_unregister_callback(cxl_cper_callback callback);
--- 
-2.17.1
-
+Acked-by: Heiko Carstens <hca@linux.ibm.com>
