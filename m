@@ -1,166 +1,188 @@
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F185156C6;
-	Tue,  2 Jan 2024 17:43:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11066154A9
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 17:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VOiN84Ux"
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3ba14203a34so9435014b6e.1;
-        Tue, 02 Jan 2024 09:43:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704217432; x=1704822232; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oFAXfoSqedernbiWEjd/3knzaFCGGb+zuLCr9vWqgk4=;
-        b=VOiN84UxslOPnST1uF8yuuaZMaZY0rUIIYnQeqsSglW96kxtLiZO0eos081mZc4gUr
-         QZtvusJYn81jE7Qh2ytWaM+A1qPoNKdGOK9xO5bcPYVH0jE279entbrA9zltayxa40/e
-         dtLzKy9A8ZcPMy0SE3Lek8kZLQhBTBPI2mWH3UlYr7jq7scYY39id07xhkoS6GuY0D0h
-         qaBiBIFJBTRWZqvzWKmnQwMPx5mlqSJMAjXUnNzXHLVNqT14Pp7SIWLoEisxfyZlZ3AA
-         r9jbHMguaHJ5r4/V+rqdgvx+rLsxyDtKZmu/IV0PPbyXH3A7HK5fvwfjYcre2DTMBTVr
-         ZXBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704217432; x=1704822232;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oFAXfoSqedernbiWEjd/3knzaFCGGb+zuLCr9vWqgk4=;
-        b=CpGcU+QsGC+f4afZU2G+Ng/om1PLb1v7C0N1Fbjyr6OPkZ9JulURAWoiJ60Fy4+GHB
-         rvwDyYfGfSRTniKREAIB6+mUooxc5bn6MWgn5sIznHtVMnYPbSETBAzobhrWtmQE/APl
-         kAgSRcnKmw1HKa0Gj1PkY719Bzh1riiF8oiByy/Cd9+iC0Wb5k6oxGhxfQ42oyV7NS4Q
-         21PLxnFG5XUvtY6UPzx/2n21/VO6UTLg2+sMRZXHFpsNw4UNtjM5B9q4bd485Hr3dZ2E
-         hyLdWycVx7lqxUnksGXOG68O2agHC8K6APaSuxAmf/2nJJ9gPULFW/nPDOChj93Hv2uq
-         2r8Q==
-X-Gm-Message-State: AOJu0YwcXIPrt8vzAdaxrE6zoPV6lU0xTDbPcsf/3y9xMzuMg5Evqkhs
-	2/I5nryDEDxRpir8KcGDPWkMfD9jrBgP5A==
-X-Google-Smtp-Source: AGHT+IHl/019xddMgz9dzwdw//SCPvoCIFqs7YXU8Oot7eKHFac5tM8u9C/Ua4cEkhMMQP3o/7gPlg==
-X-Received: by 2002:a05:6808:3c4d:b0:3bb:cdd5:17c4 with SMTP id gl13-20020a0568083c4d00b003bbcdd517c4mr15552274oib.83.1704217432358;
-        Tue, 02 Jan 2024 09:43:52 -0800 (PST)
-Received: from dschatzberg-fedora-PF3DHTBV ([2620:10d:c091:500::7:7ce3])
-        by smtp.gmail.com with ESMTPSA id dm6-20020ad44e26000000b0067f6ec98ae9sm10239578qvb.32.2024.01.02.09.43.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jan 2024 09:43:51 -0800 (PST)
-Date: Tue, 2 Jan 2024 12:43:49 -0500
-From: Dan Schatzberg <schatzberg.dan@gmail.com>
-To: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Yosry Ahmed <yosryahmed@google.com>, Huan Yang <link@vivo.com>,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, Tejun Heo <tj@kernel.org>,
-	Zefan Li <lizefan.x@bytedance.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shakeel Butt <shakeelb@google.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	SeongJae Park <sj@kernel.org>,
-	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>,
-	Nhat Pham <nphamcs@gmail.com>, Yue Zhao <findns94@gmail.com>
-Subject: Re: [PATCH v5 2/2] mm: add swapiness= arg to memory.reclaim
-Message-ID: <ZZRLVYeTjljn0dO5@dschatzberg-fedora-PF3DHTBV>
-References: <20231220152653.3273778-1-schatzberg.dan@gmail.com>
- <20231220152653.3273778-3-schatzberg.dan@gmail.com>
- <ZYQFlynE7CU_Fjoc@tiehlicka>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TvsB1H5r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704217523;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qpYK3XlrSVzoiQg06tW9BiOzquqDi+TLEnPuE5AD4b8=;
+	b=TvsB1H5rfaFNNbvOPg480gDpdlPbBCP+9Q4tFXiFtnZnuHtdxfMZEH1gGhnfHubjwel2Na
+	+2X4/lAkAZUZExUiq/zav0ta9ujiv/+7Kvqfl7Ldf/CzpaDRX/GF72iwRsb1ChJVv0hCt2
+	Qqi3Z/+xWnKp5PbY0bQV5kcmXN+qhhA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-680-ms8k78quM8idEC82V53Hmg-1; Tue, 02 Jan 2024 12:45:18 -0500
+X-MC-Unique: ms8k78quM8idEC82V53Hmg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2A1F285A589;
+	Tue,  2 Jan 2024 17:45:18 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.68])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 3B6441121313;
+	Tue,  2 Jan 2024 17:45:17 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <140431.1704208899@warthog.procyon.org.uk>
+References: <140431.1704208899@warthog.procyon.org.uk>
+To: Jeffrey Altman <jaltman@auristor.com>
+Cc: dhowells@redhat.com, Marc Dionne <marc.dionne@auristor.com>,
+    linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] afs: Fix error handling with lookup via FS.InlineBulkStatus
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZYQFlynE7CU_Fjoc@tiehlicka>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <238256.1704217516.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 02 Jan 2024 17:45:16 +0000
+Message-ID: <238257.1704217516@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-On Thu, Dec 21, 2023 at 10:29:59AM +0100, Michal Hocko wrote:
-> On Wed 20-12-23 07:26:51, Dan Schatzberg wrote:
-> >  ...
-> 
-> LGTM
-> Acked-by: Michal Hocko <mhocko@suse.com.
-> 
-> Just one minor thing. It would be really great to prevent from potential
-> incorrect use of mem_cgroup_swappiness. This should be internal function
-> to memcg. Now, having scan_control internal to vmscan.c makes that
-> harder and moving it out to swap.h or internal.h sounds overreaching.
-> 
-> We could do this at least to reduce those mistakes. I can make it a
-> proper patch if this seems reasonable or you can fold it into your patch
-> directly.
-> --- 
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index f98dff23b758..5f3a182e9515 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -92,8 +92,10 @@ struct scan_control {
->  	unsigned long	anon_cost;
->  	unsigned long	file_cost;
->  
-> -	/* Swappiness value for reclaim. NULL will fall back to per-memcg/global value */
-> +#ifdef CONFIG_MEMCG
-> +	/* Swappiness value for reclaim. Always use sc_swappiness()! */
->  	int *swappiness;
-> +#endif
->  
->  	/* Can active folios be deactivated as part of reclaim? */
->  #define DEACTIVATE_ANON 1
-> @@ -230,6 +232,13 @@ static bool writeback_throttling_sane(struct scan_control *sc)
->  #endif
->  	return false;
->  }
-> +
-> +static int sc_swappiness(struct scan_control *sc, struct mem_cgroup *memcg)
-> +{
-> +	if (sc->swappiness)
-> +		return *sc->swappiness;
-> +	return mem_cgroup_swappiness(memcg);
-> +}
->  #else
->  static bool cgroup_reclaim(struct scan_control *sc)
->  {
-> @@ -245,6 +254,10 @@ static bool writeback_throttling_sane(struct scan_control *sc)
->  {
->  	return true;
->  }
-> +static int sc_swappiness(struct scan_control *sc, struct mem_cgroup *memcg)
-> +{
-> +	return READ_ONCE(vm_swappiness);
-> +}
->  #endif
->  
->  static void set_task_reclaim_state(struct task_struct *task,
-> @@ -2330,8 +2343,7 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
->  	struct pglist_data *pgdat = lruvec_pgdat(lruvec);
->  	struct mem_cgroup *memcg = lruvec_memcg(lruvec);
->  	unsigned long anon_cost, file_cost, total_cost;
-> -	int swappiness = sc->swappiness ?
-> -		*sc->swappiness : mem_cgroup_swappiness(memcg);
-> +	int swappiness = sc_swappiness(sc, memcg);
->  	u64 fraction[ANON_AND_FILE];
->  	u64 denominator = 0;	/* gcc */
->  	enum scan_balance scan_balance;
-> @@ -2612,10 +2624,7 @@ static int get_swappiness(struct lruvec *lruvec, struct scan_control *sc)
->  	    mem_cgroup_get_nr_swap_pages(memcg) < MIN_LRU_BATCH)
->  		return 0;
->  
-> -	if (sc->swappiness)
-> -		return *sc->swappiness;
-> -
-> -	return mem_cgroup_swappiness(memcg);
-> +	return sc_swappiness(sc, memcg);
->  }
->  
->  static int get_nr_gens(struct lruvec *lruvec, int type)
-> -- 
-> Michal Hocko
-> SUSE Labs
+Here's a version of the patch against v6.7-rc7 rather than my afs-fix-rota=
+tion
+branch.
 
-Thanks for the review Michal and sorry for the delayed response. Your
-patch looks reasonable to me but I'm a bit unclear about the need for
-#ifdef - mem_cgroup_swappiness already works correctly regardless of
-CONFIG_MEMCG or not - why not make sc->swappiness and sc_swappiness()
-unconditional?
+---
+afs: Fix error handling with lookup via FS.InlineBulkStatus
 
-Happy to roll that into the next version of my patch.
+When afs does a lookup, it tries to use FS.InlineBulkStatus to preemptivel=
+y
+look up a bunch of files in the parent directory and cache this locally, o=
+n
+the basis that we might want to look at them too (for example if someone
+does an ls on a directory, they may want want to then stat every file
+listed).
+
+FS.InlineBulkStatus can be considered a compound op with the normal abort
+code applying to the compound as a whole.  Each status fetch within the
+compound is then given its own individual abort code - but assuming no
+error that prevents the bulk fetch from returning the compound result will
+be 0, even if all the constituent status fetches failed.
+
+At the conclusion of afs_do_lookup(), we should use the abort code from th=
+e
+appropriate status to determine the error to return, if any - but instead
+it is assumed that we were successful if the op as a whole succeeded and w=
+e
+return an incompletely initialised inode, resulting in ENOENT, no matter
+the actual reason.  In the particular instance reported, a vnode with no
+permission granted to be accessed is being given a UAEACCES abort code
+which should be reported as EACCES, but is instead being reported as
+ENOENT.
+
+Fix this by abandoning the inode (which will be cleaned up with the op) if
+file[1] has an abort code indicated and turn that abort code into an error
+instead.
+
+Whilst we're at it, add a tracepoint so that the abort codes of the
+individual subrequests of FS.InlineBulkStatus can be logged.  At the momen=
+t
+only the container abort code can be 0.
+
+Fixes: e49c7b2f6de7 ("afs: Build an abstraction around an "operation" conc=
+ept")
+Reported-by: Jeffrey Altman <jaltman@auristor.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: linux-afs@lists.infradead.org
+---
+ fs/afs/dir.c               |   11 ++++++++---
+ include/trace/events/afs.h |   25 +++++++++++++++++++++++++
+ 2 files changed, 33 insertions(+), 3 deletions(-)
+
+diff --git a/fs/afs/dir.c b/fs/afs/dir.c
+index 5219182e52e1..a9dcb9d994e4 100644
+--- a/fs/afs/dir.c
++++ b/fs/afs/dir.c
+@@ -707,6 +707,8 @@ static void afs_do_lookup_success(struct afs_operation=
+ *op)
+ 			break;
+ 		}
+ =
+
++		if (vp->scb.status.abort_code)
++			trace_afs_bulkstat_error(op, &vp->fid, i, vp->scb.status.abort_code);
+ 		if (!vp->scb.have_status && !vp->scb.have_error)
+ 			continue;
+ =
+
+@@ -895,12 +897,15 @@ static struct inode *afs_do_lookup(struct inode *dir=
+, struct dentry *dentry,
+ 		afs_begin_vnode_operation(op);
+ 		afs_wait_for_operation(op);
+ 	}
+-	inode =3D ERR_PTR(op->error);
+ =
+
+ out_op:
+ 	if (op->error =3D=3D 0) {
+-		inode =3D &op->file[1].vnode->netfs.inode;
+-		op->file[1].vnode =3D NULL;
++		if (op->file[1].scb.status.abort_code) {
++			op->error =3D afs_abort_to_error(op->file[1].scb.status.abort_code);
++		} else {
++			inode =3D &op->file[1].vnode->netfs.inode;
++			op->file[1].vnode =3D NULL;
++		}
+ 	}
+ =
+
+ 	if (op->file[0].scb.have_status)
+diff --git a/include/trace/events/afs.h b/include/trace/events/afs.h
+index e9d412d19dbb..caec276515dc 100644
+--- a/include/trace/events/afs.h
++++ b/include/trace/events/afs.h
+@@ -1216,6 +1216,31 @@ TRACE_EVENT(afs_file_error,
+ 		      __print_symbolic(__entry->where, afs_file_errors))
+ 	    );
+ =
+
++TRACE_EVENT(afs_bulkstat_error,
++	    TP_PROTO(struct afs_operation *op, struct afs_fid *fid, unsigned int=
+ index, s32 abort),
++
++	    TP_ARGS(op, fid, index, abort),
++
++	    TP_STRUCT__entry(
++		    __field_struct(struct afs_fid,	fid)
++		    __field(unsigned int,		op)
++		    __field(unsigned int,		index)
++		    __field(s32,			abort)
++			     ),
++
++	    TP_fast_assign(
++		    __entry->op =3D op->debug_id;
++		    __entry->fid =3D *fid;
++		    __entry->index =3D index;
++		    __entry->abort =3D abort;
++			   ),
++
++	    TP_printk("OP=3D%08x[%02x] %llx:%llx:%x a=3D%d",
++		      __entry->op, __entry->index,
++		      __entry->fid.vid, __entry->fid.vnode, __entry->fid.unique,
++		      __entry->abort)
++	    );
++
+ TRACE_EVENT(afs_cm_no_server,
+ 	    TP_PROTO(struct afs_call *call, struct sockaddr_rxrpc *srx),
+ =
+
+
