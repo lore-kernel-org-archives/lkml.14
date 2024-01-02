@@ -1,104 +1,148 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2163212E6B;
-	Tue,  2 Jan 2024 15:09:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE69412E7E
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 15:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mBGP0+KB"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-67f9fac086bso72766526d6.3;
-        Tue, 02 Jan 2024 07:09:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704208150; x=1704812950; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FMS55Vzekx4T3pQgk1uVM7+XggMIpgc3xmmxIF8jTeY=;
-        b=mBGP0+KBZZ5RVjbTox05T7TLZeWMS5Mah6/1rkZVpVHcgaTbl5HrzlL/9aKUOAadXx
-         MzpiIKsw9nBqTf80bjtnMTP7qR02WbxaCxyvFbf4GFiQcid7r1MvpCcpluQ1hUKV+XrG
-         S8S0FWWQifdnKIx8y/vNQ/66FwP316x7GRO/i5998wEsB0Tbg2BfC/brUIL8lR5h9qxm
-         f2zUbJb43Uc4CM/vMnPB4GAZfSV0K45Ro499Zn1s9GJuwQVQOduhDg9HS6Wofz1r4c3s
-         n4aMY+37TKhYnw2K/eG7xSlwu1/v7l8Gxcv35iEm8wEYZMaKAsgEQ8kr2L1DwSRUBgLU
-         OeRQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EGcEb+FB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704208179;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JyAp2a63bNUdMnRsj/hhIizx1kpY/IpGl6RFLf7olc0=;
+	b=EGcEb+FBf1SCon9Px0Ou9S1QT3PeXhaZdnve0OngsZuwDvTCRtt1qt2nv9HqHcWBcb9H08
+	XLIDyZCxmmZyNfSnUnCIlOIlOe9fVz02EneNVqiIGBjfDQWzt+sj3e3Ma5rsB39db5d+1f
+	yBUzpFwKGsXkgly/uSlCOl71G3pY0C8=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-516-0ouZ8hJSOiqjMOhFQZR5-Q-1; Tue, 02 Jan 2024 10:09:38 -0500
+X-MC-Unique: 0ouZ8hJSOiqjMOhFQZR5-Q-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-336811fc1d7so7172225f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 07:09:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704208150; x=1704812950;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FMS55Vzekx4T3pQgk1uVM7+XggMIpgc3xmmxIF8jTeY=;
-        b=kT5Hic3wDvIZMnaka5cjIxpfJZefBBQQ/cDy2c8/DpfJzmeMo7iVzLEFXpcx4Z3svh
-         MuTBqO3XQYKit7SQGJavOyNTZwFEJbBUypmnBCIlV8H2lDzeNmy2atrjfOTpt9MffiFu
-         dhI6JYA1Bibu+X804/qi6HEAwpoE85FBSnW0mk7dSnosSkIU8LKGT8rN7AdMrYxe2XUj
-         frrfuX2+FnrTrSgztqOhN08/FxoGz7Vz4srfSIsDfTcz0rcLJIRJTxArCrL3TCS6FomE
-         W7U/3+8+/1ZKOi3McR54IoaMHM5inEJZRa4yk3IIShbjwxzd0mPkpj8WfJ4F5C4MWz3J
-         bXqA==
-X-Gm-Message-State: AOJu0YxvhlSMjIuS0XC0EInWGnGV5x8cE1py/lI9Fvh2Qrby0ZQ9ZZH2
-	T53yR7wMkp2Z8YDaDhh8fbs=
-X-Google-Smtp-Source: AGHT+IGWbSLusYM73Mvn3tf3GQ41JzvUWrvoogxoINH6YdIWkyWIMUa/huqymo1ygkFfvYp485HL0A==
-X-Received: by 2002:a05:6214:e8c:b0:67f:8dfb:b6b1 with SMTP id hf12-20020a0562140e8c00b0067f8dfbb6b1mr28230780qvb.5.1704208149845;
-        Tue, 02 Jan 2024 07:09:09 -0800 (PST)
-Received: from localhost (48.230.85.34.bc.googleusercontent.com. [34.85.230.48])
-        by smtp.gmail.com with ESMTPSA id n5-20020a0ce945000000b0067fa1179b57sm8875424qvo.131.2024.01.02.07.09.09
+        d=1e100.net; s=20230601; t=1704208177; x=1704812977;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JyAp2a63bNUdMnRsj/hhIizx1kpY/IpGl6RFLf7olc0=;
+        b=aJFJycAWnRSikkni+pSpcJ/e3u4GHEAoq7YzYUqvgdFgXEXcKU6SwX0MSJhwQ0wLOI
+         iRK4BdgzFTyX3tOQexFW8H3U7Vxc8DyQJJOpme3GO8uESjVl8XrDMiirBRPdECR5vqqN
+         g9KdfG2lmeYoGZ5kE/fHy/AHf7Mtjr05pLwXa7W74uvNK6MqJFRHhVH4vnMO1jNaFkCC
+         GL3rL8x7mI2oAdXKq29U5/ViD6p4Tog4XNJGfQ21r+V/eSw9yx8URnbzitk3mi2xJuxZ
+         2AGvLy9u6fvwfEGb34CGMlpikzoW1UKgBjfs+FwysSBhk7dFjEldFSpH1IZgQFbCpzNe
+         GqFQ==
+X-Gm-Message-State: AOJu0YynxloUJH3Y0YnRKGAiyiTCRB/jvqJggJ5OnYOFTV9L0wnL4bIU
+	S28B11lf0A0R3YT8aOQq/ojdbTlEZoNC0Yb4UKjjWnfYw4V2NBzfjLYVeTuc1CcGFn45LfQ9e19
+	lW4lbm21zDq/ibSH7+Q6wtwLwhbdmlg39
+X-Received: by 2002:a5d:6744:0:b0:336:45cd:6d87 with SMTP id l4-20020a5d6744000000b0033645cd6d87mr10953343wrw.60.1704208177486;
+        Tue, 02 Jan 2024 07:09:37 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEyuXnWxFGu6P2UDRmOMW7+D+oRJwWgKCt7eNeNUUfLIpD6sU5j5lSo6bU7jHHxrb0gagtbQQ==
+X-Received: by 2002:a5d:6744:0:b0:336:45cd:6d87 with SMTP id l4-20020a5d6744000000b0033645cd6d87mr10953332wrw.60.1704208177153;
+        Tue, 02 Jan 2024 07:09:37 -0800 (PST)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id a1-20020adfed01000000b0033748f5600csm1610410wro.108.2024.01.02.07.09.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jan 2024 07:09:09 -0800 (PST)
-Date: Tue, 02 Jan 2024 10:09:09 -0500
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Richard Gobert <richardbgobert@gmail.com>, 
- davem@davemloft.net, 
- dsahern@kernel.org, 
- edumazet@google.com, 
- kuba@kernel.org, 
- pabeni@redhat.com, 
- shuah@kernel.org, 
- netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, 
- lixiaoyan@google.com
-Message-ID: <659427152812e_2907a12946f@willemb.c.googlers.com.notmuch>
-In-Reply-To: <5bd9a1c7-63e8-4f5e-a749-c7eeeaed3c42@gmail.com>
-References: <127b8199-1cd4-42d7-9b2b-875abaad93fe@gmail.com>
- <5bd9a1c7-63e8-4f5e-a749-c7eeeaed3c42@gmail.com>
-Subject: Re: [PATCH net-next v2 3/3] selftests/net: fix GRO coalesce test and
- add ext header coalesce tests
+        Tue, 02 Jan 2024 07:09:36 -0800 (PST)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ linux-arch@vger.kernel.org, x86@kernel.org, Thomas Gleixner
+ <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Wanpeng Li <wanpengli@tencent.com>, Vitaly Kuznetsov
+ <vkuznets@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Jason Baron
+ <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel
+ <ardb@kernel.org>, Frederic Weisbecker <frederic@kernel.org>, "Paul E.
+ McKenney" <paulmck@kernel.org>, Feng Tang <feng.tang@intel.com>, Andrew
+ Morton <akpm@linux-foundation.org>, "Mike Rapoport (IBM)"
+ <rppt@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, David Hildenbrand
+ <david@redhat.com>, "ndesaulniers@google.com" <ndesaulniers@google.com>,
+ Michael Kelley <mikelley@microsoft.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>
+Subject: Re: [PATCH 5/5] x86/tsc: Make __use_tsc __ro_after_init
+In-Reply-To: <20231204182043.GB7299@noisy.programming.kicks-ass.net>
+References: <20231120105528.760306-1-vschneid@redhat.com>
+ <20231120105528.760306-6-vschneid@redhat.com>
+ <20231120120553.GU8262@noisy.programming.kicks-ass.net>
+ <xhsmhcyvlc3mi.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <20231204182043.GB7299@noisy.programming.kicks-ass.net>
+Date: Tue, 02 Jan 2024 16:09:35 +0100
+Message-ID: <xhsmhmstnkc0g.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain
 
-Richard Gobert wrote:
-> Currently there is no test which checks that IPv6 extension header packets
-> successfully coalesce. This commit adds a test, which verifies two IPv6
-> packets with HBH extension headers do coalesce, and another test which
-> checks that packets with different extension header data do not coalesce
-> in GRO.
-> 
-> I changed the receive socket filter to accept a packet with one extension
-> header. This change exposed a bug in the fragment test -- the old BPF did
-> not accept the fragment packet. I updated correct_num_packets in the
-> fragment test accordingly.
-> 
-> Signed-off-by: Richard Gobert <richardbgobert@gmail.com>
+On 04/12/23 19:20, Peter Zijlstra wrote:
+> On Mon, Dec 04, 2023 at 05:51:49PM +0100, Valentin Schneider wrote:
+>> On 20/11/23 13:05, Peter Zijlstra wrote:
+>> > On Mon, Nov 20, 2023 at 11:55:28AM +0100, Valentin Schneider wrote:
+>> >> __use_tsc is only ever enabled in __init tsc_enable_sched_clock(), so mark
+>> >> it as __ro_after_init.
+>> >>
+>> >> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+>> >> ---
+>> >>  arch/x86/kernel/tsc.c | 2 +-
+>> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> >>
+>> >> diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+>> >> index 15f97c0abc9d0..f19b42ea40573 100644
+>> >> --- a/arch/x86/kernel/tsc.c
+>> >> +++ b/arch/x86/kernel/tsc.c
+>> >> @@ -44,7 +44,7 @@ EXPORT_SYMBOL(tsc_khz);
+>> >>  static int __read_mostly tsc_unstable;
+>> >>  static unsigned int __initdata tsc_early_khz;
+>> >>
+>> >> -static DEFINE_STATIC_KEY_FALSE(__use_tsc);
+>> >> +static DEFINE_STATIC_KEY_FALSE_RO(__use_tsc);
+>> >
+>> > So sure, we can absolutely do that, but do we want to take this one
+>> > further perhaps? "notsc" on x86_64 makes no sense what so ever. Lets
+>> > drag things into this millennium.
+>> >
+>>
+>> Just to make sure I follow: currently, for the static key to be enabled, we
+>> (mostly) need:
+>> o X86_FEATURE_TSC is in CPUID
+>> o determine_cpu_tsc_frequencies()->pit_hpet_ptimer_calibrate_cpu() passes
+>>
+>> IIUC all X86_64 systems have a TSC, so the CPUID feature should be a given.
+>>
+>> AFAICT pit_hpt_ptimer_calibrate_cpu() relies on having either HPET or the
+>> ACPI PM timer, the latter should be widely available, though X86_PM_TIMER
+>> can be disabled via EXPERT - is that a fringe case we don't care about, or
+>> did I miss something? I don't really know this stuff, and I'm trying to
+>> write a changelog...
+>
+> Ah, I was mostly just going by the fact that all of x86_64 have TSC and
+> disabling it makes no sense.
+>
+> TSC calibration is always 'fun', but I don't know of a system where its
+> failure causes us to not use TSC, Thomas?
 
-Reviewed-by: Willem de Bruijn <willemb@google.com>
+Having another look at this, it looks like the actual requirements for the
+TSC being used are either of:
+o CPUID accepting 0x16 as eax input (cf. cpu_khz_from_cpuid())
+o MSR_FSB_FREQ being available (cf. cpu_khz_from_msr())
+o pit_hpet_ptimer_calibrate_cpu() doesn't mess up
 
-Thanks for adding the second test.
+I couldn't find any guarantees for x86_64 on having the processor frequency
+information CPUID leaf, nor for the FSB_FREQ MSR (both tsc_msr_cpu_ids and
+the SDM seem to point at only a handful of models).
 
-> +static void add_ipv6_exthdr(void *buf, void *optpkt, __u8 exthdr_type, char *ext_payload)
-> +{
-> +	struct ipv6_opt_hdr *exthdr = (struct ipv6_opt_hdr *)(optpkt + tcp_offset);
-> +	struct ipv6hdr *iph = (struct ipv6hdr *)(optpkt + ETH_HLEN);
-> +	char *exthdr_payload_start = (char *)(exthdr + 1);
-> +
-> +	exthdr->hdrlen = 0;
-> +	exthdr->nexthdr = IPPROTO_TCP;
-> +
-> +	if (ext_payload)
-> +		memcpy(exthdr_payload_start, ext_payload, MIN_EXTHDR_SIZE - sizeof(*exthdr));
+Also for x86_64 there is this "apicpmtimer" cmdline arg which currently
+disables the TSC. The commit that introduced it [1] suggests there are x86_64
+systems out there with calibration issues, so now I'm not sure whether we
+can kill the static key for x86_64 :(
 
-minor nit, in case this gets respun: ext_payload is always true.
+[1]: 0c3749c41f5e ("[PATCH] x86_64: Calibrate APIC timer using PM timer")
+followed by: 7fd67843b96f ("[PATCH] x86_64: Disable tsc when apicpmtimer is active")
+
