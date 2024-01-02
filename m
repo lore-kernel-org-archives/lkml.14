@@ -1,120 +1,171 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1B217985
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 23:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465CE17982;
+	Tue,  2 Jan 2024 23:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BOxMgSO6"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2cd10001532so13963001fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 15:33:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704238414; x=1704843214; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=idbn+oW+ru79HvN1qxo/ff+LJhpYNwODr6kmnulljN4=;
-        b=BOxMgSO6Ua3dcWWtt/6WKfOXsHqM0wbe30ijg71RaFyfkjZY2WATTG18j5BQE2jQFh
-         7QB0Rm7+m4GfQ3+w/hDHM+/emEdSVIUOroiRav+SGenN9q68MCiHMm1hnwf/tWKXHSgB
-         WJ+JK9xj4DwIPnz9bAaiXXdx4348AYGOtl0JBZYbDcbLVSQF2cxAVT4D6frXkeHjILam
-         Eb4zJXKCPg4B8fNAbTfpVsjVETBA9EjOyWIPBrnODt1ImHlD6JI4e4MGLw3N/dd6WuLA
-         GuIkvY1A6q9Yhv5u1hlP0SA7OGfrBDZAtWCTZdynbpSiAEOWfMHtvaQapkia5TV1lQA+
-         qG6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704238414; x=1704843214;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=idbn+oW+ru79HvN1qxo/ff+LJhpYNwODr6kmnulljN4=;
-        b=ms8jVPUKLwUDytqi5NMoU8db9/xBNj6Bl2TIPT6I67Zid9tLdDij8s2L+MQ5BnVJ0n
-         tuwQLaUztrCcMldjxGU9NxLuFMyN40+b3dQaPQ8D7n+zB1RHAW+3nClRiMA5LPR3CPP5
-         jNIApwu7L95CW0fRedlyUl+Mo9aUal1O6IJm4a9NcHFbheocXlo443Zm4aVkZQNI1hGJ
-         /Wiwr88071ZGXnlWYF8XUXadXQ7FqIASJQPyOvSpvjHjzsbby1kWLyexooh3p1i1yEVQ
-         8YMGNp4VSN4BuXfsx9nAdUZsqTu+Z5HDxZAWx7Mh6AsYWtR+qw2hHLpYPbynzgrN9JzI
-         PeCQ==
-X-Gm-Message-State: AOJu0YysWtv9q32IBeVQ0V6u14RSbZB61j4DhC5+ZCbSgdfWRUvDgGh5
-	WLPfFRh59avmtrDdEyuej5S/72Rdhtl21w==
-X-Google-Smtp-Source: AGHT+IF4WB/wHeBDxLZQA+hq3pgf2KuxfIsCfu9z6Ah8FS7+nNNRGyvvP5PeHgFRmdJA9/e5eBvpcw==
-X-Received: by 2002:a2e:88cf:0:b0:2cc:dbbe:7c55 with SMTP id a15-20020a2e88cf000000b002ccdbbe7c55mr4684881ljk.94.1704238414248;
-        Tue, 02 Jan 2024 15:33:34 -0800 (PST)
-Received: from linaro.org ([79.115.23.25])
-        by smtp.gmail.com with ESMTPSA id t25-20020a056402241900b00553b6b5bb44sm16499540eda.67.2024.01.02.15.33.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jan 2024 15:33:33 -0800 (PST)
-Date: Wed, 3 Jan 2024 01:33:32 +0200
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Georgi Djakov <djakov@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rajendra Nayak <quic_rjendra@quicinc.com>,
-	Sibi Sankar <quic_sibis@quicinc.com>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 3/4] arm64: dts: qcom: x1e80100: Add missing system-wide
- PSCI power domain
-Message-ID: <ZZSdTKe/aw2M1/2X@linaro.org>
-References: <20240102-topic-x1e_fixes-v1-0-70723e08d5f6@linaro.org>
- <20240102-topic-x1e_fixes-v1-3-70723e08d5f6@linaro.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T0PE5hAi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704238434; x=1735774434;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=hmnREbkJ1spni6quDzIEHXCaQXW3TktM92/lBSG23sI=;
+  b=T0PE5hAiC4Xewm3C6culXzxpzHV4YvDgFq+hdbaV96FzOPk8/5HG2Iqn
+   wvVF3Jb/0vjfdd/96jASXHAO1UFuk4jk/rFOE2OOOsiMOHc9SlE6Oik+v
+   TzGS1yxcd8RXTc+/6i8ZJZK7ZyxMEqVssL9aEo412uRSyeCRCUYF7xB18
+   FiECVJZ+1uWX2KwazMLLoqJDmZ4L7Jm4KP3KZ0bw3zuuSKcTXc0vQrT/a
+   d20aWBLYm8gWam0iYuTBcHGmbFbl0pvUY/NvZExfny7yB6Ae+yPQii8Pn
+   /wVvNTojt/jWFmFeoB36NceFxnZ3uM3t2ZlY4Q03k8IxiXL7boRdnlrQ0
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="3769991"
+X-IronPort-AV: E=Sophos;i="6.04,326,1695711600"; 
+   d="scan'208";a="3769991"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 15:33:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="1111182255"
+X-IronPort-AV: E=Sophos;i="6.04,326,1695711600"; 
+   d="scan'208";a="1111182255"
+Received: from keithj1-mobl2.amr.corp.intel.com (HELO [10.209.44.31]) ([10.209.44.31])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 15:33:51 -0800
+Message-ID: <20cd835e-f84c-4c43-812e-6706f7266150@linux.intel.com>
+Date: Tue, 2 Jan 2024 15:33:51 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240102-topic-x1e_fixes-v1-3-70723e08d5f6@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Revert "PCI/ASPM: Remove pcie_aspm_pm_state_change()"
+Content-Language: en-US
+To: Bjorn Helgaas <helgaas@kernel.org>, Michael Schaller
+ <michael@5challer.de>, Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, "Maciej W . Rozycki" <macro@orcam.me.uk>,
+ Ajay Agarwal <ajayagarwal@google.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Johan Hovold <johan+linaro@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ stable@vger.kernel.org
+References: <76c61361-b8b4-435f-a9f1-32b716763d62@5challer.de>
+ <20240102232550.1751655-1-helgaas@kernel.org>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240102232550.1751655-1-helgaas@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 24-01-02 19:29:49, Konrad Dybcio wrote:
-> Previous Qualcomm SoCs over the past couple years have used the Arm DSU
-> architecture, which basically unified the meaning of the "cluster" and
-> "system". This is however clearly not the case on X1E, as can be seen
-> by three separate cluster power domains.
+
+
+On 1/2/2024 3:25 PM, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> Add the lacking system-level power domain. For now it's going to be
-> always-on, as no system-wide idle states are defined at the moment.
+> This reverts commit 08d0cc5f34265d1a1e3031f319f594bd1970976c.
 > 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> Michael reported that when attempting to resume from suspend to RAM on ASUS
+> mini PC PN51-BB757MDE1 (DMI model: MINIPC PN51-E1), 08d0cc5f3426
+> ("PCI/ASPM: Remove pcie_aspm_pm_state_change()") caused a 12-second delay
+> with no output, followed by a reboot.
+> 
+> Workarounds include:
+> 
+>   - Reverting 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()")
+>   - Booting with "pcie_aspm=off"
+>   - Booting with "pcie_aspm.policy=performance"
+>   - "echo 0 | sudo tee /sys/bus/pci/devices/0000:03:00.0/link/l1_aspm"
+>     before suspending
+>   - Connecting a USB flash drive
+> 
 
-Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+Did you find the root cause? Is this issue specific to that particular
+device? If yes, can we do a quirk?
 
+> Fixes: 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()")
+> Reported-by: Michael Schaller <michael@5challer.de>
+> Link: https://lore.kernel.org/r/76c61361-b8b4-435f-a9f1-32b716763d62@5challer.de
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: <stable@vger.kernel.org>
 > ---
->  arch/arm64/boot/dts/qcom/x1e80100.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  drivers/pci/pci.c       |  6 ++++++
+>  drivers/pci/pci.h       |  2 ++
+>  drivers/pci/pcie/aspm.c | 19 +++++++++++++++++++
+>  3 files changed, 27 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> index 6f75fc342ceb..fc164b9b3ef1 100644
-> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> @@ -395,16 +395,24 @@ CPU_PD11: power-domain-cpu11 {
->  		CLUSTER_PD0: power-domain-cpu-cluster0 {
->  			#power-domain-cells = <0>;
->  			domain-idle-states = <&CLUSTER_CL4>, <&CLUSTER_CL5>;
-> +			power-domains = <&SYSTEM_PD>;
->  		};
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 55bc3576a985..bdbf8a94b4d0 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1335,6 +1335,9 @@ static int pci_set_full_power_state(struct pci_dev *dev)
+>  		pci_restore_bars(dev);
+>  	}
 >  
->  		CLUSTER_PD1: power-domain-cpu-cluster1 {
->  			#power-domain-cells = <0>;
->  			domain-idle-states = <&CLUSTER_CL4>, <&CLUSTER_CL5>;
-> +			power-domains = <&SYSTEM_PD>;
->  		};
->  
->  		CLUSTER_PD2: power-domain-cpu-cluster2 {
->  			#power-domain-cells = <0>;
->  			domain-idle-states = <&CLUSTER_CL4>, <&CLUSTER_CL5>;
-> +			power-domains = <&SYSTEM_PD>;
-> +		};
+> +	if (dev->bus->self)
+> +		pcie_aspm_pm_state_change(dev->bus->self);
 > +
-> +		SYSTEM_PD: power-domain-system {
-> +			#power-domain-cells = <0>;
-> +			/* TODO: system-wide idle states */
->  		};
->  	};
+>  	return 0;
+>  }
 >  
-> 
-> -- 
-> 2.43.0
-> 
+> @@ -1429,6 +1432,9 @@ static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state)
+>  				     pci_power_name(dev->current_state),
+>  				     pci_power_name(state));
+>  
+> +	if (dev->bus->self)
+> +		pcie_aspm_pm_state_change(dev->bus->self);
+> +
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 5ecbcf041179..f43873049d52 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -569,10 +569,12 @@ int pcie_retrain_link(struct pci_dev *pdev, bool use_lt);
+>  #ifdef CONFIG_PCIEASPM
+>  void pcie_aspm_init_link_state(struct pci_dev *pdev);
+>  void pcie_aspm_exit_link_state(struct pci_dev *pdev);
+> +void pcie_aspm_pm_state_change(struct pci_dev *pdev);
+>  void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
+>  #else
+>  static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+>  static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
+> +static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
+>  static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
+>  #endif
+>  
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 50b04ae5c394..8715e951c491 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -1008,6 +1008,25 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
+>  	up_read(&pci_bus_sem);
+>  }
+>  
+> +/* @pdev: the root port or switch downstream port */
+> +void pcie_aspm_pm_state_change(struct pci_dev *pdev)
+> +{
+> +	struct pcie_link_state *link = pdev->link_state;
+> +
+> +	if (aspm_disabled || !link)
+> +		return;
+> +	/*
+> +	 * Devices changed PM state, we should recheck if latency
+> +	 * meets all functions' requirement
+> +	 */
+> +	down_read(&pci_bus_sem);
+> +	mutex_lock(&aspm_lock);
+> +	pcie_update_aspm_capable(link->root);
+> +	pcie_config_aspm_path(link);
+> +	mutex_unlock(&aspm_lock);
+> +	up_read(&pci_bus_sem);
+> +}
+> +
+>  void pcie_aspm_powersave_config_link(struct pci_dev *pdev)
+>  {
+>  	struct pcie_link_state *link = pdev->link_state;
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
