@@ -1,80 +1,68 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B35D10788
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 14:09:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D631078D;
+	Tue,  2 Jan 2024 14:13:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="O6qcUVpk"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-50e9e5c97e1so933669e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 06:09:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1704204592; x=1704809392; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0CaqYteyDB6DSZaj2cT5acnP15a5TO5ZRNcWIqlu/lo=;
-        b=O6qcUVpkHMj1aRPNjW5WAYaHAbWuM8RgXykCEnMpNRNrq4re4hYPqU2ulaS2LDSWIG
-         CjGm709oTGZ6J13RdjdlTYoAkaDwSVsWRIQm3EbWARThWlKFWBSowWNqjOjUWJZI92PL
-         rC09orsWUNvjePbkV+2Jas+7mL/fjA1xVDGuMahAtJoenqefFhd5+0tCpbuvt2/wRtBC
-         kGYE8gA1brmfp0NIiWsmGwHZW0J/gsPXLaHoqAYQlKbkkQ5I8/IPFgDD8fXz+kC1Eeve
-         /PJN6+yGOmNeu5sqV9W4KHTvdtxlXA1UuOR/0EBuLWGdMWnorK5Vx3qIXINgJmaYvklE
-         rJww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704204592; x=1704809392;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0CaqYteyDB6DSZaj2cT5acnP15a5TO5ZRNcWIqlu/lo=;
-        b=UlnF78S5gcHMtGch5u0jxgoesS+zxNGVkOPf1B+mi8YqOTqkW9+LHu9AdPdB7fkiZZ
-         vAJeYQIVYa4+Urth50KT3EoYdERU3w/cpbjqO1mzrCCZqUBUqXCglY74Vr/kHrbH3+qh
-         cHYAALftX/aO5EGlcscmtqfE/HkQPIssAJRuW3Ht/kPjy39Yat8L7ELItk1+RfHl2T2m
-         cE3Yzi/2sIdATdxd1tV18EKwV8931lOwoAzeWSQ2Wx6AmNwtzRu4RJf/M2ttQwih2mND
-         DnbKA8mKkndiOFSM8JByvkAuiKqkI2HFfMzw990kprcemFkasFf/waz1eBJJEJiEcJuq
-         Mh9Q==
-X-Gm-Message-State: AOJu0YxbTC8vhVA24gjRhQsWyTBhLWQnRQoeYSwFHXvLAcrVMjERtEjb
-	Ap7j5FFN3QGufa246nDcf1PTlrQqpb7+9GO0LXEJpjpNk9XNVw==
-X-Google-Smtp-Source: AGHT+IELL9nUa31vUXEX5h0bZNF4Tr1uek7jeQ8pU4/BAeKEpKlwSYfXKBsBWrqJmh62sjzGLdBraG4h6YhZDcbM+QI=
-X-Received: by 2002:a05:6512:e9f:b0:50e:7b20:3092 with SMTP id
- bi31-20020a0565120e9f00b0050e7b203092mr5345311lfb.33.1704204592366; Tue, 02
- Jan 2024 06:09:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="cBYrHOUt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1704204832;
+	bh=TNz2bBbjdA8ttdYkWZtPUW/GO/y4iF7ensfXnYtQXew=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cBYrHOUtswoP4Jqju05wwfV4ZlcVuMtYSMafpUEfTvPis0o9a3XR64npMCLCQ/Zz+
+	 NwrOPQ3bsW+l08qfZj3Hb/0Js697WCWxJoJNaok25S7VddTatB4MXU7F6In81wkesY
+	 eSMXKsC06dZ3gxX18KbaE8aQZ+CcsM+uezBsX7Iw7KPhuArNL18iMq7p7FH3x1r4dw
+	 fRK2VIDxhVrImFZZL9j/3TkgjbxkSoCc0o2JNAXEQbJSgkZjGE/TEX3uPA4XHp9kAj
+	 KDV0OVWHcu9SupmQ73mQ03uEAogjQS60N0LinimJIgkT+XAYAFpU8LVaFA4E4DKmcn
+	 Gol2qlV9XAyJQ==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id AD3E13781FDF;
+	Tue,  2 Jan 2024 14:13:51 +0000 (UTC)
+Message-ID: <2c90633c-8d28-41e6-8c47-c58e1f1c3276@collabora.com>
+Date: Tue, 2 Jan 2024 15:13:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231024142706.195517-1-hezhongkun.hzk@bytedance.com>
- <CAKEwX=OiNB+pPhb-3Tf7O=F7psKE3EOpwmbPSeLSOyuHpj3i+Q@mail.gmail.com> <CACSyD1P6HmH9tSvONnNxYv8P+am_hH2dK3UJQd9_+o6EWkPsXA@mail.gmail.com>
-In-Reply-To: <CACSyD1P6HmH9tSvONnNxYv8P+am_hH2dK3UJQd9_+o6EWkPsXA@mail.gmail.com>
-From: Zhongkun He <hezhongkun.hzk@bytedance.com>
-Date: Tue, 2 Jan 2024 22:09:41 +0800
-Message-ID: <CACSyD1Oq_0+y=2LbbMEJPtnm4tQt61pbP=CnqtprKan5U3-cVQ@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH] mm: zswap: fix the lack of page lru flag
- in zswap_writeback_entry
-To: Nhat Pham <nphamcs@gmail.com>
-Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, yosryahmed@google.com, 
-	sjenning@redhat.com, ddstreet@ieee.org, vitaly.wool@konsulko.com, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] arm64: dts: mediatek: mt8186: Add jpgenc node
+Content-Language: en-US
+To: Eugen Hristev <eugen.hristev@collabora.com>, linux-media@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+ bin.liu@mediatek.com
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kernel@collabora.com, matthias.bgg@gmail.com,
+ Allen-KH Cheng <allen-kh.cheng@mediatek.com>,
+ Hsin-Yi Wang <hsinyi@chromium.org>, Max Staudt <mstaudt@chromium.org>,
+ Ricardo Ribalda <ribalda@chromium.org>
+References: <20240102103801.268647-1-eugen.hristev@collabora.com>
+ <20240102103801.268647-2-eugen.hristev@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20240102103801.268647-2-eugen.hristev@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
->
-> Base:
->                      total        used        recalim        total        used
-> Mem:           38Gi       2.5Gi       ---->             38Gi       1.5Gi
-> Swap:         5.0Gi       1.0Gi       ---->              5Gi        1.5Gi
-> used memory  -1G   swap +0.5g
-> It means that  half of the pages are failed to move to the tail of lru list,
-> So we need to release an additional 0.5Gi anon pages to swap space.
+Il 02/01/24 11:38, Eugen Hristev ha scritto:
+> From: Allen-KH Cheng <allen-kh.cheng@mediatek.com>
+> 
+> Add JPEG encoder node.
+> 
+> Signed-off-by: Allen-KH Cheng <allen-kh.cheng@mediatek.com>
+> Reviewed-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> Reviewed-by: Max Staudt <mstaudt@chromium.org>
+> Tested-by: Max Staudt <mstaudt@chromium.org>
+> Reviewed-by: Ricardo Ribalda <ribalda@chromium.org>
+> [eugen.hristev@collabora.com: minor cleanup]
+> Signed-off-by: Eugen Hristev <eugen.hristev@collabora.com>
 
-Based on the results of multiple tests, the following information is updated.
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-Base:
-                      total        used        recalim        total        used
- Mem:           38Gi       2.6Gi       ---->             38Gi       1.6Gi
- Swap:         5.0Gi       1.0Gi       ---->              5Gi        1.9Gi
- used memory  -1G   swap +0.9g
-It means that  most of the pages failed to move to the tail of the lru list,
-So we need to release an additional 0.9Gi anon pages to swap space.
 
-Thanks again.
