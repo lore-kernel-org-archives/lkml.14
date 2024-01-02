@@ -1,66 +1,98 @@
-Received: from cstnet.cn (smtp37.cstnet.cn [159.226.251.37])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE70FEAD3;
-	Tue,  2 Jan 2024 11:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iie.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iie.ac.cn
-Received: from mengjingzi$iie.ac.cn ( [121.195.114.118] ) by
- ajax-webmail-APP-12 (Coremail) ; Tue, 2 Jan 2024 19:38:31 +0800 (GMT+08:00)
-Date: Tue, 2 Jan 2024 19:38:31 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: =?UTF-8?B?5a2f5pWs5ae/?= <mengjingzi@iie.ac.cn>
-To: gregkh@linuxfoundation.org, jirislaby@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: inappropriate capability checks in tty_ioctl()
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.15 build 20230921(8ad33efc)
- Copyright (c) 2002-2024 www.mailtech.cn cnic.cn
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7833EAD6;
+	Tue,  2 Jan 2024 11:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="nhQYPxq8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1704196212; x=1704801012; i=markus.elfring@web.de;
+	bh=c4TSuFiFOOo9FkY+Aknv57saIRU7nXw1AKJdpOYp6bU=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=nhQYPxq8uh/DsiJfbSD/ZPWYUxY5BYviPSL00BaXEsbLfe7JvmJMOMkj9OcILX15
+	 817sRbxkylDOgrszH8R0ws/p6HMkxVdnjGaV/bOVB1m/JLMoNVI31OPkzay9QX+Oh
+	 o19QLFZWeE7/QckgWesRsXK7stwrom1UVU1LRn8MJGSFNIeafjFfzfJYmCTSYvi1O
+	 svgQpGrWYdJ9mz01AEJOLQ8zCvbDIkpHRT++oJQ7jiSCjVc3oS3mii7tTjfbI5VEm
+	 4jKjLPYOor5vOfHWmmZnX7k7B8ZBh1pngSrguVXGpIDDrmu8KNPTdZ3cuU7s6qNBq
+	 7sEFUbkO1Irof+6Tkg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MbCE0-1qnUOS0Qfo-00bkVR; Tue, 02
+ Jan 2024 12:50:12 +0100
+Message-ID: <96b9d2b8-3f44-4880-a33d-dc281ca70161@web.de>
+Date: Tue, 2 Jan 2024 12:50:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <19ed91a4.10d80.18cc9f7d2ea.Coremail.mengjingzi@iie.ac.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:tgCowADXTs+39ZNlWUMCAA--.21635W
-X-CM-SenderInfo: pphqwyxlqj6xo6llvhldfou0/1tbiBwAEE2WTyAWMFwAAsw
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VW3Jw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [0/2] net/smc: Adjustments for two function implementations
+Content-Language: en-GB
+To: Wen Gu <guwen@linux.alibaba.com>, linux-s390@vger.kernel.org,
+ netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ "David S. Miller" <davem@davemloft.net>, "D. Wythe"
+ <alibuda@linux.alibaba.com>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Jan Karcher <jaka@linux.ibm.com>,
+ Paolo Abeni <pabeni@redhat.com>, Tony Lu <tonylu@linux.alibaba.com>,
+ Wenjia Zhang <wenjia@linux.ibm.com>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <8ba404fd-7f41-44a9-9869-84f3af18fb46@web.de>
+ <93033352-4b9c-bf52-1920-6ccf07926a21@linux.alibaba.com>
+ <46fe66f7-dc3b-4863-96e8-7a855316e8bd@web.de>
+ <b2ee4680-72e9-56a1-e0dd-9cbbe64a7dac@linux.alibaba.com>
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <b2ee4680-72e9-56a1-e0dd-9cbbe64a7dac@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:fL22ir/94IlqNcjBk73dNW87D7iDSGg7z9ik73BWj7mqMtrTvxh
+ j+V9tmvjN/oBHQTcXKjyUlbz3eVckEpzjzWYSCgCStu4IH79TjDwOhFqMshus/jKKTSgGIY
+ rqXC07CnQD7oPULw0+ZLswbR+d/b/VBPwTupByi9JreZXuUA3i3T0dGgOyA8KXB+bawOhJ4
+ RrrxHyhx+OYjJU0q/VPqQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Bon9xkLkqc8=;BnGmEViRLyUtFIXl3mCxKGATLqw
+ pg2MakC/MQKfjCQ+3t0bzwv7sHnRbqUIiozRqCB8o86tq4YWYnIgcWMcpyk15T0OBMDVrlZ2w
+ llH6+NCrXeDIIE/GdpEcPZKnFL3zW8EfGWLhDB202qTStn3fb5IyThYL0pUkurRXSwceT4gzl
+ K2I6YaCW1L/ydJCsYcSHFUbMIrTIlemhKQyJR9pD0PX///iXL92dE8g0Wxu3pZhzdzfcURp7q
+ MZ53REf/aWHcI5jlyk8qoPseJBR9x3Ayp9zl+ptbHBKLJR2uYq4HmroOW+dYBX62RGlOp656t
+ W+P8ZadbS1FViPLO/hw/vOcYQShrMo/meWOLTk689yhtzOq2LcRe2YzsIRnMNM/uXm46BGjIU
+ 5DjzCqTcElqHEeTNBKLrVmp/7W44TuBW8iheLNgMyCeY3cxfrCGhAC0a+Z+a9tLm8c40dNjn2
+ +n14/PePywSVpsEhKAef0Pfu9kwnizTnTlPVklgnbQePWpMjO5wNMfdN9NqZcOKG+KUOw6GF0
+ rE7ps+C0dKhKjbePgohzTtTbL9A369WIvUaVRCIQ2v9xDO/aoHVaG8Zm1PWTCRNiDhibr1td2
+ Z+Kc/pfIqKUdH0tIr5SRnZaqjpqLwMEplazIJfjAlpwKWTUfFR79mhD1XmSXS/W56+ZTbLP8s
+ jg6O3r/TT41is4GxocTX1xL/SadkD9Ty063dQX8yZBE7rHYtG0HR82t5Ht+9V6W8Scpu2QdYK
+ BEDmZbaUZy1OrFJvjvojzS91W9cPfVj3bLOlFJ9CxnLwBYSdpz596XdttJdO5fezssb5UL0nY
+ ckjjslAnhdvWJDRy5DG+Y0gh3kcyZUN/eC5h5+HuZOK0wAAWSTf/tpXM1nKx3ctaHuSvCmiUG
+ 39J0FlLtvb75LZm9jRRhrMCQLPeNh/gsg2crET3gd7RJXKoBf9hkFGpKW1eZhMJKHWeAeneAu
+ jbHFQIvsIoCsgrAWxOMBCZ+1u88=
 
-SGkhCgpXZSB3b3VsZCBsaWtlIHRvIHByb3Bvc2UgYW4gYWRqdXN0bWVudCB0byB0aGUgY2FwYWJp
-bGl0eSBjaGVja3MgaW4gdGhlIHR0eV9pb2N0bCgpIGZ1bmN0aW9uLiBDdXJyZW50bHksIHRoZSBm
-dW5jdGlvbiB1c2VzIENBUF9TWVNfQURNSU4gdG8gcHJvdGVjdCB0aHJlZSBzdWJjb21tYW5kczog
-VElPQ0NPTlMsIFRJT0NTVEkgYW5kIFRJT0NWSEFOR1VQLiBXZSBwcm9wb3NlIHVwZGF0aW5nIHRo
-aXMgdG8gdXNlIENBUF9TWVNfVFRZX0NPTkZJRyBpbnN0ZWFkIGZvciB0aGUgZm9sbG93aW5nIHJl
-YXNvbnM6CgooMSkgQ0FQX1NZU19UVFlfQ09ORklHIGlzIG1vcmUgcmVsZXZhbnQgdG8gdGhlIGZ1
-bmN0aW9uczogVGhlIHRocmVlIHN1YmNvbW1hbmRzIGFyZSByZXNwb25zaWJsZSBmb3IgdHR5LXJl
-bGF0ZWQgZnVuY3Rpb25zOiByZWRpcmVjdGluZyBjb25zb2xlIG91dHB1dCAoVElPQ0NPTlMpLCBm
-YWtpbmcgaW5wdXQgdG8gYSB0ZXJtaW5hbCAoVElPQ1NUSSksIGFuZCBtYWtpbmcgdGhlIHRlcm1p
-bmFsIGJlIGh1bmcgdXAgKFRJT0NWSEFOR1VQKS4gQXMgdGhlIGRlZmluaXRpb25zIGluIHRoZSBj
-YXBhYmlsaXR5IG1hbnVhbCBwYWdlWzFdLCBDQVBfU1lTX1RUWV9DT05GSUcgaXMgc3BlY2lmaWNh
-bGx5IGRlc2lnbmVkIGZvciAiZW1wbG95aW5nIHZhcmlvdXMgcHJpdmlsZWdlZCBpb2N0bCgyKSBv
-cGVyYXRpb25zIG9uIHZpcnR1YWwgdGVybWluYWxzLiIgVGhpcyBhbGlnbnMgbW9yZSBjbG9zZWx5
-IHdpdGggdGhlIGludGVuZGVkIHVzYWdlIHNjZW5hcmlvIGNvbXBhcmVkIHRvIENBUF9TWVNfQURN
-SU4uCgooMikgQ29uc2lzdGVuY3k6IENBUF9TWVNfVFRZX0NPTkZJRyBpcyBhbHJlYWR5IGVtcGxv
-eWVkIGluIG90aGVyIHBhcnRzIG9mIHRoZSBrZXJuZWwgdG8gcHJvdGVjdCBUSU9DVkhBTkdVUC1s
-aWtlIGZ1bmN0aW9uYWxpdHkuIEZvciBpbnN0YW5jZSwgaW4gdHR5X2lvY3RsKCkgQ0FQX1NZU19B
-RE1JTiBpcyB1c2VkIGJlZm9yZSB0dHlfdmhhbmd1cCgpLCB3aGlsZSBpbiBTWVNDQUxMX0RFRklO
-RTAodmhhbmd1cCksIHdoaWNoIGxvY2F0ZWQgaW4gZnMvb3Blbi5jLCB0aGUgY2hlY2sgaXMgZG9u
-ZSB3aXRoIENBUF9TWVNfVFRZX0NPTkZJRyBiZWZvcmUgdHR5X3ZoYW5ndXAoKS4KCigzKSBNYWlu
-dGFpbmluZyBMZWFzdCBQcml2aWxlZ2U6IENBUF9TWVNfQVNNSU4gaXMgYWxyZWFkeSBvdmVybG9h
-ZGVkIGFuZCBrbm93biBhcyB0aGUgbmV3ICJyb290IlsyXS4gQWNjb3JkaW5nIHRvIHRoZSBtYW51
-YWwgcGFnZVsxXSDigJxkb24ndCBjaG9vc2UgQ0FQX1NZU19BRE1JTiBpZiB5b3UgY2FuIHBvc3Np
-Ymx5IGF2b2lkIGl04oCdLCBzd2l0Y2hpbmcgdG8gQ0FQX1NZU19UVFlfQ09ORklHIGNvdWxkIGJl
-IGhlbHBmdWwgZm9yIHN0YW5kYXJkaXppbmcgdGhlIHVzZSBvZiBjYXBhYmlsaXRpZXMgYW5kIGlt
-cGxlbWVudGluZyBsZWFzdCBwcml2aWxlZ2VzLiAKClRoaXMgaXNzdWUgZXhpc3RzIGluIHNldmVy
-YWwga2VybmVsIHZlcnNpb25zIGFuZCB3ZSBoYXZlIGNoZWNrZWQgaXQgb24gdGhlIGxhdGVzdCBz
-dGFibGUgcmVsZWFzZShMaW51eCA2LjYuOSkuIFdlIHdvdWxkIGFwcHJlY2lhdGUgeW91ciB0aG91
-Z2h0cyBhbmQgZmVlZGJhY2sgb24gdGhpcyBwcm9wb3NhbC4gVGhhbmsgeW91IGZvciB5b3VyIHRp
-bWUgYW5kIGNvbnNpZGVyYXRpb24uCgpCZXN0IHJlZ2FyZHMsCkppbmd6aQoKcmVmZXJlbmNlOgpb
-MV0gaHR0cHM6Ly93d3cubWFuNy5vcmcvbGludXgvbWFuLXBhZ2VzL21hbjcvY2FwYWJpbGl0aWVz
-LjcuaHRtbApbMl0gaHR0cHM6Ly9sd24ubmV0L0FydGljbGVzLzQ4NjMwNi8K
+> But it is not very attractive to me since the calls occur on low-frequency paths
+> or unlikely condition, resulting in limited performance loss and the current
+> kfree() usage is fine and common.
+
+The prioritisation of development activities influences progress in related areas.
+
+
+> So what is the benfit?
+
+* Source code clarity
+
+* Nicer run time characteristics
+
+
+See also:
+https://wiki.sei.cmu.edu/confluence/display/c/MEM12-C.+Consider+using+a+goto+chain+when+leaving+a+function+on+error+when+using+and+releasing+resources
+
+
+> I noticed that some other discussions are on-going. It seems like you are trying
+> to change other similiar places.
+
+I would appreciate if improvements can be achieved also for similarly affected
+software components.
+
+Regards,
+Markus
