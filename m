@@ -1,60 +1,55 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274E71866;
-	Tue,  2 Jan 2024 02:41:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 766D646A3;
+	Tue,  2 Jan 2024 02:42:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R4EevxXc"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7815ba075f9so390457885a.0;
-        Mon, 01 Jan 2024 18:41:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dgcb7+aA"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d45f182fa2so42783265ad.3;
+        Mon, 01 Jan 2024 18:42:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704163295; x=1704768095; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1704163327; x=1704768127; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eRVOpblwQ3hnrC1ABa9hLFHr9iquzQYphLKUbyNwreY=;
-        b=R4EevxXcQFa04jfqAQmBIUF+mMIHAFIMX2QgfzrwNvgfiB6EtHyXSG7WaEm7RTgbh1
-         T3nmqFMiWH1Ovddzrz7eB7j/RwgGw73H27Rf7YM90V9apshhif8Iypy0cXdoty4RXjji
-         /3+aJ4GFie+JmqneVzC9yTu55Tv+ssZ2jUIWMiDQ3D0uNcVmiDLXMhyNwaObjVkJu2sI
-         10OFjK+AB+8Vigixt/KJxBLhQr3DkJKNuHpzr8RlprEnbJb7Lr1L9O9zcazx/z4TDeVJ
-         hVdebrkTh0b+waR+ev3w6PSczwa219kNvHvK5U3A9kQOGbs+sEp/u5ynxo/BFRdrLF/y
-         Xr4A==
+        bh=IfOHaDOQFWCjFE5eYECAufdGX/M8ENRMe8BdoJQwdrM=;
+        b=dgcb7+aAMoauuTzvh8Nau8kLSePNZJYoHi3AkeNl8se+Cw6TIjRVVaKMoFNAnEMEuL
+         PElVf5uImFZ3ErbOc7D1VzSEmOyedcATKhRxmy1moWexiM2+EZ/I1MUDACj4j+OHj1fx
+         +YGgZRJdtX1Tn7vbXwjfR54z+OlfD9Qu8pjpC4ZBvxGZZZMI1yySTM47cGqcXBKt/TD3
+         LmCpOMDE72qQQfxPpkRdMEd2Y0WS3EZhutpB4M9c/gUn1kVzZyYrQ/Mx9QUgcGW0sBiB
+         rmEJYmaYpwH2f8okSsAEym46Jf+Vk+ZxKZUU4mqjLGmijiG1w/V8q56B+WPHOXXN5rIs
+         WWsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704163295; x=1704768095;
+        d=1e100.net; s=20230601; t=1704163327; x=1704768127;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=eRVOpblwQ3hnrC1ABa9hLFHr9iquzQYphLKUbyNwreY=;
-        b=wlvibAENScCK89wSSOuBjVbCdFLMrurOujtypsnBJ2SkSiV0kQuJzrrBM+1P+paGiM
-         SpqSkNaIaFE0T9+NDg74gMg0kjYqcCrE6UhOcO6QzB0dqxby+73sJTO9Zh7d87AunI0+
-         usF/gfXdaCD2ee3txy9ba/XrMWBVqBKcI3mczsSApOPDh26WT+GC84oIugjGDza7B7yz
-         KppirfUkYShgxamFEamYiLTC7KruyKTbZY0evc4RFbSWr36n4fcH+UkLMnfcEqBKwTbs
-         MaZUkUDnH9osTYcI1/w5oeXleoCdC3fHPUxppISL5ynM2fZvsacACwnWYRpqgsaxu1aW
-         t1Ow==
-X-Gm-Message-State: AOJu0YzYocXxhxTv4kIRCzJ5PrCwv05ukvznbJCQGE3fNtVV5p/4mSys
-	ABkuWlRCiUnci84D+6LL/0I=
-X-Google-Smtp-Source: AGHT+IEl3+Pk1MOkQjs46lysrTP/eWZLzFXJpHaRZUn8ihW9X0n1DRVLcHdsPtYNlhrgHw7yuwO0Mg==
-X-Received: by 2002:ae9:e416:0:b0:781:415c:273e with SMTP id q22-20020ae9e416000000b00781415c273emr17154242qkc.99.1704163295025;
-        Mon, 01 Jan 2024 18:41:35 -0800 (PST)
-Received: from localhost.localdomain (107-015-241-140.res.spectrum.com. [107.15.241.140])
-        by smtp.gmail.com with ESMTPSA id bk7-20020a05620a1a0700b0077d7326c60csm9161896qkb.38.2024.01.01.18.41.34
+        bh=IfOHaDOQFWCjFE5eYECAufdGX/M8ENRMe8BdoJQwdrM=;
+        b=iBTA1d4dtLHmjOoieydFu3kXxgtEM52T3CGJVfjf2U96IrSLtApZ2hXYkdzkgMR0kf
+         uxQwBSjtCcyDULVVxTNaUijyWccx2415UP+uGch2KX1QiR8QGdSGdkvvf6GlqcGBpadP
+         mqhpVYKVB0yg9y0RRtGSY2+mSN9QcMthhV8SJouy1bJ5UgMeBIfWUAhvbgJRevcXeeAh
+         OB21wlxf/liCgQtrVo8cWI92LbAbClWufbWneoU1/mvO7rNlaL8/5U0nnmhzOWfzlqMf
+         7f1K+VYgFP4iDFdu6Mm6xjF+hz371DvEWtvEbK7Gvq9BPCov4VTh25NQpUde5Ken2N5l
+         0b9w==
+X-Gm-Message-State: AOJu0YxEupkK/OaBmbGGDSAMvAaKgRQx3qb+XvleIEu8cOv7UeYNkjhD
+	DAamdKKhsw0CZMLzUN1M/d4=
+X-Google-Smtp-Source: AGHT+IGBlPFEg45SFGKot3B9Qmhip+YFNIfepomX4SLuIrjxOfMELCEVoF3xRzLbgD7feppLDqQifw==
+X-Received: by 2002:a17:902:e88d:b0:1d4:be70:21c0 with SMTP id w13-20020a170902e88d00b001d4be7021c0mr2015443plg.16.1704163326602;
+        Mon, 01 Jan 2024 18:42:06 -0800 (PST)
+Received: from localhost.localdomain (45.78.55.121.16clouds.com. [45.78.55.121])
+        by smtp.gmail.com with ESMTPSA id a4-20020a170902ecc400b001d1d1ef8be5sm20895643plh.173.2024.01.01.18.42.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jan 2024 18:41:34 -0800 (PST)
-From: John Clark <inindev@gmail.com>
-To: "Rob Herring" <robh+dt@kernel.org>,
-	"Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-	"Conor Dooley" <conor+dt@kernel.org>,
-	"Heiko Stuebner" <heiko@sntech.de>,
-	linux-rockchip@lists.infradead.org
-Cc: "Thomas McKahan" <tmckahan@singleboardsolutions.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
+        Mon, 01 Jan 2024 18:42:06 -0800 (PST)
+From: Guoxin Pu <pugokushin@gmail.com>
+To: axboe@kernel.dk
+Cc: linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	John Clark <inindev@gmail.com>
-Subject: [PATCH] arm64: dts: rockchip: nanopc-t6 sdmmc regulator
-Date: Tue,  2 Jan 2024 02:40:53 +0000
-Message-ID: <20240102024054.1030313-1-inindev@gmail.com>
+	Guoxin Pu <pugokushin@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] block: fix length of strscpy()
+Date: Tue,  2 Jan 2024 10:41:15 +0800
+Message-ID: <20240102024115.4395-1-pugokushin@gmail.com>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -64,45 +59,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-sdmmc on the nanopc-t6 is powered by vcc3v3_sd_s0, not vcc_3v3_s3
-add the vcc3v3_sd_s0 regulator, and control it with gpio4_a5
+In commit 146afeb235ccec10c17ad8ea26327c0c79dbd968 ("block: use strscpy()
+to instead of strncpy()") , the length that should now represent the length
+of the string with the terminating NULL was not updated alongside the
+change.
 
-Signed-off-by: John Clark <inindev@gmail.com>
+This has caused blkdevparts= definition on kernel cmdline to be not
+correctly recognized and partitions not correctly initialized, breaking any
+device relying on such partitions to boot, on stable releases since 6.6
+
+This patch fixes the lengths to contain the terminating NULL.
+
+Fixes: 146afeb235cc ("block: use strscpy() to instead of strncpy()")
+Cc: stable@vger.kernel.org # 6.6.x
+Signed-off-by: Guoxin Pu <pugokushin@gmail.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dts | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ block/partitions/cmdline.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dts b/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dts
-index 54445f929a37..fc8add8df3db 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dts
-@@ -159,6 +159,17 @@ vcc3v3_pcie30: vcc3v3-pcie30-regulator {
- 		regulator-max-microvolt = <3300000>;
- 		vin-supply = <&vcc5v0_sys>;
- 	};
-+
-+	vcc3v3_sd_s0: vcc3v3-sd-s0-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-low;
-+		gpio = <&gpio4 RK_PA5 GPIO_ACTIVE_LOW>;
-+		regulator-boot-on;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-name = "vcc3v3_sd_s0";
-+		vin-supply = <&vcc_3v3_s3>;
-+	};
- };
+diff --git a/block/partitions/cmdline.c b/block/partitions/cmdline.c
+index c03bc105e575..4657704c3e37 100644
+--- a/block/partitions/cmdline.c
++++ b/block/partitions/cmdline.c
+@@ -79,8 +79,8 @@ static int parse_subpart(struct cmdline_subpart **subpart, char *partdef)
+ 			goto fail;
+ 		}
  
- &combphy0_ps {
-@@ -544,7 +555,7 @@ &sdmmc {
- 	no-mmc;
- 	no-sdio;
- 	sd-uhs-sdr104;
--	vmmc-supply = <&vcc_3v3_s3>;
-+	vmmc-supply = <&vcc3v3_sd_s0>;
- 	vqmmc-supply = <&vccio_sd_s0>;
- 	status = "okay";
- };
+-		length = min_t(int, next - partdef,
+-			       sizeof(new_subpart->name) - 1);
++		length = min_t(int, next - partdef + 1,
++			       sizeof(new_subpart->name));
+ 		strscpy(new_subpart->name, partdef, length);
+ 
+ 		partdef = ++next;
+@@ -138,7 +138,7 @@ static int parse_parts(struct cmdline_parts **parts, const char *bdevdef)
+ 		goto fail;
+ 	}
+ 
+-	length = min_t(int, next - bdevdef, sizeof(newparts->name) - 1);
++	length = min_t(int, next - bdevdef + 1, sizeof(newparts->name));
+ 	strscpy(newparts->name, bdevdef, length);
+ 	newparts->nr_subparts = 0;
+ 
+@@ -148,8 +148,8 @@ static int parse_parts(struct cmdline_parts **parts, const char *bdevdef)
+ 		bdevdef = next;
+ 		next = strchr(bdevdef, ',');
+ 
+-		length = (!next) ? (sizeof(buf) - 1) :
+-			min_t(int, next - bdevdef, sizeof(buf) - 1);
++		length = (!next) ? sizeof(buf) :
++			min_t(int, next - bdevdef + 1, sizeof(buf));
+ 
+ 		strscpy(buf, bdevdef, length);
+ 
+@@ -250,7 +250,6 @@ static struct cmdline_parts *bdev_parts;
+ static int add_part(int slot, struct cmdline_subpart *subpart,
+ 		struct parsed_partitions *state)
+ {
+-	int label_min;
+ 	struct partition_meta_info *info;
+ 	char tmp[sizeof(info->volname) + 4];
+ 
+@@ -262,9 +261,7 @@ static int add_part(int slot, struct cmdline_subpart *subpart,
+ 
+ 	info = &state->parts[slot].info;
+ 
+-	label_min = min_t(int, sizeof(info->volname) - 1,
+-			  sizeof(subpart->name));
+-	strscpy(info->volname, subpart->name, label_min);
++	strscpy(info->volname, subpart->name, sizeof(info->volname));
+ 
+ 	snprintf(tmp, sizeof(tmp), "(%s)", info->volname);
+ 	strlcat(state->pp_buf, tmp, PAGE_SIZE);
 -- 
 2.43.0
 
