@@ -1,73 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C5910940;
-	Tue,  2 Jan 2024 13:42:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nwco2/gy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704202954; x=1735738954;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Jr7YmTDiLZWk/2Zs/oXAKicCT/PTbL1zJJ4Y1ag3Ud8=;
-  b=Nwco2/gy5ACrKxy00HSjQrf2a8M4CW0a23dJ5aRmnNddeqro2INk71LO
-   Hu5o6lv2UpxSkI/vaKKiBjcWDwmAeRVAJ0hU+xfnGJqRUOXJcqF2mWfn8
-   s2NextVbX5krSF9r+qMHClNHp2XQRo30CJqlYijO9qnG2pKiBLJT29pFk
-   BXjU/uYHHar2A3wubVGM+kAfcrRfiFgqBeCliTsvxlHV0/P7odXPvCWMM
-   Y6sLq4yabDoyj4l7x+Cj8jXYm8lSvtDBW+HaIm12T5vDz3vxCHTJwWwS8
-   m//hPcr1eYD8jDCuyyPBQbfG7SyYj5lDtZajx9BIoVv5Gj1kVYwtxfTjc
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="4217818"
-X-IronPort-AV: E=Sophos;i="6.04,325,1695711600"; 
-   d="scan'208";a="4217818"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 05:42:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="870265559"
-X-IronPort-AV: E=Sophos;i="6.04,325,1695711600"; 
-   d="scan'208";a="870265559"
-Received: from unknown (HELO [10.237.72.75]) ([10.237.72.75])
-  by FMSMGA003.fm.intel.com with ESMTP; 02 Jan 2024 05:42:30 -0800
-Message-ID: <8169d773-f9ec-4092-b036-9e4fd59966c3@linux.intel.com>
-Date: Tue, 2 Jan 2024 15:42:30 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95CC125B5;
+	Tue,  2 Jan 2024 13:42:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=v0yd.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=v0yd.nl
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4T4DM83spzz9tJ3;
+	Tue,  2 Jan 2024 14:33:24 +0100 (CET)
+From: =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>
+To: Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>,
+	asahi@lists.linux.dev,
+	linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH 3/4] Bluetooth: HCI: Add new state HCI_POWERING_DOWN
+Date: Tue,  2 Jan 2024 14:33:09 +0100
+Message-ID: <20240102133311.6712-4-verdre@v0yd.nl>
+In-Reply-To: <20240102133311.6712-1-verdre@v0yd.nl>
+References: <20240102133311.6712-1-verdre@v0yd.nl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: i2c-designware: NULL ptr at RIP: 0010:regmap_read+0x12/0x70
-To: Borislav Petkov <bp@alien8.de>, linux-i2c@vger.kernel.org
-Cc: lkml <linux-kernel@vger.kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>, narasimhan.v@amd.com
-References: <20231229120820.GCZY62tM7z4v2XmOAZ@fat_crate.local>
-Content-Language: en-US
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-In-Reply-To: <20231229120820.GCZY62tM7z4v2XmOAZ@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4T4DM83spzz9tJ3
 
-Hi
+Add a new state HCI_POWERING_DOWN that indicates that the device is
+currently powering down, this will be useful for the next commit.
 
-On 12/29/23 14:08, Borislav Petkov wrote:
-> Looking at the call stack, I see
-> 
->    2409205acd3c ("i2c: designware: fix __i2c_dw_disable() in case master is holding SCL low")
-> 
-> which does that dev->map deref in __i2c_dw_disable() but maybe ->map is
-> invalid by then...?
-> 
-> Just a stab in the dark anyway...
-> 
-Do you run same tests on vanilla? I.e. do you see this on v6.7-rc8?
+Signed-off-by: Jonas Dreßler <verdre@v0yd.nl>
+---
+ include/net/bluetooth/hci.h |  1 +
+ net/bluetooth/hci_sync.c    | 16 +++++++++++-----
+ net/bluetooth/mgmt.c        | 14 ++++++++++++++
+ 3 files changed, 26 insertions(+), 5 deletions(-)
 
-I'm curious to know is this already existing issue or regression because 
-of recent cleanup patches in linux-next between v6.7-rc8.. 
-drivers/i2c/busses/i2c-designware-*.
+diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+index cf5d6230c..e08afd870 100644
+--- a/include/net/bluetooth/hci.h
++++ b/include/net/bluetooth/hci.h
+@@ -361,6 +361,7 @@ enum {
+ 	HCI_SETUP,
+ 	HCI_CONFIG,
+ 	HCI_DEBUGFS_CREATED,
++	HCI_POWERING_DOWN,
+ 	HCI_AUTO_OFF,
+ 	HCI_RFKILLED,
+ 	HCI_MGMT,
+diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
+index e6eee1808..c920de0a2 100644
+--- a/net/bluetooth/hci_sync.c
++++ b/net/bluetooth/hci_sync.c
+@@ -5389,27 +5389,33 @@ static int hci_power_off_sync(struct hci_dev *hdev)
+ 	if (!test_bit(HCI_UP, &hdev->flags))
+ 		return 0;
+ 
++	hci_dev_set_flag(hdev, HCI_POWERING_DOWN);
++
+ 	if (test_bit(HCI_ISCAN, &hdev->flags) ||
+ 	    test_bit(HCI_PSCAN, &hdev->flags)) {
+ 		err = hci_write_scan_enable_sync(hdev, 0x00);
+ 		if (err)
+-			return err;
++			goto out;
+ 	}
+ 
+ 	err = hci_clear_adv_sync(hdev, NULL, false);
+ 	if (err)
+-		return err;
++		goto out;
+ 
+ 	err = hci_stop_discovery_sync(hdev);
+ 	if (err)
+-		return err;
++		goto out;
+ 
+ 	/* Terminated due to Power Off */
+ 	err = hci_disconnect_all_sync(hdev, HCI_ERROR_REMOTE_POWER_OFF);
+ 	if (err)
+-		return err;
++		goto out;
++
++	err = hci_dev_close_sync(hdev);
+ 
+-	return hci_dev_close_sync(hdev);
++out:
++	hci_dev_clear_flag(hdev, HCI_POWERING_DOWN);
++	return err;
+ }
+ 
+ int hci_set_powered_sync(struct hci_dev *hdev, u8 val)
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index c5291e139..8f42ee059 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -1382,6 +1382,14 @@ static int set_powered(struct sock *sk, struct hci_dev *hdev, void *data,
+ 
+ 	hci_dev_lock(hdev);
+ 
++	if (!cp->val) {
++		if (hci_dev_test_flag(hdev, HCI_POWERING_DOWN)) {
++			err = mgmt_cmd_status(sk, hdev->id, MGMT_OP_SET_POWERED,
++					      MGMT_STATUS_BUSY);
++			goto failed;
++		}
++	}
++
+ 	if (pending_find(MGMT_OP_SET_POWERED, hdev)) {
+ 		err = mgmt_cmd_status(sk, hdev->id, MGMT_OP_SET_POWERED,
+ 				      MGMT_STATUS_BUSY);
+@@ -9742,6 +9750,9 @@ bool mgmt_powering_down(struct hci_dev *hdev)
+ 	struct mgmt_pending_cmd *cmd;
+ 	struct mgmt_mode *cp;
+ 
++	if (hci_dev_test_flag(hdev, HCI_POWERING_DOWN))
++		return true;
++
+ 	cmd = pending_find(MGMT_OP_SET_POWERED, hdev);
+ 	if (!cmd)
+ 		return false;
+@@ -10049,6 +10060,9 @@ void mgmt_set_local_name_complete(struct hci_dev *hdev, u8 *name, u8 status)
+ 		/* If this is a HCI command related to powering on the
+ 		 * HCI dev don't send any mgmt signals.
+ 		 */
++		if (hci_dev_test_flag(hdev, HCI_POWERING_DOWN))
++			return;
++
+ 		if (pending_find(MGMT_OP_SET_POWERED, hdev))
+ 			return;
+ 	}
+-- 
+2.43.0
+
