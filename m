@@ -1,111 +1,116 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD2115AE5
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 17:54:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1315415EAA;
+	Tue,  2 Jan 2024 17:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQ3XAnIW"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d4a2526a7eso14040995ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 09:54:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704218046; x=1704822846; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=HKSeSe6aIz/giM2hLWohMCNrft/gPTDUxVx5SpP3Eg8=;
-        b=iQ3XAnIWnjar2ZYyLhDTvoTQGD86vhuTspFjEfkZ2LS8is25EqtlIlVqY1uNrARYhv
-         4njSVNDX7VvqQykfK3TMI3LuF5aQ1VyidjoTlxv9QIvoz/SqTk9hI3AnUeIQHY7hsi6H
-         Oqx5fTw5nTQpZaCE4OwLNXIjRr1gek9ss6yx2t3z7HGrkv9xiudu/Url5mbG/Q2b/9P4
-         iPrpU9rmarBnVV2LHpAcXuQw4sbwPCYSVx63I9X+8I3q14VOWhryxEp+dEjwxwIC+ju7
-         urazwrtNUwpiFvSQulSKKlxiUJ2cHXugOX2FgvGizKkdzeOCNDBKbH7EOZ8TbLpSXubF
-         9UyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704218046; x=1704822846;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HKSeSe6aIz/giM2hLWohMCNrft/gPTDUxVx5SpP3Eg8=;
-        b=rOoF/bfwkbAjfGKvATd3rCj3YSrko5CjzTXBQy7q4tEnnxiV/FB3iGgxTAbsfGxbI2
-         8LM/ojOc+gnTtmIDSCCf5zrUKFyAC1SyVQLlPRp4BgaEx3cA7aNKUeojptBKKtRRwDo0
-         3n/9y+/Kp0dITyk9obdUK0erlW9+a7sOrAyXGJWBuRIjeUAUpSBjXbCkYndxHLOj09oc
-         Zi6Qhg6t1V3RY5vsjMWT5QNlEMCkyyzhXuEK87+Crscucjtlmpb5fha9x5omgrwajnML
-         07qMWQA8hWvtRh6lquD/W7E1sLGGZk9hVudd5TnD7SimEHOejZrVBJMwvza9GVDHUTf0
-         2hiA==
-X-Gm-Message-State: AOJu0Yxwcwo+m/0duzLe0bXyP7mPiHQtc8qpQxFcX1w1jInKCVTOTmIt
-	eDnWvhpbtQsQDJa57QsH2jw=
-X-Google-Smtp-Source: AGHT+IGjD60IJ5O934G0uk9U2RzbZjBO7ugPyT2rW4oxx9bLV6dvHfHyD2MlY2xhFWamcsU7Iv7RfQ==
-X-Received: by 2002:a17:903:1251:b0:1d3:529a:83b6 with SMTP id u17-20020a170903125100b001d3529a83b6mr8433403plh.17.1704218046394;
-        Tue, 02 Jan 2024 09:54:06 -0800 (PST)
-Received: from KASONG-MB2.tencent.com ([115.171.41.9])
-        by smtp.gmail.com with ESMTPSA id be10-20020a170902aa0a00b001d3c3d486bfsm22151969plb.163.2024.01.02.09.54.03
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 02 Jan 2024 09:54:05 -0800 (PST)
-From: Kairui Song <ryncsn@gmail.com>
-To: linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Chris Li <chrisl@kernel.org>,
-	"Huang, Ying" <ying.huang@intel.com>,
-	Hugh Dickins <hughd@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Michal Hocko <mhocko@suse.com>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	David Hildenbrand <david@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	Kairui Song <kasong@tencent.com>
-Subject: [PATCH v2 4/9] mm/swap: always account swapped in page into current memcg
-Date: Wed,  3 Jan 2024 01:53:33 +0800
-Message-ID: <20240102175338.62012-5-ryncsn@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240102175338.62012-1-ryncsn@gmail.com>
-References: <20240102175338.62012-1-ryncsn@gmail.com>
-Reply-To: Kairui Song <kasong@tencent.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Rm9QcEmR"
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 402HHw0A019523;
+	Tue, 2 Jan 2024 17:54:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=I0MgCuODickFIYksO64ThHepb8KQxUyfAdwDlDz1u7w=;
+ b=Rm9QcEmRda6ykCaaAqcVIdHwoSpAmZe5MZyABJJW31NqfvhusFqTzhDnajjgFTiOviFt
+ ATdMXUyFrUYje5//xxY4b6hclY5GWbbenQya8FIEOL6yqVJCdasKkc4aUhKXkxpcoZFT
+ RZAGMPuPGtaeRZKLyvpFFqvfWO+PSFMDuFlCk/JPkycQKlvb0rVLO5wk02fHW81emT5B
+ 80dgKj8YZzMjtiU4DfiJzZ3zXwVmQ4h4NjFUTm1De1Ruk7DiZkuLsmK1TTZj3NHfo/Fw
+ uJyknUeQH2ia3xRuaplqBfgJSkLEbHIbGZXaMXeG/JJFGJZCtTrN7gvD7FtD9jUpN5Hq uw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vcprx8qe1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jan 2024 17:54:05 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 402HI7Vd019985;
+	Tue, 2 Jan 2024 17:54:04 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vcprx8qd9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jan 2024 17:54:04 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 402Gfwl6017838;
+	Tue, 2 Jan 2024 17:54:04 GMT
+Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vawwypf9m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jan 2024 17:54:04 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 402Hs3kC23462486
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 2 Jan 2024 17:54:03 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 460F358063;
+	Tue,  2 Jan 2024 17:54:03 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8076F58060;
+	Tue,  2 Jan 2024 17:54:02 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.135.171])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  2 Jan 2024 17:54:02 +0000 (GMT)
+Message-ID: <39e5612eb2d4dea2759310ccce39c1ad40b5388f.camel@linux.ibm.com>
+Subject: Re: [PATCH] integrity: don't throw an error immediately when failed
+ to add a cert to the .machine keyring
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Coiby Xu <coxu@redhat.com>, linux-integrity@vger.kernel.org
+Cc: itrymybest80@protonmail.com, Dmitry Kasatkin
+ <dmitry.kasatkin@gmail.com>,
+        Paul Moore <paul@paul-moore.com>, James
+ Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "open
+ list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>,
+        open list
+ <linux-kernel@vger.kernel.org>
+Date: Tue, 02 Jan 2024 12:54:02 -0500
+In-Reply-To: <20231227044156.166009-1-coxu@redhat.com>
+References: <20231227044156.166009-1-coxu@redhat.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: M5pVSb9sk9s-TDoesZfNQZZhgHz4hpOp
+X-Proofpoint-ORIG-GUID: 3mjAS6lJuc6SPA8h4W2zeZQnJ0yC0kB2
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-02_06,2024-01-02_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 bulkscore=0 mlxlogscore=593 impostorscore=0
+ lowpriorityscore=0 suspectscore=0 adultscore=0 phishscore=0 mlxscore=0
+ spamscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401020134
 
-From: Kairui Song <kasong@tencent.com>
+Hi Coiby,
 
-Currently, mem_cgroup_swapin_charge_folio is always called with
-mm argument as NULL, except in swapin_direct.
+According to https://docs.kernel.org/process/submitting-patches.html,the summary line should be no more than  70 - 75 characters. 
 
-swapin_direct is used when swapin should skip readahead and
-swapcache (SWP_SYNCHRONOUS_IO). Other caller paths of
-mem_cgroup_swapin_charge_folio are for swapin that should
-not skip readahead and cache.
+On Wed, 2023-12-27 at 12:41 +0800, Coiby Xu wrote:
+> Currently when the kernel fails to add a cert to the .machine keyring,
+> it will throw an error immediately in the function integrity_add_key.
+> 
+> Since the kernel will try adding to the .platform keyring next or throw
+> an error (in the caller of integrity_add_key i.e. add_to_machine_keyring),
+> so there is no need to throw an error immediately in integrity_add_key.
+> 
+> Reported-by: itrymybest80@protonmail.com
+> Closes: https://bugzilla.redhat.com/show_bug.cgi?id=2239331
+> Signed-off-by: Coiby Xu <coxu@redhat.com>
 
-This could cause swapin charging to behave differently depending
-on swap device. This currently didn't happen because the only call
-path of swapin_direct is the direct anon page fault path, where mm
-equals to current->mm, but will no longer be true if swapin_direct
-is shared and have other callers (eg, swapoff).
+Otherwise, the patch looks good.
 
-So make swapin_direct also passes NULL for mm, no feature change.
-
-Signed-off-by: Kairui Song <kasong@tencent.com>
----
- mm/swap_state.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/swap_state.c b/mm/swap_state.c
-index 6130de8d5226..d39c5369da21 100644
---- a/mm/swap_state.c
-+++ b/mm/swap_state.c
-@@ -881,7 +881,7 @@ struct folio *swapin_direct(swp_entry_t entry, gfp_t gfp_mask,
- 	folio = vma_alloc_folio(GFP_HIGHUSER_MOVABLE, 0,
- 				vma, vmf->address, false);
- 	if (folio) {
--		if (mem_cgroup_swapin_charge_folio(folio, vma->vm_mm,
-+		if (mem_cgroup_swapin_charge_folio(folio, NULL,
- 						   GFP_KERNEL, entry)) {
- 			folio_put(folio);
- 			return NULL;
 -- 
-2.43.0
+thanks,
+
+Mim
+
+
 
