@@ -1,90 +1,134 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.dolansoft.org (s2.dolansoft.org [212.51.146.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD68F171BF;
-	Tue,  2 Jan 2024 22:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F12E171B6;
+	Tue,  2 Jan 2024 22:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brun.one
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=brun.one
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SaP6DsUn"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-555aa7fd668so4189942a12.0;
-        Tue, 02 Jan 2024 14:14:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704233639; x=1704838439; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=nNtKRKHLT7GbRif0IHQKXzEMZSVRXKy9jF4fRiR/VhE=;
-        b=SaP6DsUnX1LOjT0yIHrbFmUGha0kBq/ZHP+ACS9ItNsrH8C7bxiLkM7vho1nFO3BtV
-         lStjvErkAXMco3DvgKz+BhBjq5vWeYOK8c7XtH5UcOE6J79HLx7oNepHR9w45TP4rfwH
-         cjCDgydCG3+oSuKzX+hq4Yw9mXF7kRwCoQOxMxVKu8jFzt49gxdSpS33xvg+JIEokbwO
-         yEev1IyUTxn4lFs3irQLPVUl3v32b8UbX6sICQJbaRnZuRUmSImwvTmaEs4EUA1GvNJY
-         7NAFjGQt3DKam9tMREkWA00ArsqHykIglbibVUboe+/t1m97BWmaGhyiIAM3MLpNo7nX
-         dRMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704233639; x=1704838439;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nNtKRKHLT7GbRif0IHQKXzEMZSVRXKy9jF4fRiR/VhE=;
-        b=nWwuyCJpC3C+sQAxBBTG0yG/eTKw3oD7c0v/485dOW9Bsp0jRdex/2QABGQs/EUgma
-         bWlYFWcdrfZroDXRRSnf7+VmtiZQu5s49eDctOzEejnZlR8Rsv1CU/Y2ws8lKqPN2ZvY
-         9hd0DWz52Y11cWWlKaQYDFRzashaq201vyKL4IoxvGHcXvB1UTv0tw9e0YEqCG0QJD6a
-         H0bixnvkcpas7lG88qu3IRU6BQINeVME3bmcNGyogc6McbqauN7foRIOtwEXIw0IOoPT
-         Rq8JrH6VNx97ZkE5LJE7305VgTM6MXMBkAWZLMUyarAI+V5LleVhB1LvBwp38RxtX6yw
-         mupw==
-X-Gm-Message-State: AOJu0YzQF/aY+bYKHHyX3iDiZqD7SyyERFlOpn8YfXq2ScGevBn55oZM
-	2ZGzT7MJl/M4izk/44NKEcM=
-X-Google-Smtp-Source: AGHT+IEt2lfwKc8ud/gUjAY0071TQZcjd/zfGADvdh0gXWS/csgwq/BmpisH8laLc0/X9noGpGIzpg==
-X-Received: by 2002:a17:906:74d3:b0:a27:ec73:7a89 with SMTP id z19-20020a17090674d300b00a27ec737a89mr1604424ejl.68.1704233638915;
-        Tue, 02 Jan 2024 14:13:58 -0800 (PST)
-Received: from [127.0.0.1] ([89.205.132.224])
-        by smtp.gmail.com with ESMTPSA id l1-20020a170907914100b00a27741ca951sm4950747ejs.108.2024.01.02.14.13.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jan 2024 14:13:58 -0800 (PST)
-Date: Tue, 02 Jan 2024 23:13:58 +0100
-From: Eric Woudstra <ericwouds@gmail.com>
-To: Daniel Golle <daniel@makrotopia.org>
-CC: "Russell King (Oracle)" <linux@armlinux.org.uk>,
- Alexander Couzens <lynxis@fe80.eu>, Andrew Lunn <andrew@lunn.ch>,
- Heiner Kallweit <hkallweit1@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Frank Wunderlich <frank-w@public-files.de>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_RFC_net-next=5D_net=3A_pcs=3A_pcs-mtk-lyn?= =?US-ASCII?Q?xi_fix_mtk=5Fpcs=5Flynxi=5Fget=5Fstate=28=29_for_2500base-x?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <ZZRrk85SCDmo76NJ@pidgin.makrotopia.org>
-References: <20240102074408.1049203-1-ericwouds@gmail.com> <ZZP9GR15ufDbjGAJ@shell.armlinux.org.uk> <92190426-3614-4774-9E9F-18F121622788@gmail.com> <74223164-ab50-4d6d-a4f4-561b0a70d396@gmail.com> <ZZRrk85SCDmo76NJ@pidgin.makrotopia.org>
-Message-ID: <6666EB36-984E-4898-A41A-2D9713DE4DB0@gmail.com>
+	dkim=pass (2048-bit key) header.d=brun.one header.i=@brun.one header.b="E2npxgfi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=brun.one;
+	s=s1; h=MIME-Version:Message-ID:Date:Subject:Cc:To:From:In-Reply-To:
+	References:From:To:Subject:Date:Message-ID:Reply-To;
+	bh=tk05/deGlS4tuw8pDhigIISVFF8G63ZmEtVtmgFP+ks=; b=E2npxgfi8/c4idsH1/Hnvcq0ax
+	l7IuT51xDlloC1d+wTulBhV6qiDkBEf/+BzNDF+RWbqHBZe89s5aOgWu2foYq/9Ubt2D7ajNQMADZ
+	kb2/YsJ+iV4k8Yb2eyY7YDAAqpKSR3yDX1vFQHxgDfmX59XDq2Sxgo9N+M6XNUWJPwDtJ7S8tahd/
+	QRMyLP6fed+t06iymK5hahb4B+dG/9UV1+kMbmKbvRd5zL1Brp7j4yx6U1fP8J5N2W9Xuun2tZdf4
+	u9qNXfySN5EQrkJCd1UZleR7BMuw3mgwvK72KGs56fde0PSu3Xq/I7P17dbUt4z7qsg0V6+Gt7/bK
+	u9C/TkRg==;
+Received: from [212.51.153.89] (helo=blacklava.cluster.local)
+	by mx.dolansoft.org with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <lorenz@dolansoft.org>)
+	id 1rKmca-001AiL-2O;
+	Tue, 02 Jan 2024 21:48:24 +0000
+From: Lorenz Brun <lorenz@brun.one>
+To: Stefan Binding <sbinding@opensource.cirrus.com>,
+	James Schulman <james.schulman@cirrus.com>,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>
+Cc: alsa-devel@alsa-project.org,
+	patches@opensource.cirrus.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] ALSA: hda: cs35l41: Support more HP models without _DSD
+Date: Tue,  2 Jan 2024 22:48:20 +0100
+Message-ID: <20240102214821.3394810-1-lorenz@brun.one>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Sender: lorenz@dolansoft.org
 
-I believe the general idea is that phylink should be aware wether to use in=
-band or outband negotiation in order to setup the hardware correctly=2E Spe=
-aking of a situation where there is a PHY attached=2E
+This adds overrides for a series of notebooks using a common config
+taken from HP's proprietary Windows driver.
 
-On January 2, 2024 9:01:23 PM GMT+01:00, Daniel Golle <daniel@makrotopia=
-=2Eorg> wrote:
->On Tue, Jan 02, 2024 at 08:33:32PM +0100, Eric Woudstra wrote:
->> [=2E=2E=2E]
->>=20
->> So if phylink_mii_c22_pcs_decode_state() should not set the speed, then=
- it is not correctly set somewhere else=2E
->
->Yes, but the fix should go to pcs-mtk-lynxi=2Ec and you don't need to
->change phylink for it to work=2E
->This should be enough:
->https://patchwork=2Ekernel=2Eorg/project/netdevbpf/patch/091e466912f1333b=
-b76d23e95dc6019c9b71645f=2E1699565880=2Egit=2Edaniel@makrotopia=2Eorg/
->
+This has been tested on a HP 15-ey0xxxx device (subsystem 103C8A31)
+together with another Realtek quirk and the calibration files from the
+proprietary driver.
+
+Signed-off-by: Lorenz Brun <lorenz@brun.one>
+---
+Changes in v2:
+ - Use newly-introduced config table instead of function
+ - Change boost cap value from 10uF to 24uF after cross-referencing my
+   sources with the preexisting 103C89C6 entry.
+
+Changes in v3:
+ - Rebase onto sound/for-next
+ - Sorted model table
+ - Updated commit message
+
+ sound/pci/hda/cs35l41_hda_property.c | 44 ++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+
+diff --git a/sound/pci/hda/cs35l41_hda_property.c b/sound/pci/hda/cs35l41_hda_property.c
+index 52820ca9c603..fcc605be51cf 100644
+--- a/sound/pci/hda/cs35l41_hda_property.c
++++ b/sound/pci/hda/cs35l41_hda_property.c
+@@ -42,6 +42,28 @@ static const struct cs35l41_config cs35l41_config_table[] = {
+  * in the ACPI. The Reset GPIO is also valid, so we can use the Reset defined in _DSD.
+  */
+ 	{ "103C89C6", 2, INTERNAL, { CS35L41_RIGHT, CS35L41_LEFT, 0, 0 }, -1, -1, -1, 1000, 4500, 24 },
++	{ "103C8A28", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
++	{ "103C8A29", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
++	{ "103C8A2A", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
++	{ "103C8A2B", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
++	{ "103C8A2C", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
++	{ "103C8A2D", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
++	{ "103C8A2E", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
++	{ "103C8A30", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
++	{ "103C8A31", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
++	{ "103C8BB3", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
++	{ "103C8BB4", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
++	{ "103C8BDF", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
++	{ "103C8BE0", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
++	{ "103C8BE1", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
++	{ "103C8BE2", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
++	{ "103C8BE9", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
++	{ "103C8BDD", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
++	{ "103C8BDE", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
++	{ "103C8BE3", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
++	{ "103C8BE5", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
++	{ "103C8BE6", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
++	{ "103C8B3A", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4100, 24 },
+ 	{ "104312AF", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
+ 	{ "10431433", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
+ 	{ "10431463", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
+@@ -356,6 +378,28 @@ static const struct cs35l41_prop_model cs35l41_prop_model_table[] = {
+ 	{ "CSC3551", "10280BEB", generic_dsd_config },
+ 	{ "CSC3551", "10280C4D", generic_dsd_config },
+ 	{ "CSC3551", "103C89C6", generic_dsd_config },
++	{ "CSC3551", "103C8A28", generic_dsd_config },
++	{ "CSC3551", "103C8A29", generic_dsd_config },
++	{ "CSC3551", "103C8A2A", generic_dsd_config },
++	{ "CSC3551", "103C8A2B", generic_dsd_config },
++	{ "CSC3551", "103C8A2C", generic_dsd_config },
++	{ "CSC3551", "103C8A2D", generic_dsd_config },
++	{ "CSC3551", "103C8A2E", generic_dsd_config },
++	{ "CSC3551", "103C8A30", generic_dsd_config },
++	{ "CSC3551", "103C8A31", generic_dsd_config },
++	{ "CSC3551", "103C8BB3", generic_dsd_config },
++	{ "CSC3551", "103C8BB4", generic_dsd_config },
++	{ "CSC3551", "103C8BDF", generic_dsd_config },
++	{ "CSC3551", "103C8BE0", generic_dsd_config },
++	{ "CSC3551", "103C8BE1", generic_dsd_config },
++	{ "CSC3551", "103C8BE2", generic_dsd_config },
++	{ "CSC3551", "103C8BE9", generic_dsd_config },
++	{ "CSC3551", "103C8BDD", generic_dsd_config },
++	{ "CSC3551", "103C8BDE", generic_dsd_config },
++	{ "CSC3551", "103C8BE3", generic_dsd_config },
++	{ "CSC3551", "103C8BE5", generic_dsd_config },
++	{ "CSC3551", "103C8BE6", generic_dsd_config },
++	{ "CSC3551", "103C8B3A", generic_dsd_config },
+ 	{ "CSC3551", "104312AF", generic_dsd_config },
+ 	{ "CSC3551", "10431433", generic_dsd_config },
+ 	{ "CSC3551", "10431463", generic_dsd_config },
+-- 
+2.42.0
+
