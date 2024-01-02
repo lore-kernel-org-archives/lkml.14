@@ -1,112 +1,128 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C6DFF4F4;
-	Tue,  2 Jan 2024 12:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A374EED7
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 12:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="S0UnOMij"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=EKt6waYkREQSl8TOEPwS+m4Ybyc4+NtjQUDV5bNbQWs=; b=S0UnOMijCUX3JsRUr+wAE4YgUf
-	eE9RQMlrBh1t9kmigzTWvhMhi71gOETUnZhO+58XxWphtoXyw3uthVlbhWzEuqXTEH/jKgMnD9XJl
-	lmE+XNhJUHF4E+87DAc3z6ASZSw1QTFP9k1pURiHfE7GXVyX6QCvE5yYzFQFA03Pl1dvr00fH2EKx
-	nBHnIgIodzNv0e3nV/Ki3wMSXzEzYEgkbAW2gSB0cLcZblTqgz3Tv1j2/V/gJBR6BYrQEw/n9ow2V
-	vaC8ZxRUMlczXMv27GBH+Q9orgljB4nUEdNR/Og6ySj5CmdbIGo1dWgr4RNBOe0t3c2yxxdiiNp1p
-	eywa18Ig==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34188)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rKe0f-0006Xv-27;
-	Tue, 02 Jan 2024 12:36:41 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rKe0h-0005IC-OE; Tue, 02 Jan 2024 12:36:43 +0000
-Date: Tue, 2 Jan 2024 12:36:43 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Eric Woudstra <ericwouds@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Frank Wunderlich <frank-w@public-files.de>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH RFC net-next] net: phylink: add quirk for disabling
- in-band-status for mediatek pcs at 2500base-x
-Message-ID: <ZZQDWzYlxAKl0JxI@shell.armlinux.org.uk>
-References: <20240102074326.1049179-1-ericwouds@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XH70b9PU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704199061;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eTOeUCtDb5GVXFc7f9ZKRWPTysZoCC8la1hp9HQwt0I=;
+	b=XH70b9PUayDDvqpr1UiCAJb6CoVqc5nesDNuIoVSRwkalYWBz5h976JygX7BzfAMIoMtFt
+	DpBv4qMTsFFO+sPYjansY/bMLy/25PYqwX9kD6H3gkmR7PGddfx8hVdX5lsN36ducxB1ly
+	9N63tHvW9lYf5J9wYCSmA6X0E6h/g6w=
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
+ [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-656-OGoJU-gANHKJOJ5vxCRBSg-1; Tue, 02 Jan 2024 07:37:40 -0500
+X-MC-Unique: OGoJU-gANHKJOJ5vxCRBSg-1
+Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-50e7ddf4dacso4465105e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 04:37:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704199058; x=1704803858;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eTOeUCtDb5GVXFc7f9ZKRWPTysZoCC8la1hp9HQwt0I=;
+        b=ETe/D/cXYNDnalqmRiKwYMlXhiduybH6CI4BHn/jLAIVtLPBPDbKIPyuzdq6ld5Fwb
+         l8HlsnIO4Q1iPtru1RyvyCYmjkTNdwnjigvKVGg2yh3aj5nl5mYPQbEDR3Ms5uEjEr4U
+         D7iQIN+Bg36S29dinO/mzhVHxBJEJWO2D/ibG3kbSuZ24UY8s844apY+uaIun+gW6IXX
+         HTg3RwwUw8ietJcAVMImDMkYiUrYI/5DZ+cZHLDnSJbyw4bWQG3FHStOeRJe4wKtWVeC
+         XuM/z0w+j2L8rsYvTmkN+lSVkYTLF3C/EE+uEiBFL78pw3oZRsR+Ir2nS7o0c/FLuRHS
+         b1+A==
+X-Gm-Message-State: AOJu0YyIoGxhMRai9Eg6Vamuz/6roCVxy06nU3tSH0CUYo4Q96rQSSaT
+	Wkqg9GKQb+brp/XtdU2OyVxtp41CxnDtEQQeRKOOBI0VpJ0mjp11GMLLtkAi8jUKa+ESjVjO1wT
+	xf5VKUwnVks9hJW6xm2/v+VwVyJpIV6Qa
+X-Received: by 2002:a05:6512:158d:b0:50e:6b4f:9809 with SMTP id bp13-20020a056512158d00b0050e6b4f9809mr7894830lfb.20.1704199058783;
+        Tue, 02 Jan 2024 04:37:38 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEaOrzDnMM39k8oG/LEnKD1O5kbB1x6EzMJtPdL+gUeRD4kNmp1BOet/oWi4/JjhhlRJRftzg==
+X-Received: by 2002:a05:6512:158d:b0:50e:6b4f:9809 with SMTP id bp13-20020a056512158d00b0050e6b4f9809mr7894823lfb.20.1704199058489;
+        Tue, 02 Jan 2024 04:37:38 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id fd23-20020a056402389700b00553a86b7821sm15857865edb.74.2024.01.02.04.37.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jan 2024 04:37:38 -0800 (PST)
+Message-ID: <14940411-0da9-45bf-ba88-d3bd3b3c643f@redhat.com>
+Date: Tue, 2 Jan 2024 13:37:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240102074326.1049179-1-ericwouds@gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] platform/x86: wmi: linux/wmi.h: fix Excess kernel-doc
+ description warning
+Content-Language: en-US, nl
+To: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc: Armin Wolf <W_Armin@gmx.de>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org
+References: <20231223194321.23084-1-rdunlap@infradead.org>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20231223194321.23084-1-rdunlap@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 02, 2024 at 08:43:26AM +0100, Eric Woudstra wrote:
-> In follow up to: net: pcs: pcs-mtk-lynxi: use 2500Base-X without AN
+Hi,
+
+On 12/23/23 20:43, Randy Dunlap wrote:
+> Remove the "private:" comment to prevent the kernel-doc warning:
 > 
-> MediaTek LynxI PCS, 2500Base-X will only work without inband status due to
-> hardware limitation.
+> include/linux/wmi.h:27: warning: Excess struct member 'setable' description in 'wmi_device'
+> 
+> Either a struct member is documented (via kernel-doc) or it's private,
+> but not both.
+> 
+> Fixes: b4cc979588ee ("platform/x86: wmi: Add kernel doc comments")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Armin Wolf <W_Armin@gmx.de>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Cc: platform-driver-x86@vger.kernel.org
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+> v2: add Fixes: tag and Rev-by: Armin
 
-Yes, we need better support for 2500base-X connected to a PHY.
-Currently, we treat both base-X interface modes as _media_ side modes
-by looking at the Autoneg bit. However, given that 2500base-X has been
-around for ages in vendor-specific forms, we need to do better. The
-introduction of the PHYLINK_PCS_NEG_* enum and phylink_pcs_neg_mode()
-is a step towards resolving this (as well as ensuring consistency of
-implementation so we _can_ start to address it in phylink rather than
-having different PCS drivers doing weird stuff.)
 
-I am _not_ of the opinion that we should be dealing with this based on
-compatibles or anything like that.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-As 6.6 was declared LTS, I think we can now move phylink_pcs_neg_mode()
-into phylink.c, and thus think about what we should do with:
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-+               /* 1000base-X is designed for use media-side for Fibre
-+                * connections, and thus the Autoneg bit needs to be
-+                * taken into account. We also do this for 2500base-X
-+                * as well, but drivers may not support this, so may
-+                * need to override this.
-+                */
-+               if (!phylink_autoneg_inband(mode))
-+                       neg_mode = PHYLINK_PCS_NEG_OUTBAND;
-+               else if (linkmode_test_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
-+                                          advertising))
-+                       neg_mode = PHYLINK_PCS_NEG_INBAND_ENABLED;
-+               else
-+                       neg_mode = PHYLINK_PCS_NEG_INBAND_DISABLED;
-+               break;
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
-Specifically, the linkmode_test_bit() bit. When there is a PHY present,
-the link between the PCS and PHY should _not_ depend on Autoneg as that
-is indicates what we want for the _media_ side, and in the case of a
-PCS-to-PHY link, that is not the media.
+Regards,
 
-The next issue is the one that you refer to, and there's several issues:
+Hans
 
-1. some implementations of 2500base-X do not support inband
-2. some implementations of 2500base-X appear to require inband
-   (e.g. mvneta, mvpp2)
 
-I have some thoughts on this, but I don't have the time to express them
-in email at the moment (too much to get through post-Christmas post-
-Covid.)
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+> 
+>  include/linux/wmi.h |    2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff -- a/include/linux/wmi.h b/include/linux/wmi.h
+> --- a/include/linux/wmi.h
+> +++ b/include/linux/wmi.h
+> @@ -21,8 +21,6 @@
+>   */
+>  struct wmi_device {
+>  	struct device dev;
+> -
+> -	/* private: used by the WMI driver core */
+>  	bool setable;
+>  };
+>  
+> 
+
