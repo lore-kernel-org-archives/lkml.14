@@ -1,75 +1,114 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8A1EAC0;
-	Tue,  2 Jan 2024 11:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415BAEAC2;
+	Tue,  2 Jan 2024 11:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Nyt5iZ81"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=0zuMAw5hy4EWFGm1n9NKAOVIvTy+R2ps+YCTy6ULtmI=; b=Nyt5iZ81xR1esYL/XWDhQdufVm
-	St+PtX31GbwLgODgDQyUaTDhGzIHZl+ZnWl+MXC8de9F315zJcjH5is1I/ESXbSIayGWLewny0Qj8
-	EbneUncfP6AyTxeO7raA6d6kBVLcrU6JDrHTW2MVdfRdWBr76nJ+sfZzRTizfHH0xxo5IViSiTLB9
-	MWXYgeGiD0zomDMrNjQalDmMTgjscMBPvI/OqfDHZD1OD92fxbHcteDDZSHGWdAyzgxUnhm1FvQls
-	FSNDgPMLNPyKm+Ln8nSCAv8UpMJsF/zg2tAoZmm8qoh2sTPT2mA85PiOoGkf2o/CqeCAlEFbzUAqz
-	LJfO3z6A==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54808)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rKd4e-0006Tt-2U;
-	Tue, 02 Jan 2024 11:36:44 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rKd4h-0005Ez-6w; Tue, 02 Jan 2024 11:36:47 +0000
-Date: Tue, 2 Jan 2024 11:36:47 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Dimitri Fedrau <dima.fedrau@gmail.com>,
-	Stefan Eichenberger <eichest@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] net: phy: marvell-88q2xxx: add driver for the
- Marvell 88Q2220 PHY
-Message-ID: <ZZP1T7gJPAsEzeas@shell.armlinux.org.uk>
-References: <20231219093554.GA6393@debian>
- <20231221072853.107678-1-dima.fedrau@gmail.com>
- <20231221072853.107678-5-dima.fedrau@gmail.com>
- <ZYRCDTWgHbM2qAom@eichest-laptop>
- <20231221141636.GA122124@debian>
- <59fed161-6c08-4537-b02d-19e67e342dd8@lunn.ch>
+	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="HfBx0L9S"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id DFB4E9C0888;
+	Tue,  2 Jan 2024 06:37:40 -0500 (EST)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id oH47By21Q_s9; Tue,  2 Jan 2024 06:37:40 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 50F959C0957;
+	Tue,  2 Jan 2024 06:37:40 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 50F959C0957
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1704195460; bh=bAsNfTDPGcy9UE/qR8q9C/MYhrYIBcUMKG2G3Oi4VLE=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=HfBx0L9SYhFxNTXnatyaVVD/0MKoxKv1DkFPwS4FhP21ZdGhZFAP2Yw2hgXG5W1+t
+	 DG22L6dYlNdqI/yA4nolhiQbAYRMk3Yvd1vhj35YZTZ1keQ1XC+emTImMoQmjgdIjh
+	 alA58hoYPXIYl8/8523fTVCfrQVCNMBqb6qPyKUQ1uoRLrwWFtxWeVm73HyoV71weA
+	 Vcvll8Fbldw/DCB9WQCaUVbMMf9+FXj0uatTbgq9RGC183UtRM5ockSfi6AD3jQlfV
+	 NlAXW2vSrvxzA0K2KrHkaWWkgrrQsn+4DCiJZlStF1JhWW5TYl6ACLELjZgkVicaEV
+	 5OCMfpqr9RX7g==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id 20Ly5X62OB9G; Tue,  2 Jan 2024 06:37:40 -0500 (EST)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [192.168.48.237])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 1AD139C0888;
+	Tue,  2 Jan 2024 06:37:40 -0500 (EST)
+Date: Tue, 2 Jan 2024 06:37:39 -0500 (EST)
+From: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, 
+	shengjiu wang <shengjiu.wang@gmail.com>, 
+	Xiubo Lee <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>, 
+	Nicolin Chen <nicoleotsuka@gmail.com>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	linux-sound <linux-sound@vger.kernel.org>, 
+	devicetree <devicetree@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	alsa-devel <alsa-devel@alsa-project.org>, 
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
+	Philip-Dylan Gleonec <philip-dylan.gleonec@savoirfairelinux.com>
+Message-ID: <1300509761.24764.1704195459987.JavaMail.zimbra@savoirfairelinux.com>
+In-Reply-To: <20231220222550.GA1232936-robh@kernel.org>
+References: <20231218124058.2047167-1-elinor.montmasson@savoirfairelinux.com> <20231218124058.2047167-11-elinor.montmasson@savoirfairelinux.com> <20231220222550.GA1232936-robh@kernel.org>
+Subject: Re: [PATCHv3 RESEND 10/10] ASoC: dt-bindings: fsl-asoc-card: add
+ compatible for generic codec
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <59fed161-6c08-4537-b02d-19e67e342dd8@lunn.ch>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.8.15_GA_4581 (ZimbraWebClient - GC112 (Linux)/8.8.15_GA_4581)
+Thread-Topic: ASoC: dt-bindings: fsl-asoc-card: add compatible for generic codec
+Thread-Index: r/qDupTL/n3XOuEH8yE+GIqg/zABBQ==
 
-On Thu, Dec 21, 2023 at 03:25:56PM +0100, Andrew Lunn wrote:
-> > Without setting the master-slave option it didn't work. I think its
-> > mandatory.
+Hello,
+
+On Wednesday, 20 December, 2023 23:25:50, Rob Herring wrote:
+> On Mon, Dec 18, 2023 at 01:40:58PM +0100, Elinor Montmasson wrote: 
+> > +Optional, relevant only with the "fsl,imx-audio-generic" compatible: 
+> > + 
+> > + - cpu-slot-width : Indicates a specific TDM slot width in bits. 
+> > + - cpu-slot-num : Indicates a specific number of TDM slots per frame. 
 > 
-> I don't think it is. The PHY should have a default setting for
-> master-slave. Often its based on the typical use case. If its
-> typically inside a switch, then it should default to prefer-master. If
-> its typically in an end system, then it should be prefer-slave.
+> Pretty sure I've seen other bindings with TDM slot properties. A sign we 
+> need something common if we don't already have something. 
 
-However, master/slave needs autoneg, and if autoneg is disabled, then
-that may not be resolvable, and it may need manual configuration.
+That's right, "tdm-slot.txt" already defines TDM bindings, I will
+use them with the utility function snd_soc_of_parse_tdm_slot().
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+> > + - cpu-sysclk-freq-rx : Frequency of the CPU DAI sys clock for Rx. 
+> > + - cpu-sysclk-freq-tx : Frequency of the CPU DAI sys clock for Tx. 
+> > + 
+> > + - cpu-sysclk-dir-rx-out : Boolean property. Specifies sys clock direction 
+> > + as 'out' on initialization for Rx. 
+> > + If not set, default direction is 'in'. 
+> > + - cpu-sysclk-dir-tx-out : Boolean property. Specifies sys clock direction 
+> > + as 'out' on initialization for Tx. 
+> > + If not set, default direction is 'in'. 
+> 
+> Looks like clock stuff. Use the clock binding. 
+
+simple-card defines similar properties at the dai level:
+"system-clock-frequency" and "system-clock-direction-out".
+The first is used if no "clocks" binding is specified for the dai node.
+
+Maybe I could use a similar logic with fsl-asoc-card ?
+* adding a "clock-cpu" phandle property which should be the cpu clock.
+It will be used to retreive the frequency for both RX and TX.
+* keeping "cpu-sysclk-freq-rx"/"cpu-sysclk-freq-tx", which are used if
+no clock is provided, like "system-clock-frequency" in simple-card.
+* keep using "cpu-sysclk-dir-rx-out"/"cpu-sysclk-dir-tx-out", like
+"system-clock-direction-out" in simple card.
+
+Also, maybe I could rename my new properties:
+cpu-system-clock-frequency-tx, cpu-system-clock-direction-out-rx, ...
+It would better match those in simple-card as they do the same thing.
+
+Best regards,
+Elinor Montmasson
