@@ -1,186 +1,141 @@
-Received: from relay04.th.seeweb.it (relay04.th.seeweb.it [5.144.164.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C795168A6
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 21:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
-Received: from SoMainline.org (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id B6E5820145;
-	Tue,  2 Jan 2024 22:17:46 +0100 (CET)
-Date: Tue, 2 Jan 2024 22:17:45 +0100
-From: Marijn Suijten <marijn.suijten@somainline.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Manivannan Sadhasivam <mani@kernel.org>, Sibi Sankar <quic_sibis@quicinc.com>, 
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
-	Joerg Roedel <joro@8bytes.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Wesley Cheng <quic_wcheng@quicinc.com>, Alexey Minnekhanov <alexeymin@postmarketos.org>, 
-	linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev, 
-	linux-usb@vger.kernel.org, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: Re: [PATCH v2 06/14] arm64: dts: qcom: sdm630: Drop RPM bus clocks
-Message-ID: <6b3eetuyhg6y6wgqgxn2ruovjfrg24dbwsictlryealtwtnq6t@xk6nm3mxwbeh>
-References: <20230721-topic-rpm_clk_cleanup-v2-0-1e506593b1bd@linaro.org>
- <20230721-topic-rpm_clk_cleanup-v2-6-1e506593b1bd@linaro.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141E8168A7
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 21:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QTq0Bdpo"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dbd7389572dso12612444276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 13:27:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704230839; x=1704835639; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=b9mb89vCm3BKTU0DU+/TGy4Hk6L4CQ4i3DlNwc7INoo=;
+        b=QTq0Bdpo60Ekqq2oYrLPhrRJXYQNZ4E2Yt6/noM/M+HB+sNtRh7ignNo9Cy3hIlekX
+         mIWrMX9TIu+lqVnTmg2Ar22FQs/81LYhG5wd3I12E1oGKPsAOg9B3RaNoyj6dZBV2xNR
+         cQbm94zUt6LPqNquQWih+umpryX8HK1QvDZ84f/pvZAMSc9ieZAoIJV5g2vEwfQ1fMu1
+         Rtcuw6Z0fdR2Vyp7B+yxYkSmNetKobhTvewX+uqHyAs8Y4Vaij4LMnQHi5GDrRidkOBX
+         GYkERIWBo6qnB8Lzxqz3qU7Req5wRfw3hhhfTTYDc/n6emJWdCrFXAMm0PR/rDhVX9Lw
+         /kUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704230839; x=1704835639;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b9mb89vCm3BKTU0DU+/TGy4Hk6L4CQ4i3DlNwc7INoo=;
+        b=MPqSG2QaNuvY0JqbtiKNQQzUqL0Shj0q6K1c14DpAunS+sj3sGeg0nxudbFTdARGi/
+         doc04hwOHLuNtoR4iP7tNSk/y7xxRsV3hWj/8n4+BR0HMYmfbM81IgWHWYnqhiCxfixp
+         U7ZpI2k5dCSh4Bp7dpj5gEiolYKk72qHTdsHERz4aonFtPuiXIwLrAWc+stcGH8W15cx
+         H/Q5c7XtxcWwYT8ID3kw7EbjD2SUQZ2VdGfQBVPvKKTZRpTWJFaGcm3XIysBG2k7jhsE
+         VaRGnvtiMdHgYYipzhX/U/IArYbu7D+xzu6vOCxbr3q77gJThoktbXoFh3JxGcCan+aM
+         uhSg==
+X-Gm-Message-State: AOJu0Yxx0DivGLD4fLampE5Y1+TYThwpOtj6ZW/mv8Uck5aEgqJTCJb5
+	29bIxzPDVihZALX1IxsRR4+DP/FxJJnCEslvM7TVIy0QxMDZZsIrv7YZpTvAZRXTXV6VH3Zz2XC
+	KpZpsuMsaNmOzL2r6sReQHvmf3fwfNt96bInWPjM05A96kBS7nHDO965i4t1oHEZxgBjN8vih8K
+	PS7AXOwaEZ7Qk17A==
+X-Google-Smtp-Source: AGHT+IHi1x1vNvCy7nh5qrPZXCz13gCpMzojuxdWNRARprBd5bnr1TBEGPjAqihkEYX2n51UbHfc4n0C/Tpy/M+g4g==
+X-Received: from almasrymina.svl.corp.google.com ([2620:15c:2c4:200:9a04:c262:c978:d762])
+ (user=almasrymina job=sendgmr) by 2002:a25:8181:0:b0:dbd:2c5a:6c53 with SMTP
+ id p1-20020a258181000000b00dbd2c5a6c53mr21581ybk.6.1704230838915; Tue, 02 Jan
+ 2024 13:27:18 -0800 (PST)
+Date: Tue,  2 Jan 2024 13:27:13 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230721-topic-rpm_clk_cleanup-v2-6-1e506593b1bd@linaro.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
+Message-ID: <20240102212716.810731-1-almasrymina@google.com>
+Subject: [RFC PATCH net-next v4 0/2] Abstract page from net stack
+From: Mina Almasry <almasrymina@google.com>
+To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc: Mina Almasry <almasrymina@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, 
+	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, Shakeel Butt <shakeelb@google.com>, 
+	Yunsheng Lin <linyunsheng@huawei.com>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2023-09-12 15:31:44, Konrad Dybcio wrote:
-> These clocks are now handled from within the icc framework and are
-> no longer registered from within the CCF. Remove them.
-> 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Changes in v4:
+- Forked off the trivial fixes to skb_frag_t field access to their own
+  patches and changed this to RFC that depends on these fixes:
 
-This makes the USB and IOMMUs probe again on SDM630 devices like the Sony Xperia
-XA2 Ultra.  Thanks!
+https://lore.kernel.org/netdev/20240102205905.793738-1-almasrymina@google.c=
+om/T/#u
+https://lore.kernel.org/netdev/20240102205959.794513-1-almasrymina@google.c=
+om/T/#u
 
-Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
+- Use an empty struct for netmem instead of void* __bitwise as that's
+  not a correct use of __bitwise.
 
-+cc Dmitry who was talking to me about this SoC.
+-----------
 
-> ---
->  arch/arm64/boot/dts/qcom/sdm630.dtsi | 49 +++++++-----------------------------
->  1 file changed, 9 insertions(+), 40 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm630.dtsi b/arch/arm64/boot/dts/qcom/sdm630.dtsi
-> index ec6003212c4d..f11d2a07508c 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm630.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm630.dtsi
-> @@ -605,9 +605,6 @@ bimc: interconnect@1008000 {
->  			compatible = "qcom,sdm660-bimc";
->  			reg = <0x01008000 0x78000>;
->  			#interconnect-cells = <1>;
-> -			clock-names = "bus", "bus_a";
-> -			clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
-> -				 <&rpmcc RPM_SMD_BIMC_A_CLK>;
->  		};
->  
->  		restart@10ac000 {
-> @@ -619,28 +616,17 @@ cnoc: interconnect@1500000 {
->  			compatible = "qcom,sdm660-cnoc";
->  			reg = <0x01500000 0x10000>;
->  			#interconnect-cells = <1>;
-> -			clock-names = "bus", "bus_a";
-> -			clocks = <&rpmcc RPM_SMD_CNOC_CLK>,
-> -				 <&rpmcc RPM_SMD_CNOC_A_CLK>;
->  		};
->  
->  		snoc: interconnect@1626000 {
->  			compatible = "qcom,sdm660-snoc";
->  			reg = <0x01626000 0x7090>;
->  			#interconnect-cells = <1>;
-> -			clock-names = "bus", "bus_a";
-> -			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
-> -				 <&rpmcc RPM_SMD_SNOC_A_CLK>;
->  		};
->  
->  		anoc2_smmu: iommu@16c0000 {
->  			compatible = "qcom,sdm630-smmu-v2", "qcom,smmu-v2";
->  			reg = <0x016c0000 0x40000>;
-> -
-> -			assigned-clocks = <&rpmcc RPM_SMD_AGGR2_NOC_CLK>;
-> -			assigned-clock-rates = <1000>;
-> -			clocks = <&rpmcc RPM_SMD_AGGR2_NOC_CLK>;
-> -			clock-names = "bus";
->  			#global-interrupts = <2>;
->  			#iommu-cells = <1>;
->  
-> @@ -685,16 +671,12 @@ a2noc: interconnect@1704000 {
->  			compatible = "qcom,sdm660-a2noc";
->  			reg = <0x01704000 0xc100>;
->  			#interconnect-cells = <1>;
-> -			clock-names = "bus",
-> -				      "bus_a",
-> -				      "ipa",
-> +			clock-names = "ipa",
->  				      "ufs_axi",
->  				      "aggre2_ufs_axi",
->  				      "aggre2_usb3_axi",
->  				      "cfg_noc_usb2_axi";
-> -			clocks = <&rpmcc RPM_SMD_AGGR2_NOC_CLK>,
-> -				 <&rpmcc RPM_SMD_AGGR2_NOC_A_CLK>,
-> -				 <&rpmcc RPM_SMD_IPA_CLK>,
-> +			clocks = <&rpmcc RPM_SMD_IPA_CLK>,
->  				 <&gcc GCC_UFS_AXI_CLK>,
->  				 <&gcc GCC_AGGRE2_UFS_AXI_CLK>,
->  				 <&gcc GCC_AGGRE2_USB3_AXI_CLK>,
-> @@ -705,10 +687,8 @@ mnoc: interconnect@1745000 {
->  			compatible = "qcom,sdm660-mnoc";
->  			reg = <0x01745000 0xa010>;
->  			#interconnect-cells = <1>;
-> -			clock-names = "bus", "bus_a", "iface";
-> -			clocks = <&rpmcc RPM_SMD_MMSSNOC_AXI_CLK>,
-> -				 <&rpmcc RPM_SMD_MMSSNOC_AXI_CLK_A>,
-> -				 <&mmcc AHB_CLK_SRC>;
-> +			clock-names = "iface";
-> +			clocks = <&mmcc AHB_CLK_SRC>;
->  		};
->  
->  		tsens: thermal-sensor@10ae000 {
-> @@ -1228,20 +1208,16 @@ usb3: usb@a8f8800 {
->  				 <&gcc GCC_USB30_MASTER_CLK>,
->  				 <&gcc GCC_AGGRE2_USB3_AXI_CLK>,
->  				 <&gcc GCC_USB30_SLEEP_CLK>,
-> -				 <&gcc GCC_USB30_MOCK_UTMI_CLK>,
-> -				 <&rpmcc RPM_SMD_AGGR2_NOC_CLK>;
-> +				 <&gcc GCC_USB30_MOCK_UTMI_CLK>;
->  			clock-names = "cfg_noc",
->  				      "core",
->  				      "iface",
->  				      "sleep",
-> -				      "mock_utmi",
-> -				      "bus";
-> +				      "mock_utmi";
->  
->  			assigned-clocks = <&gcc GCC_USB30_MOCK_UTMI_CLK>,
-> -					  <&gcc GCC_USB30_MASTER_CLK>,
-> -					  <&rpmcc RPM_SMD_AGGR2_NOC_CLK>;
-> -			assigned-clock-rates = <19200000>, <120000000>,
-> -					       <19200000>;
-> +					  <&gcc GCC_USB30_MASTER_CLK>;
-> +			assigned-clock-rates = <19200000>, <120000000>;
->  
->  			interrupts = <GIC_SPI 347 IRQ_TYPE_LEVEL_HIGH>,
->  				     <GIC_SPI 243 IRQ_TYPE_LEVEL_HIGH>;
-> @@ -2144,10 +2120,9 @@ mmss_smmu: iommu@cd00000 {
->  
->  			clocks = <&mmcc MNOC_AHB_CLK>,
->  				 <&mmcc BIMC_SMMU_AHB_CLK>,
-> -				 <&rpmcc RPM_SMD_MMSSNOC_AXI_CLK>,
->  				 <&mmcc BIMC_SMMU_AXI_CLK>;
->  			clock-names = "iface-mm", "iface-smmu",
-> -				      "bus-mm", "bus-smmu";
-> +				      "bus-smmu";
->  			#global-interrupts = <2>;
->  			#iommu-cells = <1>;
->  
-> @@ -2264,12 +2239,6 @@ gnoc: interconnect@17900000 {
->  			compatible = "qcom,sdm660-gnoc";
->  			reg = <0x17900000 0xe000>;
->  			#interconnect-cells = <1>;
-> -			/*
-> -			 * This one apparently features no clocks,
-> -			 * so let's not mess with the driver needlessly
-> -			 */
-> -			clock-names = "bus", "bus_a";
-> -			clocks = <&xo_board>, <&xo_board>;
->  		};
->  
->  		apcs_glb: mailbox@17911000 {
-> 
-> -- 
-> 2.42.0
-> 
+Changes in v3:
+
+- Replaced the struct netmem union with an opaque netmem_ref type.
+- Added func docs to the netmem helpers and type.
+- Renamed the skb_frag_t fields since it's no longer a bio_vec
+
+-----------
+
+Changes in v2:
+- Reverted changes to the page_pool. The page pool now retains the same
+  API, so that we don't have to touch many existing drivers. The devmem
+  TCP series will include the changes to the page pool.
+
+- Addressed comments.
+
+This series is a prerequisite to the devmem TCP series. For a full
+snapshot of the code which includes these changes, feel free to check:
+
+https://github.com/mina/linux/commits/tcpdevmem-rfcv5/
+
+-----------
+
+Currently these components in the net stack use the struct page
+directly:
+
+1. Drivers.
+2. Page pool.
+3. skb_frag_t.
+
+To add support for new (non struct page) memory types to the net stack, we
+must first abstract the current memory type.
+
+Originally the plan was to reuse struct page* for the new memory types,
+and to set the LSB on the page* to indicate it's not really a page.
+However, for safe compiler type checking we need to introduce a new type.
+
+struct netmem is introduced to abstract the underlying memory type.
+Currently it's a no-op abstraction that is always a struct page underneath.
+In parallel there is an undergoing effort to add support for devmem to the
+net stack:
+
+https://lore.kernel.org/netdev/20231208005250.2910004-1-almasrymina@google.=
+com/
+
+Cc: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: Yunsheng Lin <linyunsheng@huawei.com>
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+
+Mina Almasry (2):
+  net: introduce abstraction for network memory
+  net: add netmem to skb_frag_t
+
+ include/linux/skbuff.h | 92 +++++++++++++++++++++++++++++-------------
+ include/net/netmem.h   | 41 +++++++++++++++++++
+ net/core/skbuff.c      | 22 +++++++---
+ net/kcm/kcmsock.c      |  9 ++++-
+ 4 files changed, 129 insertions(+), 35 deletions(-)
+ create mode 100644 include/net/netmem.h
+
+--=20
+2.43.0.472.g3155946c3a-goog
+
