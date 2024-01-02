@@ -1,204 +1,168 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D10463D0;
-	Tue,  2 Jan 2024 09:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from smtpfb2-g21.free.fr (smtpfb2-g21.free.fr [212.27.42.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D0A163A6;
+	Tue,  2 Jan 2024 09:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Ttzh2bqT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="N5682qh9";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Ttzh2bqT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="N5682qh9"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 903A61FCED;
-	Tue,  2 Jan 2024 09:25:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1704187501; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=10ALmBdejT/UDcEl5ROuUx4qyQxUrE5NQXpj4f4LXhM=;
-	b=Ttzh2bqTXlR+ctkzKcEGO5U82EgJsVZmlsMID1iJI8iHitzJnSoO9kql9D8Ik6UlfE2MPp
-	Q/HSwPqijdFbNc2jQa0r0yhcTiEnrRWrsBomjmvKixTKb5fIT4s7K06IVMwjDeWOCfzD8H
-	M2VqJ7QzaYCFPq2scRGQtvZcdeLrP3k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1704187501;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=10ALmBdejT/UDcEl5ROuUx4qyQxUrE5NQXpj4f4LXhM=;
-	b=N5682qh9z3GlftWXoHQBcq/L08wRXX07bHovWWirdPKPKiJQrL9ZBEK69eKSTTSIsPwgJF
-	2h+vvg7JI6azhcCA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1704187501; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=10ALmBdejT/UDcEl5ROuUx4qyQxUrE5NQXpj4f4LXhM=;
-	b=Ttzh2bqTXlR+ctkzKcEGO5U82EgJsVZmlsMID1iJI8iHitzJnSoO9kql9D8Ik6UlfE2MPp
-	Q/HSwPqijdFbNc2jQa0r0yhcTiEnrRWrsBomjmvKixTKb5fIT4s7K06IVMwjDeWOCfzD8H
-	M2VqJ7QzaYCFPq2scRGQtvZcdeLrP3k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1704187501;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=10ALmBdejT/UDcEl5ROuUx4qyQxUrE5NQXpj4f4LXhM=;
-	b=N5682qh9z3GlftWXoHQBcq/L08wRXX07bHovWWirdPKPKiJQrL9ZBEK69eKSTTSIsPwgJF
-	2h+vvg7JI6azhcCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 336B213AC6;
-	Tue,  2 Jan 2024 09:25:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id rZVDC23Wk2XpCgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 02 Jan 2024 09:25:01 +0000
-Date: Tue, 02 Jan 2024 10:25:00 +0100
-Message-ID: <87y1d8ulxv.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: =?ISO-8859-1?Q?P=E9ter?= Ujfalusi <peter.ujfalusi@linux.intel.com>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>,
-	Mark Brown <broonie@kernel.org>,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	alsa-devel@alsa-project.org,
-	linux-sound@vger.kernel.org,
-	pierre-louis.bossart@linux.intel.com,
-	kai.vehmanen@linux.intel.com,
-	ranjani.sridharan@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: Oops in hdac_hda_dev_probe (6.7-rc7)
-In-Reply-To: <3260e806-a708-4462-9d4e-346e54143a65@linux.intel.com>
-References: <ZYvUIxtrqBQZbNlC@shine.dominikbrodowski.net>
-	<87sf3lxiet.wl-tiwai@suse.de>
-	<ZY7kosArPqhlCfOA@shine.dominikbrodowski.net>
-	<874jg1x7ao.wl-tiwai@suse.de>
-	<ZY_Gb8-rncuOjRq-@shine.dominikbrodowski.net>
-	<87plyovwg7.wl-tiwai@suse.de>
-	<3260e806-a708-4462-9d4e-346e54143a65@linux.intel.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=free.fr header.i=@free.fr header.b="rt4YQJaf"
+Received: from smtp1-g21.free.fr (smtp1-g21.free.fr [212.27.42.1])
+	by smtpfb2-g21.free.fr (Postfix) with ESMTP id 8A7384CEFB;
+	Tue,  2 Jan 2024 10:19:17 +0100 (CET)
+Received: from [192.168.10.46] (unknown [130.180.211.218])
+	(Authenticated sender: daniel.lezcano@free.fr)
+	by smtp1-g21.free.fr (Postfix) with ESMTPA id 214A8B00579;
+	Tue,  2 Jan 2024 10:18:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=free.fr;
+	s=smtp-20201208; t=1704187150;
+	bh=YRUoYjKW8wgPvfkaSvYp4j0kKMDfeM6Fj+lD91OGM74=;
+	h=Date:To:Cc:From:Subject:From;
+	b=rt4YQJafE5g+ceEXg/ahxqubhvkCht+UuaL0/xhW5s2ysQg8jFDATA8HRC6TmbjTR
+	 OF3nUO3aQguhBNf9gDT/oehdw4t1pT0wu+Za1cj0JLJqZ6Whw7Kr9OSrxss74i/5Mv
+	 bAVyJULvhuQj76KT0jrXr6PoQ55B6p7uGe9wkh35ck1XPDkP0bQeNCydYKV4bm4WWq
+	 kFY4UInNuClPDQzNAfp9MlB3OxnltdJvdai2DIfZHMp2gdtsoDjiqYwcinka7e1R6W
+	 WepBMnDoJs/nEYPh2k/tthkbuhtHzjj0Hnr6So6P5F0n+R0LYlUaHwP20mtE3A2KXw
+	 2NnaRryztU/2Q==
+Message-ID: <7163da4d-3f73-490c-a387-04d82e8bee1b@free.fr>
+Date: Tue, 2 Jan 2024 10:18:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-8859-1
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux PM mailing list <linux-pm@vger.kernel.org>,
+ =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+ Binbin Zhou <zhoubb.aaron@gmail.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Fabio Estevam
+ <festevam@denx.de>, Johan Hovold <johan+linaro@kernel.org>,
+ Florian Eckert <fe@dev.tdt.de>, Mateusz Majewski <m.majewski2@samsung.com>
+From: Daniel Lezcano <daniel.lezcano@free.fr>
+Subject: [GIT PULL] thermal material for v6.8-rc1
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.10 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_TWELVE(0.00)[13];
-	 MID_CONTAINS_FROM(1.00)[];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[dominikbrodowski.net,kernel.org,gmail.com,perex.cz,suse.com,alsa-project.org,vger.kernel.org,linux.intel.com,lists.linux.dev];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Score: -2.10
-X-Spam-Flag: NO
-
-On Tue, 02 Jan 2024 10:08:47 +0100,
-P�ter Ujfalusi wrote:
-> 
-> 
-> 
-> On 30/12/2023 12:03, Takashi Iwai wrote:
-> > On Sat, 30 Dec 2023 08:27:43 +0100,
-> > Dominik Brodowski wrote:
-> >>
-> >> Am Fri, Dec 29, 2023 at 06:11:43PM +0100 schrieb Takashi Iwai:
-> >>> On Fri, 29 Dec 2023 16:24:18 +0100,
-> >>> Dominik Brodowski wrote:
-> >>>>
-> >>>> Hi Takashi,
-> >>>>
-> >>>> many thanks for your response. Your patch helps half-way: the oops goes
-> >>>> away, but so does the sound... With your patch, the decisive lines in dmesg
-> >>>> are:
-> >>>>
-> >>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
-> >>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
-> >>>> 	sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
-> >>>> 	sof_sdw sof_sdw: snd_soc_register_card failed -517
-> >>>> 	sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
-> >>>> 	sof_sdw sof_sdw: snd_soc_register_card failed -517
-> >>>> 	platform sof_sdw: deferred probe pending
-> >>>>
-> >>>> With a revert of the a0575b4add21, it is:
-> >>>>
-> >>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
-> >>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
-> >>>> 	sof-audio-pci-intel-tgl 0000:00:1f.3: Topology: ABI 3:22:1 Kernel ABI 3:23:0
-> >>>> 	sof_sdw sof_sdw: ASoC: Parent card not yet available, widget card binding deferred
-> >>>> 	sof_sdw sof_sdw: hda_dsp_hdmi_build_controls: no PCM in topology for HDMI converter 3
-> >>>> 	input: sof-soundwire HDMI/DP,pcm=5 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input14
-> >>>> 	input: sof-soundwire HDMI/DP,pcm=6 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input15
-> >>>> 	input: sof-soundwire HDMI/DP,pcm=7 as /devices/pci0000:00/0000:00:1f.3/sof_sdw/sound/card0/input16
-> >>>>
-> >>>> Maybe this helps a bit further?
-> >>>
-> >>> Thanks for quick testing.
-> >>> It shows at least that my guess wasn't wrong.
-> >>>
-> >>> The problem could be the initialization order in the caller side.
-> >>> Can the patch below work instead?
-> >>
-> >> Unfortunately, no:
-> >>
-> >> sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
-> >> sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:0
-> >> sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
-> >> sof_sdw sof_sdw: snd_soc_register_card failed -517
-> >> sof_sdw sof_sdw: ASoC: CODEC DAI intel-hdmi-hifi1 not registered
-> >> sof_sdw sof_sdw: snd_soc_register_card failed -517
-> >> platform sof_sdw: deferred probe pending
-> > 
-> > Hm, then it might be the logical failure of that commit.
-> > Peter?
-> > 
-> > Without a fix in the next few days, we'll have to revert it before
-> > 6.7.
-> 
-> The fix for this was sent early December:
-> https://lore.kernel.org/linux-sound/20231207095425.19597-1-peter.ujfalusi@linux.intel.com/
-> 
-> It had the correct Fixes tag but it did not made it to 6.7-rc while
-> a0575b4add21 did made it.
-> 
-> Mark, Takashi, can you pick the fix for 6.7 (it is in -next)? I think we
-> might have time for it to land?
-
-Oh that landed to Mark's for-next branch, i.e. only for 6.8.
-Mark, please cherry-pick and send a PR before 6.7 final.
-
-Meanwhile, Peter, please update the bugzilla entry to let people try
-the patch.
 
 
-thanks,
+Hi Rafael,
 
-Takashi
+happy new year 2024!
+
+Please consider pulling these thermal changes.
+
+Thanks
+
+   -- Daniel
+
+The following changes since commit 5f70413a85056db04050604a76b52e3f39a37f21:
+
+   thermal: cpuidle_cooling: fix kernel-doc warning and a spello 
+(2023-12-21 12:05:48 +0100)
+
+are available in the Git repository at:
+
+ 
+ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git 
+tags/thermal-v6.8-rc1
+
+for you to fetch changes up to 5314b1543787e6cd5d248186fcfd5c5fc4ca2146:
+
+   thermal/drivers/exynos: Use set_trips ops (2024-01-02 09:33:19 +0100)
+
+----------------------------------------------------------------
+- Converted Mediatek Thermal to the json-schema (Rafał Miłecki)
+
+- Fixed DT bindings issue on Loongson (Binbin Zhou)
+
+- Fixed returning NULL instead of -ENODEV on Loogsoo (Binbin Zhou)
+
+- Added the DT binding for the tsens on SM8650 platform (Neil Armstrong)
+
+- Added a reboot on critical option feature (Fabio Estevam)
+
+- Made usage of DEFINE_SIMPLE_DEV_PM_OPS on AmLogic (Uwe Kleine-König)
+
+- Added the D1/T113s THS controller support on Sun8i (Maxim Kiselev)
+
+- Fixed example in the DT binding for QCom SPMI (Johan Hovold)
+
+- Fixed compilation warning for the tmon utility (Florian Eckert)
+
+- Added interrupt based configuration on Exynos along with a set of
+   related cleanups (Mateusz Majewski)
+
+----------------------------------------------------------------
+Binbin Zhou (2):
+       dt-bindings: thermal: loongson,ls2k-thermal: Fix binding check issues
+       drivers/thermal/loongson2_thermal: Fix incorrect PTR_ERR() judgment
+
+Fabio Estevam (4):
+       dt-bindings: thermal-zones: Document critical-action
+       thermal/core: Prepare for introduction of thermal reboot
+       reboot: Introduce thermal_zone_device_critical_reboot()
+       thermal/thermal_of: Allow rebooting after critical temp
+
+Florian Eckert (1):
+       tools/thermal/tmon: Fix compilation warning for wrong format
+
+Johan Hovold (2):
+       dt-bindings: thermal: qcom-spmi-adc-tm5/hc: Fix example node names
+       dt-bindings: thermal: qcom-spmi-adc-tm5/hc: Clean up examples
+
+Mateusz Majewski (9):
+       thermal/drivers/exynos: Remove an unnecessary field description
+       thermal/drivers/exynos: Drop id field
+       thermal/drivers/exynos: Wwitch from workqueue-driven interrupt 
+handling to threaded interrupts
+       thermal/drivers/exynos: Handle devm_regulator_get_optional return 
+value correctly
+       thermal/drivers/exynos: Simplify regulator (de)initialization
+       thermal/drivers/exynos: Stop using the threshold mechanism on 
+Exynos 4210
+       thermal/drivers/exynos: Split initialization of TMU and the 
+thermal zone
+       thermal/drivers/exynos: Use BIT wherever possible
+       thermal/drivers/exynos: Use set_trips ops
+
+Maxim Kiselev (2):
+       dt-bindings: thermal: sun8i: Add binding for D1/T113s THS controller
+       thermal/drivers/sun8i: Add D1/T113s THS controller support
+
+Neil Armstrong (1):
+       dt-bindings: thermal: qcom-tsens: document the SM8650 Temperature 
+Sensor
+
+Rafał Miłecki (1):
+       dt-bindings: thermal: convert Mediatek Thermal to the json-schema
+
+Uwe Kleine-König (2):
+       thermal: amlogic: Make amlogic_thermal_disable() return void
+       thermal: amlogic: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+
+  .../bindings/thermal/allwinner,sun8i-a83t-ths.yaml |   7 +-
+  .../bindings/thermal/loongson,ls2k-thermal.yaml    |  10 +-
+  .../bindings/thermal/mediatek,thermal.yaml         |  99 ++++
+  .../bindings/thermal/mediatek-thermal.txt          |  52 --
+  .../bindings/thermal/qcom-spmi-adc-tm-hc.yaml      |   8 +-
+  .../bindings/thermal/qcom-spmi-adc-tm5.yaml        |  16 +-
+  .../devicetree/bindings/thermal/qcom-tsens.yaml    |   1 +
+  .../devicetree/bindings/thermal/thermal-zones.yaml |  16 +
+  drivers/thermal/amlogic_thermal.c                  |  19 +-
+  drivers/thermal/loongson2_thermal.c                |   2 +-
+  drivers/thermal/samsung/exynos_tmu.c               | 529 
++++++++++++----------
+  drivers/thermal/sun8i_thermal.c                    |  13 +
+  drivers/thermal/thermal_core.c                     |  21 +-
+  drivers/thermal/thermal_core.h                     |   1 +
+  drivers/thermal/thermal_of.c                       |   6 +
+  include/linux/reboot.h                             |  12 +-
+  kernel/reboot.c                                    |  34 +-
+  tools/thermal/tmon/tui.c                           |   2 +-
+  18 files changed, 491 insertions(+), 357 deletions(-)
+  create mode 100644 
+Documentation/devicetree/bindings/thermal/mediatek,thermal.yaml
+  delete mode 100644 
+Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
+
