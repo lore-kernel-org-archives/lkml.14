@@ -1,234 +1,219 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BEE6AA1;
-	Tue,  2 Jan 2024 08:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB5563A6;
+	Tue,  2 Jan 2024 08:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="bEq7Iz0D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1704184961;
-	bh=spflRRYbVyJI+GGk2sTIi1F+XFwMR1bA9QOFqaNLvnI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bEq7Iz0D56xaFA4xRPKaUIKofXDRD9rmgTlSkaYBaCPO6vLHZxyOV/FZI5V5TUGC1
-	 W5c/iSO1ZL+6ihdoA1eiFBHABzyVVtcwme79aUBopxjNwFDyKVr2Oz0PVDEifNsTLM
-	 tjhR9BsNHIyv+9yQTL1D1DtjIHaLyF5XrxYbgV1J3Lj4alhVh0YjdqP0TadeB0sMBt
-	 v+Y+/7QU6Wrw1CUWDEWFlcT6KCY8YYiZ3RHgzXIbHcUuCIa4duV+amHSLDX3DV6M9p
-	 XAI1TC+0rpBFfoihFhIGNSAuro2HetPS5Br9aWe0wQz5UK/sj12o+iZ/imUJPdpTKP
-	 5qZDwuCWaTArw==
-Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C054237804B2;
-	Tue,  2 Jan 2024 08:42:39 +0000 (UTC)
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	kernel@collabora.com,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] mm/selftests: hugepage-mremap: conform test to TAP format output
-Date: Tue,  2 Jan 2024 13:19:18 +0500
-Message-ID: <20240102081919.2325570-1-usama.anjum@collabora.com>
-X-Mailer: git-send-email 2.42.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HV4RtWW3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704185089; x=1735721089;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=UvmgInCVS3LhauRxpvGYGqfhEKWYPGEDg6KPf7j+yCc=;
+  b=HV4RtWW3zbgsrg7xsd+HrGGdyb8HJTqDUD67gM6K7KSgE8iYYgBrfNWB
+   12VNThHGdcAeyvYYkH9WfLZ4uZhsbOTBT1FFrIDTDcb3Qeqrjyn2RAnwD
+   c+lOs9WPxbfDVybQQVjNuqc0fyopk7dDdiHrB9jeRZ1bv+94+s+RxcTcd
+   UMLBB+hi0ntDi9Im6jSEG584jmCojHq7wu+JE+Ha4FAZIeM0xg6RjHJCt
+   MLHj3M4ueAZGzuOgKLSEdkB3kES1Fp9lHcqVobepfg/uAf+ytD8tu7HE8
+   sVixbqV0SxLJc+2mrrgbqja78KQM67zVenEUxJtXvlWmkuBLk+IO51qwt
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10940"; a="4189864"
+X-IronPort-AV: E=Sophos;i="6.04,324,1695711600"; 
+   d="scan'208";a="4189864"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 00:44:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10940"; a="779632795"
+X-IronPort-AV: E=Sophos;i="6.04,324,1695711600"; 
+   d="scan'208";a="779632795"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 00:44:41 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Gregory Price <gregory.price@memverge.com>
+Cc: Gregory Price <gourry.memverge@gmail.com>,  <linux-mm@kvack.org>,
+  <linux-doc@vger.kernel.org>,  <linux-fsdevel@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>,  <linux-api@vger.kernel.org>,
+  <x86@kernel.org>,  <akpm@linux-foundation.org>,  <arnd@arndb.de>,
+  <tglx@linutronix.de>,  <luto@kernel.org>,  <mingo@redhat.com>,
+  <bp@alien8.de>,  <dave.hansen@linux.intel.com>,  <hpa@zytor.com>,
+  <mhocko@kernel.org>,  <tj@kernel.org>,  <corbet@lwn.net>,
+  <rakie.kim@sk.com>,  <hyeongtak.ji@sk.com>,  <honggyu.kim@sk.com>,
+  <vtavarespetr@micron.com>,  <peterz@infradead.org>,
+  <jgroves@micron.com>,  <ravis.opensrc@micron.com>,
+  <sthanneeru@micron.com>,  <emirakhur@micron.com>,  <Hasan.Maruf@amd.com>,
+  <seungjun.ha@samsung.com>,  Srinivasulu Thanneeru
+ <sthanneeru.opensrc@micron.com>
+Subject: Re: [PATCH v5 02/11] mm/mempolicy: introduce
+ MPOL_WEIGHTED_INTERLEAVE for weighted interleaving
+In-Reply-To: <ZYp6ZRLZQVtTHest@memverge.com> (Gregory Price's message of "Tue,
+	26 Dec 2023 02:01:57 -0500")
+References: <20231223181101.1954-1-gregory.price@memverge.com>
+	<20231223181101.1954-3-gregory.price@memverge.com>
+	<8734vof3kq.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZYp6ZRLZQVtTHest@memverge.com>
+Date: Tue, 02 Jan 2024 16:42:42 +0800
+Message-ID: <878r58dt31.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=ascii
 
-Conform the layout, informational and status messages to TAP. No
-functional change is intended other than the layout of output messages.
+Gregory Price <gregory.price@memverge.com> writes:
 
-Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
----
- tools/testing/selftests/mm/hugepage-mremap.c | 87 ++++++++------------
- 1 file changed, 35 insertions(+), 52 deletions(-)
+> On Wed, Dec 27, 2023 at 04:32:37PM +0800, Huang, Ying wrote:
+>> Gregory Price <gourry.memverge@gmail.com> writes:
+>> 
+>> > +static unsigned int weighted_interleave_nid(struct mempolicy *pol, pgoff_t ilx)
+>> > +{
+>> > +	nodemask_t nodemask = pol->nodes;
+>> > +	unsigned int target, weight_total = 0;
+>> > +	int nid;
+>> > +	unsigned char weights[MAX_NUMNODES];
+>> 
+>> MAX_NUMNODSE could be as large as 1024.  1KB stack space may be too
+>> large?
+>> 
+>
+> I've been struggling with a good solution to this.  We need a local copy
+> of weights to prevent weights from changing out from under us during
+> allocation (which may take quite some time), but it seemed unwise to
+> to allocate 1KB heap in this particular path.
+>
+> Is my concern unfounded?  If so, I can go ahead and add the allocation
+> code.
 
-diff --git a/tools/testing/selftests/mm/hugepage-mremap.c b/tools/testing/selftests/mm/hugepage-mremap.c
-index cabd0084f57b..c463d1c09c9b 100644
---- a/tools/testing/selftests/mm/hugepage-mremap.c
-+++ b/tools/testing/selftests/mm/hugepage-mremap.c
-@@ -24,6 +24,7 @@
- #include <sys/ioctl.h>
- #include <string.h>
- #include <stdbool.h>
-+#include "../kselftest.h"
- #include "vm_util.h"
- 
- #define DEFAULT_LENGTH_MB 10UL
-@@ -34,7 +35,7 @@
- 
- static void check_bytes(char *addr)
- {
--	printf("First hex is %x\n", *((unsigned int *)addr));
-+	ksft_print_msg("First hex is %x\n", *((unsigned int *)addr));
- }
- 
- static void write_bytes(char *addr, size_t len)
-@@ -52,7 +53,7 @@ static int read_bytes(char *addr, size_t len)
- 	check_bytes(addr);
- 	for (i = 0; i < len; i++)
- 		if (*(addr + i) != (char)i) {
--			printf("Mismatch at %lu\n", i);
-+			ksft_print_msg("Mismatch at %lu\n", i);
- 			return 1;
- 		}
- 	return 0;
-@@ -66,17 +67,13 @@ static void register_region_with_uffd(char *addr, size_t len)
- 	/* Create and enable userfaultfd object. */
- 
- 	uffd = syscall(__NR_userfaultfd, O_CLOEXEC | O_NONBLOCK);
--	if (uffd == -1) {
--		perror("userfaultfd");
--		exit(1);
--	}
-+	if (uffd == -1)
-+		ksft_exit_fail_msg("userfaultfd: %s\n", strerror(errno));
- 
- 	uffdio_api.api = UFFD_API;
- 	uffdio_api.features = 0;
--	if (ioctl(uffd, UFFDIO_API, &uffdio_api) == -1) {
--		perror("ioctl-UFFDIO_API");
--		exit(1);
--	}
-+	if (ioctl(uffd, UFFDIO_API, &uffdio_api) == -1)
-+		ksft_exit_fail_msg("ioctl-UFFDIO_API: %s\n", strerror(errno));
- 
- 	/* Create a private anonymous mapping. The memory will be
- 	 * demand-zero paged--that is, not yet allocated. When we
-@@ -86,21 +83,17 @@ static void register_region_with_uffd(char *addr, size_t len)
- 
- 	addr = mmap(NULL, len, PROT_READ | PROT_WRITE,
- 		    MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
--	if (addr == MAP_FAILED) {
--		perror("mmap");
--		exit(1);
--	}
-+	if (addr == MAP_FAILED)
-+		ksft_exit_fail_msg("mmap: %s\n", strerror(errno));
- 
--	printf("Address returned by mmap() = %p\n", addr);
-+	ksft_print_msg("Address returned by mmap() = %p\n", addr);
- 
- 	/* Register the memory range of the mapping we just created for
- 	 * handling by the userfaultfd object. In mode, we request to track
- 	 * missing pages (i.e., pages that have not yet been faulted in).
- 	 */
--	if (uffd_register(uffd, addr, len, true, false, false)) {
--		perror("ioctl-UFFDIO_REGISTER");
--		exit(1);
--	}
-+	if (uffd_register(uffd, addr, len, true, false, false))
-+		ksft_exit_fail_msg("ioctl-UFFDIO_REGISTER: %s\n", strerror(errno));
- }
- 
- int main(int argc, char *argv[])
-@@ -108,10 +101,11 @@ int main(int argc, char *argv[])
- 	size_t length = 0;
- 	int ret = 0, fd;
- 
--	if (argc >= 2 && !strcmp(argv[1], "-h")) {
--		printf("Usage: %s [length_in_MB]\n", argv[0]);
--		exit(1);
--	}
-+	ksft_print_header();
-+	ksft_set_plan(1);
-+
-+	if (argc >= 2 && !strcmp(argv[1], "-h"))
-+		ksft_exit_fail_msg("Usage: %s [length_in_MB]\n", argv[0]);
- 
- 	/* Read memory length as the first arg if valid, otherwise fallback to
- 	 * the default length.
-@@ -123,50 +117,40 @@ int main(int argc, char *argv[])
- 
- 	length = MB_TO_BYTES(length);
- 	fd = memfd_create(argv[0], MFD_HUGETLB);
--	if (fd < 0) {
--		perror("Open failed");
--		exit(1);
--	}
-+	if (fd < 0)
-+		ksft_exit_fail_msg("Open failed: %s\n", strerror(errno));
- 
- 	/* mmap to a PUD aligned address to hopefully trigger pmd sharing. */
- 	unsigned long suggested_addr = 0x7eaa40000000;
- 	void *haddr = mmap((void *)suggested_addr, length, PROTECTION,
- 			   MAP_HUGETLB | MAP_SHARED | MAP_POPULATE, fd, 0);
--	printf("Map haddr: Returned address is %p\n", haddr);
--	if (haddr == MAP_FAILED) {
--		perror("mmap1");
--		exit(1);
--	}
-+	ksft_print_msg("Map haddr: Returned address is %p\n", haddr);
-+	if (haddr == MAP_FAILED)
-+		ksft_exit_fail_msg("mmap1: %s\n", strerror(errno));
- 
- 	/* mmap again to a dummy address to hopefully trigger pmd sharing. */
- 	suggested_addr = 0x7daa40000000;
- 	void *daddr = mmap((void *)suggested_addr, length, PROTECTION,
- 			   MAP_HUGETLB | MAP_SHARED | MAP_POPULATE, fd, 0);
--	printf("Map daddr: Returned address is %p\n", daddr);
--	if (daddr == MAP_FAILED) {
--		perror("mmap3");
--		exit(1);
--	}
-+	ksft_print_msg("Map daddr: Returned address is %p\n", daddr);
-+	if (daddr == MAP_FAILED)
-+		ksft_exit_fail_msg("mmap3: %s\n", strerror(errno));
- 
- 	suggested_addr = 0x7faa40000000;
- 	void *vaddr =
- 		mmap((void *)suggested_addr, length, PROTECTION, FLAGS, -1, 0);
--	printf("Map vaddr: Returned address is %p\n", vaddr);
--	if (vaddr == MAP_FAILED) {
--		perror("mmap2");
--		exit(1);
--	}
-+	ksft_print_msg("Map vaddr: Returned address is %p\n", vaddr);
-+	if (vaddr == MAP_FAILED)
-+		ksft_exit_fail_msg("mmap2: %s\n", strerror(errno));
- 
- 	register_region_with_uffd(haddr, length);
- 
- 	void *addr = mremap(haddr, length, length,
- 			    MREMAP_MAYMOVE | MREMAP_FIXED, vaddr);
--	if (addr == MAP_FAILED) {
--		perror("mremap");
--		exit(1);
--	}
-+	if (addr == MAP_FAILED)
-+		ksft_exit_fail_msg("mremap: %s\n", strerror(errno));
- 
--	printf("Mremap: Returned address is %p\n", addr);
-+	ksft_print_msg("Mremap: Returned address is %p\n", addr);
- 	check_bytes(addr);
- 	write_bytes(addr, length);
- 	ret = read_bytes(addr, length);
-@@ -174,12 +158,11 @@ int main(int argc, char *argv[])
- 	munmap(addr, length);
- 
- 	addr = mremap(addr, length, length, 0);
--	if (addr != MAP_FAILED) {
--		printf("mremap: Expected failure, but call succeeded\n");
--		exit(1);
--	}
-+	if (addr != MAP_FAILED)
-+		ksft_exit_fail_msg("mremap: Expected failure, but call succeeded\n");
- 
- 	close(fd);
- 
--	return ret;
-+	ksft_test_result(!ret, "Read same data\n");
-+	ksft_exit(!ret);
- }
--- 
-2.42.0
+Please take a look at NODEMASK_ALLOC().
 
+>> > +	unsigned char weight;
+>> > +
+>> > +	barrier();
+>> 
+>> Memory barrier needs comments.
+>> 
+>
+> Barrier is to stabilize nodemask on the stack, but yes i'll carry the
+> comment from interleave_nid into this barrier as well.
+
+Please see below.
+
+>> > +
+>> > +	/* first ensure we have a valid nodemask */
+>> > +	nid = first_node(nodemask);
+>> > +	if (nid == MAX_NUMNODES)
+>> > +		return nid;
+>> 
+>> It appears that this isn't necessary, because we can check whether
+>> weight_total == 0 after the next loop.
+>> 
+>
+> fair, will snip.
+>
+>> > +
+>> > +	/* Then collect weights on stack and calculate totals */
+>> > +	for_each_node_mask(nid, nodemask) {
+>> > +		weight = iw_table[nid];
+>> > +		weight_total += weight;
+>> > +		weights[nid] = weight;
+>> > +	}
+>> > +
+>> > +	/* Finally, calculate the node offset based on totals */
+>> > +	target = (unsigned int)ilx % weight_total;
+>> 
+>> Why use type casting?
+>> 
+>
+> Artifact of old prototypes, snipped.
+>
+>> > +
+>> > +	/* Stabilize the nodemask on the stack */
+>> > +	barrier();
+>> 
+>> I don't think barrier() is needed to wait for memory operations for
+>> stack.  It's usually used for cross-processor memory order.
+>>
+>
+> This is present in the old interleave code.  To the best of my
+> understanding, the concern is for mempolicy->nodemask rebinding that can
+> occur when cgroups.cpusets.mems_allowed changes.
+>
+> so we can't iterate over (mempolicy->nodemask), we have to take a local
+> copy.
+>
+> My *best* understanding of the barrier here is to prevent the compiler
+> from reordering operations such that it attempts to optimize out the
+> local copy (or do lazy-fetch).
+>
+> It is present in the original interleave code, so I pulled it forward to
+> this, but I have not tested whether this is a bit paranoid or not.
+>
+> from `interleave_nid`:
+>
+>  /*
+>   * The barrier will stabilize the nodemask in a register or on
+>   * the stack so that it will stop changing under the code.
+>   *
+>   * Between first_node() and next_node(), pol->nodes could be changed
+>   * by other threads. So we put pol->nodes in a local stack.
+>   */
+>  barrier();
+
+Got it.  This is kind of READ_ONCE() for nodemask.  To avoid to add
+comments all over the place.  Can we implement a wrapper for it?  For
+example, memcpy_once().  __read_once_size() in
+tools/include/linux/compiler.h can be used as reference.
+
+Because node_weights[] may be changed simultaneously too.  We may need
+to consider similar issue for it too.  But RCU seems more appropriate
+for node_weights[].
+
+>> > +		/* Otherwise we adjust nr_pages down, and continue from there */
+>> > +		rem_pages -= pol->wil.cur_weight;
+>> > +		pol->wil.cur_weight = 0;
+>> > +		prev_node = node;
+>> 
+>> If pol->wil.cur_weight == 0, prev_node will be used without being
+>> initialized below.
+>> 
+>
+> pol->wil.cur_weight is not used below.
+>
+>> > +	}
+>> > +
+>> > +	/* Now we can continue allocating as if from 0 instead of an offset */
+>> > +	rounds = rem_pages / weight_total;
+>> > +	delta = rem_pages % weight_total;
+>> > +	for (i = 0; i < nnodes; i++) {
+>> > +		node = next_node_in(prev_node, nodes);
+>> > +		weight = weights[node];
+>> > +		node_pages = weight * rounds;
+>> > +		if (delta) {
+>> > +			if (delta > weight) {
+>> > +				node_pages += weight;
+>> > +				delta -= weight;
+>> > +			} else {
+>> > +				node_pages += delta;
+>> > +				delta = 0;
+>> > +			}
+>> > +		}
+>> > +		/* We may not make it all the way around */
+>> > +		if (!node_pages)
+>> > +			break;
+>> > +		/* If an over-allocation would occur, floor it */
+>> > +		if (node_pages + total_allocated > nr_pages) {
+>> 
+>> Why is this possible?
+>> 
+>
+> this may have been a paranoid artifact from an early prototype, will
+> snip and validate.
+
+--
+Best Regards,
+Huang, Ying
