@@ -1,44 +1,44 @@
 Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16037182A7
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 21:08:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26A118651
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 21:08:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KkhdR48g"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-35fe9a6609eso73631245ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 13:08:53 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J/iviGxT"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3600dc78bc0so29926405ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 13:08:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1704229733; x=1704834533; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1704229735; x=1704834535; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Kv/aa+b9yoEdKvBahkqrw433Fqiy1xO+ioSsYaTJvb4=;
-        b=KkhdR48gDfOnK0JzFjr9dKqzquQEnAWkct5MJKxXTVUYMsVdlUwo5iSD+vN7NzaVQa
-         jetjvii6Fno+XkzfzFS/H1THp689jd0nzmp9/pCLWh616Sa0EGBDt+JmupEyUi/76F/2
-         Re4a0iKMXdCcCSwVDy1s5HI2HojH4odrxmZGs=
+        bh=6xWplU6V/74zhrE0fU+phMJuFQc01H2ditVc3hsW/nY=;
+        b=J/iviGxTnseTosGYD18/rbF8CRnnRPLnuoyhM+uMxt2rHo8zsjpoIu858je2rx9fSw
+         nNFtxc1LOzjg1Bb5JrY3peV4KD6mCmd/qEqnogrUal+3AjklC1X68C2uWM0UK6ZPDF1m
+         MCEH3hKAIXs4HL84mb8+Hlm2oT8Lv2Jt3Vbtk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704229733; x=1704834533;
+        d=1e100.net; s=20230601; t=1704229735; x=1704834535;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Kv/aa+b9yoEdKvBahkqrw433Fqiy1xO+ioSsYaTJvb4=;
-        b=QhLoPEaXPldUuxyJGLLzWlJ+HR42T0g4v/4Mi7jRBsBR/1NGTITUPMhuimaeXJVxRf
-         ZxrUoF8VkcEd/BGEK2kACmCAkqGgjWg74KhUIMv6kUacDsp4TsFMqv02Kzxdp74EU2Me
-         oGJeh8JRP1hLzC2BXveKwveIH1iQffHzGuPLanGbKu2HokWylAs8vnlRD4ogvLeTqbRR
-         q74HwTMVe7hCD4Nhsgm5cQm89PN7gm1Kq4PWtWnjKbZaXKtiSnK01LNJkAdSVAXBKQUu
-         s6hFqBt8jGFfiIpc7uxHzreBWE/ZMhnT8iHrRIFULN48r+f0juqyRDohemsv1y271Zd7
-         xGdw==
-X-Gm-Message-State: AOJu0YwcphmTuviG0GuQoCArfTXCdlpW7AqjMknqu2g1EBNcA/YeQZM2
-	Bp+bIM/iDaWzKj0vbL61Cy7QONSBlnmjWmGRJwwlFFwoDQLr
-X-Google-Smtp-Source: AGHT+IHHN3TbtDEmyfVNFzxMQSipzvaGMekbOIDXc3JT0zP9D5s4Ute8SBzjxYwpVjI4JooHeisxkw==
-X-Received: by 2002:a05:6e02:1a88:b0:35f:a4b2:7018 with SMTP id k8-20020a056e021a8800b0035fa4b27018mr27509779ilv.29.1704229733266;
-        Tue, 02 Jan 2024 13:08:53 -0800 (PST)
+        bh=6xWplU6V/74zhrE0fU+phMJuFQc01H2ditVc3hsW/nY=;
+        b=RMOfL8q8TmjRvnzKJqTJksislE48NExfeTLEYqZuduZYRAsD5Ib3vwG5uS2Ox3tJKM
+         A5PQ4R5rQMvfIgEgmtqL/PiWPxVqLoNLS4BNQOhLSQ8ITa7x8v3p67QBFjBf4QxfhpaM
+         dGuZ26AqKb+zH469zwHpLObj5zyz/bNmpjc5vyQV5g+aPI5KQHshrOVPign2YXVmDN3R
+         JrQ4/NsyR1wU9LRFjYFWYVKL/a/ddjxBWqX7oHjHoA/lA69VtIlNc9gWfogGeEgqmCBJ
+         UpjS2TaMxQf/9k8b0AjHxjA/6EhWowLphLMOKlnHJMC0kTIP4N3rFsx0/dNRWiLK5iGW
+         Ubjg==
+X-Gm-Message-State: AOJu0YxNEjgRNdPiE3E/nE9sWB2qq0lpksUp8GYOygWlJfFwO5o7Py2h
+	OL/VKwEt3E45mCO+TLusi6QzWL1MfWdm7c/sEQJNfbl5HviB
+X-Google-Smtp-Source: AGHT+IHfOsWwH7XeGwxyO82lQ7Beiea2aMSZMszgEK2VhB9dcZJ2V4KeyfBreF3d8IlhWEEKQTrnQw==
+X-Received: by 2002:a05:6e02:1be1:b0:360:2197:4bbe with SMTP id y1-20020a056e021be100b0036021974bbemr15914894ilv.59.1704229735102;
+        Tue, 02 Jan 2024 13:08:55 -0800 (PST)
 Received: from markhas1.lan (71-218-50-136.hlrn.qwest.net. [71.218.50.136])
-        by smtp.gmail.com with ESMTPSA id bo18-20020a056638439200b0046993034c91sm6956978jab.77.2024.01.02.13.08.52
+        by smtp.gmail.com with ESMTPSA id bo18-20020a056638439200b0046993034c91sm6956978jab.77.2024.01.02.13.08.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jan 2024 13:08:53 -0800 (PST)
+        Tue, 02 Jan 2024 13:08:54 -0800 (PST)
 From: Mark Hasemeyer <markhas@chromium.org>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Sudeep Holla <sudeep.holla@arm.com>,
@@ -51,15 +51,15 @@ Cc: Sudeep Holla <sudeep.holla@arm.com>,
 	Tzung-Bi Shih <tzungbi@kernel.org>,
 	Mark Hasemeyer <markhas@chromium.org>,
 	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
 	Rob Herring <robh+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
 	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH v4 11/24] arm64: dts: mediatek: mt8192: Enable cros-ec-spi as wake source
-Date: Tue,  2 Jan 2024 14:07:35 -0700
-Message-ID: <20240102140734.v4.11.Ibd330d26a00f5e219a7e448452769124833a9762@changeid>
+	linux-tegra@vger.kernel.org
+Subject: [PATCH v4 13/24] arm64: dts: tegra: Enable cros-ec-spi as wake source
+Date: Tue,  2 Jan 2024 14:07:37 -0700
+Message-ID: <20240102140734.v4.13.Ic12bf13efe60f9ffaa444126c55a35fbf6c521cc@changeid>
 X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
 In-Reply-To: <20240102210820.2604667-1-markhas@chromium.org>
 References: <20240102210820.2604667-1-markhas@chromium.org>
@@ -97,21 +97,21 @@ change
 Changes in v2:
 -Split by arch/soc
 
- arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi | 1 +
+ arch/arm64/boot/dts/nvidia/tegra132-norrin.dts | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi b/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
-index f2281250ac35d..ab44d382f757e 100644
---- a/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
-@@ -1332,6 +1332,7 @@ cros_ec: ec@0 {
- 		spi-max-frequency = <3000000>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&cros_ec_int>;
-+		wakeup-source;
+diff --git a/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts b/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
+index bbc2e9bef08da..14d58859bb55c 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
++++ b/arch/arm64/boot/dts/nvidia/tegra132-norrin.dts
+@@ -762,6 +762,7 @@ ec: cros-ec@0 {
+ 			interrupt-parent = <&gpio>;
+ 			interrupts = <TEGRA_GPIO(C, 7) IRQ_TYPE_LEVEL_LOW>;
+ 			reg = <0>;
++			wakeup-source;
  
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+ 			google,cros-ec-spi-msg-delay = <2000>;
+ 
 -- 
 2.43.0.472.g3155946c3a-goog
 
