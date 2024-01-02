@@ -1,66 +1,106 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34FD5663;
-	Tue,  2 Jan 2024 09:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3B2CA69;
+	Tue,  2 Jan 2024 09:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="m6E0Itzo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1704186897;
-	bh=h1vYuqHfw4Si6zEFGSCOCtG/Sf6p6ZMOenHPLIBQu1g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=m6E0ItzoMYPOvZwdJ9vXEdYJcHQj2X7R7GUh7rEnF6uqjrJAqHNJX3fZ3YU90QkKU
-	 F9M5a57t4N/SSBoXdtO4wexHOIXr6JezHTjwTfk/bn5eB6ESJ5brgIpgpJg+0uFUgx
-	 eAA3GEsNK8JwORvp5Z92CAXqqHRFDY9eXDPNzy2yH1YEXxjy4xrZYTJ24Eo7ih8RWQ
-	 JpVi3bA6HlY9j0bpLSFgcJBnlVEFGRMbToEGWiMU1T5Mt1ssk35v2Rrc2myfLVzreC
-	 f3QT+tq67VkSLRWIXHTZoLqX52FD2udi4EGOUle0jz6Oxm8TGKETdtr0iLM3rhXtnq
-	 kROLcNG31KPDg==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 224FC37804B2;
-	Tue,  2 Jan 2024 09:14:56 +0000 (UTC)
-Message-ID: <d44ccb77-1bd9-43fe-be2d-cc2c342eae89@collabora.com>
-Date: Tue, 2 Jan 2024 10:14:56 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qbjbK+L5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=tlEfMQFt5gK7xTvm4OYyFW6oyrGcWRnYRgh3+dnfWXQ=; b=qbjbK+L5aYe/lDZscjtenI5cjW
+	dZL/n71TVQj2zphfxq3RZ+cNggYEWOSaYIL6eYvVx5t5XbeQtXC5MfvkPEbeyWhD7ffyRT3M3U/Vd
+	VVSFZvNRo70tslTpjdD38Sg+/jUCGJ+dlQkKzla59Tw98eiFplHqpLYGh8x1cESshIjA8i2C7Sn5M
+	muL2EGVBlVq2u1U2wLBjpcL4+E4cCtxzD6oY/ijyD7c2z9wI6Hy3ySQPY+FZTT4GhfgPtObTsn+Mf
+	4GMgFwlfji7YX5rkT/+U0nnZrO6GArNuSqp3UnB6eP/3Dq/eakRRSpeSc0fIN9D8KevfYWMzxiVW4
+	BH4OtoIw==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1rKaqw-009pns-In; Tue, 02 Jan 2024 09:14:26 +0000
+Date: Tue, 2 Jan 2024 09:14:26 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: "Aiqun Yu (Maria)" <quic_aiquny@quicinc.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>,
+	Hillf Danton <hdanton@sina.com>, kernel@quicinc.com,
+	quic_pkondeti@quicinc.com, keescook@chromium.or,
+	viro@zeniv.linux.org.uk, brauner@kernel.org, oleg@redhat.com,
+	dhowells@redhat.com, jarkko@kernel.org, paul@paul-moore.com,
+	jmorris@namei.org, serge@hallyn.com, linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] kernel: Introduce a write lock/unlock wrapper for
+ tasklist_lock
+Message-ID: <ZZPT8hMiuT1pCBP7@casper.infradead.org>
+References: <20231213101745.4526-1-quic_aiquny@quicinc.com>
+ <ZXnaNSrtaWbS2ivU@casper.infradead.org>
+ <87o7eu7ybq.fsf@email.froward.int.ebiederm.org>
+ <ZY30k7OCtxrdR9oP@casper.infradead.org>
+ <cd0f6613-9aa9-4698-bebe-0f61286d7552@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/6] arm64: dts: mediatek: mt8186: Add venc node
-Content-Language: en-US
-To: Eugen Hristev <eugen.hristev@collabora.com>, tiffany.lin@mediatek.com,
- andrew-ct.chen@mediatek.com, matthias.bgg@gmail.com,
- linux-mediatek@lists.infradead.org
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- robh+dt@kernel.org, kernel@collabora.com, Kyrie Wu <kyrie.wu@mediatek.com>,
- Allen-KH Cheng <allen-kh.cheng@mediatek.com>,
- Hsin-Yi Wang <hsinyi@chromium.org>
-References: <20231228113245.174706-1-eugen.hristev@collabora.com>
- <20231228113245.174706-7-eugen.hristev@collabora.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20231228113245.174706-7-eugen.hristev@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cd0f6613-9aa9-4698-bebe-0f61286d7552@quicinc.com>
 
-Il 28/12/23 12:32, Eugen Hristev ha scritto:
-> From: Kyrie Wu <kyrie.wu@mediatek.com>
-> 
-> Add video encoder node.
-> 
-> Signed-off-by: Kyrie Wu <kyrie.wu@mediatek.com>
-> Signed-off-by: Allen-KH Cheng <allen-kh.cheng@mediatek.com>
-> Reviewed-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> [eugen.hristev@collabora.com: minor cleanup]
-> Signed-off-by: Eugen Hristev <eugen.hristev@collabora.com>
+On Tue, Jan 02, 2024 at 10:19:47AM +0800, Aiqun Yu (Maria) wrote:
+> On 12/29/2023 6:20 AM, Matthew Wilcox wrote:
+> > On Wed, Dec 13, 2023 at 12:27:05PM -0600, Eric W. Biederman wrote:
+> > > Matthew Wilcox <willy@infradead.org> writes:
+> > > > I think the right way to fix this is to pass a boolean flag to
+> > > > queued_write_lock_slowpath() to let it know whether it can re-enable
+> > > > interrupts while checking whether _QW_WAITING is set.
+> > > 
+> > > Yes.  It seems to make sense to distinguish between write_lock_irq and
+> > > write_lock_irqsave and fix this for all of write_lock_irq.
+> > 
+> > I wasn't planning on doing anything here, but Hillf kind of pushed me into
+> > it.  I think it needs to be something like this.  Compile tested only.
+> > If it ends up getting used,
+> Happy new year!
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Thank you!  I know your new year is a few weeks away still ;-)
 
+> > -void __lockfunc queued_write_lock_slowpath(struct qrwlock *lock)
+> > +void __lockfunc queued_write_lock_slowpath(struct qrwlock *lock, bool irq)
+> >   {
+> >   	int cnts;
+> > @@ -82,7 +83,11 @@ void __lockfunc queued_write_lock_slowpath(struct qrwlock *lock)
+> Also a new state showed up after the current design:
+> 1. locked flag with _QW_WAITING, while irq enabled.
+> 2. And this state will be only in interrupt context.
+> 3. lock->wait_lock is hold by the write waiter.
+> So per my understanding, a different behavior also needed to be done in
+> queued_write_lock_slowpath:
+>   when (unlikely(in_interrupt())) , get the lock directly.
+
+I don't think so.  Remember that write_lock_irq() can only be called in
+process context, and when interrupts are enabled.
+
+> So needed to be done in release path. This is to address Hillf's concern on
+> possibility of deadlock.
+
+Hillf's concern is invalid.
+
+> >   	/* When no more readers or writers, set the locked flag */
+> >   	do {
+> > +		if (irq)
+> > +			local_irq_enable();
+> I think write_lock_irqsave also needs to be take account. So
+> loal_irq_save(flags) should be take into account here.
+
+If we did want to support the same kind of spinning with interrupts
+enabled for write_lock_irqsave(), we'd want to pass the flags in
+and do local_irq_restore(), but I don't know how we'd support
+write_lock_irq() if we did that -- can we rely on passing in 0 for flags
+meaning "reenable" on all architectures?  And ~0 meaning "don't
+reenable" on all architectures?
+
+That all seems complicated, so I didn't do that.
 
