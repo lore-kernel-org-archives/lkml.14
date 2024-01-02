@@ -1,1035 +1,171 @@
-Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34523156D9;
-	Tue,  2 Jan 2024 18:16:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA17156D6
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 18:17:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="SWll/8wS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
-	t=1704218877; bh=80zj8SPxwzylrdzN2h7VA3A5EaV5FR3HxjxsAq8IBCw=;
-	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
-	b=SWll/8wSyXV3zJU0ZrF4m1cE7tfzQJvGr7Mws914WEISJXtFBRDYxgjtlrNRvlRcc
-	 cL8r2lA4esQgzBuyXdnPfO2whOYCF0Piia6MszQxSMjBI1rKO9u/SjDlkkmDGM/tjC
-	 0zezdhESCMXovDAaPwxJy0j6s4gNCo/4gzOvobzc=
-Date: Tue, 2 Jan 2024 19:07:56 +0100
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
-To: Manuel Traut <manut@mecka.net>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>, 
-	Mark Yao <markyao0591@gmail.com>, Diederik de Haas <didi.debian@cknow.org>, 
-	Segfault <awarnecke002@hotmail.com>, Arnaud Ferraris <aferraris@debian.org>, 
-	Danct12 <danct12@riseup.net>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v3 4/4] arm64: dts: rockchip: Add devicetree for Pine64
- PineTab2
-Message-ID: <775vjfucu2g2s6zzeutj7f7tapx3q2geccpxvv4ppcms4hxbq7@cbrdmlu2ryzp>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
-	Manuel Traut <manut@mecka.net>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>, 
-	Mark Yao <markyao0591@gmail.com>, Diederik de Haas <didi.debian@cknow.org>, 
-	Segfault <awarnecke002@hotmail.com>, Arnaud Ferraris <aferraris@debian.org>, 
-	Danct12 <danct12@riseup.net>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
-References: <20240102-pinetab2-v3-0-cb1aa69f8c30@mecka.net>
- <20240102-pinetab2-v3-4-cb1aa69f8c30@mecka.net>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S+2u32qo"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a27733ae1dfso440673466b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 10:17:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704219472; x=1704824272; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vokVJUHBqqgZii3C8tGP6hxXN4hNbUKKpSnGYxnExi0=;
+        b=S+2u32qokC3Fcqz8q4EzZr6Eq1S97L0cCA6LDw9vIbIw194wLemtkTQmvGoFnMDrtO
+         9HSRpC0bAv71jI37SfDpk0YcAm30RJTHyugrZdZGEwoxVzoJFvZ25gSB+zQ5de2VvIY6
+         Ft1ObH3uaRZgrky7tKdGQC6qtZgQ4DsgBWMZmOSvKhvXJwQt2AgQ/2llkvJ84+OEOhfd
+         2avVmPVjxEcmgpgmjwUPQH5baOP4YjEVb+Svnit4hWnh4ZeJp3NOUlDX6MHZMYfJ+kho
+         QXMp8ItlitMvM+30VJuEQvt35c6jxuVV2pHwS0cdXOYbkv/0JZDF0V//zYlGyPGyQkd0
+         C+aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704219472; x=1704824272;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vokVJUHBqqgZii3C8tGP6hxXN4hNbUKKpSnGYxnExi0=;
+        b=MktYnfZAeToJ9Wh8uoWzXOuaX7Z4NQY1y1qr8kMzaJ6d/rd5WsNT1vaHiHsrqi2Z61
+         YKwCDAZugwv5uU8xFTOBuVUa58qeCII2h5cZZmFxdBxj6+EsArLPcQD+5j7d6NLZR4P1
+         dwJ+CPd1n3y+ddWmkMSaC6/sK5qDdW9SifJUQCPlIjf443dS8cSx+Yr2Q4wYSw8d7I3L
+         pOhHeN9YCYmrjzJI5I54zTYhu3kEtTbnPlBHZOilhaq7VC0MDOQ/zABcbOjOqbVqkce/
+         Ynszgfps24juyhn3FZQDjHqUL+X7q32p2tYZI2M2LpAfhAKooDetTWcilnEwXsn3+k+c
+         K6Bw==
+X-Gm-Message-State: AOJu0YyeRWUzk5XWvg3WvnrgQWFuJTwapO5hPf8JAVZDIuAo8hw91NJB
+	u0wrDiMENO65xQyPyX5V4i20Gb2bqCT6MkffcoVkKhSHeSY=
+X-Google-Smtp-Source: AGHT+IGO6CdZf1pizfg01zNcXfQT9jtY2/0JkQ1ySIveRsPvmKlm+siO/jHT1Z3BZh+offdblfkLdg==
+X-Received: by 2002:a17:907:72c3:b0:a23:4532:f168 with SMTP id du3-20020a17090772c300b00a234532f168mr5910693ejc.227.1704219472321;
+        Tue, 02 Jan 2024 10:17:52 -0800 (PST)
+Received: from [192.168.199.125] (178235179036.dynamic-4-waw-k-1-3-0.vectranet.pl. [178.235.179.36])
+        by smtp.gmail.com with ESMTPSA id fp21-20020a1709069e1500b00a26ade46619sm11179166ejc.121.2024.01.02.10.17.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jan 2024 10:17:51 -0800 (PST)
+Message-ID: <7e31d489-de96-42f0-a72a-a581859e7131@linaro.org>
+Date: Tue, 2 Jan 2024 19:17:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240102-pinetab2-v3-4-cb1aa69f8c30@mecka.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] firmware/psci: Set
+ pm_set_resume/suspend_via_firmware() on qcom
+Content-Language: en-US
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Bjorn Andersson <andersson@kernel.org>
+References: <20231227-topic-psci_fw_sus-v1-0-6910add70bf3@linaro.org>
+ <20231227-topic-psci_fw_sus-v1-2-6910add70bf3@linaro.org>
+ <20231228102801.fzaubcjq5thfwgxg@bogus>
+ <f34dd5de-9e56-4c58-b9bf-2356b41d17b1@linaro.org>
+ <20231228115053.zlypgc5uxxvghi4a@bogus>
+ <376d3040-b9ed-4574-90d7-fb864d694e3c@linaro.org>
+ <20231228124348.mmtceqeuean7ly6y@bogus>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20231228124348.mmtceqeuean7ly6y@bogus>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello Manuel,
-
-see below...
-
-On Tue, Jan 02, 2024 at 05:15:47PM +0100, Manuel Traut wrote:
-> From: Alexander Warnecke <awarnecke002@hotmail.com>
+On 28.12.2023 13:43, Sudeep Holla wrote:
+> On Thu, Dec 28, 2023 at 01:16:28PM +0100, Konrad Dybcio wrote:
+>> On 28.12.2023 12:50, Sudeep Holla wrote:
+>>> On Thu, Dec 28, 2023 at 12:47:51PM +0100, Konrad Dybcio wrote:
+>>>> On 28.12.2023 11:28, Sudeep Holla wrote:
+>>>>> On Wed, Dec 27, 2023 at 11:15:31PM +0100, Konrad Dybcio wrote:
+>>>>>> Most Qualcomm platforms implementing PSCI (ab)use CPU_SUSPEND for
+>>>>>> entering various stages of suspend, across the SoC. These range from a
+>>>>>> simple WFI to a full-fledged power collapse of the entire chip
+>>>>>> (mostly, anyway).
+>>>>>>
+>>>>>> Some device drivers are curious to know whether "the firmware" (which is
+>>>>>> often assumed to be ACPI) takes care of suspending or resuming the
+>>>>>> platform. Set the flag that reports this behavior on the aforementioned
+>>>>>> chips.
+>>>>>>
+>>>>>> Some newer Qualcomm chips ship with firmware that actually advertises
+>>>>>> PSCI SYSTEM_SUSPEND, so the compatible list should only grow slightly.
+>>>>>>
+>>>>>
+>>>>> NACK, just use suspend-to-idle if SYSTEM_SUSPEND is not advertised. It is
+>>>>> designed for such platforms especially on x86/ACPI which don't advertise
+>>>>> Sx states. I see no reason why that doesn't work on ARM platforms as well.
+>>>>
+>>>> Not sure if I got the message through well, but the bottom line is, on
+>>>> Qualcomm platforms the "idle" states aren't actually just "idle" (read:
+>>>> they're not like S0ix). All but the most shallow ones shut down quite a
+>>>> chunk of the entire SoC, with the lowest ones being essentially S3 with
+>>>> power being cut off from the entire chip, except for the memory rail.
+>>>>
+>>>
+>>> No I understood that and S2I is exactly what you need.
+>>> Have you checked if S2I already works as intended on these platforms ?
+>> Yes, simple CPU idling works OOTB and the SoC power collapse only works
+>> given the developer doesn't cut corners when bringing up the platform
+>> (read: works on some of the ones we support, trying hard to expand that
+>> group!)
+>>
+>>> What extra do you achieve with this hack by advertising fake S2R ?
+>> Uh.. unless I misunderstood something, I'm not advertising s2ram..
+>> Quite the opposite, I'm making sure only s2idle is allowed.
+>>
 > 
-> [...]
->
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3566-pinetab2.dtsi b/arch/arm64/boot/dts/rockchip/rk3566-pinetab2.dtsi
-> new file mode 100644
-> index 000000000000..5d895628406b
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3566-pinetab2.dtsi
-> @@ -0,0 +1,959 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/gpio-keys.h>
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/leds/common.h>
-> +#include <dt-bindings/pinctrl/rockchip.h>
-> +#include <dt-bindings/soc/rockchip,vop2.h>
-> +#include <dt-bindings/usb/pd.h>
-> +#include "rk3566.dtsi"
-> +
-> +/ {
-> +	chassis-type = "tablet";
-> +
-> +	aliases {
-> +		mmc0 = &sdhci;
-> +		mmc1 = &sdmmc0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial2:1500000n8";
-> +	};
-> +
-> +	adc-keys {
-> +		compatible = "adc-keys";
-> +		io-channels = <&saradc 0>;
-> +		io-channel-names = "buttons";
-> +		keyup-threshold-microvolt = <1800000>;
-> +		poll-interval = <25>;
-> +
-> +		button-vol-up {
-> +			label = "Volume Up";
-> +			linux,code = <KEY_VOLUMEUP>;
-> +			press-threshold-microvolt = <297500>;
-> +		};
-> +
-> +		button-vol-down {
-> +			label = "Volume Down";
-> +			linux,code = <KEY_VOLUMEDOWN>;
-> +			press-threshold-microvolt = <1750>;
-> +		};
-> +	};
-> +
-> +	backlight: backlight {
-> +		compatible = "pwm-backlight";
-> +		pwms = <&pwm4 0 25000 0>;
-> +		brightness-levels = <20 220>;
-> +		num-interpolated-steps = <200>;
+> Right, I didn't notice that in suspend_valid_all(), it can be rename
+> suspend_valid_s2i or something. "All" indicates all state is valid.
+> 
+> Anyways that is not the main point. IIUC S2I must still work if there is
+> at-least one CPU idle state other than WFI without these changes. Right ?
 
-Does this linear brightness -> PWM duty cycle mapping lead to linear
-relationship between brighntess level and subjective brightness on this HW?
+Yes, and it does
 
-I doubt it a bit...
+> 
+> If all these changes is to support S2I wih WFI only, then we can look at
+> some generic solution as there were previous attempts to do something
+> similar on other platforms IIRC.
 
-> +		default-brightness-level = <100>;
-> +		power-supply = <&vcc_sys>;
-> +	};
-> +
-> +	battery: battery {
-> +		compatible = "simple-battery";
-> +		charge-full-design-microamp-hours = <6000000>;
-> +		charge-term-current-microamp = <300000>;
-> +		constant-charge-current-max-microamp = <2000000>;
-> +		constant-charge-voltage-max-microvolt = <4300000>;
-> +		voltage-max-design-microvolt = <4350000>;
-> +		voltage-min-design-microvolt = <3400000>;
-> +
-> +		ocv-capacity-celsius = <20>;
-> +		ocv-capacity-table-0 = <4322000 100>, <4250000 95>, <4192000 90>, <4136000 85>,
-> +				       <4080000 80>, <4022000 75>, <3972000 70>, <3928000 65>,
-> +				       <3885000 60>, <3833000 55>, <3798000 50>, <3780000 45>,
-> +				       <3776000 40>, <3773000 35>, <3755000 30>, <3706000 25>,
-> +				       <3640000 20>, <3589000 15>, <3535000 10>, <3492000 5>,
-> +				       <3400000 0>;
-> +	};
-> +
-> +	gpio_keys: gpio-keys {
-> +		compatible = "gpio-keys";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&kb_id_det>;
-> +
-> +		tablet-mode-switch {
-> +			debounce-interval = <20>;
-> +			gpios = <&gpio4 RK_PA4 GPIO_ACTIVE_HIGH>;
-> +			label = "Tablet Mode";
-> +			linux,input-type = <EV_SW>;
-> +			linux,code = <SW_TABLET_MODE>;
-> +		};
-> +	};
-> +
-> +	hdmi-con {
+No, I'm just interested in setting the resume/suspend_via_firmware()
+markers and the PSCI driver seems like a good place for it, be it on
+all platforms with SYSTEM_SUSPEND and Qualcomm which sneaked equivalent
+functionality into the CPU_SUSPEND call.
 
-hdmi-connector
-
-> +		compatible = "hdmi-connector";
-> +		type = "d";
-> +
-> +		port {
-> +			hdmi_con_in: endpoint {
-> +				remote-endpoint = <&hdmi_out_con>;
-> +			};
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +
-
-Spurious newline ^
-
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&flash_led_en_h>;
-> +
-> +		led-0 {
-> +			gpios = <&gpio4 RK_PA5 GPIO_ACTIVE_HIGH>;
-> +			color = <LED_COLOR_ID_WHITE>;
-> +			function = LED_FUNCTION_FLASH;
-> +		};
-> +	};
-> +
-> +	rk817-sound {
-> +		compatible = "simple-audio-card";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&hp_det_l>;
-> +		simple-audio-card,format = "i2s";
-> +		simple-audio-card,name = "rk817_ext";
-> +		simple-audio-card,mclk-fs = <256>;
-> +
-> +		simple-audio-card,widgets =
-> +			"Microphone", "Mic Jack",
-> +			"Headphone", "Headphones",
-> +			"Speaker", "Internal Speakers";
-> +
-> +		simple-audio-card,routing =
-> +			"MICR", "Mic Jack",
-> +			"Headphones", "HPOL",
-> +			"Headphones", "HPOR",
-> +			"Internal Speakers", "Speaker Amplifier OUTL",
-> +			"Internal Speakers", "Speaker Amplifier OUTR",
-> +			"Speaker Amplifier INL", "HPOL",
-> +			"Speaker Amplifier INR", "HPOR";
-> +		simple-audio-card,hp-det-gpio = <&gpio4 RK_PC6 GPIO_ACTIVE_LOW>;
-> +		simple-audio-card,aux-devs = <&speaker_amp>;
-> +		simple-audio-card,pin-switches = "Internal Speakers";
-> +
-> +		simple-audio-card,cpu {
-> +			sound-dai = <&i2s1_8ch>;
-> +		};
-> +
-> +		simple-audio-card,codec {
-> +			sound-dai = <&rk817>;
-> +		};
-> +	};
-> +
-> +	speaker_amp: speaker-amplifier {
-> +		compatible = "simple-audio-amplifier";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&spk_ctl>;
-> +		enable-gpios = <&gpio4 RK_PC2 GPIO_ACTIVE_HIGH>;
-> +		sound-name-prefix = "Speaker Amplifier";
-> +		VCC-supply = <&vcc_bat>;
-> +	};
-> +
-> +	vcc_3v3: vcc-3v3 {
-
-Regulator node names shoule end with -regulator suffix. The same applies for
-all of the below nodes.
-
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc_3v3";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		vin-supply = <&vcc3v3_sys>;
-> +	};
-> +
-> +	vcc3v3_minipcie: vcc3v3-minipcie {
-> +		compatible = "regulator-fixed";
-> +		enable-active-high;
-> +		gpio = <&gpio4 RK_PC3 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pcie_pwren_h>;
-> +		regulator-name = "vcc3v3_minipcie";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		vin-supply = <&vcc_sys>;
-> +	};
-> +
-> +	vcc3v3_sd: vcc3v3-sd {
-> +		compatible = "regulator-fixed";
-> +		gpio = <&gpio0 RK_PA5 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&sdmmc_pwren_l>;
-> +		regulator-name = "vcc3v3_sd";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		vin-supply = <&vcc3v3_sys>;
-> +	};
-> +
-> +	vcc5v0_usb_host0: vcc5v0-usb-host0 {
-> +		compatible = "regulator-fixed";
-> +		enable-active-high;
-> +		gpio = <&gpio4 RK_PC4 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&usb_host_pwren1_h>;
-> +		regulator-name = "vcc5v0_usb_host0";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		vin-supply = <&vcc5v_midu>;
-> +	};
-> +
-> +	vcc5v0_usb_host2: vcc5v0-usb-host2 {
-> +		compatible = "regulator-fixed";
-> +		enable-active-high;
-> +		gpio = <&gpio4 RK_PC5 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&usb_host_pwren2_h>;
-> +		regulator-name = "vcc5v0_usb_host2";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		vin-supply = <&vcc5v_midu>;
-> +	};
-> +
-> +	vcc_bat: vcc-bat {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc_bat";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +
-> +	vcc_sys: vcc-sys {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc_sys";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		vin-supply = <&vcc_bat>;
-> +	};
-> +
-> +	vdd1v2_dvp: vdd1v2-dvp {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vdd1v2_dvp";
-> +		regulator-min-microvolt = <1200000>;
-> +		regulator-max-microvolt = <1200000>;
-> +		vin-supply = <&vcc_3v3>;
-> +		/*enable-supply = <&vcc2v8_dvp>;*/
-
-There's no such property. Delete this commented out line.
-
-> +	};
-> +};
-> +
-> +&combphy1 {
-> +	status = "okay";
-> +};
-> +
-> +&combphy2 {
-> +	status = "okay";
-> +};
-> +
-> +&cpu0 {
-> +	cpu-supply = <&vdd_cpu>;
-> +};
-> +
-> +&cpu1 {
-> +	cpu-supply = <&vdd_cpu>;
-> +};
-> +
-> +&cpu2 {
-> +	cpu-supply = <&vdd_cpu>;
-> +};
-> +
-> +&cpu3 {
-> +	cpu-supply = <&vdd_cpu>;
-> +};
-> +
-> +&cru {
-> +	assigned-clocks = <&pmucru CLK_RTC_32K>, <&cru PLL_GPLL>,
-> +			  <&pmucru PLL_PPLL>, <&cru PLL_VPLL>;
-> +	assigned-clock-rates = <32768>, <1200000000>, <200000000>, <500000000>;
-> +	assigned-clock-parents = <&pmucru CLK_RTC32K_FRAC>;
-> +};
-> +
-> +&csi_dphy {
-> +	status = "okay";
-> +};
-> +
-> +&dsi0 {
-> +	status = "okay";
-> +	clock-master;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	lcd: panel@0 {
-> +		compatible = "boe,th101mb31ig002-28a";
-> +		reg = <0>;
-> +		backlight = <&backlight>;
-> +		enable-gpios = <&gpio0 RK_PC7 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&lcd_pwren_h &lcd0_rst_l>;
-
-Re lcd0_rst_l:
-
-It's a bit weird conceptually to reference from dtsi something that's only 
-declared in dts that includes the dtsi. Maybe move pinctrl-* properties
-to dts &lcd, too...
-
-> +		rotation = <90>;
-> +		power-supply = <&vcc_3v3>;
-> +
-> +		port@0 {
-> +			panel_in_dsi: endpoint@0 {
-> +				remote-endpoint = <&dsi0_out_con>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&dsi0_in {
-> +	dsi0_in_vp1: endpoint {
-> +		remote-endpoint = <&vp1_out_dsi0>;
-> +	};
-> +};
-> +
-> +&dsi0_out {
-> +	dsi0_out_con: endpoint {
-> +		remote-endpoint = <&panel_in_dsi>;
-> +	};
-> +};
-> +
-> +&dsi_dphy0 {
-> +	status = "okay";
-> +};
-> +
-> +&gpu {
-> +	mali-supply = <&vdd_gpu_npu>;
-> +	status = "okay";
-> +};
-> +
-> +&hdmi {
-> +	avdd-0v9-supply = <&vdda_0v9_p>;
-> +	avdd-1v8-supply = <&vcc_1v8>;
-> +	status = "okay";
-> +};
-> +
-> +&hdmi_in {
-> +	hdmi_in_vp0: endpoint {
-> +		remote-endpoint = <&vp0_out_hdmi>;
-> +	};
-> +};
-> +
-> +&hdmi_out {
-> +	hdmi_out_con: endpoint {
-> +		remote-endpoint = <&hdmi_con_in>;
-> +	};
-> +};
-> +
-> +&hdmi_sound {
-> +	status = "okay";
-> +};
-> +
-> +&i2c0 {
-> +	clock-frequency = <400000>;
-> +	status = "okay";
-> +
-> +	vdd_cpu: regulator@1c {
-> +		compatible = "tcs,tcs4525";
-> +		reg = <0x1c>;
-> +		fcs,suspend-voltage-selector = <1>;
-> +		regulator-name = "vdd_cpu";
-> +		regulator-min-microvolt = <800000>;
-> +		regulator-max-microvolt = <1150000>;
-> +		regulator-ramp-delay = <2300>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		vin-supply = <&vcc_sys>;
-> +
-> +		regulator-state-mem {
-> +			regulator-off-in-suspend;
-> +		};
-> +	};
-> +
-> +	rk817: pmic@20 {
-> +		compatible = "rockchip,rk817";
-> +		reg = <0x20>;
-> +		interrupt-parent = <&gpio0>;
-> +		interrupts = <RK_PA3 IRQ_TYPE_LEVEL_LOW>;
-> +		assigned-clocks = <&cru I2S1_MCLKOUT_TX>;
-> +		assigned-clock-parents = <&cru CLK_I2S1_8CH_TX>;
-> +		clock-names = "mclk";
-> +		clocks = <&cru I2S1_MCLKOUT_TX>;
-> +		clock-output-names = "rk808-clkout1", "rk808-clkout2";
-> +		#clock-cells = <1>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pmic_int_l>, <&i2s1m0_mclk>;
-> +		rockchip,system-power-controller;
-> +		#sound-dai-cells = <0>;
-> +		wakeup-source;
-> +
-> +		vcc1-supply = <&vcc_sys>;
-> +		vcc2-supply = <&vcc_sys>;
-> +		vcc3-supply = <&vcc_sys>;
-> +		vcc4-supply = <&vcc_sys>;
-> +		vcc5-supply = <&vcc_sys>;
-> +		vcc6-supply = <&vcc_sys>;
-> +		vcc7-supply = <&vcc_sys>;
-> +		vcc8-supply = <&vcc_sys>;
-> +		vcc9-supply = <&vcc5v_midu>;
-> +
-> +		regulators {
-> +			vdd_logic: DCDC_REG1 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <500000>;
-> +				regulator-max-microvolt = <1350000>;
-> +				regulator-ramp-delay = <6001>;
-> +				regulator-initial-mode = <0x2>;
-> +				regulator-name = "vdd_logic";
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +				};
-> +			};
-> +
-> +			vdd_gpu_npu: DCDC_REG2 {
-> +				regulator-min-microvolt = <500000>;
-> +				regulator-max-microvolt = <1350000>;
-> +				regulator-ramp-delay = <6001>;
-> +				regulator-initial-mode = <0x2>;
-> +				regulator-name = "vdd_gpu_npu";
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +				};
-> +			};
-> +
-> +			vcc_ddr: DCDC_REG3 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-initial-mode = <0x2>;
-> +				regulator-name = "vcc_ddr";
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +				};
-> +			};
-> +
-> +			vcc3v3_sys: DCDC_REG4 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-initial-mode = <0x2>;
-> +				regulator-name = "vcc3v3_sys";
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +				};
-> +			};
-> +
-> +			vcca1v8_pmu: LDO_REG1 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-name = "vcca1v8_pmu";
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +				};
-> +			};
-> +
-> +			vdda_0v9_p: LDO_REG2 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <900000>;
-> +				regulator-max-microvolt = <900000>;
-> +				regulator-name = "vdda_0v9_p";
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +				};
-> +			};
-> +
-> +			vdda0v9_pmu: LDO_REG3 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <900000>;
-> +				regulator-max-microvolt = <900000>;
-> +				regulator-name = "vdda0v9_pmu";
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +				};
-> +			};
-> +
-> +			vccio_acodec: LDO_REG4 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-name = "vccio_acodec";
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +				};
-> +			};
-> +
-> +			vccio_sd: LDO_REG5 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-name = "vccio_sd";
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +				};
-> +			};
-> +
-> +			vcc3v3_pmu: LDO_REG6 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-name = "vcc3v3_pmu";
-> +				regulator-state-mem {
-> +					regulator-on-in-suspend;
-> +				};
-> +			};
-> +
-> +			vcc_1v8: LDO_REG7 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-name = "vcc_1v8";
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +				};
-> +			};
-> +
-> +			vcc1v8_dvp: LDO_REG8 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-name = "vcc1v8_dvp";
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +				};
-> +			};
-> +
-> +			vcc2v8_dvp: LDO_REG9 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <2800000>;
-> +				regulator-max-microvolt = <2800000>;
-> +				regulator-name = "vcc2v8_dvp";
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +				};
-> +			};
-> +
-> +			vcc5v_midu: BOOST {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <5000000>;
-> +				regulator-max-microvolt = <5000000>;
-> +				regulator-name = "boost";
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-
-I guess this prevents remote USB wakeup by USB devices. Like wakeup via USB
-keyboard. Probably not a bad thing, though.
-
-> +				};
-> +			};
-> +
-> +			vbus: OTG_SWITCH {
-> +				regulator-min-microvolt = <5000000>;
-> +				regulator-max-microvolt = <5000000>;
-> +				regulator-name = "otg_switch";
-> +				regulator-state-mem {
-> +					regulator-off-in-suspend;
-> +				};
-> +			};
-> +		};
-> +
-> +		charger {
-> +			monitored-battery = <&battery>;
-> +			rockchip,resistor-sense-micro-ohms = <10000>;
-> +			rockchip,sleep-enter-current-microamp = <300000>;
-> +			rockchip,sleep-filter-current-microamp = <100000>;
-> +		};
-> +	};
-> +};
-> +
-> +&i2c1 {
-> +	clock-frequency = <400000>;
-> +	status = "okay";
-> +
-> +	touchscreen@5d {
-> +		compatible = "goodix,gt911";
-> +		reg = <0x5d>;
-> +		interrupt-parent = <&gpio0>;
-> +		interrupts = <RK_PB0 IRQ_TYPE_EDGE_FALLING>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&tp_int_l_pmuio2>, <&tp_rst_l_pmuio2>;
-> +		AVDD28-supply = <&vcc3v3_pmu>;
-> +		VDDIO-supply = <&vcca1v8_pmu>;
-> +		irq-gpios = <&gpio0 RK_PB0 GPIO_ACTIVE_HIGH>;
-> +		reset-gpios = <&gpio0 RK_PC2 GPIO_ACTIVE_HIGH>;
-> +	};
-> +};
-> +
-> +&i2c2 {
-> +	clock-frequency = <400000>;
-> +	pinctrl-0 = <&i2c2m1_xfer>;
-> +	status = "okay";
-> +
-> +	vcm@c {
-> +		compatible = "dongwoon,dw9714";
-> +		reg = <0x0c>;
-> +		vcc-supply = <&vcc1v8_dvp>;
-> +	};
-> +
-> +	camera@36 {
-> +		compatible = "ovti,ov5648";
-> +		reg = <0x36>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&camerab_pdn_l &camerab_rst_l>;
-> +
-> +		clocks = <&cru CLK_CIF_OUT>;
-> +		assigned-clocks = <&cru CLK_CIF_OUT>;
-> +		assigned-clock-rates = <24000000>;
-> +
-> +		avdd-supply = <&vcc2v8_dvp>;
-> +		dvdd-supply = <&vdd1v2_dvp>;
-> +		dovdd-supply = <&vcc1v8_dvp>;
-> +		powerdown-gpios = <&gpio4 RK_PB3 GPIO_ACTIVE_LOW>;
-> +		reset-gpios = <&gpio4 RK_PB1 GPIO_ACTIVE_LOW>;
-> +
-> +		port {
-> +			endpoint {
-> +				data-lanes = <1 2>;
-> +				remote-endpoint = <0>;
-> +				link-frequencies = /bits/ 64 <210000000 168000000>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&i2c5 {
-> +	clock-frequency = <400000>;
-> +	status = "okay";
-> +
-> +	accelerometer@18 {
-> +		compatible = "silan,sc7a20";
-> +		reg = <0x18>;
-> +		interrupt-parent = <&gpio3>;
-> +		interrupts = <RK_PA2 IRQ_TYPE_LEVEL_LOW>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&gsensor_int_l>;
-> +		st,drdy-int-pin = <1>;
-> +		vdd-supply = <&vcc_1v8>;
-> +		vddio-supply = <&vcc_1v8>;
-> +		mount-matrix = "1", "0", "0",
-> +			       "0", "0", "1",
-> +			       "0", "1", "0";
-> +	};
-> +};
-> +
-> +&i2s0_8ch {
-> +	status = "okay";
-> +};
-> +
-> +&i2s1_8ch {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2s1m0_sclktx
-> +		     &i2s1m0_lrcktx
-> +		     &i2s1m0_sdi0
-> +		     &i2s1m0_sdo0>;
-> +	rockchip,trcm-sync-tx-only;
-> +	status = "okay";
-> +};
-> +
-> +&pcie2x1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pcie_reset_h>;
-> +	reset-gpios = <&gpio1 RK_PB2 GPIO_ACTIVE_HIGH>;
-> +	vpcie3v3-supply = <&vcc3v3_minipcie>;
-> +	status = "okay";
-> +};
-
-Does it make sense to enable this HW block by default, when it isn't used on
-actual HW?
-
-> +&pinctrl {
-> +	bt {
-> +		bt_wake_host_h: bt-wake-host-h {
-> +			rockchip,pins = <0 RK_PB5 RK_FUNC_GPIO &pcfg_pull_down>;
-> +		};
-> +	};
-
-^^^ unused
-
-> +
-> +	camerab {
-> +		camerab_pdn_l: camerab-pdn-l {
-> +			rockchip,pins = <4 RK_PB3 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +
-> +		camerab_rst_l: camerab-rst-l {
-> +			rockchip,pins = <4 RK_PB1 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	cameraf {
-> +		cameraf_pdn_l: cameraf-pdn-l {
-> +			rockchip,pins = <4 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +
-> +		cameraf_rst_l: cameraf-rst-l {
-> +			rockchip,pins = <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-
-^^^ unused
-
-> +
-> +	flash {
-> +		flash_led_en_h: flash-led-en-h {
-> +			rockchip,pins = <4 RK_PA5 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	fspi {
-> +		fspi_dual_io_pins: fspi-dual-io-pins {
-> +			rockchip,pins =
-> +				/* fspi_clk */
-> +				<1 RK_PD0 1 &pcfg_pull_none>,
-> +				/* fspi_cs0n */
-> +				<1 RK_PD3 1 &pcfg_pull_none>,
-> +				/* fspi_d0 */
-> +				<1 RK_PD1 1 &pcfg_pull_none>,
-> +				/* fspi_d1 */
-> +				<1 RK_PD2 1 &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	gsensor {
-> +		gsensor_int_l: gsensor-int-l {
-> +			rockchip,pins = <3 RK_PA2 RK_FUNC_GPIO &pcfg_pull_up>;
-> +		};
-> +	};
-> +
-> +	kb {
-> +		kb_id_det: kb-id-det {
-> +			rockchip,pins = <4 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	lcd {
-> +		lcd_pwren_h: lcd-pwren-h {
-> +			rockchip,pins = <0 RK_PC7 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	pcie {
-> +		pcie_pwren_h: pcie-pwren-h {
-> +			rockchip,pins = <4 RK_PC3 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +
-> +		pcie_reset_h: pcie-reset-h {
-> +			rockchip,pins = <1 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	pmic {
-> +		pmic_int_l: pmic-int-l {
-> +			rockchip,pins = <0 RK_PA3 RK_FUNC_GPIO &pcfg_pull_up>;
-> +		};
-> +	};
-> +
-> +	sdmmc {
-> +		sdmmc_pwren_l: sdmmc-pwren-l {
-> +			rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	sound {
-> +		hp_det_l: hp-det-l {
-> +			rockchip,pins = <4 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +
-> +		spk_ctl: spk-ctl {
-> +			rockchip,pins = <4 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	tp {
-> +		tp_int_l_pmuio2: tp-int-l-pmuio2 {
-> +			rockchip,pins = <0 RK_PB0 RK_FUNC_GPIO &pcfg_pull_up>;
-> +		};
-> +
-> +		tp_rst_l_pmuio2: tp-rst-l-pmuio2 {
-> +			rockchip,pins = <0 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	usb {
-> +		usbcc_int_l: usbcc-int-l {
-> +			rockchip,pins = <0 RK_PC5 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-
-^^^ unused
-
-> +		usb_host_pwren1_h: usb-host-pwren1-h {
-> +			rockchip,pins = <4 RK_PC4 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +
-> +		usb_host_pwren2_h: usb-host-pwren2-h {
-> +			rockchip,pins = <4 RK_PC5 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	wifi {
-> +		host_wake_wl: host-wake-wl {
-> +			rockchip,pins = <0 RK_PB7 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +
-> +		wifi_pwren: wifi-pwren {
-> +			rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +
-> +		wifi_wake_host_h: wifi-wake-host-h {
-> +			rockchip,pins = <0 RK_PC4 RK_FUNC_GPIO &pcfg_pull_down>;
-> +		};
-> +	};
-
-^^^ all of this wifi stuff is unused
-
-Also wifi_pwren is not really useful on actual HW. W_VBAT is routed directly
-to wifi chip, with wifi_pwren_h signal having no effect: (short via R9664)
-
-   https://megous.com/dl/tmp/b499859c1012f969.png
-
-> +};
-> +
-> +&pmu_io_domains {
-> +	pmuio1-supply = <&vcc3v3_pmu>;
-> +	pmuio2-supply = <&vcca1v8_pmu>;
-> +	vccio1-supply = <&vccio_acodec>;
-> +	vccio2-supply = <&vcc_1v8>;
-> +	vccio3-supply = <&vccio_sd>;
-> +	vccio4-supply = <&vcc_1v8>;
-> +	vccio5-supply = <&vcc_1v8>;
-> +	vccio6-supply = <&vcc1v8_dvp>;
-> +	vccio7-supply = <&vcc_3v3>;
-> +	status = "okay";
-> +};
-> +
-> +&pwm4 {
-> +	status = "okay";
-> +};
-> +
-> +&saradc {
-> +	vref-supply = <&vcc_1v8>;
-> +	status = "okay";
-> +};
-> +
-> +&sdhci {
-> +	bus-width = <8>;
-> +	no-sdio;
-> +	no-sd;
-> +	non-removable;
-> +	max-frequency = <200000000>;
-> +	mmc-hs200-1_8v;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&emmc_bus8
-> +		     &emmc_clk
-> +		     &emmc_cmd
-> +		     &emmc_datastrobe
-> +		     &emmc_rstnout>;
-> +	vmmc-supply = <&vcc_3v3>;
-> +	vqmmc-supply = <&vcc_1v8>;
-> +	status = "okay";
-> +};
-> +
-> +&sdmmc0 {
-> +	bus-width = <4>;
-> +	cap-sd-highspeed;
-> +	cd-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_LOW>;
-> +	disable-wp;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sdmmc0_bus4
-> +		     &sdmmc0_clk
-> +		     &sdmmc0_cmd
-> +		     &sdmmc0_det>;
-> +	sd-uhs-sdr104;
-> +	vmmc-supply = <&vcc3v3_sd>;
-> +	vqmmc-supply = <&vccio_sd>;
-> +	status = "okay";
-> +};
-> +
-> +&sdmmc1 {
-> +	bus-width = <4>;
-> +	cap-sd-highspeed;
-> +	cap-sdio-irq;
-> +	keep-power-in-suspend;
-> +	non-removable;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sdmmc1_bus4
-> +		     &sdmmc1_cmd
-> +		     &sdmmc1_clk>;
-> +	sd-uhs-sdr104;
-> +	vqmmc-supply = <&vcca1v8_pmu>;
-> +	status = "okay";
-> +};
-> +
-> +&sfc {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&fspi_dual_io_pins>;
-> +	status = "okay";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	flash@0 {
-> +		compatible = "jedec,spi-nor";
-> +		reg = <0>;
-> +		spi-max-frequency = <24000000>;
-
-That's a bit on the low side. The flash chip should work for all commands up to
-80MHz https://megous.com/dl/tmp/b428ad9b85ac4633.png and SGM3157YC6 switch
-for the FSPI-CLK should have high enough bandwidth, too.
-
-> +		spi-rx-bus-width = <2>;
-
-GD25LQ128E supports quad I/O. Maybe try 4 if it will work.
-
-> +		spi-tx-bus-width = <1>;
-> +	};
-> +};
-> +
-> +&tsadc {
-> +	rockchip,hw-tshut-mode = <1>;
-> +	rockchip,hw-tshut-polarity = <0>;
-> +	status = "okay";
-> +};
-> +
-> +&uart1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart1m0_xfer
-> +		     &uart1m0_ctsn
-> +		     &uart1m0_rtsn>;
-> +	status = "okay";
-> +	uart-has-rtscts;
-> +};
-
-Not sure about enabling UART for bluetooth, without having the bluetooth driver
-hooked in, somehow. UART will by default pull TX signal high, which may cause
-current leakage into gpio/uart pin of the bluetooth chip, if it's not powered up.
-
-Maybe just remove this, until bluetooth is figured out...
-
-kind regards,
-	o.
-
+Konrad
