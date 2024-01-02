@@ -1,72 +1,69 @@
-Received: from out203-205-221-231.mail.qq.com (out203-205-221-231.mail.qq.com [203.205.221.231])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5896DEAC2
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 11:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DEFEAC2;
+	Tue,  2 Jan 2024 11:45:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="fjCgGpy1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1704195452; bh=oEZhMRw9HdJT4A4ewTuyjJB8RjNCZNkSeMoeyQNKRcU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=fjCgGpy12WSCPVg1PksqyZ5SYTPlJa9PkMwRFGUyyzMuLfyWuWq/EsWfufzrsEmuB
-	 7wgdtojzOTQHn395XQfy4SkW0rbgm1ghogHZMUF4zZ9tHbwAX04e9Rd1gRNYuS577r
-	 afu7QXuGMvdwah/84QzZiHFzHJExjQ5A48B0vAYs=
-Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
-	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
-	id 95E93A02; Tue, 02 Jan 2024 19:37:30 +0800
-X-QQ-mid: xmsmtpt1704195450tyxkjroig
-Message-ID: <tencent_17CEBA53BB6733599E5D1B6A4BB11B5A2508@qq.com>
-X-QQ-XMAILINFO: NvH2zBBgt3uT6SfvEicVD2L+8tzhP/HGQJrafDNfRCRQjBTdn9tbBQCJJ/6fTS
-	 IYQ1ivyaBl7pKVag5tYNGgGPOqIn1HDB896C3BD/CFOUgELsLNoZCQw6yUtxk+VKir+4fAEaI1Ts
-	 YVF4C5n6Mf+p6UEJVd7AC3TZ3cqX5mx8K2WzFTDCPJMeuT3Kor+967/zn9XBAQVS5tVGFms0FX8Z
-	 CH909PcMf3tMZdrUnZFFg+DlmycOeFiV9iUVD2K6gffwfB6bEbKx1t5z1BKEaa8Tzk9UySIV3De6
-	 t2ljZfjHfNB9m85tzzl1JbQP42PcACsE5uvSFfoZQCdsAbCPWC1vMCTeekrd407G+kb6lZa+rEhH
-	 H++qhxgK6juYrDvwWGm1x1gr8tLjW67bU9s1+wW838l9fHQUKNTRTbyneGJlmUsparIDqjl5oKHq
-	 Ulc0z8pLFpEDBJZAovPUdfqckfBmUfmkZ0UvNNZKwZxnKebba+0fWBhMjhzobKFQrcXDJ6Omh/u2
-	 W8MBCNCs4aUUGW88nMr6wAhqo0BNfM2FK0aNYiKJfhwoToo+aVZM1aV29vFmNBTg9Lyn6BSfJ8JK
-	 rkg9+LhUlNJ29+ndRIXJ8/vhoyuvrzfPqxo5IkXYObUJVonWW8YOGCNJmzL5fSAx7AbITUzk/iYI
-	 dnMDdh1t/kTlZZfHqU66xZqrjv8CbwIjW28cS83vFsIr3RrEXXXgUwXhAGfhH6fg6hJFrce7t+/I
-	 AP3tNJEuXv7pxNa+g343MpgVrVSGLYiYIep/tRSNOPlLNf/bmUgq0aYVDza11QDq2I2+cvYdvTU8
-	 XXasMsGdL6BrQacjwRznoAovPEOqnKtLFQoH6VTwtGah+vPa9ozoCMLOb6QmdAmR00qymh+EtzDV
-	 Sjulkb4bNb4mIiiJCMV8XOiMtidad+DMdHxZsYNSP8JlZWsXawvk4b6tuX7EblhyCJ0+PATieo
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+41a88b825a315aac2254@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [hfs?] possible deadlock in hfs_extend_file (2)
-Date: Tue,  2 Jan 2024 19:37:31 +0800
-X-OQ-MSGID: <20240102113730.1515754-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000004efa57060def87be@google.com>
-References: <0000000000004efa57060def87be@google.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ZdOQTpa0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=UklajQ9JTXYubmhmdHvvtB1U0jcrFHuCHpiOoKk95LQ=; b=ZdOQTpa00hDTiVvIqU4tks9+c7
+	/FHOBxaNXJJpQD1EGgZx6nfIlvksPzg/sy3fpbWsr2VC0Qj9elsV4KVFVMtrfUnteJuUKfzNcDfwc
+	Y/jtbbudJ0UnY7NNWz5A+guAXFf/kWRVMli5aQRy9J1j1HKQhorA25WWj/RhjDToHkB+2m22G+1Iv
+	xq3Vd4uJ9/4K3yPr8gi6KUgeMNA5pP9zb36etoM3D6ukmUfnp7jd6tXBU/mX+o3a/d8ZAVWNHf55D
+	QcKnQ2tPJ1t4UYf86rIPupkcdmNsMyFT2P/dhkKNnCXE0Oy4p0KbdkUuDNdfQjxdRkFancp3XZxDR
+	4nbGC6uA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46158)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rKdCg-0006Ul-0x;
+	Tue, 02 Jan 2024 11:45:02 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rKdCi-0005G8-OG; Tue, 02 Jan 2024 11:45:04 +0000
+Date: Tue, 2 Jan 2024 11:45:04 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org
+Subject: Re: [PATCH] net: phy: linux/phy.h: fix Excess kernel-doc description
+ warning
+Message-ID: <ZZP3QHTfUUmBve6w@shell.armlinux.org.uk>
+References: <20231223050613.13978-1-rdunlap@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231223050613.13978-1-rdunlap@infradead.org>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-please test possible deadlock in hfs_extend_file
+On Fri, Dec 22, 2023 at 09:06:13PM -0800, Randy Dunlap wrote:
+> Remove the @phy_timer: line to prevent the kernel-doc warning:
+> 
+> include/linux/phy.h:768: warning: Excess struct member 'phy_timer' description in 'phy_device'
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Heiner Kallweit <hkallweit1@gmail.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: netdev@vger.kernel.org
+> ---
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 610a9b8f49fb
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 
-diff --git a/fs/hfs/extent.c b/fs/hfs/extent.c
-index 6d1878b99b30..1b02c7b6a10c 100644
---- a/fs/hfs/extent.c
-+++ b/fs/hfs/extent.c
-@@ -197,6 +197,10 @@ static int hfs_ext_read_extent(struct inode *inode, u16 block)
- 	    block < HFS_I(inode)->cached_start + HFS_I(inode)->cached_blocks)
- 		return 0;
- 
-+	if (HFS_I(inode)->flags & HFS_FLG_EXT_DIRTY && 
-+	    HFS_I(inode)->flags & HFS_FLG_EXT_NEW) 
-+		return -ENOENT;
-+
- 	res = hfs_find_init(HFS_SB(inode->i_sb)->ext_tree, &fd);
- 	if (!res) {
- 		res = __hfs_ext_cache_extent(&fd, inode, block);
+Thanks!
 
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
