@@ -1,136 +1,203 @@
-Received: from mxe.seznam.cz (mxe.seznam.cz [77.75.78.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3305F156E0;
-	Tue,  2 Jan 2024 17:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=email.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=email.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B943154AA
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 17:34:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=email.cz header.i=@email.cz header.b="nmZbjt0X"
-Received: from email.seznam.cz
-	by smtpc-mxe-54579945bb-pxvlm
-	(smtpc-mxe-54579945bb-pxvlm [2a02:598:128:8a00::1000:527])
-	id 72f428d68c009a7c727aa6ce;
-	Tue, 02 Jan 2024 18:31:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=email.cz;
-	s=szn20221014; t=1704216700;
-	bh=Xx0LeTeIW32q/hCd9KIFcqfXL/LqFY+MNCe/80cec9I=;
-	h=Received:From:To:Subject:Date:Message-Id:Mime-Version:X-Mailer:
-	 Content-Type:Content-Transfer-Encoding;
-	b=nmZbjt0XpO4vNUIGqkICThigSStuTvgWxkjB+SIraTiS+BJ7tzrxJ4aYUfcojHS8J
-	 Tg0c2J9jP+EJ9VHprk7Zzh2f5HT18Qd68T58R4ApyXsFBi2taJIeFARX/lAzlScXPR
-	 GDVCMy4rSDsX5vz3SD31AGyexc4IWDCieGtRD8IKxXrhB/FGRRo2n7vpaxJ7Vsk+Nq
-	 7riL4Y3RCCiGFat7M61I5uUjDpY87tJw5oikArKQFgNAlbYF2P1Pgoycm3hGXTpfv4
-	 WDpCL/KX1yCPax/5BgNEdWm/tAII1vtd/e5gCepdBadV5CrhpcQaawoHtcn88orHkI
-	 LTYG0oZvxdcpQ==
-Received: from 184-143.gtt-net.cz (184-143.gtt-net.cz [82.144.143.184])
-	by email.seznam.cz (szn-UNKNOWN-unknown) with HTTP;
-	Tue, 02 Jan 2024 18:30:02 +0100 (CET)
-From: "Tomas Paukrt" <tomaspaukrt@email.cz>
-To: "Kalle Valo" <kvalo@kernel.org>,
-	"Jeff Johnson" <quic_jjohnson@quicinc.com>,
-	<ath10k@lists.infradead.org>,
-	<linux-wireless@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: ath10k: add hw_params for Atheros QCA9377-7
-Date: Tue, 02 Jan 2024 18:30:02 +0100 (CET)
-Message-Id: <BBi.ZZQl.2U1cEGGzeXI.1bb4WQ@seznam.cz>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eIKxHN22"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-55679552710so14157a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 09:34:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704216850; x=1704821650; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O4H4STx0XR17w8qdB0s8hsPN6AziBcrpsvvrusepEl8=;
+        b=eIKxHN22uF4ipZEbLfODcakewE4ub9/F+bb1dYH9tupsBPW2YIaKE4oiYgqJCz1ZBm
+         ijN0/H2iRO7BrSt2f1+40qumD5oTf4Or9wps8rQfOnBnxqHB6+wd873X3BkMRIO0Bn9r
+         6ug04rSW23EUlK3iDBodaERaDBEjyo8EY9/olsXcRuysdcAIMN3rKt7ARAQ57zryxuV3
+         NNdApwgtGobV9WKWympscfUXdcTlnFu3JG6gHFOWwkTU40Y7kkVUkXC5qXnUwgggk4LR
+         phEN/r8G6RuCG8veF9m6NKn7+E0a6OcBBehZ2OW9SqhwWTrJ2TmCoCGHvRElERarsJg7
+         xPsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704216850; x=1704821650;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O4H4STx0XR17w8qdB0s8hsPN6AziBcrpsvvrusepEl8=;
+        b=g1GChVU1qTjeiNKNwSfxPXRPqHHSuyDrAKBuHHXPoHPJWabq14Q7ZiztdMjNlZrmSb
+         62BwSkOWteJCSsnHSMJeGK+zSO41exvqNdQ0bpuABty76Z+p42jPuTQEb0NcIP9mrEMO
+         xRLvt4wuKi8/kSZ2Vmfz0xtqW2WppK4je+GWxjH/7Vx+QsLBYACZ/vR3i7hG73objWWO
+         yKZ1Go53ZSe3YZ9IyJqjWZA4farxyr/tAA0A4PSJrDGSoFa06QkTfY2nkZTL+S1IPf7Z
+         2ta//TUy97AORD+1nTIBuumO102LxSd2MnmDO5B++8YH7wFjJzuNH5VGOiwFWuW7M8Xk
+         yfuw==
+X-Gm-Message-State: AOJu0YyfVyKXm4e5rCxA62a4j9/Lk0CUVA8nLRl0d/1XYQ9Afw73ydhy
+	OS6zC0C9p1AJjsLjVgikCgLG7ezG/eCvCQ4hOOQQo4AXtYQ/
+X-Google-Smtp-Source: AGHT+IFvEcIrqZ9aUSnNEmLKXBrUPXMwi6f7bv82qceodEBrqeWWCV70ozR3PyflHs50XEz9U6Tm24vgKfbfCzlUAAY=
+X-Received: by 2002:a50:ba8e:0:b0:554:228f:4b8e with SMTP id
+ x14-20020a50ba8e000000b00554228f4b8emr1136022ede.2.1704216849665; Tue, 02 Jan
+ 2024 09:34:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (szn-mime-2.1.33)
-X-Mailer: szn-UNKNOWN-unknown
-Content-Type: text/plain;
-	charset=utf-8
+MIME-Version: 1.0
+References: <127b8199-1cd4-42d7-9b2b-875abaad93fe@gmail.com> <90117449-1f4a-47d7-baf4-2ed6540bc436@gmail.com>
+In-Reply-To: <90117449-1f4a-47d7-baf4-2ed6540bc436@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Tue, 2 Jan 2024 18:33:58 +0100
+Message-ID: <CANn89i+GJOgcDWK=C0+vmomt2ShotrOKyLiXzFkfT1W8vpJv1Q@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 2/3] net: gro: parse ipv6 ext headers without
+ frag0 invalidation
+To: Richard Gobert <richardbgobert@gmail.com>
+Cc: davem@davemloft.net, dsahern@kernel.org, kuba@kernel.org, 
+	pabeni@redhat.com, shuah@kernel.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Add hw_params for modules based on Atheros QCA9377-7 chipset.
+On Tue, Jan 2, 2024 at 2:25=E2=80=AFPM Richard Gobert <richardbgobert@gmail=
+.com> wrote:
+>
+> The existing code always pulls the IPv6 header and sets the transport
+> offset initially. Then optionally again pulls any extension headers in
+> ipv6_gso_pull_exthdrs and sets the transport offset again on return from
+> that call. skb->data is set at the start of the first extension header
+> before calling ipv6_gso_pull_exthdrs, and must disable the frag0
+> optimization because that function uses pskb_may_pull/pskb_pull instead o=
+f
+> skb_gro_ helpers. It sets the GRO offset to the TCP header with
+> skb_gro_pull and sets the transport header. Then returns skb->data to its
+> position before this block.
+>
+> This commit introduces a new helper function - ipv6_gro_pull_exthdrs -
+> which is used in ipv6_gro_receive to pull ipv6 ext headers instead of
+> ipv6_gso_pull_exthdrs. Thus, there is no modification of skb->data, all
+> operations use skb_gro_* helpers, and the frag0 fast path can be taken fo=
+r
+> IPv6 packets with ext headers.
+>
+> Signed-off-by: Richard Gobert <richardbgobert@gmail.com>
+> Reviewed-by: Willem de Bruijn <willemb@google.com>
+> ---
+>  include/net/ipv6.h     |  1 +
+>  net/ipv6/ip6_offload.c | 51 +++++++++++++++++++++++++++++++++---------
+>  2 files changed, 42 insertions(+), 10 deletions(-)
+>
+> diff --git a/include/net/ipv6.h b/include/net/ipv6.h
+> index 78d38dd88aba..217240efa182 100644
+> --- a/include/net/ipv6.h
+> +++ b/include/net/ipv6.h
+> @@ -26,6 +26,7 @@ struct ip_tunnel_info;
+>  #define SIN6_LEN_RFC2133       24
+>
+>  #define IPV6_MAXPLEN           65535
+> +#define IPV6_MIN_EXTHDR_LEN    8
 
-Signed-off-by: Tomas Paukrt <tomaspaukrt@email.cz>
----
- drivers/net/wireless/ath/ath10k/core.c | 42 +++++++++++++++++++++++++++++=
-+++++
- drivers/net/wireless/ath/ath10k/hw.h   |  2 ++
- 2 files changed, 44 insertions(+)
+// Hmm see my following comment.
 
-diff --git a/drivers/net/wireless/ath/ath10k/core.c b/drivers/net/wireless=
-/ath/ath10k/core.c
-index 6cdb225..cb33c93 100644
---- a/drivers/net/wireless/ath/ath10k/core.c
-+++ b/drivers/net/wireless/ath/ath10k/core.c
-@@ -615,6 +615,48 @@ static const struct ath10k_hw_params ath10k_hw_params=
-_list[] =3D {
- 	},
- 	{
- 		.id =3D QCA9377_HW_1_1_DEV_VERSION,
-+		.dev_id =3D QCA9377_1_1_DEVICE_ID,
-+		.bus =3D ATH10K_BUS_USB,
-+		.name =3D "qca9377 hw1.1 usb",
-+		.patch_load_addr =3D QCA9377_HW_1_0_PATCH_LOAD_ADDR,
-+		.uart_pin =3D 6,
-+		.otp_exe_param =3D 0,
-+		.channel_counters_freq_hz =3D 88000,
-+		.max_probe_resp_desc_thres =3D 0,
-+		.cal_data_len =3D 8124,
-+		.fw =3D {
-+			.dir =3D QCA9377_HW_1_0_FW_DIR,
-+			.board =3D QCA9377_HW_1_0_BOARD_DATA_FILE_USB,
-+			.board_size =3D QCA9377_BOARD_DATA_SZ,
-+			.board_ext_size =3D QCA9377_BOARD_EXT_DATA_SZ,
-+		},
-+		.rx_desc_ops =3D &qca988x_rx_desc_ops,
-+		.hw_ops =3D &qca6174_ops,
-+		.hw_clk =3D qca6174_clk,
-+		.target_cpu_freq =3D 176000000,
-+		.decap_align_bytes =3D 4,
-+		.spectral_bin_discard =3D 0,
-+		.spectral_bin_offset =3D 0,
-+		.vht160_mcs_rx_highest =3D 0,
-+		.vht160_mcs_tx_highest =3D 0,
-+		.n_cipher_suites =3D 8,
-+		.ast_skid_limit =3D 0x10,
-+		.num_wds_entries =3D 0x20,
-+		.target_64bit =3D false,
-+		.rx_ring_fill_level =3D HTT_RX_RING_FILL_LEVEL,
-+		.shadow_reg_support =3D false,
-+		.rri_on_ddr =3D false,
-+		.hw_filter_reset_required =3D true,
-+		.fw_diag_ce_download =3D false,
-+		.credit_size_workaround =3D false,
-+		.tx_stats_over_pktlog =3D false,
-+		.dynamic_sar_support =3D false,
-+		.hw_restart_disconnect =3D false,
-+		.use_fw_tx_credits =3D true,
-+		.delay_unmap_buffer =3D false,
-+	},
-+	{
-+		.id =3D QCA9377_HW_1_1_DEV_VERSION,
- 		.dev_id =3D QCA9377_1_0_DEVICE_ID,
- 		.bus =3D ATH10K_BUS_SDIO,
- 		.name =3D "qca9377 hw1.1 sdio",
-diff --git a/drivers/net/wireless/ath/ath10k/hw.h b/drivers/net/wireless/a=
-th/ath10k/hw.h
-index 9643031..f5e6f8a 100644
---- a/drivers/net/wireless/ath/ath10k/hw.h
-+++ b/drivers/net/wireless/ath/ath10k/hw.h
-@@ -29,6 +29,7 @@ enum ath10k_bus {
- #define QCA9888_2_0_DEVICE_ID	(0x0056)
- #define QCA9984_1_0_DEVICE_ID	(0x0046)
- #define QCA9377_1_0_DEVICE_ID   (0x0042)
-+#define QCA9377_1_1_DEVICE_ID   (0x9378)
- #define QCA9887_1_0_DEVICE_ID   (0x0050)
- 
- /* QCA988X 1.0 definitions (unsupported) */
-@@ -121,6 +122,7 @@ enum qca9377_chip_id_rev {
- /* QCA9377 1.0 definitions */
- #define QCA9377_HW_1_0_FW_DIR          ATH10K_FW_DIR "/QCA9377/hw1.0"
- #define QCA9377_HW_1_0_BOARD_DATA_FILE "board.bin"
-+#define QCA9377_HW_1_0_BOARD_DATA_FILE_USB "board-usb.bin"
- #define QCA9377_HW_1_0_PATCH_LOAD_ADDR	0x1234
- 
- /* QCA4019 1.0 definitions */
--- 
-2.7.4
+>
+>  /*
+>   *     NextHeader field of IPv6 header
+> diff --git a/net/ipv6/ip6_offload.c b/net/ipv6/ip6_offload.c
+> index 0e0b5fed0995..c07111d8f56a 100644
+> --- a/net/ipv6/ip6_offload.c
+> +++ b/net/ipv6/ip6_offload.c
+> @@ -37,6 +37,40 @@
+>                 INDIRECT_CALL_L4(cb, f2, f1, head, skb);        \
+>  })
+>
+> +static int ipv6_gro_pull_exthdrs(struct sk_buff *skb, int off, int proto=
+)
+> +{
+> +       const struct net_offload *ops =3D NULL;
+> +       struct ipv6_opt_hdr *opth;
+> +
+> +       for (;;) {
+> +               int len;
+> +
+> +               ops =3D rcu_dereference(inet6_offloads[proto]);
+> +
+> +               if (unlikely(!ops))
+> +                       break;
+> +
+> +               if (!(ops->flags & INET6_PROTO_GSO_EXTHDR))
+> +                       break;
+> +
+> +               opth =3D skb_gro_header(skb, off + IPV6_MIN_EXTHDR_LEN, o=
+ff);
 
+I do not see a compelling reason for adding yet another constant here.
+
+I would stick to
+
+   opth =3D skb_gro_header(skb, off + sizeof(*opth), off);
+
+Consistency with similar helpers is desirable.
+
+> +               if (unlikely(!opth))
+> +                       break;
+> +
+> +               len =3D ipv6_optlen(opth);
+> +
+> +               opth =3D skb_gro_header(skb, off + len, off);
+
+Note this call will take care of precise pull.
+
+> +               if (unlikely(!opth))
+> +                       break;
+> +               proto =3D opth->nexthdr;
+> +
+> +               off +=3D len;
+> +       }
+> +
+> +       skb_gro_pull(skb, off - skb_network_offset(skb));
+> +       return proto;
+> +}
+> +
+>  static int ipv6_gso_pull_exthdrs(struct sk_buff *skb, int proto)
+>  {
+>         const struct net_offload *ops =3D NULL;
+> @@ -203,28 +237,25 @@ INDIRECT_CALLABLE_SCOPE struct sk_buff *ipv6_gro_re=
+ceive(struct list_head *head,
+>                 goto out;
+>
+>         skb_set_network_header(skb, off);
+> -       skb_gro_pull(skb, sizeof(*iph));
+> -       skb_set_transport_header(skb, skb_gro_offset(skb));
+>
+> -       flush +=3D ntohs(iph->payload_len) !=3D skb_gro_len(skb);
+> +       flush +=3D ntohs(iph->payload_len) !=3D skb->len - hlen;
+>
+>         proto =3D iph->nexthdr;
+>         ops =3D rcu_dereference(inet6_offloads[proto]);
+>         if (!ops || !ops->callbacks.gro_receive) {
+> -               pskb_pull(skb, skb_gro_offset(skb));
+> -               skb_gro_frag0_invalidate(skb);
+> -               proto =3D ipv6_gso_pull_exthdrs(skb, proto);
+> -               skb_gro_pull(skb, -skb_transport_offset(skb));
+> -               skb_reset_transport_header(skb);
+> -               __skb_push(skb, skb_gro_offset(skb));
+> +               proto =3D ipv6_gro_pull_exthdrs(skb, hlen, proto);
+>
+>                 ops =3D rcu_dereference(inet6_offloads[proto]);
+>                 if (!ops || !ops->callbacks.gro_receive)
+>                         goto out;
+>
+> -               iph =3D ipv6_hdr(skb);
+> +               iph =3D skb_gro_network_header(skb);
+> +       } else {
+> +               skb_gro_pull(skb, sizeof(*iph));
+>         }
+>
+> +       skb_set_transport_header(skb, skb_gro_offset(skb));
+> +
+>         NAPI_GRO_CB(skb)->proto =3D proto;
+>
+>         flush--;
+> --
+> 2.36.1
+>
