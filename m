@@ -1,29 +1,31 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A422EDF5D;
-	Tue,  2 Jan 2024 09:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D5386AA7;
+	Tue,  2 Jan 2024 09:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="VgRSL4Cz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1704187576; x=1704792376; i=markus.elfring@web.de;
-	bh=hm9XvsB8Hc+GdCwiF3RHaf2+W9Sx9+rzWWOPBtlg8U0=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=VgRSL4Czpr9uuX6BZvWm6E0gbIKeKF81KU2N7arwbRFR5No28HHwxGXvX3eL0/xX
-	 ADPm6qFgZ+PJjFjBABOeiQq/yOmmzoq1UjKm44h7B86l+W5O/BJrpgAXE9Bp7tOzk
-	 xkmSrYbwevpo0ANCoT5mOcvTi6xDfDAn/fwDvE+3qtKiFiQjJDPbD6mwVQBuiEPi7
-	 fCrjUwMhDHmUKSDAJEtzdmjHevc8Y3Xm3tWr2JLFBF0dSZ4NbpAl1s0DCJhosWR4L
-	 QdoWKZ2iRFuS2nozEF2jHLBumDA+/BPsb29VkO/d7FRJu++S3khtFR8kzBqlAWvO5
-	 8eukZlFUxjOAWTODNA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N0Zns-1qzTBD0WHs-00wanB; Tue, 02
- Jan 2024 10:26:15 +0100
-Message-ID: <f96d8343-e7b3-491d-b191-f2ddb4ba5269@web.de>
-Date: Tue, 2 Jan 2024 10:26:12 +0100
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="nPgXO884"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1704187707;
+	bh=gn5FpuH9CD4cUJLZXPICGs3i6tDEmWT7HtO3PfLeCgc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nPgXO884a+Eq0z4hmL++VX1/Z7gHK4mqbGOWWtBUKM14g7nEmlHwqdEit8GZIZ2Rv
+	 pNv6IFOdRH3iCg8Q4lzHUlpfv3V4DBbtr3+BMJe+3voFUhXIq2+yDMXGPDu4YjSqPN
+	 aj9ExNclKXsReyrqbE0W7FZ8K1JpLFHySrbLrS/MRWrtQ5hZxParUbjbokUjIUUlEp
+	 TnAJ1M3gSGiodthnO2d1QWOo3HyIN3RygaD8fPeCedPokPUCX/dJIOcxHr3AmP/Z1Y
+	 Lr3OLY22zZmPhDT2w2dgocdYqvNnv+nEOswkadZJJrjnTxQUzuyPo3tvY23D1GwsUb
+	 otaPuoKMDxvfQ==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id D7B8037813DB;
+	Tue,  2 Jan 2024 09:28:26 +0000 (UTC)
+Message-ID: <39d7a40b-3618-4746-9229-c9dbe1e19d2e@collabora.com>
+Date: Tue, 2 Jan 2024 10:28:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -31,66 +33,62 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sunrpc: Improve exception handling in krb5_etm_checksum()
-Content-Language: en-GB
-To: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
- netdev@vger.kernel.org, kernel-janitors@vger.kernel.org
-Cc: Anna Schumaker <anna@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
- Dai Ngo <Dai.Ngo@oracle.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Herbert Xu
- <herbert@gondor.apana.org.au>, Jakub Kicinski <kuba@kernel.org>,
- Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
- Olga Kornievskaia <kolga@netapp.com>, Paolo Abeni <pabeni@redhat.com>,
- Simo Sorce <simo@redhat.com>, Tom Talpey <tom@talpey.com>,
- Trond Myklebust <trond.myklebust@hammerspace.com>,
- LKML <linux-kernel@vger.kernel.org>
-References: <9561c78e-49a2-430c-a611-52806c0cdf25@web.de>
- <ZZIhEJK68Sapos2t@tissot.1015granger.net>
- <4307bce9-ccbd-4bc5-aa8e-b618a1664cbe@web.de>
- <ZZLuaRwSZI16EKdP@tissot.1015granger.net>
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <ZZLuaRwSZI16EKdP@tissot.1015granger.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:fHraEXCZs9bFHLtOOPd8xSkwRa+bWUmDA46Cp6Cx+X+wgYf5Du9
- kWjIIkrOvlTarY4rBGy9eMpWqFRSmflO8KGY2pJiVlfFYYnbRCXVMXZR4G79TElPx1ek8yi
- 0ZPOUb32uwUl3TE2JjWkw99MUtTGbQtMol7sDX7byJhEsqJE+3Y8UPaerVS1DdeV2c/N8Xb
- G7kAL10sJ7zGV86fLOdSQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:fOO4Nl2obn4=;zj++G77n+wQ4X6DGe67n4Af16x/
- BnxbsJbuio2eixsTb/MVEc0LnPGtsEU0hDvLoOhNCfqMd7Dd13yjijAJ8kxPmLJNwKLmbU+9g
- GTolCHXPMbY/Fb1mF5CbvSORa/KRBEaHJWhfb/4WMwRJuQwOoOWYeXR1TpZSbbzKzk7LewqFN
- 7kteIP6AgATwYi17wcLWY1vD5T9gPjz3X+iAXtRdZ0yDP64EzpYXzm6LXVsz92xpbVcKqLzzv
- Hvtn/gxVx39NSfMEIp6r3L2V3ZWwSwkl+4OEj5VAiHBbZ+yH53hqwyOCkfmSKcgEz8RviyJ1V
- 5jQN984jOSpSA2gGVZS9cj6t04UvaG0wyD56HlFkzqtMMr6MVPTj66Rd7mb1fD20vsZVixyVR
- 8fgs5YqgdPyan4BxcLC6QJ4WRNMYoPq9rd76GF5kkaKZ7Ku+KQusyxUCoD+8wfObSpAERXFbY
- AGQaJPGz4xsdieT3b7tU0hlZlRLfUelGl/lXlpo7ByhI9sBpXS2RTaP7nfU45mREQjoLeNUt9
- 8m39WxYJ/yqV3TZe5ya/sIAX7zJYXOaHJe0y7u/6webrFvce621s/Wts162oEq6jPgTwx0lgU
- hds8POQUd39R+xuQqijLrIX9uV1L3peqvWQ0ewkULKfYaAGzn5ICa+JOp46cuBKeFggicAB7C
- maQcifEoTsdkGlPVgMN+MQoedwh2aq3FjAL4TuvpXXPRFtJHKuwzVnuoAoFWUkL4CJEf6EO2Q
- CVda/bE9wfp3N1S68w8ZirbZhP0DZM1oCJjI7sd3oV6aH3kbagluVHtvRnIjm5uwKMEeM6KQ/
- qUOSCegDKHcIqxgQnkbePreeh4ehreXnLvBRHjgrdnTae7B7m/5p6mZLqPpcI7M/xzD5NQpOq
- JF+JiTG4++QKzdjT/h7YW1G1qrD6hndR32dUK4msLr/io/C8guszxK/7TMZ+0BodcrdZC7N59
- 7Y3h44frkfzqJfKJrthHeA8l8BM=
+Subject: Re: [PATCH 2/2] arm64: dts: mediatek: mt8186: Add jpgenc node
+Content-Language: en-US
+To: Eugen Hristev <eugen.hristev@collabora.com>, bin.liu@mediatek.com,
+ matthias.bgg@gmail.com, linux-media@vger.kernel.org,
+ devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org,
+ Allen-KH Cheng <allen-kh.cheng@mediatek.com>,
+ Hsin-Yi Wang <hsinyi@chromium.org>, Max Staudt <mstaudt@chromium.org>,
+ Ricardo Ribalda <ribalda@chromium.org>
+References: <20231227130812.148914-1-eugen.hristev@collabora.com>
+ <20231227130812.148914-2-eugen.hristev@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20231227130812.148914-2-eugen.hristev@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-=E2=80=A6
-> +++ b/net/sunrpc/auth_gss/gss_krb5_crypto.c
-=E2=80=A6
-> @@ -970,8 +969,7 @@ u32 krb5_etm_checksum(struct crypto_sync_skcipher *c=
-ipher,
->
->  out_free_ahash:
->  	ahash_request_free(req);
-> -out_free_mem:
-> -	kfree(iv);
-> +out_free_cksumdata:
->  	kfree_sensitive(checksumdata);
->  	return err ? GSS_S_FAILURE : GSS_S_COMPLETE;
->  }
-=E2=80=A6
+Il 27/12/23 14:08, Eugen Hristev ha scritto:
+> From: Allen-KH Cheng <allen-kh.cheng@mediatek.com>
+> 
+> Add JPEG encoder node.
+> 
+> Signed-off-by: Allen-KH Cheng <allen-kh.cheng@mediatek.com>
+> Reviewed-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> Reviewed-by: Max Staudt <mstaudt@chromium.org>
+> Tested-by: Max Staudt <mstaudt@chromium.org>
+> Reviewed-by: Ricardo Ribalda <ribalda@chromium.org>
+> [eugen.hristev@collabora.com: minor cleanup]
+> Signed-off-by: Eugen Hristev <eugen.hristev@collabora.com>
+> ---
+>   arch/arm64/boot/dts/mediatek/mt8186.dtsi | 13 +++++++++++++
+>   1 file changed, 13 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8186.dtsi b/arch/arm64/boot/dts/mediatek/mt8186.dtsi
+> index e451b6c8cd9e..ef1b269f9184 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8186.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8186.dtsi
+> @@ -2054,6 +2054,19 @@ venc: video-encoder@17020000 {
+>   			mediatek,scp = <&scp>;
+>   		};
+>   
+> +		jpgenc: jpgenc@17030000 {
 
-How do you think about to use the identifier =E2=80=9Cout_free_checksumdat=
-a=E2=80=9D?
+Can we please call this jpeg-encoder@17030000 instead?
 
-Regards,
-Markus
+> +			compatible = "mediatek,mt8186-jpgenc", "mediatek,mtk-jpgenc";
+> +			reg = <0 0x17030000 0 0x10000>;
+> +			interrupts = <GIC_SPI 245 IRQ_TYPE_LEVEL_HIGH 0>;
+> +			clocks = <&vencsys CLK_VENC_CKE2_JPGENC>;
+> +			clock-names = "jpgenc";
+
+clock-names ...
+iommus ....
+power-domains ...
+
+Cheers,
+Angelo
+
+
