@@ -1,56 +1,56 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC73414AB6
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 14:03:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5554156DC
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 14:03:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r40Mf/JQ"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40d76923ec4so33209105e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 06:03:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jBAKOIba"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3367f8f8cb0so9675965f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 06:03:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704204221; x=1704809021; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6jx4kCirWEKyRJhRB+hSiaSLY7KMEDa3xsSh/eHvycU=;
-        b=r40Mf/JQ8+S9anS0pEeiVcybfeGVCYdlQc6lmRl02KSPCvVbP82gGDkmJ4hNOXYLxV
-         p5cFAjatbjLmRQFD61ElP0Dy7QDZeWNhyE+HmcB47801L+bz2YodaCmfxIg8PzLe7Tkf
-         4hgPu+njE8Dup8uUKhviNERAEg+VB6aNjy2Lqs7Z/cEiyhXKvtdozU+vD8zolBIiuI0G
-         /w7K+6nBYQAaK7sf1qptFSfU/XRxoemRC7SK07i9Kh0ECv/yKsSd5qNdbyHQDJ2TDhhH
-         wUo+ZU6bofGlkF+E8GgnjpfUiG3shUxdoKLN9uBV0esjmMeWrqA2/M0i1KtOXxiPUyb+
-         1KLQ==
+        d=linaro.org; s=google; t=1704204227; x=1704809027; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GeJuJizoWeAs29loa6MRIjI0gunccegFhfT3lI/DWIs=;
+        b=jBAKOIba/xIr+7nD78XhYRVDqnsegy2GBhdvfeFgQsHKgF2I974MshoM8DtnyAFOIu
+         KU8JsFE1Q9CmjjiLpLFZ0AzfC5oibDyIsvgN2MvLuGSDqLO+SR5xX1sAbgYLFOhkACE7
+         IsQb5ZfeX7C9jTzARBmmNWP74Lgt1YQl7wTwlqvK0NfRGKK2oJtF6EzfciDD6XexbNsh
+         tpgh4KhH7EXfIFcHx3Z2TOi1Q7fTZqBmPeTatbwIwijtYpC2Z44uBuZ2XYwQhjKrZo4g
+         ujyMKcMjs4jwiTShNM1KrRSXE2if/ODf+vXiN/lEKthv1dGgzE5kxwCgnsyfJNlefz7o
+         PDEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704204221; x=1704809021;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6jx4kCirWEKyRJhRB+hSiaSLY7KMEDa3xsSh/eHvycU=;
-        b=ibI7/xHaWhEiHUJsk98aaa70mQrJ+trmX3jub6+CDvcSsfJc3chrQTYM4iUnZDABcL
-         mI9F2VWfL4UnbeqCJKgzw3OL6Ow/HpKWM8mh5Fe9yhKZ8EjdCmW6mN1r3YGN/JGAXtA+
-         tCVZXvQE/I8xe1imRTKbxninSn0UrwSRiMLpsUuBt4ItWK3GHMFeP93M5mjqEdABm/0f
-         EBAV6tLw91Eax9BdYGv27bFl9GTOdSNJbYHSYjHrTUDCJy1hY9MTC3WmRyz2wmozLoBm
-         oWHwSCZjhAuCrpv50mXJN2YQ8WGMb2fNztqgwxwyTtpsXQrcMmYn05n4soxIwPKKFBqq
-         7Z/A==
-X-Gm-Message-State: AOJu0Yw+Np4ndkeEvDJJbrxlMc6MIa9otuaVn35i1aV0yJsTnOgQa+FP
-	2fLorXHLJq62YtVDFLOdOHTlVLjRP01Zew==
-X-Google-Smtp-Source: AGHT+IGWYIKvLFu7hD6N6JHD2l27CY/uzIzKJYH+mrqppO697Hszjxa8CpubpAtiUgM0X6ER68IsQA==
-X-Received: by 2002:a05:600c:538e:b0:40d:7a8e:3476 with SMTP id hg14-20020a05600c538e00b0040d7a8e3476mr3382517wmb.20.1704204221326;
-        Tue, 02 Jan 2024 06:03:41 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704204227; x=1704809027;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GeJuJizoWeAs29loa6MRIjI0gunccegFhfT3lI/DWIs=;
+        b=MvA5odxPW+ggVO2SmDt8x+h0Gy7/vOG215acPKzeIsdcvOpptlAJkS6Ykjk564iuSw
+         tklk7e0sdLMnXbdvXNv2+DOr1tjcUISt1/mhlUf0bg5nYdUNrc7vriwd/Ow5PmN8o91p
+         1oHby30+l81uxH9EGhywKty2kqxjLTLK/XCHIEBvHBiLeJw1Ua66SuRb6EFUxGtq6LjG
+         VdP2+XSDUGFhgCIxL4BXdEXEePCoLnaBSVgZSSU8+BZ2Hs/3cNyB1Y12jPrNxCNIEzAf
+         LwNaX9GX/o0Gw9RZNASATQQaaIj27nzq4bgqS7uL4S9cW3zQC4vCsa28goCQ5aR4wEbU
+         +LFQ==
+X-Gm-Message-State: AOJu0Yxa21Xv3OxCEWyP3NaTlxYCmRooeex4L5Ao7fpEYS1yxu5tbzfV
+	KD9aCSW2XD8wa2KcDwNdk/y/uVUCaaqKY9xEyiMxN635KaY=
+X-Google-Smtp-Source: AGHT+IE/lxBI2psr/eyrLZFMSVyOi8+3ecJpLXDxAYrw3nUMQDDIqSUNcdGH6FQb1H0HxA0PUgdCHw==
+X-Received: by 2002:a5d:5145:0:b0:336:7f03:4af with SMTP id u5-20020a5d5145000000b003367f0304afmr10379008wrt.123.1704204226988;
+        Tue, 02 Jan 2024 06:03:46 -0800 (PST)
 Received: from localhost ([102.140.209.237])
-        by smtp.gmail.com with ESMTPSA id q17-20020a05600c46d100b0040d802a7619sm13969451wmo.38.2024.01.02.06.03.40
+        by smtp.gmail.com with ESMTPSA id q17-20020adfcd91000000b003362d0eefd3sm28380018wrj.20.2024.01.02.06.03.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jan 2024 06:03:41 -0800 (PST)
-Date: Tue, 2 Jan 2024 16:24:29 +0300
+        Tue, 02 Jan 2024 06:03:46 -0800 (PST)
+Date: Tue, 2 Jan 2024 16:29:12 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Nathan DSilva <expitau@gmail.com>
-Cc: gregkh@linuxfoundation.org, philipp.g.hortmann@gmail.com,
-	tdavies@darkphysics.net, error27@gmail.com,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: rtl8192e: Add blank line after declarations
-Message-ID: <556cb2ae-4402-4f69-ba41-fa212deb2c78@suswa.mountain>
-References: <ZXvevJ2vEEQ92rau@oatmeal.darkphysics>
- <20231215152918.532037-1-expitau@gmail.com>
+To: oe-kbuild@lists.linux.dev, Edward Adam Davis <eadavis@qq.com>,
+	syzbot+553d90297e6d2f50dbc7@syzkaller.appspotmail.com
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	jfs-discussion@lists.sourceforge.net, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, shaggy@kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] jfs: fix array-index-out-of-bounds in diNewExt
+Message-ID: <828db1e9-9b98-4797-bd23-08fbae1260d3@suswa.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,13 +59,121 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231215152918.532037-1-expitau@gmail.com>
+In-Reply-To: <tencent_B86ECD2ECECC92A7ED86EF92D0064A499206@qq.com>
 
-Also send the v3 as a new thread.  See my blog for more details?
+Hi Edward,
 
-https://staticthinking.wordpress.com/2022/07/27/how-to-send-a-v2-patch
+kernel test robot noticed the following build warnings:
 
-regards,
-dan carpenter
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Edward-Adam-Davis/jfs-fix-array-index-out-of-bounds-in-diNewExt/20231212-095530
+base:   https://github.com/kleikamp/linux-shaggy jfs-next
+patch link:    https://lore.kernel.org/r/tencent_B86ECD2ECECC92A7ED86EF92D0064A499206%40qq.com
+patch subject: [PATCH] jfs: fix array-index-out-of-bounds in diNewExt
+config: i386-randconfig-141-20231212 (https://download.01.org/0day-ci/archive/20231214/202312142348.6HRZtXTB-lkp@intel.com/config)
+compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
+reproduce: (https://download.01.org/0day-ci/archive/20231214/202312142348.6HRZtXTB-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202312142348.6HRZtXTB-lkp@intel.com/
+
+New smatch warnings:
+fs/jfs/jfs_imap.c:2213 diNewExt() error: buffer overflow 'imap->im_imap.in_agctl' 128 <= 128
+
+Old smatch warnings:
+fs/jfs/jfs_imap.c:2229 diNewExt() error: buffer overflow 'imap->im_imap.in_agctl' 128 <= 128
+fs/jfs/jfs_imap.c:2304 diNewExt() error: buffer overflow 'imap->im_imap.in_agctl' 128 <= 128
+fs/jfs/jfs_imap.c:2318 diNewExt() error: buffer overflow 'imap->im_imap.in_agctl' 128 <= 128
+fs/jfs/jfs_imap.c:2330 diNewExt() error: buffer overflow 'imap->im_imap.in_agctl' 128 <= 128
+fs/jfs/jfs_imap.c:2332 diNewExt() error: buffer overflow 'imap->im_imap.in_agctl' 128 <= 128
+fs/jfs/jfs_imap.c:2363 diNewExt() error: buffer overflow 'imap->im_imap.in_agctl' 128 <= 128
+fs/jfs/jfs_imap.c:2364 diNewExt() error: buffer overflow 'imap->im_imap.in_agctl' 128 <= 128
+
+vim +2213 fs/jfs/jfs_imap.c
+
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2152  static int diNewExt(struct inomap * imap, struct iag * iagp, int extno)
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2153  {
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2154  	int agno, iagno, fwd, back, freei = 0, sword, rc;
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2155  	struct iag *aiagp = NULL, *biagp = NULL, *ciagp = NULL;
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2156  	struct metapage *amp, *bmp, *cmp, *dmp;
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2157  	struct inode *ipimap;
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2158  	s64 blkno, hint;
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2159  	int i, j;
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2160  	u32 mask;
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2161  	ino_t ino;
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2162  	struct dinode *dp;
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2163  	struct jfs_sb_info *sbi;
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2164  
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2165  	/* better have free extents.
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2166  	 */
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2167  	if (!iagp->nfreeexts) {
+eb8630d7d2fd13 Joe Perches       2013-06-04  2168  		jfs_error(imap->im_ipimap->i_sb, "no free extents\n");
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2169  		return -EIO;
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2170  	}
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2171  
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2172  	/* get the inode map inode.
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2173  	 */
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2174  	ipimap = imap->im_ipimap;
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2175  	sbi = JFS_SBI(ipimap->i_sb);
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2176  
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2177  	amp = bmp = cmp = NULL;
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2178  
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2179  	/* get the ag and iag numbers for this iag.
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2180  	 */
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2181  	agno = BLKTOAG(le64_to_cpu(iagp->agstart), sbi);
+f93b91b82fcf16 Edward Adam Davis 2023-12-12  2182  	if (agno > MAXAG || agno < 0)
+
+The commit introduces this agno > MAXAG comparison.  But Smatch says
+that it should be agno >= MAXAG.
+
+f93b91b82fcf16 Edward Adam Davis 2023-12-12  2183  		return -EIO;
+f93b91b82fcf16 Edward Adam Davis 2023-12-12  2184  
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2185  	iagno = le32_to_cpu(iagp->iagnum);
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2186  
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2187  	/* check if this is the last free extent within the
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2188  	 * iag.  if so, the iag must be removed from the ag
+25985edcedea63 Lucas De Marchi   2011-03-30  2189  	 * free extent list, so get the iags preceding and
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2190  	 * following the iag on this list.
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2191  	 */
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2192  	if (iagp->nfreeexts == cpu_to_le32(1)) {
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2193  		if ((fwd = le32_to_cpu(iagp->extfreefwd)) >= 0) {
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2194  			if ((rc = diIAGRead(imap, fwd, &amp)))
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2195  				return (rc);
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2196  			aiagp = (struct iag *) amp->data;
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2197  		}
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2198  
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2199  		if ((back = le32_to_cpu(iagp->extfreeback)) >= 0) {
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2200  			if ((rc = diIAGRead(imap, back, &bmp)))
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2201  				goto error_out;
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2202  			biagp = (struct iag *) bmp->data;
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2203  		}
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2204  	} else {
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2205  		/* the iag has free extents.  if all extents are free
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2206  		 * (as is the case for a newly allocated iag), the iag
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2207  		 * must be added to the ag free extent list, so get
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2208  		 * the iag at the head of the list in preparation for
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2209  		 * adding this iag to this list.
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2210  		 */
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2211  		fwd = back = -1;
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2212  		if (iagp->nfreeexts == cpu_to_le32(EXTSPERIAG)) {
+^1da177e4c3f41 Linus Torvalds    2005-04-16 @2213  			if ((fwd = imap->im_agctl[agno].extfree) >= 0) {
+
+If agno == MAXAG then we're out of bounds here.
+
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2214  				if ((rc = diIAGRead(imap, fwd, &amp)))
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2215  					goto error_out;
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2216  				aiagp = (struct iag *) amp->data;
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2217  			}
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2218  		}
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2219  	}
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2220  
+^1da177e4c3f41 Linus Torvalds    2005-04-16  2221  	/* check if the iag has no free inodes.  if so, the iag
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
