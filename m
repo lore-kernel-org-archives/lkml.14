@@ -1,129 +1,113 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mail-m118196.ym.163.com (mail-m118196.ym.163.com [115.236.118.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F00EBF;
-	Tue,  2 Jan 2024 03:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MSH5f8Dt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1704167367;
-	bh=fHH2oL5nwatjdyOgNtoiTqFaYGBo4OoqMQjSZLVF+N8=;
-	h=Date:From:To:Cc:Subject:From;
-	b=MSH5f8DtAwJHOoRk1DPqduTTJeF/Xi4jsKsBhsoW/i3fEs/aBNKK6AVpeWxcc+iKV
-	 I2UIs0/oSe5yE18b722exYGgudFhIYW8TDtQKFftE8Dn81d4MRphXKNHekMZyUlKUv
-	 hSqiun8yL48o18f0r+NUlHaRN/zhKZMDRmdnL3qmZCyI1Ub8m6LZR+ljVH8zqPHKQn
-	 jIopWmPOwBOTkJEZWj9vZRrHziA5dhs7De3oMxOSnlYOf2BzGBOrFa4cH0SQ4BAU7A
-	 FMzXrd7rg7r0Y7FI8vqoGaXWhFdv2x000cS9wZjbM22IOZL+RbhG5+UW4JFq0RNAZb
-	 FyMdXwfhfxtOw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4T3zPL2C8kz4wxX;
-	Tue,  2 Jan 2024 14:49:26 +1100 (AEDT)
-Date: Tue, 2 Jan 2024 14:49:24 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Dan Williams <dan.j.williams@intel.com>, "Rafael J. Wysocki"
- <rjw@rjwysocki.net>
-Cc: Dave Jiang <dave.jiang@intel.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, "Rafael J. Wysocki"
- <rafael.j.wysocki@intel.com>
-Subject: linux-next: manual merge of the cxl tree with the pm tree
-Message-ID: <20240102144924.1fdfa044@canb.auug.org.au>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58CDA20F8;
+	Tue,  2 Jan 2024 03:53:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sangfor.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sangfor.com.cn
+Received: from ubuntu.localdomain (unknown [111.222.250.119])
+	by mail-m12750.qiye.163.com (Hmail) with ESMTPA id 2C2E2F2038A;
+	Tue,  2 Jan 2024 11:43:57 +0800 (CST)
+From: Shifeng Li <lishifeng@sangfor.com.cn>
+To: jgg@ziepe.ca,
+	leon@kernel.org,
+	wenglianfa@huawei.com,
+	gustavoars@kernel.org
+Cc: linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Shifeng Li <lishifeng@sangfor.com.cn>,
+	Shifeng Li <lishifeng1992@126.com>
+Subject: [PATCH] RDMA/device: Fix a race between mad_client and cm_client init
+Date: Mon,  1 Jan 2024 19:43:35 -0800
+Message-Id: <20240102034335.34842-1-lishifeng@sangfor.com.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/f6bH5xUlDv/hJA7yK.XU.zQ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDTx9CVkpKH0NDHkNJGhhNS1UTARMWGhIXJBQOD1
+	lXWRgSC1lBWUpKSlVJSUlVSU5LVUpKQllXWRYaDxIVHRRZQVlPS0hVSk1PSUxOVUpLS1VKQktLWQ
+	Y+
+X-HM-Tid: 0a8cc8455a43b21dkuuu2c2e2f2038a
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6P1E6Vio5NDw8FUkqMD81TTgT
+	LRcKCi1VSlVKTEtPSk1MS0hDS0hNVTMWGhIXVRcSCBMSHR4VHDsIGhUcHRQJVRgUFlUYFUVZV1kS
+	C1lBWUpKSlVJSUlVSU5LVUpKQllXWQgBWUFITUlPNwY+
 
---Sig_/f6bH5xUlDv/hJA7yK.XU.zQ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The mad_client will be initialized in enable_device_and_get(), while the
+devices_rwsem will be downgraded to a read semaphore. There is a window
+that leads to the failed initialization for cm_client, since it can not
+get matched mad port from ib_mad_port_list, and the matched mad port will
+be added to the list after that.
 
-Hi all,
+    mad_client    |                       cm_client
+------------------|--------------------------------------------------------
+ib_register_device|
+enable_device_and_get
+down_write(&devices_rwsem)
+xa_set_mark(&devices, DEVICE_REGISTERED)
+downgrade_write(&devices_rwsem)
+                  |
+                  |ib_cm_init
+                  |ib_register_client(&cm_client)
+                  |down_read(&devices_rwsem)
+                  |xa_for_each_marked (&devices, DEVICE_REGISTERED)
+                  |add_client_context
+                  |cm_add_one
+                  |ib_register_mad_agent
+                  |ib_get_mad_port
+                  |__ib_get_mad_port
+                  |list_for_each_entry(entry, &ib_mad_port_list, port_list)
+                  |return NULL
+                  |up_read(&devices_rwsem)
+                  |
+add_client_context|
+ib_mad_init_device|
+ib_mad_port_open  |
+list_add_tail(&port_priv->port_list, &ib_mad_port_list)
+up_read(&devices_rwsem)
+                  |
 
-Today's linux-next merge of the cxl tree got a conflict in:
+Fix it by using the devices_rwsem write semaphore to protect the mad_client
+init flow in enable_device_and_get().
 
-  include/linux/acpi.h
+Fixes: d0899892edd0 ("RDMA/device: Provide APIs from the core code to help unregistration")
+Cc: Shifeng Li <lishifeng1992@126.com>
+Signed-off-by: Shifeng Li <lishifeng@sangfor.com.cn>
+---
+ drivers/infiniband/core/device.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-between commit:
+diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
+index 67bcea7a153c..85782786993d 100644
+--- a/drivers/infiniband/core/device.c
++++ b/drivers/infiniband/core/device.c
+@@ -1315,12 +1315,6 @@ static int enable_device_and_get(struct ib_device *device)
+ 	down_write(&devices_rwsem);
+ 	xa_set_mark(&devices, device->index, DEVICE_REGISTERED);
+ 
+-	/*
+-	 * By using downgrade_write() we ensure that no other thread can clear
+-	 * DEVICE_REGISTERED while we are completing the client setup.
+-	 */
+-	downgrade_write(&devices_rwsem);
+-
+ 	if (device->ops.enable_driver) {
+ 		ret = device->ops.enable_driver(device);
+ 		if (ret)
+@@ -1337,7 +1331,7 @@ static int enable_device_and_get(struct ib_device *device)
+ 	if (!ret)
+ 		ret = add_compat_devs(device);
+ out:
+-	up_read(&devices_rwsem);
++	up_write(&devices_rwsem);
+ 	return ret;
+ }
+ 
+-- 
+2.25.1
 
-  f47507988145 ("thermal: ACPI: Move the ACPI thermal library to drivers/ac=
-pi/")
-
-from the pm tree and commit:
-
-  ca53543d8e34 ("acpi: numa: Add helper function to retrieve the performanc=
-e attributes")
-
-from the cxl tree.
-
-Dan, thanks for the heads up.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/linux/acpi.h
-index 118a18b7ff84,8b0761c682f9..000000000000
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@@ -424,13 -425,16 +425,23 @@@ extern int acpi_blacklisted(void)
-  extern void acpi_osi_setup(char *str);
-  extern bool acpi_osi_is_win8(void);
- =20
- +#ifdef CONFIG_ACPI_THERMAL_LIB
- +int thermal_acpi_active_trip_temp(struct acpi_device *adev, int id, int *=
-ret_temp);
- +int thermal_acpi_passive_trip_temp(struct acpi_device *adev, int *ret_tem=
-p);
- +int thermal_acpi_hot_trip_temp(struct acpi_device *adev, int *ret_temp);
- +int thermal_acpi_critical_trip_temp(struct acpi_device *adev, int *ret_te=
-mp);
- +#endif
- +
-+ #ifdef CONFIG_ACPI_HMAT
-+ int acpi_get_genport_coordinates(u32 uid, struct access_coordinate *coord=
-);
-+ #else
-+ static inline int acpi_get_genport_coordinates(u32 uid,
-+ 					       struct access_coordinate *coord)
-+ {
-+ 	return -EOPNOTSUPP;
-+ }
-+ #endif
-+=20
-  #ifdef CONFIG_ACPI_NUMA
-  int acpi_map_pxm_to_node(int pxm);
-  int acpi_get_node(acpi_handle handle);
-
---Sig_/f6bH5xUlDv/hJA7yK.XU.zQ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWTh8QACgkQAVBC80lX
-0GxdPAgAhA+s3BHKsaU1OvdOYJ4rEh13P2Xvl3m1AR36VmgCbDO6QtLramQl5dW8
-V7dpjHs5wJbifzj2HLfhsL/jHFgykZOMvdkBK8N/ZDmW3TQ5xNKbrKWFx7HCSdkg
-BgH3OAHkYJI2y5glhMFm4UyBy0uGr7kqzpRzFA21/35q1BRCzlcwJI7qT9tB8Dn1
-gyNVfDt0wZrI20cg7EizQyVbraTPzq43xWX3FsnJjyh8XWi4kgR4mp7Q3llJhRld
-4UkExckcrVBK2YPAcovWDY1RGVoO5nHlQVgSg8xk5Q91RvdNYmRXqU0tR/WNg9mc
-cb1MeiKVjgq9Nuny8pt0WjYsSZbAkQ==
-=OyXZ
------END PGP SIGNATURE-----
-
---Sig_/f6bH5xUlDv/hJA7yK.XU.zQ--
