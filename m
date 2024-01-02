@@ -1,81 +1,108 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C1712E5E;
-	Tue,  2 Jan 2024 14:31:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB88110955;
+	Tue,  2 Jan 2024 14:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="fpZGWbVe"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7F57A40E0197;
-	Tue,  2 Jan 2024 14:31:25 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id jqDK2FPNrzIb; Tue,  2 Jan 2024 14:31:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1704205882; bh=3RAVNM7LYaoLfzaXssXlRtBXH/zpslXjygklhi3m5ng=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fpZGWbVemrzkfBr14FKIUKe0YrNibM1g2Dp/r7Dh4PSJHoN72qdY75JFcRFMgJUk+
-	 ThO/GAn6S8t6qiGapDNjq6+V6LApHghQYnY9/f1DDpwdXeLpEJ9QgMgTiZdnEXFfoE
-	 sgxyTakmuxY8nKEEzwOd+p9yNiSyAXaaEMXaffexrsvXvznhr7/W8zMTlzXoRs02nQ
-	 296fp6dbsk43cr/3+DE5z++eC2RyY73USRx86Q6WP/h/sotEtQsXlvvZRvnyUa54V6
-	 TeM8/cnRVqJAwDGJYO/4C4+csL/SL41YnfgBRppkAY6vyJEbytCYrG7owiG5J/xFUR
-	 hhurvQeiaKXshQh7FfNc2pQWNloWf74yU0gKhKfkqX8TT69ry0h55L3fQ2UnkgVTXd
-	 u4U6uO4VpI/RNRe2dq/0HWOPmrYh+8gvIoLUxnvK1bqQviukgWChzQ4WPR0btY8VbU
-	 ZoEfUJFQpmOiHncXWwLnODEhgXW78QnS9AMAZTQTIHVE8GCwf4v7ENvyIKNh4AuCP/
-	 6EQgytnms6kPduZTCsilXmNUrsRZRnSGHAAGr/YZJzb8MCRlg4buKKn5WiZzgVClo2
-	 C8p9xxRsPrPd4TlEcaq3U6BVr7fFW5Fm5csDJoUApsMZ3Ftle4f7AiJjn8TcXgCxrc
-	 A7gKpmmmtennf/PjkFjHHGls=
-Received: from zn.tnic (pd9530f8c.dip0.t-ipconnect.de [217.83.15.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 757F440E0193;
-	Tue,  2 Jan 2024 14:31:10 +0000 (UTC)
-Date: Tue, 2 Jan 2024 15:31:04 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Wanpeng Li <wanpengli@tencent.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org,
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/sev: Fix SEV check in sev_map_percpu_data()
-Message-ID: <20240102143104.GCZZQeKLNY1NJ78uVR@fat_crate.local>
-References: <20240102133747.27053-1-kirill.shutemov@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="j98rMTP6"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 402DiZWY028458;
+	Tue, 2 Jan 2024 14:34:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=Zy1qZMqGOpyHSQ3Wj0sp9M6cSL2hJ07Te9b4OYnhiyU=;
+ b=j98rMTP644v3QpH4PtJtDsxKIjMDKID9A6Qqd4yaFJ66XKUgaFlk5kgcWssGXdDm/6rl
+ Bb4R7mwIXa/vI63pZ6CQWm1avWqfjvknl03wbeoY3a863UzFnFu2rx+HJyJNN5Sv8/X1
+ r/1Fb9E2tdsHPgc3mTNnt931cm8h4Csm7nFbCC+04QfghGz7L8MDcCFZSUg8mA7ya5BJ
+ RNLl7XMIRRgvyXrtuzAW00PMka2C4yTxjD3y7k0xZznqfc7wXiNnlhQpFFzJkZ35K+OS
+ 2Dh/LKHLkbMqsrAo6x/cQxqHnZybQE2v66533GBTYrsUks6foRQAckD0eMZA5msTc5od Zg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vcjqutbc9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jan 2024 14:34:38 +0000
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 402DilXq030037;
+	Tue, 2 Jan 2024 14:34:37 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vcjqutbbb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jan 2024 14:34:37 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 402Bv3NY017981;
+	Tue, 2 Jan 2024 14:34:36 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vayrkcyv4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jan 2024 14:34:36 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 402EYXeW24904366
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 2 Jan 2024 14:34:33 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 53F3E2004B;
+	Tue,  2 Jan 2024 14:34:33 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 102A520043;
+	Tue,  2 Jan 2024 14:34:32 +0000 (GMT)
+Received: from osiris (unknown [9.171.22.30])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  2 Jan 2024 14:34:31 +0000 (GMT)
+Date: Tue, 2 Jan 2024 15:34:30 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Sven Schnelle <svens@linux.ibm.com>
+Subject: Re: [PATCH v3 23/34] s390/cpacf: Unpoison the results of cpacf_trng()
+Message-ID: <20240102143430.6306-A-hca@linux.ibm.com>
+References: <20231213233605.661251-1-iii@linux.ibm.com>
+ <20231213233605.661251-24-iii@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240102133747.27053-1-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20231213233605.661251-24-iii@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: kTqZ1PRN-hTiLoJIQyYlJCXg5MKH4SKE
+X-Proofpoint-ORIG-GUID: z1yxLgfbHQruE14JYN0FnEq3ruYg6F5g
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-02_04,2024-01-02_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 phishscore=0
+ mlxlogscore=483 suspectscore=0 adultscore=0 priorityscore=1501
+ impostorscore=0 spamscore=0 bulkscore=0 mlxscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401020111
 
-On Tue, Jan 02, 2024 at 04:37:47PM +0300, Kirill A. Shutemov wrote:
-> The function sev_map_percpu_data() checks if it is running on an SEV
-> platform by checking the CC_ATTR_GUEST_MEM_ENCRYPT attribute. However,
-> this attribute is also defined for TDX.
+On Thu, Dec 14, 2023 at 12:24:43AM +0100, Ilya Leoshkevich wrote:
+> Prevent KMSAN from complaining about buffers filled by cpacf_trng()
+> being uninitialized.
 > 
-> To avoid false positives, add a cc_vendor check.
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Tested-by: Alexander Gordeev <agordeev@linux.ibm.com>
+> Reviewed-by: Alexander Potapenko <glider@google.com>
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+> ---
+>  arch/s390/include/asm/cpacf.h | 3 +++
+>  1 file changed, 3 insertions(+)
 
-Fixes: 4d96f9109109 ("x86/sev: Replace occurrences of sev_active() with cc_platform_has()")
-Suggested-by: Borislav Petkov (AMD) <bp@alien8.de>
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Acked-by: Heiko Carstens <hca@linux.ibm.com>
