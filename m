@@ -1,182 +1,195 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C70D53A5;
-	Tue,  2 Jan 2024 07:43:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4AF20E0;
+	Tue,  2 Jan 2024 07:44:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mol/eurh"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-50e9a42582aso1279419e87.2;
-        Mon, 01 Jan 2024 23:43:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W9F2kOw5"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6da47688fd9so458360b3a.0;
+        Mon, 01 Jan 2024 23:44:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704181423; x=1704786223; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mM3PDqFdCZw+zdDJaYo5Q6NaL9KNCZtFGDckEZSKOng=;
-        b=Mol/eurhtbBpBsBEORadegz73+mEs7dwn3x4ZRDn7ShsTpmy4vkU43K+Huv4eAwTCH
-         if57tcTZUh5hPYoraZ9UOh0ucDoHvA/QO2juz/ZTjytlpBBxf9OGCSi1Y8vf4rmarU2n
-         rhoMUaU1Ns7y3dRyNzpWxlNyvgbEbSKa00jMBja34bG372GC0q6/3NzCWfCtjJNncrfq
-         tbfvn421EYjHUIGko1jTNke5cG9LxfXe3Bh+dRQwxcctia+Q6sYljaIPwnwtwguhlbGh
-         0XuKkMWDudelqll4AkXuCDCsHEp/hj03rSBHCCYTh/74Qct9/TyfNgmtwCM9GRGT8Yl6
-         x2rA==
+        d=gmail.com; s=20230601; t=1704181474; x=1704786274; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=wg9z40SKV9zz/Qh6H6yd7L4Gx2w+wLF8wf2B0iINmZI=;
+        b=W9F2kOw5T2n/wNwoUfemH4fyx7XtpyCGklRD2MxOzgzUsB18+q5At3oWg4DbhX5VIH
+         3g36M2KOMPgceng229YPdtLm4dBaBvn4SMVvrb/f+JCyE/ZQFyj96YFreXjtAFLhdZXV
+         L0mRiYuSIhswdtJ1K0j1twG2WxyyLO5+P7wV0cSeXJC1dEAbKoPwuPrchRwFsD4IHajs
+         g3ZEkR0kpda+6CRVKJdJPFNR1qkzx+96wIsl4rtpj8aXmXByZljxLSVKrZ5jjNjb0EQh
+         fFqXjumApqBdC1u6hAG614dBJWKDy+kbg8ToJsAs6+uUgaGVAlfYE3jNpiNMUk7Z29Lu
+         vsqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704181423; x=1704786223;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mM3PDqFdCZw+zdDJaYo5Q6NaL9KNCZtFGDckEZSKOng=;
-        b=j1Of+7HZSFh3CedVyScwKpTwKsWpVdxbhlDVcQ6G8F5q7sRPlh7bKZJCk4dsU49Nzo
-         j9Yq3GK2fpJG6UBymmvj8CivweQar03nEaHo11zyUi4//UFFuAf50+cHNcee6FE7rSiO
-         7h/KQPUGJ1vgv04xX8vzFYxbmMAb1RUbYCNFJPIUzGFXvi20dlaQU2BO6Uefml1BcfiN
-         PKTTRoe7QA+w2gz2Mguyfbb212+ekw/pEVAKqvFX18Vr3lWJiEgLM5vLKp1awzIaAZ24
-         ozSAs1Y0dAxSt5C7MCom9DxhtQCObBBEg+Li15P95B1x3m3cLQuIJnX7U9XZWvFYTpQR
-         04wA==
-X-Gm-Message-State: AOJu0YwMsPoBED9T/pXSOuKFrb0LOLJ6zcf9ML/+xvJby2dB+GMD9Pry
-	AOgfySBuqmWKKgsit+oxp6Q=
-X-Google-Smtp-Source: AGHT+IFPtfc//kD/XoMFYOLGF/DLaFInPnIJKxvQEy0hvSCHjbtHIQ8SDlaKUR5cxnPPR9uEALzwig==
-X-Received: by 2002:a05:6512:3d9e:b0:50e:7042:468d with SMTP id k30-20020a0565123d9e00b0050e7042468dmr7464991lfv.36.1704181422779;
-        Mon, 01 Jan 2024 23:43:42 -0800 (PST)
-Received: from corebook.localdomain (2001-1c00-020d-1300-1b1c-4449-176a-89ea.cable.dynamic.v6.ziggo.nl. [2001:1c00:20d:1300:1b1c:4449:176a:89ea])
-        by smtp.gmail.com with ESMTPSA id u23-20020aa7d0d7000000b005533a9934b6sm15574325edo.54.2024.01.01.23.43.41
+        d=1e100.net; s=20230601; t=1704181474; x=1704786274;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wg9z40SKV9zz/Qh6H6yd7L4Gx2w+wLF8wf2B0iINmZI=;
+        b=VfEOegc+lrOFkf6tarOC/a2DRWZIKItAxXOgYxjUg55KnVsK2ATtlCbWXMWZnribab
+         bSxvYXQE+o0OhVvsN71SEApq+8WzNfpS7f451Or6QeM4PyV4AJrXF+0QZ2jIiz6V2CuU
+         EMZgef4Zi/tXlsL/hBv+SwlI1thPikIkfLEGrOZ+HA7EY4KpmnmkFrBArE6M1CyCJfIp
+         0yKU+5g9ewN2O5YhUenUjNYw+WT+7TRMZ9y/TSl7E4YI4MTRhAT7oKOiQWfh+NZJIed2
+         8my52tYXTeRJ4iRMGsiaoQ2nCxKXoWTB/9wzyHcupGk0f9wW0qfzlmEMkOSl5+sXFwRB
+         QHNA==
+X-Gm-Message-State: AOJu0Yy09cPRwsZKoKWuaejzwu+W7yAqce2oXiutHSKwiQcr26Zv7pOD
+	ql9kTSHVioFDSVDbwdMj7nE=
+X-Google-Smtp-Source: AGHT+IG7R1XLlIRSqqFaPgRkrxnUewPMPirqkWd9ZOxWtQb782pbhMKWrC7vJ9/nwC6UtJCaVtEPwg==
+X-Received: by 2002:a05:6a21:3e0c:b0:195:f98f:13f3 with SMTP id bk12-20020a056a213e0c00b00195f98f13f3mr4980364pzc.35.1704181473909;
+        Mon, 01 Jan 2024 23:44:33 -0800 (PST)
+Received: from geday ([189.115.92.220])
+        by smtp.gmail.com with ESMTPSA id h9-20020a170902704900b001d05456394csm21399587plt.28.2024.01.01.23.44.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jan 2024 23:43:42 -0800 (PST)
-From: Eric Woudstra <ericwouds@gmail.com>
-To: Russell King <linux@armlinux.org.uk>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Frank Wunderlich <frank-w@public-files.de>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Eric Woudstra <ericwouds@gmail.com>
-Subject: [PATCH RFC net-next] net: phylink: add quirk for disabling in-band-status for mediatek pcs at 2500base-x
-Date: Tue,  2 Jan 2024 08:43:26 +0100
-Message-ID: <20240102074326.1049179-1-ericwouds@gmail.com>
-X-Mailer: git-send-email 2.42.1
+        Mon, 01 Jan 2024 23:44:33 -0800 (PST)
+Date: Tue, 2 Jan 2024 04:45:07 -0300
+From: Geraldo Nascimento <geraldogabriel@gmail.com>
+To: Andy Chi <andy.chi@canonical.com>
+Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Stefan Binding <sbinding@opensource.cirrus.com>,
+	Kailang Yang <kailang@realtek.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Shenghao Ding <shenghao-ding@ti.com>,
+	Matthew Anderson <ruinairas1992@gmail.com>,
+	Luka Guzenko <l.guzenko@web.de>, Yuchi Yang <yangyuchi66@gmail.com>,
+	Vitaly Rodionov <vitalyr@opensource.cirrus.com>,
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ALSA: hda/realtek: fix mute/micmute LEDs for a HP ZBook
+Message-ID: <ZZO/Az2puwFY5L3R@geday>
+References: <20240102024916.19093-1-andy.chi@canonical.com>
+ <ZZOQamQsHUR7eEPd@geday>
+ <CAEzXkg3YiH_XQGz4vbFc7dptmMSWrVDrALdNJAmmQgWa17PP1A@mail.gmail.com>
+ <CAEzXkg1DmR2PJ2SKF8hRdbRaPVVU8eWHjzjXHcJE-KqCU-8wqA@mail.gmail.com>
+ <ZZOwVZN7Xn2rIKtB@geday>
+ <CAEzXkg0NLYxgKHr4iyoJPU7aZcrtcQFBo3o_K=qHuBpXeyNvbQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEzXkg0NLYxgKHr4iyoJPU7aZcrtcQFBo3o_K=qHuBpXeyNvbQ@mail.gmail.com>
 
-In follow up to: net: pcs: pcs-mtk-lynxi: use 2500Base-X without AN
+On Tue, Jan 02, 2024 at 02:59:56PM +0800, Andy Chi wrote:
+> On Tue, Jan 2, 2024 at 2:42 PM Geraldo Nascimento
+> <geraldogabriel@gmail.com> wrote:
+> >
+> > On Tue, Jan 02, 2024 at 01:49:40PM +0800, Andy Chi wrote:
+> > > Hi Geraldo,
+> > > Yes, this model is not yet publicly available, so I can't type the
+> > > full name on this patch.
+> > >
+> > > (change to text plain mode to send out again.)
+> >
+> Hi Geraldo,
+> > Hi Andy, please be kind and next time refrain from top-posting,
+> > as it reverses the attention order for those reading the
+> > discussion for posterity.
+> >
+> Got it, appreciate your feedback.
+> > I think it is reasonable to mention it explicitly as an
+> > upcoming product in order not to cause any confusion and
+> > to make sure there's another janitorial patch later on
+> > filling in the model details.
+> >
+> Should I mention it in the commit message? Or is it ok if I put the
+> model name after it's on the market?
 
-MediaTek LynxI PCS, 2500Base-X will only work without inband status due to
-hardware limitation.
+Andy, in order to clear up any confusion that might arise later on, and
+to maintain high the quality of both code and git meta-information I think
+you should explicitly mention both in the commit info and commit message
+that this is an upcoming product.
 
-I understand this patch probably will not get approved as it is now, but
-perhaps with some pointers in the correct direction to follow, I can change
-it so it could be. It does however get the result that the rtl8221b on a
-sfp module functions correctly, with and without (as optical sfp) the phy
-attached and without using a quirk/ethtool to disable auto-negotiation.
+Also, instead of just "HP" in the commit proper, it should say something
+like "Upcoming HP ZBook".
 
-Introduce bool phylink_major_no_inband(pl,interface), a function similar to
-bool phylink_phy_no_inband(phy). An option could be to use a function like
-bool pcs->ops->supports_inband(interface), where if the function-pointer is
-null, it means it is supported for all. This instead of using
-of_device_is_compatible() inside the phylink_major_no_inband() function.
+But that's just my advice, now you need to wait and hear Takashi's advice.
 
-Code added to phylink_major_config():
+We should always strive toward striking a healthy balance between companies'
+needs and the public nature of the development of the Linux kernel and ALSA.
+Unfortunately that means some details of upcoming models may end up
+catching up the attention of the specialized press.
 
-When there is no PHY attached, pl->pcs_neg_mode is set to
-PHYLINK_PCS_NEG_INBAND_DISABLED.
+I encourage you to look on the bright side and think of it as free PR ;)
 
-When there is a PHY attached, pl->cur_link_an_mode is set to MLO_AN_PHY.
-To have the pcs function correctly with the rtl8221b, we need to do the
-following to the in-band-status:
+Best Regards,
+Geraldo Nascimento
 
-We need to disable it when interface of the pcs is set to 2500base-x,
-but need it enable it when switched to sgmii.
-
-So we get:
-
-[...] mtk_soc_eth ... eth1: phy link up sgmii/1Gbps/Full/none/rx/tx
-[...] mtk_soc_eth ... eth1: phylink_mac_config: mode=inband/sgmii/none
-                                adv=00,00000000,00000000,00000000 pause=03
-
-[...] mtk_soc_eth ... eth1: phy link up 2500base-x/2.5Gbps/Full/none/rx/tx
-[...] mtk_soc_eth ... eth1: phylink_mac_config: mode=phy/2500base-x/none
-                                adv=00,00000000,00008000,0000606f pause=03
-
-Changes to be committed:
-	modified:   drivers/net/phy/phylink.c
-
-Signed-off-by: Eric Woudstra <ericwouds@gmail.com>
----
- drivers/net/phy/phylink.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
-
-diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-index 298dfd6982a5..6e443eb8ee46 100644
---- a/drivers/net/phy/phylink.c
-+++ b/drivers/net/phy/phylink.c
-@@ -1074,6 +1074,22 @@ static void phylink_pcs_an_restart(struct phylink *pl)
- 		pl->pcs->ops->pcs_an_restart(pl->pcs);
- }
- 
-+static bool phylink_major_no_inband(struct phylink *pl, phy_interface_t interface)
-+{
-+	struct device_node *node = pl->config->dev->of_node;
-+
-+	if (!node)
-+		return false;
-+
-+	if (!of_device_is_compatible(node, "mediatek,eth-mac"))
-+		return false;
-+
-+	if (interface != PHY_INTERFACE_MODE_2500BASEX)
-+		return false;
-+
-+	return true;
-+}
-+
- static void phylink_major_config(struct phylink *pl, bool restart,
- 				  const struct phylink_link_state *state)
- {
-@@ -1085,10 +1101,22 @@ static void phylink_major_config(struct phylink *pl, bool restart,
- 
- 	phylink_dbg(pl, "major config %s\n", phy_modes(state->interface));
- 
-+	if (phylink_major_no_inband(pl, state->interface) && (!!pl->phydev)) {
-+		if (pl->cur_link_an_mode == MLO_AN_INBAND)
-+			pl->cur_link_an_mode = MLO_AN_PHY;
-+		else
-+			/* restore mode if it was changed before */
-+			pl->cur_link_an_mode = pl->cfg_link_an_mode;
-+	}
-+
- 	pl->pcs_neg_mode = phylink_pcs_neg_mode(pl->cur_link_an_mode,
- 						state->interface,
- 						state->advertising);
- 
-+	if (phylink_major_no_inband(pl, state->interface) && !pl->phydev &&
-+	    pl->pcs_neg_mode == PHYLINK_PCS_NEG_INBAND_ENABLED)
-+		pl->pcs_neg_mode = PHYLINK_PCS_NEG_INBAND_DISABLED;
-+
- 	if (pl->using_mac_select_pcs) {
- 		pcs = pl->mac_ops->mac_select_pcs(pl->config, state->interface);
- 		if (IS_ERR(pcs)) {
-@@ -1218,6 +1246,9 @@ static void phylink_mac_pcs_get_state(struct phylink *pl,
- 				      struct phylink_link_state *state)
- {
- 	linkmode_copy(state->advertising, pl->link_config.advertising);
-+	if (pl->pcs_neg_mode == PHYLINK_PCS_NEG_INBAND_DISABLED)
-+		linkmode_clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
-+				   state->advertising);
- 	linkmode_zero(state->lp_advertising);
- 	state->interface = pl->link_config.interface;
- 	state->rate_matching = pl->link_config.rate_matching;
--- 
-2.42.1
-
+> 
+> > It's best to leave Takashi now to attend to your patch, and I
+> > congratulate both you as well as Canonical and HP for the
+> > effort towards bettering Linux.
+> Cheers :)
+> 
+> >
+> > Thanks for addressing this quickly.
+> >
+> > Geraldo Nascimento
+> >
+> > >
+> > > Kr,
+> > > Andy
+> > >
+> > >
+> > > On Tue, Jan 2, 2024 at 1:47 PM Andy Chi <andy.chi@canonical.com> wrote:
+> > > >
+> > > > Hi Geraldo,
+> > > > Yes, this model is not yet publicly available, so I can't type the full name on this patch.
+> > > >
+> > > > Kr,
+> > > > Andy
+> > > >
+> > > > On Tue, Jan 2, 2024 at 12:25 PM Geraldo Nascimento <geraldogabriel@gmail.com> wrote:
+> > > >>
+> > > >> On Tue, Jan 02, 2024 at 10:49:15AM +0800, Andy Chi wrote:
+> > > >> > There is a HP ZBook which using ALC236 codec and need the
+> > > >> > ALC236_FIXUP_HP_MUTE_LED_MICMUTE_VREF quirk to make mute LED
+> > > >> > and micmute LED work.
+> > > >>
+> > > >> Hi Andy,
+> > > >>
+> > > >> I know Takashi in the name of smooth operation usually takes this kind
+> > > >> of simple patch, quickly, since it's a simple bugfix, unless there are
+> > > >> any objections, so I must raise one.
+> > > >>
+> > > >> Which HP ZBook? Which model?
+> > > >>
+> > > >> Is this a still unreleased model Canonical has had access under a NDA
+> > > >> for example? Or perhaps there is some other reason why you cannot name
+> > > >> the model yet?
+> > > >>
+> > > >> Either way, there is a need to publicly know the reason for the missing
+> > > >> model information.
+> > > >>
+> > > >> >
+> > > >> > Signed-off-by: Andy Chi <andy.chi@canonical.com>
+> > > >> > ---
+> > > >> >  sound/pci/hda/patch_realtek.c | 1 +
+> > > >> >  1 file changed, 1 insertion(+)
+> > > >> >
+> > > >> > diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+> > > >> > index 7e9d8c1cedfc..1c8d5b58eb64 100644
+> > > >> > --- a/sound/pci/hda/patch_realtek.c
+> > > >> > +++ b/sound/pci/hda/patch_realtek.c
+> > > >> > @@ -9939,6 +9939,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+> > > >> >       SND_PCI_QUIRK(0x103c, 0x8c70, "HP EliteBook 835 G11", ALC287_FIXUP_CS35L41_I2C_2_HP_GPIO_LED),
+> > > >> >       SND_PCI_QUIRK(0x103c, 0x8c71, "HP EliteBook 845 G11", ALC287_FIXUP_CS35L41_I2C_2_HP_GPIO_LED),
+> > > >> >       SND_PCI_QUIRK(0x103c, 0x8c72, "HP EliteBook 865 G11", ALC287_FIXUP_CS35L41_I2C_2_HP_GPIO_LED),
+> > > >> > +     SND_PCI_QUIRK(0x103c, 0x8c96, "HP", ALC236_FIXUP_HP_MUTE_LED_MICMUTE_VREF),
+> > > >>
+> > > >> Same questioning as above. "HP" is IMHO unacceptable without a clear
+> > > >> reason for the missing model information.
+> > > >>
+> > > >> Thanks,
+> > > >> Geraldo Nascimento
+> > > >>
+> > > >> >       SND_PCI_QUIRK(0x103c, 0x8ca4, "HP ZBook Fury", ALC245_FIXUP_CS35L41_SPI_2_HP_GPIO_LED),
+> > > >> >       SND_PCI_QUIRK(0x103c, 0x8ca7, "HP ZBook Fury", ALC245_FIXUP_CS35L41_SPI_2_HP_GPIO_LED),
+> > > >> >       SND_PCI_QUIRK(0x103c, 0x8cf5, "HP ZBook Studio 16", ALC245_FIXUP_CS35L41_SPI_4_HP_GPIO_LED),
+> > > >> > --
+> > > >> > 2.34.1
+> > > >> >
+> > > >> >
