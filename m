@@ -1,163 +1,157 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE66815AEA
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 14:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A06815AF7;
+	Tue,  2 Jan 2024 14:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lI4MKSKK"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dbe78430946so1080635276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 06:38:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1704206327; x=1704811127; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Jy0uRx2JMKC7IT4IrT6DQeOOAvtEVqpfbBhM8k6y5YU=;
-        b=lI4MKSKK0DT9T/8CHJPTLjXGtC2VQyQIeo0slFWaSUBLQN4POb17ew1naXivDDu/dH
-         1PGocvTFj7iEoIepWOWsnw8K6DvpBxTfYnnpVNPrFssj2uTKAdqRTr4sKpgzrtPxcQ9N
-         sQGG8BVCoe7bHpGNdA2rNyWCsM8zaAy7wPX4w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704206327; x=1704811127;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Jy0uRx2JMKC7IT4IrT6DQeOOAvtEVqpfbBhM8k6y5YU=;
-        b=ml2O5o5g3GWHIaoAoPzxZ/WvCZ+tXHbUEQ71qnWkGsxlhQb03tgU+/B73Dkxu9sZ8W
-         JN350NJ9BEsvXNizryGD4Gq7mDBei5NiTNjNBeHFrVWya8V0GmBg5Gop1gRe89k1w9Wv
-         HXErTnKaiy3mGWz3YXeeDYT7a+mUigyMZiwMVsOq0xJmguP+rMP6TXrA0pHjnBcsbLUN
-         MJHGgVxWuVEiVtUNfKikm5lJWO+3yqChx5Nn2OFNP/tbqpArveU72tBiN6m3kTSAYuKA
-         /6Nod7xKboYk0AEZcYRk0ifGpB6s/B8TSqO8t0uvVwZocOEKg4cA9Np64okzDW+HpLqk
-         TSsQ==
-X-Gm-Message-State: AOJu0YxiqE+/xozay8Oxklssio6sZF0EudHZ31q+HpajdUfw1obM5gbW
-	eEqYDXD1+muNhXv0Q0ljNpn2zZit4PGrt52I99OLWmLqeUppZc8=
-X-Google-Smtp-Source: AGHT+IF2VmlnzA7AgDC3KwlEUuCIE5PgevZGdecadVjf9tfvv09O27NfPI3ZsHc2De/o71n4pxcOUQ==
-X-Received: by 2002:a25:aa2d:0:b0:dbd:5cd5:4d53 with SMTP id s42-20020a25aa2d000000b00dbd5cd54d53mr7126352ybi.96.1704206327096;
-        Tue, 02 Jan 2024 06:38:47 -0800 (PST)
-Received: from denia.c.googlers.com (204.246.236.35.bc.googleusercontent.com. [35.236.246.204])
-        by smtp.gmail.com with ESMTPSA id p13-20020ad451cd000000b00680b34d52f8sm1463586qvq.13.2024.01.02.06.38.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jan 2024 06:38:46 -0800 (PST)
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Tue, 02 Jan 2024 14:38:45 +0000
-Subject: [PATCH v3] media: ucvideo: Add quirk for Logitech Rally Bar
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GBVAPcaJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704206329; x=1735742329;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=pIwuSBuivaLiuysTG8SR9U5i6WTksuS89VvUb25xUrk=;
+  b=GBVAPcaJSTmBzpBxXX0MCBb3qVmexi6bWxw7/x3M4/DwdxNMLaRmyF/1
+   G4dMX7sTVd4PxAefMsCoRxpL55RSewMYxZe0dgcw8oAyoQP+Wh2h1OuiH
+   yMNurTB92kTmkntD+PaWDGrLyMrRnODjkzCw47cR6KrPEeCQxKB+fOKwy
+   KSrsqD0BVZ0l2XWorm7RpOjoFVVrlUdVcLIpG/Hue3/W5j12T0SPlRHWr
+   zCBQn7rAgG2bPUqbzzetkp6WurVPCGzsN1m0GiBGG6/T1+riRLmSrzOWt
+   doHXYchtffZ3GnPi1o5T6xYv17RIO0K/guetR2kdnxXu79Y99nZ+YF+2E
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="10270514"
+X-IronPort-AV: E=Sophos;i="6.04,325,1695711600"; 
+   d="scan'208";a="10270514"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 06:38:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="923234326"
+X-IronPort-AV: E=Sophos;i="6.04,325,1695711600"; 
+   d="scan'208";a="923234326"
+Received: from 984fee00a4c6.jf.intel.com ([10.165.58.231])
+  by fmsmga001.fm.intel.com with ESMTP; 02 Jan 2024 06:38:47 -0800
+From: Yi Liu <yi.l.liu@intel.com>
+To: joro@8bytes.org,
+	alex.williamson@redhat.com,
+	jgg@nvidia.com,
+	kevin.tian@intel.com,
+	robin.murphy@arm.com,
+	baolu.lu@linux.intel.com
+Cc: cohuck@redhat.com,
+	eric.auger@redhat.com,
+	nicolinc@nvidia.com,
+	kvm@vger.kernel.org,
+	mjrosato@linux.ibm.com,
+	chao.p.peng@linux.intel.com,
+	yi.l.liu@intel.com,
+	yi.y.sun@linux.intel.com,
+	peterx@redhat.com,
+	jasowang@redhat.com,
+	shameerali.kolothum.thodi@huawei.com,
+	lulu@redhat.com,
+	suravee.suthikulpanit@amd.com,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	zhenzhong.duan@intel.com,
+	joao.m.martins@oracle.com,
+	xin.zeng@intel.com,
+	yan.y.zhao@intel.com,
+	j.granados@samsung.com
+Subject: [PATCH v10 09/10] iommufd: Add data structure for Intel VT-d stage-1 cache invalidation
+Date: Tue,  2 Jan 2024 06:38:33 -0800
+Message-Id: <20240102143834.146165-10-yi.l.liu@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240102143834.146165-1-yi.l.liu@intel.com>
+References: <20240102143834.146165-1-yi.l.liu@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240102-rallybar-v3-1-0ab197ce4aa2@chromium.org>
-X-B4-Tracking: v=1; b=H4sIAPUflGUC/3WMwQ6CMBAFf4X0bA27LQ148j+Mh9IWaALUbLWRE
- P7dwtHocV7ezMqiI+8iuxQrI5d89GHOIE4FM4Oee8e9zcywRAGIyEmP49Jq4tAYVxolbeUUy/c
- Huc6/j9Ttnnnw8RloOcoJ9vVHJAEHXmOLWloBpequZqAw+dd0DtSzvZPwn4vZrWrZWIW6qUB+u
- du2fQDDhAwd3wAAAA==
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Alan Stern <stern@rowland.harvard.edu>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-media@vger.kernel.org, stable@vger.kernel.org, 
- Ricardo Ribalda <ribalda@chromium.org>
-X-Mailer: b4 0.12.3
+Content-Transfer-Encoding: 8bit
 
-Logitech Rally Bar devices, despite behaving as UVC cameras, have a
-different power management system that the other cameras from Logitech.
+This adds the data structure invalidating caches for the nested domain
+allocated with IOMMU_HWPT_DATA_VTD_S1 type.
 
-USB_QUIRK_RESET_RESUME is applied to all the UVC cameras from Logitech
-at the usb core. Unfortunately, USB_QUIRK_RESET_RESUME causes undesired
-USB disconnects, that make them completely unusable.
-
-Instead of creating a list for this family of devices in the core, let's
-create a quirk in the UVC driver.
-
-Fixes: e387ef5c47dd ("usb: Add USB_QUIRK_RESET_RESUME for all Logitech UVC webcams")
-Cc: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Yi Liu <yi.l.liu@intel.com>
 ---
-Tested with a Rallybar Mini with an Acer Chromebook Spin 513
----
-Changes in v3:
-- Move quirk to uvc driver
-- Link to v2: https://lore.kernel.org/r/20231222-rallybar-v2-1-5849d62a9514@chromium.org
+ include/uapi/linux/iommufd.h | 58 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
-Changes in v2:
-- Add Fixes tag
-- Add UVC maintainer as Cc
-- Link to v1: https://lore.kernel.org/r/20231222-rallybar-v1-1-82b2a4d3106f@chromium.org
----
- drivers/media/usb/uvc/uvc_driver.c | 21 +++++++++++++++++++++
- drivers/media/usb/uvc/uvcvideo.h   |  1 +
- 2 files changed, 22 insertions(+)
-
-diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-index 08fcd2ffa727..77c1932c29ca 100644
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -14,6 +14,7 @@
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/usb.h>
-+#include <linux/usb/quirks.h>
- #include <linux/usb/uvc.h>
- #include <linux/videodev2.h>
- #include <linux/vmalloc.h>
-@@ -2233,6 +2234,8 @@ static int uvc_probe(struct usb_interface *intf,
- 	}
+diff --git a/include/uapi/linux/iommufd.h b/include/uapi/linux/iommufd.h
+index 824560c50ec6..37c778055201 100644
+--- a/include/uapi/linux/iommufd.h
++++ b/include/uapi/linux/iommufd.h
+@@ -623,6 +623,64 @@ enum iommu_hwpt_invalidate_data_type {
+ 	IOMMU_HWPT_INVALIDATE_DATA_VTD_S1,
+ };
  
- 	uvc_dbg(dev, PROBE, "UVC device initialized\n");
-+	if (dev->quirks & UVC_QUIRK_FORCE_RESUME)
-+		udev->quirks &= ~USB_QUIRK_RESET_RESUME;
- 	usb_enable_autosuspend(udev);
- 	return 0;
- 
-@@ -2574,6 +2577,24 @@ static const struct usb_device_id uvc_ids[] = {
- 	  .bInterfaceSubClass	= 1,
- 	  .bInterfaceProtocol	= 0,
- 	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_RESTORE_CTRLS_ON_INIT) },
-+	/* Logitech Rally Bar */
-+	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
-+				| USB_DEVICE_ID_MATCH_INT_INFO,
-+	  .idVendor		= 0x046d,
-+	  .idProduct		= 0x089b,
-+	  .bInterfaceClass	= USB_CLASS_VIDEO,
-+	  .bInterfaceSubClass	= 1,
-+	  .bInterfaceProtocol	= 0,
-+	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_FORCE_RESUME) },
-+	/* Logitech Rally Bar */
-+	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
-+				| USB_DEVICE_ID_MATCH_INT_INFO,
-+	  .idVendor		= 0x046d,
-+	  .idProduct		= 0x08d3,
-+	  .bInterfaceClass	= USB_CLASS_VIDEO,
-+	  .bInterfaceSubClass	= 1,
-+	  .bInterfaceProtocol	= 0,
-+	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_FORCE_RESUME) },
- 	/* Chicony CNF7129 (Asus EEE 100HE) */
- 	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
- 				| USB_DEVICE_ID_MATCH_INT_INFO,
-diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-index 6fb0a78b1b00..fa59a21d2a28 100644
---- a/drivers/media/usb/uvc/uvcvideo.h
-+++ b/drivers/media/usb/uvc/uvcvideo.h
-@@ -73,6 +73,7 @@
- #define UVC_QUIRK_FORCE_Y8		0x00000800
- #define UVC_QUIRK_FORCE_BPP		0x00001000
- #define UVC_QUIRK_WAKE_AUTOSUSPEND	0x00002000
-+#define UVC_QUIRK_FORCE_RESUME		0x00004000
- 
- /* Format flags */
- #define UVC_FMT_FLAG_COMPRESSED		0x00000001
-
----
-base-commit: c0f65a7c112b3cfa691cead54bcf24d6cc2182b5
-change-id: 20231222-rallybar-19ce0c64d5e6
-
-Best regards,
++/**
++ * enum iommu_hwpt_vtd_s1_invalidate_flags - Flags for Intel VT-d
++ *                                           stage-1 cache invalidation
++ * @IOMMU_VTD_INV_FLAGS_LEAF: Indicates whether the invalidation applies
++ *                            to all-levels page structure cache or just
++ *                            the leaf PTE cache.
++ */
++enum iommu_hwpt_vtd_s1_invalidate_flags {
++	IOMMU_VTD_INV_FLAGS_LEAF = 1 << 0,
++};
++
++/**
++ * enum iommu_hwpt_vtd_s1_invalidate_error - Hardware error of invalidation
++ * @IOMMU_HWPT_INVALIDATE_VTD_S1_ICE: Invalidation Completion Error, details
++ *                                    refer to 11.4.7.1 Fault Status Register
++ *                                    of VT-d specification.
++ * @IOMMU_HWPT_INVALIDATE_VTD_S1_ITE: Invalidation Time-out Error, details
++ *                                    refer to 11.4.7.1 Fault Status Register
++ *                                    of VT-d specification.
++ */
++enum iommu_hwpt_vtd_s1_invalidate_error {
++	IOMMU_HWPT_INVALIDATE_VTD_S1_ICE = 1 << 0,
++	IOMMU_HWPT_INVALIDATE_VTD_S1_ITE = 1 << 1,
++};
++
++/**
++ * struct iommu_hwpt_vtd_s1_invalidate - Intel VT-d cache invalidation
++ *                                       (IOMMU_HWPT_INVALIDATE_DATA_VTD_S1)
++ * @addr: The start address of the range to be invalidated. It needs to
++ *        be 4KB aligned.
++ * @npages: Number of contiguous 4K pages to be invalidated.
++ * @flags: Combination of enum iommu_hwpt_vtd_s1_invalidate_flags
++ * @hw_error: One of enum iommu_hwpt_vtd_s1_invalidate_error
++ *
++ * The Intel VT-d specific invalidation data for user-managed stage-1 cache
++ * invalidation in nested translation. Userspace uses this structure to
++ * tell the impacted cache scope after modifying the stage-1 page table.
++ *
++ * Invalidating all the caches related to the page table by setting @addr
++ * to be 0 and @npages to be U64_MAX.
++ *
++ * The device TLB will be invalidated automatically if ATS is enabled.
++ *
++ * An entry is considered 'handled' after it passes the audit and submitted
++ * to the IOMMU by the underlying driver. Check the @entry_num output of
++ * struct iommu_hwpt_invalidate for the number of handled entries. A 'handled'
++ * request may still fail in hardware for various reasons, e.g. due to timeout
++ * on waiting for device response upon a device TLB invalidation request. In
++ * such case the hardware error info is reported in the @hw_error field of the
++ * handled entry.
++ */
++struct iommu_hwpt_vtd_s1_invalidate {
++	__aligned_u64 addr;
++	__aligned_u64 npages;
++	__u32 flags;
++	__u32 hw_error;
++};
++
+ /**
+  * struct iommu_hwpt_invalidate - ioctl(IOMMU_HWPT_INVALIDATE)
+  * @size: sizeof(struct iommu_hwpt_invalidate)
 -- 
-Ricardo Ribalda <ribalda@chromium.org>
+2.34.1
 
