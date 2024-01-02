@@ -1,134 +1,110 @@
-Received: from hi1smtp01.de.adit-jv.com (smtp1.de.adit-jv.com [93.241.18.167])
+Received: from out203-205-221-155.mail.qq.com (out203-205-221-155.mail.qq.com [203.205.221.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EABDAF515;
-	Tue,  2 Jan 2024 12:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=de.adit-jv.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.adit-jv.com
-Received: from hi2exch02.adit-jv.com (hi2exch02.adit-jv.com [10.72.92.28])
-	by hi1smtp01.de.adit-jv.com (Postfix) with ESMTP id 5A472520254;
-	Tue,  2 Jan 2024 13:34:33 +0100 (CET)
-Received: from vmlxhi-118.adit-jv.com (10.72.93.77) by hi2exch02.adit-jv.com
- (10.72.92.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 2 Jan
- 2024 13:34:33 +0100
-From: Hardik Gajjar <hgajjar@de.adit-jv.com>
-To: <gregkh@linuxfoundation.org>, <stern@rowland.harvard.edu>,
-	<john@keeping.me.uk>
-CC: <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<erosca@de.adit-jv.com>, <hgajjar@de.adit-jv.com>, <jlayton@kernel.org>,
-	<brauner@kernel.org>
-Subject: [PATCH v3] usb: gadget: f_fs: Add the missing get_alt callback
-Date: Tue, 2 Jan 2024 13:34:19 +0100
-Message-ID: <20240102123419.13491-1-hgajjar@de.adit-jv.com>
-X-Mailer: git-send-email 2.17.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2227AFBF0;
+	Tue,  2 Jan 2024 12:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="p5Ru6ZUz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1704199013; bh=KccDZNyBw07ctq/DN3VElW8F3A1ia8xExihctND/oh4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=p5Ru6ZUzBdYcgAA/DvsG1qV+UwFHpVhC425WNXaVRjEB7bjlSWzJuSFfOqKovE6AU
+	 sxWNT+b/YY3bDE0VsX/qthI0XeFtJT6+/qevhbgXswmwchMG0b1OxKalQplqKGoXUM
+	 DcQI+u/SwjokXggvgUP57hbbab6wrAt0G+62F+Nk=
+Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
+	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
+	id 93334A1C; Tue, 02 Jan 2024 20:36:51 +0800
+X-QQ-mid: xmsmtpt1704199011tmjb9ifyq
+Message-ID: <tencent_8C1ACE487B4E6C302EE56D8C95C0E8E2EF0A@qq.com>
+X-QQ-XMAILINFO: N7h1OCCDntujvVtpMWdxaTVHmbrXzaCl4eDQp1ppMvKr1B3sZmiP2rPKkpDVT2
+	 Wx22gtapO0SWIPeDdMHzM/pDsl7mOzDQP48b0kIWc35lT2+9r8zpfTFP+HKYPUWHHLByu0/s4Ae0
+	 x2ApYkcNEvsVXDZKfqJgLcAJayxcTN+XUyts0x5OPOhqCceFUC12mZy6McngXf/2DnTK2mJyqfHZ
+	 l4H37h5XXIRzXAclsR/47rr3lL7/VuUJ6P8siruJeUdyXbUcAiNoLnHGViUaJ6/3dTelzTVjJ7hB
+	 NYTEMxUu3l3pBaqkXHKRstFYz4tgRIIdBOWlePjNYSSTqHKnWlI39YU1FY1yFPopiTLtrK2vmg+t
+	 vfcpNz5u0lmRkF7vfwfPjxx5+t25QGqtcgwXuPRFxLLD5xpXmyoV8zwqMhpsoeGblOFxun5x8Ce+
+	 btmdSKb2dNRV9GLxSZp/csIEVUlDim/DeIg8fJeVS1CV4EVn7Us8wR/7z7Yyjry2sk2tbSOKk/d0
+	 fxG9ock9UqKE62M9ivXdHKIuIecQlcLBzO4xkgn3bUHCTAsmhS0VZ40mfCFKSCw5aNQ68M6PTCWt
+	 ZnRmLqFfNPSN4HHf/OF208uflBXEP6+3EYF8nGxWTfvL6OjPtcqlXPIZCtbcnMDs4JOdgrpmlXTW
+	 HPvnyHjAkVnBD6G/FofN95KWRnoadgUqQxN1yU5NjG8Iy5emIANXUeUhPrM7AvvzrwDhXky7Awnk
+	 DB7S8uapn1593i1VneE+x5cFU7zZa3A8nknRZ/OU02fTEoZ4gP2Fnpacypdcda/WpR0yk3YpdM6Z
+	 LHR6yjY+sqSrSkJt8p7VRL7YTgbVGLJ487OwXJ6++h9QKYOBgF4ca++/iIvq7Hu7fyKgVbdFzY2n
+	 0Uz9Uk3y5OkUo1Uy4d+p+9cZ6V8ZsGwSr/H/58X2mmXGGANpazBfPYieixh0XEAbrHW4iiYF/zhK
+	 zH6adJif8=
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+41a88b825a315aac2254@syzkaller.appspotmail.com
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com,
+	willy@infradead.org
+Subject: [PATCH] hfs: fix deadlock in hfs_extend_file
+Date: Tue,  2 Jan 2024 20:36:51 +0800
+X-OQ-MSGID: <20240102123651.1582577-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000004efa57060def87be@google.com>
+References: <0000000000004efa57060def87be@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: hi2exch02.adit-jv.com (10.72.92.28) To
- hi2exch02.adit-jv.com (10.72.92.28)
+Content-Transfer-Encoding: 8bit
 
-The Apple CarLife iAP gadget has a descriptor with two alternate
-settings. The host sends the set_alt request to configure alt_setting
-0 or 1, and this is verified by the subsequent get_alt request.
+[syz report]
+syz-executor279/5059 is trying to acquire lock:
+ffff888079c100f8 (&HFS_I(tree->inode)->extents_lock){+.+.}-{3:3}, at: hfs_extend_file+0xa2/0xb10 fs/hfs/extent.c:397
 
-This patch implements and sets the get_alt callback. Without the
-get_alt callback, composite.c abruptly concludes the
-USB_REQ_GET/SET_INTERFACE request, assuming only one alt setting
-for the endpoint.
+but task is already holding lock:
+ffff888079c10778 (&HFS_I(tree->inode)->extents_lock){+.+.}-{3:3}, at: hfs_extend_file+0xa2/0xb10 fs/hfs/extent.c:397
 
-Signed-off-by: Hardik Gajjar <hgajjar@de.adit-jv.com>
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(&HFS_I(tree->inode)->extents_lock);
+  lock(&HFS_I(tree->inode)->extents_lock);
+
+ *** DEADLOCK ***
+[Analysis] 
+ hfs_extend_file()->
+   hfs_ext_read_extent()->
+     __hfs_ext_cache_extent()->
+       __hfs_ext_write_extent()->
+         hfs_bmap_reserve()->
+           hfs_extend_file()->
+
+When an inode has both the HFS_FLG_EXT_DIRTY and HFS_FLG_EXT_NEW flags, it will
+enter the above loop and trigger a deadlock.
+
+[Fix]
+In hfs_ext_read_extent(), check if the above two flags exist simultaneously, 
+and exit the subsequent process when the conditions are met.
+
+Reported-and-tested-by: syzbot+41a88b825a315aac2254@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
 ---
-changes since version 1:
-	- improve commit message to indicate why the get_alt callback
-	  is necessary
-	- Link to v1 - https://lore.kernel.org/all/20231124164435.74727-1-hgajjar@de.adit-jv.com/
+ fs/hfs/extent.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-changes since version 2:
-	- Add the limit to allow set up to 2 alt settings.
-	- Link to v2 - https://lore.kernel.org/all/20231201145234.97452-1-hgajjar@de.adit-jv.com/
----
- drivers/usb/gadget/function/f_fs.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
-index efe3e3b85769..22200d618184 100644
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -42,6 +42,7 @@
- #include "configfs.h"
+diff --git a/fs/hfs/extent.c b/fs/hfs/extent.c
+index 6d1878b99b30..1b02c7b6a10c 100644
+--- a/fs/hfs/extent.c
++++ b/fs/hfs/extent.c
+@@ -197,6 +197,10 @@ static int hfs_ext_read_extent(struct inode *inode, u16 block)
+ 	    block < HFS_I(inode)->cached_start + HFS_I(inode)->cached_blocks)
+ 		return 0;
  
- #define FUNCTIONFS_MAGIC	0xa647361 /* Chosen by a honest dice roll ;) */
-+#define MAX_ALT_SETTINGS	2		  /* Allow up to 2 alt settings to be set. */
- 
- /* Reference counter handling */
- static void ffs_data_get(struct ffs_data *ffs);
-@@ -75,6 +76,7 @@ struct ffs_function {
- 	short				*interfaces_nums;
- 
- 	struct usb_function		function;
-+	int				cur_alt[MAX_CONFIG_INTERFACES];
- };
- 
- 
-@@ -98,6 +100,7 @@ static int __must_check ffs_func_eps_enable(struct ffs_function *func);
- static int ffs_func_bind(struct usb_configuration *,
- 			 struct usb_function *);
- static int ffs_func_set_alt(struct usb_function *, unsigned, unsigned);
-+static int ffs_func_get_alt(struct usb_function *f, unsigned int intf);
- static void ffs_func_disable(struct usb_function *);
- static int ffs_func_setup(struct usb_function *,
- 			  const struct usb_ctrlrequest *);
-@@ -3232,6 +3235,15 @@ static void ffs_reset_work(struct work_struct *work)
- 	ffs_data_reset(ffs);
- }
- 
-+static int ffs_func_get_alt(struct usb_function *f,
-+			    unsigned int interface)
-+{
-+	struct ffs_function *func = ffs_func_from_usb(f);
-+	int intf = ffs_func_revmap_intf(func, interface);
++	if (HFS_I(inode)->flags & HFS_FLG_EXT_DIRTY && 
++	    HFS_I(inode)->flags & HFS_FLG_EXT_NEW) 
++		return -ENOENT;
 +
-+	return (intf < 0) ? intf : func->cur_alt[interface];
-+}
-+
- static int ffs_func_set_alt(struct usb_function *f,
- 			    unsigned interface, unsigned alt)
- {
-@@ -3239,6 +3251,9 @@ static int ffs_func_set_alt(struct usb_function *f,
- 	struct ffs_data *ffs = func->ffs;
- 	int ret = 0, intf;
- 
-+	if (alt > MAX_ALT_SETTINGS)
-+		return -EINVAL;
-+
- 	if (alt != (unsigned)-1) {
- 		intf = ffs_func_revmap_intf(func, interface);
- 		if (intf < 0)
-@@ -3266,8 +3281,10 @@ static int ffs_func_set_alt(struct usb_function *f,
- 
- 	ffs->func = func;
- 	ret = ffs_func_eps_enable(func);
--	if (ret >= 0)
-+	if (ret >= 0) {
- 		ffs_event_add(ffs, FUNCTIONFS_ENABLE);
-+		func->cur_alt[interface] = alt;
-+	}
- 	return ret;
- }
- 
-@@ -3574,6 +3591,7 @@ static struct usb_function *ffs_alloc(struct usb_function_instance *fi)
- 	func->function.bind    = ffs_func_bind;
- 	func->function.unbind  = ffs_func_unbind;
- 	func->function.set_alt = ffs_func_set_alt;
-+	func->function.get_alt = ffs_func_get_alt;
- 	func->function.disable = ffs_func_disable;
- 	func->function.setup   = ffs_func_setup;
- 	func->function.req_match = ffs_func_req_match;
+ 	res = hfs_find_init(HFS_SB(inode->i_sb)->ext_tree, &fd);
+ 	if (!res) {
+ 		res = __hfs_ext_cache_extent(&fd, inode, block);
 -- 
-2.17.1
+2.43.0
 
