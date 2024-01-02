@@ -1,367 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD9812E5E;
-	Tue,  2 Jan 2024 06:50:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D0614A82;
+	Tue,  2 Jan 2024 06:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ucDSxbRB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D51BC433C8;
-	Tue,  2 Jan 2024 06:50:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704178249;
-	bh=6HrmutA4w4lJw9CHMXV+TxNZ0KU+8Hg+Z65BKTFYS74=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ucDSxbRBbTiz0AzoQHUy+H+gUWK/XnS3DCif5T/hE4u/TJ0MyXBc96G8Bz/XVDrwc
-	 71xJWlSbob8LCNZeE1+wTrEWdSdG+e5WgLHZfK93MtPsdjoggZ+a0rEeTT09rNdcha
-	 4WagtwTlo6hiMjGy0DJma4R2YBfIjSrq+uY7rEgu6NTWdcwVpttCUjPxZCmh+ER7JW
-	 lCz+XTVTkbwef1nxZWpP56AtvBrsVX4mdI1zMKxnNMZVSXhYkY8w4Do3H58kayTJUg
-	 J149VouGeItcpW0YT6V9F4ga1Mk4l9F/nd9NMWIUUabRlOcx99xL2Bgtd2ZzFAquOA
-	 mJJK+IVwlyMHg==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Jerry Shih <jerry.shih@sifive.com>
-Cc: linux-kernel@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Phoebe Chen <phoebe.chen@sifive.com>,
-	hongrong.hsu@sifive.com,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Andy Chiu <andy.chiu@sifive.com>,
-	=?UTF-8?q?Christoph=20M=C3=BCllner?= <christoph.muellner@vrull.eu>,
-	Heiko Stuebner <heiko.stuebner@vrull.eu>
-Subject: [RFC PATCH 13/13] crypto: riscv - add vector crypto accelerated SM4
-Date: Tue,  2 Jan 2024 00:47:39 -0600
-Message-ID: <20240102064743.220490-14-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240102064743.220490-1-ebiggers@kernel.org>
-References: <20240102064743.220490-1-ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tug/gzpd"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5ce2aada130so1191473a12.1;
+        Mon, 01 Jan 2024 22:51:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704178267; x=1704783067; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=R8F/+iXsJjJp5cY3eRGqTDaoPQDTgw92LMUvnxufrxc=;
+        b=Tug/gzpddvCSk96Dcmz8qYJ9DcsN8rZKCzAi6itaKSnlrLuGHQozhdgiAeTU1qWRU9
+         RMf97AqAmGoOS1/dR/75Z4cvcfJjb/J691V8wybVbZ58jKFaYfasc+n3aYPHr+pQyLAZ
+         0R7x8fmzwtkNsL+POCr+WXVqLU16/T35n7tXIONIGCTZJYayh4ncili6a3pqgHxeHfjb
+         lpjnsAPvVojU5dcOD77Az4if/4jmi58EK72mFy6uEhvIH5/bKxDkNHZkNz4/fXqk4xDQ
+         O8r2Gp7nBB9JV1Ksnxwx65jh60ztD3QHEuPVIHQE+SRJ7uU7td4WbxNypDX884q5S4uk
+         3U0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704178267; x=1704783067;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R8F/+iXsJjJp5cY3eRGqTDaoPQDTgw92LMUvnxufrxc=;
+        b=hO8bpeE+Afv+qYID9lt5o3F84pMKRCQg7rsZ5bYAVHlXXxmUihA6Nemycj1ci05zua
+         8A2wqsfuLVkv62CQGSS4H96NfC4OpqmkDDet9ltIyp+1KNKpdOZXurlgsE7yOzFl326/
+         6AILqsKFU2JyPsBchThAgQ4YdiayB65mDTWfSSsSKC1BgzKCicJOWZHREGG01xoS4ZSA
+         ofKy8ittETU9ITFDSVRhU5iNbC/2ejAoGb6+yzNDKbMP8pCkmkopbY1oV1fzWg1TnT2E
+         i0M+eywezEPjGp14h33wJKZIB42OV7GBxsCFSapPlpFF8poh88wnn/o18+ud0oJODiuL
+         EnXg==
+X-Gm-Message-State: AOJu0YydOsDYxmLb6dSi5G7uwpYhCBBU2B0ZqRVqYa+4X+iC5yC8zGBs
+	xe77iccxjLmV2FgbHpbrzjs=
+X-Google-Smtp-Source: AGHT+IHcTREjpyWgKEzKD4YAHHxNS5f79u2XfsEPNCsjiFswXMxR+qe0BtSk/jJ0gOK+K3RbrdXVDQ==
+X-Received: by 2002:a05:6a20:1443:b0:197:1a55:7dcf with SMTP id a3-20020a056a20144300b001971a557dcfmr436231pzi.50.1704178266809;
+        Mon, 01 Jan 2024 22:51:06 -0800 (PST)
+Received: from Laptop-X1 ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id q23-20020a170902b11700b001d4abf0a28csm4714023plr.132.2024.01.01.22.51.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jan 2024 22:51:05 -0800 (PST)
+Date: Tue, 2 Jan 2024 14:51:00 +0800
+From: Hangbin Liu <liuhangbin@gmail.com>
+To: Yujie Liu <yujie.liu@intel.com>
+Cc: Guillaume Nault <gnault@redhat.com>, netdev@vger.kernel.org,
+	Paolo Abeni <pabeni@redhat.com>, David Ahern <dsahern@kernel.org>,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	lkp@intel.com, kernel test robot <oliver.sang@intel.com>
+Subject: Re: [PATCH v2 net-next] selftests/net: change shebang to bash to
+ support "source"
+Message-ID: <ZZOyVGQ7U3K16wHr@Laptop-X1>
+References: <20231229131931.3961150-1-yujie.liu@intel.com>
+ <ZZFbxyQeHgf3UQrN@debian>
+ <ZZOkfPgs6T3ujpJo@yujie-X299>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZZOkfPgs6T3ujpJo@yujie-X299>
 
-From: Jerry Shih <jerry.shih@sifive.com>
+On Tue, Jan 02, 2024 at 01:51:56PM +0800, Yujie Liu wrote:
+> > Looks like it'd be simpler to just replace the "source" commands with
+> > "." and leave the shebang as is (unless there are other bash-specific
+> > constructs in these scripts of course).
+> > 
+> > Generally speaking, I think we should avoid madating a specific shell,
+> > unless that really simplifies the test script (which is not the case
+> > here).
+> 
+> Hi Guillaume,
+> 
+> Thanks for the comments. As this is related with a large patch series from
+> Hangbin, and other scripts use "source" during the conversion, so we may
+> need some input from Hangbin.
+> 
+> Hi Hangbin,
+> 
+> Could you please share your comments on this? Would you like to replace
+> "source" with "." for these two specific scripts as Guillaume suggested,
+> or change the shebang from "sh" to "bash"?
 
-Add an implementation of SM4 using the Zvksed extension.  The assembly
-code is derived from OpenSSL code (openssl/openssl#21923) that was
-dual-licensed so that it could be reused in the kernel.  Nevertheless,
-the assembly has been significantly reworked for integration with the
-kernel, for example by using a regular .S file instead of the so-called
-perlasm, using the assembler instead of bare '.inst', and greatly
-reducing code duplication.
+Both works for me :)
 
-Co-developed-by: Christoph Müllner <christoph.muellner@vrull.eu>
-Signed-off-by: Christoph Müllner <christoph.muellner@vrull.eu>
-Co-developed-by: Heiko Stuebner <heiko.stuebner@vrull.eu>
-Signed-off-by: Heiko Stuebner <heiko.stuebner@vrull.eu>
-Signed-off-by: Jerry Shih <jerry.shih@sifive.com>
-Co-developed-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- arch/riscv/crypto/Kconfig                   |  17 +++
- arch/riscv/crypto/Makefile                  |   3 +
- arch/riscv/crypto/sm4-riscv64-glue.c        | 109 ++++++++++++++++++
- arch/riscv/crypto/sm4-riscv64-zvksed-zvkb.S | 117 ++++++++++++++++++++
- 4 files changed, 246 insertions(+)
- create mode 100644 arch/riscv/crypto/sm4-riscv64-glue.c
- create mode 100644 arch/riscv/crypto/sm4-riscv64-zvksed-zvkb.S
-
-diff --git a/arch/riscv/crypto/Kconfig b/arch/riscv/crypto/Kconfig
-index d44911853fa2d..9ba225d968289 100644
---- a/arch/riscv/crypto/Kconfig
-+++ b/arch/riscv/crypto/Kconfig
-@@ -81,11 +81,28 @@ config CRYPTO_SM3_RISCV64
- 	depends on 64BIT && RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
- 	select CRYPTO_HASH
- 	select CRYPTO_SM3
- 	help
- 	  SM3 (ShangMi 3) secure hash function (OSCCA GM/T 0004-2012)
- 
- 	  Architecture: riscv64 using:
- 	  - Zvksh vector crypto extension
- 	  - Zvkb vector crypto extension
- 
-+config CRYPTO_SM4_RISCV64
-+	tristate "Ciphers: SM4 (ShangMi 4)"
-+	depends on 64BIT && RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
-+	select CRYPTO_ALGAPI
-+	select CRYPTO_SM4
-+	help
-+	  SM4 block cipher algorithm (OSCCA GB/T 32907-2016,
-+	  ISO/IEC 18033-3:2010/Amd 1:2021)
-+
-+	  SM4 (GBT.32907-2016) is a cryptographic standard issued by the
-+	  Organization of State Commercial Administration of China (OSCCA)
-+	  as an authorized cryptographic algorithm for use within China.
-+
-+	  Architecture: riscv64 using:
-+	  - Zvksed vector crypto extension
-+	  - Zvkb vector crypto extension
-+
- endmenu
-diff --git a/arch/riscv/crypto/Makefile b/arch/riscv/crypto/Makefile
-index 4b5efabd1162a..70d60060d9b26 100644
---- a/arch/riscv/crypto/Makefile
-+++ b/arch/riscv/crypto/Makefile
-@@ -16,10 +16,13 @@ obj-$(CONFIG_CRYPTO_GHASH_RISCV64) += ghash-riscv64.o
- ghash-riscv64-y := ghash-riscv64-glue.o ghash-riscv64-zvkg.o
- 
- obj-$(CONFIG_CRYPTO_SHA256_RISCV64) += sha256-riscv64.o
- sha256-riscv64-y := sha256-riscv64-glue.o sha256-riscv64-zvknha_or_zvknhb-zvkb.o
- 
- obj-$(CONFIG_CRYPTO_SHA512_RISCV64) += sha512-riscv64.o
- sha512-riscv64-y := sha512-riscv64-glue.o sha512-riscv64-zvknhb-zvkb.o
- 
- obj-$(CONFIG_CRYPTO_SM3_RISCV64) += sm3-riscv64.o
- sm3-riscv64-y := sm3-riscv64-glue.o sm3-riscv64-zvksh-zvkb.o
-+
-+obj-$(CONFIG_CRYPTO_SM4_RISCV64) += sm4-riscv64.o
-+sm4-riscv64-y := sm4-riscv64-glue.o sm4-riscv64-zvksed-zvkb.o
-diff --git a/arch/riscv/crypto/sm4-riscv64-glue.c b/arch/riscv/crypto/sm4-riscv64-glue.c
-new file mode 100644
-index 0000000000000..b8993f1411f45
---- /dev/null
-+++ b/arch/riscv/crypto/sm4-riscv64-glue.c
-@@ -0,0 +1,109 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * SM4 using the RISC-V vector crypto extensions
-+ *
-+ * Copyright (C) 2023 VRULL GmbH
-+ * Author: Heiko Stuebner <heiko.stuebner@vrull.eu>
-+ *
-+ * Copyright (C) 2023 SiFive, Inc.
-+ * Author: Jerry Shih <jerry.shih@sifive.com>
-+ */
-+
-+#include <asm/simd.h>
-+#include <asm/vector.h>
-+#include <crypto/internal/cipher.h>
-+#include <crypto/internal/simd.h>
-+#include <crypto/sm4.h>
-+#include <linux/linkage.h>
-+#include <linux/module.h>
-+
-+asmlinkage void sm4_expandkey_zvksed_zvkb(const u8 user_key[SM4_KEY_SIZE],
-+					  u32 rkey_enc[SM4_RKEY_WORDS],
-+					  u32 rkey_dec[SM4_RKEY_WORDS]);
-+asmlinkage void sm4_crypt_zvksed_zvkb(const u32 rkey[SM4_RKEY_WORDS],
-+				      const u8 in[SM4_BLOCK_SIZE],
-+				      u8 out[SM4_BLOCK_SIZE]);
-+
-+static int riscv64_sm4_setkey(struct crypto_tfm *tfm, const u8 *key,
-+			      unsigned int key_len)
-+{
-+	struct sm4_ctx *ctx = crypto_tfm_ctx(tfm);
-+
-+	if (key_len != SM4_KEY_SIZE)
-+		return -EINVAL;
-+
-+	if (crypto_simd_usable()) {
-+		kernel_vector_begin();
-+		sm4_expandkey_zvksed_zvkb(key, ctx->rkey_enc, ctx->rkey_dec);
-+		kernel_vector_end();
-+	} else {
-+		sm4_expandkey(ctx, key, key_len);
-+	}
-+	return 0;
-+}
-+
-+static void riscv64_sm4_encrypt(struct crypto_tfm *tfm, u8 *dst, const u8 *src)
-+{
-+	const struct sm4_ctx *ctx = crypto_tfm_ctx(tfm);
-+
-+	if (crypto_simd_usable()) {
-+		kernel_vector_begin();
-+		sm4_crypt_zvksed_zvkb(ctx->rkey_enc, src, dst);
-+		kernel_vector_end();
-+	} else {
-+		sm4_crypt_block(ctx->rkey_enc, dst, src);
-+	}
-+}
-+
-+static void riscv64_sm4_decrypt(struct crypto_tfm *tfm, u8 *dst, const u8 *src)
-+{
-+	const struct sm4_ctx *ctx = crypto_tfm_ctx(tfm);
-+
-+	if (crypto_simd_usable()) {
-+		kernel_vector_begin();
-+		sm4_crypt_zvksed_zvkb(ctx->rkey_dec, src, dst);
-+		kernel_vector_end();
-+	} else {
-+		sm4_crypt_block(ctx->rkey_dec, dst, src);
-+	}
-+}
-+
-+static struct crypto_alg riscv64_sm4_alg = {
-+	.cra_flags = CRYPTO_ALG_TYPE_CIPHER,
-+	.cra_blocksize = SM4_BLOCK_SIZE,
-+	.cra_ctxsize = sizeof(struct sm4_ctx),
-+	.cra_priority = 300,
-+	.cra_name = "sm4",
-+	.cra_driver_name = "sm4-riscv64-zvksed-zvkb",
-+	.cra_cipher = {
-+		.cia_min_keysize = SM4_KEY_SIZE,
-+		.cia_max_keysize = SM4_KEY_SIZE,
-+		.cia_setkey = riscv64_sm4_setkey,
-+		.cia_encrypt = riscv64_sm4_encrypt,
-+		.cia_decrypt = riscv64_sm4_decrypt,
-+	},
-+	.cra_module = THIS_MODULE,
-+};
-+
-+static int __init riscv64_sm4_mod_init(void)
-+{
-+	if (riscv_isa_extension_available(NULL, ZVKSED) &&
-+	    riscv_isa_extension_available(NULL, ZVKB) &&
-+	    riscv_vector_vlen() >= 128)
-+		return crypto_register_alg(&riscv64_sm4_alg);
-+
-+	return -ENODEV;
-+}
-+
-+static void __exit riscv64_sm4_mod_fini(void)
-+{
-+	crypto_unregister_alg(&riscv64_sm4_alg);
-+}
-+
-+module_init(riscv64_sm4_mod_init);
-+module_exit(riscv64_sm4_mod_fini);
-+
-+MODULE_DESCRIPTION("SM4 (RISC-V accelerated)");
-+MODULE_AUTHOR("Heiko Stuebner <heiko.stuebner@vrull.eu>");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS_CRYPTO("sm4");
-diff --git a/arch/riscv/crypto/sm4-riscv64-zvksed-zvkb.S b/arch/riscv/crypto/sm4-riscv64-zvksed-zvkb.S
-new file mode 100644
-index 0000000000000..143e60ddf3fe4
---- /dev/null
-+++ b/arch/riscv/crypto/sm4-riscv64-zvksed-zvkb.S
-@@ -0,0 +1,117 @@
-+/* SPDX-License-Identifier: Apache-2.0 OR BSD-2-Clause */
-+//
-+// This file is dual-licensed, meaning that you can use it under your
-+// choice of either of the following two licenses:
-+//
-+// Copyright 2023 The OpenSSL Project Authors. All Rights Reserved.
-+//
-+// Licensed under the Apache License 2.0 (the "License"). You can obtain
-+// a copy in the file LICENSE in the source distribution or at
-+// https://www.openssl.org/source/license.html
-+//
-+// or
-+//
-+// Copyright (c) 2023, Christoph Müllner <christoph.muellner@vrull.eu>
-+// Copyright (c) 2023, Jerry Shih <jerry.shih@sifive.com>
-+// Copyright 2024 Google LLC
-+// All rights reserved.
-+//
-+// Redistribution and use in source and binary forms, with or without
-+// modification, are permitted provided that the following conditions
-+// are met:
-+// 1. Redistributions of source code must retain the above copyright
-+//    notice, this list of conditions and the following disclaimer.
-+// 2. Redistributions in binary form must reproduce the above copyright
-+//    notice, this list of conditions and the following disclaimer in the
-+//    documentation and/or other materials provided with the distribution.
-+//
-+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+
-+// The generated code of this file depends on the following RISC-V extensions:
-+// - RV64I
-+// - RISC-V Vector ('V') with VLEN >= 128
-+// - RISC-V Vector SM4 Block Cipher extension ('Zvksed')
-+// - RISC-V Vector Cryptography Bit-manipulation extension ('Zvkb')
-+
-+#include <linux/linkage.h>
-+
-+.text
-+.option arch, +zvksed, +zvkb
-+
-+// void sm4_expandkey_zksed_zvkb(const u8 user_key[16], u32 rkey_enc[32],
-+//				 u32 rkey_dec[32]);
-+SYM_FUNC_START(sm4_expandkey_zvksed_zvkb)
-+	vsetivli	zero, 4, e32, m1, ta, ma
-+
-+	// Load the user key.
-+	vle32.v		v1, (a0)
-+	vrev8.v		v1, v1
-+
-+	// XOR the user key with the family key.
-+	la		t0, FAMILY_KEY
-+	vle32.v		v2, (t0)
-+	vxor.vv		v1, v1, v2
-+
-+	// Compute the round keys.  Store them in forwards order in rkey_enc
-+	// and in reverse order in rkey_dec.
-+	addi		a2, a2, 31*4
-+	li		t0, -4
-+	.set		i, 0
-+.rept 8
-+	vsm4k.vi	v1, v1, i
-+	vse32.v		v1, (a1)	// Store to rkey_enc.
-+	vsse32.v	v1, (a2), t0	// Store to rkey_dec.
-+.if i < 7
-+	addi		a1, a1, 16
-+	addi		a2, a2, -16
-+.endif
-+	.set		i, i + 1
-+.endr
-+
-+	ret
-+SYM_FUNC_END(sm4_expandkey_zvksed_zvkb)
-+
-+// void sm4_crypt_zvksed_zvkb(const u32 rkey[32], const u8 in[16], u8 out[16]);
-+SYM_FUNC_START(sm4_crypt_zvksed_zvkb)
-+	vsetivli	zero, 4, e32, m1, ta, ma
-+
-+	// Load the input data.
-+	vle32.v		v1, (a1)
-+	vrev8.v		v1, v1
-+
-+	// Do the 32 rounds of SM4, 4 at a time.
-+	.set		i, 0
-+.rept 8
-+	vle32.v		v2, (a0)
-+	vsm4r.vs	v1, v2
-+.if i < 7
-+	addi		a0, a0, 16
-+.endif
-+	.set		i, i + 1
-+.endr
-+
-+	// Store the output data (in reverse element order).
-+	vrev8.v		v1, v1
-+	li		t0, -4
-+	addi		a2, a2, 12
-+	vsse32.v	v1, (a2), t0
-+
-+	ret
-+SYM_FUNC_END(sm4_crypt_zvksed_zvkb)
-+
-+.section ".rodata"
-+.p2align 2
-+.type FAMILY_KEY, @object
-+FAMILY_KEY:
-+	.word 0xA3B1BAC6, 0x56AA3350, 0x677D9197, 0xB27022DC
-+.size FAMILY_KEY, .-FAMILY_KEY
--- 
-2.43.0
-
+Thanks
+Hangbin
