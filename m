@@ -1,295 +1,416 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8795A171DF
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 22:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB0317722;
+	Tue,  2 Jan 2024 22:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NEqjXs76"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-50e70b9a840so328e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 14:41:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCL5Eel8"
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7b7f6caf047so468739339f.3;
+        Tue, 02 Jan 2024 14:42:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704235278; x=1704840078; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1704235346; x=1704840146; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Wwtp0RapXDF0AyHO608G8Unzpht3Heb8Iz8vVndZq5w=;
-        b=NEqjXs76mqmtyU/cFyccztmvnGEoJeDuTGPBKijlgv1eJ6TqkVhQgbKsWx95HfnUuj
-         nTe3aiH13R/UlJW1OBaNgVfC/QtxTk0WfxGbWmxFyLPmiNWWUmuUWsz0LrzC+N29gTTD
-         6k4745XQRPxdaSK35cnAiOg75uSJ0iYXchG8lUomb9Jp2EX26pnjqG1GFt3//sFvejyC
-         /Lmt4JT3YLBykvzkcmFV7cTzDh81bawBO78cUu3onJ0Bt3yaFTS/DnI+Jn/ZQGj21YP4
-         7ySgtKiuToU9ZRBY5OvVipGGRoYLTrX7HWw4jOWFwJAsxhG9ZAHBYfiNSxzLD358D0od
-         kuhw==
+        bh=CmHr3OHt7MPw9x5AVtozF2YFFmQZ/QVzunb0U9o/+5w=;
+        b=VCL5Eel8AMqxxyfMb+ixyKA3PhzAADRObA2syklfbyGHMtrpAKWTX9Pa4R86eQPENm
+         QsLJ3ZSST3m0HRyCLEr0GGEDUUcqKaNC1rrcsazM/o3oHoQZFnRANu+pAKugRPPtBqE8
+         mI9OUYeSOpvQ1/igWGbgiMQLL/t5D6LR2kJnuqHGb7XINVBzkKeJq0O+jRfSGsx8zIUD
+         yPepcz0Bxa5Ig4MXnafZsb15uLngd+hJMIPrqwwYBWRjjBx0E9NdyRd2PCVgIA4issf9
+         Xhpx8K/I+r+1fvsqNDqA36+EpORNO4gHFQgGWKe/Dtuqni3OpJNVnoiv6P3hP4RW9Edz
+         dQQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704235278; x=1704840078;
+        d=1e100.net; s=20230601; t=1704235346; x=1704840146;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Wwtp0RapXDF0AyHO608G8Unzpht3Heb8Iz8vVndZq5w=;
-        b=Dnh0MM9VpMEyZnmxNTX5hd8LIofC0GQAmz4tHst6HgB0tO1Z8vCALw0xkSWDT4Oc0U
-         umAlAyUUOIpcQCjoUwX9aqFk3N05ngIOoGu6X8lsb7kjuWfEwE4l7pts/dfQ9kiPSBMY
-         7K/0LNpySdkeOdkbUOckbg4xEfkCc2yMH0Hg80gUUm/sa/ywlI7DPkdsJVxywwduhVj7
-         rmp9gH6KsnbkZmzrWpaqHc1DyIYPyz/VAhM9HtlCkLDb6OEjL1enn0o32siYN9cjCP3l
-         geox3zk2JIqNsPwaNrj8G38bEEqv39Z2+3B8NsIo5NRlVsngbC+8y4chTep1jxH6jhB6
-         Stzw==
-X-Gm-Message-State: AOJu0Yyyu2SoAiuE9QhMEZ0+tlUqlLsfNqV3k179ZdL1XF/TQevmUCVZ
-	7G2bzmjuON0J0zI6PsiYt0oQbdYuSjmBhAG38Vy6ek+kTyDQ
-X-Google-Smtp-Source: AGHT+IGVMLm/Qdswcgr6++8fjw86gx7rCSFOlLefssE2dScC7t0YnCZsP0VVmz+WyzEm/PqMxxnZEUAP1GxvR2MsZcw=
-X-Received: by 2002:ac2:58fc:0:b0:50e:9f94:1c37 with SMTP id
- v28-20020ac258fc000000b0050e9f941c37mr1559lfo.7.1704235278375; Tue, 02 Jan
- 2024 14:41:18 -0800 (PST)
+        bh=CmHr3OHt7MPw9x5AVtozF2YFFmQZ/QVzunb0U9o/+5w=;
+        b=HgpS7R4572dBYJC5euidOX4IwDhyJIAvG1V89rD2oLva2UqoxDJyhtsTQws/ECoD8b
+         MYri7V6kfr7awOR/eheqfpKR9T7GFkYsDAxasMClwUKQxmwrPm7HKb2Ns/Dt+Xr7Ob8Z
+         ZmnypPbHby9bZWcvAdoFkTCCbVTHsjgTRjD9D/nvQJyp2qMg1uPnFTOspI0snD9ITLms
+         D3RsSLVmWxm7io/vrqUOAQA/g6jUSfnEBT6K5FUPp4J+yyFHXsGrTrmeXkTbafdZ/3ay
+         DdgjFIdP3SNuDtC2ioah9Q4H+S1teVdX5f3t9THPEsBcEwlSquaj65IByLclP1/djiM1
+         8faQ==
+X-Gm-Message-State: AOJu0YzY9HRJ5OUyJgGXv0WFSCEb9u1GzqlXsGTCOGid3CyR6i/m4X1b
+	nPlHmbgCMpNLSF3zAY0X7d5Aw5j3dov/mWRJ2z8=
+X-Google-Smtp-Source: AGHT+IHXcpJn/BhKjBO+se6/n7iotyTXbqg5g4oLMShcPjlSf3ZjTCI5Hja/UzMHl1c6oGr4wdnHOaQY7rJiRX0+JCI=
+X-Received: by 2002:a6b:e00c:0:b0:7b7:f9ef:37b6 with SMTP id
+ z12-20020a6be00c000000b007b7f9ef37b6mr21622934iog.15.1704235345662; Tue, 02
+ Jan 2024 14:42:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZYbm5L7tw7bdpDpE@kernel.org> <4d86f3b6-eaee-4673-bdf5-3b97c1c1ad17@linux.intel.com>
-In-Reply-To: <4d86f3b6-eaee-4673-bdf5-3b97c1c1ad17@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 2 Jan 2024 14:41:07 -0800
-Message-ID: <CAP-5=fUfJ-VBGS1D2+WM_eBu4uPGvxJ2KyD4WXzgKRCfGKHTQQ@mail.gmail.com>
-Subject: Re: perf test hybrid failing on 14700K
-To: "Liang, Kan" <kan.liang@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@intel.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20231220152653.3273778-1-schatzberg.dan@gmail.com> <20231220152653.3273778-3-schatzberg.dan@gmail.com>
+In-Reply-To: <20231220152653.3273778-3-schatzberg.dan@gmail.com>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Tue, 2 Jan 2024 14:42:14 -0800
+Message-ID: <CAKEwX=P7MVYc2jYCZG4BfawgBfJNcd-rLkDka5_tCrm8RSay9Q@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] mm: add swapiness= arg to memory.reclaim
+To: Dan Schatzberg <schatzberg.dan@gmail.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Yosry Ahmed <yosryahmed@google.com>, Huan Yang <link@vivo.com>, linux-kernel@vger.kernel.org, 
+	cgroups@vger.kernel.org, linux-mm@kvack.org, Tejun Heo <tj@kernel.org>, 
+	Zefan Li <lizefan.x@bytedance.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Michal Hocko <mhocko@kernel.org>, Shakeel Butt <shakeelb@google.com>, 
+	Muchun Song <muchun.song@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
+	Kefeng Wang <wangkefeng.wang@huawei.com>, SeongJae Park <sj@kernel.org>, 
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>, Yue Zhao <findns94@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 2, 2024 at 7:43=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.co=
-m> wrote:
+On Wed, Dec 20, 2023 at 7:27=E2=80=AFAM Dan Schatzberg <schatzberg.dan@gmai=
+l.com> wrote:
 >
+> Allow proactive reclaimers to submit an additional swappiness=3D<val>
+> argument to memory.reclaim. This overrides the global or per-memcg
+> swappiness setting for that reclaim attempt.
 >
+> For example:
 >
-> On 2023-12-23 8:55 a.m., Arnaldo Carvalho de Melo wrote:
-> > Hi Kan,
-> >
-> > I noticed the following problem, are you able to reproduce it?
-> >
-> > Happy solstice!
+> echo "2M swappiness=3D0" > /sys/fs/cgroup/memory.reclaim
 >
-> Happy new year!
+> will perform reclaim on the rootcg with a swappiness setting of 0 (no
+> swap) regardless of the vm.swappiness sysctl setting.
 >
-> >
-> > - Arnaldo
-> >
-> > root@number:/home/acme/Downloads# grep "model name" -m1 /proc/cpuinfo
-> > model name    : Intel(R) Core(TM) i7-14700K
-> > root@number:/home/acme/Downloads# uname -a
-> > Linux number 6.6.4-200.fc39.x86_64 #1 SMP PREEMPT_DYNAMIC Sun Dec  3 18=
-:13:11 UTC 2023 x86_64 GNU/Linux
-> > root@number:/home/acme/Downloads# perf -vv
-> > perf version 6.7.rc6.g63daba4e2861
-> >                  dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
-> >     dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
-> >          syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-> >                 libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT
-> >             debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
-> >                 libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-> >                libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-> > numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-> >                libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
-> >              libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-> >               libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-> >              libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-> >              libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
-> >     libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
-> >                   zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-> >                   lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-> >              get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-> >                    bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-> >                    aio: [ on  ]  # HAVE_AIO_SUPPORT
-> >                   zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
-> >                libpfm4: [ on  ]  # HAVE_LIBPFM
-> >          libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
-> >          bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
-> > root@number:/home/acme/Downloads# perf test 75
-> >  75: x86 hybrid                                                      : =
-FAILED!
+> Userspace proactive reclaimers use the memory.reclaim interface to
+> trigger reclaim. The memory.reclaim interface does not allow for any way
+> to effect the balance of file vs anon during proactive reclaim. The only
+> approach is to adjust the vm.swappiness setting. However, there are a
+> few reasons we look to control the balance of file vs anon during
+> proactive reclaim, separately from reactive reclaim:
 >
-> The failure should be a regression caused by the a24d9d9dc096 ("perf
-> parse-events: Make legacy events lower priority than sysfs/JSON")
+> * Swapout should be limited to manage SSD write endurance. In near-OOM
+> situations we are fine with lots of swap-out to avoid OOMs. As these are
+> typically rare events, they have relatively little impact on write
+> endurance. However, proactive reclaim runs continuously and so its
+> impact on SSD write endurance is more significant. Therefore it is
+> desireable to control swap-out for proactive reclaim separately from
+> reactive reclaim
 >
-> @@ -1004,10 +1012,19 @@ static int config_term_pmu(struct
-> perf_event_attr *attr,
->                                                            err_str, /*hel=
-p=3D*/NULL);
->                         return -EINVAL;
+> * Some userspace OOM killers like systemd-oomd[1] support OOM killing on
+> swap exhaustion. This makes sense if the swap exhaustion is triggered
+> due to reactive reclaim but less so if it is triggered due to proactive
+> reclaim (e.g. one could see OOMs when free memory is ample but anon is
+> just particularly cold). Therefore, it's desireable to have proactive
+> reclaim reduce or stop swap-out before the threshold at which OOM
+> killing occurs.
+>
+> In the case of Meta's Senpai proactive reclaimer, we adjust
+> vm.swappiness before writes to memory.reclaim[2]. This has been in
+> production for nearly two years and has addressed our needs to control
+> proactive vs reactive reclaim behavior but is still not ideal for a
+> number of reasons:
+>
+> * vm.swappiness is a global setting, adjusting it can race/interfere
+> with other system administration that wishes to control vm.swappiness.
+> In our case, we need to disable Senpai before adjusting vm.swappiness.
+>
+> * vm.swappiness is stateful - so a crash or restart of Senpai can leave
+> a misconfigured setting. This requires some additional management to
+> record the "desired" setting and ensure Senpai always adjusts to it.
+>
+> With this patch, we avoid these downsides of adjusting vm.swappiness
+> globally.
+>
+> [1]https://www.freedesktop.org/software/systemd/man/latest/systemd-oomd.s=
+ervice.html
+> [2]https://github.com/facebookincubator/oomd/blob/main/src/oomd/plugins/S=
+enpai.cpp#L585-L598
+>
+> Signed-off-by: Dan Schatzberg <schatzberg.dan@gmail.com>
+> ---
+>  Documentation/admin-guide/cgroup-v2.rst | 18 ++++----
+>  include/linux/swap.h                    |  3 +-
+>  mm/memcontrol.c                         | 56 ++++++++++++++++++++-----
+>  mm/vmscan.c                             | 13 +++++-
+>  4 files changed, 69 insertions(+), 21 deletions(-)
+>
+> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admi=
+n-guide/cgroup-v2.rst
+> index 3f85254f3cef..ee42f74e0765 100644
+> --- a/Documentation/admin-guide/cgroup-v2.rst
+> +++ b/Documentation/admin-guide/cgroup-v2.rst
+> @@ -1282,17 +1282,10 @@ PAGE_SIZE multiple when read back.
+>         This is a simple interface to trigger memory reclaim in the
+>         target cgroup.
+>
+> -       This file accepts a single key, the number of bytes to reclaim.
+> -       No nested keys are currently supported.
+> -
+>         Example::
+>
+>           echo "1G" > memory.reclaim
+>
+> -       The interface can be later extended with nested keys to
+> -       configure the reclaim behavior. For example, specify the
+> -       type of memory to reclaim from (anon, file, ..).
+> -
+>         Please note that the kernel can over or under reclaim from
+>         the target cgroup. If less bytes are reclaimed than the
+>         specified amount, -EAGAIN is returned.
+> @@ -1304,6 +1297,17 @@ PAGE_SIZE multiple when read back.
+>         This means that the networking layer will not adapt based on
+>         reclaim induced by memory.reclaim.
+>
+> +The following nested keys are defined.
+> +
+> +         =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D            =3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +         swappiness            Swappiness value to reclaim with
+> +         =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D            =3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +       Specifying a swappiness value instructs the kernel to perform
+> +       the reclaim with that swappiness value. Note that this has the
+> +       same semantics as vm.swappiness applied to memcg reclaim with
+> +       all the existing limitations and potential future extensions.
+> +
+>    memory.peak
+>         A read-only single value file which exists on non-root
+>         cgroups.
+> diff --git a/include/linux/swap.h b/include/linux/swap.h
+> index e2ab76c25b4a..8afdec40efe3 100644
+> --- a/include/linux/swap.h
+> +++ b/include/linux/swap.h
+> @@ -412,7 +412,8 @@ extern unsigned long try_to_free_pages(struct zonelis=
+t *zonelist, int order,
+>  extern unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *mem=
+cg,
+>                                                   unsigned long nr_pages,
+>                                                   gfp_t gfp_mask,
+> -                                                 unsigned int reclaim_op=
+tions);
+> +                                                 unsigned int reclaim_op=
+tions,
+> +                                                 int *swappiness);
+>  extern unsigned long mem_cgroup_shrink_node(struct mem_cgroup *mem,
+>                                                 gfp_t gfp_mask, bool nosw=
+ap,
+>                                                 pg_data_t *pgdat,
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index fbe9f02dd206..6d627a754851 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -52,6 +52,7 @@
+>  #include <linux/sort.h>
+>  #include <linux/fs.h>
+>  #include <linux/seq_file.h>
+> +#include <linux/parser.h>
+>  #include <linux/vmpressure.h>
+>  #include <linux/memremap.h>
+>  #include <linux/mm_inline.h>
+> @@ -2449,7 +2450,8 @@ static unsigned long reclaim_high(struct mem_cgroup=
+ *memcg,
+>                 psi_memstall_enter(&pflags);
+>                 nr_reclaimed +=3D try_to_free_mem_cgroup_pages(memcg, nr_=
+pages,
+>                                                         gfp_mask,
+> -                                                       MEMCG_RECLAIM_MAY=
+_SWAP);
+> +                                                       MEMCG_RECLAIM_MAY=
+_SWAP,
+> +                                                       NULL);
+>                 psi_memstall_leave(&pflags);
+>         } while ((memcg =3D parent_mem_cgroup(memcg)) &&
+>                  !mem_cgroup_is_root(memcg));
+> @@ -2740,7 +2742,7 @@ static int try_charge_memcg(struct mem_cgroup *memc=
+g, gfp_t gfp_mask,
+>
+>         psi_memstall_enter(&pflags);
+>         nr_reclaimed =3D try_to_free_mem_cgroup_pages(mem_over_limit, nr_=
+pages,
+> -                                                   gfp_mask, reclaim_opt=
+ions);
+> +                                                   gfp_mask, reclaim_opt=
+ions, NULL);
+>         psi_memstall_leave(&pflags);
+>
+>         if (mem_cgroup_margin(mem_over_limit) >=3D nr_pages)
+> @@ -3660,7 +3662,7 @@ static int mem_cgroup_resize_max(struct mem_cgroup =
+*memcg,
 >                 }
-> -               attr->type =3D PERF_TYPE_HARDWARE;
-> -               attr->config =3D term->val.num;
-> -               if (perf_pmus__supports_extended_type())
-> -                       attr->config |=3D (__u64)pmu->type << PERF_PMU_TY=
-PE_SHIFT;
-> +               /*
-> +                * If the PMU has a sysfs or json event prefer it over
-> +                * legacy. ARM requires this.
-> +                */
-> +               if (perf_pmu__have_event(pmu, term->config))
-> For Intel hybrid, the perf_pmu__have_event() should be always true for
-> all hw events and hw cache events. So the patch will mistakenly update
-> the type to TYPE_USER. However, On Intel platforms, the type of the hw
-> events should be TYPE_HARDWARE.
 >
-> Seems ARM needs to find another way to distinguish the case.
+>                 if (!try_to_free_mem_cgroup_pages(memcg, 1, GFP_KERNEL,
+> -                                       memsw ? 0 : MEMCG_RECLAIM_MAY_SWA=
+P)) {
+> +                                       memsw ? 0 : MEMCG_RECLAIM_MAY_SWA=
+P, NULL)) {
+>                         ret =3D -EBUSY;
+>                         break;
+>                 }
+> @@ -3774,7 +3776,7 @@ static int mem_cgroup_force_empty(struct mem_cgroup=
+ *memcg)
+>                         return -EINTR;
 >
-> Ian, any suggestions?
-
-Hi Kan/Mark,
-
-Firstly, the perf_pmu__have_event is a test of whether
-/sys/devices/<pmu>/events or the equivalent json events have the
-specified event string like "inst_retired.any" - ie it isn't a test of
-whether the event is supported by the kernel. Mark was quite insistent
-that the behavior be changed so that if a legacy event is specified
-with a PMU, the PMU's sysfs/json event is the priority which is a big
-behavior change on x86.
-
-To get the test passing again I've sent out a test update:
-https://lore.kernel.org/lkml/20240102215732.1125997-1-irogers@google.com/
-This switches the legacy events in the test to ones which don't have
-sysfs or json equivalents. The test is somewhat brittle as an x86 PMU
-change could decide to add /sys/devices/cpu/events/cycles alongside
-/sys/devices/cpu/events/cpu-cycles. Ideally we'd be testing all events
-on core PMUs, for legacy events they may have a sysfs/json override
-and the test expectation should expect this and assert that the type
-isn't PERF_TYPE_HARDWARE, etc. For now what I sent out is sufficient
-to get the "x86 hybrid" test passing. I should probably have done the
-whole Reported-by.. thing, sorry for missing that.
-
-Thanks,
-Ian
-
->
-> +                       term->type_term =3D PARSE_EVENTS__TERM_TYPE_USER;
-> +                       term->no_value =3D true;
-> +               } else {
-> +                       attr->type =3D PERF_TYPE_HARDWARE;
-> +                       attr->config =3D term->val.num;
-> +                       if (perf_pmus__supports_extended_type())
-> +                               attr->config |=3D (__u64)pmu->type << PER=
-F_PMU_TYPE_SHIFT;
-> +               }
->                 return 0;
+>                 if (!try_to_free_mem_cgroup_pages(memcg, 1, GFP_KERNEL,
+> -                                                 MEMCG_RECLAIM_MAY_SWAP)=
+)
+> +                                                 MEMCG_RECLAIM_MAY_SWAP,=
+ NULL))
+>                         nr_retries--;
 >         }
->         if (term->type_term =3D=3D PARSE_EVENTS__TERM_TYPE_USER ||
 >
+> @@ -6720,7 +6722,7 @@ static ssize_t memory_high_write(struct kernfs_open=
+_file *of,
+>                 }
 >
-> Thanks,
-> Kan
-> > root@number:/home/acme/Downloads# perf test -v 75
-> >  75: x86 hybrid                                                      :
-> > --- start ---
-> > test child forked, pid 4111587
-> > Using CPUID GenuineIntel-6-B7-1
-> > running test 0 'cpu_core/cpu-cycles/'
-> > FAILED arch/x86/tests/hybrid.c:30 wrong type
-> > Event test failure: test 0 'cpu_core/cpu-cycles/'running test 1 '{cpu_c=
-ore/cpu-cycles/,cpu_core/instructions/}'
-> > FAILED arch/x86/tests/hybrid.c:42 wrong type
-> > Event test failure: test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions=
-/}'running test 2 '{cpu-clock,cpu_core/cpu-cycles/}'
-> > FAILED arch/x86/tests/hybrid.c:65 wrong type
-> > Event test failure: test 2 '{cpu-clock,cpu_core/cpu-cycles/}'running te=
-st 3 '{cpu_core/cpu-cycles/,cpu-clock}'
-> > FAILED arch/x86/tests/hybrid.c:78 wrong type
-> > Event test failure: test 3 '{cpu_core/cpu-cycles/,cpu-clock}'running te=
-st 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'
-> > FAILED arch/x86/tests/hybrid.c:95 wrong type
-> > Event test failure: test 4 '{cpu_core/cpu-cycles/k,cpu_core/instruction=
-s/u}'running test 5 'r1a'
-> > running test 6 'cpu_core/r1a/'
-> > running test 7 'cpu_core/config=3D10,config1,config2=3D3,period=3D1000/=
-u'
-> > WARNING: event 'N/A' not valid (bits 0-1 of config2 '3' not supported b=
-y kernel)!
-> > running test 8 'cpu_core/LLC-loads/'
-> > test child finished with -1
-> > ---- end ----
-> > x86 hybrid: FAILED!
-> > root@number:/home/acme/Downloads#
-> >
-> > root@number:/home/acme/Downloads# perf trace -e perf_event_open perf te=
-st -F -v 75
-> >  75: x86 hybrid                                                      :
-> > --- start ---
-> > Using CPUID GenuineIntel-6-B7-1
-> > running test 0 'cpu_core/cpu-cycles/'
-> > FAILED arch/x86/tests/hybrid.c:30 wrong type
-> > Event test failure: test 0 'cpu_core/cpu-cycles/'running test 1 '{cpu_c=
-ore/cpu-cycles/,cpu_core/instructions/}'
-> > FAILED arch/x86/tests/hybrid.c:42 wrong type
-> > Event test failure: test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions=
-/}'running test 2 '{cpu-clock,cpu_core/cpu-cycles/}'
-> > FAILED arch/x86/tests/hybrid.c:65 wrong type
-> > Event test failure: test 2 '{cpu-clock,cpu_core/cpu-cycles/}'running te=
-st 3 '{cpu_core/cpu-cycles/,cpu-clock}'
-> > FAILED arch/x86/tests/hybrid.c:78 wrong type
-> > Event test failure: test 3 '{cpu_core/cpu-cycles/,cpu-clock}'running te=
-st 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'
-> > FAILED arch/x86/tests/hybrid.c:95 wrong type
-> > Event test failure: test 4 '{cpu_core/cpu-cycles/k,cpu_core/instruction=
-s/u}'running test 5 'r1a'
-> > running test 6 'cpu_core/r1a/'
-> > running test 7 'cpu_core/config=3D10,config1,config2=3D3,period=3D1000/=
-u'
-> > WARNING: event 'N/A' not valid (bits 0-1 of config2 '3' not supported b=
-y kernel)!
-> > running test 8 'cpu_core/LLC-loads/'
-> > ---- end ----
-> > x86 hybrid: FAILED!
-> >      0.000 ( 0.008 ms): :4115165/4115165 perf_event_open(attr_uptr: { t=
-ype: 0 (PERF_TYPE_HARDWARE), config: 0xa00000000, disabled: 1, { bp_len, co=
-nfig2 }: 0x900000000, branch_sample_type: USER|COUNTERS, sample_regs_user: =
-0x3ecaddffffffff, sample_stack_user: 4115165, clockid: 925535355, sample_re=
-gs_intr: 0x8140c90000a8f7, sample_max_stack: 8, sig_data: 120259084288 }, c=
-pu: -1, group_fd: -1, flags: FD_CLOEXEC) =3D 3
-> >      0.010 ( 0.002 ms): :4115165/4115165 perf_event_open(attr_uptr: { t=
-ype: 0 (PERF_TYPE_HARDWARE), config: 0x400000000, disabled: 1, { bp_len, co=
-nfig2 }: 0x900000000, branch_sample_type: USER|COUNTERS, sample_regs_user: =
-0x3ecaddffffffff, sample_stack_user: 4115165, clockid: 925538919, sample_re=
-gs_intr: 0x8140c90000a8f7, sample_max_stack: 8, sig_data: 120259084288 }, c=
-pu: -1, group_fd: -1, flags: FD_CLOEXEC) =3D 4
-> > root@number:/home/acme/Downloads# strace -e perf_event_open perf test -=
-F -v 75
-> >  75: x86 hybrid                                                      :
-> > --- start ---
-> > Using CPUID GenuineIntel-6-B7-1
-> > running test 0 'cpu_core/cpu-cycles/'
-> > FAILED arch/x86/tests/hybrid.c:30 wrong type
-> > Event test failure: test 0 'cpu_core/cpu-cycles/'running test 1 '{cpu_c=
-ore/cpu-cycles/,cpu_core/instructions/}'
-> > FAILED arch/x86/tests/hybrid.c:42 wrong type
-> > Event test failure: test 1 '{cpu_core/cpu-cycles/,cpu_core/instructions=
-/}'running test 2 '{cpu-clock,cpu_core/cpu-cycles/}'
-> > FAILED arch/x86/tests/hybrid.c:65 wrong type
-> > Event test failure: test 2 '{cpu-clock,cpu_core/cpu-cycles/}'running te=
-st 3 '{cpu_core/cpu-cycles/,cpu-clock}'
-> > FAILED arch/x86/tests/hybrid.c:78 wrong type
-> > Event test failure: test 3 '{cpu_core/cpu-cycles/,cpu-clock}'running te=
-st 4 '{cpu_core/cpu-cycles/k,cpu_core/instructions/u}'
-> > FAILED arch/x86/tests/hybrid.c:95 wrong type
-> > Event test failure: test 4 '{cpu_core/cpu-cycles/k,cpu_core/instruction=
-s/u}'running test 5 'r1a'
-> > running test 6 'cpu_core/r1a/'
-> > running test 7 'cpu_core/config=3D10,config1,config2=3D3,period=3D1000/=
-u'
-> > WARNING: event 'N/A' not valid (bits 0-1 of config2 '3' not supported b=
-y kernel)!
-> > running test 8 'cpu_core/LLC-loads/'
-> > perf_event_open({type=3DPERF_TYPE_HARDWARE, size=3D0 /* PERF_ATTR_SIZE_=
-??? */, config=3D0xa<<32|PERF_COUNT_HW_CPU_CYCLES, sample_period=3D0, sampl=
-e_type=3D0, read_format=3D0, disabled=3D1, precise_ip=3D0 /* arbitrary skid=
- */, ...}, 0, -1, -1, PERF_FLAG_FD_CLOEXEC) =3D 3
-> > perf_event_open({type=3DPERF_TYPE_HARDWARE, size=3D0 /* PERF_ATTR_SIZE_=
-??? */, config=3D0x4<<32|PERF_COUNT_HW_CPU_CYCLES, sample_period=3D0, sampl=
-e_type=3D0, read_format=3D0, disabled=3D1, precise_ip=3D0 /* arbitrary skid=
- */, ...}, 0, -1, -1, PERF_FLAG_FD_CLOEXEC) =3D 4
-> > ---- end ----
-> > x86 hybrid: FAILED!
-> > +++ exited with 0 +++
-> > root@number:/home/acme/Downloads#
-> >
+>                 reclaimed =3D try_to_free_mem_cgroup_pages(memcg, nr_page=
+s - high,
+> -                                       GFP_KERNEL, MEMCG_RECLAIM_MAY_SWA=
+P);
+> +                                       GFP_KERNEL, MEMCG_RECLAIM_MAY_SWA=
+P, NULL);
+>
+>                 if (!reclaimed && !nr_retries--)
+>                         break;
+> @@ -6769,7 +6771,7 @@ static ssize_t memory_max_write(struct kernfs_open_=
+file *of,
+>
+>                 if (nr_reclaims) {
+>                         if (!try_to_free_mem_cgroup_pages(memcg, nr_pages=
+ - max,
+> -                                       GFP_KERNEL, MEMCG_RECLAIM_MAY_SWA=
+P))
+> +                                       GFP_KERNEL, MEMCG_RECLAIM_MAY_SWA=
+P, NULL))
+>                                 nr_reclaims--;
+>                         continue;
+>                 }
+> @@ -6895,19 +6897,50 @@ static ssize_t memory_oom_group_write(struct kern=
+fs_open_file *of,
+>         return nbytes;
+>  }
+>
+> +enum {
+> +       MEMORY_RECLAIM_SWAPPINESS =3D 0,
+> +       MEMORY_RECLAIM_NULL,
+> +};
+> +
+> +static const match_table_t tokens =3D {
+> +       { MEMORY_RECLAIM_SWAPPINESS, "swappiness=3D%d"},
+> +       { MEMORY_RECLAIM_NULL, NULL },
+> +};
+> +
+>  static ssize_t memory_reclaim(struct kernfs_open_file *of, char *buf,
+>                               size_t nbytes, loff_t off)
+>  {
+>         struct mem_cgroup *memcg =3D mem_cgroup_from_css(of_css(of));
+>         unsigned int nr_retries =3D MAX_RECLAIM_RETRIES;
+>         unsigned long nr_to_reclaim, nr_reclaimed =3D 0;
+> +       int swappiness =3D -1;
+>         unsigned int reclaim_options;
+> -       int err;
+> +       char *old_buf, *start;
+> +       substring_t args[MAX_OPT_ARGS];
+>
+>         buf =3D strstrip(buf);
+> -       err =3D page_counter_memparse(buf, "", &nr_to_reclaim);
+> -       if (err)
+> -               return err;
+> +
+> +       old_buf =3D buf;
+> +       nr_to_reclaim =3D memparse(buf, &buf) / PAGE_SIZE;
+> +       if (buf =3D=3D old_buf)
+> +               return -EINVAL;
+> +
+> +       buf =3D strstrip(buf);
+> +
+> +       while ((start =3D strsep(&buf, " ")) !=3D NULL) {
+> +               if (!strlen(start))
+> +                       continue;
+> +               switch (match_token(start, tokens, args)) {
+> +               case MEMORY_RECLAIM_SWAPPINESS:
+> +                       if (match_int(&args[0], &swappiness))
+> +                               return -EINVAL;
+> +                       if (swappiness < MIN_SWAPPINESS || swappiness > M=
+AX_SWAPPINESS)
+> +                               return -EINVAL;
+> +                       break;
+> +               default:
+> +                       return -EINVAL;
+> +               }
+> +       }
+>
+>         reclaim_options =3D MEMCG_RECLAIM_MAY_SWAP | MEMCG_RECLAIM_PROACT=
+IVE;
+>         while (nr_reclaimed < nr_to_reclaim) {
+> @@ -6926,7 +6959,8 @@ static ssize_t memory_reclaim(struct kernfs_open_fi=
+le *of, char *buf,
+>
+>                 reclaimed =3D try_to_free_mem_cgroup_pages(memcg,
+>                                         min(nr_to_reclaim - nr_reclaimed,=
+ SWAP_CLUSTER_MAX),
+> -                                       GFP_KERNEL, reclaim_options);
+> +                                       GFP_KERNEL, reclaim_options,
+> +                                       swappiness =3D=3D -1 ? NULL : &sw=
+appiness);
+>
+>                 if (!reclaimed && !nr_retries--)
+>                         return -EAGAIN;
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index d91963e2d47f..aa5666842c49 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -92,6 +92,9 @@ struct scan_control {
+>         unsigned long   anon_cost;
+>         unsigned long   file_cost;
+>
+> +       /* Swappiness value for reclaim. NULL will fall back to per-memcg=
+/global value */
+> +       int *swappiness;
+> +
+>         /* Can active folios be deactivated as part of reclaim? */
+>  #define DEACTIVATE_ANON 1
+>  #define DEACTIVATE_FILE 2
+> @@ -2327,7 +2330,8 @@ static void get_scan_count(struct lruvec *lruvec, s=
+truct scan_control *sc,
+>         struct pglist_data *pgdat =3D lruvec_pgdat(lruvec);
+>         struct mem_cgroup *memcg =3D lruvec_memcg(lruvec);
+>         unsigned long anon_cost, file_cost, total_cost;
+> -       int swappiness =3D mem_cgroup_swappiness(memcg);
+> +       int swappiness =3D sc->swappiness ?
+> +               *sc->swappiness : mem_cgroup_swappiness(memcg);
+>         u64 fraction[ANON_AND_FILE];
+>         u64 denominator =3D 0;    /* gcc */
+>         enum scan_balance scan_balance;
+> @@ -2608,6 +2612,9 @@ static int get_swappiness(struct lruvec *lruvec, st=
+ruct scan_control *sc)
+>             mem_cgroup_get_nr_swap_pages(memcg) < MIN_LRU_BATCH)
+>                 return 0;
+>
+> +       if (sc->swappiness)
+> +               return *sc->swappiness;
+> +
+>         return mem_cgroup_swappiness(memcg);
+>  }
+>
+> @@ -6463,12 +6470,14 @@ unsigned long mem_cgroup_shrink_node(struct mem_c=
+group *memcg,
+>  unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
+>                                            unsigned long nr_pages,
+>                                            gfp_t gfp_mask,
+> -                                          unsigned int reclaim_options)
+> +                                          unsigned int reclaim_options,
+> +                                          int *swappiness)
+>  {
+>         unsigned long nr_reclaimed;
+>         unsigned int noreclaim_flag;
+>         struct scan_control sc =3D {
+>                 .nr_to_reclaim =3D max(nr_pages, SWAP_CLUSTER_MAX),
+> +               .swappiness =3D swappiness,
+>                 .gfp_mask =3D (current_gfp_context(gfp_mask) & GFP_RECLAI=
+M_MASK) |
+>                                 (GFP_HIGHUSER_MOVABLE & ~GFP_RECLAIM_MASK=
+),
+>                 .reclaim_idx =3D MAX_NR_ZONES - 1,
+> --
+> 2.39.3
+>
+
+The swappiness =3D -1 part seems a bit awkward, but other LGTM.
+Reviewed-by: Nhat Pham <nphamcs@gmail.com>
