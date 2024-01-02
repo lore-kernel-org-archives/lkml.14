@@ -1,49 +1,38 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A3616414
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 20:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HVcH99P3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704228124;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UbAgTltj/0phRLhEdJ+tD7nQJLUShjq5nTzZeX6dGnA=;
-	b=HVcH99P3S/CFUZggVrK7NWL6Ym1EdCHqzLJ7lpU8kD6RRICYUCpD2wf6iXvRP709OErnO6
-	DY6Pk9tWs7KTh4b50wVEhNHsjb/3NZB2TFJeafWZMk1d85BBE64kWDrdYKG/pNzsCvs2cN
-	27WzzyGJ8FlCGiyndePMh1Yarg+nLis=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-461-w-0h2nGVNXaaWUPgwAeXig-1; Tue,
- 02 Jan 2024 15:42:01 -0500
-X-MC-Unique: w-0h2nGVNXaaWUPgwAeXig-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EED5938116E3;
-	Tue,  2 Jan 2024 20:42:00 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.22.16.212])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4008F2166B31;
-	Tue,  2 Jan 2024 20:42:00 +0000 (UTC)
-Received: by fedora.redhat.com (Postfix, from userid 1000)
-	id C273D28C5EF; Tue,  2 Jan 2024 15:41:59 -0500 (EST)
-Date: Tue, 2 Jan 2024 15:41:59 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, Miklos Szeredi <miklos@szeredi.hu>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] virtiofs: Improve three size determinations
-Message-ID: <ZZR1FxR4cUzuDzLK@redhat.com>
-References: <c5c14b02-660a-46e1-9eb3-1a16d7c84922@web.de>
- <02fe18da-55f5-47c5-a297-58411edbb78b@web.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C563E16402
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 20:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 92C7B626FAFD;
+	Tue,  2 Jan 2024 21:45:33 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id c26r3h03Ykk4; Tue,  2 Jan 2024 21:45:32 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id B57AE626FAFC;
+	Tue,  2 Jan 2024 21:45:32 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id bn0u2smvcOuc; Tue,  2 Jan 2024 21:45:32 +0100 (CET)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 914E4626FAFB;
+	Tue,  2 Jan 2024 21:45:32 +0100 (CET)
+Date: Tue, 2 Jan 2024 21:45:32 +0100 (CET)
+From: Richard Weinberger <richard@nod.at>
+To: chengzhihao1 <chengzhihao1@huawei.com>
+Cc: david oberhollenzer <david.oberhollenzer@sigma-star.at>, 
+	Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, 
+	Tudor Ambarus <Tudor.Ambarus@linaro.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-mtd <linux-mtd@lists.infradead.org>
+Message-ID: <535616666.192239.1704228332389.JavaMail.zimbra@nod.at>
+In-Reply-To: <a145fc68-9b0a-9794-48d2-b7ad79116833@huawei.com>
+References: <20231228014112.2836317-1-chengzhihao1@huawei.com> <1145531757.175508.1703844362355.JavaMail.zimbra@nod.at> <13b259ca-b32f-a8d6-5e11-8bb38df72f5c@huawei.com> <642239519.177270.1703884138999.JavaMail.zimbra@nod.at> <a145fc68-9b0a-9794-48d2-b7ad79116833@huawei.com>
+Subject: Re: [PATCH RFC 00/17] ubifs: Add filesystem repair support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,68 +40,93 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <02fe18da-55f5-47c5-a297-58411edbb78b@web.de>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF97 (Linux)/8.8.12_GA_3809)
+Thread-Topic: ubifs: Add filesystem repair support
+Thread-Index: zanHUD2ShtmoWAAG/yLjSang7Pf/kw==
 
-On Fri, Dec 29, 2023 at 09:36:36AM +0100, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Fri, 29 Dec 2023 08:42:04 +0100
-> 
-> Replace the specification of data structures by pointer dereferences
-> as the parameter for the operator “sizeof” to make the corresponding size
-> determination a bit safer according to the Linux coding style convention.
+----- Urspr=C3=BCngliche Mail -----
+> Von: "chengzhihao1" <chengzhihao1@huawei.com>
+> I come up with another way to implement fsck.ubifs:
+>=20
+> There are three modes:
+>=20
+> 1. common mode(no options): Ask user whether to fix as long as a problem
+> is detected.
 
-I had a look at coding-style.rst and it does say that dereferencing the
-pointer is preferred form. Primary argument seems to be that somebody
-might change the pointer variable type but not the corresponding type
-passed to sizeof().
+Makes sense.
 
-There is some value to the argument. I don't feel strongly about it.
+> 2. safe mode(-a option): Auto repair as long as no data/files lost(eg.
+> nlink, isize, xattr_cnt, which can be corrected without dropping nodes),
+> otherwise returns error code.
 
-Miklos, if you like this change, feel free to apply. 
+Makes sense.
+=20
+> 3. dangerous mode(-y option): Fix is always successful, unless
+> superblock is corrupted. There are 2 situations:
 
-Thanks
-Vivek
-  
-> 
-> This issue was detected by using the Coccinelle software.
-> 
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-> ---
->  fs/fuse/virtio_fs.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
-> index 5f1be1da92ce..2f8ba9254c1e 100644
-> --- a/fs/fuse/virtio_fs.c
-> +++ b/fs/fuse/virtio_fs.c
-> @@ -1435,11 +1435,11 @@ static int virtio_fs_get_tree(struct fs_context *fsc)
->  		goto out_err;
-> 
->  	err = -ENOMEM;
-> -	fc = kzalloc(sizeof(struct fuse_conn), GFP_KERNEL);
-> +	fc = kzalloc(sizeof(*fc), GFP_KERNEL);
->  	if (!fc)
->  		goto out_err;
-> 
-> -	fm = kzalloc(sizeof(struct fuse_mount), GFP_KERNEL);
-> +	fm = kzalloc(sizeof(*fm), GFP_KERNEL);
->  	if (!fm)
->  		goto out_err;
-> 
-> @@ -1495,7 +1495,7 @@ static int virtio_fs_init_fs_context(struct fs_context *fsc)
->  	if (fsc->purpose == FS_CONTEXT_FOR_SUBMOUNT)
->  		return fuse_init_fs_context_submount(fsc);
-> 
-> -	ctx = kzalloc(sizeof(struct fuse_fs_context), GFP_KERNEL);
-> +	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
->  	if (!ctx)
->  		return -ENOMEM;
->  	fsc->fs_private = ctx;
-> --
-> 2.43.0
-> 
-> 
+Please not use "-y". Usually "-y" stands for "answer yes to all questions".
+But selecting names for command line flags is currently my least concern.
+=20
+>   a) TNC is valid: fsck will print which file is dropped and which
+> file's data is dropped
 
+Sounds also good.
+=20
+>   b) TNC is invalid: fsck will scan all nodes without referencing TNC,
+> same as this patchset does
+
+I'd make this a distinct mode.
+It can be used to rebuild index and LEB property trees.
+This is basically a "drop trees and rebuild" mode.
+
+>=20
+> Q1: How do you think of this method?
+
+Sounds good so far.
+=20
+> Q2: Mode 1, 2 and 3(a) depend on journal replaying, I found
+> xfs_repair[1] should be used after mounting/unmounting xfs (Let kernel
+> replay journal), if UBIFS does so, there is no need to copy recovery
+> subsystem into userspace, but user has to mount/unmount before doing
+> fsck. I found e2fsck has copied recovery code into userspace, so it can
+> do fsck without mounting/unmounting. If UBIFS does so, journal replaying
+> will update TNC and LPT, please reference Q3(1). Which method do you
+> suggest?
+
+UBIFS is a little special regarding the journal.
+
+1. The journal is not an add-on like it is on many other file systems,
+you have to replay it to get a consistent file system.
+2. Journal replay is also needed after a clean umount. The reason is that
+UBIFS does no commit at umount time.
+
+So IMHO you need to have journal replay code in your tool in any case.
+You can copy it from the kernel implementation and add more checks.
+While the kernel code also tries to be fast, fsck should be more paranoid.
+Ideally the outcome is a libubifs or such which can be derived from the
+kernel source while building mtd-utils.
+
+> Q3: If fsck drops or updates a node(eg. dentry lost inode, corrected
+> inode) in mode 1,2 and 3(a), TNC/LPT should be updated. There are two
+> ways updating TNC and LPT:
+>=20
+>   1) Like kernel does, which means that mark dirty TNC/LPT for
+> corresponding branches and do_commit(). It will copy much code into
+> userspace, eg. tnc.c, lpt.c, tnc_commit.c,
+> lpt_commit.c. I fear there exists risks. For example, there is no space
+> left for new index nodes, gc should be performed? If so, gc/lpt gc code
+> should be copied too.
+>=20
+>   2) Rebuild new TNC/LPT based on valid nodes. This way is simple, but
+> old good TNC could be corrupted, it means that powercut during fsck may
+> let UBIFS image must be repaired in mode 3(b) but it could be repaired
+> in mode 2\3(a) before invoking fsck.
+>=20
+> Which way is better?
+
+Since you need to do a full journal replay anyway and power-cut awareness
+is one of your requirements, I fear the only option is 1).
+
+Thanks,
+//richard
