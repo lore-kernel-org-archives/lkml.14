@@ -1,150 +1,66 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E4F14A9C
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 15:53:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1rKh4q-0001xX-4T; Tue, 02 Jan 2024 16:53:12 +0100
-Message-ID: <cfb9c01a-7af6-42ff-9056-e64c8c29bfdb@pengutronix.de>
-Date: Tue, 2 Jan 2024 16:53:09 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD8C14A9A;
+	Tue,  2 Jan 2024 15:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hjRyV52s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59CF8C433C7;
+	Tue,  2 Jan 2024 15:58:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704211089;
+	bh=gsBgM/SJ5swumfn/cuVueJtKXK9nInmvCfn1DD55G2Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hjRyV52srkWcrFMd9p6aHkxAvUkzcYMa2RWZPQEwAxmGtHyGaxQfbs/v+npGYXCIT
+	 6nX2lufBMDX4XoQhsQIv3YMo83DPc7XTW6iQxSMAtrHgte2dIP9cs8JqwUgLlfs3GI
+	 jWftuUfNohpebYe4v9tCOTdbHFT68XR6Py2mOIOe4nvsGeCrnBy0LNTaZkYHuSOxR4
+	 6m+BzIMKiNgZjYj5yIR2bhYJEiPR4TAFyxM4iCtkctS/vsmGAHD9Y3UujEG4K9Xe7g
+	 XKAc+BDP9yNbZSWpiaiCX4tyELCk89f/wvAvpjyazjxFg0jj+n1BaftTt/JPatw0pn
+	 kte5fS0oDAw2g==
+Date: Tue, 2 Jan 2024 07:58:07 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: fuyao <fuyao@sjterm.com>
+Cc: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>, Alexandre
+ Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Chen-Yu Tsai
+ <wens@csie.org>, Samuel Holland <samuel@sholland.org>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, netdev@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org,
+ =?UTF-8?B?6bqm5YGl5bu6?= <maijianzhang@allwinnertech.com>
+Subject: Re: [PATCH] gmac: sun8i: r40: add gmac tx_delay support
+Message-ID: <20240102075807.1a4cac92@kernel.org>
+In-Reply-To: <ZYPmZj8l01eQsDS5@debian.cyg>
+References: <ZYKvCQBD-SY9uVLF@debian.cyg>
+	<2370947.NG923GbCHz@jernej-laptop>
+	<ZYPmZj8l01eQsDS5@debian.cyg>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 2/2] arm64: boot: Support Flat Image Tree
-Content-Language: en-US
-To: Masahiro Yamada <masahiroy@kernel.org>, Chen-Yu Tsai <wenst@chromium.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Simon Glass <sjg@chromium.org>, linux-arm-kernel@lists.infradead.org,
- U-Boot Mailing List <u-boot@lists.denx.de>,
- Nicolas Schier <nicolas@fjasle.eu>, Tom Rini <trini@konsulko.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
- Nathan Chancellor <nathan@kernel.org>, Nick Terrell <terrelln@fb.com>,
- Will Deacon <will@kernel.org>, linux-doc@vger.kernel.org,
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
- workflows@vger.kernel.org
-References: <20231202035511.487946-1-sjg@chromium.org>
- <20231202035511.487946-3-sjg@chromium.org>
- <20231203153401.GV8402@pendragon.ideasonboard.com>
- <20231207142723.GA3187877@google.com>
- <20231207143814.GD15521@pendragon.ideasonboard.com>
- <CAGXv+5Go_0pEVAOLQmRCc_a9-YUtZEmBfXtMuBupX_nb9iqwbw@mail.gmail.com>
- <20231209152946.GC13421@pendragon.ideasonboard.com>
- <CAMuHMdVMZs6mnwWBgFwktO=8o=QzROv60cfZe085MhD6HxQjpQ@mail.gmail.com>
- <CAGXv+5Est3FL-XcEL-vB-6zVNas0mqb2cNYa==Yb7W2SQU9xVQ@mail.gmail.com>
- <CAK7LNATyD-PeNbaLTjJmU9=koqqE+V6QvFe09c2VrXopWvjpcw@mail.gmail.com>
- <CAK7LNAR7Fm-1yaZmyH78vG5yNbbW2Avjj5F63u+aST6JQoMd5A@mail.gmail.com>
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-In-Reply-To: <CAK7LNAR7Fm-1yaZmyH78vG5yNbbW2Avjj5F63u+aST6JQoMd5A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hello Yamada-san,
+On Thu, 21 Dec 2023 15:16:54 +0800 fuyao wrote:
+> I don't see it in the user manual also.
+> 
+> it works fine in 100M, but it doesn't work good in 1G without tx_delay
+> in my board.
+> 
+> Read the sdk from allwinner I found in:
+> 
+> https://sourcegraph.com/github.com/tinalinux/linux-3.10/-/blob/arch/arm/boot/dts/sun8iw11p1.dtsi?L1826
+> https://sourcegraph.com/github.com/tinalinux/linux-3.10@r40-v1.y/-/blob/drivers/net/ethernet/allwinner/sunxi-gmac.c?L877
+> 
+> And I add it to my board, it works fine.
+> 
+> So, I think it may be exist register but not documented.
 
-On 14.12.23 08:33, Masahiro Yamada wrote:
->> The FIT spec allows the "fdt" property to list
->> multiple image nodes.
->>
->>
->> o config-1
->>  |- description = "configuration description"
->>  |- kernel = "kernel sub-node unit name"
->>  |- fdt = "fdt sub-node unit-name" [, "fdt overlay sub-node unit-name", ...]
->>  |- loadables = "loadables sub-node unit-name"
->>  |- script = "
->>  |- compatible = "vendor
-> 
-> 
-> 
-> 
-> 
-> This is a question for U-Boot (and barebox).
-> 
-> 
-> 
-> 
->    images {
->           base {
->                 ...
->           };
-> 
->           addon1 {
->                 ...
->           };
-> 
->           addon2 {
->                 ...
->           };
->     };
-> 
->     configurations {
->           ...
->           fdt = "base", "addon1", "addon2";
->     };
-> 
-> 
-> 
-> 
-> Is U-Boot's "bootm" command able to dynamically construct
-> the full DTB from "base" + "addon1" + "addon2"
-> and pass to the kernel?
-
-barebox can apply overlays to the DT, but doesn't do so yet from
-the extra entries in configuration fdt properties.
-
-This should be straight-forward to add though, if the need arises.
-
-> Is U-Boot able to handle FIT (includes kernel + DTs)
-> and a separate initrd?
-> 
->   # bootm  <fit-address>:<conf-name>  <ramdisk-address>
-
-This is possible in barebox, provided that the FIT image doesn't
-already have a ramdisk and that CONFIG_BOOTM_FORCE_SIGNED_IMAGES=n:
-
-  bootm -r /mnt/nfs/ramdisk.gz /mnt/nfs/image.fit
-
-(Or the equivalent variables if not wanting to use the shell.)
-
-> Presumably, it would be difficult to inject initramdisk
-> into image.fit later, so I am hoping bootm would work like that,
-> but I did not delve into U-Boot code.
-> 
-> 
-> 
-> If it works, is it possible to verify the integrity of initrd?
-> The kernel and DTs inside FIT will be verified, but not sure
-> if it is possible for ramdisk.
-
-If one wants to preclude mix & match attacks, the configuration needs
-to be verified fully, so if signing is required, it's probably better to
-amend the FIT later on with the new configuration instead of signing
-the initrd separately and combining them at runtime.
-
-Cheers,
-Ahmad
-
-> 
-> 
-> 
-> 
-> 
-
+Unless Allwinner can chime in we should at least document the situation
+clearly in the commit message (incl. what HW+config was tested, exactly)
+and add a comment in the code?
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
+pw-bot: cr
