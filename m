@@ -1,111 +1,181 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD99CFBF6
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 13:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D8CF9D2;
+	Tue,  2 Jan 2024 13:01:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Urj3Kxr4"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a27db7d85c7so161160466b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 05:01:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704200459; x=1704805259; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6r0cBbzRUMyVtOb0ZzKCwag9UOU710+HMzjU5F0c9ns=;
-        b=Urj3Kxr4IvR7bjlKaqhriOTBxaj9lAkzAPtG1bGAdl3G6hl/dOHtEFEqlCnU8ZIT31
-         iYrAx/9/+GGGN6mqRRPMucS/mhwwp6UF9hh0p49UMjbRloh2/XB+XkdjMQZtXP44jdi7
-         +pQlaxwb9ExgRhk0qYkxeOxFfqJd5V+dy8PmKF00GX0bdKVlywQx69EUNzUWY6uMPwNe
-         0hlHqYrt1ytKqBt3bYkzubud8WedxUYIo3HBq3RPGjn2mejRNlBbINltY8FBtr5WXW38
-         C45KOxOKSXECWnhym3NB5PkCR2ypgb70tCSUt8/+Vs7Cb6JjyCuGOj4r/KGsu1VijrPu
-         nUDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704200459; x=1704805259;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6r0cBbzRUMyVtOb0ZzKCwag9UOU710+HMzjU5F0c9ns=;
-        b=DgdPJaTj+0RQ9jgmzs+5qndPwQxBbuLlKqvnDv7FBRkm1aO8SwVqEyZEv/pXw6Kman
-         ePijbmTWONptI/MIIIFs+pdpJQhiqgYr70o6LVp/8ek0a5ZnYFd/qhQWCi3gPB3DtG+B
-         +fDw47uloa8oxRX9Z4JyKK9zY1MDe04jJowmSm1u2NKoKO1nX/jnOeMGlXMszdN0AZhr
-         8G7iWnRevP9th3TrglOXywAbRkV9PfNc8Uqr/IJEwbqrpxjyCo0uFrOt3etHXab/werF
-         /bngJ1l83c8X4qQrt8ORajitEf2PNPOCPdFz+J76m4YY84VVw7HxR7Nls7fhI1xnDGzi
-         tdTg==
-X-Gm-Message-State: AOJu0YwsP2YbMLlSguJ8Ng/L8P9E+m036ZInnPLs4zgDnB/7r00Kf0sq
-	Xffeppy3ulf2d3gNWlD7L1V3sFCWfPkQSWpfRxY=
-X-Google-Smtp-Source: AGHT+IELyPSJ3YmKkxM8fUVcYbY0Q+v2urBRFPIn+NZyHbWsBjAJdZhoRV0XzqdDtD5D8TbFbuffrITO882PR6v/PFo=
-X-Received: by 2002:a17:906:5d0:b0:a23:6c9c:d4ce with SMTP id
- t16-20020a17090605d000b00a236c9cd4cemr7451190ejt.116.1704200458614; Tue, 02
- Jan 2024 05:00:58 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="uzD0a/cV";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="8NS+Rm6R";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="uzD0a/cV";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="8NS+Rm6R"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 10BEF1FD60;
+	Tue,  2 Jan 2024 13:01:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1704200504; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hZoeJmEwC8cyYtQvESJPMTmB6Pqe0KyQyZMZD9R5Q5A=;
+	b=uzD0a/cVppPVBj1AxhKJq2r7R8AFGbUZeeeQAmlYQhN2TvnXSFh1A5w9WyjlUwiFsUuBiI
+	JcJQKfd2rx5IIgvavyFYRunyJQhpVa6foJRLa/+IJ7DPPFn1AF40rSQx8TeN3AiIuLrfde
+	Qo1mXFK732fgi93/uyaGLhRH7LfpG/c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1704200504;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hZoeJmEwC8cyYtQvESJPMTmB6Pqe0KyQyZMZD9R5Q5A=;
+	b=8NS+Rm6Rx21+lSvXj2sOTzxMr63ez2YsEJs4EsOOUAha8G5RgZ3wg5uhjGS9L/EpiO/yj0
+	aJaQJtIZriSURcAg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1704200504; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hZoeJmEwC8cyYtQvESJPMTmB6Pqe0KyQyZMZD9R5Q5A=;
+	b=uzD0a/cVppPVBj1AxhKJq2r7R8AFGbUZeeeQAmlYQhN2TvnXSFh1A5w9WyjlUwiFsUuBiI
+	JcJQKfd2rx5IIgvavyFYRunyJQhpVa6foJRLa/+IJ7DPPFn1AF40rSQx8TeN3AiIuLrfde
+	Qo1mXFK732fgi93/uyaGLhRH7LfpG/c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1704200504;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hZoeJmEwC8cyYtQvESJPMTmB6Pqe0KyQyZMZD9R5Q5A=;
+	b=8NS+Rm6Rx21+lSvXj2sOTzxMr63ez2YsEJs4EsOOUAha8G5RgZ3wg5uhjGS9L/EpiO/yj0
+	aJaQJtIZriSURcAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EFFE81340C;
+	Tue,  2 Jan 2024 13:01:43 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id FAWWOjcJlGXkSAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 02 Jan 2024 13:01:43 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id AA75CA07EF; Tue,  2 Jan 2024 14:01:43 +0100 (CET)
+Date: Tue, 2 Jan 2024 14:01:43 +0100
+From: Jan Kara <jack@suse.cz>
+To: Kemeng Shi <shikemeng@huaweicloud.com>
+Cc: tytso@mit.edu, adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/8] ext4: remove unused parameter group in
+ ext4_mb_choose_next_group_*()
+Message-ID: <20240102130143.5yngez5r6npn67ky@quack3>
+References: <20231125161143.3945726-1-shikemeng@huaweicloud.com>
+ <20231125161143.3945726-3-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240102073351.1527503-1-alexs@kernel.org> <xhsmhplykjawj.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-In-Reply-To: <xhsmhplykjawj.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-From: Alex Shi <seakeel@gmail.com>
-Date: Tue, 2 Jan 2024 21:00:22 +0800
-Message-ID: <CAJy-Am=R=gRFqSdGjXaMqq7Yetpp-4=bLtnP-87GepN4zff5Tg@mail.gmail.com>
-Subject: Re: [PATCH] sched/tracing: correct the task blocking state
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: alexs@kernel.org, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, linux-kernel@vger.kernel.org, curuwang@tencent.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231125161143.3945726-3-shikemeng@huaweicloud.com>
+X-Spam-Level: 
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Level: 
+X-Spamd-Bar: /
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [0.19 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCPT_COUNT_FIVE(0.00)[5];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,huaweicloud.com:email,suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.00)[20.22%];
+	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="uzD0a/cV";
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=8NS+Rm6R
+X-Spam-Score: 0.19
+X-Rspamd-Queue-Id: 10BEF1FD60
 
-On Tue, Jan 2, 2024 at 6:19=E2=80=AFPM Valentin Schneider <vschneid@redhat.=
-com> wrote:
->
-> On 02/01/24 15:33, alexs@kernel.org wrote:
-> > From: Alex Shi <alexs@kernel.org>
-> >
-> > commit 80ed87c8a9ca ("sched/wait: Introduce TASK_NOLOAD and TASK_IDLE")
-> > stopped the idle kthreads contribution to loadavg. Also task idle shoul=
-d
-> > separated from blocked state too, otherwise we will get incorrect task
-> > blocking state from event tracing sched:sched_stat_blocked.
-> >
->
-> Why is that incorrect? AFAICT we have mapped the (schedstat) 'blocked'
-> meaning to TASK_UNINTERRUPTIBLE. TASK_IDLE tasks don't contribute to
-> loadavg yes, but they are still in an UNINTERRUPTIBLE wait.
+On Sun 26-11-23 00:11:37, Kemeng Shi wrote:
+> Remove unused parameter group in ext4_mb_choose_next_group_*().
+> 
+> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
 
+Makes sense. Feel free to add:
 
-Hi Valentin,
-Thanks a lot for the reply.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-I agree with you the current usage, but if so, we account for the idle task=
- into
-blocked state. And it's better to distinguish between idle and block.
+								Honza
 
->
-> > diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-> > index b28114478b82..b6afa596f071 100644
-> > --- a/kernel/sched/deadline.c
-> > +++ b/kernel/sched/deadline.c
-> > @@ -1570,7 +1570,7 @@ update_stats_dequeue_dl(struct dl_rq *dl_rq, stru=
-ct sched_dl_entity *dl_se,
-> >                       __schedstat_set(p->stats.sleep_start,
-> >                                       rq_clock(rq_of_dl_rq(dl_rq)));
-> >
-> > -             if (state & TASK_UNINTERRUPTIBLE)
-> > +             if (is_blocked_task_state(state))
-> >                       __schedstat_set(p->stats.block_start,
-> >                                       rq_clock(rq_of_dl_rq(dl_rq)));
->
-> This change makes it so tasks waiting in TASK_IDLE have their waiting
-> ignored by schedstat (they are seen as neither INTERRUPTIBLE nor UNINTERR=
-UPTIBLE).
->
-
-Right, maybe it's time to add a new state for TASK_IDLE?
-
-Many thanks!
-Alex Shi
+> ---
+>  fs/ext4/mballoc.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+> index 9f9b8dd06..765b62729 100644
+> --- a/fs/ext4/mballoc.c
+> +++ b/fs/ext4/mballoc.c
+> @@ -870,7 +870,7 @@ mb_update_avg_fragment_size(struct super_block *sb, struct ext4_group_info *grp)
+>   * cr level needs an update.
+>   */
+>  static void ext4_mb_choose_next_group_p2_aligned(struct ext4_allocation_context *ac,
+> -			enum criteria *new_cr, ext4_group_t *group, ext4_group_t ngroups)
+> +			enum criteria *new_cr, ext4_group_t *group)
+>  {
+>  	struct ext4_sb_info *sbi = EXT4_SB(ac->ac_sb);
+>  	struct ext4_group_info *iter;
+> @@ -944,7 +944,7 @@ ext4_mb_find_good_group_avg_frag_lists(struct ext4_allocation_context *ac, int o
+>   * order. Updates *new_cr if cr level needs an update.
+>   */
+>  static void ext4_mb_choose_next_group_goal_fast(struct ext4_allocation_context *ac,
+> -		enum criteria *new_cr, ext4_group_t *group, ext4_group_t ngroups)
+> +		enum criteria *new_cr, ext4_group_t *group)
+>  {
+>  	struct ext4_sb_info *sbi = EXT4_SB(ac->ac_sb);
+>  	struct ext4_group_info *grp = NULL;
+> @@ -989,7 +989,7 @@ static void ext4_mb_choose_next_group_goal_fast(struct ext4_allocation_context *
+>   * much and fall to CR_GOAL_LEN_SLOW in that case.
+>   */
+>  static void ext4_mb_choose_next_group_best_avail(struct ext4_allocation_context *ac,
+> -		enum criteria *new_cr, ext4_group_t *group, ext4_group_t ngroups)
+> +		enum criteria *new_cr, ext4_group_t *group)
+>  {
+>  	struct ext4_sb_info *sbi = EXT4_SB(ac->ac_sb);
+>  	struct ext4_group_info *grp = NULL;
+> @@ -1124,11 +1124,11 @@ static void ext4_mb_choose_next_group(struct ext4_allocation_context *ac,
+>  	}
+>  
+>  	if (*new_cr == CR_POWER2_ALIGNED) {
+> -		ext4_mb_choose_next_group_p2_aligned(ac, new_cr, group, ngroups);
+> +		ext4_mb_choose_next_group_p2_aligned(ac, new_cr, group);
+>  	} else if (*new_cr == CR_GOAL_LEN_FAST) {
+> -		ext4_mb_choose_next_group_goal_fast(ac, new_cr, group, ngroups);
+> +		ext4_mb_choose_next_group_goal_fast(ac, new_cr, group);
+>  	} else if (*new_cr == CR_BEST_AVAIL_LEN) {
+> -		ext4_mb_choose_next_group_best_avail(ac, new_cr, group, ngroups);
+> +		ext4_mb_choose_next_group_best_avail(ac, new_cr, group);
+>  	} else {
+>  		/*
+>  		 * TODO: For CR=2, we can arrange groups in an rb tree sorted by
+> -- 
+> 2.30.0
+> 
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
