@@ -1,136 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m127207.xmail.ntesmail.com (mail-m127207.xmail.ntesmail.com [115.236.127.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCD16AA1;
-	Tue,  2 Jan 2024 08:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XPWCVDEL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39629C433C7;
-	Tue,  2 Jan 2024 08:33:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704184382;
-	bh=R8U/2kZF2yuyBg7/eL/B7CU9p17fLKIzW3PZsS7W7Jo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XPWCVDELXMtNoW7754bzg5gToUshkGkxexsRrYP0YX9WgxKu+NQ1zl5jKfzY0vrIM
-	 dubt3gbb4v7rUGnlUWgEUQUOvClDbe2LS+Q9DMoLxSD2sKejsrrLukoiPK0BZprKei
-	 l8XUSO+B6nMN+TErGMcHx1mpN9sl3NKmEz8Ld2IcinRSX9jpHFf7uF7Us9b55nOTBp
-	 cEmx13hS3lzVCVUaCzZfKIZNleAB7XQqHaNfMTczEuioskVK1YJwi5g8Vlc1pl2RC0
-	 dA0SNAR4JQf1UJq7i3gaGqMBfRaABCrlgVzCgBhTO1pQ+DlTfqtYI0JRDbj7wra+Ws
-	 847JlSLqw7iow==
-Date: Tue, 2 Jan 2024 10:32:57 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Chengchang Tang <tangchengchang@huawei.com>
-Cc: Stephen Hemminger <stephen@networkplumber.org>,
-	Junxian Huang <huangjunxian6@hisilicon.com>, jgg@ziepe.ca,
-	dsahern@gmail.com, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linuxarm@huawei.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH iproute2-rc 1/2] rdma: Fix core dump when pretty is used
-Message-ID: <20240102083257.GB6361@unreal>
-References: <20231229065241.554726-1-huangjunxian6@hisilicon.com>
- <20231229065241.554726-2-huangjunxian6@hisilicon.com>
- <20231229092129.25a526c4@hermes.local>
- <30d8c237-953a-8794-9baa-e21b31d4d88c@huawei.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9499D5382;
+	Tue,  2 Jan 2024 08:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=senarytech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=senarytech.com
+Received: from book-ThinkStation-P328.. (unknown [61.183.143.78])
+	by mail-m12756.qiye.163.com (Hmail) with ESMTPA id 5D363DC083C;
+	Tue,  2 Jan 2024 14:05:08 +0800 (CST)
+From: bo liu <bo.liu@senarytech.com>
+To: perex@perex.cz,
+	tiwai@suse.com
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bo liu <bo.liu@senarytech.com>
+Subject: [PATCH] ALSA: hda/conexant: Fix headset auto detect fail in cx8070 and SN6140
+Date: Tue,  2 Jan 2024 14:04:57 +0800
+Message-Id: <20240102060457.4917-1-bo.liu@senarytech.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <30d8c237-953a-8794-9baa-e21b31d4d88c@huawei.com>
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCGkJCVkMYH0pCHR4ZSEwYSFUTARMWGhIXJBQOD1
+	lXWRgSC1lBWU1KVUpDSFVKT0hVTENZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
+X-HM-Tid: 0a8cc8c69c0cb223kuuu5d363dc083c
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nxg6Tio*SzwyEUk6DUw3K0Ma
+	TUoKCzFVSlVKTEtPSkxOTktCSU1PVTMWGhIXVRkUVRcSDjsIHhUaCQIPHhgTVRgUFkVZV1kSC1lB
+	WU1KVUpDSFVKT0hVTENZV1kIAVlBTk9CTjcG
 
-On Tue, Jan 02, 2024 at 03:44:29PM +0800, Chengchang Tang wrote:
-> 
-> 
-> On 2023/12/30 1:21, Stephen Hemminger wrote:
-> > On Fri, 29 Dec 2023 14:52:40 +0800
-> > Junxian Huang <huangjunxian6@hisilicon.com> wrote:
-> > 
-> > > From: Chengchang Tang <tangchengchang@huawei.com>
-> > > 
-> > > There will be a core dump when pretty is used as the JSON object
-> > > hasn't been opened and closed properly.
-> > > 
-> > > Before:
-> > > $ rdma res show qp -jp -dd
-> > > [ {
-> > >      "ifindex": 1,
-> > >      "ifname": "hns_1",
-> > >      "port": 1,
-> > >      "lqpn": 1,
-> > >      "type": "GSI",
-> > >      "state": "RTS",
-> > >      "sq-psn": 0,
-> > >      "comm": "ib_core"
-> > > },
-> > > "drv_sq_wqe_cnt": 128,
-> > > "drv_sq_max_gs": 2,
-> > > "drv_rq_wqe_cnt": 512,
-> > > "drv_rq_max_gs": 1,
-> > > rdma: json_writer.c:130: jsonw_end: Assertion `self->depth > 0' failed.
-> > > Aborted (core dumped)
-> > > 
-> > > After:
-> > > $ rdma res show qp -jp -dd
-> > > [ {
-> > >          "ifindex": 2,
-> > >          "ifname": "hns_2",
-> > >          "port": 1,
-> > >          "lqpn": 1,
-> > >          "type": "GSI",
-> > >          "state": "RTS",
-> > >          "sq-psn": 0,
-> > >          "comm": "ib_core",{
-> > >              "drv_sq_wqe_cnt": 128,
-> > >              "drv_sq_max_gs": 2,
-> > >              "drv_rq_wqe_cnt": 512,
-> > >              "drv_rq_max_gs": 1,
-> > >              "drv_ext_sge_sge_cnt": 256
-> > >          }
-> > >      } ]
-> > > 
-> > > Fixes: 331152752a97 ("rdma: print driver resource attributes")
-> > > Signed-off-by: Chengchang Tang <tangchengchang@huawei.com>
-> > > Signed-off-by: Junxian Huang <huangjunxian6@hisilicon.com>
-> > This code in rdma seems to be miking json and newline functionality
-> > which creates bug traps.
-> > 
-> > Also the json should have same effective output in pretty and non-pretty mode.
-> > It looks like since pretty mode add extra object layer, the nesting of {} would be
-> > different.
-> > 
-> > The conversion to json_print() was done but it isn't using same conventions
-> > as ip or tc.
-> > 
-> > The correct fix needs to go deeper and hit other things.
-> > 
-> 
-> Hi, Stephen,
-> 
-> The root cause of this issue is that close_json_object() is being called in
-> newline_indent(), resulting in a mismatch
-> of {}.
-> 
-> When fixing this problem, I was unsure why a newline() is needed in pretty
-> mode, so I simply kept this logic and
-> solved the issue of open_json_object() and close_json_object() not matching.
-> However, If the output of pretty mode
-> and not-pretty mode should be the same, then this problem can be resolved by
-> deleting this newline_indent().
+When OMTP headset plugin the headset jack of CX8070 and SN6160 sound cards,
+the headset type detection circuit will recognize the headset type as CTIA.
+At this point, plugout and plugin the headset will get the correct headset
+type as OMTP.
+The reason for the failure of headset type recognition is that the sound
+card creation will enable the VREF voltage of the headset mic, which
+interferes with the headset type automatic detection circuit. Plugout and
+plugin the headset will restart the headset detection and get the correct
+headset type.
+The patch is disable the VREF voltage when the headset is not present, and
+will enable the VREF voltage when the headset is present.
 
-Stephen didn't say that output of pretty and not-pretty should be the
-same, but he said that JSON logic should be the same.
+Signed-off-by: bo liu <bo.liu@senarytech.com>
+---
+ sound/pci/hda/patch_conexant.c | 72 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 71 insertions(+), 1 deletion(-)
 
-Thanks
+diff --git a/sound/pci/hda/patch_conexant.c b/sound/pci/hda/patch_conexant.c
+index a889cccdd607..e24befa1fad9 100644
+--- a/sound/pci/hda/patch_conexant.c
++++ b/sound/pci/hda/patch_conexant.c
+@@ -166,6 +166,7 @@ static void cxt_init_gpio_led(struct hda_codec *codec)
+ 
+ static int cx_auto_init(struct hda_codec *codec)
+ {
++	unsigned int mic_persent;
+ 	struct conexant_spec *spec = codec->spec;
+ 	snd_hda_gen_init(codec);
+ 	if (!spec->dynamic_eapd)
+@@ -174,6 +175,22 @@ static int cx_auto_init(struct hda_codec *codec)
+ 	cxt_init_gpio_led(codec);
+ 	snd_hda_apply_fixup(codec, HDA_FIXUP_ACT_INIT);
+ 
++	switch (codec->core.vendor_id) {
++	case 0x14f11f86:
++	case 0x14f11f87:
++		/* fix some headset type recognize fail issue, such as EDIFIER headset */
++		snd_hda_codec_write(codec, 0x1c, 0, 0x320, 0x010);
++		snd_hda_codec_write(codec, 0x1c, 0, 0x3b0, 0xe10);
++		snd_hda_codec_write(codec, 0x1c, 0, 0x4f0, 0x0eb);
++		/* fix reboot headset type recognize fail issue */
++		mic_persent = snd_hda_codec_read(codec, 0x19, 0, 0xf09, 0x0);
++		if (mic_persent&0x80000000)
++			snd_hda_codec_write(codec, 0x19, 0, 0x707, 0x24);
++		else
++			snd_hda_codec_write(codec, 0x19, 0, 0x707, 0x20);
++		break;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -192,6 +209,58 @@ static void cx_auto_free(struct hda_codec *codec)
+ 	snd_hda_gen_free(codec);
+ }
+ 
++static int headset_present_flag;
++static void cx_jack_unsol_event(struct hda_codec *codec, unsigned int res)
++{
++	unsigned int val, phone_present, mic_persent, phone_tag, mic_tag;
++	unsigned int count = 0;
++
++	switch (codec->core.vendor_id) {
++	case 0x14f11f86:
++	case 0x14f11f87:
++		/* check hp&mic tag to process headset pulgin&plugout */
++		phone_tag = snd_hda_codec_read(codec, 0x16, 0, 0xf08, 0x0);
++		mic_tag = snd_hda_codec_read(codec, 0x19, 0, 0xf08, 0x0);
++		if ((phone_tag&(res>>26)) || (mic_tag&(res>>26))) {
++			phone_present = snd_hda_codec_read(codec, 0x16, 0, 0xf09, 0x0);
++			if (!(phone_present&0x80000000)) {/* headphone plugout */
++				headset_present_flag = 0;
++				snd_hda_codec_write(codec, 0x19, 0, 0x707, 0x20);
++				break;
++			}
++			if (headset_present_flag == 0) {
++				headset_present_flag = 1;
++			} else if (headset_present_flag == 1) {
++				mic_persent = snd_hda_codec_read(codec, 0x19, 0, 0xf09, 0x0);
++				/* headset is present */
++				if ((phone_present&0x80000000) && (mic_persent&0x80000000)) {
++					/* wait headset detect done */
++					do {
++						msleep(20);
++						val = snd_hda_codec_read(codec, 0x1c,
++									0, 0xca0, 0x0);
++						count += 1;
++					} while ((count > 3) || (val&0x080));
++					val = snd_hda_codec_read(codec, 0x1c, 0, 0xcb0, 0x0);
++					if (val&0x800) {
++						codec_dbg(codec, "headset plugin, type is CTIA\n");
++						snd_hda_codec_write(codec, 0x19, 0, 0x707, 0x24);
++					} else if (val&0x400) {
++						codec_dbg(codec, "headset plugin, type is OMTP\n");
++						snd_hda_codec_write(codec, 0x19, 0, 0x707, 0x24);
++					} else {
++						codec_dbg(codec, "headphone plugin\n");
++					}
++					headset_present_flag = 2;
++				}
++			}
++		}
++		break;
++	}
++
++	snd_hda_jack_unsol_event(codec, res);
++}
++
+ #ifdef CONFIG_PM
+ static int cx_auto_suspend(struct hda_codec *codec)
+ {
+@@ -205,7 +274,7 @@ static const struct hda_codec_ops cx_auto_patch_ops = {
+ 	.build_pcms = snd_hda_gen_build_pcms,
+ 	.init = cx_auto_init,
+ 	.free = cx_auto_free,
+-	.unsol_event = snd_hda_jack_unsol_event,
++	.unsol_event = cx_jack_unsol_event,
+ #ifdef CONFIG_PM
+ 	.suspend = cx_auto_suspend,
+ 	.check_power_status = snd_hda_gen_check_power_status,
+@@ -1042,6 +1111,7 @@ static int patch_conexant_auto(struct hda_codec *codec)
+ 	codec->spec = spec;
+ 	codec->patch_ops = cx_auto_patch_ops;
+ 
++	headset_present_flag = 0;
+ 	cx_auto_parse_eapd(codec);
+ 	spec->gen.own_eapd_ctl = 1;
+ 
+-- 
+2.34.1
 
-> 
-> I believe the original developer may not have realized that
-> close_json_object() is being called in newline(), which leads
-> to this problem. To improve the code's readability, I would try to strip out
-> close_json_obejct() from newline().
-> 
-> Thanks,
-> Chengchang Tang
-> 
