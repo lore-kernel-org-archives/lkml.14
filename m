@@ -1,110 +1,146 @@
-Received: from out203-205-221-155.mail.qq.com (out203-205-221-155.mail.qq.com [203.205.221.155])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2227AFBF0;
-	Tue,  2 Jan 2024 12:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CDF8F9C3;
+	Tue,  2 Jan 2024 12:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="p5Ru6ZUz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1704199013; bh=KccDZNyBw07ctq/DN3VElW8F3A1ia8xExihctND/oh4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=p5Ru6ZUzBdYcgAA/DvsG1qV+UwFHpVhC425WNXaVRjEB7bjlSWzJuSFfOqKovE6AU
-	 sxWNT+b/YY3bDE0VsX/qthI0XeFtJT6+/qevhbgXswmwchMG0b1OxKalQplqKGoXUM
-	 DcQI+u/SwjokXggvgUP57hbbab6wrAt0G+62F+Nk=
-Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
-	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
-	id 93334A1C; Tue, 02 Jan 2024 20:36:51 +0800
-X-QQ-mid: xmsmtpt1704199011tmjb9ifyq
-Message-ID: <tencent_8C1ACE487B4E6C302EE56D8C95C0E8E2EF0A@qq.com>
-X-QQ-XMAILINFO: N7h1OCCDntujvVtpMWdxaTVHmbrXzaCl4eDQp1ppMvKr1B3sZmiP2rPKkpDVT2
-	 Wx22gtapO0SWIPeDdMHzM/pDsl7mOzDQP48b0kIWc35lT2+9r8zpfTFP+HKYPUWHHLByu0/s4Ae0
-	 x2ApYkcNEvsVXDZKfqJgLcAJayxcTN+XUyts0x5OPOhqCceFUC12mZy6McngXf/2DnTK2mJyqfHZ
-	 l4H37h5XXIRzXAclsR/47rr3lL7/VuUJ6P8siruJeUdyXbUcAiNoLnHGViUaJ6/3dTelzTVjJ7hB
-	 NYTEMxUu3l3pBaqkXHKRstFYz4tgRIIdBOWlePjNYSSTqHKnWlI39YU1FY1yFPopiTLtrK2vmg+t
-	 vfcpNz5u0lmRkF7vfwfPjxx5+t25QGqtcgwXuPRFxLLD5xpXmyoV8zwqMhpsoeGblOFxun5x8Ce+
-	 btmdSKb2dNRV9GLxSZp/csIEVUlDim/DeIg8fJeVS1CV4EVn7Us8wR/7z7Yyjry2sk2tbSOKk/d0
-	 fxG9ock9UqKE62M9ivXdHKIuIecQlcLBzO4xkgn3bUHCTAsmhS0VZ40mfCFKSCw5aNQ68M6PTCWt
-	 ZnRmLqFfNPSN4HHf/OF208uflBXEP6+3EYF8nGxWTfvL6OjPtcqlXPIZCtbcnMDs4JOdgrpmlXTW
-	 HPvnyHjAkVnBD6G/FofN95KWRnoadgUqQxN1yU5NjG8Iy5emIANXUeUhPrM7AvvzrwDhXky7Awnk
-	 DB7S8uapn1593i1VneE+x5cFU7zZa3A8nknRZ/OU02fTEoZ4gP2Fnpacypdcda/WpR0yk3YpdM6Z
-	 LHR6yjY+sqSrSkJt8p7VRL7YTgbVGLJ487OwXJ6++h9QKYOBgF4ca++/iIvq7Hu7fyKgVbdFzY2n
-	 0Uz9Uk3y5OkUo1Uy4d+p+9cZ6V8ZsGwSr/H/58X2mmXGGANpazBfPYieixh0XEAbrHW4iiYF/zhK
-	 zH6adJif8=
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+41a88b825a315aac2254@syzkaller.appspotmail.com
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com,
-	willy@infradead.org
-Subject: [PATCH] hfs: fix deadlock in hfs_extend_file
-Date: Tue,  2 Jan 2024 20:36:51 +0800
-X-OQ-MSGID: <20240102123651.1582577-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000004efa57060def87be@google.com>
-References: <0000000000004efa57060def87be@google.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Zxvd2YOa"
+X-UUID: 41ad12e8a96d11ee9e680517dc993faa-20240102
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=BuK7s7sV/d/zocOp9WyQc4jOUhufFxVHx+kxKOinkOM=;
+	b=Zxvd2YOakbMLVXW22ta99OLR0U+DOPShbO4uv1QTsvfqXsbArgWI2ItF6jr6tjQwxftTPtElyS95QvVkfFNvpCDdBp9raCTwvGsT+fGNQzBQIewGb8HwaA9nazUt/5TLxCSUqWAeNkdD8++TBUQqSihGNTYMJ6BlRdJ2ClANiPc=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:142c3af2-e436-4317-9cf2-1d4ce734d3e2,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:5d391d7,CLOUDID:b724b92e-1ab8-4133-9780-81938111c800,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,
+	DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-UUID: 41ad12e8a96d11ee9e680517dc993faa-20240102
+Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
+	(envelope-from <hao.qin@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 881740024; Tue, 02 Jan 2024 20:48:41 +0800
+Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Tue, 2 Jan 2024 20:48:40 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Tue, 2 Jan 2024 20:48:39 +0800
+From: Hao Qin <hao.qin@mediatek.com>
+To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
+	<johan.hedberg@gmail.com>, Luiz Von Dentz <luiz.dentz@gmail.com>
+CC: Sean Wang <sean.wang@mediatek.com>, Deren Wu <deren.Wu@mediatek.com>,
+	Aaron Hou <aaron.hou@mediatek.com>, Chris Lu <chris.lu@mediatek.com>, Steve
+ Lee <steve.lee@mediatek.com>, linux-bluetooth
+	<linux-bluetooth@vger.kernel.org>, linux-kernel
+	<linux-kernel@vger.kernel.org>, linux-mediatek
+	<linux-mediatek@lists.infradead.org>, hao.qin <hao.qin@mediatek.com>
+Subject: [PATCH v2 1/2] Bluetooth: btusb: mediatek: refactor btusb_mtk_reset function
+Date: Tue, 2 Jan 2024 20:47:46 +0800
+Message-ID: <20240102124747.21644-1-hao.qin@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-[syz report]
-syz-executor279/5059 is trying to acquire lock:
-ffff888079c100f8 (&HFS_I(tree->inode)->extents_lock){+.+.}-{3:3}, at: hfs_extend_file+0xa2/0xb10 fs/hfs/extent.c:397
+From: "hao.qin" <hao.qin@mediatek.com>
 
-but task is already holding lock:
-ffff888079c10778 (&HFS_I(tree->inode)->extents_lock){+.+.}-{3:3}, at: hfs_extend_file+0xa2/0xb10 fs/hfs/extent.c:397
+Extract function btusb_mtk_subsys_reset from btusb_mtk_reset
+for future handling of resetting bluetooth controller without
+USB reset.
 
-other info that might help us debug this:
- Possible unsafe locking scenario:
+Signed-off-by: hao.qin <hao.qin@mediatek.com>
 
-       CPU0
-       ----
-  lock(&HFS_I(tree->inode)->extents_lock);
-  lock(&HFS_I(tree->inode)->extents_lock);
-
- *** DEADLOCK ***
-[Analysis] 
- hfs_extend_file()->
-   hfs_ext_read_extent()->
-     __hfs_ext_cache_extent()->
-       __hfs_ext_write_extent()->
-         hfs_bmap_reserve()->
-           hfs_extend_file()->
-
-When an inode has both the HFS_FLG_EXT_DIRTY and HFS_FLG_EXT_NEW flags, it will
-enter the above loop and trigger a deadlock.
-
-[Fix]
-In hfs_ext_read_extent(), check if the above two flags exist simultaneously, 
-and exit the subsequent process when the conditions are met.
-
-Reported-and-tested-by: syzbot+41a88b825a315aac2254@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
 ---
- fs/hfs/extent.c | 4 ++++
- 1 file changed, 4 insertions(+)
+V1 -> V2: refactor btusb_mtk_reset function
 
-diff --git a/fs/hfs/extent.c b/fs/hfs/extent.c
-index 6d1878b99b30..1b02c7b6a10c 100644
---- a/fs/hfs/extent.c
-+++ b/fs/hfs/extent.c
-@@ -197,6 +197,10 @@ static int hfs_ext_read_extent(struct inode *inode, u16 block)
- 	    block < HFS_I(inode)->cached_start + HFS_I(inode)->cached_blocks)
- 		return 0;
+Link:
+  https://lore.kernel.org/all/20231215063714.7684-1-hao.qin@mediatek.com/
+---
+ drivers/bluetooth/btusb.c | 45 +++++++++++++++++++++++----------------
+ 1 file changed, 27 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 0926e4451802..abefcd1a089d 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -2994,28 +2994,13 @@ static u32 btusb_mtk_reset_done(struct hci_dev *hdev)
+ 	return val & MTK_BT_RST_DONE;
+ }
  
-+	if (HFS_I(inode)->flags & HFS_FLG_EXT_DIRTY && 
-+	    HFS_I(inode)->flags & HFS_FLG_EXT_NEW) 
-+		return -ENOENT;
+-static int btusb_mtk_reset(struct hci_dev *hdev, void *rst_data)
++static int btusb_mtk_subsys_reset(struct hci_dev *hdev, u32 dev_id)
+ {
+ 	struct btusb_data *data = hci_get_drvdata(hdev);
+-	struct btmediatek_data *mediatek;
+ 	u32 val;
+ 	int err;
+ 
+-	/* It's MediaTek specific bluetooth reset mechanism via USB */
+-	if (test_and_set_bit(BTUSB_HW_RESET_ACTIVE, &data->flags)) {
+-		bt_dev_err(hdev, "last reset failed? Not resetting again");
+-		return -EBUSY;
+-	}
+-
+-	err = usb_autopm_get_interface(data->intf);
+-	if (err < 0)
+-		return err;
+-
+-	btusb_stop_traffic(data);
+-	usb_kill_anchored_urbs(&data->tx_anchor);
+-	mediatek = hci_get_priv(hdev);
+-
+-	if (mediatek->dev_id == 0x7925) {
++	if (dev_id == 0x7925) {
+ 		btusb_mtk_uhw_reg_read(data, MTK_BT_RESET_REG_CONNV3, &val);
+ 		val |= (1 << 5);
+ 		btusb_mtk_uhw_reg_write(data, MTK_BT_RESET_REG_CONNV3, val);
+@@ -3059,8 +3044,32 @@ static int btusb_mtk_reset(struct hci_dev *hdev, void *rst_data)
+ 	if (!val)
+ 		bt_dev_err(hdev, "Can't get device id, subsys reset fail.");
+ 
+-	usb_queue_reset_device(data->intf);
++	return err;
++}
+ 
++static int btusb_mtk_reset(struct hci_dev *hdev, void *rst_data)
++{
++	struct btusb_data *data = hci_get_drvdata(hdev);
++	struct btmediatek_data *mediatek;
++	int err;
 +
- 	res = hfs_find_init(HFS_SB(inode->i_sb)->ext_tree, &fd);
- 	if (!res) {
- 		res = __hfs_ext_cache_extent(&fd, inode, block);
++	/* It's MediaTek specific bluetooth reset mechanism via USB */
++	if (test_and_set_bit(BTUSB_HW_RESET_ACTIVE, &data->flags)) {
++		bt_dev_err(hdev, "last reset failed? Not resetting again");
++		return -EBUSY;
++	}
++
++	err = usb_autopm_get_interface(data->intf);
++	if (err < 0)
++		return err;
++
++	btusb_stop_traffic(data);
++	usb_kill_anchored_urbs(&data->tx_anchor);
++	mediatek = hci_get_priv(hdev);
++
++	err = btusb_mtk_subsys_reset(hdev, mediatek->dev_id);
++
++	usb_queue_reset_device(data->intf);
+ 	clear_bit(BTUSB_HW_RESET_ACTIVE, &data->flags);
+ 
+ 	return err;
 -- 
-2.43.0
+2.18.0
 
