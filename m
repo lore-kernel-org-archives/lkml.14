@@ -1,153 +1,140 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C5912E6B;
-	Tue,  2 Jan 2024 15:06:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B7214A9C
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 15:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ieo1go8j"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 402EQJ9x007842;
-	Tue, 2 Jan 2024 15:05:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=yAUmslGfmAn/v408/JnMAl0laE6kfhNSkhNgHmtKlnU=;
- b=ieo1go8j8kWEwJEEg5WO5vqKGg10aSk8+UtbSP/lq+gTsFu7bhHsL8dk9O0Pyb0xCOka
- lPLOwNHlS9mVhlub+fQfuNPYrAWqE8+/bDNkHm5Q9D7TzRwMTeu5kykgM+1BePfhuD1d
- bug+utmcst7Ol4gcDORK8Ef0cc3TKi8JQRta/VDfWlwG3ew14GeKqaAua9l1mZ0PA1hQ
- mUIi1/Jzr+5ZsiOa0DzBH6/YlbWvNkGhPSOtOISnyCmuxhS6/kasesUkVii/tMHZo41/
- z1Vqzjuhvyg+bSK0KKIf+g5RQmO0VCUI9bJlbs+7wqXcWnTPgM3XZ4MPDebT/fHaG7et GA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vcf2j7s58-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jan 2024 15:05:38 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 402EurZf010225;
-	Tue, 2 Jan 2024 15:05:38 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vcf2j7s4t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jan 2024 15:05:38 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 402CNLmp017971;
-	Tue, 2 Jan 2024 15:05:36 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vayrkd7fk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jan 2024 15:05:36 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 402F5Xi514680808
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 2 Jan 2024 15:05:33 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A82E120043;
-	Tue,  2 Jan 2024 15:05:33 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8E97820040;
-	Tue,  2 Jan 2024 15:05:32 +0000 (GMT)
-Received: from osiris (unknown [9.171.22.30])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue,  2 Jan 2024 15:05:32 +0000 (GMT)
-Date: Tue, 2 Jan 2024 16:05:31 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Sven Schnelle <svens@linux.ibm.com>
-Subject: Re: [PATCH v3 28/34] s390/mm: Define KMSAN metadata for vmalloc and
- modules
-Message-ID: <20240102150531.6306-F-hca@linux.ibm.com>
-References: <20231213233605.661251-1-iii@linux.ibm.com>
- <20231213233605.661251-29-iii@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fy1WfJXo"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6d98f6e8de1so2813974b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 07:06:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704207979; x=1704812779; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nwt7CszV/J46V/JfrZ4yi4aU/mOorO6zMh2f6qpUKyY=;
+        b=fy1WfJXonc+xySrGW8ly6KHOYwIdtq0JGyJmjdVkQ/IANyF/SZUGK8XACq0U38ObrN
+         /E2dmwJav26EsCj0YL4ARrOIZAzEK3Gn6Fh+zYWBHyygfEmWKmA0gHuMEeiIAMbqRi8q
+         eGNLjyWe9/uXnO/UgEtvJOsCfrhR6GN1wozLLDnvdhH9IBOyShitlt2/QfkozNzop4w+
+         6LL9ehuZ/WtBFGex+1/HwZ5exoFl5C15GkD/zcRG4g3fI8KCas+U7Sci0YdEvuxod/2e
+         YLNh+oWu374ruxV0ejiIrzt/nSUHXCUtpBpxcytXZTd9JSWQ7xCqgF4j4jaO3Nq3ELhd
+         KKEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704207979; x=1704812779;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Nwt7CszV/J46V/JfrZ4yi4aU/mOorO6zMh2f6qpUKyY=;
+        b=JldU4ukVgGpJjDlgfR3OLyAZiYMfW4On1tKVaGNbALZcdFfqA7AX1N/hJqGjP4z0Wr
+         j3C5Q5yGWMmSBWbQqNNjRFQBdHyWTWWv0OZ5c2r5Y8ur1XBFZlaw5E8CL1fAWNrJZibv
+         7PM/xE8xDyBvqB4EwByGBYOTKA7Zk5sXhrQWcY8IFaRPG+VYYuXVNwmUxhCpDKUhGyUv
+         Z80lx5X/zzC/letXQtcrShHapYWDlhtkGN1xROMUuljWioqOoOOTyNT5pLW+nxwUamJe
+         CQ7wYQT4SqM1r7W0c9qz8GBYgsIs1YUGdG7YJKVfIY85P/+S5n5SRfrMp3Wlhz2JzW2X
+         alqA==
+X-Gm-Message-State: AOJu0Yx2Rm3JCazAby9CLbiHMsqyhnUt0acT/VKycQxGJ/cL2brdZRyT
+	LunnyxsUONVDw7JWiMBSpiE=
+X-Google-Smtp-Source: AGHT+IHE48un0LDnENnIvmj49RY3BQYS/qjj1IT4T8V/k7ITKJInhKWS1Armej+LFz9LzsQqfAVA5A==
+X-Received: by 2002:a05:6a20:9784:b0:186:bd68:facc with SMTP id hx4-20020a056a20978400b00186bd68faccmr7802964pzc.28.1704207979190;
+        Tue, 02 Jan 2024 07:06:19 -0800 (PST)
+Received: from code.. ([144.202.108.46])
+        by smtp.gmail.com with ESMTPSA id e12-20020a63500c000000b005ce998b9391sm2884851pgb.67.2024.01.02.07.06.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jan 2024 07:06:19 -0800 (PST)
+From: Yuntao Wang <ytcoode@gmail.com>
+To: bhe@redhat.com
+Cc: akpm@linux-foundation.org,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	dyoung@redhat.com,
+	eric.devolder@oracle.com,
+	hbathini@linux.ibm.com,
+	hpa@zytor.com,
+	kexec@lists.infradead.org,
+	lijiang@redhat.com,
+	linux-kernel@vger.kernel.org,
+	mingo@redhat.com,
+	seanjc@google.com,
+	sourabhjain@linux.ibm.com,
+	tglx@linutronix.de,
+	tiwai@suse.de,
+	vgoyal@redhat.com,
+	x86@kernel.org,
+	ytcoode@gmail.com
+Subject: Re: [PATCH 3/3] crash_core: fix and simplify the logic of crash_exclude_mem_range()
+Date: Tue,  2 Jan 2024 23:06:05 +0800
+Message-ID: <20240102150605.111256-1-ytcoode@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <ZZPMLextp0n3lwbD@MiWiFi-R3L-srv>
+References: <ZZPMLextp0n3lwbD@MiWiFi-R3L-srv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231213233605.661251-29-iii@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Ha6_F5y1dtYwlryom_EL-MOezepsJYos
-X-Proofpoint-ORIG-GUID: YUgncFyGNiUc-bIEjUnn1fILOqO8p_p-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-02_04,2024-01-02_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 phishscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
- malwarescore=0 spamscore=0 mlxlogscore=925 clxscore=1015 suspectscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401020115
+Content-Transfer-Encoding: 8bit
 
-On Thu, Dec 14, 2023 at 12:24:48AM +0100, Ilya Leoshkevich wrote:
-> The pages for the KMSAN metadata associated with most kernel mappings
-> are taken from memblock by the common code. However, vmalloc and module
-> metadata needs to be defined by the architectures.
+On Tue, 2 Jan 2024 16:41:17 +0800, Baoquan He <bhe@redhat.com> wrote:
+
+> Hi Yuntao,
 > 
-> Be a little bit more careful than x86: allocate exactly MODULES_LEN
-> for the module shadow and origins, and then take 2/3 of vmalloc for
-> the vmalloc shadow and origins. This ensures that users passing small
-> vmalloc= values on the command line do not cause module metadata
-> collisions.
+> On 12/30/23 at 06:16pm, Baoquan He wrote:
+> > On 12/29/23 at 12:10pm, Andrew Morton wrote:
+> > > On Sat, 16 Dec 2023 11:31:04 +0800 Baoquan He <bhe@redhat.com> wrote:
+> > > 
+> > > > > > Imagine we have a crashkernel region 256M reserved under 4G, say [2G, 2G+256M].
+> > > > > > Then after excluding the 256M from a region, it should stop. But now, this patch
+> > > > > > will make it continue scanning. Not sure if it's all in my mind.
+> > > > > 
+> > > > > Hi Baoquan,
+> > > > > 
+> > > > > Thank you for such a detailed reply. Now I finally understand why the code is
+> > > > > written this way.
+> > > > > 
+> > > > > However, if we can guarantee its correctness, wouldn't it be better to use the
+> > > > > generic region removing logic? At least it is more concise and clear, and other
+> > > > > people reading this code for the first time wouldn't get confused like me.
+> > > > > 
+> > > > > As for your concern about the while loop, I think it wouldn't affect performance
+> > > > > much because the total number of loops is small.
+> > > > 
+> > > > Well, see below kexec-tools commit, you wouldn't say that. And when you
+> > > > understand the code, you will feel a little uncomfortable about the
+> > > > sustaining useless scanning. At least, we should stop scanning after
+> > > > needed exluding is done.
+> > > > 
+> > > > Or, we may need add a generic region removing function so that it
+> > > > can be shared, e.g e820 memory region removing, memblock region removing.
+> > > > Otherwise, I can't see why a specific region excluding need a generic 
+> > > > region removing function.
+> > > 
+> > > So where do we now stand on this patchset?
+> > 
+> > The patch 1 and 2 are good clean up. The patch 3 plus below one, the
+> > entire is a good code improvement patch.
+> > 
+> > [PATCH] crash_core: optimize crash_exclude_mem_range()
+> > https://lore.kernel.org/all/20231219163418.108591-1-ytcoode@gmail.com/T/#u
 > 
-> Reviewed-by: Alexander Potapenko <glider@google.com>
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-> ---
->  arch/s390/boot/startup.c        |  8 ++++++++
->  arch/s390/include/asm/pgtable.h | 10 ++++++++++
->  2 files changed, 18 insertions(+)
+> Can you repost this patchset with some updating, e.g adding ack in patch
+> 1 and 2, and squash below patch into patch 3? This will be easier for
+> patch merging.
 > 
-> diff --git a/arch/s390/boot/startup.c b/arch/s390/boot/startup.c
-> index 8104e0e3d188..e37e7ffda430 100644
-> --- a/arch/s390/boot/startup.c
-> +++ b/arch/s390/boot/startup.c
-> @@ -253,9 +253,17 @@ static unsigned long setup_kernel_memory_layout(void)
->  	MODULES_END = round_down(__abs_lowcore, _SEGMENT_SIZE);
->  	MODULES_VADDR = MODULES_END - MODULES_LEN;
->  	VMALLOC_END = MODULES_VADDR;
-> +#ifdef CONFIG_KMSAN
-> +	VMALLOC_END -= MODULES_LEN * 2;
-> +#endif
->  
->  	/* allow vmalloc area to occupy up to about 1/2 of the rest virtual space left */
->  	vmalloc_size = min(vmalloc_size, round_down(VMALLOC_END / 2, _REGION3_SIZE));
-> +#ifdef CONFIG_KMSAN
-> +	/* take 2/3 of vmalloc area for KMSAN shadow and origins */
-> +	vmalloc_size = round_down(vmalloc_size / 3, _REGION3_SIZE);
-> +	VMALLOC_END -= vmalloc_size * 2;
-> +#endif
+> [PATCH] crash_core: optimize crash_exclude_mem_range()
+> https://lore.kernel.org/all/20231219163418.108591-1-ytcoode@gmail.com/T/#u
+> 
+> And, you may need to drop below patchset since patch 2 conflicts with
+> this patchset, and patch 1 is conflicting with fuqiang's patch.
+> 
+> [PATCH 0/2] crash: fix potential cmem->ranges array overflow
+> 
+> Thanks
+> Baoquan
 
-Please use
+Hi Baoquan,
 
-	if (IS_ENABLED(CONFIG_KMSAN))
+I've reposted this patchset, the link to the v2 version of this patchset is:
 
-above, since this way we get more compile time checks.
-
-> +#ifdef CONFIG_KMSAN
-> +#define KMSAN_VMALLOC_SIZE (VMALLOC_END - VMALLOC_START)
-> +#define KMSAN_VMALLOC_SHADOW_START VMALLOC_END
-> +#define KMSAN_VMALLOC_ORIGIN_START (KMSAN_VMALLOC_SHADOW_START + \
-> +				    KMSAN_VMALLOC_SIZE)
-> +#define KMSAN_MODULES_SHADOW_START (KMSAN_VMALLOC_ORIGIN_START + \
-> +				    KMSAN_VMALLOC_SIZE)
-
-Long single lines for these, please :)
-
-With that, and Alexander Gordeev's comments addressed:
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
+https://lore.kernel.org/lkml/20240102144905.110047-1-ytcoode@gmail.com/t/#u
