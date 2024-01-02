@@ -1,145 +1,96 @@
-Received: from IND01-BMX-obe.outbound.protection.outlook.com (mail-bmxind01on2079.outbound.protection.outlook.com [40.107.239.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D030FBE2;
-	Tue,  2 Jan 2024 13:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siliconsignals.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siliconsignals.io
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EmCtO0ViOiSNOZIE5F6WrHopMvAef+sfkSJmFvFPJPf/tvocy6x99oInli+iq/WW/yYTcLZ9AA5rQynHilvrA5f3gRMusDqagjYS+RI+TN21d12LnfsKKWSeN+LM7AsaYn115TOG2mUqJZi1F2SRLW23QDSs7y25f0vMEvKMlsnq07UBxc3bPYh5Vhef1WdDcX37ZXx6JoIf+0mwlbHpOB2QRGNh7n/oGFebr1LbLbvKOnkfGiAEag6v0pNaMCCLDNBqh5jRK4hoCZFw9FHtHu8cGSOyNyUxViGMJbavLqA4bsTgI82niVl2pLkxGqSk0XC/mduC0bQgtIEqLAUbFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pk2k7HCUO2fW3r8o+R4rlpx/u5bswYcg4/m43ayJwdQ=;
- b=l3TzO/NOCT8cIH3ACK9Es7XT5ufHFBlJH5a69l6eUiZvZm/pdHT6lIvC11WEerQFRcIkVjLm4NJ1S2eS2tyCOIjaTrZHNM9sVIjyjqHOV5JB5HInECO8jTpHR4gZwVbokVV8QYfcunHommkNhxuA2UmCmNkp34TulvX3ID2UUEEBsntNETvqSDDCtQsMlEhjmk4lv+d3+OSrMltQ/146AbzQRE3UTJ5aCM7vGPjZkVEsUpWWOMQ/4nwesOauiSsrPE7sNPFjXI3ZV5cpI0WpXl2on9NFBEYlLaxMphs/UtBWNJTZN0Zp27v2Z0WxA993UImQ9hrBRwi1cok9vycU6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siliconsignals.io; dmarc=pass action=none
- header.from=siliconsignals.io; dkim=pass header.d=siliconsignals.io; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siliconsignals.io;
-Received: from PN3PR01MB10135.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:1df::8)
- by MAZPR01MB7376.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:59::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.25; Tue, 2 Jan
- 2024 13:15:41 +0000
-Received: from PN3PR01MB10135.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::e2fc:c41e:7375:e933]) by PN3PR01MB10135.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::e2fc:c41e:7375:e933%3]) with mapi id 15.20.7135.023; Tue, 2 Jan 2024
- 13:15:41 +0000
-From: Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>
-To: stanimir.k.varbanov@gmail.com,
-	quic_vgarodia@quicinc.com,
-	agross@kernel.org,
-	andersson@kernel.org,
-	konrad.dybcio@linaro.org,
-	mchehab@kernel.org,
-	quic_dikshita@quicinc.com
-Cc: himanshu.bhavani@siliconsignals.io,
-	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
-	linux-media@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] media: venus: use div64_u64() instead of do_div()
-Date: Tue,  2 Jan 2024 18:45:09 +0530
-Message-Id: <20240102131509.1733215-1-himanshu.bhavani@siliconsignals.io>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BM1P287CA0010.INDP287.PROD.OUTLOOK.COM
- (2603:1096:b00:40::20) To PN3PR01MB10135.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:1df::8)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001D6F9E0;
+	Tue,  2 Jan 2024 13:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nFbw9+uz"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3367a304091so9172292f8f.3;
+        Tue, 02 Jan 2024 05:15:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704201357; x=1704806157; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:from:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=dqqX1JqpimAC6WihwYqyfae5QhT3NRDdGoohV28wxAI=;
+        b=nFbw9+uzOZxxYuLF5AEsqx83bjvpEB5bTrs65RjTSV8+E5MJ3+ioF5MTOFFRWRyk+J
+         qqHstuteQupFf/RJCbscuwPzp9DglpqGFlDsWmJtPdkz/sR6fjTh0K2GMHgGBUNCNmZm
+         0vf/sPwmp1FBiL3W+g9Uz2aqTTK+HrE0/OyhuF9D5KoHNuy+Ko53fy+g9LfwDiQ1zZYN
+         cT1PXrZIXTKzvoWZ5KKjB6XVZBs6sJ6xJvKQDXW/xEipt06KyjUAJq/QLi5IkgxE0776
+         jZEmYNKymZh2pG3UL1db2Rjb2tiNZk48+HcKzyzP0rw92pRoy0DlCol/1UDn8BIuNZjx
+         1/Og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704201357; x=1704806157;
+        h=content-transfer-encoding:to:subject:from:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dqqX1JqpimAC6WihwYqyfae5QhT3NRDdGoohV28wxAI=;
+        b=UXBj8u64+x2vOsZYK+Xa/JBBCb0fLamYLdpsCMaeM96Jgr35ZPW4qd4VMzVFkvQU1M
+         a/n9ovIpcoJBQ/4Bv6DBCVe2hIPcPGHLWfTnMMEA5lW+a+LY2DrrH8W2Diug0o27zYxW
+         ELBgHQ5ofP3mvmERv9XGKbte1O2vP1JrLDUXJ4Z2dFn7jwvCI0LJ9Dfagyd1bPGnvrv/
+         5uLbD1DDh7ZGq0FHSM9t+1djjM6kYy1t4nTzD5Za0QBwJz/c8yfRqctQmv2gl3rRNNnx
+         KWpkBElNrRH0HMez5V9KjIx85Vg7B8Fh09NBXTyczmujLoRmeCmLLy3It4AXMLi+6mDu
+         kvBg==
+X-Gm-Message-State: AOJu0YzedBeFFYgVrW35tSP6ANdp2hdd68gbbQ5WFU/Jq7LPxqDqnUB6
+	wuBc0IR7Ziea6FdyFIZnWhs=
+X-Google-Smtp-Source: AGHT+IGcS7PgOg4I+exgCKVC94VRbmPUFjcbsafH6LxZaK3p42Hs+yK476OdyEYRPY987/x9j+YIAA==
+X-Received: by 2002:adf:e648:0:b0:337:4a10:ea9 with SMTP id b8-20020adfe648000000b003374a100ea9mr141492wrn.207.1704201356973;
+        Tue, 02 Jan 2024 05:15:56 -0800 (PST)
+Received: from debian ([146.70.204.204])
+        by smtp.gmail.com with ESMTPSA id dr15-20020a5d5f8f000000b003373ece28efsm5985602wrb.29.2024.01.02.05.15.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jan 2024 05:15:56 -0800 (PST)
+Message-ID: <127b8199-1cd4-42d7-9b2b-875abaad93fe@gmail.com>
+Date: Tue, 2 Jan 2024 14:15:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PN3PR01MB10135:EE_|MAZPR01MB7376:EE_
-X-MS-Office365-Filtering-Correlation-Id: efdd9e03-e5cc-477d-c5ac-08dc0b94eb68
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	zjgWzbURvx6kv8VYV7+Sh5+aa1gG08b1qc06cKnNcWiY2mhdH+cwrejKTFkDUrat9usF5SKLlknCugxULEtzcFdAldkAiLYOPcJlxsC9P1MMrZbPuOlkq4h4GZ10jcHFlIypd91gnUeX6e6q+3b34g9yYl/vmZGpXdWzeKrcMYMQJ9vTqraUohhpdXwdhThfnsVH3KoHOmBMPQPcgAG9L6PodSgeqdeCNrQDAURmpO8qJLXTMHCYZs/0durwmHraGvrOEvdeY9milnT8muSsHNMN5wFJAwzJUSfjRDe6zM02QvtVYlHGJkJOzOz3b9nDp65EB7acFaBOIrOsy2X82ykuM4dq3bcOd0KFeeLH0hUcEqlGqHjSC+SobuS5NrBygWJexMh09Cg91PFPT+Ec+qjqqsOx/dS21pfbxPGlEn1v5d3SMP4F8bhSUiIvENcIYxFtdgPpEBzipA300OQ5WM4FBQqQTleO6QbbnKGWkvbPnSG1o6eP2esjzTf20WtHY63kI6L0jmOoHghxt4kxzqYuhYTdtOIEFAvvtDtbSQLqezp27bfAqFIvhxP5sMG7f/MmTv/5Pk/2MtACw62fp5NppbtavyQt1PAEaYP+Bf9hlFGN13ilA3zDWkH/Xz84SuInhEdX8k6on2XqcESap25XoyP4fO+ns1CHTYPlwLc=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PN3PR01MB10135.INDPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(39830400003)(396003)(376002)(136003)(346002)(366004)(230922051799003)(230273577357003)(230173577357003)(64100799003)(1800799012)(451199024)(186009)(6512007)(52116002)(6666004)(478600001)(6506007)(6486002)(83380400001)(26005)(1076003)(2616005)(7416002)(2906002)(41300700001)(66476007)(5660300002)(4326008)(8676002)(8936002)(66556008)(44832011)(66946007)(316002)(38100700002)(38350700005)(86362001)(36756003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?bNxJMJFbXGuGI3khobvxl59izhEzDQ/Y55l00+2CoQnpW7NirtRefA3ioRHA?=
- =?us-ascii?Q?VnaM8QdCDKBCooVPK0pPXmwK7gGPcQ9jooO/4MfwDNx+8ebd8v6bx384GM5W?=
- =?us-ascii?Q?ArCg7mcb318nRGcDveSROJpyanBaf/hm49UO3fLYEj6OuL9QkOQKEID3LB9t?=
- =?us-ascii?Q?lSHc5VGJh69rbS5jPR2eTUgqPRkdQTohqcgMxggd/OTuj0FUdldO3lTXEIYN?=
- =?us-ascii?Q?YqXlnapI+6djd6thCQQ7NZxezT/JNi0PxYWyO5PDH4XHlAsTmHHeeALz0xbU?=
- =?us-ascii?Q?Abphjbg/zJwYABeBXZrc4eWa+aWeSfRAZKWQ1NznwoGvMGGAXYYTfzYrIL6C?=
- =?us-ascii?Q?WyVCatsw7/7jo8/ozkK9ULhSTYLF3VQ/lb6DikAH9dHcivusRYKUQYOQu9Z4?=
- =?us-ascii?Q?EIQKhEkTFh1u8W+Qw4Z114awps9OeMGlcy+QnMOr8Q0MT+U5PLjUUqdrSkRg?=
- =?us-ascii?Q?jVQOnXYIvjvsLyJw/0lbcTbd3gTVOStCn7t+fRZc/KZQjk4JkJWQmUuvh4ME?=
- =?us-ascii?Q?4nMoL6/pzgaiXLKICSzXttPYWhEgW+E1Lz+dP50kD7quX3JnqpoOrbQgDpzB?=
- =?us-ascii?Q?GbqFb5XZ5+n4I/TTBPlnK8c6RpnG8unTJWkw9OuWPAnn+qPIPDdRtQp9Sk6y?=
- =?us-ascii?Q?0YmfYV2AqmqlMtgQDxnXUPapxIXkSW+fL7reRFqurK7QULPJY01TYszLat1q?=
- =?us-ascii?Q?UZ3STLNB/EcIkm8X0nQ/mcFdnGWZK3kc3Alh+2dcexNNID4xgT7Dus/ugRDH?=
- =?us-ascii?Q?bMaJK5x1PbJ0vPYFvhRf7H+2hIRPO0vXmOaxcxQF+zPvfmkETKVRG7LWn8ua?=
- =?us-ascii?Q?KSl7YyIkr7qtTytVdVGsoygpVHHR5n9wTjJ7xY3cyswNm/CFABCYm197iPjq?=
- =?us-ascii?Q?SXlcRJyBJu5XrlabddRWw+B5UJ3zbaqv6lm9PwExw1kH/TSBMCtC5F6MLgyM?=
- =?us-ascii?Q?Tp50A/U0UUn3Snb8bq4ZXo8PJGGcIO9Jc5kyw1Eq1lpglzs8XP5ZuzPkJjdI?=
- =?us-ascii?Q?swgYaaztzUbSInZOEPLAkg5X1WS9aSZVsfe6sUR9vTTGRwLep9htwYxmtu/S?=
- =?us-ascii?Q?HfID3V2APm4t90V8HM4bFs2LVyA3NiVTQIKlGcygIVjcn2BCJE5r6lhsxusV?=
- =?us-ascii?Q?sfgSKE35RG61YUhQebrmSSCOhMrPAS0Yp5xzLBR1MWyRs1FG2cHB7OcTZKNk?=
- =?us-ascii?Q?DdV4DeSCH2HVjwiRbVDwhjmjYKVbWSYm98XsLCqA5D6lDwkAow70rPRqq61U?=
- =?us-ascii?Q?X2aihtQHbre0bQE+17UTlNNV1ms36/h9QrC5zqAj9jc8LgZP6p5UVc8CD99g?=
- =?us-ascii?Q?SjRkHhylaaYpKkcAlkCfXt/Pbpqq15BCwOo4hLyxjNISu4pC+bN2aUtA87KI?=
- =?us-ascii?Q?x0R4uCCmH+5FFLYBxo+WHp5bZWLm8Mu8W3gWg42GcjQJHS9i8l6J/OfciE82?=
- =?us-ascii?Q?XLD5o7EvBbVPC775Q8YtSBZVYfmPTBBiNRh78p0RdCHU1dcgv4YEZ/4QTXgf?=
- =?us-ascii?Q?aHizuNJ0AEXRdpObMntNaWF40h2oQoPi6ev6/kLeBr0nKNChzQ0Oapwq3S+X?=
- =?us-ascii?Q?XSWZaaFDRXq+tuOnyXH+AQ4HCNMGY5DUq2VHq4C32PMSsqLwNNPaPRSdUgWl?=
- =?us-ascii?Q?3mGqJbJ53/HxchX4HlzMdfU=3D?=
-X-OriginatorOrg: siliconsignals.io
-X-MS-Exchange-CrossTenant-Network-Message-Id: efdd9e03-e5cc-477d-c5ac-08dc0b94eb68
-X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB10135.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jan 2024 13:15:41.3505
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 7ec5089e-a433-4bd1-a638-82ee62e21d37
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6nM3eJd84V2rLH225x1/rI60yyBqy7qR92w41PSonjQR4PHY48Lx2lKzlr5hUqeX8HHHzkKaHjqX2iW2wTU5i+ybPdf083StOS6hdsC6ZBDVCREc3RdlFjV8LGxIYD8w
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MAZPR01MB7376
+From: Richard Gobert <richardbgobert@gmail.com>
+Subject: [PATCH net-next v2 0/3] net: gro: reduce extension header parsing
+ overhead
+To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, shuah@kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-do_div() does a 64-by-32 division.
-When the divisor is u64, do_div() truncates it to 32 bits,
-this means it can test non-zero and be truncated to zero for
-division.
+This series attempts to reduce the parsing overhead of IPv6 extension
+headers in GRO and GSO, by removing extension header specific code and
+enabling the frag0 fast path.
+ 
+The following changes were made:
+ - Removed some unnecessary HBH conditionals by adding HBH offload
+   to inet6_offloads
+ - Added a utility function to support frag0 fast path in ipv6_gro_receive
+ - Added selftests for IPv6 packets with extension headers in GRO
 
-fix do_div.cocci warning:
-do_div() does a 64-by-32 division, please consider using div64_u64
-instead.
+Richard
 
-Signed-off-by: Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>
----
- drivers/media/platform/qcom/venus/venc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v1 -> v2:
+ - Added a minimum IPv6 extension header length constant to make code self
+   documenting.
+ - Added new selftest which checks that packets with different extension
+   header payloads do not coalesce.
+ - Added more info in the second commit message regarding the code changes.
+ - v1:
+   https://lore.kernel.org/netdev/f4eff69d-3917-4c42-8c6b-d09597ac4437@gmail.com/
 
-diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
-index 44b13696cf82..ad6c31c272ac 100644
---- a/drivers/media/platform/qcom/venus/venc.c
-+++ b/drivers/media/platform/qcom/venus/venc.c
-@@ -409,13 +409,13 @@ static int venc_s_parm(struct file *file, void *fh, struct v4l2_streamparm *a)
- 	out->capability = V4L2_CAP_TIMEPERFRAME;
- 
- 	us_per_frame = timeperframe->numerator * (u64)USEC_PER_SEC;
--	do_div(us_per_frame, timeperframe->denominator);
-+	us_per_frame = div64_u64(us_per_frame, timeperframe->denominator);
- 
- 	if (!us_per_frame)
- 		return -EINVAL;
- 
- 	fps = (u64)USEC_PER_SEC;
--	do_div(fps, us_per_frame);
-+	fps = div64_u64(fps, us_per_frame);
- 
- 	inst->timeperframe = *timeperframe;
- 	inst->fps = fps;
+Richard Gobert (3):
+  net: gso: add HBH extension header offload support
+  net: gro: parse ipv6 ext headers without frag0 invalidation
+  selftests/net: fix GRO coalesce test and add ext header coalesce tests
+
+ include/net/ipv6.h                |  1 +
+ net/ipv6/exthdrs_offload.c        | 11 ++++
+ net/ipv6/ip6_offload.c            | 76 +++++++++++++++++--------
+ tools/testing/selftests/net/gro.c | 94 +++++++++++++++++++++++++++++--
+ 4 files changed, 152 insertions(+), 30 deletions(-)
+
 -- 
-2.25.1
+2.36.1
 
