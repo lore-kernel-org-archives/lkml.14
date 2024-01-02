@@ -1,111 +1,234 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378A5C8C7;
-	Tue,  2 Jan 2024 08:42:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BEE6AA1;
+	Tue,  2 Jan 2024 08:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lYvx74rG"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a28271c5eb5so2105466b.0;
-        Tue, 02 Jan 2024 00:42:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704184934; x=1704789734; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u8CwfhciTLcDiE7Z2boNc1lfBQV0c29+edCvxD3xhxw=;
-        b=lYvx74rGS2+xGM6c3Z//l6T6BeTRAXsOucdNZtAad71mDcYYZHVgn5bDTHarAKzd7U
-         kL6Ha/dSDjFPRHEqE//0yCptVED61e/1VHkgQzhKct61aIOeP3A2scPTZCvJGgazNB+x
-         8XPk5hkPE+BuhexrPLV5+gMnoLMM+XjlcWBfhX3A3b8lU0hILFc08FKcz8joLx0oFPSv
-         x+Y96yroBBmNMyQk7fXG3odjBWrbH0ie7Ck79uYg57LsTyLqYoUvIzLXdJbo/FsBSFzy
-         lmNxuZRWHjlAFnf30+YfJgLKKsKCpnlkpkct3hrV3RL8JKcYp38P/ivrECqj/wnoGs7E
-         2qDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704184934; x=1704789734;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u8CwfhciTLcDiE7Z2boNc1lfBQV0c29+edCvxD3xhxw=;
-        b=PX64XSVLKMKnPA3AeQD7yjpyqxAr4liK8XsZ6sxn1zypA70EqOEMGTSG71c89lYA8t
-         NJbB+4ZGUeD9ds67Ixiww7KNVP0AEoPwlAaplOaIj5ANOctrS62CWcXnaV1sPwT0h9dt
-         Yzt92bM/E2oPARClI64d6ZHexH4+EY544AcHPdwVebwWYzrA6ZsVzDXMqzfrhhcXPlYW
-         5Ekf0EmR/4eTkysSyEVY3GcD3YNXyfQwqaGb7RqUNe/eigIySVeEbrvHYoS1e8qacgdt
-         37DfP4ry7LaGei2SmE7zJau6F7EiIURpa+W5Ma5f8cPQYch16RD4snKFthEU1fACdHYg
-         8cuA==
-X-Gm-Message-State: AOJu0YyGQ32RVYbC9xOcv9W4sibmLXDenOGqyP3TdOI5aHq841ih+BqD
-	vGYCsyRxNQpp2HQZsazIm951PztFtK+VBX2XIb8=
-X-Google-Smtp-Source: AGHT+IF0Je5njR/YwKTdhQb9U6w8Kntqq0Wc5pbJCaNzaq6nIzQOU8CyuYjXOabufWuRIbCfNLe74OjYjOZXwN3njYY=
-X-Received: by 2002:a17:906:3a4b:b0:a23:5914:9c6c with SMTP id
- a11-20020a1709063a4b00b00a2359149c6cmr16249150ejf.1.1704184934176; Tue, 02
- Jan 2024 00:42:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="bEq7Iz0D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1704184961;
+	bh=spflRRYbVyJI+GGk2sTIi1F+XFwMR1bA9QOFqaNLvnI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bEq7Iz0D56xaFA4xRPKaUIKofXDRD9rmgTlSkaYBaCPO6vLHZxyOV/FZI5V5TUGC1
+	 W5c/iSO1ZL+6ihdoA1eiFBHABzyVVtcwme79aUBopxjNwFDyKVr2Oz0PVDEifNsTLM
+	 tjhR9BsNHIyv+9yQTL1D1DtjIHaLyF5XrxYbgV1J3Lj4alhVh0YjdqP0TadeB0sMBt
+	 v+Y+/7QU6Wrw1CUWDEWFlcT6KCY8YYiZ3RHgzXIbHcUuCIa4duV+amHSLDX3DV6M9p
+	 XAI1TC+0rpBFfoihFhIGNSAuro2HetPS5Br9aWe0wQz5UK/sj12o+iZ/imUJPdpTKP
+	 5qZDwuCWaTArw==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C054237804B2;
+	Tue,  2 Jan 2024 08:42:39 +0000 (UTC)
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	kernel@collabora.com,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mm/selftests: hugepage-mremap: conform test to TAP format output
+Date: Tue,  2 Jan 2024 13:19:18 +0500
+Message-ID: <20240102081919.2325570-1-usama.anjum@collabora.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230921090027.11136-1-Wenhua.Lin@unisoc.com> <20230921090027.11136-2-Wenhua.Lin@unisoc.com>
- <c8b9fef7-e27c-6760-52a8-04045dcdc0ec@linux.alibaba.com>
-In-Reply-To: <c8b9fef7-e27c-6760-52a8-04045dcdc0ec@linux.alibaba.com>
-From: wenhua lin <wenhua.lin1994@gmail.com>
-Date: Tue, 2 Jan 2024 16:42:02 +0800
-Message-ID: <CAB9BWhdFgEfgPZ4wcz8RZmyqDGQDYKvk+Rt2LSfz4aPd1_u1dA@mail.gmail.com>
-Subject: Re: [PATCH V2 1/4] gpio: sprd: In the sleep state, the eic debounce
- clk must be forced open
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: Wenhua Lin <Wenhua.Lin@unisoc.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Orson Zhai <orsonzhai@gmail.com>, 
-	Chunyan Zhang <zhang.lyra@gmail.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Xiongpeng Wu <xiongpeng.wu@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Sep 27, 2023 at 5:08=E2=80=AFPM Baolin Wang
-<baolin.wang@linux.alibaba.com> wrote:
->
->
->
-> On 9/21/2023 5:00 PM, Wenhua Lin wrote:
-> > In the sleep state, Eic debounce has no clock and the clk of
-> > debounce needs to be forced open, so that eic can wake up normally.
-> >
-> > Fixes: 2788938b7946 ("gpio: eic-sprd: Make the irqchip immutable")
->
-> Are you sure this is the right Fixes tag? This commit did not change EIC
-> debounce logics.
->
-> The changes look good to me.
+Conform the layout, informational and status messages to TAP. No
+functional change is intended other than the layout of output messages.
 
-This modification turns on the debounce clock, and we will modify the
-submission
-description on patch v3. Thank you for your review.
+Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+---
+ tools/testing/selftests/mm/hugepage-mremap.c | 87 ++++++++------------
+ 1 file changed, 35 insertions(+), 52 deletions(-)
 
->
-> > Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
-> > ---
-> >   drivers/gpio/gpio-eic-sprd.c | 2 ++
-> >   1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.=
-c
-> > index 84352a6f4973..bfa8a4c7515a 100644
-> > --- a/drivers/gpio/gpio-eic-sprd.c
-> > +++ b/drivers/gpio/gpio-eic-sprd.c
-> > @@ -23,6 +23,7 @@
-> >   #define SPRD_EIC_DBNC_IC            0x24
-> >   #define SPRD_EIC_DBNC_TRIG          0x28
-> >   #define SPRD_EIC_DBNC_CTRL0         0x40
-> > +#define SPRD_EIC_DBNC_FORCE_CLK              0x8000
-> >
-> >   #define SPRD_EIC_LATCH_INTEN                0x0
-> >   #define SPRD_EIC_LATCH_INTRAW               0x4
-> > @@ -214,6 +215,7 @@ static int sprd_eic_set_debounce(struct gpio_chip *=
-chip, unsigned int offset,
-> >       u32 value =3D readl_relaxed(base + reg) & ~SPRD_EIC_DBNC_MASK;
-> >
-> >       value |=3D (debounce / 1000) & SPRD_EIC_DBNC_MASK;
-> > +     value |=3D SPRD_EIC_DBNC_FORCE_CLK;
-> >       writel_relaxed(value, base + reg);
-> >
-> >       return 0;
+diff --git a/tools/testing/selftests/mm/hugepage-mremap.c b/tools/testing/selftests/mm/hugepage-mremap.c
+index cabd0084f57b..c463d1c09c9b 100644
+--- a/tools/testing/selftests/mm/hugepage-mremap.c
++++ b/tools/testing/selftests/mm/hugepage-mremap.c
+@@ -24,6 +24,7 @@
+ #include <sys/ioctl.h>
+ #include <string.h>
+ #include <stdbool.h>
++#include "../kselftest.h"
+ #include "vm_util.h"
+ 
+ #define DEFAULT_LENGTH_MB 10UL
+@@ -34,7 +35,7 @@
+ 
+ static void check_bytes(char *addr)
+ {
+-	printf("First hex is %x\n", *((unsigned int *)addr));
++	ksft_print_msg("First hex is %x\n", *((unsigned int *)addr));
+ }
+ 
+ static void write_bytes(char *addr, size_t len)
+@@ -52,7 +53,7 @@ static int read_bytes(char *addr, size_t len)
+ 	check_bytes(addr);
+ 	for (i = 0; i < len; i++)
+ 		if (*(addr + i) != (char)i) {
+-			printf("Mismatch at %lu\n", i);
++			ksft_print_msg("Mismatch at %lu\n", i);
+ 			return 1;
+ 		}
+ 	return 0;
+@@ -66,17 +67,13 @@ static void register_region_with_uffd(char *addr, size_t len)
+ 	/* Create and enable userfaultfd object. */
+ 
+ 	uffd = syscall(__NR_userfaultfd, O_CLOEXEC | O_NONBLOCK);
+-	if (uffd == -1) {
+-		perror("userfaultfd");
+-		exit(1);
+-	}
++	if (uffd == -1)
++		ksft_exit_fail_msg("userfaultfd: %s\n", strerror(errno));
+ 
+ 	uffdio_api.api = UFFD_API;
+ 	uffdio_api.features = 0;
+-	if (ioctl(uffd, UFFDIO_API, &uffdio_api) == -1) {
+-		perror("ioctl-UFFDIO_API");
+-		exit(1);
+-	}
++	if (ioctl(uffd, UFFDIO_API, &uffdio_api) == -1)
++		ksft_exit_fail_msg("ioctl-UFFDIO_API: %s\n", strerror(errno));
+ 
+ 	/* Create a private anonymous mapping. The memory will be
+ 	 * demand-zero paged--that is, not yet allocated. When we
+@@ -86,21 +83,17 @@ static void register_region_with_uffd(char *addr, size_t len)
+ 
+ 	addr = mmap(NULL, len, PROT_READ | PROT_WRITE,
+ 		    MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+-	if (addr == MAP_FAILED) {
+-		perror("mmap");
+-		exit(1);
+-	}
++	if (addr == MAP_FAILED)
++		ksft_exit_fail_msg("mmap: %s\n", strerror(errno));
+ 
+-	printf("Address returned by mmap() = %p\n", addr);
++	ksft_print_msg("Address returned by mmap() = %p\n", addr);
+ 
+ 	/* Register the memory range of the mapping we just created for
+ 	 * handling by the userfaultfd object. In mode, we request to track
+ 	 * missing pages (i.e., pages that have not yet been faulted in).
+ 	 */
+-	if (uffd_register(uffd, addr, len, true, false, false)) {
+-		perror("ioctl-UFFDIO_REGISTER");
+-		exit(1);
+-	}
++	if (uffd_register(uffd, addr, len, true, false, false))
++		ksft_exit_fail_msg("ioctl-UFFDIO_REGISTER: %s\n", strerror(errno));
+ }
+ 
+ int main(int argc, char *argv[])
+@@ -108,10 +101,11 @@ int main(int argc, char *argv[])
+ 	size_t length = 0;
+ 	int ret = 0, fd;
+ 
+-	if (argc >= 2 && !strcmp(argv[1], "-h")) {
+-		printf("Usage: %s [length_in_MB]\n", argv[0]);
+-		exit(1);
+-	}
++	ksft_print_header();
++	ksft_set_plan(1);
++
++	if (argc >= 2 && !strcmp(argv[1], "-h"))
++		ksft_exit_fail_msg("Usage: %s [length_in_MB]\n", argv[0]);
+ 
+ 	/* Read memory length as the first arg if valid, otherwise fallback to
+ 	 * the default length.
+@@ -123,50 +117,40 @@ int main(int argc, char *argv[])
+ 
+ 	length = MB_TO_BYTES(length);
+ 	fd = memfd_create(argv[0], MFD_HUGETLB);
+-	if (fd < 0) {
+-		perror("Open failed");
+-		exit(1);
+-	}
++	if (fd < 0)
++		ksft_exit_fail_msg("Open failed: %s\n", strerror(errno));
+ 
+ 	/* mmap to a PUD aligned address to hopefully trigger pmd sharing. */
+ 	unsigned long suggested_addr = 0x7eaa40000000;
+ 	void *haddr = mmap((void *)suggested_addr, length, PROTECTION,
+ 			   MAP_HUGETLB | MAP_SHARED | MAP_POPULATE, fd, 0);
+-	printf("Map haddr: Returned address is %p\n", haddr);
+-	if (haddr == MAP_FAILED) {
+-		perror("mmap1");
+-		exit(1);
+-	}
++	ksft_print_msg("Map haddr: Returned address is %p\n", haddr);
++	if (haddr == MAP_FAILED)
++		ksft_exit_fail_msg("mmap1: %s\n", strerror(errno));
+ 
+ 	/* mmap again to a dummy address to hopefully trigger pmd sharing. */
+ 	suggested_addr = 0x7daa40000000;
+ 	void *daddr = mmap((void *)suggested_addr, length, PROTECTION,
+ 			   MAP_HUGETLB | MAP_SHARED | MAP_POPULATE, fd, 0);
+-	printf("Map daddr: Returned address is %p\n", daddr);
+-	if (daddr == MAP_FAILED) {
+-		perror("mmap3");
+-		exit(1);
+-	}
++	ksft_print_msg("Map daddr: Returned address is %p\n", daddr);
++	if (daddr == MAP_FAILED)
++		ksft_exit_fail_msg("mmap3: %s\n", strerror(errno));
+ 
+ 	suggested_addr = 0x7faa40000000;
+ 	void *vaddr =
+ 		mmap((void *)suggested_addr, length, PROTECTION, FLAGS, -1, 0);
+-	printf("Map vaddr: Returned address is %p\n", vaddr);
+-	if (vaddr == MAP_FAILED) {
+-		perror("mmap2");
+-		exit(1);
+-	}
++	ksft_print_msg("Map vaddr: Returned address is %p\n", vaddr);
++	if (vaddr == MAP_FAILED)
++		ksft_exit_fail_msg("mmap2: %s\n", strerror(errno));
+ 
+ 	register_region_with_uffd(haddr, length);
+ 
+ 	void *addr = mremap(haddr, length, length,
+ 			    MREMAP_MAYMOVE | MREMAP_FIXED, vaddr);
+-	if (addr == MAP_FAILED) {
+-		perror("mremap");
+-		exit(1);
+-	}
++	if (addr == MAP_FAILED)
++		ksft_exit_fail_msg("mremap: %s\n", strerror(errno));
+ 
+-	printf("Mremap: Returned address is %p\n", addr);
++	ksft_print_msg("Mremap: Returned address is %p\n", addr);
+ 	check_bytes(addr);
+ 	write_bytes(addr, length);
+ 	ret = read_bytes(addr, length);
+@@ -174,12 +158,11 @@ int main(int argc, char *argv[])
+ 	munmap(addr, length);
+ 
+ 	addr = mremap(addr, length, length, 0);
+-	if (addr != MAP_FAILED) {
+-		printf("mremap: Expected failure, but call succeeded\n");
+-		exit(1);
+-	}
++	if (addr != MAP_FAILED)
++		ksft_exit_fail_msg("mremap: Expected failure, but call succeeded\n");
+ 
+ 	close(fd);
+ 
+-	return ret;
++	ksft_test_result(!ret, "Read same data\n");
++	ksft_exit(!ret);
+ }
+-- 
+2.42.0
+
