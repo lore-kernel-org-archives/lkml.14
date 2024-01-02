@@ -1,84 +1,90 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84EC71094E
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 14:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A3510949;
+	Tue,  2 Jan 2024 14:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o+tcxqoO"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40d5d898162so42238185e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 06:03:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ccp6Nxdq"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40d8991f1acso14235845e9.1;
+        Tue, 02 Jan 2024 06:03:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704204216; x=1704809016; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5qqTKJtifBPnETv7np6pfevn5UJOzWmcakMBHLMWLps=;
-        b=o+tcxqoOYcQ5HAayJnRqSm7NxdAqP2MErgQU8epSHKYVyM/c4jcC81b3Yd176KG4DS
-         9is9buQ+5aWrA1Vstbw8VmEpR+TW5x0EIzaEnOUzWKGKlHt2pDC8o31QuXCPaNCnAaYg
-         fREAZEYQLWPjKfhv094977NNmDuGdHgxllDUKqBRTbO7o4wvPfrr18FmMrPjtcTWlVmP
-         hqurUR1K9WRIvk7jcGSW+sezFZSzYApttQ5VbJFRxbDZMcT6LLZjNUQfigzswlbPLHjx
-         my4cIf89hejeyO+DSyYRLSV5+ufEdKHqv/MzVcuzKn4V2mTPSkNlcRx4VVenc/GRQfhx
-         k0Zw==
+        d=gmail.com; s=20230601; t=1704204215; x=1704809015; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=awobl8VjBDg7kap3xLk73wds/lfIaStSTrwk13gNoso=;
+        b=Ccp6NxdqzqoU044Z4brWeaSeMCTEWOdtuHHv23hb46t50JH2t6gqZ/gLW+1qsdTWtz
+         nQa7hNQXGlGZO8gkCCEKMIV0NmsIqAipsaaNHnVbvBz7RZa5JDF+bVT8sVqVH7sugoMI
+         nClLU3+liVLMCCB5GZj2WVyQqM1EpQiT3iJ1x5sBVQFJ6/z//z0V9FyoZbw3Uti9BFV8
+         /JMUKxpjv/Y6qK+ikkrSewXPsVVDWju05tYTa5BslPECDIFrYzTZbyPjvuJ/D/0hXxR+
+         ZMkDr4gHdmCfCa2HWMCD4yTmxcRw9OtwmLDOBsFWZBsfMYV6FAgs05uCOv//gjYydf1L
+         MvOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704204216; x=1704809016;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5qqTKJtifBPnETv7np6pfevn5UJOzWmcakMBHLMWLps=;
-        b=auET08G7DZz3Wrs83VDle5h3p2b4fWEw8UXeJKTQUKtnXPYzAoa0nHo361h9t9wCC9
-         i+90LLEc2GhnrIpT5uNeQ7DRwupxHv5Wcyrky0Ke9HPgjyD4RvwguZZrE53IHRcuQjZ7
-         g3m57/zHTQjwWYrIn4ZPFw+jp5JdX8V7IuV5KZ79KL0c9OozT+NPikeIGd4DBg3sGh5D
-         j7srcJ1Jo3O52wVJat7hH1ClixQEJyo5VZBelhdtorvfNg/NNfIeSxuR3inlQCbYsffi
-         lE9/SKEcjozqCpNj9tGI1euoj6jdkB69xlgD9Z1KkJB2PNZZ4Qs2Oeb7rRINwjz8hUqo
-         l7aw==
-X-Gm-Message-State: AOJu0YzxIsfabj4hC7VVocOxfV3+EmbCiH0lyJjwP9c6KQL1EsCtw+9r
-	4XcGLFzZoCgXpWZGIQWYnY+57ibKvEWuGw==
-X-Google-Smtp-Source: AGHT+IHszu5kYoPxaua17Zir72G8+47MdyzOxbuqM4YiER7bIwhhZFsyR7srK6e08ANasQ0eoLbNNw==
-X-Received: by 2002:a05:600c:ca:b0:40d:376b:c640 with SMTP id u10-20020a05600c00ca00b0040d376bc640mr12050424wmm.102.1704204216035;
-        Tue, 02 Jan 2024 06:03:36 -0800 (PST)
-Received: from localhost ([102.140.209.237])
-        by smtp.gmail.com with ESMTPSA id d17-20020adffbd1000000b0033719111458sm11777561wrs.36.2024.01.02.06.03.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        d=1e100.net; s=20230601; t=1704204215; x=1704809015;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=awobl8VjBDg7kap3xLk73wds/lfIaStSTrwk13gNoso=;
+        b=oBSzLztntB2RNhZEbzHfkAODDtcP3stw/ben0HcirsJiWr4elOYFbf1PCM/QeVN0Rs
+         Glmr96h8CpjGUobluI/TTucLFpQ6DMNpN3UBXnAp4USwJ/wOqhmd13zDTAyl3Df4/b4g
+         K9NFW+vviOvi1beE8dES4lMuGt4rDBTtqKwyiyzX4EpTTHf/6I1B7nJX32C+Ti5PvFd1
+         0NdEwMB7UT4RMUApAr21NKN8jqFSF9/LwaYi7d9iOuO7mQYeh3CY36gRlO0qFm08J70S
+         3v6LykeF1jKUHlVz6nxem7/6WncuGgWPee34NShC/51UjOVqXqAS+gFJBwpGtqmNVFFe
+         gkFQ==
+X-Gm-Message-State: AOJu0YwAUZDtJT2MRlCaiuEgPUIZBFA+iwI8IWPlvA/CU8Bby3EfjU5O
+	O7FkrVZC055Sf8K2DyYYVS4=
+X-Google-Smtp-Source: AGHT+IGjWPQMT5ktYvyAz36LOlc7pBfpxvgWtK7kq7Rbteikwx2+6+aTk/sjJOMxVp1y2vtgh0vFAQ==
+X-Received: by 2002:a05:600c:2d84:b0:40b:5e59:ccb3 with SMTP id i4-20020a05600c2d8400b0040b5e59ccb3mr8822636wmg.148.1704204215352;
         Tue, 02 Jan 2024 06:03:35 -0800 (PST)
-Date: Tue, 2 Jan 2024 16:22:56 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Nathan DSilva <expitau@gmail.com>
-Cc: gregkh@linuxfoundation.org, philipp.g.hortmann@gmail.com,
-	tdavies@darkphysics.net, error27@gmail.com,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: rtl8192e: Add blank line after declarations
-Message-ID: <213d872d-8ad0-49f5-b6ae-9a1c69ecc107@suswa.mountain>
-References: <ZXvevJ2vEEQ92rau@oatmeal.darkphysics>
- <20231215152918.532037-1-expitau@gmail.com>
+Received: from localhost.localdomain (host-87-10-250-100.retail.telecomitalia.it. [87.10.250.100])
+        by smtp.googlemail.com with ESMTPSA id e17-20020a5d5311000000b0033672cfca96sm28427527wrv.89.2024.01.02.06.03.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jan 2024 06:03:34 -0800 (PST)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Christian Marangi <ansuelsmth@gmail.com>
+Subject: [net-next PATCH v2 0/4] net: phy: at803x: even more generalization
+Date: Tue,  2 Jan 2024 15:03:24 +0100
+Message-ID: <20240102140330.7371-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231215152918.532037-1-expitau@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Dec 15, 2023 at 03:29:18PM +0000, Nathan DSilva wrote:
-> Remove a warning about line breaks after declarations found by checkpatch.
-> 
-> Signed-off-by: Nathan DSilva <expitau@gmail.com>
-> ---
-> 
-> Thank you very much for your response. I didn't realize you could select
-> multiple --to recipients, or that you could have comments not in the changelog.
-> 
+This is part 3 of at803x required patches to split the PHY driver
+in more specific PHY Family driver.
 
-This should say:
+While adding support for a new PHY Family qca807x it was notice lots
+of similarities with the qca808x cdt function. Hence this series
+is done to make things easier in the future when qca807x PHY will be
+submitted.
 
-v2: Fix commit message
-v3: Improve these notes about changes between versions
+Changes v2:
+- Address request from Russell in a previous series on cdt get
+  status improvement
 
-Otherwise it looks okay.
+Christian Marangi (4):
+  net: phy: at803x: generalize cdt fault length function
+  net: phy: at803x: refactor qca808x cable test get status function
+  net: phy: at803x: add support for cdt cross short test for qca808x
+  net: phy: at803x: make read_status more generic
 
-regards,
-dan carpenter
+ drivers/net/phy/at803x.c | 171 ++++++++++++++++++++++++++-------------
+ 1 file changed, 116 insertions(+), 55 deletions(-)
 
+-- 
+2.43.0
 
