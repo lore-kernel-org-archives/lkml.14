@@ -1,56 +1,46 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603B914A9C;
-	Tue,  2 Jan 2024 15:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B3F12E69;
+	Tue,  2 Jan 2024 15:03:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="WaTnIwQo"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4029fW3Z029874;
-	Tue, 2 Jan 2024 08:57:35 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=PODMain02222019; bh=w
-	V54aLCafCqPFkfP1HXduuwoFpHJPYhvba9jOLf4nBI=; b=WaTnIwQoKiFd8jS9F
-	BiwUsHA7xT9lyGjhVrolWlrQmi8olx1hpmno9tXJkXDgUwvYaLqM9xkXRVSMvkUO
-	Wj8k0bidYuPBaetoPZk0nYeu67J+4HoRgFKsAr4ciMOHyL8hQBlybiAqkPS5yKHT
-	Wfe8RITDuqfsMY8GfuXhL4btTSsdURSQ4Lhe4tE+1tlCdbcOA18b96ljOU+IFoHu
-	kuEiwV4/GTMoe7p3sK02AFdOr0zN4o0nDQ8r/aTowyrsynZ5g4FQ01t6pYAIxqW+
-	szo+aUraiUVv6HBmGWNxkrNCWVLyT2ldLj08BniEhbhckBqbJuUNSivL/Arltv0Z
-	5Dd5g==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3vahg2b9t3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jan 2024 08:57:35 -0600 (CST)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 2 Jan
- 2024 14:57:33 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.2.1118.40 via Frontend
- Transport; Tue, 2 Jan 2024 14:57:33 +0000
-Received: from aus-sw-rshr002.ad.cirrus.com (aus-sw-rshr002.ad.cirrus.com [141.131.145.53])
-	by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 6907A46B;
-	Tue,  2 Jan 2024 14:57:32 +0000 (UTC)
-From: James Ogletree <jogletre@opensource.cirrus.com>
-To: 
-CC: James Ogletree <jogletre@opensource.cirrus.com>,
-        Jeff LaBundy
-	<jeff@labundy.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jonathan
- Corbet <corbet@lwn.net>,
-        "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK,
- TOUCHSCREEN)..." <linux-input@vger.kernel.org>,
-        "open list:DOCUMENTATION"
-	<linux-doc@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH RESEND 1/2] Input: support pre-stored effects
-Date: Tue, 2 Jan 2024 14:56:12 +0000
-Message-ID: <20240102145614.127736-1-jogletre@opensource.cirrus.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bgzhe2H3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEAE8C433C7;
+	Tue,  2 Jan 2024 15:03:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704207838;
+	bh=aAclt0B+OSjENNYBjj9U19v0PFhS/aJa+mB6Qz5/pfY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Bgzhe2H3J4eljcl+IJ8gS2QwDzge1N+6/3/KTfrX7nT2XFEZiGdHYyUwjZ5j28MbP
+	 mUCpqPJBc68LBW2UdMeVl/rrrG+ytlf0sBv28Hvy927HBFnSYQSeyobrdzjySZRi4h
+	 eB6QH7Gd6zlpcs/J2chdu+1XoOFeCggI8bO9LM9z2jL59wxCKCDkTD6hcgfXt590Pr
+	 DSltxYFLQOUOpQAeBymvie+c7Ewky3a0uDpDMfOe8brn9M4PZjGiew6R7ByFxL1fz3
+	 T8G636rdv+SFU2d8LdhQOk7/U76UQNUsv5Aq0uYx4LHr+wEaxVICONizhpJX91/fYg
+	 RAyXuZqAbGhDA==
+From: Michael Walle <mwalle@kernel.org>
+To: bbara93@gmail.com
+Cc: benjamin.bara@skidata.com,
+	dmitry.osipenko@collabora.com,
+	jonathanh@nvidia.com,
+	lee@kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-tegra@vger.kernel.org,
+	nm@ti.com,
+	peterz@infradead.org,
+	rafael.j.wysocki@intel.com,
+	richard.leitner@linux.dev,
+	stable@vger.kernel.org,
+	treding@nvidia.com,
+	wsa+renesas@sang-engineering.com,
+	wsa@kernel.org,
+	Michael Walle <mwalle@kernel.org>
+Subject: [PATCH v7 2/5] Re: i2c: core: run atomic i2c xfer when !preemptible
+Date: Tue,  2 Jan 2024 16:03:50 +0100
+Message-Id: <20240102150350.3180741-1-mwalle@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230327-tegra-pmic-reboot-v7-2-18699d5dcd76@skidata.com>
+References: <20230327-tegra-pmic-reboot-v7-2-18699d5dcd76@skidata.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,97 +48,118 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: mJkb45CEN7JXr_gPI6I5WKL9bsgKZ5SL
-X-Proofpoint-ORIG-GUID: mJkb45CEN7JXr_gPI6I5WKL9bsgKZ5SL
-X-Proofpoint-Spam-Reason: safe
 
-At present, the best way to define effects that pre-exist in device
-memory is by utilizing the custom_data field of ff_periodic_effect,
-which it was not intended for, and which requires extra processing
-by the driver.
+Hi,
 
-Provide simpler option for interacting with pre-stored effects in
-device memory.
+> Since bae1d3a05a8b, i2c transfers are non-atomic if preemption is
+> disabled. However, non-atomic i2c transfers require preemption (e.g. in
+> wait_for_completion() while waiting for the DMA).
+> 
+> panic() calls preempt_disable_notrace() before calling
+> emergency_restart(). Therefore, if an i2c device is used for the
+> restart, the xfer should be atomic. This avoids warnings like:
+> 
+> [   12.667612] WARNING: CPU: 1 PID: 1 at kernel/rcu/tree_plugin.h:318 rcu_note_context_switch+0x33c/0x6b0
+> [   12.676926] Voluntary context switch within RCU read-side critical section!
+> ...
+> [   12.742376]  schedule_timeout from wait_for_completion_timeout+0x90/0x114
+> [   12.749179]  wait_for_completion_timeout from tegra_i2c_wait_completion+0x40/0x70
+> ...
+> [   12.994527]  atomic_notifier_call_chain from machine_restart+0x34/0x58
+> [   13.001050]  machine_restart from panic+0x2a8/0x32c
+> 
+> Use !preemptible() instead, which is basically the same check as
+> pre-v5.2.
+> 
+> Fixes: bae1d3a05a8b ("i2c: core: remove use of in_atomic()")
+> Cc: stable@vger.kernel.org # v5.2+
+> Suggested-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+> Acked-by: Wolfram Sang <wsa@kernel.org>
+> Reviewed-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+> Tested-by: Nishanth Menon <nm@ti.com>
+> Signed-off-by: Benjamin Bara <benjamin.bara@skidata.com>
+> ---
+>  drivers/i2c/i2c-core.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/i2c-core.h b/drivers/i2c/i2c-core.h
+> index 1247e6e6e975..05b8b8dfa9bd 100644
+> --- a/drivers/i2c/i2c-core.h
+> +++ b/drivers/i2c/i2c-core.h
+> @@ -29,7 +29,7 @@ int i2c_dev_irq_from_resources(const struct resource *resources,
+>   */
+>  static inline bool i2c_in_atomic_xfer_mode(void)
+>  {
+> -	return system_state > SYSTEM_RUNNING && irqs_disabled();
+> +	return system_state > SYSTEM_RUNNING && !preemptible();
 
-Reviewed-by: Jeff LaBundy <jeff@labundy.com>
-Signed-off-by: James Ogletree <jogletre@opensource.cirrus.com>
----
- include/uapi/linux/input.h | 32 ++++++++++++++++++++++----------
- 1 file changed, 22 insertions(+), 10 deletions(-)
+With preemption disabled, this boils down to
+  return system_state > SYSTEM_RUNNING (&& !0)
 
-diff --git a/include/uapi/linux/input.h b/include/uapi/linux/input.h
-index 2557eb7b0561..689e5fa10647 100644
---- a/include/uapi/linux/input.h
-+++ b/include/uapi/linux/input.h
-@@ -428,17 +428,27 @@ struct ff_rumble_effect {
- 	__u16 weak_magnitude;
- };
- 
-+/**
-+ * struct ff_prestored_effect - defines parameters of a pre-stored force-feedback effect
-+ * @index: index of effect
-+ * @bank: memory bank of effect
-+ */
-+struct ff_prestored_effect {
-+	__u16 index;
-+	__u16 bank;
-+};
-+
- /**
-  * struct ff_effect - defines force feedback effect
-  * @type: type of the effect (FF_CONSTANT, FF_PERIODIC, FF_RAMP, FF_SPRING,
-- *	FF_FRICTION, FF_DAMPER, FF_RUMBLE, FF_INERTIA, or FF_CUSTOM)
-+ *	FF_FRICTION, FF_DAMPER, FF_RUMBLE, FF_INERTIA, FF_PRESTORED, or FF_CUSTOM)
-  * @id: an unique id assigned to an effect
-  * @direction: direction of the effect
-  * @trigger: trigger conditions (struct ff_trigger)
-  * @replay: scheduling of the effect (struct ff_replay)
-  * @u: effect-specific structure (one of ff_constant_effect, ff_ramp_effect,
-- *	ff_periodic_effect, ff_condition_effect, ff_rumble_effect) further
-- *	defining effect parameters
-+ *	ff_periodic_effect, ff_condition_effect, ff_rumble_effect, ff_prestored_effect)
-+ *	further defining effect parameters
-  *
-  * This structure is sent through ioctl from the application to the driver.
-  * To create a new effect application should set its @id to -1; the kernel
-@@ -464,6 +474,7 @@ struct ff_effect {
- 		struct ff_periodic_effect periodic;
- 		struct ff_condition_effect condition[2]; /* One for each axis */
- 		struct ff_rumble_effect rumble;
-+		struct ff_prestored_effect prestored;
- 	} u;
- };
- 
-@@ -479,20 +490,21 @@ struct ff_effect {
- #define FF_DAMPER	0x55
- #define FF_INERTIA	0x56
- #define FF_RAMP		0x57
-+#define FF_PRESTORED	0x58
- 
- #define FF_EFFECT_MIN	FF_RUMBLE
--#define FF_EFFECT_MAX	FF_RAMP
-+#define FF_EFFECT_MAX	FF_PRESTORED
- 
- /*
-  * Force feedback periodic effect types
-  */
- 
--#define FF_SQUARE	0x58
--#define FF_TRIANGLE	0x59
--#define FF_SINE		0x5a
--#define FF_SAW_UP	0x5b
--#define FF_SAW_DOWN	0x5c
--#define FF_CUSTOM	0x5d
-+#define FF_SQUARE	0x59
-+#define FF_TRIANGLE	0x5a
-+#define FF_SINE		0x5b
-+#define FF_SAW_UP	0x5c
-+#define FF_SAW_DOWN	0x5d
-+#define FF_CUSTOM	0x5e
- 
- #define FF_WAVEFORM_MIN	FF_SQUARE
- #define FF_WAVEFORM_MAX	FF_CUSTOM
--- 
-2.25.1
+and will then generate a backtrace splash on each reboot on our
+board:
 
+# reboot -f
+[   12.687169] No atomic I2C transfer handler for 'i2c-0'
+[   12.692313] WARNING: CPU: 6 PID: 275 at drivers/i2c/i2c-core.h:40 i2c_smbus_xfer+0x100/0x118
+[   12.700745] Modules linked in:
+[   12.703788] CPU: 6 PID: 275 Comm: reboot Not tainted 6.7.0-rc6-next-20231222+ #2494
+[   12.711431] Hardware name: Kontron 3.5"-SBC-i1200 (DT)
+[   12.716555] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   12.723504] pc : i2c_smbus_xfer+0x100/0x118
+[   12.727674] lr : i2c_smbus_xfer+0x100/0x118
+[   12.731844] sp : ffff80008389b7c0
+[   12.735146] x29: ffff80008389b7c0 x28: ffff0000c561b4c0 x27: ffff0000c2b06400
+[   12.742268] x26: ffff0000c65aec4a x25: 000000000000000b x24: 0000000000000001
+[   12.749389] x23: 0000000000000000 x22: 0000000000000064 x21: 0000000000000008
+[   12.756510] x20: ffff80008389b836 x19: ffff0000c2dda080 x18: ffffffffffffffff
+[   12.763631] x17: ffff800080813f48 x16: ffff80008081bd38 x15: 0730072d07630732
+[   12.770752] x14: 0769072707200772 x13: 0730072d07630732 x12: 0769072707200772
+[   12.777873] x11: 0720072007200720 x10: ffff8000827dc828 x9 : ffff80008012e154
+[   12.784994] x8 : 00000000ffffefff x7 : ffff8000827dc828 x6 : 80000000fffff000
+[   12.792116] x5 : 000000000000bff4 x4 : 0000000000000000 x3 : 0000000000000000
+[   12.799236] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff0000c561b4c0
+[   12.806359] Call trace:
+[   12.808793]  i2c_smbus_xfer+0x100/0x118
+[   12.812616]  i2c_smbus_read_i2c_block_data+0x60/0xb0
+[   12.817569]  mt6360_regmap_read+0xa4/0x1b8
+[   12.821654]  _regmap_raw_read+0xfc/0x270
+[   12.825566]  _regmap_bus_read+0x4c/0x90
+[   12.829389]  _regmap_read+0x6c/0x168
+[   12.832953]  _regmap_update_bits+0xf8/0x150
+[   12.837124]  regmap_update_bits_base+0x6c/0xa8
+[   12.841555]  regulator_disable_regmap+0x48/0x68
+[   12.846073]  _regulator_do_disable+0x130/0x1e8
+[   12.850504]  _regulator_disable+0x154/0x1d8
+[   12.854676]  regulator_disable+0x44/0x90
+[   12.858587]  mmc_regulator_set_ocr+0x8c/0x118
+[   12.862933]  msdc_ops_set_ios+0x3f4/0x938
+[   12.866932]  mmc_set_initial_state+0x90/0xa8
+[   12.871191]  mmc_power_off+0x40/0x68
+[   12.874754]  _mmc_sd_suspend+0x5c/0x190
+[   12.878577]  mmc_sd_suspend+0x20/0x78
+[   12.882227]  mmc_bus_shutdown+0x48/0x90
+[   12.886051]  device_shutdown+0x134/0x298
+[   12.889961]  kernel_restart+0x48/0xd0
+[   12.893613]  __do_sys_reboot+0x1e0/0x278
+[   12.897523]  __arm64_sys_reboot+0x2c/0x40
+[   12.901519]  invoke_syscall+0x50/0x128
+[   12.905257]  el0_svc_common.constprop.0+0x48/0xf0
+[   12.909950]  do_el0_svc+0x24/0x38
+[   12.913253]  el0_svc+0x38/0xd8
+[   12.916296]  el0t_64_sync_handler+0x100/0x130
+[   12.920639]  el0t_64_sync+0x1a4/0x1a8
+[   12.924289] ---[ end trace 0000000000000000 ]---
+...
+
+I'm not sure if this is now the expected behavior or not. There will be
+no backtraces, if I build a preemptible kernel, nor will there be
+backtraces if I revert this patch.
+
+OTOH, the driver I'm using (drivers/i2c/busses/i2c-mt65xx.c) has no
+*_atomic(). So the warning is correct. There is also [1], which seems to
+be the same issue I'm facing.
+
+-michael
+
+[1] https://lore.kernel.org/linux-i2c/13271b9b-4132-46ef-abf8-2c311967bb46@mailbox.org/
