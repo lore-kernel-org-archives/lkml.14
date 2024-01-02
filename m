@@ -1,56 +1,45 @@
 Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E85ACA64;
-	Tue,  2 Jan 2024 09:58:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB23CA64;
+	Tue,  2 Jan 2024 09:58:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="PTjZT+yn"
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ANLY/JZD"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
 	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=hHKFbUEIS5ipHE53Wsnge1tw3F+Oty8Rlp/6KIyJ0SM=; b=PTjZT+ynysR242Cz+a5gDo6Ug6
-	vxfDl4l640h+U1q2VFbFKeuf86sURKmW73H8d15Qkn0/7Bsd6oXmu6vvrOpK2Vv8Dkhb3oHRzNU1O
-	3HvBChhvWIyTe8Dw0bHzjAbMdF1/76379C2QtzPoBH528P2iBWNoxJuFA1XEMIRoY63PM55QF/DfL
-	YL3xMQnMaelYjmhh2hz1Yf3zSHgh4HZriT2ziwBeBmLuWm47C07oskPy+VvfDv1LaMv19ntO3WSNO
-	+a7nBcGi5aGRY5sIuKIvUrqhThMA9kRc9gVx4LZDofSfFmu0JiIbf42uI4wuVA039WlaUznPAYtdu
-	egnlxz/Q==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:37522)
+	bh=9ImigIKQ0f5FtlKrHZFopBhXW0/whWx1b/wua1Xqmmg=; b=ANLY/JZDuRf2a6cANeNpO1omaM
+	Wu+MbU007YJGjRFez4pvalbNQj+bcT1dTgsHvNHKDoD9iW2pLH3+YkbcCWM9G1uW9rf2dIFps1Ypm
+	3HTGRJkHE499C4nhK7yCS7ECQvO8kuM8j4oZvv5o4SNzVjWfvbn9Iz+AfjO71j6Znd149LPeoC5Vv
+	SeZo3iCTVTbRb/HRaQUi5YY/l09hOI+80aUW5aqlN+blrYp5jOhpQZdG0fWbzP1c8boUxCYMakfv8
+	J4ZW4XnxjDHcKiBHm3o/XT+eSpMPBuoTP2RLEJhAkRVqgm3wXkXHgJaAf3n8LpWeXeM1nsKDX8PKn
+	wYoQPjUQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52110)
 	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <linux@armlinux.org.uk>)
-	id 1rKbWu-0006Ku-1v;
-	Tue, 02 Jan 2024 09:57:48 +0000
+	id 1rKbSk-0006Kj-0m;
+	Tue, 02 Jan 2024 09:53:30 +0000
 Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
 	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rKbWu-00059k-UX; Tue, 02 Jan 2024 09:57:48 +0000
-Date: Tue, 2 Jan 2024 09:57:48 +0000
+	id 1rKbSk-00059b-Aq; Tue, 02 Jan 2024 09:53:30 +0000
+Date: Tue, 2 Jan 2024 09:53:30 +0000
 From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Jie Luo <quic_luoj@quicinc.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	hkallweit1@gmail.com, corbet@lwn.net, p.zabel@pengutronix.de,
-	f.fainelli@gmail.com, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, Christian Marangi <ansuelsmth@gmail.com>
-Subject: Re: [PATCH v8 14/14] dt-bindings: net: ar803x: add qca8084 PHY
- properties
-Message-ID: <ZZPeHJJU96y1kdlZ@shell.armlinux.org.uk>
-References: <20231215074005.26976-15-quic_luoj@quicinc.com>
- <60b9081c-76fa-4122-b7ae-5c3dcf7229f9@lunn.ch>
- <a65ad12d-b990-4439-b196-903f4a5f096a@quicinc.com>
- <f5c5cbce-c36e-498a-97e2-35f06d927d74@lunn.ch>
- <a9798333-3105-422f-8033-76c0b1d4f439@quicinc.com>
- <7c05b08a-bb6d-4fa1-8cee-c1051badc9d9@lunn.ch>
- <ZX2rU5OFcZFyBmGl@shell.armlinux.org.uk>
- <6abe5d6f-9d00-445f-8c81-9c89b9da3e0a@quicinc.com>
- <ZX3LqN8DSdKXqsYc@shell.armlinux.org.uk>
- <1bddd434-024c-45ff-9866-92951a3f555f@quicinc.com>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [net-next PATCH] net: phy: at803x: better align function
+ varibles to open parenthesis
+Message-ID: <ZZPdGnJQ1V/E8zBP@shell.armlinux.org.uk>
+References: <20231217235011.2070-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,48 +48,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1bddd434-024c-45ff-9866-92951a3f555f@quicinc.com>
+In-Reply-To: <20231217235011.2070-1-ansuelsmth@gmail.com>
 Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Mon, Dec 18, 2023 at 11:01:03AM +0800, Jie Luo wrote:
-> 
-> 
-> On 12/17/2023 12:09 AM, Russell King (Oracle) wrote:
-> > On Sat, Dec 16, 2023 at 10:41:28PM +0800, Jie Luo wrote:
-> > > 
-> > > 
-> > > On 12/16/2023 9:51 PM, Russell King (Oracle) wrote:
-> > > > On Sat, Dec 16, 2023 at 11:21:53AM +0100, Andrew Lunn wrote:
-> > > > > > The following is the chip package, the chip can work on the switch mode
-> > > > > > like the existed upstream code qca8k, where PHY1-PHY4 is connected with
-> > > > > > MAC1-MAC4 directly;
-> > > > > 
-> > > > > Ah, that is new information, and has a big effect on the design.
-> > > > 
-> > > > This QCA8084 that's being proposed in these patches is not a PHY in
-> > > > itself, but is a SoC. I came across this:
-> > > > 
-> > > >    https://www.rt-rk.com/android-tv-solution-tv-in-smartphone-pantsstb-based-on-qualcomm-soc-design/
-> > > 
-> > > The chip mentioned in the link you mentioned is SoC, which is not the
-> > > chip that the qca8084 driver work for.
-> > 
-> > So there's two chips called QCA8084 both produced by Qualcomm? I find
-> > that hard to believe.
-> > 
-> 
-> The SoC mentioned in the link you provided is the APQ8084 that is introduced
-> in the link below:
-> https://www.qualcomm.com/products/mobile/snapdragon/smartphones/snapdragon-8-series-mobile-platforms/snapdragon-processors-805
+On Mon, Dec 18, 2023 at 12:50:11AM +0100, Christian Marangi wrote:
+> -	if (qca808x_cdt_fault_length_valid(pair_a))
+> -		ethnl_cable_test_fault_length(phydev, ETHTOOL_A_CABLE_PAIR_A,
+> -				qca808x_cdt_fault_length(phydev, ETHTOOL_A_CABLE_PAIR_A));
+> -	if (qca808x_cdt_fault_length_valid(pair_b))
+> -		ethnl_cable_test_fault_length(phydev, ETHTOOL_A_CABLE_PAIR_B,
+> -				qca808x_cdt_fault_length(phydev, ETHTOOL_A_CABLE_PAIR_B));
+> -	if (qca808x_cdt_fault_length_valid(pair_c))
+> -		ethnl_cable_test_fault_length(phydev, ETHTOOL_A_CABLE_PAIR_C,
+> -				qca808x_cdt_fault_length(phydev, ETHTOOL_A_CABLE_PAIR_C));
+> -	if (qca808x_cdt_fault_length_valid(pair_d))
+> -		ethnl_cable_test_fault_length(phydev, ETHTOOL_A_CABLE_PAIR_D,
+> -				qca808x_cdt_fault_length(phydev, ETHTOOL_A_CABLE_PAIR_D));
+> +	if (qca808x_cdt_fault_length_valid(pair_a)) {
+> +		val = qca808x_cdt_fault_length(phydev, ETHTOOL_A_CABLE_PAIR_A);
+> +		ethnl_cable_test_fault_length(phydev, ETHTOOL_A_CABLE_PAIR_A, val);
+> +	}
+> +	if (qca808x_cdt_fault_length_valid(pair_b)) {
+> +		val = qca808x_cdt_fault_length(phydev, ETHTOOL_A_CABLE_PAIR_B);
+> +		ethnl_cable_test_fault_length(phydev, ETHTOOL_A_CABLE_PAIR_B, val);
+> +	}
+> +	if (qca808x_cdt_fault_length_valid(pair_c)) {
+> +		val = qca808x_cdt_fault_length(phydev, ETHTOOL_A_CABLE_PAIR_C);
+> +		ethnl_cable_test_fault_length(phydev, ETHTOOL_A_CABLE_PAIR_C, val);
+> +	}
+> +	if (qca808x_cdt_fault_length_valid(pair_d)) {
+> +		val = qca808x_cdt_fault_length(phydev, ETHTOOL_A_CABLE_PAIR_D);
+> +		ethnl_cable_test_fault_length(phydev, ETHTOOL_A_CABLE_PAIR_D, val);
+> +	}
 
-So the one mentioned in the rt-rk article and a load of CVEs is _not_
-QCA8084 but is APQ8084. Sounds like a lot of people are getting stuff
-wrong - which is hardly surprising as there are people that seem to
-_enjoy_ getting the technical details wrong. I haven't worked out if
-it's intentional malace, or they're just fundamentally lazy individuals
-who just like to screw with other people.
+Maybe a static function for these?
 
-Sigh.
+static void qca808x_get_cdt_length(struct phy_device *phydev, u8 pair)
+{
+	ethnl_cable_test_fault_length(phydev, pair,
+				      qca808x_cdt_fault_length(phydev, pair));
+}
+
+or going via 'val'. Either way, repeating the same two lines multiple
+times seems a bit suboptimal.
+
+Whether or not you do this:
+
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+
+Thanks!
 
 -- 
 RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
