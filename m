@@ -1,139 +1,103 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A0C101D5
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 14:02:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE50812E59
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 14:03:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n/a8o/Rr"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-40d8991f1acso14225695e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 06:02:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fjBFpDQn"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-33723ad790cso3028931f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 06:03:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704204163; x=1704808963; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=V/7mv4b7UJD/BzLag5HRBVmocUnHPWAiQ2MQxiW+kVo=;
-        b=n/a8o/RrAmHhEpgPYMai0dS2DnnJ/z/mtJ4o4zfOVe5CHmb8lr7sLaXXDcYh411a6e
-         Y8T7H58bJeZ6+iEUqNi52DA99pXuJheX/166vjY4Z0aTFhGDKlN8/1O3o36o5QWsqpGm
-         niODAyFIQmWVKCN97Ky+RuUnZBdqkoUWy/V3Zy19dmjconClkTVAqj1Yp8D5ghzgtGad
-         62v+7QDFBp9Pz2J1MUvE/WM3FZn8bWDrCOnh+Oryj1VzB/eGJPJy/jpPHmIOtD1ZLBwY
-         cds9EC6nJcBWgZ6X29YDlyxjyXp1uzuZG8xoblZWG1ySMB3TfpKcSUMKYRKLrBBimCtd
-         SDKQ==
+        d=linaro.org; s=google; t=1704204193; x=1704808993; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=euPFm6DrMI0+wW/k92PU5TU57T+pTbdKKdKloQ0vt4M=;
+        b=fjBFpDQn+rKpd5C0IyqZHp+wzfjeQfH/sm80HwSjWUpHz/zAGqamLC+eZ8cmEGQv9p
+         O2yjMBNHcTsn5hUx7SIz2nW9YIHYczJYqd/OfKkgtXYXGMy/dfE084BcpyYckX8eTVHs
+         w13ThAQLkrQ7tGysu4LH926feFHL7UkcjyEPGRm8QptKB4iOyGhMqFRVZ8ULHsBFmmH5
+         fhGy5Ids+3dQwY919aX2pUMKGQ7TP7pvzQ9+j1oMD7LKG54xy5puno0uaMeE+qEZXOmI
+         LxCpR1u5xS/lg/YyaYc+LnwkMzSy5VCyGe4PRGeDu7DS2tmikhCfRST9BKC2i3KeGh1r
+         JDrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704204163; x=1704808963;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V/7mv4b7UJD/BzLag5HRBVmocUnHPWAiQ2MQxiW+kVo=;
-        b=dub46/MlCK1XelxcImaEub46nipKjzaS9eE6rgxsdii9K4NY4ycpryuR5MSb16YOKT
-         M2KsMaS7NTTqVR9vYUi/M6XRIqF1eULF8yj9qJYOw8NJUDbBvgKnX9prlqBNB3y+yaxg
-         Hrc17RYNZhZunjdJXCmHiZr0+q6YVElJPpPA/22cBHJNTw7vqPau1xEdTwO7Oj323tUo
-         E/ASlvIvGFPeKGwLSwBNEJ/MmxAoXEHSAGrhGqBCnVCrqzwOJaNjaMxmVhfEYpQc6sW4
-         eM2kOYvVNMr2EdqU0V4QktihfrnGkG+7isMR4aFy0WTiWOw7+iimv5ClRw0TcCS4gJt+
-         TR2g==
-X-Gm-Message-State: AOJu0Yw+amF5gYe+VElesrLAvDezKLiFoQW69RdSlH90fAfUW70xYDIv
-	mUBrpNOuBWH+Rkj+tbi+yMJHLReewb/AUQ==
-X-Google-Smtp-Source: AGHT+IH3VhlRlXj3x0V/u8jvLVtAXEEM7HcxvHM0IRuRu0WxGAZJxGIyDO1XWwQIMO+yb2HlWf8VnQ==
-X-Received: by 2002:a05:600c:2d84:b0:40b:5e59:ccb3 with SMTP id i4-20020a05600c2d8400b0040b5e59ccb3mr8821823wmg.148.1704204163222;
-        Tue, 02 Jan 2024 06:02:43 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704204193; x=1704808993;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=euPFm6DrMI0+wW/k92PU5TU57T+pTbdKKdKloQ0vt4M=;
+        b=nlzIEx2VThQ/l3Adp8kB6bbZoHJUqvKdUsoBoHORPpEPq7XBGY97cLr+EyzK7XOlnT
+         OcUeqpRZ8zjTb9KMJej6qv0Kpz1MJfvG/KMSdcc6mAG/QVHCDVezBwXWgqX8yYEN7XSU
+         31AjO4PjAr1LGMjOwF/L8uzYFj3FATtw++XgzcTJ4dzZ+8pN30gBsyFtzUaMtQq4n+CF
+         GG0yeG8hoLmSGE4OhK3sQ776AnHmrcbq+N8bOu8lgAKFUNiMz4++MDdTyAFCqddzaKHa
+         +gchbBvM+uP+cWjZu9hUl52wmGDCr1uDz4CgHnQ3eKrWcEUC5rlbijXciGFhoDzVMJ/q
+         TwvQ==
+X-Gm-Message-State: AOJu0Ywoq0X2uxPJma15PvXWja7Q9W1tYxVzhZDDG9rviKzfarv/KI49
+	71GjodHmyK3cYEy3GuWnkbUhDyVP7nwoxg==
+X-Google-Smtp-Source: AGHT+IExbck5usnFUfBjH1gPXmE5ErcKMgjEsukLhzziZv7BvexAfj4jA2oeb+j+WPaWR5rgjiPNvA==
+X-Received: by 2002:a05:600c:4f54:b0:40d:8580:4f1a with SMTP id m20-20020a05600c4f5400b0040d85804f1amr1443638wmq.171.1704204193127;
+        Tue, 02 Jan 2024 06:03:13 -0800 (PST)
 Received: from localhost ([102.140.209.237])
-        by smtp.gmail.com with ESMTPSA id g14-20020a05600c310e00b0040d6eb862a7sm18594695wmo.41.2024.01.02.06.02.42
+        by smtp.gmail.com with ESMTPSA id c18-20020a05600c0a5200b0040c6d559490sm45398508wmq.3.2024.01.02.06.03.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jan 2024 06:02:42 -0800 (PST)
-Date: Tue, 2 Jan 2024 14:16:45 +0300
+        Tue, 02 Jan 2024 06:03:12 -0800 (PST)
+Date: Tue, 2 Jan 2024 15:37:34 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-Cc: Vladimir Oltean <olteanv@gmail.com>, Simon Horman <horms@kernel.org>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Landen Chao <Landen.Chao@mediatek.com>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Frank Wunderlich <frank-w@public-files.de>,
-	Bartel Eerdekens <bartel.eerdekens@constell8.be>,
-	mithat.guner@xeront.com, erkin.bozoglu@xeront.com
-Subject: Re: [PATCH net-next 07/15] net: dsa: mt7530: do not run
- mt7530_setup_port5() if port 5 is disabled
-Message-ID: <48b664fb-edf9-4170-abde-2eb99e04f0e5@suswa.mountain>
-References: <20231118123205.266819-1-arinc.unal@arinc9.com>
- <20231118123205.266819-8-arinc.unal@arinc9.com>
- <20231121185358.GA16629@kernel.org>
- <a2826485-70a6-4ba7-89e1-59e68e622901@arinc9.com>
- <90fde560-054e-4188-b15c-df2e082d3e33@moroto.mountain>
- <20231207184015.u7uoyfhdxiyuw6hh@skbuf>
- <9b729dab-aebc-4c0c-a5e1-164845cd0948@suswa.mountain>
- <20231208184652.k2max4kf7r3fgksg@skbuf>
- <c3a0fc6a-825c-4de3-b5cf-b454a6d4d3cf@arinc9.com>
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: oe-kbuild@lists.linux.dev, lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>
+Subject: Re: arch/riscv/kernel/module.c:639 process_accumulated_relocations()
+ error: uninitialized symbol 'curr_type'.
+Message-ID: <c11513b4-6e60-44b5-ba12-83fbb9b7e2c3@suswa.mountain>
+References: <d0897fb3-1af8-430b-aa8b-9aa829bad1d7@suswa.mountain>
+ <ZXoFhu2TPXgrsInY@ghost>
+ <a46f0c36-8fd2-4a85-880c-eb462d4a837b@suswa.mountain>
+ <ZYzIbVfge6I8Ptw0@ghost>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c3a0fc6a-825c-4de3-b5cf-b454a6d4d3cf@arinc9.com>
+In-Reply-To: <ZYzIbVfge6I8Ptw0@ghost>
 
-On Sun, Dec 17, 2023 at 03:22:27PM +0300, Arınç ÜNAL wrote:
-> On 8.12.2023 21:46, Vladimir Oltean wrote:
-> > Hmm, maybe the problem, all along, was that we let the -ENODEV return
-> > code from of_get_phy_mode() pass through? "interface" will really be
-> > uninitialized in that case. It's not a false positive.
+On Wed, Dec 27, 2023 at 04:59:25PM -0800, Charlie Jenkins wrote:
+> On Thu, Dec 14, 2023 at 11:00:46AM +0300, Dan Carpenter wrote:
+> > On Wed, Dec 13, 2023 at 11:27:02AM -0800, Charlie Jenkins wrote:
+> > > > 8fd6c5142395a1 Charlie Jenkins 2023-11-01  638  			}
+> > > > 8fd6c5142395a1 Charlie Jenkins 2023-11-01 @639  			reloc_handlers[curr_type].accumulate_handler(
+> > > >                                                                                        ^^^^^^^^^
+> > > > Can the list be empty?  Uninitialized in that case.
+> > > 
+> > > That's a tricky one, the list cannot be empty. Each bucket in the
+> > > bucket_iter is guarunteed to have at least one rel_entry. I can probably
+> > > resolve this by extracting this for loop into a do-while loop.
 > > 
-> > Instead of:
+> > You can just ignore false positives.  It's not really a fix to change it
+> > to a do-while loop.  I reviewed the do while code before reading this
+> > email and I still wondered about empty lists, but just to hear that it's
+> > not going to be empty is enough.  Just the email was sufficient.
 > > 
-> > 	ret = of_get_phy_mode(mac_np, &interface);
-> > 	if (ret && ret != -ENODEV) {
-> > 		...
-> > 		return ret;
-> > 	}
-> > 
-> > it should have been like this, to not complain:
-> > 
-> > 	ret = of_get_phy_mode(mac_np, &interface);
-> > 	if (ret) {
-> > 		...
-> > 		return ret;
-> > 	}
+> > regards,
+> > dan carpenter
 > > 
 > 
-> I just tried this, smatch still reports "interface" as uninitialised.
+> The fix isn't the do-while loop but rather the use after free, the
+> incorrect sizeof, and incorrect error handling when
+> initialize_relocation_hashtable fails. I decided to include the do-while
+> code because I was already touching the surrounding code. Can you review
+> [1]? If you would prefer that the do-while is reverted, I can do that,
+> but it is important that the rest of the fixes are merged before 6.7 is
+> released.
 > 
-> $ export ARCH=mips CROSS_COMPILE=mips-linux-gnu-
-> $ ../smatch/smatch_scripts/kchecker --spammy drivers/net/dsa/mt7530.c
-> 
->   UPD     include/config/kernel.release
->   UPD     include/generated/utsrelease.h
->   CHECK   scripts/mod/empty.c
->   CALL    scripts/checksyscalls.sh
->   CC      drivers/net/dsa/mt7530.o
->   CHECK   drivers/net/dsa/mt7530.c
-> drivers/net/dsa/mt7530.c:217 mt7530_mii_read() warn: call of 'warn_slowpath_fmt' with non-constant format argument
-> drivers/net/dsa/mt7530.c:454 mt7530_setup_port6() error: uninitialized symbol 'ncpo1'.
-> drivers/net/dsa/mt7530.c:868 mt7530_set_ageing_time() error: uninitialized symbol 'age_count'.
-> drivers/net/dsa/mt7530.c:868 mt7530_set_ageing_time() error: uninitialized symbol 'age_unit'.
-> drivers/net/dsa/mt7530.c:2324 mt7530_setup() error: uninitialized symbol 'interface'.
+> [1] https://lore.kernel.org/all/20231213-module_loading_fix-v1-1-da9b7c92ade5@rivosinc.com/
 
-That's so strange.
 
-Vladimir was right that I was misreading what he said and also hadn't
-noticed the break.
-
-For me, his approach silences the warning with or without the cross
-function DB.  Also of_get_phy_mode() initializes interface on all paths
-so checking for -EINVAL doesn't matter as far as this warning is
-concerned.
+Most subsystems wouldn't merge a patch like this which does so many
+things at the same time...
 
 regards,
 dan carpenter
+
