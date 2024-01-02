@@ -1,160 +1,133 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from dvalin.narfation.org (dvalin.narfation.org [213.160.73.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807F0DF5D;
-	Tue,  2 Jan 2024 11:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.96.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1rKcQJ-0006IK-2M;
-	Tue, 02 Jan 2024 10:55:04 +0000
-Date: Tue, 2 Jan 2024 11:52:34 +0100
-From: Daniel Golle <daniel@makrotopia.org>
-To: Eric Woudstra <ericwouds@gmail.com>
-Cc: Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Frank Wunderlich <frank-w@public-files.de>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH RFC net-next] net: phylink: add quirk for disabling
- in-band-status for mediatek pcs at 2500base-x
-Message-ID: <ZZPq8iMAv3eR9Gfk@pidgin.makrotopia.org>
-References: <20240102074326.1049179-1-ericwouds@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B39DF6A;
+	Tue,  2 Jan 2024 11:28:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=narfation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="Ma1AcYdF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
+	s=20121; t=1704194540;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IKJCpy+cXuzjprgjg+Of6HIRqe2chRqAQCoAEdEUmLc=;
+	b=Ma1AcYdF6RGml4NMC2wYnGW8Vy7bjxkIzK37EUrf2SOtuanqn/FetHnrbA82SaaooQe92G
+	Mhnjmwbsq85AfOHyz7iQ0XHuHmEeytkzWWUp4MladgBss0XUVBDLqt6+JL42CIWfs/dW8/
+	/64eblXjavruLl8t+a/CvRTjviKw6ao=
+From: Sven Eckelmann <sven@narfation.org>
+To: b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, Antonio Quartulli <a@unstable.cc>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Marek Lindner <mareklindner@neomailbox.ch>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Wunderlich <sw@simonwunderlich.de>,
+ Markus Elfring <Markus.Elfring@web.de>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Subject:
+ Re: [PATCH 1/2] batman-adv: Return directly after a failed
+ batadv_dat_select_candidates() in batadv_dat_forward_data()
+Date: Tue, 02 Jan 2024 12:22:16 +0100
+Message-ID: <12355496.O9o76ZdvQC@sven-l14>
+In-Reply-To: <54dc53f8-5f08-4f1d-938a-c845c8ec0d44@web.de>
+References:
+ <8588cafe-3c61-40a6-b071-0877632a2a1e@web.de>
+ <54dc53f8-5f08-4f1d-938a-c845c8ec0d44@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240102074326.1049179-1-ericwouds@gmail.com>
+Content-Type: multipart/signed; boundary="nextPart5744289.DvuYhMxLoT";
+ micalg="pgp-sha512"; protocol="application/pgp-signature"
 
-On Tue, Jan 02, 2024 at 08:43:26AM +0100, Eric Woudstra wrote:
-> In follow up to: net: pcs: pcs-mtk-lynxi: use 2500Base-X without AN
-> 
-> MediaTek LynxI PCS, 2500Base-X will only work without inband status due to
-> hardware limitation.
-> 
-> I understand this patch probably will not get approved as it is now, but
-> perhaps with some pointers in the correct direction to follow, I can change
-> it so it could be. It does however get the result that the rtl8221b on a
-> sfp module functions correctly, with and without (as optical sfp) the phy
-> attached and without using a quirk/ethtool to disable auto-negotiation.
-> 
-> Introduce bool phylink_major_no_inband(pl,interface), a function similar to
-> bool phylink_phy_no_inband(phy). An option could be to use a function like
-> bool pcs->ops->supports_inband(interface), where if the function-pointer is
-> null, it means it is supported for all. This instead of using
-> of_device_is_compatible() inside the phylink_major_no_inband() function.
-> 
-> Code added to phylink_major_config():
-> 
-> When there is no PHY attached, pl->pcs_neg_mode is set to
-> PHYLINK_PCS_NEG_INBAND_DISABLED.
-> 
-> When there is a PHY attached, pl->cur_link_an_mode is set to MLO_AN_PHY.
-> To have the pcs function correctly with the rtl8221b, we need to do the
-> following to the in-band-status:
-> 
-> We need to disable it when interface of the pcs is set to 2500base-x,
-> but need it enable it when switched to sgmii.
-> 
-> So we get:
-> 
-> [...] mtk_soc_eth ... eth1: phy link up sgmii/1Gbps/Full/none/rx/tx
-> [...] mtk_soc_eth ... eth1: phylink_mac_config: mode=inband/sgmii/none
->                                 adv=00,00000000,00000000,00000000 pause=03
-> 
-> [...] mtk_soc_eth ... eth1: phy link up 2500base-x/2.5Gbps/Full/none/rx/tx
-> [...] mtk_soc_eth ... eth1: phylink_mac_config: mode=phy/2500base-x/none
->                                 adv=00,00000000,00008000,0000606f pause=03
-> 
-> Changes to be committed:
-> 	modified:   drivers/net/phy/phylink.c
-> 
-> Signed-off-by: Eric Woudstra <ericwouds@gmail.com>
+--nextPart5744289.DvuYhMxLoT
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"; protected-headers="v1"
+From: Sven Eckelmann <sven@narfation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Date: Tue, 02 Jan 2024 12:22:16 +0100
+Message-ID: <12355496.O9o76ZdvQC@sven-l14>
+In-Reply-To: <54dc53f8-5f08-4f1d-938a-c845c8ec0d44@web.de>
+MIME-Version: 1.0
+
+On Tuesday, 2 January 2024 08:11:47 CET Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Tue, 2 Jan 2024 07:27:45 +0100
+>=20
+> The kfree() function was called in one case by
+> the batadv_dat_forward_data() function during error handling
+> even if the passed variable contained a null pointer.
+> This issue was detected by using the Coccinelle software.
+>=20
+> * Thus return directly after a batadv_dat_select_candidates() call failed
+>   at the beginning.
+>=20
+> * Delete the label =E2=80=9Cout=E2=80=9D which became unnecessary with th=
+is refactoring.
+>=20
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+
+Acked-by: Sven Eckelmann <sven@narfation.org>
+
 > ---
->  drivers/net/phy/phylink.c | 31 +++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-
-Your changes should go into mtk_eth_soc.c, you sould not need to modify
-phylink for this and as the link being up or down is still reported
-correctly by the hardware, it is also ok to have phylink believe that
-in-band-status is being used and just not set the SGMII_AN bit in the
-MediaTek LynxI hardware.
-(ie. only auto-negotiation of speed and duplex doesn't work in
-2500Base-X mode)
-
-> 
-> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-> index 298dfd6982a5..6e443eb8ee46 100644
-> --- a/drivers/net/phy/phylink.c
-> +++ b/drivers/net/phy/phylink.c
-> @@ -1074,6 +1074,22 @@ static void phylink_pcs_an_restart(struct phylink *pl)
->  		pl->pcs->ops->pcs_an_restart(pl->pcs);
+>  net/batman-adv/distributed-arp-table.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>=20
+> diff --git a/net/batman-adv/distributed-arp-table.c b/net/batman-adv/dist=
+ributed-arp-table.c
+> index 28a939d56090..4c7e85534324 100644
+> --- a/net/batman-adv/distributed-arp-table.c
+> +++ b/net/batman-adv/distributed-arp-table.c
+> @@ -684,7 +684,7 @@ static bool batadv_dat_forward_data(struct batadv_pri=
+v *bat_priv,
+>=20
+>  	cand =3D batadv_dat_select_candidates(bat_priv, ip, vid);
+>  	if (!cand)
+> -		goto out;
+> +		return ret;
+>=20
+>  	batadv_dbg(BATADV_DBG_DAT, bat_priv, "DHT_SEND for %pI4\n", &ip);
+>=20
+> @@ -728,7 +728,6 @@ static bool batadv_dat_forward_data(struct batadv_pri=
+v *bat_priv,
+>  		batadv_orig_node_put(cand[i].orig_node);
+>  	}
+>=20
+> -out:
+>  	kfree(cand);
+>  	return ret;
 >  }
->  
-> +static bool phylink_major_no_inband(struct phylink *pl, phy_interface_t interface)
-> +{
-> +	struct device_node *node = pl->config->dev->of_node;
-> +
-> +	if (!node)
-> +		return false;
-> +
-> +	if (!of_device_is_compatible(node, "mediatek,eth-mac"))
-> +		return false;
-> +
-> +	if (interface != PHY_INTERFACE_MODE_2500BASEX)
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
->  static void phylink_major_config(struct phylink *pl, bool restart,
->  				  const struct phylink_link_state *state)
->  {
-> @@ -1085,10 +1101,22 @@ static void phylink_major_config(struct phylink *pl, bool restart,
->  
->  	phylink_dbg(pl, "major config %s\n", phy_modes(state->interface));
->  
-> +	if (phylink_major_no_inband(pl, state->interface) && (!!pl->phydev)) {
-> +		if (pl->cur_link_an_mode == MLO_AN_INBAND)
-> +			pl->cur_link_an_mode = MLO_AN_PHY;
-> +		else
-> +			/* restore mode if it was changed before */
-> +			pl->cur_link_an_mode = pl->cfg_link_an_mode;
-> +	}
-> +
->  	pl->pcs_neg_mode = phylink_pcs_neg_mode(pl->cur_link_an_mode,
->  						state->interface,
->  						state->advertising);
->  
-> +	if (phylink_major_no_inband(pl, state->interface) && !pl->phydev &&
-> +	    pl->pcs_neg_mode == PHYLINK_PCS_NEG_INBAND_ENABLED)
-> +		pl->pcs_neg_mode = PHYLINK_PCS_NEG_INBAND_DISABLED;
-> +
->  	if (pl->using_mac_select_pcs) {
->  		pcs = pl->mac_ops->mac_select_pcs(pl->config, state->interface);
->  		if (IS_ERR(pcs)) {
-> @@ -1218,6 +1246,9 @@ static void phylink_mac_pcs_get_state(struct phylink *pl,
->  				      struct phylink_link_state *state)
->  {
->  	linkmode_copy(state->advertising, pl->link_config.advertising);
-> +	if (pl->pcs_neg_mode == PHYLINK_PCS_NEG_INBAND_DISABLED)
-> +		linkmode_clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
-> +				   state->advertising);
->  	linkmode_zero(state->lp_advertising);
->  	state->interface = pl->link_config.interface;
->  	state->rate_matching = pl->link_config.rate_matching;
-> -- 
-> 2.42.1
-> 
+> --
+> 2.43.0
+>=20
+>=20
+
+
+--nextPart5744289.DvuYhMxLoT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAmWT8ekACgkQXYcKB8Em
+e0Zezg/+P9PfejkVp+OoIyYjl/JOvoFqwplYaSBqhuTzvIVSx8fGZmzS0eBHploL
+kIPHLR9UoxD4ghhd0JX1Vu/e2bWMQUFJGmzX92xFcXxMrx/FJ3DfMRM9rPSkd/FX
+Z4QFQp5BkQuqWk1tICiOSP+GeGtiXY9UZnrYFEKmJG601RaziFMGXC8va/zmaBBD
+7+YTYyJwPxO5jF+KLIEMJjCT1b4+o9fneoGdwpoyvk0JyC9FbYbiOPeeB+37PczD
+X1YGGNnAmF8cPFU89J/8XXplraK8HAOaivzAsTDPnBOu4SP/spQKWefX/LgqkFWx
+5c0l02CzZapL6szJEk1ZbqTfXrRbDjnqFxxIV7HBbtnx6hkSbPvNcubB+B1k56AA
+l+2EY9gPnIUe/a5C11LUYc4zfNF5Z+k8ZgtrRiTiR+CstKtjBdiGytyRN4Lj/7ax
+YmhnVkAKY/Dr79Frc76jP+sGNnCzHna9AhHUyHBtHRdr6/vx8ggEPtylrxjsVll0
+VCZuKAM23pJ8fKdEiexVon9pX5UXq+nqIBc/iZvU0+i/QE8GK/DAd1lWVoDpFDvA
+25O42/MbEUefcd4VHksZdNLOqxKwyFJunUZmS5piyt7VO2RhRUQQVCeWDvETpZ+/
+oyV9q09FlZRIYbRioLqmv2jNV7WoUSw3DWOrh7GUe1vsWzYhzmM=
+=QSP4
+-----END PGP SIGNATURE-----
+
+--nextPart5744289.DvuYhMxLoT--
+
+
+
