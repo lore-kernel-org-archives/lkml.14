@@ -1,58 +1,56 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE50812E59
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 14:03:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E398011194
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 14:03:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fjBFpDQn"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-33723ad790cso3028931f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 06:03:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a8+dPWga"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40d604b4b30so25932785e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 06:03:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704204193; x=1704808993; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1704204207; x=1704809007; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=euPFm6DrMI0+wW/k92PU5TU57T+pTbdKKdKloQ0vt4M=;
-        b=fjBFpDQn+rKpd5C0IyqZHp+wzfjeQfH/sm80HwSjWUpHz/zAGqamLC+eZ8cmEGQv9p
-         O2yjMBNHcTsn5hUx7SIz2nW9YIHYczJYqd/OfKkgtXYXGMy/dfE084BcpyYckX8eTVHs
-         w13ThAQLkrQ7tGysu4LH926feFHL7UkcjyEPGRm8QptKB4iOyGhMqFRVZ8ULHsBFmmH5
-         fhGy5Ids+3dQwY919aX2pUMKGQ7TP7pvzQ9+j1oMD7LKG54xy5puno0uaMeE+qEZXOmI
-         LxCpR1u5xS/lg/YyaYc+LnwkMzSy5VCyGe4PRGeDu7DS2tmikhCfRST9BKC2i3KeGh1r
-         JDrw==
+        bh=Gm2hXx5OxeyOxmYs9z0AMxVtmT7lZ2HwF2TM+0OQnV4=;
+        b=a8+dPWgaS8E2aYSjnjszJP6kgg/svLsybi6525IA6/ajonHIMZz/HAxVFZggxVQohp
+         5E3ii+yEz9hShO376e0FcDBWdOqKeHN5dtqHGkOSucNCFWw8WrKFyI+mPddGjNvxxKgp
+         A+rtuHQJcjFkwZLJ/+NXy73GI0JulSb5J3sDOinm/3kUMaXF6AwqpbvzCMX4Mw1Qfgg2
+         n0YqUa4xsaSMNe0j1sV4ScEJ57MLDuXqy940my5NiP8/yjThflFIt+uElg8FrOdDXwpx
+         kBRqCjsjXr6+qQAFSHog1b4aofKscq5ozh+5Ogx8DqW5URtXNI4EDAIl33RkdhxS2Xfu
+         ZvUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704204193; x=1704808993;
+        d=1e100.net; s=20230601; t=1704204207; x=1704809007;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=euPFm6DrMI0+wW/k92PU5TU57T+pTbdKKdKloQ0vt4M=;
-        b=nlzIEx2VThQ/l3Adp8kB6bbZoHJUqvKdUsoBoHORPpEPq7XBGY97cLr+EyzK7XOlnT
-         OcUeqpRZ8zjTb9KMJej6qv0Kpz1MJfvG/KMSdcc6mAG/QVHCDVezBwXWgqX8yYEN7XSU
-         31AjO4PjAr1LGMjOwF/L8uzYFj3FATtw++XgzcTJ4dzZ+8pN30gBsyFtzUaMtQq4n+CF
-         GG0yeG8hoLmSGE4OhK3sQ776AnHmrcbq+N8bOu8lgAKFUNiMz4++MDdTyAFCqddzaKHa
-         +gchbBvM+uP+cWjZu9hUl52wmGDCr1uDz4CgHnQ3eKrWcEUC5rlbijXciGFhoDzVMJ/q
-         TwvQ==
-X-Gm-Message-State: AOJu0Ywoq0X2uxPJma15PvXWja7Q9W1tYxVzhZDDG9rviKzfarv/KI49
-	71GjodHmyK3cYEy3GuWnkbUhDyVP7nwoxg==
-X-Google-Smtp-Source: AGHT+IExbck5usnFUfBjH1gPXmE5ErcKMgjEsukLhzziZv7BvexAfj4jA2oeb+j+WPaWR5rgjiPNvA==
-X-Received: by 2002:a05:600c:4f54:b0:40d:8580:4f1a with SMTP id m20-20020a05600c4f5400b0040d85804f1amr1443638wmq.171.1704204193127;
-        Tue, 02 Jan 2024 06:03:13 -0800 (PST)
+        bh=Gm2hXx5OxeyOxmYs9z0AMxVtmT7lZ2HwF2TM+0OQnV4=;
+        b=Dibkzb0b+Zfh6+1B93M9Y6JIiNtm844nviYacH2LBhRFXqXPK4EUCXCo1INJhMT0Ej
+         fzDVtVZwIttbQC5hsT0yrL3214vv+fjweuNBu8ICvhmZpeEN36cSXMgYrlUo8uM9KSuf
+         fiSbPEYufsEzhjCv/ifx0Axz/cVzL4hJMtBK2H5QA0PhAQc3C0i0Y8IjPjwPwtOPomMc
+         w5M3jqDvI1MBz23kTKQgZ+D8oaHQKv/1M13XjehW1OzSOohzro+k2on+fJKVtJ/0M3+k
+         SttloN0bBV/CK42Yje7ciaOGhMLOgHPSg4lRjJffWNr5nsix4boOLt+ceVza4lvueE9y
+         JBKA==
+X-Gm-Message-State: AOJu0YwARbyWW5t+ZdjoaGj/EeDuZ1GI32kX2Te6dU/t7XsjUCJEJ8OJ
+	O2A5vldnzwbL0+EQVFRcV7o3pBkqBu0sVw==
+X-Google-Smtp-Source: AGHT+IG+uVM0QKMD5sZLNHS1LUvENcwUlvFjpNhHg7TNOtGjSQFVBrHtal+ZV4SNZgV25Gs3/ZVTkQ==
+X-Received: by 2002:a05:600c:5195:b0:40d:88b8:1bd1 with SMTP id fa21-20020a05600c519500b0040d88b81bd1mr1277633wmb.185.1704204207378;
+        Tue, 02 Jan 2024 06:03:27 -0800 (PST)
 Received: from localhost ([102.140.209.237])
-        by smtp.gmail.com with ESMTPSA id c18-20020a05600c0a5200b0040c6d559490sm45398508wmq.3.2024.01.02.06.03.10
+        by smtp.gmail.com with ESMTPSA id iv13-20020a05600c548d00b0040d30af488asm49616502wmb.40.2024.01.02.06.03.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jan 2024 06:03:12 -0800 (PST)
-Date: Tue, 2 Jan 2024 15:37:34 +0300
+        Tue, 02 Jan 2024 06:03:27 -0800 (PST)
+Date: Tue, 2 Jan 2024 16:17:46 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: oe-kbuild@lists.linux.dev, lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>
-Subject: Re: arch/riscv/kernel/module.c:639 process_accumulated_relocations()
- error: uninitialized symbol 'curr_type'.
-Message-ID: <c11513b4-6e60-44b5-ba12-83fbb9b7e2c3@suswa.mountain>
-References: <d0897fb3-1af8-430b-aa8b-9aa829bad1d7@suswa.mountain>
- <ZXoFhu2TPXgrsInY@ghost>
- <a46f0c36-8fd2-4a85-880c-eb462d4a837b@suswa.mountain>
- <ZYzIbVfge6I8Ptw0@ghost>
+To: "<Tree Davies" <tdavies@darkphysics.net>
+Cc: Nathan DSilva <expitau@gmail.com>, gregkh@linuxfoundation.org,
+	philipp.g.hortmann@gmail.com, kamrankhadijadj@gmail.com,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: rtl8192e: Add blank line after declarations
+Message-ID: <9802302b-5aba-4675-bfaa-eadd3e168d1e@suswa.mountain>
+References: <20231215032852.501316-1-expitau@gmail.com>
+ <ZXvevJ2vEEQ92rau@oatmeal.darkphysics>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,42 +59,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZYzIbVfge6I8Ptw0@ghost>
+In-Reply-To: <ZXvevJ2vEEQ92rau@oatmeal.darkphysics>
 
-On Wed, Dec 27, 2023 at 04:59:25PM -0800, Charlie Jenkins wrote:
-> On Thu, Dec 14, 2023 at 11:00:46AM +0300, Dan Carpenter wrote:
-> > On Wed, Dec 13, 2023 at 11:27:02AM -0800, Charlie Jenkins wrote:
-> > > > 8fd6c5142395a1 Charlie Jenkins 2023-11-01  638  			}
-> > > > 8fd6c5142395a1 Charlie Jenkins 2023-11-01 @639  			reloc_handlers[curr_type].accumulate_handler(
-> > > >                                                                                        ^^^^^^^^^
-> > > > Can the list be empty?  Uninitialized in that case.
-> > > 
-> > > That's a tricky one, the list cannot be empty. Each bucket in the
-> > > bucket_iter is guarunteed to have at least one rel_entry. I can probably
-> > > resolve this by extracting this for loop into a do-while loop.
-> > 
-> > You can just ignore false positives.  It's not really a fix to change it
-> > to a do-while loop.  I reviewed the do while code before reading this
-> > email and I still wondered about empty lists, but just to hear that it's
-> > not going to be empty is enough.  Just the email was sufficient.
-> > 
-> > regards,
-> > dan carpenter
-> > 
-> 
-> The fix isn't the do-while loop but rather the use after free, the
-> incorrect sizeof, and incorrect error handling when
-> initialize_relocation_hashtable fails. I decided to include the do-while
-> code because I was already touching the surrounding code. Can you review
-> [1]? If you would prefer that the do-while is reverted, I can do that,
-> but it is important that the rest of the fixes are merged before 6.7 is
-> released.
-> 
-> [1] https://lore.kernel.org/all/20231213-module_loading_fix-v1-1-da9b7c92ade5@rivosinc.com/
+On Thu, Dec 14, 2023 at 09:06:04PM -0800, <Tree Davies wrote:
+> 3. For this driver, it is best to send your patches to Greg, Philipp Hortmann,
+> and Dan Carpenter (error27@gmail.com) looks at them sometimes too. And like you
+> did, cc the mailing lists.
 
+You don't need to CC me.  I'm on the list.  Just use get_maintainer.pl.
 
-Most subsystems wouldn't merge a patch like this which does so many
-things at the same time...
+Otherwise your advise was correct.
 
 regards,
 dan carpenter
