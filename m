@@ -1,117 +1,84 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1B711C85;
-	Tue,  2 Jan 2024 13:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=v0yd.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=v0yd.nl
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4T4DMD1n5Qz9sWC;
-	Tue,  2 Jan 2024 14:33:28 +0100 (CET)
-From: =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>
-To: Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>,
-	asahi@lists.linux.dev,
-	linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH 4/4] hci: Queue a HCI power-off command before rfkilling adapters
-Date: Tue,  2 Jan 2024 14:33:10 +0100
-Message-ID: <20240102133311.6712-5-verdre@v0yd.nl>
-In-Reply-To: <20240102133311.6712-1-verdre@v0yd.nl>
-References: <20240102133311.6712-1-verdre@v0yd.nl>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1649EFBE4;
+	Tue,  2 Jan 2024 13:34:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yTF8VXtP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A040C433C7;
+	Tue,  2 Jan 2024 13:34:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1704202454;
+	bh=UE6bcMz4qLf8bUdr80ygpuEnx8MhX2cnpnCRu9OT7ZM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=yTF8VXtPs2RrE0XnHxRUfGf1hjvNSPzPkQ7q/4PRmC94ApyAqPygbcAF8BFiidyap
+	 pIEVEdc1QprdwpzjkES3NPITp9Y/y+3YBlDFWafEYhd+iD6cgMtyzz2Itnfd6VHpOK
+	 B8fID1pllmWVFixsJIvbcPPps1hsGkhokmLAC7ms=
+Date: Tue, 2 Jan 2024 14:34:11 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Alan Stern <stern@rowland.harvard.edu>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] usb: core: Add quirk for Logitech Rallybar
+Message-ID: <2024010236-handwoven-manicotti-4451@gregkh>
+References: <20231222-rallybar-v2-1-5849d62a9514@chromium.org>
+ <82bf432c-2a78-4b9c-88ab-ef4f0888e9aa@rowland.harvard.edu>
+ <CANiDSCtd4-pQDdf03cBZz6deUe=b4ufiQ4WR=ddwjubOoxAQ1w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4T4DMD1n5Qz9sWC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANiDSCtd4-pQDdf03cBZz6deUe=b4ufiQ4WR=ddwjubOoxAQ1w@mail.gmail.com>
 
-On a lot of platforms (at least the MS Surface devices, M1 macbooks, and
-a few ThinkPads) firmware doesn't do its job when rfkilling a device
-and the bluetooth adapter is not actually shut down on rfkill. This leads
-to connected devices remaining in connected state and the bluetooth
-connection eventually timing out after rfkilling an adapter.
+On Tue, Jan 02, 2024 at 12:31:53PM +0100, Ricardo Ribalda wrote:
+> Hi Alan
+> 
+> On Sat, 23 Dec 2023 at 21:01, Alan Stern <stern@rowland.harvard.edu> wrote:
+> >
+> > On Fri, Dec 22, 2023 at 10:55:49PM +0000, Ricardo Ribalda wrote:
+> > > Logitech Rallybar devices, despite behaving as UVC camera, they have a
+> > > different power management system than the rest of the other Logitech
+> > > cameras.
+> > >
+> > > USB_QUIRK_RESET_RESUME causes undesired USB disconnects, that make the
+> > > device unusable.
+> > >
+> > > These are the only two devices that have this behavior, and we do not
+> > > have the list of devices that require USB_QUIRK_RESET_RESUME, so lets
+> > > create a new lit for them that un-apply the USB_QUIRK_RESET_RESUME
+> > > quirk.
+> > >
+> > > Fixes: e387ef5c47dd ("usb: Add USB_QUIRK_RESET_RESUME for all Logitech UVC webcams")
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > > ---
+> >
+> > Would it make more sense to do this inside the uvc driver instead of
+> > creating a new single-purpose list in the core?
+> 
+> I can try to move it to the uvc driver. But maybe it is better to keep it here:
+> 
+> The same vid:pid also has other functionality, not only uvc: Sync
+> agent interface, UPD Interface, ADB interface.
+> If we apply the quirk to the uvc driver, and the uvc driver is not
+> loaded, the other functionality will still be broken....
+> 
+> I expect to see more devices from Logitech not needing the
+> RESET_RESUME quirk... so this list will eventually grow.
+> 
+> Setting/useting RESET_RESUME in two different locations, can make the
+> code difficult to follow.
+> 
+> What do you think?
 
-Use the rfkill hook in the HCI driver to actually power the device off
-before rfkilling it.
+Try it in the specific driver first please.
 
-Note that the wifi subsystem is doing something similar by calling
-cfg80211_shutdown_all_interfaces()
-in it's rfkill set_block callback (see cfg80211_rfkill_set_block).
+thanks,
 
-Signed-off-by: Jonas Dreßler <verdre@v0yd.nl>
----
- net/bluetooth/hci_core.c | 33 ++++++++++++++++++++++++++++++---
- 1 file changed, 30 insertions(+), 3 deletions(-)
-
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 1ec83985f..1c91d02f7 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -543,6 +543,23 @@ int hci_dev_open(__u16 dev)
- 	return err;
- }
- 
-+static int set_powered_off_sync(struct hci_dev *hdev, void *data)
-+{
-+	return hci_set_powered_sync(hdev, false);
-+}
-+
-+static void set_powered_off_sync_complete(struct hci_dev *hdev, void *data, int err)
-+{
-+	if (err)
-+		bt_dev_err(hdev, "Powering HCI device off before rfkilling failed (%d)", err);
-+}
-+
-+static int hci_dev_do_poweroff(struct hci_dev *hdev)
-+{
-+	return hci_cmd_sync_queue(hdev, set_powered_off_sync,
-+				  NULL, set_powered_off_sync_complete);
-+}
-+
- int hci_dev_do_close(struct hci_dev *hdev)
- {
- 	int err;
-@@ -943,17 +960,27 @@ int hci_get_dev_info(void __user *arg)
- static int hci_rfkill_set_block(void *data, bool blocked)
- {
- 	struct hci_dev *hdev = data;
-+	int err;
- 
- 	BT_DBG("%p name %s blocked %d", hdev, hdev->name, blocked);
- 
- 	if (hci_dev_test_flag(hdev, HCI_USER_CHANNEL))
- 		return -EBUSY;
- 
-+	if (blocked == hci_dev_test_flag(hdev, HCI_RFKILLED))
-+		return 0;
-+
- 	if (blocked) {
--		hci_dev_set_flag(hdev, HCI_RFKILLED);
- 		if (!hci_dev_test_flag(hdev, HCI_SETUP) &&
--		    !hci_dev_test_flag(hdev, HCI_CONFIG))
--			hci_dev_do_close(hdev);
-+		    !hci_dev_test_flag(hdev, HCI_CONFIG)) {
-+			err = hci_dev_do_poweroff(hdev);
-+			if (err) {
-+				bt_dev_err(hdev, "Powering off device before rfkilling failed (%d)",
-+					   err);
-+			}
-+		}
-+
-+		hci_dev_set_flag(hdev, HCI_RFKILLED);
- 	} else {
- 		hci_dev_clear_flag(hdev, HCI_RFKILLED);
- 	}
--- 
-2.43.0
-
+greg k-h
