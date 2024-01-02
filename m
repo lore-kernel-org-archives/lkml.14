@@ -1,46 +1,33 @@
-Received: from mail1.merlins.org (magic.merlins.org [209.81.13.136])
+Received: from relay04.th.seeweb.it (relay04.th.seeweb.it [5.144.164.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE5A168A2;
-	Tue,  2 Jan 2024 21:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=merlins.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=merlins.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=merlins.org header.i=@merlins.org header.b="g7KAkPF0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=merlins.org
-	; s=key; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=jEUidlbRkh+sRXZoW4h6WobGnL5gbYzACItvfn2hM+U=; b=g7KAkPF0qoG7mLFbqBmO2qi8CY
-	XpyiPHFPcaiIiXMIViLFIM+WNYJHmwua303AS7aMg1KHF4DMdYXD6xESS3N4ATwfEPu1PRnZj6+fN
-	SnM4ymPxRALtu1lCSvsW6fgA8xCvv7GudddxcUDqp7vr4quYnB60M+Tgeo5FBGOmTQg7woxqDsRy7
-	sDy0DM3Wf4lKYEo67R6NrCY5EtIdoZQXJswZ636VHtt5OqUHmyWQtwA6dTq/SnMZf0vKuQo7Yy4LM
-	PTpFe6T5h2ses5bisb3e0rXOWUG7m6/zhDvxbPh70CXCaNXZHiqFZMI83l3ppVfpf4ORZ2Vuo0XXz
-	pTXkFU0A==;
-Received: from lfbn-idf3-1-20-89.w81-249.abo.wanadoo.fr ([81.249.147.89]:54622 helo=sauron.svh.merlins.org)
-	by mail1.merlins.org with esmtpsa 
-	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim 4.94.2 #2)
-	id 1rKmFY-00062a-7h by authid <merlins.org> with srv_auth_plain; Tue, 02 Jan 2024 13:24:36 -0800
-Received: from merlin by sauron.svh.merlins.org with local (Exim 4.96)
-	(envelope-from <marc@merlins.org>)
-	id 1rKmFW-0063xS-18;
-	Tue, 02 Jan 2024 13:24:34 -0800
-Date: Tue, 2 Jan 2024 13:24:34 -0800
-From: Marc MERLIN <marc@merlins.org>
-To: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	Rander Wang <rander.wang@intel.com>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	linux-sound@vger.kernel.org, alsa-devel@alsa-project.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: sof-audio-pci-intel-tgl/soundwire 6.6.8 kernel outputs no sound
- on speakers but works on headphones => missing alsa-ucm-conf
-Message-ID: <ZZR_Et3vvv-bmQ0H@merlins.org>
-References: <20231223234430.GA11359@merlins.org>
- <alpine.DEB.2.22.394.2401021117370.14041@eliteleevi.tm.intel.com>
- <ZZRP8RqT83cE-S5m@merlins.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C795168A6
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 21:26:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
+Received: from SoMainline.org (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id B6E5820145;
+	Tue,  2 Jan 2024 22:17:46 +0100 (CET)
+Date: Tue, 2 Jan 2024 22:17:45 +0100
+From: Marijn Suijten <marijn.suijten@somainline.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Sibi Sankar <quic_sibis@quicinc.com>, 
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Joerg Roedel <joro@8bytes.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Wesley Cheng <quic_wcheng@quicinc.com>, Alexey Minnekhanov <alexeymin@postmarketos.org>, 
+	linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev, 
+	linux-usb@vger.kernel.org, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH v2 06/14] arm64: dts: qcom: sdm630: Drop RPM bus clocks
+Message-ID: <6b3eetuyhg6y6wgqgxn2ruovjfrg24dbwsictlryealtwtnq6t@xk6nm3mxwbeh>
+References: <20230721-topic-rpm_clk_cleanup-v2-0-1e506593b1bd@linaro.org>
+ <20230721-topic-rpm_clk_cleanup-v2-6-1e506593b1bd@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,30 +36,151 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZZRP8RqT83cE-S5m@merlins.org>
-X-Sysadmin: BOFH
-X-URL: http://marc.merlins.org/
-X-SA-Exim-Connect-IP: 81.249.147.89
-X-SA-Exim-Mail-From: marc@merlins.org
+In-Reply-To: <20230721-topic-rpm_clk_cleanup-v2-6-1e506593b1bd@linaro.org>
 
-On Tue, Jan 02, 2024 at 10:03:29AM -0800, Marc MERLIN wrote:
-> 1) for sure, debian package alsa-ucm-conf should be required, not
-> recommended. It's not big, people who can't keep track of everything
-> that changes all the time, have no idea that they need it, and really
-> need it installed by default if their hardware requires it.
-> I've filed a couple of bugs with them, including on the package
-> description that gives little clue that the package can be so essential
+On 2023-09-12 15:31:44, Konrad Dybcio wrote:
+> These clocks are now handled from within the icc framework and are
+> no longer registered from within the CCF. Remove them.
+> 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-Done:
+This makes the USB and IOMMUs probe again on SDM630 devices like the Sony Xperia
+XA2 Ultra.  Thanks!
 
-https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1059871
-alsa-ucm-conf should be a required package by libasound2-data, it's essential on some sound hardware
+Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
 
-https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1059872
-alsa-ucm-conf should be a required package, it's essential on some sound hardware
++cc Dmitry who was talking to me about this SoC.
 
-Marc
--- 
-"A mouse is a device used to point at the xterm you want to type in" - A.S.R.
- 
-Home page: http://marc.merlins.org/                       | PGP 7F55D5F27AAF9D08
+> ---
+>  arch/arm64/boot/dts/qcom/sdm630.dtsi | 49 +++++++-----------------------------
+>  1 file changed, 9 insertions(+), 40 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm630.dtsi b/arch/arm64/boot/dts/qcom/sdm630.dtsi
+> index ec6003212c4d..f11d2a07508c 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm630.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm630.dtsi
+> @@ -605,9 +605,6 @@ bimc: interconnect@1008000 {
+>  			compatible = "qcom,sdm660-bimc";
+>  			reg = <0x01008000 0x78000>;
+>  			#interconnect-cells = <1>;
+> -			clock-names = "bus", "bus_a";
+> -			clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
+> -				 <&rpmcc RPM_SMD_BIMC_A_CLK>;
+>  		};
+>  
+>  		restart@10ac000 {
+> @@ -619,28 +616,17 @@ cnoc: interconnect@1500000 {
+>  			compatible = "qcom,sdm660-cnoc";
+>  			reg = <0x01500000 0x10000>;
+>  			#interconnect-cells = <1>;
+> -			clock-names = "bus", "bus_a";
+> -			clocks = <&rpmcc RPM_SMD_CNOC_CLK>,
+> -				 <&rpmcc RPM_SMD_CNOC_A_CLK>;
+>  		};
+>  
+>  		snoc: interconnect@1626000 {
+>  			compatible = "qcom,sdm660-snoc";
+>  			reg = <0x01626000 0x7090>;
+>  			#interconnect-cells = <1>;
+> -			clock-names = "bus", "bus_a";
+> -			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
+> -				 <&rpmcc RPM_SMD_SNOC_A_CLK>;
+>  		};
+>  
+>  		anoc2_smmu: iommu@16c0000 {
+>  			compatible = "qcom,sdm630-smmu-v2", "qcom,smmu-v2";
+>  			reg = <0x016c0000 0x40000>;
+> -
+> -			assigned-clocks = <&rpmcc RPM_SMD_AGGR2_NOC_CLK>;
+> -			assigned-clock-rates = <1000>;
+> -			clocks = <&rpmcc RPM_SMD_AGGR2_NOC_CLK>;
+> -			clock-names = "bus";
+>  			#global-interrupts = <2>;
+>  			#iommu-cells = <1>;
+>  
+> @@ -685,16 +671,12 @@ a2noc: interconnect@1704000 {
+>  			compatible = "qcom,sdm660-a2noc";
+>  			reg = <0x01704000 0xc100>;
+>  			#interconnect-cells = <1>;
+> -			clock-names = "bus",
+> -				      "bus_a",
+> -				      "ipa",
+> +			clock-names = "ipa",
+>  				      "ufs_axi",
+>  				      "aggre2_ufs_axi",
+>  				      "aggre2_usb3_axi",
+>  				      "cfg_noc_usb2_axi";
+> -			clocks = <&rpmcc RPM_SMD_AGGR2_NOC_CLK>,
+> -				 <&rpmcc RPM_SMD_AGGR2_NOC_A_CLK>,
+> -				 <&rpmcc RPM_SMD_IPA_CLK>,
+> +			clocks = <&rpmcc RPM_SMD_IPA_CLK>,
+>  				 <&gcc GCC_UFS_AXI_CLK>,
+>  				 <&gcc GCC_AGGRE2_UFS_AXI_CLK>,
+>  				 <&gcc GCC_AGGRE2_USB3_AXI_CLK>,
+> @@ -705,10 +687,8 @@ mnoc: interconnect@1745000 {
+>  			compatible = "qcom,sdm660-mnoc";
+>  			reg = <0x01745000 0xa010>;
+>  			#interconnect-cells = <1>;
+> -			clock-names = "bus", "bus_a", "iface";
+> -			clocks = <&rpmcc RPM_SMD_MMSSNOC_AXI_CLK>,
+> -				 <&rpmcc RPM_SMD_MMSSNOC_AXI_CLK_A>,
+> -				 <&mmcc AHB_CLK_SRC>;
+> +			clock-names = "iface";
+> +			clocks = <&mmcc AHB_CLK_SRC>;
+>  		};
+>  
+>  		tsens: thermal-sensor@10ae000 {
+> @@ -1228,20 +1208,16 @@ usb3: usb@a8f8800 {
+>  				 <&gcc GCC_USB30_MASTER_CLK>,
+>  				 <&gcc GCC_AGGRE2_USB3_AXI_CLK>,
+>  				 <&gcc GCC_USB30_SLEEP_CLK>,
+> -				 <&gcc GCC_USB30_MOCK_UTMI_CLK>,
+> -				 <&rpmcc RPM_SMD_AGGR2_NOC_CLK>;
+> +				 <&gcc GCC_USB30_MOCK_UTMI_CLK>;
+>  			clock-names = "cfg_noc",
+>  				      "core",
+>  				      "iface",
+>  				      "sleep",
+> -				      "mock_utmi",
+> -				      "bus";
+> +				      "mock_utmi";
+>  
+>  			assigned-clocks = <&gcc GCC_USB30_MOCK_UTMI_CLK>,
+> -					  <&gcc GCC_USB30_MASTER_CLK>,
+> -					  <&rpmcc RPM_SMD_AGGR2_NOC_CLK>;
+> -			assigned-clock-rates = <19200000>, <120000000>,
+> -					       <19200000>;
+> +					  <&gcc GCC_USB30_MASTER_CLK>;
+> +			assigned-clock-rates = <19200000>, <120000000>;
+>  
+>  			interrupts = <GIC_SPI 347 IRQ_TYPE_LEVEL_HIGH>,
+>  				     <GIC_SPI 243 IRQ_TYPE_LEVEL_HIGH>;
+> @@ -2144,10 +2120,9 @@ mmss_smmu: iommu@cd00000 {
+>  
+>  			clocks = <&mmcc MNOC_AHB_CLK>,
+>  				 <&mmcc BIMC_SMMU_AHB_CLK>,
+> -				 <&rpmcc RPM_SMD_MMSSNOC_AXI_CLK>,
+>  				 <&mmcc BIMC_SMMU_AXI_CLK>;
+>  			clock-names = "iface-mm", "iface-smmu",
+> -				      "bus-mm", "bus-smmu";
+> +				      "bus-smmu";
+>  			#global-interrupts = <2>;
+>  			#iommu-cells = <1>;
+>  
+> @@ -2264,12 +2239,6 @@ gnoc: interconnect@17900000 {
+>  			compatible = "qcom,sdm660-gnoc";
+>  			reg = <0x17900000 0xe000>;
+>  			#interconnect-cells = <1>;
+> -			/*
+> -			 * This one apparently features no clocks,
+> -			 * so let's not mess with the driver needlessly
+> -			 */
+> -			clock-names = "bus", "bus_a";
+> -			clocks = <&xo_board>, <&xo_board>;
+>  		};
+>  
+>  		apcs_glb: mailbox@17911000 {
+> 
+> -- 
+> 2.42.0
+> 
