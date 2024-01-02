@@ -1,132 +1,79 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71B16AA6;
-	Tue,  2 Jan 2024 07:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4T44cJ1gRPz1wrQm;
-	Tue,  2 Jan 2024 15:44:16 +0800 (CST)
-Received: from dggpemm500006.china.huawei.com (unknown [7.185.36.236])
-	by mail.maildlp.com (Postfix) with ESMTPS id C2A061A0192;
-	Tue,  2 Jan 2024 15:44:29 +0800 (CST)
-Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
- dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 2 Jan 2024 15:44:29 +0800
-Received: from [10.67.121.229] (10.67.121.229) by
- dggpemm500007.china.huawei.com (7.185.36.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 2 Jan 2024 15:44:29 +0800
-Subject: Re: [PATCH iproute2-rc 1/2] rdma: Fix core dump when pretty is used
-To: Stephen Hemminger <stephen@networkplumber.org>, Junxian Huang
-	<huangjunxian6@hisilicon.com>
-References: <20231229065241.554726-1-huangjunxian6@hisilicon.com>
- <20231229065241.554726-2-huangjunxian6@hisilicon.com>
- <20231229092129.25a526c4@hermes.local>
-CC: <jgg@ziepe.ca>, <leon@kernel.org>, <dsahern@gmail.com>,
-	<netdev@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-	<linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>
-From: Chengchang Tang <tangchengchang@huawei.com>
-Message-ID: <30d8c237-953a-8794-9baa-e21b31d4d88c@huawei.com>
-Date: Tue, 2 Jan 2024 15:44:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3ABE2108
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 07:46:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N1DVmgA3"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40d88f9e602so10639555e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jan 2024 23:46:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704181563; x=1704786363; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iHhD+e+1GG2LR5Q+uwUPWMKjzXneKZEYPGVrdDS3Exk=;
+        b=N1DVmgA3QG20HYFe8fWTDKWrDtgi2M2/gb+rQdRhJ1T5H1beql8jG6H4UOqTti/7MX
+         sOQeko1606byMN1KGo5kz24RAYGdrTwBDga773ky2w+lcge60ZtwGXrUUgwNeI/GMKlJ
+         emZDJELz+Dl1SOsUS+Z9sRfwxZYfZDkcGOx+d0y0W0IzJHEw/BjBtPn3KR5PoD66hJet
+         0sJ8Nrq6lBBKXfk3CZ5NUcCyZ+1VsSDTPBVkYsC0rESpLM7SsJsPOY93akY3CrDGcK3z
+         x/22GYF0d3JczPn95Oi8V9OqfLyPpVmTLQ5mGjaBxEni5Rw3tOU0MbjDRQkvZIJFQrkq
+         J0/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704181563; x=1704786363;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iHhD+e+1GG2LR5Q+uwUPWMKjzXneKZEYPGVrdDS3Exk=;
+        b=GUfn7i3DuUvb9wsveYv70iZCdYxJCrxTsHwEeMK1A2sDyNforYquxj58EUBCPBpZW2
+         qfzW+m+YNr8p7HAVqlojW7t0lJCGGrS80LFSsXmvXUU6eOLKmyUi8aIMX0BLnNHyuW3q
+         sY/9l1Pb6N/+K1dHbBNTwjzzITJjfousFR36iy5dCEnZ7IK1tbUBibr7Ak9UEfiUAm6V
+         EmqPHk3aW7IjmG67geMR+YWJk05KPOXCsLQKybpgZH1LyXpDdal7OJy94EtTWOtlZ+Gf
+         cj65NUQuQelXsU33DLQ6euxTQcZR5SJF69T4ov6KmVRpmQzOoyXPHHcHYEUzy2W/RquN
+         wyxw==
+X-Gm-Message-State: AOJu0YyC7puN334fSTa2EmjUU0JXcnOrGrVkpcN87iGN0GET4dOPi8KA
+	ESyWWHFo1NiNimArYu9I58NnLmXm2fXCiQ==
+X-Google-Smtp-Source: AGHT+IHZM9WS+upGseBJPvyCFjM81kkTRQxUR0kQ5A933R//MIPNKfDQsQzf7os5FOBCXJA8CoAPxg==
+X-Received: by 2002:a05:600c:1987:b0:40d:5798:1797 with SMTP id t7-20020a05600c198700b0040d57981797mr6118743wmq.63.1704181562764;
+        Mon, 01 Jan 2024 23:46:02 -0800 (PST)
+Received: from localhost ([102.140.209.237])
+        by smtp.gmail.com with ESMTPSA id o20-20020a05600c4fd400b004094d4292aesm43262533wmq.18.2024.01.01.23.46.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jan 2024 23:46:02 -0800 (PST)
+Date: Tue, 2 Jan 2024 10:45:59 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: =?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado <nfraprado@collabora.com>
+Cc: Shuah Khan <shuah@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, kernelci@lists.linux.dev,
+	kernel@collabora.com, Tim Bird <Tim.Bird@sony.com>,
+	linux-pci@vger.kernel.org, David Gow <davidgow@google.com>,
+	linux-kselftest@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+	Doug Anderson <dianders@chromium.org>, linux-usb@vger.kernel.org,
+	Saravana Kannan <saravanak@google.com>,
+	Guenter Roeck <groeck@chromium.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v3 0/3] Add test to verify probe of devices from
+ discoverable busses
+Message-ID: <3271d300-74c9-4ef3-b993-a8ddeda6076c@suswa.mountain>
+References: <20231227123643.52348-1-nfraprado@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20231229092129.25a526c4@hermes.local>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500007.china.huawei.com (7.185.36.183)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231227123643.52348-1-nfraprado@collabora.com>
+
+Life hack: Don't put RFC in the subject.  Especially if it's a v2 or
+higher.  No one reads RFC patches.
+
+This patchset seems like a low risk patch to apply.
+
+regards,
+dan carpenter
 
 
-
-On 2023/12/30 1:21, Stephen Hemminger wrote:
-> On Fri, 29 Dec 2023 14:52:40 +0800
-> Junxian Huang <huangjunxian6@hisilicon.com> wrote:
->
->> From: Chengchang Tang <tangchengchang@huawei.com>
->>
->> There will be a core dump when pretty is used as the JSON object
->> hasn't been opened and closed properly.
->>
->> Before:
->> $ rdma res show qp -jp -dd
->> [ {
->>      "ifindex": 1,
->>      "ifname": "hns_1",
->>      "port": 1,
->>      "lqpn": 1,
->>      "type": "GSI",
->>      "state": "RTS",
->>      "sq-psn": 0,
->>      "comm": "ib_core"
->> },
->> "drv_sq_wqe_cnt": 128,
->> "drv_sq_max_gs": 2,
->> "drv_rq_wqe_cnt": 512,
->> "drv_rq_max_gs": 1,
->> rdma: json_writer.c:130: jsonw_end: Assertion `self->depth > 0' failed.
->> Aborted (core dumped)
->>
->> After:
->> $ rdma res show qp -jp -dd
->> [ {
->>          "ifindex": 2,
->>          "ifname": "hns_2",
->>          "port": 1,
->>          "lqpn": 1,
->>          "type": "GSI",
->>          "state": "RTS",
->>          "sq-psn": 0,
->>          "comm": "ib_core",{
->>              "drv_sq_wqe_cnt": 128,
->>              "drv_sq_max_gs": 2,
->>              "drv_rq_wqe_cnt": 512,
->>              "drv_rq_max_gs": 1,
->>              "drv_ext_sge_sge_cnt": 256
->>          }
->>      } ]
->>
->> Fixes: 331152752a97 ("rdma: print driver resource attributes")
->> Signed-off-by: Chengchang Tang <tangchengchang@huawei.com>
->> Signed-off-by: Junxian Huang <huangjunxian6@hisilicon.com>
-> This code in rdma seems to be miking json and newline functionality
-> which creates bug traps.
->
-> Also the json should have same effective output in pretty and non-pretty mode.
-> It looks like since pretty mode add extra object layer, the nesting of {} would be
-> different.
->
-> The conversion to json_print() was done but it isn't using same conventions
-> as ip or tc.
->
-> The correct fix needs to go deeper and hit other things.
->
-
-Hi, Stephen,
-
-The root cause of this issue is that close_json_object() is being called 
-in newline_indent(), resulting in a mismatch
-of {}.
-
-When fixing this problem, I was unsure why a newline() is needed in 
-pretty mode, so I simply kept this logic and
-solved the issue of open_json_object() and close_json_object() not 
-matching. However, If the output of pretty mode
-and not-pretty mode should be the same, then this problem can be 
-resolved by deleting this newline_indent().
-
-I believe the original developer may not have realized that 
-close_json_object() is being called in newline(), which leads
-to this problem. To improve the code's readability, I would try to strip 
-out close_json_obejct() from newline().
-
-Thanks,
-Chengchang Tang
