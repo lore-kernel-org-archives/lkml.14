@@ -1,159 +1,88 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1683B16401;
-	Tue,  2 Jan 2024 19:29:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D2915AF6;
+	Tue,  2 Jan 2024 19:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AGKUIlWB"
-Received: from skinsburskii. (c-73-239-240-195.hsd1.wa.comcast.net [73.239.240.195])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 13EF120B3CC1;
-	Tue,  2 Jan 2024 11:29:17 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 13EF120B3CC1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1704223757;
-	bh=NWTVgm1Yghg6D+rhM1rcN+66tvwgyzPsGZv9i/VSt6U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AGKUIlWB2Mm3FV6uXLBIaYKw+ZOwF2oq+eG0GukNiGT0FaLu/cVNCJon1WWLrmbVf
-	 J0hpNTn0r5lQ7JZB7M+RoCQjykomiAtupbkO2imOrk6t0a4a8otvll3IN45v8vvg9M
-	 ESzfuKVdNYd5yhrMIDgJwHYz4CZGB1jbtbq0mHws=
-Date: Sun, 31 Dec 2023 19:01:41 -0800
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Alexander Graf <graf@amazon.com>, @skinsburskii.
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org,
-	linux-doc@vger.kernel.org, x86@kernel.org,
-	Eric Biederman <ebiederm@xmission.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>,
-	James Gowans <jgowans@amazon.com>, arnd@arndb.de,
-	pbonzini@redhat.com, madvenka@linux.microsoft.com,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v2 02/17] memblock: Declare scratch memory as CMA
-Message-ID: <20240101030141.GA723@skinsburskii.>
-References: <20231222193607.15474-1-graf@amazon.com>
- <20231222193607.15474-3-graf@amazon.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eSQFzGzb"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-35fd902c6b5so82044345ab.3;
+        Tue, 02 Jan 2024 11:30:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704223800; x=1704828600; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3dLzJTPxirZd6kW8WXj95cv8++GN7i41+6PgBQongBc=;
+        b=eSQFzGzbZg6tROrl+Qcqzu9qjGwH5tA4deBoyWW6GmyJEyQBR34tW2m2Snli5Fyiw1
+         th4IR22f1xitbeiNQ9oCXhOmqva+ykEfmp2yR0Fq+Za1tKsp4rSkH8iBZEIGyy6uM7Hs
+         1BsKoN8ZRGqarr3PzI68qdnpKG0SZ4/D6P4iB7u1HidftP8LqN9IgXSHc0f5YSUHpQmU
+         fbeCJI1mkV3cafYoY2y5zv0St+zYRfY3CmVe1caZ2NRVpNRTtixKa972iY7f2fEk7Ijv
+         zRB2HEwOeDANCiPs+CAVLRIhU0gxQVXR+wlzRkGyulZ/wyxWRdOEHFuEESOMl9BtWF6p
+         WiwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704223800; x=1704828600;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3dLzJTPxirZd6kW8WXj95cv8++GN7i41+6PgBQongBc=;
+        b=jfPGIRvEq2a7L8y3kSp01sTUol0ib8Kc3D3Ex6Fne8Fx79iUW7xs2fFjAp/Q1KJ7gx
+         OGiKuCpGxfv5T3Hary2FhliDkL7qyxaBmfxOo1A7HtqYH/Mxt7jn4+qdw/kOdgrjXm2P
+         PAlNKGjuuIgqp3QqtXTlnGOL4AEt7Rbqqj7+7ZPsD7XWtNxO0z5Me9OJQxorIsFj5q52
+         23gpvZSb5NhaLotoJu2QwVaL4GYeG2AksIIv9WaPw/kJYs4pLK59ktTsh7X82zHNTRH+
+         ht5H2uMKj0h6BHnWDVnSZSLLM9f+LJKV2CQkdXh8+RRXeJHWeUcK0c9EPkbt2bLRyjSi
+         4apg==
+X-Gm-Message-State: AOJu0Yz6KrRy3a9EO773vIkQMpApO8tX956a7W3S0dzAombIAip4jF+I
+	m9LKBWUEmg3rpQY9BjrE9f0=
+X-Google-Smtp-Source: AGHT+IHZfduyvxdowlAgFeALh+0JD54971ApQGhLj0NNcRFVRfJq3vCoS/FL3GlTSK7oZkhyaqnWew==
+X-Received: by 2002:a05:6e02:1521:b0:360:fe1:8abb with SMTP id i1-20020a056e02152100b003600fe18abbmr17508304ilu.119.1704223800080;
+        Tue, 02 Jan 2024 11:30:00 -0800 (PST)
+Received: from ?IPV6:2601:282:1e82:2350:5017:6182:740b:2f80? ([2601:282:1e82:2350:5017:6182:740b:2f80])
+        by smtp.googlemail.com with ESMTPSA id bf12-20020a056e02308c00b0035fec699584sm6772857ilb.13.2024.01.02.11.29.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jan 2024 11:29:59 -0800 (PST)
+Message-ID: <17a2c694-2c48-46dc-b028-68793a31a984@gmail.com>
+Date: Tue, 2 Jan 2024 12:29:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231222193607.15474-3-graf@amazon.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH iproute2-rc 1/2] rdma: Fix core dump when pretty is used
+Content-Language: en-US
+To: Leon Romanovsky <leon@kernel.org>,
+ Stephen Hemminger <stephen@networkplumber.org>
+Cc: Chengchang Tang <tangchengchang@huawei.com>,
+ Junxian Huang <huangjunxian6@hisilicon.com>, jgg@ziepe.ca,
+ netdev@vger.kernel.org, linux-rdma@vger.kernel.org, linuxarm@huawei.com,
+ linux-kernel@vger.kernel.org
+References: <20231229065241.554726-1-huangjunxian6@hisilicon.com>
+ <20231229065241.554726-2-huangjunxian6@hisilicon.com>
+ <20231229092129.25a526c4@hermes.local>
+ <30d8c237-953a-8794-9baa-e21b31d4d88c@huawei.com>
+ <20240102083257.GB6361@unreal>
+ <29146463-6d0e-21c5-af42-217cee760b3f@huawei.com>
+ <20240102122106.GI6361@unreal> <20240102082746.651ff7cf@hermes.local>
+ <20240102191701.GC5160@unreal>
+From: David Ahern <dsahern@gmail.com>
+In-Reply-To: <20240102191701.GC5160@unreal>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Dec 22, 2023 at 07:35:52PM +0000, Alexander Graf wrote:
-> When we finish populating our memory, we don't want to lose the scratch
-> region as memory we can use for useful data. Do do that, we mark it as
-> CMA memory. That means that any allocation within it only happens with
-> movable memory which we can then happily discard for the next kexec.
+On 1/2/24 12:17 PM, Leon Romanovsky wrote:
+>>
+>> Part of the problem is the meaning of pretty mode is different in rdma
+>> than all of the other commands. The meaning of the flags should be the
+>> same across ip, devlink, tc, and rdma; therefore pretty should mean
+>> nothing unless json is enabled.
 > 
-> That way we don't lose the scratch region's memory anymore for
-> allocations after boot.
-> 
-> Signed-off-by: Alexander Graf <graf@amazon.com>
-> 
-> ---
-> 
-> v1 -> v2:
-> 
->   - test bot warning fix
-> ---
->  mm/memblock.c | 30 ++++++++++++++++++++++++++----
->  1 file changed, 26 insertions(+), 4 deletions(-)
-> 
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index e89e6c8f9d75..3700c2c1a96d 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -16,6 +16,7 @@
->  #include <linux/kmemleak.h>
->  #include <linux/seq_file.h>
->  #include <linux/memblock.h>
-> +#include <linux/page-isolation.h>
->  
->  #include <asm/sections.h>
->  #include <linux/io.h>
-> @@ -1100,10 +1101,6 @@ static bool should_skip_region(struct memblock_type *type,
->  	if ((flags & MEMBLOCK_SCRATCH) && !memblock_is_scratch(m))
->  		return true;
->  
-> -	/* Leave scratch memory alone after scratch-only phase */
-> -	if (!(flags & MEMBLOCK_SCRATCH) && memblock_is_scratch(m))
-> -		return true;
-> -
->  	return false;
->  }
->  
-> @@ -2153,6 +2150,20 @@ static void __init __free_pages_memory(unsigned long start, unsigned long end)
->  	}
->  }
->  
-> +#ifdef CONFIG_MEMBLOCK_SCRATCH
-> +static void reserve_scratch_mem(phys_addr_t start, phys_addr_t end)
+> I was very inspired by devlink when wrote rdmatool. It is supposed to
+> behave the same. :)
 
-nit: the function name doesn't look reasonable as it has nothing
-limiting it to neither reservation nor scratch mem.
-Perhaps something like "set_mem_cma_type" would be a better fit.
+You need better inspirations :-)
 
-> +{
-> +	ulong start_pfn = pageblock_start_pfn(PFN_DOWN(start));
-> +	ulong end_pfn = pageblock_align(PFN_UP(end));
-> +	ulong pfn;
-> +
-> +	for (pfn = start_pfn; pfn < end_pfn; pfn += pageblock_nr_pages) {
-> +		/* Mark as CMA to prevent kernel allocations in it */
-
-nit: the comment above looks irrelevant/redundant.
-
-> +		set_pageblock_migratetype(pfn_to_page(pfn), MIGRATE_CMA);
-> +	}
-> +}
-> +#endif
-> +
->  static unsigned long __init __free_memory_core(phys_addr_t start,
->  				 phys_addr_t end)
->  {
-> @@ -2214,6 +2225,17 @@ static unsigned long __init free_low_memory_core_early(void)
->  
->  	memmap_init_reserved_pages();
->  
-> +#ifdef CONFIG_MEMBLOCK_SCRATCH
-> +	/*
-> +	 * Mark scratch mem as CMA before we return it. That way we ensure that
-> +	 * no kernel allocations happen on it. That means we can reuse it as
-> +	 * scratch memory again later.
-> +	 */
-> +	__for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
-> +			     MEMBLOCK_SCRATCH, &start, &end, NULL)
-> +		reserve_scratch_mem(start, end);
-> +#endif
-> +
->  	/*
->  	 * We need to use NUMA_NO_NODE instead of NODE_DATA(0)->node_id
->  	 *  because in some case like Node0 doesn't have RAM installed
-> -- 
-> 2.40.1
-> 
-> 
-> 
-> 
-> Amazon Development Center Germany GmbH
-> Krausenstr. 38
-> 10117 Berlin
-> Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-> Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-> Sitz: Berlin
-> Ust-ID: DE 289 237 879
-> 
-> 
+It was a mistake to merge devlink source code into iproute2 without a
+commitment to bring it inline with other iproute2 commands.
