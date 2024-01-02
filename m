@@ -1,143 +1,190 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5B07DF51;
-	Tue,  2 Jan 2024 11:16:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 21B5CC15;
-	Tue,  2 Jan 2024 03:17:02 -0800 (PST)
-Received: from [10.57.86.61] (unknown [10.57.86.61])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 813A63F7A6;
-	Tue,  2 Jan 2024 03:16:13 -0800 (PST)
-Message-ID: <781005d2-2ec9-4e6b-8472-33da85e77575@arm.com>
-Date: Tue, 2 Jan 2024 11:17:31 +0000
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B68DDC7;
+	Tue,  2 Jan 2024 11:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rKmx+O3G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC65FC43391;
+	Tue,  2 Jan 2024 11:16:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704194212;
+	bh=wH3UN+QEBeHo1CxZ6/L0nHaYUK8LzrtPCHlYvTqoAPQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=rKmx+O3G4u6tD/av1MVTGyVxCkd2s7aCJQMOAf5BmsZGJ2kac2aZZOirU3ltVF+xU
+	 BY2I1h4URbBV3ME3JYpYc/Lk7bneh1cTHtl6Qjv0k9fveNELZ6dSabLVupVUgQi3Hm
+	 sMXBGCCQsdVSeBQyp7+t9TNe9aI6HfuXY7p/xYhIwrJ6crJV6QVhWkeTMuJQqbkz5q
+	 sNLGt01zACtu7LZBl3P9NyS6Shd9TJ938UU64KsL9R/gGuwdsjdxkjo2BMlmmEtZxT
+	 PcdBKIAk2mDsoUuSm9isVjYr0aLeufNAyB6JCuGJSB7EoKW1+QfFl/s3toWaFJeDEr
+	 ubPjbOhP1PLVw==
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a282cb36d37so74783266b.3;
+        Tue, 02 Jan 2024 03:16:52 -0800 (PST)
+X-Gm-Message-State: AOJu0YxbnANKJ+Uu1fCx+3omXVbBJGyz4w1+EbkBTROfOCcMo2hH1mhx
+	udbmg2rggF8M5Am6D015zbh2zZUMgnvfpGTsDpc=
+X-Google-Smtp-Source: AGHT+IGz8iOixHSCpJ0lYL7fIB2qzRVNbPRM/W2vZAG0Y741XUSxrPBDI1OQCXvTMipu+vnICAmP15DLX+1P3yL2QZM=
+X-Received: by 2002:a17:907:61a2:b0:a26:8ee9:9b31 with SMTP id
+ mt34-20020a17090761a200b00a268ee99b31mr708210ejc.4.1704194211016; Tue, 02 Jan
+ 2024 03:16:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 09/23] PM: EM: Use runtime modified EM for CPUs energy
- estimation in EAS
-Content-Language: en-US
-To: Qais Yousef <qyousef@layalina.io>
-Cc: Xuewen Yan <xuewen.yan94@gmail.com>, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, rafael@kernel.org, dietmar.eggemann@arm.com,
- rui.zhang@intel.com, amit.kucheria@verdurent.com, amit.kachhap@gmail.com,
- daniel.lezcano@linaro.org, viresh.kumar@linaro.org, len.brown@intel.com,
- pavel@ucw.cz, mhiramat@kernel.org, wvw@google.com
-References: <20231129110853.94344-1-lukasz.luba@arm.com>
- <20231129110853.94344-10-lukasz.luba@arm.com>
- <20231217175923.wxmfocgckpaytptb@airbuntu>
- <CAB8ipk_5TjUTrZ-nrGAwYMugLJFF72MvvRDzPJqaCayNwCm1wg@mail.gmail.com>
- <1ccd7a20-0479-46f7-a968-57a18f0c0152@arm.com>
- <20231228173256.kepuwwimb4b2osew@airbuntu>
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <20231228173256.kepuwwimb4b2osew@airbuntu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240102101711.10872-2-xry111@xry111.site>
+In-Reply-To: <20240102101711.10872-2-xry111@xry111.site>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 2 Jan 2024 19:16:43 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H45oORgBPF0g4hqJB=dqtEuHCh1o4mKZELrvRNfrS5FEw@mail.gmail.com>
+Message-ID: <CAAhV-H45oORgBPF0g4hqJB=dqtEuHCh1o4mKZELrvRNfrS5FEw@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: Fix and simplify fcsr initialization on execve
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: WANG Xuerui <kernel@xen0n.name>, Eric Biederman <ebiederm@xmission.com>, 
+	Kees Cook <keescook@chromium.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Jinyang He <hejinyang@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
+	loongarch@lists.linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jan 2, 2024 at 6:17=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrote=
+:
+>
+> There has been a lingering bug in LoongArch Linux systems causing some
+> GCC tests to intermittently fail (see Closes link).  I've made a minimal
+> reproducer:
+>
+>     zsh% cat measure.s
+>     .align 4
+>     .globl _start
+>     _start:
+>         movfcsr2gr  $a0, $fcsr0
+>         bstrpick.w  $a0, $a0, 16, 16
+>         beqz        $a0, .ok
+>         break       0
+>     .ok:
+>         li.w        $a7, 93
+>         syscall     0
+>     zsh% cc mesaure.s -o measure -nostdlib
+>     zsh% echo $((1.0/3))
+>     0.33333333333333331
+>     zsh% while ./measure; do ; done
+>
+> This while loop should not stop as POSIX is clear that execve must set
+> fenv to the default, where FCSR should be zero.  But in fact it will
+> just stop after running for a while (normally less than 30 seconds).
+> Note that "$((1.0/3))" is needed to reproduce the issue because it
+> raises FE_INVALID and makes fcsr0 non-zero.
+>
+> The problem is we are relying on SET_PERSONALITY2 to reset
+> current->thread.fpu.fcsr.  But SET_PERSONALITY2 is executed before
+> start_thread which calls lose_fpu(0).  We can see if kernel preempt is
+> enabled, we may switch to another thread after SET_PERSONALITY2 but
+> before lose_fpu(0).  Then bad thing happens: during the thread switch
+> the value of the fcsr0 register is stored into current->thread.fpu.fcsr,
+> making it dirty again.
+>
+> The issue can be fixed by setting current->thread.fpu.fcsr after
+> lose_fpu(0) because lose_fpu clears TIF_USEDFPU, then the thread
+> switch won't touch current->thread.fpu.fcsr.
+>
+> The only other architecture setting FCSR in SET_PERSONALITY2 is MIPS.
+> They do this for supporting different FP flavors (NaN encodings etc).
+> which do not exist on LoongArch.  I'm not sure how MIPS evades the issue
+> (or maybe it's just buggy too) but I'll investigate it later.
+You have already investigated it, so should this message be updated?
 
+Huacai
 
-On 12/28/23 17:32, Qais Yousef wrote:
-> On 12/19/23 08:32, Lukasz Luba wrote:
->> Hi Qais and Xuewen,
->>
->> On 12/19/23 04:03, Xuewen Yan wrote:
->>> On Mon, Dec 18, 2023 at 1:59 AM Qais Yousef <qyousef@layalina.io> wrote:
->>>>
->>>> On 11/29/23 11:08, Lukasz Luba wrote:
->>>>> The new Energy Model (EM) supports runtime modification of the performance
->>>>> state table to better model the power used by the SoC. Use this new
->>>>> feature to improve energy estimation and therefore task placement in
->>>>> Energy Aware Scheduler (EAS).
->>>>
->>>> nit: you moved the code to use the new runtime em table instead of the one
->>>> parsed at boot.
->>>>
->>>>>
->>>>> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
->>>>> ---
->>>>>    include/linux/energy_model.h | 16 ++++++++++++----
->>>>>    1 file changed, 12 insertions(+), 4 deletions(-)
->>>>>
->>>>> diff --git a/include/linux/energy_model.h b/include/linux/energy_model.h
->>>>> index 1e618e431cac..94a77a813724 100644
->>>>> --- a/include/linux/energy_model.h
->>>>> +++ b/include/linux/energy_model.h
->>>>> @@ -238,6 +238,7 @@ static inline unsigned long em_cpu_energy(struct em_perf_domain *pd,
->>>>>                                 unsigned long max_util, unsigned long sum_util,
->>>>>                                 unsigned long allowed_cpu_cap)
->>>>>    {
->>>>> +     struct em_perf_table *runtime_table;
->>>>>         unsigned long freq, scale_cpu;
->>>>>         struct em_perf_state *ps;
->>>>>         int cpu, i;
->>>>> @@ -255,7 +256,14 @@ static inline unsigned long em_cpu_energy(struct em_perf_domain *pd,
->>>>>          */
->>>>>         cpu = cpumask_first(to_cpumask(pd->cpus));
->>>>>         scale_cpu = arch_scale_cpu_capacity(cpu);
->>>>> -     ps = &pd->table[pd->nr_perf_states - 1];
->>>>> +
->>>>> +     /*
->>>>> +      * No rcu_read_lock() since it's already called by task scheduler.
->>>>> +      * The runtime_table is always there for CPUs, so we don't check.
->>>>> +      */
->>>>
->>>> WARN_ON(rcu_read_lock_held()) instead?
->>>
->>> I agree, or SCHED_WARN_ON(!rcu_read_lock_held()) ?
->>
->> I disagree here. This is a sched function in hot path and as comment
-> 
-> WARN_ON() is not a sched function.
-
-I was referring to em_cpu_energy() being sched function. No one else
-should call it. That's the old contract also put into the doc of
-that function.
-
-> 
->> says:
->>
->> -----------------------
->>   * This function must be used only for CPU devices. There is no validation,
->>   * i.e. if the EM is a CPU type and has cpumask allocated. It is called from
->>   * the scheduler code quite frequently and that is why there is not checks.
->> -----------------------
->>
->> We don't have to put the checks or warnings everywhere in the kernel
->> functions. Especially hot one like this one.
-> 
-> When checks are necessary, there are ways even for hot paths.
-
-We have that function called from feec() where the RCU must be hold,
-otherwise the whole EAS would be unstable.
-
-> 
->>
->> As you might not notice, we don't even check if the pd->cpus is not NULL
-> 
-> rcu_read_lock_held() is only enabled for lockdebug build and it's the standard
-> way to document and add verification to ensure locking rules are honoured. On
-> non lockdebug build this will be compiled out.
-> 
-> You had to put a long comment to ensure locking rules are correct, why not
-> use existing infrastructure instead to provide better checks and inherent
-> documentation?
-
-I didn't want to add any more overhead in this hot path.
-
-> 
-> We had a bug recently where the rcu_read_lock() was moved and this broke some
-> function buried down in the call stack. So subtle code shuffles elsewhere can
-> cause unwanted side effects; and it's hard to catch these bugs.
-> 
-> 	https://lore.kernel.org/stable/20231009130130.210024505@linuxfoundation.org/
-
-OK, let me check that w/ and w/o lockdebug build and the
-SCHED_WARN_ON(!rcu_read_lock_held())
-
-Although, it would be only a safety net for accidental use of
-em_cpu_energy() from code path other than feec()...
-Which actually might bring some value.
+>
+> For LoongArch, just remove the current->thread.fpu.fcsr setting from
+> SET_PERSONALITY2 and do it in start_thread, after lose_fpu(0).
+>
+> The while loop failing with the mainline kernel has survived one hour
+> after this change.
+>
+> Closes: https://github.com/loongson-community/discussions/issues/7
+> Fixes: 803b0fc5c3f2 ("LoongArch: Add process management")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+> ---
+>
+> v1 -> v2:
+> - Still set current->thread.fpu.fcsr to boot_cpu_data.fpu_csr0 instead
+>   of constant 0.
+>
+>  arch/loongarch/include/asm/elf.h | 5 -----
+>  arch/loongarch/kernel/elf.c      | 5 -----
+>  arch/loongarch/kernel/process.c  | 1 +
+>  3 files changed, 1 insertion(+), 10 deletions(-)
+>
+> diff --git a/arch/loongarch/include/asm/elf.h b/arch/loongarch/include/as=
+m/elf.h
+> index 9b16a3b8e706..f16bd42456e4 100644
+> --- a/arch/loongarch/include/asm/elf.h
+> +++ b/arch/loongarch/include/asm/elf.h
+> @@ -241,8 +241,6 @@ void loongarch_dump_regs64(u64 *uregs, const struct p=
+t_regs *regs);
+>  do {                                                                   \
+>         current->thread.vdso =3D &vdso_info;                             =
+ \
+>                                                                         \
+> -       loongarch_set_personality_fcsr(state);                          \
+> -                                                                       \
+>         if (personality(current->personality) !=3D PER_LINUX)            =
+ \
+>                 set_personality(PER_LINUX);                             \
+>  } while (0)
+> @@ -259,7 +257,6 @@ do {                                                 =
+                       \
+>         clear_thread_flag(TIF_32BIT_ADDR);                              \
+>                                                                         \
+>         current->thread.vdso =3D &vdso_info;                             =
+ \
+> -       loongarch_set_personality_fcsr(state);                          \
+>                                                                         \
+>         p =3D personality(current->personality);                         =
+ \
+>         if (p !=3D PER_LINUX32 && p !=3D PER_LINUX)                      =
+   \
+> @@ -340,6 +337,4 @@ extern int arch_elf_pt_proc(void *ehdr, void *phdr, s=
+truct file *elf,
+>  extern int arch_check_elf(void *ehdr, bool has_interpreter, void *interp=
+_ehdr,
+>                           struct arch_elf_state *state);
+>
+> -extern void loongarch_set_personality_fcsr(struct arch_elf_state *state)=
+;
+> -
+>  #endif /* _ASM_ELF_H */
+> diff --git a/arch/loongarch/kernel/elf.c b/arch/loongarch/kernel/elf.c
+> index 183e94fc9c69..0fa81ced28dc 100644
+> --- a/arch/loongarch/kernel/elf.c
+> +++ b/arch/loongarch/kernel/elf.c
+> @@ -23,8 +23,3 @@ int arch_check_elf(void *_ehdr, bool has_interpreter, v=
+oid *_interp_ehdr,
+>  {
+>         return 0;
+>  }
+> -
+> -void loongarch_set_personality_fcsr(struct arch_elf_state *state)
+> -{
+> -       current->thread.fpu.fcsr =3D boot_cpu_data.fpu_csr0;
+> -}
+> diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/proc=
+ess.c
+> index 767d94cce0de..3f9cae615f52 100644
+> --- a/arch/loongarch/kernel/process.c
+> +++ b/arch/loongarch/kernel/process.c
+> @@ -92,6 +92,7 @@ void start_thread(struct pt_regs *regs, unsigned long p=
+c, unsigned long sp)
+>         clear_used_math();
+>         regs->csr_era =3D pc;
+>         regs->regs[3] =3D sp;
+> +       current->thread.fpu.fcsr =3D boot_cpu_data.fpu_csr0;
+>  }
+>
+>  void flush_thread(void)
+> --
+> 2.43.0
+>
