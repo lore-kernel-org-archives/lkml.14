@@ -1,56 +1,56 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491812574
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 05:37:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A84210FC
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 05:39:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dq8FNNmO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VSi8N1Hl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704173858;
+	s=mimecast20190719; t=1704173990;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=eCnGZSmn0Xbft/VvC3w27VmkfIRRQMc7XVfvoJNmfHo=;
-	b=Dq8FNNmOnV48ZkdI9nIP8ZaEECWQWJJPsSsTjcWCFWAYYdRYbtMlGXp4tHUWi+FhbqWx1k
-	z+n24TLq8OyU160IYIOqiYNJgGoPJoFQlfZaLmqa9Gx2MA4kex5l7z925JNvprPY7rzCh/
-	nEJNSBM00vBlK2S4GPoZOZXHVhYglx8=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=bbq0KObq2f8j+82pUN4AGj7eg3qIjhtUEVS9ATEV+Oo=;
+	b=VSi8N1Hlec/TepJlaoQRz+NuUZH16sm1efSRNwEAa/HbBvNmy6+MLfKOzdAQv/8cJKOo0L
+	ge4KTeeIBCTGPMtHscApBLxomVXGOqnIPAydpGzwWQ+QMRwg54Z34ft5KEPnYIVmJHlg5w
+	dgbj5y8lXW/sIEmDP+sQYGBeRTKspiA=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-543-NyMTX97DNN2BYlz5lYB9pw-1; Tue, 02 Jan 2024 00:37:32 -0500
-X-MC-Unique: NyMTX97DNN2BYlz5lYB9pw-1
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-28bea0ff98cso2090990a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Jan 2024 21:37:32 -0800 (PST)
+ us-mta-660-fBY9ca7mP5CxrC-rfxtvEg-1; Tue, 02 Jan 2024 00:39:48 -0500
+X-MC-Unique: fBY9ca7mP5CxrC-rfxtvEg-1
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-28bd331cb57so2730269a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Jan 2024 21:39:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704173851; x=1704778651;
+        d=1e100.net; s=20230601; t=1704173987; x=1704778787;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=eCnGZSmn0Xbft/VvC3w27VmkfIRRQMc7XVfvoJNmfHo=;
-        b=QzIM+EbVM3sAITPT5RCb2V/EiX4fFIZoB44V4IW6s21rJ8YpYbIyTy0g/905h7x0/R
-         LmPFuEnohH6ZpafJDJyTdRch0AulC3D6w2V6fBq65dA1io8J8IUpjnwG2tQQpf3FLlSm
-         ix9OW9Ljx55O1EpgCTLvcHoPmK0Stxq3tjnVKVJnXoTHnIxLiJ3Lpk/9reYLz5+vDcWa
-         dgCUrr1t1vK7plDDwtkgA5iBkNKcBVQJs1UsE7vl/YGD0xeG+/IGWaMXTFANyv+kQfeP
-         gxhfPcP79P10fDf05fBVBlpL83y15ThyCXwBsh13SMo1qKJwC/XYAHw9QpXtSwJE3ulk
-         o10Q==
-X-Gm-Message-State: AOJu0YxAoMhd50VN2JXgLNfnfXY3lpRhCZz9KeBxIJCdiml9w0R1JRFf
-	AkpKMlaUDPV0JSBvpPQECmJjs6kOtoe13933oMFtwz4EoSg44IvV1gnSWPRgzgBOFts0o657Vok
-	9I6Rb62ww6cKyV9QzF6k5c8nthPxCWw2r
-X-Received: by 2002:a17:902:ce86:b0:1d3:eecd:b296 with SMTP id f6-20020a170902ce8600b001d3eecdb296mr33590830plg.6.1704173851407;
-        Mon, 01 Jan 2024 21:37:31 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHENzr2M0aJyyZm2vt3XzuVCeWLevZs5IuWsUdjc1ZzU9FWxHr/jzg4D3MMktI1x4ptpcHyFg==
-X-Received: by 2002:a17:902:ce86:b0:1d3:eecd:b296 with SMTP id f6-20020a170902ce8600b001d3eecdb296mr33590810plg.6.1704173851161;
-        Mon, 01 Jan 2024 21:37:31 -0800 (PST)
+        bh=bbq0KObq2f8j+82pUN4AGj7eg3qIjhtUEVS9ATEV+Oo=;
+        b=VBi5H1NzAEKj3aMzQyBdqz4+7LeyGONayZBM8s75cXkK7meee2vga2zajIUuxDZ5WA
+         aUSpNonhf2S0B352G0Ky75aMriuP1wH0QFPuXe08WynZPwIiGV38I57gfhFj4Il3TueO
+         jj5/viKtw8Q1YTHj8wyIbZYrO33Nu5kmIYChbG5aAn4eI6R+dBvuQOVDhoD5ou86/lv4
+         8YKYoQnWd8Har5kAyDrTmmsRqbro7i+ATXpotXK5zfFokcobr+pHtxWIVVUBN1ehcIpK
+         7M90yZsiXTv0BfAoNNLhKMjmHmAlblB7d8Y9F85jATPEDBhrMDQ/+0Bss3Z4EHHp9VG7
+         bbdA==
+X-Gm-Message-State: AOJu0YzSq9B1xDLxwszmSCj+kHRDjwdt3Sxn4MoT59776P4C0Zf6+itz
+	AbIb0mnUDdTQhwjy4iw9ttBKqrUe8QqQkqaj0bxCMDyxWE0Bz4+S3dYOLMSrUgtbNCM0/a7OHsw
+	aRN1hANuhhS126x3rqW8MKylh7+t8AgvV
+X-Received: by 2002:a17:90a:a589:b0:28b:bd2d:f924 with SMTP id b9-20020a17090aa58900b0028bbd2df924mr24809543pjq.2.1704173987589;
+        Mon, 01 Jan 2024 21:39:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFuR1t3QCDF99soHy376+nbiN/c3MDqPEKDqcI+XWwTDxY2xbRtvWRrTvKfEHzNP7Fpwq1DzQ==
+X-Received: by 2002:a17:90a:a589:b0:28b:bd2d:f924 with SMTP id b9-20020a17090aa58900b0028bbd2df924mr24809540pjq.2.1704173987309;
+        Mon, 01 Jan 2024 21:39:47 -0800 (PST)
 Received: from x1n ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id v4-20020a17090331c400b001d49c0daf60sm6900347ple.265.2024.01.01.21.37.22
+        by smtp.gmail.com with ESMTPSA id lt24-20020a17090b355800b0028cb445ade2sm6857199pjb.16.2024.01.01.21.39.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jan 2024 21:37:30 -0800 (PST)
-Date: Tue, 2 Jan 2024 13:37:14 +0800
+        Mon, 01 Jan 2024 21:39:46 -0800 (PST)
+Date: Tue, 2 Jan 2024 13:39:32 +0800
 From: Peter Xu <peterx@redhat.com>
 To: Muchun Song <muchun.song@linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
 	Matthew Wilcox <willy@infradead.org>,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	Lorenzo Stoakes <lstoakes@gmail.com>,
@@ -72,11 +72,11 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
 	Jason Gunthorpe <jgg@nvidia.com>,
 	Andrea Arcangeli <aarcange@redhat.com>,
 	Axel Rasmussen <axelrasmussen@google.com>
-Subject: Re: [PATCH 03/13] mm: Provide generic pmd_thp_or_huge()
-Message-ID: <ZZOhCuuozrBscdRC@x1n>
+Subject: Re: [PATCH 05/13] mm: Introduce vma_pgtable_walk_{begin|end}()
+Message-ID: <ZZOhlB-KK4hF3PgY@x1n>
 References: <20231219075538.414708-1-peterx@redhat.com>
- <20231219075538.414708-4-peterx@redhat.com>
- <135b3189-f459-4b57-9861-bb8acb999d91@linux.dev>
+ <20231219075538.414708-6-peterx@redhat.com>
+ <0D9E28F4-AFA8-479C-8311-093DAFD9DF41@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,30 +85,13 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <135b3189-f459-4b57-9861-bb8acb999d91@linux.dev>
+In-Reply-To: <0D9E28F4-AFA8-479C-8311-093DAFD9DF41@linux.dev>
 
-On Mon, Dec 25, 2023 at 02:29:53PM +0800, Muchun Song wrote:
-> > @@ -1355,6 +1355,10 @@ static inline int pmd_write(pmd_t pmd)
-> >   #endif /* pmd_write */
-> >   #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
-> > +#ifndef pmd_thp_or_huge
-> 
-> I think it may be the time to rename to pmd_thp_or_hugetlb,
-> the "huge" is really confusing. thp is not huge? Actually,
-> it is huge. It is better to make it more specific from now on, like
-> "hugetlb".
+On Mon, Dec 25, 2023 at 02:34:48PM +0800, Muchun Song wrote:
+> Reviewed-by: Muchun Song <songmuchun@bytedance.com>
 
-The rename will need to touch ARM code, which I wanted to avoid, see:
-
-arch/arm64/include/asm/pgtable.h:#define pmd_thp_or_huge(pmd)   (pmd_huge(pmd) || pmd_trans_huge(pmd))
-
-So far this series only touches generic code.  Would you mind I keep this
-patch as-is, and leave renaming to later?
-
-> 
-> BTW, please cc me via the new email (muchun.song@linux.dev) next edition.
-
-Sure.  Thanks for taking a look.
+You're using the old email address here.  Do you want me to also use the
+linux.dev one that you suggested me to use?
 
 -- 
 Peter Xu
