@@ -1,37 +1,18 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C3616400;
-	Tue,  2 Jan 2024 20:04:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.96.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1rKkzf-0000Qg-1y;
-	Tue, 02 Jan 2024 20:04:09 +0000
-Date: Tue, 2 Jan 2024 21:01:23 +0100
-From: Daniel Golle <daniel@makrotopia.org>
-To: Eric Woudstra <ericwouds@gmail.com>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
-	Alexander Couzens <lynxis@fe80.eu>, Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Frank Wunderlich <frank-w@public-files.de>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH RFC net-next] net: pcs: pcs-mtk-lynxi fix
- mtk_pcs_lynxi_get_state() for 2500base-x
-Message-ID: <ZZRrk85SCDmo76NJ@pidgin.makrotopia.org>
-References: <20240102074408.1049203-1-ericwouds@gmail.com>
- <ZZP9GR15ufDbjGAJ@shell.armlinux.org.uk>
- <92190426-3614-4774-9E9F-18F121622788@gmail.com>
- <74223164-ab50-4d6d-a4f4-561b0a70d396@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D65EC16403
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 20:07:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DCCDC433C8;
+	Tue,  2 Jan 2024 20:07:55 +0000 (UTC)
+Date: Tue, 2 Jan 2024 20:07:52 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Chris von Recklinghausen <crecklin@redhat.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] don't record leak information on allocations done
+ between kmemleak_init and kmemleak_late_init
+Message-ID: <ZZRtGC9ZPVR5uCqu@arm.com>
+References: <20240102153428.139984-1-crecklin@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,15 +21,89 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <74223164-ab50-4d6d-a4f4-561b0a70d396@gmail.com>
+In-Reply-To: <20240102153428.139984-1-crecklin@redhat.com>
 
-On Tue, Jan 02, 2024 at 08:33:32PM +0100, Eric Woudstra wrote:
-> [...]
-> 
-> So if phylink_mii_c22_pcs_decode_state() should not set the speed, then it is not correctly set somewhere else.
+On Tue, Jan 02, 2024 at 10:34:28AM -0500, Chris von Recklinghausen wrote:
+> If an object is allocated after kmemleak_init is called but before
+> kmemleak_late_init is called, calls to kmemleak_not_leak or
+> kmemleak_ignore on the object don't prevent a scan from reporting the
+> object as a leak.
 
-Yes, but the fix should go to pcs-mtk-lynxi.c and you don't need to
-change phylink for it to work.
-This should be enough:
-https://patchwork.kernel.org/project/netdevbpf/patch/091e466912f1333bb76d23e95dc6019c9b71645f.1699565880.git.daniel@makrotopia.org/
+This may be true but what is the reason for this? Can you give some
+example of false positives you get?
 
+> Avoid this situation by only registering objects in kmemleak_alloc when
+> kmemleak_initialized is set.
+
+I wouldn't do this, kmemleak needs to track all the early allocations,
+otherwise it will lead to lots of false positives. However, looking at
+your patch, it looks like it doesn't touch kmemleak_alloc() at all and
+it does something completely different.
+
+> diff --git a/mm/kmemleak.c b/mm/kmemleak.c
+> index 5501363d6b31..0c8a5f456874 100644
+> --- a/mm/kmemleak.c
+> +++ b/mm/kmemleak.c
+> @@ -1117,7 +1117,8 @@ void __ref kmemleak_free_part(const void *ptr, size_t size)
+>  {
+>  	pr_debug("%s(0x%px)\n", __func__, ptr);
+>  
+> -	if (kmemleak_enabled && ptr && !IS_ERR(ptr))
+> +	if (kmemleak_enabled && kmemleak_late_initialized && ptr &&
+> +		!IS_ERR(ptr))
+>  		delete_object_part((unsigned long)ptr, size, false);
+>  }
+
+This leaves some memory to still be tracked by kmemleak when it was
+actually freed. Later when it is reallocated, you'll get some errors and
+kmemleak will disable itself.
+
+>  EXPORT_SYMBOL_GPL(kmemleak_free_part);
+> @@ -1135,7 +1136,8 @@ void __ref kmemleak_free_percpu(const void __percpu *ptr)
+>  
+>  	pr_debug("%s(0x%px)\n", __func__, ptr);
+>  
+> -	if (kmemleak_free_enabled && ptr && !IS_ERR(ptr))
+> +	if (kmemleak_free_enabled && kmemleak_late_initialized && ptr &&
+> +		!IS_ERR(ptr))
+>  		for_each_possible_cpu(cpu)
+>  			delete_object_full((unsigned long)per_cpu_ptr(ptr,
+>  								      cpu));
+
+Same here.
+
+> @@ -1189,7 +1191,8 @@ void __ref kmemleak_not_leak(const void *ptr)
+>  {
+>  	pr_debug("%s(0x%px)\n", __func__, ptr);
+>  
+> -	if (kmemleak_enabled && ptr && !IS_ERR(ptr))
+> +	if (kmemleak_enabled && kmamleak_late_initialized && ptr &&
+                                 ^^^
+I guess you haven't compiled this patch. Does it actually fix the
+problem you are reporting?
+
+> +		!IS_ERR(ptr))
+>  		make_gray_object((unsigned long)ptr);
+>  }
+
+This change doesn't help at all with your problem statement.
+
+>  EXPORT_SYMBOL(kmemleak_not_leak);
+> @@ -1207,7 +1210,8 @@ void __ref kmemleak_ignore(const void *ptr)
+>  {
+>  	pr_debug("%s(0x%px)\n", __func__, ptr);
+>  
+> -	if (kmemleak_enabled && ptr && !IS_ERR(ptr))
+> +	if (kmemleak_enabled && kmamleak_late_initialized && ptr &&
+> +		!IS_ERR(ptr))
+>  		make_black_object((unsigned long)ptr, false);
+>  }
+>  EXPORT_SYMBOL(kmemleak_ignore);
+
+Neither does this.
+
+Also if you re-post, please cc linux-mm as well. Andrew Morton tends to
+pick up the kmemleak patches (once acked).
+
+-- 
+Catalin
