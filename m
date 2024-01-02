@@ -1,16 +1,31 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54FCBD298;
-	Tue,  2 Jan 2024 09:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08204C15;
-	Tue,  2 Jan 2024 01:42:36 -0800 (PST)
-Received: from [10.57.86.61] (unknown [10.57.86.61])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 80FFA3F7A6;
-	Tue,  2 Jan 2024 01:41:47 -0800 (PST)
-Message-ID: <58b0f68f-80bc-411f-9c41-c751d353687b@arm.com>
-Date: Tue, 2 Jan 2024 09:43:06 +0000
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7CDD27F;
+	Tue,  2 Jan 2024 09:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="vwpbM4Ek"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1704188507;
+	bh=FyLks047y5EHUM2OKY0gTkVd8p2xO2+y8kTMjKFijSg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=vwpbM4EknSe+s+iyX71PYvZayhxWo+dUMoNsHsri18wj1l3ZS3hUxt9FFhZjr6tto
+	 IC/7DUykfGCRE7vgGNQfeldwcVLsSRHO9HC37m/GO7h9P9wY9RKAlcU0kaguoFaX9r
+	 3N3EzQbhdspbUtxvcJL7oehKuNPcUmSMvaE519+uZ4AXEJZJ472+3cHFuBWJIgg81c
+	 R+XEmQz0hJMnn8MR5aIqAMxawvkyhlKy87lz5OUv0CQsBia6AGxKyiKgcnuYM2YJya
+	 iqrngmitpclR0jCLy4wsH2RWqdpcze3Wpwp5jo23rTr8I5Vx32hfDJbm/PO4s+s66F
+	 DLxraCut+Yl3A==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id A82E63781433;
+	Tue,  2 Jan 2024 09:41:46 +0000 (UTC)
+Message-ID: <0bfa27e8-c173-4a2a-b453-9289f2eb1926@collabora.com>
+Date: Tue, 2 Jan 2024 10:41:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -18,44 +33,55 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 05/23] PM: EM: Refactor a new function
- em_compute_costs()
+Subject: Re: [PATCH] clk: mediatek: fix cppcheck error for uninitialized
+ variable
 Content-Language: en-US
-To: Qais Yousef <qyousef@layalina.io>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- rafael@kernel.org, dietmar.eggemann@arm.com, rui.zhang@intel.com,
- amit.kucheria@verdurent.com, amit.kachhap@gmail.com,
- daniel.lezcano@linaro.org, viresh.kumar@linaro.org, len.brown@intel.com,
- pavel@ucw.cz, mhiramat@kernel.org, wvw@google.com
-References: <20231129110853.94344-1-lukasz.luba@arm.com>
- <20231129110853.94344-6-lukasz.luba@arm.com>
- <20231217175845.2jdeqaz62mmcjuwu@airbuntu>
- <5f7f52a4-4f0a-4694-a743-478c5e4e4079@arm.com>
- <20231228171441.jgyjtp3knbtcqgf7@airbuntu>
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <20231228171441.jgyjtp3knbtcqgf7@airbuntu>
+To: mturquette@baylibre.com, sboyd@kernel.org, matthias.bgg@gmail.com,
+ kishan.dudhatra@siliconsignals.io
+Cc: Chen-Yu Tsai <wenst@chromium.org>, Tom Rix <trix@redhat.com>,
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+References: <20231225152806.3716898-1-user@falcon>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20231225152806.3716898-1-user@falcon>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-
-On 12/28/23 17:14, Qais Yousef wrote:
-> On 12/19/23 10:59, Lukasz Luba wrote:
->>
->>
->> On 12/17/23 17:58, Qais Yousef wrote:
->>> On 11/29/23 11:08, Lukasz Luba wrote:
->>>> Refactor a dedicated function which will be easier to maintain and re-use
->>>> in future. The upcoming changes for the modifiable EM perf_state table
->>>> will use it (instead of duplicating the code).
->>>
->>> nit: What is being refactored? Looks like you took em_compute_cost() out of
->>> em_create_perf_table().
->>
->> Yes, it's going to be re-used later for also update code path, not only
->> register code path.
+Il 25/12/23 16:28,  ha scritto:
+> From: Kishan Dudhatra <kishan.dudhatra@siliconsignals.io>
 > 
-> Sorry I was terse. I meant the commit message could be clearer to require less
-> effort untangling what is actually being changed.
+> cppcheck reports below warning
+> 
+> clk/mediatek/clk-fhctl.c:206:27:
+> error: Uninitialized variable: pll_postdiv [uninitvar]
+> if (postdiv && postdiv < pll_postdiv)
+> 
+> This is due to uninitialization of variable pll_postdiv,
+> which is now initialized as part of this patch.
+> 
+> Signed-off-by: Kishan Dudhatra <kishan.dudhatra@siliconsignals.io>
 
-OK, I will rephrase that description. Thanks.
+This is a false positive... the pll_postdiv variable is *always* used
+and *only if* postdiv > 0.
+
+P.S.: There was some problem with your email, as the From entry is empty.
+
+Regards,
+Angelo
+
+> 
+> diff --git a/drivers/clk/mediatek/clk-fhctl.c b/drivers/clk/mediatek/clk-fhctl.c
+> index 33b6ad8fdc2e..b0e71e4fd938 100644
+> --- a/drivers/clk/mediatek/clk-fhctl.c
+> +++ b/drivers/clk/mediatek/clk-fhctl.c
+> @@ -186,7 +186,7 @@ static int fhctl_hopping(struct mtk_fh *fh, unsigned int new_dds,
+>   	struct fh_pll_regs *regs = &fh->regs;
+>   	struct mtk_clk_pll *pll = &fh->clk_pll;
+>   	spinlock_t *lock = fh->lock;
+> -	unsigned int pll_postdiv;
+> +	unsigned int pll_postdiv = 0;
+>   	unsigned long flags = 0;
+>   	int ret;
+>   
+
+
