@@ -1,130 +1,89 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C21F18629
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 21:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019F218646;
+	Tue,  2 Jan 2024 22:01:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oMGifK9S"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a26fa294e56so630673566b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 13:58:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/TvCjBQ"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3bbbdf0b859so5291183b6e.3;
+        Tue, 02 Jan 2024 14:01:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704232729; x=1704837529; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=lHJy85+7TLRzk/78Sps6i5Kou/fAYiZr6UV6VpAliiQ=;
-        b=oMGifK9SD5ehvV/0aXTjuv0Ylfh/CPqzxvK/gf+oNBeVt8dkqpxNnRD6LvlQ9fNHLj
-         6mhLdpsQv/vpS6FoqyjHqopG1pnPsLTjFRosMfR364dSFXWTLWHeibRC2Jp5OVUT/saE
-         vzVhJ6aMYTNp8ezoBAiG3CFsc0slEi7SVmvJNJDe9EZKaa/MYDbcOjaksFNa7lNZvIZa
-         Ntx6rdm2L3zo2yIb2nhzt6nkLGHoo6qyviuBlbRCm8gavJjS3jhmTurZBPa/fwrJ+/4X
-         5oKgAIxEVVBz1p5abgSN+N1BVMriXWRTe6eEg4EoKiyRh9sNKlZ1BO8KkmkuD653AMBk
-         eG5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704232729; x=1704837529;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1704232894; x=1704837694; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lHJy85+7TLRzk/78Sps6i5Kou/fAYiZr6UV6VpAliiQ=;
-        b=sdLIXf66ZfxnOpeTPxN2vcqfo4SFvSKScP0XApJBcO5lwQ2tAry6IymMlINt2c8QGQ
-         jyruzsMY6D+zOZ0ahOTR+dIe/HsHzbMnRTckrRm28kFgkim5CtxFn1UUpn1Qxf8NWm8H
-         uGoIc2pyinE1yZxg7FQNjX2ePx/w2bFmDUkUup05SBtE6ASStZN7zQ+dhXEm2mzOjXiu
-         pNFZAcYvEvXxRDzsOwos3gGPimy/ZJxNnZR8PEBaZwVow6EgZrN4kiGsp9ChUe985q80
-         QiNawY8azRge1fhTKNGi8lemdVET1VW1S0uoZfETUhHE0cr21tRPvSogkO5ZwnZKHhxL
-         RQhQ==
-X-Gm-Message-State: AOJu0YwAF5T+ueawWI1yrusDiOXH57z5faXw3FLD3hFVwVpRdDcFXZ9m
-	pkhCzaI2OzUaz3Qz493FZQQaVG2Ivh3mVw==
-X-Google-Smtp-Source: AGHT+IFIHQe3frel2Y84wxUwyRKTsbeBBr4IW+wot2CBsPnws8SbyytPBldCKAcr2B0L/MKfUeQdnw==
-X-Received: by 2002:a17:906:3389:b0:a27:e17a:8858 with SMTP id v9-20020a170906338900b00a27e17a8858mr2135106eja.108.1704232728832;
-        Tue, 02 Jan 2024 13:58:48 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.218.27])
-        by smtp.gmail.com with ESMTPSA id q23-20020a170906771700b00a26f1f36708sm8165521ejm.78.2024.01.02.13.58.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Jan 2024 13:58:48 -0800 (PST)
-Message-ID: <a780d27e-194d-44ca-b6cf-f9c43f47b557@linaro.org>
-Date: Tue, 2 Jan 2024 22:58:46 +0100
+        bh=mqI9o54z9qRSDIMHvl1bUrXAFI07BELIcpmN1oqYEIU=;
+        b=X/TvCjBQswBhArHn8iAvqZQn+LS4Umi5sN1okgyimPa06RfzVL5AI9SG/dHlXJwYtP
+         Oi4jPo+OMYgMqV/UCoFC4ievTPN1Y8p95t0tNQCopYzv1KqdRD/CFu0+JPO3Yzb0shUy
+         IXTdAiJmM0k0DD53xsNMOkLj+RcEGZ0YzmS8EGg89Ntxn8b6e7xGXSrcgZWeqHp+djTM
+         X5i5XPAAGFxpXRw/vX87UWAN5MycCYb7MJSXH60q3fRuWrkk/S8TRTc6cn3Tz+F7vrAU
+         AN/NWRq9f02keRl7rcG1B5sLAAwpZsYn83BHA4ZlVNqArO8kP63ycAtxIJ4fBggf+joW
+         k4Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704232894; x=1704837694;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=mqI9o54z9qRSDIMHvl1bUrXAFI07BELIcpmN1oqYEIU=;
+        b=g08vc57XNX+hVEJSpdEtzlpcDpMy1JyWmjWQvoVok4epaLiV2RwiClHenp1Y1/SryN
+         UsIlA3s11E0l1BKeFJshfW5CWPRE/ZeoXT2mLggon5+6efWi2MBEto3SCfouOcn52a/7
+         mVeQJfZxkuMDVRiG+1XiF8V2jdkBfw8Ql1LWorLfB2VSbdJ4Tzm+xDtejZQlsoZlMv8l
+         BygJXm0Vc0dEG6oUEaUmJ+hboK923b/JDlQy7LeN4sdmhBiNjn/stb+G6Bb1VDfoQXLj
+         FBLYtFoxyKWGBE3xpHqCSaR3ZVoZ+QyxV/4yEBWQbzNA+VlWOd+Q1cQ+4biMYq0gSIyx
+         Pf0Q==
+X-Gm-Message-State: AOJu0Yz2Ae6AgnEJJj1reQBumN6oigjK1lyyHplLTSlC2xkhu87gaEKM
+	k7Ovaej0sewzbW79UCZqB/wbK/6SSTg=
+X-Google-Smtp-Source: AGHT+IHZJgB/+lNjtSFxLat8Tr18hFlaFdVfpMJks0gtk8aynOT14d4JPagPUed58Sicz/NncFP23Q==
+X-Received: by 2002:a05:6808:1708:b0:3b9:e2bf:c24e with SMTP id bc8-20020a056808170800b003b9e2bfc24emr24064815oib.15.1704232894093;
+        Tue, 02 Jan 2024 14:01:34 -0800 (PST)
+Received: from localhost (48.230.85.34.bc.googleusercontent.com. [34.85.230.48])
+        by smtp.gmail.com with ESMTPSA id p13-20020a0cfacd000000b0067f678747ffsm9148761qvo.50.2024.01.02.14.01.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jan 2024 14:01:33 -0800 (PST)
+Date: Tue, 02 Jan 2024 17:01:33 -0500
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Arnd Bergmann <arnd@arndb.de>, 
+ Thomas Lange <thomas@corelatus.se>, 
+ Netdev <netdev@vger.kernel.org>, 
+ linux-kernel@vger.kernel.org
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ =?UTF-8?B?SsO2cm4tVGhvcmJlbiBIaW56?= <jthinz@mailbox.tu-berlin.de>, 
+ Deepa Dinamani <deepa.kernel@gmail.com>, 
+ "David S . Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>
+Message-ID: <659487bd95ff6_2aa3c62948e@willemb.c.googlers.com.notmuch>
+In-Reply-To: <fb69e804-6a9d-4052-a96e-40f8a20c189a@app.fastmail.com>
+References: <d1ce6aba-1b10-471c-ba60-10effa1dac10@corelatus.se>
+ <fb69e804-6a9d-4052-a96e-40f8a20c189a@app.fastmail.com>
+Subject: Re: [PATCH net] net: Implement missing SO_TIMESTAMPING_NEW cmsg
+ support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 02/22] dt-bindings: soc: qcom: qcom,saw2: add missing
- compatible strings
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Andy Gross <agross@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org
-References: <20240102-saw2-spm-regulator-v7-0-0472ec237f49@linaro.org>
- <20240102-saw2-spm-regulator-v7-2-0472ec237f49@linaro.org>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240102-saw2-spm-regulator-v7-2-0472ec237f49@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
 
-On 02/01/2024 06:17, Dmitry Baryshkov wrote:
-> Define compatible strings for SAW2 units present on MSM8960, IPQ4019
-> and IPQ8064.  There is no need to include SAW version into the compat
-> string, so just use the SoC and SAW2 kind.
+Arnd Bergmann wrote:
+> On Tue, Jan 2, 2024, at 22:13, Thomas Lange wrote:
+> > Commit 9718475e6908 ("socket: Add SO_TIMESTAMPING_NEW") added the new
+> > socket option SO_TIMESTAMPING_NEW. However, it was never implemented in
+> > __sock_cmsg_send thus breaking SO_TIMESTAMPING cmsg for platforms using
+> > SO_TIMESTAMPING_NEW.
+> >
+> > Fixes: 9718475e6908 ("socket: Add SO_TIMESTAMPING_NEW")
+> > Link: 
+> > https://lore.kernel.org/netdev/6a7281bf-bc4a-4f75-bb88-7011908ae471@app.fastmail.com/
+> > Signed-off-by: Thomas Lange <thomas@corelatus.se>
 > 
-> Also add missing L2 SAW2 compatibles for MSM8974 and APQ8084, they
-> follow the existing CPU SAW2 strings.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Cc: stable@vger.kernel.org
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
-
+Reviewed-by: Willem de Bruijn <willemb@google.com>
