@@ -1,296 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF7D15AD7;
-	Tue,  2 Jan 2024 14:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE66815AEA
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 14:38:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kTwbhFmM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704206328; x=1735742328;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=RhiXnLLG5dHDW1It9pkSt3+L8su0CvX3udFjW+SbWh4=;
-  b=kTwbhFmM9F8X53iRnHB3BEdJV5HqvT2Gh5ccWsXL1FXMpPHybQqMVOk0
-   H13NbF8shK/LNL75XdrvJmBxCD2uAHhbOghtIwWOeYaN2cNd5Yar1P2wk
-   RH8JrSbhV+c9EdlkZJ30+UGL+zdkNvnpQCRHjJ89mmRtwYb+u7rjbEnYK
-   xy9Ek+nhnLnbMV8EEyTEis5W5NXfdHDf2yrfOddzzbhp8TNaDdEuzYh6C
-   KnBa3tch3Tvt64zjd5hkXxhwvqlsSTunysncfdKnxVZvXnAew1O+rMD7R
-   Wag6uOK78Ox0rc4M922lfzFhg45axEwk85YLtsSKr3u0uTvMmLVY4VlS7
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="10270502"
-X-IronPort-AV: E=Sophos;i="6.04,325,1695711600"; 
-   d="scan'208";a="10270502"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 06:38:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="923234316"
-X-IronPort-AV: E=Sophos;i="6.04,325,1695711600"; 
-   d="scan'208";a="923234316"
-Received: from 984fee00a4c6.jf.intel.com ([10.165.58.231])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Jan 2024 06:38:46 -0800
-From: Yi Liu <yi.l.liu@intel.com>
-To: joro@8bytes.org,
-	alex.williamson@redhat.com,
-	jgg@nvidia.com,
-	kevin.tian@intel.com,
-	robin.murphy@arm.com,
-	baolu.lu@linux.intel.com
-Cc: cohuck@redhat.com,
-	eric.auger@redhat.com,
-	nicolinc@nvidia.com,
-	kvm@vger.kernel.org,
-	mjrosato@linux.ibm.com,
-	chao.p.peng@linux.intel.com,
-	yi.l.liu@intel.com,
-	yi.y.sun@linux.intel.com,
-	peterx@redhat.com,
-	jasowang@redhat.com,
-	shameerali.kolothum.thodi@huawei.com,
-	lulu@redhat.com,
-	suravee.suthikulpanit@amd.com,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	zhenzhong.duan@intel.com,
-	joao.m.martins@oracle.com,
-	xin.zeng@intel.com,
-	yan.y.zhao@intel.com,
-	j.granados@samsung.com
-Subject: [PATCH v10 08/10] iommu/vt-d: Convert stage-1 cache invalidation to return QI fault
-Date: Tue,  2 Jan 2024 06:38:32 -0800
-Message-Id: <20240102143834.146165-9-yi.l.liu@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240102143834.146165-1-yi.l.liu@intel.com>
-References: <20240102143834.146165-1-yi.l.liu@intel.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lI4MKSKK"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dbe78430946so1080635276.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 06:38:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1704206327; x=1704811127; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jy0uRx2JMKC7IT4IrT6DQeOOAvtEVqpfbBhM8k6y5YU=;
+        b=lI4MKSKK0DT9T/8CHJPTLjXGtC2VQyQIeo0slFWaSUBLQN4POb17ew1naXivDDu/dH
+         1PGocvTFj7iEoIepWOWsnw8K6DvpBxTfYnnpVNPrFssj2uTKAdqRTr4sKpgzrtPxcQ9N
+         sQGG8BVCoe7bHpGNdA2rNyWCsM8zaAy7wPX4w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704206327; x=1704811127;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Jy0uRx2JMKC7IT4IrT6DQeOOAvtEVqpfbBhM8k6y5YU=;
+        b=ml2O5o5g3GWHIaoAoPzxZ/WvCZ+tXHbUEQ71qnWkGsxlhQb03tgU+/B73Dkxu9sZ8W
+         JN350NJ9BEsvXNizryGD4Gq7mDBei5NiTNjNBeHFrVWya8V0GmBg5Gop1gRe89k1w9Wv
+         HXErTnKaiy3mGWz3YXeeDYT7a+mUigyMZiwMVsOq0xJmguP+rMP6TXrA0pHjnBcsbLUN
+         MJHGgVxWuVEiVtUNfKikm5lJWO+3yqChx5Nn2OFNP/tbqpArveU72tBiN6m3kTSAYuKA
+         /6Nod7xKboYk0AEZcYRk0ifGpB6s/B8TSqO8t0uvVwZocOEKg4cA9Np64okzDW+HpLqk
+         TSsQ==
+X-Gm-Message-State: AOJu0YxiqE+/xozay8Oxklssio6sZF0EudHZ31q+HpajdUfw1obM5gbW
+	eEqYDXD1+muNhXv0Q0ljNpn2zZit4PGrt52I99OLWmLqeUppZc8=
+X-Google-Smtp-Source: AGHT+IF2VmlnzA7AgDC3KwlEUuCIE5PgevZGdecadVjf9tfvv09O27NfPI3ZsHc2De/o71n4pxcOUQ==
+X-Received: by 2002:a25:aa2d:0:b0:dbd:5cd5:4d53 with SMTP id s42-20020a25aa2d000000b00dbd5cd54d53mr7126352ybi.96.1704206327096;
+        Tue, 02 Jan 2024 06:38:47 -0800 (PST)
+Received: from denia.c.googlers.com (204.246.236.35.bc.googleusercontent.com. [35.236.246.204])
+        by smtp.gmail.com with ESMTPSA id p13-20020ad451cd000000b00680b34d52f8sm1463586qvq.13.2024.01.02.06.38.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jan 2024 06:38:46 -0800 (PST)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Tue, 02 Jan 2024 14:38:45 +0000
+Subject: [PATCH v3] media: ucvideo: Add quirk for Logitech Rally Bar
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240102-rallybar-v3-1-0ab197ce4aa2@chromium.org>
+X-B4-Tracking: v=1; b=H4sIAPUflGUC/3WMwQ6CMBAFf4X0bA27LQ148j+Mh9IWaALUbLWRE
+ P7dwtHocV7ezMqiI+8iuxQrI5d89GHOIE4FM4Oee8e9zcywRAGIyEmP49Jq4tAYVxolbeUUy/c
+ Huc6/j9Ttnnnw8RloOcoJ9vVHJAEHXmOLWloBpequZqAw+dd0DtSzvZPwn4vZrWrZWIW6qUB+u
+ du2fQDDhAwd3wAAAA==
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Alan Stern <stern@rowland.harvard.edu>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-media@vger.kernel.org, stable@vger.kernel.org, 
+ Ricardo Ribalda <ribalda@chromium.org>
+X-Mailer: b4 0.12.3
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+Logitech Rally Bar devices, despite behaving as UVC cameras, have a
+different power management system that the other cameras from Logitech.
 
-This makes the pasid based cache invalidation and device TLB invalidation
-to return QI faults to callers. This is needed when usersapce invalidates
-cache after modifying the stage-1 page table used in nested translation.
-Hardware errors during invalidation should be reported to user.
+USB_QUIRK_RESET_RESUME is applied to all the UVC cameras from Logitech
+at the usb core. Unfortunately, USB_QUIRK_RESET_RESUME causes undesired
+USB disconnects, that make them completely unusable.
 
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Yi Liu <yi.l.liu@intel.com>
+Instead of creating a list for this family of devices in the core, let's
+create a quirk in the UVC driver.
+
+Fixes: e387ef5c47dd ("usb: Add USB_QUIRK_RESET_RESUME for all Logitech UVC webcams")
+Cc: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- drivers/iommu/intel/dmar.c  | 13 +++++++------
- drivers/iommu/intel/iommu.c | 12 ++++++------
- drivers/iommu/intel/iommu.h |  6 +++---
- drivers/iommu/intel/pasid.c | 12 +++++++-----
- drivers/iommu/intel/svm.c   |  8 ++++----
- 5 files changed, 27 insertions(+), 24 deletions(-)
+Tested with a Rallybar Mini with an Acer Chromebook Spin 513
+---
+Changes in v3:
+- Move quirk to uvc driver
+- Link to v2: https://lore.kernel.org/r/20231222-rallybar-v2-1-5849d62a9514@chromium.org
 
-diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
-index c3251c36c567..d9e38ff34437 100644
---- a/drivers/iommu/intel/dmar.c
-+++ b/drivers/iommu/intel/dmar.c
-@@ -1529,7 +1529,7 @@ void qi_flush_iotlb(struct intel_iommu *iommu, u16 did, u64 addr,
- }
- 
- void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
--			u16 qdep, u64 addr, unsigned mask)
-+			u16 qdep, u64 addr, unsigned mask, u32 *fault)
- {
- 	struct qi_desc desc;
- 
-@@ -1556,12 +1556,12 @@ void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
- 	desc.qw2 = 0;
- 	desc.qw3 = 0;
- 
--	qi_submit_sync(iommu, &desc, 1, 0, NULL);
-+	qi_submit_sync(iommu, &desc, 1, 0, fault);
- }
- 
- /* PASID-based IOTLB invalidation */
- void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u32 pasid, u64 addr,
--		     unsigned long npages, bool ih)
-+		     unsigned long npages, bool ih, u32 *fault)
- {
- 	struct qi_desc desc = {.qw2 = 0, .qw3 = 0};
- 
-@@ -1597,12 +1597,13 @@ void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u32 pasid, u64 addr,
- 				QI_EIOTLB_AM(mask);
+Changes in v2:
+- Add Fixes tag
+- Add UVC maintainer as Cc
+- Link to v1: https://lore.kernel.org/r/20231222-rallybar-v1-1-82b2a4d3106f@chromium.org
+---
+ drivers/media/usb/uvc/uvc_driver.c | 21 +++++++++++++++++++++
+ drivers/media/usb/uvc/uvcvideo.h   |  1 +
+ 2 files changed, 22 insertions(+)
+
+diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+index 08fcd2ffa727..77c1932c29ca 100644
+--- a/drivers/media/usb/uvc/uvc_driver.c
++++ b/drivers/media/usb/uvc/uvc_driver.c
+@@ -14,6 +14,7 @@
+ #include <linux/module.h>
+ #include <linux/slab.h>
+ #include <linux/usb.h>
++#include <linux/usb/quirks.h>
+ #include <linux/usb/uvc.h>
+ #include <linux/videodev2.h>
+ #include <linux/vmalloc.h>
+@@ -2233,6 +2234,8 @@ static int uvc_probe(struct usb_interface *intf,
  	}
  
--	qi_submit_sync(iommu, &desc, 1, 0, NULL);
-+	qi_submit_sync(iommu, &desc, 1, 0, fault);
- }
+ 	uvc_dbg(dev, PROBE, "UVC device initialized\n");
++	if (dev->quirks & UVC_QUIRK_FORCE_RESUME)
++		udev->quirks &= ~USB_QUIRK_RESET_RESUME;
+ 	usb_enable_autosuspend(udev);
+ 	return 0;
  
- /* PASID-based device IOTLB Invalidate */
- void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu, u16 sid, u16 pfsid,
--			      u32 pasid,  u16 qdep, u64 addr, unsigned int size_order)
-+			      u32 pasid,  u16 qdep, u64 addr,
-+			      unsigned int size_order, u32 *fault)
- {
- 	unsigned long mask = 1UL << (VTD_PAGE_SHIFT + size_order - 1);
- 	struct qi_desc desc = {.qw1 = 0, .qw2 = 0, .qw3 = 0};
-@@ -1650,7 +1651,7 @@ void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu, u16 sid, u16 pfsid,
- 		desc.qw1 |= QI_DEV_EIOTLB_SIZE;
- 	}
+@@ -2574,6 +2577,24 @@ static const struct usb_device_id uvc_ids[] = {
+ 	  .bInterfaceSubClass	= 1,
+ 	  .bInterfaceProtocol	= 0,
+ 	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_RESTORE_CTRLS_ON_INIT) },
++	/* Logitech Rally Bar */
++	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++				| USB_DEVICE_ID_MATCH_INT_INFO,
++	  .idVendor		= 0x046d,
++	  .idProduct		= 0x089b,
++	  .bInterfaceClass	= USB_CLASS_VIDEO,
++	  .bInterfaceSubClass	= 1,
++	  .bInterfaceProtocol	= 0,
++	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_FORCE_RESUME) },
++	/* Logitech Rally Bar */
++	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
++				| USB_DEVICE_ID_MATCH_INT_INFO,
++	  .idVendor		= 0x046d,
++	  .idProduct		= 0x08d3,
++	  .bInterfaceClass	= USB_CLASS_VIDEO,
++	  .bInterfaceSubClass	= 1,
++	  .bInterfaceProtocol	= 0,
++	  .driver_info		= UVC_INFO_QUIRK(UVC_QUIRK_FORCE_RESUME) },
+ 	/* Chicony CNF7129 (Asus EEE 100HE) */
+ 	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
+ 				| USB_DEVICE_ID_MATCH_INT_INFO,
+diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+index 6fb0a78b1b00..fa59a21d2a28 100644
+--- a/drivers/media/usb/uvc/uvcvideo.h
++++ b/drivers/media/usb/uvc/uvcvideo.h
+@@ -73,6 +73,7 @@
+ #define UVC_QUIRK_FORCE_Y8		0x00000800
+ #define UVC_QUIRK_FORCE_BPP		0x00001000
+ #define UVC_QUIRK_WAKE_AUTOSUSPEND	0x00002000
++#define UVC_QUIRK_FORCE_RESUME		0x00004000
  
--	qi_submit_sync(iommu, &desc, 1, 0, NULL);
-+	qi_submit_sync(iommu, &desc, 1, 0, fault);
- }
- 
- void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did,
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index 897159dba47d..68e494f1d03a 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -1462,7 +1462,7 @@ static void __iommu_flush_dev_iotlb(struct device_domain_info *info,
- 	sid = info->bus << 8 | info->devfn;
- 	qdep = info->ats_qdep;
- 	qi_flush_dev_iotlb(info->iommu, sid, info->pfsid,
--			   qdep, addr, mask);
-+			   qdep, addr, mask, NULL);
- 	quirk_extra_dev_tlb_flush(info, addr, mask, IOMMU_NO_PASID, qdep);
- }
- 
-@@ -1490,7 +1490,7 @@ static void iommu_flush_dev_iotlb(struct dmar_domain *domain,
- 					 PCI_DEVID(info->bus, info->devfn),
- 					 info->pfsid, dev_pasid->pasid,
- 					 info->ats_qdep, addr,
--					 mask);
-+					 mask, NULL);
- 	}
- 	spin_unlock_irqrestore(&domain->lock, flags);
- }
-@@ -1505,10 +1505,10 @@ static void domain_flush_pasid_iotlb(struct intel_iommu *iommu,
- 
- 	spin_lock_irqsave(&domain->lock, flags);
- 	list_for_each_entry(dev_pasid, &domain->dev_pasids, link_domain)
--		qi_flush_piotlb(iommu, did, dev_pasid->pasid, addr, npages, ih);
-+		qi_flush_piotlb(iommu, did, dev_pasid->pasid, addr, npages, ih, NULL);
- 
- 	if (!list_empty(&domain->devices))
--		qi_flush_piotlb(iommu, did, IOMMU_NO_PASID, addr, npages, ih);
-+		qi_flush_piotlb(iommu, did, IOMMU_NO_PASID, addr, npages, ih, NULL);
- 	spin_unlock_irqrestore(&domain->lock, flags);
- }
- 
-@@ -5195,10 +5195,10 @@ void quirk_extra_dev_tlb_flush(struct device_domain_info *info,
- 	sid = PCI_DEVID(info->bus, info->devfn);
- 	if (pasid == IOMMU_NO_PASID) {
- 		qi_flush_dev_iotlb(info->iommu, sid, info->pfsid,
--				   qdep, address, mask);
-+				   qdep, address, mask, NULL);
- 	} else {
- 		qi_flush_dev_iotlb_pasid(info->iommu, sid, info->pfsid,
--					 pasid, qdep, address, mask);
-+					 pasid, qdep, address, mask, NULL);
- 	}
- }
- 
-diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
-index c6de958e4f54..ce9bd08dcd05 100644
---- a/drivers/iommu/intel/iommu.h
-+++ b/drivers/iommu/intel/iommu.h
-@@ -866,14 +866,14 @@ void qi_flush_context(struct intel_iommu *iommu, u16 did,
- void qi_flush_iotlb(struct intel_iommu *iommu, u16 did, u64 addr,
- 		    unsigned int size_order, u64 type);
- void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
--			u16 qdep, u64 addr, unsigned mask);
-+			u16 qdep, u64 addr, unsigned mask, u32 *fault);
- 
- void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u32 pasid, u64 addr,
--		     unsigned long npages, bool ih);
-+		     unsigned long npages, bool ih, u32 *fault);
- 
- void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu, u16 sid, u16 pfsid,
- 			      u32 pasid, u16 qdep, u64 addr,
--			      unsigned int size_order);
-+			      unsigned int size_order, u32 *fault);
- void quirk_extra_dev_tlb_flush(struct device_domain_info *info,
- 			       unsigned long address, unsigned long pages,
- 			       u32 pasid, u16 qdep);
-diff --git a/drivers/iommu/intel/pasid.c b/drivers/iommu/intel/pasid.c
-index 67f924760ba8..4a7fe551d8a6 100644
---- a/drivers/iommu/intel/pasid.c
-+++ b/drivers/iommu/intel/pasid.c
-@@ -492,9 +492,11 @@ devtlb_invalidation_with_pasid(struct intel_iommu *iommu,
- 	 * efficient to flush devTLB specific to the PASID.
- 	 */
- 	if (pasid == IOMMU_NO_PASID)
--		qi_flush_dev_iotlb(iommu, sid, pfsid, qdep, 0, 64 - VTD_PAGE_SHIFT);
-+		qi_flush_dev_iotlb(iommu, sid, pfsid, qdep, 0,
-+				   64 - VTD_PAGE_SHIFT, NULL);
- 	else
--		qi_flush_dev_iotlb_pasid(iommu, sid, pfsid, pasid, qdep, 0, 64 - VTD_PAGE_SHIFT);
-+		qi_flush_dev_iotlb_pasid(iommu, sid, pfsid, pasid, qdep, 0,
-+					 64 - VTD_PAGE_SHIFT, NULL);
- }
- 
- void intel_pasid_tear_down_entry(struct intel_iommu *iommu, struct device *dev,
-@@ -521,7 +523,7 @@ void intel_pasid_tear_down_entry(struct intel_iommu *iommu, struct device *dev,
- 	pasid_cache_invalidation_with_pasid(iommu, did, pasid);
- 
- 	if (pgtt == PASID_ENTRY_PGTT_PT || pgtt == PASID_ENTRY_PGTT_FL_ONLY)
--		qi_flush_piotlb(iommu, did, pasid, 0, -1, 0);
-+		qi_flush_piotlb(iommu, did, pasid, 0, -1, 0, NULL);
- 	else
- 		iommu->flush.flush_iotlb(iommu, did, 0, 0, DMA_TLB_DSI_FLUSH);
- 
-@@ -543,7 +545,7 @@ static void pasid_flush_caches(struct intel_iommu *iommu,
- 
- 	if (cap_caching_mode(iommu->cap)) {
- 		pasid_cache_invalidation_with_pasid(iommu, did, pasid);
--		qi_flush_piotlb(iommu, did, pasid, 0, -1, 0);
-+		qi_flush_piotlb(iommu, did, pasid, 0, -1, 0, NULL);
- 	} else {
- 		iommu_flush_write_buffer(iommu);
- 	}
-@@ -834,7 +836,7 @@ void intel_pasid_setup_page_snoop_control(struct intel_iommu *iommu,
- 	 *      Addr[63:12]=0x7FFFFFFF_FFFFF) to affected functions
- 	 */
- 	pasid_cache_invalidation_with_pasid(iommu, did, pasid);
--	qi_flush_piotlb(iommu, did, pasid, 0, -1, 0);
-+	qi_flush_piotlb(iommu, did, pasid, 0, -1, 0, NULL);
- 
- 	/* Device IOTLB doesn't need to be flushed in caching mode. */
- 	if (!cap_caching_mode(iommu->cap))
-diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index 660d049ad5b6..bf7b4c5c21f4 100644
---- a/drivers/iommu/intel/svm.c
-+++ b/drivers/iommu/intel/svm.c
-@@ -179,11 +179,11 @@ static void __flush_svm_range_dev(struct intel_svm *svm,
- 	if (WARN_ON(!pages))
- 		return;
- 
--	qi_flush_piotlb(sdev->iommu, sdev->did, svm->pasid, address, pages, ih);
-+	qi_flush_piotlb(sdev->iommu, sdev->did, svm->pasid, address, pages, ih, NULL);
- 	if (info->ats_enabled) {
- 		qi_flush_dev_iotlb_pasid(sdev->iommu, sdev->sid, info->pfsid,
- 					 svm->pasid, sdev->qdep, address,
--					 order_base_2(pages));
-+					 order_base_2(pages), NULL);
- 		quirk_extra_dev_tlb_flush(info, address, order_base_2(pages),
- 					  svm->pasid, sdev->qdep);
- 	}
-@@ -225,11 +225,11 @@ static void intel_flush_svm_all(struct intel_svm *svm)
- 	list_for_each_entry_rcu(sdev, &svm->devs, list) {
- 		info = dev_iommu_priv_get(sdev->dev);
- 
--		qi_flush_piotlb(sdev->iommu, sdev->did, svm->pasid, 0, -1UL, 0);
-+		qi_flush_piotlb(sdev->iommu, sdev->did, svm->pasid, 0, -1UL, 0, NULL);
- 		if (info->ats_enabled) {
- 			qi_flush_dev_iotlb_pasid(sdev->iommu, sdev->sid, info->pfsid,
- 						 svm->pasid, sdev->qdep,
--						 0, 64 - VTD_PAGE_SHIFT);
-+						 0, 64 - VTD_PAGE_SHIFT, NULL);
- 			quirk_extra_dev_tlb_flush(info, 0, 64 - VTD_PAGE_SHIFT,
- 						  svm->pasid, sdev->qdep);
- 		}
+ /* Format flags */
+ #define UVC_FMT_FLAG_COMPRESSED		0x00000001
+
+---
+base-commit: c0f65a7c112b3cfa691cead54bcf24d6cc2182b5
+change-id: 20231222-rallybar-19ce0c64d5e6
+
+Best regards,
 -- 
-2.34.1
+Ricardo Ribalda <ribalda@chromium.org>
 
