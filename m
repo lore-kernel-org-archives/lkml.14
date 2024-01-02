@@ -1,166 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EAD14F76
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Jan 2024 15:07:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD2E14F73;
+	Tue,  2 Jan 2024 15:07:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SXbvuShq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2808AC433C7;
-	Tue,  2 Jan 2024 15:07:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704208022;
-	bh=ngDURZBrEZ6nJ6PufU0TBhtE8mc4FbnsCbyVBq3BT6k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SXbvuShqZhDJsRcKp/SJ1c21pa875vVyuzNFjzDuV+HncxvShQ0x7h2TP3EBUbL8J
-	 XP09rSCbAXzE7JR2VTHdavFjL2zboylGd4qRnIUPSBjg38l/uokXnuIpRwhHG0A/Dk
-	 CWakqv+GgFXI+rpcZOsjyjKI5+NUgf/vr6kiVp7nREvLmWT691VTXiKHpdDM02VuiA
-	 AVGEYdYa2vSjrRQRKPpGarhMQ/MaQV5emRbyvS2eSKMr8zae6DtiGMVCdVbCwX2qIj
-	 WZ9BmmNLKYDQy2aadlDYW+LVoWrV5hQeqrYGoLBIXg///wHQOBuh8o+tTnEltb3AIP
-	 kKptNmqOAVXUw==
-From: Oded Gabbay <ogabbay@kernel.org>
-To: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: Dani Liberman <dliberman@habana.ai>
-Subject: [PATCH 2/6] accel/habanalabs/gaudi2: add interrupt affinity for user interrupts
-Date: Tue,  2 Jan 2024 17:06:50 +0200
-Message-Id: <20240102150654.522555-2-ogabbay@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240102150654.522555-1-ogabbay@kernel.org>
-References: <20240102150654.522555-1-ogabbay@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="K8s/TXnn"
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 402EI2Yt031896;
+	Tue, 2 Jan 2024 15:06:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=Oonp123cOdkP40iNRTSGS2eTt70BPLYr/b5oy9HIOrE=;
+ b=K8s/TXnnvnjYH/i63M4IJ8zJHQCU3LU4xpar5nz7GGtGeZerOuyW34Cj8fL58lx5Iit8
+ WnB6PXZkhxtXAeZi0CY7TRzm0EDR6AUQ3xJW29Bvo4gJHUe7CWUe8gMRy3CB73Cgm3WR
+ ZQ5Oo6ATzTFGZOeX/cXmPHTHsFNBKPuF0+nfL9EhIeUh8aguAoalQ/EorSBwwNdFa4UI
+ sMHsrO6BPYG7ripsJhjLkD66corKHhJjusWg/wT3VosjoIRVboLScyPTpOrPdvrF9zXN
+ Ys/N65xahMlVsqJiA5J2+C3VjzzpdhlzdRphqbtC/Tow93pb1wtpqDfHc+BP5aE1H9yD OQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vcm4k9a60-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jan 2024 15:06:46 +0000
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 402ETn6Y004810;
+	Tue, 2 Jan 2024 15:06:46 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vcm4k9a5g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jan 2024 15:06:46 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 402DoQfs017830;
+	Tue, 2 Jan 2024 15:06:45 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vawwynmw4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Jan 2024 15:06:45 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 402F6g4R22020754
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 2 Jan 2024 15:06:42 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4D94B20040;
+	Tue,  2 Jan 2024 15:06:42 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EA9552004D;
+	Tue,  2 Jan 2024 15:06:40 +0000 (GMT)
+Received: from osiris (unknown [9.171.22.30])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  2 Jan 2024 15:06:40 +0000 (GMT)
+Date: Tue, 2 Jan 2024 16:06:39 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, Marco Elver <elver@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vasily Gorbik <gor@linux.ibm.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Sven Schnelle <svens@linux.ibm.com>
+Subject: Re: [PATCH v3 30/34] s390/traps: Unpoison the
+ kernel_stack_overflow()'s pt_regs
+Message-ID: <20240102150639.6306-H-hca@linux.ibm.com>
+References: <20231213233605.661251-1-iii@linux.ibm.com>
+ <20231213233605.661251-31-iii@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231213233605.661251-31-iii@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: leYrbA6vtAty3KAE9ah14tjkk5Bn0Uhc
+X-Proofpoint-ORIG-GUID: utJWxtGOYHGAv9Kk1hnF_c8f7r1ax0vb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-02_04,2024-01-02_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ mlxlogscore=933 bulkscore=0 phishscore=0 adultscore=0 priorityscore=1501
+ mlxscore=0 suspectscore=0 lowpriorityscore=0 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401020115
 
-From: Dani Liberman <dliberman@habana.ai>
+On Thu, Dec 14, 2023 at 12:24:50AM +0100, Ilya Leoshkevich wrote:
+> This is normally done by the generic entry code, but the
+> kernel_stack_overflow() flow bypasses it.
+> 
+> Reviewed-by: Alexander Potapenko <glider@google.com>
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+> ---
+>  arch/s390/kernel/traps.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-User interrupts are MSIx interrupts coming from Gaudi2, that have
-specific range of IDs and are assigned to the sole use of the user
-process that opened the Gaudi2 device (reminder: there can be only
-a single user process running on Gaudi2 at any given time).
-
-The interrupts are allocated and managed by the driver and therefore,
-the user expects the driver to initialize them properly, which also
-includes setting the affinity to the related CPU cores of the
-device's NUMA node to get maximum performance.
-
-Signed-off-by: Dani Liberman <dliberman@habana.ai>
-Reviewed-by: Oded Gabbay <ogabbay@kernel.org>
-Signed-off-by: Oded Gabbay <ogabbay@kernel.org>
----
- drivers/accel/habanalabs/common/device.c     | 30 ++++++++++++++++++++
- drivers/accel/habanalabs/common/habanalabs.h |  5 ++++
- drivers/accel/habanalabs/gaudi2/gaudi2.c     |  5 ++++
- 3 files changed, 40 insertions(+)
-
-diff --git a/drivers/accel/habanalabs/common/device.c b/drivers/accel/habanalabs/common/device.c
-index e81ccafddfb3..514459396818 100644
---- a/drivers/accel/habanalabs/common/device.c
-+++ b/drivers/accel/habanalabs/common/device.c
-@@ -2807,3 +2807,33 @@ void hl_enable_err_info_capture(struct hl_error_info *captured_err_info)
- 	atomic_set(&captured_err_info->cs_timeout.write_enable, 1);
- 	captured_err_info->undef_opcode.write_enable = true;
- }
-+
-+void hl_init_cpu_for_irq(struct hl_device *hdev)
-+{
-+	struct cpumask *available_mask = &hdev->irq_affinity_mask;
-+	int numa_node = hdev->pdev->dev.numa_node, i;
-+	static struct cpumask cpu_mask;
-+
-+	if (numa_node < 0)
-+		return;
-+
-+	if (!cpumask_and(&cpu_mask, cpumask_of_node(numa_node), cpu_online_mask)) {
-+		dev_err(hdev->dev, "No available affinities in current numa node\n");
-+		return;
-+	}
-+
-+	/* Remove HT siblings */
-+	for_each_cpu(i, &cpu_mask)
-+		cpumask_set_cpu(cpumask_first(topology_sibling_cpumask(i)), available_mask);
-+}
-+
-+void hl_set_irq_affinity(struct hl_device *hdev, int irq)
-+{
-+	if (cpumask_empty(&hdev->irq_affinity_mask)) {
-+		dev_dbg(hdev->dev, "affinity mask is empty\n");
-+		return;
-+	}
-+
-+	if (irq_set_affinity_hint(irq, &hdev->irq_affinity_mask))
-+		dev_err(hdev->dev, "Failed setting irq %d affinity\n", irq);
-+}
-diff --git a/drivers/accel/habanalabs/common/habanalabs.h b/drivers/accel/habanalabs/common/habanalabs.h
-index 2a900c9941fe..b1a7b229e161 100644
---- a/drivers/accel/habanalabs/common/habanalabs.h
-+++ b/drivers/accel/habanalabs/common/habanalabs.h
-@@ -3257,6 +3257,7 @@ struct hl_reset_info {
-  * @clk_throttling: holds information about current/previous clock throttling events
-  * @captured_err_info: holds information about errors.
-  * @reset_info: holds current device reset information.
-+ * @irq_affinity_mask: mask of available CPU cores for user and decoder interrupt handling.
-  * @stream_master_qid_arr: pointer to array with QIDs of master streams.
-  * @fw_inner_major_ver: the major of current loaded preboot inner version.
-  * @fw_inner_minor_ver: the minor of current loaded preboot inner version.
-@@ -3446,6 +3447,8 @@ struct hl_device {
- 
- 	struct hl_reset_info		reset_info;
- 
-+	cpumask_t			irq_affinity_mask;
-+
- 	u32				*stream_master_qid_arr;
- 	u32				fw_inner_major_ver;
- 	u32				fw_inner_minor_ver;
-@@ -4032,6 +4035,8 @@ void hl_handle_critical_hw_err(struct hl_device *hdev, u16 event_id, u64 *event_
- void hl_handle_fw_err(struct hl_device *hdev, struct hl_info_fw_err_info *info);
- void hl_capture_engine_err(struct hl_device *hdev, u16 engine_id, u16 error_count);
- void hl_enable_err_info_capture(struct hl_error_info *captured_err_info);
-+void hl_init_cpu_for_irq(struct hl_device *hdev);
-+void hl_set_irq_affinity(struct hl_device *hdev, int irq);
- 
- #ifdef CONFIG_DEBUG_FS
- 
-diff --git a/drivers/accel/habanalabs/gaudi2/gaudi2.c b/drivers/accel/habanalabs/gaudi2/gaudi2.c
-index e0e5615ef9b0..fd01525b1ea2 100644
---- a/drivers/accel/habanalabs/gaudi2/gaudi2.c
-+++ b/drivers/accel/habanalabs/gaudi2/gaudi2.c
-@@ -4254,6 +4254,8 @@ static int gaudi2_enable_msix(struct hl_device *hdev)
- 	if (gaudi2->hw_cap_initialized & HW_CAP_MSIX)
- 		return 0;
- 
-+	hl_init_cpu_for_irq(hdev);
-+
- 	rc = pci_alloc_irq_vectors(hdev->pdev, GAUDI2_MSIX_ENTRIES, GAUDI2_MSIX_ENTRIES,
- 					PCI_IRQ_MSIX);
- 	if (rc < 0) {
-@@ -4307,6 +4309,7 @@ static int gaudi2_enable_msix(struct hl_device *hdev)
- 			i++, j++, user_irq_init_cnt++) {
- 
- 		irq = pci_irq_vector(hdev->pdev, i);
-+		hl_set_irq_affinity(hdev, irq);
- 		rc = request_irq(irq, hl_irq_user_interrupt_handler, 0, gaudi2_irq_name(i),
- 				&hdev->user_interrupt[j]);
- 		if (rc) {
-@@ -4333,6 +4336,7 @@ static int gaudi2_enable_msix(struct hl_device *hdev)
- 			i < GAUDI2_IRQ_NUM_USER_FIRST + user_irq_init_cnt ; i++, j++) {
- 
- 		irq = pci_irq_vector(hdev->pdev, i);
-+		irq_set_affinity_hint(irq, NULL);
- 		free_irq(irq, &hdev->user_interrupt[j]);
- 	}
- 	irq = pci_irq_vector(hdev->pdev, GAUDI2_IRQ_NUM_UNEXPECTED_ERROR);
-@@ -4413,6 +4417,7 @@ static void gaudi2_disable_msix(struct hl_device *hdev)
- 			k < hdev->asic_prop.user_interrupt_count ; i++, j++, k++) {
- 
- 		irq = pci_irq_vector(hdev->pdev, i);
-+		irq_set_affinity_hint(irq, NULL);
- 		free_irq(irq, &hdev->user_interrupt[j]);
- 	}
- 
--- 
-2.34.1
-
+Acked-by: Heiko Carstens <hca@linux.ibm.com>
