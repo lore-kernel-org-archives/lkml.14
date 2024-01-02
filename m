@@ -1,152 +1,116 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7099AD2F0;
-	Tue,  2 Jan 2024 09:53:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA33C8C4;
+	Tue,  2 Jan 2024 09:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="A4p/GRB8"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4029CRcE032503;
-	Tue, 2 Jan 2024 09:53:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=AYCtOkc+9831jYDs1FcN1a+YAqrskx92og3tUg087YU=;
- b=A4p/GRB8tYMsaukAXGbxqDfxjEzDvMEliKa8hYQmNs7BFfB6R65lKIZlu1ZUP6dFOAwL
- Xxby3Udype6QMnCQuDTf3KHkKxrEAj+/DDduq3C6UaPMRgq0ugPng8y33PySPOxcgZEn
- LomZMsH8RuEXqG8OMwVi0ul8ctQ6DWcU+1cFNKNZ31OmXhO3kQdfkOPBpGlCkoNGC9U3
- BwfiRx5CO47Bup0tjf3gtD4dGiqSkPOgi1RX2GU669QC+BF8TjSoCY2rIWpTQ1RgT3px
- lJ1TeRMssl4RX6wNf6Y5T++zZ1VV7N7bwLgOauzY8ahN7CAJBo5/COEe1W9W5so4wv1l wg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vcfn6rnnh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jan 2024 09:53:20 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4029Khff019456;
-	Tue, 2 Jan 2024 09:53:19 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vcfn6rnmx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jan 2024 09:53:19 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4029PIKJ024559;
-	Tue, 2 Jan 2024 09:53:18 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vb0823kb7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Jan 2024 09:53:18 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4029rGAI4915940
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 2 Jan 2024 09:53:16 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D25BB20040;
-	Tue,  2 Jan 2024 09:53:16 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 483AE20043;
-	Tue,  2 Jan 2024 09:53:16 +0000 (GMT)
-Received: from [9.171.21.141] (unknown [9.171.21.141])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  2 Jan 2024 09:53:16 +0000 (GMT)
-Message-ID: <2bf1b0cb-86af-4e00-a0aa-23e3944617a2@linux.ibm.com>
-Date: Tue, 2 Jan 2024 10:53:15 +0100
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OGJCQe8X"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4029rfb8004461;
+	Tue, 2 Jan 2024 03:53:41 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1704189221;
+	bh=74sdqSkVGxGgwTNR2R1XLLsqkxdGTod/LNAm1GoA48s=;
+	h=Date:CC:Subject:To:References:From:In-Reply-To;
+	b=OGJCQe8XSEJCKH187sP5V1JSoPpmqXv5QSaqH0w+uL79w3Qn/pevMwAD2ima0ji7B
+	 YBxZ3RVnGnkp4JaNUgIxZHPpZLmr5YoDkyGQbxT2c78xiaoh/R4DqsDi9Rw73RL6nF
+	 Z0KTo0uq+KjfRnpsiyu0NxCEyzkqHVEB+TMPSwbg=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4029rfDx070659
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 2 Jan 2024 03:53:41 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 2
+ Jan 2024 03:53:41 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 2 Jan 2024 03:53:41 -0600
+Received: from [10.249.131.186] ([10.249.131.186])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4029rbpD033320;
+	Tue, 2 Jan 2024 03:53:38 -0600
+Message-ID: <ff6c57ba-ff35-d7b4-482e-99673d202790@ti.com>
+Date: Tue, 2 Jan 2024 15:23:37 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [EXT] Re: [PATCH 1/2] net/iucv: Improve unlocking in
- iucv_enable()
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+CC: "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com"
+	<edumazet@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        <s-vadapalli@ti.com>
+Subject: Re: [PATCH 1/3] net: ethernet: ti: am65-cpsw: Fix max mtu to fit
+ ethernet frames
 Content-Language: en-US
-To: Suman Ghosh <sumang@marvell.com>, Markus Elfring <Markus.Elfring@web.de>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Wenjia Zhang <wenjia@linux.ibm.com>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <cde82080-c715-473c-97ac-6ef66bba6d64@web.de>
- <81f7db31-a258-4dc8-b6e1-c1ef1844a9d2@web.de>
- <SJ0PR18MB5216C27127E46490951A1E5DDB61A@SJ0PR18MB5216.namprd18.prod.outlook.com>
- <8123a895-c7dd-4a75-94bc-6f61639621eb@web.de>
- <SJ0PR18MB52168AC4B874C0B99BD37039DB61A@SJ0PR18MB5216.namprd18.prod.outlook.com>
-From: Alexandra Winter <wintera@linux.ibm.com>
-In-Reply-To: <SJ0PR18MB52168AC4B874C0B99BD37039DB61A@SJ0PR18MB5216.namprd18.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: C8uidfJ9Rbzq5X89ajyI9gGmOvlv4ngY
-X-Proofpoint-ORIG-GUID: F-_IGs_ztXSTS1-qI-16oqhFy018xpAq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-02_02,2024-01-01_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 bulkscore=0 malwarescore=0 spamscore=0 impostorscore=0
- priorityscore=1501 mlxscore=0 suspectscore=0 mlxlogscore=833 clxscore=1011
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401020075
+To: =?UTF-8?B?U2FuanXDoW4gR2FyY8OtYSwgSm9yZ2U=?=
+	<Jorge.SanjuanGarcia@duagon.com>
+References: <20240102081825.14635-1-jorge.sanjuangarcia@duagon.com>
+ <c025f2f9-ca2c-4fdb-adb1-803745fded0c.a613f387-0b3b-49fd-9401-3a0ed0c1f80e.61715cd4-eb1f-4175-83f7-1dd58ae46b17@emailsignatures365.codetwo.com>
+ <20240102081825.14635-2-jorge.sanjuangarcia@duagon.com>
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+In-Reply-To: <20240102081825.14635-2-jorge.sanjuangarcia@duagon.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
+Hello,
 
+On 02-01-2024 13:49, Sanjuán García, Jorge wrote:
+> The value of AM65_CPSW_MAX_PACKET_SIZE represents the maximum length
+> of a received frame. This value is written to the register
+> AM65_CPSW_PORT_REG_RX_MAXLEN.
+> 
+> The maximum MTU configured on the network device should then leave
+> some room for the ethernet headers and frame check. Otherwise, if
+> the network interface is configured to its maximum mtu possible,
+> the frames will be larger than AM65_CPSW_MAX_PACKET_SIZE and will
+> get dropped as oversized.
+> 
+> Fixes: 93a76530316a ("net: ethernet: ti: introduce am65x/j721e gigabit eth 
+> subsystem driver")
+> Signed-off-by: Jorge Sanjuan Garcia <jorge.sanjuangarcia@duagon.com>
 
-On 02.01.24 09:27, Suman Ghosh wrote:
->>> [Suman] This looks confusing. What is the issue with retaining the
->> original change?
->>
->> I propose to reduce the number of cpus_read_unlock() calls (in the
->> source code).
->>
->> Regards,
->> Markus
-> [Suman] Then I think we should do something like this. Changing the code flow back-and-forth using "goto" does not seem correct.
+Please use [PATCH net] as the subject prefix for patches which are
+posted as Bug Fixes. Apart from that, this patch looks good to me.
 
-I share Suman's concern that jumping backwards goto is confusing.
-But I think the Coccinelle finding of freeing a null-pointer should be addressed (see patch 2/2)
-Thank you Markus for reporting it.
+Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 
-The allocation does require holding the cpus_read_lock. 
-For some reason Markus wants to reduce the number of cpus_read_unlock() calls (why?),
-so what about something like this for both issues:
+> ---
+>   drivers/net/ethernet/ti/am65-cpsw-nuss.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c 
+> b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+> index 7651f90f51f2..378d69b8cb14 100644
+> --- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+> +++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+> @@ -2196,7 +2196,8 @@ am65_cpsw_nuss_init_port_ndev(struct am65_cpsw_common 
+> *common, u32 port_idx)
+>           eth_hw_addr_set(port->ndev, port->slave.mac_addr);
+> 
+>           port->ndev->min_mtu = AM65_CPSW_MIN_PACKET_SIZE;
+> -       port->ndev->max_mtu = AM65_CPSW_MAX_PACKET_SIZE;
+> +       port->ndev->max_mtu = AM65_CPSW_MAX_PACKET_SIZE -
+> +                             (VLAN_ETH_HLEN + ETH_FCS_LEN);
+>           port->ndev->hw_features = NETIF_F_SG |
+>                                     NETIF_F_RXCSUM |
+>                                     NETIF_F_HW_CSUM |
 
-diff --git a/net/iucv/iucv.c b/net/iucv/iucv.c
-index 0ed6e34d6edd..1030403b826b 100644
---- a/net/iucv/iucv.c
-+++ b/net/iucv/iucv.c
-@@ -542,24 +542,22 @@ static int iucv_enable(void)
-        size_t alloc_size;
-        int cpu, rc;
+...
 
--       cpus_read_lock();
--       rc = -ENOMEM;
-        alloc_size = iucv_max_pathid * sizeof(struct iucv_path);
-        iucv_path_table = kzalloc(alloc_size, GFP_KERNEL);
-        if (!iucv_path_table)
--               goto out;
-+               return -ENOMEM;
-        /* Declare per cpu buffers. */
--       rc = -EIO;
-+       cpus_read_lock();
-        for_each_online_cpu(cpu)
-                smp_call_function_single(cpu, iucv_declare_cpu, NULL, 1);
--       if (cpumask_empty(&iucv_buffer_cpumask))
-+       if (cpumask_empty(&iucv_buffer_cpumask)) {
-                /* No cpu could declare an iucv buffer. */
--               goto out;
--       cpus_read_unlock();
--       return 0;
--out:
--       kfree(iucv_path_table);
--       iucv_path_table = NULL;
-+               kfree(iucv_path_table);
-+               iucv_path_table = NULL;
-+               rc = -EIO;
-+       } else {
-+               rc = 0;
-+       }
-        cpus_read_unlock();
-        return rc;
- }
+-- 
+Regards,
+Siddharth.
