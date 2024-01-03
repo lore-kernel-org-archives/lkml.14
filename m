@@ -1,276 +1,101 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3DE1182AA
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 09:12:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA3D2C15;
-	Wed,  3 Jan 2024 01:13:31 -0800 (PST)
-Received: from [10.57.74.226] (unknown [10.57.74.226])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F2D73F7A6;
-	Wed,  3 Jan 2024 01:12:43 -0800 (PST)
-Message-ID: <7acefbe0-9413-48fd-ad98-56fecc6f29da@arm.com>
-Date: Wed, 3 Jan 2024 09:12:40 +0000
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB0F182AF;
+	Wed,  3 Jan 2024 09:12:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RgmJcQaY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704273168; x=1735809168;
+  h=from:to:cc:subject:date:message-id;
+  bh=gPf7rfKmzwzlXV8d5iHJVEkj1nA/mwcPl3PJ7L7K2SY=;
+  b=RgmJcQaYTdhtkAMWmVasSkGa3nwp9fdwGMzftKwiXfqQFi4oCdQotMp/
+   990xE/ePj+O2oY0hST05KlA+j6sRrzXS+hUNloz9YrdRFxCF2y/fbj3kr
+   cCvfBGRv79raVpmfNNcvo0u3EJ67tCJ5E8MD+42iU11/yEDhrTEw6fE7B
+   35zjStJQgtwxjY00MRPDVVzyx8sEy5rc4wQ13aln8YDhUl/4/yaVKw1Nj
+   NW6uafhp/pmwjK51rDMpMzayaSnGdfjNxRcpjf/yp/UCruEQth7BseTJX
+   OkZuIQf5cwhV42Hlx0TIANcBG2vD3/GY1KHocJF/cd4HqCbvb7rKK7K11
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="463386609"
+X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
+   d="scan'208";a="463386609"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 01:12:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="783445220"
+X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
+   d="scan'208";a="783445220"
+Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 01:12:45 -0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Cc: pbonzini@redhat.com,
+	seanjc@google.com,
+	shuah@kernel.org,
+	stevensd@chromium.org,
+	Yan Zhao <yan.y.zhao@intel.com>
+Subject: [RFC PATCH v2 0/3] KVM: allow mapping of compound tail pages for IO or PFNMAP mapping
+Date: Wed,  3 Jan 2024 16:43:27 +0800
+Message-Id: <20240103084327.19955-1-yan.y.zhao@intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/4] Enable >0 order folio memory compaction
-Content-Language: en-GB
-To: Zi Yan <ziy@nvidia.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- "Huang, Ying" <ying.huang@intel.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- David Hildenbrand <david@redhat.com>, "Yin, Fengwei"
- <fengwei.yin@intel.com>, Yu Zhao <yuzhao@google.com>,
- Vlastimil Babka <vbabka@suse.cz>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- Johannes Weiner <hannes@cmpxchg.org>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- Kemeng Shi <shikemeng@huaweicloud.com>,
- Mel Gorman <mgorman@techsingularity.net>, Rohan Puri
- <rohan.puri15@gmail.com>, Mcgrof Chamberlain <mcgrof@kernel.org>,
- Adam Manzanares <a.manzanares@samsung.com>,
- "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-References: <20231113170157.280181-1-zi.yan@sent.com>
- <1e7cf758-ac0e-4eda-a8e2-90db5eed7f7a@arm.com>
- <7ED1378A-AC39-48A2-8A2A-E06C7858DCE1@nvidia.com>
- <df51bbb7-f791-4747-9077-e9f7f37e9518@arm.com>
- <E22D7AC8-0891-4B4D-BB90-129B1CB77CB2@nvidia.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <E22D7AC8-0891-4B4D-BB90-129B1CB77CB2@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-On 02/01/2024 20:50, Zi Yan wrote:
-> On 21 Nov 2023, at 12:11, Ryan Roberts wrote:
-> 
->> On 21/11/2023 16:45, Zi Yan wrote:
->>> On 21 Nov 2023, at 10:46, Ryan Roberts wrote:
->>>
->>>>>
->>>>> vm-scalability results
->>>>> ===
->>>>>
->>>>> =========================================================================================
->>>>> compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
->>>>>   gcc-13/defconfig/debian/300s/qemu-vm/mmap-xread-seq-mt/vm-scalability
->>>>>
->>>>> commit:
->>>>>   6.6.0-rc4-mm-everything-2023-10-21-02-40+
->>>>>   6.6.0-rc4-split-folio-in-compaction+
->>>>>   6.6.0-rc4-folio-migration-in-compaction+
->>>>>   6.6.0-rc4-folio-migration-free-page-split+
->>>>>   6.6.0-rc4-folio-migration-free-page-split-sort-src+
->>>>>
->>>>> 6.6.0-rc4-mm-eve 6.6.0-rc4-split-folio-in-co 6.6.0-rc4-folio-migration-i 6.6.0-rc4-folio-migration-f 6.6.0-rc4-folio-migration-f
->>>>> ---------------- --------------------------- --------------------------- --------------------------- ---------------------------
->>>>>          %stddev     %change         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
->>>>>              \          |                \          |                \          |                \          |                \
->>>>>   12896955            +2.7%   13249322            -4.0%   12385175 ±  5%      +1.1%   13033951            -0.4%   12845698        vm-scalability.throughput
->>>>
->>>> Hi Zi,
->>>>
->>>> Are you able to add any commentary to these results as I'm struggling to
->>>> interpret them; Is a positive or negative change better (are they times or
->>>> rates?). What are the stddev values? The title suggests percent but the values
->>>> are huge - I'm trying to understand what the error bars look like - are the
->>>> swings real or noise?
->>>
->>> The metric is vm-scalability.throughput, so the larger the better. Some %stddev
->>> are not present since they are too small. For 6.6.0-rc4-folio-migration-in-compaction+,
->>> %stddev is greater than %change, so the change might be noise.
->>
->> Ahh got it - thanks!
->>
->>>
->>> Also, I talked to DavidH in last THP Cabal meeting about this. He suggested that
->>> there are a lot of noise in vm-scalability like what I have here and I should
->>> run more iterations and on bare metal. I am currently rerun them on a baremetal
->>> and more iterations on the existing VM and report the results later. Please
->>> note that the runs really take some time.
->>
->> Ahh ok, I'll wait for the bare metal numbers and will disregard these for now.
->> Thanks!
-> 
-> It seems that the unexpected big mmap-pread-seq-mt perf drop came from the mistake I
-> made in patch 1. After fixing that, mmap-pread-seq-mt perf only drops 0.5%. The new
-> results on top of 6.7.0-rc1-mm-everything-2023-11-15-00-17 are at the end of the email.
+This is a v2 for previous series [1] to allow mapping for compound tail
+pages for IO or PFNMAP mapping.
 
-Good news! I don't see the results for mmap-pread-seq-mt below - perhaps you
-forgot to include it?
+Compared to v1, this version provides selftest to check functionality in
+KVM to map memslots for MMIO BARs (VMAs with flag VM_IO | VM_PFNMAP), as
+requested by Sean in [1].
 
-> 
-> I am preparing v2 and will send it out soon.
-> 
-> =========================================================================================
-> compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
->   gcc-13/defconfig/debian/300s/qemu-vm/mmap-xread-seq-mt/vm-scalability
-> 
-> commit:
->   6.7.0-rc1-mm-everything-2023-11-15-00-17+
->   6.7.0-rc1-split-folio-in-compaction+
->   6.7.0-rc1-folio-migration-in-compaction+
->   6.7.0-rc1-folio-migration-free-page-split+
->   6.7.0-rc1-folio-migration-free-page-split-sort-src+
-> 
-> 6.7.0-rc1-mm-eve 6.7.0-rc1-split-folio-in-co 6.7.0-rc1-folio-migration-i 6.7.0-rc1-folio-migration-f 6.7.0-rc1-folio-migration-f
-> ---------------- --------------------------- --------------------------- --------------------------- ---------------------------
->          %stddev     %change         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
->              \          |                \          |                \          |                \          |                \
->   13041962           +16.1%   15142976            +5.0%   13690666 ±  6%      +6.7%   13920441            +5.5%   13762582        vm-scalability.throughput
+The selftest can also be used to test series "allow mapping non-refcounted
+pages" [2].
 
-I'm still not sure I'm interpretting this correctly; is %change always relative
-to 6.7.0-rc1-mm-everything-2023-11-15-00-17 or is it relative to the previous
-commit?
+Tag RFC is added because a test driver is introduced in patch 2, which is
+new to KVM selftest, and test "set_memory_region_io" in patch 3 depends on
+that the test driver is compiled and loaded in kernel.
+Besides, patch 3 calls vm_set_user_memory_region() directly without
+modifying vm_mem_add().
+So, this series is sent to ensure the main direction is right.
 
-If the former, then it looks like splitting the folios is actually faster than
-migrating them whole?
+Thanks
+Yan
+
+[1] https://lore.kernel.org/all/20230719083332.4584-1-yan.y.zhao@intel.com/
+[2] https://lore.kernel.org/all/20230911021637.1941096-1-stevensd@google.com/
+
+v2:
+added patch 2 and 3 to do selftest for patch 1 (Sean).
+
+Yan Zhao (3):
+  KVM: allow mapping of compound tail pages for IO or PFNMAP mapping
+  KVM: selftests: add selftest driver for KVM to test memory slots for
+    MMIO BARs
+  KVM: selftests: Add set_memory_region_io to test memslots for MMIO
+    BARs
+
+ lib/Kconfig.debug                             |  14 +
+ lib/Makefile                                  |   1 +
+ lib/test_kvm_mock_device.c                    | 281 ++++++++++++++++++
+ lib/test_kvm_mock_device_uapi.h               |  16 +
+ tools/testing/selftests/kvm/Makefile          |   1 +
+ .../selftests/kvm/set_memory_region_io.c      | 188 ++++++++++++
+ virt/kvm/kvm_main.c                           |   2 +-
+ 7 files changed, 502 insertions(+), 1 deletion(-)
+ create mode 100644 lib/test_kvm_mock_device.c
+ create mode 100644 lib/test_kvm_mock_device_uapi.h
+ create mode 100644 tools/testing/selftests/kvm/set_memory_region_io.c
 
 
-> 
-> =========================================================================================
-> compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
->   gcc-13/defconfig/debian/300s/qemu-vm/mmap-pread-seq/vm-scalability
-> 
-> commit:
->   6.7.0-rc1-mm-everything-2023-11-15-00-17+
->   6.7.0-rc1-split-folio-in-compaction+
->   6.7.0-rc1-folio-migration-in-compaction+
->   6.7.0-rc1-folio-migration-free-page-split+
->   6.7.0-rc1-folio-migration-free-page-split-sort-src+
-> 
-> 6.7.0-rc1-mm-eve 6.7.0-rc1-split-folio-in-co 6.7.0-rc1-folio-migration-i 6.7.0-rc1-folio-migration-f 6.7.0-rc1-folio-migration-f
-> ---------------- --------------------------- --------------------------- --------------------------- ---------------------------
->          %stddev     %change         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
->              \          |                \          |                \          |                \          |                \
->   14998168            -1.0%   14852803            -0.7%   14890569            -0.3%   14946766            -0.4%   14943302        vm-scalability.throughput
-> 
-> =========================================================================================
-> compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
->   gcc-13/defconfig/debian/300s/qemu-vm/lru-file-readtwice/vm-scalability
-> 
-> commit:
->   6.7.0-rc1-mm-everything-2023-11-15-00-17+
->   6.7.0-rc1-split-folio-in-compaction+
->   6.7.0-rc1-folio-migration-in-compaction+
->   6.7.0-rc1-folio-migration-free-page-split+
->   6.7.0-rc1-folio-migration-free-page-split-sort-src+
-> 
-> 6.7.0-rc1-mm-eve 6.7.0-rc1-split-folio-in-co 6.7.0-rc1-folio-migration-i 6.7.0-rc1-folio-migration-f 6.7.0-rc1-folio-migration-f
-> ---------------- --------------------------- --------------------------- --------------------------- ---------------------------
->          %stddev     %change         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
->              \          |                \          |                \          |                \          |                \
->    6750930 ±  7%     +41.5%    9549570 ±  2%     +31.6%    8883545 ±  2%     +33.1%    8982606 ±  2%     +30.7%    8821667 ±  3%  vm-scalability.throughput
-> 
-> =========================================================================================
-> compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
->   gcc-13/defconfig/debian/300s/qemu-vm/lru-file-mmap-read/vm-scalability
-> 
-> commit:
->   6.7.0-rc1-mm-everything-2023-11-15-00-17+
->   6.7.0-rc1-split-folio-in-compaction+
->   6.7.0-rc1-folio-migration-in-compaction+
->   6.7.0-rc1-folio-migration-free-page-split+
->   6.7.0-rc1-folio-migration-free-page-split-sort-src+
-> 
-> 6.7.0-rc1-mm-eve 6.7.0-rc1-split-folio-in-co 6.7.0-rc1-folio-migration-i 6.7.0-rc1-folio-migration-f 6.7.0-rc1-folio-migration-f
-> ---------------- --------------------------- --------------------------- --------------------------- ---------------------------
->          %stddev     %change         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
->              \          |                \          |                \          |                \          |                \
->    5818610 ± 14%     +43.1%    8329118 ±  2%     +26.0%    7331427 ±  4%     +23.2%    7170418 ±  4%     +22.8%    7147458 ±  4%  vm-scalability.throughput
-> 
-> =========================================================================================
-> compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
->   gcc-13/defconfig/debian/300s/qemu-vm/anon-r-rand/vm-scalability
-> 
-> commit:
->   6.7.0-rc1-mm-everything-2023-11-15-00-17+
->   6.7.0-rc1-split-folio-in-compaction+
->   6.7.0-rc1-folio-migration-in-compaction+
->   6.7.0-rc1-folio-migration-free-page-split+
->   6.7.0-rc1-folio-migration-free-page-split-sort-src+
-> 
-> 6.7.0-rc1-mm-eve 6.7.0-rc1-split-folio-in-co 6.7.0-rc1-folio-migration-i 6.7.0-rc1-folio-migration-f 6.7.0-rc1-folio-migration-f
-> ---------------- --------------------------- --------------------------- --------------------------- ---------------------------
->          %stddev     %change         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
->              \          |                \          |                \          |                \          |                \
->    1973808            -0.2%    1969617            -0.5%    1964376            +0.3%    1979245            +1.0%    1993677        vm-scalability.throughput
-> 
-> =========================================================================================
-> compiler/kconfig/rootfs/runtime/size/tbox_group/test/testcase:
->   gcc-13/defconfig/debian/300s/512G/qemu-vm/anon-w-rand/vm-scalability
-> 
-> commit:
->   6.7.0-rc1-mm-everything-2023-11-15-00-17+
->   6.7.0-rc1-split-folio-in-compaction+
->   6.7.0-rc1-folio-migration-in-compaction+
->   6.7.0-rc1-folio-migration-free-page-split+
->   6.7.0-rc1-folio-migration-free-page-split-sort-src+
-> 
-> 6.7.0-rc1-mm-eve 6.7.0-rc1-split-folio-in-co 6.7.0-rc1-folio-migration-i 6.7.0-rc1-folio-migration-f 6.7.0-rc1-folio-migration-f
-> ---------------- --------------------------- --------------------------- --------------------------- ---------------------------
->          %stddev     %change         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
->              \          |                \          |                \          |                \          |                \
->     479486            +0.3%     481036            +0.0%     479580            +2.3%     490310            +1.6%     487107        vm-scalability.throughput
-> 
-> =========================================================================================
-> compiler/kconfig/rootfs/runtime/size/tbox_group/test/testcase:
->   gcc-13/defconfig/debian/300s/512G/qemu-vm/anon-cow-rand/vm-scalability
-> 
-> commit:
->   6.7.0-rc1-mm-everything-2023-11-15-00-17+
->   6.7.0-rc1-split-folio-in-compaction+
->   6.7.0-rc1-folio-migration-in-compaction+
->   6.7.0-rc1-folio-migration-free-page-split+
->   6.7.0-rc1-folio-migration-free-page-split-sort-src+
-> 
-> 6.7.0-rc1-mm-eve 6.7.0-rc1-split-folio-in-co 6.7.0-rc1-folio-migration-i 6.7.0-rc1-folio-migration-f 6.7.0-rc1-folio-migration-f
-> ---------------- --------------------------- --------------------------- --------------------------- ---------------------------
->          %stddev     %change         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
->              \          |                \          |                \          |                \          |                \
->     453237            +1.2%     458580            +0.5%     455455            +2.6%     464830            +2.6%     465211        vm-scalability.throughput
-> 
-> =========================================================================================
-> compiler/kconfig/rootfs/runtime/size/tbox_group/test/testcase:
->   gcc-13/defconfig/debian/300s/256G/qemu-vm/msync/vm-scalability
-> 
-> commit:
->   6.7.0-rc1-mm-everything-2023-11-15-00-17+
->   6.7.0-rc1-split-folio-in-compaction+
->   6.7.0-rc1-folio-migration-in-compaction+
->   6.7.0-rc1-folio-migration-free-page-split+
->   6.7.0-rc1-folio-migration-free-page-split-sort-src+
-> 
-> 6.7.0-rc1-mm-eve 6.7.0-rc1-split-folio-in-co 6.7.0-rc1-folio-migration-i 6.7.0-rc1-folio-migration-f 6.7.0-rc1-folio-migration-f
-> ---------------- --------------------------- --------------------------- --------------------------- ---------------------------
->          %stddev     %change         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
->              \          |                \          |                \          |                \          |                \
->    1074404 ±  5%     +78.7%    1920268           +78.7%    1920270           +77.2%    1903612           +78.0%    1912223        vm-scalability.throughput
-> 
-> =========================================================================================
-> compiler/kconfig/rootfs/runtime/size/tbox_group/test/testcase:
->   gcc-13/defconfig/debian/300s/256G/qemu-vm/msync-mt/vm-scalability
-> 
-> commit:
->   6.7.0-rc1-mm-everything-2023-11-15-00-17+
->   6.7.0-rc1-split-folio-in-compaction+
->   6.7.0-rc1-folio-migration-in-compaction+
->   6.7.0-rc1-folio-migration-free-page-split+
->   6.7.0-rc1-folio-migration-free-page-split-sort-src+
-> 
-> 6.7.0-rc1-mm-eve 6.7.0-rc1-split-folio-in-co 6.7.0-rc1-folio-migration-i 6.7.0-rc1-folio-migration-f 6.7.0-rc1-folio-migration-f
-> ---------------- --------------------------- --------------------------- --------------------------- ---------------------------
->          %stddev     %change         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
->              \          |                \          |                \          |                \          |                \
->    2568988            +5.3%    2706227            +5.3%    2706214            +6.3%    2729716            +5.3%    2704539        vm-scalability.throughput
-> 
-> 
-> --
-> Best Regards,
-> Yan, Zi
+base-commit: 8ed26ab8d59111c2f7b86d200d1eb97d2a458fd1
+-- 
+2.17.1
 
