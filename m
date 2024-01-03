@@ -1,129 +1,78 @@
-Received: from mail.tkos.co.il (mail.tkos.co.il [84.110.109.230])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F881CA89
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 18:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tkos.co.il
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b="ktbiLOTW"
-Received: from localhost (unknown [10.0.8.3])
-	by mail.tkos.co.il (Postfix) with ESMTP id 5FDCA440A92;
-	Wed,  3 Jan 2024 20:47:20 +0200 (IST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
-	s=default; t=1704307640;
-	bh=TGqtNSqQzaT3LW4imqj4e0okddD35ScBH/nof2tytVY=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:From;
-	b=ktbiLOTWNHgYgoCMfabqvXLREuUI2x8zEHaLTHh6OnWDmRkQDb2xY8v2A1AA2Wbz/
-	 3iJv8lAtSOR3TaD2Jzc18AvIWc3wQNy+u7nqvv7A8M7TqIq0FsezN9kSK3ujqfjguP
-	 8RwFrT7lxIn7d04/f0AJ+9gYfwr3NAYJC8hJc+EBchZcEqrqGK1S/1UClae6I4cWbx
-	 B01MUQsACIjNa4GLJ5Oq3cuMGagKdXhzceak8a3MmNQdlNDZtfRUX2RBpbv9sUS2v5
-	 SgCZ8ErxMTQGC/iFTd5oTCkNicjxAq00JzY+4/7rDXUJGvqTsToFTPsn7MPBdYPjCv
-	 eTNJ2TtesVe9Q==
-References: <20240103170002.1793197-1-enachman@marvell.com>
-User-agent: mu4e 1.10.8; emacs 29.1
-From: Baruch Siach <baruch@tkos.co.il>
-To: Elad Nachman <enachman@marvell.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, thunder.leizhen@huawei.com,
- bhe@redhat.com, akpm@linux-foundation.org, yajun.deng@linux.dev,
- chris.zjh@huawei.com, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: mm: Fix SOCs with DDR starting above zero
-Date: Wed, 03 Jan 2024 20:47:17 +0200
-In-reply-to: <20240103170002.1793197-1-enachman@marvell.com>
-Message-ID: <87r0iy45ho.fsf@tarshish>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3204D1CA82;
+	Wed,  3 Jan 2024 18:49:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16542C433C8;
+	Wed,  3 Jan 2024 18:49:58 +0000 (UTC)
+Date: Wed, 3 Jan 2024 13:51:02 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] eventfs: Stop using dcache_readdir() for getdents()
+Message-ID: <20240103135102.38352956@gandalf.local.home>
+In-Reply-To: <CAHk-=wjVdGkjDXBbvLn2wbZnqP4UsH46E3gqJ9m7UG6DpX2+WA@mail.gmail.com>
+References: <20240103102553.17a19cea@gandalf.local.home>
+	<CAHk-=whrRobm82kcjwj625bZrdK+vvEo0B5PBzP+hVaBcHUkJA@mail.gmail.com>
+	<CAHk-=wjVdGkjDXBbvLn2wbZnqP4UsH46E3gqJ9m7UG6DpX2+WA@mail.gmail.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Elad,
+On Wed, 3 Jan 2024 10:38:09 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-On Wed, Jan 03 2024, Elad Nachman wrote:
-> From: Elad Nachman <enachman@marvell.com>
+> On Wed, 3 Jan 2024 at 10:12, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > Much better. Now eventfs looks more like a real filesystem, and less
+> > like an eldritch horror monster that is parts of dcache tackled onto a
+> > pseudo-filesystem.  
+> 
+> Oh, except I think you still need to just remove the 'set_gid()' mess.
+> 
+> It's disgusting and it's wrong, and it's not even what the 'uid'
+> option does (it only sets the root inode uid).
+> 
+> If you remount the filesystem with different gid values, you get to
+> keep both broken pieces. And if it isn't a remount, then setting the
+> root uid is sufficient.
+> 
+> I think the whole thing was triggered by commit 49d67e445742, and
+> maybe the fix is to just revert that commit.
+> 
+> That commit makes no sense in general, since the default mounting
+> position for tracefs that the kernel sets up is only accessible to
+> root anyway.
+> 
+> Alternatively, just do the ->permissions() thing, and allow access to
+> the group in the mount options.
+> 
+> Getting rid of set_gid() would be this attached lovely patch:
+> 
+>  fs/tracefs/inode.c | 83 ++----------------------------------------------------
+>  1 file changed, 2 insertions(+), 81 deletions(-)
+> 
+> and would get rid of the final (?) piece of disgusting dcache hackery
+> that tracefs most definitely should not have.
 >
-> Some SOCs, like the Marvell AC5/X/IM, have a combination
-> of DDR starting at 0x2_0000_0000 coupled with DMA controllers
-> limited to 31 and 32 bit of addressing.
-> This requires to properly arrange ZONE_DMA and ZONE_DMA32 for
-> these SOCs, so swiotlb and coherent DMA allocation would work
-> properly.
-> Change initialization so device tree dma zone bits are taken as
-> function of offset from DRAM start, and when calculating the
-> maximal zone physical RAM address for physical DDR starting above
-> 32-bit, combine the physical address start plus the zone mask
-> passed as parameter.
-> This creates the proper zone splitting for these SOCs:
-> 0..2GB for ZONE_DMA
-> 2GB..4GB for ZONE_DMA32
-> 4GB..8GB for ZONE_NORMAL
->
-> Signed-off-by: Elad Nachman <enachman@marvell.com>
 
-For an alternative approach see
+I'll look at that and play with it. I understand VFS much better now that I
+spent so much time with eventfs. That commit had to do with allowing OTH
+read access, which is a security issue as the trace files expose a lot of
+the kernel internals.
 
-  https://lore.kernel.org/all/cover.1703683642.git.baruch@tkos.co.il/
+I think these changes are a bit much for -rc8, don't you? Or do you want
+all this in before v6.7 is released. I'd be more comfortable with adding
+these changes in the upcoming merge window, where I can have more time
+playing with them.
 
-baruch
-
-> ---
->  arch/arm64/mm/init.c | 20 +++++++++++++++-----
->  1 file changed, 15 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index 74c1db8ce271..8288c778916e 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -115,20 +115,21 @@ static void __init arch_reserve_crashkernel(void)
->  
->  /*
->   * Return the maximum physical address for a zone accessible by the given bits
-> - * limit. If DRAM starts above 32-bit, expand the zone to the maximum
-> - * available memory, otherwise cap it at 32-bit.
-> + * limit. If DRAM starts above 32-bit, expand the zone to the available memory
-> + * start limited by the zone bits mask, otherwise cap it at 32-bit.
->   */
->  static phys_addr_t __init max_zone_phys(unsigned int zone_bits)
->  {
->  	phys_addr_t zone_mask = DMA_BIT_MASK(zone_bits);
->  	phys_addr_t phys_start = memblock_start_of_DRAM();
-> +	phys_addr_t phys_end = memblock_end_of_DRAM();
->  
->  	if (phys_start > U32_MAX)
-> -		zone_mask = PHYS_ADDR_MAX;
-> +		zone_mask = phys_start | zone_mask;
->  	else if (phys_start > zone_mask)
->  		zone_mask = U32_MAX;
->  
-> -	return min(zone_mask, memblock_end_of_DRAM() - 1) + 1;
-> +	return min(zone_mask, phys_end - 1) + 1;
->  }
->  
->  static void __init zone_sizes_init(void)
-> @@ -140,7 +141,16 @@ static void __init zone_sizes_init(void)
->  
->  #ifdef CONFIG_ZONE_DMA
->  	acpi_zone_dma_bits = fls64(acpi_iort_dma_get_max_cpu_address());
-> -	dt_zone_dma_bits = fls64(of_dma_get_max_cpu_address(NULL));
-> +	/*
-> +	 * When calculating the dma zone bits from the device tree, subtract
-> +	 * the DRAM start address, in case it does not start from address
-> +	 * zero. This way. we pass only the zone size related bits to
-> +	 * max_zone_phys(), which will add them to the base of the DRAM.
-> +	 * This prevents miscalculations on arm64 SOCs which combines
-> +	 * DDR starting above 4GB with memory controllers limited to
-> +	 * 32-bits or less:
-> +	 */
-> +	dt_zone_dma_bits = fls64(of_dma_get_max_cpu_address(NULL) - memblock_start_of_DRAM());
->  	zone_dma_bits = min3(32U, dt_zone_dma_bits, acpi_zone_dma_bits);
->  	arm64_dma_phys_limit = max_zone_phys(zone_dma_bits);
->  	max_zone_pfns[ZONE_DMA] = PFN_DOWN(arm64_dma_phys_limit);
-
-
--- 
-                                                     ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+-- Steve
