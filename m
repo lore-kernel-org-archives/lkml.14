@@ -1,231 +1,448 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C521A726;
-	Wed,  3 Jan 2024 15:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HTCVvdqZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CBF8C433C7;
-	Wed,  3 Jan 2024 15:22:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704295347;
-	bh=PSULNPafTiN5YA/zznHKljEYILe0lgiiOYnPvIBLCtU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=HTCVvdqZyxiXxnTanJVRMJKPFRpS9n90G2HKitP4aY/wBhmMUdJ53AsIa/Gyl/4Jz
-	 pLkz9apw4Rim6otI0sGhlUTS2iqiCWEa3hp739v+hUiMUAxOtvb33hj666Vi5bZvuJ
-	 fvzcGHlQMBAt1WqUkYrIWo8lfzxiLZ+8u19gY1e1W5JsS1XnH0xTngSdeOTujLwcKz
-	 VpAZNDzQG9AYcV+R6bZfBgwTehETca+wsNrozRuYNycZOxUS8ftq55ZRjIPN+t6yL+
-	 uuvihs48iNhQJaz1R9ps25naygJYNwSJTmPHLEZ05ePe1M3Kwgn1TzVDNt8unNxKHl
-	 Rh7pRU/LdxtMQ==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-50e7dd8bce8so7814459e87.1;
-        Wed, 03 Jan 2024 07:22:27 -0800 (PST)
-X-Gm-Message-State: AOJu0YzUi1J9e6raYk8qBu25AWdTjQj8yNYExQILFg09ecR+HPc3e6hu
-	wjf2zNutkE5Mx1h6kjXQYENWDt4R1Tk05unG83Q=
-X-Google-Smtp-Source: AGHT+IGFcFYO2J618BYFfSaaCdih8PzDV/WsOJ6Eg0j1h8wQdMvLsG1eT5V9WrmOXvxhn44h3RXmYuOstjkzgkiucVI=
-X-Received: by 2002:a05:6512:12cd:b0:50e:a08d:172 with SMTP id
- p13-20020a05651212cd00b0050ea08d0172mr1429415lfg.85.1704295345418; Wed, 03
- Jan 2024 07:22:25 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39F61A726;
+	Wed,  3 Jan 2024 15:24:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9DEDC433C8;
+	Wed,  3 Jan 2024 15:24:50 +0000 (UTC)
+Date: Wed, 3 Jan 2024 10:25:53 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Subject: [PATCH] eventfs: Stop using dcache_readdir() for getdents()
+Message-ID: <20240103102553.17a19cea@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230926194242.2732127-1-sjg@chromium.org> <20230926194242.2732127-2-sjg@chromium.org>
- <BN9PR11MB5483FF3039913334C7EA83E1E6AEA@BN9PR11MB5483.namprd11.prod.outlook.com>
- <CAMj1kXFG92NpL7T7YocOup0xLKyopt3MnSCp0RL8cLzozzJz7A@mail.gmail.com>
- <BN9PR11MB548303B09536EB1577472029E6B3A@BN9PR11MB5483.namprd11.prod.outlook.com>
- <CAPnjgZ36t8g7E=0MSJyaV8-QKv9RVYe47Jd5E=NU-mFM4LWBQA@mail.gmail.com>
- <CAMj1kXHAEeK7x2f13k_JV3Xcw61nNLasyvXQf+mKwKekQ48EpQ@mail.gmail.com>
- <BN9PR11MB548334E0DA6495C438FBFDE1E6BBA@BN9PR11MB5483.namprd11.prod.outlook.com>
- <BN9PR11MB548314DDE8D4C9503103D51CE6BBA@BN9PR11MB5483.namprd11.prod.outlook.com>
- <CAMj1kXHbM+ArLgNZgnmiok4gOfv6QLYxzyB9OCwfhEkJ2xGK_g@mail.gmail.com>
- <BN9PR11MB5483C2FBCD07DE61DCCDB523E6BCA@BN9PR11MB5483.namprd11.prod.outlook.com>
- <CAMj1kXHmu=ykgBMRiFqG4_ra3FJtHa=GASoMUJswdMFa9v4Xgw@mail.gmail.com>
- <BN9PR11MB54837EEB391CC2A8FA6C0BF5E695A@BN9PR11MB5483.namprd11.prod.outlook.com>
- <CAMj1kXEQL9n1Adedow5KEyZ5gdFQY3Fn+Fz8vSK3mHib_vDFig@mail.gmail.com> <BN9PR11MB5483E191F1906641565A1337E694A@BN9PR11MB5483.namprd11.prod.outlook.com>
-In-Reply-To: <BN9PR11MB5483E191F1906641565A1337E694A@BN9PR11MB5483.namprd11.prod.outlook.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 3 Jan 2024 16:22:14 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXGcZP99hyURXFAZfwKmYqj-xBN9BcW7R3h9Mm2k937Buw@mail.gmail.com>
-Message-ID: <CAMj1kXGcZP99hyURXFAZfwKmYqj-xBN9BcW7R3h9Mm2k937Buw@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] schemas: Add some common reserved-memory usages
-To: "Chiu, Chasel" <chasel.chiu@intel.com>
-Cc: Simon Glass <sjg@chromium.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Rob Herring <robh@kernel.org>, "Tan, Lean Sheng" <sheng.tan@9elements.com>, 
-	lkml <linux-kernel@vger.kernel.org>, Dhaval Sharma <dhaval@rivosinc.com>, 
-	"Brune, Maximilian" <maximilian.brune@9elements.com>, Yunhui Cui <cuiyunhui@bytedance.com>, 
-	"Dong, Guo" <guo.dong@intel.com>, Tom Rini <trini@konsulko.com>, 
-	ron minnich <rminnich@gmail.com>, "Guo, Gua" <gua.guo@intel.com>, 
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, U-Boot Mailing List <u-boot@lists.denx.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 22 Dec 2023 at 20:52, Chiu, Chasel <chasel.chiu@intel.com> wrote:
->
->
-> Please see my reply below inline.
->
-> Thanks,
-> Chasel
->
-...
-> > > > The gEfiMemoryTypeInformationGuid HOB typically carries platform
-> > > > defaults, and the actual memory type information is kept in a
-> > > > non-volatile EFI variable, which gets updated when the memory usage
-> > > > changes. Is this different for UefiPayloadPkg?
-> > > >
-> > > > (For those among the cc'ees less versed in EFI/EDK2: when you get
-> > > > the 'config changed -rebooting' message from the boot firmware, it
-> > > > typically means that this memory type table has changed, and a
-> > > > reboot is necessary.)
-> > > >
-> > > > So the platform init needs to read this variable, or get the
-> > > > information in a different way. I assume it is the payload, not the
-> > > > platform init that updates the variable when necessary. This means
-> > > > the information flows from payload(n) to platform init(n+1), where =
-n
-> > > > is a monotonic index tracking consecutive boots of the system.
-> > > >
-> > > > Can you explain how the DT fits into this? How are the runtime-code
-> > > > and runtime-data memory reservation nodes under /reserved-memory
-> > > > used to implement this information exchange between platform init
-> > > > and payload? And how do the HOB and the EFI variable fit into this =
-picture?
-> > >
-> > >
-> > > 1. With some offline discussion, we would move
-> > > gEfiMemoryTypeInformationGuid usage to FDT->upl-custom node. This is
-> > > because it is edk2 implementation choice and non-edk2 PlatformInit or
-> > > Payload may not have such memory optimization implementation. (not a
-> > > generic usage/requirement for PlatformInit and Payload)
-> > >
-> > > The edk2 example flow will be like below:
-> > >
-> > > PlatformInit to GetVariable of gEfiMemoryTypeInformationGuid and crea=
-te Hob-
-> > >
-> > >   PlatformInit to initialize FDT->upl-custom node to report
-> > gEfiMemoryTypeInformationGuid HOB information ->
-> > >     UefiPayload entry to re-create gEfiMemoryTypeInformationGuid HOB =
-basing
-> > on FDT input (instead of the default MemoryType inside UefiPayload) ->
-> > >       UefiPayload DxeMain/Gcd will consume gEfiMemoryTypeInformationG=
-uid
-> > Hob for memory type information ->
-> > >         UefiPayload to initialize UEFI environment (mainly DXE dispat=
-cher) ->
-> > >           (additional FV binary appended to common UefiPayload binary=
-)
-> > PlatformPayload to provide VariableService which is platform specific -=
->
-> > >             UefiPayload UefiBootManager will SetVariable if memory ty=
-pe change
-> > needed and request a warm reset ->
-> > >               Back to PlatformInit ...
-> > >
-> >
-> > OK so the upl-custom node can do whatever it needs to. I imagine these =
-will
-> > include the memory descriptor attribute field, and other parts that may=
- be missing
-> > from the /reserved-memory DT node specification?
->
->
-> Yes, if needed by edk2 specific implementation, not generic enough, we ma=
-y consider to use upl-custom node to pass those data.
->
->
-> >
-> > >
-> > > 2. Now the proposed reserved-memory node usages will be for PlatformI=
-nit to
-> > provide data which may be used by Payload or OS. This is not edk2 speci=
-fic and
-> > any PlatformInit/Payload could have same support.
-> > > Note: all of below are optional and PlatformInit may choose to implem=
-ent some
-> > of them or not.
-> > >
-> > >       - acpi
-> > > If PlatformInit created some ACPI tables, this will report a memory r=
-egion which
-> > contains all the tables to Payload and Payload may base on this to add =
-some more
-> > tables if required.
-> > >
-> > >       - acpi-nvs
-> > > If PlatformInit has created some ACPI tables which having ACPI NVS me=
-mory
-> > dependency, this will be that nvs region.
-> > >
-> >
-> > These make sense.
-> >
-> > >       - boot-code
-> > > When PlatformInit having some FW boot phase code that could be freed
-> > > for OS to use when payload transferring control to UEFI OS
-> > >
-> > >       - boot-data
-> > > When PlatformInit having some FW boot phase data that could be freed =
-for OS
-> > to use when payload transferring control to UEFI OS.
-> > >
-> > >       - runtime-code
-> > > PlatformInit may provide some services code that can be used for Payl=
-oad to
-> > initialize UEFI Runtime Services for supporting UEFI OS.
-> > >
-> > >       - runtime-data
-> > > PlatformInit may provide some services data that can be used for Payl=
-oad to
-> > Initialize UEFI Runtime Services for supporting UEFI OS.
-> > >
-> >
-> > A UEFI OS must consume this information from the UEFI memory map, not f=
-rom
-> > the /reserved-memory nodes. So these nodes must either not be visible t=
-o the OS
-> > at all, or carry an annotation that the OS must ignore them.
-> >
-> > Would it be possible to include a restriction in the DT schema that the=
-se are only
-> > valid in the firmware boot phase?
->
->
-> https://uefi.org/specs/UEFI/2.10/07_Services_Boot_Services.html#efi-boot-=
-services-exitbootservices
-> Per UEFI specification, UEFI OS will always call UEFI GetMemoryMap functi=
-on to retrieve memory map, so FDT node present or not does not matter to UE=
-FI OS. We probably could have annotation in UPL specification to emphasize =
-this.
-> I'm not familiar with Linux FDT boot, but if non-UEFI OS does not call UE=
-FI GetMemoryMap() and does not know what is runtime-code/data, boot-code/da=
-ta, it might just treat such reserved-memory nodes as 'regular' reserved me=
-mory nodes, and that's still ok because non-UEFI OS will not call to any ru=
-ntime service or re-purpose boot-code/data memory regions.
->
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-You are saying the same thing but in a different way. A UEFI OS must
-only rely on GetMemoryMap(), and not on the /reserved-memory node to
-obtain this information. But this requirement needs to be stated
-somewhere: the UEFI spec does not reason about other sources of EFI
-memory information at all, and this DT schema does not mention any of
-this either.
+The eventfs creates dynamically allocated dentries and inodes. Using the
+dcache_readdir() logic for its own directory lookups requires hiding the
+cursor of the dcache logic and playing games to allow the dcache_readdir()
+to still have access to the cursor while the eventfs saved what it created
+and what it needs to release.
 
-> Would you provide a real OS case which will be impacted by this reserved-=
-memory schema so we can discuss basing on real case?
->
+Instead, just have eventfs have its own iterate_shared callback function
+that will fill in the dent entries. This simplifies the code quite a bit.
 
-Funny, that is what I have been trying to get from you :-)
+Also, remove the "lookup" parameter to the create_file/dir_dentry() and
+always have it return a dentry that has its ref count incremented, and
+have the caller call the dput. This simplifies that code as well.
 
-The problem I am anticipating here is that the information in
-/reserved-memory may be out of sync with the EFI memory map. It needs
-to be made clear that the EFI memory map is the only source of truth
-when the OS is involved, and this /reserved-memory mechanism should
-only be used by other firmware stages. But the schema does not mention
-this at all. The schema also does not mention that the information in
-/reserved-memory is not actually sufficient to reconstruct the EFI
-memory map that the firmware payload expects (which is why the
-upl-custom-node exists too)
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/tracefs/event_inode.c | 237 +++++++++++++--------------------------
+ 1 file changed, 78 insertions(+), 159 deletions(-)
+
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index f0677ea0ec24..53d34a4b5a2b 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -52,9 +52,7 @@ enum {
+ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 					  struct dentry *dentry,
+ 					  unsigned int flags);
+-static int dcache_dir_open_wrapper(struct inode *inode, struct file *file);
+-static int dcache_readdir_wrapper(struct file *file, struct dir_context *ctx);
+-static int eventfs_release(struct inode *inode, struct file *file);
++static int eventfs_iterate(struct file *file, struct dir_context *ctx);
+ 
+ static void update_attr(struct eventfs_attr *attr, struct iattr *iattr)
+ {
+@@ -148,11 +146,9 @@ static const struct inode_operations eventfs_file_inode_operations = {
+ };
+ 
+ static const struct file_operations eventfs_file_operations = {
+-	.open		= dcache_dir_open_wrapper,
+ 	.read		= generic_read_dir,
+-	.iterate_shared	= dcache_readdir_wrapper,
++	.iterate_shared	= eventfs_iterate,
+ 	.llseek		= generic_file_llseek,
+-	.release	= eventfs_release,
+ };
+ 
+ /* Return the evenfs_inode of the "events" directory */
+@@ -390,16 +386,14 @@ void eventfs_set_ei_status_free(struct tracefs_inode *ti, struct dentry *dentry)
+  * @mode: The mode of the file.
+  * @data: The data to use to set the inode of the file with on open()
+  * @fops: The fops of the file to be created.
+- * @lookup: If called by the lookup routine, in which case, dput() the created dentry.
+  *
+  * Create a dentry for a file of an eventfs_inode @ei and place it into the
+- * address located at @e_dentry. If the @e_dentry already has a dentry, then
+- * just do a dget() on it and return. Otherwise create the dentry and attach it.
++ * address located at @e_dentry.
+  */
+ static struct dentry *
+ create_file_dentry(struct eventfs_inode *ei, int idx,
+ 		   struct dentry *parent, const char *name, umode_t mode, void *data,
+-		   const struct file_operations *fops, bool lookup)
++		   const struct file_operations *fops)
+ {
+ 	struct eventfs_attr *attr = NULL;
+ 	struct dentry **e_dentry = &ei->d_children[idx];
+@@ -414,9 +408,7 @@ create_file_dentry(struct eventfs_inode *ei, int idx,
+ 	}
+ 	/* If the e_dentry already has a dentry, use it */
+ 	if (*e_dentry) {
+-		/* lookup does not need to up the ref count */
+-		if (!lookup)
+-			dget(*e_dentry);
++		dget(*e_dentry);
+ 		mutex_unlock(&eventfs_mutex);
+ 		return *e_dentry;
+ 	}
+@@ -441,13 +433,12 @@ create_file_dentry(struct eventfs_inode *ei, int idx,
+ 		 * way to being freed, don't return it. If e_dentry is NULL
+ 		 * it means it was already freed.
+ 		 */
+-		if (ei->is_freed)
++		if (ei->is_freed) {
+ 			dentry = NULL;
+-		else
++		} else {
+ 			dentry = *e_dentry;
+-		/* The lookup does not need to up the dentry refcount */
+-		if (dentry && !lookup)
+ 			dget(dentry);
++		}
+ 		mutex_unlock(&eventfs_mutex);
+ 		return dentry;
+ 	}
+@@ -465,9 +456,6 @@ create_file_dentry(struct eventfs_inode *ei, int idx,
+ 	}
+ 	mutex_unlock(&eventfs_mutex);
+ 
+-	if (lookup)
+-		dput(dentry);
+-
+ 	return dentry;
+ }
+ 
+@@ -500,13 +488,12 @@ static void eventfs_post_create_dir(struct eventfs_inode *ei)
+  * @pei: The eventfs_inode parent of ei.
+  * @ei: The eventfs_inode to create the directory for
+  * @parent: The dentry of the parent of this directory
+- * @lookup: True if this is called by the lookup code
+  *
+  * This creates and attaches a directory dentry to the eventfs_inode @ei.
+  */
+ static struct dentry *
+ create_dir_dentry(struct eventfs_inode *pei, struct eventfs_inode *ei,
+-		  struct dentry *parent, bool lookup)
++		  struct dentry *parent)
+ {
+ 	struct dentry *dentry = NULL;
+ 
+@@ -520,9 +507,7 @@ create_dir_dentry(struct eventfs_inode *pei, struct eventfs_inode *ei,
+ 	if (ei->dentry) {
+ 		/* If the dentry already has a dentry, use it */
+ 		dentry = ei->dentry;
+-		/* lookup does not need to up the ref count */
+-		if (!lookup)
+-			dget(dentry);
++		dget(dentry);
+ 		mutex_unlock(&eventfs_mutex);
+ 		return dentry;
+ 	}
+@@ -542,7 +527,7 @@ create_dir_dentry(struct eventfs_inode *pei, struct eventfs_inode *ei,
+ 		 * way to being freed.
+ 		 */
+ 		dentry = ei->dentry;
+-		if (dentry && !lookup)
++		if (dentry)
+ 			dget(dentry);
+ 		mutex_unlock(&eventfs_mutex);
+ 		return dentry;
+@@ -562,9 +547,6 @@ create_dir_dentry(struct eventfs_inode *pei, struct eventfs_inode *ei,
+ 	}
+ 	mutex_unlock(&eventfs_mutex);
+ 
+-	if (lookup)
+-		dput(dentry);
+-
+ 	return dentry;
+ }
+ 
+@@ -589,8 +571,8 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 	struct eventfs_inode *ei;
+ 	struct dentry *ei_dentry = NULL;
+ 	struct dentry *ret = NULL;
++	struct dentry *d;
+ 	const char *name = dentry->d_name.name;
+-	bool created = false;
+ 	umode_t mode;
+ 	void *data;
+ 	int idx;
+@@ -626,13 +608,10 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 		ret = simple_lookup(dir, dentry, flags);
+ 		if (IS_ERR(ret))
+ 			goto out;
+-		create_dir_dentry(ei, ei_child, ei_dentry, true);
+-		created = true;
+-		break;
+-	}
+-
+-	if (created)
++		d = create_dir_dentry(ei, ei_child, ei_dentry);
++		dput(d);
+ 		goto out;
++	}
+ 
+ 	for (i = 0; i < ei->nr_entries; i++) {
+ 		entry = &ei->entries[i];
+@@ -650,8 +629,8 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 			ret = simple_lookup(dir, dentry, flags);
+ 			if (IS_ERR(ret))
+ 				goto out;
+-			create_file_dentry(ei, i, ei_dentry, name, mode, cdata,
+-					   fops, true);
++			d = create_file_dentry(ei, i, ei_dentry, name, mode, cdata, fops);
++			dput(d);
+ 			break;
+ 		}
+ 	}
+@@ -660,127 +639,82 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 	return ret;
+ }
+ 
+-struct dentry_list {
+-	void			*cursor;
+-	struct dentry		**dentries;
+-};
+-
+-/**
+- * eventfs_release - called to release eventfs file/dir
+- * @inode: inode to be released
+- * @file: file to be released (not used)
+- */
+-static int eventfs_release(struct inode *inode, struct file *file)
+-{
+-	struct tracefs_inode *ti;
+-	struct dentry_list *dlist = file->private_data;
+-	void *cursor;
+-	int i;
+-
+-	ti = get_tracefs(inode);
+-	if (!(ti->flags & TRACEFS_EVENT_INODE))
+-		return -EINVAL;
+-
+-	if (WARN_ON_ONCE(!dlist))
+-		return -EINVAL;
+-
+-	for (i = 0; dlist->dentries && dlist->dentries[i]; i++) {
+-		dput(dlist->dentries[i]);
+-	}
+-
+-	cursor = dlist->cursor;
+-	kfree(dlist->dentries);
+-	kfree(dlist);
+-	file->private_data = cursor;
+-	return dcache_dir_close(inode, file);
+-}
+-
+-static int add_dentries(struct dentry ***dentries, struct dentry *d, int cnt)
+-{
+-	struct dentry **tmp;
+-
+-	tmp = krealloc(*dentries, sizeof(d) * (cnt + 2), GFP_NOFS);
+-	if (!tmp)
+-		return -1;
+-	tmp[cnt] = d;
+-	tmp[cnt + 1] = NULL;
+-	*dentries = tmp;
+-	return 0;
+-}
+-
+-/**
+- * dcache_dir_open_wrapper - eventfs open wrapper
+- * @inode: not used
+- * @file: dir to be opened (to create it's children)
+- *
+- * Used to dynamic create file/dir with-in @file, all the
+- * file/dir will be created. If already created then references
+- * will be increased
++/*
++ * Walk the children of a eventfs_inode to fill in getdents().
+  */
+-static int dcache_dir_open_wrapper(struct inode *inode, struct file *file)
++static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ {
+ 	const struct file_operations *fops;
++	struct inode *f_inode = file_inode(file);
+ 	const struct eventfs_entry *entry;
+ 	struct eventfs_inode *ei_child;
+ 	struct tracefs_inode *ti;
+ 	struct eventfs_inode *ei;
+-	struct dentry_list *dlist;
+-	struct dentry **dentries = NULL;
+-	struct dentry *parent = file_dentry(file);
+-	struct dentry *d;
+-	struct inode *f_inode = file_inode(file);
+-	const char *name = parent->d_name.name;
++	struct dentry *ei_dentry = NULL;
++	struct dentry *dentry;
++	const char *name;
+ 	umode_t mode;
+-	void *data;
+-	int cnt = 0;
+ 	int idx;
+-	int ret;
+-	int i;
+-	int r;
++	int ret = -EINVAL;
++	int ino;
++	int i, r, c;
++
++	if (!dir_emit_dots(file, ctx))
++		return 0;
+ 
+ 	ti = get_tracefs(f_inode);
+ 	if (!(ti->flags & TRACEFS_EVENT_INODE))
+ 		return -EINVAL;
+ 
+-	if (WARN_ON_ONCE(file->private_data))
+-		return -EINVAL;
++	c = ctx->pos - 2;
+ 
+ 	idx = srcu_read_lock(&eventfs_srcu);
+ 
+ 	mutex_lock(&eventfs_mutex);
+ 	ei = READ_ONCE(ti->private);
++	if (ei && !ei->is_freed)
++		ei_dentry = READ_ONCE(ei->dentry);
+ 	mutex_unlock(&eventfs_mutex);
+ 
+-	if (!ei) {
+-		srcu_read_unlock(&eventfs_srcu, idx);
+-		return -EINVAL;
+-	}
+-
+-
+-	data = ei->data;
++	if (!ei || !ei_dentry)
++		goto out;
+ 
+-	dlist = kmalloc(sizeof(*dlist), GFP_KERNEL);
+-	if (!dlist) {
+-		srcu_read_unlock(&eventfs_srcu, idx);
+-		return -ENOMEM;
+-	}
++	ret = 0;
+ 
+-	inode_lock(parent->d_inode);
++	/*
++	 * Need to create the dentries and inodes to have a consistent
++	 * inode number.
++	 */
+ 	list_for_each_entry_srcu(ei_child, &ei->children, list,
+ 				 srcu_read_lock_held(&eventfs_srcu)) {
+-		d = create_dir_dentry(ei, ei_child, parent, false);
+-		if (d) {
+-			ret = add_dentries(&dentries, d, cnt);
+-			if (ret < 0)
+-				break;
+-			cnt++;
++
++		if (ei_child->is_freed)
++			continue;
++
++		name = ei_child->name;
++
++		dentry = create_dir_dentry(ei, ei_child, ei_dentry);
++		if (!dentry)
++			goto out;
++		ino = dentry->d_inode->i_ino;
++		dput(dentry);
++
++		if (c > 0) {
++			c--;
++			continue;
+ 		}
++
++		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR))
++			goto out;
++		ctx->pos++;
+ 	}
+ 
+ 	for (i = 0; i < ei->nr_entries; i++) {
+-		void *cdata = data;
++		void *cdata = ei->data;
++
+ 		entry = &ei->entries[i];
+ 		name = entry->name;
++
+ 		mutex_lock(&eventfs_mutex);
+ 		/* If ei->is_freed, then the event itself may be too */
+ 		if (!ei->is_freed)
+@@ -790,41 +724,26 @@ static int dcache_dir_open_wrapper(struct inode *inode, struct file *file)
+ 		mutex_unlock(&eventfs_mutex);
+ 		if (r <= 0)
+ 			continue;
+-		d = create_file_dentry(ei, i, parent, name, mode, cdata, fops, false);
+-		if (d) {
+-			ret = add_dentries(&dentries, d, cnt);
+-			if (ret < 0)
+-				break;
+-			cnt++;
++
++		dentry = create_file_dentry(ei, i, ei_dentry, name, mode, cdata, fops);
++		if (!dentry)
++			goto out;
++		ino = dentry->d_inode->i_ino;
++		dput(dentry);
++
++		if (c > 0) {
++			c--;
++			continue;
+ 		}
++
++		if (!dir_emit(ctx, name, strlen(name), ino, DT_REG))
++			goto out;
++		ctx->pos++;
+ 	}
+-	inode_unlock(parent->d_inode);
++	ret = 1;
++ out:
+ 	srcu_read_unlock(&eventfs_srcu, idx);
+-	ret = dcache_dir_open(inode, file);
+-
+-	/*
+-	 * dcache_dir_open() sets file->private_data to a dentry cursor.
+-	 * Need to save that but also save all the dentries that were
+-	 * opened by this function.
+-	 */
+-	dlist->cursor = file->private_data;
+-	dlist->dentries = dentries;
+-	file->private_data = dlist;
+-	return ret;
+-}
+-
+-/*
+- * This just sets the file->private_data back to the cursor and back.
+- */
+-static int dcache_readdir_wrapper(struct file *file, struct dir_context *ctx)
+-{
+-	struct dentry_list *dlist = file->private_data;
+-	int ret;
+ 
+-	file->private_data = dlist->cursor;
+-	ret = dcache_readdir(file, ctx);
+-	dlist->cursor = file->private_data;
+-	file->private_data = dlist;
+ 	return ret;
+ }
+ 
+-- 
+2.42.0
+
