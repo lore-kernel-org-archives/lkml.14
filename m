@@ -1,171 +1,74 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079B218E00
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 10:47:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q88nAwV3"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d4ba539f6cso16700565ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 02:47:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704278823; x=1704883623; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YcomVPZKfMGPSapPmMcKFhoGRvIlj/vDUxSMo893ZHM=;
-        b=Q88nAwV358ImRo9NxQvURw6r8yQtcMULqrWmXOsqBDIerESmW2jyNTiPbuAfpYwdCj
-         ihc22JWGLT6NQJPlo+5+SbsuncaU4P2GNRFiK3+55c5r5UT0PHm9CUQ/lc5GNxTYdVRQ
-         /rdMA0blWNFkZEI3kY3jHJTB+TS99uVBw5i6Q2pybG/5v/ythtwMh0lc4PSEsi0RqD59
-         BD2fE+AqrCHAiTulN7QA4r68+8niilZ9Ghvfngq8uuDIZGjvilIiylBCJmeeaquT0hKj
-         POd+MfjAdwm3g5W5DeskJQ/L8I53JJl5qkACV735m/syi1GOvl7HTz0MCsr9wzAKb6RJ
-         QHRA==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5459818E08
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 10:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-35fcbe27a7fso119770835ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 02:47:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704278823; x=1704883623;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YcomVPZKfMGPSapPmMcKFhoGRvIlj/vDUxSMo893ZHM=;
-        b=qnvHbe/FdlACdxv6co0pi+YhyyziIz0/QXjlSTLIczOsEfkvmxpSkISu+G5blABIho
-         STnqPgz87Y0Qb3AKzHICHPosmgu6dSzR10kQ3D8kgD6n1yv25MkCCyL+Jrkj/AE+u+yw
-         5auEiS84fAdk0KvY3IKj+JlXAePpbYqvbaTq2ixjZgPWUJlxtlMnd9qwszyaG+ohDda8
-         Og69s4oCVT0PMrqEwnQZdC9ENlEiEbCASudmfrQN3u2rM1KQjIPnK6lIgr/nLGkijmtT
-         VMXJeJxqG6hNBkH6uQVisdbn+PxaL2bs6NJf0+n5+g2+bGw/IgwP3j5Z4OOs9SepCsXf
-         TkXw==
-X-Gm-Message-State: AOJu0YwqNLDYqJU2JF1fgcHeZMIXeB+3J5zlgIs5cQxdqJRgH0M8/cTw
-	ahno51jALE9lz1/lIj0n7TPaBquJyGAheQ==
-X-Google-Smtp-Source: AGHT+IHxJm1WJIvAAPzcbupFAoa0cmuN/4umyS3/k+XyyGf8idZn7fFh32P7Qqsme1ttAANK9+BeyA==
-X-Received: by 2002:a05:6a20:160d:b0:198:308f:2f45 with SMTP id l13-20020a056a20160d00b00198308f2f45mr172098pzj.92.1704278823290;
-        Wed, 03 Jan 2024 02:47:03 -0800 (PST)
-Received: from localhost ([122.172.86.168])
-        by smtp.gmail.com with ESMTPSA id p56-20020a056a0026f800b006d99d986624sm18832025pfw.151.2024.01.03.02.47.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jan 2024 02:47:02 -0800 (PST)
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Viresh Kumar <vireshk@kernel.org>,
-	Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>,
-	linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] OPP: Relocate dev_pm_opp_sync_regulators()
-Date: Wed,  3 Jan 2024 16:16:58 +0530
-Message-Id: <619d355a4500cd766639be3696016daa56214cc3.1704278811.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
+        d=1e100.net; s=20230601; t=1704278840; x=1704883640;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0v9D0U8zoD0RGhtvTYl+RE9AdMXmXMXGPURFx26hzEc=;
+        b=OeZqu+rqXGLfRHw/JEAxijqGvF9B+EhMeVQ6kwHXM8Xlsy7Qm6AUX3lMJFAz0Lu222
+         dFuG4P5DacE2kDyTwTS5JVxe9VjReovZjSJo/mjiKDG8tsVvRJuWroR98VNzbyI0vkSB
+         igIfa4/wAZc6LJRidfgtm/lN9fvqtKXVRVTI5W9S6diFUvQHV3oe73jcG0j1djykXV9V
+         3q4qFWY/1QEv2lEfALO/Pi6oO6oHm02AAwYM1HeuDcYCBujqNaCnabR7ixqXXXM78d4c
+         oS/E0HWQI7CldBp2kFQ3QVtA8PwK/T4nXI/nxZxVnJi/P65kNXdKgYO9AabE8a/Uugo7
+         7+Iw==
+X-Gm-Message-State: AOJu0YzH96hdmflWDVaihr8ODDr2qeF09axTKx/VXT6DXLsIcLe+L6hH
+	5mQQcbtW5T6SohE88TQZSeMgKWei7SY8rySSN0QD9W5+HFhN
+X-Google-Smtp-Source: AGHT+IHPMOHUuANNnM1elvc/yjK02zS6unpcxlMnJzKrWI5oJcqSTfD9XHwCw4aJDuQD+tdEErrea3dBmzyFR9+hk79RPGOseu0A
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1d18:b0:35f:f01e:bb32 with SMTP id
+ i24-20020a056e021d1800b0035ff01ebb32mr2389137ila.4.1704278840626; Wed, 03 Jan
+ 2024 02:47:20 -0800 (PST)
+Date: Wed, 03 Jan 2024 02:47:20 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e4d49f060e08565a@google.com>
+Subject: [syzbot] Monthly netfilter report (Jan 2024)
+From: syzbot <syzbot+listc06dd9c5e64ea358a383@syzkaller.appspotmail.com>
+To: fw@strlen.de, kadlec@netfilter.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, netfilter-devel@vger.kernel.org, pablo@netfilter.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Move this to a more relevant place in the file. No functional changes.
+Hello netfilter maintainers/developers,
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+This is a 31-day syzbot report for the netfilter subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/netfilter
+
+During the period, 0 new issues were detected and 0 were fixed.
+In total, 4 issues are still open and 157 have been fixed so far.
+
+Some of the still happening issues:
+
+Ref Crashes Repro Title
+<1> 45      Yes   INFO: rcu detected stall in gc_worker (3)
+                  https://syzkaller.appspot.com/bug?extid=eec403943a2a2455adaa
+<2> 4       Yes   INFO: rcu detected stall in tcp_setsockopt
+                  https://syzkaller.appspot.com/bug?extid=1a11c39caf29450eac9f
+<3> 2       Yes   WARNING in __nf_unregister_net_hook (6)
+                  https://syzkaller.appspot.com/bug?extid=de4025c006ec68ac56fc
+
 ---
- drivers/opp/core.c | 82 +++++++++++++++++++++++-----------------------
- 1 file changed, 41 insertions(+), 41 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index a6e80f566e9b..29f8160c3e38 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -3012,6 +3012,47 @@ int dev_pm_opp_adjust_voltage(struct device *dev, unsigned long freq,
- }
- EXPORT_SYMBOL_GPL(dev_pm_opp_adjust_voltage);
- 
-+/**
-+ * dev_pm_opp_sync_regulators() - Sync state of voltage regulators
-+ * @dev:	device for which we do this operation
-+ *
-+ * Sync voltage state of the OPP table regulators.
-+ *
-+ * Return: 0 on success or a negative error value.
-+ */
-+int dev_pm_opp_sync_regulators(struct device *dev)
-+{
-+	struct opp_table *opp_table;
-+	struct regulator *reg;
-+	int i, ret = 0;
-+
-+	/* Device may not have OPP table */
-+	opp_table = _find_opp_table(dev);
-+	if (IS_ERR(opp_table))
-+		return 0;
-+
-+	/* Regulator may not be required for the device */
-+	if (unlikely(!opp_table->regulators))
-+		goto put_table;
-+
-+	/* Nothing to sync if voltage wasn't changed */
-+	if (!opp_table->enabled)
-+		goto put_table;
-+
-+	for (i = 0; i < opp_table->regulator_count; i++) {
-+		reg = opp_table->regulators[i];
-+		ret = regulator_sync_voltage(reg);
-+		if (ret)
-+			break;
-+	}
-+put_table:
-+	/* Drop reference taken by _find_opp_table() */
-+	dev_pm_opp_put_opp_table(opp_table);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(dev_pm_opp_sync_regulators);
-+
- /**
-  * dev_pm_opp_enable() - Enable a specific OPP
-  * @dev:	device for which we do this operation
-@@ -3135,44 +3176,3 @@ void dev_pm_opp_remove_table(struct device *dev)
- 	dev_pm_opp_put_opp_table(opp_table);
- }
- EXPORT_SYMBOL_GPL(dev_pm_opp_remove_table);
--
--/**
-- * dev_pm_opp_sync_regulators() - Sync state of voltage regulators
-- * @dev:	device for which we do this operation
-- *
-- * Sync voltage state of the OPP table regulators.
-- *
-- * Return: 0 on success or a negative error value.
-- */
--int dev_pm_opp_sync_regulators(struct device *dev)
--{
--	struct opp_table *opp_table;
--	struct regulator *reg;
--	int i, ret = 0;
--
--	/* Device may not have OPP table */
--	opp_table = _find_opp_table(dev);
--	if (IS_ERR(opp_table))
--		return 0;
--
--	/* Regulator may not be required for the device */
--	if (unlikely(!opp_table->regulators))
--		goto put_table;
--
--	/* Nothing to sync if voltage wasn't changed */
--	if (!opp_table->enabled)
--		goto put_table;
--
--	for (i = 0; i < opp_table->regulator_count; i++) {
--		reg = opp_table->regulators[i];
--		ret = regulator_sync_voltage(reg);
--		if (ret)
--			break;
--	}
--put_table:
--	/* Drop reference taken by _find_opp_table() */
--	dev_pm_opp_put_opp_table(opp_table);
--
--	return ret;
--}
--EXPORT_SYMBOL_GPL(dev_pm_opp_sync_regulators);
--- 
-2.31.1.272.g89b43f80a514
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
