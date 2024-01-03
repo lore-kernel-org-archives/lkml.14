@@ -1,60 +1,116 @@
-Received: from cstnet.cn (smtp87.cstnet.cn [159.226.251.87])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F373E1A59A;
-	Wed,  3 Jan 2024 03:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iie.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iie.ac.cn
-Received: from mengjingzi$iie.ac.cn ( [121.195.114.118] ) by
- ajax-webmail-APP-17 (Coremail) ; Wed, 3 Jan 2024 11:12:28 +0800 (GMT+08:00)
-Date: Wed, 3 Jan 2024 11:12:28 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: =?UTF-8?B?5a2f5pWs5ae/?= <mengjingzi@iie.ac.cn>
-To: brauner@kernel.org
-Cc: linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: proposal to refine capability checks when _rlimit_overlimit() is
- true
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.15 build 20230921(8ad33efc)
- Copyright (c) 2002-2024 www.mailtech.cn cnic.cn
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289214A27
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 03:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PqSt2mQ5"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-55539cac143so6651865a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 19:15:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704251705; x=1704856505; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/yCW+5O20qYq82QEvwJZHzQUCJBD1lIKf/JM2prlUkY=;
+        b=PqSt2mQ5FwlhVWdIbFKu9dKo3qU7teiKkU0lRiRlJz99RlVttRCKByqWHLKpyB8cLM
+         hMlLSTsvdELrwTJGTGnMS/Vs8HiJdleo/v1NETRMdTDJ4RIct/VDS0vuuC1pq8Ly7UQx
+         NAWnw5IWVOP9kvJ+R4PCwXJrBoYNubhZ7TgZYUk2VuP13Xp4plucCPsZIs2UEQOTuy9r
+         0Xj6kQ+x6OUfCZ98km56i+Q9T6dw4YhXVFXMIS6fBe1pTVYFLD4/6f7uoOfI1dyf+Qtm
+         ncC5enLVQRPXU5CJYRB3N6RlWm3fEd6gvNDD2NuRoE4P1ho+g+7qZwy3AJ0WcjRw7jyt
+         hIKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704251705; x=1704856505;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/yCW+5O20qYq82QEvwJZHzQUCJBD1lIKf/JM2prlUkY=;
+        b=jlvd0o3wTnZKnIHp+LLemwj4nrHCfApSFyxoH0YvRQs4irUKEjN0xtFtI1GH+++34/
+         JlGsuvKModI2KH40N2V/cXsF17d6QR72a1oBO/dtMfco6oL5XyMbcJVZY0lsMcXbdWO1
+         R3A/GCQblaO+U5xKPZmx39yhiIpyITi/QeDszebDLyfKEYgHiJsWPEQ7j9uFSSQVTgpn
+         s1py3lK03YGpcb/dOzVGv+SO6u/wtDOGnaV/nxZNo16ikFoSFZoqtXQISkRCV80xUkrO
+         QWS8irA1Y+CeJsvEwt/i1Hl6MlIEecrOZUyAOQZdaI85Ruh4JkT0q2Hz8TejRlKZWfBL
+         Y5xg==
+X-Gm-Message-State: AOJu0Yy0QztS7MGsorZ6Y+ctPSXXzoh+EozCPABJVMymvZ0CmTJoI+73
+	6N3gom6LHUDLWpnbuuSWCEeZIhrYLRI3sgkfyJ0=
+X-Google-Smtp-Source: AGHT+IFbUZCHNjuNqZKsm7D3GhTqH+amvdbA9Hr7oyK3NDCLYNY8gDlP35k+OL216aHKCZEQLmmzUeDabcmEiLq1XQE=
+X-Received: by 2002:a05:6402:1347:b0:555:936e:feb6 with SMTP id
+ y7-20020a056402134700b00555936efeb6mr4426542edw.22.1704251705088; Tue, 02 Jan
+ 2024 19:15:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <1a8ed7bd.c96e.18ccd4ee4d1.Coremail.mengjingzi@iie.ac.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:qgCowAB3Qumd0JRl5xYDAA--.26354W
-X-CM-SenderInfo: pphqwyxlqj6xo6llvhldfou0/1tbiDAYFE2WUwEQ2dgAAsp
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+References: <20240102073351.1527503-1-alexs@kernel.org> <xhsmhplykjawj.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAJy-Am=R=gRFqSdGjXaMqq7Yetpp-4=bLtnP-87GepN4zff5Tg@mail.gmail.com> <xhsmhjzork8x5.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+In-Reply-To: <xhsmhjzork8x5.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+From: Alex Shi <seakeel@gmail.com>
+Date: Wed, 3 Jan 2024 11:14:29 +0800
+Message-ID: <CAJy-AmkG+6jZCGFBnqA_33NtBBq_hjemqkPCbZX2Jty0KWQE+w@mail.gmail.com>
+Subject: Re: [PATCH] sched/tracing: correct the task blocking state
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: alexs@kernel.org, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Daniel Bristot de Oliveira <bristot@redhat.com>, linux-kernel@vger.kernel.org, curuwang@tencent.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SGkhCgpXZSBvYnNlcnZlZCBhIHBvdGVudGlhbCByZWZpbmVtZW50IGluIHRoZSBrZXJuZWwvZm9y
-ay5jIGxpbmUgMjM2OC4gQ3VycmVudGx5LCBib3RoIENBUF9TWVNfQURNSU4gYW5kIENBUF9TWVNf
-UkVTT1VSQ0UgYXJlIGNoZWNrZWQgd2hlbiB0aGUgbGltaXQgaXMgb3ZlciBzeXN0ZW0gbGltaXQu
-IFdlIHN1Z2dlc3QgY29uc2lkZXJpbmcgYW4gYWRqdXN0bWVudCB0byB1dGlsaXplIENBUF9TWVNf
-UkVTT1VSQ0UgZXhjbHVzaXZlbHkuIEhlcmUncyBvdXIgcmF0aW9uYWxlIGZvciB0aGlzIHN1Z2dl
-c3Rpb246CgooMSkgRGVmaW5lZCBDYXBhYmlsaXR5IGZvciBSZXNvdXJjZSBBY2Nlc3M6IEFjY29y
-ZGluZyB0byB0aGUgY2FwYWJpbGl0eSBtYW51YWwgcGFnZVsxXSwgdGhlIGNhcGFiaWxpdHkgZXhw
-bGljaXRseSBkZWZpbmVkIGZvciBieXBhc3NpbmcgcmVzb3VyY2UgbGltaXRzIGlzIENBUF9TWVNf
-UkVTT1VSQ0UuIFRoaXMgY2FwYWJpbGl0eSBpcyBkZXNpZ25lZCB0byBwcm92aWRlIHRoZSBuZWNl
-c3NhcnkgcHJpdmlsZWdlcyBmb3IgYWNjZXNzaW5nIHN5c3RlbSByZXNvdXJjZXMgd2l0aG91dCBv
-dmVyLXByaXZpbGVnaW5nIHdpdGggdGhlIGJyb2FkZXIgQ0FQX1NZU19BRE1JTi4KCigyKSBNYWlu
-dGFpbmluZyBMZWFzdCBQcml2aWxlZ2U6IENBUF9TWVNfQVNNSU4gaXMgYWxyZWFkeSBvdmVybG9h
-ZGVkIGFuZCBrbm93biBhcyB0aGUgbmV3ICJyb290IlsyXS4gVGhlIHVzZSBvZiBDQVBfU1lTX0FE
-TUlOIGluIHRoaXMgY29udGV4dCBtaWdodCBpbmFkdmVydGVudGx5IG92ZXItcHJpdmlsZWdlIHRo
-ZSBzeXN0ZW0gYnkgcHJvdmlkaW5nIG1vcmUgY2FwYWJpbGl0aWVzIHRoYW4gbmVjZXNzYXJ5LiBB
-bmQgYWNjb3JkaW5nIHRvIGNhcGFiaWxpdHkgbWFudWFsIHBhZ2VbMV0sIOKAnERvbid0IGNob29z
-ZSBDQVBfU1lTX0FETUlOIGlmIHlvdSBjYW4gcG9zc2libHkgYXZvaWQgaXQh4oCdLCBpdCdzIGJl
-bmVmaWNpYWwgdG8gdXNlIHRoZSBtb3N0IHNwZWNpZmljIGNhcGFiaWxpdHkgcmVxdWlyZWQgZm9y
-IGEgZ2l2ZW4gdGFzay4KClRoaXMgaXNzdWUgZXhpc3RzIGluIHNldmVyYWwga2VybmVsIHZlcnNp
-b25zIGFuZCB3ZSBoYXZlIGNoZWNrZWQgaXQgb24gdGhlIGxhdGVzdCBzdGFibGUgcmVsZWFzZShM
-aW51eCA2LjYuOSkuCgpZb3VyIGluc2lnaHRzIGFuZCBmZWVkYmFjayBvbiB0aGlzIHByb3Bvc2Vk
-IG1vZGlmaWNhdGlvbiB3b3VsZCBiZSBoaWdobHkgYXBwcmVjaWF0ZWQuIFRoYW5rIHlvdSBmb3Ig
-eW91ciB0aW1lIGFuZCBjb25zaWRlcmF0aW9uLgoKQmVzdCByZWdhcmRzLApKaW5nemkKCnJlZmVy
-ZW5jZToKWzFdIGh0dHBzOi8vd3d3Lm1hbjcub3JnL2xpbnV4L21hbi1wYWdlcy9tYW43L2NhcGFi
-aWxpdGllcy43Lmh0bWwKWzJdIGh0dHBzOi8vbHduLm5ldC9BcnRpY2xlcy80ODYzMDYv
+On Wed, Jan 3, 2024 at 12:16=E2=80=AFAM Valentin Schneider <vschneid@redhat=
+.com> wrote:
+>
+> On 02/01/24 21:00, Alex Shi wrote:
+> > On Tue, Jan 2, 2024 at 6:19=E2=80=AFPM Valentin Schneider <vschneid@red=
+hat.com> wrote:
+> >>
+> >> On 02/01/24 15:33, alexs@kernel.org wrote:
+> >> > From: Alex Shi <alexs@kernel.org>
+> >> >
+> >> > commit 80ed87c8a9ca ("sched/wait: Introduce TASK_NOLOAD and TASK_IDL=
+E")
+> >> > stopped the idle kthreads contribution to loadavg. Also task idle sh=
+ould
+> >> > separated from blocked state too, otherwise we will get incorrect ta=
+sk
+> >> > blocking state from event tracing sched:sched_stat_blocked.
+> >> >
+> >>
+> >> Why is that incorrect? AFAICT we have mapped the (schedstat) 'blocked'
+> >> meaning to TASK_UNINTERRUPTIBLE. TASK_IDLE tasks don't contribute to
+> >> loadavg yes, but they are still in an UNINTERRUPTIBLE wait.
+> >
+> >
+> > Hi Valentin,
+> > Thanks a lot for the reply.
+> >
+> > I agree with you the current usage, but if so, we account for the idle =
+task into
+> > blocked state. And it's better to distinguish between idle and block.
+> >
+>
+> Why is that an issue? If those tasks didn't have to be
+> TASK_UNINTERRUPTIBLE (via TASK_IDLE), we'd make them TASK_INTERRUPTIBLE a=
+nd
+> they'd also inflate the 'sleeping' schedstat (rather than the 'blocked').
+>
+> What problem are you facing with those tasks being flagged as blocked dur=
+ing
+> their wait?
+>
+
+Uh, Tencent cloud has some latency sensitive services, a blocked state
+means the service has
+ some trouble, but with IDLE state involved, it's failed on this judgement.
+and 2nd, if a service has abnormal, we want to check if it's hanging
+on io or sth else, but the top
+3 D tasks are often queuework in our system, and even a task in
+blocked state we have no
+quick way to figure out if it's IDLE or BLOCKED.  2 different states
+will help us a lot.
+
+Thanks!
