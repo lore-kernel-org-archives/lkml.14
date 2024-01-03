@@ -1,106 +1,74 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB76182A4;
-	Wed,  3 Jan 2024 08:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [172.29.66.158] (93-34-6-18.ip47.fastwebnet.it [93.34.6.18])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 38BA261E5FE01;
-	Wed,  3 Jan 2024 09:44:51 +0100 (CET)
-Message-ID: <d30e0344-d753-4fa5-9308-5b344c585495@molgen.mpg.de>
-Date: Wed, 3 Jan 2024 09:44:48 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5AC18049;
+	Wed,  3 Jan 2024 08:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-05 (Coremail) with SMTP id zQCowAAH6AwZH5Vl66EnAw--.36358S2;
+	Wed, 03 Jan 2024 16:47:21 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: patrice.chotard@foss.st.com,
+	linus.walleij@linaro.org,
+	bartosz.golaszewski@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] pinctrl: st: Return pinctrl_gpio_direction_output to transfer the error
+Date: Wed,  3 Jan 2024 08:50:58 +0000
+Message-Id: <20240103085058.3771653-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] Bluetooth: rfcomm: Fix null-ptr-deref in
- rfcomm_check_security
-To: Yuxuan Hu <20373622@buaa.edu.cn>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
- baijiaju1990@gmail.com, sy2239101@buaa.edu.cn, buaazhr@buaa.edu.cn
-References: <20240103031410.3262524-1-20373622@buaa.edu.cn>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240103031410.3262524-1-20373622@buaa.edu.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAAH6AwZH5Vl66EnAw--.36358S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtw4rtr1fuw1kZw4rJr45Awb_yoWfZrX_Ca
+	4fWFy7JryUC3WkWr1ayw13XFyIkanrXF10vFsYqr1akry5Cw4qv3s7urW5G3s7WrW7J345
+	GrWDXryrAw47AjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbcxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r43
+	MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
+	0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
+	wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
+	W8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
+	cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjYLvtUUUUU==
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-Dear Yuxuan,
+Return pinctrl_gpio_direction_output() in order to transfer the error
+if it fails.
 
+Fixes: b679d6c06b2b ("treewide: rename pinctrl_gpio_direction_output_new()")
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/pinctrl/pinctrl-st.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Thank you for your patch.
+diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
+index 1485573b523c..5d9abd6547d0 100644
+--- a/drivers/pinctrl/pinctrl-st.c
++++ b/drivers/pinctrl/pinctrl-st.c
+@@ -723,9 +723,8 @@ static int st_gpio_direction_output(struct gpio_chip *chip,
+ 	struct st_gpio_bank *bank = gpiochip_get_data(chip);
+ 
+ 	__st_gpio_set(bank, offset, value);
+-	pinctrl_gpio_direction_output(chip, offset);
+ 
+-	return 0;
++	return pinctrl_gpio_direction_output(chip, offset);
+ }
+ 
+ static int st_gpio_get_direction(struct gpio_chip *chip, unsigned offset)
+-- 
+2.25.1
 
-Am 03.01.24 um 04:14 schrieb Yuxuan Hu:
-> During our fuzz testing of the connection and disconnection process at the
-> RFCOMM layer,we discovered this bug.By comparing the packetsfrom a normal
-
-1.  Please add a space after punctuation like full stops/periods and 
-commas. (There are more occurrences below.)
-2.  packets from
-
-> connection and disconnection process with the testcase that triggered a
-> KASAN report, we analyzed the cause of this bug as follows:
-
-s/, we/. We/
-
-> 1. In the packets captured during a normal connection, the host sends a
-> `Read Encryption Key Size` type of `HCI_CMD` packet(Command Opcode: 0x1408)
-
-Please add a space before (.
-
-> to the controller to inquire the length of encryption key.After receiving
-> this packet, the controller immediately replies with a Command Complete
-> packet (Event Code: 0x0e) to return the Encryption Key Size.
-> 
-> 2. In our fuzz test case, the timing of the controller's response to this
-> packet was delayed to an unexpected point: after the RFCOMM and L2CAP
-> layers had disconnected but before the HCI layer had disconnected.
-> 
-> 3. After receiving the Encryption Key Size Response at the time described
-> in point 2, the host still called the rfcomm_check_security function.
-> However, by this time `struct l2cap_conn *conn = l2cap_pi(sk)->chan->conn;`
-> had already been released, and when the function executed
-> `return hci_conn_security(conn->hcon, d->sec_level, auth_type, d->out);`,
-> specifically when accessing `conn->hcon`, a null-ptr-deref error occurred.
-> 
-> To fix this bug, check if `sk->sk_state` is BT_CLOSED before calling
-> rfcomm_recv_frame in rfcomm_process_rx.
-
-Is this bug covered by a test case already?
-
-> Signed-off-by: Yuxuan Hu <20373622@buaa.edu.cn>
-> ---
-> V1 -> V2: Removed the direct check for `conn` being null in rfcomm_check_security
-> 
->   net/bluetooth/rfcomm/core.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/bluetooth/rfcomm/core.c b/net/bluetooth/rfcomm/core.c
-> index 053ef8f25fae..1d34d8497033 100644
-> --- a/net/bluetooth/rfcomm/core.c
-> +++ b/net/bluetooth/rfcomm/core.c
-> @@ -1941,7 +1941,7 @@ static struct rfcomm_session *rfcomm_process_rx(struct rfcomm_session *s)
->   	/* Get data directly from socket receive queue without copying it. */
->   	while ((skb = skb_dequeue(&sk->sk_receive_queue))) {
->   		skb_orphan(skb);
-> -		if (!skb_linearize(skb)) {
-> +		if (!skb_linearize(skb) && sk->sk_state != BT_CLOSED) {
->   			s = rfcomm_recv_frame(s, skb);
->   			if (!s)
->   				break;
-
-Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
-
-
-Kind regards,
-
-Paul
