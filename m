@@ -1,81 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A486619458;
-	Wed,  3 Jan 2024 12:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UDMfLmqr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704284749; x=1735820749;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7NZPFuLqIaZYxF8kzjwORU+cPOyFb8rBNMttLqHxoyI=;
-  b=UDMfLmqrSvJ7f4Xfhg+a6pdId2N+iIJ76n+VkfdQVd2LdvWHWTNLpXu1
-   Z+T08AoSiE7mwNTeznB4hWiJpfBCFn4aHGbPV0iWLX1iWwg2aF6vbegFu
-   VG2GP2BQRYCkc7IMp2N+7V9NO9bGAllSK7tRDxn5McW1wdcewW7N/pW+/
-   WIEZvyxkwTGvDuVuetvklHiAkBUx7dNLwehTFs18429srWHdL+XWLQeul
-   joSWkPZwcUxeowXu9jpLdziPJLeOwv3YNVlvUsrNMTOdMX5Z42jXR7t1K
-   HEj55mVknwVEg9em94cqojKy7POQrnPqakvSdKe3xpdsp8VUlSPxpceCR
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="4085305"
-X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
-   d="scan'208";a="4085305"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 04:25:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="783498077"
-X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
-   d="scan'208";a="783498077"
-Received: from sharadav-mobl.amr.corp.intel.com (HELO box.shutemov.name) ([10.249.36.97])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 04:25:42 -0800
-Received: by box.shutemov.name (Postfix, from userid 1000)
-	id C10E610A567; Wed,  3 Jan 2024 15:25:39 +0300 (+03)
-Date: Wed, 3 Jan 2024 15:25:39 +0300
-From: kirill.shutemov@linux.intel.com
-To: Alexey Makhalov <alexey.makhalov@broadcom.com>
-Cc: linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
-	mingo@redhat.com, tglx@linutronix.de, x86@kernel.org,
-	netdev@vger.kernel.org, richardcochran@gmail.com,
-	linux-input@vger.kernel.org, dmitry.torokhov@gmail.com,
-	zackr@vmware.com, linux-graphics-maintainer@vmware.com,
-	pv-drivers@vmware.com, namit@vmware.com, timothym@vmware.com,
-	akaher@vmware.com, jsipek@vmware.com,
-	dri-devel@lists.freedesktop.org, daniel@ffwll.ch, airlied@gmail.com,
-	tzimmermann@suse.de, mripard@kernel.org,
-	maarten.lankhorst@linux.intel.com, horms@kernel.org
-Subject: Re: [PATCH v4 6/6] x86/vmware: Add TDX hypercall support
-Message-ID: <20240103122539.agoq7647bzwcgjep@box.shutemov.name>
-References: <20231228192421.29894-1-alexey.makhalov@broadcom.com>
- <20231228192421.29894-7-alexey.makhalov@broadcom.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0804619442
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 12:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rL0MF-0005Mi-3Y; Wed, 03 Jan 2024 13:28:27 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rL0ME-00074u-0N; Wed, 03 Jan 2024 13:28:26 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rL0MD-003LfH-2x;
+	Wed, 03 Jan 2024 13:28:25 +0100
+Date: Wed, 3 Jan 2024 13:28:25 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Sean Young <sean@mess.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, linux-pwm@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] pwm: bcm2835: Remove duplicate call to
+ clk_rate_exclusive_put()
+Message-ID: <sbcslehlbdhjggyb4thughrzuzjrbc3knbh3ulfhhi6mcrvayd@rbheyjouom6d>
+References: <20231222131312.174491-1-sean@mess.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="j2t4mrma5c4f7diw"
 Content-Disposition: inline
-In-Reply-To: <20231228192421.29894-7-alexey.makhalov@broadcom.com>
+In-Reply-To: <20231222131312.174491-1-sean@mess.org>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Thu, Dec 28, 2023 at 11:24:21AM -0800, Alexey Makhalov wrote:
-> From: Alexey Makhalov <amakhalov@vmware.com>
-> 
-> VMware hypercalls use I/O port, VMCALL or VMMCALL instructions.
-> Add __tdx_hypercall path to support TDX guests.
-> 
-> No change in high bandwidth hypercalls, as only low bandwidth
-> ones are supported for TDX guests.
-> 
-> Co-developed-by: Tim Merrifield <timothym@vmware.com>
-> Signed-off-by: Tim Merrifield <timothym@vmware.com>
-> Signed-off-by: Alexey Makhalov <amakhalov@vmware.com>
-> Reviewed-by: Nadav Amit <namit@vmware.com>
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+--j2t4mrma5c4f7diw
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Hello Thierry,
+
+On Fri, Dec 22, 2023 at 01:13:11PM +0000, Sean Young wrote:
+> devm_add_action_or_reset() already calls the action in the error case.
+>=20
+> Reported-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> Closes: https://lore.kernel.org/linux-pwm/fuku3b5ur6y4k4refd3vmeoenzjo6mw=
+e3b3gtel34rhhhtvnsa@w4uktgbqsc3w/
+> Fixes: fcc760729359 ("pwm: bcm2835: Allow PWM driver to be used in atomic=
+ context")
+> Signed-off-by: Sean Young <sean@mess.org>
+> Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> ---
+>  drivers/pwm/pwm-bcm2835.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
+> index 307c0bd5f885..283cf27f25ba 100644
+> --- a/drivers/pwm/pwm-bcm2835.c
+> +++ b/drivers/pwm/pwm-bcm2835.c
+> @@ -160,10 +160,8 @@ static int bcm2835_pwm_probe(struct platform_device =
+*pdev)
+> =20
+>  	ret =3D devm_add_action_or_reset(&pdev->dev, devm_clk_rate_exclusive_pu=
+t,
+>  				       pc->clk);
+> -	if (ret) {
+> -		clk_rate_exclusive_put(pc->clk);
+> +	if (ret)
+>  		return ret;
+> -	}
+> =20
+>  	pc->rate =3D clk_get_rate(pc->clk);
+>  	if (!pc->rate)
+
+this patch should be added to your for-next branch and then your PR for
+the next merge window.
+
+Also "pwm: linux/pwm.h: fix Excess kernel-doc description warning"
+(Message-Id: 20231223050621.13994-1-rdunlap@infradead.org) should be
+added IMHO.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--j2t4mrma5c4f7diw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWVUugACgkQj4D7WH0S
+/k4FPgf+KciZuFT4wJCWNSuCGXQuJYPIGrhYmOixhFTfChRratxydUme6qGd0hRC
+Pvvyw9As/U4FF5tv/3CWxuFC/ZiXe75ZgekP/Hn3NF2e0mQFSVTZtL5MZtNLC3X0
+gGnWSV3k33UrNvxBp6x7ib176BVTXeQ13n+w5AHdMHXy8thKsc5sIHCPfKqm0Scu
+otgt5pUJsVwnIVVP8eEDB4XjLD9SDZGaJB8zjpDPLh5CuKYdRmJcvi1Z/Cs1AtSt
+NNIRcHUZxrrfDj/RWXtmwS+T8yRS4+/LEUOWnQjwnxapskk0M90JZhiUfrNuQIk6
+7r6iI9Nd7GkkUyxIsO0FIeSV0gED4A==
+=9tQB
+-----END PGP SIGNATURE-----
+
+--j2t4mrma5c4f7diw--
