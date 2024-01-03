@@ -1,230 +1,353 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E1EA18059;
-	Wed,  3 Jan 2024 08:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KZ3RxjMN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704270706; x=1735806706;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=K2D+DOH/3k8UCY1rTsgGy6wghC2CdFVcWHWsDmKE3ec=;
-  b=KZ3RxjMN9232lkF+LevQsNw5gbdXrH8fE7lmHMicTyjV9y0mUskoJ4ug
-   AiHThL+2qYVlsMzbg7do5A6fkW8ZFOcctdZBHwE+oPrVz89sat9VmXndI
-   NtVHBIAnFgk55wPq4YaSOzhVU/E8Dd82r1bEiOuCPAauvfyRUcPAb321F
-   saezyA9rLFzLx4jScHpTzMNu6e7Ypix47qFDzNKJei6XHYD5rO2jB/Aua
-   1fnlfmlSANOfbo0xyqOKZ2s2g7bqTCalgu0jKPxswzp6xljN5ON646TXO
-   batwxC+E35aGvub4wOlxHFy2cey9JWeTPOnsBf9wy+ine014dOFoU9tYb
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="395854473"
-X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
-   d="scan'208";a="395854473"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 00:31:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="773079904"
-X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
-   d="scan'208";a="773079904"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 00:31:41 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Srinivasulu Thanneeru <sthanneeru@micron.com>
-Cc: gregory.price <gregory.price@memverge.com>,  Srinivasulu Opensrc
- <sthanneeru.opensrc@micron.com>,  "linux-cxl@vger.kernel.org"
- <linux-cxl@vger.kernel.org>,  "linux-mm@kvack.org" <linux-mm@kvack.org>,
-  "aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>,
-  "dan.j.williams@intel.com" <dan.j.williams@intel.com>,  "mhocko@suse.com"
- <mhocko@suse.com>,  "tj@kernel.org" <tj@kernel.org>,
-  "john@jagalactic.com" <john@jagalactic.com>,  Eishan Mirakhur
- <emirakhur@micron.com>,  "Vinicius Tavares Petrucci"
- <vtavarespetr@micron.com>,  Ravis OpenSrc <Ravis.OpenSrc@micron.com>,
-  "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,  Johannes
- Weiner <hannes@cmpxchg.org>,  Wei Xu <weixugc@google.com>
-Subject: Re: [EXT] Re: [RFC PATCH v2 0/2] Node migration between memory tiers
-In-Reply-To: <PH0PR08MB79550922630FEC47E4B4D3A3A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
-	(Srinivasulu Thanneeru's message of "Wed, 3 Jan 2024 07:56:42 +0000")
-References: <20231213175329.594-1-sthanneeru.opensrc@micron.com>
-	<87cyv8qcqk.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<ZXyQIJOim1+tE0Qr@memverge.com>
-	<87fs00njft.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<PH0PR08MB7955E9F08CCB64F23963B5C3A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
-	<87edezc5l1.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<PH0PR08MB79550922630FEC47E4B4D3A3A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
-Date: Wed, 03 Jan 2024 16:29:42 +0800
-Message-ID: <87a5pmddl5.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 286E418622
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 08:34:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72AA7C15;
+	Wed,  3 Jan 2024 00:34:49 -0800 (PST)
+Received: from [10.57.74.226] (unknown [10.57.74.226])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 356A43F5A1;
+	Wed,  3 Jan 2024 00:33:33 -0800 (PST)
+Message-ID: <7d07caae-ae22-4cda-a3d0-4f542f52817a@arm.com>
+Date: Wed, 3 Jan 2024 08:33:24 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 09/10] selftests/mm/cow: Generalize do_run_with_thp()
+ helper
+Content-Language: en-GB
+To: Itaru Kitayama <itaru.kitayama@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, Yin Fengwei <fengwei.yin@intel.com>,
+ David Hildenbrand <david@redhat.com>, Yu Zhao <yuzhao@google.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>, Yang Shi
+ <shy828301@gmail.com>, "Huang, Ying" <ying.huang@intel.com>,
+ Zi Yan <ziy@nvidia.com>, Luis Chamberlain <mcgrof@kernel.org>,
+ Itaru Kitayama <itaru.kitayama@gmail.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ John Hubbard <jhubbard@nvidia.com>, David Rientjes <rientjes@google.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Hugh Dickins <hughd@google.com>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>, Barry Song <21cnbao@gmail.com>,
+ Alistair Popple <apopple@nvidia.com>, linux-mm@kvack.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20231207161211.2374093-1-ryan.roberts@arm.com>
+ <20231207161211.2374093-10-ryan.roberts@arm.com> <ZZT9BHVU0+lyKNJF@vm3>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <ZZT9BHVU0+lyKNJF@vm3>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Srinivasulu Thanneeru <sthanneeru@micron.com> writes:
+On 03/01/2024 06:21, Itaru Kitayama wrote:
+> On Thu, Dec 07, 2023 at 04:12:10PM +0000, Ryan Roberts wrote:
+>> do_run_with_thp() prepares (PMD-sized) THP memory into different states
+>> before running tests. With the introduction of multi-size THP, we would
+>> like to reuse this logic to also test those smaller THP sizes. So let's
+>> add a thpsize parameter which tells the function what size THP it should
+>> operate on.
+>>
+>> A separate commit will utilize this change to add new tests for
+>> multi-size THP, where available.
+>>
+>> Reviewed-by: David Hildenbrand <david@redhat.com>
+>> Tested-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+>> Tested-by: John Hubbard <jhubbard@nvidia.com>
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> 
+> Tested-by: Itaru Kitayama <itaru.kitayama@linux.dev>
 
-> Micron Confidential
->
->
->
-> Micron Confidential
->> -----Original Message-----
->> From: Huang, Ying <ying.huang@intel.com>
->> Sent: Wednesday, January 3, 2024 11:38 AM
->> To: Srinivasulu Thanneeru <sthanneeru@micron.com>
->> Cc: gregory.price <gregory.price@memverge.com>; Srinivasulu Opensrc
->> <sthanneeru.opensrc@micron.com>; linux-cxl@vger.kernel.org; linux-
->> mm@kvack.org; aneesh.kumar@linux.ibm.com; dan.j.williams@intel.com;
->> mhocko@suse.com; tj@kernel.org; john@jagalactic.com; Eishan Mirakhur
->> <emirakhur@micron.com>; Vinicius Tavares Petrucci
->> <vtavarespetr@micron.com>; Ravis OpenSrc <Ravis.OpenSrc@micron.com>;
->> Jonathan.Cameron@huawei.com; linux-kernel@vger.kernel.org; Johannes
->> Weiner <hannes@cmpxchg.org>; Wei Xu <weixugc@google.com>
->> Subject: Re: [EXT] Re: [RFC PATCH v2 0/2] Node migration between memory
->> tiers
->>
->> CAUTION: EXTERNAL EMAIL. Do not click links or open attachments unless
->> you recognize the sender and were expecting this message.
->>
->>
->> Srinivasulu Thanneeru <sthanneeru@micron.com> writes:
->>
->> > Micron Confidential
->> >
->> > Hi Huang, Ying,
->> >
->> > My apologies for wrong mail reply format, my mail client settings got
->> changed on my PC.
->> > Please find comments bellow inline.
->> >
->> > Regards,
->> > Srini
->> >
->> >
->> > Micron Confidential
->> >> -----Original Message-----
->> >> From: Huang, Ying <ying.huang@intel.com>
->> >> Sent: Monday, December 18, 2023 11:26 AM
->> >> To: gregory.price <gregory.price@memverge.com>
->> >> Cc: Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>; linux-
->> >> cxl@vger.kernel.org; linux-mm@kvack.org; Srinivasulu Thanneeru
->> >> <sthanneeru@micron.com>; aneesh.kumar@linux.ibm.com;
->> >> dan.j.williams@intel.com; mhocko@suse.com; tj@kernel.org;
->> >> john@jagalactic.com; Eishan Mirakhur <emirakhur@micron.com>; Vinicius
->> >> Tavares Petrucci <vtavarespetr@micron.com>; Ravis OpenSrc
->> >> <Ravis.OpenSrc@micron.com>; Jonathan.Cameron@huawei.com; linux-
->> >> kernel@vger.kernel.org; Johannes Weiner <hannes@cmpxchg.org>; Wei Xu
->> >> <weixugc@google.com>
->> >> Subject: [EXT] Re: [RFC PATCH v2 0/2] Node migration between memory
->> tiers
->> >>
->> >> CAUTION: EXTERNAL EMAIL. Do not click links or open attachments unless
->> >> you recognize the sender and were expecting this message.
->> >>
->> >>
->> >> Gregory Price <gregory.price@memverge.com> writes:
->> >>
->> >> > On Fri, Dec 15, 2023 at 01:02:59PM +0800, Huang, Ying wrote:
->> >> >> <sthanneeru.opensrc@micron.com> writes:
->> >> >>
->> >> >> > =============
->> >> >> > Version Notes:
->> >> >> >
->> >> >> > V2 : Changed interface to memtier_override from adistance_offset.
->> >> >> > memtier_override was recommended by
->> >> >> > 1. John Groves <john@jagalactic.com>
->> >> >> > 2. Ravi Shankar <ravis.opensrc@micron.com>
->> >> >> > 3. Brice Goglin <Brice.Goglin@inria.fr>
->> >> >>
->> >> >> It appears that you ignored my comments for V1 as follows ...
->> >> >>
->> >> >>
->> >>
->> https://lore.k/
->> %2F&data=05%7C02%7Csthanneeru%40micron.com%7C3e5d38eb47be463c2
->> 95c08dc0c229d22%7Cf38a5ecd28134862b11bac1d563c806f%7C0%7C0%7C63
->> 8398590664228240%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMD
->> AiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C
->> &sdata=7fPxb1YYR2tZ0v2FB1vlXnMJFcI%2Fr9HT2%2BUD1MNUd%2FI%3D&re
->> served=0
->> >> ernel.org%2Flkml%2F87o7f62vur.fsf%40yhuang6-
->> >>
->> desk2.ccr.corp.intel.com%2F&data=05%7C02%7Csthanneeru%40micron.com
->> >>
->> %7C5e614e5f028342b6b59c08dbff8e3e37%7Cf38a5ecd28134862b11bac1d56
->> >>
->> 3c806f%7C0%7C0%7C638384758666895965%7CUnknown%7CTWFpbGZsb3d
->> >>
->> 8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3
->> >>
->> D%7C3000%7C%7C%7C&sdata=OpMkYCar%2Fv8uHb7AvXbmaNltnXeTvcNUTi
->> >> bLhwV12Fg%3D&reserved=0
->> >
->> > Thank you, Huang, Ying for pointing to this.
->> >
->> https://lpc.ev/
->> ents%2Fevent%2F16%2Fcontributions%2F1209%2Fattachments%2F1042%2F1
->> 995%2FLive%2520In%2520a%2520World%2520With%2520Multiple%2520Me
->> mory%2520Types.pdf&data=05%7C02%7Csthanneeru%40micron.com%7C3e
->> 5d38eb47be463c295c08dc0c229d22%7Cf38a5ecd28134862b11bac1d563c806
->> f%7C0%7C0%7C638398590664228240%7CUnknown%7CTWFpbGZsb3d8eyJW
->> IjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3
->> 000%7C%7C%7C&sdata=1fGraxff7%2F1hNaE0an0xEudSKSUvaF3HgClMkmdC7
->> n8%3D&reserved=0
->> >
->> > In the presentation above, the adistance_offsets are per memtype.
->> > We believe that adistance_offset per node is more suitable and flexible.
->> > since we can change it per node. If we keep adistance_offset per memtype,
->> > then we cannot change it for a specific node of a given memtype.
->> >
->> >> >>
->> >>
->> https://lore.k/
->> %2F&data=05%7C02%7Csthanneeru%40micron.com%7C3e5d38eb47be463c2
->> 95c08dc0c229d22%7Cf38a5ecd28134862b11bac1d563c806f%7C0%7C0%7C63
->> 8398590664228240%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMD
->> AiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C
->> &sdata=7fPxb1YYR2tZ0v2FB1vlXnMJFcI%2Fr9HT2%2BUD1MNUd%2FI%3D&re
->> served=0
->> >> ernel.org%2Flkml%2F87jzpt2ft5.fsf%40yhuang6-
->> >>
->> desk2.ccr.corp.intel.com%2F&data=05%7C02%7Csthanneeru%40micron.com
->> >>
->> %7C5e614e5f028342b6b59c08dbff8e3e37%7Cf38a5ecd28134862b11bac1d56
->> >>
->> 3c806f%7C0%7C0%7C638384758666895965%7CUnknown%7CTWFpbGZsb3d
->> >>
->> 8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3
->> >>
->> D%7C3000%7C%7C%7C&sdata=O0%2B6T%2FgU0TicCEYBac%2FAyjOLwAeouh
->> >> D%2BcMI%2BflOsI1M%3D&reserved=0
->> >
->> > Yes, memory_type would be grouping the related memories together as
->> single tier.
->> > We should also have a flexibility to move nodes between tiers, to address
->> the issues.
->> > described in use cases above.
->>
->> We don't pursue absolute flexibility.  We add necessary flexibility
->> only.  Why do you need this kind of flexibility?  Can you provide some
->> use cases where memory_type based "adistance_offset" doesn't work?
->
-> - /sys/devices/virtual/memory_type/memory_type/ adistance_offset
-> memory_type based "adistance_offset will provide a way to move all nodes of same memory_type (e.g. all cxl nodes)
-> to different tier.
+Thanks for testing!
 
-We will not put the CXL nodes with different performance metrics in one
-memory_type.  If so, do you still need to move one of them?
+> 
+> I am replying to all this time; Ryan, do you think it's okay to run
+> 700 of selftests/mm/cow tests? Even on FVP, they did not take longer
+> though.
 
-> Whereas /sys/devices/system/node/node2/memtier_override provide a way migrate a node from one tier to another.
-> Considering a case where we would like to move two cxl nodes into two different tiers in future.
-> So, I thought it would be good to have flexibility at node level instead of at memory_type.
+What exactly is your concern, the amount of time it takes to run the tests? I've
+found (at least on real HW) that the time it takes to run a test is dominated by
+accessing the folio's memory. So adding all of the new tests that test sizes
+between order-2 and PMD_ORDER-1 is ~equivalent to running the existing PMD_ORDER
+tests twice. And the runtime of those is barely noticable compared to the
+PUD_ORDER HugeTLB tests. So I don't think we are impacting runtime by much.
+Sounds like your experience says that's also true for FVP?
 
---
-Best Regards,
-Huang, Ying
+> 
+>> ---
+>>  tools/testing/selftests/mm/cow.c | 121 +++++++++++++++++--------------
+>>  1 file changed, 67 insertions(+), 54 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/mm/cow.c b/tools/testing/selftests/mm/cow.c
+>> index 7324ce5363c0..4d0b5a125d3c 100644
+>> --- a/tools/testing/selftests/mm/cow.c
+>> +++ b/tools/testing/selftests/mm/cow.c
+>> @@ -32,7 +32,7 @@
+>>  
+>>  static size_t pagesize;
+>>  static int pagemap_fd;
+>> -static size_t thpsize;
+>> +static size_t pmdsize;
+>>  static int nr_hugetlbsizes;
+>>  static size_t hugetlbsizes[10];
+>>  static int gup_fd;
+>> @@ -734,7 +734,7 @@ enum thp_run {
+>>  	THP_RUN_PARTIAL_SHARED,
+>>  };
+>>  
+>> -static void do_run_with_thp(test_fn fn, enum thp_run thp_run)
+>> +static void do_run_with_thp(test_fn fn, enum thp_run thp_run, size_t thpsize)
+>>  {
+>>  	char *mem, *mmap_mem, *tmp, *mremap_mem = MAP_FAILED;
+>>  	size_t size, mmap_size, mremap_size;
+>> @@ -759,11 +759,11 @@ static void do_run_with_thp(test_fn fn, enum thp_run thp_run)
+>>  	}
+>>  
+>>  	/*
+>> -	 * Try to populate a THP. Touch the first sub-page and test if we get
+>> -	 * another sub-page populated automatically.
+>> +	 * Try to populate a THP. Touch the first sub-page and test if
+>> +	 * we get the last sub-page populated automatically.
+>>  	 */
+>>  	mem[0] = 0;
+>> -	if (!pagemap_is_populated(pagemap_fd, mem + pagesize)) {
+>> +	if (!pagemap_is_populated(pagemap_fd, mem + thpsize - pagesize)) {
+>>  		ksft_test_result_skip("Did not get a THP populated\n");
+>>  		goto munmap;
+>>  	}
+>> @@ -773,12 +773,14 @@ static void do_run_with_thp(test_fn fn, enum thp_run thp_run)
+>>  	switch (thp_run) {
+>>  	case THP_RUN_PMD:
+>>  	case THP_RUN_PMD_SWAPOUT:
+>> +		assert(thpsize == pmdsize);
+>>  		break;
+>>  	case THP_RUN_PTE:
+>>  	case THP_RUN_PTE_SWAPOUT:
+>>  		/*
+>>  		 * Trigger PTE-mapping the THP by temporarily mapping a single
+>> -		 * subpage R/O.
+>> +		 * subpage R/O. This is a noop if the THP is not pmdsize (and
+>> +		 * therefore already PTE-mapped).
+>>  		 */
+>>  		ret = mprotect(mem + pagesize, pagesize, PROT_READ);
+>>  		if (ret) {
+>> @@ -875,52 +877,60 @@ static void do_run_with_thp(test_fn fn, enum thp_run thp_run)
+>>  		munmap(mremap_mem, mremap_size);
+>>  }
+>>  
+>> -static void run_with_thp(test_fn fn, const char *desc)
+>> +static void run_with_thp(test_fn fn, const char *desc, size_t size)
+>>  {
+>> -	ksft_print_msg("[RUN] %s ... with THP\n", desc);
+>> -	do_run_with_thp(fn, THP_RUN_PMD);
+>> +	ksft_print_msg("[RUN] %s ... with THP (%zu kB)\n",
+>> +		desc, size / 1024);
+>> +	do_run_with_thp(fn, THP_RUN_PMD, size);
+>>  }
+>>  
+>> -static void run_with_thp_swap(test_fn fn, const char *desc)
+>> +static void run_with_thp_swap(test_fn fn, const char *desc, size_t size)
+>>  {
+>> -	ksft_print_msg("[RUN] %s ... with swapped-out THP\n", desc);
+>> -	do_run_with_thp(fn, THP_RUN_PMD_SWAPOUT);
+>> +	ksft_print_msg("[RUN] %s ... with swapped-out THP (%zu kB)\n",
+>> +		desc, size / 1024);
+>> +	do_run_with_thp(fn, THP_RUN_PMD_SWAPOUT, size);
+>>  }
+>>  
+>> -static void run_with_pte_mapped_thp(test_fn fn, const char *desc)
+>> +static void run_with_pte_mapped_thp(test_fn fn, const char *desc, size_t size)
+>>  {
+>> -	ksft_print_msg("[RUN] %s ... with PTE-mapped THP\n", desc);
+>> -	do_run_with_thp(fn, THP_RUN_PTE);
+>> +	ksft_print_msg("[RUN] %s ... with PTE-mapped THP (%zu kB)\n",
+>> +		desc, size / 1024);
+>> +	do_run_with_thp(fn, THP_RUN_PTE, size);
+>>  }
+>>  
+>> -static void run_with_pte_mapped_thp_swap(test_fn fn, const char *desc)
+>> +static void run_with_pte_mapped_thp_swap(test_fn fn, const char *desc, size_t size)
+>>  {
+>> -	ksft_print_msg("[RUN] %s ... with swapped-out, PTE-mapped THP\n", desc);
+>> -	do_run_with_thp(fn, THP_RUN_PTE_SWAPOUT);
+>> +	ksft_print_msg("[RUN] %s ... with swapped-out, PTE-mapped THP (%zu kB)\n",
+>> +		desc, size / 1024);
+>> +	do_run_with_thp(fn, THP_RUN_PTE_SWAPOUT, size);
+>>  }
+>>  
+>> -static void run_with_single_pte_of_thp(test_fn fn, const char *desc)
+>> +static void run_with_single_pte_of_thp(test_fn fn, const char *desc, size_t size)
+>>  {
+>> -	ksft_print_msg("[RUN] %s ... with single PTE of THP\n", desc);
+>> -	do_run_with_thp(fn, THP_RUN_SINGLE_PTE);
+>> +	ksft_print_msg("[RUN] %s ... with single PTE of THP (%zu kB)\n",
+>> +		desc, size / 1024);
+>> +	do_run_with_thp(fn, THP_RUN_SINGLE_PTE, size);
+>>  }
+>>  
+>> -static void run_with_single_pte_of_thp_swap(test_fn fn, const char *desc)
+>> +static void run_with_single_pte_of_thp_swap(test_fn fn, const char *desc, size_t size)
+>>  {
+>> -	ksft_print_msg("[RUN] %s ... with single PTE of swapped-out THP\n", desc);
+>> -	do_run_with_thp(fn, THP_RUN_SINGLE_PTE_SWAPOUT);
+>> +	ksft_print_msg("[RUN] %s ... with single PTE of swapped-out THP (%zu kB)\n",
+>> +		desc, size / 1024);
+>> +	do_run_with_thp(fn, THP_RUN_SINGLE_PTE_SWAPOUT, size);
+>>  }
+>>  
+>> -static void run_with_partial_mremap_thp(test_fn fn, const char *desc)
+>> +static void run_with_partial_mremap_thp(test_fn fn, const char *desc, size_t size)
+>>  {
+>> -	ksft_print_msg("[RUN] %s ... with partially mremap()'ed THP\n", desc);
+>> -	do_run_with_thp(fn, THP_RUN_PARTIAL_MREMAP);
+>> +	ksft_print_msg("[RUN] %s ... with partially mremap()'ed THP (%zu kB)\n",
+>> +		desc, size / 1024);
+>> +	do_run_with_thp(fn, THP_RUN_PARTIAL_MREMAP, size);
+>>  }
+>>  
+>> -static void run_with_partial_shared_thp(test_fn fn, const char *desc)
+>> +static void run_with_partial_shared_thp(test_fn fn, const char *desc, size_t size)
+>>  {
+>> -	ksft_print_msg("[RUN] %s ... with partially shared THP\n", desc);
+>> -	do_run_with_thp(fn, THP_RUN_PARTIAL_SHARED);
+>> +	ksft_print_msg("[RUN] %s ... with partially shared THP (%zu kB)\n",
+>> +		desc, size / 1024);
+>> +	do_run_with_thp(fn, THP_RUN_PARTIAL_SHARED, size);
+>>  }
+>>  
+>>  static void run_with_hugetlb(test_fn fn, const char *desc, size_t hugetlbsize)
+>> @@ -1091,15 +1101,15 @@ static void run_anon_test_case(struct test_case const *test_case)
+>>  
+>>  	run_with_base_page(test_case->fn, test_case->desc);
+>>  	run_with_base_page_swap(test_case->fn, test_case->desc);
+>> -	if (thpsize) {
+>> -		run_with_thp(test_case->fn, test_case->desc);
+>> -		run_with_thp_swap(test_case->fn, test_case->desc);
+>> -		run_with_pte_mapped_thp(test_case->fn, test_case->desc);
+>> -		run_with_pte_mapped_thp_swap(test_case->fn, test_case->desc);
+>> -		run_with_single_pte_of_thp(test_case->fn, test_case->desc);
+>> -		run_with_single_pte_of_thp_swap(test_case->fn, test_case->desc);
+>> -		run_with_partial_mremap_thp(test_case->fn, test_case->desc);
+>> -		run_with_partial_shared_thp(test_case->fn, test_case->desc);
+>> +	if (pmdsize) {
+>> +		run_with_thp(test_case->fn, test_case->desc, pmdsize);
+>> +		run_with_thp_swap(test_case->fn, test_case->desc, pmdsize);
+>> +		run_with_pte_mapped_thp(test_case->fn, test_case->desc, pmdsize);
+>> +		run_with_pte_mapped_thp_swap(test_case->fn, test_case->desc, pmdsize);
+>> +		run_with_single_pte_of_thp(test_case->fn, test_case->desc, pmdsize);
+>> +		run_with_single_pte_of_thp_swap(test_case->fn, test_case->desc, pmdsize);
+>> +		run_with_partial_mremap_thp(test_case->fn, test_case->desc, pmdsize);
+>> +		run_with_partial_shared_thp(test_case->fn, test_case->desc, pmdsize);
+>>  	}
+>>  	for (i = 0; i < nr_hugetlbsizes; i++)
+>>  		run_with_hugetlb(test_case->fn, test_case->desc,
+>> @@ -1120,7 +1130,7 @@ static int tests_per_anon_test_case(void)
+>>  {
+>>  	int tests = 2 + nr_hugetlbsizes;
+>>  
+>> -	if (thpsize)
+>> +	if (pmdsize)
+>>  		tests += 8;
+>>  	return tests;
+>>  }
+>> @@ -1329,7 +1339,7 @@ static void run_anon_thp_test_cases(void)
+>>  {
+>>  	int i;
+>>  
+>> -	if (!thpsize)
+>> +	if (!pmdsize)
+>>  		return;
+>>  
+>>  	ksft_print_msg("[INFO] Anonymous THP tests\n");
+>> @@ -1338,13 +1348,13 @@ static void run_anon_thp_test_cases(void)
+>>  		struct test_case const *test_case = &anon_thp_test_cases[i];
+>>  
+>>  		ksft_print_msg("[RUN] %s\n", test_case->desc);
+>> -		do_run_with_thp(test_case->fn, THP_RUN_PMD);
+>> +		do_run_with_thp(test_case->fn, THP_RUN_PMD, pmdsize);
+>>  	}
+>>  }
+>>  
+>>  static int tests_per_anon_thp_test_case(void)
+>>  {
+>> -	return thpsize ? 1 : 0;
+>> +	return pmdsize ? 1 : 0;
+>>  }
+>>  
+>>  typedef void (*non_anon_test_fn)(char *mem, const char *smem, size_t size);
+>> @@ -1419,7 +1429,7 @@ static void run_with_huge_zeropage(non_anon_test_fn fn, const char *desc)
+>>  	}
+>>  
+>>  	/* For alignment purposes, we need twice the thp size. */
+>> -	mmap_size = 2 * thpsize;
+>> +	mmap_size = 2 * pmdsize;
+>>  	mmap_mem = mmap(NULL, mmap_size, PROT_READ | PROT_WRITE,
+>>  			MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+>>  	if (mmap_mem == MAP_FAILED) {
+>> @@ -1434,11 +1444,11 @@ static void run_with_huge_zeropage(non_anon_test_fn fn, const char *desc)
+>>  	}
+>>  
+>>  	/* We need a THP-aligned memory area. */
+>> -	mem = (char *)(((uintptr_t)mmap_mem + thpsize) & ~(thpsize - 1));
+>> -	smem = (char *)(((uintptr_t)mmap_smem + thpsize) & ~(thpsize - 1));
+>> +	mem = (char *)(((uintptr_t)mmap_mem + pmdsize) & ~(pmdsize - 1));
+>> +	smem = (char *)(((uintptr_t)mmap_smem + pmdsize) & ~(pmdsize - 1));
+>>  
+>> -	ret = madvise(mem, thpsize, MADV_HUGEPAGE);
+>> -	ret |= madvise(smem, thpsize, MADV_HUGEPAGE);
+>> +	ret = madvise(mem, pmdsize, MADV_HUGEPAGE);
+>> +	ret |= madvise(smem, pmdsize, MADV_HUGEPAGE);
+>>  	if (ret) {
+>>  		ksft_test_result_fail("MADV_HUGEPAGE failed\n");
+>>  		goto munmap;
+>> @@ -1457,7 +1467,7 @@ static void run_with_huge_zeropage(non_anon_test_fn fn, const char *desc)
+>>  		goto munmap;
+>>  	}
+>>  
+>> -	fn(mem, smem, thpsize);
+>> +	fn(mem, smem, pmdsize);
+>>  munmap:
+>>  	munmap(mmap_mem, mmap_size);
+>>  	if (mmap_smem != MAP_FAILED)
+>> @@ -1650,7 +1660,7 @@ static void run_non_anon_test_case(struct non_anon_test_case const *test_case)
+>>  	run_with_zeropage(test_case->fn, test_case->desc);
+>>  	run_with_memfd(test_case->fn, test_case->desc);
+>>  	run_with_tmpfile(test_case->fn, test_case->desc);
+>> -	if (thpsize)
+>> +	if (pmdsize)
+>>  		run_with_huge_zeropage(test_case->fn, test_case->desc);
+>>  	for (i = 0; i < nr_hugetlbsizes; i++)
+>>  		run_with_memfd_hugetlb(test_case->fn, test_case->desc,
+>> @@ -1671,7 +1681,7 @@ static int tests_per_non_anon_test_case(void)
+>>  {
+>>  	int tests = 3 + nr_hugetlbsizes;
+>>  
+>> -	if (thpsize)
+>> +	if (pmdsize)
+>>  		tests += 1;
+>>  	return tests;
+>>  }
+>> @@ -1681,10 +1691,13 @@ int main(int argc, char **argv)
+>>  	int err;
+>>  
+>>  	pagesize = getpagesize();
+>> -	thpsize = read_pmd_pagesize();
+>> -	if (thpsize)
+>> +	pmdsize = read_pmd_pagesize();
+>> +	if (pmdsize) {
+>> +		ksft_print_msg("[INFO] detected PMD size: %zu KiB\n",
+>> +			       pmdsize / 1024);
+>>  		ksft_print_msg("[INFO] detected THP size: %zu KiB\n",
+>> -			       thpsize / 1024);
+>> +			       pmdsize / 1024);
+>> +	}
+>>  	nr_hugetlbsizes = detect_hugetlb_page_sizes(hugetlbsizes,
+>>  						    ARRAY_SIZE(hugetlbsizes));
+>>  	detect_huge_zeropage();
+>> -- 
+>> 2.25.1
+>>
+
