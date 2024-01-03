@@ -1,94 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp87.cstnet.cn [159.226.251.87])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F63E19BBA;
-	Wed,  3 Jan 2024 03:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nOQoswZ/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704251410; x=1735787410;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=yfYuDnLnosyafof+2dmQ1VR1lM0gJ9NDYqFf6ZR3LWc=;
-  b=nOQoswZ/XJISB+0KTz6EGPUrqXoJcFoyMF5bQxntCXKUB6D3hhWDbWax
-   A0qvZqAwZZZJvjhq5ihfGx6y+fE+4DXkSLJqiIYpk4sjS7cL4oBymtVBu
-   5Pw0Hp3ixDHWyPDGbjMZ4MHSxeqAx2EkJEFrcD/tBXLMDJ3Jyx/R9gEiJ
-   9fwcCd+qwcbwrPJ4n5h4yIJIGOOsk9YDuBXVO5czEDaU7ghVDkP+TnCsx
-   XJh4gM8X0Z7sqIvG8MQbbdHhrt+CImGPd74m13T5fH+X5+rpdd8P6Ywzg
-   rrB4BY3lZbgPvNO5E+5jOUyHIv5D0bh5C0hYyoq9ozi/YoGxlNvN12YKu
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="10343183"
-X-IronPort-AV: E=Sophos;i="6.04,326,1695711600"; 
-   d="scan'208";a="10343183"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 19:10:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="729666013"
-X-IronPort-AV: E=Sophos;i="6.04,326,1695711600"; 
-   d="scan'208";a="729666013"
-Received: from dmi-pnp-i7.sh.intel.com ([10.239.159.155])
-  by orsmga003.jf.intel.com with ESMTP; 02 Jan 2024 19:10:06 -0800
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Jim Mattson <jmattson@google.com>
-Cc: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Zhenyu Wang <zhenyuw@linux.intel.com>,
-	Zhang Xiong <xiong.y.zhang@intel.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	Like Xu <like.xu.linux@gmail.com>,
-	Jinrong Liang <cloudliang@tencent.com>,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [kvm-unit-tests Patch v3 11/11] x86: pmu: Improve branch misses event verification
-Date: Wed,  3 Jan 2024 11:14:09 +0800
-Message-Id: <20240103031409.2504051-12-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240103031409.2504051-1-dapeng1.mi@linux.intel.com>
-References: <20240103031409.2504051-1-dapeng1.mi@linux.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F373E1A59A;
+	Wed,  3 Jan 2024 03:12:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iie.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iie.ac.cn
+Received: from mengjingzi$iie.ac.cn ( [121.195.114.118] ) by
+ ajax-webmail-APP-17 (Coremail) ; Wed, 3 Jan 2024 11:12:28 +0800 (GMT+08:00)
+Date: Wed, 3 Jan 2024 11:12:28 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: =?UTF-8?B?5a2f5pWs5ae/?= <mengjingzi@iie.ac.cn>
+To: brauner@kernel.org
+Cc: linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: proposal to refine capability checks when _rlimit_overlimit() is
+ true
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.15 build 20230921(8ad33efc)
+ Copyright (c) 2002-2024 www.mailtech.cn cnic.cn
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <1a8ed7bd.c96e.18ccd4ee4d1.Coremail.mengjingzi@iie.ac.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:qgCowAB3Qumd0JRl5xYDAA--.26354W
+X-CM-SenderInfo: pphqwyxlqj6xo6llvhldfou0/1tbiDAYFE2WUwEQ2dgAAsp
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-Since IBPB command is already leveraged to force one branch miss
-triggering, the lower boundary of branch misses event can be set to 1
-instead of 0 on IBPB supported processors. Thus the ambiguity from 0 can
-be eliminated.
-
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- x86/pmu.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/x86/pmu.c b/x86/pmu.c
-index c8d4a0dcd362..d5c3fcfaa84c 100644
---- a/x86/pmu.c
-+++ b/x86/pmu.c
-@@ -172,6 +172,16 @@ static void adjust_events_range(struct pmu_event *gp_events, int branch_idx)
- 		gp_events[branch_idx].min = PRECISE_LOOP_BRANCHES;
- 		gp_events[branch_idx].max = PRECISE_LOOP_BRANCHES;
- 	}
-+
-+	/*
-+	 * If HW supports IBPB, one branch miss is forced to trigger by
-+	 * IBPB command. Thus overwrite the lower boundary of branch misses
-+	 * event to 1.
-+	 */
-+	if (has_ibpb()) {
-+		/* branch misses event */
-+		gp_events[branch_idx + 1].min = 1;
-+	}
- }
- 
- volatile uint64_t irq_received;
--- 
-2.34.1
-
+SGkhCgpXZSBvYnNlcnZlZCBhIHBvdGVudGlhbCByZWZpbmVtZW50IGluIHRoZSBrZXJuZWwvZm9y
+ay5jIGxpbmUgMjM2OC4gQ3VycmVudGx5LCBib3RoIENBUF9TWVNfQURNSU4gYW5kIENBUF9TWVNf
+UkVTT1VSQ0UgYXJlIGNoZWNrZWQgd2hlbiB0aGUgbGltaXQgaXMgb3ZlciBzeXN0ZW0gbGltaXQu
+IFdlIHN1Z2dlc3QgY29uc2lkZXJpbmcgYW4gYWRqdXN0bWVudCB0byB1dGlsaXplIENBUF9TWVNf
+UkVTT1VSQ0UgZXhjbHVzaXZlbHkuIEhlcmUncyBvdXIgcmF0aW9uYWxlIGZvciB0aGlzIHN1Z2dl
+c3Rpb246CgooMSkgRGVmaW5lZCBDYXBhYmlsaXR5IGZvciBSZXNvdXJjZSBBY2Nlc3M6IEFjY29y
+ZGluZyB0byB0aGUgY2FwYWJpbGl0eSBtYW51YWwgcGFnZVsxXSwgdGhlIGNhcGFiaWxpdHkgZXhw
+bGljaXRseSBkZWZpbmVkIGZvciBieXBhc3NpbmcgcmVzb3VyY2UgbGltaXRzIGlzIENBUF9TWVNf
+UkVTT1VSQ0UuIFRoaXMgY2FwYWJpbGl0eSBpcyBkZXNpZ25lZCB0byBwcm92aWRlIHRoZSBuZWNl
+c3NhcnkgcHJpdmlsZWdlcyBmb3IgYWNjZXNzaW5nIHN5c3RlbSByZXNvdXJjZXMgd2l0aG91dCBv
+dmVyLXByaXZpbGVnaW5nIHdpdGggdGhlIGJyb2FkZXIgQ0FQX1NZU19BRE1JTi4KCigyKSBNYWlu
+dGFpbmluZyBMZWFzdCBQcml2aWxlZ2U6IENBUF9TWVNfQVNNSU4gaXMgYWxyZWFkeSBvdmVybG9h
+ZGVkIGFuZCBrbm93biBhcyB0aGUgbmV3ICJyb290IlsyXS4gVGhlIHVzZSBvZiBDQVBfU1lTX0FE
+TUlOIGluIHRoaXMgY29udGV4dCBtaWdodCBpbmFkdmVydGVudGx5IG92ZXItcHJpdmlsZWdlIHRo
+ZSBzeXN0ZW0gYnkgcHJvdmlkaW5nIG1vcmUgY2FwYWJpbGl0aWVzIHRoYW4gbmVjZXNzYXJ5LiBB
+bmQgYWNjb3JkaW5nIHRvIGNhcGFiaWxpdHkgbWFudWFsIHBhZ2VbMV0sIOKAnERvbid0IGNob29z
+ZSBDQVBfU1lTX0FETUlOIGlmIHlvdSBjYW4gcG9zc2libHkgYXZvaWQgaXQh4oCdLCBpdCdzIGJl
+bmVmaWNpYWwgdG8gdXNlIHRoZSBtb3N0IHNwZWNpZmljIGNhcGFiaWxpdHkgcmVxdWlyZWQgZm9y
+IGEgZ2l2ZW4gdGFzay4KClRoaXMgaXNzdWUgZXhpc3RzIGluIHNldmVyYWwga2VybmVsIHZlcnNp
+b25zIGFuZCB3ZSBoYXZlIGNoZWNrZWQgaXQgb24gdGhlIGxhdGVzdCBzdGFibGUgcmVsZWFzZShM
+aW51eCA2LjYuOSkuCgpZb3VyIGluc2lnaHRzIGFuZCBmZWVkYmFjayBvbiB0aGlzIHByb3Bvc2Vk
+IG1vZGlmaWNhdGlvbiB3b3VsZCBiZSBoaWdobHkgYXBwcmVjaWF0ZWQuIFRoYW5rIHlvdSBmb3Ig
+eW91ciB0aW1lIGFuZCBjb25zaWRlcmF0aW9uLgoKQmVzdCByZWdhcmRzLApKaW5nemkKCnJlZmVy
+ZW5jZToKWzFdIGh0dHBzOi8vd3d3Lm1hbjcub3JnL2xpbnV4L21hbi1wYWdlcy9tYW43L2NhcGFi
+aWxpdGllcy43Lmh0bWwKWzJdIGh0dHBzOi8vbHduLm5ldC9BcnRpY2xlcy80ODYzMDYv
