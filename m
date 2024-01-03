@@ -1,165 +1,161 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9078C1C6BB
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 18:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124631CAA0
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 18:38:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="DFjHIT4r"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2cd1aeb1b02so7019631fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 10:38:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ps9cD3Dx"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a28bf46ea11so38981366b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 10:38:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1704307108; x=1704911908; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=NjSZPIcPNoFGpG+WpkTBOGU5J4ZC0xbLsWqkPtHnL28=;
-        b=DFjHIT4rw9qvULevWxYS7fscs7xiOemEXBQaUUJHtHFDqJEtr1AzV/2XGk6h8WfvU9
-         C4oOlRu5heAIOC6RMLVR/dFZDIrTmhgYiKtMY47FCEY+WdZ6ypF6qj/Iu7nNh2ohVEeJ
-         SBj4bRUX+qE8sFuLIwvy7+wRPdgdfkOY0JCJ4=
+        d=google.com; s=20230601; t=1704307126; x=1704911926; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lYrCXAnsOH5ti259ZxbWJxLR6syqU5rDe0tyxmeWWuA=;
+        b=Ps9cD3DxxvLm/nA8x2j//4AbGTxK+X6pG3Df7eOOVLqwjQdWlsjSaojsKFd1m6XVBr
+         exUPW0Ctd30yPSvhvxXlwz/RJzloEBoY6U/ZG0Pqf3Fw3AfeLoNd2C4xtHjavl46pOC8
+         jWwl6wNoYJzsu7J5H4gtoHnkZ5lX4XMYznnGWEdGOVSjxC/YSfHshtgOMUnmGLrpuVgy
+         YgCCQ45iglhQxTNIVtd4ccexqPtDB7vWq/AZxELO4G5W3h1i3bqQT/haTXJlfoyN7mNr
+         OFjnY6rXva0Vz97v4QVs8GMMwfG2En/soBv5RCqwaDzooEOOf50CJIut9MJJkMTRW/Vh
+         ++4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704307108; x=1704911908;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NjSZPIcPNoFGpG+WpkTBOGU5J4ZC0xbLsWqkPtHnL28=;
-        b=ggdLkl7HUOjOS3ntiGu9dnyQ/+CcJrWYH14K77tp+1Tl4HbneGJCTSiU9nteiLNXvw
-         OqUOHXO7MXHrDl9EZWRJJJSGsZGfN2JNNt+lCTvaSSz+9J14hWfTXXQLxn2Vc4qEEY5t
-         mbOpABxvdH8SlvXa6sPdrnwyPlQDQX3Bi7YT8CkwPhKOJ7H/aH/q2SAn8YTpNp5rJRVn
-         15zZ6SCOSYCxf7JjTNhJgt/b85aZfd7I0hn5FcMpkRFsTam+7CLUZ75cECf2Z22L1dn5
-         0wVEynfSFFYxAP2oHbpP8VwxC6NEeENTNQfFrilq2fQ3Iv0+HqH3PsnFGDaDq+cmYp4c
-         CeJA==
-X-Gm-Message-State: AOJu0YxrFQOS4qu0Nh0Se4N0jk8GTHUQ6tt44IyIZ+Ut5gM/1e+zY9oX
-	B8Ex+ssLXHwdXhuQvjFVD7XXmV2cDkd7P/fG2f9R5U1t+z6sW+Bj
-X-Google-Smtp-Source: AGHT+IFOZ5S5GyqW60S8MY+F9CAdM/vx7MYSiwCj/y12DRXAOfpGtcdAWW49RsW9/6Dd+YqCiD641w==
-X-Received: by 2002:a2e:7c12:0:b0:2cc:d45a:48f2 with SMTP id x18-20020a2e7c12000000b002ccd45a48f2mr6795469ljc.62.1704307108253;
-        Wed, 03 Jan 2024 10:38:28 -0800 (PST)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id e10-20020a05651c090a00b002cce6095241sm2973891ljq.62.2024.01.03.10.38.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jan 2024 10:38:27 -0800 (PST)
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-50e80d40a41so8687152e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 10:38:27 -0800 (PST)
-X-Received: by 2002:a05:6512:a83:b0:50e:a517:6f13 with SMTP id
- m3-20020a0565120a8300b0050ea5176f13mr871776lfu.23.1704307107291; Wed, 03 Jan
- 2024 10:38:27 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704307126; x=1704911926;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lYrCXAnsOH5ti259ZxbWJxLR6syqU5rDe0tyxmeWWuA=;
+        b=wICGSxmq8s0ZNzsiKzw9Um7qy5F0wbBzRC7gSBNXcqda1T9hy5bNvIv5TntwyfDXRs
+         egSlFURI+NjWM7yI3P58FVnMDc2VBhglU1+Q9DBSmNZ11hRqVGl2osLDgI5Pn7P01gCX
+         ngo1ofUJnzE3NUdf+VkXyrbZgWnkB4TOO5jpSPqNIfSulJZa9zcoaG85eyOf7AvrLh5L
+         egl403wo9Pv6mqww8OwqInpZCBtAyHCh87wibOzDXXHAIVpL//8TXqObJwa8RaU6aB8A
+         2uz11cNXGerJ7IpRJGmxdp3YIFfkiXN2TM/TsU4ytNDNOV1gHfaw+J8ida14BlY2hQCR
+         ow+A==
+X-Gm-Message-State: AOJu0YxImhlh5+5M2PlDyevK9h+lMmqOWsdglr5LaHMoJs+uPJCe/B7X
+	D1b7JBiHmnXgxSbIVP82poEBZCmspGk4iShAUWOYK56kc5FRWbUV5YoetOPE6bVcHrc=
+X-Google-Smtp-Source: AGHT+IHjRdt5+uZ9nZA8crZD5uFYRphJnSJ6JCDKfN+HX/AxSHKzupPmd7ltprsCcDhr9SyYHn60vw2HqP99zs0fD8Y=
+X-Received: by 2002:a17:907:9010:b0:a23:62ed:105b with SMTP id
+ ay16-20020a170907901000b00a2362ed105bmr1147383ejc.69.1704307126074; Wed, 03
+ Jan 2024 10:38:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240103102553.17a19cea@gandalf.local.home> <CAHk-=whrRobm82kcjwj625bZrdK+vvEo0B5PBzP+hVaBcHUkJA@mail.gmail.com>
-In-Reply-To: <CAHk-=whrRobm82kcjwj625bZrdK+vvEo0B5PBzP+hVaBcHUkJA@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 3 Jan 2024 10:38:09 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjVdGkjDXBbvLn2wbZnqP4UsH46E3gqJ9m7UG6DpX2+WA@mail.gmail.com>
-Message-ID: <CAHk-=wjVdGkjDXBbvLn2wbZnqP4UsH46E3gqJ9m7UG6DpX2+WA@mail.gmail.com>
-Subject: Re: [PATCH] eventfs: Stop using dcache_readdir() for getdents()
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Type: multipart/mixed; boundary="000000000000b8b1f0060e0eebf2"
-
---000000000000b8b1f0060e0eebf2
+References: <20231214020530.2267499-1-almasrymina@google.com>
+ <20231214020530.2267499-5-almasrymina@google.com> <ddffff98-f3de-6a5d-eb26-636dacefe9aa@huawei.com>
+ <CAHS8izO2nDHuxKau8iLcAmnho-1TYkzW09MBZ80+JzOo9YyVFA@mail.gmail.com>
+ <20231215021114.ipvdx2bwtxckrfdg@google.com> <20231215190126.1040fa12@kernel.org>
+ <CALvZod5myy2SvuCMNmqjjYeNONqSArV+8y8mrkfnNeog8WLjng@mail.gmail.com>
+ <CAHS8izOLBtjHOqbTS_PiTNe+rTE=jboDWDM9zS108B57vVNcwA@mail.gmail.com>
+ <CAHS8izMkCwv3jak9KUHeDUrkwBNNpdYk4voEX7Cbp7mTpNAQdA@mail.gmail.com>
+ <54f226ef-df2d-9f32-fa3f-e846d6510758@huawei.com> <CAHS8izP63wXGH+Q3y1H=ycT=AHYnhGveBnuyF_rYioAjZ=Hn=g@mail.gmail.com>
+ <7c6d35e3-165f-5883-1c1b-fce82c976028@huawei.com> <CAHS8izNqeiK1tq=48LMbbqq5B4d2mhgbuKRvnFtiBngf73jXZg@mail.gmail.com>
+ <fda068d0-f7fb-90fc-cdd6-1f853a4a225f@huawei.com>
+In-Reply-To: <fda068d0-f7fb-90fc-cdd6-1f853a4a225f@huawei.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Wed, 3 Jan 2024 10:38:31 -0800
+Message-ID: <CAHS8izNAxB=DQzSBOGbm6SsiL1cLSijj9n=g3d3egSxnOcBibQ@mail.gmail.com>
+Subject: Re: [RFC PATCH net-next v1 4/4] net: page_pool: use netmem_t instead
+ of struct page in API
+To: Yunsheng Lin <linyunsheng@huawei.com>
+Cc: Shakeel Butt <shakeelb@google.com>, Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, bpf@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Michael Chan <michael.chan@broadcom.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, Wei Fang <wei.fang@nxp.com>, 
+	Shenwei Wang <shenwei.wang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, 
+	NXP Linux Team <linux-imx@nxp.com>, Jeroen de Borst <jeroendb@google.com>, 
+	Praveen Kaligineedi <pkaligineedi@google.com>, Shailend Chand <shailend@google.com>, 
+	Yisen Zhuang <yisen.zhuang@huawei.com>, Salil Mehta <salil.mehta@huawei.com>, 
+	Jesse Brandeburg <jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Marcin Wojtas <mw@semihalf.com>, 
+	Russell King <linux@armlinux.org.uk>, Sunil Goutham <sgoutham@marvell.com>, 
+	Geetha sowjanya <gakula@marvell.com>, Subbaraya Sundeep <sbhatta@marvell.com>, 
+	hariprasad <hkelam@marvell.com>, Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>, 
+	Sean Wang <sean.wang@mediatek.com>, Mark Lee <Mark-MC.Lee@mediatek.com>, 
+	Lorenzo Bianconi <lorenzo@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>, 
+	Horatiu Vultur <horatiu.vultur@microchip.com>, UNGLinuxDriver@microchip.com, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Jassi Brar <jaswinder.singh@linaro.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Siddharth Vadapalli <s-vadapalli@ti.com>, 
+	Ravi Gunasekaran <r-gunasekaran@ti.com>, Roger Quadros <rogerq@kernel.org>, 
+	Jiawen Wu <jiawenwu@trustnetic.com>, Mengyuan Lou <mengyuanlou@net-swift.com>, 
+	Ronak Doshi <doshir@vmware.com>, VMware PV-Drivers Reviewers <pv-drivers@vmware.com>, 
+	Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>, 
+	Kalle Valo <kvalo@kernel.org>, Juergen Gross <jgross@suse.com>, 
+	Stefano Stabellini <sstabellini@kernel.org>, 
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Jason Gunthorpe <jgg@nvidia.com>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 3 Jan 2024 at 10:12, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Wed, Jan 3, 2024 at 1:47=E2=80=AFAM Yunsheng Lin <linyunsheng@huawei.com=
+> wrote:
 >
-> Much better. Now eventfs looks more like a real filesystem, and less
-> like an eldritch horror monster that is parts of dcache tackled onto a
-> pseudo-filesystem.
+> On 2024/1/3 0:14, Mina Almasry wrote:
+> >
+> > The idea being that skb_frag_page() can return NULL if the frag is not
+> > paged, and the relevant callers are modified to handle that.
+>
+> There are many existing drivers which are not expecting NULL returning fo=
+r
+> skb_frag_page() as those drivers are not supporting devmem, adding additi=
+onl
+> checking overhead in skb_frag_page() for those drivers does not make much
+> sense, IMHO, it may make more sense to introduce a new helper for the dri=
+ver
+> supporting devmem or networking core that needing dealing with both norma=
+l
+> page and devmem.
+>
+> And we are also able to keep the old non-NULL returning semantic for
+> skb_frag_page().
 
-Oh, except I think you still need to just remove the 'set_gid()' mess.
+I think I'm seeing agreement that the direction we're heading into
+here is that most net stack & drivers should use the abstract netmem
+type, and only specific code that needs a page or devmem (like
+tcp_receive_zerocopy or tcp_recvmsg_dmabuf) will be the ones that
+unpack the netmem and get the underlying page or devmem, using
+skb_frag_page() or something like skb_frag_dmabuf(), etc.
 
-It's disgusting and it's wrong, and it's not even what the 'uid'
-option does (it only sets the root inode uid).
+As Jason says repeatedly, I'm not allowed to blindly cast a netmem to
+a page and assume netmem=3D=3Dpage. Netmem can only be cast to a page
+after checking the low bits and verifying the netmem is actually a
+page. I think any suggestions that blindly cast a netmem to page
+without the checks will get nacked by Jason & Christian, so the
+checking in the specific cases where the code needs to know the
+underlying memory type seems necessary.
 
-If you remount the filesystem with different gid values, you get to
-keep both broken pieces. And if it isn't a remount, then setting the
-root uid is sufficient.
+IMO I'm not sure the checking is expensive. With likely/unlikely &
+static branches the checks should be very minimal or a straight no-op.
+For example in RFC v2 where we were doing a lot of checks for devmem
+(we don't do that anymore for RFCv5), I had run the page_pool perf
+tests and proved there is little to no perf regression:
 
-I think the whole thing was triggered by commit 49d67e445742, and
-maybe the fix is to just revert that commit.
+https://lore.kernel.org/netdev/CAHS8izM4w2UETAwfnV7w+ZzTMxLkz+FKO+xTgRdtYKz=
+V8RzqXw@mail.gmail.com/
 
-That commit makes no sense in general, since the default mounting
-position for tracefs that the kernel sets up is only accessible to
-root anyway.
-
-Alternatively, just do the ->permissions() thing, and allow access to
-the group in the mount options.
-
-Getting rid of set_gid() would be this attached lovely patch:
-
- fs/tracefs/inode.c | 83 ++----------------------------------------------------
- 1 file changed, 2 insertions(+), 81 deletions(-)
-
-and would get rid of the final (?) piece of disgusting dcache hackery
-that tracefs most definitely should not have.
-
-             Linus
-
---000000000000b8b1f0060e0eebf2
-Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
-Content-Disposition: attachment; filename="patch.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_lqy4f8350>
-X-Attachment-Id: f_lqy4f8350
-
-IGZzL3RyYWNlZnMvaW5vZGUuYyB8IDgzICsrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwg
-ODEgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZnMvdHJhY2Vmcy9pbm9kZS5jIGIvZnMvdHJh
-Y2Vmcy9pbm9kZS5jCmluZGV4IDYyNTI0YjIwOTY0ZS4uYTIyMjUzMDM3ZTNlIDEwMDY0NAotLS0g
-YS9mcy90cmFjZWZzL2lub2RlLmMKKysrIGIvZnMvdHJhY2Vmcy9pbm9kZS5jCkBAIC0xODMsODMg
-KzE4Myw2IEBAIHN0cnVjdCB0cmFjZWZzX2ZzX2luZm8gewogCXN0cnVjdCB0cmFjZWZzX21vdW50
-X29wdHMgbW91bnRfb3B0czsKIH07CiAKLXN0YXRpYyB2b2lkIGNoYW5nZV9naWQoc3RydWN0IGRl
-bnRyeSAqZGVudHJ5LCBrZ2lkX3QgZ2lkKQotewotCWlmICghZGVudHJ5LT5kX2lub2RlKQotCQly
-ZXR1cm47Ci0JZGVudHJ5LT5kX2lub2RlLT5pX2dpZCA9IGdpZDsKLX0KLQotLyoKLSAqIFRha2Vu
-IGZyb20gZF93YWxrLCBidXQgd2l0aG91dCBoZSBuZWVkIGZvciBoYW5kbGluZyByZW5hbWVzLgot
-ICogTm90aGluZyBjYW4gYmUgcmVuYW1lZCB3aGlsZSB3YWxraW5nIHRoZSBsaXN0LCBhcyB0cmFj
-ZWZzCi0gKiBkb2VzIG5vdCBzdXBwb3J0IHJlbmFtZXMuIFRoaXMgaXMgb25seSBjYWxsZWQgd2hl
-biBtb3VudGluZwotICogb3IgcmVtb3VudGluZyB0aGUgZmlsZSBzeXN0ZW0sIHRvIHNldCBhbGwg
-dGhlIGZpbGVzIHRvCi0gKiB0aGUgZ2l2ZW4gZ2lkLgotICovCi1zdGF0aWMgdm9pZCBzZXRfZ2lk
-KHN0cnVjdCBkZW50cnkgKnBhcmVudCwga2dpZF90IGdpZCkKLXsKLQlzdHJ1Y3QgZGVudHJ5ICp0
-aGlzX3BhcmVudDsKLQlzdHJ1Y3QgbGlzdF9oZWFkICpuZXh0OwotCi0JdGhpc19wYXJlbnQgPSBw
-YXJlbnQ7Ci0Jc3Bpbl9sb2NrKCZ0aGlzX3BhcmVudC0+ZF9sb2NrKTsKLQotCWNoYW5nZV9naWQo
-dGhpc19wYXJlbnQsIGdpZCk7Ci1yZXBlYXQ6Ci0JbmV4dCA9IHRoaXNfcGFyZW50LT5kX3N1YmRp
-cnMubmV4dDsKLXJlc3VtZToKLQl3aGlsZSAobmV4dCAhPSAmdGhpc19wYXJlbnQtPmRfc3ViZGly
-cykgewotCQlzdHJ1Y3QgdHJhY2Vmc19pbm9kZSAqdGk7Ci0JCXN0cnVjdCBsaXN0X2hlYWQgKnRt
-cCA9IG5leHQ7Ci0JCXN0cnVjdCBkZW50cnkgKmRlbnRyeSA9IGxpc3RfZW50cnkodG1wLCBzdHJ1
-Y3QgZGVudHJ5LCBkX2NoaWxkKTsKLQkJbmV4dCA9IHRtcC0+bmV4dDsKLQotCQlzcGluX2xvY2tf
-bmVzdGVkKCZkZW50cnktPmRfbG9jaywgREVOVFJZX0RfTE9DS19ORVNURUQpOwotCi0JCWNoYW5n
-ZV9naWQoZGVudHJ5LCBnaWQpOwotCi0JCS8qIElmIHRoaXMgaXMgdGhlIGV2ZW50cyBkaXJlY3Rv
-cnksIHVwZGF0ZSB0aGF0IHRvbyAqLwotCQl0aSA9IGdldF90cmFjZWZzKGRlbnRyeS0+ZF9pbm9k
-ZSk7Ci0JCWlmICh0aSAmJiAodGktPmZsYWdzICYgVFJBQ0VGU19FVkVOVF9JTk9ERSkpCi0JCQll
-dmVudGZzX3VwZGF0ZV9naWQoZGVudHJ5LCBnaWQpOwotCi0JCWlmICghbGlzdF9lbXB0eSgmZGVu
-dHJ5LT5kX3N1YmRpcnMpKSB7Ci0JCQlzcGluX3VubG9jaygmdGhpc19wYXJlbnQtPmRfbG9jayk7
-Ci0JCQlzcGluX3JlbGVhc2UoJmRlbnRyeS0+ZF9sb2NrLmRlcF9tYXAsIF9SRVRfSVBfKTsKLQkJ
-CXRoaXNfcGFyZW50ID0gZGVudHJ5OwotCQkJc3Bpbl9hY3F1aXJlKCZ0aGlzX3BhcmVudC0+ZF9s
-b2NrLmRlcF9tYXAsIDAsIDEsIF9SRVRfSVBfKTsKLQkJCWdvdG8gcmVwZWF0OwotCQl9Ci0JCXNw
-aW5fdW5sb2NrKCZkZW50cnktPmRfbG9jayk7Ci0JfQotCS8qCi0JICogQWxsIGRvbmUgYXQgdGhp
-cyBsZXZlbCAuLi4gYXNjZW5kIGFuZCByZXN1bWUgdGhlIHNlYXJjaC4KLQkgKi8KLQlyY3VfcmVh
-ZF9sb2NrKCk7Ci1hc2NlbmQ6Ci0JaWYgKHRoaXNfcGFyZW50ICE9IHBhcmVudCkgewotCQlzdHJ1
-Y3QgZGVudHJ5ICpjaGlsZCA9IHRoaXNfcGFyZW50OwotCQl0aGlzX3BhcmVudCA9IGNoaWxkLT5k
-X3BhcmVudDsKLQotCQlzcGluX3VubG9jaygmY2hpbGQtPmRfbG9jayk7Ci0JCXNwaW5fbG9jaygm
-dGhpc19wYXJlbnQtPmRfbG9jayk7Ci0KLQkJLyogZ28gaW50byB0aGUgZmlyc3Qgc2libGluZyBz
-dGlsbCBhbGl2ZSAqLwotCQlkbyB7Ci0JCQluZXh0ID0gY2hpbGQtPmRfY2hpbGQubmV4dDsKLQkJ
-CWlmIChuZXh0ID09ICZ0aGlzX3BhcmVudC0+ZF9zdWJkaXJzKQotCQkJCWdvdG8gYXNjZW5kOwot
-CQkJY2hpbGQgPSBsaXN0X2VudHJ5KG5leHQsIHN0cnVjdCBkZW50cnksIGRfY2hpbGQpOwotCQl9
-IHdoaWxlICh1bmxpa2VseShjaGlsZC0+ZF9mbGFncyAmIERDQUNIRV9ERU5UUllfS0lMTEVEKSk7
-Ci0JCXJjdV9yZWFkX3VubG9jaygpOwotCQlnb3RvIHJlc3VtZTsKLQl9Ci0JcmN1X3JlYWRfdW5s
-b2NrKCk7Ci0Jc3Bpbl91bmxvY2soJnRoaXNfcGFyZW50LT5kX2xvY2spOwotCXJldHVybjsKLX0K
-LQogc3RhdGljIGludCB0cmFjZWZzX3BhcnNlX29wdGlvbnMoY2hhciAqZGF0YSwgc3RydWN0IHRy
-YWNlZnNfbW91bnRfb3B0cyAqb3B0cykKIHsKIAlzdWJzdHJpbmdfdCBhcmdzW01BWF9PUFRfQVJH
-U107CkBAIC0zMzIsMTAgKzI1NSw4IEBAIHN0YXRpYyBpbnQgdHJhY2Vmc19hcHBseV9vcHRpb25z
-KHN0cnVjdCBzdXBlcl9ibG9jayAqc2IsIGJvb2wgcmVtb3VudCkKIAlpZiAoIXJlbW91bnQgfHwg
-b3B0cy0+b3B0cyAmIEJJVChPcHRfdWlkKSkKIAkJaW5vZGUtPmlfdWlkID0gb3B0cy0+dWlkOwog
-Ci0JaWYgKCFyZW1vdW50IHx8IG9wdHMtPm9wdHMgJiBCSVQoT3B0X2dpZCkpIHsKLQkJLyogU2V0
-IGFsbCB0aGUgZ3JvdXAgaWRzIHRvIHRoZSBtb3VudCBvcHRpb24gKi8KLQkJc2V0X2dpZChzYi0+
-c19yb290LCBvcHRzLT5naWQpOwotCX0KKwlpZiAoIXJlbW91bnQgfHwgb3B0cy0+b3B0cyAmIEJJ
-VChPcHRfZ2lkKSkKKwkJaW5vZGUtPmlfZ2lkID0gb3B0cy0+Z2lkOwogCiAJcmV0dXJuIDA7CiB9
-Cg==
---000000000000b8b1f0060e0eebf2--
+--=20
+Thanks,
+Mina
