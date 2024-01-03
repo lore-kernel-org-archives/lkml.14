@@ -1,287 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B9518E08
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 11:10:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D859618E0C;
+	Wed,  3 Jan 2024 11:10:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ojFX72Sr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49CB0C433C7;
-	Wed,  3 Jan 2024 11:10:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704280237;
-	bh=vLoZYtFxzJ2+K06nFXKmnrlfGz1y0ecWX2UzGR9hwI0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ojFX72Sr1iuIEWNfq3+EibKDiSiBnB0uCNBpToafuraSESQqXMB+/6mIiVmfCbYMJ
-	 MXgdHSsj8YdOK7mgWpGy9zLQKvERKCKJYAmEsPlTzWR0ba/BKoy6zfQY44+Hp3n7mV
-	 zWPJFNAPPrPuafzz/gevLPHy9sMqcJFPqmoQpFBI5ZOm4qXmwC2VO9+VHTdxlPY8v7
-	 U0Qg1BTheOHUKbHAzHtTlYMau0be/H8DUIWofJ4txtePgtJDooJLY04zGDh7lpXaTo
-	 EuRrbNBl4hadcG2hE4SX9IvGcXrc5NCQjfL8eJS8lEgNZAjolL3JWsL/Rp/QjXVTHr
-	 t/Pt1u9GaJWAw==
-Date: Wed, 3 Jan 2024 18:57:55 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: Add support for BATCHED_UNMAP_TLB_FLUSH
-Message-ID: <ZZU9s7iHDTBD39C0@xhacker>
-References: <20240102141851.105144-1-alexghiti@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gxipcu4Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704280244; x=1735816244;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=pj9WHV7vN3rtOcUAz5NT9Ykx5SZEIa8+tJWrnXtekEw=;
+  b=Gxipcu4ZND5lpHo9PjBD8YP3JGo5llUsCEDgjNVhosWY109Z0nPldiHG
+   olzH6dyQZc0/3n2bQ7RGff2nnS4vwp8LNTzFyE/Wn1z94U8CPTBE4j3Wu
+   cfOtNJDDcmLwuipzAFX/x5i032DDr+POQfXBnxbpavd/We4dn0OLelsYh
+   KRJ6M1GUQREMQIx56ujbXe3kLM8EEpDXNmiKxK/OUFIjdY47LVINTCKa4
+   QJbfRMmWDDB5xvO4PZzo5/PiDnRKztABdH4UmaKyWZvJ1Lh9G5yLfhwty
+   o9UduQovQxENUZjoy2lxLH4xdcE2E1IejaVEyMhgR0V0ICCkOP3SiUqQ9
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="381959304"
+X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
+   d="scan'208";a="381959304"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 03:10:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="953202028"
+X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
+   d="scan'208";a="953202028"
+Received: from bergbenj-mobl1.ger.corp.intel.com (HELO myassin-mobl1.ger.corp.intel.com) ([10.251.211.32])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 03:10:39 -0800
+Date: Wed, 3 Jan 2024 13:10:33 +0200 (EET)
+From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Lino Sanfilippo <l.sanfilippo@kunbus.com>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Jiri Slaby <jirislaby@kernel.org>, u.kleine-koenig@pengutronix.de, 
+    shawnguo@kernel.org, s.hauer@pengutronix.de, mcoquelin.stm32@gmail.com, 
+    alexandre.torgue@foss.st.com, cniedermaier@dh-electronics.com, 
+    hugo@hugovil.com, m.brock@vanmierlo.com, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    linux-serial <linux-serial@vger.kernel.org>, LinoSanfilippo@gmx.de, 
+    Lukas Wunner <lukas@wunner.de>, p.rosenberger@kunbus.com, 
+    stable@vger.kernel.org
+Subject: Re: [PATCH v7 1/7] serial: Do not hold the port lock when setting
+ rx-during-tx GPIO
+In-Reply-To: <20240103061818.564-2-l.sanfilippo@kunbus.com>
+Message-ID: <485fbc21-d099-d316-2146-36fef116f894@linux.intel.com>
+References: <20240103061818.564-1-l.sanfilippo@kunbus.com> <20240103061818.564-2-l.sanfilippo@kunbus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240102141851.105144-1-alexghiti@rivosinc.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, Jan 02, 2024 at 03:18:51PM +0100, Alexandre Ghiti wrote:
-> Allow to defer the flushing of the TLB when unmapping pges, which allows
-> to reduce the numbers of IPI and the number of sfence.vma.
+On Wed, 3 Jan 2024, Lino Sanfilippo wrote:
+
+> Both the imx and stm32 driver set the rx-during-tx GPIO in rs485_config().
+> Since this function is called with the port lock held, this can be a
+> problem in case that setting the GPIO line can sleep (e.g. if a GPIO
+> expander is used which is connected via SPI or I2C).
 > 
-> The ubenchmarch used in commit 43b3dfdd0455 ("arm64: support
-> batched/deferred tlb shootdown during page reclamation/migration") shows
-> good performance improvement and perf reports an important decrease in
-> time spent flushing the tlb (results come from qemu):
-
-Hi Alex,
-
-I tried this micro benchmark with your patch on T-HEAD TH1520 platform, I
-didn't see any performance improvement for the micro benchmark. Per
-myunderstanding, the micro benchmark is special case for arm64 because
-in a normal tlb flush flow, below sequence is necessary:
-
-tlbi
-dsb
-
-
-while with BATCHED_UNMAP_TLB_FLUSH, the arm64 just does 'tlbi', leaving
-the dsb to the arch_tlbbatch_flush(). So the final result is
-
-several 'tlbi + dsb' sequence VS. several 'tlbi' instructions + only one dsb
-The performance improvement comes from the unnecessary dsb eliminations.
-
-Do you have suitable benchmark(s) for BATCHED_UNMAP_TLB_FLUSH on riscv?
-
-Thanks
-
+> Avoid this issue by moving the GPIO setting outside of the port lock into
+> the serial core and thus making it a generic feature.
 > 
-> Before this patch:
+> Also with commit c54d48543689 ("serial: stm32: Add support for rs485
+> RX_DURING_TX output GPIO") the SER_RS485_RX_DURING_TX flag is only set if a
+> rx-during-tx GPIO is _not_ available, which is wrong. Fix this, too.
+
+This doesn't explain why it's wrong and I could figure it out myself 
+either.
+
+> Furthermore reset old GPIO settings in case that changing the RS485
+> configuration failed.
 > 
-> real	2m1.135s
-> user	0m0.980s
-> sys	2m0.096s
-> 
-> 4.83%  batch_tlb  [kernel.kallsyms]            [k] __flush_tlb_range
-> 
-> After this patch:
-> 
-> real	1m0.543s
-> user	0m1.059s
-> sys	0m59.489s
-> 
-> 0.14%  batch_tlb  [kernel.kallsyms]            [k] __flush_tlb_range
-> 
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> Fixes: c54d48543689 ("serial: stm32: Add support for rs485 RX_DURING_TX output GPIO")
+> Fixes: ca530cfa968c ("serial: imx: Add support for RS485 RX_DURING_TX output GPIO")
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Lino Sanfilippo <l.sanfilippo@kunbus.com>
 > ---
->  arch/riscv/Kconfig                |  1 +
->  arch/riscv/include/asm/tlbbatch.h | 15 +++++++
->  arch/riscv/include/asm/tlbflush.h | 10 +++++
->  arch/riscv/mm/tlbflush.c          | 71 ++++++++++++++++++++++---------
->  4 files changed, 77 insertions(+), 20 deletions(-)
->  create mode 100644 arch/riscv/include/asm/tlbbatch.h
+>  drivers/tty/serial/imx.c         |  4 ----
+>  drivers/tty/serial/serial_core.c | 26 ++++++++++++++++++++++++--
+>  drivers/tty/serial/stm32-usart.c |  8 ++------
+>  3 files changed, 26 insertions(+), 12 deletions(-)
 > 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 7603bd8ab333..aa07bd43b138 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -53,6 +53,7 @@ config RISCV
->  	select ARCH_USE_MEMTEST
->  	select ARCH_USE_QUEUED_RWLOCKS
->  	select ARCH_USES_CFI_TRAPS if CFI_CLANG
-> +	select ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH if SMP && MMU
->  	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
->  	select ARCH_WANT_FRAME_POINTERS
->  	select ARCH_WANT_GENERAL_HUGETLB if !RISCV_ISA_SVNAPOT
-> diff --git a/arch/riscv/include/asm/tlbbatch.h b/arch/riscv/include/asm/tlbbatch.h
-> new file mode 100644
-> index 000000000000..46014f70b9da
-> --- /dev/null
-> +++ b/arch/riscv/include/asm/tlbbatch.h
-> @@ -0,0 +1,15 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2023 Rivos Inc.
-> + */
-> +
-> +#ifndef _ASM_RISCV_TLBBATCH_H
-> +#define _ASM_RISCV_TLBBATCH_H
-> +
-> +#include <linux/cpumask.h>
-> +
-> +struct arch_tlbflush_unmap_batch {
-> +	struct cpumask cpumask;
-> +};
-> +
-> +#endif /* _ASM_RISCV_TLBBATCH_H */
-> diff --git a/arch/riscv/include/asm/tlbflush.h b/arch/riscv/include/asm/tlbflush.h
-> index 8f3418c5f172..f0b731ccc0c2 100644
-> --- a/arch/riscv/include/asm/tlbflush.h
-> +++ b/arch/riscv/include/asm/tlbflush.h
-> @@ -46,6 +46,16 @@ void flush_tlb_kernel_range(unsigned long start, unsigned long end);
->  void flush_pmd_tlb_range(struct vm_area_struct *vma, unsigned long start,
->  			unsigned long end);
->  #endif
-> +
-> +#ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
-> +bool arch_tlbbatch_should_defer(struct mm_struct *mm);
-> +void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
-> +			       struct mm_struct *mm,
-> +			       unsigned long uaddr);
-> +void arch_flush_tlb_batched_pending(struct mm_struct *mm);
-> +void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch);
-> +#endif /* CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH */
-> +
->  #else /* CONFIG_SMP && CONFIG_MMU */
+> diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+> index 708b9852a575..9cffeb23112b 100644
+> --- a/drivers/tty/serial/imx.c
+> +++ b/drivers/tty/serial/imx.c
+> @@ -1943,10 +1943,6 @@ static int imx_uart_rs485_config(struct uart_port *port, struct ktermios *termio
+>  	    rs485conf->flags & SER_RS485_RX_DURING_TX)
+>  		imx_uart_start_rx(port);
 >  
->  #define flush_tlb_all() local_flush_tlb_all()
-> diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
-> index e6659d7368b3..bb623bca0a7d 100644
-> --- a/arch/riscv/mm/tlbflush.c
-> +++ b/arch/riscv/mm/tlbflush.c
-> @@ -93,29 +93,23 @@ static void __ipi_flush_tlb_range_asid(void *info)
->  	local_flush_tlb_range_asid(d->start, d->size, d->stride, d->asid);
->  }
->  
-> -static void __flush_tlb_range(struct mm_struct *mm, unsigned long start,
-> -			      unsigned long size, unsigned long stride)
-> +static void __flush_tlb_range(struct cpumask *cmask, unsigned long asid,
-> +			      unsigned long start, unsigned long size,
-> +			      unsigned long stride)
->  {
->  	struct flush_tlb_range_data ftd;
-> -	const struct cpumask *cmask;
-> -	unsigned long asid = FLUSH_TLB_NO_ASID;
->  	bool broadcast;
->  
-> -	if (mm) {
-> -		unsigned int cpuid;
-> +	if (cpumask_empty(cmask))
-> +		return;
->  
-> -		cmask = mm_cpumask(mm);
-> -		if (cpumask_empty(cmask))
-> -			return;
-> +	if (cmask != cpu_online_mask) {
-> +		unsigned int cpuid;
->  
->  		cpuid = get_cpu();
->  		/* check if the tlbflush needs to be sent to other CPUs */
->  		broadcast = cpumask_any_but(cmask, cpuid) < nr_cpu_ids;
+> -	if (port->rs485_rx_during_tx_gpio)
+> -		gpiod_set_value_cansleep(port->rs485_rx_during_tx_gpio,
+> -					 !!(rs485conf->flags & SER_RS485_RX_DURING_TX));
 > -
-> -		if (static_branch_unlikely(&use_asid_allocator))
-> -			asid = atomic_long_read(&mm->context.id) & asid_mask;
->  	} else {
-> -		cmask = cpu_online_mask;
->  		broadcast = true;
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+> index f1348a509552..d155131f221d 100644
+> --- a/drivers/tty/serial/serial_core.c
+> +++ b/drivers/tty/serial/serial_core.c
+> @@ -1402,6 +1402,16 @@ static void uart_set_rs485_termination(struct uart_port *port,
+>  				 !!(rs485->flags & SER_RS485_TERMINATE_BUS));
+>  }
+>  
+> +static void uart_set_rs485_rx_during_tx(struct uart_port *port,
+> +					const struct serial_rs485 *rs485)
+> +{
+> +	if (!(rs485->flags & SER_RS485_ENABLED))
+> +		return;
+> +
+> +	gpiod_set_value_cansleep(port->rs485_rx_during_tx_gpio,
+> +				 !!(rs485->flags & SER_RS485_RX_DURING_TX));
+> +}
+> +
+>  static int uart_rs485_config(struct uart_port *port)
+>  {
+>  	struct serial_rs485 *rs485 = &port->rs485;
+> @@ -1413,12 +1423,17 @@ static int uart_rs485_config(struct uart_port *port)
+>  
+>  	uart_sanitize_serial_rs485(port, rs485);
+>  	uart_set_rs485_termination(port, rs485);
+> +	uart_set_rs485_rx_during_tx(port, rs485);
+>  
+>  	uart_port_lock_irqsave(port, &flags);
+>  	ret = port->rs485_config(port, NULL, rs485);
+>  	uart_port_unlock_irqrestore(port, flags);
+> -	if (ret)
+> +	if (ret) {
+>  		memset(rs485, 0, sizeof(*rs485));
+> +		/* unset GPIOs */
+> +		gpiod_set_value_cansleep(port->rs485_term_gpio, 0);
+> +		gpiod_set_value_cansleep(port->rs485_rx_during_tx_gpio, 0);
+> +	}
+>  
+>  	return ret;
+>  }
+> @@ -1457,6 +1472,7 @@ static int uart_set_rs485_config(struct tty_struct *tty, struct uart_port *port,
+>  		return ret;
+>  	uart_sanitize_serial_rs485(port, &rs485);
+>  	uart_set_rs485_termination(port, &rs485);
+> +	uart_set_rs485_rx_during_tx(port, &rs485);
+>  
+>  	uart_port_lock_irqsave(port, &flags);
+>  	ret = port->rs485_config(port, &tty->termios, &rs485);
+> @@ -1468,8 +1484,14 @@ static int uart_set_rs485_config(struct tty_struct *tty, struct uart_port *port,
+>  			port->ops->set_mctrl(port, port->mctrl);
 >  	}
+>  	uart_port_unlock_irqrestore(port, flags);
+> -	if (ret)
+> +	if (ret) {
+> +		/* restore old GPIO settings */
+> +		gpiod_set_value_cansleep(port->rs485_term_gpio,
+> +			!!(port->rs485.flags & SER_RS485_TERMINATE_BUS));
+> +		gpiod_set_value_cansleep(port->rs485_rx_during_tx_gpio,
+> +			!!(port->rs485.flags & SER_RS485_RX_DURING_TX));
+>  		return ret;
+> +	}
 >  
-> @@ -135,25 +129,34 @@ static void __flush_tlb_range(struct mm_struct *mm, unsigned long start,
->  		local_flush_tlb_range_asid(start, size, stride, asid);
->  	}
+>  	if (copy_to_user(rs485_user, &port->rs485, sizeof(port->rs485)))
+>  		return -EFAULT;
+> diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
+> index 3048620315d6..fc7fd40bca98 100644
+> --- a/drivers/tty/serial/stm32-usart.c
+> +++ b/drivers/tty/serial/stm32-usart.c
+> @@ -226,12 +226,6 @@ static int stm32_usart_config_rs485(struct uart_port *port, struct ktermios *ter
 >  
-> -	if (mm)
-> +	if (cmask != cpu_online_mask)
->  		put_cpu();
->  }
+>  	stm32_usart_clr_bits(port, ofs->cr1, BIT(cfg->uart_enable_bit));
 >  
-> +static inline unsigned long get_mm_asid(struct mm_struct *mm)
-> +{
-> +	return static_branch_unlikely(&use_asid_allocator) ?
-> +			atomic_long_read(&mm->context.id) & asid_mask : FLUSH_TLB_NO_ASID;
-> +}
+> -	if (port->rs485_rx_during_tx_gpio)
+> -		gpiod_set_value_cansleep(port->rs485_rx_during_tx_gpio,
+> -					 !!(rs485conf->flags & SER_RS485_RX_DURING_TX));
+> -	else
+> -		rs485conf->flags |= SER_RS485_RX_DURING_TX;
+> -
+>  	if (rs485conf->flags & SER_RS485_ENABLED) {
+>  		cr1 = readl_relaxed(port->membase + ofs->cr1);
+>  		cr3 = readl_relaxed(port->membase + ofs->cr3);
+> @@ -256,6 +250,8 @@ static int stm32_usart_config_rs485(struct uart_port *port, struct ktermios *ter
+>  
+>  		writel_relaxed(cr3, port->membase + ofs->cr3);
+>  		writel_relaxed(cr1, port->membase + ofs->cr1);
 > +
->  void flush_tlb_mm(struct mm_struct *mm)
->  {
-> -	__flush_tlb_range(mm, 0, FLUSH_TLB_MAX_SIZE, PAGE_SIZE);
-> +	__flush_tlb_range(mm_cpumask(mm), get_mm_asid(mm),
-> +			  0, FLUSH_TLB_MAX_SIZE, PAGE_SIZE);
->  }
->  
->  void flush_tlb_mm_range(struct mm_struct *mm,
->  			unsigned long start, unsigned long end,
->  			unsigned int page_size)
->  {
-> -	__flush_tlb_range(mm, start, end - start, page_size);
-> +	__flush_tlb_range(mm_cpumask(mm), get_mm_asid(mm),
-> +			  start, end - start, page_size);
->  }
->  
->  void flush_tlb_page(struct vm_area_struct *vma, unsigned long addr)
->  {
-> -	__flush_tlb_range(vma->vm_mm, addr, PAGE_SIZE, PAGE_SIZE);
-> +	__flush_tlb_range(mm_cpumask(vma->vm_mm), get_mm_asid(vma->vm_mm),
-> +			  addr, PAGE_SIZE, PAGE_SIZE);
->  }
->  
->  void flush_tlb_range(struct vm_area_struct *vma, unsigned long start,
-> @@ -185,18 +188,46 @@ void flush_tlb_range(struct vm_area_struct *vma, unsigned long start,
->  		}
->  	}
->  
-> -	__flush_tlb_range(vma->vm_mm, start, end - start, stride_size);
-> +	__flush_tlb_range(mm_cpumask(vma->vm_mm), get_mm_asid(vma->vm_mm),
-> +			  start, end - start, stride_size);
->  }
->  
->  void flush_tlb_kernel_range(unsigned long start, unsigned long end)
->  {
-> -	__flush_tlb_range(NULL, start, end - start, PAGE_SIZE);
-> +	__flush_tlb_range((struct cpumask *)cpu_online_mask, FLUSH_TLB_NO_ASID,
-> +			  start, end - start, PAGE_SIZE);
->  }
->  
->  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->  void flush_pmd_tlb_range(struct vm_area_struct *vma, unsigned long start,
->  			unsigned long end)
->  {
-> -	__flush_tlb_range(vma->vm_mm, start, end - start, PMD_SIZE);
-> +	__flush_tlb_range(mm_cpumask(vma->vm_mm), get_mm_asid(vma->vm_mm),
-> +			  start, end - start, PMD_SIZE);
->  }
->  #endif
-> +
-> +#ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
-> +bool arch_tlbbatch_should_defer(struct mm_struct *mm)
-> +{
-> +	return true;
-> +}
-> +
-> +void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
-> +			       struct mm_struct *mm,
-> +			       unsigned long uaddr)
-> +{
-> +	cpumask_or(&batch->cpumask, &batch->cpumask, mm_cpumask(mm));
-> +}
-> +
-> +void arch_flush_tlb_batched_pending(struct mm_struct *mm)
-> +{
-> +	flush_tlb_mm(mm);
-> +}
-> +
-> +void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
-> +{
-> +	__flush_tlb_range(&batch->cpumask, FLUSH_TLB_NO_ASID, 0,
-> +			  FLUSH_TLB_MAX_SIZE, PAGE_SIZE);
-> +}
-> +#endif /* CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH */
-> -- 
-> 2.39.2
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> +		rs485conf->flags |= SER_RS485_RX_DURING_TX;
+
+Is it really intentional to force this on even if user requests it not to 
+be enabled (and after GPIO set value code used the value user provided)?
+
+Other than that, this change looks fine.
+
+-- 
+ i.
+
