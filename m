@@ -1,117 +1,111 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5165C1A5BA;
-	Wed,  3 Jan 2024 14:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0951A714
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 14:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kzSq1G1N"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 403CVfJe030588;
-	Wed, 3 Jan 2024 14:52:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=t3ywbodv99MLGzJ90Zc5rriRMeJOoLGuSei3ncrMzv4=; b=kz
-	Sq1G1N7XkK0i0nDevXJy3TWQp1er+JeZZZ3RB9EUQuPk70sb/PsLjpjSrUGIPB4M
-	ireRq9WlDVooPw62ipRxlJJ9SUMvrsyBWrlYD8PdHNoQbx5uxwBQ1DJemhpwjtBM
-	DKv3uTDksj3TX14oI1s/9c9LUtcU27iKDWHVtq32o1/XqMT6QCgiAQZoJYO5yXbN
-	CCxT5NJr0N+PiNrH8jAcACb5WXkh0Bz0g8GwlDErnFL538a4+Mv0Brem3JtzlXA1
-	FfyQEjWtSYOu8kidsfxboSx3m2kxEOHVtm/vFCymmeNOp+EahJyeX+USCD29RS25
-	Pz64L6bbjkrFH2/967iw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vcum1235h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jan 2024 14:52:25 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 403EqOSg027425
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 3 Jan 2024 14:52:24 GMT
-Received: from [10.216.35.57] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 3 Jan
- 2024 06:52:19 -0800
-Message-ID: <814824d9-9509-4b5d-84ad-de0cbf5808a0@quicinc.com>
-Date: Wed, 3 Jan 2024 20:22:15 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AV+D26VQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704293987;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=s3o3MrTd6nm5lawOB5Ax6jA2uuGzy36Eef5IBUe+5HY=;
+	b=AV+D26VQILz2cOKMwox8g/2mhcRPhHN01nFPa87LciragtVm7beV/Cb+82LXtZIJUo+mWR
+	Ti/UTs06ne1ObFBUECvgj4yAZnHFrHQipXq/CZc7ug1rKT9XXGNUKbD+p5NbRXwYGT/TP9
+	YsV63Pj61e2sdL6D7/GQHPGm9nKgznY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-298-3VxcmtpCOkq8GL6PiBMlJQ-1; Wed, 03 Jan 2024 09:59:43 -0500
+X-MC-Unique: 3VxcmtpCOkq8GL6PiBMlJQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4F93C83B821;
+	Wed,  3 Jan 2024 14:59:42 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.68])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 24175C15A0C;
+	Wed,  3 Jan 2024 14:59:37 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>,
+	Jeff Layton <jlayton@kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Dominique Martinet <asmadeus@codewreck.org>
+Cc: David Howells <dhowells@redhat.com>,
+	Steve French <smfrench@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	linux-cachefs@redhat.com,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] netfs, cachefiles, 9p: Additional patches
+Date: Wed,  3 Jan 2024 14:59:24 +0000
+Message-ID: <20240103145935.384404-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/2] dt-bindings: usb: dwc3: Clean up hs_phy_irq in
- binding
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Wesley Cheng <quic_wcheng@quicinc.com>
-CC: <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>, <quic_ppratap@quicinc.com>,
-        <quic_jackp@quicinc.com>, Andy Gross
-	<agross@kernel.org>,
-        Johan Hovold <johan@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-References: <20231222063648.11193-1-quic_kriskura@quicinc.com>
- <20231222063648.11193-2-quic_kriskura@quicinc.com>
- <e6419898-0d77-4286-a04b-7240eb90d8df@linaro.org>
- <268f9f54-8b2a-42bb-9a5d-10bd930cb282@quicinc.com>
- <55c478c7-abcc-4487-b81c-479df47d5666@linaro.org>
-From: Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>
-In-Reply-To: <55c478c7-abcc-4487-b81c-479df47d5666@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: z7O5ULuuphWKyvnzm97uhQPzQJuAP6_L
-X-Proofpoint-GUID: z7O5ULuuphWKyvnzm97uhQPzQJuAP6_L
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- mlxlogscore=429 clxscore=1015 lowpriorityscore=0 adultscore=0
- malwarescore=0 priorityscore=1501 phishscore=0 impostorscore=0
- suspectscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401030122
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
+Hi Christian, Jeff, Gao, Dominique,
 
->>>>            interrupt-names:
->>>> -          minItems: 3
->>>>              items:
->>>> +            - const: pwr_event
->>>>                - const: hs_phy_irq
->>>> -            - const: dp_hs_phy_irq
->>>> -            - const: dm_hs_phy_irq
->>>> +            - const: qusb2_phy
->>>
->>> Why qusb2_phy is after hs_phy_irq? In the earlier if:then: it is the
->>> second one.
->>>
->>
->> In v3 as well, the hs_phy_irq is before qusb2_phy interrupt:
->> https://lore.kernel.org/all/20231211121124.4194-2-quic_kriskura@quicinc.com/
-> 
-> ? How v3 matters?
-> 
+Here are some additional patches for my netfs-lib tree:
 
-I was thinking whether I modified the order between v3 and v5 and didn't 
-mention in change log and hence I compared with v3. Thanks for the catch.
+ (1) Fix __cachefiles_prepare_write() to correctly validate against the DIO
+     alignment.
 
-I made qusb2_phy the second one in the list and pushed v6: 
-https://lore.kernel.org/all/20231227091951.685-1-quic_kriskura@quicinc.com/
+ (2) 9p: Fix initialisation of the netfs_inode so that i_size is set before
+     netfs_inode_init() is called.
 
-Can you help provide you review on v6 as well.
+ (3) 9p: Do a couple of cleanups (remove a couple of unused vars and turn a
+     BUG_ON() into a warning).
 
-Regards,
-Krishna,
+ (4) 9p: Always update remote_i_size, even if we're asked not to update
+     i_size in stat2inode.
+
+ (5) 9p: Return the amount written in preference to an error if we wrote
+     something.
+
+David
+
+The netfslib postings:
+Link: https://lore.kernel.org/r/20231013160423.2218093-1-dhowells@redhat.com/ # v1
+Link: https://lore.kernel.org/r/20231117211544.1740466-1-dhowells@redhat.com/ # v2
+Link: https://lore.kernel.org/r/20231207212206.1379128-1-dhowells@redhat.com/ # v3
+Link: https://lore.kernel.org/r/20231213152350.431591-1-dhowells@redhat.com/ # v4
+Link: https://lore.kernel.org/r/20231221132400.1601991-1-dhowells@redhat.com/ # v5
+
+David Howells (5):
+  cachefiles: Fix __cachefiles_prepare_write()
+  9p: Fix initialisation of netfs_inode for 9p
+  9p: Do a couple of cleanups
+  9p: Always update remote_i_size in stat2inode
+  9p: Use length of data written to the server in preference to error
+
+ fs/9p/v9fs_vfs.h       |  1 +
+ fs/9p/vfs_addr.c       | 24 ++++++++++++------------
+ fs/9p/vfs_inode.c      |  6 +++---
+ fs/9p/vfs_inode_dotl.c |  7 ++++---
+ fs/cachefiles/io.c     | 28 +++++++++++++++++-----------
+ 5 files changed, 37 insertions(+), 29 deletions(-)
+
