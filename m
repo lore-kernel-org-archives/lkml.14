@@ -1,135 +1,112 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE9E182A2
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 08:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4B7182CF
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 08:14:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="c6DUitPQ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cCyZ7Ti8";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HlW+xlJ2";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="L5gPJvUG"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 1C6341F798;
-	Wed,  3 Jan 2024 08:14:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1704269641; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EHzT6aEuunaF8l957oLeyQUzYLU5v+V8f8tLm26sh6Q=;
-	b=c6DUitPQDMRwF+0goNIS1n9Q0sr99l84uw2rTrxYLUZo4553qSO56Q41HlH0GbKdkhZJTW
-	22mJpS+H/qKDYwIXq4K3gRk2ACrmx+/pVmT2qgyy9HNqPV4PPfHrCVBJMYwfLqg5heHr6D
-	BOnBATflnsTYq51QctE/eIt9Z66sDMA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1704269641;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EHzT6aEuunaF8l957oLeyQUzYLU5v+V8f8tLm26sh6Q=;
-	b=cCyZ7Ti86IGLu4B9k6WFjJGXYPDYEwA0tSo34nnmEYMDnfOVvQg4gahtNBJUY/XwwOXb6W
-	jihSN0D4Xwq8/QCQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1704269640; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EHzT6aEuunaF8l957oLeyQUzYLU5v+V8f8tLm26sh6Q=;
-	b=HlW+xlJ2flYs8Ie3LfqBXcZLLCXsPnlmeyNwYByRNLwgoM/NqpmqVOmOTW6EWgr0HgsGlE
-	U/BGuf1rkvii764yUoymTTCYqRIz/dvsCiS/q6IwlvtN58Evu4ckpYClx2JK+u2i2O4+NQ
-	JWQDEi0tdlBlblgJ6L5H63stSix/Kt4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1704269640;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EHzT6aEuunaF8l957oLeyQUzYLU5v+V8f8tLm26sh6Q=;
-	b=L5gPJvUGmCkrGVVkF3WH2nqdQl2bjBdu+Y7S8tPHLacvvIRiMeQCoTJdmpe5zD/a/aUD3d
-	6cnsmAFtEUCM4BBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4E2851340C;
-	Wed,  3 Jan 2024 08:13:59 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id SfDJD0cXlWWaWgAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Wed, 03 Jan 2024 08:13:59 +0000
-Date: Wed, 3 Jan 2024 09:14:49 +0100
-From: Oscar Salvador <osalvador@suse.de>
-To: andrey.konovalov@linux.dev
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Marco Elver <elver@google.com>,
-	Alexander Potapenko <glider@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>, kasan-dev@googlegroups.com,
-	Evgenii Stepanov <eugenis@google.com>, linux-mm@kvack.org,
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="jQ1a+B7g"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-555e1bf6475so2515333a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 00:14:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1704269649; x=1704874449; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8NLeu4c+70FbWhZWyp8ofXWlavTVRvov3jDdAHZ2Sxs=;
+        b=jQ1a+B7gSzyxbgQZV4hkvbp+uc0g0w7/5s9wqbWqviMZ26rr54LZTlo+F+vUKvLn1s
+         iaqmfKgb9tEwiY70efPVEfIFSw19ULkM+WBBK+wt1cYe1TTNVuEHE7oTpP2nlleM2mnh
+         H2rXjof+LB7LdYeLiTJZhcYbHaGyU7ZSsX9WlthcLPGJcIPJfrHc71sudt0Vl5gqIc9Y
+         jyDvPMo3Hd2VHzN5IkSftL5reJyOzYV3zJOxhHKDkhH2BqwhG1SR1ldo6aBI0nNzQza6
+         XG/ck1/CZfQf3kJ+vixVAK2oiW8ghl9Dn3XP5CDWh3RqkZks+ll2PTvhvGKGIoT24fq5
+         y28w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704269649; x=1704874449;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8NLeu4c+70FbWhZWyp8ofXWlavTVRvov3jDdAHZ2Sxs=;
+        b=Xxn1MoH6HFAvCjHjEpA3RLyuoVszzadNTVxEx9LtVIuyEt883EcxnQIVikowbeAvZA
+         rddSrm+SxKDk1K98WAL4Ns+znWW6Y8m0+bcH12jVjsRk+3K1janym+abRwPhmagBHXzJ
+         wpgZe7rHqIcSctfpAjOm8PBTxc0KUDLtxGey/X2pcLwD6KWpRFkCAUGWyqRsl2WX8cdi
+         uWA/up78wNJFF3KTCiBpXVlb9zBX0MCWSWHaAvMVCgWU7u1cq2Q7pJMkC+kE/EMSBQ2Q
+         QOm78bQU996QaN9EesEOvALBh6PaWZLW05NstihFRk1z3ae9gUbT2W9F5vdC3iJHYRlJ
+         em+g==
+X-Gm-Message-State: AOJu0YzXaYHzdHXqL5nCCHn+6xauyLPgOXbKcyG6NADj5BRRQimI3kVz
+	SDT++JTdKtGG/MeKg460hftAuDiOZfBdSQ==
+X-Google-Smtp-Source: AGHT+IHuAlW392LA3z/z6G4YmP9CE3iboyix6WpzpR0ACM4D7EzBb/QXme3cn51Zb/GHj2nwAhG4qA==
+X-Received: by 2002:a05:6402:1617:b0:555:bb88:cba3 with SMTP id f23-20020a056402161700b00555bb88cba3mr4925911edv.27.1704269648765;
+        Wed, 03 Jan 2024 00:14:08 -0800 (PST)
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.5])
+        by smtp.gmail.com with ESMTPSA id cn13-20020a0564020cad00b00554b089f1dcsm13104196edb.38.2024.01.03.00.14.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jan 2024 00:14:08 -0800 (PST)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: s.shtylyov@omp.ru,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: mitsuhiro.kimura.kc@renesas.com,
+	netdev@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Andrey Konovalov <andreyknvl@google.com>
-Subject: Re: [PATCH v4 01/22] lib/stackdepot: print disabled message only if
- truly disabled
-Message-ID: <ZZUXeSTWneflnRn6@localhost.localdomain>
-References: <cover.1700502145.git.andreyknvl@google.com>
- <73a25c5fff29f3357cd7a9330e85e09bc8da2cbe.1700502145.git.andreyknvl@google.com>
+	claudiu.beznea@tuxon.dev,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v4 0/1] net: ravb: fixes for the ravb driver
+Date: Wed,  3 Jan 2024 10:13:52 +0200
+Message-Id: <20240103081353.4165445-1-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <73a25c5fff29f3357cd7a9330e85e09bc8da2cbe.1700502145.git.andreyknvl@google.com>
-X-Spam-Level: 
-X-Spam-Level: 
-X-Spamd-Result: default: False [-0.10 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_TWELVE(0.00)[12];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[linux-foundation.org,gmail.com,google.com,suse.cz,googlegroups.com,kvack.org,vger.kernel.org];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.00)[40.46%]
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Score: -0.10
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
 
-On Mon, Nov 20, 2023 at 06:46:59PM +0100, andrey.konovalov@linux.dev wrote:
-> From: Andrey Konovalov <andreyknvl@google.com>
-> 
-> Currently, if stack_depot_disable=off is passed to the kernel
-> command-line after stack_depot_disable=on, stack depot prints a message
-> that it is disabled, while it is actually enabled.
-> 
-> Fix this by moving printing the disabled message to
-> stack_depot_early_init. Place it before the
-> __stack_depot_early_init_requested check, so that the message is printed
-> even if early stack depot init has not been requested.
-> 
-> Also drop the stack_table = NULL assignment from disable_stack_depot,
-> as stack_table is NULL by default.
-> 
-> Fixes: e1fdc403349c ("lib: stackdepot: add support to disable stack depot")
-> Reviewed-by: Marco Elver <elver@google.com>
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Hi,
+
+Series adds one fix for the ravb driver to wait for the operating
+mode to be applied by hardware before proceeding.
+
+Thank you,
+Claudiu Beznea
+
+Change in v4:
+- rephrase a paragraph from patch description
+- added a comment in ravb_set_opmode()
+- collected Rb tag
+
+Changes in v3:
+- s/csr_opmode/csr_ops in ravb_set_opmode()
+- mask opmode with CCC_OPC when retrieveing csr_ops
+- in ravb_set_opmode() updated modify mask passed to ravb_modify() to
+  include GAC and CSEL bits if these are part of opmode
+- s/failed to switch device to config mode/failed to switch device to
+  requested mode/ in ravb_set_opmode()
+- s/operation/operating in the title of patch 1/1
+
+Changes in v2:
+- dropped patch 2/2 from v1 ("net: ravb: Check that GTI loading request is
+  done")
+- kept a single "Fixes" entry in commit description
+- updated commit description for patch 1/1
+- introduce ravb_set_opmode() that does all the necessities for
+  setting the operating mode (set DMA.CCC and wait for CSR.OPS) and call it
+  where needed; this should comply with all the HW manuals requirements as
+  different manual variants specify different modes need to be checked in
+  CSR.OPS when setting DMA.CCC.
+
+Claudiu Beznea (1):
+  net: ravb: Wait for operating mode to be applied
+
+ drivers/net/ethernet/renesas/ravb_main.c | 65 +++++++++++++++---------
+ 1 file changed, 42 insertions(+), 23 deletions(-)
 
 -- 
-Oscar Salvador
-SUSE Labs
+2.39.2
+
