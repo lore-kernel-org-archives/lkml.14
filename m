@@ -1,79 +1,103 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from proxmox-new.maurer-it.com (proxmox-new.maurer-it.com [94.136.29.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848D718E3C;
-	Wed,  3 Jan 2024 09:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="jg9h8ytC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=D5wPLE9TZz9FB8/zFddxM+lmOG8aS1WUAq/N+WIF/34=; b=jg9h8ytC1jyaCi86YZ3yq/HzUo
-	Seznnu4aTFRdTXJGmfFHAoH6YU3aS90j7cpthWeEQHQJRY2fKCahqw78iCTzpUsUvyYF0Idcea9e7
-	4arIyVUDfOFaoh9Ibm0so5z1qetdUTK0DxUHg3rlmi42pbdqAQmsIpfDsucH/U7J2FS+8C1QwFHUG
-	/ZaP/aEtdTMz/JKRqc7Fvp06Qz7ijJfpB+2r5LEOqJjR4MudDJfT0fJl8KRvuJCSFaU5DM/lstI4G
-	VrnQtA+7spviCCv2HrumYR8WSHEDQpeo70e0Z8kk54G9pVtQUnZ9haza8a/DcL/nUFA4ZkjBsJYKu
-	+4iAFSWQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45524)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rKxtZ-0007JJ-0I;
-	Wed, 03 Jan 2024 09:50:41 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rKxtZ-0006G0-1w; Wed, 03 Jan 2024 09:50:41 +0000
-Date: Wed, 3 Jan 2024 09:50:41 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: Eric Woudstra <ericwouds@gmail.com>, Alexander Couzens <lynxis@fe80.eu>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Frank Wunderlich <frank-w@public-files.de>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH RFC net-next] net: pcs: pcs-mtk-lynxi fix
- mtk_pcs_lynxi_get_state() for 2500base-x
-Message-ID: <ZZUt8YG/z8koXK9y@shell.armlinux.org.uk>
-References: <20240102074408.1049203-1-ericwouds@gmail.com>
- <ZZP9GR15ufDbjGAJ@shell.armlinux.org.uk>
- <92190426-3614-4774-9E9F-18F121622788@gmail.com>
- <74223164-ab50-4d6d-a4f4-561b0a70d396@gmail.com>
- <ZZRrk85SCDmo76NJ@pidgin.makrotopia.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1BA1862A;
+	Wed,  3 Jan 2024 09:52:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proxmox.com
+Received: from proxmox-new.maurer-it.com (localhost.localdomain [127.0.0.1])
+	by proxmox-new.maurer-it.com (Proxmox) with ESMTP id 15E4745133;
+	Wed,  3 Jan 2024 10:46:55 +0100 (CET)
+Message-ID: <45a1df73-c6c1-4d36-b84d-93bb4ec9f861@proxmox.com>
+Date: Wed, 3 Jan 2024 10:46:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZZRrk85SCDmo76NJ@pidgin.makrotopia.org>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Qemu KVM thread spins at 100% CPU usage on scsi hot-unplug
+ (kernel 6.6.8 guest)
+Content-Language: en-US
+To: Steven Haigh <netwiz@crc.id.au>, Lukas Wunner <lukas@wunner.de>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <3a7656ab-df4c-4d57-8866-661beffcddd7@crc.id.au>
+ <20231228131802.GA21994@wunner.de>
+ <5f4dfc03-bdfc-41d1-8c5a-1e767e472a96@crc.id.au>
+From: Fiona Ebner <f.ebner@proxmox.com>
+In-Reply-To: <5f4dfc03-bdfc-41d1-8c5a-1e767e472a96@crc.id.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 02, 2024 at 09:01:23PM +0100, Daniel Golle wrote:
-> On Tue, Jan 02, 2024 at 08:33:32PM +0100, Eric Woudstra wrote:
-> > [...]
-> > 
-> > So if phylink_mii_c22_pcs_decode_state() should not set the speed, then it is not correctly set somewhere else.
+Hi,
+
+Am 29.12.23 um 06:46 schrieb Steven Haigh:
+> On 29/12/23 00:18, Lukas Wunner wrote:
+>> On Thu, Dec 28, 2023 at 01:03:10PM +1100, Steven Haigh wrote:
+>>> At some point in kernel 6.6.x, SCSI hotplug in qemu VMs broke. This was
+>>> mostly fixed in the following commit to release 6.6.8:
+>>>     commit 5cc8d88a1b94b900fd74abda744c29ff5845430b
+>>>     Author: Bjorn Helgaas <bhelgaas@google.com>
+>>>     Date:   Thu Dec 14 09:08:56 2023 -0600
+>>>     Revert "PCI: acpiphp: Reassign resources on bridge if necessary"
+>>>
+>>> After this commit, the SCSI block device is hotplugged correctly, and
+>>> a device node as /dev/sdX appears within the qemu VM.
+>>>
+>>> New problem:
+>>>
+>>> When the same SCSI block device is hot-unplugged, the QEMU KVM
+>>> process will
+>>> spin at 100% CPU usage. The guest shows no CPU being used via top,
+>>> but the
+>>> host will continue to spin in the KVM thread until the VM is rebooted.
+>>
+>> Find out the PID of the qemu process on the host, then cat
+>> /proc/$PID/stack
+>> to see where the CPU time is spent.
 > 
-> Yes, but the fix should go to pcs-mtk-lynxi.c and you don't need to
-> change phylink for it to work.
+> Thanks for the tip - I'll certainly do that.
+> 
+> Annoyingly, since I posted this report originally, then adding in a new
+> report to the kernel.org lists in this, I have been unable to reproduce
+> this problem. I have successfully done ~22 scsi hotplug / remove cycles
+> and none resulted in reproducing the issue.
+> 
+> Kernel versions are still the same on both proxmox host and the Fedora
+> guest - however I see an update on the host of the qemu-kvm packages in
+> Proxmox. The proxmox host hasn't even been rebooted in this time.
+> 
+> I wonder if the initial revert included in 6.6.8 fixed the main problem,
+> and the later update to qemu-kvm packages on the proxmox host followed
+> by the last reboot of the VM with the new KVM package sorted the second
+> issue.
+> 
+> Seeing as I can no longer reproduce this reliably - whereas it was 100%
+> reproducible prior, maybe I'm now chasing ghosts.
+> 
 
-... which is broken thinking. It's "let's add custom hacks to drivers
-to implement driver specific behaviour, ignoring what is being asked
-of them by the upper layers."
+That sounds likely. Version pve-qemu-kvm=8.1.2-5 had a regression where
+an IO thread in QEMU could start spinning after a drain (which happens
+during hotplug on the QEMU side). It was introduced by an attempted fix
+for a much rarer problem [0] and was reverted in pve-qemu-kvm=8.1.2-6
+[1]. A proper fix is still being worked on [2].
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+[0]:
+https://git.proxmox.com/?p=pve-qemu.git;a=commit;h=6b7c1815e1c89cb66ff48fbba6da69fe6d254630
+[1]:
+https://git.proxmox.com/?p=pve-qemu.git;a=commit;h=2a49e667bae33f2a5c6ba6b59a0cd26387f73a27
+[2]: https://lists.nongnu.org/archive/html/qemu-devel/2023-12/msg01900.html
+
+Best Regards,
+Fiona
+
+> I'll still continue to monitor - as I normally do this SCSI hotplug ~3
+> times per week doing backups to different external HDDs - so if I do
+> observe it again, I'll grab the stack and reply to this thread again
+> with what I can find.
+> 
+> Until then, I don't want to waste other peoples time also chasing ghosts :)
+> 
+
+
