@@ -1,49 +1,16 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CCE1D534
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 20:06:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tWoNggRk"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-42832ddd9d1so8206901cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 12:06:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704312413; x=1704917213; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HB9ce/ZYj/o4q+a999lFcCPcvK9JlN2H69sVtgUKvWI=;
-        b=tWoNggRkLg77FZmoYe7r/lfrBBHM3Ymak81nFdFy8rtdL6E4Ido1HJSszoTzC2b7lH
-         e47KteAuJO/nH7iDubjnutqlApc1wpiM+BbZrW43EX8iFiXOEKOlLrczDfFF1dWA6wa5
-         JK2beLjRMxoiZkYNOwvvgIq0RNLcLpRebpueQSCT5X/24qNme6M3CUWawxNLUi/sZ2as
-         cbWBxglHsB46r5T8WtItdXiegj/cLIh+ieAxSa/0tfTdSfigfdTr8aCWBcHZqwyJrJ27
-         VTU4b0ENZWIkWawVYRZtm31UM4v1kZWf7s/RoKLbGS7695mXHm892DrGOnKNd5lus5/n
-         T74Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704312413; x=1704917213;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HB9ce/ZYj/o4q+a999lFcCPcvK9JlN2H69sVtgUKvWI=;
-        b=C7CDZ1XvMzEelW4tXYrwEN0K/Uiyw+EibHElEO3y4pEWVAkx1avcek6IHKYmlBxl6r
-         eRDPqL9U0Cfk15TDtyI66LaK9kiZM3Ri98gwO9UjZ2fJe1NHrg1LLF1rR4Hibl+D/LiF
-         RbJMtI9aFMW1jsz8NbJcMRC8s01gghx/WnWodWILGrzx0Wd97YwCE5Xe74mPCeP9G/s9
-         YqJVDRIradUqecRzNNeCGej9t+mPsEi516guVFofJOLp/ht4wkOTS0T9XsTpZfovE7B8
-         ABFVN17J/QfRASGLepZ17loIw5n5m8VScUo/5gU1gDBJY0GMdaUcYd+ijEUpxPOW1siD
-         dUhw==
-X-Gm-Message-State: AOJu0Yxttdcfx1m1BomWbM2yuEhA2DzvQlO0fY2jPvlij+T/u/mshTxp
-	njhdA5YhOUHV+VG7G+bKQnOl0XkeeLlR
-X-Google-Smtp-Source: AGHT+IHBMSV1+MBkLmy7Z1dA3S1YsmNAWyf0LA6NmReZNlLiJ20oDpmaPkJVVjqaZsxjwDHM1wehZQ==
-X-Received: by 2002:ac8:5782:0:b0:425:85b7:a784 with SMTP id v2-20020ac85782000000b0042585b7a784mr30392949qta.53.1704312413418;
-        Wed, 03 Jan 2024 12:06:53 -0800 (PST)
-Received: from [192.168.1.31] (d-65-175-157-166.nh.cpe.atlanticbb.net. [65.175.157.166])
-        by smtp.gmail.com with ESMTPSA id j4-20020ac806c4000000b00427f02d072bsm7618575qth.95.2024.01.03.12.06.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jan 2024 12:06:53 -0800 (PST)
-Message-ID: <bedf07d1-2cd5-4bc8-9e59-a96479a7ff14@google.com>
-Date: Wed, 3 Jan 2024 15:06:52 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FC891D527;
+	Wed,  3 Jan 2024 20:07:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E0E35C15;
+	Wed,  3 Jan 2024 12:07:51 -0800 (PST)
+Received: from [10.57.85.107] (unknown [10.57.85.107])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E56983F64C;
+	Wed,  3 Jan 2024 12:07:04 -0800 (PST)
+Message-ID: <d362ed6b-7e6a-4b77-b364-14e987eaa9e7@arm.com>
+Date: Wed, 3 Jan 2024 20:08:23 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,39 +18,209 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next 2/2] selftests/bpf: add inline assembly helpers
- to access array elements
+Subject: Re: [PATCH v1 5/6] thermal: netlink: Pass thermal zone pointer to
+ notify routines
 Content-Language: en-US
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, mattbobrowski@google.com,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240103153307.553838-1-brho@google.com>
- <20240103153307.553838-3-brho@google.com>
- <CAEf4BzbKT3LbHQSFwpAfoJuhyGy2NpHk7A6ivkFiutN_jnKHYg@mail.gmail.com>
-From: Barret Rhoden <brho@google.com>
-In-Reply-To: <CAEf4BzbKT3LbHQSFwpAfoJuhyGy2NpHk7A6ivkFiutN_jnKHYg@mail.gmail.com>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Linux ACPI <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <4556052.LvFx2qVVIh@kreacher> <1975810.PYKUYFuaPT@kreacher>
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <1975810.PYKUYFuaPT@kreacher>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 1/3/24 14:51, Andrii Nakryiko wrote:
-> I'm curious how bpf_cmp_likely/bpf_cmp_unlikely (just applied to
-> bpf-next) compares to this?
-
-these work great!
-
-e.g.
-
-         if (bpf_cmp_likely(idx, <, NR_MAP_ELEMS))
-                 map_elems[idx] = i;
-
-works fine.  since that's essentially the code that bpf_array_elem() was 
-trying to replace, i'd rather just use the new bpf_cmp helpers than have 
-the special array_elem helpers.
-
-thanks,
-
-barret
 
 
+On 12/15/23 20:00, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> There are several routines in the thermal netlink API that take a
+> thermal zone ID or a thermal zone type as their arguments, but from
+> their callers perspective it would be more convenient to pass a thermal
+> zone pointer to them and let them extract the necessary data from the
+> given thermal zone object by themselves.
+> 
+> Modify the code accordingly.
+> 
+> No intentional functional impact.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>   drivers/thermal/thermal_core.c    |   10 +++++-----
+>   drivers/thermal/thermal_netlink.c |   21 +++++++++++----------
+>   drivers/thermal/thermal_netlink.h |   22 ++++++++++++----------
+>   3 files changed, 28 insertions(+), 25 deletions(-)
+> 
+> Index: linux-pm/drivers/thermal/thermal_core.c
+> ===================================================================
+> --- linux-pm.orig/drivers/thermal/thermal_core.c
+> +++ linux-pm/drivers/thermal/thermal_core.c
+> @@ -213,7 +213,7 @@ exit:
+>   	mutex_unlock(&tz->lock);
+>   	mutex_unlock(&thermal_governor_lock);
+>   
+> -	thermal_notify_tz_gov_change(tz->id, policy);
+> +	thermal_notify_tz_gov_change(tz, policy);
+>   
+>   	return ret;
+>   }
+> @@ -475,9 +475,9 @@ static int thermal_zone_device_set_mode(
+>   	mutex_unlock(&tz->lock);
+>   
+>   	if (mode == THERMAL_DEVICE_ENABLED)
+> -		thermal_notify_tz_enable(tz->id);
+> +		thermal_notify_tz_enable(tz);
+>   	else
+> -		thermal_notify_tz_disable(tz->id);
+> +		thermal_notify_tz_disable(tz);
+>   
+>   	return ret;
+>   }
+> @@ -1386,7 +1386,7 @@ thermal_zone_device_register_with_trips(
+>   	if (atomic_cmpxchg(&tz->need_update, 1, 0))
+>   		thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
+>   
+> -	thermal_notify_tz_create(tz->id, tz->type);
+> +	thermal_notify_tz_create(tz);
+>   
+>   	return tz;
+>   
+> @@ -1490,7 +1490,7 @@ void thermal_zone_device_unregister(stru
+>   
+>   	put_device(&tz->device);
+>   
+> -	thermal_notify_tz_delete(tz_id);
+> +	thermal_notify_tz_delete(tz);
+>   
+>   	wait_for_completion(&tz->removal);
+>   	kfree(tz);
+> Index: linux-pm/drivers/thermal/thermal_netlink.c
+> ===================================================================
+> --- linux-pm.orig/drivers/thermal/thermal_netlink.c
+> +++ linux-pm/drivers/thermal/thermal_netlink.c
+> @@ -288,30 +288,30 @@ out_free_msg:
+>   	return ret;
+>   }
+>   
+> -int thermal_notify_tz_create(int tz_id, const char *name)
+> +int thermal_notify_tz_create(const struct thermal_zone_device *tz)
+>   {
+> -	struct param p = { .tz_id = tz_id, .name = name };
+> +	struct param p = { .tz_id = tz->id, .name = tz->type };
+>   
+>   	return thermal_genl_send_event(THERMAL_GENL_EVENT_TZ_CREATE, &p);
+>   }
+>   
+> -int thermal_notify_tz_delete(int tz_id)
+> +int thermal_notify_tz_delete(const struct thermal_zone_device *tz)
+>   {
+> -	struct param p = { .tz_id = tz_id };
+> +	struct param p = { .tz_id = tz->id };
+>   
+>   	return thermal_genl_send_event(THERMAL_GENL_EVENT_TZ_DELETE, &p);
+>   }
+>   
+> -int thermal_notify_tz_enable(int tz_id)
+> +int thermal_notify_tz_enable(const struct thermal_zone_device *tz)
+>   {
+> -	struct param p = { .tz_id = tz_id };
+> +	struct param p = { .tz_id = tz->id };
+>   
+>   	return thermal_genl_send_event(THERMAL_GENL_EVENT_TZ_ENABLE, &p);
+>   }
+>   
+> -int thermal_notify_tz_disable(int tz_id)
+> +int thermal_notify_tz_disable(const struct thermal_zone_device *tz)
+>   {
+> -	struct param p = { .tz_id = tz_id };
+> +	struct param p = { .tz_id = tz->id };
+>   
+>   	return thermal_genl_send_event(THERMAL_GENL_EVENT_TZ_DISABLE, &p);
+>   }
+> @@ -370,9 +370,10 @@ int thermal_notify_cdev_delete(int cdev_
+>   	return thermal_genl_send_event(THERMAL_GENL_EVENT_CDEV_DELETE, &p);
+>   }
+>   
+> -int thermal_notify_tz_gov_change(int tz_id, const char *name)
+> +int thermal_notify_tz_gov_change(const struct thermal_zone_device *tz,
+> +				 const char *name)
+>   {
+> -	struct param p = { .tz_id = tz_id, .name = name };
+> +	struct param p = { .tz_id = tz->id, .name = name };
+>   
+>   	return thermal_genl_send_event(THERMAL_GENL_EVENT_TZ_GOV_CHANGE, &p);
+>   }
+> Index: linux-pm/drivers/thermal/thermal_netlink.h
+> ===================================================================
+> --- linux-pm.orig/drivers/thermal/thermal_netlink.h
+> +++ linux-pm/drivers/thermal/thermal_netlink.h
+> @@ -14,10 +14,10 @@ struct thermal_genl_cpu_caps {
+>   #ifdef CONFIG_THERMAL_NETLINK
+>   int __init thermal_netlink_init(void);
+>   void __init thermal_netlink_exit(void);
+> -int thermal_notify_tz_create(int tz_id, const char *name);
+> -int thermal_notify_tz_delete(int tz_id);
+> -int thermal_notify_tz_enable(int tz_id);
+> -int thermal_notify_tz_disable(int tz_id);
+> +int thermal_notify_tz_create(const struct thermal_zone_device *tz);
+> +int thermal_notify_tz_delete(const struct thermal_zone_device *tz);
+> +int thermal_notify_tz_enable(const struct thermal_zone_device *tz);
+> +int thermal_notify_tz_disable(const struct thermal_zone_device *tz);
+>   int thermal_notify_tz_trip_down(const struct thermal_zone_device *tz,
+>   				const struct thermal_trip *trip);
+>   int thermal_notify_tz_trip_up(const struct thermal_zone_device *tz,
+> @@ -27,7 +27,8 @@ int thermal_notify_tz_trip_change(const
+>   int thermal_notify_cdev_state_update(int cdev_id, int state);
+>   int thermal_notify_cdev_add(int cdev_id, const char *name, int max_state);
+>   int thermal_notify_cdev_delete(int cdev_id);
+> -int thermal_notify_tz_gov_change(int tz_id, const char *name);
+> +int thermal_notify_tz_gov_change(const struct thermal_zone_device *tz,
+> +				 const char *name);
+>   int thermal_genl_sampling_temp(int id, int temp);
+>   int thermal_genl_cpu_capability_event(int count,
+>   				      struct thermal_genl_cpu_caps *caps);
+> @@ -37,22 +38,22 @@ static inline int thermal_netlink_init(v
+>   	return 0;
+>   }
+>   
+> -static inline int thermal_notify_tz_create(int tz_id, const char *name)
+> +static inline int thermal_notify_tz_create(const struct thermal_zone_device *tz)
+>   {
+>   	return 0;
+>   }
+>   
+> -static inline int thermal_notify_tz_delete(int tz_id)
+> +static inline int thermal_notify_tz_delete(const struct thermal_zone_device *tz)
+>   {
+>   	return 0;
+>   }
+>   
+> -static inline int thermal_notify_tz_enable(int tz_id)
+> +static inline int thermal_notify_tz_enable(const struct thermal_zone_device *tz)
+>   {
+>   	return 0;
+>   }
+>   
+> -static inline int thermal_notify_tz_disable(int tz_id)
+> +static inline int thermal_notify_tz_disable(const struct thermal_zone_device *tz)
+>   {
+>   	return 0;
+>   }
+> @@ -91,7 +92,8 @@ static inline int thermal_notify_cdev_de
+>   	return 0;
+>   }
+>   
+> -static inline int thermal_notify_tz_gov_change(int tz_id, const char *name)
+> +static inline int thermal_notify_tz_gov_change(const struct thermal_zone_device *tz,
+> +					       const char *name)
+>   {
+>   	return 0;
+>   }
+> 
+> 
+> 
+
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
