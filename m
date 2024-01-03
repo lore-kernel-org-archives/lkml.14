@@ -1,189 +1,299 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4259A1CFBD;
-	Wed,  3 Jan 2024 20:08:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A5F5C15;
-	Wed,  3 Jan 2024 12:09:37 -0800 (PST)
-Received: from [10.57.85.107] (unknown [10.57.85.107])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B9103F64C;
-	Wed,  3 Jan 2024 12:08:50 -0800 (PST)
-Message-ID: <314e5b15-de28-4336-8a0f-f3c08183a6b1@arm.com>
-Date: Wed, 3 Jan 2024 20:10:07 +0000
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460C21D527
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 20:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="iP5B2JSV"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7815aca9a4eso419186485a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 12:09:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google; t=1704312551; x=1704917351; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=pM/8dQfYS9UuYC/k2nrRJhStfDT3AcSvNyR2TpRbd0w=;
+        b=iP5B2JSVTUDaFhZSQQ7ubaw5kIOmh2mtr6VMQA9xuaImDIUUcUXslCNF133QBbteJW
+         SgOwsV9PsTa4W0L9a8sr3gqxC2lkx8B9Lp617BOjkwm55OVNS6VVZIZIyc02yS1udIcd
+         eCsv7NjeP0IOG+ExYspPvkmO/9IcMIHFWu9UQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704312551; x=1704917351;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pM/8dQfYS9UuYC/k2nrRJhStfDT3AcSvNyR2TpRbd0w=;
+        b=GRwtm/wmJcs8txoEAUVmE0ccD2boDV9q5AYP7NClOowdb4wg+Od/wtODcuEGHsZmH1
+         J2JQHm7sHNWjMF1HEOHNeI850qLIN9Qfjo76jiu7toXCUqtjcLg+dVsFZA1cYkPC3wad
+         E9bQu+zDR5GgQBDPwACw2hLbbUI5cLlN0lLZ8hXAdqvPYt6qMnP8KdpEpzyu5+ei8wUI
+         Y2hGJMVieH8mQwEcsCclU0U4tUu1bAYRr0D83eePoL4W2IrgAH5s9m5RZCuM7hyCZF0l
+         gIp9Z8EIBM8YjlyU4soBQG6AHb3zBKuTwQq2mTKDzp7UKrMFdqYJHPJnQktkviF8ZBWK
+         yLAw==
+X-Gm-Message-State: AOJu0YzMkyRj4kRPPUa4eQZkw9jfVBQPmfsbLJ/SpsQmi+GZb/1D+ncN
+	45WmBJVOWi/4STySgez1SCPaqjI/OHAnoA==
+X-Google-Smtp-Source: AGHT+IEDlOVbK+1wecfwRGZEXxfPCLa4shUGFn+dWsCL1mobQgvnwjenM/WmHyzusLqLkKMPH6B53Q==
+X-Received: by 2002:a05:620a:2482:b0:781:3c4b:350 with SMTP id i2-20020a05620a248200b007813c4b0350mr20140060qkn.56.1704312550967;
+        Wed, 03 Jan 2024 12:09:10 -0800 (PST)
+Received: from localhost (c-98-249-43-138.hsd1.va.comcast.net. [98.249.43.138])
+        by smtp.gmail.com with ESMTPSA id x15-20020ae9e90f000000b00781baa4db60sm2808979qkf.66.2024.01.03.12.09.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jan 2024 12:09:10 -0800 (PST)
+Message-ID: <6595bee6.e90a0220.57b35.76e9@mx.google.com>
+X-Google-Original-Message-ID: <20240103200907.GA654520@JoelBox.>
+Date: Wed, 3 Jan 2024 15:09:07 -0500
+From: Joel Fernandes <joel@joelfernandes.org>
+To: David Vernet <void@manifault.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	"Vineeth Pillai (Google)" <vineeth@bitbyteword.org>,
+	Ben Segall <bsegall@google.com>, Borislav Petkov <bp@alien8.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>, Mel Gorman <mgorman@suse.de>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Wanpeng Li <wanpengli@tencent.com>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Masami Hiramatsu <mhiramat@google.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Tejun Heo <tj@kernel.org>, Josh Don <joshdon@google.com>,
+	Barret Rhoden <brho@google.com>, David Dunn <daviddunn@google.com>,
+	julia.lawall@inria.fr, himadrispandya@gmail.com,
+	jean-pierre.lozi@inria.fr, ast@kernel.org, paulmck@kernel.org
+Subject: Re: [RFC PATCH 0/8] Dynamic vcpu priority management in kvm
+References: <20231214024727.3503870-1-vineeth@bitbyteword.org>
+ <ZXsvl7mabUuNkWcY@google.com>
+ <20231215181014.GB2853@maniforge>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 6/6] thermal: netlink: Rework cdev-related notify API
-Content-Language: en-US
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Linux PM <linux-pm@vger.kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- Linux ACPI <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-References: <4556052.LvFx2qVVIh@kreacher> <7628882.EvYhyI6sBW@kreacher>
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <7628882.EvYhyI6sBW@kreacher>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231215181014.GB2853@maniforge>
+
+Hi David,
+
+On Fri, Dec 15, 2023 at 12:10:14PM -0600, David Vernet wrote:
+> On Thu, Dec 14, 2023 at 08:38:47AM -0800, Sean Christopherson wrote:
+> > +sched_ext folks
+> 
+> Thanks for the cc.
+
+Just back from holidays, sorry for the late reply. But it was a good break to
+go over your email in more detail ;-).
+
+> > On Wed, Dec 13, 2023, Vineeth Pillai (Google) wrote:
+> > > Double scheduling is a concern with virtualization hosts where the host
+> > > schedules vcpus without knowing whats run by the vcpu and guest schedules
+> > > tasks without knowing where the vcpu is physically running. This causes
+> > > issues related to latencies, power consumption, resource utilization
+> > > etc. An ideal solution would be to have a cooperative scheduling
+> > > framework where the guest and host shares scheduling related information
+> > > and makes an educated scheduling decision to optimally handle the
+> > > workloads. As a first step, we are taking a stab at reducing latencies
+> > > for latency sensitive workloads in the guest.
+> > > 
+> > > This series of patches aims to implement a framework for dynamically
+> > > managing the priority of vcpu threads based on the needs of the workload
+> > > running on the vcpu. Latency sensitive workloads (nmi, irq, softirq,
+> > > critcal sections, RT tasks etc) will get a boost from the host so as to
+> > > minimize the latency.
+> > > 
+> > > The host can proactively boost the vcpu threads when it has enough
+> > > information about what is going to run on the vcpu - fo eg: injecting
+> > > interrupts. For rest of the case, guest can request boost if the vcpu is
+> > > not already boosted. The guest can subsequently request unboost after
+> > > the latency sensitive workloads completes. Guest can also request a
+> > > boost if needed.
+> > > 
+> > > A shared memory region is used to communicate the scheduling information.
+> > > Guest shares its needs for priority boosting and host shares the boosting
+> > > status of the vcpu. Guest sets a flag when it needs a boost and continues
+> > > running. Host reads this on next VMEXIT and boosts the vcpu thread. For
+> > > unboosting, it is done synchronously so that host workloads can fairly
+> > > compete with guests when guest is not running any latency sensitive
+> > > workload.
+> > 
+> > Big thumbs down on my end.  Nothing in this RFC explains why this should be done
+> > in KVM.  In general, I am very opposed to putting policy of any kind into KVM,
+> > and this puts a _lot_ of unmaintainable policy into KVM by deciding when to
+> > start/stop boosting a vCPU.
+> 
+> I have to agree, not least of which is because in addition to imposing a
+> severe maintenance tax, these policies are far from exhaustive in terms
+> of what you may want to do for cooperative paravirt scheduling.
+
+Just to clarify the 'policy' we are discussing here, it is not about 'how to
+schedule' but rather 'how/when to boost/unboost'. We want the existing
+scheduler (or whatever it might be in the future) to make the actual decision
+about how to schedule.
+
+In that sense, I agree with Sean that we are probably forcing a singular
+policy on when and how to boost which might not work for everybody (in theory
+anyway). And I am perfectly OK with the BPF route as I mentioned in the other
+email. So perhaps we can use a tracepoint in the VMEXIT path to run a BPF
+program (?). And we still have to figure out how to run BPF programs in the
+interrupt injections patch (I am currently studying those paths more also
+thanks to Sean's email describing them).
+
+> I think
+> something like sched_ext would give you the best of all worlds: no
+> maintenance burden on the KVM maintainers, more options for implementing
+> various types of policies, performant, safe to run on the host, no need
+> to reboot when trying a new policy, etc. More on this below.
+
+I think switching to sched_ext just for this is overkill, we don't want
+to change the scheduler yet which is a much more invasive/involved changed.
+For instance, we want the features of this patchset to work for ARM as well
+which heavily depends on EAS/cpufreq.
+
+[...]
+> > Concretely, boosting vCPUs for most events is far too coarse grained.  E.g. boosting
+> > a vCPU that is running a low priority workload just because the vCPU triggered
+> > an NMI due to PMU counter overflow doesn't make sense.  Ditto for if a guest's
+> > hrtimer expires on a vCPU running a low priority workload.
+> >
+> > And as evidenced by patch 8/8, boosting vCPUs based on when an event is _pending_
+> > is not maintainable.  As hardware virtualizes more and more functionality, KVM's
+> > visilibity into the guest effectively decreases, e.g. Intel and AMD both support
+> > with IPI virtualization.
+> > 
+> > Boosting the target of a PV spinlock kick is similarly flawed.  In that case, KVM
+> > only gets involved _after_ there is a problem, i.e. after a lock is contended so
+> > heavily that a vCPU stops spinning and instead decided to HLT.  It's not hard to
+> > imagine scenarios where a guest would want to communicate to the host that it's
+> > acquiring a spinlock for a latency sensitive path and so shouldn't be scheduled
+> > out.  And of course that's predicated on the assumption that all vCPUs are subject
+> > to CPU overcommit.
+> > 
+> > Initiating a boost from the host is also flawed in the sense that it relies on
+> > the guest to be on the same page as to when it should stop boosting.  E.g. if
+> > KVM boosts a vCPU because an IRQ is pending, but the guest doesn't want to boost
+> > IRQs on that vCPU and thus doesn't stop boosting at the end of the IRQ handler,
+> > then the vCPU could end up being boosted long after its done with the IRQ.
+> > 
+> > Throw nested virtualization into the mix and then all of this becomes nigh
+> > impossible to sort out in KVM.  E.g. if an L1 vCPU is a running an L2 vCPU, i.e.
+> > a nested guest, and L2 is spamming interrupts for whatever reason, KVM will end
+> > repeatedly boosting the L1 vCPU regardless of the priority of the L2 workload.
+> > 
+> > For things that aren't clearly in KVM's domain, I don't think we should implement
+> > KVM-specific functionality until every other option has been tried (and failed).
+> > I don't see any reason why KVM needs to get involved in scheduling, beyond maybe
+> > providing *input* regarding event injection, emphasis on *input* because KVM
+> > providing information to userspace or some other entity is wildly different than
+> > KVM making scheduling decisions based on that information.
+> > 
+> > Pushing the scheduling policies to host userspace would allow for far more control
+> > and flexibility.  E.g. a heavily paravirtualized environment where host userspace
+> > knows *exactly* what workloads are being run could have wildly different policies
+> > than an environment where the guest is a fairly vanilla Linux VM that has received
+> > a small amount of enlightment.
+> > 
+> > Lastly, if the concern/argument is that userspace doesn't have the right knobs
+> > to (quickly) boost vCPU tasks, then the proposed sched_ext functionality seems
+> > tailor made for the problems you are trying to solve.
+> >
+> > https://lkml.kernel.org/r/20231111024835.2164816-1-tj%40kernel.org
+> 
+> I very much agree. There are some features missing from BPF that we'd
+> need to add to enable this, but they're on the roadmap, and I don't
+> think they'd be especially difficult to implement.
+> 
+> The main building block that I was considering is a new kptr [0] and set
+> of kfuncs [1] that would allow a BPF program to have one or more R/W
+> shared memory regions with a guest.
+
+I really like your ideas around sharing memory across virt boundary using
+BPF. The one concern I would have is that, this does require loading a BPF
+program from the guest userspace, versus just having a guest kernel that
+'does the right thing'.
+
+On the host, I would have no problem loading a BPF program as a one-time
+thing, but on the guest it may be more complex as we don't always control the
+guest userspace and their BPF loading mechanisms. Example, an Android guest
+needs to have its userspace modified to load BPF progs, etc. Not hard
+problems, but flexibility comes with more cost. Last I recall, Android does
+not use a lot of the BPF features that come with the libbpf library because
+they write their own userspace from scratch (due to licensing). OTOH, if this
+was an Android kernel-only change, that would simplify a lot.
+
+Still there is a lot of merit to sharing memory with BPF and let BPF decide
+the format of the shared memory, than baking it into the kernel... so thanks
+for bringing this up! Lets talk more about it... Oh, and there's my LSFMMBPF
+invitiation request ;-) ;-).
+
+> This could enable a wide swath of
+> BPF paravirt use cases that are not limited to scheduling, but in terms
+> of sched_ext, the BPF scheduler could communicate with the guest
+> scheduler over this shared memory region in whatever manner was required
+> for that use case.
+> 
+> [0]: https://lwn.net/Articles/900749/
+> [1]: https://lwn.net/Articles/856005/
+
+Thanks, I had no idea about these. I have a question -- would it be possible
+to call the sched_setscheduler() function in core.c via a kfunc? Then we can
+trigger the boost from a BPF program on the host side. We could start simple
+from there.
+
+I agree on the rest below. I just wanted to emphasize though that this patch
+series does not care about what the scheduler does. It merely hints the
+scheduler via a priority setting that something is an important task. That's
+a far cry from how to actually schedule and the spirit here is to use
+whatever scheduler the user has to decide how to actually schedule.
+
+thanks,
+
+ - Joel
 
 
+> For example, the guest could communicate scheduling intention such as:
+> 
+> - "Don't preempt me and/or boost me (because I'm holding a spinlock, in an
+>   NMI region, running some low-latency task, etc)".
+> - "VCPU x prefers to be on a P core", and then later, "Now it prefers an
+>   E core". Note that this doesn't require pinning or anything like that.
+>   It's just the VCPU requesting some best-effort placement, and allowing
+>   that policy to change dynamically depending on what the guest is
+>   doing.
+> - "Try to give these VCPUs their own fully idle cores if possible, but
+>   these other VCPUs should ideally be run as hypertwins as they're
+>   expected to have good cache locality", etc.
+> 
+> In general, some of these policies might be silly and not work well,
+> others might work very well for some workloads / architectures and not
+> as well on others, etc. sched_ext would make it easy to try things out
+> and see what works well, without having to worry about rebooting or
+> crashing the host, and ultimately without having to implement and
+> maintain some scheduling policy directly in KVM. As Sean said, the host
+> knows exactly what workloads are being run and could have very targeted
+> and bespoke policies that wouldn't be appropriate for a vanilla Linux
+> VM.
+> 
+> Finally, while it's not necessarily related to paravirt scheduling
+> specifically, I think it's maybe worth mentioning that sched_ext would
+> have allowed us to implement a core-sched-like policy when L1TF first
+> hit us. It was inevitable that we'd need a core-sched policy build into
+> the core kernel as well, but we could have used sched_ext as a solution
+> until core sched was merged. Tejun implemented something similar in an
+> example scheduler where only tasks in the same cgroup are ever allowed
+> to run as hypertwins [3]. The point is, you can do basically anything
+> you want with sched_ext. For paravirt, I think there are a ton of
+> interesting possibilities, and I think those possibilities are better
+> explored and implemented with sched_ext rather than implementing
+> policies directly in KVM.
+> 
+> [3]: https://lore.kernel.org/lkml/20231111024835.2164816-27-tj@kernel.org/
 
-On 12/15/23 20:02, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> The only actually used thermal netlink notification routine related
-> to cooling devices is thermal_notify_cdev_state_update().  The other
-> two, thermal_notify_cdev_add() and thermal_notify_cdev_delete(), are
-> never used.
-> 
-> So as to get rid of dead code, drop thermal_notify_cdev_add/delete(),
-> which can be added back if they turn out to be ever needed, along with
-> the related code.
-> 
-> In analogy with the previous thermal netlink API changes, redefine
-> thermal_notify_cdev_state_update() to take a const cdev pointer as its
-> first argument and let it extract the requisite information from there
-> by itself.
-> 
-> No intentional functional impact.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->   drivers/thermal/thermal_helpers.c |    2 -
->   drivers/thermal/thermal_netlink.c |   43 ++------------------------------------
->   drivers/thermal/thermal_netlink.h |   19 +++-------------
->   3 files changed, 8 insertions(+), 56 deletions(-)
-> 
-> Index: linux-pm/drivers/thermal/thermal_netlink.h
-> ===================================================================
-> --- linux-pm.orig/drivers/thermal/thermal_netlink.h
-> +++ linux-pm/drivers/thermal/thermal_netlink.h
-> @@ -24,9 +24,8 @@ int thermal_notify_tz_trip_up(const stru
->   			      const struct thermal_trip *trip);
->   int thermal_notify_tz_trip_change(const struct thermal_zone_device *tz,
->   				  const struct thermal_trip *trip);
-> -int thermal_notify_cdev_state_update(int cdev_id, int state);
-> -int thermal_notify_cdev_add(int cdev_id, const char *name, int max_state);
-> -int thermal_notify_cdev_delete(int cdev_id);
-> +int thermal_notify_cdev_state_update(const struct thermal_cooling_device *cdev,
-> +				     int state);
->   int thermal_notify_tz_gov_change(const struct thermal_zone_device *tz,
->   				 const char *name);
->   int thermal_genl_sampling_temp(int id, int temp);
-> @@ -76,18 +75,8 @@ static inline int thermal_notify_tz_trip
->   	return 0;
->   }
->   
-> -static inline int thermal_notify_cdev_state_update(int cdev_id, int state)
-> -{
-> -	return 0;
-> -}
-> -
-> -static inline int thermal_notify_cdev_add(int cdev_id, const char *name,
-> -					  int max_state)
-> -{
-> -	return 0;
-> -}
-> -
-> -static inline int thermal_notify_cdev_delete(int cdev_id)
-> +static inline int thermal_notify_cdev_state_update(const struct thermal_cooling_device *cdev,
-> +						   int state)
->   {
->   	return 0;
->   }
-> Index: linux-pm/drivers/thermal/thermal_helpers.c
-> ===================================================================
-> --- linux-pm.orig/drivers/thermal/thermal_helpers.c
-> +++ linux-pm/drivers/thermal/thermal_helpers.c
-> @@ -152,7 +152,7 @@ static void thermal_cdev_set_cur_state(s
->   	if (cdev->ops->set_cur_state(cdev, target))
->   		return;
->   
-> -	thermal_notify_cdev_state_update(cdev->id, target);
-> +	thermal_notify_cdev_state_update(cdev, target);
->   	thermal_cooling_device_stats_update(cdev, target);
->   }
->   
-> Index: linux-pm/drivers/thermal/thermal_netlink.c
-> ===================================================================
-> --- linux-pm.orig/drivers/thermal/thermal_netlink.c
-> +++ linux-pm/drivers/thermal/thermal_netlink.c
-> @@ -147,27 +147,6 @@ static int thermal_genl_event_tz_trip_ch
->   	return 0;
->   }
->   
-> -static int thermal_genl_event_cdev_add(struct param *p)
-> -{
-> -	if (nla_put_string(p->msg, THERMAL_GENL_ATTR_CDEV_NAME,
-> -			   p->name) ||
-> -	    nla_put_u32(p->msg, THERMAL_GENL_ATTR_CDEV_ID,
-> -			p->cdev_id) ||
-> -	    nla_put_u32(p->msg, THERMAL_GENL_ATTR_CDEV_MAX_STATE,
-> -			p->cdev_max_state))
-> -		return -EMSGSIZE;
-> -
-> -	return 0;
-> -}
-> -
-> -static int thermal_genl_event_cdev_delete(struct param *p)
-> -{
-> -	if (nla_put_u32(p->msg, THERMAL_GENL_ATTR_CDEV_ID, p->cdev_id))
-> -		return -EMSGSIZE;
-> -
-> -	return 0;
-> -}
-> -
->   static int thermal_genl_event_cdev_state_update(struct param *p)
->   {
->   	if (nla_put_u32(p->msg, THERMAL_GENL_ATTR_CDEV_ID,
-> @@ -244,8 +223,6 @@ static cb_t event_cb[] = {
->   	[THERMAL_GENL_EVENT_TZ_TRIP_UP]		= thermal_genl_event_tz_trip_up,
->   	[THERMAL_GENL_EVENT_TZ_TRIP_DOWN]	= thermal_genl_event_tz_trip_down,
->   	[THERMAL_GENL_EVENT_TZ_TRIP_CHANGE]	= thermal_genl_event_tz_trip_change,
-> -	[THERMAL_GENL_EVENT_CDEV_ADD]		= thermal_genl_event_cdev_add,
-> -	[THERMAL_GENL_EVENT_CDEV_DELETE]	= thermal_genl_event_cdev_delete,
->   	[THERMAL_GENL_EVENT_CDEV_STATE_UPDATE]	= thermal_genl_event_cdev_state_update,
->   	[THERMAL_GENL_EVENT_TZ_GOV_CHANGE]	= thermal_genl_event_gov_change,
->   	[THERMAL_GENL_EVENT_CPU_CAPABILITY_CHANGE] = thermal_genl_event_cpu_capability_change,
-> @@ -348,28 +325,14 @@ int thermal_notify_tz_trip_change(const
->   	return thermal_genl_send_event(THERMAL_GENL_EVENT_TZ_TRIP_CHANGE, &p);
->   }
->   
-> -int thermal_notify_cdev_state_update(int cdev_id, int cdev_state)
-> +int thermal_notify_cdev_state_update(const struct thermal_cooling_device *cdev,
-> +				     int state)
->   {
-> -	struct param p = { .cdev_id = cdev_id, .cdev_state = cdev_state };
-> +	struct param p = { .cdev_id = cdev->id, .cdev_state = state };
->   
->   	return thermal_genl_send_event(THERMAL_GENL_EVENT_CDEV_STATE_UPDATE, &p);
->   }
->   
-> -int thermal_notify_cdev_add(int cdev_id, const char *name, int cdev_max_state)
-> -{
-> -	struct param p = { .cdev_id = cdev_id, .name = name,
-> -			   .cdev_max_state = cdev_max_state };
-> -
-> -	return thermal_genl_send_event(THERMAL_GENL_EVENT_CDEV_ADD, &p);
-> -}
-> -
-> -int thermal_notify_cdev_delete(int cdev_id)
-> -{
-> -	struct param p = { .cdev_id = cdev_id };
-> -
-> -	return thermal_genl_send_event(THERMAL_GENL_EVENT_CDEV_DELETE, &p);
-> -}
-> -
->   int thermal_notify_tz_gov_change(const struct thermal_zone_device *tz,
->   				 const char *name)
->   {
-> 
-> 
-> 
 
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
