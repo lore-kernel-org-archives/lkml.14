@@ -1,71 +1,66 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E047E;
-	Wed,  3 Jan 2024 00:12:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA8B362;
+	Wed,  3 Jan 2024 00:20:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AvJqAlAB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B8BFC433C7;
-	Wed,  3 Jan 2024 00:12:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="neeRo+i9"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0DFECC433C7;
+	Wed,  3 Jan 2024 00:20:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704240759;
-	bh=rTo7bHSTZscbaOSrZrDFMXX97W0sP/G2kTdUTny+Fxc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=AvJqAlABGx6tTO9tTTIkN+baamjM3G24G2UXDCrNuty4jx95zxXWVJXB3xBP5z2f2
-	 AgDmNft0zn+kkdyIxnMRgPCuPfeg1b0uq9g1pfcF/WMHb2S5cEH0CW+6E4LVfkJpic
-	 jxylJXJ1JyDQUn1cUCfZq6BeSQrD09wCvysgOV3VC4g8NO+Z+BvTuR28NHiiOzWiAP
-	 w8TYRjO58QThStISLzZGmfwdphJPBKYm6B/RNEHyjAcbJfuexKYqcCHGl0QgHzquFP
-	 0qxtlUfch2fESz3mmtylXmlM3hzZVZPEsYXeRrf9cDCfB+MuIwgS5jOICKjHZ4lEXk
-	 GvnehWXu6GBmw==
-Date: Tue, 2 Jan 2024 18:12:37 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Michael Schaller <michael@5challer.de>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	"Maciej W . Rozycki" <macro@orcam.me.uk>,
-	Ajay Agarwal <ajayagarwal@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] Revert "PCI/ASPM: Remove pcie_aspm_pm_state_change()"
-Message-ID: <20240103001237.GA1755171@bhelgaas>
+	s=k20201202; t=1704241225;
+	bh=aIsUKu+yZamorxjmUFGFEBphcUe2Y1eu5rvXAC2OpdY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=neeRo+i9afojXM/3NNCreF09CMJUgvSboqVXmMEpDXpLe6HPSXvkyWoICwBgVHJYk
+	 Fhwz56u5pUh6ff1kn/WJCFtSpkSKaNtDS6SVImyYRBqcmvjgRAH2Gaa89l6oPLVGR0
+	 B2/tCk4ZrmWgo+mvbH5TRVOwWcC3mAy9CKmROqG1oyO1jOSzTe8WzdnlNAEu41Z/n1
+	 OAAiw5U2MUsOpnj+1kWXZ1ZPgtcNvUkcYrhzhjrK2GCIwc99LesHRngsKdfZA9KdFt
+	 m7BRMUlujdbn3LVHNv55RW5ceRPqk3bbsLn3nf1/2o744GyRO1p21H0gYiS77SvnjY
+	 jXlBx5Az16kxw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E74C7C395C5;
+	Wed,  3 Jan 2024 00:20:24 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20cd835e-f84c-4c43-812e-6706f7266150@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] MAINTAINERS: Update mvpp2 driver email
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170424122494.12524.6893620259777477458.git-patchwork-notify@kernel.org>
+Date: Wed, 03 Jan 2024 00:20:24 +0000
+References: <20231225225245.1606-1-marcin.s.wojtas@gmail.com>
+In-Reply-To: <20231225225245.1606-1-marcin.s.wojtas@gmail.com>
+To: Marcin Wojtas <marcin.s.wojtas@gmail.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, pabeni@redhat.com,
+ kuba@kernel.org, edumazet@google.com, davem@davemloft.net,
+ linux@armlinux.org.uk
 
-On Tue, Jan 02, 2024 at 03:33:51PM -0800, Kuppuswamy Sathyanarayanan wrote:
-> On 1/2/2024 3:25 PM, Bjorn Helgaas wrote:
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> > 
-> > This reverts commit 08d0cc5f34265d1a1e3031f319f594bd1970976c.
-> > 
-> > Michael reported that when attempting to resume from suspend to RAM on ASUS
-> > mini PC PN51-BB757MDE1 (DMI model: MINIPC PN51-E1), 08d0cc5f3426
-> > ("PCI/ASPM: Remove pcie_aspm_pm_state_change()") caused a 12-second delay
-> > with no output, followed by a reboot.
-> > 
-> > Workarounds include:
-> > 
-> >   - Reverting 08d0cc5f3426 ("PCI/ASPM: Remove pcie_aspm_pm_state_change()")
-> >   - Booting with "pcie_aspm=off"
-> >   - Booting with "pcie_aspm.policy=performance"
-> >   - "echo 0 | sudo tee /sys/bus/pci/devices/0000:03:00.0/link/l1_aspm"
-> >     before suspending
-> >   - Connecting a USB flash drive
+Hello:
+
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Mon, 25 Dec 2023 23:52:45 +0100 you wrote:
+> I no longer use mw@semihalf.com email. Update
+> mvpp2 driver entry with my alternative address.
 > 
-> Did you find the root cause? Is this issue specific to that particular
-> device? If yes, can we do a quirk?
+> Signed-off-by: Marcin Wojtas <marcin.s.wojtas@gmail.com>
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Unfortunately we don't know the root cause yet.  Without knowing the
-root cause, I don't think we can make a good quirk.
+Here is the summary with links:
+  - MAINTAINERS: Update mvpp2 driver email
+    https://git.kernel.org/netdev/net/c/fe6d8300a7af
 
-Bjorn
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
