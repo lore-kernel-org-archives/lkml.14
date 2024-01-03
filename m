@@ -1,16 +1,28 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 555A61D521;
-	Wed,  3 Jan 2024 20:06:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 600F1C15;
-	Wed,  3 Jan 2024 12:06:50 -0800 (PST)
-Received: from [10.57.85.107] (unknown [10.57.85.107])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5CB9D3F64C;
-	Wed,  3 Jan 2024 12:06:03 -0800 (PST)
-Message-ID: <4eb9b38f-5364-466b-99fa-b2c42c1a4997@arm.com>
-Date: Wed, 3 Jan 2024 20:07:20 +0000
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538331D521;
+	Wed,  3 Jan 2024 20:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xYks43pB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=5dyrGtJzFd/nI+6RCdTpAzac1uifkIlq6gjdAP+yoZw=; b=xYks43pBdg0PRPfV3sN8AogwYq
+	QBdSQshZw0qh4pNmSImWYahazDV6+yjxE0/7uGpf4wTxJRjzrOSHFK5L3M4esyXowrtX3at5XsEGa
+	JCyti2kkoEqczDhNF9uiEs+2Jx9u4w0P4rjzQBQrJSUryiNeOC5osbVdG7LFqx+dx388C7q46SLUC
+	v3YMSvT7u2FKJUSHs/IZBwVp66/ZDqtRTptFYgIRmfN58f+hwakY1xSWkJUweCGdRi+ec6gGKal1G
+	XKQtfuY+uxe4wMrcHVQ5wDCSll0rClLFcD/aiKJdCW3cLNAAAAcIFrb2CrlUp9YZ4IjOZtivzx1qt
+	y/fuJFFw==;
+Received: from [50.53.46.231] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rL7Va-00BzMz-1A;
+	Wed, 03 Jan 2024 20:06:34 +0000
+Message-ID: <775efa9b-0917-4e89-abc5-470c9f4506db@infradead.org>
+Date: Wed, 3 Jan 2024 12:06:33 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -18,151 +30,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 4/6] thermal: netlink: Drop
- thermal_notify_tz_trip_add/delete()
+Subject: Re: [PATCH] media: i2c: thp7312: select CONFIG_FW_LOADER
 Content-Language: en-US
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Linux PM <linux-pm@vger.kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- Linux ACPI <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-References: <4556052.LvFx2qVVIh@kreacher> <10409811.nUPlyArG6x@kreacher>
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <10409811.nUPlyArG6x@kreacher>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Arnd Bergmann <arnd@kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Paul Elder <paul.elder@ideasonboard.com>,
+ Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>,
+ Hans de Goede <hdegoede@redhat.com>,
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Alain Volmat <alain.volmat@foss.st.com>,
+ Mehdi Djait <mehdi.djait@bootlin.com>, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240103155811.4092035-1-arnd@kernel.org>
+ <20240103174820.GA17142@pendragon.ideasonboard.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240103174820.GA17142@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 12/15/23 19:59, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 1/3/24 09:48, Laurent Pinchart wrote:
+> Hi Arnd,
 > 
-> Because thermal_notify_tz_trip_add/delete() are never used, drop them
-> entirely along with the related code.
+> Thank you for the patch.
 > 
-> The addition or removal of trip points is not supported by the thermal
-> core and is unlikely to be supported in the future, so it is also
-> unlikely that these functions will ever be needed.
+> On Wed, Jan 03, 2024 at 04:58:05PM +0100, Arnd Bergmann wrote:
+>> From: Arnd Bergmann <arnd@arndb.de>
+>>
+>> The recently added driver uses the firmware loader mechanism but causes
+>> a link failure when that is in a loadable module while thp7312 itself
+>> is built-in:
+>>
+>> arm-linux-gnueabi-ld: drivers/media/i2c/thp7312.o: in function `thp7312_probe':
+>> thp7312.c:(.text+0x4164): undefined reference to `firmware_upload_register'
+>>
+>> Select the required Kconfig symbol. Note that the driver specifically
+>> needs the firmware upload interface that is controlled by CONFIG_FW_UPLOAD,
+>> but there is no link failure when that is disabled because the interfaces
+>> are stubbed out here.
+>>
+>> Fixes: 7a52ab415b43 ("media: i2c: Add driver for THine THP7312")
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > 
-> No intentional functional impact.
+> I've posted a similar fix yesterday, see
+> https://lore.kernel.org/linux-media/20240102074518.24968-1-laurent.pinchart@ideasonboard.com
 > 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->   drivers/thermal/thermal_netlink.c |   33 +--------------------------------
->   drivers/thermal/thermal_netlink.h |   14 --------------
->   2 files changed, 1 insertion(+), 46 deletions(-)
+> What approach do you think is best ?
+
+By far the dominant use of FW_LOADER is to select it instead of depend on it,
+so I prefer Arnd's patch.
+
 > 
-> Index: linux-pm/drivers/thermal/thermal_netlink.c
-> ===================================================================
-> --- linux-pm.orig/drivers/thermal/thermal_netlink.c
-> +++ linux-pm/drivers/thermal/thermal_netlink.c
-> @@ -135,7 +135,7 @@ static int thermal_genl_event_tz_trip_up
->   	return 0;
->   }
->   
-> -static int thermal_genl_event_tz_trip_add(struct param *p)
-> +static int thermal_genl_event_tz_trip_change(struct param *p)
->   {
->   	if (nla_put_u32(p->msg, THERMAL_GENL_ATTR_TZ_ID, p->tz_id) ||
->   	    nla_put_u32(p->msg, THERMAL_GENL_ATTR_TZ_TRIP_ID, p->trip_id) ||
-> @@ -147,15 +147,6 @@ static int thermal_genl_event_tz_trip_ad
->   	return 0;
->   }
->   
-> -static int thermal_genl_event_tz_trip_delete(struct param *p)
-> -{
-> -	if (nla_put_u32(p->msg, THERMAL_GENL_ATTR_TZ_ID, p->tz_id) ||
-> -	    nla_put_u32(p->msg, THERMAL_GENL_ATTR_TZ_TRIP_ID, p->trip_id))
-> -		return -EMSGSIZE;
-> -
-> -	return 0;
-> -}
-> -
->   static int thermal_genl_event_cdev_add(struct param *p)
->   {
->   	if (nla_put_string(p->msg, THERMAL_GENL_ATTR_CDEV_NAME,
-> @@ -245,9 +236,6 @@ int thermal_genl_event_tz_disable(struct
->   int thermal_genl_event_tz_trip_down(struct param *p)
->   	__attribute__((alias("thermal_genl_event_tz_trip_up")));
->   
-> -int thermal_genl_event_tz_trip_change(struct param *p)
-> -	__attribute__((alias("thermal_genl_event_tz_trip_add")));
-> -
->   static cb_t event_cb[] = {
->   	[THERMAL_GENL_EVENT_TZ_CREATE]		= thermal_genl_event_tz_create,
->   	[THERMAL_GENL_EVENT_TZ_DELETE]		= thermal_genl_event_tz_delete,
-> @@ -256,8 +244,6 @@ static cb_t event_cb[] = {
->   	[THERMAL_GENL_EVENT_TZ_TRIP_UP]		= thermal_genl_event_tz_trip_up,
->   	[THERMAL_GENL_EVENT_TZ_TRIP_DOWN]	= thermal_genl_event_tz_trip_down,
->   	[THERMAL_GENL_EVENT_TZ_TRIP_CHANGE]	= thermal_genl_event_tz_trip_change,
-> -	[THERMAL_GENL_EVENT_TZ_TRIP_ADD]	= thermal_genl_event_tz_trip_add,
-> -	[THERMAL_GENL_EVENT_TZ_TRIP_DELETE]	= thermal_genl_event_tz_trip_delete,
->   	[THERMAL_GENL_EVENT_CDEV_ADD]		= thermal_genl_event_cdev_add,
->   	[THERMAL_GENL_EVENT_CDEV_DELETE]	= thermal_genl_event_cdev_delete,
->   	[THERMAL_GENL_EVENT_CDEV_STATE_UPDATE]	= thermal_genl_event_cdev_state_update,
-> @@ -350,23 +336,6 @@ int thermal_notify_tz_trip_up(const stru
->   	return thermal_genl_send_event(THERMAL_GENL_EVENT_TZ_TRIP_UP, &p);
->   }
->   
-> -int thermal_notify_tz_trip_add(int tz_id, int trip_id, int trip_type,
-> -			       int trip_temp, int trip_hyst)
-> -{
-> -	struct param p = { .tz_id = tz_id, .trip_id = trip_id,
-> -			   .trip_type = trip_type, .trip_temp = trip_temp,
-> -			   .trip_hyst = trip_hyst };
-> -
-> -	return thermal_genl_send_event(THERMAL_GENL_EVENT_TZ_TRIP_ADD, &p);
-> -}
-> -
-> -int thermal_notify_tz_trip_delete(int tz_id, int trip_id)
-> -{
-> -	struct param p = { .tz_id = tz_id, .trip_id = trip_id };
-> -
-> -	return thermal_genl_send_event(THERMAL_GENL_EVENT_TZ_TRIP_DELETE, &p);
-> -}
-> -
->   int thermal_notify_tz_trip_change(const struct thermal_zone_device *tz,
->   				  const struct thermal_trip *trip)
->   {
-> Index: linux-pm/drivers/thermal/thermal_netlink.h
-> ===================================================================
-> --- linux-pm.orig/drivers/thermal/thermal_netlink.h
-> +++ linux-pm/drivers/thermal/thermal_netlink.h
-> @@ -22,9 +22,6 @@ int thermal_notify_tz_trip_down(const st
->   				const struct thermal_trip *trip);
->   int thermal_notify_tz_trip_up(const struct thermal_zone_device *tz,
->   			      const struct thermal_trip *trip);
-> -int thermal_notify_tz_trip_delete(int tz_id, int id);
-> -int thermal_notify_tz_trip_add(int tz_id, int id, int type,
-> -			       int temp, int hyst);
->   int thermal_notify_tz_trip_change(const struct thermal_zone_device *tz,
->   				  const struct thermal_trip *trip);
->   int thermal_notify_cdev_state_update(int cdev_id, int state);
-> @@ -71,17 +68,6 @@ static inline int thermal_notify_tz_trip
->   {
->   	return 0;
->   }
-> -
-> -static inline int thermal_notify_tz_trip_delete(int tz_id, int id)
-> -{
-> -	return 0;
-> -}
-> -
-> -static inline int thermal_notify_tz_trip_add(int tz_id, int id, int type,
-> -					     int temp, int hyst)
-> -{
-> -	return 0;
-> -}
->   
->   static inline int thermal_notify_tz_trip_change(const struct thermal_zone_device *tz,
->   						const struct thermal_trip *trip)
-> 
-> 
+>> ---
+>>  drivers/media/i2c/Kconfig | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+>> index 78a87331686e..4c3435921f19 100644
+>> --- a/drivers/media/i2c/Kconfig
+>> +++ b/drivers/media/i2c/Kconfig
+>> @@ -674,6 +674,7 @@ menu "Camera ISPs"
+>>  config VIDEO_THP7312
+>>  	tristate "THine THP7312 support"
+>>  	depends on I2C
+>> +	select FW_LOADER
+>>  	select MEDIA_CONTROLLER
+>>  	select V4L2_CCI_I2C
+>>  	select V4L2_FWNODE
 > 
 
-We could also add a comment that these two
-(THERMAL_GENL_EVENT_TZ_TRIP_ADD/DELETE) in the uapi header are obsolete.
-
-Other than that this looks good.
-
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+-- 
+#Randy
