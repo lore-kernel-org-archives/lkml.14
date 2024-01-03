@@ -1,55 +1,55 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FEBED5
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 01:08:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8392EA6
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 01:08:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qwC8abFT"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-5e734d6cbe4so78106547b3.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 17:08:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U+rNw5Hw"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-5ebca94cf74so58041527b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 17:08:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704244101; x=1704848901; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1704244117; x=1704848917; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kQZx6mFOYirIUAArcj6mBKkjCVrYW4c3EknIHib0Ab4=;
-        b=qwC8abFTqjtWgxswQDXrJb8BziM9tRW3dKZyQ/eENex7LDu0L4eHrKH3xjil9F/aAD
-         8yExgZQeKmAc/I2gbOEJowKI5k9QxxxvPwQoLCmykI5z9U3jYUC9/DkfBI8vN3aY8pHj
-         MLHTYFgLa0KZdBwxiuDedG2wJRLYC0I9HO9SpsmlRfpU6kIwQB1zTk+WDAtjmcTQdFdx
-         sfZlkRqADcFyPguZKNI/omknfuZBhJnD0ZkF2F2WdQikH2p4n3y+hib6fFaHiM/qM0ar
-         IfdfWcZQBQa2UQNWVFuYPo3a7ELrNyWOkmMBwpKYSUVQDVDk0U9J3Gchz3TGhpiW6QK3
-         FoWQ==
+        bh=p8fPDfzL2N3tcHcZiXtbT0PFXQblAxBsLoG48+1LxxE=;
+        b=U+rNw5HwUnSLY4WP0pZEVFbKEJp+u3ltXqpuYcbMQve0ZB/pDNSXv7Nf6PViR8LPFO
+         QxxsDHfsyNiqvpOWIw++Onj6IfHLeJ3e9Fv1707Dp2mfe+0XeAX9aeA9WVreU1xz5QWq
+         AlKTptRJVNdAHqh6yJJpvtfQpS7N2sOIzycHXvJxXF17Xbvd6xRtimabUj3F0O7nDW9D
+         w9nZ/R/4hbDA3S8DyyDEMk0l9bjji3XMyAytRYN5aOmylQf8kDiG6Kt10LCn8asT++6D
+         dC2YxZI6GrYKdnXjGKjZXpO338EFX/Byz2bX2FXtDXZX2GxDfeTXqW4BMy4mP6XNu2Nb
+         qxhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704244101; x=1704848901;
+        d=1e100.net; s=20230601; t=1704244117; x=1704848917;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kQZx6mFOYirIUAArcj6mBKkjCVrYW4c3EknIHib0Ab4=;
-        b=ilBQ+f06saxGSszk5TdPn2IgVybCCIzFazy1Ub6zcJrqqNoyquqQWY8DPvBv9d6ghe
-         ovIz7UPKnId+We+jgnhQ3NupdC5cqrcO5GDJe+LPlRThW22oILLCDdx3OWWgi9QJS4uo
-         oeyw/vqPcd2XYBMgTpbXdG3SLqe7s22NfQQgF+2u+/FjgfrFet4nlF1mKOVn5eO5apdc
-         L7rwQDN4o+slG3609XdvZXFHEFTW0PHEjv9ppK/cvgCli9n8zNftkVB0G6C4uzw96zFr
-         fFIwhrLAawm7eLKQHYo0/SvP+YD8G4t3K0UaX5KA7S6K8UcQ77sPvedfP4AnJEoLjX/m
-         k/yQ==
-X-Gm-Message-State: AOJu0YwR93pEJfx+gxWxS9IMdGBWF+fnUUZ8des46x3lNplzqfsSIgOl
-	oFwhEV9QMTv6fB+3CyNWL8Rp7ftH2qGgIWTBRU3f+jZUbeuLDw==
-X-Google-Smtp-Source: AGHT+IFLvYmlISArL8/w0L24/AWKtV7noKnDHAvcx8j6L6HiRiGyB5/Lo6NZnVbibRNZru4dx8wEQgiFkgLuIiFLimA=
-X-Received: by 2002:a0d:e60f:0:b0:5e7:731f:cbfd with SMTP id
- p15-20020a0de60f000000b005e7731fcbfdmr12950767ywe.42.1704244100985; Tue, 02
- Jan 2024 17:08:20 -0800 (PST)
+        bh=p8fPDfzL2N3tcHcZiXtbT0PFXQblAxBsLoG48+1LxxE=;
+        b=VfxUglVZp2a4L34xuG8AKMoLBBdYjH3z5EagmF2cIBePRAkI7tCpM681E18Frui9lJ
+         StncfVgYkoik8WQwNy39Tp0XIHBeBnXjjStHnrIOzz7tvS18OIGc5MXi81wyYJbepuM5
+         fIvoKyofQMhX5Eity7ZOgLt7AbAx80focLi80xntRYCB1hpTYAAXR89FgzTbil2s4NI8
+         0AP76pSbOCqd9vrtl5u8pPkegBRqvNGalSA3imQpQHx+iyMf1YsefmMl6RPoJQQ3NHYX
+         UvaMK9WlZOgnSrRYvQcyZycrI/KgT1SYS7dDQ1RlTcYE9z2KiCajoay6grGWvMwozUot
+         Kihg==
+X-Gm-Message-State: AOJu0YyhLkL+CbF0GV0HhBYlUlmYty3eCBlBDaY2e2u4Af1PXEG8ESuN
+	8waRXxQquQE6lT/Oh/D4qxOpquHSk+INIhXlkkVVzlntXOW0pQ==
+X-Google-Smtp-Source: AGHT+IESRnzFActZ4nCEdcS2Hd80g6/QMeRxBsKvrVu/YOu9jw+UX733JJtP+MA9aE4bapxcuCWGYqU5G6iZtgRfM0U=
+X-Received: by 2002:a81:5454:0:b0:5e8:8c2c:32ac with SMTP id
+ i81-20020a815454000000b005e88c2c32acmr14014156ywb.41.1704244116831; Tue, 02
+ Jan 2024 17:08:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240102-topic-gpu_cooling-v1-0-fda30c57e353@linaro.org> <20240102-topic-gpu_cooling-v1-11-fda30c57e353@linaro.org>
-In-Reply-To: <20240102-topic-gpu_cooling-v1-11-fda30c57e353@linaro.org>
+References: <20240102-topic-gpu_cooling-v1-0-fda30c57e353@linaro.org> <20240102-topic-gpu_cooling-v1-12-fda30c57e353@linaro.org>
+In-Reply-To: <20240102-topic-gpu_cooling-v1-12-fda30c57e353@linaro.org>
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Wed, 3 Jan 2024 03:08:10 +0200
-Message-ID: <CAA8EJpoZkAExZmhxOpYy7E5s_iu_N_eA0ZkXQx8_s7B+kmivZA@mail.gmail.com>
-Subject: Re: [PATCH 11/12] arm64: dts: qcom: sm8550: Hook up GPU cooling device
+Date: Wed, 3 Jan 2024 03:08:26 +0200
+Message-ID: <CAA8EJpr+gV-+8tBCgnN-113uoq-G1wN6iRhApHMtavzs1Ec1tQ@mail.gmail.com>
+Subject: Re: [PATCH 12/12] arm64: dts: qcom: sdm630: Hook up GPU cooling device
 To: Konrad Dybcio <konrad.dybcio@linaro.org>
 Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -60,16 +60,15 @@ Content-Type: text/plain; charset="UTF-8"
 On Tue, 2 Jan 2024 at 15:38, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
 >
 > In order to allow for throttling the GPU, hook up the cooling device
-> to the respective thermal zones. Also, unify the naming scheme of the
-> thermal zones across the tree while at it.
+> to the respective thermal zones.
 >
 > Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 > ---
->  arch/arm64/boot/dts/qcom/sm8550.dtsi | 57 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
+>  arch/arm64/boot/dts/qcom/sdm630.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
 
 Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-
 
 -- 
 With best wishes
