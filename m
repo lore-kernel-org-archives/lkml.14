@@ -1,94 +1,134 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992EA1CAA8;
-	Wed,  3 Jan 2024 19:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E268A1CA9B;
+	Wed,  3 Jan 2024 19:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YIunxPK1"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5ca1b4809b5so3247034a12.3;
-        Wed, 03 Jan 2024 11:15:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704309342; x=1704914142; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=THg77ifkb1nWeoB2+qgVSINTgAapw6XOZvKpasqorLI=;
-        b=YIunxPK1b3eLxlZhuxAh1eHDZWfLOmnNgsBTmKGruKXlGxHTT2IMKs2czJh4zTmjOh
-         8ZT7Jk/gP+qD4J2+rdMlyEx++uEo0Ipu09wH5RuIgAwafjrodKesHXSMBKXYBSqYML4o
-         DKqESxGDbQF5qt7HCFLhIvrjtsEqfn0qDFy+ioXm7PbHXQYKOSHyD9YlO/qso7uKXlRB
-         q/Jw4/u59wV5/OaENz412aAdGA6JsRmxCOl4nvR4Ua0CJ74FnIR21wrV1CSvzk0QimhC
-         xGfNQ5LJ3d/n9rNKlfZNhS9ib7D0hos9tsgwaj4CaAAH1HBGHldDpUyyRbObpoFrUfiA
-         C3Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704309342; x=1704914142;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=THg77ifkb1nWeoB2+qgVSINTgAapw6XOZvKpasqorLI=;
-        b=eCprM6q8oZnZ6KWkcUIXtKvw103XFR683Bhe+FcEnI1reiUu5hJIa0dGFVqSQrzccy
-         PezaFURaUoTQGFA+GM4st6BQkCxLIKuRlxvfp9gEgXAgigjr273Wq7CbQrhSj65c+2a4
-         WM7IEB0DQXwwCPkDV4lea7LaYQtxWcNTIWyytCqR37tVjf+kQivjZgXmBpNKNF5yUcmd
-         HZmWudH39V0QvT+Haox14DtYlPPOUFNWiW0xkkbdmfz86xyRCIiL8EGn6Sd9TEfu9Yt3
-         XYSgqgkR0z/dn9kbR8wLO3o9KIKY+xRiqhnCZObyW84JEhUzDYiEqmA41N2OOrZcxFJk
-         W69w==
-X-Gm-Message-State: AOJu0Yx4JTN2D8mgWJDFGECCWRcPi7id1ApJn8dnxSNQlSA2ITXPC4HL
-	AZKfgEpjNopcdZzT/1E1v5I=
-X-Google-Smtp-Source: AGHT+IHa3Md31dvmuaHFAtSG1dwhs2s1EzBoOiqYuNjpKGoKqEynfIKWI6zeugxZ4FTv85lFr45hyw==
-X-Received: by 2002:a05:6a20:9799:b0:197:1075:b51f with SMTP id hx25-20020a056a20979900b001971075b51fmr2250052pzc.122.1704309341901;
-        Wed, 03 Jan 2024 11:15:41 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id du8-20020a056a002b4800b006daa809584csm3473076pfb.182.2024.01.03.11.15.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jan 2024 11:15:41 -0800 (PST)
-Message-ID: <9b783291-d6ba-46b3-8e91-8deab3f3f777@gmail.com>
-Date: Wed, 3 Jan 2024 11:15:39 -0800
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="fhOtqFKA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+	t=1704310048; x=1704914848; i=w_armin@gmx.de;
+	bh=jAvhRAuLMwF09z0O8Wn623XKzZ4cT7/lRTptfGH+3Uk=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
+	 References;
+	b=fhOtqFKAv2PoS6Maafw2sTf6l9E34RHPHZqxzTgojSHcUpPWnTQ7aKDJK+jUA73A
+	 S8H9iMqiR1caQMCpeLyjQKpdAppOtXT1R3eN1xkuq6hcSmECHRcNRfOy0eSIPCkEw
+	 vQErM2wWyXd44urs+qc2sgP5eM3QiTC6HBnDxBHSIKEPQssK4Y1MEm4hNtRLEBQly
+	 4/FmPDZWp108zF/3UBIiEd6RXRG8en4tjSrLJSz+uQYgjU46tZgVukYuws6/M040W
+	 RPMQRT7XC6HSEVfPZr9Ink9BBd1BAIlE09oRZeG6Fl2heS7zp1lpRf4AWsx5hMLjj
+	 tAblxA+LjPBEdi7LTA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MYeMt-1rhP0m3JY3-00VioH; Wed, 03 Jan 2024 20:27:27 +0100
+From: Armin Wolf <W_Armin@gmx.de>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 2/4] platform/x86: wmi: Return immediately if an suitable WMI event is found
+Date: Wed,  3 Jan 2024 20:27:05 +0100
+Message-Id: <20240103192707.115512-3-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240103192707.115512-1-W_Armin@gmx.de>
+References: <20240103192707.115512-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5.15 00/95] 5.15.146-rc1 review
-Content-Language: en-US
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, allen.lkml@gmail.com
-References: <20240103164853.921194838@linuxfoundation.org>
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20240103164853.921194838@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:nsG8TD6g7FOddttMBLCBlXgejchclXT9ya4KHwThGTHhGNTwYjO
+ anFyyUkbQ8i61N+DYCiUQ3AYlQe+AAGehQoxeqBiRV2nC0O600VcNp4DX24SvojF3MwfcKV
+ w3mJAlDeciZfrImy13RGEntPxB5RVzrCTErGg8Jl1q+1xak7l6lhJbpQCJgZDpzmLthSXvj
+ BwkMPRG1jtHq9xTKk04iQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:iie4OV3hTjQ=;jZ2SeOqr0+Fgd0b4+6YAAy5mNVs
+ Uzk3W7UJDA5Gr/T4MIi/wDDEas7qJXqlQOe1zhlMHYd4KvZhlfzKv+TnQWXIUZcVzvG1i5fKJ
+ bcg7JzawjtQ0n4EgC3jnu+mebW9D83pHOuY8UPJ6DO4epvgN++bsVB66o2y66+2b2AOwgvxK3
+ cxZHnkhCa9BCwEOAUaUJ5fq9O7boJlQyZAqJtqjP2sxCtkEoEONBSrHLrKulqbiBloSa92N0K
+ AYuTGnWb/zxPTPLCmMST96ARlSMb589F+2A1sBQRbGID8zlZJ232AbeY0gSFEz/MNMfLGLkFv
+ PvO23D+aMjhYd9bpz78a2aUY2P4+DVLPyA/gWkOC0NDm3uwazi+JBv95JkL4FyjbemnoAy00V
+ M9SB2paEtGkSHevdcb1WfglbjGiDEz5za5sklUV1pwzmYm/LIDfRQhQTfX+0OaYP638L7cqWL
+ v2Z9mG8z14lVE6eSpPmpCSJ9TWqnFX5LiVX4uqzrnpUdEaUQkMb6pzWRTazV+wB0kMdq7SjTt
+ QPVeEbrS+011e2c8XfMxOx6QXqZgkc/wzgWqrld31SuDCVaHlAOVB9C+ovOZqE/fjDKJ1lIek
+ /CVW2CzTDhSI73fYPvJ87TxO66YmWklW83dD28Yct/O5WZO8Qtv+HelfPVy49+dqM4+wxJnZU
+ YJghW8YobLVaDjL1hIQvNixnvSY90k6Sggz+hdtl0XsVtxYFWBQrdK3yTy9RHPbJLE20WWbxK
+ 6StGhq+NeZGcQxgbBf/RyuUOLXKrvXknKt58i5Tzd3ib0Dwui7VrTJSwRMZD861Sqz7+V7wj2
+ c+RnwK/gj9nd62UrnQkZoyWd+U/1c1LJZ2mwdYWSHKUzVOieJz5KeMNrvC3rM24tKzsYE2Nd/
+ DIhMF1+gjBOby/TV4JxBsPvmq7RgKcKt+js3kh2oYKif/+lj2pMO9dTBX2WqpsCyU29Ae1VYW
+ nlrBsA==
 
-On 1/3/24 08:54, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.15.146 release.
-> There are 95 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 05 Jan 2024 16:47:49 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.146-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Commit 58f6425eb92f ("WMI: Cater for multiple events with same GUID")
+allowed legacy WMI notify handlers to be installed for multiple WMI
+devices with the same GUID.
+However this is useless since the legacy GUID-based interface is
+blacklisted from seeing WMI devices with duplicated GUIDs.
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+Return immediately if a suitable WMI event is found in
+wmi_install/remove_notify_handler() since searching for other suitable
+events is pointless.
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+Tested on a Dell Inspiron 3505 and a Acer Aspire E1-731.
+
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/platform/x86/wmi.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index 3899a5e3fca7..7470a149b254 100644
+=2D-- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -572,7 +572,6 @@ acpi_status wmi_install_notify_handler(const char *gui=
+d,
+ 				       void *data)
+ {
+ 	struct wmi_block *block;
+-	acpi_status status =3D AE_NOT_EXIST;
+ 	guid_t guid_input;
+
+ 	if (!guid || !handler)
+@@ -595,11 +594,11 @@ acpi_status wmi_install_notify_handler(const char *g=
+uid,
+ 			if (ACPI_FAILURE(wmi_status))
+ 				dev_warn(&block->dev.dev, "Failed to enable device\n");
+
+-			status =3D AE_OK;
++			return AE_OK;
+ 		}
+ 	}
+
+-	return status;
++	return AE_NOT_EXIST;
+ }
+ EXPORT_SYMBOL_GPL(wmi_install_notify_handler);
+
+@@ -614,7 +613,6 @@ EXPORT_SYMBOL_GPL(wmi_install_notify_handler);
+ acpi_status wmi_remove_notify_handler(const char *guid)
+ {
+ 	struct wmi_block *block;
+-	acpi_status status =3D AE_NOT_EXIST;
+ 	guid_t guid_input;
+
+ 	if (!guid)
+@@ -637,11 +635,11 @@ acpi_status wmi_remove_notify_handler(const char *gu=
+id)
+ 			block->handler =3D NULL;
+ 			block->handler_data =3D NULL;
+
+-			status =3D AE_OK;
++			return AE_OK;
+ 		}
+ 	}
+
+-	return status;
++	return AE_NOT_EXIST;
+ }
+ EXPORT_SYMBOL_GPL(wmi_remove_notify_handler);
+
+=2D-
+2.39.2
 
