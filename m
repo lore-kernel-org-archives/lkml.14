@@ -1,28 +1,34 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D11F21805C;
-	Wed,  3 Jan 2024 07:16:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8AxjuvBCZVlz3IBAA--.5795S3;
-	Wed, 03 Jan 2024 15:16:17 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxqb2_CZVlm1EYAA--.43800S7;
-	Wed, 03 Jan 2024 15:16:17 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Juergen Gross <jgross@suse.com>
-Cc: loongarch@lists.linux.dev,
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A294418028;
+	Wed,  3 Jan 2024 07:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4T4gzS3z9mz4f3jQb;
+	Wed,  3 Jan 2024 15:17:56 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 4D65B1A0914;
+	Wed,  3 Jan 2024 15:17:58 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgDn6hAkCpVliUCTFQ--.54310S4;
+	Wed, 03 Jan 2024 15:17:58 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: ming.lei@redhat.com,
+	hch@lst.de,
+	bvanassche@acm.org,
+	axboe@kernel.dk
+Cc: linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	kvm@vger.kernel.org
-Subject: [PATCH 5/5] LoongArch: Add pv ipi support on LoongArch system
-Date: Wed,  3 Jan 2024 15:16:15 +0800
-Message-Id: <20240103071615.3422264-6-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240103071615.3422264-1-maobibo@loongson.cn>
-References: <20240103071615.3422264-1-maobibo@loongson.cn>
+	yukuai3@huawei.com,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH for-6.8/block RFC v2] block: support to account io_ticks precisely
+Date: Wed,  3 Jan 2024 15:15:15 +0800
+Message-Id: <20240103071515.2477311-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -30,465 +36,297 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Dxqb2_CZVlm1EYAA--.43800S7
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9fXoWfGw45Kr1xXr4UZw4xXFyruFX_yoW8JF13uo
-	W3GF4vqw4rW3yruFs0vw1Fqry5XFWakr4DAas3Z3Z8WFn7Jw12gry8Kw43tF17Grs5GF9r
-	C343Xr1ktayftFnxl-sFpf9Il3svdjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8wcxFpf
-	9Il3svdxBIdaVrn0xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3
-	UjIYCTnIWjp_UUUYs7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI
-	8IcIk0rVWrJVCq3wAFIxvE14AKwVW8JVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-	0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280
-	aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
-	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E
-	5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAV
-	WUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY
-	1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI
-	0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7I
-	UbCzuJUUUUU==
+X-CM-TRANSID:cCh0CgDn6hAkCpVliUCTFQ--.54310S4
+X-Coremail-Antispam: 1UD129KBjvJXoWfJr43tw4kXFWxArW3Kw4fGrg_yoWDuF1xp3
+	yDAay7tay0gF48uFykt3W7A3WSgw4qkrW7Ar43CryYyFnrKr1fX3WvvFWFqF4xZrZ7AayU
+	Zr4kAayDu398W3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v2
+	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0J
+	UdHUDUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On LoongArch system, ipi hw uses iocsr registers, there is one iocsr
-register access on ipi sender and two iocsr access on ipi interrupt
-handler. On VM mode all iocsr registers accessing will trap into
-hypervisor.
+From: Yu Kuai <yukuai3@huawei.com>
 
-This patch adds pv ipi support for VM, hypercall instruction is used
-to ipi sender, and hypervisor will inject SWI on the VM. During SWI
-interrupt handler, only estat CSR register is read and written. Estat
-CSR register access will not trap into hypervisor. So with pv ipi
-supported, pv ipi sender will trap into hypervsor, pv ipi interrupt
-handler will not trap.
+Currently, io_ticks is accounted based on sampling, specifically
+update_io_ticks() will always account io_ticks by 1 jiffies from
+bdev_start_io_acct()/blk_account_io_start(), and the result can be
+inaccurate, for example(HZ is 250):
 
-Also this patch adds ipi multicast support, the method is similar with
-x86. With ipi multicast support, ipi notification can be sent to at most
-64 vcpus at a time. And hw cpuid is equal to logic cpuid in LoongArch
-kvm hypervisor now, will add hw cpuid search logic in kvm hypervisor
-in the next patch.
+Test script:
+fio -filename=/dev/sda -bs=4k -rw=write -direct=1 -name=test -thinktime=4ms
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+Test result: util is about 90%, while the disk is really idle.
+
+In order to account io_ticks precisely, update_io_ticks() must know if
+there are IO inflight already, and this requires overhead slightly,
+hence precise io accounting is disabled by default, and user can enable
+it through sysfs entry.
+
+Noted that for rq-based devcie, part_stat_local_inc/dec() and
+part_in_flight() is used to track inflight instead of iterating tags,
+which is not supposed to be used in fast path because 'tags->lock' is
+grabbed in blk_mq_find_and_get_req().
+
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- arch/loongarch/include/asm/hardirq.h   |   1 +
- arch/loongarch/include/asm/kvm_para.h  | 124 +++++++++++++++++++++++++
- arch/loongarch/include/asm/loongarch.h |   1 +
- arch/loongarch/kernel/irq.c            |   2 +-
- arch/loongarch/kernel/paravirt.c       | 103 ++++++++++++++++++++
- arch/loongarch/kernel/smp.c            |   2 +-
- arch/loongarch/kvm/exit.c              |  66 ++++++++++++-
- 7 files changed, 295 insertions(+), 4 deletions(-)
+Changes in v2:
+ - remove the new parameter for update_io_ticks();
+ - simplify update_io_ticks();
+ - use swith in queue_iostats_store();
+ - add missing part_stat_local_dec() in blk_account_io_merge_request()
 
-diff --git a/arch/loongarch/include/asm/hardirq.h b/arch/loongarch/include/asm/hardirq.h
-index 9f0038e19c7f..998011f162d0 100644
---- a/arch/loongarch/include/asm/hardirq.h
-+++ b/arch/loongarch/include/asm/hardirq.h
-@@ -21,6 +21,7 @@ enum ipi_msg_type {
- typedef struct {
- 	unsigned int ipi_irqs[NR_IPI];
- 	unsigned int __softirq_pending;
-+	atomic_t messages;
- } ____cacheline_aligned irq_cpustat_t;
+ Documentation/ABI/stable/sysfs-block |  8 ++++--
+ block/blk-core.c                     | 10 +++++--
+ block/blk-merge.c                    |  3 ++
+ block/blk-mq.c                       | 12 ++++++--
+ block/blk-sysfs.c                    | 42 ++++++++++++++++++++++++++--
+ block/blk.h                          |  1 +
+ block/genhd.c                        |  2 +-
+ include/linux/blk-mq.h               |  1 +
+ include/linux/blkdev.h               |  3 ++
+ 9 files changed, 72 insertions(+), 10 deletions(-)
+
+diff --git a/Documentation/ABI/stable/sysfs-block b/Documentation/ABI/stable/sysfs-block
+index 1fe9a553c37b..e5fedecf7bdf 100644
+--- a/Documentation/ABI/stable/sysfs-block
++++ b/Documentation/ABI/stable/sysfs-block
+@@ -358,8 +358,12 @@ What:		/sys/block/<disk>/queue/iostats
+ Date:		January 2009
+ Contact:	linux-block@vger.kernel.org
+ Description:
+-		[RW] This file is used to control (on/off) the iostats
+-		accounting of the disk.
++		[RW] This file is used to control the iostats accounting of the
++		disk. If this value is 0, iostats accounting is disabled; If
++		this value is 1, iostats accounting is enabled, but io_ticks is
++		accounted by sampling and the result is not accurate; If this
++		value is 2, iostats accounting is enabled and io_ticks is
++		accounted precisely, but there will be slightly overhead.
  
- DECLARE_PER_CPU_SHARED_ALIGNED(irq_cpustat_t, irq_stat);
-diff --git a/arch/loongarch/include/asm/kvm_para.h b/arch/loongarch/include/asm/kvm_para.h
-index 41200e922a82..a25a84e372b9 100644
---- a/arch/loongarch/include/asm/kvm_para.h
-+++ b/arch/loongarch/include/asm/kvm_para.h
-@@ -9,6 +9,10 @@
- #define HYPERVISOR_VENDOR_SHIFT		8
- #define HYPERCALL_CODE(vendor, code)	((vendor << HYPERVISOR_VENDOR_SHIFT) + code)
  
-+#define KVM_HC_CODE_SERVICE		0
-+#define KVM_HC_SERVICE			HYPERCALL_CODE(HYPERVISOR_KVM, KVM_HC_CODE_SERVICE)
-+#define  KVM_HC_FUNC_IPI		1
-+
- /*
-  * LoongArch hypcall return code
-  */
-@@ -16,6 +20,126 @@
- #define KVM_HC_INVALID_CODE		-1UL
- #define KVM_HC_INVALID_PARAMETER	-2UL
- 
-+/*
-+ * Hypercalls interface for KVM hypervisor
-+ *
-+ * a0: function identifier
-+ * a1-a6: args
-+ * Return value will be placed in v0.
-+ * Up to 6 arguments are passed in a1, a2, a3, a4, a5, a6.
-+ */
-+static __always_inline long kvm_hypercall(u64 fid)
-+{
-+	register long ret asm("v0");
-+	register unsigned long fun asm("a0") = fid;
-+
-+	__asm__ __volatile__(
-+		"hvcl "__stringify(KVM_HC_SERVICE)
-+		: "=r" (ret)
-+		: "r" (fun)
-+		: "memory"
-+		);
-+
-+	return ret;
-+}
-+
-+static __always_inline long kvm_hypercall1(u64 fid, unsigned long arg0)
-+{
-+	register long ret asm("v0");
-+	register unsigned long fun asm("a0") = fid;
-+	register unsigned long a1  asm("a1") = arg0;
-+
-+	__asm__ __volatile__(
-+		"hvcl "__stringify(KVM_HC_SERVICE)
-+		: "=r" (ret)
-+		: "r" (fun), "r" (a1)
-+		: "memory"
-+		);
-+
-+	return ret;
-+}
-+
-+static __always_inline long kvm_hypercall2(u64 fid,
-+		unsigned long arg0, unsigned long arg1)
-+{
-+	register long ret asm("v0");
-+	register unsigned long fun asm("a0") = fid;
-+	register unsigned long a1  asm("a1") = arg0;
-+	register unsigned long a2  asm("a2") = arg1;
-+
-+	__asm__ __volatile__(
-+			"hvcl "__stringify(KVM_HC_SERVICE)
-+			: "=r" (ret)
-+			: "r" (fun), "r" (a1), "r" (a2)
-+			: "memory"
-+			);
-+
-+	return ret;
-+}
-+
-+static __always_inline long kvm_hypercall3(u64 fid,
-+	unsigned long arg0, unsigned long arg1, unsigned long arg2)
-+{
-+	register long ret asm("v0");
-+	register unsigned long fun asm("a0") = fid;
-+	register unsigned long a1  asm("a1") = arg0;
-+	register unsigned long a2  asm("a2") = arg1;
-+	register unsigned long a3  asm("a3") = arg2;
-+
-+	__asm__ __volatile__(
-+		"hvcl "__stringify(KVM_HC_SERVICE)
-+		: "=r" (ret)
-+		: "r" (fun), "r" (a1), "r" (a2), "r" (a3)
-+		: "memory"
-+		);
-+
-+	return ret;
-+}
-+
-+static __always_inline long kvm_hypercall4(u64 fid,
-+		unsigned long arg0, unsigned long arg1, unsigned long arg2,
-+		unsigned long arg3)
-+{
-+	register long ret asm("v0");
-+	register unsigned long fun asm("a0") = fid;
-+	register unsigned long a1  asm("a1") = arg0;
-+	register unsigned long a2  asm("a2") = arg1;
-+	register unsigned long a3  asm("a3") = arg2;
-+	register unsigned long a4  asm("a4") = arg3;
-+
-+	__asm__ __volatile__(
-+		"hvcl "__stringify(KVM_HC_SERVICE)
-+		: "=r" (ret)
-+		: "r"(fun), "r" (a1), "r" (a2), "r" (a3), "r" (a4)
-+		: "memory"
-+		);
-+
-+	return ret;
-+}
-+
-+static __always_inline long kvm_hypercall5(u64 fid,
-+		unsigned long arg0, unsigned long arg1, unsigned long arg2,
-+		unsigned long arg3, unsigned long arg4)
-+{
-+	register long ret asm("v0");
-+	register unsigned long fun asm("a0") = fid;
-+	register unsigned long a1  asm("a1") = arg0;
-+	register unsigned long a2  asm("a2") = arg1;
-+	register unsigned long a3  asm("a3") = arg2;
-+	register unsigned long a4  asm("a4") = arg3;
-+	register unsigned long a5  asm("a5") = arg4;
-+
-+	__asm__ __volatile__(
-+		"hvcl "__stringify(KVM_HC_SERVICE)
-+		: "=r" (ret)
-+		: "r"(fun), "r" (a1), "r" (a2), "r" (a3), "r" (a4), "r" (a5)
-+		: "memory"
-+		);
-+
-+	return ret;
-+}
-+
-+
- static inline unsigned int kvm_arch_para_features(void)
- {
- 	return 0;
-diff --git a/arch/loongarch/include/asm/loongarch.h b/arch/loongarch/include/asm/loongarch.h
-index a03b466555a1..a787b69f6fb0 100644
---- a/arch/loongarch/include/asm/loongarch.h
-+++ b/arch/loongarch/include/asm/loongarch.h
-@@ -167,6 +167,7 @@
- #define CPUCFG_KVM_SIG			CPUCFG_KVM_BASE
- #define  KVM_SIGNATURE			"KVM\0"
- #define CPUCFG_KVM_FEATURE		(CPUCFG_KVM_BASE + 4)
-+#define  KVM_FEATURE_PV_IPI		BIT(1)
- #ifndef __ASSEMBLY__
- 
- /* CSR */
-diff --git a/arch/loongarch/kernel/irq.c b/arch/loongarch/kernel/irq.c
-index 1b58f7c3eed9..b5bd298c981f 100644
---- a/arch/loongarch/kernel/irq.c
-+++ b/arch/loongarch/kernel/irq.c
-@@ -113,5 +113,5 @@ void __init init_IRQ(void)
- 			per_cpu(irq_stack, i), per_cpu(irq_stack, i) + IRQ_STACK_SIZE);
+ What:		/sys/block/<disk>/queue/logical_block_size
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 9520ccab3050..f0d347ab0f34 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -956,9 +956,13 @@ void update_io_ticks(struct block_device *part, unsigned long now, bool end)
+ 	unsigned long stamp;
+ again:
+ 	stamp = READ_ONCE(part->bd_stamp);
+-	if (unlikely(time_after(now, stamp))) {
+-		if (likely(try_cmpxchg(&part->bd_stamp, &stamp, now)))
+-			__part_stat_add(part, io_ticks, end ? now - stamp : 1);
++	if (unlikely(time_after(now, stamp)) &&
++	    likely(try_cmpxchg(&part->bd_stamp, &stamp, now))) {
++		if (end || (blk_queue_precise_io_stat(part->bd_queue) &&
++			    part_in_flight(part)))
++			__part_stat_add(part, io_ticks, now - stamp);
++		else
++			__part_stat_add(part, io_ticks, 1);
  	}
- 
--	set_csr_ecfg(ECFGF_IP0 | ECFGF_IP1 | ECFGF_IP2 | ECFGF_IPI | ECFGF_PMC);
-+	set_csr_ecfg(ECFGF_SIP0 | ECFGF_IP0 | ECFGF_IP1 | ECFGF_IP2 | ECFGF_IPI | ECFGF_PMC);
+ 	if (part->bd_partno) {
+ 		part = bdev_whole(part);
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index 2d470cf2173e..ea5553766f90 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -779,6 +779,9 @@ static void blk_account_io_merge_request(struct request *req)
+ 	if (blk_do_io_stat(req)) {
+ 		part_stat_lock();
+ 		part_stat_inc(req->part, merges[op_stat_group(req_op(req))]);
++		if (req->rq_flags & RQF_PRECISE_IO_STAT)
++			part_stat_local_dec(req->part,
++					in_flight[op_is_write(req_op(req))]);
+ 		part_stat_unlock();
+ 	}
  }
-diff --git a/arch/loongarch/kernel/paravirt.c b/arch/loongarch/kernel/paravirt.c
-index 21d01d05791a..a70eba278607 100644
---- a/arch/loongarch/kernel/paravirt.c
-+++ b/arch/loongarch/kernel/paravirt.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/export.h>
- #include <linux/types.h>
-+#include <linux/interrupt.h>
- #include <linux/jump_label.h>
- #include <linux/kvm_para.h>
- #include <asm/paravirt.h>
-@@ -16,6 +17,94 @@ static u64 native_steal_clock(int cpu)
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index fb29ff5cc281..0cb0e8db9dfd 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -360,8 +360,11 @@ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
  
- DEFINE_STATIC_CALL(pv_steal_clock, native_steal_clock);
- 
-+#ifdef CONFIG_SMP
-+static void pv_send_ipi_single(int cpu, unsigned int action)
-+{
-+	unsigned int min, old_action;
-+	unsigned long ipi_bitmap = 0;
-+	irq_cpustat_t *info = &per_cpu(irq_stat, cpu);
-+
-+	action = 1UL << action;
-+	old_action = atomic_fetch_or(action, &info->messages);
-+	if (old_action == 0) {
-+		min = cpu_logical_map(cpu);
-+		ipi_bitmap = 1;
-+		kvm_hypercall2(KVM_HC_FUNC_IPI, ipi_bitmap, min);
+ 	if (data->flags & BLK_MQ_REQ_PM)
+ 		data->rq_flags |= RQF_PM;
+-	if (blk_queue_io_stat(q))
++	if (blk_queue_io_stat(q)) {
+ 		data->rq_flags |= RQF_IO_STAT;
++		if (blk_queue_precise_io_stat(q))
++			data->rq_flags |= RQF_PRECISE_IO_STAT;
 +	}
-+}
-+
-+static void pv_send_ipi_mask(const struct cpumask *mask, unsigned int action)
-+{
-+	unsigned int cpu, i, min = 0, max = 0, old_action;
-+	u64 ipi_bitmap = 0;
-+	irq_cpustat_t *info;
-+
-+	if (cpumask_empty(mask))
-+		return;
-+
-+	action = 1UL << action;
-+	for_each_cpu(i, mask) {
-+		cpu = cpu_logical_map(i);
-+		if (!ipi_bitmap) {
-+			min = max = cpu;
-+		} else if (cpu < min && (max - cpu) < BITS_PER_LONG) {
-+			ipi_bitmap <<= min - cpu;
-+			min = cpu;
-+		} else if (cpu > min && cpu < min + BITS_PER_LONG) {
-+			max = cpu < max ? max : cpu;
-+		} else {
-+			kvm_hypercall2(KVM_HC_FUNC_IPI, ipi_bitmap, min);
-+			min = max = cpu;
-+			ipi_bitmap = 0;
-+		}
-+		info = &per_cpu(irq_stat, i);
-+		old_action = atomic_fetch_or(action, &info->messages);
-+		if (old_action == 0)
-+			__set_bit(cpu - min, (unsigned long *)&ipi_bitmap);
-+	}
-+
-+	if (ipi_bitmap)
-+		kvm_hypercall2(KVM_HC_FUNC_IPI, ipi_bitmap, min);
-+}
-+
-+static irqreturn_t loongson_do_swi(int irq, void *dev)
-+{
-+	irq_cpustat_t *info;
-+	long action;
-+
-+	clear_csr_estat(1 << INT_SWI0);
-+
-+	info = this_cpu_ptr(&irq_stat);
-+	do {
-+		action = atomic_xchg(&info->messages, 0);
-+		if (action & SMP_CALL_FUNCTION) {
-+			generic_smp_call_function_interrupt();
-+			info->ipi_irqs[IPI_CALL_FUNCTION]++;
-+		}
-+
-+		if (action & SMP_RESCHEDULE) {
-+			scheduler_ipi();
-+			info->ipi_irqs[IPI_RESCHEDULE]++;
-+		}
-+	} while (action);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void pv_ipi_init(void)
-+{
-+	int r, swi0;
-+
-+	swi0 = get_percpu_irq(INT_SWI0);
-+	if (swi0 < 0)
-+		panic("SIP0 IRQ mapping failed\n");
-+	irq_set_percpu_devid(swi0);
-+	r = request_percpu_irq(swi0, loongson_do_swi, "SWI0", &irq_stat);
-+	if (r < 0)
-+		panic("SIP0 IRQ request failed\n");
-+}
-+#endif
-+
- static bool kvm_para_available(void)
- {
- 	static int hypervisor_type;
-@@ -32,10 +121,24 @@ static bool kvm_para_available(void)
+ 	rq->rq_flags = data->rq_flags;
  
- int __init pv_guest_init(void)
- {
-+	int feature;
-+
- 	if (!cpu_has_hypervisor)
- 		return 0;
- 	if (!kvm_para_available())
- 		return 0;
- 
-+	/*
-+	 * check whether KVM hypervisor supports pv_ipi or not
-+	 */
-+#ifdef CONFIG_SMP
-+	feature = read_cpucfg(CPUCFG_KVM_FEATURE);
-+	if (feature & KVM_FEATURE_PV_IPI) {
-+		smp_ops.call_func_single_ipi	= pv_send_ipi_single;
-+		smp_ops.call_func_ipi		= pv_send_ipi_mask;
-+		smp_ops.ipi_init		= pv_ipi_init;
-+	}
-+#endif
-+
- 	return 1;
+ 	if (data->rq_flags & RQF_SCHED_TAGS) {
+@@ -999,6 +1002,9 @@ static inline void blk_account_io_done(struct request *req, u64 now)
+ 		update_io_ticks(req->part, jiffies, true);
+ 		part_stat_inc(req->part, ios[sgrp]);
+ 		part_stat_add(req->part, nsecs[sgrp], now - req->start_time_ns);
++		if (req->rq_flags & RQF_PRECISE_IO_STAT)
++			part_stat_local_dec(req->part,
++					in_flight[op_is_write(req_op(req))]);
+ 		part_stat_unlock();
+ 	}
  }
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index 8cce7839b22f..ebcf2ac8a9c2 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -283,7 +283,7 @@ void loongson_boot_secondary(int cpu, struct task_struct *idle)
- void loongson_init_secondary(void)
+@@ -1006,7 +1012,6 @@ static inline void blk_account_io_done(struct request *req, u64 now)
+ static inline void blk_account_io_start(struct request *req)
  {
- 	unsigned int cpu = smp_processor_id();
--	unsigned int imask = ECFGF_IP0 | ECFGF_IP1 | ECFGF_IP2 |
-+	unsigned int imask = ECFGF_SIP0 | ECFGF_IP0 | ECFGF_IP1 | ECFGF_IP2 |
- 			     ECFGF_IPI | ECFGF_PMC | ECFGF_TIMER;
+ 	trace_block_io_start(req);
+-
+ 	if (blk_do_io_stat(req)) {
+ 		/*
+ 		 * All non-passthrough requests are created from a bio with one
+@@ -1021,6 +1026,9 @@ static inline void blk_account_io_start(struct request *req)
  
- 	change_csr_ecfg(ECFG0_IM, imask);
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index e233d7b3b76d..bd8a631d8626 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -227,6 +227,9 @@ static int kvm_emu_cpucfg(struct kvm_vcpu *vcpu, larch_inst inst)
- 	case CPUCFG_KVM_SIG:
- 		vcpu->arch.gprs[rd] = *(unsigned int *)KVM_SIGNATURE;
- 		break;
-+	case CPUCFG_KVM_FEATURE:
-+		vcpu->arch.gprs[rd] = KVM_FEATURE_PV_IPI;
+ 		part_stat_lock();
+ 		update_io_ticks(req->part, jiffies, false);
++		if (req->rq_flags & RQF_PRECISE_IO_STAT)
++			part_stat_local_inc(req->part,
++					in_flight[op_is_write(req_op(req))]);
+ 		part_stat_unlock();
+ 	}
+ }
+diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+index 40bab5975c56..ce22dc29b5f1 100644
+--- a/block/blk-sysfs.c
++++ b/block/blk-sysfs.c
+@@ -303,7 +303,6 @@ queue_##name##_store(struct request_queue *q, const char *page, size_t count) \
+ 
+ QUEUE_SYSFS_BIT_FNS(nonrot, NONROT, 1);
+ QUEUE_SYSFS_BIT_FNS(random, ADD_RANDOM, 0);
+-QUEUE_SYSFS_BIT_FNS(iostats, IO_STAT, 0);
+ QUEUE_SYSFS_BIT_FNS(stable_writes, STABLE_WRITES, 0);
+ #undef QUEUE_SYSFS_BIT_FNS
+ 
+@@ -468,6 +467,45 @@ static ssize_t queue_dax_show(struct request_queue *q, char *page)
+ 	return queue_var_show(blk_queue_dax(q), page);
+ }
+ 
++static ssize_t queue_iostats_show(struct request_queue *q, char *page)
++{
++	int val = 0;
++
++	if (blk_queue_io_stat(q))
++		val = blk_queue_precise_io_stat(q) ? 2 : 1;
++
++	return sprintf(page, "%u\n", val);
++}
++
++static ssize_t
++queue_iostats_store(struct request_queue *q, const char *page, size_t count)
++{
++	unsigned long nr;
++	int ret = queue_var_store(&nr, page, count);
++
++	if (ret < 0)
++		return ret;
++
++	switch (nr) {
++	case 0:
++		blk_queue_flag_clear(QUEUE_FLAG_IO_STAT, q);
++		blk_queue_flag_clear(QUEUE_FLAG_PRECISE_IO_STAT, q);
 +		break;
- 	default:
- 		vcpu->arch.gprs[rd] = 0;
- 		break;
-@@ -664,12 +667,71 @@ static int kvm_handle_fpu_disabled(struct kvm_vcpu *vcpu)
- 	return RESUME_GUEST;
- }
- 
-+static int kvm_pv_send_ipi(struct kvm_vcpu *vcpu, int sgi)
-+{
-+	int ret = 0;
-+	u64 ipi_bitmap;
-+	unsigned int min, cpu;
-+	struct kvm_vcpu *dest;
-+
-+	ipi_bitmap = vcpu->arch.gprs[LOONGARCH_GPR_A1];
-+	min = vcpu->arch.gprs[LOONGARCH_GPR_A2];
-+
-+	if (ipi_bitmap) {
-+		cpu = find_first_bit((void *)&ipi_bitmap, BITS_PER_LONG);
-+		while (cpu < BITS_PER_LONG) {
-+			if ((cpu + min) < KVM_MAX_VCPUS) {
-+				dest = kvm_get_vcpu_by_id(vcpu->kvm, cpu + min);
-+				kvm_queue_irq(dest, sgi);
-+				kvm_vcpu_kick(dest);
-+			}
-+			cpu = find_next_bit((void *)&ipi_bitmap, BITS_PER_LONG, cpu + 1);
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+/*
-+ * hypcall emulation always return to guest, Caller should check retval.
-+ */
-+static void kvm_handle_pv_hcall(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long func = vcpu->arch.gprs[LOONGARCH_GPR_A0];
-+	long ret;
-+
-+	switch (func) {
-+	case KVM_HC_FUNC_IPI:
-+		kvm_pv_send_ipi(vcpu, INT_SWI0);
-+		ret = KVM_HC_STATUS_SUCCESS;
++	case 1:
++		blk_queue_flag_set(QUEUE_FLAG_IO_STAT, q);
++		blk_queue_flag_clear(QUEUE_FLAG_PRECISE_IO_STAT, q);
++		break;
++	case 2:
++		blk_queue_flag_set(QUEUE_FLAG_IO_STAT, q);
++		blk_queue_flag_set(QUEUE_FLAG_PRECISE_IO_STAT, q);
 +		break;
 +	default:
-+		ret = KVM_HC_INVALID_CODE;
-+		break;
-+	};
-+
-+	vcpu->arch.gprs[LOONGARCH_GPR_A0] = ret;
-+}
-+
- static int kvm_handle_hypcall(struct kvm_vcpu *vcpu)
- {
-+	larch_inst inst;
-+	unsigned int code;
-+
-+	inst.word = vcpu->arch.badi;
-+	code = inst.reg0i15_format.immediate;
- 	update_pc(&vcpu->arch);
- 
--	/* Treat it as noop intruction, only set return value */
--	vcpu->arch.gprs[LOONGARCH_GPR_A0] = KVM_HC_INVALID_CODE;
-+	switch (code) {
-+	case KVM_HC_SERVICE:
-+		kvm_handle_pv_hcall(vcpu);
-+		break;
-+	default:
-+		/* Treat it as noop intruction, only set return value */
-+		vcpu->arch.gprs[LOONGARCH_GPR_A0] = KVM_HC_INVALID_CODE;
-+		break;
++		return -EINVAL;
 +	}
 +
- 	return RESUME_GUEST;
++	return count;
++}
++
+ #define QUEUE_RO_ENTRY(_prefix, _name)			\
+ static struct queue_sysfs_entry _prefix##_entry = {	\
+ 	.attr	= { .name = _name, .mode = 0444 },	\
+@@ -489,6 +527,7 @@ QUEUE_RO_ENTRY(queue_max_segments, "max_segments");
+ QUEUE_RO_ENTRY(queue_max_integrity_segments, "max_integrity_segments");
+ QUEUE_RO_ENTRY(queue_max_segment_size, "max_segment_size");
+ QUEUE_RW_ENTRY(elv_iosched, "scheduler");
++QUEUE_RW_ENTRY(queue_iostats, "iostats");
+ 
+ QUEUE_RO_ENTRY(queue_logical_block_size, "logical_block_size");
+ QUEUE_RO_ENTRY(queue_physical_block_size, "physical_block_size");
+@@ -534,7 +573,6 @@ static struct queue_sysfs_entry queue_hw_sector_size_entry = {
+ };
+ 
+ QUEUE_RW_ENTRY(queue_nonrot, "rotational");
+-QUEUE_RW_ENTRY(queue_iostats, "iostats");
+ QUEUE_RW_ENTRY(queue_random, "add_random");
+ QUEUE_RW_ENTRY(queue_stable_writes, "stable_writes");
+ 
+diff --git a/block/blk.h b/block/blk.h
+index 1ef920f72e0f..1154e87a4022 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -344,6 +344,7 @@ static inline bool blk_do_io_stat(struct request *rq)
  }
  
+ void update_io_ticks(struct block_device *part, unsigned long now, bool end);
++unsigned int part_in_flight(struct block_device *part);
+ 
+ static inline void req_set_nomerge(struct request_queue *q, struct request *req)
+ {
+diff --git a/block/genhd.c b/block/genhd.c
+index d74fb5b4ae68..92d03cd24c79 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -118,7 +118,7 @@ static void part_stat_read_all(struct block_device *part,
+ 	}
+ }
+ 
+-static unsigned int part_in_flight(struct block_device *part)
++unsigned int part_in_flight(struct block_device *part)
+ {
+ 	unsigned int inflight = 0;
+ 	int cpu;
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index a676e116085f..bd925421bc4a 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -44,6 +44,7 @@ typedef __u32 __bitwise req_flags_t;
+ #define RQF_QUIET		((__force req_flags_t)(1 << 11))
+ /* account into disk and partition IO statistics */
+ #define RQF_IO_STAT		((__force req_flags_t)(1 << 13))
++#define RQF_PRECISE_IO_STAT	((__force req_flags_t)(1 << 14))
+ /* runtime pm request */
+ #define RQF_PM			((__force req_flags_t)(1 << 15))
+ /* on IO scheduler merge hash */
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 94701a63ad8a..575099f28a8e 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -517,6 +517,7 @@ struct request_queue {
+ #define QUEUE_FLAG_NONROT	6	/* non-rotational device (SSD) */
+ #define QUEUE_FLAG_VIRT		QUEUE_FLAG_NONROT /* paravirt device */
+ #define QUEUE_FLAG_IO_STAT	7	/* do disk/partitions IO accounting */
++#define QUEUE_FLAG_PRECISE_IO_STAT 8	/* do disk/partitions IO accounting precisely */
+ #define QUEUE_FLAG_NOXMERGES	9	/* No extended merges */
+ #define QUEUE_FLAG_ADD_RANDOM	10	/* Contributes to random pool */
+ #define QUEUE_FLAG_SYNCHRONOUS	11	/* always completes in submit context */
+@@ -557,6 +558,8 @@ bool blk_queue_flag_test_and_set(unsigned int flag, struct request_queue *q);
+ #define blk_queue_stable_writes(q) \
+ 	test_bit(QUEUE_FLAG_STABLE_WRITES, &(q)->queue_flags)
+ #define blk_queue_io_stat(q)	test_bit(QUEUE_FLAG_IO_STAT, &(q)->queue_flags)
++#define blk_queue_precise_io_stat(q) \
++	test_bit(QUEUE_FLAG_PRECISE_IO_STAT, &(q)->queue_flags)
+ #define blk_queue_add_random(q)	test_bit(QUEUE_FLAG_ADD_RANDOM, &(q)->queue_flags)
+ #define blk_queue_zone_resetall(q)	\
+ 	test_bit(QUEUE_FLAG_ZONE_RESETALL, &(q)->queue_flags)
 -- 
-2.39.3
+2.39.2
 
