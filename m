@@ -1,34 +1,65 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2075.outbound.protection.outlook.com [40.107.237.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A294418028;
-	Wed,  3 Jan 2024 07:18:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4T4gzS3z9mz4f3jQb;
-	Wed,  3 Jan 2024 15:17:56 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 4D65B1A0914;
-	Wed,  3 Jan 2024 15:17:58 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgDn6hAkCpVliUCTFQ--.54310S4;
-	Wed, 03 Jan 2024 15:17:58 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: ming.lei@redhat.com,
-	hch@lst.de,
-	bvanassche@acm.org,
-	axboe@kernel.dk
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH for-6.8/block RFC v2] block: support to account io_ticks precisely
-Date: Wed,  3 Jan 2024 15:15:15 +0800
-Message-Id: <20240103071515.2477311-1-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3FD2182A1;
+	Wed,  3 Jan 2024 07:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dKqESCQl"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PIgo7bXsiaKAZEk0ltJJleeEuL99qKKejH1/J7yeGqdtDbcImjU2Ks6SMtVRHKDCsIZOtFUR2bT1tK0NlOWBm7sC6sJeg0Fa9N8kea3okSeXsU51VeJWuss3j7QXhE5velUhzFp4oePporgPH3YjuJ3SAlhZsqxtPDl3wMp+UbF+Fjxowexrc1891yEnh2o3BSUwBgCWWPcpcL04EHLyLLopkLSHJRdWVVKc+C2Edr2U02l+/XN+yz/j2WdyikIeid6AV+WmQt19nNbymnHLhNiPIEJM1DGdZWu+DM2NLPmuIiC9SfAfoeTUJH/n+F9tl5SSGWaPPmjw2SV9QwqgKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VElIniLMDSesrJPxroM2HJ5S4bT9DgNdb8TJqF4hkWs=;
+ b=E7nLF898mFGpqXmSF5xLBla20Uh0ouhQjVNYOBDG4hs8YxovrdHCBZQVqu7OA/Snq+o7jy5AtVM/eoYIOZENUex3+Yg8wiZ8AsUOQKte+M9akPbfNGhuFv2m+wHihTf/5bTcsxRUcn/LIDf9zxiO1TbvCnH9TA602jFNGCcVRLmnP8+pyYpkyUVBZtRWEwwOmE6avHBq8HhcWNyOLnCf2Q+GcP+jPfJKY3Z5Lxe5xZjUWb5CugF6h53ZuoMA2nH7MNZoBOhlWD4zxP6kkDEXUvqytfN57fJXlLu1WiqkTET/Xn6OtyL1rtAC1bJys35IczWSHbhmXgqQEZ8pnRm81g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=baylibre.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VElIniLMDSesrJPxroM2HJ5S4bT9DgNdb8TJqF4hkWs=;
+ b=dKqESCQllEeJeFapCqXdSjebRqBlxMb5Cz8Vq/EyyCQJMIuPpgCRPq/0cMpaYbvcjTkdlBL/2DwYrwkBV//WluF64ravvD+OWYgKMJLaoWK+M+Ul+xaeaAiAqGxSkOTjk/1RK79QPV40fUyofVoCzYLfDlDj3tXaoHg9IZKHBP0=
+Received: from DM6PR12CA0032.namprd12.prod.outlook.com (2603:10b6:5:1c0::45)
+ by PH7PR12MB8016.namprd12.prod.outlook.com (2603:10b6:510:26b::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.25; Wed, 3 Jan
+ 2024 07:20:46 +0000
+Received: from DS2PEPF00003439.namprd02.prod.outlook.com
+ (2603:10b6:5:1c0:cafe::d) by DM6PR12CA0032.outlook.office365.com
+ (2603:10b6:5:1c0::45) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.21 via Frontend
+ Transport; Wed, 3 Jan 2024 07:20:46 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS2PEPF00003439.mail.protection.outlook.com (10.167.18.36) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7159.9 via Frontend Transport; Wed, 3 Jan 2024 07:20:45 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Wed, 3 Jan
+ 2024 01:20:38 -0600
+Received: from xsjwillw50.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.34 via Frontend
+ Transport; Wed, 3 Jan 2024 01:20:38 -0600
+From: Naman Trivedi Manojbhai <naman.trivedimanojbhai@amd.com>
+To: <mturquette@baylibre.com>, <sboyd@kernel.org>, <michal.simek@amd.com>,
+	<abel.vesa@linaro.org>, <robh@kernel.org>, <krzysztof.kozlowski@linaro.org>,
+	<angelogioacchino.delregno@collabora.com>
+CC: <linux-clk@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, Naman Trivedi Manojbhai
+	<naman.trivedimanojbhai@amd.com>
+Subject: [PATCH] drivers: clk: zynqmp: remove clock name dependency
+Date: Tue, 2 Jan 2024 23:20:17 -0800
+Message-ID: <20240103072017.1646007-1-naman.trivedimanojbhai@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,297 +67,94 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDn6hAkCpVliUCTFQ--.54310S4
-X-Coremail-Antispam: 1UD129KBjvJXoWfJr43tw4kXFWxArW3Kw4fGrg_yoWDuF1xp3
-	yDAay7tay0gF48uFykt3W7A3WSgw4qkrW7Ar43CryYyFnrKr1fX3WvvFWFqF4xZrZ7AayU
-	Zr4kAayDu398W3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v2
-	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0J
-	UdHUDUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS2PEPF00003439:EE_|PH7PR12MB8016:EE_
+X-MS-Office365-Filtering-Correlation-Id: 53a77fd1-68a7-4c96-e8ee-08dc0c2c80d6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	iwT4CDlTZxLpVNzMd7u4wG47sayhdp20uZ13WISSM6JiZ7EbkhPraRumnhtqOI4DDFLrvhBMVcQJkziPlpDh3xoTlw814HnOCMJ8ee21XVgkQRsQcFsDthJJho+o8uF1o2JdN0HY04Y8tiOjHyhuvnHtCUC2IwlmiUfBwfx/ydghq60lyrehDhZ+M6OF3AncXrbPsuSz2SH/JboQJwIotHcskdon9SG7FztDih3KK/fC3SA5JTHEg8cSvKryvz5mynLmbLlsc7+CLooOeF5plP4tkTfR6C9EQ5E4KZJQd5Wnsgz3BCRvg6Z8PDwnE6f8qy4Jkh/8bPxDX+r3vkEy5GHzZ21U65ZvwoDPf9dQrXliDeihDue5Xp/v/sRc2XgPx80zw0jWod0y8A3zVJ+8osivQlFUkmYBp9L6ox4li62XjO1ZH/LFDeV9gl9c8uL/xyrtVhr4l0SlzsA9S1iShN1ysdG+pu+8jsDBjQnPolqE1lWoMqrt4CcYowEpwVX7f2DvMWO5XD0tTNBX8Ba9t8y9DXUCow4GySHnF3Xvpz4xF4AuNS0zFO0yK4uv8RCYIDxR1BmMGVqkPIOy3OW27A0z3eMsatI7FLGvE+M+DLRpDJUkvsD1tSXxswQUgiZj1mrjKeLBxBs/DBPHV217P8UymMmxw2IwNZSOfR17qQE9dHNwIiW+SJqGh/26oqP7K6lyNXPS6Z25w2ecjmZ+84+5ia7ZtGKroy2FhJcDoDpWEkkjwAaYhmJlLtGPWzJLGxd2f8TmoSaml+zhi5djZCEzm/YioYbKRlEVkNiN8cqRRoLGf/1OIlKYSAVryG6/
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(376002)(346002)(396003)(136003)(230273577357003)(230173577357003)(230922051799003)(186009)(64100799003)(1800799012)(451199024)(82310400011)(46966006)(36840700001)(40470700004)(40480700001)(40460700003)(6666004)(36860700001)(82740400003)(36756003)(81166007)(86362001)(356005)(478600001)(5660300002)(2906002)(26005)(2616005)(426003)(336012)(1076003)(47076005)(54906003)(70586007)(316002)(70206006)(8936002)(4326008)(110136005)(8676002)(41300700001)(83380400001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jan 2024 07:20:45.8648
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 53a77fd1-68a7-4c96-e8ee-08dc0c2c80d6
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS2PEPF00003439.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8016
 
-From: Yu Kuai <yukuai3@huawei.com>
+Currently, from zynqmp_get_parent_list() function the clock driver
+references the clock by name instead of its reference from device tree.
+This causes problem when the clock name in the device tree is changed.
 
-Currently, io_ticks is accounted based on sampling, specifically
-update_io_ticks() will always account io_ticks by 1 jiffies from
-bdev_start_io_acct()/blk_account_io_start(), and the result can be
-inaccurate, for example(HZ is 250):
+Remove hard dependency of clock name and update the logic to use clock
+reference from device tree instead of clock name.
 
-Test script:
-fio -filename=/dev/sda -bs=4k -rw=write -direct=1 -name=test -thinktime=4ms
-
-Test result: util is about 90%, while the disk is really idle.
-
-In order to account io_ticks precisely, update_io_ticks() must know if
-there are IO inflight already, and this requires overhead slightly,
-hence precise io accounting is disabled by default, and user can enable
-it through sysfs entry.
-
-Noted that for rq-based devcie, part_stat_local_inc/dec() and
-part_in_flight() is used to track inflight instead of iterating tags,
-which is not supposed to be used in fast path because 'tags->lock' is
-grabbed in blk_mq_find_and_get_req().
-
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Naman Trivedi Manojbhai <naman.trivedimanojbhai@amd.com>
 ---
-Changes in v2:
- - remove the new parameter for update_io_ticks();
- - simplify update_io_ticks();
- - use swith in queue_iostats_store();
- - add missing part_stat_local_dec() in blk_account_io_merge_request()
+ drivers/clk/zynqmp/clkc.c | 30 +++++++++++++++++++++++++++++-
+ 1 file changed, 29 insertions(+), 1 deletion(-)
 
- Documentation/ABI/stable/sysfs-block |  8 ++++--
- block/blk-core.c                     | 10 +++++--
- block/blk-merge.c                    |  3 ++
- block/blk-mq.c                       | 12 ++++++--
- block/blk-sysfs.c                    | 42 ++++++++++++++++++++++++++--
- block/blk.h                          |  1 +
- block/genhd.c                        |  2 +-
- include/linux/blk-mq.h               |  1 +
- include/linux/blkdev.h               |  3 ++
- 9 files changed, 72 insertions(+), 10 deletions(-)
-
-diff --git a/Documentation/ABI/stable/sysfs-block b/Documentation/ABI/stable/sysfs-block
-index 1fe9a553c37b..e5fedecf7bdf 100644
---- a/Documentation/ABI/stable/sysfs-block
-+++ b/Documentation/ABI/stable/sysfs-block
-@@ -358,8 +358,12 @@ What:		/sys/block/<disk>/queue/iostats
- Date:		January 2009
- Contact:	linux-block@vger.kernel.org
- Description:
--		[RW] This file is used to control (on/off) the iostats
--		accounting of the disk.
-+		[RW] This file is used to control the iostats accounting of the
-+		disk. If this value is 0, iostats accounting is disabled; If
-+		this value is 1, iostats accounting is enabled, but io_ticks is
-+		accounted by sampling and the result is not accurate; If this
-+		value is 2, iostats accounting is enabled and io_ticks is
-+		accounted precisely, but there will be slightly overhead.
+diff --git a/drivers/clk/zynqmp/clkc.c b/drivers/clk/zynqmp/clkc.c
+index a91d98e238c2..87915de083d9 100644
+--- a/drivers/clk/zynqmp/clkc.c
++++ b/drivers/clk/zynqmp/clkc.c
+@@ -549,18 +549,46 @@ static int zynqmp_get_parent_list(struct device_node *np, u32 clk_id,
+ 	u32 total_parents = clock[clk_id].num_parents;
+ 	struct clock_topology *clk_nodes;
+ 	struct clock_parent *parents;
++	struct clk *clk_parent;
++	char *clk_name;
  
+ 	clk_nodes = clock[clk_id].node;
+ 	parents = clock[clk_id].parent;
  
- What:		/sys/block/<disk>/queue/logical_block_size
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 9520ccab3050..f0d347ab0f34 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -956,9 +956,13 @@ void update_io_ticks(struct block_device *part, unsigned long now, bool end)
- 	unsigned long stamp;
- again:
- 	stamp = READ_ONCE(part->bd_stamp);
--	if (unlikely(time_after(now, stamp))) {
--		if (likely(try_cmpxchg(&part->bd_stamp, &stamp, now)))
--			__part_stat_add(part, io_ticks, end ? now - stamp : 1);
-+	if (unlikely(time_after(now, stamp)) &&
-+	    likely(try_cmpxchg(&part->bd_stamp, &stamp, now))) {
-+		if (end || (blk_queue_precise_io_stat(part->bd_queue) &&
-+			    part_in_flight(part)))
-+			__part_stat_add(part, io_ticks, now - stamp);
-+		else
-+			__part_stat_add(part, io_ticks, 1);
- 	}
- 	if (part->bd_partno) {
- 		part = bdev_whole(part);
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 2d470cf2173e..ea5553766f90 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -779,6 +779,9 @@ static void blk_account_io_merge_request(struct request *req)
- 	if (blk_do_io_stat(req)) {
- 		part_stat_lock();
- 		part_stat_inc(req->part, merges[op_stat_group(req_op(req))]);
-+		if (req->rq_flags & RQF_PRECISE_IO_STAT)
-+			part_stat_local_dec(req->part,
-+					in_flight[op_is_write(req_op(req))]);
- 		part_stat_unlock();
- 	}
- }
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index fb29ff5cc281..0cb0e8db9dfd 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -360,8 +360,11 @@ static struct request *blk_mq_rq_ctx_init(struct blk_mq_alloc_data *data,
- 
- 	if (data->flags & BLK_MQ_REQ_PM)
- 		data->rq_flags |= RQF_PM;
--	if (blk_queue_io_stat(q))
-+	if (blk_queue_io_stat(q)) {
- 		data->rq_flags |= RQF_IO_STAT;
-+		if (blk_queue_precise_io_stat(q))
-+			data->rq_flags |= RQF_PRECISE_IO_STAT;
-+	}
- 	rq->rq_flags = data->rq_flags;
- 
- 	if (data->rq_flags & RQF_SCHED_TAGS) {
-@@ -999,6 +1002,9 @@ static inline void blk_account_io_done(struct request *req, u64 now)
- 		update_io_ticks(req->part, jiffies, true);
- 		part_stat_inc(req->part, ios[sgrp]);
- 		part_stat_add(req->part, nsecs[sgrp], now - req->start_time_ns);
-+		if (req->rq_flags & RQF_PRECISE_IO_STAT)
-+			part_stat_local_dec(req->part,
-+					in_flight[op_is_write(req_op(req))]);
- 		part_stat_unlock();
- 	}
- }
-@@ -1006,7 +1012,6 @@ static inline void blk_account_io_done(struct request *req, u64 now)
- static inline void blk_account_io_start(struct request *req)
- {
- 	trace_block_io_start(req);
--
- 	if (blk_do_io_stat(req)) {
- 		/*
- 		 * All non-passthrough requests are created from a bio with one
-@@ -1021,6 +1026,9 @@ static inline void blk_account_io_start(struct request *req)
- 
- 		part_stat_lock();
- 		update_io_ticks(req->part, jiffies, false);
-+		if (req->rq_flags & RQF_PRECISE_IO_STAT)
-+			part_stat_local_inc(req->part,
-+					in_flight[op_is_write(req_op(req))]);
- 		part_stat_unlock();
- 	}
- }
-diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-index 40bab5975c56..ce22dc29b5f1 100644
---- a/block/blk-sysfs.c
-+++ b/block/blk-sysfs.c
-@@ -303,7 +303,6 @@ queue_##name##_store(struct request_queue *q, const char *page, size_t count) \
- 
- QUEUE_SYSFS_BIT_FNS(nonrot, NONROT, 1);
- QUEUE_SYSFS_BIT_FNS(random, ADD_RANDOM, 0);
--QUEUE_SYSFS_BIT_FNS(iostats, IO_STAT, 0);
- QUEUE_SYSFS_BIT_FNS(stable_writes, STABLE_WRITES, 0);
- #undef QUEUE_SYSFS_BIT_FNS
- 
-@@ -468,6 +467,45 @@ static ssize_t queue_dax_show(struct request_queue *q, char *page)
- 	return queue_var_show(blk_queue_dax(q), page);
- }
- 
-+static ssize_t queue_iostats_show(struct request_queue *q, char *page)
-+{
-+	int val = 0;
-+
-+	if (blk_queue_io_stat(q))
-+		val = blk_queue_precise_io_stat(q) ? 2 : 1;
-+
-+	return sprintf(page, "%u\n", val);
-+}
-+
-+static ssize_t
-+queue_iostats_store(struct request_queue *q, const char *page, size_t count)
-+{
-+	unsigned long nr;
-+	int ret = queue_var_store(&nr, page, count);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	switch (nr) {
-+	case 0:
-+		blk_queue_flag_clear(QUEUE_FLAG_IO_STAT, q);
-+		blk_queue_flag_clear(QUEUE_FLAG_PRECISE_IO_STAT, q);
-+		break;
-+	case 1:
-+		blk_queue_flag_set(QUEUE_FLAG_IO_STAT, q);
-+		blk_queue_flag_clear(QUEUE_FLAG_PRECISE_IO_STAT, q);
-+		break;
-+	case 2:
-+		blk_queue_flag_set(QUEUE_FLAG_IO_STAT, q);
-+		blk_queue_flag_set(QUEUE_FLAG_PRECISE_IO_STAT, q);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return count;
-+}
-+
- #define QUEUE_RO_ENTRY(_prefix, _name)			\
- static struct queue_sysfs_entry _prefix##_entry = {	\
- 	.attr	= { .name = _name, .mode = 0444 },	\
-@@ -489,6 +527,7 @@ QUEUE_RO_ENTRY(queue_max_segments, "max_segments");
- QUEUE_RO_ENTRY(queue_max_integrity_segments, "max_integrity_segments");
- QUEUE_RO_ENTRY(queue_max_segment_size, "max_segment_size");
- QUEUE_RW_ENTRY(elv_iosched, "scheduler");
-+QUEUE_RW_ENTRY(queue_iostats, "iostats");
- 
- QUEUE_RO_ENTRY(queue_logical_block_size, "logical_block_size");
- QUEUE_RO_ENTRY(queue_physical_block_size, "physical_block_size");
-@@ -534,7 +573,6 @@ static struct queue_sysfs_entry queue_hw_sector_size_entry = {
- };
- 
- QUEUE_RW_ENTRY(queue_nonrot, "rotational");
--QUEUE_RW_ENTRY(queue_iostats, "iostats");
- QUEUE_RW_ENTRY(queue_random, "add_random");
- QUEUE_RW_ENTRY(queue_stable_writes, "stable_writes");
- 
-diff --git a/block/blk.h b/block/blk.h
-index 1ef920f72e0f..1154e87a4022 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -344,6 +344,7 @@ static inline bool blk_do_io_stat(struct request *rq)
- }
- 
- void update_io_ticks(struct block_device *part, unsigned long now, bool end);
-+unsigned int part_in_flight(struct block_device *part);
- 
- static inline void req_set_nomerge(struct request_queue *q, struct request *req)
- {
-diff --git a/block/genhd.c b/block/genhd.c
-index d74fb5b4ae68..92d03cd24c79 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -118,7 +118,7 @@ static void part_stat_read_all(struct block_device *part,
- 	}
- }
- 
--static unsigned int part_in_flight(struct block_device *part)
-+unsigned int part_in_flight(struct block_device *part)
- {
- 	unsigned int inflight = 0;
- 	int cpu;
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index a676e116085f..bd925421bc4a 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -44,6 +44,7 @@ typedef __u32 __bitwise req_flags_t;
- #define RQF_QUIET		((__force req_flags_t)(1 << 11))
- /* account into disk and partition IO statistics */
- #define RQF_IO_STAT		((__force req_flags_t)(1 << 13))
-+#define RQF_PRECISE_IO_STAT	((__force req_flags_t)(1 << 14))
- /* runtime pm request */
- #define RQF_PM			((__force req_flags_t)(1 << 15))
- /* on IO scheduler merge hash */
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 94701a63ad8a..575099f28a8e 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -517,6 +517,7 @@ struct request_queue {
- #define QUEUE_FLAG_NONROT	6	/* non-rotational device (SSD) */
- #define QUEUE_FLAG_VIRT		QUEUE_FLAG_NONROT /* paravirt device */
- #define QUEUE_FLAG_IO_STAT	7	/* do disk/partitions IO accounting */
-+#define QUEUE_FLAG_PRECISE_IO_STAT 8	/* do disk/partitions IO accounting precisely */
- #define QUEUE_FLAG_NOXMERGES	9	/* No extended merges */
- #define QUEUE_FLAG_ADD_RANDOM	10	/* Contributes to random pool */
- #define QUEUE_FLAG_SYNCHRONOUS	11	/* always completes in submit context */
-@@ -557,6 +558,8 @@ bool blk_queue_flag_test_and_set(unsigned int flag, struct request_queue *q);
- #define blk_queue_stable_writes(q) \
- 	test_bit(QUEUE_FLAG_STABLE_WRITES, &(q)->queue_flags)
- #define blk_queue_io_stat(q)	test_bit(QUEUE_FLAG_IO_STAT, &(q)->queue_flags)
-+#define blk_queue_precise_io_stat(q) \
-+	test_bit(QUEUE_FLAG_PRECISE_IO_STAT, &(q)->queue_flags)
- #define blk_queue_add_random(q)	test_bit(QUEUE_FLAG_ADD_RANDOM, &(q)->queue_flags)
- #define blk_queue_zone_resetall(q)	\
- 	test_bit(QUEUE_FLAG_ZONE_RESETALL, &(q)->queue_flags)
+ 	for (i = 0; i < total_parents; i++) {
+ 		if (!parents[i].flag) {
++			ret = of_property_match_string(np, "clock-names",
++						       parents[i].name);
++			if (ret >= 0) {
++				clk_parent = of_clk_get(np, ret);
++				if (clk_parent) {
++					clk_name = __clk_get_name(clk_parent);
++					if (clk_name)
++						strcpy(parents[i].name, clk_name);
++					else
++						return 1;
++				} else {
++					return 1;
++				}
++			}
+ 			parent_list[i] = parents[i].name;
+ 		} else if (parents[i].flag == PARENT_CLK_EXTERNAL) {
+ 			ret = of_property_match_string(np, "clock-names",
+ 						       parents[i].name);
+-			if (ret < 0)
++			if (ret < 0) {
+ 				strcpy(parents[i].name, "dummy_name");
++			} else {
++				clk_parent = of_clk_get(np, ret);
++				if (clk_parent) {
++					clk_name = __clk_get_name(clk_parent);
++					if (clk_name)
++						strcpy(parents[i].name, clk_name);
++					else
++						return 1;
++				} else {
++					return 1;
++				}
++			}
+ 			parent_list[i] = parents[i].name;
+ 		} else {
+ 			strcat(parents[i].name,
 -- 
-2.39.2
+2.25.1
 
