@@ -1,62 +1,135 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E58C18625;
-	Wed,  3 Jan 2024 08:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7DDF2C15;
-	Wed,  3 Jan 2024 00:11:29 -0800 (PST)
-Received: from [10.57.85.107] (unknown [10.57.85.107])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 52BD33F5A1;
-	Wed,  3 Jan 2024 00:10:42 -0800 (PST)
-Message-ID: <b670b0bc-79ea-4be7-a78d-644b344be408@arm.com>
-Date: Wed, 3 Jan 2024 08:11:59 +0000
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE9E182A2
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 08:14:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="c6DUitPQ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cCyZ7Ti8";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HlW+xlJ2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="L5gPJvUG"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1C6341F798;
+	Wed,  3 Jan 2024 08:14:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1704269641; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EHzT6aEuunaF8l957oLeyQUzYLU5v+V8f8tLm26sh6Q=;
+	b=c6DUitPQDMRwF+0goNIS1n9Q0sr99l84uw2rTrxYLUZo4553qSO56Q41HlH0GbKdkhZJTW
+	22mJpS+H/qKDYwIXq4K3gRk2ACrmx+/pVmT2qgyy9HNqPV4PPfHrCVBJMYwfLqg5heHr6D
+	BOnBATflnsTYq51QctE/eIt9Z66sDMA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1704269641;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EHzT6aEuunaF8l957oLeyQUzYLU5v+V8f8tLm26sh6Q=;
+	b=cCyZ7Ti86IGLu4B9k6WFjJGXYPDYEwA0tSo34nnmEYMDnfOVvQg4gahtNBJUY/XwwOXb6W
+	jihSN0D4Xwq8/QCQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1704269640; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EHzT6aEuunaF8l957oLeyQUzYLU5v+V8f8tLm26sh6Q=;
+	b=HlW+xlJ2flYs8Ie3LfqBXcZLLCXsPnlmeyNwYByRNLwgoM/NqpmqVOmOTW6EWgr0HgsGlE
+	U/BGuf1rkvii764yUoymTTCYqRIz/dvsCiS/q6IwlvtN58Evu4ckpYClx2JK+u2i2O4+NQ
+	JWQDEi0tdlBlblgJ6L5H63stSix/Kt4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1704269640;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EHzT6aEuunaF8l957oLeyQUzYLU5v+V8f8tLm26sh6Q=;
+	b=L5gPJvUGmCkrGVVkF3WH2nqdQl2bjBdu+Y7S8tPHLacvvIRiMeQCoTJdmpe5zD/a/aUD3d
+	6cnsmAFtEUCM4BBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4E2851340C;
+	Wed,  3 Jan 2024 08:13:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id SfDJD0cXlWWaWgAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 03 Jan 2024 08:13:59 +0000
+Date: Wed, 3 Jan 2024 09:14:49 +0100
+From: Oscar Salvador <osalvador@suse.de>
+To: andrey.konovalov@linux.dev
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Marco Elver <elver@google.com>,
+	Alexander Potapenko <glider@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>, kasan-dev@googlegroups.com,
+	Evgenii Stepanov <eugenis@google.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Andrey Konovalov <andreyknvl@google.com>
+Subject: Re: [PATCH v4 01/22] lib/stackdepot: print disabled message only if
+ truly disabled
+Message-ID: <ZZUXeSTWneflnRn6@localhost.localdomain>
+References: <cover.1700502145.git.andreyknvl@google.com>
+ <73a25c5fff29f3357cd7a9330e85e09bc8da2cbe.1700502145.git.andreyknvl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/6] thermal: netlink: Redefine the API and drop unused
- code
-Content-Language: en-US
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Linux PM <linux-pm@vger.kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- Linux ACPI <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-References: <4556052.LvFx2qVVIh@kreacher>
- <CAJZ5v0hRGKjwDv0VLw550CLfUuNGaVXxmvcpbFhS=PCPqY0n4A@mail.gmail.com>
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <CAJZ5v0hRGKjwDv0VLw550CLfUuNGaVXxmvcpbFhS=PCPqY0n4A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <73a25c5fff29f3357cd7a9330e85e09bc8da2cbe.1700502145.git.andreyknvl@google.com>
+X-Spam-Level: 
+X-Spam-Level: 
+X-Spamd-Result: default: False [-0.10 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[12];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,suse.de:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[linux-foundation.org,gmail.com,google.com,suse.cz,googlegroups.com,kvack.org,vger.kernel.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.00)[40.46%]
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Score: -0.10
+X-Spam-Flag: NO
 
-Hi Rafael,
+On Mon, Nov 20, 2023 at 06:46:59PM +0100, andrey.konovalov@linux.dev wrote:
+> From: Andrey Konovalov <andreyknvl@google.com>
+> 
+> Currently, if stack_depot_disable=off is passed to the kernel
+> command-line after stack_depot_disable=on, stack depot prints a message
+> that it is disabled, while it is actually enabled.
+> 
+> Fix this by moving printing the disabled message to
+> stack_depot_early_init. Place it before the
+> __stack_depot_early_init_requested check, so that the message is printed
+> even if early stack depot init has not been requested.
+> 
+> Also drop the stack_table = NULL assignment from disable_stack_depot,
+> as stack_table is NULL by default.
+> 
+> Fixes: e1fdc403349c ("lib: stackdepot: add support to disable stack depot")
+> Reviewed-by: Marco Elver <elver@google.com>
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 
-On 1/2/24 13:24, Rafael J. Wysocki wrote:
-> On Fri, Dec 15, 2023 at 9:02 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->>
->> Hi Everyone,
->>
->> This patch series redefines the thermal netlink API to be somewhat more
->> convenient to use on the caller side and drops some unused code from
->> the thermal netlink library.
->>
->> Please refer to the individual patch changelogs for details.
-> 
-> No feedback, so this series doesn't appear to be controversial, and I
-> would like to get it into 6.8.
-> 
-> Tentatively queuing it up and please let me know if it is problematic.
-> 
-> Thanks!
-> 
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
 
-I agree, these are not controversial patches, so IMO queuing them is OK.
-I took a glance at them, but I can do the proper review today if you
-like.
-
-Regards,
-Lukasz
+-- 
+Oscar Salvador
+SUSE Labs
