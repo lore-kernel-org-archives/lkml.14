@@ -1,88 +1,85 @@
-Received: from nautica.notk.org (nautica.notk.org [91.121.71.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A44A1CFBB;
-	Wed,  3 Jan 2024 19:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="wnu79S7k";
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="B4k+m/q8"
-Received: by nautica.notk.org (Postfix, from userid 108)
-	id 329E1C028; Wed,  3 Jan 2024 20:46:02 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-	t=1704311162; bh=DYpAMKUEr4ZUo/A2V1G5Stqgcj7W2gBmNsNpjPAItNg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=wnu79S7kdE+HWljFIVMAS7Vk67BpQzcH/o34qldo/6irXMtO+faoEAyINGHxImOXX
-	 9GP17leT7P1W463WpEJZkyiolgk52RwUBvSDdgQYZSlPA93YktS1I4MZNigEYvKvBC
-	 Xk0YC9QAjdB9I5r1MXBi2OE/AsG90K1YZh/emHkgct2U+wc2yremZ4RwFLOcwAMujr
-	 9sigwMmkv11kEXwB4THRJaP3J0I1fvAwnwFDvawq+X2g060DS0uESZGmYMxXT0JtuE
-	 V3hB2WyD18x19osmXaW0egTf7IMBbX/p0vKGtZImTCyeKKt18MSd4XpeBgjHEcsMVL
-	 NAdWTSCvrXIHw==
-X-Spam-Level: 
-Received: from gaia (localhost [127.0.0.1])
-	by nautica.notk.org (Postfix) with ESMTPS id 13998C01A;
-	Wed,  3 Jan 2024 20:45:53 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-	t=1704311161; bh=DYpAMKUEr4ZUo/A2V1G5Stqgcj7W2gBmNsNpjPAItNg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B4k+m/q8vwyz1cmJjWarRzlV3PUa/4GYuScLc3MH9IP8RXLMxQgNKo26pq046ww1w
-	 IXiwt0dLInSvuNJJhA69DW/3p05amxvZHcQYMeEGw4S0aXDDnM+hfwt6n23bW8rE0j
-	 321wZwAkYtQ2G2n2+mY3DL2D4JIsNe02StYEJsq7JutX4onPpj3vRyZbc1iQzVvJau
-	 BhSK0FEsTlhA3v6B2bG4rvREluC3TF7JpZvOXy8473obAqXXGRVKv9zNB9Ekw5yCRB
-	 P1E0WP0KYgz5HWK4aIG7D+g2rhNpqeTEVLUtzx/r4CDXibmlMLGrVTN1XCxXzGJmdX
-	 SKwuMgP0lMVHw==
-Received: from localhost (gaia [local])
-	by gaia (OpenSMTPD) with ESMTPA id 7038adea;
-	Wed, 3 Jan 2024 19:45:51 +0000 (UTC)
-Date: Thu, 4 Jan 2024 04:45:36 +0900
-From: Dominique Martinet <asmadeus@codewreck.org>
-To: David Howells <dhowells@redhat.com>
-Cc: Christian Brauner <christian@brauner.io>,
-	Jeff Layton <jlayton@kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Steve French <smfrench@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>, linux-cachefs@redhat.com,
-	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev, linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>
-Subject: Re: [PATCH 3/5] 9p: Do a couple of cleanups
-Message-ID: <ZZW5YEy0xiGp1JRT@codewreck.org>
-References: <20240103145935.384404-1-dhowells@redhat.com>
- <20240103145935.384404-4-dhowells@redhat.com>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E94EA1CF81;
+	Wed,  3 Jan 2024 19:46:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9CBBC15;
+	Wed,  3 Jan 2024 11:47:41 -0800 (PST)
+Received: from [10.57.85.107] (unknown [10.57.85.107])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C75563F7A6;
+	Wed,  3 Jan 2024 11:46:54 -0800 (PST)
+Message-ID: <3ae22159-3230-4b53-a390-c7fda21da00c@arm.com>
+Date: Wed, 3 Jan 2024 19:48:11 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240103145935.384404-4-dhowells@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/6] thermal: trip: Constify thermal zone argument of
+ thermal_zone_trip_id()
+Content-Language: en-US
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Linux ACPI <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <4556052.LvFx2qVVIh@kreacher> <1896687.tdWV9SEqCh@kreacher>
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <1896687.tdWV9SEqCh@kreacher>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-David Howells wrote on Wed, Jan 03, 2024 at 02:59:27PM +0000:
-> Do a couple of cleanups to 9p:
+
+
+On 12/15/23 19:53, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
->  (1) Remove a couple of unused variables.
+> Because thermal_zone_trip_id() does not update the thermal zone object
+> passed to it, its pointer argument representing the thermal zone can be
+> const, so adjust its definition accordingly.
 > 
->  (2) Turn a BUG_ON() into a warning, consolidate with another warning and
->      make the warning message include the inode number rather than
->      whatever's in i_private (which will get hashed anyway).
+> No functional impact.
 > 
-> Suggested-by: Dominique Martinet <asmadeus@codewreck.org>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>   drivers/thermal/thermal_core.h |    2 +-
+>   drivers/thermal/thermal_trip.c |    2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> Index: linux-pm/drivers/thermal/thermal_core.h
+> ===================================================================
+> --- linux-pm.orig/drivers/thermal/thermal_core.h
+> +++ linux-pm/drivers/thermal/thermal_core.h
+> @@ -120,7 +120,7 @@ void __thermal_zone_device_update(struct
+>   	for (__trip = __tz->trips; __trip - __tz->trips < __tz->num_trips; __trip++)
+>   
+>   void __thermal_zone_set_trips(struct thermal_zone_device *tz);
+> -int thermal_zone_trip_id(struct thermal_zone_device *tz,
+> +int thermal_zone_trip_id(const struct thermal_zone_device *tz,
+>   			 const struct thermal_trip *trip);
+>   void thermal_zone_trip_updated(struct thermal_zone_device *tz,
+>   			       const struct thermal_trip *trip);
+> Index: linux-pm/drivers/thermal/thermal_trip.c
+> ===================================================================
+> --- linux-pm.orig/drivers/thermal/thermal_trip.c
+> +++ linux-pm/drivers/thermal/thermal_trip.c
+> @@ -143,7 +143,7 @@ int thermal_zone_get_trip(struct thermal
+>   }
+>   EXPORT_SYMBOL_GPL(thermal_zone_get_trip);
+>   
+> -int thermal_zone_trip_id(struct thermal_zone_device *tz,
+> +int thermal_zone_trip_id(const struct thermal_zone_device *tz,
+>   			 const struct thermal_trip *trip)
+>   {
+>   	/*
+> 
+> 
+> 
 
-Thanks,
+LGTM,
 
-Acked-by: Dominique Martinet <asmadeus@codewreck.org>
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
 
--- 
-Dominique Martinet | Asmadeus
