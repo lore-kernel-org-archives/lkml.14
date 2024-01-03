@@ -1,102 +1,102 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845041CF89
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 13:37:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E68E199B6;
+	Wed,  3 Jan 2024 13:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mx0b-0016f401.pphosted.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h1ixBfMk"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5563944b3dfso2831100a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 05:37:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704289038; x=1704893838; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RUTCpmfzsSKDHjYlRAYYiQ/aykX/VSlVLVDx9q/aHss=;
-        b=h1ixBfMknoaC4l+AUBd8AJxLIjHhdyqHNtr3TRY2V1hHkTm9QeSDGOvrG1GzBlZq+Q
-         NVCTPRvFcjckYbw7Y6qRd5AoJ4ONtTKVESzq/rubsJ+DENS23TMIeAr1KGrbpqCe3Yw0
-         v3sW3Z/obnwJ2/V+id+HCUx1KE9Z08MaYUzqTfLd6zhT5GjX7m4NQfn3DE/ZOzhK35ei
-         smQdQui0GNmWoXV4sodszlxVuV4gNDVT4wV6TVGPOaABi2MEYB7P68xFTYdd7u/U8NRv
-         l4VngCj4nKauf9etSdvfoWYSBL6LGYEU1bF43kR/SmQ31yXvIM0q+5JAyUJ0BfVJsHvb
-         eQFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704289038; x=1704893838;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RUTCpmfzsSKDHjYlRAYYiQ/aykX/VSlVLVDx9q/aHss=;
-        b=tSQH5OVEwMatvHPYamkyDbc+TkRKAsHOae1s/dO2X/gnzf5acONo/9qxfetet3ZWAe
-         OrprL6HAiMKHS4tOpxaLvsDUGnm5qOt5V+vngzMya8wxp745C9woIKlkEeprLjqRvNEh
-         JhsA/kC8gA2hC+n0nfWpIBHkLxLE7U+aBZA7qHsiZokNoeTX48SmvCqxzp7zyVcp95iJ
-         jyJRL+xlhNnbJR7IBcybtHfCzRMuZFqS+MqUgjetYoKODgOZrNSmHWWMkGOEz2YTKJj+
-         TxnW7eYxeu1B9OzNQDbsDyciDfp8hfWXYqUs2jpytCeuLvXIQjbCu+oNLkWrfAs8gGId
-         RlLg==
-X-Gm-Message-State: AOJu0Yz8E7u8Lh8uCZ9Y9Nw6V24yni4sv0/l2MsipcHOqcUlJzzY9jGH
-	/3aAYdI5UWDInYV8uTemsCzGpd6nmS+d0w==
-X-Google-Smtp-Source: AGHT+IGb2r7J18V8yKKCdqerodJ+VgX/4qpTBHIyyTYZHgIVHNAnqdK32Kg08Qc9J+Leig1llChqKA==
-X-Received: by 2002:a17:906:1cca:b0:a26:9776:5ed8 with SMTP id i10-20020a1709061cca00b00a2697765ed8mr8882690ejh.91.1704289037859;
-        Wed, 03 Jan 2024 05:37:17 -0800 (PST)
-Received: from [10.167.154.1] (178235179036.dynamic-4-waw-k-1-3-0.vectranet.pl. [178.235.179.36])
-        by smtp.gmail.com with ESMTPSA id cl2-20020a170906c4c200b00a275637e699sm6474351ejb.166.2024.01.03.05.37.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jan 2024 05:37:17 -0800 (PST)
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Date: Wed, 03 Jan 2024 14:36:10 +0100
-Subject: [PATCH v5 12/12] arm64: dts: qcom: sm6115: Add VDD_CX to GPU_CC
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="kLhrPyd4"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4032T7WG005087;
+	Wed, 3 Jan 2024 05:37:52 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=pfpt0220; bh=zh+AyINX
+	Tu/Vu+J5ZWs/mnBjeWFhJ2utrKdUpD3dDh8=; b=kLhrPyd4G7oi/JGNrMbhn/Ue
+	b25wiCm4ozjXAFfD8PoY7I1QyXbe1S5Xa70gmaScrintawXW6QpDa5NTWSR4fr/K
+	ktEDcsrmLL5XxgozDrIKSoH67aK9xIWjq4eMJh12CCXrkPiW+IhZ7lETFeHOCmk7
+	UsqAud5oLXK3dJy+MjF9+OnuyjQoJO81I+tMWabuZUiROz61YQ9iTo8xLbz/PSvd
+	deGeUwq+a4POknU0j/jKyXBa6/idh9X2BAoHQ2yIXo3AdvTdsI4MAqDMOHpnFh0e
+	z69rtQk25+8ECP5/LhjBLq8sKgc9x/P5QUnAdIExfQyJxNM3bPiR7gcxKukQxg==
+Received: from dc5-exch02.marvell.com ([199.233.59.182])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3vcxu5tqst-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+	Wed, 03 Jan 2024 05:37:52 -0800 (PST)
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Wed, 3 Jan
+ 2024 05:37:51 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
+ Transport; Wed, 3 Jan 2024 05:37:51 -0800
+Received: from dc3lp-swdev041.marvell.com (dc3lp-swdev041.marvell.com [10.6.60.191])
+	by maili.marvell.com (Postfix) with ESMTP id 109093F708E;
+	Wed,  3 Jan 2024 05:37:47 -0800 (PST)
+From: Elad Nachman <enachman@marvell.com>
+To: <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <vadym.kochan@plvision.eu>, <aviramd@marvell.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC: <enachman@marvell.com>, <stable@vger.kernel.org>
+Subject: [PATCH v2] mtd: rawnand: marvell: fix layouts
+Date: Wed, 3 Jan 2024 15:37:40 +0200
+Message-ID: <20240103133740.1233405-1-enachman@marvell.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230717-topic-branch_aon_cleanup-v5-12-99942e6bf1ba@linaro.org>
-References: <20230717-topic-branch_aon_cleanup-v5-0-99942e6bf1ba@linaro.org>
-In-Reply-To: <20230717-topic-branch_aon_cleanup-v5-0-99942e6bf1ba@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@linaro.org>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1704289018; l=911;
- i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
- bh=WDI26IliceRlW0YgN7X8GrPWGyVd7988pOYar0kAAss=;
- b=01bznyiO7SHJ7u1n+mr2x5/l72XfL8vU3ZTAqXysZ9MQBbaRmXXk4/moJBIOB2Jy+kHXEQjaM
- l7nr6hxPSFuDoC/YFopLpiuMznUulnRmARQvej1R6ze5B6MQZen2SfK
-X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: v1EW8NBQjlMtvzdifc8-WQV5sv3PL5qF
+X-Proofpoint-GUID: v1EW8NBQjlMtvzdifc8-WQV5sv3PL5qF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
 
-The GPU_CC block is powered by VDD_CX. Link the power domain and
-provide a reasonable minimum vote (lowest available on the platform)
-to ensure the registers within are accessible.
+From: Elad Nachman <enachman@marvell.com>
 
-Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+The check in nand_base.c, nand_scan_tail() : has the following code:
+(ecc->steps * ecc->size != mtd->writesize) which fails for some NAND chips.
+Remove ECC entries in this driver which are not integral multiplications,
+and adjust the number of chunks for entries which fails the above
+calculation so it will calculate correctly (this was previously done
+automatically before the check and was removed in a later commit).
+
+Fixes: 68c18dae6888 ("mtd: rawnand: marvell: add missing layouts")
+Cc: stable@vger.kernel.org
+Signed-off-by: Elad Nachman <enachman@marvell.com>
 ---
- arch/arm64/boot/dts/qcom/sm6115.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mtd/nand/raw/marvell_nand.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm6115.dtsi b/arch/arm64/boot/dts/qcom/sm6115.dtsi
-index 30b140e1cec0..ec9a74acc69c 100644
---- a/arch/arm64/boot/dts/qcom/sm6115.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm6115.dtsi
-@@ -1723,6 +1723,8 @@ gpucc: clock-controller@5990000 {
- 			clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
- 				 <&gcc GCC_GPU_GPLL0_CLK_SRC>,
- 				 <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
-+			power-domains = <&rpmpd SM6115_VDDCX>;
-+			required-opps = <&rpmpd_opp_low_svs>;
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
- 			#power-domain-cells = <1>;
-
+diff --git a/drivers/mtd/nand/raw/marvell_nand.c b/drivers/mtd/nand/raw/marvell_nand.c
+index a46698744850..5b0f5a9cef81 100644
+--- a/drivers/mtd/nand/raw/marvell_nand.c
++++ b/drivers/mtd/nand/raw/marvell_nand.c
+@@ -290,16 +290,13 @@ static const struct marvell_hw_ecc_layout marvell_nfc_layouts[] = {
+ 	MARVELL_LAYOUT( 2048,   512,  4,  1,  1, 2048, 32, 30,  0,  0,  0),
+ 	MARVELL_LAYOUT( 2048,   512,  8,  2,  1, 1024,  0, 30,1024,32, 30),
+ 	MARVELL_LAYOUT( 2048,   512,  8,  2,  1, 1024,  0, 30,1024,64, 30),
+-	MARVELL_LAYOUT( 2048,   512,  12, 3,  2, 704,   0, 30,640,  0, 30),
+-	MARVELL_LAYOUT( 2048,   512,  16, 5,  4, 512,   0, 30,  0, 32, 30),
++	MARVELL_LAYOUT( 2048,   512,  16, 4,  4, 512,   0, 30,  0, 32, 30),
+ 	MARVELL_LAYOUT( 4096,   512,  4,  2,  2, 2048, 32, 30,  0,  0,  0),
+-	MARVELL_LAYOUT( 4096,   512,  8,  5,  4, 1024,  0, 30,  0, 64, 30),
+-	MARVELL_LAYOUT( 4096,   512,  12, 6,  5, 704,   0, 30,576, 32, 30),
+-	MARVELL_LAYOUT( 4096,   512,  16, 9,  8, 512,   0, 30,  0, 32, 30),
++	MARVELL_LAYOUT( 4096,   512,  8,  4,  4, 1024,  0, 30,  0, 64, 30),
++	MARVELL_LAYOUT( 4096,   512,  16, 8,  8, 512,   0, 30,  0, 32, 30),
+ 	MARVELL_LAYOUT( 8192,   512,  4,  4,  4, 2048,  0, 30,  0,  0,  0),
+-	MARVELL_LAYOUT( 8192,   512,  8,  9,  8, 1024,  0, 30,  0, 160, 30),
+-	MARVELL_LAYOUT( 8192,   512,  12, 12, 11, 704,  0, 30,448,  64, 30),
+-	MARVELL_LAYOUT( 8192,   512,  16, 17, 16, 512,  0, 30,  0,  32, 30),
++	MARVELL_LAYOUT( 8192,   512,  8,  8,  8, 1024,  0, 30,  0, 160, 30),
++	MARVELL_LAYOUT( 8192,   512,  16, 16, 16, 512,  0, 30,  0,  32, 30),
+ };
+ 
+ /**
 -- 
-2.43.0
+2.25.1
 
