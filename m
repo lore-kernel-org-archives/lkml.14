@@ -1,96 +1,121 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6846918E06;
-	Wed,  3 Jan 2024 10:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B15318C2D
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 10:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="gpZ/aCjn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=UsxFTjUw6Zc2yvy6gkvn2mjApUFXVkeXpGQUxAbjitU=; b=gpZ/aCjnmyd++8LssUZU3FoxdS
-	6XaYiNdun0vIQV5JJmt2Pf3BjvxTq5Ch1Z97pUyBawgO/vOBlUiRJAMbQtpTFBBMGKHSmpJoWa4Uw
-	WhKFhSIBGDm23A1bEM6Zr3pjEMAboW0AWo5XwZWxX5lQLwHCJvKYhHwrOKLIKs+HRjIsj2q/NtHco
-	43oQyAcVgfqZcxIF1IuIsEztTSoukqniwvxlR2Pl+efRByvnAy4PPIeuMIddCRdCbpVqIEp67mitf
-	u/RNfIcrqInq0IJoVxyrZ+aTboaQIvXsDmITtylv4fbz/JNmTg+JfDgtS0S5kPUrTJJabNwu0Dhrz
-	QRqo0bYg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:57900)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rKyqC-0007Ll-3B;
-	Wed, 03 Jan 2024 10:51:17 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rKyqB-0006Ia-VO; Wed, 03 Jan 2024 10:51:15 +0000
-Date: Wed, 3 Jan 2024 10:51:15 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Yajun Deng <yajun.deng@linux.dev>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, andrew@lunn.ch, olteanv@gmail.com,
-	hkallweit1@gmail.com, kabel@kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
-Subject: Re: [PATCH net-next] net: phy: Cleanup struct mdio_driver_common
-Message-ID: <ZZU8I5wwH+y1VsIy@shell.armlinux.org.uk>
-References: <20231228072350.1294425-1-yajun.deng@linux.dev>
- <ZZRJLg6U0G5CNRQ0@shell.armlinux.org.uk>
- <a5aca886-ca0a-8170-417f-a189ec28c87f@linux.dev>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TFlix0eG"
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3bbb4806f67so5926962b6e.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 02:52:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704279134; x=1704883934; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nMMpHFwbYIixD5jke+2dMO327Ye7pNGps79GYRqFlIQ=;
+        b=TFlix0eGrF0ae3rf6oTFWHjxTKHcRbyAh6eNJHIMtYM/x4phXtowIrZz09RBtqvZY2
+         f002XKf92Nym77jmIymUTTin8GLYY3DZyGHDxUd+xbJpTOkiGtcWip8wtK67a4lxvmTP
+         L7UQAFVe42LVW67WdKEYHZ/mf4i3f1f3ARnvRR3f/qaVDdCKVgwKJnY0bZr0fSX8eoad
+         x7KzYWnPYcibVVIch1DuHqiX+jm2Lxb6qUrYax7PavAUDccAjh3bj7oVwRz21jRv4lMy
+         MuHLCm0q+au6DgZu3PJ8dVsXmdXOlP0GzuM70TdkmFZZPiFdiTAYdTI1KA5zOXYQCk2z
+         jhQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704279134; x=1704883934;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nMMpHFwbYIixD5jke+2dMO327Ye7pNGps79GYRqFlIQ=;
+        b=GVwry8yPPyT/+sStw2BeTDGyJf10y1qRNgQKq2t714bKyCdXj2YdmrkhbfkU+gC/T4
+         6645NA24ByE0KOISSL0rM1y7x7gzaSdDWgHsOwy4WBzO3N4KD8jv3TZPexmkXuZm90Bb
+         zP4L2c1150VsuOEuFN0NScOHWoPTtpMf83AQ1PuaYJAgyZV0JHmMq7T3ifFBG/1r6gVj
+         JKWxV38yi0YHOJQIV2U7zqnTxRbLFWcLo/e8QCgfw7xn3MUQvlEv0DMma6+lZtAe+FXt
+         1n4zLWx+4AhpSCUZ/OVmQTqkEObr3hPPoZZAu++ECBN+fjXvdK8iXnI+4Z1hC3VsbPV1
+         ZPjw==
+X-Gm-Message-State: AOJu0Yzx/0C427/YipQUQ9Z6wTDQSBpb1LSec6fkqX2CzvA5MBN8zJIt
+	4mUK8cfR+9VkWZAm9171qPd3MtwYwZMAmw==
+X-Google-Smtp-Source: AGHT+IGB3o4aQ9oTUBETxAEAW3t3ETj7JH0FcAUn1/gGrs1Hl2rqiiUzXZIww2T44LjFcv/bDWjFXA==
+X-Received: by 2002:a05:6808:1391:b0:3bc:23b6:5d78 with SMTP id c17-20020a056808139100b003bc23b65d78mr997901oiw.16.1704279134381;
+        Wed, 03 Jan 2024 02:52:14 -0800 (PST)
+Received: from localhost ([122.172.86.168])
+        by smtp.gmail.com with ESMTPSA id q26-20020a62e11a000000b006d994a0bba7sm19616273pfh.189.2024.01.03.02.52.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jan 2024 02:52:13 -0800 (PST)
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Viresh Kumar <vireshk@kernel.org>,
+	Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>,
+	linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] OPP: Move dev_pm_opp_icc_bw to internal opp.h
+Date: Wed,  3 Jan 2024 16:22:09 +0530
+Message-Id: <3b82024c5ba93e7a0db2d0b9635ca6b28338efd7.1704279120.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a5aca886-ca0a-8170-417f-a189ec28c87f@linux.dev>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Wed, Jan 03, 2024 at 10:03:14AM +0800, Yajun Deng wrote:
-> 
-> On 2024/1/3 01:34, Russell King (Oracle) wrote:
-> > I'm not sure why this consistency is even desired, the commit message
-> > doesn't properly say _why_ this change is being proposed.
-> 
-> Most drivers use device_driver directly. This should be added to the commit.
-> 
-> Like this:
-> 
-> struct sdio_driver {
-> 
-> ... ...
-> 
->         struct device_driver drv;
-> };
-> 
-> 
-> struct pcie_port_service_driver {
-> 
-> ... ...
-> 
->         struct device_driver driver;
-> };
-> 
-> and so on ...
+It isn't used by any driver or API, privatize it.
 
-... which is fine for those other drivers because they don't share the
-same bus. That is not the case here - we have two different classes
-of drivers on the same bus.
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ drivers/opp/opp.h      | 12 ++++++++++++
+ include/linux/pm_opp.h | 12 ------------
+ 2 files changed, 12 insertions(+), 12 deletions(-)
 
-I don't like a justification that just because other subsystems do
-something in one particular way, that is the only way things should be
-done. I think there is good reason to have the structure we have, and
-thus there needs to be a good reason to change it.
-
-Maybe Andrew has a different opinion, but I think we need a better
-justification for this change.
-
+diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
+index 23dcb2fbf8c3..558c9ac6a6fa 100644
+--- a/drivers/opp/opp.h
++++ b/drivers/opp/opp.h
+@@ -50,6 +50,18 @@ struct opp_config_data {
+ 	unsigned int flags;
+ };
+ 
++/**
++ * struct dev_pm_opp_icc_bw - Interconnect bandwidth values
++ * @avg:	Average bandwidth corresponding to this OPP (in icc units)
++ * @peak:	Peak bandwidth corresponding to this OPP (in icc units)
++ *
++ * This structure stores the bandwidth values for a single interconnect path.
++ */
++struct dev_pm_opp_icc_bw {
++	u32 avg;
++	u32 peak;
++};
++
+ /*
+  * Internal data structure organization with the OPP layer library is as
+  * follows:
+diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+index 74768c47d790..76dcb7f37bcd 100644
+--- a/include/linux/pm_opp.h
++++ b/include/linux/pm_opp.h
+@@ -45,18 +45,6 @@ struct dev_pm_opp_supply {
+ 	unsigned long u_watt;
+ };
+ 
+-/**
+- * struct dev_pm_opp_icc_bw - Interconnect bandwidth values
+- * @avg:	Average bandwidth corresponding to this OPP (in icc units)
+- * @peak:	Peak bandwidth corresponding to this OPP (in icc units)
+- *
+- * This structure stores the bandwidth values for a single interconnect path.
+- */
+-struct dev_pm_opp_icc_bw {
+-	u32 avg;
+-	u32 peak;
+-};
+-
+ typedef int (*config_regulators_t)(struct device *dev,
+ 			struct dev_pm_opp *old_opp, struct dev_pm_opp *new_opp,
+ 			struct regulator **regulators, unsigned int count);
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.31.1.272.g89b43f80a514
+
