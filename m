@@ -1,269 +1,166 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165851B28E;
-	Wed,  3 Jan 2024 16:15:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368751B297
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 16:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="LnFBHPZv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1704298514; x=1704903314; i=wahrenst@gmx.net;
-	bh=imkSH+hwXFfzyiK1yfUX4mKbDgZe9g8ZcJZYzgf+QN0=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=LnFBHPZvNDAHvvJw7iqXyQ6bIUF1n/r/YoY1i+NMdrtudncZYAHhXl+ETV2gLbFx
-	 mz14VLFg7lFxnx4ruV3hbj8UBPAS5p7AWZYFXd5+xzdZFCTv2JP9wqf7ntzTB8TPn
-	 F3xW0GzDfNbeEYhLX+AKvmqaEhV7wsBxaJV/Tbt5rPgybWSj8PJb07GbGZpVO+sxO
-	 +YHIwPFUutPkrenqPKXpwTp8mMal7zIKIL9xCls7IoXW+/NWqSicO8kHDHkk4brsG
-	 6gpOa9T4dU8g+FabSHc2lnAdhRQsonEH4g7Nhp+5sqQ99tWPx1sdJ7iQvTPjrv7xx
-	 GuoHTZo8BO6LQZf0Mg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MK3Rm-1reNTA09fy-00LWIg; Wed, 03
- Jan 2024 17:15:14 +0100
-Message-ID: <2a2dda53-754b-4aa4-8457-9fc37310c267@gmx.net>
-Date: Wed, 3 Jan 2024 17:15:13 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R/kL4X0T"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3374eb61cbcso577478f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 08:19:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704298759; x=1704903559; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=selIPiTBkoS5l1OMM3i9w0HzBJej2N34COzM6/N+NXw=;
+        b=R/kL4X0TuZViqbCth7s4OVAa3mr2h0jHTHDMHYgWkquq6pbl3f1nU5D3JQ450UxFLf
+         xhfNez88fb2TgyA0Yr6PKPQF+t81IuNuHYT107+2pD3PLNAFHqJeS0SnMgY0ed79yExL
+         lNVBT++TDjCYA3WOUlqfFcc2s7GP94jzpEV0xOJNvjGbP0a8eqYSUJQtet57oVgeNdJC
+         KJ0OXHfPkFVGzn06aoPzutMMt66xGNuEY2zrehR+RgQ0xMRK9fzMSaRuYE+J1rS/QLff
+         7927CNvu11Ses4Pa1/G9XVQBPBqNRT0A8yIchldWXGPxEC2cMMAUKJstUuKdtdoZXcWO
+         8wAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704298759; x=1704903559;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=selIPiTBkoS5l1OMM3i9w0HzBJej2N34COzM6/N+NXw=;
+        b=gfWwYFGJ1F1UDzChcqRidzvt5MQqUWzwJbnsBzEe/JvElbkd74xM5cVs67eyAVaXQg
+         CTuoy/yVff56lwxWvXYbkNf/gSn1QYRUP/2JE3Xwl/DRmR3cevYKkY0UBZblgOoEchaa
+         p/l45t8jsoQIVQOgrYErm8aHMdLo0Gr7lBTKdHyzkynYHT9QDo4jAoyDYfVswTSS1fH+
+         +xmIydyJeVAje/z0aQN81ir3KAormboKCA6l71EVfjvJx4EWw1+5JdfvxVc1v2Z8ZNct
+         FyD28PS9IzFH71rgDLOqzefNo7AMwJOE0rGpnMEhyu8L5wYPezMO9qM6T4A7/BInej84
+         MLZg==
+X-Gm-Message-State: AOJu0YwUKuSl7ETkh4vHlcqWhiCzUcb+K0mWy/KIhs3U7+R4130zpcNW
+	fgRB3k+3BZzQhTxsctKFLcbrDJ+ymkFliDJNpikrBDCW7XDsyA==
+X-Google-Smtp-Source: AGHT+IHxc6RmbUDk8qZRRP/wXwKJQLoJEMFsPKWaRD1qnAIxQ7oGRHhKlBd9L738dgpFKgfPEWiB2CKPi4ihoQcZq9g=
+X-Received: by 2002:a5d:4cc8:0:b0:336:95d2:c64a with SMTP id
+ c8-20020a5d4cc8000000b0033695d2c64amr9871256wrt.130.1704298759433; Wed, 03
+ Jan 2024 08:19:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/2] arm64: dts: imx93-var-som: Add Variscite
- VAR-SOM-MX93
-To: Mathieu Othacehe <othacehe@gnu.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Li Yang <leoyang.li@nxp.com>, Fabio Estevam <festevam@gmail.com>,
- Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- NXP Linux Team <linux-imx@nxp.com>
-References: <20240103143639.32280-1-othacehe@gnu.org>
- <20240103143639.32280-3-othacehe@gnu.org>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <20240103143639.32280-3-othacehe@gnu.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:LymS0Usi2/IByK7faB7lS4yWXu/28nZy8fN6LdxyePNkl4y4Dm1
- Uhoeyn5JYpB+HyaDt8FZt9bwX/gxFD3umRL5fyplqNv/z0gyubLMY/PEFoCNPDubqR+dVzE
- 49c6/bfUtcVKvUAx9k33RhSVDKLiqYtKBFCjwOL+yeLavCu9S27DyTpm8bcbODYkSQXDI8p
- sTjSKq4zzx+RBnzbE+ZAw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Yi/3E2Kk6ac=;UKVyhY9iJfUBgwQXdMGS44Wjnwo
- CQZtMd39Qr5+1laS0Ede9k06JwNmgg/Gbcz6FZ/gXWxYylocWSeuGLYnOSQuFVYV4gaUZgy2p
- 15VN1I2j54K99iW4CiE1ZJT/sZFpaNzDAHxWv/nPW13gerp2Gfd9HF9zXUwvNy+KQ9pu0Nip5
- RMT/MI6h2LVbog1ZZ2t2NnJpn7bx/MqxrptqCEH8mVIsriYYn/93dDx4KdvaquiYe8/mbiyia
- 44KvtgZvst2nfsPcNxj8+2BdGXXOdSCNTKfq7izGh1LTJDMapcOc9WVzmmcJN4oa7rxGL1OHB
- vb/UXQYbzO9WeGKs2x82x2WuKo6VvBNM2Louw+5B/HRQWjbRKC9sHViv6jtBm8BPqvW+8gYGZ
- F+sRTl9AVSZ5U1UU0EnvfHcPXO887RsHcjL3m0z788JNWT+c34hhmers2zJrPpnIPiIC27exC
- R6nUx9px90S++vrCdEf3xCTYLzNhV3Eje/UJ9hQy/K0lQpc0rtzMjfuA2YzzjSA65u9K2qBf6
- vxaFqmtaSAW0dnT5P1eMKXCU4WaEdWlCwn5bjvW9V+vIKtoM+vQZVZFVmNL1j8ZYS7r/0i+lv
- 7KjT3XiSK/V4FkcR/6Owub2AUmWXNo94EvwP+kQGsgrekMtoD7t6GbzLc8z3EaauBbaFPG42X
- iU27ySCGRBnbkeLmXKrDqvTWv0JsmBOd2ioUyIvUFhIUgHywGkmqpnH3JocX1zhWNKOl9pMx1
- 7yayQOzzHOgc2UQOwL8lm5pUGd4ID19ml/lzpwi8sg1I40m+5dxnnQXlvI1yN9bS1mDt9SJCV
- mKWPCg9FYB7xNdtzLrdCZm8BrvMvCBShK/iEgEhCcYv21b0uDR/0WWc5vL7tujKKXAWYEWG/k
- MxTXdfr0RqJPTbDGb72h4V3wfXAjYCms6oEk51waZp7f73UVsg6JMDA+w0cchNdtltinz9C/H
- dUh9/aVQ/S5GJFP3f5D+2qJ4P2Y=
+References: <20231228114157.104822-1-ulf.hansson@linaro.org>
+ <20231228114157.104822-4-ulf.hansson@linaro.org> <ZZRY4rMjjkIsG3Ef@p14s> <CAPDyKFqgw_my76dicP9wuQAmF=kF=v5wGwxEF05wTQHdSvfuCA@mail.gmail.com>
+In-Reply-To: <CAPDyKFqgw_my76dicP9wuQAmF=kF=v5wGwxEF05wTQHdSvfuCA@mail.gmail.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Date: Wed, 3 Jan 2024 09:19:08 -0700
+Message-ID: <CANLsYkzAG4EdYgQ9hNgMB3icGY_yrNwXesBnYxnBtzakrGv7zg@mail.gmail.com>
+Subject: Re: [PATCH 3/5] remoteproc: imx_rproc: Convert to dev_pm_domain_attach|detach_list()
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, 
+	Sudeep Holla <sudeep.holla@arm.com>, Kevin Hilman <khilman@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Nikunj Kela <nkela@quicinc.com>, Prasad Sodagudi <psodagud@quicinc.com>, 
+	Stephan Gerhold <stephan@gerhold.net>, Ben Horgan <Ben.Horgan@arm.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-remoteproc@vger.kernel.org, 
+	linux-media@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Mathieu,
+On Wed, 3 Jan 2024 at 03:11, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Tue, 2 Jan 2024 at 19:41, Mathieu Poirier <mathieu.poirier@linaro.org> wrote:
+> >
+> > Hi Ulf,
+> >
+> > I'm in agreement with the modifications done to imx_rproc.c and imx_dsp_rproc.c.
+> > There is one thing I am ambivalent on, please see below.
+> >
+> > On Thu, Dec 28, 2023 at 12:41:55PM +0100, Ulf Hansson wrote:
+> > > Let's avoid the boilerplate code to manage the multiple PM domain case, by
+> > > converting into using dev_pm_domain_attach|detach_list().
+> > >
+> > > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > > Cc: Bjorn Andersson <andersson@kernel.org>
+> > > Cc: Shawn Guo <shawnguo@kernel.org>
+> > > Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> > > Cc: <linux-remoteproc@vger.kernel.org>
+> > > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > > ---
+> > >  drivers/remoteproc/imx_rproc.c | 73 +++++-----------------------------
+> > >  1 file changed, 9 insertions(+), 64 deletions(-)
+> > >
+> > > diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+> > > index 8bb293b9f327..3161f14442bc 100644
+> > > --- a/drivers/remoteproc/imx_rproc.c
+> > > +++ b/drivers/remoteproc/imx_rproc.c
+> > > @@ -92,7 +92,6 @@ struct imx_rproc_mem {
+> > >
+> > >  static int imx_rproc_xtr_mbox_init(struct rproc *rproc);
+> > >  static void imx_rproc_free_mbox(struct rproc *rproc);
+> > > -static int imx_rproc_detach_pd(struct rproc *rproc);
+> > >
+> > >  struct imx_rproc {
+> > >       struct device                   *dev;
+> > > @@ -113,10 +112,8 @@ struct imx_rproc {
+> > >       u32                             rproc_pt;       /* partition id */
+> > >       u32                             rsrc_id;        /* resource id */
+> > >       u32                             entry;          /* cpu start address */
+> > > -     int                             num_pd;
+> > >       u32                             core_index;
+> > > -     struct device                   **pd_dev;
+> > > -     struct device_link              **pd_dev_link;
+> > > +     struct dev_pm_domain_list       *pd_list;
+> > >  };
+> > >
+> > >  static const struct imx_rproc_att imx_rproc_att_imx93[] = {
+> > > @@ -853,7 +850,7 @@ static void imx_rproc_put_scu(struct rproc *rproc)
+> > >               return;
+> > >
+> > >       if (imx_sc_rm_is_resource_owned(priv->ipc_handle, priv->rsrc_id)) {
+> > > -             imx_rproc_detach_pd(rproc);
+> > > +             dev_pm_domain_detach_list(priv->pd_list);
+> > >               return;
+> > >       }
+> > >
+> > > @@ -880,72 +877,20 @@ static int imx_rproc_partition_notify(struct notifier_block *nb,
+> > >  static int imx_rproc_attach_pd(struct imx_rproc *priv)
+> > >  {
+> > >       struct device *dev = priv->dev;
+> > > -     int ret, i;
+> > > -
+> > > -     /*
+> > > -      * If there is only one power-domain entry, the platform driver framework
+> > > -      * will handle it, no need handle it in this driver.
+> > > -      */
+> > > -     priv->num_pd = of_count_phandle_with_args(dev->of_node, "power-domains",
+> > > -                                               "#power-domain-cells");
+> > > -     if (priv->num_pd <= 1)
+> > > -             return 0;
+> >
+> > In function dev_pm_domain_attach_list(), this condition is "<= 0" rather than
+> > "<= 1".  As such the association between the device and power domain will be
+> > done twice when there is a single power domain, i.e once by the core and once in
+> > dev_pm_domain_attach_list().
+> >
+> > I am assuming the runtime PM subsystem is smart enough to deal with this kind of
+> > situation but would like a confirmation.
+>
+> Thanks for reviewing!
+>
+> To cover the the single PM domain case, imx_rproc_attach_pd() is
+> returning 0 when dev->pm_domain has been assigned. Moreover,
+> dev_pm_domain_attach_list() doesn't allow attaching in the single PM
+> domain case, as it returns -EEXIST if "dev->pm_domain" is already
+> assigned.
+>
+> Did that make sense to you?
+>
 
-Am 03.01.24 um 15:36 schrieb Mathieu Othacehe:
-> Add DTSI for Variscite VAR-SOM-MX93 System on Module and DTS for Varisci=
-te
-> VAR-SOM-MX93 on Symphony evaluation board.
->
-> This version comes with:
-> - NXP i.MX 93 Dual, 1.7GHz, Cortex-A55 + Cortex-M33
-> - 2 GB of RAM
-> - 16GB eMMC
-> - 802.11ax/ac/a/b/g/n WiFi with 5.3 Bluetooth
-> - CAN bus
-> - Audio codec
->
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Mathieu Othacehe <othacehe@gnu.org>
-> ---
->   arch/arm64/boot/dts/freescale/Makefile        |   1 +
->   .../dts/freescale/imx93-var-som-symphony.dts  | 352 ++++++++++++++++++
->   .../boot/dts/freescale/imx93-var-som.dtsi     | 111 ++++++
->   3 files changed, 464 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/freescale/imx93-var-som-symphon=
-y.dts
->   create mode 100644 arch/arm64/boot/dts/freescale/imx93-var-som.dtsi
->
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dt=
-s/freescale/Makefile
-> index 2e027675d7bb..a6f1700961e3 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -203,6 +203,7 @@ dtb-$(CONFIG_ARCH_MXC) +=3D imx8ulp-evk.dtb
->   dtb-$(CONFIG_ARCH_MXC) +=3D imx93-11x11-evk.dtb
->   dtb-$(CONFIG_ARCH_MXC) +=3D imx93-tqma9352-mba93xxca.dtb
->   dtb-$(CONFIG_ARCH_MXC) +=3D imx93-tqma9352-mba93xxla.dtb
-> +dtb-$(CONFIG_ARCH_MXC) +=3D imx93-var-som-symphony.dtb
->
->   imx8mm-venice-gw72xx-0x-imx219-dtbs	:=3D imx8mm-venice-gw72xx-0x.dtb i=
-mx8mm-venice-gw72xx-0x-imx219.dtbo
->   imx8mm-venice-gw72xx-0x-rpidsi-dtbs	:=3D imx8mm-venice-gw72xx-0x.dtb i=
-mx8mm-venice-gw72xx-0x-rpidsi.dtbo
-> diff --git a/arch/arm64/boot/dts/freescale/imx93-var-som-symphony.dts b/=
-arch/arm64/boot/dts/freescale/imx93-var-som-symphony.dts
-> new file mode 100644
-> index 000000000000..963fa1a6d09c
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/imx93-var-som-symphony.dts
-> @@ -0,0 +1,352 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright 2021 NXP
-> + * Copyright 2023 Variscite Ltd.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "imx93-var-som.dtsi"
-> +
-> +/{
-> +	model =3D "Variscite VAR-SOM-MX93 on Symphony evaluation board";
-> +	compatible =3D "variscite,var-som-mx93-symphony",
-> +		     "variscite,var-som-mx93", "fsl,imx93";
-> +
-> +	aliases {
-> +		ethernet0 =3D &eqos;
-> +		ethernet1 =3D &fec;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path =3D &lpuart1;
-> +	};
-> +
-> +	/*
-> +	 * Needed only for Symphony <=3D v1.5
-> +	 */
-> +	reg_fec_phy: regulator-fec-phy {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "fec-phy";
-> +		regulator-min-microvolt =3D <1800000>;
-> +		regulator-max-microvolt =3D <1800000>;
-> +		regulator-enable-ramp-delay =3D <20000>;
-> +		gpio =3D <&pca9534 7 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +		regulator-always-on;
-> +	};
-> +
-> +	reg_usdhc2_vmmc: regulator-usdhc2 {
-> +		compatible =3D "regulator-fixed";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&pinctrl_reg_usdhc2_vmmc>;
-> +		regulator-name =3D "VSD_3V3";
-> +		regulator-min-microvolt =3D <3300000>;
-> +		regulator-max-microvolt =3D <3300000>;
-> +		gpio =3D <&gpio2 18 GPIO_ACTIVE_HIGH>;
-> +		off-on-delay-us =3D <20000>;
-> +		enable-active-high;
-> +	};
-> +
-> +	reg_vref_1v8: regulator-adc-vref {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "vref_1v8";
-> +		regulator-min-microvolt =3D <1800000>;
-> +		regulator-max-microvolt =3D <1800000>;
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells =3D <2>;
-> +		#size-cells =3D <2>;
-> +		ranges;
-> +
-> +		ethosu_mem: ethosu-region@88000000 {
-> +			compatible =3D "shared-dma-pool";
-> +			reusable;
-> +			reg =3D <0x0 0x88000000 0x0 0x8000000>;
-> +		};
-> +
-> +		vdev0vring0: vdev0vring0@87ee0000 {
-> +			reg =3D <0 0x87ee0000 0 0x8000>;
-> +			no-map;
-> +		};
-> +
-> +		vdev0vring1: vdev0vring1@87ee8000 {
-> +			reg =3D <0 0x87ee8000 0 0x8000>;
-> +			no-map;
-> +		};
-> +
-> +		vdev1vring0: vdev1vring0@87ef0000 {
-> +			reg =3D <0 0x87ef0000 0 0x8000>;
-> +			no-map;
-> +		};
-> +
-> +		vdev1vring1: vdev1vring1@87ef8000 {
-> +			reg =3D <0 0x87ef8000 0 0x8000>;
-> +			no-map;
-> +		};
-> +
-> +		rsc_table: rsc-table@2021f000 {
-> +			reg =3D <0 0x2021f000 0 0x1000>;
-> +			no-map;
-> +		};
-> +
-> +		vdevbuffer: vdevbuffer@87f00000 {
-> +			compatible =3D "shared-dma-pool";
-> +			reg =3D <0 0x87f00000 0 0x100000>;
-> +			no-map;
-> +		};
-> +
-> +		ele_reserved: ele-reserved@87de0000 {
-> +			compatible =3D "shared-dma-pool";
-> +			reg =3D <0 0x87de0000 0 0x100000>;
-> +			no-map;
-> +		};
-> +	};
-> +
-> +	gpio-keys {
-> +		compatible =3D "gpio-keys";
-> +
-> +		key-back {
-> +			label =3D "Back";
-> +			gpios =3D <&pca9534 1 GPIO_ACTIVE_LOW>;
-> +			linux,code =3D <KEY_BACK>;
-> +		};
-> +
-> +		key-home {
-> +			label =3D "Home";
-> +			gpios =3D <&pca9534 2 GPIO_ACTIVE_LOW>;
-> +			linux,code =3D <KEY_HOME>;
-> +		};
-> +
-> +		key-menu {
-> +			label =3D "Menu";
-> +			gpios =3D <&pca9534 3 GPIO_ACTIVE_LOW>;
-> +			linux,code =3D <KEY_MENU>;
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible =3D "gpio-leds";
-> +		status =3D "okay";
-> +
-> +		heartbeat {
-Please use a node name, which describe the hardware in general like "led".
-> +			label =3D "Heartbeat";
-The label property is deprecated, please use function and color instead:
+Ah yes!  The correlation between dev->pm_domain and the magic done by
+the core framework was lost on me.
 
-https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bi=
-ndings/leds/common.yaml
+Once you respin to address Nikunj's comment I will ask the NXP team in
+Romania to test this set.  With the holiday season still floating in
+the air it may take a little while for them to get to it.
 
-Best regards
-> +			gpios =3D <&pca9534 0 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger =3D "heartbeat";
-> +		};
-> +	};
-> +};
-> +
+> [...]
+>
+> Kind regards
+> Uffe
