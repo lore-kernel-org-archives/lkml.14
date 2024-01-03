@@ -1,89 +1,130 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F381108;
-	Wed,  3 Jan 2024 01:38:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD1810FE;
+	Wed,  3 Jan 2024 01:41:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aLvOEsXZ"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-680b1a2c966so14930136d6.3;
-        Tue, 02 Jan 2024 17:38:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XG5wXB+K"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-28ce9a0e544so146013a91.3;
+        Tue, 02 Jan 2024 17:41:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704245936; x=1704850736; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FC3YNpZQ824RvnO6l/cHjeHZ3qIOYGfCscSR0Xu4SHY=;
-        b=aLvOEsXZoBm6zsmKM6cYKA3UPQN6cc1g+G8aUxtPjaDaFs5Y+/WsUyzakZUUm+rPv5
-         g8Vcsjzpx6SDoyaVWWj5i0J4zxD4BK68MyE9ypMqLijEi36iDDpAVgzPPi0CxFMHj+3a
-         nNtJlVVfOTG9s6AlS8ULVc3I+zFfsEDIIdJg2n/cRcwQs42bJ+OaohM8l0UtBNw1CB6s
-         kbMyWCPBwLruX2J1mOsHpIkPLmumte3fpVZiepVHZv+rYODqrLe8BG9beupB5HNCTdPI
-         BpTsZyXWJ8EH4KbZd7utUtLhBb2KiJsu246BDgdO7Sq5AlbyPPQ+qHoNgj0/uxDuCFDt
-         N2XQ==
+        d=gmail.com; s=20230601; t=1704246066; x=1704850866; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fsry+veA0BH9pQQgtym3vQ1xpw5YN/FTLuIDJlPaT/M=;
+        b=XG5wXB+KD7PJ+JeTu94f18/1QjLLpjdTcNTJWT6qwNYEr6svx+gaU4s743w/TDxPk9
+         LnlOumWItDWuPwwpIIC3CqGpJflk+KxThuzS3Dd5kPN8X9l+8rxa/mW0XEyYIO9YNJXn
+         r6zSrbeqVZnFBq57ySuzxAqXNHG/gXDOsg4L1iEbgoJdK1EyED9V5FSgbPOC1EXnCXmx
+         ySQYjKR4xq2BbNJK/RG+B62BLnZSKlhkrzEtg5aLh0l841RZsfPL30xHl094OMVuxJLQ
+         vfbNcUJIQJVMbx2x+LaGhdTNiB+nPRRgOXlOiiyqsyuPMHDen5NGveRz5tQusoN71er5
+         rz5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704245936; x=1704850736;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=FC3YNpZQ824RvnO6l/cHjeHZ3qIOYGfCscSR0Xu4SHY=;
-        b=vxvlK6JrjzeFODkhqfsUcog+nTTe1aR4zIx9I9k5TswQoCXr9AUb5X6JhPwFPJHitm
-         trvrmA9OvXq3VE9HNw0pzowYlSNcqAbIL7lx/18AIEnKhJLAbqohImMmPcXSgqA01MwB
-         gWd7jHcFsVScYhSWXBRp4SePykG3gfJyA1dt4jkHAJfYnTCuOGbDwYnw8wyoynKwDy1e
-         FZWSf3SDUVbvBEUuTu+GmcqTUPxasxUdploJEbMetCAVsQTza+mZhWazMVMT7WRXuqqF
-         kgAsfcXOQ6+v7QgGSDkPAELRNPDLK/ftAIsSwHagkfxiUDQt0rvut3KmzD9OVDiIB7NV
-         qGag==
-X-Gm-Message-State: AOJu0Yxai061RoCoHNqZydyJ/DQhN1MIz4pJeHkULb4Qe+TARuUrSH4p
-	hpDw74ouWEmP264owjAoG4jvZUKmG3U=
-X-Google-Smtp-Source: AGHT+IFDvPq3TzqkSgnyyR4hQaDcBezziHkJCMDuLOt7XAqrnqdfbHY28UPqj3s4Ta942mEH66MB5g==
-X-Received: by 2002:a05:6214:19e7:b0:67f:4f8b:e298 with SMTP id q7-20020a05621419e700b0067f4f8be298mr30598302qvc.0.1704245936508;
-        Tue, 02 Jan 2024 17:38:56 -0800 (PST)
-Received: from localhost (48.230.85.34.bc.googleusercontent.com. [34.85.230.48])
-        by smtp.gmail.com with ESMTPSA id w6-20020a0cef86000000b0067f77ca8d18sm10555731qvr.96.2024.01.02.17.38.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jan 2024 17:38:56 -0800 (PST)
-Date: Tue, 02 Jan 2024 20:38:56 -0500
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Marc Dionne <marc.dionne@auristor.com>, 
- netdev@vger.kernel.org, 
- Jordan Rife <jrife@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, 
- Eric Dumazet <edumazet@google.com>, 
- "David S. Miller" <davem@davemloft.net>
-Cc: Willem de Bruijn <willemb@google.com>, 
- Simon Horman <horms@kernel.org>, 
- linux-kernel@vger.kernel.org
-Message-ID: <6594bab0a524_2c093829412@willemb.c.googlers.com.notmuch>
-In-Reply-To: <20231221131230.2025000-1-marc.dionne@auristor.com>
-References: <20231221131230.2025000-1-marc.dionne@auristor.com>
-Subject: Re: [PATCH] net: Save and restore msg_namelen in sock_sendmsg
+        d=1e100.net; s=20230601; t=1704246066; x=1704850866;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Fsry+veA0BH9pQQgtym3vQ1xpw5YN/FTLuIDJlPaT/M=;
+        b=HS7ssEB18JQZ6Q1g859aJOSDnv5VnzMPl/NUEYs7kQ+bGVOnmCoWGpCWffprdA5HOG
+         lBoaDauI5j7CrqFeqLUD5u7xtqrxNUdyQCkc/q69/hvF+Uj41Fuls7bHjRmyiwPgWCKv
+         vt/kcGVtleHwDp4IFIenVxutnZ3UHND2xKDEm1P/HYDJOQqJEd8JhIe328OWdmM3NGMG
+         lR6+XWjcICS9OfqeoVFRPy6vk+Cgwq2lRPeeQlV2PoUETjeIf4dqrrcodBfcKCV+S1C6
+         t2sWbvvx9xvkHa5RlHSLQiaf7xSeBCe7mXXPlBXVAEHvqbP41ic70+KX3Ug8bvQARG1v
+         WONw==
+X-Gm-Message-State: AOJu0YwjlFyYO81gLhYDBVaTGSPuS73d5Q+VUj/Zjb464VKlarJOTu+G
+	4697likbWfAejgDvPpCBLPJsN7kej5Nake1JJNRGfLXYXcx+mw==
+X-Google-Smtp-Source: AGHT+IEFA1WPqXBDf6TZ9sAPvWMZnLP1mKpQSnenwwwlgbRJFCw1RJsRUvloVhcxfRR496mPMA+HdaNkqeQLbJbJQe8=
+X-Received: by 2002:a17:90a:7186:b0:28c:d9b:5983 with SMTP id
+ i6-20020a17090a718600b0028c0d9b5983mr8760421pjk.48.1704246065933; Tue, 02 Jan
+ 2024 17:41:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20231204064934.21236-1-wenchao.chen@unisoc.com>
+ <CAPDyKFpK2Yjj2oDWCUKHpht6PC9uNG-x2rPYO3EBD6GGWg4VZg@mail.gmail.com>
+ <CA+Da2qyB2tQjq5wxoqNwjb5HXhdPHMsWN08Ot7nMEkZzOgQ9LA@mail.gmail.com> <7541f17a-f0a7-486b-9664-3573623d7154@linux.alibaba.com>
+In-Reply-To: <7541f17a-f0a7-486b-9664-3573623d7154@linux.alibaba.com>
+From: Wenchao Chen <wenchao.chen666@gmail.com>
+Date: Wed, 3 Jan 2024 09:40:54 +0800
+Message-ID: <CA+Da2qy7Rwkx-SXORi8DB5ptaTm1TuME+CgsCDk2Bs-rJo6gsg@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sprd: Fix eMMC init failure after hw reset
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Wenchao Chen <wenchao.chen@unisoc.com>, 
+	zhang.lyra@gmail.com, orsonzhai@gmail.com, linux-mmc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, zhenxiong.lai@unisoc.com, 
+	yuelin.tang@unisoc.com
+Content-Type: text/plain; charset="UTF-8"
 
-Marc Dionne wrote:
-> Commit 86a7e0b69bd5 ("net: prevent rewrite of msg_name in
-> sock_sendmsg()") made sock_sendmsg save the incoming msg_name pointer
-> and restore it before returning, to insulate the caller against
-> msg_name being changed by the called code.  If the address length
-> was also changed however, we may return with an inconsistent structure
-> where the length doesn't match the address, and attempts to reuse it may
-> lead to lost packets.
-> 
-> For example, a kernel that doesn't have commit 1c5950fc6fe9 ("udp6: fix
-> potential access to stale information") will replace a v4 mapped address
-> with its ipv4 equivalent, and shorten namelen accordingly from 28 to 16.
-> If the caller attempts to reuse the resulting msg structure, it will have
-> the original ipv6 (v4 mapped) address but an incorrect v4 length.
-> 
-> Fixes: 86a7e0b69bd5 ("net: prevent rewrite of msg_name in sock_sendmsg()")
-> Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
+Gentle ping.
 
-Reviewed-by: Willem de Bruijn <willemb@google.com>
+Thanks,
+Wenchao.Chen
+
+On Tue, 12 Dec 2023 at 10:57, Baolin Wang <baolin.wang@linux.alibaba.com> wrote:
+>
+>
+>
+> On 12/8/2023 7:52 PM, Wenchao Chen wrote:
+> > On Thu, 7 Dec 2023 at 21:59, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> >>
+> >> On Mon, 4 Dec 2023 at 07:50, Wenchao Chen <wenchao.chen@unisoc.com> wrote:
+> >>>
+> >>> Some eMMC devices that do not close the auto clk gate
+> >>> after hw reset will cause eMMC initialization to fail.
+> >>>
+> >>> Signed-off-by: Wenchao Chen <wenchao.chen@unisoc.com>
+> >>
+> >> I assume we want this tagged for stable kernels too, but do we have a
+> >> corresponding fixes commit that we can point out?
+> >>
+> >> Kind regards
+> >> Uffe
+> >>
+> >
+> > Hi Uffe
+> > Sorry, I forgot to add fixes commit.
+> >
+> > Fixes: ff874dbc4f86 ("mmc: sdhci-sprd: Disable CLK_AUTO when the clock
+> > is less than 400K")
+>
+> With the Fixes tag, looks goo to me.
+> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>
+> >>> ---
+> >>>   drivers/mmc/host/sdhci-sprd.c | 10 +++++++---
+> >>>   1 file changed, 7 insertions(+), 3 deletions(-)
+> >>>
+> >>> diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
+> >>> index 6b8a57e2d20f..bed57a1c64b5 100644
+> >>> --- a/drivers/mmc/host/sdhci-sprd.c
+> >>> +++ b/drivers/mmc/host/sdhci-sprd.c
+> >>> @@ -239,15 +239,19 @@ static inline void _sdhci_sprd_set_clock(struct sdhci_host *host,
+> >>>          div = ((div & 0x300) >> 2) | ((div & 0xFF) << 8);
+> >>>          sdhci_enable_clk(host, div);
+> >>>
+> >>> +       val = sdhci_readl(host, SDHCI_SPRD_REG_32_BUSY_POSI);
+> >>> +       mask = SDHCI_SPRD_BIT_OUTR_CLK_AUTO_EN | SDHCI_SPRD_BIT_INNR_CLK_AUTO_EN;
+> >>>          /* Enable CLK_AUTO when the clock is greater than 400K. */
+> >>>          if (clk > 400000) {
+> >>> -               val = sdhci_readl(host, SDHCI_SPRD_REG_32_BUSY_POSI);
+> >>> -               mask = SDHCI_SPRD_BIT_OUTR_CLK_AUTO_EN |
+> >>> -                       SDHCI_SPRD_BIT_INNR_CLK_AUTO_EN;
+> >>>                  if (mask != (val & mask)) {
+> >>>                          val |= mask;
+> >>>                          sdhci_writel(host, val, SDHCI_SPRD_REG_32_BUSY_POSI);
+> >>>                  }
+> >>> +       } else {
+> >>> +               if (val & mask) {
+> >>> +                       val &= ~mask;
+> >>> +                       sdhci_writel(host, val, SDHCI_SPRD_REG_32_BUSY_POSI);
+> >>> +               }
+> >>>          }
+> >>>   }
+> >>>
+> >>> --
+> >>> 2.17.1
+> >>>
