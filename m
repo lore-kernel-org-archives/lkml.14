@@ -1,112 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E8D418C05
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 09:04:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1457818043
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 09:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CWZ26c7u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704272650;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OXxrEElr";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="eiUS5Rvv";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OXxrEElr";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="eiUS5Rvv"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0712821C64;
+	Wed,  3 Jan 2024 09:05:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1704272756; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Kimaz79paVloj/e6SryFhzLQ5bfwrfwnGX6HNnH18gM=;
-	b=CWZ26c7u78ulUNnZy21j+Iyoz+/VXcq0X5lT0Ap2JE+gWUtS/F4nPO7Ek5KkHa4hIeBXZh
-	sHYXRMKbyq/IgauXfHMJTy+FRhwjHBDtpoMf1FOFsx1oFslCUmQp8ZTgiopGEw7UYeChtY
-	0FPbhPnyA1/9bp3ClWyjmRqoXyGeozU=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-471-clzl96yvOnaK54Pu-1wRLg-1; Wed, 03 Jan 2024 04:04:09 -0500
-X-MC-Unique: clzl96yvOnaK54Pu-1wRLg-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5561bf805daso1083194a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 01:04:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704272648; x=1704877448;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Kimaz79paVloj/e6SryFhzLQ5bfwrfwnGX6HNnH18gM=;
-        b=Sljj/RGIgq3psoS7A1s/Z9xmnoYFeuhBV6Y52SoxF0zrQY9JHIhl0VwMfB/OhrYrc2
-         9KJshHr14DpJCR2/D5YWhB0oDnBwq9mVLmHKe4Gq55pvPlDsk+XvjbcFmRBaZbZ/Rcl1
-         MtWZv9j8UZm85yZRs3wk5eE2cXyTmuNBDsWd4tGecd7HO/HqCEoG1liT2z2mkvsUyHZF
-         1DKHMopFH27Ly4PbcLARvy0UPNpqSt2yEQHNty/+XG7dSz0eWgJt3Plo+fDO/9eJ6fNz
-         BqaDJDpjAPBEJ4bGIXDdDQcO6+3X0DyZFeyxXK0DByvHm0Ws+7xghcCbUnwyOW5eWKxU
-         SJ+A==
-X-Gm-Message-State: AOJu0YzpPt37t8L9C8z6BwXOjycZfkJ2ijJSnJdlcuYzhu9VlM21HfS+
-	eH6R4N1wX7gTVYi70KNHvAJs41HFNq0Aai1m+NiNr1VwZ6QcGktHUlIShpWbiP8Y6684a8TAuy3
-	prF0pkIbZ0gOV4MwbAhVGlLbLQvayy6R/
-X-Received: by 2002:a50:cd56:0:b0:553:7f36:b90c with SMTP id d22-20020a50cd56000000b005537f36b90cmr11355403edj.1.1704272648350;
-        Wed, 03 Jan 2024 01:04:08 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFnzXW1T/PtiyMEePFAeIfjoDdcIOAwrLU81pstOcxV+Ri0wVlPHV3elGdnjF9boBnTgsZDvA==
-X-Received: by 2002:a50:cd56:0:b0:553:7f36:b90c with SMTP id d22-20020a50cd56000000b005537f36b90cmr11355396edj.1.1704272648000;
-        Wed, 03 Jan 2024 01:04:08 -0800 (PST)
-Received: from imammedo.users.ipa.redhat.com ([185.140.112.229])
-        by smtp.gmail.com with ESMTPSA id ck15-20020a0564021c0f00b00555f908b2e4sm5623610edb.40.2024.01.03.01.04.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jan 2024 01:04:07 -0800 (PST)
-Date: Wed, 3 Jan 2024 10:04:06 +0100
-From: Igor Mammedov <imammedo@redhat.com>
-To: Jonathan Woithe <jwoithe@just42.net>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [Regression] Commit 40613da52b13 ("PCI: acpiphp: Reassign
- resources on bridge if necessary")
-Message-ID: <20240103100406.0c5ff818@imammedo.users.ipa.redhat.com>
-In-Reply-To: <ZYPYIpO36YE8V8hQ@marvin.atrad.com.au>
-References: <ZXpaNCLiDM+Kv38H@marvin.atrad.com.au>
-	<20231214143205.4ba0e11a@imammedo.users.ipa.redhat.com>
-	<ZXt+BxvmG6ru63qJ@marvin.atrad.com.au>
-	<ZXw4Ly/csFgl76Lj@marvin.atrad.com.au>
-	<20231215143638.032028eb@imammedo.users.ipa.redhat.com>
-	<ZXziuPCKNBLhbssO@marvin.atrad.com.au>
-	<ZYPYIpO36YE8V8hQ@marvin.atrad.com.au>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+	bh=9YHgEMpLm7folf5G8Ij+ZasKgK+9OLJsmoPBAUvLJ/8=;
+	b=OXxrEElrNfC+/T5mY1izxFruu35404m0j3OipElyrHhk70EhEVSjlrTgu1vHsM7m2zzddg
+	wfDLOFu0uHl2077tXTxU2DOG2tMOxxzwt6Ejg3BoTFg8fbvshfCghQeO5fMoiJP4SejDlv
+	6bKYK1+hsT557oQjts72D0rfr15YI6E=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1704272756;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9YHgEMpLm7folf5G8Ij+ZasKgK+9OLJsmoPBAUvLJ/8=;
+	b=eiUS5Rvvpde2p9gy0tfi2VBTJMrDVIqjkFif9iFzaiZJR1Yf74nJIgN+sL4NhjL8LSRVN1
+	J6Y5ZmX1tSoldzDQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1704272756; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9YHgEMpLm7folf5G8Ij+ZasKgK+9OLJsmoPBAUvLJ/8=;
+	b=OXxrEElrNfC+/T5mY1izxFruu35404m0j3OipElyrHhk70EhEVSjlrTgu1vHsM7m2zzddg
+	wfDLOFu0uHl2077tXTxU2DOG2tMOxxzwt6Ejg3BoTFg8fbvshfCghQeO5fMoiJP4SejDlv
+	6bKYK1+hsT557oQjts72D0rfr15YI6E=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1704272756;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9YHgEMpLm7folf5G8Ij+ZasKgK+9OLJsmoPBAUvLJ/8=;
+	b=eiUS5Rvvpde2p9gy0tfi2VBTJMrDVIqjkFif9iFzaiZJR1Yf74nJIgN+sL4NhjL8LSRVN1
+	J6Y5ZmX1tSoldzDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3C2421340C;
+	Wed,  3 Jan 2024 09:05:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 2UebC3MjlWUEaQAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 03 Jan 2024 09:05:55 +0000
+Date: Wed, 3 Jan 2024 10:06:46 +0100
+From: Oscar Salvador <osalvador@suse.de>
+To: andrey.konovalov@linux.dev
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Marco Elver <elver@google.com>,
+	Alexander Potapenko <glider@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>, kasan-dev@googlegroups.com,
+	Evgenii Stepanov <eugenis@google.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Andrey Konovalov <andreyknvl@google.com>
+Subject: Re: [PATCH v4 10/22] lib/stackdepot: store next pool pointer in
+ new_pool
+Message-ID: <ZZUjptpWL8qBO5f3@localhost.localdomain>
+References: <cover.1700502145.git.andreyknvl@google.com>
+ <448bc18296c16bef95cb3167697be6583dcc8ce3.1700502145.git.andreyknvl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <448bc18296c16bef95cb3167697be6583dcc8ce3.1700502145.git.andreyknvl@google.com>
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -3.71
+X-Spamd-Result: default: False [-3.71 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_TWELVE(0.00)[12];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[linux-foundation.org,gmail.com,google.com,suse.cz,googlegroups.com,kvack.org,vger.kernel.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-2.41)[97.30%]
+X-Spam-Flag: NO
 
-On Thu, 21 Dec 2023 16:46:02 +1030
-Jonathan Woithe <jwoithe@just42.net> wrote:
-
-> On Sat, Dec 16, 2023 at 10:05:22AM +1030, Jonathan Woithe wrote:
-> > On Fri, Dec 15, 2023 at 02:36:38PM +0100, Igor Mammedov wrote:  
-> > > On Fri, 15 Dec 2023 21:57:43 +1030
-> > > Jonathan Woithe <jwoithe@just42.net> wrote:  
-> > > > As mentioned, testing another kernel can only happen next Thursday.  If
-> > > > you would like other tests done let me know and I'll do them at the same
-> > > > time.  I have remote access to the machine, so it's possible to retrieve
-> > > > information from it at any time.  
-> > > 
-> > > lets wait till you can get logs with dyndbg='...' (I've asked for earlier)
-> > > and one more test with "pci=realloc" on kernel CLI to see if that helps.  
-> > 
-> > Okay.  
+On Mon, Nov 20, 2023 at 06:47:08PM +0100, andrey.konovalov@linux.dev wrote:
+> From: Andrey Konovalov <andreyknvl@google.com>
 > 
-> I added the "dyndbg=" option to the 5.15.139 kernel command line and booted. 
-> The resulting dmesg output has been attached to bugzilla 218268.
+> Instead of using the last pointer in stack_pools for storing the pointer
+> to a new pool (which does not yet store any stack records), use a new
+> new_pool variable.
 > 
-> I also tested 5.15.139 with the "pci=realloc" kernel parameter.  This was
-> sufficient to allow the system to boot without a GPU initialisation failure.
-> The dmesg output from this boot has also been attached to bugzilla 218268.
+> This a purely code readability change: it seems more logical to store
+> the pointer to a pool with a special meaning in a dedicated variable.
 > 
-> I used kernel.org's 5.15.139 for these tests because I already had it
-> compiled and was a little short of time.  If you'd like me to repeat the
-> tests with a different kernel let me know which one and I'll see what I can
-> do.  The Christmas break may delay this somewhat.
+> Reviewed-by: Alexander Potapenko <glider@google.com>
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 
-Thanks for collecting tables and debug logs,
-I'll get back to you if more debug info or testing would be needed.
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
 
-> Regards
->   jonathan
-> 
+ 
 
+-- 
+Oscar Salvador
+SUSE Labs
