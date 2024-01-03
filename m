@@ -1,162 +1,70 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB2A19BC0;
-	Wed,  3 Jan 2024 12:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.197])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C8AE19442;
+	Wed,  3 Jan 2024 12:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Q1K1lETl";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="o4/D6hUa";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Q1K1lETl";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="o4/D6hUa"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D8E1821C46;
-	Wed,  3 Jan 2024 12:40:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1704285623;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=20ruKaqHGpSyHLXE/c7mqjiw1CKRRpotINPqVduOYwo=;
-	b=Q1K1lETliTdRlrbpuYcbDJCNLRyfseNkT7O9KG7k43qo+zJQDGQoR5Teztc1JjCG66Jfu7
-	YYWOF836ktg9Z6PpkDO/Avyey1jC5Ex/SA/W76gfXQyMMZHJa7Cwu6lvmN/Se9fDUhy/8p
-	/8zVWhI6yjswCRwf6Dx5NjBQN2LSmtU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1704285623;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=20ruKaqHGpSyHLXE/c7mqjiw1CKRRpotINPqVduOYwo=;
-	b=o4/D6hUaN6oYe8c2NZs5CLAwmgMgPxUEow+rj3/B7s9DS0yeUZUMkz5qyhW64gpEUXwpBc
-	PshODaVzO680AtCg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1704285623;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=20ruKaqHGpSyHLXE/c7mqjiw1CKRRpotINPqVduOYwo=;
-	b=Q1K1lETliTdRlrbpuYcbDJCNLRyfseNkT7O9KG7k43qo+zJQDGQoR5Teztc1JjCG66Jfu7
-	YYWOF836ktg9Z6PpkDO/Avyey1jC5Ex/SA/W76gfXQyMMZHJa7Cwu6lvmN/Se9fDUhy/8p
-	/8zVWhI6yjswCRwf6Dx5NjBQN2LSmtU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1704285623;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=20ruKaqHGpSyHLXE/c7mqjiw1CKRRpotINPqVduOYwo=;
-	b=o4/D6hUaN6oYe8c2NZs5CLAwmgMgPxUEow+rj3/B7s9DS0yeUZUMkz5qyhW64gpEUXwpBc
-	PshODaVzO680AtCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 72B151340C;
-	Wed,  3 Jan 2024 12:40:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id mpD9GrdVlWWJKAAAD6G6ig
-	(envelope-from <pvorel@suse.cz>); Wed, 03 Jan 2024 12:40:23 +0000
-Date: Wed, 3 Jan 2024 13:40:13 +0100
-From: Petr Vorel <pvorel@suse.cz>
-To: Cyril Hrubis <chrubis@suse.cz>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, ltp@lists.linux.it,
-	Li Wang <liwang@redhat.com>,
-	Andrea Cervesato <andrea.cervesato@suse.com>,
-	Greg Ungerer <gerg@linux-m68k.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Christophe Lyon <christophe.lyon@linaro.org>,
-	linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	linux-riscv <linux-riscv@lists.infradead.org>,
-	Linux-sh list <linux-sh@vger.kernel.org>
-Subject: Re: [PATCH 00/36] Remove UCLINUX from LTP
-Message-ID: <20240103124013.GA1095350@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <20240103015240.1065284-1-pvorel@suse.cz>
- <CAMuHMdXGwyS-CL0vLdUP4Z4YEYhmcmDyC3YdGCnS=jFkqASqvw@mail.gmail.com>
- <20240103114957.GD1073466@pevik>
- <CAMuHMdX0s0gLRoPtjJmDnSmZ_MNY590dN+JxM1HKAL1g_bjX+w@mail.gmail.com>
- <ZZVOhlGPg5KRyS-F@yuki>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="UkbQnUrm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=chNQa
+	qyjmqQSTbtOWxsw9RHKFvBwS7P46pvgdz+FY1w=; b=UkbQnUrmk4B1bUUWoQHSk
+	4vFpgPyfBnMSpsTiX7PNJHc+PT4Ow4ZEvxHbiVDbxlYN5baFyYl4yBI4342Pa/j+
+	0pDUw81DO/ckZ8z6MaqEX3kYFAdKq4e8CbHxFRnZcqZX5NEeyqaNZxha2hfi9F0I
+	0oSLpx7RrxTMjR/eCkc+UU=
+Received: from WH-D-007635B.QUECTEL.COM (unknown [223.76.229.213])
+	by zwqz-smtp-mta-g4-2 (Coremail) with SMTP id _____wDXP4r7MpVlGNmfAA--.162S2;
+	Wed, 03 Jan 2024 18:12:12 +0800 (CST)
+From: clancy_shang@163.com
+To: marcel@holtmann.org,
+	johan.hedberg@gmail.com,
+	luiz.dentz@gmail.com
+Cc: linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zhongjun.yu@quectel.com,
+	Clancy Shang <clancy.shang@quectel.com>
+Subject: [PATCH] Bluetooth: hci_sync: fix hogp device suspend bug
+Date: Wed,  3 Jan 2024 18:12:01 +0800
+Message-Id: <20240103101201.1812679-1-clancy_shang@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZZVOhlGPg5KRyS-F@yuki>
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: ***
-X-Spam-Score: 4.00
-X-Spamd-Result: default: False [4.00 / 50.00];
-	 ARC_NA(0.00)[];
-	 HAS_REPLYTO(0.30)[pvorel@suse.cz];
-	 REPLYTO_EQ_FROM(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 NEURAL_SPAM_LONG(3.50)[1.000];
-	 RCPT_COUNT_TWELVE(0.00)[15];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.00)[33.18%]
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDXP4r7MpVlGNmfAA--.162S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7Xw13CF1rKFWfCr45uF4UJwb_yoWDZwbE93
+	ZFyay29w1UGrWxZw4qyr4kCr4xZw4rWF4kur93Z34jgF98Wr18GryDXF90kr1xWa95Arsx
+	Ar15WFWSqrW8GjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUeiNVPUUUUU==
+X-CM-SenderInfo: xfod0ux1bvxtlqj6il2tof0z/xtbBzQBauGVOBNCX7gAAsp
 
-Hi Geert, Cyril, all,
+From: Clancy Shang <clancy.shang@quectel.com>
 
-Geert, first, thank you for Cc all the other lists.
-For anybody from those lists, we talk about:
-https://lore.kernel.org/ltp/20240103015240.1065284-1-pvorel@suse.cz/
+when Bluetooth enters suspend, and disconnects everything with the
+disconnect reason code of 0x15, the hogp device could not into sleep
+and continued advertising. when use the disconnect reason code of 0x13,
+the hogp device going into sleep succeeded.
 
-> Hi!
-> > I am not sure I agree with this series.
-> > Removing support for UCLINUX from LTP is almost a guarantee for
-> > not noticing when more breakage is introduced.
+Signed-off-by: Clancy Shang <clancy.shang@quectel.com>
+---
+ net/bluetooth/hci_sync.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > How exactly is UCLINUX broken in LTP?
+diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
+index d85a7091a116..16b5420c32d0 100644
+--- a/net/bluetooth/hci_sync.c
++++ b/net/bluetooth/hci_sync.c
+@@ -5927,7 +5927,7 @@ int hci_suspend_sync(struct hci_dev *hdev)
+ 
+ 	if (hci_conn_count(hdev)) {
+ 		/* Soft disconnect everything (power off) */
+-		err = hci_disconnect_all_sync(hdev, HCI_ERROR_REMOTE_POWER_OFF);
++		err = hci_disconnect_all_sync(hdev, HCI_ERROR_REMOTE_USER_TERM);
+ 		if (err) {
+ 			/* Set state to BT_RUNNING so resume doesn't notify */
+ 			hdev->suspend_state = BT_RUNNING;
+-- 
+2.25.1
 
-> As far as we know noone is using it and nobody is maintaing it for a
-> decade, so it's bitrotting and we do not have manpower to fix it, or
-> rather we do not want to invest the scarcely limited resources we have
-> into something that is niche at best. We asked repeatedly if anyone want
-> to invest time into keeping it alive, but nobody answered the call so
-> far and I doubt that it will happen at this point.
-
-Also, UCLINUX was used in tests which used the legacy LTP API, which was buggy.
-We slowly rewrite tests into new API [1], which is more reliable and do cleanup
-and bug fixes during test rewrites. But because nobody stand to maintain UCLINUX
-support, it's not in the new API. Thus we have actively deleted it's support
-during the rewrite in past years.
-
-I wonder myself if anybody is even using LTP on UCLINUX platforms. Nearly 25% of
-the syscalls tests use fork(), thus will not work on UCLINUX. First tests were
-rewritten in 2016 (first release in 20160510) and nobody complained.
-
-All tests C based tests (both new and legacy API):
-$ git grep -l  -e 'include .tst_test.h' -e 'include .test.h' testcases/ |wc -l
-1494
-
-Tests, which use fork(), i.e. not working in UCLINUX:
-$ git grep -l  '\.forks_child.*1' testcases/ |wc -l
-334
-
-Kind regards,
-Petr
-
-[1] https://github.com/linux-test-project/ltp/wiki/C-Test-API
