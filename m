@@ -1,84 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6DB1CF91;
-	Wed,  3 Jan 2024 19:52:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 146D41CF96;
+	Wed,  3 Jan 2024 19:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JUpU0ytY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C276C433C7;
-	Wed,  3 Jan 2024 19:52:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704311578;
-	bh=AGxGXJZa41oa0ZBFIkl3/sSNflvf5FcKlcCCl5qT46A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JUpU0ytYwAjqQ9Kmu6iuW4yOWPjAEv6QR2Bm0uQMeNdd/7EGUhaAe9asYTlUN7ub+
-	 o4cx/VBQ8P0kzZGCZ2AhPKrnIueuZPzE3UOQE7RqPsK/y3QQeIomvTSS4W7mdktl1T
-	 KsOaldTfqSsZVbHpi+jSNgHE3ufTJgjHzAXZ8WNWD6AVoVPJtsdDn769V7KEwS3/Fb
-	 8Em38nhwWOoz/WQ4LRIPYfErPlkuSsSJHvFYN+LNEN4cafX0e23octvhGxUkRVMlxs
-	 M8kAkhKgKb/1ICpZk+vpfF7yWUYvKwun430g3axWj6wKZxYgv6IFkEkx9XNe9jzQg0
-	 +6Ko/cnkkgb/Q==
-Date: Wed, 3 Jan 2024 13:52:53 -0600
-From: Eric Van Hensbergen <ericvh@kernel.org>
-To: Dominique Martinet <asmadeus@codewreck.org>
-Cc: David Howells <dhowells@redhat.com>, Jeff Layton <jlayton@kernel.org>,
-	Steve French <smfrench@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	Christian Brauner <christian@brauner.io>, linux-cachefs@redhat.com,
-	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Latchesar Ionkov <lucho@ionkov.net>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>
-Subject: Re: [PATCH v5 40/40] 9p: Use netfslib read/write_iter
-Message-ID: <ZZW7Fesoy4H2zic7@FV7GG9FTHL>
-References: <20231221132400.1601991-1-dhowells@redhat.com>
- <20231221132400.1601991-41-dhowells@redhat.com>
- <ZZULNQAZ0n0WQv7p@codewreck.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="APEdFICj"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5ce10b5ee01so552103a12.1;
+        Wed, 03 Jan 2024 11:55:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704311708; x=1704916508; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=X3iU8aqcre6TJqNl9hYE6bRCOPELUfFdiBKR8Euu9Ys=;
+        b=APEdFICjaFmxck+mRbZCGA/1t3Duei/2eWTWzR480uRB+JXjHnYDpCYtQqTPpEw5sM
+         CazNIPTrOESeisPP+ILI22ifeUJUE1tQ6wBWJeGhR/wqzaFr4YXd5dggM+4oHgNZ5m8c
+         9XjRCDVLMZZb39d83dsHCey6iVwkq004LuZ0gdvooMxVjXMEMEtfjIpLYZMLxDO4KuNQ
+         uPcHqc+UAW8TGCQ54TRH+CVVT4+3Is39QgMN6zAzRVvB4g4fS1CpGRSERPI8NMV19WYN
+         n3Z0mKV4MogX9BincNHEQYfDk4o8jObfVbtS8/NnuFlW3SLbHTHBcOLIoabT0OwwO2oW
+         VwlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704311708; x=1704916508;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=X3iU8aqcre6TJqNl9hYE6bRCOPELUfFdiBKR8Euu9Ys=;
+        b=cZZptr0Q0r3LIzlRTvCwLwa9e7EKdruosvsEgW4+DzJpjCnm2M7ENdP5n7AMF/3Hix
+         JFwLC6xXv7PMmnCfshXLdKVNgHBSME6PgeY4l2MlWL46BYdI3Fxk46hlbNKHGtGClBXm
+         G60pe5N2iYEr27X2Cd8uA0Pa3QMR3giZ5nHp7KpyZh0BobTf6ZRz5fPkP69qWTmqRmwz
+         SKTsbKTeOqyt5A1/+/1xtzAuoJSrCniUPt6iehSoLnmBPj9aMT4DLpZaQSSvx6wtKadB
+         e+GEH5J2gXidnK5DfyHdnzkjsRTnla3L4UWkr62r04f1yJkk0uPd/2kpMCqiGaYqJOgt
+         V0nw==
+X-Gm-Message-State: AOJu0YyL/8QOAXqHMB0/yHLj+4HMXzcN2Fa+Ol1B1YThOi9Ov0HBVAqb
+	qs0kUEMb8xgQjSZZd9x82GY=
+X-Google-Smtp-Source: AGHT+IGClAPCl9CbqKzsGVTXv82t4CtF/ve+Vpmn61NCHnYs+cWDY36TDd1dJAx61YoOCl3oeA27Rw==
+X-Received: by 2002:a05:6a20:4323:b0:198:fe75:5692 with SMTP id h35-20020a056a20432300b00198fe755692mr748022pzk.23.1704311708263;
+        Wed, 03 Jan 2024 11:55:08 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id w19-20020a63d753000000b005cd78f13608sm22746267pgi.13.2024.01.03.11.55.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jan 2024 11:55:07 -0800 (PST)
+Message-ID: <abd2e7c5-b1f3-4a70-8634-fb7f51080da8@gmail.com>
+Date: Wed, 3 Jan 2024 11:55:06 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZZULNQAZ0n0WQv7p@codewreck.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.1 000/100] 6.1.71-rc1 review
+Content-Language: en-US
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, allen.lkml@gmail.com
+References: <20240103164856.169912722@linuxfoundation.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <20240103164856.169912722@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 03, 2024 at 04:22:29PM +0900, Dominique Martinet wrote:
-> David Howells wrote on Thu, Dec 21, 2023 at 01:23:35PM +0000:
+On 1/3/24 08:53, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.71 release.
+> There are 100 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> I've noticed we don't cache xattrs are all, so with the default mount
-> options on a kernel built with 9P_FS_SECURITY we'll get a gazillion
-> lookups for security.capabilities... But that's another problem, and
-> this is still an improvement so no reason to hold back.
->
-
-This is a big problem and already on my backlog list since some things
-default to this even if the remote file system doesn't support
-xattrs.  The quick fix is to disable on a mount when we detect the
-host side isn't supporting them (of course this could be weird for
-exports that cross file system boundries) -- at the very least we
-could keep this info on an inode basis and not request as long as the
-inode info is cached.  Caching the actual properties is also a step,
-but given this is a security feature, I imagine we don't want to trust
-our cache and will always have to ask server unless we can come up with
-something clever to indicate xattr changes (haven't looked into that
-much yet).
- 
+> Responses should be made by Fri, 05 Jan 2024 16:47:49 +0000.
+> Anything received after that time might be too late.
 > 
-> (I'd still be extremly thanksful if Christian and/or Eric would have
-> time to check as well, but I won't push back to merging it this merge
-> window next week if they don't have time... I'll also keep trying to run
-> some more tests as time allows)
->
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.71-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-I'll try to run through my regression tests as well, but sure we
-can fix things up after the merge window if we miss things.
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-    -eric
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
