@@ -1,113 +1,162 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C7C156E3;
-	Wed,  3 Jan 2024 03:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XNOdzEAc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704251834; x=1735787834;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=IYl8ewQ4V4H2LKmJOnjAX1mXhwVOE3zgKgzzaM0O4jg=;
-  b=XNOdzEAczL+1nrraXDOtIYd9qGEEHxEFmnI2C2UQm5OPhO2PuHkNfXjy
-   vPYAZP1wIEUrDR+uTT+ixM6fCi/OxeZnL1g8DCsQfPoYLcSOXN5F2c6aV
-   PMcuXVhR6ck1ZrSeDHZQahOKCZ3lRuGLKq3l4g6XlBgx1e87vLNJmZf8T
-   1zVpUzzpgjhDPUSDAoRNnwIS2RQ7d7YZdXsa5yM2u8NrHw5yg/VfhhMcg
-   Am4inq2LyXmWyH3aUJoIVq4bM3H/Mw/UZ5tnCnahr4vayPnS0AalxbG+v
-   DJ6MaO9LCd2uO7kuVbZOfzvYtg2d7RwNeCA37upT5JcXOIw//hu7CvvCM
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="483135463"
-X-IronPort-AV: E=Sophos;i="6.04,326,1695711600"; 
-   d="scan'208";a="483135463"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 19:17:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="783381442"
-X-IronPort-AV: E=Sophos;i="6.04,326,1695711600"; 
-   d="scan'208";a="783381442"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 19:17:04 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Gregory Price <gregory.price@memverge.com>
-Cc: Gregory Price <gourry.memverge@gmail.com>,  <linux-mm@kvack.org>,
-  <linux-doc@vger.kernel.org>,  <linux-fsdevel@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  <linux-api@vger.kernel.org>,
-  <x86@kernel.org>,  <akpm@linux-foundation.org>,  <arnd@arndb.de>,
-  <tglx@linutronix.de>,  <luto@kernel.org>,  <mingo@redhat.com>,
-  <bp@alien8.de>,  <dave.hansen@linux.intel.com>,  <hpa@zytor.com>,
-  <mhocko@kernel.org>,  <tj@kernel.org>,  <corbet@lwn.net>,
-  <rakie.kim@sk.com>,  <hyeongtak.ji@sk.com>,  <honggyu.kim@sk.com>,
-  <vtavarespetr@micron.com>,  <peterz@infradead.org>,
-  <jgroves@micron.com>,  <ravis.opensrc@micron.com>,
-  <sthanneeru@micron.com>,  <emirakhur@micron.com>,  <Hasan.Maruf@amd.com>,
-  <seungjun.ha@samsung.com>,  Johannes Weiner <hannes@cmpxchg.org>,  Hasan
- Al Maruf <hasanalmaruf@fb.com>,  Hao Wang <haowang3@fb.com>,  Dan Williams
- <dan.j.williams@intel.com>,  "Michal Hocko" <mhocko@suse.com>,  Zhongkun
- He <hezhongkun.hzk@bytedance.com>,  "Frank van der Linden"
- <fvdl@google.com>,  John Groves <john@jagalactic.com>,  Jonathan Cameron
- <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v5 00/11] mempolicy2, mbind2, and weighted interleave
-In-Reply-To: <ZZRepTEFNFC17fjT@memverge.com> (Gregory Price's message of "Tue,
-	2 Jan 2024 14:06:13 -0500")
-References: <20231223181101.1954-1-gregory.price@memverge.com>
-	<87frzqg1jp.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<ZYqEjsaqseI68EyJ@memverge.com>
-	<87le98e4w1.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<ZZRepTEFNFC17fjT@memverge.com>
-Date: Wed, 03 Jan 2024 11:15:06 +0800
-Message-ID: <87sf3fcdl1.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CAC94A16
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 03:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4T4ZZw3PHnz1FHX7;
+	Wed,  3 Jan 2024 11:14:48 +0800 (CST)
+Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
+	by mail.maildlp.com (Postfix) with ESMTPS id F3CD1140136;
+	Wed,  3 Jan 2024 11:18:46 +0800 (CST)
+Received: from [10.174.178.46] (10.174.178.46) by
+ kwepemm600013.china.huawei.com (7.193.23.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 3 Jan 2024 11:18:46 +0800
+Subject: Re: [PATCH RFC 00/17] ubifs: Add filesystem repair support
+To: Richard Weinberger <richard@nod.at>
+CC: david oberhollenzer <david.oberhollenzer@sigma-star.at>, Miquel Raynal
+	<miquel.raynal@bootlin.com>, Sascha Hauer <s.hauer@pengutronix.de>, Tudor
+ Ambarus <Tudor.Ambarus@linaro.org>, linux-kernel
+	<linux-kernel@vger.kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>
+References: <20231228014112.2836317-1-chengzhihao1@huawei.com>
+ <1145531757.175508.1703844362355.JavaMail.zimbra@nod.at>
+ <13b259ca-b32f-a8d6-5e11-8bb38df72f5c@huawei.com>
+ <642239519.177270.1703884138999.JavaMail.zimbra@nod.at>
+ <a145fc68-9b0a-9794-48d2-b7ad79116833@huawei.com>
+ <535616666.192239.1704228332389.JavaMail.zimbra@nod.at>
+From: Zhihao Cheng <chengzhihao1@huawei.com>
+Message-ID: <460eb02e-8937-282c-62c5-6ea606324b0e@huawei.com>
+Date: Wed, 3 Jan 2024 11:18:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+In-Reply-To: <535616666.192239.1704228332389.JavaMail.zimbra@nod.at>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600013.china.huawei.com (7.193.23.68)
 
-Gregory Price <gregory.price@memverge.com> writes:
+在 2024/1/3 4:45, Richard Weinberger 写道:
+> ----- Ursprüngliche Mail -----
+>> Von: "chengzhihao1" <chengzhihao1@huawei.com>
+>> I come up with another way to implement fsck.ubifs:
+>>
+>> There are three modes:
+>>
+>> 1. common mode(no options): Ask user whether to fix as long as a problem
+>> is detected.
+> 
+> Makes sense.
+> 
+>> 2. safe mode(-a option): Auto repair as long as no data/files lost(eg.
+>> nlink, isize, xattr_cnt, which can be corrected without dropping nodes),
+>> otherwise returns error code.
+> 
+> Makes sense.
+>   
+>> 3. dangerous mode(-y option): Fix is always successful, unless
+>> superblock is corrupted. There are 2 situations:
+> 
+> Please not use "-y". Usually "-y" stands for "answer yes to all questions".
+> But selecting names for command line flags is currently my least concern.
+>   
+>>    a) TNC is valid: fsck will print which file is dropped and which
+>> file's data is dropped
+> 
+> Sounds also good.
+>   
+>>    b) TNC is invalid: fsck will scan all nodes without referencing TNC,
+>> same as this patchset does
+> 
+> I'd make this a distinct mode.
+> It can be used to rebuild index and LEB property trees.
+> This is basically a "drop trees and rebuild" mode.
+> 
 
->> >> > struct mpol_args {
->> >> >         /* Basic mempolicy settings */
->> >> >         __u16 mode;
->> >> >         __u16 mode_flags;
->> >> >         __s32 home_node;
->> >> >         __u64 pol_maxnodes;
->> >> 
->> >> I understand that we want to avoid hole in struct.  But I still feel
->> >> uncomfortable to use __u64 for a small.  But I don't have solution too.
->> >> Anyone else has some idea?
->> >>
->> >
->> > maxnode has been an `unsigned long` in every other interface for quite
->> > some time.  Seems better to keep this consistent rather than it suddenly
->> > become `unsigned long` over here and `unsigned short` over there.
->> 
->> I don't think that it matters.  The actual maximum node number will be
->> less than maximum `unsigned short`.
->> 
->
-> the structure will end up being
->
-> struct mpol_args {
-> 	__u16 mode;
-> 	__u16 mode_flags;
-> 	__s32 home_node;
-> 	__u16 pol_maxnodes;
-> 	__u8  rsv[6];
-> 	__aligned_u64 pol_nodes;
-> 	__aligned_u64 il_weights;
-> }
->
-> If you're fine with that, i'll make the change.
+OK, then fsck will have four modes.
 
-This looks OK for me.  But, I don't know whether others think this is
-better.
+>>
+>> Q1: How do you think of this method?
+> 
+> Sounds good so far.
+>   
+>> Q2: Mode 1, 2 and 3(a) depend on journal replaying, I found
+>> xfs_repair[1] should be used after mounting/unmounting xfs (Let kernel
+>> replay journal), if UBIFS does so, there is no need to copy recovery
+>> subsystem into userspace, but user has to mount/unmount before doing
+>> fsck. I found e2fsck has copied recovery code into userspace, so it can
+>> do fsck without mounting/unmounting. If UBIFS does so, journal replaying
+>> will update TNC and LPT, please reference Q3(1). Which method do you
+>> suggest?
+> 
+> UBIFS is a little special regarding the journal.
+> 
+> 1. The journal is not an add-on like it is on many other file systems,
+> you have to replay it to get a consistent file system.
+> 2. Journal replay is also needed after a clean umount. The reason is that
+> UBIFS does no commit at umount time.
 
---
-Best Regards,
-Huang, Ying
+I agree, there exists one situation that UBIFS replays journal even 
+after clean umount.
+     P1      ubifs_bgt      umount
+   mkdir
+          run_bg_commit
+           c->cmt_state = COMMIT_RUNNING_BACKGROUND
+           do_commit
+            ubifs_log_start_commit(c, &new_ltail_lnum) // log start
+            up_write(&c->commit_sem)
+   touch
+    ubifs_jnl_update // new buds added
+                          cleanup_mnt
+                           deactivate_super
+                            fs->kill_sb
+                             generic_shutdown_super
+                              sync_filesystem
+                               ubifs_sync_fs
+                                ubifs_run_commit
+                                 wait_for_commit // wait bg commit, 
+'touch' won't be commited, it will be replayed in next mount
+
+> 
+> So IMHO you need to have journal replay code in your tool in any case.
+> You can copy it from the kernel implementation and add more checks.
+> While the kernel code also tries to be fast, fsck should be more paranoid.
+> Ideally the outcome is a libubifs or such which can be derived from the
+> kernel source while building mtd-utils.
+
+All right, sounds like a huge copy work.
+
+> 
+>> Q3: If fsck drops or updates a node(eg. dentry lost inode, corrected
+>> inode) in mode 1,2 and 3(a), TNC/LPT should be updated. There are two
+>> ways updating TNC and LPT:
+>>
+>>    1) Like kernel does, which means that mark dirty TNC/LPT for
+>> corresponding branches and do_commit(). It will copy much code into
+>> userspace, eg. tnc.c, lpt.c, tnc_commit.c,
+>> lpt_commit.c. I fear there exists risks. For example, there is no space
+>> left for new index nodes, gc should be performed? If so, gc/lpt gc code
+>> should be copied too.
+>>
+>>    2) Rebuild new TNC/LPT based on valid nodes. This way is simple, but
+>> old good TNC could be corrupted, it means that powercut during fsck may
+>> let UBIFS image must be repaired in mode 3(b) but it could be repaired
+>> in mode 2\3(a) before invoking fsck.
+>>
+>> Which way is better?
+> 
+> Since you need to do a full journal replay anyway and power-cut awareness
+> is one of your requirements, I fear the only option is 1). >
+> Thanks,
+> //richard
+> .
+> 
+
