@@ -1,107 +1,113 @@
-Received: from buaa.edu.cn (unknown [202.112.128.25])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA084A1C;
-	Wed,  3 Jan 2024 03:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=buaa.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buaa.edu.cn
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C7C156E3;
+	Wed,  3 Jan 2024 03:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=buaa.edu.cn header.i=@buaa.edu.cn header.b="vDboQI1M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=buaa.edu.cn; s=buaa; h=Received:From:To:Cc:Subject:Date:
-	Message-Id:MIME-Version:Content-Transfer-Encoding; bh=ZT4f7RGcP8
-	9s2PD4GqbxF1IDMNpMzEJiOuxSzUjnO2Q=; b=vDboQI1MjVVPsWBhP8xgQM8D60
-	3axFhSUn9Z7AGSybcRhaQTvRNWYKfaJBOrMAAVvm/HBmpsW5xWTQZqfWputqsun1
-	mTlT+f/9f/9b8XYL3RNbVJ3E3AUTSK+4fva7dwsz7VR4S+ppFf9hBZpqTtskXZBI
-	rowjW0Lrf69bZthIo=
-Received: from localhost.localdomain (unknown [10.130.147.18])
-	by coremail-app1 (Coremail) with SMTP id OCz+CgAnVlgh0ZRlzISiAA--.48024S2;
-	Wed, 03 Jan 2024 11:14:41 +0800 (CST)
-From: Yuxuan Hu <20373622@buaa.edu.cn>
-To: marcel@holtmann.org,
-	johan.hedberg@gmail.com,
-	luiz.dentz@gmail.com
-Cc: linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	baijiaju1990@gmail.com,
-	sy2239101@buaa.edu.cn,
-	20373622@buaa.edu.cn,
-	buaazhr@buaa.edu.cn
-Subject: [PATCH V2] Bluetooth: rfcomm: Fix null-ptr-deref in rfcomm_check_security
-Date: Wed,  3 Jan 2024 11:14:10 +0800
-Message-Id: <20240103031410.3262524-1-20373622@buaa.edu.cn>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XNOdzEAc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704251834; x=1735787834;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=IYl8ewQ4V4H2LKmJOnjAX1mXhwVOE3zgKgzzaM0O4jg=;
+  b=XNOdzEAczL+1nrraXDOtIYd9qGEEHxEFmnI2C2UQm5OPhO2PuHkNfXjy
+   vPYAZP1wIEUrDR+uTT+ixM6fCi/OxeZnL1g8DCsQfPoYLcSOXN5F2c6aV
+   PMcuXVhR6ck1ZrSeDHZQahOKCZ3lRuGLKq3l4g6XlBgx1e87vLNJmZf8T
+   1zVpUzzpgjhDPUSDAoRNnwIS2RQ7d7YZdXsa5yM2u8NrHw5yg/VfhhMcg
+   Am4inq2LyXmWyH3aUJoIVq4bM3H/Mw/UZ5tnCnahr4vayPnS0AalxbG+v
+   DJ6MaO9LCd2uO7kuVbZOfzvYtg2d7RwNeCA37upT5JcXOIw//hu7CvvCM
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="483135463"
+X-IronPort-AV: E=Sophos;i="6.04,326,1695711600"; 
+   d="scan'208";a="483135463"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 19:17:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="783381442"
+X-IronPort-AV: E=Sophos;i="6.04,326,1695711600"; 
+   d="scan'208";a="783381442"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 19:17:04 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Gregory Price <gregory.price@memverge.com>
+Cc: Gregory Price <gourry.memverge@gmail.com>,  <linux-mm@kvack.org>,
+  <linux-doc@vger.kernel.org>,  <linux-fsdevel@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>,  <linux-api@vger.kernel.org>,
+  <x86@kernel.org>,  <akpm@linux-foundation.org>,  <arnd@arndb.de>,
+  <tglx@linutronix.de>,  <luto@kernel.org>,  <mingo@redhat.com>,
+  <bp@alien8.de>,  <dave.hansen@linux.intel.com>,  <hpa@zytor.com>,
+  <mhocko@kernel.org>,  <tj@kernel.org>,  <corbet@lwn.net>,
+  <rakie.kim@sk.com>,  <hyeongtak.ji@sk.com>,  <honggyu.kim@sk.com>,
+  <vtavarespetr@micron.com>,  <peterz@infradead.org>,
+  <jgroves@micron.com>,  <ravis.opensrc@micron.com>,
+  <sthanneeru@micron.com>,  <emirakhur@micron.com>,  <Hasan.Maruf@amd.com>,
+  <seungjun.ha@samsung.com>,  Johannes Weiner <hannes@cmpxchg.org>,  Hasan
+ Al Maruf <hasanalmaruf@fb.com>,  Hao Wang <haowang3@fb.com>,  Dan Williams
+ <dan.j.williams@intel.com>,  "Michal Hocko" <mhocko@suse.com>,  Zhongkun
+ He <hezhongkun.hzk@bytedance.com>,  "Frank van der Linden"
+ <fvdl@google.com>,  John Groves <john@jagalactic.com>,  Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v5 00/11] mempolicy2, mbind2, and weighted interleave
+In-Reply-To: <ZZRepTEFNFC17fjT@memverge.com> (Gregory Price's message of "Tue,
+	2 Jan 2024 14:06:13 -0500")
+References: <20231223181101.1954-1-gregory.price@memverge.com>
+	<87frzqg1jp.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZYqEjsaqseI68EyJ@memverge.com>
+	<87le98e4w1.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZZRepTEFNFC17fjT@memverge.com>
+Date: Wed, 03 Jan 2024 11:15:06 +0800
+Message-ID: <87sf3fcdl1.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:OCz+CgAnVlgh0ZRlzISiAA--.48024S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7WFyDGF1xXr18Aw4UCw4rXwb_yoW8tFyfpF
-	ZFya4xGFn7ur15Arn7AF4kuFyrZr1v9r15Kw4ku3yY93s5Wwn7trWSyr1jvay5CFs0y343
-	ZF18Xw4DGrnru37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBF1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-	IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
-	z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2vYz4IE04k24V
-	AvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xf
-	McIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7
-	v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS
-	14v26r1q6r43MxkIecxEwVCm-wCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26F
-	1DJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUAxhLUUUUU=
-X-CM-SenderInfo: ysqtljawssquxxddhvlgxou0/
+Content-Type: text/plain; charset=ascii
 
-During our fuzz testing of the connection and disconnection process at the
-RFCOMM layer,we discovered this bug.By comparing the packetsfrom a normal
-connection and disconnection process with the testcase that triggered a
-KASAN report, we analyzed the cause of this bug as follows:
+Gregory Price <gregory.price@memverge.com> writes:
 
-1. In the packets captured during a normal connection, the host sends a
-`Read Encryption Key Size` type of `HCI_CMD` packet(Command Opcode: 0x1408)
-to the controller to inquire the length of encryption key.After receiving
-this packet, the controller immediately replies with a Command Complete
-packet (Event Code: 0x0e) to return the Encryption Key Size.
+>> >> > struct mpol_args {
+>> >> >         /* Basic mempolicy settings */
+>> >> >         __u16 mode;
+>> >> >         __u16 mode_flags;
+>> >> >         __s32 home_node;
+>> >> >         __u64 pol_maxnodes;
+>> >> 
+>> >> I understand that we want to avoid hole in struct.  But I still feel
+>> >> uncomfortable to use __u64 for a small.  But I don't have solution too.
+>> >> Anyone else has some idea?
+>> >>
+>> >
+>> > maxnode has been an `unsigned long` in every other interface for quite
+>> > some time.  Seems better to keep this consistent rather than it suddenly
+>> > become `unsigned long` over here and `unsigned short` over there.
+>> 
+>> I don't think that it matters.  The actual maximum node number will be
+>> less than maximum `unsigned short`.
+>> 
+>
+> the structure will end up being
+>
+> struct mpol_args {
+> 	__u16 mode;
+> 	__u16 mode_flags;
+> 	__s32 home_node;
+> 	__u16 pol_maxnodes;
+> 	__u8  rsv[6];
+> 	__aligned_u64 pol_nodes;
+> 	__aligned_u64 il_weights;
+> }
+>
+> If you're fine with that, i'll make the change.
 
-2. In our fuzz test case, the timing of the controller's response to this
-packet was delayed to an unexpected point: after the RFCOMM and L2CAP
-layers had disconnected but before the HCI layer had disconnected.
+This looks OK for me.  But, I don't know whether others think this is
+better.
 
-3. After receiving the Encryption Key Size Response at the time described
-in point 2, the host still called the rfcomm_check_security function.
-However, by this time `struct l2cap_conn *conn = l2cap_pi(sk)->chan->conn;`
-had already been released, and when the function executed
-`return hci_conn_security(conn->hcon, d->sec_level, auth_type, d->out);`,
-specifically when accessing `conn->hcon`, a null-ptr-deref error occurred.
-
-To fix this bug, check if `sk->sk_state` is BT_CLOSED before calling
-rfcomm_recv_frame in rfcomm_process_rx.
-
-Signed-off-by: Yuxuan Hu <20373622@buaa.edu.cn>
----
-V1 -> V2: Removed the direct check for `conn` being null in rfcomm_check_security
-
- net/bluetooth/rfcomm/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/bluetooth/rfcomm/core.c b/net/bluetooth/rfcomm/core.c
-index 053ef8f25fae..1d34d8497033 100644
---- a/net/bluetooth/rfcomm/core.c
-+++ b/net/bluetooth/rfcomm/core.c
-@@ -1941,7 +1941,7 @@ static struct rfcomm_session *rfcomm_process_rx(struct rfcomm_session *s)
- 	/* Get data directly from socket receive queue without copying it. */
- 	while ((skb = skb_dequeue(&sk->sk_receive_queue))) {
- 		skb_orphan(skb);
--		if (!skb_linearize(skb)) {
-+		if (!skb_linearize(skb) && sk->sk_state != BT_CLOSED) {
- 			s = rfcomm_recv_frame(s, skb);
- 			if (!s)
- 				break;
--- 
-2.25.1
-
+--
+Best Regards,
+Huang, Ying
