@@ -1,64 +1,59 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224051DA21;
-	Wed,  3 Jan 2024 21:23:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="j7f4ijon"
-Received: from localhost (unknown [IPv6:2601:280:5e00:7e19::646])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 60D068E3;
-	Wed,  3 Jan 2024 21:23:37 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 60D068E3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1704317017; bh=hPBXGJx4KuTZLUTGOfnBh0rwbPYSu4hMMIs+rC1U6VI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=j7f4ijon3vUOPX8Vq7odfdXXtHSDkSpTqhoFLU1pcmAFPjHtBBzKGwYnjB38ItBQ6
-	 9xwYENT4cb7o0J2VZYGaicPbsvTOz6kxiGz8W9okyaoB9pAntU8RuwLaHKW/IXHJEC
-	 b+pQTqrsa3HptnE7RxJH49D33+wknbeCxY1PErYfSsl6+DuWhZh54MQiPY8OujCQ1a
-	 SKUzr8LEX6n3CXQ070/k0F5nf0gy3BbPeNbb6va44J0Xtv256eqIhrddE4cqcMTHgC
-	 q1+2GjZI0la5fgX9eMREETeh/ine8IAVZQ/45k4NgabnJLjJrlacZPcAFHfpgkjezb
-	 5eiBJ2mfxAqzw==
-From: Jonathan Corbet <corbet@lwn.net>
-To: "JiaLong.Yang" <jialong.yang@shingroup.cn>, Alex Shi <alexs@kernel.org>,
- Yanteng Si <siyanteng@loongson.cn>
-Cc: shenghui.qu@shingroup.cn, ke.zhao@shingroup.cn, zhijie.ren@shingroup.cn,
- "JiaLong.Yang" <jialong.yang@shingroup.cn>, Zenghui Yu
- <zenghui.yu@linux.dev>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2] Docs/zh_CN: Fix the meaning of DEBUG to pr_debug()
-In-Reply-To: <20231221055832.4374-1-jialong.yang@shingroup.cn>
-References: <20231221055832.4374-1-jialong.yang@shingroup.cn>
-Date: Wed, 03 Jan 2024 14:23:36 -0700
-Message-ID: <874jfu861z.fsf@meer.lwn.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78F61DA23;
+	Wed,  3 Jan 2024 21:24:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C96FC433C8;
+	Wed,  3 Jan 2024 21:24:32 +0000 (UTC)
+Date: Wed, 3 Jan 2024 16:25:35 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, Linux
+ Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH v2] ring-buffer/Documentation: Add documentation on
+ buffer_percent file
+Message-ID: <20240103162535.6de92d55@gandalf.local.home>
+In-Reply-To: <87h6ju86fh.fsf@meer.lwn.net>
+References: <20231226130149.4685c838@gandalf.local.home>
+	<87h6ju86fh.fsf@meer.lwn.net>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-"JiaLong.Yang" <jialong.yang@shingroup.cn> writes:
+On Wed, 03 Jan 2024 14:15:30 -0700
+Jonathan Corbet <corbet@lwn.net> wrote:
 
-> We know the macro DEBUG will make pr_debug() save the formatted
-> string into final binary. But the translation in chinese gives a
-> opposite meaning.
->
-> Signed-off-by: JiaLong.Yang <jialong.yang@shingroup.cn>
-> link: https://lore.kernel.org/lkml/a9cbebd8-dd6e-d81c-471f-f40dcc7196ea@linux.dev/
-> Reviewed-by: Zenghui Yu <zenghui.yu@linux.dev>
-> link: https://lore.kernel.org/lkml/340cbb78-3e68-4584-8e11-313f7f86fd34@loongson.cn/
-> Acked-by: Yanteng Si <siyanteng@loongson.cn>
-> ---
->
-> V2: add commit info.
-> Maybe now I have known about the process of patch.
-> Sorry for wasting time of yours.
+> Steven Rostedt <rostedt@goodmis.org> writes:
+> 
+> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> >
+> > When the buffer_percent file was added to the kernel, the documentation
+> > should have been updated to document what that file does.
+> >
+> > Fixes: 03329f9939781 ("tracing: Add tracefs file buffer_percentage")
+> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > ---
+> > Changes since v1: https://lore.kernel.org/all/20231226123525.71a6d0fb@gandalf.local.home/
+> >
+> > - Fixed some grammar issues.
+> >
+> >  Documentation/trace/ftrace.rst | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)  
+> 
+> Are you planning on shipping this one upstream, or would you like me to
+> pick it up?
 
-Applied, thanks.
+I was hoping you can take it, but please take v3.
 
-jon
+  https://lore.kernel.org/all/20231229122402.537eb252@gandalf.local.home/
+
+Thanks!
+
+-- Steve
