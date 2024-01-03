@@ -1,98 +1,189 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1A51CFAD
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 20:08:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XK8FdQRd"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-28c5af37d3aso1917597a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 12:08:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704312529; x=1704917329; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ZbXC5eCmmqFTARmpyDuedcNTwdQFCtXDKnroQ3f3H6o=;
-        b=XK8FdQRddv8dGDTR1terofZteJ3QHeqR+b3/Nvx0iq+WEAAIBXY1zFDs6h5sXsD+0F
-         //kINYySjm0DyDMWg44jCVKfiotniTseQi/ja8s/VbIqh9DVNrTU5wtOm75PtkIZAdAn
-         uqm8FrpjQVbFCls9M3olItQObFujNl3q5DpEhEJwL0M22MWeZSiRpO9AaAV3iHLwhIqI
-         0K+f1429nr3YAEECQ09s6AcAKvzu4fiP21PEN37FZsKw2+CbNix8DILLIrckiQb7SHEq
-         tqDPIsbzHrvaz2aPWIjZd7E5p5La4b5um/l5MgUPhQjr1mxsGcdiDgiYfzW9OzzSSNUG
-         o2Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704312529; x=1704917329;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZbXC5eCmmqFTARmpyDuedcNTwdQFCtXDKnroQ3f3H6o=;
-        b=cNL4vtJDpSHFOJqqjZ6h2SV/b//H3JHsJ7YrmOKZHRVbPGVd3mLGwuZjrl6AU3nJa8
-         kFPFdaKDM2zJxW+MM7apObAxDQezAOj0HDkvXv2XphF3FJ7gfvNeYBmvpl5gl5ef0xhT
-         dJAvaiLsJ1/UjX47anDdWCHtGp2tu3HTaVGxiPRkddyvhHPHr3kwZbvSVFQAtF/INggu
-         lcxK72IDsKWJU/paTE1eX7tdobwns87JPGtEsHlSBKKosQtLcldbF/rquvniCkfTOJrB
-         JjiWmsytPk0hCt6cnx8HWtdHaWCD5sHi0IC9hiBVOyhr0dlGBWhutIqVkc3SL+s2uF3r
-         ndRA==
-X-Gm-Message-State: AOJu0YyFunaJvvSodt4nwjt8QI+RKsM2vADRqOjOqXq/s5vWr1k6VDUK
-	/7tUfKc6NPf1SMuKqx2Zs2y025gUD2E=
-X-Google-Smtp-Source: AGHT+IGLiJzgmgB4U37pca7hhkT8SbqE+p0v4GxcS3Qwg3LOfexhPnD8ksQK8oGV2dG9n66nZP+osw==
-X-Received: by 2002:a17:90a:71cc:b0:28c:c24d:165d with SMTP id m12-20020a17090a71cc00b0028cc24d165dmr9719579pjs.1.1704312529402;
-        Wed, 03 Jan 2024 12:08:49 -0800 (PST)
-Received: from visitorckw-System-Product-Name (IP-216-168.cs.nctu.edu.tw. [140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id ca13-20020a17090af30d00b0028acb86f7b5sm2214914pjb.44.2024.01.03.12.08.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jan 2024 12:08:48 -0800 (PST)
-Date: Thu, 4 Jan 2024 04:08:45 +0800
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: Ian Rogers <irogers@google.com>
-Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] min_heap: Min heap optimizations
-Message-ID: <ZZW+zcfFOa5YgK2j@visitorckw-System-Product-Name>
-References: <20231220083224.3712113-1-visitorckw@gmail.com>
- <CAP-5=fXwa-GSDJX3pO-LSz-D_X7qk2Ck1vtdddtV8ixzsO+5BA@mail.gmail.com>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4259A1CFBD;
+	Wed,  3 Jan 2024 20:08:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A5F5C15;
+	Wed,  3 Jan 2024 12:09:37 -0800 (PST)
+Received: from [10.57.85.107] (unknown [10.57.85.107])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B9103F64C;
+	Wed,  3 Jan 2024 12:08:50 -0800 (PST)
+Message-ID: <314e5b15-de28-4336-8a0f-f3c08183a6b1@arm.com>
+Date: Wed, 3 Jan 2024 20:10:07 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXwa-GSDJX3pO-LSz-D_X7qk2Ck1vtdddtV8ixzsO+5BA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 6/6] thermal: netlink: Rework cdev-related notify API
+Content-Language: en-US
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Linux PM <linux-pm@vger.kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Linux ACPI <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <4556052.LvFx2qVVIh@kreacher> <7628882.EvYhyI6sBW@kreacher>
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <7628882.EvYhyI6sBW@kreacher>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 03, 2024 at 09:56:29AM -0800, Ian Rogers wrote:
-> On Wed, Dec 20, 2023 at 12:32 AM Kuan-Wei Chiu <visitorckw@gmail.com> wrote:
-> >
-> > Hello,
-> >
-> > The purpose of this patch series is to enhance the existing min heap
-> > implementation. The optimization focuses on both the heap construction
-> > process and the number of comparisons made during the heapify
-> > operation.
-> >
-> > Kuan-Wei Chiu (2):
-> >   min_heap: Optimize number of calls to min_heapify()
-> >   min_heap: Optimize number of comparisons in min_heapify()
+
+
+On 12/15/23 20:02, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> Thanks Kuan-Wei,
+> The only actually used thermal netlink notification routine related
+> to cooling devices is thermal_notify_cdev_state_update().  The other
+> two, thermal_notify_cdev_add() and thermal_notify_cdev_delete(), are
+> never used.
 > 
-> The patch series looks good to me. Given the extra conditions should
-> there be some updates to:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/lib/test_min_heap.c
-> to ensure coverage?
->
-Hi Ian,
+> So as to get rid of dead code, drop thermal_notify_cdev_add/delete(),
+> which can be added back if they turn out to be ever needed, along with
+> the related code.
+> 
+> In analogy with the previous thermal netlink API changes, redefine
+> thermal_notify_cdev_state_update() to take a const cdev pointer as its
+> first argument and let it extract the requisite information from there
+> by itself.
+> 
+> No intentional functional impact.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>   drivers/thermal/thermal_helpers.c |    2 -
+>   drivers/thermal/thermal_netlink.c |   43 ++------------------------------------
+>   drivers/thermal/thermal_netlink.h |   19 +++-------------
+>   3 files changed, 8 insertions(+), 56 deletions(-)
+> 
+> Index: linux-pm/drivers/thermal/thermal_netlink.h
+> ===================================================================
+> --- linux-pm.orig/drivers/thermal/thermal_netlink.h
+> +++ linux-pm/drivers/thermal/thermal_netlink.h
+> @@ -24,9 +24,8 @@ int thermal_notify_tz_trip_up(const stru
+>   			      const struct thermal_trip *trip);
+>   int thermal_notify_tz_trip_change(const struct thermal_zone_device *tz,
+>   				  const struct thermal_trip *trip);
+> -int thermal_notify_cdev_state_update(int cdev_id, int state);
+> -int thermal_notify_cdev_add(int cdev_id, const char *name, int max_state);
+> -int thermal_notify_cdev_delete(int cdev_id);
+> +int thermal_notify_cdev_state_update(const struct thermal_cooling_device *cdev,
+> +				     int state);
+>   int thermal_notify_tz_gov_change(const struct thermal_zone_device *tz,
+>   				 const char *name);
+>   int thermal_genl_sampling_temp(int id, int temp);
+> @@ -76,18 +75,8 @@ static inline int thermal_notify_tz_trip
+>   	return 0;
+>   }
+>   
+> -static inline int thermal_notify_cdev_state_update(int cdev_id, int state)
+> -{
+> -	return 0;
+> -}
+> -
+> -static inline int thermal_notify_cdev_add(int cdev_id, const char *name,
+> -					  int max_state)
+> -{
+> -	return 0;
+> -}
+> -
+> -static inline int thermal_notify_cdev_delete(int cdev_id)
+> +static inline int thermal_notify_cdev_state_update(const struct thermal_cooling_device *cdev,
+> +						   int state)
+>   {
+>   	return 0;
+>   }
+> Index: linux-pm/drivers/thermal/thermal_helpers.c
+> ===================================================================
+> --- linux-pm.orig/drivers/thermal/thermal_helpers.c
+> +++ linux-pm/drivers/thermal/thermal_helpers.c
+> @@ -152,7 +152,7 @@ static void thermal_cdev_set_cur_state(s
+>   	if (cdev->ops->set_cur_state(cdev, target))
+>   		return;
+>   
+> -	thermal_notify_cdev_state_update(cdev->id, target);
+> +	thermal_notify_cdev_state_update(cdev, target);
+>   	thermal_cooling_device_stats_update(cdev, target);
+>   }
+>   
+> Index: linux-pm/drivers/thermal/thermal_netlink.c
+> ===================================================================
+> --- linux-pm.orig/drivers/thermal/thermal_netlink.c
+> +++ linux-pm/drivers/thermal/thermal_netlink.c
+> @@ -147,27 +147,6 @@ static int thermal_genl_event_tz_trip_ch
+>   	return 0;
+>   }
+>   
+> -static int thermal_genl_event_cdev_add(struct param *p)
+> -{
+> -	if (nla_put_string(p->msg, THERMAL_GENL_ATTR_CDEV_NAME,
+> -			   p->name) ||
+> -	    nla_put_u32(p->msg, THERMAL_GENL_ATTR_CDEV_ID,
+> -			p->cdev_id) ||
+> -	    nla_put_u32(p->msg, THERMAL_GENL_ATTR_CDEV_MAX_STATE,
+> -			p->cdev_max_state))
+> -		return -EMSGSIZE;
+> -
+> -	return 0;
+> -}
+> -
+> -static int thermal_genl_event_cdev_delete(struct param *p)
+> -{
+> -	if (nla_put_u32(p->msg, THERMAL_GENL_ATTR_CDEV_ID, p->cdev_id))
+> -		return -EMSGSIZE;
+> -
+> -	return 0;
+> -}
+> -
+>   static int thermal_genl_event_cdev_state_update(struct param *p)
+>   {
+>   	if (nla_put_u32(p->msg, THERMAL_GENL_ATTR_CDEV_ID,
+> @@ -244,8 +223,6 @@ static cb_t event_cb[] = {
+>   	[THERMAL_GENL_EVENT_TZ_TRIP_UP]		= thermal_genl_event_tz_trip_up,
+>   	[THERMAL_GENL_EVENT_TZ_TRIP_DOWN]	= thermal_genl_event_tz_trip_down,
+>   	[THERMAL_GENL_EVENT_TZ_TRIP_CHANGE]	= thermal_genl_event_tz_trip_change,
+> -	[THERMAL_GENL_EVENT_CDEV_ADD]		= thermal_genl_event_cdev_add,
+> -	[THERMAL_GENL_EVENT_CDEV_DELETE]	= thermal_genl_event_cdev_delete,
+>   	[THERMAL_GENL_EVENT_CDEV_STATE_UPDATE]	= thermal_genl_event_cdev_state_update,
+>   	[THERMAL_GENL_EVENT_TZ_GOV_CHANGE]	= thermal_genl_event_gov_change,
+>   	[THERMAL_GENL_EVENT_CPU_CAPABILITY_CHANGE] = thermal_genl_event_cpu_capability_change,
+> @@ -348,28 +325,14 @@ int thermal_notify_tz_trip_change(const
+>   	return thermal_genl_send_event(THERMAL_GENL_EVENT_TZ_TRIP_CHANGE, &p);
+>   }
+>   
+> -int thermal_notify_cdev_state_update(int cdev_id, int cdev_state)
+> +int thermal_notify_cdev_state_update(const struct thermal_cooling_device *cdev,
+> +				     int state)
+>   {
+> -	struct param p = { .cdev_id = cdev_id, .cdev_state = cdev_state };
+> +	struct param p = { .cdev_id = cdev->id, .cdev_state = state };
+>   
+>   	return thermal_genl_send_event(THERMAL_GENL_EVENT_CDEV_STATE_UPDATE, &p);
+>   }
+>   
+> -int thermal_notify_cdev_add(int cdev_id, const char *name, int cdev_max_state)
+> -{
+> -	struct param p = { .cdev_id = cdev_id, .name = name,
+> -			   .cdev_max_state = cdev_max_state };
+> -
+> -	return thermal_genl_send_event(THERMAL_GENL_EVENT_CDEV_ADD, &p);
+> -}
+> -
+> -int thermal_notify_cdev_delete(int cdev_id)
+> -{
+> -	struct param p = { .cdev_id = cdev_id };
+> -
+> -	return thermal_genl_send_event(THERMAL_GENL_EVENT_CDEV_DELETE, &p);
+> -}
+> -
+>   int thermal_notify_tz_gov_change(const struct thermal_zone_device *tz,
+>   				 const char *name)
+>   {
+> 
+> 
+> 
 
-Thank you for your review.
-
-The current min_heap test is sufficient to cover all the code changes
-introduced by this patch series, even when only tested with a known
-set of values copied from the data.
-
-Additionally, I'm unsure if the commit message title prefix I used is
-correct. Perhaps I should use "lib:" instead of "min_heap:"?
-
-Best regards,
-Kuan-Wei Chiu
-
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
