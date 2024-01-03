@@ -1,405 +1,426 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6FC318636
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 09:13:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7182718627;
+	Wed,  3 Jan 2024 09:14:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RcliW7Lr";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="R0zK4T/y";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ctkUNYaY";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="n6qcG7qW"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 90B1621C64;
-	Wed,  3 Jan 2024 09:13:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1704273234; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OaUGx3HlxrUaYynmTLyTYeD/XbRLOHVkk+knRajgh5o=;
-	b=RcliW7LrGd9bAVkxQbAyz9IUVVua645tpn/dBTcQrx9NDmAWHc0NkagXzNUt2fUklRGUOI
-	QSK2GgqgkqDmYeeQJS58TKHD2JdJPKPQNY0A22Wg/BtxwGzaacv0cosj2OaRfwQ3ZHCq1q
-	p0HYYBA0qhmBw3VHk6h9KAvuCCOLu7o=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1704273234;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OaUGx3HlxrUaYynmTLyTYeD/XbRLOHVkk+knRajgh5o=;
-	b=R0zK4T/ytaQwvbDYQ6XaCE2xQoSjOeOsY375NdKvwp7RbheVC/woYfVNQ23TEuQF5lA9Rl
-	SMJGJrdZvgwMoCBg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1704273232; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OaUGx3HlxrUaYynmTLyTYeD/XbRLOHVkk+knRajgh5o=;
-	b=ctkUNYaYKP0uBTYXYnd9sRq2kSYEZW8daIKDpUZhrbXTvJ1270889lq8xx2QO+wq4x5PHd
-	Kn4nrZPTyRKlX0CvbkN8tTB4pADftqXP5R162q5XaILiudseNNLHZq66D6aTPXSZc/iJEw
-	rVwsxMKrhDCO2WdwLDLq6h85xwlevR8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1704273232;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OaUGx3HlxrUaYynmTLyTYeD/XbRLOHVkk+knRajgh5o=;
-	b=n6qcG7qWRIsw1BuzO91FDEtwjPo4YMvABjpbo/1dNrsXpyiklUDDCfNnqD2b7wuyVWLvYD
-	Pvy/OQEIF0GxtkCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A25EE13AA6;
-	Wed,  3 Jan 2024 09:13:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id sq7tI08llWUNawAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Wed, 03 Jan 2024 09:13:51 +0000
-Date: Wed, 3 Jan 2024 10:14:42 +0100
-From: Oscar Salvador <osalvador@suse.de>
-To: andrey.konovalov@linux.dev
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Marco Elver <elver@google.com>,
-	Alexander Potapenko <glider@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>, kasan-dev@googlegroups.com,
-	Evgenii Stepanov <eugenis@google.com>, linux-mm@kvack.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bArnnaSm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704273256; x=1735809256;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references;
+  bh=beKMrUAeoM7XiyShL3qFBKJIHdC3YdO1vgauHYZzfX8=;
+  b=bArnnaSm5GryXnjbIX93zDN4S/PHYxXm2CBLh//wDyrX36VIAWgR08Mc
+   nnQpJIyvdFLs5cCL9bWfzhkguZrI15piZhj8LMOV9IpofW3GN4/vIHl0j
+   AiYv3PrCA8vfoEfWdUrRBSFZibD6e6KWbfvmaVeGzZCUgEeGe6amcDKHW
+   dfroQHYA0j5bL/y76AG+3y38nAGZ+W0VzYpgDYrtH+IIqr3x+akbEePON
+   K83oJ57xRq+PqYb1wCJFFcAW4BdvnDGYZh4Uu23P/nrAIrd//8DMZpION
+   PBagbv7F3IpPNc6ivBfUE0nBKl7mO6nOatA40WAjqSjWTX/Xg2KeBSvjf
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="394136947"
+X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
+   d="scan'208";a="394136947"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 01:14:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="923485704"
+X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
+   d="scan'208";a="923485704"
+Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 01:14:13 -0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Andrey Konovalov <andreyknvl@google.com>
-Subject: Re: [PATCH v4 12/22] lib/stackdepot: use read/write lock
-Message-ID: <ZZUlgs69iTTlG8Lh@localhost.localdomain>
-References: <cover.1700502145.git.andreyknvl@google.com>
- <9f81ffcc4bb422ebb6326a65a770bf1918634cbb.1700502145.git.andreyknvl@google.com>
+	linux-kselftest@vger.kernel.org
+Cc: pbonzini@redhat.com,
+	seanjc@google.com,
+	shuah@kernel.org,
+	stevensd@chromium.org,
+	Yan Zhao <yan.y.zhao@intel.com>
+Subject: [RFC PATCH v2 2/3] KVM: selftests: add selftest driver for KVM to test memory slots for MMIO BARs
+Date: Wed,  3 Jan 2024 16:44:57 +0800
+Message-Id: <20240103084457.20086-1-yan.y.zhao@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240103084327.19955-1-yan.y.zhao@intel.com>
+References: <20240103084327.19955-1-yan.y.zhao@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9f81ffcc4bb422ebb6326a65a770bf1918634cbb.1700502145.git.andreyknvl@google.com>
-X-Spam-Level: 
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ctkUNYaY;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=n6qcG7qW
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-6.01 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_DKIM_ARC_DNSWL_HI(-1.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_TWELVE(0.00)[12];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,suse.de:dkim,suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FREEMAIL_CC(0.00)[linux-foundation.org,gmail.com,google.com,suse.cz,googlegroups.com,kvack.org,vger.kernel.org];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 RCVD_IN_DNSWL_HI(-0.50)[2a07:de40:b281:106:10:150:64:167:received]
-X-Spam-Score: -6.01
-X-Rspamd-Queue-Id: 90B1621C64
-X-Spam-Flag: NO
 
-On Mon, Nov 20, 2023 at 06:47:10PM +0100, andrey.konovalov@linux.dev wrote:
-> From: Andrey Konovalov <andreyknvl@google.com>
-> 
-> Currently, stack depot uses the following locking scheme:
-> 
-> 1. Lock-free accesses when looking up a stack record, which allows to
->    have multiple users to look up records in parallel;
-> 2. Spinlock for protecting the stack depot pools and the hash table
->    when adding a new record.
-> 
-> For implementing the eviction of stack traces from stack depot, the
-> lock-free approach is not going to work anymore, as we will need to be
-> able to also remove records from the hash table.
-> 
-> Convert the spinlock into a read/write lock, and drop the atomic accesses,
-> as they are no longer required.
-> 
-> Looking up stack traces is now protected by the read lock and adding new
-> records - by the write lock. One of the following patches will add a new
-> function for evicting stack records, which will be protected by the write
-> lock as well.
-> 
-> With this change, multiple users can still look up records in parallel.
-> 
-> This is preparatory patch for implementing the eviction of stack records
-> from the stack depot.
-> 
-> Reviewed-by: Alexander Potapenko <glider@google.com>
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+This driver is for testing KVM memory slots for device MMIO BARs that are
+mapped to pages serving as device resources.
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
+This driver implements a mock device whose device resources are pages
+array that can be mmaped into user space. It provides ioctl interface to
+users to configure whether the pages are allocated as a compound huge page
+or not.
 
-> ---
-> 
-> Changed v2->v3:
-> - Use lockdep_assert_held_read annotation in depot_fetch_stack.
-> 
-> Changes v1->v2:
-> - Add lockdep_assert annotations.
-> ---
->  lib/stackdepot.c | 87 +++++++++++++++++++++++++-----------------------
->  1 file changed, 46 insertions(+), 41 deletions(-)
-> 
-> diff --git a/lib/stackdepot.c b/lib/stackdepot.c
-> index a5eff165c0d5..8378b32b5310 100644
-> --- a/lib/stackdepot.c
-> +++ b/lib/stackdepot.c
-> @@ -23,6 +23,7 @@
->  #include <linux/percpu.h>
->  #include <linux/printk.h>
->  #include <linux/slab.h>
-> +#include <linux/spinlock.h>
->  #include <linux/stacktrace.h>
->  #include <linux/stackdepot.h>
->  #include <linux/string.h>
-> @@ -91,15 +92,15 @@ static void *new_pool;
->  static int pools_num;
->  /* Next stack in the freelist of stack records within stack_pools. */
->  static struct stack_record *next_stack;
-> -/* Lock that protects the variables above. */
-> -static DEFINE_RAW_SPINLOCK(pool_lock);
->  /*
->   * Stack depot tries to keep an extra pool allocated even before it runs out
->   * of space in the currently used pool. This flag marks whether this extra pool
->   * needs to be allocated. It has the value 0 when either an extra pool is not
->   * yet allocated or if the limit on the number of pools is reached.
->   */
-> -static int new_pool_required = 1;
-> +static bool new_pool_required = true;
-> +/* Lock that protects the variables above. */
-> +static DEFINE_RWLOCK(pool_rwlock);
->  
->  static int __init disable_stack_depot(char *str)
->  {
-> @@ -232,6 +233,8 @@ static void depot_init_pool(void *pool)
->  	const int records_in_pool = DEPOT_POOL_SIZE / DEPOT_STACK_RECORD_SIZE;
->  	int i, offset;
->  
-> +	lockdep_assert_held_write(&pool_rwlock);
-> +
->  	/* Initialize handles and link stack records to each other. */
->  	for (i = 0, offset = 0;
->  	     offset <= DEPOT_POOL_SIZE - DEPOT_STACK_RECORD_SIZE;
-> @@ -254,22 +257,17 @@ static void depot_init_pool(void *pool)
->  
->  	/* Save reference to the pool to be used by depot_fetch_stack(). */
->  	stack_pools[pools_num] = pool;
-> -
-> -	/*
-> -	 * WRITE_ONCE() pairs with potential concurrent read in
-> -	 * depot_fetch_stack().
-> -	 */
-> -	WRITE_ONCE(pools_num, pools_num + 1);
-> +	pools_num++;
->  }
->  
->  /* Keeps the preallocated memory to be used for a new stack depot pool. */
->  static void depot_keep_new_pool(void **prealloc)
->  {
-> +	lockdep_assert_held_write(&pool_rwlock);
-> +
->  	/*
->  	 * If a new pool is already saved or the maximum number of
->  	 * pools is reached, do not use the preallocated memory.
-> -	 * Access new_pool_required non-atomically, as there are no concurrent
-> -	 * write accesses to this variable.
->  	 */
->  	if (!new_pool_required)
->  		return;
-> @@ -287,15 +285,15 @@ static void depot_keep_new_pool(void **prealloc)
->  	 * At this point, either a new pool is kept or the maximum
->  	 * number of pools is reached. In either case, take note that
->  	 * keeping another pool is not required.
-> -	 * smp_store_release() pairs with smp_load_acquire() in
-> -	 * stack_depot_save().
->  	 */
-> -	smp_store_release(&new_pool_required, 0);
-> +	new_pool_required = false;
->  }
->  
->  /* Updates references to the current and the next stack depot pools. */
->  static bool depot_update_pools(void **prealloc)
->  {
-> +	lockdep_assert_held_write(&pool_rwlock);
-> +
->  	/* Check if we still have objects in the freelist. */
->  	if (next_stack)
->  		goto out_keep_prealloc;
-> @@ -307,7 +305,7 @@ static bool depot_update_pools(void **prealloc)
->  
->  		/* Take note that we might need a new new_pool. */
->  		if (pools_num < DEPOT_MAX_POOLS)
-> -			smp_store_release(&new_pool_required, 1);
-> +			new_pool_required = true;
->  
->  		/* Try keeping the preallocated memory for new_pool. */
->  		goto out_keep_prealloc;
-> @@ -341,6 +339,8 @@ depot_alloc_stack(unsigned long *entries, int size, u32 hash, void **prealloc)
->  {
->  	struct stack_record *stack;
->  
-> +	lockdep_assert_held_write(&pool_rwlock);
-> +
->  	/* Update current and new pools if required and possible. */
->  	if (!depot_update_pools(prealloc))
->  		return NULL;
-> @@ -376,18 +376,15 @@ depot_alloc_stack(unsigned long *entries, int size, u32 hash, void **prealloc)
->  static struct stack_record *depot_fetch_stack(depot_stack_handle_t handle)
->  {
->  	union handle_parts parts = { .handle = handle };
-> -	/*
-> -	 * READ_ONCE() pairs with potential concurrent write in
-> -	 * depot_init_pool().
-> -	 */
-> -	int pools_num_cached = READ_ONCE(pools_num);
->  	void *pool;
->  	size_t offset = parts.offset << DEPOT_STACK_ALIGN;
->  	struct stack_record *stack;
->  
-> -	if (parts.pool_index > pools_num_cached) {
-> +	lockdep_assert_held_read(&pool_rwlock);
-> +
-> +	if (parts.pool_index > pools_num) {
->  		WARN(1, "pool index %d out of bounds (%d) for stack id %08x\n",
-> -		     parts.pool_index, pools_num_cached, handle);
-> +		     parts.pool_index, pools_num, handle);
->  		return NULL;
->  	}
->  
-> @@ -429,6 +426,8 @@ static inline struct stack_record *find_stack(struct stack_record *bucket,
->  {
->  	struct stack_record *found;
->  
-> +	lockdep_assert_held(&pool_rwlock);
-> +
->  	for (found = bucket; found; found = found->next) {
->  		if (found->hash == hash &&
->  		    found->size == size &&
-> @@ -446,6 +445,7 @@ depot_stack_handle_t __stack_depot_save(unsigned long *entries,
->  	depot_stack_handle_t handle = 0;
->  	struct page *page = NULL;
->  	void *prealloc = NULL;
-> +	bool need_alloc = false;
->  	unsigned long flags;
->  	u32 hash;
->  
-> @@ -465,22 +465,26 @@ depot_stack_handle_t __stack_depot_save(unsigned long *entries,
->  	hash = hash_stack(entries, nr_entries);
->  	bucket = &stack_table[hash & stack_hash_mask];
->  
-> -	/*
-> -	 * Fast path: look the stack trace up without locking.
-> -	 * smp_load_acquire() pairs with smp_store_release() to |bucket| below.
-> -	 */
-> -	found = find_stack(smp_load_acquire(bucket), entries, nr_entries, hash);
-> -	if (found)
-> +	read_lock_irqsave(&pool_rwlock, flags);
-> +
-> +	/* Fast path: look the stack trace up without full locking. */
-> +	found = find_stack(*bucket, entries, nr_entries, hash);
-> +	if (found) {
-> +		read_unlock_irqrestore(&pool_rwlock, flags);
->  		goto exit;
-> +	}
-> +
-> +	/* Take note if another stack pool needs to be allocated. */
-> +	if (new_pool_required)
-> +		need_alloc = true;
-> +
-> +	read_unlock_irqrestore(&pool_rwlock, flags);
->  
->  	/*
-> -	 * Check if another stack pool needs to be allocated. If so, allocate
-> -	 * the memory now: we won't be able to do that under the lock.
-> -	 *
-> -	 * smp_load_acquire() pairs with smp_store_release() in
-> -	 * depot_update_pools() and depot_keep_new_pool().
-> +	 * Allocate memory for a new pool if required now:
-> +	 * we won't be able to do that under the lock.
->  	 */
-> -	if (unlikely(can_alloc && smp_load_acquire(&new_pool_required))) {
-> +	if (unlikely(can_alloc && need_alloc)) {
->  		/*
->  		 * Zero out zone modifiers, as we don't have specific zone
->  		 * requirements. Keep the flags related to allocation in atomic
-> @@ -494,7 +498,7 @@ depot_stack_handle_t __stack_depot_save(unsigned long *entries,
->  			prealloc = page_address(page);
->  	}
->  
-> -	raw_spin_lock_irqsave(&pool_lock, flags);
-> +	write_lock_irqsave(&pool_rwlock, flags);
->  
->  	found = find_stack(*bucket, entries, nr_entries, hash);
->  	if (!found) {
-> @@ -503,11 +507,7 @@ depot_stack_handle_t __stack_depot_save(unsigned long *entries,
->  
->  		if (new) {
->  			new->next = *bucket;
-> -			/*
-> -			 * smp_store_release() pairs with smp_load_acquire()
-> -			 * from |bucket| above.
-> -			 */
-> -			smp_store_release(bucket, new);
-> +			*bucket = new;
->  			found = new;
->  		}
->  	} else if (prealloc) {
-> @@ -518,7 +518,7 @@ depot_stack_handle_t __stack_depot_save(unsigned long *entries,
->  		depot_keep_new_pool(&prealloc);
->  	}
->  
-> -	raw_spin_unlock_irqrestore(&pool_lock, flags);
-> +	write_unlock_irqrestore(&pool_rwlock, flags);
->  exit:
->  	if (prealloc) {
->  		/* Stack depot didn't use this memory, free it. */
-> @@ -542,6 +542,7 @@ unsigned int stack_depot_fetch(depot_stack_handle_t handle,
->  			       unsigned long **entries)
->  {
->  	struct stack_record *stack;
-> +	unsigned long flags;
->  
->  	*entries = NULL;
->  	/*
-> @@ -553,8 +554,12 @@ unsigned int stack_depot_fetch(depot_stack_handle_t handle,
->  	if (!handle || stack_depot_disabled)
->  		return 0;
->  
-> +	read_lock_irqsave(&pool_rwlock, flags);
-> +
->  	stack = depot_fetch_stack(handle);
->  
-> +	read_unlock_irqrestore(&pool_rwlock, flags);
-> +
->  	*entries = stack->entries;
->  	return stack->size;
->  }
-> -- 
-> 2.25.1
-> 
+KVM selftest code can then map the mock device resource to KVM memslots
+to check if any error encountered. After VM shutdown, mock device
+resource's page reference counters are checked to ensure KVM does not hold
+extra reference count during memslot add/removal.
 
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+---
+ lib/Kconfig.debug               |  14 ++
+ lib/Makefile                    |   1 +
+ lib/test_kvm_mock_device.c      | 281 ++++++++++++++++++++++++++++++++
+ lib/test_kvm_mock_device_uapi.h |  16 ++
+ 4 files changed, 312 insertions(+)
+ create mode 100644 lib/test_kvm_mock_device.c
+ create mode 100644 lib/test_kvm_mock_device_uapi.h
+
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index cc7d53d9dc01..c0fd4b53db89 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2922,6 +2922,20 @@ config TEST_HMM
+ 
+ 	  If unsure, say N.
+ 
++config TEST_KVM_MOCK_DEVICE
++	tristate "Test page-backended BAR to KVM mock device"
++	help
++	  This is a mock KVM assigned device whose MMIO BAR is backended by
++	  struct page.
++	  Say M here if you want to build the "test_kvm_mock_device" module.
++	  Doing so will allow you to run KVM selftest
++	  tools/testing/selftest/kvm/set_memory_region_io, which tests
++	  functionality of adding page-backended MMIO memslots in KVM and
++	  ensures that reference count of the backend pages are correctly
++	  handled.
++
++	  If unsure, say N.
++
+ config TEST_FREE_PAGES
+ 	tristate "Test freeing pages"
+ 	help
+diff --git a/lib/Makefile b/lib/Makefile
+index 6b09731d8e61..894a185bbabd 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -83,6 +83,7 @@ obj-$(CONFIG_TEST_STATIC_KEYS) += test_static_key_base.o
+ obj-$(CONFIG_TEST_DYNAMIC_DEBUG) += test_dynamic_debug.o
+ obj-$(CONFIG_TEST_PRINTF) += test_printf.o
+ obj-$(CONFIG_TEST_SCANF) += test_scanf.o
++obj-$(CONFIG_TEST_KVM_MOCK_DEVICE) += test_kvm_mock_device.o
+ 
+ obj-$(CONFIG_TEST_BITMAP) += test_bitmap.o
+ ifeq ($(CONFIG_CC_IS_CLANG)$(CONFIG_KASAN),yy)
+diff --git a/lib/test_kvm_mock_device.c b/lib/test_kvm_mock_device.c
+new file mode 100644
+index 000000000000..4e7527c230cd
+--- /dev/null
++++ b/lib/test_kvm_mock_device.c
+@@ -0,0 +1,281 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * This is a module to test KVM DEVICE MMIO PASSTHROUGH.
++ */
++#include <linux/init.h>
++#include <linux/fs.h>
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/cdev.h>
++#include <linux/device.h>
++#include <linux/mm.h>
++
++#include "test_kvm_mock_device_uapi.h"
++
++/* kvm mock device */
++struct kvm_mock_dev {
++	dev_t devt;
++	struct device device;
++	struct cdev cdev;
++};
++static struct kvm_mock_dev kvm_mock_dev;
++
++struct kvm_mock_device {
++	bool compound;
++	struct page *resource;
++	u64 bar_size;
++	int order;
++	int *ref_array;
++	struct mutex lock;
++	bool prepared;
++};
++
++static bool opened;
++
++#define BAR_SIZE 0x200000UL
++#define DEFAULT_COMPOUND true
++
++static vm_fault_t kvm_mock_device_mmap_fault(struct vm_fault *vmf)
++{
++	struct vm_area_struct *vma = vmf->vma;
++	struct kvm_mock_device *kmdev = vma->vm_private_data;
++	struct page *p = kmdev->resource;
++	vm_fault_t ret = VM_FAULT_NOPAGE;
++	unsigned long addr;
++	int i;
++
++	for (addr = vma->vm_start, i = vma->vm_pgoff; addr < vma->vm_end;
++	     addr += PAGE_SIZE, i++) {
++
++		ret = vmf_insert_pfn(vma, addr, page_to_pfn(p + i));
++		if (ret == VM_FAULT_NOPAGE)
++			continue;
++
++		zap_vma_ptes(vma, vma->vm_start, vma->vm_end - vma->vm_start);
++		return ret;
++
++	}
++	return ret;
++}
++
++static const struct vm_operations_struct kvm_mock_device_mmap_ops = {
++	.fault = kvm_mock_device_mmap_fault,
++};
++
++static int kvm_mock_device_fops_mmap(struct file *file, struct vm_area_struct *vma)
++{
++	struct kvm_mock_device *kmdev = file->private_data;
++	u64 offset, req_len;
++	int ret = 0;
++
++	mutex_lock(&kmdev->lock);
++	if (!kmdev->prepared) {
++		ret = -ENODEV;
++		goto out;
++	}
++
++	offset = vma->vm_pgoff << PAGE_SHIFT;
++	req_len = vma->vm_end - vma->vm_start;
++	if (offset + req_len > BAR_SIZE) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	vm_flags_set(vma, VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP);
++	vma->vm_ops = &kvm_mock_device_mmap_ops;
++	vma->vm_private_data = kmdev;
++out:
++	mutex_unlock(&kmdev->lock);
++	return ret;
++}
++
++static int kvm_mock_device_prepare_resource(struct kvm_mock_device *kmdev)
++{
++	gfp_t gfp_flags = GFP_KERNEL | __GFP_ZERO;
++	unsigned int order = kmdev->order;
++	unsigned long count = 1 << order;
++	unsigned long i;
++	struct page *p;
++	int ret;
++
++	mutex_lock(&kmdev->lock);
++	if (kmdev->prepared) {
++		ret = -EBUSY;
++		goto out;
++	}
++
++	if (kmdev->compound)
++		gfp_flags |= __GFP_COMP;
++
++	p = alloc_pages_node(0, gfp_flags, order);
++	if (!p) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	kmdev->ref_array = kmalloc_array(count, sizeof(kmdev->ref_array),
++					 GFP_KERNEL_ACCOUNT);
++	if (!kmdev->ref_array) {
++		__free_pages(p, order);
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	for (i = 0; i < count; i++)
++		kmdev->ref_array[i] = page_ref_count(p + i);
++
++	kmdev->resource = p;
++	kmdev->prepared = true;
++out:
++	mutex_unlock(&kmdev->lock);
++	return ret;
++}
++
++static int kvm_mock_device_check_resource_ref(struct kvm_mock_device *kmdev)
++{
++	u32 i, count = 1 << kmdev->order;
++	struct page *p = kmdev->resource;
++	int inequal = 0;
++
++	mutex_lock(&kmdev->lock);
++	if (!kmdev->prepared) {
++		mutex_unlock(&kmdev->lock);
++		return -ENODEV;
++	}
++
++	for (i = 0; i < count; i++) {
++		if (kmdev->ref_array[i] == page_ref_count(p + i))
++			continue;
++
++		pr_err("kvm test device check resource page %d old ref=%d new ref=%d\n",
++			i, kmdev->ref_array[i], page_ref_count(p + i));
++		inequal++;
++	}
++	mutex_unlock(&kmdev->lock);
++
++	return inequal;
++}
++
++static int kvm_mock_device_fops_open(struct inode *inode, struct file *filp)
++{
++	struct kvm_mock_device *kmdev;
++
++	if (opened)
++		return -EBUSY;
++
++	kmdev = kzalloc(sizeof(*kmdev), GFP_KERNEL_ACCOUNT);
++	if (!kmdev)
++		return -ENOMEM;
++
++	kmdev->compound = DEFAULT_COMPOUND;
++	kmdev->bar_size = BAR_SIZE;
++	kmdev->order = get_order(kmdev->bar_size);
++	mutex_init(&kmdev->lock);
++	filp->private_data = kmdev;
++
++	opened = true;
++	return 0;
++}
++
++static int kvm_mock_device_fops_release(struct inode *inode, struct file *filp)
++{
++	struct kvm_mock_device *kmdev = filp->private_data;
++
++	if (kmdev->prepared)
++		__free_pages(kmdev->resource, kmdev->order);
++	mutex_destroy(&kmdev->lock);
++	kfree(kmdev->ref_array);
++	kfree(kmdev);
++	opened = false;
++	return 0;
++}
++
++static long kvm_mock_device_fops_unlocked_ioctl(struct file *filp,
++					unsigned int command,
++					unsigned long arg)
++{
++	struct kvm_mock_device *kmdev = filp->private_data;
++	int r;
++
++	switch (command) {
++	case KVM_MOCK_DEVICE_GET_BAR_SIZE: {
++		u64 bar_size;
++
++		bar_size = kmdev->bar_size;
++		r = put_user(bar_size, (u64 __user *)arg);
++		break;
++	}
++	case KVM_MOCK_DEVICE_PREPARE_RESOURCE: {
++		u32 compound;
++
++		r = get_user(compound, (u32 __user *)arg);
++		if (r)
++			return r;
++
++		kmdev->compound = compound;
++		r = kvm_mock_device_prepare_resource(kmdev);
++		break;
++
++	}
++	case KVM_MOCK_DEVICE_CHECK_BACKEND_REF: {
++		int inequal;
++
++		inequal = kvm_mock_device_check_resource_ref(kmdev);
++
++		if (inequal < 0)
++			return inequal;
++
++		r = put_user(inequal, (u32 __user *)arg);
++		break;
++	}
++	default:
++		r = -EOPNOTSUPP;
++	}
++
++	return r;
++}
++
++
++static const struct file_operations kvm_mock_device_fops = {
++	.open		= kvm_mock_device_fops_open,
++	.release	= kvm_mock_device_fops_release,
++	.mmap		= kvm_mock_device_fops_mmap,
++	.unlocked_ioctl = kvm_mock_device_fops_unlocked_ioctl,
++	.llseek		= default_llseek,
++	.owner		= THIS_MODULE,
++};
++
++
++static int __init kvm_mock_device_test_init(void)
++{
++	int ret;
++
++	ret = alloc_chrdev_region(&kvm_mock_dev.devt, 0, 1, "KVM-MOCK-DEVICE");
++	if (ret)
++		goto out;
++
++	cdev_init(&kvm_mock_dev.cdev, &kvm_mock_device_fops);
++	kvm_mock_dev.cdev.owner = THIS_MODULE;
++	device_initialize(&kvm_mock_dev.device);
++	kvm_mock_dev.device.devt =  MKDEV(MAJOR(kvm_mock_dev.devt), 0);
++	ret = dev_set_name(&kvm_mock_dev.device, "kvm_mock_device");
++	if (ret)
++		goto out;
++
++	ret = cdev_device_add(&kvm_mock_dev.cdev, &kvm_mock_dev.device);
++	if (ret)
++		goto out;
++
++out:
++	return ret;
++}
++
++static void __exit kvm_mock_device_test_exit(void)
++{
++	cdev_device_del(&kvm_mock_dev.cdev, &kvm_mock_dev.device);
++	unregister_chrdev_region(kvm_mock_dev.devt, 1);
++}
++
++module_init(kvm_mock_device_test_init);
++module_exit(kvm_mock_device_test_exit);
++MODULE_LICENSE("GPL");
+diff --git a/lib/test_kvm_mock_device_uapi.h b/lib/test_kvm_mock_device_uapi.h
+new file mode 100644
+index 000000000000..227d0bf1d430
+--- /dev/null
++++ b/lib/test_kvm_mock_device_uapi.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * This is a module to help test KVM guest access of KVM mock device's BAR,
++ * whose backend is mapped to pages.
++ */
++#ifndef _LIB_TEST_KVM_MOCK_DEVICE_UAPI_H
++#define _LIB_TEST_KVM_MOCK_DEVICE_UAPI_H
++
++#include <linux/types.h>
++#include <linux/ioctl.h>
++
++#define KVM_MOCK_DEVICE_GET_BAR_SIZE _IOR('M', 0x00, u64)
++#define KVM_MOCK_DEVICE_PREPARE_RESOURCE _IOWR('M', 0x01, u32)
++#define KVM_MOCK_DEVICE_CHECK_BACKEND_REF _IOWR('M', 0x02, u32)
++
++#endif /* _LIB_TEST_KVM_MOCK_DEVICE_UAPI_H */
 -- 
-Oscar Salvador
-SUSE Labs
+2.17.1
+
