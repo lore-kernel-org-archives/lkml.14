@@ -1,147 +1,90 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBCC91C683
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 18:12:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517AE1C68A;
+	Wed,  3 Jan 2024 18:15:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="NjhhFPYs"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5559bb6b29dso5575425a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 10:12:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1704305547; x=1704910347; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/OAdStb2L8zryYFpyn7IXiVtaAM2rtXpmPffWXoWPII=;
-        b=NjhhFPYsOyNDFiBDl9i5ycZ7r71PtHSavuqTK6u2LrR1roqKWAB3Hcqzcx8KsL/I52
-         aO8pMdJNiMaT6rk2QJ8Ut4vEVr+Gw+CtnwWG63CiEtb65kvyPqbE9ZKDO/u2c2trI3iS
-         bTtfclLw/vFca6cZeUUq0gSUMwVtgVY2SYHlY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704305547; x=1704910347;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/OAdStb2L8zryYFpyn7IXiVtaAM2rtXpmPffWXoWPII=;
-        b=nYBRNfHmBTCVd0cJlqUKfzPi+FCKcVgL0anGCVrWlzBiW2x9FWeyM2G0L20jdqi97b
-         5Ned0+Wlvvj1RfW/5o+zitR4Uz3w/4oXJJKkZy9aGW5v4mPB9P6dyymADViMWQc9mm5w
-         G0MMRxipl5+K4xAV5+CUdWR0dloJLOeCksQ1S96werUNlB0aNJnGVhH6z3DQbpCDn0Ec
-         36Sn21tGG914nlsvyweyZqDUPG5TK+ETKbLXPqAMrNFRpVjetETOFF3j4p8Hx9RKnU/S
-         LU6JzOFax3H0EMTDLVB9MRMIS79hqfsaorSmtjjl85O2ZzinGKNQpMoXFgxzMr9taYse
-         ghJg==
-X-Gm-Message-State: AOJu0YwR1PqdDcCIjwuVYUAkfeydeIYELvvzUaxqeI7lbdfQyb5Ic7eb
-	9wRv7mQ3WDRDYpB+pkpynxDkqBB+eAhQsftm80OZZhM9tIPIC9ye
-X-Google-Smtp-Source: AGHT+IHY7KNgOEOg3ufLPvtroPrKKiJOo4A5zhi9c/8u2nGJUeaegodZjfXVSSjD6wTGknqhDjj62Q==
-X-Received: by 2002:a17:907:26cd:b0:a27:7da8:aaee with SMTP id bp13-20020a17090726cd00b00a277da8aaeemr5009775ejc.12.1704305546872;
-        Wed, 03 Jan 2024 10:12:26 -0800 (PST)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id lo2-20020a170906fa0200b00a26ae4fb50asm12271688ejb.89.2024.01.03.10.12.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jan 2024 10:12:26 -0800 (PST)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a2864eb81c9so184280566b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 10:12:26 -0800 (PST)
-X-Received: by 2002:a17:906:5a5c:b0:a23:6708:cdd0 with SMTP id
- my28-20020a1709065a5c00b00a236708cdd0mr6801033ejc.88.1704305545696; Wed, 03
- Jan 2024 10:12:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hgiGavpj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AE03C433C7;
+	Wed,  3 Jan 2024 18:15:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704305744;
+	bh=AUXrWa4gez8USeQ48h8WOwSAUbB123G3JwiEuIp/YrM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hgiGavpjnyWCBS+MOW1xqN+TMQo7IoZrUXbaSExkf51Dv66D5lZxSzuU2DvD0JyoS
+	 KGY7vBvcsByvQkjkaYqD4P4Xd/QSsl8qeEjNDFm4Ru87DYlzs0VJj1g5i7lVaWMvjy
+	 2wCLrDZvwV6CNqDyih5ZpZgyo2gnzUtMuhSrHLi+eSRawL+KIV5Oiyang1guGb6Awj
+	 hsEOp66LkLFXgK9VAvRDQ9rNq9N/lUDMdFXG1G0sLczCk0mNF0xzPw4qx4Egb/DsTo
+	 bSqqXS9+WWEdDgRU4BDWGOuhX27W4dna2kmVIIyOHnau9VX2WvOkSjYnDGmht2Y/mp
+	 39wEn5K3GbyPw==
+Date: Wed, 3 Jan 2024 11:15:42 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org
+Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	patches@lists.linux.dev
+Subject: Re: [PATCH] x86/tools: objdump_reformat.awk: Skip bad instructions
+ from llvm-objdump
+Message-ID: <20240103181542.GA629234@dev-arch.thelio-3990X>
+References: <20231205-objdump_reformat-awk-handle-llvm-objdump-bad_expr-v1-1-b4a74f39396f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240103102553.17a19cea@gandalf.local.home>
-In-Reply-To: <20240103102553.17a19cea@gandalf.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 3 Jan 2024 10:12:08 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whrRobm82kcjwj625bZrdK+vvEo0B5PBzP+hVaBcHUkJA@mail.gmail.com>
-Message-ID: <CAHk-=whrRobm82kcjwj625bZrdK+vvEo0B5PBzP+hVaBcHUkJA@mail.gmail.com>
-Subject: Re: [PATCH] eventfs: Stop using dcache_readdir() for getdents()
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231205-objdump_reformat-awk-handle-llvm-objdump-bad_expr-v1-1-b4a74f39396f@kernel.org>
 
-On Wed, 3 Jan 2024 at 07:24, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> Instead, just have eventfs have its own iterate_shared callback function
-> that will fill in the dent entries. This simplifies the code quite a bit.
+Ping? I am still seeing this issue.
 
-Much better. Now eventfs looks more like a real filesystem, and less
-like an eldritch horror monster that is parts of dcache tackled onto a
-pseudo-filesystem.
-
-However, one request, and one nit:
-
-> Also, remove the "lookup" parameter to the create_file/dir_dentry() and
-> always have it return a dentry that has its ref count incremented, and
-> have the caller call the dput. This simplifies that code as well.
-
-Can you please do that as a separate patch, where the first patch just
-cleans up the directory iteration, and the second patch then goes "now
-there are no more callers that have the 'lookup' argument set to
-false".
-
-Because as-is, the patch is kind of two things mixed up.
-
-The small nit is this:
-
-> +static int eventfs_iterate(struct file *file, struct dir_context *ctx)
->  {
-> +       /*
-> +        * Need to create the dentries and inodes to have a consistent
-> +        * inode number.
-> +        */
->         list_for_each_entry_srcu(ei_child, &ei->children, list,
->                                  srcu_read_lock_held(&eventfs_srcu)) {
-> -               d = create_dir_dentry(ei, ei_child, parent, false);
-> -               if (d) {
-> -                       ret = add_dentries(&dentries, d, cnt);
-> -                       if (ret < 0)
-> -                               break;
-> -                       cnt++;
-> +
-> +               if (ei_child->is_freed)
-> +                       continue;
-> +
-> +               name = ei_child->name;
-> +
-> +               dentry = create_dir_dentry(ei, ei_child, ei_dentry);
-> +               if (!dentry)
-> +                       goto out;
-> +               ino = dentry->d_inode->i_ino;
-> +               dput(dentry);
-> +
-> +               if (c > 0) {
-> +                       c--;
-> +                       continue;
->                 }
-
-Just move this "is the position before this name" up to the top of the
-loop. Even above the "is_freed" part.
-
-Let's just always count all the entries in the child list.
-
-And same for the ei->nr_entries loop:
-
->         for (i = 0; i < ei->nr_entries; i++) {
-
-where there's no point in creating that dentry just to look up the
-inode number, only to then decide "Oh, we already iterated past this
-part, so let's not do anything with it".
-
-This wouldn't seem to matter much with a big enough getdents buffer
-(which is the normal user level behavior), but it actually does,
-because we don't keep track of "we have read to the end of the
-directory".
-
-So every readdir ends up effectively doing getdents at least twice:
-once to read the directory entries, and then once to just be told
-"that was all".
-
-End result: you should strive very hard to *not* waste time on the
-directory entries that have already been read, and are less than
-'ctx->pos'.
-
-             Linus
+On Tue, Dec 05, 2023 at 12:53:08PM -0700, Nathan Chancellor wrote:
+> When running the instruction decoder selftest with LLVM=1 +
+> CONFIG_PVH=y, there is a series of warnings:
+> 
+>   arch/x86/tools/insn_decoder_test: warning: Found an x86 instruction decoder bug, please report this.
+>   arch/x86/tools/insn_decoder_test: warning: ffffffff81000050     ea                      <unknown>
+>   arch/x86/tools/insn_decoder_test: warning: objdump says 1 bytes, but insn_get_length() says 7
+>   arch/x86/tools/insn_decoder_test: warning: Decoded and checked 7214721 instructions with 1 failures
+> 
+> GNU objdump outputs "(bad)" instead of "<unknown>", which is already
+> handled in the bad_expr regex, so there is no warning.
+> 
+>   $ objdump -d arch/x86/platform/pvh/head.o | grep -E '50:\s+ea'
+>   50:   ea                      (bad)
+> 
+>   $ llvm-objdump -d arch/x86/platform/pvh/head.o | grep -E '50:\s+ea'
+>         50: ea                            <unknown>
+> 
+> Add "<unknown>" to the bad_expr regex to clear up the warning, allowing
+> the instruction decoder selftest to fully pass with llvm-objdump.
+> 
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> ---
+>  arch/x86/tools/objdump_reformat.awk | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/tools/objdump_reformat.awk b/arch/x86/tools/objdump_reformat.awk
+> index a4120d907277..20b08a6c4d33 100644
+> --- a/arch/x86/tools/objdump_reformat.awk
+> +++ b/arch/x86/tools/objdump_reformat.awk
+> @@ -11,7 +11,7 @@ BEGIN {
+>  	prev_addr = ""
+>  	prev_hex = ""
+>  	prev_mnemonic = ""
+> -	bad_expr = "(\\(bad\\)|^rex|^.byte|^rep(z|nz)$|^lock$|^es$|^cs$|^ss$|^ds$|^fs$|^gs$|^data(16|32)$|^addr(16|32|64))"
+> +	bad_expr = "(\\(bad\\)|<unknown>|^rex|^.byte|^rep(z|nz)$|^lock$|^es$|^cs$|^ss$|^ds$|^fs$|^gs$|^data(16|32)$|^addr(16|32|64))"
+>  	fwait_expr = "^9b[ \t]*fwait"
+>  	fwait_str="9b\tfwait"
+>  }
+> 
+> ---
+> base-commit: 5225952d74d43e4c054731c74b8afd700b23a94a
+> change-id: 20231205-objdump_reformat-awk-handle-llvm-objdump-bad_expr-9e74cd2a08b5
+> 
+> Best regards,
+> -- 
+> Nathan Chancellor <nathan@kernel.org>
+> 
+> 
