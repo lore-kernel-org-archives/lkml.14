@@ -1,34 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1409F1C283;
-	Wed,  3 Jan 2024 17:22:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17931C280;
+	Wed,  3 Jan 2024 17:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="id+Jtz1l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49332C433C8;
-	Wed,  3 Jan 2024 17:22:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704302579;
-	bh=3iyOZymBQYPfh3A81OW/8BHqC2kwA+1c8I7WqYrHYY8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=id+Jtz1laHJDT6jC/h8FzAg0YKDKd0ybFlwNZ0ZusovfviIq9YSUjmSOsw6H7w9mA
-	 cE0hmYXoqQHfAnFSnJ503UZnBguSbdBHrWYc6Y9K2X5jn2w59zLnDoBwxUkWQQ+mBH
-	 6rKLpvQfups/h61P3D3gmJbSbOBHU7wDW7LCk5M0wZ83pjKo1PxIsafk6q6w9cROmm
-	 dZME5g/+WiX+Qd5SQQp52DMNwDO8wfZgu3xO4DdxxX/HN7QzfHSuzGNAtl+dJmb4Ls
-	 380GNdSq9I2cUl8bZ3+FwUwQqIFlKwnbnPloQCQScW+EeEiA0uRDoHKdFC94fabzCi
-	 RD5jwsd1yMdLg==
-Date: Wed, 3 Jan 2024 17:22:54 +0000
-From: Simon Horman <horms@kernel.org>
-To: Zhipeng Lu <alexious@zju.edu.cn>
-Cc: Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maor Gottlieb <maorg@mellanox.com>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net/mlx5e: fix a double-free in arfs_create_groups
-Message-ID: <20240103172254.GB31813@kernel.org>
-References: <20231224081348.3535146-1-alexious@zju.edu.cn>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MJtJBiNZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704302816; x=1735838816;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=EJE3hRpgK0X23wIsKdiyvAzh6pSGgJFYMhCfGWSeSWc=;
+  b=MJtJBiNZoMJMrCXxgFmqDk221JUfRAy3g1DTgKZkkTYsYBbpFL8LqdKK
+   Hq6D2B7N8oA+bclF+KQP51jyvNRQljZleend+40frvaXHGZst4JoK8ajS
+   oTTyWu8XmTftWa9GKDONFx/VyBg+/1J+tc2uvTKuJICS3a45/IxCCEfhC
+   2XUf7Vldi4c5Mx570ga8GGRVEeLYvfkpP0P/11vl+EKi9Awv/2YByVaUL
+   25RCODabia2S0UILg/sJjALo1+lMUT1/ahHCHN6eAYgccuIhSAbbyM8Xo
+   OaoBmcekpKCz4bbWmMT68WbOnSvcUJxyK+lA1kN4j8QmilKSxs1Q4zxXh
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="18561802"
+X-IronPort-AV: E=Sophos;i="6.04,328,1695711600"; 
+   d="scan'208";a="18561802"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 09:26:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="953283636"
+X-IronPort-AV: E=Sophos;i="6.04,328,1695711600"; 
+   d="scan'208";a="953283636"
+Received: from sgruszka-mobl.ger.corp.intel.com (HELO localhost) ([10.252.36.57])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 09:26:51 -0800
+Date: Wed, 3 Jan 2024 16:02:34 +0100
+From: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Chen Yu <yu.c.chen@intel.com>, Len Brown <len.brown@intel.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Zhang Rui <rui.zhang@intel.com>, Zhao Liu <zhao1.liu@intel.com>,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] thermal: intel: hfi: Add a suspend notifier
+Message-ID: <ZZV3CgnaWznmzFKF@linux.intel.com>
+References: <20240103041459.11113-1-ricardo.neri-calderon@linux.intel.com>
+ <20240103041459.11113-5-ricardo.neri-calderon@linux.intel.com>
+ <CAJZ5v0jSERoeMki9ZvWtTqiZidETeo1Xm_Qb0Oo2qRG0PMrSJQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,49 +53,71 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231224081348.3535146-1-alexious@zju.edu.cn>
+In-Reply-To: <CAJZ5v0jSERoeMki9ZvWtTqiZidETeo1Xm_Qb0Oo2qRG0PMrSJQ@mail.gmail.com>
 
-On Sun, Dec 24, 2023 at 04:13:48PM +0800, Zhipeng Lu wrote:
-> When `in` allocated by kvzalloc fails, arfs_create_groups will free
-> ft->g and return an error. However, arfs_create_table, the only caller of
-> arfs_create_groups, will hold this error and call to
-> mlx5e_destroy_flow_table, in which the ft->g will be freed again.
+On Wed, Jan 03, 2024 at 02:34:26PM +0100, Rafael J. Wysocki wrote:
+> > +static int hfi_pm_notify(struct notifier_block *nb,
+> > +                        unsigned long mode, void *unused)
+> > +{
+> > +       struct hfi_cpu_info *info = &per_cpu(hfi_cpu_info, 0);
+> > +       struct hfi_instance *hfi = info->hfi_instance;
+> > +       int ret = 0;
+> > +
+> > +       /* HFI may not be in use. */
+> > +       if (!hfi)
+> > +               return ret;
+> > +
+> > +       mutex_lock(&hfi_instance_lock);
+> > +       /*
+> > +        * Only handle the HFI instance of the package of the boot CPU. The
+> > +        * instances of other packages are handled in the CPU hotplug callbacks.
+> > +        */
+> > +       switch (mode) {
+> > +       case PM_HIBERNATION_PREPARE:
+> > +       case PM_SUSPEND_PREPARE:
+> > +       case PM_RESTORE_PREPARE:
+> > +               ret = smp_call_function_single(0, hfi_do_disable, NULL, true);
+> > +               break;
+> > +
+> > +       case PM_POST_RESTORE:
+> > +       case PM_POST_HIBERNATION:
+> > +       case PM_POST_SUSPEND:
+> > +               ret = smp_call_function_single(0, hfi_do_enable, hfi, true);
+> > +               break;
 > 
-> Fixes: 1cabe6b0965e ("net/mlx5e: Create aRFS flow tables")
-> Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+> Because this handles the boot CPU only, one has to wonder if it should
+> be a syscore op rather than a PM notifier.
+> 
+> It does not sleep AFAICS, so it can run in that context, and it is
+> guaranteed to run on the boot CPU then, so it is not necessary to
+> force that.  Moreover, syscore ops are guaranteed to be
+> non-concurrent, so locking is not needed.
 
-Thanks,
+There are below warnings in smp_call_function_single() :
 
-I agree this addresses the issue that you describe.
-And as a minimal fix it looks good.
+        /*
+         * Can deadlock when called with interrupts disabled.
+         * We allow cpu's that are not yet online though, as no one else can
+         * send smp call function interrupt to this cpu and as such deadlocks
+         * can't happen.
+         */
+        WARN_ON_ONCE(cpu_online(this_cpu) && irqs_disabled()
+                     && !oops_in_progress);
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+        /*
+         * When @wait we can deadlock when we interrupt between llist_add() and
+         * arch_send_call_function_ipi*(); when !@wait we can deadlock due to
+         * csd_lock() on because the interrupt context uses the same csd
+         * storage.
+         */
+        WARN_ON_ONCE(!in_task());
 
-However, I would like to suggest that some clean-up work could
-take place as a follow-up.
+And this one in syscore_suspend(): 
 
-I think that the error handling in this area of the code
-is rather fragile. This is because initialisation is not necessarily
-unwound on error within the function that initialisation occurs.
+        WARN_ONCE(!irqs_disabled(),
+                "Interrupts enabled before system core suspend.\n");
+                                                                     
+So seems they are not compatible.
 
-I think it would be better if arfs_create_groups():
-
-1. Released allocates resources it allocates, including ft->g and
-   elements of ft->g, on error.
-2. This was achieved by using a goto unwind ladder.
-3. The caller treated ft->g as uninitialised if
-   arfs_create_groups fails.
-
-Likewise, I think that:
-
-* arfs_create_groups, should initialise ft->num_groups
-
-And further, logic similar to the above should guide
-how arfs_create_table() initialises ft->t and cleans it
-up on error.
-
-I did not look at the code beyond the scope described above.
-But the above are general principles that may well apply in
-other nearby code too.
-
-...
+Regards
+Stanislaw
