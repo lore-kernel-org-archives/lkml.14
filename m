@@ -1,65 +1,72 @@
-Received: from viti.kaiser.cx (viti.kaiser.cx [85.214.81.225])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E3B18EA1
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 11:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
-Received: from [185.206.209.216] (helo=martin-debian-2.paytec.ch)
-	by viti.kaiser.cx with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.89)
-	(envelope-from <martin@kaiser.cx>)
-	id 1rKz2s-0006tr-49; Wed, 03 Jan 2024 12:04:22 +0100
-From: Martin Kaiser <martin@kaiser.cx>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH] ARM: debug: fix DEBUG_UNCOMPRESS help for !MULTIPLATFORM
-Date: Wed,  3 Jan 2024 12:04:09 +0100
-Message-Id: <20240103110409.167132-1-martin@kaiser.cx>
-X-Mailer: git-send-email 2.39.2
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92A1F18EA1;
+	Wed,  3 Jan 2024 11:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A9F4BC15;
+	Wed,  3 Jan 2024 03:13:47 -0800 (PST)
+Received: from [10.57.85.107] (unknown [10.57.85.107])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8C76C3F7A6;
+	Wed,  3 Jan 2024 03:13:00 -0800 (PST)
+Message-ID: <062556a9-bf24-4f92-9c37-1723984c5127@arm.com>
+Date: Wed, 3 Jan 2024 11:14:18 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 0/6] thermal: netlink: Redefine the API and drop unused
+ code
+Content-Language: en-US
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Linux PM <linux-pm@vger.kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Linux ACPI <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <4556052.LvFx2qVVIh@kreacher>
+ <CAJZ5v0hRGKjwDv0VLw550CLfUuNGaVXxmvcpbFhS=PCPqY0n4A@mail.gmail.com>
+ <b670b0bc-79ea-4be7-a78d-644b344be408@arm.com>
+ <CAJZ5v0jcaa8S7g+kKCC9yHHW-7BN0TLWZecOhdNMpHWYFExgHw@mail.gmail.com>
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <CAJZ5v0jcaa8S7g+kKCC9yHHW-7BN0TLWZecOhdNMpHWYFExgHw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Commit 84fc86360623 ("ARM: make ARCH_MULTIPLATFORM user-visible") modified
-DEBUG_UNCOMPRESS to prevent using it with multiplatform kernels.
 
-Update the help text, remove references to multiplatform.
 
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
----
- arch/arm/Kconfig.debug | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+On 1/3/24 10:24, Rafael J. Wysocki wrote:
+> Hi Lukasz,
+> 
+> On Wed, Jan 3, 2024 at 9:10 AM Lukasz Luba <lukasz.luba@arm.com> wrote:
+>>
+>> Hi Rafael,
+>>
+>> On 1/2/24 13:24, Rafael J. Wysocki wrote:
+>>> On Fri, Dec 15, 2023 at 9:02 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>>>>
+>>>> Hi Everyone,
+>>>>
+>>>> This patch series redefines the thermal netlink API to be somewhat more
+>>>> convenient to use on the caller side and drops some unused code from
+>>>> the thermal netlink library.
+>>>>
+>>>> Please refer to the individual patch changelogs for details.
+>>>
+>>> No feedback, so this series doesn't appear to be controversial, and I
+>>> would like to get it into 6.8.
+>>>
+>>> Tentatively queuing it up and please let me know if it is problematic.
+>>>
+>>> Thanks!
+>>>
+>>
+>> I agree, these are not controversial patches, so IMO queuing them is OK.
+>> I took a glance at them, but I can do the proper review today if you
+>> like.
+> 
+> Well, if you can allocate some time for that, it would be appreciated!
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index fc2b41d41447..5fbbac1b708b 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -1809,15 +1809,8 @@ config DEBUG_UNCOMPRESS
- 		     (!DEBUG_TEGRA_UART || !ZBOOT_ROM) && \
- 		     !DEBUG_BRCMSTB_UART && !DEBUG_SEMIHOSTING
- 	help
--	  This option influences the normal decompressor output for
--	  multiplatform kernels.  Normally, multiplatform kernels disable
--	  decompressor output because it is not possible to know where to
--	  send the decompressor output.
--
--	  When this option is set, the selected DEBUG_LL output method
--	  will be re-used for normal decompressor output on multiplatform
--	  kernels.
--	  
-+	  Say Y here to enable debug output in the decompressor code, using
-+	  the selected DEBUG_LL output method.
- 
- config UNCOMPRESS_INCLUDE
- 	string
--- 
-2.39.2
-
+Sure, no problem, I'll do that today.
