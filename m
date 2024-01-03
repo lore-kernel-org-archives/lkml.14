@@ -1,87 +1,127 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1BA9182B9;
-	Wed,  3 Jan 2024 07:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE701803D
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 07:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="V6HHqHGq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1704268636; x=1704873436; i=markus.elfring@web.de;
-	bh=HVKTWztEQ+2dMi/RMBadEFDB/54G8PYPCBjeOYxfJGI=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=V6HHqHGq8/7QT207WLZdx2bQYB/oSpbSdwuhfzkWlRqQHYHhDSW3E7nM2WDUP5FM
-	 pQ4cC4gwkxCe3cdMJGaiiATvMKn7Z4vh+0IK/4JcRG+nkBD6KjY8GPi70FpzpA8DC
-	 wfXAmfHHg+QOGxvp3hOsJ90ZWrTOrwcgSiMPv+MpLIubIaIffix2ET2HvV3JNtW66
-	 indm+hQMXcl24I3LJxkIYyEyRt7RKplsVh3lPTClA94DmGCeR6WfLao5cvOWGRpnI
-	 pV+QFl5Q6CzpKdGwjirtQpqf51mqiggZE/AsKVY+jaYRKrXdM2Ef0azaBTPtr1oQV
-	 Mv3Ea+c2EmYEH40X4Q==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.88.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N4627-1rC6O50EJF-00zso0; Wed, 03
- Jan 2024 08:57:16 +0100
-Message-ID: <8175d102-e1ba-4956-a54a-e734f4d99ecf@web.de>
-Date: Wed, 3 Jan 2024 08:56:50 +0100
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="rl0lataF";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5Xx/gzVB";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PBRI/Ri2";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Xx7QSCiP"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 31AC51F794;
+	Wed,  3 Jan 2024 07:59:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1704268766; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/+XgaVZhEtaaw71eJX+qMxtn9jHEUYxgF/derp86AW4=;
+	b=rl0lataFPHqkUio9e5ekLXx/w262FSKIJgFL1WcabP++IkhBO1ahFHvovoEr0nxmqHwFmq
+	NZciqrme8szOzS9eND5ajlawumGwyfmsEnQyX47/50ce0SuJeLH+akUHlycLuhbiDy88lf
+	lkgjvg/dRN7mHIuEqdfUCp/gHVK4NoY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1704268766;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/+XgaVZhEtaaw71eJX+qMxtn9jHEUYxgF/derp86AW4=;
+	b=5Xx/gzVBU6veHB+iKV38MqSgwtbdF+BH7l9XkLoA8lN9k7TLNKhTRyRDTOJFOH3PxUjwHC
+	+Lw65Uc8PNV/KDDQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1704268765; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/+XgaVZhEtaaw71eJX+qMxtn9jHEUYxgF/derp86AW4=;
+	b=PBRI/Ri2F/WXSJwjqaZbJNvD8BwU9WH44v1xxV+OxYpbuMn36fRf/fkIXwtPOhWRAWovvu
+	WxiEmeP1diXGGpd0kCNeN4Hx/Ffz3+gi2oWjPGJ5cQAK23omsGJqLt+zSk4hx4gx/Pf0E/
+	kKyZz8PChHrN/Lm6D3VsK8V3CjJmR9w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1704268765;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/+XgaVZhEtaaw71eJX+qMxtn9jHEUYxgF/derp86AW4=;
+	b=Xx7QSCiPzC/NCSJzO38a0IrhSJv3Z8StejhPiO829nqo/zyo4D3Pcdro9w1OZQVKlqAG5U
+	RmxIVpeAQSOfrVBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1AF3813AA6;
+	Wed,  3 Jan 2024 07:59:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ruxGBt0TlWWwVgAAD6G6ig
+	(envelope-from <chrubis@suse.cz>); Wed, 03 Jan 2024 07:59:25 +0000
+Date: Wed, 3 Jan 2024 08:58:40 +0100
+From: Cyril Hrubis <chrubis@suse.cz>
+To: Petr Vorel <pvorel@suse.cz>
+Cc: ltp@lists.linux.it, Li Wang <liwang@redhat.com>,
+	Andrea Cervesato <andrea.cervesato@suse.com>,
+	Greg Ungerer <gerg@linux-m68k.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Christophe Lyon <christophe.lyon@linaro.org>,
+	linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/36] Remove UCLINUX from LTP
+Message-ID: <ZZUTsDX8bKPimLgD@rei>
+References: <20240103015240.1065284-1-pvorel@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: platform/chrome: cros_ec_i2c: Less function calls in
- cros_ec_cmd_xfer_i2c() after error detection
-To: Tzung-Bi Shih <tzungbi@kernel.org>, chrome-platform@lists.linux.dev,
- kernel-janitors@vger.kernel.org
-Cc: Benson Leung <bleung@chromium.org>, =?UTF-8?B?R8O8bnRlciBSw7Zjaw==?=
- <groeck@chromium.org>, LKML <linux-kernel@vger.kernel.org>
-References: <5db36d2b-afe0-4027-b22e-ded163a409be@web.de>
- <ZZTVtOumDlR4iZPa@google.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <ZZTVtOumDlR4iZPa@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:BddBvBaGpdCIVj3hrd6z5dcnD233fEmCoAnbYNSrZOvfMyDxz3S
- D+21kkjr3CBDvfqRdT6yJXO/gOotBjwN+UWbL14ktUy3JzZ1YHJVGjnYhi6Orncx6IiPQQg
- qGksaB647yILRFqYQazXMWNsAurh7ybwWLIRuKuz7ySLxlunbhCMMndE1eMhrMNekmyPOZ+
- La0JTTiVV/2FJGYeQXLKQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240103015240.1065284-1-pvorel@suse.cz>
+X-Spam-Level: 
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.76 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 REPLY(-4.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[12];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.16)[69.10%]
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Score: -3.76
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:2PZBKHXO7tQ=;mPse9iXVcB25Amlj3jCFLbd6PCr
- 3+RyVUq21pRAsNcBGB20v2CoZvekjt1xaGQOs1SM21rGNpBilfHpmVy1KqqoHQp7K0PZ5+nAV
- Fj3JH6wwXi1iSxerUtCpOKonQ1EUXvSfuvgYkU7+rRyxkHLvdr8nM6bO9HYfKn26ekhfMphyn
- ezGTDKRxm/nEHJ5WJ/n+JPirRnolfnJrVWgGS/WyzBz4vHmyvi99y+aq6x5gZKFYVNDLuLKL5
- g6gdqL8fDSAqYEWs/9TTE6LN2mbi+JpU5HanKr93sEgMT6si5YAZds5BhxyLJ0BrVL/t8gC9r
- 5MO0aBddJ3z5IdL6kyCTl64Pp6XaA+AiLiWXMKoT56XCz/goLjyMpiYDct1FVQ4wlB7rrsJkF
- lW0KtLE/bHvakDx0tAl6+g2asnJRfz2Yh6pHtoux3hPwX00Q4HxbNhnWzt0UEurKTmY+DIQJi
- nERo3+biWBqT/iG+J/lqTcArQxnDUYWmLak+8BfrmPSndVz8sjLFUnymchMxwSrHkMfaxDHfN
- HM/QYfX0BuQtlu1EW/3zY6zHgVMqFA2lEVuaE55sjJlXyimiBKb+l9xPM3CAHcJYeVeDNf2jO
- KHuEujSkSSsb8a0X+r3cfQyToqlfb3WiyP65dUfmcssjbZoTKvlw1DHAVKZVDIhitELHca+Ge
- DWgTWA32rqRZjvUiuWOj+LwifphrSxrGm+jqQv2aTICC3DdeJalCS9Tg/V3j8M0BYAhUBSUK7
- YZfsJn1X0Au0zZAaMQZZ435c69GR45hxngmlfNqQgbZ2a1f7vaYvbK+ThpTOyTBJJfCMmdKRj
- ddFKSTVLn20kSdbrZz55y0yuM/egbD8ps7mZovBzDIhRozinuDB8iKFmiYBiqcFc5PCLjJsTX
- T2eW+ZAc07QVPO8f+gKFl4ASQA52z/UFF7nlJ/hRHQp+7utYI6bduxpmb28AA1ZxAgYkAaW1Y
- 6sgS+Q==
 
->> The kfree() function was called in up to two cases by
->> the cros_ec_cmd_xfer_i2c() function during error handling
->> even if the passed variable contained a null pointer.
->> This issue was detected by using the Coccinelle software.
->>
->> * Adjust jump targets.
->>
->> * Delete two initialisations which became unnecessary
->>   with this refactoring.
->
-> The patch saves few instructions but makes the code less readable a bit.
+Hi!
+> UCLINUX is broken in LTP and nobody really cares. Actually I dare to
+> say UCLINUX is dead. Therefore I prepared patchset to remove UCLINUX
+> from LTP. We have been actively removing UCLINUX from LTP during rewrite
+> tests to new LTP API. This removes the rest from the old tests (which
+> will be sooner or later rewritten to new API).
+> 
+> Because the patchset is quite big, I did not want to send it to mailing
+> lists (but I can do it if you want).
 
-Do you find advices applicable from another information source
-also for this function implementation?
-https://wiki.sei.cmu.edu/confluence/display/c/MEM12-C.+Consider+using+a+go=
-to+chain+when+leaving+a+function+on+error+when+using+and+releasing+resourc=
-es
+I agree that this should be done, but I'm not sure if we want to get
+this in before the January release. I guess that such change would be
+safer to merge just after the release so that we have a few months to
+actually catch possible problems.
 
-Regards,
-Markus
+-- 
+Cyril Hrubis
+chrubis@suse.cz
