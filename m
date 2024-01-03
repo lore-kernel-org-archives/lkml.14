@@ -1,67 +1,100 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E4C17980;
-	Wed,  3 Jan 2024 02:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Vzs30th_1704248268;
-Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0Vzs30th_1704248268)
-          by smtp.aliyun-inc.com;
-          Wed, 03 Jan 2024 10:17:57 +0800
-From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To: jorge.lopez2@hp.com
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH] platform/x86: hp-bioscfg: Remove useless else
-Date: Wed,  3 Jan 2024 10:17:46 +0800
-Message-Id: <20240103021746.5337-1-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2CF31877
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 02:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u22h6Alv"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40d5d898162so46634405e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 18:18:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704248319; x=1704853119; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=muhOU9sgz4QGazZ/rfni9jszPeW7tQPyUaLpLGDrUWw=;
+        b=u22h6Alv9fiJ0SWaZK8rR2F0jHgt0QcmfKzGdlq5qSewci2squNtNiHPg3ey1C8edP
+         i289Y1odwhFBRmXDlHvVNKQXyiP/mGf7fOxG47++svR9As7Ug2jfWl1UavmEG6E5oZZH
+         h6j/KRiRAq6wTng6GcWbO3QoYtBKwfzf0gHcHsn/S0ekQ56Bs9Vp8kWrT4gUIo4iiZpG
+         SzCjF47sG7WGKpi3/E+NHEYdxCKB9r0K/x3icu/StHZMDZYr6wcQl5nD3E3VNKpHxRaI
+         bRh4yb+YEbGM2pUakn3RDLKq80Zqf41Fxz+ynY2C/EXXT9NQQJEJrSr0vPZEonQnhmbu
+         tECg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704248319; x=1704853119;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=muhOU9sgz4QGazZ/rfni9jszPeW7tQPyUaLpLGDrUWw=;
+        b=wmgURjD6VxOo3x+b0ICzpKyRW28Ne/q+UHKaO58bV7l0jQGPqZlqrKjyr02+HxYlH0
+         /mnAuK86x/hYsNX1gBiDMMCKPluB2RyAM36aIa8a0Fa8tvzkbICTsUGic+JHqUw9k4Cl
+         apCvwgrxJhEA4ToophzuqYvkCtXfvW6gZHLfJFwwtv9fUi13K8emvKrIwUBJmyGRJlut
+         hxImnzm8aeB35BIUDDILRG216Pkmg6h3sSLPrVXiNWoq0XF18ZAn153I6Yz5GRuQMyW+
+         JV0RS0FWYOCtpAVYvWcRlMM8Zedkq0KPtCWudyDUY7qlkuS4nkc4DO1Y8cibZjMmRYde
+         52wg==
+X-Gm-Message-State: AOJu0YwP3tO3nZrk9jxgL+cnbgVJ9bil6wHzFucYffIJz/IW1O732vxD
+	75UlJZOjusM45i10ZEMcV7rFp8VdAY7v/A==
+X-Google-Smtp-Source: AGHT+IENyJfQ6gBcjfBwcPnX51FC+82M3roaHsx7i6KP6rorcOIWiwogJNkgsT2GbWFBbqNK48Rtwg==
+X-Received: by 2002:a05:600c:a44:b0:40d:7720:9f6c with SMTP id c4-20020a05600c0a4400b0040d77209f6cmr3644918wmq.5.1704248319253;
+        Tue, 02 Jan 2024 18:18:39 -0800 (PST)
+Received: from [127.0.1.1] ([37.228.218.3])
+        by smtp.gmail.com with ESMTPSA id m4-20020a05600c4f4400b0040d3276ba19sm734374wmq.25.2024.01.02.18.18.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jan 2024 18:18:38 -0800 (PST)
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: [PATCH 0/3] arm64: dts: qcom: sc8280xp: Add CAMSS core dtsi
+ support
+Date: Wed, 03 Jan 2024 02:18:38 +0000
+Message-Id: <20240103-linux-next-24-01-02-sc8280xp-camss-core-dtsi-v1-0-abacaa63a961@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAP7DlGUC/x2NQQqDMBAAvyJ77sJmtZj2K6WHEDftQhslqyUg/
+ t3Q48xhZgeTomJw73Yo8lPTOTdwlw7iO+SXoE6NgYkHcsT40bxVzFJX5AHJYXMWPXuqC8bwNcM
+ 4F8FpNUUeewrXNEq6eWjJpUjS+t89nsdxAuGGg4h+AAAA
+To: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13-dev-4e032
 
-The assignment of the else and if branches is the same, so the else
-here is redundant, so we remove it.
+This series adds the yaml, CAMSS and CCI dts definitions for the sc8280xp.
 
-./drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:544:3-5: WARNING: possible condition with no effect (if == else).
+4 x CCI master busses
+4 x VFE
+4 x VFE Lite
+4 x CSID
+4 x CSIPHY
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=7817
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Link: https://git.codelinaro.org/bryan.odonoghue/kernel/-/tree/linux-next-24-01-02-sc8280xp-camss-core-dtsi
+
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 ---
- .../platform/x86/hp/hp-bioscfg/passwdobj-attributes.c  | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+Bryan O'Donoghue (3):
+      media: dt-bindings: media: camss: Add qcom,sc8280xp-camss binding
+      arm64: dts: qcom: sc8280xp: camss: Add CCI definitions
+      arm64: dts: qcom: sc8280xp: camss: Add CAMSS block definition
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-index f7efe217a4bb..18c60a847842 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-@@ -540,14 +540,8 @@ void hp_exit_password_attributes(void)
- 		struct kobject *attr_name_kobj =
- 			bioscfg_drv.password_data[instance_id].attr_name_kobj;
- 
--		if (attr_name_kobj) {
--			if (!strcmp(attr_name_kobj->name, SETUP_PASSWD))
--				sysfs_remove_group(attr_name_kobj,
--						   &password_attr_group);
--			else
--				sysfs_remove_group(attr_name_kobj,
--						   &password_attr_group);
--		}
-+		if (attr_name_kobj)
-+			sysfs_remove_group(attr_name_kobj, &password_attr_group);
- 	}
- 	bioscfg_drv.password_instances_count = 0;
- 	kfree(bioscfg_drv.password_data);
+ .../bindings/media/qcom,sc8280xp-camss.yaml        | 512 +++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sc8280xp.dtsi             | 563 +++++++++++++++++++++
+ 2 files changed, 1075 insertions(+)
+---
+base-commit: ab0b3e6ef50d305278b1971891cf1d82ab050b35
+change-id: 20240102-linux-next-24-01-02-sc8280xp-camss-core-dtsi-2730a5f7ef98
+
+Best regards,
 -- 
-2.20.1.7.g153144c
+Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
