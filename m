@@ -1,79 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5AC1BDC4;
-	Wed,  3 Jan 2024 16:24:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3C21BDC4;
+	Wed,  3 Jan 2024 16:24:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jrn5Qwct"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704299046; x=1735835046;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=e7A5dG1jEF9eZADbVxTs8U3CR1jOZzXgY4h4AvHFeh0=;
-  b=jrn5Qwct0EOdbGy5frkYpYLklkqEGNT6xuBnbq6GW56F+Iu3ss/7mCEa
-   rGFgHpEfgJ80N0qWAVSWHBSQHuJuNc5b8gPS7SRSlC9McmyxOQdglJ9qR
-   0VsnT05SUEUlowqg7UOoQGlgu278o97fBUR50QPyESa9qrDUy5E3LVkRl
-   ZGdGp5dFMj5B26upQX9nfVEKlBsMRaeyC/ixBdUVhuLHdRdzLquCuaiGb
-   ho84Ul67iwYVmhsfdIv5DcveHFiH/p/vQ+rWbp9tTkf+/EVfCtcgNsxg2
-   NPedJ2Rd0tL5dqZ07ZFXzKH7RL9hRDQk/M8LsZa3GZ+UMzr6RJ9w5mrVL
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="18553021"
-X-IronPort-AV: E=Sophos;i="6.04,328,1695711600"; 
-   d="scan'208";a="18553021"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 08:24:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="780026987"
-X-IronPort-AV: E=Sophos;i="6.04,328,1695711600"; 
-   d="scan'208";a="780026987"
-Received: from homichel-mobl2.amr.corp.intel.com (HELO [10.252.51.214]) ([10.252.51.214])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 08:24:01 -0800
-Message-ID: <d61245f1-cd4a-4369-9d32-087b892cf4fa@linux.intel.com>
-Date: Wed, 3 Jan 2024 18:24:53 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NKpfvShb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9D1FC433C7;
+	Wed,  3 Jan 2024 16:24:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704299050;
+	bh=oDxUJ0csC6lWNRIuyYFs6Gg2tiCMbVHu/gNkuWzoWzM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NKpfvShb6tkMIJpN0xEoI1S0zR4aLeaRArZwkobSudX3RkKpGjhNHy7iR044qE4HK
+	 zvd6GWk3J7PgtL/GHT0G+bH7zAu57/uWcaWQpl5nx7+3IBolmGkmWRh77k32S1xFb9
+	 xvQV48hg5VbrUz/0abaminyQw6+uu42GfcWgX792V6X4CooopX/mcrkaLa9KuEQK7a
+	 OCwGZ8d3eQJGe7BxWsFYgxw5etLbuRKscIsP8BJuXk6bD4qyHF2joQcWgyl9H5PftA
+	 syayVLlMizbNxE4C5uOh4kdVTMjdA5sia4spSl9GLJz4Mi8zT7Fg2MATiYcCUxvmij
+	 enitnIElliOow==
+Date: Wed, 3 Jan 2024 16:24:02 +0000
+From: Simon Horman <horms@kernel.org>
+To: Alexey Makhalov <alexey.makhalov@broadcom.com>
+Cc: linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
+	mingo@redhat.com, tglx@linutronix.de, x86@kernel.org,
+	netdev@vger.kernel.org, richardcochran@gmail.com,
+	linux-input@vger.kernel.org, dmitry.torokhov@gmail.com,
+	zackr@vmware.com, linux-graphics-maintainer@vmware.com,
+	pv-drivers@vmware.com, namit@vmware.com, timothym@vmware.com,
+	akaher@vmware.com, jsipek@vmware.com,
+	dri-devel@lists.freedesktop.org, daniel@ffwll.ch, airlied@gmail.com,
+	tzimmermann@suse.de, mripard@kernel.org,
+	maarten.lankhorst@linux.intel.com, kirill.shutemov@linux.intel.com
+Subject: Re: [PATCH v4 2/6] x86/vmware: Introduce VMware hypercall API
+Message-ID: <20240103162402.GA31813@kernel.org>
+References: <20231228192421.29894-1-alexey.makhalov@broadcom.com>
+ <20231228192421.29894-3-alexey.makhalov@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Oops in hdac_hda_dev_probe (6.7-rc7)
-Content-Language: en-US
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>,
- Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com, perex@perex.cz,
- tiwai@suse.com, alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
- pierre-louis.bossart@linux.intel.com, kai.vehmanen@linux.intel.com,
- ranjani.sridharan@linux.intel.com, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-References: <ZYvUIxtrqBQZbNlC@shine.dominikbrodowski.net>
- <87sf3lxiet.wl-tiwai@suse.de> <ZY7kosArPqhlCfOA@shine.dominikbrodowski.net>
- <874jg1x7ao.wl-tiwai@suse.de> <ZY_Gb8-rncuOjRq-@shine.dominikbrodowski.net>
- <87plyovwg7.wl-tiwai@suse.de>
- <3260e806-a708-4462-9d4e-346e54143a65@linux.intel.com>
- <87y1d8ulxv.wl-tiwai@suse.de> <87o7e2a3hr.wl-tiwai@suse.de>
-From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
-In-Reply-To: <87o7e2a3hr.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231228192421.29894-3-alexey.makhalov@broadcom.com>
 
-
-
-On 03/01/2024 16:36, Takashi Iwai wrote:
->>> Mark, Takashi, can you pick the fix for 6.7 (it is in -next)? I think we
->>> might have time for it to land?
->>
->> Oh that landed to Mark's for-next branch, i.e. only for 6.8.
->> Mark, please cherry-pick and send a PR before 6.7 final.
+On Thu, Dec 28, 2023 at 11:24:17AM -0800, Alexey Makhalov wrote:
+> From: Alexey Makhalov <amakhalov@vmware.com>
 > 
-> I ended up with cherry-picking by myself now.
+> Introduce vmware_hypercall family of functions. It is a common
+> implementation to be used by the VMware guest code and virtual
+> device drivers in architecture independent manner.
 > 
-> I'm going to send a PR to Linus for 6.7 final in tomorrow.
+> The API consists of vmware_hypercallX and vmware_hypercall_hb_{out,in}
+> set of functions by analogy with KVM hypercall API. Architecture
+> specific implementation is hidden inside.
+> 
+> It will simplify future enhancements in VMware hypercalls such
+> as SEV-ES and TDX related changes without needs to modify a
+> caller in device drivers code.
+> 
+> Current implementation extends an idea from commit bac7b4e84323
+> ("x86/vmware: Update platform detection code for VMCALL/VMMCALL
+> hypercalls") to have a slow, but safe path in VMWARE_HYPERCALL
+> earlier during the boot when alternatives are not yet applied.
+> This logic was inherited from VMWARE_CMD from the commit mentioned
+> above. Default alternative code was optimized by size to reduce
+> excessive nop alignment once alternatives are applied. Total
+> default code size is 26 bytes, in worse case (3 bytes alternative)
+> remaining 23 bytes will be aligned by only 3 long NOP instructions.
+> 
+> Signed-off-by: Alexey Makhalov <amakhalov@vmware.com>
+> Reviewed-by: Nadav Amit <namit@vmware.com>
+> Reviewed-by: Jeff Sipek <jsipek@vmware.com>
 
-Thank you, I really appreciate it!
+Hi Alexey,
 
--- 
-Péter
+I'd like to flag that this breaks gcc-13 x86_64 allmodconfig builds of the
+following files. And although this is resolved by the subsequent 3 patches
+in this series, it does still break bisection.
+
+ drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
+ drivers/input/mouse/vmmouse.c
+ drivers/ptp/ptp_vmw.c
+
+...
