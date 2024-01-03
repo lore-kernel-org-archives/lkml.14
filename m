@@ -1,83 +1,123 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7921F601;
-	Wed,  3 Jan 2024 23:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AB71F95A;
+	Wed,  3 Jan 2024 23:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="o8rZcdDm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1704323074;
-	bh=0FNwfJNTGkTVJF/7s7AiAmrUgt6nCiD1aUrR6ZJFZDY=;
-	h=Date:From:To:Cc:Subject:From;
-	b=o8rZcdDmSXvn1BXlN2nSP20/cYUkc9lHf4ANbCA8UFAx+8TG3rDzqq+OJB6NvX5Vc
-	 V2cmF/mBwxywFiHS2O/i0vH81+bF7uyFM8FETN/7xDNWTzW9sknzfpDP3zMgK8WGPY
-	 SyzIHwmdPzaK2TvsDguLRLtYW3y2vMFV2lHqP1DCX2LJEyaHqDRcDV//8FsWAVNRHK
-	 8jIqfbYDNvu16BzBDhkFIGlaJhUCKkxtKw0T13V/HvpenLJYQruYXzh6igPXeihwwr
-	 NkS/hCsRJrXJQznoCu/5x5tWrlPgx5FEP2pssE9t9yfMUYQWQH8A+e2S4NWnWMTNmK
-	 7ohelpVQC/Xng==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4T54zf1l9Bz4x5l;
-	Thu,  4 Jan 2024 10:04:30 +1100 (AEDT)
-Date: Thu, 4 Jan 2024 10:04:28 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>
-Cc: Daniel Golle <daniel@makrotopia.org>, Sam Shih <sam.shih@mediatek.com>,
- Stephen Boyd <swboyd@chromium.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the clk tree
-Message-ID: <20240104100428.1f2c3f6a@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GN8IGB0/"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40d60c49ee7so60942835e9.0;
+        Wed, 03 Jan 2024 15:04:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704323091; x=1704927891; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EKP/S6XSZaDGcudVaS0h8PY9BVZmPCIH7/appJgF/zE=;
+        b=GN8IGB0//uItkWoSyjYTr838W2TQxNmKReg1+0q69V8sdVz5Vzksmy/wV16EJATn7R
+         tRpyxVTzwA+65mP7QBQPFpOElGNenbgCU529cOZHc9ADW5qsdVM9K2+JkqysThs6tB/c
+         McbR34DbCv8FkPgRU67bbk631aluf6vDpyrQstSRDkZBPWLGkG4UaG/PPsa7w3zA2rX7
+         H4DAc1KNe5Qwm3m4KT3OGcQ6TN8jy+NebWQf2NVF2koianMSc39jbdaeoWTd2rx/rxo7
+         GqRhnfEOrPptxGjcIQ6K+uYK/qxNsdUO3gpVJboy8wS8Nbb0kHqKcO57mZIRgC3M62/x
+         JPWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704323091; x=1704927891;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EKP/S6XSZaDGcudVaS0h8PY9BVZmPCIH7/appJgF/zE=;
+        b=jl7/e7nYbZSpJCUlkb73awcm28Qwa0L6QvRXitJJywO7hOtUTQ49XHzXczOmosbLQn
+         Qrv5ksnK20oZMkBC3wyPBuft1zQjuHQ53197aALwDBPXAP3DcCQ2+KwbKhEgmYVYfZ+k
+         BAg8r6/8E/hyA63k+8dmrGP/6RWxyWcdrwKQeW4qlhOitnhZp/SmITa/MK353ZJQ1yqA
+         etrOgIVBcY9a/89kl+PQkbFL8qaJ+D7I6MRWKw5oUeWRqjzTWpg9Mju2joDgElMIZnk1
+         tarIUyecw4UZVJcSudyyBrRj54g81Qx5r8WEnzDc66wn8PKMHad2wTBaqqrFX0775lSK
+         NxpQ==
+X-Gm-Message-State: AOJu0YxSxvslQtfFQV3zLyoLvsqT78kBxG9sGROdVm75OrXr82S1icfA
+	UNOTWXKfjedH36iW2maBQXI=
+X-Google-Smtp-Source: AGHT+IG1+90FL/z53soE2V8+HrXb98ZdAJ4W4hmXkScdkrI8R6H31ryA90iwZMBeRr9IjlI2AKzZ5g==
+X-Received: by 2002:a05:600c:2116:b0:40d:5fd4:ce2c with SMTP id u22-20020a05600c211600b0040d5fd4ce2cmr5275517wml.53.1704323091218;
+        Wed, 03 Jan 2024 15:04:51 -0800 (PST)
+Received: from localhost.localdomain (host-80-116-159-187.retail.telecomitalia.it. [80.116.159.187])
+        by smtp.googlemail.com with ESMTPSA id w13-20020a05600c474d00b0040c46719966sm3740969wmo.25.2024.01.03.15.04.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jan 2024 15:04:50 -0800 (PST)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	William Zhang <william.zhang@broadcom.com>,
+	Anand Gore <anand.gore@broadcom.com>,
+	Kursad Oney <kursad.oney@broadcom.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+	=?UTF-8?q?Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>,
+	Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	netdev@vger.kernel.org
+Subject: [net-next PATCH v7 0/5] net: phy: generic polarity + LED support for qca808x
+Date: Wed,  3 Jan 2024 15:12:33 +0100
+Message-ID: <20240103141251.23446-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_//fa6zbZC8YgtxDjUtMn_PBa";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_//fa6zbZC8YgtxDjUtMn_PBa
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This small series add LEDs support for qca808x.
 
-Hi all,
+QCA808x apply on PHY reset a strange polarity settings and require
+some tweak to apply a more common configuration found on devices.
+On adding support for it, it was pointed out that a similar
+feature is also being implemented for a marvell PHY where
+LED polarity is set per LED (and not global) and also have
+a special mode where the LED is tristated.
 
-After merging the clk tree, today's linux-next build (x86_64 allmodconfig)
-failed like this:
+The first 3 patch are to generalize this as we expect more PHY
+in the future to have a similar configuration.
 
-ERROR: modpost: missing MODULE_LICENSE() in drivers/clk/mediatek/clk-mt7988=
--infracfg.o
+The implementation is extensible to support additional special
+mode in the future with minimal changes and don't create regression
+on already implemented PHY drivers.
 
-Caused by commit
+(changelog present in single patch)
 
-  7589129341ad ("clk: mediatek: add drivers for MT7988 SoC")
+Christian Marangi (5):
+  dt-bindings: net: phy: Make LED active-low property common
+  dt-bindings: net: phy: Document LED inactive high impedance mode
+  net: phy: add support for PHY LEDs polarity modes
+  dt-bindings: net: Document QCA808x PHYs
+  net: phy: at803x: add LED support for qca808x
 
-I have used the clk tree from next-20240103 for today.
+ .../devicetree/bindings/leds/common.yaml      |  12 +
+ .../bindings/leds/leds-bcm63138.yaml          |   4 -
+ .../bindings/leds/leds-bcm6328.yaml           |   4 -
+ .../devicetree/bindings/leds/leds-bcm6358.txt |   2 -
+ .../bindings/leds/leds-pwm-multicolor.yaml    |   4 -
+ .../devicetree/bindings/leds/leds-pwm.yaml    |   5 -
+ .../devicetree/bindings/net/qca,qca808x.yaml  |  54 +++
+ drivers/net/phy/at803x.c                      | 326 ++++++++++++++++++
+ drivers/net/phy/phy_device.c                  |  12 +
+ include/linux/phy.h                           |  22 ++
+ 10 files changed, 426 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/qca,qca808x.yaml
 
---=20
-Cheers,
-Stephen Rothwell
+-- 
+2.43.0
 
---Sig_//fa6zbZC8YgtxDjUtMn_PBa
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWV5/wACgkQAVBC80lX
-0GyXQgf/f9J5EbkHH0E5i1aKWqG0l6iITMdNd0+y1qKp8T+NK4FiipZBXF/xQ/Nz
-WdGgTJc3MHwLVA6hM3E9B4eKpphJw0MoPT6N5qH27TggSl+eNG17nDtc5A/152OP
-pYljFurF67qr8Ll53Q7Fhezftxp8jrguLX0eXJPkSwO1GX8T0pZO9EMDsCvYMqIJ
-V2PjFfCnT6fqWp3WMSIKP5HHzPaRzpXsLVuy/BnjGrVWqcV2PeY1K37PwSBN6paj
-VRs1pcvbMaTJnDWicnxQ7duZgmAbMdPce+QBysjKg0rTVRfJMaNXJnVyr/Qu8pxR
-bY5GF/4gGja1aeE0cqwqrGED9u+4pg==
-=+iMk
------END PGP SIGNATURE-----
-
---Sig_//fa6zbZC8YgtxDjUtMn_PBa--
