@@ -1,72 +1,112 @@
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C7A18EB5
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 12:18:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="tKg2/8QS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1704283997; bh=kXZ7H5ciV8izRUYlk7CkzEBsb3PXS4+N0LB5qQgk7Bo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=tKg2/8QSOQQRL8Wr3FdQpzA/PMJlf9ysF9rZj0zgFmvqD3HF9uLhxbVIXaYCBrbQ9
-	 BQkV4v4LIX79fRbqZo10r+VMy07jdNdTQlSIDhoZbCRTQp4kAGsCkIoXHl9hFQIdPb
-	 9gOl8APJ6GXe/aTOWFlDlk+tjSoArUkfdrz9ODDw=
-Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
-	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
-	id 34FAC091; Wed, 03 Jan 2024 20:13:15 +0800
-X-QQ-mid: xmsmtpt1704283995t4ad9vegk
-Message-ID: <tencent_5292EF864E49B52EDC6EF0CC99A7E4C6C306@qq.com>
-X-QQ-XMAILINFO: NvH2zBBgt3uT6SfvEicVD2L0azpIUZsry5Y/HUPF5hFdUj4LCsVXMen8nLulvz
-	 gltrAhfJ/ubQm8Cf5k8FI4q3Dk3kN8Zpjh7u4GRC19fBk0V7imHh3Ug+vyKj2tISZohXId3Jh5ms
-	 q2rxIvuAHuCP65hDVP52sfZH4n3CKFc0Qp+vVb0TlddA2/5VzVP+bBqsat4fC2d7WaDGqwRVp7Vs
-	 47DSTGiUYRrndtyZ1bOfLrRadGn4E4iq9qcMiP7/V1W+yXoUouxdTcpFrcoEZnHcfl7Rkcbs/VqN
-	 ZkIpT0tcBM28nFlJ928Na6MBAG4+BiIqwigE0v4ywGdPbATH2S4wIawSnIq6aJhTfZYS7jyGmQUL
-	 XvfTFIoHERFXzp1Gl1/ptayPFt7bOKRFeM0c9PeB48FLEG+w63yg6W+IyDYqhjcIyDwG4rp4xhfi
-	 OPmXkUnhLMZhiSSkS2YOWIy+VTBzTPcuXdU1co84BoWqRHBTn4NXoyGn7dmlZPtAXwhXHwDV5VK9
-	 FWNckPzhRIk4upclCH8WiPQ/FW6UinyuJ7K7a7ssoj4vNzuVVVi9vF5gXEvZ/767Ai391FiCXR50
-	 uId2zshqwgQpxfbMxU+iXd1qfgWsvu9uiorqotQ1f6sQTmO4Cn/R+9kLSw26k5Znyax9UP0XqU/p
-	 GZlTvg415XQgVe32BEv3rFUW4oDiV+L45+us7Kx0nxqZmHZ2E0gGlicg/8bZ3U1tG9WdZSHWbCfq
-	 S48/Q0gqnAKIDhu1AY0z2U2UZ98b9JARH7g8hmiHI84aFPheiKp+CFGhlp8PuaihNazNGnecFusW
-	 NpaLtRozWB39lS4CcdT30twj4cn2QXaY2gARiELauCmCYdNUXpoZjsKPRjgSm2TrOWQXfYiNJXzT
-	 sA6kuVOlkKGUThFH67LqXpPa9Puuz4oW4fOqqSigPQZJP+Rvoi1N9Y3X67GaI7lpYOHvycOjhU9a
-	 en5l5GOEA=
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+74dce9511a59ad67a492@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [reiserfs?] general protection fault in reiserfs_xattr_set
-Date: Wed,  3 Jan 2024 20:13:16 +0800
-X-OQ-MSGID: <20240103121315.2733802-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000009d4b80060df41cf8@google.com>
-References: <0000000000009d4b80060df41cf8@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C091518EC9
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 12:18:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rL0CN-00039L-L8; Wed, 03 Jan 2024 13:18:15 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rL0CM-00073n-NR; Wed, 03 Jan 2024 13:18:14 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rL0CM-003LaY-20;
+	Wed, 03 Jan 2024 13:18:14 +0100
+Date: Wed, 3 Jan 2024 13:18:14 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: pratikmanvar09@gmail.com, linux-pwm@vger.kernel.org, 
+	shawnguo@kernel.org, s.hauer@pengutronix.de, Pratik Manvar <pratik.manvar@ifm.com>, 
+	linux-kernel@vger.kernel.org, thierry.reding@gmail.com, Clark Wang <xiaoning.wang@nxp.com>, 
+	linux-imx@nxp.com, kernel@pengutronix.de, festevam@gmail.com, 
+	linux-arm-kernel@lists.infradead.org, Jun Li <jun.li@nxp.com>
+Subject: Re: [PATCH] pwm: imx27: workaround of the pwm output bug
+Message-ID: <sdqgerar4utskfvp2pxbjsjesf2s5zuxtlssur2v3kdvq5m7a6@jaueiad7zvcf>
+References: <20231229063013.1786-1-pratikmanvar09@gmail.com>
+ <20240103103421.GA3758@francesco-nb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="oig3ms6c3h2nuufe"
+Content-Disposition: inline
+In-Reply-To: <20240103103421.GA3758@francesco-nb>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-please test null ptr deref in reiserfs_xattr_set
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 453f5db0619e
+--oig3ms6c3h2nuufe
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/fs/reiserfs/xattr.c b/fs/reiserfs/xattr.c
-index 998035a6388e..00fd8f747394 100644
---- a/fs/reiserfs/xattr.c
-+++ b/fs/reiserfs/xattr.c
-@@ -618,6 +618,9 @@ int reiserfs_xattr_set(struct inode *inode, const char *name,
- 	int error, error2;
- 	size_t jbegin_count = reiserfs_xattr_nblocks(inode, buffer_size);
- 
-+	if (!reiserfs_xattrs_initialized(inode->i_sb))
-+		return -EOPNOTSUPP;
-+
- 	/* Check before we start a transaction and then do nothing. */
- 	if (!d_really_is_positive(REISERFS_SB(inode->i_sb)->priv_root))
- 		return -EOPNOTSUPP;
+On Wed, Jan 03, 2024 at 11:34:21AM +0100, Francesco Dolcini wrote:
+> On Fri, Dec 29, 2023 at 12:00:07PM +0530, pratikmanvar09@gmail.com wrote:
+> > From: Clark Wang <xiaoning.wang@nxp.com>
+> >=20
+> > This fixes the pwm output bug when decrease the duty cycle.
+> > This is a limited workaround for the PWM IP issue TKT0577206.
+> >=20
+> > Root cause:
+> > When the SAR FIFO is empty, the new write value will be directly applied
+> > to SAR even the current period is not over.
+> > If the new SAR value is less than the old one, and the counter is
+> > greater than the new SAR value, the current period will not filp the
+> > level. This will result in a pulse with a duty cycle of 100%.
+> >=20
+> > Workaround:
+> > Add an old value SAR write before updating the new duty cycle to SAR.
+> > This will keep the new value is always in a not empty fifo, and can be
+> > wait to update after a period finished.
+> >=20
+> > Limitation:
+> > This workaround can only solve this issue when the PWM period is longer
+> > than 2us(or <500KHz).
+> >=20
+> > Reviewed-by: Jun Li <jun.li@nxp.com>
+> > Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
+> > Link: https://github.com/nxp-imx/linux-imx/commit/16181cc4eee61d87cbaba=
+0e5a479990507816317
+> > Tested-by: Pratik Manvar <pratik.manvar@ifm.com>
+>=20
+> You need to add your signed-off-by at the end when sending a patch, no
+> matter if you are the author or not.
 
+FTR: This also applies to the v2 patch. I discarded both from the pwm
+patchwork.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--oig3ms6c3h2nuufe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWVUIUACgkQj4D7WH0S
+/k6ytAf/UIcvOinV3MPezxtggAVXZ/zCrUR/WE0fMJhwd0PD1uOWXFt5wjEDkUzB
+WxzrfbXSWpjcn1lwITWpxr74Mu7qJ4LU9ia+Mu3ApqBGOgc3qy+SuCMouSWthctC
+MNon899rT1PFMT3TQRsKHW2fXLvlisMPv9wZhdm/LaCSpaodt362cJN0zRMFZl9u
+qzYrlcM2xaHewPsU7ALJiJOZtA9V7LX05Fu+H4sAZynShGDxzdnzugEFjR2gu4Ax
+ZTiTTr4+Mg9vyNuEHdNwFNMA7Aj40bN77HP9AvM6tBytbUrzCA3kC58631IfAxIn
+rQ6qXijhPWfYk5WPgWEjUlKSLqTVCA==
+=Reno
+-----END PGP SIGNATURE-----
+
+--oig3ms6c3h2nuufe--
