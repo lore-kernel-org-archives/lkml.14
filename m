@@ -1,71 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD3561B290;
-	Wed,  3 Jan 2024 15:15:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7031A71A
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 15:16:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IBH/QuA3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53746C433CC;
-	Wed,  3 Jan 2024 15:15:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gf9pQ/af"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E6C9C433C7;
+	Wed,  3 Jan 2024 15:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704294911;
-	bh=ldRoSHvT6Rsry6/JCGChzrHz1I65uNFCAGV5UUxFlGA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=IBH/QuA3Eycfx0gIQnxzlatxLaXul9m7My77lsHmfTkfYNeF2R35sxVYcFG0qYDGz
-	 Q2iFfwWqCBl3NgMeZtXwVmpGWCNbLQrkdM0GRQlC93esLlCTFu6U66mTgGhgug0Kcv
-	 jFjCSnPbSFL9OlRN51iSaJlvh1uHcR7qdrwMV/pdymLkbQ5YDBMVvS9Ze5qwochBmV
-	 qV6Xw2hM0zEWHyDmy3HuZsuU1ynBjHnGM1PnPCb2UuY5nlXrgjwXcSafGbSdPnI6Z8
-	 8+Y2X5cpolzxxxFBMG8Xq2OhIkh6uZ+ziQbhdUODDuGMS0j0h4nkOueGMPGO3GH1uA
-	 71+1Qu//CUDkQ==
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2cce6bb9b48so53150141fa.1;
-        Wed, 03 Jan 2024 07:15:11 -0800 (PST)
-X-Gm-Message-State: AOJu0YzHIzN5G4odunC0wl0jkOjn2AvX5fVy/ankt0xHJz4MyNP2ShDb
-	aEVI6ULa9RCvKy04uOlcB/vAeA/3ja5kY2b3iQ==
-X-Google-Smtp-Source: AGHT+IFqtORKMYmea6Sua/HpDIR+OhSvzO5v/pjx+rnHnj7+cZmrhfeXvNjnLi75WlD7c7NCdkjTTKvfobADQjhDnlM=
-X-Received: by 2002:a2e:9c14:0:b0:2cc:6666:168d with SMTP id
- s20-20020a2e9c14000000b002cc6666168dmr3813403lji.69.1704294909538; Wed, 03
- Jan 2024 07:15:09 -0800 (PST)
+	s=k20201202; t=1704295006;
+	bh=htNgBFBV/CKJcgQaocKh9f1UxgQQ82NiIUtI74MyQj4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Gf9pQ/af33jkPwdM/5tgbvWGyNx5or7NiLzSPLWPf/matHojty611C2q3ZtsjVOA5
+	 QGiLsSxw1vprazFYFKlVLl3DOAjlfoI5DTBnPD1gslBO0GG8otzapjEODkd38l1+wy
+	 JMkxhWV4XNqOa8gSM5l/Zw5UdwxMObagUzzhwH6jrhgTgxmBmW4Ohz/mrrZZ4ABLA1
+	 ubxUvmNSoIrplgsvtklkilJ3mIbnx7U86nDXpy7jd9RHjqaORsLdeZLG5tzCYb5hFM
+	 ow+nweFB/PNpNryc3J+5jWGjflt8MsLSfCcrJPrOSt8DI67hYqdd9YbL8QrjtZeNNg
+	 BATC0icqBPBCQ==
+Date: Wed, 3 Jan 2024 23:04:04 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: Re: [PATCH v4 04/12] riscv: Only send remote fences when some other
+ CPU is online
+Message-ID: <ZZV3ZDa7eS+Ecc4i@xhacker>
+References: <20240102220134.3229156-1-samuel.holland@sifive.com>
+ <20240102220134.3229156-5-samuel.holland@sifive.com>
+ <ZZV19owFbjOzgG89@xhacker>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240103142051.111717-1-krzysztof.kozlowski@linaro.org> <20240103142051.111717-2-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20240103142051.111717-2-krzysztof.kozlowski@linaro.org>
-From: Rob Herring <robh+dt@kernel.org>
-Date: Wed, 3 Jan 2024 08:14:57 -0700
-X-Gmail-Original-Message-ID: <CAL_JsqKBANb+SKfykPvUH82bGH6sU5LuCfsM5iSbZ6Uk4vKHrw@mail.gmail.com>
-Message-ID: <CAL_JsqKBANb+SKfykPvUH82bGH6sU5LuCfsM5iSbZ6Uk4vKHrw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: juno: fix thermal zone node names
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, 
-	linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZZV19owFbjOzgG89@xhacker>
 
-On Wed, Jan 3, 2024 at 7:21=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> Linux kernel uses thermal zone node name during registering thermal
-> zones and has a hard-coded limit of 20 characters, including terminating
-> NUL byte.  Exceeding the limit will cause failure to configure thermal
-> zone.
->
-> Reported-by: Rob Herring <robh@kernel.org>
-> Closes: https://lore.kernel.org/all/CAL_JsqKogbT_4DPd1n94xqeHaU_J8ve5K09W=
-OyVsRX3jxxUW3w@mail.gmail.com/
-> Fixes: fb4d25d7a33f ("arm64: dts: juno: Align thermal zone names with bin=
-dings")
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  arch/arm64/boot/dts/arm/juno-base.dtsi | 4 ++--
->  arch/arm64/boot/dts/arm/juno-scmi.dtsi | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
+On Wed, Jan 03, 2024 at 10:58:01PM +0800, Jisheng Zhang wrote:
+> On Tue, Jan 02, 2024 at 02:00:41PM -0800, Samuel Holland wrote:
+> > If no other CPU is online, a local cache or TLB flush is sufficient.
+> > These checks can be constant-folded when SMP is disabled.
+> > 
+> > Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+> > ---
+> > 
+> > Changes in v4:
+> >  - New patch for v4
+> > 
+> >  arch/riscv/mm/cacheflush.c | 4 +++-
+> >  arch/riscv/mm/tlbflush.c   | 4 +++-
+> >  2 files changed, 6 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/riscv/mm/cacheflush.c b/arch/riscv/mm/cacheflush.c
+> > index 47c485bc7df0..f7933ae88a55 100644
+> > --- a/arch/riscv/mm/cacheflush.c
+> > +++ b/arch/riscv/mm/cacheflush.c
+> > @@ -21,7 +21,9 @@ void flush_icache_all(void)
+> >  {
+> >  	local_flush_icache_all();
+> >  
+> > -	if (riscv_use_sbi_for_rfence())
+> > +	if (num_online_cpus() < 2)
+> 
+> with patch5, I think it's better to short cut for !SMP, I.E
+> if (!IS_ENABLED(CONFIG_SMP) || num_online_cpus()) < 2)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+aha, plz ignore this comment, I see the num_online_cpus() is defined as 1U for
+UP.
+
+> 
+> so that the UP case can avoid a atomic read and check
+> 
+> > +		return;
+> > +	else if (riscv_use_sbi_for_rfence())
+> >  		sbi_remote_fence_i(NULL);
+> >  	else
+> >  		on_each_cpu(ipi_remote_fence_i, NULL, 1);
+> > diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
+> > index 2f18fe6fc4f3..37b3c93e3c30 100644
+> > --- a/arch/riscv/mm/tlbflush.c
+> > +++ b/arch/riscv/mm/tlbflush.c
+> > @@ -73,7 +73,9 @@ static void __ipi_flush_tlb_all(void *info)
+> >  
+> >  void flush_tlb_all(void)
+> >  {
+> > -	if (riscv_use_sbi_for_rfence())
+> > +	if (num_online_cpus() < 2)
+> 
+> ditto
+> 
+> > +		local_flush_tlb_all();
+> > +	else if (riscv_use_sbi_for_rfence())
+> >  		sbi_remote_sfence_vma_asid(NULL, 0, FLUSH_TLB_MAX_SIZE, FLUSH_TLB_NO_ASID);
+> >  	else
+> >  		on_each_cpu(__ipi_flush_tlb_all, NULL, 1);
+> > -- 
+> > 2.42.0
+> > 
+> > 
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
