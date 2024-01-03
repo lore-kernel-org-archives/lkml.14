@@ -1,87 +1,143 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A99918021;
-	Wed,  3 Jan 2024 06:04:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40E21798F;
+	Wed,  3 Jan 2024 06:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ii+G2f08"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-28ceae32e9fso88614a91.1;
-        Tue, 02 Jan 2024 22:04:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704261891; x=1704866691; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RADEDc9Gi3yeGmgXekpn/ZMo5Gqri1fLzJEVnaWXUjc=;
-        b=ii+G2f083fS29py30lKeyifbquA64GgRt1scpwQH9fR+N/7t8vKBmzusxB91PUdmEK
-         4ARZ3HonxQHX0uGR31nekjynMg3QYhKHbdymk3yMBb1BTsxAUHOd8JvDdG5harZNmcWB
-         krx//XClRHGuuur15vKuRtsv2DLubcy8nlio0lzkF5osRSKy5ZNrdmTxh1qSeq0BDvYa
-         IDdGd20GvBO8EAC+NblY12fGPCe5fmp4d1bCXc4x1NaUtIiyebCMBiwLDMUuBZNTpQ34
-         HIVjwvitrMOJsRZQsDmZ1NeqRHYctB1LI+YDzu3fBOZgS+UhYne189f/8B2ly0e8G5RI
-         dWGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704261891; x=1704866691;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RADEDc9Gi3yeGmgXekpn/ZMo5Gqri1fLzJEVnaWXUjc=;
-        b=fkN7SYsh0oo5EL+o9ZkAduBQ8DGhMbBB8ScdcZqmV0Aj0N7z4+IrSFHKkCZVGuuxyR
-         bbirYbefmGJh81Uxo5c0uY0a7OKLjvceaz10L+YHR1Qp0uQtixr/2Jaw5ozkectTwv+A
-         FoUlc67nxry5A0iJpMpM4QBgAZJjaIe153LqLk5PBh6reNxXoY/HzJL31umfAla8vbJh
-         3QY2p3RA3qg4+1sa4xKxJWlLD4POfgo4OOzSIIZn5HusblE8DJNDRTvdc0t0EI8/bAxT
-         ufN3wQldl9slrHoyAJSfUr9D1SFpzRC71gYQr4WeMc0kOd0MlWnonmu1ZuR2JDPaufpQ
-         xETA==
-X-Gm-Message-State: AOJu0YyMNggOLyGzAJNz1WF8vy605+rlapbalqlrDU2RH80uZp6FyBjF
-	LBhmzDo3CgBKHyTZ00Vunew=
-X-Google-Smtp-Source: AGHT+IFqHi+Z9RaxmTv01e7Lhq19U4PDLeD1/DLeP/+2Nj+9uvZb6Eflr8CAJzBj7s8A4fjMAeUQ9w==
-X-Received: by 2002:a17:90a:4701:b0:28c:b90c:9fb8 with SMTP id h1-20020a17090a470100b0028cb90c9fb8mr2128463pjg.28.1704261890733;
-        Tue, 02 Jan 2024 22:04:50 -0800 (PST)
-Received: from fedora (c-24-4-59-2.hsd1.ca.comcast.net. [24.4.59.2])
-        by smtp.gmail.com with ESMTPSA id x8-20020a17090a46c800b0028caac8d061sm665404pjg.12.2024.01.02.22.04.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jan 2024 22:04:50 -0800 (PST)
-Date: Tue, 2 Jan 2024 22:04:47 -0800
-From: Tao Ren <rentao.bupt@gmail.com>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-	taoren@fb.com
-Subject: Re: [PATCH 5/5] ARM: dts: aspeed: Add Facebook Wedge400 BMC
-Message-ID: <ZZT4/w2eVzMhtsPx@fedora>
-References: <20200824211948.12852-1-rentao.bupt@gmail.com>
- <20200824211948.12852-6-rentao.bupt@gmail.com>
- <20231220082714.GA17989@wunner.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YB6gIyGt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704261915; x=1735797915;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=SADNmv801L5zzCHLukWFMJZ5+gmmqGnOCeM/xTkND3M=;
+  b=YB6gIyGtAe9joZUQwDT841tGd7wNo4+NaNpZ4I3mGzQ1jKiWNaGo9Jrm
+   86fidOpT0ZDRHDQF9f949kyy8RkvApX+bm19mzDWeqdq6G94rs7ZwT0DR
+   M4K2V5Bn23T7d+tiuwK7A9ElaoxavXbv1vuI+cMDqZm0+EUoFeGynBrHg
+   qbod+YWINpNNcaRuVeaAYrFje+CO10z2Myymgb+Bo7pOiHUtHgeYAhbwB
+   0VwKOoQ3YCKhPQ01tGdVCPfhYCmUBoHEk6IxYPIopYfOz8udW22a8RcLH
+   SC/xaVDo9BDgyRpKswpetemEDQbABEMs2lpO3OQYFnutKfqC55StGwfPr
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="400770887"
+X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
+   d="scan'208";a="400770887"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 22:05:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="808732507"
+X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
+   d="scan'208";a="808732507"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 22:05:07 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Gregory Price <gregory.price@memverge.com>
+Cc: Gregory Price <gourry.memverge@gmail.com>,  <linux-mm@kvack.org>,
+  <linux-doc@vger.kernel.org>,  <linux-fsdevel@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>,  <linux-api@vger.kernel.org>,
+  <x86@kernel.org>,  <akpm@linux-foundation.org>,  <arnd@arndb.de>,
+  <tglx@linutronix.de>,  <luto@kernel.org>,  <mingo@redhat.com>,
+  <bp@alien8.de>,  <dave.hansen@linux.intel.com>,  <hpa@zytor.com>,
+  <mhocko@kernel.org>,  <tj@kernel.org>,  <corbet@lwn.net>,
+  <rakie.kim@sk.com>,  <hyeongtak.ji@sk.com>,  <honggyu.kim@sk.com>,
+  <vtavarespetr@micron.com>,  <peterz@infradead.org>,
+  <jgroves@micron.com>,  <ravis.opensrc@micron.com>,
+  <sthanneeru@micron.com>,  <emirakhur@micron.com>,  <Hasan.Maruf@amd.com>,
+  <seungjun.ha@samsung.com>
+Subject: Re: [PATCH v5 01/11] mm/mempolicy: implement the sysfs-based
+ weighted_interleave interface
+In-Reply-To: <ZZTNpGhj8EmYBB70@memverge.com> (Gregory Price's message of "Tue,
+	2 Jan 2024 21:59:48 -0500")
+References: <20231223181101.1954-1-gregory.price@memverge.com>
+	<20231223181101.1954-2-gregory.price@memverge.com>
+	<877cl0f8oo.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZYp3JbcCPQc4fUrB@memverge.com>
+	<87h6jwdvxn.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZZRn04IiZhet8peu@memverge.com>
+	<87wmsrcexq.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZZTNpGhj8EmYBB70@memverge.com>
+Date: Wed, 03 Jan 2024 14:03:09 +0800
+Message-ID: <87il4bc5sy.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231220082714.GA17989@wunner.de>
+Content-Type: text/plain; charset=ascii
 
-Hi Lukas,
+Gregory Price <gregory.price@memverge.com> writes:
 
-On Wed, Dec 20, 2023 at 09:27:14AM +0100, Lukas Wunner wrote:
-> On Mon, Aug 24, 2020 at 02:19:48PM -0700, rentao.bupt@gmail.com wrote:
-> > Add initial version of device tree for Facebook Wedge400 (AST2500) BMC.
-> [...]
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge400.dts
-> [...]
-> > +		tpmdev@0 {
-> > +			compatible = "tcg,tpm_tis-spi";
-> 
-> What's the chip used on this board?  Going forward, the DT schema for TPMs
-> requires the exact chip name in addition to the generic "tcg,tpm_tis-spi".
+> On Wed, Jan 03, 2024 at 10:45:53AM +0800, Huang, Ying wrote:
+>> 
+>> > The minimum functionality is everything receiving a default weight of 1,
+>> > such that weighted interleave's behavior defaults to round-robin
+>> > interleave. This gets the system off the ground.
+>> 
+>> I don't think that we need to implement all functionalities now.  But,
+>> we may need to consider more especially if it may impact the user space
+>> interface.  The default base weight is something like that.  If we
+>> change the default base weight from "1" to "16" later, users may be
+>> surprised.  So, I think it's better to discuss it now.
+>>
+>
+> This is a hill I don't particularly care to die on.  I think the weights
+> are likely to end up being set at boot and rebalanced as (rare) hotplug
+> events occur.
+>
+> So if people think the default weight should be 3,16,24 or 123, i don't
+> think it's going to matter.
+>
+>> 
+>> We can use a wrapper function to hide the logic.
+>>
+>
+> Done.  I'll push a new set tomorrow.
+>
+>> > I think it also allows MPOL_F_GWEIGHT to be eliminated.
+>> 
+>> Do we need a way to distinguish whether to copy the global weights to
+>> local weights when the memory policy is created?  That is, when the
+>> global weights are changed later, will the changes be used?  One
+>> possible solution is
+>> 
+>> - If no weights are specified in set_mempolicy2(), the global weights
+>>   will be used always.
+>> 
+>> - If at least one weight is specified in set_mempolicy2(), it will be
+>>   used, and the other weights in global weights will be copied to the
+>>   local weights.  That is, changes to the global weights will not be
+>>   used.
+>> 
+>
+> What's confusing about that is that if a user sets a weight to 0,
+> they'll get a non-0 weight - always.
+>
+> In my opinion, if we want to make '0' mean 'use system default', then
+> it should mean 'ALWAYS use system default for this node'.
+>
+> "Use the system default at the time the syscall was called, and do not
+> update to use a new system default if that default is changed" is
+> confusing.
+>
+> If you say use a global value, use the global value. Simple.
 
-Most likely it is "infineon,slb9670", but let me double confirm and will
-prepare a patch for fix later.
+I mainly have concerns about consistency.  The global weights can be
+changed while the local weights are fixed.  For example,
 
-Cheers,
+- Weights of node 0,1 is [3, 1] initially
 
-- Tao
+- Process A call set_mempolicy2() to set weights to [4, 0], that is, use
+  default weight for node 1.
+
+- After hotplug, the weights of node is changed to [12, 4, 1], now the
+  effective weights used in process A becomes [4, 4].  Which is hardly
+  desired.
+
+Another choice is to disallow "0" as weight in set_mempolicy2().
+
+--
+Best Regards,
+Huang, Ying
