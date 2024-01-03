@@ -1,167 +1,91 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A9C1CF92;
-	Wed,  3 Jan 2024 19:51:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TtFgqfHq"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-556c60c3f9aso1320732a12.3;
-        Wed, 03 Jan 2024 11:51:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704311487; x=1704916287; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ImXWekjANIxIOH7V6JRHO3do1hNhg4w7k9oJ9w7rJMI=;
-        b=TtFgqfHqFwd8XC93pl0LIbnUqfXwtktE5ozCnj8DO1MxGNfTExurxJJeXbBBUNu4Z5
-         JMRj14Jh0xQEPnikspxk5l66MyEjgDZtBHvoVcH1+brHKC2QkBeRfgUYuL+ffVZNT5hf
-         s3C/iIF8ULpehPY/l/0XvpziKuGVOChGBgRJEI+StbERAe2/yor3TMBZRf5XblxPnnvI
-         0PI7n6dK0GrvFzLQkJ+03kvu6517o/Gb6jDD+OE36ZbxnvHz8BmoJ/SEbeH/AYK6AEWi
-         zq7NTzb//MnHgCzvlOe/o/4bUJM7hlhNmju2qZE/jxVxnENWZGgq1UcSyAXdtm/JWTe3
-         5Maw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704311487; x=1704916287;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ImXWekjANIxIOH7V6JRHO3do1hNhg4w7k9oJ9w7rJMI=;
-        b=j3xswJmlgNgg53h5sjN3lQRN/vWuJzk/NccsyX5qe7JRpQGQeH6qOgP0qfPFs6+wM+
-         j2BImcXlcL14KibmaUff+505Unh6KW+vTJcTQ05wNHRBZqUpVeFtbwQUt30f53cC2EZ5
-         hiJRiLRne90S6k4YHnv1IVgDd/GMTrQLJag+iEEUXUeV1dvt1bLKVPd0Vn1jC49zDq80
-         G7SzQnQpxZF2Stv43eD/rGlshuQx7MZxbWvOjMGDy4OgFE/XUOHaRbJkNp6xOF2iM5us
-         V83FkWRXmEze2JmGqSU6+FGY5CDccd6OCkPmenDlG6QRsYADL3QkXoiYbiId+qUEmVJA
-         edAA==
-X-Gm-Message-State: AOJu0YwFHBwT9t1nQGj8i6oUTn9ITRw5m6NO75Vvf/J87EPKB6kFduD4
-	xUnKOlDC/fUrv2FNnCWtEQJke0w84EvP8XSfKL3fUau0
-X-Google-Smtp-Source: AGHT+IGDLY9eSL4TE2NIgNb8FaQWNJ4HX4f7ourWeRr0EgSXzmt+2f4SWiH/b+ycHzssjwZPT8OrWbT295okGz9RFqg=
-X-Received: by 2002:a50:cd16:0:b0:554:1171:4495 with SMTP id
- z22-20020a50cd16000000b0055411714495mr13049212edi.23.1704311486757; Wed, 03
- Jan 2024 11:51:26 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765221D525;
+	Wed,  3 Jan 2024 19:52:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0594C433C7;
+	Wed,  3 Jan 2024 19:52:02 +0000 (UTC)
+Date: Wed, 3 Jan 2024 14:53:06 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Al Viro <viro@ZenIV.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
+ linux-fsdevel@vger.kernel.org, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] eventfs: Stop using dcache_readdir() for getdents()
+Message-ID: <20240103145306.51f8a4cd@gandalf.local.home>
+In-Reply-To: <CAHk-=wjVdGkjDXBbvLn2wbZnqP4UsH46E3gqJ9m7UG6DpX2+WA@mail.gmail.com>
+References: <20240103102553.17a19cea@gandalf.local.home>
+	<CAHk-=whrRobm82kcjwj625bZrdK+vvEo0B5PBzP+hVaBcHUkJA@mail.gmail.com>
+	<CAHk-=wjVdGkjDXBbvLn2wbZnqP4UsH46E3gqJ9m7UG6DpX2+WA@mail.gmail.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240103153307.553838-1-brho@google.com> <20240103153307.553838-3-brho@google.com>
-In-Reply-To: <20240103153307.553838-3-brho@google.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 3 Jan 2024 11:51:13 -0800
-Message-ID: <CAEf4BzbKT3LbHQSFwpAfoJuhyGy2NpHk7A6ivkFiutN_jnKHYg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 2/2] selftests/bpf: add inline assembly helpers
- to access array elements
-To: Barret Rhoden <brho@google.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, mattbobrowski@google.com, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 3, 2024 at 7:33=E2=80=AFAM Barret Rhoden <brho@google.com> wrot=
-e:
->
-> When accessing an array, even if you insert your own bounds check,
-> sometimes the compiler will remove the check, or modify it such that the
-> verifier no longer knows your access is within bounds.
->
-> The compiler is even free to make a copy of a register, check the copy,
-> and use the original to access the array.  The verifier knows the *copy*
-> is within bounds, but not the original register!
->
-> Signed-off-by: Barret Rhoden <brho@google.com>
-> ---
->  tools/testing/selftests/bpf/Makefile          |   2 +-
->  .../bpf/prog_tests/test_array_elem.c          | 112 ++++++++++
->  .../selftests/bpf/progs/array_elem_test.c     | 195 ++++++++++++++++++
->  tools/testing/selftests/bpf/progs/bpf_misc.h  |  43 ++++
->  4 files changed, 351 insertions(+), 1 deletion(-)
->  create mode 100644 tools/testing/selftests/bpf/prog_tests/test_array_ele=
-m.c
->  create mode 100644 tools/testing/selftests/bpf/progs/array_elem_test.c
->
+On Wed, 3 Jan 2024 10:38:09 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-I'm curious how bpf_cmp_likely/bpf_cmp_unlikely (just applied to
-bpf-next) compares to this?
+> @@ -332,10 +255,8 @@ static int tracefs_apply_options(struct super_block *sb, bool remount)
+>  	if (!remount || opts->opts & BIT(Opt_uid))
+>  		inode->i_uid = opts->uid;
+>  
+> -	if (!remount || opts->opts & BIT(Opt_gid)) {
+> -		/* Set all the group ids to the mount option */
+> -		set_gid(sb->s_root, opts->gid);
+> -	}
+> +	if (!remount || opts->opts & BIT(Opt_gid))
+> +		inode->i_gid = opts->gid;
+>  
+>  	return 0;
+>  }
 
+This doesn't work because for tracefs (not eventfs) the dentries are
+created at boot up and before the file system is mounted. This means you
+can't even set a gid in /etc/fstab. This will cause a regression.
 
-> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftes=
-ts/bpf/Makefile
-> index 617ae55c3bb5..651d4663cc78 100644
-> --- a/tools/testing/selftests/bpf/Makefile
-> +++ b/tools/testing/selftests/bpf/Makefile
-> @@ -34,7 +34,7 @@ LIBELF_CFLAGS :=3D $(shell $(PKG_CONFIG) libelf --cflag=
-s 2>/dev/null)
->  LIBELF_LIBS    :=3D $(shell $(PKG_CONFIG) libelf --libs 2>/dev/null || e=
-cho -lelf)
->
->  CFLAGS +=3D -g $(OPT_FLAGS) -rdynamic                                   =
- \
-> -         -Wall -Werror                                                 \
-> +         -dicks -Wall -Werror                                          \
+tracefs was designed after debugfs, which also ignores gid. But because
+there's users out there that want non-root accounts to have access to
+tracing, it is documented to set the gid to a group that you can then add
+users to. And that's the reason behind the set_gid() walk.
 
-what does this magic argument do? )
+Reverting that one commit won't fix things either, because it only blocked
+OTH to be read, but the creation of the files changed their mode's passed
+to block OTH as well, so all those would need to be changed too. And I
+don't think making the trace files open to OTH is a good solution, even if
+the tracefs top level directory itself blocks other. The issue was that the
+user use to just mount the top level to allow the group access to the files
+below, which allowed all users access. But this is weak control of the file
+system.
 
->           $(GENFLAGS) $(SAN_CFLAGS) $(LIBELF_CFLAGS)                    \
->           -I$(CURDIR) -I$(INCLUDE_DIR) -I$(GENDIR) -I$(LIBDIR)          \
->           -I$(TOOLSINCDIR) -I$(APIDIR) -I$(OUTPUT)
-> diff --git a/tools/testing/selftests/bpf/prog_tests/test_array_elem.c b/t=
-ools/testing/selftests/bpf/prog_tests/test_array_elem.c
-> new file mode 100644
-> index 000000000000..c953636f07c9
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/prog_tests/test_array_elem.c
-> @@ -0,0 +1,112 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2024 Google LLC. */
-> +#include <test_progs.h>
-> +#include "array_elem_test.skel.h"
-> +
-> +#define NR_MAP_ELEMS 100
-> +
-> +/*
-> + * Helper to load and run a program.
-> + * Call must define skel, map_elems, and bss_elems.
-> + * Destroy the skel when you're done.
-> + */
-> +#define load_and_run(PROG) ({
+Even my non-test machines have me in the tracing group so my user account
+has access to tracefs.
 
-does this have to be a macro? Can you write it as a function?
-                                    \
-> +       int err;                                                        \
-> +       skel =3D array_elem_test__open();                                =
- \
-> +       if (!ASSERT_OK_PTR(skel, "array_elem_test open"))               \
-> +               return;                                                 \
-> +       bpf_program__set_autoload(skel->progs.x_ ## PROG, true);        \
-> +       err =3D array_elem_test__load(skel);                             =
- \
-> +       if (!ASSERT_EQ(err, 0, "array_elem_test load")) {               \
-> +               array_elem_test__destroy(skel);                         \
-> +               return;                                                 \
-> +       }                                                               \
-> +       err =3D array_elem_test__attach(skel);                           =
- \
-> +       if (!ASSERT_EQ(err, 0, "array_elem_test attach")) {             \
-> +               array_elem_test__destroy(skel);                         \
-> +               return;                                                 \
-> +       }                                                               \
-> +       for (int i =3D 0; i < NR_MAP_ELEMS; i++)                         =
- \
-> +               skel->bss->lookup_indexes[i] =3D i;                      =
- \
-> +       map_elems =3D bpf_map__mmap(skel->maps.arraymap);                =
- \
-> +       ASSERT_OK_PTR(map_elems, "mmap");                               \
-> +       bss_elems =3D skel->bss->bss_elems;                              =
- \
-> +       skel->bss->target_pid =3D getpid();                              =
- \
-> +       usleep(1);                                                      \
-> +})
-> +
+On boot up, all the tracefs files are created via tracefs_create_file() and
+directories by tracefs_create_dir() which was copied from
+debugfs_create_file/dir(). At this moment, the dentry is created with the
+permissions set. There's no looking at the super block.
 
+So we need a way to change the permissions at mount time.
 
-[...]
+The only solution I can think of that doesn't include walking the current
+dentries, is to convert all of tracefs to be more like eventfs, and have
+the dentries created on demand. But perhaps, different than eventfs, they
+do not need to be freed when they are no longer referenced, which should
+make it easier to implement. And there's not nearly as many files and
+directories, so keeping meta data around isn't as much of an issue.
+
+Instead of creating the inode and dentry in the tracefs_create_file/dir(),
+it could just create a descriptor that holds the fops, data and mode. Then
+on lookup, it would create the inodes and dentries similar to eventfs.
+
+It would need its own iterate_shared as well.
+
+-- Steve
