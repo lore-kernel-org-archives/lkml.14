@@ -1,87 +1,145 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 955F718E0D
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 10:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7bbb3de4dcbso240102039f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 02:47:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704278841; x=1704883641;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V/q3fX7yfr4+OxT/fgvLyZ0FBGYrlGsDU4PTbrFMXMU=;
-        b=PReLrBamokgx3Q0pX7s+mvktqoNEbSx/d4CDRhrzUczFqGL/Zk3mCCHNCsQ6shr3Md
-         v2nunCjLhFvMI6dHppuwF9Fj2hRwLRtL0neEEmXnlv63gb2bgN5/fX+vatLODW78AOcw
-         RvpeCSeOkiQAhnz6UEGV7Uiz0MbbbcGI6HLsXpYuEXqUBqha4TK+0XnlX8+HRkJZHwLN
-         26dLRHtSAEk2dwfKXZJQdU6h0z8cfdhBYcuML0P410AQnOt55uuNxQmyNh2duT/aerlt
-         5zApZWbkXB+uDQI22R5M67BsFP0ah1ACnCh7Lk6UY51BEZC+vlSlvUiwoO/wkfBiLWMG
-         xFIw==
-X-Gm-Message-State: AOJu0YyIO3wQg1mudxtT19Fsl1m1whJMu2FtQmvWEJf7TsSq/rEmb4JN
-	/kFKzEChgfOBCjoBv0wog3NCdU/oJ8tJTGVEY/EJyq4aHOFrI/A=
-X-Google-Smtp-Source: AGHT+IF+FHvBiFwTjzjx9Sl+fixAoS3nuebFzJcxhwO8WYaTRSv/XaTiDQiVzT4ZY+vs8TKQ/L+uZlA6cALEF5IwX/UhPcRY/XBS
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F6518C19;
+	Wed,  3 Jan 2024 10:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aMVSUKwr";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LXjTni6i";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="L3Dr+y52";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fMD2WkQk"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id CF8151FD0D;
+	Wed,  3 Jan 2024 10:47:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1704278863; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rg5KRAwo0AFVwbHMpXUMvMXUGfmIiWah+X+scYHvmWs=;
+	b=aMVSUKwrNxKsDAtUhf83urZiLbahRA7dJv4iQjHxUh+linKRV+pUcXJCCPGFN5u7AcGhI1
+	IOB2tFAsBrKF2NBPp15LiB0cuBZyeaT/VJDg11OJt8LZwI2Ejd4J6+COUcAKcnuyIcshls
+	0dZb93UyC28ht4DE29UksYuO/1CbnCw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1704278863;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rg5KRAwo0AFVwbHMpXUMvMXUGfmIiWah+X+scYHvmWs=;
+	b=LXjTni6iQ+fTVuHvu61vqthFR6yFRCHGPc6Iui8mFt3NrYCEYaflXhh31Ku5oBrWZGx+87
+	QomT+jNovuQZIHBA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1704278862; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rg5KRAwo0AFVwbHMpXUMvMXUGfmIiWah+X+scYHvmWs=;
+	b=L3Dr+y526qc0FBu3bqQMGQ50XpMSEiO9d48DUvXIryxfDurx0LPNjmoVRTq7MYo1gxiNuE
+	jX0g8s/bdQnRhG/MNMgYwVfHa4gJBNtd10MHTqDE2Av/ptZMTGLHE2DgXBexnbZzjQ4S0m
+	5kD7ZobGVDaNTjudjPftmhoqDP6h6sw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1704278862;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rg5KRAwo0AFVwbHMpXUMvMXUGfmIiWah+X+scYHvmWs=;
+	b=fMD2WkQkqIdPqohQoq1TdjD3GDNhi5RWUkxKZwFRbthol1/6FrTA6vZ6NMqrhsl4zy+wKJ
+	SGLbUpRyweJynqBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8A3E41340C;
+	Wed,  3 Jan 2024 10:47:42 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 2AVoIE47lWXuBgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 03 Jan 2024 10:47:42 +0000
+Date: Wed, 03 Jan 2024 11:47:42 +0100
+Message-ID: <87cyuibsmp.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Yu Liao <liaoyu15@huawei.com>,
+	Dawei Li <set_pte_at@outlook.com>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ALSA: ac97: fix build regression
+In-Reply-To: <20240103102544.3715055-1-arnd@kernel.org>
+References: <20240103102544.3715055-1-arnd@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a2d:b0:35f:f683:f817 with SMTP id
- g13-20020a056e021a2d00b0035ff683f817mr2185154ile.5.1704278840869; Wed, 03 Jan
- 2024 02:47:20 -0800 (PST)
-Date: Wed, 03 Jan 2024 02:47:20 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e8ad89060e0856f8@google.com>
-Subject: [syzbot] Monthly wireless report (Jan 2024)
-From: syzbot <syzbot+list2ced74a42cd2d7138cf6@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=L3Dr+y52;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=fMD2WkQk
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-2.07 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[outlook.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[9];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,arndb.de:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 FREEMAIL_CC(0.00)[perex.cz,suse.com,linuxfoundation.org,arndb.de,huawei.com,outlook.com,vger.kernel.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-1.56)[92.15%]
+X-Spam-Score: -2.07
+X-Rspamd-Queue-Id: CF8151FD0D
+X-Spam-Flag: NO
 
-Hello wireless maintainers/developers,
+On Wed, 03 Jan 2024 11:25:38 +0100,
+Arnd Bergmann wrote:
+> 
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The ac97_bus_type structure is no longer declared in this file:
+> 
+> sound/ac97/bus.c: In function 'ac97_codec_add':
+> sound/ac97/bus.c:112:27: error: 'ac97_bus_type' undeclared (first use in this function); did you mean 'bus_type'?
+>   112 |         codec->dev.bus = &ac97_bus_type;
+>       |                           ^~~~~~~~~~~~~
+>       |                           bus_type
+> sound/ac97/bus.c:112:27: note: each undeclared identifier is reported only once for each function it appears in
+> sound/ac97/bus.c: In function 'snd_ac97_codec_driver_register':
+> sound/ac97/bus.c:191:28: error: 'ac97_bus_type' undeclared (first use in this function); did you mean 'ac97_bus_reset'?
+>   191 |         drv->driver.bus = &ac97_bus_type;
+> 
+> Include the header that contains the declaration and make sure the definition
+> is const but not static.
+> 
+> Fixes: 66e82d219924 ("ALSA: mark all struct bus_type as const")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-This is a 31-day syzbot report for the wireless subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/wireless
+Thanks, applied now.
 
-During the period, 0 new issues were detected and 0 were fixed.
-In total, 30 issues are still open and 119 have been fixed so far.
 
-Some of the still happening issues:
-
-Ref  Crashes Repro Title
-<1>  6261    Yes   WARNING in __ieee80211_beacon_get
-                   https://syzkaller.appspot.com/bug?extid=18c783c5cf6a781e3e2c
-<2>  4378    Yes   WARNING in __cfg80211_ibss_joined (2)
-                   https://syzkaller.appspot.com/bug?extid=7f064ba1704c2466e36d
-<3>  3715    Yes   WARNING in ieee80211_link_info_change_notify (2)
-                   https://syzkaller.appspot.com/bug?extid=de87c09cc7b964ea2e23
-<4>  2836    No    WARNING in ieee80211_ibss_csa_beacon (2)
-                   https://syzkaller.appspot.com/bug?extid=b10a54cb0355d83fd75c
-<5>  842     Yes   WARNING in ar5523_submit_rx_cmd/usb_submit_urb
-                   https://syzkaller.appspot.com/bug?extid=6101b0c732dea13ea55b
-<6>  744     Yes   WARNING in ieee80211_start_next_roc
-                   https://syzkaller.appspot.com/bug?extid=c3a167b5615df4ccd7fb
-<7>  507     Yes   WARNING in ieee80211_bss_info_change_notify (2)
-                   https://syzkaller.appspot.com/bug?extid=dd4779978217b1973180
-<8>  65      Yes   WARNING in ieee80211_free_ack_frame (2)
-                   https://syzkaller.appspot.com/bug?extid=ac648b0525be1feba506
-<9>  46      Yes   WARNING in carl9170_usb_submit_cmd_urb/usb_submit_urb
-                   https://syzkaller.appspot.com/bug?extid=9468df99cb63a4a4c4e1
-<10> 38      Yes   WARNING in ar5523_cmd/usb_submit_urb
-                   https://syzkaller.appspot.com/bug?extid=1bc2c2afd44f820a669f
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
-
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
+Takashi
