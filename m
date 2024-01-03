@@ -1,90 +1,120 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 681321C684
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 17:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 803B61D52A;
+	Wed,  3 Jan 2024 17:57:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t4nT7QdY"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-54744e66d27so451a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 09:56:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704304602; x=1704909402; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cVlTKPYO7lkIftOZJ8uU2692obLmgBxgcDPoOrfSxVk=;
-        b=t4nT7QdYxT1rYfz1flWHiYE+gDxaa2rRUjdxZ3lvYw3ptVrURwnti4Q7b+fiD2eX2n
-         i2eMkEaibm4TRQZFjA+YhHgx+dZqNfSq2RX4YmzydP2mQ/aWZdxt0RlZwLWA+SE6plyN
-         FNnlzwd5+btjJKzW1sR/tsEM3CYysSLcA0GceGIwuwYZ22dDiLlDal+kFitVSOvXS1I5
-         xx7TDLB9p2dgJ3x1/iSyn1VDt4xfwWKjtNK5KUufy+8O3Qk64atf1mBsW8w8ISOSFCLr
-         K7TkcncUyUKLbB5xTrn5cAx1rWI+n0/A09VbN7Vs4nf7zSNKlgnUppTCNE6Aq6I2pU/K
-         0n1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704304602; x=1704909402;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cVlTKPYO7lkIftOZJ8uU2692obLmgBxgcDPoOrfSxVk=;
-        b=nOxBL6yplqQAykOdKoWOfjt7JOwVP83TvB3crbSpfqdr7U5uzp3prfHLaQGf4OmH1+
-         nohzfhrzInJOr3t8/nBeP2LlpPW8mAtsdfCzvb16QQ2645J/W9UcD3OacTslEt4BtAjd
-         Mmz+nDJCvIeQ48O3FiPjGRns7H/8COCFU2OJ7VSSQxozksIAj4JJft0CHWwa9XHExCFr
-         q6gyEhbRruL7/f3ujxZztnq8OUBJpgi48BVyl9W7zkHFPWVRPgeHL8YxZBIOsn+FqUG2
-         DqNZ/yY4zIGUP5zO9Jtnp+PcT9UAj5tRj+s5kr8JOQ7SvMkJ/jT15AYBKORqQjS/yZ6Q
-         YWyQ==
-X-Gm-Message-State: AOJu0YxWo0sOXtu8CwEfhcny8wj9ebLSrBBg+RLm3NWt1RdYv3HY7jbw
-	8p8BKz1iUoVSUJVwbtmSxpcA4UGanjCsqVucIYHtBixVoBnR
-X-Google-Smtp-Source: AGHT+IEE8iuFDDGdvAHdAw2DhH14Nxhsf3iV+U/GSamanvDz1pZTOeUwxLAUfHXnj90E8HCXIn5FfA5YiYASlxq/LkE=
-X-Received: by 2002:a50:c34c:0:b0:553:d734:3f5a with SMTP id
- q12-20020a50c34c000000b00553d7343f5amr223616edb.4.1704304601628; Wed, 03 Jan
- 2024 09:56:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQ61WSOk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25872C433CB;
+	Wed,  3 Jan 2024 17:57:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704304671;
+	bh=EQmqIwt5epCeJn4AJ4OZUCyNlDG/sWGPlg++mDoiWxE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PQ61WSOkYHvDu+NAujBX1iKQQZ8LBc7cOd7ZSkJdNDefaZuBx9ynYYZVtX4jJdGb+
+	 7XOT6chUxOsHLsEnmmvvdLULKAFhQAYEnDaeLySVJ4sicSBeTl1tnAmJxJOG36YvXX
+	 Ms9+4/7u7PMcapNSeVrTinr/tC5NoN2SrdI6TT4Y1/nJCvPFNr90TPRnY4X++JGbln
+	 dp6/3BqX3NvceDJ1L6d9p4FcLzK+bE6jV5LWDAamgcqerXB0coCHYs6xCp4t1vOTc5
+	 GJ700QXwCSqBl067oofTfdRi3BHCUE+ZrADAp/W+bEhUxVqMQidoVCPQFTYFgr5ua0
+	 q6BvF2SdkCRUw==
+Date: Wed, 3 Jan 2024 17:57:43 +0000
+From: Will Deacon <will@kernel.org>
+To: Jisheng Zhang <jszhang@kernel.org>
+Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Nick Piggin <npiggin@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Arnd Bergmann <arnd@arndb.de>,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, Nadav Amit <namit@vmware.com>,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Yu Zhao <yuzhao@google.com>,
+	x86@kernel.org
+Subject: Re: [PATCH 1/2] mm/tlb: fix fullmm semantics
+Message-ID: <20240103175743.GG5954@willie-the-truck>
+References: <20231228084642.1765-1-jszhang@kernel.org>
+ <20231228084642.1765-2-jszhang@kernel.org>
+ <20240103175001.GF5954@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231220083224.3712113-1-visitorckw@gmail.com>
-In-Reply-To: <20231220083224.3712113-1-visitorckw@gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 3 Jan 2024 09:56:29 -0800
-Message-ID: <CAP-5=fXwa-GSDJX3pO-LSz-D_X7qk2Ck1vtdddtV8ixzsO+5BA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] min_heap: Min heap optimizations
-To: Kuan-Wei Chiu <visitorckw@gmail.com>
-Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240103175001.GF5954@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Wed, Dec 20, 2023 at 12:32=E2=80=AFAM Kuan-Wei Chiu <visitorckw@gmail.co=
-m> wrote:
->
-> Hello,
->
-> The purpose of this patch series is to enhance the existing min heap
-> implementation. The optimization focuses on both the heap construction
-> process and the number of comparisons made during the heapify
-> operation.
->
-> Kuan-Wei Chiu (2):
->   min_heap: Optimize number of calls to min_heapify()
->   min_heap: Optimize number of comparisons in min_heapify()
+On Wed, Jan 03, 2024 at 05:50:01PM +0000, Will Deacon wrote:
+> On Thu, Dec 28, 2023 at 04:46:41PM +0800, Jisheng Zhang wrote:
+> > From: Nadav Amit <namit@vmware.com>
+> > 
+> > fullmm in mmu_gather is supposed to indicate that the mm is torn-down
+> > (e.g., on process exit) and can therefore allow certain optimizations.
+> > However, tlb_finish_mmu() sets fullmm, when in fact it want to say that
+> > the TLB should be fully flushed.
+> > 
+> > Change tlb_finish_mmu() to set need_flush_all and check this flag in
+> > tlb_flush_mmu_tlbonly() when deciding whether a flush is needed.
+> > 
+> > At the same time, bring the arm64 fullmm on process exit optimization back.
+> > 
+> > Signed-off-by: Nadav Amit <namit@vmware.com>
+> > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> > Cc: Andrea Arcangeli <aarcange@redhat.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Andy Lutomirski <luto@kernel.org>
+> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Will Deacon <will@kernel.org>
+> > Cc: Yu Zhao <yuzhao@google.com>
+> > Cc: Nick Piggin <npiggin@gmail.com>
+> > Cc: x86@kernel.org
+> > ---
+> >  arch/arm64/include/asm/tlb.h | 5 ++++-
+> >  include/asm-generic/tlb.h    | 2 +-
+> >  mm/mmu_gather.c              | 2 +-
+> >  3 files changed, 6 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/arm64/include/asm/tlb.h b/arch/arm64/include/asm/tlb.h
+> > index 846c563689a8..6164c5f3b78f 100644
+> > --- a/arch/arm64/include/asm/tlb.h
+> > +++ b/arch/arm64/include/asm/tlb.h
+> > @@ -62,7 +62,10 @@ static inline void tlb_flush(struct mmu_gather *tlb)
+> >  	 * invalidating the walk-cache, since the ASID allocator won't
+> >  	 * reallocate our ASID without invalidating the entire TLB.
+> >  	 */
+> > -	if (tlb->fullmm) {
+> > +	if (tlb->fullmm)
+> > +		return;
+> > +
+> > +	if (tlb->need_flush_all) {
+> >  		if (!last_level)
+> >  			flush_tlb_mm(tlb->mm);
+> >  		return;
+> 
+> Why isn't the 'last_level' check sufficient here? In other words, when do
+> we perform a !last_level invalidation with 'fullmm' set outside of teardown?
 
-Thanks Kuan-Wei,
+Sorry, logic inversion typo there. I should've said:
 
-The patch series looks good to me. Given the extra conditions should
-there be some updates to:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/lib=
-/test_min_heap.c
-to ensure coverage?
+  When do we perform a last_level invalidation with 'fullmm' set outside
+  of teardown?
 
-Thanks,
-Ian
+I remember this used to be the case for OOM ages ago, but 687cb0884a71
+("mm, oom_reaper: gather each vma to prevent leaking TLB entry") sorted
+that out.
 
->
->  include/linux/min_heap.h | 44 +++++++++++++++++++++-------------------
->  1 file changed, 23 insertions(+), 21 deletions(-)
->
-> --
-> 2.25.1
->
+I'm not against making this clearer and/or more robust, I'm just trying
+to understand whether this is fixing a bug (as implied by the subject)
+or not.
+
+Will
