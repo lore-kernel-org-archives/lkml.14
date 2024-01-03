@@ -1,155 +1,118 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f194.google.com (mail-yb1-f194.google.com [209.85.219.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779A118028
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 05:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92CC17988;
+	Wed,  3 Jan 2024 06:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="N+25HVh+"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240103055809epoutp045c44ee08335cfc6f5fc093fe706f5eac~mwMt_MsFz0170601706epoutp04G
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 05:58:09 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240103055809epoutp045c44ee08335cfc6f5fc093fe706f5eac~mwMt_MsFz0170601706epoutp04G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1704261489;
-	bh=Pf2dZcRj3DhWgVRNDm7EChH8TNgNl1cEinXghVV1m/0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=N+25HVh+4ML3wkudkDl6FBs2QAVINFb0EWrDUTHUIEi6+0pctB5eASaZ9brs0+sMX
-	 bEslyMbpCxQgfNRl8+2Wluh6Ef04tYw1efx/svHveXLsX39xUx04iTL9J2azFz9x49
-	 LCGW6hGTsNxDi8Ol1AJYjwrhwn1VaV+7eWIExtVk=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20240103055808epcas5p15ffe7e7ea10f818af80b259ada734a29~mwMtYYyNb1619516195epcas5p1G;
-	Wed,  3 Jan 2024 05:58:08 +0000 (GMT)
-Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.183]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4T4fCM2ZRrz4x9QB; Wed,  3 Jan
-	2024 05:58:07 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	6D.20.19369.E67F4956; Wed,  3 Jan 2024 14:58:06 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240103055746epcas5p148c2b06032e09956ddcfc72894abc82a~mwMY6WIXB3067430674epcas5p1x;
-	Wed,  3 Jan 2024 05:57:46 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240103055746epsmtrp296aaac7ef0f47548fc855c3e5f4fd4ee~mwMY5mVys1420114201epsmtrp2e;
-	Wed,  3 Jan 2024 05:57:46 +0000 (GMT)
-X-AuditID: b6c32a50-c99ff70000004ba9-90-6594f76e952d
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	A9.EE.08817.A57F4956; Wed,  3 Jan 2024 14:57:46 +0900 (KST)
-Received: from localhost.localdomain (unknown [109.105.118.124]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240103055745epsmtip1f241b366c1140cb8ec56c16fb7bdc7fa~mwMXbCpzL2375623756epsmtip1E;
-	Wed,  3 Jan 2024 05:57:44 +0000 (GMT)
-From: Xiaobing Li <xiaobing.li@samsung.com>
-To: axboe@kernel.dk
-Cc: asml.silence@gmail.com, linux-kernel@vger.kernel.org,
-	io-uring@vger.kernel.org, kun.dou@samsung.com, peiwei.li@samsung.com,
-	joshi.k@samsung.com, kundan.kumar@samsung.com, wenwen.chen@samsung.com,
-	ruyi.zhang@samsung.com, xiaobing.li@samsung.com
-Subject: Re: Re: [PATCH v6] io_uring: Statistics of the true utilization of
- sq threads.
-Date: Wed,  3 Jan 2024 13:49:37 +0800
-Message-ID: <20240103054940.2121301-1-xiaobing.li@samsung.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <7967c7a9-3d17-44de-a170-2b5354460126@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DyIC+AF1"
+Received: by mail-yb1-f194.google.com with SMTP id 3f1490d57ef6-dbdd61d80a3so100888276.0;
+        Tue, 02 Jan 2024 22:03:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704261794; x=1704866594; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sQ5IlZ0V3FHaUxfy2Z13jv10QMbc9LLMikTDxO1h8tE=;
+        b=DyIC+AF171WqM4aLiGMC76IYMmccZPtTVWw39TUWmWbz2fLUqDHyztCnPtXQOk7gDV
+         bbXmcLBe4T1EONz3N7vd9s9NON5O40hsP5C63v+lgAFnJmHD06Ur24BrzCuAMOiilHCh
+         GRyPI11P8A8HeR6OgRVEnAeUYRu5V6eYRTFOaCaLcGBYA9wRZTJFSrfsiIrt57zDDzTy
+         ZYkWxV44ffJHyJreUbK6b4zMUJ14i89BNauWryNTP/1NfpBUqzcj2FUSp2B7sU1PSgh0
+         +JX98EI+JnQq7p84enY4bsNSCM8mIYW03Q9fuI50oKFZKGGv4lqSOAqjWmuPaLAlVyaA
+         nrpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704261794; x=1704866594;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sQ5IlZ0V3FHaUxfy2Z13jv10QMbc9LLMikTDxO1h8tE=;
+        b=djbNB166j2YkAClvDRVE7ozhsGAMtKviYdPWhe5SITt9izNw1L0K+tsAknGS2OztVa
+         fXjTEJ73+TQdq05JFQ+knQjtJ3w6sjoAawt63yGOWVLOOD9GoSdGRXElj1g/2x1y73qJ
+         e1J2MNgGVH8AzoHXeNf2eD+g1pFV8Rnir3ngaSl2JLdCJIgvTp2e+qG7ioXNdjsc4MNb
+         uOB3S0+ecqYdmyy7+AfjlwBmf9zuas5PXxEppzf4imTZGTYNthE4W8bXdwf2J4PYQIXt
+         UkLqf3Tj14KvqcjjnMiSDVCPKP4kAyKckS9OqRfVeOmuQFBzze0BrBNoetRz7bHXepKs
+         LH9w==
+X-Gm-Message-State: AOJu0YzlEwSiT1YqP4QIpFQ4E3pmiS5E56OwozbB+dxtHGThjl528r3z
+	9zfzL8VR6FHXCwccquZomSplIHgKUMrD7DsIJzU=
+X-Google-Smtp-Source: AGHT+IEin4aLwzgRDR4YF1/z/b9ItG0hiLXmGxsk6KOXZ+HGU75LTH+uJ4VHAoPVHhGqhsVSBupooXSyuU5C53pXdVg=
+X-Received: by 2002:a05:6902:10d:b0:dbc:da55:b397 with SMTP id
+ o13-20020a056902010d00b00dbcda55b397mr321129ybh.65.1704261793832; Tue, 02 Jan
+ 2024 22:03:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMJsWRmVeSWpSXmKPExsWy7bCmlm7e9ympBgcnalrMWbWN0WL13X42
-	i3et51gsjv5/y2bxq/suo8XWL19ZLS7vmsNm8Wwvp8WXw9/ZLc5O+MBqMXXLDiaLjpbLjA48
-	Hjtn3WX3uHy21KNvyypGj8+b5AJYorJtMlITU1KLFFLzkvNTMvPSbZW8g+Od403NDAx1DS0t
-	zJUU8hJzU22VXHwCdN0yc4AOU1IoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUWpOQUmBTo
-	FSfmFpfmpevlpZZYGRoYGJkCFSZkZyyf/oO5oFOg4tPmtAbG5zxdjBwcEgImEjs+ZHUxcnEI
-	CexhlNjdO48JwvnEKHHh6GlGCOcbo0Tr5vtADidYx/+vJ5ghEnsZJd50vWKHcL4yStye9ZkJ
-	pIpNQFvi+rouVhBbREBYYn9HKwtIEbPAX0aJCS9/M4MkhAUiJTq/nWcCOYRFQFXixocIkDCv
-	gJ3Et+ZFbBDb5CUW71gOVs4pYCtx5OMudogaQYmTM5+wgNjMQDXNW2eDXSQhMJVD4tCiG6wQ
-	zS4Svy/0s0DYwhKvjm9hh7ClJD6/2wu1oFjiSM93VojmBkaJ6bevQhVZS/y7socF5DhmAU2J
-	9bv0IcKyElNPrWOCWMwn0fv7CRNEnFdixzwYW1Vi9aWHUHulJV43/IaKe0hMapsMDdMJjBK/
-	dk9lm8CoMAvJQ7OQPDQLYfUCRuZVjFKpBcW56anJpgWGunmp5fBoTs7P3cQITq1aATsYV2/4
-	q3eIkYmD8RCjBAezkgjv+nWTU4V4UxIrq1KL8uOLSnNSiw8xmgJDfCKzlGhyPjC555XEG5pY
-	GpiYmZmZWBqbGSqJ875unZsiJJCeWJKanZpakFoE08fEwSnVwBQ1v/dP/MrZr9XMXD6eWLiI
-	MU/f/GnAo6vmnHFXdi//riB3cDnXHu2ST5NPF3RciRHbul7xjWjz77eybJPX1TrofpdRX+C/
-	4KbwEa2P8pYbFooaGx3l2r0mcvmd9Rb2q99dOCX/qzQy6HIQt2fpjqdlzd/Cco3OXLopzPNb
-	+uZ6vpKq/t92ua2yniUzg7a1xd3mNOhYsf5Bg8T7JcLVnxfZiqZuq2gS7bt4pqLzffHZqH/P
-	tLa3Psg0nJ+bf+SIYssNNYb6mJ5Y5jnnsndGJR7Y/Zpf/rM9D3tT056NQiFnMo55zpe3L6xa
-	Hl6VvyGzI0EwqG//aj6Wt1G6nNoTZ014WrBG/0zBosXmvRU/lZRYijMSDbWYi4oTATgei0A2
-	BAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDLMWRmVeSWpSXmKPExsWy7bCSnG7U9ympBtffKFjMWbWN0WL13X42
-	i3et51gsjv5/y2bxq/suo8XWL19ZLS7vmsNm8Wwvp8WXw9/ZLc5O+MBqMXXLDiaLjpbLjA48
-	Hjtn3WX3uHy21KNvyypGj8+b5AJYorhsUlJzMstSi/TtErgylk//wVzQKVDxaXNaA+Nzni5G
-	Tg4JAROJ/19PMHcxcnEICexmlJhwfCljFyMHUEJa4s+fcogaYYmV/56zQ9R8ZpToazrJBJJg
-	E9CWuL6uixXEFgEq2t/RygJiMwt0Mkm8/qwHYgsLhEscbL4FNpNFQFXixocIkDCvgJ3Et+ZF
-	bBDz5SUW71jODGJzCthKHPm4ix3EFhKwkbiyexsbRL2gxMmZT1hAxjALqEusnycEsUleonnr
-	bOYJjIKzkFTNQqiahaRqASPzKkbJ1ILi3PTcYsMCo7zUcr3ixNzi0rx0veT83E2M4AjR0trB
-	uGfVB71DjEwcjIcYJTiYlUR416+bnCrEm5JYWZValB9fVJqTWnyIUZqDRUmc99vr3hQhgfTE
-	ktTs1NSC1CKYLBMHp1QDk/2XQ1t7d0ys4e54drc6WMB8ha1LzNzzdxIrMvZW9V1bt/eUwEqz
-	N5u23JoaINDy8MF/AynJw0JMun/Pxxf1GO9KPPS9nuHOdn7ZxJuVZ6ds2CHf02l84KBr986A
-	PdMbZibpzX/37CdrbEbfl/2R/rvEFhezBHTdfct5/XHZBqMTPM0pS5sLcmJ5v/5N0w3ZcK2r
-	eYM8Y1yF1LHWwx+unG/12MzetEP7U7d2TBvHlPftdZ38pjwuuc9vrTu/adn6uPh3KivffJn9
-	/nPT+6QDcdIZU9rUcut91SJ0u9L557hdfq110KGZ5+rXhrXHi2+Iy/PtZeGPTDi9RefbHKmZ
-	6m+2+qR09BYXCWWuKlStVGIpzkg01GIuKk4EAA5fCGD/AgAA
-X-CMS-MailID: 20240103055746epcas5p148c2b06032e09956ddcfc72894abc82a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240103055746epcas5p148c2b06032e09956ddcfc72894abc82a
-References: <7967c7a9-3d17-44de-a170-2b5354460126@gmail.com>
-	<CGME20240103055746epcas5p148c2b06032e09956ddcfc72894abc82a@epcas5p1.samsung.com>
+References: <20231229081409.1276386-1-menglong8.dong@gmail.com>
+ <ZZRR1q1JrJMD1lAy@google.com> <c628c362-b2e8-4ad6-a34f-50c2822bccd6@linux.dev>
+ <CADxym3bPjdErhZ_wgQNK3BqbeUgvGMtLJRA_rD3pRa+BVcA95A@mail.gmail.com> <4fa8ae9d-11fd-4728-83bd-848cb22952e7@linux.dev>
+In-Reply-To: <4fa8ae9d-11fd-4728-83bd-848cb22952e7@linux.dev>
+From: Menglong Dong <menglong8.dong@gmail.com>
+Date: Wed, 3 Jan 2024 14:03:02 +0800
+Message-ID: <CADxym3aYT6ftPMFiuMSiTpNEYpvPz1p3rEtK6bX2_N=BreXOzQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 0/2] bpf: add csum/ip_summed fields to __sk_buff
+To: Yonghong Song <yonghong.song@linux.dev>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>, Stanislav Fomichev <sdf@google.com>, andrii@kernel.org, 
+	ast@kernel.org, daniel@iogearbox.net, song@kernel.org, 
+	john.fastabend@gmail.com, kpsingh@kernel.org, haoluo@google.com, 
+	jolsa@kernel.org, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	pabeni@redhat.com, mykolal@fb.com, shuah@kernel.org, horms@kernel.org, 
+	dhowells@redhat.com, linyunsheng@huawei.com, aleksander.lobakin@intel.com, 
+	joannelkoong@gmail.com, laoar.shao@gmail.com, kuifeng@meta.com, 
+	bjorn@rivosinc.com, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 12/30/23 9:27 AM, Pavel Begunkov wrote:
-> Why it uses jiffies instead of some task run time?
-> Consequently, why it's fine to account irq time and other
-> preemption? (hint, it's not)
-> 
-> Why it can't be done with userspace and/or bpf? Why
-> can't it be estimated by checking and tracking
-> IORING_SQ_NEED_WAKEUP in userspace?
-> 
-> What's the use case in particular? Considering that
-> one of the previous revisions was uapi-less, something
-> is really fishy here. Again, it's a procfs file nobody
-> but a few would want to parse to use the feature.
-> 
-> Why it just keeps aggregating stats for the whole
-> life time of the ring? If the workload changes,
-> that would either totally screw the stats or would make
-> it too inert to be useful. That's especially relevant
-> for long running (days) processes. There should be a
-> way to reset it so it starts counting anew.
+On Wed, Jan 3, 2024 at 11:55=E2=80=AFAM Yonghong Song <yonghong.song@linux.=
+dev> wrote:
+>
+>
+> On 1/2/24 6:54 PM, Menglong Dong wrote:
+> > On Wed, Jan 3, 2024 at 8:52=E2=80=AFAM Martin KaFai Lau <martin.lau@lin=
+ux.dev> wrote:
+> >> On 1/2/24 10:11 AM, Stanislav Fomichev wrote:
+> >>> On 12/29, Menglong Dong wrote:
+> >>>> For now, we have to call some helpers when we need to update the csu=
+m,
+> >>>> such as bpf_l4_csum_replace, bpf_l3_csum_replace, etc. These helpers=
+ are
+> >>>> not inlined, which causes poor performance.
+> >>>>
+> >>>> In fact, we can define our own csum update functions in BPF program
+> >>>> instead of bpf_l3_csum_replace, which is totally inlined and efficie=
+nt.
+> >>>> However, we can't do this for bpf_l4_csum_replace for now, as we can=
+'t
+> >>>> update skb->csum, which can cause skb->csum invalid in the rx path w=
+ith
+> >>>> CHECKSUM_COMPLETE mode.
+> >>>>
+> >>>> What's more, we can't use the direct data access and have to use
+> >>>> skb_store_bytes() with the BPF_F_RECOMPUTE_CSUM flag in some case, s=
+uch
+> >>>> as modifing the vni in the vxlan header and the underlay udp header =
+has
+> >>>> no checksum.
+> >> There is bpf_csum_update(), does it work?
+> >> A helper call should be acceptable comparing with the csum calculation=
+ itself.
+> > Yeah, this helper works in this case! Now we miss the last
+> > piece for the tx path: ip_summed. We need to know if it is
+> > CHECKSUM_PARTIAL to decide if we should update the
+> > csum in the packet. In the tx path, the csum in the L4 is the
+> > pseudo header only if skb->ip_summed is CHECKSUM_PARTIAL.
+> >
+> > Maybe we can introduce a lightweight kfunc to get its
+> > value? Such as bpf_skb_csum_mode(). As we need only call
+> > it once, there shouldn't be overhead on it.
+>
+> You don't need kfunc, you can do checking like
+>    struct sk_buff *kskb =3D bpf_cast_to_kern_ctx(skb);
+>    if (kskb->ip_summed =3D=3D CHECKSUM_PARTIAL) ...
+>    ...
+>
 
-Hi, Jens and Pavel,
-I carefully read the questions you raised.
-First of all, as to why I use jiffies to statistics time, it
-is because I have done some performance tests and found that
-using jiffies has a relatively smaller loss of performance 
-than using task run time. Of course, using task run time is 
-indeed more accurate.  But in fact, our requirements for 
-accuracy are not particularly high, so after comprehensive 
-consideration, we finally chose to use jiffies.
-Of course, if you think that a little more performance loss 
-here has no impact, I can use task run time instead, but in 
-this case, does the way of calculating sqpoll thread timeout
-also need to be changed, because it is also calculated through
-jiffies.
-Then there’s how to use this metric.
-We are studying some optimization methods for io-uring, including
-performance and CPU utilization, but we found that there is
-currently no tool that can observe the CPU ratio of sqthread's 
-actual processing IO part, so we want to merge this method  that
-can observe this value so that we can more easily observe the 
-optimization effects.
-
-Best regards,
---
-Xiaobing Li
+Great, this is exactly what I need! Thanks~
