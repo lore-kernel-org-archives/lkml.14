@@ -1,448 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947141BDEC;
-	Wed,  3 Jan 2024 16:56:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246431BDF3
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 16:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CigdaF1t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73E5BC433C7;
-	Wed,  3 Jan 2024 16:56:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1704301016;
-	bh=55YAiE47xn8SJbZTG5gBBLlgoRLB1XK+vd8rkROAvGY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=CigdaF1togTarn+NtgBxxfngDH+4AsYg/tooD1VIGld7TfEqp5H9I4fXZLNSoUDaT
-	 qhK4Q2enmkRLQZbm/I50emsyG062YK7J7wJt0YfSWhyLQRFTO7XKWqH3tplCcw9nYp
-	 qFEyKmRhG9ZB4Vv5DSaKXukht5d6HV25kj/tfvUc=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	allen.lkml@gmail.com
-Subject: [PATCH 6.1 000/100] 6.1.71-rc1 review
-Date: Wed,  3 Jan 2024 17:53:49 +0100
-Message-ID: <20240103164856.169912722@linuxfoundation.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="N60pYn0x"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5534dcfdd61so1182763a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 08:57:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1704301024; x=1704905824; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=zl+pWuGvkr3PepNBGmYX9s8KhmGr6FwIy7+RDKXY6n4=;
+        b=N60pYn0xKlIe3QRk7fGNOCGPifK4ILpu2hGcgU4S9LN9MMjn+ITaqQPBrlyDcuS17o
+         5cgYmssinHHR/gfsETw0+41gHgXBVJf29CzUHeEwrXQyoo081pu0r/cXgxe8eod04+Gd
+         ZxvzYaosIFWFE1eib8nR68KHjrjheWQck6wog=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704301024; x=1704905824;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zl+pWuGvkr3PepNBGmYX9s8KhmGr6FwIy7+RDKXY6n4=;
+        b=GDb4PLmCSR05pip+kCckhGjAwOqNwS0nuaKOqRLdaxdODxYJcbe4oI+oHTw/GtFvgQ
+         ekvLR7HjihJivaz76xAcq5W7coyXUR2EBkL5zY5P7j8+YQFQBX0kZSWb54DnFGX6TZBS
+         D5+Fv/9G+61dqcItWKfhTFDNmUW8rWhurbMhqKDrw7VjHr5t3tqj/TWQWXUDmEWr6XDK
+         B0br9ARTsluEfPJF4h61DBSer6IGlSPI3lMVImJtl5gLfhkVjkgQWK9Vs42qzZ6s3u9x
+         fJBeF97QbcSF8j8H/2mNFTGIBGFS+YoioJqQE6Va3Az7hOXk81JV/lF0qpIql2/pD2x6
+         66oA==
+X-Gm-Message-State: AOJu0YyqSN9VpiLCWJO33/TElb3pcAM6+4gjd31goa1eWpFGouW76PU6
+	bsAYWlOEOj08izK7+hcofl2lomSMk+eDbM+m1nfXjvrM2fVQ
+X-Google-Smtp-Source: AGHT+IFPeKx7jODK0kMzxV/DmpTGdk9maEceY+oHSFiLcS1z2xZaA2JXxbJ3TyoLQexNnKiKPydRhjj6DYIbSCCEljs=
+X-Received: by 2002:a05:6402:4306:b0:556:cd93:3acb with SMTP id
+ m6-20020a056402430600b00556cd933acbmr1096806edc.3.1704301024237; Wed, 03 Jan
+ 2024 08:57:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.71-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-6.1.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 6.1.71-rc1
-X-KernelTest-Deadline: 2024-01-05T16:49+00:00
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-This is the start of the stable review cycle for the 6.1.71 release.
-There are 100 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Fri, 05 Jan 2024 16:47:49 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.71-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 6.1.71-rc1
-
-Andrii Nakryiko <andrii@kernel.org>
-    tracing/kprobes: Fix symbol counting logic by looking at modules as well
-
-Jiri Olsa <jolsa@kernel.org>
-    kallsyms: Make module_kallsyms_on_each_symbol generally available
-
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-    device property: Allow const parameter to dev_fwnode()
-
-Geert Uytterhoeven <geert+renesas@glider.be>
-    spi: Constify spi parameters of chip select APIs
-
-NeilBrown <neilb@suse.de>
-    NFSD: fix possible oops when nfsd/pool_stats is closed.
-
-Steven Rostedt (Google) <rostedt@goodmis.org>
-    ring-buffer: Fix slowpath of interrupted event
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: nf_tables: skip set commit for deleted/destroyed sets
-
-Steven Rostedt (Google) <rostedt@goodmis.org>
-    ring-buffer: Remove useless update to write_stamp in rb_try_to_discard()
-
-Steven Rostedt (Google) <rostedt@goodmis.org>
-    tracing: Fix blocked reader of snapshot buffer
-
-Steven Rostedt (Google) <rostedt@goodmis.org>
-    ring-buffer: Fix wake ups when buffer_percent is set to 100
-
-Matthew Wilcox (Oracle) <willy@infradead.org>
-    mm/memory-failure: check the mapcount of the precise page
-
-Matthew Wilcox (Oracle) <willy@infradead.org>
-    mm/memory-failure: cast index to loff_t before shifting it
-
-Charan Teja Kalla <quic_charante@quicinc.com>
-    mm: migrate high-order folios in swap cache correctly
-
-Baokun Li <libaokun1@huawei.com>
-    mm/filemap: avoid buffered read/write race to read inconsistent data
-
-Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-    platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: fix slab-out-of-bounds in smb_strndup_from_utf16()
-
-Christoph Hellwig <hch@lst.de>
-    block: renumber QUEUE_FLAG_HW_WC
-
-Louis Chauvet <louis.chauvet@bootlin.com>
-    spi: atmel: Fix clock issue when using devices with different polarities
-
-Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
-    spi: Add APIs in spi core to set/get spi->chip_select and spi->cs_gpiod
-
-Tudor Ambarus <tudor.ambarus@microchip.com>
-    spi: Reintroduce spi_set_cs_timing()
-
-Helge Deller <deller@gmx.de>
-    linux/export: Ensure natural alignment of kcrctab array
-
-NeilBrown <neilb@suse.de>
-    nfsd: call nfsd_last_thread() before final nfsd_put()
-
-NeilBrown <neilb@suse.de>
-    nfsd: separate nfsd_last_thread() from nfsd_put()
-
-Nuno Sa <nuno.sa@analog.com>
-    iio: imu: adis16475: add spi_device_id table
-
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-    spi: Introduce spi_get_device_match_data() helper
-
-Dan Carpenter <dan.carpenter@linaro.org>
-    usb: fotg210-hcd: delete an incorrect bounds test
-
-Tony Lindgren <tony@atomide.com>
-    ARM: dts: Fix occasional boot hang for am3 usb
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: fix wrong allocation size update in smb2_open()
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: avoid duplicate opinfo_put() call on error of smb21_lease_break_ack()
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: lazy v2 lease break on smb2_write()
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: send v2 lease break notification for directory
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: downgrade RWH lease caching state to RH for directory
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: set v2 lease capability
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: set epoch in create context v2 lease
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: don't update ->op_state as OPLOCK_STATE_NONE on error
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: move setting SMB2_FLAGS_ASYNC_COMMAND and AsyncId
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: release interim response after sending status pending response
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: move oplock handling after unlock parent dir
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: separately allocate ci per dentry
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: fix possible deadlock in smb2_open
-
-Zongmin Zhou <zhouzongmin@kylinos.cn>
-    ksmbd: prevent memory leak on error return
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: fix kernel-doc comment of ksmbd_vfs_kern_path_locked()
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: no need to wait for binded connection termination at logoff
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: add support for surrogate pair conversion
-
-Kangjing Huang <huangkangjing@gmail.com>
-    ksmbd: fix missing RDMA-capable flag for IPoIB device in ksmbd_rdma_capable_netdev()
-
-Marios Makassikis <mmakassikis@freebox.fr>
-    ksmbd: fix recursive locking in vfs helpers
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: fix kernel-doc comment of ksmbd_vfs_setxattr()
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: reorganize ksmbd_iov_pin_rsp()
-
-Cheng-Han Wu <hank20010209@gmail.com>
-    ksmbd: Remove unused field in ksmbd_user struct
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: fix potential double free on smb2_read_pipe() error path
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: fix Null pointer dereferences in ksmbd_update_fstate()
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: fix wrong error response status by using set_smb2_rsp_status()
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: fix race condition between tree conn lookup and disconnect
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: fix race condition from parallel smb2 lock requests
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: fix race condition from parallel smb2 logoff requests
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: fix race condition with fp
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: check iov vector index in ksmbd_conn_write()
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: return invalid parameter error response if smb2 request is invalid
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: fix passing freed memory 'aux_payload_buf'
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: remove unneeded mark_inode_dirty in set_info_sec()
-
-Steve French <stfrench@microsoft.com>
-    ksmbd: remove experimental warning
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: add missing calling smb2_set_err_rsp() on error
-
-Yang Li <yang.lee@linux.alibaba.com>
-    ksmbd: Fix one kernel-doc comment
-
-Atte Heikkilä <atteh.mailbox@gmail.com>
-    ksmbd: fix `force create mode' and `force directory mode'
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: fix wrong interim response on compound
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: add support for read compound
-
-Yang Yingliang <yangyingliang@huawei.com>
-    ksmbd: switch to use kmemdup_nul() helper
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: check if a mount point is crossed during path lookup
-
-Wang Ming <machel@vivo.com>
-    ksmbd: Fix unsigned expression compared with zero
-
-Gustavo A. R. Silva <gustavoars@kernel.org>
-    ksmbd: Replace one-element array with flexible-array member
-
-Gustavo A. R. Silva <gustavoars@kernel.org>
-    ksmbd: Use struct_size() helper in ksmbd_negotiate_smb_dialect()
-
-Lu Hongfei <luhongfei@vivo.com>
-    ksmbd: Replace the ternary conditional operator with min()
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: use kvzalloc instead of kvmalloc
-
-Lu Hongfei <luhongfei@vivo.com>
-    ksmbd: Change the return value of ksmbd_vfs_query_maximal_access to void
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: return a literal instead of 'err' in ksmbd_vfs_kern_path_locked()
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: use kzalloc() instead of __GFP_ZERO
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: remove unused ksmbd_tree_conn_share function
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: add mnt_want_write to ksmbd vfs functions
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: fix posix_acls and acls dereferencing possible ERR_PTR()
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: call putname after using the last component
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: fix uninitialized pointer read in smb2_create_link()
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: fix uninitialized pointer read in ksmbd_vfs_rename()
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: fix racy issue from using ->d_parent and ->d_name
-
-Al Viro <viro@zeniv.linux.org.uk>
-    fs: introduce lock_rename_child() helper
-
-David Disseldorp <ddiss@suse.de>
-    ksmbd: remove unused compression negotiate ctx packing
-
-David Disseldorp <ddiss@suse.de>
-    ksmbd: avoid duplicate negotiate ctx offset increments
-
-David Disseldorp <ddiss@suse.de>
-    ksmbd: set NegotiateContextCount once instead of every inc
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: delete asynchronous work from list
-
-Tom Rix <trix@redhat.com>
-    ksmbd: remove unused is_char_allowed function
-
-Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-    ksmbd: Fix parameter name and comment mismatch
-
-Colin Ian King <colin.i.king@gmail.com>
-    ksmbd: Fix spelling mistake "excceed" -> "exceeded"
-
-Steve French <stfrench@microsoft.com>
-    ksmbd: update Kconfig to note Kerberos support and fix indentation
-
-Dawei Li <set_pte_at@outlook.com>
-    ksmbd: Remove duplicated codes
-
-Dawei Li <set_pte_at@outlook.com>
-    ksmbd: fix typo, syncronous->synchronous
-
-Dawei Li <set_pte_at@outlook.com>
-    ksmbd: Implements sess->rpc_handle_list as xarray
-
-ye xingchen <ye.xingchen@zte.com.cn>
-    ksmbd: Convert to use sysfs_emit()/sysfs_emit_at() APIs
-
-Marios Makassikis <mmakassikis@freebox.fr>
-    ksmbd: Fix resource leak in smb2_lock()
-
-Jeff Layton <jlayton@kernel.org>
-    ksmbd: use F_SETLK when unlocking a file
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: set SMB2_SESSION_FLAG_ENCRYPT_DATA when enforcing data encryption for this share
-
-Gustavo A. R. Silva <gustavoars@kernel.org>
-    ksmbd: replace one-element arrays with flexible-array members
-
-
--------------
-
-Diffstat:
-
- Makefile                          |    4 +-
- arch/arm/boot/dts/am33xx.dtsi     |    1 +
- drivers/base/property.c           |   11 +-
- drivers/iio/imu/adis16475.c       |  129 +++--
- drivers/platform/x86/p2sb.c       |  178 +++++--
- drivers/spi/spi-atmel.c           |   82 ++-
- drivers/spi/spi.c                 |   92 +++-
- drivers/usb/host/fotg210-hcd.c    |    3 -
- fs/namei.c                        |  125 ++++-
- fs/nfsd/nfsctl.c                  |    9 +-
- fs/nfsd/nfsd.h                    |    8 +-
- fs/nfsd/nfssvc.c                  |   57 +-
- fs/smb/common/smb2pdu.h           |    1 +
- fs/smb/server/Kconfig             |   10 +-
- fs/smb/server/asn1.c              |   33 +-
- fs/smb/server/auth.c              |   11 +-
- fs/smb/server/connection.c        |   74 +--
- fs/smb/server/connection.h        |    2 +-
- fs/smb/server/ksmbd_netlink.h     |    4 +-
- fs/smb/server/ksmbd_work.c        |  100 +++-
- fs/smb/server/ksmbd_work.h        |   36 +-
- fs/smb/server/mgmt/share_config.h |   29 +-
- fs/smb/server/mgmt/tree_connect.c |   53 +-
- fs/smb/server/mgmt/tree_connect.h |   14 +-
- fs/smb/server/mgmt/user_config.h  |    1 -
- fs/smb/server/mgmt/user_session.c |   38 +-
- fs/smb/server/mgmt/user_session.h |    3 +-
- fs/smb/server/oplock.c            |  147 ++++--
- fs/smb/server/oplock.h            |    8 +-
- fs/smb/server/server.c            |   36 +-
- fs/smb/server/smb2misc.c          |   19 +-
- fs/smb/server/smb2ops.c           |   19 +-
- fs/smb/server/smb2pdu.c           | 1033 ++++++++++++++++---------------------
- fs/smb/server/smb2pdu.h           |    3 +-
- fs/smb/server/smb_common.c        |   19 +-
- fs/smb/server/smb_common.h        |   14 +-
- fs/smb/server/smbacl.c            |   20 +-
- fs/smb/server/smbacl.h            |    2 +-
- fs/smb/server/transport_ipc.c     |    4 +-
- fs/smb/server/transport_rdma.c    |   44 +-
- fs/smb/server/unicode.c           |  191 ++++---
- fs/smb/server/vfs.c               |  638 ++++++++++++-----------
- fs/smb/server/vfs.h               |   52 +-
- fs/smb/server/vfs_cache.c         |   63 ++-
- fs/smb/server/vfs_cache.h         |   18 +-
- include/linux/blkdev.h            |    2 +-
- include/linux/export-internal.h   |    1 +
- include/linux/module.h            |    9 +
- include/linux/namei.h             |    7 +
- include/linux/property.h          |    7 +-
- include/linux/spi/spi.h           |   23 +
- kernel/module/kallsyms.c          |    2 -
- kernel/trace/ring_buffer.c        |  140 ++---
- kernel/trace/trace.c              |   20 +-
- kernel/trace/trace_kprobe.c       |   25 +-
- mm/filemap.c                      |    9 +
- mm/memory-failure.c               |    8 +-
- mm/migrate.c                      |    9 +-
- net/netfilter/nf_tables_api.c     |    2 +-
- 59 files changed, 2139 insertions(+), 1563 deletions(-)
-
-
+References: <20240103102332.3642417-1-arnd@kernel.org> <ZZWBS5EugvO2dBp0@C02YVCJELVCG.dhcp.broadcom.net>
+ <557cfaec-6721-4409-83c9-6a60742a5021@app.fastmail.com>
+In-Reply-To: <557cfaec-6721-4409-83c9-6a60742a5021@app.fastmail.com>
+From: Michael Chan <michael.chan@broadcom.com>
+Date: Wed, 3 Jan 2024 08:56:51 -0800
+Message-ID: <CACKFLikiU6WC3EfPaNBrPsf3wAQU=8XbabA2nhVUUOBihQ29FA@mail.gmail.com>
+Subject: Re: [PATCH] bnxt: fix building without CONFIG_RFS_ACCEL
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Andy Gospodarek <andrew.gospodarek@broadcom.com>, Arnd Bergmann <arnd@kernel.org>, 
+	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Pavan Chebbi <pavan.chebbi@broadcom.com>, Somnath Kotur <somnath.kotur@broadcom.com>, 
+	Kalesh AP <kalesh-anakkur.purayil@broadcom.com>, 
+	Randy Schacher <stuart.schacher@broadcom.com>, 
+	Vasundhara Volam <vasundhara-v.volam@broadcom.com>, Netdev <netdev@vger.kernel.org>, 
+	linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000002a9cb4060e0d8170"
+
+--0000000000002a9cb4060e0d8170
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jan 3, 2024 at 8:01=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Wed, Jan 3, 2024, at 16:46, Andy Gospodarek wrote:
+> > There is a good oppportunity to clean this up a little better.  When
+> > CONFIG_RFS_ACCEL is not set there is no reason to even have
+> > bnxt_cfg_ntp_filters included in the driver build.
+> >
+> > I'll talk to Michael and we will post a fix for this.
+>
+> Ok, thanks!
+
+Yes, we can clean this up better.  User configured ntuple filters are
+directly added and don't go through bnxt_cfg_ntp_filters() by way of
+the workqueue.  I'll post the fix later today.  Thanks.
+
+--0000000000002a9cb4060e0d8170
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+OnaLEot1MoQO7BIe5S9H4AcCEXXcrJJiAtMCl47ARpyHmvQFQFFTrHgUYEd9V+9bOzY7MBIGSV1N
+/JfsT1sZw6HT0lJkSQefhPGpBniAob62DJP3qr11tu8CAwEAAaOCAdowggHWMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJAYDVR0R
+BB0wG4EZbWljaGFlbC5jaGFuQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNV
+HSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQU31rAyTdZweIF0tJTFYwfOv2w
+L4QwDQYJKoZIhvcNAQELBQADggEBACcuyaGmk0NSZ7Kio7O7WSZ0j0f9xXcBnLbJvQXFYM7JI5uS
+kw5ozATEN5gfmNIe0AHzqwoYjAf3x8Dv2w7HgyrxWdpjTKQFv5jojxa3A5LVuM8mhPGZfR/L5jSk
+5xc3llsKqrWI4ov4JyW79p0E99gfPA6Waixoavxvv1CZBQ4Stu7N660kTu9sJrACf20E+hdKLoiU
+hd5wiQXo9B2ncm5P3jFLYLBmPltIn/uzdiYpFj+E9kS9XYDd+boBZhN1Vh0296zLQZobLfKFzClo
+E6IFyTTANonrXvCRgodKS+QJEH8Syu2jSKe023aVemkuZjzvPK7o9iU7BKkPG2pzLPgxggJtMIIC
+aQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQD
+EyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgxeQGjDntHGb2iaQkIw
+DQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIFd7DwdAFcI6QRZfTSaZUfZWW2k2+Hjm
+zBpA9MlGNixoMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDEw
+MzE2NTcwNFowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCG
+SAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQC
+ATANBgkqhkiG9w0BAQEFAASCAQAs2tBEKsO1cKmSF5Q/erwxjgYCQA09zhKiktsYDcxWijSqdKKR
+aHgnFFW1laeLz0BKnSZjh/xpBRA4icUOmLV1BuWqPQUcnT/aOC70hmJtAPYGAdgywEoemRoMoRSJ
+V1eubderhusyNW6FDAN/3JTviiqZtwcn++jBcM4utFem0mRPG9mBr4eNRR0w4W+Dzvs7nsX29i3A
+slKPLzkBd/7zPlvkPSDJXkyVRECbNSlWh1H6KlNxgs2xsyJHuk/sxhlk7g+1wAsk8SgZYJMvzehY
+1LH7rm8qvcLcLTEJwkGaUg8JXjzvtYk8PxfwN5ayb3ce9cEPiF46PBIWCKluUMJK
+--0000000000002a9cb4060e0d8170--
