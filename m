@@ -1,237 +1,196 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C95910F1;
-	Wed,  3 Jan 2024 01:31:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3A44A0E
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 01:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X/mhnsTx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704245479; x=1735781479;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=HiklqFWdgwiaML2oC9DFqY2NcYVIPOMToQqZcvxMcxM=;
-  b=X/mhnsTx53DEGjTZxwpEpLNhGLppNr6ahoujhocDJo2P1zCf7Sk6sfOO
-   8Dv814xROU/WKV3BeTPuUjo1FJOz/n+Hr6FbCqyVhy8qQ2022nEDqCyRf
-   b+KJyAIC2YQdXPv8z/ZoCjAXMWAsEUyhVckTDGyp7AYqyyPgpTco+GIkK
-   vKiLl4cDuLtyA+B/4li9iEUaaDFtth6MPUhg1w1SzQhm0zHxlBJlaT2In
-   Y/aUC2p1Fu8Zf4PLJzxrccWhC7F2g2SZ98HizO34LuoZiW9UKl9cYmKcK
-   Q2WZFxrjzn3BMbsYgs/hW1AbNXrGBQUhc1OSfgPYkAG2qqTMWoBjzrC61
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="3782174"
-X-IronPort-AV: E=Sophos;i="6.04,326,1695711600"; 
-   d="scan'208";a="3782174"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jan 2024 17:31:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="903272021"
-X-IronPort-AV: E=Sophos;i="6.04,326,1695711600"; 
-   d="scan'208";a="903272021"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orsmga004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 02 Jan 2024 17:31:04 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 2 Jan 2024 17:31:04 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 2 Jan 2024 17:31:03 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 2 Jan 2024 17:31:03 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 2 Jan 2024 17:31:01 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kLQyno0F2GlN9w4y+OnN50ht0wNcEmXxWowT5paeznatqIDkm8VtXe5AxL8HZbw/yhHqbJ2+Ov+rrBEoidkoZF7XM+guWpcgzuHMkUti3P3GIj0zZ3yVelYUKKPQbn6JBIrGUqju0YZdgTwarovOhJMCinoczEVsqdb/wUOAVzXkbzDPde6Rdf6AwrC8Df2aLOg2WIEZe4x1BCiXOadlMMvOcwIdgoCF4SMw7D5pol1zLW1cNLODTMlJy6SttxMSCEJrBoPYiXIPCNJcRT0xFo3g7o3SEd1V76umsoJVM/X9uuuqkZOHGNp1l51MM45sKEu+/6oZCHN7Sjkx5AwqYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zQJMxK/k3LbywtlW1nMmbSqNsjlmD6+yGDF1WV0npzo=;
- b=OwPVGth87Bkgq2d1YECx2suN3O02rh+WSTg45lgVwtge6hcSesgUpJPaisWFsvFuxdJljGW2VaabCQkJ2aaG+wWhKFbedPZinyL+JpXJHq5I9LORqmZrkVZARjDE3mUcETETsu+ApAhdRq6RHtcI9IdPCiHVskCWtV4hwI1tyd5dtemjDTeL5tcAnV5Tvaxs3ZN2/zVDqP1UePfLtFyCA5N13EBt2RNCfelTDPUNLbydKDwh2BYt3CPx46SllM8iX4gLNQ8BdeB57tbQ4V2ysmzkMMM0LozN0I1ICwD/mfmF2S4wYfH0odQY1iGrehG2D+PqcfcJCzdY4pVY1aLV9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SN7PR11MB7540.namprd11.prod.outlook.com (2603:10b6:806:340::7)
- by LV2PR11MB6048.namprd11.prod.outlook.com (2603:10b6:408:178::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.25; Wed, 3 Jan
- 2024 01:30:59 +0000
-Received: from SN7PR11MB7540.namprd11.prod.outlook.com
- ([fe80::4b41:979d:5c37:aab9]) by SN7PR11MB7540.namprd11.prod.outlook.com
- ([fe80::4b41:979d:5c37:aab9%3]) with mapi id 15.20.7113.028; Wed, 3 Jan 2024
- 01:30:59 +0000
-Message-ID: <ae271e08-f390-4ce7-914c-63668a46bc4b@intel.com>
-Date: Wed, 3 Jan 2024 09:33:48 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 10/10] iommu/vt-d: Add iotlb flush for nested domain
-Content-Language: en-US
-To: Jason Gunthorpe <jgg@nvidia.com>
-CC: <joro@8bytes.org>, <alex.williamson@redhat.com>, <kevin.tian@intel.com>,
-	<robin.murphy@arm.com>, <baolu.lu@linux.intel.com>, <cohuck@redhat.com>,
-	<eric.auger@redhat.com>, <nicolinc@nvidia.com>, <kvm@vger.kernel.org>,
-	<mjrosato@linux.ibm.com>, <chao.p.peng@linux.intel.com>,
-	<yi.y.sun@linux.intel.com>, <peterx@redhat.com>, <jasowang@redhat.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <lulu@redhat.com>,
-	<suravee.suthikulpanit@amd.com>, <iommu@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<zhenzhong.duan@intel.com>, <joao.m.martins@oracle.com>,
-	<xin.zeng@intel.com>, <yan.y.zhao@intel.com>, <j.granados@samsung.com>
-References: <20240102143834.146165-1-yi.l.liu@intel.com>
- <20240102143834.146165-11-yi.l.liu@intel.com>
- <20240102184422.GI50406@nvidia.com>
-From: Yi Liu <yi.l.liu@intel.com>
-In-Reply-To: <20240102184422.GI50406@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2PR02CA0067.apcprd02.prod.outlook.com
- (2603:1096:4:54::31) To SN7PR11MB7540.namprd11.prod.outlook.com
- (2603:10b6:806:340::7)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TtoQzkUk"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d42ed4cdc7so73755ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 17:32:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704245537; x=1704850337; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IqPVmDTLcp0lm6JkLsZ7c/JcNa8c/Le1eOgSpFlwcuI=;
+        b=TtoQzkUkBPcwPaUNyOMOpyOUaRGE7hHoqBoD53/vUjkbfr9LX8gJBduCrrQ5BedkB2
+         P8Irs6VDWcsDlbQNuXSVjwHLDfgp2z+hvLn6N3M8cf3AfXimkgpNhTbMzfWyE1HCArW6
+         k4fxyDUHlNmlfHHNSULIkQYWkZY0B2BDnR3JsrEhzyZyxvOKHV6BEmTZLaCssASo9li6
+         EJ6qmi4+ReDNTQ3nwdyt6OEz8X01eH9jZYq/Nsp/sb50wKfatVPc2sNGVdV+BBafYa2W
+         jy3cKH59fFL1Ln4yzBGeqLDsGEWXWA87R+Z6oGPAV0ETI00GrMnCeGKZ8hCjmwytRxt8
+         a1uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704245537; x=1704850337;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IqPVmDTLcp0lm6JkLsZ7c/JcNa8c/Le1eOgSpFlwcuI=;
+        b=eO9sKQ5ywSiU+rLaG5Gi9fq91Fokl7gyE9Y22G9LQiovlhy7JLaBjT9I1L5/Lr8CgX
+         A3XpJwvd+JPybqWly7+TI8cXCo6t6K1TemH+jVLO2qRS2PhBUAyyEnUa8RRjSFlw/TFk
+         Zh//onEUwi1dqj5uj9X3cZcGTBBWG0jGI5f5Bl8vx5j1F4cKYcC9Hr+gYj4CQ+8+RRC/
+         q8Reanu00R25qKIAhvJ1ywme7ls2RMilxO4q8/VWpXUIox659amfADkTvKvUidCFpBAH
+         wJrmWelIO2xlhihghVAGbPRk3VxYb/DCWzIi3VWE6eQSojiWJUJ+kElgdYuFJ8ctmtdk
+         9Q3A==
+X-Gm-Message-State: AOJu0Yy6C4o00JkMEwQarMt1mF3Uq6AAGE6BLNZgL+I8GqIv+QAtG47t
+	uk/5kF8DvbtF3kAoq+j3ine7K94Oawbu
+X-Google-Smtp-Source: AGHT+IG7XtbtkOp8HKw3smQ60PS3HuaDsC6br2LR43feUh9XWs4NZY7BQuSI3RZwcDhAAmIxspxKVQ==
+X-Received: by 2002:a17:902:d508:b0:1d3:9d94:3309 with SMTP id b8-20020a170902d50800b001d39d943309mr76340plg.22.1704245536522;
+        Tue, 02 Jan 2024 17:32:16 -0800 (PST)
+Received: from [2620:0:1008:15:c73b:7876:89ec:9102] ([2620:0:1008:15:c73b:7876:89ec:9102])
+        by smtp.gmail.com with ESMTPSA id e15-20020aa7824f000000b006d9879ba6besm20155240pfn.170.2024.01.02.17.32.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jan 2024 17:32:15 -0800 (PST)
+Date: Tue, 2 Jan 2024 17:32:15 -0800 (PST)
+From: David Rientjes <rientjes@google.com>
+To: Gang Li <gang.li@linux.dev>
+cc: David Hildenbrand <david@redhat.com>, 
+    Mike Kravetz <mike.kravetz@oracle.com>, 
+    Muchun Song <muchun.song@linux.dev>, 
+    Andrew Morton <akpm@linux-foundation.org>, 
+    Tim Chen <tim.c.chen@linux.intel.com>, linux-mm@kvack.org, 
+    linux-kernel@vger.kernel.org, ligang.bdlg@bytedance.com
+Subject: Re: [PATCH v3 4/7] hugetlb: pass *next_nid_to_alloc directly to
+ for_each_node_mask_to_alloc
+In-Reply-To: <20240102131249.76622-5-gang.li@linux.dev>
+Message-ID: <19b08bb8-1fbd-557b-2684-5c29c5c783e6@google.com>
+References: <20240102131249.76622-1-gang.li@linux.dev> <20240102131249.76622-5-gang.li@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR11MB7540:EE_|LV2PR11MB6048:EE_
-X-MS-Office365-Filtering-Correlation-Id: f03dd52c-3209-4c21-2cfe-08dc0bfba348
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QH0qyVVHPZmZwjJJimbO9LEjVx1ASCWBWk0anvO7HI3v0x+UtZSY2/MthN0meTz/G5TLZ+fCzaNPvzf+tcxMr/3N6Y63CvfO3RnGP2QzQ7zeVzGJDOCRztM9zNej1V9Wl9fYZq84f4JwReeG62/8GrnVuZP2eKJedQ57Xe4Zu/xvYLNxLxAGjBrhW508k3ktLZaQ7Ih51D8kmSq9UBUbOmhcaWgOIv68iACvr1mbRVqfjFBrQd1iVmHOxnj0g/2fIl2w0IyH49nK4aqmS+AS7YHycy5nMIYKYV5Woesa5kDBaZ68P7dioxIw0jacRD9Ppdcn90drR2U0sf8SH9HLzSJ9Clav4Msu6HAmFWyQJzF2JdbUCtAM+ueiupgj8oakAz7rUT+IHrLDoqXMepFiwfudexULFGmdshgjPw3cnGnA1WLr0dtCJUsKXnnfhKurJcE/tNN8uEXJShW2afNs/f9mZH3dj3F38viQ39jzGerDzUf7aAk/fyl/6efQiIEsK7Y/q8fsPikteXOTThzJ3KWANtlCYzWQ9DkqQiWREXWw5WNNJxVGYNWsm+3V7zFgL7JaJk+7b6oSZ6Wvcy51gWuwaTa8t42D869WZCx7UJcSfDDek2In4N67Yjxqq8g4wXKRIDgAXEIeU5FYpPh6suF+ZBjvM8qxDBKywmbB/gE=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR11MB7540.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(346002)(366004)(396003)(39860400002)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(5660300002)(7416002)(2906002)(31696002)(41300700001)(6666004)(478600001)(6486002)(86362001)(82960400001)(6506007)(83380400001)(2616005)(26005)(36756003)(8936002)(53546011)(6512007)(316002)(4326008)(966005)(8676002)(38100700002)(66476007)(6916009)(66946007)(66556008)(31686004)(2304002)(43740500002)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RDdodVNsQWlYNGIyN3BoOGMvUlBZQ2NKdFdpT29JSmhGTjFkZ0ZabGtxSTlM?=
- =?utf-8?B?Z29TZVJSYzhuakhsT3RSRzVnRlpxcXBROUJpQUxwZTdmNkgvcFBubHI3KzBi?=
- =?utf-8?B?d3RGYnF5K1djclBIUmUxQ2FmWHFzMldXYUxZMHNtM25IMmV5QzJrOFV0ZDI1?=
- =?utf-8?B?eTM0OENGdzZvTjVRbFNGLzA2Q0FEUFd2VUxlbVN2V0NqN0liSjBmTm5KdGFl?=
- =?utf-8?B?QytQaHNMaTFYUFdOdmd0SXhkTGVIbWJaN0VNSzREVXJBaG9wTHN4OVFMSUpv?=
- =?utf-8?B?VnFEL09vVi9wcURNWDc0VzVobDhQM1d1M1RRVk5ZdjhKRnJicHJCcDlJSm1x?=
- =?utf-8?B?WUdtNzVJa0E2RjIrNlQwbGJkWkduc3FibFVPbk1mR2RXdjRsRkdPZ3J4UzVO?=
- =?utf-8?B?ZEN1NVp4M1FxbHQvdEJSci9TNFFRTktsVGF4WVYxUC9qeEJmeittL3RGc3J1?=
- =?utf-8?B?MDE5OGxESktyV3gzWGpleFVmcXZhbEJsR0ljNDJOQmwvZzhCSzZqdTAwUnph?=
- =?utf-8?B?bjBWRGFOeldVQzVrQjRPQkVsNkxVemFuS3B2SEd1ZlgwNTRuTFBsK1ZCcHlM?=
- =?utf-8?B?ODdPczlTUnU3dlRNKzJDb1IwOXZXVFFvVEJIQU1pSjdJTkhJTjVGOWJxckNG?=
- =?utf-8?B?QnBkdGoxL3llWndOVWFtNEJGR2NhZUtWUWtreUdQTk9SRFJUTmZ4VittYzlT?=
- =?utf-8?B?SURuNStyM1dPSmtTWGxmN1lpdnFyQStEQk1LVit5eDZMdHhqbXNJUEZ6Zi9E?=
- =?utf-8?B?ZDRUNHp4YVI3STBJZGxoNnIrLzRQZWdoTG5LMEFwKy9ONml0SUhtYjhQa3Z0?=
- =?utf-8?B?cXNkdnhTTnV2d1RXUXE3cUJKVlNhTEdsZTFwT2EzOCtIRnMwbldDVEpiRUtL?=
- =?utf-8?B?bEEwWW9LZzlsNWJOUDlLMzlQSWJVeFVvZjZVcHFCRldGV21ZVnpGOVpJcThT?=
- =?utf-8?B?dEFVZkFhMGI3VmRRbmpmMmtWWHgzak93S2MweXF5QXk4MnNCM2VrT25OWHY1?=
- =?utf-8?B?ZndRcTYxNGhyUkxudGx1aWdHWkhyQWswb1VJRjBtTXRXZG5rT1d3b2w2Zi9Q?=
- =?utf-8?B?eDJYTkQzek81T0l4WWNnU09MbHYvMHYvNDVSUnVIQllsT1k5MWhWZDlwSFFQ?=
- =?utf-8?B?ZmxMUEdzMnhaaHpXby9yQ3VLck04bGRiYTB6QVRMaEtOcHcxcUdyQlJMT21D?=
- =?utf-8?B?MkMyVXlTUVk0U2NUVFQvN0JOcnBRaGwzMklRN1JqUEgwWHVDakxXSzhkTU5E?=
- =?utf-8?B?ZGtuckRBZndRS1lORzBkcDN4WlVIUm1LUU5sRkkwQmVtbWVFWjVxS3J4bmRB?=
- =?utf-8?B?d2tnR0dDNkgwLzdFUjJsS3FoeU04VmQ2MTU5UFFFOGR5YjlmaFhQN0J2TVBP?=
- =?utf-8?B?QXdzT0dDWmNHQnBWU0tVc1JrbFFtN2R0bGpDL1dEd3VvYWJsVUZHV09ETytL?=
- =?utf-8?B?a29wcGMrVU5KYWgvbXVzRVYwSmhNTXNTcDlKclhRdGxQQkgzZ3RPeXVYV3RI?=
- =?utf-8?B?VmlJQm5oUGJLek5MRE1FRU43VHNEOHI1UGJhR2VQcXpqQkZqbHg0N215cjNK?=
- =?utf-8?B?OWhjQ0lyRFZhelNQR1Qva21VNy9DcHpadlF1elp2Y2t1N0hsK25vdWhXT0Er?=
- =?utf-8?B?YUdLVnd1Z2w4S1N0bFpTTHNteDZUT3JtaUNpZVp5OE8xOUtMQVFRV2l5ajN6?=
- =?utf-8?B?RU9vQnUvRHppcXluU2lHbzVhUWNDTGpTNSs0aXBXZGM5ekVnTHhJN1dzYzdK?=
- =?utf-8?B?SW5WcUI4ay80SFlvaXF1WkxoUGJqNU5vVy8yVk5sVkw0M1NEM2lQenRqVEE4?=
- =?utf-8?B?QllwbEx2emdjRjBLZGRzVkE4M3k0V2Z6bUIrUytkb3E1b3IwcnB6aFZqeVdS?=
- =?utf-8?B?czhDTTBCeUhIRTVTbndJemNJR3kzNkp3RVNoVU0rUkYySWdiZll6VW4yL21w?=
- =?utf-8?B?WFFhOFFjb0h6ajIyV201aEJUTlA5QjJNbmlVTzNZUFdqdytCZ2JKOC9BRHJ3?=
- =?utf-8?B?Z0JEMVFPa2dYa1hPejhGT2hwclpSeXFaeWxiWXgvR1F2UDlIem1UcHc2MDNy?=
- =?utf-8?B?ajQ2cGhLZDIyYVhPNGNlcXV0UGlRKytxYXJmeFFzbWtRT2RCbW1LZUNXWDBT?=
- =?utf-8?Q?PTiRhM7DcVLgxDJa9MirJaVH0?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: f03dd52c-3209-4c21-2cfe-08dc0bfba348
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR11MB7540.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jan 2024 01:30:59.1737
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ed5BReSn3cH/UB+W9UOkWIHMxcatDpG878m0CfMkfTB/q4x9dJI6qxJNjqgyOGgU0MBRbbs22s3C3/tIVKqYdQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR11MB6048
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=US-ASCII
 
-On 2024/1/3 02:44, Jason Gunthorpe wrote:
-> On Tue, Jan 02, 2024 at 06:38:34AM -0800, Yi Liu wrote:
+On Tue, 2 Jan 2024, Gang Li wrote:
+
+> The parallelization of hugetlb allocation leads to errors when sharing
+> h->next_nid_to_alloc across different threads. To address this, it's
+> necessary to assign a separate next_nid_to_alloc for each thread.
 > 
->> +static void intel_nested_flush_cache(struct dmar_domain *domain, u64 addr,
->> +				     unsigned long npages, bool ih, u32 *error)
->> +{
->> +	struct iommu_domain_info *info;
->> +	unsigned long i;
->> +	unsigned mask;
->> +	u32 fault;
->> +
->> +	xa_for_each(&domain->iommu_array, i, info)
->> +		qi_flush_piotlb(info->iommu,
->> +				domain_id_iommu(domain, info->iommu),
->> +				IOMMU_NO_PASID, addr, npages, ih, NULL);
+> Consequently, the hstate_next_node_to_alloc and for_each_node_mask_to_alloc
+> have been modified to directly accept a *next_nid_to_alloc parameter,
+> ensuring thread-specific allocation and avoiding concurrent access issues.
 > 
-> This locking on the xarray is messed up throughout the driver. There
-> could be a concurrent detach at this point which will free info and
-> UAF this.
+> Signed-off-by: Gang Li <gang.li@linux.dev>
+> ---
+> This patch seems not elegant, but I can't come up with anything better.
+> Any suggestions will be highly appreciated!
 
-hmmm, xa_for_each() takes and releases rcu lock, and according to the
-domain_detach_iommu(), info is freed after xa_erase(). For an existing
-info stored in xarray, xa_erase() should return after rcu lock is released.
-is it? Any idea? @Baolu
+Same error as v2:
 
-void domain_detach_iommu(struct dmar_domain *domain, struct intel_iommu *iommu)
-{
-	struct iommu_domain_info *info;
+mm/hugetlb.c:3315:53: warning: variable 'node' is used uninitialized whenever '&&' condition is false [-Wsometimes-uninitialized]
+        for_each_node_mask_to_alloc(&h->next_nid_to_alloc, nr_nodes, node, &node_states[N_MEMORY]) {
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+mm/hugetlb.c:1501:3: note: expanded from macro 'for_each_node_mask_to_alloc'
+                nr_nodes > 0 &&                                         \
+                ^~~~~~~~~~~~
+mm/hugetlb.c:3342:38: note: uninitialized use occurs here
+        list_add(&m->list, &huge_boot_pages[node]);
+                                            ^~~~
+mm/hugetlb.c:3315:53: note: remove the '&&' if its condition is always true
+        for_each_node_mask_to_alloc(&h->next_nid_to_alloc, nr_nodes, node, &node_states[N_MEMORY]) {
+                                                           ^
+mm/hugetlb.c:3310:7: warning: variable 'node' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+                if (!m)
+                    ^~
+mm/hugetlb.c:3342:38: note: uninitialized use occurs here
+        list_add(&m->list, &huge_boot_pages[node]);
+                                            ^~~~
+mm/hugetlb.c:3310:3: note: remove the 'if' if its condition is always true
+                if (!m)
+                ^~~~~~~
+mm/hugetlb.c:3304:20: note: initialize the variable 'node' to silence this warning
+        int nr_nodes, node;
+                          ^
+                           = 0
+2 warnings generated.
 
-	spin_lock(&iommu->lock);
-	info = xa_load(&domain->iommu_array, iommu->seq_id);
-	if (--info->refcnt == 0) {
-		clear_bit(info->did, iommu->domain_ids);
-		xa_erase(&domain->iommu_array, iommu->seq_id);
-		domain->nid = NUMA_NO_NODE;
-		domain_update_iommu_cap(domain);
-		kfree(info);
-	}
-	spin_unlock(&iommu->lock);
-}
-
-> This seems to be systemic issue, so I'm going to ignore it here, but
-> please make a series to fix it completely.
-
-yeah, this writing is the same with other places that reference the 
-iommu_array. If there is real problem, may check with Baolu and Kevin.
-
-> xarray is probably a bad data structure to manage attachment, a linked
-> list is going to use less memory in most cases and you need a mutex
-> lock anyhow.
-
-below is the commit that introduces iommu_array.
-
-commit ba949f4cd4c39c587e9b722ac7eb7f7e8a42dace
-Author: Lu Baolu <baolu.lu@linux.intel.com>
-Date:   Tue Jul 12 08:09:05 2022 +0800
-
-     iommu/vt-d: Refactor iommu information of each domain
-
-     When a DMA domain is attached to a device, it needs to allocate a domain
-     ID from its IOMMU. Currently, the domain ID information is stored in two
-     static arrays embedded in the domain structure. This can lead to memory
-     waste when the driver is running on a small platform.
-
-     This optimizes these static arrays by replacing them with an xarray and
-     consuming memory on demand.
-
-     Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-     Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-     Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
-     Link: 
-https://lore.kernel.org/r/20220702015610.2849494-4-baolu.lu@linux.intel.com
-     Signed-off-by: Joerg Roedel <jroedel@suse.de>
-
-
--- 
-Regards,
-Yi Liu
+> ---
+>  mm/hugetlb.c | 22 ++++++++++++----------
+>  1 file changed, 12 insertions(+), 10 deletions(-)
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 92448e747991d..a71bc1622b53b 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -1464,15 +1464,15 @@ static int get_valid_node_allowed(int nid, nodemask_t *nodes_allowed)
+>   * next node from which to allocate, handling wrap at end of node
+>   * mask.
+>   */
+> -static int hstate_next_node_to_alloc(struct hstate *h,
+> +static int hstate_next_node_to_alloc(int *next_nid_to_alloc,
+>  					nodemask_t *nodes_allowed)
+>  {
+>  	int nid;
+>  
+>  	VM_BUG_ON(!nodes_allowed);
+>  
+> -	nid = get_valid_node_allowed(h->next_nid_to_alloc, nodes_allowed);
+> -	h->next_nid_to_alloc = next_node_allowed(nid, nodes_allowed);
+> +	nid = get_valid_node_allowed(*next_nid_to_alloc, nodes_allowed);
+> +	*next_nid_to_alloc = next_node_allowed(nid, nodes_allowed);
+>  
+>  	return nid;
+>  }
+> @@ -1495,10 +1495,10 @@ static int hstate_next_node_to_free(struct hstate *h, nodemask_t *nodes_allowed)
+>  	return nid;
+>  }
+>  
+> -#define for_each_node_mask_to_alloc(hs, nr_nodes, node, mask)		\
+> +#define for_each_node_mask_to_alloc(next_nid_to_alloc, nr_nodes, node, mask)		\
+>  	for (nr_nodes = nodes_weight(*mask);				\
+>  		nr_nodes > 0 &&						\
+> -		((node = hstate_next_node_to_alloc(hs, mask)) || 1);	\
+> +		((node = hstate_next_node_to_alloc(next_nid_to_alloc, mask)) || 1);	\
+>  		nr_nodes--)
+>  
+>  #define for_each_node_mask_to_free(hs, nr_nodes, node, mask)		\
+> @@ -2350,12 +2350,13 @@ static void prep_and_add_allocated_folios(struct hstate *h,
+>   */
+>  static struct folio *alloc_pool_huge_folio(struct hstate *h,
+>  					nodemask_t *nodes_allowed,
+> -					nodemask_t *node_alloc_noretry)
+> +					nodemask_t *node_alloc_noretry,
+> +					int *next_nid_to_alloc)
+>  {
+>  	gfp_t gfp_mask = htlb_alloc_mask(h) | __GFP_THISNODE;
+>  	int nr_nodes, node;
+>  
+> -	for_each_node_mask_to_alloc(h, nr_nodes, node, nodes_allowed) {
+> +	for_each_node_mask_to_alloc(next_nid_to_alloc, nr_nodes, node, nodes_allowed) {
+>  		struct folio *folio;
+>  
+>  		folio = only_alloc_fresh_hugetlb_folio(h, gfp_mask, node,
+> @@ -3310,7 +3311,7 @@ int __alloc_bootmem_huge_page(struct hstate *h, int nid)
+>  		goto found;
+>  	}
+>  	/* allocate from next node when distributing huge pages */
+> -	for_each_node_mask_to_alloc(h, nr_nodes, node, &node_states[N_MEMORY]) {
+> +	for_each_node_mask_to_alloc(&h->next_nid_to_alloc, nr_nodes, node, &node_states[N_MEMORY]) {
+>  		m = memblock_alloc_try_nid_raw(
+>  				huge_page_size(h), huge_page_size(h),
+>  				0, MEMBLOCK_ALLOC_ACCESSIBLE, node);
+> @@ -3684,7 +3685,7 @@ static int adjust_pool_surplus(struct hstate *h, nodemask_t *nodes_allowed,
+>  	VM_BUG_ON(delta != -1 && delta != 1);
+>  
+>  	if (delta < 0) {
+> -		for_each_node_mask_to_alloc(h, nr_nodes, node, nodes_allowed) {
+> +		for_each_node_mask_to_alloc(&h->next_nid_to_alloc, nr_nodes, node, nodes_allowed) {
+>  			if (h->surplus_huge_pages_node[node])
+>  				goto found;
+>  		}
+> @@ -3799,7 +3800,8 @@ static int set_max_huge_pages(struct hstate *h, unsigned long count, int nid,
+>  		cond_resched();
+>  
+>  		folio = alloc_pool_huge_folio(h, nodes_allowed,
+> -						node_alloc_noretry);
+> +						node_alloc_noretry,
+> +						&h->next_nid_to_alloc);
+>  		if (!folio) {
+>  			prep_and_add_allocated_folios(h, &page_list);
+>  			spin_lock_irq(&hugetlb_lock);
+> -- 
+> 2.20.1
+> 
+> 
