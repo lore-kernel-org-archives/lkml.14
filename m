@@ -1,291 +1,174 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BE61B26F
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 15:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A261A704;
+	Wed,  3 Jan 2024 15:07:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bvpCkP+1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704294152;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9YzjbOUgpmBQjCOcD8mqfwxZd0BBuvIZGME9zIgMdSg=;
-	b=bvpCkP+11r7CMuEUvC9ckmz+92LfP/dRt0rdwF50BPN0jb6X226T4qfvgmlhGH+pu/h1bP
-	X2xFpxZ0T0QnUVUkzZOZpFxeGPtxvNwQcRC+bqc1qDNUU83kMImAzFsE7+E39Y5l92uSq6
-	G1waExlgMY7gSSwGb8Cl9cP62V/M/8U=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-498-rj6weVZxN16S24OD-OFbvA-1; Wed, 03 Jan 2024 10:02:30 -0500
-X-MC-Unique: rj6weVZxN16S24OD-OFbvA-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-40d8791308eso19248035e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 07:02:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704294149; x=1704898949;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9YzjbOUgpmBQjCOcD8mqfwxZd0BBuvIZGME9zIgMdSg=;
-        b=J3JxaUvl/d13RqdkMMP5yyZFH0x5dWHE2XKXqgI8pi0FqeG4ERdvRHGU6XAX4pEAKH
-         UmGLhxhPbIwAuG6XOA8az4lAZO1jukYbd0pjo+bBZQKxVLwjIY4Hfz7jw06A6e+iqxyG
-         wDp7g3cE3+Gwcpqlg1zXfLJGvJofbqot32v/frDPwpNi0LuyXecCsfvx5p6g8M/m4HfC
-         m+w4upMqh2S+8uPsrH+zHsS487CduiYF5rdhmdYKaJM8gOToUl3WJRU78ICnUNkRtBt1
-         Lp+G2TTFGsvGxhpNRghjJNn85hRVqNIheNudpwu1+Jple3sADRYWDcc7c2sN5zDMtpOg
-         8kMg==
-X-Gm-Message-State: AOJu0Yy+YINLW4S9z6799YW7yApMwUFxEOta2ZWccfLsdTUlha1n7Z+Q
-	db+452tsZ7qBSIZp0n69iEjhSNoxXqJ5CVW51+mMpyH7Ncd2cUmJtyTvM0XIa4td3uZmLalpqxJ
-	b95lWZSU4xCZyGbEcjWAxecyEuUqRoRs=
-X-Received: by 2002:a7b:c3c6:0:b0:40c:de2:148c with SMTP id t6-20020a7bc3c6000000b0040c0de2148cmr9814047wmj.47.1704294149639;
-        Wed, 03 Jan 2024 07:02:29 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGf2xvpgewPhCy7SJJa8JoELXLbO3OMO+jKcvhfVqh41Qo5YGyItbjrI41gXQAgNxq5coAqjQ==
-X-Received: by 2002:a7b:c3c6:0:b0:40c:de2:148c with SMTP id t6-20020a7bc3c6000000b0040c0de2148cmr9814036wmj.47.1704294149263;
-        Wed, 03 Jan 2024 07:02:29 -0800 (PST)
-Received: from [192.168.9.34] (net-2-34-31-72.cust.vodafonedsl.it. [2.34.31.72])
-        by smtp.gmail.com with ESMTPSA id n19-20020a05600c4f9300b0040d8d023760sm2574803wmq.5.2024.01.03.07.02.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jan 2024 07:02:28 -0800 (PST)
-Message-ID: <67bd8de1-f4a2-43bd-a973-3add86cc2b26@redhat.com>
-Date: Wed, 3 Jan 2024 16:02:27 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LY8TF53j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CB11C433C8;
+	Wed,  3 Jan 2024 15:07:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704294458;
+	bh=FCWeGqBB2LoWam8qeYDl6io0kV3y6U6ulHjprFNadU4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=LY8TF53jXlgvYfoUfXYHSI9V4LXC6wAVztuySm8Gxb7i58suU6vAm/h8ua4URP2cT
+	 /by7N5Nh0NOpimjVHMZru0eArpOwYgSVyWyo2a8UYjoXkv9Ra3IToB2y6/YxtSYWSF
+	 z2DeGg3H88S5XuwQImnNSdnXoGJ16Ohmb5bGvircawzncFDVHFpARL069/eigGH2bJ
+	 QBtBHohxOsMHrQW2X1JB5WV9o8/Fa7s9udZPAtnJpzzt9jS7SYxyLug5m4wLijU4NE
+	 I7mrM2wNmGlLCVu2FCBIaRN9DZrJE2hUDrqB8pGdSEAW6UIzqLswghBSCdIIA/wgU2
+	 044qpmw1I+azQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 1/2] fpga: add an owner field and use it to take
- the low-level module's refcount
-To: Xu Yilun <yilun.xu@linux.intel.com>
-Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
- Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org
-References: <20231218202809.84253-1-marpagan@redhat.com>
- <20231218202809.84253-2-marpagan@redhat.com>
- <ZYkoIdrbqJ9w+EHg@yilunxu-OptiPlex-7050>
-Content-Language: en-US
-From: Marco Pagani <marpagan@redhat.com>
-In-Reply-To: <ZYkoIdrbqJ9w+EHg@yilunxu-OptiPlex-7050>
-Content-Type: text/plain; charset=UTF-8
+Date: Wed, 03 Jan 2024 16:07:32 +0100
+From: Michael Walle <mwalle@kernel.org>
+To: Benjamin Bara <bbara93@gmail.com>
+Cc: benjamin.bara@skidata.com, dmitry.osipenko@collabora.com,
+ jonathanh@nvidia.com, lee@kernel.org, linux-i2c@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, nm@ti.com,
+ peterz@infradead.org, rafael.j.wysocki@intel.com, richard.leitner@linux.dev,
+ stable@vger.kernel.org, treding@nvidia.com,
+ wsa+renesas@sang-engineering.com, wsa@kernel.org
+Subject: Re: [PATCH v7 2/5] Re: i2c: core: run atomic i2c xfer when
+ !preemptible
+In-Reply-To: <CAJpcXm5gFMYnJ9bSA9nOXhKoibfedxjhRfu92dCmi6sVG3e=7Q@mail.gmail.com>
+References: <20230327-tegra-pmic-reboot-v7-2-18699d5dcd76@skidata.com>
+ <20240102150350.3180741-1-mwalle@kernel.org>
+ <CAJpcXm7W2vckakdFYiT4jssea-AzrZMsjHijfa+QpfzDVL+E3A@mail.gmail.com>
+ <5e13f5e2da9c4f8fc0d4da2ab4b40383@kernel.org>
+ <CAJpcXm5gFMYnJ9bSA9nOXhKoibfedxjhRfu92dCmi6sVG3e=7Q@mail.gmail.com>
+Message-ID: <6f321c457d1c66783480382929c94e0c@kernel.org>
+X-Sender: mwalle@kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 
+Hi Benjamin,
 
-
-On 2023-12-25 07:58, Xu Yilun wrote:
-> On Mon, Dec 18, 2023 at 09:28:08PM +0100, Marco Pagani wrote:
->> Add a module owner field to the fpga_manager_ops struct and use it to
->> take the low-level control module's refcount instead of relying on the
->> parent device's driver pointer. Low-level control modules should
->> statically set the owner field to THIS_MODULE. To detect when the owner
+>> >> With preemption disabled, this boils down to
+>> >>   return system_state > SYSTEM_RUNNING (&& !0)
+>> >>
+>> >> and will then generate a backtrace splash on each reboot on our
+>> >> board:
+>> >>
+>> >> # reboot -f
+>> >> [   12.687169] No atomic I2C transfer handler for 'i2c-0'
+>> >> ...
+>> >> [   12.806359] Call trace:
+>> >> [   12.808793]  i2c_smbus_xfer+0x100/0x118
+>> >> ...
+>> >>
+>> >> I'm not sure if this is now the expected behavior or not. There will
+>> >> be
+>> >> no backtraces, if I build a preemptible kernel, nor will there be
+>> >> backtraces if I revert this patch.
+>> >
+>> >
+>> > thanks for the report.
+>> >
+>> > In your case, the warning comes from shutting down a regulator during
+>> > device_shutdown(), so nothing really problematic here.
+>> 
+>> I tend to disagree. Yes it's not problematic. But from a users point 
+>> of
+>> view, you get a splash of *many* backtraces on every reboot. Btw, one
+>> should really turn this into a WARN_ONCE(). But even in this case you
+>> might scare users which will eventually lead to more bug reports.
 > 
-> Don't be so strict, people could pass in any owner module they think it
-> is correct.
->
-
-I'm planning to use a helper macro to set the owner field at registration,
-as suggested by Greg K-H. So, I would change this sentence anyway.
- 
->> module pointer becomes stale, set the mops pointer to null during
->> fpga_mgr_unregister() (called by the low-level module exit function) and
+> Sure, but the correct "fix" would be to implement an atomic handler if
+> the i2c is used during this late stage. I just meant that the
+> device_shutdown() is less problematic than the actual reboot handler.
+> Your PMIC seems to not have a reboot handler (registered (yet)), and is
+> therefore not "affected".
 > 
-> No need the side note, people could call fpga_mgr_unregister() at any
-> time they think it is correct.
->
-
-Okay, I'll drop this line.
-
->> test it before taking the module's refcount. Use a mutex to avoid a
->> crash that can happen if __fpga_mgr_get() gets suspended between testing
->> the mops pointer and taking the low-level refcount and then resumes when
->> the low-level module has already been freed.
->>
->> Thanks to Xu Yilun for suggesting the locking pattern.
+>> > However, later in
+>> > the "restart sequence", IRQs are disabled before the restart handlers
+>> > are called. If the reboot handlers would rely on irq-based
+>> > ("non-atomic") i2c transfer, they might not work properly.
+>> 
+>> I get this from a technical point of view and agree that the correct
+>> fix is to add the atomic variant to the i2c driver, which begs the
+>> question, if adding the atomic variant to the driver will be 
+>> considered
+>> as a Fixes patch.
 > 
-> I appreciate that but don't put it in changelog. A Suggested-by is
-> appropriate.
-> 
+> I can add a Fixes when I post it. Although the initial patch just makes
+> the actual problem "noisier".
 
-Okay.
+As far as I understand, there was no problem (for me at least),
+because the interrupts were still enabled at this time. But now,
+there is the problem with getting these backtraces and with that
+the user reports.
 
->>
->> Other changes: move put_device() from __fpga_mgr_get() to fpga_mgr_get()
-> 
-> Opportunistically move put_device() ...
-> 
-> The point is, try to imply the *Other* changes are simple and relative to
-> the main change, or we should split the patch.
-> 
-> Sorry but seeing the actual change, please split. The whole change is
-> small and the put_device() part contributes 40% code ...
-> 
+Don't get me wrong, I'm all for the correct fix here. But at the
+same time I fear all the reports we'll be getting. And in the meantime
+there was already a new one.
 
-Make sense. I would prefer to rephrase the message and do everything in a
-single patch since moving put_device() is a small change related to the
-mechanism for getting the manager.
-
-Thanks,
-Marco
-
->> and of_fpga_mgr_get() to improve code clarity.
->>
->> Fixes: 654ba4cc0f3e ("fpga manager: ensure lifetime with of_fpga_mgr_get")
->> Signed-off-by: Marco Pagani <marpagan@redhat.com>
->> ---
->>  drivers/fpga/fpga-mgr.c       | 50 ++++++++++++++++++++++++-----------
->>  include/linux/fpga/fpga-mgr.h |  4 +++
->>  2 files changed, 38 insertions(+), 16 deletions(-)
->>
->> diff --git a/drivers/fpga/fpga-mgr.c b/drivers/fpga/fpga-mgr.c
->> index 06651389c592..a32b7d40080d 100644
->> --- a/drivers/fpga/fpga-mgr.c
->> +++ b/drivers/fpga/fpga-mgr.c
->> @@ -664,20 +664,20 @@ static struct attribute *fpga_mgr_attrs[] = {
->>  };
->>  ATTRIBUTE_GROUPS(fpga_mgr);
->>  
->> -static struct fpga_manager *__fpga_mgr_get(struct device *dev)
->> +static struct fpga_manager *__fpga_mgr_get(struct device *mgr_dev)
->>  {
->>  	struct fpga_manager *mgr;
->>  
->> -	mgr = to_fpga_manager(dev);
->> +	mgr = to_fpga_manager(mgr_dev);
->>  
->> -	if (!try_module_get(dev->parent->driver->owner))
->> -		goto err_dev;
->> +	mutex_lock(&mgr->mops_mutex);
->>  
->> -	return mgr;
->> +	if (!mgr->mops || !try_module_get(mgr->mops->owner))
->> +		mgr = ERR_PTR(-ENODEV);
->>  
->> -err_dev:
->> -	put_device(dev);
->> -	return ERR_PTR(-ENODEV);
->> +	mutex_unlock(&mgr->mops_mutex);
->> +
->> +	return mgr;
->>  }
->>  
->>  static int fpga_mgr_dev_match(struct device *dev, const void *data)
->> @@ -693,12 +693,18 @@ static int fpga_mgr_dev_match(struct device *dev, const void *data)
->>   */
->>  struct fpga_manager *fpga_mgr_get(struct device *dev)
->>  {
->> -	struct device *mgr_dev = class_find_device(&fpga_mgr_class, NULL, dev,
->> -						   fpga_mgr_dev_match);
->> +	struct fpga_manager *mgr;
->> +	struct device *mgr_dev;
->> +
->> +	mgr_dev = class_find_device(&fpga_mgr_class, NULL, dev, fpga_mgr_dev_match);
->>  	if (!mgr_dev)
->>  		return ERR_PTR(-ENODEV);
->>  
->> -	return __fpga_mgr_get(mgr_dev);
->> +	mgr = __fpga_mgr_get(mgr_dev);
->> +	if (IS_ERR(mgr))
->> +		put_device(mgr_dev);
->> +
->> +	return mgr;
->>  }
->>  EXPORT_SYMBOL_GPL(fpga_mgr_get);
->>  
->> @@ -711,13 +717,18 @@ EXPORT_SYMBOL_GPL(fpga_mgr_get);
->>   */
->>  struct fpga_manager *of_fpga_mgr_get(struct device_node *node)
->>  {
->> -	struct device *dev;
->> +	struct fpga_manager *mgr;
->> +	struct device *mgr_dev;
->>  
->> -	dev = class_find_device_by_of_node(&fpga_mgr_class, node);
->> -	if (!dev)
->> +	mgr_dev = class_find_device_by_of_node(&fpga_mgr_class, node);
->> +	if (!mgr_dev)
->>  		return ERR_PTR(-ENODEV);
->>  
->> -	return __fpga_mgr_get(dev);
->> +	mgr = __fpga_mgr_get(mgr_dev);
->> +	if (IS_ERR(mgr))
->> +		put_device(mgr_dev);
->> +
->> +	return mgr;
->>  }
->>  EXPORT_SYMBOL_GPL(of_fpga_mgr_get);
->>  
->> @@ -727,7 +738,7 @@ EXPORT_SYMBOL_GPL(of_fpga_mgr_get);
->>   */
->>  void fpga_mgr_put(struct fpga_manager *mgr)
->>  {
->> -	module_put(mgr->dev.parent->driver->owner);
->> +	module_put(mgr->mops->owner);
->>  	put_device(&mgr->dev);
->>  }
->>  EXPORT_SYMBOL_GPL(fpga_mgr_put);
->> @@ -803,6 +814,7 @@ fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *in
->>  	}
->>  
->>  	mutex_init(&mgr->ref_mutex);
->> +	mutex_init(&mgr->mops_mutex);
->>  
->>  	mgr->name = info->name;
->>  	mgr->mops = info->mops;
->> @@ -888,6 +900,12 @@ void fpga_mgr_unregister(struct fpga_manager *mgr)
->>  	 */
->>  	fpga_mgr_fpga_remove(mgr);
->>  
->> +	mutex_lock(&mgr->mops_mutex);
->> +
->> +	mgr->mops = NULL;
->> +
->> +	mutex_unlock(&mgr->mops_mutex);
->> +
->>  	device_unregister(&mgr->dev);
->>  }
->>  EXPORT_SYMBOL_GPL(fpga_mgr_unregister);
->> diff --git a/include/linux/fpga/fpga-mgr.h b/include/linux/fpga/fpga-mgr.h
->> index 54f63459efd6..b4d9413cb444 100644
->> --- a/include/linux/fpga/fpga-mgr.h
->> +++ b/include/linux/fpga/fpga-mgr.h
->> @@ -162,6 +162,7 @@ struct fpga_manager_info {
->>   * @write_complete: set FPGA to operating state after writing is done
->>   * @fpga_remove: optional: Set FPGA into a specific state during driver remove
->>   * @groups: optional attribute groups.
->> + * @owner: owner module containing the ops.
->>   *
->>   * fpga_manager_ops are the low level functions implemented by a specific
->>   * fpga manager driver.  The optional ones are tested for NULL before being
->> @@ -184,6 +185,7 @@ struct fpga_manager_ops {
->>  			      struct fpga_image_info *info);
->>  	void (*fpga_remove)(struct fpga_manager *mgr);
->>  	const struct attribute_group **groups;
->> +	struct module *owner;
->>  };
->>  
->>  /* FPGA manager status: Partial/Full Reconfiguration errors */
->> @@ -201,6 +203,7 @@ struct fpga_manager_ops {
->>   * @state: state of fpga manager
->>   * @compat_id: FPGA manager id for compatibility check.
->>   * @mops: pointer to struct of fpga manager ops
->> + * @mops_mutex: protects mops from low-level module removal
->>   * @priv: low level driver private date
->>   */
->>  struct fpga_manager {
->> @@ -209,6 +212,7 @@ struct fpga_manager {
->>  	struct mutex ref_mutex;
->>  	enum fpga_mgr_states state;
->>  	struct fpga_compat_id *compat_id;
->> +	struct mutex mops_mutex;
->>  	const struct fpga_manager_ops *mops;
->>  	void *priv;
->>  };
->> -- 
->> 2.43.0
->>
->>
+>> Do I get it correct, that in my case the interrupts are still enabled?
+>> Otherwise I'd have gotten this warning even before your patch, 
+>> correct?
 > 
+> Yes, device_shutdown() is called during
+> kernel_{shutdown,restart}_prepare(), before
+> machine_{power_off,restart}() is called. The interrupts should 
+> therefore
+> still be enabled in your case.
+> 
+>> Excuse my ignorance, but when are the interrupts actually disabled
+>> during shutdown?
+> 
+> This is usually one of the first things done in machine_restart(),
+> before the architecture-specific restart handlers are called (which
+> might use i2c). Same for machine_power_off().
 
+Thanks for explaining.
+
+>> >> OTOH, the driver I'm using (drivers/i2c/busses/i2c-mt65xx.c) has no
+>> >> *_atomic(). So the warning is correct. There is also [1], which seems
+>> >> to
+>> >> be the same issue I'm facing.
+>> >>
+>> >> -michael
+>> >>
+>> >> [1]
+>> >> https://lore.kernel.org/linux-i2c/13271b9b-4132-46ef-abf8-2c311967bb46@mailbox.org/
+>> >
+>> >
+>> > I tried to implement an atomic handler for the mt65xx, but I don't have
+>> > the respective hardware available to test it. I decided to use a
+>> > similar
+>> > approach as done in drivers/i2c/busses/i2c-rk3x.c, which calls the IRQ
+>> > handler in a while loop if an atomic xfer is requested. IMHO, this
+>> > should work with IRQs enabled and disabled, but I am not sure if this
+>> > is
+>> > the best approach...
+>> 
+>> Thanks for already looking into that. Do you want to submit it as an
+>> actual patch? If so, you can add
+>> 
+>> Tested-by: Michael Walle <mwalle@kernel.org>
+> 
+> Yes, I can do that - thanks for the quick feedback.
+> 
+>> But again, it would be nice if we somehow can get rid of this huge
+>> splash
+>> of backtraces on 6.7.x (I guess it's already too late 6.7).
+> 
+> IMHO, converting the error to WARN_ONCE() makes sense to reduce the
+> noise, but helps having more reliable reboot handling via i2c. Do you
+> think this is a sufficient "short-term solution" to reduce the noise
+> before the missing atomic handlers are actually implemented?
+
+Turning that WARN into a WARN_ONCE is one thing. But it is still odd
+that don't I get a warning with preemption enabled. Is that because
+preemptible() will still return 1 until interrupts are actually 
+disabled?
+Can we achieve something similar with kernels without preemption 
+support?
+IOW, just warn iff there is an actual error, that is if i2c_xfer()
+is called with interrupt off?
+
+-michael
