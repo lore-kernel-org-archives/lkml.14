@@ -1,32 +1,29 @@
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D17185A
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 02:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0VzsDo3j_1704248945;
-Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0VzsDo3j_1704248945)
-          by smtp.aliyun-inc.com;
-          Wed, 03 Jan 2024 10:29:14 +0800
-From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To: lucas.demarchi@intel.com
-Cc: ogabbay@kernel.org,
-	thomas.hellstrom@linux.intel.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH] drm/xe/vm: Simplify the calculation of variables
-Date: Wed,  3 Jan 2024 10:29:04 +0800
-Message-Id: <20240103022904.106092-1-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1FC9186B;
+	Wed,  3 Jan 2024 02:30:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4T4YbT063Hz4f3l7R;
+	Wed,  3 Jan 2024 10:30:13 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 457B71A088B;
+	Wed,  3 Jan 2024 10:30:16 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.124.27])
+	by APP1 (Coremail) with SMTP id cCh0CgDX2A62xpRlYWmAFQ--.14269S2;
+	Wed, 03 Jan 2024 10:30:16 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	jack@suse.cz
+Cc: linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/9] Some random cleanups to mballoc
+Date: Wed,  3 Jan 2024 18:28:12 +0800
+Message-Id: <20240103102821.448134-1-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,31 +31,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgDX2A62xpRlYWmAFQ--.14269S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ww4xWrWrAr4xAF1DKr4rKrg_yoW8GF4Upr
+	sxCr43Ww18Z345uFsrWw4vqw1fGw1xCFWUX3WSgwn7XFy3ZF1fGFsrtF4F9FyrXFW0qFnx
+	Za12yr15Gr1xua7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
+	8lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E
+	3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r
+	xl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv
+	0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z2
+	80aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28I
+	cxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
+	IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI
+	42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
+	IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
+	87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j-6pPUUUUU=
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-./drivers/gpu/drm/xe/xe_vm.c:187:25-27: WARNING !A || A && B is equivalent to !A || B.
+This series contains some random cleanups to mballoc. No function change
+is intended except patch 8 may fix a potential memleak if non-used
+preallocation spaces of inode could be greater than UNIT_MAX.
+More details can be found in respective patches. Thanks!
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=7818
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
----
- drivers/gpu/drm/xe/xe_vm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v1->v2:
+-Collect RVB from Jan.
+-Remove 'needed' in trace_ext4_discard_preallocations.
 
-diff --git a/drivers/gpu/drm/xe/xe_vm.c b/drivers/gpu/drm/xe/xe_vm.c
-index 9180f2d2d71d..dd304a92d0bb 100644
---- a/drivers/gpu/drm/xe/xe_vm.c
-+++ b/drivers/gpu/drm/xe/xe_vm.c
-@@ -184,8 +184,8 @@ static bool preempt_fences_waiting(struct xe_vm *vm)
- 
- 	list_for_each_entry(q, &vm->preempt.exec_queues, compute.link) {
- 		if (!q->compute.pfence ||
--		    (q->compute.pfence && test_bit(DMA_FENCE_FLAG_ENABLE_SIGNAL_BIT,
--						   &q->compute.pfence->flags))) {
-+		    test_bit(DMA_FENCE_FLAG_ENABLE_SIGNAL_BIT,
-+			     &q->compute.pfence->flags)) {
- 			return true;
- 		}
- 	}
+Kemeng Shi (9):
+  ext4: remove unused return value of __mb_check_buddy
+  ext4: remove unused parameter group in ext4_mb_choose_next_group_*()
+  ext4: remove unneeded return value of ext4_mb_release_context
+  ext4: remove unused ext4_allocation_context::ac_groups_considered
+  ext4: remove unused return value of ext4_mb_release
+  ext4: remove unused return value of ext4_mb_release_inode_pa
+  ext4: remove unused return value of ext4_mb_release_group_pa
+  ext4: remove unnecessary parameter "needed" in
+    ext4_discard_preallocations
+  ext4: remove 'needed' in trace_ext4_discard_preallocations
+
+ fs/ext4/ext4.h              |  4 +--
+ fs/ext4/extents.c           | 10 ++++----
+ fs/ext4/file.c              |  2 +-
+ fs/ext4/indirect.c          |  2 +-
+ fs/ext4/inode.c             |  6 ++---
+ fs/ext4/ioctl.c             |  2 +-
+ fs/ext4/mballoc.c           | 49 ++++++++++++++-----------------------
+ fs/ext4/mballoc.h           |  1 -
+ fs/ext4/move_extent.c       |  4 +--
+ fs/ext4/super.c             |  2 +-
+ include/trace/events/ext4.h | 11 +++------
+ 11 files changed, 38 insertions(+), 55 deletions(-)
+
 -- 
-2.20.1.7.g153144c
+2.30.0
 
