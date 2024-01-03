@@ -1,454 +1,618 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2084.outbound.protection.outlook.com [40.107.241.84])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7A21BDF1;
-	Wed,  3 Jan 2024 17:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A181C2A6;
+	Wed,  3 Jan 2024 17:03:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VNn4DdnQ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fr8U3fHNBp/lKbpThYJgXOEkXGCJ8asiH6bEzP89C2Ku7Tu9gPH8afUerhXsEDeJwL4YDYjH8yOqX/3y6RC31F/XAKQeeLgwihbVwc6Dl7YDKOzk7O8w277WqqXryo97IHEEJpvnFqIeB7BqNPj/xmmMu2Xtof8OLdVV4XtMIbuaD3T0hspTDyqGSFAks0kKqjzKQqMFiNoCs8FwfZqe8gWkP+WO+3xRtPLBsFIqJd87meOWqEG3XbE69htpxwqCc9tIcnWcb9+6vtIQPvirjYq3dUdI1kbi1paogDRlapOTRVcydLwGCwpqC97bgZ4wOqw/JyE7yCtCdSVJv28Yrg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4FKcFvq++Mm7GXurLybwB4MdavLc1B1LnUAvfqfMsjQ=;
- b=i3S89mVDj9kgL/VraXJDAb0jIwm2hw7UbRdRuhqFWCGny3lWlzvDGRYIB40BaOKwkblthyZ5/GICYzt8/y/tgoEn2dvPZXFLIJmWynSqmkRMMo4BViwcJ2By37GPDZQVLN+Zx8pkctJ9bTaEvs9XYxHMppk/hgmBetC6aMH8LD8gFf6FBsMYZCmeUBpuWg3NLukXXmwTP4kKVUCLplsEmb+tiTlX9xt3D6Md3UqL1DFjtHTGJ6A48cJYnfnmQc/GdPMMTOkahpqmCwcn61HI6/RQmMW9VP2GbCGBd6haEXcF98X3FArS5by4DL1f51/37NseadvYGZFdmtR1kkO4WQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4FKcFvq++Mm7GXurLybwB4MdavLc1B1LnUAvfqfMsjQ=;
- b=VNn4DdnQDsbCPF511KjDohheDkmscYlgR4Zgc2BGyZGNN2ld+kOLxIDIWjfi+utvK6MTHRQ0l1eUtKzNZDF+q0+Z6B/u4l6jlN5JntoET4GCjsqqnrSeLV10XfNjPKCPjMEZQS6KUEjk9jsmRhvAW5oygtHXP2iuFd2+5UTllXU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PA4PR04MB7518.eurprd04.prod.outlook.com (2603:10a6:102:e4::10)
- by PAXPR04MB8797.eurprd04.prod.outlook.com (2603:10a6:102:20c::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.25; Wed, 3 Jan
- 2024 17:03:02 +0000
-Received: from PA4PR04MB7518.eurprd04.prod.outlook.com
- ([fe80::5e5d:a77a:d64d:2fbc]) by PA4PR04MB7518.eurprd04.prod.outlook.com
- ([fe80::5e5d:a77a:d64d:2fbc%5]) with mapi id 15.20.7135.023; Wed, 3 Jan 2024
- 17:03:02 +0000
-Date: Wed, 3 Jan 2024 12:02:25 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: krzysztof.kozlowski@linaro.org, devicetree@vger.kernel.org,
-	conor+dt@kernel.org, hongxing.zhu@nxp.com,
-	krzysztof.kozlowski+dt@linaro.org, imx@lists.linux.dev,
-	linux-pci@vger.kernel.org, lpieralisi@kernel.org,
-	linux-kernel@vger.kernel.org, s.hauer@pengutronix.de,
-	helgaas@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de,
-	manivannan.sadhasivam@linaro.org, bhelgaas@google.com,
-	shawnguo@kernel.org, kw@linux.com, festevam@gmail.com,
-	robh@kernel.org, linux-arm-kernel@lists.infradead.org,
-	l.stach@pengutronix.de
-Subject: Re: [PATCH v7 01/16] PCI: imx6: Simplify clock handling by using
- bulk_clk_*() function
-Message-ID: <ZZWTIbjBJ/DdpUQi@lizhi-Precision-Tower-5810>
-References: <20231227182727.1747435-1-Frank.Li@nxp.com>
- <20231227182727.1747435-2-Frank.Li@nxp.com>
- <20240102084744.tyquwp6hkb36tfxg@pengutronix.de>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240102084744.tyquwp6hkb36tfxg@pengutronix.de>
-X-ClientProxiedBy: BY3PR10CA0017.namprd10.prod.outlook.com
- (2603:10b6:a03:255::22) To AS8PR04MB7511.eurprd04.prod.outlook.com
- (2603:10a6:20b:23f::5)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="u9XnsWSE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59FDBC433C7;
+	Wed,  3 Jan 2024 17:03:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1704301438;
+	bh=iWDm/uqCcFfAVooOCre0dK+73yU/FGPiWXLM0K/uKGo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=u9XnsWSE9Dlc5sJZmBf7pUdTIOUBCa4E8Pk+eLdStMgqZ/V0BMRO27mdL+vCY8ZtN
+	 kAqBxFHyMb6Y5Navy8bzLidPFVoYI6mWr2IrqfynjT55VWBvgen0aP4uqvLIsc4cJP
+	 99mQHxxPMDVWeMN5u27AJqajSFEZgnMYmOG5xg+g=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	linux@roeck-us.net,
+	shuah@kernel.org,
+	patches@kernelci.org,
+	lkft-triage@lists.linaro.org,
+	pavel@denx.de,
+	jonathanh@nvidia.com,
+	f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net,
+	rwarsow@gmx.de,
+	conor@kernel.org,
+	allen.lkml@gmail.com
+Subject: [PATCH 5.15 00/95] 5.15.146-rc1 review
+Date: Wed,  3 Jan 2024 17:54:08 +0100
+Message-ID: <20240103164853.921194838@linuxfoundation.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR04MB7518:EE_|PAXPR04MB8797:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4fa37d07-da0e-4a00-ab56-08dc0c7dca18
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	VKy/uVb4j7e79ZgIDokZFVcOq3YLLorX6UFnH3glr4bOcL+1IVnLJLun6xIx1d8H5BrypOdgveSm0/XACZTpHg3eYkdw4AHxM5AtME90jXqLHp02N8CquSzzLYmmUq39X4YrUUT+YgEHzbXgeB6GD7HmmDND35VyE/TSP+LuPK7RA58b9YEJZ0DuOXRhTIONJrsL4MIdbl9Xf2xaQkaYU1iBe5JJICngV4eF8V285kSLW4XqpdOg+ij4hMEYif02O1OB/cmlvEnzXqesqP4fn/veX/kPey7XPfK6axfpR2szfJkC6VMKzRhQ6m5aDKptKdR6v5Pb+LebV1WoHfkdfOV+g21ABuFsF1aSw4vGfyTQFvQHA9wEWfgHSnFt/VjaTNOK4RzgiRAZbCCmIZRB8CLUsg1y914FNDxCCx89cuSmWPywrSWEx/BwNn5cRhd5SRtqWKD6Egzqp6Bv9dLR0vP/+vjfg6AH/BZonAkiZhRxA6faIwdtUeoKfP+7F+6PbjJnLjgPHJ3xGo0tnotLb4y7yxM2NvG965vdXxSAuBKiN7ZffHjFUfIhef+4oiFPSrdkS2ak6qzV0LN/CZ6RUfCozwK/R0ja+OM4C27aWb/y0iS8yGG+pQaEXnFzAkOn
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB7518.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(396003)(136003)(39860400002)(346002)(376002)(366004)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(38100700002)(38350700005)(86362001)(6512007)(9686003)(52116002)(6666004)(83380400001)(478600001)(4326008)(6486002)(66946007)(66476007)(66556008)(26005)(8676002)(6916009)(316002)(8936002)(6506007)(41300700001)(5660300002)(7416002)(33716001)(2906002)(30864003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9uaJYft3NkrGsvkwI+rnFG8WQma8KS1DTny2ufE+PvCbUKsr+b/ToDKVN3YL?=
- =?us-ascii?Q?W2hYbozPqxrkXrEmSVADuummFK5jUUMBPoh4QWcuml9XuaL4kWH/41PLKw9w?=
- =?us-ascii?Q?NrRTk/iH90v8b2hl7sUzG4nt+SKiXshHxoCShEV3a8QL5urLlj865Xmtfnr/?=
- =?us-ascii?Q?RqEouxEk7RMwYVCZyII4fYHiMkq3oEqf7z0raOtJvDDqS1S57XCKK6Miz8v4?=
- =?us-ascii?Q?is2fUpXN5YQvLHjdJgcsgd55RO2SawHzqRPnrNuSvrxxjBr3tK+WSjRFxmt2?=
- =?us-ascii?Q?floJTRSLDjbVozNvc6+ZAP6LSvDGpc5KS0Vd/zr5xGhU9JL04Q9IPjb8cWcz?=
- =?us-ascii?Q?fsB7scryPowEohsweXHqBvKiX2R7UbpL1E4/h3yezGoG4fkdxSyhdeDejvPb?=
- =?us-ascii?Q?i2FwmzNwnuS1wAydA8lb9shFS4pp56R73ykKV+t3BZge/nKnkthJC4CKWwp+?=
- =?us-ascii?Q?c501eBTbcZD2U2c96ZQ5hgolxugssx+rYTlpSf2DLblYuDRlNVh/03puJ7t0?=
- =?us-ascii?Q?R9YxghTut+6ZvTZnWxTCS1pyZ1mqpoxFwNIsAtTRg5TYd8Ykpae4HoFZiiIm?=
- =?us-ascii?Q?l18Lb1qgsD0lv7TOzM9VbyX2DJ9XSgIvX84htyVAaC39fZiM+3UsCT9ZY1sW?=
- =?us-ascii?Q?Nfu3tmKPbJO8thVFl2WJQoiC1yyzIeIH4rMhAdi4jXLIopczKBrJuBpxZx3l?=
- =?us-ascii?Q?eeQHa6lCWvsEglLC5LFzqRZaHC7nA13Rsu6qbPPf/deN/e04saPv67QtsdRF?=
- =?us-ascii?Q?h2SKVOEQkptJoRcdujjR25mkRCA4lvD6xgUJGc+o4UowX6q84US+iSy4fmxL?=
- =?us-ascii?Q?+o9OSGYNE5bjRyMolugxgZ1MJywVfdhPghc2VdZ7G45mVyHNPv678DivpWaM?=
- =?us-ascii?Q?XtyWq3JuNEqc4RJ/6l6Gug2uhB+y5knGHp0neKWcPzcBvrTVXvOpm6bPrU3r?=
- =?us-ascii?Q?couNf863/sFhXk4Y9o2Dx1NmaxA9ZepOJrA6kG+v4ZKuyQ2Er1E3FMuOSOMd?=
- =?us-ascii?Q?mvhLu27FshayVq45DSB/ty69aTEdiZH4YBH/EaBuWbSy7+rp71BJP5Quz0rm?=
- =?us-ascii?Q?KXMXnDytwbO9OeDn/bNQEQJuCI/N2bvsq8o9pqYSLoAACbLwkv4XUbeC6VVw?=
- =?us-ascii?Q?IC8kUjC9uWF9IGQBnL2ZA9f/8hA4kz0K1mgGRlXGbLsHLHlgaGogJX3raqSB?=
- =?us-ascii?Q?kixqx1iO2f7P/zWamoPeMS2u5HVBhWP5zlBujcG74sbv2Wt52FMFrgVBwBaY?=
- =?us-ascii?Q?g8+OF4N5eXXjgt3FuLcmw1M7d6nC/ibiEgR+aLInRSKhEaKa2eGZIjEMbgux?=
- =?us-ascii?Q?s4G5+7r/5IqgiJscumLZ0SHhzZySg+1pOEctGxTtfELL5Ex14VrsNWESTiZ8?=
- =?us-ascii?Q?vTWkKYhTSvBolUtwrKBps9o/A889jnKi+GWPY++GBmFXSMQT3POgAbPM5u7W?=
- =?us-ascii?Q?30CebQ1IEx4csZW+59lbUuJZE/M3fYB2Kp+7wwVFQnTu5AiU3/ujBM0WBLdB?=
- =?us-ascii?Q?moxkX90kWJM7FlXlJvBZ1NH0yvwyi+aNw5gC9rbigJaaBlM7fBgUWApsruPC?=
- =?us-ascii?Q?tnO13RDIi6j1m1vgq3Q=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4fa37d07-da0e-4a00-ab56-08dc0c7dca18
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB7511.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jan 2024 17:03:01.9509
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Z4ez8XKbntcEAMoDcDS4txQiXfR7sPVHn3Gx+QpuNi8LTREbilVU65lh5Dml7zTgkFToubSIt7kK9OD0rUQFRw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8797
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.146-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.15.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.15.146-rc1
+X-KernelTest-Deadline: 2024-01-05T16:49+00:00
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 02, 2024 at 09:47:44AM +0100, Marco Felsch wrote:
-> Hi Frank,
-> 
-> On 23-12-27, Frank Li wrote:
-> > Refactors the clock handling logic. Adds clk_names[] define in drvdata.
-> > Using clk_bulk*() api simplifies the code.
-> 
-> does this influence the clock enable/disable sequence ordering? Just
-> asking to avoid regressions on older platforms which may require some
-> sort of order (e.g. require clock-a before clock-b).
+This is the start of the stable review cycle for the 5.15.146 release.
+There are 95 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-drvdata::clk_names is order of enble sequence. So far we have not found
-the problem.
+Responses should be made by Fri, 05 Jan 2024 16:47:49 +0000.
+Anything received after that time might be too late.
 
-Frank Li
-> 
-> Regards,
->   Marco
-> 
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > ---
-> > 
-> > Notes:
-> >     Change from v4 to v5
-> >     - update commit message
-> >     - direct using clk name list, instead of macro
-> >     - still keep caculate clk list count because sizeof return pre allocated
-> >     array size.
-> >     
-> >     Change from v3 to v4
-> >     - using clk_bulk_*() API
-> >     Change from v1 to v3
-> >     - none
-> > 
-> >  drivers/pci/controller/dwc/pci-imx6.c | 125 ++++++++------------------
-> >  1 file changed, 35 insertions(+), 90 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> > index 74703362aeec7..50d9faaa17f71 100644
-> > --- a/drivers/pci/controller/dwc/pci-imx6.c
-> > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> > @@ -61,12 +61,15 @@ enum imx6_pcie_variants {
-> >  #define IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE	BIT(1)
-> >  #define IMX6_PCIE_FLAG_SUPPORTS_SUSPEND		BIT(2)
-> >  
-> > +#define IMX6_PCIE_MAX_CLKS       6
-> > +
-> >  struct imx6_pcie_drvdata {
-> >  	enum imx6_pcie_variants variant;
-> >  	enum dw_pcie_device_mode mode;
-> >  	u32 flags;
-> >  	int dbi_length;
-> >  	const char *gpr;
-> > +	const char *clk_names[IMX6_PCIE_MAX_CLKS];
-> >  };
-> >  
-> >  struct imx6_pcie {
-> > @@ -74,11 +77,8 @@ struct imx6_pcie {
-> >  	int			reset_gpio;
-> >  	bool			gpio_active_high;
-> >  	bool			link_is_up;
-> > -	struct clk		*pcie_bus;
-> > -	struct clk		*pcie_phy;
-> > -	struct clk		*pcie_inbound_axi;
-> > -	struct clk		*pcie;
-> > -	struct clk		*pcie_aux;
-> > +	struct clk_bulk_data	clks[IMX6_PCIE_MAX_CLKS];
-> > +	u32			clks_cnt;
-> >  	struct regmap		*iomuxc_gpr;
-> >  	u16			msi_ctrl;
-> >  	u32			controller_id;
-> > @@ -407,13 +407,18 @@ static void imx7d_pcie_wait_for_phy_pll_lock(struct imx6_pcie *imx6_pcie)
-> >  
-> >  static int imx6_setup_phy_mpll(struct imx6_pcie *imx6_pcie)
-> >  {
-> > -	unsigned long phy_rate = clk_get_rate(imx6_pcie->pcie_phy);
-> > +	unsigned long phy_rate = 0;
-> >  	int mult, div;
-> >  	u16 val;
-> > +	int i;
-> >  
-> >  	if (!(imx6_pcie->drvdata->flags & IMX6_PCIE_FLAG_IMX6_PHY))
-> >  		return 0;
-> >  
-> > +	for (i = 0; i < imx6_pcie->clks_cnt; i++)
-> > +		if (strncmp(imx6_pcie->clks[i].id, "pcie_phy", 8) == 0)
-> > +			phy_rate = clk_get_rate(imx6_pcie->clks[i].clk);
-> > +
-> >  	switch (phy_rate) {
-> >  	case 125000000:
-> >  		/*
-> > @@ -550,19 +555,11 @@ static int imx6_pcie_attach_pd(struct device *dev)
-> >  
-> >  static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
-> >  {
-> > -	struct dw_pcie *pci = imx6_pcie->pci;
-> > -	struct device *dev = pci->dev;
-> >  	unsigned int offset;
-> >  	int ret = 0;
-> >  
-> >  	switch (imx6_pcie->drvdata->variant) {
-> >  	case IMX6SX:
-> > -		ret = clk_prepare_enable(imx6_pcie->pcie_inbound_axi);
-> > -		if (ret) {
-> > -			dev_err(dev, "unable to enable pcie_axi clock\n");
-> > -			break;
-> > -		}
-> > -
-> >  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
-> >  				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN, 0);
-> >  		break;
-> > @@ -589,12 +586,6 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
-> >  	case IMX8MQ_EP:
-> >  	case IMX8MP:
-> >  	case IMX8MP_EP:
-> > -		ret = clk_prepare_enable(imx6_pcie->pcie_aux);
-> > -		if (ret) {
-> > -			dev_err(dev, "unable to enable pcie_aux clock\n");
-> > -			break;
-> > -		}
-> > -
-> >  		offset = imx6_pcie_grp_offset(imx6_pcie);
-> >  		/*
-> >  		 * Set the over ride low and enabled
-> > @@ -615,9 +606,6 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
-> >  static void imx6_pcie_disable_ref_clk(struct imx6_pcie *imx6_pcie)
-> >  {
-> >  	switch (imx6_pcie->drvdata->variant) {
-> > -	case IMX6SX:
-> > -		clk_disable_unprepare(imx6_pcie->pcie_inbound_axi);
-> > -		break;
-> >  	case IMX6QP:
-> >  	case IMX6Q:
-> >  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
-> > @@ -631,14 +619,6 @@ static void imx6_pcie_disable_ref_clk(struct imx6_pcie *imx6_pcie)
-> >  				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL,
-> >  				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL);
-> >  		break;
-> > -	case IMX8MM:
-> > -	case IMX8MM_EP:
-> > -	case IMX8MQ:
-> > -	case IMX8MQ_EP:
-> > -	case IMX8MP:
-> > -	case IMX8MP_EP:
-> > -		clk_disable_unprepare(imx6_pcie->pcie_aux);
-> > -		break;
-> >  	default:
-> >  		break;
-> >  	}
-> > @@ -650,23 +630,9 @@ static int imx6_pcie_clk_enable(struct imx6_pcie *imx6_pcie)
-> >  	struct device *dev = pci->dev;
-> >  	int ret;
-> >  
-> > -	ret = clk_prepare_enable(imx6_pcie->pcie_phy);
-> > -	if (ret) {
-> > -		dev_err(dev, "unable to enable pcie_phy clock\n");
-> > +	ret =  clk_bulk_prepare_enable(imx6_pcie->clks_cnt, imx6_pcie->clks);
-> > +	if (ret)
-> >  		return ret;
-> > -	}
-> > -
-> > -	ret = clk_prepare_enable(imx6_pcie->pcie_bus);
-> > -	if (ret) {
-> > -		dev_err(dev, "unable to enable pcie_bus clock\n");
-> > -		goto err_pcie_bus;
-> > -	}
-> > -
-> > -	ret = clk_prepare_enable(imx6_pcie->pcie);
-> > -	if (ret) {
-> > -		dev_err(dev, "unable to enable pcie clock\n");
-> > -		goto err_pcie;
-> > -	}
-> >  
-> >  	ret = imx6_pcie_enable_ref_clk(imx6_pcie);
-> >  	if (ret) {
-> > @@ -679,11 +645,7 @@ static int imx6_pcie_clk_enable(struct imx6_pcie *imx6_pcie)
-> >  	return 0;
-> >  
-> >  err_ref_clk:
-> > -	clk_disable_unprepare(imx6_pcie->pcie);
-> > -err_pcie:
-> > -	clk_disable_unprepare(imx6_pcie->pcie_bus);
-> > -err_pcie_bus:
-> > -	clk_disable_unprepare(imx6_pcie->pcie_phy);
-> > +	clk_bulk_disable_unprepare(imx6_pcie->clks_cnt, imx6_pcie->clks);
-> >  
-> >  	return ret;
-> >  }
-> > @@ -691,9 +653,7 @@ static int imx6_pcie_clk_enable(struct imx6_pcie *imx6_pcie)
-> >  static void imx6_pcie_clk_disable(struct imx6_pcie *imx6_pcie)
-> >  {
-> >  	imx6_pcie_disable_ref_clk(imx6_pcie);
-> > -	clk_disable_unprepare(imx6_pcie->pcie);
-> > -	clk_disable_unprepare(imx6_pcie->pcie_bus);
-> > -	clk_disable_unprepare(imx6_pcie->pcie_phy);
-> > +	clk_bulk_disable_unprepare(imx6_pcie->clks_cnt, imx6_pcie->clks);
-> >  }
-> >  
-> >  static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
-> > @@ -1305,32 +1265,19 @@ static int imx6_pcie_probe(struct platform_device *pdev)
-> >  		return imx6_pcie->reset_gpio;
-> >  	}
-> >  
-> > -	/* Fetch clocks */
-> > -	imx6_pcie->pcie_bus = devm_clk_get(dev, "pcie_bus");
-> > -	if (IS_ERR(imx6_pcie->pcie_bus))
-> > -		return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_bus),
-> > -				     "pcie_bus clock source missing or invalid\n");
-> > +	while (imx6_pcie->drvdata->clk_names[imx6_pcie->clks_cnt]) {
-> > +		int i = imx6_pcie->clks_cnt;
-> > +
-> > +		imx6_pcie->clks[i].id = imx6_pcie->drvdata->clk_names[i];
-> > +		imx6_pcie->clks_cnt++;
-> > +	}
-> >  
-> > -	imx6_pcie->pcie = devm_clk_get(dev, "pcie");
-> > -	if (IS_ERR(imx6_pcie->pcie))
-> > -		return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie),
-> > -				     "pcie clock source missing or invalid\n");
-> > +	/* Fetch clocks */
-> > +	ret = devm_clk_bulk_get(dev, imx6_pcie->clks_cnt, imx6_pcie->clks);
-> > +	if (ret)
-> > +		return ret;
-> >  
-> >  	switch (imx6_pcie->drvdata->variant) {
-> > -	case IMX6SX:
-> > -		imx6_pcie->pcie_inbound_axi = devm_clk_get(dev,
-> > -							   "pcie_inbound_axi");
-> > -		if (IS_ERR(imx6_pcie->pcie_inbound_axi))
-> > -			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_inbound_axi),
-> > -					     "pcie_inbound_axi clock missing or invalid\n");
-> > -		break;
-> > -	case IMX8MQ:
-> > -	case IMX8MQ_EP:
-> > -		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
-> > -		if (IS_ERR(imx6_pcie->pcie_aux))
-> > -			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_aux),
-> > -					     "pcie_aux clock source missing or invalid\n");
-> > -		fallthrough;
-> >  	case IMX7D:
-> >  		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
-> >  			imx6_pcie->controller_id = 1;
-> > @@ -1353,10 +1300,6 @@ static int imx6_pcie_probe(struct platform_device *pdev)
-> >  	case IMX8MM_EP:
-> >  	case IMX8MP:
-> >  	case IMX8MP_EP:
-> > -		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
-> > -		if (IS_ERR(imx6_pcie->pcie_aux))
-> > -			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_aux),
-> > -					     "pcie_aux clock source missing or invalid\n");
-> >  		imx6_pcie->apps_reset = devm_reset_control_get_exclusive(dev,
-> >  									 "apps");
-> >  		if (IS_ERR(imx6_pcie->apps_reset))
-> > @@ -1372,14 +1315,6 @@ static int imx6_pcie_probe(struct platform_device *pdev)
-> >  	default:
-> >  		break;
-> >  	}
-> > -	/* Don't fetch the pcie_phy clock, if it has abstract PHY driver */
-> > -	if (imx6_pcie->phy == NULL) {
-> > -		imx6_pcie->pcie_phy = devm_clk_get(dev, "pcie_phy");
-> > -		if (IS_ERR(imx6_pcie->pcie_phy))
-> > -			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_phy),
-> > -					     "pcie_phy clock source missing or invalid\n");
-> > -	}
-> > -
-> >  
-> >  	/* Grab turnoff reset */
-> >  	imx6_pcie->turnoff_reset = devm_reset_control_get_optional_exclusive(dev, "turnoff");
-> > @@ -1477,6 +1412,7 @@ static const struct imx6_pcie_drvdata drvdata[] = {
-> >  			 IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE,
-> >  		.dbi_length = 0x200,
-> >  		.gpr = "fsl,imx6q-iomuxc-gpr",
-> > +		.clk_names = {"pcie_bus", "pcie", "pcie_phy"},
-> >  	},
-> >  	[IMX6SX] = {
-> >  		.variant = IMX6SX,
-> > @@ -1484,6 +1420,7 @@ static const struct imx6_pcie_drvdata drvdata[] = {
-> >  			 IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE |
-> >  			 IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
-> >  		.gpr = "fsl,imx6q-iomuxc-gpr",
-> > +		.clk_names = {"pcie_bus", "pcie", "pcie_phy", "pcie_inbound_axi"},
-> >  	},
-> >  	[IMX6QP] = {
-> >  		.variant = IMX6QP,
-> > @@ -1492,40 +1429,48 @@ static const struct imx6_pcie_drvdata drvdata[] = {
-> >  			 IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
-> >  		.dbi_length = 0x200,
-> >  		.gpr = "fsl,imx6q-iomuxc-gpr",
-> > +		.clk_names = {"pcie_bus", "pcie", "pcie_phy"},
-> >  	},
-> >  	[IMX7D] = {
-> >  		.variant = IMX7D,
-> >  		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
-> >  		.gpr = "fsl,imx7d-iomuxc-gpr",
-> > +		.clk_names = {"pcie_bus", "pcie", "pcie_phy"},
-> >  	},
-> >  	[IMX8MQ] = {
-> >  		.variant = IMX8MQ,
-> >  		.gpr = "fsl,imx8mq-iomuxc-gpr",
-> > +		.clk_names = {"pcie_bus", "pcie", "pcie_phy", "pcie_aux"},
-> >  	},
-> >  	[IMX8MM] = {
-> >  		.variant = IMX8MM,
-> >  		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
-> >  		.gpr = "fsl,imx8mm-iomuxc-gpr",
-> > +		.clk_names = {"pcie_bus", "pcie", "pcie_aux"},
-> >  	},
-> >  	[IMX8MP] = {
-> >  		.variant = IMX8MP,
-> >  		.flags = IMX6_PCIE_FLAG_SUPPORTS_SUSPEND,
-> >  		.gpr = "fsl,imx8mp-iomuxc-gpr",
-> > +		.clk_names = {"pcie_bus", "pcie", "pcie_aux"},
-> >  	},
-> >  	[IMX8MQ_EP] = {
-> >  		.variant = IMX8MQ_EP,
-> >  		.mode = DW_PCIE_EP_TYPE,
-> >  		.gpr = "fsl,imx8mq-iomuxc-gpr",
-> > +		.clk_names = {"pcie_bus", "pcie", "pcie_phy", "pcie_aux"},
-> >  	},
-> >  	[IMX8MM_EP] = {
-> >  		.variant = IMX8MM_EP,
-> >  		.mode = DW_PCIE_EP_TYPE,
-> >  		.gpr = "fsl,imx8mm-iomuxc-gpr",
-> > +		.clk_names = {"pcie_bus", "pcie", "pcie_aux"},
-> >  	},
-> >  	[IMX8MP_EP] = {
-> >  		.variant = IMX8MP_EP,
-> >  		.mode = DW_PCIE_EP_TYPE,
-> >  		.gpr = "fsl,imx8mp-iomuxc-gpr",
-> > +		.clk_names = {"pcie_bus", "pcie", "pcie_aux"},
-> >  	},
-> >  };
-> >  
-> > -- 
-> > 2.34.1
-> > 
-> > 
-> > 
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.146-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+and the diffstat can be found below.
+
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.15.146-rc1
+
+Jiri Olsa <jolsa@kernel.org>
+    bpf: Fix prog_array_map_poke_run map poke update
+
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    device property: Allow const parameter to dev_fwnode()
+
+Mikulas Patocka <mpatocka@redhat.com>
+    dm-integrity: don't modify bio's immutable bio_vec in integrity_metadata()
+
+Steven Rostedt (Google) <rostedt@goodmis.org>
+    ring-buffer: Fix slowpath of interrupted event
+
+Pablo Neira Ayuso <pablo@netfilter.org>
+    netfilter: nf_tables: skip set commit for deleted/destroyed sets
+
+Namjae Jeon <linkinjeon@kernel.org>
+    ksmbd: fix slab-out-of-bounds in smb_strndup_from_utf16()
+
+Steven Rostedt (Google) <rostedt@goodmis.org>
+    ring-buffer: Remove useless update to write_stamp in rb_try_to_discard()
+
+Steven Rostedt (Google) <rostedt@goodmis.org>
+    tracing: Fix blocked reader of snapshot buffer
+
+Steven Rostedt (Google) <rostedt@goodmis.org>
+    ring-buffer: Fix wake ups when buffer_percent is set to 100
+
+Baokun Li <libaokun1@huawei.com>
+    mm/filemap: avoid buffered read/write race to read inconsistent data
+
+Hyunwoo Kim <v4bel@theori.io>
+    Bluetooth: af_bluetooth: Fix Use-After-Free in bt_sock_recvmsg
+
+Paulo Alcantara <pc@manguebit.com>
+    smb: client: fix OOB in smbCalcSize()
+
+Paulo Alcantara <pc@manguebit.com>
+    smb: client: fix OOB in SMB2_query_info_init()
+
+Nuno Sa <nuno.sa@analog.com>
+    iio: imu: adis16475: add spi_device_id table
+
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    spi: Introduce spi_get_device_match_data() helper
+
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    device property: Add const qualifier to device_get_match_data() parameter
+
+Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+    net: usb: ax88179_178a: avoid failed operations when device is disconnected
+
+Justin Chen <justinpopo6@gmail.com>
+    net: usb: ax88179_178a: wol optimizations
+
+Justin Chen <justinpopo6@gmail.com>
+    net: usb: ax88179_178a: clean up pm calls
+
+Jakub Kicinski <kuba@kernel.org>
+    ethernet: constify references to netdev->dev_addr in drivers
+
+Dan Carpenter <dan.carpenter@linaro.org>
+    usb: fotg210-hcd: delete an incorrect bounds test
+
+Tony Lindgren <tony@atomide.com>
+    ARM: dts: Fix occasional boot hang for am3 usb
+
+Namjae Jeon <linkinjeon@kernel.org>
+    ksmbd: fix wrong allocation size update in smb2_open()
+
+Namjae Jeon <linkinjeon@kernel.org>
+    ksmbd: avoid duplicate opinfo_put() call on error of smb21_lease_break_ack()
+
+Namjae Jeon <linkinjeon@kernel.org>
+    ksmbd: lazy v2 lease break on smb2_write()
+
+Namjae Jeon <linkinjeon@kernel.org>
+    ksmbd: send v2 lease break notification for directory
+
+Namjae Jeon <linkinjeon@kernel.org>
+    ksmbd: downgrade RWH lease caching state to RH for directory
+
+Namjae Jeon <linkinjeon@kernel.org>
+    ksmbd: set v2 lease capability
+
+Namjae Jeon <linkinjeon@kernel.org>
+    ksmbd: set epoch in create context v2 lease
+
+Namjae Jeon <linkinjeon@kernel.org>
+    ksmbd: have a dependency on cifs ARC4
+
+Krister Johansen <kjlx@templeofstupid.com>
+    fuse: share lookup state between submount and its parent
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/alternatives: Sync core before enabling interrupts
+
+Marc Zyngier <maz@kernel.org>
+    KVM: arm64: vgic: Force vcpu vgic teardown on vcpu destroy
+
+Herve Codina <herve.codina@bootlin.com>
+    lib/vsprintf: Fix %pfwf when current node refcount == 0
+
+xiongxin <xiongxin@kylinos.cn>
+    gpio: dwapb: mask/unmask IRQ when disable/enale it
+
+Tony Lindgren <tony@atomide.com>
+    bus: ti-sysc: Flush posted write only after srst_udelay
+
+Steven Rostedt (Google) <rostedt@goodmis.org>
+    tracing / synthetic: Disable events after testing in synth_event_gen_test_init()
+
+Alexander Atanasov <alexander.atanasov@virtuozzo.com>
+    scsi: core: Always send batch on reset or error handling command
+
+Fabio Estevam <festevam@denx.de>
+    dt-bindings: nvmem: mxs-ocotp: Document fsl,ocotp
+
+Ronald Wahl <ronald.wahl@raritan.com>
+    net: ks8851: Fix TX stall caused by TX buffer overrun
+
+Rouven Czerwinski <r.czerwinski@pengutronix.de>
+    net: rfkill: gpio: set GPIO direction
+
+Fedor Pchelkin <pchelkin@ispras.ru>
+    net: 9p: avoid freeing uninit memory in p9pdu_vreadf
+
+Christoffer Sandberg <cs@tuxedo.de>
+    Input: soc_button_array - add mapping for airplane mode button
+
+Xiao Yao <xiaoyao@rock-chips.com>
+    Bluetooth: MGMT/SMP: Fix address type when using SMP over BREDR/LE
+
+Frédéric Danis <frederic.danis@collabora.com>
+    Bluetooth: L2CAP: Send reject on command corrupted request
+
+Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+    Bluetooth: hci_event: Fix not checking if HCI_OP_INQUIRY has been sent
+
+Reinhard Speyerer <rspmn@arcor.de>
+    USB: serial: option: add Quectel RM500Q R13 firmware support
+
+Slark Xiao <slark_xiao@163.com>
+    USB: serial: option: add Foxconn T99W265 with new baseline
+
+Alper Ak <alperyasinak1@gmail.com>
+    USB: serial: option: add Quectel EG912Y module support
+
+Mark Glover <mark.glover@actisense.com>
+    USB: serial: ftdi_sio: update Actisense PIDs constant names
+
+Johannes Berg <johannes.berg@intel.com>
+    wifi: cfg80211: fix certs build to not depend on file order
+
+Chen-Yu Tsai <wens@kernel.org>
+    wifi: cfg80211: Add my certificate
+
+Jeremie Knuesel <knuesel@gmail.com>
+    ALSA: usb-audio: Increase delay in MOTU M quirk
+
+David Lechner <dlechner@baylibre.com>
+    iio: triggered-buffer: prevent possible freeing of wrong buffer
+
+Wadim Egorov <w.egorov@phytec.de>
+    iio: adc: ti_am335x_adc: Fix return value check of tiadc_request_dma()
+
+Javier Carrasco <javier.carrasco.cruz@gmail.com>
+    iio: common: ms_sensors: ms_sensors_i2c: fix humidity conversion time table
+
+Wei Yongjun <weiyongjun1@huawei.com>
+    scsi: bnx2fc: Fix skb double free in bnx2fc_rcv()
+
+Haoran Liu <liuhaoran14@163.com>
+    Input: ipaq-micro-keys - add error handling for devm_kmemdup
+
+Konrad Dybcio <konrad.dybcio@linaro.org>
+    interconnect: qcom: sm8250: Enable sync_state
+
+Su Hui <suhui@nfschina.com>
+    iio: imu: inv_mpu6050: fix an error code problem in inv_mpu6050_read_raw
+
+Mike Tipton <quic_mdtipton@quicinc.com>
+    interconnect: Treat xlate() returning NULL node as an error
+
+Paulo Alcantara <pc@manguebit.com>
+    smb: client: fix OOB in smb2_query_reparse_point()
+
+Paulo Alcantara <pc@manguebit.com>
+    smb: client: fix NULL deref in asn1_ber_decoder()
+
+Ville Syrjälä <ville.syrjala@linux.intel.com>
+    drm/i915: Fix intel_atomic_setup_scalers() plane_state handling
+
+Ville Syrjälä <ville.syrjala@linux.intel.com>
+    drm/i915: Relocate intel_atomic_setup_scalers()
+
+Luca Coelho <luciano.coelho@intel.com>
+    drm/i915/mtl: limit second scaler vertical scaling in ver >= 14
+
+Namjae Jeon <linkinjeon@kernel.org>
+    ksmbd: fix wrong name of SMB2_CREATE_ALLOCATION_SIZE
+
+Kent Gibson <warthog618@gmail.com>
+    gpiolib: cdev: add gpio_device locking wrapper around gpio_ioctl()
+
+Alexis Lothoré <alexis.lothore@bootlin.com>
+    pinctrl: at91-pio4: use dedicated lock class for IRQ
+
+Quan Nguyen <quan@os.amperecomputing.com>
+    i2c: aspeed: Handle the coalesced stop conditions with the start conditions.
+
+Jerome Brunet <jbrunet@baylibre.com>
+    ASoC: hdmi-codec: fix missing report for jack initial status
+
+David Howells <dhowells@redhat.com>
+    afs: Fix use-after-free due to get/remove race in volume tree
+
+David Howells <dhowells@redhat.com>
+    afs: Use refcount_t rather than atomic_t
+
+David Howells <dhowells@redhat.com>
+    afs: Fix overwriting of result of DNS query
+
+David Howells <dhowells@redhat.com>
+    keys, dns: Allow key types (eg. DNS) to be reclaimed immediately on expiry
+
+Eric Dumazet <edumazet@google.com>
+    net: check dev->gso_max_size in gso_features_check()
+
+David Howells <dhowells@redhat.com>
+    afs: Fix dynamic root lookup DNS check
+
+David Howells <dhowells@redhat.com>
+    afs: Fix the dynamic root's d_delete to always delete unused dentries
+
+Liu Jian <liujian56@huawei.com>
+    net: check vlan filter feature in vlan_vids_add_by_dev() and vlan_vids_del_by_dev()
+
+Yury Norov <yury.norov@gmail.com>
+    net: mana: select PAGE_POOL
+
+Eric Dumazet <edumazet@google.com>
+    net/rose: fix races in rose_kill_by_device()
+
+Zhipeng Lu <alexious@zju.edu.cn>
+    ethernet: atheros: fix a memleak in atl1e_setup_ring_resources
+
+Eric Dumazet <edumazet@google.com>
+    net: sched: ife: fix potential use-after-free
+
+Rahul Rameshbabu <rrameshbabu@nvidia.com>
+    net/mlx5e: Correct snprintf truncation handling for fw_version buffer used by representors
+
+Moshe Shemesh <moshe@nvidia.com>
+    net/mlx5: Fix fw tracer first block check
+
+Dinghao Liu <dinghao.liu@zju.edu.cn>
+    net/mlx5e: fix a potential double-free in fs_udp_create_groups
+
+Shifeng Li <lishifeng@sangfor.com.cn>
+    net/mlx5e: Fix slab-out-of-bounds in mlx5_query_nic_vport_mac_list()
+
+Vlad Buslov <vladbu@nvidia.com>
+    Revert "net/mlx5e: fix double free of encap_header"
+
+Vlad Buslov <vladbu@nvidia.com>
+    Revert "net/mlx5e: fix double free of encap_header in update funcs"
+
+Johannes Berg <johannes.berg@intel.com>
+    wifi: mac80211: mesh_plink: fix matches_local logic
+
+Johannes Berg <johannes.berg@intel.com>
+    wifi: iwlwifi: pcie: add another missing bh-disable for rxq->lock
+
+Heiko Carstens <hca@linux.ibm.com>
+    s390/vx: fix save/restore of fpu kernel context
+
+Geert Uytterhoeven <geert+renesas@glider.be>
+    reset: Fix crash when freeing non-existent optional resets
+
+Kunwu Chan <chentao@kylinos.cn>
+    ARM: OMAP2+: Fix null pointer dereference and memory leak in omap_soc_device_init
+
+Andrew Davis <afd@ti.com>
+    ARM: dts: dra7: Fix DRA7 L3 NoC node register size
+
+
+-------------
+
+Diffstat:
+
+ .../devicetree/bindings/nvmem/mxs-ocotp.yaml       |  10 +-
+ Makefile                                           |   4 +-
+ arch/arm/boot/dts/am33xx.dtsi                      |   1 +
+ arch/arm/boot/dts/dra7.dtsi                        |   2 +-
+ arch/arm/mach-omap2/id.c                           |   5 +
+ arch/arm64/kvm/arm.c                               |   2 +-
+ arch/arm64/kvm/vgic/vgic-init.c                    |   5 +-
+ arch/arm64/kvm/vgic/vgic-mmio-v3.c                 |   2 +-
+ arch/arm64/kvm/vgic/vgic.h                         |   1 +
+ arch/s390/include/asm/fpu/api.h                    |   2 +-
+ arch/x86/kernel/alternative.c                      |   2 +-
+ arch/x86/net/bpf_jit_comp.c                        |  46 ++++
+ drivers/base/property.c                            |  13 +-
+ drivers/bus/ti-sysc.c                              |  18 +-
+ drivers/gpio/gpio-dwapb.c                          |  12 +-
+ drivers/gpio/gpiolib-cdev.c                        |  16 +-
+ drivers/gpu/drm/i915/display/intel_atomic.c        | 193 +---------------
+ drivers/gpu/drm/i915/display/intel_atomic.h        |   4 -
+ drivers/gpu/drm/i915/display/skl_scaler.c          | 257 +++++++++++++++++++++
+ drivers/gpu/drm/i915/display/skl_scaler.h          |  14 +-
+ drivers/i2c/busses/i2c-aspeed.c                    |  48 ++--
+ drivers/iio/adc/ti_am335x_adc.c                    |   4 +-
+ drivers/iio/buffer/industrialio-triggered-buffer.c |  10 +
+ drivers/iio/common/ms_sensors/ms_sensors_i2c.c     |   4 +-
+ drivers/iio/imu/adis16475.c                        | 129 +++++++----
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c         |   4 +-
+ drivers/input/keyboard/ipaq-micro-keys.c           |   3 +
+ drivers/input/misc/soc_button_array.c              |   5 +
+ drivers/interconnect/core.c                        |   3 +
+ drivers/interconnect/qcom/sm8250.c                 |   1 +
+ drivers/md/dm-integrity.c                          |  11 +-
+ drivers/net/ethernet/actions/owl-emac.c            |   2 +-
+ drivers/net/ethernet/adaptec/starfire.c            |  10 +-
+ drivers/net/ethernet/alacritech/slicoss.c          |   2 +-
+ drivers/net/ethernet/alteon/acenic.c               |   4 +-
+ drivers/net/ethernet/altera/altera_tse_main.c      |   2 +-
+ drivers/net/ethernet/amd/nmclan_cs.c               |   3 +-
+ drivers/net/ethernet/amd/xgbe/xgbe-dev.c           |   2 +-
+ drivers/net/ethernet/amd/xgbe/xgbe.h               |   2 +-
+ drivers/net/ethernet/apm/xgene-v2/mac.c            |   2 +-
+ drivers/net/ethernet/apm/xgene/xgene_enet_hw.c     |   2 +-
+ drivers/net/ethernet/apm/xgene/xgene_enet_sgmac.c  |   2 +-
+ drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c  |   2 +-
+ drivers/net/ethernet/apple/bmac.c                  |   8 +-
+ drivers/net/ethernet/aquantia/atlantic/aq_hw.h     |   6 +-
+ drivers/net/ethernet/aquantia/atlantic/aq_macsec.c |   2 +-
+ .../ethernet/aquantia/atlantic/hw_atl/hw_atl_a0.c  |   4 +-
+ .../ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c  |   4 +-
+ .../ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.h  |   2 +-
+ .../aquantia/atlantic/hw_atl/hw_atl_utils.c        |   4 +-
+ .../aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c   |   4 +-
+ .../ethernet/aquantia/atlantic/hw_atl2/hw_atl2.c   |   2 +-
+ drivers/net/ethernet/atheros/atl1e/atl1e_main.c    |   5 +-
+ drivers/net/ethernet/broadcom/b44.c                |   6 +-
+ drivers/net/ethernet/broadcom/bcmsysport.c         |   2 +-
+ drivers/net/ethernet/broadcom/bgmac.c              |   2 +-
+ drivers/net/ethernet/broadcom/bnx2.c               |   2 +-
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x.h        |   2 +-
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c   |   4 +-
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h  |   3 +-
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c   |   2 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c          |   2 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c    |   4 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.h    |   2 +-
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c     |   4 +-
+ drivers/net/ethernet/calxeda/xgmac.c               |   2 +-
+ drivers/net/ethernet/chelsio/cxgb/gmac.h           |   2 +-
+ drivers/net/ethernet/chelsio/cxgb/pm3393.c         |   2 +-
+ drivers/net/ethernet/chelsio/cxgb/vsc7326.c        |   2 +-
+ drivers/net/ethernet/chelsio/cxgb3/common.h        |   2 +-
+ drivers/net/ethernet/chelsio/cxgb3/xgmac.c         |   2 +-
+ drivers/net/ethernet/cisco/enic/enic_pp.c          |   2 +-
+ drivers/net/ethernet/dlink/dl2k.c                  |   2 +-
+ drivers/net/ethernet/dnet.c                        |   6 +-
+ drivers/net/ethernet/emulex/benet/be_cmds.c        |   2 +-
+ drivers/net/ethernet/emulex/benet/be_cmds.h        |   2 +-
+ drivers/net/ethernet/emulex/benet/be_main.c        |   2 +-
+ drivers/net/ethernet/ethoc.c                       |   2 +-
+ drivers/net/ethernet/fealnx.c                      |   2 +-
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c     |   4 +-
+ drivers/net/ethernet/freescale/fman/fman_dtsec.c   |   8 +-
+ drivers/net/ethernet/freescale/fman/fman_dtsec.h   |   2 +-
+ drivers/net/ethernet/freescale/fman/fman_memac.c   |   8 +-
+ drivers/net/ethernet/freescale/fman/fman_memac.h   |   2 +-
+ drivers/net/ethernet/freescale/fman/fman_tgec.c    |   8 +-
+ drivers/net/ethernet/freescale/fman/fman_tgec.h    |   2 +-
+ drivers/net/ethernet/freescale/fman/mac.h          |   2 +-
+ drivers/net/ethernet/hisilicon/hisi_femac.c        |   2 +-
+ drivers/net/ethernet/hisilicon/hix5hd2_gmac.c      |   2 +-
+ drivers/net/ethernet/hisilicon/hns/hnae.h          |   2 +-
+ drivers/net/ethernet/hisilicon/hns/hns_ae_adapt.c  |   2 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_gmac.c |   2 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.c  |   2 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_mac.h  |   5 +-
+ .../net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c    |   2 +-
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h        |   2 +-
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    |   2 +-
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  |   2 +-
+ drivers/net/ethernet/i825xx/sun3_82586.c           |   2 +-
+ drivers/net/ethernet/intel/i40e/i40e.h             |   2 +-
+ drivers/net/ethernet/intel/ixgb/ixgb_hw.c          |   2 +-
+ drivers/net/ethernet/intel/ixgb/ixgb_hw.h          |   2 +-
+ drivers/net/ethernet/marvell/mv643xx_eth.c         |   2 +-
+ drivers/net/ethernet/marvell/mvneta.c              |   4 +-
+ drivers/net/ethernet/marvell/pxa168_eth.c          |   6 +-
+ drivers/net/ethernet/mediatek/mtk_star_emac.c      |   2 +-
+ .../ethernet/mellanox/mlx5/core/diag/fw_tracer.c   |   2 +-
+ .../mellanox/mlx5/core/en/fs_tt_redirect.c         |   1 +
+ .../net/ethernet/mellanox/mlx5/core/en/tc_tun.c    |  30 +--
+ drivers/net/ethernet/mellanox/mlx5/core/en_fs.c    |   4 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en_rep.c   |   2 +-
+ .../net/ethernet/mellanox/mlx5/core/ipoib/ipoib.c  |   2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/vport.c    |   2 +-
+ drivers/net/ethernet/micrel/ks8842.c               |   2 +-
+ drivers/net/ethernet/micrel/ks8851.h               |   3 +
+ drivers/net/ethernet/micrel/ks8851_common.c        |  22 +-
+ drivers/net/ethernet/micrel/ks8851_spi.c           |  42 ++--
+ drivers/net/ethernet/micrel/ksz884x.c              |   4 +-
+ drivers/net/ethernet/microsoft/Kconfig             |   1 +
+ drivers/net/ethernet/myricom/myri10ge/myri10ge.c   |   3 +-
+ drivers/net/ethernet/neterion/s2io.c               |   2 +-
+ drivers/net/ethernet/neterion/s2io.h               |   2 +-
+ .../ethernet/netronome/nfp/flower/tunnel_conf.c    |   6 +-
+ drivers/net/ethernet/nxp/lpc_eth.c                 |   2 +-
+ drivers/net/ethernet/qlogic/qed/qed_dev.c          |   2 +-
+ drivers/net/ethernet/qlogic/qed/qed_dev_api.h      |   2 +-
+ drivers/net/ethernet/qlogic/qed/qed_l2.c           |   2 +-
+ drivers/net/ethernet/qlogic/qed/qed_main.c         |   2 +-
+ drivers/net/ethernet/qlogic/qed/qed_mcp.c          |   2 +-
+ drivers/net/ethernet/qlogic/qed/qed_mcp.h          |   2 +-
+ drivers/net/ethernet/qlogic/qed/qed_rdma.c         |   2 +-
+ drivers/net/ethernet/qlogic/qed/qed_vf.c           |   2 +-
+ drivers/net/ethernet/qlogic/qed/qed_vf.h           |   4 +-
+ drivers/net/ethernet/qlogic/qede/qede_filter.c     |   2 +-
+ drivers/net/ethernet/qualcomm/emac/emac-mac.c      |   2 +-
+ drivers/net/ethernet/rdc/r6040.c                   |  12 +-
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h  |   2 +-
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_core.c    |   3 +-
+ drivers/net/ethernet/sfc/ef10.c                    |   4 +-
+ drivers/net/ethernet/sfc/ef10_sriov.c              |   2 +-
+ drivers/net/ethernet/sfc/ef10_sriov.h              |   6 +-
+ drivers/net/ethernet/sfc/net_driver.h              |   2 +-
+ drivers/net/ethernet/sfc/siena_sriov.c             |   2 +-
+ drivers/net/ethernet/sfc/siena_sriov.h             |   2 +-
+ drivers/net/ethernet/sis/sis900.c                  |   2 +-
+ drivers/net/ethernet/smsc/smsc911x.c               |   2 +-
+ drivers/net/ethernet/smsc/smsc9420.c               |   2 +-
+ drivers/net/ethernet/stmicro/stmmac/common.h       |   4 +-
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c  |   2 +-
+ .../net/ethernet/stmicro/stmmac/dwmac1000_core.c   |   2 +-
+ .../net/ethernet/stmicro/stmmac/dwmac100_core.c    |   2 +-
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  |   2 +-
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_lib.c   |   2 +-
+ drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c    |   2 +-
+ .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    |   3 +-
+ drivers/net/ethernet/stmicro/stmmac/hwif.h         |   3 +-
+ .../net/ethernet/stmicro/stmmac/stmmac_selftests.c |   4 +-
+ drivers/net/ethernet/sun/sunbmac.c                 |   2 +-
+ drivers/net/ethernet/sun/sunqe.c                   |   2 +-
+ drivers/net/ethernet/synopsys/dwc-xlgmac-hw.c      |   2 +-
+ drivers/net/ethernet/synopsys/dwc-xlgmac.h         |   2 +-
+ drivers/net/ethernet/ti/tlan.c                     |   4 +-
+ drivers/net/ethernet/toshiba/tc35815.c             |   3 +-
+ drivers/net/ethernet/xilinx/xilinx_emaclite.c      |   7 +-
+ drivers/net/ethernet/xircom/xirc2ps_cs.c           |   2 +-
+ drivers/net/phy/mscc/mscc_main.c                   |   2 +-
+ drivers/net/usb/aqc111.c                           |   2 +-
+ drivers/net/usb/ax88179_178a.c                     | 224 +++++++++---------
+ drivers/net/usb/catc.c                             |   2 +-
+ drivers/net/usb/dm9601.c                           |   3 +-
+ drivers/net/usb/mcs7830.c                          |   3 +-
+ drivers/net/usb/sr9700.c                           |   3 +-
+ drivers/net/wireless/intel/iwlwifi/pcie/trans.c    |   4 +-
+ drivers/pinctrl/pinctrl-at91-pio4.c                |   8 +
+ drivers/reset/core.c                               |   8 +-
+ drivers/scsi/bnx2fc/bnx2fc_fcoe.c                  |   9 +-
+ drivers/scsi/scsi_error.c                          |   2 +
+ drivers/spi/spi.c                                  |  12 +
+ drivers/usb/host/fotg210-hcd.c                     |   3 -
+ drivers/usb/serial/ftdi_sio.c                      |   6 +-
+ drivers/usb/serial/ftdi_sio_ids.h                  |   6 +-
+ drivers/usb/serial/option.c                        |   5 +
+ fs/Kconfig                                         |   4 +-
+ fs/afs/cell.c                                      |  67 +++---
+ fs/afs/cmservice.c                                 |   2 +-
+ fs/afs/dynroot.c                                   |  31 +--
+ fs/afs/internal.h                                  |  18 +-
+ fs/afs/proc.c                                      |   6 +-
+ fs/afs/rxrpc.c                                     |  26 ++-
+ fs/afs/server.c                                    |  40 ++--
+ fs/afs/vl_list.c                                   |  19 +-
+ fs/afs/volume.c                                    |  47 +++-
+ fs/cifs/misc.c                                     |   4 +
+ fs/cifs/smb2misc.c                                 |  26 +--
+ fs/cifs/smb2ops.c                                  |  26 ++-
+ fs/cifs/smb2pdu.c                                  |  29 ++-
+ fs/cifs/smb2pdu.h                                  |   2 +-
+ fs/fuse/fuse_i.h                                   |  15 ++
+ fs/fuse/inode.c                                    |  75 +++++-
+ fs/ksmbd/oplock.c                                  | 115 ++++++++-
+ fs/ksmbd/oplock.h                                  |   8 +-
+ fs/ksmbd/smb2misc.c                                |  15 +-
+ fs/ksmbd/smb2ops.c                                 |   9 +-
+ fs/ksmbd/smb2pdu.c                                 |  61 ++---
+ fs/ksmbd/smb2pdu.h                                 |   1 +
+ fs/ksmbd/vfs.c                                     |   3 +
+ fs/ksmbd/vfs_cache.c                               |  13 +-
+ fs/ksmbd/vfs_cache.h                               |   3 +
+ include/linux/bpf.h                                |   3 +
+ include/linux/key-type.h                           |   1 +
+ include/linux/property.h                           |   9 +-
+ include/linux/qed/qed_eth_if.h                     |   2 +-
+ include/linux/qed/qed_if.h                         |   2 +-
+ include/linux/qed/qed_rdma_if.h                    |   3 +-
+ include/linux/spi/spi.h                            |   3 +
+ include/net/bluetooth/hci_core.h                   |   5 +
+ include/trace/events/afs.h                         |  26 +--
+ kernel/bpf/arraymap.c                              |  58 +----
+ kernel/trace/ring_buffer.c                         | 136 ++++-------
+ kernel/trace/synth_event_gen_test.c                |  11 +
+ kernel/trace/trace.c                               |  20 +-
+ lib/vsprintf.c                                     |  11 +-
+ mm/filemap.c                                       |   9 +
+ net/8021q/vlan_core.c                              |   9 +-
+ net/9p/protocol.c                                  |  17 +-
+ net/bluetooth/af_bluetooth.c                       |   7 +-
+ net/bluetooth/hci_event.c                          |   3 +-
+ net/bluetooth/l2cap_core.c                         |  21 +-
+ net/bluetooth/mgmt.c                               |  25 +-
+ net/bluetooth/smp.c                                |   7 +
+ net/core/dev.c                                     |   3 +
+ net/dns_resolver/dns_key.c                         |  10 +-
+ net/ife/ife.c                                      |   1 +
+ net/mac80211/mesh_plink.c                          |  10 +-
+ net/netfilter/nf_tables_api.c                      |   2 +-
+ net/rfkill/rfkill-gpio.c                           |   8 +
+ net/rose/af_rose.c                                 |  41 +++-
+ net/wireless/certs/wens.hex                        |  87 +++++++
+ security/keys/gc.c                                 |  31 ++-
+ security/keys/internal.h                           |  11 +-
+ security/keys/key.c                                |  15 +-
+ security/keys/proc.c                               |   2 +-
+ sound/soc/codecs/hdmi-codec.c                      |  12 +-
+ sound/usb/quirks.c                                 |   4 +-
+ 244 files changed, 1807 insertions(+), 1089 deletions(-)
+
+
