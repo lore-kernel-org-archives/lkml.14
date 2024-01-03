@@ -1,123 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17931C280;
-	Wed,  3 Jan 2024 17:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427021C283;
+	Wed,  3 Jan 2024 17:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mx0b-0016f401.pphosted.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MJtJBiNZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704302816; x=1735838816;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=EJE3hRpgK0X23wIsKdiyvAzh6pSGgJFYMhCfGWSeSWc=;
-  b=MJtJBiNZoMJMrCXxgFmqDk221JUfRAy3g1DTgKZkkTYsYBbpFL8LqdKK
-   Hq6D2B7N8oA+bclF+KQP51jyvNRQljZleend+40frvaXHGZst4JoK8ajS
-   oTTyWu8XmTftWa9GKDONFx/VyBg+/1J+tc2uvTKuJICS3a45/IxCCEfhC
-   2XUf7Vldi4c5Mx570ga8GGRVEeLYvfkpP0P/11vl+EKi9Awv/2YByVaUL
-   25RCODabia2S0UILg/sJjALo1+lMUT1/ahHCHN6eAYgccuIhSAbbyM8Xo
-   OaoBmcekpKCz4bbWmMT68WbOnSvcUJxyK+lA1kN4j8QmilKSxs1Q4zxXh
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="18561802"
-X-IronPort-AV: E=Sophos;i="6.04,328,1695711600"; 
-   d="scan'208";a="18561802"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 09:26:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="953283636"
-X-IronPort-AV: E=Sophos;i="6.04,328,1695711600"; 
-   d="scan'208";a="953283636"
-Received: from sgruszka-mobl.ger.corp.intel.com (HELO localhost) ([10.252.36.57])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 09:26:51 -0800
-Date: Wed, 3 Jan 2024 16:02:34 +0100
-From: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Chen Yu <yu.c.chen@intel.com>, Len Brown <len.brown@intel.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Zhang Rui <rui.zhang@intel.com>, Zhao Liu <zhao1.liu@intel.com>,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] thermal: intel: hfi: Add a suspend notifier
-Message-ID: <ZZV3CgnaWznmzFKF@linux.intel.com>
-References: <20240103041459.11113-1-ricardo.neri-calderon@linux.intel.com>
- <20240103041459.11113-5-ricardo.neri-calderon@linux.intel.com>
- <CAJZ5v0jSERoeMki9ZvWtTqiZidETeo1Xm_Qb0Oo2qRG0PMrSJQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="i176oH0k"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4037XSmF020422;
+	Wed, 3 Jan 2024 09:28:13 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	pfpt0220; bh=1RB523u/YzFg6ojBTR5PfGAHwNn7BQfV7Lfr+ultk7I=; b=i17
+	6oH0kJS+QBk/IYvdI6lLLppu6PdLqitmuCX+X12PqRPgWcnYVsCxtYqv2XnwA3wL
+	9kYo8rxmTu6DB48s/693jywZCECOmqqU+nFnU+EvY2fEZqCPhHWEBxIei0mQfhYW
+	U9XWFqaIz3k17t3PecfOOtxqDPIj1Fo7777h7hjmKMLH8NlbxJgf+V8o09pomkKR
+	NG//MqKzQoGfpVj9QuSqUPLy2p4YaiL1DZ0SKz2rzfYkC2PnDzxeB2Aiq4Tzegb7
+	4hsYTBxNFDmJ1jGAFPRGNJ+FPJrIroG9857LJQbRjW0u/jOtoP015fLZYuZ7pnBm
+	5kXBzTzqH75hAxXH1rQ==
+Received: from dc5-exch02.marvell.com ([199.233.59.182])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3vd39qadtu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+	Wed, 03 Jan 2024 09:28:13 -0800 (PST)
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Wed, 3 Jan
+ 2024 09:28:11 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
+ Transport; Wed, 3 Jan 2024 09:28:11 -0800
+Received: from dc3lp-swdev041.marvell.com (dc3lp-swdev041.marvell.com [10.6.60.191])
+	by maili.marvell.com (Postfix) with ESMTP id 29F705B6931;
+	Wed,  3 Jan 2024 09:28:07 -0800 (PST)
+From: Elad Nachman <enachman@marvell.com>
+To: <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <andrew@lunn.ch>, <gregory.clement@bootlin.com>,
+        <sebastian.hesselbarth@gmail.com>, <huziji@marvell.com>,
+        <ulf.hansson@linaro.org>, <linux-mmc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC: <enachman@marvell.com>
+Subject: [PATCH v2 1/2] dt-bindings: mmc: add Marvell ac5
+Date: Wed, 3 Jan 2024 19:28:02 +0200
+Message-ID: <20240103172803.1826113-2-enachman@marvell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240103172803.1826113-1-enachman@marvell.com>
+References: <20240103172803.1826113-1-enachman@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0jSERoeMki9ZvWtTqiZidETeo1Xm_Qb0Oo2qRG0PMrSJQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: NfWS2ua3aNYgD7XOY9qGhS1C9f2M5O7L
+X-Proofpoint-GUID: NfWS2ua3aNYgD7XOY9qGhS1C9f2M5O7L
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
 
-On Wed, Jan 03, 2024 at 02:34:26PM +0100, Rafael J. Wysocki wrote:
-> > +static int hfi_pm_notify(struct notifier_block *nb,
-> > +                        unsigned long mode, void *unused)
-> > +{
-> > +       struct hfi_cpu_info *info = &per_cpu(hfi_cpu_info, 0);
-> > +       struct hfi_instance *hfi = info->hfi_instance;
-> > +       int ret = 0;
-> > +
-> > +       /* HFI may not be in use. */
-> > +       if (!hfi)
-> > +               return ret;
-> > +
-> > +       mutex_lock(&hfi_instance_lock);
-> > +       /*
-> > +        * Only handle the HFI instance of the package of the boot CPU. The
-> > +        * instances of other packages are handled in the CPU hotplug callbacks.
-> > +        */
-> > +       switch (mode) {
-> > +       case PM_HIBERNATION_PREPARE:
-> > +       case PM_SUSPEND_PREPARE:
-> > +       case PM_RESTORE_PREPARE:
-> > +               ret = smp_call_function_single(0, hfi_do_disable, NULL, true);
-> > +               break;
-> > +
-> > +       case PM_POST_RESTORE:
-> > +       case PM_POST_HIBERNATION:
-> > +       case PM_POST_SUSPEND:
-> > +               ret = smp_call_function_single(0, hfi_do_enable, hfi, true);
-> > +               break;
-> 
-> Because this handles the boot CPU only, one has to wonder if it should
-> be a syscore op rather than a PM notifier.
-> 
-> It does not sleep AFAICS, so it can run in that context, and it is
-> guaranteed to run on the boot CPU then, so it is not necessary to
-> force that.  Moreover, syscore ops are guaranteed to be
-> non-concurrent, so locking is not needed.
+From: Elad Nachman <enachman@marvell.com>
 
-There are below warnings in smp_call_function_single() :
+Add dt bindings for Marvell AC5/X/IM eMMC controller.
+This compatibility string covers the differences in the
+AC5/X version of the driver: 31-bit bus limitation and
+DDR memory starting at address 0x2_0000_0000, which are handled
+by usage of a bounce buffer plus a different DMA mask.
 
-        /*
-         * Can deadlock when called with interrupts disabled.
-         * We allow cpu's that are not yet online though, as no one else can
-         * send smp call function interrupt to this cpu and as such deadlocks
-         * can't happen.
-         */
-        WARN_ON_ONCE(cpu_online(this_cpu) && irqs_disabled()
-                     && !oops_in_progress);
+Signed-off-by: Elad Nachman <enachman@marvell.com>
+---
+ .../devicetree/bindings/mmc/marvell,xenon-sdhci.yaml          | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-        /*
-         * When @wait we can deadlock when we interrupt between llist_add() and
-         * arch_send_call_function_ipi*(); when !@wait we can deadlock due to
-         * csd_lock() on because the interrupt context uses the same csd
-         * storage.
-         */
-        WARN_ON_ONCE(!in_task());
+diff --git a/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.yaml b/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.yaml
+index 3a8e74894ae0..cfe6237716f4 100644
+--- a/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.yaml
++++ b/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.yaml
+@@ -27,7 +27,9 @@ properties:
+           - marvell,armada-ap806-sdhci
+ 
+       - items:
+-          - const: marvell,armada-ap807-sdhci
++          - enum:
++              - marvell,armada-ap807-sdhci
++              - marvell,ac5-sdhci
+           - const: marvell,armada-ap806-sdhci
+ 
+       - items:
+-- 
+2.25.1
 
-And this one in syscore_suspend(): 
-
-        WARN_ONCE(!irqs_disabled(),
-                "Interrupts enabled before system core suspend.\n");
-                                                                     
-So seems they are not compatible.
-
-Regards
-Stanislaw
