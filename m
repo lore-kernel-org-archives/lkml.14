@@ -1,99 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from eggs.gnu.org (eggs.gnu.org [209.51.188.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982C11A5A0;
-	Wed,  3 Jan 2024 14:36:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDFAC1B268;
+	Wed,  3 Jan 2024 14:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gnu.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnu.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pj111nEW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8961AC433C8;
-	Wed,  3 Jan 2024 14:36:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704292564;
-	bh=is7O5uMKlFnKVd3x+vpOi0jZoWskFl0wA4r7k43/gWY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Pj111nEWhbwtnIBXAmtPTKY07uMZLZalmcUisGEP01x91bzK1WMukhkXdmvcbLiz4
-	 nzjuKfvPLvnFmmJnrLQ3u5SNnbNuN7NK7IuyAO7jqoF0a4BeqbHjaoYV14ky9gjX7u
-	 AQMYN2St2mGoLuzjRd+80Ftvu2tbiJmi8zaOAteCnijOw/MGNC+tQiq1/XqiG9txGu
-	 R1dqFESMQMMqdCT57+JD8QAZu4Xa5xXNj+LQwbw3REC5LQfR/1AaGwt0+F/MikT/nw
-	 bzj0byS0nAt1ZtobKqk3F5og48OWQeWe5VrN+DFCETjFL6EO7F3nQiUlMw5X/4jtnA
-	 qAzRUdUnPCWuQ==
-Date: Wed, 3 Jan 2024 08:35:57 -0600
-From: Eric Biggers <ebiggers@kernel.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-riscv@lists.infradead.org,
-	Jerry Shih <jerry.shih@sifive.com>, linux-kernel@vger.kernel.org,
-	Heiko Stuebner <heiko@sntech.de>,
-	Phoebe Chen <phoebe.chen@sifive.com>, hongrong.hsu@sifive.com,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Andy Chiu <andy.chiu@sifive.com>
-Subject: Re: [RFC PATCH 00/13] RISC-V crypto with reworked asm files
-Message-ID: <20240103143557.GA773@quark.localdomain>
-References: <20240102064743.220490-1-ebiggers@kernel.org>
- <CAMj1kXEAqxCZ_PNM9a=CyciSHUzDU_yqemKh51oncHyLbYUKtA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gnu.org header.i=@gnu.org header.b="IvXmoJxc"
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+	by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.90_1)
+	(envelope-from <othacehe@gnu.org>)
+	id 1rL2MW-0005mQ-LZ; Wed, 03 Jan 2024 09:36:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+	s=fencepost-gnu-org; h=MIME-Version:Date:Subject:To:From:in-reply-to:
+	references; bh=Xt5kL03dGlCCOFmmhGy6NWYfXXspqCZA8XaL0CgGlg0=; b=IvXmoJxcBCyoV7
+	b4ytFoxi5fnfD0fD/UM8kiRQwIYSswBxXEcd1Bv70Y3lw7AWzZyWUnws0xiOkhB3IDSWdbuwvJNAU
+	p1Bp3bsgGqOjUOTY9BZoAmqEAfJyUhF175F6m1bDtb0DKEW43QMf2YAxNyePiu2/1lB2+xL27rKEm
+	jsDHiiUaaBmT/cuoSmUs4umilgJqg7SU1bK0IjVAcjtxwxSQfKU5+DbXQYAwp15bwrAblR1j7CuDw
+	zc3h5APMvJhmO7PSKaKXSVW13vyxCmQSZ+TUyXCgTlCOBA/HHhumCw9vh3ME4bhmsEp9v4hZFtcCv
+	+4Y7XWDDIKDHURAbpZHA==;
+From: Mathieu Othacehe <othacehe@gnu.org>
+To: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Li Yang <leoyang.li@nxp.com>,
+	Stefan Wahren <wahrenst@gmx.net>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Mathieu Othacehe <othacehe@gnu.org>
+Subject: [PATCH v5 0/2] Add Variscite VAR-SOM-MX93 support
+Date: Wed,  3 Jan 2024 15:36:37 +0100
+Message-ID: <20240103143639.32280-1-othacehe@gnu.org>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXEAqxCZ_PNM9a=CyciSHUzDU_yqemKh51oncHyLbYUKtA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 03, 2024 at 03:00:29PM +0100, Ard Biesheuvel wrote:
-> On Tue, 2 Jan 2024 at 07:50, Eric Biggers <ebiggers@kernel.org> wrote:
-> >
-> > As discussed previously, the proposed use of the so-called perlasm for
-> > the RISC-V crypto assembly files makes them difficult to read, and these
-> > files have some other issues such extensively duplicating source code
-> > for the different AES key lengths and for the unrolled hash functions.
-> > There is/was a desire to share code with OpenSSL, but many of the files
-> > have already diverged significantly; also, for most of the algorithms
-> > the source code can be quite short anyway, due to the native support for
-> > them in the RISC-V vector crypto extensions combined with the way the
-> > RISC-V vector extension naturally scales to arbitrary vector lengths.
-> >
-> > Since we're still waiting for prerequisite patches to be merged anyway,
-> > we have a bit more time to get this cleaned up properly.  So I've had a
-> > go at cleaning up the patchset to use standard .S files, with the code
-> > duplication fixed.  I also made some tweaks to make the different
-> > algorithms consistent with each other and with what exists in the kernel
-> > already for other architectures, and tried to improve comments.
-> >
-> > The result is this series, which passes all tests and is about 2400
-> > lines shorter than the latest version with the perlasm
-> > (https://lore.kernel.org/linux-crypto/20231231152743.6304-1-jerry.shih@sifive.com/).
-> > All the same functionality and general optimizations are still included,
-> > except for some minor optimizations in XTS that I dropped since it's not
-> > clear they are worth the complexity.  (Note that almost all users of XTS
-> > in the kernel only use it with block-aligned messages, so it's not very
-> > important to optimize the ciphertext stealing case.)
-> >
-> > I'd appreciate people's thoughts on this series.  Jerry, I hope I'm not
-> > stepping on your toes too much here, but I think there are some big
-> > improvements here.
-> >
-> 
-> As I have indicated before, I fully agree with Eric here that avoiding
-> perlasm is preferable: sharing code with OpenSSL is great if we can
-> simply adopt the exact same code (and track OpenSSL as its upstream)
-> but this never really worked that well for skciphers, due to API
-> differences. (The SHA transforms can be reused a bit more easily)
-> 
-> I will also note that perlasm is not as useful for RISC-V as it is for
-> other architectures: in OpenSSL, perlasm is also used to abstract
-> differences in calling conventions between, e.g., x86_64 on Linux vs
-> Windows, or to support building with outdated [proprietary]
-> toolchains.
-> 
-> I do wonder if we could also use .req directives for register aliases
-> instead of CPP defines? It shouldn't matter for working code, but the
-> diagnostics tend to be a bit more useful if the aliases are visible to
-> the assembler.
+Hey,
 
-.req unfortunately isn't an option since it is specific to AArch64 and ARM
-assembly.  So we have to use #defines like x86 does.  Ultimately, the effect is
-about the same.
+This is a v5 adding support for the Variscite VAR-SOM-MX93 SoM on Symphony
+Board.
 
-- Eric
+Thanks,
+
+Signed-off-by: Mathieu Othacehe <othacehe@gnu.org>
+---
+Changes in v5:
+- Add gpio-keys and gpio-leds
+- Enable lpuart6
+
+Changes in v4:
+- Add ethernet0 alias
+- Remove useless properties
+
+Changes in v3:
+- Fix indentation on a continuation line
+- Remove useless nodes and include
+
+Changes in v2:
+- Remove "nxp,pca9451a" block
+- Fixed checkpatch warnings
+- Fixed dtb_checks warnings
+- Introduce dt-bindings documentation
+
+v4: https://lore.kernel.org/linux-devicetree/20231227170919.8771-1-othacehe@gnu.org/
+
+Mathieu Othacehe (2):
+  dt-bindings: arm: fsl: Add VAR-SOM-MX93 with Symphony
+  arm64: dts: imx93-var-som: Add Variscite VAR-SOM-MX93
+
+ .../devicetree/bindings/arm/fsl.yaml          |   6 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../dts/freescale/imx93-var-som-symphony.dts  | 352 ++++++++++++++++++
+ .../boot/dts/freescale/imx93-var-som.dtsi     | 111 ++++++
+ 4 files changed, 470 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx93-var-som-symphony.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/imx93-var-som.dtsi
+
+-- 
+2.41.0
+
