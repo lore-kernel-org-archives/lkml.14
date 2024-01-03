@@ -1,101 +1,57 @@
-Received: from mail-4325.protonmail.ch (mail-4325.protonmail.ch [185.70.43.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp87.cstnet.cn [159.226.251.87])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E497A4A13
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 02:39:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="ExTsSpJk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=rpwcewjj7zfibednh5axf65hs4.protonmail; t=1704249544; x=1704508744;
-	bh=coq+E/koRQ1nyDj6Btxcud2fUdhToaVns+u6j7xhYDo=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=ExTsSpJkVG/FfAqr+JfR7Aea8K6RrhNmZ/g2kFoQcYuBoUap5M8BeiKM20bCJVdxl
-	 5+5T8tc9wNuMheekpSVToJvcsizmqPcOVYNXZUjqYSeSr2COuARD9z/3trnEvPUTH+
-	 7uOYdd17CnBiS5xRj8wzRD6v45AmVdlX2Da6G2nR37buheIBVIpIw+TUhDHKt8BjT0
-	 tvwLDAGIAoQ4+a4zXIz2DpVDEx/rQp4U/DGDmidBgEaRi38sHQiSY4u6mQIQQtO3KX
-	 asiLmWM2vD0Ry9x2b8n/QuwcNZwUidY6ATm8xzzMgabizOhPT6BCP2m6oDTNmueYIs
-	 rdDrRzp8WIElQ==
-Date: Wed, 03 Jan 2024 02:38:50 +0000
-To: "peterz@infradead.org" <peterz@infradead.org>
-From: rohan470 <rohan470@proton.me>
-Cc: "mingo@kernel.org" <mingo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: EEVDF virtual time calculation rationale
-Message-ID: <ZkUEh0F9jAcEI7v9ufD9OqnxsuVxvOca7fX8R9jJlre5kFXoynNMANNbZFPZs02-jb2MdiCQAGk_l2Xdl4cmnxekDyRG45rcJ1-yU0Kz9oo=@proton.me>
-Feedback-ID: 96939901:user:proton
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0390D469F;
+	Wed,  3 Jan 2024 02:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iie.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iie.ac.cn
+Received: from mengjingzi$iie.ac.cn ( [121.195.114.118] ) by
+ ajax-webmail-APP-17 (Coremail) ; Wed, 3 Jan 2024 10:45:35 +0800 (GMT+08:00)
+Date: Wed, 3 Jan 2024 10:45:35 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: =?UTF-8?B?5a2f5pWs5ae/?= <mengjingzi@iie.ac.cn>
+To: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	pabeni@redhat.com, brauner@kernel.org
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Subject: capability checks in sk_setsockopt() and __sock_cmsg_send()
+ inconsistent with the documentation
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.15 build 20230921(8ad33efc)
+ Copyright (c) 2002-2024 www.mailtech.cn cnic.cn
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <5f96b80d.c739.18ccd3646b8.Coremail.mengjingzi@iie.ac.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:qgCowADHKupPypRlsBMDAA--.32349W
+X-CM-SenderInfo: pphqwyxlqj6xo6llvhldfou0/1tbiDAcFE2WUwEQhAgABsK
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-Hello,
-
-I have a question regarding the calculation of virtual time in the new EEVD=
-F system.=20
-I'm quite new to Linux kernel development, so forgive me if my question sou=
-nds naive or if my assumptions regarding the kernel's scheduling mechanisms=
- are incorrect.
-
-I read Stoica et al's EEVDF papers (both the 37 page technical report [1], =
-and the 1996 RTSS conference edition [2]). I then spent the past few weeks =
-studying the new EEVDF code.
-I noticed a difference in how virtual time is calculated in the paper versu=
-s how the kernel does it.
-
-The paper defines virtual time as:
-V(t)=3D\int_{0}^{t}\frac{1}{\sum_{j\in A(\tau)}w_j}d\tau
-
-However, if I understand correctly, the kernel does not calculate virtual t=
-ime with this formula.=20
-Instead, it takes the \Sum lag_i =3D 0 invariant of EEVDF and the definitio=
-n of lag (lag_i =3D S - s_i =3D w_i * (V - v_i)), and rearranges the formul=
-a to solve for virtual time, V.=20
-This means virtual time is effectively calculated as a weighted average of =
-the tasks' virtual runtimes.
-
-Why does the kernel calculate virtual time this way? Does it produce the ex=
-act same value as the integral solution?
-Was this inherited from the CFS system?
-
-One issue I thought of with the integral solution is that the definition of=
- time 0 is somewhat ambiguous. Is it when the system boots, or when the run=
-queue is initialized, or something else?
-Could it be set to any arbitrary time constant, as long as it's before the =
-first time we try to calculate virtual time?=20
-Unfortunately, the paper doesn't answer these questions, since it omits the=
- implementation of the get_current_vt function.
-
-Could an integral version be implemented like this?: we store the virtual t=
-ime in a variable, virtual_time. When the scheduler runs periodically from =
-an interrupt, we update virtual time with: virtual_time +=3D (1/sum_of_weig=
-hts)*(t-t'), where t is the current time and t' is the last time we updated=
- the virtual_time variable. When a task leaves/joins the system, we update =
-virtual time with: virtual_time =3D virtual_time +/- (lag_i(t)/(sum_of_weig=
-hts)), where sum_of_weights is the new sum after the leave/join.
-
-For the periodic update (not the leave/join) of virtual_time, we effectivel=
-y break the integral into two parts: one for the 0 to t' interval, and anot=
-her for the t' to t interval. Since the integral for 0 to t' is already cal=
-culated, we don't have to worry about the variations in sum_of_weights duri=
-ng that interval. Since we update virtual_time and sum_of_weights whenever =
-a task leaves/joins the system, then t' is the last time the weights could =
-have changed before t. Therefore, we know sum_of_weights stays constant bet=
-ween t' and t.
-
-I'm curious to learn more about why the weighted average method is used, an=
-d whether or not the integral solution is possible to use in the kernel.
-
-Thanks,
--Rohan
-
-[1] https://citeseerx.ist.psu.edu/document?repid=3Drep1&type=3Dpdf&doi=3D80=
-5acf7726282721504c8f00575d91ebfd750564
-[2] https://ieeexplore.ieee.org/abstract/document/563725?casa_token=3DeZ1XT=
-M6ux9QAAAAA:10ncyLGX4mjYATqMTdwBRgQTkIjE4MHtYvYKLXVuaubP_cdWr8YeX-TALqd-94O=
-xhDp248wAWFqe
+SGkhIAoKV2UndmUgaWRlbnRpZmllZCByZWR1bmRhbnQgY2FwYWJpbGl0eSBjaGVja3Mgd2l0aGlu
+IHRoZSBza19zZXRzb2Nrb3B0KCkgYW5kIF9fc29ja19jbXNnX3NlbmQoKSBmdW5jdGlvbnMsIHNw
+ZWNpZmljYWxseSByZWxhdGVkIHRvIHRoZSBvcHRpb25zIFNPX01BUksgYW5kIFNPX1BSSU9SSVRZ
+LgoKQ3VycmVudGx5LCBib3RoIENBUF9ORVRfQURNSU4gYW5kIENBUF9ORVRfUkFXIGFyZSB1c2Vk
+IGZvciB0aGVzZSBjaGVja3MsIGFuZCB3ZSBwcm9wb3NlIHNpbXBsaWZ5aW5nIHRoaXMgYnkgZXhj
+bHVzaXZlbHkgdXNpbmcgQ0FQX05FVF9BRE1JTi4gT3VyIHJhdGlvbmFsZSBpcyBiYXNlZCBvbiB0
+aGUgZGVmaW5pdGlvbnMgcHJvdmlkZWQgaW4gdGhlIGNhcGFiaWxpdHkgbWFudWFsIHBhZ2UoaHR0
+cHM6Ly93d3cubWFuNy5vcmcvbGludXgvbWFuLXBhZ2VzL21hbjcvY2FwYWJpbGl0aWVzLjcuaHRt
+bCksIHdoaWNoIHNwZWNpZmllcyB0aGF0IG9ubHkgQ0FQX05FVF9BRE1JTiBpcyByZXF1aXJlZCBm
+b3IgdXNpbmcgc2V0c29ja29wdCgyKSB0byBzZXQgU09fUFJJT1JJVFksIFNPX0RFQlVHLCBhbmQg
+U09fTUFSSy4gQWRkaXRpb25hbGx5LCB3ZSd2ZSBvYnNlcnZlZCB0aGF0IFNPX0RFQlVHIGlzIGFs
+cmVhZHkgcHJvdGVjdGVkIHNvbGVseSBieSBDQVBfTkVUX0FETUlOLgoKU2ltcGxpZnlpbmcgdGhl
+IGNhcGFiaWxpdHkgY2hlY2tzIGluIHRoZXNlIGZ1bmN0aW9ucyB0byBvbmx5IHVzZSBDQVBfTkVU
+X0FETUlOIHdvdWxkIG5vdCBvbmx5IGFsaWduIHdpdGggdGhlIGNhcGFiaWxpdHkgbWFudWFsIHBh
+Z2UgYnV0IGFsc28gY29udHJpYnV0ZSB0byBhIG1vcmUgc3RyYWlnaHRmb3J3YXJkIGFuZCBjb25z
+aXN0ZW50IGNvZGViYXNlLgoKVGhpcyBpc3N1ZSBleGlzdHMgaW4gc2V2ZXJhbCBrZXJuZWwgdmVy
+c2lvbnMgYW5kIHdlIGhhdmUgY2hlY2tlZCBpdCBvbiB0aGUgbGF0ZXN0IHN0YWJsZSByZWxlYXNl
+KExpbnV4IDYuNi45KS4KCllvdXIgaW5zaWdodHMgYW5kIGZlZWRiYWNrIG9uIHRoaXMgcHJvcG9z
+ZWQgYWRqdXN0bWVudCB3b3VsZCBiZSBncmVhdGx5IGFwcHJlY2lhdGVkLiBUaGFuayB5b3UgZm9y
+IHlvdXIgdGltZSBhbmQgY29uc2lkZXJhdGlvbi4KCkJlc3QgcmVnYXJkcywKSmluZ3ppCg==
