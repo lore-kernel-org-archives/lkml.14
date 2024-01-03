@@ -1,178 +1,169 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2045.outbound.protection.outlook.com [40.107.243.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B850C1BDEA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 651441BDE3;
 	Wed,  3 Jan 2024 16:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJiaCM98"
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6dbbc637df7so7010411a34.2;
-        Wed, 03 Jan 2024 08:49:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704300547; x=1704905347; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7YOxkBSsy8gVCBj2wU1um2RFxkUEv6eBM3fBzmTk6ZQ=;
-        b=aJiaCM98BnS3fYhsCP3DsODw3GPWi4RbCFzT0gmuuuKo72cWhg4JvGRymxn+Q3+dlj
-         kH/47gDzHjwK0Fw8IB44F0RC+4Qjy+pFd0UAqkDgYgMQHja9l8OD0FDO/g8KOdjWWZ82
-         ZV+eNEuQt1IKQwWel28JZzcuRXz+jEW4DpzWP++IhdO/oEBM3xsG7LoDG6IVdPHxC3VJ
-         id7GLk+n3wyHnytpdgIGrIF2N+WxcOFp0iwZtGSdNvM6czMln0WxaIVCIi4dlc1mMAyI
-         RVSYz8c770XcEqIqIesEk+TvR9mnzduf5APsxm91kXyStSASBIe7uavEF/YoBcE76YRZ
-         S7Bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704300547; x=1704905347;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7YOxkBSsy8gVCBj2wU1um2RFxkUEv6eBM3fBzmTk6ZQ=;
-        b=JpW1C5ZRz8xCTS0Qz4k8qWaWM5qC65LarxcDKnqHi4nVAs/xLTZm6KtKd7s99nNu/2
-         0bIXZ8ZFcWskYpnwmK7atvunJCsOLTGeD1ajAsWsQU51DZxG+hWh6233LgkiyNrttAkW
-         DEPqvHJl6g2sAmFlUNW9RUCEPBdnl3vy/2HPgYSh43INq5KMdd3xVaLghdVRaq9CpGTL
-         5QKDbtOseOwf9II8o45YUoxq62fc/my2HOz92dan2qu9Ulu3HounSLkeDNVdEdWZSTco
-         jieEH17GG7OT1RQxzmbXKGxb/CMxh/ZstdaHFnuYrIJxuNeHAzR3vg/o3Uo6DqPJEl7+
-         xk9g==
-X-Gm-Message-State: AOJu0YwhJGi79cN9RlK0B0UBqltoUL5aBBvQEcPsNAsvNVp/jdz1qQXj
-	d+d16VLh7VgkUZbXCW8J0Ww=
-X-Google-Smtp-Source: AGHT+IFLNd6r4sLlBUDIfHH5k+tFiPZb3cLEvcFpPURN1hrp6Tu+pnN5zSuJjq33t8jB9TXNfanpxg==
-X-Received: by 2002:a9d:63d6:0:b0:6db:b08d:67b6 with SMTP id e22-20020a9d63d6000000b006dbb08d67b6mr12936091otl.53.1704300547484;
-        Wed, 03 Jan 2024 08:49:07 -0800 (PST)
-Received: from localhost ([2620:10d:c091:400::5:fcab])
-        by smtp.gmail.com with ESMTPSA id k15-20020ac8478f000000b004240481cee0sm14234406qtq.58.2024.01.03.08.49.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jan 2024 08:49:07 -0800 (PST)
-From: Dan Schatzberg <schatzberg.dan@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	linux-mm@kvack.org,
-	Tejun Heo <tj@kernel.org>,
-	Zefan Li <lizefan.x@bytedance.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeelb@google.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	David Hildenbrand <david@redhat.com>,
-	Chris Li <chrisl@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Dan Schatzberg <schatzberg.dan@gmail.com>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	Yue Zhao <findns94@gmail.com>,
-	Hugh Dickins <hughd@google.com>
-Subject: [PATCH v6 0/2] Add swappiness argument to memory.reclaim
-Date: Wed,  3 Jan 2024 08:48:35 -0800
-Message-Id: <20240103164841.2800183-1-schatzberg.dan@gmail.com>
-X-Mailer: git-send-email 2.39.3
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="YMjtf5Ra"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YMTt5RAT/pWIU8vovVsY0hjUV370EB8wUEGlT1Lb4U0ajP86Cz7dZIcr+CAx4AdTx9tIDC4D+JsK99i97wVqgk18rru8TX876/bggifacxAXLeHYnJSFECQxh83G88fQAZRneVRaC2m8tAT+7+D7zDA2b7HdXoqjxuGFie+FTeGPk6WhF4+5fdhpISlNmZZ34pwjm0oW/yv+7s9UeSs48mhiK9fHAz2xQ93rO1/pcJohC9n3ORt9se/7yonof7tDcpUxgPoic9t9mRrufwV13aqchbMvzCrqQiL+xIziWCmQDaCnmoqx9M7PtXmAIuOWnK0GSM7wmuiNPZglF+N22w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BlRf0VoX2QLx7emLII3PqB7MCV2hzfQ3wXHn4xCO9ow=;
+ b=MqtFxa6hAcvtnozfHc9onWK3Ie856RhWcx8zlnONjZzayhrxGEKWzo6AawXJshb3CTSLUuD3OgT4n2vPcYJ7MNMnfPncEX4jSZi2I0yv2oqpT4vAz6aH69HTszzl1KGdulOJq6zBVMGQG8PD+m2M3TBx1bS7Bl+dJgZq2LI+VfVukwyyroHJ5pFKSt5nyQxhyGZh+J4oSg+ul90QdQeQZhrIZ2OW/7v4Y+exlCig+n43iB5YcbjgrVMfSv5Tj3Ac8ZZS+AOkNUwLO6KS5qQyi1Ae6SFE/CsGd847+tHsRcVHbaH70p5UfO/AvHUlfVzA/GywRCDhxmk+H0SB/rH7zA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=oracle.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BlRf0VoX2QLx7emLII3PqB7MCV2hzfQ3wXHn4xCO9ow=;
+ b=YMjtf5RaIeYR263nrfVwOwn4HRGIKxn4rp/cNIte3LE92ZPK8cOUtWx4LndTd7Nrqw4wJcqrCeEEfxy6bDcdLakdg4Agwevsvdp3aD57guorhZfa9hl7VtWMd1Gid8QNysgk2V8ThNg0z58p6edgTZeKs9LuapijlD8Arig6qG1tzjz8sccos9ibJHrrI1N4EKK9XsC0Y4GUdqq/EnH0zypI9hlnUhw5J7qFunDUXXwBfCJ91elDpslVO1JwfOS2qUK8/uerbOlzuQt/wljf/5QBJ/BGc2WcAa28I9NYiCqR6SxdYbCC/ZLLDpHJ0iHmgCg6LE5KSI4/sI7sQghBag==
+Received: from BYAPR02CA0013.namprd02.prod.outlook.com (2603:10b6:a02:ee::26)
+ by SN7PR12MB8146.namprd12.prod.outlook.com (2603:10b6:806:323::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.27; Wed, 3 Jan
+ 2024 16:49:05 +0000
+Received: from CO1PEPF000042A9.namprd03.prod.outlook.com
+ (2603:10b6:a02:ee:cafe::ce) by BYAPR02CA0013.outlook.office365.com
+ (2603:10b6:a02:ee::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.24 via Frontend
+ Transport; Wed, 3 Jan 2024 16:49:04 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ CO1PEPF000042A9.mail.protection.outlook.com (10.167.243.38) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7159.9 via Frontend Transport; Wed, 3 Jan 2024 16:49:04 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Wed, 3 Jan 2024
+ 08:48:49 -0800
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Wed, 3 Jan 2024
+ 08:48:49 -0800
+Received: from Asurada-Nvidia (10.127.8.12) by mail.nvidia.com (10.129.68.10)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41 via Frontend
+ Transport; Wed, 3 Jan 2024 08:48:47 -0800
+Date: Wed, 3 Jan 2024 08:48:46 -0800
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+	"joro@8bytes.org" <joro@8bytes.org>, "alex.williamson@redhat.com"
+	<alex.williamson@redhat.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>, "cohuck@redhat.com"
+	<cohuck@redhat.com>, "eric.auger@redhat.com" <eric.auger@redhat.com>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "mjrosato@linux.ibm.com"
+	<mjrosato@linux.ibm.com>, "chao.p.peng@linux.intel.com"
+	<chao.p.peng@linux.intel.com>, "yi.y.sun@linux.intel.com"
+	<yi.y.sun@linux.intel.com>, "peterx@redhat.com" <peterx@redhat.com>,
+	"jasowang@redhat.com" <jasowang@redhat.com>,
+	"shameerali.kolothum.thodi@huawei.com"
+	<shameerali.kolothum.thodi@huawei.com>, "lulu@redhat.com" <lulu@redhat.com>,
+	"suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, "Duan,
+ Zhenzhong" <zhenzhong.duan@intel.com>, "joao.m.martins@oracle.com"
+	<joao.m.martins@oracle.com>, "Zeng, Xin" <xin.zeng@intel.com>, "Zhao, Yan Y"
+	<yan.y.zhao@intel.com>
+Subject: Re: [PATCH v7 1/3] iommufd: Add data structure for Intel VT-d
+ stage-1 cache invalidation
+Message-ID: <ZZWP7iBqUtbTRb3s@Asurada-Nvidia>
+References: <20231117131816.24359-2-yi.l.liu@intel.com>
+ <c967e716-9112-4d1a-b6f7-9a005e28202d@intel.com>
+ <BN9PR11MB5276D14D2A7FF60B41A6A7B48C93A@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <ZXu5whlIGfiq16wF@Asurada-Nvidia>
+ <BN9PR11MB52766D7F774510E0181CC89B8C93A@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <ZXvI2IiXwwuHRE8V@Asurada-Nvidia>
+ <7c398efc-8a2f-479d-bcff-ded8cc1ef3d0@intel.com>
+ <20240102233849.GK50406@nvidia.com>
+ <c59a780d-4030-4815-a34b-fb2e2f902ab3@intel.com>
+ <20240103160108.GP50406@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240103160108.GP50406@nvidia.com>
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000042A9:EE_|SN7PR12MB8146:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3ad75a7f-f85a-449a-47c5-08dc0c7be542
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	7IBUVdaWpM0ZXrDinSO3RGGXCPblENaI0ryDzxNLqhAafUb6gyBs0mkRuRGJwRNCkjLh8o+VTN9FDL3jmRvOfu1cHYkoJVWw2QUro/JftW7tvZAtjIPjriZG1yIdls0sT4psyLbEqFWSKsXR6hHBnwBJgoQiHogAxk0drecb8RwUpkpLWzKmxAR7LLiAmWhhHQErI2xRBryTIiErlJcb0F9gRBg3fZMwhQlzYI8dlw4PGdu4EWYCjePhhklI4+5uupJEMdgsfcGWEiXirDo3rJHcAsLZOQg3sT9g+XSU04YXcffNqb20HJTeOsETabbfWBWwSuoStshParHdKUuTKnz8yYWWjbaFTm8yowT6uzpgp2oJNa1eNejctFWiEeRmOr24Z9fSDo9EiQe6+ZHyT244auHzzP8AE0FGLlqAC5WbG+oifSZLGPqRWs+uPEUGTMfBy61d2lZZ+k0hhhmATLRjYPHKdPbNREQgNzjgOLyNml0o3835wCPPsF7uXwSZXKYDJATtgjBcPn2h2420nFy1f3G4rkpocb5xFajFbd41Ef74bDZy5c6SQ/wwJ7Sa0Uu5rHbQeaeP9cHeH4rMf65LjK3t0F7VVeUAVCaJd7stVClxzQkA9NmSk5tbtCBlwwwBQXcmAY4XsQ/QkrhXhaBCqhmAiCv/DkEUYDgVQAhx69HboYJyp29CCpslj8egeECr5QRbFAf2cE283JTpIqN33n3++mTi/4kr+/VmSEM=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(346002)(39860400002)(396003)(136003)(376002)(230922051799003)(64100799003)(451199024)(1800799012)(82310400011)(186009)(36840700001)(46966006)(40470700004)(53546011)(55016003)(40460700003)(9686003)(40480700001)(66899024)(47076005)(4326008)(6862004)(7636003)(316002)(54906003)(5660300002)(356005)(8676002)(8936002)(36860700001)(82740400003)(7416002)(2906002)(336012)(426003)(83380400001)(86362001)(478600001)(33716001)(26005)(6636002)(70586007)(41300700001)(70206006);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jan 2024 16:49:04.5823
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3ad75a7f-f85a-449a-47c5-08dc0c7be542
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000042A9.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8146
 
-Changes since V5:
-  * Made the scan_control behavior limited to proactive reclaim explicitly
-  * created sc_swappiness helper to reduce chance of mis-use
+On Wed, Jan 03, 2024 at 12:01:08PM -0400, Jason Gunthorpe wrote:
+> On Wed, Jan 03, 2024 at 10:24:42AM +0800, Yi Liu wrote:
+> > On 2024/1/3 07:38, Jason Gunthorpe wrote:
+> > > On Fri, Dec 15, 2023 at 12:01:19PM +0800, Yi Liu wrote:
+> > > > > I think I misread Yi's narrative: dev_id is a working approach
+> > > > > for VMM to convert to a vRID, while he is asking for a better
+> > > > > alternative :)
+> > > > 
+> > > > In concept, dev_id works, but in reality we have problem to get a dev_id
+> > > > for a given device in intel iommu driver, hence I'm asking for help here. :)
+> > > 
+> > > I think we just need to solve this one way or another.. Even if you
+> > > use a viommu object you still end up having difficult coupling to
+> > > iommufd
+> > > 
+> > > Some:
+> > >    iommufd_get_dev_id(struct iommufd_ctx *ictx, struct device *dev)
+> > > 
+> > > Callable by a driver (using the driver-callable function
+> > > infrastructure we made for dirty tracking) Is really all that is
+> > > needed here.
+> > 
+> > yep, I noticed IOMMUFD_DRIVER was selected by intel iommu driver when
+> > IOMMUFD is configed. Maybe such an API could be compiled when
+> > IOMMUFD_DRIVER is enabled as well. This does address my concern on making
+> > intel iommu driver depending on iommufd. But still need a way to pass in
+> > the iommufd_ctx pointer to intel iommu driver, and store it. Hence intel
+> > iommu driver could call the above iommufd_get_dev_id(). One possible way is
+> > passing it when attaching device to domain and clear it in detach. However,
+> > this seems not ideal as iommufd_ctx information should be static between
+> > bind_iommufd and unbind. But we don't call into intel iommu driver in the
+> > bind and unbind operations. May need to add new iommu op. Any suggestion
+> > here?
+> 
+> You can pass the ctx to the invalidate op, it is already implied
+> because the passed iommu_domain is linked to a single iommufd ctx.
 
-Changes since V4:
-  * Fixed some initialization bugs by reverting back to a pointer for swappiness
-  * Added some more caveats to the behavior of swappiness in documentation
+The device virtual id lookup API needs something similar, yet it
+likely needs a viommu pointer (or its id) instead? As the table
+is attached to a viommu while an ictx can have multiple viommus,
+right?
 
-Changes since V3:
-  * Added #define for MIN_SWAPPINESS and MAX_SWAPPINESS
-  * Added explicit calls to mem_cgroup_swappiness
-
-Changes since V2:
-  * No functional change
-  * Used int consistently rather than a pointer
-
-Changes since V1:
-  * Added documentation
-
-This patch proposes augmenting the memory.reclaim interface with a
-swappiness=<val> argument that overrides the swappiness value for that instance
-of proactive reclaim.
-
-Userspace proactive reclaimers use the memory.reclaim interface to trigger
-reclaim. The memory.reclaim interface does not allow for any way to effect the
-balance of file vs anon during proactive reclaim. The only approach is to adjust
-the vm.swappiness setting. However, there are a few reasons we look to control
-the balance of file vs anon during proactive reclaim, separately from reactive
-reclaim:
-
-* Swapout should be limited to manage SSD write endurance. In near-OOM
-  situations we are fine with lots of swap-out to avoid OOMs. As these are
-  typically rare events, they have relatively little impact on write endurance.
-  However, proactive reclaim runs continuously and so its impact on SSD write
-  endurance is more significant. Therefore it is desireable to control swap-out
-  for proactive reclaim separately from reactive reclaim
-
-* Some userspace OOM killers like systemd-oomd[1] support OOM killing on swap
-  exhaustion. This makes sense if the swap exhaustion is triggered due to
-  reactive reclaim but less so if it is triggered due to proactive reclaim (e.g.
-  one could see OOMs when free memory is ample but anon is just particularly
-  cold). Therefore, it's desireable to have proactive reclaim reduce or stop
-  swap-out before the threshold at which OOM killing occurs.
-
-In the case of Meta's Senpai proactive reclaimer, we adjust vm.swappiness before
-writes to memory.reclaim[2]. This has been in production for nearly two years
-and has addressed our needs to control proactive vs reactive reclaim behavior
-but is still not ideal for a number of reasons:
-
-* vm.swappiness is a global setting, adjusting it can race/interfere with other
-  system administration that wishes to control vm.swappiness. In our case, we
-  need to disable Senpai before adjusting vm.swappiness.
-
-* vm.swappiness is stateful - so a crash or restart of Senpai can leave a
-  misconfigured setting. This requires some additional management to record the
-  "desired" setting and ensure Senpai always adjusts to it.
-
-With this patch, we avoid these downsides of adjusting vm.swappiness globally.
-
-Previously, this exact interface addition was proposed by Yosry[3]. In response,
-Roman proposed instead an interface to specify precise file/anon/slab reclaim
-amounts[4]. More recently Huan also proposed this as well[5] and others
-similarly questioned if this was the proper interface.
-
-Previous proposals sought to use this to allow proactive reclaimers to
-effectively perform a custom reclaim algorithm by issuing proactive reclaim with
-different settings to control file vs anon reclaim (e.g. to only reclaim anon
-from some applications). Responses argued that adjusting swappiness is a poor
-interface for custom reclaim.
-
-In contrast, I argue in favor of a swappiness setting not as a way to implement
-custom reclaim algorithms but rather to bias the balance of anon vs file due to
-differences of proactive vs reactive reclaim. In this context, swappiness is the
-existing interface for controlling this balance and this patch simply allows for
-it to be configured differently for proactive vs reactive reclaim.
-
-Specifying explicit amounts of anon vs file pages to reclaim feels inappropriate
-for this prupose. Proactive reclaimers are un-aware of the relative age of file
-vs anon for a cgroup which makes it difficult to manage proactive reclaim of
-different memory pools. A proactive reclaimer would need some amount of anon
-reclaim attempts separate from the amount of file reclaim attempts which seems
-brittle given that it's difficult to observe the impact.
-
-[1]https://www.freedesktop.org/software/systemd/man/latest/systemd-oomd.service.html
-[2]https://github.com/facebookincubator/oomd/blob/main/src/oomd/plugins/Senpai.cpp#L585-L598
-[3]https://lore.kernel.org/linux-mm/CAJD7tkbDpyoODveCsnaqBBMZEkDvshXJmNdbk51yKSNgD7aGdg@mail.gmail.com/
-[4]https://lore.kernel.org/linux-mm/YoPHtHXzpK51F%2F1Z@carbon/
-[5]https://lore.kernel.org/lkml/20231108065818.19932-1-link@vivo.com/
-
-Dan Schatzberg (2):
-  mm: add defines for min/max swappiness
-  mm: add swapiness= arg to memory.reclaim
-
- Documentation/admin-guide/cgroup-v2.rst | 18 +++++---
- include/linux/swap.h                    |  5 ++-
- mm/memcontrol.c                         | 58 ++++++++++++++++++++-----
- mm/vmscan.c                             | 39 ++++++++++++-----
- 4 files changed, 90 insertions(+), 30 deletions(-)
-
--- 
-2.39.3
-
+Thanks
+Nic
