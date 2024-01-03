@@ -1,354 +1,285 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C6C18AE8;
-	Wed,  3 Jan 2024 09:14:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B84118AEB;
+	Wed,  3 Jan 2024 09:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="AtVWzHuD";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="mmNbBV2C";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="AtVWzHuD";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="mmNbBV2C"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 013DD21C64;
-	Wed,  3 Jan 2024 09:14:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1704273290; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MRZ2aUMbqlaAIRlYGl9VBJK21WKEAOCW3XaQryG78/A=;
-	b=AtVWzHuDGz6J/vwxZq27QNZA4f5WAbMHAp4SmB9hZPYaAUcKZ8KtUrzdc4Z45r15R+hn6A
-	msS8zcd8WJntRYlRiFi3w/XhYX1rIi4qpI+uIE7rJnSnPb7mPKAN/63843fwNE4bUkpH+q
-	udn7kynxADRZI0TYIW/2rBE9Nn1Rusw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1704273290;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MRZ2aUMbqlaAIRlYGl9VBJK21WKEAOCW3XaQryG78/A=;
-	b=mmNbBV2CsaewPSvhMj8jx7XDV1HqVhNpTOk8RP+Y8viSMXPirP+Z2LEl0oL8y5uJ4dNfVC
-	Dv/6j1RMIPgoKZCQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1704273290; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MRZ2aUMbqlaAIRlYGl9VBJK21WKEAOCW3XaQryG78/A=;
-	b=AtVWzHuDGz6J/vwxZq27QNZA4f5WAbMHAp4SmB9hZPYaAUcKZ8KtUrzdc4Z45r15R+hn6A
-	msS8zcd8WJntRYlRiFi3w/XhYX1rIi4qpI+uIE7rJnSnPb7mPKAN/63843fwNE4bUkpH+q
-	udn7kynxADRZI0TYIW/2rBE9Nn1Rusw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1704273290;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MRZ2aUMbqlaAIRlYGl9VBJK21WKEAOCW3XaQryG78/A=;
-	b=mmNbBV2CsaewPSvhMj8jx7XDV1HqVhNpTOk8RP+Y8viSMXPirP+Z2LEl0oL8y5uJ4dNfVC
-	Dv/6j1RMIPgoKZCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DED2F13AA6;
-	Wed,  3 Jan 2024 09:14:49 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 3glkNokllWVKawAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 03 Jan 2024 09:14:49 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 7C30CA07EF; Wed,  3 Jan 2024 10:14:49 +0100 (CET)
-Date: Wed, 3 Jan 2024 10:14:49 +0100
-From: Jan Kara <jack@suse.cz>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz,
-	linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 8/9] ext4: remove unnecessary parameter "needed" in
- ext4_discard_preallocations
-Message-ID: <20240103091449.djg4tepqfbizi75h@quack3>
-References: <20240103102821.448134-1-shikemeng@huaweicloud.com>
- <20240103102821.448134-9-shikemeng@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d1r8NF7s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704273293; x=1735809293;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references;
+  bh=al72hcUGOzqysVVj35W64xRJAG42d0hvvgBN5GR17Eg=;
+  b=d1r8NF7s5j+wiL3BkfSkZsk35UdEwINa8szuFoLLkP+PauUR3OUw5OIj
+   HV44jFXblPfaj5EIvmfhBg+XdSPb7p4vDNJP1tiEer0lBSYOK3InKuO7Q
+   qxqtxq/u9jDyKEFy+DCxhzFXuIU28HYGi1Y4Ha2B1lknH2WWoXuZcMnIW
+   MeRsnxzUdXief5OYtr2oDWEv0DCxZO9ULnltJzOiksRG9jqCTWD9wRmpy
+   l9DcoVT2ugkCnHvPfAMmAmeZjbOcazqLu9tWdbDtseufDjgVc2nVrAN7i
+   MikExITjoCLFMYNG3FfSaF0RaOEIRAM2Wvwk/SWOQzWfGtZWFi0LuVcHa
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="463386829"
+X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
+   d="scan'208";a="463386829"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 01:14:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10941"; a="898812648"
+X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
+   d="scan'208";a="898812648"
+Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 01:14:46 -0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Cc: pbonzini@redhat.com,
+	seanjc@google.com,
+	shuah@kernel.org,
+	stevensd@chromium.org,
+	Yan Zhao <yan.y.zhao@intel.com>
+Subject: [RFC PATCH v2 3/3] KVM: selftests: Add set_memory_region_io to test memslots for MMIO BARs
+Date: Wed,  3 Jan 2024 16:45:35 +0800
+Message-Id: <20240103084535.20162-1-yan.y.zhao@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240103084327.19955-1-yan.y.zhao@intel.com>
+References: <20240103084327.19955-1-yan.y.zhao@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240103102821.448134-9-shikemeng@huaweicloud.com>
-X-Spam-Level: 
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.31 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 RCVD_DKIM_ARC_DNSWL_HI(-1.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCPT_COUNT_FIVE(0.00)[6];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,suse.com:email,huaweicloud.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_IN_DNSWL_HI(-0.50)[2a07:de40:b281:106:10:150:64:167:received];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=AtVWzHuD;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=mmNbBV2C
-X-Spam-Score: -4.31
-X-Rspamd-Queue-Id: 013DD21C64
 
-On Wed 03-01-24 18:28:20, Kemeng Shi wrote:
-> The "needed" controls the number of ext4_prealloc_space to discard in
-> ext4_discard_preallocations. Function ext4_discard_preallocations is
-> supposed to discard all non-used preallocated blocks when "needed"
-> is 0 and now ext4_discard_preallocations is always called with "needed"
-> = 0. Remove unnecessary parameter "needed" and remove all non-used
-> preallocated spaces in ext4_discard_preallocations to simplify the
-> code.
-> 
-> Note: If count of non-used preallocated spaces could be more than
-> UINT_MAX, there was a memory leak as some non-used preallocated
-> spaces are left ununsed and this commit will fix it. Otherwise,
-> there is no behavior change.
-> 
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+Added a selftest set_memory_region_io to test memslots for MMIO BARs.
+The MMIO BARs' backends are compound/non-compound huge pages serving as
+device resources allocated by a mock device driver.
 
-Looks good. Feel free to add:
+This selftest will assert and report "errno=14 - Bad address" in vcpu_run()
+if any failure is met to add such MMIO BAR memslots.
+After MMIO memslots removal, page reference counts of the device resources
+are also checked.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+As this selftest will interacts with a mock device "/dev/kvm_mock_device",
+it depends on test driver test_kvm_mock_device.ko in the kernel.
+CONFIG_TEST_KVM_MOCK_DEVICE=m must be enabled in the kernel.
 
-								Honza
+Currently, this selftest is only compiled for __x86_64__.
 
-> ---
->  fs/ext4/ext4.h        |  2 +-
->  fs/ext4/extents.c     | 10 +++++-----
->  fs/ext4/file.c        |  2 +-
->  fs/ext4/indirect.c    |  2 +-
->  fs/ext4/inode.c       |  6 +++---
->  fs/ext4/ioctl.c       |  2 +-
->  fs/ext4/mballoc.c     | 10 +++-------
->  fs/ext4/move_extent.c |  4 ++--
->  fs/ext4/super.c       |  2 +-
->  9 files changed, 18 insertions(+), 22 deletions(-)
-> 
-> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> index fb35cae16..2fd444034 100644
-> --- a/fs/ext4/ext4.h
-> +++ b/fs/ext4/ext4.h
-> @@ -2905,7 +2905,7 @@ extern int ext4_mb_init(struct super_block *);
->  extern void ext4_mb_release(struct super_block *);
->  extern ext4_fsblk_t ext4_mb_new_blocks(handle_t *,
->  				struct ext4_allocation_request *, int *);
-> -extern void ext4_discard_preallocations(struct inode *, unsigned int);
-> +extern void ext4_discard_preallocations(struct inode *);
->  extern int __init ext4_init_mballoc(void);
->  extern void ext4_exit_mballoc(void);
->  extern ext4_group_t ext4_mb_prefetch(struct super_block *sb,
-> diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-> index 880f383df..fd350889a 100644
-> --- a/fs/ext4/extents.c
-> +++ b/fs/ext4/extents.c
-> @@ -100,7 +100,7 @@ static int ext4_ext_trunc_restart_fn(struct inode *inode, int *dropped)
->  	 * i_rwsem. So we can safely drop the i_data_sem here.
->  	 */
->  	BUG_ON(EXT4_JOURNAL(inode) == NULL);
-> -	ext4_discard_preallocations(inode, 0);
-> +	ext4_discard_preallocations(inode);
->  	up_write(&EXT4_I(inode)->i_data_sem);
->  	*dropped = 1;
->  	return 0;
-> @@ -4313,7 +4313,7 @@ int ext4_ext_map_blocks(handle_t *handle, struct inode *inode,
->  			 * not a good idea to call discard here directly,
->  			 * but otherwise we'd need to call it every free().
->  			 */
-> -			ext4_discard_preallocations(inode, 0);
-> +			ext4_discard_preallocations(inode);
->  			if (flags & EXT4_GET_BLOCKS_DELALLOC_RESERVE)
->  				fb_flags = EXT4_FREE_BLOCKS_NO_QUOT_UPDATE;
->  			ext4_free_blocks(handle, inode, NULL, newblock,
-> @@ -5354,7 +5354,7 @@ static int ext4_collapse_range(struct file *file, loff_t offset, loff_t len)
->  	ext4_fc_mark_ineligible(sb, EXT4_FC_REASON_FALLOC_RANGE, handle);
->  
->  	down_write(&EXT4_I(inode)->i_data_sem);
-> -	ext4_discard_preallocations(inode, 0);
-> +	ext4_discard_preallocations(inode);
->  	ext4_es_remove_extent(inode, punch_start, EXT_MAX_BLOCKS - punch_start);
->  
->  	ret = ext4_ext_remove_space(inode, punch_start, punch_stop - 1);
-> @@ -5362,7 +5362,7 @@ static int ext4_collapse_range(struct file *file, loff_t offset, loff_t len)
->  		up_write(&EXT4_I(inode)->i_data_sem);
->  		goto out_stop;
->  	}
-> -	ext4_discard_preallocations(inode, 0);
-> +	ext4_discard_preallocations(inode);
->  
->  	ret = ext4_ext_shift_extents(inode, handle, punch_stop,
->  				     punch_stop - punch_start, SHIFT_LEFT);
-> @@ -5494,7 +5494,7 @@ static int ext4_insert_range(struct file *file, loff_t offset, loff_t len)
->  		goto out_stop;
->  
->  	down_write(&EXT4_I(inode)->i_data_sem);
-> -	ext4_discard_preallocations(inode, 0);
-> +	ext4_discard_preallocations(inode);
->  
->  	path = ext4_find_extent(inode, offset_lblk, NULL, 0);
->  	if (IS_ERR(path)) {
-> diff --git a/fs/ext4/file.c b/fs/ext4/file.c
-> index 0166bb9ca..89cb28da8 100644
-> --- a/fs/ext4/file.c
-> +++ b/fs/ext4/file.c
-> @@ -174,7 +174,7 @@ static int ext4_release_file(struct inode *inode, struct file *filp)
->  			(atomic_read(&inode->i_writecount) == 1) &&
->  			!EXT4_I(inode)->i_reserved_data_blocks) {
->  		down_write(&EXT4_I(inode)->i_data_sem);
-> -		ext4_discard_preallocations(inode, 0);
-> +		ext4_discard_preallocations(inode);
->  		up_write(&EXT4_I(inode)->i_data_sem);
->  	}
->  	if (is_dx(inode) && filp->private_data)
-> diff --git a/fs/ext4/indirect.c b/fs/ext4/indirect.c
-> index a9f371611..d8ca7f64f 100644
-> --- a/fs/ext4/indirect.c
-> +++ b/fs/ext4/indirect.c
-> @@ -714,7 +714,7 @@ static int ext4_ind_trunc_restart_fn(handle_t *handle, struct inode *inode,
->  	 * i_rwsem. So we can safely drop the i_data_sem here.
->  	 */
->  	BUG_ON(EXT4_JOURNAL(inode) == NULL);
-> -	ext4_discard_preallocations(inode, 0);
-> +	ext4_discard_preallocations(inode);
->  	up_write(&EXT4_I(inode)->i_data_sem);
->  	*dropped = 1;
->  	return 0;
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index d77323204..53ed4a0ad 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -371,7 +371,7 @@ void ext4_da_update_reserve_space(struct inode *inode,
->  	 */
->  	if ((ei->i_reserved_data_blocks == 0) &&
->  	    !inode_is_open_for_write(inode))
-> -		ext4_discard_preallocations(inode, 0);
-> +		ext4_discard_preallocations(inode);
->  }
->  
->  static int __check_block_validity(struct inode *inode, const char *func,
-> @@ -4014,7 +4014,7 @@ int ext4_punch_hole(struct file *file, loff_t offset, loff_t length)
->  	if (stop_block > first_block) {
->  
->  		down_write(&EXT4_I(inode)->i_data_sem);
-> -		ext4_discard_preallocations(inode, 0);
-> +		ext4_discard_preallocations(inode);
->  
->  		ext4_es_remove_extent(inode, first_block,
->  				      stop_block - first_block);
-> @@ -4167,7 +4167,7 @@ int ext4_truncate(struct inode *inode)
->  
->  	down_write(&EXT4_I(inode)->i_data_sem);
->  
-> -	ext4_discard_preallocations(inode, 0);
-> +	ext4_discard_preallocations(inode);
->  
->  	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS))
->  		err = ext4_ext_truncate(handle, inode);
-> diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-> index 0bfe2ce58..2e2bcd22b 100644
-> --- a/fs/ext4/ioctl.c
-> +++ b/fs/ext4/ioctl.c
-> @@ -458,7 +458,7 @@ static long swap_inode_boot_loader(struct super_block *sb,
->  	ext4_reset_inode_seed(inode);
->  	ext4_reset_inode_seed(inode_bl);
->  
-> -	ext4_discard_preallocations(inode, 0);
-> +	ext4_discard_preallocations(inode);
->  
->  	err = ext4_mark_inode_dirty(handle, inode);
->  	if (err < 0) {
-> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-> index e6561a09d..0e6beb3b4 100644
-> --- a/fs/ext4/mballoc.c
-> +++ b/fs/ext4/mballoc.c
-> @@ -5469,7 +5469,7 @@ ext4_mb_discard_group_preallocations(struct super_block *sb,
->   *
->   * FIXME!! Make sure it is valid at all the call sites
->   */
-> -void ext4_discard_preallocations(struct inode *inode, unsigned int needed)
-> +void ext4_discard_preallocations(struct inode *inode)
->  {
->  	struct ext4_inode_info *ei = EXT4_I(inode);
->  	struct super_block *sb = inode->i_sb;
-> @@ -5491,15 +5491,12 @@ void ext4_discard_preallocations(struct inode *inode, unsigned int needed)
->  	mb_debug(sb, "discard preallocation for inode %lu\n",
->  		 inode->i_ino);
->  	trace_ext4_discard_preallocations(inode,
-> -			atomic_read(&ei->i_prealloc_active), needed);
-> -
-> -	if (needed == 0)
-> -		needed = UINT_MAX;
-> +			atomic_read(&ei->i_prealloc_active), 0);
->  
->  repeat:
->  	/* first, collect all pa's in the inode */
->  	write_lock(&ei->i_prealloc_lock);
-> -	for (iter = rb_first(&ei->i_prealloc_node); iter && needed;
-> +	for (iter = rb_first(&ei->i_prealloc_node); iter;
->  	     iter = rb_next(iter)) {
->  		pa = rb_entry(iter, struct ext4_prealloc_space,
->  			      pa_node.inode_node);
-> @@ -5523,7 +5520,6 @@ void ext4_discard_preallocations(struct inode *inode, unsigned int needed)
->  			spin_unlock(&pa->pa_lock);
->  			rb_erase(&pa->pa_node.inode_node, &ei->i_prealloc_node);
->  			list_add(&pa->u.pa_tmp_list, &list);
-> -			needed--;
->  			continue;
->  		}
->  
-> diff --git a/fs/ext4/move_extent.c b/fs/ext4/move_extent.c
-> index 18a9e7c47..0abfc104a 100644
-> --- a/fs/ext4/move_extent.c
-> +++ b/fs/ext4/move_extent.c
-> @@ -689,8 +689,8 @@ ext4_move_extents(struct file *o_filp, struct file *d_filp, __u64 orig_blk,
->  
->  out:
->  	if (*moved_len) {
-> -		ext4_discard_preallocations(orig_inode, 0);
-> -		ext4_discard_preallocations(donor_inode, 0);
-> +		ext4_discard_preallocations(orig_inode);
-> +		ext4_discard_preallocations(donor_inode);
->  	}
->  
->  	ext4_free_ext_path(path);
-> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> index d062383ea..c0cfc3e46 100644
-> --- a/fs/ext4/super.c
-> +++ b/fs/ext4/super.c
-> @@ -1518,7 +1518,7 @@ void ext4_clear_inode(struct inode *inode)
->  	ext4_fc_del(inode);
->  	invalidate_inode_buffers(inode);
->  	clear_inode(inode);
-> -	ext4_discard_preallocations(inode, 0);
-> +	ext4_discard_preallocations(inode);
->  	ext4_es_remove_extent(inode, 0, EXT_MAX_BLOCKS);
->  	dquot_drop(inode);
->  	if (EXT4_I(inode)->jinode) {
-> -- 
-> 2.30.0
-> 
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+---
+ tools/testing/selftests/kvm/Makefile          |   1 +
+ .../selftests/kvm/set_memory_region_io.c      | 188 ++++++++++++++++++
+ 2 files changed, 189 insertions(+)
+ create mode 100644 tools/testing/selftests/kvm/set_memory_region_io.c
+
+diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+index 4412b42d95de..9d39514b6403 100644
+--- a/tools/testing/selftests/kvm/Makefile
++++ b/tools/testing/selftests/kvm/Makefile
+@@ -144,6 +144,7 @@ TEST_GEN_PROGS_x86_64 += memslot_modification_stress_test
+ TEST_GEN_PROGS_x86_64 += memslot_perf_test
+ TEST_GEN_PROGS_x86_64 += rseq_test
+ TEST_GEN_PROGS_x86_64 += set_memory_region_test
++TEST_GEN_PROGS_x86_64 += set_memory_region_io
+ TEST_GEN_PROGS_x86_64 += steal_time
+ TEST_GEN_PROGS_x86_64 += kvm_binary_stats_test
+ TEST_GEN_PROGS_x86_64 += system_counter_offset_test
+diff --git a/tools/testing/selftests/kvm/set_memory_region_io.c b/tools/testing/selftests/kvm/set_memory_region_io.c
+new file mode 100644
+index 000000000000..e221103091f4
+--- /dev/null
++++ b/tools/testing/selftests/kvm/set_memory_region_io.c
+@@ -0,0 +1,188 @@
++// SPDX-License-Identifier: GPL-2.0
++#define _GNU_SOURCE /* for program_invocation_short_name */
++#include <fcntl.h>
++#include <pthread.h>
++#include <sched.h>
++#include <semaphore.h>
++#include <signal.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/ioctl.h>
++#include <sys/mman.h>
++
++#include <linux/compiler.h>
++
++#include <test_util.h>
++#include <kvm_util.h>
++#include <processor.h>
++
++#include <../../../../lib/test_kvm_mock_device_uapi.h>
++
++/*
++ * Somewhat arbitrary location and slot, intended to not overlap anything.
++ */
++#define MEM_REGION_GPA_BASE	0xc0000000
++#define RANDOM_OFFSET		0x1000
++#define MEM_REGION_GPA_RANDOM	(MEM_REGION_GPA_BASE + RANDOM_OFFSET)
++#define MEM_REGION_SLOT_ID	10
++
++static const bool non_compound_supported;
++
++static const uint64_t BASE_VAL = 0x1111;
++static const uint64_t RANDOM_VAL = 0x2222;
++
++static unsigned long bar_size;
++
++static sem_t vcpu_ready;
++
++static void guest_code_read_bar(void)
++{
++	uint64_t val;
++
++	GUEST_SYNC(0);
++
++	val = READ_ONCE(*((uint64_t *)MEM_REGION_GPA_RANDOM));
++	GUEST_ASSERT_EQ(val, RANDOM_VAL);
++
++	val = READ_ONCE(*((uint64_t *)MEM_REGION_GPA_BASE));
++	GUEST_ASSERT_EQ(val, BASE_VAL);
++
++	GUEST_DONE();
++}
++
++static void *vcpu_worker(void *data)
++{
++	struct kvm_vcpu *vcpu = data;
++	struct kvm_run *run = vcpu->run;
++	struct ucall uc;
++	uint64_t cmd;
++
++	/*
++	 * Loop until the guest is done.  Re-enter the guest on all MMIO exits,
++	 * which will occur if the guest attempts to access a memslot after it
++	 * has been deleted or while it is being moved .
++	 */
++	while (1) {
++		vcpu_run(vcpu);
++
++		if (run->exit_reason == KVM_EXIT_IO) {
++			cmd = get_ucall(vcpu, &uc);
++			if (cmd != UCALL_SYNC)
++				break;
++
++			sem_post(&vcpu_ready);
++			continue;
++		}
++
++		if (run->exit_reason != KVM_EXIT_MMIO)
++			break;
++
++		TEST_ASSERT(!run->mmio.is_write, "Unexpected exit mmio write");
++		TEST_ASSERT(run->mmio.len == 8,
++			    "Unexpected exit mmio size = %u", run->mmio.len);
++
++		TEST_ASSERT(run->mmio.phys_addr < MEM_REGION_GPA_BASE ||
++			    run->mmio.phys_addr >= MEM_REGION_GPA_BASE + bar_size,
++			    "Unexpected exit mmio address = 0x%llx",
++			    run->mmio.phys_addr);
++	}
++
++	if (run->exit_reason == KVM_EXIT_IO && cmd == UCALL_ABORT)
++		REPORT_GUEST_ASSERT(uc);
++
++	return NULL;
++}
++
++static void wait_for_vcpu(void)
++{
++	struct timespec ts;
++
++	TEST_ASSERT(!clock_gettime(CLOCK_REALTIME, &ts),
++		    "clock_gettime() failed: %d\n", errno);
++
++	ts.tv_sec += 2;
++	TEST_ASSERT(!sem_timedwait(&vcpu_ready, &ts),
++		    "sem_timedwait() failed: %d\n", errno);
++
++	/* Wait for the vCPU thread to reenter the guest. */
++	usleep(100000);
++}
++
++static void test_kvm_mock_device_bar(bool compound)
++{
++	struct kvm_vm *vm;
++	void *mem;
++	struct kvm_vcpu *vcpu;
++	pthread_t vcpu_thread;
++	int fd, ret;
++	u32 param_compound = compound;
++	u32 inequal = 0;
++
++	fd = open("/dev/kvm_mock_device", O_RDWR);
++	if (fd < 0) {
++		pr_info("Please ensure \"CONFIG_TEST_KVM_MOCK_DEVICE=m\" is enabled in the kernel");
++		pr_info(", and execute\n\"modprobe test_kvm_mock_device\n");
++	}
++	TEST_ASSERT(fd >= 0, "Failed to open kvm mock device.");
++
++	ret = ioctl(fd, KVM_MOCK_DEVICE_GET_BAR_SIZE, &bar_size);
++	TEST_ASSERT(ret == 0, "Failed to get bar size of kvm mock device");
++
++	ret = ioctl(fd, KVM_MOCK_DEVICE_PREPARE_RESOURCE, &param_compound);
++	TEST_ASSERT(ret == 0, "Failed to prepare resource of kvm mock device");
++
++	mem = mmap(NULL, (size_t)bar_size, PROT_READ | PROT_WRITE, MAP_SHARED,
++		   fd, 0);
++	TEST_ASSERT(mem != MAP_FAILED, "Failed to mmap() kvm mock device bar");
++
++	*(u64 *)mem = BASE_VAL;
++	*(u64 *)(mem + RANDOM_OFFSET) = RANDOM_VAL;
++
++	vm = vm_create_with_one_vcpu(&vcpu, guest_code_read_bar);
++
++	vm_set_user_memory_region(vm, MEM_REGION_SLOT_ID, 0, MEM_REGION_GPA_BASE,
++				  bar_size, mem);
++
++	virt_map(vm, MEM_REGION_GPA_BASE, MEM_REGION_GPA_BASE,
++		 (RANDOM_OFFSET / getpagesize()) + 1);
++
++	pthread_create(&vcpu_thread, NULL, vcpu_worker, vcpu);
++
++	/* Ensure the guest thread is spun up. */
++	wait_for_vcpu();
++
++	pthread_join(vcpu_thread, NULL);
++
++	vm_set_user_memory_region(vm, MEM_REGION_SLOT_ID, 0, 0, 0, 0);
++	kvm_vm_free(vm);
++
++	ret = ioctl(fd, KVM_MOCK_DEVICE_CHECK_BACKEND_REF, &inequal);
++	TEST_ASSERT(ret == 0 && inequal == 0, "Incorrect resource ref of KVM device");
++
++	munmap(mem, bar_size);
++	close(fd);
++}
++
++static void test_non_compound_backend(void)
++{
++	pr_info("Testing non-compound huge page backend for mem slot\n");
++	test_kvm_mock_device_bar(false);
++}
++
++static void test_compound_backend(void)
++{
++	pr_info("Testing compound huge page backend for mem slot\n");
++	test_kvm_mock_device_bar(true);
++}
++
++int main(int argc, char *argv[])
++{
++#ifdef __x86_64__
++	test_compound_backend();
++	if (non_compound_supported)
++		test_non_compound_backend();
++#endif
++
++	return 0;
++}
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.17.1
+
