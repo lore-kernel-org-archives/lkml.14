@@ -1,143 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451281A71A;
-	Wed,  3 Jan 2024 15:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C8B1A71B
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 15:18:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jUUUf00R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704295070; x=1735831070;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=9mUwJ80U6Qo/JAFX+8aJByQoV4CdiadrMi9dMOmzuCA=;
-  b=jUUUf00RfocwqP1fVbjimVTOl7FtC+WN6Gtc5wIFSswnipQN+IXsk8+I
-   lug+oG8+DWqnUjOI+KiPrmHrNumqOi73H6R1kv9pMg7FIB7iV+nzXJu8M
-   sPoEJoyFGFf6oLH5BtQW95LRETLFCn+SOZy6M/zwrhla118lJ/fD3ENkv
-   tbCswrBcVwIenVPWvApHz+86g/mF5m7ycUO57Uc5lzQ0U7o6+opMfFYBD
-   Z+duCD8BbSUE1Chetsq8dvTOIwIoPYungpPE9H6/pLu2faRPe6in+6gEu
-   1PBg9iUeCvMRAS/it6GXnu15bunuo/CBLVQlH9hRkoIbSKruMpha3QM9S
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="10623813"
-X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
-   d="scan'208";a="10623813"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 07:17:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
-   d="scan'208";a="28390521"
-Received: from lmjeniso-mobl1.amr.corp.intel.com (HELO [10.212.155.116]) ([10.212.155.116])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 07:17:47 -0800
-Message-ID: <ff3a0382-734d-4f46-bd35-ffa1f53a3ac3@intel.com>
-Date: Wed, 3 Jan 2024 07:17:46 -0800
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="UOvxH07p"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a275b3a1167so601337666b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 07:18:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1704295109; x=1704899909; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=x58X07zwjYU7cKHRzjg4ENbbksPJOwVkc9czaYIAXnY=;
+        b=UOvxH07pTHjYyCTYEc8kC4SXBKwnARlAPqx1Nkn45nBsttkklzlnQO0vGSUk0+iaNT
+         XHBsFqr5bZ9Yh4TdxrNsDnINDC/4iMWizyiIiCHVuSq0qV56hS3CaHVHaYpdYZqDfEhq
+         4d7PU6gaOTkho3Fa582w1pyi1hU2arSLSYDG0/bkE2Iss+JvQFoiywFkHQquXmo1eiiT
+         hI2MF8Y55UI/rWQO5NI9uykbqEjIyiMrIIho6dtTe9KvpONBs50OwyBQqorJK7nUbAcc
+         TCznmPdQdKfT0zsQ5aGAzy2zdtkZvzd48mBuMEuRIprCLvA3zNisA9JFQaa4oIinwHpZ
+         wRQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704295109; x=1704899909;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x58X07zwjYU7cKHRzjg4ENbbksPJOwVkc9czaYIAXnY=;
+        b=tWf6ZdjQHEqnipBtKXiERQdazsuCT0FFD/N44b/r8c1DW7alq0qV65OD1irlW3nqA3
+         4lrQdUNxK61ixrfYkvemQeiP0tX4N6Ke1zO7atcTLVvSISv+FJWEyDRCEwMBHETFnDE4
+         0Z2geWStmYA9D0FbMgTmLzabshEfFHCv0kjH1buonO4Vw2GFmoP94K4PoKuaSGZXxwgm
+         Bqgin4xo7fYu+01o+XNQqwGCvh4QkqB7Fk0UxVma04XlUm2hskUmMcg5vEldrrs/bOJl
+         5gcA4IIZWqR0AejTLFf8tBjjVxXeZw5OK1uG5NIcpSVYPt96Uj5w6igyeNqUxt7lBgz5
+         a/fA==
+X-Gm-Message-State: AOJu0YzPsKiDVkPtwFdg6VEiA6HenaVHhtB34m/MIhWTVvfL0oXNXlWm
+	FqBzCkC4f5SQBL33iaYFljx592NvjIBXwQ==
+X-Google-Smtp-Source: AGHT+IFvaCr1M0YJt2eVUUY9JaIAd7GjOQgEzJfEemGQkJ002T1Rf88/GWTw0XzPMNRZwYC3tYhoyw==
+X-Received: by 2002:a17:906:52ce:b0:a28:ab0b:fb56 with SMTP id w14-20020a17090652ce00b00a28ab0bfb56mr392021ejn.106.1704295108657;
+        Wed, 03 Jan 2024 07:18:28 -0800 (PST)
+Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
+        by smtp.gmail.com with ESMTPSA id ez21-20020a1709070bd500b00a26ac88d801sm12144793ejc.30.2024.01.03.07.18.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jan 2024 07:18:28 -0800 (PST)
+Date: Wed, 3 Jan 2024 16:18:27 +0100
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	KVM list <kvm@vger.kernel.org>, linux-riscv <linux-riscv@lists.infradead.org>
+Subject: Re: Re: linux-next: Tree for Jan 2 (riscv & KVM problem)
+Message-ID: <20240103-d2201c92e97755a4bb438bc3@orel>
+References: <20240102165725.6d18cc50@canb.auug.org.au>
+ <44907c6b-c5bd-4e4a-a921-e4d3825539d8@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] x86: intel_epb: Add earlyparam option to keep bias at
- performance
-Content-Language: en-US
-To: Jack Allister <jalliste@amazon.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
- Paul Durrant <pdurrant@amazon.com>, Jue Wang <juew@amazon.com>,
- Usama Arif <usama.arif@bytedance.com>, Jonathan Corbet <corbet@lwn.net>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- "Paul E. McKenney" <paulmck@kernel.org>, Randy Dunlap
- <rdunlap@infradead.org>, Tejun Heo <tj@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Yan-Jie Wang <yanjiewtw@gmail.com>,
- Hans de Goede <hdegoede@redhat.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <83431857-7182-471a-9ff1-9dac37e5a02f@intel.com>
- <20240103144607.46369-1-jalliste@amazon.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20240103144607.46369-1-jalliste@amazon.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <44907c6b-c5bd-4e4a-a921-e4d3825539d8@infradead.org>
 
-On 1/3/24 06:46, Jack Allister wrote:
-> +	intel_epb=	[X86]
-> +			auto
-> +			  Same as not passing a parameter to intel_epb. This will
-> +			  ensure that the intel_epb module will restore the energy
-> +			  performance bias to "normal" at boot-time. This workaround
-> +			  is for buggy BIOSes which may not set this value and cause
-> +			  either overheating or excess power usage.
-> +			preserve
-> +			  At kernel boot-time if the EPB value is read as "performance"
-> +			  keep it at this value. This prevents the "performance" -> "normal"
-> +			  transition which is a workaround mentioned above.
+On Tue, Jan 02, 2024 at 10:07:21AM -0800, Randy Dunlap wrote:
+> 
+> 
+> On 1/1/24 21:57, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Changes since 20231222:
+> > 
+> 
+> It is possible for a riscv randconfig to create a .config file with
+> CONFIG_KVM enabled but CONFIG_HAVE_KVM is not set.
+> Is that expected?
+> 
+> CONFIG_HAVE_KVM_IRQCHIP=y
+> CONFIG_HAVE_KVM_IRQ_ROUTING=y
+> CONFIG_KVM_MMIO=y
+> CONFIG_HAVE_KVM_MSI=y
+> CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT=y
+> CONFIG_HAVE_KVM_VCPU_ASYNC_IOCTL=y
+> CONFIG_KVM_XFER_TO_GUEST_WORK=y
+> CONFIG_KVM_GENERIC_HARDWARE_ENABLING=y
+> CONFIG_KVM_GENERIC_MMU_NOTIFIER=y
+> CONFIG_VIRTUALIZATION=y
+> CONFIG_KVM=m
+> 
+> Should arch/riscv/kvm/Kconfig: "config KVM" select HAVE_KVM
+> along with the other selects there or should that "config KVM"
+> depend on HAVE_KVM?
 
-This ends up describing the nitty-gritty details of the implementation
-instead of what users should take away from the options.  Could we up
-level this a bit?
+We probably should add a patch which makes RISCV select HAVE_KVM and
+KVM depend on HAVE_KVM in order for riscv kvm to be consistent with
+the other KVM supporting architectures.
 
-How about this?
+> 
+> 
+> The problem .config file causes build errors because EVENTFD
+> is not set:
+> 
+> ../arch/riscv/kvm/../../../virt/kvm/eventfd.c: In function 'kvm_irqfd_assign':
+> ../arch/riscv/kvm/../../../virt/kvm/eventfd.c:335:19: error: implicit declaration of function 'eventfd_ctx_fileget'; did you mean 'eventfd_ctx_fdget'? [-Werror=implicit-function-declaration]
+>   335 |         eventfd = eventfd_ctx_fileget(f.file);
+>       |                   ^~~~~~~~~~~~~~~~~~~
+>       |                   eventfd_ctx_fdget
+> ../arch/riscv/kvm/../../../virt/kvm/eventfd.c:335:17: warning: assignment to 'struct eventfd_ctx *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+>   335 |         eventfd = eventfd_ctx_fileget(f.file);
+>       |                 ^
+>
 
-	intel_epb=	[X86]
-			
-			auto (default)
-				Work around buggy BIOSes to avoid
-				excess power usage by forcing
-				performance bias to "normal" at boot-
-				time.
-			
-			preserve
-				Do not override the existing performance
-				bias setting.  Useful if a previous
-				kernel or bootloader's setting is more
-				desirable than "normal".
+Hmm. riscv kvm selects HAVE_KVM_EVENTFD, which selects EVENTFD. I'm
+not sure how the lack of HAVE_KVM is leading to this.
 
-It's better formatted and uses the "(default)" tag instead of trying to
-explain it in prose.  It also explains when someone might want to use
-the override instead of just explaining its function.
-
+Thanks,
+drew
