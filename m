@@ -1,201 +1,170 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15EC218623;
-	Wed,  3 Jan 2024 09:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2CD18628
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 09:14:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="JOY7H+0K";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="tZ4FWm4i";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="NzrKbS7j";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="b2dZL8mE"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P+yOHYGe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704273286;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ECdT86ko6CPDQ7PwUTvJTmsh3hF4cTDBKdjOYZE7Ef8=;
+	b=P+yOHYGe62HGUf9HPLjbG5PQ9+bPn+xxLg74lXHLowGJOIyRE6RVfsjUX5vcHlUJYz+otX
+	Sdwv8q6CJwQv19KGXEL3P7pEVIdvglCZgJzcxUm1BaqcQ3oDbN3PT/q1asgJTFVBcMiiMx
+	EBsZutiOmJ+0khpKe/kQU1Ynmpl21AE=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-656-YJyX-2z5NWeDsYfFUhlklw-1; Wed, 03 Jan 2024 04:14:40 -0500
+X-MC-Unique: YJyX-2z5NWeDsYfFUhlklw-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 034301FD0B;
-	Wed,  3 Jan 2024 09:14:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1704273277; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=62QMAVOIeETc0lprwmhI1LD09b6GbIfO2eMEU/Mvyic=;
-	b=JOY7H+0KsFGTrHBJiMO6wDVuqLJGOy8xNiICVQjV1c2fFTAs3Q7TuldTnejeeRry9NDtCL
-	ZOy4CVBfX3EuXtQjG18ZQ7bDpsyfDqLKub0LUqlLF/vUW5IFnwN8zg0WKVIijshZWj6dd8
-	Ql8CJLqzxzmS6zfVzzBFPUkZP4VOqcc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1704273277;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=62QMAVOIeETc0lprwmhI1LD09b6GbIfO2eMEU/Mvyic=;
-	b=tZ4FWm4ipV052N+/nuQPll6PPHCXYHZOWo26e7jxoc4pfGQ3BjROB7L4dgABBLU5A/TruO
-	VsXA7ddvCmqbFVAg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1704273275; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=62QMAVOIeETc0lprwmhI1LD09b6GbIfO2eMEU/Mvyic=;
-	b=NzrKbS7jUZpPls/KaEgv5JYt1c4DEq0pgHi1PZLUFcpeqjd6zo8OdX6XZRPXST/uV2y0u+
-	s9phGsc6f0mpgakoQZenRljRqRHQRUQylseqjxTJX7r5ioCZs2fAjyma/WBsfvMDIakb4o
-	3E7tNN9zP6vZul94xX6q/DznyPXh/cs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1704273275;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=62QMAVOIeETc0lprwmhI1LD09b6GbIfO2eMEU/Mvyic=;
-	b=b2dZL8mErc7RAfSq1l7sypkvHjSemTb6yD+VXqA/GHidD/kGqFSs7kd87UI7fzb7x0KOEm
-	Nr5SVbKrwu2VCDCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EABEC13AA6;
-	Wed,  3 Jan 2024 09:14:34 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id EoNLOXollWU9awAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 03 Jan 2024 09:14:34 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 767D0A07EF; Wed,  3 Jan 2024 10:14:34 +0100 (CET)
-Date: Wed, 3 Jan 2024 10:14:34 +0100
-From: Jan Kara <jack@suse.cz>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz,
-	linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 9/9] ext4: remove 'needed' in
- trace_ext4_discard_preallocations
-Message-ID: <20240103091434.lzsaxlplfeeypwly@quack3>
-References: <20240103102821.448134-1-shikemeng@huaweicloud.com>
- <20240103102821.448134-10-shikemeng@huaweicloud.com>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6FE0C1019DE1;
+	Wed,  3 Jan 2024 09:14:39 +0000 (UTC)
+Received: from x1n.redhat.com (unknown [10.72.116.69])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 16526492BF0;
+	Wed,  3 Jan 2024 09:14:26 +0000 (UTC)
+From: peterx@redhat.com
+To: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: James Houghton <jthoughton@google.com>,
+	David Hildenbrand <david@redhat.com>,
+	"Kirill A . Shutemov" <kirill@shutemov.name>,
+	Yang Shi <shy828301@gmail.com>,
+	peterx@redhat.com,
+	linux-riscv@lists.infradead.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+	Rik van Riel <riel@surriel.com>,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Andrew Jones <andrew.jones@linux.dev>,
+	linuxppc-dev@lists.ozlabs.org,
+	Mike Kravetz <mike.kravetz@oracle.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	linux-arm-kernel@lists.infradead.org,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH v2 00/13] mm/gup: Unify hugetlb, part 2
+Date: Wed,  3 Jan 2024 17:14:10 +0800
+Message-ID: <20240103091423.400294-1-peterx@redhat.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240103102821.448134-10-shikemeng@huaweicloud.com>
-X-Spam-Level: 
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.31 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 RCVD_DKIM_ARC_DNSWL_HI(-1.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCPT_COUNT_FIVE(0.00)[6];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,huaweicloud.com:email,suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_IN_DNSWL_HI(-0.50)[2a07:de40:b281:106:10:150:64:167:received];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=NzrKbS7j;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=b2dZL8mE
-X-Spam-Score: -4.31
-X-Rspamd-Queue-Id: 034301FD0B
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-On Wed 03-01-24 18:28:21, Kemeng Shi wrote:
-> As 'needed' to trace_ext4_discard_preallocations is always 0 which
-> is meaningless. Just remove it.
-> 
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-> Suggested-by: Jan Kara <jack@suse.cz>
+From: Peter Xu <peterx@redhat.com>
 
-Looks good. Feel free to add:
+v2:
+- Collect acks
+- Patch 9:
+  - Use READ_ONCE() to fetch pud entry [James]
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+rfc: https://lore.kernel.org/r/20231116012908.392077-1-peterx@redhat.com
+v1:  https://lore.kernel.org/r/20231219075538.414708-1-peterx@redhat.com
 
-								Honza
+This is v2 of the series, based on latest mm-unstalbe (856325d361df).
 
-> ---
->  fs/ext4/mballoc.c           |  5 ++---
->  include/trace/events/ext4.h | 11 ++++-------
->  2 files changed, 6 insertions(+), 10 deletions(-)
-> 
-> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-> index 0e6beb3b4..091a832a8 100644
-> --- a/fs/ext4/mballoc.c
-> +++ b/fs/ext4/mballoc.c
-> @@ -5481,9 +5481,8 @@ void ext4_discard_preallocations(struct inode *inode)
->  	struct rb_node *iter;
->  	int err;
->  
-> -	if (!S_ISREG(inode->i_mode)) {
-> +	if (!S_ISREG(inode->i_mode))
->  		return;
-> -	}
->  
->  	if (EXT4_SB(sb)->s_mount_state & EXT4_FC_REPLAY)
->  		return;
-> @@ -5491,7 +5490,7 @@ void ext4_discard_preallocations(struct inode *inode)
->  	mb_debug(sb, "discard preallocation for inode %lu\n",
->  		 inode->i_ino);
->  	trace_ext4_discard_preallocations(inode,
-> -			atomic_read(&ei->i_prealloc_active), 0);
-> +			atomic_read(&ei->i_prealloc_active));
->  
->  repeat:
->  	/* first, collect all pa's in the inode */
-> diff --git a/include/trace/events/ext4.h b/include/trace/events/ext4.h
-> index 65029dfb9..a697f4b77 100644
-> --- a/include/trace/events/ext4.h
-> +++ b/include/trace/events/ext4.h
-> @@ -772,15 +772,14 @@ TRACE_EVENT(ext4_mb_release_group_pa,
->  );
->  
->  TRACE_EVENT(ext4_discard_preallocations,
-> -	TP_PROTO(struct inode *inode, unsigned int len, unsigned int needed),
-> +	TP_PROTO(struct inode *inode, unsigned int len),
->  
-> -	TP_ARGS(inode, len, needed),
-> +	TP_ARGS(inode, len),
->  
->  	TP_STRUCT__entry(
->  		__field(	dev_t,		dev		)
->  		__field(	ino_t,		ino		)
->  		__field(	unsigned int,	len		)
-> -		__field(	unsigned int,	needed		)
->  
->  	),
->  
-> @@ -788,13 +787,11 @@ TRACE_EVENT(ext4_discard_preallocations,
->  		__entry->dev	= inode->i_sb->s_dev;
->  		__entry->ino	= inode->i_ino;
->  		__entry->len	= len;
-> -		__entry->needed	= needed;
->  	),
->  
-> -	TP_printk("dev %d,%d ino %lu len: %u needed %u",
-> +	TP_printk("dev %d,%d ino %lu len: %u",
->  		  MAJOR(__entry->dev), MINOR(__entry->dev),
-> -		  (unsigned long) __entry->ino, __entry->len,
-> -		  __entry->needed)
-> +		  (unsigned long) __entry->ino, __entry->len)
->  );
->  
->  TRACE_EVENT(ext4_mb_discard_preallocations,
-> -- 
-> 2.30.0
-> 
+The series removes the hugetlb slow gup path after a previous refactor work
+[1], so that slow gup now uses the exact same path to process all kinds of
+memory including hugetlb.
+
+For the long term, we may want to remove most, if not all, call sites of
+huge_pte_offset().  It'll be ideal if that API can be completely dropped
+from arch hugetlb API.  This series is one small step towards merging
+hugetlb specific codes into generic mm paths.  From that POV, this series
+removes one reference to huge_pte_offset() out of many others.
+
+One goal of such a route is that we can reconsider merging hugetlb features
+like High Granularity Mapping (HGM).  It was not accepted in the past
+because it may add lots of hugetlb specific codes and make the mm code even
+harder to maintain.  With a merged codeset, features like HGM can hopefully
+share some code with THP, legacy (PMD+) or modern (continuous PTEs).
+
+To make it work, the generic slow gup code will need to at least understand
+hugepd, which is already done like so in fast-gup.  Fortunately it seems
+that's the only major thing I need to teach slow GUP to share the common
+path for now besides normal huge PxD entries.  Non-gup can be more
+challenging, but that's a question for later.
+
+There's one major difference for slow-gup on cont_pte / cont_pmd handling,
+currently supported on three architectures (aarch64, riscv, ppc).  Before
+the series, slow gup will be able to recognize e.g. cont_pte entries with
+the help of huge_pte_offset() when hstate is around.  Now it's gone but
+still working, by looking up pgtable entries one by one.
+
+It's not ideal, but hopefully this change should not affect yet on major
+workloads.  There's some more information in the commit message of the last
+patch.  If this would be a concern, we can consider teaching slow gup to
+recognize cont pte/pmd entries, and that should recover the lost
+performance.  But I doubt its necessity for now, so I kept it as simple as
+it can be.
+
+Test Done
+=========
+
+This v1 went through the normal GUP smoke tests over different memory
+types on archs (using VM instances): x86_64, aarch64, ppc64le.  For
+aarch64, tested over 64KB cont_pte huge pages.  For ppc64le, tested over
+16MB hugepd entries (Power8 hash MMU on 4K base page size).
+
+Patch layout
+=============
+
+Patch 1-7:    Preparation works, or cleanups in relevant code paths
+Patch 8-12:   Teach slow gup with all kinds of huge entries (pXd, hugepd)
+Patch 13:     Drop hugetlb_follow_page_mask()
+
+More information can be found in the commit messages of each patch.  Any
+comment will be welcomed.  Thanks.
+
+[1] https://lore.kernel.org/all/20230628215310.73782-1-peterx@redhat.com
+
+Peter Xu (13):
+  mm/Kconfig: CONFIG_PGTABLE_HAS_HUGE_LEAVES
+  mm/hugetlb: Declare hugetlbfs_pagecache_present() non-static
+  mm: Provide generic pmd_thp_or_huge()
+  mm: Make HPAGE_PXD_* macros even if !THP
+  mm: Introduce vma_pgtable_walk_{begin|end}()
+  mm/gup: Drop folio_fast_pin_allowed() in hugepd processing
+  mm/gup: Refactor record_subpages() to find 1st small page
+  mm/gup: Handle hugetlb for no_page_table()
+  mm/gup: Cache *pudp in follow_pud_mask()
+  mm/gup: Handle huge pud for follow_pud_mask()
+  mm/gup: Handle huge pmd for follow_pmd_mask()
+  mm/gup: Handle hugepd for follow_page()
+  mm/gup: Handle hugetlb in the generic follow_page_mask code
+
+ include/linux/huge_mm.h |  25 +--
+ include/linux/hugetlb.h |  16 +-
+ include/linux/mm.h      |   3 +
+ include/linux/pgtable.h |   4 +
+ mm/Kconfig              |   3 +
+ mm/gup.c                | 362 ++++++++++++++++++++++++++++++++--------
+ mm/huge_memory.c        | 133 +--------------
+ mm/hugetlb.c            |  75 +--------
+ mm/internal.h           |   7 +-
+ mm/memory.c             |  12 ++
+ 10 files changed, 342 insertions(+), 298 deletions(-)
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.41.0
+
