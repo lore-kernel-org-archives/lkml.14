@@ -1,223 +1,240 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3767F1DA2F;
-	Wed,  3 Jan 2024 22:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184FD1DDE6
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 22:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L2zQVESq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704319699; x=1735855699;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=bWYKfW+W155izAfPOJLVTn3/PlPChrsQgZyYVzEfHoE=;
-  b=L2zQVESqcUT+4y7Zy8JqMBZryOQRqiHLKHs1TROqCAu5DFh5GjU1B69Y
-   Y+GejHe1AgNKwMMfQVumLp9itV1ZQJGUwxaufot/UtJq+v1F8Aa2+OnNJ
-   L6XkIUm/0oCH3Zsyz2lWgYL2qCLNszpNgcBH666rPPp4DNg2+GeVFFwz1
-   0trnMaYg5gRiqKLlSoVcuKBrvnx2K4+x4NFtG48lhmG6uPgilCisK6s5M
-   meqXvP/L+tQUxp1YYhA82jbPkARgRmE/f0Rs7JO4L5jg/jd5FfgKQrcx5
-   PpXq/IPogkuFt3+qhUG+JZxxe7sQNrfSHnVACmZ510yZ5q+zqIMbiBhMh
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="4429286"
-X-IronPort-AV: E=Sophos;i="6.04,328,1695711600"; 
-   d="scan'208";a="4429286"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 14:08:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="756356935"
-X-IronPort-AV: E=Sophos;i="6.04,328,1695711600"; 
-   d="scan'208";a="756356935"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orsmga006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 03 Jan 2024 14:08:16 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 3 Jan 2024 14:08:16 -0800
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 3 Jan 2024 14:08:16 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 3 Jan 2024 14:08:16 -0800
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.40) by
- edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 3 Jan 2024 14:08:15 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W1KkxFwPAY/deGgW7agwWUhswZb5sRa2XWdFqzM0hDhyVCElzsar5AvTlxqhjFz+leWZbfZMZYLs+FQwk2VRqe+jnVV1iQkukvuVe/Vlkvoakt8A5AT4IG8DvXwi9mHsA6iufH6vvbScpjNmBbyGnyKx8EkmQiIgsg26a6zh+VAWbScW1w4/OyDjKjV8Ra1Z4dNW3lEDQj5WgkzL0qScQRpFA4YWgRM1gZGw3dkJaNiATfJRCtGGRE41mos630OSUip9VQn33wdngjIMCQlXPwidgTV9wzp1KTg1hQsgA60wpzNpWFxv66rOYA7VIQT4aZrt09BcEISP6oKm0cW8SQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TojkqcjoY0kFugvfUGsw1UVFhgXrGOD/YKQc4OYyla8=;
- b=TeNd02OnMHTvVHBpB5VXt86LYjUuCdYmiBhoKCvIU68CKShH+hQKaNaGYn5YVg+QmFrfv528H1ztT+g/UlTSznxDnFY3wtxFGhqZOBP0u3IvH5ZuOJtUviIKQYobl+TuGWE2Y06az2ydd4k4OYtBS6PVO0I2Khf8QlcIq7+j8vL+J9c1VBjFuXP2yc+Q9xijBmulFK6PZSKae4KmUirplQNFIBtAaF/Dk5eEks92d7X3goTcxWDtEng6jVI/GNp9+DENKzjbskfmp0aGKgXLLRQCHjRssvRMor5QFBaZrZILpRrZ47bi2EpfJZ/8M/rhTVhmGQ+LD77ohicOaebPBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by IA1PR11MB6537.namprd11.prod.outlook.com (2603:10b6:208:3a3::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.13; Wed, 3 Jan
- 2024 22:08:06 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6257:f90:c7dd:f0b2%4]) with mapi id 15.20.7159.013; Wed, 3 Jan 2024
- 22:08:06 +0000
-Date: Wed, 3 Jan 2024 14:08:02 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Smita Koralahalli
-	<Smita.KoralahalliChannabasappa@amd.com>, Shiju Jose <shiju.jose@huawei.com>
-CC: Yazen Ghannam <yazen.ghannam@amd.com>, Davidlohr Bueso
-	<dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ard
- Biesheuvel" <ardb@kernel.org>, <linux-efi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>, Ira Weiny
-	<ira.weiny@intel.com>
-Subject: RE: [PATCH v5 9/9] cxl/pci: Register for and process CPER events
-Message-ID: <6595dac27b081_8dc68294e3@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20231220-cxl-cper-v5-0-1bb8a4ca2c7a@intel.com>
- <20231220-cxl-cper-v5-9-1bb8a4ca2c7a@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20231220-cxl-cper-v5-9-1bb8a4ca2c7a@intel.com>
-X-ClientProxiedBy: MW4PR04CA0202.namprd04.prod.outlook.com
- (2603:10b6:303:86::27) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NRDjHM81"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-35d374bebe3so5269165ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 14:09:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1704319762; x=1704924562; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=te2PH2Kdt4cQrnvMOmJ454BBecoYeY1JOfYpAxEXWxY=;
+        b=NRDjHM81w/sZiM8JrKwggU2qq7U5V4q/crH6ON1yBYTp2vZZhLcgkLmmUv9mGCkTqQ
+         NOAUtvVjPVSJmK3wmDU5BnUXP9dHxDKOlvhhwrLcVk2gmrTFm1HyUj9H/hGEzoOdvyXd
+         zZ7QvoiOd617OtYbSpl8eMXtzaJnS7Xa5Gkaw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704319762; x=1704924562;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=te2PH2Kdt4cQrnvMOmJ454BBecoYeY1JOfYpAxEXWxY=;
+        b=njsZTc+Z+HFyz2a4ZzOo5AyKsHuhdujEYdFybzI9Y76GrL62aP21UHVABnyCR9xICi
+         yeSF8L6YY+gRLyKjroPWc6YGHkzB/yqIjig10F0lW2WJBl2P3OxthzvBWrPnC3JulVVW
+         5912mmheEdE+Jl7Ug8f9U0gqjic2QQvdcUC0UZwIWYig2nddGTFOvQIqn7xz9PVxVmje
+         Ur0njgGviLa3nt30DYG7RYTZih2DHowxq96EPb+rOLc6mgLkr/FBgVjLdzXRIDLO66PT
+         mN93QVYH+siF9EMUw8s3x3uYAq00IRzrhXjZImjPnmCvFlh+mwAuFPFvx3GOkQa+cKTY
+         u4Dw==
+X-Gm-Message-State: AOJu0Yx+Jdjwl7cAmdD1wfT8wY5gUztKTjPstFT+tr0DzMeMS9XmQ3wK
+	bFIuODTgD+6FA0Rs575wby0neCAJ58EDrQ==
+X-Google-Smtp-Source: AGHT+IFaaY5Skh+o7ny4ui5W9ZhTFlM4FEgUH0yIGmZMDbedaycTOwiYk25gWja3CQeLGAKe5kxYVg==
+X-Received: by 2002:a05:6602:2190:b0:7ba:a0f9:7660 with SMTP id b16-20020a056602219000b007baa0f97660mr30672565iob.1.1704319762050;
+        Wed, 03 Jan 2024 14:09:22 -0800 (PST)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id bq11-20020a056638468b00b0046dd22fd24csm1096998jab.87.2024.01.03.14.09.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jan 2024 14:09:21 -0800 (PST)
+Message-ID: <4fb169fd-393c-441e-b0f7-32a3777c1d11@linuxfoundation.org>
+Date: Wed, 3 Jan 2024 15:09:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA1PR11MB6537:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5655ab00-9680-4298-94f4-08dc0ca8764b
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ykTipd6juVmoL3owpWnvs1n5mQDvVXlyTKR0TfGyB03uZdldUxrTkmrKRS7TzVXd9xb7mr2fNecxyIXcnmzkG4ucW8NN1HeJBbmWBmTYSTeFOXvlbQAnzYiwv9osGvB+tiagjWmXWxyPXDCz0ueOYmczdlu8/P9JIEB0Ggtu2A1DfQXjm7IG06aTtcxA/BEvvmHf3Uz1g9aCm8tgVxiXIuCG/vhhnu87zdEcAogLOBGdhIdbWkHbZa4tAXvsTc3avkE2UiQlFQYGkZxboUGtb8X8iwVB02tHlNFz7bBgOYsiA2r4lN0FV8Fm5j4P6MOfFlJpXiIu69pf6glCC96aRdzuYsvgh8gTXNPTL5v/sEcrghdOy0D3eUOSW4L4m+8KpMrT+pVGnTOBn34MCbN5V6FBJM/p/peo2cu+HiCLdC9TVaBInUSzakF1zNUCN2nYQCvJKWxQ8kuNu3wtpIa6q/xLqjEjbwFYPc/U3WoEEzSIu+RnU48F8MAfJY10TD59gXb+iDxVpsi4lcaiKDBlPBU/WP3H4dKmePHGhQj0Gzr7mJncQKzWIxM5EUTte2ij
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(366004)(39860400002)(396003)(346002)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(5660300002)(8676002)(8936002)(54906003)(4326008)(83380400001)(6506007)(6512007)(110136005)(6666004)(26005)(478600001)(9686003)(86362001)(107886003)(316002)(6486002)(66476007)(66556008)(66946007)(41300700001)(38100700002)(82960400001)(2906002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?rhdYlanWqMhfSZsbF/IRBRrL4sSfUiUTHHKRaDeEwfWp6VtILx7WedY4iWcF?=
- =?us-ascii?Q?/5gEkDnXG+GNZK+JXfSDI6dMiNcAWCA+yIuRS3zOYjpAhr/yjbur3MyQ0vdU?=
- =?us-ascii?Q?Fz0QowOoxmj2Wt4w8LSNCHeGJukZn16iqXAnJGPTBv2xWVxvWV2898zecdyv?=
- =?us-ascii?Q?bxGwUVJlcn25H4d8Lq7NhGnwFOB9YXNxi0F30K/UCtpI+KtHSSQ5o0g4sRun?=
- =?us-ascii?Q?WzuFdcyJHwkQt/IoQq7G1tAHBi7NE8HmakDcio4i/3vVzwDQozVrqsuET+wW?=
- =?us-ascii?Q?aeAMd5RqQ9QFkW09rqfrG7eh1828zX05HmwNjaS9PxKr+XPuXcJ8eYbYhx5Y?=
- =?us-ascii?Q?ukSsXtXy4J+MRtWMSBPnwFzr/F4Iiv8ABDAwLnkCPPe+C5SUVshEs7UCra4x?=
- =?us-ascii?Q?dEZF4e+2yj/VifmtiJhALFVYuj6e6wNqKQINLZMI80sciBWx97GOUrD5Cmsd?=
- =?us-ascii?Q?bPVixOuwfri+Evj08zqG5SC6KfkZi4LeqOdQ9aPxnWiRcaVUDnAcsXw6ClYw?=
- =?us-ascii?Q?d/AFkWjMEPxTiSeHf10AZbV6OK0HiC5T+Q8SSWHH3QXoI1PbciMGjGHoMqgC?=
- =?us-ascii?Q?QV2MeFl1w3OdbElazI8WEzxt8WZr+gmfvbzdX/9LDzQaX9nqu8tjQ97kHxtH?=
- =?us-ascii?Q?2hbxXsHz9woFXzr4zwe6rHhz9JCJ4fyX90i3jd4jeAAvbhxleyp+EU5cCeTv?=
- =?us-ascii?Q?V3ROxUfa/Hk9ZKh+e2GuYNsr4IeBv9Jua294BSKXSpEecjXc2QIEiXQQyma+?=
- =?us-ascii?Q?2keeGhmqXgr3VJ/Z5ADwB5YlBzh5AmOv7AVa4V5++/P3v2LSTJfftvbAFJf0?=
- =?us-ascii?Q?1VnKoytuhfzj6C29NqDHKQfzxyNGe/etbVUL8G65pfa+BdAjactnUZI8bmut?=
- =?us-ascii?Q?o9yEMOR6sHj7NserF1RkVsdczfptZB1K+n5okz07FeXujDcUNiDOjNIY8AA4?=
- =?us-ascii?Q?4LMiqJnAtEeg96fnJk5RlQWgkCddY5i3FOhk6LxS27wOvxcRmryFG0FmSdEi?=
- =?us-ascii?Q?5W5s/HTyuHXco0U1NN4xDG0M5Nr2xWir+rpVkoJUBDWR30ubGLCGjv2N7q5k?=
- =?us-ascii?Q?6HUHvWyOa+6qpdsvF4QGJpzzEJIXJu23NgfypRDN5dNhYalDtJ5kbOwf1bY4?=
- =?us-ascii?Q?qevoamcmIUxt4875tjxUsDW3qK1H3MBLtHeE01+DJNxkHTPf2JIcp+x8tgPf?=
- =?us-ascii?Q?Wc08Arp+sQ6HNb8/eWXULjBFKCfOh/ktNOjhvZelrSD79YkaGtkUSGmMjr/l?=
- =?us-ascii?Q?hQouoAfLTJbPqgrkxHsSLhO/7dqaFp7nU0yJSRhhlGfvA9mZ/unxCoqpxHsE?=
- =?us-ascii?Q?yZtIjHMsKuJmae14iOmW1ImdoIhx7BE28RqVgB3qbwvkAqvDYZRuywNq7ihl?=
- =?us-ascii?Q?JJwDDcOCaM6+Dpf+Xq5C1S3RmLaHTBOSDnilh81yIg6afUfy7YfM9Gw55Ia3?=
- =?us-ascii?Q?rZDQpRD5Gacvzbgr4O4sA/PWc6w6nDo49a9q0ZL3jByDUkfG4Y8+DAxKHaFx?=
- =?us-ascii?Q?dGOoWcS/qedbQ8hYytm8rht1AaACs3QN4Dzr9MMs1EbVtHLncMRsjXZMEGUp?=
- =?us-ascii?Q?MusbrsYva0PRBzpR/rELaR/DUQm6Rw5MT9V7bhklMr/zZ1W/vQRGORiwIOV6?=
- =?us-ascii?Q?CA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5655ab00-9680-4298-94f4-08dc0ca8764b
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jan 2024 22:08:05.9976
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EsOeR3ik4ZLy7wfO1327RevMbEKu1DxO/UcBdDkllAuf69gMVSaVfJXwASpmY4YwiJnKDQsvY4dk+WYhjwU4HkmYxz3mjHt7PjTvyNY9NAQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6537
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v4 1/3] kselftests: lib.mk: Add TEST_GEN_MODS_DIR
+ variable
+Content-Language: en-US
+To: Joe Lawrence <joe.lawrence@redhat.com>,
+ Marcos Paulo de Souza <mpdesouza@suse.com>
+Cc: Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+ Petr Mladek <pmladek@suse.com>, linux-kselftest@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-s390@vger.kernel.org, live-patching@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20231220-send-lp-kselftests-v4-0-3458ec1b1a38@suse.com>
+ <20231220-send-lp-kselftests-v4-1-3458ec1b1a38@suse.com>
+ <ZZSOtsbzpy2mvmUC@redhat.com>
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <ZZSOtsbzpy2mvmUC@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Ira Weiny wrote:
-> If the firmware has configured CXL event support to be firmware first
-> the OS can process those events through CPER records.  The CXL layer has
-> unique DPA to HPA knowledge and standard event trace parsing in place.
+On 1/2/24 15:31, Joe Lawrence wrote:
+> On Wed, Dec 20, 2023 at 01:53:12PM -0300, Marcos Paulo de Souza wrote:
+>> Add TEST_GEN_MODS_DIR variable for kselftests. It can point to
+>> a directory containing kernel modules that will be used by
+>> selftest scripts.
+>>
+>> The modules are built as external modules for the running kernel.
+>> As a result they are always binary compatible and the same tests
+>> can be used for older or newer kernels.
+>>
+>> The build requires "kernel-devel" package to be installed.
+>> For example, in the upstream sources, the rpm devel package
+>> is produced by "make rpm-pkg"
+>>
+>> The modules can be built independently by
+>>
+>>    make -C tools/testing/selftests/livepatch/
+>>
+>> or they will be automatically built before running the tests via
+>>
+>>    make -C tools/testing/selftests/livepatch/ run_tests
+>>
+>> Note that they are _not_ built when running the standalone
+>> tests by calling, for example, ./test-state.sh.
+>>
+>> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+>> ---
+>>   Documentation/dev-tools/kselftest.rst |  4 ++++
+>>   tools/testing/selftests/lib.mk        | 20 +++++++++++++++-----
+>>   2 files changed, 19 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/Documentation/dev-tools/kselftest.rst b/Documentation/dev-tools/kselftest.rst
+>> index ab376b316c36..7f3582a67318 100644
+>> --- a/Documentation/dev-tools/kselftest.rst
+>> +++ b/Documentation/dev-tools/kselftest.rst
+>> @@ -245,6 +245,10 @@ Contributing new tests (details)
+>>      TEST_PROGS, TEST_GEN_PROGS mean it is the executable tested by
+>>      default.
+>>   
+>> +   TEST_GEN_MODS_DIR should be used by tests that require modules to be built
+>> +   before the test starts. The variable will contain the name of the directory
+>> +   containing the modules.
+>> +
+>>      TEST_CUSTOM_PROGS should be used by tests that require custom build
+>>      rules and prevent common build rule use.
+>>   
+>> diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
+>> index 118e0964bda9..6c7c5a0112cf 100644
+>> --- a/tools/testing/selftests/lib.mk
+>> +++ b/tools/testing/selftests/lib.mk
+>> @@ -70,12 +70,15 @@ KHDR_INCLUDES := -isystem $(KHDR_DIR)
+>>   # TEST_PROGS are for test shell scripts.
+>>   # TEST_CUSTOM_PROGS and TEST_PROGS will be run by common run_tests
+>>   # and install targets. Common clean doesn't touch them.
+>> +# TEST_GEN_MODS_DIR is used to specify a directory with modules to be built
+>> +# before the test executes. These modules are cleaned on the clean target as well.
+>>   TEST_GEN_PROGS := $(patsubst %,$(OUTPUT)/%,$(TEST_GEN_PROGS))
+>>   TEST_GEN_PROGS_EXTENDED := $(patsubst %,$(OUTPUT)/%,$(TEST_GEN_PROGS_EXTENDED))
+>>   TEST_GEN_FILES := $(patsubst %,$(OUTPUT)/%,$(TEST_GEN_FILES))
+>> +TEST_GEN_MODS_DIR := $(patsubst %,$(OUTPUT)/%,$(TEST_GEN_MODS_DIR))
+>>   
+>>   all: kernel_header_files $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED) \
+>> -     $(TEST_GEN_FILES)
+>> +     $(TEST_GEN_FILES) $(if $(TEST_GEN_MODS_DIR),gen_mods_dir)
+>>   
+>>   kernel_header_files:
+>>   	@ls $(KHDR_DIR)/linux/*.h >/dev/null 2>/dev/null;                      \
+>> @@ -105,8 +108,8 @@ endef
+>>   
+>>   run_tests: all
+>>   ifdef building_out_of_srctree
+>> -	@if [ "X$(TEST_PROGS)$(TEST_PROGS_EXTENDED)$(TEST_FILES)" != "X" ]; then \
+>> -		rsync -aq --copy-unsafe-links $(TEST_PROGS) $(TEST_PROGS_EXTENDED) $(TEST_FILES) $(OUTPUT); \
+>> +	@if [ "X$(TEST_PROGS)$(TEST_PROGS_EXTENDED)$(TEST_FILES)$(TEST_GEN_MODS_DIR)" != "X" ]; then \
+>> +		rsync -aq --copy-unsafe-links $(TEST_PROGS) $(TEST_PROGS_EXTENDED) $(TEST_FILES) $(TEST_GEN_MODS_DIR) $(OUTPUT); \
+>>   	fi
+>>   	@if [ "X$(TEST_PROGS)" != "X" ]; then \
+>>   		$(call RUN_TESTS, $(TEST_GEN_PROGS) $(TEST_CUSTOM_PROGS) \
+>> @@ -118,6 +121,12 @@ else
+>>   	@$(call RUN_TESTS, $(TEST_GEN_PROGS) $(TEST_CUSTOM_PROGS) $(TEST_PROGS))
+>>   endif
+>>   
+>> +gen_mods_dir:
+>> +	$(Q)$(MAKE) -C $(TEST_GEN_MODS_DIR)
+>> +
+>> +clean_mods_dir:
+>> +	$(Q)$(MAKE) -C $(TEST_GEN_MODS_DIR) clean
+>> +
+>>   define INSTALL_SINGLE_RULE
+>>   	$(if $(INSTALL_LIST),@mkdir -p $(INSTALL_PATH))
+>>   	$(if $(INSTALL_LIST),rsync -a --copy-unsafe-links $(INSTALL_LIST) $(INSTALL_PATH)/)
+>> @@ -131,6 +140,7 @@ define INSTALL_RULE
+>>   	$(eval INSTALL_LIST = $(TEST_CUSTOM_PROGS)) $(INSTALL_SINGLE_RULE)
+>>   	$(eval INSTALL_LIST = $(TEST_GEN_PROGS_EXTENDED)) $(INSTALL_SINGLE_RULE)
+>>   	$(eval INSTALL_LIST = $(TEST_GEN_FILES)) $(INSTALL_SINGLE_RULE)
+>> +	$(eval INSTALL_LIST = $(TEST_GEN_MODS_DIR)) $(INSTALL_SINGLE_RULE)
 > 
-> CPER records contain Bus, Device, Function information which can be used
-> to identify the PCI device which is sending the event.
+> Hi Marcos,
 > 
-> Change the PCI driver registration to include registration of a CXL
-> CPER callback to process events through the trace subsystem.
+> Sorry for the late reply on this, but I'm reviewing this version by
+> trying to retrofit it into our selftest packaging (pre-build the test
+> module .ko's and stash those into an rpm rather than building on the
+> test host).
 > 
-> Use new scoped based management to simplify the handling of the PCI
-> device object.
+> Since $TEST_GEN_MODS_DIR is treated as a directory, I found that the
+> selftest install target copies a bunch of intermediate object and kbuild
+> files:
 > 
-> NOTE this patch depends on Dan's addition of a device guard[1].
+>    $ mkdir /tmp/test-install
+>    $ make KDIR=$(pwd) INSTALL_PATH=/tmp/test-install TARGETS=livepatch \
+>         -C tools/testing/selftests/ install
+> 
+>    [ ... builds livepatch selftests ... ]
+> 
+> the rsync in question:
+> 
+>    rsync -a --copy-unsafe-links /home/jolawren/src/kernel/tools/testing/selftests/livepatch/test_modules /tmp/test-install/livepatch/
+>    ...
+> 
+> and then looking at the destination:
+> 
+>    $ tree -a /tmp/test-install/
+>    /tmp/test-install/
+>    ├── kselftest
+>    │   ├── module.sh
+>    │   ├── prefix.pl
+>    │   └── runner.sh
+>    ├── kselftest-list.txt
+>    ├── livepatch
+>    │   ├── config
+>    │   ├── functions.sh
+>    │   ├── settings
+>    │   ├── test-callbacks.sh
+>    │   ├── test-ftrace.sh
+>    │   ├── test_klp-call_getpid
+>    │   ├── test-livepatch.sh
+>    │   ├── test_modules
+>    │   │   ├── Makefile
+>    │   │   ├── modules.order
+>    │   │   ├── .modules.order.cmd
+>    │   │   ├── Module.symvers
+>    │   │   ├── .Module.symvers.cmd
+>    │   │   ├── test_klp_atomic_replace.c
+>    │   │   ├── test_klp_atomic_replace.ko
+>    │   │   ├── .test_klp_atomic_replace.ko.cmd
+>    │   │   ├── test_klp_atomic_replace.mod
+>    │   │   ├── test_klp_atomic_replace.mod.c
+>    │   │   ├── .test_klp_atomic_replace.mod.cmd
+>    │   │   ├── test_klp_atomic_replace.mod.o
+>    │   │   ├── .test_klp_atomic_replace.mod.o.cmd
+>    │   │   ├── test_klp_atomic_replace.o
+>    │   │   ├── .test_klp_atomic_replace.o.cmd
+>    ...
+> 
+> On the other hand, variables like $TEST_GEN_FILES specify individual
+> files, so only final binaries like test_klp-call_getpid (and not
+> test_klp-call_getpid.c) are copied to $INSTALL_PATH.
 
-Now that you added guard(pci_dev) earlier in the series you can just use
-that here rather than guard(device).
 
-[..]
-> +#define CXL_EVENT_HDR_FLAGS_REC_SEVERITY GENMASK(1, 0)
-> +static void cxl_cper_event_call(enum cxl_event_type ev_type,
-> +				struct cxl_cper_event_rec *rec)
-> +{
-> +	struct cper_cxl_event_devid *device_id = &rec->hdr.device_id;
-> +	struct pci_dev *pdev __free(pci_dev_put) = NULL;
-> +	enum cxl_event_log_type log_type;
-> +	struct cxl_dev_state *cxlds;
-> +	unsigned int devfn;
-> +	u32 hdr_flags;
-> +
-> +	devfn = PCI_DEVFN(device_id->device_num, device_id->func_num);
-> +	pdev = pci_get_domain_bus_and_slot(device_id->segment_num,
-> +					   device_id->bus_num, devfn);
-> +	if (!pdev)
-> +		return;
-> +
-> +	guard(device)(&pdev->dev);
+Thank you Joe for finding this problem.
 
-Per above:
-	guard(pci_dev)(pdev);
+Copying source files and object files doesn't sound right. This isn't
+how the ksleftest installs work. Let's fix this.
 
-> +	if (pdev->driver != &cxl_pci_driver)
-> +		return;
-> +
-> +	cxlds = pci_get_drvdata(pdev);
-> +	if (!cxlds)
-> +		return;
-> +
-> +	/* Fabricate a log type */
-> +	hdr_flags = get_unaligned_le24(rec->event.generic.hdr.flags);
-> +	log_type = FIELD_GET(CXL_EVENT_HDR_FLAGS_REC_SEVERITY, hdr_flags);
-> +
-> +	cxl_event_trace_record(cxlds->cxlmd, log_type, ev_type,
-> +			       &uuid_null, &rec->event);
-> +}
-> +
-> +static int __init cxl_pci_driver_init(void)
-> +{
-> +	int rc;
-> +
-> +	rc = pci_register_driver(&cxl_pci_driver);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = cxl_cper_register_callback(cxl_cper_event_call);
-> +	if (rc)
-> +		pci_unregister_driver(&cxl_pci_driver);
+thanks,
+--Shuah
 
-I think this order should be flipped. That way any errors that might
-arrive due to activity caused by probing have a chance to be serviced.
-Any that fire while initial probing is happening will pause in
-cxl_cper_event_call() and wait for probing to complete. Of course if
-probing fails, all is lost, but I think there is some incremental
-benefit to trying to catch those early records for things that are not
-probing fatal.
