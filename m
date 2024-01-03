@@ -1,122 +1,291 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EEFC1CF8A
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 15:00:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BE61B26F
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 15:02:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WlvIIMQY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bvpCkP+1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704294016;
+	s=mimecast20190719; t=1704294152;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7QMJZ+3lHeykV3WPSbajID2T4bzMyvXitF+gI+XPTjU=;
-	b=WlvIIMQY0Jc70EjRsDm3sWLi9Edks09+k12WzFYdIz6MkmSMAgYdFppVcZRRiyAzDO98EQ
-	L/V8725gWJnJeFp2y9pu1q9Mb9X/v9G5vy5rOvpLAQJGWVr2OK9lknruEOsifKbioInJZI
-	Yr3skH16iF4m2ohBfQZVaZE0keA3Hxw=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-590-aceTF6bhNCidJMmyrfkt8A-1; Wed,
- 03 Jan 2024 10:00:12 -0500
-X-MC-Unique: aceTF6bhNCidJMmyrfkt8A-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4AA321E441CA;
-	Wed,  3 Jan 2024 15:00:10 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.68])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 1A2D21121306;
-	Wed,  3 Jan 2024 15:00:06 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-	Jeff Layton <jlayton@kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Dominique Martinet <asmadeus@codewreck.org>
-Cc: David Howells <dhowells@redhat.com>,
-	Steve French <smfrench@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Tom Talpey <tom@talpey.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	linux-cachefs@redhat.com,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>
-Subject: [PATCH 5/5] 9p: Use length of data written to the server in preference to error
-Date: Wed,  3 Jan 2024 14:59:29 +0000
-Message-ID: <20240103145935.384404-6-dhowells@redhat.com>
-In-Reply-To: <20240103145935.384404-1-dhowells@redhat.com>
-References: <20240103145935.384404-1-dhowells@redhat.com>
+	bh=9YzjbOUgpmBQjCOcD8mqfwxZd0BBuvIZGME9zIgMdSg=;
+	b=bvpCkP+11r7CMuEUvC9ckmz+92LfP/dRt0rdwF50BPN0jb6X226T4qfvgmlhGH+pu/h1bP
+	X2xFpxZ0T0QnUVUkzZOZpFxeGPtxvNwQcRC+bqc1qDNUU83kMImAzFsE7+E39Y5l92uSq6
+	G1waExlgMY7gSSwGb8Cl9cP62V/M/8U=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-498-rj6weVZxN16S24OD-OFbvA-1; Wed, 03 Jan 2024 10:02:30 -0500
+X-MC-Unique: rj6weVZxN16S24OD-OFbvA-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-40d8791308eso19248035e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 07:02:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704294149; x=1704898949;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9YzjbOUgpmBQjCOcD8mqfwxZd0BBuvIZGME9zIgMdSg=;
+        b=J3JxaUvl/d13RqdkMMP5yyZFH0x5dWHE2XKXqgI8pi0FqeG4ERdvRHGU6XAX4pEAKH
+         UmGLhxhPbIwAuG6XOA8az4lAZO1jukYbd0pjo+bBZQKxVLwjIY4Hfz7jw06A6e+iqxyG
+         wDp7g3cE3+Gwcpqlg1zXfLJGvJofbqot32v/frDPwpNi0LuyXecCsfvx5p6g8M/m4HfC
+         m+w4upMqh2S+8uPsrH+zHsS487CduiYF5rdhmdYKaJM8gOToUl3WJRU78ICnUNkRtBt1
+         Lp+G2TTFGsvGxhpNRghjJNn85hRVqNIheNudpwu1+Jple3sADRYWDcc7c2sN5zDMtpOg
+         8kMg==
+X-Gm-Message-State: AOJu0Yy+YINLW4S9z6799YW7yApMwUFxEOta2ZWccfLsdTUlha1n7Z+Q
+	db+452tsZ7qBSIZp0n69iEjhSNoxXqJ5CVW51+mMpyH7Ncd2cUmJtyTvM0XIa4td3uZmLalpqxJ
+	b95lWZSU4xCZyGbEcjWAxecyEuUqRoRs=
+X-Received: by 2002:a7b:c3c6:0:b0:40c:de2:148c with SMTP id t6-20020a7bc3c6000000b0040c0de2148cmr9814047wmj.47.1704294149639;
+        Wed, 03 Jan 2024 07:02:29 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGf2xvpgewPhCy7SJJa8JoELXLbO3OMO+jKcvhfVqh41Qo5YGyItbjrI41gXQAgNxq5coAqjQ==
+X-Received: by 2002:a7b:c3c6:0:b0:40c:de2:148c with SMTP id t6-20020a7bc3c6000000b0040c0de2148cmr9814036wmj.47.1704294149263;
+        Wed, 03 Jan 2024 07:02:29 -0800 (PST)
+Received: from [192.168.9.34] (net-2-34-31-72.cust.vodafonedsl.it. [2.34.31.72])
+        by smtp.gmail.com with ESMTPSA id n19-20020a05600c4f9300b0040d8d023760sm2574803wmq.5.2024.01.03.07.02.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jan 2024 07:02:28 -0800 (PST)
+Message-ID: <67bd8de1-f4a2-43bd-a973-3add86cc2b26@redhat.com>
+Date: Wed, 3 Jan 2024 16:02:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 1/2] fpga: add an owner field and use it to take
+ the low-level module's refcount
+To: Xu Yilun <yilun.xu@linux.intel.com>
+Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+ Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org
+References: <20231218202809.84253-1-marpagan@redhat.com>
+ <20231218202809.84253-2-marpagan@redhat.com>
+ <ZYkoIdrbqJ9w+EHg@yilunxu-OptiPlex-7050>
+Content-Language: en-US
+From: Marco Pagani <marpagan@redhat.com>
+In-Reply-To: <ZYkoIdrbqJ9w+EHg@yilunxu-OptiPlex-7050>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-In v9fs_upload_to_server(), we pass the error to netfslib to terminate the
-subreq rather than the amount of data written - even if we did actually
-write something.
 
-Further, we assume that the write is always entirely done if successful -
-but it might have been partially complete - as returned by
-p9_client_write(), but we ignore that.
 
-Fix this by indicating the amount written by preference and only returning
-the error if we didn't write anything.
+On 2023-12-25 07:58, Xu Yilun wrote:
+> On Mon, Dec 18, 2023 at 09:28:08PM +0100, Marco Pagani wrote:
+>> Add a module owner field to the fpga_manager_ops struct and use it to
+>> take the low-level control module's refcount instead of relying on the
+>> parent device's driver pointer. Low-level control modules should
+>> statically set the owner field to THIS_MODULE. To detect when the owner
+> 
+> Don't be so strict, people could pass in any owner module they think it
+> is correct.
+>
 
-(We might want to return both in future if both are available as this
-might be useful as to whether we retry or not.)
-
-Suggested-by: Dominique Martinet <asmadeus@codewreck.org>
-Link: https://lore.kernel.org/r/ZZULNQAZ0n0WQv7p@codewreck.org/
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Eric Van Hensbergen <ericvh@kernel.org>
-cc: Latchesar Ionkov <lucho@ionkov.net>
-cc: Christian Schoenebeck <linux_oss@crudebyte.com>
-cc: v9fs@lists.linux.dev
-cc: linux-cachefs@redhat.com
-cc: linux-fsdevel@vger.kernel.org
----
- fs/9p/vfs_addr.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
-index f7f83eec3bcc..047855033d32 100644
---- a/fs/9p/vfs_addr.c
-+++ b/fs/9p/vfs_addr.c
-@@ -29,12 +29,11 @@
- static void v9fs_upload_to_server(struct netfs_io_subrequest *subreq)
- {
- 	struct p9_fid *fid = subreq->rreq->netfs_priv;
--	int err;
-+	int err, len;
+I'm planning to use a helper macro to set the owner field at registration,
+as suggested by Greg K-H. So, I would change this sentence anyway.
  
- 	trace_netfs_sreq(subreq, netfs_sreq_trace_submit);
--	p9_client_write(fid, subreq->start, &subreq->io_iter, &err);
--	netfs_write_subrequest_terminated(subreq, err < 0 ? err : subreq->len,
--					  false);
-+	len = p9_client_write(fid, subreq->start, &subreq->io_iter, &err);
-+	netfs_write_subrequest_terminated(subreq, len ?: err, false);
- }
- 
- static void v9fs_upload_to_server_worker(struct work_struct *work)
+>> module pointer becomes stale, set the mops pointer to null during
+>> fpga_mgr_unregister() (called by the low-level module exit function) and
+> 
+> No need the side note, people could call fpga_mgr_unregister() at any
+> time they think it is correct.
+>
+
+Okay, I'll drop this line.
+
+>> test it before taking the module's refcount. Use a mutex to avoid a
+>> crash that can happen if __fpga_mgr_get() gets suspended between testing
+>> the mops pointer and taking the low-level refcount and then resumes when
+>> the low-level module has already been freed.
+>>
+>> Thanks to Xu Yilun for suggesting the locking pattern.
+> 
+> I appreciate that but don't put it in changelog. A Suggested-by is
+> appropriate.
+> 
+
+Okay.
+
+>>
+>> Other changes: move put_device() from __fpga_mgr_get() to fpga_mgr_get()
+> 
+> Opportunistically move put_device() ...
+> 
+> The point is, try to imply the *Other* changes are simple and relative to
+> the main change, or we should split the patch.
+> 
+> Sorry but seeing the actual change, please split. The whole change is
+> small and the put_device() part contributes 40% code ...
+> 
+
+Make sense. I would prefer to rephrase the message and do everything in a
+single patch since moving put_device() is a small change related to the
+mechanism for getting the manager.
+
+Thanks,
+Marco
+
+>> and of_fpga_mgr_get() to improve code clarity.
+>>
+>> Fixes: 654ba4cc0f3e ("fpga manager: ensure lifetime with of_fpga_mgr_get")
+>> Signed-off-by: Marco Pagani <marpagan@redhat.com>
+>> ---
+>>  drivers/fpga/fpga-mgr.c       | 50 ++++++++++++++++++++++++-----------
+>>  include/linux/fpga/fpga-mgr.h |  4 +++
+>>  2 files changed, 38 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/drivers/fpga/fpga-mgr.c b/drivers/fpga/fpga-mgr.c
+>> index 06651389c592..a32b7d40080d 100644
+>> --- a/drivers/fpga/fpga-mgr.c
+>> +++ b/drivers/fpga/fpga-mgr.c
+>> @@ -664,20 +664,20 @@ static struct attribute *fpga_mgr_attrs[] = {
+>>  };
+>>  ATTRIBUTE_GROUPS(fpga_mgr);
+>>  
+>> -static struct fpga_manager *__fpga_mgr_get(struct device *dev)
+>> +static struct fpga_manager *__fpga_mgr_get(struct device *mgr_dev)
+>>  {
+>>  	struct fpga_manager *mgr;
+>>  
+>> -	mgr = to_fpga_manager(dev);
+>> +	mgr = to_fpga_manager(mgr_dev);
+>>  
+>> -	if (!try_module_get(dev->parent->driver->owner))
+>> -		goto err_dev;
+>> +	mutex_lock(&mgr->mops_mutex);
+>>  
+>> -	return mgr;
+>> +	if (!mgr->mops || !try_module_get(mgr->mops->owner))
+>> +		mgr = ERR_PTR(-ENODEV);
+>>  
+>> -err_dev:
+>> -	put_device(dev);
+>> -	return ERR_PTR(-ENODEV);
+>> +	mutex_unlock(&mgr->mops_mutex);
+>> +
+>> +	return mgr;
+>>  }
+>>  
+>>  static int fpga_mgr_dev_match(struct device *dev, const void *data)
+>> @@ -693,12 +693,18 @@ static int fpga_mgr_dev_match(struct device *dev, const void *data)
+>>   */
+>>  struct fpga_manager *fpga_mgr_get(struct device *dev)
+>>  {
+>> -	struct device *mgr_dev = class_find_device(&fpga_mgr_class, NULL, dev,
+>> -						   fpga_mgr_dev_match);
+>> +	struct fpga_manager *mgr;
+>> +	struct device *mgr_dev;
+>> +
+>> +	mgr_dev = class_find_device(&fpga_mgr_class, NULL, dev, fpga_mgr_dev_match);
+>>  	if (!mgr_dev)
+>>  		return ERR_PTR(-ENODEV);
+>>  
+>> -	return __fpga_mgr_get(mgr_dev);
+>> +	mgr = __fpga_mgr_get(mgr_dev);
+>> +	if (IS_ERR(mgr))
+>> +		put_device(mgr_dev);
+>> +
+>> +	return mgr;
+>>  }
+>>  EXPORT_SYMBOL_GPL(fpga_mgr_get);
+>>  
+>> @@ -711,13 +717,18 @@ EXPORT_SYMBOL_GPL(fpga_mgr_get);
+>>   */
+>>  struct fpga_manager *of_fpga_mgr_get(struct device_node *node)
+>>  {
+>> -	struct device *dev;
+>> +	struct fpga_manager *mgr;
+>> +	struct device *mgr_dev;
+>>  
+>> -	dev = class_find_device_by_of_node(&fpga_mgr_class, node);
+>> -	if (!dev)
+>> +	mgr_dev = class_find_device_by_of_node(&fpga_mgr_class, node);
+>> +	if (!mgr_dev)
+>>  		return ERR_PTR(-ENODEV);
+>>  
+>> -	return __fpga_mgr_get(dev);
+>> +	mgr = __fpga_mgr_get(mgr_dev);
+>> +	if (IS_ERR(mgr))
+>> +		put_device(mgr_dev);
+>> +
+>> +	return mgr;
+>>  }
+>>  EXPORT_SYMBOL_GPL(of_fpga_mgr_get);
+>>  
+>> @@ -727,7 +738,7 @@ EXPORT_SYMBOL_GPL(of_fpga_mgr_get);
+>>   */
+>>  void fpga_mgr_put(struct fpga_manager *mgr)
+>>  {
+>> -	module_put(mgr->dev.parent->driver->owner);
+>> +	module_put(mgr->mops->owner);
+>>  	put_device(&mgr->dev);
+>>  }
+>>  EXPORT_SYMBOL_GPL(fpga_mgr_put);
+>> @@ -803,6 +814,7 @@ fpga_mgr_register_full(struct device *parent, const struct fpga_manager_info *in
+>>  	}
+>>  
+>>  	mutex_init(&mgr->ref_mutex);
+>> +	mutex_init(&mgr->mops_mutex);
+>>  
+>>  	mgr->name = info->name;
+>>  	mgr->mops = info->mops;
+>> @@ -888,6 +900,12 @@ void fpga_mgr_unregister(struct fpga_manager *mgr)
+>>  	 */
+>>  	fpga_mgr_fpga_remove(mgr);
+>>  
+>> +	mutex_lock(&mgr->mops_mutex);
+>> +
+>> +	mgr->mops = NULL;
+>> +
+>> +	mutex_unlock(&mgr->mops_mutex);
+>> +
+>>  	device_unregister(&mgr->dev);
+>>  }
+>>  EXPORT_SYMBOL_GPL(fpga_mgr_unregister);
+>> diff --git a/include/linux/fpga/fpga-mgr.h b/include/linux/fpga/fpga-mgr.h
+>> index 54f63459efd6..b4d9413cb444 100644
+>> --- a/include/linux/fpga/fpga-mgr.h
+>> +++ b/include/linux/fpga/fpga-mgr.h
+>> @@ -162,6 +162,7 @@ struct fpga_manager_info {
+>>   * @write_complete: set FPGA to operating state after writing is done
+>>   * @fpga_remove: optional: Set FPGA into a specific state during driver remove
+>>   * @groups: optional attribute groups.
+>> + * @owner: owner module containing the ops.
+>>   *
+>>   * fpga_manager_ops are the low level functions implemented by a specific
+>>   * fpga manager driver.  The optional ones are tested for NULL before being
+>> @@ -184,6 +185,7 @@ struct fpga_manager_ops {
+>>  			      struct fpga_image_info *info);
+>>  	void (*fpga_remove)(struct fpga_manager *mgr);
+>>  	const struct attribute_group **groups;
+>> +	struct module *owner;
+>>  };
+>>  
+>>  /* FPGA manager status: Partial/Full Reconfiguration errors */
+>> @@ -201,6 +203,7 @@ struct fpga_manager_ops {
+>>   * @state: state of fpga manager
+>>   * @compat_id: FPGA manager id for compatibility check.
+>>   * @mops: pointer to struct of fpga manager ops
+>> + * @mops_mutex: protects mops from low-level module removal
+>>   * @priv: low level driver private date
+>>   */
+>>  struct fpga_manager {
+>> @@ -209,6 +212,7 @@ struct fpga_manager {
+>>  	struct mutex ref_mutex;
+>>  	enum fpga_mgr_states state;
+>>  	struct fpga_compat_id *compat_id;
+>> +	struct mutex mops_mutex;
+>>  	const struct fpga_manager_ops *mops;
+>>  	void *priv;
+>>  };
+>> -- 
+>> 2.43.0
+>>
+>>
+> 
 
