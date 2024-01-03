@@ -1,170 +1,354 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2CD18628
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 09:14:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C6C18AE8;
+	Wed,  3 Jan 2024 09:14:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P+yOHYGe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704273286;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ECdT86ko6CPDQ7PwUTvJTmsh3hF4cTDBKdjOYZE7Ef8=;
-	b=P+yOHYGe62HGUf9HPLjbG5PQ9+bPn+xxLg74lXHLowGJOIyRE6RVfsjUX5vcHlUJYz+otX
-	Sdwv8q6CJwQv19KGXEL3P7pEVIdvglCZgJzcxUm1BaqcQ3oDbN3PT/q1asgJTFVBcMiiMx
-	EBsZutiOmJ+0khpKe/kQU1Ynmpl21AE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-656-YJyX-2z5NWeDsYfFUhlklw-1; Wed, 03 Jan 2024 04:14:40 -0500
-X-MC-Unique: YJyX-2z5NWeDsYfFUhlklw-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="AtVWzHuD";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="mmNbBV2C";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="AtVWzHuD";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="mmNbBV2C"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6FE0C1019DE1;
-	Wed,  3 Jan 2024 09:14:39 +0000 (UTC)
-Received: from x1n.redhat.com (unknown [10.72.116.69])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 16526492BF0;
-	Wed,  3 Jan 2024 09:14:26 +0000 (UTC)
-From: peterx@redhat.com
-To: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: James Houghton <jthoughton@google.com>,
-	David Hildenbrand <david@redhat.com>,
-	"Kirill A . Shutemov" <kirill@shutemov.name>,
-	Yang Shi <shy828301@gmail.com>,
-	peterx@redhat.com,
-	linux-riscv@lists.infradead.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
-	Rik van Riel <riel@surriel.com>,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Andrew Jones <andrew.jones@linux.dev>,
-	linuxppc-dev@lists.ozlabs.org,
-	Mike Kravetz <mike.kravetz@oracle.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	linux-arm-kernel@lists.infradead.org,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH v2 00/13] mm/gup: Unify hugetlb, part 2
-Date: Wed,  3 Jan 2024 17:14:10 +0800
-Message-ID: <20240103091423.400294-1-peterx@redhat.com>
-Content-Type: text/plain; charset="utf-8"
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 013DD21C64;
+	Wed,  3 Jan 2024 09:14:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1704273290; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MRZ2aUMbqlaAIRlYGl9VBJK21WKEAOCW3XaQryG78/A=;
+	b=AtVWzHuDGz6J/vwxZq27QNZA4f5WAbMHAp4SmB9hZPYaAUcKZ8KtUrzdc4Z45r15R+hn6A
+	msS8zcd8WJntRYlRiFi3w/XhYX1rIi4qpI+uIE7rJnSnPb7mPKAN/63843fwNE4bUkpH+q
+	udn7kynxADRZI0TYIW/2rBE9Nn1Rusw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1704273290;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MRZ2aUMbqlaAIRlYGl9VBJK21WKEAOCW3XaQryG78/A=;
+	b=mmNbBV2CsaewPSvhMj8jx7XDV1HqVhNpTOk8RP+Y8viSMXPirP+Z2LEl0oL8y5uJ4dNfVC
+	Dv/6j1RMIPgoKZCQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1704273290; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MRZ2aUMbqlaAIRlYGl9VBJK21WKEAOCW3XaQryG78/A=;
+	b=AtVWzHuDGz6J/vwxZq27QNZA4f5WAbMHAp4SmB9hZPYaAUcKZ8KtUrzdc4Z45r15R+hn6A
+	msS8zcd8WJntRYlRiFi3w/XhYX1rIi4qpI+uIE7rJnSnPb7mPKAN/63843fwNE4bUkpH+q
+	udn7kynxADRZI0TYIW/2rBE9Nn1Rusw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1704273290;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MRZ2aUMbqlaAIRlYGl9VBJK21WKEAOCW3XaQryG78/A=;
+	b=mmNbBV2CsaewPSvhMj8jx7XDV1HqVhNpTOk8RP+Y8viSMXPirP+Z2LEl0oL8y5uJ4dNfVC
+	Dv/6j1RMIPgoKZCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DED2F13AA6;
+	Wed,  3 Jan 2024 09:14:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 3glkNokllWVKawAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 03 Jan 2024 09:14:49 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 7C30CA07EF; Wed,  3 Jan 2024 10:14:49 +0100 (CET)
+Date: Wed, 3 Jan 2024 10:14:49 +0100
+From: Jan Kara <jack@suse.cz>
+To: Kemeng Shi <shikemeng@huaweicloud.com>
+Cc: tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz,
+	linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 8/9] ext4: remove unnecessary parameter "needed" in
+ ext4_discard_preallocations
+Message-ID: <20240103091449.djg4tepqfbizi75h@quack3>
+References: <20240103102821.448134-1-shikemeng@huaweicloud.com>
+ <20240103102821.448134-9-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240103102821.448134-9-shikemeng@huaweicloud.com>
+X-Spam-Level: 
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.31 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCVD_DKIM_ARC_DNSWL_HI(-1.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCPT_COUNT_FIVE(0.00)[6];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,suse.com:email,huaweicloud.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_IN_DNSWL_HI(-0.50)[2a07:de40:b281:106:10:150:64:167:received];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=AtVWzHuD;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=mmNbBV2C
+X-Spam-Score: -4.31
+X-Rspamd-Queue-Id: 013DD21C64
 
-From: Peter Xu <peterx@redhat.com>
+On Wed 03-01-24 18:28:20, Kemeng Shi wrote:
+> The "needed" controls the number of ext4_prealloc_space to discard in
+> ext4_discard_preallocations. Function ext4_discard_preallocations is
+> supposed to discard all non-used preallocated blocks when "needed"
+> is 0 and now ext4_discard_preallocations is always called with "needed"
+> = 0. Remove unnecessary parameter "needed" and remove all non-used
+> preallocated spaces in ext4_discard_preallocations to simplify the
+> code.
+> 
+> Note: If count of non-used preallocated spaces could be more than
+> UINT_MAX, there was a memory leak as some non-used preallocated
+> spaces are left ununsed and this commit will fix it. Otherwise,
+> there is no behavior change.
+> 
+> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
 
-v2:
-- Collect acks
-- Patch 9:
-  - Use READ_ONCE() to fetch pud entry [James]
+Looks good. Feel free to add:
 
-rfc: https://lore.kernel.org/r/20231116012908.392077-1-peterx@redhat.com
-v1:  https://lore.kernel.org/r/20231219075538.414708-1-peterx@redhat.com
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-This is v2 of the series, based on latest mm-unstalbe (856325d361df).
+								Honza
 
-The series removes the hugetlb slow gup path after a previous refactor work
-[1], so that slow gup now uses the exact same path to process all kinds of
-memory including hugetlb.
-
-For the long term, we may want to remove most, if not all, call sites of
-huge_pte_offset().  It'll be ideal if that API can be completely dropped
-from arch hugetlb API.  This series is one small step towards merging
-hugetlb specific codes into generic mm paths.  From that POV, this series
-removes one reference to huge_pte_offset() out of many others.
-
-One goal of such a route is that we can reconsider merging hugetlb features
-like High Granularity Mapping (HGM).  It was not accepted in the past
-because it may add lots of hugetlb specific codes and make the mm code even
-harder to maintain.  With a merged codeset, features like HGM can hopefully
-share some code with THP, legacy (PMD+) or modern (continuous PTEs).
-
-To make it work, the generic slow gup code will need to at least understand
-hugepd, which is already done like so in fast-gup.  Fortunately it seems
-that's the only major thing I need to teach slow GUP to share the common
-path for now besides normal huge PxD entries.  Non-gup can be more
-challenging, but that's a question for later.
-
-There's one major difference for slow-gup on cont_pte / cont_pmd handling,
-currently supported on three architectures (aarch64, riscv, ppc).  Before
-the series, slow gup will be able to recognize e.g. cont_pte entries with
-the help of huge_pte_offset() when hstate is around.  Now it's gone but
-still working, by looking up pgtable entries one by one.
-
-It's not ideal, but hopefully this change should not affect yet on major
-workloads.  There's some more information in the commit message of the last
-patch.  If this would be a concern, we can consider teaching slow gup to
-recognize cont pte/pmd entries, and that should recover the lost
-performance.  But I doubt its necessity for now, so I kept it as simple as
-it can be.
-
-Test Done
-=========
-
-This v1 went through the normal GUP smoke tests over different memory
-types on archs (using VM instances): x86_64, aarch64, ppc64le.  For
-aarch64, tested over 64KB cont_pte huge pages.  For ppc64le, tested over
-16MB hugepd entries (Power8 hash MMU on 4K base page size).
-
-Patch layout
-=============
-
-Patch 1-7:    Preparation works, or cleanups in relevant code paths
-Patch 8-12:   Teach slow gup with all kinds of huge entries (pXd, hugepd)
-Patch 13:     Drop hugetlb_follow_page_mask()
-
-More information can be found in the commit messages of each patch.  Any
-comment will be welcomed.  Thanks.
-
-[1] https://lore.kernel.org/all/20230628215310.73782-1-peterx@redhat.com
-
-Peter Xu (13):
-  mm/Kconfig: CONFIG_PGTABLE_HAS_HUGE_LEAVES
-  mm/hugetlb: Declare hugetlbfs_pagecache_present() non-static
-  mm: Provide generic pmd_thp_or_huge()
-  mm: Make HPAGE_PXD_* macros even if !THP
-  mm: Introduce vma_pgtable_walk_{begin|end}()
-  mm/gup: Drop folio_fast_pin_allowed() in hugepd processing
-  mm/gup: Refactor record_subpages() to find 1st small page
-  mm/gup: Handle hugetlb for no_page_table()
-  mm/gup: Cache *pudp in follow_pud_mask()
-  mm/gup: Handle huge pud for follow_pud_mask()
-  mm/gup: Handle huge pmd for follow_pmd_mask()
-  mm/gup: Handle hugepd for follow_page()
-  mm/gup: Handle hugetlb in the generic follow_page_mask code
-
- include/linux/huge_mm.h |  25 +--
- include/linux/hugetlb.h |  16 +-
- include/linux/mm.h      |   3 +
- include/linux/pgtable.h |   4 +
- mm/Kconfig              |   3 +
- mm/gup.c                | 362 ++++++++++++++++++++++++++++++++--------
- mm/huge_memory.c        | 133 +--------------
- mm/hugetlb.c            |  75 +--------
- mm/internal.h           |   7 +-
- mm/memory.c             |  12 ++
- 10 files changed, 342 insertions(+), 298 deletions(-)
-
+> ---
+>  fs/ext4/ext4.h        |  2 +-
+>  fs/ext4/extents.c     | 10 +++++-----
+>  fs/ext4/file.c        |  2 +-
+>  fs/ext4/indirect.c    |  2 +-
+>  fs/ext4/inode.c       |  6 +++---
+>  fs/ext4/ioctl.c       |  2 +-
+>  fs/ext4/mballoc.c     | 10 +++-------
+>  fs/ext4/move_extent.c |  4 ++--
+>  fs/ext4/super.c       |  2 +-
+>  9 files changed, 18 insertions(+), 22 deletions(-)
+> 
+> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> index fb35cae16..2fd444034 100644
+> --- a/fs/ext4/ext4.h
+> +++ b/fs/ext4/ext4.h
+> @@ -2905,7 +2905,7 @@ extern int ext4_mb_init(struct super_block *);
+>  extern void ext4_mb_release(struct super_block *);
+>  extern ext4_fsblk_t ext4_mb_new_blocks(handle_t *,
+>  				struct ext4_allocation_request *, int *);
+> -extern void ext4_discard_preallocations(struct inode *, unsigned int);
+> +extern void ext4_discard_preallocations(struct inode *);
+>  extern int __init ext4_init_mballoc(void);
+>  extern void ext4_exit_mballoc(void);
+>  extern ext4_group_t ext4_mb_prefetch(struct super_block *sb,
+> diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
+> index 880f383df..fd350889a 100644
+> --- a/fs/ext4/extents.c
+> +++ b/fs/ext4/extents.c
+> @@ -100,7 +100,7 @@ static int ext4_ext_trunc_restart_fn(struct inode *inode, int *dropped)
+>  	 * i_rwsem. So we can safely drop the i_data_sem here.
+>  	 */
+>  	BUG_ON(EXT4_JOURNAL(inode) == NULL);
+> -	ext4_discard_preallocations(inode, 0);
+> +	ext4_discard_preallocations(inode);
+>  	up_write(&EXT4_I(inode)->i_data_sem);
+>  	*dropped = 1;
+>  	return 0;
+> @@ -4313,7 +4313,7 @@ int ext4_ext_map_blocks(handle_t *handle, struct inode *inode,
+>  			 * not a good idea to call discard here directly,
+>  			 * but otherwise we'd need to call it every free().
+>  			 */
+> -			ext4_discard_preallocations(inode, 0);
+> +			ext4_discard_preallocations(inode);
+>  			if (flags & EXT4_GET_BLOCKS_DELALLOC_RESERVE)
+>  				fb_flags = EXT4_FREE_BLOCKS_NO_QUOT_UPDATE;
+>  			ext4_free_blocks(handle, inode, NULL, newblock,
+> @@ -5354,7 +5354,7 @@ static int ext4_collapse_range(struct file *file, loff_t offset, loff_t len)
+>  	ext4_fc_mark_ineligible(sb, EXT4_FC_REASON_FALLOC_RANGE, handle);
+>  
+>  	down_write(&EXT4_I(inode)->i_data_sem);
+> -	ext4_discard_preallocations(inode, 0);
+> +	ext4_discard_preallocations(inode);
+>  	ext4_es_remove_extent(inode, punch_start, EXT_MAX_BLOCKS - punch_start);
+>  
+>  	ret = ext4_ext_remove_space(inode, punch_start, punch_stop - 1);
+> @@ -5362,7 +5362,7 @@ static int ext4_collapse_range(struct file *file, loff_t offset, loff_t len)
+>  		up_write(&EXT4_I(inode)->i_data_sem);
+>  		goto out_stop;
+>  	}
+> -	ext4_discard_preallocations(inode, 0);
+> +	ext4_discard_preallocations(inode);
+>  
+>  	ret = ext4_ext_shift_extents(inode, handle, punch_stop,
+>  				     punch_stop - punch_start, SHIFT_LEFT);
+> @@ -5494,7 +5494,7 @@ static int ext4_insert_range(struct file *file, loff_t offset, loff_t len)
+>  		goto out_stop;
+>  
+>  	down_write(&EXT4_I(inode)->i_data_sem);
+> -	ext4_discard_preallocations(inode, 0);
+> +	ext4_discard_preallocations(inode);
+>  
+>  	path = ext4_find_extent(inode, offset_lblk, NULL, 0);
+>  	if (IS_ERR(path)) {
+> diff --git a/fs/ext4/file.c b/fs/ext4/file.c
+> index 0166bb9ca..89cb28da8 100644
+> --- a/fs/ext4/file.c
+> +++ b/fs/ext4/file.c
+> @@ -174,7 +174,7 @@ static int ext4_release_file(struct inode *inode, struct file *filp)
+>  			(atomic_read(&inode->i_writecount) == 1) &&
+>  			!EXT4_I(inode)->i_reserved_data_blocks) {
+>  		down_write(&EXT4_I(inode)->i_data_sem);
+> -		ext4_discard_preallocations(inode, 0);
+> +		ext4_discard_preallocations(inode);
+>  		up_write(&EXT4_I(inode)->i_data_sem);
+>  	}
+>  	if (is_dx(inode) && filp->private_data)
+> diff --git a/fs/ext4/indirect.c b/fs/ext4/indirect.c
+> index a9f371611..d8ca7f64f 100644
+> --- a/fs/ext4/indirect.c
+> +++ b/fs/ext4/indirect.c
+> @@ -714,7 +714,7 @@ static int ext4_ind_trunc_restart_fn(handle_t *handle, struct inode *inode,
+>  	 * i_rwsem. So we can safely drop the i_data_sem here.
+>  	 */
+>  	BUG_ON(EXT4_JOURNAL(inode) == NULL);
+> -	ext4_discard_preallocations(inode, 0);
+> +	ext4_discard_preallocations(inode);
+>  	up_write(&EXT4_I(inode)->i_data_sem);
+>  	*dropped = 1;
+>  	return 0;
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index d77323204..53ed4a0ad 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -371,7 +371,7 @@ void ext4_da_update_reserve_space(struct inode *inode,
+>  	 */
+>  	if ((ei->i_reserved_data_blocks == 0) &&
+>  	    !inode_is_open_for_write(inode))
+> -		ext4_discard_preallocations(inode, 0);
+> +		ext4_discard_preallocations(inode);
+>  }
+>  
+>  static int __check_block_validity(struct inode *inode, const char *func,
+> @@ -4014,7 +4014,7 @@ int ext4_punch_hole(struct file *file, loff_t offset, loff_t length)
+>  	if (stop_block > first_block) {
+>  
+>  		down_write(&EXT4_I(inode)->i_data_sem);
+> -		ext4_discard_preallocations(inode, 0);
+> +		ext4_discard_preallocations(inode);
+>  
+>  		ext4_es_remove_extent(inode, first_block,
+>  				      stop_block - first_block);
+> @@ -4167,7 +4167,7 @@ int ext4_truncate(struct inode *inode)
+>  
+>  	down_write(&EXT4_I(inode)->i_data_sem);
+>  
+> -	ext4_discard_preallocations(inode, 0);
+> +	ext4_discard_preallocations(inode);
+>  
+>  	if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS))
+>  		err = ext4_ext_truncate(handle, inode);
+> diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+> index 0bfe2ce58..2e2bcd22b 100644
+> --- a/fs/ext4/ioctl.c
+> +++ b/fs/ext4/ioctl.c
+> @@ -458,7 +458,7 @@ static long swap_inode_boot_loader(struct super_block *sb,
+>  	ext4_reset_inode_seed(inode);
+>  	ext4_reset_inode_seed(inode_bl);
+>  
+> -	ext4_discard_preallocations(inode, 0);
+> +	ext4_discard_preallocations(inode);
+>  
+>  	err = ext4_mark_inode_dirty(handle, inode);
+>  	if (err < 0) {
+> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+> index e6561a09d..0e6beb3b4 100644
+> --- a/fs/ext4/mballoc.c
+> +++ b/fs/ext4/mballoc.c
+> @@ -5469,7 +5469,7 @@ ext4_mb_discard_group_preallocations(struct super_block *sb,
+>   *
+>   * FIXME!! Make sure it is valid at all the call sites
+>   */
+> -void ext4_discard_preallocations(struct inode *inode, unsigned int needed)
+> +void ext4_discard_preallocations(struct inode *inode)
+>  {
+>  	struct ext4_inode_info *ei = EXT4_I(inode);
+>  	struct super_block *sb = inode->i_sb;
+> @@ -5491,15 +5491,12 @@ void ext4_discard_preallocations(struct inode *inode, unsigned int needed)
+>  	mb_debug(sb, "discard preallocation for inode %lu\n",
+>  		 inode->i_ino);
+>  	trace_ext4_discard_preallocations(inode,
+> -			atomic_read(&ei->i_prealloc_active), needed);
+> -
+> -	if (needed == 0)
+> -		needed = UINT_MAX;
+> +			atomic_read(&ei->i_prealloc_active), 0);
+>  
+>  repeat:
+>  	/* first, collect all pa's in the inode */
+>  	write_lock(&ei->i_prealloc_lock);
+> -	for (iter = rb_first(&ei->i_prealloc_node); iter && needed;
+> +	for (iter = rb_first(&ei->i_prealloc_node); iter;
+>  	     iter = rb_next(iter)) {
+>  		pa = rb_entry(iter, struct ext4_prealloc_space,
+>  			      pa_node.inode_node);
+> @@ -5523,7 +5520,6 @@ void ext4_discard_preallocations(struct inode *inode, unsigned int needed)
+>  			spin_unlock(&pa->pa_lock);
+>  			rb_erase(&pa->pa_node.inode_node, &ei->i_prealloc_node);
+>  			list_add(&pa->u.pa_tmp_list, &list);
+> -			needed--;
+>  			continue;
+>  		}
+>  
+> diff --git a/fs/ext4/move_extent.c b/fs/ext4/move_extent.c
+> index 18a9e7c47..0abfc104a 100644
+> --- a/fs/ext4/move_extent.c
+> +++ b/fs/ext4/move_extent.c
+> @@ -689,8 +689,8 @@ ext4_move_extents(struct file *o_filp, struct file *d_filp, __u64 orig_blk,
+>  
+>  out:
+>  	if (*moved_len) {
+> -		ext4_discard_preallocations(orig_inode, 0);
+> -		ext4_discard_preallocations(donor_inode, 0);
+> +		ext4_discard_preallocations(orig_inode);
+> +		ext4_discard_preallocations(donor_inode);
+>  	}
+>  
+>  	ext4_free_ext_path(path);
+> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> index d062383ea..c0cfc3e46 100644
+> --- a/fs/ext4/super.c
+> +++ b/fs/ext4/super.c
+> @@ -1518,7 +1518,7 @@ void ext4_clear_inode(struct inode *inode)
+>  	ext4_fc_del(inode);
+>  	invalidate_inode_buffers(inode);
+>  	clear_inode(inode);
+> -	ext4_discard_preallocations(inode, 0);
+> +	ext4_discard_preallocations(inode);
+>  	ext4_es_remove_extent(inode, 0, EXT_MAX_BLOCKS);
+>  	dquot_drop(inode);
+>  	if (EXT4_I(inode)->jinode) {
+> -- 
+> 2.30.0
+> 
 -- 
-2.41.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
