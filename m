@@ -1,285 +1,99 @@
-Received: from mo4-p00-ob.smtp.rzone.de (mo4-p00-ob.smtp.rzone.de [85.215.255.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C9121DA2F;
-	Wed,  3 Jan 2024 21:34:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gerhold.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=gerhold.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134D41DA4F;
+	Wed,  3 Jan 2024 21:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="Fs6Eda+r";
-	dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="cqnsFZHe"
-ARC-Seal: i=1; a=rsa-sha256; t=1704316217; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=rExV4khYM1zRU7cjvMdaVI5m8LV9lavXrH9khRwoa9+hsct+KlUOy+7Mn3Lr1BATpU
-    78xlKqiwhJAVIy7NygyaNk5uufVnzQLxsnnnCuBBiFwrkkYSErK1sHRZcTpDIgZlx/b3
-    EZziYYyv4GWtWr0d7557XjlPlpT8bw/mcpgTWPfl+5gpMf0hz82rb8i7eW3EopFZlNdW
-    eDa/WDkoSRL2y0YNLitYEa5GX+xqFHGXUp1BbGjuY9gNOdhWkeUKj1z9q6iYdSb8CfwN
-    b7F9GlL1n+u071uUFkhgOfqYDEyD0hVcal9sSOV19H/WVVFkjxME5txjuNxNSsuIkxXh
-    r9cA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1704316217;
-    s=strato-dkim-0002; d=strato.com;
-    h=Cc:To:Message-Id:Subject:Date:From:Cc:Date:From:Subject:Sender;
-    bh=U74J5n70oOkdpD2USO/TKMTXE9DOo0XAlgw3xl3xdRE=;
-    b=FeAgxTn5QHOvfY9YSAsU+NVItER0D1BULeZm57ZinxB+XiX/aURBLLr/qy2sjEyjcm
-    J+SVc42E/+BTTM/+wH+iVVI9pYR/WVFBMQ2X2ZYQIAaT0fEnXNOhsWquQAQQF5BDf6+I
-    3GOW3b+3/8nfws1/+sKtWf2gaOQcUXFFN55hs6tzszCMlJtbc7Tirf56i7s08yha6fyn
-    sbZPlstykr4txTMmmWUaHABzVs9sGCsn54hFmyXf7O6tqn3mVccaZInVw3M/DtWwcWG/
-    /bcApHTSyxV6o5iGRMDqm/ZhcYeIhPUOupGYbM1lQx9esh0p1P14z/C8cUXUz1Q6euSV
-    beUQ==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo00
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1704316217;
-    s=strato-dkim-0002; d=gerhold.net;
-    h=Cc:To:Message-Id:Subject:Date:From:Cc:Date:From:Subject:Sender;
-    bh=U74J5n70oOkdpD2USO/TKMTXE9DOo0XAlgw3xl3xdRE=;
-    b=Fs6Eda+rwZlBGXOzSSZuJAwHnJw9YH1SWt3JYgk7fNgwMgP1qzAcspmoIIH/XD3Bjc
-    lbxnC8h4r65lWCUOjjYwJRcFhJX1RPasONW2tpa/wBtTP1DAPBWTg8zULdWvOVMSwO25
-    6oW5idrSoPFamRxFc34dBa4K0goFoEmW4lj0Qj0nPGfr6scPz063264DSW0lLKoUIxAv
-    u/6tLpgMYVKzf6TEQFxODh0SNiUItGdLhd3L7S7R58IWmtsVoDCXjBzBp6XoOiiY/k0X
-    aa4l01U3WXY0gwtauC5crJ6uRV0sH5t2+zuG202mIqaPzv96BGzFzh69D6LxF30+C184
-    0cQg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1704316217;
-    s=strato-dkim-0003; d=gerhold.net;
-    h=Cc:To:Message-Id:Subject:Date:From:Cc:Date:From:Subject:Sender;
-    bh=U74J5n70oOkdpD2USO/TKMTXE9DOo0XAlgw3xl3xdRE=;
-    b=cqnsFZHe4irgeHQwZ9PI5Q5l3JQkuTFnatPMYKPDp6sYzZpoFuHndOg5lryn8OZwjP
-    MpcWoqkAXWwZI1jCOYBg==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQjVd4CteZ/7jYgS+mLFY+H0JAn9VOH8mz0="
-Received: from [192.168.244.3]
-    by smtp.strato.de (RZmta 49.10.0 SBL|AUTH)
-    with ESMTPSA id 58bb61003LAGNVs
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Wed, 3 Jan 2024 22:10:16 +0100 (CET)
-From: Stephan Gerhold <stephan@gerhold.net>
-Date: Wed, 03 Jan 2024 22:10:05 +0100
-Subject: [PATCH v2] PM: domains: Scale down parent performance states in
- reverse order
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C2xdHhwi"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6d9bc8939d0so2988002b3a.0;
+        Wed, 03 Jan 2024 13:34:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704317671; x=1704922471; darn=vger.kernel.org;
+        h=mime-version:references:in-reply-to:message-id:cc:to:subject:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+cVjY5Pt++Oml7k46uXFJ0gcfn/CPEiqKh/TxTDxjTQ=;
+        b=C2xdHhwi3WIhl6+q9SmtcsJD9RNe1So9YmjKwEWZx/JQdjnijrvwldRnfmzWYhF2YX
+         Os7LiKVBx4+r1k+P10a6LN3R9SLa3oOaD1YxQ/TxwfHKyiiYZuX8BH12MSmpRjWF00oT
+         oE8iAQPAA6aq/bypusIErbFUvW1h5JIli4nYUrEJKar7lbQUAvG4MO+NiTg/oh0U9Yox
+         6Q/45BbFMhQ/J/BAzQPoZVNpflR0XrOKhV2rDHjvnJP5rYMI+qIvyU+deGu6MGvaGiba
+         nKAbG8G3vnN/KwHd747QNuTlJdkMQK1njV+cEUb75+qA42e9CnfIoRIg1TaXYvgwK8GT
+         R0fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704317671; x=1704922471;
+        h=mime-version:references:in-reply-to:message-id:cc:to:subject:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+cVjY5Pt++Oml7k46uXFJ0gcfn/CPEiqKh/TxTDxjTQ=;
+        b=Nn1L4nKZb6jufd2K0+68Ur8kh1IUH+rtgnMitfTraatL9NPqsgWznCmweRj5IJ/Qea
+         O+Ou+uo6N0z+JLID2/6k1ct73TeDQKN8hIVnNc0mf0qOFz7IUe7YPa12fRAu7HpfMxXJ
+         v19wU9zIJAh7gjWqSB7F9ZOh2J1XlvYhQQuhAg3ja/fTLBs7Oc1j5xBLaxn6egFEpP/a
+         3Rs4PP1Ia7dAXaOr3ZSf1G2CZJNwnhw+kOTzyG05tY8kGoONtery6kk0EPb7WkZpL6H9
+         tKGAwTOxFpIH7JyweetyLo8hFZ1RD+KWoTYWWudwRIZMHC6uCUUKMy/v838yNXsExuG/
+         y14Q==
+X-Gm-Message-State: AOJu0YxSYhr+X1WIjdgYpGYBnMuahtQ9ig+zSdx4pxbzO62vsS+I1J3i
+	9OyDvy+EfZx4kko/ExvktoWJYrkVYVk=
+X-Google-Smtp-Source: AGHT+IH9nZVFLiGQx1dtVzf7cyH5HQ9gCnfyFQQwfiAq1rIgzN39tHS6Ync8unOzhVg7BWamte8Adg==
+X-Received: by 2002:a05:6a20:72ac:b0:197:587:aecd with SMTP id o44-20020a056a2072ac00b001970587aecdmr2916093pzk.7.1704317671128;
+        Wed, 03 Jan 2024 13:34:31 -0800 (PST)
+Received: from [192.168.1.135] ([103.77.5.247])
+        by smtp.gmail.com with ESMTPSA id le6-20020a056a004fc600b006da0f15b31csm12649452pfb.97.2024.01.03.13.34.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jan 2024 13:34:30 -0800 (PST)
+Date: Thu, 04 Jan 2024 10:34:14 +1300
+From: Oliver Giles <ohw.giles@gmail.com>
+Subject: Re: [PATCH v2 08/11] tty: splice_read: disable
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jiri Slaby <jirislaby@kernel.org>, Ahelenia =?iso-8859-2?q?Ziemia=F1ska?=
+	<nabijaczleweli@nabijaczleweli.xyz>, Jens Axboe <axboe@kernel.dk>,
+	Christian Brauner <brauner@kernel.org>, Alexander Viro
+	<viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Message-Id: <2XFP6S.GINKQ8IKAA1W1@gmail.com>
+In-Reply-To: <CAHk-=wgLZXULo7pg=nwUMFLsKNUe+1_X=Fk7+f-J0735Oir97w@mail.gmail.com>
+References: <cover.1703126594.git.nabijaczleweli@nabijaczleweli.xyz>
+	<4dec932dcd027aa5836d70a6d6bedd55914c84c2.1703126594.git.nabijaczleweli@nabijaczleweli.xyz>
+	<6c3fc5e9-f8cf-4b42-9317-8ce9669160c2@kernel.org>
+	<CAHk-=wgLZXULo7pg=nwUMFLsKNUe+1_X=Fk7+f-J0735Oir97w@mail.gmail.com>
+X-Mailer: geary/44.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240103-genpd-perf-order-v2-1-eeecfc55624b@gerhold.net>
-X-B4-Tracking: v=1; b=H4sIACzNlWUC/32NQQqDMBBFryKz7hQzopKueo/iIk0mGiiJTERaJ
- Hdv6gG6fA/++wdklsAZbs0BwnvIIcUKdGnALibOjMFVBmqpU9T2OHNcHa4sHpM4Fnz6rmtJW+q
- NhTpbhX14n8nHVHkJeUvyOR929bN/YrtChUOvR2sHbUbS95llSS93jbzBVEr5Avg2SC+yAAAA
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Viresh Kumar <viresh.kumar@linaro.org>, 
- Stephan Gerhold <stephan@gerhold.net>
-X-Mailer: b4 0.12.4
+Content-Type: text/plain; charset=us-ascii; format=flowed
 
-Power domains might have parent domains assigned that are automatically
-managed by the PM domain core. In particular, parent domains are
-automatically powered on/off and setting performance states on child
-domains is translated to parent domains (e.g. using an OPP table from
-the device tree).
 
-Currently parent performance states are always adjusted before the
-performance state of the child domain is changed.
+On Wed, Jan 3 2024 at 11:14:59 -08:00:00, Linus Torvalds 
+<torvalds@linux-foundation.org> wrote:
+> 
+> It's some annoying SSL VPN thing that splices to pppd:
+> 
+>    https://lore.kernel.org/all/C8KER7U60WXE.25UFD8RE6QZQK@oguc/
 
-However, typically a parent/child relationship between two power
-domains with performance states models the requirement to keep the
-parent domain at a performance state equal or higher to the child
-domain. When scaling down there is a brief moment where the parent
-domain will end up having a lower performance state than required by
-the child domain.
+I'm happy to report that that particular SSL VPN tool is no longer 
+around.
+And it had anyway grown a fall-back-to-read/write in case splice() 
+fails.
+So at least from my perspective, no objections to splice-to-tty going 
+away
+altogether.
 
-To avoid this, we need to differentiate between scaling up/down and
-adjust the order of operations:
+> and I'd be happy to try to limit splice to tty's to maybe just the one
+> case that pppd uses.
 
- - When scaling up, parent domains should be adjusted before the child
-   domain. In case of an error, the rollback happens in reverse order.
+To be exact, pppd is just providing a pty with which other (now all 
+extinct?)
+applications can do nefarious things.
 
- - When scaling down, parent domains should be adjusted after the child
-   domain, in reverse order, just as if we would rollback scaling up.
-   In case of an error, the rollback happens in normal order (just as
-   if we would normally scale up).
+> Maybe that VPN thing already has the pty in non-blocking mode, for
+> example, and we could make the tty splicing fail for any blocking op?
 
-Implement this by moving the existing functionality of
-_genpd_set_performance_state() to two separate functions that are
-called in the proper iteration order.
+FWIW, the SSL VPN tool did indeed have the pty in non-blocking mode.
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
----
-Changes in v2:
-- Rebase to adjust for move of drivers/base/power/domain.c
-  to drivers/pmdomain/core.c
-- Regenerate CC list
-- No code changes
-- Link to v1: https://lore.kernel.org/r/20231205-genpd-perf-order-v1-1-6597cc69a729@gerhold.net
----
-Related discussion: https://lore.kernel.org/linux-pm/ZWXgFNKgm9QaFuzx@gerhold.net/
----
- drivers/pmdomain/core.c | 124 ++++++++++++++++++++++++++++++------------------
- 1 file changed, 77 insertions(+), 47 deletions(-)
+Oliver
 
-diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
-index a1f6cba3ae6c..fec9dc6ab828 100644
---- a/drivers/pmdomain/core.c
-+++ b/drivers/pmdomain/core.c
-@@ -311,72 +311,102 @@ static int genpd_xlate_performance_state(struct generic_pm_domain *genpd,
- }
- 
- static int _genpd_set_performance_state(struct generic_pm_domain *genpd,
--					unsigned int state, int depth)
-+					unsigned int state, int depth);
-+
-+static void _genpd_rollback_parent_state(struct gpd_link *link, int depth)
- {
--	struct generic_pm_domain *parent;
--	struct gpd_link *link;
--	int parent_state, ret;
-+	struct generic_pm_domain *parent = link->parent;
-+	int parent_state;
- 
--	if (state == genpd->performance_state)
--		return 0;
-+	genpd_lock_nested(parent, depth + 1);
- 
--	/* Propagate to parents of genpd */
--	list_for_each_entry(link, &genpd->child_links, child_node) {
--		parent = link->parent;
-+	parent_state = link->prev_performance_state;
-+	link->performance_state = parent_state;
- 
--		/* Find parent's performance state */
--		ret = genpd_xlate_performance_state(genpd, parent, state);
--		if (unlikely(ret < 0))
--			goto err;
-+	parent_state = _genpd_reeval_performance_state(parent, parent_state);
-+	if (_genpd_set_performance_state(parent, parent_state, depth + 1)) {
-+		pr_err("%s: Failed to roll back to %d performance state\n",
-+		       parent->name, parent_state);
-+	}
- 
--		parent_state = ret;
-+	genpd_unlock(parent);
-+}
- 
--		genpd_lock_nested(parent, depth + 1);
-+static int _genpd_set_parent_state(struct generic_pm_domain *genpd,
-+				   struct gpd_link *link,
-+				   unsigned int state, int depth)
-+{
-+	struct generic_pm_domain *parent = link->parent;
-+	int parent_state, ret;
- 
--		link->prev_performance_state = link->performance_state;
--		link->performance_state = parent_state;
--		parent_state = _genpd_reeval_performance_state(parent,
--						parent_state);
--		ret = _genpd_set_performance_state(parent, parent_state, depth + 1);
--		if (ret)
--			link->performance_state = link->prev_performance_state;
-+	/* Find parent's performance state */
-+	ret = genpd_xlate_performance_state(genpd, parent, state);
-+	if (unlikely(ret < 0))
-+		return ret;
- 
--		genpd_unlock(parent);
-+	parent_state = ret;
- 
--		if (ret)
--			goto err;
--	}
-+	genpd_lock_nested(parent, depth + 1);
- 
--	if (genpd->set_performance_state) {
--		ret = genpd->set_performance_state(genpd, state);
--		if (ret)
--			goto err;
--	}
-+	link->prev_performance_state = link->performance_state;
-+	link->performance_state = parent_state;
- 
--	genpd->performance_state = state;
--	return 0;
-+	parent_state = _genpd_reeval_performance_state(parent, parent_state);
-+	ret = _genpd_set_performance_state(parent, parent_state, depth + 1);
-+	if (ret)
-+		link->performance_state = link->prev_performance_state;
- 
--err:
--	/* Encountered an error, lets rollback */
--	list_for_each_entry_continue_reverse(link, &genpd->child_links,
--					     child_node) {
--		parent = link->parent;
-+	genpd_unlock(parent);
- 
--		genpd_lock_nested(parent, depth + 1);
-+	return ret;
-+}
-+
-+static int _genpd_set_performance_state(struct generic_pm_domain *genpd,
-+					unsigned int state, int depth)
-+{
-+	struct gpd_link *link = NULL;
-+	int ret;
-+
-+	if (state == genpd->performance_state)
-+		return 0;
- 
--		parent_state = link->prev_performance_state;
--		link->performance_state = parent_state;
-+	/* When scaling up, propagate to parents first in normal order */
-+	if (state > genpd->performance_state) {
-+		list_for_each_entry(link, &genpd->child_links, child_node) {
-+			ret = _genpd_set_parent_state(genpd, link, state, depth);
-+			if (ret)
-+				goto rollback_parents_up;
-+		}
-+	}
- 
--		parent_state = _genpd_reeval_performance_state(parent,
--						parent_state);
--		if (_genpd_set_performance_state(parent, parent_state, depth + 1)) {
--			pr_err("%s: Failed to roll back to %d performance state\n",
--			       parent->name, parent_state);
-+	if (genpd->set_performance_state) {
-+		ret = genpd->set_performance_state(genpd, state);
-+		if (ret) {
-+			if (link)
-+				goto rollback_parents_up;
-+			return ret;
- 		}
-+	}
- 
--		genpd_unlock(parent);
-+	/* When scaling down, propagate to parents last in reverse order */
-+	if (state < genpd->performance_state) {
-+		list_for_each_entry_reverse(link, &genpd->child_links, child_node) {
-+			ret = _genpd_set_parent_state(genpd, link, state, depth);
-+			if (ret)
-+				goto rollback_parents_down;
-+		}
- 	}
- 
-+	genpd->performance_state = state;
-+	return 0;
-+
-+rollback_parents_up:
-+	list_for_each_entry_continue_reverse(link, &genpd->child_links, child_node)
-+		_genpd_rollback_parent_state(link, depth);
-+	return ret;
-+rollback_parents_down:
-+	list_for_each_entry_continue(link, &genpd->child_links, child_node)
-+		_genpd_rollback_parent_state(link, depth);
- 	return ret;
- }
- 
 
----
-base-commit: 0fef202ac2f8e6d9ad21aead648278f1226b9053
-change-id: 20231205-genpd-perf-order-bf33029c25ac
-
-Best regards,
--- 
-Stephan Gerhold <stephan@gerhold.net>
 
