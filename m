@@ -1,138 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC99D1B268;
-	Wed,  3 Jan 2024 15:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ACFF1A730;
+	Wed,  3 Jan 2024 15:28:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lOP+rSO+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704295521; x=1735831521;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=lLvRN6Vgg9jzrWkSLBTHIGTCs88oK3ZBLYQBbiDRE9M=;
-  b=lOP+rSO+xauMRKgd3gQXa9Sa3gppGFPTOiUBiQPrJWcVqfneyILwzE+L
-   b1YDAgGi3TsDFzZESbqDUFjLQIVvG4SHFwR9EuNuVJo/vjFQ+dScWR2ow
-   f5lQfslug9+WrqncLDNskAT+30N+KFZeYCWnli6BqY2zqsT10RaqLM2Rt
-   hF7Pv0gL07bjQ/zH8MGHdp0xN3q0bcIJX2rnObGjBGau0V8CIeZn5v4sh
-   j4QU5IutQOduldyG5sp41OOKQtxrEhZK8QRfmYtdCEKJLCZx9INm0U0qM
-   4009paf3qWDZfi1oIkSRfe/oTo17qZL8fHQl2volS7CmuqE6KJ+uJr8NA
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="377177058"
-X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
-   d="scan'208";a="377177058"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 07:25:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="923575360"
-X-IronPort-AV: E=Sophos;i="6.04,327,1695711600"; 
-   d="scan'208";a="923575360"
-Received: from unknown (HELO [10.237.72.158]) ([10.237.72.158])
-  by fmsmga001.fm.intel.com with ESMTP; 03 Jan 2024 07:25:18 -0800
-Message-ID: <888da30a-c1ed-4fb0-af81-787fd868ce20@linux.intel.com>
-Date: Wed, 3 Jan 2024 17:25:17 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BBz2ctHS"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 403DlAVu001467;
+	Wed, 3 Jan 2024 15:27:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=Nu8lunzViOUpOfegZsY+Z05a/poHdYSCSroiiueke/4=; b=BB
+	z2ctHSJD5dquHTYRfOF1AtFzzDiAGhOtvEXPnoGkGSSys0dg3J2a1lkPCqOVLCQ2
+	cpXHWWf9EJEcP7zO7SNQGvCXsFgWJF1xSYmjfV0xhUogTTxrM9VyeyZeC2LSJdwd
+	ZPR/8gnpoDdbEFb03FMC602ms+bbciRyAMd71Tk3NhNEHTvjFIZhoovyx48GL8Ho
+	mnMSZsJ2ieM+nP54aTQMzoCzkkjoq89m9b2gdA0oM9phOslVmEScO0sn3fREyUGo
+	kcYlpiqA4pVUne7jfLzmCm7WaOg6TXhgWe6muJDeaItueS9pNeFlWn9GCTbzhsnP
+	SXlf9BvoRZnzQGxyNDgA==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vd8dpr8pe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Jan 2024 15:27:46 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 403FRiTq029569
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 3 Jan 2024 15:27:44 GMT
+Received: from [10.216.8.10] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 3 Jan
+ 2024 07:27:33 -0800
+Message-ID: <520e377d-e990-c185-4a20-07806873e506@quicinc.com>
+Date: Wed, 3 Jan 2024 20:57:13 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: i2c-designware: NULL ptr at RIP: 0010:regmap_read+0x12/0x70
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: RESEND: Re: [Patch v6 03/12] docs: qcom: Add qualcomm minidump
+ guide
 Content-Language: en-US
-To: "V, Narasimhan" <Narasimhan.V@amd.com>, Borislav Petkov <bp@alien8.de>,
- "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
-Cc: lkml <linux-kernel@vger.kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
- "Limonciello, Mario" <Mario.Limonciello@amd.com>
-References: <20231229120820.GCZY62tM7z4v2XmOAZ@fat_crate.local>
- <8169d773-f9ec-4092-b036-9e4fd59966c3@linux.intel.com>
- <DM4PR12MB508654DF49FE079D6C283D658961A@DM4PR12MB5086.namprd12.prod.outlook.com>
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-In-Reply-To: <DM4PR12MB508654DF49FE079D6C283D658961A@DM4PR12MB5086.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Ruipeng Qi <ruipengqi7@gmail.com>
+CC: <agross@kernel.org>, <alim.akhtar@samsung.com>, <andersson@kernel.org>,
+        <bmasney@redhat.com>, <conor+dt@kernel.org>, <corbet@lwn.net>,
+        <gpiccoli@igalia.com>, <keescook@chromium.org>, <kernel@quicinc.com>,
+        <kgene@kernel.org>, <konrad.dybcio@linaro.org>,
+        <krzysztof.kozlowski+dt@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-samsung-soc@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <matthias.bgg@gmail.com>, <nm@ti.com>, <robh+dt@kernel.org>,
+        <tony.luck@intel.com>, <vigneshr@ti.com>, <qiruipeng@lixiang.com>
+References: <1700864395-1479-4-git-send-email-quic_mojha@quicinc.com>
+ <20231225135542.1789-1-ruipengqi7@gmail.com>
+From: Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <20231225135542.1789-1-ruipengqi7@gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Eq10y8K3OI3Kx2Zzds3mwvzzBPYT1-u_
+X-Proofpoint-ORIG-GUID: Eq10y8K3OI3Kx2Zzds3mwvzzBPYT1-u_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 phishscore=0 impostorscore=0 spamscore=0
+ lowpriorityscore=0 mlxscore=0 malwarescore=0 mlxlogscore=826 adultscore=0
+ clxscore=1011 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401030127
 
-On 1/2/24 17:47, V, Narasimhan wrote:
-> [AMD Official Use Only - General]
+
+
+On 12/25/2023 7:25 PM, Ruipeng Qi wrote:
+> <+How a kernel client driver can register region with minidump
+> <+------------------------------------------------------------
+> <+
+> <+Client driver can use ``qcom_minidump_region_register`` API's to register
+> <+and ``qcom_minidump_region_unregister`` to unregister their region from
+> <+minidump driver.
+> <+
+> <+Client needs to fill their region by filling ``qcom_minidump_region``
+> <+structure object which consists of the region name, region's virtual
+> <+and physical address and its size.
 > 
+> Hi, Mukesh, wish you a good holiday :)
+
+Hope you had the same..:-)
+
 > 
-> No, we don't see this issue on linus' tree or on linux-next in the till 
-> the previous week
+> I have the following idea, please help me to assess whether this can be
+> implemented or not. As we all know, most of the kernel objects are
+> allocated by the slab sub-system.I wonder if we can dump all memory
+> keeped by the slab sub-system? If so,  we got most of the kernel objects
+> which will be helpful to fix problems when we run with system issues.
 > 
-Thanks, this indeed shows it's a regression coming from recent Andy's 
-patchset. Notes and questions below:
+> How can we do this? From the description above, I think we should
+> register one region for each slab,  for each slab will have some pages,
+> and the memory between each slab is non-continuous. As we all
+> know, there are millions of slabs in the system, so if we dump slabs
+> in this way, it will introduce a heavy overhead.
+> 
+> I am not very familiar with qualcomm minidump, maybe my thought
+> is wrong. Looking forward to your reply!
 
-> [    6.245173] i2c_designware AMDI0010:00: Unknown Synopsys component type: 0xffffffff
+In the current state and in simple terms, Qualcomm Minidump can not do
+this, Minidump is more of a consumer driver so, what ever gets
+registered with it, it can dump. Qualcomm Minidump serves bigger purpose
+to dump content in any kind of crash whether it is kernel or non-kernel
+like NOC errors/XPUs etc and both kernel/non-kernel entity can register 
+to it, so we gets dump in any kind of system crash.
 
-This made me scratching my head since driver probing will fail in this 
-case with -ENODEV and I could not trigger runtime PM activity in such 
-case but perhaps this is timing specific which happens to happen in your 
-case.
+One more thing, kernel part of minidump, we are calling it APSS Minidump
+has limitation of no of entries so it will be difficult to dump 
+non-continuous regions after a certain number of registration ~200. However,
+we do have a solution in downstream kernel for it like to create a big 
+CMA buffer and register this buffer with Minidump so that whatever gets 
+dumped in that buffer gets captured during crash and fill up this buffer 
+and create elf during panic. I think, similar thing you are also doing 
+with your OS-minidump.
 
-Out of curiosity do you see this same "i2c_designware AMDI0010:00: 
-Unknown Synopsys component type: 0xffffffff" error on Vanilla or is it 
-also regression in linux-next?
+I have just glanced into your implementation of OS-minidump, it
+more of relying on basic concept of RAM content preserved
+across boot and later reading it through procfs but this basic
+stuff is common to pstore(ram) as well and pstore has file system 
+support why don't you make your driver as one of pstore record and that 
+way Qualcomm minidump also gets benefited where entire OS-minidump 
+record gets registered with Qualcomm minidump and we get this on panic 
+and you get this via pstorefs.
 
-> [    6.252683] BUG: kernel NULL pointer dereference, address: 00000000000001fc
-> [    6.256551] #PF: supervisor read access in kernel mode
-> [    6.256551] #PF: error_code(0x0000) - not-present page
-> [    6.256551] PGD 0 
-> [    6.256551] Oops: 0000 [#1] PREEMPT SMP NOPTI
-> [    6.256551] CPU: 32 PID: 211 Comm: kworker/32:0 Not tainted 6.7.0-rc6-next-20231222-1703820640818 #1
-> [    6.256551] Workqueue: pm pm_runtime_work
-> [    6.256551] RIP: 0010:regmap_read+0x12/0x70
-> [    6.256551] Code: 00 00 00 00 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 55 48 89 e5 41 55 41 54 53 <8b> 87 fc 01 00 00 83 e8 01 85 f0 75 42 48 89 fb 41 89 f4 49 89 d5
-> [    6.256551] RSP: 0018:ff7fa5c740bcbc98 EFLAGS: 00010246
-> [    6.256551] RAX: 0000000000000000 RBX: ff38ff5c159f1028 RCX: 0000000000000008
-> [    6.256551] RDX: ff7fa5c740bcbcc4 RSI: 0000000000000034 RDI: 0000000000000000
-> [    6.256551] RBP: ff7fa5c740bcbcb0 R08: ff38ff5c02ceb8b0 R09: ff38ff5c002a4500
-> [    6.256551] R10: 0000000000000003 R11: 0000000000000003 R12: ff38ff5c159f1028
-> [    6.256551] R13: 0000000000000000 R14: 0000000000000000 R15: ff38ff5c159ed8f4
-> [    6.256551] FS:  0000000000000000(0000) GS:ff38ff6b0d200000(0000) knlGS:0000000000000000
-> [    6.256551] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    6.256551] CR2: 00000000000001fc CR3: 000000007403c001 CR4: 0000000000771ef0
-> [    6.256551] PKRU: 55555554
-> [    6.256551] Call Trace:
-> [    6.256551]  <TASK>
-> [    6.256551]  ? show_regs+0x6d/0x80
-> [    6.256551]  ? __die+0x29/0x70
-> [    6.256551]  ? page_fault_oops+0x153/0x4a0
-> [    6.256551]  ? do_user_addr_fault+0x30f/0x6c0
-> [    6.256551]  ? exc_page_fault+0x7c/0x190
-> [    6.256551]  ? asm_exc_page_fault+0x2b/0x30
-> [    6.256551]  ? regmap_read+0x12/0x70
-> [    6.256551]  ? update_load_avg+0x82/0x7d0
-> [    6.256551]  __i2c_dw_disable+0x38/0x180
-> [    6.256551]  i2c_dw_disable+0x3f/0xb0
-> [    6.256551]  i2c_dw_runtime_suspend+0x33/0x50
+-Mukesh
 
-I think this Oops comes because of the first commit in the patchset:
-
-bd466a892612 ("i2c: designware: Fix PM calls order in dw_i2c_plat_probe()"
-
-Do you see the issue if you test at that commit?
-
-Before that commit when the i2c_dw_probe() path fails we explicitly 
-disable the runtime PM before returning but now let the managed calls to 
-do it. Perhaps there is some time window that runtime suspending occurs 
-in parallel while drivers base is executing post probe code?
-
-dw_i2c_plat_probe
-	i2c_dw_probe
-		i2c_dw_probe_master
-			i2c_dw_init_regmap
-				-> failure and thus dev->map is not set
-
-i2c_dw_runtime_suspend
-	i2c_dw_disable
-		__i2c_dw_disable
-			regmap_read(dev->map, ...)
-				-> Oops because dev->map is NULL
-
-Other PM related commit in the patchset is commit 2347b8dc0d2e ("i2c: 
-designware: Consolidate PM ops") but I don't think that is the reason.
+> 
+> Best Regards
+> Ruipeng
