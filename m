@@ -1,73 +1,170 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A731CF8A
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 19:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30261CF80
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 19:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n0UgTBL4"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4283f7d53f2so58161cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 11:45:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704311126; x=1704915926; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=08K7LhOetDPdy9c3bhAy6SA1r70KyGek06ME+qynwdY=;
-        b=n0UgTBL4y2n/PiBseo5zbymMZVI6t+Sw7Z6flus8BZYjULgc2RBNU/493QHFsiFmL0
-         QJJzKmD28Lfmu8DWrSDN2W/NWaB8cHAJGxgJl9qZJefLJlfweDEMbDU5i+mO38UjUcd6
-         YmtVNDds5F0EwT6V/EiNqlUIxDhlQURRmOIYFhdZd25mJm0tWgueagyaQP6B6D8qI6yJ
-         JJxo+bOjfDZ77rgnxnde7+NWo/dPu8ImdIyUz30iO+qXF1+FRR2eHTQP6qE1F3nL9IuY
-         wBs4ufXs6nAsw35FXgmphUcCfy8Q1sFxUeFteU5QZbUBdf6RzgnhI/LKjxyjjfd7JNQE
-         ttag==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cWDNfOW2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704311156;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MN23VlrrOb22VS37aOVQIQ8RkupXeUp9J0UVd6x/4lk=;
+	b=cWDNfOW2TBczlMX9CW2JZU1FjcujdQdK77v7pIOyFNOsGi0Oj+d8nDbpQlNkAgwbDkGQ+A
+	yYhaMSNK2W0VBs7W8sRiQrUDWbq2YkfK/JWKueGn3V2vOENFB6kXAQyOXbOWpQKfVyupax
+	ya+V5K/qaIshTJlO+A/jcUmbJhZj+e0=
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
+ [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-445-aY8nSd17PF-8BUchSBetDQ-1; Wed, 03 Jan 2024 14:45:55 -0500
+X-MC-Unique: aY8nSd17PF-8BUchSBetDQ-1
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-1d4c36e9507so13348205ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 11:45:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704311126; x=1704915926;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1704311154; x=1704915954;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :references:in-reply-to:message-id:date:subject:cc:to:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=08K7LhOetDPdy9c3bhAy6SA1r70KyGek06ME+qynwdY=;
-        b=J0/1ED3SOvebrpYiyp2Qwtyi/Xz7hAxhFzkToOBO4lwSX10dZRN+XXF3qG+TlBFDuU
-         ytuKzarHFI1YZlqtGHvk4ze/JfnzsxANqw9o+jzif5VJqBniGXirMRA/ag2sRAExP9yz
-         HbseroHNt95bNjU+dd5adK02HZHV/kKoEVocXjyqODRag7pf3P2NawQvGckhPN/zkbpf
-         hkUIbJUXiQVt7s15YSDU1EmlqtUsVmpHsVIJOi6pHKMyMS74mb0CaQbPW9BhXXLrejxS
-         fKbjLpCbFXiJEKHp9tPBUj3jIZK4cyb1C6repSKDSu/qR+ZL8INeAveYvo7wZuLenfMu
-         Oudg==
-X-Gm-Message-State: AOJu0Yy6AB7frjwdxqvZeeQmAPPWeQVlKTApxfaVl5g8E/hn5VkDBAFs
-	sW4eMhoOKkKy/bSyrBoLfaj5iydviGgv
-X-Google-Smtp-Source: AGHT+IHpdeWDTUGFEoYyWXGKPiAy09Orm5WIgHCQnHBAQrhtE/UKeD5p5zrafXMQ0T04zPyVziVRGg==
-X-Received: by 2002:a05:622a:1ba0:b0:427:9b36:d8f with SMTP id bp32-20020a05622a1ba000b004279b360d8fmr24323985qtb.93.1704311126144;
-        Wed, 03 Jan 2024 11:45:26 -0800 (PST)
-Received: from [192.168.1.31] (d-65-175-157-166.nh.cpe.atlanticbb.net. [65.175.157.166])
-        by smtp.gmail.com with ESMTPSA id bt13-20020ac8690d000000b0042834ec3e46sm1440448qtb.7.2024.01.03.11.45.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jan 2024 11:45:25 -0800 (PST)
-Message-ID: <d2f30155-ba00-4f10-9d05-c6cba3bcb1ef@google.com>
-Date: Wed, 3 Jan 2024 14:45:25 -0500
+        bh=MN23VlrrOb22VS37aOVQIQ8RkupXeUp9J0UVd6x/4lk=;
+        b=llPO4/2Hw+xFRkr1SsaI8M3Z0CTM30gukSXqfvOvZHK6eGvtFpjg+i7iH92DZ7rrK4
+         Y4KwvNAW7fzca85hspGj13lX7XEyKsBOilDokc5mL+dZrwRsWsTCh1AAMDJTssGf868k
+         UYRwCLhrC6ENToyqybQsRuO0JeVyNkYYNYesrvltUm2ZrJ/kXGMHX/pACJqCB+ARzD8Y
+         rqlqJ9F0GRC+hoyI09+6j/du3hOX05QrEKiKUMBzqPxo5fHIfTpqr5FxdsTbp4GL2u0l
+         T2EyoQWfso9CqLNdLhSJzYNTQbaK+kNN2FPtvD64nbV75rDuPH4fFa0cT11FfXEMpOx3
+         wrfQ==
+X-Gm-Message-State: AOJu0Yzm5bmEHdvOVUQCUYdfJkUiz74slqd6q968rX/ZXe/hr7ZUkpEb
+	VT4VlM1g5Azb9Ywm1XlsfsK/tnQHG8Jd5q3YHJ1+DjaFkYuLBl7WmUjYaudYBCcOxOYQKzpURZf
+	eN995uYUdUAYvHaH6D6rRVfsWbtQiuZid
+X-Received: by 2002:a17:903:192:b0:1d4:2d8d:3537 with SMTP id z18-20020a170903019200b001d42d8d3537mr9435133plg.44.1704311154372;
+        Wed, 03 Jan 2024 11:45:54 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHVTkymOGkrkQkIBnXFJiY9sblp/xEmSwfRK0FgAp5VgnmrgNU5MGI6Jk37yHZKnSKxsdslrA==
+X-Received: by 2002:a17:903:192:b0:1d4:2d8d:3537 with SMTP id z18-20020a170903019200b001d42d8d3537mr9435106plg.44.1704311154076;
+        Wed, 03 Jan 2024 11:45:54 -0800 (PST)
+Received: from localhost.localdomain ([2804:431:c7ec:911:6911:ca60:846:eb46])
+        by smtp.gmail.com with ESMTPSA id ju13-20020a170903428d00b001d4301325a6sm20735475plb.247.2024.01.03.11.45.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jan 2024 11:45:53 -0800 (PST)
+From: Leonardo Bras <leobras@redhat.com>
+To: Guo Ren <guoren@kernel.org>
+Cc: Leonardo Bras <leobras@redhat.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	panqinglin2020@iscas.ac.cn,
+	bjorn@rivosinc.com,
+	conor.dooley@microchip.com,
+	peterz@infradead.org,
+	keescook@chromium.org,
+	wuwei2016@iscas.ac.cn,
+	xiaoguang.xing@sophgo.com,
+	chao.wei@sophgo.com,
+	unicorn_wang@outlook.com,
+	uwu@icenowy.me,
+	jszhang@kernel.org,
+	wefu@redhat.com,
+	atishp@atishpatra.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Guo Ren <guoren@linux.alibaba.com>
+Subject: Re: [PATCH V2 3/3] riscv: xchg: Prefetch the destination word for sc.w
+Date: Wed,  3 Jan 2024 16:45:39 -0300
+Message-ID: <ZZW5Y85OdibCu58h@LeoBras>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <CAJF2gTQ7Oo8UKdPRs0GAAUsh9mDCgGucS8g8kuPzByaWVOtigw@mail.gmail.com>
+References: <20231231082955.16516-1-guoren@kernel.org> <20231231082955.16516-4-guoren@kernel.org> <20240102-81391283df04c430d76c0eb0@orel> <CAJF2gTQ7Oo8UKdPRs0GAAUsh9mDCgGucS8g8kuPzByaWVOtigw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 bpf-next 1/2] libbpf: add helpers for mmapping maps
-Content-Language: en-US
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, mattbobrowski@google.com,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240103185403.610641-1-brho@google.com>
- <20240103185403.610641-2-brho@google.com>
- <CAEf4Bzbyn8VaMz8jWCShDDMtwif5Qt+YTEih0GEzULFeAAS2LQ@mail.gmail.com>
-From: Barret Rhoden <brho@google.com>
-In-Reply-To: <CAEf4Bzbyn8VaMz8jWCShDDMtwif5Qt+YTEih0GEzULFeAAS2LQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On 1/3/24 14:42, Andrii Nakryiko wrote:
-> this is specifically ARRAY map's rules, it might differ for other map
-> types (e.g., RINGBUF has different logic)
+On Wed, Jan 03, 2024 at 02:15:45PM +0800, Guo Ren wrote:
+> On Tue, Jan 2, 2024 at 7:19 PM Andrew Jones <ajones@ventanamicro.com> wrote:
+> >
+> > On Sun, Dec 31, 2023 at 03:29:53AM -0500, guoren@kernel.org wrote:
+> > > From: Guo Ren <guoren@linux.alibaba.com>
+> > >
+> > > The cost of changing a cacheline from shared to exclusive state can be
+> > > significant, especially when this is triggered by an exclusive store,
+> > > since it may result in having to retry the transaction.
+> > >
+> > > This patch makes use of prefetch.w to prefetch cachelines for write
+> > > prior to lr/sc loops when using the xchg_small atomic routine.
+> > >
+> > > This patch is inspired by commit: 0ea366f5e1b6 ("arm64: atomics:
+> > > prefetch the destination word for write prior to stxr").
+> > >
+> > > Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+> > > Signed-off-by: Guo Ren <guoren@kernel.org>
+> > > ---
+> > >  arch/riscv/include/asm/cmpxchg.h | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
+> > > index 26cea2395aae..d7b9d7951f08 100644
+> > > --- a/arch/riscv/include/asm/cmpxchg.h
+> > > +++ b/arch/riscv/include/asm/cmpxchg.h
+> > > @@ -10,6 +10,7 @@
+> > >
+> > >  #include <asm/barrier.h>
+> > >  #include <asm/fence.h>
+> > > +#include <asm/processor.h>
+> > >
+> > >  #define __arch_xchg_masked(prepend, append, r, p, n)                 \
+> >
+> > Are you sure this is based on v6.7-rc7? Because I don't see this macro.
+> Oh, it is based on Leobras' patches. I would remove it in the next of version.
 
-good to know.  will drop it.
+I would say this next :)
+
+> 
+> >
+> > >  ({                                                                   \
+> > > @@ -23,6 +24,7 @@
+> > >                                                                       \
+> > >       __asm__ __volatile__ (                                          \
+> > >              prepend                                                  \
+> > > +            PREFETCHW_ASM(%5)                                        \
+> > >              "0:      lr.w %0, %2\n"                                  \
+> > >              "        and  %1, %0, %z4\n"                             \
+> > >              "        or   %1, %1, %z3\n"                             \
+> > > @@ -30,7 +32,7 @@
+> > >              "        bnez %1, 0b\n"                                  \
+> > >              append                                                   \
+> > >              : "=&r" (__retx), "=&r" (__rc), "+A" (*(__ptr32b))       \
+> > > -            : "rJ" (__newx), "rJ" (~__mask)                          \
+> > > +            : "rJ" (__newx), "rJ" (~__mask), "rJ" (__ptr32b)         \
+> >
+> > I'm pretty sure we don't want to allow the J constraint for __ptr32b.
+> >
+> > >              : "memory");                                             \
+> > >                                                                       \
+> > >       r = (__typeof__(*(p)))((__retx & __mask) >> __s);               \
+> > > --
+> > > 2.40.1
+> > >
+> >
+> > Thanks,
+> > drew
+> 
+> 
+> 
+> -- 
+> Best Regards
+>  Guo Ren
+> 
+
+Nice patch :)
+Any reason it's not needed in __arch_cmpxchg_masked(), and __arch_cmpxchg() ?
+
+Thanks!
+Leo
+
