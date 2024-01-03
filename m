@@ -1,95 +1,94 @@
-Received: from nautica.notk.org (nautica.notk.org [91.121.71.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CE71D529;
-	Wed,  3 Jan 2024 19:47:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162BF1CF8A
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 19:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="KqCLgCLv";
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="cp+ReJMB"
-Received: by nautica.notk.org (Postfix, from userid 108)
-	id AF266C027; Wed,  3 Jan 2024 20:47:04 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-	t=1704311224; bh=rchUNxdMCqpxIcXW8Gd8rSQ5mpefCht1oHNRmrwB1pY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KqCLgCLvNFzqohtP+Q00yasRxvDCYWdLlzzFXvHOWe9rBinElOfDxYU9K7hZf/nb5
-	 yzmsz914DpXIublCq4fenyPl790/cWrEV7Kv4otTyDddP9sHmecTY6qkluQNeTRw7w
-	 GKv1xUqnqtUTL42Y2EPdQ80fY9FfEXuGjGRjLZs9Qr5bzV9qoaM3QhgjSJFjppKcmq
-	 rXQmZLjbTyRKgOPCBhHEQGlvLYtEwr/yOK1sq/ZJvt8pX0twrYja27PDZZqd+TmdMk
-	 WRzeilNoNFYXeYNhQ9F8HKU2gyKS8QlDNkTR7vC3ErTf43wXbMoYLC/aypxu8I24Fw
-	 jrRHmZJW8oL+g==
-X-Spam-Level: 
-Received: from gaia (localhost [127.0.0.1])
-	by nautica.notk.org (Postfix) with ESMTPS id 7F88AC01A;
-	Wed,  3 Jan 2024 20:46:56 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-	t=1704311223; bh=rchUNxdMCqpxIcXW8Gd8rSQ5mpefCht1oHNRmrwB1pY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cp+ReJMBn4/XifVWwL9GKWjgkdtOemo/VHptMfuCAey1eLCbRlXG8C98KiVBZWxQz
-	 akAQ/UbdziobN/oM86x455uM+VDXCfHi0FGn1LyWCSLZ+O0lcIM1epqEAlYR/oI3bW
-	 KDoePmBGHzUHJfEwETut5v+EXyKaJQl3IsJzqKvrTVSxz+zFiA7glGc3YoQxwb3kZG
-	 Dk8V40uXy4lDjOa4efxjrsPampxxMLB0G9RZK+y1M1uBtZ2jO2fVIGlj2hdwqGPJ5b
-	 cnZIsrl4Zu+sK1EsxMTzzmiNyNw1eykicrjIUmzOzbzIkTLPStHaI5hlFt4HU2Gojv
-	 twZElKdDAeHDQ==
-Received: from localhost (gaia [local])
-	by gaia (OpenSMTPD) with ESMTPA id 34cd8836;
-	Wed, 3 Jan 2024 19:46:53 +0000 (UTC)
-Date: Thu, 4 Jan 2024 04:46:38 +0900
-From: Dominique Martinet <asmadeus@codewreck.org>
-To: David Howells <dhowells@redhat.com>
-Cc: Christian Brauner <christian@brauner.io>,
-	Jeff Layton <jlayton@kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Steve French <smfrench@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>, linux-cachefs@redhat.com,
-	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev, linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>
-Subject: Re: [PATCH 5/5] 9p: Use length of data written to the server in
- preference to error
-Message-ID: <ZZW5nlB5v-SDsT_P@codewreck.org>
-References: <20240103145935.384404-1-dhowells@redhat.com>
- <20240103145935.384404-6-dhowells@redhat.com>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="DWEQg2N7"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40d41555f9dso108557345e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 11:48:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1704311293; x=1704916093; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zs7YK65vsgCJhyJ8cxRJlQYt/xebK4dr15ogDzD3qOs=;
+        b=DWEQg2N7MSlgwVSHy/TPqQbxpXN5QjacuZkCClS6ACC9SnmEb+n2uTNR/ryPtvp+nT
+         wfLkECn4cYzLqXw2I5ynOVvEebVRXYw+tuqDJCgohXkTXYnJxiQUKFSttuMBfi/WqvQx
+         odGxMXx3DfONkP22bpgdsVSRRnciXOKJ2d7EMEWspbrH/lbKRWvMJBlKWxzMLMCPwcCk
+         WIdjI980BgBsvqoxUKwJqm5gsCV9ItLwDRwutoPBjvl2STHkRJzgzzpaGCb06xjtBajJ
+         uM9Rs7VREcxcw7JdhUX8DXVhLndwe/Jje97ndxAb8yd840rBOkdFe8Mor4rU6P+Vq5xj
+         Uh3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704311293; x=1704916093;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Zs7YK65vsgCJhyJ8cxRJlQYt/xebK4dr15ogDzD3qOs=;
+        b=cX6ukPNsXcHepo6rDiRyuRkH3IuGQWRz0jgFNsGayf7Bt4q9y9nEeJwR2gCn1GGkY2
+         BCPMWr5yL9cEp8Gso+DJ9dKQswkFQulXLv0D7Jc272LICIJ0XJH/OW43Uwm00s9nYZTY
+         KMzDLKdrPamqUQPw45x2T7cPt3FCePjTEp7lXijz+PHuvEacT+zg4wNehRNCiqbFco6z
+         YdVPrulWvIfSY264nlnecP+GCPnCXNiUszuveTTAHWCX95rsxnKf/WGZuf4wuM1fzIxA
+         qlCdcTJuftAf7aPRsPTJrGOoCtWe6+t7i/z6qI4fJWOwXfwCl39a85Fkjv9iL8HeiApe
+         Q+xA==
+X-Gm-Message-State: AOJu0Yy7kJmFv85BQi72vIAvysJVD/qLoCQcoY8akQrqGX2aLUTKmMsE
+	N+6FnZ7+NCYz27vdJp+Zalzaff5Csr8WEA==
+X-Google-Smtp-Source: AGHT+IGPKgforDJAQaqV1A5QN2T0jJs2gRNZTWT+QgU4y55oKFqLDC2gqwiPp88YH4GAEVXueke8qg==
+X-Received: by 2002:a05:600c:2296:b0:40d:71f3:1597 with SMTP id 22-20020a05600c229600b0040d71f31597mr4615711wmf.172.1704311293257;
+        Wed, 03 Jan 2024 11:48:13 -0800 (PST)
+Received: from localhost (cst2-173-16.cust.vodafone.cz. [31.30.173.16])
+        by smtp.gmail.com with ESMTPSA id je2-20020a05600c1f8200b0040d5a9d6b68sm3284877wmb.6.2024.01.03.11.48.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jan 2024 11:48:12 -0800 (PST)
+Date: Wed, 3 Jan 2024 20:48:12 +0100
+From: Andrew Jones <ajones@ventanamicro.com>
+To: guoren@kernel.org
+Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	panqinglin2020@iscas.ac.cn, bjorn@rivosinc.com, conor.dooley@microchip.com, 
+	leobras@redhat.com, peterz@infradead.org, keescook@chromium.org, 
+	wuwei2016@iscas.ac.cn, xiaoguang.xing@sophgo.com, chao.wei@sophgo.com, 
+	unicorn_wang@outlook.com, uwu@icenowy.me, jszhang@kernel.org, wefu@redhat.com, 
+	atishp@atishpatra.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Guo Ren <guoren@linux.alibaba.com>
+Subject: Re: [PATCH V2 1/3] riscv: Add Zicbop instruction definitions &
+ cpufeature
+Message-ID: <20240103-4f92e1f7290975300ecc64ce@orel>
+References: <20231231082955.16516-1-guoren@kernel.org>
+ <20231231082955.16516-2-guoren@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240103145935.384404-6-dhowells@redhat.com>
+In-Reply-To: <20231231082955.16516-2-guoren@kernel.org>
 
-David Howells wrote on Wed, Jan 03, 2024 at 02:59:29PM +0000:
-> In v9fs_upload_to_server(), we pass the error to netfslib to terminate the
-> subreq rather than the amount of data written - even if we did actually
-> write something.
-> 
-> Further, we assume that the write is always entirely done if successful -
-> but it might have been partially complete - as returned by
-> p9_client_write(), but we ignore that.
-> 
-> Fix this by indicating the amount written by preference and only returning
-> the error if we didn't write anything.
-> 
-> (We might want to return both in future if both are available as this
-> might be useful as to whether we retry or not.)
-> 
-> Suggested-by: Dominique Martinet <asmadeus@codewreck.org>
+On Sun, Dec 31, 2023 at 03:29:51AM -0500, guoren@kernel.org wrote:
+...
+> +#define CBO_PREFETCH_I(base, offset)				\
+> +	INSN_S(OPCODE_OP_IMM, FUNC3(6), __RS2(0),		\
+> +	       SIMM12(offset), RS1(base))
+> +
+> +#define CBO_PREFETCH_R(base, offset)				\
+> +	INSN_S(OPCODE_OP_IMM, FUNC3(6), __RS2(1),		\
+> +	       SIMM12(offset), RS1(base))
+> +
+> +#define CBO_PREFETCH_W(base, offset)				\
+> +	INSN_S(OPCODE_OP_IMM, FUNC3(6), __RS2(3),		\
+> +	       SIMM12(offset), RS1(base))
+
+These should just be named
+
+ PREFETCH_I
+ PREFETCH_R
+ PREFETCH_W
+
+without the CBO_ prefix. The other CMO instructions we've added have the
+CBO_ prefix because their actual instruction names are e.g. cbo.zero,
+but the prefix instructions are not named that way.
 
 Thanks,
-
-Acked-by: Dominique Martinet <asmadeus@codewreck.org>
-
--- 
-Dominique Martinet | Asmadeus
+drew
