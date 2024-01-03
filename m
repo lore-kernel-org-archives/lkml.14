@@ -1,94 +1,217 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7E81D558
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 21:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8241D555
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 21:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="2+nPMrKw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1704316094;
-	bh=duGESKBgxXGs3L/CZsA4/2AFzoxTyxROtWlIKBFet9w=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=2+nPMrKwoooJ5f2BvPBb0bhW6EMTHLDpBHXF/UdT0hp5uqrd9TILdfXgXpVbeKm6V
-	 jcnEg7rONfa0xHivyj8GwYeVhfdQmQ66ZnGUH4JvpUhnJWF2nbxy2SmDJaN9c0bTZY
-	 Vti+ooF0LnT4C+B4rWbe5Dzj80q9XliLM0uj+pGDk2G16covq0wKRvJAxlD1CPzw1+
-	 OVFa7Zh3LuTiYezYaoVR6134DsPOVbK0cid+QSDmnnvqSIijI3SB89DNeE+UpyXjPs
-	 vI5zTIHD4HVlGWjeAQbruUgLgnaaryoVLox09YDwXTa0hoWVCyjgy9MUv5p0OcPmYY
-	 NXp4LOxl7uYsA==
-Received: from [100.109.49.129] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dmitry.osipenko)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 946CD3780629;
-	Wed,  3 Jan 2024 21:08:13 +0000 (UTC)
-Message-ID: <0617eeeb-c0af-4ab0-8ae1-e87ba0044948@collabora.com>
-Date: Thu, 4 Jan 2024 00:08:10 +0300
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yc1kbZO4"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dbe9c7932b3so1806415276.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 13:10:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704316254; x=1704921054; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FBHxZQOqHKQWZQsNLhWIGO2APx/c3T+5AETXMz0BW6c=;
+        b=Yc1kbZO4ea7AXmAsMqvcpf/ajIwTCNSgspDi2aFKYOGB6LkqZ+QzV1vXDcFOlvQ680
+         x/yBbl9YapBZai778kLoNcHwXoC0gcpKokl7eHFfUndkY0Lm+gAbqd61iNpQ7iBH49fh
+         arYdHmBNQmfhj8Duu2yJeKho8NCmGwen+PT2lMaOhUA8rjZKhdK4MBgGn1U6JvB9Issb
+         exdmNFY0CtvKuD1ZUlQZ4w763RUltcos2qASJnrsmcxAmGt+LdMjvyzH2sAUKhhN6Mop
+         yeXASdaEAQ58Ql+9ltjS1sTDpmlY3E4dLeQ/eoF17YgbjUPFOEiQJNN7U00J3MiojwrQ
+         Jc0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704316254; x=1704921054;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FBHxZQOqHKQWZQsNLhWIGO2APx/c3T+5AETXMz0BW6c=;
+        b=IgHbWUJawC0uFO3UKXdGaB4IJd+kwY0tp9TCiDUKgm/h2DmIgP0LQy6zOpCONG3Huv
+         mJ5vK85UaDXeamJH1LQM+F1AyLZkajsapht9GjXTCCmyLZokChi+opzW7DiQOk1hVoMq
+         U3JJLVoUG9hejrQ/Kh3PZNPsSht8TrM9HFuEJEsG8jUMhH3d0cYr3jKfZYOvU9dA7OHP
+         an+8hDPN1yBxGpMeGGQhwvpkDDYB/Bn7BA3PZG1J/ueOyG4N0Poy/e6qI4r5jbRaEkA5
+         0tr9q41HecRtyQZGTa2Vy+oyQQ4bLx6+CWeJYA+VnoJXxDkEnaqoDmn0IMaMnI6ayMT0
+         DlNw==
+X-Gm-Message-State: AOJu0Yxk/Wfx/izrqYD/gLlimqNfVO+Wiow0d0LI2vsLnrr3v/oyVtqa
+	YwLGyM1Vg0HnFFSPI+H/+xEkgFueAcfFD06/Ww==
+X-Google-Smtp-Source: AGHT+IGa4g+9oBnUZU56Lne58hJptqYE1No2WgZAgnwNtYkKBHjg5J2c+84iFOCcgyBQbiUr6wcroX8sUfg=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a25:9f03:0:b0:dbd:f0c7:8926 with SMTP id
+ n3-20020a259f03000000b00dbdf0c78926mr6852351ybq.7.1704316254236; Wed, 03 Jan
+ 2024 13:10:54 -0800 (PST)
+Date: Wed, 3 Jan 2024 13:10:52 -0800
+In-Reply-To: <b82bb32b-3348-4c18-b07e-34f523ae93b5@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] drm/virtio: Spelling fixes
-Content-Language: en-US
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Cc: David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
- <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Daniel Vetter <daniel@ffwll.ch>
-References: <20231219151955.2477488-1-andriy.shevchenko@linux.intel.com>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-In-Reply-To: <20231219151955.2477488-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20240102232136.38778-1-Ashish.Kalra@amd.com> <ZZSqkm5WNEUuuA_h@google.com>
+ <b82bb32b-3348-4c18-b07e-34f523ae93b5@amd.com>
+Message-ID: <ZZXNXNZkCW8e1G5i@google.com>
+Subject: Re: [PATCH] x86/sev: Add support for allowing zero SEV ASIDs.
+From: Sean Christopherson <seanjc@google.com>
+To: Ashish Kalra <ashish.kalra@amd.com>
+Cc: pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	thomas.lendacky@amd.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	joro@8bytes.org
+Content-Type: text/plain; charset="us-ascii"
 
-On 12/19/23 18:19, Andy Shevchenko wrote:
-> While making a spelling mistake myself for `git grep kvalloc`
-> I found that the only file has such a typo. Fix it and update
-> to the standard de facto of how we refer to the functions.
-> Also spell usr-out as user-out, it seems this driver uses its
-> own terminology nobody else can decypher, make it more readable.
+On Wed, Jan 03, 2024, Ashish Kalra wrote:
+> Hello Sean,
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/gpu/drm/virtio/virtgpu_submit.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> On 1/2/2024 6:30 PM, Sean Christopherson wrote:
+> > On Tue, Jan 02, 2024, Ashish Kalra wrote:
+> > > @@ -2172,8 +2176,10 @@ void sev_vm_destroy(struct kvm *kvm)
+> > >   void __init sev_set_cpu_caps(void)
+> > >   {
+> > > -	if (!sev_enabled)
+> > > +	if (!sev_guests_enabled) {
+> > Ugh, what a mess.  The module param will show sev_enabled=false, but the caps
+> > and CPUID will show SEV=true.
+> > 
+> > And this is doubly silly because "sev_enabled" is never actually checked, e.g.
+> > if misc cgroup support is disabled, KVM_SEV_INIT will try to reclaim ASIDs and
+> > eventually fail with -EBUSY, which is super confusing to users.
 > 
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_submit.c b/drivers/gpu/drm/virtio/virtgpu_submit.c
-> index 5c514946bbad..1c7c7f61a222 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_submit.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_submit.c
-> @@ -99,8 +99,8 @@ virtio_gpu_parse_deps(struct virtio_gpu_submit *submit)
->  		return 0;
->  
->  	/*
-> -	 * kvalloc at first tries to allocate memory using kmalloc and
-> -	 * falls back to vmalloc only on failure. It also uses __GFP_NOWARN
-> +	 * kvmalloc() at first tries to allocate memory using kmalloc() and
-> +	 * falls back to vmalloc() only on failure. It also uses __GFP_NOWARN
->  	 * internally for allocations larger than a page size, preventing
->  	 * storm of KMSG warnings.
->  	 */
-> @@ -529,7 +529,7 @@ int virtio_gpu_execbuffer_ioctl(struct drm_device *dev, void *data,
->  	virtio_gpu_submit(&submit);
->  
->  	/*
-> -	 * Set up usr-out data after submitting the job to optimize
-> +	 * Set up user-out data after submitting the job to optimize
->  	 * the job submission path.
->  	 */
->  	virtio_gpu_install_out_fence_fd(&submit);
+> But this is what we expect that KVM_SEV_INIT will fail. In this case,
+> sev_asid_new() will not actually try to reclaim any ASIDs as sev_misc_cg_try_charge()
+> will fail before any ASID bitmap walking/reclamation and return an error which
+> will eventually return -EBUSY to the user.
 
-Applied to misc-next, thanks
+Please read what I wrote.  "if misc cgroup support is disabled", i.e. if
+CONFIG_CGROUP_MISC=n, then sev_misc_cg_try_charge() is a nop.
 
--- 
-Best regards,
-Dmitry
+> > The other weirdness is that KVM can cause sev_enabled=false && sev_es_enabled=true,
+> > but if *userspace* sets sev_enabled=false then sev_es_enabled is also forced off.
+> But that is already the behavior without this patch applied.
+> > 
+> > In other words, the least awful option seems to be to keep sev_enabled true :-(
+> > 
+> > >   		kvm_cpu_cap_clear(X86_FEATURE_SEV);
+> > > +		return;
+> > This is blatantly wrong, as it can result in KVM advertising SEV-ES if SEV is
+> > disabled by the user.
+> No, this ensures that we don't advertise any SEV capability if neither
+> SEV/SEV-ES or in future SNP is enabled.
 
+No, it does not.  There is an early return statement here that prevents KVM from
+invoking kvm_cpu_cap_clear() for X86_FEATURE_SEV_ES.  Do I think userspace will
+actually be tripped up by seeing SEV_ES without SEV?  No.  Is it unnecessarily
+confusing?  Yes.
+
+> > > +	}
+> > >   	if (!sev_es_enabled)
+> > >   		kvm_cpu_cap_clear(X86_FEATURE_SEV_ES);
+> > >   }
+> > > @@ -2229,9 +2235,11 @@ void __init sev_hardware_setup(void)
+> > >   		goto out;
+> > >   	}
+> > > -	sev_asid_count = max_sev_asid - min_sev_asid + 1;
+> > > -	WARN_ON_ONCE(misc_cg_set_capacity(MISC_CG_RES_SEV, sev_asid_count));
+> > > -	sev_supported = true;
+> > > +	if (min_sev_asid <= max_sev_asid) {
+> > > +		sev_asid_count = max_sev_asid - min_sev_asid + 1;
+> > > +		WARN_ON_ONCE(misc_cg_set_capacity(MISC_CG_RES_SEV, sev_asid_count));
+> > > +		sev_supported = true;
+> > > +	}
+> > >   	/* SEV-ES support requested? */
+> > >   	if (!sev_es_enabled)
+> > > @@ -2262,7 +2270,8 @@ void __init sev_hardware_setup(void)
+> > >   	if (boot_cpu_has(X86_FEATURE_SEV))
+> > >   		pr_info("SEV %s (ASIDs %u - %u)\n",
+> > >   			sev_supported ? "enabled" : "disabled",
+> > > -			min_sev_asid, max_sev_asid);
+> > > +			sev_supported ? min_sev_asid : 0,
+> > > +			sev_supported ? max_sev_asid : 0);
+> > I honestly think we should print the "garbage" values.  The whole point of
+> > printing the min/max SEV ASIDs was to help users understand why SEV is disabled,
+> > i.e. printing zeroes is counterproductive.
+> > 
+> > >   	if (boot_cpu_has(X86_FEATURE_SEV_ES))
+> > >   		pr_info("SEV-ES %s (ASIDs %u - %u)\n",
+> > >   			sev_es_supported ? "enabled" : "disabled",
+> > It's all a bit gross, but I think we want something like this (I'm definitely
+> > open to suggestions though):
+> > 
+> > diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> > index d0c580607f00..bfac6d17462a 100644
+> > --- a/arch/x86/kvm/svm/sev.c
+> > +++ b/arch/x86/kvm/svm/sev.c
+> > @@ -143,8 +143,20 @@ static void sev_misc_cg_uncharge(struct kvm_sev_info *sev)
+> >   static int sev_asid_new(struct kvm_sev_info *sev)
+> >   {
+> > -       int asid, min_asid, max_asid, ret;
+> > +       /*
+> > +        * SEV-enabled guests must use asid from min_sev_asid to max_sev_asid.
+> > +        * SEV-ES-enabled guest can use from 1 to min_sev_asid - 1.  Note, the
+> > +        * min ASID can end up larger than the max if basic SEV support is
+> > +        * effectively disabled by disallowing use of ASIDs for SEV guests.
+> > +        */
+> > +       unsigned int min_asid = sev->es_active ? 1 : min_sev_asid;
+> > +       unsigned int max_asid = sev->es_active ? min_sev_asid - 1 : max_sev_asid;
+> > +       unsigned int asid;
+> >          bool retry = true;
+> > +       int ret;
+> > +
+> > +       if (min_asid > max_asid)
+> > +               return -ENOTTY;
+> 
+> This will still return -EBUSY to user.
+
+Huh?  The above is obviously -ENOTTY, and I don't see anything in the call stack
+that will convert it to -EBUSY.
+
+> This check here or the failure return from sev_misc_cg_try_charge() are quite
+> similar in that sense.
+> 
+> My point is that the same is achieved quite cleanly with
+> sev_misc_cg_try_charge() too.
+
+"Without additional effort" is not synonymous with "cleanly".  Relying on an
+accounting restriction that is completely orthogonal to basic functionality is
+not "clean".
+
+> >          WARN_ON(sev->misc_cg);
+> >          sev->misc_cg = get_current_misc_cg();
+> > @@ -157,12 +169,6 @@ static int sev_asid_new(struct kvm_sev_info *sev)
+> >          mutex_lock(&sev_bitmap_lock);
+> > -       /*
+> > -        * SEV-enabled guests must use asid from min_sev_asid to max_sev_asid.
+> > -        * SEV-ES-enabled guest can use from 1 to min_sev_asid - 1.
+> > -        */
+> > -       min_asid = sev->es_active ? 1 : min_sev_asid;
+> > -       max_asid = sev->es_active ? min_sev_asid - 1 : max_sev_asid;
+> >   again:
+> >          asid = find_next_zero_bit(sev_asid_bitmap, max_asid + 1, min_asid);
+> >          if (asid > max_asid) {
+> > @@ -2232,8 +2238,10 @@ void __init sev_hardware_setup(void)
+> >                  goto out;
+> >          }
+> > -       sev_asid_count = max_sev_asid - min_sev_asid + 1;
+> > -       WARN_ON_ONCE(misc_cg_set_capacity(MISC_CG_RES_SEV, sev_asid_count));
+> > +       if (min_sev_asid <= max_sev_asid) {
+> > +               sev_asid_count = max_sev_asid - min_sev_asid + 1;
+> > +               WARN_ON_ONCE(misc_cg_set_capacity(MISC_CG_RES_SEV, sev_asid_count));
+> > +       }
+> >          sev_supported = true;
+> >          /* SEV-ES support requested? */
+> > @@ -2264,8 +2272,9 @@ void __init sev_hardware_setup(void)
+> >   out:
+> >          if (boot_cpu_has(X86_FEATURE_SEV))
+> >                  pr_info("SEV %s (ASIDs %u - %u)\n",
+> > -                       sev_supported ? "enabled" : "disabled",
+> > -                       min_sev_asid, max_sev_asid);
+> > +                       sev_supported ? (min_sev_asid <= max_sev_asid ? "enabled" : "unusable") : "disabled",
+> > +                       sev_supported ? min_sev_asid : 0,
+> > +                       sev_supported ? max_sev_asid : 0);
+> 
+> We are not showing min and max ASIDs for SEV as {0,0} with this patch as
+> sev_supported is true ?
+
+Yes, and that is deliberate.  See this from above:
+
+ : I honestly think we should print the "garbage" values.  The whole point of  
+ : printing the min/max SEV ASIDs was to help users understand why SEV is disabled,
+ : i.e. printing zeroes is counterproductive.
