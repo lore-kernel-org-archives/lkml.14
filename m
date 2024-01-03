@@ -1,197 +1,177 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C7D1A720
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 15:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167B71BDDF
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 15:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="G9MMxejv"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-50e7dff3e9fso7777428e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 07:18:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q+eM/XMs"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-5e8e0c7f9a8so5971557b3.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 07:19:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1704295109; x=1704899909; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qOnh6GFoMJIg3Fk5aDwenA5FAvHDGXhGVcW2b/3N3Bc=;
-        b=G9MMxejvLv3D5PRC5DfObCJVUmNe6vKlhaNd6xjL6bsQmcbL3ulgyh3mDZ1wxYED+E
-         0gHoQsKDjb4/6jR5dOqt+MHsH4o9YgLRqkB81HN3aOyb8jwHDdk3gDCugVbUmYCTvIxZ
-         FTWV7lORIqlc3LRKx7/oV6MTt3YvWjfgBOVRl1oMidr2ep7AA4IXGcPmjxSHoJf2Mf3K
-         u7j4zUyfZLyup/WBYx9moOJG3FMmnb008Au0uPZ+Od1FQU7dHAwUJdYwcaTh415hhZBw
-         2cI/jtcZh4dO/hE8fX9K/cmj1CKwKLSXn0LxC9zrF5GpvRmEJdoqnMtciS5DmsiT7JDB
-         PFLA==
+        d=google.com; s=20230601; t=1704295144; x=1704899944; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3mixGhCxFNsjK1/FsJPxtUpDRVUJ3A5zONET6Xrw4qg=;
+        b=q+eM/XMsOCmY40JEcCme1n8XFl2ib1dxQVYAVZuQq8ReaJtE0BmBg8/bVxczkW1bmH
+         tbJnJqBqouGGu3voxjoGTzFHjRCj34E8xGDeMqaDH3+1XzEhlDIFEbZjClfvvDbMyr0S
+         BoKNpfSLNxbCYgDG/32sFBiSl27k7LmCVRlaw3kmIAa0dAlHW5/0dv68nxXOfDiL1rm6
+         NjCMn1O8LCF2tOptgEBfyzKIAaD/jeUO00VQKwBG793siBjyauZe9Na0wamWoEKop3ok
+         KYc2Lc4z0MYjgznKO/6fUGTz7kIeP2RSIqEGdFjpTDWgqcurNroDQbmsTcXPUE3oEpWJ
+         A1UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704295109; x=1704899909;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qOnh6GFoMJIg3Fk5aDwenA5FAvHDGXhGVcW2b/3N3Bc=;
-        b=C6twtWUunT+WnQH2RGmUU5FhpEynZPgEyPECKVIY+R3yn37bGYVhYfyEl8jB7fcpne
-         V4Nh9nfB/r5ob3Xk9R42XrMHiWCLKD1M+cm22kc6zGKxZPkCaHVQJKUiayeFjcKJuIzk
-         hgol/ZHTu08/wG5d8VFXsn+l3PXzAgTz9fCVyj7MshM/m8FzDCGM8jYXMwjJWpuWsrKb
-         kWiKhIPs/YfvJHNEUm6YS8abxIDux1pH49CRLSaU0eR+D7kBpedwFgplQsCUYd+U3CSk
-         V1GbvCOlLBnSyGB5+X5pwVxm3Ip/AaruGQOPQCAPj2Yh9ePgnYqZBjst/OM0RsQ9kDB7
-         brBw==
-X-Gm-Message-State: AOJu0YzOi1JnP+Wh+zXY/Bn1kGMVEIUgGrC8kmMxUjZgYLXeK2ko77xQ
-	O9Y8LDj75qkqmiL+TeUn/F4+O93AGWhBmg==
-X-Google-Smtp-Source: AGHT+IGmMNSNCa2FS9YbKliIuuRoRIjkZHFFRQauWfc6RzCo+GBWoTZ+VEYuChLYvzI5/3hshuW9bQ==
-X-Received: by 2002:a05:6512:3c8e:b0:50e:7693:7084 with SMTP id h14-20020a0565123c8e00b0050e76937084mr9468630lfv.57.1704295108834;
-        Wed, 03 Jan 2024 07:18:28 -0800 (PST)
-Received: from ?IPV6:2a02:6b6a:b5c7:0:1b12:a705:8eb0:640d? ([2a02:6b6a:b5c7:0:1b12:a705:8eb0:640d])
-        by smtp.gmail.com with ESMTPSA id a5-20020a056512390500b0050e677cb432sm3667596lfu.193.2024.01.03.07.18.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jan 2024 07:18:28 -0800 (PST)
-Message-ID: <a57b9e19-3466-bb73-1c88-c19417ac6822@bytedance.com>
-Date: Wed, 3 Jan 2024 15:18:25 +0000
+        d=1e100.net; s=20230601; t=1704295144; x=1704899944;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3mixGhCxFNsjK1/FsJPxtUpDRVUJ3A5zONET6Xrw4qg=;
+        b=Cba1ou5bo1kynDawQJaVpSZS2VifNOnQL/rABzHYC7fO/H2xYN/FUWr+Lo4vjcpxdJ
+         BWpubnBr/HCQVw1qGqqa1gHVVsXOKdL3ghch1s2vTkvWo8XZXVhln0OC3ty6yryenpZd
+         vHtYN9oo/s+eTGP/DVuns8qhneh/waBWVQJUxw9dMKWxnnRXlFe4G7GGvZqkaqLnDStk
+         6vYuWBXKtcy+en8boXFPCGMZ7pMdpJ1u+OOtCLejxwbdkWM365AJrD0l9Q2q8Q++LqZw
+         wBTwRzTZY3lRFIiI1bL8Vza/UsHlSvCgOxAi/CPPpXUKT5954SQVeMDaMo1IK8VWhli6
+         3Tag==
+X-Gm-Message-State: AOJu0YyOs1y0StGC9JPsM5BOMao3HmR/2MhmgxtZoxT1yA6A2H4L7Gt2
+	+YY9hDtZBbrXykSlt3/+DOd3Et2RLBoQko2F5w==
+X-Google-Smtp-Source: AGHT+IFpHI+G7d1DsDGUzqaus+dSoFyBlUJa9XfJpxyPsdf3is63/25aoOu/fJNw6UCe159iS4D+2tfB0xo=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:690c:31e:b0:5d3:56a4:9073 with SMTP id
+ bg30-20020a05690c031e00b005d356a49073mr665900ywb.2.1704295143978; Wed, 03 Jan
+ 2024 07:19:03 -0800 (PST)
+Date: Wed, 3 Jan 2024 07:19:02 -0800
+In-Reply-To: <3207569.5fSG56mABF@uriel>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [External] [PATCH v5] x86: intel_epb: Add earlyparam option to
- keep bias at performance
-To: Jack Allister <jalliste@amazon.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
- Paul Durrant <pdurrant@amazon.com>, Jue Wang <juew@amazon.com>,
- Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, "Paul E. McKenney" <paulmck@kernel.org>,
- Randy Dunlap <rdunlap@infradead.org>, Tejun Heo <tj@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Yan-Jie Wang <yanjiewtw@gmail.com>,
- Hans de Goede <hdegoede@redhat.com>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <83431857-7182-471a-9ff1-9dac37e5a02f@intel.com>
- <20240103144607.46369-1-jalliste@amazon.com>
-Content-Language: en-US
-From: Usama Arif <usama.arif@bytedance.com>
-In-Reply-To: <20240103144607.46369-1-jalliste@amazon.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <2285758.taCxCBeP46@uriel> <868D3980-3323-4E4A-8A7A-B9C26F123A1E@zytor.com>
+ <3207569.5fSG56mABF@uriel>
+Message-ID: <ZZV65qJuJ67E_n9O@google.com>
+Subject: Re: x86 SGDT emulation for Wine
+From: Sean Christopherson <seanjc@google.com>
+To: Elizabeth Figura <zfigura@codeweavers.com>
+Cc: x86@kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, 
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, wine-devel@winehq.org, 
+	"H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jan 02, 2024, Elizabeth Figura wrote:
+> On Wednesday, December 27, 2023 5:58:19 PM CST H. Peter Anvin wrote:
+> > On December 27, 2023 2:20:37 PM PST, Elizabeth Figura <zfigura@codeweav=
+ers.com> wrote:
+> > >Hello all,
+> > >
+> > >There is a Windows 98 program, a game called Nuclear Strike, which wan=
+ts to
+> > >do some amount of direct VGA access. Part of this is port I/O, which
+> > >naturally throws SIGILL that we can trivially catch and emulate in Win=
+e.
+> > >The other part is direct access to the video memory at 0xa0000, which =
+in
+> > >general isn't a problem to catch and virtualize as well.
+> > >
+> > >However, this program is a bit creative about how it accesses that mem=
+ory;
+> > >instead of just writing to 0xa0000 directly, it looks up a segment
+> > >descriptor whose base is at 0xa0000 and then uses the %es override to
+> > >write bytes. In pseudo-C, what it does is:
 
+...
 
-On 03/01/2024 14:46, Jack Allister wrote:
-> Buggy BIOSes may not set a sane boot-time Energy Performance Bias (EPB).
-> A result of this may be overheating or excess power usage. The kernel
-> overrides any boot-time EPB "performance" bias to "normal" to avoid this.
-> 
-> When used in data centers it is preferable keep the EPB at "performance"
-> when performing a live-update of the host kernel via a kexec to the new
-> kernel. This is due to boot-time being critical when performing the kexec
-> as running guest VMs will perceieve this as latency or downtime.
-> 
-> On Intel Xeon Ice Lake platforms it has been observed that a combination of
-> EPB being set to "normal" alongside HWP (Intel Hardware P-states) being
-> enabled/configured during or close to the kexec causes an increases the
-> live-update/kexec downtime by 7 times compared to when the EPB is set to
-> "performance".
-> 
-> Introduce a command-line parameter, "intel_epb=preserve", to skip the
-> "performance" -> "normal" override/workaround. This maintains prior
-> functionality when no parameter is set, but adds in the ability to stay at
-> performance for a speedy kexec if a user wishes.
-> 
-> Signed-off-by: Jack Allister <jalliste@amazon.com>
-> Acked-by: Rafael J. Wysocki <rafael@kernel.org>
-> Cc: Paul Durrant <pdurrant@amazon.com>
-> Cc: Jue Wang <juew@amazon.com>
-> Cc: Usama Arif <usama.arif@bytedance.com>
-> ---
->   .../admin-guide/kernel-parameters.txt         | 12 +++++++++++
->   arch/x86/kernel/cpu/intel_epb.c               | 21 +++++++++++++++++--
->   2 files changed, 31 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 65731b060e3f..5602ee213115 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -2148,6 +2148,18 @@
->   			0	disables intel_idle and fall back on acpi_idle.
->   			1 to 9	specify maximum depth of C-state.
->   
-> +	intel_epb=	[X86]
-> +			auto
-> +			  Same as not passing a parameter to intel_epb. This will
-> +			  ensure that the intel_epb module will restore the energy
-> +			  performance bias to "normal" at boot-time. This workaround
-> +			  is for buggy BIOSes which may not set this value and cause
-> +			  either overheating or excess power usage.
-Hi,
+> > A prctl() to set the UMIP-emulated return values or disable it (giving
+> > SIGILL) would be easy enough.
+> >=20
+> > For the non-UMIP case, and probably for a lot of other corner cases lik=
+e
+> > relying on certain magic selector values and what not, the best option
+> > really would be to wrap the code in a lightweight KVM container. I do *=
+not*
+> > mean running the Qemu user space part of KVM; instead have Wine interfa=
+ce
+> > with /dev/kvm directly.
+> >=20
+> > Non-KVM-capable hardware is basically historic at this point.
+>=20
+> Sorry for the late response=E2=80=94I've been trying to do research on wh=
+at would be=20
+> necessary to use KVM (plus I made the poor choice of sending this during =
+the=20
+> holiday season...)
+>=20
+> I'm concerned that KVM is going to be difficult or even intractable. Here=
+ are=20
+> some of the problems that I (perhaps incorrectly) understand:
+>=20
+> * As I am led to understand, there can only be one hypervisor on the mach=
+ine=20
+> at a time,
 
-Thanks for the patch. Is auto needed over here? It was pointed in an 
-earlier review that it could be an option, but it doesn't seem to serve 
-a purpose. Its also not how the code works, i.e. intel_epb=abc would be 
-the same as intel_epb=auto. Just could add a print if intel_epb=preserve 
-is not encountered then an unexpected value has been passed in.
+No.  Only one instance of KVM-the-module is allowed, but there is no arbitr=
+ary
+limit on the number of VMs that userspace can create.  The only meaningful
+limitation is memory, and while struct kvm isn't tiny, it's not _that_ big.
 
-> +			preserve
-> +			  At kernel boot-time if the EPB value is read as "performance"
-> +			  keep it at this value. This prevents the "performance" -> "normal"
-> +			  transition which is a workaround mentioned above.
-> +
->   	intel_pstate=	[X86]
->   			disable
->   			  Do not enable intel_pstate as the default
-> diff --git a/arch/x86/kernel/cpu/intel_epb.c b/arch/x86/kernel/cpu/intel_epb.c
-> index e4c3ba91321c..419e699a43e6 100644
-> --- a/arch/x86/kernel/cpu/intel_epb.c
-> +++ b/arch/x86/kernel/cpu/intel_epb.c
-> @@ -50,7 +50,8 @@
->    * the OS will do that anyway.  That sometimes is problematic, as it may cause
->    * the system battery to drain too fast, for example, so it is better to adjust
->    * it on CPU bring-up and if the initial EPB value for a given CPU is 0, the
-> - * kernel changes it to 6 ('normal').
-> + * kernel changes it to 6 ('normal'). However, if it is desirable to retain the
-> + * original initial EPB value, intel_epb=preserve can be set to enforce it.
->    */
->   
->   static DEFINE_PER_CPU(u8, saved_epb);
-> @@ -75,6 +76,8 @@ static u8 energ_perf_values[] = {
->   	[EPB_INDEX_POWERSAVE] = ENERGY_PERF_BIAS_POWERSAVE,
->   };
->   
-> +static bool intel_epb_no_override __read_mostly;
-> +
->   static int intel_epb_save(void)
->   {
->   	u64 epb;
-> @@ -106,7 +109,7 @@ static void intel_epb_restore(void)
->   		 * ('normal').
->   		 */
->   		val = epb & EPB_MASK;
-> -		if (val == ENERGY_PERF_BIAS_PERFORMANCE) {
-> +		if (!intel_epb_no_override && val == ENERGY_PERF_BIAS_PERFORMANCE) {
->   			val = energ_perf_values[EPB_INDEX_NORMAL];
->   			pr_warn_once("ENERGY_PERF_BIAS: Set to 'normal', was 'performance'\n");
->   		}
-> @@ -213,6 +216,20 @@ static const struct x86_cpu_id intel_epb_normal[] = {
->   	{}
->   };
->   
-> +static __init int parse_intel_epb(char *str)
-> +{
-> +	if (!str)
-> +		return 0;
-> +
-> +	/* "intel_epb=preserve" prevents PERFORMANCE->NORMAL on restore. */
-> +	if (!strcmp(str, "preserve"))
-> +		intel_epb_no_override = true;
-> +
-Maybe add an print in else here to say that unexpected value has been 
-encountered for intel_epb if preserve is not seen.
+> and KVM has a hard limit on the number of vCPUs.
+>
+>   The obvious way to use KVM for Wine is to make each (guest) thread a vC=
+PU.=20
+> That will, at the very least, run into the thread limit. In order to avoi=
+d=20
+> that we'd need to ship a whole scheduler, which is concerning. That's a h=
+uge=20
+> component to ship and a huge burden to keep updated. It also means we nee=
+d to=20
+> hoist *all* of the ipc and sync code into the guest, which will take an=
+=20
+> enormous amount of work.
+>=20
+>   Moreover, because there can only be one hypervisor, and Wine is a multi=
+-
+> process beast, that means that we suddenly need to throw every process in=
+to=20
+> the same VM.
 
-Thanks,
-Usama
-> +	return 0;
-> +}
-> +
-> +early_param("intel_epb", parse_intel_epb);
-> +
->   static __init int intel_epb_init(void)
->   {
->   	const struct x86_cpu_id *id = x86_match_cpu(intel_epb_normal);
+As above, this is wildly inaccurate.  The only KVM restriction with respect=
+ to
+processes is that a VM is bound to the process (address space) that created=
+ the
+VM.  There are no restrictions on the number of VMs that can be created, e.=
+g. a
+single process can create multiple VMs.
+
+> That has unfortunate implications regarding isolation (it's been a dream =
+for
+> years that we'd be able to share a single wine "VM" between multiple user=
+s),
+> it complicates memory management (though perhaps not terribly?). And it m=
+eans
+> you can only have one Wine VM at a time, and can't use Wine at the same t=
+ime
+> as a "real" VM, neither of which are restrictions that currently exist.
+>=20
+>   And it's not even like we can refactor=E2=80=94we'd have to rewrite ton=
+s of code to=20
+> work inside a VM, but also keep the old code around for the cases where w=
+e=20
+> don't have a VM and want to delegate scheduling to the host OS.
+>=20
+> * Besides scheduling, we need to exit the VM every time we would normally=
+ call=20
+> into Unix code, which in practice is every time that the application does=
+ an=20
+> NT syscall, or uses a library which we delegate to the host (including e.=
+g.=20
+> GPU, multimedia, audio...)
+
+Maybe I misinterpreted Peter's suggestion, but at least in my mind I wasn't=
+ thinking
+that the entire Wine process would run in a VM, but rather Wine would run j=
+ust
+the "problematic" code in a VM.
