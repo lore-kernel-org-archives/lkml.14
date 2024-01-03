@@ -1,112 +1,148 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C091518EC9
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 12:18:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rL0CN-00039L-L8; Wed, 03 Jan 2024 13:18:15 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rL0CM-00073n-NR; Wed, 03 Jan 2024 13:18:14 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rL0CM-003LaY-20;
-	Wed, 03 Jan 2024 13:18:14 +0100
-Date: Wed, 3 Jan 2024 13:18:14 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: pratikmanvar09@gmail.com, linux-pwm@vger.kernel.org, 
-	shawnguo@kernel.org, s.hauer@pengutronix.de, Pratik Manvar <pratik.manvar@ifm.com>, 
-	linux-kernel@vger.kernel.org, thierry.reding@gmail.com, Clark Wang <xiaoning.wang@nxp.com>, 
-	linux-imx@nxp.com, kernel@pengutronix.de, festevam@gmail.com, 
-	linux-arm-kernel@lists.infradead.org, Jun Li <jun.li@nxp.com>
-Subject: Re: [PATCH] pwm: imx27: workaround of the pwm output bug
-Message-ID: <sdqgerar4utskfvp2pxbjsjesf2s5zuxtlssur2v3kdvq5m7a6@jaueiad7zvcf>
-References: <20231229063013.1786-1-pratikmanvar09@gmail.com>
- <20240103103421.GA3758@francesco-nb>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2260B199A0;
+	Wed,  3 Jan 2024 12:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JQ2uUbfx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1704284368;
+	bh=sXvCTJMiMZYRpZ56qv2vfroblI96aeB5QJhYBTGQ51s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JQ2uUbfxeiEBF2kzZjHIHn9Tdpp3LgHNaU6HfR0+Ta1mDvIV09iUJyfCqgy3OBVYp
+	 YOqMmMCP1NvVqwgSdrUALT2FXZ4PVcObau2maRNTgYKjl8b+aCUjv+7VBLX2KlyMeB
+	 KpVAgw+uaCqls572liiibW+OaX3hzfqqn2XGBhfs+zEqNrHos/KSU+RkY4GpBzrHXl
+	 cDYMyIrUza28IlH5XPy1XtMX6EUu2L6apf9/Az+zrQEPn1Jewg6oRuSvKq5Pyi6jSy
+	 SUqO3O2GjG0l7TgZgCmY96PkGvKZQ1s9hakqYJz5NfC2zybaoMKzwuGA6H8Fb4LXua
+	 qLtGS69h25y/A==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 451A5378104C;
+	Wed,  3 Jan 2024 12:19:27 +0000 (UTC)
+Message-ID: <eed88b36-ae56-40d3-8588-0d5d75da71a6@collabora.com>
+Date: Wed, 3 Jan 2024 13:19:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="oig3ms6c3h2nuufe"
-Content-Disposition: inline
-In-Reply-To: <20240103103421.GA3758@francesco-nb>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] clk: mediatek: Introduce need_pm_runtime to
+ mtk_clk_desc
+Content-Language: en-US
+To: Pin-yen Lin <treapking@chromium.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Chen-Yu Tsai <wenst@chromium.org>, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Weiyi Lu <weiyi.lu@mediatek.com>, linux-mediatek@lists.infradead.org,
+ Eugen Hristev <eugen.hristev@collabora.com>
+References: <20240102081402.1226795-1-treapking@chromium.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20240102081402.1226795-1-treapking@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+Il 02/01/24 09:12, Pin-yen Lin ha scritto:
+> Introduce a new need_pm_runtime variable to mtk_clk_desc to indicate
+> this clock needs a runtime PM get on the clock controller during the
+> probing stage.
+> 
+> Signed-off-by: Pin-yen Lin <treapking@chromium.org>
+
+Hello Pin-yen,
+
+We have experienced something similar, but it was really hard to reproduce after
+some changes.
+
+In an effort to try to solve this issue (but again, reproducing is really hard),
+Eugen has sent a commit in the hope that someone else found a way to easily
+reproduce. Please look at [1].
+
+I'm also adding Eugen to the Cc's of this email.
+
+Cheers,
+Angelo
+
+[1]: 
+https://patchwork.kernel.org/project/linux-pm/patch/20231225133615.78993-1-eugen.hristev@collabora.com/
+
+> ---
+> 
+> Changes in v2:
+> - Fix the order of error handling
+> - Update the commit message and add a comment before the runtime PM call
+> 
+>   drivers/clk/mediatek/clk-mtk.c | 15 +++++++++++++++
+>   drivers/clk/mediatek/clk-mtk.h |  2 ++
+>   2 files changed, 17 insertions(+)
+> 
+> diff --git a/drivers/clk/mediatek/clk-mtk.c b/drivers/clk/mediatek/clk-mtk.c
+> index 2e55368dc4d8..c31e535909c8 100644
+> --- a/drivers/clk/mediatek/clk-mtk.c
+> +++ b/drivers/clk/mediatek/clk-mtk.c
+> @@ -13,6 +13,7 @@
+>   #include <linux/of.h>
+>   #include <linux/of_address.h>
+>   #include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+>   #include <linux/slab.h>
+>   
+>   #include "clk-mtk.h"
+> @@ -494,6 +495,14 @@ static int __mtk_clk_simple_probe(struct platform_device *pdev,
+>   			return IS_ERR(base) ? PTR_ERR(base) : -ENOMEM;
+>   	}
+>   
+> +
+> +	if (mcd->need_runtime_pm) {
+> +		devm_pm_runtime_enable(&pdev->dev);
+> +		r = pm_runtime_resume_and_get(&pdev->dev);
+> +		if (r)
+> +			return r;
+> +	}
+> +
+>   	/* Calculate how many clk_hw_onecell_data entries to allocate */
+>   	num_clks = mcd->num_clks + mcd->num_composite_clks;
+>   	num_clks += mcd->num_fixed_clks + mcd->num_factor_clks;
+> @@ -574,6 +583,9 @@ static int __mtk_clk_simple_probe(struct platform_device *pdev,
+>   			goto unregister_clks;
+>   	}
+>   
+> +	if (mcd->need_runtime_pm)
+> +		pm_runtime_put(&pdev->dev);
+> +
+>   	return r;
+>   
+>   unregister_clks:
+> @@ -604,6 +616,9 @@ static int __mtk_clk_simple_probe(struct platform_device *pdev,
+>   free_base:
+>   	if (mcd->shared_io && base)
+>   		iounmap(base);
+> +
+> +	if (mcd->need_runtime_pm)
+> +		pm_runtime_put(&pdev->dev);
+>   	return r;
+>   }
+>   
+> diff --git a/drivers/clk/mediatek/clk-mtk.h b/drivers/clk/mediatek/clk-mtk.h
+> index 22096501a60a..c17fe1c2d732 100644
+> --- a/drivers/clk/mediatek/clk-mtk.h
+> +++ b/drivers/clk/mediatek/clk-mtk.h
+> @@ -237,6 +237,8 @@ struct mtk_clk_desc {
+>   
+>   	int (*clk_notifier_func)(struct device *dev, struct clk *clk);
+>   	unsigned int mfg_clk_idx;
+> +
+> +	bool need_runtime_pm;
+>   };
+>   
+>   int mtk_clk_pdev_probe(struct platform_device *pdev);
 
 
---oig3ms6c3h2nuufe
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 03, 2024 at 11:34:21AM +0100, Francesco Dolcini wrote:
-> On Fri, Dec 29, 2023 at 12:00:07PM +0530, pratikmanvar09@gmail.com wrote:
-> > From: Clark Wang <xiaoning.wang@nxp.com>
-> >=20
-> > This fixes the pwm output bug when decrease the duty cycle.
-> > This is a limited workaround for the PWM IP issue TKT0577206.
-> >=20
-> > Root cause:
-> > When the SAR FIFO is empty, the new write value will be directly applied
-> > to SAR even the current period is not over.
-> > If the new SAR value is less than the old one, and the counter is
-> > greater than the new SAR value, the current period will not filp the
-> > level. This will result in a pulse with a duty cycle of 100%.
-> >=20
-> > Workaround:
-> > Add an old value SAR write before updating the new duty cycle to SAR.
-> > This will keep the new value is always in a not empty fifo, and can be
-> > wait to update after a period finished.
-> >=20
-> > Limitation:
-> > This workaround can only solve this issue when the PWM period is longer
-> > than 2us(or <500KHz).
-> >=20
-> > Reviewed-by: Jun Li <jun.li@nxp.com>
-> > Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
-> > Link: https://github.com/nxp-imx/linux-imx/commit/16181cc4eee61d87cbaba=
-0e5a479990507816317
-> > Tested-by: Pratik Manvar <pratik.manvar@ifm.com>
->=20
-> You need to add your signed-off-by at the end when sending a patch, no
-> matter if you are the author or not.
-
-FTR: This also applies to the v2 patch. I discarded both from the pwm
-patchwork.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---oig3ms6c3h2nuufe
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWVUIUACgkQj4D7WH0S
-/k6ytAf/UIcvOinV3MPezxtggAVXZ/zCrUR/WE0fMJhwd0PD1uOWXFt5wjEDkUzB
-WxzrfbXSWpjcn1lwITWpxr74Mu7qJ4LU9ia+Mu3ApqBGOgc3qy+SuCMouSWthctC
-MNon899rT1PFMT3TQRsKHW2fXLvlisMPv9wZhdm/LaCSpaodt362cJN0zRMFZl9u
-qzYrlcM2xaHewPsU7ALJiJOZtA9V7LX05Fu+H4sAZynShGDxzdnzugEFjR2gu4Ax
-ZTiTTr4+Mg9vyNuEHdNwFNMA7Aj40bN77HP9AvM6tBytbUrzCA3kC58631IfAxIn
-rQ6qXijhPWfYk5WPgWEjUlKSLqTVCA==
-=Reno
------END PGP SIGNATURE-----
-
---oig3ms6c3h2nuufe--
