@@ -1,328 +1,258 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BDC18E0D;
-	Wed,  3 Jan 2024 10:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63BB818C38;
+	Wed,  3 Jan 2024 11:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="B7acPJNm"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id CAD9540E01CB;
-	Wed,  3 Jan 2024 10:59:44 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id rhWWOBUcAl4K; Wed,  3 Jan 2024 10:59:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1704279582; bh=kWj1r7YWgv/xuCZuac9oYHJ2Ii/q2D59EYfwOqw5nDg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B7acPJNm7mRSTv6Mii0NETfGyxXgzzVz4ntLc/qNPM07P18RKpz6+8/kceMx/oNpc
-	 oImibIN2Z8H04tAS6K/S6VnRw3Pi8SmvpPVLi+Y/HV5GC7ZAND9OmiLvKmZ9LlrRlS
-	 fGgqtsxGJktbeO4tB27WlO1v3Fii7Yh1SX9/K8VpwoG2ZZE2NrBkaTdxmR4Fe0M/Hi
-	 U7Q/drYXNLtQLSzGc3wMyw+7P8B82Gv3wjThFOqT3tbLTAoYtE+ljlByG+ihQXuD3O
-	 bjYbDfUV9qHcCTSpQM3WACJcS+qh4rtfrwQlG+bwLCxqOu+v9qlVqOLjaWJ5sy0hes
-	 Juz97AY3DmWr+YTj3rcrQXiWhrm22bRDbWmPzR7avSen1FwD5mcHLjUVIcuYkJjRhR
-	 NMy7dQ/PPtb4nJOCWZOu3GcbwWMeArZcNe9uGNcTR9T7MzBHCSqchOQtn3XGoHzpPd
-	 UDsSBU7zKBxRMJ5n5NxP1WeWVx1H1ytu6v38rLh1gU2KQZA4bQDIL8xkaRp1Jb1b+N
-	 DlQ6PQjeNk2Zss1VaXILMIXWHL8xZw0WCtQQ1mMEyczAh2LEgvSUGXvRcW6k0Rp6/k
-	 Y+e7bsTJXwrhWuO1czB40mvLSkpEQl+cLfZA0osFOuOEhwdYE4gaX6DHvF+5L28+iJ
-	 sUQ/JYUv9fplWGB6pHHsjaM4=
-Received: from zn.tnic (pd9530f8c.dip0.t-ipconnect.de [217.83.15.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8C4C940E01C5;
-	Wed,  3 Jan 2024 10:59:34 +0000 (UTC)
-Date: Wed, 3 Jan 2024 11:59:33 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-	avadhut.naik@amd.com, tony.luck@intel.com, john.allen@amd.com,
-	william.roche@oracle.com, muralidhara.mk@amd.com
-Subject: Re: [PATCH v4 0/3] AMD Address Translation Library
-Message-ID: <20240103105933.GBZZU+FRPkBDkIwr4P@fat_crate.local>
-References: <20231218190406.27479-1-yazen.ghannam@amd.com>
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="JOInMJEL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=s31663417; t=1704279656; x=1704884456; i=wahrenst@gmx.net;
+	bh=g2Z6MvvMkQ+kJLriOC+XA/VgFBdbSnkP4cIEJgxIfuM=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=JOInMJELebW/5734Vs/T26+HvYO4JJlIjgdb2Ky23CC8UUrNwJ4vdFaSMk6u5QyS
+	 f5VAWCfGUsQAR4zbrx35VT3stlPhbCutMsbFMkKgs9ooFtlSS3mOwjy0NuQxhNKwq
+	 KblhMMB9WF1nTBOFS1ecGedb2jVqurKalKMEco1AMHOLu+tDugc/lVbXmShNA8CRG
+	 Oo3wOdFq2V0Z9x4o7Drx+DeiBkCz39af7W5cWQVDmadA1CRf5+1oVkfnfyn1MkOCe
+	 1LSSdVdG7c8QUXrYTwuj9BxBdE5VKYq+VNIlVagEIQcAwZ10pBcWx7xD4rwPIrLoV
+	 6Pa90Omi+o1YzjROcg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MZTqg-1rgRSA1Hwk-00WX63; Wed, 03
+ Jan 2024 12:00:56 +0100
+Message-ID: <9b5f9e1b-645a-4b44-a30c-fe93e7bf3532@gmx.net>
+Date: Wed, 3 Jan 2024 12:00:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20231218190406.27479-1-yazen.ghannam@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] pwm: imx27: workaround of the pwm output bug
+To: pratikmanvar09@gmail.com
+Cc: festevam@gmail.com, jun.li@nxp.com, kernel@pengutronix.de,
+ linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+ oe-kbuild-all@lists.linux.dev, pratik.manvar@ifm.com,
+ s.hauer@pengutronix.de, shawnguo@kernel.org, thierry.reding@gmail.com,
+ u.kleine-koenig@pengutronix.de, xiaoning.wang@nxp.com, lkp@intel.com
+References: <202312300907.RGtYsKxb-lkp@intel.com>
+ <20240103063454.1795-1-pratikmanvar09@gmail.com>
+Content-Language: en-US
+From: Stefan Wahren <wahrenst@gmx.net>
+In-Reply-To: <20240103063454.1795-1-pratikmanvar09@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:9fs9dcpWc9nO2pwBLgcP7kEXEe/kAweafeLoW79fow2sCOja2lK
+ ear8zCcoJLfSF0VwZPKqCHRi24D1cjsjYTxxnqVitG1C9N6FhBNQtwEekT4hntOhaqg1GjX
+ WoZ/5wrxa4flnxkucAz5QmPPzkf21ygXaJEam2L7B2ylB78xZYGQhwyVFLbVx7FGS5Kg0NM
+ +09awctNG2qUgW1iTEG1g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:/vRVwKhM6Yg=;unls2BsqOW2WFrJf5/FEPKWNDPN
+ HIoaAmsULXz72wbeI0EPgowjcgV5aEouWUKrsq8kWpse/cxtMKzj76jAas9aGbaZGMP78NG+b
+ CuODDoC/n/3WYo3EH+zdRs0Q71QrRhIK8bRVawqfPMhtigRql+31++mUEnNvCll6cP9ztaN82
+ TpM/TRM22S4xscsqwjEAt2o/p3+rl/2x19kGZ32Jg/7UalmYG6QcehZFH79QCsd4N2DgtFsSY
+ uA41TSG7fqYC7AK56iOuURhnOvwLkYb5MVOyCdb2uOUF62+yny7QKc4+xk1hwuQtZ7dbSSzR5
+ 8rOwAdW0SnMw9bC7pBno3p47++dmFldINOaM2tlfyg4H2Mdt5vUyRM0OE4Gme9t6lKOt4nVve
+ 2wzcIU5QBF0/rkd+gr9T1q5TQLWoL8cBgtN7kojNvxd6JdBWebaZEGYOc8e5eH+LpEhiP/APA
+ ewXh2IM0yGqRPWpLSMPUgMRC1Wp51ZibC+lWXWCPCHHi2yD5YOWHzOAZnlhn29dASTVgCvrlu
+ N2gYgFfnxgcOclGmimh9ZTyEX/Mlt4+GbDAPcpEn/KFzLoXX+MkBcJG1ZHNZIsOPGbkLnBpqc
+ 4J6aW8WLGOjFCvNI2/hY9l+g18I4TBcXv/SUDjaLmrkYLn4zBJMc+wGOx4qb35bSt9GD+7cIH
+ qcS8PUAiwVePleaQv60I6JjGLL3TZoalC8d3WtI6G+8aCFd7ku4kYC+d5b34XYb3NV4RVgmHj
+ 3Qrc3BCN+wIglBsg/CXi6BAM4hC04oPwfjeoGaKiogMDUF8YgP0mpdn2SwUQpKJhE+agMl/x0
+ +1smuAQVf8XsK2hk87DdVOqB+UKewHr/rRsIUxWa40p9am0kHigTGZVuMLZyT4T1z6BpE0a28
+ ah4A+DrxF+HtFir49gaUIEn/ujm/YowVtr7rL2UBseEY6USZxf9oCIkdrBEBDUEsvJB1Df4BG
+ vcPNhsxvSTqNpfrUpWle/6VpfM8=
 
-On Mon, Dec 18, 2023 at 01:04:03PM -0600, Yazen Ghannam wrote:
-> Hi all,
-> 
-> This revision addresses comments from Boris for v3. The most substantial
-> change is the removal of the library "stub".
-> 
-> Thanks,
-> Yazen
-> 
-> Yazen Ghannam (3):
->   RAS: Introduce AMD Address Translation Library
->   EDAC/amd64: Use new AMD Address Translation Library
->   Documentation: RAS: Add index and address translation section
+Hi Pratik,
 
-Ok, a combo diff of my fixes ontop, below. Lemme queue it - further
-fixes can go ontop from now on.
+Am 03.01.24 um 07:34 schrieb pratikmanvar09@gmail.com:
+> From: Clark Wang <xiaoning.wang@nxp.com>
+>
+> This fixes the pwm output bug when decrease the duty cycle.
+> This is a limited workaround for the PWM IP issue TKT0577206.
+this looks like a patch from the vendor tree.
 
-Thx.
+Could you please provide a link to the origin or at least to the
+document which describes TKT0577206?
 
----
-diff --git a/drivers/ras/amd/atl/access.c b/drivers/ras/amd/atl/access.c
-index 1de0460f5e03..f6dd87bb2c35 100644
---- a/drivers/ras/amd/atl/access.c
-+++ b/drivers/ras/amd/atl/access.c
-@@ -18,12 +18,12 @@ static DEFINE_MUTEX(df_indirect_mutex);
- /*
-  * Data Fabric Indirect Access uses FICAA/FICAD.
-  *
-- * Fabric Indirect Configuration Access Address (FICAA): Constructed based
-+ * Fabric Indirect Configuration Access Address (FICAA): constructed based
-  * on the device's Instance Id and the PCI function and register offset of
-  * the desired register.
-  *
-- * Fabric Indirect Configuration Access Data (FICAD): There are FICAD LO
-- * and FICAD HI registers but so far we only need the LO register.
-+ * Fabric Indirect Configuration Access Data (FICAD): there are FICAD
-+ * low and high registers but so far only the low register is needed.
-  *
-  * Use Instance Id 0xFF to indicate a broadcast read.
-  */
-diff --git a/drivers/ras/amd/atl/core.c b/drivers/ras/amd/atl/core.c
-index 9cc31c052427..6dc4e06305f7 100644
---- a/drivers/ras/amd/atl/core.c
-+++ b/drivers/ras/amd/atl/core.c
-@@ -31,7 +31,7 @@ static int addr_over_limit(struct addr_ctx *ctx)
- 
- 	/* Is calculated system address above DRAM limit address? */
- 	if (ctx->ret_addr > dram_limit_addr) {
--		atl_debug("Calculated address (0x%016llx) > DRAM limit (0x%016llx)",
-+		atl_debug(ctx, "Calculated address (0x%016llx) > DRAM limit (0x%016llx)",
- 			  ctx->ret_addr, dram_limit_addr);
- 		return -EINVAL;
- 	}
-@@ -179,7 +179,7 @@ static void check_for_legacy_df_access(void)
-  * are technically independent things.
-  *
-  * It's possible to match on the PCI IDs of the Data Fabric devices, but this will be
-- * an every expanding list. Instead match on the SMCA and Zen features to cover all
-+ * an ever expanding list. Instead, match on the SMCA and Zen features to cover all
-  * relevant systems.
-  */
- static const struct x86_cpu_id amd_atl_cpuids[] = {
-diff --git a/drivers/ras/amd/atl/dehash.c b/drivers/ras/amd/atl/dehash.c
-index 51721094dd06..6f414926e6fe 100644
---- a/drivers/ras/amd/atl/dehash.c
-+++ b/drivers/ras/amd/atl/dehash.c
-@@ -12,7 +12,14 @@
- 
- #include "internal.h"
- 
--static inline bool valid_map_bits(struct addr_ctx *ctx, u8 bit1, u8 bit2,
-+/*
-+ * Verify the interleave bits are correct in the different interleaving
-+ * settings.
-+ *
-+ * If @num_intlv_dies and/or @num_intlv_sockets are 1, it means the
-+ * respective interleaving is disabled.
-+ */
-+static inline bool map_bits_valid(struct addr_ctx *ctx, u8 bit1, u8 bit2,
- 				  u8 num_intlv_dies, u8 num_intlv_sockets)
- {
- 	if (!(ctx->map.intlv_bit_pos == bit1 || ctx->map.intlv_bit_pos == bit2)) {
-@@ -37,11 +44,7 @@ static int df2_dehash_addr(struct addr_ctx *ctx)
- {
- 	u8 hashed_bit, intlv_bit, intlv_bit_pos;
- 
--	/*
--	 * Assert that interleave bit is 8 or 9 and that die and socket
--	 * interleaving are disabled.
--	 */
--	if (!valid_map_bits(ctx, 8, 9, 1, 1))
-+	if (!map_bits_valid(ctx, 8, 9, 1, 1))
- 		return -EINVAL;
- 
- 	intlv_bit_pos = ctx->map.intlv_bit_pos;
-@@ -64,11 +67,7 @@ static int df3_dehash_addr(struct addr_ctx *ctx)
- 	bool hash_ctl_64k, hash_ctl_2M, hash_ctl_1G;
- 	u8 hashed_bit, intlv_bit, intlv_bit_pos;
- 
--	/*
--	 * Assert that interleave bit is 8 or 9 and that die and socket
--	 * interleaving are disabled.
--	 */
--	if (!valid_map_bits(ctx, 8, 9, 1, 1))
-+	if (!map_bits_valid(ctx, 8, 9, 1, 1))
- 		return -EINVAL;
- 
- 	hash_ctl_64k = FIELD_GET(DF3_HASH_CTL_64K, ctx->map.ctl);
-@@ -172,11 +171,7 @@ static int df4_dehash_addr(struct addr_ctx *ctx)
- 	bool hash_ctl_64k, hash_ctl_2M, hash_ctl_1G;
- 	u8 hashed_bit, intlv_bit;
- 
--	/*
--	 * Assert that interleave bit is 8, die interleaving is disabled,
--	 * and no more than 2 sockets are interleaved.
--	 */
--	if (!valid_map_bits(ctx, 8, 8, 1, 2))
-+	if (!map_bits_valid(ctx, 8, 8, 1, 2))
- 		return -EINVAL;
- 
- 	hash_ctl_64k = FIELD_GET(DF4_HASH_CTL_64K, ctx->map.ctl);
-@@ -252,11 +247,7 @@ static int df4p5_dehash_addr(struct addr_ctx *ctx)
- 	u8 hashed_bit, intlv_bit;
- 	u64 rehash_vector;
- 
--	/*
--	 * Assert that interleave bit is 8, die interleaving is disabled,
--	 * and no more than 2 sockets are interleaved.
--	 */
--	if (!valid_map_bits(ctx, 8, 8, 1, 2))
-+	if (!map_bits_valid(ctx, 8, 8, 1, 2))
- 		return -EINVAL;
- 
- 	hash_ctl_64k = FIELD_GET(DF4_HASH_CTL_64K, ctx->map.ctl);
-diff --git a/drivers/ras/amd/atl/denormalize.c b/drivers/ras/amd/atl/denormalize.c
-index fb182dd7cca6..01f1d0fb6799 100644
---- a/drivers/ras/amd/atl/denormalize.c
-+++ b/drivers/ras/amd/atl/denormalize.c
-@@ -339,7 +339,8 @@ static u16 get_logical_coh_st_fabric_id(struct addr_ctx *ctx)
- 	}
- 
- 	if (log_fabric_id == MAX_COH_ST_CHANNELS)
--		atl_debug("COH_ST remap entry not found for 0x%x", log_fabric_id);
-+		atl_debug(ctx, "COH_ST remap entry not found for 0x%x",
-+			  log_fabric_id);
- 
- 	/* Get the Node ID bits from the physical and apply to the logical. */
- 	return (phys_fabric_id & df_cfg.node_id_mask) | log_fabric_id;
-diff --git a/drivers/ras/amd/atl/internal.h b/drivers/ras/amd/atl/internal.h
-index a1996811aa34..f17c5f5c9950 100644
---- a/drivers/ras/amd/atl/internal.h
-+++ b/drivers/ras/amd/atl/internal.h
-@@ -279,10 +279,10 @@ static inline u64 remove_bits(u8 low_bit, u8 high_bit, u64 data)
- 	return temp1 | temp2;
- }
- 
--#define atl_debug(fmt, arg...) \
-+#define atl_debug(ctx, fmt, arg...) \
- 	pr_debug("socket_id=%u die_id=%u coh_st_inst_id=%u norm_addr=0x%016llx: " fmt,\
--		 ctx->inputs.socket_id, ctx->inputs.die_id,\
--		 ctx->inputs.coh_st_inst_id, ctx->inputs.norm_addr, ##arg)
-+		 (ctx)->inputs.socket_id, (ctx)->inputs.die_id,\
-+		 (ctx)->inputs.coh_st_inst_id, (ctx)->inputs.norm_addr, ##arg)
- 
- static inline void atl_debug_on_bad_df_rev(void)
- {
-@@ -291,7 +291,7 @@ static inline void atl_debug_on_bad_df_rev(void)
- 
- static inline void atl_debug_on_bad_intlv_mode(struct addr_ctx *ctx)
- {
--	atl_debug("Unrecognized interleave mode: %u", ctx->map.intlv_mode);
-+	atl_debug(ctx, "Unrecognized interleave mode: %u", ctx->map.intlv_mode);
- }
- 
- #endif /* __AMD_ATL_INTERNAL_H__ */
-diff --git a/drivers/ras/amd/atl/map.c b/drivers/ras/amd/atl/map.c
-index 8145b7bb2b40..64e8b1eda1ae 100644
---- a/drivers/ras/amd/atl/map.c
-+++ b/drivers/ras/amd/atl/map.c
-@@ -140,7 +140,7 @@ static int get_dram_offset(struct addr_ctx *ctx, u64 *norm_offset)
- 
- 	/* Should not be called for map 0. */
- 	if (!ctx->map.num) {
--		atl_debug("Trying to find DRAM offset for map 0");
-+		atl_debug(ctx, "Trying to find DRAM offset for map 0");
- 		return -EINVAL;
- 	}
- 
-@@ -388,7 +388,6 @@ static int find_normalized_offset(struct addr_ctx *ctx, u64 *norm_offset)
- 
- 	for (ctx->map.num = 1; ctx->map.num < df_cfg.num_coh_st_maps; ctx->map.num++) {
- 		ret = get_dram_offset(ctx, norm_offset);
--
- 		if (ret < 0)
- 			return ret;
- 
-@@ -398,13 +397,13 @@ static int find_normalized_offset(struct addr_ctx *ctx, u64 *norm_offset)
- 
- 		/* Enabled offsets should never be 0. */
- 		if (*norm_offset == 0) {
--			atl_debug("Enabled map %u offset is 0", ctx->map.num);
-+			atl_debug(ctx, "Enabled map %u offset is 0", ctx->map.num);
- 			return -EINVAL;
- 		}
- 
- 		/* Offsets should always increase from one map to the next. */
- 		if (*norm_offset <= last_offset) {
--			atl_debug("Map %u offset (0x%016llx) <= previous (0x%016llx)",
-+			atl_debug(ctx, "Map %u offset (0x%016llx) <= previous (0x%016llx)",
- 				  ctx->map.num, *norm_offset, last_offset);
- 			return -EINVAL;
- 		}
-@@ -650,18 +649,17 @@ static void dump_address_map(struct dram_addr_map *map)
- 
- int get_address_map(struct addr_ctx *ctx)
- {
--	int ret = 0;
-+	int ret;
- 
- 	ret = get_address_map_common(ctx);
- 	if (ret)
--		goto out;
-+		return ret;
- 
- 	ret = get_global_map_data(ctx);
- 	if (ret)
--		goto out;
-+		return ret;
- 
- 	dump_address_map(&ctx->map);
- 
--out:
- 	return ret;
- }
-diff --git a/drivers/ras/amd/atl/system.c b/drivers/ras/amd/atl/system.c
-index 37ad203bb93e..af61f2f1d6de 100644
---- a/drivers/ras/amd/atl/system.c
-+++ b/drivers/ras/amd/atl/system.c
-@@ -17,7 +17,7 @@ int determine_node_id(struct addr_ctx *ctx, u8 socket_id, u8 die_id)
- 	u16 socket_id_bits, die_id_bits;
- 
- 	if (socket_id > 0 && df_cfg.socket_id_mask == 0) {
--		atl_debug("Invalid socket inputs: socket_id=%u socket_id_mask=0x%x",
-+		atl_debug(ctx, "Invalid socket inputs: socket_id=%u socket_id_mask=0x%x",
- 			  socket_id, df_cfg.socket_id_mask);
- 		return -EINVAL;
- 	}
-@@ -28,7 +28,7 @@ int determine_node_id(struct addr_ctx *ctx, u8 socket_id, u8 die_id)
- 	socket_id_bits &=	df_cfg.socket_id_mask;
- 
- 	if (die_id > 0 && df_cfg.die_id_mask == 0) {
--		atl_debug("Invalid die inputs: die_id=%u die_id_mask=0x%x",
-+		atl_debug(ctx, "Invalid die inputs: die_id=%u die_id_mask=0x%x",
- 			  die_id, df_cfg.die_id_mask);
- 		return -EINVAL;
- 	}
-@@ -225,8 +225,6 @@ static void get_num_maps(void)
- 		df_cfg.num_coh_st_maps	= 2;
- 		break;
- 	case DF4:
--		df_cfg.num_coh_st_maps	= 4;
--		break;
- 	case DF4p5:
- 		df_cfg.num_coh_st_maps	= 4;
- 		break;
+As a i.MX6ULL user i couldn't find this issue in the chip errata. So are
+you sure that every PWM IP handled by this driver is affected?
+>
+> Root cause:
+> When the SAR FIFO is empty, the new write value will be directly applied
+> to SAR even the current period is not over.
+> If the new SAR value is less than the old one, and the counter is
+> greater than the new SAR value, the current period will not filp the
+s/filp/flip/ ?
+> level. This will result in a pulse with a duty cycle of 100%.
+>
+> Workaround:
+> Add an old value SAR write before updating the new duty cycle to SAR.
+> This will keep the new value is always in a not empty fifo, and can be
+> wait to update after a period finished.
+>
+> Limitation:
+> This workaround can only solve this issue when the PWM period is longer
+> than 2us(or <500KHz).
+>
+> Reviewed-by: Jun Li <jun.li@nxp.com>
+> Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
+> Link: https://github.com/nxp-imx/linux-imx/commit/16181cc4eee61d87cbaba0=
+e5a479990507816317
+> Tested-by: Pratik Manvar <pratik.manvar@ifm.com>
+> ---
+>   V1 -> V2: fix sparse warnings reported-by: kernel test robot <lkp@inte=
+l.com>
+>             Closes: https://lore.kernel.org/oe-kbuild-all/202312300907.R=
+GtYsKxb-lkp@intel.com/
+>
+>   drivers/pwm/pwm-imx27.c | 67 ++++++++++++++++++++++++++++++++++++++---
+>   1 file changed, 62 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+> index 7d9bc43f12b0..1e500a5bf564 100644
+> --- a/drivers/pwm/pwm-imx27.c
+> +++ b/drivers/pwm/pwm-imx27.c
+> @@ -21,11 +21,13 @@
+>   #include <linux/platform_device.h>
+>   #include <linux/pwm.h>
+>   #include <linux/slab.h>
+> +#include <linux/spinlock.h>
+>
+>   #define MX3_PWMCR			0x00    /* PWM Control Register */
+>   #define MX3_PWMSR			0x04    /* PWM Status Register */
+>   #define MX3_PWMSAR			0x0C    /* PWM Sample Register */
+>   #define MX3_PWMPR			0x10    /* PWM Period Register */
+> +#define MX3_PWMCNR			0x14    /* PWM Counter Register */
+>
+>   #define MX3_PWMCR_FWM			GENMASK(27, 26)
+>   #define MX3_PWMCR_STOPEN		BIT(25)
+> @@ -91,6 +93,7 @@ struct pwm_imx27_chip {
+>   	 * value to return in that case.
+>   	 */
+>   	unsigned int duty_cycle;
+> +	spinlock_t lock;
+>   };
+>
+>   #define to_pwm_imx27_chip(chip)	container_of(chip, struct pwm_imx27_ch=
+ip, chip)
+> @@ -203,10 +206,10 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_ch=
+ip *chip,
+>
+>   	sr =3D readl(imx->mmio_base + MX3_PWMSR);
+>   	fifoav =3D FIELD_GET(MX3_PWMSR_FIFOAV, sr);
+> -	if (fifoav =3D=3D MX3_PWMSR_FIFOAV_4WORDS) {
+> +	if (fifoav >=3D MX3_PWMSR_FIFOAV_3WORDS) {
+>   		period_ms =3D DIV_ROUND_UP_ULL(pwm_get_period(pwm),
+>   					 NSEC_PER_MSEC);
+> -		msleep(period_ms);
+> +		msleep(period_ms * (fifoav - 2));
+This touches a different workaround ("pwm: imx: Avoid sample FIFO
+overflow for i.MX PWM version2") without any explanation.
+>
+>   		sr =3D readl(imx->mmio_base + MX3_PWMSR);
+>   		if (fifoav =3D=3D FIELD_GET(MX3_PWMSR_FIFOAV, sr))
+> @@ -217,13 +220,15 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_ch=
+ip *chip,
+>   static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *p=
+wm,
+>   			   const struct pwm_state *state)
+>   {
+> -	unsigned long period_cycles, duty_cycles, prescale;
+> +	unsigned long period_cycles, duty_cycles, prescale, counter_check, fla=
+gs;
+>   	struct pwm_imx27_chip *imx =3D to_pwm_imx27_chip(chip);
+> +	void __iomem *reg_sar =3D imx->mmio_base + MX3_PWMSAR;
+> +	__force u32 sar_last, sar_current;
+>   	struct pwm_state cstate;
+>   	unsigned long long c;
+>   	unsigned long long clkrate;
+>   	int ret;
+> -	u32 cr;
+> +	u32 cr, timeout =3D 1000;
+>
+>   	pwm_get_state(pwm, &cstate);
+>
+> @@ -264,7 +269,57 @@ static int pwm_imx27_apply(struct pwm_chip *chip, s=
+truct pwm_device *pwm,
+>   		pwm_imx27_sw_reset(chip);
+>   	}
+>
+> -	writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
+> +	/*
+> +	 * This is a limited workaround. When the SAR FIFO is empty, the new
+> +	 * write value will be directly applied to SAR even the current period
+> +	 * is not over.
+> +	 * If the new SAR value is less than the old one, and the counter is
+> +	 * greater than the new SAR value, the current period will not filp
+The same typo as in the commit message.
+> +	 * the level. This will result in a pulse with a duty cycle of 100%.
+> +	 * So, writing the current value of the SAR to SAR here before updatin=
+g
+> +	 * the new SAR value can avoid this issue.
+> +	 *
+> +	 * Add a spin lock and turn off the interrupt to ensure that the
+> +	 * real-time performance can be guaranteed as much as possible when
+> +	 * operating the following operations.
+> +	 *
+> +	 * 1. Add a threshold of 1.5us. If the time T between the read current
+> +	 * count value CNR and the end of the cycle is less than 1.5us, wait
+> +	 * for T to be longer than 1.5us before updating the SAR register.
+> +	 * This is to avoid the situation that when the first SAR is written,
+> +	 * the current cycle just ends and the SAR FIFO that just be written
+> +	 * is emptied again.
+> +	 *
+> +	 * 2. Use __raw_writel() to minimize the interval between two writes t=
+o
+> +	 * the SAR register to increase the fastest pwm frequency supported.
+> +	 *
+> +	 * When the PWM period is longer than 2us(or <500KHz), this workaround
+> +	 * can solve this problem.
+> +	 */
+> +	if (duty_cycles < imx->duty_cycle) {
+> +		c =3D clkrate * 1500;
+> +		do_div(c, NSEC_PER_SEC);
+> +		counter_check =3D c;
+> +		sar_last =3D (__force u32) cpu_to_le32(imx->duty_cycle);
+> +		sar_current =3D (__force u32) cpu_to_le32(duty_cycles);
+> +
+> +		spin_lock_irqsave(&imx->lock, flags);
+> +		if (state->period >=3D 2000) {
+> +			while ((period_cycles -
+> +				readl_relaxed(imx->mmio_base + MX3_PWMCNR))
+> +				< counter_check) {
+> +				if (!--timeout)
+> +					break;
+> +			};
+> +		}
+> +		if (!(MX3_PWMSR_FIFOAV &
+> +		      readl_relaxed(imx->mmio_base + MX3_PWMSR)))
+> +			__raw_writel(sar_last, reg_sar);
+> +		__raw_writel(sar_current, reg_sar);
+> +		spin_unlock_irqrestore(&imx->lock, flags);
+> +	} else
+> +		writel(duty_cycles, imx->mmio_base + MX3_PWMSAR);
+> +
+This is hard to believe that checkpatch.pl is fine with this patch.
+Please use it before submission.
+>   	writel(period_cycles, imx->mmio_base + MX3_PWMPR);
+>
+>   	/*
+> @@ -324,6 +379,8 @@ static int pwm_imx27_probe(struct platform_device *p=
+dev)
+>   		return dev_err_probe(&pdev->dev, PTR_ERR(imx->clk_per),
+>   				     "failed to get peripheral clock\n");
+>
+> +	spin_lock_init(&imx->lock);
+> +	imx->duty_cycle =3D 0;
+This line looks unrelated and unnecessary.
 
--- 
-Regards/Gruss,
-    Boris.
+Best regards
+>   	imx->chip.ops =3D &pwm_imx27_ops;
+>   	imx->chip.dev =3D &pdev->dev;
+>   	imx->chip.npwm =3D 1;
 
-https://people.kernel.org/tglx/notes-about-netiquette
