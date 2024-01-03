@@ -1,151 +1,62 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD8E18E00
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 11:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7b7fdde8b2dso1416312839f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 03:04:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704279876; x=1704884676;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=R8KfXmtbwMJMKrl1dAJ+3T+XeGVJU5tYwWqQe05u00k=;
-        b=mgf1R4MsbREBrtbtGxWURXjCH/jarJq9Gt9iD02v+4tJMF3wXtkz+TgG6WXL6cA28d
-         3lQWLY0gq7dZVwonEoKAOhARhvu8rw0uiA2+F9EslRQNtRrOIgPmzQyKDtONqJsqgh8o
-         6+2GKwksNSFfmE6Wp5jhnQDqBEkRPomf2Dw4wdk1XkLWrbGLwNAAY45HioKUi8bFATM1
-         ntvOS+wLPZF9jbJ/QWG7+YMg8ypah2f4vM7btGLJdrUi9rRWIohU6tu02Daf4scSdKGF
-         0NOIgYcBXW5FyTwgItyrux6muAGjOJMjZDJCT+OiL1tBrPU0LAY5Eguv8jBdvFXI1l3A
-         hBaw==
-X-Gm-Message-State: AOJu0YyR3cn6QLFCKUWVNz0S4eBNuDLUxPwx2ZMMIn9ZPoPkc+xnyR9X
-	AIhuQCZHP7rS5sJ14hUWiil49nYIcMmxTF6APCqxyXgtUvLM
-X-Google-Smtp-Source: AGHT+IHlATu/d3FvAhv+dHu8yoftsb2wcqgtUVNfCH1GkqmOkEVQAREBnssNuGCDmzykc2peSnPvOXe8ezDdtnpksyZ0c7XusCRA
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4F518EA0;
+	Wed,  3 Jan 2024 11:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rKz59-00048H-RT; Wed, 03 Jan 2024 12:06:43 +0100
+Message-ID: <5c8eb9ed-8029-4e31-b957-083255b6616c@leemhuis.info>
+Date: Wed, 3 Jan 2024 12:06:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c28:b0:35f:9ada:73a8 with SMTP id
- m8-20020a056e021c2800b0035f9ada73a8mr3068749ilh.2.1704279876280; Wed, 03 Jan
- 2024 03:04:36 -0800 (PST)
-Date: Wed, 03 Jan 2024 03:04:36 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009fa770060e089409@google.com>
-Subject: [syzbot] [wireless?] WARNING: suspicious RCU usage in __cfg80211_bss_update
-From: syzbot <syzbot+864a269c27ee06b58374@syzkaller.appspotmail.com>
-To: benjamin.berg@intel.com, davem@davemloft.net, edumazet@google.com, 
-	johannes.berg@intel.com, johannes@sipsolutions.net, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	miriam.rachel.korenblit@intel.com, netdev@vger.kernel.org, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Platforms supporting SGX fail to kexec due to
+ 96c6b8f212a ("memblock: report failures when memblock_can_resize is not set")
+To: LKML Mailing List <linux-kernel@vger.kernel.org>,
+ regressions@lists.linux.dev
+References: <ZY4T7YxrJZCxhMxx@a4bf019067fa.jf.intel.com>
+Content-Language: en-US, de-DE
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ZY4T7YxrJZCxhMxx@a4bf019067fa.jf.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1704280006;a8c67909;
+X-HE-SMSGID: 1rKz59-00048H-RT
 
-Hello,
+On 29.12.23 01:33, Ashok Raj wrote:
+> 
+> 96c6b8f212a ("memblock: report failures when memblock_can_resize is not set")
+> 
+> Causes kexec failure. Backing out this change, kexec succeeds. Symptom is
+> it appears to hang, possibly hung at the panic. Although I have the
+> earlyprintk enabled, I don't see any console messages when new kernel
+> boots. 
+> 
+> Also tested turning off CONFIG_X86_SGX, the kernel with this commit
+> included also kexec's fine.
+> 
+> Booting from warm/cold reset has no issues. Only kexec to new kernel with
+> this change included and CONFIG_X86_SGX=y causes the kexec failure.
+> 
+> #regzbot introduced: 96c6b8f212a
 
-syzbot found the following issue on:
+Fix a typo and do a few other things while at it:
 
-HEAD commit:    954fb2d2d49f Merge branch 'remove-retired-tc-uapi'
-git tree:       net-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=16774b7ee80000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a4e9ca8e3c104d2a
-dashboard link: https://syzkaller.appspot.com/bug?extid=864a269c27ee06b58374
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15890ef9e80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1764956ee80000
+#regzbot introduced: e96c6b8f212a
+#regzbot title: memblock: platforms supporting SGX fail to kexec
+#regzbot ignore-activity
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/4bca0ab1d263/disk-954fb2d2.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/d2766905a2c7/vmlinux-954fb2d2.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d12ee4a13afb/bzImage-954fb2d2.xz
-
-The issue was bisected to:
-
-commit 32af9a9e1069e55bc02741fb00ac9d0ca1a2eaef
-Author: Benjamin Berg <benjamin.berg@intel.com>
-Date:   Wed Dec 20 11:41:41 2023 +0000
-
-    wifi: cfg80211: free beacon_ies when overridden from hidden BSS
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1496b32de80000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=1696b32de80000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1296b32de80000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+864a269c27ee06b58374@syzkaller.appspotmail.com
-Fixes: 32af9a9e1069 ("wifi: cfg80211: free beacon_ies when overridden from hidden BSS")
-
-wlan0: Created IBSS using preconfigured BSSID 50:50:50:50:50:50
-wlan0: Creating new IBSS network, BSSID 50:50:50:50:50:50
-=============================
-WARNING: suspicious RCU usage
-6.7.0-rc6-syzkaller-01863-g954fb2d2d49f #0 Not tainted
------------------------------
-net/wireless/scan.c:1867 suspicious rcu_dereference_check() usage!
-
-other info that might help us debug this:
-
-
-rcu_scheduler_active = 2, debug_locks = 1
-4 locks held by kworker/u4:2/35:
- #0: ffff888013071938 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x789/0x15d0 kernel/workqueue.c:2602
- #1: ffffc90000abfd80 ((work_completion)(&rdev->wiphy_work)){+.+.}-{0:0}, at: process_one_work+0x7eb/0x15d0 kernel/workqueue.c:2603
- #2: ffff88807b0f8768 (&rdev->wiphy.mtx){+.+.}-{3:3}, at: wiphy_lock include/net/cfg80211.h:5928 [inline]
- #2: ffff88807b0f8768 (&rdev->wiphy.mtx){+.+.}-{3:3}, at: cfg80211_wiphy_work+0x2b/0x330 net/wireless/core.c:424
- #3: ffff88807b0f8168 (&rdev->bss_lock){+...}-{2:2}, at: spin_lock_bh include/linux/spinlock.h:356 [inline]
- #3: ffff88807b0f8168 (&rdev->bss_lock){+...}-{2:2}, at: cfg80211_inform_single_bss_frame_data+0x8e4/0x12c0 net/wireless/scan.c:3014
-
-stack backtrace:
-CPU: 0 PID: 35 Comm: kworker/u4:2 Not tainted 6.7.0-rc6-syzkaller-01863-g954fb2d2d49f #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
-Workqueue: events_unbound cfg80211_wiphy_work
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x125/0x1b0 lib/dump_stack.c:106
- lockdep_rcu_suspicious+0x20c/0x3b0 kernel/locking/lockdep.c:6712
- __cfg80211_bss_update+0x17fb/0x25f0 net/wireless/scan.c:1867
- cfg80211_inform_single_bss_frame_data+0x91e/0x12c0 net/wireless/scan.c:3015
- cfg80211_inform_bss_frame_data+0x14c/0x340 net/wireless/scan.c:3050
- __ieee80211_sta_join_ibss+0xcf3/0x1880 net/mac80211/ibss.c:376
- ieee80211_sta_create_ibss+0x206/0x470 net/mac80211/ibss.c:1320
- ieee80211_sta_find_ibss net/mac80211/ibss.c:1449 [inline]
- ieee80211_ibss_work+0xbbb/0x14c0 net/mac80211/ibss.c:1666
- ieee80211_iface_work+0xbeb/0xda0 net/mac80211/iface.c:1665
- cfg80211_wiphy_work+0x24e/0x330 net/wireless/core.c:437
- process_one_work+0x886/0x15d0 kernel/workqueue.c:2627
- process_scheduled_works kernel/workqueue.c:2700 [inline]
- worker_thread+0x8b9/0x1290 kernel/workqueue.c:2781
- kthread+0x2c6/0x3a0 kernel/kthread.c:388
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
