@@ -1,116 +1,162 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFC9F182DD
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 09:47:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 62A10C15;
-	Wed,  3 Jan 2024 01:48:39 -0800 (PST)
-Received: from bogus (unknown [10.57.74.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9649A3F7A6;
-	Wed,  3 Jan 2024 01:47:50 -0800 (PST)
-Date: Wed, 3 Jan 2024 09:44:42 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>
-Subject: Re: [PATCH 2/2] firmware/psci: Set
- pm_set_resume/suspend_via_firmware() on qcom
-Message-ID: <20240103094442.mlh2pf3odof3ze3s@bogus>
-References: <20231227-topic-psci_fw_sus-v1-0-6910add70bf3@linaro.org>
- <20231227-topic-psci_fw_sus-v1-2-6910add70bf3@linaro.org>
- <20231228102801.fzaubcjq5thfwgxg@bogus>
- <f34dd5de-9e56-4c58-b9bf-2356b41d17b1@linaro.org>
- <20231228115053.zlypgc5uxxvghi4a@bogus>
- <376d3040-b9ed-4574-90d7-fb864d694e3c@linaro.org>
- <20231228124348.mmtceqeuean7ly6y@bogus>
- <7e31d489-de96-42f0-a72a-a581859e7131@linaro.org>
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2259F18625
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 09:48:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DKURrIJW"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-336897b6bd6so10077208f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 01:48:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704275297; x=1704880097; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9ygiQ5GZ7AaDONBWvS2tDIrOeQ15Rvo3O1ywNhmUg6E=;
+        b=DKURrIJWUdAW9g81u035uyQjPPYqxC3IHf5y4D4x5F8/0+SupR0ZqLxRH9INT9swMz
+         QjuATZjny7Qb/fZ+VfKUhm8vn8jLTz1DGrtS+2qrcZFaHliPgBDCKtOlv0nMn534Yltz
+         nyl3fqupsaG+BnycDn65a3Ff/oWhfOC3129AjlJYHbKy5qB0gHED6NSCwg+MltvCRqvV
+         /jOaYutSu4MzBlr3GoJgC245W2BJVY1DePS2sDHH3CQGoAuC4Si22qtnMCzbGkzTXTCD
+         BCP6RVnpYKayfcjeL9zvqwekBQXNi4b1O2TBTb2cjGN08fk9JdBF4HtXtGnlDXufeO7d
+         Y6RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704275297; x=1704880097;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9ygiQ5GZ7AaDONBWvS2tDIrOeQ15Rvo3O1ywNhmUg6E=;
+        b=B5LKXY2+CHs3hy6HqHsQvGCCPunpdDZG+RqPOdBAZrHxOMTUeARVB18iVR55jVyr6o
+         pcafnWRztJbo3//nzkNo0Tfp3M37zIpZ8eIXCkr38nyu2nNtJYcBHNExbWf0RgkA6K/t
+         U5BAdtTUDeT/qPAyx5TDSQF7C1U69+Wdqu5Ak5PdDRCBXQhm6EM8n8xtUjcWznsM8Oo4
+         VkVKNt+WIBSn6lyxvr8gVVQlc36kRfpxEQNJ55XWnpHLEadl9Pk0TIaf3ojgygWsZpNj
+         Gavu8ifcvq+sF4lxmPDqbViCVpaNGupm2woq8aoLoLTtHLEDwKCdGgsqvaJx4y1lVfp7
+         RAzw==
+X-Gm-Message-State: AOJu0Yy9ZuvGygWRqNAys4Keqx6JRjaVtoIzqLIbwR6lBl+4QHyBng5K
+	x6neelSLlprh/+OH5gT9H2iiEvliLTx8iA==
+X-Google-Smtp-Source: AGHT+IHSLGf/w+/4nLJY24qGtbeXFaHszE9j+MVClx84jKy+oClHc3nv8SAWdrAvyz8Wu3CyLWhQYQ==
+X-Received: by 2002:a05:6000:368:b0:337:2aa3:ac80 with SMTP id f8-20020a056000036800b003372aa3ac80mr3811982wrf.68.1704275297315;
+        Wed, 03 Jan 2024 01:48:17 -0800 (PST)
+Received: from [192.168.100.86] ([37.228.218.3])
+        by smtp.gmail.com with ESMTPSA id z13-20020adfe54d000000b00333359b522dsm30539123wrm.77.2024.01.03.01.48.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jan 2024 01:48:16 -0800 (PST)
+Message-ID: <e0926d70-09d1-40ab-939a-7e110d718448@linaro.org>
+Date: Wed, 3 Jan 2024 09:48:15 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7e31d489-de96-42f0-a72a-a581859e7131@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/5] net: mdio: ipq4019: enable the SoC uniphy clocks
+ for ipq5332 platform
+Content-Language: en-US
+To: Luo Jie <quic_luoj@quicinc.com>, agross@kernel.org, andersson@kernel.org,
+ konrad.dybcio@linaro.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, andrew@lunn.ch,
+ hkallweit1@gmail.com, linux@armlinux.org.uk, robert.marko@sartura.hr
+Cc: linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ quic_srichara@quicinc.com
+References: <20231225084424.30986-1-quic_luoj@quicinc.com>
+ <20231225084424.30986-3-quic_luoj@quicinc.com>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20231225084424.30986-3-quic_luoj@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 02, 2024 at 07:17:50PM +0100, Konrad Dybcio wrote:
-> On 28.12.2023 13:43, Sudeep Holla wrote:
-> > On Thu, Dec 28, 2023 at 01:16:28PM +0100, Konrad Dybcio wrote:
-> >> On 28.12.2023 12:50, Sudeep Holla wrote:
-> >>> On Thu, Dec 28, 2023 at 12:47:51PM +0100, Konrad Dybcio wrote:
-> >>>> On 28.12.2023 11:28, Sudeep Holla wrote:
-> >>>>> On Wed, Dec 27, 2023 at 11:15:31PM +0100, Konrad Dybcio wrote:
-> >>>>>> Most Qualcomm platforms implementing PSCI (ab)use CPU_SUSPEND for
-> >>>>>> entering various stages of suspend, across the SoC. These range from a
-> >>>>>> simple WFI to a full-fledged power collapse of the entire chip
-> >>>>>> (mostly, anyway).
-> >>>>>>
-> >>>>>> Some device drivers are curious to know whether "the firmware" (which is
-> >>>>>> often assumed to be ACPI) takes care of suspending or resuming the
-> >>>>>> platform. Set the flag that reports this behavior on the aforementioned
-> >>>>>> chips.
-> >>>>>>
-> >>>>>> Some newer Qualcomm chips ship with firmware that actually advertises
-> >>>>>> PSCI SYSTEM_SUSPEND, so the compatible list should only grow slightly.
-> >>>>>>
-> >>>>>
-> >>>>> NACK, just use suspend-to-idle if SYSTEM_SUSPEND is not advertised. It is
-> >>>>> designed for such platforms especially on x86/ACPI which don't advertise
-> >>>>> Sx states. I see no reason why that doesn't work on ARM platforms as well.
-> >>>>
-> >>>> Not sure if I got the message through well, but the bottom line is, on
-> >>>> Qualcomm platforms the "idle" states aren't actually just "idle" (read:
-> >>>> they're not like S0ix). All but the most shallow ones shut down quite a
-> >>>> chunk of the entire SoC, with the lowest ones being essentially S3 with
-> >>>> power being cut off from the entire chip, except for the memory rail.
-> >>>>
-> >>>
-> >>> No I understood that and S2I is exactly what you need.
-> >>> Have you checked if S2I already works as intended on these platforms ?
-> >> Yes, simple CPU idling works OOTB and the SoC power collapse only works
-> >> given the developer doesn't cut corners when bringing up the platform
-> >> (read: works on some of the ones we support, trying hard to expand that
-> >> group!)
-> >>
-> >>> What extra do you achieve with this hack by advertising fake S2R ?
-> >> Uh.. unless I misunderstood something, I'm not advertising s2ram..
-> >> Quite the opposite, I'm making sure only s2idle is allowed.
-> >>
-> >
-> > Right, I didn't notice that in suspend_valid_all(), it can be rename
-> > suspend_valid_s2i or something. "All" indicates all state is valid.
-> >
-> > Anyways that is not the main point. IIUC S2I must still work if there is
-> > at-least one CPU idle state other than WFI without these changes. Right ?
->
-> Yes, and it does
->
+On 25/12/2023 08:44, Luo Jie wrote:
+> On the platform ipq5332, the related SoC uniphy GCC clocks need
+> to be enabled for making the MDIO slave devices accessible.
+> 
+> These UNIPHY clocks are from the SoC platform GCC clock provider,
+> which are enabled for the connected PHY devices working.
+> 
+> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+> ---
+>   drivers/net/mdio/mdio-ipq4019.c | 75 ++++++++++++++++++++++++++++-----
+>   1 file changed, 64 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/net/mdio/mdio-ipq4019.c b/drivers/net/mdio/mdio-ipq4019.c
+> index 5273864fabb3..e24b0e688b10 100644
+> --- a/drivers/net/mdio/mdio-ipq4019.c
+> +++ b/drivers/net/mdio/mdio-ipq4019.c
+> @@ -35,15 +35,36 @@
+>   /* MDIO clock source frequency is fixed to 100M */
+>   #define IPQ_MDIO_CLK_RATE	100000000
+>   
+> +/* SoC UNIPHY fixed clock */
+> +#define IPQ_UNIPHY_AHB_CLK_RATE	100000000
+> +#define IPQ_UNIPHY_SYS_CLK_RATE	24000000
+> +
+>   #define IPQ_PHY_SET_DELAY_US	100000
+>   
+>   /* Maximum SOC PCS(uniphy) number on IPQ platform */
+>   #define ETH_LDO_RDY_CNT				3
+>   
+> +enum mdio_clk_id {
+> +	MDIO_CLK_MDIO_AHB,
+> +	MDIO_CLK_UNIPHY0_AHB,
+> +	MDIO_CLK_UNIPHY0_SYS,
+> +	MDIO_CLK_UNIPHY1_AHB,
+> +	MDIO_CLK_UNIPHY1_SYS,
+> +	MDIO_CLK_CNT
+> +};
+> +
+>   struct ipq4019_mdio_data {
+>   	void __iomem *membase;
+>   	void __iomem *eth_ldo_rdy[ETH_LDO_RDY_CNT];
+> -	struct clk *mdio_clk;
+> +	struct clk *clk[MDIO_CLK_CNT];
+> +};
+> +
+> +static const char *const mdio_clk_name[] = {
+> +	"gcc_mdio_ahb_clk",
+> +	"uniphy0_ahb",
+> +	"uniphy0_sys",
+> +	"uniphy1_ahb",
+> +	"uniphy1_sys"
+>   };
+>   
+>   static int ipq4019_mdio_wait_busy(struct mii_bus *bus)
+> @@ -209,14 +230,43 @@ static int ipq4019_mdio_write_c22(struct mii_bus *bus, int mii_id, int regnum,
+>   static int ipq_mdio_reset(struct mii_bus *bus)
+>   {
+>   	struct ipq4019_mdio_data *priv = bus->priv;
+> -	int ret;
+> +	unsigned long rate;
+> +	int ret, index;
+>   
+> -	/* Configure MDIO clock source frequency if clock is specified in the device tree */
+> -	ret = clk_set_rate(priv->mdio_clk, IPQ_MDIO_CLK_RATE);
+> -	if (ret)
+> -		return ret;
+> +	/* For the platform ipq5332, there are two SoC uniphies available
+> +	 * for connecting with ethernet PHY, the SoC uniphy gcc clock
+> +	 * should be enabled for resetting the connected device such
+> +	 * as qca8386 switch, qca8081 PHY or other PHYs effectively.
+> +	 *
+> +	 * Configure MDIO/UNIPHY clock source frequency if clock instance
+> +	 * is specified in the device tree.
+> +	 */
+> +	for (index = MDIO_CLK_MDIO_AHB; index < MDIO_CLK_CNT; index++) {
 
-Thanks for the confirmation.
+you could do a
 
-> >
-> > If all these changes is to support S2I wih WFI only, then we can look at
-> > some generic solution as there were previous attempts to do something
-> > similar on other platforms IIRC.
->
-> No, I'm just interested in setting the resume/suspend_via_firmware()
-> markers and the PSCI driver seems like a good place for it, be it on
+if (!priv->clk[index])
+	continue;
 
-Agreed and your PATCH 1/2 does that exactly and hence I have acked it
-already.
+here and save a few cycles executing code for absent clocks. ipq6018 has 
+just 1/5 of the clocks you are checking for here.
 
-> all platforms with SYSTEM_SUSPEND and Qualcomm which sneaked equivalent
-> functionality into the CPU_SUSPEND call.
->
+Better still capture the number of clocks you find in probe() in a 
+variable priv->num_clocks and only step through the array
 
-But I don't like the Qualcomm specific changes.
+for (i = 0; i < priv->num_clocks; i++) {}
 
---
-Regards,
-Sudeep
+---
+bod
