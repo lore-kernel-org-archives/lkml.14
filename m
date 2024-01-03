@@ -1,38 +1,35 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 082AA1CA9F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E571CAA1;
 	Wed,  3 Jan 2024 19:27:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="EYAcQcz6"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="NCi7oiuX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1704310051; x=1704914851; i=w_armin@gmx.de;
-	bh=mIHX7j8fEUd+Bx6DEm5FMjslE50yqHiQ75c9lG7NPSc=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=EYAcQcz68YHbGTvNWR0jkLo0zxNjzOR1Dojd1mo7u9HsuAUbZY+ychRQzSKdnvF8
-	 L1eCy//+OCMiduw54zwJXodrMMe9JSmjLy1DMgwv/IcSldCJXlhGWHa3rFjw9IUEL
-	 KyeZdVYf4g9fwsyo7CQei+BYtWw2/8lBwA4pMXdAqboPIL3E4t6QrM3zGelr1e1SI
-	 2stQ17cNUT21N2/hk/mPAgol8Ish4f5ru9dkbF/QhH9dykwPDk0u7GLp//egbfPt7
-	 HXgBovDlNUQuxzZRVu59uTuwQnC1CLAbfu6rXBm3uICrf7Umovp0/wbh/GfgEg7wc
-	 GIp4nx+ThnjvgFkSAw==
+	t=1704310044; x=1704914844; i=w_armin@gmx.de;
+	bh=yWQ7XN1J5vZr985YRVzHaSSRXWFlznRBidVHnXk3W9g=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=NCi7oiuX8m9HO5zNYLOhnGUntnD+cDznVkBp+9zqeVWHogDkwOGAn9J6e4bOjQZi
+	 EVb3oiiJXWYfCWOBW+c22n/VQc/pkDPGL+tTobMNRirZQx+ROoKv3xWZlEO+NPsB7
+	 gXx4ahQ0IvC263uuTXpJc0B0fzI3EHrHlRZsnQbX9bCwjRPXMNGi5gdleE4LXLTxe
+	 cwx89M/kWZ/Sp8+DmnaywyLWKK411ciQZWgmjYanX8s7GvmmI4WvQg1Rf9aVUXz/B
+	 ef5cEZ2iBatyrNxARudZGFP3KEwvIy4WNhOq1o0MeiLF6tlJaksI+YhRcwLx4XheX
+	 wwn9okYRAsA8/534gQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
  (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1M3DO3-1rLwFT45PB-003eUr; Wed, 03 Jan 2024 20:27:31 +0100
+ 1MoO2E-1qsKeq0Vc8-00oqzh; Wed, 03 Jan 2024 20:27:24 +0100
 From: Armin Wolf <W_Armin@gmx.de>
 To: hdegoede@redhat.com,
 	ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] platform/x86: wmi: Fix notify callback locking
-Date: Wed,  3 Jan 2024 20:27:07 +0100
-Message-Id: <20240103192707.115512-5-W_Armin@gmx.de>
+Subject: [PATCH 0/4] platform/x86: wmi: Event handling fixes
+Date: Wed,  3 Jan 2024 20:27:03 +0100
+Message-Id: <20240103192707.115512-1-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240103192707.115512-1-W_Armin@gmx.de>
-References: <20240103192707.115512-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,219 +37,62 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Ezw9sfKGvnBuc/nJwB1N5aPeICUYOeqsx2POT4RLIZN1+qslB+o
- EoZMjnTrOknTA5R66AUypebL1gB0RlYq8ErFAu5C5G+wDC32hVWrP5131mSwgWciHfQQ2SZ
- 5odyMguMYQrYqRj1ZjhnSYL6vu6Yl7Nk0WftTZQOWj0vlqC1DOFqFK9yz8JdkTJuX9v4e97
- 5r/TmF8RKDnK76i0xitMQ==
+X-Provags-ID: V03:K1:ExSkNmB2XLBVT0zbD7/ej9cbtogIZbianXTtpDxY4fOmtJE0vKv
+ bB/Ey2dY561zgHgoV8BJoWM3XO81NP5Zi8KCS4mbC+qWGgqTpJVoAMJE7VxSYe5M2OOCZQV
+ gB+8kQXddMHcNdBzYLfupU8YJWvU4zmz0nhvedr0seaEI4X7muqCMHtyu7y39moMXJmAjJD
+ VmO3VMnqlGMHCxdj4PDqA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:YsK1EHBHo34=;1OmhmvCDOjzZ/OQ/bkuQMBsWwip
- 1Q6mcoSJLP9URaISfHpYiWL0m1/PdXhLnRDYS93CTmtkWO/dO5oSen7dLLBS3nL4/8Hy2kkBr
- 2us0QNh/Ie8TWyF/PZg8zPteFVJ9F1o8mC0VB2YZVvAnpgU5LEDAwgLok4C3aUZkbmceiLdYj
- xbDVSODKpC0RVUCy811WKMobHHIMek6EpCtqOFKUZYLqG0fJ3ivG0oUw1+kLTWl72tR8gMfWw
- P5042PuE72ONWdOz8OQ+z+acpR/UUCLgfazzLFTsByd3H6zMG1vgs0Ak7NWZezFpocB0XYwwY
- 2Stt54ellOJ45DnbOb6aTJI+36tHUkXxgd/Zsy7hiCJfu/COWpQOe8CKYre0l4pSnEiepU75U
- Z+CILvqu3jo6tPBMO3NHK8bwPr/7eq1pSQgdOKUMbJjaAZvXa/klTG2ht6XyoJ9f34UMM8t1p
- qmL5KRlDBmLLOQ99EvNJ3HxS5e5yL84VgiDQh8hSll+C3lnvBJaIrbqPlQmkB4g5sMVYC8NoI
- 7VflSP2gEAGtQMxtqNIyaPRrg9/z+djYOpL276lxcffKWCQ3H5MmHbI2ZOOAKBMXP4zK/m6De
- ANF0z70XSmgA1HAynm6KFnN5rz00VtYrZK+DanFTi9IPoKXwFDXgfuYAEcDXYjHfTRm1N5TTk
- 5D10Ai8/Y2mJA/LzUZt8RVxMAYxp6ygjnWHW7Q5TNrTw3Bo3ES48r6b/h5oRyoL5A/QiUDz6t
- NAx+BPt0AP7GjuncxPFIGRXjSMnwVQgO0VAnG3DYHInErqBB3o8cRotDxyz9IQ+Fc/JpK1lAY
- GNEWYzO3f0XIYKEWnXvAAprej5ZYEkWaorMPO5Mt/vSlR0AzjDgIw03vBuJFDKYVHmwD5tZw/
- Zz0hNwP0oQNR4KZ1ioJMC7l6RL3+xT5PFqZZ2HjHABeqXulwkOoWuQdVHvWq7YZMj9hycBkv5
- FUp8H+dtmqzNhWFlkNT9A5rr2ls=
+UI-OutboundReport: notjunk:1;M01:P0:8maeRSqu2ns=;kqNKUrPIL14F7ooBFSA5Qtmy80l
+ RUVZaG6lMPIpE8ukBWzqrGh1wZH5mK3geulUxAAW9PcO22V8V/Zso4h/7lKrF2E2BV2UXIRRW
+ IlqCrL4xgMU3OrXE3VkT2dtR0MAq0+G/6Puc1BXZVk87IXnlixRl0jlLo60ylzz9P16F3hFDU
+ Fr+Dotg1ckKGbwXxsv1FwDQGUFPkaMikv8mKnni6w/Wsw4ePsuShBycQ2Z8yuKJFDiiqIQ2X6
+ ThpSIpt5iOnlkEL7bLuhXUOCX++WoUL3ZGmsOQAMjf9M38bFEM2K+WSReHdKI1W1Ss9ysVr8q
+ vFDMTvLfhD6dHSspl8Ni20qK0gF4D0oyUJ4L1u+Vg359lcsR3QR66vOt2P5/3+0mjW/WQnMRb
+ y/7EQzExsuTDlUJ210v3L53NshI/JiB0IUx59kCJosKEGFyCzSdSJQ3jbcx13UX5qQtldtz0k
+ XJ8a3brsCkKZHgJNFcXoZ3nfzJvu2bgn1PebxeJJsfFFtuu1z/5ubPSILSHNNUPrExfXjGRqe
+ AqYQieSFcLH+MuLFEUMpGC56uqCOjsI3TPf2qoyKfxaPE4jgbxwhx7a30BnwCnkD3MOW0EWOy
+ ylA3i+JjgzK/krUJS8mtL4JdMEYjH7UxUttu/MpoOOD4Nee+RUgVVxtHzk+iH5V/QUDmCpced
+ DaB+101jENUWn3cyce/6Tk0vnJjk7GbNKKV+4ylt3MtJx/2Eeh3TZLtiZWYCY51edvNPuym8Q
+ FAp6NhAJ8Q6qE3Qytp4mezTbO1U4IJp0IRqAj3Nx3q11pJdPiesIa46m9ydR/O1lOc+BIRJto
+ N9oTICAx8O5eFYNpN17RwJ+HEahzmlDI5OShHvrUbsFMBtaEV4xjQy2928uWC5Nm5pa+OLpw+
+ hUmUyEFmaBES8JSYtpPxCtmXtumyQs6Y4PNHw/mv1NdWn7K0ltBPFdHwrEzJSmrX0HAcRIINW
+ CjxA7dfGfw9XP9jjORHEaHg/wz8=
 
-When an legacy WMI event handler is removed, an WMI event could
-have called the handler just before it was removed, meaning the
-handler could still be running after wmi_remove_notify_handler()
-returns.
-Something similar could also happens when using the WMI bus, as
-the WMI core might still call the notify() callback from an WMI
-driver even if its remove() callback was just called.
+This patch series contains various fixes for the handling of
+WMI events. The first patch fixes an issue where the WMI core
+would return an error even when a legacy WMI notify handler
+was installed successfully.
 
-Fix this by introducing a rw semaphore which ensures that the
-event state of a WMI device does not change while the WMI core
-is handling an event for it.
+The second patch cleans up the last remains of
+commit 58f6425eb92f ("WMI: Cater for multiple events with same GUID"),
+which is useless now that legacy WMI handlers cannot see duplicated
+GUIDS. This however might highlight a potential problem:
 
-Tested on a Dell Inspiron 3505 and a Acer Aspire E1-731.
+In the email thread concerning aforementioned commit, a (now legacy)
+WMI driver was mentioned which depended on this functionality.
+I believe this driver is the dell-wmi-aio driver, so this driver is
+likely already broken for some time and should be converted to the
+new bus-based interface.
 
-Fixes: 1686f5444546 ("platform/x86: wmi: Incorporate acpi_install_notify_h=
-andler")
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/wmi.c | 71 +++++++++++++++++++++++++-------------
- 1 file changed, 47 insertions(+), 24 deletions(-)
+The next patch decouples the legacy WMI notify handlers from the
+wmi_block_list, while the last patch fixes a race condition when a
+notify callback is called by the WMI core.
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 6a886635689a..1aa097d34690 100644
-=2D-- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -25,6 +25,7 @@
- #include <linux/list.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/rwsem.h>
- #include <linux/slab.h>
- #include <linux/sysfs.h>
- #include <linux/types.h>
-@@ -56,7 +57,6 @@ static_assert(__alignof__(struct guid_block) =3D=3D 1);
+All patches have been tested on a Dell Inspiron 3505 and a
+Acer Aspire E1-731.
 
- enum {	/* wmi_block flags */
- 	WMI_READ_TAKES_NO_ARGS,
--	WMI_PROBED,
- };
+Armin Wolf (4):
+  platform/x86: wmi: Fix error handling in legacy WMI notify handler
+    functions
+  platform/x86: wmi: Return immediately if an suitable WMI event is
+    found
+  platform/x86: wmi: Decouple legacy WMI notify handlers from
+    wmi_block_list
+  platform/x86: wmi: Fix notify callback locking
 
- struct wmi_block {
-@@ -64,8 +64,10 @@ struct wmi_block {
- 	struct list_head list;
- 	struct guid_block gblock;
- 	struct acpi_device *acpi_device;
-+	struct rw_semaphore notify_lock;	/* Protects notify callback add/remove =
-*/
- 	wmi_notify_handler handler;
- 	void *handler_data;
-+	bool driver_ready;
- 	unsigned long flags;
- };
+ drivers/platform/x86/wmi.c | 179 +++++++++++++++++++++++--------------
+ 1 file changed, 111 insertions(+), 68 deletions(-)
 
-@@ -602,6 +604,8 @@ acpi_status wmi_install_notify_handler(const char *gui=
-d,
- 		return AE_ERROR;
-
- 	wblock =3D container_of(wdev, struct wmi_block, dev);
-+
-+	down_write(&wblock->notify_lock);
- 	if (wblock->handler) {
- 		status =3D AE_ALREADY_ACQUIRED;
- 	} else {
-@@ -613,6 +617,7 @@ acpi_status wmi_install_notify_handler(const char *gui=
-d,
-
- 		status =3D AE_OK;
- 	}
-+	up_write(&wblock->notify_lock);
-
- 	wmi_device_put(wdev);
-
-@@ -639,6 +644,8 @@ acpi_status wmi_remove_notify_handler(const char *guid=
-)
- 		return AE_ERROR;
-
- 	wblock =3D container_of(wdev, struct wmi_block, dev);
-+
-+	down_write(&wblock->notify_lock);
- 	if (!wblock->handler) {
- 		status =3D AE_NULL_ENTRY;
- 	} else {
-@@ -650,6 +657,7 @@ acpi_status wmi_remove_notify_handler(const char *guid=
-)
-
- 		status =3D AE_OK;
- 	}
-+	up_write(&wblock->notify_lock);
-
- 	wmi_device_put(wdev);
-
-@@ -895,7 +903,9 @@ static int wmi_dev_probe(struct device *dev)
- 		}
- 	}
-
--	set_bit(WMI_PROBED, &wblock->flags);
-+	down_write(&wblock->notify_lock);
-+	wblock->driver_ready =3D true;
-+	up_write(&wblock->notify_lock);
-
- 	return 0;
- }
-@@ -905,7 +915,9 @@ static void wmi_dev_remove(struct device *dev)
- 	struct wmi_block *wblock =3D dev_to_wblock(dev);
- 	struct wmi_driver *wdriver =3D drv_to_wdrv(dev->driver);
-
--	clear_bit(WMI_PROBED, &wblock->flags);
-+	down_write(&wblock->notify_lock);
-+	wblock->driver_ready =3D false;
-+	up_write(&wblock->notify_lock);
-
- 	if (wdriver->remove)
- 		wdriver->remove(dev_to_wdev(dev));
-@@ -1018,6 +1030,8 @@ static int wmi_create_device(struct device *wmi_bus_=
-dev,
- 		wblock->dev.setable =3D true;
-
-  out_init:
-+	init_rwsem(&wblock->notify_lock);
-+	wblock->driver_ready =3D false;
- 	wblock->dev.dev.bus =3D &wmi_bus_type;
- 	wblock->dev.dev.parent =3D wmi_bus_dev;
-
-@@ -1190,6 +1204,26 @@ acpi_wmi_ec_space_handler(u32 function, acpi_physic=
-al_address address,
- 	}
- }
-
-+static void wmi_notify_driver(struct wmi_block *wblock)
-+{
-+	struct wmi_driver *driver =3D drv_to_wdrv(wblock->dev.dev.driver);
-+	struct acpi_buffer data =3D { ACPI_ALLOCATE_BUFFER, NULL };
-+	acpi_status status;
-+
-+	if (!driver->no_notify_data) {
-+		status =3D get_event_data(wblock, &data);
-+		if (ACPI_FAILURE(status)) {
-+			dev_warn(&wblock->dev.dev, "Failed to get event data\n");
-+			return;
-+		}
-+	}
-+
-+	if (driver->notify)
-+		driver->notify(&wblock->dev, data.pointer);
-+
-+	kfree(data.pointer);
-+}
-+
- static int wmi_notify_device(struct device *dev, void *data)
- {
- 	struct wmi_block *wblock =3D dev_to_wblock(dev);
-@@ -1198,28 +1232,17 @@ static int wmi_notify_device(struct device *dev, v=
-oid *data)
- 	if (!(wblock->gblock.flags & ACPI_WMI_EVENT && wblock->gblock.notify_id =
-=3D=3D *event))
- 		return 0;
-
--	/* If a driver is bound, then notify the driver. */
--	if (test_bit(WMI_PROBED, &wblock->flags) && wblock->dev.dev.driver) {
--		struct wmi_driver *driver =3D drv_to_wdrv(wblock->dev.dev.driver);
--		struct acpi_buffer evdata =3D { ACPI_ALLOCATE_BUFFER, NULL };
--		acpi_status status;
--
--		if (!driver->no_notify_data) {
--			status =3D get_event_data(wblock, &evdata);
--			if (ACPI_FAILURE(status)) {
--				dev_warn(&wblock->dev.dev, "failed to get event data\n");
--				return -EIO;
--			}
--		}
--
--		if (driver->notify)
--			driver->notify(&wblock->dev, evdata.pointer);
--
--		kfree(evdata.pointer);
--	} else if (wblock->handler) {
--		/* Legacy handler */
--		wblock->handler(*event, wblock->handler_data);
-+	down_read(&wblock->notify_lock);
-+	/* The WMI driver notify handler conflicts with the legacy WMI handler.
-+	 * Because of this the WMI driver notify handler takes precedence.
-+	 */
-+	if (wblock->dev.dev.driver && wblock->driver_ready) {
-+		wmi_notify_driver(wblock);
-+	} else {
-+		if (wblock->handler)
-+			wblock->handler(*event, wblock->handler_data);
- 	}
-+	up_read(&wblock->notify_lock);
-
- 	acpi_bus_generate_netlink_event(wblock->acpi_device->pnp.device_class,
- 					dev_name(&wblock->dev.dev), *event, 0);
 =2D-
 2.39.2
 
