@@ -1,143 +1,119 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09ECF1C2BB;
-	Wed,  3 Jan 2024 17:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mx0b-0016f401.pphosted.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9911C283;
+	Wed,  3 Jan 2024 17:30:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="AzZ9ubI+"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4032Sq93004808;
-	Wed, 3 Jan 2024 09:28:16 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	pfpt0220; bh=NCOi8MK/oxzSNBqqVOUYfqHk/FOhqRWG+Gpz8Bzjx9I=; b=AzZ
-	9ubI+12xrSMdKfxQ2euVzgUOYoYNdgO4sDrPfbWVJhB0vG8i7oMC7h+eaXs6/6DF
-	kNE1eD8AYNncgxf7qnTHQLD/cz27lzG3a4NUoP++bUUPRjxKPjwWvjNblQ1hJxit
-	BEvJBIy15PLJhTnYIOViBoxkWt9XGUo/0yr+NNJIOZSMCKthsX562dDR3YeRTaoz
-	IeyCymImW87HGjhfdmlmu0/72qQER1VijWeOvApU3pV/1wJEr52GZcrtCECHBP/O
-	ok/ZbN/Sb5yjf4AoKFlA1pTTrdVsbiXxpTGR5pKerRxFLozuko1WA53sauab/PZT
-	/4BK6C7kbIS6HRuJoOg==
-Received: from dc5-exch01.marvell.com ([199.233.59.181])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3vcxu5umjj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jan 2024 09:28:16 -0800 (PST)
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Wed, 3 Jan
- 2024 09:28:14 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
- Transport; Wed, 3 Jan 2024 09:28:14 -0800
-Received: from dc3lp-swdev041.marvell.com (dc3lp-swdev041.marvell.com [10.6.60.191])
-	by maili.marvell.com (Postfix) with ESMTP id AA88F5B6933;
-	Wed,  3 Jan 2024 09:28:11 -0800 (PST)
-From: Elad Nachman <enachman@marvell.com>
-To: <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <andrew@lunn.ch>, <gregory.clement@bootlin.com>,
-        <sebastian.hesselbarth@gmail.com>, <huziji@marvell.com>,
-        <ulf.hansson@linaro.org>, <linux-mmc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC: <enachman@marvell.com>
-Subject: [PATCH v2 2/2] arm64: dts: ac5: add mmc node and clock
-Date: Wed, 3 Jan 2024 19:28:03 +0200
-Message-ID: <20240103172803.1826113-3-enachman@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240103172803.1826113-1-enachman@marvell.com>
-References: <20240103172803.1826113-1-enachman@marvell.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uUPap1lO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72774C433C7;
+	Wed,  3 Jan 2024 17:30:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704303024;
+	bh=Ju7Vq8CwuQ7jiiyXLGXUEI+QEL8KuKs42zh0z+rASmY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uUPap1lOmnZZcoDn17aA8Nd55HVoqi1isFli+gdAOiYCvRBKZm3kV6DODXZqV3dQN
+	 /nDvDhmFjdjQA/MmahaHI21zT33AjRILypCNBJG4A1uriIOq8ZAINhWLrW9YJXn+Kz
+	 eO+wKSkeRD6KYVw8sAxMUMcAOc8gwL5oqZSe5zD9PR1tGE+yO7nY7MKdJWeueZAUs3
+	 Pd4Bk8blzw16+B7IoBhzdeDHSYtx7JQvdKY5WL6sOtSHNBf7OuUmRddln8AdADXFtF
+	 At8jiyYJw+898xhPXiBkt486fIHDmNiLKnQw46JUnD6uVU1Wjib88XKgtGuwetLQWC
+	 7bP87sEkD5xHw==
+Date: Wed, 3 Jan 2024 17:30:18 +0000
+From: Will Deacon <will@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+	ARM <linux-arm-kernel@lists.infradead.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the arm-soc tree with the arm-perf
+ tree
+Message-ID: <20240103173018.GD5954@willie-the-truck>
+References: <20240103100324.05f47bb8@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: RdWnCnkYxNb3y4FkkXMh44Hr1tz6OkzZ
-X-Proofpoint-GUID: RdWnCnkYxNb3y4FkkXMh44Hr1tz6OkzZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240103100324.05f47bb8@canb.auug.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-From: Elad Nachman <enachman@marvell.com>
+On Wed, Jan 03, 2024 at 10:03:24AM +1100, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the arm-soc tree got a conflict in:
+> 
+>   arch/arm/kernel/perf_event_v6.c
+> 
+> between commit:
+> 
+>   5cd7da19cb97 ("arm: perf: Remove PMU locking")
+> 
+> from the arm-perf tree and commit:
+> 
+>   ced296f63635 ("ARM: Delete ARM11MPCore perf leftovers")
+> 
+> from the arm-soc tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
+> 
+> diff --cc arch/arm/kernel/perf_event_v6.c
+> index 8fc080c9e4fb,0cbf46233d6b..000000000000
+> --- a/arch/arm/kernel/perf_event_v6.c
+> +++ b/arch/arm/kernel/perf_event_v6.c
+> @@@ -436,35 -386,9 +373,8 @@@ static void armv6pmu_disable_event(stru
+>   	val &= ~mask;
+>   	val |= evt;
+>   	armv6_pmcr_write(val);
+>  -	raw_spin_unlock_irqrestore(&events->pmu_lock, flags);
+>   }
+>   
+> - static void armv6mpcore_pmu_disable_event(struct perf_event *event)
+> - {
+> - 	unsigned long val, mask, evt = 0;
+> - 	struct hw_perf_event *hwc = &event->hw;
+> - 	int idx = hwc->idx;
+> - 
+> - 	if (ARMV6_CYCLE_COUNTER == idx) {
+> - 		mask	= ARMV6_PMCR_CCOUNT_IEN;
+> - 	} else if (ARMV6_COUNTER0 == idx) {
+> - 		mask	= ARMV6_PMCR_COUNT0_IEN;
+> - 	} else if (ARMV6_COUNTER1 == idx) {
+> - 		mask	= ARMV6_PMCR_COUNT1_IEN;
+> - 	} else {
+> - 		WARN_ONCE(1, "invalid counter number (%d)\n", idx);
+> - 		return;
+> - 	}
+> - 
+> - 	/*
+> - 	 * Unlike UP ARMv6, we don't have a way of stopping the counters. We
+> - 	 * simply disable the interrupt reporting.
+> - 	 */
+> - 	val = armv6_pmcr_read();
+> - 	val &= ~mask;
+> - 	val |= evt;
+> - 	armv6_pmcr_write(val);
+> - }
+> - 
+>   static int armv6_map_event(struct perf_event *event)
+>   {
+>   	return armpmu_map_event(event, &armv6_perf_map,
 
-Add mmc and mmc clock nodes to ac5 and ac5x device tree files
+Thanks, this looks fine to me (just remove all the 11MPCore code).
 
-Signed-off-by: Elad Nachman <enachman@marvell.com>
----
- arch/arm64/boot/dts/marvell/ac5-98dx25xx.dtsi | 31 ++++++++++++++++++-
- .../boot/dts/marvell/ac5-98dx35xx-rd.dts      |  4 +++
- 2 files changed, 34 insertions(+), 1 deletion(-)
+Arnd -- anything you need me to do in the perf tree here other than mention
+this in my pull request?
 
-diff --git a/arch/arm64/boot/dts/marvell/ac5-98dx25xx.dtsi b/arch/arm64/boot/dts/marvell/ac5-98dx25xx.dtsi
-index b5e042b8e929..5591939e057b 100644
---- a/arch/arm64/boot/dts/marvell/ac5-98dx25xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/ac5-98dx25xx.dtsi
-@@ -77,7 +77,6 @@ soc {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 		ranges;
--		dma-ranges;
- 
- 		internal-regs@7f000000 {
- 			#address-cells = <1>;
-@@ -204,6 +203,30 @@ gpio1: gpio@18140 {
- 			};
- 		};
- 
-+		mmc_dma: bus@80500000 {
-+				compatible = "simple-bus";
-+				ranges;
-+				#address-cells = <0x2>;
-+				#size-cells = <0x2>;
-+				reg = <0x0 0x80500000 0x0 0x100000>;
-+				dma-ranges = <0x0 0x0 0x2 0x0 0x0 0x80000000>;
-+				dma-coherent;
-+
-+				sdhci: mmc@805c0000 {
-+					compatible = "marvell,ac5-sdhci",
-+						     "marvell,armada-ap806-sdhci";
-+					reg = <0x0 0x805c0000 0x0 0x1000>;
-+					interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
-+					clocks = <&emmc_clock>, <&cnm_clock>;
-+					clock-names = "core", "axi";
-+					bus-width = <8>;
-+					non-removable;
-+					mmc-ddr-1_8v;
-+					mmc-hs200-1_8v;
-+					mmc-hs400-1_8v;
-+				};
-+		};
-+
- 		/*
- 		 * Dedicated section for devices behind 32bit controllers so we
- 		 * can configure specific DMA mapping for them
-@@ -335,5 +358,11 @@ nand_clock: nand-clock {
- 			#clock-cells = <0>;
- 			clock-frequency = <400000000>;
- 		};
-+
-+		emmc_clock: emmc-clock {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <400000000>;
-+		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/marvell/ac5-98dx35xx-rd.dts b/arch/arm64/boot/dts/marvell/ac5-98dx35xx-rd.dts
-index f0ebdb84eec9..0c973d7a215a 100644
---- a/arch/arm64/boot/dts/marvell/ac5-98dx35xx-rd.dts
-+++ b/arch/arm64/boot/dts/marvell/ac5-98dx35xx-rd.dts
-@@ -99,3 +99,7 @@ parition@2 {
- 		};
- 	};
- };
-+
-+&sdhci {
-+	status = "okay";
-+};
--- 
-2.25.1
-
+Will
