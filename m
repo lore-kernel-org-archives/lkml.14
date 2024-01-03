@@ -1,30 +1,41 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ECDE1798F;
-	Wed,  3 Jan 2024 02:51:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4T4Z3L70MBz4f3kF6;
-	Wed,  3 Jan 2024 10:50:54 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 3F5651A017D;
-	Wed,  3 Jan 2024 10:50:58 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.124.27])
-	by APP4 (Coremail) with SMTP id gCh0CgD3U0SNy5RlDGn8FQ--.36935S7;
-	Wed, 03 Jan 2024 10:50:58 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: tytso@mit.edu,
-	adilger.kernel@dilger.ca
-Cc: linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] ext4: Add unit test for ext4_mb_mark_diskspace_used
-Date: Wed,  3 Jan 2024 18:49:00 +0800
-Message-Id: <20240103104900.464789-6-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20240103104900.464789-1-shikemeng@huaweicloud.com>
-References: <20240103104900.464789-1-shikemeng@huaweicloud.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0F94A13
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 02:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IBcYPolr"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1704250440;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=jKg88EOc19Ldtm/CDT5Vvu/qnifyLXpVN7rl8hsod6M=;
+	b=IBcYPolrqPHkbUIAacMiHDSykXqfpBH/JtWC+mGENXrqYgL+J+GAviTeW33XVK+uKQ1aUS
+	ej/JQPXJgzMZ1yzFAgvVC05anwGGffEMZwtKkv0a2HHKQVnbVTS0baW3X1EC0h9bgW5f+f
+	OMbJajn+6efsgCyejh9OuK9uc6Zqufo=
+From: Yajun Deng <yajun.deng@linux.dev>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: andrew@lunn.ch,
+	olteanv@gmail.com,
+	hkallweit1@gmail.com,
+	linux@armlinux.org.uk,
+	przemyslaw.kitszel@intel.com,
+	rmk+kernel@armlinux.org.uk,
+	kabel@kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	Yajun Deng <yajun.deng@linux.dev>
+Subject: [PATCH net-next v2 0/2] net: phy: Use is_phy_driver() and is_phy_device()
+Date: Wed,  3 Jan 2024 10:53:32 +0800
+Message-Id: <20240103025334.541682-1-yajun.deng@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,102 +43,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgD3U0SNy5RlDGn8FQ--.36935S7
-X-Coremail-Antispam: 1UD129KBjvJXoW7WF1rCw18tFWUKFyDKFWxWFg_yoW5JFW3pa
-	15uFn0kr45JrnxWw4SgrZrC3W3Kw4kZrWktryfWrn0vFW7GF98Aa1kKF15Gw48Jr4kXa43
-	Z3Z0qa47Gr4xCrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUB2b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
-	8IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAv
-	FVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3w
-	A2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE
-	3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr2
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
-	Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-	6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-	vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-	42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU3XTQUUUUU
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+X-Migadu-Flow: FLOW_OUT
 
-Add unit test for ext4_mb_mark_diskspace_used
+There is only one flag that can be set in struct mdio_driver_common and
+mdio_device. We can compare the probe of the driver or the type of the
+device to implement it. Hence, these flags in struct mdio_driver_common
+and mdio_device can be removed.
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
----
- fs/ext4/mballoc-test.c | 52 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+Introduce is_phy_driver() and is_phy_device(). Use them test the driver
+or device.
 
-diff --git a/fs/ext4/mballoc-test.c b/fs/ext4/mballoc-test.c
-index b68f44740..12d0b22ca 100644
---- a/fs/ext4/mballoc-test.c
-+++ b/fs/ext4/mballoc-test.c
-@@ -470,6 +470,57 @@ static void test_free_blocks_simple(struct kunit *test)
- 			ranges[i].start, ranges[i].len);
- }
- 
-+static void
-+test_mark_diskspace_used_range(struct kunit *test,
-+			       struct ext4_allocation_context *ac,
-+			       ext4_grpblk_t start,
-+			       ext4_grpblk_t len)
-+{
-+	struct super_block *sb = (struct super_block *)test->priv;
-+	int ret;
-+	void *bitmap;
-+	ext4_grpblk_t i, max;
-+
-+	/* ext4_mb_mark_diskspace_used will BUG if len is 0 */
-+	if (len == 0)
-+		return;
-+
-+	ac->ac_b_ex.fe_group = TEST_GOAL_GROUP;
-+	ac->ac_b_ex.fe_start = start;
-+	ac->ac_b_ex.fe_len = len;
-+
-+	bitmap = mbt_ctx_bitmap(sb, TEST_GOAL_GROUP);
-+	memset(bitmap, 0, sb->s_blocksize);
-+	ret = ext4_mb_mark_diskspace_used(ac, NULL, 0);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+
-+	max = EXT4_CLUSTERS_PER_GROUP(sb);
-+	i = mb_find_next_bit(bitmap, max, 0);
-+	KUNIT_ASSERT_EQ(test, i, start);
-+	i = mb_find_next_zero_bit(bitmap, max, i + 1);
-+	KUNIT_ASSERT_EQ(test, i, start + len);
-+	i = mb_find_next_bit(bitmap, max, i + 1);
-+	KUNIT_ASSERT_EQ(test, max, i);
-+}
-+
-+static void test_mark_diskspace_used(struct kunit *test)
-+{
-+	struct super_block *sb = (struct super_block *)test->priv;
-+	struct inode inode = { .i_sb = sb, };
-+	struct ext4_allocation_context ac;
-+	struct test_range ranges[TEST_RANGE_COUNT];
-+	int i;
-+
-+	mbt_generate_test_ranges(sb, ranges, TEST_RANGE_COUNT);
-+
-+	ac.ac_status = AC_STATUS_FOUND;
-+	ac.ac_sb = sb;
-+	ac.ac_inode = &inode;
-+	for (i = 0; i < TEST_RANGE_COUNT; i++)
-+		test_mark_diskspace_used_range(test, &ac, ranges[i].start,
-+					       ranges[i].len);
-+}
-+
- static void mbt_generate_buddy(struct super_block *sb, void *buddy,
- 			       void *bitmap, struct ext4_group_info *grp)
- {
-@@ -784,6 +835,7 @@ static struct kunit_case mbt_test_cases[] = {
- 	KUNIT_CASE_PARAM(test_mb_generate_buddy, mbt_layouts_gen_params),
- 	KUNIT_CASE_PARAM(test_mb_mark_used, mbt_layouts_gen_params),
- 	KUNIT_CASE_PARAM(test_mb_free_blocks, mbt_layouts_gen_params),
-+	KUNIT_CASE_PARAM(test_mark_diskspace_used, mbt_layouts_gen_params),
- 	{}
- };
- 
+v1 -> v2:
+remove redundant parens and the exported.
+
+Yajun Deng (2):
+  net: phy: Cleanup struct mdio_driver_common and introduce
+    is_phy_driver()
+  net: phy: Introduce is_phy_device()
+
+ drivers/net/dsa/b53/b53_mdio.c          |  2 +-
+ drivers/net/dsa/dsa_loop.c              |  2 +-
+ drivers/net/dsa/lan9303_mdio.c          |  2 +-
+ drivers/net/dsa/microchip/ksz8863_smi.c |  2 +-
+ drivers/net/dsa/mt7530-mdio.c           |  2 +-
+ drivers/net/dsa/mv88e6060.c             |  2 +-
+ drivers/net/dsa/mv88e6xxx/chip.c        |  2 +-
+ drivers/net/dsa/qca/ar9331.c            |  2 +-
+ drivers/net/dsa/qca/qca8k-8xxx.c        |  2 +-
+ drivers/net/dsa/realtek/realtek-mdio.c  |  2 +-
+ drivers/net/dsa/xrs700x/xrs700x_mdio.c  |  2 +-
+ drivers/net/phy/mdio_bus.c              |  7 ++--
+ drivers/net/phy/mdio_device.c           | 21 +++++-------
+ drivers/net/phy/phy_device.c            | 44 ++++++++++++++-----------
+ drivers/net/phy/xilinx_gmii2rgmii.c     |  2 +-
+ drivers/phy/broadcom/phy-bcm-ns-usb3.c  |  8 ++---
+ drivers/phy/broadcom/phy-bcm-ns2-pcie.c |  8 ++---
+ include/linux/mdio.h                    | 19 ++---------
+ include/linux/phy.h                     | 10 +++---
+ 19 files changed, 62 insertions(+), 79 deletions(-)
+
 -- 
-2.30.0
+2.25.1
 
