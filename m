@@ -1,87 +1,77 @@
-Received: from out203-205-221-231.mail.qq.com (out203-205-221-231.mail.qq.com [203.205.221.231])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A3F18ECD;
-	Wed,  3 Jan 2024 12:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="oX6ZihZ4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1704284404; bh=hsWvIYTjGOuzkSHY0cRhuMQ9nYrh1dhhCxx/OjJphEE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=oX6ZihZ4T4XuarlFE0ha55Wc7LoMXc83phzHQ1CcTHsNY2ZvCq79l+NkrA73F6/XO
-	 Y9pjC507eoK0hUylolKltPJoNMvjIctpewNlZDzxRjQ6yWzzg4LdCc7GAxdlYZrfT2
-	 X9ZqaaAWCib0Uu2IjJFUitl4dOUm/U1NIxDZsPiE=
-Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
-	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
-	id 3721BE1A; Wed, 03 Jan 2024 20:13:50 +0800
-X-QQ-mid: xmsmtpt1704284030t5lk8klny
-Message-ID: <tencent_BF8F0DF0258C8DBF124CDDE4DD8D992DCF07@qq.com>
-X-QQ-XMAILINFO: MQ+wLuVvI2LQx1ZWRYQcqrrru8adTGjx2DK1zZieGMM5Y/1cc8/R+Ey5dg6t3b
-	 gz93V4CrPQDU+BFuJzi3BlheLDoS5kXDJ51uNlcEUX5iGsPdruRlZwXhieqrjGDf6Gg/Dbnuv4OF
-	 vgihRqlzDkquI9+ef1p+WCDI12EF634TMfKkWQbw3nzkseFvplzB2uctkUTD0xnmCqrehHPIeG5k
-	 0JDJ/rS655z+U3JUZUEmzTfMDsdAa4tOwp8yLXO8Y4zqUNXwbrGFCPfoYrvuRxdllOf1tB/h7tBP
-	 vk1H05stOWsAFPMar1bLL1LZRuNZzu3eMORR8vzJsU/iCmz3ZSJr8YkLawH6cxZrI4EmLs7+xkgV
-	 IquvIwjLDyi7hKFpDXqBb1cCzNHzUNHNVPdxnmnVHf53S41t0I16aAXzVKL1bJovnUB4BD7t+QWA
-	 TOQ9K3OHVXDwsELv22PSv2Dov5IP9PHU9Uj9rsIikv34IqTAYl5Hg9lvdBTdAn+7CS/6Hf1UPq2K
-	 vayA+0WyzvOUySvq0QxsyIPxeZ1gUtOpSW8JXBYLzGqOYcOGj1mPmQ6Oua1EH8c4JSlc1M1+CiAO
-	 +V3u+W3E1vgv1o8kKG45HG46A1S4wu0JF4i4e8qUSGYaP4677BL3cZ1KANKiWJB076GUwog6c/fU
-	 WbqsZDuoebMfU/5iwuguhcW/ED+3d7BujXalYnJaMO2tnjEjqNtcXvjTd1+DGxSi2a7Rhx3Q/pwR
-	 wXNWnzboVOkELgL6oJCePZ8eajmYLwRVEtYkGPYQnVbfmxZYFuqMLMOO7QLnPd+FJqHsnICMQgAC
-	 mG70DP2IrSK1KdtMnWwa5zze18Wnt8R9UiG7864zddXfDEQsAXpM3l0+EjqHne7skv5HtJo+XFJt
-	 qUmAaBqfLXBn9WlAAwbcu6/gpOwErsnP1UaBqGnicQa+hyCXoM0tQqj9+R8eRse7ANkb/cuSa7
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+864a269c27ee06b58374@syzkaller.appspotmail.com
-Cc: benjamin.berg@intel.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	johannes.berg@intel.com,
-	johannes@sipsolutions.net,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	miriam.rachel.korenblit@intel.com,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH net-next] wifi: fix warning in __cfg80211_bss_update
-Date: Wed,  3 Jan 2024 20:13:51 +0800
-X-OQ-MSGID: <20240103121350.2734479-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000009fa770060e089409@google.com>
-References: <0000000000009fa770060e089409@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFBB199BF;
+	Wed,  3 Jan 2024 12:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id C707428144;
+	Wed,  3 Jan 2024 13:20:09 +0100 (CET)
+Date: Wed, 3 Jan 2024 13:20:05 +0100
+From: Francesco Dolcini <francesco@dolcini.it>
+To: pratikmanvar09@gmail.com
+Cc: francesco@dolcini.it, festevam@gmail.com, jun.li@nxp.com,
+	kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+	linux-imx@nxp.com, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, oe-kbuild-all@lists.linux.dev,
+	pratik.manvar@ifm.com, s.hauer@pengutronix.de, shawnguo@kernel.org,
+	thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+	xiaoning.wang@nxp.com
+Subject: Re: [PATCH v3] pwm: imx27: workaround of the pwm output bug
+Message-ID: <20240103122005.GA3347@francesco-nb>
+References: <20240103103421.GA3758@francesco-nb>
+ <20240103110200.1018-1-pratikmanvar09@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240103110200.1018-1-pratikmanvar09@gmail.com>
 
-Replace rcu_dereference() with rcu_access_pointer() to avoid warnings. 
+Hello Pratik,
 
-Fixes: 32af9a9e1069 ("wifi: cfg80211: free beacon_ies when overridden from hidden BSS")
-Reported-and-tested-by: syzbot+864a269c27ee06b58374@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- net/wireless/scan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed, Jan 03, 2024 at 04:32:00PM +0530, pratikmanvar09@gmail.com wrote:
+> From: Clark Wang <xiaoning.wang@nxp.com>
+> 
+> This fixes the pwm output bug when decrease the duty cycle.
+> This is a limited workaround for the PWM IP issue TKT0577206.
+> 
+> Root cause:
+> When the SAR FIFO is empty, the new write value will be directly applied
+> to SAR even the current period is not over.
+> If the new SAR value is less than the old one, and the counter is
+> greater than the new SAR value, the current period will not filp the
+> level. This will result in a pulse with a duty cycle of 100%.
+> 
+> Workaround:
+> Add an old value SAR write before updating the new duty cycle to SAR.
+> This will keep the new value is always in a not empty fifo, and can be
+> wait to update after a period finished.
+> 
+> Limitation:
+> This workaround can only solve this issue when the PWM period is longer
+> than 2us(or <500KHz).
+> 
+> Reviewed-by: Jun Li <jun.li@nxp.com>
+> Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
+> Link: https://github.com/nxp-imx/linux-imx/commit/16181cc4eee61d87cbaba0e5a479990507816317
+> Tested-by: Pratik Manvar <pratik.manvar@ifm.com>
+> Signed-off-by: Pratik Manvar <pratik.manvar@ifm.com>
 
-diff --git a/net/wireless/scan.c b/net/wireless/scan.c
-index cf2131671..7cb8ae87c 100644
---- a/net/wireless/scan.c
-+++ b/net/wireless/scan.c
-@@ -1864,7 +1864,7 @@ __cfg80211_bss_update(struct cfg80211_registered_device *rdev,
- 					 &hidden->hidden_list);
- 				hidden->refcount++;
- 
--				ies = (void *)rcu_dereference(new->pub.beacon_ies);
-+				ies = (void *)rcu_access_pointer(new->pub.beacon_ies);
- 				rcu_assign_pointer(new->pub.beacon_ies,
- 						   hidden->pub.beacon_ies);
- 				if (ies)
--- 
-2.43.0
+A very similar patch was already send in 2021 [1], did it had review
+comments not addressed? Please have a look.
+
+In general please refrain from sending a new patch version every other
+day, while every Linux kernel subsystem has different rules and a
+difference pace of development, in this specific case sending a v3 just
+adding your signed-off-by without allowing a little bit of time to wait
+for more feedback is just not sane.
+
+[1] https://lore.kernel.org/all/?q=dfn%3Adrivers%2Fpwm%2Fpwm-imx27.c+AND+b%3A%22Clark+Wang%22
+
+Francesco
 
