@@ -1,56 +1,64 @@
-Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6D93182A8
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 08:48:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="lJR7nafK"
-Received: from 8bytes.org (p4ffe1e67.dip0.t-ipconnect.de [79.254.30.103])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from mta.juntadeandalucia.es (mta6.juntadeandalucia.es [217.12.26.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.8bytes.org (Postfix) with ESMTPSA id D12421C1E7B;
-	Wed,  3 Jan 2024 09:38:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
-	s=default; t=1704271100;
-	bh=ctd4MjkCM4xOiGBT1Tv2nhcVi8muD8i8UPtmMaoXT0w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lJR7nafKj9Tp80SYD/oBXxTTIN6Rv5/kMW9zxQc0s5Mq4CIh3kk7uGDwDn6S+zA2p
-	 MAnpRLbdEYeaqlwOAbZyr+paFwAOhXvrVWLrqN2U/ncxjosym9aj8uDflUcibnLYrg
-	 YwcD0001U8IF0/YQ7VSDTaAw1M6hHRqLsU9wlQLwdHXi/SQLGv2QDoxeKEwfw9tqKM
-	 UizVHRVS8scTHwRDYFXWD7cxdkl8G3mycSfFevwxvw2M3Acr9b38iulT/m/iSsrGO1
-	 +xlA/n6lVBdQK0ZuJaOqyK8bZg6aL1whsmSTP1968wwhWHxNesA6FIyttb4rEiyjV9
-	 63WeVGhNJhOvQ==
-Date: Wed, 3 Jan 2024 09:38:19 +0100
-From: Joerg Roedel <joro@8bytes.org>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Ido Schimmel <idosch@idosch.org>, will@kernel.org,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	zhangzekun11@huawei.com, john.g.garry@oracle.com,
-	dheerajkumar.srivastava@amd.com, jsnitsel@redhat.com
-Subject: Re: [PATCH v3 0/2] iommu/iova: Make the rcache depot properly
- flexible
-Message-ID: <ZZUc-7mU9gx5wVuW@8bytes.org>
-References: <cover.1694535580.git.robin.murphy@arm.com>
- <ZY1osaGLyT-sdKE8@shredder>
- <ZZO6NV-Kq-ktnyo5@shredder>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40B618049
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 08:51:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=juntadeandalucia.es
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=juntadeandalucia.es
+Received: from [10.240.225.252] (helo=mail.juntadeandalucia.es)
+	by ccodis04.juntadeandalucia.es with esmtp (Exim 4.94.2)
+	(envelope-from <luis.munoz.edu@juntadeandalucia.es>)
+	id 1rKwxj-0002Ar-MM
+	for linux-kernel@vger.kernel.org; Wed, 03 Jan 2024 09:50:55 +0100
+Received: from [213.194.128.62] (helo=[192.168.1.148])
+	by mail.juntadeandalucia.es with esmtpa (Exim 4.94.2)
+	(envelope-from <luis.munoz.edu@juntadeandalucia.es>)
+	id 1rKwxj-00072n-7V; Wed, 03 Jan 2024 09:50:55 +0100
+Message-ID: <ea2f0a37-9691-4595-bcb3-881e29d83ee0@juntadeandalucia.es>
+Date: Wed, 3 Jan 2024 09:50:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZZO6NV-Kq-ktnyo5@shredder>
+User-Agent: Mozilla Thunderbird
+Subject: Re: I can't activate term(e) and kill(i) magic SysRq key
+To: Christian Kujau <lists@nerdbynature.de>
+Cc: linux-kernel@vger.kernel.org
+References: <002cc4da-e502-4c79-97bd-0a8b6cb2630c@juntadeandalucia.es>
+ <464f7af8-d83d-d2e3-c635-772ed6a3cb54@nerdbynature.de>
+Content-Language: es-ES
+From: =?UTF-8?Q?Luis_Mu=C3=B1oz_Fuente?= <luis.munoz.edu@juntadeandalucia.es>
+In-Reply-To: <464f7af8-d83d-d2e3-c635-772ed6a3cb54@nerdbynature.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-KLMS-Rule-ID: 1
+X-KLMS-Message-Action: clean
+X-KLMS-AntiSpam-Lua-Profiles: 182453 [Jan 03 2024]
+X-KLMS-AntiSpam-Version: 6.1.0.3
+X-KLMS-AntiSpam-Envelope-From: luis.munoz.edu@juntadeandalucia.es
+X-KLMS-AntiSpam-Rate: 0
+X-KLMS-AntiSpam-Status: not_detected
+X-KLMS-AntiSpam-Method: none
+X-KLMS-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {rep_avail}, {Tracking_from_domain_doesnt_match_to}, FromAlignment: s, ApMailHostAddress: 213.194.128.62
+X-MS-Exchange-Organization-SCL: -1
+X-KLMS-AntiSpam-Interceptor-Info: scan successful
+X-KLMS-AntiPhishing: Clean, bases: 2024/01/03 07:02:00
+X-KLMS-AntiVirus: Kaspersky Security for Linux Mail Server, version 8.0.3.30, bases: 2024/01/03 05:32:00 #22946033
+X-KLMS-AntiVirus-Status: Clean, skipped
 
-On Tue, Jan 02, 2024 at 09:24:37AM +0200, Ido Schimmel wrote:
-> FYI, we didn't see the leaks since reverting these two patches whereas
-> before we saw them almost everyday, so I'm quite sure they introduced
-> the leaks.
 
-Robin, can you have a look please?
+El 2/1/24 a las 21:45, Christian Kujau escribió:
+> Maybe. Some distributions choose to disable certain sysrq functions. See 
+> the page you cited, on the very top: what does "sysctl kernel.sysrq" say? 
+> If it's anything but "1", certain or all sysrq functions are disabled.
 
-Thanks,
+Hello:
+I had gotten involved. I was looking at the option the kernel was
+compiled with by default:
+grep -i CONFIG_MAGIC_SYSRQ /boot/my_kernel
+instead of looking at what option I had chosen:
+cat /proc/sys/kernel/sysrq
+Thank you
 
-	Joerg
