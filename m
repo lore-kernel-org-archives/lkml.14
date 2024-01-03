@@ -1,116 +1,113 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289214A27
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Jan 2024 03:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PqSt2mQ5"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-55539cac143so6651865a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Jan 2024 19:15:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704251705; x=1704856505; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/yCW+5O20qYq82QEvwJZHzQUCJBD1lIKf/JM2prlUkY=;
-        b=PqSt2mQ5FwlhVWdIbFKu9dKo3qU7teiKkU0lRiRlJz99RlVttRCKByqWHLKpyB8cLM
-         hMlLSTsvdELrwTJGTGnMS/Vs8HiJdleo/v1NETRMdTDJ4RIct/VDS0vuuC1pq8Ly7UQx
-         NAWnw5IWVOP9kvJ+R4PCwXJrBoYNubhZ7TgZYUk2VuP13Xp4plucCPsZIs2UEQOTuy9r
-         0Xj6kQ+x6OUfCZ98km56i+Q9T6dw4YhXVFXMIS6fBe1pTVYFLD4/6f7uoOfI1dyf+Qtm
-         ncC5enLVQRPXU5CJYRB3N6RlWm3fEd6gvNDD2NuRoE4P1ho+g+7qZwy3AJ0WcjRw7jyt
-         hIKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704251705; x=1704856505;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/yCW+5O20qYq82QEvwJZHzQUCJBD1lIKf/JM2prlUkY=;
-        b=jlvd0o3wTnZKnIHp+LLemwj4nrHCfApSFyxoH0YvRQs4irUKEjN0xtFtI1GH+++34/
-         JlGsuvKModI2KH40N2V/cXsF17d6QR72a1oBO/dtMfco6oL5XyMbcJVZY0lsMcXbdWO1
-         R3A/GCQblaO+U5xKPZmx39yhiIpyITi/QeDszebDLyfKEYgHiJsWPEQ7j9uFSSQVTgpn
-         s1py3lK03YGpcb/dOzVGv+SO6u/wtDOGnaV/nxZNo16ikFoSFZoqtXQISkRCV80xUkrO
-         QWS8irA1Y+CeJsvEwt/i1Hl6MlIEecrOZUyAOQZdaI85Ruh4JkT0q2Hz8TejRlKZWfBL
-         Y5xg==
-X-Gm-Message-State: AOJu0Yy0QztS7MGsorZ6Y+ctPSXXzoh+EozCPABJVMymvZ0CmTJoI+73
-	6N3gom6LHUDLWpnbuuSWCEeZIhrYLRI3sgkfyJ0=
-X-Google-Smtp-Source: AGHT+IFbUZCHNjuNqZKsm7D3GhTqH+amvdbA9Hr7oyK3NDCLYNY8gDlP35k+OL216aHKCZEQLmmzUeDabcmEiLq1XQE=
-X-Received: by 2002:a05:6402:1347:b0:555:936e:feb6 with SMTP id
- y7-20020a056402134700b00555936efeb6mr4426542edw.22.1704251705088; Tue, 02 Jan
- 2024 19:15:05 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A69F171CA;
+	Wed,  3 Jan 2024 03:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4T4ZcT2BqHz4f3nTT;
+	Wed,  3 Jan 2024 11:16:09 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id EC08D1A017F;
+	Wed,  3 Jan 2024 11:16:14 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgD3Rg1+0ZRl7G6DFQ--.7113S3;
+	Wed, 03 Jan 2024 11:16:14 +0800 (CST)
+Subject: Re: [PATCH v3 2/2] md: don't account sync_io if iostats of the disk
+ is disabled
+To: linan666@huaweicloud.com, song@kernel.org, axboe@kernel.dk
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org, yi.zhang@huawei.com, houtao1@huawei.com,
+ yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20231223033703.2949831-1-linan666@huaweicloud.com>
+ <20231223033703.2949831-3-linan666@huaweicloud.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <e2305cc4-dc3e-7693-9b61-33896c1b7a37@huaweicloud.com>
+Date: Wed, 3 Jan 2024 11:16:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240102073351.1527503-1-alexs@kernel.org> <xhsmhplykjawj.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <CAJy-Am=R=gRFqSdGjXaMqq7Yetpp-4=bLtnP-87GepN4zff5Tg@mail.gmail.com> <xhsmhjzork8x5.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-In-Reply-To: <xhsmhjzork8x5.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-From: Alex Shi <seakeel@gmail.com>
-Date: Wed, 3 Jan 2024 11:14:29 +0800
-Message-ID: <CAJy-AmkG+6jZCGFBnqA_33NtBBq_hjemqkPCbZX2Jty0KWQE+w@mail.gmail.com>
-Subject: Re: [PATCH] sched/tracing: correct the task blocking state
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: alexs@kernel.org, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, linux-kernel@vger.kernel.org, curuwang@tencent.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20231223033703.2949831-3-linan666@huaweicloud.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgD3Rg1+0ZRl7G6DFQ--.7113S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7tF1xCFyDtry8tryxJrW7XFb_yoW8Cr1xpa
+	ykAF9ak34UXr45WasrZ34UCa4rWw17tFW0yrW7C34fXFy3tr9xGF4Sga90qF1vgFWrWFWa
+	qw1jvFs09a10vrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvab4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
+	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
+	67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
+	uYvjxUOyCJDUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Wed, Jan 3, 2024 at 12:16=E2=80=AFAM Valentin Schneider <vschneid@redhat=
-.com> wrote:
->
-> On 02/01/24 21:00, Alex Shi wrote:
-> > On Tue, Jan 2, 2024 at 6:19=E2=80=AFPM Valentin Schneider <vschneid@red=
-hat.com> wrote:
-> >>
-> >> On 02/01/24 15:33, alexs@kernel.org wrote:
-> >> > From: Alex Shi <alexs@kernel.org>
-> >> >
-> >> > commit 80ed87c8a9ca ("sched/wait: Introduce TASK_NOLOAD and TASK_IDL=
-E")
-> >> > stopped the idle kthreads contribution to loadavg. Also task idle sh=
-ould
-> >> > separated from blocked state too, otherwise we will get incorrect ta=
-sk
-> >> > blocking state from event tracing sched:sched_stat_blocked.
-> >> >
-> >>
-> >> Why is that incorrect? AFAICT we have mapped the (schedstat) 'blocked'
-> >> meaning to TASK_UNINTERRUPTIBLE. TASK_IDLE tasks don't contribute to
-> >> loadavg yes, but they are still in an UNINTERRUPTIBLE wait.
-> >
-> >
-> > Hi Valentin,
-> > Thanks a lot for the reply.
-> >
-> > I agree with you the current usage, but if so, we account for the idle =
-task into
-> > blocked state. And it's better to distinguish between idle and block.
-> >
->
-> Why is that an issue? If those tasks didn't have to be
-> TASK_UNINTERRUPTIBLE (via TASK_IDLE), we'd make them TASK_INTERRUPTIBLE a=
-nd
-> they'd also inflate the 'sleeping' schedstat (rather than the 'blocked').
->
-> What problem are you facing with those tasks being flagged as blocked dur=
-ing
-> their wait?
->
 
-Uh, Tencent cloud has some latency sensitive services, a blocked state
-means the service has
- some trouble, but with IDLE state involved, it's failed on this judgement.
-and 2nd, if a service has abnormal, we want to check if it's hanging
-on io or sth else, but the top
-3 D tasks are often queuework in our system, and even a task in
-blocked state we have no
-quick way to figure out if it's IDLE or BLOCKED.  2 different states
-will help us a lot.
 
-Thanks!
+ÔÚ 2023/12/23 11:37, linan666@huaweicloud.com Ð´µÀ:
+> From: Li Nan <linan122@huawei.com>
+> 
+> If iostats is disabled, disk_stats will not be updated and
+> part_stat_read_accum() only returns a constant value. In this case,
+> continuing to count sync_io and to check is_mddev_idle() is no longer
+> meaningful.
+> 
+> Signed-off-by: Li Nan <linan122@huawei.com>
+> ---
+>   drivers/md/md.h | 3 ++-
+>   drivers/md/md.c | 4 ++++
+>   2 files changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/md/md.h b/drivers/md/md.h
+> index 1a4f976951c1..e2d03a7a858c 100644
+> --- a/drivers/md/md.h
+> +++ b/drivers/md/md.h
+> @@ -584,7 +584,8 @@ extern void mddev_unlock(struct mddev *mddev);
+>   
+>   static inline void md_sync_acct(struct block_device *bdev, unsigned long nr_sectors)
+>   {
+> -	atomic64_add(nr_sectors, &bdev->bd_disk->sync_io);
+> +	if (blk_queue_io_stat(bdev->bd_disk->queue))
+> +		atomic64_add(nr_sectors, &bdev->bd_disk->sync_io);
+>   }
+>   
+>   static inline void md_sync_acct_bio(struct bio *bio, unsigned long nr_sectors)
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index a6829ea5b560..b56614eae8dc 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -8502,6 +8502,10 @@ static int is_mddev_idle(struct mddev *mddev, int init)
+>   	rcu_read_lock();
+>   	rdev_for_each_rcu(rdev, mddev) {
+>   		struct gendisk *disk = rdev->bdev->bd_disk;
+> +
+> +		if (!blk_queue_io_stat(disk->queue))
+> +			continue;
+
+Consider that the queue flag can be set/cleared through sysfs, let's
+keep set rdev->last_events in the case 'init'. To prevent a false
+positive(althrough highly unlikely) if iostat is enabled during
+md_do_sync().
+
+Thanks,
+Kuai
+
+> +
+>   		curr_events =
+>   			(long long)part_stat_read_accum(disk->part0, sectors) -
+>   			atomic64_read(&disk->sync_io);
+> 
+
