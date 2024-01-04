@@ -1,101 +1,173 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60C02CCAD;
-	Thu,  4 Jan 2024 22:37:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A195328DB0;
+	Thu,  4 Jan 2024 22:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fliKLtkR"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-5e76f7ca09cso1023667b3.0;
-        Thu, 04 Jan 2024 14:37:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704407865; x=1705012665; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=jfP13WYF364mOWLMsaSyApRyyJyIZ4hmplq28T3PTRw=;
-        b=fliKLtkRxSGdgiXdmoh/E8+F9SbsayvWfKEhq+DVOWu7DuJ4rUsEISofdBLLOd5jOS
-         L7miFeWcIMM35oSXHWyyMR+VRADha3IbFMVHUouPIHadUTpj8T9p2boxPeLrAmMF4Kze
-         QDJjAkX4h11Ywvowc1lxuMZsVQ2UfcECJ1XcUl2z9Fx7D/uthZcC95CixH7wYOnXie+k
-         jKVo+tpu83aIgsKqLie9oh20rPmJUxGhn8RK0O8s7MckqY+gdF/Geb7m15Vzdl/NRA3e
-         rAVsYYKAdWiLFSghvK3an/kbj5AXABq8ud+5J6ZZzGJz4HsXFzxNRLeuh5KuRl/EjEHj
-         /S3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704407865; x=1705012665;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jfP13WYF364mOWLMsaSyApRyyJyIZ4hmplq28T3PTRw=;
-        b=j5xytDYVN4HTev16A082SSnPM/WNNcjXzqlw3fIto3xGpngNMDxvYhirkIUzV+Fy1m
-         2Eic3xBTHMkZutHiF33GxyzHDP79JlTIBp3z4U6BgfmkA6xglYQ5nqgwfJCZMP+lymEY
-         60P1nIvUwdACh+ZbJq17sIXTvPBFS8TEo0RpDkvySDxT9b+DAA+rQQk7hSzShq+Ma1oj
-         2NvMmI4IDbhUCWayHx6XfaEBkPRdc6OR59T60GauzSOFY8QXgDhx5EL8LnxMcCjdIO+9
-         p7cPF5+kALQBRPtlTVfBgItPlKMAWRofbO00YxVJgWf91DNvlR4ubfrgXPYg6FMj9qgR
-         1dgQ==
-X-Gm-Message-State: AOJu0Ywy7DKkLBQyzrIKF0CgfeRiy56X9o7zDw1XRjLHpFpUyaoq7Fip
-	BpeiQpwjw4hCJNwBeJskvjw=
-X-Google-Smtp-Source: AGHT+IHq2RMkPMRo0ssm7elkHl7qRL3PSosWZ1lovYwdIkmFGQQYHTR7vHuoUPdorYGIje436U2mXQ==
-X-Received: by 2002:a0d:f3c4:0:b0:5ef:e5ff:ab82 with SMTP id c187-20020a0df3c4000000b005efe5ffab82mr2261109ywf.4.1704407865480;
-        Thu, 04 Jan 2024 14:37:45 -0800 (PST)
-Received: from hoboy.vegasvil.org ([2600:1700:2430:6f6f:e2d5:5eff:fea5:802f])
-        by smtp.gmail.com with ESMTPSA id h65-20020a815344000000b005f46cd4858asm148247ywb.72.2024.01.04.14.37.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jan 2024 14:37:44 -0800 (PST)
-Date: Thu, 4 Jan 2024 14:37:42 -0800
-From: Richard Cochran <richardcochran@gmail.com>
-To: Mahesh Bandewar <maheshb@google.com>
-Cc: Netdev <netdev@vger.kernel.org>, Linux <linux-kernel@vger.kernel.org>,
-	David Miller <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>, John Stultz <jstultz@google.com>,
-	Don Hatchett <hatch@google.com>, Yuliang Li <yuliangli@google.com>,
-	Mahesh Bandewar <mahesh@bandewar.net>,
-	Willem de Bruijn <willemb@google.com>
-Subject: Re: [PATCHv3 net-next 2/3] ptp: add ioctl interface for
- ptp_gettimex64any()
-Message-ID: <ZZczNlXzM8lrZgH5@hoboy.vegasvil.org>
-References: <20240104212439.3276458-1-maheshb@google.com>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="VJach6FS"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 404HdK1Z029968;
+	Thu, 4 Jan 2024 16:37:19 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=PODMain02222019; bh=M
+	Shzt3LVhFxMMuG6ippnJ3aKDGhRinbXBUUZ94iQi08=; b=VJach6FSwwbzt9KmI
+	GWjCTzJzGjLLeGGhyU96URR9nObLd4F+tECWcYZVXnh9so3tG/UyD3OMzAekeJPR
+	yO/CLF3Cyt7sS9sZJyxiSlsdFeIczLXTD5+PjX+5DTlD0ryn/29hyd5YeCCMTar+
+	M/udBGMya454ibWyxn9mZERg12Gx+HFsP6vi67cBDnTcXnfDUQ4e5IDq+FZh07xm
+	2g4iFzL2z5yxYKuAfCFpe3VFVdbw7LwUZy0BJ72/MAisZP7A6Z1U4RqpguIX4THo
+	aixE2vx4Yx9W5aqLCMOJ1qbD5sAcq5X8nf12uir/DFeip6K2PC+GakcXUOR9tHSS
+	LIY4Q==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3ve18src5a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Jan 2024 16:37:18 -0600 (CST)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 4 Jan
+ 2024 22:37:16 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1118.40 via Frontend Transport; Thu, 4 Jan 2024 22:37:01 +0000
+Received: from aus-sw-rshr002.ad.cirrus.com (aus-sw-rshr002.ad.cirrus.com [141.131.145.53])
+	by ediswmail.ad.cirrus.com (Postfix) with ESMTP id E99CC474;
+	Thu,  4 Jan 2024 22:36:56 +0000 (UTC)
+From: James Ogletree <jogletre@opensource.cirrus.com>
+To: 
+CC: James Ogletree <jogletre@opensource.cirrus.com>,
+        James Ogletree
+	<james.ogletree@cirrus.com>,
+        Fred Treven <fred.treven@cirrus.com>,
+        Ben Bright
+	<ben.bright@cirrus.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "Rob
+ Herring" <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Simon Trimmer <simont@opensource.cirrus.com>,
+        Charles Keepax
+	<ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald
+	<rf@opensource.cirrus.com>,
+        Lee Jones <lee@kernel.org>, Liam Girdwood
+	<lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, Jaroslav Kysela
+	<perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        James Schulman
+	<james.schulman@cirrus.com>,
+        David Rhodes <david.rhodes@cirrus.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Alexandre Belloni
+	<alexandre.belloni@bootlin.com>,
+        Peng Fan <peng.fan@nxp.com>, Jacky Bai
+	<ping.bai@nxp.com>,
+        Jeff LaBundy <jeff@labundy.com>,
+        Weidong Wang
+	<wangweidong.a@awinic.com>,
+        Herve Codina <herve.codina@bootlin.com>,
+        "Arnd
+ Bergmann" <arnd@arndb.de>, Shuming Fan <shumingf@realtek.com>,
+        Shenghao Ding
+	<13916275206@139.com>, Ryan Lee <ryans.lee@analog.com>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Maxim Kochetkov <fido_max@inbox.ru>,
+        "open
+ list:CIRRUS LOGIC HAPTIC DRIVERS" <patches@opensource.cirrus.com>,
+        "open
+ list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+	<linux-input@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE
+ TREE BINDINGS" <devicetree@vger.kernel.org>,
+        open list
+	<linux-kernel@vger.kernel.org>,
+        "open list:SOUND - SOC LAYER / DYNAMIC AUDIO
+ POWER MANAGEM..." <linux-sound@vger.kernel.org>,
+        "moderated list:CIRRUS LOGIC
+ AUDIO CODEC DRIVERS" <alsa-devel@alsa-project.org>
+Subject: [PATCH v5 0/5] Add support for CS40L50
+Date: Thu, 4 Jan 2024 22:36:33 +0000
+Message-ID: <20240104223643.876292-1-jogletre@opensource.cirrus.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240104212439.3276458-1-maheshb@google.com>
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: rpOIz0vGtpWU2aw1DIz15-q1kEDNu-vQ
+X-Proofpoint-GUID: rpOIz0vGtpWU2aw1DIz15-q1kEDNu-vQ
+X-Proofpoint-Spam-Reason: safe
 
-On Thu, Jan 04, 2024 at 01:24:39PM -0800, Mahesh Bandewar wrote:
+There is a massive delta from V4, so only the highlgihts are
+mentioned below. I intend for this version to address all
+feedback to-date, so if you find something left unaddressed
+then please let me know.
 
-> @@ -226,6 +238,8 @@ struct ptp_pin_desc {
->  	_IOWR(PTP_CLK_MAGIC, 18, struct ptp_sys_offset_extended)
->  #define PTP_MASK_CLEAR_ALL  _IO(PTP_CLK_MAGIC, 19)
->  #define PTP_MASK_EN_SINGLE  _IOW(PTP_CLK_MAGIC, 20, unsigned int)
-> +#define PTP_SYS_OFFSET_ANY \
-> +	_IOWR(PTP_CLK_MAGIC, 21, struct ptp_sys_offset_any)
+Changes in v5:
+- Added a codec sub-device to support I2S streaming
+- Moved write sequencer code from cirrus_haptics to cs_dsp
+- Reverted cirrus_haptics library; future Cirrus input
+  drivers will export and utilize cs40l50_vibra functions
+- Added more comments
+- Many small stylistic and logical improvements
 
-As I said before, this functionality really ought to be a new system call.
+Changes in v4:
+- Moved from Input to MFD
+- Moved common Cirrus haptic functions to a library
+- Incorporated runtime PM framework
+- Many style improvements
 
-Did you see these patch series posted on the list?
+Changes in v3:
+- YAML formatting corrections
+- Fixed typo in MAINTAINERS
+- Used generic node name "haptic-driver"
+- Fixed probe error code paths
+- Switched to "sizeof(*)"
+- Removed tree reference in MAINTAINERS
 
- 31.Dec'23 Sagi Maimon          [PATCH v4] posix-timers: add multi_clock_gettime system call
- 31.Dec'23 Andy Lutomirski      ├─>
- 01.Jan'24 Sagi Maimon          │ └─>
- 01.Jan'24 kernel test rob      ├─>
- 01.Jan'24 kernel test rob      └─>
+Changes in v2:
+- Fixed checkpatch warnings
 
- 02.Jan'24 Sagi Maimon          [PATCH v5] posix-timers: add multi_clock_gettime system call
- 02.Jan'24 Arnd Bergmann        ├─>
- 03.Jan'24 Sagi Maimon          │ └─>
- 04.Jan'24 kernel test rob      └─>
+James Ogletree (5):
+  firmware: cs_dsp: Add write sequencer interface
+  dt-bindings: input: cirrus,cs40l50: Add initial DT binding
+  mfd: cs40l50: Add support for CS40L50 core driver
+  Input: cs40l50 - Add support for the CS40L50 haptic driver
+  ASoC: cs40l50: Support I2S streaming to CS40L50
 
-I think this will be the way forward.
+ .../bindings/input/cirrus,cs40l50.yaml        |  70 +++
+ MAINTAINERS                                   |  12 +
+ drivers/firmware/cirrus/cs_dsp.c              | 261 ++++++++
+ drivers/input/misc/Kconfig                    |  10 +
+ drivers/input/misc/Makefile                   |   1 +
+ drivers/input/misc/cs40l50-vibra.c            | 572 ++++++++++++++++++
+ drivers/mfd/Kconfig                           |  30 +
+ drivers/mfd/Makefile                          |   4 +
+ drivers/mfd/cs40l50-core.c                    | 536 ++++++++++++++++
+ drivers/mfd/cs40l50-i2c.c                     |  69 +++
+ drivers/mfd/cs40l50-spi.c                     |  69 +++
+ include/linux/firmware/cirrus/cs_dsp.h        |  28 +
+ include/linux/mfd/cs40l50.h                   | 128 ++++
+ sound/soc/codecs/Kconfig                      |  11 +
+ sound/soc/codecs/Makefile                     |   2 +
+ sound/soc/codecs/cs40l50-codec.c              | 304 ++++++++++
+ 16 files changed, 2107 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/cirrus,cs40l50.yaml
+ create mode 100644 drivers/input/misc/cs40l50-vibra.c
+ create mode 100644 drivers/mfd/cs40l50-core.c
+ create mode 100644 drivers/mfd/cs40l50-i2c.c
+ create mode 100644 drivers/mfd/cs40l50-spi.c
+ create mode 100644 include/linux/mfd/cs40l50.h
+ create mode 100644 sound/soc/codecs/cs40l50-codec.c
 
-Please review the multi_clock_gettime series and help refine it.
-
-Thanks,
-Richard
+-- 
+2.25.1
 
