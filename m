@@ -1,112 +1,126 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91082C18F
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 19:13:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 384A82C18E
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 19:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="F/ZnFVg7"
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-596175c0be0so452536eaf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 11:13:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wlmZyAN4"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a28d61ba65eso103424166b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 11:13:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google; t=1704395583; x=1705000383; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/+vYEuDAPJ/iEdESxX2pInRN4g9EPXyQ5h9FSdd/4u4=;
-        b=F/ZnFVg7p6RCRwo6c599coMU7gxw34TnRuIn9tv4NSDTLCFyNIcCycMnVBIoSBhUaf
-         5VePqzrdqqOPRKKkraOQpG8XlgFm3zjmU3ROzjemte9baJ4kCqNNrgdAqngJeCHvlLMT
-         ccN+J71GjNlNUYaCcvaMn9xh9mjC0xYx+SwN4B6qr/yTTMnZRYvNOhLp64UX+NkJd/Vy
-         YSkeOW4R3gS7ZDU8/YKly32rHGE+xlyTcPg4qLxF5bOlnB3yUbFqy9azk3VRBB7HpFXx
-         waNjhIskVtiY0gZZye1eBD20fLHFMqL1LxWwap0rGSneRmh7FVOv1Qc8SWhK/C/qEkoW
-         tynA==
+        d=linaro.org; s=google; t=1704395605; x=1705000405; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=w1jHdRbaPGpj1yWdyU57CtY1OuGSl5HjxG3Iq2FzE5U=;
+        b=wlmZyAN49SklqaLacqGG/aidl2rPDwLdSzsCCEzAEgrjDZmNNQtfk4X6j4p4ow6O4V
+         BiLBl/WKsaGdpBIDVv7ReAzq6SyeyDyyi8UViS6EEKrNudy5E4NJ8KImJf/ASOzttse2
+         VFs2fowCmXeBttdSLiWThkChW9zkC65AyF2h8XpJ/mWvBVmor/3/4h9UafjCbCR4K5xK
+         KSh1L9fjNDpW1igJtuHVMqLxUX9TNMusHnyXzRBueQbA9SWdow7kJusW0RWbO+m8UlKW
+         xk1z3PPFThoXIStHjMeO1mgOo9xDGTMldGj3bw0Jqm+/iXTrtPv2qk7DJrW+g8BdjXrd
+         GJwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704395583; x=1705000383;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/+vYEuDAPJ/iEdESxX2pInRN4g9EPXyQ5h9FSdd/4u4=;
-        b=XSS+L+VDR9qnPbKbxzLi/4TCrMNQluOzt9pFcwza+CcE9mXRSJRPNtfk71MNKacF9L
-         oqf//G0Z0NRNH4CcnnCACIwxPyzg4d/TOnmAjmicUoAe4N7j/RwEYBD8WxU38KWeq2a4
-         TNREAbzL5IfEWvB0jaIyOAQdgV0IHLOQ7LwSRGyA+7QNgPLAoh+TmCEY0Sl4y5ts0nE/
-         4l8OcjPblfXV8T52bixHei61h+U6XYdSZott8R02/toU4/sxxi1V1y26pQ/TQki9Y8Fv
-         Z6/IVsR7tJc4VcKhkZoZ79NvL/aKGE0tZAwONhm8Ngv19x3gCGNWyfHkanfe3qxDZzrq
-         09IQ==
-X-Gm-Message-State: AOJu0YyzpccgstuiIE9Y2QQp2Dy0bgtKqVARZHD2GDzumbmr/S+c/6Bf
-	SY11VsfoBgg04ajaJJJphWJlMmo12TvHQVpvBKkdytHf0Q3JrA==
-X-Google-Smtp-Source: AGHT+IF/5x1qWEeEN53jwIdamLjEry3P/nE1f12xa2taaKft/YlEJdrBP6aDzExJ1bDcrqKpemuFKkiIEAFmrNQGE5k=
-X-Received: by 2002:a05:6358:8828:b0:174:b7f2:51db with SMTP id
- hv40-20020a056358882800b00174b7f251dbmr1188037rwb.19.1704395582852; Thu, 04
- Jan 2024 11:13:02 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704395605; x=1705000405;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=w1jHdRbaPGpj1yWdyU57CtY1OuGSl5HjxG3Iq2FzE5U=;
+        b=imUEe56KF5u4kdviaaK/yNKBav9gmmgEZw6RWsuxnIMLT+BeHzssWW+VTBpzgGV94o
+         3xpTtserRNpSQ1baFRUrbTdbsDAbRi+UPqVYbQJXiqK2gcr/zs9gyBhafHrhfHHwnCZ0
+         R7M/EBVfwjnbIwFpMkhGQdTLHsPGKkt38qtGM1LrfdoWcWXSmEVesJgDFYqRDxN4vHZc
+         l4WrN1nPCEwoJAL/nH/zgvMoyWckbM7vDLYbMBqFa1kKYI75abtllnAqKqqkquX0n9Hl
+         1yE162HuvrlKrGIjaIIVAnCJk96DqI1kWsnzVLD/Jyclg7y0P5HPLE++FdQvzsHUx2eu
+         FMHA==
+X-Gm-Message-State: AOJu0YxhzxeUlQ/GatsrdXZCU6bq7faOVfTvIq+d7SNOax93zRDjzVbc
+	VoVl8fQkFZHn6jUVEb0JMdytTTvSU3SBQA==
+X-Google-Smtp-Source: AGHT+IF3gA/z2MxTiWhuND4fB3e+UpH8GeyHFQBka37rK4T8DzoFwTLLPQl4p5SA0zuFPqgPcIGFog==
+X-Received: by 2002:a17:906:4e97:b0:a28:b34c:ccc1 with SMTP id v23-20020a1709064e9700b00a28b34cccc1mr445644eju.224.1704395605442;
+        Thu, 04 Jan 2024 11:13:25 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.218.27])
+        by smtp.gmail.com with ESMTPSA id fb20-20020a1709073a1400b00a26a061ae1esm14054583ejc.97.2024.01.04.11.13.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jan 2024 11:13:25 -0800 (PST)
+Message-ID: <35693c2f-6a6e-4161-bd1d-f63d814d7636@linaro.org>
+Date: Thu, 4 Jan 2024 20:13:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231226200205.562565-1-pasha.tatashin@soleen.com>
- <eqkpplwwyeqqd356ka3g6isaoboe62zrii77krsb7zwzmvdusr@5i3lzfhpt2xe>
- <CA+CK2bBE1bQuqZy3cbWiv8V3vJ8YNJZRayp6Wv-j2_9i37XT4g@mail.gmail.com> <eng4vwaci5hwlicszgcld6uny55vll2bfs3vp2yjbjf3exhamg@zf6yc2uhax7w>
-In-Reply-To: <eng4vwaci5hwlicszgcld6uny55vll2bfs3vp2yjbjf3exhamg@zf6yc2uhax7w>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 4 Jan 2024 14:12:26 -0500
-Message-ID: <CA+CK2bCUGepLLA2Hsmq00XEhPzLWPb5CjzY_UPT0qWSKastjAQ@mail.gmail.com>
-Subject: Re: [PATCH v3 00/10] IOMMU memory observability
-To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-Cc: akpm@linux-foundation.org, alim.akhtar@samsung.com, alyssa@rosenzweig.io, 
-	asahi@lists.linux.dev, baolu.lu@linux.intel.com, bhelgaas@google.com, 
-	cgroups@vger.kernel.org, corbet@lwn.net, david@redhat.com, 
-	dwmw2@infradead.org, hannes@cmpxchg.org, heiko@sntech.de, 
-	iommu@lists.linux.dev, jernej.skrabec@gmail.com, jonathanh@nvidia.com, 
-	joro@8bytes.org, krzysztof.kozlowski@linaro.org, linux-doc@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-rockchip@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, linux-sunxi@lists.linux.dev, 
-	linux-tegra@vger.kernel.org, lizefan.x@bytedance.com, marcan@marcan.st, 
-	mhiramat@kernel.org, m.szyprowski@samsung.com, paulmck@kernel.org, 
-	rdunlap@infradead.org, robin.murphy@arm.com, samuel@sholland.org, 
-	suravee.suthikulpanit@amd.com, sven@svenpeter.dev, thierry.reding@gmail.com, 
-	tj@kernel.org, tomas.mudrunka@gmail.com, vdumpa@nvidia.com, wens@csie.org, 
-	will@kernel.org, yu-cheng.yu@intel.com, rientjes@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 02/10] dt-bindings: marvell: a38x: add solidrun armada
+ 388 clearfog boards
+Content-Language: en-US
+To: Josua Mayer <josua@solid-run.com>, Andrew Lunn <andrew@lunn.ch>,
+ Gregory Clement <gregory.clement@bootlin.com>,
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Russell King <linux@armlinux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240104-support-clearfog-gtr-l8-sfp-v5-0-52be60fc54e3@solid-run.com>
+ <20240104-support-clearfog-gtr-l8-sfp-v5-2-52be60fc54e3@solid-run.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
+ m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
+ HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
+ XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
+ mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
+ v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
+ cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
+ rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
+ qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
+ aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
+ gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
+ dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
+ NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
+ hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
+ oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
+ H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
+ yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
+ 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
+ 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
+ +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
+ FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
+ 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
+ DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
+ oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
+ 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
+ Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
+ qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
+ /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
+ qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
+ EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
+ KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
+ fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240104-support-clearfog-gtr-l8-sfp-v5-2-52be60fc54e3@solid-run.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 4, 2024 at 12:04=E2=80=AFPM Michal Koutn=C3=BD <mkoutny@suse.co=
-m> wrote:
->
-> On Thu, Jan 04, 2024 at 11:29:43AM -0500, Pasha Tatashin <pasha.tatashin@=
-soleen.com> wrote:
-> > Thank you for taking a look at this. The two patches [1] [2] which add
-> > GFP_KERNEL_ACCOUNT were sent separate from this series at request of
-> > reviewers:
->
-> Ah, I didn't catch that.
->
-> Though, I mean the patch 02/10 calls iommu_alloc_pages() with GFP_KERNEL
-> (and not a passed gfp from iommu_map).
-> Then patch 09/10 accounts all iommu_alloc_pages() under NR_IOMMU_PAGES.
->
-> I think there is a difference between what's shown NR_IOMMU_PAGES and
-> what will have __GFP_ACCOUNT because of that.
->
-> I.e. is it the intention that this difference is not subject to
-> limiting?
+On 04/01/2024 18:48, Josua Mayer wrote:
+> Add DT compatible for SolidRun Armada-388 based Clearfog Base and Pro
+> boards, which are already in place in-tree.
+> 
 
-Yes, we will have a difference between GFP_ACCOUNT and what
-NR_IOMMU_PAGES shows. GFP_ACCOUNT is set only where it makes sense to
-charge to user processes, i.e. IOMMU Page Tables, but there more IOMMU
-shared data that should not really be charged to a specific process.
-The charged and uncharged data will be visible via /proc/vmstat
-nr_iommu_pages field.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Pasha
 
->
-> (Note: I'm not familiar with iommu code and moreover I'm only looking at
-> the two patch sets, not the complete code applied. So you may correct my
-> reasoning.)
->
->
-> Thanks,
-> Michal
+Best regards,
+Krzysztof
+
