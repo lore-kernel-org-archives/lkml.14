@@ -1,92 +1,105 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD9F2136C
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 14:10:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99CF22304
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 14:13:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p6NiO/bv"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40d4a7f0c4dso5311715e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 06:10:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="VlA8CZgE"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3374eb61cbcso516382f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 06:13:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704377451; x=1704982251; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1IG/HNz7wTqJE1bnao0AkkiNoHMZAFUZYED8cZloi6g=;
-        b=p6NiO/bvtsW3YgLbwGmiWFFzwZrIF9zVcp+Y9ShaOBsDq7xLIhIwCI9SLV1A2Zf8DA
-         Qn8QwXpjOBBYY2rIrUKxWYdnIdrP/Smh5mCdTje7QVQmPCi1lID09nnghil9d/UlEx7d
-         cBfIBbGnl7QJy3ez3fIudQ0udOPpI3G8qc30PKlaBseCzsX3VuwgWIj0MAW4giPS0E7+
-         mRhBMdv64ZDXUB9VoUt3gnUPahsVi8GwZRzMjhAe/0tSOMB22UlVXZd4Ctioy250DIXx
-         r2F/PlrH7tpSta3rPkxiqjPTq8d1dK5o4HlT+EcvIl02Ie+FrdagcCaCuTRUQNAoOAGB
-         xjmA==
+        d=9elements.com; s=google; t=1704377598; x=1704982398; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IisSOi1IhKaF5rBKbPxKm8c6DbGMBvt8EnvrHA2VnKU=;
+        b=VlA8CZgE29NnLdqA+aVG5OO9LbumJzjH3gP3nNulHUusebuQNvWJcEwVXDV9qL+xFv
+         RCAoIaTbMK5LnZxjcQwwHqbymfq7VMJrVhxHqpJ0fsyNM+61A5HohILOLSd892BfLQw7
+         9m72ntY3mBibTRYX54l6wgCkhaBL0VBu4fkyuHi0GtgsDk/HSCyPmAV4Ybh7moc5b43l
+         +7gU3GCfrh9M5q49Vx8QyhK4J1wyvineZqAXAOnWTQRokc69M1gpLt9LGvt4xzNC8K7e
+         wbuMGkEPUxaZsXFrXsyZixB/elMwLZ4SxBIwwPp/fAbD9g+UuVRCaQt1tGi0izs8ORQJ
+         SM+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704377451; x=1704982251;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1IG/HNz7wTqJE1bnao0AkkiNoHMZAFUZYED8cZloi6g=;
-        b=srpUAep4O7W9qEBVj2+Vkxw+/c0gn6oGY7hmdo6AypeWiNkdfzEDs5HRG1+hVSer+X
-         euKUWxLx8AD2up1agTjYVoxHP+oBgiqSKEat4IWC9pb1kqruOONsFnfwUCFwIzONquJW
-         TIGGY/nS/SIQSFWTcgNW7aWxyFNF4v6sjGHbJeH5y5/NFGPNKW+vWSdTs5jk5SjMSvLI
-         vBWeDucuKn1/YSUyd69DZZmNZkEmgq3UnVPXMPxVCLg8me/Sj2dg1tX7Y2m/Llpnrj+q
-         Oh9/2c9IGP27ck0VV1cBVf+puMo1rN7CmF5HaPU39YnW+mP8SvpU5droocdb0zWN3zBN
-         BHUw==
-X-Gm-Message-State: AOJu0YzpiR8y/EYdFB07o8KPeNBlKZVRckJnt4oyrx4yIHGE02y7ZINY
-	ymKfNIuVLkCsZKUOdk2egPutW+tGnY8DAA==
-X-Google-Smtp-Source: AGHT+IGvfF8iQXUpHTP+ygPHMlMeDihW13RCa/olJo9wziP2tZDKBt9hQ+LpDxlLi2AYnJJ5mjPeng==
-X-Received: by 2002:a05:600c:3007:b0:40c:486d:6cb4 with SMTP id j7-20020a05600c300700b0040c486d6cb4mr411001wmh.83.1704377451520;
-        Thu, 04 Jan 2024 06:10:51 -0800 (PST)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id g15-20020a05600c310f00b0040d53588d94sm5857865wmo.46.2024.01.04.06.10.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jan 2024 06:10:50 -0800 (PST)
-Message-ID: <abd91e5a-cf01-4b86-965b-ed315a58355d@linaro.org>
-Date: Thu, 4 Jan 2024 15:10:49 +0100
+        d=1e100.net; s=20230601; t=1704377598; x=1704982398;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IisSOi1IhKaF5rBKbPxKm8c6DbGMBvt8EnvrHA2VnKU=;
+        b=bjDwk4J8MQlvojpUf5GzWcoidmIlyIjz7RXOJyGMI+OvlJ/Y6QugjFfHAHOayVOFv8
+         yZC5TSFt+BmLuUx4Rd9s42Ioa/pc5dkfGbHIPriIYMh7yjD608aVkbYyWrurvBNUy1Wu
+         r90GaoFP7ujBvkFLeKohqTwhMgVsWhM+DeppMoTbEC5c9Nzll7QZKc4n5DZ6RdV37m2P
+         +RAorF5Sj9ZP56lpBisSkSnQJgLf6rHbaJOHRNHnl+Qa79l5M/XcQoe/HqAju0seo9Yt
+         xjA/HxSdiZpzHeFFlRIEKCIE+UAE4J2kZ1BQEw1ocIo7qGFjvZ6yvR7T1h5HH+AvwrNF
+         FTCg==
+X-Gm-Message-State: AOJu0YyK6icplEzv8sJuG2+vUBI7ah4Iv+rHjQ5qmKicLsFNV+2xTJIF
+	G7lpMp2Y3tbT0rG6D8QwXTn3hB59iNGzHg==
+X-Google-Smtp-Source: AGHT+IEm4tz6gdfug2cOjsuG3IzEij3flQEhgPvs+mzFp4W0xKI6+Ij+cEszgnjAkOWpomV3E6jeRw==
+X-Received: by 2002:a05:600c:354b:b0:40d:91f8:a663 with SMTP id i11-20020a05600c354b00b0040d91f8a663mr401331wmq.23.1704377597700;
+        Thu, 04 Jan 2024 06:13:17 -0800 (PST)
+Received: from stroh80.sec.9e.network (ip-078-094-000-051.um19.pools.vodafone-ip.de. [78.94.0.51])
+        by smtp.gmail.com with ESMTPSA id u17-20020a5d4351000000b00336f05840c4sm20324420wrr.100.2024.01.04.06.13.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jan 2024 06:13:16 -0800 (PST)
+From: Naresh Solanki <naresh.solanki@9elements.com>
+To: broonie@kernel.org,
+	Liam Girdwood <lgirdwood@gmail.com>
+Cc: mazziesaccount@gmail.com,
+	Naresh Solanki <naresh.solanki@9elements.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] regulator: event: Ensure atomicity for sequence number
+Date: Thu,  4 Jan 2024 19:43:13 +0530
+Message-ID: <20240104141314.3337037-1-naresh.solanki@9elements.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] thermal: k3_j72xx_bandgap: implement suspend/resume
- support
-Content-Language: en-US
-To: Thomas Richard <thomas.richard@bootlin.com>, rafael@kernel.org
-Cc: rui.zhang@intel.com, lukasz.luba@arm.com, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
- gregory.clement@bootlin.com, theo.lebrun@bootlin.com, u-kumar1@ti.com,
- Keerthy <j-keerthy@ti.com>
-References: <20231130164953.2043305-1-thomas.richard@bootlin.com>
- <d8f52066-323d-4622-b6b0-32834a504dfe@bootlin.com>
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <d8f52066-323d-4622-b6b0-32834a504dfe@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 04/01/2024 12:31, Thomas Richard wrote:
-> On 11/30/23 17:49, Thomas Richard wrote:
->> From: Théo Lebrun <theo.lebrun@bootlin.com>
->>
->> This add suspend-to-ram support.
-> 
-> Hello,
-> 
-> Could someone please take a look at this patch ?
+Previously, the sequence number in the regulator event subsystem was
+updated without atomic operations, potentially leading to race
+conditions. This commit addresses the issue by making the sequence
+number atomic.
 
-Seems like the MAINTAINER file not up to date regarding ti_bandgap.c and 
-ti_j*bandgap.c
+Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
+---
+ drivers/regulator/event.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-[Added Keerthy]
+diff --git a/drivers/regulator/event.c b/drivers/regulator/event.c
+index 0ec58f306b38..ea3bd49544e8 100644
+--- a/drivers/regulator/event.c
++++ b/drivers/regulator/event.c
+@@ -8,10 +8,11 @@
+ #include <regulator/regulator.h>
+ #include <net/netlink.h>
+ #include <net/genetlink.h>
++#include <linux/atomic.h>
+ 
+ #include "regnl.h"
+ 
+-static unsigned int reg_event_seqnum;
++static atomic_t reg_event_seqnum = ATOMIC_INIT(0);
+ 
+ static const struct genl_multicast_group reg_event_mcgrps[] = {
+ 	{ .name = REG_GENL_MCAST_GROUP_NAME, },
+@@ -43,9 +44,8 @@ int reg_generate_netlink_event(const char *reg_name, u64 event)
+ 		return -ENOMEM;
+ 
+ 	/* add the genetlink message header */
+-	msg_header = genlmsg_put(skb, 0, reg_event_seqnum++,
+-				 &reg_event_genl_family, 0,
+-				 REG_GENL_CMD_EVENT);
++	msg_header = genlmsg_put(skb, 0, atomic_inc_return(&reg_event_seqnum),
++				 &reg_event_genl_family, 0, REG_GENL_CMD_EVENT);
+ 	if (!msg_header) {
+ 		nlmsg_free(skb);
+ 		return -ENOMEM;
 
-
-
+base-commit: 67ba055dd7758c34f6e64c9d35132362c1e1f0b5
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.41.0
 
