@@ -1,129 +1,124 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2DD2C6B9;
-	Thu,  4 Jan 2024 22:45:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B982CCBB
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 22:46:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JsTGqUy0"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7818ab57d7dso70371485a.2;
-        Thu, 04 Jan 2024 14:45:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pr1eCYjd"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-40d89105365so8743195e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 14:46:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704408333; x=1705013133; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SeB4ajz7ViEKbPrOyH94bEBl7Qai5rs8f9JUUiOHPqg=;
-        b=JsTGqUy0UYP8yZSKrgi5JK06MEG9SIjNh3O8XHQOBPMsOtnnxyZsMgPqgxjcnMBQHS
-         KbjQmBuAS4rNRH36D8ZlYVkNEs/jQS60pgj850WPk8m9NlshfbL8WsTKZPjtewVzOK0D
-         omZhw6nAZuIQ8p2X1ZitZXvcN6PMm8jyRanrjkw2tHsm0yKqJD0zBejYLSUWlv0j1D9G
-         6yBJzgc+xRLouC7mLnit2uaX2p+n7DWjxLfa5ByxQmKMIbrAbXqnbKEwjD0FjOlOx8S0
-         8M1a/j35FyfPB3h4wEqEGqjPcvxlmlb3mLanmHCdl06f3KQnA4Vp2IzpPNm2qSI1RXMN
-         SLRA==
+        d=linaro.org; s=google; t=1704408367; x=1705013167; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=alNrLSr0vpGWNK/6L+uLnjjf3nOao06SX6CzGEth2ao=;
+        b=Pr1eCYjdLHEWZo3h0ad4oPgvbDgkObSLuRHrpKty0jdEDqWzWUjv58E2dnnLaQwJnv
+         qXipdoDKh5bjU6MjkGL5X65Sj6CPc0Koy0KEfbFRZCylBZRRLYB0ht9+thgAijDQEsMF
+         Tp0++x8GTKL85qfOuYyTZm+45iA7zz6J6YlJ0ERB1Ku1+QdsPTe0uhgmjTeOqcNVrlgl
+         8cVbr1d8lFkEryQCp1IDJN5cx8uKmWgMsHMRzifpyL3s1qRg/sHMrWAV98H2fZhbY9vu
+         gDOquBoWPLtC+Un1zfTMAmvyrcLc8rHhOZDVNfrVdWLN9mm3Fngq2/0ZP+vFVmD+gMyr
+         fI7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704408333; x=1705013133;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SeB4ajz7ViEKbPrOyH94bEBl7Qai5rs8f9JUUiOHPqg=;
-        b=qoBTUS8b/rGhoqf7htXxoYLLLoq/mreu343Zyl/9aHo659SvhMnNl9cD5JcGqtlLH8
-         +eZYsPaGO7/doLbcils5qEhXDGeGnTY2oajqcWe54nxsSCZLjnrdfv5YPi6AI6+M91rq
-         HiEPFJfio/5Ocz6NKDGFZJYtCqLNAtIajVfcxO2JuYEjRojImJx8IOf4EcvOIhsi99n6
-         rGFb5TLdKHop5sL2yLpUPKTNVKBA7yukXIEvcnV7qJEhcHAAvjlhWgRYcIMVug3c9xo2
-         cBy8ViLYCZnPi9Ov2a5OX6PwZrUVCxvENeoOGRDe2cu/vBH0yqtXPEXhC5JPZnoqh7U1
-         Qfnw==
-X-Gm-Message-State: AOJu0Yx4cPEaEIsAyONeLvY3CdgLfrcptECiUn63aVwDbVvt/Sgyygcd
-	hDIwddHXK8MOhIN5jJPloBk=
-X-Google-Smtp-Source: AGHT+IEkSfRFJYtHdahczAAKNlPFOE2vriKZn5YLfVdSWA5iboKWQspqvRQ7O5mnKMaAXeno6rMkxw==
-X-Received: by 2002:a05:620a:90f:b0:781:7a9e:6a55 with SMTP id v15-20020a05620a090f00b007817a9e6a55mr1159549qkv.131.1704408332809;
-        Thu, 04 Jan 2024 14:45:32 -0800 (PST)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id c22-20020a05620a11b600b00781e1c466e7sm141707qkk.24.2024.01.04.14.45.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jan 2024 14:45:32 -0800 (PST)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailauth.nyi.internal (Postfix) with ESMTP id 0113527C005A;
-	Thu,  4 Jan 2024 17:45:30 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Thu, 04 Jan 2024 17:45:30 -0500
-X-ME-Sender: <xms:CDWXZR8ciP-YmughSHYIWkEVVs9KOfSmFpLtib51cd12hXYVJ1boHQ>
-    <xme:CDWXZVvvwSzUnwIFDml24jFSqwDj8ly0RWdctQV-fVbzU-dxBge_GiEOXvpvmXjcN
-    QtZcEB8v0PpdOU_Ow>
-X-ME-Received: <xmr:CDWXZfAD49RFsQiFg8znmQAeDhTb-cMaq5uWyi9PzsZiVPICiYFppc3cxTA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdegkedgtddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhu
-    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
-    htthgvrhhnpeehudfgudffffetuedtvdehueevledvhfelleeivedtgeeuhfegueeviedu
-    ffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    gsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdei
-    gedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfih
-    igmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:CDWXZVe5VaDiwYAfGKo1bOgOubuS2yFwYOjTeiz6I5AuWXdCvt_RDg>
-    <xmx:CDWXZWPYe9NoZ5-R5TZ-6iNIuHuOUtNnR5joNB--Z8ntu4oxfaGqmw>
-    <xmx:CDWXZXmwTiaESwk2YFchNefwEELkfF25c_rQJqu-HJmxhaa9JDZZHA>
-    <xmx:CTWXZbfJ9Nyf50VtNerqlM6mOp3a06roxJ1tRet8yZA9trYry5rhBw>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 4 Jan 2024 17:45:28 -0500 (EST)
-Date: Thu, 4 Jan 2024 14:44:19 -0800
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>, Tiago Lam <tiagolam@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Martin Rodriguez Reboredo <yakoyoku@gmail.com>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] rust: sync: add `CondVar::wait_timeout`
-Message-ID: <ZZc0w9tr5NmPAcNP@boqun-archlinux>
-References: <20240104-rb-new-condvar-methods-v3-0-70b514fcbe52@google.com>
- <20240104-rb-new-condvar-methods-v3-3-70b514fcbe52@google.com>
+        d=1e100.net; s=20230601; t=1704408367; x=1705013167;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=alNrLSr0vpGWNK/6L+uLnjjf3nOao06SX6CzGEth2ao=;
+        b=F2SUvS2uRXj3OEN9adLR22TrZGTddiN0GLVHxmA9r1x98EJLMW2T9RGl27+Z/Q8I3T
+         6gyfVgc0fYHZLzM67HARDKsPPV0NloDQk0KmWQhy6/Ml7D5qJI0HC/R7tXVJa6YsX1Lb
+         8nBj4QFF4+Apdo/pnSrARAMHcSnE92/CcPCZZxQPE8Gae8l/ygi+0Rm75YbqbI6VPtPp
+         jC6eu1TUNOXxCjKATR7TA0zNISZ7kTLTxS9Igdt/mA3ZDvhPuplduok8rTrDkoqWICw5
+         /3XOcwOTgLXVCoJvsR5nIpBoVo6N0/I5OhosTH44WvpwU6ipkSi5dl3G7h5tILGM+8mt
+         8KKw==
+X-Gm-Message-State: AOJu0YxAqc1PV8B2RrnBZkGFHO/2Q+4vP9dZBY3AGRHFn5EKDNNYst7I
+	T+9SqZfD/OiVPwVBhj9m2h7l3M1RRgAOyQ==
+X-Google-Smtp-Source: AGHT+IF4IaO9vRFD0mkUsLeLZL7V2E2O2Y9xw6r19GiUl+eNn8vovriXD3avgbVJznPdRs1iAIg/rQ==
+X-Received: by 2002:a05:600c:1d1b:b0:408:3696:3d51 with SMTP id l27-20020a05600c1d1b00b0040836963d51mr727112wms.4.1704408367640;
+        Thu, 04 Jan 2024 14:46:07 -0800 (PST)
+Received: from [192.168.199.125] (178235179036.dynamic-4-waw-k-1-3-0.vectranet.pl. [178.235.179.36])
+        by smtp.gmail.com with ESMTPSA id yy4-20020a170906dc0400b00a28fa7838bbsm147829ejb.65.2024.01.04.14.46.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jan 2024 14:46:07 -0800 (PST)
+Message-ID: <8d6c659a-5164-4f85-a90c-6d3f439821b6@linaro.org>
+Date: Thu, 4 Jan 2024 23:46:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240104-rb-new-condvar-methods-v3-3-70b514fcbe52@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] phy: qualcomm: eusb2-repeater: Fix the regfields for
+ multiple instances
+Content-Language: en-US
+To: Abel Vesa <abel.vesa@linaro.org>, Bjorn Andersson <andersson@kernel.org>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240104-phy-qcom-eusb2-repeater-fixes-v1-0-047b7b6b8333@linaro.org>
+ <20240104-phy-qcom-eusb2-repeater-fixes-v1-1-047b7b6b8333@linaro.org>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240104-phy-qcom-eusb2-repeater-fixes-v1-1-047b7b6b8333@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 04, 2024 at 02:02:43PM +0000, Alice Ryhl wrote:
+On 4.01.2024 15:52, Abel Vesa wrote:
+> The global regmap fields offsets currently get incremented with the base
+> address of the repeater. This issue doesn't get noticed unless the probe
+> defers or there are multiple repeaters on that platform. So instead of
+> incrementing the global ones, copy them for each instance of the
+> repeater.
+> 
+> Fixes: 4ba2e52718c0 ("phy: qualcomm: phy-qcom-eusb2-repeater: Use regmap_fields")
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> ---
+Ohh I wouldn't have thought about this.. Nice spot!
+
 [...]
-> diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
-> index 9451932d5d86..ffb4a51eb898 100644
-> --- a/rust/kernel/task.rs
-> +++ b/rust/kernel/task.rs
-> @@ -7,6 +7,9 @@
->  use crate::{bindings, types::Opaque};
->  use core::{marker::PhantomData, ops::Deref, ptr};
->  
 
-Missing: 
+> -	struct reg_field *regfields = eusb2_repeater_tune_reg_fields;
+>  	struct eusb2_repeater *rptr = phy_get_drvdata(phy);
+> +	struct reg_field *regfields = rptr->regfields;
+Without this:
 
-	use core::ffi::c_long;
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-here.
-
-Regards,
-Boqun
-
-> +/// A sentinal value used for infinite timeouts.
-> +pub const MAX_SCHEDULE_TIMEOUT: c_long = c_long::MAX;
-> +
->  /// Returns the currently running task.
->  #[macro_export]
->  macro_rules! current {
-> 
-> -- 
-> 2.43.0.472.g3155946c3a-goog
-> 
+Konrad
