@@ -1,133 +1,151 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A306F219E0
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 11:33:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B9B21117;
+	Thu,  4 Jan 2024 11:34:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bBvZK4SL"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-40d4a222818so8125595e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 03:33:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704368022; x=1704972822; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DC8FuXj+Yfd4w0yOAOxJTVGPRfss2QedGHLzAZKsQQ8=;
-        b=bBvZK4SL9Y3stgK+NYUDIzDaUjHm0YZhH1ZFp4tWTBvh8y6jjDgB2XJXhQmFQ8+uNZ
-         eKWdZS03/DJKfUrHI0ZmaxMhOuamQcjwNxXGK7y/fbAGW0/QWMYl8DTd/KUrNA0ljk/a
-         gZfahgI/+4zE7mPu1IJnzYGttGYdvYw8uYxD4HOMBBuqtfX760vQnM+Kim0BiAi6tPEv
-         KhJqeyf0WopAwCMV6z9GHhuG7XgRvdmvDEzsp95AZKFMTG8Jh7QwfktXRF/2wkr8izC+
-         jx30S7Q3LSSZYffJ7gqdqkkJoCtYZbr/g2ymvKgUu3sZY3DnHWQOCDPsqMl8QPZWBNF5
-         ooYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704368022; x=1704972822;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DC8FuXj+Yfd4w0yOAOxJTVGPRfss2QedGHLzAZKsQQ8=;
-        b=GR49vUD5E5JP88h9FHmRPeTeMtO2kX3cVO8g7mtR19ZQSTguVqw54Go8Gu+yNSdhRv
-         dxc3zazDfa5BtsG1rlkGc+IQRgqPP+zYam8cUM55TVMh//T1Mallx/apJAUv/EtCzDcU
-         vDN2vFQPiqLHHWnXtOqzktQzLlWFdXzq4bwZu37YvuBSKnbY/hkJdaxlFmmSJDN9lg+F
-         ryY4zCwORlDizM9FXzN54FVB1rEF6YV+G9AgNZd3s8Fb0kDJ7aeCW+1AlAl5mFdCOQ/c
-         v2eF+baJPI9tJGcL9IQi0iSM5oVGjpwdI6RbqTbrQjTZzRflwkhAq4Zk2R6bV1Rmn6SN
-         Gclw==
-X-Gm-Message-State: AOJu0YxCB7S+S9sbFas7MoN3ZDWM28YMcjwzrNMUkIV+s0ZOcXSpmWaY
-	tSu2QkcUCsiZmXi9BaZd2jhpLH31ynXCkw==
-X-Google-Smtp-Source: AGHT+IGD4r3KBdjmMDQC/206M8Y09U4JqBN1jJbYyv/IfLlEKT9xl/HjGe2Mm9dS3S1KHV3z75Xs4A==
-X-Received: by 2002:a05:600c:6026:b0:40d:388b:441b with SMTP id az38-20020a05600c602600b0040d388b441bmr290237wmb.105.1704368021856;
-        Thu, 04 Jan 2024 03:33:41 -0800 (PST)
-Received: from [192.168.100.86] ([37.228.218.3])
-        by smtp.gmail.com with ESMTPSA id n4-20020a7bc5c4000000b0040d376ac369sm5323832wmk.40.2024.01.04.03.33.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jan 2024 03:33:41 -0800 (PST)
-Message-ID: <3627b156-a4e4-458e-9cf0-ca6c62366e7e@linaro.org>
-Date: Thu, 4 Jan 2024 11:33:39 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="knP3uavG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28144C433C8;
+	Thu,  4 Jan 2024 11:34:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704368092;
+	bh=2P/Mc4Boujf9+C81JhTvvl3flMRtd8Fdmy/qH4BFF3Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=knP3uavGDcmbaVzvhcK37L7HMxE3IxEifdUAoAK1EXKwu1Mr8Kwwkc3B3KR/aA6vq
+	 qfTF+4sh6PNmG4YLL6Sf8vObYJUdf939jt0AcboW3HHWn9TZHS9CtFBtpCbLn+eReJ
+	 ObtpD9yb/ybzVkfDxkutIAMpaykgXL4bHbkV8nD64r8npOclTTNwK4yf3+ToWy3cbU
+	 0PUkc2xQFmTiWpi1Ncy/ciEVUJzVueqb3RibvcglTlpzmF24HmcDKAGomt9/Cr6Tmc
+	 j5gCbrGiN9Ggi67IQGox+AeZKlnJTV/1vMDGfnhM1pq71m1HtORqvU+dR0SQ068QzT
+	 zmP5jBXzap12A==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rLLzt-008mUH-Ky;
+	Thu, 04 Jan 2024 11:34:49 +0000
+Date: Thu, 04 Jan 2024 11:34:48 +0000
+Message-ID: <86h6jt9vs7.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-acpi@vger.kernel.org,
+	acpica-devel@lists.linux.dev,
+	Mark Rutland <mark.rutland@arm.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Fang Xiang <fangxiang3@xiaomi.com>,
+	Robert Moore <robert.moore@intel.com>
+Subject: Re: [PATCH v4 0/3] irqchip/gic-v3: Enable non-coherent GIC designs probing
+In-Reply-To: <CAJZ5v0gUBU=VL8E34sjROssoGNbLnhmUQVHGWT60hgBG_ufTHw@mail.gmail.com>
+References: <20230905104721.52199-1-lpieralisi@kernel.org>
+	<20231227110038.55453-1-lpieralisi@kernel.org>
+	<CAJZ5v0gUBU=VL8E34sjROssoGNbLnhmUQVHGWT60hgBG_ufTHw@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] media: dt-bindings: media: camss: Add
- qcom,sc8280xp-camss binding
-Content-Language: en-US
-To: Rob Herring <robh@kernel.org>,
- Bryan O'Donoghue <pure.logic@nexus-software.ie>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240103-linux-next-24-01-02-sc8280xp-camss-core-dtsi-v1-0-abacaa63a961@linaro.org>
- <20240103-linux-next-24-01-02-sc8280xp-camss-core-dtsi-v1-1-abacaa63a961@linaro.org>
- <87bcff40-b5ff-41c9-a33f-95f5e80a2f22@linaro.org>
- <62995a12-e835-40ff-966f-8522f2ab53dc@nexus-software.ie>
- <20240103175424.GA1440392-robh@kernel.org>
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20240103175424.GA1440392-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: rafael@kernel.org, lpieralisi@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev, mark.rutland@arm.com, robin.murphy@arm.com, fangxiang3@xiaomi.com, robert.moore@intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On 03/01/2024 17:54, Rob Herring wrote:
-> On Wed, Jan 03, 2024 at 09:40:02AM +0000, Bryan O'Donoghue wrote:
->> On 03/01/2024 07:40, Krzysztof Kozlowski wrote:
->>> On 03/01/2024 03:18, Bryan O'Donoghue wrote:
->>>> Add bindings for qcom,sc8280xp-camss in order to support the camera
->>>> subsystem for sc8280xp as found in the Lenovo x13s Laptop.
->>>>
->>>> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
->>>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>>> ---
->>>>    .../bindings/media/qcom,sc8280xp-camss.yaml        | 512 +++++++++++++++++++++
->>>>    1 file changed, 512 insertions(+)
->>>>
->>>
->>> This patch fails, as pointed out by Robot.
->>>
->>> Best regards,
->>> Krzysztof
->>>
->>>
->>
->> Ah its in Bjorn's 6.8 clock pull tree.
->>
->> I will repost when it hits -next
-> 
-> How is that helpful? It will still fail, and the media maintainers still
-> can't apply this. If you work on linux-next, you'd better be
-> aware of and explain the dependencies.
-> 
-> Rob
+On Wed, 03 Jan 2024 13:43:16 +0000,
+"Rafael J. Wysocki" <rafael@kernel.org> wrote:
+>=20
+> On Wed, Dec 27, 2023 at 12:00=E2=80=AFPM Lorenzo Pieralisi
+> <lpieralisi@kernel.org> wrote:
+> >
+> > This series is v4 of previous series:
+> >
+> > v3: https://lore.kernel.org/all/20231006125929.48591-1-lpieralisi@kerne=
+l.org
+> > v2: https://lore.kernel.org/all/20230906094139.16032-1-lpieralisi@kerne=
+l.org
+> > v1: https://lore.kernel.org/all/20230905104721.52199-1-lpieralisi@kerne=
+l.org
+> >
+> > v3 -> v4:
+> >         - Dropped patches [1-3], already merged
+> >         - Added Linuxized ACPICA changes accepted upstream
+> >         - Rebased against v6.7-rc3
+> >
+> > v2 -> v3:
+> >         - Added ACPICA temporary changes and ACPI changes to implement
+> >           ECR https://bugzilla.tianocore.org/show_bug.cgi?id=3D4557
+> >         - ACPI changes are for testing purposes - subject to ECR code
+> >           first approval
+> >
+> > v1 -> v2:
+> >         - Updated DT bindings as per feedback
+> >         - Updated patch[2] to use GIC quirks infrastructure
+> >
+> > Original cover letter
+> > ---
+> > The GICv3 architecture specifications provide a means for the
+> > system programmer to set the shareability and cacheability
+> > attributes the GIC components (redistributors and ITSes) use
+> > to drive memory transactions.
+> >
+> > Albeit the architecture give control over shareability/cacheability
+> > memory transactions attributes (and barriers), it is allowed to
+> > connect the GIC interconnect ports to non-coherent memory ports
+> > on the interconnect, basically tying off shareability/cacheability
+> > "wires" and de-facto making the redistributors and ITSes non-coherent
+> > memory observers.
+> >
+> > This series aims at starting a discussion over a possible solution
+> > to this problem, by adding to the GIC device tree bindings the
+> > standard dma-noncoherent property. The GIC driver uses the property
+> > to force the redistributors and ITSes shareability attributes to
+> > non-shareable, which consequently forces the driver to use CMOs
+> > on GIC memory tables.
+> >
+> > On ARM DT DMA is default non-coherent, so the GIC driver can't rely
+> > on the generic DT dma-coherent/non-coherent property management layer
+> > (of_dma_is_coherent()) which would default all GIC designs in the field
+> > as non-coherent; it has to rely on ad-hoc dma-noncoherent property hand=
+ling.
+> >
+> > When a consistent approach is agreed upon for DT an equivalent binding =
+will
+> > be put forward for ACPI based systems.
+> >
+> > Lorenzo Pieralisi (3):
+> >   ACPICA: MADT: Add GICC online capable bit handling
+> >   ACPICA: MADT: Add new MADT GICC/GICR/ITS non-coherent flags handling
+> >   irqchip/gic-v3: Enable non-coherent redistributors/ITSes ACPI probing
+> >
+> >  drivers/acpi/processor_core.c    | 21 +++++++++++++++++++++
+> >  drivers/irqchip/irq-gic-common.h |  8 ++++++++
+> >  drivers/irqchip/irq-gic-v3-its.c |  4 ++++
+> >  drivers/irqchip/irq-gic-v3.c     |  9 +++++++++
+> >  include/acpi/actbl2.h            | 12 ++++++++++--
+> >  include/linux/acpi.h             |  3 +++
+> >  6 files changed, 55 insertions(+), 2 deletions(-)
+> >
+> > --
+>=20
+> I can apply the first 2 patches, but I would need an ACK for the 3rd one.
+>=20
+> Alternatively, feel free to add
+>=20
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>=20
+> to the first 2 patches and route them via ARM64.
 
-Well, it actually is in -next as at the time I posted this patch
+Thanks for that. I have some comments on the third patch, which I'd
+like to see addressed beforehand. This is probably all 6.9 material
+anyway (nobody is affected by this so far).
 
-https://git.codelinaro.org/bryan.odonoghue/kernel/-/blob/linux-next-24-01-02-sc8280xp-camss-core-dtsi/include/dt-bindings/clock/qcom,sc8280xp-camcc.h
+	M.
 
-per the branch referenced in the cover letter
-
-https://git.codelinaro.org/bryan.odonoghue/kernel/-/tree/linux-next-24-01-02-sc8280xp-camss-core-dtsi
-
-Looking at the name of the branch for your bot
-
-20240103-linux-next-24-01-02-sc8280xp-camss-core-dtsi-v1-1-abacaa63a961@linaro.org
-
-Does this branch name in the bot output 
-"linux-next-24-01-02-sc8280xp-camss-core-dtsi-v1" imply it built from 
-the branch I referenced in the cover letter 
-"linux-next-24-01-02-sc8280xp-camss-core-dtsi" ?
-
-Am I getting the base of the build right ?
-
-https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240103-linux-next-24-01-02-sc8280xp-camss-core-dtsi-v1-1-abacaa63a961@linaro.org/
-
-If not - what is the base of the build ?
-
----
-bod
+--=20
+Without deviation from the norm, progress is not possible.
