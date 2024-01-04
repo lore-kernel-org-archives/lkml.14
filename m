@@ -1,368 +1,138 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98BAB20DE1;
-	Thu,  4 Jan 2024 09:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C02208D1
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 09:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fustg9+o";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="dbXGBzKJ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fustg9+o";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="dbXGBzKJ"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id A5BB91F7FC;
-	Thu,  4 Jan 2024 09:54:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1704362066; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4i41TaruQR4Pq5LXVEoj7/T9YHF9NQenB4+HeINuBzQ=;
-	b=fustg9+o6qY6TdkQ3bcIke++mqLviQ0aEDOI0jykhmrcW5x4qRYGZjNEUDkZL/krZ41f5i
-	KWUA6mdqYEKTND1s/sQjOp/uNrumayJQa368Ek6PQYjNjwN1ypUWhjWBJoTt0qKCvkNm8Y
-	GzNAFybAGvMDkMpmXNqwfPin/Mkb0PU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1704362066;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4i41TaruQR4Pq5LXVEoj7/T9YHF9NQenB4+HeINuBzQ=;
-	b=dbXGBzKJXvS9A4pyna6aepGghBvFxQypR9kpnM2NVdT36NzRsMZRdwSmbUEkrbgflYoYiu
-	dIl2cW7cX8NyIuBw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1704362066; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4i41TaruQR4Pq5LXVEoj7/T9YHF9NQenB4+HeINuBzQ=;
-	b=fustg9+o6qY6TdkQ3bcIke++mqLviQ0aEDOI0jykhmrcW5x4qRYGZjNEUDkZL/krZ41f5i
-	KWUA6mdqYEKTND1s/sQjOp/uNrumayJQa368Ek6PQYjNjwN1ypUWhjWBJoTt0qKCvkNm8Y
-	GzNAFybAGvMDkMpmXNqwfPin/Mkb0PU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1704362066;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4i41TaruQR4Pq5LXVEoj7/T9YHF9NQenB4+HeINuBzQ=;
-	b=dbXGBzKJXvS9A4pyna6aepGghBvFxQypR9kpnM2NVdT36NzRsMZRdwSmbUEkrbgflYoYiu
-	dIl2cW7cX8NyIuBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 184EE137E8;
-	Thu,  4 Jan 2024 09:54:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 6LObBFKAlmXPZwAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Thu, 04 Jan 2024 09:54:26 +0000
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: ardb@kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	bhelgaas@google.com,
-	arnd@arndb.de,
-	zohar@linux.ibm.com,
-	dmitry.kasatkin@gmail.com,
-	paul@paul-moore.com,
-	jmorris@namei.org,
-	serge@hallyn.com,
-	javierm@redhat.com
-Cc: linux-arch@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-integrity@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH v3 4/4] arch/x86: Do not include <asm/bootparam.h> in several files
-Date: Thu,  4 Jan 2024 10:51:22 +0100
-Message-ID: <20240104095421.12772-5-tzimmermann@suse.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240104095421.12772-1-tzimmermann@suse.de>
-References: <20240104095421.12772-1-tzimmermann@suse.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wmx//jxu"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a28bd9ca247so31570066b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 01:55:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704362130; x=1704966930; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wO8OC0Dzb3+yM1rxiFt6WTsH4sWuKnHi0Z9bM/kkbiQ=;
+        b=wmx//jxuABvm2y49gbqV6XtIlD9HQgY8cFOjGH/7Y/StmIVb0cjHHgOmRUkV0kq72c
+         s0wQZSgYIepKl3hLYMNbhUmX2Q3p30i/RkADbt9HDLhsSQK5/6TyEU7m1HVYiYjrD1H1
+         GG53ZoIDhwFrXs4V18giI1lOCHhSfV46vJW9HwdmbLMV3cSaO5m1ag8ZUDOUgKmYOvEW
+         DTXhG+K6ghU+/ideKaXhyYvvAzfv3HptD7trvn5M62KhPD9xy8cXO78BAgMO59pOZSsz
+         SoHG205h5L2PNrL7j7oQpn92KwmWkPMX1lnyaPdHmPic9v5X/TxJww3dhSk2lZ1wxqxp
+         DEeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704362130; x=1704966930;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wO8OC0Dzb3+yM1rxiFt6WTsH4sWuKnHi0Z9bM/kkbiQ=;
+        b=jdtTnpnwwCn8Qh1QE+sQ1qPANRNVZj00s4VLVXIzvwSucJ42vZfW439pRflRLDCeSr
+         47IanFOdDzYouF0d4GYz6Cyos9LqAl8SZHCKF5VDXpvcbI1qzrnnxKGhin5lxsWfHiaO
+         i0sd2pxYLl1ll9etpLV5FXBU5Vlym5TT3z1j94vavozFrw/6pdjt5PPGSNmSWXOx2bLp
+         nU86XCQ8QnD0XRQ2IsVdfV44swR9lLxHLCOyfk8/xVsY68OYOH8FJTIXk2SfBWEAyzFs
+         t99eydNgmyKysk9MVkCI7kLUcKP4lCjzkkA9sWHKB3/y88Yq9EqJEASACKiqXZXdmnRp
+         L7yQ==
+X-Gm-Message-State: AOJu0YwRENhJfN/uJLB39gK3U3N9LhPx4jLr+bYQzuPJx6s1sqkKv8Jf
+	tvU+NN4Tybu+M60qNPog72gZce/4PmUKmw==
+X-Google-Smtp-Source: AGHT+IEzIPkgZdDLrd4i3akEmjh8BhCDJun38iAcjUcvqneFS1rD6PnG9aBdDqyF3+Fji+7S1hRZvw==
+X-Received: by 2002:a17:906:d7a8:b0:a27:f2b7:bfde with SMTP id pk8-20020a170906d7a800b00a27f2b7bfdemr178795ejb.130.1704362130400;
+        Thu, 04 Jan 2024 01:55:30 -0800 (PST)
+Received: from [192.168.199.125] (178235179036.dynamic-4-waw-k-1-3-0.vectranet.pl. [178.235.179.36])
+        by smtp.gmail.com with ESMTPSA id gk1-20020a17090790c100b00a28a8ca1c55sm1184525ejb.212.2024.01.04.01.55.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jan 2024 01:55:30 -0800 (PST)
+Message-ID: <7f2f738b-a2a7-43ba-b63a-bba59e76bae4@linaro.org>
+Date: Thu, 4 Jan 2024 10:55:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Score: 3.40
-X-Spamd-Result: default: False [3.40 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 BAYES_HAM(-3.00)[99.99%];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 R_MISSING_CHARSET(2.50)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 BROKEN_CONTENT_TYPE(1.50)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 R_RATELIMIT(0.00)[to_ip_from(RLf6fmkuiuubj71hj5sz5bt3qt)];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_TWELVE(0.00)[22];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
-	 FREEMAIL_TO(0.00)[kernel.org,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,google.com,arndb.de,linux.ibm.com,gmail.com,paul-moore.com,namei.org,hallyn.com];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: ***
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 03/12] clk: qcom: gcc-sm6375: Unregister critical
+ clocks
+Content-Language: en-US
+To: Johan Hovold <johan@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20230717-topic-branch_aon_cleanup-v5-0-99942e6bf1ba@linaro.org>
+ <20230717-topic-branch_aon_cleanup-v5-3-99942e6bf1ba@linaro.org>
+ <ZZZt1fV9WYJ6P-xE@hovoldconsulting.com>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <ZZZt1fV9WYJ6P-xE@hovoldconsulting.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Remove the include statement for <asm/bootparam.h> from several files
-that don't require it. Limits the exposure of the boot parameters
-within the Linux kernel code.
+On 4.01.2024 09:35, Johan Hovold wrote:
+> On Wed, Jan 03, 2024 at 02:36:01PM +0100, Konrad Dybcio wrote:
+>> Some clocks need to be always-on, but we don't really do anything
+>> with them, other than calling enable() once and telling Linux they're
+>> enabled.
+>>
+>> Unregister them to save a couple of bytes and, perhaps more
+>> importantly, allow for runtime suspend of the clock controller device,
+>> as CLK_IS_CRITICAL prevents the latter.
+>>
+>> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> 
+>> @@ -3886,6 +3797,11 @@ static int gcc_sm6375_probe(struct platform_device *pdev)
+>>  	qcom_branch_set_clk_en(regmap, 0x17028); /* GCC_CAMERA_XO_CLK */
+>>  	qcom_branch_set_clk_en(regmap, 0x2b004); /* GCC_CPUSS_GNOC_CLK */
+>>  	qcom_branch_set_clk_en(regmap, 0x1702c); /* GCC_DISP_XO_CLK */
+>> +	qcom_branch_set_clk_en(regmap, 0x17008); /* GCC_CAMERA_AHB_CLK */
+>> +	qcom_branch_set_clk_en(regmap, 0x1700c); /* GCC_DISP_AHB_CLK */
+>> +	qcom_branch_set_clk_en(regmap, 0x36004); /* GCC_GPU_CFG_AHB_CLK */
+>> +	qcom_branch_set_clk_en(regmap, 0x79004); /* GCC_SYS_NOC_CPUSS_AHB_CLK */
+>> +	qcom_branch_set_clk_en(regmap, 0x17004); /* GCC_VIDEO_AHB_CLK */
+> 
+> Shouldn't you keep the above sorted by offset or at least try to group
+> them by subsystem (e.g. keep the camera clocks together)?
+Guess I assumed order-of-appearance sorting was fine when I made this
+patch.
 
-Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+I can group it by hw block, though.
 
----
-
-v3:
-	* revert of e820/types.h required
-v2:
-	* clean up misc.h and e820/types.h
-	* include bootparam.h in several source files
----
- arch/x86/boot/compressed/acpi.c       | 2 ++
- arch/x86/boot/compressed/cmdline.c    | 2 ++
- arch/x86/boot/compressed/efi.c        | 2 ++
- arch/x86/boot/compressed/misc.h       | 3 ++-
- arch/x86/boot/compressed/pgtable_64.c | 1 +
- arch/x86/boot/compressed/sev.c        | 1 +
- arch/x86/include/asm/kexec.h          | 1 -
- arch/x86/include/asm/mem_encrypt.h    | 2 +-
- arch/x86/include/asm/sev.h            | 3 ++-
- arch/x86/include/asm/x86_init.h       | 2 --
- arch/x86/kernel/crash.c               | 1 +
- arch/x86/kernel/sev-shared.c          | 2 ++
- arch/x86/platform/pvh/enlighten.c     | 1 +
- arch/x86/xen/enlighten_pvh.c          | 1 +
- arch/x86/xen/vga.c                    | 1 -
- 15 files changed, 18 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
-index 18d15d1ce87d..f196b1d1ddf8 100644
---- a/arch/x86/boot/compressed/acpi.c
-+++ b/arch/x86/boot/compressed/acpi.c
-@@ -5,6 +5,8 @@
- #include "../string.h"
- #include "efi.h"
- 
-+#include <asm/bootparam.h>
-+
- #include <linux/numa.h>
- 
- /*
-diff --git a/arch/x86/boot/compressed/cmdline.c b/arch/x86/boot/compressed/cmdline.c
-index c1bb180973ea..e162d7f59cc5 100644
---- a/arch/x86/boot/compressed/cmdline.c
-+++ b/arch/x86/boot/compressed/cmdline.c
-@@ -1,6 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "misc.h"
- 
-+#include <asm/bootparam.h>
-+
- static unsigned long fs;
- static inline void set_fs(unsigned long seg)
- {
-diff --git a/arch/x86/boot/compressed/efi.c b/arch/x86/boot/compressed/efi.c
-index 6edd034b0b30..f2e50f9758e6 100644
---- a/arch/x86/boot/compressed/efi.c
-+++ b/arch/x86/boot/compressed/efi.c
-@@ -7,6 +7,8 @@
- 
- #include "misc.h"
- 
-+#include <asm/bootparam.h>
-+
- /**
-  * efi_get_type - Given a pointer to boot_params, determine the type of EFI environment.
-  *
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index c0d502bd8716..01c89c410efd 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -33,7 +33,6 @@
- #include <linux/elf.h>
- #include <asm/page.h>
- #include <asm/boot.h>
--#include <asm/bootparam.h>
- #include <asm/desc_defs.h>
- 
- #include "tdx.h"
-@@ -53,6 +52,8 @@
- #define memptr unsigned
- #endif
- 
-+struct boot_param;
-+
- /* boot/compressed/vmlinux start and end markers */
- extern char _head[], _end[];
- 
-diff --git a/arch/x86/boot/compressed/pgtable_64.c b/arch/x86/boot/compressed/pgtable_64.c
-index 51f957b24ba7..c882e1f67af0 100644
---- a/arch/x86/boot/compressed/pgtable_64.c
-+++ b/arch/x86/boot/compressed/pgtable_64.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "misc.h"
-+#include <asm/bootparam.h>
- #include <asm/e820/types.h>
- #include <asm/processor.h>
- #include "pgtable.h"
-diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-index 454acd7a2daf..13beae767e48 100644
---- a/arch/x86/boot/compressed/sev.c
-+++ b/arch/x86/boot/compressed/sev.c
-@@ -12,6 +12,7 @@
-  */
- #include "misc.h"
- 
-+#include <asm/bootparam.h>
- #include <asm/pgtable_types.h>
- #include <asm/sev.h>
- #include <asm/trapnr.h>
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index c9f6a6c5de3c..91ca9a9ee3a2 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -25,7 +25,6 @@
- 
- #include <asm/page.h>
- #include <asm/ptrace.h>
--#include <asm/bootparam.h>
- 
- struct kimage;
- 
-diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-index 359ada486fa9..c1a8a3408c18 100644
---- a/arch/x86/include/asm/mem_encrypt.h
-+++ b/arch/x86/include/asm/mem_encrypt.h
-@@ -15,7 +15,7 @@
- #include <linux/init.h>
- #include <linux/cc_platform.h>
- 
--#include <asm/bootparam.h>
-+struct boot_params;
- 
- #ifdef CONFIG_X86_MEM_ENCRYPT
- void __init mem_encrypt_init(void);
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index 5b4a1ce3d368..8dad8b1613bf 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -13,7 +13,6 @@
- 
- #include <asm/insn.h>
- #include <asm/sev-common.h>
--#include <asm/bootparam.h>
- #include <asm/coco.h>
- 
- #define GHCB_PROTOCOL_MIN	1ULL
-@@ -22,6 +21,8 @@
- 
- #define	VMGEXIT()			{ asm volatile("rep; vmmcall\n\r"); }
- 
-+struct boot_params;
-+
- enum es_result {
- 	ES_OK,			/* All good */
- 	ES_UNSUPPORTED,		/* Requested operation not supported */
-diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
-index c878616a18b8..f062715578a0 100644
---- a/arch/x86/include/asm/x86_init.h
-+++ b/arch/x86/include/asm/x86_init.h
-@@ -2,8 +2,6 @@
- #ifndef _ASM_X86_PLATFORM_H
- #define _ASM_X86_PLATFORM_H
- 
--#include <asm/bootparam.h>
--
- struct ghcb;
- struct mpc_bus;
- struct mpc_cpu;
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index c92d88680dbf..564cff7ed33a 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -26,6 +26,7 @@
- #include <linux/vmalloc.h>
- #include <linux/memblock.h>
- 
-+#include <asm/bootparam.h>
- #include <asm/processor.h>
- #include <asm/hardirq.h>
- #include <asm/nmi.h>
-diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
-index ccb0915e84e1..4962ec42dc68 100644
---- a/arch/x86/kernel/sev-shared.c
-+++ b/arch/x86/kernel/sev-shared.c
-@@ -9,6 +9,8 @@
-  * and is included directly into both code-bases.
-  */
- 
-+#include <asm/setup_data.h>
-+
- #ifndef __BOOT_COMPRESSED
- #define error(v)	pr_err(v)
- #define has_cpuflag(f)	boot_cpu_has(f)
-diff --git a/arch/x86/platform/pvh/enlighten.c b/arch/x86/platform/pvh/enlighten.c
-index 00a92cb2c814..944e0290f2c0 100644
---- a/arch/x86/platform/pvh/enlighten.c
-+++ b/arch/x86/platform/pvh/enlighten.c
-@@ -3,6 +3,7 @@
- 
- #include <xen/hvc-console.h>
- 
-+#include <asm/bootparam.h>
- #include <asm/io_apic.h>
- #include <asm/hypervisor.h>
- #include <asm/e820/api.h>
-diff --git a/arch/x86/xen/enlighten_pvh.c b/arch/x86/xen/enlighten_pvh.c
-index ada3868c02c2..9e9db601bd52 100644
---- a/arch/x86/xen/enlighten_pvh.c
-+++ b/arch/x86/xen/enlighten_pvh.c
-@@ -4,6 +4,7 @@
- 
- #include <xen/hvc-console.h>
- 
-+#include <asm/bootparam.h>
- #include <asm/io_apic.h>
- #include <asm/hypervisor.h>
- #include <asm/e820/api.h>
-diff --git a/arch/x86/xen/vga.c b/arch/x86/xen/vga.c
-index d97adab8420f..f7547807b0bd 100644
---- a/arch/x86/xen/vga.c
-+++ b/arch/x86/xen/vga.c
-@@ -2,7 +2,6 @@
- #include <linux/screen_info.h>
- #include <linux/init.h>
- 
--#include <asm/bootparam.h>
- #include <asm/setup.h>
- 
- #include <xen/interface/xen.h>
--- 
-2.43.0
-
+Konrad
