@@ -1,101 +1,99 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E2B2CCB2;
-	Thu,  4 Jan 2024 22:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQgzbLnF"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-556aa7fe765so1146783a12.2;
-        Thu, 04 Jan 2024 14:46:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704408368; x=1705013168; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=06lPjTfo3YdRLLJ7lhbrUqAnozPaB9BqiqaizfWnuOM=;
-        b=IQgzbLnFGdO+4MBt6ztnHKGXNezZFRB7ucHqKPakO5MjdHU1sp8etNPSdXRyhWKmol
-         9rNyhc4udwC4VDtxzdsbqN+emtTzhdEz46t7UTd3CaVTbF/gpavy6UxlYaCUU1p29EWZ
-         ZfxgH2AqaEGTgPAPCaBWb5gFIugUaa6BxWk6F5NAXAabFaOmLIvyf9yHD9AqQsDPYgsH
-         XXliaECHgt3YFKuXGIcF76mI+sbdWoEmsMAsflyaBYP/8zUd+apoGHSn3lXF+/Sry65Q
-         gWuNgmoxyZ1ZuZvUYmeDI7447L9ViAIQhkhqkbprJmCAmdid1yhVBSFJ5JxFvScIWuHV
-         S3Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704408368; x=1705013168;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=06lPjTfo3YdRLLJ7lhbrUqAnozPaB9BqiqaizfWnuOM=;
-        b=M8eBBILl9+idCXYwSVsDUgf7OIm+wj7bj29mMG5YRyMTHJwvHOvD+V0lj/yYjHMJ6x
-         J6r0hCDuWneSKlcHki0XYbQ/HZO9HY4Y0IxMpNRD+UNlrvVfPFWPkXmsHeGohxVpRYpe
-         mFalkA84ZHbNXWmE2W6KVUcbMGqXl5heBF7GywU/8AMDd0GksHh8lTlrH15mu24guNeS
-         sf6p+QnoUqUHIAdeamVFeXeTz7hyChoUsdKd1wqkzK3vrIgCWp9cu2dZYTBH1NAJe++H
-         0wN7qgDrbFhnaq5ez/kUA//cYY3OyAR10EOA5wjUKTLHnYv6uz/o+xZQQtEhFqZ/lJ3p
-         nPTg==
-X-Gm-Message-State: AOJu0YwOBhhECEfUg9xA3QS08J3O8wSzIM5lLBM2s2VjkddqUROHARIT
-	7NSQRdWo7BAsgVy+kUbTuaGw54X4Sg+k65bwuOs=
-X-Google-Smtp-Source: AGHT+IEvXzOjgkjtMlZPKJt0H3xhedbOAegeiCnY8TSorXC5N7cWhhDeTHTcmRD7oblIzYW2yCNaZ+G3A757U8v7bxI=
-X-Received: by 2002:a17:906:c55:b0:a28:77b:bb36 with SMTP id
- t21-20020a1709060c5500b00a28077bbb36mr625274ejf.134.1704408368287; Thu, 04
- Jan 2024 14:46:08 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3652CCD6
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 22:46:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rLWTt-0003LX-RS; Thu, 04 Jan 2024 23:46:29 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rLWTs-000SXg-6R; Thu, 04 Jan 2024 23:46:28 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rLWTs-003ePm-0J;
+	Thu, 04 Jan 2024 23:46:28 +0100
+Date: Thu, 4 Jan 2024 23:46:27 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc: William Qiu <william.qiu@starfivetech.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org, 
+	Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh+dt@kernel.org>, 
+	Thierry Reding <thierry.reding@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Hal Feng <hal.feng@starfivetech.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Subject: Re: [PATCH v10 3/4] riscv: dts: starfive: jh7100: Add PWM node and
+ pins configuration
+Message-ID: <xd2ryic6mr6d6cbljjbhmr56mfpchfzkmc3lnznhmoiwyzip2a@6bhbho267e7c>
+References: <20231222094548.54103-1-william.qiu@starfivetech.com>
+ <20231222094548.54103-4-william.qiu@starfivetech.com>
+ <CAJM55Z9tyrR7emEBrY0+Fnc_LUFQHkqYHLQ4ptL=XQMy52qtVw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240103153307.553838-1-brho@google.com> <20240103153307.553838-3-brho@google.com>
- <CAEf4BzbKT3LbHQSFwpAfoJuhyGy2NpHk7A6ivkFiutN_jnKHYg@mail.gmail.com> <0d9f51e9-7e07-48dd-bf18-ea28ab6b1e83@google.com>
-In-Reply-To: <0d9f51e9-7e07-48dd-bf18-ea28ab6b1e83@google.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 4 Jan 2024 14:45:56 -0800
-Message-ID: <CAEf4Bzb8RviBbC0fVMzKmoY6oU0B1v_8CrnUr1RaffPWb7SpLQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 2/2] selftests/bpf: add inline assembly helpers
- to access array elements
-To: Barret Rhoden <brho@google.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, mattbobrowski@google.com, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="t6vmolgghsdowiew"
+Content-Disposition: inline
+In-Reply-To: <CAJM55Z9tyrR7emEBrY0+Fnc_LUFQHkqYHLQ4ptL=XQMy52qtVw@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+
+
+--t6vmolgghsdowiew
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 4, 2024 at 1:37=E2=80=AFPM Barret Rhoden <brho@google.com> wrot=
-e:
->
-> On 1/3/24 14:51, Andrii Nakryiko wrote:
-> >> +
-> >> +/*
-> >> + * Helper to load and run a program.
-> >> + * Call must define skel, map_elems, and bss_elems.
-> >> + * Destroy the skel when you're done.
-> >> + */
-> >> +#define load_and_run(PROG) ({
-> > does this have to be a macro? Can you write it as a function?
->
-> can do.  (if we keep these patches).
->
-> i used a macro for the ## PROG below, but i can do something with ints
-> and switches to turn on the autoload for a single prog.  or just
-> copy-paste the boilerplate.
+Hello Emil,
 
-why can't you pass the `struct bpf_program *prog` parameter?
+On Sun, Dec 24, 2023 at 02:49:34AM -0800, Emil Renner Berthing wrote:
+> William Qiu wrote:
+> > Add OpenCores PWM controller node and add PWM pins configuration
+> > on VisionFive 1 board.
+> >
+> > Signed-off-by: William Qiu <william.qiu@starfivetech.com>
+>=20
+> Sorry, I thought I already sent my review. This looks good.
+>=20
+> Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 
->
-> >> +       int err;                                                      =
-  \
-> >> +       skel =3D array_elem_test__open();                             =
-    \
-> >> +       if (!ASSERT_OK_PTR(skel, "array_elem_test open"))             =
-  \
-> >> +               return;                                               =
-  \
-> >> +       bpf_program__set_autoload(skel->progs.x_ ## PROG, true);      =
-  \
->
-> thanks,
->
-> barret
->
->
+Is this also an implicit Ack to take this patch via the pwm tree once
+the earlier patches are ready? Or do you want to take it via your tree?
+(Maybe already now together with the binding? If so, you can assume my
+Reviewed-by to be an implicit Ack for that.)
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--t6vmolgghsdowiew
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWXNUMACgkQj4D7WH0S
+/k5yJwf8DhWKIA7w5Efn+CTxdLq+56oqG3ETi+SoNHAw6aIw5EMpC/VJwzn87CjW
+rFbc+3JtR/MZvQtlQeEaKu8+IuYRUW0iOFQ2FjVJXI2219g9PsTgMdx9fQmlZFqp
+iFg3DTWerqhqGu258walJUgojVdC6plX2sjlVWvf9UIIaYv9yR4IYMffeFWw0MM/
+dThWdIdYfx4BtxMJWxkiw3QQr7s1tpJ55weroLPO5CAMqXrjiC6YGmcelTF8mRCJ
+6pFloQ1MTC6kT5gERkxBlnO1V+WocrNXPamPFavh5UtGL0PmsZqQzUT49MWwb2si
+sXuOgYjeLG8VgEj8X0+2I+x7k90eDg==
+=xoqr
+-----END PGP SIGNATURE-----
+
+--t6vmolgghsdowiew--
