@@ -1,151 +1,212 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2086.outbound.protection.partner.outlook.cn [139.219.146.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EDBA18B00;
-	Thu,  4 Jan 2024 05:48:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gqT+AlBJA9Z0u9ZvMetJHpTyN8oRCkABtusA6vtNxMcZiiJRbntAASR5Zqj74aO1FtPerf8xoaE/7qbM5c3ytbTtkShD/mImQVoyQiB2T6zVZeIM5+f71zD5a1vI+w8UbJh3aXKNtLSluLI4xjAu8yRjnwrr2cpnjn9uDOR15JaDM2sFd8PpgEvOeRr+1MQGobIZ+vf+YP0rtxV6e8qDSqPCx15mLvTqiswBYunpyDYJXJiXxxbI3hLBuXscLFOG1bp20cASoxEnF46LR+6S4jaA3yNH+mlAOnEY1DvRTuEUBSraLfzD65bbE43MJMp5FVbwC979XEVVwEE+Yc12TA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JpIlqX1F6oRIEE2HeyDQPUNE1uK+ZdFiOZnZJLQ/mDk=;
- b=XLvA1BXmkm7e8eSn7ixqXl/rGZ6OPys/5cn7l8r8T8OMmRBelAaKkpE11uK6WX1NAKq4s6Kemg4wN8vIwsJoBFiAo9VL76heLyDd1oz2eWClX+HrHxc5LWWFSETA5GrV/7KPBVkx8CBZV4qAKZTwq3V3PlYFceJ3y4TtLfF8XJdV96gdX7eBVhLRacoieLy3KmQpgBR7rJwtCmfbwsZ1sH3R5BwSehXCY8L5yqwAUvcuPaInD0QMK7HuZHMEV/Jc/sXxSjttIcnkRF6bcL1i/U3lyOeL7tJ5U+kkAM7sT3Yle5xtSvrswFVqrTUflyjvnBr+Lk7Wo3Sv4102nGM27w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:1b::9) by ZQ0PR01MB0981.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.14; Thu, 4 Jan
- 2024 03:12:31 +0000
-Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
- ([fe80::bc6e:a7fa:7ab5:7417]) by
- ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn ([fe80::bc6e:a7fa:7ab5:7417%4])
- with mapi id 15.20.7135.026; Thu, 4 Jan 2024 03:12:31 +0000
-From: Yuklin Soo <yuklin.soo@starfivetech.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Linus Walleij
-	<linus.walleij@linaro.org>, Yuklin Soo <yuklin.soo@starfivetech.com>
-CC: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Hal Feng
-	<hal.feng@starfivetech.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Jianlong Huang <jianlong.huang@starfivetech.com>, Emil Renner Berthing
-	<kernel@esmil.dk>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Drew
- Fustini <drew@beagleboard.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Subject: RE: [RFC PATCH 1/6] dt-bindings: pinctrl: starfive: add JH8100
- pinctrl bindings
-Thread-Topic: [RFC PATCH 1/6] dt-bindings: pinctrl: starfive: add JH8100
- pinctrl bindings
-Thread-Index: AQHaM+jQtC6UubUli02XCaS05iYu97CzPUUAgAAeLoCAFbP3wA==
-Date: Thu, 4 Jan 2024 03:12:31 +0000
-Message-ID:
- <ZQ0PR01MB130273F2A3286849FB5BB0C9F667A@ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn>
-References: <20231221083622.3445726-1-yuklin.soo@starfivetech.com>
- <20231221083622.3445726-2-yuklin.soo@starfivetech.com>
- <CACRpkdYL8wK2vX7P7p4QvU9VV2CPjRv_aXiLqO+07MMCCKKk4Q@mail.gmail.com>
- <6c861db8-f6cd-4e12-856a-ef45efc654a2@linaro.org>
-In-Reply-To: <6c861db8-f6cd-4e12-856a-ef45efc654a2@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: ZQ0PR01MB1302:EE_|ZQ0PR01MB0981:EE_
-x-ms-office365-filtering-correlation-id: 7c26bebd-085b-4543-d7fb-08dc0cd2fd48
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- K1Ldjc4x8GBitLIl5yNqAX6F7V5BPSOwwijz8yCF0rsHrDeBsqaYQ50L5dzOxwXRdc33zhH2TjmB6Pn8rpb2lFqH0n2m4Xcq58SywcBtRaD/vuA7L66k8Y91yY1bOj1Vw02En7owFsEWz8CBLxMHkhTtlKoNo3rCGk7/wF0M2+Q93AbT2G/uO0zuh9A3sC9ULh+mkts3EgoED163nd9eQQ1bVHGYaCirfQJKye2CZkPwtUxu/RGniWJ34AF4/ZDhww2uy1/Iw5jTEnw96nTXvU/deHwzCR+3lIteh0MMlNZ9RV6CAp7eJSnCfVy3o3t6glb5O2gXtGasVAv+d5Vpl10qf+73iS+2uPwh0A8Ltm6dK21iGf9+zxsqtAGYQahtaIvy5j99rtVF0JuIe+SbfEZOjUvxIyy3vcB3zfTpMHQdb4vhG/QSq0zdt4+xsSc9ZKorH/2oyU1b7J6kHyQdFU1ZdZlitd0CYkJJBl5zglIY4Hzwnlo9YymMHqqbWXiYXi9MMZptx0bigIY32J1NfKJcQMYfXHEh18eJYNIk7V6dnr6RwXGZaCBYWBeABXlt
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(39830400003)(346002)(366004)(396003)(136003)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(7696005)(41320700001)(122000001)(53546011)(9686003)(508600001)(66556008)(55016003)(71200400001)(110136005)(66446008)(4326008)(76116006)(40160700002)(33656002)(66946007)(54906003)(44832011)(66476007)(41300700001)(2906002)(8936002)(8676002)(83380400001)(5660300002)(40180700001)(4744005)(7416002)(86362001)(38100700002)(64756008)(26005)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?VTZtcVBzZ2xsOXdTbFFuQ1I2engvTVM3TWgzSG9aZTRZY1ZKSUY3dXd3N2g5?=
- =?utf-8?B?QVR3L1F0bEh4LzBXZ2FhSHI0Y3I2SWxRSlVKM3k5UWxpZVdRd2ZFZGNtTTdU?=
- =?utf-8?B?cUxrS05jRjk0VDFNRVFKek11bnBHaTBFVVNTR0FEWHR3bHZsMzN4ZVh1Rldn?=
- =?utf-8?B?MXB3OTljNkJzdkU0YW5EejUxc0Z2WG5kMUE3N3dpWE5JMnNTaGVBK3YyM3dw?=
- =?utf-8?B?elBnL2huWm9sUGNIcWkrSG9OM3czNG5FSGdDdC9yeWE2aGJGTENXZXcxSVo3?=
- =?utf-8?B?c1VvRENxZEFlUHNONzFhdTJZdGhoMFUrMVpNbHhBK1ZjZEhFZHJuNFgrd3pw?=
- =?utf-8?B?dFVrV0xub0ZpNFZnM3NhMmx3ZW95QzRyUFRNMTdpRm4wQ0haR1lBbWFQenJ1?=
- =?utf-8?B?Y1NBaThrMks0TFlDa1dEa1k4eTcxWlBLWGhsT0dqUGhWV3QvMzBFMlBCdllI?=
- =?utf-8?B?WHJNMGU1Sy9FNHJtanROQWJvNCtadVRCYzVrOXRaUVV4bk14UDBvWU4xS29S?=
- =?utf-8?B?OWdtQWhaaERCMDNJTGFpcWIya1NnV1hQZXUwZVFuNEpJVVVlZEIzNHBhZ3U0?=
- =?utf-8?B?Q0JrSEg2SS91YXpIdzdpcmtDYjBPWVFMalBRdGgvQXJwTlR0YXFpeHdkc2lu?=
- =?utf-8?B?Q3grUW93N3VXMmhoL0FLRkJOWDNKN1pCVTcvbGJkdWRQQTRZRVR2MEsyclF0?=
- =?utf-8?B?WDh3V3h4YUszNVBndmJ4cUFHb3pLYmVJVzNCdWo5Umo2YVlXb0duTnB1Njln?=
- =?utf-8?B?R2NjTnJDOWFaMXNFdWxuWk1HTlJMaWRmUW53alBDeFp4N2c1TmdRck50UVdU?=
- =?utf-8?B?aW5ZNk5yT2JDcXQvUWszNDVuV0E0djJCY21OZmo3TFpvR2t5T3JGQmlDaTM4?=
- =?utf-8?B?SFdHWjVOWVVCV2RiOHVpdXBRc2RzbFdldTZSMnJ3WE83cXR2OWlsVHVDbUFH?=
- =?utf-8?B?ZXd0TTR6M0JuMWJlMjJBUTZZUEc5Q2M4c0dvWDJBbURKcEpXMmpDWUd0UXBk?=
- =?utf-8?B?MG9DbTd5WkZyWXU3QUNXQUN0MFUvcGFYVUh2OTBBK01YOW92OFpXeGtscVVy?=
- =?utf-8?B?TnhFS0NYVVZXU1BrVXg1dXNLbEpiY1RBSDVoeUFnR2szTkNpdy9nQ1lPdmNG?=
- =?utf-8?B?QkVhT21EVHZNU0JRSGhWQVZLcTU0ZHc3NC93SFNwdS95RUpMZHlxNXJmT0ZR?=
- =?utf-8?B?UmRxMTFwS1pweXRQVGc3eXdaNEJGSld3VitCQ0F0ajkxbDkzQ1RjbVlLNmxY?=
- =?utf-8?B?a0dKY1NJa2JDOFYvM21zUGt2TVBvbzNLbzVqc3JFdWJLd1l3cTZIMnVVK3A0?=
- =?utf-8?B?TS9pNlVVZE9ITXFGcDNKWHExV2FLbE0zaCtYRmUzZ2w2VFhIMHB4QkdmUG5D?=
- =?utf-8?B?bURUTDNKNVM0WlJhTUc3dFpZZ0Y1UzhGcEk5ZS96am15VUNoNXZYYTU0MlNK?=
- =?utf-8?B?R3ZFcVVpYjdWWStKeTVPcmJyaXdid3dIRWNtWHM3TCtNOGlTMk9SUm50amJV?=
- =?utf-8?B?NW8rMURkMGNISFdOZDNsR2dFY2xNY2I1LzJiNE5TK203cXZWRFdjcERSalZL?=
- =?utf-8?B?QlZ6aGdoZ3JTU1lLTExKdDlob0pmeHVHQ1lYS1B0RDczb0paUmh0MnZEcWdT?=
- =?utf-8?B?d2pTMVRsbjdDcC96VEhpODdCUUVYTkdvcWpQVUhoMHJubTUyRG5JSjRUbmdv?=
- =?utf-8?B?SmIrQWJNMVNaQnJGY2tDN3Y2RVVtbS8rRERhR0RPc1RKNVJXV2dpeDhmelNI?=
- =?utf-8?B?bk1QR0hrMzYrWEUwQjlYbElseENlbzlVL3NUOS9ocXFDcWJ0RGJwaHg4WS9K?=
- =?utf-8?B?V285SWR1d1J5bnEzRzFPcGVjNkgyWlA3VUdkaDMwRFN6dGIwRFBDcDE1dC9L?=
- =?utf-8?B?S1J2dHdTTTJxSHovbWVweGVna05leFdhOHc2cyt2MVA3ZjhoK0czRjN5bFZD?=
- =?utf-8?B?eE4wR1lNeHYzV0o5Wk9qdFloMldyR1BtY0JZdEduUG5WNVR6NmMrdHQ3RTJ0?=
- =?utf-8?B?dEUyZG5USDJVUUxHb0k4NVBUVXd0dVY4SXQwVk55WjAvc2wwWlUrYzJNMCtZ?=
- =?utf-8?B?cGVRMWZmSFhTdFZ3S29JOFlUTTZJa0tvZnVNZVA5c1ZGdGZQVWwvTWIyZjVw?=
- =?utf-8?B?RUlMRU1PMUgzYUdhblMvdWZuNE55cnNXOGhaa3pzbSt6NjVmamJhbkRkcUw2?=
- =?utf-8?B?eFE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9B21A710
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 05:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XEAWvMiy"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6d9af1f52bcso72361b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 21:50:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704347436; x=1704952236; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Uf9xX6NGzjv1ISMlid2UcA3oN+qjOMTFEKHCEil84EA=;
+        b=XEAWvMiyIvCSukO3FitDAFBdKhzLDI/tvLdqP20JJiSKYV0RUgF9RY4QOGwf2vcmOg
+         B6xCMPebYroO3TAJOzXRNnMDXPiL1PncmhuM9r/a2+JcUgLIuOGoRsGMzzHCPKMCjOQ5
+         eWrPuDkibkQGauMZhr0/sL3E006QsJboJ7LmdULTglMX9Kon/k5xM011qjeO+k/hwQNh
+         Gr5nTFlsuvhuZOEbFiIkoq6FTHzg2eGeBTDOoM3/c66AWC2HztFweJpA3mMop1VJaTlH
+         +X163fQX7Bajk39NDTQ5Qiz6agrfGOINFR5bMmckHoyGto6UvTqCaWXoQuYNwATOOBqO
+         zIRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704347436; x=1704952236;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Uf9xX6NGzjv1ISMlid2UcA3oN+qjOMTFEKHCEil84EA=;
+        b=OnId4NijarHeRV4Y/9CCM7T0E9D68zOv9Qyi2o64Pw0CQ/gUPHP/zBoIuPmqphdLw3
+         tVVPe/teBRlJWdfYIlnpq47d6PXHCwBdqNlXU6sbq9xFTz773cxxxiGqAY4t+amhMWih
+         Q7PNCwH3I/S1yB6v6idITGeb563DWYxvAU4A/Y63LNCvGZOSi2l5jPYcPMMZxHmWvAiX
+         wzo5WaE6ew2zsbQ1rg/4i7DN71rSJiYunBzoANVeqNrc75iTu2xyscKIyD7n8iHmnelO
+         kQ4L/b6Dx3IAiJMUy22ARJ043xVdJw0W1NCrRkfifGfW/u7pa5aj7oteLn0/4uNymyi+
+         DKhA==
+X-Gm-Message-State: AOJu0YyoWSwKtUvqKgFwCjlTWywIJevfsk6OSR3Ty7tFcC+8u8LWg3d4
+	HsGI4DPbisjncvikI7noJNHxZo0RY+Oz
+X-Google-Smtp-Source: AGHT+IH+YmP6TkldqOBQ8q7LpIRUpnAuB55Y4aNLVXHxOcIszacbpKTctAPDRpPE0LlZCjBp4X2MWA==
+X-Received: by 2002:a05:6a00:2e81:b0:6d9:8d50:55d with SMTP id fd1-20020a056a002e8100b006d98d50055dmr157139pfb.47.1704347435731;
+        Wed, 03 Jan 2024 21:50:35 -0800 (PST)
+Received: from thinkpad ([220.158.159.72])
+        by smtp.gmail.com with ESMTPSA id f22-20020aa78b16000000b006d0d90edd2csm23793210pfd.42.2024.01.03.21.50.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jan 2024 21:50:35 -0800 (PST)
+Date: Thu, 4 Jan 2024 11:20:30 +0530
+From: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
+To: Shradha Todi <shradha.t@samsung.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, jingoohan1@gmail.com,
+	gustavo.pimentel@synopsys.com, josh@joshtriplett.org,
+	lukas.bulwahn@gmail.com, hongxing.zhu@nxp.com,
+	pankaj.dubey@samsung.com, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
+ controller
+Message-ID: <20240104055030.GA3031@thinkpad>
+References: <CGME20231130115055epcas5p4e29befa80877be45dbee308846edc0ba@epcas5p4.samsung.com>
+ <20231130115044.53512-1-shradha.t@samsung.com>
+ <20231130165514.GW3043@thinkpad>
+ <000601da3e07$c39e5e00$4adb1a00$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c26bebd-085b-4543-d7fb-08dc0cd2fd48
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jan 2024 03:12:31.1619
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cEKQ+uOLOAEHkLcT55Gx70YbFwzFD35ObA+9pt22zX7vCC4K/udwhewuPMCfTag2jqYON3+7axJEWBIk1Zvm0cxm7XpMPt2rwNjlObJScKs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB0981
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <000601da3e07$c39e5e00$4adb1a00$@samsung.com>
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS3J6eXN6dG9mIEtvemxv
-d3NraSA8a3J6eXN6dG9mLmtvemxvd3NraUBsaW5hcm8ub3JnPg0KPiBTZW50OiBUaHVyc2RheSwg
-RGVjZW1iZXIgMjEsIDIwMjMgMTE6NDUgUE0NCj4gVG86IExpbnVzIFdhbGxlaWogPGxpbnVzLndh
-bGxlaWpAbGluYXJvLm9yZz47IFl1a2xpbiBTb28NCj4gPHl1a2xpbi5zb29Ac3RhcmZpdmV0ZWNo
-LmNvbT4NCj4gQ2M6IEJhcnRvc3ogR29sYXN6ZXdza2kgPGJhcnRvc3ouZ29sYXN6ZXdza2lAbGlu
-YXJvLm9yZz47IEhhbCBGZW5nDQo+IDxoYWwuZmVuZ0BzdGFyZml2ZXRlY2guY29tPjsgTGV5Zm9v
-biBUYW4gPGxleWZvb24udGFuQHN0YXJmaXZldGVjaC5jb20+Ow0KPiBKaWFubG9uZyBIdWFuZyA8
-amlhbmxvbmcuaHVhbmdAc3RhcmZpdmV0ZWNoLmNvbT47IEVtaWwgUmVubmVyIEJlcnRoaW5nDQo+
-IDxrZXJuZWxAZXNtaWwuZGs+OyBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPjsgS3J6eXN6
-dG9mIEtvemxvd3NraQ0KPiA8a3J6eXN6dG9mLmtvemxvd3NraStkdEBsaW5hcm8ub3JnPjsgQ29u
-b3IgRG9vbGV5IDxjb25vcitkdEBrZXJuZWwub3JnPjsNCj4gRHJldyBGdXN0aW5pIDxkcmV3QGJl
-YWdsZWJvYXJkLm9yZz47IGxpbnV4LWdwaW9Admdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4ga2Vy
-bmVsQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0K
-PiByaXNjdkBsaXN0cy5pbmZyYWRlYWQub3JnOyBQYXVsIFdhbG1zbGV5IDxwYXVsLndhbG1zbGV5
-QHNpZml2ZS5jb20+OyBQYWxtZXINCj4gRGFiYmVsdCA8cGFsbWVyQGRhYmJlbHQuY29tPjsgQWxi
-ZXJ0IE91IDxhb3VAZWVjcy5iZXJrZWxleS5lZHU+DQo+IFN1YmplY3Q6IFJlOiBbUkZDIFBBVENI
-IDEvNl0gZHQtYmluZGluZ3M6IHBpbmN0cmw6IHN0YXJmaXZlOiBhZGQgSkg4MTAwIHBpbmN0cmwN
-Cj4gYmluZGluZ3MNCj4gDQo+IE9uIDIxLzEyLzIwMjMgMTQ6NTcsIExpbnVzIFdhbGxlaWogd3Jv
-dGU6DQo+ID4+ICsgICAgICAgICAgZHJpdmUtc3RyZW5ndGg6DQo+ID4+ICsgICAgICAgICAgICBl
-bnVtOiBbIDIsIDQsIDgsIDEyIF0NCj4gPg0KPiA+IE1pbGxpYW1wZXJlcz8gVGhlbiBzcGVsbCB0
-aGF0IG91dCBpbiBhIGRlc2NyaXB0aW9uOg0KPiANCj4gT3IganVzdCB1c2UgZHJpdmUtc3RyZW5n
-dGgtbWljcm9hbXANCg0KU3VnZ2VzdCBjaGFuZ2luZyDigJxkcml2ZS1zdHJlbmd0aDrigJ0gdG8g
-4oCcZHJpdmUtc3RyZW5ndGg6IERyaXZlIHN0cmVuZ3RoIGluIG1B4oCdIHNpbmNlIHRoZSB1bml0
-IGlzIGluIG1BLg0KDQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+IEtyenlzenRvZg0KDQo=
+On Wed, Jan 03, 2024 at 11:13:20AM +0530, Shradha Todi wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Shradha Todi <shradha.t@samsung.com>
+> > Sent: 04 December 2023 14:10
+> > To: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
+> > Cc: 'lpieralisi@kernel.org' <lpieralisi@kernel.org>; 'kw@linux.com'
+> > <kw@linux.com>; 'robh@kernel.org' <robh@kernel.org>;
+> > 'bhelgaas@google.com' <bhelgaas@google.com>; 'jingoohan1@gmail.com'
+> > <jingoohan1@gmail.com>; 'gustavo.pimentel@synopsys.com'
+> > <gustavo.pimentel@synopsys.com>; 'josh@joshtriplett.org'
+> > <josh@joshtriplett.org>; 'lukas.bulwahn@gmail.com'
+> > <lukas.bulwahn@gmail.com>; 'hongxing.zhu@nxp.com'
+> > <hongxing.zhu@nxp.com>; 'pankaj.dubey@samsung.com'
+> > <pankaj.dubey@samsung.com>; 'linux-kernel@vger.kernel.org' <linux-
+> > kernel@vger.kernel.org>; 'linux-pci@vger.kernel.org' <linux-
+> > pci@vger.kernel.org>
+> > Subject: RE: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
+> > controller
+> > 
+> > 
+> > 
+> > > -----Original Message-----
+> > > From: Manivannan Sadhasivam [mailto:manivannan.sadhasivam@linaro.org]
+> > > Sent: 30 November 2023 22:25
+> > > To: Shradha Todi <shradha.t@samsung.com>
+> > > Cc: lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
+> > > bhelgaas@google.com; jingoohan1@gmail.com;
+> > > gustavo.pimentel@synopsys.com; josh@joshtriplett.org;
+> > > lukas.bulwahn@gmail.com; hongxing.zhu@nxp.com;
+> > > pankaj.dubey@samsung.com; linux-kernel@vger.kernel.org; linux-
+> > > pci@vger.kernel.org
+> > > Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
+> > > controller
+> > >
+> > > On Thu, Nov 30, 2023 at 05:20:41PM +0530, Shradha Todi wrote:
+> > > > DesignWare controller provides a vendor specific extended capability
+> > > > called RASDES as an IP feature. This extended capability  provides
+> > > > hardware information like:
+> > > >  - Debug registers to know the state of the link or controller.
+> > > >  - Error injection mechanisms to inject various PCIe errors including
+> > > >    sequence number, CRC
+> > > >  - Statistical counters to know how many times a particular event
+> > > >    occurred
+> > > >
+> > > > However, in Linux we do not have any generic or custom support to be
+> > > > able to use this feature in an efficient manner. This is the reason
+> > > > we are proposing this framework. Debug and bring up time of
+> > > > high-speed IPs are highly dependent on costlier hardware analyzers
+> > > > and this solution will in some ways help to reduce the HW analyzer usage.
+> > > >
+> > > > The debugfs entries can be used to get information about underlying
+> > > > hardware and can be shared with user space. Separate debugfs entries
+> > > > has been created to cater to all the DES hooks provided by the controller.
+> > > > The debugfs entries interacts with the RASDES registers in the
+> > > > required sequence and provides the meaningful data to the user. This
+> > > > eases the effort to understand and use the register information for
+> > > debugging.
+> > > >
+> > > > v1 version was posted long back and for some reasons I couldn't work
+> > > > on it. I apologize for the long break. I'm restarting this activity
+> > > > and have taken care of all previous review comments shared.
+> > > > v1:
+> > > > https://lore.kernel.org/all/20210518174618.42089-1-shradha.t@samsung
+> > > > .c
+> > > > om/T/
+> > > >
+> > >
+> > > There is already a series floating to add similar functionality via
+> > > perf
+> > > subsystem: https://lore.kernel.org/linux-pci/20231121013400.18367-1-
+> > > xueshuai@linux.alibaba.com/
+> > >
+> > > - Mani
+> > >
+> > 
+> > Hi Mani,
+> > 
+> > The series proposed in perf includes only time based-analysis and event counters
+> > which will monitor performance (Group 6 and 7). The patch or framework that we
+> > have proposed includes debug information, error injection facility and error
+> > counters (Group 0 - 5) which are not included as part of the functionality
+> > implemented via perf. In my opinion, these functionalities don't count as
+> > performance monitoring or counters but rather as debug counters. How about
+> > we take this up as a debugfs framework as proposed in my patch?
+> > Or if others feel it can be taken via perf driver then I am happy to extend the perf
+> > driver if authors do not have objection. Let me know what you think of this?
+> > Meanwhile I will review the perf patches and share my feedback.
+> > 
+> 
+> Hello Mani,
+> Any update on the above comment? IMO, even though the perf patches and this
+> patchset are both part of the DWC vendor specific capability - RASDES,  they
+> cover different features. The perf file includes performance based parameters
+> like time-based analysis and event counters for count of packets whereas this
+> patchset includes debugging fields, error injection and event counters for count
+> of errors. I think having a separate debugfs file fits more but would you suggest
+> we extend the perf file itself? 
+> 
+
+For the error injection and counters, we already have the EDAC framework. So
+adding them in the DWC driver doesn't make sense to me.
+
+But first check with the perf driver author if they have any plans on adding the
+proposed functionality. If they do not have any plan or not working on it, then
+look into EDAC.
+
+- Mani
+
+> Shradha
+> 
+> > > > Shradha Todi (3):
+> > > >   PCI: dwc: Add support for vendor specific capability search
+> > > >   PCI: debugfs: Add support for RASDES framework in DWC
+> > > >   PCI: dwc: Create debugfs files in DWC driver
+> > > >
+> > > >  drivers/pci/controller/dwc/Kconfig            |   8 +
+> > > >  drivers/pci/controller/dwc/Makefile           |   1 +
+> > > >  .../controller/dwc/pcie-designware-debugfs.c  | 476
+> > > ++++++++++++++++++
+> > > >  .../controller/dwc/pcie-designware-debugfs.h  |   0
+> > > >  drivers/pci/controller/dwc/pcie-designware.c  |  20 +
+> > > > drivers/pci/controller/dwc/pcie-designware.h  |  18 +
+> > > >  6 files changed, 523 insertions(+)
+> > > >  create mode 100644
+> > > > drivers/pci/controller/dwc/pcie-designware-debugfs.c
+> > > >  create mode 100644
+> > > > drivers/pci/controller/dwc/pcie-designware-debugfs.h
+> > > >
+> > > > --
+> > > > 2.17.1
+> > > >
+> > >
+> > > --
+> > > மணிவண்ணன் சதாசிவம்
+> 
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
