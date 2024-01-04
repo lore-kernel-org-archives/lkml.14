@@ -1,173 +1,169 @@
-Received: from gimli.rothwell.id.au (gimli.rothwell.id.au [103.230.158.156])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1BDA1E4A8;
-	Thu,  4 Jan 2024 22:10:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rothwell.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rothwell.id.au
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA2B2C850
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 22:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rothwell.id.au header.i=@rothwell.id.au header.b="c1KjIIBQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rothwell.id.au;
-	s=201702; t=1704405892;
-	bh=If2814HFR+59WDsBz9gf/4ej7C70sl4Dq1sz0ZnVow0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=c1KjIIBQ43iscQf/typY4aFGldEFLPGs188eQ0bDYCYo4QYVixsQospEPF3mjw/nG
-	 48oEEv6kF4Lp4CkVXn5VTr5siaM6CdCpqqSnh0rG2qCLyLzeo3lioBTw4jeBLwDfPu
-	 xgkyzNl+LFh/uPDQgX/HwdhFMP2qvNExm2rpZgBtSUgHWxN3kjleiI/SzPxGWJWhpg
-	 cAF0MC9Djf+yISgrjElB/zfsTtLQPY58VijdJYR1pQwS+CeYHFkp4bG84wbOJnsnh6
-	 ZYlZV1FDd3rWO77YNkKIqjpapDdqlk3saXdgy4Ue+fkqBCzW0KfHSfpz/hyeflILrY
-	 Uj7JLzqHxOSoQ==
-Received: from authenticated.rothwell.id.au (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.rothwell.id.au (Postfix) with ESMTPSA id 4T5gcM013wzyb9;
-	Fri,  5 Jan 2024 09:04:50 +1100 (AEDT)
-Date: Fri, 5 Jan 2024 09:04:49 +1100
-From: Stephen Rothwell <sfr@rothwell.id.au>
-To: Sean Young <sean@mess.org>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Thierry Reding
- <thierry.reding@gmail.com>, Lee Jones <lee@kernel.org>, Jingoo Han
- <jingoohan1@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>,
- Stephen Rothwell <sfr@canb.auug.org.au>, Flavio Suligoi
- <f.suligoi@asem.it>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Linux DRI Development
- <dri-devel@lists.freedesktop.org>
-Subject: Re: (subset) linux-next: build failure after merge of the pwm tree
-Message-ID: <20240105090449.5cf240ec@oak>
-In-Reply-To: <ZZaplFvjLADNz-2m@gofer.mess.org>
-References: <20231221165805.0c4771c1@canb.auug.org.au>
-	<170316329164.542553.8341559295114557258.b4-ty@kernel.org>
-	<20231221125801.GG10102@google.com>
-	<ZYSFUZf8NcK5vvLv@orome.fritz.box>
-	<ZZaCQahr3t8CUumD@archie.me>
-	<ZZaplFvjLADNz-2m@gofer.mess.org>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nzOxYd6w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704406357; x=1735942357;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=i4Wnaosbtu6tWHnfINhnI1IZAXSgRJ8fGJuxG2b67PU=;
+  b=nzOxYd6wNixfiECeZmLd+/fwSxRDhb60VcrgX3Ae+IhsIeGLDaT/lyBG
+   rV8lTF5sODtgjdduQ9onAxYiFXGcYkC7SWyLM0Y1hH+CDapgs9qN1HFmO
+   u8iKezdGOkHorOb2JgBmsbQHk3eL6AP1zvI58m96wkDEXAbkbJR+Pj3WZ
+   mPUyLYrPcFchKjy1HzejyHHeYF1uObivdZ9rLTBpWoABNwUZvbMp527dE
+   lEDRNeNRzYpUg5ScJ5IhnIR2oRFy3k1QnquzZoNAjkR4+3P59wWe1+xjE
+   Q1FNGtwMmgAbC2W6Jf4sZdz7D5xW/YIf4f+ArMfq6FeuRYB4stDmXLIBq
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="382353674"
+X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
+   d="scan'208";a="382353674"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 14:12:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="953758695"
+X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
+   d="scan'208";a="953758695"
+Received: from tkantar-mobl1.amr.corp.intel.com (HELO khuang2-desk.gar.corp.intel.com) ([10.209.21.206])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 14:12:32 -0800
+From: Kai Huang <kai.huang@intel.com>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org,
+	dave.hansen@intel.com,
+	kirill.shutemov@linux.intel.com,
+	tglx@linutronix.de,
+	bp@alien8.de,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	rafael@kernel.org,
+	dan.j.williams@intel.com,
+	hpa@zytor.com,
+	geert@linux-m68k.org,
+	bhe@redhat.com,
+	akpm@linux-foundation.org,
+	rppt@kernel.org,
+	frederic@kernel.org,
+	dave.jiang@intel.com,
+	xin3.li@intel.com,
+	rick.p.edgecombe@intel.com,
+	isaku.yamahata@intel.com,
+	yuan.yao@intel.com
+Subject: [PATCH] x86/asm: Remove the __iomem annotation of movdir64b()'s dst argument
+Date: Fri,  5 Jan 2024 11:12:19 +1300
+Message-ID: <20240104221219.572258-1-kai.huang@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/xW9ccXYMuSXzGh3Fg8i_Q4P";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/xW9ccXYMuSXzGh3Fg8i_Q4P
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Commit e56d28df2f66 ("x86/virt/tdx: Configure global KeyID on all
+packages") causes below sparse check warning:
 
-Hi all,
+  arch/x86/virt/vmx/tdx/tdx.c:683:27: warning: incorrect type in argument 1 (different address spaces)
+  arch/x86/virt/vmx/tdx/tdx.c:683:27:    expected void [noderef] __iomem *dst
+  arch/x86/virt/vmx/tdx/tdx.c:683:27:    got void *
 
-On Thu, 4 Jan 2024 12:50:28 +0000 Sean Young <sean@mess.org> wrote:
->
-> On Thu, Jan 04, 2024 at 05:02:41PM +0700, Bagas Sanjaya wrote:
-> > [also add Jingoo (additional backlight maintainer) and Linus]
-> >=20
-> > On Thu, Dec 21, 2023 at 07:34:57PM +0100, Thierry Reding wrote: =20
-> > > On Thu, Dec 21, 2023 at 12:58:01PM +0000, Lee Jones wrote: =20
-> > > > On Thu, 21 Dec 2023, Lee Jones wrote:
-> > > >  =20
-> > > > > On Thu, 21 Dec 2023 16:58:05 +1100, Stephen Rothwell wrote: =20
-> > > > > > After merging the backlight tree, today's linux-next build (x86=
-_64
-> > > > > > allmodconfig) failed like this:
-> > > > > >=20
-> > > > > > drivers/video/backlight/mp3309c.c: In function 'mp3309c_bl_upda=
-te_status':
-> > > > > > drivers/video/backlight/mp3309c.c:134:23: error: implicit decla=
-ration of function 'pwm_apply_state'; did you mean 'pwm_apply_args'? [-Werr=
-or=3Dimplicit-function-declaration]
-> > > > > >   134 |                 ret =3D pwm_apply_state(chip->pwmd, &pw=
-mstate);
-> > > > > >       |                       ^~~~~~~~~~~~~~~
-> > > > > >       |                       pwm_apply_args
-> > > > > >=20
-> > > > > > [...] =20
-> > > > >=20
-> > > > > Applied, thanks!
-> > > > >=20
-> > > > > [1/1] linux-next: build failure after merge of the pwm tree
-> > > > >       commit: f7baa9ccef93ba1c36a8ecf58c2f4e86fb3181b9 =20
-> > > >=20
-> > > > Actually it's:
-> > > >=20
-> > > >   f7baa9ccef93b ("backlight: mp3309c: Rename  pwm_apply_state() to =
-pwm_apply_might_sleep()")
-> > > >=20
-> > > > But don't bank on the commit ID staying the same. =20
-> > >=20
-> > > This is likely going to break the build on your branch because
-> > > pwm_apply_might_sleep() is only available in the PWM tree right now. =
-In
-> > > any case, I've now pushed a commit that adds pwm_apply_state() back a=
-s a
-> > > compatibility stub, so it should be okay for you to drop this if you
-> > > run into problems. It's always possible that somebody else wants to a=
-dd
-> > > a new caller of pwm_apply_state() and in retrospect we should've
-> > > probably done this from the start, at least as a transitional measure
-> > > for one or two cycles.
-> > >  =20
-> >=20
-> > Hi Lee and Thierry,
-> >=20
-> > I know that we're still on New Year vibes, so some things are not up to=
- full
-> > steam for now; but since we're close to v6.7 release and v6.8 merge win=
-dow,
-> > hence allow me to ask:
-> >=20
-> > Stephen Rothwell is still complaining about backlight tree build failure
-> > due to f7baa9ccef93b, yet it has not been fixed so far. Has the culprit
-> > been dropped/reverted as he requested? The worst case is the culprit sl=
-ips
-> > through and become part of backlight PR and Linus will likely not happy
-> > with the build regression (maybe he had to fix by himself). =20
->=20
-> This should be fixed by 9a216587a03df, and on current linux-next I can't=
-=20
-> reproduce the problem any more (x86_64 allmodconfig).
+The reason is TDX must use the MOVDIR64B instruction to convert TDX
+private memory (which is normal RAM but not MMIO) back to normal.  The
+TDX code uses existing movdir64b() helper to do that, but the first
+argument @dst of movdir64b() is annotated with __iomem.
 
-Of course linux-next is fine, because I have fixed it up in there.
+When movdir64b() was firstly introduced in commit 0888e1030d3e
+("x86/asm: Carve out a generic movdir64b() helper for general usage"),
+it didn't have the __iomem annotation.  But this commit also introduced
+the same "incorrect type" sparse warning because the iosubmit_cmds512(),
+which was the solo caller of movdir64b(), has the __iomem annotation.
 
-Here is the problem:  the backlight tree
-(git://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git#for-backli=
-ght-next)
-is broken when built in its own because of the above patch (which is
-commit f7baa9ccef93).  In linux-next, I have been merging the previous
-working version of the backlight tree (with head commit 7d84a63a39b7).
-The patch (commit f7baa9ccef93) can only be applied to the merge of the
-backlight tree and the pwm tree
-(git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git=
-#for-next)
-which is merged much later in the linux-next process.  If the backlight
-tree was merged by Linus before the pwm tree, it would break his build
-(and he would not be happy).  But the patch on the head of the
-backlight tree was made unnecessary by commit 9a216587a03d in the pwm
-tree.  So, please either revert commit f7baa9ccef93 in the backlight
-tree (or simply to a "git reset --hard HEAD^" there).  The patch of
-commit f7baa9ccef93 can be applied some time later (after Linus has
-merged both trees.
+This was later fixed by commit 6ae58d871319 ("x86/asm: Annotate
+movdir64b()'s dst argument with __iomem").  That fix was reasonable
+because until TDX code the movdir64b() was only used to move data to
+MMIO location, as described by the commit message:
 
---=20
-Cheers,
-Stephen Rothwell
+  ... The current usages send a 64-bytes command descriptor to an MMIO
+  location (portal) on a device for consumption. When future usages for
+  the MOVDIR64B instruction warrant a separate variant of a memory to
+  memory operation, the argument annotation can be revisited.
 
---Sig_/xW9ccXYMuSXzGh3Fg8i_Q4P
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Now TDX code uses MOVDIR64B to move data to normal memory so it's time
+to revisit.
 
------BEGIN PGP SIGNATURE-----
+The SDM says the destination of MOVDIR64B is "memory location specified
+in a general register", thus it's more reasonable that movdir64b() does
+not have the __iomem annotation on the @dst.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWXK4EACgkQAVBC80lX
-0Gy01Qf6A1C5SMeayXoJVjrb1sBes2bSqA6BnrLQT9O2O/FGzvW678lYwOppq2Z4
-vgkvFcEMrBD82x/7DBmRZye3XdnyZwjHwHuHqA7Q+soXunIWOz6DgyaJ89GQ4BBs
-Nyndkrfj/f1xNN9PCxxDzB/Uv45RUVNT9EMMWlVdjZLSrcJLj8YL3NWNEE50++K8
-8eYw2XF8j6SASp55r+bgZfLJEvygCwrzY4IgrPWt9gP5YXSsZ8MpPvo32UhEqUnJ
-Y7vZCwE+W3Geyd1W+ujzT3GnZKyI5L3Jtok5CJI6gzXKC9LYI+aCVwgjy580qtbG
-CZC/3XsFPtr2wLlnB32M7KuCRhoAZA==
-=M1fR
------END PGP SIGNATURE-----
+Remove the __iomem annotation from the @dst argument of movdir64b() to
+fix the sparse warning in TDX code.  Similar to memset_io(), introduce a
+new movdir64b_io() to cover the case where the destination is an MMIO
+location, and change the solo caller iosubmit_cmds512() to use the new
+movdir64b_io().
 
---Sig_/xW9ccXYMuSXzGh3Fg8i_Q4P--
+In movdir64b_io() explicitly use __force in the type casting otherwise
+there will be below sparse warning:
+
+  warning: cast removes address space '__iomem' of expression
+
+Fixes: e56d28df2f66 ("x86/virt/tdx: Configure global KeyID on all packages")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202312311924.tGjsBIQD-lkp@intel.com/
+Signed-off-by: Kai Huang <kai.huang@intel.com>
+---
+ arch/x86/include/asm/io.h            | 2 +-
+ arch/x86/include/asm/special_insns.h | 9 +++++++--
+ 2 files changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
+index 76238842406a..de2dc9837f11 100644
+--- a/arch/x86/include/asm/io.h
++++ b/arch/x86/include/asm/io.h
+@@ -379,7 +379,7 @@ static inline void iosubmit_cmds512(void __iomem *dst, const void *src,
+ 	const u8 *end = from + count * 64;
+ 
+ 	while (from < end) {
+-		movdir64b(dst, from);
++		movdir64b_io(dst, from);
+ 		from += 64;
+ 	}
+ }
+diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
+index d6cd9344f6c7..f661277e52d6 100644
+--- a/arch/x86/include/asm/special_insns.h
++++ b/arch/x86/include/asm/special_insns.h
+@@ -224,10 +224,10 @@ static inline void serialize(void)
+ }
+ 
+ /* The dst parameter must be 64-bytes aligned */
+-static inline void movdir64b(void __iomem *dst, const void *src)
++static inline void movdir64b(void *dst, const void *src)
+ {
+ 	const struct { char _[64]; } *__src = src;
+-	struct { char _[64]; } __iomem *__dst = dst;
++	struct { char _[64]; } *__dst = dst;
+ 
+ 	/*
+ 	 * MOVDIR64B %(rdx), rax.
+@@ -245,6 +245,11 @@ static inline void movdir64b(void __iomem *dst, const void *src)
+ 		     :  "m" (*__src), "a" (__dst), "d" (__src));
+ }
+ 
++static inline void movdir64b_io(void __iomem *dst, const void *src)
++{
++	movdir64b((void __force *)dst, src);
++}
++
+ /**
+  * enqcmds - Enqueue a command in supervisor (CPL0) mode
+  * @dst: destination, in MMIO space (must be 512-bit aligned)
+
+base-commit: 83e1bdc94f32dcf52dfcd2025acc7a2b9376b1e8
+-- 
+2.43.0
+
