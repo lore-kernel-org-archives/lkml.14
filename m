@@ -1,202 +1,261 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2067.outbound.protection.outlook.com [40.107.220.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A489249E6;
-	Thu,  4 Jan 2024 15:04:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BEE2C433C7;
-	Thu,  4 Jan 2024 15:04:39 +0000 (UTC)
-Date: Thu, 4 Jan 2024 10:05:44 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Christian Brauner
- <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>,
- linux-doc@vger.kernel.org
-Subject: Re: [PATCH] tracefs/eventfs: Use root and instance inodes as
- default ownership
-Message-ID: <20240104100544.593030e0@gandalf.local.home>
-In-Reply-To: <20240104043945.GQ1674809@ZenIV>
-References: <20240103203246.115732ec@gandalf.local.home>
-	<20240104014837.GO1674809@ZenIV>
-	<20240103212506.41432d12@gandalf.local.home>
-	<20240104043945.GQ1674809@ZenIV>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD1B24A0C;
+	Thu,  4 Jan 2024 15:04:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="cUp25mOO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZtEiR9O1tmGyHDRc4GrYRkKWN0wIPtxm1VDZWghKIjlXZLBHxeQx3qWpnzKleANoSaLJKqGq9jkqT6md4SPUR0sCXPeLFGGuTPtVzedOAd0m+tecs7mEs38YxrArnIF2E3gjqsbbsDIWNVJRp4tRvn9TKhvhPahAlm42rNgfvbJHadnHNXC4OKxFj54T/K3QAmy6aq1BxVXdev1cdzIFjFbAERg+ZvdKmnerZ6zrqj6EoiNqTY+rrLpO2Y/0iwgQsfyBEENmTQxqSYMWbB7p+zvarE31U7m1Cz4ABGn5ZUVhauR5v6+RkaKE2zN8Ff6EGMfYgQBlbVqG88QLZg8rGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JsVr28K7bOlt8PeqfFwv/0qZReEWmvOWBUHvqgYZKhA=;
+ b=CFj6R+tZUIvtykPlkM1pH4dA5o5LwxmqsHmK5xarNpDm6oEOdYpHffIE9FUEWw2l1eTjo/8BbnGTe4AoWTuLywV9wm6WwocdA3Z0il7ZylI/4CRGHP+tCunoZYA9vxo1wrxNXzovesy19DdHkoYXoiiOhai4YagiY1nF0WZ+ENvkr52N+t7hNO06WdsoC0oiWSjCWOygF21IfbJL611C54RlIVEk3oKCKjKeKh6xP8cWB4MGXwlrasEg7cMzfLLoJvhyq7BCkYiAug7qOII2dgrDP49r0N/bGCDQjFVX02pmEws7TOjZNwxoWPG3KqitDn0by1NWemeNZL/as8MVlA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JsVr28K7bOlt8PeqfFwv/0qZReEWmvOWBUHvqgYZKhA=;
+ b=cUp25mOOxtpiegJjTGJTAyUK/Dpp3nQ76qvr6GIpQc0M7e5pZ1cekEcxfxG3XRVwADxIQ4+a9miziVqXtJPPhEqUeWwrkFpAwN6pFBCfK3NfaH7XDCtlTAC/MkmF9lPCzBGec9GJfP204DEcoBc883bbUvyIHnztUmR6xJrAwTSCo+PTcI50c8PfLaa1Bp8mrzuOgAxnAMyg/auA+tcHwlExArKJHUfKO/fkgNFG4uBCdsepWHpw2wFuFKK4+CJSOMyCtgiIdYBj6PMsgz8qhU0djfx2Hmj8l/fhn6hFueFGJvMgvDMspFPaq6njnYDYinkJIrNeBXmaAjgad2LQAQ==
+Received: from BL1PR13CA0096.namprd13.prod.outlook.com (2603:10b6:208:2b9::11)
+ by DM4PR12MB7671.namprd12.prod.outlook.com (2603:10b6:8:104::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.23; Thu, 4 Jan
+ 2024 15:04:53 +0000
+Received: from BL6PEPF0001AB4F.namprd04.prod.outlook.com
+ (2603:10b6:208:2b9:cafe::98) by BL1PR13CA0096.outlook.office365.com
+ (2603:10b6:208:2b9::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.13 via Frontend
+ Transport; Thu, 4 Jan 2024 15:04:53 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ BL6PEPF0001AB4F.mail.protection.outlook.com (10.167.242.73) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7159.9 via Frontend Transport; Thu, 4 Jan 2024 15:04:53 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Thu, 4 Jan 2024
+ 07:04:33 -0800
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.41; Thu, 4 Jan 2024 07:04:33 -0800
+Received: from vdi.nvidia.com (10.127.8.12) by mail.nvidia.com
+ (10.126.190.180) with Microsoft SMTP Server id 15.2.986.41 via Frontend
+ Transport; Thu, 4 Jan 2024 07:04:32 -0800
+From: Liming Sun <limings@nvidia.com>
+To: Vadim Pasternak <vadimp@nvidia.com>, David Thompson
+	<davthompson@nvidia.com>, Hans de Goede <hdegoede@redhat.com>, Mark Gross
+	<markgross@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>
+CC: Liming Sun <limings@nvidia.com>, <platform-driver-x86@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v1 1/1] Drop Tx network packet when Tx TmFIFO is full
+Date: Thu, 4 Jan 2024 10:04:24 -0500
+Message-ID: <f250079635da4ba75c3a3a1d7c3820f48cfc3f06.1704380474.git.limings@nvidia.com>
+X-Mailer: git-send-email 2.30.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4F:EE_|DM4PR12MB7671:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8db26d72-499a-4127-e203-08dc0d3681de
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	iSA0GOAjE8kJ1Db2M5kILSXDY6DzbqrXBer5Pw6K6VFTe4kfDAKBxafCrrP//IQThfw/4MZQKU7Afp1ZPMw9tGHiCJVz+1YT4yTBbN0GSJf6nBtPXg2ioH1WRKBTi/9fpSeeL+xu+wajKFL/fFdJHRqlwXTvJdgMEhR4EPCoACY81yHEqZgGPLXKCI12DPC3X31LEcxw7xzeQcXiBVkEecw9c0Zrby/s1aT2RrbSPiZlRJqHKkLNvxjE7YYR8OychfU3WfGLwMpwnojozrBTVtWb/4IWANkbHNK2cjA590ke2l3AaHeIukFdCnuecZOHxEGGtK6PSbj7P2XmGW8Wl1dMSlYd4kxbJydH7pxPf4Abu/6vn9lT00Tf6O9ZqyhCREuBdhBCyxZXZY3sj6tAEun1WI2z2BvMkx0dy2/rj9xdnDR1b5xdJ6ANLA8cFEESAMtrKmkqzSBoGeeQiapyHcVZ3cnsQwS9TYL1HUwFsjtuN45Yfe7Wva5FM/jmJDmN8fRMGD8GVPhsgYIzPw0VMP0GnCwPmUzuwvjP1cMWpBd8SEuBWJhTCJjsUs9g+xLmlAF3eh1NmJoZPHh67tpZnJWZtWiGU36aov5g21qKFSpuMXtvWAmC+jOXQRwKzItv9caAw/QmuY6xQYKegFKkwFeacJmqBKxB0RubUUuJQFXQbyEUKS++ZoHNDtJvPjsMCViQZU1jMPSc+4wCPFk9nYKxfY6+/Zy/bQh70kosHysfj79zsIaDEjTVybd2HtiopootZWijFHqyAiSt8Xzh6VxwjGDGaa27iaSFlYwSamNFMvyWIgYorw2cbhH03cPP
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(376002)(39860400002)(346002)(396003)(136003)(230273577357003)(230173577357003)(230922051799003)(1800799012)(64100799003)(451199024)(186009)(82310400011)(36840700001)(46966006)(40470700004)(47076005)(40480700001)(316002)(7696005)(7636003)(110136005)(86362001)(54906003)(4326008)(40460700003)(8936002)(70206006)(70586007)(36756003)(356005)(8676002)(6666004)(36860700001)(5660300002)(478600001)(26005)(2616005)(41300700001)(336012)(426003)(2906002)(83380400001)(82740400003)(21314003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jan 2024 15:04:53.6155
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8db26d72-499a-4127-e203-08dc0d3681de
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB4F.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7671
 
-On Thu, 4 Jan 2024 04:39:45 +0000
-Al Viro <viro@zeniv.linux.org.uk> wrote:
+Starting from Linux 5.16 kernel, Tx timeout mechanism was added
+into the virtio_net driver which prints the "Tx timeout" message
+when a packet is stuck in Tx queue for too long which could happen
+when external host driver is stuck or stopped and failed to read
+the FIFO.
 
-> On Wed, Jan 03, 2024 at 09:25:06PM -0500, Steven Rostedt wrote:
-> > On Thu, 4 Jan 2024 01:48:37 +0000
-> > Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >   
-> > > On Wed, Jan 03, 2024 at 08:32:46PM -0500, Steven Rostedt wrote:
-> > >   
-> > > > +	/* Get the tracefs root from the parent */
-> > > > +	inode = d_inode(dentry->d_parent);
-> > > > +	inode = d_inode(inode->i_sb->s_root);    
-> > > 
-> > > That makes no sense.  First of all, for any positive dentry we have
-> > > dentry->d_sb == dentry->d_inode->i_sb.  And it's the same for all
-> > > dentries on given superblock.  So what's the point of that dance?
-> > > If you want the root inode, just go for d_inode(dentry->d_sb->s_root)
-> > > and be done with that...  
-> > 
-> > That was more of thinking that the dentry and dentry->d_parent are
-> > different. As dentry is part of eventfs and dentry->d_parent is part of
-> > tracefs.  
-> 
-> ???
-> 
-> >Currently they both have the same superblock so yeah, I could just
-> > write it that way too and it would work. But in my head, I was thinking
-> > that they behave differently and maybe one day eventfs would get its own
-> > superblock which would not work.  
-> 
-> ->d_parent *always* points to the same filesystem; if you get an (automounted?)  
-> mountpoint there, ->d_parent simply won't work - it will point to dentry itself.
-> 
+Below is an example of the reported message:
 
-This is the "tribal knowledge" I'm talking about. I really didn't know how
-the root dentry parent worked. I guess that makes sense, as it matches the
-'..' of a directory, and the '/' directory '..' points to itself. Although
-mounted file systems do not behave that way. My /proc/.. is '/'. I just
-figured that the dentry->d_parent would be similar. Learn something everyday.
+"[494105.316739] virtio_net virtio1 tmfifo_net0: TX timeout on
+queue: 0, sq: output.0, vq: 0×1, name: output.0, usecs since
+last trans: 3079892256".
 
-> > To explain this better:
-> > 
-> >   /sys/kernel/tracing/ is the parent of /sys/kernel/tracing/events
-> > 
-> > But everything but "events" in /sys/kernel/tracing/* is part of tracefs.
-> > Everything in /sys/kernel/tracing/events is part of eventfs.
-> > 
-> > That was my thought process. But as both tracefs and eventfs still use
-> > tracefs_get_inode(), it would work as you state.
-> > 
-> > I'll update that, as I don't foresee that eventfs will become its own file
-> > system.  
-> 
-> There is no way to get to underlying mountpoint by dentry - simply because
-> the same fs instance can be mounted in any number of places.
+To avoid such "Tx timeout" messages, this commit adds a timeout
+mechanism to drop and release the pending Tx packet if not able to
+transmit for two seconds due to Tx FIFO full.
 
-OK, so the dentry is still separate from the path and tied closer to the
-inode.
+This commit also handles the special case that the packet is half-
+transmitted into the Tx FIFO. In such case, the packet is discarded
+with remaining length stored in vring->rem_padding. So paddings with
+zeros can be sent out when Tx space is available to maintain the
+integrity of the packet format. The padded packet will be dropped on
+the receiving side.
 
-> 
-> A crude overview of taxonomy:
-> 
-> file_system_type: what filesystem instances belong to.  Not quite the same
-> thing as fs driver (one driver can provide several of those).  Usually
-> it's 1-to-1, but that's not required (e.g. NFS vs NFSv4, or ext[234], or...).
+Signed-off-by: Liming Sun <limings@nvidia.com>
+---
+ drivers/platform/mellanox/mlxbf-tmfifo.c | 67 ++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
-I don't know the difference between NFS and NFSv4 as I just used whatever
-was the latest. But I understand the ext[234] part.
+diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+index 5c683b4eaf10..47ed2a6027a6 100644
+--- a/drivers/platform/mellanox/mlxbf-tmfifo.c
++++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+@@ -47,6 +47,9 @@
+ /* Message with data needs at least two words (for header & data). */
+ #define MLXBF_TMFIFO_DATA_MIN_WORDS		2
+ 
++/* Tx timeout in milliseconds. */
++#define TMFIFO_TX_TIMEOUT			2000
++
+ /* ACPI UID for BlueField-3. */
+ #define TMFIFO_BF3_UID				1
+ 
+@@ -62,12 +65,14 @@ struct mlxbf_tmfifo;
+  * @drop_desc: dummy desc for packet dropping
+  * @cur_len: processed length of the current descriptor
+  * @rem_len: remaining length of the pending packet
++ * @rem_padding: remaining bytes to send as paddings
+  * @pkt_len: total length of the pending packet
+  * @next_avail: next avail descriptor id
+  * @num: vring size (number of descriptors)
+  * @align: vring alignment size
+  * @index: vring index
+  * @vdev_id: vring virtio id (VIRTIO_ID_xxx)
++ * @tx_timeout: expire time of last tx packet
+  * @fifo: pointer to the tmfifo structure
+  */
+ struct mlxbf_tmfifo_vring {
+@@ -79,12 +84,14 @@ struct mlxbf_tmfifo_vring {
+ 	struct vring_desc drop_desc;
+ 	int cur_len;
+ 	int rem_len;
++	int rem_padding;
+ 	u32 pkt_len;
+ 	u16 next_avail;
+ 	int num;
+ 	int align;
+ 	int index;
+ 	int vdev_id;
++	unsigned long tx_timeout;
+ 	struct mlxbf_tmfifo *fifo;
+ };
+ 
+@@ -819,6 +826,50 @@ static bool mlxbf_tmfifo_rxtx_one_desc(struct mlxbf_tmfifo_vring *vring,
+ 	return true;
+ }
+ 
++static void mlxbf_tmfifo_check_tx_timeout(struct mlxbf_tmfifo_vring *vring)
++{
++	unsigned long flags;
++
++	/* Only handle Tx timeout for network vdev. */
++	if (vring->vdev_id != VIRTIO_ID_NET)
++		return;
++
++	/* Initialize the timeout or return if not expired. */
++	if (!vring->tx_timeout) {
++		/* Initialize the timeout. */
++		vring->tx_timeout = jiffies +
++			msecs_to_jiffies(TMFIFO_TX_TIMEOUT);
++		return;
++	} else if (time_before(jiffies, vring->tx_timeout)) {
++		/* Return if not timeout yet. */
++		return;
++	}
++
++	/*
++         * Drop the packet after timeout. The outstanding packet is
++         * released and the remaining bytes will be sent with padding byte 0x00
++         * as a recovery. On the peer(host) side, the padding bytes 0x00 will be
++         * either dropped directly, or appended into existing outstanding packet
++         * thus dropped as corrupted network packet.
++         */
++	vring->rem_padding = round_up(vring->rem_len, sizeof(u64));
++	mlxbf_tmfifo_release_pkt(vring);
++	vring->cur_len = 0;
++	vring->rem_len = 0;
++	vring->fifo->vring[0] = NULL;
++
++	/*
++	 * Make sure the load/store are in order before
++	 * returning back to virtio.
++	 */
++	virtio_mb(false);
++
++	/* Notify upper layer. */
++	spin_lock_irqsave(&vring->fifo->spin_lock[0], flags);
++	vring_interrupt(0, vring->vq);
++	spin_unlock_irqrestore(&vring->fifo->spin_lock[0], flags);
++}
++
+ /* Rx & Tx processing of a queue. */
+ static void mlxbf_tmfifo_rxtx(struct mlxbf_tmfifo_vring *vring, bool is_rx)
+ {
+@@ -841,6 +892,7 @@ static void mlxbf_tmfifo_rxtx(struct mlxbf_tmfifo_vring *vring, bool is_rx)
+ 		return;
+ 
+ 	do {
++retry:
+ 		/* Get available FIFO space. */
+ 		if (avail == 0) {
+ 			if (is_rx)
+@@ -851,6 +903,17 @@ static void mlxbf_tmfifo_rxtx(struct mlxbf_tmfifo_vring *vring, bool is_rx)
+ 				break;
+ 		}
+ 
++		/* Insert paddings for discarded Tx packet. */
++		if (!is_rx) {
++			vring->tx_timeout = 0;
++			while (vring->rem_padding >= sizeof(u64)) {
++				writeq(0, vring->fifo->tx.data);
++				vring->rem_padding -= sizeof(u64);
++				if (--avail == 0)
++					goto retry;
++			}
++		}
++
+ 		/* Console output always comes from the Tx buffer. */
+ 		if (!is_rx && devid == VIRTIO_ID_CONSOLE) {
+ 			mlxbf_tmfifo_console_tx(fifo, avail);
+@@ -860,6 +923,10 @@ static void mlxbf_tmfifo_rxtx(struct mlxbf_tmfifo_vring *vring, bool is_rx)
+ 		/* Handle one descriptor. */
+ 		more = mlxbf_tmfifo_rxtx_one_desc(vring, is_rx, &avail);
+ 	} while (more);
++
++	/* Check Tx timeout. */
++	if (avail <= 0 && !is_rx)
++		mlxbf_tmfifo_check_tx_timeout(vring);
+ }
+ 
+ /* Handle Rx or Tx queues. */
+-- 
+2.30.1
 
-> 
-> super_block: individual filesystem instance.  Hosts dentry tree (connected or
-> several disconnected parts - think NFSv4 or the state while trying to get
-> a dentry by fhandle, etc.).
-
-I don't know how NFSv4 works, I'm only a user of it, I never actually
-looked at the code. So that's not the best example, at least for me.
-
-> 
-> dentry: object in a filesystem's directory tree(s).  Always belongs to
-> specific filesystem instance - that relationship never changes.  Tree
-> structure (and names) _within_ _filesystem_ belong on that level.
-> ->d_parent is part of that tree structure; never NULL, root of a (sub)tree  
-> has it pointing to itself.  Might be negative, might refer to a filesystem object
-> (file, directory, symlink, etc.).
-
-This is useful.
-
-> 
-> inode: filesystem object (file, directory, etc.).  Always belongs to
-> specific filesystem instance.  Non-directory inodes might have any
-> number of dentry instances (aliases) refering to it; a directory one - no 
-> more than one.
-
-This above is very useful knowledge that I did not know. That directory
-inodes can only have a single dentry.
-
->  Filesystem object contents belongs here; multiple hardlinks
-> have different dentries and the same inode.
-
-So, can I assume that an inode could only have as many dentries as hard
-links? I know directories are only allowed to have a single hard link. Is
-that why they can only have a single dentry?
-
->  Of course, filesystem type in
-> question might have no such thing as multiple hardlinks - that's up to
-> filesystem.  In general there is no way to find (or enumerate) such links;
-> e.g. a local filesystem might have an extra hardlink somewhere we had
-> never looked at and there won't be any dentries for such hardlinks and
-> no way to get them short of doing the full search of the entire tree.
-> The situation with e.g. NFS client is even worse, obviously.
-> 
-> mount: in a sense, mount to super_block is what dentry is to inode.  It
-> provides a view of (sub)tree hosted in given filesystem instance.  The
-> same filesystem may have any number of mounts, refering to its subtrees
-> (possibly the same subtree for each, possibly all different - up to
-> the callers of mount(2)).  They form mount tree(s) - that's where the
-> notions related to "this mounted on top of that" belong.  Note that
-> they can be moved around - with no telling the filesystem about that
-> happening.  Again, there's no such thing as "the mountpoint of given
-> filesystem instance" - it might be mounted in any number of places
-> at the same time.  Specific mount - sure, no problem, except that it
-> can move around.
-> 
-> namespace: mount tree.  Unlike everything prior, this one is a part of
-> process state - same as descriptor table, mappings, etc.
-
-And I'm guessing namespace is for containers. At least that's what I've
-been assuming they are for.
-
-> 
-> file: opened IO channel.  It does refer to specific mount and specific
-> dentry (and thus filesystem instance and an inode on it).  Current
-> IO position lives here, so does any per-open(2) state.
-
-And IIUC, this is what maps to a processes fd table. That is, the process's
-file descriptor number it passes to the kernel will be mapped to this
-"file".
-
-> 
-> descriptor table: mapping from numbers to IO channels (opened files).
-
-This is that "process fd table" I mentioned above (I wrote that before
-reading this).
-
-> Again, a part of process state.  dup() creates a new entry, with
-> reference to the same file as the old one; multiple open() of the
-
-Hmm, wouldn't "dup()" create another "file" that just points to the same
-dentry? It wouldn't be the "same file", or did you mean "file" from the
-user space point of view?
-
-> same pathname will each yield a separate opened file.  _Some_ state
-> belongs here (close-on-exec, mostly).  Note that there's no such
-> thing as "the descriptor of this file" - not even "the user-supplied
-> number that had been used to get the file we are currently reading
-> from", since that number might be refering to something entirely
-> different right after we'd resolved it to opened file and that
-> happens *without* disrupting the operation.
-
-This last paragraph confused me. What do you mean by ""referring to
-something entirely different"?
-
-Thanks for this overview. It was very useful, and something I think we
-should add to kernel doc. I did read Documentation/filesystems/vfs.rst but
-honestly, I think your writeup here is a better overview.
-
--- Steve
