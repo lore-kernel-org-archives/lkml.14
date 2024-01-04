@@ -1,139 +1,63 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23111210F3;
-	Thu,  4 Jan 2024 11:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BCIiI5a9"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 404BJQfJ124161;
-	Thu, 4 Jan 2024 05:19:26 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1704367166;
-	bh=gEI1DUvl7fwMGnh7BriCsJR03yIbeB6SbxVvjDA9xHg=;
-	h=From:To:CC:Subject:Date;
-	b=BCIiI5a9PeRs0T+tkg67xaVWYXo85oT6EKzgsRzyOcJr+aOblB0QhLpEyANNkOLRV
-	 Ra0gpt21YLCm/FMycxD/NDXIKKrIJSaGhDriliaDketlmqnGL5z7AiYdaW5RKcHhLf
-	 62VDJ30ArdkfeUuVCP6fcyWcpm3ImUNbQa+y8cac=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 404BJQtm117077
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 4 Jan 2024 05:19:26 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 4
- Jan 2024 05:19:26 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 4 Jan 2024 05:19:26 -0600
-Received: from a0497641-HP-Z2-Tower-G9-Workstation-Desktop-PC.dhcp.ti.com (a0497641-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [172.24.227.36])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 404BJMmS111184;
-	Thu, 4 Jan 2024 05:19:23 -0600
-From: Neha Malcom Francis <n-francis@ti.com>
-To: <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <vigneshr@ti.com>, <nm@ti.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <a-nandan@ti.com>, <kristo@kernel.org>,
-        <u-kumar1@ti.com>, <n-francis@ti.com>
-Subject: [PATCH v2] arm64: dts: ti: k3-j721e: Add support for DFS in J721E A72
-Date: Thu, 4 Jan 2024 16:49:22 +0530
-Message-ID: <20240104111922.832040-1-n-francis@ti.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D1D20DF0
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 11:20:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i53875a56.versanet.de ([83.135.90.86] helo=phil.lan)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1rLLPQ-0003Kg-Tf; Thu, 04 Jan 2024 11:57:09 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: Sandy Huang <hjc@rock-chips.com>,
+	Mark Yao <markyao0591@gmail.com>,
+	David Airlie <airlied@gmail.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Quentin Schulz <foss+kernel@0leil.net>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	dri-devel@lists.freedesktop.org,
+	Quentin Schulz <quentin.schulz@theobroma-systems.com>,
+	linux-kernel@vger.kernel.org,
+	Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v2 0/2] drm/rockchip: lvds: improve erroring out when drm_of_find_panel_or_bridge fails
+Date: Thu,  4 Jan 2024 11:57:07 +0100
+Message-Id: <170436581964.3241728.17762561185162139964.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20231120-rk-lvds-defer-msg-v2-0-9c59a5779cf9@theobroma-systems.com>
+References: <20231120-rk-lvds-defer-msg-v2-0-9c59a5779cf9@theobroma-systems.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Add 2G, 1G, 500M and 250M as the supported frequencies for A72. This
-enables support for Dynamic Frequency Scaling (DFS). Note that Dynamic
-Voltage and Frequency Scaling (DVFS) is not supported on J7 devices.
+On Mon, 20 Nov 2023 13:29:47 +0100, Quentin Schulz wrote:
+> drm_of_find_panel_or_bridge may return a different error code than
+> EPROBE_DEFER so let's not overwrite it.
+> 
+> At the same time, let's demote the DRM_DEV_ERROR message to
+> dev_err_probe so that the scary message isn't shown (by default)
+> whenever EPROBE_DEFER is returned to not mislead users.
+> 
+> [...]
 
-J721E SoC has three different speed grade devices (see [1], 7.5
-Operating Performance Points) which as of today are indiscernible in
-software, users of a different speed grade device must manually change
-the DTS to ensure their maximum speed frequency is supported.
+Applied, thanks!
 
-To obtain clock-latency-ns, the maximum time was found to switch from/to
-any frequency for a CPU and this value was rounded off and set.
+[1/2] drm/rockchip: lvds: do not overwrite error code
+      commit: 79b09453c4e369ca81cfb670d0136d089e3b92f0
+[2/2] drm/rockchip: lvds: do not print scary message when probing defer
+      commit: 52d11c863ac92e36a0365249f7f6d27ac48c78bc
 
-[1] https://www.ti.com/lit/gpn/tda4vm
-
-Signed-off-by: Neha Malcom Francis <n-francis@ti.com>
----
-Test and boot logs:
-https://gist.github.com/nehamalcom/33608837ab5ad3332ff11a7fa7a602e2
-
-Changes since v1:
-https://lore.kernel.org/all/20231214075637.176586-1-n-francis@ti.com/
-- removed OPPs 1.5G and 750M as they introduced boot regression in
-  J721E-SK
-- Nishanth
-	- indicated DVFS not supported in commit message
-	- moved critical data sheet info from below tear line to commit
-	  message
-	- added opp-shared property
-	- added clock-latency-ns property
-
- arch/arm64/boot/dts/ti/k3-j721e.dtsi | 31 ++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e.dtsi b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-index a200810df54a..5de6c70bd989 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-@@ -48,6 +48,9 @@ cpu0: cpu@0 {
- 			d-cache-line-size = <64>;
- 			d-cache-sets = <256>;
- 			next-level-cache = <&L2_0>;
-+			clocks = <&k3_clks 202 2>;
-+			clock-names = "cpu";
-+			operating-points-v2 = <&cpu0_opp_table>;
- 		};
- 
- 		cpu1: cpu@1 {
-@@ -62,6 +65,34 @@ cpu1: cpu@1 {
- 			d-cache-line-size = <64>;
- 			d-cache-sets = <256>;
- 			next-level-cache = <&L2_0>;
-+			clocks = <&k3_clks 203 0>;
-+			clock-names = "cpu";
-+			operating-points-v2 = <&cpu0_opp_table>;
-+		};
-+	};
-+
-+	cpu0_opp_table: opp-table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp6-2000000000 {
-+			opp-hz = /bits/ 64 <2000000000>;
-+			clock-latency-ns = <300000>;
-+		};
-+
-+		opp4-1000000000 {
-+			opp-hz = /bits/ 64 <1000000000>;
-+			clock-latency-ns = <300000>;
-+		};
-+
-+		opp2-500000000 {
-+			opp-hz = /bits/ 64 <500000000>;
-+			clock-latency-ns = <300000>;
-+		};
-+
-+		opp1-250000000 {
-+			opp-hz = /bits/ 64 <250000000>;
-+			clock-latency-ns = <300000>;
- 		};
- 	};
- 
+Best regards,
 -- 
-2.34.1
-
+Heiko Stuebner <heiko@sntech.de>
