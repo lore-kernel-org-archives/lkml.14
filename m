@@ -1,66 +1,60 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294CD23769;
-	Thu,  4 Jan 2024 15:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E468C2375F
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 15:09:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BbarvAFe"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=QMeOCEySrVsJoINeQ9TxSNj3pbxXUobg3IWm+PNZCv8=; b=BbarvAFemfLPswJMTN35yeEzOb
-	K6xgTNviB5Dwxae0K+reW+ZN5MgVdA04t8uexoUgGx5kFGIdzCdvNYA5UE1fP0TXWypf16c2HBc+R
-	3wnOimyOgkYFowOhnfotZSe3dPpzf8Lcm+iaVsOyp5C8dk6KlHm9G+TYOSXVZT8W8PfoZ2dwqmEMq
-	Bw1TT24kk9MMU+ZxMRg5ntUIsQXwRRxTcrT2dSoQMzvVlR8Ci1H7uNXSREVmdYSS/+kfgMj75D/uM
-	QsBYUD+0HXvBr61b3drn5iep3H62o86+q6W9ZHM829QpThRI0h/kfng/Nq50HLB23Y43oTaviwJiR
-	wALd4NhQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1rLPHy-00FNU5-CW; Thu, 04 Jan 2024 15:05:42 +0000
-Date: Thu, 4 Jan 2024 15:05:42 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: j.granados@samsung.com
-Cc: Luis Chamberlain <mcgrof@kernel.org>, josh@joshtriplett.org,
-	Kees Cook <keescook@chromium.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Iurii Zaikin <yzaikin@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Will Drewry <wad@chromium.org>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Petr Mladek <pmladek@suse.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Balbir Singh <bsingharora@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v2 00/10] sysctl: Remove sentinel elements from kernel dir
-Message-ID: <ZZbJRiN8ENV/FoTV@casper.infradead.org>
-References: <20240104-jag-sysctl_remove_empty_elem_kernel-v2-0-836cc04e00ec@samsung.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="as7w+wtp"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d3f2985425so3541075ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 07:09:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704380991; x=1704985791; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zCW9oZWKyQ9e4+VukxMpsgFSr8YXVhhj/025rshv2Ck=;
+        b=as7w+wtpsR+05KGxSvvhaH2cseUyFlXDydCngH5Di2wVRYiOSMBeSl48G8kJ4Q5WLd
+         mgCmNH2r8FwX+6HP601EE2ne4XXjkUIkhboX7id0AkGWVvcgGJPQqJg4jDtKLXQyAfF7
+         DP+PK2ZmzPsZq4SrkYzlqR/WSri7e8/oNbxnRELA/J5BAa5jYW84peUWDWu/VV2Ygyyr
+         PhxndnTP3JKgd8buhCZzKKkuk301j9PH+8ZprTUKxqfG2YSMpeXTcUiO84wFsgNMOMCi
+         MlT1FWHxYYg5RAlz1h/Eo/eKPKa6n/pAuSrrgZZ+ruicQVVMfx8bRjx1bGFh71w76lPv
+         ltDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704380991; x=1704985791;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zCW9oZWKyQ9e4+VukxMpsgFSr8YXVhhj/025rshv2Ck=;
+        b=UBpDCoKc68lOrrixBOXLgU5E2adSbyNFCIfDbVft4kOaBDOwQLT/4ftXNUf9bXwXAK
+         kg11T/1ydPpt9UtD98H/kDPU6sBFMrT2U0aYq48CmXHNAJNHcN1fIWnVCKfjxsPseMBl
+         8tGCFHgaYn5KVO7z+/x54rNETaxL400hH95Tu965WsA/SLuO3mGV9p2BL43ijvlmlgw+
+         srg54i54MLllOkHlQw6uxHw+SKjMaTJ76CmTIOIQ8/L+LCOkdsI3bZdmlUPRlJwjcab9
+         hnZfsht9FTn2a5E8Pl7ZeQ6gLRLqd7BJEAeQTZp1jDaoBgBRR/ODG49Xe+Xz86/FHhi1
+         vz4w==
+X-Gm-Message-State: AOJu0YwNyOZEJeeN1Fgds5YaFy6SSB4NyrnSwsbPlZW7Qm0QMDVp+5fJ
+	hUjBPJaMsfT8Bbdf6+iMfMPlHH1dq0sJjg6zjdgV1YUdGKc5V24=
+X-Google-Smtp-Source: AGHT+IFDeMjhUh85xUIOfhMENAOdaQ0mYUxGbQAbBNf5318yFFIj5Q0LR1p1rvUlPa0NYwaofk/k8Q==
+X-Received: by 2002:a17:902:c10c:b0:1d3:fbf6:4d94 with SMTP id 12-20020a170902c10c00b001d3fbf64d94mr531132pli.75.1704380991041;
+        Thu, 04 Jan 2024 07:09:51 -0800 (PST)
+Received: from google.com (77.62.105.34.bc.googleusercontent.com. [34.105.62.77])
+        by smtp.gmail.com with ESMTPSA id d14-20020a170902aa8e00b001bf52834696sm25513697plr.207.2024.01.04.07.09.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jan 2024 07:09:48 -0800 (PST)
+Date: Thu, 4 Jan 2024 15:09:41 +0000
+From: Carlos Llamas <cmllamas@google.com>
+To: Tanzir Hasan <tanzirh@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	linux-kernel@vger.kernel.org, Nick Desaulniers <nnn@google.com>,
+	Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH] android: removed asm-generic/errno-base.h
+Message-ID: <ZZbKNd5rYmd9EBf1@google.com>
+References: <20231226-binderfs-v1-1-66829e92b523@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,16 +63,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240104-jag-sysctl_remove_empty_elem_kernel-v2-0-836cc04e00ec@samsung.com>
+In-Reply-To: <20231226-binderfs-v1-1-66829e92b523@google.com>
 
-On Thu, Jan 04, 2024 at 04:02:21PM +0100, Joel Granados via B4 Relay wrote:
-> From: Joel Granados <j.granados@samsung.com>
+On Tue, Dec 26, 2023 at 05:09:23PM +0000, Tanzir Hasan wrote:
+> asm-generic/errno-base.h can be replaced by linux/errno.h and the file
+> will still build correctly. It is an asm-generic file which should be
+> avoided if possible.
 > 
-> What?
+> Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+> Signed-off-by: Tanzir Hasan <tanzirh@google.com>
+> ---
+>  drivers/android/binderfs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
+> index 1224ab7aa070..d04ff6029480 100644
+> --- a/drivers/android/binderfs.c
+> +++ b/drivers/android/binderfs.c
+> @@ -29,7 +29,7 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/user_namespace.h>
+>  #include <linux/xarray.h>
+> -#include <uapi/asm-generic/errno-base.h>
+> +#include <linux/errno.h>
+>  #include <uapi/linux/android/binder.h>
+>  #include <uapi/linux/android/binderfs.h>
+>  
+> 
+> ---
+> base-commit: 606d9c29e71fbf52fcfd3fcc3ad92e444c8e1d47
+> change-id: 20231218-binderfs-a758e162e0ba
+> 
+> Best regards,
+> -- 
+> Tanzir Hasan <tanzirh@google.com>
 
-The reason I wanted you to do the sentinel removal before the split was
-so that there weren't two rounds of patches.  Ironically, because you
-refused to do it that way, not only are there two rounds of patches, but
-I'm being cc'd on all of them, so I get all the $%*^ emails twice.
 
-Please at least stop cc'ing me.
+Acked-by: Carlos Llamas <cmllamas@google.com>
+
+Thanks,
+--
+Carlos Llamas
