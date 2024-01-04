@@ -1,119 +1,107 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4BA20B1A;
-	Thu,  4 Jan 2024 10:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BCE720B11
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 10:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="P65Ak5q9"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4049bVa5023173;
-	Thu, 4 Jan 2024 10:27:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=OjqOtZ8ntc57kqqSbuT5H821EMYkp3YYKdw1VCNYAs4=; b=P6
-	5Ak5q9GqFC535lqFOqzm6AlhmEwFnBtUTf/mwS1Q/ROgH5TEAR+ISV46ITvZwVnf
-	g45194PmY9szRIcF3VnwSDVDPc5aVyQqR/ouU8ZjD0nScfthXGUtNNNq6w9Iew/A
-	hEabZ82U5wjOdUa9RLDxP/rKXTtc8zpZ6CMbm4M0B3GCilw9F6RScxe2khzf5Euk
-	83TPAWTIZiOTChi0ALQWyqMxRsyB4UxG5AZyz5WQjiYmQOKNmFhR0j8AwtgYJsgw
-	MhhQB8SZkGKRskYpqMvOKrxT7U3v3KR7DoqLpChc281ZzkrPoF5wtxucSVCjWBQo
-	uhpIMwjKTEtpJ3T4H9cw==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vd8s1jgsj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Jan 2024 10:27:15 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 404ARE4r022470
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 4 Jan 2024 10:27:14 GMT
-Received: from [10.239.154.73] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 4 Jan
- 2024 02:27:08 -0800
-Message-ID: <ce5b0ae5-e61a-40a3-8a83-278b56274aba@quicinc.com>
-Date: Thu, 4 Jan 2024 18:27:06 +0800
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="tDw6rHKS"
+Received: from eig-obgw-5007a.ext.cloudfilter.net ([10.0.29.141])
+	by cmsmtp with ESMTPS
+	id LAzErSS5foMN9LKvlrIeZN; Thu, 04 Jan 2024 10:26:29 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id LKvkrthBhPwzWLKvkrlAc1; Thu, 04 Jan 2024 10:26:28 +0000
+X-Authority-Analysis: v=2.4 cv=T8yf8tGQ c=1 sm=1 tr=0 ts=659687d4
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=-Ou01B_BuAIA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=nmWuMzfKamIsx3l42hEX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
+	Message-ID:From:In-Reply-To:References:Cc:To:Subject:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Ng+7tuUqwkRsi3OcuU1CkXvkXYStr5Kz6LXj6Zczh0U=; b=tDw6rHKSqFvtMcIADnDUPYAd2/
+	AwNrTb+oHEmQGqg7pkscWxT8ujNvASMvsxCuGI7iQAWsTpkspxIgFZfPZd1Q/KOfa9wZGPsvH43G+
+	6qVrIsZLtofOfG0K8xW046SlWg4L3Yy2cxZR4we6gkDza951IoKPUFqM5IDwsgfhoKfEWRm9/Z0xl
+	Orwg6dP8+mtYLSBWWxUSSxERwtKmIlBMLe5uSExk9ES+ES7Kh7fB/N7+bQS1d1KlqvnumiQ/sdQZB
+	cbiyG5X2vVOhEnqqeTtZ9iF9L7Avw+DqcFTQMCkbhtBqCmZfHk9n+G4TVClePm+36ZDdj7vM9i1nK
+	oeALnlEA==;
+Received: from c-98-207-139-8.hsd1.ca.comcast.net ([98.207.139.8]:34110 helo=[10.0.1.47])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <re@w6rz.net>)
+	id 1rLKvi-003tdz-0Q;
+	Thu, 04 Jan 2024 03:26:26 -0700
+Subject: Re: [PATCH 6.6 00/49] 6.6.10-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com
+References: <20240103164834.970234661@linuxfoundation.org>
+In-Reply-To: <20240103164834.970234661@linuxfoundation.org>
+From: Ron Economos <re@w6rz.net>
+Message-ID: <6fea0d2c-828c-a878-f9d1-820a050b9642@w6rz.net>
+Date: Thu, 4 Jan 2024 02:26:23 -0800
+User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: ipq6018: add #power-domain-cells for
- gcc node
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>,
-        <quic_tdas@quicinc.com>, <quic_aiquny@quicinc.com>
-CC: <kernel@quicinc.com>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240104-gcc-docs-update-v1-1-127e4816b798@quicinc.com>
- <CAA8EJprsGke9zZBy_x=YSxz7R1aSpx8r3ndjjXVVKhjKBxd=QQ@mail.gmail.com>
- <724f608a-cbfe-48f6-a1f7-59b961a7d724@quicinc.com>
- <56ee556d-ec31-4553-bce3-0c1e12c111ed@linaro.org>
-From: Fenglin Wu <quic_fenglinw@quicinc.com>
-In-Reply-To: <56ee556d-ec31-4553-bce3-0c1e12c111ed@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: EDpcKrpjHAX5L9AZipH9LHlQ9VE4gyLL
-X-Proofpoint-ORIG-GUID: EDpcKrpjHAX5L9AZipH9LHlQ9VE4gyLL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 priorityscore=1501 spamscore=0 suspectscore=0
- impostorscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
- mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401040079
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 98.207.139.8
+X-Source-L: No
+X-Exim-ID: 1rLKvi-003tdz-0Q
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-98-207-139-8.hsd1.ca.comcast.net ([10.0.1.47]) [98.207.139.8]:34110
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 4
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfHvhemW5sKm5uxNb6eYLdRFKY2B6vTlekUi4+4breyzM0aFgUtovgjztkJLh+27rH31cgK1qXFSiB2MEAQXDBfENCPT3EBDWpjIv3ZFA7/m3gG8/3Zf2
+ UA1Gb6tMAe0ffVKySYNQXSorwKjJjecX4kFj7fm+uc4R1saUHKCnCY+MPgx5/7XAs8MpVwbqwRZU68nMrjISjVxtdsna+tIfDqw=
 
+On 1/3/24 8:55 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.10 release.
+> There are 49 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 05 Jan 2024 16:47:49 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.10-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
+Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
-On 1/4/2024 6:16 PM, Konrad Dybcio wrote:
-> On 4.01.2024 11:13, Fenglin Wu wrote:
->>
->>
->> On 1/4/2024 5:53 PM, Dmitry Baryshkov wrote:
->>> On Thu, 4 Jan 2024 at 10:06, Fenglin Wu via B4 Relay
->>> <devnull+quic_fenglinw.quicinc.com@kernel.org> wrote:
->>>>
->>>> From: Fenglin Wu <quic_fenglinw@quicinc.com>
->>>>
->>>> Property '#power-domain-cells' is required as per defined in qcom,gcc.yaml
->>>> so add it for ipq6018 gcc device node to eliminate following warning in
->>>> dtbs_check:
->>>>
->>>> arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dtb: gcc@1800000:
->>>>           '#power-domain-cells' is a required property
->>>> from schema $id: http://devicetree.org/schemas/clock/qcom,gcc-ipq6018.yaml#
->>>
->>> But ipq6018 doesn't implement GDSC support. So for the sake of fixing
->>> the warning you are adding a bogus property.
->>>
->> I agree. However, there are also some gcc drivers not implementing GDSC support but the bindings are adding '#power-domain-cells' in the DT example, such as: qcom,gcc-apq8064.yaml, qcom,gcc-ipq4019.yaml, qcom,gcc-ipq6018.yaml, qcom,gcc-ipq8064.yaml, qcom,gcc-msm8660.yaml.
->>
->> Actually I thought that maybe we should do a clean up by removing '#power-domain-cells' out of the qcom,gcc.yaml binding and only adding it into individual qcom,gcc-xxx.yaml for the driver which has implemented GDSC support. I checked this with Taniya offline, but she prefers only fixing it in ipq6018.dtsi as it doesn't hurt anything by adding the property, and she expects the GDSC support should be existing in most of qcom,gcc drivers especially the newer Qcom chipsets.
-> 
-> Before we start changing anything, we should assess whether these
-> platforms actually have GDSCs within this clock controller block,
-> even if they are (currently) not described in the clk driver.
-> 
-I would assume '#power-domain-cells' is only required for drivers which 
-register GDSC as power-domain device, for drivers that only configure 
-GDSC during probe or for platforms have GDSC but not register them as 
-power-domain device, making '#power-domain-cells' as a required property 
-doesn't help anything but just generating more dtbs check warnings.
+Tested-by: Ron Economos <re@w6rz.net>
 
-> Konrad
