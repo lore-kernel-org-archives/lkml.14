@@ -1,191 +1,220 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8786320B28;
-	Thu,  4 Jan 2024 11:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6E021344;
+	Thu,  4 Jan 2024 11:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="S8vDLPBG"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5147D40E00C5;
-	Thu,  4 Jan 2024 11:17:48 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id KGOr19mSjR4J; Thu,  4 Jan 2024 11:17:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1704367065; bh=rWnQdgMEkN3G7K5K3oauO5Dk8faRv4o3tZ5emI76S5Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S8vDLPBG+v9OUyaP3+Ro45KPEmAb/VZQfjECTPx2xhoJkblHwT9fpWWNX6EWUKsGJ
-	 YEuqyCPmuh7VJd7DcgQcOEyHFq1jx1Ut5FEPLy3e+sonMTUw1bp1U45gWBQqN2mpQM
-	 Cnr/fHnuEAcHPCve+YoeBKGLAqGHgtIqcqgtJWfSGNGDfb2nwBVqViWznq2NadN9ac
-	 gQptVnl7Vbke0ozSfIZPvPq3bsDEnQsLsTOB9hJlSrfRq0nSjCd7Aik6aoacSUWgNj
-	 DLJMbATVAUAkGugV7Vb044aqTChzFodhC796XhX9dhN3Lnmu7OPoBrw1oZK3fQYHOi
-	 kYuneRyqHsd9uKDGXdqx2pbFM7ZAf1EcyZDH5fwO69qzT8VM76ew9Hs2lRDnx2WYdy
-	 jgWqxfXNgT2prcS2c/mmze8g1fobiFHpNVzVVgQlwLCRM7rARkBOu7S/Yn85oIuFxo
-	 jJcjZHDD5VV3bDz38njXksB3V/6HQqsLPV6rTIyrZ6pkMEutwUNU8swpyJqZu2/pMu
-	 3s955RE9bc5rt4q6d5FOGTzQB14BXBeFatuMyBfimymFVuA7My+zGY2dLvDGpVIrZb
-	 3fH37ifRpIcRi0aseZzevA45QaGy44JvDRsQi+/rDHqzVL7XQfwUNlpRrWzDQ4cl5n
-	 /hNWVO1P6LSGdJ+2RpE+qB0g=
-Received: from zn.tnic (pd9530f8c.dip0.t-ipconnect.de [217.83.15.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BCCF240E0196;
-	Thu,  4 Jan 2024 11:17:06 +0000 (UTC)
-Date: Thu, 4 Jan 2024 12:16:59 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Michael Roth <michael.roth@amd.com>
-Cc: x86@kernel.org, kvm@vger.kernel.org, linux-coco@lists.linux.dev,
-	linux-mm@kvack.org, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-	jroedel@suse.de, thomas.lendacky@amd.com, hpa@zytor.com,
-	ardb@kernel.org, pbonzini@redhat.com, seanjc@google.com,
-	vkuznets@redhat.com, jmattson@google.com, luto@kernel.org,
-	dave.hansen@linux.intel.com, slp@redhat.com, pgonda@google.com,
-	peterz@infradead.org, srinivas.pandruvada@linux.intel.com,
-	rientjes@google.com, tobin@ibm.com, vbabka@suse.cz,
-	kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com,
-	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com,
-	pankaj.gupta@amd.com, liam.merwick@oracle.com, zhi.a.wang@intel.com,
-	Brijesh Singh <brijesh.singh@amd.com>
-Subject: Re: [PATCH v1 04/26] x86/sev: Add the host SEV-SNP initialization
- support
-Message-ID: <20240104111659.GEZZaTq1FGUfRzz3lM@fat_crate.local>
-References: <20231230161954.569267-1-michael.roth@amd.com>
- <20231230161954.569267-5-michael.roth@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TnHmBlvl"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2cd1a1c5addso4492461fa.1;
+        Thu, 04 Jan 2024 03:18:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704367083; x=1704971883; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0fY4KAev0YvTWOo+yfNf4haoMllAwXF/UHdK8nIe8OE=;
+        b=TnHmBlvlzIeodKC+QP9TjADza42EelFRxJemh/xt4yikp/TR5ekUl8NUEmt0ziS0QN
+         oxJcY3/S72e9LCpjNDxSM8ipFI94yRmfnUJyfodmtzSGGm3Lrwo5yyv7AtgoisXClnIC
+         MqdJUQ998GRT2adWUxRx+aNaLf0r6aZpMvHgMVJytAU2sZTL7jbrZeVUHZy/QVkbVB81
+         lh7DyizKQC7dpvCgu1LMRHv7vSYvdo3Bqv+kzBQkSZVT82U2Wbeb0HDA8wGLjBDY/62R
+         h383ZOYktMlEE57QRGzEhhH9M3p4L7LgQQlQAYyEFI04TuZUu7hvYUWw/so22Vz1MC7h
+         iyvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704367083; x=1704971883;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0fY4KAev0YvTWOo+yfNf4haoMllAwXF/UHdK8nIe8OE=;
+        b=YTwqMx55kOCuq6MkZI6vXJnvxAlCnW1i9YJtQNwjkhNATbxqCiU06WD9g56GF4D9wS
+         fprE5YsB39qJ/+mGlP5+itxNJf+lspflFptkbmbi0iEhXZ8jieb7zm5SauHVVZI70agD
+         h5QNnIu4MZoHGvkY/WIrpd5Wy/jjicpP7EtmgSZEV2MlscxhWEeW4/xw+u98ZprxPjc0
+         U+aKZfUXisYs2l+gI1PRa4blEcdNw6rGLkK8LHUSKo34RNoN1agiLPVc7MOrxQz6RSrh
+         A/BSDbwMXgS2Gme7xMxCrYh7v9BRSnIgOB/cJsX1AWWnnmmjIz74lUc90VS0l6JQPZna
+         6Q4Q==
+X-Gm-Message-State: AOJu0YzjPvx8aCnQYz1P9rEWesz7+phgMWbK2ihJN4yckVJlnqvm8IJU
+	LZ1WmkkLuUJ0vwyRBIpjz8s=
+X-Google-Smtp-Source: AGHT+IEIj6bfxp7mN6ZE9yBh+mRCxiq2rKBecy5DALO0b7pLLukHeHb1hQMGXfWpQrY+Pfs/q6pvLQ==
+X-Received: by 2002:a2e:7c13:0:b0:2cd:1919:ee28 with SMTP id x19-20020a2e7c13000000b002cd1919ee28mr206953ljc.36.1704367082368;
+        Thu, 04 Jan 2024 03:18:02 -0800 (PST)
+Received: from pc636 (host-95-193-77-34.mobileonline.telia.com. [95.193.77.34])
+        by smtp.gmail.com with ESMTPSA id h5-20020a2ebc85000000b002ccd49fa5a9sm4135991ljf.19.2024.01.04.03.18.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jan 2024 03:18:01 -0800 (PST)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Thu, 4 Jan 2024 12:17:59 +0100
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Uladzislau Rezki <urezki@gmail.com>, RCU <rcu@vger.kernel.org>,
+	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Hillf Danton <hdanton@sina.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
+	Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [PATCH v3 4/7] rcu: Improve handling of synchronize_rcu() users
+Message-ID: <ZZaT56z4Re4q9hp4@pc636>
+References: <e20058f9-a525-4d65-b22b-7dd9cfec9737@paulmck-laptop>
+ <ZZQHCrGNwjooI4kU@pc636>
+ <cd45b0b5-f86b-43fb-a5f3-47d340cd4f9f@paulmck-laptop>
+ <ZZVeEGTKVp7CUqtK@pc636>
+ <45a15103-0302-4e7d-b522-e17e8b8ac927@paulmck-laptop>
+ <ZZWa2LENLXCMUBhW@pc636>
+ <d4635fdf-8ed0-452d-8bc8-0fe0e7fb1994@paulmck-laptop>
+ <ZZWvKLy9mIOaaay4@pc636>
+ <ZZWvbkhFA_Mbw_wH@pc636>
+ <7dfb7ee8-f9a3-4c15-b3d1-b4f77602cbe1@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231230161954.569267-5-michael.roth@amd.com>
+In-Reply-To: <7dfb7ee8-f9a3-4c15-b3d1-b4f77602cbe1@paulmck-laptop>
 
-On Sat, Dec 30, 2023 at 10:19:32AM -0600, Michael Roth wrote:
-> From: Brijesh Singh <brijesh.singh@amd.com>
+On Wed, Jan 03, 2024 at 11:33:01AM -0800, Paul E. McKenney wrote:
+> On Wed, Jan 03, 2024 at 08:03:10PM +0100, Uladzislau Rezki wrote:
+> > On Wed, Jan 03, 2024 at 08:02:00PM +0100, Uladzislau Rezki wrote:
+> > > On Wed, Jan 03, 2024 at 09:56:42AM -0800, Paul E. McKenney wrote:
+> > > > On Wed, Jan 03, 2024 at 06:35:20PM +0100, Uladzislau Rezki wrote:
+> > > > > On Wed, Jan 03, 2024 at 06:47:30AM -0800, Paul E. McKenney wrote:
+> > > > > > On Wed, Jan 03, 2024 at 02:16:00PM +0100, Uladzislau Rezki wrote:
+> > > > > > > On Tue, Jan 02, 2024 at 11:25:13AM -0800, Paul E. McKenney wrote:
+> > > > > > > > On Tue, Jan 02, 2024 at 01:52:26PM +0100, Uladzislau Rezki wrote:
+> > > > > > > > > Hello, Paul!
+> > > > > > > > > 
+> > > > > > > > > Sorry for late answer, it is because of holidays :)
+> > > > > > > > > 
+> > > > > > > > > > > > > The problem is that, we are limited in number of "wait-heads" which we
+> > > > > > > > > > > > > add as a marker node for this/current grace period. If there are more clients
+> > > > > > > > > > > > > and there is no a wait-head available it means that a system, the deferred
+> > > > > > > > > > > > > kworker, is slow in processing callbacks, thus all wait-nodes are in use.
+> > > > > > > > > > > > > 
+> > > > > > > > > > > > > That is why we need an extra grace period. Basically to repeat our try one
+> > > > > > > > > > > > > more time, i.e. it might be that a current grace period is not able to handle
+> > > > > > > > > > > > > users due to the fact that a system is doing really slow, but this is rather
+> > > > > > > > > > > > > a corner case and is not a problem.
+> > > > > > > > > > > > 
+> > > > > > > > > > > > But in that case, the real issue is not the need for an extra grace
+> > > > > > > > > > > > period, but rather the need for the wakeup processing to happen, correct?
+> > > > > > > > > > > > Or am I missing something subtle here?
+> > > > > > > > > > > > 
+> > > > > > > > > > > Basically, yes. If we had a spare dummy-node we could process the users
+> > > > > > > > > > > by the current GP(no need in extra). Why we may not have it - it is because
+> > > > > > > > > > > like you pointed:
+> > > > > > > > > > > 
+> > > > > > > > > > > - wake-up issue, i.e. wake-up time + when we are on_cpu;
+> > > > > > > > > > > - slow list process. For example priority. The kworker is not
+> > > > > > > > > > >   given enough CPU time to do the progress, thus "dummy-nodes"
+> > > > > > > > > > >   are not released in time for reuse.
+> > > > > > > > > > > 
+> > > > > > > > > > > Therefore, en extra GP is requested if there is a high flow of
+> > > > > > > > > > > synchronize_rcu() users and kworker is not able to do a progress
+> > > > > > > > > > > in time.
+> > > > > > > > > > > 
+> > > > > > > > > > > For example 60K+ parallel synchronize_rcu() users will trigger it.
+> > > > > > > > > > 
+> > > > > > > > > > OK, but what bad thing would happen if that was moved to precede the
+> > > > > > > > > > rcu_seq_start(&rcu_state.gp_seq)?  That way, the requested grace period
+> > > > > > > > > > would be the same as the one that is just now starting.
+> > > > > > > > > > 
+> > > > > > > > > > Something like this?
+> > > > > > > > > > 
+> > > > > > > > > > 	start_new_poll = rcu_sr_normal_gp_init();
+> > > > > > > > > > 
+> > > > > > > > > > 	/* Record GP times before starting GP, hence rcu_seq_start(). */
+> > > > > > > > > > 	rcu_seq_start(&rcu_state.gp_seq);
+> > > > > > > > > > 	ASSERT_EXCLUSIVE_WRITER(rcu_state.gp_seq);
+> > > > > > > > > >
+> > > > > > > > > I had a concern about the case when rcu_sr_normal_gp_init() handles what
+> > > > > > > > > we currently have, in terms of requests. Right after that there is/are
+> > > > > > > > > extra sync requests which invoke the start_poll_synchronize_rcu() but
+> > > > > > > > > since a GP has been requested before it will not request an extra one. So
+> > > > > > > > > "last" incoming users might not be processed.
+> > > > > > > > > 
+> > > > > > > > > That is why i have placed the rcu_sr_normal_gp_init() after a gp_seq is
+> > > > > > > > > updated.
+> > > > > > > > > 
+> > > > > > > > > I can miss something, so please comment. Apart of that we can move it
+> > > > > > > > > as you proposed.
+> > > > > > > > 
+> > > > > > > > Couldn't that possibility be handled by a check in rcu_gp_cleanup()?
+> > > > > > > > 
+> > > > > > > It is controlled by the caller anyway, i.e. if a new GP is needed.
+> > > > > > > 
+> > > > > > > I am not 100% sure it is as straightforward as it could look like to
+> > > > > > > handle it in the rcu_sr_normal_gp_cleaup() function. At least i see
+> > > > > > > that we need to access to the first element of llist and find out if
+> > > > > > > it is a wait-dummy-head or not. If not we know there are extra incoming
+> > > > > > > calls.
+> > > > > > > 
+> > > > > > > So that way requires extra calling of start_poll_synchronize_rcu().
+> > > > > > 
+> > > > > > If this is invoked early enough in rcu_gp_cleanup(), all that needs to
+> > > > > > happen is to set the need_gp flag.  Plus you can count the number of
+> > > > > > requests, and snapshot that number at rcu_gp_init() time and check to
+> > > > > > see if it changed at rcu_gp_cleanup() time.  Later on, this could be
+> > > > > > used to reduce the number of wakeups, correct?
+> > > > > > 
+> > > > > You mean instead of waking-up a gp-kthread just continue processing of
+> > > > > new users if they are exist? If so, i think, we can implement it as separate
+> > > > > patches.
+> > > > 
+> > > > Agreed, this is an optimization, and thus should be a separate patch.
+> > > > 
+> > > > > > > I can add a comment about your concern and we can find the best approach
+> > > > > > > later, if it is OK with you!
+> > > > > > 
+> > > > > > I agree that this should be added via a later patch, though I have not
+> > > > > > yet given up on the possibility that this patch might be simple enough
+> > > > > > to be later in this same series.
+> > > > > > 
+> > > > > Maybe there is a small misunderstanding. Please note, the rcu_sr_normal_gp_init() 
+> > > > > function does not request any new gp, i.e. our approach does not do any extra GP
+> > > > > requests. It happens only if there are no any dummy-wait-head available as we
+> > > > > discussed it earlier.
+> > > > 
+> > > > The start_poll_synchronize_rcu() added by your patch 4/7 will request
+> > > > an additional grace period because it is invoked after rcu_seq_start()
+> > > > is called, correct?  Or am I missing something subtle here?
+> > > > 
+> > > <snip>
+> > > +       // New poll request after rnp unlock
+> > > +       if (start_new_poll)
+> > > +               (void) start_poll_synchronize_rcu();
+> > > +
+> > > <snip>
+> > > 
+> > > The "start_new_poll" is set to "true" only when _this_ GP is not able
+> > > to handle anything and there are outstanding users. It happens when the
+> > > rcu_sr_normal_gp_init() function was not able to insert a dummy separator
+> > > to the llist, because there were no left dummy-nodes(fixed number of them)
+> > > due to the fact that all of them are "in-use". The reason why there are no
+> > > dummy-nodes is because of slow progress because it is done by dedicated
+> > > kworker.
+> > > 
+> > > I can trigger it, i mean when we need an addition GP, start_new_pool is 1,
+> > > only when i run 20 000 processes concurrently in a tight loop:
+> > > 
+> > > <snip>
+> > > while (1)
+> > >   synchronize_rcu();
+> > > <snip>
+> > > 
+> > > in that scenario we start to ask for an addition GP because we are not up
+> > > to speed, i.e. a system is slow in processing callbacks and we need some
+> > > time until wait-node/nodes is/are released for reuse.
+> > > 
+> > > We need a next GP to move it forward, i.e. to repeat a try of attaching
+> > > a dummy-node.
+> > > 
+> > Probably i should add a comment about it :)
 > 
-> The memory integrity guarantees of SEV-SNP are enforced through a new
-> structure called the Reverse Map Table (RMP). The RMP is a single data
-> structure shared across the system that contains one entry for every 4K
-> page of DRAM that may be used by SEV-SNP VMs. APM2 section 15.36 details
-> a number of steps needed to detect/enable SEV-SNP and RMP table support
-> on the host:
+> Sounds good, and thank you for bearing with me!
 > 
->  - Detect SEV-SNP support based on CPUID bit
->  - Initialize the RMP table memory reported by the RMP base/end MSR
->    registers and configure IOMMU to be compatible with RMP access
->    restrictions
->  - Set the MtrrFixDramModEn bit in SYSCFG MSR
->  - Set the SecureNestedPagingEn and VMPLEn bits in the SYSCFG MSR
->  - Configure IOMMU
-> 
-> RMP table entry format is non-architectural and it can vary by
-> processor. It is defined by the PPR. Restrict SNP support to CPU
-> models/families which are compatible with the current RMP table entry
-> format to guard against any undefined behavior when running on other
-> system types. Future models/support will handle this through an
-> architectural mechanism to allow for broader compatibility.
-> 
-> SNP host code depends on CONFIG_KVM_AMD_SEV config flag, which may be
-> enabled even when CONFIG_AMD_MEM_ENCRYPT isn't set, so update the
-> SNP-specific IOMMU helpers used here to rely on CONFIG_KVM_AMD_SEV
-> instead of CONFIG_AMD_MEM_ENCRYPT.
+Thanks to you :)
 
-Small fixups to the commit message:
-
-    The memory integrity guarantees of SEV-SNP are enforced through a new
-    structure called the Reverse Map Table (RMP). The RMP is a single data
-    structure shared across the system that contains one entry for every 4K
-    page of DRAM that may be used by SEV-SNP VMs. The APM v2 section on
-    Secure Nested Paging (SEV-SNP) details a number of steps needed to
-    detect/enable SEV-SNP and RMP table support on the host:
-    
-     - Detect SEV-SNP support based on CPUID bit
-     - Initialize the RMP table memory reported by the RMP base/end MSR
-       registers and configure IOMMU to be compatible with RMP access
-       restrictions
-     - Set the MtrrFixDramModEn bit in SYSCFG MSR
-     - Set the SecureNestedPagingEn and VMPLEn bits in the SYSCFG MSR
-     - Configure IOMMU
-    
-    The RMP table entry format is non-architectural and it can vary by
-    processor. It is defined by the PPR document for each respective CPU
-    family. Restrict SNP support to CPU models/families which are compatible
-    with the current RMP table entry format to guard against any undefined
-    behavior when running on other system types. Future models/support will
-    handle this through an architectural mechanism to allow for broader
-    compatibility.
-    
-    The SNP host code depends on CONFIG_KVM_AMD_SEV config flag which may
-    be enabled even when CONFIG_AMD_MEM_ENCRYPT isn't set, so update the
-    SNP-specific IOMMU helpers used here to rely on CONFIG_KVM_AMD_SEV
-    instead of CONFIG_AMD_MEM_ENCRYPT.
-
-> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-> index f1bd7b91b3c6..15ce1269f270 100644
-> --- a/arch/x86/include/asm/msr-index.h
-> +++ b/arch/x86/include/asm/msr-index.h
-> @@ -599,6 +599,8 @@
->  #define MSR_AMD64_SEV_ENABLED		BIT_ULL(MSR_AMD64_SEV_ENABLED_BIT)
->  #define MSR_AMD64_SEV_ES_ENABLED	BIT_ULL(MSR_AMD64_SEV_ES_ENABLED_BIT)
->  #define MSR_AMD64_SEV_SNP_ENABLED	BIT_ULL(MSR_AMD64_SEV_SNP_ENABLED_BIT)
-> +#define MSR_AMD64_RMP_BASE		0xc0010132
-> +#define MSR_AMD64_RMP_END		0xc0010133
->  
->  /* SNP feature bits enabled by the hypervisor */
->  #define MSR_AMD64_SNP_VTOM			BIT_ULL(3)
-> @@ -709,7 +711,14 @@
->  #define MSR_K8_TOP_MEM2			0xc001001d
->  #define MSR_AMD64_SYSCFG		0xc0010010
->  #define MSR_AMD64_SYSCFG_MEM_ENCRYPT_BIT	23
-> -#define MSR_AMD64_SYSCFG_MEM_ENCRYPT	BIT_ULL(MSR_AMD64_SYSCFG_MEM_ENCRYPT_BIT)
-> +#define MSR_AMD64_SYSCFG_MEM_ENCRYPT		BIT_ULL(MSR_AMD64_SYSCFG_MEM_ENCRYPT_BIT)
-> +#define MSR_AMD64_SYSCFG_SNP_EN_BIT		24
-> +#define MSR_AMD64_SYSCFG_SNP_EN		BIT_ULL(MSR_AMD64_SYSCFG_SNP_EN_BIT)
-> +#define MSR_AMD64_SYSCFG_SNP_VMPL_EN_BIT	25
-> +#define MSR_AMD64_SYSCFG_SNP_VMPL_EN		BIT_ULL(MSR_AMD64_SYSCFG_SNP_VMPL_EN_BIT)
-> +#define MSR_AMD64_SYSCFG_MFDM_BIT		19
-> +#define MSR_AMD64_SYSCFG_MFDM			BIT_ULL(MSR_AMD64_SYSCFG_MFDM_BIT)
-> +
-
-Fix the vertical alignment:
-
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 15ce1269f270..f482bc6a5ae7 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -710,14 +710,14 @@
- #define MSR_K8_TOP_MEM1			0xc001001a
- #define MSR_K8_TOP_MEM2			0xc001001d
- #define MSR_AMD64_SYSCFG		0xc0010010
--#define MSR_AMD64_SYSCFG_MEM_ENCRYPT_BIT	23
--#define MSR_AMD64_SYSCFG_MEM_ENCRYPT		BIT_ULL(MSR_AMD64_SYSCFG_MEM_ENCRYPT_BIT)
--#define MSR_AMD64_SYSCFG_SNP_EN_BIT		24
-+#define MSR_AMD64_SYSCFG_MEM_ENCRYPT_BIT 23
-+#define MSR_AMD64_SYSCFG_MEM_ENCRYPT	BIT_ULL(MSR_AMD64_SYSCFG_MEM_ENCRYPT_BIT)
-+#define MSR_AMD64_SYSCFG_SNP_EN_BIT	24
- #define MSR_AMD64_SYSCFG_SNP_EN		BIT_ULL(MSR_AMD64_SYSCFG_SNP_EN_BIT)
--#define MSR_AMD64_SYSCFG_SNP_VMPL_EN_BIT	25
--#define MSR_AMD64_SYSCFG_SNP_VMPL_EN		BIT_ULL(MSR_AMD64_SYSCFG_SNP_VMPL_EN_BIT)
--#define MSR_AMD64_SYSCFG_MFDM_BIT		19
--#define MSR_AMD64_SYSCFG_MFDM			BIT_ULL(MSR_AMD64_SYSCFG_MFDM_BIT)
-+#define MSR_AMD64_SYSCFG_SNP_VMPL_EN_BIT 25
-+#define MSR_AMD64_SYSCFG_SNP_VMPL_EN	BIT_ULL(MSR_AMD64_SYSCFG_SNP_VMPL_EN_BIT)
-+#define MSR_AMD64_SYSCFG_MFDM_BIT	19
-+#define MSR_AMD64_SYSCFG_MFDM		BIT_ULL(MSR_AMD64_SYSCFG_MFDM_BIT)
- 
- #define MSR_K8_INT_PENDING_MSG		0xc0010055
- /* C1E active bits in int pending message */
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+--
+Uladzislau Rezki
