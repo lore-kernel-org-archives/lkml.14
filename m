@@ -1,63 +1,85 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D1D20DF0
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 11:20:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i53875a56.versanet.de ([83.135.90.86] helo=phil.lan)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1rLLPQ-0003Kg-Tf; Thu, 04 Jan 2024 11:57:09 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: Sandy Huang <hjc@rock-chips.com>,
-	Mark Yao <markyao0591@gmail.com>,
-	David Airlie <airlied@gmail.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Quentin Schulz <foss+kernel@0leil.net>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	dri-devel@lists.freedesktop.org,
-	Quentin Schulz <quentin.schulz@theobroma-systems.com>,
-	linux-kernel@vger.kernel.org,
-	Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2 0/2] drm/rockchip: lvds: improve erroring out when drm_of_find_panel_or_bridge fails
-Date: Thu,  4 Jan 2024 11:57:07 +0100
-Message-Id: <170436581964.3241728.17762561185162139964.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231120-rk-lvds-defer-msg-v2-0-9c59a5779cf9@theobroma-systems.com>
-References: <20231120-rk-lvds-defer-msg-v2-0-9c59a5779cf9@theobroma-systems.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1EF21100
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 11:21:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="CkCcC81e"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5570bef7cb8so321942a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 03:21:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1704367267; x=1704972067; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qKPYdKug4jHnHkMVUhvNYsHAKauhASNUqaOoyowrxaM=;
+        b=CkCcC81e7pxUPbxnGqAeBDgXnUW0N5jiidh0AzksMoDj3DX6007FBlyuC5W463bBoN
+         f1xV4nv/PRx090so3Ad8Ss5VWJ4tbg6h1doY52R70zRXVjNQdvwRt5HrpHaEhgzyUYaN
+         lf3nfg5lzalWWAw5CLPAOcP9zdIu9nsZLIItzOCnR+iFXDQx5pxqVCsNYSYyfg8oXyTa
+         2plNuAYxJYr+Ua3AzAGUyWT1HXFW/IGlNCZPVAA8hdW3mHqlNExLlYYpAcEs5+20jQBz
+         NRwswomhmD9DPbw4WHF62Ha5XfxSRhjk3+nZeGkKkQpUO5q+eu6S1tPGJMtDYWw8EUXn
+         sWvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704367267; x=1704972067;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qKPYdKug4jHnHkMVUhvNYsHAKauhASNUqaOoyowrxaM=;
+        b=roNqEzv6U3ZNWA1hZ/9TDYtGXoPCeAI3a++d8dpODmLT8RlpT/S26tNfKVlu6UK77S
+         tF6WA2S1gCUhQu8o/tOxge2hjVDDIp2rXXYLGtWv5Oh1mIdDrEGPJW447rzupth8WON6
+         6wHMAT+6KqQUhU9e1piLqd4CxgnawI8yzsTWJxdTelUNHH81AOXoCejvjxHn3mhQGW1z
+         QDJjMX0nOKL6mU+vVWI/PbraPCY8ebpNwsYOSkvNaMYN11UNYER8jzGw/BHDewHQKDw+
+         s/7mDlyh914+OXfNrmHQXaEYlQPN9LfaBUglOU0U2/SHNRc4Ip/G9CEO0EUxjJ5scKWx
+         Fx4g==
+X-Gm-Message-State: AOJu0YwCVEti0hhGtg2v7z6pjqRF9j58C2ARhKJpYZJ6mvVkz6v1YJNO
+	5lr4aiximRvPFlj79qovTTe/2aMh01wERQ==
+X-Google-Smtp-Source: AGHT+IGEPF95NHKVsnpyIHKUm/KgY8I0kv9v78/s4o+1miuTMPSJaURO0LP/yv/+PD12AbmgBJL1yQ==
+X-Received: by 2002:a50:bae9:0:b0:555:65c0:e72b with SMTP id x96-20020a50bae9000000b0055565c0e72bmr319888ede.62.1704367266640;
+        Thu, 04 Jan 2024 03:21:06 -0800 (PST)
+Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
+        by smtp.gmail.com with ESMTPSA id w14-20020aa7d28e000000b0055306f10c28sm18642880edq.28.2024.01.04.03.21.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jan 2024 03:21:06 -0800 (PST)
+Date: Thu, 4 Jan 2024 12:21:05 +0100
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-riscv@lists.infradead.org, linux-next@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, anup@brainfault.org, 
+	atishp@atishpatra.org, rdunlap@infradead.org, sfr@canb.auug.org.au, mpe@ellerman.id.au, 
+	npiggin@gmail.com, linuxppc-dev@lists.ozlabs.org, pbonzini@redhat.com
+Subject: Re: Re: [PATCH] RISC-V: KVM: Require HAVE_KVM
+Message-ID: <20240104-6a5a59dde14adcaf3ac22a35@orel>
+References: <20240104104307.16019-2-ajones@ventanamicro.com>
+ <20240104-d5ebb072b91a6f7abbb2ac76@orel>
+ <752c11ea-7172-40ff-a821-c78aeb6c5518@ghiti.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <752c11ea-7172-40ff-a821-c78aeb6c5518@ghiti.fr>
 
-On Mon, 20 Nov 2023 13:29:47 +0100, Quentin Schulz wrote:
-> drm_of_find_panel_or_bridge may return a different error code than
-> EPROBE_DEFER so let's not overwrite it.
+On Thu, Jan 04, 2024 at 12:07:51PM +0100, Alexandre Ghiti wrote:
+> On 04/01/2024 11:52, Andrew Jones wrote:
+> > This applies to linux-next, but I forgot to append -next to the PATCH
+> > prefix.
 > 
-> At the same time, let's demote the DRM_DEV_ERROR message to
-> dev_err_probe so that the scary message isn't shown (by default)
-> whenever EPROBE_DEFER is returned to not mislead users.
 > 
-> [...]
+> Shoudn't this go to -fixes instead? With a Fixes tag?
 
-Applied, thanks!
+I'm not sure how urgent it is since it's a randconfig thing, but if we
+think it deserves the -fixes track then I can do that. The Fixes tag isn't
+super easy to select since, while it seems like it should be 8132d887a702
+("KVM: remove CONFIG_HAVE_KVM_EVENTFD"), it could also be 99cdc6c18c2d
+("RISC-V: Add initial skeletal KVM support").
 
-[1/2] drm/rockchip: lvds: do not overwrite error code
-      commit: 79b09453c4e369ca81cfb670d0136d089e3b92f0
-[2/2] drm/rockchip: lvds: do not print scary message when probing defer
-      commit: 52d11c863ac92e36a0365249f7f6d27ac48c78bc
+I'll leave both the urgency decision and the Fixes tag selection up to
+the maintainers. Anup? Paolo?
 
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+Thanks,
+drew
