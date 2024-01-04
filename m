@@ -1,53 +1,52 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7527E1EA95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327692030A
 	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 09:07:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TqBCh0vI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VcRtJKhG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704359246;
+	s=mimecast20190719; t=1704359247;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Dyerj4wk/ZFwQTySswA1kbRd7v7F1+vxDBdnemG6spU=;
-	b=TqBCh0vIW37ieVV9bfde8VaHnc8Vl+Kjr+F0Ls/V5ii3LaoE7nR6MwW2vyYCJ2JQ+4sezz
-	EO+tT9cb66JvqpWL6h7qnIK/D1AYyBkPWTMeNDeEsKbMNSREgcZCbw48XJW7acT0Tz+eLi
-	CE3qoEhFAnE9YcQdrgYvV8zcHtLgopQ=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Jsenl4ryPejHUAvVnk0GRNLRuch6fMe21jriRXS4vNY=;
+	b=VcRtJKhG5/TPNt/fwVgXDt4bpPdUYUR1ACnPoFx/gtj7jvXNmO4xrw/vfOVtbniHONnmTp
+	2mXim0Q4OEvp7D2jGTTtyz9du0tXdGcUaJZrYo/BUFKQnr6IFrndf0Df3p/7kiRrwv+oLA
+	QLRjJUj8VTY9Y5Olehf1ZLIAN4SVmbw=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-556-9ukcPC5hOTGL3cORj58ffw-1; Thu, 04 Jan 2024 04:07:25 -0500
-X-MC-Unique: 9ukcPC5hOTGL3cORj58ffw-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-40d5ac8116fso653835e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 01:07:25 -0800 (PST)
+ us-mta-139-DxSovwt1M3WYph6_8AdAnw-1; Thu, 04 Jan 2024 04:07:24 -0500
+X-MC-Unique: DxSovwt1M3WYph6_8AdAnw-1
+Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2ccad9d7cdfso743921fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 01:07:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704359244; x=1704964044;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Dyerj4wk/ZFwQTySswA1kbRd7v7F1+vxDBdnemG6spU=;
-        b=Fz2Lm9+PiDZ/wc97aaQmvQtS8QkwRjDLuWGvh3j7tcByh+FTspAX3bILiwhLHpbVrx
-         db/MG3zHUjjkIbR0cpVLvSjHgIwkTK+mPDKwpLEN44J3klbawGRkB7MJfq4rz8cvXVO5
-         Rt6mzO/L0qhMt0Mta/VwwVQZLOik6t1A2z6n4hiWUDEE88N6WSHzFPFeJrXYJ26PKwJN
-         HBQMymgoE1+7EDRjj2gq4RCo5gKskUxX+AFbJjrnXzFqnlY7F7qP8S6Md4nQKFtvJhVJ
-         qo2AiXW7ImtIE6i82Ggr6kB9FK2ODZ35QvQXdbNUxG0dQD5Qh0Kr60P7WxMPB04DC4pm
-         mRcw==
-X-Gm-Message-State: AOJu0YwZ2zVEQtBVCC32r0iWS5MB7f5yq/JlV4adlLSqYr0lAieb2zTA
-	p6qSPJQkj0XL5gOTwubMbVa68YI9crRcSKZhSj5oVmO+/7f8L/cy47dThIlP5OrUjqXFOAPWKkr
-	AVirC9PCoqXAnzLoS9ntsK1MsbEceo8Rv
-X-Received: by 2002:a5d:530b:0:b0:336:7110:38e2 with SMTP id e11-20020a5d530b000000b00336711038e2mr442479wrv.3.1704359244283;
-        Thu, 04 Jan 2024 01:07:24 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGnOXrQk2cIihpHok1C7CyYlsuReEbnUhcMXsqJWkEpa+4RuJPHmSYUUJZSaW06PyuJTJ2d1A==
-X-Received: by 2002:a5d:530b:0:b0:336:7110:38e2 with SMTP id e11-20020a5d530b000000b00336711038e2mr442456wrv.3.1704359243976;
-        Thu, 04 Jan 2024 01:07:23 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704359241; x=1704964041;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Jsenl4ryPejHUAvVnk0GRNLRuch6fMe21jriRXS4vNY=;
+        b=FKGeX4TAukizfW0LGyojn4/eBWPxaDOfcP5W7Anzmz5eTfwLOZOCg2LV4KiMtW/gaF
+         dCgk5+K1e2/bl9SDHszeHgiwYGR3FJe1xY+HEUZMU+w+kr8a3K3Py96/ClqUReVmjnpg
+         xWjqcc3uWmlI4vbdmGhKMA1hu4etmgP9fjFztpLBZAigydsx5f2qo6WU2TKrX5Uy8Cqc
+         spNlOxbTmmTp6f1EPVIS6k1+K9+qgzR/W4bLOFjqCycEvd25nwjSOrUE1vCKs7hUYPw0
+         URWAM/v0mdH+PCIBrVsN09RdeIVzXvKXQ/QEmRXJCKXU3R/qZgD1XmVIMSZLh7WxwUwB
+         EGlw==
+X-Gm-Message-State: AOJu0YyKsme7D+7TY5g+ti4I93Bu4Vy02B+DKGep+bkDXyJgPWwJf0KL
+	4cu+/T7YutxIOfViQ7nbdZw9hZVJ/CxdAtkp63tggg2z44oXmgDbqcRUqqQLbVZ9QMrV4j3F8+Q
+	g8B1t1jp1yXOWzH2Gq85Dg7w51SQ7GDAV
+X-Received: by 2002:a2e:be8b:0:b0:2cd:11fe:b686 with SMTP id a11-20020a2ebe8b000000b002cd11feb686mr318521ljr.4.1704359241638;
+        Thu, 04 Jan 2024 01:07:21 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH65xsq4UaUv59BM3JCRmpML+t+4U30EIkbbHGSL0kFGxxoanHC8jrP8up3ugW5IqrJEPJuOQ==
+X-Received: by 2002:a2e:be8b:0:b0:2cd:11fe:b686 with SMTP id a11-20020a2ebe8b000000b002cd11feb686mr318504ljr.4.1704359241266;
+        Thu, 04 Jan 2024 01:07:21 -0800 (PST)
 Received: from pstanner-thinkpadt14sgen1.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id h15-20020a5d430f000000b0033740e109adsm8720864wrq.75.2024.01.04.01.07.22
+        by smtp.gmail.com with ESMTPSA id h15-20020a5d430f000000b0033740e109adsm8720864wrq.75.2024.01.04.01.07.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jan 2024 01:07:23 -0800 (PST)
+        Thu, 04 Jan 2024 01:07:20 -0800 (PST)
 From: Philipp Stanner <pstanner@redhat.com>
 To: Bjorn Helgaas <bhelgaas@google.com>,
 	Arnd Bergmann <arnd@arndb.de>,
@@ -77,12 +76,10 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	linux-arch@vger.kernel.org,
 	stable@vger.kernel.org
-Subject: [PATCH v5 2/5] lib: move pci_iomap.c to drivers/pci/
-Date: Thu,  4 Jan 2024 10:07:06 +0100
-Message-ID: <20240104090708.10571-4-pstanner@redhat.com>
+Subject: [PATCH v5 RESEND 0/5] Regather scattered PCI-Code
+Date: Thu,  4 Jan 2024 10:07:04 +0100
+Message-ID: <20240104090708.10571-2-pstanner@redhat.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240104090708.10571-2-pstanner@redhat.com>
-References: <20240104090708.10571-2-pstanner@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -91,114 +88,159 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This file is guarded by an #ifdef CONFIG_PCI. It, consequently, does not
-belong to lib/ because it is not generic infrastructure.
+@Stable-Kernel:
+You receive this patch series because its first patch fixes leaks in
+PCI.
 
-Move the file to drivers/pci/ and implement the necessary changes to
-Makefiles and Kconfigs.
+Changes in v5:
+- Add forgotten update to MAINTAINERS file.
 
-Update MAINTAINERS file.
+Changes in v4:
+- Apply Arnd's Reviewed-by's
+- Add ifdef CONFIG_HAS_IOPORT_MAP guard in drivers/pci/iomap.c (build
+  error on openrisc)
+- Fix typo in patch no.5
 
-Suggested-by: Danilo Krummrich <dakr@redhat.com>
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
----
- MAINTAINERS                            | 1 -
- drivers/pci/Kconfig                    | 5 +++++
- drivers/pci/Makefile                   | 1 +
- lib/pci_iomap.c => drivers/pci/iomap.c | 3 ---
- lib/Kconfig                            | 3 ---
- lib/Makefile                           | 1 -
- 6 files changed, 6 insertions(+), 8 deletions(-)
- rename lib/pci_iomap.c => drivers/pci/iomap.c (99%)
+Changes in v3:
+- Create a separate patch for the leaks in lib/iomap.c. Make it the
+  series' first patch. (Arnd)
+- Turns out the aforementioned bug wasn't just accidentally removing
+  iounmap() with the ifdef, it was also missing ioport_unmap() to begin
+  with. Add it.
+- Move the ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT-mechanism from
+  asm-generic/io.h to asm-generic/ioport.h. (Arnd)
+- Adjust the implementation of iomem_is_ioport() in asm-generic/io.h so
+  that it matches exactly what pci_iounmap() previously did in
+  lib/pci_iomap.c. (Arnd)
+- Move the CONFIG_HAS_IOPORT guard in asm-generic/io.h so that
+  iomem_is_ioport() will always be compiled and just returns false if
+  there are no ports.
+- Add TODOs to several places informing about the generic
+  iomem_is_ioport() in lib/iomap.c not being generic.
+- Add TODO about the followup work to make drivers/pci/iomap.c's
+  pci_iounmap() actually generic.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index edae86acdfdc..efa37ee81d30 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16762,7 +16762,6 @@ F:	include/asm-generic/pci*
- F:	include/linux/of_pci.h
- F:	include/linux/pci*
- F:	include/uapi/linux/pci*
--F:	lib/pci*
- 
- PCIE DRIVER FOR AMAZON ANNAPURNA LABS
- M:	Jonathan Chocron <jonnyc@amazon.com>
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index 74147262625b..d35001589d88 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -13,6 +13,11 @@ config FORCE_PCI
- 	select HAVE_PCI
- 	select PCI
- 
-+# select this to provide a generic PCI iomap,
-+# without PCI itself having to be defined
-+config GENERIC_PCI_IOMAP
-+	bool
-+
- menuconfig PCI
- 	bool "PCI support"
- 	depends on HAVE_PCI
-diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-index cc8b4e01e29d..64dcedccfc87 100644
---- a/drivers/pci/Makefile
-+++ b/drivers/pci/Makefile
-@@ -14,6 +14,7 @@ ifdef CONFIG_PCI
- obj-$(CONFIG_PROC_FS)		+= proc.o
- obj-$(CONFIG_SYSFS)		+= slot.o
- obj-$(CONFIG_ACPI)		+= pci-acpi.o
-+obj-$(CONFIG_GENERIC_PCI_IOMAP) += iomap.o
- endif
- 
- obj-$(CONFIG_OF)		+= of.o
-diff --git a/lib/pci_iomap.c b/drivers/pci/iomap.c
-similarity index 99%
-rename from lib/pci_iomap.c
-rename to drivers/pci/iomap.c
-index 6e144b017c48..91285fcff1ba 100644
---- a/lib/pci_iomap.c
-+++ b/drivers/pci/iomap.c
-@@ -9,7 +9,6 @@
- 
- #include <linux/export.h>
- 
--#ifdef CONFIG_PCI
- /**
-  * pci_iomap_range - create a virtual mapping cookie for a PCI BAR
-  * @dev: PCI device that owns the BAR
-@@ -178,5 +177,3 @@ void pci_iounmap(struct pci_dev *dev, void __iomem *p)
- EXPORT_SYMBOL(pci_iounmap);
- 
- #endif /* ARCH_WANTS_GENERIC_PCI_IOUNMAP */
--
--#endif /* CONFIG_PCI */
-diff --git a/lib/Kconfig b/lib/Kconfig
-index 3ea1c830efab..1bf859166ac7 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -70,9 +70,6 @@ source "lib/math/Kconfig"
- config NO_GENERIC_PCI_IOPORT_MAP
- 	bool
- 
--config GENERIC_PCI_IOMAP
--	bool
--
- config GENERIC_IOMAP
- 	bool
- 	select GENERIC_PCI_IOMAP
-diff --git a/lib/Makefile b/lib/Makefile
-index 6b09731d8e61..0800289ec6c5 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -153,7 +153,6 @@ CFLAGS_debug_info.o += $(call cc-option, -femit-struct-debug-detailed=any)
- obj-y += math/ crypto/
- 
- obj-$(CONFIG_GENERIC_IOMAP) += iomap.o
--obj-$(CONFIG_GENERIC_PCI_IOMAP) += pci_iomap.o
- obj-$(CONFIG_HAS_IOMEM) += iomap_copy.o devres.o
- obj-$(CONFIG_CHECK_SIGNATURE) += check_signature.o
- obj-$(CONFIG_DEBUG_LOCKING_API_SELFTESTS) += locking-selftest.o
+Changes in v2:
+- Replace patch 4, previously extending the comment about pci_iounmap()
+  in lib/iomap.c, with a patch that moves pci_iounmap() from that file
+  to drivers/pci/iomap.c, creating a unified version there. (Arnd)
+- Implement iomem_is_ioport() as a new helper in asm-generic/io.h and
+  lib/iomap.c. (Arnd)
+- Move the build rule in drivers/pci/Makefile for iomap.o under the
+  guard of #if PCI. This had to be done because when just checking for
+  GENERIC_PCI_IOMAP being defined, the functions don't disappear, which
+  was the case previously in lib/pci_iomap.c, where the entire file was
+  made empty if PCI was not set by the guard #ifdef PCI. (Intel's Bots)
+- Rephares all patches' commit messages a little bit.
+
+
+Sooooooooo. I reworked v1.
+
+Please review this carefully, the IO-Ranges are obviously a bit tricky,
+as is the build-system / ifdef-ery.
+
+Arnd has suggested that architectures defining a custom inb() need their
+own iomem_is_ioport(), as well. I've grepped for inb() and found the
+following list of archs that define their own:
+  - alpha
+  - arm
+  - m68k <--
+  - parisc
+  - powerpc
+  - sh
+  - sparc
+  - x86 <--
+
+All of those have their own definitons of pci_iounmap(). Therefore, they
+don't need our generic version in the first place and, thus, also need
+no iomem_is_ioport().
+The two exceptions are x86 and m68k. The former uses lib/iomap.c through
+CONFIG_GENERIC_IOMAP, as Arnd pointed out in the previous discussion
+(thus, CONFIG_GENERIC_IOMAP is not really generic in this regard).
+
+So as I see it, only m68k WOULD need its own custom definition of
+iomem_is_ioport(). But as I understand it it doesn't because it uses the
+one from asm-generic/pci_iomap.h ??
+
+I wasn't entirely sure how to deal with the address ranges for the
+generic implementation in asm-generic/io.h. It's marked with a TODO.
+Input appreciated.
+
+I removed the guard around define pci_iounmap in asm-generic/io.h. An
+alternative would be to have it be guarded by CONFIG_GENERIC_IOMAP and
+CONFIG_GENERIC_PCI_IOMAP, both. Without such a guard, there is no
+collision however, because generic pci_iounmap() from
+drivers/pci/iomap.c will only get pulled in when
+CONFIG_GENERIC_PCI_IOMAP is actually set.
+
+I cross-built this for a variety of architectures, including the usual
+suspects (s390, m68k). So far successfully. But let's see what Intel's
+robots say :O
+
+P.
+
+
+Original cover letter:
+
+Hi!
+
+So it seems that since ca. 2007 the PCI code has been scattered a bit.
+PCI's devres code, which is only ever used by users of the entire
+PCI-subsystem anyways, resides in lib/devres.c and is guarded by an
+ifdef PCI, just as the content of lib/pci_iomap.c is.
+
+It, thus, seems reasonable to move all of that.
+
+As I were at it, I moved as much of the devres-specific code from pci.c
+to devres.c, too. The only exceptions are four functions that are
+currently difficult to move. More information about that can be read
+here [1].
+
+I noticed these scattered files while working on (new) PCI-specific
+devres functions. If we can get this here merged, I'll soon send another
+patch series that addresses some API-inconsistencies and could move the
+devres-part of the four remaining functions.
+
+I don't want to do that in this series as this here is only about moving
+code, whereas the next series would have to actually change API
+behavior.
+
+I successfully (cross-)built this for x86, x86_64, AARCH64 and ARM
+(allyesconfig). I booted a kernel with it on x86_64, with a Fedora
+desktop environment as payload. The OS came up fine
+
+I hope this is OK. If we can get it in, we'd soon have a very
+consistent PCI API again.
+
+Regards,
+P.
+
+
+
+Philipp Stanner (5):
+  lib/pci_iomap.c: fix cleanup bugs in pci_iounmap()
+  lib: move pci_iomap.c to drivers/pci/
+  lib: move pci-specific devres code to drivers/pci/
+  pci: move devres code from pci.c to devres.c
+  lib, pci: unify generic pci_iounmap()
+
+ MAINTAINERS                            |   1 -
+ drivers/pci/Kconfig                    |   5 +
+ drivers/pci/Makefile                   |   3 +-
+ drivers/pci/devres.c                   | 450 +++++++++++++++++++++++++
+ lib/pci_iomap.c => drivers/pci/iomap.c |  49 +--
+ drivers/pci/pci.c                      | 249 --------------
+ drivers/pci/pci.h                      |  24 ++
+ include/asm-generic/io.h               |  27 +-
+ include/asm-generic/iomap.h            |  21 ++
+ lib/Kconfig                            |   3 -
+ lib/Makefile                           |   1 -
+ lib/devres.c                           | 208 +-----------
+ lib/iomap.c                            |  28 +-
+ 13 files changed, 566 insertions(+), 503 deletions(-)
+ create mode 100644 drivers/pci/devres.c
+ rename lib/pci_iomap.c => drivers/pci/iomap.c (75%)
+
 -- 
 2.43.0
 
