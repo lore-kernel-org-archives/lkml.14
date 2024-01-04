@@ -1,125 +1,221 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84BA249FD;
-	Thu,  4 Jan 2024 14:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076ED2377C
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 15:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PUAC30ca"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 404EvwlH014903;
-	Thu, 4 Jan 2024 08:57:58 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1704380278;
-	bh=tpsiP9S7pAPpPw0380V2GtyMNvsYeXNqBBFLduNiK5w=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=PUAC30caudaxVIi74hAcs+gAShKCn6IQbIr8yoJn3fXN+6mbSzeRl541yWj2WxTL6
-	 zA6an5GOenDTdB2p1XwUm3dtbBnSM3xGlH+pz6RM5JLW93QF6bbsjtcAdyWkmyCoDC
-	 9F9bxHejpwEng4zOQaLiogkzwbO4Db7PVQxk3eOg=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 404EvwRx126414
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 4 Jan 2024 08:57:58 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 4
- Jan 2024 08:57:58 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 4 Jan 2024 08:57:58 -0600
-Received: from LT5CG31242FY.dhcp.ti.com ([10.250.161.227])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 404EvPfP105959;
-	Thu, 4 Jan 2024 08:57:51 -0600
-From: Shenghao Ding <shenghao-ding@ti.com>
-To: <broonie@kernel.org>, <conor+dt@kernel.org>,
-        <krzysztof.kozlowski@linaro.org>
-CC: <robh+dt@kernel.org>, <andriy.shevchenko@linux.intel.com>,
-        <kevin-lu@ti.com>, <baojun.xu@ti.com>, <devicetree@vger.kernel.org>,
-        <lgirdwood@gmail.com>, <perex@perex.cz>,
-        <pierre-louis.bossart@linux.intel.com>, <13916275206@139.com>,
-        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <liam.r.girdwood@intel.com>, <soyer@irl.hu>, <tiwai@suse.de>,
-        <peeyush@ti.com>, <navada@ti.com>,
-        Shenghao Ding <shenghao-ding@ti.com>
-Subject: [PATCH v5 4/4] ASoC: tas2781: Add tas2563 into driver
-Date: Thu, 4 Jan 2024 22:57:19 +0800
-Message-ID: <20240104145721.1398-4-shenghao-ding@ti.com>
-X-Mailer: git-send-email 2.33.0.windows.2
-In-Reply-To: <20240104145721.1398-1-shenghao-ding@ti.com>
-References: <20240104145721.1398-1-shenghao-ding@ti.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kd2fCAmh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704380408;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aezVZ21RXwDSPznUaEfqO8ObQ6DAwMB4uYqaeR9muhs=;
+	b=Kd2fCAmhoK0LpFlKeE2/ZmWLy+vejFuNGitUz2YD7+GTvUZprE2ihH0DH+FNLaqOTcDHa2
+	m4NFZWqC06XcR5QDYdFpuxMEmO/6Bfc+runm9jpzh1sZsGyef/ozfSacHtTDe+nzYk0zh6
+	XDBRllbDw85MyMTo0WLJ6QJiPx2U3jc=
+Received: from mail-vs1-f71.google.com (mail-vs1-f71.google.com
+ [209.85.217.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-385--992aZnuO5yq791L8SkNxg-1; Thu, 04 Jan 2024 10:00:05 -0500
+X-MC-Unique: -992aZnuO5yq791L8SkNxg-1
+Received: by mail-vs1-f71.google.com with SMTP id ada2fe7eead31-466f26eefe0so177775137.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 07:00:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704380405; x=1704985205;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aezVZ21RXwDSPznUaEfqO8ObQ6DAwMB4uYqaeR9muhs=;
+        b=Zf53d6V5XjDgQ3xqyPqMsw0BVGbv28XG9pn35r1zc2zbjmqUE/H6WnPMKdXhDEYVlc
+         9IJKhtYe2yqBGqnMNw4g3GxcRbvaIj+++zp0MjqAo4YTvAkGMiZqYOvHrAoufm/sQzs8
+         GIpD87aZ8wFvKbyGGl+nTNWXpXiAngRDnpMCDGRkGyH9Uz0ZsQ1DlpHK5X/lFOzTchf8
+         wNbBSY6F9P9J/kYVUWd/xPu609qT8apq0LEOwqO60e0jyuZtT+OggJ0mCHXCoEn52p5A
+         WATrUU6feInqnCS1xmkyuW4tnrwDjRaJMxsaqH5mrAci+IzE7/CRsZzvVW3NDdAppkOK
+         KrGA==
+X-Gm-Message-State: AOJu0YwzwNp2d2IhadxqygmChTM+CCv12fw4Q7JW3gog7/zhBTN8G2RC
+	nxDESy4Y8+CGV76J4rXLXLnTFfFV1G/D8J7q03pnlUOCEcYv3D5gRRIe7G2p/eTWEVkU0K9leL1
+	oJhEKa0HpVqqQL72LsYX/oEu9FInqCwsJ1XSGtAg4T7vLN2mm
+X-Received: by 2002:a05:6102:3d0c:b0:467:ab82:8541 with SMTP id i12-20020a0561023d0c00b00467ab828541mr539164vsv.2.1704380405030;
+        Thu, 04 Jan 2024 07:00:05 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF2HsVP41TbYsCNRo6/+4LVhY17gL8avGvalNBhnIivjxsS/wGVW5B9BBDLt8t9XK0c/FrtR1NieWMjipPujkQ=
+X-Received: by 2002:a05:6102:3d0c:b0:467:ab82:8541 with SMTP id
+ i12-20020a0561023d0c00b00467ab828541mr539149vsv.2.1704380404783; Thu, 04 Jan
+ 2024 07:00:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <3d8f5987-e09c-4dd2-a9c0-8ba22c9e948a@paulmck-laptop>
+ <88f49775-2b56-48cc-81b8-651a940b7d6b@paulmck-laptop> <ZZX6pkHnZP777DVi@google.com>
+ <77d7a3e3-f35e-4507-82c2-488405b25fa4@paulmck-laptop> <c6d5dd6e-2dec-423c-af39-213f17b1a9db@paulmck-laptop>
+In-Reply-To: <c6d5dd6e-2dec-423c-af39-213f17b1a9db@paulmck-laptop>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Thu, 4 Jan 2024 15:59:52 +0100
+Message-ID: <CABgObfYG-ZwiRiFeGbAgctLfj7+PSmgauN9RwGMvZRfxvmD_XQ@mail.gmail.com>
+Subject: Re: [BUG] Guest OSes die simultaneously (bisected)
+To: paulmck@kernel.org
+Cc: Sean Christopherson <seanjc@google.com>, Like Xu <like.xu@linux.intel.com>, 
+	Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Luwei Kang <luwei.kang@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, Breno Leitao <leitao@debian.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Move tas2563 from tas2562 driver to tas2781 driver to unbind tas2563 from
-tas2562 driver code and bind it to tas2781 driver code, because tas2563
-only work in bypass-DSP mode with tas2562 driver. In order to enable DSP
-mode for tas2563, it has been moved to tas2781 driver. As to the hardware
-part, such as register setting and DSP firmware, all these are stored in
-the binary firmware. What tas2781 drivder does is to parse the firmware
-and download it to the chip, then power on the chip. So, tas2781 driver
-can be resued as tas2563 driver. Only attention will be paid to downloading
-corresponding firmware.
+On Thu, Jan 4, 2024 at 3:58=E2=80=AFPM Paul E. McKenney <paulmck@kernel.org=
+> wrote:
+>
+> On Wed, Jan 03, 2024 at 05:00:35PM -0800, Paul E. McKenney wrote:
+> > On Wed, Jan 03, 2024 at 04:24:06PM -0800, Sean Christopherson wrote:
+> > > On Wed, Jan 03, 2024, Paul E. McKenney wrote:
+> > > > On Wed, Jan 03, 2024 at 02:22:23PM -0800, Paul E. McKenney wrote:
+> > > > > Hello!
+> > > > >
+> > > > > Since some time between v5.19 and v6.4, long-running rcutorture t=
+ests
+> > > > > would (rarely but intolerably often) have all guests on a given h=
+ost die
+> > > > > simultaneously with something like an instruction fault or a segm=
+entation
+> > > > > violation.
+> > > > >
+> > > > > Each bisection step required 20 hosts running 10 hours each, and
+> > > > > this eventually fingered commit c59a1f106f5c ("KVM: x86/pmu: Add
+> > > > > IA32_PEBS_ENABLE MSR emulation for extended PEBS").  Although thi=
+s commit
+> > > > > is certainly messing with things that could possibly cause all ma=
+nner
+> > > > > of mischief, I don't immediately see a smoking gun.  Except that =
+the
+> > > > > commit prior to this one is rock solid.
+> > > > > Just to make things a bit more exciting, bisection in mainline pr=
+oved
+> > > > > to be problematic due to bugs of various kinds that hid this one.=
+  I was
+> > > > > therefore forced to bisect among the commits backported to the in=
+ternal
+> > > > > v5.19-based kernel, which fingered the backported version of the =
+patch
+> > > > > called out above.
+> > > >
+> > > > Ah, and so why do I believe that this is a problem in mainline rath=
+er
+> > > > than just (say) a backporting mistake?
+> > > >
+> > > > Because this issue was first located in v6.4, which already has thi=
+s
+> > > > commit included.
+> > > >
+> > > >                                                   Thanx, Paul
+> > > >
+> > > > > Please note that this is not (yet) an emergency.  I will just con=
+tinue
+> > > > > to run rcutorture on v5.19-based hypervisors in the meantime.
+> > > > >
+> > > > > Any suggestions for debugging or fixing?
+> > >
+> > > This looks suspect:
+> > >
+> > > +       u64 pebs_mask =3D cpuc->pebs_enabled & x86_pmu.pebs_capable;
+> > > +       int global_ctrl, pebs_enable;
+> > >
+> > > -       arr[0].msr =3D MSR_CORE_PERF_GLOBAL_CTRL;
+> > > -       arr[0].host =3D intel_ctrl & ~cpuc->intel_ctrl_guest_mask;
+> > > -       arr[0].guest =3D intel_ctrl & ~cpuc->intel_ctrl_host_mask;
+> > > -       arr[0].guest &=3D ~(cpuc->pebs_enabled & x86_pmu.pebs_capable=
+);
+> > > -       *nr =3D 1;
+> > > +       *nr =3D 0;
+> > > +       global_ctrl =3D (*nr)++;
+> > > +       arr[global_ctrl] =3D (struct perf_guest_switch_msr){
+> > > +               .msr =3D MSR_CORE_PERF_GLOBAL_CTRL,
+> > > +               .host =3D intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
+> > > +               .guest =3D intel_ctrl & (~cpuc->intel_ctrl_host_mask =
+| ~pebs_mask),
+> > > +       };
+> > >
+> > >
+> > > IIUC (always a big if with this code), the intent is that the guest's=
+ version of
+> > > PERF_GLOBAL_CTRL gets bits that are (a) not exclusive to the host and=
+ (b) not
+> > > being used for PEBS.  (b) is necessary because PEBS generates records=
+ in memory
+> > > using virtual addresses, i.e. the CPU will write to memory using a vi=
+rtual address
+> > > that is valid for the host but not the guest.  And so PMU counters th=
+at are
+> > > configured to generate PEBS records need to be disabled while running=
+ the guest.
+> > >
+> > > Before that commit, the logic was:
+> > >
+> > >   guest[PERF_GLOBAL_CTRL] =3D ctrl & ~host;
+> > >   guest[PERF_GLOBAL_CTRL] &=3D ~pebs;
+> > >
+> > > But after, it's now:
+> > >
+> > >   guest[PERF_GLOBAL_CTRL] =3D ctrl & (~host | ~pebs);
+> > >
+> > > I.e. the kernel is enabled counters in the guest that are not host-on=
+ly OR not
+> > > PEBS.  E.g. if only counter 0 is in use, it's using PEBS, but it's no=
+t exclusive
+> > > to the host, then the new code will yield (truncated to a single byte=
+ for sanity)
+> > >
+> > >   1 =3D 1 & (0xf | 0xe)
+> > >
+> > > and thus keep counter 0 enabled, whereas the old code would yield
+> > >
+> > >   1 =3D 1 & 0xf
+> > >   0 =3D 1 & 0xe
+> > >
+> > > A bit of a shot in the dark and completed untested, but I think this =
+is the correct
+> > > fix?
+> >
+> > I am firing off some tests, and either way, thank you very much!!!
+>
+> Woo-hoo!!!  ;-)
+>
+> Tested-by: Paul E. McKenney <paulmck@kernel.org>
+>
+> Will you be sending a proper patch, or would you prefer that I do so?
+> In the latter case, I would need your Signed-off-by.
 
-Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
+I will fast track this one to Linus.
 
----
-Change in v5:
- - Add tas2563 to tas2781 driver.
- - Add more comments on why move tas2563 to tas2781 driver.
- - Provide rationale in terms of bindings and hardware, not in terms of driver.
-   Or at least not only.
- - In all cases, to make the lists ordered by a chip model, tas2563 is first,
-   tas2781 is second.
----
- sound/soc/codecs/tas2781-i2c.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Paolo
 
-diff --git a/sound/soc/codecs/tas2781-i2c.c b/sound/soc/codecs/tas2781-i2c.c
-index 55cd5e3c23a5..bd5ef4ff96fe 100644
---- a/sound/soc/codecs/tas2781-i2c.c
-+++ b/sound/soc/codecs/tas2781-i2c.c
-@@ -1,13 +1,13 @@
- // SPDX-License-Identifier: GPL-2.0
- //
--// ALSA SoC Texas Instruments TAS2781 Audio Smart Amplifier
-+// ALSA SoC Texas Instruments TAS2563/TAS2781 Audio Smart Amplifier
- //
- // Copyright (C) 2022 - 2023 Texas Instruments Incorporated
- // https://www.ti.com
- //
--// The TAS2781 driver implements a flexible and configurable
-+// The TAS2563/TAS2781 driver implements a flexible and configurable
- // algo coefficient setting for one, two, or even multiple
--// TAS2781 chips.
-+// TAS2563/TAS2781 chips.
- //
- // Author: Shenghao Ding <shenghao-ding@ti.com>
- // Author: Kevin Lu <kevin-lu@ti.com>
-@@ -32,6 +32,7 @@
- #include <sound/tas2781-tlv.h>
- 
- static const struct i2c_device_id tasdevice_id[] = {
-+	{ "tas2563", TAS2563 },
- 	{ "tas2781", TAS2781 },
- 	{}
- };
-@@ -39,6 +40,7 @@ MODULE_DEVICE_TABLE(i2c, tasdevice_id);
- 
- #ifdef CONFIG_OF
- static const struct of_device_id tasdevice_of_match[] = {
-+	{ .compatible = "ti,tas2563" },
- 	{ .compatible = "ti,tas2781" },
- 	{},
- };
--- 
-2.34.1
+> And again, thank you very much!!!
+>
+>                                                         Thanx, Paul
+>
+> > > diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/cor=
+e.c
+> > > index a08f794a0e79..92d5a3464cb2 100644
+> > > --- a/arch/x86/events/intel/core.c
+> > > +++ b/arch/x86/events/intel/core.c
+> > > @@ -4056,7 +4056,7 @@ static struct perf_guest_switch_msr *intel_gues=
+t_get_msrs(int *nr, void *data)
+> > >         arr[global_ctrl] =3D (struct perf_guest_switch_msr){
+> > >                 .msr =3D MSR_CORE_PERF_GLOBAL_CTRL,
+> > >                 .host =3D intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
+> > > -               .guest =3D intel_ctrl & (~cpuc->intel_ctrl_host_mask =
+| ~pebs_mask),
+> > > +               .guest =3D intel_ctrl & ~(cpuc->intel_ctrl_host_mask =
+| pebs_mask),
+> > >         };
+> > >
+> > >         if (!x86_pmu.pebs)
+> > >
+>
 
