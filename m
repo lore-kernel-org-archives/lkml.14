@@ -1,139 +1,126 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2042.outbound.protection.outlook.com [40.107.220.42])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33AA21375;
-	Thu,  4 Jan 2024 12:11:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1485A2136C
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 12:12:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="UQg5Irm0"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FJ+5MhhtoglouewM3aEyJMjawO0wgaNrm1/3P38pmAcf53eVNd4s0h/rwC7LnhWAbSXDMDmPUmExcAXciPm0nia7GgWwpEsQ2aNBlBJEMpDwtdHQVWzZhedyhdxj4nafdDMSnERyRos9BL8MeTK2U0Hl1xobY6UhnBGdkbmNZCGHU2Pc3uHDalCFvqhPqxM9n60ZFAqRhiapU9E4OXTKI9I+8rAcRB1mnAG71ZjpXGmU5mFIrPx01ZzHT/FSery3pKl9CfievLrTdO85Zh3Hk4yydqm+J9Ael3+7HwPZhB+cEiG1YISfc2+acL+QBYv0f3I8ePuG1X7sgIq5NaSaMw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tvcgBwo07ZqkE3UcXqlebkCXSGftW6sAwGPj8JUJ1ns=;
- b=SlQMZ1Gn5DDfXKvqxEH8kgM5lFXMwDWSR4g9NI9iJ2HmVQIt5oeZhXNMCUfDDYBvEBKOfWRl3FhivbwOXF6J1cWaS78eGePvI4MFlDTeqZIhPdNUp06eXcgAFiuXKt1/IAldCvwaPDXX9kBynz+RY35RVtckIhcfzkrLKFPhel2+5BPunITc255WcV0u0ZtTW8tn52r+sw5v9CyCZBnPXZWL6PqjSiuY3Zv/HCtr2hzLuRqLsTjUN1I/VepqPT6zJvkJYeyATVNMNFWBy0nthGxxr2pjpvq8VhAlz3VWUqaC1KYCfVKZXqxyVfVxn6ulKvn/Loj/1XH2DIrvC26Vig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tvcgBwo07ZqkE3UcXqlebkCXSGftW6sAwGPj8JUJ1ns=;
- b=UQg5Irm02D1JXYzYHDXR1MPhAxUS2nMV4qj9ElgMQhub7GuTSa61eyf80fagxX0do4poB8LZkRWAMji4DhSMP6C+2mioQngVSUkXO0nqDas4cFs4CetcyCynJQSe1UYRG0uQo0aszaj3ze3oCNdtytzjwXdvHMo38PQjoaLu2S7K2z4/pQQF5LXntEaJB+slRxEAozgRKjpi0SC+WM8noAPl+Qhj6n2iEn/iS7big1U7OxEWIvcYjzCaHp7lUM/fsa21NmtPk6/E3tFUciuk+lFGCwWGB5V9ZObUB4Qgxbd5bOhH2d4JlTsEKPn+D6KkfdEwGpRy7T/lrjR4KMkggA==
-Received: from DM6PR06CA0076.namprd06.prod.outlook.com (2603:10b6:5:336::9) by
- SA0PR12MB7461.namprd12.prod.outlook.com (2603:10b6:806:24b::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7159.13; Thu, 4 Jan 2024 12:11:49 +0000
-Received: from CY4PEPF0000FCBE.namprd03.prod.outlook.com
- (2603:10b6:5:336:cafe::d7) by DM6PR06CA0076.outlook.office365.com
- (2603:10b6:5:336::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.14 via Frontend
- Transport; Thu, 4 Jan 2024 12:11:48 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- CY4PEPF0000FCBE.mail.protection.outlook.com (10.167.242.100) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7159.9 via Frontend Transport; Thu, 4 Jan 2024 12:11:48 +0000
-Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Thu, 4 Jan 2024
- 04:11:42 -0800
-Received: from drhqmail203.nvidia.com (10.126.190.182) by
- drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.41; Thu, 4 Jan 2024 04:11:42 -0800
-Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.126.190.182) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41 via Frontend
- Transport; Thu, 4 Jan 2024 04:11:42 -0800
-From: Jon Hunter <jonathanh@nvidia.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
-	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
-	<rwarsow@gmx.de>, <conor@kernel.org>, <allen.lkml@gmail.com>,
-	<linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH 5.10 00/75] 5.10.206-rc1 review
-In-Reply-To: <20240103164842.953224409@linuxfoundation.org>
-References: <20240103164842.953224409@linuxfoundation.org>
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fYec3gjj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704370340;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J7iFE0cJqYSxbPNQPBRUKOHpRKlp3NQlliF2b2TCRgY=;
+	b=fYec3gjjyhvAKZCM0YJdDhns9+QGDVLytj5zrKi/TIIraFSmV/OHzpVaHw8FeivyIToC1a
+	O3mnt29sLe9mB1V71JxOcYE9StnbQnZXCrHXARp4QCAyeSgJsyo/o+K1dzPIA3JWV4H9fb
+	C5MgqmxATzJy7RTYnoJCHeMd6qogT/s=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-426-5_BfGu3-NAGVI7J7jV0EyA-1; Thu, 04 Jan 2024 07:12:13 -0500
+X-MC-Unique: 5_BfGu3-NAGVI7J7jV0EyA-1
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2ccbb39dcddso5214251fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 04:12:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704370332; x=1704975132;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J7iFE0cJqYSxbPNQPBRUKOHpRKlp3NQlliF2b2TCRgY=;
+        b=Z45OW3sOxFyY6JPLlO8DBgCgkKC58dkmFNcKOaZqO5cn2UkB71phpWJp0T4MQyEbKx
+         7vqpqsY94ZYvUihQobL2nL5+P3MuE78tJpuexSpkUntYFJEd3eJjJjYkutUmgFSD9Omk
+         ea3Vd+7R/gy6EfQXU0c29IWI3IQtZPtGFGFHLqVoYDFHP85OAQeChMl0PwbJQ/JvWJX7
+         3P5ZjAtHQHnHYrZMwoAHXjdiFJkE6DHbR1ZUVJ4eJtX56X66IPMqp5rg6EXlk4M3pgGR
+         RI/0y9cO/5xioLD8B4kMlZhD1+m5kKxl7Bmk0ok74vQgqPtYLuLH0H+MkxNHDsyG4x1t
+         vvNg==
+X-Gm-Message-State: AOJu0YwlIRdxU5Hu1vyxYhplvxaIEuOm4r6HY5m9WZAZ2/nu8Z8Awrm+
+	azLDkBUTq9tSMB6+A7AGODUtRAnnVlYQMDuvesHmeZNITdPLLJKtOGqxUlHPQRDqQNeddbKbQr0
+	AZb9nTZE0hSZUrM+EnWW4n6p7BhWcjcfK
+X-Received: by 2002:a05:6512:398c:b0:50e:3645:96d2 with SMTP id j12-20020a056512398c00b0050e364596d2mr191999lfu.96.1704370332190;
+        Thu, 04 Jan 2024 04:12:12 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFjMJzXx79ftMb3MWAwcCtyNKToAA0llaPqTtEa13OwyifLCeR+EndGQhHxpb8+oa6NKGZGAg==
+X-Received: by 2002:a05:6512:398c:b0:50e:3645:96d2 with SMTP id j12-20020a056512398c00b0050e364596d2mr191990lfu.96.1704370331884;
+        Thu, 04 Jan 2024 04:12:11 -0800 (PST)
+Received: from imammedo.users.ipa.redhat.com ([185.140.112.229])
+        by smtp.gmail.com with ESMTPSA id g1-20020a056402428100b00556ee10cfe3sm1287360edc.92.2024.01.04.04.12.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jan 2024 04:12:11 -0800 (PST)
+Date: Thu, 4 Jan 2024 13:12:10 +0100
+From: Igor Mammedov <imammedo@redhat.com>
+To: Ilpo =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Lorenzo
+ Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>, Lukas Wunner
+ <lukas@wunner.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, Andy
+ Shevchenko <andriy.shevchenko@intel.com>, "Rafael J . Wysocki"
+ <rafael@kernel.org>, linux-kernel@vger.kernel.org, Jonathan Woithe
+ <jwoithe@just42.net>
+Subject: Re: [PATCH v2 0/7] PCI: Solve two bridge window sizing issues
+Message-ID: <20240104131210.71f44d4b@imammedo.users.ipa.redhat.com>
+In-Reply-To: <20231228165707.3447-1-ilpo.jarvinen@linux.intel.com>
+References: <20231228165707.3447-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <c8cf41ba-ee61-49ee-9a9a-0eb1a8da5585@drhqmail203.nvidia.com>
-Date: Thu, 4 Jan 2024 04:11:42 -0800
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCBE:EE_|SA0PR12MB7461:EE_
-X-MS-Office365-Filtering-Correlation-Id: adce727d-0199-4822-7a65-08dc0d1e53eb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	F8p3bFohfH1Heh02anvsY75qieNrpcdyBQf42E+dIA3CCW8E6UUY0hxr6ZB0nHoqieI2CHWDOLkxwFetOfg9ZS+WM5dehK28WKXuDcaQx8SeqVhXlkQOQSeEfO9mhWJ8M80FHVYU892W38I90R+qqSFK9ZM/7xuKJX2s8Ba7nB7ENlfExTdMaUwj/zoCEO0cnolBBmxg7YcmnWPiHDS8cLsbsrMjfSkVU6J3c7RttH7CqvcTJhnjWMeJmzmOO7ZcxlKWzNyxzLH0EdDfRbu9Ba4Bt411W2eOQGDB2ZxZj+2BfXuLpc5qWESWnOv+auRWpyOP4HYoJN4y7uiKPeZPkKyCHf0Q6NaPbWjfZx/ZDCygXpFVN+xHcmhY6tQ3clLwqN1F/R1RB7fvNlhiAFNL4L/Fe1wzjNcVTZ/olVwd62scrL/K7dba8Uqx3KPZzvn7phuufS47VITTMEhOLWUC1EGdnPu5y0gbn2Xc8Y8UUb/iLwwxBaTKtt7xoIcajp2Ty9hoGywrjBx82nMUo5SVCv0DPJDd/N8Mw1a5qS8pce6F/aK8CruM82Rl7XmiMWVLVTnh/dAfb4Bn3SKCLyl9MQeXwexK8CxxpGpa/o0glP2T6sbgm9APQ/8Kcujbhb1WvDF9N6M42y1AYBxKEfIVtkL8kNQTN4pmiah9rAZV0qcvwcYZ5OAYZXo5+U7tpeKtpdyUSm3v2wnoTPT+qHhTtN/XM/cuxm8+q3+RFobJMHYKB/sYLrwnS1WeiA6hVqpGC3uz/B2WTk79VGDHEY+675Pwl74fE9Ei1y7U/NyttXA=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(396003)(346002)(136003)(376002)(230922051799003)(64100799003)(451199024)(1800799012)(82310400011)(186009)(36840700001)(40470700004)(46966006)(31696002)(86362001)(356005)(7636003)(478600001)(966005)(70206006)(70586007)(31686004)(54906003)(6916009)(26005)(336012)(426003)(7416002)(5660300002)(2906002)(8676002)(316002)(8936002)(4326008)(36860700001)(82740400003)(40480700001)(40460700003)(47076005)(41300700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jan 2024 12:11:48.6951
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: adce727d-0199-4822-7a65-08dc0d1e53eb
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000FCBE.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB7461
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 03 Jan 2024 17:54:41 +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.10.206 release.
-> There are 75 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 05 Jan 2024 16:47:49 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.206-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+On Thu, 28 Dec 2023 18:57:00 +0200
+Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
 
-All tests passing for Tegra ...
+> Hi all,
+>=20
+> Here's a series that contains two fixes to PCI bridge window sizing
+> algorithm. Together, they should enable remove & rescan cycle to work
+> for a PCI bus that has PCI devices with optional resources and/or
+> disparity in BAR sizes.
+>=20
+> For the second fix, I chose to expose find_empty_resource_slot() from
+> kernel/resource.c because it should increase accuracy of the cannot-fit
+> decision (currently that function is called find_resource()). In order
+> to do that sensibly, a few improvements seemed in order to make its
+> interface and name of the function sane before exposing it. Thus, the
+> few extra patches on resource side.
+>=20
+> Unfortunately I don't have a reason to suspect these would help with
+> the issues related to the currently ongoing resource regression
+> thread [1].
 
-Test results for stable-v5.10:
-    10 builds:	10 pass, 0 fail
-    26 boots:	26 pass, 0 fail
-    68 tests:	68 pass, 0 fail
+Jonathan,
+can you test this series on affected machine with broken kernel to see if
+it's of any help in your case?
 
-Linux version:	5.10.206-rc1-g6ed2e58a1d40
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra194-p3509-0000+p3668-0000,
-                tegra20-ventana, tegra210-p2371-2180,
-                tegra210-p3450-0000, tegra30-cardhu-a04
+>=20
+> [1] https://lore.kernel.org/linux-pci/ZXpaNCLiDM+Kv38H@marvin.atrad.com.a=
+u/
+>=20
+> v2:
+> - Add "typedef" to kerneldoc to get correct formatting
+> - Use RESOURCE_SIZE_MAX instead of literal
+> - Remove unnecessary checks for io{port/mem}_resource
+> - Apply a few style tweaks from Andy
+>=20
+> Ilpo J=C3=A4rvinen (7):
+>   PCI: Fix resource double counting on remove & rescan
+>   resource: Rename find_resource() to find_empty_resource_slot()
+>   resource: Document find_empty_resource_slot() and resource_constraint
+>   resource: Use typedef for alignf callback
+>   resource: Handle simple alignment inside __find_empty_resource_slot()
+>   resource: Export find_empty_resource_slot()
+>   PCI: Relax bridge window tail sizing rules
+>=20
+>  drivers/pci/bus.c       | 10 ++----
+>  drivers/pci/setup-bus.c | 80 +++++++++++++++++++++++++++++++++++++----
+>  include/linux/ioport.h  | 44 ++++++++++++++++++++---
+>  include/linux/pci.h     |  5 +--
+>  kernel/resource.c       | 68 ++++++++++++++++-------------------
+>  5 files changed, 148 insertions(+), 59 deletions(-)
+>=20
 
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-
-Jon
