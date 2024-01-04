@@ -1,110 +1,122 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F822C19A
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 19:21:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F30A2C681;
+	Thu,  4 Jan 2024 19:23:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="EdnZzLUC"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-55590da560dso1039659a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 11:21:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1704396098; x=1705000898; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=v4MuqzTE/G+T5VrqGABwUELReNnh9TwctX30WQtzQOw=;
-        b=EdnZzLUClgs4ur/8y5FP6tRq02qyWaY5N72vXNV5I9U8bZ/7bKHZvSDwGX01jA1NAz
-         Z/8Dmh9QysgWpFAHjEiv5MnGR2GQbMzilbKtSJTGsR7mqwKBGTHr7a88sJ40n+4iPQSr
-         xtIwlHn98rsYx9laJRh++951DYO2BbepN1hGk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704396098; x=1705000898;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=v4MuqzTE/G+T5VrqGABwUELReNnh9TwctX30WQtzQOw=;
-        b=uJSTT4YXAtWo7O+eS7ryLdK5Aroa+hrfqMShKwPXMX1HCuyYJztj6aK7CQ0vzbPFTU
-         I1jPsJlQz44B0snL2OwFNjnQOvIsg7kpK5ChLuCbouKzkZIbPpwqs/QdpDu6q4CQeW3Z
-         Ra5W03PeqRGguZKeWXEU0mWcbapuKL6uRlXM7CJP22JoaekOk7vIIYeE+PZmvDB5dOJT
-         9TvcuPa7iZXImDrWzbqECHCDZ05J60/EGaFV6G+EBCJvZSXg0lxdu+vQR7om4+6lQ8SL
-         VMz1Ajvbqm6Ar5zz/sHLK1lTYZojezPHLZf4biskCiQW7vdhKegkATXEb64mou2MQpsM
-         UBOA==
-X-Gm-Message-State: AOJu0Yzssa/Er2baKmp+6vngMosxVaRNMOW2GpSVelTSNrc4VyEKkOpj
-	7245QHcFP+aseto1RPRiKMgA2GyBKUjmcdvQtx2lVQR9vgBkFDLw
-X-Google-Smtp-Source: AGHT+IEU/IY1KKTx9zizhibF7EhPPIg33pTnwqOiLHnBKnhlKJmZlx96IVL5r9UJwIwyR9W91Ai05w==
-X-Received: by 2002:a17:907:765b:b0:a27:440e:50ee with SMTP id kj27-20020a170907765b00b00a27440e50eemr548971ejc.57.1704396098069;
-        Thu, 04 Jan 2024 11:21:38 -0800 (PST)
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
-        by smtp.gmail.com with ESMTPSA id mz14-20020a1709071b8e00b00a27a17543d2sm6138674ejc.170.2024.01.04.11.21.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jan 2024 11:21:37 -0800 (PST)
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a28b2e1a13fso100518566b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 11:21:37 -0800 (PST)
-X-Received: by 2002:a17:906:ee86:b0:a28:fb5:4389 with SMTP id
- wt6-20020a170906ee8600b00a280fb54389mr705009ejb.0.1704396097273; Thu, 04 Jan
- 2024 11:21:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="meNwmT0f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EC73C433C8;
+	Thu,  4 Jan 2024 19:23:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704396233;
+	bh=onmE/RNN+R0R622Kj1gpfjhJTPdyiEEgXOtbnFDL9vM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=meNwmT0f40fUdUnCGT+x2YGTjJ2yCdYWGp93Q0I+AgpYXrr2udoKh2wGh7o51MNlh
+	 xVdhFdmRHIg/iJ2usoZ5K8UPEmrX9dKKCul6s5S9e+4pRH70PvbwiVfoKBcxpDdcU2
+	 8uIyf1AVz0CaGWyDFfECIqiTWgdFKoGwq/II3NMorJm6KyYDSiia2G7ToXF/+e24pU
+	 5YE59CNdkvNFam7dar7dZEhVbi1lZg/XXBSsbshDBUWq0MDdYMl/JPFRGTwNzkqcNc
+	 /WaiUESmmiFJy7DiU4/s6UjRbnANjVtZHo854wjfMLvmhPUZQkyWwyRyqq4cC0ymJ7
+	 3KzuCBOe47+rA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 8F2C6CE06FA; Thu,  4 Jan 2024 11:23:52 -0800 (PST)
+Date: Thu, 4 Jan 2024 11:23:52 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Like Xu <like.xu@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Luwei Kang <luwei.kang@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, Breno Leitao <leitao@debian.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>
+Subject: Re: [BUG] Guest OSes die simultaneously (bisected)
+Message-ID: <acb26142-622a-4f5d-aba6-c92601f95fbf@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <3d8f5987-e09c-4dd2-a9c0-8ba22c9e948a@paulmck-laptop>
+ <88f49775-2b56-48cc-81b8-651a940b7d6b@paulmck-laptop>
+ <ZZX6pkHnZP777DVi@google.com>
+ <77d7a3e3-f35e-4507-82c2-488405b25fa4@paulmck-laptop>
+ <c6d5dd6e-2dec-423c-af39-213f17b1a9db@paulmck-laptop>
+ <CABgObfYG-ZwiRiFeGbAgctLfj7+PSmgauN9RwGMvZRfxvmD_XQ@mail.gmail.com>
+ <b2775ea5-20c9-4dff-b4b1-bbb212065a22@paulmck-laptop>
+ <b327b546-4a5f-462d-baeb-804a33bd3f6a@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240103203246.115732ec@gandalf.local.home> <20240104014837.GO1674809@ZenIV>
- <20240103212506.41432d12@gandalf.local.home> <20240104043945.GQ1674809@ZenIV>
- <20240104100544.593030e0@gandalf.local.home> <20240104182502.GR1674809@ZenIV> <20240104141017.4cd8451f@gandalf.local.home>
-In-Reply-To: <20240104141017.4cd8451f@gandalf.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 4 Jan 2024 11:21:20 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiLTq-aj2bN_B7-0h2NYdkVxkbkmiOKKer=n0x6pPO77A@mail.gmail.com>
-Message-ID: <CAHk-=wiLTq-aj2bN_B7-0h2NYdkVxkbkmiOKKer=n0x6pPO77A@mail.gmail.com>
-Subject: Re: [PATCH] tracefs/eventfs: Use root and instance inodes as default ownership
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, LKML <linux-kernel@vger.kernel.org>, 
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Christian Brauner <brauner@kernel.org>, 
-	linux-fsdevel@vger.kernel.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b327b546-4a5f-462d-baeb-804a33bd3f6a@redhat.com>
 
-On Thu, 4 Jan 2024 at 11:09, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> My mistake was thinking that the dentry was attached more to the path than
-> the inode. But that doesn't seem to be the case. I wasn't sure if there was
-> a way to get to a dentry from the inode.
+On Thu, Jan 04, 2024 at 05:32:34PM +0100, Paolo Bonzini wrote:
+> On 1/4/24 17:06, Paul E. McKenney wrote:
+> > Although I am happy to have been able to locate the commit (and even
+> > happier that Sean spotted the problem and that you quickly pushed the
+> > fix to mainline!), chasing this consumed a lot of time and systems over
+> > an embarrassingly large number of months.  As in I first spotted this
+> > bug in late July.  Despite a number of increasingly complex attempts,
+> > bisection became feasible only after the buggy commit was backported to
+> > our internal v5.19 code base.  🙁
+> 
+> Yes, this strikes two sore points.
+> 
+> One is that I have also experienced being able to bisect only with a
+> somewhat more linear history (namely the CentOS Stream 9 aka c9s
+> frankenkernel [1]) and not with upstream.  Even if the c9s kernel is not a
+> fully linear set of commits, there's some benefit from merge commits that
+> consist of slightly more curated set of patches, where each merge commit
+> includes both new features and bugfixes.  Unfortunately, whether you'll be
+> able to do this with the c9s kernel depends a lot on the subsystems involved
+> and on the bug.  Both are factors that may or may not be known in advance.
 
-Yeah, so dentry->inode and path->dentry are one-way translations,
-because the other way can have multiple different cases.
+I guess I am glad that it is not just me.  ;-)
 
-IOW, a path will specify *one* dentry, and a dentry will specily *one*
-inode, but one inode can be associated with multiple dentries, and
-there may be other undiscovered dentries that *would* point to it but
-aren't even cached right now.
+> The other, of course, is testing.  The KVM selftests infrastructure is meant
+> for this kind of white box problem, but the space of tests that can be
+> written is so large, that there's always too few tests.  It shines when you
+> have a clear bisection but an unclear fix (in the past I have had cases
+> where spending two days to write a test led me to writing a fix in thirty
+> minutes), but boosting the reproducibility is always a good thing.
 
-And a single dentry can be part of multiple paths, thanks to bind mounts.
+Agreed, validation never will be perfect, and so improving the test
+suite based on production experience is a good thing, as is creating
+test cases based on the behavior of important production workloads for
+those who run them.
 
-The "inode->i_dentry" list is *not* a way to look up all dentries,
-because - as mentioned - there may be potential other paths (and thus
-other dentries) that lead to the same inode that just haven't been
-looked up yet (or that have already been aged out of the cache).
+> > And please understand that I am not casting shade on those who wrote,
+> > reviewed, and committed that buggy commit.  As in I freely confess that
+> > I had to stare at Sean's fix for a few minutes before I figured out what
+> > was going on.
+> 
+> Oh don't worry about that---rather, I am going to cast a shade on those that
+> did not review the commit, namely me.  I am somewhat obsessed with Boolean
+> logic and *probably* I would have caught it, or would have asked to split
+> the use of designated initializers to a separate patch.  Any of the two
+> could, at least potentially, have saved you quite some time.
 
-Of course any *particular* filesystem may not have hard links (so one
-inode has only one possible dentry), and you may not have bind mounts,
-and it might be one of the virtual filesystems where everything is
-always in memory, so none of the above problems are guaranteed to be
-the case in any *particular* situation.
+We have all done similar things.  I certainly have!
 
-But it's all part of why the dcache is actually really subtle. It's
-not just the RCU lookup rules and the specialized locking (both
-reflock and the rather complicated rules about d_lock ordering), it's
-also that whole "yeah, the filesystem only sees a 'dentry', but
-because of bind mounts the vfs layer actually does things internally
-in terms of 'struct path' in order to be able to then show that single
-fiolesystem in multiple places".
+> > Instead, the point I am trying to make is that carefully
+> > constructed tests can serve as tireless and accurate code reviewers.
+> > This won't ever replace actual code review, but my experience indicates
+> > that it will help find more bugs more quickly and more easily.
+> 
+> TBH this (conflict between virtual addresses on the host and the guest
+> leading to corruption of the guest) is probably not the kind of adversarial
+> test that one would have written or suggested right off the bat.  But it
+> should be written now indeed.
 
-Etc etc.
+Very good, looking forward to seeing it!
 
-There's a reason Al Viro ends up owning the dcache. Nobody else can
-wrap their tiny little minds around it all.
+							Thanx, Paul
 
-               Linus
+> Paolo
+> 
+> [1]
+> https://www.theregister.com/2023/06/30/enterprise_distro_feature_devconf/
+> 
