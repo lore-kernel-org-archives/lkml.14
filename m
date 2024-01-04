@@ -1,232 +1,169 @@
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3C421369
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 11:28:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38ABD2134A;
+	Thu,  4 Jan 2024 11:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c5T35EMF"
-Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-46788b25f95so123907137.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 03:28:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704367719; x=1704972519; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tweg/D/5XWVwQJcIsArKsHkePEu/CHILd8GCHNr9cnk=;
-        b=c5T35EMFHwYjd+OxfWWrFPkGafWTvV1Nyngn6/TfCBUw+yD2YYU8pHhTB3vOVdT4hD
-         Kcs0jYNwYLu5j/9j1Ummt7tac1F4l4dJQ5trVCmbJot9DIpW5sLZkQ0RwnWwneh5Pqqr
-         LrZkuwbWgOJkIy8jCWzVrES3v1/kxn+QBVJFExrZq+jdowrZbhlGpAFxphKv0DrKScmE
-         GnWY+jTMt2d++5DnEZVO4f1CyRSF84mDbkGqtMEvbTE0NOzwuZtDNry7ty3G8/fRf/xs
-         Lbe8XBtPlgWkBjCb+iJ6oqnMffds6qXNq0bGvriAh0KpByAefDxN7K6QgP81f3cTQ661
-         f0wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704367719; x=1704972519;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tweg/D/5XWVwQJcIsArKsHkePEu/CHILd8GCHNr9cnk=;
-        b=Pw5yu9D8JntAYpP22XVUFssNy4tEDIkNINU4AX7IEwmCels+gGu6TzwxahE2Bc++bQ
-         wej41QcD2VxibG1xSahP2dPFuhD2YENq7vhP5zbFB7mAjdw5k5bQYmF5pF76M1As30uf
-         ph5yz8M0e+ECqqtEav88qbfzi4uG87BCQqG0qvI9TxVOUM8SXiygyetEkNkc6AIvJ6Jb
-         zMzoMmFnmKpVADbuUWaPXgXU1A735SPYORkhJJRuZa3TvSl8q35YLdTm6gN50eKb7wnt
-         gbMpI9NUjajoepGtcR+W+CrYXiZS4ZgEmWJnQsESx42U5iB9ONwd1MsaaquhqnZYifqg
-         gFSg==
-X-Gm-Message-State: AOJu0YxibFntvdHy128qDmRdthSNcbm0NMRbTvw3Q8v3JxbNvZSzlsfn
-	OnX5QvNkLERchd9bmzWcfRuGwQzlMT2UC+NOIpOL5wIzpNIx4Q==
-X-Google-Smtp-Source: AGHT+IEU2rSSQg/onyItb6pGiOtsfeAw8aUXOzj0XpNDIE+pMquEBDh+i2TfRqP7hH6b2oqlUZZB8s95rgLwdJE51Ts=
-X-Received: by 2002:a05:6102:3eca:b0:466:60a0:ca74 with SMTP id
- n10-20020a0561023eca00b0046660a0ca74mr374339vsv.10.1704367719386; Thu, 04 Jan
- 2024 03:28:39 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wsQKzVwT";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="QnmhJ6W9";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wsQKzVwT";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="QnmhJ6W9"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 9EE851F805;
+	Thu,  4 Jan 2024 11:28:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1704367735; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=id+paq71QAy1mcff5/EB3PkmVyeX2lIOxwmUvRxr4fA=;
+	b=wsQKzVwTEzNXMrID3WBUT2cACh+KzJec60Ql22fl5N5QaM5/2vK+qfg2IueeonhI3lc8Nw
+	H4SFayUpxnCxSkdcbmYEGhQVwnDAKL/rHBCVpvzBMWMnq8D8tcrV6BiP5OkgTLI5R6djXs
+	huBK7ewNueIlSgrTFcVmz95tuQULxHk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1704367735;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=id+paq71QAy1mcff5/EB3PkmVyeX2lIOxwmUvRxr4fA=;
+	b=QnmhJ6W9z9hciG62uLQwn7l6XDnoT7FgUsOy4cuGf7GKqEjXmnN5qYZJx69CAE4e0wLDCV
+	6voNpMi3rZDHXuCw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1704367735; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=id+paq71QAy1mcff5/EB3PkmVyeX2lIOxwmUvRxr4fA=;
+	b=wsQKzVwTEzNXMrID3WBUT2cACh+KzJec60Ql22fl5N5QaM5/2vK+qfg2IueeonhI3lc8Nw
+	H4SFayUpxnCxSkdcbmYEGhQVwnDAKL/rHBCVpvzBMWMnq8D8tcrV6BiP5OkgTLI5R6djXs
+	huBK7ewNueIlSgrTFcVmz95tuQULxHk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1704367735;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=id+paq71QAy1mcff5/EB3PkmVyeX2lIOxwmUvRxr4fA=;
+	b=QnmhJ6W9z9hciG62uLQwn7l6XDnoT7FgUsOy4cuGf7GKqEjXmnN5qYZJx69CAE4e0wLDCV
+	6voNpMi3rZDHXuCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 89DFF13722;
+	Thu,  4 Jan 2024 11:28:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id BsajIXeWlmXXBQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 04 Jan 2024 11:28:55 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 273FFA07EF; Thu,  4 Jan 2024 12:28:55 +0100 (CET)
+Date: Thu, 4 Jan 2024 12:28:55 +0100
+From: Jan Kara <jack@suse.cz>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: axboe@kernel.dk, roger.pau@citrix.com, colyli@suse.de,
+	kent.overstreet@gmail.com, joern@lazybastard.org,
+	miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+	sth@linux.ibm.com, hoeppner@linux.ibm.com, hca@linux.ibm.com,
+	gor@linux.ibm.com, agordeev@linux.ibm.com, jejb@linux.ibm.com,
+	martin.petersen@oracle.com, clm@fb.com, josef@toxicpanda.com,
+	dsterba@suse.com, viro@zeniv.linux.org.uk, brauner@kernel.org,
+	nico@fluxnic.net, xiang@kernel.org, chao@kernel.org, tytso@mit.edu,
+	adilger.kernel@dilger.ca, jack@suse.com, konishi.ryusuke@gmail.com,
+	willy@infradead.org, akpm@linux-foundation.org, hare@suse.de,
+	p.raghav@samsung.com, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+	linux-bcache@vger.kernel.org, linux-mtd@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+	linux-bcachefs@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+	linux-ext4@vger.kernel.org, linux-nilfs@vger.kernel.org,
+	yukuai3@huawei.com, yi.zhang@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH RFC v3 for-6.8/block 04/17] mtd: block2mtd: use bdev apis
+Message-ID: <20240104112855.uci45hhqaiitmsir@quack3>
+References: <20231221085712.1766333-1-yukuai1@huaweicloud.com>
+ <20231221085712.1766333-5-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240103164853.921194838@linuxfoundation.org>
-In-Reply-To: <20240103164853.921194838@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 4 Jan 2024 16:58:27 +0530
-Message-ID: <CA+G9fYvfo1Sr8fBYd=oDkG19Z0O5+z4mnonPvXyhNnhPBdbGUg@mail.gmail.com>
-Subject: Re: [PATCH 5.15 00/95] 5.15.146-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231221085712.1766333-5-yukuai1@huaweicloud.com>
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: 1.61
+X-Spamd-Bar: +
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [1.61 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 BAYES_HAM(-0.08)[63.79%];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 R_RATELIMIT(0.00)[to_ip_from(RLhr85cyeg3mfw7iggddtjdkgs)];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_TWELVE(0.00)[48];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,huawei.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[kernel.dk,citrix.com,suse.de,gmail.com,lazybastard.org,bootlin.com,nod.at,ti.com,linux.ibm.com,oracle.com,fb.com,toxicpanda.com,suse.com,zeniv.linux.org.uk,kernel.org,fluxnic.net,mit.edu,dilger.ca,infradead.org,linux-foundation.org,samsung.com,vger.kernel.org,lists.xenproject.org,lists.infradead.org,lists.ozlabs.org,huawei.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=wsQKzVwT;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=QnmhJ6W9
+X-Spam-Level: *
+X-Rspamd-Queue-Id: 9EE851F805
 
-On Wed, 3 Jan 2024 at 22:34, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.15.146 release.
-> There are 95 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 05 Jan 2024 16:47:49 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.15.146-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.15.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Thu 21-12-23 16:56:59, Yu Kuai wrote:
+> From: Yu Kuai <yukuai3@huawei.com>
+> 
+> On the one hand covert to use folio while reading bdev inode, on the
+> other hand prevent to access bd_inode directly.
+> 
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+...
+> +		for (p = folio_address(folio); p < max; p++)
+>  			if (*p != -1UL) {
+> -				lock_page(page);
+> -				memset(page_address(page), 0xff, PAGE_SIZE);
+> -				set_page_dirty(page);
+> -				unlock_page(page);
+> -				balance_dirty_pages_ratelimited(mapping);
+> +				folio_lock(folio);
+> +				memset(folio_address(folio), 0xff,
+> +				       folio_size(folio));
+> +				folio_mark_dirty(folio);
+> +				folio_unlock(folio);
+> +				bdev_balance_dirty_pages_ratelimited(bdev);
 
+Rather then creating this bdev_balance_dirty_pages_ratelimited() just for
+MTD perhaps we can have here (and in other functions):
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+				...
+				mapping = folio_mapping(folio);
+				folio_unlock(folio);
+				if (mapping)
+					balance_dirty_pages_ratelimited(mapping);
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+What do you think? Because when we are working with the folios it is rather
+natural to use their mapping for dirty balancing?
 
-## Build
-* kernel: 5.15.146-rc1
-* git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
-* git branch: linux-5.15.y
-* git commit: 927631a7bbf09d5c91bd27dc5c660eaff4c67b06
-* git describe: v5.15.145-96-g927631a7bbf0
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.15.y/build/v5.15=
-.145-96-g927631a7bbf0
-
-## Test Regressions (compared to v5.15.145)
-
-## Metric Regressions (compared to v5.15.145)
-
-## Test Fixes (compared to v5.15.145)
-
-## Metric Fixes (compared to v5.15.145)
-
-## Test result summary
-total: 96922, pass: 76690, fail: 2639, skip: 17532, xfail: 61
-
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 117 total, 117 passed, 0 failed
-* arm64: 44 total, 44 passed, 0 failed
-* i386: 33 total, 33 passed, 0 failed
-* mips: 24 total, 24 passed, 0 failed
-* parisc: 4 total, 4 passed, 0 failed
-* powerpc: 26 total, 26 passed, 0 failed
-* riscv: 11 total, 11 passed, 0 failed
-* s390: 11 total, 11 passed, 0 failed
-* sh: 10 total, 10 passed, 0 failed
-* sparc: 8 total, 8 passed, 0 failed
-* x86_64: 38 total, 38 passed, 0 failed
-
-## Test suites summary
-* boot
-* kselftest-android
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-drivers-dma-buf
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-filesystems
-* kselftest-filesystems-binderfs
-* kselftest-filesystems-epoll
-* kselftest-firmware
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-ir
-* kselftest-kcmp
-* kselftest-kexec
-* kselftest-kvm
-* kselftest-lib
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-memory-hotplug
-* kselftest-mincore
-* kselftest-mount
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-forwarding
-* kselftest-net-mptcp
-* kselftest-netfilter
-* kselftest-nsfs
-* kselftest-openat2
-* kselftest-pid_namespace
-* kselftest-pidfd
-* kselftest-proc
-* kselftest-pstore
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-splice
-* kselftest-static_keys
-* kselftest-sync
-* kselftest-sysctl
-* kselftest-tc-testing
-* kselftest-timens
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-vm
-* kselftest-watchdog
-* kselftest-x86
-* kselftest-zram
-* kunit
-* libgpiod
-* log-parser-boot
-* log-parser-test
-* ltp-cap_bounds
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-filecaps
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-fsx
-* ltp-hugetlb
-* ltp-io
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-securebits
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* network-basic-tests
-* perf
-* rcutorture
-* v4l2-compliance
-
---
-Linaro LKFT
-https://lkft.linaro.org
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
