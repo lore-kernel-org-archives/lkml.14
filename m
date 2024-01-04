@@ -1,167 +1,122 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1022249FF;
-	Thu,  4 Jan 2024 15:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0465B2376E
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 15:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cJmiX8ix"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 404FGoGf022442;
-	Thu, 4 Jan 2024 09:16:50 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1704381410;
-	bh=1vVZQWCwm6Aj79XrJxm6KaggjAzeXoVxnAU3BgYJzNE=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=cJmiX8ixi+74wWuZdZaxJehD+9jpabLWXKenhDNsCPEdm8MCUpHi6Nl5IiSCNfsnW
-	 FUO/lZOpvtCmJyuyeI0oiv/eObYGls0euuQvRKSybj0rhKupUkG6TINwPogag6rZuu
-	 ty7rT1Z6l1hEJACvkx1SA+1VlaG9lQ7WXXWGECCg=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 404FGoc2012514
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 4 Jan 2024 09:16:50 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 4
- Jan 2024 09:16:50 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 4 Jan 2024 09:16:50 -0600
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 404FGoSG002746;
-	Thu, 4 Jan 2024 09:16:50 -0600
-Date: Thu, 4 Jan 2024 09:16:50 -0600
-From: Nishanth Menon <nm@ti.com>
-To: Neha Malcom Francis <n-francis@ti.com>
-CC: <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <vigneshr@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <a-nandan@ti.com>, <kristo@kernel.org>, <u-kumar1@ti.com>
-Subject: Re: [PATCH v2] arm64: dts: ti: k3-j721e: Add support for DFS in
- J721E A72
-Message-ID: <20240104151650.my3cuhgase4yf7gj@luminance>
-References: <20240104111922.832040-1-n-francis@ti.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rCAJ3Bvk"
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6dc02727c62so327783a34.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 07:18:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704381491; x=1704986291; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nZwnS2Sp7vv2PRnAVDjhBATPiqXuD/DhpKZdALVjptM=;
+        b=rCAJ3BvkuCa7svBTTM856xsJPAk0VrRSewLOS76ssEEYFUMLkOQKxTAhEfU/q4F9nx
+         P1hlyurUeuklxdcXm1cr+3xtujrxNuKtkXt6qrqTeKFc9NBlPGEQOIhrXh0Oc3Xj7NOc
+         YqZEqqfqfVjgQnkwQERoXncM31CR/OPaiQThbiLF0VOx/n+YdoZ2UDpOOFVz2PwDWswD
+         g4JwxUNMwTxZXt0LiJeehubl4+x01WCUckMz97O+d3Ft02NeEzIAgZVNv6y4x4JnUGlS
+         /VcwPGI1LxQJZF3u2cZwTwyf/GKqX6rMz53BQBvD1diyBkrkUqElCd1mayDsfh6DgM4c
+         U51w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704381491; x=1704986291;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nZwnS2Sp7vv2PRnAVDjhBATPiqXuD/DhpKZdALVjptM=;
+        b=mRwN/LaWLsMGQo6/bx/xy24KH6IucBjRgFOoO0vTlGnFcxiTpOL2P0pDgGYrSIQyqS
+         ae0w+nz73WaMwmdTE7ATDN+b/Ihcj/TDSKQmEKZ+/iRBnF5dk23QQkcc3VkqYTZtlx/E
+         za86OJ41edNX2ccaPk85QKoMAenAxbvo/dsmbGvOAfhcYJgDtzpDb4p3fljsimSpKGvv
+         SLuCZhKF9nfG7fohYdSJCxYf/hAYeRNYc96hx7cA+6ACdv9tVyTz7bffuAGOYQiL1j+F
+         4F7GM9AUNj4FkwMib5oydfc32ql96RzDucrOztSbG0xIsKbpYkigzvp48fplR7w0Xeuk
+         1LJw==
+X-Gm-Message-State: AOJu0YwHdGfipshoKneDIWdQZZJJ7hn4NY+WGm5dszv+IbH/T5tTqf+i
+	NtDTxtl1XY00ThPsKcDrcGWSxKNK0NxgvOOGTni5/XGkEK6X
+X-Google-Smtp-Source: AGHT+IGfMPGT98T1eBmmQHiBufvEQT/Hgt8TdGqVsNK+ddk26PvAtema7RxLe/wukaMT3IVYTmHVvLe6wRZS15AVPsY=
+X-Received: by 2002:a05:6871:4e46:b0:1fa:f508:b5cc with SMTP id
+ uj6-20020a0568714e4600b001faf508b5ccmr722750oab.55.1704381490990; Thu, 04 Jan
+ 2024 07:18:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240104111922.832040-1-n-francis@ti.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20231213220447.3613500-1-benno.lossin@proton.me>
+In-Reply-To: <20231213220447.3613500-1-benno.lossin@proton.me>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Thu, 4 Jan 2024 16:17:59 +0100
+Message-ID: <CAH5fLghY3o5keT3UGUd0h1eb1WXT98BVYsrOpwpvAKq=7NVsXQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] rust: macros: add `decl_generics` to `parse_generics()`
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@samsung.com>, Sumera Priyadarsini <sylphrenadin@gmail.com>, 
+	Vincenzo Palazzo <vincenzopalazzodev@gmail.com>, Asahi Lina <lina@asahilina.net>, 
+	Martin Rodriguez Reboredo <yakoyoku@gmail.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 16:49-20240104, Neha Malcom Francis wrote:
-> Add 2G, 1G, 500M and 250M as the supported frequencies for A72. This
-> enables support for Dynamic Frequency Scaling (DFS). Note that Dynamic
-> Voltage and Frequency Scaling (DVFS) is not supported on J7 devices.
-> 
-> J721E SoC has three different speed grade devices (see [1], 7.5
-> Operating Performance Points) which as of today are indiscernible in
-> software, users of a different speed grade device must manually change
-> the DTS to ensure their maximum speed frequency is supported.
-> 
-> To obtain clock-latency-ns, the maximum time was found to switch from/to
-> any frequency for a CPU and this value was rounded off and set.
-> 
-> [1] https://www.ti.com/lit/gpn/tda4vm
-> 
-> Signed-off-by: Neha Malcom Francis <n-francis@ti.com>
-> ---
-> Test and boot logs:
-> https://gist.github.com/nehamalcom/33608837ab5ad3332ff11a7fa7a602e2
-> 
-> Changes since v1:
-> https://lore.kernel.org/all/20231214075637.176586-1-n-francis@ti.com/
-> - removed OPPs 1.5G and 750M as they introduced boot regression in
->   J721E-SK
+On Wed, Dec 13, 2023 at 11:08=E2=80=AFPM Benno Lossin <benno.lossin@proton.=
+me> wrote:
+>
+> The generic parameters on a type definition can specify default values.
+> Currently `parse_generics()` cannot handle this though. For example when
+> parsing the following generics:
+>
+>     <T: Clone, const N: usize =3D 0>
+>
+> The `impl_generics` will be set to `T: Clone, const N: usize =3D 0` and
+> `ty_generics` will be set to `T, N`. Now using the `impl_generics` on an
+> impl block:
+>
+>     impl<$($impl_generics)*> Foo {}
+>
+> will result in invalid Rust code, because default values are only
+> available on type definitions.
+>
+> Therefore add parsing support for generic parameter default values using
+> a new kind of generics called `decl_generics` and change the old
+> behavior of `impl_generics` to not contain the generic parameter default
+> values.
+>
+> Now `Generics` has three fields:
+> - `impl_generics`: the generics with bounds
+>   (e.g. `T: Clone, const N: usize`)
+> - `decl_generics`: the generics with bounds and default values
+>   (e.g. `T: Clone, const N: usize =3D 0`)
+> - `ty_generics`:  contains the generics without bounds and without
+>   default values (e.g. `T, N`)
+>
+> `impl_generics` is designed to be used on `impl<$impl_generics>`,
+> `decl_generics` for the type definition, so `struct Foo<$decl_generics>`
+> and `ty_generics` whenever you use the type, so `Foo<$ty_generics>`.
+>
+> Here is an example that uses all three different types of generics:
+>
+>     let (Generics { decl_generics, impl_generics, ty_generics }, rest) =
+=3D parse_generics(input);
+>     quote! {
+>         struct Foo<$($decl_generics)*> {
+>             // ...
+>         }
+>
+>         impl<$impl_generics> Foo<$ty_generics> {
+>             fn foo() {
+>                 // ...
+>             }
+>         }
+>     }
+>
+> The next commit contains a fix to the `#[pin_data]` macro making it
+> compatible with generic parameter default values by relying on this new
+> behavior.
+>
+> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
 
-I do not think this is the right approach precisely for the above
-reason.
-
-See my comment in V1: https://lore.kernel.org/all/20231214125130.zqtq6ioj4c533wha@elbow/
-
-"
-I am also concerned if the table should be separated out as a dtsi and
-included at board.dts level to prevent downstream users going crazy..
-"
-
-I suspect there is no magic opp configuration that will work with all
-downstream and board variations. instead of creating a trimmed down
-non-datasheet tuples of OPP configuration, use the data sheet provided
-OPP configurations into each dtsi and the boards can apply the dtsi
-based on the type of sample they have.
-
-I don't see any other scheme (overlays, maybe?).. but this approach is
-broken and your note above proves why this approach is broken.
-
-> - Nishanth
-> 	- indicated DVFS not supported in commit message
-> 	- moved critical data sheet info from below tear line to commit
-> 	  message
-> 	- added opp-shared property
-> 	- added clock-latency-ns property
-> 
->  arch/arm64/boot/dts/ti/k3-j721e.dtsi | 31 ++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-j721e.dtsi b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-> index a200810df54a..5de6c70bd989 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-> @@ -48,6 +48,9 @@ cpu0: cpu@0 {
->  			d-cache-line-size = <64>;
->  			d-cache-sets = <256>;
->  			next-level-cache = <&L2_0>;
-> +			clocks = <&k3_clks 202 2>;
-> +			clock-names = "cpu";
-> +			operating-points-v2 = <&cpu0_opp_table>;
->  		};
->  
->  		cpu1: cpu@1 {
-> @@ -62,6 +65,34 @@ cpu1: cpu@1 {
->  			d-cache-line-size = <64>;
->  			d-cache-sets = <256>;
->  			next-level-cache = <&L2_0>;
-> +			clocks = <&k3_clks 203 0>;
-> +			clock-names = "cpu";
-> +			operating-points-v2 = <&cpu0_opp_table>;
-> +		};
-> +	};
-> +
-> +	cpu0_opp_table: opp-table {
-> +		compatible = "operating-points-v2";
-> +		opp-shared;
-> +
-> +		opp6-2000000000 {
-> +			opp-hz = /bits/ 64 <2000000000>;
-> +			clock-latency-ns = <300000>;
-> +		};
-> +
-> +		opp4-1000000000 {
-> +			opp-hz = /bits/ 64 <1000000000>;
-> +			clock-latency-ns = <300000>;
-> +		};
-> +
-> +		opp2-500000000 {
-> +			opp-hz = /bits/ 64 <500000000>;
-> +			clock-latency-ns = <300000>;
-> +		};
-> +
-> +		opp1-250000000 {
-> +			opp-hz = /bits/ 64 <250000000>;
-> +			clock-latency-ns = <300000>;
->  		};
->  	};
->  
-> -- 
-> 2.34.1
-> 
-
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+Tested-by: Alice Ryhl <aliceryhl@google.com>
