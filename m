@@ -1,71 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211DB250F2;
-	Thu,  4 Jan 2024 16:30:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30249225D8
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 16:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="np/wq2zD"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 93D63C433CA;
-	Thu,  4 Jan 2024 16:30:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704385828;
-	bh=GT7a99x/z4Bg6ZWuMZ4pBmBqzfF43hjo1DiECkMYpmg=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=np/wq2zDa2but9Uizayyf1+Y5dwhArdHpKNfACoIQdRYCyndlrryrS83I/WAKF6J3
-	 xfD21v64YuS6DD4vXCccFTVSKJkglktMARpRxE5TExAqozwrsOZAmPSRg1PI000/Te
-	 QHDwYAwmklFZnivcXqx3N9g/Equ2k8NsddUlVCNioB8ASWptQjFF2WcfhX8avYujRC
-	 oEPtkK4gha9Y7B5vekCi3fJfZxHZP74NVkP1hMknB1mGntAkWATAST4iQcKI0CmwWQ
-	 GYVZh2exFBzqdEa63jYQyyoEUhMlNtS2ds78xdofg19PX1fWdVhqobYotGaqww6Wei
-	 aS6Atp28FszQQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5E642C43168;
-	Thu,  4 Jan 2024 16:30:28 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="IguwM/Rt";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Iqzz7IPx";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="IguwM/Rt";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Iqzz7IPx"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 30720220D1;
+	Thu,  4 Jan 2024 16:30:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1704385851; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K097X3kyBI0qKEETeboAFR0vzwa5YHkJaPrDUXK5nNM=;
+	b=IguwM/RtRJMcIw7Yc/xGd4wOtgWcJIEFnz1To9Q8DLSPIp35LW5+b0twLE1J4+qTh2fAN4
+	hnhDXC9WPfdHEIwWyuiwlF1jL5RuF6k7iOKq/JmIzNT4wwHk0Q3ojbB6k3sqpdNpROk85z
+	Y6ZU/3dw6a5hLDlZizuW8TDNQMAXr40=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1704385851;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K097X3kyBI0qKEETeboAFR0vzwa5YHkJaPrDUXK5nNM=;
+	b=Iqzz7IPxZFfDckXHSoery3Tn4peGfoLoqnIGzZ8I8iLipVLX1vgcxQh4f4nOSwJtDx6+zk
+	6jOFqmURd3EdgMCA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1704385851; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K097X3kyBI0qKEETeboAFR0vzwa5YHkJaPrDUXK5nNM=;
+	b=IguwM/RtRJMcIw7Yc/xGd4wOtgWcJIEFnz1To9Q8DLSPIp35LW5+b0twLE1J4+qTh2fAN4
+	hnhDXC9WPfdHEIwWyuiwlF1jL5RuF6k7iOKq/JmIzNT4wwHk0Q3ojbB6k3sqpdNpROk85z
+	Y6ZU/3dw6a5hLDlZizuW8TDNQMAXr40=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1704385851;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K097X3kyBI0qKEETeboAFR0vzwa5YHkJaPrDUXK5nNM=;
+	b=Iqzz7IPxZFfDckXHSoery3Tn4peGfoLoqnIGzZ8I8iLipVLX1vgcxQh4f4nOSwJtDx6+zk
+	6jOFqmURd3EdgMCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 21999137E8;
+	Thu,  4 Jan 2024 16:30:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id mzMnCDvdlmWvXwAAD6G6ig
+	(envelope-from <jwiesner@suse.de>); Thu, 04 Jan 2024 16:30:51 +0000
+Received: by incl.suse.cz (Postfix, from userid 1000)
+	id A80CE9BD82; Thu,  4 Jan 2024 17:30:50 +0100 (CET)
+Date: Thu, 4 Jan 2024 17:30:50 +0100
+From: Jiri Wiesner <jwiesner@suse.de>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org, John Stultz <jstultz@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Stephen Boyd <sboyd@kernel.org>, Feng Tang <feng.tang@intel.com>
+Subject: Re: [PATCH] clocksource: Skip watchdog check for large watchdog
+ intervals
+Message-ID: <20240104163050.GC3303@incl>
+References: <20240103112113.GA6108@incl>
+ <5b8fd9ba-1622-4ec7-b3cc-2db3a78122f1@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH RESEND net] net: Implement missing SO_TIMESTAMPING_NEW cmsg
- support
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170438582838.10335.14098796357832248818.git-patchwork-notify@kernel.org>
-Date: Thu, 04 Jan 2024 16:30:28 +0000
-References: <20240104085744.49164-1-thomas@corelatus.se>
-In-Reply-To: <20240104085744.49164-1-thomas@corelatus.se>
-To: Thomas Lange <thomas@corelatus.se>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- willemdebruijn.kernel@gmail.com, jthinz@mailbox.tu-berlin.de, arnd@arndb.de,
- deepa.kernel@gmail.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5b8fd9ba-1622-4ec7-b3cc-2db3a78122f1@paulmck-laptop>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Level: 
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="IguwM/Rt";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Iqzz7IPx
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-3.43 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 URIBL_BLOCKED(0.00)[suse.de:dkim];
+	 DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	 RCPT_COUNT_FIVE(0.00)[6];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.42)[78.11%]
+X-Spam-Score: -3.43
+X-Rspamd-Queue-Id: 30720220D1
+X-Spam-Flag: NO
 
-Hello:
+On Wed, Jan 03, 2024 at 02:08:08PM -0800, Paul E. McKenney wrote:
+> I believe that there were concerns about a similar approach in the case
+> where the jiffies counter is the clocksource
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+I ran a few simple tests on a 2 NUMA node Intel machine and found nothing 
+so far. I tried booting with clocksource=jiffies and I changed the 
+"nr_online_nodes <= 4" check in tsc_clocksource_as_watchdog() to enable 
+the watchdog on my machine. I have a debugging module that monitors 
+clocksource and watchdog reads in clocksource_watchdog() with kprobes. I 
+see the cs/wd reads executed roughly every 0.5 second, as expected. When 
+the machine is idle the average watchdog interval is 501.61 milliseconds 
+(+-15.57 ms, with a minimum of 477.07 ms and a maximum of 517.93 ms). The 
+result is similar when the CPUs of the machine are fully saturated with 
+netperf processes. I also tried booting with clocksource=jiffies and 
+tsc=watchdog. The watchdog interval was similar to the previous test.
 
-On Thu,  4 Jan 2024 09:57:44 +0100 you wrote:
-> Commit 9718475e6908 ("socket: Add SO_TIMESTAMPING_NEW") added the new
-> socket option SO_TIMESTAMPING_NEW. However, it was never implemented in
-> __sock_cmsg_send thus breaking SO_TIMESTAMPING cmsg for platforms using
-> SO_TIMESTAMPING_NEW.
-> 
-> Fixes: 9718475e6908 ("socket: Add SO_TIMESTAMPING_NEW")
-> Link: https://lore.kernel.org/netdev/6a7281bf-bc4a-4f75-bb88-7011908ae471@app.fastmail.com/
-> Signed-off-by: Thomas Lange <thomas@corelatus.se>
-> 
-> [...]
-
-Here is the summary with links:
-  - [RESEND,net] net: Implement missing SO_TIMESTAMPING_NEW cmsg support
-    https://git.kernel.org/netdev/net/c/382a32018b74
-
-You are awesome, thank you!
+AFAIK, the jiffies clocksource does get checked by the watchdog itself. 
+And with that, I have run out of ideas.
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Jiri Wiesner
+SUSE Labs
