@@ -1,105 +1,78 @@
-Received: from gofer.mess.org (gofer.mess.org [88.97.38.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7DC22324;
-	Thu,  4 Jan 2024 12:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mess.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mess.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318272230A;
+	Thu,  4 Jan 2024 13:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mess.org header.i=@mess.org header.b="SZrSYppm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mess.org; s=2020;
-	t=1704372628; bh=2rIYho0tJC4fQVeP6/cBbLHX5whOI1hHP2hPbbpgze8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SZrSYppmG8kRGCUnosr7aniaaMeadcFKNVy6SrMe0d79B4F/ByDaAeDIGTX/P8e7I
-	 PJgo+r+eT2+uz3IsN65cwhk75HOmuguHYscVpN9fsAwoxjxS+WSto/KiQsIcRQHAfZ
-	 6lX1MZG2Z5lNSpxrW28GC3VClCxPkEVO9z9FDqO/5StIj7zdcUjTMxAsvfQBJKq81q
-	 ufyR0eMIKfjOXLtEWz6cLRQ8xdU2Zk+R7Ebg1Okla5Iy/gDbSxmYEQQlHb2k+MH6bp
-	 xhOV1HF11uummEJ1SAyhW1W5aDsEK84tKOqMwC7Pg2qw+Dmi5g4BfvF4eP2a7lryxg
-	 G5v0Fqb9AInFg==
-Received: by gofer.mess.org (Postfix, from userid 1000)
-	id 1760F1000FC; Thu,  4 Jan 2024 12:50:28 +0000 (GMT)
-Date: Thu, 4 Jan 2024 12:50:28 +0000
-From: Sean Young <sean@mess.org>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Lee Jones <lee@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Flavio Suligoi <f.suligoi@asem.it>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Linux DRI Development <dri-devel@lists.freedesktop.org>
-Subject: Re: (subset) linux-next: build failure after merge of the pwm tree
-Message-ID: <ZZaplFvjLADNz-2m@gofer.mess.org>
-References: <20231221165805.0c4771c1@canb.auug.org.au>
- <170316329164.542553.8341559295114557258.b4-ty@kernel.org>
- <20231221125801.GG10102@google.com>
- <ZYSFUZf8NcK5vvLv@orome.fritz.box>
- <ZZaCQahr3t8CUumD@archie.me>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iKomG6EL"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-680d2ec3459so3360206d6.0;
+        Thu, 04 Jan 2024 05:00:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704373231; x=1704978031; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0nIrL28BMXphB/rrvwi7A3ipYuJ+0Mt1C/a/HABGUGM=;
+        b=iKomG6EL+le/sIir45GMtv5PAFxT7PRBTK+faFt7X+e/unXNc9YONdmW/gyUDmAV17
+         x3nvanKAKqnWZrVlvpmukrAKISOfWnMHFIhkFDagMGgXOG/mIKeT+89u9C+/KspABWg5
+         Dq3NivLS4ZZQIf5ziuDr3zmJRZB0HV3W1TnoM0bVw7G9x5/iqL2n6ZVFAR7z1wYQQfnc
+         Z0YfHa/kOsxbfYX7nh72CWZ6cnNKH9tN7GMhzM9anSE/84LtshAQ8yHVPTLDC1fY4Bif
+         0qMOdDIPIIfGKC1yRDYwjAbgT+Nx5E+o3qQRHY5+2RhHjiB9oXbQp61Kh3sLcVpeCPJO
+         42aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704373231; x=1704978031;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0nIrL28BMXphB/rrvwi7A3ipYuJ+0Mt1C/a/HABGUGM=;
+        b=MIexvL7ExiDFRI1E6aQUcJZtHCNFUeDaYFhtPealkZixvxRN6x46LpNr2arYCANubt
+         bdrmKy5t/shXL5i3jlmljEchRIPaGGMkrfaFv16pNCxDo4jINFPCXjQtk1FqnTz7jAuX
+         DqUcirfEgipxm/dQRb5CANnbBu2JT29AKvb5oaB4HQ/uE09VUp5iJ39cuF2uA2hYDQDh
+         75q9Gukqp3bl5Fk6JB4zKz1Nb3r+hBUJaUt8Rzg6/h1aSUo5B/pG2MQ7+IgjUTTn++Yy
+         6ob4HirWVZT5a7QHjuaUfB6jSET+ptjy/7ORT7Pbj01u0bmVKF9PRIi453yOK0djrnD8
+         6Xbg==
+X-Gm-Message-State: AOJu0YwhThxLCtPpEdTgnRe97DMZ47nO1BiBEaylQnxfW0RsskI+/f7P
+	1nxkwqPr9JIBMda9kT1930OFlxzCK3qGivfznmI=
+X-Google-Smtp-Source: AGHT+IHKS4qebg5nUXwf/Jgik19KfX2MEHI198BGYVjzKZ5GC8oFuWwJ5+FRovNxNyd2Vc2zwn7xKgEgDgz3ST1P0gc=
+X-Received: by 2002:a05:6214:411e:b0:67f:457c:21ac with SMTP id
+ kc30-20020a056214411e00b0067f457c21acmr586686qvb.48.1704373230947; Thu, 04
+ Jan 2024 05:00:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZZaCQahr3t8CUumD@archie.me>
+References: <20240104024244.12163-1-Wenhua.Lin@unisoc.com> <20240104024244.12163-2-Wenhua.Lin@unisoc.com>
+In-Reply-To: <20240104024244.12163-2-Wenhua.Lin@unisoc.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 4 Jan 2024 14:59:54 +0200
+Message-ID: <CAHp75VfdCHnPovC+LJyVsh=SGTLXDoDowd+0z+0J-wDF2_yjCQ@mail.gmail.com>
+Subject: Re: [PATCH V3 1/4] gpio: eic-sprd: Keep the clock rtc_1k on
+To: Wenhua Lin <Wenhua.Lin@unisoc.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	wenhua lin <wenhua.lin1994@gmail.com>, Xiongpeng Wu <xiongpeng.wu@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 04, 2024 at 05:02:41PM +0700, Bagas Sanjaya wrote:
-> [also add Jingoo (additional backlight maintainer) and Linus]
-> 
-> On Thu, Dec 21, 2023 at 07:34:57PM +0100, Thierry Reding wrote:
-> > On Thu, Dec 21, 2023 at 12:58:01PM +0000, Lee Jones wrote:
-> > > On Thu, 21 Dec 2023, Lee Jones wrote:
-> > > 
-> > > > On Thu, 21 Dec 2023 16:58:05 +1100, Stephen Rothwell wrote:
-> > > > > After merging the backlight tree, today's linux-next build (x86_64
-> > > > > allmodconfig) failed like this:
-> > > > > 
-> > > > > drivers/video/backlight/mp3309c.c: In function 'mp3309c_bl_update_status':
-> > > > > drivers/video/backlight/mp3309c.c:134:23: error: implicit declaration of function 'pwm_apply_state'; did you mean 'pwm_apply_args'? [-Werror=implicit-function-declaration]
-> > > > >   134 |                 ret = pwm_apply_state(chip->pwmd, &pwmstate);
-> > > > >       |                       ^~~~~~~~~~~~~~~
-> > > > >       |                       pwm_apply_args
-> > > > > 
-> > > > > [...]
-> > > > 
-> > > > Applied, thanks!
-> > > > 
-> > > > [1/1] linux-next: build failure after merge of the pwm tree
-> > > >       commit: f7baa9ccef93ba1c36a8ecf58c2f4e86fb3181b9
-> > > 
-> > > Actually it's:
-> > > 
-> > >   f7baa9ccef93b ("backlight: mp3309c: Rename  pwm_apply_state() to pwm_apply_might_sleep()")
-> > > 
-> > > But don't bank on the commit ID staying the same.
-> > 
-> > This is likely going to break the build on your branch because
-> > pwm_apply_might_sleep() is only available in the PWM tree right now. In
-> > any case, I've now pushed a commit that adds pwm_apply_state() back as a
-> > compatibility stub, so it should be okay for you to drop this if you
-> > run into problems. It's always possible that somebody else wants to add
-> > a new caller of pwm_apply_state() and in retrospect we should've
-> > probably done this from the start, at least as a transitional measure
-> > for one or two cycles.
-> > 
-> 
-> Hi Lee and Thierry,
-> 
-> I know that we're still on New Year vibes, so some things are not up to full
-> steam for now; but since we're close to v6.7 release and v6.8 merge window,
-> hence allow me to ask:
-> 
-> Stephen Rothwell is still complaining about backlight tree build failure
-> due to f7baa9ccef93b, yet it has not been fixed so far. Has the culprit
-> been dropped/reverted as he requested? The worst case is the culprit slips
-> through and become part of backlight PR and Linus will likely not happy
-> with the build regression (maybe he had to fix by himself).
+On Thu, Jan 4, 2024 at 4:43=E2=80=AFAM Wenhua Lin <Wenhua.Lin@unisoc.com> w=
+rote:
+>
+> The eic debounce does not have a clock of rtc_1k in the sleep state,
+> but the eic debounce will be used to wake up the system, therefore the
+> clock of rtc_1k needs to be kept open.
 
-This should be fixed by 9a216587a03df, and on current linux-next I can't 
-reproduce the problem any more (x86_64 allmodconfig).
+...
 
-Thanks,
-Sean
+> +#define SPRD_EIC_DBNC_FORCE_CLK                0x8000
+
+BIT(15) ?
+
+--=20
+With Best Regards,
+Andy Shevchenko
