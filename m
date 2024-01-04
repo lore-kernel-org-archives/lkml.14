@@ -1,71 +1,90 @@
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797F72C851;
-	Thu,  4 Jan 2024 22:06:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925092CCDC;
+	Thu,  4 Jan 2024 22:06:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="tRavlGDQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-	MIME-Version:Date:Message-ID:content-disposition;
-	bh=AAtCmH9DA6lM9l6DifQrYEv+bX1UwKxr56zpWzhv1mc=; b=tRavlGDQW3rrwtr170Y697ZAUo
-	TQQDbqphJG0rNHMFZXsdMzeQyaI1ksRfbV8rRh6tFXnUMD3yRn4B1Li8reCcRL9RcS79Bt5aHYLq3
-	Ukg9sbe/qbBTwpTftDFjvy92YN+ty3TNAArYzmw+q7kdpjBh2yDqQJLcCvGiSnr798KmeUK59ue2J
-	09qvlSh/1p3HsQlUy7sOjPMTI8pwwvYTb3zFfn/udvmdE5ZmuvPbnZ4ruvmbkjqtjZ1N40mN+6PvO
-	eAf2qZZ1YO1c/n+UIJL3bfEWtmz39aaJxGvh4rUg4n4im6aJLSxOYdvmqD+tyeoEgsdHFqCS+fKJP
-	Tx9XS27w==;
-Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
-	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.94.2)
-	(envelope-from <logang@deltatee.com>)
-	id 1rLVZs-00CkPZ-5i; Thu, 04 Jan 2024 14:48:36 -0700
-Message-ID: <e194200b-18e9-406d-9faf-03b54c1e606c@deltatee.com>
-Date: Thu, 4 Jan 2024 14:48:33 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CAlrklkC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CA3FC433C9;
+	Thu,  4 Jan 2024 22:06:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704406000;
+	bh=KhBC4o8lt9ggirKlNd4Czi4ZBXFpEOlHVQBjEI7rzrk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CAlrklkCMSQJ2QJxUJH4KNzNrDD4KdGJr4RSIEKdCA2Gg/w8BSUdbPoz+gdmNDPbO
+	 zqAJa09kwVRoe1Tc25NzNiJVXGGsq5horcY8qzwGpUD9zttO7HnQluHwEQ6wF2nOQk
+	 5pBsOs1L/lhe4nPo84+vJDdVG3z7jShfKZqyL+I5380Zy3bVlgtM4Hm5OY8crRfTFA
+	 jzD2fFcO9DAYJiFpZvSC7wiUxqfQc4Tu9ly+XaxE9Whod2J9IVvAHS+sdaIjsN428P
+	 aRmV5jWWUIxl6s4rcS5CDFLrpMM7RnWLnV7bzFvG2RFpBPa7+6P3y1UFM3rCRLlVdA
+	 d8GBSjosYB+GQ==
+Date: Thu, 4 Jan 2024 23:06:35 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Piyush Malgujar <pmalgujar@marvell.com>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rric@kernel.org, cchavva@marvell.com, sgarapati@marvell.com, 
+	jannadurai@marvell.com
+Subject: Re: [PATCH v2 0/4] i2c: thunderx: Marvell thunderx i2c changes
+Message-ID: <nu6py2gosmy33ge4mozuisyfyfdw6i7j4i77o6v2xudyshosso@3x3frfn5gomd>
+References: <20230728120004.19680-1-pmalgujar@marvell.com>
+ <20231024201440.ey7pjah7fq33mbwm@zenone.zhora.eu>
+ <20231026125429.GA22428@Dell2s-9>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- Bjorn Helgaas <bhelgaas@google.com>, Eric Dumazet <edumazet@google.com>
-Cc: alexis.lothore@bootlin.com, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org, linux-pci@vger.kernel.org
-References: <02d9ec4a10235def0e764ff1f5be881ba12e16e8.1704397858.git.christophe.jaillet@wanadoo.fr>
-Content-Language: en-CA
-From: Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <02d9ec4a10235def0e764ff1f5be881ba12e16e8.1704397858.git.christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 24.64.144.200
-X-SA-Exim-Rcpt-To: christophe.jaillet@wanadoo.fr, bhelgaas@google.com, edumazet@google.com, alexis.lothore@bootlin.com, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, linux-pci@vger.kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Level: 
-Subject: Re: [PATCH] PCI/P2PDMA: Fix a sleeping issue in a RCU read section
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231026125429.GA22428@Dell2s-9>
 
+Hi Piyush,
 
-
-On 2024-01-04 12:52, Christophe JAILLET wrote:
-> It is not allowed to sleep within a RCU read section, so use GFP_ATOMIC
-> instead of GFP_KERNEL here.
+On Thu, Oct 26, 2023 at 05:54:29AM -0700, Piyush Malgujar wrote:
+> On Tue, Oct 24, 2023 at 10:14:40PM +0200, Andi Shyti wrote:
+> > Hi Piyush,
+> > 
+> > On Fri, Jul 28, 2023 at 05:00:00AM -0700, Piyush Malgujar wrote:
+> > > The changes are for Marvell OcteonTX2 SOC family:
+> > > 
+> > > - Handling clock divisor logic using subsytem ID
+> > > - Support for high speed mode
+> > > - Handle watchdog timeout
+> > > - Added ioclk support
+> > > 
+> > > Changes since V1:
+> > > - Addressed comments, added defines as required
+> > > - Removed unnecessary code
+> > > - Added a patch to support ioclk if sclk not present in ACPI table
+> > > 
+> > > Piyush Malgujar (1):
+> > >   i2c: thunderx: Adding ioclk support
+> > > 
+> > > Suneel Garapati (3):
+> > >   i2c: thunderx: Clock divisor logic changes
+> > >   i2c: thunderx: Add support for High speed mode
+> > >   i2c: octeon: Handle watchdog timeout
+> > > 
+> > >  drivers/i2c/busses/i2c-octeon-core.c     | 96 ++++++++++++++++++------
+> > >  drivers/i2c/busses/i2c-octeon-core.h     | 27 +++++++
+> > >  drivers/i2c/busses/i2c-thunderx-pcidrv.c | 23 ++++--
+> > >  3 files changed, 115 insertions(+), 31 deletions(-)
+> > 
+> > I was going through the patches that failed to receive an answer,
+> > is this series still valid? Do you still need a round of review
+> > here?
+> > 
+> > Andi
 > 
-> Fixes: ae21f835a5bd ("PCI/P2PDMA: Finish RCU conversion of pdev->p2pdma")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> Hi Andi,
+> 
+> Yes, these patches are still valid. These have been acked by you
+> and were waiting to get reply from Robert.
+> Please review the patches.
 
-This makes sense to me. Though, the use of RCU could probably use a
-review. Seeing p2pdma is only released through a devm action on the
-pdev, I would think it shouldn't be needed if we hold a reference to the
-pdev.
+sorry for the very late response... I guess we won't receive any
+answer from Robert... do you mind respinning the series as this
+doesn't apply anymore?
 
-Other than that:
-
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-
-Thanks!
-
-Logan
+Thanks,
+Andi
