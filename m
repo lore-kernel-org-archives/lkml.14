@@ -1,202 +1,129 @@
-Received: from smtprelay07.ispgateway.de (smtprelay07.ispgateway.de [134.119.228.105])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D0A2CCB4;
-	Thu,  4 Jan 2024 22:43:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apitzsch.eu
-Received: from [92.206.191.209] (helo=note-book.lan)
-	by smtprelay07.ispgateway.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96.1)
-	(envelope-from <git@apitzsch.eu>)
-	id 1rLWOi-0005BY-2u;
-	Thu, 04 Jan 2024 23:41:09 +0100
-From: =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
-Date: Thu, 04 Jan 2024 23:40:40 +0100
-Subject: [PATCH v2] dt-bindings: regulator: Convert ti,tps65132 to YAML
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2DD2C6B9;
+	Thu,  4 Jan 2024 22:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JsTGqUy0"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7818ab57d7dso70371485a.2;
+        Thu, 04 Jan 2024 14:45:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704408333; x=1705013133; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SeB4ajz7ViEKbPrOyH94bEBl7Qai5rs8f9JUUiOHPqg=;
+        b=JsTGqUy0UYP8yZSKrgi5JK06MEG9SIjNh3O8XHQOBPMsOtnnxyZsMgPqgxjcnMBQHS
+         KbjQmBuAS4rNRH36D8ZlYVkNEs/jQS60pgj850WPk8m9NlshfbL8WsTKZPjtewVzOK0D
+         omZhw6nAZuIQ8p2X1ZitZXvcN6PMm8jyRanrjkw2tHsm0yKqJD0zBejYLSUWlv0j1D9G
+         6yBJzgc+xRLouC7mLnit2uaX2p+n7DWjxLfa5ByxQmKMIbrAbXqnbKEwjD0FjOlOx8S0
+         8M1a/j35FyfPB3h4wEqEGqjPcvxlmlb3mLanmHCdl06f3KQnA4Vp2IzpPNm2qSI1RXMN
+         SLRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704408333; x=1705013133;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SeB4ajz7ViEKbPrOyH94bEBl7Qai5rs8f9JUUiOHPqg=;
+        b=qoBTUS8b/rGhoqf7htXxoYLLLoq/mreu343Zyl/9aHo659SvhMnNl9cD5JcGqtlLH8
+         +eZYsPaGO7/doLbcils5qEhXDGeGnTY2oajqcWe54nxsSCZLjnrdfv5YPi6AI6+M91rq
+         HiEPFJfio/5Ocz6NKDGFZJYtCqLNAtIajVfcxO2JuYEjRojImJx8IOf4EcvOIhsi99n6
+         rGFb5TLdKHop5sL2yLpUPKTNVKBA7yukXIEvcnV7qJEhcHAAvjlhWgRYcIMVug3c9xo2
+         cBy8ViLYCZnPi9Ov2a5OX6PwZrUVCxvENeoOGRDe2cu/vBH0yqtXPEXhC5JPZnoqh7U1
+         Qfnw==
+X-Gm-Message-State: AOJu0Yx4cPEaEIsAyONeLvY3CdgLfrcptECiUn63aVwDbVvt/Sgyygcd
+	hDIwddHXK8MOhIN5jJPloBk=
+X-Google-Smtp-Source: AGHT+IEkSfRFJYtHdahczAAKNlPFOE2vriKZn5YLfVdSWA5iboKWQspqvRQ7O5mnKMaAXeno6rMkxw==
+X-Received: by 2002:a05:620a:90f:b0:781:7a9e:6a55 with SMTP id v15-20020a05620a090f00b007817a9e6a55mr1159549qkv.131.1704408332809;
+        Thu, 04 Jan 2024 14:45:32 -0800 (PST)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id c22-20020a05620a11b600b00781e1c466e7sm141707qkk.24.2024.01.04.14.45.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jan 2024 14:45:32 -0800 (PST)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailauth.nyi.internal (Postfix) with ESMTP id 0113527C005A;
+	Thu,  4 Jan 2024 17:45:30 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Thu, 04 Jan 2024 17:45:30 -0500
+X-ME-Sender: <xms:CDWXZR8ciP-YmughSHYIWkEVVs9KOfSmFpLtib51cd12hXYVJ1boHQ>
+    <xme:CDWXZVvvwSzUnwIFDml24jFSqwDj8ly0RWdctQV-fVbzU-dxBge_GiEOXvpvmXjcN
+    QtZcEB8v0PpdOU_Ow>
+X-ME-Received: <xmr:CDWXZfAD49RFsQiFg8znmQAeDhTb-cMaq5uWyi9PzsZiVPICiYFppc3cxTA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdegkedgtddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhu
+    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrg
+    htthgvrhhnpeehudfgudffffetuedtvdehueevledvhfelleeivedtgeeuhfegueeviedu
+    ffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    gsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdei
+    gedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfih
+    igmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:CDWXZVe5VaDiwYAfGKo1bOgOubuS2yFwYOjTeiz6I5AuWXdCvt_RDg>
+    <xmx:CDWXZWPYe9NoZ5-R5TZ-6iNIuHuOUtNnR5joNB--Z8ntu4oxfaGqmw>
+    <xmx:CDWXZXmwTiaESwk2YFchNefwEELkfF25c_rQJqu-HJmxhaa9JDZZHA>
+    <xmx:CTWXZbfJ9Nyf50VtNerqlM6mOp3a06roxJ1tRet8yZA9trYry5rhBw>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 4 Jan 2024 17:45:28 -0500 (EST)
+Date: Thu, 4 Jan 2024 14:44:19 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>, Tiago Lam <tiagolam@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Martin Rodriguez Reboredo <yakoyoku@gmail.com>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] rust: sync: add `CondVar::wait_timeout`
+Message-ID: <ZZc0w9tr5NmPAcNP@boqun-archlinux>
+References: <20240104-rb-new-condvar-methods-v3-0-70b514fcbe52@google.com>
+ <20240104-rb-new-condvar-methods-v3-3-70b514fcbe52@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240104-tps65132-v2-1-6c77fe2f4787@apitzsch.eu>
-X-B4-Tracking: v=1; b=H4sIAOczl2UC/23MQQ7CIBCF4as0sxZTpikUV97DdEGAymxaApSoD
- XcXu3b5v7x8ByQXySW4dQdEVyjRtrbASwfG6/XpGNnWgD0OHLlkOSQx8gGZXCZEZY22o4J2D9E
- t9Dqpx9zaU8pbfJ9y4b/1D1I440wORiitRG9xuutA+ZOMv7od5lrrF9S8kHaiAAAA
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
-X-Mailer: b4 0.12.4
-X-Df-Sender: YW5kcmVAYXBpdHpzY2guZXU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240104-rb-new-condvar-methods-v3-3-70b514fcbe52@google.com>
 
-Convert TI TPS65132 bindings from .txt to .yaml format.
+On Thu, Jan 04, 2024 at 02:02:43PM +0000, Alice Ryhl wrote:
+[...]
+> diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
+> index 9451932d5d86..ffb4a51eb898 100644
+> --- a/rust/kernel/task.rs
+> +++ b/rust/kernel/task.rs
+> @@ -7,6 +7,9 @@
+>  use crate::{bindings, types::Opaque};
+>  use core::{marker::PhantomData, ops::Deref, ptr};
+>  
 
-Signed-off-by: André Apitzsch <git@apitzsch.eu>
----
-Changes in v2:
-- Fix typo in commit message header (65133 -> 65132)
-- Add missing 'maintainers' property and put list in as fallback as it
-  was done for Documentation/devicetree/bindings/serial/8250.yaml
-- Link to v1: https://lore.kernel.org/r/20231217-tps65132-v1-1-73c69a960d28@apitzsch.eu
----
- .../devicetree/bindings/regulator/ti,tps65132.yaml | 84 ++++++++++++++++++++++
- .../bindings/regulator/tps65132-regulator.txt      | 46 ------------
- 2 files changed, 84 insertions(+), 46 deletions(-)
+Missing: 
 
-diff --git a/Documentation/devicetree/bindings/regulator/ti,tps65132.yaml b/Documentation/devicetree/bindings/regulator/ti,tps65132.yaml
-new file mode 100644
-index 000000000000..6a6d1a3d6fa7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/ti,tps65132.yaml
-@@ -0,0 +1,84 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/ti,tps65132.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: TI TPS65132 Dual Output Power Regulators
-+
-+maintainers:
-+  - devicetree@vger.kernel.org
-+
-+description: |
-+  The TPS65132 is designed to supply positive/negative driven applications.
-+
-+  Datasheet is available at:
-+  https://www.ti.com/lit/gpn/tps65132
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,tps65132
-+
-+  reg:
-+    maxItems: 1
-+
-+patternProperties:
-+  "^out[pn]$":
-+    type: object
-+    $ref: regulator.yaml#
-+    unevaluatedProperties: false
-+    description:
-+      Properties for single regulator.
-+
-+    properties:
-+      enable-gpios:
-+        maxItems: 1
-+        description:
-+          GPIO specifier to enable the GPIO control (on/off) for regulator.
-+
-+      active-discharge-gpios:
-+        maxItems: 1
-+        description:
-+          GPIO specifier to actively discharge the delay mechanism.
-+
-+      ti,active-discharge-time-us:
-+        description: Regulator active discharge time in microseconds.
-+
-+    dependencies:
-+      active-discharge-gpios: [ 'ti,active-discharge-time-us' ]
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        regulator@3e {
-+            compatible = "ti,tps65132";
-+            reg = <0x3e>;
-+
-+            outp {
-+                regulator-name = "outp";
-+                regulator-boot-on;
-+                regulator-always-on;
-+                enable-gpios = <&gpio 23 GPIO_ACTIVE_HIGH>;
-+            };
-+
-+            outn {
-+                regulator-name = "outn";
-+                regulator-boot-on;
-+                regulator-always-on;
-+                regulator-active-discharge = <0>;
-+                enable-gpios = <&gpio 40 GPIO_ACTIVE_HIGH>;
-+            };
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/regulator/tps65132-regulator.txt b/Documentation/devicetree/bindings/regulator/tps65132-regulator.txt
-deleted file mode 100644
-index 3a3505520c69..000000000000
---- a/Documentation/devicetree/bindings/regulator/tps65132-regulator.txt
-+++ /dev/null
-@@ -1,46 +0,0 @@
--TPS65132 regulators
--
--Required properties:
--- compatible: "ti,tps65132"
--- reg: I2C slave address
--
--Optional Subnode:
--Device supports two regulators OUTP and OUTN. A sub node within the
--   device node describe the properties of these regulators. The sub-node
--   names must be as follows:
--	-For regulator outp, the sub node name should be "outp".
--	-For regulator outn, the sub node name should be "outn".
--
---enable-gpios:(active high, output) Regulators are controlled by the input pins.
--   If it is connected to GPIO through host system then provide the
--   gpio number as per gpio.txt.
---active-discharge-gpios: (active high, output) Some configurations use delay mechanisms
--  on the enable pin, to keep the regulator enabled for some time after
--  the enable signal goes low. This GPIO is used to actively discharge
--  the delay mechanism. Requires specification of ti,active-discharge-time-us
---ti,active-discharge-time-us: how long the active discharge gpio should be
--  asserted for during active discharge, in microseconds.
--
--Each regulator is defined using the standard binding for regulators.
--
--Example:
--
--	tps65132@3e {
--		compatible = "ti,tps65132";
--		reg = <0x3e>;
--
--		outp {
--			regulator-name = "outp";
--			regulator-boot-on;
--			regulator-always-on;
--			enable-gpios = <&gpio 23 0>;
--		};
--
--		outn {
--			regulator-name = "outn";
--			regulator-boot-on;
--			regulator-always-on;
--			regulator-active-discharge = <0>;
--			enable-gpios = <&gpio 40 0>;
--		};
--	};
+	use core::ffi::c_long;
 
----
-base-commit: d0b3c8aa5e37775cd7c3ac07b256218df0fd6678
-change-id: 20231217-tps65132-7f8229dcad59
+here.
 
-Best regards,
--- 
-André Apitzsch <git@apitzsch.eu>
+Regards,
+Boqun
 
+> +/// A sentinal value used for infinite timeouts.
+> +pub const MAX_SCHEDULE_TIMEOUT: c_long = c_long::MAX;
+> +
+>  /// Returns the currently running task.
+>  #[macro_export]
+>  macro_rules! current {
+> 
+> -- 
+> 2.43.0.472.g3155946c3a-goog
+> 
