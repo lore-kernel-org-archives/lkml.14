@@ -1,182 +1,127 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031471DDCD
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 08:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8C71DDCD
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 08:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aHx3G9q0"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-55539cac143so320090a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 00:42:01 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="RgeBvFeV"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a27733ae1dfso26612566b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 00:42:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704357720; x=1704962520; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NkAvidZ3xgL3LyDJ+kTMXwdem4qrhqmW8XT+H+hB9Nw=;
-        b=aHx3G9q0U9dT1p2Jhigi9UFl/bL6vPSXgjLtzW4fC25IuReNF2JAZ2/DfciSADlAY3
-         L36o3LVmAABtznuom6P++04ti52zgniDyAiI6XtNbd9BvIN86Keu7MSqeoiZk4Q7OoMO
-         cziEQDpBbPNObmC8ePkAgsRfGFPt0q7tg9wGnRCYkP0cTAumGVR+X25Llk+t1NtfUDmq
-         ci95odcvvg4yJj6bPeKB7wgkf896kgyfZnASYHUQ4XDBbkXpClGONYiz910CyeSZwuVr
-         VvpiGksih0R6qS4/zzzPEHf0kX31+nkDXlDuD+oZrboiANx3k++LqNwlALG3OhwcNUG3
-         oVQA==
+        d=amarulasolutions.com; s=google; t=1704357733; x=1704962533; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=w6TTGghNZIM3DwJh+LEsX8daCCdA5ovV1xX1zOwS5+I=;
+        b=RgeBvFeVd8GeH2ixJda7LEOylWxiyJjOfQiXqkt3Sr4SEoCxB0yfxv11PdTGkpsiGd
+         T9U1O8dsRqeWees70711jDp3K8e4Ff9V01MbQxB9qEKCmxlyOOOU8s0HnKFH1AmnfyJg
+         0a/G9vgTNc0Oe2lgg/nGa1xIE6YbgZijdlOnA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704357720; x=1704962520;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NkAvidZ3xgL3LyDJ+kTMXwdem4qrhqmW8XT+H+hB9Nw=;
-        b=g17sSmkjtk/69MXA5ehrn9ZwzZhNS4RJ6VlAdGr0oGnLzJ/f1Pkn9i6fa4Ob0r6L9G
-         WbAA+4jmZ+x8Lu8dQfpHAEf93V92G4lDpbbShLgI/8r30yN4vQli64jfJGJunk/w7M76
-         JkqxET/zaPeSc4giNTCo2QXXg6staN81LLVB1KDX509RmH1MvMQmmfnoN5+tBulr7gg+
-         g2mnRZtVMdocv0CROOiHD2Ua0kglvr9bhTBVLKbBZ5Mo3hff5iKDqMSKusANWb0RnIuZ
-         vxPY96EpYEwJGGZ5jO55MA8xDt7nAcuTsoUwkT6jl0tC7+8+0ObZiuadDTbwX4SSGbT0
-         oAzg==
-X-Gm-Message-State: AOJu0YwhKfHZUJJjnv7lYouGOSjcoYyiL/SDgF0kJclY/YzSZE7Hw9NB
-	7hmaG5frjM4Qhniy45h0lz6ZjHyI1fp9kw==
-X-Google-Smtp-Source: AGHT+IGkfTouuSc0V4+b4cPz0sF5sFfv0F2WsHl/Dag0nMZ4JlfO7q/0frazXKnSPST3RXegnmqzog==
-X-Received: by 2002:a17:907:9195:b0:a28:e303:3799 with SMTP id bp21-20020a170907919500b00a28e3033799mr134291ejb.127.1704357720222;
-        Thu, 04 Jan 2024 00:42:00 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.218.27])
-        by smtp.gmail.com with ESMTPSA id k2-20020a170906128200b00a28ec89674bsm131107ejb.173.2024.01.04.00.41.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jan 2024 00:41:59 -0800 (PST)
-Message-ID: <099f3dfb-0557-4c8e-9e69-abc76463f659@linaro.org>
-Date: Thu, 4 Jan 2024 09:41:58 +0100
+        d=1e100.net; s=20230601; t=1704357733; x=1704962533;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w6TTGghNZIM3DwJh+LEsX8daCCdA5ovV1xX1zOwS5+I=;
+        b=U1jlYYuCPAPfrOP4fz2FKg8+KM+szgCmEuZdLLTCNqSNuuUGk9mXhat0+DdQ83L/fy
+         exDPlZRYBfvFaTNp6EcaBdIe0qtbge5G+wWNPhQbGTony4cqiPJI6SraNWdJz8yNDym3
+         D0UMThvy/jRQp2QZ9RqDDiOiZOamRZwLTk04gBPhcdacdUeFtlbsLvvETM5Lq9F5qpHJ
+         Jjc/3d4e/rvqILSAxo3rCTE3zEHzqIq8/Mxi/GNLdMqZ0Oz4JKk963mVmoWlv/PMjDPa
+         StvfpjQoP5AwyqrBawZ/HoUAB/mYIjSk68QScyyxlaQSkF8y1esnZCmw19G2JQ0A6uM9
+         szcg==
+X-Gm-Message-State: AOJu0YyBstvFbDrrK+Yk5Lh2BQEMF2cf6VCOOCPt5ttKAOqFhOzeSLKj
+	WDEnCzuwZm1wH1NB5zbExxe8HqfbyDtTIBcNsdbJ5fHDbJg=
+X-Google-Smtp-Source: AGHT+IFyrXaOSZ8giovYkCTuU9dk3yAf5TDiqjFF9nYGZb1tZAGuyWbchnGPaOePcQ+ciRaFdTnV/w==
+X-Received: by 2002:a17:907:9009:b0:a28:c638:40a0 with SMTP id ay9-20020a170907900900b00a28c63840a0mr65840ejc.77.1704357733257;
+        Thu, 04 Jan 2024 00:42:13 -0800 (PST)
+Received: from dario-ThinkPad-T14s-Gen-2i.amarulasolutions.com (net-93-150-255-34.cust.vodafonedsl.it. [93.150.255.34])
+        by smtp.gmail.com with ESMTPSA id wh14-20020a170906fd0e00b00a233efe6aa7sm13495704ejb.51.2024.01.04.00.42.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jan 2024 00:42:12 -0800 (PST)
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-amarula@amarulasolutions.com,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	Andre Przywara <andre.przywara@arm.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	David Airlie <airlied@gmail.com>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Lee Jones <lee@kernel.org>,
+	=?UTF-8?q?Leonard=20G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Sean Nyekjaer <sean@geanix.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH v4 0/8] Add display support for stm32f769-disco board
+Date: Thu,  4 Jan 2024 09:41:40 +0100
+Message-ID: <20240104084206.721824-1-dario.binacchi@amarulasolutions.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 03/11] dt-bindings: marvell: a38x: add solidrun armada
- 388 clearfog boards
-Content-Language: en-US
-To: Josua Mayer <josua@solid-run.com>, Andrew Lunn <andrew@lunn.ch>,
- Gregory Clement <gregory.clement@bootlin.com>,
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20231230-support-clearfog-gtr-l8-sfp-v4-0-1d7f0e2c7128@solid-run.com>
- <20231230-support-clearfog-gtr-l8-sfp-v4-3-1d7f0e2c7128@solid-run.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231230-support-clearfog-gtr-l8-sfp-v4-3-1d7f0e2c7128@solid-run.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 30/12/2023 16:44, Josua Mayer wrote:
-> Add DT compatible for SolidRun Armada-388 based Clearfog Base and Pro
-> boards, which are already in place in-tree.
-> 
-> There are already 3 distinct dts in tree for these *two* boards,
-> declaring particular compatible strings:
-> - armada-388-clearfog.dts:
->   compatible = "solidrun,clearfog-a1", "marvell,armada388",
->                "marvell,armada385, "marvell,armada380";
-> - armada-388-clearfog-base.dts:
->   compatible = "solidrun,clearfog-base-a1", "solidrun,clearfog-a1",
->                "marvell,armada388", "marvell,armada385,
->                "marvell,armada380";
-> - armada-388-clearfog-pro.dts:
->   compatible = "solidrun,clearfog-base-a1", "solidrun,clearfog-a1",
->                "marvell,armada388", "marvell,armada385,
->                "marvell,armada380";
+The series adds display support for the stm32f769-disco board. It has been
+tested on hardware revisions MB1225-B03 and MB1166-A09. This required
+modifications to the nt35510 driver. As I do not have the Hydis HVA40WV1
+display, it would be better if someone tested the driver in that
+configuration.
 
-Drop code from commit msg. Commit msg should explain why and what, not
-copy the code.
+Changes in v4:
+- Put the "enum" list in alphabetical order
 
-> 
-> This has historic reasons, the first entry is a legacy name for the
-> "pro" version, old versions of u-boot built when only one variant
-> existed explicitly boot by this name.
-> 
-> Note that both compatibles and model field include the string "A1".
-> At least up to revision 2.0 of the board, this had been printed
-> on the pcb. However in marketing material and conversations it is
-> usually omitted. "Clearfog Pro" and "Clearfog Pro A1" always mean
-> exactly the same product.
-> 
-> Technically Base and Pro variants are similar enough that they can
-> successfully boot with each other's dts. Hence it makes (some)
-> sense for them to share the "clearfog-a1" compatible.
-> 
-> Add bindings for the explicit variants including base / pro suffix.
-> The legacy "armada-388-clearfog.dts" is not supported by these
-> bindings" as it does not make sense having two bindings for one board.
-> 
-> Signed-off-by: Josua Mayer <josua@solid-run.com>
-> ---
->  .../devicetree/bindings/arm/marvell/armada-38x.yaml       | 15 ++++++---------
->  1 file changed, 6 insertions(+), 9 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/marvell/armada-38x.yaml b/Documentation/devicetree/bindings/arm/marvell/armada-38x.yaml
-> index 5af222e6db18..4950b840bf1c 100644
-> --- a/Documentation/devicetree/bindings/arm/marvell/armada-38x.yaml
-> +++ b/Documentation/devicetree/bindings/arm/marvell/armada-38x.yaml
-> @@ -15,17 +15,14 @@ properties:
->    compatible:
->      oneOf:
->  
-> -      - description: Armada 380 SoC
-> -        items:
-> -          - const: marvell,armada380
-> -
-> -      - description: Armada 385 SoC
+Changes in v3:
+- Use "enum" to have less code changed
 
+Changes in v2:
+- Add Acked-by tag of Conor Dooley
+- Add a dash in front of each "items:"
+- Change the status of panel_backlight node to "disabled"
+- Delete backlight property from panel0 node.
+- Re-write the patch [7/8] "drm/panel: nt35510: refactor panel initialization"
+  in the same style as the original driver in order to maintain the same
+  structure.
+- Re-write the patch [8/8] "drm/panel: nt35510: support FRIDA FRD400B25025-A-CTK"
+  in the same style as the original driver.
 
-You just added these lines. It does not make sense to add them and
-immediately remove. It's a noop.
-> 
+Dario Binacchi (8):
+  dt-bindings: mfd: stm32f7: Add binding definition for DSI
+  ARM: dts: stm32: add DSI support on stm32f769
+  ARM: dts: stm32: rename mmc_vcard to vcc-3v3 on stm32f769-disco
+  ARM: dts: stm32: add display support on stm32f769-disco
+  dt-bindings: nt35510: add compatible for FRIDA FRD400B25025-A-CTK
+  ARM: dts: add stm32f769-disco-mb1225-revb03-mb1166-reva09
+  drm/panel: nt35510: move hardwired parameters to configuration
+  drm/panel: nt35510: support FRIDA FRD400B25025-A-CTK
 
-Best regards,
-Krzysztof
+ .../display/panel/novatek,nt35510.yaml        |   4 +-
+ arch/arm/boot/dts/st/Makefile                 |   1 +
+ ...f769-disco-mb1225-revb03-mb1166-reva09.dts |  18 +
+ arch/arm/boot/dts/st/stm32f769-disco.dts      |  78 +++-
+ arch/arm/boot/dts/st/stm32f769.dtsi           |  21 +
+ drivers/gpu/drm/panel/panel-novatek-nt35510.c | 422 +++++++++++++++---
+ include/dt-bindings/mfd/stm32f7-rcc.h         |   1 +
+ 7 files changed, 484 insertions(+), 61 deletions(-)
+ create mode 100644 arch/arm/boot/dts/st/stm32f769-disco-mb1225-revb03-mb1166-reva09.dts
+ create mode 100644 arch/arm/boot/dts/st/stm32f769.dtsi
+
+-- 
+2.43.0
 
