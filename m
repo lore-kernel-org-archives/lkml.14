@@ -1,154 +1,193 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from smtp.smtpout.orange.fr (smtp-23.smtpout.orange.fr [80.12.242.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09342C850
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 22:16:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2096E2C846;
+	Thu,  4 Jan 2024 22:19:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OKRFvuxe"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5572a9b3420so39160a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 14:16:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704406567; x=1705011367; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YmEwJraJ4e4jT15EacqQbPjlb9M9wODOsTgFHucU8Ww=;
-        b=OKRFvuxev/B8KH1SB0zFaMgZfxNpZdN83YqCV2JkSxdjxUbmr8443yl7d7lRNFvjSc
-         j0GrX/9tA7q74I/Ht5Ad/W8r/TXXxFYhdZ9FL0AVMTqs+owieKHrE2eG8YtU3DTzsjnA
-         wnfz+A/TMO5VCICM3HOH+iABixwj7hJxSRhSiodVAjqaqpZbdUOrAx/p6oLasfgTGKnt
-         cj7xb0nSmvrQ5624XeJLWBZ1wkLXXPPKXPMkvjYzxdmQ/l2PB6IBNYsyy0595+Y49h7R
-         iQXGMy5UAlWaztYy3svd4r3TLGGFkORiN6JZBL1X7mwVwWJjil1dJkPoPEjRKAMgMGdV
-         glCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704406567; x=1705011367;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YmEwJraJ4e4jT15EacqQbPjlb9M9wODOsTgFHucU8Ww=;
-        b=tZwopXktYZ+TerKAeHsC1h1kQVFcMaNsLpodLODaoSzekGBPxVaZYCuOtxuAEglt4Q
-         NPUNY+avEU2gizvIk9/BiFqw6nv1gdQ5w8s8EjF9z7t7Fzy0LrcavvODPJUo3rbzZ9Tc
-         +W0lRWjXuFb8LldGeJDhrxmVd+jsOCIcDvRqh6XpmJjI10QY6NRqDDBg2EsFZ5Dq51cn
-         0xiNoj5ZXEZ5bFdt7WZzBXG9KG9qzdh6yXgVUYJwL13Gx6tZF/K9aaSjd4ytt2GuPmJg
-         iiCvA27yFPqsQNEmSZ3m8lMA792tI/zWVyN4BNNDOZcny2odnSaO5R+TSpzR30CXI+Gc
-         8a8g==
-X-Gm-Message-State: AOJu0YyNcyuwSkAP2nkthaNvUmngp5oi4lkmeLxNU0YttyEzb3KHL3E6
-	VsWIirKPAD47Z8l7EeJF1XPnoiZBcoh34XzNJ4GLLBUvYgAh
-X-Google-Smtp-Source: AGHT+IFfrgRIWtZ9HrhyGAn143escpZpbafix8BFd16G8Qgpz+Ecbc714kdUSCPtt9+phrmGkm20SOlyqPkHmz1c25U=
-X-Received: by 2002:a17:906:d154:b0:a28:6621:5801 with SMTP id
- br20-20020a170906d15400b00a2866215801mr1226462ejb.19.1704406566797; Thu, 04
- Jan 2024 14:16:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="UrnWQ0N3"
+Received: from [192.168.1.18] ([92.140.202.140])
+	by smtp.orange.fr with ESMTPA
+	id LW41rtOjt9TFdLW42rlc93; Thu, 04 Jan 2024 23:19:47 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1704406787;
+	bh=3Q7pzHGXPPl1OBa+o5NTSmQy9WdHQt6nO2Rw6zfaTac=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=UrnWQ0N3PgWAhcdHvlw2Q4eGYAx9q6LWSPUSn4/VGNn4Dub21Nb45vE3bjg6bXpm8
+	 jBJGMSbFpn8OIqHFUWT8qyxNMh8nGE8S1vCNbSNuTsOIemyCI7g3wus2b2YoN1vUWj
+	 FCABgrH+QsW+okONfa7ExvkKtMLUEZfhUnZrs7IsgYLGViAO07C3CbOp/z40oAAdS1
+	 LC7X20nXW9v/scaFBkfh6ZNTBBw7staxhcetbY5RA253ZrhakeQt4Gp9433G83ysD4
+	 AjwhBDr8KeZU+IjakzzRojDmghvT8w7FeAyhhCpZKEwXjPO4wAYme9d/Xpf7S+cIA6
+	 euYXEY+N6BhIw==
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 04 Jan 2024 23:19:47 +0100
+X-ME-IP: 92.140.202.140
+Message-ID: <9d57f4ea-67d1-48b5-92df-c5556f95f5d6@wanadoo.fr>
+Date: Thu, 4 Jan 2024 23:19:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231220214505.2303297-1-almasrymina@google.com>
- <20231220214505.2303297-3-almasrymina@google.com> <20231221232343.qogdsoavt7z45dfc@google.com>
- <CAHS8izOp_m9SyPjNth-iYBXH2qQQpc9PuZaHbpUL=H0W=CVHgQ@mail.gmail.com> <20240104134424.399fee0a@kernel.org>
-In-Reply-To: <20240104134424.399fee0a@kernel.org>
-From: Mina Almasry <almasrymina@google.com>
-Date: Thu, 4 Jan 2024 14:15:52 -0800
-Message-ID: <CAHS8izPMCNxnk7wnq6-T8e4GHmkgQbZTSEowU5Vw5fB+8y7amg@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 2/3] net: introduce abstraction for network memory
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Shakeel Butt <shakeelb@google.com>, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, kvm@vger.kernel.org, virtualization@lists.linux.dev, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, 
-	Stefano Garzarella <sgarzare@redhat.com>, David Howells <dhowells@redhat.com>, 
-	Jason Gunthorpe <jgg@nvidia.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH 1/2] PM / devfreq: Fix buffer overflow in
+ trans_stat_show
+Content-Language: fr
+To: Christian Marangi <ansuelsmth@gmail.com>,
+ MyungJoo Ham <myungjoo.ham@samsung.com>,
+ Kyungmin Park <kyungmin.park@samsung.com>,
+ Chanwoo Choi <cw00.choi@samsung.com>, Jonghwa Lee
+ <jonghwa3.lee@samsung.com>, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org
+Cc: stable@vger.kernel.org
+References: <20240104215521.10772-1-ansuelsmth@gmail.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20240104215521.10772-1-ansuelsmth@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 4, 2024 at 1:44=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wro=
-te:
->
-> On Thu, 21 Dec 2023 15:44:22 -0800 Mina Almasry wrote:
-> > The warning is like so:
-> >
-> > ./include/net/page_pool/helpers.h: In function =E2=80=98page_pool_alloc=
-=E2=80=99:
-> > ./include/linux/stddef.h:8:14: warning: returning =E2=80=98void *=E2=80=
-=99 from a
-> > function with return type =E2=80=98netmem_ref=E2=80=99 {aka =E2=80=98lo=
-ng unsigned int=E2=80=99} makes
-> > integer from pointer without a cast [-Wint-conversion]
-> >     8 | #define NULL ((void *)0)
-> >       |              ^
-> > ./include/net/page_pool/helpers.h:132:24: note: in expansion of macro
-> > =E2=80=98NULL=E2=80=99
-> >   132 |                 return NULL;
-> >       |                        ^~~~
-> >
-> > And happens in all the code where:
-> >
-> > netmem_ref func()
-> > {
-> >     return NULL;
-> > }
-> >
-> > It's fixable by changing the return to `return (netmem_ref NULL);` or
-> > `return 0;`, but I feel like netmem_ref should be some type which
-> > allows a cast from NULL implicitly.
->
-> Why do you think we should be able to cast NULL implicitly?
-> netmem_ref is a handle, it could possibly be some form of
-> an ID in the future, rather than a pointer. Or have more low
-> bits stolen for specific use cases.
->
-> unsigned long, and returning 0 as "no handle" makes perfect sense to me.
->
-> Note that 0 is a special case, bitwise types are allowed to convert
-> to 0/bool and 0 is implicitly allowed to become a bitwise type.
-> This will pass without a warning:
->
-> typedef unsigned long __bitwise netmem_ref;
->
-> netmem_ref some_code(netmem_ref ref)
-> {
->         // direct test is fine
->         if (!ref)
->                 // 0 "upgrades" without casts
->                 return 0;
->         // 1 does not, we need __force
->         return (__force netmem_ref)1 | ref;
-> }
->
-> The __bitwise annotation will make catching people trying
-> to cast to struct page * trivial.
->
-> You seem to be trying hard to make struct netmem a thing.
-> Perhaps you have a reason I'm not getting?
+Le 04/01/2024 à 22:55, Christian Marangi a écrit :
+> Fix buffer overflow in trans_stat_show().
+> 
+> Convert simple snprintf to the more secure scnprintf with size of
+> PAGE_SIZE.
+> 
+> Add condition checking if we are exceeding PAGE_SIZE and exit early from
+> loop. Also add at the end a warning that we exceeded PAGE_SIZE and that
+> stats is disabled.
+> 
+> Return -EFBIG in the case where we don't have enough space to write the
+> full transition table.
+> 
+> Also document in the ABI that this function can return -EFBIG error.
+> 
+> Cc: stable@vger.kernel.org
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218041
+> Fixes: e552bbaf5b98 ("PM / devfreq: Add sysfs node for representing frequency transition information.")
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> ---
+>   Documentation/ABI/testing/sysfs-class-devfreq |  3 +
+>   drivers/devfreq/devfreq.c                     | 57 +++++++++++++------
+>   2 files changed, 42 insertions(+), 18 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-devfreq b/Documentation/ABI/testing/sysfs-class-devfreq
+> index 5e6b74f30406..1e7e0bb4c14e 100644
+> --- a/Documentation/ABI/testing/sysfs-class-devfreq
+> +++ b/Documentation/ABI/testing/sysfs-class-devfreq
+> @@ -52,6 +52,9 @@ Description:
+>   
+>   			echo 0 > /sys/class/devfreq/.../trans_stat
+>   
+> +		If the transition table is bigger than PAGE_SIZE, reading
+> +		this will return an -EFBIG error.
+> +
+>   What:		/sys/class/devfreq/.../available_frequencies
+>   Date:		October 2012
+>   Contact:	Nishanth Menon <nm@ti.com>
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> index 63347a5ae599..8459512d9b07 100644
+> --- a/drivers/devfreq/devfreq.c
+> +++ b/drivers/devfreq/devfreq.c
+> @@ -1688,7 +1688,7 @@ static ssize_t trans_stat_show(struct device *dev,
+>   			       struct device_attribute *attr, char *buf)
+>   {
+>   	struct devfreq *df = to_devfreq(dev);
+> -	ssize_t len;
+> +	ssize_t len = 0;
+>   	int i, j;
+>   	unsigned int max_state;
+>   
+> @@ -1697,7 +1697,7 @@ static ssize_t trans_stat_show(struct device *dev,
+>   	max_state = df->max_state;
+>   
+>   	if (max_state == 0)
+> -		return sprintf(buf, "Not Supported.\n");
+> +		return scnprintf(buf, PAGE_SIZE, "Not Supported.\n");
 
-There are a number of functions that return struct page* today that I
-convert to return struct netmem* later in the child devmem series, one
-example is something like:
+Hi,
 
-struct page *page_pool_alloc(...); // returns NULL on failure.
+maybe using  sysfs_emit_at() could be even cleaner and less verbose?
 
-becomes:
+>   
+>   	mutex_lock(&df->lock);
+>   	if (!df->stop_polling &&
+> @@ -1707,31 +1707,52 @@ static ssize_t trans_stat_show(struct device *dev,
+>   	}
+>   	mutex_unlock(&df->lock);
+>   
+> -	len = sprintf(buf, "     From  :   To\n");
+> -	len += sprintf(buf + len, "           :");
+> -	for (i = 0; i < max_state; i++)
+> -		len += sprintf(buf + len, "%10lu",
+> -				df->freq_table[i]);
+> +	len += scnprintf(buf + len, PAGE_SIZE - len, "     From  :   To\n");
+> +	len += scnprintf(buf + len, PAGE_SIZE - len, "           :");
+> +	for (i = 0; i < max_state; i++) {
+> +		if (len >= PAGE_SIZE - 1)
+> +			break;
+> +		len += scnprintf(buf + len, PAGE_SIZE - len, "%10lu",
+> +				 df->freq_table[i]);
+> +	}
+> +	if (len >= PAGE_SIZE - 1)
+> +		return PAGE_SIZE - 1;
+>   
+> -	len += sprintf(buf + len, "   time(ms)\n");
+> +	len += scnprintf(buf + len, PAGE_SIZE - len, "   time(ms)\n");
+>   
+>   	for (i = 0; i < max_state; i++) {
+> +		if (len >= PAGE_SIZE - 1)
+> +			break;
 
-struct netmem *page_pool_alloc(...); // also returns NULL on failure.
+I'm not sure that adding all these tests is needed. It could save some 
+cycles in the worse case (when buf could overflow), but in fact wastes 
+cycles in the normel case.
 
-rather than,
+CJ
 
-netmem_ref page_pool_alloc(...); // returns 0 on failure.
+>   		if (df->freq_table[i] == df->previous_freq)
+> -			len += sprintf(buf + len, "*");
+> +			len += scnprintf(buf + len, PAGE_SIZE - len, "*");
+>   		else
+> -			len += sprintf(buf + len, " ");
+> +			len += scnprintf(buf + len, PAGE_SIZE - len, " ");
+> +		if (len >= PAGE_SIZE - 1)
+> +			break;
+> +
+> +		len += scnprintf(buf + len, PAGE_SIZE - len, "%10lu:",
+> +				 df->freq_table[i]);
+> +		for (j = 0; j < max_state; j++) {
+> +			if (len >= PAGE_SIZE - 1)
+> +				break;
+> +			len += scnprintf(buf + len, PAGE_SIZE - len, "%10u",
+> +					 df->stats.trans_table[(i * max_state) + j]);
+> +		}
+> +		if (len >= PAGE_SIZE - 1)
+> +			break;
+> +		len += scnprintf(buf + len, PAGE_SIZE - len, "%10llu\n", (u64)
+> +				 jiffies64_to_msecs(df->stats.time_in_state[i]));
+> +	}
+>   
+> -		len += sprintf(buf + len, "%10lu:", df->freq_table[i]);
+> -		for (j = 0; j < max_state; j++)
+> -			len += sprintf(buf + len, "%10u",
+> -				df->stats.trans_table[(i * max_state) + j]);
+> +	if (len < PAGE_SIZE - 1)
+> +		len += scnprintf(buf + len, PAGE_SIZE - len, "Total transition : %u\n",
+> +				 df->stats.total_trans);
+>   
+> -		len += sprintf(buf + len, "%10llu\n", (u64)
+> -			jiffies64_to_msecs(df->stats.time_in_state[i]));
+> +	if (len >= PAGE_SIZE - 1) {
+> +		pr_warn_once("devfreq transition table exceeds PAGE_SIZE. Disabling\n");
+> +		return -EFBIG;
+>   	}
+>   
+> -	len += sprintf(buf + len, "Total transition : %u\n",
+> -					df->stats.total_trans);
+>   	return len;
+>   }
+>   
 
-I guess in my mind having NULL be castable to the new type makes it so
-that I can avoid the additional code churn of converting a bunch of
-`return NULL;` to `return 0;`, and maybe the transition from page
-pointers to netmem pointers can be more easily done if they're both
-compatible pointer types.
-
-But that is not any huge blocker or critical point in my mind, I just
-thought this approach is preferred. If conversion to unsigned long
-makes more sense to you, I'll respin this like that and do the `NULL
--> 0` conversion everywhere as needed.
-
---=20
-Thanks,
-Mina
