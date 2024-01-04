@@ -1,98 +1,87 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D2124B56
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 16:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B412B250E9;
+	Thu,  4 Jan 2024 16:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="XGR0rUuH"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-336dcebcdb9so599315f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 08:42:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=google; t=1704386534; x=1704991334; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mpXENXwhmXYod+f5UTB49xNrxA0qxmUQQJ2I+RzT7Zo=;
-        b=XGR0rUuHFCASrSGF8qSNVwc6X37goqnxtHX5Vs1bBlipfe8LAQHC8ia+kjDhRUBgN2
-         iNUIxnVq+niwmGRV58fhxu/YRSXTsNfG33CXNBoBnJGTlUVd77xEyhtW4EqCnULyjamC
-         2EbxSJpSO06je6C5OeNVylkhWAreQ6gLwjwp3CPbxEdEdLvESnHfFMKduedHYLPDpATe
-         RZ6ntWmwfq+dr/My8m1VOZ/N5Gfy94Xg31fOya6bGMa+w9XnIulmebdJZc0txOUTdt7h
-         S6rSdz/tIl89PM3yE5hJpD8cywQA1/7o0T4B49ovIcloYN25qAu8p6Wz0dX5C8j4BC/5
-         3TDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704386534; x=1704991334;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mpXENXwhmXYod+f5UTB49xNrxA0qxmUQQJ2I+RzT7Zo=;
-        b=uWa1T5/ZqrgYyMw8S4dm5Pvxo/dRw78CGnKUKy4Qw7WMg5O64eUQlFjiyMkirX0dIW
-         CPaQfpbgdD3j1rB+IVXyALG5/Y/KC7mFB4ULaDOVBp29cwXGwrBolc4oNjXO2C2/v1Tl
-         B+4xHHXSKkqEfo+xT2TjAE8Yp1qQHLpNdHVCWy2N8/l/NI/Y4dDKyhKyeUVf2k03FIf/
-         UWTJMLrdC062OVrqLKvibtSbcUwSt7xHcsJyx6oDJvxF5RNxADr1QwymU4msv4L+0Uv2
-         JaRRzRwQ6rwPbPWW4IorLPVsk1uTO/NRyALKiszYUJmEQIpOTLjygtgHQH23bG+iU0jA
-         eOtA==
-X-Gm-Message-State: AOJu0YwjvN7C53iyUXMKor/PF41QiorOnRGKmqc96lKIp56T2tpLampO
-	WsAjKvdq4R38IPoM41pXDTQkNrnK6POl
-X-Google-Smtp-Source: AGHT+IHP8yGPFDYtpi4C1LZERI45Ly0u07BpJhTMkZQnGAVERrx3lCAIpVaRtN3O+qq9Iysqw40XTg==
-X-Received: by 2002:adf:ea8f:0:b0:336:c963:25ee with SMTP id s15-20020adfea8f000000b00336c96325eemr305083wrm.166.1704386533844;
-        Thu, 04 Jan 2024 08:42:13 -0800 (PST)
-Received: from [10.83.37.178] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id cg13-20020a5d5ccd000000b00336e6014263sm21815296wrb.98.2024.01.04.08.42.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jan 2024 08:42:13 -0800 (PST)
-Message-ID: <335a2669-6902-4f57-bf48-5650cbf55406@arista.com>
-Date: Thu, 4 Jan 2024 16:42:05 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ge5K4PuS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704386695; x=1735922695;
+  h=from:message-id:to:cc:date:subject:mime-version:
+   content-transfer-encoding;
+  bh=/DQS4wqv+vvwhHxOf2aClwntwxDonsfP8n12aAK5U0c=;
+  b=Ge5K4PuS/dUzvXfAf1cdcGA/kWut8AmDhFE+463NpmgTSACoLii4kBaN
+   m6Rb9cj+RbPtIlqhq2wAJ4IxC3VfrxgpFkyDL1zXDBdQPPb9/hA+mG4Ql
+   T8sckV0wgUav+Co19yDv9uoHAQfZc6JOQWgDTbvKew6/NlIpBr7z6YM7O
+   VwWrVUApL/yiBlN1+XZguj7+EkF9syLKsKO4EJjx+QjDfAho0LthUvrsk
+   CDmzOrCdNItCUoTKI/9auTHTxlj5d5Jw7upAcDeULKCKJZKrsn4gMMFG4
+   YnGCTHxcSYOc1QIER5MdcGYlol8CJ5lecIaIpB0NSsf9vGW1lACOGePBl
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="382276291"
+X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
+   d="scan'208";a="382276291"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 08:44:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="814703587"
+X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
+   d="scan'208";a="814703587"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.32.230])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 08:44:52 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Message-ID: <1a6657ef8475862e4fc282efe832fa86.=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+Date: Thu, 04 Jan 2024 18:32:23 +0200
+Subject: [GIT PULL] platform-drivers-x86 for v6.7-7
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net/tcp: Only produce AO/MD5 logs if there are any keys
-Content-Language: en-US
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Eric Dumazet <edumazet@google.com>, "David S. Miller"
- <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>,
- Christian Kujau <lists@nerdbynature.de>,
- Salam Noureddine <noureddine@arista.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Dmitry Safonov <0x7f454c46@gmail.com>
-References: <20240104-tcp_hash_fail-logs-v1-1-ff3e1f6f9e72@arista.com>
- <20240104075742.71e4399f@kernel.org>
-From: Dmitry Safonov <dima@arista.com>
-In-Reply-To: <20240104075742.71e4399f@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Jakub,
+Hi Linus,
 
-On 1/4/24 15:57, Jakub Kicinski wrote:
-> On Thu,  4 Jan 2024 13:42:39 +0000 Dmitry Safonov wrote:
->> User won't care about inproper hash options in the TCP header if they
->> don't use neither TCP-AO nor TCP-MD5. Yet, those logs can add up in
->> syslog, while not being a real concern to the host admin:
->>> kernel: TCP: TCP segment has incorrect auth options set for XX.20.239.12.54681->XX.XX.90.103.80 [S]  
->>
->> Keep silent and avoid logging when there aren't any keys in the system.
->>
->> Side-note: I also defined static_branch_tcp_*() helpers to avoid more
->> ifdeffery, going to remove more ifdeffery further with their help.
-> 
-> Wouldn't we be better off converting the prints to trace points. 
-> The chances for hitting them due to malicious packets feels much
-> higher than dealing with a buggy implementation in the wild.
+Here is a last minute platform-drivers-x86 fixes PR for v6.7.
 
-Do you mean a proper stuff like in net/core/net-traces.c or just
-lowering the loglevel to net_dbg_ratelimited() [like Christian
-originally proposed], which in turns becomes runtime enabled/disabled?
+Unfortunately the P2SB deadlock fix broke some older HW and we need some
+time to figure out the best way to fix the issue so reverting the deadlock
+fix for now.
 
-Both seem fine to me, albeit I was a bit reluctant to change it without
-a good reason as even pre- 2717b5adea9e TCP-MD5 messages were logged and
-some userspace may expect them. I guess we can try and see if anyone
-notices/complains over changes to these messages changes or not.
+Regards, i.
 
-Thanks,
-             Dmitry
 
+The following changes since commit 70681aa0746ae61d7668b9f651221fad5e30c71e:
+
+  platform/x86/intel/pmc: Move GBE LTR ignore to suspend callback (2023-12-29 15:31:22 +0200)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.7-7
+
+for you to fetch changes up to b20712e853305cbd04673f02b7e52ba5b12c11a9:
+
+  Revert "platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe" (2024-01-04 18:16:51 +0200)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.7-7
+
+Revert P2SB / PCI deadlock fix due issue with older HW w/o P2SB.
+
+The following is an automated shortlog grouped by driver:
+
+p2sb:
+ - Revert: Allow p2sb_bar() calls during PCI device probe
+
+----------------------------------------------------------------
+Shin'ichiro Kawasaki (1):
+      Revert "platform/x86: p2sb: Allow p2sb_bar() calls during PCI device probe"
+
+ drivers/platform/x86/p2sb.c | 172 +++++++++++---------------------------------
+ 1 file changed, 41 insertions(+), 131 deletions(-)
