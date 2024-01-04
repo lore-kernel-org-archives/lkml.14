@@ -1,140 +1,77 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DAF62C84F
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 21:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F32012C850;
+	Thu,  4 Jan 2024 21:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pTeEfE8v"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d427518d52so145125ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 13:56:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HbdfzHOn"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6d98ce84e18so699872b3a.3;
+        Thu, 04 Jan 2024 13:57:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704405396; x=1705010196; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=12fLjY3V2aHyKRvHjCJjs0z1gfnzQU+/rSN+3Gfrkvk=;
-        b=pTeEfE8vXUcWoXs3ogxKHhikjJHa2FKa9axR7mw4tATR0TprK2AfhQrknMhbdTAURL
-         x6Kr4EInaYgtsudyposkgbnVLQHdyfqsuT1cpIMm/Js0D070Y2EVawJMmAVaqXaSCBZ9
-         Q2IlOkX3Shnn3rmOLl7C6m85k1jTdid3k2WHPAmuiCRGQKFvTOygA8BkIb7dAIGqf1kD
-         GMPGSRiFr1y+fGt84PAtJXeVcPtl9fPqw+MvaflGMgiawidKPZWR9Tn+rEMgeZNGrqGA
-         CHmKsjaGHgiA9DwUrSisr946ZB4bQOJFeZie5l/Ph45QANvf9H6jVUK6JYtOPoC/YuOi
-         QxJQ==
+        d=gmail.com; s=20230601; t=1704405472; x=1705010272; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=egHS+o8XmTRrz6Xl0CS5lT3RaLGscP5yKRKwuMkxu20=;
+        b=HbdfzHOnhF0SMEdkzTVBeEXZYBShqGFA2EvcJsHC5I2GBP8NOoEmw7LMqh5J2Tm7sN
+         bFq4nAnj1954lAd3RBLpaGr0SkoEGd6vJ+C60iubG4y7Dy6B+vDeX0IjxtnNRbafzxaT
+         42e2O2k8hhnIY5TVwfUSwqg7p7aTgbevlNLny9JHfYBm52PZJE9rSW7jiU42IBpcPMqU
+         TiFImo0u6LJJwIabpvQ3MFQ2LNjLin2JcUJLnbCf7So1XbuEc9miHE+J36to5qLeMmop
+         KOrVIwtsdANdLx4dZDlrA+3KGJr8OH1fd22bu+4v8Pvh5928f061OZJuKJowXWhogbhi
+         4stA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704405396; x=1705010196;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=12fLjY3V2aHyKRvHjCJjs0z1gfnzQU+/rSN+3Gfrkvk=;
-        b=S+vK5AyQczuDi7TAksF5TfE34hHZYX3LAzHmp5a2epZcrIxFJo/dpfemOV/byl15JK
-         tJfD3kVAndSdpGO6+j9ZT6flI4lWnsCYQ/y/1G93DEj/TlGxtjsKAJtndd+s1/XCdjo7
-         H1rZ1FUFrE2jpuXB/zNn6tjVIEsSLsRraxa0bmQV89a9hphfvZn8cS9au3vlkfMvMeT1
-         PQfTKePj5jKbrrgQ7/SArDArt+BEFhAZmpbsHp9bbzLO6lHsylotGNxgc5wgjQLnh3ZG
-         RARRHdIcgycffVY+L/0IdmxfADyit3hklF8+n2SymIjmaVpQt8bFQs9B2elXpBTHnGRN
-         xxJg==
-X-Gm-Message-State: AOJu0YwVoTJ7g/Q7KmkqNvl4pRYP1GvwVEgXNVObJPsAO1J5xulaOJa7
-	iZohw9QcATkXP7JfW3J2H9WU8yAbbOI7
-X-Google-Smtp-Source: AGHT+IG3ufCvOdqmgbI9rjYdydk7M56k37e9DHVhn/r+yDyUyqpkJTt3Auc0PidFKjW4wBoS0dhsgg==
-X-Received: by 2002:a17:903:2448:b0:1d4:c44a:7644 with SMTP id l8-20020a170903244800b001d4c44a7644mr1654491pls.4.1704405396292;
-        Thu, 04 Jan 2024 13:56:36 -0800 (PST)
-Received: from [192.168.60.239] (9.184.168.34.bc.googleusercontent.com. [34.168.184.9])
-        by smtp.gmail.com with ESMTPSA id c10-20020a170902aa4a00b001d3ee84ef0csm77598plr.235.2024.01.04.13.56.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jan 2024 13:56:35 -0800 (PST)
-Message-ID: <20c1e825-8e90-4874-bff0-0985649d333e@google.com>
-Date: Thu, 4 Jan 2024 13:56:32 -0800
+        d=1e100.net; s=20230601; t=1704405472; x=1705010272;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=egHS+o8XmTRrz6Xl0CS5lT3RaLGscP5yKRKwuMkxu20=;
+        b=UCysPV11bhEiUTREuHNKPOqlqdFdzGR/FBApNsozduwF53u3TFJCArkgHO9rEYcwbY
+         f0frQE45cPkIF+yDALSxbGru15gcdLVRTlnTwnidD9h3jFk6eft1APfaAopf373ayoHV
+         5kv++4AezIZMLhF9lNyOgP89lQnMg4Zlqqu83NTljPQtOgwdSyxTs5o7RsGDtpeGkljv
+         dGA+21S6OV/eEjwjwe/msN5WZ36Aj/abkGF8gMYzPG6QWAuswZk41nIpLq7KpNxJFjTI
+         qN+YYwOLPb/GLNXAqkyK1M3PXDg7VHXsRPVYUVeznIfiKjvvxcFYqcvUwonJeVF4m/IY
+         rv+Q==
+X-Gm-Message-State: AOJu0YxEbJlfDsFougeV/sRTn7HEbnut7OHo0ZjiexFboWW0h28NvUl/
+	OrtuXuqbQbPw35yMG0mPfYc=
+X-Google-Smtp-Source: AGHT+IFjNZNufWHFTZQUVgsfqz2Mj/lvykqlgUgeQzS16YBpxT0iO7eliCi/lNUAkH396cD4SlGf3w==
+X-Received: by 2002:a05:6a00:1949:b0:6da:e0a:9b19 with SMTP id s9-20020a056a00194900b006da0e0a9b19mr1332223pfk.63.1704405472083;
+        Thu, 04 Jan 2024 13:57:52 -0800 (PST)
+Received: from localhost (dhcp-72-253-202-210.hawaiiantel.net. [72.253.202.210])
+        by smtp.gmail.com with ESMTPSA id y14-20020aa79e0e000000b006da04f1b884sm128318pfq.105.2024.01.04.13.57.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jan 2024 13:57:51 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Thu, 4 Jan 2024 11:57:50 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Daniel Vacek <neelx@redhat.com>
+Cc: Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>,
+	cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] blk-cgroup: clean up after commit f1c006f1c685
+Message-ID: <ZZcp3nKecqfxxH4Z@mtj.duckdns.org>
+References: <20240104180031.148148-1-neelx@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] usb: gadget: uvc: Fix use are free during STREAMOFF
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: dan.scally@ideasonboard.com, laurent.pinchart@ideasonboard.com,
- etalvala@google.com, jchowdhary@google.com, linux-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org
-References: <20231215210746.821494-1-arakesh@google.com>
- <2024010450-humming-bullion-1af4@gregkh>
-Content-Language: en-US
-From: Avichal Rakesh <arakesh@google.com>
-In-Reply-To: <2024010450-humming-bullion-1af4@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240104180031.148148-1-neelx@redhat.com>
 
-Thank you for the review, Greg!
-
-Sent out V2 with the comments addressed.
-
-On 1/4/24 06:19, Greg KH wrote:
-> On Fri, Dec 15, 2023 at 01:07:44PM -0800, Avichal Rakesh wrote:
->> There is a path that may lead to freed memory being referenced,
->> and causing kernel panics.
->>
->> The kernel panic has the following stack trace:
->>
->> Workqueue: uvcgadget uvcg_video_pump.c51fb85fece46625450f86adbf92c56c.cfi_jt
->> pstate: 60c00085 (nZCv daIf +PAN +UAO -TCO BTYPE=--)
->> pc : __list_del_entry_valid+0xc0/0xd4
->> lr : __list_del_entry_valid+0xc0/0xd4
->> Call trace:
->>   __list_del_entry_valid+0xc0/0xd4
->>   uvc_video_free_request+0x60/0x98
->>   uvcg_video_pump+0x1cc/0x204
->>   process_one_work+0x21c/0x4b8
->>   worker_thread+0x29c/0x574
->>   kthread+0x158/0x1b0
->>   ret_from_fork+0x10/0x30
->>
->> The root cause is that uvcg_video_usb_req_queue frees the uvc_request
->> if is_enabled is false and returns an error status. video_pump also
->> frees the associated request if uvcg_video_usb_req_queue returns an e
->> rror status, leading to double free and accessing garbage memory.
+On Thu, Jan 04, 2024 at 07:00:30PM +0100, Daniel Vacek wrote:
+> Commit f1c006f1c685 moved deletion of the list blkg->q_node
+> from blkg_destroy() to blkg_free_workfn(). Clean up the now
+> useless variable.
 > 
-> Odd line wrapping :(
+> Signed-off-by: Daniel Vacek <neelx@redhat.com>
 
-Sigh! Fixed. Apologies.
+Acked-by: Tejun Heo <tj@kernel.org>
 
-> 
->>
->> To fix the issue, this patch removes freeing logic from
->> uvcg_video_usb_req_queue, and lets the callers to the function handle
->> queueing errors as they see fit.
->>
->> Signed-off-by: Avichal Rakesh <arakesh@google.com>
->> ---
->>  drivers/usb/gadget/function/uvc_video.c | 12 +++++++++---
->>  1 file changed, 9 insertions(+), 3 deletions(-)
-> 
-> What commit id does this fix?
+Thanks.
 
-The commit that caused the bug is not in linus' branch yet. Added
-the "Fixes" tag with the commit SHA from usb-next branch. Let me know
-if I should be using some other SHA.
-
-> 
-> 
->>
->> diff --git a/drivers/usb/gadget/function/uvc_video.c b/drivers/usb/gadget/function/uvc_video.c
->> index 98ba524c27f5..e5db1be14ca3 100644
->> --- a/drivers/usb/gadget/function/uvc_video.c
->> +++ b/drivers/usb/gadget/function/uvc_video.c
->> @@ -277,8 +277,7 @@ static int uvcg_video_usb_req_queue(struct uvc_video *video,
->>  	struct list_head *list = NULL;
->>  
->>  	if (!video->is_enabled) {
->> -		uvc_video_free_request(req->context, video->ep);
->> -		return -ENODEV;
->> +		return -EINVAL;
-> 
-> Isn't this a separate change?  And does it actually matter?
-
-It was meant to differentiate between usb_ep_queue failing 
-and the video stream being disabled, but we don't really
-care about that. Reverted.
-
-Thank you!
-
-- Avi.
+-- 
+tejun
