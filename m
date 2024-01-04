@@ -1,183 +1,182 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2084.outbound.protection.outlook.com [40.107.223.84])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAEDE1DDC3;
-	Thu,  4 Jan 2024 08:41:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031471DDCD
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 08:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zxRlYUfW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FclJQenVelnCN39/am16dBCDAwtTbb3MptzcTy+FVQalQnSx4Wmkx98Yuxs8stfLXOdMQXfNAm2kq65IefiVkaHqqfNbz0rey/vOFiGcQ63ci02FEZ+o2+lZ79YCWrKU3WDxDCBRJB98br5FBpen9NkU69Mq5y+HdDpXLLt0Bo/kRhINAE/s4mcFjOeO2BvptQeU9v7UP4o5de9c1HtMiSR01F8Emx+fiCBSLmOazdBT1fFvlR6sRo5gIvHqBCjMNnUDqMNz3H7bel6aO55lBX0UULoIoq6BLPhjeDXytjkNZDnppa+2KL0bai9Ont4TlG+yl0J01MoaguE6q2W+Lg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LMGkMAcVuyEUKEuhXSUNdWPPvdRxsN061VdyA1fsVjM=;
- b=E12yv86B64WCMGgXFrJjvDbxFO/uvUI5UULYkwuSAhOGJSshHC4iogvvkW/nY3S7YvNBEO/VfC6wc1zhlsXCOIGAxW6nAV2APXk8z6NQb4uPhcL/nx8LjS0sC7nUyEsCKk1nu3pRyaTdg276uW7v60D/05tw+Si+KGUAHEoWsCtQlpkv24FUjpQ2/Rvj6H7HkvqF6/EpFkVwl3cg41QJ1irwznDbGcUxBrcjlsipFFKbe6dVdRrpPv/+cQBTq1gVMb9+OD6tW7geDOzzr49Rs6gXDJCrBcpEkQB+yfWW8UiAkMtLyIJxGez66BAt/TUetg9tWbBBzfIPJdyOOns2QQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LMGkMAcVuyEUKEuhXSUNdWPPvdRxsN061VdyA1fsVjM=;
- b=zxRlYUfWO8hsvUyBoNMzl/DsSyLUeg8AG8uvR+ReIR2whbClePvph60cImOjbXfDZeLCyhX4R5BSlNhGrE+iU/cvRs/XH8t2piqeEIIWDNo4DLsAasHCm6PqVI+UqXDCUr8lk8DPAhqXr3TJdWNvDYxCDwQbdxtVFE990PLS6HY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB3657.namprd12.prod.outlook.com (2603:10b6:5:149::18)
- by PH7PR12MB8016.namprd12.prod.outlook.com (2603:10b6:510:26b::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.14; Thu, 4 Jan
- 2024 08:41:42 +0000
-Received: from DM6PR12MB3657.namprd12.prod.outlook.com
- ([fe80::5786:22a:27df:9a70]) by DM6PR12MB3657.namprd12.prod.outlook.com
- ([fe80::5786:22a:27df:9a70%7]) with mapi id 15.20.7159.013; Thu, 4 Jan 2024
- 08:41:42 +0000
-Date: Thu, 4 Jan 2024 09:41:37 +0100
-From: Robert Richter <rrichter@amd.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Fan Ni <nifan.cxl@gmail.com>,
-	Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH] cxl/pci: Get rid of pointer arithmetic reading CDAT table
-Message-ID: <ZZZvQcWKHd2Pmg3O@rric.localdomain>
-References: <20231116-fix-cdat-devm-free-v1-1-b148b40707d7@intel.com>
- <ZVfIaNhiSc-yQZo5@rric.localdomain>
- <ZVfJ6Fxidvw_gz7r@rric.localdomain>
- <657bd741d2961_269bd294d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <657bd741d2961_269bd294d@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-ClientProxiedBy: FR3P281CA0029.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:1c::22) To DM6PR12MB3657.namprd12.prod.outlook.com
- (2603:10b6:5:149::18)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aHx3G9q0"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-55539cac143so320090a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 00:42:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704357720; x=1704962520; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NkAvidZ3xgL3LyDJ+kTMXwdem4qrhqmW8XT+H+hB9Nw=;
+        b=aHx3G9q0U9dT1p2Jhigi9UFl/bL6vPSXgjLtzW4fC25IuReNF2JAZ2/DfciSADlAY3
+         L36o3LVmAABtznuom6P++04ti52zgniDyAiI6XtNbd9BvIN86Keu7MSqeoiZk4Q7OoMO
+         cziEQDpBbPNObmC8ePkAgsRfGFPt0q7tg9wGnRCYkP0cTAumGVR+X25Llk+t1NtfUDmq
+         ci95odcvvg4yJj6bPeKB7wgkf896kgyfZnASYHUQ4XDBbkXpClGONYiz910CyeSZwuVr
+         VvpiGksih0R6qS4/zzzPEHf0kX31+nkDXlDuD+oZrboiANx3k++LqNwlALG3OhwcNUG3
+         oVQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704357720; x=1704962520;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NkAvidZ3xgL3LyDJ+kTMXwdem4qrhqmW8XT+H+hB9Nw=;
+        b=g17sSmkjtk/69MXA5ehrn9ZwzZhNS4RJ6VlAdGr0oGnLzJ/f1Pkn9i6fa4Ob0r6L9G
+         WbAA+4jmZ+x8Lu8dQfpHAEf93V92G4lDpbbShLgI/8r30yN4vQli64jfJGJunk/w7M76
+         JkqxET/zaPeSc4giNTCo2QXXg6staN81LLVB1KDX509RmH1MvMQmmfnoN5+tBulr7gg+
+         g2mnRZtVMdocv0CROOiHD2Ua0kglvr9bhTBVLKbBZ5Mo3hff5iKDqMSKusANWb0RnIuZ
+         vxPY96EpYEwJGGZ5jO55MA8xDt7nAcuTsoUwkT6jl0tC7+8+0ObZiuadDTbwX4SSGbT0
+         oAzg==
+X-Gm-Message-State: AOJu0YwhKfHZUJJjnv7lYouGOSjcoYyiL/SDgF0kJclY/YzSZE7Hw9NB
+	7hmaG5frjM4Qhniy45h0lz6ZjHyI1fp9kw==
+X-Google-Smtp-Source: AGHT+IGkfTouuSc0V4+b4cPz0sF5sFfv0F2WsHl/Dag0nMZ4JlfO7q/0frazXKnSPST3RXegnmqzog==
+X-Received: by 2002:a17:907:9195:b0:a28:e303:3799 with SMTP id bp21-20020a170907919500b00a28e3033799mr134291ejb.127.1704357720222;
+        Thu, 04 Jan 2024 00:42:00 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.218.27])
+        by smtp.gmail.com with ESMTPSA id k2-20020a170906128200b00a28ec89674bsm131107ejb.173.2024.01.04.00.41.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jan 2024 00:41:59 -0800 (PST)
+Message-ID: <099f3dfb-0557-4c8e-9e69-abc76463f659@linaro.org>
+Date: Thu, 4 Jan 2024 09:41:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3657:EE_|PH7PR12MB8016:EE_
-X-MS-Office365-Filtering-Correlation-Id: e38b1026-07a3-4960-0194-08dc0d00f9e5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	WSrKTrt/rFIjEC3X/q/DeSz7BS8BBRrjMqoXJkmvaszbXuB1lg3Gxyz4eCVJiRFPlLgnk+49emZlpimGQ/BSJ/HICcFTjRvVdP74UvTUcr2ym0ezD6Czo8sXPmxoGF1K9y9Ls8E0cW1nFcJy5E9HrHW9A/qucEpl8gzOrRF0cuKWo7dmrbztenUx0C5qm7fE+U+s+RKfNu190cnEJQw9MhzavFrTFNjPxoDPSz5B1Hi3cxVCv/+7vBC4NbIohE3dTyb/i+cWy67OEV7PTyISk3W2lLXQy9uVhMRu4DFzJ09SyFUo1XWt0C7+ax+h0OtFWrc/sAeVL+Ls8Zj0uaHgvh6+fBhIF79J+N1NWG59hBDKyZaUN6T1m3Xt5f/SUk1bBlDIsC67SVbVtqNFYwbK6jG+5H/T2uEwuoCkV2HT0h9uAHcpGdAkhKb/W/LDFIvg5CBjWidR1kD0XlXrd+bJbvNjaiXCoKlsEVB0TczPexuMm9wmJ9WOuzfoi/IxFVgg87EQkLcQ5suQdJ3PqUEYLSAG+79zdGQO4PDKfEvULtS7nBe9COwyL05nc91yWmsOLYMiv+7qI4vAzfnG5Nl5R28GbSK4VKbHfwRsS2sEVCY=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3657.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(39860400002)(136003)(376002)(366004)(396003)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(316002)(2906002)(54906003)(4326008)(5660300002)(7416002)(83380400001)(41300700001)(26005)(9686003)(6512007)(478600001)(6666004)(6486002)(6506007)(53546011)(8936002)(6916009)(66946007)(8676002)(66476007)(38100700002)(66556008)(26583001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?CGtKJ14hF0e7aQR+QfZQqkLT3Du9Rh1xvAYoy55TWrHfZQYRNdhlBvX6Mo75?=
- =?us-ascii?Q?s21rxVF2+ijvuAMnQB9B0t7w7DVeseDsscdqY8+8Gt4PJZaES90zc3tBaO0r?=
- =?us-ascii?Q?tV7TxO9OFw8dTNqHvuJxQhoDGYVfqu8EXI1Q4lvF74SFSLRzhgesyYYing36?=
- =?us-ascii?Q?ewQYtRTSkZpoFXVdjF20jgyAymj2lplOgu3mBk5ChoAYOH8yB13YLmukZm9Y?=
- =?us-ascii?Q?hFQKYe65gOFQw4uhYiuFUTir7agMQaoW8B3ItH0ndohA0ckyNQcXIqB1HWEm?=
- =?us-ascii?Q?zC2F7d9c8m1AObgP7/RPZvm3zcGoiNGrMIYwX/7vbsWlgsaI9PUNeiT6esxR?=
- =?us-ascii?Q?lZ7778pfqfl0DoYzmAP9uJ1lzHRhkyQpjWHc74PQBxSAJAJwEcHjLreU29zH?=
- =?us-ascii?Q?JljKte3jmu+shKl0Tiu9+moOBV+sCXEhovfkoYqGn0FgL4h/768BzAWYH393?=
- =?us-ascii?Q?66wrggqMytlgmr3wo02HEWlGsXMrBvhOss9n2oqKnNMpAuKHxVERekYO9UB6?=
- =?us-ascii?Q?PPnR3h1aCQv5jXpSqgPZTx6IOgSAl8imcXMzKXwKQlh2SgiWt25MkzDyVP2O?=
- =?us-ascii?Q?9yX/Chzf8M+kEp09sR4OlYb6CxJjWzKXU41uSbADZRyqB9+NIM1Ns/6EjfYI?=
- =?us-ascii?Q?aGaiYglgfbGHOPjCqxS1RJN93SnVYb9RAC8e1ySPptsBg976SX11HBWrX3SS?=
- =?us-ascii?Q?ob8tyPZANSSrekfxfKrMtOkyvUS+udxzGKVRabUASNl9X0Ha5s6q8SYCgip+?=
- =?us-ascii?Q?CmY9UuD8qsjSk5CJA9LPokWyPpw5vePCTDnHYXOEF3+6KMGgFLxqHOgXbWrI?=
- =?us-ascii?Q?UieeYY23VKmXiFuAIksQoBncUfshG/HvGQ7XxZSWCX6mHSMqW3eu3MB6K9iT?=
- =?us-ascii?Q?iaa/x+AuhxNlPJSrjTgUECAvv5LvH40SUGc/CfaORPDpu87y/G7dr8XM8K79?=
- =?us-ascii?Q?2ST0dzEXD60mbXsc+Hf6XR7HONvFoX2MYa5J+fDWxa3Y9rB3l/Z/11+yKJDG?=
- =?us-ascii?Q?U6310V8QoOwXWLRSTXAfVYXU57k9/Pt8I/eJfyNXyYqkwDG81jnA1VLaGFAF?=
- =?us-ascii?Q?XGmPbIpGAnLzGBi273InH9qnnbyhZ/vy86DWa6sExWjX7ZSgmJ128JFLd4Fe?=
- =?us-ascii?Q?qG58FiKyg6eTDmoFP2Tul/MkkDQa/HOXsi/ILBkWmnaWy5+nMCE+FQLjWf8N?=
- =?us-ascii?Q?u9JcnLjGgliAhvDzlJDbZoD4AAaVSVh7tlNJNYYlbUKwjRUXD2Oc71Yitepq?=
- =?us-ascii?Q?0mwLFVSJU5sk18GU0S9osJjlIdJ2Sf87fq/cDXT/TJXb7tjnaXcES1xKPDsS?=
- =?us-ascii?Q?r6iox16EOSoWmU4xv6xf5GfqE+Rlf8mdAAErjNeOAiSakxQEJqn9/FvGT9Dh?=
- =?us-ascii?Q?YK6LeR2eXOS3Y7iLZpC4kNE70Q85Ua0E5BqltwhfcmRVAGqaCRSI0rKkm32o?=
- =?us-ascii?Q?qtxS9LlADBMyYxdDOxhKHCeJQ/jRN6M4TYtnC+aG3JqlBlxiJZplXaHtjcWz?=
- =?us-ascii?Q?8XWHLXbJvrraHlzWx8Kjb6Ge4D5nZ5clmrL2RC2PwPHxFWERsp8Y6AOkyoOt?=
- =?us-ascii?Q?GzCQDKyKyaD9asXNBi1Ijr6tOg+YEYtCDmvTGZhB?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e38b1026-07a3-4960-0194-08dc0d00f9e5
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3657.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jan 2024 08:41:42.5419
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UKGgFbjX8BIz2irCv4aE+6XFc1L7RUbzu9hivpFlZQTgCDpA0EiCM0K40bADSYgIT24WL+zJtUvfef091DjTTQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8016
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 03/11] dt-bindings: marvell: a38x: add solidrun armada
+ 388 clearfog boards
+Content-Language: en-US
+To: Josua Mayer <josua@solid-run.com>, Andrew Lunn <andrew@lunn.ch>,
+ Gregory Clement <gregory.clement@bootlin.com>,
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20231230-support-clearfog-gtr-l8-sfp-v4-0-1d7f0e2c7128@solid-run.com>
+ <20231230-support-clearfog-gtr-l8-sfp-v4-3-1d7f0e2c7128@solid-run.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20231230-support-clearfog-gtr-l8-sfp-v4-3-1d7f0e2c7128@solid-run.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This threat slipped away end of last year...
-
-On 14.12.23 20:34:09, Dan Williams wrote:
-> Robert Richter wrote:
-> > On 17.11.23 21:09:18, Robert Richter wrote:
-> > > I will send an on-top patch for 6.8 that reworks that code area to
-> > > remove the pointer arithmetic.
-> > 
-> > Here it is:
-> > 
-> > From 13787f72c20b8c54754ae86015d982307eae0397 Mon Sep 17 00:00:00 2001
-> > From: Robert Richter <rrichter@amd.com>
-> > Subject: [PATCH] cxl/pci: Get rid of pointer arithmetic reading CDAT table
-> > 
-> > Reading the CDAT table using DOE requires a Table Access Response
-> > Header in addition to the CDAT entry. In current implementation this
-> > has caused offsets with sizeof(__le32) to the actual buffers. This led
-> > to hardly readable code and even bugs (see fix of devm_kfree() in
-> > read_cdat_data()).
-> > 
-> > Rework code to avoid calculations with sizeof(__le32). Introduce
-> > struct cdat_doe for this which contains the Table Access Response
-> > Header and a variable payload size for various data structures
-> > afterwards to access the CDAT table and its CDAT Data Structures
-> > without recalculating buffer offsets.
+On 30/12/2023 16:44, Josua Mayer wrote:
+> Add DT compatible for SolidRun Armada-388 based Clearfog Base and Pro
+> boards, which are already in place in-tree.
 > 
-> I like reworking the code to introduce an explicit type for the response
-> buffer, but as Ira points out, lets call it a "response" not a
-> "cdat_doe".
+> There are already 3 distinct dts in tree for these *two* boards,
+> declaring particular compatible strings:
+> - armada-388-clearfog.dts:
+>   compatible = "solidrun,clearfog-a1", "marvell,armada388",
+>                "marvell,armada385, "marvell,armada380";
+> - armada-388-clearfog-base.dts:
+>   compatible = "solidrun,clearfog-base-a1", "solidrun,clearfog-a1",
+>                "marvell,armada388", "marvell,armada385,
+>                "marvell,armada380";
+> - armada-388-clearfog-pro.dts:
+>   compatible = "solidrun,clearfog-base-a1", "solidrun,clearfog-a1",
+>                "marvell,armada388", "marvell,armada385,
+>                "marvell,armada380";
 
-Looks good.
-
-> 
-> The feedback on the flex array is accurate, but I see no reason to have
-> 3 flex arrays vs:
-> 
-> struct cdat_response {
->        __le32 doe_header;
->        union {
->                struct cdat_header header;
->                struct cdat_entry_header entry;
->                u8 table[];
->        };
-> } __packed;
-
-The flex arrays are due to sizeof(*doe) which is just the size of the
-base payload without any variable data then. Another nice effect of
-this is pointer creation of @header and @entry:
-
-	doe->header vs. &doe->header etc.
-
-... which aligns with doe->table too.
-
-This all leads to well readable code.
+Drop code from commit msg. Commit msg should explain why and what, not
+copy the code.
 
 > 
-> As far as I can see nothing outside of drivers/cxl/core/pci.c needs
-> 'struct cdat_response', so it can stay local to this C file.
+> This has historic reasons, the first entry is a legacy name for the
+> "pro" version, old versions of u-boot built when only one variant
+> existed explicitly boot by this name.
 > 
-> While you are working on that I will do another lead-in cleanup to kill
-> the goto in cxl_cdat_read_table() and let you come back and kill off the
-> open-coded "+ sizeof(__le32)" that I will leave behind.
+> Note that both compatibles and model field include the string "A1".
+> At least up to revision 2.0 of the board, this had been printed
+> on the pcb. However in marketing material and conversations it is
+> usually omitted. "Clearfog Pro" and "Clearfog Pro A1" always mean
+> exactly the same product.
+> 
+> Technically Base and Pro variants are similar enough that they can
+> successfully boot with each other's dts. Hence it makes (some)
+> sense for them to share the "clearfog-a1" compatible.
+> 
+> Add bindings for the explicit variants including base / pro suffix.
+> The legacy "armada-388-clearfog.dts" is not supported by these
+> bindings" as it does not make sense having two bindings for one board.
+> 
+> Signed-off-by: Josua Mayer <josua@solid-run.com>
+> ---
+>  .../devicetree/bindings/arm/marvell/armada-38x.yaml       | 15 ++++++---------
+>  1 file changed, 6 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/marvell/armada-38x.yaml b/Documentation/devicetree/bindings/arm/marvell/armada-38x.yaml
+> index 5af222e6db18..4950b840bf1c 100644
+> --- a/Documentation/devicetree/bindings/arm/marvell/armada-38x.yaml
+> +++ b/Documentation/devicetree/bindings/arm/marvell/armada-38x.yaml
+> @@ -15,17 +15,14 @@ properties:
+>    compatible:
+>      oneOf:
+>  
+> -      - description: Armada 380 SoC
+> -        items:
+> -          - const: marvell,armada380
+> -
+> -      - description: Armada 385 SoC
 
-I briefly looked into your patch, but will send for reference a v2
-with a rebase onto cxl/next and small updates only. I could prepare a
-v3 that bases on your patch afterwards.
 
-Thanks,
+You just added these lines. It does not make sense to add them and
+immediately remove. It's a noop.
+> 
 
--Robert
+Best regards,
+Krzysztof
+
