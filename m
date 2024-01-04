@@ -1,49 +1,144 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC0824B43
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 16:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i53875a56.versanet.de ([83.135.90.86] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1rLQZh-0007V0-L5; Thu, 04 Jan 2024 17:28:05 +0100
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: Sandy Huang <hjc@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- kernel@collabora.com
-Subject: Re: [PATCH] drm/rockchip: vop2: Drop superfluous include
-Date: Thu, 04 Jan 2024 17:28:04 +0100
-Message-ID: <5666118.6fTUFtlzNn@diego>
-In-Reply-To: <20240104143951.85219-1-cristian.ciocaltea@collabora.com>
-References: <20240104143951.85219-1-cristian.ciocaltea@collabora.com>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56B5425102
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 16:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8AFFC15;
+	Thu,  4 Jan 2024 08:29:17 -0800 (PST)
+Received: from e127643.. (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2A9BD3F5A1;
+	Thu,  4 Jan 2024 08:28:23 -0800 (PST)
+From: James Clark <james.clark@arm.com>
+To: coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	broonie@kernel.org,
+	maz@kernel.org,
+	suzuki.poulose@arm.com,
+	acme@kernel.org
+Cc: James Clark <james.clark@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mike Leach <mike.leach@linaro.org>,
+	Leo Yan <leo.yan@linaro.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Miguel Luis <miguel.luis@oracle.com>,
+	Jintack Lim <jintack.lim@linaro.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Kalesh Singh <kaleshsingh@google.com>,
+	Vincent Donnefort <vdonnefort@google.com>,
+	Kristina Martsenko <kristina.martsenko@arm.com>,
+	Akihiko Odaki <akihiko.odaki@daynix.com>,
+	Fuad Tabba <tabba@google.com>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Jing Zhang <jingzhangos@google.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 4/7] arm64: KVM: Add iflag for FEAT_TRF
+Date: Thu,  4 Jan 2024 16:27:04 +0000
+Message-Id: <20240104162714.1062610-5-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240104162714.1062610-1-james.clark@arm.com>
+References: <20240104162714.1062610-1-james.clark@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 
-Am Donnerstag, 4. Januar 2024, 15:39:49 CET schrieb Cristian Ciocaltea:
-> The rockchip_drm_fb.h header contains just a single function which is
-> not directly used by the VOP2 driver.  Drop the unnecessary include.
-> 
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Add an extra iflag to signify if the TRFCR register is accessible.
+Because TRBE requires FEAT_TRF, DEBUG_STATE_SAVE_TRBE still has the same
+behavior even though it's only set when FEAT_TRF is present.
 
-applied to drm-misc-next-fixes as
-commit 38709af26c33e398c3292e96837ccfde41fd9e6b
+The following holes are left in struct kvm_vcpu_arch, but there aren't
+enough other 8 bit fields to rearrange it to leave any hole smaller than
+7 bytes:
 
+  u8                         cflags;               /*  2292     1 */
+  /* XXX 1 byte hole, try to pack */
+  u16                        iflags;               /*  2294     2 */
+  u8                         sflags;               /*  2296     1 */
+  bool                       pause;                /*  2297     1 */
+  /* XXX 6 bytes hole, try to pack */
 
-Regards,
-Heiko
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ arch/arm64/include/asm/kvm_host.h |  4 +++-
+ arch/arm64/kvm/debug.c            | 24 ++++++++++++++++++++----
+ 2 files changed, 23 insertions(+), 5 deletions(-)
 
+diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+index 93d38ad257ed..4864a1fcdf89 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -551,7 +551,7 @@ struct kvm_vcpu_arch {
+ 	u8 cflags;
+ 
+ 	/* Input flags to the hypervisor code, potentially cleared after use */
+-	u8 iflags;
++	u16 iflags;
+ 
+ 	/* State flags for kernel bookkeeping, unused by the hypervisor code */
+ 	u8 sflags;
+@@ -761,6 +761,8 @@ struct kvm_vcpu_arch {
+ #define DEBUG_STATE_SAVE_TRBE	__vcpu_single_flag(iflags, BIT(6))
+ /* vcpu running in HYP context */
+ #define VCPU_HYP_CONTEXT	__vcpu_single_flag(iflags, BIT(7))
++/* Save trace filter controls */
++#define DEBUG_STATE_SAVE_TRFCR	__vcpu_single_flag(iflags, BIT(8))
+ 
+ /* SVE enabled for host EL0 */
+ #define HOST_SVE_ENABLED	__vcpu_single_flag(sflags, BIT(0))
+diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
+index 8725291cb00a..f86cbfae60f3 100644
+--- a/arch/arm64/kvm/debug.c
++++ b/arch/arm64/kvm/debug.c
+@@ -331,14 +331,30 @@ void kvm_arch_vcpu_load_debug_state_flags(struct kvm_vcpu *vcpu)
+ 	    !(read_sysreg_s(SYS_PMBIDR_EL1) & BIT(PMBIDR_EL1_P_SHIFT)))
+ 		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_SPE);
+ 
+-	/* Check if we have TRBE implemented and available at the host */
+-	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_TraceBuffer_SHIFT) &&
+-	    !(read_sysreg_s(SYS_TRBIDR_EL1) & TRBIDR_EL1_P))
+-		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
++	/*
++	 * Set SAVE_TRFCR flag if FEAT_TRF (TraceFilt) exists. This flag
++	 * signifies that the exclude_host/exclude_guest settings of any active
++	 * host Perf session on a core running a VCPU can be written into
++	 * TRFCR_EL1 on guest switch.
++	 */
++	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_TraceFilt_SHIFT)) {
++		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRFCR);
++		/*
++		 * Check if we have TRBE implemented and available at the host.
++		 * If it's in use at the time of guest switch then trace will
++		 * need to be completely disabled. The architecture mandates
++		 * FEAT_TRF with TRBE, so we only need to check for TRBE after
++		 * TRF.
++		 */
++		if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_TraceBuffer_SHIFT) &&
++		    !(read_sysreg_s(SYS_TRBIDR_EL1) & TRBIDR_EL1_P))
++			vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
++	}
+ }
+ 
+ void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
+ {
+ 	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_SPE);
+ 	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
++	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRFCR);
+ }
+-- 
+2.34.1
 
