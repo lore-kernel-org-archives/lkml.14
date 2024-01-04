@@ -1,111 +1,107 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D1E241ED;
-	Thu,  4 Jan 2024 14:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4C0225A5
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 14:27:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IEB/+bGv"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 404E01EN026938;
-	Thu, 4 Jan 2024 14:23:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=C4eC814GmPEtEFPN+OlM7TiAaskuBpnOkF9UFumXED8
-	=; b=IEB/+bGvPcQQDNkK8nnwGZ0R4sP3lrf17yW2F00V/uRxS5m/W4qnqqUwIp/
-	BBDXfYV/XEqaziF0RHYh50LK8ug+TA/KILDUW5mys8a93k8wnLsOe5HztEm7TpmV
-	11ZKgHYRo67hdHvycUwd+SPTgw2J1Is/gl4uIu/KQczyWo5hNkhGy9qjTQVEQD90
-	s1HewSxi6qZVaO7dtc3cksGoemU47YTC7OGT/kdnrEMDy7dENBgNBT8PsbMoVA9h
-	FvOUzW57T/lChVjiVLGyvliIKTQqjDIoCM48FkzOc31UzD+oZ8Rfok1oXFvoQfEU
-	3p8uvAViaD1V8R16g1NSeww+GhA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vdx28024d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Jan 2024 14:23:40 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 404ENd1i011620
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 4 Jan 2024 14:23:39 GMT
-Received: from hu-skakitap-hyd.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 4 Jan 2024 06:23:34 -0800
-From: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-Date: Thu, 4 Jan 2024 19:53:06 +0530
-Subject: [PATCH 3/3] clk: qcom: gcc-sm8150: Update the gcc resets
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ze6JRXNu"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5cd51c0e8ebso349790a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 06:27:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704378473; x=1704983273; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=KlDNdLgG5ibL0gOyrViS7ps98MSZFg5ogqetKbBuLvU=;
+        b=ze6JRXNu8h4e79QNoCUrmA376CL9Yg0a/MtGOvLGKP/XZfrkJaypWwPZPv8IThbYZn
+         UAqUq0DEjeTfwmpBW1wACMDw7tQUR0u0hhusJmVc+9jsZ266igEJMUdjWBNka2J3QjSM
+         A0+LtJSB7zYXB3G+1LiO7t6NaDZ13YFpMgmMz8Gap3Dvj8CcYT2krXu2JW9VPI0WRGpQ
+         z6DWpZa5XP9LLGVw4mdlf93PVisHMIGycJH9zT/tYJC/msMHV+7ZlYRl2pIEkNy8TLKL
+         z+zgf2uXx/GumC3eVl9fPhnNtfoMo8nz3S1P/NG+prW+emh2BMdz2Or4SEkEvAjG+Lcr
+         sv6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704378473; x=1704983273;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KlDNdLgG5ibL0gOyrViS7ps98MSZFg5ogqetKbBuLvU=;
+        b=YDpqHM6uEywPTGqIoRyQMYUPGUFbclteMUU86u2ywRypLUAuFMjH0Y4FO6HYERcOXO
+         9jLZBCmp4HK7PsAwB6m5Id/+bX3NRMzXrUiH8HxSaakdsWkyKKkkHo6abtJPRN/HMmzp
+         +9EViPONhWSMQy0fRjsrA76nMWDEe1/5v+8bgmM9mo5wyvEjgSkH1OwKRX2mfbMdFxKj
+         i67PmGI9hEB15N/vudu1rLvwPwbh/PyLfTTCZphr8xmchpQMUSWMVINuLxZ2eMf1sVnZ
+         sqCJ+UpzNV83Rw49CFb8YXoq7S+BWTrZtth2ib6Qprc5mRmOFhm1WvS7EdkPiQSDodt4
+         rUhA==
+X-Gm-Message-State: AOJu0YzAy/zw6IkCxUVxzzatRlWFKebUcNUW/iySljY1k8Q0eDAnIRLl
+	i8Ts40Z8rNHMvNRQM8o24UbfugQKCX1uhFPG49mER1fgvhOJzA==
+X-Google-Smtp-Source: AGHT+IGqvkW6yeaNT+Y7OY+dO+PH6KMDKkNWkiq98aqn0UvOwKKiSD9Z6AiaRMINEuA90J/MiNKP3flBsgcm0JdZv9I=
+X-Received: by 2002:a17:90b:4c4b:b0:286:6cc1:5fde with SMTP id
+ np11-20020a17090b4c4b00b002866cc15fdemr512285pjb.97.1704378473558; Thu, 04
+ Jan 2024 06:27:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240104-sm8150-dfs-support-v1-3-a5eebfdc1b12@quicinc.com>
-References: <20240104-sm8150-dfs-support-v1-0-a5eebfdc1b12@quicinc.com>
-In-Reply-To: <20240104-sm8150-dfs-support-v1-0-a5eebfdc1b12@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Deepak Katragadda <dkatraga@codeaurora.org>,
-        Vinod Koul <vkoul@kernel.org>, Taniya Das <quic_tdas@quicinc.com>,
-        "Rob
- Herring" <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Ajit Pandey
-	<quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        "Jagadeesh Kona" <quic_jkona@quicinc.com>,
-        Satya Priya Kakitapalli
-	<quic_skakitap@quicinc.com>
-X-Mailer: b4 0.12.4
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: UdK7BLfOJYq5U9ywj3RJpE5aIpf8MN_p
-X-Proofpoint-ORIG-GUID: UdK7BLfOJYq5U9ywj3RJpE5aIpf8MN_p
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 mlxscore=0 impostorscore=0 phishscore=0 clxscore=1015
- malwarescore=0 adultscore=0 mlxlogscore=778 suspectscore=0 bulkscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401040113
+References: <20240101154624.100981-1-sshegde@linux.vnet.ibm.com> <20240101154624.100981-2-sshegde@linux.vnet.ibm.com>
+In-Reply-To: <20240101154624.100981-2-sshegde@linux.vnet.ibm.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Thu, 4 Jan 2024 15:27:42 +0100
+Message-ID: <CAKfTPtDU1osT2NF8p0BDSXBdp4Qjwkt6mBQEaA9oHVd+O8zYGg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] sched: use existing helper functions to access
+ ->avg_rt and ->avg_dl
+To: Shrikanth Hegde <sshegde@linux.vnet.ibm.com>
+Cc: mingo@kernel.org, peterz@infradead.org, dietmar.eggemann@arm.com, 
+	linux-kernel@vger.kernel.org, srikar@linux.vnet.ibm.com, yu.c.chen@intel.com, 
+	tim.c.chen@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 
-Add all the available resets for the global clock controller
-on sm8150.
+On Mon, 1 Jan 2024 at 16:49, Shrikanth Hegde <sshegde@linux.vnet.ibm.com> wrote:
+>
+> There are helper functions called cpu_util_dl and cpu_util_rt which gives
+> the average utilization of DL and RT respectively. But there are few
+> places in code where these variables are used directly.
+>
+> Instead use the helper function so that code becomes simpler and easy to
+> maintain later on. This patch doesn't intend any functional changes.
+>
+> Signed-off-by: Shrikanth Hegde <sshegde@linux.vnet.ibm.com>
 
-Fixes: 2a1d7eb854bb ("clk: qcom: gcc: Add global clock controller driver for SM8150")
-Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
----
- drivers/clk/qcom/gcc-sm8150.c | 3 +++
- 1 file changed, 3 insertions(+)
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
 
-diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
-index 6d76fd344ddf..833e64b61e6b 100644
---- a/drivers/clk/qcom/gcc-sm8150.c
-+++ b/drivers/clk/qcom/gcc-sm8150.c
-@@ -3778,6 +3778,9 @@ static const struct qcom_reset_map gcc_sm8150_resets[] = {
- 	[GCC_USB30_PRIM_BCR] = { 0xf000 },
- 	[GCC_USB30_SEC_BCR] = { 0x10000 },
- 	[GCC_USB_PHY_CFG_AHB2PHY_BCR] = { 0x6a000 },
-+	[GCC_VIDEO_AXIC_CLK_BCR] = { 0xb02c, 2 },
-+	[GCC_VIDEO_AXI0_CLK_BCR] = { 0xb024, 2 },
-+	[GCC_VIDEO_AXI1_CLK_BCR] = { 0xb028, 2 },
- };
- 
- static struct gdsc *gcc_sm8150_gdscs[] = {
-
--- 
-2.25.1
-
+> ---
+>  kernel/sched/fair.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index bcea3d55d95d..1aeca3f943a8 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -9212,10 +9212,10 @@ static inline bool cfs_rq_has_blocked(struct cfs_rq *cfs_rq)
+>
+>  static inline bool others_have_blocked(struct rq *rq)
+>  {
+> -       if (READ_ONCE(rq->avg_rt.util_avg))
+> +       if (cpu_util_rt(rq))
+>                 return true;
+>
+> -       if (READ_ONCE(rq->avg_dl.util_avg))
+> +       if (cpu_util_dl(rq))
+>                 return true;
+>
+>         if (thermal_load_avg(rq))
+> @@ -9481,8 +9481,8 @@ static unsigned long scale_rt_capacity(int cpu)
+>          * avg_thermal.load_avg tracks thermal pressure and the weighted
+>          * average uses the actual delta max capacity(load).
+>          */
+> -       used = READ_ONCE(rq->avg_rt.util_avg);
+> -       used += READ_ONCE(rq->avg_dl.util_avg);
+> +       used = cpu_util_rt(rq);
+> +       used += cpu_util_dl(rq);
+>         used += thermal_load_avg(rq);
+>
+>         if (unlikely(used >= max))
+> --
+> 2.39.3
+>
