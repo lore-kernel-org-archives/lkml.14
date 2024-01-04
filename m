@@ -1,316 +1,183 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60B920DCB
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 09:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ae8jB8o4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704359252;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oTGzUnuImaRUCmV4376iFTUXoCEDIuJDS3P/LYSpU0A=;
-	b=Ae8jB8o4Nkc4MSbkakiLg/Uniiw43NqqBo0T2fYboqZ6CkicwpVTu5xU6dvj8vR+VPuZa8
-	CfJOUX/1ng8l4HPiggy3Lg9KD3Vv7s9lbbRDwt4zeNdcj8CqIEu+jSZu9w5LR+jWzUg+L1
-	Lnm7ppCP/fRNxy5385HybwpfVgNn6y0=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-644-J_EUk3pAPYiGnG5YqM732w-1; Thu, 04 Jan 2024 04:07:30 -0500
-X-MC-Unique: J_EUk3pAPYiGnG5YqM732w-1
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2cd13187886so343921fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 01:07:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704359248; x=1704964048;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oTGzUnuImaRUCmV4376iFTUXoCEDIuJDS3P/LYSpU0A=;
-        b=HU3dSMAzN5Nz1pTMp/1XVMhIkj/TmQbRTjMbwPcWJ2065IzEtYrfPhYCiyc7iVDF6B
-         URrluVjqauNy8VL6Eh+bAdTyMWl3nsxgFDqZAbqBi25mmN75fADhCVOWnaVt9CoC7oQB
-         dvOGgRo3GowqWBojKgCd6dsVRVBRMTBOpH4emvJulpaeSNAaBUpqqTS6E/m/v7gGakIU
-         c4xAEIV4eUt2sxrN80JwniNI5GOScXZixv3EuzudodYt10+uHiD2ZX20BbSONaxl+WMt
-         THTJSzwFKGHjIGVCmEJRt0wROF1yYFS5SxJEmN61BxBt6rVeITv6ZRIn3O8V5U3Izano
-         cU8w==
-X-Gm-Message-State: AOJu0YxHfs6IUF59YUwRrmQr8ZZ4iXGRBTlps03i6Rc2cjNZaJX6OG3P
-	1T0oOistkQZWOS5+UPuyaA2+ij+95C+QEwZQOyfK/+IgCorGWMPd/zUJshpdAYbuAjzATxAksgX
-	YjVtNFV6qt6yyzrXODGrSxLEgJ4kse08d
-X-Received: by 2002:a05:651c:2128:b0:2cc:6106:6915 with SMTP id a40-20020a05651c212800b002cc61066915mr333325ljq.1.1704359248013;
-        Thu, 04 Jan 2024 01:07:28 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGnMYw/9UPaH47sAKOMKUiXeBh1CKms/mGS5BjNl3Ex387RvjL0pboURedgx5y5Yj7h5q3weA==
-X-Received: by 2002:a05:651c:2128:b0:2cc:6106:6915 with SMTP id a40-20020a05651c212800b002cc61066915mr333299ljq.1.1704359247712;
-        Thu, 04 Jan 2024 01:07:27 -0800 (PST)
-Received: from pstanner-thinkpadt14sgen1.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id h15-20020a5d430f000000b0033740e109adsm8720864wrq.75.2024.01.04.01.07.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jan 2024 01:07:27 -0800 (PST)
-From: Philipp Stanner <pstanner@redhat.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	NeilBrown <neilb@suse.de>,
-	John Sanpe <sanpeqf@gmail.com>,
-	Kent Overstreet <kent.overstreet@gmail.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Philipp Stanner <pstanner@redhat.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Uladzislau Koshchanka <koshchanka@gmail.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	David Gow <davidgow@google.com>,
-	Kees Cook <keescook@chromium.org>,
-	Rae Moar <rmoar@google.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	"wuqiang.matt" <wuqiang.matt@bytedance.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Jason Baron <jbaron@akamai.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Marco Elver <elver@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ben Dooks <ben.dooks@codethink.co.uk>,
-	dakr@redhat.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	stable@vger.kernel.org,
-	Arnd Bergmann <arnd@kernel.org>
-Subject: [PATCH v5 5/5] lib, pci: unify generic pci_iounmap()
-Date: Thu,  4 Jan 2024 10:07:09 +0100
-Message-ID: <20240104090708.10571-7-pstanner@redhat.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240104090708.10571-2-pstanner@redhat.com>
-References: <20240104090708.10571-2-pstanner@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827561EA95
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 09:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rLJin-00009h-2S; Thu, 04 Jan 2024 10:09:01 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rLJil-000J08-2c; Thu, 04 Jan 2024 10:08:59 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rLJik-003WEi-3A;
+	Thu, 04 Jan 2024 10:08:58 +0100
+Date: Thu, 4 Jan 2024 10:08:58 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Cc: Arnd Bergmann <arnd@arndb.de>, Robert Jarzmik <robert.jarzmik@free.fr>, 
+	Lubomir Rintel <lkundrak@v3.sk>, zhang songyi <zhang.songyi@zte.com.cn>, soc@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH RFC RESEND] soc: pxa: ssp: Cast to enum pxa_ssp_type
+ instead of int
+Message-ID: <rj7ijuyy47jrffi6sk7wikqo3rnutz2swkdrznyegalylacawz@jdncegf3elct>
+References: <20240103210604.16877-1-duje.mihanovic@skole.hr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="52dkhi32d3pgibs4"
+Content-Disposition: inline
+In-Reply-To: <20240103210604.16877-1-duje.mihanovic@skole.hr>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The implementation of pci_iounmap() is currently scattered over two
-files, drivers/pci/iomap.c and lib/iomap.c. Additionally,
-architectures can define their own version.
 
-To have only one version, it's necessary to create a helper function,
-iomem_is_ioport(), that tells pci_iounmap() whether the passed address
-points to an ioport or normal memory.
+--52dkhi32d3pgibs4
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-iomem_is_ioport() can be provided through two different ways:
-  1. The architecture itself provides it. As of today, the version
-     coming from lib/iomap.c de facto is the x86-specific version and
-     comes into play when CONFIG_GENERIC_IOMAP is selected. This rather
-     confusing naming is an artifact left by the removal of IA64.
-  2. As a default version in include/asm-generic/io.h for those
-     architectures that don't use CONFIG_GENERIC_IOMAP, but also don't
-     provide their own version of iomem_is_ioport().
+[adding lakml to Cc for wider audience]
 
-Once all architectures that support ports provide iomem_is_ioport(), the
-arch-specific definitions for pci_iounmap() can be removed and the archs
-can use the generic implementation, instead.
+On Wed, Jan 03, 2024 at 10:06:03PM +0100, Duje Mihanovi=C4=87 wrote:
+> On ARM64 platforms, id->data is a 64-bit value and casting it to a
+> 32-bit integer causes build errors. Cast it to the corresponding enum
+> instead.
+>=20
+> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
+> ---
+> This patch is necessary for my Marvell PXA1908 series to compile successf=
+ully
+> with allyesconfig:
+> https://lore.kernel.org/all/20231102-pxa1908-lkml-v7-0-cabb1a0cb52b@skole=
+=2Ehr/
+> ---
+>  drivers/soc/pxa/ssp.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/soc/pxa/ssp.c b/drivers/soc/pxa/ssp.c
+> index a1e8a07f7275..e2ffd8fd7e13 100644
+> --- a/drivers/soc/pxa/ssp.c
+> +++ b/drivers/soc/pxa/ssp.c
+> @@ -152,11 +152,11 @@ static int pxa_ssp_probe(struct platform_device *pd=
+ev)
+>  	if (dev->of_node) {
+>  		const struct of_device_id *id =3D
+>  			of_match_device(of_match_ptr(pxa_ssp_of_ids), dev);
+> -		ssp->type =3D (int) id->data;
+> +		ssp->type =3D (enum pxa_ssp_type) id->data;
 
-Create a unified version of pci_iounmap() in drivers/pci/iomap.c.
-Provide the function iomem_is_ioport() in include/asm-generic/io.h
-(generic) and lib/iomap.c ("pseudo-generic" for x86).
+I wonder if this is a long-term fix. The error that the compiler throws
+is:
 
-Remove the CONFIG_GENERIC_IOMAP guard around
-ARCH_WANTS_GENERIC_PCI_IOUNMAP so that configs that set
-CONFIG_GENERIC_PCI_IOMAP without CONFIG_GENERIC_IOMAP still get the
-function.
+	drivers/soc/pxa/ssp.c:155:29: error: cast from pointer to integer of diffe=
+rent size [-Werror=3Dpointer-to-int-cast]
+	  155 |                 ssp->type =3D (int) id->data;
+	      |                             ^
 
-Add TODOs for follow-up work on the "generic is not generic but
-x86-specific"-Problem.
+enum pxa_ssp_type is an integer type, too, and its width could be
+smaller than 64 bit, too.
 
-Suggested-by: Arnd Bergmann <arnd@kernel.org>
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/pci/iomap.c         | 46 +++++++++++++------------------------
- include/asm-generic/io.h    | 27 ++++++++++++++++++++--
- include/asm-generic/iomap.h | 21 +++++++++++++++++
- lib/iomap.c                 | 28 ++++++++++++++++------
- 4 files changed, 83 insertions(+), 39 deletions(-)
+The following would also help:
 
-diff --git a/drivers/pci/iomap.c b/drivers/pci/iomap.c
-index 91285fcff1ba..b7faf22ec8f5 100644
---- a/drivers/pci/iomap.c
-+++ b/drivers/pci/iomap.c
-@@ -135,44 +135,30 @@ void __iomem *pci_iomap_wc(struct pci_dev *dev, int bar, unsigned long maxlen)
- EXPORT_SYMBOL_GPL(pci_iomap_wc);
- 
- /*
-- * pci_iounmap() somewhat illogically comes from lib/iomap.c for the
-- * CONFIG_GENERIC_IOMAP case, because that's the code that knows about
-- * the different IOMAP ranges.
-+ * This check is still necessary due to legacy reasons.
-  *
-- * But if the architecture does not use the generic iomap code, and if
-- * it has _not_ defined it's own private pci_iounmap function, we define
-- * it here.
-- *
-- * NOTE! This default implementation assumes that if the architecture
-- * support ioport mapping (HAS_IOPORT_MAP), the ioport mapping will
-- * be fixed to the range [ PCI_IOBASE, PCI_IOBASE+IO_SPACE_LIMIT [,
-- * and does not need unmapping with 'ioport_unmap()'.
-- *
-- * If you have different rules for your architecture, you need to
-- * implement your own pci_iounmap() that knows the rules for where
-- * and how IO vs MEM get mapped.
-- *
-- * This code is odd, and the ARCH_HAS/ARCH_WANTS #define logic comes
-- * from legacy <asm-generic/io.h> header file behavior. In particular,
-- * it would seem to make sense to do the iounmap(p) for the non-IO-space
-- * case here regardless, but that's not what the old header file code
-- * did. Probably incorrectly, but this is meant to be bug-for-bug
-- * compatible.
-+ * TODO: Have all architectures that provide their own pci_iounmap() provide
-+ * iomem_is_ioport() instead. Remove this #if afterwards.
-  */
- #if defined(ARCH_WANTS_GENERIC_PCI_IOUNMAP)
- 
--void pci_iounmap(struct pci_dev *dev, void __iomem *p)
-+/**
-+ * pci_iounmap - Unmapp a mapping
-+ * @dev: PCI device the mapping belongs to
-+ * @addr: start address of the mapping
-+ *
-+ * Unmapp a PIO or MMIO mapping.
-+ */
-+void pci_iounmap(struct pci_dev *dev, void __iomem *addr)
- {
--#ifdef ARCH_HAS_GENERIC_IOPORT_MAP
--	uintptr_t start = (uintptr_t) PCI_IOBASE;
--	uintptr_t addr = (uintptr_t) p;
--
--	if (addr >= start && addr < start + IO_SPACE_LIMIT) {
--		ioport_unmap(p);
-+#ifdef CONFIG_HAS_IOPORT_MAP
-+	if (iomem_is_ioport(addr)) {
-+		ioport_unmap(addr);
- 		return;
- 	}
- #endif
--	iounmap(p);
-+
-+	iounmap(addr);
- }
- EXPORT_SYMBOL(pci_iounmap);
- 
-diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-index bac63e874c7b..58c7bf4080da 100644
---- a/include/asm-generic/io.h
-+++ b/include/asm-generic/io.h
-@@ -1129,11 +1129,34 @@ extern void ioport_unmap(void __iomem *p);
- #endif /* CONFIG_GENERIC_IOMAP */
- #endif /* CONFIG_HAS_IOPORT_MAP */
- 
--#ifndef CONFIG_GENERIC_IOMAP
-+/*
-+ * TODO:
-+ * remove this once all architectures replaced their pci_iounmap() with
-+ * a custom implementation of iomem_is_ioport().
-+ */
- #ifndef pci_iounmap
-+#define pci_iounmap pci_iounmap
- #define ARCH_WANTS_GENERIC_PCI_IOUNMAP
-+#endif /* pci_iounmap */
-+
-+/*
-+ * This function is a helper only needed for the generic pci_iounmap().
-+ * It's provided here if the architecture does not provide its own version.
-+ */
-+#ifndef iomem_is_ioport
-+#define iomem_is_ioport iomem_is_ioport
-+static inline bool iomem_is_ioport(void __iomem *addr_raw)
-+{
-+#ifdef CONFIG_HAS_IOPORT
-+	uintptr_t start = (uintptr_t)PCI_IOBASE;
-+	uintptr_t addr = (uintptr_t)addr_raw;
-+
-+	if (addr >= start && addr < start + IO_SPACE_LIMIT)
-+		return true;
- #endif
--#endif
-+	return false;
-+}
-+#endif /* iomem_is_ioport */
- 
- #ifndef xlate_dev_mem_ptr
- #define xlate_dev_mem_ptr xlate_dev_mem_ptr
-diff --git a/include/asm-generic/iomap.h b/include/asm-generic/iomap.h
-index 196087a8126e..2cdc6988a102 100644
---- a/include/asm-generic/iomap.h
-+++ b/include/asm-generic/iomap.h
-@@ -110,6 +110,27 @@ static inline void __iomem *ioremap_np(phys_addr_t offset, size_t size)
- }
- #endif
- 
-+/*
-+ * If CONFIG_GENERIC_IOMAP is selected and the architecture does NOT provide its
-+ * own version, ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT makes sure that the generic
-+ * version from asm-generic/io.h is NOT used and instead the second "generic"
-+ * version from lib/iomap.c is used.
-+ *
-+ * There are currently two generic versions because of a difficult cleanup
-+ * process. Namely, the version in lib/iomap.c once was really generic when IA64
-+ * still existed. Today, it's only really used by x86.
-+ *
-+ * TODO: Move the version from lib/iomap.c to x86 specific code. Then, remove
-+ * this ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT-mechanism.
-+ */
-+#ifdef CONFIG_GENERIC_IOMAP
-+#ifndef iomem_is_ioport
-+#define iomem_is_ioport iomem_is_ioport
-+bool iomem_is_ioport(void __iomem *addr);
-+#define ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT
-+#endif /* iomem_is_ioport */
-+#endif /* CONFIG_GENERIC_IOMAP */
-+
- #include <asm-generic/pci_iomap.h>
- 
- #endif
-diff --git a/lib/iomap.c b/lib/iomap.c
-index 4f8b31baa575..eb9a879ebf42 100644
---- a/lib/iomap.c
-+++ b/lib/iomap.c
-@@ -418,12 +418,26 @@ EXPORT_SYMBOL(ioport_map);
- EXPORT_SYMBOL(ioport_unmap);
- #endif /* CONFIG_HAS_IOPORT_MAP */
- 
--#ifdef CONFIG_PCI
--/* Hide the details if this is a MMIO or PIO address space and just do what
-- * you expect in the correct way. */
--void pci_iounmap(struct pci_dev *dev, void __iomem * addr)
-+/*
-+ * If CONFIG_GENERIC_IOMAP is selected and the architecture does NOT provide its
-+ * own version, ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT makes sure that the generic
-+ * version from asm-generic/io.h is NOT used and instead the second "generic"
-+ * version from this file here is used.
-+ *
-+ * There are currently two generic versions because of a difficult cleanup
-+ * process. Namely, the version in lib/iomap.c once was really generic when IA64
-+ * still existed. Today, it's only really used by x86.
-+ *
-+ * TODO: Move this function to x86-specific code.
-+ */
-+#if defined(ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT)
-+bool iomem_is_ioport(void __iomem *addr)
- {
--	IO_COND(addr, /* nothing */, iounmap(addr));
-+	unsigned long port = (unsigned long __force)addr;
-+
-+	if (port > PIO_OFFSET && port < PIO_RESERVED)
-+		return true;
-+
-+	return false;
- }
--EXPORT_SYMBOL(pci_iounmap);
--#endif /* CONFIG_PCI */
-+#endif /* ARCH_WANTS_GENERIC_IOMEM_IS_IOPORT */
--- 
-2.43.0
+diff --git a/drivers/soc/pxa/ssp.c b/drivers/soc/pxa/ssp.c
+index a1e8a07f7275..095d997eb886 100644
+--- a/drivers/soc/pxa/ssp.c
++++ b/drivers/soc/pxa/ssp.c
+@@ -96,13 +96,13 @@ EXPORT_SYMBOL(pxa_ssp_free);
+=20
+ #ifdef CONFIG_OF
+ static const struct of_device_id pxa_ssp_of_ids[] =3D {
+-	{ .compatible =3D "mrvl,pxa25x-ssp",	.data =3D (void *) PXA25x_SSP },
+-	{ .compatible =3D "mvrl,pxa25x-nssp",	.data =3D (void *) PXA25x_NSSP },
+-	{ .compatible =3D "mrvl,pxa27x-ssp",	.data =3D (void *) PXA27x_SSP },
+-	{ .compatible =3D "mrvl,pxa3xx-ssp",	.data =3D (void *) PXA3xx_SSP },
+-	{ .compatible =3D "mvrl,pxa168-ssp",	.data =3D (void *) PXA168_SSP },
+-	{ .compatible =3D "mrvl,pxa910-ssp",	.data =3D (void *) PXA910_SSP },
+-	{ .compatible =3D "mrvl,ce4100-ssp",	.data =3D (void *) CE4100_SSP },
++	{ .compatible =3D "mrvl,pxa25x-ssp",	.driver_data =3D PXA25x_SSP },
++	{ .compatible =3D "mvrl,pxa25x-nssp",	.driver_data =3D PXA25x_NSSP },
++	{ .compatible =3D "mrvl,pxa27x-ssp",	.driver_data =3D PXA27x_SSP },
++	{ .compatible =3D "mrvl,pxa3xx-ssp",	.driver_data =3D PXA3xx_SSP },
++	{ .compatible =3D "mvrl,pxa168-ssp",	.driver_data =3D PXA168_SSP },
++	{ .compatible =3D "mrvl,pxa910-ssp",	.driver_data =3D PXA910_SSP },
++	{ .compatible =3D "mrvl,ce4100-ssp",	.driver_data =3D CE4100_SSP },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, pxa_ssp_of_ids);
+@@ -152,7 +152,7 @@ static int pxa_ssp_probe(struct platform_device *pdev)
+ 	if (dev->of_node) {
+ 		const struct of_device_id *id =3D
+ 			of_match_device(of_match_ptr(pxa_ssp_of_ids), dev);
+-		ssp->type =3D (int) id->data;
++		ssp->type =3D id->driver_data;
+ 	} else {
+ 		const struct platform_device_id *id =3D
+ 			platform_get_device_id(pdev);
+diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetabl=
+e.h
+index f458469c5ce5..fbe16089e4bb 100644
+--- a/include/linux/mod_devicetable.h
++++ b/include/linux/mod_devicetable.h
+@@ -283,7 +283,10 @@ struct of_device_id {
+ 	char	name[32];
+ 	char	type[32];
+ 	char	compatible[128];
+-	const void *data;
++	union {
++		const void *data;
++		kernel_ulong_t driver_data;
++	};
+ };
+=20
+ /* VIO */
 
+For this driver the change would be nice, as several casts can be
+dropped.
+
+>  	} else {
+>  		const struct platform_device_id *id =3D
+>  			platform_get_device_id(pdev);
+> -		ssp->type =3D (int) id->driver_data;
+> +		ssp->type =3D (enum pxa_ssp_type) id->driver_data;
+
+This one isn't problematic in my build configuration and you could just
+drop the cast completely.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--52dkhi32d3pgibs4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWWdakACgkQj4D7WH0S
+/k5kkAf/SdNq0pMzzew8DK1KS9BHkwqYm63O609O6pP+m+aJlHmSt2HGFPIhEV4I
+aGasfXdwyiF+QJ3oGOmBA4j7+AcGAB5sog1Ofhh8GzOAft3gntrF/TiQhCXHHUNX
+tH7M/v5gqdwBwDHvyF6b8LPNL/1LZ784Gtiso+G6geuTmA7veXkaW4gXuFTvWJfT
+dtEvYqrlZharOUHKEtBF2Yazt42zub/pqDP1ZNgvvuT+1WCLMdCRdJjDZRGdC3/b
+Nl6ANRbOhTZPhvAzuryKug8e9tBAhqdLR0UhfXJ/b9shUr8zlLB96Rgw5q+HWFcY
+qjNWazn8ABaFDQn6pX3Ep1O2SzGk1g==
+=ZZi0
+-----END PGP SIGNATURE-----
+
+--52dkhi32d3pgibs4--
