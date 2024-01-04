@@ -1,136 +1,172 @@
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F4224B4F
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 16:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=landley.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B29249E8
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 16:32:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20230601.gappssmtp.com header.i=@landley-net.20230601.gappssmtp.com header.b="FGndA+ao"
-Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-7ba9c26e14aso20360539f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 08:32:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20230601.gappssmtp.com; s=20230601; t=1704385946; x=1704990746; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GZozTrRnGVXzy31zBAY9Io4KyrsVmk5XpdKMFCKbp5Q=;
-        b=FGndA+aoe6WDkgaivOKRHwydkzkusJ8CuvZXYuM5KMprCew/0HZKAHsTxfP7JXLYRM
-         FfCvbWbi3xXR5BqM3gdc6WZGBISwuoAip158x+ftCkm64Z9NCbKT6MqCPMSwCzYej+EG
-         2RzZ0bHZOqOmBudyeTCWgnD/RkDHyGNdZP0Rpwm+TEfDvCs9p+El9xGlUiitquXlNtvy
-         HQ/yTlNnFdo5pRpvoIG1sRBqSFnQRYwc2HwzIwO7KaChSCqaKtxkaoWcaFd0D+LHhccx
-         dWpLZ+W5pLuVlaUShb9dcUYge5KF1U7bxcJhG0lETalKMntPslu3WRryXCRdi5A21oG7
-         rncQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TFZCiWFR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704385963;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=akWgTmFa47rUgoDK+eCBTLMBxssII8Qcvv2CCCWck0g=;
+	b=TFZCiWFREfR/dKvowRqAxIBuLvnttqjhVzkqOSYvhueuHFRGfhmmdkXpyZKmE+R4soobSf
+	WkXE2j1JT+BrF4yuxHSoakXhJeucftiZP8P5SYkR2/LYso/QrE8cRVeneT+iXKUxGFwzau
+	jsM9yOHhg+mSk2Lm0KR9BGW7N39odko=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-184-0mKYmQpDOX2PC0P5-Q4yjA-1; Thu, 04 Jan 2024 11:32:42 -0500
+X-MC-Unique: 0mKYmQpDOX2PC0P5-Q4yjA-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5561bf805daso284894a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 08:32:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704385946; x=1704990746;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GZozTrRnGVXzy31zBAY9Io4KyrsVmk5XpdKMFCKbp5Q=;
-        b=BCejj8NBtFB24qh1IPm+UaTNIugIOfChswHA0r0kJXLS3cpDPgcjY21U3aJllzDxYK
-         zH4hf+XOhuHSSzsw7KTn6r0xxPLvhjCPMaMtYj9xMIxZ3GB/y8xRIN7iEpCHGBchT2MM
-         SplBYj4hkunFQalqCmGxpwwhpEGp31yt7o8u9u1K8phU0M9GCApWE7KzPkW+sLkf/zV3
-         KS9HZtdIEOk2lC4R9xxiIukKzNP5wTT1IS+1cWgNB3Jq9VtCc/PnlCIEJmLGfF8gaP13
-         AlvwSXuEzOjbHS4ADYGD7WYhke4qShMNgoagPs6b6GYqVTnS51xkIQWIx4mUY44WOKJd
-         h/fw==
-X-Gm-Message-State: AOJu0YwPIMKoMVZGK6O6iC283BIjpruBLtY8XYQLWEXEg8ka+/kpkzFl
-	0u9UQq5LUV+75c3kyCvNzILRKW8RCkjeFg==
-X-Google-Smtp-Source: AGHT+IGfv7ALW3+Jd+SE55tGh732azgppxaH8IixXrfYqjh5vvjsIK9HlVCx+k8e0bLSIH6hQ0rZAQ==
-X-Received: by 2002:a6b:e511:0:b0:7ba:7d6a:652c with SMTP id y17-20020a6be511000000b007ba7d6a652cmr543650ioc.3.1704385946492;
-        Thu, 04 Jan 2024 08:32:26 -0800 (PST)
-Received: from [172.16.32.83] ([198.232.126.202])
-        by smtp.gmail.com with ESMTPSA id n21-20020a02a915000000b0046df6a4574dsm212304jam.161.2024.01.04.08.32.25
+        d=1e100.net; s=20230601; t=1704385961; x=1704990761;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=akWgTmFa47rUgoDK+eCBTLMBxssII8Qcvv2CCCWck0g=;
+        b=n671IEf1vDn+EcsfEQ6emTTywgpM6PShcLgJn4vmgG7fEc0zjDoy53nV7MogKtWU7r
+         dlGH1+Dhrc+7zfGBDmC1u0qpPhL2zp32KjccHGTqckYFKIRjMQNuvxc67JJ5iPSusj/r
+         Gw5Br0f9Q1eYsuX8x+aOGi3slWOdiA/xcKm+J7Ev8mdgrQ3suG0bixRQvo6YnRwno/h7
+         pojPgwRGZRDxEfTW37nOAXJVAQ6/Hk9S5WQFVVY1sseNAtm9ahh3NaZObkEIYp2gpHAL
+         hiCGZHp9V8oO3qwQVMt4W/Aivk7TFpxx66RsfUmdYELhKkNzwDZtcMVEVmGfzIS0B8Ef
+         gHkg==
+X-Gm-Message-State: AOJu0Yy+0hgoxgOQamdDIc24iWsEPEYzptfUUA27fBmckiPbdM4etRRQ
+	SiAyoQoz7ZOdpv+E2BEzNOcyOO6mZ1yAq1U8kOIrxvmFXEIl2pbJpe5chjKlJ4eXiKw7Mq92iiH
+	XGkFS45A4Zei/tqraQJaQfLOou4iyudV2
+X-Received: by 2002:a50:9b41:0:b0:555:beee:3107 with SMTP id a1-20020a509b41000000b00555beee3107mr643815edj.54.1704385960864;
+        Thu, 04 Jan 2024 08:32:40 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGkU3VZtlbN/tQ5N+t31BDoSe635YfcI99gHwRMBuflYlar3qJChwlxHQkPU1QvyoHUrRjhwQ==
+X-Received: by 2002:a50:9b41:0:b0:555:beee:3107 with SMTP id a1-20020a509b41000000b00555beee3107mr643804edj.54.1704385960573;
+        Thu, 04 Jan 2024 08:32:40 -0800 (PST)
+Received: from ?IPV6:2001:b07:6468:f312:1c09:f536:3de6:228c? ([2001:b07:6468:f312:1c09:f536:3de6:228c])
+        by smtp.googlemail.com with ESMTPSA id ev14-20020a056402540e00b00556e497cc96sm1967009edb.84.2024.01.04.08.32.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jan 2024 08:32:26 -0800 (PST)
-Message-ID: <c7b8d248-fb59-0476-dea8-89d40207460f@landley.net>
-Date: Thu, 4 Jan 2024 10:38:53 -0600
+        Thu, 04 Jan 2024 08:32:39 -0800 (PST)
+Message-ID: <b327b546-4a5f-462d-baeb-804a33bd3f6a@redhat.com>
+Date: Thu, 4 Jan 2024 17:32:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v3] rootfs: Fix support for rootfstype= when root= is
- given
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] Guest OSes die simultaneously (bisected)
+To: paulmck@kernel.org
+Cc: Sean Christopherson <seanjc@google.com>, Like Xu
+ <like.xu@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Luwei Kang <luwei.kang@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ Breno Leitao <leitao@debian.org>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>
+References: <3d8f5987-e09c-4dd2-a9c0-8ba22c9e948a@paulmck-laptop>
+ <88f49775-2b56-48cc-81b8-651a940b7d6b@paulmck-laptop>
+ <ZZX6pkHnZP777DVi@google.com>
+ <77d7a3e3-f35e-4507-82c2-488405b25fa4@paulmck-laptop>
+ <c6d5dd6e-2dec-423c-af39-213f17b1a9db@paulmck-laptop>
+ <CABgObfYG-ZwiRiFeGbAgctLfj7+PSmgauN9RwGMvZRfxvmD_XQ@mail.gmail.com>
+ <b2775ea5-20c9-4dff-b4b1-bbb212065a22@paulmck-laptop>
 Content-Language: en-US
-To: Askar Safin <safinaskar@gmail.com>
-Cc: Stefan Berger <stefanb@linux.ibm.com>, gregkh@linuxfoundation.org,
- initramfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, zohar@linux.ibm.com
-References: <CAPnZJGDcNwPLbzC99qNQ+bRMwxPU-Z0xe=TD6DWQU=0MNyeftA@mail.gmail.com>
- <d4b227de-d609-aef2-888b-203dbcf06707@landley.net>
- <CAPnZJGBeV-E_AN8GnTfkaJvRtBmCeMYYCt+O0XMsc3kDULRuKg@mail.gmail.com>
- <fb776d99-1956-4e1b-9afc-84f27ca40f46@linux.ibm.com>
- <0879141d-462c-7e94-7c87-7a5b5422b8ed@landley.net>
- <e32077de-b159-4a7b-89a3-e1925239142f@linux.ibm.com>
- <fcb45898-0699-878f-0656-f570607fbed4@landley.net>
- <CAPnZJGAr8BfTHmn3QZnJ6dnVCQsUnUASmdH4tzz0-QMwHmZZLQ@mail.gmail.com>
-From: Rob Landley <rob@landley.net>
-In-Reply-To: <CAPnZJGAr8BfTHmn3QZnJ6dnVCQsUnUASmdH4tzz0-QMwHmZZLQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+From: Paolo Bonzini <pbonzini@redhat.com>
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <b2775ea5-20c9-4dff-b4b1-bbb212065a22@paulmck-laptop>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 1/4/24 00:06, Askar Safin wrote:
-> On Sat, Dec 30, 2023 at 8:01 PM Rob Landley <rob@landley.net> wrote:
->> I've been following the initramfs xattr support threads forever:
-> 
-> Here is my proposal: add to the kernel support for catar (
-> https://0pointer.net/blog/casync-a-tool-for-distributing-file-system-images.html
-> ) in addition to cpio. catar has the following advantages:
+On 1/4/24 17:06, Paul E. McKenney wrote:
+> Although I am happy to have been able to locate the commit (and even
+> happier that Sean spotted the problem and that you quickly pushed the
+> fix to mainline!), chasing this consumed a lot of time and systems over
+> an embarrassingly large number of months.  As in I first spotted this
+> bug in late July.  Despite a number of increasingly complex attempts,
+> bisection became feasible only after the buggy commit was backported to
+> our internal v5.19 code base.  🙁
 
-Didn't we just have a thread about the inadvisability of adding more ways to do
-the same thing, with each existing codepath still having to be supported forever?
+Yes, this strikes two sore points.
 
-And your solution is a link to the website of Lenart Pottering, author and
-maintainer of systemd. You want to put systemd code into the kernel.
+One is that I have also experienced being able to bisect only with a 
+somewhat more linear history (namely the CentOS Stream 9 aka c9s 
+frankenkernel [1]) and not with upstream.  Even if the c9s kernel is not 
+a fully linear set of commits, there's some benefit from merge commits 
+that consist of slightly more curated set of patches, where each merge 
+commit includes both new features and bugfixes.  Unfortunately, whether 
+you'll be able to do this with the c9s kernel depends a lot on the 
+subsystems involved and on the bug.  Both are factors that may or may 
+not be known in advance.
 
-> - catar is simple and reproducible. For the same directory tree the
-> same bit-precise catar file is generated, which is good for
-> cryptographic signatures.
+The other, of course, is testing.  The KVM selftests infrastructure is 
+meant for this kind of white box problem, but the space of tests that 
+can be written is so large, that there's always too few tests.  It 
+shines when you have a clear bisection but an unclear fix (in the past I 
+have had cases where spending two days to write a test led me to writing 
+a fix in thirty minutes), but boosting the reproducibility is always a 
+good thing.
 
-I can trivially reproduce the same cpio each time from the same tree, the trick
-is just fetching the whole directory and sorting it before processing (to
-squelch hash-impacted readdir() return order from the filesystem).
+> And please understand that I am not casting shade on those who wrote,
+> reviewed, and committed that buggy commit.  As in I freely confess that
+> I had to stare at Sean's fix for a few minutes before I figured out what
+> was going on.
 
-> As opposed to tar's monstrosity (
-> https://www.cyphar.com/blog/post/20190121-ociv2-images-i-tar )
-> - catar has support for xattr.
+Oh don't worry about that---rather, I am going to cast a shade on those 
+that did not review the commit, namely me.  I am somewhat obsessed with 
+Boolean logic and *probably* I would have caught it, or would have asked 
+to split the use of designated initializers to a separate patch.  Any of 
+the two could, at least potentially, have saved you quite some time.
 
-Adding xattr support to my toybox cpio implementation is maybe 10 lines of C, I
-assume the other implementations aren't that much more tangled. The question was
-always a largely aesthetic issue of file format.
+> Instead, the point I am trying to make is that carefully
+> constructed tests can serve as tireless and accurate code reviewers.
+> This won't ever replace actual code review, but my experience indicates
+> that it will help find more bugs more quickly and more easily.
 
-Tar is NOT well-defined. I say this as someone who has IMPLEMENTED tar and has a
-pending TODO item to patch up YET ANOTHER funky corner case du jour somebody hit:
+TBH this (conflict between virtual addresses on the host and the guest 
+leading to corruption of the guest) is probably not the kind of 
+adversarial test that one would have written or suggested right off the 
+bat.  But it should be written now indeed.
 
-https://github.com/landley/toybox/issues/469
+Paolo
 
-Inventing a NEW file format... there are multiple dozens already: zip, arj,
-lharc, zoo... You could theoretically extract squashfs into initramfs because
-technically it's an archive format.
+[1] 
+https://www.theregister.com/2023/06/30/enterprise_distro_feature_devconf/
 
-Good grief, there's an xkcd on that:
-
-https://xkcd.com/927/
-
-> It has support for nearly all types of
-
-"nearly"
-
-Please no.
-
-> metainformation Linux offers (32 bit UIDs, nanosecond timestamps,
-> "disable CoW" flag and various other flags, selinux file labels, file
-> capabilities, etc). All this metainformation can be disabled if
-> needed. So, next time we will want to add some new type of
-> metainformation, there will be no need for lengthy discussions about
-> how it should be stored.
-
-There's no real need NOW. "We did not come to an agreement in email" does not
-mean "let's add a new unrelated format". It means let's carve out an hour to
-actually speak to each other, by voice and maybe video, using this thing called
-the internet. (Without covid we'd have had a BOF at some conference by now.)
-
-Rob
