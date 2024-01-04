@@ -1,89 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from server.atrad.com.au (server.atrad.com.au [150.101.241.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA480225AF
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 12:22:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d6CtpzgY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 156B5C433C7;
-	Thu,  4 Jan 2024 12:22:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704370973;
-	bh=tnsTGxjomhIrnB3BnUgfs/p8K5ZjHkHT6ioMQvM9KRM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=d6CtpzgY+Ll4YTDyRczpFqx71h8N1oJ8wPHn5Qy4hd63j/O28c4vHxBg7/gMfTmiX
-	 KlITUW+Zuf8CtcDsO3hnKOXiFVltB0Anjs1pEGKJa/ePlp+3J25DuWDF9hdnWgf3Kq
-	 DSybo3EZdwd89cUeYZnYJneAo34IUqqO/FM2lxTZ0/PURWEuSt850n9ZUAMC29NGJc
-	 lpDyTnCMPgusz4o2OvM5wrg4vmoFPCk5vPCPI9Jh9uts4PXwmIR5EmI4aiU/RfX52Q
-	 3p48grv63KZDILeYoDnEUrc+LXjU/3rOy2Q9O7XK5JfZnlornYuK0qwnlnKuDk5Uur
-	 NLUxrCx78lu9Q==
-Message-ID: <a041b9a4-213f-47ae-ad33-6152213ad376@kernel.org>
-Date: Thu, 4 Jan 2024 06:22:52 -0600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99AA921373;
+	Thu,  4 Jan 2024 12:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=just42.net
+Received: from marvin.atrad.com.au (marvin.atrad.com.au [192.168.0.2])
+	by server.atrad.com.au (8.17.2/8.17.2) with ESMTPS id 404CIq6K028017
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Thu, 4 Jan 2024 22:48:53 +1030
+Date: Thu, 4 Jan 2024 22:48:52 +1030
+From: Jonathan Woithe <jwoithe@just42.net>
+To: Igor Mammedov <imammedo@redhat.com>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] PCI: Solve two bridge window sizing issues
+Message-ID: <ZZaiLOR4aO84CG2S@marvin.atrad.com.au>
+References: <20231228165707.3447-1-ilpo.jarvinen@linux.intel.com>
+ <20240104131210.71f44d4b@imammedo.users.ipa.redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 09/11] firmware: stratix10-svc: Convert to platform remove
- callback returning void
-Content-Language: en-US
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: kernel@pengutronix.de, linux-kernel@vger.kernel.org
-References: <cover.1703693980.git.u.kleine-koenig@pengutronix.de>
- <e574041cdce2e4e69f729dfa726a6d090762cff9.1703693980.git.u.kleine-koenig@pengutronix.de>
-From: Dinh Nguyen <dinguyen@kernel.org>
-In-Reply-To: <e574041cdce2e4e69f729dfa726a6d090762cff9.1703693980.git.u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240104131210.71f44d4b@imammedo.users.ipa.redhat.com>
+X-MIMEDefang-action: accept
+X-Scanned-By: MIMEDefang 2.86 on 192.168.0.1
 
-On 12/27/23 10:26, Uwe Kleine-König wrote:
-> The .remove() callback for a platform driver returns an int which makes
-> many driver authors wrongly assume it's possible to do error handling by
-> returning an error code. However the value returned is ignored (apart
-> from emitting a warning) and this typically results in resource leaks.
+On Thu, Jan 04, 2024 at 01:12:10PM +0100, Igor Mammedov wrote:
+> On Thu, 28 Dec 2023 18:57:00 +0200
+> Ilpo J�rvinen <ilpo.jarvinen@linux.intel.com> wrote:
 > 
-> To improve here there is a quest to make the remove callback return
-> void. In the first step of this quest all drivers are converted to
-> .remove_new(), which already returns void. Eventually after all drivers
-> are converted, .remove_new() will be renamed to .remove().
+> > Hi all,
+> > 
+> > Here's a series that contains two fixes to PCI bridge window sizing
+> > algorithm. Together, they should enable remove & rescan cycle to work
+> > for a PCI bus that has PCI devices with optional resources and/or
+> > disparity in BAR sizes.
+> > 
+> > For the second fix, I chose to expose find_empty_resource_slot() from
+> > kernel/resource.c because it should increase accuracy of the cannot-fit
+> > decision (currently that function is called find_resource()). In order
+> > to do that sensibly, a few improvements seemed in order to make its
+> > interface and name of the function sane before exposing it. Thus, the
+> > few extra patches on resource side.
+> > 
+> > Unfortunately I don't have a reason to suspect these would help with
+> > the issues related to the currently ongoing resource regression
+> > thread [1].
 > 
-> Trivially convert this driver from always returning zero in the remove
-> callback to the void returning variant.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
->   drivers/firmware/stratix10-svc.c | 6 ++----
->   1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
-> index c693da60e9a9..528f37417aea 100644
-> --- a/drivers/firmware/stratix10-svc.c
-> +++ b/drivers/firmware/stratix10-svc.c
-> @@ -1251,7 +1251,7 @@ static int stratix10_svc_drv_probe(struct platform_device *pdev)
->   	return ret;
->   }
->   
-> -static int stratix10_svc_drv_remove(struct platform_device *pdev)
-> +static void stratix10_svc_drv_remove(struct platform_device *pdev)
->   {
->   	struct stratix10_svc *svc = dev_get_drvdata(&pdev->dev);
->   	struct stratix10_svc_controller *ctrl = platform_get_drvdata(pdev);
-> @@ -1267,13 +1267,11 @@ static int stratix10_svc_drv_remove(struct platform_device *pdev)
->   	if (ctrl->genpool)
->   		gen_pool_destroy(ctrl->genpool);
->   	list_del(&ctrl->node);
-> -
-> -	return 0;
->   }
->   
->   static struct platform_driver stratix10_svc_driver = {
->   	.probe = stratix10_svc_drv_probe,
-> -	.remove = stratix10_svc_drv_remove,
-> +	.remove_new = stratix10_svc_drv_remove,
->   	.driver = {
->   		.name = "stratix10-svc",
->   		.of_match_table = stratix10_svc_drv_match,
+> Jonathan,
+> can you test this series on affected machine with broken kernel to see if
+> it's of any help in your case?
 
-Acked-by: Dinh Nguyen <dinguyen@kernel.org>
+Certainly, but it will have to wait until next Thursday (11 Jan 2024).  I'm
+still on leave this week, and when at work I only have physical access to
+the machine concerned on Thursdays at present.
+
+Which kernel would you prefer I apply the series to?
+
+Regards
+  jonathan
