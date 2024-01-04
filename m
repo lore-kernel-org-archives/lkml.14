@@ -1,22 +1,28 @@
-Received: from mail-m12746.qiye.163.com (mail-m12746.qiye.163.com [115.236.127.46])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309811DFE5;
-	Thu,  4 Jan 2024 06:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C2A71F927;
+	Thu,  4 Jan 2024 06:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="K6TsTIX4"
-DKIM-Signature: a=rsa-sha256;
-	b=K6TsTIX4TaA83bO7yJMwivg11xmfitXtEk6R3b7jRBmWjgGrJDN/E71L+YisiFfZu541Q8iSSuuRNH56IHxNKbqZck5dZnQY3E4NJWF1Dl7rRkoghky7UL3l7Hea+nqi/Zqs4TK1BFkKdPmTPmBicTSQUcNBXrfKYkYZZeVhhhw=;
-	s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=9EAWngpmrjmIVASbpi542X7zUSHejpcQvkpGhWlQL2s=;
-	h=date:mime-version:subject:message-id:from;
-Received: from [172.16.12.69] (unknown [58.22.7.114])
-	by mail-m11877.qiye.163.com (Hmail) with ESMTPA id 5AD08400335;
-	Thu,  4 Jan 2024 11:01:47 +0800 (CST)
-Message-ID: <b1b1f215-738d-4d4d-90cf-0ea5cea11c14@rock-chips.com>
-Date: Thu, 4 Jan 2024 11:01:47 +0800
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b="AJjKAzYK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1704350555; x=1704955355; i=quwenruo.btrfs@gmx.com;
+	bh=xida4jYMBmqOqXEefFj9KpfEQTtSxYYAjtuqmqphSmI=;
+	h=X-UI-Sender-Class:Date:Subject:To:References:From:In-Reply-To;
+	b=AJjKAzYKykbZypYugkmRWSuMZ8Z2EMUp0jgQM1BWrY2P+rNfwsKfQPYb/WovdZSB
+	 6dVjuctFqGqhGEvHIuBVPUgbVJTV/RqufXjds0eeOfdsaSKNC+Azi59O3FFaEW1Hm
+	 Rp2mnXOa2DCZ4dRVOPBiadYZ47wPlnVor1hosRzyNCZ4z043ge45D6nmN6JC6eZuZ
+	 h407avVR3H+4YM0daRzJlTPE58trRVg21/1nTsUtiGti6dNLNPXiBJ88jslHp7SR5
+	 uy9Ey53UhwMuVRSSpuhNK3Sq/9CEzw06jp005srBn5eEAAkmZVEkdYA0fKuC73L83
+	 +6kfA1AExe9vKjGhCg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [172.16.0.153] ([118.211.64.174]) by mail.gmx.net (mrgmx105
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MFsUp-1rQX252zp1-00HKa6; Thu, 04
+ Jan 2024 07:42:35 +0100
+Message-ID: <d321160b-b895-4049-8ac6-4ff6ce5df7d4@gmx.com>
+Date: Thu, 4 Jan 2024 17:12:25 +1030
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -24,325 +30,214 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: shawn.lin@rock-chips.com, linux-kernel@vger.kernel.org,
- Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson
- <ulf.hansson@linaro.org>, Jyan Chou <jyanchou@realtek.com>,
- linux-mmc@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] mmc: sdhci-of-dwcmshc: Implement SDHCI CQE support
-Content-Language: en-GB
-To: Sergey Khimich <serghox@gmail.com>
-References: <20231231144619.758290-1-serghox@gmail.com>
- <20231231144619.758290-3-serghox@gmail.com>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <20231231144619.758290-3-serghox@gmail.com>
+Subject: Re: [PATCH v3 2/4] kstrtox: introduce a safer version of memparse()
+Content-Language: en-US
+To: Randy Dunlap <rdunlap@infradead.org>, Qu Wenruo <wqu@suse.com>,
+ linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ akpm@linux-foundation.org, christophe.jaillet@wanadoo.fr,
+ andriy.shevchenko@linux.intel.com, David.Laight@ACULAB.COM, ddiss@suse.de,
+ geert@linux-m68k.org
+References: <cover.1704324320.git.wqu@suse.com>
+ <4960b36916d55e22be08fe1689b81e0eefb47578.1704324320.git.wqu@suse.com>
+ <248554b4-a549-4e94-835c-3430403b746c@infradead.org>
+From: Qu Wenruo <quwenruo.btrfs@gmx.com>
+Autocrypt: addr=quwenruo.btrfs@gmx.com; keydata=
+ xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAHNIlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT7CwJQEEwEIAD4CGwMFCwkI
+ BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCY00iVQUJDToH
+ pgAKCRDCPZHzoSX+qNKACACkjDLzCvcFuDlgqCiS4ajHAo6twGra3uGgY2klo3S4JespWifr
+ BLPPak74oOShqNZ8yWzB1Bkz1u93Ifx3c3H0r2vLWrImoP5eQdymVqMWmDAq+sV1Koyt8gXQ
+ XPD2jQCrfR9nUuV1F3Z4Lgo+6I5LjuXBVEayFdz/VYK63+YLEAlSowCF72Lkz06TmaI0XMyj
+ jgRNGM2MRgfxbprCcsgUypaDfmhY2nrhIzPUICURfp9t/65+/PLlV4nYs+DtSwPyNjkPX72+
+ LdyIdY+BqS8cZbPG5spCyJIlZonADojLDYQq4QnufARU51zyVjzTXMg5gAttDZwTH+8LbNI4
+ mm2YzsBNBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
+ CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
+ /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
+ GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
+ q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
+ ABEBAAHCwHwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCY00ibgUJDToHvwAK
+ CRDCPZHzoSX+qK6vB/9yyZlsS+ijtsvwYDjGA2WhVhN07Xa5SBBvGCAycyGGzSMkOJcOtUUf
+ tD+ADyrLbLuVSfRN1ke738UojphwkSFj4t9scG5A+U8GgOZtrlYOsY2+cG3R5vjoXUgXMP37
+ INfWh0KbJodf0G48xouesn08cbfUdlphSMXujCA8y5TcNyRuNv2q5Nizl8sKhUZzh4BascoK
+ DChBuznBsucCTAGrwPgG4/ul6HnWE8DipMKvkV9ob1xJS2W4WJRPp6QdVrBWJ9cCdtpR6GbL
+ iQi22uZXoSPv/0oUrGU+U5X4IvdnvT+8viPzszL5wXswJZfqfy8tmHM85yjObVdIG6AlnrrD
+In-Reply-To: <248554b4-a549-4e94-835c-3430403b746c@infradead.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkNMGlYYGklMTkhDHk9NSB1VEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk1PSUxOVUpLS1VKQk
-	tLWQY+
-X-HM-Tid: 0a8cd26b77a72eb3kusn5ad08400335
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PE06Shw6Pzw9EUMzIkMqMTdP
-	SyEwCQ1VSlVKTEtPSEhMSEtDSU5CVTMWGhIXVQgTGgwVVRcSFTsJFBgQVhgTEgsIVRgUFkVZV1kS
-	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUpKSEJDNwY+
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:CrVsbMwMt7+YQRPUOmwVq14/SXF/4aS6iv4NElSkHwvms7ll4/O
+ eX37P/ub/HxExSR/zXC5y3VdXKAylUTdGxh+BK4HshhShXDVVwlBllXi2BWQeBUiMzaz7Ep
+ C1C94hPv5pjdC03MEHfSaeFeAmHyr5GKNgDJ0JmtLM3/xGoiZykrAvwwkGAFfUszqj+1wHX
+ weKmfAoReFjUyOl4YaAhw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:16ck9G6Xcy0=;w2lX4z2ysrT18sPfv7Hmmi8ZSNo
+ Dhu7UaiFK+nHDkG2WdfO3xdGnsdMxmhMRkIr7HGGNy0C3VpYCcv5W9elFq5eRzX2MhdMcgCA3
+ X55yFCWzWaopj36btoDHcVbInAnfkFv3spR8YcpIxbS3MyrM9KkD0KLfnXHt406Ibiqv/vtWc
+ B4eut9gP9wHV+GIr/zuMRvHR5+osQwpkjnkg+7uNDB7OMYv/q65AZsIvlq6DSKeAXav1HSOsx
+ p60STJtIUZXETDIFp4DbJWfN7Ebr1CJ9MHyPW+WwrTwnN64v+FTJSVKfnQEMoYNB50h0CzJtu
+ BRhtlhwLsP7F/gnDlwxThXS/Nv5/pMAmEm70CyXhAO8/eSijp27X0M5agFipfoVKun4xDFUwk
+ LqExkXSoSy0Lk9LIaTwFoR2chSdTmJ8TAvnSq6iXuf6BabR8ndhBwgOS2wkrcltC5Ec9zWVqk
+ GIVHjIvPLn1jE5rBcaZaaR5HeTcs5nnM5hxzu+MnznNEBnFtxZ+dBHOPSuPTfwSkBSmuBmgTm
+ JhCEsiKdxebL6IyXmiSdGb5MHPKeiraoucV6deBi3KTKQW7ZYH5GnyiET0pf52+fMyx/pXtlC
+ kaGD36IWeegOOsFsqdkZ7s+pFErIHFR5K8p9QYm/dKXx7v8s/oA0yarvKGA0tWhf69QZdBcLI
+ Gm/HIACwb3tzHkbnfT5B2OIb4i8pQJXi/fBsTvssdsXgUVSmid4Nq+aRLvL6jwh5QSp/125ws
+ jSx3HvEB4P10V3jt71lo+4aI5ANMYMBX+Ep9+WU2EqFZ9RVFty/snti5LzQzEqNfsyf5xgEWV
+ wGe+X9oEzdzxmU9zHL9UKsm6fz9fFhOgIzKzWcjcjB5lUXoIfBRGEv1FWbQsn5+TBkS1Pbjs5
+ 36F6V0Z3dDjxS5T9z+AdasprB9r3vjHYmSM7tHPBmb76cFI3fUAC1h48V+MNhT9VNu+dCKvMC
+ vxWwNt375Bhk1oaR4nuDpDgcfoc=
 
-Hi Sergey
 
-On 2023/12/31 22:46, Sergey Khimich wrote:
-> From: Sergey Khimich <serghox@gmail.com>
-> 
-> For enabling CQE support just set 'supports-cqe' in your DevTree file
-> for appropriate mmc node.
-> 
 
-I have tested this patchset and it seems work fine on Rockchip SoCs when 
-I removed sdhci_enable_v4_mode as we don't have SDHCI_CAN_64BIT_V4 
-support. Why do we force to enable v4?
+On 2024/1/4 17:00, Randy Dunlap wrote:
+> Hi,
+>
+[...]
+>> + *		parameter.
+>> + *
+>> + * @suffixes:	The suffixes which should be parsed. Use logical ORed
+>> + *		memparse_suffix enum to indicate the supported suffixes.
+>> + *		The suffixes are case-insensive, all 2 ^ 10 based.
+>
+> 		                 case-insensitive
+>
+>> + *		Supported ones are "KMGPTE".
+>> + *		NOTE: If one suffix out of the supported one is hit, it would
+>
+> 		                                         ones
+>
+>> + *		end the parse normally, with @retptr pointed to the unsupported
+>> + *		suffix.
+>
+> Could you explain (or give an example) of "to the unsupported suffix"?
+> This isn't clear IMO.
 
-And I found it breaks s2r, since the patch didn't call cqhci_suspend
-and cqhci_resume.
+Oh, my bad, that sentence itself is not correct.
 
-> Signed-off-by: Sergey Khimich <serghox@gmail.com>
-> ---
->   drivers/mmc/host/Kconfig            |   1 +
->   drivers/mmc/host/sdhci-of-dwcmshc.c | 181 +++++++++++++++++++++++++++-
->   2 files changed, 180 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index 58bd5fe4cd25..f7594705b013 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -233,6 +233,7 @@ config MMC_SDHCI_OF_DWCMSHC
->   	depends on MMC_SDHCI_PLTFM
->   	depends on OF
->   	depends on COMMON_CLK
-> +	select MMC_CQHCI
->   	help
->   	  This selects Synopsys DesignWare Cores Mobile Storage Controller
->   	  support.
-> diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
-> index 3a3bae6948a8..0ba1df4bcf36 100644
-> --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
-> +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
-> @@ -20,6 +20,7 @@
->   #include <linux/sizes.h>
->   
->   #include "sdhci-pltfm.h"
-> +#include "cqhci.h"
->   
->   #define SDHCI_DWCMSHC_ARG2_STUFF	GENMASK(31, 16)
->   
-> @@ -36,6 +37,9 @@
->   #define DWCMSHC_ENHANCED_STROBE		BIT(8)
->   #define DWCMSHC_EMMC_ATCTRL		0x40
->   
-> +/* DWC IP vendor area 2 pointer */
-> +#define DWCMSHC_P_VENDOR_AREA2		0xea
-> +
->   /* Rockchip specific Registers */
->   #define DWCMSHC_EMMC_DLL_CTRL		0x800
->   #define DWCMSHC_EMMC_DLL_RXCLK		0x804
-> @@ -75,6 +79,11 @@
->   #define BOUNDARY_OK(addr, len) \
->   	((addr | (SZ_128M - 1)) == ((addr + len - 1) | (SZ_128M - 1)))
->   
-> +#define DWCMSHC_SDHCI_CQE_TRNS_MODE	(SDHCI_TRNS_MULTI | \
-> +					 SDHCI_TRNS_BLK_CNT_EN | \
-> +					 SDHCI_TRNS_DMA)
-> +
-> +
->   enum dwcmshc_rk_type {
->   	DWCMSHC_RK3568,
->   	DWCMSHC_RK3588,
-> @@ -90,7 +99,9 @@ struct rk35xx_priv {
->   
->   struct dwcmshc_priv {
->   	struct clk	*bus_clk;
-> -	int vendor_specific_area1; /* P_VENDOR_SPECIFIC_AREA reg */
-> +	int vendor_specific_area1; /* P_VENDOR_SPECIFIC_AREA1 reg */
-> +	int vendor_specific_area2; /* P_VENDOR_SPECIFIC_AREA2 reg */
-> +
->   	void *priv; /* pointer to SoC private stuff */
->   };
->   
-> @@ -210,6 +221,90 @@ static void dwcmshc_hs400_enhanced_strobe(struct mmc_host *mmc,
->   	sdhci_writel(host, vendor, reg);
->   }
->   
-> +static int dwcmshc_execute_tuning(struct mmc_host *mmc, u32 opcode)
-> +{
-> +	int err = sdhci_execute_tuning(mmc, opcode);
-> +	struct sdhci_host *host = mmc_priv(mmc);
-> +
-> +	if (err)
-> +		return err;
-> +
-> +	/*
-> +	 * Tuning can leave the IP in an active state (Buffer Read Enable bit
-> +	 * set) which prevents the entry to low power states (i.e. S0i3). Data
-> +	 * reset will clear it.
-> +	 */
-> +	sdhci_reset(host, SDHCI_RESET_DATA);
-> +
-> +	return 0;
-> +}
-> +
-> +static u32 dwcmshc_cqe_irq_handler(struct sdhci_host *host, u32 intmask)
-> +{
-> +	int cmd_error = 0;
-> +	int data_error = 0;
-> +
-> +	if (!sdhci_cqe_irq(host, intmask, &cmd_error, &data_error))
-> +		return intmask;
-> +
-> +	cqhci_irq(host->mmc, intmask, cmd_error, data_error);
-> +
-> +	return 0;
-> +}
-> +
-> +static void dwcmshc_sdhci_cqe_enable(struct mmc_host *mmc)
-> +{
-> +	struct sdhci_host *host = mmc_priv(mmc);
-> +	u8 ctrl;
-> +
-> +	sdhci_writew(host, DWCMSHC_SDHCI_CQE_TRNS_MODE, SDHCI_TRANSFER_MODE);
-> +
-> +	sdhci_cqe_enable(mmc);
-> +
-> +	/*
-> +	 * The "DesignWare Cores Mobile Storage Host Controller
-> +	 * DWC_mshc / DWC_mshc_lite Databook" says:
-> +	 * when Host Version 4 Enable" is 1 in Host Control 2 register,
-> +	 * SDHCI_CTRL_ADMA32 bit means ADMA2 is selected.
-> +	 * Selection of 32-bit/64-bit System Addressing:
-> +	 * either 32-bit or 64-bit system addressing is selected by
-> +	 * 64-bit Addressing bit in Host Control 2 register.
-> +	 *
-> +	 * On the other hand the "DesignWare Cores Mobile Storage Host
-> +	 * Controller DWC_mshc / DWC_mshc_lite User Guide" says, that we have to
-> +	 * set DMA_SEL to ADMA2 _only_ mode in the Host Control 2 register.
-> +	 */
-> +	ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
-> +	ctrl &= ~SDHCI_CTRL_DMA_MASK;
-> +	ctrl |= SDHCI_CTRL_ADMA32;
-> +	sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-> +}
-> +
-> +static void dwcmshc_set_tran_desc(struct cqhci_host *cq_host, u8 **desc,
-> +				  dma_addr_t addr, int len, bool end, bool dma64)
-> +{
-> +	int tmplen, offset;
-> +
-> +	if (likely(!len || BOUNDARY_OK(addr, len))) {
-> +		cqhci_set_tran_desc(*desc, addr, len, end, dma64);
-> +		return;
-> +	}
-> +
-> +	offset = addr & (SZ_128M - 1);
-> +	tmplen = SZ_128M - offset;
-> +	cqhci_set_tran_desc(*desc, addr, tmplen, false, dma64);
-> +
-> +	addr += tmplen;
-> +	len -= tmplen;
-> +	*desc += cq_host->trans_desc_len;
-> +	cqhci_set_tran_desc(*desc, addr, len, end, dma64);
-> +}
-> +
-> +static void dwcmshc_cqhci_dumpregs(struct mmc_host *mmc)
-> +{
-> +	sdhci_dumpregs(mmc_priv(mmc));
-> +}
-> +
->   static void dwcmshc_rk3568_set_clock(struct sdhci_host *host, unsigned int clock)
->   {
->   	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> @@ -345,6 +440,7 @@ static const struct sdhci_ops sdhci_dwcmshc_ops = {
->   	.get_max_clock		= dwcmshc_get_max_clock,
->   	.reset			= sdhci_reset,
->   	.adma_write_desc	= dwcmshc_adma_write_desc,
-> +	.irq			= dwcmshc_cqe_irq_handler,
->   };
->   
->   static const struct sdhci_ops sdhci_dwcmshc_rk35xx_ops = {
-> @@ -379,6 +475,71 @@ static const struct sdhci_pltfm_data sdhci_dwcmshc_rk35xx_pdata = {
->   		   SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN,
->   };
->   
-> +static const struct cqhci_host_ops dwcmshc_cqhci_ops = {
-> +	.enable		= dwcmshc_sdhci_cqe_enable,
-> +	.disable	= sdhci_cqe_disable,
-> +	.dumpregs	= dwcmshc_cqhci_dumpregs,
-> +	.set_tran_desc	= dwcmshc_set_tran_desc,
-> +};
-> +
-> +static void dwcmshc_cqhci_init(struct sdhci_host *host, struct platform_device *pdev)
-> +{
-> +	struct cqhci_host *cq_host;
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct dwcmshc_priv *priv = sdhci_pltfm_priv(pltfm_host);
-> +	bool dma64 = false;
-> +	u16 clk;
-> +	int err;
-> +
-> +	host->mmc->caps2 |= MMC_CAP2_CQE | MMC_CAP2_CQE_DCMD;
-> +	cq_host = devm_kzalloc(&pdev->dev, sizeof(*cq_host), GFP_KERNEL);
-> +	if (!cq_host) {
-> +		dev_err(mmc_dev(host->mmc), "Unable to setup CQE: not enough memory\n");
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * For dwcmshc host controller we have to enable internal clock
-> +	 * before access to some registers from Vendor Specific Aria 2.
-> +	 */
-> +	clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
-> +	clk |= SDHCI_CLOCK_INT_EN;
-> +	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
-> +	clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
-> +	if (!(clk & SDHCI_CLOCK_INT_EN)) {
-> +		dev_err(mmc_dev(host->mmc), "Unable to setup CQE: internal clock enable error\n");
-> +		goto free_cq_host;
-> +	}
-> +
-> +	cq_host->mmio = host->ioaddr + priv->vendor_specific_area2;
-> +	cq_host->ops = &dwcmshc_cqhci_ops;
-> +
-> +	/* Enable using of 128-bit task descriptors */
-> +	dma64 = host->flags & SDHCI_USE_64_BIT_DMA;
-> +	if (dma64) {
-> +		dev_dbg(mmc_dev(host->mmc), "128-bit task descriptors\n");
-> +		cq_host->caps |= CQHCI_TASK_DESC_SZ_128;
-> +	}
-> +	err = cqhci_init(cq_host, host->mmc, dma64);
-> +	if (err) {
-> +		dev_err(mmc_dev(host->mmc), "Unable to setup CQE: error %d\n", err);
-> +		goto int_clock_disable;
-> +	}
-> +
-> +	dev_dbg(mmc_dev(host->mmc), "CQE init done\n");
-> +
-> +	return;
-> +
-> +int_clock_disable:
-> +	clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
-> +	clk &= ~SDHCI_CLOCK_INT_EN;
-> +	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
-> +
-> +free_cq_host:
-> +	devm_kfree(&pdev->dev, cq_host);
-> +}
-> +
-> +
->   static int dwcmshc_rk35xx_init(struct sdhci_host *host, struct dwcmshc_priv *dwc_priv)
->   {
->   	int err;
-> @@ -471,7 +632,7 @@ static int dwcmshc_probe(struct platform_device *pdev)
->   	struct rk35xx_priv *rk_priv = NULL;
->   	const struct sdhci_pltfm_data *pltfm_data;
->   	int err;
-> -	u32 extra;
-> +	u32 extra, caps;
->   
->   	pltfm_data = device_get_match_data(&pdev->dev);
->   	if (!pltfm_data) {
-> @@ -519,9 +680,12 @@ static int dwcmshc_probe(struct platform_device *pdev)
->   
->   	priv->vendor_specific_area1 =
->   		sdhci_readl(host, DWCMSHC_P_VENDOR_AREA1) & DWCMSHC_AREA1_MASK;
-> +	priv->vendor_specific_area2 =
-> +		sdhci_readw(host, DWCMSHC_P_VENDOR_AREA2);
->   
->   	host->mmc_host_ops.request = dwcmshc_request;
->   	host->mmc_host_ops.hs400_enhanced_strobe = dwcmshc_hs400_enhanced_strobe;
-> +	host->mmc_host_ops.execute_tuning = dwcmshc_execute_tuning;
->   
->   	if (pltfm_data == &sdhci_dwcmshc_rk35xx_pdata) {
->   		rk_priv = devm_kzalloc(&pdev->dev, sizeof(struct rk35xx_priv), GFP_KERNEL);
-> @@ -547,6 +711,10 @@ static int dwcmshc_probe(struct platform_device *pdev)
->   		sdhci_enable_v4_mode(host);
->   #endif
->   
-> +	caps = sdhci_readl(host, SDHCI_CAPABILITIES);
-> +	if (caps & SDHCI_CAN_64BIT_V4)
-> +		sdhci_enable_v4_mode(host);
-> +
->   	host->mmc->caps |= MMC_CAP_WAIT_WHILE_BUSY;
->   
->   	pm_runtime_get_noresume(dev);
-> @@ -557,6 +725,15 @@ static int dwcmshc_probe(struct platform_device *pdev)
->   	if (err)
->   		goto err_rpm;
->   
-> +	/* Setup Command Queue Engine if enabled */
-> +	if (device_property_read_bool(&pdev->dev, "supports-cqe")) {
-> +		if (caps & SDHCI_CAN_64BIT_V4)
-> +			dwcmshc_cqhci_init(host, pdev);
-> +		else
-> +			dev_warn(dev, "Cannot enable CQE without V4 mode support\n");
-> +	}
-> +
-> +
->   	if (rk_priv)
->   		dwcmshc_rk35xx_postinit(host, priv);
->   
+What I really want to say is:
+
+  If one suffix (one of "KMGPTE") is hit but that suffix is not
+  specified in the @suffxies parameter, it would end the parse normally,
+  with @retptr pointed to the (unsupported) suffix.
+
+The example would be the "68k " case in the ok cases in the next patch.
+We have two different cases for the same "68k" string, with different
+@suffixes and different results:
+
+	"68k ", KMGPTE -> 68 * 1024, @retptr at " ".
+	"68k ", M -> 68, @retptr at 'k'.
+
+I don't have a better expression here unfortunately, maybe the special
+case is not even worthy explaining?
+
+>
+>> + *
+>> + * @res:	Where to write the result.
+>> + *
+>> + * @retptr:	(output) Optional pointer to the next char after parse com=
+pletes.
+>> + *
+>> + * Return 0 if any valid numberic string can be parsed, and @retptr up=
+dated.
+>> + * Return -INVALID if no valid number string can be found.
+>> + * Return -ERANGE if the number overflows.
+>> + * For minus return values, @retptr would not be updated.
+>
+>   * Returns:
+>   * * %0 if any valid numeric string can be parsed, and @retptr is updat=
+ed.
+>   * * %-EINVAL if no valid number string can be found.
+>   * * %-ERANGE if the number overflows.
+>   * * For negative return values, @retptr is not updated.
+>
+>
+> For *ALL* of the comments, I request/suggest that you change the "would =
+be" or
+> "would not be" to "is" or "is not" or whatever present tense words make =
+the
+> most sense.
+
+No problem.
+
+Thanks,
+Qu
+
+>
+>
+>> + */
+>> +noinline int memparse_safe(const char *s, enum memparse_suffix suffixe=
+s,
+>> +			   unsigned long long *res, char **retptr)
+>> +{
+>> +	unsigned long long value;
+>> +	unsigned int rv;
+>> +	int shift =3D 0;
+>> +	int base =3D 0;
+>> +
+>> +	s =3D _parse_integer_fixup_radix(s, &base);
+>> +	rv =3D _parse_integer(s, base, &value);
+>> +	if (rv & KSTRTOX_OVERFLOW)
+>> +		return -ERANGE;
+>> +	if (rv =3D=3D 0)
+>> +		return -EINVAL;
+>> +
+>> +	s +=3D rv;
+>> +	switch (*s) {
+>> +	case 'K':
+>> +	case 'k':
+>> +		if (!(suffixes & MEMPARSE_SUFFIX_K))
+>> +			break;
+>> +		shift =3D 10;
+>> +		break;
+>> +	case 'M':
+>> +	case 'm':
+>> +		if (!(suffixes & MEMPARSE_SUFFIX_M))
+>> +			break;
+>> +		shift =3D 20;
+>> +		break;
+>> +	case 'G':
+>> +	case 'g':
+>> +		if (!(suffixes & MEMPARSE_SUFFIX_G))
+>> +			break;
+>> +		shift =3D 30;
+>> +		break;
+>> +	case 'T':
+>> +	case 't':
+>> +		if (!(suffixes & MEMPARSE_SUFFIX_T))
+>> +			break;
+>> +		shift =3D 40;
+>> +		break;
+>> +	case 'P':
+>> +	case 'p':
+>> +		if (!(suffixes & MEMPARSE_SUFFIX_P))
+>> +			break;
+>> +		shift =3D 50;
+>> +		break;
+>> +	case 'E':
+>> +	case 'e':
+>> +		if (!(suffixes & MEMPARSE_SUFFIX_E))
+>> +			break;
+>> +		shift =3D 60;
+>> +		break;
+>> +	}
+>> +	if (shift) {
+>> +		s++;
+>> +		if (value >> (64 - shift))
+>> +			return -ERANGE;
+>> +		value <<=3D shift;
+>> +	}
+>> +	*res =3D value;
+>> +	if (retptr)
+>> +		*retptr =3D (char *)s;
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL(memparse_safe);
+>> +
+>>   /**
+>>    * kstrtoull - convert a string to an unsigned long long
+>>    * @s: The start of the string. The string must be null-terminated, a=
+nd may also
+>
+> Thanks.
