@@ -1,37 +1,37 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2084.outbound.protection.outlook.com [40.107.93.84])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2064.outbound.protection.outlook.com [40.107.212.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442E828DB9;
-	Thu,  4 Jan 2024 17:12:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55ADD2C6A7;
+	Thu,  4 Jan 2024 17:12:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZVtuwFWT"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Z1WEPRj3"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NgHAUJZQQJGOZ9gATJByf3+7y0lwKBtotpqvC8fxuQxHCUs5YvRc9FMogSlvGBPR/LUXmO3INHxH6v5ENqE/TNIhJdDxq03hXWCeRQzzv/9KU9Ic4/dgI3H79VKgoBjtA6w2RMOC8aeCxPbV2v95I9U9XwbvILhOoh+N8GIa/i+rxuxjfu5ib2akC/XOI0oNNXCci0/ScPjHn+Ecd3sZm/H7lGPd9YjNY/pvBdb9Rfhxi6gsY6/ivjuDrDhGH9B/1RJBwGR9g2C4Tg4rRr3G0C8t9JMl1qKL3SHeWuCfKGNlMOzYu0DIaRqhADnc2S/x1qKUDrSEXpxuVPWtXjk+ng==
+ b=NZy9921I/cxsmM/mT4Nu6xs4pMk/lwFeuRuBCsfeR02Fk8/hcJfJEymeXQPRUeF5MV4aoT2wBMeg6kPblEI1/e9aHe9bBggIq6YZ6yOF/nTKyaLu4YwIBIimcuxe1Zp0tEnSH+hqRxql7Cyr9AGtjjo4ThNr51qb2dWhhclBuJ8JDHeBD6oQYQJnr4jVCcNvtLTdjaDvODffiCi1ogAB8MM6T7gqb+qn/Elw3PP6aL8KLpDMqHRhNnyFS703PFA0t7Kax5Zl3KZQO9ylpWOjnsYg0kfjzDOArVbXGPzUDqoqtNHnvXUY+YjL8FAKFt6rbEFN1JAP9DHrFYz53jasdQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jhVBXH+IltD3kpoJwfm00H6Rnk41GD9XT2RASqKLOYg=;
- b=aEa/GTDVshEIE36kJPDPuVsgfcTphSjBCEqVAHYd+v11bZJuY4FNVftOiSGOaOgbpADnNO3uqKzlHbuiN6WiH0n5ANOdUgMTjY+IIx+kBECwLiuWXt5zIbAF2zs7hI+nUb/bGeO174+ykq269rPKhN6Gp7ABD46evs9HhkQFWbr7RSCaGu1jK9afKI/Acal2HS3UnzvvyJ8gDRm0i7mSeKsgB0g5Av3DlZEYVhxE1G2SLKE6FvpKXDIIvIWhIPCFaWHqpb8ab1fBJlofv1sUdkXZNmj41RJxADtYAYBnI7rL/i6bcw0aRF1T93T6idvOhprMEBV12PnRQh+FbKp4qg==
+ bh=z22fZj2ZslWdm6XMDtUt/mFJgscRVo8cTrG8iqZ2EZ0=;
+ b=dRkKKe7peQ6o3Was7qwl8tiCdI1hD5gfrsLdYXmeRa7+Le3dZejZyOJSjYxvkA8PfQzFrbCk1odBIZyrmd4nnC1jBN/J3OXMsOA71lAOpgq4zvHxeGDRMau55vR6G3+33H9z9D9GIn1UZgT3stRwsTvhL0G3lizuWuNeENXqMNbvwdj38tHlMvM91KyUP3z1C8Dmpws+Rfa3/G+S7tWCva/POt+QdblO/0wIn8TsIHAGOB1alF/11u10jjM0ulrQdkYClfa3FUz7Py4UdqbQDuuBiE6QcjmyWVhgHMhd7OZ0xsJuW7xYgNtDVZtojlIROxC4EKh4qjSu8AhY/wSPfw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=davemloft.net smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jhVBXH+IltD3kpoJwfm00H6Rnk41GD9XT2RASqKLOYg=;
- b=ZVtuwFWT/mDYLx9nEV3fEUqycDHT3+Dppr/WRZwkzEX1oDx69OSiga7CiG+kja3JNBi2ZdU7mwDDwmnSV75R8BD+2g1GfJ7gWZuIddETxjk6Fwl33zAX1pm2qlCvWFsvJy8bsneamaT2i44lvcmuqizWPYYc7xetD5FA50aokxw=
-Received: from DS7PR03CA0220.namprd03.prod.outlook.com (2603:10b6:5:3ba::15)
- by SA1PR12MB8142.namprd12.prod.outlook.com (2603:10b6:806:334::5) with
+ bh=z22fZj2ZslWdm6XMDtUt/mFJgscRVo8cTrG8iqZ2EZ0=;
+ b=Z1WEPRj3ymfCEHKMOvRxyh4KsV13E/6QHM2ExbNIuIYkgZnq/hkEAUrj/KhPVIpegTwOmc4Y6UCacBWuFpLU1Lr7k2jCscuYNa3ZVattrQZWJmXkds0cgtYbCS2bbZVbol2wT6Ae0Q/+FldkUXCfJP+bTxq/uVjaWMlfF3Gi2B0=
+Received: from DS7PR03CA0227.namprd03.prod.outlook.com (2603:10b6:5:3ba::22)
+ by BL0PR12MB4916.namprd12.prod.outlook.com (2603:10b6:208:1ce::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.15; Thu, 4 Jan
- 2024 17:12:43 +0000
+ 2024 17:12:44 +0000
 Received: from DS3PEPF000099D7.namprd04.prod.outlook.com
- (2603:10b6:5:3ba:cafe::b9) by DS7PR03CA0220.outlook.office365.com
- (2603:10b6:5:3ba::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.13 via Frontend
- Transport; Thu, 4 Jan 2024 17:12:43 +0000
+ (2603:10b6:5:3ba:cafe::e6) by DS7PR03CA0227.outlook.office365.com
+ (2603:10b6:5:3ba::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.16 via Frontend
+ Transport; Thu, 4 Jan 2024 17:12:44 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -41,18 +41,18 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  DS3PEPF000099D7.mail.protection.outlook.com (10.167.17.8) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7159.9 via Frontend Transport; Thu, 4 Jan 2024 17:12:42 +0000
+ 15.20.7159.9 via Frontend Transport; Thu, 4 Jan 2024 17:12:44 +0000
 Received: from driver-dev1.pensando.io (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Thu, 4 Jan
- 2024 11:12:39 -0600
+ 2024 11:12:41 -0600
 From: Brett Creeley <brett.creeley@amd.com>
 To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
 	<pabeni@redhat.com>, <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <shannon.nelson@amd.com>, <brett.creeley@amd.com>
-Subject: [PATCH net-next 5/8] pds_core: Clear BARs on reset
-Date: Thu, 4 Jan 2024 09:12:18 -0800
-Message-ID: <20240104171221.31399-6-brett.creeley@amd.com>
+Subject: [PATCH net-next 7/8] pds_core: Unmask adminq interrupt in work thread
+Date: Thu, 4 Jan 2024 09:12:20 -0800
+Message-ID: <20240104171221.31399-8-brett.creeley@amd.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240104171221.31399-1-brett.creeley@amd.com>
 References: <20240104171221.31399-1-brett.creeley@amd.com>
@@ -67,188 +67,75 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099D7:EE_|SA1PR12MB8142:EE_
-X-MS-Office365-Filtering-Correlation-Id: cf419c8f-dd04-4246-0398-08dc0d485d29
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099D7:EE_|BL0PR12MB4916:EE_
+X-MS-Office365-Filtering-Correlation-Id: dd5ec5b9-2a6a-457c-8611-08dc0d485dcd
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	xJ3Syczm38eTP9R2kqZ222Q91A3Zz4BQIU6nz/o+Yei2fvfAlRer4YZjIcbwC6H0pVk3fM3F3eZFJao9AZ5w9qJprkoiaVQfW0uRwaSMlELcDniBXdwRisbKO/2E77zRmKTD61DIkM/1mr1tA1g5byJLXpaTmKF6IYhVvRv447fg7gIsXuEWAsAiG3A+gt3V4x/qw1c00t1zbOGOojADyF0sZosRXP0rXKtUDzlhEne1C18qIGib8Nwfrs7Czk3BbZQhau1uhcQ4W7+S0cxmawSRkspL/kGbE/Tt/ENFs0Gx14/ShiKN820zuwIjWaqLqcV2we/FXliAedpkZI1XEJNV0+3s7ljO2WEZl56wj9cH1wj+i7sQqQ2ch/97/1RBSxWhrT0h0jruobcYUeyiC8XdKAAplqkPBW86pRxN+FIw1fNcAUKMxnF0NLdgwLVaArwzKLiZTjVzi8dAWiim5fxFaDiD/F4/aJiRPIavctvjWAhpJ1AgykhoOJdpXuAEg+aVhyfC3t6fwJn1+vhoTTY3aQjFN+Y2Ynmpm/NzqGYFe+ir3gqIg8Ng+Nn2W+zLIyxoY0CSbtI3OvipEBpkwBKZXUr8+hr8+/ybzPn7TILEyE+5c7Bavi21UCp4bpKzl5AO7GfVLLA4YZ6R03EMvsrOrU2BGN65CyDT3GFPdLKcpJAHVpJRgbkwv47F1iiuOveGJFFVrTp+zK/bQx4/01hW64cYhNzg/VB2AFcjCMTjYUetNETuEY/pVbvEsF3qkqM9fqpItlIrcTHR8dNYbg==
+	8UF4zK/v1626phqqoEAplBYhRsDH0UeLcou7dC10uAnRKk5ZdTRonpTYb5Z7PRL+6M9u9ehFzoVkhVFf3lXSEN1Q1fNpOpd4zoscDEG6pQJA+dvGwWRBNskBlvVgDl455IJsdlhtoAtzy/7l7H1pMt6QMdqOEmd+m/pjmmKSZXwP7/TFJ3gLD6KWaJDuZ013byFRS693uS8ScvxNdytjT432lEvFmuwX7cg8Wacge/HGpmxABG9dOHmdlzWA2HKVtMJJE5Mf8qjmOPNSwreNR3BSa32+PraslBH0fqLdYRdAya1/aQxByaBikK62dss/Vvk7cgJXuFeh/O1jYKqMb9b0R7XGTFZv1ffhqBkSwLCfIr9/D7PXzepjIS3hnE8HF1/4YNCw/RFc6uHHuX78Cm5Ps9p1kb5cPv+4NTwsZeyJfsbooRdrriVYQxoFnj6zo4IsREf//yQXLI9LU0kxfQJ/T4bc7q9ILxZg40WR7fr7MRITRR46T9Kqi7Qs3itIV5GZC+VT44tPg/OqzMXa9+aGJ2rs+HdPZAtZChmvJS+ZLO6JJNcvszrRg0iNJgOiaJlBz03u9DFb+OYjZ8WdGnPRgQ/vo1FCwd8lYeq+c+ifaWJP7QdlXm8O/bL1TVJwAfTY+KXirQ4EcaTnQ8/+onDirgA4F98Id3i9Xe8tZNPbz46YWiqG0PaCnea/UPMtPdbATTysUchsAWRQc6LjUFoREDFLOwZ5EPTPEivdJpsCttrjo4PkuFKf/UgrOaBrw9bXTb7NrFM/iJV+9sRsCA==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(346002)(39860400002)(376002)(136003)(230922051799003)(186009)(64100799003)(82310400011)(451199024)(1800799012)(40470700004)(46966006)(36840700001)(426003)(26005)(2616005)(1076003)(336012)(6666004)(478600001)(47076005)(16526019)(83380400001)(41300700001)(2906002)(4326008)(316002)(8936002)(54906003)(70206006)(110136005)(70586007)(44832011)(8676002)(36860700001)(5660300002)(82740400003)(86362001)(36756003)(81166007)(356005)(40460700003)(40480700001)(36900700001);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(396003)(136003)(376002)(346002)(230922051799003)(82310400011)(186009)(64100799003)(1800799012)(451199024)(36840700001)(40470700004)(46966006)(36860700001)(47076005)(40480700001)(1076003)(16526019)(426003)(26005)(2616005)(336012)(40460700003)(83380400001)(478600001)(41300700001)(6666004)(4326008)(70586007)(110136005)(70206006)(316002)(8936002)(54906003)(36756003)(8676002)(44832011)(82740400003)(81166007)(356005)(86362001)(2906002)(5660300002)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jan 2024 17:12:42.9980
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jan 2024 17:12:44.1387
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf419c8f-dd04-4246-0398-08dc0d485d29
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd5ec5b9-2a6a-457c-8611-08dc0d485dcd
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	DS3PEPF000099D7.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8142
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB4916
 
-During reset the BARs might be accessed when they are
-unmapped. This can cause unexpected issues, so fix it by
-clearing the cached BAR values so they are not accessed
-until they are re-mapped.
-
-Also, make sure any places that can access the BARs
-when they are NULL are prevented.
+Unmasking the interrupt during the pdsc_adminq_isr
+is a bit early and could cause unnecessary interrupts.
+Instead always unmask after processing the adminq
+and notifyq in pdsc_work_thread()->pdsc_process_adminq().
+Also, since we are always unmasking, there's no need
+for the local credits variable in pdsc_process_adminq().
 
 Signed-off-by: Brett Creeley <brett.creeley@amd.com>
 Reviewed-by: Shannon Nelson <shannon.nelson@amd.com>
 ---
- drivers/net/ethernet/amd/pds_core/adminq.c  | 28 +++++++++++++++------
- drivers/net/ethernet/amd/pds_core/core.c    |  8 +++++-
- drivers/net/ethernet/amd/pds_core/dev.c     |  9 ++++++-
- drivers/net/ethernet/amd/pds_core/devlink.c |  3 ++-
- drivers/net/ethernet/amd/pds_core/fw.c      |  3 +++
- drivers/net/ethernet/amd/pds_core/main.c    |  5 ++++
- 6 files changed, 45 insertions(+), 11 deletions(-)
+ drivers/net/ethernet/amd/pds_core/adminq.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/net/ethernet/amd/pds_core/adminq.c b/drivers/net/ethernet/amd/pds_core/adminq.c
-index 5edff33d56f3..ea773cfa0af6 100644
+index ea773cfa0af6..c83a0a80d533 100644
 --- a/drivers/net/ethernet/amd/pds_core/adminq.c
 +++ b/drivers/net/ethernet/amd/pds_core/adminq.c
-@@ -191,10 +191,16 @@ static int __pdsc_adminq_post(struct pdsc *pdsc,
+@@ -82,7 +82,6 @@ void pdsc_process_adminq(struct pdsc_qcq *qcq)
+ 	unsigned long irqflags;
+ 	int nq_work = 0;
+ 	int aq_work = 0;
+-	int credits;
  
- 	/* Check that the FW is running */
- 	if (!pdsc_is_fw_running(pdsc)) {
--		u8 fw_status = ioread8(&pdsc->info_regs->fw_status);
--
--		dev_info(pdsc->dev, "%s: post failed - fw not running %#02x:\n",
--			 __func__, fw_status);
-+		if (pdsc->info_regs) {
-+			u8 fw_status =
-+				ioread8(&pdsc->info_regs->fw_status);
-+
-+			dev_info(pdsc->dev, "%s: post failed - fw not running %#02x:\n",
-+				 __func__, fw_status);
-+		} else {
-+			dev_info(pdsc->dev, "%s: post failed - BARs not setup\n",
-+				 __func__);
-+		}
- 		ret = -ENXIO;
+ 	/* Don't process AdminQ when it's not up */
+ 	if (!pdsc_adminq_inc_if_up(pdsc)) {
+@@ -128,11 +127,9 @@ void pdsc_process_adminq(struct pdsc_qcq *qcq)
  
- 		goto err_out_unlock;
-@@ -266,10 +272,16 @@ int pdsc_adminq_post(struct pdsc *pdsc,
- 			break;
- 
- 		if (!pdsc_is_fw_running(pdsc)) {
--			u8 fw_status = ioread8(&pdsc->info_regs->fw_status);
--
--			dev_dbg(pdsc->dev, "%s: post wait failed - fw not running %#02x:\n",
--				__func__, fw_status);
-+			if (pdsc->info_regs) {
-+				u8 fw_status =
-+					ioread8(&pdsc->info_regs->fw_status);
-+
-+				dev_dbg(pdsc->dev, "%s: post wait failed - fw not running %#02x:\n",
-+					__func__, fw_status);
-+			} else {
-+				dev_dbg(pdsc->dev, "%s: post wait failed - BARs not setup\n",
-+					__func__);
-+			}
- 			err = -ENXIO;
- 			break;
- 		}
-diff --git a/drivers/net/ethernet/amd/pds_core/core.c b/drivers/net/ethernet/amd/pds_core/core.c
-index 3b3e1541dd1c..023a59c8e425 100644
---- a/drivers/net/ethernet/amd/pds_core/core.c
-+++ b/drivers/net/ethernet/amd/pds_core/core.c
-@@ -600,7 +600,13 @@ void pdsc_fw_up(struct pdsc *pdsc)
- 
- static void pdsc_check_pci_health(struct pdsc *pdsc)
- {
--	u8 fw_status = ioread8(&pdsc->info_regs->fw_status);
-+	u8 fw_status;
-+
-+	/* some sort of teardown already in progress */
-+	if (!pdsc->info_regs)
-+		return;
-+
-+	fw_status = ioread8(&pdsc->info_regs->fw_status);
- 
- 	/* is PCI broken? */
- 	if (fw_status != PDS_RC_BAD_PCI)
-diff --git a/drivers/net/ethernet/amd/pds_core/dev.c b/drivers/net/ethernet/amd/pds_core/dev.c
-index 31940b857e0e..62a38e0a8454 100644
---- a/drivers/net/ethernet/amd/pds_core/dev.c
-+++ b/drivers/net/ethernet/amd/pds_core/dev.c
-@@ -57,6 +57,9 @@ int pdsc_err_to_errno(enum pds_core_status_code code)
- 
- bool pdsc_is_fw_running(struct pdsc *pdsc)
- {
-+	if (!pdsc->info_regs)
-+		return false;
-+
- 	pdsc->fw_status = ioread8(&pdsc->info_regs->fw_status);
- 	pdsc->last_fw_time = jiffies;
- 	pdsc->last_hb = ioread32(&pdsc->info_regs->fw_heartbeat);
-@@ -182,13 +185,17 @@ int pdsc_devcmd_locked(struct pdsc *pdsc, union pds_core_dev_cmd *cmd,
- {
- 	int err;
- 
-+	if (!pdsc->cmd_regs)
-+		return -ENXIO;
-+
- 	memcpy_toio(&pdsc->cmd_regs->cmd, cmd, sizeof(*cmd));
- 	pdsc_devcmd_dbell(pdsc);
- 	err = pdsc_devcmd_wait(pdsc, cmd->opcode, max_seconds);
--	memcpy_fromio(comp, &pdsc->cmd_regs->comp, sizeof(*comp));
- 
- 	if ((err == -ENXIO || err == -ETIMEDOUT) && pdsc->wq)
- 		queue_work(pdsc->wq, &pdsc->health_work);
-+	else
-+		memcpy_fromio(comp, &pdsc->cmd_regs->comp, sizeof(*comp));
- 
- 	return err;
+ credits:
+ 	/* Return the interrupt credits, one for each completion */
+-	credits = nq_work + aq_work;
+-	if (credits)
+-		pds_core_intr_credits(&pdsc->intr_ctrl[qcq->intx],
+-				      credits,
+-				      PDS_CORE_INTR_CRED_REARM);
++	pds_core_intr_credits(&pdsc->intr_ctrl[qcq->intx],
++			      nq_work + aq_work,
++			      PDS_CORE_INTR_CRED_REARM);
+ 	refcount_dec(&pdsc->adminq_refcnt);
  }
-diff --git a/drivers/net/ethernet/amd/pds_core/devlink.c b/drivers/net/ethernet/amd/pds_core/devlink.c
-index e9948ea5bbcd..54864f27c87a 100644
---- a/drivers/net/ethernet/amd/pds_core/devlink.c
-+++ b/drivers/net/ethernet/amd/pds_core/devlink.c
-@@ -111,7 +111,8 @@ int pdsc_dl_info_get(struct devlink *dl, struct devlink_info_req *req,
  
- 	mutex_lock(&pdsc->devcmd_lock);
- 	err = pdsc_devcmd_locked(pdsc, &cmd, &comp, pdsc->devcmd_timeout * 2);
--	memcpy_fromio(&fw_list, pdsc->cmd_regs->data, sizeof(fw_list));
-+	if (!err)
-+		memcpy_fromio(&fw_list, pdsc->cmd_regs->data, sizeof(fw_list));
- 	mutex_unlock(&pdsc->devcmd_lock);
- 	if (err && err != -EIO)
- 		return err;
-diff --git a/drivers/net/ethernet/amd/pds_core/fw.c b/drivers/net/ethernet/amd/pds_core/fw.c
-index 90a811f3878a..fa626719e68d 100644
---- a/drivers/net/ethernet/amd/pds_core/fw.c
-+++ b/drivers/net/ethernet/amd/pds_core/fw.c
-@@ -107,6 +107,9 @@ int pdsc_firmware_update(struct pdsc *pdsc, const struct firmware *fw,
+@@ -157,7 +154,6 @@ irqreturn_t pdsc_adminq_isr(int irq, void *data)
  
- 	dev_info(pdsc->dev, "Installing firmware\n");
+ 	qcq = &pdsc->adminqcq;
+ 	queue_work(pdsc->wq, &qcq->work);
+-	pds_core_intr_mask(&pdsc->intr_ctrl[qcq->intx], PDS_CORE_INTR_MASK_CLEAR);
+ 	refcount_dec(&pdsc->adminq_refcnt);
  
-+	if (!pdsc->cmd_regs)
-+		return -ENXIO;
-+
- 	dl = priv_to_devlink(pdsc);
- 	devlink_flash_update_status_notify(dl, "Preparing to flash",
- 					   NULL, 0, 0);
-diff --git a/drivers/net/ethernet/amd/pds_core/main.c b/drivers/net/ethernet/amd/pds_core/main.c
-index 5172a5ad8ec6..05fdeb235e5f 100644
---- a/drivers/net/ethernet/amd/pds_core/main.c
-+++ b/drivers/net/ethernet/amd/pds_core/main.c
-@@ -37,6 +37,11 @@ static void pdsc_unmap_bars(struct pdsc *pdsc)
- 	struct pdsc_dev_bar *bars = pdsc->bars;
- 	unsigned int i;
- 
-+	pdsc->info_regs = NULL;
-+	pdsc->cmd_regs = NULL;
-+	pdsc->intr_status = NULL;
-+	pdsc->intr_ctrl = NULL;
-+
- 	for (i = 0; i < PDS_CORE_BARS_MAX; i++) {
- 		if (bars[i].vaddr)
- 			pci_iounmap(pdsc->pdev, bars[i].vaddr);
+ 	return IRQ_HANDLED;
 -- 
 2.17.1
 
