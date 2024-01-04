@@ -1,29 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A83241E0;
-	Thu,  4 Jan 2024 15:02:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBF92420D;
+	Thu,  4 Jan 2024 15:02:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oaoRz5Gi"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4FAC2C433CD;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DDY6pdYI"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BCC91C116B3;
 	Thu,  4 Jan 2024 15:02:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1704380565;
-	bh=F68T4yfrZvNl4UBjQrVTXao7+5rzaoz2/YnsMWP1cC4=;
+	bh=2YZbvYyt0a7TBx89a/LXKdhtP/fd+epxuxNolaWdMk4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=oaoRz5GiNYa5bYC4deGDtkgORzDYuZk8/+xSsgC6uEEfqrRQEWxuSvzNbIcJgYNRO
-	 5II7A22TwTEu+xw/JvB60IDbpOlcgCm+51YdXBjS+7yap+fL8vmrqHDoPoTQ9eL+Ub
-	 XsD3ZNfOKZ0lixbMFXbPmwsx4igi8pVq+Rq8RcaFj75cUuRq+TT6io5hp3BHM59JKr
-	 bHIWs9f+tMw1nkDnXMdUSWmmiyce9skuPzQpN0s6eeFNidA9eKXPffWB8YmQJrXs4j
-	 N5p64LY2deHe0yGc+Pfb+vT+rfyEd6i+bKGrut2S7u6K+5TFNvFuWmipiW7jkQzm9D
-	 n2G1MCUhPBCgA==
+	b=DDY6pdYIRGuy/IqX3neDbTH5fLNvqXdNxzXiXjZI0ESY2XeKYIpyJyRyri9uNHeCZ
+	 S9QoGKTTb9cySRS8FvOJMwpEv4t7MHsKcBToHC1Kt1A4M1jX6JJl8Reo5fV36HlAcs
+	 Ex5LTPmId7JuXPLrmpmKld8/mFFDteGQVZFIGBb3CWqA4Ev/e3Dw+s7YpyLAsspfze
+	 eqQqBzy+C2puiszzKCVHYdJ+VAihA18L6y9/UQiC5ww2XbGPmAWU8Feug/5Cw0mRNb
+	 YLY5HoY9sedUmx4VJ0gTBvjYmczjofc2C9Xtg+Z057yjlo5UfoWAkEkaoUFvByjeku
+	 aTlpSLQyUpsQA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B09DC47074;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D9CC47073;
 	Thu,  4 Jan 2024 15:02:45 +0000 (UTC)
 From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Date: Thu, 04 Jan 2024 16:02:23 +0100
-Subject: [PATCH v2 02/10] umh: Remove the now superfluous sentinel elements
- from ctl_table array
+Date: Thu, 04 Jan 2024 16:02:28 +0100
+Subject: [PATCH v2 07/10] printk: Remove the now superfluous sentinel
+ elements from ctl_table array
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,7 +33,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Message-Id:
- <20240104-jag-sysctl_remove_empty_elem_kernel-v2-2-836cc04e00ec@samsung.com>
+ <20240104-jag-sysctl_remove_empty_elem_kernel-v2-7-836cc04e00ec@samsung.com>
 References:
  <20240104-jag-sysctl_remove_empty_elem_kernel-v2-0-836cc04e00ec@samsung.com>
 In-Reply-To:
@@ -69,17 +69,17 @@ Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
  linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
  bpf@vger.kernel.org, Joel Granados <j.granados@samsung.com>
 X-Mailer: b4 0.13-dev-86aa5
-X-Developer-Signature: v=1; a=openpgp-sha256; l=848; i=j.granados@samsung.com;
- h=from:subject:message-id; bh=BUKRurk0Zl4Mt0SVqAIUyLoFVcmRKbH7eHtjelFkSI0=;
- b=owEB7QES/pANAwAKAbqXzVK3lkFPAcsmYgBllsiQynlD07SyzoCEvZyaTpPLTS0Jzw1bQSZvP
- 5UavKIH+mqJAbMEAAEKAB0WIQSuRwlXJeYxJc7LJ5C6l81St5ZBTwUCZZbIkAAKCRC6l81St5ZB
- TwHOC/9M6CH39Pyho/yoy4pmOkgcdI96sfOfD//REIIsW0L3jlYqDJq0RWkCKG4sW7EWH4CCelA
- E2F0Fs488M5wUZq/hsDEQMKP43Fidwd0LxD39SwlCSYptvHVU6PPNTD2PBHnyvYJJQ6tS+o22JP
- Afmj8uAA9+w3OfbQWxNfCifSGLBSPbSwiN9SOIdBz1YcLL4Tt7e86FswNGxtpWhDZM0C5aoElqC
- ToOri3VRMj8jq4NUSwkbeTDG6RPXTvm2J/J+uqmHHeE8p1kTWUuQPfUpkfF1abJLfFccFNjr4UY
- d+/QGLugW3Xsy8gjkaFnHGpprRPSDScy+1CDB+yWSYE4I2v874plQu1fiKUEAd2ftBqvo2p0vVk
- WnMSTJktp0zAWwJXb+OIjGiU4OVnckLAJN8qPdMH8jUPLQoYtAnD9JTkm2wkkZF3rszil97zrbJ
- NAq+PlfYIT6xntDB3fA6kfeFaYLpTopQTpPF4FaA0vSaYvBmCMwXqfQKNnnUbs99dlGAs=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=918; i=j.granados@samsung.com;
+ h=from:subject:message-id; bh=0RIXHtz2qk2L/BtCOsMTqHqgTDQk5qxNwP6u/9nvwkg=;
+ b=owEB7QES/pANAwAKAbqXzVK3lkFPAcsmYgBllsiRP58+mgIl1Ljw8f0Tp729I8/loQ4fDbu14
+ K2lkSCYZECJAbMEAAEKAB0WIQSuRwlXJeYxJc7LJ5C6l81St5ZBTwUCZZbIkQAKCRC6l81St5ZB
+ TwAeC/9GoHY3KhH9zUZQZJiDaYIXsyY3oxjLSIE8BsKGUZ2BwE82BWnnEF3foe8KPS2FRq1GsXX
+ PJgzxRPEa4Tnr6JXWq7bA/T3CcdQz3EeaJdvnP66CS5wr5hQ1F7zl0K098VXOj2ooZUbfM1xyt9
+ pi1uM2q/Arm/dH3D4FjNorf+rGPaSCIYbVDdNcKCC2Le9uGj94EWXvpM/YUTRmOLIG1cTPXnY45
+ dlRCCSzpsC7sVPhG1Uf/qia7QsQHGDqKJHLYy73JJ9pOg+TgL1xH2EXRVXEPkyl9MRT0woRCgHG
+ /SEZ356lVGqKjmG/GK0ox+1rTKYYkPT2KHpRPcvUXZWML/jHY9bimbi754rX5/sNiJMY1S6rJuw
+ ebltqt9IFrvbVS9kwrHQfoi2oqS8wTxb1r2HWGwzj9x35MN8cX2ABbJspICnuqHot5tZuFGbnkn
+ 8kSe7/H2N2fneoP2+DtJGcowYqW2alz+q/q1vg7Ilu7t0eRY81/M9ik0oPwi49Une54ME=
 X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
  fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
 X-Endpoint-Received:
@@ -95,25 +95,26 @@ will reduce the overall build time size of the kernel and run time
 memory bloat by ~64 bytes per sentinel (further information Link :
 https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
 
-Remove sentinel element from usermodehelper_table
+rm sentinel element from printk_sysctls
 
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Joel Granados <j.granados@samsung.com>
 ---
- kernel/umh.c | 1 -
+ kernel/printk/sysctl.c | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/kernel/umh.c b/kernel/umh.c
-index 1b13c5d34624..598b3ffe1522 100644
---- a/kernel/umh.c
-+++ b/kernel/umh.c
-@@ -560,7 +560,6 @@ static struct ctl_table usermodehelper_table[] = {
- 		.mode		= 0600,
- 		.proc_handler	= proc_cap_handler,
+diff --git a/kernel/printk/sysctl.c b/kernel/printk/sysctl.c
+index c228343eeb97..3e47dedce9e5 100644
+--- a/kernel/printk/sysctl.c
++++ b/kernel/printk/sysctl.c
+@@ -76,7 +76,6 @@ static struct ctl_table printk_sysctls[] = {
+ 		.extra1		= SYSCTL_ZERO,
+ 		.extra2		= SYSCTL_TWO,
  	},
--	{ }
+-	{}
  };
  
- static int __init init_umh_sysctls(void)
+ void __init printk_sysctl_init(void)
 
 -- 
 2.30.2
