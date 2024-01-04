@@ -1,106 +1,196 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DD07208A6;
-	Thu,  4 Jan 2024 07:43:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxDOs+YZZlq+ABAA--.7171S3;
-	Thu, 04 Jan 2024 15:41:51 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxPN48YZZlfyoBAA--.2989S3;
-	Thu, 04 Jan 2024 15:41:48 +0800 (CST)
-Subject: Re: [PATCH bpf-next v1] bpf: Return -ENOTSUPP if callbacks are not
- allowed in non-JITed programs
-To: John Fastabend <john.fastabend@gmail.com>,
- Eduard Zingerman <eddyz87@gmail.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>
-References: <20231225091830.6094-1-yangtiezhu@loongson.cn>
- <1179fcf4e4feaf5d9161eb0ec8fb41e4f08511a4.camel@gmail.com>
- <6594a4c15a677_11e86208cd@john.notmuch>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <0ea51d9f-7007-b893-0903-d9f76d6f34c9@loongson.cn>
-Date: Thu, 4 Jan 2024 15:41:48 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E43F200A6
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 07:47:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mkFEL6Hz"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-555bd21f9fdso275104a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 23:47:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704354434; x=1704959234; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oGF4/vmIJ8o7IJvlJQyYKaxW9KtTtwYjR9BBLu19fK4=;
+        b=mkFEL6HzI8xj4xcJEgGtfq2/GQfxmpYfCM6qKsp/DwjdhHavpkkdYUNWqZe4tZnbpj
+         nummQLXCZGmtl3W/LPaBOpVBxSLlENm/joY/SgTTfbouINsw8USktKevRISs8zFuewb+
+         olIiZzsqmf5C/b1WyvS/jRc5qi85L6TnOlQLeAkSk2IRBghZDeJDDm6ZiFjNfxK13lJW
+         syVCKMHEvRgKxAlpM1R6Q9agccCRPEosXITT7OS9ZEW71GKv6c3KdBCJXwrFS46CG6ML
+         J/uCEciNYweY5UKPtX5e562LGcpzjXKpA0HLXCRJ6TzEKHT0gMGgjksWdv726GiysYfN
+         YcGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704354434; x=1704959234;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oGF4/vmIJ8o7IJvlJQyYKaxW9KtTtwYjR9BBLu19fK4=;
+        b=vMUxD/mHvd10p7vhy54CHIbBfDWmFgppezaDa2mYPKG0e8abuYALmT0KfuFgNRU0LC
+         Maj/UsYpUMY6236wx97wg8wnlw0BFZPaE4LMiJu9B8oREz5BUbKAOkj252WYYJ3RgJZN
+         sN240aH8ui/XFS13rLABUoyLMVL0lPoXlw7/85Y7BbKBtmAD4zi3v+u2oz8NNP4w/ByH
+         NyaeNfrEqDPC/SVNxF83WA1/4Vuu28h3qvWz/tgJhceFEWngJT0lsitBTSPDs2sLtpwj
+         kF1pkID1mosTb/ubO6PKeQG93tCh9F+91rip4E2zFYhdp71ajRHF6yZ/PtMWnPDFuaKR
+         dAPg==
+X-Gm-Message-State: AOJu0YwVZp31Np217XNHJWmUS+SvEwCL6E4VX7hsgpacueTfK8RAZW28
+	pno2nvId5em84w88P85BWE4OXyX/kuqsMA==
+X-Google-Smtp-Source: AGHT+IHD4M0r8yDP/YsO00ANonos/KjanteYCjmiTxyH/zJvMcNhKtTUPBA9N36eVzDrvVyTOgmzew==
+X-Received: by 2002:a50:9b4f:0:b0:555:ea2f:a97f with SMTP id a15-20020a509b4f000000b00555ea2fa97fmr98511edj.13.1704354434368;
+        Wed, 03 Jan 2024 23:47:14 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.218.27])
+        by smtp.gmail.com with ESMTPSA id p12-20020a05640243cc00b0055493aa8905sm14982937edc.63.2024.01.03.23.47.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jan 2024 23:47:13 -0800 (PST)
+Message-ID: <c4831e26-5ff0-40b1-98d4-addfdc1ee5a8@linaro.org>
+Date: Thu, 4 Jan 2024 08:47:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <6594a4c15a677_11e86208cd@john.notmuch>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/5] dt-bindings: net: ipq4019-mdio: Document ipq5332
+ platform
+Content-Language: en-US
+To: Jie Luo <quic_luoj@quicinc.com>, agross@kernel.org, andersson@kernel.org,
+ konrad.dybcio@linaro.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, andrew@lunn.ch,
+ hkallweit1@gmail.com, linux@armlinux.org.uk, robert.marko@sartura.hr
+Cc: linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ quic_srichara@quicinc.com
+References: <20231225084424.30986-1-quic_luoj@quicinc.com>
+ <20231225084424.30986-6-quic_luoj@quicinc.com>
+ <dee72ce8-b24e-467a-b265-1b965588807f@linaro.org>
+ <aeb364a3-6c05-4a1b-ba32-e687a89f20f8@quicinc.com>
+ <58dde1a7-ed4a-442c-bb5c-c3f6d926fb7e@linaro.org>
+ <06ddbae8-1502-41fb-8cf8-9a3390dad557@quicinc.com>
+ <28c8b31c-8dcb-4a19-9084-22c77a74b9a1@linaro.org>
+ <d231b7e2-51f5-4676-8fc0-e4bc6154e2d7@quicinc.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <d231b7e2-51f5-4676-8fc0-e4bc6154e2d7@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8BxPN48YZZlfyoBAA--.2989S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxJry5KrW7Ar15ZF1Uur4xXwc_yoW8Aw45pF
-	40kFWqyFWvqa47WasFqFsrua42qw15J3y7WFW8AryxJFn8tr9xJr48Kw43uasavrn3W3W0
-	va1S9FyvvFyUXacCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1tC7UUU
-	UU=
 
-
-
-On 01/03/2024 08:05 AM, John Fastabend wrote:
-> Eduard Zingerman wrote:
->> On Mon, 2023-12-25 at 17:18 +0800, Tiezhu Yang wrote:
->>> If CONFIG_BPF_JIT_ALWAYS_ON is not set and bpf_jit_enable is 0, there
->>> exist 6 failed tests.
-
-...
-
->>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->>> ---
->>>  kernel/bpf/verifier.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
->>> index a376eb609c41..1c780a893284 100644
->>> --- a/kernel/bpf/verifier.c
->>> +++ b/kernel/bpf/verifier.c
->>> @@ -19069,7 +19069,7 @@ static int fixup_call_args(struct bpf_verifier_env *env)
->>>  			 * have to be rejected, since interpreter doesn't support them yet.
->>>  			 */
->>>  			verbose(env, "callbacks are not allowed in non-JITed programs\n");
->>> -			return -EINVAL;
->>> +			return -ENOTSUPP;
->>>  		}
->>>
->>>  		if (!bpf_pseudo_call(insn))
+On 28/12/2023 08:38, Jie Luo wrote:
+>>> Sorry for this confusion.
+>>> Rob said the internal reference source can be decided by the absence of
+>>> the property combined with compatible string, because i said the
 >>
->> I agree with this change, however I think that it should be consistent.
->> Quick and non-exhaustive grepping shows that there are 4 places where
->> "non-JITed" is used in error messages: in check_map_func_compatibility()
->> and in fixup_call_args().
->> All these places currently use -EINVAL and should be updated to -ENOTSUPP,
->> if this change gets a green light.
->
-> My preference is to just leave them as is unless its a serious
-> problem. In this case any userspace has likely already figured
-> out how to handle these errors so I don't think there is much
-> value in changing things.
+>> So all your three DT maintainers agree that lack of property for
+>> choosing clock, defines the usage of interrupt source.
+> 
+> This is the reference clock source selection of CMN block, which
+> generates the clocks for the Ethernet devices.
+> 
+>>
+>> Now we had huge amount of arguments that you do not represent properly
+>> the clock relationships. Still.
+> 
+> here is the clock topology.
+> reference clock sources ---> CMN PLL ---> various output clocks
 
-I am not quite sure whether to ignore this patch, but the state of
-this patch is "Changes Requested" [1], I guess I should send v2 as
-Eduard suggested.
+How do you guarantee that these clocks are enabled without proper
+relationships described in DT? In current and future designs?
 
-[1] 
-https://patchwork.kernel.org/project/netdevbpf/patch/20231225091830.6094-1-yangtiezhu@loongson.cn/
+> 
+> the output clocks are provided to the Ethernet devices(such as the
+> qca808x PHY devices).
+> 
+> These information is also provided the commit message of the patch
+> <net: mdio: ipq4019: configure CMN PLL clock for ipq5332>.
+> 
+>>
+>>> internal 96MHZ is used on ipq5018 currently in the previous message.
+>>>
+>>> per double checked the current IPQ platforms, the internal 96MHZ is also
+>>> possible on ipq9574, and the reference clock source should be kept as
+>>> configurable instead of limited by the compatible string, maybe the
+>>> different reference clock source is acquired in the future, even
+>>> currently it is not used on the special platform for now.
+>>>
+>>> so i update the solution with a little bit of changes.
+>>
+>> You still do not want to implement our suggestions and I don't
+>> understand your arguments. Nothing in above paragraph explains me why
+>> you cannot use clock provider/consumer relationships.
+> 
+> Hi Krzysztof,
+> 
+> The reference clock source can be registered as the fix clock provider,
+>  From the current fix clock provider, the clock rate is useful for the
+> clock consumer, the fix clock rate is used to generate the output clocks
+> by the divider or multiplier.
+> 
+> For the CMN block to select reference clock, which is configuring the
+> clock source, we don't know the formula to get the output clock value
+> based on the reference clock value.
 
-Thanks,
-Tiezhu
+I don't understand what does it mean. You do not know how to program CMN
+block?
+
+> 
+> i also see there is an example in the upstream code, which is same as
+> the CMN block to select the reference clock source.
+
+Oh, the old argument. So if there is a bug in the code, you are going
+for example to implement it as well?
+
+> 
+> the property "ref-clock-frequency" is defined in the yaml file below.
+> Documentation/devicetree/bindings/net/wireless/ti,wlcore.yaml.
+
+And how does the hardware look like there? It's TI, so how do you even know?
+
+
+
+Best regards,
+Krzysztof
 
