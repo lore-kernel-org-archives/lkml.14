@@ -1,373 +1,230 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail115-100.sinamail.sina.com.cn (mail115-100.sinamail.sina.com.cn [218.30.115.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E821D68A
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 04:56:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lp41SNvS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704344210;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wkxxTkMqNEwpbKHN6am6PA+y1xu5ofQzJ5MjP1uHEUc=;
-	b=Lp41SNvSAkJwyZXSt9EXdaYwMQhDdN8Kn9NBWLdqJlL1yefnW0D271vQXVImHT/2J6je61
-	GtMw+gj2pTTiHxmA5H9Rgmd+6ceu8R4T6yQXAynwTFn9gkgrRt+PmcYcC+bbvGmnuT0j3Y
-	cni2Ge1m1q/ceHyZLlEHSzApEFt5I4o=
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
- [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-177-WF-h8ccBPY2SVQ8PCmfUig-1; Wed, 03 Jan 2024 23:56:49 -0500
-X-MC-Unique: WF-h8ccBPY2SVQ8PCmfUig-1
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-6d9b266183eso112602b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 20:56:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704344208; x=1704949008;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wkxxTkMqNEwpbKHN6am6PA+y1xu5ofQzJ5MjP1uHEUc=;
-        b=hTpPSLuRFh3JZnpz7tSWwtZq002EdCM8hplrjeWEwxcuF4IkdxQtyoQ4s0SKXrM5j4
-         z4H2PZGdggMmEd1xV/XAziIYa+9TxLoMZoW1g18dS2h3r5J3kVI+nOjhU1/HglVmwFN+
-         PzFLntOZOr9A/VuNBMhEWMWvBZwsRXG8jmfIWFiyy0J0Y4WjDZWR6QlzaVyTeS9wdzAE
-         nVBkHbnb6edF+cMIeuLmkUZ4mwjcWLWfW7LkHUF/5zy1a6euTzFYpIpCtO66fFSAZ+WR
-         5BEAwPYHs7jxLqviVJU46cA0OrxMgJAGr64hLqbaiC41s8waUtb5aVFeCsbPCvo4WbQR
-         6FwA==
-X-Gm-Message-State: AOJu0YzvYOGVK9U54J/OJw0R6vJ8Ql1aPYdj57uIuiqKEeSoSdkBxWPw
-	biz68KAirC5IHkTxDLAbTQsy4cMh0hn7eTMTuayiP66At3xBOQTBs5QNrACImxxiMqs5eaRMU+J
-	CCVN8p5+NKSRkZuQPLda0hI04S1IehTXA
-X-Received: by 2002:a05:6a00:2f94:b0:6d9:9ea6:a366 with SMTP id fm20-20020a056a002f9400b006d99ea6a366mr80048pfb.61.1704344208059;
-        Wed, 03 Jan 2024 20:56:48 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFzvdSrrptTX8IcNlJN4p/HszwLZSS5w416eatKHRrDdMIRM5mvP3tOSbw5q+TcRtNtsxNB6g==
-X-Received: by 2002:a05:6a00:2f94:b0:6d9:9ea6:a366 with SMTP id fm20-20020a056a002f9400b006d99ea6a366mr80041pfb.61.1704344207664;
-        Wed, 03 Jan 2024 20:56:47 -0800 (PST)
-Received: from LeoBras.redhat.com ([2804:431:c7ec:911:6911:ca60:846:eb46])
-        by smtp.gmail.com with ESMTPSA id k11-20020a63ff0b000000b005c662e103a1sm23227447pgi.41.2024.01.03.20.56.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jan 2024 20:56:47 -0800 (PST)
-From: Leonardo Bras <leobras@redhat.com>
-To: guoren@kernel.org
-Cc: Leonardo Bras <leobras@redhat.com>,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	panqinglin2020@iscas.ac.cn,
-	bjorn@rivosinc.com,
-	conor.dooley@microchip.com,
-	peterz@infradead.org,
-	anup@brainfault.org,
-	keescook@chromium.org,
-	wuwei2016@iscas.ac.cn,
-	xiaoguang.xing@sophgo.com,
-	chao.wei@sophgo.com,
-	unicorn_wang@outlook.com,
-	uwu@icenowy.me,
-	jszhang@kernel.org,
-	wefu@redhat.com,
-	atishp@atishpatra.org,
-	linux-riscv@lists.infradead.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8EF154AD
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 05:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([113.118.67.178])
+	by sina.com (172.16.235.24) with ESMTP
+	id 65963C85000057B2; Thu, 4 Jan 2024 13:05:13 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 3914745089410
+X-SMAIL-UIID: C8DB516FDAEF42099E75FA5FAE883757-20240104-130513-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+2b131f51bb4af224ab40@syzkaller.appspotmail.com>
+Cc: krzysztof.kozlowski@linaro.org,
+	Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
 	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	virtualization@lists.linux-foundation.org,
-	Guo Ren <guoren@linux.alibaba.com>
-Subject: Re: [PATCH V12 06/14] riscv: qspinlock: Introduce combo spinlock
-Date: Thu,  4 Jan 2024 01:56:33 -0300
-Message-ID: <ZZY6gcFUnGJVVXbg@LeoBras>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231225125847.2778638-7-guoren@kernel.org>
-References: <20231225125847.2778638-1-guoren@kernel.org> <20231225125847.2778638-7-guoren@kernel.org>
+	netdev@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] [nfc?] INFO: task hung in nfc_targets_found
+Date: Thu,  4 Jan 2024 13:05:00 +0800
+Message-Id: <20240104050501.2766-1-hdanton@sina.com>
+In-Reply-To: <00000000000026100c060e143e5a@google.com>
+References: <00000000000026100c060e143e5a@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 
-On Mon, Dec 25, 2023 at 07:58:39AM -0500, guoren@kernel.org wrote:
-> From: Guo Ren <guoren@linux.alibaba.com>
+On Wed, 03 Jan 2024 16:59:25 -0800
+> Hello,
 > 
-> Combo spinlock could support queued and ticket in one Linux Image and
-> select them during boot time via command line. Here is the func
-> size (Bytes) comparison table below:
+> syzbot found the following issue on:
 > 
-> TYPE			: COMBO | TICKET | QUEUED
-> arch_spin_lock		: 106	| 60     | 50
-> arch_spin_unlock	: 54    | 36     | 26
-> arch_spin_trylock	: 110   | 72     | 54
-> arch_spin_is_locked	: 48    | 34     | 20
-> arch_spin_is_contended	: 56    | 40     | 24
-> rch_spin_value_unlocked	: 48    | 34     | 24
+> HEAD commit:    453f5db0619e Merge tag 'trace-v6.7-rc7' of git://git.kerne..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=141bc48de80000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=f8e72bae38c079e4
+> dashboard link: https://syzkaller.appspot.com/bug?extid=2b131f51bb4af224ab40
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 > 
-> One example of disassemble combo arch_spin_unlock:
->   <+14>:    nop                # detour slot
->   <+18>:    fence   rw,w       --+-> queued_spin_unlock
->   <+22>:    sb      zero,0(a4) --+   (2 instructions)
->   <+26>:    ld      s0,8(sp)
->   <+28>:    addi    sp,sp,16
->   <+30>:    ret
->   <+32>:    lw      a5,0(a4)   --+-> ticket_spin_unlock
->   <+34>:    sext.w  a5,a5        |   (7 instructions)
->   <+36>:    fence   rw,w         |
->   <+40>:    addiw   a5,a5,1      |
->   <+42>:    slli    a5,a5,0x30   |
->   <+44>:    srli    a5,a5,0x30   |
->   <+46>:    sh      a5,0(a4)   --+
->   <+50>:    ld      s0,8(sp)
->   <+52>:    addi    sp,sp,16
->   <+54>:    ret
-> The qspinlock is smaller and faster than ticket-lock when all are in a
-> fast path.
+> Unfortunately, I don't have any reproducer for this issue yet.
 > 
-> The combo spinlock could provide a compatible Linux Image for different
-> micro-arch designs that have/haven't forward progress guarantee. Use
-> command line options to select between qspinlock and ticket-lock, and
-> the default is ticket-lock.
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/6ed2cada0823/disk-453f5db0.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/1fa106f79073/vmlinux-453f5db0.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/c75ff5078c5c/bzImage-453f5db0.xz
 > 
-> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-> Signed-off-by: Guo Ren <guoren@kernel.org>
-> ---
->  .../admin-guide/kernel-parameters.txt         |  2 +
->  arch/riscv/Kconfig                            |  9 +++-
->  arch/riscv/include/asm/spinlock.h             | 48 +++++++++++++++++++
->  arch/riscv/kernel/setup.c                     | 34 +++++++++++++
->  include/asm-generic/qspinlock.h               |  2 +
->  include/asm-generic/ticket_spinlock.h         |  2 +
->  6 files changed, 96 insertions(+), 1 deletion(-)
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+2b131f51bb4af224ab40@syzkaller.appspotmail.com
 > 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 65731b060e3f..2ac9f1511774 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -4753,6 +4753,8 @@
->  			[KNL] Number of legacy pty's. Overwrites compiled-in
->  			default number.
->  
-> +	qspinlock	[RISCV] Use native qspinlock.
-> +
->  	quiet		[KNL] Disable most log messages
->  
->  	r128=		[HW,DRM]
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index f345df0763b2..b7673c5c0997 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -434,7 +434,7 @@ config NODES_SHIFT
->  
->  choice
->  	prompt "RISC-V spinlock type"
-> -	default RISCV_TICKET_SPINLOCKS
-> +	default RISCV_COMBO_SPINLOCKS
->  
->  config RISCV_TICKET_SPINLOCKS
->  	bool "Using ticket spinlock"
-> @@ -446,6 +446,13 @@ config RISCV_QUEUED_SPINLOCKS
->  	help
->  	  Make sure your micro arch give cmpxchg/xchg forward progress
->  	  guarantee. Otherwise, stay at ticket-lock.
-> +
-> +config RISCV_COMBO_SPINLOCKS
-> +	bool "Using combo spinlock"
-> +	depends on SMP && MMU
-> +	select ARCH_USE_QUEUED_SPINLOCKS
-> +	help
-> +	  Select queued spinlock or ticket-lock by cmdline.
->  endchoice
->  
->  config RISCV_ALTERNATIVE
-> diff --git a/arch/riscv/include/asm/spinlock.h b/arch/riscv/include/asm/spinlock.h
-> index 98a3da4b1056..d07643c07aae 100644
-> --- a/arch/riscv/include/asm/spinlock.h
-> +++ b/arch/riscv/include/asm/spinlock.h
-> @@ -7,12 +7,60 @@
->  #define _Q_PENDING_LOOPS	(1 << 9)
->  #endif
->  
-> +#ifdef CONFIG_RISCV_COMBO_SPINLOCKS
-> +#define __no_arch_spinlock_redefine
-> +#include <asm/ticket_spinlock.h>
-> +#include <asm/qspinlock.h>
-> +#include <linux/jump_label.h>
-> +
-> +DECLARE_STATIC_KEY_TRUE(combo_qspinlock_key);
-> +
-> +#define COMBO_SPINLOCK_BASE_DECLARE(op)					\
-> +static __always_inline void arch_spin_##op(arch_spinlock_t *lock)	\
-> +{									\
-> +	if (static_branch_likely(&combo_qspinlock_key))			\
-> +		queued_spin_##op(lock);					\
-> +	else								\
-> +		ticket_spin_##op(lock);					\
-> +}
-> +COMBO_SPINLOCK_BASE_DECLARE(lock)
-> +COMBO_SPINLOCK_BASE_DECLARE(unlock)
-> +
-> +#define COMBO_SPINLOCK_IS_DECLARE(op)					\
-> +static __always_inline int arch_spin_##op(arch_spinlock_t *lock)	\
-> +{									\
-> +	if (static_branch_likely(&combo_qspinlock_key))			\
-> +		return queued_spin_##op(lock);				\
-> +	else								\
-> +		return ticket_spin_##op(lock);				\
-> +}
-> +COMBO_SPINLOCK_IS_DECLARE(is_locked)
-> +COMBO_SPINLOCK_IS_DECLARE(is_contended)
-> +
-> +static __always_inline bool arch_spin_trylock(arch_spinlock_t *lock)
-> +{
-> +	if (static_branch_likely(&combo_qspinlock_key))
-> +		return queued_spin_trylock(lock);
-> +	else
-> +		return ticket_spin_trylock(lock);
-> +}
-> +
-> +static __always_inline int arch_spin_value_unlocked(arch_spinlock_t lock)
-> +{
-> +	if (static_branch_likely(&combo_qspinlock_key))
-> +		return queued_spin_value_unlocked(lock);
-> +	else
-> +		return ticket_spin_value_unlocked(lock);
-> +}
-> +
-
-Hello Guo Ren,
-
-The above is much better than v11, but can be improved as I mentioned in 
-my reply in v11. Okay, I noticed there is a type issue: some return int, 
-others return bool while some return void, but it can be improved:
-
-+#define COMBO_SPINLOCK_DECLARE(op, type)                             \
-+static __always_inline type arch_spin_##op(arch_spinlock_t *lock)    \
-+{                                                                    \
-+     if (static_branch_likely(&combo_qspinlock_key))                 \
-+             return queued_spin_##op(lock);                          \
-+     else                                                            \
-+             return ticket_spin_##op(lock);                          \
-+}
-+
-+COMBO_SPINLOCK_DECLARE(lock, void)
-+COMBO_SPINLOCK_DECLARE(unlock, void)
-+COMBO_SPINLOCK_DECLARE(is_locked, int)
-+COMBO_SPINLOCK_DECLARE(is_contended, int)
-+COMBO_SPINLOCK_DECLARE(value_unlocked, int)
-+COMBO_SPINLOCK_DECLARE(trylock, bool)
-
-===
-IIRC it's legal to return a void f1() from a void f2():
-
-void f1() {}
-
-void f2() {
-	return f1(); /* <- IIRC it's legal :)*/
-}
-===
-
-> +#else /* CONFIG_RISCV_COMBO_SPINLOCKS */
->  #ifdef CONFIG_QUEUED_SPINLOCKS
->  #include <asm/qspinlock.h>
->  #else
->  #include <asm/ticket_spinlock.h>
->  #endif
->  
-> +#endif /* CONFIG_RISCV_COMBO_SPINLOCKS */
->  #include <asm/qrwlock.h>
->  
->  #endif /* __ASM_RISCV_SPINLOCK_H */
-> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
-> index 535a837de55d..d9072a59831c 100644
-> --- a/arch/riscv/kernel/setup.c
-> +++ b/arch/riscv/kernel/setup.c
-> @@ -246,6 +246,37 @@ static void __init parse_dtb(void)
->  #endif
->  }
->  
-> +#ifdef CONFIG_RISCV_COMBO_SPINLOCKS
-> +static bool enable_qspinlock __ro_after_init;
-> +static int __init queued_spinlock_setup(char *p)
-> +{
-> +	enable_qspinlock = true;
-> +
-> +	return 0;
-> +}
-> +early_param("qspinlock", queued_spinlock_setup);
-> +
-> +/*
-> + * Ticket-lock would dirty the lock value, so force qspinlock at
-> + * first and switch to ticket-lock later.
-> + *  - key is true : qspinlock -> qspinlock (no change)
-> + *  - key is false: qspinlock -> ticket-lock
-> + *    (No ticket-lock -> qspinlock)
-> + */
-> +DEFINE_STATIC_KEY_TRUE(combo_qspinlock_key);
-> +EXPORT_SYMBOL(combo_qspinlock_key);
-> +
-> +static void __init riscv_spinlock_init(void)
-> +{
-> +	if (!enable_qspinlock) {
-> +		static_branch_disable(&combo_qspinlock_key);
-> +		pr_info("Ticket spinlock: enabled\n");
-> +	} else {
-> +		pr_info("Queued spinlock: enabled\n");
-> +	}
-> +}
-> +#endif
-> +
->  extern void __init init_rt_signal_env(void);
->  
->  void __init setup_arch(char **cmdline_p)
-> @@ -297,6 +328,9 @@ void __init setup_arch(char **cmdline_p)
->  	riscv_set_dma_cache_alignment();
->  
->  	riscv_user_isa_enable();
-> +#ifdef CONFIG_RISCV_COMBO_SPINLOCKS
-> +	riscv_spinlock_init();
-> +#endif
->  }
->  
->  static int __init topology_init(void)
-> diff --git a/include/asm-generic/qspinlock.h b/include/asm-generic/qspinlock.h
-> index 0655aa5b57b2..bf47cca2c375 100644
-> --- a/include/asm-generic/qspinlock.h
-> +++ b/include/asm-generic/qspinlock.h
-> @@ -136,6 +136,7 @@ static __always_inline bool virt_spin_lock(struct qspinlock *lock)
->  }
->  #endif
->  
-> +#ifndef __no_arch_spinlock_redefine
->  /*
->   * Remapping spinlock architecture specific functions to the corresponding
->   * queued spinlock functions.
-> @@ -146,5 +147,6 @@ static __always_inline bool virt_spin_lock(struct qspinlock *lock)
->  #define arch_spin_lock(l)		queued_spin_lock(l)
->  #define arch_spin_trylock(l)		queued_spin_trylock(l)
->  #define arch_spin_unlock(l)		queued_spin_unlock(l)
-> +#endif
->  
->  #endif /* __ASM_GENERIC_QSPINLOCK_H */
-> diff --git a/include/asm-generic/ticket_spinlock.h b/include/asm-generic/ticket_spinlock.h
-> index cfcff22b37b3..325779970d8a 100644
-> --- a/include/asm-generic/ticket_spinlock.h
-> +++ b/include/asm-generic/ticket_spinlock.h
-> @@ -89,6 +89,7 @@ static __always_inline int ticket_spin_is_contended(arch_spinlock_t *lock)
->  	return (s16)((val >> 16) - (val & 0xffff)) > 1;
->  }
->  
-> +#ifndef __no_arch_spinlock_redefine
->  /*
->   * Remapping spinlock architecture specific functions to the corresponding
->   * ticket spinlock functions.
-> @@ -99,5 +100,6 @@ static __always_inline int ticket_spin_is_contended(arch_spinlock_t *lock)
->  #define arch_spin_lock(l)		ticket_spin_lock(l)
->  #define arch_spin_trylock(l)		ticket_spin_trylock(l)
->  #define arch_spin_unlock(l)		ticket_spin_unlock(l)
-> +#endif
->  
->  #endif /* __ASM_GENERIC_TICKET_SPINLOCK_H */
-> -- 
-> 2.40.1
+> INFO: task kworker/u4:93:7607 blocked for more than 143 seconds.
+>       Not tainted 6.7.0-rc7-syzkaller-00049-g453f5db0619e #0
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> task:kworker/u4:93   state:D stack:20248 pid:7607  tgid:7607  ppid:2      flags:0x00004000
+> Workqueue: nfc2_nci_rx_wq nci_rx_work
+> Call Trace:
+>  <TASK>
+>  context_switch kernel/sched/core.c:5376 [inline]
+>  __schedule+0x1961/0x4ab0 kernel/sched/core.c:6688
+>  __schedule_loop kernel/sched/core.c:6763 [inline]
+>  schedule+0x149/0x260 kernel/sched/core.c:6778
+>  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:6835
+>  __mutex_lock_common kernel/locking/mutex.c:679 [inline]
+>  __mutex_lock+0x6a3/0xd60 kernel/locking/mutex.c:747
+>  device_lock include/linux/device.h:992 [inline]
+>  nfc_targets_found+0x26f/0x590 net/nfc/core.c:778
+>  nci_ntf_packet+0x4431/0x4f40
+>  nci_rx_work+0x14c/0x2b0 net/nfc/nci/core.c:1522
+>  process_one_work kernel/workqueue.c:2627 [inline]
+>  process_scheduled_works+0x90f/0x1420 kernel/workqueue.c:2700
+>  worker_thread+0xa5f/0x1000 kernel/workqueue.c:2781
+>  kthread+0x2d3/0x370 kernel/kthread.c:388
+>  ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147
+>  ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+>  </TASK>
+> INFO: task kworker/0:1:11541 blocked for more than 143 seconds.
+>       Not tainted 6.7.0-rc7-syzkaller-00049-g453f5db0619e #0
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> task:kworker/0:1     state:D stack:23280 pid:11541 tgid:11541 ppid:2      flags:0x00004000
+> Workqueue: events nfc_urelease_event_work
+> Call Trace:
+>  <TASK>
+>  context_switch kernel/sched/core.c:5376 [inline]
+>  __schedule+0x1961/0x4ab0 kernel/sched/core.c:6688
+>  __schedule_loop kernel/sched/core.c:6763 [inline]
+>  schedule+0x149/0x260 kernel/sched/core.c:6778
+>  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:6835
+>  __mutex_lock_common kernel/locking/mutex.c:679 [inline]
+>  __mutex_lock+0x6a3/0xd60 kernel/locking/mutex.c:747
+>  nci_request net/nfc/nci/core.c:149 [inline]
+>  nci_stop_poll+0x123/0x480 net/nfc/nci/core.c:873
+>  nfc_stop_poll+0xea/0x220 net/nfc/core.c:259
+>  nfc_urelease_event_work+0x160/0x2f0 net/nfc/netlink.c:1852
+>  process_one_work kernel/workqueue.c:2627 [inline]
+>  process_scheduled_works+0x90f/0x1420 kernel/workqueue.c:2700
+>  worker_thread+0xa5f/0x1000 kernel/workqueue.c:2781
+>  kthread+0x2d3/0x370 kernel/kthread.c:388
+>  ret_from_fork+0x48/0x80 arch/x86/kernel/process.c:147
+>  ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+>  </TASK>
+> INFO: task syz-executor.1:27827 blocked for more than 143 seconds.
+>       Not tainted 6.7.0-rc7-syzkaller-00049-g453f5db0619e #0
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> task:syz-executor.1  state:D stack:25392 pid:27827 tgid:27824 ppid:27038  flags:0x00004006
+> Call Trace:
+>  <TASK>
+>  context_switch kernel/sched/core.c:5376 [inline]
+>  __schedule+0x1961/0x4ab0 kernel/sched/core.c:6688
+>  __schedule_loop kernel/sched/core.c:6763 [inline]
+>  schedule+0x149/0x260 kernel/sched/core.c:6778
+>  schedule_timeout+0xb0/0x300 kernel/time/timer.c:2143
+>  do_wait_for_common kernel/sched/completion.c:95 [inline]
+>  __wait_for_common kernel/sched/completion.c:116 [inline]
+>  wait_for_common kernel/sched/completion.c:127 [inline]
+>  wait_for_completion+0x354/0x620 kernel/sched/completion.c:148
+>  __flush_workqueue+0x730/0x1630 kernel/workqueue.c:3192
+>  nci_close_device+0x193/0x600 net/nfc/nci/core.c:579
+>  nci_unregister_device+0x40/0x240 net/nfc/nci/core.c:1297
+>  virtual_ncidev_close+0x59/0x90 drivers/nfc/virtual_ncidev.c:168
+>  __fput+0x3cc/0x9e0 fs/file_table.c:394
+>  task_work_run+0x24a/0x300 kernel/task_work.c:180
+>  get_signal+0x166e/0x1840 kernel/signal.c:2680
+>  arch_do_signal_or_restart+0x96/0x860 arch/x86/kernel/signal.c:309
+>  exit_to_user_mode_loop+0x6a/0x100 kernel/entry/common.c:168
+>  exit_to_user_mode_prepare+0xb1/0x150 kernel/entry/common.c:204
+>  __syscall_exit_to_user_mode_work kernel/entry/common.c:285 [inline]
+>  syscall_exit_to_user_mode+0x69/0x2a0 kernel/entry/common.c:296
+>  do_syscall_64+0x52/0x110 arch/x86/entry/common.c:89
+>  entry_SYSCALL_64_after_hwframe+0x63/0x6b
+> RIP: 0033:0x7fab9d07cce9
+> RSP: 002b:00007fab9ddde0c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+> RAX: fffffffffffffff2 RBX: 00007fab9d19bf80 RCX: 00007fab9d07cce9
+> RDX: 0000000000000064 RSI: 0000000020000500 RDI: 0000000000000003
+> RBP: 00007fab9d0c947a R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> R13: 000000000000000b R14: 00007fab9d19bf80 R15: 00007ffe08b6c548
+>  </TASK>
 > 
+> Showing all locks held in the system:
+> 1 lock held by khungtaskd/29:
+>  #0: ffffffff8d92dae0 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:301 [inline]
+>  #0: ffffffff8d92dae0 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:747 [inline]
+>  #0: ffffffff8d92dae0 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x55/0x2a0 kernel/locking/lockdep.c:6614
+> 2 locks held by getty/4825:
+>  #0: ffff88802a6320a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
+>  #1: ffffc90002f062f0 (&ldata->atomic_read_lock){+.+.}-{3:3}, at: n_tty_read+0x6b4/0x1e10 drivers/tty/n_tty.c:2201
+> 3 locks held by kworker/u4:93/7607:
+>  #0: ffff8880368b3938 ((wq_completion)nfc2_nci_rx_wq){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2602 [inline]
+>  #0: ffff8880368b3938 ((wq_completion)nfc2_nci_rx_wq){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2700
+>  #1: ffffc900156b7d20 ((work_completion)(&ndev->rx_work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2602 [inline]
+>  #1: ffffc900156b7d20 ((work_completion)(&ndev->rx_work)){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2700
+>  #2: ffff88802bed5100 (&dev->mutex){....}-{3:3}, at: device_lock include/linux/device.h:992 [inline]
+>  #2: ffff88802bed5100 (&dev->mutex){....}-{3:3}, at: nfc_targets_found+0x26f/0x590 net/nfc/core.c:778
+> 6 locks held by kworker/0:1/11541:
+>  #0: ffff888012c70d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2602 [inline]
+>  #0: ffff888012c70d38 ((wq_completion)events){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2700
+>  #1: ffffc90004a6fd20 ((work_completion)(&w->w)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2602 [inline]
+>  #1: ffffc90004a6fd20 ((work_completion)(&w->w)){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2700
+>  #2: ffffffff8ee4d808 (nfc_devlist_mutex){+.+.}-{3:3}, at: nfc_urelease_event_work+0xa7/0x2f0 net/nfc/netlink.c:1843
+>  #3: ffff88802bed5508 (&genl_data->genl_data_mutex){+.+.}-{3:3}, at: nfc_urelease_event_work+0x111/0x2f0 net/nfc/netlink.c:1849
+>  #4: ffff88802bed5100 (&dev->mutex){....}-{3:3}, at: device_lock include/linux/device.h:992 [inline]
+>  #4: ffff88802bed5100 (&dev->mutex){....}-{3:3}, at: nfc_stop_poll+0x3c/0x220 net/nfc/core.c:247
+>  #5: ffff88802bed4350 (&ndev->req_lock){+.+.}-{3:3}, at: nci_request net/nfc/nci/core.c:149 [inline]
+>  #5: ffff88802bed4350 (&ndev->req_lock){+.+.}-{3:3}, at: nci_stop_poll+0x123/0x480 net/nfc/nci/core.c:873
+> 3 locks held by kworker/1:2/16113:
+>  #0: ffff888012c70d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2602 [inline]
+>  #0: ffff888012c70d38 ((wq_completion)events){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2700
+>  #1: ffffc9000322fd20 ((work_completion)(&w->w)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2602 [inline]
+>  #1: ffffc9000322fd20 ((work_completion)(&w->w)){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2700
+>  #2: ffffffff8ee4d808 (nfc_devlist_mutex){+.+.}-{3:3}, at: nfc_urelease_event_work+0xa7/0x2f0 net/nfc/netlink.c:1843
+> 3 locks held by kworker/1:9/17613:
+>  #0: ffff888012c70d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2602 [inline]
+>  #0: ffff888012c70d38 ((wq_completion)events){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2700
+>  #1: ffffc9000d927d20 ((work_completion)(&w->w)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2602 [inline]
+>  #1: ffffc9000d927d20 ((work_completion)(&w->w)){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2700
+>  #2: ffffffff8ee4d808 (nfc_devlist_mutex){+.+.}-{3:3}, at: nfc_urelease_event_work+0xa7/0x2f0 net/nfc/netlink.c:1843
+> 3 locks held by kworker/0:5/22239:
+>  #0: ffff888012c70d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2602 [inline]
+>  #0: ffff888012c70d38 ((wq_completion)events){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2700
+>  #1: ffffc90014e57d20 ((work_completion)(&w->w)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2602 [inline]
+>  #1: ffffc90014e57d20 ((work_completion)(&w->w)){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2700
+>  #2: ffffffff8ee4d808 (nfc_devlist_mutex){+.+.}-{3:3}, at: nfc_urelease_event_work+0xa7/0x2f0 net/nfc/netlink.c:1843
+> 3 locks held by kworker/1:0/23072:
+>  #0: ffff888012c70d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2602 [inline]
+>  #0: ffff888012c70d38 ((wq_completion)events){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2700
+>  #1: ffffc9000a5afd20 ((work_completion)(&w->w)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:2602 [inline]
+>  #1: ffffc9000a5afd20 ((work_completion)(&w->w)){+.+.}-{0:0}, at: process_scheduled_works+0x825/0x1420 kernel/workqueue.c:2700
+>  #2: ffffffff8ee4d808 (nfc_devlist_mutex){+.+.}-{3:3}, at: nfc_urelease_event_work+0xa7/0x2f0 net/nfc/netlink.c:1843
+> 1 lock held by syz-executor.1/27827:
+>  #0: ffff88802bed4350 (&ndev->req_lock){+.+.}-{3:3}, at: nci_close_device+0x10a/0x600 net/nfc/nci/core.c:561
+> 2 locks held by syz-executor.1/27953:
+>  #0: ffffffff8e0dcb48 (misc_mtx){+.+.}-{3:3}, at: misc_open+0x5c/0x380 drivers/char/misc.c:129
+>  #1: ffffffff8ee4d808 (nfc_devlist_mutex){+.+.}-{3:3}, at: nfc_register_device+0x3c/0x320 net/nfc/core.c:1116
+> 1 lock held by syz-executor.5/27976:
+>  #0: ffffffff8e0dcb48 (misc_mtx){+.+.}-{3:3}, at: misc_open+0x5c/0x380 drivers/char/misc.c:129
+> 1 lock held by syz-executor.5/27979:
+>  #0: ffffffff8e0dcb48 (misc_mtx){+.+.}-{3:3}, at: misc_open+0x5c/0x380 drivers/char/misc.c:129
+> 1 lock held by syz-executor.5/27981:
+>  #0: ffffffff8e0dcb48 (misc_mtx){+.+.}-{3:3}, at: misc_open+0x5c/0x380 drivers/char/misc.c:129
+> 1 lock held by syz-executor.5/27984:
+>  #0: ffffffff8e0dcb48 (misc_mtx){+.+.}-{3:3}, at: misc_open+0x5c/0x380 drivers/char/misc.c:129
+> 1 lock held by syz-executor.5/27986:
+>  #0: ffffffff8e0dcb48 (misc_mtx){+.+.}-{3:3}, at: misc_open+0x5c/0x380 drivers/char/misc.c:129
+> 1 lock held by syz-executor.1/28013:
+>  #0: ffffffff8e0dcb48 (misc_mtx){+.+.}-{3:3}, at: misc_open+0x5c/0x380 drivers/char/misc.c:129
+> 
+> =============================================
 
+	syz-executor.1:27827		kworker/u4:93/7607	kworker/0:1/11541
+	===				===			===
+	nci_close_device()		nci_rx_work()		nfc_urelease_event_work()
+	mutex_lock(&ndev->req_lock)				device_lock()
+	flush_workqueue(ndev->rx_wq)				mutex_lock(&ndev->req_lock)
+					device_lock()
+
+Looks like lockdep failed to detect deadlock once more because of device_lock().
