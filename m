@@ -1,87 +1,81 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 663701A70F;
-	Thu,  4 Jan 2024 05:38:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="m+zgEiCT"
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id B88CF20B3CC1; Wed,  3 Jan 2024 21:38:03 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B88CF20B3CC1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1704346683;
-	bh=b4odax9GuG+vEl7FORVuOkcxGF2kMIYHtdjMzmlmeB8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m+zgEiCTEWR1Yne6IgbZPH/qyq2ltXZVC5Gho8MZ6dzbSnsv9QP5IthbaEttFp9qH
-	 0njlCAEHpSMSO+8ZTrPQ/7udhURpzqqH3iPavOT/Pr/zPVVgLzwfYbWp9go28APbgU
-	 /UvyuJ9e8t+6+Oynt1KbZ46xTj22k1+LdECrjFEg=
-Date: Wed, 3 Jan 2024 21:38:03 -0800
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, decui@microsoft.com
-Subject: Re: [PATCH] PCI/sysfs: Fix race in pci sysfs creation
-Message-ID: <20240104053803.GA16954@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1702093576-30405-1-git-send-email-ssengar@linux.microsoft.com>
- <5736414.DvuYhMxLoT@steina-w>
- <20231212082805.GA3521@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D38F18EBF
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 05:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 4045eZCU057778;
+	Thu, 4 Jan 2024 13:40:35 +0800 (+08)
+	(envelope-from Xuewen.Yan@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4T5Fct75KXz2QcMNy;
+	Thu,  4 Jan 2024 13:33:50 +0800 (CST)
+Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
+ BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Thu, 4 Jan 2024 13:40:33 +0800
+From: Xuewen Yan <xuewen.yan@unisoc.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <will@kernel.org>
+CC: <longman@redhat.com>, <boqun.feng@gmail.com>, <ke.wang@unisoc.com>,
+        <zhiguo.niu@unisoc.com>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] lock/lockdep: Add missing graph_unlock in validate_chain
+Date: Thu, 4 Jan 2024 13:40:30 +0800
+Message-ID: <20240104054030.14733-1-xuewen.yan@unisoc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231212082805.GA3521@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL:SHSQR01.spreadtrum.com 4045eZCU057778
 
-On Tue, Dec 12, 2023 at 12:28:05AM -0800, Saurabh Singh Sengar wrote:
-> On Tue, Dec 12, 2023 at 08:19:11AM +0100, Alexander Stein wrote:
-> > Hi Saurabh,
-> > 
-> > thanks for the patch.
-> > 
-> > Am Samstag, 9. Dezember 2023, 04:46:16 CET schrieb Saurabh Sengar:
-> > > Currently there is a race in calling pci_create_resource_files function
-> > > from two different therads, first therad is triggered by pci_sysfs_init
-> > > from the late initcall where as the second thread is initiated by
-> > > pci_bus_add_devices from the respective PCI drivers probe.
-> > > 
-> > > The synchronization between these threads relies on the sysfs_initialized
-> > > flag. However, in pci_sysfs_init, sysfs_initialized is set right before
-> > > calling pci_create_resource_files which is wrong as it can create race
-> > > condition with pci_bus_add_devices threads. Fix this by setting
-> > > sysfs_initialized flag at the end of pci_sysfs_init and direecly call the
-> > 
-> > Small typo here: direecly -> directly
-> > 
-> > > pci_create_resource_files function from it.
-> > > 
-> > > There can be an additional case where driver probe is so delayed that
-> > > pci_bus_add_devices is called after the sysfs is created by pci_sysfs_init.
-> > > In such cases, attempting to access already existing sysfs resources is
-> > > unnecessary. Fix this by adding a check for sysfs attributes and return
-> > > if they are already allocated.
-> > > 
-> > > In both cases, the consequence will be the removal of sysfs resources that
-> > > were appropriately allocated by pci_sysfs_init following the warning below.
-> > 
-> > I'm not sure if this is the way to go. Unfortunately I can't trigger this 
-> > error on my imx6 platform at the moment (apparently timing is off).
-> > But reading [1] again, the most expressive way is that pci_bus_add_devices() 
-> > needs to wait until pci_sysfs_init() has passed.
-> 
-> (I correct my self a bit in my earlier reply)
-> The problem with waiting is that sysfs entries will be created by pci_sysfs_init
-> already and when pci_bus_add_devices try to create it will observe that the
-> entries are already existing and in such case PCI code will remove the sysfs
-> entries created by pci_sysfs_init. Resulting system will be having no sysfs
-> entries.
+The lookup_chain_cache_add will get graph_lock, but the
+validate_chain do not unlock before return 0.
 
+So add graph_unlock before return 0.
 
-Hi Alexander,
-Have you got time to check this ? Please let me know if you think there is any
-concern left with this patch.
+Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+---
+ kernel/locking/lockdep.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-- Saurabh
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 151bd3de5936..24995e1ebc62 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3855,8 +3855,11 @@ static int validate_chain(struct task_struct *curr,
+ 		 */
+ 		int ret = check_deadlock(curr, hlock);
+ 
+-		if (!ret)
++		if (!ret) {
++			graph_unlock();
+ 			return 0;
++		}
++
+ 		/*
+ 		 * Add dependency only if this lock is not the head
+ 		 * of the chain, and if the new lock introduces no more
+@@ -3865,9 +3868,9 @@ static int validate_chain(struct task_struct *curr,
+ 		 * serializes nesting locks), see the comments for
+ 		 * check_deadlock().
+ 		 */
+-		if (!chain_head && ret != 2) {
+-			if (!check_prevs_add(curr, hlock))
+-				return 0;
++		if (!chain_head && ret != 2 && !check_prevs_add(curr, hlock)) {
++			graph_unlock();
++			return 0;
+ 		}
+ 
+ 		graph_unlock();
+-- 
+2.25.1
+
