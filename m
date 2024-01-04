@@ -1,52 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D926A28E15;
-	Thu,  4 Jan 2024 19:10:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE272C19A
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 19:10:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oSkg4gEY"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id ADB3EC433C8;
-	Thu,  4 Jan 2024 19:10:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k1upHSDF"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 25311C433C9;
+	Thu,  4 Jan 2024 19:10:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704395408;
-	bh=UfJh6I2mFrBoujS0j0AUAW4t8ZB5oK4vMkw960rtMls=;
+	s=k20201202; t=1704395412;
+	bh=OFT0cYdQcfcAjLV7qTEtGLasNg7g19VpAt4z0BUMlXs=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=oSkg4gEYexEiXiaENS4DTgbaFNRUe67zo0pzUFxWENm9pe9lSy2muPqJj6t62vq71
-	 Bd3AxxDigv4bNWZtkv7obwW8baNMrWZpIe/IGJ5O6p4bQZ8n/a44QVPbDu09Ol6/9m
-	 DWeHRblscfvBssHSjdxuWmn8dgIkD5mvvv3zsr0m0ZtY5o4nBJCwGQI0dWcwsxcGex
-	 3MiPedJazl+vLRNL7WByLr8iHbHeYNi8yluUqnOoZ0uDXbFZa7le2M4OsfLPHzwn50
-	 D07hxwOf+LguvrOi323z4x7rlji43KnDuvM+i5UUrfDHEVdB/swfcuSq7AzjI3otvP
-	 xEOH9u0dhpz3w==
+	b=k1upHSDFyOkpqixG78GgFMIvKlrYI2xfghY8EnDyEZhrwBjSBy47fyP8jDVycGLGx
+	 m+B/+Ltbt4hMfEUMCvPhGdmmX4n/ZeggZnlqYtlev+W8e+wwej9Y9uvkUnWrCHCSWW
+	 9JY9yhpAM150JqGXYNMQzDbr/zaiN72Os6jl1Zj5O2WF5TSZa3bFcIwN3KwynoKeA2
+	 SRb5JtEDAg/XbLO6sdxoDGGBnNgIJW7x0QlhT2CN4XKy1ZzyNMTaO62o+i6fvOIzjU
+	 cqp+1Otejdds+vG4BQLDBDFUZA4x+DJl7GTqGjU7zYUb+gN8MdcQ9j2IqTg1CuYJBN
+	 livTetexZE07Q==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8AAACC43168;
-	Thu,  4 Jan 2024 19:10:08 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for v6.7-7
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 11E26C43168;
+	Thu,  4 Jan 2024 19:10:12 +0000 (UTC)
+Subject: Re: [git pull] drm fixes for 6.8
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <1a6657ef8475862e4fc282efe832fa86.=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>>
-References: <1a6657ef8475862e4fc282efe832fa86.=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>>
-X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1a6657ef8475862e4fc282efe832fa86.=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.7-7
-X-PR-Tracked-Commit-Id: b20712e853305cbd04673f02b7e52ba5b12c11a9
+In-Reply-To: <CAPM=9txBXQR8YsaU2fO1frcGBP6HKTF473Rqae_hwT_yY-dRrg@mail.gmail.com>
+References: <CAPM=9txBXQR8YsaU2fO1frcGBP6HKTF473Rqae_hwT_yY-dRrg@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAPM=9txBXQR8YsaU2fO1frcGBP6HKTF473Rqae_hwT_yY-dRrg@mail.gmail.com>
+X-PR-Tracked-Remote: git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2024-01-04
+X-PR-Tracked-Commit-Id: faa21f4c20960fee268bdb0fe977ed0edb6685fe
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5eff55d725a4e0dc6fc7709c4b1ca4fe40588d07
-Message-Id: <170439540848.3148.16111811287337636824.pr-tracker-bot@kernel.org>
-Date: Thu, 04 Jan 2024 19:10:08 +0000
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+X-PR-Merge-Commit-Id: 5939a693dc6e6d6f293681017c70ff60c3723d43
+Message-Id: <170439541204.3148.17028465187686419462.pr-tracker-bot@kernel.org>
+Date: Thu, 04 Jan 2024 19:10:12 +0000
+To: Dave Airlie <airlied@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Thu, 04 Jan 2024 18:32:23 +0200:
+The pull request you sent on Thu, 4 Jan 2024 12:29:55 +1000:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.7-7
+> git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2024-01-04
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5eff55d725a4e0dc6fc7709c4b1ca4fe40588d07
+https://git.kernel.org/torvalds/c/5939a693dc6e6d6f293681017c70ff60c3723d43
 
 Thank you!
 
