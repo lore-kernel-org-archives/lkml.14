@@ -1,111 +1,102 @@
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B0E2136F;
-	Thu,  4 Jan 2024 11:42:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N8zsJf+t"
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-595ac2b6c59so173847eaf.2;
-        Thu, 04 Jan 2024 03:42:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704368570; x=1704973370; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bAgP8YYefZBKQ2T5DcbZSgvKWru2EMjpy0dzt/PCz5o=;
-        b=N8zsJf+tAXDu0BXtfesKgFgojA0cPRquguC8sdIOnD7lRgfK8c9w1L1lx4F2Yd6LBs
-         CuTB1xmIDemABOATfV/I9YYe42NHEu4H3IFp1Mqj+jz4H7Ru072xlD9bMlbgiWVaqPqi
-         bpExS7fuatHBr5V1QsrtExtFwquXEZRg0gpe0MoQj9fBab1oS1hBPUMjMxZukregYQCa
-         8M2VBUBXGKpUXfzNrFkjh6Sp7V0GvF0Yn5E4YVRXvNuIXhKI6ZuppGmsMxl71lP9cOtX
-         uZBr67GQBFPAlI3yr7ALbIHtkjBewHDuVDzjXz3OK0PkBYCFGLt+nM34sJArNEMjDcTK
-         ybXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704368570; x=1704973370;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bAgP8YYefZBKQ2T5DcbZSgvKWru2EMjpy0dzt/PCz5o=;
-        b=RHtOpPZ75opi8IpUWezCij3RkdGW8C5MxqCx5YjyzCqqzUWDSXaVXiT3wIsaWVp1LX
-         0EOtZ5N+4vvXIJ6guaZfSl1P7nOKOhsCh7at/7S3qHtyb4S4VheU/e8cFRL3Gqd+/Foo
-         mmqtk60zNnefGvhsmRrGZeEWppbeaL0L+J1kOQWFUuTXRUjVnBlLpGdfj4jk1LaXM+Y4
-         Ot/V8hDA9rNk+Vdb/mW6yrhbdKHv9n6gRSXIWgZ4avpRQVBUBfc5rbWIJ7lVrfz/TUcK
-         uubBTheiHccgUMJxV7AND91EX/+etCPSHM9OIsAHiQOJA/ZjCy0oP2tcO4GhEu+ufqoi
-         4eqQ==
-X-Gm-Message-State: AOJu0YxDakr+LDNt+/aqtj0lGmBDXyvAuFj92OPGKVVlakgZ+K+JnNof
-	dBJZBj6Tt9EVtpKbmKYLykfqRwnouBh78vUJ+eg=
-X-Google-Smtp-Source: AGHT+IFGeowPpRL12vIrpg/nC+3rhIYAcJLTNy2TO7c3CiW6lZkgk7lwX3CM7Zw5cwXPd33np0igfHm5oWLm4XYcxYI=
-X-Received: by 2002:a4a:b045:0:b0:594:406:4416 with SMTP id
- g5-20020a4ab045000000b0059404064416mr420529oon.8.1704368570083; Thu, 04 Jan
- 2024 03:42:50 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059EB21344;
+	Thu,  4 Jan 2024 11:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4T5Pp26WbpzWlj5;
+	Thu,  4 Jan 2024 19:42:18 +0800 (CST)
+Received: from dggpeml500021.china.huawei.com (unknown [7.185.36.21])
+	by mail.maildlp.com (Postfix) with ESMTPS id 314DD18001C;
+	Thu,  4 Jan 2024 19:43:01 +0800 (CST)
+Received: from [10.174.177.174] (10.174.177.174) by
+ dggpeml500021.china.huawei.com (7.185.36.21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 4 Jan 2024 19:43:00 +0800
+Message-ID: <ec2bb12d-2b35-25c8-740b-30a80dd56d1f@huawei.com>
+Date: Thu, 4 Jan 2024 19:43:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231229090643.116575-1-qiujingbao.dlmu@gmail.com>
- <20231229090643.116575-4-qiujingbao.dlmu@gmail.com> <942d79d0-08a8-4cda-90de-57daa44d9dd7@linaro.org>
- <CAJRtX8Rv0Ws=fcgDf2jh6GRz3ba+CkjH4u6JUPZnN61-CqqzZA@mail.gmail.com> <73dc5e85-0442-4b48-8abb-4a323403f3c0@linaro.org>
-In-Reply-To: <73dc5e85-0442-4b48-8abb-4a323403f3c0@linaro.org>
-From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-Date: Thu, 4 Jan 2024 19:42:39 +0800
-Message-ID: <CAJRtX8QKyGDrCa_L8YY_Bsy3TTJsfw0LOt2T8uLWEfKE9QrQDg@mail.gmail.com>
-Subject: Re: [PATCH v1 3/3] dt-bindings: mfd: sophgo: add misc MFD for Sophgo
- CV1800 series SoC.
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: a.zummo@towertech.it, alexandre.belloni@bootlin.com, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dlan@gentoo.org, inochiama@outlook.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+Subject: Re: [PATCH v2 4/8] ext4: avoid bb_free and bb_fragments inconsistency
+ in mb_free_blocks()
+Content-Language: en-US
+To: Jan Kara <jack@suse.cz>
+CC: <linux-ext4@vger.kernel.org>, <tytso@mit.edu>, <adilger.kernel@dilger.ca>,
+	<ritesh.list@gmail.com>, <linux-kernel@vger.kernel.org>,
+	<yi.zhang@huawei.com>, <yangerkun@huawei.com>, <yukuai3@huawei.com>,
+	<stable@vger.kernel.org>, Baokun Li <libaokun1@huawei.com>
+References: <20231221150558.2740823-1-libaokun1@huawei.com>
+ <20231221150558.2740823-5-libaokun1@huawei.com>
+ <20240104104255.eewvmywxyqtfwzug@quack3>
+From: Baokun Li <libaokun1@huawei.com>
+In-Reply-To: <20240104104255.eewvmywxyqtfwzug@quack3>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpeml500021.china.huawei.com (7.185.36.21)
 
-On Thu, Jan 4, 2024 at 7:16=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+On 2024/1/4 18:42, Jan Kara wrote:
+> On Thu 21-12-23 23:05:54, Baokun Li wrote:
+>> After updating bb_free in mb_free_blocks, it is possible to return without
+>> updating bb_fragments because the block being freed is found to have
+>> already been freed, which leads to inconsistency between bb_free and
+>> bb_fragments.
+>>
+>> Since the group may be unlocked in ext4_grp_locked_error(), this can lead
+>> to problems such as dividing by zero when calculating the average fragment
+>> length. Hence move the update of bb_free to after the block double-free
+>> check guarantees that the corresponding statistics are updated only after
+>> the core block bitmap is modified.
+>>
+>> Fixes: eabe0444df90 ("ext4: speed-up releasing blocks on commit")
+>> CC: stable@vger.kernel.org # 3.10
+>> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+> Just one nit below but regardless of that feel free to add:
 >
-> On 04/01/2024 12:05, Jingbao Qiu wrote:
-> >>> +
-> >>> +required:
-> >>> +  - compatible
-> >>> +  - reg
-> >>> +  - rtc
-> >>> +  - por
-> >>> +
-> >>> +unevaluatedProperties: false
-> >>> +
-> >>> +examples:
-> >>> +  - |
-> >>> +    #include <dt-bindings/interrupt-controller/irq.h>
-> >>> +
-> >>> +    misc@5025000 {
-> >>
-> >>
-> >> misc can be anything.
-> >
-> > Actually, there are RTC and (Power On Reset/POR) here. I can't find a s=
-uitable
-> > word to describe him. Can you give me some advice?
+> Reviewed-by: Jan Kara <jack@suse.cz>
 >
-> Then maybe just rtc? If there is nothing else, why RTC is separate subnod=
-e?
+>> @@ -1941,10 +1936,16 @@ static void mb_free_blocks(struct inode *inode, struct ext4_buddy *e4b,
+>>   				EXT4_GROUP_INFO_BBITMAP_CORRUPT);
+>>   		} else {
+>>   			mb_regenerate_buddy(e4b);
+>> +			goto check;
+>>   		}
+>> -		goto done;
+>> +		return;
+>>   	}
+> I think this might be more readable when we revert the condition like:
 >
-
-There is also a por submodule used to provide power off and restart functio=
-ns.
-Do you mean to use RTC as the parent node like this.
-rtc{
-    //something
-    por{
-    }
-}
-
-Best regards,
-Jingbao Qiu
-
-
-> Best regards,
-> Krzysztof
+> 		/*
+> 		 * Fastcommit replay can free already freed blocks which
+> 		 * corrupts allocation info. Regenerate it.
+> 		 */
+> 		if (sbi->s_mount_state & EXT4_FC_REPLAY) {
+> 	               	mb_regenerate_buddy(e4b);
+> 			goto check;
+> 		}
+>                  ext4_grp_locked_error(sb, e4b->bd_group,
+>                                        inode ? inode->i_ino : 0, blocknr,
+>                                        "freeing already freed block (bit %u); block bitmap corrupt.",
+>                                        block);
+>                  ext4_mark_group_bitmap_corrupted(sb, e4b->bd_group,
+>                                  EXT4_GROUP_INFO_BBITMAP_CORRUPT);
+> 		return;
+> 	}
 >
+> 								Honza
+Yes, it looks much clearer that way!
+I will switch to it in the next version.
+
+Thanks a lot!
+-- 
+With Best Regards,
+Baokun Li
+.
