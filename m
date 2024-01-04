@@ -1,73 +1,57 @@
-Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30713523B
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 02:02:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ow/UutQ2"
-Message-ID: <820aeca6-1605-4413-2d97-0554443b3297@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1704333735;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c8kduCbYQOl6J/3e1ntHCE7CtU7jNW9QWg2FRYJCYxg=;
-	b=Ow/UutQ2S6Ez5cXEHt93hzSLA7XLoFlhQFdNTP9UX8HDLr45RQEVOwstQr36PG+n4IRoRp
-	JwK7ftQrr3gtQnRlEir3rIFopzGaa2mRBetmiBOawUwBAocjXsivyR5QCNGBxBdBElQ4Iq
-	eve4n+eevjFiVvFL9bW9V7zqcPYmc+I=
-Date: Thu, 4 Jan 2024 10:02:01 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26828185B;
+	Thu,  4 Jan 2024 02:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+	id 1rLD4Q-00GebV-PX; Thu, 04 Jan 2024 10:02:55 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 04 Jan 2024 10:03:06 +0800
+Date: Thu, 4 Jan 2024 10:03:06 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: David Howells <dhowells@redhat.com>
+Cc: Shigeru Yoshida <syoshida@redhat.com>, davem@davemloft.net,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: af_alg/hash: Fix uninit-value access in
+ af_alg_free_sg()
+Message-ID: <ZZYR2qcc2Fmaxqq0@gondor.apana.org.au>
+References: <ZYUFs1MumRFf3mnv@gondor.apana.org.au>
+ <20231211135949.689204-1-syoshida@redhat.com>
+ <386306.1704296211@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next v2 0/2] net: phy: Use is_phy_driver() and
- is_phy_device()
-Content-Language: en-US
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, andrew@lunn.ch, olteanv@gmail.com, hkallweit1@gmail.com,
- przemyslaw.kitszel@intel.com, kabel@kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
-References: <20240103025334.541682-1-yajun.deng@linux.dev>
- <ZZVogCGYu9pIR620@shell.armlinux.org.uk>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yajun Deng <yajun.deng@linux.dev>
-In-Reply-To: <ZZVogCGYu9pIR620@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <386306.1704296211@warthog.procyon.org.uk>
 
+On Wed, Jan 03, 2024 at 03:36:51PM +0000, David Howells wrote:
+> Hmmm...  Is that going to get you a potential memory leak?
+> 
+> ctx->sgl.sgt.sgl could (in theory) point to an allocated table.  I guess that
+> would be cleaned up by af_alg_free_areq_sgls(), so there's probably no leak
+> there.
 
-On 2024/1/3 22:00, Russell King (Oracle) wrote:
-> On Wed, Jan 03, 2024 at 10:53:32AM +0800, Yajun Deng wrote:
->> There is only one flag that can be set in struct mdio_driver_common and
->> mdio_device. We can compare the probe of the driver or the type of the
->> device to implement it. Hence, these flags in struct mdio_driver_common
->> and mdio_device can be removed.
->>
->> Introduce is_phy_driver() and is_phy_device(). Use them test the driver
->> or device.
-> It is not a good idea to post a new series while discussion of the first
-> is still on-going, even if it has been 24 hours since you last posted a
-> patch. If discussion is still going on, then we don't need the
-> distraction of yet another series to duplicate the comments to.
->
-> I remain completely unconvinced of the merit of these changes. IMHO,
-> it is pure churn for churn's sake - there is no _real_ benefit. It
-> doesn't fix a bug. It doesn't make the code easier to read. It only
-> satisfies some ideological idea that all drivers should look the same.
->
-> Unless a very good justification can be found, I am not in favour of
-> changing these drivers.
->
-> There _may_ be good merit in is_phy_driver() and is_phy_device(), and
-> as Andrew says, that should be done _first_.
->
-Ok, I got it, thanks!
+The SG list is only setup in this function, and gets freed before
+we return.  There should be no SG list on entry.  It's only because
+you added the special case for a zero-length hash that we hit the
+bogus free.  So we should fix this by not freeing the SG list in
+the zero-length case, as it was never allocated.
 
+> OTOH, af_alg_free_areq_sgls() is going to call af_alg_free_sg(), so maybe we
+> want to initialise sgl->sgt.sgl to NULL as well.
 
+That has nothing to do with this.  This SG list is specific to
+algif_hash and has nothing to do with the shared SG list used
+by aead and skcipher.
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
