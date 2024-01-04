@@ -1,114 +1,108 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0C420B28;
-	Thu,  4 Jan 2024 10:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U3hD1lil"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-204df0830ccso253335fac.1;
-        Thu, 04 Jan 2024 02:34:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704364483; x=1704969283; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fS/Q9GVBRyVKTadPh7mSSJ4C5FDOro6DyfomCqB3lUk=;
-        b=U3hD1lilzFA0MIr5avaKtQv5KvVt5rCrQDcwLJll2Z9/gGK2OR8LZWRJcfqTet7VrJ
-         l50X9h/xLu3WhV/JsPlmpl+tTXX4pLW/XQB4XICszSTcNBgWwjDRN5RBsgNILAzerkYk
-         KsGDQQtLPSV/bURaiDrStEP5yE4rIy57rCGQ2i1/4Vn/0fOVgE6Cdesa5u2RhPMl3jsi
-         dpYP2bzX5j4slqNRYOC15AeTTG/VE4xVgQ7wAkBecmvV8LUpctYiaBiepJv+B9os8GyZ
-         ZOXWJMHcaDVFNwHPG7JsefnxxHOeG4573j944Uo3G05Zn7nmkvtjl5gYhJdMupHNiaxx
-         p5Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704364483; x=1704969283;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fS/Q9GVBRyVKTadPh7mSSJ4C5FDOro6DyfomCqB3lUk=;
-        b=wG5By7E+z4jm0V3VrZnEGNr9t/TyZ2R0mGtDNPTqUnq847lBxKCvs5bhHyJjblajBe
-         WO1BdLN4Hqy94zUXmCLBVdBL8nIpHTojdtem+nreAr7KjMI5tzDdf7zrODOJN1fKCRyS
-         d7LwlP41sBID1jiN93dAjoYZMUxziIuT8pAL8+NZzWMqnY8E/VZBWyf9QcLC4LhaZKLZ
-         bifaejAYtGPCT0b+fkEhCv48na+Iv+LyDZ2lfZeHInTOTMn+ooMe73wHVV10lBX3GOtY
-         IMiy1c1eqPMoK7yoWAitvAsYvv2o020pqbNA0tmh4/Hw+kyQtmD52W4/PPVeCUsY4D+B
-         M36A==
-X-Gm-Message-State: AOJu0YzAcnMa0WguGhf86jwSccPktjru7NOgtRThn1rxr2FoMXRCttPM
-	7xwwr9uqXlgx+uX6HWU0Z2oDvkpjA1P9WVVmVKU=
-X-Google-Smtp-Source: AGHT+IE2tgR1X/gyhHMsmwRS5MbhKev21ngS0vyt9Oeqr9406leou2qM2IPXgJCx8/5X5ZnGKBUYa6UehjNKUrKP7P0=
-X-Received: by 2002:a05:6871:a908:b0:203:64c3:7b86 with SMTP id
- wn8-20020a056871a90800b0020364c37b86mr372875oab.44.1704364482541; Thu, 04 Jan
- 2024 02:34:42 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4583320DCE
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 10:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from fsav313.sakura.ne.jp (fsav313.sakura.ne.jp [153.120.85.144])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 404AYx8J050578;
+	Thu, 4 Jan 2024 19:34:59 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav313.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav313.sakura.ne.jp);
+ Thu, 04 Jan 2024 19:34:59 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav313.sakura.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 404AYxCk050573
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Thu, 4 Jan 2024 19:34:59 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <d314e471-0251-461e-988d-70add0c6ebf6@I-love.SAKURA.ne.jp>
+Date: Thu, 4 Jan 2024 19:34:59 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231229090643.116575-1-qiujingbao.dlmu@gmail.com>
- <20231229090643.116575-2-qiujingbao.dlmu@gmail.com> <c5f7571e-8c99-4143-bfcd-cfd5b08329a9@linaro.org>
-In-Reply-To: <c5f7571e-8c99-4143-bfcd-cfd5b08329a9@linaro.org>
-From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-Date: Thu, 4 Jan 2024 18:34:31 +0800
-Message-ID: <CAJRtX8SjutyeA29zvkHR2LmoPF0BSWSVVg44MOGqzn5znOmQVw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] dt-bindings: rtc: sophgo: add RTC for Sophgo
- CV1800 series SoC.
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: a.zummo@towertech.it, alexandre.belloni@bootlin.com, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dlan@gentoo.org, inochiama@outlook.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [net?] [nfc?] INFO: task hung in nfc_targets_found
+Content-Language: en-US
+To: Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+2b131f51bb4af224ab40@syzkaller.appspotmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg KH <gregkh@linuxfoundation.org>
+Cc: krzysztof.kozlowski@linaro.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+References: <00000000000026100c060e143e5a@google.com>
+ <20240104050501.2766-1-hdanton@sina.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <20240104050501.2766-1-hdanton@sina.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 4, 2024 at 4:32=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 29/12/2023 10:06, Jingbao Qiu wrote:
-> > Add devicetree binding to describe the RTC for Sophgo CV1800 SoC.
-> >
-> > Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-> > ---
-> > This patch depends on the clk driver
-> > Clk driver link:
-> > https://lore.kernel.org/all/IA1PR20MB49539CDAD9A268CBF6CA184BBB9FA@IA1P=
-R20MB4953.namprd20.prod.outlook.com/
->
-> I don't understand how binding can depend on a driver. This is very
-> confusing and suggests you write binding for the driver, which is not
-> what we want.
->
-> What's more, I really do not see the dependency here, so your message is
-> incorrect?
->
+On 2024/01/04 14:05, Hillf Danton wrote:
+> On Wed, 03 Jan 2024 16:59:25 -0800
+>> HEAD commit:    453f5db0619e Merge tag 'trace-v6.7-rc7' of git://git.kerne..
+>> git tree:       upstream
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=141bc48de80000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=f8e72bae38c079e4
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=2b131f51bb4af224ab40
+>> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+>>
+> 
+> 	syz-executor.1:27827		kworker/u4:93/7607	kworker/0:1/11541
+> 	===				===			===
+> 	nci_close_device()		nci_rx_work()		nfc_urelease_event_work()
+> 	mutex_lock(&ndev->req_lock)				device_lock()
+> 	flush_workqueue(ndev->rx_wq)				mutex_lock(&ndev->req_lock)
+> 					device_lock()
+> 
+> Looks like lockdep failed to detect deadlock once more because of device_lock().
 
-What I mean is that clk is used in the following example. In the clk
-patch, there
-is a macro definition that can be used to replace this number.
+Yes, this is yet another circular locking dependency hidden by device_lock().
 
-> >
-> >  .../bindings/rtc/sophgo,cv1800-rtc.yaml       | 40 +++++++++++++++++++
-> >  1 file changed, 40 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/rtc/sophgo,cv1800=
--rtc.yaml
-> >
->
-> You have dependencies between patches, but I do not see this explained
-> at all. How people can figure out merging strategy if they are not aware
-> there is dependency?
+Calling flush_workqueue(ndev->rx_wq) with ndev->req_lock has to be avoided,
+for nci_close_device() has ndev->req_lock => dev->dev dependency and
+nfc_urelease_event_work() has dev->dev => ndev->req_lock dependency.
 
-I'm sorry for that, I will add an explanation in the description.
+  nci_close_device() {
+    mutex_lock(&ndev->req_lock); // ffff88802bed4350
+    flush_workqueue(ndev->rx_wq); // wait for nci_rx_work() to complete
+    mutex_unlock(&ndev->req_lock); // ffff88802bed4350
+  }
+  
+  nci_rx_work() { // ndev->rx_work is on ndev->rx_wq
+    nci_ntf_packet() {
+      device_lock(&dev->dev); // ffff88802bed5100
+      device_unlock(&dev->dev); // ffff88802bed5100
+    }
+  }
 
-Happy new year!
+  nfc_urelease_event_work() {
+    mutex_lock(&nfc_devlist_mutex); // ffffffff8ee4d808
+    mutex_lock(&dev->genl_data.genl_data_mutex); // ffff88802bed5508
+    nfc_stop_poll() {
+      device_lock(&dev->dev); // ffff88802bed5100
+      nci_stop_poll() {
+        nci_request() {
+          mutex_lock(&ndev->req_lock); // ffff88802bed4350
+          mutex_unlock(&ndev->req_lock); // ffff88802bed4350
+        }
+      }
+      device_unlock(&dev->dev); // ffff88802bed5100
+    }
+    mutex_unlock(&dev->genl_data.genl_data_mutex); // ffff88802bed5508
+    mutex_unlock(&nfc_devlist_mutex); // ffffffff8ee4d808
+  }
 
-Best regards,
-Jingbao Qiu
+I consider that we need to enable lockdep validation on dev->dev mutex
+( https://lkml.kernel.org/r/c7fb01a9-3e12-77ed-5c4c-db7deb64dc73@I-love.SAKURA.ne.jp )
+but was some alternative to my proposal at
+https://lkml.kernel.org/r/1ad499bb-0c53-7529-ff00-e4328823f6fa@I-love.SAKURA.ne.jp
+proposed? Is it time to retry my proposal?
 
->
->
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->
-> Best regards,
-> Krzysztof
->
