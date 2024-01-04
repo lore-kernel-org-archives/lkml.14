@@ -1,550 +1,108 @@
-Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DBD11EB3D;
-	Thu,  4 Jan 2024 09:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=richtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
-X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
-Received: from 192.168.10.47
-	by mg.richtek.com with MailGates ESMTPS Server V6.0(636809:0:AUTH_RELAY)
-	(envelope-from <cy_huang@richtek.com>)
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Thu, 04 Jan 2024 17:03:33 +0800 (CST)
-Received: from ex4.rt.l (192.168.10.47) by ex4.rt.l (192.168.10.47) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.27; Thu, 4 Jan
- 2024 17:03:32 +0800
-Received: from linuxcarl2.richtek.com (192.168.10.154) by ex4.rt.l
- (192.168.10.45) with Microsoft SMTP Server id 15.2.1258.27 via Frontend
- Transport; Thu, 4 Jan 2024 17:03:32 +0800
-From: <cy_huang@richtek.com>
-To: Jonathan Cameron <jic23@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>
-CC: Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>,
-	ChiYuan Huang <cy_huang@richtek.com>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
-	<u.kleine-koenig@pengutronix.de>, <linux-iio@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 2/2] iio: adc: rtq6056: Add support for the whole RTQ6056 family
-Date: Thu, 4 Jan 2024 17:03:31 +0800
-Message-ID: <2980b67de00bae1fc25004188e8aabf53073d940.1704357933.git.cy_huang@richtek.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1704357933.git.cy_huang@richtek.com>
-References: <cover.1704357933.git.cy_huang@richtek.com>
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2015E20307
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 09:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SVPlIylK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704359156;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iX9qGa68E78UJ5hvhNoD5drMxwjL+oaCeZZpL7pj4DY=;
+	b=SVPlIylKFL+ZOYemddu8I6ZKxQ8BymNXAkmkXBwKNQ5KK13R0FBfla2NOyhV/Ca8lOtajg
+	gn7U5+4LRRtoxSM5Z4WuV6I2JxHsgAfBuCrgMsAJbphM8Vn0x0pZiwiDAbx2DfZBsIvUpi
+	OIj4RPmcpTk/GZj9fZzz95ev4pKUtmo=
+Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com
+ [209.85.167.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-395-E58fsocAMEmyys8TgsWxCg-1; Thu, 04 Jan 2024 04:05:55 -0500
+X-MC-Unique: E58fsocAMEmyys8TgsWxCg-1
+Received: by mail-oi1-f199.google.com with SMTP id 5614622812f47-3bbf47262ccso324953b6e.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 01:05:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704359154; x=1704963954;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iX9qGa68E78UJ5hvhNoD5drMxwjL+oaCeZZpL7pj4DY=;
+        b=TKl/iAYjZfOsgNbeGyWeYhOVQnaMAmSRvmnhQ8cJia+Thu4j7q6WAdhRM4xnudVeVX
+         H7rfR+PPi5mHhhjR0PQPV5T2FLCWMwDk4nwkAPePdCimqBe1kAEjvDTBZZWnAAllKE4H
+         7LVaF5umUL911BbfpvokLwW68ZtJwylUySv2RaIh4DcKbJyg1cunAjTtYR+/7xF+EZ8r
+         PqAkzit6Ad2S0A6JyvwcwGjSU7DL+y3JStAJTbG71jO59zWEKh0zLh2VQ9p/v7ve0ZFt
+         Bc57++ZbVOxsptujOIxQA2yXjyoyJB5HC9Dx+yWHYi6uB9Ys76dgePlLd1RkwBUZz8rg
+         CgvQ==
+X-Gm-Message-State: AOJu0Yyc7mJylX1XXwDhhxbjJ6J7Fnmyk3F2rSPpDAP1XiKun0VEC4OS
+	NMo1ZXsI9h/Lt3rOGab+o2SX+LA0UAsw8wdu+EFe4US+7t50Vi5OJQe7LJCbPBr1l3oncrMy7XC
+	QRj2XKxYivn9aEwwO7rb1E8AKLvBOgtET
+X-Received: by 2002:a05:6808:1a94:b0:3b9:d927:ddb7 with SMTP id bm20-20020a0568081a9400b003b9d927ddb7mr228909oib.114.1704359154744;
+        Thu, 04 Jan 2024 01:05:54 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEcXwblzmJPqNerpl2OA9EGd4wENm9y6PKRdLr299Ev6F492CVmc5Lb+EkH+KOnVuVI7q//xg==
+X-Received: by 2002:a05:6808:1a94:b0:3b9:d927:ddb7 with SMTP id bm20-20020a0568081a9400b003b9d927ddb7mr228902oib.114.1704359154404;
+        Thu, 04 Jan 2024 01:05:54 -0800 (PST)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id i17-20020a056214031100b0067f3a1a7557sm11611255qvu.120.2024.01.04.01.05.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jan 2024 01:05:53 -0800 (PST)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Alex Shi <seakeel@gmail.com>
+Cc: alexs@kernel.org, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
+ <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent
+ Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
+ <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, Ben
+ Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Daniel Bristot
+ de Oliveira <bristot@redhat.com>, linux-kernel@vger.kernel.org,
+ curuwang@tencent.com
+Subject: Re: [PATCH] sched/tracing: correct the task blocking state
+In-Reply-To: <CAJy-Ammtn1Asw98fnB28ym-FF8Wafc=p9Nv_dDfY1pL3V8bCQA@mail.gmail.com>
+References: <20240102073351.1527503-1-alexs@kernel.org>
+ <xhsmhplykjawj.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAJy-Am=R=gRFqSdGjXaMqq7Yetpp-4=bLtnP-87GepN4zff5Tg@mail.gmail.com>
+ <xhsmhjzork8x5.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAJy-AmkG+6jZCGFBnqA_33NtBBq_hjemqkPCbZX2Jty0KWQE+w@mail.gmail.com>
+ <xhsmhbka2jzaj.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAJy-Ammtn1Asw98fnB28ym-FF8Wafc=p9Nv_dDfY1pL3V8bCQA@mail.gmail.com>
+Date: Thu, 04 Jan 2024 10:05:50 +0100
+Message-ID: <xhsmh4jftjwnl.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: ChiYuan Huang <cy_huang@richtek.com>
+On 04/01/24 15:56, Alex Shi wrote:
+> On Wed, Jan 3, 2024 at 9:56=E2=80=AFPM Valentin Schneider <vschneid@redha=
+t.com> wrote:
+>>
+>> That's useful information - generally it's good to add the motivation fo=
+r a
+>> patch in the changelog.
+>
+> Thanks a lot for coaching, I changed the commit log in the v2 patch:
+> https://lore.kernel.org/lkml/20240103081042.1549189-1-alexs@kernel.org/
+> Btw, which way is usual prefered, send v2 patch in a separate thread
+> or add '--in-reply-to' to follow this thread?
+>
 
-RTQ6053 and RTQ6059 are the same series of RTQ6056.
+New threads are usually better, it makes it clear that it is a new version
+of the patch and not just a reply to the previous version's
+thread.
 
-The respective differences with RTQ6056 are listed below
-RTQ6053
-- chip package type
+Reviewers/Maintainers can also jump more easily on the v(n+1) when it's a
+separate thread, in case they missed / didn't have time to review the
+previous version.
 
-RTQ6059
-- Reduce the pinout for vbus sensing pin
-- Some internal ADC scaling change
-
-Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
----
-v4
-- Remove the unused chip type enum
-- Directly return in switch case of read_channel function
-- Refine in write_raw switch case for IIO_CHAN_INFO_SAMP_FREQ
-  If sample frequency is fixed, return invalid and break switch case
-- Use devdata->num_channels to replace the predefined constant
-- Change the rtq6059 difference part for the control bitfield name from
-  the general 'F_xxx' to 'F_RTQ6059_xxx'
-- Fix rtq6059 average sample variable store problem in 'set_average' function
-
-v3
-- Resotre the enum for control field.
-- Put all the predefined datas/callbacks in dev_data.
-- Remove the unused 'rtq6059_info'.
-- Change 'default_conv_time' to 'default_conv_time_us'.
-- Move the comment for default config above the dev_data setting line.
-
-v2
-- Remove rtq6053 in DT match table and make rtq6053 fallback compatible
-  with rtq6056
----
- drivers/iio/adc/rtq6056.c | 275 +++++++++++++++++++++++++++++++++++---
- 1 file changed, 255 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/iio/adc/rtq6056.c b/drivers/iio/adc/rtq6056.c
-index ad4cea6839b2..897760161757 100644
---- a/drivers/iio/adc/rtq6056.c
-+++ b/drivers/iio/adc/rtq6056.c
-@@ -39,6 +39,10 @@
- #define RTQ6056_DEFAULT_CONFIG	0x4127
- #define RTQ6056_CONT_ALLON	7
- 
-+#define RTQ6059_DEFAULT_CONFIG	0x3C47
-+#define RTQ6059_VBUS_LSB_OFFSET	3
-+#define RTQ6059_AVG_BASE	8
-+
- enum {
- 	RTQ6056_CH_VSHUNT = 0,
- 	RTQ6056_CH_VBUS,
-@@ -47,19 +51,46 @@ enum {
- 	RTQ6056_MAX_CHANNEL
- };
- 
-+/*
-+ * The enum is to present the 0x00 CONFIG RG bitfield for the 16bit RG value
-+ * field value order from LSB to MSB
-+ * RTQ6053/6 is OPMODE->VSHUNTCT->VBUSCT->AVG->RESET
-+ * RTQ6059 is OPMODE->SADC->BADC->PGA->RESET
-+ */
- enum {
- 	F_OPMODE = 0,
- 	F_VSHUNTCT,
-+	F_RTQ6059_SADC = F_VSHUNTCT,
- 	F_VBUSCT,
-+	F_RTQ6059_BADC = F_VBUSCT,
- 	F_AVG,
-+	F_RTQ6059_PGA = F_AVG,
- 	F_RESET,
- 	F_MAX_FIELDS
- };
- 
-+struct rtq6056_priv;
-+
-+struct richtek_dev_data {
-+	bool fixed_samp_freq;
-+	u8 vbus_offset;
-+	int default_conv_time_us;
-+	unsigned int default_config;
-+	unsigned int calib_coefficient;
-+	const int *avg_sample_list;
-+	int avg_sample_list_length;
-+	const struct reg_field *reg_fields;
-+	const struct iio_chan_spec *channels;
-+	int num_channels;
-+	int (*read_scale)(struct iio_chan_spec const *ch, int *val, int *val2);
-+	int (*set_average)(struct rtq6056_priv *priv, int val);
-+};
-+
- struct rtq6056_priv {
- 	struct device *dev;
- 	struct regmap *regmap;
- 	struct regmap_field *rm_fields[F_MAX_FIELDS];
-+	const struct richtek_dev_data *devdata;
- 	u32 shunt_resistor_uohm;
- 	int vshuntct_us;
- 	int vbusct_us;
-@@ -74,6 +105,14 @@ static const struct reg_field rtq6056_reg_fields[F_MAX_FIELDS] = {
- 	[F_RESET] = REG_FIELD(RTQ6056_REG_CONFIG, 15, 15),
- };
- 
-+static const struct reg_field rtq6059_reg_fields[F_MAX_FIELDS] = {
-+	[F_OPMODE] = REG_FIELD(RTQ6056_REG_CONFIG, 0, 2),
-+	[F_VSHUNTCT] = REG_FIELD(RTQ6056_REG_CONFIG, 3, 6),
-+	[F_VBUSCT] = REG_FIELD(RTQ6056_REG_CONFIG, 7, 10),
-+	[F_AVG]	= REG_FIELD(RTQ6056_REG_CONFIG, 11, 12),
-+	[F_RESET] = REG_FIELD(RTQ6056_REG_CONFIG, 15, 15),
-+};
-+
- static const struct iio_chan_spec rtq6056_channels[RTQ6056_MAX_CHANNEL + 1] = {
- 	{
- 		.type = IIO_VOLTAGE,
-@@ -151,10 +190,93 @@ static const struct iio_chan_spec rtq6056_channels[RTQ6056_MAX_CHANNEL + 1] = {
- 	IIO_CHAN_SOFT_TIMESTAMP(RTQ6056_MAX_CHANNEL),
- };
- 
-+/*
-+ * Difference between RTQ6056 and RTQ6059
-+ * - Fixed sampling conversion time
-+ * - Average sample numbers
-+ * - Channel scale
-+ * - calibration coefficient
-+ */
-+static const struct iio_chan_spec rtq6059_channels[RTQ6056_MAX_CHANNEL + 1] = {
-+	{
-+		.type = IIO_VOLTAGE,
-+		.indexed = 1,
-+		.channel = 0,
-+		.address = RTQ6056_REG_SHUNTVOLT,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				      BIT(IIO_CHAN_INFO_SCALE) |
-+				      BIT(IIO_CHAN_INFO_SAMP_FREQ),
-+		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
-+		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
-+		.scan_index = 0,
-+		.scan_type = {
-+			.sign = 's',
-+			.realbits = 16,
-+			.storagebits = 16,
-+			.endianness = IIO_CPU,
-+		},
-+	},
-+	{
-+		.type = IIO_VOLTAGE,
-+		.indexed = 1,
-+		.channel = 1,
-+		.address = RTQ6056_REG_BUSVOLT,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				      BIT(IIO_CHAN_INFO_SCALE) |
-+				      BIT(IIO_CHAN_INFO_SAMP_FREQ),
-+		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
-+		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
-+		.scan_index = 1,
-+		.scan_type = {
-+			.sign = 'u',
-+			.realbits = 16,
-+			.storagebits = 16,
-+			.endianness = IIO_CPU,
-+		},
-+	},
-+	{
-+		.type = IIO_POWER,
-+		.indexed = 1,
-+		.channel = 2,
-+		.address = RTQ6056_REG_POWER,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				      BIT(IIO_CHAN_INFO_SCALE) |
-+				      BIT(IIO_CHAN_INFO_SAMP_FREQ),
-+		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
-+		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
-+		.scan_index = 2,
-+		.scan_type = {
-+			.sign = 'u',
-+			.realbits = 16,
-+			.storagebits = 16,
-+			.endianness = IIO_CPU,
-+		},
-+	},
-+	{
-+		.type = IIO_CURRENT,
-+		.indexed = 1,
-+		.channel = 3,
-+		.address = RTQ6056_REG_CURRENT,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				      BIT(IIO_CHAN_INFO_SAMP_FREQ),
-+		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
-+		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
-+		.scan_index = 3,
-+		.scan_type = {
-+			.sign = 's',
-+			.realbits = 16,
-+			.storagebits = 16,
-+			.endianness = IIO_CPU,
-+		},
-+	},
-+	IIO_CHAN_SOFT_TIMESTAMP(RTQ6056_MAX_CHANNEL),
-+};
-+
- static int rtq6056_adc_read_channel(struct rtq6056_priv *priv,
- 				    struct iio_chan_spec const *ch,
- 				    int *val)
- {
-+	const struct richtek_dev_data *devdata = priv->devdata;
- 	struct device *dev = priv->dev;
- 	unsigned int addr = ch->address;
- 	unsigned int regval;
-@@ -168,12 +290,21 @@ static int rtq6056_adc_read_channel(struct rtq6056_priv *priv,
- 		return ret;
- 
- 	/* Power and VBUS is unsigned 16-bit, others are signed 16-bit */
--	if (addr == RTQ6056_REG_BUSVOLT || addr == RTQ6056_REG_POWER)
-+	switch (addr) {
-+	case RTQ6056_REG_BUSVOLT:
-+		regval >>= devdata->vbus_offset;
- 		*val = regval;
--	else
-+		return IIO_VAL_INT;
-+	case RTQ6056_REG_POWER:
-+		*val = regval;
-+		return IIO_VAL_INT;
-+	case RTQ6056_REG_SHUNTVOLT:
-+	case RTQ6056_REG_CURRENT:
- 		*val = sign_extend32(regval, 16);
--
--	return IIO_VAL_INT;
-+		return IIO_VAL_INT;
-+	default:
-+		return -EINVAL;
-+	}
- }
- 
- static int rtq6056_adc_read_scale(struct iio_chan_spec const *ch, int *val,
-@@ -199,6 +330,28 @@ static int rtq6056_adc_read_scale(struct iio_chan_spec const *ch, int *val,
- 	}
- }
- 
-+static int rtq6059_adc_read_scale(struct iio_chan_spec const *ch, int *val,
-+				  int *val2)
-+{
-+	switch (ch->address) {
-+	case RTQ6056_REG_SHUNTVOLT:
-+		/* VSHUNT lsb  10uV */
-+		*val = 10000;
-+		*val2 = 1000000;
-+		return IIO_VAL_FRACTIONAL;
-+	case RTQ6056_REG_BUSVOLT:
-+		/* VBUS lsb 4mV */
-+		*val = 4;
-+		return IIO_VAL_INT;
-+	case RTQ6056_REG_POWER:
-+		/* Power lsb 20mW */
-+		*val = 20;
-+		return IIO_VAL_INT;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
- /*
-  * Sample frequency for channel VSHUNT and VBUS. The indices correspond
-  * with the bit value expected by the chip. And it can be found at
-@@ -248,6 +401,10 @@ static const int rtq6056_avg_sample_list[] = {
- 	1, 4, 16, 64, 128, 256, 512, 1024,
- };
- 
-+static const int rtq6059_avg_sample_list[] = {
-+	1, 2, 4, 8, 16, 32, 64, 128,
-+};
-+
- static int rtq6056_adc_set_average(struct rtq6056_priv *priv, int val)
- {
- 	unsigned int selector;
-@@ -268,6 +425,30 @@ static int rtq6056_adc_set_average(struct rtq6056_priv *priv, int val)
- 	return 0;
- }
- 
-+static int rtq6059_adc_set_average(struct rtq6056_priv *priv, int val)
-+{
-+	unsigned int selector;
-+	int ret;
-+
-+	if (val > 128 || val < 1)
-+		return -EINVAL;
-+
-+	/* The supported average sample is 2^x (x from 0 to 7) */
-+	selector = fls(val) - 1;
-+
-+	ret = regmap_field_write(priv->rm_fields[F_RTQ6059_BADC],
-+				 RTQ6059_AVG_BASE + selector);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_field_write(priv->rm_fields[F_RTQ6059_SADC],
-+				 RTQ6059_AVG_BASE + selector);
-+
-+	priv->avg_sample = BIT(selector);
-+
-+	return 0;
-+}
-+
- static int rtq6056_adc_get_sample_freq(struct rtq6056_priv *priv,
- 				       struct iio_chan_spec const *ch, int *val)
- {
-@@ -292,12 +473,13 @@ static int rtq6056_adc_read_raw(struct iio_dev *indio_dev,
- 				int *val2, long mask)
- {
- 	struct rtq6056_priv *priv = iio_priv(indio_dev);
-+	const struct richtek_dev_data *devdata = priv->devdata;
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
- 		return rtq6056_adc_read_channel(priv, chan, val);
- 	case IIO_CHAN_INFO_SCALE:
--		return rtq6056_adc_read_scale(chan, val, val2);
-+		return devdata->read_scale(chan, val, val2);
- 	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
- 		*val = priv->avg_sample;
- 		return IIO_VAL_INT;
-@@ -313,6 +495,9 @@ static int rtq6056_adc_read_avail(struct iio_dev *indio_dev,
- 				  const int **vals, int *type, int *length,
- 				  long mask)
- {
-+	struct rtq6056_priv *priv = iio_priv(indio_dev);
-+	const struct richtek_dev_data *devdata = priv->devdata;
-+
- 	switch (mask) {
- 	case IIO_CHAN_INFO_SAMP_FREQ:
- 		*vals = rtq6056_samp_freq_list;
-@@ -320,9 +505,9 @@ static int rtq6056_adc_read_avail(struct iio_dev *indio_dev,
- 		*length = ARRAY_SIZE(rtq6056_samp_freq_list);
- 		return IIO_AVAIL_LIST;
- 	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
--		*vals = rtq6056_avg_sample_list;
-+		*vals = devdata->avg_sample_list;
-+		*length = devdata->avg_sample_list_length;
- 		*type = IIO_VAL_INT;
--		*length = ARRAY_SIZE(rtq6056_avg_sample_list);
- 		return IIO_AVAIL_LIST;
- 	default:
- 		return -EINVAL;
-@@ -334,6 +519,7 @@ static int rtq6056_adc_write_raw(struct iio_dev *indio_dev,
- 				 int val2, long mask)
- {
- 	struct rtq6056_priv *priv = iio_priv(indio_dev);
-+	const struct richtek_dev_data *devdata = priv->devdata;
- 	int ret;
- 
- 	ret = iio_device_claim_direct_mode(indio_dev);
-@@ -342,10 +528,15 @@ static int rtq6056_adc_write_raw(struct iio_dev *indio_dev,
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_SAMP_FREQ:
-+		if (devdata->fixed_samp_freq) {
-+			ret = -EINVAL;
-+			break;
-+		}
-+
- 		ret = rtq6056_adc_set_samp_freq(priv, chan, val);
- 		break;
- 	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
--		ret = rtq6056_adc_set_average(priv, val);
-+		ret = devdata->set_average(priv, val);
- 		break;
- 	default:
- 		ret = -EINVAL;
-@@ -374,6 +565,7 @@ static int rtq6056_adc_read_label(struct iio_dev *indio_dev,
- static int rtq6056_set_shunt_resistor(struct rtq6056_priv *priv,
- 				      int resistor_uohm)
- {
-+	const struct richtek_dev_data *devdata = priv->devdata;
- 	unsigned int calib_val;
- 	int ret;
- 
-@@ -382,8 +574,8 @@ static int rtq6056_set_shunt_resistor(struct rtq6056_priv *priv,
- 		return -EINVAL;
- 	}
- 
--	/* calibration = 5120000 / (Rshunt (uOhm) * current lsb (1mA)) */
--	calib_val = 5120000 / resistor_uohm;
-+	/* calibration = coefficient / (Rshunt (uOhm) * current lsb (1mA)) */
-+	calib_val = devdata->calib_coefficient / resistor_uohm;
- 	ret = regmap_write(priv->regmap, RTQ6056_REG_CALIBRATION, calib_val);
- 	if (ret)
- 		return ret;
-@@ -450,6 +642,7 @@ static irqreturn_t rtq6056_buffer_trigger_handler(int irq, void *p)
- 	struct iio_poll_func *pf = p;
- 	struct iio_dev *indio_dev = pf->indio_dev;
- 	struct rtq6056_priv *priv = iio_priv(indio_dev);
-+	const struct richtek_dev_data *devdata = priv->devdata;
- 	struct device *dev = priv->dev;
- 	struct {
- 		u16 vals[RTQ6056_MAX_CHANNEL];
-@@ -469,6 +662,9 @@ static irqreturn_t rtq6056_buffer_trigger_handler(int irq, void *p)
- 		if (ret)
- 			goto out;
- 
-+		if (addr == RTQ6056_REG_BUSVOLT)
-+			raw >>= devdata->vbus_offset;
-+
- 		data.vals[i++] = raw;
- 	}
- 
-@@ -528,20 +724,26 @@ static int rtq6056_probe(struct i2c_client *i2c)
- 	struct rtq6056_priv *priv;
- 	struct device *dev = &i2c->dev;
- 	struct regmap *regmap;
-+	const struct richtek_dev_data *devdata;
- 	unsigned int vendor_id, shunt_resistor_uohm;
- 	int ret;
- 
- 	if (!i2c_check_functionality(i2c->adapter, I2C_FUNC_SMBUS_WORD_DATA))
- 		return -EOPNOTSUPP;
- 
-+	devdata = device_get_match_data(dev);
-+	if (!devdata)
-+		return dev_err_probe(dev, -EINVAL, "Invalid dev data\n");
-+
- 	indio_dev = devm_iio_device_alloc(dev, sizeof(*priv));
- 	if (!indio_dev)
- 		return -ENOMEM;
- 
- 	priv = iio_priv(indio_dev);
- 	priv->dev = dev;
--	priv->vshuntct_us = priv->vbusct_us = 1037;
-+	priv->vshuntct_us = priv->vbusct_us = devdata->default_conv_time_us;
- 	priv->avg_sample = 1;
-+	priv->devdata = devdata;
- 	i2c_set_clientdata(i2c, priv);
- 
- 	regmap = devm_regmap_init_i2c(i2c, &rtq6056_regmap_config);
-@@ -561,15 +763,11 @@ static int rtq6056_probe(struct i2c_client *i2c)
- 				     "Invalid vendor id 0x%04x\n", vendor_id);
- 
- 	ret = devm_regmap_field_bulk_alloc(dev, regmap, priv->rm_fields,
--					   rtq6056_reg_fields, F_MAX_FIELDS);
-+					   devdata->reg_fields, F_MAX_FIELDS);
- 	if (ret)
- 		return dev_err_probe(dev, ret, "Failed to init regmap field\n");
- 
--	/*
--	 * By default, configure average sample as 1, bus and shunt conversion
--	 * time as 1037 microsecond, and operating mode to all on.
--	 */
--	ret = regmap_write(regmap, RTQ6056_REG_CONFIG, RTQ6056_DEFAULT_CONFIG);
-+	ret = regmap_write(regmap, RTQ6056_REG_CONFIG, devdata->default_config);
- 	if (ret)
- 		return dev_err_probe(dev, ret,
- 				     "Failed to enable continuous sensing\n");
-@@ -598,8 +796,8 @@ static int rtq6056_probe(struct i2c_client *i2c)
- 
- 	indio_dev->name = "rtq6056";
- 	indio_dev->modes = INDIO_DIRECT_MODE;
--	indio_dev->channels = rtq6056_channels;
--	indio_dev->num_channels = ARRAY_SIZE(rtq6056_channels);
-+	indio_dev->channels = devdata->channels;
-+	indio_dev->num_channels = devdata->num_channels;
- 	indio_dev->info = &rtq6056_info;
- 
- 	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
-@@ -640,8 +838,45 @@ static int rtq6056_runtime_resume(struct device *dev)
- static DEFINE_RUNTIME_DEV_PM_OPS(rtq6056_pm_ops, rtq6056_runtime_suspend,
- 				 rtq6056_runtime_resume, NULL);
- 
-+static const struct richtek_dev_data rtq6056_devdata = {
-+	.default_conv_time_us = 1037,
-+	.calib_coefficient = 5120000,
-+	/*
-+	 * By default, configure average sample as 1, bus and shunt conversion
-+	 * time as 1037 microsecond, and operating mode to all on.
-+	 */
-+	.default_config = RTQ6056_DEFAULT_CONFIG,
-+	.avg_sample_list = rtq6056_avg_sample_list,
-+	.avg_sample_list_length = ARRAY_SIZE(rtq6056_avg_sample_list),
-+	.reg_fields = rtq6056_reg_fields,
-+	.channels = rtq6056_channels,
-+	.num_channels = ARRAY_SIZE(rtq6056_channels),
-+	.read_scale = rtq6056_adc_read_scale,
-+	.set_average = rtq6056_adc_set_average,
-+};
-+
-+static const struct richtek_dev_data rtq6059_devdata = {
-+	.fixed_samp_freq = true,
-+	.vbus_offset = RTQ6059_VBUS_LSB_OFFSET,
-+	.default_conv_time_us = 532,
-+	.calib_coefficient = 40960000,
-+	/*
-+	 * By default, configure average sample as 1, bus and shunt conversion
-+	 * time as 532 microsecond, and operating mode to all on.
-+	 */
-+	.default_config = RTQ6059_DEFAULT_CONFIG,
-+	.avg_sample_list = rtq6059_avg_sample_list,
-+	.avg_sample_list_length = ARRAY_SIZE(rtq6059_avg_sample_list),
-+	.reg_fields = rtq6059_reg_fields,
-+	.channels = rtq6059_channels,
-+	.num_channels = ARRAY_SIZE(rtq6059_channels),
-+	.read_scale = rtq6059_adc_read_scale,
-+	.set_average = rtq6059_adc_set_average,
-+};
-+
- static const struct of_device_id rtq6056_device_match[] = {
--	{ .compatible = "richtek,rtq6056" },
-+	{ .compatible = "richtek,rtq6056", .data = &rtq6056_devdata },
-+	{ .compatible = "richtek,rtq6059", .data = &rtq6059_devdata },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, rtq6056_device_match);
--- 
-2.34.1
+> Thanks
+> Alex
+>
+>>
+>> > Thanks!
+>>
 
