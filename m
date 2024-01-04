@@ -1,96 +1,104 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF3D2C844
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 21:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677022C6BE;
+	Thu,  4 Jan 2024 21:44:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ok6K8gvc"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4280e3ab14fso5584991cf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 13:37:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704404242; x=1705009042; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TswUjOEAhg3N75qmaiYjejtfwKdXhO5F6QGd/S4RM8M=;
-        b=Ok6K8gvcELhRDhffY4a7Grals/CAIC3nFzkppm+6pLgxa4iMK5ov1kobIb8INgKM1Z
-         eBI2299XUxr4IJvodPts44xk1nHgxGUvUmKKSUiRsxwHnDub78aUSLFdj4weJooBUDMN
-         vR8KumsSf1kdUQCQ16vl0Fj2KdLe+VUqGlF3+WzIHSsY79KmiGVLAZ0onsW1jRwS6Wfp
-         NZ8yAM7KLCuEZcdcFrve/rwwCnVigHCGhRPaWQTH84mJ13MKwZ5ZAtj+Pf/0kFsKxFyC
-         RGtME8yuJalZDSfJloj5w1ClDQ/PN3aBoE4traVJnrgHfX3LGKLh+Oz105UaJiQsNbkA
-         NiqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704404242; x=1705009042;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TswUjOEAhg3N75qmaiYjejtfwKdXhO5F6QGd/S4RM8M=;
-        b=HRdZPW+jYwRLAh0wKRMqNIg6vxIeQ+ZsJa/vIhmJM1/syw6Wy6/TlkheARHQghC+ku
-         kvLADUn3wYshKt0l8BQT6XbntIVaoLJp2SntYTaB6Kq4x43EtdXNMeUcm1M+yJtDx8Hv
-         AWxqAeXiRUTVc06CznrCq5X91G2rZNSs5a389fkbuHLb2Dy+lCfcXNAw/td6Zl7oiegA
-         Od5KIJXz3sjmWvW6GU5ld8wZRHmsRpohLgJVADLVz/y+t3kCodKGESfrc0Mdf7vNvJ29
-         b59xAiBHE+REdYHdOkBgA3IbQrZVHS6+FfA7ukHLyCu+o1vqEdfmbIxGsN2QYLIroXYu
-         HPNw==
-X-Gm-Message-State: AOJu0YwYZ32E8MHTD2zW5uG2+KIk2OihLhoq8AOruTEVQxvU00knK9iz
-	tWlr+e3x0PDa4K7trq0uy6LczfQS7fn9
-X-Google-Smtp-Source: AGHT+IEqQCvG0d1qLwZSXx6BUFsh2kTk1sltZq/ydyyKWzPyHDyyuuYt5TRZ5ga6etj9++TPegC8SA==
-X-Received: by 2002:ac8:5bc2:0:b0:427:ea89:dd78 with SMTP id b2-20020ac85bc2000000b00427ea89dd78mr1540779qtb.73.1704404242327;
-        Thu, 04 Jan 2024 13:37:22 -0800 (PST)
-Received: from [192.168.1.31] (d-65-175-157-166.nh.cpe.atlanticbb.net. [65.175.157.166])
-        by smtp.gmail.com with ESMTPSA id w26-20020a05622a191a00b0042839736d9fsm150064qtc.19.2024.01.04.13.37.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jan 2024 13:37:22 -0800 (PST)
-Message-ID: <0d9f51e9-7e07-48dd-bf18-ea28ab6b1e83@google.com>
-Date: Thu, 4 Jan 2024 16:37:21 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZxkXNWKV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50D01C433C7;
+	Thu,  4 Jan 2024 21:44:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704404666;
+	bh=qmkVGkFZ7N/03sFNMtroJyKLYvamcso6OXSxZb6lC8o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZxkXNWKVaf1lvZwh2WEDFAzLx5sRzxdwJSIS6we8WgA/IV/VGdWMA7gKEEbxsZwEk
+	 Pam+FQeekr4Xe+b6AcmjAsWHCJupmtYEyiWCl+v9YqWij7Wec0E2afxccf8W81SW7w
+	 c73k9L3Lg0D+QKrsn29t7IdYNN5oP6qae6yHBVbWwuAPRreXxhLqrdXE9hXDZOngjH
+	 JHEEKvvyc5uqjb3PZDUlDiGUwcLH7tv+PsFoaS9XOWvz5GSfEChjftQ01Qc+eXH97N
+	 fV93XcT2xwytJ+hiFWJPIc71q8my7LYNElLbbAL7V2BbPGYbvCM51eVoWUcwkWLYqW
+	 2J7JJjt4/WOHw==
+Date: Thu, 4 Jan 2024 13:44:24 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: Shakeel Butt <shakeelb@google.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, kvm@vger.kernel.org,
+ virtualization@lists.linux.dev, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Stefan
+ Hajnoczi <stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>,
+ David Howells <dhowells@redhat.com>, Jason Gunthorpe <jgg@nvidia.com>,
+ Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>, Yunsheng Lin
+ <linyunsheng@huawei.com>, Willem de Bruijn
+ <willemdebruijn.kernel@gmail.com>
+Subject: Re: [PATCH net-next v3 2/3] net: introduce abstraction for network
+ memory
+Message-ID: <20240104134424.399fee0a@kernel.org>
+In-Reply-To: <CAHS8izOp_m9SyPjNth-iYBXH2qQQpc9PuZaHbpUL=H0W=CVHgQ@mail.gmail.com>
+References: <20231220214505.2303297-1-almasrymina@google.com>
+	<20231220214505.2303297-3-almasrymina@google.com>
+	<20231221232343.qogdsoavt7z45dfc@google.com>
+	<CAHS8izOp_m9SyPjNth-iYBXH2qQQpc9PuZaHbpUL=H0W=CVHgQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next 2/2] selftests/bpf: add inline assembly helpers
- to access array elements
-Content-Language: en-US
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, mattbobrowski@google.com,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240103153307.553838-1-brho@google.com>
- <20240103153307.553838-3-brho@google.com>
- <CAEf4BzbKT3LbHQSFwpAfoJuhyGy2NpHk7A6ivkFiutN_jnKHYg@mail.gmail.com>
-From: Barret Rhoden <brho@google.com>
-In-Reply-To: <CAEf4BzbKT3LbHQSFwpAfoJuhyGy2NpHk7A6ivkFiutN_jnKHYg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 1/3/24 14:51, Andrii Nakryiko wrote:
->> +
->> +/*
->> + * Helper to load and run a program.
->> + * Call must define skel, map_elems, and bss_elems.
->> + * Destroy the skel when you're done.
->> + */
->> +#define load_and_run(PROG) ({
-> does this have to be a macro? Can you write it as a function?
+On Thu, 21 Dec 2023 15:44:22 -0800 Mina Almasry wrote:
+> The warning is like so:
+>=20
+> ./include/net/page_pool/helpers.h: In function =E2=80=98page_pool_alloc=
+=E2=80=99:
+> ./include/linux/stddef.h:8:14: warning: returning =E2=80=98void *=E2=80=
+=99 from a
+> function with return type =E2=80=98netmem_ref=E2=80=99 {aka =E2=80=98long=
+ unsigned int=E2=80=99} makes
+> integer from pointer without a cast [-Wint-conversion]
+>     8 | #define NULL ((void *)0)
+>       |              ^
+> ./include/net/page_pool/helpers.h:132:24: note: in expansion of macro
+> =E2=80=98NULL=E2=80=99
+>   132 |                 return NULL;
+>       |                        ^~~~
+>=20
+> And happens in all the code where:
+>=20
+> netmem_ref func()
+> {
+>     return NULL;
+> }
+>=20
+> It's fixable by changing the return to `return (netmem_ref NULL);` or
+> `return 0;`, but I feel like netmem_ref should be some type which
+> allows a cast from NULL implicitly.
 
-can do.  (if we keep these patches).
+Why do you think we should be able to cast NULL implicitly?
+netmem_ref is a handle, it could possibly be some form of=20
+an ID in the future, rather than a pointer. Or have more low
+bits stolen for specific use cases.
 
-i used a macro for the ## PROG below, but i can do something with ints 
-and switches to turn on the autoload for a single prog.  or just 
-copy-paste the boilerplate.
+unsigned long, and returning 0 as "no handle" makes perfect sense to me.
 
->> +       int err;                                                        \
->> +       skel = array_elem_test__open();                                 \
->> +       if (!ASSERT_OK_PTR(skel, "array_elem_test open"))               \
->> +               return;                                                 \
->> +       bpf_program__set_autoload(skel->progs.x_ ## PROG, true);        \
+Note that 0 is a special case, bitwise types are allowed to convert
+to 0/bool and 0 is implicitly allowed to become a bitwise type.
+This will pass without a warning:
 
-thanks,
+typedef unsigned long __bitwise netmem_ref;
 
-barret
+netmem_ref some_code(netmem_ref ref)
+{
+	// direct test is fine
+	if (!ref)
+		// 0 "upgrades" without casts
+		return 0;
+	// 1 does not, we need __force
+	return (__force netmem_ref)1 | ref;
+}
 
+The __bitwise annotation will make catching people trying
+to cast to struct page * trivial.
 
+You seem to be trying hard to make struct netmem a thing.
+Perhaps you have a reason I'm not getting?
