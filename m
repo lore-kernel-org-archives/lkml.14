@@ -1,274 +1,570 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55562231E
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 12:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13FF821A09;
+	Thu,  4 Jan 2024 12:39:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="c855kIav"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 404AXP1m020338;
-	Thu, 4 Jan 2024 04:38:21 -0800
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2040.outbound.protection.outlook.com [104.47.66.40])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3vd39qedug-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Jan 2024 04:38:21 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SxRx3yJA4K68QKhefaPSRWujmCTR7rm6IX9Z5MMuYCFqWzBkeL8oGnu4h+GrKdjAUj9o1Or/Rpu69FSxDE0jjfiNw1GnjPBbtbQdo0qdK9Ynd0vSIsS9Er9h3UH7sOPcXo/sEgl6o4SBuMkksOZdFZBrmQHGWf+iW3WeLbTV1YFWyCv0rJogLul3C1jLFcYLd6YrWvW5CTJAlzEWquGnjzGBGbnU1rviBQlEOWbskUJDBpTfsHhDYk+Ov1JD0MLHmbqck09dYTMN0xAq8ySqN9J5j/c+Kb6CMiPY4rBtee+uo/x6K4b2JqcF5Z/5/vp0U3LvvFpOorT0FmZDWkWTnw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=p9Duwzjx5N8fGRe9Q/5kVHpF+XtO8OriPYN6cPl2JFw=;
- b=Z/M70v3EelQCKgRgUDQQJkewHqxWgf6ALpHApZpXAnQOoW92SGMrVlsX7bnrTG1xD3vYmTkXz8bMx/5PZHx+Ad4FIukUdWHtwGgg5UWCMfqjGiUb0CaNEAFZt4iOALE0xIh0NZ/2fueje5l10FAXbHhORmhTj0Nh34FC96zkanpbL+3v+NQlpcCMSVRxL2vBPD5YPimuni6n4hYNulhdUIEetZyG+EoPYI+BB1l3YhfFJKv9cFQiudzz1Dg5+050qWjYDT1DBba2hnWZK2QXTaYiUh2asmVFMEBVjAMA10uHPBsS2Xb/vTaWf71fQSXIc6tBEu9F1v5Dco4AEGVxQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p9Duwzjx5N8fGRe9Q/5kVHpF+XtO8OriPYN6cPl2JFw=;
- b=c855kIavq8+U9jRpXkFRok47Us85FXS1fFqgok6r2TG/HFHCY7GJfL8e/0exSJIn9G9Hp+gusM5m+RESDB9S5OTTM2UmfigZFOVazGgeE4Zu7FC1zrCr0g6pSos6XQxfqcNdBkEZP3VxYBLI6BNzI9+j8wjPDosO0u6joKfGeGQ=
-Received: from BN9PR18MB4251.namprd18.prod.outlook.com (2603:10b6:408:11c::10)
- by SJ0PR18MB3963.namprd18.prod.outlook.com (2603:10b6:a03:2ab::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.14; Thu, 4 Jan
- 2024 12:38:16 +0000
-Received: from BN9PR18MB4251.namprd18.prod.outlook.com
- ([fe80::cbda:8123:48d4:6632]) by BN9PR18MB4251.namprd18.prod.outlook.com
- ([fe80::cbda:8123:48d4:6632%6]) with mapi id 15.20.7159.015; Thu, 4 Jan 2024
- 12:38:16 +0000
-From: Elad Nachman <enachman@marvell.com>
-To: Florian Fainelli <florian.fainelli@broadcom.com>,
-        Will Deacon
-	<will@kernel.org>
-CC: "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "thunder.leizhen@huawei.com" <thunder.leizhen@huawei.com>,
-        "bhe@redhat.com"
-	<bhe@redhat.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "yajun.deng@linux.dev" <yajun.deng@linux.dev>,
-        "chris.zjh@huawei.com"
-	<chris.zjh@huawei.com>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>
-Subject: RE: [EXT] Re: [PATCH] arm64: mm: Fix SOCs with DDR starting above
- zero
-Thread-Topic: [EXT] Re: [PATCH] arm64: mm: Fix SOCs with DDR starting above
- zero
-Thread-Index: AQHaPmZY/EHin6dDVUeSHB1g0ELBfbDIXH4AgAANHQCAAS6V4A==
-Date: Thu, 4 Jan 2024 12:38:16 +0000
-Message-ID: 
- <BN9PR18MB4251A62F3C57A8C6910C00F5DB672@BN9PR18MB4251.namprd18.prod.outlook.com>
-References: <20240103170002.1793197-1-enachman@marvell.com>
- <20240103174531.GE5954@willie-the-truck>
- <fc6f3fff-9915-4ffd-93f0-a633d5662147@broadcom.com>
-In-Reply-To: <fc6f3fff-9915-4ffd-93f0-a633d5662147@broadcom.com>
-Accept-Language: he-IL, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR18MB4251:EE_|SJ0PR18MB3963:EE_
-x-ms-office365-filtering-correlation-id: cc503559-cfe7-46a8-17e2-08dc0d220621
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- g3HoHrLgON+UyCVnDotMYtAW8/xR9lRCzwTAdV5tV6TXseiDApIefow+fxuB/MjgIF5Y+GzSj878GqSwQq9rJXY1OEKYl6SDOc2g+YvfiHJJ32MC2wm1mtxqeE+ptziwh8Cz8YoivsLDzCDK8AK1uyjFZT8noHy5W8zntWZnDgtTpU63Qp8QYhQqLjL7nm8tv4Iz7Yd3R5b4JnvIW8hydc5aOwznL5N0asnnSVxiN65O01py7qLj24aX5pGqm0BZrUgkJBeJNC8mfD27Xv/NG42Uq+LFGFQrifY3SwhJiHIAfAnY7GZAawil3zd8ynKO+WFSgLicKw3hz/XEbodc9S/KZPVx21/lNL57bf+1WInxSZHLchSMPTp9Ker4x7yRhXsLjcH3F8u22Oh75CpwNm/R+ZfiJA3LzNvYivwOy8xspSLii7j9q28j2H0FPV+qIW6FpIfMEq1WQ1F5mSGY+MIguzKPuUs1yiVpGSPrXRDd1qjSnaapv/FA/yI9nlq9qUejG1VFyYqk3hNXQy5YbZnDRMq5a/pW+LI0EIe4f4r77YmSdF+IT/GwgRo9ZfilOrz0NNxZs1XVy1HH14Bz+Mpm0wUc9Tk28mVk40R17ab0Ocft5sHMIKTMYh54DF/XIUgHWlpozjb1Uqn2eNbVXOViZCIuM020HmYnFrhgkjI=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR18MB4251.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(396003)(39860400002)(136003)(366004)(230173577357003)(230922051799003)(230273577357003)(451199024)(186009)(64100799003)(1800799012)(7696005)(478600001)(6506007)(71200400001)(53546011)(9686003)(8936002)(55016003)(86362001)(122000001)(8676002)(38100700002)(38070700009)(316002)(4326008)(110136005)(54906003)(52536014)(5660300002)(2906002)(7416002)(66946007)(33656002)(41300700001)(83380400001)(66556008)(66476007)(66446008)(64756008)(76116006);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?utf-8?B?UVN3eTZQL1QvdW10alUxT0YwOHNWcWtoMXJBeWJYNW5mQ212dlpScDQ1K0FZ?=
- =?utf-8?B?MzFsK1ZqWTNWZHc4ckkveEhTVmI5dXZlUWhYcnp1RlQ5MTZ2djM2aGdoM0JG?=
- =?utf-8?B?ZXhpOG9XdHYzdnB5QzZGc2dWa3cxN0d3a1VsOStCUjNjQnRpdTkzM2Z0cTBN?=
- =?utf-8?B?bTRQQXVLeXBMTXRuaHNyOENRRFJzVkRBVzFhRjJJcEtWWWRGUGk1UHNCb01n?=
- =?utf-8?B?Y1hPTkVFZjRQTlRacUZBM2d0M2RQVzNpYlZZWWVPcmZLMmcwNS9EZmZFUjJt?=
- =?utf-8?B?L2xPY2JUL1NZbUVlWkpjOWRqYjdUWUwxUVg1Z25hT2YzQWt3aW5tQWhESXBW?=
- =?utf-8?B?amVUaWlGNEFYTnBGaUlPNkhYZ0F1dGtYSS9PSGhnMUc5M3JuZ1RUTllQN2VV?=
- =?utf-8?B?ZGo5ZVkrb2s2cUtnbWpHVHVQTGxrdmdTUERORFRCYXFnVDFsbGlXRDlua0ZW?=
- =?utf-8?B?OFFEdFBSeUJWWUQzOElQQmRPa3MrOTRBZlNKQXZLeE8zS29FNVpGWER3aUkz?=
- =?utf-8?B?cURYbkJVcFZVQUdQbmJZbHVFVTExdzZwVGZ3QkpJdnFDVy91Y1hxVGIvb05S?=
- =?utf-8?B?QSt0U0FjMTdBc0ZmZ2FZL0N0aEo3bUN0SWNmZWROc2ViZkhpTWtwaWp0SkJo?=
- =?utf-8?B?SEk2aEhFcWJPSHpjQjFXNlQ1c1lxd09SUWU0U211YmNtWmE3T1RyQVhaWVh4?=
- =?utf-8?B?K1hQVFd1Q3EvdVNYakMyV2ErUHYwM0VVVHBBUW5TcXdFTy84WVVPMDZVSU1V?=
- =?utf-8?B?Nmxkc3NwTENVNDRRZTZXZ3JPc3F3a3h6SUNvYlZXQ1VPUXRYRkhSTHhLRU41?=
- =?utf-8?B?a2gyWDFEY0pvenJsakFMNmpJa1ZkbStlTnh1MVEzZTZCQkwwUFRkL05tekFv?=
- =?utf-8?B?bDhwNm1SOE9jN0ZFT1FOZGpwR3c5cUdBUnNDcDBoSCtxOHRDZ1N3MCtjaTRJ?=
- =?utf-8?B?R3JMbzFwN3NGRllCNzZzNm9nSktpNjdMZUU0UUk0RW5qSTczTjM0L3BtY2lJ?=
- =?utf-8?B?SjIxdENPQ1ZHczZ2TUhrZ0pMMndoUUg4N1Z3bUh0RVhxRmpkSWNyNjZSSUNU?=
- =?utf-8?B?YmU1Tno0UktWd3ppUkdPYXdMVFJPamQwVUtnZ2Z2SXozSmVhQkxtdStySE42?=
- =?utf-8?B?d3RhN1ZaRGU4LzhTa0Y0QjIxeUxFQmxnNUlJS1RNNktpNytqZTRuREl3MnZH?=
- =?utf-8?B?djJRMjI3dUk4QzhBR3JUL0U5eENkNFVERmdVV3hFWFRyVmpmVnp4NGF4Ym1h?=
- =?utf-8?B?VWZDRGFDdWtUTkliRUIrbU1Deit3ajhHd0k0MlRjcmY3ZmVjV24zbXFlbjdM?=
- =?utf-8?B?SUo0dDRIalEyY3YzZkcwNTRHMDB1aTlDY1VzVTg1d2x0Y05kWks3TFVWRm14?=
- =?utf-8?B?Y0F3cXRwZkxLazZUd0luYTdyTDkrYlNkTDlrWFUwL0twRGRXbjVJZXJkODhi?=
- =?utf-8?B?K0Z1cFFaOHgvTFNQOEFzdXhqZXFmTm5sUkZEZXArYWlUT2RjQ3Y2aDB6MFhs?=
- =?utf-8?B?dHVMNlJVU1ZKL2Uzb0V2MzU1b2wxUk9lMjhGRGw3M0NKMXJrL0F4aEViYVFV?=
- =?utf-8?B?ckZPeklya01KR2k1VGZOWWlNM2NZUHJ5TTBtY3podXRTQWs2dUMwK2RLZHpi?=
- =?utf-8?B?ZGJZcXhZVU9JRzlJUjNtTjJRVVdhRkhXNmFnVW1ZdmRQQWJsR1lBUXgxb2pK?=
- =?utf-8?B?Ukk3VHI3WHFBdStqblJNdHphMVlJR09VUENHczFiMEJrRm1KMjZ4VEpBWFBL?=
- =?utf-8?B?dXhBMnZZbVhPUGV2WTNobkhSNjczdkg0TGdoc2tEY3NuK3I5YUo1Y0V3Z2lZ?=
- =?utf-8?B?THR5aStVUDVVQ3hEclcxazFTazFKQWFSTHh0c0UvM2VGcWFlR3gzL1dZNlBo?=
- =?utf-8?B?WGVPOHRNTE1qNlFSR1kxU0dFZjhERyt2TFZKZnNURzlVRC9TNURqV01zMERn?=
- =?utf-8?B?cVdrV1IzSWprRm1aaGkwdmZWK0FVTWVaS1pSQW9FWXJMbTJUa1MyY1NPOHNn?=
- =?utf-8?B?QUhmRDhVcFNqeVcybmRrU210L3lvV05TZzUrWU40OGFjMVBHZko4RzBtOUZU?=
- =?utf-8?B?YWxNdVcvOXMxQ0JyaE1ZdENDRnFOTHFvOVYyZDZSczNqUG1XRGpmN2pJdmdz?=
- =?utf-8?B?QVNLZ1VmU0hvK0M0SzNlZG5yaFQ4T25ZWVY3U1pVbm1BZXoxMlZyZlZkbzFF?=
- =?utf-8?Q?RfZQZFGUdNJGtSiISGOTArcrGzl+nyzLkL59FWZ0iT0/?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jc3emnQl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3211BC433C8;
+	Thu,  4 Jan 2024 12:39:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704371963;
+	bh=/2WY45SakhE3CG3eYyZMADqFwRD3LHdHe9F1gaQ4V9U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Jc3emnQlHQYwU54eO40Ol7V8c+YwQ9fN9YPeH28PSYEI39djFKB/50NtmJG7oaKKv
+	 QcD2knARDtdSgQZo6EVE0GZG7sbhbdLJdHGWLtefK49CoV49/6U38vjLh4pjeX2B3u
+	 rQcYc53IjiV43GmtjEhSkgVKX9IVD6PQCVrGz/9LLlTFM6KfZZNk/A4wldPpozvXU2
+	 RYrHbiS4r3gf2e+hoFl+1+x0Z6h7DRZiSnEniEYaXFuzsNXezUMN+CpreaB8863nHl
+	 f+Y3S507TUJAoVLp1BEwOrAx5DP+zu8AxNiwOi51BCFoRLnROHsc89gtz8owc6VgSf
+	 TGuAMa+FWX8sg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+	id 767C1403EF; Thu,  4 Jan 2024 09:39:20 -0300 (-03)
+Date: Thu, 4 Jan 2024 09:39:20 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Edward Baker <edward.baker@intel.com>
+Subject: Re: [PATCH v1 1/4] perf vendor events intel: Alderlake/rocketlake
+ metric fixes
+Message-ID: <ZZam-EG-UepcXtWw@kernel.org>
+References: <20240104074259.653219-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: marvell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR18MB4251.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc503559-cfe7-46a8-17e2-08dc0d220621
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jan 2024 12:38:16.2381
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: T1+Tv2j9IU/tXqB0Y1nsgPTjfwQiUazv4fzhRm7RR2K35KQM84+OXRgsHwpEMTtECpDDgOcJtnnH4vfQwE/H8w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR18MB3963
-X-Proofpoint-ORIG-GUID: 0ys19CCjRtF0yNoesLgVmbxXNHKLAFuo
-X-Proofpoint-GUID: 0ys19CCjRtF0yNoesLgVmbxXNHKLAFuo
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240104074259.653219-1-irogers@google.com>
+X-Url: http://acmel.wordpress.com
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRmxvcmlhbiBGYWluZWxs
-aSA8Zmxvcmlhbi5mYWluZWxsaUBicm9hZGNvbS5jb20+DQo+IFNlbnQ6IFdlZG5lc2RheSwgSmFu
-dWFyeSAzLCAyMDI0IDg6MzIgUE0NCj4gVG86IFdpbGwgRGVhY29uIDx3aWxsQGtlcm5lbC5vcmc+
-OyBFbGFkIE5hY2htYW4NCj4gPGVuYWNobWFuQG1hcnZlbGwuY29tPg0KPiBDYzogY2F0YWxpbi5t
-YXJpbmFzQGFybS5jb207IHRodW5kZXIubGVpemhlbkBodWF3ZWkuY29tOw0KPiBiaGVAcmVkaGF0
-LmNvbTsgYWtwbUBsaW51eC1mb3VuZGF0aW9uLm9yZzsgeWFqdW4uZGVuZ0BsaW51eC5kZXY7DQo+
-IGNocmlzLnpqaEBodWF3ZWkuY29tOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51
-eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6IFtFWFRdIFJl
-OiBbUEFUQ0hdIGFybTY0OiBtbTogRml4IFNPQ3Mgd2l0aCBERFIgc3RhcnRpbmcgYWJvdmUNCj4g
-emVybw0KPiANCj4gRXh0ZXJuYWwgRW1haWwNCj4gDQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gT24gMS8z
-LzI0IDA5OjQ1LCBXaWxsIERlYWNvbiB3cm90ZToNCj4gPiBPbiBXZWQsIEphbiAwMywgMjAyNCBh
-dCAwNzowMDowMlBNICswMjAwLCBFbGFkIE5hY2htYW4gd3JvdGU6DQo+ID4+IEZyb206IEVsYWQg
-TmFjaG1hbiA8ZW5hY2htYW5AbWFydmVsbC5jb20+DQo+ID4+DQo+ID4+IFNvbWUgU09DcywgbGlr
-ZSB0aGUgTWFydmVsbCBBQzUvWC9JTSwgaGF2ZSBhIGNvbWJpbmF0aW9uDQo+ID4+IG9mIEREUiBz
-dGFydGluZyBhdCAweDJfMDAwMF8wMDAwIGNvdXBsZWQgd2l0aCBETUEgY29udHJvbGxlcnMNCj4g
-Pj4gbGltaXRlZCB0byAzMSBhbmQgMzIgYml0IG9mIGFkZHJlc3NpbmcuDQo+ID4+IFRoaXMgcmVx
-dWlyZXMgdG8gcHJvcGVybHkgYXJyYW5nZSBaT05FX0RNQSBhbmQgWk9ORV9ETUEzMiBmb3INCj4g
-Pj4gdGhlc2UgU09Dcywgc28gc3dpb3RsYiBhbmQgY29oZXJlbnQgRE1BIGFsbG9jYXRpb24gd291
-bGQgd29yaw0KPiA+PiBwcm9wZXJseS4NCj4gPj4gQ2hhbmdlIGluaXRpYWxpemF0aW9uIHNvIGRl
-dmljZSB0cmVlIGRtYSB6b25lIGJpdHMgYXJlIHRha2VuIGFzDQo+ID4+IGZ1bmN0aW9uIG9mIG9m
-ZnNldCBmcm9tIERSQU0gc3RhcnQsIGFuZCB3aGVuIGNhbGN1bGF0aW5nIHRoZQ0KPiA+PiBtYXhp
-bWFsIHpvbmUgcGh5c2ljYWwgUkFNIGFkZHJlc3MgZm9yIHBoeXNpY2FsIEREUiBzdGFydGluZyBh
-Ym92ZQ0KPiA+PiAzMi1iaXQsIGNvbWJpbmUgdGhlIHBoeXNpY2FsIGFkZHJlc3Mgc3RhcnQgcGx1
-cyB0aGUgem9uZSBtYXNrDQo+ID4+IHBhc3NlZCBhcyBwYXJhbWV0ZXIuDQo+ID4+IFRoaXMgY3Jl
-YXRlcyB0aGUgcHJvcGVyIHpvbmUgc3BsaXR0aW5nIGZvciB0aGVzZSBTT0NzOg0KPiA+PiAwLi4y
-R0IgZm9yIFpPTkVfRE1BDQo+ID4+IDJHQi4uNEdCIGZvciBaT05FX0RNQTMyDQo+ID4+IDRHQi4u
-OEdCIGZvciBaT05FX05PUk1BTA0KPiA+Pg0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBFbGFkIE5hY2ht
-YW4gPGVuYWNobWFuQG1hcnZlbGwuY29tPg0KPiA+PiAtLS0NCj4gPj4gICBhcmNoL2FybTY0L21t
-L2luaXQuYyB8IDIwICsrKysrKysrKysrKysrKy0tLS0tDQo+ID4+ICAgMSBmaWxlIGNoYW5nZWQs
-IDE1IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pDQo+ID4+DQo+ID4+IGRpZmYgLS1naXQg
-YS9hcmNoL2FybTY0L21tL2luaXQuYyBiL2FyY2gvYXJtNjQvbW0vaW5pdC5jDQo+ID4+IGluZGV4
-IDc0YzFkYjhjZTI3MS4uODI4OGM3Nzg5MTZlIDEwMDY0NA0KPiA+PiAtLS0gYS9hcmNoL2FybTY0
-L21tL2luaXQuYw0KPiA+PiArKysgYi9hcmNoL2FybTY0L21tL2luaXQuYw0KPiA+PiBAQCAtMTE1
-LDIwICsxMTUsMjEgQEAgc3RhdGljIHZvaWQgX19pbml0DQo+IGFyY2hfcmVzZXJ2ZV9jcmFzaGtl
-cm5lbCh2b2lkKQ0KPiA+Pg0KPiA+PiAgIC8qDQo+ID4+ICAgICogUmV0dXJuIHRoZSBtYXhpbXVt
-IHBoeXNpY2FsIGFkZHJlc3MgZm9yIGEgem9uZSBhY2Nlc3NpYmxlIGJ5IHRoZQ0KPiBnaXZlbiBi
-aXRzDQo+ID4+IC0gKiBsaW1pdC4gSWYgRFJBTSBzdGFydHMgYWJvdmUgMzItYml0LCBleHBhbmQg
-dGhlIHpvbmUgdG8gdGhlIG1heGltdW0NCj4gPj4gLSAqIGF2YWlsYWJsZSBtZW1vcnksIG90aGVy
-d2lzZSBjYXAgaXQgYXQgMzItYml0Lg0KPiA+PiArICogbGltaXQuIElmIERSQU0gc3RhcnRzIGFi
-b3ZlIDMyLWJpdCwgZXhwYW5kIHRoZSB6b25lIHRvIHRoZSBhdmFpbGFibGUNCj4gbWVtb3J5DQo+
-ID4+ICsgKiBzdGFydCBsaW1pdGVkIGJ5IHRoZSB6b25lIGJpdHMgbWFzaywgb3RoZXJ3aXNlIGNh
-cCBpdCBhdCAzMi1iaXQuDQo+ID4+ICAgICovDQo+ID4+ICAgc3RhdGljIHBoeXNfYWRkcl90IF9f
-aW5pdCBtYXhfem9uZV9waHlzKHVuc2lnbmVkIGludCB6b25lX2JpdHMpDQo+ID4+ICAgew0KPiA+
-PiAgIAlwaHlzX2FkZHJfdCB6b25lX21hc2sgPSBETUFfQklUX01BU0soem9uZV9iaXRzKTsNCj4g
-Pj4gICAJcGh5c19hZGRyX3QgcGh5c19zdGFydCA9IG1lbWJsb2NrX3N0YXJ0X29mX0RSQU0oKTsN
-Cj4gPj4gKwlwaHlzX2FkZHJfdCBwaHlzX2VuZCA9IG1lbWJsb2NrX2VuZF9vZl9EUkFNKCk7DQo+
-ID4+DQo+ID4+ICAgCWlmIChwaHlzX3N0YXJ0ID4gVTMyX01BWCkNCj4gPj4gLQkJem9uZV9tYXNr
-ID0gUEhZU19BRERSX01BWDsNCj4gPj4gKwkJem9uZV9tYXNrID0gcGh5c19zdGFydCB8IHpvbmVf
-bWFzazsNCj4gPj4gICAJZWxzZSBpZiAocGh5c19zdGFydCA+IHpvbmVfbWFzaykNCj4gPj4gICAJ
-CXpvbmVfbWFzayA9IFUzMl9NQVg7DQo+ID4+DQo+ID4+IC0JcmV0dXJuIG1pbih6b25lX21hc2ss
-IG1lbWJsb2NrX2VuZF9vZl9EUkFNKCkgLSAxKSArIDE7DQo+ID4+ICsJcmV0dXJuIG1pbih6b25l
-X21hc2ssIHBoeXNfZW5kIC0gMSkgKyAxOw0KPiA+PiAgIH0NCj4gPj4NCj4gPj4gICBzdGF0aWMg
-dm9pZCBfX2luaXQgem9uZV9zaXplc19pbml0KHZvaWQpDQo+ID4+IEBAIC0xNDAsNyArMTQxLDE2
-IEBAIHN0YXRpYyB2b2lkIF9faW5pdCB6b25lX3NpemVzX2luaXQodm9pZCkNCj4gPj4NCj4gPj4g
-ICAjaWZkZWYgQ09ORklHX1pPTkVfRE1BDQo+ID4+ICAgCWFjcGlfem9uZV9kbWFfYml0cyA9DQo+
-IGZsczY0KGFjcGlfaW9ydF9kbWFfZ2V0X21heF9jcHVfYWRkcmVzcygpKTsNCj4gPj4gLQlkdF96
-b25lX2RtYV9iaXRzID0gZmxzNjQob2ZfZG1hX2dldF9tYXhfY3B1X2FkZHJlc3MoTlVMTCkpOw0K
-PiA+PiArCS8qDQo+ID4+ICsJICogV2hlbiBjYWxjdWxhdGluZyB0aGUgZG1hIHpvbmUgYml0cyBm
-cm9tIHRoZSBkZXZpY2UgdHJlZSwgc3VidHJhY3QNCj4gPj4gKwkgKiB0aGUgRFJBTSBzdGFydCBh
-ZGRyZXNzLCBpbiBjYXNlIGl0IGRvZXMgbm90IHN0YXJ0IGZyb20gYWRkcmVzcw0KPiA+PiArCSAq
-IHplcm8uIFRoaXMgd2F5LiB3ZSBwYXNzIG9ubHkgdGhlIHpvbmUgc2l6ZSByZWxhdGVkIGJpdHMg
-dG8NCj4gPj4gKwkgKiBtYXhfem9uZV9waHlzKCksIHdoaWNoIHdpbGwgYWRkIHRoZW0gdG8gdGhl
-IGJhc2Ugb2YgdGhlIERSQU0uDQo+ID4+ICsJICogVGhpcyBwcmV2ZW50cyBtaXNjYWxjdWxhdGlv
-bnMgb24gYXJtNjQgU09DcyB3aGljaCBjb21iaW5lcw0KPiA+PiArCSAqIEREUiBzdGFydGluZyBh
-Ym92ZSA0R0Igd2l0aCBtZW1vcnkgY29udHJvbGxlcnMgbGltaXRlZCB0bw0KPiA+PiArCSAqIDMy
-LWJpdHMgb3IgbGVzczoNCj4gPj4gKwkgKi8NCj4gPj4gKwlkdF96b25lX2RtYV9iaXRzID0gZmxz
-NjQob2ZfZG1hX2dldF9tYXhfY3B1X2FkZHJlc3MoTlVMTCkgLQ0KPiBtZW1ibG9ja19zdGFydF9v
-Zl9EUkFNKCkpOw0KPiA+PiAgIAl6b25lX2RtYV9iaXRzID0gbWluMygzMlUsIGR0X3pvbmVfZG1h
-X2JpdHMsDQo+IGFjcGlfem9uZV9kbWFfYml0cyk7DQo+ID4+ICAgCWFybTY0X2RtYV9waHlzX2xp
-bWl0ID0gbWF4X3pvbmVfcGh5cyh6b25lX2RtYV9iaXRzKTsNCj4gPj4gICAJbWF4X3pvbmVfcGZu
-c1taT05FX0RNQV0gPSBQRk5fRE9XTihhcm02NF9kbWFfcGh5c19saW1pdCk7DQo+ID4NCj4gPiBI
-bW0sIEknbSBhIGJpdCB3b3JyaWVkIHRoaXMgY291bGQgcmVncmVzcyBvdGhlciBwbGF0Zm9ybXMg
-c2luY2UgeW91IHNlZW0NCj4gPiB0byBiZSBhc3N1bWluZyB0aGF0IERNQSBhZGRyZXNzIDAgY29y
-cmVzcG9uZHMgdG8gdGhlIHBoeXNpY2FsIHN0YXJ0IG9mDQo+ID4gRFJBTS4gV2hhdCBpZiB0aGF0
-IGlzbid0IHRoZSBjYXNlPw0KPiANCj4gQWxsIG9mIG91ciBtb3N0IHJlY2VudCBTZXQtdG9wLWJv
-eCBTb0NzIG1hcCBEUkFNIHN0YXJ0aW5nIGF0IFBBDQo+IDB4NDAwMF8wMDAwIEZXSVcuIFdlIGhh
-dmUgdGhlIGZvbGxvd2luZyBtZW1vcnkgbWFwczoNCg0KVGhhdCBpcyBiZWxvdyA0R0INCg0KPiAN
-Cj4gMS4gRFJBTSBtYXBwZWQgYXQgUEEgMHgwMDAwXzAwMDANCj4gMi4gRFJBTSBtYXBwZWQgYXQg
-UEEgMHg0MDAwXzAwMDAgd2l0aCBhbm90aGVyIG1lbW9yeSBjb250cm9sbGVyDQo+IHN0YXJ0aW5n
-DQo+IGF0IDB4M18wMDAwXzAwMDANCj4gMy4gRFJBTSBtYXBwZWQgYXQgUEEgMHg0MDAwXzAwMDAg
-d2l0aCBhIHNpbmdsZSBtZW1vcnkgY29udHJvbGxlci4NCj4gDQo+IEhlcmUgaXMgdGhlIGJlZm9y
-ZS9hZnRlciBkaWZmIHdpdGggZGVidWdnaW5nIHByaW50cyBpbnRyb2R1Y2VkIHRvIHByaW50DQo+
-IHN0YXJ0LCBlbmQsIG1pbiwgbWFzayBhbmQgdGhlIGR0X3pvbmVfZG1hX2JpdHMgdmFsdWU6DQo+
-IA0KPiBNZW1vcnkgbWFwIDEuIHdpdGggMkdCIC0+IG5vIGNoYW5nZSBpbiBvdXRwdXQNCj4gDQo+
-IE1lbW9yeSBtYXAgMi4gd2l0aCAyKzJHQiAtPiBubyBjaGFuZ2UgaW4gb3V0cHV0DQo+IA0KPiBN
-ZW1vcnkgbWFwIDMuIHdpdGggNEdCOg0KPiANCj4gQEAgLTM5LDcgKzM5LDcgQEANCj4gICBbICAg
-IDAuMDAwMDAwXSBPRjogcmVzZXJ2ZWQgbWVtOg0KPiAweDAwMDAwMDAwZmRmZmYwMDAuLjB4MDAw
-MDAwMDBmZGZmZmZmZiAoNCBLaUIpIG5vbWFwIG5vbi1yZXVzYWJsZQ0KPiBOV01CT1gNCj4gICBb
-ICAgIDAuMDAwMDAwXSBPRjogcmVzZXJ2ZWQgbWVtOg0KPiAweDAwMDAwMDAwZmUwMDAwMDAuLjB4
-MDAwMDAwMDBmZmZmZmZmZiAoMzI3NjggS2lCKSBub21hcCBub24tcmV1c2FibGUNCj4gU1JSQGZl
-MDAwMDAwDQo+ICAgWyAgICAwLjAwMDAwMF0gbWF4X3pvbmVfcGh5czogc3RhcnQ6IDB4MDAwMDAw
-MDA0MDAwMDAwMCwgZW5kOg0KPiAweDAwMDAwMDAxNDAwMDAwMDAsIG1pbjogMHgwMDAwMDAwMTAw
-MDAwMDAwLCBtYXNrOiAweDAwMDAwMDAwZmZmZmZmZmYNCj4gLVsgICAgMC4wMDAwMDBdIHpvbmVf
-c2l6ZXNfaW5pdDogZHRfem9uZV9kbWFfYml0czogMHgwMDAwMDAyMQ0KPiArWyAgICAwLjAwMDAw
-MF0gem9uZV9zaXplc19pbml0OiBkdF96b25lX2RtYV9iaXRzOiAweDAwMDAwMDIwDQo+ICAgWyAg
-ICAwLjAwMDAwMF0gbWF4X3pvbmVfcGh5czogc3RhcnQ6IDB4MDAwMDAwMDA0MDAwMDAwMCwgZW5k
-Og0KPiAweDAwMDAwMDAxNDAwMDAwMDAsIG1pbjogMHgwMDAwMDAwMTAwMDAwMDAwLCBtYXNrOiAw
-eDAwMDAwMDAwZmZmZmZmZmYNCj4gICBbICAgIDAuMDAwMDAwXSBab25lIHJhbmdlczoNCj4gICBb
-ICAgIDAuMDAwMDAwXSAgIERNQSAgICAgIFttZW0gMHgwMDAwMDAwMDQwMDAwMDAwLTB4MDAwMDAw
-MDBmZmZmZmZmZl0NCj4gQEAgLTg4LDI0MyArODgsMjQzIEBADQo+IA0KPiBNZW1vcnkgbWFwIDMu
-IHdpdGggMkdCOg0KPiANCj4gQEAgLTM5LDExICszOSwxMSBAQA0KPiAgIFsgICAgMC4wMDAwMDBd
-IE9GOiByZXNlcnZlZCBtZW06DQo+IDB4MDAwMDAwMDBiZGZmZjAwMC4uMHgwMDAwMDAwMGJkZmZm
-ZmZmICg0IEtpQikgbm9tYXAgbm9uLXJldXNhYmxlDQo+IE5XTUJPWA0KPiAgIFsgICAgMC4wMDAw
-MDBdIE9GOiByZXNlcnZlZCBtZW06DQo+IDB4MDAwMDAwMDBiZTAwMDAwMC4uMHgwMDAwMDAwMGJm
-ZmZmZmZmICgzMjc2OCBLaUIpIG5vbWFwIG5vbi1yZXVzYWJsZQ0KPiBTUlJAYmUwMDAwMDANCj4g
-ICBbICAgIDAuMDAwMDAwXSBtYXhfem9uZV9waHlzOiBzdGFydDogMHgwMDAwMDAwMDQwMDAwMDAw
-LCBlbmQ6DQo+IDB4MDAwMDAwMDBjMDAwMDAwMCwgbWluOiAweDAwMDAwMDAwYzAwMDAwMDAsIG1h
-c2s6IDB4MDAwMDAwMDBmZmZmZmZmZg0KPiAtWyAgICAwLjAwMDAwMF0gem9uZV9zaXplc19pbml0
-OiBkdF96b25lX2RtYV9iaXRzOiAweDAwMDAwMDIwDQo+IC1bICAgIDAuMDAwMDAwXSBtYXhfem9u
-ZV9waHlzOiBzdGFydDogMHgwMDAwMDAwMDQwMDAwMDAwLCBlbmQ6DQo+IDB4MDAwMDAwMDBjMDAw
-MDAwMCwgbWluOiAweDAwMDAwMDAwYzAwMDAwMDAsIG1hc2s6IDB4MDAwMDAwMDBmZmZmZmZmZg0K
-PiArWyAgICAwLjAwMDAwMF0gem9uZV9zaXplc19pbml0OiBkdF96b25lX2RtYV9iaXRzOiAweDAw
-MDAwMDFmDQo+ICtbICAgIDAuMDAwMDAwXSBtYXhfem9uZV9waHlzOiBzdGFydDogMHgwMDAwMDAw
-MDQwMDAwMDAwLCBlbmQ6DQo+IDB4MDAwMDAwMDBjMDAwMDAwMCwgbWluOiAweDAwMDAwMDAwODAw
-MDAwMDAsIG1hc2s6IDB4MDAwMDAwMDA3ZmZmZmZmZg0KPiAgIFsgICAgMC4wMDAwMDBdIFpvbmUg
-cmFuZ2VzOg0KPiAtWyAgICAwLjAwMDAwMF0gICBETUEgICAgICBbbWVtIDB4MDAwMDAwMDA0MDAw
-MDAwMC0weDAwMDAwMDAwYmZmZmZmZmZdDQo+IC1bICAgIDAuMDAwMDAwXSAgIERNQTMyICAgIGVt
-cHR5DQo+ICtbICAgIDAuMDAwMDAwXSAgIERNQSAgICAgIFttZW0gMHgwMDAwMDAwMDQwMDAwMDAw
-LTB4MDAwMDAwMDA3ZmZmZmZmZl0NCj4gK1sgICAgMC4wMDAwMDBdICAgRE1BMzIgICAgW21lbSAw
-eDAwMDAwMDAwODAwMDAwMDAtMHgwMDAwMDAwMGJmZmZmZmZmXQ0KPiAgIFsgICAgMC4wMDAwMDBd
-ICAgTm9ybWFsICAgZW1wdHkNCj4gICBbICAgIDAuMDAwMDAwXSBNb3ZhYmxlIHpvbmUgc3RhcnQg
-Zm9yIGVhY2ggbm9kZQ0KPiAgIFsgICAgMC4wMDAwMDBdIEVhcmx5IG1lbW9yeSBub2RlIHJhbmdl
-cw0KPiBAQCAtNTQsNyArNTQsNyBAQA0KPiAtLQ0KPiBGbG9yaWFuDQoNCkRvIHlvdSBoYXZlIGFu
-IGV4YW1wbGUgd2hlcmUgdGhpcyB3b3JrcyB3aGVuIEREUiBtZW1vcnkgc3RhcnRzIGFib3ZlIDRH
-Qj8NClRoZSBjb2RlIGluIG1heF96b25lX3BoeXMoKSBoYXMgc2VwYXJhdGUgaWYgY2xhdXNlcyBm
-b3IgbWVtb3J5IHN0YXJ0aW5nIGFib3ZlIDRHQiwNCmFuZCBmb3IgbWVtb3J5IHN0YXJ0aW5nIGFi
-b3ZlIHpvbmUgbWFzayBidXQgYmVsb3cgNEdCLi4uDQoNCkVsYWQuDQo=
+Em Wed, Jan 03, 2024 at 11:42:56PM -0800, Ian Rogers escreveu:
+> Fix that the core PMU is being specified for 2 uncore events. Specify
+> a PMU for the alderlake UNCORE_FREQ metric.
+> 
+> Conversion script updated in:
+> https://github.com/intel/perfmon/pull/126
+> 
+> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Closes: https://lore.kernel.org/lkml/ZZWOdHXJJ_oecWwm@kernel.org/
+> Signed-off-by: Ian Rogers <irogers@google.com>
+
+After this first patch:
+
+101: perf all metricgroups test                                      : Ok
+102: perf all metrics test                                           : FAILED!
+107: perf metrics value validation                                   : Ok
+
+102 is now failing due to some other problem:
+
+root@number:~# perf test -v 102
+102: perf all metrics test                                           :
+--- start ---
+test child forked, pid 2701034
+Testing tma_core_bound
+Testing tma_info_core_ilp
+Testing tma_info_memory_l2mpki
+Testing tma_memory_bound
+Testing tma_info_bad_spec_branch_misprediction_cost
+Testing tma_info_bad_spec_ipmisp_cond_ntaken
+Testing tma_info_bad_spec_ipmisp_cond_taken
+Testing tma_info_bad_spec_ipmisp_indirect
+Testing tma_info_bad_spec_ipmisp_ret
+Testing tma_info_bad_spec_ipmispredict
+Testing tma_info_bottleneck_mispredictions
+Testing tma_info_branches_callret
+Testing tma_info_branches_cond_nt
+Testing tma_info_branches_cond_tk
+Testing tma_info_branches_jump
+Testing tma_info_branches_other_branches
+Testing tma_branch_mispredicts
+Testing tma_clears_resteers
+Testing tma_machine_clears
+Testing tma_mispredicts_resteers
+Testing tma_icache_misses
+Testing tma_info_bottleneck_big_code
+Testing tma_itlb_misses
+Testing tma_unknown_branches
+Testing tma_info_inst_mix_bptkbranch
+Testing tma_info_inst_mix_ipbranch
+Testing tma_info_inst_mix_ipcall
+Testing tma_info_inst_mix_iptb
+Testing tma_info_system_ipfarbranch
+Testing tma_info_thread_uptb
+Testing tma_info_memory_fb_hpki
+Testing tma_info_memory_l1mpki
+Testing tma_info_memory_l1mpki_load
+Testing tma_info_memory_l2hpki_all
+Testing tma_info_memory_l2hpki_load
+Testing tma_info_memory_l2mpki_all
+Testing tma_info_memory_l2mpki_load
+Testing tma_info_memory_l3mpki
+Testing tma_l1_bound
+Testing tma_l2_bound
+Testing tma_l3_bound
+Testing tma_fp_scalar
+Testing tma_fp_vector
+Testing tma_fp_vector_128b
+Testing tma_fp_vector_256b
+Testing tma_int_vector_128b
+Testing tma_int_vector_256b
+Testing tma_port_0
+Testing tma_x87_use
+Testing tma_info_botlnk_l0_core_bound_likely
+Testing tma_info_core_fp_arith_utilization
+Testing tma_info_pipeline_execute
+Testing tma_info_system_gflops
+Testing tma_info_thread_execute_per_issue
+Testing tma_dsb
+Testing tma_info_frontend_dsb_coverage
+Testing tma_decoder0_alone
+Testing tma_dsb_switches
+Testing tma_info_botlnk_l2_dsb_misses
+Testing tma_info_frontend_dsb_switch_cost
+Testing tma_info_frontend_ipdsb_miss_ret
+Testing tma_mite
+Testing tma_contested_accesses
+Testing tma_false_sharing
+Testing tma_backend_bound
+Testing tma_backend_bound_aux
+Testing tma_bad_speculation
+Testing tma_frontend_bound
+Testing tma_retiring
+Testing tma_info_botlnk_l2_ic_misses
+Testing tma_info_bottleneck_instruction_fetch_bw
+Testing tma_info_frontend_fetch_upc
+Testing tma_info_frontend_icache_miss_latency
+Testing tma_info_frontend_ipunknown_branch
+Testing tma_info_frontend_lsd_coverage
+Testing tma_info_memory_tlb_code_stlb_mpki
+Testing tma_fetch_bandwidth
+Testing tma_lsd
+Testing tma_branch_resteers
+Testing tma_lcp
+Testing tma_ms_switches
+Testing tma_info_core_flopc
+Testing tma_info_inst_mix_iparith
+Testing tma_info_inst_mix_iparith_avx128
+Testing tma_info_inst_mix_iparith_avx256
+Testing tma_info_inst_mix_iparith_scalar_dp
+Testing tma_info_inst_mix_iparith_scalar_sp
+Testing tma_info_inst_mix_ipflop
+Testing tma_fetch_latency
+Testing tma_avx_assists
+Testing tma_fp_arith
+Testing tma_fp_assists
+Testing tma_info_system_cpu_utilization
+Testing tma_info_system_dram_bw_use
+Testing tma_shuffles
+Testing tma_info_frontend_l2mpki_code
+Testing tma_info_frontend_l2mpki_code_all
+Testing tma_info_inst_mix_ipload
+Testing tma_info_inst_mix_ipstore
+Testing tma_info_bottleneck_memory_bandwidth
+Testing tma_info_bottleneck_memory_data_tlbs
+Testing tma_info_bottleneck_memory_latency
+Testing tma_info_memory_core_l1d_cache_fill_bw
+Testing tma_info_memory_core_l2_cache_fill_bw
+Testing tma_info_memory_core_l3_cache_access_bw
+Testing tma_info_memory_core_l3_cache_fill_bw
+Testing tma_info_memory_load_miss_real_latency
+Testing tma_info_memory_mlp
+Testing tma_info_memory_thread_l1d_cache_fill_bw_1t
+Testing tma_info_memory_thread_l2_cache_fill_bw_1t
+Testing tma_info_memory_thread_l3_cache_access_bw_1t
+Testing tma_info_memory_thread_l3_cache_fill_bw_1t
+Testing tma_info_memory_tlb_load_stlb_mpki
+Testing tma_info_memory_tlb_page_walks_utilization
+Testing tma_info_memory_tlb_store_stlb_mpki
+Testing tma_info_system_mem_parallel_reads
+Testing tma_info_system_mem_read_latency
+Testing tma_info_system_mem_request_latency
+Testing tma_info_thread_cpi
+Testing tma_fb_full
+Testing tma_mem_bandwidth
+Testing tma_sq_full
+Testing tma_streaming_stores
+Testing tma_dram_bound
+Testing tma_store_bound
+Testing tma_l3_hit_latency
+Testing tma_mem_latency
+Testing tma_store_latency
+Testing tma_dtlb_load
+Testing tma_dtlb_store
+Testing tma_load_stlb_hit
+Testing tma_load_stlb_miss
+Testing tma_store_stlb_hit
+Testing tma_store_stlb_miss
+Testing tma_info_memory_oro_data_l2_mlp
+Testing tma_info_memory_oro_load_l2_mlp
+Testing tma_info_memory_oro_load_l2_miss_latency
+Testing tma_info_memory_oro_load_l3_miss_latency
+Testing tma_microcode_sequencer
+Testing tma_info_core_clks
+Testing tma_info_core_clks_p
+Testing tma_info_core_cpi
+Testing tma_info_core_ipc
+Testing tma_info_core_slots
+Testing tma_info_core_upi
+Testing tma_info_frontend_inst_miss_cost_dramhit_percent
+Testing tma_info_frontend_inst_miss_cost_l2hit_percent
+Testing tma_info_frontend_inst_miss_cost_l3hit_percent
+Testing tma_info_inst_mix_branch_mispredict_ratio
+Testing tma_info_inst_mix_branch_mispredict_to_unknown_branch_ratio
+Testing tma_info_inst_mix_fpdiv_uop_ratio
+Testing tma_info_inst_mix_idiv_uop_ratio
+Testing tma_info_inst_mix_ipfarbranch
+Testing tma_info_inst_mix_ipmisp_cond_ntaken
+Testing tma_info_inst_mix_ipmisp_cond_taken
+Testing tma_info_inst_mix_ipmisp_indirect
+Testing tma_info_inst_mix_ipmisp_ret
+Testing tma_info_inst_mix_ipmispredict
+Testing tma_info_inst_mix_microcode_uop_ratio
+Testing tma_info_inst_mix_x87_uop_ratio
+Testing tma_info_l1_bound_address_alias_blocks
+Testing tma_info_l1_bound_load_splits
+Testing tma_info_l1_bound_store_fwd_blocks
+Testing tma_info_memory_cycles_per_demand_load_dram_hit
+Testing tma_info_memory_cycles_per_demand_load_l2_hit
+Testing tma_info_memory_cycles_per_demand_load_l3_hit
+Testing tma_info_memory_memloadpki
+Testing tma_info_system_kernel_cpi
+Testing tma_info_system_kernel_utilization
+Testing tma_data_sharing
+Testing tma_lock_latency
+Testing tma_fused_instructions
+Testing tma_info_pipeline_ipassist
+Testing tma_info_pipeline_retire
+Testing tma_info_pipeline_strings_cycles
+Testing tma_info_thread_clks
+Testing tma_info_thread_uoppi
+Testing tma_int_operations
+Testing tma_memory_operations
+Testing tma_non_fused_branches
+Testing tma_nop_instructions
+Testing tma_other_light_ops
+Testing tma_ports_utilization
+Testing tma_ports_utilized_0
+Testing tma_ports_utilized_1
+Metric 'tma_ports_utilized_1' not printed in:
+# Running 'internals/synthesize' benchmark:
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+  Average synthesis took: 49.581 usec (+- 0.030 usec)
+  Average num. events: 47.000 (+- 0.000)
+  Average time per event 1.055 usec
+  Average data synthesis took: 53.367 usec (+- 0.032 usec)
+  Average num. events: 246.000 (+- 0.000)
+  Average time per event 0.217 usec
+
+ Performance counter stats for 'perf bench internals synthesize':
+
+     <not counted>      cpu_core/TOPDOWN.SLOTS/                                                 (0.00%)
+     <not counted>      cpu_core/topdown-retiring/                                              (0.00%)
+     <not counted>      cpu_core/topdown-mem-bound/                                             (0.00%)
+     <not counted>      cpu_core/topdown-bad-spec/                                              (0.00%)
+     <not counted>      cpu_core/topdown-fe-bound/                                              (0.00%)
+     <not counted>      cpu_core/topdown-be-bound/                                              (0.00%)
+     <not counted>      cpu_core/RESOURCE_STALLS.SCOREBOARD/                                        (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.1_PORTS_UTIL/                                        (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.BOUND_ON_LOADS/                                        (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.1_PORTS_UTIL/                                        (0.00%)
+     <not counted>      cpu_core/CYCLE_ACTIVITY.STALLS_TOTAL/                                        (0.00%)
+     <not counted>      cpu_core/CPU_CLK_UNHALTED.THREAD/                                        (0.00%)
+     <not counted>      cpu_core/ARITH.DIV_ACTIVE/                                              (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.2_PORTS_UTIL,umask=0xc/                                        (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.3_PORTS_UTIL,umask=0x80/                                        (0.00%)
+
+       1.180394056 seconds time elapsed
+
+       0.409881000 seconds user
+       0.764134000 seconds sys
+Testing tma_ports_utilized_2
+Metric 'tma_ports_utilized_2' not printed in:
+# Running 'internals/synthesize' benchmark:
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+  Average synthesis took: 50.456 usec (+- 0.066 usec)
+  Average num. events: 47.000 (+- 0.000)
+  Average time per event 1.074 usec
+  Average data synthesis took: 52.904 usec (+- 0.030 usec)
+  Average num. events: 246.000 (+- 0.000)
+  Average time per event 0.215 usec
+
+ Performance counter stats for 'perf bench internals synthesize':
+
+     <not counted>      cpu_core/TOPDOWN.SLOTS/                                                 (0.00%)
+     <not counted>      cpu_core/topdown-retiring/                                              (0.00%)
+     <not counted>      cpu_core/topdown-mem-bound/                                             (0.00%)
+     <not counted>      cpu_core/topdown-bad-spec/                                              (0.00%)
+     <not counted>      cpu_core/topdown-fe-bound/                                              (0.00%)
+     <not counted>      cpu_core/topdown-be-bound/                                              (0.00%)
+     <not counted>      cpu_core/RESOURCE_STALLS.SCOREBOARD/                                        (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.1_PORTS_UTIL/                                        (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.BOUND_ON_LOADS/                                        (0.00%)
+     <not counted>      cpu_core/CYCLE_ACTIVITY.STALLS_TOTAL/                                        (0.00%)
+     <not counted>      cpu_core/CPU_CLK_UNHALTED.THREAD/                                        (0.00%)
+     <not counted>      cpu_core/ARITH.DIV_ACTIVE/                                              (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.2_PORTS_UTIL,umask=0xc/                                        (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.2_PORTS_UTIL/                                        (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.3_PORTS_UTIL,umask=0x80/                                        (0.00%)
+
+       1.187012938 seconds time elapsed
+
+       0.397919000 seconds user
+       0.782854000 seconds sys
+Testing tma_ports_utilized_3m
+Metric 'tma_ports_utilized_3m' not printed in:
+# Running 'internals/synthesize' benchmark:
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+  Average synthesis took: 48.248 usec (+- 0.028 usec)
+  Average num. events: 47.000 (+- 0.000)
+  Average time per event 1.027 usec
+  Average data synthesis took: 52.781 usec (+- 0.036 usec)
+  Average num. events: 245.000 (+- 0.000)
+  Average time per event 0.215 usec
+
+ Performance counter stats for 'perf bench internals synthesize':
+
+     <not counted>      cpu_core/TOPDOWN.SLOTS/                                                 (0.00%)
+     <not counted>      cpu_core/topdown-retiring/                                              (0.00%)
+     <not counted>      cpu_core/topdown-mem-bound/                                             (0.00%)
+     <not counted>      cpu_core/topdown-bad-spec/                                              (0.00%)
+     <not counted>      cpu_core/topdown-fe-bound/                                              (0.00%)
+     <not counted>      cpu_core/topdown-be-bound/                                              (0.00%)
+     <not counted>      cpu_core/UOPS_EXECUTED.CYCLES_GE_3/                                        (0.00%)
+     <not counted>      cpu_core/RESOURCE_STALLS.SCOREBOARD/                                        (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.1_PORTS_UTIL/                                        (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.BOUND_ON_LOADS/                                        (0.00%)
+     <not counted>      cpu_core/CYCLE_ACTIVITY.STALLS_TOTAL/                                        (0.00%)
+     <not counted>      cpu_core/CPU_CLK_UNHALTED.THREAD/                                        (0.00%)
+     <not counted>      cpu_core/ARITH.DIV_ACTIVE/                                              (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.2_PORTS_UTIL,umask=0xc/                                        (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.3_PORTS_UTIL,umask=0x80/                                        (0.00%)
+
+       1.160315379 seconds time elapsed
+
+       0.388639000 seconds user
+       0.765363000 seconds sys
+Testing tma_serializing_operation
+Testing C10_Pkg_Residency
+Testing C1_Core_Residency
+Testing C2_Pkg_Residency
+Testing C3_Pkg_Residency
+Testing C6_Core_Residency
+Testing C6_Pkg_Residency
+Testing C7_Core_Residency
+Testing C7_Pkg_Residency
+Testing C8_Pkg_Residency
+Testing C9_Pkg_Residency
+Testing tma_info_system_average_frequency
+Testing tma_info_system_turbo_utilization
+Testing tma_info_inst_mix_ipswpf
+Testing tma_info_bottleneck_branching_overhead
+Testing tma_info_core_coreipc
+Testing tma_info_thread_ipc
+Testing tma_heavy_operations
+Testing tma_light_operations
+Testing tma_info_core_core_clks
+Testing tma_info_system_smt_2t_utilization
+Testing tma_info_thread_slots_utilization
+Testing UNCORE_FREQ
+Testing tma_info_system_socket_clks
+Testing tma_info_inst_mix_instructions
+Testing tma_info_thread_slots
+Testing tma_base
+Testing tma_ms_uops
+Testing tma_resource_bound
+Testing tma_alloc_restriction
+Testing tma_branch_detect
+Testing tma_branch_resteer
+Testing tma_cisc
+Testing tma_decode
+Testing tma_divider
+Testing tma_fast_nuke
+Testing tma_few_uops_instructions
+Testing tma_fpdiv_uops
+Testing tma_mem_scheduler
+Testing tma_non_mem_scheduler
+Testing tma_nuke
+Testing tma_other_fb
+Testing tma_other_load_store
+Testing tma_other_ret
+Testing tma_predecode
+Testing tma_register
+Testing tma_reorder_buffer
+Testing tma_serialization
+Testing tma_assists
+Testing tma_disambiguation
+Testing tma_fp_assist
+Testing tma_ld_buffer
+Testing tma_memory_ordering
+Testing tma_other_l1
+Testing tma_page_fault
+Testing tma_rsv
+Testing tma_smc
+Testing tma_split_loads
+Testing tma_split_stores
+Testing tma_st_buffer
+Testing tma_stlb_hit
+Testing tma_stlb_miss
+Testing tma_store_fwd_blk
+Testing tma_alu_op_utilization
+Testing tma_load_op_utilization
+Testing tma_mixing_vectors
+Testing tma_page_faults
+Testing tma_store_op_utilization
+Testing tma_memory_fence
+Metric 'tma_memory_fence' not printed in:
+# Running 'internals/synthesize' benchmark:
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+  Average synthesis took: 49.458 usec (+- 0.033 usec)
+  Average num. events: 47.000 (+- 0.000)
+  Average time per event 1.052 usec
+  Average data synthesis took: 53.268 usec (+- 0.027 usec)
+  Average num. events: 244.000 (+- 0.000)
+  Average time per event 0.218 usec
+
+ Performance counter stats for 'perf bench internals synthesize':
+
+     <not counted>      cpu_core/TOPDOWN.SLOTS/                                                 (0.00%)
+     <not counted>      cpu_core/topdown-retiring/                                              (0.00%)
+     <not counted>      cpu_core/topdown-mem-bound/                                             (0.00%)
+     <not counted>      cpu_core/topdown-bad-spec/                                              (0.00%)
+     <not counted>      cpu_core/topdown-fe-bound/                                              (0.00%)
+     <not counted>      cpu_core/topdown-be-bound/                                              (0.00%)
+     <not counted>      cpu_core/RESOURCE_STALLS.SCOREBOARD/                                        (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.1_PORTS_UTIL/                                        (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.BOUND_ON_LOADS/                                        (0.00%)
+     <not counted>      cpu_core/MISC2_RETIRED.LFENCE/                                          (0.00%)
+     <not counted>      cpu_core/CYCLE_ACTIVITY.STALLS_TOTAL/                                        (0.00%)
+     <not counted>      cpu_core/CPU_CLK_UNHALTED.THREAD/                                        (0.00%)
+     <not counted>      cpu_core/ARITH.DIV_ACTIVE/                                              (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.2_PORTS_UTIL,umask=0xc/                                        (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.3_PORTS_UTIL,umask=0x80/                                        (0.00%)
+
+       1.177929044 seconds time elapsed
+
+       0.434552000 seconds user
+       0.736874000 seconds sys
+Testing tma_port_1
+Testing tma_port_6
+Testing tma_slow_pause
+Metric 'tma_slow_pause' not printed in:
+# Running 'internals/synthesize' benchmark:
+Computing performance of single threaded perf event synthesis by
+synthesizing events on the perf process itself:
+  Average synthesis took: 49.987 usec (+- 0.049 usec)
+  Average num. events: 47.000 (+- 0.000)
+  Average time per event 1.064 usec
+  Average data synthesis took: 53.490 usec (+- 0.033 usec)
+  Average num. events: 245.000 (+- 0.000)
+  Average time per event 0.218 usec
+
+ Performance counter stats for 'perf bench internals synthesize':
+
+     <not counted>      cpu_core/TOPDOWN.SLOTS/                                                 (0.00%)
+     <not counted>      cpu_core/topdown-retiring/                                              (0.00%)
+     <not counted>      cpu_core/topdown-mem-bound/                                             (0.00%)
+     <not counted>      cpu_core/topdown-bad-spec/                                              (0.00%)
+     <not counted>      cpu_core/topdown-fe-bound/                                              (0.00%)
+     <not counted>      cpu_core/topdown-be-bound/                                              (0.00%)
+     <not counted>      cpu_core/RESOURCE_STALLS.SCOREBOARD/                                        (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.1_PORTS_UTIL/                                        (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.BOUND_ON_LOADS/                                        (0.00%)
+     <not counted>      cpu_core/CPU_CLK_UNHALTED.PAUSE/                                        (0.00%)
+     <not counted>      cpu_core/CYCLE_ACTIVITY.STALLS_TOTAL/                                        (0.00%)
+     <not counted>      cpu_core/CPU_CLK_UNHALTED.THREAD/                                        (0.00%)
+     <not counted>      cpu_core/ARITH.DIV_ACTIVE/                                              (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.2_PORTS_UTIL,umask=0xc/                                        (0.00%)
+     <not counted>      cpu_core/EXE_ACTIVITY.3_PORTS_UTIL,umask=0x80/                                        (0.00%)
+
+       1.186254766 seconds time elapsed
+
+       0.427220000 seconds user
+       0.752217000 seconds sys
+Testing smi_cycles
+Testing smi_num
+Testing tsx_aborted_cycles
+Testing tsx_cycles_per_elision
+Testing tsx_cycles_per_transaction
+Testing tsx_transactional_cycles
+test child finished with -1
+---- end ----
+perf all metrics test: FAILED!
+root@number:~#
+
+> ---
+>  .../arch/x86/alderlake/adl-metrics.json           | 15 ++++++++-------
+>  .../arch/x86/rocketlake/rkl-metrics.json          |  2 +-
+>  2 files changed, 9 insertions(+), 8 deletions(-)
+> 
+> diff --git a/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json b/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
+> index 3388b58b8f1a..35124a4ddcb2 100644
+> --- a/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
+> +++ b/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
+> @@ -69,12 +69,6 @@
+>          "MetricName": "C9_Pkg_Residency",
+>          "ScaleUnit": "100%"
+>      },
+> -    {
+> -        "BriefDescription": "Uncore frequency per die [GHZ]",
+> -        "MetricExpr": "tma_info_system_socket_clks / #num_dies / duration_time / 1e9",
+> -        "MetricGroup": "SoC",
+> -        "MetricName": "UNCORE_FREQ"
+> -    },
+>      {
+>          "BriefDescription": "Percentage of cycles spent in System Management Interrupts.",
+>          "MetricExpr": "((msr@aperf@ - cycles) / msr@aperf@ if msr@smi@ > 0 else 0)",
+> @@ -809,6 +803,13 @@
+>          "ScaleUnit": "100%",
+>          "Unit": "cpu_atom"
+>      },
+> +    {
+> +        "BriefDescription": "Uncore frequency per die [GHZ]",
+> +        "MetricExpr": "tma_info_system_socket_clks / #num_dies / duration_time / 1e9",
+> +        "MetricGroup": "SoC",
+> +        "MetricName": "UNCORE_FREQ",
+> +        "Unit": "cpu_core"
+> +    },
+>      {
+>          "BriefDescription": "This metric represents Core fraction of cycles CPU dispatched uops on execution ports for ALU operations.",
+>          "MetricExpr": "(cpu_core@UOPS_DISPATCHED.PORT_0@ + cpu_core@UOPS_DISPATCHED.PORT_1@ + cpu_core@UOPS_DISPATCHED.PORT_5_11@ + cpu_core@UOPS_DISPATCHED.PORT_6@) / (5 * tma_info_core_core_clks)",
+> @@ -1838,7 +1839,7 @@
+>      },
+>      {
+>          "BriefDescription": "Average number of parallel data read requests to external memory",
+> -        "MetricExpr": "UNC_ARB_DAT_OCCUPANCY.RD / cpu_core@UNC_ARB_DAT_OCCUPANCY.RD\\,cmask\\=1@",
+> +        "MetricExpr": "UNC_ARB_DAT_OCCUPANCY.RD / UNC_ARB_DAT_OCCUPANCY.RD@cmask\\=1@",
+>          "MetricGroup": "Mem;MemoryBW;SoC",
+>          "MetricName": "tma_info_system_mem_parallel_reads",
+>          "PublicDescription": "Average number of parallel data read requests to external memory. Accounts for demand loads and L1/L2 prefetches",
+> diff --git a/tools/perf/pmu-events/arch/x86/rocketlake/rkl-metrics.json b/tools/perf/pmu-events/arch/x86/rocketlake/rkl-metrics.json
+> index 0c880e415669..27433fc15ede 100644
+> --- a/tools/perf/pmu-events/arch/x86/rocketlake/rkl-metrics.json
+> +++ b/tools/perf/pmu-events/arch/x86/rocketlake/rkl-metrics.json
+> @@ -985,7 +985,7 @@
+>      },
+>      {
+>          "BriefDescription": "Average number of parallel data read requests to external memory",
+> -        "MetricExpr": "UNC_ARB_DAT_OCCUPANCY.RD / cpu@UNC_ARB_DAT_OCCUPANCY.RD\\,cmask\\=1@",
+> +        "MetricExpr": "UNC_ARB_DAT_OCCUPANCY.RD / UNC_ARB_DAT_OCCUPANCY.RD@cmask\\=1@",
+>          "MetricGroup": "Mem;MemoryBW;SoC",
+>          "MetricName": "tma_info_system_mem_parallel_reads",
+>          "PublicDescription": "Average number of parallel data read requests to external memory. Accounts for demand loads and L1/L2 prefetches"
+> -- 
+> 2.43.0.472.g3155946c3a-goog
+> 
+
+-- 
+
+- Arnaldo
