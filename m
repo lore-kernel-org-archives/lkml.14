@@ -1,101 +1,167 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C83C2C6B9
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 19:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DA62C6B5
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 19:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="t31Jxc6I"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3606ad581a5so2041095ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 11:42:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X0jFp9pT"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-78158569dc6so59294685a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 11:42:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1704397378; x=1705002178; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zwpW8R3xYRcFeijiUFHaM884VPc1V+tX+SXLWnbPyzE=;
-        b=t31Jxc6IjDIDFuriAo29YKsXR8UshY8Ea20epAztUpL50/EIjoJhRdxFl+qaGaSJ94
-         xFf5R0MWMeqIPpnCDJ64fFHmditFJbQuZ6vfkr622pixW1Y+12ogQUOEaD96+3pNw/A3
-         ydU8mjfqkLV8nRitzO9F8Kp/PwAAibZqcWvE1pGXONNCGVQgzBt09pKAqaukSOK/74Ri
-         X6LiRteCMfwFrTEnT5ET7U+JIm+BeHu0AN3nesadEa3WaQgZc/V2DfKmKHJEC1caWiat
-         SfMA6EqYoHQNe6J3MEEXUmDEZm20FgynEG41Cg0yqC78oa+J5Cegskyq9L/Kcxuvd8va
-         EdEw==
+        d=gmail.com; s=20230601; t=1704397377; x=1705002177; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ipa5davUZdpnLP8xz+lR7PHmqo0QJqwMmEYsOeo03ZY=;
+        b=X0jFp9pTYzqq2Dp6U15NExPHFhPAoxsDgi1bhweUilm1raplPMRIMBNDlsmmNXLRrd
+         pZDG+eohyEfodM3DjD6a2YBkONvDiH/YCKeJwt2iksi7skQXJlDbGzGyVHdUgIAAUt7/
+         XXsVXZbDPgSiAfhiL4Ywnz8lES1qoQ449zpMpY3NwrJZiVYBC2skreolleDvZFMAbUxD
+         2laLMcEYWreA4i8eIUuYsTae6xkWGX9MLUpdzGyJAYw1oXTkAZjED0QlZZTsXWSckO5T
+         Axrf8nIDNn81pd31U2UMs6Jl4w7ydyF9e1RzhOCCEHPPE8g7KjrbuhC/1yNYb726tMQv
+         251w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704397378; x=1705002178;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1704397377; x=1705002177;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zwpW8R3xYRcFeijiUFHaM884VPc1V+tX+SXLWnbPyzE=;
-        b=Gh9hirlbTGkkh3Fa+P7kAEq/iqlpfkfZ2YF4JWROV328jF8IsaE1lA6+LfX+pccUj8
-         3nYUrUJkmvjWTLW9VKy9AiH0IDGPpchY79Q3QlGFcl7JiibJ8cY5FJFZ+JX+U9z1zdR9
-         cuNElL2iJEZf36D6NBnMXH/G/Pu2pjiutv9LpHGKAf7JVB/Y0V4r6UkoQ/fBuakhAnMH
-         IhTiZh7MYDis8l1krp/zVwLWUVwdShr8syMLyCvDLOkvbW4TnDcHviXAvjhqRAAFafTh
-         btAKivjmfxTrjfy/8eaWRLqYXURb7rsOdRn+Y4ldiKjtB/FP2f9AvK+VuuEf0a2b/SNU
-         aYjg==
-X-Gm-Message-State: AOJu0YzVIi6I2th5O5ZI1YIvvoYzwdg9JGvgJPX6JBS+QWSdHphTEZsn
-	RpcYPS2LTsLOxwSsuUJJ8XDMXzm/apFCtA==
-X-Google-Smtp-Source: AGHT+IHT5RafxhxVkhoC7ZCG7auu1NWdb7RZx+i84274U3eQ2c8mka4bV5n112vi+aMJBdUfbRUZxQ==
-X-Received: by 2002:a05:6e02:170f:b0:35f:ca3f:fa67 with SMTP id u15-20020a056e02170f00b0035fca3ffa67mr1224476ill.43.1704397378523;
-        Thu, 04 Jan 2024 11:42:58 -0800 (PST)
-Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id o10-20020a92daca000000b0035d0da89a0asm19606ilq.6.2024.01.04.11.42.57
+        bh=Ipa5davUZdpnLP8xz+lR7PHmqo0QJqwMmEYsOeo03ZY=;
+        b=LgJ5sHaH5ZqCFkHtOEyvim3ucTmp8TwKChdOQAEgFDFm+si5fMBLBo+RrsJ8yef5FA
+         9DKXnN+nHp6nILaahCh+0JRfDz3lWakE9nLdilU3Kqo3kVjReri3fWVNrB7JkLB8onia
+         7tkfyN8H+CuVvMo6KMGoPFI+tYF9uzD4NxZhiUp50VTknHYShkz+Pck81bGvVxL/wnuS
+         1LDwo9SsGYPba51Mqu/Ja2JX4VPId6LAXkP3YuRRpkBQ3XS7gvqY93uj6TGR/ajY0jd6
+         voXb0XUFudZ+946ptXORYZgLmPt/koTLCfh0lMp47h72reES91hg/tMVGF7CoEvJDNyt
+         oq1A==
+X-Gm-Message-State: AOJu0Yw6NKhrFyv4t6DaAJPqPrVJPNuclp0lwlGeb9SdSptB5gr3xEm2
+	H0lNVr0SDmL+yu3GpkElxrs=
+X-Google-Smtp-Source: AGHT+IGzYxfjZ4YbzuyLkP6i/uhd+nmDIY9y+MM3NZ+RJvz1cXO4lg0BuTZPWGwpLqKJqUqao0clcQ==
+X-Received: by 2002:ae9:c00b:0:b0:781:b471:8bc0 with SMTP id u11-20020ae9c00b000000b00781b4718bc0mr1104420qkk.11.1704397377185;
+        Thu, 04 Jan 2024 11:42:57 -0800 (PST)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id qr8-20020a05620a390800b007815fb7018fsm43630qkn.4.2024.01.04.11.42.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jan 2024 11:42:58 -0800 (PST)
-From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Thu, 04 Jan 2024 11:42:49 -0800
-Subject: [PATCH v3 3/3] riscv: Fix relocation_hashtable size
+        Thu, 04 Jan 2024 11:42:56 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailauth.nyi.internal (Postfix) with ESMTP id 6C45627C0060;
+	Thu,  4 Jan 2024 14:42:56 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Thu, 04 Jan 2024 14:42:56 -0500
+X-ME-Sender: <xms:PwqXZffhhp9PLMg0zmeYnGozoU52ETWQ3GCzACz932RyXCHVYSOpDA>
+    <xme:PwqXZVM8HOUGmxYY8ANPCRpB42JWtWsMKgkrsXYbtNEeCIR5Svi62zSLXxxaAJzqz
+    xxUGSOPTXL3ZvQW6Q>
+X-ME-Received: <xmr:PwqXZYiZHHlfcQRyTP1DQs_EWXIxKVQ1TMoGolCHb0AQePt3fZp7bZy28Jo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdegjedguddvkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhq
+    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
+    grthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveei
+    udffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedt
+    ieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfh
+    higihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:PwqXZQ_7YAGoh1fYUV1WOMFAES4YMrWDOrfzvOHXIZK-GMoMa_6y8A>
+    <xmx:PwqXZbsj8meAfqx78ssibvu4-w5rOL-Mne9kKLjbX_aqBUGQCzs_og>
+    <xmx:PwqXZfHUfWnFD7Z9wuD4KxnCNSQDpEb7jwAcIKjtNIR65qxSxzn5Yg>
+    <xmx:QAqXZU-BqcxQm9jxAuaKs71rvCO6Ukxa960cOl9BF2hvGgi8asqBrA>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 4 Jan 2024 14:42:55 -0500 (EST)
+Date: Thu, 4 Jan 2024 11:41:47 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Xuewen Yan <xuewen.yan@unisoc.com>
+Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+	longman@redhat.com, ke.wang@unisoc.com, zhiguo.niu@unisoc.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] lock/lockdep: Add missing graph_unlock in validate_chain
+Message-ID: <ZZcJ-3MXF4BPqPtL@boqun-archlinux>
+References: <20240104054030.14733-1-xuewen.yan@unisoc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240104-module_loading_fix-v3-3-a71f8de6ce0f@rivosinc.com>
-References: <20240104-module_loading_fix-v3-0-a71f8de6ce0f@rivosinc.com>
-In-Reply-To: <20240104-module_loading_fix-v3-0-a71f8de6ce0f@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Cc: Palmer Dabbelt <palmer@rivosinc.com>, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>, 
- kernel test robot <lkp@intel.com>, Julia Lawall <julia.lawall@inria.fr>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1704397374; l=1020;
- i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
- bh=js9HmT4o7o8yl7lcSP3vcOE6sOgYhIQV9xZrhoMilzw=;
- b=oUTjSCnJ23EEXgoFiAFQOCyorLMnwVgQFC3OVXHU3L3GlTodRKu31Mb8jIU/r+O//70Beb63d
- HTFAbKyU+gjDCurro3YjGZ65fM4ysi2YV+LUAPTAIcM8RdGWr0teXfJ
-X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
- pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240104054030.14733-1-xuewen.yan@unisoc.com>
 
-A second dereference is needed to get the accurate size of the
-relocation_hashtable.
+Hi,
 
-Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-Fixes: d8792a5734b0 ("riscv: Safely remove entries from relocation list")
-Reported-by: kernel test robot <lkp@intel.com>
-Reported-by: Julia Lawall <julia.lawall@inria.fr>
-Closes: https://lore.kernel.org/r/202312120044.wTI1Uyaa-lkp@intel.com/
----
- arch/riscv/kernel/module.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, Jan 04, 2024 at 01:40:30PM +0800, Xuewen Yan wrote:
+> The lookup_chain_cache_add will get graph_lock, but the
+> validate_chain do not unlock before return 0.
+> 
 
-diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
-index 32743180e8ef..ceb0adb38715 100644
---- a/arch/riscv/kernel/module.c
-+++ b/arch/riscv/kernel/module.c
-@@ -764,7 +764,7 @@ initialize_relocation_hashtable(unsigned int num_relocations,
- 	hashtable_size <<= should_double_size;
- 
- 	*relocation_hashtable = kmalloc_array(hashtable_size,
--					      sizeof(*relocation_hashtable),
-+					      sizeof(**relocation_hashtable),
- 					      GFP_KERNEL);
- 	if (!*relocation_hashtable)
- 		return 0;
+Thanks for looking into this, a few comment below:
 
--- 
-2.43.0
+> So add graph_unlock before return 0.
+> 
+> Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+> ---
+>  kernel/locking/lockdep.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> index 151bd3de5936..24995e1ebc62 100644
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -3855,8 +3855,11 @@ static int validate_chain(struct task_struct *curr,
+>  		 */
+>  		int ret = check_deadlock(curr, hlock);
+>  
+> -		if (!ret)
+> +		if (!ret) {
+> +			graph_unlock();
 
+Note that when check_deadlock() return 0, there is a
+print_deadlock_bug() before the return, so I think it covers the
+graph_unlock() (see debug_locks_off_graph_unlock()).
+
+>  			return 0;
+> +		}
+> +
+>  		/*
+>  		 * Add dependency only if this lock is not the head
+>  		 * of the chain, and if the new lock introduces no more
+> @@ -3865,9 +3868,9 @@ static int validate_chain(struct task_struct *curr,
+>  		 * serializes nesting locks), see the comments for
+>  		 * check_deadlock().
+>  		 */
+> -		if (!chain_head && ret != 2) {
+> -			if (!check_prevs_add(curr, hlock))
+> -				return 0;
+> +		if (!chain_head && ret != 2 && !check_prevs_add(curr, hlock)) {
+> +			graph_unlock();
+
+This part is interesting, usually when an internal function in lockdep
+returns 0, it means there is an error (either a deadlock or internal
+error), and that means a print_*() would be called, and the graph lock
+will be unlocked in that print_*(). However, in check_prevs_add() there
+is one condition where it will return 0 without any print_*(), that is:
+
+
+in check_prev_add():
+
+			/* <prev> is not found in <next>::locks_before */
+			return 0;
+
+it's an internal error where <next> is in the <prev>::locks_after list
+but <prev> is not in the <next>::locks_before list, which should seldom
+happen: it's dead code. If you put a graph_unlock() before that return,
+I think it covers all the cases, unless I'm missing something subtle.
+
+Are you hitting a real issue or this is found by code reading?
+
+Regards,
+Boqun
+
+> +			return 0;
+>  		}
+>  
+>  		graph_unlock();
+> -- 
+> 2.25.1
+> 
