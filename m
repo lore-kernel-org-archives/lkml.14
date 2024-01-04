@@ -1,150 +1,150 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA1121101
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 11:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439C721101;
+	Thu,  4 Jan 2024 11:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DvOBi7ey"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a28aa47bd15so46575866b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 03:22:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bZ3n2cCi"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-556cd81163fso512837a12.1;
+        Thu, 04 Jan 2024 03:23:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704367358; x=1704972158; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WJ0Gisp1l8i9la4aV7bXjyC+CsrPqgz8AFrIuplCpT0=;
-        b=DvOBi7eycQgF6N2YCmiGAApkU7MPPOFI1/kqoG4OjnDq7LhVokql0Q4ZF/Enf3bMxN
-         +MdC27QZJez4HHzxIoBRyC3YwqlUoyUXW2KsnLraGhMmgWfrokxLg+OMUOSaBw4HHEng
-         C/e8WGCXRp6ha421+FeBI2lTGpMej2rQ75xyRwYUZRp8XJ3/ly7Uil1ZTiVaG3RQZNdh
-         8ndB3IQuJtcQ0kfh9R9M/QciaUd460g0atyWcWc5ZyBae7OJzy4rvY1ddiclL21q9a+i
-         Y1KQ+kcsNnz9E6GEjwkH+Si9pbj9F0HNxLvR+RjFUCnMAuJWN+E1xvAKS/GkNZ0GxeGM
-         HNig==
+        d=gmail.com; s=20230601; t=1704367386; x=1704972186; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2nke4XniUn2EOirvKra06Codg8uMFEBhdGp5AdYnvb0=;
+        b=bZ3n2cCiNLEH83+wyfd/Adw0ms6bpDs5O5LYsscpxT6pBaM8q8DnlE5AaFVNgFxBRk
+         RJufODCVDllED98z9BocSYYZTJ243g6zMJAQ+P8KkpMu6UKLkQpAjwoA3+pOLCs8/sX6
+         zoYif0sw0HrDKxn+cK3aFsilCLRWSMEUt97c44I6I2rmA0VjH/24pC9jNJ6FuFam3sSq
+         YUYMpB9rJFuFZF4awgLJX2wSUsh1nMTkJK4uuibEeMZjTBPrevwKBS3didLp29MZdPOq
+         k8eihhrv6Yx3ZJAJ3Nwz1dJnMHaCyVCl7PmTj3HbmL3GZ3Xifm1GdqUI2jKM7yqQbiNc
+         EdlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704367358; x=1704972158;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WJ0Gisp1l8i9la4aV7bXjyC+CsrPqgz8AFrIuplCpT0=;
-        b=J1Kz+KgPuBKNDWGG28MPCRYsox+Yum1gB/snq9K27gIhNZwIFl78JTvvaBIvn9hPHn
-         io+e+bgv8AUArTL3jM7M07vT8rUsyRjHS1KNBYuqPak9dwzpZmbxi8tVvlHLhA38HXIk
-         QrXTkqTWEb7r7GKx4Vx5duR3LaiYiPaoRQBfcUtCOD0+CCRE9ffNCkT1iEZqgbIzvNVv
-         HgdyVF+3MrmBgx9PnQmYQzGskoMpBiSZe+SxzYgZYZZFZydhDK14r0QSpicGv1PCrxpK
-         ZvWH8qEDhFGiAvsvRFkf3Gds6kQQgXoIO5JzSPd4vOCFM2HvtjfDg17VghRI8RvF9RnE
-         eY9w==
-X-Gm-Message-State: AOJu0YyzEkS6XUK0u5sJ/5utkNpjNSLHCsol5SN5iTlASFwHDMHi4GvP
-	evO3n43XmSCe9JiEqhI6d2eSHHQMN9fUlA==
-X-Google-Smtp-Source: AGHT+IF/tmW5SrIt21DlWgi1H4xIDAeaL1BSVkvFAiNpK6Q98TqkbQXBw+cdUM4zNq96osIglHR+qA==
-X-Received: by 2002:a17:906:6a21:b0:a26:d607:86e2 with SMTP id qw33-20020a1709066a2100b00a26d60786e2mr344192ejc.11.1704367358568;
-        Thu, 04 Jan 2024 03:22:38 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.218.27])
-        by smtp.gmail.com with ESMTPSA id vl5-20020a17090730c500b00a2825a9e1d0sm3090239ejb.174.2024.01.04.03.22.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jan 2024 03:22:38 -0800 (PST)
-Message-ID: <c28ab577-35ad-45f6-8be4-08b441cdb50b@linaro.org>
-Date: Thu, 4 Jan 2024 12:22:19 +0100
+        d=1e100.net; s=20230601; t=1704367386; x=1704972186;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2nke4XniUn2EOirvKra06Codg8uMFEBhdGp5AdYnvb0=;
+        b=NTVz8zugzwRY+q91cSV9pTyWsKeMLJh5y7v6hyQ7Lpb7079ird63qg9LMNz8o/4I+H
+         +eLZCZ7JVrG9V/fH9ASPAm/r92c4cmsaeLVmmZCa+ypfmaVFcuPPMaKRXyZIZ/vptTfl
+         PT3zILxqQwOcW6H1qFAnGZ69dYAHmU7MLGMS0XYjyY9w3GgkPe8aqaq7E3/Cb4sRpp96
+         Jd4qokrbBTHg6l/lf8VEJ0iv/XCFYl7lKML2OW3K5lIgg0h0hU/ueoBOT+bMUXgFaiZW
+         UNEPYMp0sBHapei/snZY0VYB5Cn4x964sOUZa+M2v6STnpI2kvFp/4f1yV8tbfndzQEW
+         Hi0Q==
+X-Gm-Message-State: AOJu0YzqpDmgYqFWfVTzpU/7RWre0a1pq4bsbnkoOv4VOvn0ntBGKMYp
+	W97OuiZjB8BamGUkJIhLOrOtnYDDofWGSg==
+X-Google-Smtp-Source: AGHT+IFWOl4poVCqgvWbk3yPyUvK/HetwToGlNhsWH5IZEbjwJu48azdUlEOAjHK09HJ3oXWL0ufhQ==
+X-Received: by 2002:a50:d61d:0:b0:554:1a96:a8aa with SMTP id x29-20020a50d61d000000b005541a96a8aamr207101edi.90.1704367386034;
+        Thu, 04 Jan 2024 03:23:06 -0800 (PST)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id i21-20020a0564020f1500b0055344b92fb6sm18926218eda.75.2024.01.04.03.23.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jan 2024 03:23:05 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 4 Jan 2024 12:23:03 +0100
+To: Daniel Xu <dxu@dxuuu.xyz>
+Cc: martin.lau@linux.dev, andrii@kernel.org, daniel@iogearbox.net,
+	ast@kernel.org, alexei.starovoitov@gmail.com, olsajiri@gmail.com,
+	quentin@isovalent.com, alan.maguire@oracle.com, memxor@gmail.com,
+	song@kernel.org, yonghong.song@linux.dev, john.fastabend@gmail.com,
+	kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next 1/2] bpf: btf: Support optional flags for
+ BTF_SET8 sets
+Message-ID: <ZZaVFxMvmMjbOlra@krava>
+References: <cover.1704324602.git.dxu@dxuuu.xyz>
+ <29644dc7906c7c0e6843d8acf92c3e29089845d0.1704324602.git.dxu@dxuuu.xyz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] arm64: dts: add description for solidrun am642 som
- and evaluation board
-Content-Language: en-US
-To: Josua Mayer <josua@solid-run.com>, Nishanth Menon <nm@ti.com>,
- Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20240103-add-am64-som-v1-0-dda1f9227aef@solid-run.com>
- <20240103-add-am64-som-v1-2-dda1f9227aef@solid-run.com>
- <eb90f92f-de58-42b2-8eb1-9d78e1fd7a60@linaro.org>
- <0402b960-6daa-446b-8503-d991deac5532@solid-run.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <0402b960-6daa-446b-8503-d991deac5532@solid-run.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <29644dc7906c7c0e6843d8acf92c3e29089845d0.1704324602.git.dxu@dxuuu.xyz>
 
-On 04/01/2024 12:01, Josua Mayer wrote:
-
-
->>> +
->>> +	leds {
->>> +		compatible = "gpio-leds";
->>> +		pinctrl-names = "default";
->>> +		pinctrl-0 = <&leds_pins_default>;
->>> +		status = "okay";
->> Where was it disabled?
-> Nowhere. Better to omit status on new nodes added by new dts file?
-
-Yes, you should not have any redundant status properties. okay is by
-default.
-
->>> +
->>> +		/* D24 */
->>> +		led1: led-1 {
->>> +			label = "led1:green";
->> Use function
-> This board has no default function defined by labels or enclosure.
-> Not sure what to pick for "function" property. Can I omit it and set only color?
+On Wed, Jan 03, 2024 at 04:31:55PM -0700, Daniel Xu wrote:
+> This commit adds support for optional flags on BTF_SET8s.
+> struct btf_id_set8 already supported 32 bits worth of flags, but was
+> only used for alignment purposes before.
 > 
-> If so - should I drop label completely - or keep the "led1"  part?
+> We now use these bits to encode flags. The next commit will tag all
+> kfunc sets with a flag so that pahole can recognize which
+> BTF_ID_FLAGS(func, ..) are actual kfuncs.
+> 
+> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+> ---
+>  include/linux/btf_ids.h | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/btf_ids.h b/include/linux/btf_ids.h
+> index a9cb10b0e2e9..88f914579fa1 100644
+> --- a/include/linux/btf_ids.h
+> +++ b/include/linux/btf_ids.h
+> @@ -183,17 +183,21 @@ extern struct btf_id_set name;
+>   * .word (1 << 3) | (1 << 1) | (1 << 2)
+>   *
+>   */
+> -#define __BTF_SET8_START(name, scope)			\
+> +#define ___BTF_SET8_START(name, scope, flags)		\
+>  asm(							\
+>  ".pushsection " BTF_IDS_SECTION ",\"a\";       \n"	\
+>  "." #scope " __BTF_ID__set8__" #name ";        \n"	\
+>  "__BTF_ID__set8__" #name ":;                   \n"	\
+> -".zero 8                                       \n"	\
+> +".zero 4                                       \n"	\
+> +".long " #flags                               "\n"	\
+>  ".popsection;                                  \n");
+>  
+> -#define BTF_SET8_START(name)				\
+> +#define __BTF_SET8_START(name, scope, flags, ...)	\
+> +___BTF_SET8_START(name, scope, flags)
+> +
+> +#define BTF_SET8_START(name, ...)			\
+>  __BTF_ID_LIST(name, local)				\
+> -__BTF_SET8_START(name, local)
+> +__BTF_SET8_START(name, local, ##__VA_ARGS__, 0)
 
-Then keep label.
+I think it'd better to use something like:
+
+  BTF_SET8_KFUNCS_START(fsverity_set_ids)
+
+instead of:
+
+  BTF_SET8_START(fsverity_set_ids, BTF_SET8_KFUNC)
+
+and to keep current BTF_SET8_START without flags argument, like:
+
+  #define BTF_SET8_START(name) \
+    __BTF_SET8_START(... , 0, ...
+
+  #define BTF_SET8_KFUNCS_START(name) \
+    __BTF_SET8_START(... , BTF_SET8_KFUNC, ...
 
 
+also I'd rename BTF_SET8_KFUNC to BTF_SET8_KFUNCS (with S)
 
-Best regards,
-Krzysztof
+do you have the pahole changes somewhere? would be great to
+see all the related changes and try the whole thing
 
+jirka
+
+
+>  
+>  #define BTF_SET8_END(name)				\
+>  asm(							\
+> @@ -214,7 +218,7 @@ extern struct btf_id_set8 name;
+>  #define BTF_SET_START(name) static struct btf_id_set __maybe_unused name = { 0 };
+>  #define BTF_SET_START_GLOBAL(name) static struct btf_id_set __maybe_unused name = { 0 };
+>  #define BTF_SET_END(name)
+> -#define BTF_SET8_START(name) static struct btf_id_set8 __maybe_unused name = { 0 };
+> +#define BTF_SET8_START(name, ...) static struct btf_id_set8 __maybe_unused name = { 0 };
+>  #define BTF_SET8_END(name)
+>  
+>  #endif /* CONFIG_DEBUG_INFO_BTF */
+> -- 
+> 2.42.1
+> 
