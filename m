@@ -1,142 +1,105 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04945249E9;
-	Thu,  4 Jan 2024 16:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C672249F5;
+	Thu,  4 Jan 2024 16:02:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Gy/HAVLT";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3RcDYnQX";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="sbx8rM4d";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="IbGrB8OO"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E153E1F7FE;
-	Thu,  4 Jan 2024 16:00:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1704384021;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t4Xn9KqraJoS04FwRt9Y/22XkZrBEmyjMHNojdzv4mI=;
-	b=Gy/HAVLT/Lk+a77XmOarzCG8JeNB9v0v2Ahcd3wAqdBKaZSN63/s/7xMv+p97pwzTQHTN/
-	i+j1K6EJ4Zax5fH3dhEjaczLsAu/3hk2jhXUcrUVV+FRJuQTe+P9mTv2978/dNsvPoCLCd
-	M1QoWUUcQ9ThYDvf+aXdH/LsfbC8oF4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1704384021;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t4Xn9KqraJoS04FwRt9Y/22XkZrBEmyjMHNojdzv4mI=;
-	b=3RcDYnQX3tejAfIglkS/vB3BKM4ZfGzJiCriQh55CFaFwZnAU0Wetv1+74WMWedSm/qwlX
-	qbOWJBMc+au3lsDQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1704384020;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t4Xn9KqraJoS04FwRt9Y/22XkZrBEmyjMHNojdzv4mI=;
-	b=sbx8rM4dc9FmLb/p4esF+K1oZoegZiiw6fSy93On66DAPlt2wGZCmvkSO1Yt8srOHb/HMb
-	Fb8qfyVy9dYpVyRUWwVB/rJGAjgfe9MriXwQfVhHyHMAk7cBN2zOBHEBcLSeEvV+rFv0Yc
-	iaXlf58d9fQ8Bi64aMfRP1nIrQ7L/N4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1704384020;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t4Xn9KqraJoS04FwRt9Y/22XkZrBEmyjMHNojdzv4mI=;
-	b=IbGrB8OOCrVGLRSDSAgw7LmgTjNY50RaKsnr1mQqs8Ne3BGkmkriW9DPOWa0sHfGwA5ixF
-	2XI8Fy0z8bY3jDCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C4C3113C96;
-	Thu,  4 Jan 2024 16:00:20 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id oI/aLxTWlmX9VwAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Thu, 04 Jan 2024 16:00:20 +0000
-Date: Thu, 4 Jan 2024 17:00:09 +0100
-From: David Sterba <dsterba@suse.cz>
-To: Fedor Pchelkin <pchelkin@ispras.ru>
-Cc: Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Chris Mason <clm@fb.com>, linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alexey Khoroshilov <khoroshilov@ispras.ru>,
-	lvc-project@linuxtesting.org,
-	syzbot+be14ed7728594dc8bd42@syzkaller.appspotmail.com,
-	syzbot+c563a3c79927971f950f@syzkaller.appspotmail.com
-Subject: Re: [PATCH] btrfs: ref-verify: free ref cache before clearing mount
- opt
-Message-ID: <20240104160009.GF15380@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20240103103128.30095-1-pchelkin@ispras.ru>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q4PD0cGd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=azJ/J7vywXkqTQ9Hi2IirR6RPgqAfj1yxhz8MRLS2x0=; b=q4PD0cGdukmiPEaNlMlJWJF+pT
+	ZXVvbKF0lx8N6RKDbdA3XnJFCH57UNSdhZ/kO8Iz0hoRFVNagfGq3512N2nRWB7DjAXdStXkQIQWA
+	ncOA4AZhdNj8GPB/A2qakkDxKh6kd0iDbs6UmdffT9uSFK6jyOMkzXooC/E6xuAvuKKbe7Rp3CQTz
+	J1I841KAHRyzTq2XKmovhgML0YXdz5QY3zZHBV6z1JGo68+qVuCERlZ6TC/jEWjXTKRPozGsTHkOr
+	2gLYqGCPigeu8LwNiVrx9UwGlVUWFnDhAyslZYKq4eBvBb5hXDvGsvbI1KfC4At7taj8HX1V2qE8x
+	5swElK2g==;
+Received: from [50.53.46.231] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rLQAp-00EbY6-1D;
+	Thu, 04 Jan 2024 16:02:23 +0000
+Message-ID: <41cdcf9d-d726-4f4f-9616-d67e68a535cb@infradead.org>
+Date: Thu, 4 Jan 2024 08:02:21 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240103103128.30095-1-pchelkin@ispras.ru>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Level: *
-X-Spam-Level: 
-X-Spamd-Bar: /
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=sbx8rM4d;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=IbGrB8OO
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-0.08 / 50.00];
-	 ARC_NA(0.00)[];
-	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 BAYES_HAM(-0.37)[76.92%];
-	 TAGGED_RCPT(0.00)[be14ed7728594dc8bd42,c563a3c79927971f950f];
-	 REPLYTO_ADDR_EQ_FROM(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 URIBL_BLOCKED(0.00)[suse.cz:dkim,linuxtesting.org:url,appspotmail.com:email,ispras.ru:email];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 TO_MATCH_ENVRCPT_SOME(0.00)[];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[10];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Spam-Score: -0.08
-X-Rspamd-Queue-Id: E153E1F7FE
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -fixes v2] RISC-V: KVM: Require HAVE_KVM
+Content-Language: en-US
+To: Andrew Jones <ajones@ventanamicro.com>, linux-riscv@lists.infradead.org,
+ linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org
+Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ anup@brainfault.org, atishp@atishpatra.org, sfr@canb.auug.org.au,
+ alex@ghiti.fr, mpe@ellerman.id.au, npiggin@gmail.com,
+ linuxppc-dev@lists.ozlabs.org, pbonzini@redhat.com
+References: <20240104123727.76987-2-ajones@ventanamicro.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240104123727.76987-2-ajones@ventanamicro.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 03, 2024 at 01:31:27PM +0300, Fedor Pchelkin wrote:
-> As clearing REF_VERIFY mount option indicates there were some errors in a
-> ref-verify process, a ref cache is not relevant anymore and should be
-> freed.
-> 
-> btrfs_free_ref_cache() requires REF_VERIFY option being set so call
-> it just before clearing the mount option.
-> 
-> Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
-> 
-> Fixes: fd708b81d972 ("Btrfs: add a extent ref verify tool")
-> Reported-by: syzbot+be14ed7728594dc8bd42@syzkaller.appspotmail.com
-> Closes: https://lore.kernel.org/lkml/000000000000e5a65c05ee832054@google.com/
-> Reported-by: syzbot+c563a3c79927971f950f@syzkaller.appspotmail.com
-> Closes: https://lore.kernel.org/lkml/0000000000007fe09705fdc6086c@google.com/
-> Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
 
-Added to misc-next, thanks.
+
+On 1/4/24 04:37, Andrew Jones wrote:
+> KVM requires EVENTFD, which is selected by HAVE_KVM. Other KVM
+> supporting architectures select HAVE_KVM and then their KVM
+> Kconfigs ensure its there with a depends on HAVE_KVM. Make RISCV
+> consistent with that approach which fixes configs which have KVM
+> but not EVENTFD, as was discovered with a randconfig test.
+> 
+> Fixes: 99cdc6c18c2d ("RISC-V: Add initial skeletal KVM support")
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Closes: https://lore.kernel.org/all/44907c6b-c5bd-4e4a-a921-e4d3825539d8@infradead.org/
+> Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
+
+
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+
+Thanks.
+
+
+> ---
+> 
+> v2:
+>  - Added Fixes tag and -fixes prefix [Alexandre/Anup]
+> 
+>  arch/riscv/Kconfig     | 1 +
+>  arch/riscv/kvm/Kconfig | 2 +-
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index a935a5f736b9..daba06a3b76f 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -128,6 +128,7 @@ config RISCV
+>  	select HAVE_KPROBES if !XIP_KERNEL
+>  	select HAVE_KPROBES_ON_FTRACE if !XIP_KERNEL
+>  	select HAVE_KRETPROBES if !XIP_KERNEL
+> +	select HAVE_KVM
+>  	# https://github.com/ClangBuiltLinux/linux/issues/1881
+>  	select HAVE_LD_DEAD_CODE_DATA_ELIMINATION if !LD_IS_LLD
+>  	select HAVE_MOVE_PMD
+> diff --git a/arch/riscv/kvm/Kconfig b/arch/riscv/kvm/Kconfig
+> index 1fd76aee3b71..36fa8ec9e5ba 100644
+> --- a/arch/riscv/kvm/Kconfig
+> +++ b/arch/riscv/kvm/Kconfig
+> @@ -19,7 +19,7 @@ if VIRTUALIZATION
+>  
+>  config KVM
+>  	tristate "Kernel-based Virtual Machine (KVM) support (EXPERIMENTAL)"
+> -	depends on RISCV_SBI && MMU
+> +	depends on HAVE_KVM && RISCV_SBI && MMU
+>  	select HAVE_KVM_IRQCHIP
+>  	select HAVE_KVM_IRQ_ROUTING
+>  	select HAVE_KVM_MSI
+
+-- 
+#Randy
