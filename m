@@ -1,146 +1,159 @@
-Received: from TWMBX02.aspeed.com (mail.aspeedtech.com [211.20.114.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A9B1D699;
-	Thu,  4 Jan 2024 03:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-Received: from TWMBX02.aspeed.com (192.168.0.24) by TWMBX02.aspeed.com
- (192.168.0.24) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 4 Jan
- 2024 11:41:21 +0800
-Received: from twmbx02.aspeed.com (192.168.10.10) by TWMBX02.aspeed.com
- (192.168.0.24) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 4 Jan 2024 11:41:21 +0800
-From: Billy Tsai <billy_tsai@aspeedtech.com>
-To: <jdelvare@suse.com>, <linux@roeck-us.net>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <joel@jms.id.au>, <andrew@aj.id.au>,
-	<corbet@lwn.net>, <thierry.reding@gmail.com>,
-	<u.kleine-koenig@pengutronix.de>, <p.zabel@pengutronix.de>,
-	<billy_tsai@aspeedtech.com>, <naresh.solanki@9elements.com>,
-	<linux-hwmon@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-aspeed@lists.ozlabs.org>,
-	<linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-pwm@vger.kernel.org>, <BMC-SW@aspeedtech.com>, <patrick@stwcx.xyz>
-Subject: [PATCH v11 0/3] Support pwm/tach driver for aspeed ast26xx
-Date: Thu, 4 Jan 2024 11:41:17 +0800
-Message-ID: <20240104034120.3516290-1-billy_tsai@aspeedtech.com>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C0F1EB35;
+	Thu,  4 Jan 2024 03:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="M4idijfD";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="N+PBxUUd"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40427pId006510;
+	Thu, 4 Jan 2024 03:42:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=Dx7z3Z3C0v3P/rgolaVtkr8iChLUONEo1xoS1UPdOyY=;
+ b=M4idijfDcmTKwdfSPPYEV29SDYwD5kZ4Qa1MiyGebl/8hru+3bqeLoZrO/6AERtNKIvo
+ IP9P6zWyMuLVbiY+V5p94wTs9p1DBwvdZQAdUrfiRapXxDWNVXuB6+J8AewhumHZc+Y4
+ i7mm1eW5Uv1ccMiq8Tx+b9rr+34HaXyhFObeJKB50iAAZ3K0T4pfl7mRYtNw+ZgfGqoG
+ H0DfpnK2FYXtwuEu3Zb39IYldUFJ2+oxk/1HlBqaUBYL7ML514My63U9vaRrmk93qaVQ
+ vvVEqh1YjzUYl6WKxpUSXQb4TokbZb6NDhX9GOr2j+vTNQLnnszp4UpkkXtoS52liWWU vA== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3va9t26c1n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 04 Jan 2024 03:42:08 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 4043VRto029459;
+	Thu, 4 Jan 2024 03:42:06 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2100.outbound.protection.outlook.com [104.47.55.100])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3vdmuhr97u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 04 Jan 2024 03:42:06 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mNxyjfJZd0VdmYKnR9LYN3pXDJF/G1jIaqA3nmFXuEYa9HZlibuSuSig3uz59rUI+WXuJkGqqbOJKVkmsSQUUdV9WCOZo24TOoM9jH0nAVZkDb9PKuiG4GPU6qEtiWhhqqAjRvPO12BTOmHCg2ljZkqCK3jbu41HnawSB9Qmt899PAsuN/nT0AwZEC1FHbwluo0qpfyUQoZCBvi5FMFZfIddVpT7UxGogkVXSKOeovpeDQNED80GrkHLACUQ9RNEcoN1icwrmu3PNeItod7CBZWNQ3JBYUopOKnv9JdAURC8x+ujmndzrOunNNsQmWfgdx0C2f075BP1ka20skhFzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Dx7z3Z3C0v3P/rgolaVtkr8iChLUONEo1xoS1UPdOyY=;
+ b=Ce2eZzmjNRREaddjdv4tDzzmtUG31mO+CMdIjVTIcUR2/ci3SfQAZwZaMz4R8G87F7QqTG6LPkmVfVyrOPUB2Ulua4JVVTK3JxlwN8QkLbZHyg41/LkWip0UDzCE1dfjJ9UHPgbaH2O5ms47KErO43cbB5BitHqtNst1KsGC59Uaz38uE7rx12j6vuoff3vwUf+3pec1R8mHjpq9QwGMB3DBD5IjKjFJCEIzUpvXgnn3t5kEc/d3Fsd7XGAAbRox+mRtOCPm3VrONPObxipFqR0AsJz9PmCOKCPC/ev4cx4FP46rY/lg5ZAhdlUGQv15iKdYoSb4IDp8LckRNV7ISA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Dx7z3Z3C0v3P/rgolaVtkr8iChLUONEo1xoS1UPdOyY=;
+ b=N+PBxUUd4uP4GFit7hSgyUu8rRKKArOipMYIA7KADkEasvCj0GzBp2T2BAUAPTTCEk/WtGh/+A4BdyYX505Rmxe5KbfUH/C3BzisZpaoSDXEcMhjfaKQ0X9cyxdHjfjuYZF595yM7H6EU39aTfTdcAwTWSv5osox/ftCu+d4Dto=
+Received: from PH0PR10MB5706.namprd10.prod.outlook.com (2603:10b6:510:148::10)
+ by CY8PR10MB6634.namprd10.prod.outlook.com (2603:10b6:930:56::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.14; Thu, 4 Jan
+ 2024 03:42:04 +0000
+Received: from PH0PR10MB5706.namprd10.prod.outlook.com
+ ([fe80::2000:9c78:19f5:176a]) by PH0PR10MB5706.namprd10.prod.outlook.com
+ ([fe80::2000:9c78:19f5:176a%3]) with mapi id 15.20.7135.023; Thu, 4 Jan 2024
+ 03:42:04 +0000
+Message-ID: <c6dacda5-7a65-7297-89f7-8ceb591c8e07@oracle.com>
+Date: Thu, 4 Jan 2024 11:41:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Subject: Re: [PATCH] btrfs: ref-verify: free ref cache before clearing mount
+ opt
+To: Fedor Pchelkin <pchelkin@ispras.ru>, Josef Bacik <josef@toxicpanda.com>
+Cc: David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        lvc-project@linuxtesting.org,
+        syzbot+be14ed7728594dc8bd42@syzkaller.appspotmail.com,
+        syzbot+c563a3c79927971f950f@syzkaller.appspotmail.com
+References: <20240103103128.30095-1-pchelkin@ispras.ru>
+From: Anand Jain <anand.jain@oracle.com>
+In-Reply-To: <20240103103128.30095-1-pchelkin@ispras.ru>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR06CA0202.apcprd06.prod.outlook.com (2603:1096:4:1::34)
+ To PH0PR10MB5706.namprd10.prod.outlook.com (2603:10b6:510:148::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: Fail (TWMBX02.aspeed.com: domain of billy_tsai@aspeedtech.com
- does not designate 192.168.10.10 as permitted sender)
- receiver=TWMBX02.aspeed.com; client-ip=192.168.10.10;
- helo=twmbx02.aspeed.com;
-
-Unlike the old design that the register setting of the TACH should based
-on the configure of the PWM. In ast26xx, the dependency between pwm and
-tach controller is eliminated and becomes a separate hardware block. One
-is used to provide pwm output and another is used to monitor the frequency
-of the input. This driver implements them by exposing two kernel
-subsystems: PWM and HWMON. The PWM subsystem can be utilized alongside
-existing drivers for controlling elements such as fans (pwm-fan.c),
-beepers (pwm-beeper.c) and so on. Through the HWMON subsystem, the driver
-provides sysfs interfaces for fan.
-
-Changes since v10:
-Add the enum for the 'fan-driving-mode' properties in the fan-common.yaml.
-
-Changes since v9:
-Change the type of fan-driving-mode to string
-Fix some typos and formatting issues.
-
-Changes since v8:
-Fix the fail of fan div register setting. (FIELD_GET -> FIELD_PREP)
-Change the type of tach-ch from uint32_t to uint8-array
-Add additional properties and apply constraints to certain properties.
-
-Changes since v7:
-Cherry-pick the fan-common.yaml and add the following properties:
-- min-rpm
-- div
-- mode
-- tach-ch
-Fix the warning which is reported by the kernel test robot.
-
-Changes since v6:
-Consolidate the PWM and TACH functionalities into a unified driver.
-
-Changes since v5:
-- pwm/tach:
-  - Remove the utilization of common resources from the parent node.
-  - Change the concept to 16 PWM/TACH controllers, each with one channel,
-  instead of 1 PWM/TACH controller with 16 channels.
-- dt-binding:
-  - Eliminate the usage of simple-mfd.
-
-Changes since v4:
-- pwm:
-  - Fix the return type of get_status function.
-- tach:
-  - read clk source once and re-use it
-  - Remove the constants variables
-  - Allocate tach_channel as array
-  - Use dev->parent
-- dt-binding:
-  - Fix the order of the patches
-  - Add example and description for tach child node
-  - Remove pwm extension property
-
-Changes since v3:
-- pwm:
-  - Remove unnecessary include header
-  - Fix warning Prefer "GPL" over "GPL v2"
-- tach:
-  - Remove the paremeter min_rpm and max_rpm and return the tach value 
-  directly without any polling or delay.
-  - Fix warning Prefer "GPL" over "GPL v2"
-- dt-binding:
-  - Replace underscore in node names with dashes
-  - Split per subsystem
-
-Changes since v2:
-- pwm:
-  - Use devm_* api to simplify the error cleanup
-  - Fix the multi-line alignment problem
-- tach:
-  - Add tach-aspeed-ast2600 to index.rst
-  - Fix the multi-line alignment problem
-  - Remove the tach enable/disable when read the rpm
-  - Fix some coding format issue
-
-Changes since v1:
-- tach:
-  - Add the document tach-aspeed-ast2600.rst
-  - Use devm_* api to simplify the error cleanup.
-  - Change hwmon register api to devm_hwmon_device_register_with_info
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR10MB5706:EE_|CY8PR10MB6634:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3deb782a-5c81-4458-379a-08dc0cd71def
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	Yjs7eQDPZcmO3gyA3gFKyNdnnIYIPqPVxkoc3pH70+/5UzeMqatYFsgp64at6969GzsVL9TbIardyfEUZypSALkxQsoYiqnxVxxsSTGWrlgMnCc7uo295jmCT1Y/K9TfNqmmEhITJoMaFCqspk39hYqLnDi47AmxIaGtsYUTepzKpaCTIGFWM9EtIsOMhJNq2NmGOXdha/lBZBFVX0MEEzjw1gexoYGIUuuwqZbG0SsyOb0wQGfltLl8ZoMOYbWCTsWDMY9zZyX01tEzrlZAxvSuAlIaUwuy//Ztxo+wI8w0RNzHNDpi7qmz3POLQQOanDHozHYL9yqJMDyb/iLxB7EeP+dYOaqpepu2LlNEXAFE34/IcA3FdwTlq1JeN2OxIraPOduRSngBKPbgdeXe+3ejaSQS3c82+FFJdBeObE45LfVul+qhHzB94ieS2h9C8jG/pQ5T4d8/3OmQcg0wZjscPRwtQEtYE054A5O7JET4k2GwwYzkKDwsIdl5GTpNj3UZTQWA3//os9ZLpiBzGKtEAqneDlexC8q3euRJex8hRK6UI409+HajWasx72uBOohzZHqS0Oe2h82GCElL0b52+f+nDvbZQ6XA35uYHEFnrr8NDtIoXbvIEi2APtVV6qZ5sbuXIYEzn4wpsqlv+Q==
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5706.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(346002)(376002)(136003)(39860400002)(366004)(230922051799003)(451199024)(1800799012)(64100799003)(186009)(38100700002)(31696002)(36756003)(31686004)(86362001)(478600001)(6506007)(6512007)(26005)(2616005)(6666004)(4270600006)(6486002)(316002)(44832011)(5660300002)(66946007)(54906003)(110136005)(66556008)(66476007)(4326008)(8936002)(8676002)(2906002)(7416002)(41300700001)(558084003)(19618925003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?bjcyUkhZL3RCakJTaFRzNmJmTVh6clhKSkk5V1FKUlZaR0tvYmRsN2NrWDZE?=
+ =?utf-8?B?Z1NjSHhIYVBTbDJFakhOTW5rWGlqb0Vhb3Q5cVcvTDIrYy9OS1FpVEhIWnJQ?=
+ =?utf-8?B?bjZMV1JWOCtwc2lJNm81VmgzQnVQTjlRWWt0eHphUVNTaVdsWERGOVVEQnEw?=
+ =?utf-8?B?TWlVN0VNeEx6WStjSTdld1hJTEt5TThYU3VjdGtkMWtqU1VvU3lMZGJzckMv?=
+ =?utf-8?B?T04zemlSWFFlWEh1WFRzaklHTzdEelAxTkZWbHNMUXZmcXk4K243UUZVbUJy?=
+ =?utf-8?B?RVd1SFZIWS9EM084NXpObmxMMkl6WU03TUVTMVNDRDZoQ2dNU0IyczhPWU5M?=
+ =?utf-8?B?WS83bG9PR0t2UGdxOE1URXlackwvb0ZVU095UDhZVlhsVCtmTGc3NHl6R1VD?=
+ =?utf-8?B?VkNPMGJFdmgvc2FWRGdjemlYU1RoQ05lQWVpOVZYUy9Bd1dTNWJnR0Q2LzNH?=
+ =?utf-8?B?UlVuWlFkV2l0Vm9nWmJZQWFxckdKR3BmUkUrTGVQV3lEazVDZExReUsvOUFY?=
+ =?utf-8?B?b2IwTmRQL05pZmJVK3J4SENBWGd6VFNGendHOXJpL1lyc1VlbERvS0htYjlO?=
+ =?utf-8?B?ejMxQnJDTGtVQVlXc2xySWVvR2tQM3JMU3NmUk54VysvckFyTUlLNDVnN0VI?=
+ =?utf-8?B?U3V4dEFUMmxhZzBCRUNoQi8vdENvMit0cEtIZGk5WGRDaE40Y3JNTURjY0JM?=
+ =?utf-8?B?YTMySG1pVlRwNmJ2WTZ4bHpBdS9mUGRyQjdkWEdZZUl2eUtiM0VDMDRWNmEx?=
+ =?utf-8?B?T0d2WmZwdnNoVStGejFnb1VVd2g0ZDZtVXFudEU1RnRibG04ZkcvSFQxdWJE?=
+ =?utf-8?B?a1NSMnlyaGdEOEhiK2FGSkttbjA0QXV6bk5UYkdHdTJtNWxTbW9hZEJzWXZE?=
+ =?utf-8?B?SUt0d2VJWnJLZy9sUlVGUzc2eTV0ZUhOTFI4ZWVTb3QzSEhTUDRUU1RsbUsx?=
+ =?utf-8?B?MDNIYS80b0lueWJjMXNMVnRXZmpCcEp2ZFl4Tnd0bTN4OU14bGJnUnVkZUt0?=
+ =?utf-8?B?TXNodHA3THRtTk4rcjMwekZsZ20xWFBiMkJCTVEyazBJREI5M2laVjZ0ajZL?=
+ =?utf-8?B?SStoT041Ym42dTFnMmNWSzJQNGk5SHEra3hrZGZDUXBRdytFRHJSekJ3OC9m?=
+ =?utf-8?B?Q1NmVGZ0VUs2YjViRG02cDBxR0FrWnVQWUJTTHFVZ0JtbWNJc2tXYmNSZEhR?=
+ =?utf-8?B?Z1VISXFjc0pzOHFDSWRWRlJUSE9lbHZZVnR5aXBuZDQ2eWNjOWUwS0ozWk90?=
+ =?utf-8?B?LzFSaXdRTlQyem5RSXQvTDNOZ1NwSjlrUUVxV1M1ZDRZcURsMDhXK0E2SmZp?=
+ =?utf-8?B?NjBhTWVhWWV5Vy9DbDF3RE5BTk5sTU1kWlRxTUZHVzZLak1ZRzNMeEVuV3hN?=
+ =?utf-8?B?OVREZms5Vll6eDRjaUREb0JLNG9kUG9wZHR3N1FiUnd1azhLYnhqL0IyQ2dC?=
+ =?utf-8?B?K3k4M0taYnNGREQzNVNMZlpKbnRqQnF6eTIxTFYxK2FEUjRkR1hBV25lWTBp?=
+ =?utf-8?B?eC9XT3I2ekxYa1lveUpEVkRReldOYjN3V3dFMXo4dEptakNmendtL052MGow?=
+ =?utf-8?B?YVJtNC9oRGZqRW9wL1RIQm9mUnBhbWR5dVdvYnpYRzFFWkNQVU1VNnExdkNy?=
+ =?utf-8?B?SEhWL0duVUdCaUl1TmZwSWRLVm44bFB2TzBIVFE1WW1Qc3hCMXJQeFZvdEpR?=
+ =?utf-8?B?a3kzYXQxd09yQjBrNzlKd3EzeGFzZ284TnlnV1FpbUt2azNBV3ZpSVhDK2I4?=
+ =?utf-8?B?bEZFL2EveUJZTktKVXF3NlB0NGZrVXkvTm9sVnhFRTNTZWFpWWsyRit2b0xw?=
+ =?utf-8?B?RUNjVmh2aTJUZmtJSkVMbHg4ak9FVFJvK3pZUW9qcWMvSithMktqN1U2NCt4?=
+ =?utf-8?B?NjNXSFdlN2hDRnNqWDVubm9XZDVQSmlmWEZ1SGl1U1ZVdFlvbERDandVSjJS?=
+ =?utf-8?B?MEdSOHFCYmJwTjZFWkptWUdNSjdYcVFHak9MZ0s1TVBWbS9qb05TUitjUEM4?=
+ =?utf-8?B?ZDBwdVgzOFVSWERWbnVxZFBUM3pNbWV6YzMzUndITGtkYm9KdlVtWVlzWVVZ?=
+ =?utf-8?B?TkhqUm5kdjV6cm42NjVCRjlkdXlKNzZpT0tFVGFLWWZYY2t2M3VrZVU0YUI0?=
+ =?utf-8?Q?mEGBSbGEEyWuCv/vs5UU1JU1I?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	4fQ6B7Vdv87drWfXYOXmF7N55WkKU9f1sdI2hcGCe0JnwhRXvSdMKxtmy0rltNTczL20Bv/JvvhQNti3+a85lw2Mdt0vaJo4+I7DYifQs30vOTA239E/Iw56yPT6v4RuqXATj/iWKBUVSK22RT8RB/qZxfI7AkqTtffNnOcpYvZ26z/vtCmDdVJE8eels5A9t0ZY1sABkGe5eiWSSsGLyoGifL1rRyqdd3k5Kb6TI8u3GBBLuPkmxgjnhkTN+XBVQeRF7Tf1x6AS1P2R5jjJ6A5cGFyRzvf87cdUMcOkkTIH9E0RM7N6XSBYINATyrhVemqsIVGMQm8PQLY3cEavT+aAITraucROwkRICaAu0nDCenDJyLNoSTvalRKmRV9BWCkoj+VPXiGKyCL9FxRTjfcbsS8BxUs3DcBhvARbCsDl/e5hbCOv8ltDSUt9c4YGZnyFsEl6v+iHN1U7EqqeyXmJeH2Awgkv6WthoNfSMQnaDOzIkNG/a33epV2/5QQabw/I0cJIv/mggcQUhdWE/HmA3a9DJpgPaK+2xklVKFJkOkA2I4LUIoRlu7r5dWzFzUz9H8ybP6Bm1SOsHYA23P6SXJmkv3+CmRuURG7Ta+k=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3deb782a-5c81-4458-379a-08dc0cd71def
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5706.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jan 2024 03:42:04.3244
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kzwKi7UyER+E1jJDE3+rOlsgbyKKbYkVQ6YfO8XYyEQyRIqh2zY3k/2AQTth+R+cpZ7Ft2/Zgq4tRhH0XpcYnQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR10MB6634
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-03_10,2024-01-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 mlxlogscore=858
+ phishscore=0 malwarescore=0 adultscore=0 spamscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2401040022
+X-Proofpoint-GUID: m8EMNiDVj-ByaqaQUPe8iUzhtUA7is3q
+X-Proofpoint-ORIG-GUID: m8EMNiDVj-ByaqaQUPe8iUzhtUA7is3q
 
 
-Billy Tsai (2):
-  dt-bindings: hwmon: Support Aspeed g6 PWM TACH Control
-  hwmon: (aspeed-g6-pwm-tacho): Support for ASPEED g6 PWM/Fan tach
+Reviewed-by: Anand Jain <anand.jain@oracle.com>
 
-Naresh Solanki (1):
-  dt-bindings: hwmon: fan: Add fan binding to schema
-
- .../bindings/hwmon/aspeed,g6-pwm-tach.yaml    |  69 +++
- .../devicetree/bindings/hwmon/fan-common.yaml |  79 +++
- Documentation/hwmon/aspeed-g6-pwm-tach.rst    |  26 +
- Documentation/hwmon/index.rst                 |   1 +
- drivers/hwmon/Kconfig                         |  11 +
- drivers/hwmon/Makefile                        |   1 +
- drivers/hwmon/aspeed-g6-pwm-tach.c            | 539 ++++++++++++++++++
- 7 files changed, 726 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml
- create mode 100644 Documentation/devicetree/bindings/hwmon/fan-common.yaml
- create mode 100644 Documentation/hwmon/aspeed-g6-pwm-tach.rst
- create mode 100644 drivers/hwmon/aspeed-g6-pwm-tach.c
-
--- 
-2.25.1
-
+Thx, Anand
