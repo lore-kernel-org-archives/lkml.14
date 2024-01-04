@@ -1,694 +1,355 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2517220330
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 09:07:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MAiq8fSD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704359250;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lsD8TrNEh5EPEwGi8hN82wHacd6cUmsWwLo/YZNp5vo=;
-	b=MAiq8fSD80Mce2Mltev0QnJHOJsb+bhLvrrT/eEDkVF4KWx+u5BZeYAW3Pu5mhYBPyoTYO
-	oAKd/wqv+1c3xXvQNwP9EWvjFa2F3MdpMgHkQSEG4qKsTmDiOhwFi8qkC+0iWW/4yFcQDm
-	AmPLratjWya2RzRvM6aphLkonMQ2uo0=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-590-wcarMtPjOZ6LTsbubfVZmQ-1; Thu, 04 Jan 2024 04:07:29 -0500
-X-MC-Unique: wcarMtPjOZ6LTsbubfVZmQ-1
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-33710c9d4afso30330f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 01:07:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704359247; x=1704964047;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lsD8TrNEh5EPEwGi8hN82wHacd6cUmsWwLo/YZNp5vo=;
-        b=WcPVoaqDjvaa2i61atA8EI7Er5d2G9NTj4b4IdczNGsTb7fjhLZ5/8hjvGs9PlOxw2
-         LCLFC9mMHziAmLWE9zwfn2RoXHrP2niYeTtc982HhkpHkh3S/s7XXrUgw2miDoWU26hA
-         DuROm2Bfzi2BKVrvqhuvBuc39MfZxbA+tojJQnOgfnOh4iGUSgCoa/WaMEQE3h0811YE
-         ThywbRrdmYFv3VU3EC2NHv/zY2qCUN6suMTRWDd1cSCaWPi+H790CMtIgjzszn+3Yi/B
-         bQcNt+na1z1hT7L4dpr+lx+NilcQzwSSmP3z10dHrYfMJ2KWHtEMmgc7pxuVw3Husyok
-         /taw==
-X-Gm-Message-State: AOJu0YxIvlj4YXUekaMSJHctWHqzy5lmTEymFro2wU+rMD1JQgxknXoP
-	CU09Y/jeSEYepTjw//fF1D7Ap5mLpF99FV8wR0pkOk3NISOj2rYS4YKRvFos9DxYmkuhac7L7d2
-	Na3LtFtjkY0YkzJhTmT/QZ7fMgoeOOvoF
-X-Received: by 2002:adf:f741:0:b0:336:69c6:5124 with SMTP id z1-20020adff741000000b0033669c65124mr420744wrp.1.1704359246753;
-        Thu, 04 Jan 2024 01:07:26 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFomaTH+rTzMyryhLsu1oMdzlcUkgOnNSPNeKrh9sXY3oXez+rt5YyNKnwX1TLM6YUTL35hUg==
-X-Received: by 2002:adf:f741:0:b0:336:69c6:5124 with SMTP id z1-20020adff741000000b0033669c65124mr420706wrp.1.1704359246366;
-        Thu, 04 Jan 2024 01:07:26 -0800 (PST)
-Received: from pstanner-thinkpadt14sgen1.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id h15-20020a5d430f000000b0033740e109adsm8720864wrq.75.2024.01.04.01.07.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jan 2024 01:07:26 -0800 (PST)
-From: Philipp Stanner <pstanner@redhat.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	NeilBrown <neilb@suse.de>,
-	John Sanpe <sanpeqf@gmail.com>,
-	Kent Overstreet <kent.overstreet@gmail.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Philipp Stanner <pstanner@redhat.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Uladzislau Koshchanka <koshchanka@gmail.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	David Gow <davidgow@google.com>,
-	Kees Cook <keescook@chromium.org>,
-	Rae Moar <rmoar@google.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	"wuqiang.matt" <wuqiang.matt@bytedance.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Jason Baron <jbaron@akamai.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Marco Elver <elver@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ben Dooks <ben.dooks@codethink.co.uk>,
-	dakr@redhat.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH v5 4/5] pci: move devres code from pci.c to devres.c
-Date: Thu,  4 Jan 2024 10:07:08 +0100
-Message-ID: <20240104090708.10571-6-pstanner@redhat.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240104090708.10571-2-pstanner@redhat.com>
-References: <20240104090708.10571-2-pstanner@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E8E20B1B;
+	Thu,  4 Jan 2024 09:07:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4T5LKj3M5Rz1g21f;
+	Thu,  4 Jan 2024 17:06:01 +0800 (CST)
+Received: from kwepemm600004.china.huawei.com (unknown [7.193.23.242])
+	by mail.maildlp.com (Postfix) with ESMTPS id E09BD1A0172;
+	Thu,  4 Jan 2024 17:07:27 +0800 (CST)
+Received: from [10.67.121.59] (10.67.121.59) by kwepemm600004.china.huawei.com
+ (7.193.23.242) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 4 Jan
+ 2024 17:07:27 +0800
+Message-ID: <482ffcce-1224-2bf8-cf07-cfc4633897a8@huawei.com>
+Date: Thu, 4 Jan 2024 17:07:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH] cpufreq: CPPC: Resolve the large frequency discrepancy
+ from cpuinfo_cur_freq
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, <beata.michalska@arm.com>, <sumitg@nvidia.com>,
+	<ionela.voinescu@arm.com>, <zengheng4@huawei.com>,
+	<yang@os.amperecomputing.com>, <will@kernel.org>, <sudeep.holla@arm.com>,
+	<liuyonglong@huawei.com>, <zhanjie9@hisilicon.com>
+References: <20231212072617.14756-1-lihuisong@huawei.com>
+ <CAJZ5v0jwW0=8cNvC-Vu_o+pEHFpN9nrPD4LXCpmSTgQBTHODgg@mail.gmail.com>
+ <486f8563-42b7-a049-97a2-bc0b553926aa@huawei.com>
+ <26ba9fa9-7871-27c3-0de5-62f61071dacd@huawei.com>
+ <CAJZ5v0jSYajeYP1r+qKOmbwzn4PE5LL9E9LKsuYUygiXxmt2MA@mail.gmail.com>
+From: "lihuisong (C)" <lihuisong@huawei.com>
+In-Reply-To: <CAJZ5v0jSYajeYP1r+qKOmbwzn4PE5LL9E9LKsuYUygiXxmt2MA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600004.china.huawei.com (7.193.23.242)
 
-The file pci.c is very large and contains a number of devres-functions.
-These functions should now reside in devres.c
 
-There are a few callers left in pci.c that do devres operations. These
-should be ported in the future. Corresponding TODOs are added by this
-commit.
-
-The reason they are not moved right now in this commit is that pci's
-devres currently implements a sort of "hybrid-mode":
-pci_request_region(), for instance, does not have a corresponding pcim_
-equivalent, yet. Instead, the function can be made managed by previously
-calling pcim_enable_device() (instead of pci_enable_device()). This
-makes it unreasonable to move pci_request_region() to devres.c
-Moving the functions would require changes to pci's API and is,
-therefore, left for future work.
-
-In summary, this commit serves as a preparation step for a following
-patch-series that will cleanly separate the PCI's managed and unmanaged
-API.
-
-Move as much devres-specific code from pci.c to devres.c as possible.
-
-Suggested-by: Danilo Krummrich <dakr@redhat.com>
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
----
- drivers/pci/devres.c | 243 +++++++++++++++++++++++++++++++++++++++++
- drivers/pci/pci.c    | 249 -------------------------------------------
- drivers/pci/pci.h    |  24 +++++
- 3 files changed, 267 insertions(+), 249 deletions(-)
-
-diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-index a3fd0d65cef1..4bd1e125bca1 100644
---- a/drivers/pci/devres.c
-+++ b/drivers/pci/devres.c
-@@ -1,4 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include <linux/device.h>
- #include <linux/pci.h>
- #include "pci.h"
- 
-@@ -11,6 +12,248 @@ struct pcim_iomap_devres {
- 	void __iomem *table[PCIM_IOMAP_MAX];
- };
- 
-+
-+static void devm_pci_unmap_iospace(struct device *dev, void *ptr)
-+{
-+	struct resource **res = ptr;
-+
-+	pci_unmap_iospace(*res);
-+}
-+
-+/**
-+ * devm_pci_remap_iospace - Managed pci_remap_iospace()
-+ * @dev: Generic device to remap IO address for
-+ * @res: Resource describing the I/O space
-+ * @phys_addr: physical address of range to be mapped
-+ *
-+ * Managed pci_remap_iospace().  Map is automatically unmapped on driver
-+ * detach.
-+ */
-+int devm_pci_remap_iospace(struct device *dev, const struct resource *res,
-+			   phys_addr_t phys_addr)
-+{
-+	const struct resource **ptr;
-+	int error;
-+
-+	ptr = devres_alloc(devm_pci_unmap_iospace, sizeof(*ptr), GFP_KERNEL);
-+	if (!ptr)
-+		return -ENOMEM;
-+
-+	error = pci_remap_iospace(res, phys_addr);
-+	if (error) {
-+		devres_free(ptr);
-+	} else	{
-+		*ptr = res;
-+		devres_add(dev, ptr);
-+	}
-+
-+	return error;
-+}
-+EXPORT_SYMBOL(devm_pci_remap_iospace);
-+
-+/**
-+ * devm_pci_remap_cfgspace - Managed pci_remap_cfgspace()
-+ * @dev: Generic device to remap IO address for
-+ * @offset: Resource address to map
-+ * @size: Size of map
-+ *
-+ * Managed pci_remap_cfgspace().  Map is automatically unmapped on driver
-+ * detach.
-+ */
-+void __iomem *devm_pci_remap_cfgspace(struct device *dev,
-+				      resource_size_t offset,
-+				      resource_size_t size)
-+{
-+	void __iomem **ptr, *addr;
-+
-+	ptr = devres_alloc(devm_ioremap_release, sizeof(*ptr), GFP_KERNEL);
-+	if (!ptr)
-+		return NULL;
-+
-+	addr = pci_remap_cfgspace(offset, size);
-+	if (addr) {
-+		*ptr = addr;
-+		devres_add(dev, ptr);
-+	} else
-+		devres_free(ptr);
-+
-+	return addr;
-+}
-+EXPORT_SYMBOL(devm_pci_remap_cfgspace);
-+
-+/**
-+ * devm_pci_remap_cfg_resource - check, request region and ioremap cfg resource
-+ * @dev: generic device to handle the resource for
-+ * @res: configuration space resource to be handled
-+ *
-+ * Checks that a resource is a valid memory region, requests the memory
-+ * region and ioremaps with pci_remap_cfgspace() API that ensures the
-+ * proper PCI configuration space memory attributes are guaranteed.
-+ *
-+ * All operations are managed and will be undone on driver detach.
-+ *
-+ * Returns a pointer to the remapped memory or an ERR_PTR() encoded error code
-+ * on failure. Usage example::
-+ *
-+ *	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+ *	base = devm_pci_remap_cfg_resource(&pdev->dev, res);
-+ *	if (IS_ERR(base))
-+ *		return PTR_ERR(base);
-+ */
-+void __iomem *devm_pci_remap_cfg_resource(struct device *dev,
-+					  struct resource *res)
-+{
-+	resource_size_t size;
-+	const char *name;
-+	void __iomem *dest_ptr;
-+
-+	BUG_ON(!dev);
-+
-+	if (!res || resource_type(res) != IORESOURCE_MEM) {
-+		dev_err(dev, "invalid resource\n");
-+		return IOMEM_ERR_PTR(-EINVAL);
-+	}
-+
-+	size = resource_size(res);
-+
-+	if (res->name)
-+		name = devm_kasprintf(dev, GFP_KERNEL, "%s %s", dev_name(dev),
-+				      res->name);
-+	else
-+		name = devm_kstrdup(dev, dev_name(dev), GFP_KERNEL);
-+	if (!name)
-+		return IOMEM_ERR_PTR(-ENOMEM);
-+
-+	if (!devm_request_mem_region(dev, res->start, size, name)) {
-+		dev_err(dev, "can't request region for resource %pR\n", res);
-+		return IOMEM_ERR_PTR(-EBUSY);
-+	}
-+
-+	dest_ptr = devm_pci_remap_cfgspace(dev, res->start, size);
-+	if (!dest_ptr) {
-+		dev_err(dev, "ioremap failed for resource %pR\n", res);
-+		devm_release_mem_region(dev, res->start, size);
-+		dest_ptr = IOMEM_ERR_PTR(-ENOMEM);
-+	}
-+
-+	return dest_ptr;
-+}
-+EXPORT_SYMBOL(devm_pci_remap_cfg_resource);
-+
-+/**
-+ * pcim_set_mwi - a device-managed pci_set_mwi()
-+ * @dev: the PCI device for which MWI is enabled
-+ *
-+ * Managed pci_set_mwi().
-+ *
-+ * RETURNS: An appropriate -ERRNO error value on error, or zero for success.
-+ */
-+int pcim_set_mwi(struct pci_dev *dev)
-+{
-+	struct pci_devres *dr;
-+
-+	dr = find_pci_dr(dev);
-+	if (!dr)
-+		return -ENOMEM;
-+
-+	dr->mwi = 1;
-+	return pci_set_mwi(dev);
-+}
-+EXPORT_SYMBOL(pcim_set_mwi);
-+
-+
-+static void pcim_release(struct device *gendev, void *res)
-+{
-+	struct pci_dev *dev = to_pci_dev(gendev);
-+	struct pci_devres *this = res;
-+	int i;
-+
-+	for (i = 0; i < DEVICE_COUNT_RESOURCE; i++)
-+		if (this->region_mask & (1 << i))
-+			pci_release_region(dev, i);
-+
-+	if (this->mwi)
-+		pci_clear_mwi(dev);
-+
-+	if (this->restore_intx)
-+		pci_intx(dev, this->orig_intx);
-+
-+	if (this->enabled && !this->pinned)
-+		pci_disable_device(dev);
-+}
-+
-+/*
-+ * TODO:
-+ * Once the last four callers in pci.c are ported, this function here needs to
-+ * be made static again.
-+ */
-+struct pci_devres *find_pci_dr(struct pci_dev *pdev)
-+{
-+	if (pci_is_managed(pdev))
-+		return devres_find(&pdev->dev, pcim_release, NULL, NULL);
-+	return NULL;
-+}
-+EXPORT_SYMBOL(find_pci_dr);
-+
-+static struct pci_devres *get_pci_dr(struct pci_dev *pdev)
-+{
-+	struct pci_devres *dr, *new_dr;
-+
-+	dr = devres_find(&pdev->dev, pcim_release, NULL, NULL);
-+	if (dr)
-+		return dr;
-+
-+	new_dr = devres_alloc(pcim_release, sizeof(*new_dr), GFP_KERNEL);
-+	if (!new_dr)
-+		return NULL;
-+	return devres_get(&pdev->dev, new_dr, NULL, NULL);
-+}
-+
-+/**
-+ * pcim_enable_device - Managed pci_enable_device()
-+ * @pdev: PCI device to be initialized
-+ *
-+ * Managed pci_enable_device().
-+ */
-+int pcim_enable_device(struct pci_dev *pdev)
-+{
-+	struct pci_devres *dr;
-+	int rc;
-+
-+	dr = get_pci_dr(pdev);
-+	if (unlikely(!dr))
-+		return -ENOMEM;
-+	if (dr->enabled)
-+		return 0;
-+
-+	rc = pci_enable_device(pdev);
-+	if (!rc) {
-+		pdev->is_managed = 1;
-+		dr->enabled = 1;
-+	}
-+	return rc;
-+}
-+EXPORT_SYMBOL(pcim_enable_device);
-+
-+/**
-+ * pcim_pin_device - Pin managed PCI device
-+ * @pdev: PCI device to pin
-+ *
-+ * Pin managed PCI device @pdev.  Pinned device won't be disabled on
-+ * driver detach.  @pdev must have been enabled with
-+ * pcim_enable_device().
-+ */
-+void pcim_pin_device(struct pci_dev *pdev)
-+{
-+	struct pci_devres *dr;
-+
-+	dr = find_pci_dr(pdev);
-+	WARN_ON(!dr || !dr->enabled);
-+	if (dr)
-+		dr->pinned = 1;
-+}
-+EXPORT_SYMBOL(pcim_pin_device);
-+
- static void pcim_iomap_release(struct device *gendev, void *res)
- {
- 	struct pci_dev *dev = to_pci_dev(gendev);
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 55bc3576a985..742b0a6545b6 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -2088,107 +2088,6 @@ int pci_enable_device(struct pci_dev *dev)
- }
- EXPORT_SYMBOL(pci_enable_device);
- 
--/*
-- * Managed PCI resources.  This manages device on/off, INTx/MSI/MSI-X
-- * on/off and BAR regions.  pci_dev itself records MSI/MSI-X status, so
-- * there's no need to track it separately.  pci_devres is initialized
-- * when a device is enabled using managed PCI device enable interface.
-- */
--struct pci_devres {
--	unsigned int enabled:1;
--	unsigned int pinned:1;
--	unsigned int orig_intx:1;
--	unsigned int restore_intx:1;
--	unsigned int mwi:1;
--	u32 region_mask;
--};
--
--static void pcim_release(struct device *gendev, void *res)
--{
--	struct pci_dev *dev = to_pci_dev(gendev);
--	struct pci_devres *this = res;
--	int i;
--
--	for (i = 0; i < DEVICE_COUNT_RESOURCE; i++)
--		if (this->region_mask & (1 << i))
--			pci_release_region(dev, i);
--
--	if (this->mwi)
--		pci_clear_mwi(dev);
--
--	if (this->restore_intx)
--		pci_intx(dev, this->orig_intx);
--
--	if (this->enabled && !this->pinned)
--		pci_disable_device(dev);
--}
--
--static struct pci_devres *get_pci_dr(struct pci_dev *pdev)
--{
--	struct pci_devres *dr, *new_dr;
--
--	dr = devres_find(&pdev->dev, pcim_release, NULL, NULL);
--	if (dr)
--		return dr;
--
--	new_dr = devres_alloc(pcim_release, sizeof(*new_dr), GFP_KERNEL);
--	if (!new_dr)
--		return NULL;
--	return devres_get(&pdev->dev, new_dr, NULL, NULL);
--}
--
--static struct pci_devres *find_pci_dr(struct pci_dev *pdev)
--{
--	if (pci_is_managed(pdev))
--		return devres_find(&pdev->dev, pcim_release, NULL, NULL);
--	return NULL;
--}
--
--/**
-- * pcim_enable_device - Managed pci_enable_device()
-- * @pdev: PCI device to be initialized
-- *
-- * Managed pci_enable_device().
-- */
--int pcim_enable_device(struct pci_dev *pdev)
--{
--	struct pci_devres *dr;
--	int rc;
--
--	dr = get_pci_dr(pdev);
--	if (unlikely(!dr))
--		return -ENOMEM;
--	if (dr->enabled)
--		return 0;
--
--	rc = pci_enable_device(pdev);
--	if (!rc) {
--		pdev->is_managed = 1;
--		dr->enabled = 1;
--	}
--	return rc;
--}
--EXPORT_SYMBOL(pcim_enable_device);
--
--/**
-- * pcim_pin_device - Pin managed PCI device
-- * @pdev: PCI device to pin
-- *
-- * Pin managed PCI device @pdev.  Pinned device won't be disabled on
-- * driver detach.  @pdev must have been enabled with
-- * pcim_enable_device().
-- */
--void pcim_pin_device(struct pci_dev *pdev)
--{
--	struct pci_devres *dr;
--
--	dr = find_pci_dr(pdev);
--	WARN_ON(!dr || !dr->enabled);
--	if (dr)
--		dr->pinned = 1;
--}
--EXPORT_SYMBOL(pcim_pin_device);
--
- /*
-  * pcibios_device_add - provide arch specific hooks when adding device dev
-  * @dev: the PCI device being added
-@@ -4281,133 +4180,6 @@ void pci_unmap_iospace(struct resource *res)
- }
- EXPORT_SYMBOL(pci_unmap_iospace);
- 
--static void devm_pci_unmap_iospace(struct device *dev, void *ptr)
--{
--	struct resource **res = ptr;
--
--	pci_unmap_iospace(*res);
--}
--
--/**
-- * devm_pci_remap_iospace - Managed pci_remap_iospace()
-- * @dev: Generic device to remap IO address for
-- * @res: Resource describing the I/O space
-- * @phys_addr: physical address of range to be mapped
-- *
-- * Managed pci_remap_iospace().  Map is automatically unmapped on driver
-- * detach.
-- */
--int devm_pci_remap_iospace(struct device *dev, const struct resource *res,
--			   phys_addr_t phys_addr)
--{
--	const struct resource **ptr;
--	int error;
--
--	ptr = devres_alloc(devm_pci_unmap_iospace, sizeof(*ptr), GFP_KERNEL);
--	if (!ptr)
--		return -ENOMEM;
--
--	error = pci_remap_iospace(res, phys_addr);
--	if (error) {
--		devres_free(ptr);
--	} else	{
--		*ptr = res;
--		devres_add(dev, ptr);
--	}
--
--	return error;
--}
--EXPORT_SYMBOL(devm_pci_remap_iospace);
--
--/**
-- * devm_pci_remap_cfgspace - Managed pci_remap_cfgspace()
-- * @dev: Generic device to remap IO address for
-- * @offset: Resource address to map
-- * @size: Size of map
-- *
-- * Managed pci_remap_cfgspace().  Map is automatically unmapped on driver
-- * detach.
-- */
--void __iomem *devm_pci_remap_cfgspace(struct device *dev,
--				      resource_size_t offset,
--				      resource_size_t size)
--{
--	void __iomem **ptr, *addr;
--
--	ptr = devres_alloc(devm_ioremap_release, sizeof(*ptr), GFP_KERNEL);
--	if (!ptr)
--		return NULL;
--
--	addr = pci_remap_cfgspace(offset, size);
--	if (addr) {
--		*ptr = addr;
--		devres_add(dev, ptr);
--	} else
--		devres_free(ptr);
--
--	return addr;
--}
--EXPORT_SYMBOL(devm_pci_remap_cfgspace);
--
--/**
-- * devm_pci_remap_cfg_resource - check, request region and ioremap cfg resource
-- * @dev: generic device to handle the resource for
-- * @res: configuration space resource to be handled
-- *
-- * Checks that a resource is a valid memory region, requests the memory
-- * region and ioremaps with pci_remap_cfgspace() API that ensures the
-- * proper PCI configuration space memory attributes are guaranteed.
-- *
-- * All operations are managed and will be undone on driver detach.
-- *
-- * Returns a pointer to the remapped memory or an ERR_PTR() encoded error code
-- * on failure. Usage example::
-- *
-- *	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-- *	base = devm_pci_remap_cfg_resource(&pdev->dev, res);
-- *	if (IS_ERR(base))
-- *		return PTR_ERR(base);
-- */
--void __iomem *devm_pci_remap_cfg_resource(struct device *dev,
--					  struct resource *res)
--{
--	resource_size_t size;
--	const char *name;
--	void __iomem *dest_ptr;
--
--	BUG_ON(!dev);
--
--	if (!res || resource_type(res) != IORESOURCE_MEM) {
--		dev_err(dev, "invalid resource\n");
--		return IOMEM_ERR_PTR(-EINVAL);
--	}
--
--	size = resource_size(res);
--
--	if (res->name)
--		name = devm_kasprintf(dev, GFP_KERNEL, "%s %s", dev_name(dev),
--				      res->name);
--	else
--		name = devm_kstrdup(dev, dev_name(dev), GFP_KERNEL);
--	if (!name)
--		return IOMEM_ERR_PTR(-ENOMEM);
--
--	if (!devm_request_mem_region(dev, res->start, size, name)) {
--		dev_err(dev, "can't request region for resource %pR\n", res);
--		return IOMEM_ERR_PTR(-EBUSY);
--	}
--
--	dest_ptr = devm_pci_remap_cfgspace(dev, res->start, size);
--	if (!dest_ptr) {
--		dev_err(dev, "ioremap failed for resource %pR\n", res);
--		devm_release_mem_region(dev, res->start, size);
--		dest_ptr = IOMEM_ERR_PTR(-ENOMEM);
--	}
--
--	return dest_ptr;
--}
--EXPORT_SYMBOL(devm_pci_remap_cfg_resource);
--
- static void __pci_set_master(struct pci_dev *dev, bool enable)
- {
- 	u16 old_cmd, cmd;
-@@ -4557,27 +4329,6 @@ int pci_set_mwi(struct pci_dev *dev)
- }
- EXPORT_SYMBOL(pci_set_mwi);
- 
--/**
-- * pcim_set_mwi - a device-managed pci_set_mwi()
-- * @dev: the PCI device for which MWI is enabled
-- *
-- * Managed pci_set_mwi().
-- *
-- * RETURNS: An appropriate -ERRNO error value on error, or zero for success.
-- */
--int pcim_set_mwi(struct pci_dev *dev)
--{
--	struct pci_devres *dr;
--
--	dr = find_pci_dr(dev);
--	if (!dr)
--		return -ENOMEM;
--
--	dr->mwi = 1;
--	return pci_set_mwi(dev);
--}
--EXPORT_SYMBOL(pcim_set_mwi);
--
- /**
-  * pci_try_set_mwi - enables memory-write-invalidate PCI transaction
-  * @dev: the PCI device for which MWI is enabled
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 5ecbcf041179..69052059dbd2 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -793,6 +793,30 @@ static inline pci_power_t mid_pci_get_power_state(struct pci_dev *pdev)
- }
- #endif
- 
-+/*
-+ * TODO:
-+ * The following two components wouldn't need to be here if they weren't used at
-+ * four last places in pci.c
-+ * Port or move these functions to devres.c and then remove the
-+ * pci_devres-components from this header file here.
-+ */
-+/*
-+ * Managed PCI resources.  This manages device on/off, INTx/MSI/MSI-X
-+ * on/off and BAR regions.  pci_dev itself records MSI/MSI-X status, so
-+ * there's no need to track it separately.  pci_devres is initialized
-+ * when a device is enabled using managed PCI device enable interface.
-+ */
-+struct pci_devres {
-+	unsigned int enabled:1;
-+	unsigned int pinned:1;
-+	unsigned int orig_intx:1;
-+	unsigned int restore_intx:1;
-+	unsigned int mwi:1;
-+	u32 region_mask;
-+};
-+
-+struct pci_devres *find_pci_dr(struct pci_dev *pdev);
-+
- /*
-  * Config Address for PCI Configuration Mechanism #1
-  *
--- 
-2.43.0
-
+在 2024/1/3 18:59, Rafael J. Wysocki 写道:
+> On Mon, Dec 18, 2023 at 3:15 AM lihuisong (C) <lihuisong@huawei.com> wrote:
+>>
+>> 在 2023/12/15 10:41, lihuisong (C) 写道:
+>>> Hi Rafael,
+>>>
+>>> Thanks for your review.😁
+>>>
+>>> 在 2023/12/15 3:31, Rafael J. Wysocki 写道:
+>>>> On Tue, Dec 12, 2023 at 8:26 AM Huisong Li <lihuisong@huawei.com> wrote:
+>>>>> Many developers found that the cpu current frequency is greater than
+>>>>> the maximum frequency of the platform, please see [1], [2] and [3].
+>>>>>
+>>>>> In the scenarios with high memory access pressure, the patch [1] has
+>>>>> proved the significant latency of cpc_read() which is used to obtain
+>>>>> delivered and reference performance counter cause an absurd frequency.
+>>>>> The sampling interval for this counters is very critical and is
+>>>>> expected
+>>>>> to be equal. However, the different latency of cpc_read() has a direct
+>>>>> impact on their sampling interval.
+>>>>>
+>>>>> This patch adds a interface, cpc_read_arch_counters_on_cpu, to read
+>>>>> delivered and reference performance counter together. According to my
+>>>>> test[4], the discrepancy of cpu current frequency in the scenarios with
+>>>>> high memory access pressure is lower than 0.2% by stress-ng
+>>>>> application.
+>>>>>
+>>>>> [1]
+>>>>> https://lore.kernel.org/all/20231025093847.3740104-4-zengheng4@huawei.com/
+>>>>> [2]
+>>>>> https://lore.kernel.org/all/20230328193846.8757-1-yang@os.amperecomputing.com/
+>>>>> [3]
+>>>>> https://lore.kernel.org/all/20230418113459.12860-7-sumitg@nvidia.com/
+>>>>>
+>>>>> [4] My local test:
+>>>>> The testing platform enable SMT and include 128 logical CPU in total,
+>>>>> and CPU base frequency is 2.7GHz. Reading "cpuinfo_cur_freq" for each
+>>>>> physical core on platform during the high memory access pressure from
+>>>>> stress-ng, and the output is as follows:
+>>>>>     0: 2699133     2: 2699942     4: 2698189     6: 2704347
+>>>>>     8: 2704009    10: 2696277    12: 2702016    14: 2701388
+>>>>>    16: 2700358    18: 2696741    20: 2700091    22: 2700122
+>>>>>    24: 2701713    26: 2702025    28: 2699816    30: 2700121
+>>>>>    32: 2700000    34: 2699788    36: 2698884    38: 2699109
+>>>>>    40: 2704494    42: 2698350    44: 2699997    46: 2701023
+>>>>>    48: 2703448    50: 2699501    52: 2700000    54: 2699999
+>>>>>    56: 2702645    58: 2696923    60: 2697718    62: 2700547
+>>>>>    64: 2700313    66: 2700000    68: 2699904    70: 2699259
+>>>>>    72: 2699511    74: 2700644    76: 2702201    78: 2700000
+>>>>>    80: 2700776    82: 2700364    84: 2702674    86: 2700255
+>>>>>    88: 2699886    90: 2700359    92: 2699662    94: 2696188
+>>>>>    96: 2705454    98: 2699260   100: 2701097   102: 2699630
+>>>>> 104: 2700463   106: 2698408   108: 2697766   110: 2701181
+>>>>> 112: 2699166   114: 2701804   116: 2701907   118: 2701973
+>>>>> 120: 2699584   122: 2700474   124: 2700768   126: 2701963
+>>>>>
+>>>>> Signed-off-by: Huisong Li <lihuisong@huawei.com>
+>>>> First off, please Cc ACPI-related patches to linux-acpi.
+>>> got it.
+>>>
+>>> +linux-acpi@vger.kernel.org
+>>>
+>>>>> ---
+>>>>>    arch/arm64/kernel/topology.c | 43
+>>>>> ++++++++++++++++++++++++++++++++++--
+>>>>>    drivers/acpi/cppc_acpi.c     | 22 +++++++++++++++---
+>>>>>    include/acpi/cppc_acpi.h     |  5 +++++
+>>>>>    3 files changed, 65 insertions(+), 5 deletions(-)
+>>>>>
+>>>>> diff --git a/arch/arm64/kernel/topology.c
+>>>>> b/arch/arm64/kernel/topology.c
+>>>>> index 7d37e458e2f5..c3122154d738 100644
+>>>>> --- a/arch/arm64/kernel/topology.c
+>>>>> +++ b/arch/arm64/kernel/topology.c
+>>>>> @@ -299,6 +299,11 @@ core_initcall(init_amu_fie);
+>>>>>    #ifdef CONFIG_ACPI_CPPC_LIB
+>>>>>    #include <acpi/cppc_acpi.h>
+>>>>>
+>>>>> +struct amu_counters {
+>>>>> +       u64 corecnt;
+>>>>> +       u64 constcnt;
+>>>>> +};
+>>>>> +
+>>>>>    static void cpu_read_corecnt(void *val)
+>>>>>    {
+>>>>>           /*
+>>>>> @@ -322,8 +327,27 @@ static void cpu_read_constcnt(void *val)
+>>>>>                         0UL : read_constcnt();
+>>>>>    }
+>>>>>
+>>>>> +static void cpu_read_amu_counters(void *data)
+>>>>> +{
+>>>>> +       struct amu_counters *cnt = (struct amu_counters *)data;
+>>>>> +
+>>>>> +       /*
+>>>>> +        * The running time of the this_cpu_has_cap() might have a
+>>>>> couple of
+>>>>> +        * microseconds and is significantly increased to tens of
+>>>>> microseconds.
+>>>>> +        * But AMU core and constant counter need to be read togeter
+>>>>> without any
+>>>>> +        * time interval to reduce the calculation discrepancy using
+>>>>> this counters.
+>>>>> +        */
+>>>>> +       if (this_cpu_has_cap(ARM64_WORKAROUND_2457168)) {
+>>>>> +               cnt->corecnt = read_corecnt();
+>>>> This statement is present in both branches, so can it be moved before
+>>>> the if ()?
+>>> Yes.
+>>> Do you mean adding a blank line before if()?
+>> Sorry, I misunderstood you.
+>> The statement "cnt->corecnt = read_corecnt();" cannot be moved before
+>> the if().
+>> The AMU core and constant counter need to be read togeter without any
+>> time interval as described in code comments.
+>> The this_cpu_has_cap() is time-consuming.
+>> That is why I don't use the cpu_read_constcnt() to read constant counter.
+> So define something like
+>
+> static inline void amu_read_counters(struct amu_counters *cnt, bool
+> read_constcnt)
+> {
+>                cnt->corecnt = read_corecnt();
+>                if (read_constcnt)
+>                              cnt->constcnt = read_constcnt();
+>                else
+>                              cnt->constcnt = 0;
+> }
+>
+>>>>> +               cnt->constcnt = 0;
+>>>>> +       } else {
+>>>>> +               cnt->corecnt = read_corecnt();
+>>>>> +               cnt->constcnt = read_constcnt();
+>>>>> +       }
+> and use it like this:
+>
+> amu_read_counters(cnt, !this_cpu_has_cap(ARM64_WORKAROUND_2457168);
+>
+> It should work as expected AFAICS.
+Yes it would work well.
+The new cpc_read_arch_counters_on_cpu() uses the counters_read_on_cpu() 
+to read core counters on specified cpu.
+smp_call_function_single() called by counters_read_on_cpu() just support 
+to pass one argument for "smp_call_func_t func".
+So we cannot define the function as you suggested. what do you think?
+>
+>>>>> +}
+>>>>> +
+>>>>>    static inline
+>>>>> -int counters_read_on_cpu(int cpu, smp_call_func_t func, u64 *val)
+>>>>> +int counters_read_on_cpu(int cpu, smp_call_func_t func, void *data)
+>>>>>    {
+>>>>>           /*
+>>>>>            * Abort call on counterless CPU or when interrupts are
+>>>>> @@ -335,7 +359,7 @@ int counters_read_on_cpu(int cpu,
+>>>>> smp_call_func_t func, u64 *val)
+>>>>>           if (WARN_ON_ONCE(irqs_disabled()))
+>>>>>                   return -EPERM;
+>>>>>
+>>>>> -       smp_call_function_single(cpu, func, val, 1);
+>>>>> +       smp_call_function_single(cpu, func, data, 1);
+>>>>>
+>>>>>           return 0;
+>>>>>    }
+>>>>> @@ -364,6 +388,21 @@ bool cpc_ffh_supported(void)
+>>>>>           return true;
+>>>>>    }
+>>>>>
+>>>>> +int cpc_read_arch_counters_on_cpu(int cpu, u64 *delivered, u64
+>>>>> *reference)
+>>>>> +{
+>>>>> +       struct amu_counters cnts = {0};
+>>>>> +       int ret;
+>>>>> +
+>>>>> +       ret = counters_read_on_cpu(cpu, cpu_read_amu_counters, &cnts);
+>>>>> +       if (ret)
+>>>>> +               return ret;
+>>>>> +
+>>>>> +       *delivered = cnts.corecnt;
+>>>>> +       *reference = cnts.constcnt;
+>>>>> +
+>>>>> +       return 0;
+>>>>> +}
+>>>>> +
+>>>>>    int cpc_read_ffh(int cpu, struct cpc_reg *reg, u64 *val)
+>>>>>    {
+>>>>>           int ret = -EOPNOTSUPP;
+>>>>> diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
+>>>>> index 7ff269a78c20..f303fabd7cfe 100644
+>>>>> --- a/drivers/acpi/cppc_acpi.c
+>>>>> +++ b/drivers/acpi/cppc_acpi.c
+>>>>> @@ -1299,6 +1299,11 @@ bool cppc_perf_ctrs_in_pcc(void)
+>>>>>    }
+>>>>>    EXPORT_SYMBOL_GPL(cppc_perf_ctrs_in_pcc);
+>>>>>
+>>>>> +int __weak cpc_read_arch_counters_on_cpu(int cpu, u64 *delivered,
+>>>>> u64 *reference)
+>>>>> +{
+>>>>> +       return 0;
+>>>>> +}
+>>>>> +
+>>>>>    /**
+>>>>>     * cppc_get_perf_ctrs - Read a CPU's performance feedback counters.
+>>>>>     * @cpunum: CPU from which to read counters.
+>>>>> @@ -1313,7 +1318,8 @@ int cppc_get_perf_ctrs(int cpunum, struct
+>>>>> cppc_perf_fb_ctrs *perf_fb_ctrs)
+>>>>>                   *ref_perf_reg, *ctr_wrap_reg;
+>>>>>           int pcc_ss_id = per_cpu(cpu_pcc_subspace_idx, cpunum);
+>>>>>           struct cppc_pcc_data *pcc_ss_data = NULL;
+>>>>> -       u64 delivered, reference, ref_perf, ctr_wrap_time;
+>>>>> +       u64 delivered = 0, reference = 0;
+>>>>> +       u64 ref_perf, ctr_wrap_time;
+>>>>>           int ret = 0, regs_in_pcc = 0;
+>>>>>
+>>>>>           if (!cpc_desc) {
+>>>>> @@ -1350,8 +1356,18 @@ int cppc_get_perf_ctrs(int cpunum, struct
+>>>>> cppc_perf_fb_ctrs *perf_fb_ctrs)
+>>>>>                   }
+>>>>>           }
+>>>>>
+>>>>> -       cpc_read(cpunum, delivered_reg, &delivered);
+>>>>> -       cpc_read(cpunum, reference_reg, &reference);
+>>>>> +       if (cpc_ffh_supported()) {
+>>>>> +               ret = cpc_read_arch_counters_on_cpu(cpunum,
+>>>>> &delivered, &reference);
+>>>>> +               if (ret) {
+>>>>> +                       pr_debug("read arch counters failed,
+>>>>> ret=%d.\n", ret);
+>>>>> +                       ret = 0;
+>>>>> +               }
+>>>>> +       }
+>>>> The above is surely not applicable to every platform using CPPC.  Also
+>>> cpc_ffh_supported is aimed to control only the platform supported FFH
+>>> to enter.
+>>> cpc_read_arch_counters_on_cpu is also needed to implemented by each
+>>> platform according to their require.
+> Well, exactly.
+>
+>>> Here just implement this interface for arm64.
+> So on x86 cpc_ffh_supported() returns true and
+> cpc_read_arch_counters_on_cpu() will do nothing, so it will always
+> fall back to using cpc_read().  That is not particularly
+> straightforward IMV.
+Understand you.
+But we have to do like this to be compatible with all platforms.
+I am thinking twice about cpc_ffh_supported().
+And I found that calling cpc_ffh_supported() here is redundant for ARM.
+Because counters_read_on_cpu() has verified if this CPU support AMU counter.
+What do you say we remove cpc_ffh_supported() here and directly call 
+this new architecture interface?
+>
+>>>> it looks like in the ARM64_WORKAROUND_2457168 enabled case it is just
+>>>> pointless overhead, because "reference" is always going to be 0 here
+>>>> then.
+>>> Right, it is always going to be 0 here for the
+>>> ARM64_WORKAROUND_2457168 enabled case .
+>>> But ARM64_WORKAROUND_2457168 is a macro releated to ARM.
+>>> It seems that it is not appropriate for this macro to appear this
+>>> common place for all platform, right?
+>>>
+>>>> Please clean that up.
+>>>>
+>>>>> +       if (!delivered || !reference) {
+>>>>> +               cpc_read(cpunum, delivered_reg, &delivered);
+>>>>> +               cpc_read(cpunum, reference_reg, &reference);
+>>>>> +       }
+>>>>> +
+>>>>>           cpc_read(cpunum, ref_perf_reg, &ref_perf);
+>>>>>
+>>>>>           /*
+>>>>> diff --git a/include/acpi/cppc_acpi.h b/include/acpi/cppc_acpi.h
+>>>>> index 6126c977ece0..07d4fd82d499 100644
+>>>>> --- a/include/acpi/cppc_acpi.h
+>>>>> +++ b/include/acpi/cppc_acpi.h
+>>>>> @@ -152,6 +152,7 @@ extern bool cpc_ffh_supported(void);
+>>>>>    extern bool cpc_supported_by_cpu(void);
+>>>>>    extern int cpc_read_ffh(int cpunum, struct cpc_reg *reg, u64 *val);
+>>>>>    extern int cpc_write_ffh(int cpunum, struct cpc_reg *reg, u64 val);
+>>>>> +extern int cpc_read_arch_counters_on_cpu(int cpu, u64 *delivered,
+>>>>> u64 *reference);
+>>>>>    extern int cppc_get_epp_perf(int cpunum, u64 *epp_perf);
+>>>>>    extern int cppc_set_epp_perf(int cpu, struct cppc_perf_ctrls
+>>>>> *perf_ctrls, bool enable);
+>>>>>    extern int cppc_get_auto_sel_caps(int cpunum, struct
+>>>>> cppc_perf_caps *perf_caps);
+>>>>> @@ -209,6 +210,10 @@ static inline int cpc_write_ffh(int cpunum,
+>>>>> struct cpc_reg *reg, u64 val)
+>>>>>    {
+>>>>>           return -ENOTSUPP;
+>>>>>    }
+>>>>> +static inline int cpc_read_arch_counters_on_cpu(int cpu, u64
+>>>>> *delivered, u64 *reference)
+>>>>> +{
+>>>>> +       return -EOPNOTSUPP;
+>>>>> +}
+>>>>>    static inline int cppc_set_epp_perf(int cpu, struct
+>>>>> cppc_perf_ctrls *perf_ctrls, bool enable)
+>>>>>    {
+>>>>>           return -ENOTSUPP;
+>>>>> --
+>>>> .
+>>> _______________________________________________
+>>> linux-arm-kernel mailing list
+>>> linux-arm-kernel@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> .
