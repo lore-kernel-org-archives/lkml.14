@@ -1,216 +1,348 @@
-Received: from mail.codeweavers.com (mail.codeweavers.com [4.36.192.163])
+Received: from mail-m12746.qiye.163.com (mail-m12746.qiye.163.com [115.236.127.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64CBB1DDF5
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 06:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeweavers.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309811DFE5;
+	Thu,  4 Jan 2024 06:40:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="eBufPN/+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=codeweavers.com; s=s1; h=Message-ID:Date:Subject:Cc:To:From:Sender;
-	bh=iMphVloIeKUNeeJm3gp+Gr4tQlsmrQhpofACzzv2WRg=; b=eBufPN/+upujT5lGNU/qW8wIZ5
-	dfIWqOb43suhLnI3KLpBNoBX7eWaLZfaoYcjrBCAF11+FlOsT+GK+E8lItWOcN7EuU/5thiLWaEVq
-	Bvpfv6y32jUxkdAxytxSw5mNJ4LV4d24U2Ew/qcy5fXvvfcYiFttFGZxwY5xo/+ZCWEq+l9TVb5y1
-	v12Vq1UrXwcaJIbUoPe82h1wYBXsr31FfTXbFe1h9OUMErPcGmi2H86QTTloLiVG7ofGfEpB/rpye
-	9T9P0xHag0lByTdAK1QAOrMzYMzxmLjeTyZGcIahdeMkNUg2Govrm0NejU78PX6xpAJ6B+tUx6mFr
-	pa9xUJmg==;
-Received: from [10.69.139.5] (helo=uriel.localnet)
-	by mail.codeweavers.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <zfigura@codeweavers.com>)
-	id 1rLHKG-00AxRy-09;
-	Thu, 04 Jan 2024 00:35:32 -0600
-From: Elizabeth Figura <zfigura@codeweavers.com>
-To: Sean Christopherson <seanjc@google.com>, "H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, wine-devel@winehq.org
-Subject: Re: x86 SGDT emulation for Wine
-Date: Thu, 04 Jan 2024 00:35:28 -0600
-Message-ID: <2451911.jE0xQCEvom@uriel>
-In-Reply-To: <1C37C311-CF8A-44EC-89B5-D826EF458708@zytor.com>
-References:
- <2285758.taCxCBeP46@uriel> <ZZV65qJuJ67E_n9O@google.com>
- <1C37C311-CF8A-44EC-89B5-D826EF458708@zytor.com>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="K6TsTIX4"
+DKIM-Signature: a=rsa-sha256;
+	b=K6TsTIX4TaA83bO7yJMwivg11xmfitXtEk6R3b7jRBmWjgGrJDN/E71L+YisiFfZu541Q8iSSuuRNH56IHxNKbqZck5dZnQY3E4NJWF1Dl7rRkoghky7UL3l7Hea+nqi/Zqs4TK1BFkKdPmTPmBicTSQUcNBXrfKYkYZZeVhhhw=;
+	s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=9EAWngpmrjmIVASbpi542X7zUSHejpcQvkpGhWlQL2s=;
+	h=date:mime-version:subject:message-id:from;
+Received: from [172.16.12.69] (unknown [58.22.7.114])
+	by mail-m11877.qiye.163.com (Hmail) with ESMTPA id 5AD08400335;
+	Thu,  4 Jan 2024 11:01:47 +0800 (CST)
+Message-ID: <b1b1f215-738d-4d4d-90cf-0ea5cea11c14@rock-chips.com>
+Date: Thu, 4 Jan 2024 11:01:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Cc: shawn.lin@rock-chips.com, linux-kernel@vger.kernel.org,
+ Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson
+ <ulf.hansson@linaro.org>, Jyan Chou <jyanchou@realtek.com>,
+ linux-mmc@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] mmc: sdhci-of-dwcmshc: Implement SDHCI CQE support
+Content-Language: en-GB
+To: Sergey Khimich <serghox@gmail.com>
+References: <20231231144619.758290-1-serghox@gmail.com>
+ <20231231144619.758290-3-serghox@gmail.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <20231231144619.758290-3-serghox@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkNMGlYYGklMTkhDHk9NSB1VEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk1PSUxOVUpLS1VKQk
+	tLWQY+
+X-HM-Tid: 0a8cd26b77a72eb3kusn5ad08400335
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PE06Shw6Pzw9EUMzIkMqMTdP
+	SyEwCQ1VSlVKTEtPSEhMSEtDSU5CVTMWGhIXVQgTGgwVVRcSFTsJFBgQVhgTEgsIVRgUFkVZV1kS
+	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUpKSEJDNwY+
 
-On Wednesday, January 3, 2024 9:33:10 AM CST H. Peter Anvin wrote:
-> On January 3, 2024 7:19:02 AM PST, Sean Christopherson <seanjc@google.com=
->=20
-wrote:
-> >On Tue, Jan 02, 2024, Elizabeth Figura wrote:
-> >> On Wednesday, December 27, 2023 5:58:19 PM CST H. Peter Anvin wrote:
-> >> > On December 27, 2023 2:20:37 PM PST, Elizabeth Figura=20
-<zfigura@codeweavers.com> wrote:
-> >> > >Hello all,
-> >> > >
-> >> > >There is a Windows 98 program, a game called Nuclear Strike, which
-> >> > >wants to
-> >> > >do some amount of direct VGA access. Part of this is port I/O, which
-> >> > >naturally throws SIGILL that we can trivially catch and emulate in
-> >> > >Wine.
-> >> > >The other part is direct access to the video memory at 0xa0000, whi=
-ch
-> >> > >in
-> >> > >general isn't a problem to catch and virtualize as well.
-> >> > >
-> >> > >However, this program is a bit creative about how it accesses that
-> >> > >memory;
-> >> > >instead of just writing to 0xa0000 directly, it looks up a segment
-> >> > >descriptor whose base is at 0xa0000 and then uses the %es override =
-to
-> >
-> >> > >write bytes. In pseudo-C, what it does is:
-> >...
-> >
-> >> > A prctl() to set the UMIP-emulated return values or disable it (givi=
-ng
-> >> > SIGILL) would be easy enough.
-> >> >=20
-> >> > For the non-UMIP case, and probably for a lot of other corner cases
-> >> > like
-> >> > relying on certain magic selector values and what not, the best opti=
-on
-> >> > really would be to wrap the code in a lightweight KVM container. I do
-> >> > *not*
-> >> > mean running the Qemu user space part of KVM; instead have Wine
-> >> > interface
-> >> > with /dev/kvm directly.
-> >> >=20
-> >> > Non-KVM-capable hardware is basically historic at this point.
-> >>=20
-> >> Sorry for the late response=E2=80=94I've been trying to do research on=
- what would
-> >> be necessary to use KVM (plus I made the poor choice of sending this
-> >> during the holiday season...)
-> >>=20
-> >> I'm concerned that KVM is going to be difficult or even intractable. H=
-ere
-> >> are some of the problems that I (perhaps incorrectly) understand:
-> >>=20
-> >> * As I am led to understand, there can only be one hypervisor on the
-> >> machine at a time,
-> >
-> >No.  Only one instance of KVM-the-module is allowed, but there is no
-> >arbitrary limit on the number of VMs that userspace can create.  The only
-> >meaningful limitation is memory, and while struct kvm isn't tiny, it's n=
-ot
-> >_that_ big.>
+Hi Sergey
 
-Ah, thanks for the correction.
+On 2023/12/31 22:46, Sergey Khimich wrote:
+> From: Sergey Khimich <serghox@gmail.com>
+> 
+> For enabling CQE support just set 'supports-cqe' in your DevTree file
+> for appropriate mmc node.
+> 
 
-So if we're able to have one VM per thread, or one VM per process with one=
-=20
-vcpu per thread (but that one is capped at 1024 at least right now?), and w=
-e=20
-don't risk running into any limits, that does make things a great deal easi=
-er.
+I have tested this patchset and it seems work fine on Rockchip SoCs when 
+I removed sdhci_enable_v4_mode as we don't have SDHCI_CAN_64BIT_V4 
+support. Why do we force to enable v4?
 
-Still, as Stefan said, I don't know if using a hypervisor is going to be=20
-plausible for speed reasons.
+And I found it breaks s2r, since the patch didn't call cqhci_suspend
+and cqhci_resume.
 
-> >> and KVM has a hard limit on the number of vCPUs.
-> >>=20
-> >>   The obvious way to use KVM for Wine is to make each (guest) thread a
-> >>   vCPU.
-> >>=20
-> >> That will, at the very least, run into the thread limit. In order to
-> >> avoid
-> >> that we'd need to ship a whole scheduler, which is concerning. That's a
-> >> huge component to ship and a huge burden to keep updated. It also means
-> >> we need to hoist *all* of the ipc and sync code into the guest, which
-> >> will take an enormous amount of work.
-> >>=20
-> >>   Moreover, because there can only be one hypervisor, and Wine is a
-> >>   multi-
-> >>=20
-> >> process beast, that means that we suddenly need to throw every process
-> >> into
-> >> the same VM.
-> >
-> >As above, this is wildly inaccurate.  The only KVM restriction with resp=
-ect
-> >to processes is that a VM is bound to the process (address space) that
-> >created the VM.  There are no restrictions on the number of VMs that can
-> >be created, e.g. a single process can create multiple VMs.
-> >
-> >> That has unfortunate implications regarding isolation (it's been a dre=
-am
-> >> for years that we'd be able to share a single wine "VM" between multip=
-le
-> >> users), it complicates memory management (though perhaps not terribly?=
-).
-> >> And it means you can only have one Wine VM at a time, and can't use Wi=
-ne
-> >> at the same time as a "real" VM, neither of which are restrictions that
-> >> currently exist.>>=20
-> >>   And it's not even like we can refactor=E2=80=94we'd have to rewrite =
-tons of
-> >>   code to
-> >>=20
-> >> work inside a VM, but also keep the old code around for the cases where
-> >> we
-> >> don't have a VM and want to delegate scheduling to the host OS.
-> >>=20
-> >> * Besides scheduling, we need to exit the VM every time we would norma=
-lly
-> >> call into Unix code, which in practice is every time that the
-> >> application does an NT syscall, or uses a library which we delegate to
-> >> the host (including e.g. GPU, multimedia, audio...)
-> >
-> >Maybe I misinterpreted Peter's suggestion, but at least in my mind I was=
-n't
-> >thinking that the entire Wine process would run in a VM, but rather Wine
-> >would run just the "problematic" code in a VM.
->=20
-> Yes, the idea would be that you would run the "problematic" code inside a=
- VM
-> *mapped 1:1 with the external address space*, i.e. use KVM simply as a
-> special execution mode to give you more control of the fine grained machi=
-ne
-> state like the GDT. The code that you don't want executed in the VM conte=
-xt
-> simply leave unmapped in the VM page tables and set up #PF to always exit
-> the VM context.
-
-So yes, as long as we *can* organize things such that we exit the hyperviso=
-r=20
-every time we want to call into Unix code, then that's feasible. We have a=
-=20
-well-defined break between Windows and Unix code and it wouldn't be=20
-inordinately difficult to shove the VM exit into that break. My concern was=
-=20
-that limitations on the number of VMs or vCPUs we can create would prevent =
-us=20
-from doing that, and effectively require us to implement a lot more inside =
-the=20
-VM, but as I understand that's not actually a problem.
-
-That still leaves the question of performance though. If having to exit the=
- VM=20
-that often for performance reasons isn't feasible, then that's still going =
-to=20
-force us to implement from scratch an inordinate amount of kernel/library c=
-ode=20
-inside the VM just to avoid the transition. Or, more likely, conclude that =
-a=20
-hypervisor just isn't going to work for us.
-
-
-I'm not at all familiar with the arch code, and I'm sure I'm not asking=20
-anything interesting, but is it really impossible to put CPU_ENTRY_AREA_RO_=
-IDT=20
-somewhere that doesn't truncate to NULL, and to put the GDT at a fixed addr=
-ess=20
-as well?
-
-
+> Signed-off-by: Sergey Khimich <serghox@gmail.com>
+> ---
+>   drivers/mmc/host/Kconfig            |   1 +
+>   drivers/mmc/host/sdhci-of-dwcmshc.c | 181 +++++++++++++++++++++++++++-
+>   2 files changed, 180 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index 58bd5fe4cd25..f7594705b013 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -233,6 +233,7 @@ config MMC_SDHCI_OF_DWCMSHC
+>   	depends on MMC_SDHCI_PLTFM
+>   	depends on OF
+>   	depends on COMMON_CLK
+> +	select MMC_CQHCI
+>   	help
+>   	  This selects Synopsys DesignWare Cores Mobile Storage Controller
+>   	  support.
+> diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
+> index 3a3bae6948a8..0ba1df4bcf36 100644
+> --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
+> +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
+> @@ -20,6 +20,7 @@
+>   #include <linux/sizes.h>
+>   
+>   #include "sdhci-pltfm.h"
+> +#include "cqhci.h"
+>   
+>   #define SDHCI_DWCMSHC_ARG2_STUFF	GENMASK(31, 16)
+>   
+> @@ -36,6 +37,9 @@
+>   #define DWCMSHC_ENHANCED_STROBE		BIT(8)
+>   #define DWCMSHC_EMMC_ATCTRL		0x40
+>   
+> +/* DWC IP vendor area 2 pointer */
+> +#define DWCMSHC_P_VENDOR_AREA2		0xea
+> +
+>   /* Rockchip specific Registers */
+>   #define DWCMSHC_EMMC_DLL_CTRL		0x800
+>   #define DWCMSHC_EMMC_DLL_RXCLK		0x804
+> @@ -75,6 +79,11 @@
+>   #define BOUNDARY_OK(addr, len) \
+>   	((addr | (SZ_128M - 1)) == ((addr + len - 1) | (SZ_128M - 1)))
+>   
+> +#define DWCMSHC_SDHCI_CQE_TRNS_MODE	(SDHCI_TRNS_MULTI | \
+> +					 SDHCI_TRNS_BLK_CNT_EN | \
+> +					 SDHCI_TRNS_DMA)
+> +
+> +
+>   enum dwcmshc_rk_type {
+>   	DWCMSHC_RK3568,
+>   	DWCMSHC_RK3588,
+> @@ -90,7 +99,9 @@ struct rk35xx_priv {
+>   
+>   struct dwcmshc_priv {
+>   	struct clk	*bus_clk;
+> -	int vendor_specific_area1; /* P_VENDOR_SPECIFIC_AREA reg */
+> +	int vendor_specific_area1; /* P_VENDOR_SPECIFIC_AREA1 reg */
+> +	int vendor_specific_area2; /* P_VENDOR_SPECIFIC_AREA2 reg */
+> +
+>   	void *priv; /* pointer to SoC private stuff */
+>   };
+>   
+> @@ -210,6 +221,90 @@ static void dwcmshc_hs400_enhanced_strobe(struct mmc_host *mmc,
+>   	sdhci_writel(host, vendor, reg);
+>   }
+>   
+> +static int dwcmshc_execute_tuning(struct mmc_host *mmc, u32 opcode)
+> +{
+> +	int err = sdhci_execute_tuning(mmc, opcode);
+> +	struct sdhci_host *host = mmc_priv(mmc);
+> +
+> +	if (err)
+> +		return err;
+> +
+> +	/*
+> +	 * Tuning can leave the IP in an active state (Buffer Read Enable bit
+> +	 * set) which prevents the entry to low power states (i.e. S0i3). Data
+> +	 * reset will clear it.
+> +	 */
+> +	sdhci_reset(host, SDHCI_RESET_DATA);
+> +
+> +	return 0;
+> +}
+> +
+> +static u32 dwcmshc_cqe_irq_handler(struct sdhci_host *host, u32 intmask)
+> +{
+> +	int cmd_error = 0;
+> +	int data_error = 0;
+> +
+> +	if (!sdhci_cqe_irq(host, intmask, &cmd_error, &data_error))
+> +		return intmask;
+> +
+> +	cqhci_irq(host->mmc, intmask, cmd_error, data_error);
+> +
+> +	return 0;
+> +}
+> +
+> +static void dwcmshc_sdhci_cqe_enable(struct mmc_host *mmc)
+> +{
+> +	struct sdhci_host *host = mmc_priv(mmc);
+> +	u8 ctrl;
+> +
+> +	sdhci_writew(host, DWCMSHC_SDHCI_CQE_TRNS_MODE, SDHCI_TRANSFER_MODE);
+> +
+> +	sdhci_cqe_enable(mmc);
+> +
+> +	/*
+> +	 * The "DesignWare Cores Mobile Storage Host Controller
+> +	 * DWC_mshc / DWC_mshc_lite Databook" says:
+> +	 * when Host Version 4 Enable" is 1 in Host Control 2 register,
+> +	 * SDHCI_CTRL_ADMA32 bit means ADMA2 is selected.
+> +	 * Selection of 32-bit/64-bit System Addressing:
+> +	 * either 32-bit or 64-bit system addressing is selected by
+> +	 * 64-bit Addressing bit in Host Control 2 register.
+> +	 *
+> +	 * On the other hand the "DesignWare Cores Mobile Storage Host
+> +	 * Controller DWC_mshc / DWC_mshc_lite User Guide" says, that we have to
+> +	 * set DMA_SEL to ADMA2 _only_ mode in the Host Control 2 register.
+> +	 */
+> +	ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
+> +	ctrl &= ~SDHCI_CTRL_DMA_MASK;
+> +	ctrl |= SDHCI_CTRL_ADMA32;
+> +	sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
+> +}
+> +
+> +static void dwcmshc_set_tran_desc(struct cqhci_host *cq_host, u8 **desc,
+> +				  dma_addr_t addr, int len, bool end, bool dma64)
+> +{
+> +	int tmplen, offset;
+> +
+> +	if (likely(!len || BOUNDARY_OK(addr, len))) {
+> +		cqhci_set_tran_desc(*desc, addr, len, end, dma64);
+> +		return;
+> +	}
+> +
+> +	offset = addr & (SZ_128M - 1);
+> +	tmplen = SZ_128M - offset;
+> +	cqhci_set_tran_desc(*desc, addr, tmplen, false, dma64);
+> +
+> +	addr += tmplen;
+> +	len -= tmplen;
+> +	*desc += cq_host->trans_desc_len;
+> +	cqhci_set_tran_desc(*desc, addr, len, end, dma64);
+> +}
+> +
+> +static void dwcmshc_cqhci_dumpregs(struct mmc_host *mmc)
+> +{
+> +	sdhci_dumpregs(mmc_priv(mmc));
+> +}
+> +
+>   static void dwcmshc_rk3568_set_clock(struct sdhci_host *host, unsigned int clock)
+>   {
+>   	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> @@ -345,6 +440,7 @@ static const struct sdhci_ops sdhci_dwcmshc_ops = {
+>   	.get_max_clock		= dwcmshc_get_max_clock,
+>   	.reset			= sdhci_reset,
+>   	.adma_write_desc	= dwcmshc_adma_write_desc,
+> +	.irq			= dwcmshc_cqe_irq_handler,
+>   };
+>   
+>   static const struct sdhci_ops sdhci_dwcmshc_rk35xx_ops = {
+> @@ -379,6 +475,71 @@ static const struct sdhci_pltfm_data sdhci_dwcmshc_rk35xx_pdata = {
+>   		   SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN,
+>   };
+>   
+> +static const struct cqhci_host_ops dwcmshc_cqhci_ops = {
+> +	.enable		= dwcmshc_sdhci_cqe_enable,
+> +	.disable	= sdhci_cqe_disable,
+> +	.dumpregs	= dwcmshc_cqhci_dumpregs,
+> +	.set_tran_desc	= dwcmshc_set_tran_desc,
+> +};
+> +
+> +static void dwcmshc_cqhci_init(struct sdhci_host *host, struct platform_device *pdev)
+> +{
+> +	struct cqhci_host *cq_host;
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct dwcmshc_priv *priv = sdhci_pltfm_priv(pltfm_host);
+> +	bool dma64 = false;
+> +	u16 clk;
+> +	int err;
+> +
+> +	host->mmc->caps2 |= MMC_CAP2_CQE | MMC_CAP2_CQE_DCMD;
+> +	cq_host = devm_kzalloc(&pdev->dev, sizeof(*cq_host), GFP_KERNEL);
+> +	if (!cq_host) {
+> +		dev_err(mmc_dev(host->mmc), "Unable to setup CQE: not enough memory\n");
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * For dwcmshc host controller we have to enable internal clock
+> +	 * before access to some registers from Vendor Specific Aria 2.
+> +	 */
+> +	clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
+> +	clk |= SDHCI_CLOCK_INT_EN;
+> +	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+> +	clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
+> +	if (!(clk & SDHCI_CLOCK_INT_EN)) {
+> +		dev_err(mmc_dev(host->mmc), "Unable to setup CQE: internal clock enable error\n");
+> +		goto free_cq_host;
+> +	}
+> +
+> +	cq_host->mmio = host->ioaddr + priv->vendor_specific_area2;
+> +	cq_host->ops = &dwcmshc_cqhci_ops;
+> +
+> +	/* Enable using of 128-bit task descriptors */
+> +	dma64 = host->flags & SDHCI_USE_64_BIT_DMA;
+> +	if (dma64) {
+> +		dev_dbg(mmc_dev(host->mmc), "128-bit task descriptors\n");
+> +		cq_host->caps |= CQHCI_TASK_DESC_SZ_128;
+> +	}
+> +	err = cqhci_init(cq_host, host->mmc, dma64);
+> +	if (err) {
+> +		dev_err(mmc_dev(host->mmc), "Unable to setup CQE: error %d\n", err);
+> +		goto int_clock_disable;
+> +	}
+> +
+> +	dev_dbg(mmc_dev(host->mmc), "CQE init done\n");
+> +
+> +	return;
+> +
+> +int_clock_disable:
+> +	clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
+> +	clk &= ~SDHCI_CLOCK_INT_EN;
+> +	sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+> +
+> +free_cq_host:
+> +	devm_kfree(&pdev->dev, cq_host);
+> +}
+> +
+> +
+>   static int dwcmshc_rk35xx_init(struct sdhci_host *host, struct dwcmshc_priv *dwc_priv)
+>   {
+>   	int err;
+> @@ -471,7 +632,7 @@ static int dwcmshc_probe(struct platform_device *pdev)
+>   	struct rk35xx_priv *rk_priv = NULL;
+>   	const struct sdhci_pltfm_data *pltfm_data;
+>   	int err;
+> -	u32 extra;
+> +	u32 extra, caps;
+>   
+>   	pltfm_data = device_get_match_data(&pdev->dev);
+>   	if (!pltfm_data) {
+> @@ -519,9 +680,12 @@ static int dwcmshc_probe(struct platform_device *pdev)
+>   
+>   	priv->vendor_specific_area1 =
+>   		sdhci_readl(host, DWCMSHC_P_VENDOR_AREA1) & DWCMSHC_AREA1_MASK;
+> +	priv->vendor_specific_area2 =
+> +		sdhci_readw(host, DWCMSHC_P_VENDOR_AREA2);
+>   
+>   	host->mmc_host_ops.request = dwcmshc_request;
+>   	host->mmc_host_ops.hs400_enhanced_strobe = dwcmshc_hs400_enhanced_strobe;
+> +	host->mmc_host_ops.execute_tuning = dwcmshc_execute_tuning;
+>   
+>   	if (pltfm_data == &sdhci_dwcmshc_rk35xx_pdata) {
+>   		rk_priv = devm_kzalloc(&pdev->dev, sizeof(struct rk35xx_priv), GFP_KERNEL);
+> @@ -547,6 +711,10 @@ static int dwcmshc_probe(struct platform_device *pdev)
+>   		sdhci_enable_v4_mode(host);
+>   #endif
+>   
+> +	caps = sdhci_readl(host, SDHCI_CAPABILITIES);
+> +	if (caps & SDHCI_CAN_64BIT_V4)
+> +		sdhci_enable_v4_mode(host);
+> +
+>   	host->mmc->caps |= MMC_CAP_WAIT_WHILE_BUSY;
+>   
+>   	pm_runtime_get_noresume(dev);
+> @@ -557,6 +725,15 @@ static int dwcmshc_probe(struct platform_device *pdev)
+>   	if (err)
+>   		goto err_rpm;
+>   
+> +	/* Setup Command Queue Engine if enabled */
+> +	if (device_property_read_bool(&pdev->dev, "supports-cqe")) {
+> +		if (caps & SDHCI_CAN_64BIT_V4)
+> +			dwcmshc_cqhci_init(host, pdev);
+> +		else
+> +			dev_warn(dev, "Cannot enable CQE without V4 mode support\n");
+> +	}
+> +
+> +
+>   	if (rk_priv)
+>   		dwcmshc_rk35xx_postinit(host, priv);
+>   
