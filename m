@@ -1,76 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C948200C6;
-	Thu,  4 Jan 2024 08:21:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0480520317
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 08:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=su-phil.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=su-phil.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W63L+Qw5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8088FC433C8;
-	Thu,  4 Jan 2024 08:21:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704356486;
-	bh=zS2xNl0qvwto+EsZXnidzfKrWR+w3hw0vpx+ygIbVFk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W63L+Qw5C8WyRqetzCAJ9q/xzcqkQQglWV6S9e4dan1w8kfgrzm8P541++DLV2fAi
-	 CiDg0sxrfr5cdKYOlw6hufTlFewl6rJL8Vf+TElcqJ/M9cfAPdnfv7bWVouPwIwjdL
-	 vPjzj194KXg24JaqOg1QAb5iF4uIwuvSq/OE8KEfDSDVFcTDltqBjV2m1K5GE8ArQI
-	 BHs3QiA0cC8cdnX7tTumyVvoYyToOi1svB4pk8VIPtnf6Pb850250CVZC5NE32IRBA
-	 h/nfxnCL70ukO+TszNYxpfan0NQLaWsbtE4irMz7fodVl2YuEQyjeLfEseDOYlLM7M
-	 mYeq/Ap77g5rQ==
-Received: from johan by xi.lan with local (Exim 4.96.2)
-	(envelope-from <johan@kernel.org>)
-	id 1rLIyg-0007SD-2x;
-	Thu, 04 Jan 2024 09:21:22 +0100
-Date: Thu, 4 Jan 2024 09:21:22 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Sven Peter <sven@svenpeter.dev>
-Cc: Aditya Garg <gargaditya08@live.com>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Felix Zhang <mrman@mrman314.tech>, linux-bluetooth@vger.kernel.org,
-	stable@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>,
-	Hector Martin <marcan@marcan.st>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Orlando Chamberlain <orlandoch.dev@gmail.com>, kekrby@gmail.com,
-	admin@kodeit.net, Janne Grunau <j@jannau.net>,
-	asahi@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] Bluetooth: Fix Bluetooth for BCM4377 on T2 Intel
- MacBooks
-Message-ID: <ZZZqgsjeY3R4YlVG@hovoldconsulting.com>
-References: <MA0P287MB021769BC136ED0B947683709B867A@MA0P287MB0217.INDP287.PROD.OUTLOOK.COM>
- <86B7DC5B-B25A-4D55-BBC7-A1C3EE8AC703@svenpeter.dev>
+	dkim=pass (2048-bit key) header.d=su-phil.net header.i=@su-phil.net header.b="A6/69bBl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=su-phil.net
+	; s=ds202310; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References
+	:To:From:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Cc:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=8Mq/6t34LUZUH3+oWedwRqIHGbLlA9zur4D1uN/EDt8=; b=A6/69bBlSVf2yO2wPFzIluA9nB
+	Un0465gfAY035vvf+p9BoeuEoH1ucnSeNAzWv/zi2k4VjF/bVif+RiV4wOu7tYTYuM7KpBhI3eTsC
+	TcNqBupodCjONgaDQQU6vL8doNREvDzPvIYN08WA6cs2+2JJF7eehA87atl+7LbTWJRVniJ5kf8Yy
+	+SqIP+2rkHf2VNoEdCvBQqeWktYOGG3/fP+5eYmpCfeSCy/c/Fh+SeMv2zxvemlXXq1LKFQKooU1W
+	p9i6SOz1FwY157lF1NQ9mk4iM5kJXHUkylzFkSWCNB853NMkQG6JjRKUloLwhLvukcA9rDy/JwTNd
+	5mPtdl5g==;
+Received: from [84.215.119.50] (port=55285 helo=[192.168.0.2])
+	by smtp.domeneshop.no with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <7@su-phil.net>)
+	id 1rLIzO-00CoEA-T9
+	for linux-kernel@vger.kernel.org;
+	Thu, 04 Jan 2024 09:22:06 +0100
+Message-ID: <c6458279-a14a-46fb-bf13-8df6a6bb157b@su-phil.net>
+Date: Thu, 4 Jan 2024 09:22:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: b7 X (was Fair Pay, Low Jitter, Philosophy)
+From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <7@su-phil.net>
+To: linux-kernel@vger.kernel.org
+References: <6ed7a0b8-63ac-407e-9741-72797e43bd81@su-phil.net>
+In-Reply-To: <6ed7a0b8-63ac-407e-9741-72797e43bd81@su-phil.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <86B7DC5B-B25A-4D55-BBC7-A1C3EE8AC703@svenpeter.dev>
 
-On Thu, Jan 04, 2024 at 08:50:19AM +0100, Sven Peter wrote:
-> > On 4. Jan 2024, at 08:47, Aditya Garg <gargaditya08@live.com> wrote:
-> >> On 28-Dec-2023, at 5:41 PM, Johan Hovold <johan@kernel.org> wrote:
+I updated philosophy again to Ev, as concept of The God. This is also a 
+right version of Eün for romic alphabet.
 
-> >> Ok, good, then this patch and the one I posted are mostly equivalent
-> >> assuming that the BCM4378/4387 return an invalid address during setup.
-> >> 
-> >> This patch may be preferred as it does not need to rely on such
-> >> assumptions, though.
+This, in addition to recognizing Gamer, Troll The Shaytan, etc, also 
+recognises Fairy (Jinn in arabic to the left Iclam.)
 
-> > So what's the final take on this? Which one is gonna be merged upstream?
+I hope you follow.
+
+OS now is simply b7 X - "Bitstream System", replacing also the wording 
+of "fileoriented" with "Bitstream Oriented" freshening this a bit up.
+
+This I believe is the ultimate development.
+
+The Serene Be With You,
+Ywe Cærlyn,
+https://su-phil.net/
+
+
+
+Den 03.01.2024 11:12, skrev Ywe Cærlyn:
+> I´ve gone through further reflections on this, and it seems the Amiga 
+> was designed according to Eün (a concept of The God). Hu (a concept of 
+> The God) would answer and continue this, and A3000UX was already Unix 
+> oriented.
 > 
-> I would’ve preferred this one (possibly with a better commit message)
-> since it’s more explicit and doesn’t rely on additional assumptions
-> but it looks like Johan’s version was already merged.
-
-Which addresses do BCM4378/4387 return before they are configured?
-Should be easy enough to verify that the current check for invalid
-addresses catches those or otherwise add them to the list.
-
-Johan
