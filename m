@@ -1,150 +1,157 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9E3286B3;
-	Thu,  4 Jan 2024 17:38:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VAVOj3qk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704389921; x=1735925921;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=3udya00K0HYS8sw10m47vAtCLMcEtftTF6aI4a13CZA=;
-  b=VAVOj3qkc58j39ZI7yc7iHNBLIhn578HeILANvRb4sXLNgU2FR8a2gbN
-   9/fVnkhSLaTQW3r/9bGKAA3myE8edsZ2q6DQVXgz61PxAZH+XtMMNvK71
-   sgaL5LnPWnV5Q6dmBSsuYdjlf7DRPb1aFSTVrDtwjXhjLU/leHmYgFuFq
-   1bJXCawVxNxBmqmZDJcR9Qlm+KwCETHJopkyp53N8006cMMfZjzsjZpmW
-   XOMHJJ+8Q6dmtTm3fCb4jGzs1utuT72fbU8PIUhu9RTIxQKQi628FW0qU
-   EtdJNCTlmx1O4gYZcZ53VB1gZ5MTxkokTkD6J55iSLYFlUEEnoScrnveD
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="401101398"
-X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
-   d="scan'208";a="401101398"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 09:38:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
-   d="scan'208";a="14972645"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 09:38:40 -0800
-Received: from [10.209.154.172] (kliang2-mobl1.ccr.corp.intel.com [10.209.154.172])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id CD27B580BF8;
-	Thu,  4 Jan 2024 09:38:37 -0800 (PST)
-Message-ID: <a327286a-36a6-4cdc-92bd-777fb763d88a@linux.intel.com>
-Date: Thu, 4 Jan 2024 12:38:36 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60A7286AD;
+	Thu,  4 Jan 2024 17:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WO5Etiid";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="04dZR2xX";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="WO5Etiid";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="04dZR2xX"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id AC7A3220E7;
+	Thu,  4 Jan 2024 17:41:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1704390061; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=12e9jUxfm5hixJE8HJKUVsReJEnWe7uObiTgEXpBrgI=;
+	b=WO5Etiid/pU3xN8w8vhjx90jdz7GK/ncX4XV1mlb233QI1S/lio8krvCVsGscJW5PhPqvc
+	0bVnkl2pnwFmQ2i+GCN2xetg/g5gITNjKHu9pnNxQQPA18gqw3C/lCw4n8iRrd2HpDtQ6W
+	c/wd2rNKB/YBMJE6eX6KeMEDSQ9MP8c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1704390061;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=12e9jUxfm5hixJE8HJKUVsReJEnWe7uObiTgEXpBrgI=;
+	b=04dZR2xXWmGMLLO5uuzGGktjAp99J+iHO8dZj9tgJRDaB+Hb3Cn7PhnIBpWBGRpSB76B2T
+	ydTyey72oz3kwXBg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1704390061; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=12e9jUxfm5hixJE8HJKUVsReJEnWe7uObiTgEXpBrgI=;
+	b=WO5Etiid/pU3xN8w8vhjx90jdz7GK/ncX4XV1mlb233QI1S/lio8krvCVsGscJW5PhPqvc
+	0bVnkl2pnwFmQ2i+GCN2xetg/g5gITNjKHu9pnNxQQPA18gqw3C/lCw4n8iRrd2HpDtQ6W
+	c/wd2rNKB/YBMJE6eX6KeMEDSQ9MP8c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1704390061;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=12e9jUxfm5hixJE8HJKUVsReJEnWe7uObiTgEXpBrgI=;
+	b=04dZR2xXWmGMLLO5uuzGGktjAp99J+iHO8dZj9tgJRDaB+Hb3Cn7PhnIBpWBGRpSB76B2T
+	ydTyey72oz3kwXBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9D89A13722;
+	Thu,  4 Jan 2024 17:41:01 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id kuyQJq3tlmWQcQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 04 Jan 2024 17:41:01 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 0C27EA07EF; Thu,  4 Jan 2024 18:41:01 +0100 (CET)
+Date: Thu, 4 Jan 2024 18:41:01 +0100
+From: Jan Kara <jack@suse.cz>
+To: Jingbo Xu <jefflexu@linux.alibaba.com>
+Cc: shr@devkernel.io, akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, joseph.qi@linux.alibaba.com,
+	linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+	willy@infradead.org
+Subject: Re: [PATCH v3 2/2] mm: fix arithmetic for max_prop_frac when setting
+ max_ratio
+Message-ID: <20240104174101.oax6zbdhy4v5u4bf@quack3>
+References: <20231219142508.86265-1-jefflexu@linux.alibaba.com>
+ <20231219142508.86265-3-jefflexu@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] KVM: x86/pmu: fix masking logic for
- MSR_CORE_PERF_GLOBAL_CTRL
-Content-Language: en-US
-To: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org
-Cc: peterz@infradead.org, linux-perf-users@vger.kernel.org,
- leitao@debian.org, acme@kernel.org, mingo@redhat.com,
- "Paul E . McKenney" <paulmck@kernel.org>,
- Sean Christopherson <seanjc@google.com>, stable@vger.kernel.org,
- Like Xu <like.xu.linux@gmail.com>
-References: <20240104153939.129179-1-pbonzini@redhat.com>
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240104153939.129179-1-pbonzini@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231219142508.86265-3-jefflexu@linux.alibaba.com>
+X-Spam-Level: 
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=WO5Etiid;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=04dZR2xX
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 URIBL_BLOCKED(0.00)[suse.cz:dkim,suse.cz:email,suse.com:email,alibaba.com:email];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[9];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-2.99)[99.95%]
+X-Spam-Score: -4.00
+X-Rspamd-Queue-Id: AC7A3220E7
+X-Spam-Flag: NO
 
-
-
-On 2024-01-04 10:39 a.m., Paolo Bonzini wrote:
-> When commit c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE
-> MSR emulation for extended PEBS") switched the initialization of
-> cpuc->guest_switch_msrs to use compound literals, it screwed up
-> the boolean logic:
+On Tue 19-12-23 22:25:08, Jingbo Xu wrote:
+> Since now bdi->max_ratio is part per million, fix the wrong arithmetic
+> for max_prop_frac when setting max_ratio.  Otherwise the miscalculated
+> max_prop_frac will affect the incrementing of writeout completion count
+> when max_ratio is not 100%.
 > 
-> +	u64 pebs_mask = cpuc->pebs_enabled & x86_pmu.pebs_capable;
-> ...
-> -	arr[0].guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask;
-> -	arr[0].guest &= ~(cpuc->pebs_enabled & x86_pmu.pebs_capable);
-> +               .guest = intel_ctrl & (~cpuc->intel_ctrl_host_mask | ~pebs_mask),
-> 
-> Before the patch, the value of arr[0].guest would have been intel_ctrl &
-> ~cpuc->intel_ctrl_host_mask & ~pebs_mask.  The intent is to always treat
-> PEBS events as host-only because, while the guest runs, there is no way
-> to tell the processor about the virtual address where to put PEBS records
-> intended for the host.
-> 
-> Unfortunately, the new expression can be expanded to
-> 
-> 	(intel_ctrl & ~cpuc->intel_ctrl_host_mask) | (intel_ctrl & ~pebs_mask)
-> 
-> which makes no sense; it includes any bit that isn't *both* marked as
-> exclude_guest and using PEBS.  So, reinstate the old logic.  
+> Fixes: efc3e6ad53ea ("mm: split off __bdi_set_max_ratio() function")
+> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 
-I think the old logic will completely disable the PEBS in guest
-capability. Because the counter which is assigned to a guest PEBS event
-will also be set in the pebs_mask. The old logic disable the counter in
-GLOBAL_CTRL in guest. Nothing will be counted.
+Good catch. Feel free to add:
 
-Like once proposed a fix in the intel_guest_get_msrs().
-https://lore.kernel.org/lkml/20231129095055.88060-1-likexu@tencent.com/
-It should work for the issue.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Ideally, we should prevent the host PEBS from profiling a guest via
-rejecting the event creation in the perf. But I couldn't find a good way
-to distinguish host-created PEBS and guest-created PEBS. So Like's
-proposal should be a good alternative so far.
+								Honza
 
-Thanks,
-Kan
-
-> Another
-> way to write it could be "intel_ctrl & ~(cpuc->intel_ctrl_host_mask |
-> pebs_mask)", presumably the intention of the author of the faulty.
-> However, I personally find the repeated application of A AND NOT B to
-> be a bit more readable.
-> 
-> This shows up as guest failures when running concurrent long-running
-> perf workloads on the host, and was reported to happen with rcutorture.
-> All guests on a given host would die simultaneously with something like an
-> instruction fault or a segmentation violation.
-> 
-> Reported-by: Paul E. McKenney <paulmck@kernel.org>
-> Analyzed-by: Sean Christopherson <seanjc@google.com>
-> Tested-by: Paul E. McKenney <paulmck@kernel.org>
-> Cc: stable@vger.kernel.org
-> Fixes: c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE MSR emulation for extended PEBS")
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 > ---
->  arch/x86/events/intel/core.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+>  mm/page-writeback.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index ce1c777227b4..0f2786d4e405 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -4051,12 +4051,17 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
->  	u64 pebs_mask = cpuc->pebs_enabled & x86_pmu.pebs_capable;
->  	int global_ctrl, pebs_enable;
+> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+> index 2140382dd768..05e5c425b3ff 100644
+> --- a/mm/page-writeback.c
+> +++ b/mm/page-writeback.c
+> @@ -728,7 +728,8 @@ static int __bdi_set_max_ratio(struct backing_dev_info *bdi, unsigned int max_ra
+>  		ret = -EINVAL;
+>  	} else {
+>  		bdi->max_ratio = max_ratio;
+> -		bdi->max_prop_frac = (FPROP_FRAC_BASE * max_ratio) / 100;
+> +		bdi->max_prop_frac = (FPROP_FRAC_BASE * max_ratio) /
+> +						(100 * BDI_RATIO_SCALE);
+>  	}
+>  	spin_unlock_bh(&bdi_lock);
 >  
-> +	/*
-> +	 * In addition to obeying exclude_guest/exclude_host, remove bits being
-> +	 * used for PEBS when running a guest, because PEBS writes to virtual
-> +	 * addresses (not physical addresses).
-> +	 */
->  	*nr = 0;
->  	global_ctrl = (*nr)++;
->  	arr[global_ctrl] = (struct perf_guest_switch_msr){
->  		.msr = MSR_CORE_PERF_GLOBAL_CTRL,
->  		.host = intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
-> -		.guest = intel_ctrl & (~cpuc->intel_ctrl_host_mask | ~pebs_mask),
-> +		.guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs_mask,
->  	};
->  
->  	if (!x86_pmu.pebs)
+> -- 
+> 2.19.1.6.gb485710b
+> 
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
