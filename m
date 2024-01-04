@@ -1,77 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBF828DC3;
-	Thu,  4 Jan 2024 18:14:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mQsYPQBj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704392084; x=1735928084;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=sA1m4Z7P3CQ1pNqVc8Y8YSLSGCDu3yuKBy1DkHN+zck=;
-  b=mQsYPQBjgRlZdQ4qmkqz4gbzWbLuCn8vxhrsg/xe/7b9nGOxx2IMkaeF
-   QecmRq3O66R75nk6/i6wjTW033UkvEPojsRAkz0VfuZaeWP9a16KunqAk
-   rxAzpHchOETZH+QXtN6JTbQyXECqertvbR9hYku4Yj1z9iy8IMTD5IBUM
-   RZl565PysoT09zClML9zXFNW+feZ6teQC0lDdl2ZZlWY3S/hxtjCB+syi
-   kJdtzC5uV4PNF4QCd2fO0/jvq9kwMtWmLqj2MtyWpDPydRmpB420rabYB
-   BgCeiZM11IeHXSAKoyR9L045HTBMrqz/vXB/gR1e6MG34urtgyUeV6GEO
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="15952104"
-X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
-   d="scan'208";a="15952104"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 10:14:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="903905911"
-X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
-   d="scan'208";a="903905911"
-Received: from asebenix-mobl1.ger.corp.intel.com ([10.251.210.215])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 10:14:41 -0800
-Date: Thu, 4 Jan 2024 20:14:38 +0200 (EET)
-From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Armin Wolf <W_Armin@gmx.de>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/4] platform/x86: wmi: Decouple legacy WMI notify handlers
- from wmi_block_list
-In-Reply-To: <20240103192707.115512-4-W_Armin@gmx.de>
-Message-ID: <ff735fbd-a0b4-6e-d3c9-a1358e9d9616@linux.intel.com>
-References: <20240103192707.115512-1-W_Armin@gmx.de> <20240103192707.115512-4-W_Armin@gmx.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C406E28DBF;
+	Thu,  4 Jan 2024 18:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.96.2)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1rLSEx-0003UN-12;
+	Thu, 04 Jan 2024 18:14:48 +0000
+Date: Thu, 4 Jan 2024 19:12:10 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: Frank Wunderlich <linux@fw-web.de>
+Cc: linux-mediatek@lists.infradead.org,
+	Frank Wunderlich <frank-w@public-files.de>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sam Shih <sam.shih@mediatek.com>, linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: reset: mediatek: add MT7988 LVTS reset
+ ID
+Message-ID: <ZZb0-pFWxuQlEm7q@pidgin.makrotopia.org>
+References: <20240104173930.13907-1-linux@fw-web.de>
+ <20240104173930.13907-2-linux@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1830788590-1704392082=:10531"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240104173930.13907-2-linux@fw-web.de>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Frank,
 
---8323329-1830788590-1704392082=:10531
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-
-On Wed, 3 Jan 2024, Armin Wolf wrote:
-
-> Until now, legacy WMI notify handler functions where using the
-> wmi_block_list, which did no refcounting on the returned WMI device.
-> This meant that the WMI device could disappear at any moment,
-> potentially leading to various errors.
-> Fix this by using bus_find_device() which returns an actual
-> reference to the found WMI device.
+On Thu, Jan 04, 2024 at 06:39:29PM +0100, Frank Wunderlich wrote:
+> From: Frank Wunderlich <frank-w@public-files.de>
 > 
-> Tested on a Dell Inspiron 3505 and a Acer Aspire E1-731.
+> ---
+>  include/dt-bindings/reset/mediatek,mt7988-resets.h | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> diff --git a/include/dt-bindings/reset/mediatek,mt7988-resets.h b/include/dt-bindings/reset/mediatek,mt7988-resets.h
+> index 493301971367..3f1e4ec07ad5 100644
+> --- a/include/dt-bindings/reset/mediatek,mt7988-resets.h
+> +++ b/include/dt-bindings/reset/mediatek,mt7988-resets.h
+> @@ -10,4 +10,8 @@
+>  /* ETHWARP resets */
+>  #define MT7988_ETHWARP_RST_SWITCH		0
+>  
+> +/* INFRA resets */
+> +#define MT7988_INFRA_RST0_THERM_CTRL_SWRST	9
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+I suppose this argument applies here as well:
 
--- 
- i.
+"IDs should start from 0 or 1 and increment by 1. If these are not IDs,
+then you do not need them in the bindings."
 
---8323329-1830788590-1704392082=:10531--
+https://lore.kernel.org/all/59629ec1-cc0c-4c5a-87cc-ea30d64ec191@linaro.org/
+
+As a consequence, as what you are describing there are hardware bits
+rather than IDs used by the driver, you can just use a numeric constant
+in device tree instead of adding dt-bindings header.
+Or change the driver so RST0_THERM_CTRL_SWRST could be defined as 0.
+
