@@ -1,212 +1,104 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9B21A710
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 05:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDC918EBD;
+	Thu,  4 Jan 2024 05:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XEAWvMiy"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6d9af1f52bcso72361b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 21:50:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704347436; x=1704952236; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Uf9xX6NGzjv1ISMlid2UcA3oN+qjOMTFEKHCEil84EA=;
-        b=XEAWvMiyIvCSukO3FitDAFBdKhzLDI/tvLdqP20JJiSKYV0RUgF9RY4QOGwf2vcmOg
-         B6xCMPebYroO3TAJOzXRNnMDXPiL1PncmhuM9r/a2+JcUgLIuOGoRsGMzzHCPKMCjOQ5
-         eWrPuDkibkQGauMZhr0/sL3E006QsJboJ7LmdULTglMX9Kon/k5xM011qjeO+k/hwQNh
-         Gr5nTFlsuvhuZOEbFiIkoq6FTHzg2eGeBTDOoM3/c66AWC2HztFweJpA3mMop1VJaTlH
-         +X163fQX7Bajk39NDTQ5Qiz6agrfGOINFR5bMmckHoyGto6UvTqCaWXoQuYNwATOOBqO
-         zIRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704347436; x=1704952236;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uf9xX6NGzjv1ISMlid2UcA3oN+qjOMTFEKHCEil84EA=;
-        b=OnId4NijarHeRV4Y/9CCM7T0E9D68zOv9Qyi2o64Pw0CQ/gUPHP/zBoIuPmqphdLw3
-         tVVPe/teBRlJWdfYIlnpq47d6PXHCwBdqNlXU6sbq9xFTz773cxxxiGqAY4t+amhMWih
-         Q7PNCwH3I/S1yB6v6idITGeb563DWYxvAU4A/Y63LNCvGZOSi2l5jPYcPMMZxHmWvAiX
-         wzo5WaE6ew2zsbQ1rg/4i7DN71rSJiYunBzoANVeqNrc75iTu2xyscKIyD7n8iHmnelO
-         kQ4L/b6Dx3IAiJMUy22ARJ043xVdJw0W1NCrRkfifGfW/u7pa5aj7oteLn0/4uNymyi+
-         DKhA==
-X-Gm-Message-State: AOJu0YyoWSwKtUvqKgFwCjlTWywIJevfsk6OSR3Ty7tFcC+8u8LWg3d4
-	HsGI4DPbisjncvikI7noJNHxZo0RY+Oz
-X-Google-Smtp-Source: AGHT+IH+YmP6TkldqOBQ8q7LpIRUpnAuB55Y4aNLVXHxOcIszacbpKTctAPDRpPE0LlZCjBp4X2MWA==
-X-Received: by 2002:a05:6a00:2e81:b0:6d9:8d50:55d with SMTP id fd1-20020a056a002e8100b006d98d50055dmr157139pfb.47.1704347435731;
-        Wed, 03 Jan 2024 21:50:35 -0800 (PST)
-Received: from thinkpad ([220.158.159.72])
-        by smtp.gmail.com with ESMTPSA id f22-20020aa78b16000000b006d0d90edd2csm23793210pfd.42.2024.01.03.21.50.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jan 2024 21:50:35 -0800 (PST)
-Date: Thu, 4 Jan 2024 11:20:30 +0530
-From: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, jingoohan1@gmail.com,
-	gustavo.pimentel@synopsys.com, josh@joshtriplett.org,
-	lukas.bulwahn@gmail.com, hongxing.zhu@nxp.com,
-	pankaj.dubey@samsung.com, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
- controller
-Message-ID: <20240104055030.GA3031@thinkpad>
-References: <CGME20231130115055epcas5p4e29befa80877be45dbee308846edc0ba@epcas5p4.samsung.com>
- <20231130115044.53512-1-shradha.t@samsung.com>
- <20231130165514.GW3043@thinkpad>
- <000601da3e07$c39e5e00$4adb1a00$@samsung.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dU2fAWE0"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4045AW5g003555;
+	Thu, 4 Jan 2024 05:57:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=LYjP6l6ccwWyulGOSKOxb1lXvRXMy12sfK4tBYthV8k=;
+ b=dU2fAWE00B74zsckVxAXa6hTRfeJfJjPmEt+BhoO0RbTgVgC34ez2pze8Bu3IdTx5KJ0
+ eHMzePHpHjinHv9MqzAj5NA7g9tucfkGrtSR6YMsUW+ybOUA+dCV/kFm0YSHkz8htv0u
+ GauVJUlpf09pqm5ekO1OmW8R+YCCNtPZkH7mboOI1vRS9BYAzDQYhWPz54Kcms8P3Ih9
+ /Tf6+H18cBYoMAjb6lKnkvAhu1jwZvYuO3HShgoU4HKS7eUKkOIOJfxu1318QXs0Oo5g
+ cNUroxkbXEg8p7yZuulq1prsqnl1oQEdCXd7W8TfvSOhlr0G5oPMzOKkaHNEg7PU6APj LA== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vdhg38w2p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Jan 2024 05:57:55 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40437dsq019309;
+	Thu, 4 Jan 2024 05:57:54 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vc30sppjc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Jan 2024 05:57:54 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4045vq3124904420
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 4 Jan 2024 05:57:52 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 634182004B;
+	Thu,  4 Jan 2024 05:57:52 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BC29520040;
+	Thu,  4 Jan 2024 05:57:50 +0000 (GMT)
+Received: from li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com (unknown [9.109.253.82])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu,  4 Jan 2024 05:57:50 +0000 (GMT)
+Date: Thu, 4 Jan 2024 11:27:47 +0530
+From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+To: Kemeng Shi <shikemeng@huaweicloud.com>
+Cc: tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/9] ext4: remove unused parameter group in
+ ext4_mb_choose_next_group_*()
+Message-ID: <ZZZI2yTyAXs3gIzL@li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com>
+References: <20240103102821.448134-1-shikemeng@huaweicloud.com>
+ <20240103102821.448134-3-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <000601da3e07$c39e5e00$4adb1a00$@samsung.com>
+In-Reply-To: <20240103102821.448134-3-shikemeng@huaweicloud.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 8dnK-ZWpIo9dbZCmBmeHrOhEg4RCg4tA
+X-Proofpoint-ORIG-GUID: 8dnK-ZWpIo9dbZCmBmeHrOhEg4RCg4tA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-04_02,2024-01-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 mlxscore=0
+ impostorscore=0 bulkscore=0 lowpriorityscore=0 phishscore=0 suspectscore=0
+ adultscore=0 spamscore=0 mlxlogscore=844 priorityscore=1501 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2401040040
 
-On Wed, Jan 03, 2024 at 11:13:20AM +0530, Shradha Todi wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Shradha Todi <shradha.t@samsung.com>
-> > Sent: 04 December 2023 14:10
-> > To: 'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>
-> > Cc: 'lpieralisi@kernel.org' <lpieralisi@kernel.org>; 'kw@linux.com'
-> > <kw@linux.com>; 'robh@kernel.org' <robh@kernel.org>;
-> > 'bhelgaas@google.com' <bhelgaas@google.com>; 'jingoohan1@gmail.com'
-> > <jingoohan1@gmail.com>; 'gustavo.pimentel@synopsys.com'
-> > <gustavo.pimentel@synopsys.com>; 'josh@joshtriplett.org'
-> > <josh@joshtriplett.org>; 'lukas.bulwahn@gmail.com'
-> > <lukas.bulwahn@gmail.com>; 'hongxing.zhu@nxp.com'
-> > <hongxing.zhu@nxp.com>; 'pankaj.dubey@samsung.com'
-> > <pankaj.dubey@samsung.com>; 'linux-kernel@vger.kernel.org' <linux-
-> > kernel@vger.kernel.org>; 'linux-pci@vger.kernel.org' <linux-
-> > pci@vger.kernel.org>
-> > Subject: RE: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
-> > controller
-> > 
-> > 
-> > 
-> > > -----Original Message-----
-> > > From: Manivannan Sadhasivam [mailto:manivannan.sadhasivam@linaro.org]
-> > > Sent: 30 November 2023 22:25
-> > > To: Shradha Todi <shradha.t@samsung.com>
-> > > Cc: lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > > bhelgaas@google.com; jingoohan1@gmail.com;
-> > > gustavo.pimentel@synopsys.com; josh@joshtriplett.org;
-> > > lukas.bulwahn@gmail.com; hongxing.zhu@nxp.com;
-> > > pankaj.dubey@samsung.com; linux-kernel@vger.kernel.org; linux-
-> > > pci@vger.kernel.org
-> > > Subject: Re: [PATCH v2 0/3] Add support for RAS DES feature in PCIe DW
-> > > controller
-> > >
-> > > On Thu, Nov 30, 2023 at 05:20:41PM +0530, Shradha Todi wrote:
-> > > > DesignWare controller provides a vendor specific extended capability
-> > > > called RASDES as an IP feature. This extended capability  provides
-> > > > hardware information like:
-> > > >  - Debug registers to know the state of the link or controller.
-> > > >  - Error injection mechanisms to inject various PCIe errors including
-> > > >    sequence number, CRC
-> > > >  - Statistical counters to know how many times a particular event
-> > > >    occurred
-> > > >
-> > > > However, in Linux we do not have any generic or custom support to be
-> > > > able to use this feature in an efficient manner. This is the reason
-> > > > we are proposing this framework. Debug and bring up time of
-> > > > high-speed IPs are highly dependent on costlier hardware analyzers
-> > > > and this solution will in some ways help to reduce the HW analyzer usage.
-> > > >
-> > > > The debugfs entries can be used to get information about underlying
-> > > > hardware and can be shared with user space. Separate debugfs entries
-> > > > has been created to cater to all the DES hooks provided by the controller.
-> > > > The debugfs entries interacts with the RASDES registers in the
-> > > > required sequence and provides the meaningful data to the user. This
-> > > > eases the effort to understand and use the register information for
-> > > debugging.
-> > > >
-> > > > v1 version was posted long back and for some reasons I couldn't work
-> > > > on it. I apologize for the long break. I'm restarting this activity
-> > > > and have taken care of all previous review comments shared.
-> > > > v1:
-> > > > https://lore.kernel.org/all/20210518174618.42089-1-shradha.t@samsung
-> > > > .c
-> > > > om/T/
-> > > >
-> > >
-> > > There is already a series floating to add similar functionality via
-> > > perf
-> > > subsystem: https://lore.kernel.org/linux-pci/20231121013400.18367-1-
-> > > xueshuai@linux.alibaba.com/
-> > >
-> > > - Mani
-> > >
-> > 
-> > Hi Mani,
-> > 
-> > The series proposed in perf includes only time based-analysis and event counters
-> > which will monitor performance (Group 6 and 7). The patch or framework that we
-> > have proposed includes debug information, error injection facility and error
-> > counters (Group 0 - 5) which are not included as part of the functionality
-> > implemented via perf. In my opinion, these functionalities don't count as
-> > performance monitoring or counters but rather as debug counters. How about
-> > we take this up as a debugfs framework as proposed in my patch?
-> > Or if others feel it can be taken via perf driver then I am happy to extend the perf
-> > driver if authors do not have objection. Let me know what you think of this?
-> > Meanwhile I will review the perf patches and share my feedback.
-> > 
-> 
-> Hello Mani,
-> Any update on the above comment? IMO, even though the perf patches and this
-> patchset are both part of the DWC vendor specific capability - RASDES,  they
-> cover different features. The perf file includes performance based parameters
-> like time-based analysis and event counters for count of packets whereas this
-> patchset includes debugging fields, error injection and event counters for count
-> of errors. I think having a separate debugfs file fits more but would you suggest
-> we extend the perf file itself? 
-> 
+On Wed, Jan 03, 2024 at 06:28:14PM +0800, Kemeng Shi wrote:
+> Remove unused parameter group in ext4_mb_choose_next_group_*().
 
-For the error injection and counters, we already have the EDAC framework. So
-adding them in the DWC driver doesn't make sense to me.
+Hey Kemeng, 
 
-But first check with the perf driver author if they have any plans on adding the
-proposed functionality. If they do not have any plan or not working on it, then
-look into EDAC.
+Just a small thing, the parameter we are removing is "ngroups" rather
+than "group" so maybe fix that in the commit message. 
 
-- Mani
+Other than that looks good, feel free to add
 
-> Shradha
+Reviewed-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
 > 
-> > > > Shradha Todi (3):
-> > > >   PCI: dwc: Add support for vendor specific capability search
-> > > >   PCI: debugfs: Add support for RASDES framework in DWC
-> > > >   PCI: dwc: Create debugfs files in DWC driver
-> > > >
-> > > >  drivers/pci/controller/dwc/Kconfig            |   8 +
-> > > >  drivers/pci/controller/dwc/Makefile           |   1 +
-> > > >  .../controller/dwc/pcie-designware-debugfs.c  | 476
-> > > ++++++++++++++++++
-> > > >  .../controller/dwc/pcie-designware-debugfs.h  |   0
-> > > >  drivers/pci/controller/dwc/pcie-designware.c  |  20 +
-> > > > drivers/pci/controller/dwc/pcie-designware.h  |  18 +
-> > > >  6 files changed, 523 insertions(+)
-> > > >  create mode 100644
-> > > > drivers/pci/controller/dwc/pcie-designware-debugfs.c
-> > > >  create mode 100644
-> > > > drivers/pci/controller/dwc/pcie-designware-debugfs.h
-> > > >
-> > > > --
-> > > > 2.17.1
-> > > >
-> > >
-> > > --
-> > > மணிவண்ணன் சதாசிவம்
+> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> ---
+>  fs/ext4/mballoc.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 > 
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+> index 9f9b8dd06..765b62729 100644
+> --- a/fs/ext4/mballoc.c
+> +++ b/fs/ext4/mballoc.c
+> @@ -870,7 +870,7 @@ mb_update_avg_fragment_size(struct super_block *sb, struct ext4_group_info *grp)
+>   * cr level needs an update.
+>   */
+>  static void ext4_mb_choose_next_group_p2_aligned(struct ext4_allocation_context *ac,
+> -			enum criteria *new_cr, ext4_group_t *group, ext4_group_t ngroups)
+> +			enum criteria *new_cr, ext4_group_t *group)
+>  {
