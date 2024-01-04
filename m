@@ -1,183 +1,179 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 827561EA95
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 09:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rLJin-00009h-2S; Thu, 04 Jan 2024 10:09:01 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rLJil-000J08-2c; Thu, 04 Jan 2024 10:08:59 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rLJik-003WEi-3A;
-	Thu, 04 Jan 2024 10:08:58 +0100
-Date: Thu, 4 Jan 2024 10:08:58 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Cc: Arnd Bergmann <arnd@arndb.de>, Robert Jarzmik <robert.jarzmik@free.fr>, 
-	Lubomir Rintel <lkundrak@v3.sk>, zhang songyi <zhang.songyi@zte.com.cn>, soc@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH RFC RESEND] soc: pxa: ssp: Cast to enum pxa_ssp_type
- instead of int
-Message-ID: <rj7ijuyy47jrffi6sk7wikqo3rnutz2swkdrznyegalylacawz@jdncegf3elct>
-References: <20240103210604.16877-1-duje.mihanovic@skole.hr>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69721208A3;
+	Thu,  4 Jan 2024 09:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fep0xAri"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a279ce3aab9so30820766b.0;
+        Thu, 04 Jan 2024 01:10:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704359416; x=1704964216; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dPBMZpIwLe97eSOARV8n7U9n/s5Z04R3IqnKQQS8rw8=;
+        b=Fep0xArifMBgUG1v3XAp15oxBTKzYCyFUjLQzD1vVBZXGUuE6h3jtO0/lIVSbgVyDi
+         w86qdchuWurAaxXjKN4wYG4WK4X9SBzb09OeD5I7sN2kUrVgdJidOQtAGRcdgV4Ko4I0
+         okOvQNWLVfLUMqf1iTb3bThbT6iIJf5+NsASjKCBx3mgmJ42c7fVy+18daVuDBb2dsYb
+         42ldz0vQwk+6+FGudqddTG37rXm7+AfiNiaRCMobLvph994Xhgn9pCzfawWsNyqjoRXZ
+         g0u4BP9G4AyMts4u6TsYlTz1eRA8flHrsyrq7A5AxomkGYWIXsqDSTpBX4yCaf05y6tZ
+         g8WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704359416; x=1704964216;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dPBMZpIwLe97eSOARV8n7U9n/s5Z04R3IqnKQQS8rw8=;
+        b=KXLjO1Ic9tdbfli3QXP7UlrEmMyNVqWsUHwrIW+CcA9oUnnb40F6B04I+UIKgb3Guc
+         ixtdPk3RuQBYdAmaw6VqG8fsgsfr7E8miMC6hoWpXFcGMpPMLRsoR1RaYrPRkFHZMUis
+         RFPKFqc8aN3rBz5//sEQpcUBXm8kL2tBSMeqMD9b3TaLwpHqM7hJU4dRr0LSLy+LeKfc
+         jh1JGiTAmbYlBm7jk9GpfwgV9FsfgM2KJMV6A3O0Bpmoyjlrzj00ivqX4AvMHnEPZJVa
+         IxqDBdd/4rvEgoJs/UflDC4waQIAElmQCBC00qFs3qiXMmaifWAtWueFEaXv8dKrm6bO
+         4+lw==
+X-Gm-Message-State: AOJu0YwXmOAmrJ5HunfijZYhDdRUMcTqErWOyy5tlfaiWL+VOa7JuxIi
+	SonWS6Ow/pe5R8ODqWT0xG9dOxbx/h8=
+X-Google-Smtp-Source: AGHT+IH9GFQFLxaGbfTd716l9XCq8gwK4NcEI5lScAk+/vXXAtSZomgstLN/aGp2NblEnpsbdZRUPg==
+X-Received: by 2002:a17:907:e8e:b0:a27:efb8:6d51 with SMTP id ho14-20020a1709070e8e00b00a27efb86d51mr114313ejc.228.1704359416289;
+        Thu, 04 Jan 2024 01:10:16 -0800 (PST)
+Received: from [192.168.26.149] (031011218106.poznan.vectranet.pl. [31.11.218.106])
+        by smtp.googlemail.com with ESMTPSA id ld11-20020a170906f94b00b00a28d1d73654sm502052ejb.207.2024.01.04.01.10.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jan 2024 01:10:15 -0800 (PST)
+Message-ID: <8c8d2d38-faf2-47f2-bfbf-2e4842dded47@gmail.com>
+Date: Thu, 4 Jan 2024 10:10:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="52dkhi32d3pgibs4"
-Content-Disposition: inline
-In-Reply-To: <20240103210604.16877-1-duje.mihanovic@skole.hr>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 1/6] dt-bindings: nvmem: layouts: add U-Boot
+ environment variables layout
+Content-Language: en-US
+To: Miquel Raynal <miquel.raynal@bootlin.com>, Rob Herring <robh@kernel.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Michael Walle <michael@walle.cc>, linux-mtd@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, u-boot@lists.denx.de,
+ =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+References: <20231221173421.13737-1-zajec5@gmail.com>
+ <20240104001129.GA2045237-robh@kernel.org> <20240104085839.5624c354@xps-13>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+In-Reply-To: <20240104085839.5624c354@xps-13>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+On 4.01.2024 08:58, Miquel Raynal wrote:
+> robh@kernel.org wrote on Wed, 3 Jan 2024 17:11:29 -0700:
+>> On Thu, Dec 21, 2023 at 06:34:16PM +0100, Rafał Miłecki wrote:
+>>> From: Rafał Miłecki <rafal@milecki.pl>
+>>>
+>>> U-Boot env data is a way of storing firmware variables. It's a format
+>>> that can be used of top of various storage devices. Its binding should
+>>> be an NVMEM layout instead of a standalone device.
+>>>
+>>> This patch adds layout binding which allows using it on top of MTD NVMEM
+>>> device as well as any other. At the same time it deprecates the old
+>>> combined binding.
+>>
+>> I don't understand the issue. From a DT perspective, there isn't. A
+>> partition is not a device, but is describing the layout of storage
+>> already.
+> 
+> Actually I think what Rafał wants to do goes in the right direction but
+> I also understand from a binding perspective it may be a little
+> confusing, even more if we consider "NVMEM" a Linux specific concept.
+> 
+> There is today a "u-boot env" NVMEM *device* description which
+> almost sits at the same level as eg. an eeprom device. We cannot
+> compare "an eeprom device" and "a u-boot environment" of course. But
+> that's truly what is currently described.
+> 
+> * Current situation
+> 
+> 	Flash device -> U-Boot env layout -> NVMEM cells
+> 
+> * Improved situation
+> 
+> 	Any storage device -> NVMEM -> U-Boot env layout -> NVMEM cells
+> 
+> The latter is of course the most relevant description as we expect
+> storage devices to expose a storage-agnostic interface (NVMEM in
+> this case) which can then be parsed (by NVMEM layouts) in a storage
+> agnostic way.
+> 
+> In the current case, the current U-Boot env binding tells people to
+> declare the env layout on top of a flash device (only). The current
+> description also expects a partition node which is typical to flash
+> devices. Whereas what we should have described in the first place is a
+> layout that applies on any kind of NVMEM device.
+> 
+> Bonus point: We've been working the last couple years on clarifying
+> bindings, especially with mtd partitions (with the partitions{}
+> container) and NVMEM layouts (with the nvmem-layout{} container).
+> The switch proposed in this patch makes use of the latter, of course.
+
+Thanks Miquèl for filling bits I missed in commit description. Despite
+years in Linux/DT I still struggle with more complex designs
+documentation.
 
 
---52dkhi32d3pgibs4
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+As per Rob's comment I think I see his point and a possible design
+confusion. If you look from a pure DT perspective then "partitions" and
+"nvmem-layout" serve a very similar purpose. They describe device's data
+content structure. For fixed structures we have very similar
+"fixed-partitions" and "fixed-cells".
 
-[adding lakml to Cc for wider audience]
+If we were to design those bindings today I'm wondering if we couldn't
+have s/partitions/layout/ and s/nvmem-layout/layout/.
 
-On Wed, Jan 03, 2024 at 10:06:03PM +0100, Duje Mihanovi=C4=87 wrote:
-> On ARM64 platforms, id->data is a 64-bit value and casting it to a
-> 32-bit integer causes build errors. Cast it to the corresponding enum
-> instead.
->=20
-> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
-> ---
-> This patch is necessary for my Marvell PXA1908 series to compile successf=
-ully
-> with allyesconfig:
-> https://lore.kernel.org/all/20231102-pxa1908-lkml-v7-0-cabb1a0cb52b@skole=
-=2Ehr/
-> ---
->  drivers/soc/pxa/ssp.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/soc/pxa/ssp.c b/drivers/soc/pxa/ssp.c
-> index a1e8a07f7275..e2ffd8fd7e13 100644
-> --- a/drivers/soc/pxa/ssp.c
-> +++ b/drivers/soc/pxa/ssp.c
-> @@ -152,11 +152,11 @@ static int pxa_ssp_probe(struct platform_device *pd=
-ev)
->  	if (dev->of_node) {
->  		const struct of_device_id *id =3D
->  			of_match_device(of_match_ptr(pxa_ssp_of_ids), dev);
-> -		ssp->type =3D (int) id->data;
-> +		ssp->type =3D (enum pxa_ssp_type) id->data;
+Rob: other than having different bindings for MTD vs. NVMEM layouts I
+think they overall design makes sense. A single device may have content
+structurized on more than 1 level:
+1. You may have fixed layout at top level (multiple partitions)
+2. Single partitions may have their own layouts (like U-Boot env data)
 
-I wonder if this is a long-term fix. The error that the compiler throws
-is:
+Maybe ideally above should look more like:
 
-	drivers/soc/pxa/ssp.c:155:29: error: cast from pointer to integer of diffe=
-rent size [-Werror=3Dpointer-to-int-cast]
-	  155 |                 ssp->type =3D (int) id->data;
-	      |                             ^
+flash@0 {
+	compatible = "<flash-compatible>";
 
-enum pxa_ssp_type is an integer type, too, and its width could be
-smaller than 64 bit, too.
+	layout {
+		compatible = "fixed-layout";
+		#address-cells = <1>;
+		#size-cells = <1>;
 
-The following would also help:
+		partition@0 {
+			reg = <0x0 0x40000>;
+			label = "u-boot";
+		};
 
-diff --git a/drivers/soc/pxa/ssp.c b/drivers/soc/pxa/ssp.c
-index a1e8a07f7275..095d997eb886 100644
---- a/drivers/soc/pxa/ssp.c
-+++ b/drivers/soc/pxa/ssp.c
-@@ -96,13 +96,13 @@ EXPORT_SYMBOL(pxa_ssp_free);
-=20
- #ifdef CONFIG_OF
- static const struct of_device_id pxa_ssp_of_ids[] =3D {
--	{ .compatible =3D "mrvl,pxa25x-ssp",	.data =3D (void *) PXA25x_SSP },
--	{ .compatible =3D "mvrl,pxa25x-nssp",	.data =3D (void *) PXA25x_NSSP },
--	{ .compatible =3D "mrvl,pxa27x-ssp",	.data =3D (void *) PXA27x_SSP },
--	{ .compatible =3D "mrvl,pxa3xx-ssp",	.data =3D (void *) PXA3xx_SSP },
--	{ .compatible =3D "mvrl,pxa168-ssp",	.data =3D (void *) PXA168_SSP },
--	{ .compatible =3D "mrvl,pxa910-ssp",	.data =3D (void *) PXA910_SSP },
--	{ .compatible =3D "mrvl,ce4100-ssp",	.data =3D (void *) CE4100_SSP },
-+	{ .compatible =3D "mrvl,pxa25x-ssp",	.driver_data =3D PXA25x_SSP },
-+	{ .compatible =3D "mvrl,pxa25x-nssp",	.driver_data =3D PXA25x_NSSP },
-+	{ .compatible =3D "mrvl,pxa27x-ssp",	.driver_data =3D PXA27x_SSP },
-+	{ .compatible =3D "mrvl,pxa3xx-ssp",	.driver_data =3D PXA3xx_SSP },
-+	{ .compatible =3D "mvrl,pxa168-ssp",	.driver_data =3D PXA168_SSP },
-+	{ .compatible =3D "mrvl,pxa910-ssp",	.driver_data =3D PXA910_SSP },
-+	{ .compatible =3D "mrvl,ce4100-ssp",	.driver_data =3D CE4100_SSP },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, pxa_ssp_of_ids);
-@@ -152,7 +152,7 @@ static int pxa_ssp_probe(struct platform_device *pdev)
- 	if (dev->of_node) {
- 		const struct of_device_id *id =3D
- 			of_match_device(of_match_ptr(pxa_ssp_of_ids), dev);
--		ssp->type =3D (int) id->data;
-+		ssp->type =3D id->driver_data;
- 	} else {
- 		const struct platform_device_id *id =3D
- 			platform_get_device_id(pdev);
-diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetabl=
-e.h
-index f458469c5ce5..fbe16089e4bb 100644
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -283,7 +283,10 @@ struct of_device_id {
- 	char	name[32];
- 	char	type[32];
- 	char	compatible[128];
--	const void *data;
-+	union {
-+		const void *data;
-+		kernel_ulong_t driver_data;
-+	};
- };
-=20
- /* VIO */
+		partition@40000 {
+			reg = <0x40000 0x10000>;
+			label = "u-boot-env";
 
-For this driver the change would be nice, as several casts can be
-dropped.
+			layout {
+				compatible = "u-boot,env-layout";
+			};
+		};
 
->  	} else {
->  		const struct platform_device_id *id =3D
->  			platform_get_device_id(pdev);
-> -		ssp->type =3D (int) id->driver_data;
-> +		ssp->type =3D (enum pxa_ssp_type) id->driver_data;
+		partition@50000 {
+			reg = <0x50000 0x100000>;
+			label = "u-boot";
+		};
+	};
+};
 
-This one isn't problematic in my build configuration and you could just
-drop the cast completely.
+but I can clearly see a use for nested "layout"s. As I said maybe we
+just shouldn't be so open in calling those MTD or NVMEM devices as that
+is kind of Linux specific.
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---52dkhi32d3pgibs4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWWdakACgkQj4D7WH0S
-/k5kkAf/SdNq0pMzzew8DK1KS9BHkwqYm63O609O6pP+m+aJlHmSt2HGFPIhEV4I
-aGasfXdwyiF+QJ3oGOmBA4j7+AcGAB5sog1Ofhh8GzOAft3gntrF/TiQhCXHHUNX
-tH7M/v5gqdwBwDHvyF6b8LPNL/1LZ784Gtiso+G6geuTmA7veXkaW4gXuFTvWJfT
-dtEvYqrlZharOUHKEtBF2Yazt42zub/pqDP1ZNgvvuT+1WCLMdCRdJjDZRGdC3/b
-Nl6ANRbOhTZPhvAzuryKug8e9tBAhqdLR0UhfXJ/b9shUr8zlLB96Rgw5q+HWFcY
-qjNWazn8ABaFDQn6pX3Ep1O2SzGk1g==
-=ZZi0
------END PGP SIGNATURE-----
-
---52dkhi32d3pgibs4--
+I'm not sure if we should try renaming "nvmem-layout" to "layout" or
+"partitions" in similar way at this point.
