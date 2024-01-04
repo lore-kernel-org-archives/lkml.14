@@ -1,45 +1,46 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF88728E0D
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 21:00:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304F02C197
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 21:00:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eDe8VMqu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dszp85vl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704402002;
+	s=mimecast20190719; t=1704402003;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D0cKn7qdYds079CLOrGNBapSvJeS5p31NAQ7WgjQqmE=;
-	b=eDe8VMquEnT5cgNR0+HvWO2+/1M5YP2u1hkUEU0v34GOOkLizUl3L2JASqthjhR4AkqS1r
-	Kv0voWKKI1HPRmuqDFh1n6g0lzdpTXnUesfTWjyvII+QNeN2+tPL4EAAluvyIMt/QI6B5Y
-	4U+IU1OCi7I703R7q1nZtvQCHqlZiqM=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=O+nTqWfxAs5egWeWSamTaC98/2rprnp2o0jYIMLBSrc=;
+	b=Dszp85vlXcX64hxfTE911WX4eXOLA2QTLBGspnTVbSzUgqabrz+8b5t5eilUswvKkV/8V+
+	KqM1oScAqjkkdMNNRfrFZw/NRHO/zU0U+m6yphPoo2/4FrAzBl0eziaLkiUzztR81PyUdg
+	ldF8FTbPvOvRZEHFfRMGPv4IgkqpLIs=
 Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-279-GE2DdKgbMG6iYTBR-hY7JA-1; Thu,
- 04 Jan 2024 16:00:01 -0500
-X-MC-Unique: GE2DdKgbMG6iYTBR-hY7JA-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-568-uHN8fklkP_-yWiSAiu-pGQ-1; Thu,
+ 04 Jan 2024 16:00:00 -0500
+X-MC-Unique: uHN8fklkP_-yWiSAiu-pGQ-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C4B4D1C18CC3;
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1A90729AA3BB;
 	Thu,  4 Jan 2024 21:00:00 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id A7F1B1121313;
-	Thu,  4 Jan 2024 21:00:00 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 9E70A1121306;
+	Thu,  4 Jan 2024 20:59:59 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
-Cc: ajones@ventanamicro.com
-Subject: [PATCH 4/4] treewide: remove CONFIG_HAVE_KVM
-Date: Thu,  4 Jan 2024 15:59:59 -0500
-Message-Id: <20240104205959.4128825-5-pbonzini@redhat.com>
-In-Reply-To: <20240104205959.4128825-1-pbonzini@redhat.com>
-References: <20240104205959.4128825-1-pbonzini@redhat.com>
+Cc: ajones@ventanamicro.com,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	x86@kernel.org,
+	kbingham@kernel.org
+Subject: [PATCH 0/4] Replace CONFIG_HAVE_KVM with more appropriate symbols.
+Date: Thu,  4 Jan 2024 15:59:55 -0500
+Message-Id: <20240104205959.4128825-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,217 +51,63 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-It has no users anymore.  While at it also remove a dependency on X86
-that is redundant within arch/x86.
+CONFIG_HAVE_KVM is currently used with three meanings:
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/arm64/Kconfig         | 1 -
- arch/arm64/kvm/Kconfig     | 1 -
- arch/loongarch/Kconfig     | 1 -
- arch/loongarch/kvm/Kconfig | 1 -
- arch/mips/Kconfig          | 9 ---------
- arch/s390/Kconfig          | 1 -
- arch/s390/kvm/Kconfig      | 1 -
- arch/x86/Kconfig           | 1 -
- arch/x86/kvm/Kconfig       | 2 --
- virt/kvm/Kconfig           | 3 ---
- 10 files changed, 21 deletions(-)
+- some architectures use it to enabled the KVM config proper, depending
+  on CPU capabilities (MIPS)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 7b071a00425d..dbf08f8b66dd 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -214,7 +214,6 @@ config ARM64
- 	select HAVE_HW_BREAKPOINT if PERF_EVENTS
- 	select HAVE_IOREMAP_PROT
- 	select HAVE_IRQ_TIME_ACCOUNTING
--	select HAVE_KVM
- 	select HAVE_MOD_ARCH_SPECIFIC
- 	select HAVE_NMI
- 	select HAVE_PERF_EVENTS
-diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-index ad5ce0454f17..d8e40d7f89f6 100644
---- a/arch/arm64/kvm/Kconfig
-+++ b/arch/arm64/kvm/Kconfig
-@@ -20,7 +20,6 @@ if VIRTUALIZATION
- 
- menuconfig KVM
- 	bool "Kernel-based Virtual Machine (KVM) support"
--	depends on HAVE_KVM
- 	select KVM_COMMON
- 	select KVM_GENERIC_HARDWARE_ENABLING
- 	select KVM_GENERIC_MMU_NOTIFIER
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index ee123820a476..78330e0ca2f2 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -129,7 +129,6 @@ config LOONGARCH
- 	select HAVE_KPROBES
- 	select HAVE_KPROBES_ON_FTRACE
- 	select HAVE_KRETPROBES
--	select HAVE_KVM
- 	select HAVE_MOD_ARCH_SPECIFIC
- 	select HAVE_NMI
- 	select HAVE_PCI
-diff --git a/arch/loongarch/kvm/Kconfig b/arch/loongarch/kvm/Kconfig
-index 3b284b7e63ad..62c05d6e175c 100644
---- a/arch/loongarch/kvm/Kconfig
-+++ b/arch/loongarch/kvm/Kconfig
-@@ -20,7 +20,6 @@ if VIRTUALIZATION
- config KVM
- 	tristate "Kernel-based Virtual Machine (KVM) support"
- 	depends on AS_HAS_LVZ_EXTENSION
--	depends on HAVE_KVM
- 	select HAVE_KVM_DIRTY_RING_ACQ_REL
- 	select HAVE_KVM_VCPU_ASYNC_IOCTL
- 	select KVM_COMMON
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 3eb3239013d9..cf5bb1c756e6 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -1262,7 +1262,6 @@ config CPU_LOONGSON64
- 	select MIPS_FP_SUPPORT
- 	select GPIOLIB
- 	select SWIOTLB
--	select HAVE_KVM
- 	help
- 	  The Loongson GSx64(GS264/GS464/GS464E/GS464V) series of processor
- 	  cores implements the MIPS64R2 instruction set with many extensions,
-@@ -1375,7 +1374,6 @@ config CPU_MIPS32_R2
- 	select CPU_SUPPORTS_32BIT_KERNEL
- 	select CPU_SUPPORTS_HIGHMEM
- 	select CPU_SUPPORTS_MSA
--	select HAVE_KVM
- 	help
- 	  Choose this option to build a kernel for release 2 or later of the
- 	  MIPS32 architecture.  Most modern embedded systems with a 32-bit
-@@ -1391,7 +1389,6 @@ config CPU_MIPS32_R5
- 	select CPU_SUPPORTS_HIGHMEM
- 	select CPU_SUPPORTS_MSA
- 	select CPU_SUPPORTS_VZ
--	select HAVE_KVM
- 	select MIPS_O32_FP64_SUPPORT
- 	help
- 	  Choose this option to build a kernel for release 5 or later of the
-@@ -1408,7 +1405,6 @@ config CPU_MIPS32_R6
- 	select CPU_SUPPORTS_HIGHMEM
- 	select CPU_SUPPORTS_MSA
- 	select CPU_SUPPORTS_VZ
--	select HAVE_KVM
- 	select MIPS_O32_FP64_SUPPORT
- 	help
- 	  Choose this option to build a kernel for release 6 or later of the
-@@ -1444,7 +1440,6 @@ config CPU_MIPS64_R2
- 	select CPU_SUPPORTS_HIGHMEM
- 	select CPU_SUPPORTS_HUGEPAGES
- 	select CPU_SUPPORTS_MSA
--	select HAVE_KVM
- 	help
- 	  Choose this option to build a kernel for release 2 or later of the
- 	  MIPS64 architecture.  Many modern embedded systems with a 64-bit
-@@ -1463,7 +1458,6 @@ config CPU_MIPS64_R5
- 	select CPU_SUPPORTS_MSA
- 	select MIPS_O32_FP64_SUPPORT if 32BIT || MIPS32_O32
- 	select CPU_SUPPORTS_VZ
--	select HAVE_KVM
- 	help
- 	  Choose this option to build a kernel for release 5 or later of the
- 	  MIPS64 architecture.  This is a intermediate MIPS architecture
-@@ -1482,7 +1476,6 @@ config CPU_MIPS64_R6
- 	select CPU_SUPPORTS_MSA
- 	select MIPS_O32_FP64_SUPPORT if 32BIT || MIPS32_O32
- 	select CPU_SUPPORTS_VZ
--	select HAVE_KVM
- 	help
- 	  Choose this option to build a kernel for release 6 or later of the
- 	  MIPS64 architecture.  New MIPS processors, starting with the Warrior
-@@ -1500,7 +1493,6 @@ config CPU_P5600
- 	select CPU_SUPPORTS_VZ
- 	select CPU_MIPSR2_IRQ_VI
- 	select CPU_MIPSR2_IRQ_EI
--	select HAVE_KVM
- 	select MIPS_O32_FP64_SUPPORT
- 	help
- 	  Choose this option to build a kernel for MIPS Warrior P5600 CPU.
-@@ -1621,7 +1613,6 @@ config CPU_CAVIUM_OCTEON
- 	select USB_OHCI_BIG_ENDIAN_MMIO if CPU_BIG_ENDIAN
- 	select MIPS_L1_CACHE_SHIFT_7
- 	select CPU_SUPPORTS_VZ
--	select HAVE_KVM
- 	help
- 	  The Cavium Octeon processor is a highly integrated chip containing
- 	  many ethernet hardware widgets for networking tasks. The processor
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index 3bec98d20283..b369ee2648c2 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -194,7 +194,6 @@ config S390
- 	select HAVE_KPROBES
- 	select HAVE_KPROBES_ON_FTRACE
- 	select HAVE_KRETPROBES
--	select HAVE_KVM
- 	select HAVE_LIVEPATCH
- 	select HAVE_MEMBLOCK_PHYS_MAP
- 	select HAVE_MOD_ARCH_SPECIFIC
-diff --git a/arch/s390/kvm/Kconfig b/arch/s390/kvm/Kconfig
-index f89bedbe63bd..7f17c5185dc3 100644
---- a/arch/s390/kvm/Kconfig
-+++ b/arch/s390/kvm/Kconfig
-@@ -19,7 +19,6 @@ if VIRTUALIZATION
- config KVM
- 	def_tristate y
- 	prompt "Kernel-based Virtual Machine (KVM) support"
--	depends on HAVE_KVM
- 	select PREEMPT_NOTIFIERS
- 	select HAVE_KVM_CPU_RELAX_INTERCEPT
- 	select HAVE_KVM_VCPU_ASYNC_IOCTL
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 3762f41bb092..a3935a737c14 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -240,7 +240,6 @@ config X86
- 	select HAVE_FUNCTION_ERROR_INJECTION
- 	select HAVE_KRETPROBES
- 	select HAVE_RETHOOK
--	select HAVE_KVM
- 	select HAVE_LIVEPATCH			if X86_64
- 	select HAVE_MIXED_BREAKPOINTS_REGS
- 	select HAVE_MOD_ARCH_SPECIFIC
-diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index c8e62a371d24..419a72ed307a 100644
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -7,7 +7,6 @@ source "virt/kvm/Kconfig"
- 
- menuconfig VIRTUALIZATION
- 	bool "Virtualization"
--	depends on HAVE_KVM || X86
- 	default y
- 	help
- 	  Say Y here to get to see options for using your Linux host to run other
-@@ -20,7 +19,6 @@ if VIRTUALIZATION
- 
- config KVM
- 	tristate "Kernel-based Virtual Machine (KVM) support"
--	depends on HAVE_KVM
- 	depends on HIGH_RES_TIMERS
- 	depends on X86_LOCAL_APIC
- 	select PREEMPT_NOTIFIERS
-diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
-index cce5c03ecc92..4ecb6daf3f91 100644
---- a/virt/kvm/Kconfig
-+++ b/virt/kvm/Kconfig
-@@ -1,9 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- # KVM common configuration items and defaults
- 
--config HAVE_KVM
--       bool
--
- config KVM_COMMON
-        bool
-        select EVENTFD
+- some architectures use it to enable host-side code that is not part of
+  the KVM module (x86)
+
+- to enable common Kconfigs required by all architectures that support
+  KVM, currently CONFIG_EVENTFD
+
+These three meanings can be replaced respectively by an architecture-
+specific Kconfig, by IS_ENABLED(CONFIG_KVM), or by a new Kconfig symbol
+that is in turn selected by the architecture-specific "config KVM".
+This is what each of the first three patches does.  After this,
+CONFIG_HAVE_KVM is unused and can be removed.
+
+This fixes architectures (PPC and RISC-V) that do not have CONFIG_HAVE_KVM=y
+and therefore fail to select CONFIG_EVENTFD.  Patch 1 can be quickly
+applied to 6.8 to fix this build failure, while the rest can be delayed
+to the early -rc period or 6.9 if desired.
+
+Paolo
+
+
+Paolo Bonzini (4):
+  KVM: introduce CONFIG_KVM_COMMON
+  MIPS: introduce Kconfig for MIPS VZ
+  x86, vfio, gdb: replace CONFIG_HAVE_KVM with IS_ENABLED(CONFIG_KVM)
+  treewide: remove CONFIG_HAVE_KVM
+
+ arch/arm64/Kconfig                       |  1 -
+ arch/arm64/kvm/Kconfig                   |  2 +-
+ arch/loongarch/Kconfig                   |  1 -
+ arch/loongarch/kvm/Kconfig               |  2 +-
+ arch/mips/Kconfig                        | 18 +++++++++---------
+ arch/mips/kvm/Kconfig                    |  3 ++-
+ arch/powerpc/kvm/Kconfig                 |  1 +
+ arch/riscv/kvm/Kconfig                   |  1 +
+ arch/s390/Kconfig                        |  1 -
+ arch/s390/kvm/Kconfig                    |  2 +-
+ arch/x86/Kconfig                         |  1 -
+ arch/x86/include/asm/hardirq.h           |  2 +-
+ arch/x86/include/asm/idtentry.h          |  2 +-
+ arch/x86/include/asm/irq.h               |  2 +-
+ arch/x86/include/asm/irq_vectors.h       |  2 +-
+ arch/x86/kernel/idt.c                    |  2 +-
+ arch/x86/kernel/irq.c                    |  4 ++--
+ arch/x86/kvm/Kconfig                     |  3 +--
+ drivers/vfio/vfio.h                      |  2 +-
+ drivers/vfio/vfio_main.c                 |  4 ++--
+ scripts/gdb/linux/constants.py.in        |  6 +++++-
+ scripts/gdb/linux/interrupts.py          |  2 +-
+ tools/arch/x86/include/asm/irq_vectors.h |  2 +-
+ virt/kvm/Kconfig                         |  2 +-
+ 24 files changed, 35 insertions(+), 33 deletions(-)
+
 -- 
 2.39.1
 
