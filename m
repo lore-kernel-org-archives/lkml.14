@@ -1,194 +1,196 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6C1219EE
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 12:39:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A04B219EC
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 12:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="q5/tUaq3"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a277339dcf4so50894666b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 04:39:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z03cvwJf"
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-466f045f8f7so112010137.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 04:40:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1704371971; x=1704976771; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1704372005; x=1704976805; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VzvOTQrYsC64lRjX0Rt7BbitXgRl8QC6qZq6acvuD1g=;
-        b=q5/tUaq30XHM3OWFF3UKTf1vU4Tvhlmb6HLtzdTo7SURp6qP4xAdD8r4vIIbwvrzld
-         C5CSEmsEDpwnx2aml7Noy4ANWFjqAdq/zCBcdxVc5LLYI6U7B8qWLTrumKh0HP2kc6ES
-         dxxvNlvmgZUEtUAEGC4NRqG/RRyNbM2eYkGlwtzZ1WD+4wmTNRr8Bg0hn2s3XuBMjW3S
-         rlM7fLWtvx5Y2biaOSA4Gc31Z2lY2tAAO6DOlaTRg4kmOnZzBqYw8DG2xAqnFEHgRLve
-         iJEBxGsfa8dRLP5zUabC7tKHg8PW9oPKlfIXk4/gkaEouKo2QjXZKpyy2Z9rGv84YGYD
-         Lq9Q==
+        bh=VJVxiZQHIN91U6hoH3sFs+qS8wBRAeVdMoW+bqKjLsI=;
+        b=z03cvwJfmlDcq/XlxlyG1xGfmKfXcF61ztOCzckc9cwlvsbPABIMwZ3G6q2+PUMDHr
+         pSGdKHjOx/PYdPsTFBTMXtak5GUlUTLFfbOW+vNWVfC3RudwIpDJMXEFYH8OPuJgCa5C
+         zAaIgxWmHqwnzPk66MNzvHyjbohq5eD6p7u8Zp1rTcZgu54BCSxq4ORrcVZVu6WJRXyH
+         OfwUOWckJ1wUbI9GlXxmmgLZvWbAS9dm0uiu50nl441qMpzwu4I5VyVBfPURNO7OKn6G
+         1AlOb4zaocRuZnBzsZui1p/9aCaEkQSWJ5SJbgvsmPuBbpnfuat6ZmWWabu020GeZ8FO
+         jMuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704371971; x=1704976771;
+        d=1e100.net; s=20230601; t=1704372005; x=1704976805;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VzvOTQrYsC64lRjX0Rt7BbitXgRl8QC6qZq6acvuD1g=;
-        b=gqz1jw3PRLHcN//RhDKvWNRp/kbMxlfBLrXZkDPqWp0yHHN4OtVGRI45q2ifvxYh66
-         tQmyw8S1x8dRxpWcWs3nmtRo/ILgP1579JXxnH/F//nEbNEutgl92YJoa87+5BJG/3Zc
-         1o1uib574GJ5ih7AdMAfEvOi8I3wPo+2JdubgqOlWbqzirp3ZeETcgcwIRG5sc8liT3Q
-         Dr/wufN5VPObGTkfF/TA63otVc4RFpI2g5B12iwam7n8G1nYiAZbtg0NdwDZhiBinf1B
-         K3wTXE/xGGtnEyrPr8gQ01XbVZmW7v55at1x/nhBsxeQL2dgnHP8p2WXD2c0EGBxtJmc
-         WMKg==
-X-Gm-Message-State: AOJu0YwemaEm2hhbtwEk/Br2EEgQcfWiePpJKhsf8OrT6gRctL43VoSH
-	b9kksyCWqo8g+NyWoTuZglmBuiHOvOqNUuIJN5k1K5ou2URAWQ==
-X-Google-Smtp-Source: AGHT+IEeRR4I3uWL5TxDjZ3qrupVtXYMaBZuKr0o+l32Kjda9sN5IKWIaRFz0g22rzETebnGyfVZeFTdsQogwR+pnjM=
-X-Received: by 2002:a17:907:76a8:b0:a26:9916:a46b with SMTP id
- jw8-20020a17090776a800b00a269916a46bmr317729ejc.33.1704371971601; Thu, 04 Jan
- 2024 04:39:31 -0800 (PST)
+        bh=VJVxiZQHIN91U6hoH3sFs+qS8wBRAeVdMoW+bqKjLsI=;
+        b=G1XlIJBzcuLg6ZARgcbxEqZx6o+O01YZawZYiFAk6JasSBkQs0qEkPGGRKp/0Msbyv
+         NhvL3TJX8lkFneIK6zRvx8i/w/XJqMI4/E1sVQLT84/QGPwJaiTUbfvewG8SWbk0rQdJ
+         5pYoNcVMTIRxauWrvGRlDnS+mESixTrEoCDBQ1e3gQ45Yk6veYbivHSJ9gBntzzFJlzF
+         SOM/HbxhuATTyCvSXfh96W4OkNhL1M6BHa+Q6qv798fqm6vgGHEiBqEr7s/uGbGm1MV7
+         ue5sEQFCVvZaZwUSTXvCCan/bqxxGN5DDKMdjgh12bO9pRnKPaXorsN0UPS2RZUEwMgQ
+         n4/A==
+X-Gm-Message-State: AOJu0YzCzgCJfSNGnlJOiY4sHlisjdB1inJ6254KLIFpBms4WZqi+d/B
+	+J3tkBgN8VKDt7nC3pzzC6qY9aCNoTHsbqmauV35P3TaC1Pwmw==
+X-Google-Smtp-Source: AGHT+IFXZQnw4BjI/Ojqt4U9SS96DChsIyTcnDo26dSAdPNqc2H5P2Rn4C5dOz+iO2Tpq0LVLHcbkoI/wbivsFDI6HM=
+X-Received: by 2002:a05:6102:358c:b0:467:ae65:b4e with SMTP id
+ h12-20020a056102358c00b00467ae650b4emr73008vsu.4.1704372005415; Thu, 04 Jan
+ 2024 04:40:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240102220134.3229156-1-samuel.holland@sifive.com> <20240102220134.3229156-9-samuel.holland@sifive.com>
-In-Reply-To: <20240102220134.3229156-9-samuel.holland@sifive.com>
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-Date: Thu, 4 Jan 2024 13:39:20 +0100
-Message-ID: <CAHVXubhKrC_7DEBXR_wCP9g7-KfWg9nuyim7+X1Ja2gh8s9+HA@mail.gmail.com>
-Subject: Re: [PATCH v4 08/12] riscv: mm: Introduce cntx2asid/cntx2version
- helper macros
-To: Samuel Holland <samuel.holland@sifive.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20240103164834.970234661@linuxfoundation.org> <99fe3993-51b5-4284-8a22-869764f393d8@linaro.org>
+ <32ebe3f1-49b7-4ad3-9ea5-ed2adbbd78da@linaro.org> <2024010427-kisser-canopy-763c@gregkh>
+In-Reply-To: <2024010427-kisser-canopy-763c@gregkh>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 4 Jan 2024 18:09:53 +0530
+Message-ID: <CA+G9fYvMRQ5QTkbGETUHDzVAyOXKEMvMdL0Ghr8cVzXOaUHifg@mail.gmail.com>
+Subject: Re: [PATCH 6.6 00/49] 6.6.10-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>, 
+	stable@vger.kernel.org, patches@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, 
+	shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, 
+	pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, 
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, 
+	conor@kernel.org, allen.lkml@gmail.com, leo@leolam.fr, 
+	johannes.berg@intel.com, Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 2, 2024 at 11:01=E2=80=AFPM Samuel Holland
-<samuel.holland@sifive.com> wrote:
+On Thu, 4 Jan 2024 at 13:29, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> When using the ASID allocator, the MM context ID contains two values:
-> the ASID in the lower bits, and the allocator version number in the
-> remaining bits. Use macros to make this separation more obvious.
->
-> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-> ---
->
-> (no changes since v1)
->
->  arch/riscv/include/asm/mmu.h |  3 +++
->  arch/riscv/mm/context.c      | 12 ++++++------
->  arch/riscv/mm/tlbflush.c     |  2 +-
->  3 files changed, 10 insertions(+), 7 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/mmu.h b/arch/riscv/include/asm/mmu.h
-> index 355504b37f8e..a550fbf770be 100644
-> --- a/arch/riscv/include/asm/mmu.h
-> +++ b/arch/riscv/include/asm/mmu.h
-> @@ -26,6 +26,9 @@ typedef struct {
->  #endif
->  } mm_context_t;
->
-> +#define cntx2asid(cntx)                ((cntx) & asid_mask)
-> +#define cntx2version(cntx)     ((cntx) & ~asid_mask)
-
-Not a big fan of the naming, I would have something like
-get_asid_from_context() and get_version_from_context() or something
-like that, but up to you of course.
-
-> +
->  void __init create_pgd_mapping(pgd_t *pgdp, uintptr_t va, phys_addr_t pa=
+> On Thu, Jan 04, 2024 at 01:15:45AM -0600, Daniel D=C3=ADaz wrote:
+> > Hello!
+> >
+> > On 03/01/24 10:10 p. m., Daniel D=C3=ADaz wrote:
+> > > Hello!
+> > >
+> > > On 03/01/24 10:55 a. m., Greg Kroah-Hartman wrote:
+> > > > This is the start of the stable review cycle for the 6.6.10 release=
+.
+> > > > There are 49 patches in this series, all will be posted as a respon=
+se
+> > > > to this one.  If anyone has any issues with these being applied, pl=
+ease
+> > > > let me know.
+> > > >
+> > > > Responses should be made by Fri, 05 Jan 2024 16:47:49 +0000.
+> > > > Anything received after that time might be too late.
+> > > >
+> > > > The whole patch series can be found in one patch at:
+> > > >     https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patc=
+h-6.6.10-rc1.gz
+> > > > or in the git tree and branch at:
+> > > >     git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git linux-6.6.y
+> > > > and the diffstat can be found below.
+> > > >
+> > > > thanks,
+> > > >
+> > > > greg k-h
+> > >
+> > > We're seeing a build regression with x86/GCC-8 and allmodconfig:
+> > >
+> > > -----8<-----
+> > >    In file included from /builds/linux/include/linux/string.h:294,
+> > >                     from /builds/linux/include/linux/bitmap.h:11,
+> > >                     from /builds/linux/include/linux/cpumask.h:12,
+> > >                     from /builds/linux/arch/x86/include/asm/paravirt.=
+h:17,
+> > >                     from /builds/linux/arch/x86/include/asm/cpuid.h:6=
+2,
+> > >                     from /builds/linux/arch/x86/include/asm/processor=
+.h:19,
+> > >                     from /builds/linux/arch/x86/include/asm/cpufeatur=
+e.h:5,
+> > >                     from /builds/linux/arch/x86/include/asm/thread_in=
+fo.h:53,
+> > >                     from /builds/linux/include/linux/thread_info.h:60=
 ,
->                                phys_addr_t sz, pgprot_t prot);
->  #endif /* __ASSEMBLY__ */
-> diff --git a/arch/riscv/mm/context.c b/arch/riscv/mm/context.c
-> index 217fd4de6134..43d005f63253 100644
-> --- a/arch/riscv/mm/context.c
-> +++ b/arch/riscv/mm/context.c
-> @@ -81,7 +81,7 @@ static void __flush_context(void)
->                 if (cntx =3D=3D 0)
->                         cntx =3D per_cpu(reserved_context, i);
+> > >                     from /builds/linux/include/linux/uio.h:9,
+> > >                     from /builds/linux/include/linux/socket.h:8,
+> > >                     from /builds/linux/include/uapi/linux/if.h:25,
+> > >                     from /builds/linux/net/wireless/nl80211.c:11:
+> > >    In function 'nl80211_set_cqm_rssi.isra.44',
+> > >        inlined from 'nl80211_set_cqm' at /builds/linux/net/wireless/n=
+l80211.c:13000:10:
+> > >    /builds/linux/include/linux/fortify-string.h:57:29: error: '__buil=
+tin_memcpy' pointer overflow between offset 36 and size [-1, 92233720368547=
+75807] [-Werror=3Darray-bounds]
+> > >     #define __underlying_memcpy __builtin_memcpy
+> > >                                 ^
+> > >    /builds/linux/include/linux/fortify-string.h:648:2: note: in expan=
+sion of macro '__underlying_memcpy'
+> > >      __underlying_##op(p, q, __fortify_size);   \
+> > >      ^~~~~~~~~~~~~
+> > >    /builds/linux/include/linux/fortify-string.h:693:26: note: in expa=
+nsion of macro '__fortify_memcpy_chk'
+> > >     #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,   \
+> > >                              ^~~~~~~~~~~~~~~~~~~~
+> > >    /builds/linux/net/wireless/nl80211.c:12939:3: note: in expansion o=
+f macro 'memcpy'
+> > >       memcpy(cqm_config->rssi_thresholds, thresholds,
+> > >       ^~~~~~
+> > >    cc1: all warnings being treated as errors
+> > >    make[5]: *** [/builds/linux/scripts/Makefile.build:243: net/wirele=
+ss/nl80211.o] Error 1
+> > > ----->8-----
+> > >
+> > > This is currently being bisected, so there is more to follow.
+> >
+> > Bisection pointed to:
+> >
+> >   commit 92045aab1bd9bfd73d816e907ea07739c4550b41
+> >   Author: Johannes Berg <johannes.berg@intel.com>
+> >   Date:   Sat Dec 16 05:47:15 2023 +0000
+> >
+> >       wifi: cfg80211: fix CQM for non-range use
+> >       commit 7e7efdda6adb385fbdfd6f819d76bc68c923c394 upstream.
+> >
+> > Reverting that was not possible, so I reverted 47f3694a4259 first ("wif=
+i: nl80211: fix deadlock in nl80211_set_cqm_rssi (6.6.x)"), but that was no=
+t enough. After reverting both 47f3694a4259 and 92045aab1bd9, the build pas=
+sed again.
+> >
+> > Reproducer:
+> >
+> >   tuxmake --runtime podman --target-arch x86_64 --toolchain gcc-8 --kco=
+nfig allmodconfig
 >
-> -               __set_bit(cntx & asid_mask, context_asid_map);
-> +               __set_bit(cntx2asid(cntx), context_asid_map);
->                 per_cpu(reserved_context, i) =3D cntx;
->         }
->
-> @@ -102,7 +102,7 @@ static unsigned long __new_context(struct mm_struct *=
-mm)
->         lockdep_assert_held(&context_lock);
->
->         if (cntx !=3D 0) {
-> -               unsigned long newcntx =3D ver | (cntx & asid_mask);
-> +               unsigned long newcntx =3D ver | cntx2asid(cntx);
->
->                 /*
->                  * If our current CONTEXT was active during a rollover, w=
-e
-> @@ -115,7 +115,7 @@ static unsigned long __new_context(struct mm_struct *=
-mm)
->                  * We had a valid CONTEXT in a previous life, so try to
->                  * re-use it if possible.
->                  */
-> -               if (!__test_and_set_bit(cntx & asid_mask, context_asid_ma=
-p))
-> +               if (!__test_and_set_bit(cntx2asid(cntx), context_asid_map=
-))
->                         return newcntx;
->         }
->
-> @@ -168,7 +168,7 @@ static void set_mm_asid(struct mm_struct *mm, unsigne=
-d int cpu)
->          */
->         old_active_cntx =3D atomic_long_read(&per_cpu(active_context, cpu=
-));
->         if (old_active_cntx &&
-> -           ((cntx & ~asid_mask) =3D=3D atomic_long_read(&current_version=
-)) &&
-> +           (cntx2version(cntx) =3D=3D atomic_long_read(&current_version)=
-) &&
->             atomic_long_cmpxchg_relaxed(&per_cpu(active_context, cpu),
->                                         old_active_cntx, cntx))
->                 goto switch_mm_fast;
-> @@ -177,7 +177,7 @@ static void set_mm_asid(struct mm_struct *mm, unsigne=
-d int cpu)
->
->         /* Check that our ASID belongs to the current_version. */
->         cntx =3D atomic_long_read(&mm->context.id);
-> -       if ((cntx & ~asid_mask) !=3D atomic_long_read(&current_version)) =
-{
-> +       if (cntx2version(cntx) !=3D atomic_long_read(&current_version)) {
->                 cntx =3D __new_context(mm);
->                 atomic_long_set(&mm->context.id, cntx);
->         }
-> @@ -191,7 +191,7 @@ static void set_mm_asid(struct mm_struct *mm, unsigne=
-d int cpu)
->
->  switch_mm_fast:
->         csr_write(CSR_SATP, virt_to_pfn(mm->pgd) |
-> -                 ((cntx & asid_mask) << SATP_ASID_SHIFT) |
-> +                 (cntx2asid(cntx) << SATP_ASID_SHIFT) |
->                   satp_mode);
->
->         if (need_flush_tlb)
-> diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
-> index 76b24d4ed4ab..5ec621545c69 100644
-> --- a/arch/riscv/mm/tlbflush.c
-> +++ b/arch/riscv/mm/tlbflush.c
-> @@ -85,7 +85,7 @@ static void __flush_tlb_range(struct mm_struct *mm, uns=
-igned long start,
->                         return;
->
->                 if (static_branch_unlikely(&use_asid_allocator))
-> -                       asid =3D atomic_long_read(&mm->context.id) & asid=
-_mask;
-> +                       asid =3D cntx2asid(atomic_long_read(&mm->context.=
-id));
->         } else {
->                 cmask =3D cpu_online_mask;
->         }
-> --
-> 2.42.0
->
+> Very odd, 6.1 works fine with this same compiler?
 
-You can add:
+It works on 6.1 with the same compiler.
 
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> These changes were in
+> the 6.1.70 release (and the 6.1.66 release) before.
+>
+> It was also in 6.6.5, before being reverted in 6.6.6, so why is this
+> causing a problem now?
 
-Thanks,
+It was also noticed on 6.6.5-rc1
+git_describe: v6.6.4-135-gb0b05ccdd77d
 
-Alex
+I have already reported this on a stable mailing list [1] on 6.6.5-rc1.
+
+Please find more details and comments from Arnd [2] and Kees [3].
+
+[1] https://lore.kernel.org/stable/CA+G9fYuL_-Q67t+Y7ST5taYv1XkkoJegH2zBvw_=
+ZUOhF9QRiOg@mail.gmail.com/
+[2] https://lore.kernel.org/stable/ce99918f-eb6a-4ad7-aa44-9d27c27b6b00@app=
+.fastmail.com/
+[3] https://lore.kernel.org/all/202311301016.84D0010@keescook/
+
+Test results comparison,
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.9=
+-50-g5fd1c89851c4/testrun/21921607/suite/build/test/gcc-8-allmodconfig/hist=
+ory/
+
+- Naresh
