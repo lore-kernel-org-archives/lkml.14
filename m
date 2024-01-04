@@ -1,150 +1,151 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90B52C69B;
-	Thu,  4 Jan 2024 21:51:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073042C847
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 21:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NB8/pL+x"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40d60c49ee7so9606355e9.0;
-        Thu, 04 Jan 2024 13:51:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704405101; x=1705009901; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bas+YdPjRljGtlJX4ssRIxTCAw0axobXiWVL+eDf96Y=;
-        b=NB8/pL+xT5xrGmhKGUlzACK277QDPDMFmQWriCDUQSLbghBALZiAzAg/bukhqgMjtc
-         l0zSVxsoGw9Flb2OmsXsSl9nbJN9w82CLGpEc/IGXqawCeLtuE0t9yp+caVSqM8u6NyQ
-         acgblUtmUMGSw7nyq/3tMNa6M5zUsLT20DP9f6YAGsQAa7L7VUmTM8z9qPXu/2lt12P/
-         0SZxpRKG0dnxz4p29VsESksTADS7mDAEUOONVaBvl0s2YDHXumuzqifImphsSChuLaxK
-         FFd3M1+PB3dt8oIsqa3oM9kbPAnKbZsa/SjYZDXqhtyZPfxzPHxeCtFWMGoaejrm75S5
-         KTQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704405101; x=1705009901;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Bas+YdPjRljGtlJX4ssRIxTCAw0axobXiWVL+eDf96Y=;
-        b=ArKXxRVFaHqze4JS245DOkhizCBG8hrm+KCSlpvRU425ic0aCl/SthZBfuz2+v8+wM
-         L/oFG/cFn8taZ+bJ9fiespgXFARt9zQjCjaujEhPRnnfzv2xKsQkv2hFcw6eGPedKMnq
-         zPF5NxumX8Y3U+6quW60qfaRZo1+QcMXRIkjon6wPBkAJquOBlTdftqaXEdHLIhZJyW3
-         JR4R1A7X6I1tY0H90Qk/4lr4RFRYXrkEI0dCSjSyd9xk7zXAPmezia5ligwoVfj+Xax9
-         VTcLBC/4xEXm3Leto9MxPt3XLP1xs1fqntPhvhNEwSrk8sY4xKlMLBVkjA3R73S24EvH
-         5djw==
-X-Gm-Message-State: AOJu0YyzHdo7JV2jOWRpEA3xGsHtBw1Q1PH/xBueU8utvbzzMqShXj20
-	Rm8VflvuC1Hl/okuPE05hPo=
-X-Google-Smtp-Source: AGHT+IHZyjHBUN0jDo/92RJRPvzGHGPyqBLjQ4NZE1nxbAPYeJtwdJ1AmotGhClp5OzXnm8VlOE/Fg==
-X-Received: by 2002:a05:600c:3acd:b0:40d:5b0d:b105 with SMTP id d13-20020a05600c3acd00b0040d5b0db105mr754745wms.117.1704405101029;
-        Thu, 04 Jan 2024 13:51:41 -0800 (PST)
-Received: from Ansuel-xps. (host-80-116-159-187.pool80116.interbusiness.it. [80.116.159.187])
-        by smtp.gmail.com with ESMTPSA id u18-20020a05600c139200b0040d5ae2905asm426374wmf.30.2024.01.04.13.51.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jan 2024 13:51:40 -0800 (PST)
-Message-ID: <6597286c.050a0220.4684a.182e@mx.google.com>
-X-Google-Original-Message-ID: <ZZcmP1GVBR1Taj0U@Ansuel-xps.>
-Date: Thu, 4 Jan 2024 22:42:23 +0100
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	William Zhang <william.zhang@broadcom.com>,
-	Anand Gore <anand.gore@broadcom.com>,
-	Kursad Oney <kursad.oney@broadcom.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-	=?iso-8859-1?Q?Fern=E1ndez?= Rojas <noltari@gmail.com>,
-	Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	netdev@vger.kernel.org
-Subject: Re: [net-next PATCH v8 3/5] net: phy: add support for PHY LEDs
- polarity modes
-References: <20240104110114.2020-1-ansuelsmth@gmail.com>
- <20240104110114.2020-4-ansuelsmth@gmail.com>
- <47f18def-d34f-4224-9de2-6e0ae7122a52@lunn.ch>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QKRJArDl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704405143; x=1735941143;
+  h=date:from:to:cc:subject:message-id;
+  bh=p7/CcMJTANzkIDXuQxiD1zt8UIVWvwa+m0zhEeIbMNg=;
+  b=QKRJArDlna4ZATbbZGqSqKbOuixtmPB+sBuSwtCUR9a2mOnX4k3YnFld
+   ZPclyE4uoZuTPwj+rkyo/qKD0OALpUR0FASiAsGtCBOdU8m8+/3xATy1Z
+   qodBswuuqyWaQ3ieHtFgik/PJbt+hJxocYe1BFXsRa5ne9eoAZGgHyFbO
+   ptazmhIcUeBgtEa4BwwSXVEdsyCniYEDvDzHXpRUODerMUxmxSX70DeFl
+   U9ORFPQ0DDxK3koSrN1QFNXVwBIJZWsd1kMALfdkEhDbQHHfkJbIxiH1C
+   edLPqAwqGE7iT8SIcdcTrOlfNyNDKqoaAyepztBWaQ0eVavFzXQcQPdZm
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="376856527"
+X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
+   d="scan'208";a="376856527"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 13:52:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="784017242"
+X-IronPort-AV: E=Sophos;i="6.04,331,1695711600"; 
+   d="scan'208";a="784017242"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by fmsmga007.fm.intel.com with ESMTP; 04 Jan 2024 13:52:21 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rLVdS-0000SQ-2K;
+	Thu, 04 Jan 2024 21:52:18 +0000
+Date: Fri, 05 Jan 2024 05:51:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/build] BUILD SUCCESS
+ bcf7ef56daca2eacf836d22eee23c66f7cd96a65
+Message-ID: <202401050518.X4sQu7Ui-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <47f18def-d34f-4224-9de2-6e0ae7122a52@lunn.ch>
 
-On Thu, Jan 04, 2024 at 02:20:45PM +0100, Andrew Lunn wrote:
-> > +	if (phydev->drv->led_polarity_set) {
-> > +		if (of_property_read_bool(led, "active-low"))
-> > +			set_bit(PHY_LED_ACTIVE_LOW, &modes);
-> > +		if (of_property_read_bool(led, "inactive-high-impedance"))
-> > +			set_bit(PHY_LED_INACTIVE_HIGH_IMPEDANCE, &modes);
-> > +
-> > +		err = phydev->drv->led_polarity_set(phydev, index, modes);
-> > +		if (err)
-> > +			return err;
-> > +	}
-> 
-> I think we should return an error if asked to set the mode, but its
-> not implemented by the driver. Something like:
-> 
-> 	if (of_property_read_bool(led, "active-low"))
-> 		set_bit(PHY_LED_ACTIVE_LOW, &modes);
-> 	if (of_property_read_bool(led, "inactive-high-impedance"))
-> 		set_bit(PHY_LED_INACTIVE_HIGH_IMPEDANCE, &modes);
-> 
-> 		
-> 	if (mode)
-> 		if (phydev->drv->led_polarity_set) {
-> 			return -EINVAL;
-> 		} else {
-> 			err = phydev->drv->led_polarity_set(phydev, index, modes);
-> 			if (err)
-> 				return err;
-> 		}
-> 	}
-> 
-> > +	/**
-> > +	 * @led_polarity_set: Set the LED polarity if active low
-> 
-> The 'if active low' is not ouw of date, since it is used for more than
-> that.
-> 
-> > +	 * @dev: PHY device which has the LED
-> > +	 * @index: Which LED of the PHY device or -1
-> > +	 * @modes: bitmap of LED polarity modes
-> > +	 *
-> > +	 * Configure LED with all the required polarity modes in @modes
-> > +	 * to make it correctly turn ON or OFF.
-> 
-> index == -1 should be explained.
->
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/build
+branch HEAD: bcf7ef56daca2eacf836d22eee23c66f7cd96a65  x86/tools: objdump_reformat.awk: Skip bad instructions from llvm-objdump
 
-If you are referring to the special way of setting the LED globally,
-that is not a thing anymore. Rob pointed out that having the double
-reference in DT is problematic and PHY driver should handle that
-internally.
+elapsed time: 739m
 
-> > +	 *
-> > +	 * Returns 0, or an error code.
-> > +	 */
-> > +	int (*led_polarity_set)(struct phy_device *dev, int index,
-> > +				unsigned long modes);
-> 
-> 
->     Andrew
-> 
-> ---
-> pw-bot: cr
+configs tested: 85
+configs skipped: 151
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+arc                         haps_hs_defconfig   gcc  
+arm                           stm32_defconfig   gcc  
+i386                             allmodconfig   clang
+i386                              allnoconfig   clang
+i386                             allyesconfig   clang
+i386         buildonly-randconfig-001-20240104   gcc  
+i386         buildonly-randconfig-002-20240104   gcc  
+i386         buildonly-randconfig-003-20240104   gcc  
+i386         buildonly-randconfig-004-20240104   gcc  
+i386         buildonly-randconfig-005-20240104   gcc  
+i386         buildonly-randconfig-006-20240104   gcc  
+i386                                defconfig   gcc  
+i386                  randconfig-001-20240104   gcc  
+i386                  randconfig-002-20240104   gcc  
+i386                  randconfig-003-20240104   gcc  
+i386                  randconfig-004-20240104   gcc  
+i386                  randconfig-005-20240104   gcc  
+i386                  randconfig-006-20240104   gcc  
+i386                  randconfig-011-20240104   clang
+i386                  randconfig-011-20240105   gcc  
+i386                  randconfig-012-20240104   clang
+i386                  randconfig-012-20240105   gcc  
+i386                  randconfig-013-20240104   clang
+i386                  randconfig-013-20240105   gcc  
+i386                  randconfig-014-20240104   clang
+i386                  randconfig-014-20240105   gcc  
+i386                  randconfig-015-20240104   clang
+i386                  randconfig-015-20240105   gcc  
+i386                  randconfig-016-20240104   clang
+i386                  randconfig-016-20240105   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                        allyesconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                       allyesconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                           gcw0_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                            allyesconfig   gcc  
+openrisc                         allmodconfig   gcc  
+powerpc                      arches_defconfig   gcc  
+powerpc                      bamboo_defconfig   gcc  
+powerpc                      chrp32_defconfig   gcc  
+powerpc                       eiger_defconfig   gcc  
+powerpc                       holly_defconfig   gcc  
+powerpc                      pcm030_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+sh                               allmodconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                          lboxre2_defconfig   gcc  
+sh                           se7721_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                       sparc32_defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240104   gcc  
+x86_64       buildonly-randconfig-002-20240104   gcc  
+x86_64       buildonly-randconfig-003-20240104   gcc  
+x86_64       buildonly-randconfig-004-20240104   gcc  
+x86_64       buildonly-randconfig-005-20240104   gcc  
+x86_64       buildonly-randconfig-006-20240104   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64                randconfig-001-20240104   clang
+x86_64                randconfig-002-20240104   clang
+x86_64                randconfig-003-20240104   clang
+x86_64                randconfig-004-20240104   clang
+x86_64                randconfig-005-20240104   clang
+x86_64                randconfig-006-20240104   clang
+x86_64                randconfig-011-20240104   gcc  
+x86_64                randconfig-012-20240104   gcc  
+x86_64                randconfig-013-20240104   gcc  
+x86_64                randconfig-014-20240104   gcc  
+x86_64                randconfig-015-20240104   gcc  
+x86_64                randconfig-016-20240104   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                    smp_lx200_defconfig   gcc  
 
 -- 
-	Ansuel
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
