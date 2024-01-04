@@ -1,208 +1,193 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C58B2374B;
-	Thu,  4 Jan 2024 14:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF8623748;
+	Thu,  4 Jan 2024 14:42:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="M5+w+PGf"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D3E861BF206;
-	Thu,  4 Jan 2024 14:41:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1704379285;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xF5ufSSvoks3261aOCEfIfrU7GTgqssBEJuBdMc7zSc=;
-	b=M5+w+PGf+TFvXeymA8x/IEV45gTLY4Nxmb0OGP6MgVCUAB4Hwy14GqSj67dK6KKGiGQAQO
-	/+26+htWmLCphBJv3xk65c6N+S0/TcwOXXNs1Vn09iYv0K3JEZRydW4xE8tW+IDIo0bMCY
-	+SzE+stg5KGI5mPGJS259EAW6R3xyhiDjzAcVg33LqFxeFLr9dNXsBvQftYn2EXzzP5Hn/
-	oZMPgHuHOZc2UapmVf/bu0iSKSWSuyt5Le2GJWWqASgP13aEYT9xMAIaCXUe+KfV5Mnmu1
-	jJU1gUV2Tye03yOa1b6YcKjXTDKrgnjDWvRpjnHqvUc0DMmPepTUeThRnCDo8Q==
-From: =?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-To: linux-wireless@vger.kernel.org
-Cc: Ajay Singh <ajay.kathat@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Kalle Valo <kvalo@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] wifi: wilc1000: fix RCU usage in connect path
-Date: Thu,  4 Jan 2024 15:39:25 +0100
-Message-ID: <20240104143925.194295-3-alexis.lothore@bootlin.com>
-X-Mailer: git-send-email 2.42.1
-In-Reply-To: <20240104143925.194295-1-alexis.lothore@bootlin.com>
-References: <20240104143925.194295-1-alexis.lothore@bootlin.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="NF40di81"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4537040E00C5;
+	Thu,  4 Jan 2024 14:42:49 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id Um-BwKp4FekK; Thu,  4 Jan 2024 14:42:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1704379366; bh=dmenayIyDEohIzfSm5J+SPjurlu17a93F377Rlg3Ezg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NF40di81KTz2ML8IClx26v5lRBSKDg20NnU2kZepG0wtZw81MjeoHhl9l63zHIKJ7
+	 qhh9dC7pEgOLxXb76hPtB3ZW+rge3VvCD0Bji7Zmeaotzvs3o51reiShj7+UVfzjbQ
+	 +K+TftPdWJ2UA6Ikjww8Pxv6Qp8KD5Y5nH5/e1awrefDfRy1whmdj2l33aISGjc4UQ
+	 erPWZklFQs8vSHoqWeR1x7Z4PmJWlADeupXGtD2oFEYQIjE9t5adMI73+mk6zKDEfw
+	 dephRWr0vPjH9dd56gkGoqnukoRoSZcnJPH2qiR3GfD4M38E6EB8YNxJxb8ivSeyI2
+	 Wb3b3ltqYiuNoqo3KtRfLyFv6k9+Ej0XXgaLuULilEfcR92FaKPubQLK3AxmFeUGXF
+	 oGrn+dTNK7wW3hK+gZyuVJc+6ZgPEhH83LtiAxdWx0nhiLvg+z2qb6AqXiuCoo5Uh6
+	 5SOtsGZO3atFxahJmrCTBWHINwTHr+1buDij5ha5zwaeCfoAs2HI4eu8G3noK8da7S
+	 E5R8B0EXdNwzvHHGhZjEkBk6+XBwZwSGhUrYhnOZmDdHamTy2O5YNzpNXXJSt2gvjl
+	 xYxgLVjg8CkLMsGih/F4RJA4et17HCBChOYCI0DkVknU0c4UrvwofaQ3fPpVa1KzJR
+	 tmFzRHv2chtAM3BHVaU4/w34=
+Received: from zn.tnic (pd9530f8c.dip0.t-ipconnect.de [217.83.15.140])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5D82A40E0196;
+	Thu,  4 Jan 2024 14:42:08 +0000 (UTC)
+Date: Thu, 4 Jan 2024 15:42:02 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Michael Roth <michael.roth@amd.com>
+Cc: x86@kernel.org, kvm@vger.kernel.org, linux-coco@lists.linux.dev,
+	linux-mm@kvack.org, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+	jroedel@suse.de, thomas.lendacky@amd.com, hpa@zytor.com,
+	ardb@kernel.org, pbonzini@redhat.com, seanjc@google.com,
+	vkuznets@redhat.com, jmattson@google.com, luto@kernel.org,
+	dave.hansen@linux.intel.com, slp@redhat.com, pgonda@google.com,
+	peterz@infradead.org, srinivas.pandruvada@linux.intel.com,
+	rientjes@google.com, tobin@ibm.com, vbabka@suse.cz,
+	kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com,
+	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com,
+	pankaj.gupta@amd.com, liam.merwick@oracle.com, zhi.a.wang@intel.com,
+	Brijesh Singh <brijesh.singh@amd.com>
+Subject: Re: [PATCH v1 04/26] x86/sev: Add the host SEV-SNP initialization
+ support
+Message-ID: <20240104144202.GGZZbDuutFUFmktT7M@fat_crate.local>
+References: <20231230161954.569267-1-michael.roth@amd.com>
+ <20231230161954.569267-5-michael.roth@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: alexis.lothore@bootlin.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20231230161954.569267-5-michael.roth@amd.com>
 
-From: Alexis Lothoré <alexis.lothore@bootlin.com>
+On Sat, Dec 30, 2023 at 10:19:32AM -0600, Michael Roth wrote:
+> +	if (cpu_has(c, X86_FEATURE_SEV_SNP)) {
+> +		/*
+> +		 * RMP table entry format is not architectural and it can vary by processor
+> +		 * and is defined by the per-processor PPR. Restrict SNP support on the
+> +		 * known CPU model and family for which the RMP table entry format is
+> +		 * currently defined for.
+> +		 */
+> +		if (!(c->x86 == 0x19 && c->x86_model <= 0xaf) &&
+> +		    !(c->x86 == 0x1a && c->x86_model <= 0xf))
+> +			setup_clear_cpu_cap(X86_FEATURE_SEV_SNP);
+> +		else if (!snp_probe_rmptable_info())
+> +			setup_clear_cpu_cap(X86_FEATURE_SEV_SNP);
+> +	}
 
-With lockdep enabled, calls to the connect function from cfg802.11 layer
-lead to the following warning:
+IOW, this below.
 
-=============================
-WARNING: suspicious RCU usage
-6.7.0-rc1-wt+ #333 Not tainted
------------------------------
-drivers/net/wireless/microchip/wilc1000/hif.c:386
-suspicious rcu_dereference_check() usage!
-[...]
-stack backtrace:
-CPU: 0 PID: 100 Comm: wpa_supplicant Not tainted 6.7.0-rc1-wt+ #333
-Hardware name: Atmel SAMA5
- unwind_backtrace from show_stack+0x18/0x1c
- show_stack from dump_stack_lvl+0x34/0x48
- dump_stack_lvl from wilc_parse_join_bss_param+0x7dc/0x7f4
- wilc_parse_join_bss_param from connect+0x2c4/0x648
- connect from cfg80211_connect+0x30c/0xb74
- cfg80211_connect from nl80211_connect+0x860/0xa94
- nl80211_connect from genl_rcv_msg+0x3fc/0x59c
- genl_rcv_msg from netlink_rcv_skb+0xd0/0x1f8
- netlink_rcv_skb from genl_rcv+0x2c/0x3c
- genl_rcv from netlink_unicast+0x3b0/0x550
- netlink_unicast from netlink_sendmsg+0x368/0x688
- netlink_sendmsg from ____sys_sendmsg+0x190/0x430
- ____sys_sendmsg from ___sys_sendmsg+0x110/0x158
- ___sys_sendmsg from sys_sendmsg+0xe8/0x150
- sys_sendmsg from ret_fast_syscall+0x0/0x1c
+Lemme send the ZEN5 thing as a separate patch.
 
-This warning is emitted because in the connect path, when trying to parse
-target BSS parameters, we dereference a RCU pointer whithout being in RCU
-critical section.
-Fix RCU dereference usage by moving it to a RCU read critical section. To
-avoid wrapping the whole wilc_parse_join_bss_param under the critical
-section, just use the critical section to copy ies data
-
-Fixes: c460495ee072 ("staging: wilc1000: fix incorrent type in initializer")
-Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
----
- drivers/net/wireless/microchip/wilc1000/hif.c | 35 ++++++++++++-------
- 1 file changed, 23 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/net/wireless/microchip/wilc1000/hif.c b/drivers/net/wireless/microchip/wilc1000/hif.c
-index 6f1218a51061..806b7337b5ae 100644
---- a/drivers/net/wireless/microchip/wilc1000/hif.c
-+++ b/drivers/net/wireless/microchip/wilc1000/hif.c
-@@ -377,38 +377,48 @@ struct wilc_join_bss_param *
- wilc_parse_join_bss_param(struct cfg80211_bss *bss,
- 			  struct cfg80211_crypto_settings *crypto)
- {
--	const struct cfg80211_bss_ies *ies = rcu_dereference(bss->ies);
--	const u8 *tim_elm, *ssid_elm, *rates_ie, *supp_rates_ie;
-+	const u8 *ies_data, *tim_elm, *ssid_elm, *rates_ie, *supp_rates_ie;
- 	const u8 *ht_ie, *wpa_ie, *wmm_ie, *rsn_ie;
- 	struct ieee80211_p2p_noa_attr noa_attr;
-+	const struct cfg80211_bss_ies *ies;
- 	struct wilc_join_bss_param *param;
--	u8 rates_len = 0;
-+	u8 rates_len = 0, ies_len;
- 	int ret;
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 9492dcad560d..0fa702673e73 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -81,10 +81,8 @@
+ #define X86_FEATURE_K6_MTRR		( 3*32+ 1) /* AMD K6 nonstandard MTRRs */
+ #define X86_FEATURE_CYRIX_ARR		( 3*32+ 2) /* Cyrix ARRs (= MTRRs) */
+ #define X86_FEATURE_CENTAUR_MCR		( 3*32+ 3) /* Centaur MCRs (= MTRRs) */
+-
+-/* CPU types for specific tunings: */
+ #define X86_FEATURE_K8			( 3*32+ 4) /* "" Opteron, Athlon64 */
+-/* FREE, was #define X86_FEATURE_K7			( 3*32+ 5) "" Athlon */
++#define X86_FEATURE_ZEN5		( 3*32+ 5) /* "" CPU based on Zen5 microarchitecture */
+ #define X86_FEATURE_P3			( 3*32+ 6) /* "" P3 */
+ #define X86_FEATURE_P4			( 3*32+ 7) /* "" P4 */
+ #define X86_FEATURE_CONSTANT_TSC	( 3*32+ 8) /* TSC ticks at a constant rate */
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index 0f0d425f0440..46335c2df083 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -539,7 +539,7 @@ static void bsp_init_amd(struct cpuinfo_x86 *c)
  
- 	param = kzalloc(sizeof(*param), GFP_KERNEL);
- 	if (!param)
- 		return NULL;
- 
-+	rcu_read_lock();
-+	ies = rcu_dereference(bss->ies);
-+	ies_data = kmemdup(ies->data, ies->len, GFP_ATOMIC);
-+	if (!ies_data) {
-+		rcu_read_unlock();
-+		return NULL;
-+	}
-+	ies_len = ies->len;
-+	rcu_read_unlock();
-+
- 	param->beacon_period = cpu_to_le16(bss->beacon_interval);
- 	param->cap_info = cpu_to_le16(bss->capability);
- 	param->bss_type = WILC_FW_BSS_TYPE_INFRA;
- 	param->ch = ieee80211_frequency_to_channel(bss->channel->center_freq);
- 	ether_addr_copy(param->bssid, bss->bssid);
- 
--	ssid_elm = cfg80211_find_ie(WLAN_EID_SSID, ies->data, ies->len);
-+	ssid_elm = cfg80211_find_ie(WLAN_EID_SSID, ies_data, ies_len);
- 	if (ssid_elm) {
- 		if (ssid_elm[1] <= IEEE80211_MAX_SSID_LEN)
- 			memcpy(param->ssid, ssid_elm + 2, ssid_elm[1]);
- 	}
- 
--	tim_elm = cfg80211_find_ie(WLAN_EID_TIM, ies->data, ies->len);
-+	tim_elm = cfg80211_find_ie(WLAN_EID_TIM, ies_data, ies_len);
- 	if (tim_elm && tim_elm[1] >= 2)
- 		param->dtim_period = tim_elm[3];
- 
- 	memset(param->p_suites, 0xFF, 3);
- 	memset(param->akm_suites, 0xFF, 3);
- 
--	rates_ie = cfg80211_find_ie(WLAN_EID_SUPP_RATES, ies->data, ies->len);
-+	rates_ie = cfg80211_find_ie(WLAN_EID_SUPP_RATES, ies_data, ies_len);
- 	if (rates_ie) {
- 		rates_len = rates_ie[1];
- 		if (rates_len > WILC_MAX_RATES_SUPPORTED)
-@@ -419,7 +429,7 @@ wilc_parse_join_bss_param(struct cfg80211_bss *bss,
- 
- 	if (rates_len < WILC_MAX_RATES_SUPPORTED) {
- 		supp_rates_ie = cfg80211_find_ie(WLAN_EID_EXT_SUPP_RATES,
--						 ies->data, ies->len);
-+						 ies_data, ies_len);
- 		if (supp_rates_ie) {
- 			u8 ext_rates = supp_rates_ie[1];
- 
-@@ -434,11 +444,11 @@ wilc_parse_join_bss_param(struct cfg80211_bss *bss,
+ 	/* Figure out Zen generations: */
+ 	switch (c->x86) {
+-	case 0x17: {
++	case 0x17:
+ 		switch (c->x86_model) {
+ 		case 0x00 ... 0x2f:
+ 		case 0x50 ... 0x5f:
+@@ -555,8 +555,8 @@ static void bsp_init_amd(struct cpuinfo_x86 *c)
+ 			goto warn;
  		}
+ 		break;
+-	}
+-	case 0x19: {
++
++	case 0x19:
+ 		switch (c->x86_model) {
+ 		case 0x00 ... 0x0f:
+ 		case 0x20 ... 0x5f:
+@@ -570,20 +570,31 @@ static void bsp_init_amd(struct cpuinfo_x86 *c)
+ 			goto warn;
+ 		}
+ 		break;
+-	}
++
++	case 0x1a:
++		switch (c->x86_model) {
++		case 0x00 ... 0x0f:
++			setup_force_cpu_cap(X86_FEATURE_ZEN5);
++			break;
++		default:
++			goto warn;
++		}
++		break;
++
+ 	default:
+ 		break;
  	}
  
--	ht_ie = cfg80211_find_ie(WLAN_EID_HT_CAPABILITY, ies->data, ies->len);
-+	ht_ie = cfg80211_find_ie(WLAN_EID_HT_CAPABILITY, ies_data, ies_len);
- 	if (ht_ie)
- 		param->ht_capable = true;
- 
--	ret = cfg80211_get_p2p_attr(ies->data, ies->len,
-+	ret = cfg80211_get_p2p_attr(ies_data, ies_len,
- 				    IEEE80211_P2P_ATTR_ABSENCE_NOTICE,
- 				    (u8 *)&noa_attr, sizeof(noa_attr));
- 	if (ret > 0) {
-@@ -462,7 +472,7 @@ wilc_parse_join_bss_param(struct cfg80211_bss *bss,
- 	}
- 	wmm_ie = cfg80211_find_vendor_ie(WLAN_OUI_MICROSOFT,
- 					 WLAN_OUI_TYPE_MICROSOFT_WMM,
--					 ies->data, ies->len);
-+					 ies_data, ies_len);
- 	if (wmm_ie) {
- 		struct ieee80211_wmm_param_ie *ie;
- 
-@@ -477,13 +487,13 @@ wilc_parse_join_bss_param(struct cfg80211_bss *bss,
- 
- 	wpa_ie = cfg80211_find_vendor_ie(WLAN_OUI_MICROSOFT,
- 					 WLAN_OUI_TYPE_MICROSOFT_WPA,
--					 ies->data, ies->len);
-+					 ies_data, ies_len);
- 	if (wpa_ie) {
- 		param->mode_802_11i = 1;
- 		param->rsn_found = true;
- 	}
- 
--	rsn_ie = cfg80211_find_ie(WLAN_EID_RSN, ies->data, ies->len);
-+	rsn_ie = cfg80211_find_ie(WLAN_EID_RSN, ies_data, ies_len);
- 	if (rsn_ie) {
- 		int rsn_ie_len = sizeof(struct element) + rsn_ie[1];
- 		int offset = 8;
-@@ -517,6 +527,7 @@ wilc_parse_join_bss_param(struct cfg80211_bss *bss,
- 			param->akm_suites[i] = crypto->akm_suites[i] & 0xFF;
- 	}
- 
-+	kfree(ies_data);
- 	return (void *)param;
+ 	if (cpu_has(c, X86_FEATURE_SEV_SNP)) {
+ 		/*
+-		 * RMP table entry format is not architectural and it can vary by processor
++		 * RMP table entry format is not architectural, can vary by processor
+ 		 * and is defined by the per-processor PPR. Restrict SNP support on the
+ 		 * known CPU model and family for which the RMP table entry format is
+ 		 * currently defined for.
+ 		 */
+-		if (!(c->x86 == 0x19 && c->x86_model <= 0xaf) &&
+-		    !(c->x86 == 0x1a && c->x86_model <= 0xf))
++		if (!boot_cpu_has(X86_FEATURE_ZEN3) &&
++		    !boot_cpu_has(X86_FEATURE_ZEN4) &&
++		    !boot_cpu_has(X86_FEATURE_ZEN5))
+ 			setup_clear_cpu_cap(X86_FEATURE_SEV_SNP);
+ 		else if (!snp_probe_rmptable_info())
+ 			setup_clear_cpu_cap(X86_FEATURE_SEV_SNP);
+@@ -1055,6 +1066,11 @@ static void init_amd_zen4(struct cpuinfo_x86 *c)
+ 		msr_set_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_SHARED_BTB_FIX_BIT);
  }
  
--- 
-2.42.1
++static void init_amd_zen5(struct cpuinfo_x86 *c)
++{
++	init_amd_zen_common();
++}
++
+ static void init_amd(struct cpuinfo_x86 *c)
+ {
+ 	u64 vm_cr;
+@@ -1100,6 +1116,8 @@ static void init_amd(struct cpuinfo_x86 *c)
+ 		init_amd_zen3(c);
+ 	else if (boot_cpu_has(X86_FEATURE_ZEN4))
+ 		init_amd_zen4(c);
++	else if (boot_cpu_has(X86_FEATURE_ZEN5))
++		init_amd_zen5(c);
+ 
+ 	/*
+ 	 * Enable workaround for FXSAVE leak on CPUs
 
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
