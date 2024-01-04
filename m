@@ -1,78 +1,136 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F612230B;
-	Thu,  4 Jan 2024 13:01:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5602922313
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 13:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eFf1h/U2"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7815c5b69e1so29377185a.1;
-        Thu, 04 Jan 2024 05:01:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="OBP2tchA"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a277339dcf4so53111766b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 05:01:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704373301; x=1704978101; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1704373311; x=1704978111; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=T58SQKnZ9f/XAhQbGGB3bCkUckh7sbRsHba15J+0qeE=;
-        b=eFf1h/U2AiR6u549cfIt5SUeQ24WfroIj4rJ25GxCcSXMnFL6+Idh4Gd6PmN5ErKa+
-         TNLKGIPyaSmxp0s1YCJ3Me73o3tKbeelr4jtstI2wWiddkOCuLQAfYkTMax5/I3qhoXq
-         Pk1dd5MALIRGA027Pw1icJ24l7WF+o6OGij3KGiXptKyBdcugAS7Gf0EjCYSuaHcvdRw
-         15NxvHiDLs/8mYosjLpDUbMW+vLxbexO+U61VcwTqOzWeQkqDSTNmUBXXC5ehesaYDac
-         tgT97CPEI+IIqSx/BNN6NFR2sf06qD/KCa57xdQUn/L2KLYPBI656qodLsZCmDwEonyu
-         8BxQ==
+        bh=/9OiB6Zr2X3JWx8/EcNzOysEraumuG0RSKA4yvIy1vs=;
+        b=OBP2tchA7eqlftKEe+yssQUdkFMNvpE5MyqZ9mLlC1foecl0GUqlgg9d3B8NpgF0Q4
+         r2peT0SHRZOHpsOrUJFy8oR+prZ8JkUmjef2Y30qEnjWUGDtI/S6pgiMgxqVHm44d/FF
+         2NRVtFVG39kImE/YeZshdxEyXHS3nz+8KTFzjoiOnWBgEQbm1XkySHAIDICjmXqNQA3U
+         KBM5jVrkD34B4VmMx8ver8vO/A31jl8ys9NLil31IHuQAOf4eh31p5APBw9b6UO4G0G2
+         nEnAsmWe4RSvnMvLcHAwmiEW3v1VfIFkPWW9wPTD6jyGur9V4F1z/nT8sLuTM4MrWT7h
+         il6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704373301; x=1704978101;
+        d=1e100.net; s=20230601; t=1704373311; x=1704978111;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=T58SQKnZ9f/XAhQbGGB3bCkUckh7sbRsHba15J+0qeE=;
-        b=DatJ6HQ9Eq31BBtimJXaVPPKHaMfKLVu358xicSSKu+87gie+SI2itm9+bdrhP96xd
-         ejeDw6SBaw3ML8cgPtJXTH487NcVAaKefJ1uh6tRbB4HOpb4GIK4T3jO6noLS57jZUs/
-         qUX/X2SVwieWL69bty6O3sipcZUm7Ph6HrGgY+4JyVCx7Bn+xzMtavwqMU3+GSkTg2GC
-         LA6FLVQ5iivHyjA7FwPWxoaSfXQSyRxa3unieQhTWptRUttvMc0hwO8qtC1tOOwJICxY
-         yAeu0VtrpLCQSHQNeoMU1oPLKiVVQcVTyzNHxKGn3nL5OzlH1Hw8ywdI2be1PXoRreCU
-         VKVw==
-X-Gm-Message-State: AOJu0YwLi/0xLkC/+7kiaeXhBvzf0uHSDuqsb+9J0hNcO01XgtwcJc7u
-	89nG1bwHncHPd3LrG73t18hE2HwTDVTvGMuWy68=
-X-Google-Smtp-Source: AGHT+IFcDZI9hrCkMltXk9QWR9FnqhH+RH0B1LwJDugeCrbUY7Qgi2qlTd+dNkV+hbw7m7RwWabWZ2FnZohJHiUE88c=
-X-Received: by 2002:a05:6214:c64:b0:680:8373:4932 with SMTP id
- t4-20020a0562140c6400b0068083734932mr552788qvj.69.1704373301098; Thu, 04 Jan
- 2024 05:01:41 -0800 (PST)
+        bh=/9OiB6Zr2X3JWx8/EcNzOysEraumuG0RSKA4yvIy1vs=;
+        b=OZvd2hdGaxlvuUjJvtwd7JCEhXJFsdwKi1e/XhpUdXXYOVpMVZL2Bvh4sPKd4FrT/8
+         E0rkAnKeBy6+cMIHx2Y1j5GI2eLilcMpDpb4EMwdzoLbOyech3sfhnGGUPQK/yhXzSfG
+         uTJBN/PHK/jmjiDKxERrnkxFRXsV/tf+uclaulR4e3O7K7GIv7lhvn+UjIFOF22D75Z1
+         5OgdgDRMEYdxiL5snHmHaMPifE4tEwUJkysXoP88g0uOKcUH6hW5x6HDwXbShg1jQBPP
+         jDEo0BPVpjvGhjcmwGa4EuinRzp0kNORmZIQar1EWfOSeR1L3D0JSg0LsGxhL7O8lWj+
+         oHLw==
+X-Gm-Message-State: AOJu0YzsGldweaPLPrLCNUiIFhzg/FDlURNQAKtS+x8hiVDf8ymFtQ7c
+	eaxSdWQouVgUtllyU9Nvm3FGxQMtgBI91o6SuZj1A+djMHdgvkZMMrQKYNUrg7c=
+X-Google-Smtp-Source: AGHT+IGv4Nd1O7QiBVZ3icJngtwYGoUCGkSaR0BhUpZqYDOqHIhgeGA1hyWSfztxKwIkK4DFZEIwm3bDuFwwIzHa8xc=
+X-Received: by 2002:a17:907:76ac:b0:a28:b9b8:2f8c with SMTP id
+ jw12-20020a17090776ac00b00a28b9b82f8cmr268278ejc.152.1704373311541; Thu, 04
+ Jan 2024 05:01:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240104024244.12163-1-Wenhua.Lin@unisoc.com> <20240104024244.12163-4-Wenhua.Lin@unisoc.com>
-In-Reply-To: <20240104024244.12163-4-Wenhua.Lin@unisoc.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 4 Jan 2024 15:01:05 +0200
-Message-ID: <CAHp75VcUU-FUYJKN40dzMbe5KmmAR7--0JV00qdgnbNwHqFjQg@mail.gmail.com>
-Subject: Re: [PATCH V3 3/4] gpio: eic-sprd: Modify the calculation method of
- eic number
-To: Wenhua Lin <Wenhua.Lin@unisoc.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Orson Zhai <orsonzhai@gmail.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	wenhua lin <wenhua.lin1994@gmail.com>, Xiongpeng Wu <xiongpeng.wu@unisoc.com>
+References: <20240102220134.3229156-1-samuel.holland@sifive.com> <20240102220134.3229156-13-samuel.holland@sifive.com>
+In-Reply-To: <20240102220134.3229156-13-samuel.holland@sifive.com>
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+Date: Thu, 4 Jan 2024 14:01:40 +0100
+Message-ID: <CAHVXubit8obRHkW9Uw+Ah=1y7cg-_y_8Ho=kzonjLFmeGYZwqQ@mail.gmail.com>
+Subject: Re: [PATCH v4 12/12] riscv: mm: Always use an ASID to flush mm contexts
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 4, 2024 at 4:43=E2=80=AFAM Wenhua Lin <Wenhua.Lin@unisoc.com> w=
-rote:
+On Tue, Jan 2, 2024 at 11:01=E2=80=AFPM Samuel Holland
+<samuel.holland@sifive.com> wrote:
 >
-> When the soc changes, the corresponding gpio-eic-sprd.c
+> Even if multiple ASIDs are not supported, using the single-ASID variant
+> of the sfence.vma instruction preserves TLB entries for global (kernel)
+> pages. So it is always more efficient to use the single-ASID code path.
+>
+> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+> ---
+>
+> Changes in v4:
+>  - There is now only one copy of __flush_tlb_range()
+>
+> Changes in v2:
+>  - Update both copies of __flush_tlb_range()
+>
+>  arch/riscv/include/asm/mmu_context.h | 2 --
+>  arch/riscv/mm/context.c              | 3 +--
+>  arch/riscv/mm/tlbflush.c             | 3 +--
+>  3 files changed, 2 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/mmu_context.h b/arch/riscv/include/as=
+m/mmu_context.h
+> index 7030837adc1a..b0659413a080 100644
+> --- a/arch/riscv/include/asm/mmu_context.h
+> +++ b/arch/riscv/include/asm/mmu_context.h
+> @@ -33,8 +33,6 @@ static inline int init_new_context(struct task_struct *=
+tsk,
+>         return 0;
+>  }
+>
+> -DECLARE_STATIC_KEY_FALSE(use_asid_allocator);
+> -
+>  #include <asm-generic/mmu_context.h>
+>
+>  #endif /* _ASM_RISCV_MMU_CONTEXT_H */
+> diff --git a/arch/riscv/mm/context.c b/arch/riscv/mm/context.c
+> index 3ca9b653df7d..20057085ab8a 100644
+> --- a/arch/riscv/mm/context.c
+> +++ b/arch/riscv/mm/context.c
+> @@ -18,8 +18,7 @@
+>
+>  #ifdef CONFIG_MMU
+>
+> -DEFINE_STATIC_KEY_FALSE(use_asid_allocator);
+> -
+> +static DEFINE_STATIC_KEY_FALSE(use_asid_allocator);
+>  static unsigned long num_asids;
+>
+>  static atomic_long_t current_version;
+> diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
+> index 5ec621545c69..39d80f56d292 100644
+> --- a/arch/riscv/mm/tlbflush.c
+> +++ b/arch/riscv/mm/tlbflush.c
+> @@ -84,8 +84,7 @@ static void __flush_tlb_range(struct mm_struct *mm, uns=
+igned long start,
+>                 if (cpumask_empty(cmask))
+>                         return;
+>
+> -               if (static_branch_unlikely(&use_asid_allocator))
+> -                       asid =3D cntx2asid(atomic_long_read(&mm->context.=
+id));
+> +               asid =3D cntx2asid(atomic_long_read(&mm->context.id));
+>         } else {
+>                 cmask =3D cpu_online_mask;
+>         }
+> --
+> 2.42.0
+>
 
-SoC
+You can add:
 
-> code needs to be modified, and the corresponding
-> Document must also be modified, which is quite troublesome.
-> To avoid modifying the driver file, the number of eics
-> is automatically calculated by matching dts nodes.
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 
---=20
-With Best Regards,
-Andy Shevchenko
+Thanks!
+
+Alex
