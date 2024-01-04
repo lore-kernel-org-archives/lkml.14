@@ -1,329 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5601E52E;
-	Thu,  4 Jan 2024 06:07:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0C41BDDB;
+	Thu,  4 Jan 2024 06:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SCoogXs2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704348424; x=1735884424;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=uPiewepm8PfvEB9N3GZvZfx/+4uX3nbmL/Wb6i5OHqg=;
-  b=SCoogXs2Vo9x5blnb3CNA0KzkIZ8HZBf191BTCO7bTA7ZOasKHHgUd+U
-   YsJu8KdoxgVKIy/I2FrhQGekaQw1oub9rseKvZgQxbUMuXdfgZN77jORn
-   XU+KwD0RjSTVw7VGLs46I5u8eprJFreY8U0SiJXuB3hZzsftBHPz9zINT
-   PbgUm2gcR2xYnEkNJUAMBKilEUuM5+73fj1EYOsPRjCIShrkTdf/QTc3q
-   lFS4N1WZ5TvLzuum5s88Qpa5mdoBvqeOuhO9kYSg5+dxZ8/hJr7Hh/xHV
-   WVCo8R/4QbeUEMfNzyt49uMJfScRsYNRDSZHw2ytdg5W/g7kR98fPKJfU
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="396855975"
-X-IronPort-AV: E=Sophos;i="6.04,329,1695711600"; 
-   d="scan'208";a="396855975"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 22:07:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,329,1695711600"; 
-   d="scan'208";a="14741076"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 22:06:59 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Srinivasulu Thanneeru <sthanneeru@micron.com>
-Cc: gregory.price <gregory.price@memverge.com>,  Srinivasulu Opensrc
- <sthanneeru.opensrc@micron.com>,  "linux-cxl@vger.kernel.org"
- <linux-cxl@vger.kernel.org>,  "linux-mm@kvack.org" <linux-mm@kvack.org>,
-  "aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>,
-  "dan.j.williams@intel.com" <dan.j.williams@intel.com>,  "mhocko@suse.com"
- <mhocko@suse.com>,  "tj@kernel.org" <tj@kernel.org>,
-  "john@jagalactic.com" <john@jagalactic.com>,  Eishan Mirakhur
- <emirakhur@micron.com>,  "Vinicius Tavares Petrucci"
- <vtavarespetr@micron.com>,  Ravis OpenSrc <Ravis.OpenSrc@micron.com>,
-  "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,  Johannes
- Weiner <hannes@cmpxchg.org>,  Wei Xu <weixugc@google.com>
-Subject: Re: [EXT] Re: [RFC PATCH v2 0/2] Node migration between memory tiers
-In-Reply-To: <PH0PR08MB79552F35351FA57EF4BD64B4A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
-	(Srinivasulu Thanneeru's message of "Wed, 3 Jan 2024 08:47:57 +0000")
-References: <20231213175329.594-1-sthanneeru.opensrc@micron.com>
-	<87cyv8qcqk.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<ZXyQIJOim1+tE0Qr@memverge.com>
-	<87fs00njft.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<PH0PR08MB7955E9F08CCB64F23963B5C3A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
-	<87edezc5l1.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<PH0PR08MB79550922630FEC47E4B4D3A3A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
-	<87a5pmddl5.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<PH0PR08MB79552F35351FA57EF4BD64B4A860A@PH0PR08MB7955.namprd08.prod.outlook.com>
-Date: Thu, 04 Jan 2024 14:05:01 +0800
-Message-ID: <87wmspbpma.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mwb4AltP"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5e78d948551so490247b3.0;
+        Wed, 03 Jan 2024 22:07:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704348442; x=1704953242; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XzkM14bUvWBneJ4PcTPU9fRSFWTidhoVTGpxL68Hv+E=;
+        b=Mwb4AltPbtDJv8IAl2VdmDvZRPXZAab3Qw7hMErmOOADJqVbce0x4GUlrqYxnKcOrh
+         gGlt/zRRJ+I3JC/1h1Pyn0TqkCXAGNOxi1FtsC41S4rQZ6ZbYOnY6+48r6q8uKF6LRmP
+         UxlSN334EjYxgZRUvlQqU3elWx9uvfHWEenRvE61/uKOyV4hdy1HPj0ZnAvLDR4LPBkN
+         fICE6b3Y8IOV5gGKzs2G/gJllxqIZ3XNZQW821Gd8bAQLO8oyDDAFaI9fcR9P2UN3D34
+         l2t/sPre8ErcKT11AyUdBsZCgUW2ttmemAtfYw4Rpw0xMgkfkB6kRlv0OMAdXBcsOfGU
+         v2Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704348442; x=1704953242;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XzkM14bUvWBneJ4PcTPU9fRSFWTidhoVTGpxL68Hv+E=;
+        b=jfd8kWtWC58c5GF+ZvkSAWxSUqPci/mW4cMGjjr4ufsathYEnA1rKHwPAkX6hmE73G
+         JsmHDx+QOHUf6zcEPIjvb1bYpx5IDpfiI1wggWflWmYCTaeTHf9iynQzmt1E3WFXXWP+
+         CWPHFM5jPEe5juHLN496owIsLFojepMyAgYtLj4g+BEaqZCR8VS0cYJykstY1J3hy15R
+         haSbv1D9zi7Z+IPwaq0/INPQhJNTimu7GLI3UuISIIHjd2yaloOmixnbv3KRkJ9zMPiL
+         Fszd9lnd/FnZUlaEQ07npEfkYgLU361NXuNhKKrDXPghvgiVxl+SoAoaIudt7kj/Soax
+         cxoQ==
+X-Gm-Message-State: AOJu0YzhOjf5SkhrEgX3EZHPLLSIEAOmtuKacWwtGVis42fDNFw1Mb8R
+	eMQq4l5OZ9hbCKoVjDIDm+EFB1+OF4vmrxJO8H8ZNhGJdYrPFQ==
+X-Google-Smtp-Source: AGHT+IEuRWd8bUJ4hDCMKpB8/YiLxGplcsaMCBC8s/kTRyQm1TRMRvM52FuwmsUjfcOuaZs5BJ7Zoi+9mSvFTaN8Sww=
+X-Received: by 2002:a25:d24d:0:b0:dbd:522c:32aa with SMTP id
+ j74-20020a25d24d000000b00dbd522c32aamr140651ybg.5.1704348441758; Wed, 03 Jan
+ 2024 22:07:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+References: <CAPnZJGDcNwPLbzC99qNQ+bRMwxPU-Z0xe=TD6DWQU=0MNyeftA@mail.gmail.com>
+ <d4b227de-d609-aef2-888b-203dbcf06707@landley.net> <CAPnZJGBeV-E_AN8GnTfkaJvRtBmCeMYYCt+O0XMsc3kDULRuKg@mail.gmail.com>
+ <fb776d99-1956-4e1b-9afc-84f27ca40f46@linux.ibm.com> <0879141d-462c-7e94-7c87-7a5b5422b8ed@landley.net>
+ <e32077de-b159-4a7b-89a3-e1925239142f@linux.ibm.com> <fcb45898-0699-878f-0656-f570607fbed4@landley.net>
+In-Reply-To: <fcb45898-0699-878f-0656-f570607fbed4@landley.net>
+From: Askar Safin <safinaskar@gmail.com>
+Date: Thu, 4 Jan 2024 09:06:45 +0300
+Message-ID: <CAPnZJGAr8BfTHmn3QZnJ6dnVCQsUnUASmdH4tzz0-QMwHmZZLQ@mail.gmail.com>
+Subject: Re: [PATCH v3] rootfs: Fix support for rootfstype= when root= is given
+To: Rob Landley <rob@landley.net>
+Cc: Stefan Berger <stefanb@linux.ibm.com>, gregkh@linuxfoundation.org, 
+	initramfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org, zohar@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Srinivasulu Thanneeru <sthanneeru@micron.com> writes:
+On Sat, Dec 30, 2023 at 8:01=E2=80=AFPM Rob Landley <rob@landley.net> wrote=
+:
+> I've been following the initramfs xattr support threads forever:
 
->> -----Original Message-----
->> From: Huang, Ying <ying.huang@intel.com>
->> Sent: Wednesday, January 3, 2024 2:00 PM
->> To: Srinivasulu Thanneeru <sthanneeru@micron.com>
->> Cc: gregory.price <gregory.price@memverge.com>; Srinivasulu Opensrc
->> <sthanneeru.opensrc@micron.com>; linux-cxl@vger.kernel.org; linux-
->> mm@kvack.org; aneesh.kumar@linux.ibm.com; dan.j.williams@intel.com;
->> mhocko@suse.com; tj@kernel.org; john@jagalactic.com; Eishan Mirakhur
->> <emirakhur@micron.com>; Vinicius Tavares Petrucci
->> <vtavarespetr@micron.com>; Ravis OpenSrc <Ravis.OpenSrc@micron.com>;
->> Jonathan.Cameron@huawei.com; linux-kernel@vger.kernel.org; Johannes
->> Weiner <hannes@cmpxchg.org>; Wei Xu <weixugc@google.com>
->> Subject: Re: [EXT] Re: [RFC PATCH v2 0/2] Node migration between memory
->> tiers
->>
->> CAUTION: EXTERNAL EMAIL. Do not click links or open attachments unless
->> you recognize the sender and were expecting this message.
->>
->>
->> Srinivasulu Thanneeru <sthanneeru@micron.com> writes:
->>
->> > Micron Confidential
->> >
->> >
->> >
->> > Micron Confidential
->> >> -----Original Message-----
->> >> From: Huang, Ying <ying.huang@intel.com>
->> >> Sent: Wednesday, January 3, 2024 11:38 AM
->> >> To: Srinivasulu Thanneeru <sthanneeru@micron.com>
->> >> Cc: gregory.price <gregory.price@memverge.com>; Srinivasulu Opensrc
->> >> <sthanneeru.opensrc@micron.com>; linux-cxl@vger.kernel.org; linux-
->> >> mm@kvack.org; aneesh.kumar@linux.ibm.com;
->> dan.j.williams@intel.com;
->> >> mhocko@suse.com; tj@kernel.org; john@jagalactic.com; Eishan Mirakhur
->> >> <emirakhur@micron.com>; Vinicius Tavares Petrucci
->> >> <vtavarespetr@micron.com>; Ravis OpenSrc
->> <Ravis.OpenSrc@micron.com>;
->> >> Jonathan.Cameron@huawei.com; linux-kernel@vger.kernel.org; Johannes
->> >> Weiner <hannes@cmpxchg.org>; Wei Xu <weixugc@google.com>
->> >> Subject: Re: [EXT] Re: [RFC PATCH v2 0/2] Node migration between
->> memory
->> >> tiers
->> >>
->> >> CAUTION: EXTERNAL EMAIL. Do not click links or open attachments unless
->> >> you recognize the sender and were expecting this message.
->> >>
->> >>
->> >> Srinivasulu Thanneeru <sthanneeru@micron.com> writes:
->> >>
->> >> > Micron Confidential
->> >> >
->> >> > Hi Huang, Ying,
->> >> >
->> >> > My apologies for wrong mail reply format, my mail client settings got
->> >> changed on my PC.
->> >> > Please find comments bellow inline.
->> >> >
->> >> > Regards,
->> >> > Srini
->> >> >
->> >> >
->> >> > Micron Confidential
->> >> >> -----Original Message-----
->> >> >> From: Huang, Ying <ying.huang@intel.com>
->> >> >> Sent: Monday, December 18, 2023 11:26 AM
->> >> >> To: gregory.price <gregory.price@memverge.com>
->> >> >> Cc: Srinivasulu Opensrc <sthanneeru.opensrc@micron.com>; linux-
->> >> >> cxl@vger.kernel.org; linux-mm@kvack.org; Srinivasulu Thanneeru
->> >> >> <sthanneeru@micron.com>; aneesh.kumar@linux.ibm.com;
->> >> >> dan.j.williams@intel.com; mhocko@suse.com; tj@kernel.org;
->> >> >> john@jagalactic.com; Eishan Mirakhur <emirakhur@micron.com>;
->> Vinicius
->> >> >> Tavares Petrucci <vtavarespetr@micron.com>; Ravis OpenSrc
->> >> >> <Ravis.OpenSrc@micron.com>; Jonathan.Cameron@huawei.com;
->> linux-
->> >> >> kernel@vger.kernel.org; Johannes Weiner <hannes@cmpxchg.org>; Wei
->> Xu
->> >> >> <weixugc@google.com>
->> >> >> Subject: [EXT] Re: [RFC PATCH v2 0/2] Node migration between memory
->> >> tiers
->> >> >>
->> >> >> CAUTION: EXTERNAL EMAIL. Do not click links or open attachments
->> unless
->> >> >> you recognize the sender and were expecting this message.
->> >> >>
->> >> >>
->> >> >> Gregory Price <gregory.price@memverge.com> writes:
->> >> >>
->> >> >> > On Fri, Dec 15, 2023 at 01:02:59PM +0800, Huang, Ying wrote:
->> >> >> >> <sthanneeru.opensrc@micron.com> writes:
->> >> >> >>
->> >> >> >> > =============
->> >> >> >> > Version Notes:
->> >> >> >> >
->> >> >> >> > V2 : Changed interface to memtier_override from adistance_offset.
->> >> >> >> > memtier_override was recommended by
->> >> >> >> > 1. John Groves <john@jagalactic.com>
->> >> >> >> > 2. Ravi Shankar <ravis.opensrc@micron.com>
->> >> >> >> > 3. Brice Goglin <Brice.Goglin@inria.fr>
->> >> >> >>
->> >> >> >> It appears that you ignored my comments for V1 as follows ...
->> >> >> >>
->> >> >> >>
->> >> >>
->> >>
->> https://lore.k/
->> %2F&data=05%7C02%7Csthanneeru%40micron.com%7Ce9e04d25ea7540100
->> cf308dc0c366eb1%7Cf38a5ecd28134862b11bac1d563c806f%7C0%7C0%7C63
->> 8398675187014390%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMD
->> AiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C
->> &sdata=k6J1wxcuHTwR9eoD9Yz137bkn6wt1L9zpf5YaOjoIqA%3D&reserved=0
->> >>
->> %2F&data=05%7C02%7Csthanneeru%40micron.com%7C3e5d38eb47be463c2
->> >>
->> 95c08dc0c229d22%7Cf38a5ecd28134862b11bac1d563c806f%7C0%7C0%7C63
->> >>
->> 8398590664228240%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMD
->> >>
->> AiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C
->> >>
->> &sdata=7fPxb1YYR2tZ0v2FB1vlXnMJFcI%2Fr9HT2%2BUD1MNUd%2FI%3D&re
->> >> served=0
->> >> >> ernel.org%2Flkml%2F87o7f62vur.fsf%40yhuang6-
->> >> >>
->> >>
->> desk2.ccr.corp.intel.com%2F&data=05%7C02%7Csthanneeru%40micron.com
->> >> >>
->> >>
->> %7C5e614e5f028342b6b59c08dbff8e3e37%7Cf38a5ecd28134862b11bac1d56
->> >> >>
->> >>
->> 3c806f%7C0%7C0%7C638384758666895965%7CUnknown%7CTWFpbGZsb3d
->> >> >>
->> >>
->> 8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3
->> >> >>
->> >>
->> D%7C3000%7C%7C%7C&sdata=OpMkYCar%2Fv8uHb7AvXbmaNltnXeTvcNUTi
->> >> >> bLhwV12Fg%3D&reserved=0
->> >> >
->> >> > Thank you, Huang, Ying for pointing to this.
->> >> >
->> >>
->> https://lpc.ev/
->> %2F&data=05%7C02%7Csthanneeru%40micron.com%7Ce9e04d25ea7540100
->> cf308dc0c366eb1%7Cf38a5ecd28134862b11bac1d563c806f%7C0%7C0%7C63
->> 8398675187014390%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMD
->> AiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C
->> &sdata=%2F0AW8RYpTIa7%2FiScnkzmmTeAE9TYqjsuWWjTuxBPptk%3D&rese
->> rved=0
->> >>
->> ents%2Fevent%2F16%2Fcontributions%2F1209%2Fattachments%2F1042%2F1
->> >>
->> 995%2FLive%2520In%2520a%2520World%2520With%2520Multiple%2520Me
->> >>
->> mory%2520Types.pdf&data=05%7C02%7Csthanneeru%40micron.com%7C3e
->> >>
->> 5d38eb47be463c295c08dc0c229d22%7Cf38a5ecd28134862b11bac1d563c806
->> >>
->> f%7C0%7C0%7C638398590664228240%7CUnknown%7CTWFpbGZsb3d8eyJW
->> >>
->> IjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3
->> >>
->> 000%7C%7C%7C&sdata=1fGraxff7%2F1hNaE0an0xEudSKSUvaF3HgClMkmdC7
->> >> n8%3D&reserved=0
->> >> >
->> >> > In the presentation above, the adistance_offsets are per memtype.
->> >> > We believe that adistance_offset per node is more suitable and flexible.
->> >> > since we can change it per node. If we keep adistance_offset per
->> memtype,
->> >> > then we cannot change it for a specific node of a given memtype.
->> >> >
->> >> >> >>
->> >> >>
->> >>
->> https://lore.k/
->> %2F&data=05%7C02%7Csthanneeru%40micron.com%7Ce9e04d25ea7540100
->> cf308dc0c366eb1%7Cf38a5ecd28134862b11bac1d563c806f%7C0%7C0%7C63
->> 8398675187014390%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMD
->> AiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C
->> &sdata=k6J1wxcuHTwR9eoD9Yz137bkn6wt1L9zpf5YaOjoIqA%3D&reserved=0
->> >>
->> %2F&data=05%7C02%7Csthanneeru%40micron.com%7C3e5d38eb47be463c2
->> >>
->> 95c08dc0c229d22%7Cf38a5ecd28134862b11bac1d563c806f%7C0%7C0%7C63
->> >>
->> 8398590664228240%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMD
->> >>
->> AiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C
->> >>
->> &sdata=7fPxb1YYR2tZ0v2FB1vlXnMJFcI%2Fr9HT2%2BUD1MNUd%2FI%3D&re
->> >> served=0
->> >> >> ernel.org%2Flkml%2F87jzpt2ft5.fsf%40yhuang6-
->> >> >>
->> >>
->> desk2.ccr.corp.intel.com%2F&data=05%7C02%7Csthanneeru%40micron.com
->> >> >>
->> >>
->> %7C5e614e5f028342b6b59c08dbff8e3e37%7Cf38a5ecd28134862b11bac1d56
->> >> >>
->> >>
->> 3c806f%7C0%7C0%7C638384758666895965%7CUnknown%7CTWFpbGZsb3d
->> >> >>
->> >>
->> 8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3
->> >> >>
->> >>
->> D%7C3000%7C%7C%7C&sdata=O0%2B6T%2FgU0TicCEYBac%2FAyjOLwAeouh
->> >> >> D%2BcMI%2BflOsI1M%3D&reserved=0
->> >> >
->> >> > Yes, memory_type would be grouping the related memories together as
->> >> single tier.
->> >> > We should also have a flexibility to move nodes between tiers, to
->> address
->> >> the issues.
->> >> > described in use cases above.
->> >>
->> >> We don't pursue absolute flexibility.  We add necessary flexibility
->> >> only.  Why do you need this kind of flexibility?  Can you provide some
->> >> use cases where memory_type based "adistance_offset" doesn't work?
->> >
->> > - /sys/devices/virtual/memory_type/memory_type/ adistance_offset
->> > memory_type based "adistance_offset will provide a way to move all nodes
->> of same memory_type (e.g. all cxl nodes)
->> > to different tier.
->>
->> We will not put the CXL nodes with different performance metrics in one
->> memory_type.  If so, do you still need to move one of them?
->
-> From  https://lpc.events/event/16/contributions/1209/attachments/1042/1995/Live%20In%20a%20World%20With%20Multiple%20Memory%20Types.pdf
-> abstract_distance_offset: override by users to deal with firmware issue.
->
-> say firmware can configure the cxl node into wrong tiers, similar to
-> that it may also configure all cxl nodes into single memtype, hence
-> all these nodes can fall into a single wrong tier.
-> In this case, per node adistance_offset would be good to have ?
+Here is my proposal: add to the kernel support for catar (
+https://0pointer.net/blog/casync-a-tool-for-distributing-file-system-images=
+.html
+) in addition to cpio. catar has the following advantages:
 
-I think that it's better to fix the error firmware if possible.  And
-these are only theoretical, not practical issues.  Do you have some
-practical issues?
-
-I understand that users may want to move nodes between memory tiers for
-different policy choices.  For that, memory_type based adistance_offset
-should be good.
-
-> --
-> Srini
->> > Whereas /sys/devices/system/node/node2/memtier_override provide a
->> way migrate a node from one tier to another.
->> > Considering a case where we would like to move two cxl nodes into two
->> different tiers in future.
->> > So, I thought it would be good to have flexibility at node level instead of at
->> memory_type.
+- catar is simple and reproducible. For the same directory tree the
+same bit-precise catar file is generated, which is good for
+cryptographic signatures. As opposed to tar's monstrosity (
+https://www.cyphar.com/blog/post/20190121-ociv2-images-i-tar )
+- catar has support for xattr. It has support for nearly all types of
+metainformation Linux offers (32 bit UIDs, nanosecond timestamps,
+"disable CoW" flag and various other flags, selinux file labels, file
+capabilities, etc). All this metainformation can be disabled if
+needed. So, next time we will want to add some new type of
+metainformation, there will be no need for lengthy discussions about
+how it should be stored. All needed metainformation is already
+supported
 
 --
-Best Regards,
-Huang, Ying
+Askar Safin
