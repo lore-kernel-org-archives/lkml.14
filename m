@@ -1,159 +1,136 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2068.outbound.protection.outlook.com [40.107.6.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D350624B31;
-	Thu,  4 Jan 2024 16:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vaisala.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vaisala.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F4224B4F
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 16:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=landley.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vaisala.com header.i=@vaisala.com header.b="YpvNiNih"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F7a++qb+WUdqhXQwHJby74npaLHwMJ8wi48arsb9HkKsnAUdHxsmI/MqExQODuhOpQdow9GNkIPYrjbKPCxJ68q02RtgbBp60shgh4UY/IJ7CqP7d9yT5XZuJU3AlzjiuAMHoD3vIdZUomwj/ALDAFBSRLM2quSvCBwvXNtJuJC5uSt1u5VUJreOug2QoSzpdCizaePBGoR7nq462zhDmfTVrigPo6xO0abjUm9JHTbc45x3UaxJfWaGW3YIiK9I2OuTy1ThAlY7ZoymVjTCf+K4QwV0usYcRVqbu8tJWkp0Lu5UVT5lfWLqQtHyizKIUA93yiH6T0SdEweMnCDrJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=b6j/PXSSjd7Il1d46P+Q91bGxsgI2QsEh6mSukI9DPo=;
- b=nHKKkY803PAZa2g68VvmrbX1vHu49WrVcjRalgyxPjCrJ31RnYoWoidR/MEOqgcMpUYHmzeKLe04mv1+eZbPyRPBUx25t+dxngrEcII3XPsfAIIsvmsH4Qu/zId5clciPhn2U2RbOE2dNzJHFSGSlWgY9QrFVJEelsHHR+qjoxfNG+jdnHbwTVzjxO+fgVqRSQ4WyNiRa9J9+hnorQTGPyuv5PqrAmOfyfR16zs9R9ul18LqtZSFbw72NaxHan20uKkX22kdGirVQbY/0KFzzB/i9xmWDpn/KLui7QR9+Z3piJSxYY7vWN2Rcurf1Qkc/Bw7q2gX4xtuYcwd8E5osg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vaisala.com; dmarc=pass action=none header.from=vaisala.com;
- dkim=pass header.d=vaisala.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vaisala.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b6j/PXSSjd7Il1d46P+Q91bGxsgI2QsEh6mSukI9DPo=;
- b=YpvNiNih9IuExiIgHrMQCkTSTOTmYSoXM5l4etokxSJ82kZbdi0wpn0H00d5Q+eYELFP/LIBdyf1e6UWcFfHRu8X0/2srrfmwKgmba4LHJtJY6ZPObtHh4kewIVutaeUFY7FIxBTuDYgl5BTIQZZOpOcfCsfR0UdejGpHxY7jk9p/uGJhagD0QY5s5I62qHqYcAcnpXolFK7jz0AyohhCmdyONfpv9e/oKTTlCCrBn++pcAYshzzk9csk2NJEUxxoP4UcQivNxwSeRx1+xKHxLt+w0EpsALizpkQcZlkSR97hWhJQ2Fv8+vYQ2JaziJRYNdYAKQFWlkJzwjpiGFCLw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vaisala.com;
-Received: from AS4PR06MB8447.eurprd06.prod.outlook.com (2603:10a6:20b:4e2::11)
- by AM0PR06MB6497.eurprd06.prod.outlook.com (2603:10a6:208:1a2::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.14; Thu, 4 Jan
- 2024 16:32:21 +0000
-Received: from AS4PR06MB8447.eurprd06.prod.outlook.com
- ([fe80::820:f7b6:7f2b:324b]) by AS4PR06MB8447.eurprd06.prod.outlook.com
- ([fe80::820:f7b6:7f2b:324b%4]) with mapi id 15.20.7159.013; Thu, 4 Jan 2024
- 16:32:21 +0000
-From: niko.mauno@vaisala.com
-To: gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Niko Mauno <niko.mauno@vaisala.com>
-Subject: [PATCH] usb: core: Make default authorization mode configurable
-Date: Thu,  4 Jan 2024 18:32:03 +0200
-Message-Id: <20240104163203.7381-1-niko.mauno@vaisala.com>
-X-Mailer: git-send-email 2.39.2
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: AS4P190CA0028.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:20b:5d0::17) To AS4PR06MB8447.eurprd06.prod.outlook.com
- (2603:10a6:20b:4e2::11)
+	dkim=pass (2048-bit key) header.d=landley-net.20230601.gappssmtp.com header.i=@landley-net.20230601.gappssmtp.com header.b="FGndA+ao"
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-7ba9c26e14aso20360539f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 08:32:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=landley-net.20230601.gappssmtp.com; s=20230601; t=1704385946; x=1704990746; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GZozTrRnGVXzy31zBAY9Io4KyrsVmk5XpdKMFCKbp5Q=;
+        b=FGndA+aoe6WDkgaivOKRHwydkzkusJ8CuvZXYuM5KMprCew/0HZKAHsTxfP7JXLYRM
+         FfCvbWbi3xXR5BqM3gdc6WZGBISwuoAip158x+ftCkm64Z9NCbKT6MqCPMSwCzYej+EG
+         2RzZ0bHZOqOmBudyeTCWgnD/RkDHyGNdZP0Rpwm+TEfDvCs9p+El9xGlUiitquXlNtvy
+         HQ/yTlNnFdo5pRpvoIG1sRBqSFnQRYwc2HwzIwO7KaChSCqaKtxkaoWcaFd0D+LHhccx
+         dWpLZ+W5pLuVlaUShb9dcUYge5KF1U7bxcJhG0lETalKMntPslu3WRryXCRdi5A21oG7
+         rncQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704385946; x=1704990746;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GZozTrRnGVXzy31zBAY9Io4KyrsVmk5XpdKMFCKbp5Q=;
+        b=BCejj8NBtFB24qh1IPm+UaTNIugIOfChswHA0r0kJXLS3cpDPgcjY21U3aJllzDxYK
+         zH4hf+XOhuHSSzsw7KTn6r0xxPLvhjCPMaMtYj9xMIxZ3GB/y8xRIN7iEpCHGBchT2MM
+         SplBYj4hkunFQalqCmGxpwwhpEGp31yt7o8u9u1K8phU0M9GCApWE7KzPkW+sLkf/zV3
+         KS9HZtdIEOk2lC4R9xxiIukKzNP5wTT1IS+1cWgNB3Jq9VtCc/PnlCIEJmLGfF8gaP13
+         AlvwSXuEzOjbHS4ADYGD7WYhke4qShMNgoagPs6b6GYqVTnS51xkIQWIx4mUY44WOKJd
+         h/fw==
+X-Gm-Message-State: AOJu0YwPIMKoMVZGK6O6iC283BIjpruBLtY8XYQLWEXEg8ka+/kpkzFl
+	0u9UQq5LUV+75c3kyCvNzILRKW8RCkjeFg==
+X-Google-Smtp-Source: AGHT+IGfv7ALW3+Jd+SE55tGh732azgppxaH8IixXrfYqjh5vvjsIK9HlVCx+k8e0bLSIH6hQ0rZAQ==
+X-Received: by 2002:a6b:e511:0:b0:7ba:7d6a:652c with SMTP id y17-20020a6be511000000b007ba7d6a652cmr543650ioc.3.1704385946492;
+        Thu, 04 Jan 2024 08:32:26 -0800 (PST)
+Received: from [172.16.32.83] ([198.232.126.202])
+        by smtp.gmail.com with ESMTPSA id n21-20020a02a915000000b0046df6a4574dsm212304jam.161.2024.01.04.08.32.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jan 2024 08:32:26 -0800 (PST)
+Message-ID: <c7b8d248-fb59-0476-dea8-89d40207460f@landley.net>
+Date: Thu, 4 Jan 2024 10:38:53 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS4PR06MB8447:EE_|AM0PR06MB6497:EE_
-X-MS-Office365-Filtering-Correlation-Id: b4b831cd-099d-49bd-2acd-08dc0d42b95d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Z53eydDK4tiNRlDoCRR8tMQDLyCiIQU9UU5oPeqVFzuuSqKdJi7rubkDp5HNIIP1PiDtNYSm1YUJt1imkVy90AmWZf/G6y+B7rOkz4HgdZrNctupODTrRMKnlNNlQM5j19lmTN19MrxqZ8elU83+J4HMiD8BQUFMfLuuplMZRWOL4QJemFouJjsbhGz49mfEeUC3ozL0UqcuTsRFHAa8qCtzq4CQPnOYP0pfpKgAp18p1H7zhKIqzVON9T202r3sARlnL7SYatrjNhdGtJOYnDMt9hJ1SxgVZEeQPUzDfpEqg0uJswxwP4XyAs/q02iVFF3T7cyzhSGu7GCc2/HXYUvJ93PzufIvoVm+qNDCGE4NPlwEdJtio1BrieZ/NvSuuO/ZhuvTYJZVsf3mcdVzvPt3JBv1KLSmRNt/cijeQpM2NBVcX+L62lf2GgjOMF8QQh7+is++u/B4mw3oxt9BmcuJePMcOCiXBOwrsEBTnxLgXRZ2gkjbApTO6fn7CF405rOaLWnz1+vfcM+l+DX2AwIGO8RX/QW5UgQAxmJqhIoo7BepanSqoIkWa6kawSScSB8ZpfulWkbmide5/3yHTBgjPYusDXI7I0AC3S9QsH2qLWRmP593lkDB9VCRDZ5b
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR06MB8447.eurprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(396003)(39850400004)(376002)(366004)(346002)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(6666004)(9686003)(6512007)(38100700002)(478600001)(6486002)(41300700001)(2616005)(6916009)(107886003)(26005)(1076003)(52116002)(6506007)(66476007)(66556008)(66946007)(316002)(36756003)(8676002)(8936002)(86362001)(4326008)(83380400001)(38350700005)(2906002)(5660300002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?tpvbz/P4Jl7EGdbKQN+ItCu7grkvjYmb4wY6c62OXJl0oSBcJfjmwlFNFD69?=
- =?us-ascii?Q?bnJxnCh6tgIfkO8GnmMEDLqlvob6M66czjwpwZSudNcOpo0QtExwsX5Iv1zm?=
- =?us-ascii?Q?99RDVE0NubVsqWrRwcPUB/1CBojpGCKE1x61t4DVZ8GSdu5/kvElQXT4PxTA?=
- =?us-ascii?Q?mJtWraIjc2qHMXrrT7+0bnW2vo7idq6HdhRaVQ6iZMOXDgARE6CzvwsbcKMJ?=
- =?us-ascii?Q?VYM6Y+lC+37ybnwYs8mIGqdW1jb2CyxIKPw+eQNsLrUwCxjVff6iOdgocXEC?=
- =?us-ascii?Q?bHkyYqk29wWTWeTBKZH85DGkqQIvfih3IMEqvWHbkCSlHCXnse/lEGqYI3E7?=
- =?us-ascii?Q?isj7FHeOVzUCimILGnDlVIFlH9UIsA8VwrdeQNgP6iOU/NBQqPdtl17Z2cVj?=
- =?us-ascii?Q?btbbO/Xjp7nTjLr2rr+wHDX51iONC8xusCuKC1NbEhChp8DdgaHEe1I2UqMX?=
- =?us-ascii?Q?OamT4ivuc+iOrS9BoXHGWau+8NXqImZX/K9jfu9J1G7mkKcOftJW+FKTIRFw?=
- =?us-ascii?Q?QUK3LGJp0HR1QDmBlArqEcBkCEKtY3Cc2vDW3dtHbN9F5ekmHMGBk9NYqsjx?=
- =?us-ascii?Q?FeP5pSi2NyJBPrDQNMIQfQbecDdyppkbxOVA3AIvbPYmVq7KfK2lRUp51VU/?=
- =?us-ascii?Q?lfjQ0Qd6IdVasikVm5kanMm3XC72YjdY/ImTwSUAGsmzBEceHxi40SoxK5PQ?=
- =?us-ascii?Q?onSD7p37ffOls0lpSTEDRe/G/mGWfn88qxAV9K3MbeXyhh2WDhMbFmVOlZxI?=
- =?us-ascii?Q?LYFjhLNNK9S6B+UGhzR7oLuna44ww+rG83EGZBVR3aeGf/8VuNgmyskLlr/T?=
- =?us-ascii?Q?n+s0qI3EE9fJDSu8r2n9pG2+CjTGPGxU8Rsx48E07M4aILyWWvLxJ4Wv10FZ?=
- =?us-ascii?Q?Uriu3U/6IZBMAhfTVE+0yJ9zlzhx7k2dpEciEDL+sk7QwhdkF2udieH3kccR?=
- =?us-ascii?Q?hDJAFsbG60E4gFJFDEforelnxoks/yjx+bOLy4V3NKbm0UhBxJxdXf10PsRx?=
- =?us-ascii?Q?LNdxO619vEEAPVqlrFd+3EnYYdgOFoVL9l2VjOJ+i9YkUG3/HMhCf0fMflJq?=
- =?us-ascii?Q?0Ru0vKOiE0lIVF+JrkKOpa8dIjg3U3DV9BbIZPRYZRswEG6Ir4WZ3t719Dlt?=
- =?us-ascii?Q?lC4Tn29zkfD2JUhiDHWxnRZuxW6gWhmcm0j85HZRvc56POWG6sxN8MBT1RTA?=
- =?us-ascii?Q?A2pqDRDOQuvVSIoxeHcusLOPPVkXhlPjrtA6KaIVKNjK46WglxncoBkG+Xwe?=
- =?us-ascii?Q?CkfBeVNEXTN05+XFn1MhUh+Wl9s/9sPdrGxqZsK5If+RXGxJ4oZiIqzlX1p+?=
- =?us-ascii?Q?+riemRB0bD9ea1JmZdfQfuwTllewywUc8Tw47whVSZpiHy/N6yXYWj+zetVJ?=
- =?us-ascii?Q?sATpJvg/zc7GIZOhM6kMKMkau9sUNcF9tlss0NyH5vyxX9K3UYjjWPHvrKid?=
- =?us-ascii?Q?w9m3oVhDot6FXQGXUsLenCtN7CHiAZDeb3ISf98Qmg+ukg5NUyOhMSFxJywv?=
- =?us-ascii?Q?/+K7SyPq6tcaL+8f8pDg0/kBDmuS9zp05But+jESjRk6op9T2MfgJSSVVufB?=
- =?us-ascii?Q?gKS2xz8fr5XPYqJWnU/byMnOH/8psfmfR06BTjOL5nhKWn1g9lCYmIPg4HEJ?=
- =?us-ascii?Q?CA=3D=3D?=
-X-OriginatorOrg: vaisala.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b4b831cd-099d-49bd-2acd-08dc0d42b95d
-X-MS-Exchange-CrossTenant-AuthSource: AS4PR06MB8447.eurprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jan 2024 16:32:20.9787
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 6d7393e0-41f5-4c2e-9b12-4c2be5da5c57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WUnmL8GR+u4qrhP1N7rZZP1tkM37y9sz1YZx6e9ktH0FGnE0NWz4VHuPaO5UE/UqdbLFyC6xaEzWK9YdOevXDw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR06MB6497
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v3] rootfs: Fix support for rootfstype= when root= is
+ given
+Content-Language: en-US
+To: Askar Safin <safinaskar@gmail.com>
+Cc: Stefan Berger <stefanb@linux.ibm.com>, gregkh@linuxfoundation.org,
+ initramfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, zohar@linux.ibm.com
+References: <CAPnZJGDcNwPLbzC99qNQ+bRMwxPU-Z0xe=TD6DWQU=0MNyeftA@mail.gmail.com>
+ <d4b227de-d609-aef2-888b-203dbcf06707@landley.net>
+ <CAPnZJGBeV-E_AN8GnTfkaJvRtBmCeMYYCt+O0XMsc3kDULRuKg@mail.gmail.com>
+ <fb776d99-1956-4e1b-9afc-84f27ca40f46@linux.ibm.com>
+ <0879141d-462c-7e94-7c87-7a5b5422b8ed@landley.net>
+ <e32077de-b159-4a7b-89a3-e1925239142f@linux.ibm.com>
+ <fcb45898-0699-878f-0656-f570607fbed4@landley.net>
+ <CAPnZJGAr8BfTHmn3QZnJ6dnVCQsUnUASmdH4tzz0-QMwHmZZLQ@mail.gmail.com>
+From: Rob Landley <rob@landley.net>
+In-Reply-To: <CAPnZJGAr8BfTHmn3QZnJ6dnVCQsUnUASmdH4tzz0-QMwHmZZLQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Niko Mauno <niko.mauno@vaisala.com>
+On 1/4/24 00:06, Askar Safin wrote:
+> On Sat, Dec 30, 2023 at 8:01 PM Rob Landley <rob@landley.net> wrote:
+>> I've been following the initramfs xattr support threads forever:
+> 
+> Here is my proposal: add to the kernel support for catar (
+> https://0pointer.net/blog/casync-a-tool-for-distributing-file-system-images.html
+> ) in addition to cpio. catar has the following advantages:
 
-Make the default USB device authorization mode configurable at build
-time. This is useful for systems that require a mode that is stricter
-than the standard setting, as it avoids relying on the kernel command
-line being properly set.
+Didn't we just have a thread about the inadvisability of adding more ways to do
+the same thing, with each existing codepath still having to be supported forever?
 
-Signed-off-by: Niko Mauno <niko.mauno@vaisala.com>
----
- drivers/usb/core/Kconfig | 15 +++++++++++++++
- drivers/usb/core/hcd.c   |  2 +-
- 2 files changed, 16 insertions(+), 1 deletion(-)
+And your solution is a link to the website of Lenart Pottering, author and
+maintainer of systemd. You want to put systemd code into the kernel.
 
-diff --git a/drivers/usb/core/Kconfig b/drivers/usb/core/Kconfig
-index 351ede4b5de2..10ad320cc2f3 100644
---- a/drivers/usb/core/Kconfig
-+++ b/drivers/usb/core/Kconfig
-@@ -116,3 +116,18 @@ config USB_AUTOSUSPEND_DELAY
- 	  The default value Linux has always had is 2 seconds.  Change
- 	  this value if you want a different delay and cannot modify
- 	  the command line or module parameter.
-+
-+config USB_DEFAULT_AUTHORIZATION_MODE
-+	int "Default authorization mode for USB devices"
-+	range -1 2
-+	default -1
-+	depends on USB
-+	help
-+	  Select the default USB device authorization mode. Can be overridden
-+	  with usbcore.authorized_default command line or module parameter.
-+
-+	  The available values have the following meanings:
-+		-1 is authorized for all devices (leftover from wireless USB)
-+		0 is unauthorized for all devices
-+		1 is authorized for all devices
-+		2 is authorized for internal devices
-diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-index 12b6dfeaf658..f39170c46be7 100644
---- a/drivers/usb/core/hcd.c
-+++ b/drivers/usb/core/hcd.c
-@@ -357,7 +357,7 @@ static const u8 ss_rh_config_descriptor[] = {
- #define USB_AUTHORIZE_ALL	1
- #define USB_AUTHORIZE_INTERNAL	2
- 
--static int authorized_default = USB_AUTHORIZE_WIRED;
-+static int authorized_default = CONFIG_USB_DEFAULT_AUTHORIZATION_MODE;
- module_param(authorized_default, int, S_IRUGO|S_IWUSR);
- MODULE_PARM_DESC(authorized_default,
- 		"Default USB device authorization: 0 is not authorized, 1 is "
--- 
-2.39.2
+> - catar is simple and reproducible. For the same directory tree the
+> same bit-precise catar file is generated, which is good for
+> cryptographic signatures.
 
+I can trivially reproduce the same cpio each time from the same tree, the trick
+is just fetching the whole directory and sorting it before processing (to
+squelch hash-impacted readdir() return order from the filesystem).
+
+> As opposed to tar's monstrosity (
+> https://www.cyphar.com/blog/post/20190121-ociv2-images-i-tar )
+> - catar has support for xattr.
+
+Adding xattr support to my toybox cpio implementation is maybe 10 lines of C, I
+assume the other implementations aren't that much more tangled. The question was
+always a largely aesthetic issue of file format.
+
+Tar is NOT well-defined. I say this as someone who has IMPLEMENTED tar and has a
+pending TODO item to patch up YET ANOTHER funky corner case du jour somebody hit:
+
+https://github.com/landley/toybox/issues/469
+
+Inventing a NEW file format... there are multiple dozens already: zip, arj,
+lharc, zoo... You could theoretically extract squashfs into initramfs because
+technically it's an archive format.
+
+Good grief, there's an xkcd on that:
+
+https://xkcd.com/927/
+
+> It has support for nearly all types of
+
+"nearly"
+
+Please no.
+
+> metainformation Linux offers (32 bit UIDs, nanosecond timestamps,
+> "disable CoW" flag and various other flags, selinux file labels, file
+> capabilities, etc). All this metainformation can be disabled if
+> needed. So, next time we will want to add some new type of
+> metainformation, there will be no need for lengthy discussions about
+> how it should be stored.
+
+There's no real need NOW. "We did not come to an agreement in email" does not
+mean "let's add a new unrelated format". It means let's carve out an hour to
+actually speak to each other, by voice and maybe video, using this thing called
+the internet. (Without covid we'd have had a BOF at some conference by now.)
+
+Rob
