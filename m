@@ -1,49 +1,31 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+Received: from smtp.smtpout.orange.fr (smtp-15.smtpout.orange.fr [80.12.242.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6AE2241F5;
-	Thu,  4 Jan 2024 14:19:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638812421B;
+	Thu,  4 Jan 2024 14:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lSQ9j7ug"
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6dc02ab3cc9so334249a34.3;
-        Thu, 04 Jan 2024 06:19:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704377980; x=1704982780; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YyXkGaIn4n8uR5zY2tnEwMlymDvJhftWg9/2ZNakfUM=;
-        b=lSQ9j7ugW2q4+YomZQK0Nm/vDby01tvZ6YeOQO869+C6fGdQP/Dm9QlN0iZAoRwvBO
-         KqXhdVMAYoELxMB3uuXQDj9xDZyU89jFbxO29DjR8op0dRvMQS0E+NUee+4fjx1ZPx2H
-         mhS6TXRvrWW9Z9K/Qh4DeWOTz4+Oouf8JEqhdG7puOG0FLsi59XBLL1yEyCyiJrmwvWT
-         SBTlRCFbybjiQmbDdZt8wL8WdXVo2hBuRkQIc/cweKEIByFEEMrI7//ImwRzhRWY7wuB
-         dezpuMqXwwvNUXFdiV/dJET+k0hePSkgRy3cSDvG/H+A3B70yPNbxuENLEpvGKD5sLVE
-         gZmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704377980; x=1704982780;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YyXkGaIn4n8uR5zY2tnEwMlymDvJhftWg9/2ZNakfUM=;
-        b=Hz2HNEoIfIGRKrNZXmAkRcT7K5HXCX9WJL/uZCAtohzIqtd3Cw+GQXN+fwMaL+hvqM
-         sauqO7pHZk7KL3DaPMEKuASRFoyhtYXRZlFM1/wQPYD5c8FRKcQxxeWqgz3ocO2hfrrX
-         uxdpsUSt23E8jmzFBhlOdsftLUS5N8p+b4WyGy8uiYoNrcAad3vW6MLOtdp7J9ZLvDFl
-         ZtXworSu7LH/38ResD7UQNl4l4yA9nXJa1a3ZiE5VxuFPhMV5RvMtb37IoH9trbGJYRo
-         aaN48x1i9xXcZceRfZPnJVuwNHQvncEccwu9UOFiV2vwdM4wdP0lIM1bS4+lVSjJmc9u
-         wUcQ==
-X-Gm-Message-State: AOJu0YwX4n3vfe1OGnhOF5YUzAtv3RiJI+l+MFE6Z4iegMFzdIb9q0Ki
-	T+qekMNmaXxLrIE/4PMNPFg=
-X-Google-Smtp-Source: AGHT+IEUMB6l0hlcqSyjPruBcShBmtmZRMFRfpq9EoSjrKDRreVRDYhnqFA0qsXRaXez6Dd9/jEhEA==
-X-Received: by 2002:a05:6358:2826:b0:175:4915:ebf5 with SMTP id k38-20020a056358282600b001754915ebf5mr667732rwb.43.1704377979784;
-        Thu, 04 Jan 2024 06:19:39 -0800 (PST)
-Received: from [192.168.54.105] (static.220.238.itcsa.net. [190.15.220.238])
-        by smtp.gmail.com with ESMTPSA id d25-20020aa78e59000000b006d945660076sm24634123pfr.59.2024.01.04.06.19.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jan 2024 06:19:39 -0800 (PST)
-Message-ID: <3d6d8098-f303-4767-9ba2-e7a80433a4c2@gmail.com>
-Date: Thu, 4 Jan 2024 11:19:34 -0300
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="TPbwZSvi"
+Received: from [192.168.1.18] ([92.140.202.140])
+	by smtp.orange.fr with ESMTPA
+	id LOa0rXuduH4TlLOa0rJH71; Thu, 04 Jan 2024 15:20:16 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1704378016;
+	bh=Q9FqaBRUlUJ8QVrn0N9cxjxXK+HP850wiUfYJxgq3pQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=TPbwZSviMLHuvYbnXJii9RDt0jfzC+RqGtoks9U5QwVOElbSmFoctY2tATq3+SLXE
+	 +i5fSeP3I4tisKbYA1fSPj0helfmtrtH3zw7vt3Z0+el3VHhhKSIZzY3QNMrB+p25j
+	 zbWz3kHfvmatrN4qUWvTUOU0JgiW2KjjWz434AwEvzmyPd4IdEh9ZqYAmoT1g4sr+g
+	 Fd6/NlUrDvGuFSRqLQZCoHC2aWYi6TLjpTVxncyBEzxpkbjp38yHGziyUJRmnJz0Aa
+	 262/6XBCiRpQH+Z+bAJ3kQ5pXQwohp3BXpTW/eqWW8P9PgFBtqzOJ5s6VJqgW9Yhwq
+	 qZoErV2YXipkg==
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 04 Jan 2024 15:20:16 +0100
+X-ME-IP: 92.140.202.140
+Message-ID: <51ce6e78-023b-4914-96c0-ed1bd664d188@wanadoo.fr>
+Date: Thu, 4 Jan 2024 15:20:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,52 +33,97 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] rust: sync: update integer types in CondVar
-To: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng
- <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@samsung.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
- Tiago Lam <tiagolam@gmail.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240104-rb-new-condvar-methods-v3-0-70b514fcbe52@google.com>
- <20240104-rb-new-condvar-methods-v3-4-70b514fcbe52@google.com>
-Content-Language: en-US
-From: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
-In-Reply-To: <20240104-rb-new-condvar-methods-v3-4-70b514fcbe52@google.com>
+Subject: Re: [PATCH] vboxsf: Remove usage of the deprecated ida_simple_xx()
+ API
+Content-Language: fr, en-US
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org
+References: <2752888783edaed8576777e1763dc0489fd07000.1702963000.git.christophe.jaillet@wanadoo.fr>
+ <b4c96284-1ae8-498b-84ae-34a9f65e9da8@redhat.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <b4c96284-1ae8-498b-84ae-34a9f65e9da8@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 1/4/24 11:02, Alice Ryhl wrote:
-> Reduce the chances of compilation failures due to integer type
-> mismatches in `CondVar`.
+Le 19/12/2023 à 10:39, Hans de Goede a écrit :
+> Hi,
 > 
-> When an integer is defined using a #define in C, bindgen doesn't know
-> which integer type it is supposed to be, so it will just use `u32` by
-> default (if it fits in an u32). Whenever the right type is something
-> else, we insert a cast in Rust. However, this means that the code has a
-> lot of extra casts, and sometimes the code will be missing casts if u32
-> happens to be correct on the developer's machine, even though the type
-> might be something else on a different platform.
+> On 12/19/23 06:17, Christophe JAILLET wrote:
+>> ida_alloc() and ida_free() should be preferred to the deprecated
+>> ida_simple_get() and ida_simple_remove().
+>>
+>> This is less verbose.
+>>
+>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 > 
-> This patch updates all uses of such constants in
-> `rust/kernel/sync/condvar.rs` to use constants defined with the right
-> type. This allows us to remove various unnecessary casts, while also
-> future-proofing for the case where `unsigned int != u32`.
+> Thanks, patch looks good to me:
 > 
-> I wrote this patch at the suggestion of Benno in [1].
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 > 
-> Link: https://lore.kernel.org/all/nAEg-6vbtX72ZY3oirDhrSEf06TBWmMiTt73EklMzEAzN4FD4mF3TPEyAOxBZgZtjzoiaBYtYr3s8sa9wp1uYH9vEWRf2M-Lf4I0BY9rAgk=@proton.me/ [1]
-> Suggested-by: Benno Lossin <benno.lossin@proton.me>
-> Reviewed-by: Tiago Lam <tiagolam@gmail.com>
-> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> ---
-> [...]
+> vboxsf is not really undergoing any active development,
+> if there is a tree which is collecting other ida related
+> patches feel free to route this through that tree.
 
-Reviewed-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
+There is still a bit of work to remove the remaining ida_simple_get() 
+calls, so we still have time.
+
+Based on another experience when phasing out an old API, I would say at 
+least 2-3 months.
+
+If this one is still around when nearly all the other calls have been 
+handled, i'll come back to it to see the best way to have is merged in a 
+tree or in another, so that the old API can be removed.
+
+CJ
+
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+>> ---
+>>   fs/vboxsf/super.c | 6 +++---
+>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/fs/vboxsf/super.c b/fs/vboxsf/super.c
+>> index 1fb8f4df60cb..cd8486bc91bd 100644
+>> --- a/fs/vboxsf/super.c
+>> +++ b/fs/vboxsf/super.c
+>> @@ -155,7 +155,7 @@ static int vboxsf_fill_super(struct super_block *sb, struct fs_context *fc)
+>>   		}
+>>   	}
+>>   
+>> -	sbi->bdi_id = ida_simple_get(&vboxsf_bdi_ida, 0, 0, GFP_KERNEL);
+>> +	sbi->bdi_id = ida_alloc(&vboxsf_bdi_ida, GFP_KERNEL);
+>>   	if (sbi->bdi_id < 0) {
+>>   		err = sbi->bdi_id;
+>>   		goto fail_free;
+>> @@ -221,7 +221,7 @@ static int vboxsf_fill_super(struct super_block *sb, struct fs_context *fc)
+>>   	vboxsf_unmap_folder(sbi->root);
+>>   fail_free:
+>>   	if (sbi->bdi_id >= 0)
+>> -		ida_simple_remove(&vboxsf_bdi_ida, sbi->bdi_id);
+>> +		ida_free(&vboxsf_bdi_ida, sbi->bdi_id);
+>>   	if (sbi->nls)
+>>   		unload_nls(sbi->nls);
+>>   	idr_destroy(&sbi->ino_idr);
+>> @@ -268,7 +268,7 @@ static void vboxsf_put_super(struct super_block *sb)
+>>   
+>>   	vboxsf_unmap_folder(sbi->root);
+>>   	if (sbi->bdi_id >= 0)
+>> -		ida_simple_remove(&vboxsf_bdi_ida, sbi->bdi_id);
+>> +		ida_free(&vboxsf_bdi_ida, sbi->bdi_id);
+>>   	if (sbi->nls)
+>>   		unload_nls(sbi->nls);
+>>   
+> 
+> 
+> 
+
