@@ -1,263 +1,266 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2056.outbound.protection.outlook.com [40.107.92.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71B52377B;
-	Thu,  4 Jan 2024 15:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="afvRIdzV"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y0f7zl1OeYuI4HCgjI2DPhX3da6BzYX6LMJOVXti1Fbl+jlAl7RGwdFKFpD8+ru4Z67uhz0naHe6pxQWwIwQTNRVVS4C8jVTwd9+DvrBVH2oopJcqeHeiL4csMRlWAZqyVtLuHq+/SoMP7mSpomKhbL0NWPxQUr6UxdNC0m7h7JG0yemTmrglbaQl6ypL9QwzN5nRTwTLGg2mc+07KKwRaaP1/XkrFj7JSYHZBSWSirxAJ28InDjd3gTwSuiu1uwNs4bFvp3dJOPp4Po5wPWKJYMwqeVW/hZtR3T54GObesdCSDi+GgnlMjxOU0mtB4q5r9ylajO5gf4USOvkUrUpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=s8zaYeaWCrMECtZ7WVVH+kKm9nxRtI5sL2A7MmpJ54M=;
- b=l/AiGeNbWWySx8pIloDoirONUS9wiXjq3KbZ3yUXMpMCL/vjbJXrUmu7aD8YkRvt/E6wj1ZZsGCEAnwoWmCmh5nX0MO9F/8e0AtbWCTuvgopRFBTVgYmjlC+TlXlhEKCsQ0hxa0I+8rvEXvLzO5UFuDCUtQbvtBA3kskyG+8ByvqZCVERROuLcVX1dZSAw6WskWsmkr3NLUcxJe1jniajmCpgqfSF49nbeA4g0Z7CQzLZ3P5t36uKNZv0iE2FVjk2ICbNiDQTEPWZiKLK3qE6Iqa1dYLZ19sv52dx/1Moox4GDWEKMEjtf67fhqUwR6TZvk16SkdoJr5Dvp3d83V4Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s8zaYeaWCrMECtZ7WVVH+kKm9nxRtI5sL2A7MmpJ54M=;
- b=afvRIdzVWTZBdqZFBBA66ScTPWSEAmTXBCrZBPEyUeSRitUlmHqUdaOVLi53K0t9K9zgH1b+RNrHaDL7Oo7MuLfzOwzUsah86DRaCqUUMOXXlnIR3gUOE6+C4y519pcVMv5888RfD7yJeuWr2O0Z06z9vaKeNXxVtc1zYqaAf6XYspl1cZDXMt0abZ0CYXWqKln44z0tQ1/AiOWKGbkff2J7nbP3puIIlcvYgkil0ZryyHbX+k6vFmPWeEUx8xlFrhBhrfNMHUQ+LXAF4Ym0rHQa5R1uE1dLTe2AMmzNCMfaFQ/ywLTHG9KJyJ+QxpE5U9RdK1GE5nBfE6dAj9GS/w==
-Received: from SJ0PR03CA0178.namprd03.prod.outlook.com (2603:10b6:a03:338::33)
- by PH0PR12MB8173.namprd12.prod.outlook.com (2603:10b6:510:296::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.13; Thu, 4 Jan
- 2024 15:14:30 +0000
-Received: from CO1PEPF000042A9.namprd03.prod.outlook.com
- (2603:10b6:a03:338:cafe::b2) by SJ0PR03CA0178.outlook.office365.com
- (2603:10b6:a03:338::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.14 via Frontend
- Transport; Thu, 4 Jan 2024 15:14:30 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- CO1PEPF000042A9.mail.protection.outlook.com (10.167.243.38) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7159.9 via Frontend Transport; Thu, 4 Jan 2024 15:14:29 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Thu, 4 Jan 2024
- 07:14:17 -0800
-Received: from drhqmail202.nvidia.com (10.126.190.181) by
- drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.41; Thu, 4 Jan 2024 07:14:16 -0800
-Received: from vdi.nvidia.com (10.127.8.12) by mail.nvidia.com
- (10.126.190.181) with Microsoft SMTP Server id 15.2.986.41 via Frontend
- Transport; Thu, 4 Jan 2024 07:14:15 -0800
-From: Liming Sun <limings@nvidia.com>
-To: Vadim Pasternak <vadimp@nvidia.com>, David Thompson
-	<davthompson@nvidia.com>, Hans de Goede <hdegoede@redhat.com>, Mark Gross
-	<markgross@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>
-CC: Liming Sun <limings@nvidia.com>, <platform-driver-x86@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 1/1] Drop Tx network packet when Tx TmFIFO is full
-Date: Thu, 4 Jan 2024 10:14:12 -0500
-Message-ID: <02fd0faaa555d1914b6ff4bd4b0b294e16989cef.1704381197.git.limings@nvidia.com>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <f250079635da4ba75c3a3a1d7c3820f48cfc3f06.1704380474.git.limings@nvidia.com>
-References: <f250079635da4ba75c3a3a1d7c3820f48cfc3f06.1704380474.git.limings@nvidia.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9CD241E7;
+	Thu,  4 Jan 2024 15:16:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FC1BC433C7;
+	Thu,  4 Jan 2024 15:16:12 +0000 (UTC)
+Date: Thu, 4 Jan 2024 10:17:17 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: syzbot <syzbot+fd93e36ced1a43a58f75@syzkaller.appspotmail.com>
+Cc: akpm@linux-foundation.org, bristot@redhat.com, bsegall@google.com,
+ chouhan.shreyansh630@gmail.com, dietmar.eggemann@arm.com, jack@suse.cz,
+ jeffm@suse.com, juri.lelli@redhat.com, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, mgorman@suse.de,
+ mingo@redhat.com, peterz@infradead.org, reiserfs-devel@vger.kernel.org,
+ rkovhaev@gmail.com, syzkaller-bugs@googlegroups.com,
+ vincent.guittot@linaro.org
+Subject: Re: [syzbot] [mm?] [reiserfs?] general protection fault in
+ free_swap_cache (4)
+Message-ID: <20240104101717.6c7fd262@gandalf.local.home>
+In-Reply-To: <0000000000008a0fa9060e1d198e@google.com>
+References: <0000000000008a0fa9060e1d198e@google.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000042A9:EE_|PH0PR12MB8173:EE_
-X-MS-Office365-Filtering-Correlation-Id: c0b24d62-81e0-4639-5725-08dc0d37d95b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	KKbFV7tkcMqAGGDAq9jzr5fzSjxH5Z1F8OOVcNeH+NcMwf3RYwrEjTwOdlR7FRANMN+9eelWERtgQqdsvIb3kU3DdB+GRLRZ/J5hbeT8TqWPiMtQaEgvrOYKxjRWhC1oF7SXA/AeV8C1S9Mc9wNtSJknh/JDcuy3RmuMSgHyh2lgldxEEzRngIKpRmYMWwoRA4+QmibnTlCEZXN5fBC+F0kloU6Vnu+pf+8bE+HjdwUapzlY1fnM24Vv7A4yljwbGiLCvxGTigt4wgSrCzN9lkE900IMYvV8UJapY6yFooixNDvoHMNF6IlvrEyvTZtEPgt+veiprmKiHailyNFqZofsb733uRt+tF4/LP87stCThqsDv75c+Na4UM8IsIfa7nQFp4QBivGWkv1cGQ8ZQOPcW8WdXELht007XVSmgoZIbTKmPJQSANq1NcVlHfvxcDexO47x7wHq63JCicKq5xBa5qHiqBizYG3Uu+wBBdyoscXKtJH0FGpUTr3QnhNPRbBBve9pq3/q6kMAHfqDSO5x4uDAjdIVDtYzmzlpsBjfVQ91L+Td36+4cX8+e/0eiomdX/nzbtZmzi98QOrlAdLSuNwDKGvot3oWIBiLuFfb/69QKKPhWxpafumTsmxbkmU/MDTyjEMfA1ld23TSzMZGyxN4gBDAEkTSBwqOKESfiOX3psYWH5iqUJC/YhO3wAvJgsSlv+zMFZFVtDkoYGW4hzU0QNE2DrIC4PpSCnuPWlnuClqicISpULSXarvf51B8MNc0Ok+ytgxvu2qQDrLvMA3Yv4vhm5gCf4dc73+b6aYui3WeHrJ3we50Ct/7
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(136003)(346002)(396003)(39860400002)(376002)(230922051799003)(230173577357003)(230273577357003)(82310400011)(186009)(64100799003)(1800799012)(451199024)(46966006)(40470700004)(36840700001)(5660300002)(2906002)(8936002)(4326008)(316002)(8676002)(70586007)(70206006)(110136005)(54906003)(426003)(2616005)(336012)(26005)(83380400001)(40480700001)(40460700003)(41300700001)(47076005)(36860700001)(82740400003)(7636003)(356005)(86362001)(36756003)(7696005)(478600001)(6666004)(21314003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jan 2024 15:14:29.9990
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0b24d62-81e0-4639-5725-08dc0d37d95b
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000042A9.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8173
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Starting from Linux 5.16 kernel, Tx timeout mechanism was added
-into the virtio_net driver which prints the "Tx timeout" message
-when a packet is stuck in Tx queue for too long which could happen
-when external host driver is stuck or stopped and failed to read
-the FIFO.
+On Thu, 04 Jan 2024 03:33:25 -0800
+syzbot <syzbot+fd93e36ced1a43a58f75@syzkaller.appspotmail.com> wrote:
 
-Below is an example of the reported message:
+> Hello,
+>=20
+> syzbot found the following issue on:
+>=20
+> HEAD commit:    610a9b8f49fb Linux 6.7-rc8
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D106d2699e80000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D48ca880a5d56f=
+9b1
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3Dfd93e36ced1a43a=
+58f75
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for D=
+ebian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D15f4cc41e80=
+000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D14d526ade80000
+>=20
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/b1acb98afcb0/dis=
+k-610a9b8f.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/4f7d6503eb8c/vmlinu=
+x-610a9b8f.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/927f38e505d9/b=
+zImage-610a9b8f.xz
+> mounted in repro: https://storage.googleapis.com/syzbot-assets/c4f427645c=
+60/mount_0.gz
+>=20
+> The issue was bisected to:
+>=20
+> commit 13d257503c0930010ef9eed78b689cec417ab741
+> Author: Shreyansh Chouhan <chouhan.shreyansh630@gmail.com>
+> Date:   Fri Jul 9 15:29:29 2021 +0000
+>=20
+>     reiserfs: check directory items on read from disk
+>=20
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D1603b8f9e8=
+0000
 
-"[494105.316739] virtio_net virtio1 tmfifo_net0: TX timeout on
-queue: 0, sq: output.0, vq: 0×1, name: output.0, usecs since
-last trans: 3079892256".
+=46rom the above there's this:
 
-To avoid such "Tx timeout" messages, this commit adds a timeout
-mechanism to drop and release the pending Tx packet if not able to
-transmit for two seconds due to Tx FIFO full.
+testing commit c81cfb6256d90ea5ba4a6fb280ea3b171be4e05c gcc
+compiler: gcc (GCC) 10.2.1 20210217, GNU ld (GNU Binutils for Debian) 2.40
+kernel signature: 497e79600c6ea11f26483c542ee335e10f144dccb7fe657a67bd32d52=
+7271e77
+all runs: OK
+false negative chance: 0.000
+# git bisect good c81cfb6256d90ea5ba4a6fb280ea3b171be4e05c
+Bisecting: 936 revisions left to test after this (roughly 10 steps)
+[e04480920d1eec9c061841399aa6f35b6f987d8b] Bluetooth: defer cleanup of reso=
+urces in hci_unregister_dev()
 
-This commit also handles the special case that the packet is half-
-transmitted into the Tx FIFO. In such case, the packet is discarded
-with remaining length stored in vring->rem_padding. So paddings with
-zeros can be sent out when Tx space is available to maintain the
-integrity of the packet format. The padded packet will be dropped on
-the receiving side.
+testing commit e04480920d1eec9c061841399aa6f35b6f987d8b gcc
+compiler: gcc (GCC) 10.2.1 20210217, GNU ld (GNU Binutils for Debian) 2.40
+kernel signature: 05fb4fd86182a07a0a9fbfcc25fafd9df57e9d38d1c03a915a6b73410=
+507148c
+run #0: crashed: BUG: unable to handle kernel paging request in leaf_paste_=
+in_buffer
+run #1: crashed: BUG: unable to handle kernel NULL pointer dereference in e=
+xpand_downwards
+run #2: crashed: INFO: trying to register non-static key in inode_doinit_wi=
+th_dentry
+run #3: crashed: BUG: unable to handle kernel paging request in do_epoll_wa=
+it
+run #4: OK
+run #5: OK
+run #6: OK
+run #7: OK
+run #8: OK
+run #9: OK
+run #10: OK
+run #11: OK
+run #12: OK
+run #13: OK
+run #14: OK
+run #15: OK
+run #16: OK
+run #17: OK
+run #18: OK
+run #19: OK
+representative crash: BUG: unable to handle kernel paging request in leaf_p=
+aste_in_buffer, types: [UNKNOWN]
+# git bisect bad e04480920d1eec9c061841399aa6f35b6f987d8b
+Bisecting: 456 revisions left to test after this (roughly 9 steps)
+[1e60cebf82948cfdc9497ea4553bab125587593c] net: let flow have same hash in =
+two directions
 
-Signed-off-by: Liming Sun <limings@nvidia.com>
----
- drivers/platform/mellanox/mlxbf-tmfifo.c | 67 ++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+If the "bad" only crashed 20% of the time, you can not trust any of the
+"all runs: OK".
 
-diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
-index 5c683b4eaf10..f39b7b9d2bfe 100644
---- a/drivers/platform/mellanox/mlxbf-tmfifo.c
-+++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-@@ -47,6 +47,9 @@
- /* Message with data needs at least two words (for header & data). */
- #define MLXBF_TMFIFO_DATA_MIN_WORDS		2
- 
-+/* Tx timeout in milliseconds. */
-+#define TMFIFO_TX_TIMEOUT			2000
-+
- /* ACPI UID for BlueField-3. */
- #define TMFIFO_BF3_UID				1
- 
-@@ -62,12 +65,14 @@ struct mlxbf_tmfifo;
-  * @drop_desc: dummy desc for packet dropping
-  * @cur_len: processed length of the current descriptor
-  * @rem_len: remaining length of the pending packet
-+ * @rem_padding: remaining bytes to send as paddings
-  * @pkt_len: total length of the pending packet
-  * @next_avail: next avail descriptor id
-  * @num: vring size (number of descriptors)
-  * @align: vring alignment size
-  * @index: vring index
-  * @vdev_id: vring virtio id (VIRTIO_ID_xxx)
-+ * @tx_timeout: expire time of last tx packet
-  * @fifo: pointer to the tmfifo structure
-  */
- struct mlxbf_tmfifo_vring {
-@@ -79,12 +84,14 @@ struct mlxbf_tmfifo_vring {
- 	struct vring_desc drop_desc;
- 	int cur_len;
- 	int rem_len;
-+	int rem_padding;
- 	u32 pkt_len;
- 	u16 next_avail;
- 	int num;
- 	int align;
- 	int index;
- 	int vdev_id;
-+	unsigned long tx_timeout;
- 	struct mlxbf_tmfifo *fifo;
- };
- 
-@@ -819,6 +826,50 @@ static bool mlxbf_tmfifo_rxtx_one_desc(struct mlxbf_tmfifo_vring *vring,
- 	return true;
- }
- 
-+static void mlxbf_tmfifo_check_tx_timeout(struct mlxbf_tmfifo_vring *vring)
-+{
-+	unsigned long flags;
-+
-+	/* Only handle Tx timeout for network vdev. */
-+	if (vring->vdev_id != VIRTIO_ID_NET)
-+		return;
-+
-+	/* Initialize the timeout or return if not expired. */
-+	if (!vring->tx_timeout) {
-+		/* Initialize the timeout. */
-+		vring->tx_timeout = jiffies +
-+			msecs_to_jiffies(TMFIFO_TX_TIMEOUT);
-+		return;
-+	} else if (time_before(jiffies, vring->tx_timeout)) {
-+		/* Return if not timeout yet. */
-+		return;
-+	}
-+
-+	/*
-+	 * Drop the packet after timeout. The outstanding packet is
-+	 * released and the remaining bytes will be sent with padding byte 0x00
-+	 * as a recovery. On the peer(host) side, the padding bytes 0x00 will be
-+	 * either dropped directly, or appended into existing outstanding packet
-+	 * thus dropped as corrupted network packet.
-+	 */
-+	vring->rem_padding = round_up(vring->rem_len, sizeof(u64));
-+	mlxbf_tmfifo_release_pkt(vring);
-+	vring->cur_len = 0;
-+	vring->rem_len = 0;
-+	vring->fifo->vring[0] = NULL;
-+
-+	/*
-+	 * Make sure the load/store are in order before
-+	 * returning back to virtio.
-+	 */
-+	virtio_mb(false);
-+
-+	/* Notify upper layer. */
-+	spin_lock_irqsave(&vring->fifo->spin_lock[0], flags);
-+	vring_interrupt(0, vring->vq);
-+	spin_unlock_irqrestore(&vring->fifo->spin_lock[0], flags);
-+}
-+
- /* Rx & Tx processing of a queue. */
- static void mlxbf_tmfifo_rxtx(struct mlxbf_tmfifo_vring *vring, bool is_rx)
- {
-@@ -841,6 +892,7 @@ static void mlxbf_tmfifo_rxtx(struct mlxbf_tmfifo_vring *vring, bool is_rx)
- 		return;
- 
- 	do {
-+retry:
- 		/* Get available FIFO space. */
- 		if (avail == 0) {
- 			if (is_rx)
-@@ -851,6 +903,17 @@ static void mlxbf_tmfifo_rxtx(struct mlxbf_tmfifo_vring *vring, bool is_rx)
- 				break;
- 		}
- 
-+		/* Insert paddings for discarded Tx packet. */
-+		if (!is_rx) {
-+			vring->tx_timeout = 0;
-+			while (vring->rem_padding >= sizeof(u64)) {
-+				writeq(0, vring->fifo->tx.data);
-+				vring->rem_padding -= sizeof(u64);
-+				if (--avail == 0)
-+					goto retry;
-+			}
-+		}
-+
- 		/* Console output always comes from the Tx buffer. */
- 		if (!is_rx && devid == VIRTIO_ID_CONSOLE) {
- 			mlxbf_tmfifo_console_tx(fifo, avail);
-@@ -860,6 +923,10 @@ static void mlxbf_tmfifo_rxtx(struct mlxbf_tmfifo_vring *vring, bool is_rx)
- 		/* Handle one descriptor. */
- 		more = mlxbf_tmfifo_rxtx_one_desc(vring, is_rx, &avail);
- 	} while (more);
-+
-+	/* Check Tx timeout. */
-+	if (avail <= 0 && !is_rx)
-+		mlxbf_tmfifo_check_tx_timeout(vring);
- }
- 
- /* Handle Rx or Tx queues. */
--- 
-2.30.1
+Not to mention each crash looks to be a separate bug!
+
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=3D1503b8f9e8=
+0000
+
+And this is:
+
+REISERFS (device loop0): checking transaction log (loop0)
+REISERFS (device loop0): Using r5 hash to sort names
+REISERFS (device loop0): using 3.5.x disk format
+REISERFS (device loop0): Created .reiserfs_priv - reserved for xattr storag=
+e.
+Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: =
+__schedule+0x13c2/0x13e0 kernel/sched/core.c:5948
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+Which looks like a corrupted (overrun?) stack. Which saying this is a
+"general protection fault" bug will put us in a wild goose chase.
+
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D1103b8f9e80000
+>=20
+> IMPORTANT: if you fix the issue, please add the following tag to the comm=
+it:
+> Reported-by: syzbot+fd93e36ced1a43a58f75@syzkaller.appspotmail.com
+> Fixes: 13d257503c09 ("reiserfs: check directory items on read from disk")
+>=20
+> general protection fault, probably for non-canonical address 0xdffffc0000=
+000001: 0000 [#1] PREEMPT SMP KASAN
+> KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
+> CPU: 1 PID: 5048 Comm: sshd Not tainted 6.7.0-rc8-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
+oogle 11/17/2023
+> RIP: 0010:_compound_head include/linux/page-flags.h:247 [inline]
+> RIP: 0010:free_swap_cache+0x25/0x3d0 mm/swap_state.c:287
+> Code: 0f 1f 44 00 00 66 0f 1f 00 41 54 55 53 48 89 fb e8 90 e9 b2 ff 48 8=
+d 7b 08 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f=
+ 85 34 03 00 00 4c 8b 63 08 31 ff 4c 89 e5 83 e5 01
+> RSP: 0018:ffffc900034df938 EFLAGS: 00010202
+> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff81d3826a
+> RDX: 0000000000000001 RSI: ffffffff81d37b70 RDI: 0000000000000008
+> RBP: 0000000000000005 R08: 0000000000000004 R09: 0000000000000200
+> R10: 0000000000000004 R11: 0000000000000001 R12: 0000000000000200
+> R13: dffffc0000000000 R14: ffff88807490d010 R15: ffff88807490d008
+> FS:  0000000000000000(0000) GS:ffff8880b9900000(0000) knlGS:0000000000000=
+000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007ffc22cebe00 CR3: 000000007c973000 CR4: 00000000003506f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  free_pages_and_swap_cache+0x60/0xa0 mm/swap_state.c:315
+>  tlb_batch_pages_flush+0x9a/0x190 mm/mmu_gather.c:98
+>  tlb_flush_mmu_free mm/mmu_gather.c:293 [inline]
+>  tlb_flush_mmu mm/mmu_gather.c:300 [inline]
+>  tlb_finish_mmu+0x14b/0x6f0 mm/mmu_gather.c:392
+>  exit_mmap+0x38b/0xa70 mm/mmap.c:3321
+>  __mmput+0x12a/0x4d0 kernel/fork.c:1349
+>  mmput+0x62/0x70 kernel/fork.c:1371
+>  exit_mm kernel/exit.c:567 [inline]
+>  do_exit+0x9a5/0x2ad0 kernel/exit.c:856
+>  do_group_exit+0xd4/0x2a0 kernel/exit.c:1018
+>  get_signal+0x23b5/0x2790 kernel/signal.c:2904
+>  arch_do_signal_or_restart+0x90/0x7f0 arch/x86/kernel/signal.c:309
+>  exit_to_user_mode_loop kernel/entry/common.c:168 [inline]
+>  exit_to_user_mode_prepare+0x121/0x240 kernel/entry/common.c:204
+>  __syscall_exit_to_user_mode_work kernel/entry/common.c:285 [inline]
+>  syscall_exit_to_user_mode+0x1e/0x60 kernel/entry/common.c:296
+>  do_syscall_64+0x4d/0x110 arch/x86/entry/common.c:89
+>  entry_SYSCALL_64_after_hwframe+0x63/0x6b
+> RIP: 0033:0x5623b9f0af8e
+> Code: Unable to access opcode bytes at 0x5623b9f0af64.
+> RSP: 002b:00007fff3b36f178 EFLAGS: 00000246 ORIG_RAX: 000000000000010f
+> RAX: 0000000000000000 RBX: 00000000000668a0 RCX: 00007f85b4f19ad5
+> RDX: 00007fff3b36f180 RSI: 00007fff3b36f2b0 RDI: 0000000000000011
+> RBP: 00005623bb920260 R08: 0000000000000008 R09: 0000000000000000
+> R10: 00007fff3b36f848 R11: 0000000000000246 R12: 00005623b9f8faa4
+> R13: 0000000000000001 R14: 00005623b9f903e8 R15: 00007fff3b36f7c8
+>  </TASK>
+> Modules linked in:
+> ----------------
+> Code disassembly (best guess):
+>    0:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
+>    5:	66 0f 1f 00          	nopw   (%rax)
+>    9:	41 54                	push   %r12
+>    b:	55                   	push   %rbp
+>    c:	53                   	push   %rbx
+>    d:	48 89 fb             	mov    %rdi,%rbx
+>   10:	e8 90 e9 b2 ff       	call   0xffb2e9a5
+>   15:	48 8d 7b 08          	lea    0x8(%rbx),%rdi
+>   19:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
+>   20:	fc ff df
+>   23:	48 89 fa             	mov    %rdi,%rdx
+>   26:	48 c1 ea 03          	shr    $0x3,%rdx
+> * 2a:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1) <-- trapping instru=
+ction
+>   2e:	0f 85 34 03 00 00    	jne    0x368
+>   34:	4c 8b 63 08          	mov    0x8(%rbx),%r12
+>   38:	31 ff                	xor    %edi,%edi
+>   3a:	4c 89 e5             	mov    %r12,%rbp
+>   3d:	83 e5 01             	and    $0x1,%ebp
+>=20
+>=20
+> ---
+> This report is generated by a bot. It may contain errors.
+
+I would say it does.
+
+Anyway, it is possibly a reiserfs bug that's using too much stack.
+
+But it would be nice if these bot reports had a bit better bisecting
+algorithm.
+
+-- Steve
+
+
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>=20
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisect=
+ion
+>=20
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+>=20
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
+>=20
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+>=20
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+>=20
+> If you want to undo deduplication, reply with:
+> #syz undup
 
