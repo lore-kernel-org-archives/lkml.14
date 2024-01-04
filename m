@@ -1,93 +1,144 @@
-Received: from smtp.smtpout.orange.fr (smtp-24.smtpout.orange.fr [80.12.242.24])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2360F225A5
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 14:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66030224E7;
+	Thu,  4 Jan 2024 14:17:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="hB3dCT7j"
-Received: from [192.168.1.18] ([92.140.202.140])
-	by smtp.orange.fr with ESMTPA
-	id LOOSrLWbxQhj4LOPRruE0t; Thu, 04 Jan 2024 15:09:22 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1704377362;
-	bh=jbwAKIGk/qogUj3VanIMfnGkTuiYS2UsI5HBNN8+DoQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=hB3dCT7jJhJAQj3p40Zm+dmv99GGpaOM1ttYQw4dURZYnkU5fM4QdXHCDcO1lcYfC
-	 ssdqTOPpKQAg9Wmjemm5GjQs7v8reu3zeW9FLU2pS0yk5f9QUW1WjmZqGq/ZvtYWns
-	 xPu7tVtZ3C01Fo6yy8smn0H+PBhDp0GF4pHP7dbLpQXUbtkjFojBSX4NcK+NV0Sweg
-	 IZK7gchUvmWjfbHyQOkX8maWV6iUkCHKdrtQJCvSnkoWc+cRuy7I4L6kuy81N8vHMA
-	 jBljfJ2sQ6pBL7WKOl1gNazqqavhdGBxIKdvbvavESj7XXX9/YhtnWo9/zxdZ9/TJb
-	 P2heprm3bQTYw==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 04 Jan 2024 15:09:22 +0100
-X-ME-IP: 92.140.202.140
-Message-ID: <f3a0ca01-f94d-41e2-be1c-a098f3e8c2fa@wanadoo.fr>
-Date: Thu, 4 Jan 2024 15:09:21 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o7T2ghRX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD257C433C7;
+	Thu,  4 Jan 2024 14:17:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704377832;
+	bh=eQ7aDWTSRpaN+U/7sf3RyfPIiHHdFRSmH7Oa7qM8a5c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=o7T2ghRXw4rIv6huLtcx/MZoqwwUm6YGdTYWQ2RNBxdKD2k+P0vW+o7u4s2IOa+6c
+	 KKtJrVgACx9in0+Co4If06+MeRNB3rhg9oqeQ/O+613ifpEbxTGJ2QY1HEUE4xWBGL
+	 t1elNAfzSdA2gsywtHizw91x2fVBEMcIRnWVO+hEk+kvxiO1lIdtadvqL07rM1mpYd
+	 tjnAPs3QvdEeXFB2MVeWwx0P3rbuFTdpNPxrkeZetxFsMsyPTmSDYOdPIHvQLnWc2v
+	 O+6e6W1N1eXr+12pPGExAgMcHtZoEvRnnCTG4/OeawcMGNRtyx/WOL0TR63QcuhE11
+	 2YDqVIdar7VoA==
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2043e721daaso279002fac.2;
+        Thu, 04 Jan 2024 06:17:12 -0800 (PST)
+X-Gm-Message-State: AOJu0YwudgSZM0fCY4hKVTdk0z4X8+xs0TL4BQwcaZRfOZYzVLTzTYGV
+	7A8x8p52wNRu+nEcR3wY1Y0o7BFcaDEZnGWw9WA=
+X-Google-Smtp-Source: AGHT+IFNnanMPL/0Df4b9PcVGoF9nPV9liwJQBoRre85bCGoux+sgtqfnrWAYCXOUVSJm+tl3SFJz6Zhji3hH8YZLwM=
+X-Received: by 2002:a05:6870:5390:b0:205:c845:7e24 with SMTP id
+ h16-20020a056870539000b00205c8457e24mr472050oan.0.1704377832206; Thu, 04 Jan
+ 2024 06:17:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] drm/panel: ltk050h3146w: only print message when GPIO
- getting is not EPROBE_DEFER
-Content-Language: fr
-To: Quentin Schulz <foss+kernel@0leil.net>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Cc: Heiko Stuebner <heiko@sntech.de>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org,
- Quentin Schulz <quentin.schulz@theobroma-systems.com>
-References: <20240104-ltk-dev_err_probe-v1-0-8ef3c0b585d8@theobroma-systems.com>
- <20240104-ltk-dev_err_probe-v1-1-8ef3c0b585d8@theobroma-systems.com>
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240104-ltk-dev_err_probe-v1-1-8ef3c0b585d8@theobroma-systems.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240103135454.376021-1-masahiroy@kernel.org> <CA+icZUX77miqFC5=iH_9e4BZw5hc1Ci8A3cHL1uGPnzHw258Hw@mail.gmail.com>
+In-Reply-To: <CA+icZUX77miqFC5=iH_9e4BZw5hc1Ci8A3cHL1uGPnzHw258Hw@mail.gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Thu, 4 Jan 2024 23:16:36 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQYQiuQ2mn=aAqOrx-xsV1hT5Q6UTkWLNkG_4E77NyEog@mail.gmail.com>
+Message-ID: <CAK7LNAQYQiuQ2mn=aAqOrx-xsV1hT5Q6UTkWLNkG_4E77NyEog@mail.gmail.com>
+Subject: Re: [PATCH] linux/export.h: remove unneeded .balign directive
+To: sedat.dilek@gmail.com
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Helge Deller <deller@gmx.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Le 04/01/2024 à 13:41, Quentin Schulz a écrit :
-> From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
-> 
-> devm_gpiod_get_optional may return EPROBE_DEFER in case the GPIO
-> controller isn't yet probed when the panel driver is being probed.
-> 
-> In that case, a spurious and confusing error message about not being
-> able to get the reset GPIO is printed even though later on the device
-> actually manages to get probed.
-> 
-> Use dev_err_probe instead so that the message is only printed when it
-> truly matters.
-> 
-> Cc: Quentin Schulz <foss+kernel@0leil.net>
-> Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+On Thu, Jan 4, 2024 at 1:05=E2=80=AFAM Sedat Dilek <sedat.dilek@gmail.com> =
+wrote:
+>
+> Happy new 2024 Masahiro,
+>
+> some small nits.
+>
+> What about adding links to the commits...
+>
+> linux/export: Fix alignment for 64-bit ksymtab entries
+> [ Upstream commit f6847807c22f6944c71c981b630b9fff30801e73 ]
+>
+> linux/export: Ensure natural alignment of kcrctab array
+> [ Upstream commit 753547de0daecbdbd1af3618987ddade325d9aaa ]
+>
+> ^^ AFAICS in linux-stable - v6.6.10-rc1 includes both
+> ^^ Is yours a follow-up and makes sense for linux-stable releases?
 
-Reviewed-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-> ---
->   drivers/gpu/drm/panel/panel-leadtek-ltk050h3146w.c | 6 ++----
->   1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-leadtek-ltk050h3146w.c b/drivers/gpu/drm/panel/panel-leadtek-ltk050h3146w.c
-> index 30919c872ac8d..ecfa4181c4fd9 100644
-> --- a/drivers/gpu/drm/panel/panel-leadtek-ltk050h3146w.c
-> +++ b/drivers/gpu/drm/panel/panel-leadtek-ltk050h3146w.c
-> @@ -646,10 +646,8 @@ static int ltk050h3146w_probe(struct mipi_dsi_device *dsi)
->   		return -EINVAL;
->   
->   	ctx->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-> -	if (IS_ERR(ctx->reset_gpio)) {
-> -		dev_err(dev, "cannot get reset gpio\n");
-> -		return PTR_ERR(ctx->reset_gpio);
-> -	}
-> +	if (IS_ERR(ctx->reset_gpio))
-> +		return dev_err_probe(dev, PTR_ERR(ctx->reset_gpio), "cannot get reset gpio\n");
->   
->   	ctx->vci = devm_regulator_get(dev, "vci");
->   	if (IS_ERR(ctx->vci)) {
-> 
+No.
 
+This patch is a separate clean-up, not a bug fix.
+
+No need for back-porting.
+
+
+
+
+>
+> ...and CC Helge Deller?
+
+
+You did it.
+
+
+Thanks.
+
+
+
+
+
+> Best regards,
+> -Sedat-
+>
+> Link: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git/log/?h=3Dlinux-6.6.y
+>
+> On Wed, Jan 3, 2024 at 2:55=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.=
+org> wrote:
+> >
+> > The .export_symbol section is discarded by the linker script, hence
+> > no alignment is needed. Simplify the code.
+> >
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > ---
+> >
+> >  include/linux/export.h | 10 +++-------
+> >  1 file changed, 3 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/include/linux/export.h b/include/linux/export.h
+> > index 0bbd02fd351d..dff230bb5aca 100644
+> > --- a/include/linux/export.h
+> > +++ b/include/linux/export.h
+> > @@ -15,13 +15,9 @@
+> >   */
+> >
+> >  #ifdef CONFIG_64BIT
+> > -#define __EXPORT_SYMBOL_REF(sym)                       \
+> > -       .balign 8                               ASM_NL  \
+> > -       .quad sym
+> > +#define __EXPORT_SYMBOL_PTR    .quad
+> >  #else
+> > -#define __EXPORT_SYMBOL_REF(sym)                       \
+> > -       .balign 4                               ASM_NL  \
+> > -       .long sym
+> > +#define __EXPORT_SYMBOL_PTR    .long
+> >  #endif
+> >
+> >  #define ___EXPORT_SYMBOL(sym, license, ns)             \
+> > @@ -29,7 +25,7 @@
+> >         __export_symbol_##sym:                  ASM_NL  \
+> >                 .asciz license                  ASM_NL  \
+> >                 .asciz ns                       ASM_NL  \
+> > -               __EXPORT_SYMBOL_REF(sym)        ASM_NL  \
+> > +               __EXPORT_SYMBOL_PTR sym         ASM_NL  \
+> >         .previous
+> >
+> >  #if defined(__DISABLE_EXPORTS)
+> > --
+> > 2.40.1
+> >
+> >
+>
+
+
+--=20
+Best Regards
+Masahiro Yamada
