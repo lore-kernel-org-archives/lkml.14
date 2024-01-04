@@ -1,115 +1,145 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2863E24B2C
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 15:38:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DE824206
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 15:39:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RWqyI4kA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GVltoPoM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704382689;
+	s=mimecast20190719; t=1704382786;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UPM6vc4WNmoCS+D/6DliXw39ErXumh08Y6Auv1yi7Xw=;
-	b=RWqyI4kAt2rS6gqHGKlUCTtGy3ypuNjz5zNitaN7/4gA/xq5zOeYdRFFVDPjKi71xVblTR
-	xiJt0bzBKJuFZBSEnAlncgJmK8RkGOgDauWL8pyXzCYUfrpIxttH72YwUoK+UBwgVDK2j3
-	3T4jHJ4e/7z3HjpdvFolMqd0mFNZV9w=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-610-k-i8HbLzOcWdZy7sgA89mg-1; Thu,
- 04 Jan 2024 10:38:06 -0500
-X-MC-Unique: k-i8HbLzOcWdZy7sgA89mg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8EA0D3C2AF6D;
-	Thu,  4 Jan 2024 15:38:05 +0000 (UTC)
-Received: from max-p1.redhat.com (unknown [10.39.208.29])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 938ABC15E6A;
-	Thu,  4 Jan 2024 15:38:03 +0000 (UTC)
-From: Maxime Coquelin <maxime.coquelin@redhat.com>
-To: mst@redhat.com,
-	jasowang@redhat.com,
-	xuanzhuo@linux.alibaba.com,
-	xieyongji@bytedance.com,
-	virtualization@lists.linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	david.marchand@redhat.com,
-	lulu@redhat.com
-Cc: Maxime Coquelin <maxime.coquelin@redhat.com>
-Subject: [PATCH v6 3/3] vduse: enable Virtio-net device type
-Date: Thu,  4 Jan 2024 16:37:53 +0100
-Message-ID: <20240104153753.2931026-4-maxime.coquelin@redhat.com>
-In-Reply-To: <20240104153753.2931026-1-maxime.coquelin@redhat.com>
-References: <20240104153753.2931026-1-maxime.coquelin@redhat.com>
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lR9Lg6efDMWUQ39ZY0+d6GK0COxADHJuB4vzRo0+m64=;
+	b=GVltoPoM02LxwUbvcwbOVfrybPVrLxIzvXf2t7E5H0QkGwtaBl5r+00T/4UTwSGqxHGE0O
+	ULKWpFVp32i/E3yoObAu/KplcyAQPQjBZSN+sHvuZ8ri4W1jdKggXCDeMx9N8YW2pWGGx5
+	jximS80YN7WkenAEqFclUau+I+5DJnI=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-326-kSbDHuGFNgihrvWQL1vBqA-1; Thu, 04 Jan 2024 10:39:44 -0500
+X-MC-Unique: kSbDHuGFNgihrvWQL1vBqA-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-50e411af4e6so564383e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 07:39:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704382782; x=1704987582;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lR9Lg6efDMWUQ39ZY0+d6GK0COxADHJuB4vzRo0+m64=;
+        b=dD3uyMK78l2AmTxRufslKUzSUsoKWSCFHOLfd9FWoiOye5GfcErc6t+Tr0Wki/WRWi
+         YjOd9J4pPKBBt6pkTh649So1WccvBX6jz19nH6SobMmPFIf8i3UyoQzw767CuLUBT+gm
+         yNl4HIxehnYNGCnlx+4IxJTRoMd5GUkKeQo53xiPkaXYr303m0beKgctMdbqn0Qbe0Fo
+         Yi1sjkikeMOxSizmDUgd5z1p/meppN82OMqjyIJDf+nSWDAT6qeKq4f1VcYE8yWlxoi+
+         OGJftJPdGL70lw0rPGnjBTliz3jZzbTg4sH4bz+ACaxc/EhinbwaVujyp+caYNMkxnvJ
+         WCwA==
+X-Gm-Message-State: AOJu0YyRdKvNEqOYZDZndlnHKyd50whUaniFi30EjGquxEt+yVpVlM/P
+	VGEctG5sP96QQz78g4KozMgtNnBm/QGluMC6gyO57jXg5XOcvOyeDM++NyqDCTJ1OldNUc2QA2l
+	GqqiRivB69vSAy7v7aY9aNXntm7Ut+sKDaGqOOS9icSgae/LlwJn4kisJpFjtArOflGE3QLtznH
+	qmb1Zy92AwmbWfFNU7
+X-Received: by 2002:a19:f01a:0:b0:50e:554a:5254 with SMTP id p26-20020a19f01a000000b0050e554a5254mr474331lfc.13.1704382782652;
+        Thu, 04 Jan 2024 07:39:42 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGu9javDIy7DAvlh5SvpsOLrDB2cSXh02eiu2QZnwzU3RtCF7X/KQBdvren0KIGZjgmGmI6YQ==
+X-Received: by 2002:a19:f01a:0:b0:50e:554a:5254 with SMTP id p26-20020a19f01a000000b0050e554a5254mr474316lfc.13.1704382782236;
+        Thu, 04 Jan 2024 07:39:42 -0800 (PST)
+Received: from [192.168.10.118] ([2001:b07:6468:f312:1c09:f536:3de6:228c])
+        by smtp.gmail.com with ESMTPSA id fw34-20020a170907502200b00a27aabff0dcsm5751748ejc.179.2024.01.04.07.39.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jan 2024 07:39:41 -0800 (PST)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Cc: kan.liang@linux.intel.com,
+	peterz@infradead.org,
+	luwei.kang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	leitao@debian.org,
+	acme@kernel.org,
+	mingo@redhat.com,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Sean Christopherson <seanjc@google.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] KVM: x86/pmu: fix masking logic for MSR_CORE_PERF_GLOBAL_CTRL
+Date: Thu,  4 Jan 2024 16:39:39 +0100
+Message-ID: <20240104153939.129179-1-pbonzini@redhat.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-This patch adds Virtio-net device type to the supported
-devices types.
+When commit c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE
+MSR emulation for extended PEBS") switched the initialization of
+cpuc->guest_switch_msrs to use compound literals, it screwed up
+the boolean logic:
 
-Initialization fails if the device does not support
-VIRTIO_F_VERSION_1 feature, in order to guarantee the
-configuration space is read-only. It also fails with
--EPERM if the CAP_NET_ADMIN is missing.
++	u64 pebs_mask = cpuc->pebs_enabled & x86_pmu.pebs_capable;
+...
+-	arr[0].guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask;
+-	arr[0].guest &= ~(cpuc->pebs_enabled & x86_pmu.pebs_capable);
++               .guest = intel_ctrl & (~cpuc->intel_ctrl_host_mask | ~pebs_mask),
 
-Signed-off-by: Maxime Coquelin <maxime.coquelin@redhat.com>
+Before the patch, the value of arr[0].guest would have been intel_ctrl &
+~cpuc->intel_ctrl_host_mask & ~pebs_mask.  The intent is to always treat
+PEBS events as host-only because, while the guest runs, there is no way
+to tell the processor about the virtual address where to put PEBS records
+intended for the host.
+
+Unfortunately, the new expression can be expanded to
+
+	(intel_ctrl & ~cpuc->intel_ctrl_host_mask) | (intel_ctrl & ~pebs_mask)
+
+which makes no sense; it includes any bit that isn't *both* marked as
+exclude_guest and using PEBS.  So, reinstate the old logic.  Another
+way to write it could be "intel_ctrl & ~(cpuc->intel_ctrl_host_mask |
+pebs_mask)", presumably the intention of the author of the faulty.
+However, I personally find the repeated application of A AND NOT B to
+be a bit more readable.
+
+This shows up as guest failures when running concurrent long-running
+perf workloads on the host, and was reported to happen with rcutorture.
+All guests on a given host would die simultaneously with something like an
+instruction fault or a segmentation violation.
+
+Reported-by: Paul E. McKenney <paulmck@kernel.org>
+Analyzed-by: Sean Christopherson <seanjc@google.com>
+Tested-by: Paul E. McKenney <paulmck@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: c59a1f106f5c ("KVM: x86/pmu: Add IA32_PEBS_ENABLE MSR emulation for extended PEBS")
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- drivers/vdpa/vdpa_user/vduse_dev.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/x86/events/intel/core.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/vdpa/vdpa_user/vduse_dev.c b/drivers/vdpa/vdpa_user/vduse_dev.c
-index 94f54ea2eb06..4057b34ff995 100644
---- a/drivers/vdpa/vdpa_user/vduse_dev.c
-+++ b/drivers/vdpa/vdpa_user/vduse_dev.c
-@@ -151,6 +151,7 @@ static struct workqueue_struct *vduse_irq_bound_wq;
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index ce1c777227b4..0f2786d4e405 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4051,12 +4051,17 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+ 	u64 pebs_mask = cpuc->pebs_enabled & x86_pmu.pebs_capable;
+ 	int global_ctrl, pebs_enable;
  
- static u32 allowed_device_id[] = {
- 	VIRTIO_ID_BLOCK,
-+	VIRTIO_ID_NET,
- };
++	/*
++	 * In addition to obeying exclude_guest/exclude_host, remove bits being
++	 * used for PEBS when running a guest, because PEBS writes to virtual
++	 * addresses (not physical addresses).
++	 */
+ 	*nr = 0;
+ 	global_ctrl = (*nr)++;
+ 	arr[global_ctrl] = (struct perf_guest_switch_msr){
+ 		.msr = MSR_CORE_PERF_GLOBAL_CTRL,
+ 		.host = intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
+-		.guest = intel_ctrl & (~cpuc->intel_ctrl_host_mask | ~pebs_mask),
++		.guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs_mask,
+ 	};
  
- static inline struct vduse_dev *vdpa_to_vduse(struct vdpa_device *vdpa)
-@@ -1694,6 +1695,10 @@ static bool features_is_valid(struct vduse_dev_config *config)
- 			(config->features & VDUSE_NET_INVALID_FEATURES_MASK))
- 		return false;
- 
-+	if ((config->device_id == VIRTIO_ID_NET) &&
-+			!(config->features & (1ULL << VIRTIO_F_VERSION_1)))
-+		return false;
-+
- 	return true;
- }
- 
-@@ -1801,6 +1806,10 @@ static int vduse_create_dev(struct vduse_dev_config *config,
- 	int ret;
- 	struct vduse_dev *dev;
- 
-+	ret = -EPERM;
-+	if ((config->device_id == VIRTIO_ID_NET) && !capable(CAP_NET_ADMIN))
-+		goto err;
-+
- 	ret = -EEXIST;
- 	if (vduse_find_dev(config->name))
- 		goto err;
-@@ -2044,6 +2053,7 @@ static const struct vdpa_mgmtdev_ops vdpa_dev_mgmtdev_ops = {
- 
- static struct virtio_device_id id_table[] = {
- 	{ VIRTIO_ID_BLOCK, VIRTIO_DEV_ANY_ID },
-+	{ VIRTIO_ID_NET, VIRTIO_DEV_ANY_ID },
- 	{ 0 },
- };
- 
+ 	if (!x86_pmu.pebs)
 -- 
 2.43.0
 
