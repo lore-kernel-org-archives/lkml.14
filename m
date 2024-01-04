@@ -1,61 +1,108 @@
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBFB1D68D;
-	Thu,  4 Jan 2024 06:05:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 3C9412800B4B2;
-	Thu,  4 Jan 2024 07:05:28 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 1F6BD1D8B72; Thu,  4 Jan 2024 07:05:28 +0100 (CET)
-Date: Thu, 4 Jan 2024 07:05:28 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v5 8/9] PCI: Define scoped based management functions
-Message-ID: <20240104060528.GA10504@wunner.de>
-References: <20231220-cxl-cper-v5-0-1bb8a4ca2c7a@intel.com>
- <20231220-cxl-cper-v5-8-1bb8a4ca2c7a@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2A01D68E;
+	Thu,  4 Jan 2024 06:06:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1QRK1wQ2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=WHH7EjkqAp4gv4LEq1uUq0Aky/vKU/3Flfj3XeBndLY=; b=1QRK1wQ2+BzwBdOIALghzMO+ie
+	k5F/PyUFVVzAw65jMQcC5zjWToU/ZB9UVwIw2fCLSsgZUxcPW18XhVJbps0TDRbq5GUEghbNHvc64
+	wZ30HAw+sZOJ/0LeZr6qKFTLKlDaoiOGSZhSFx19eYBQy6MLrmyoy3LZQ8CGmjpUfUy6Lb3+VW7xE
+	b8dRsuddWyeE/DUf9ugMzsaS5nm9GC4NvnL9ZdO7vR4CTfg2JMzBBbT1mvugm6RPmweAg/tfgeWDd
+	ZFRRKETsb/guzT3SJcisYK+vnIsH8VxX+qLBr1Y8a52urV37Oc3llxre/gkEKQfDlfbeUxsufHZbM
+	0Cw8TBFg==;
+Received: from [50.53.46.231] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rLGsX-00Cwt8-0b;
+	Thu, 04 Jan 2024 06:06:53 +0000
+Message-ID: <1ab4ff24-4e67-43d7-90b7-0131182b7e1f@infradead.org>
+Date: Wed, 3 Jan 2024 22:06:52 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231220-cxl-cper-v5-8-1bb8a4ca2c7a@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: Tree for Jan 2 (riscv & KVM problem)
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ KVM list <kvm@vger.kernel.org>, linux-riscv <linux-riscv@lists.infradead.org>
+References: <20240102165725.6d18cc50@canb.auug.org.au>
+ <44907c6b-c5bd-4e4a-a921-e4d3825539d8@infradead.org>
+ <20240103-d2201c92e97755a4bb438bc3@orel>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240103-d2201c92e97755a4bb438bc3@orel>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Dec 20, 2023 at 04:17:35PM -0800, Ira Weiny wrote:
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1170,6 +1170,7 @@ int pci_get_interrupt_pin(struct pci_dev *dev, struct pci_dev **bridge);
->  u8 pci_common_swizzle(struct pci_dev *dev, u8 *pinp);
->  struct pci_dev *pci_dev_get(struct pci_dev *dev);
->  void pci_dev_put(struct pci_dev *dev);
-> +DEFINE_FREE(pci_dev_put, struct pci_dev *, if (_T) pci_dev_put(_T))
 
-pci_dev_put() already performs a NULL pointer check internally.
-Why duplicate it here?
 
-Thanks,
+On 1/3/24 07:18, Andrew Jones wrote:
+> On Tue, Jan 02, 2024 at 10:07:21AM -0800, Randy Dunlap wrote:
+>>
+>>
+>> On 1/1/24 21:57, Stephen Rothwell wrote:
+>>> Hi all,
+>>>
+>>> Changes since 20231222:
+>>>
+>>
+>> It is possible for a riscv randconfig to create a .config file with
+>> CONFIG_KVM enabled but CONFIG_HAVE_KVM is not set.
+>> Is that expected?
+>>
+>> CONFIG_HAVE_KVM_IRQCHIP=y
+>> CONFIG_HAVE_KVM_IRQ_ROUTING=y
+>> CONFIG_KVM_MMIO=y
+>> CONFIG_HAVE_KVM_MSI=y
+>> CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT=y
+>> CONFIG_HAVE_KVM_VCPU_ASYNC_IOCTL=y
+>> CONFIG_KVM_XFER_TO_GUEST_WORK=y
+>> CONFIG_KVM_GENERIC_HARDWARE_ENABLING=y
+>> CONFIG_KVM_GENERIC_MMU_NOTIFIER=y
+>> CONFIG_VIRTUALIZATION=y
+>> CONFIG_KVM=m
+>>
+>> Should arch/riscv/kvm/Kconfig: "config KVM" select HAVE_KVM
+>> along with the other selects there or should that "config KVM"
+>> depend on HAVE_KVM?
+> 
+> We probably should add a patch which makes RISCV select HAVE_KVM and
+> KVM depend on HAVE_KVM in order for riscv kvm to be consistent with
+> the other KVM supporting architectures.
+> 
 
-Lukas
+Yes, I agree.
+
+>>
+>>
+>> The problem .config file causes build errors because EVENTFD
+>> is not set:
+>>
+>> ../arch/riscv/kvm/../../../virt/kvm/eventfd.c: In function 'kvm_irqfd_assign':
+>> ../arch/riscv/kvm/../../../virt/kvm/eventfd.c:335:19: error: implicit declaration of function 'eventfd_ctx_fileget'; did you mean 'eventfd_ctx_fdget'? [-Werror=implicit-function-declaration]
+>>   335 |         eventfd = eventfd_ctx_fileget(f.file);
+>>       |                   ^~~~~~~~~~~~~~~~~~~
+>>       |                   eventfd_ctx_fdget
+>> ../arch/riscv/kvm/../../../virt/kvm/eventfd.c:335:17: warning: assignment to 'struct eventfd_ctx *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+>>   335 |         eventfd = eventfd_ctx_fileget(f.file);
+>>       |                 ^
+>>
+> 
+> Hmm. riscv kvm selects HAVE_KVM_EVENTFD, which selects EVENTFD. I'm
+> not sure how the lack of HAVE_KVM is leading to this.
+
+The "select HAVE_KVM_EVENTFD" is gone in linux-next.
+
+-- 
+#Randy
