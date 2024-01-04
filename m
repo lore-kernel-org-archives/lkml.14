@@ -1,185 +1,261 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D2318EBD
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 06:00:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7952718EBE
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 06:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rv//3exP";
-	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="il/1X3Wh"
-X-UUID: 83dacbc4aac611eea2298b7352fd921d-20240104
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=Pt8VLSh3hi+teOQg+P+IoqchDSiIjvIJHLhkvgiAxKw=;
-	b=rv//3exPauSx8AOHS44rQ8mQ6N4htpf67Pk1x3+rpsCn6IkXImvcMxhwov1+K+N+oe3HlXrE4Gxt+hRYBW/8nuHs4ltefD3skCEtYiNbebvz3Rpd882vcrzqUN2TmEZlasc2s8Jryf2GuPWHtij3UvV/AfFgjn2mGdpAoOVGQpw=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:80fa1c9b-6db2-461d-a940-4df714638fdd,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:5d391d7,CLOUDID:7e77f97e-4f93-4875-95e7-8c66ea833d57,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,
-	DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 83dacbc4aac611eea2298b7352fd921d-20240104
-Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw02.mediatek.com
-	(envelope-from <ck.hu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1147716174; Thu, 04 Jan 2024 14:00:08 +0800
-Received: from mtkmbs10n2.mediatek.inc (172.21.101.183) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GMwSH+K5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704348250; x=1735884250;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=tiSXJDNgnEnZGQ4SQ2XGlaOb+7rVXZH+jcdk7KtWzk4=;
+  b=GMwSH+K5F9pFNZ7jGq8aWfBZLHK+uyhi6Gq/pd7TkDCVmA6xwPZS4y5j
+   jtpQ5oPWidZHpH5xYg/lAxjgJ7iLsuq/I+Lm3pDBP/Q2iCJh4JDJlVy2R
+   z+0cjLCyx8xf7mIvHDWkb1d0f7pSBXxDaH1NXlszO4UE42xFWPI6/mLlv
+   xzlfFaMc06PeKTjB59vd0GkYXp6uAZZmPjAMsyCZcNOn7z9vpn4L6+b6R
+   9Rd1Q5HiJ4K8yGb3GA6nj0FXCX80ZarxnJZitahpAhQ2Zh8F5ms+VPP6a
+   1lVH+6qMu56qc4gjzRzK4kNKztTCmGPbKrAseDDp/RM09Bmq4GGUqynQg
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="4477501"
+X-IronPort-AV: E=Sophos;i="6.04,329,1695711600"; 
+   d="scan'208";a="4477501"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2024 22:04:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10942"; a="903681073"
+X-IronPort-AV: E=Sophos;i="6.04,329,1695711600"; 
+   d="scan'208";a="903681073"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 03 Jan 2024 22:04:08 -0800
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 3 Jan 2024 22:04:07 -0800
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Wed, 3 Jan 2024 22:04:07 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Thu, 4 Jan 2024 14:00:07 +0800
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (172.21.101.237)
- by mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Thu, 4 Jan 2024 14:00:06 +0800
+ 15.1.2507.35; Wed, 3 Jan 2024 22:04:07 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nF3yDZxkdtQjrdLmI4TgIuAGjQPfVQuJvGaU2lfODJHP2x+5jmbuAUbOR+BE9xRXWesxnpXR9BI+yC+aDG71XjsR3TxebCjC377F6FRj+RcnV7lHltLwqYYcdGXdxpJsgqmQ+Kx5oxuvKLzu1M0r2LQbwuRDkqTeJzIdCK6dwi2WySHkLAoURhl7KFYSsIBDj4SiithAH2Vh6QeT671L+1HjvODNtsAkmNMf/I8cCA6NGUEOYvSDdemZ0P8unqD1Yv1nKezh7MfGu+o8F2lP7EoaW5WMFw7mFlFGlp8Y799iJH+B4BUGlGeXTEtHwrooMYT/2uSBGZ5yMde6h295wg==
+ b=BanCWRg5Z9aFnCj+O5ae0F05rNh8lg6OthPvIMFja97JUSvtf6+q/FgpWGVkDs1fW6y1yMqZEFl4YBJg06L0p5qS/x3X3F1S80sbC5m9zIOWS/ZaI7jxJov+cqVAwDX9zU2ufhnRobJ2lhlWbx904IDOP3MdkNKw+Bnxkf9Y6mKXbh7wBuHi/mz/E3Ml4imnebKZ7b1dxtgi4Er+kQZB82iqkK8w2fB/AHKjLpdhCJyki65qiuJNOv5BKkAohyAsj/x43ybcfYmvoO7nZslWloXRFFTfuuBFa8rUaqF4PUZK6kPrPBAcb3NNKWSvfJn1TR/w10ilADyFTVH/NOaEyA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Pt8VLSh3hi+teOQg+P+IoqchDSiIjvIJHLhkvgiAxKw=;
- b=J69PD3YSAZlO4nZV5u+1c//IpxQ/y85fkVRThoXhe0YUFGJaczk3O0eSFSnWGfiZVwDvrGIjtMGYXupSkBLpOMUdoTPSQ3JJ4oLQQAUlQbB1tB67Qc9keKWiaAYSRjW9HXRVAiHZh0Xr/+XCOVYJvGXySxT+coQGr5Rm8bBtnMdYOZjS0x9E4v5ioPgU9fAoXj3iEHqao4XdZgrKjNfMGlusbMw+oA7Ll/CSmztJ3FXNgJM2JgVcuSi+49+nTMdNxptuApnVbNzbBXD2P8+/lo3cOZQNXPAdthFY+uHs2/jA6nFHEl+eBOssQaEo8xLW0XXL6/AaDhqpxeqtWWfsYA==
+ bh=22xmZjgk2yn6zdbCsW+E7g/o73UrUdN/kNHDC2nP1b0=;
+ b=B9ZfuDN+5jmGxVtmlo0pRN2YloRp8WoBuI5mkMitQPW1ze+AIkglbR+jDhQaFVhDbpVWV+Zi1Ja0cFN8owo5ZKEhWAYJqeU5ZWeiiyy2HR9bNUExxmA0Phb0c60FFe0ik0VaZuIXiZUq3Gy+JLElVRYNOq32n1IeT5lCvIyxqgTa4Dk/0pjbkw+rRpLjjYF7S1/upiHqB7g5qVv+qisMPU1OG4UG2gdyDbVHaz+Rj/X5F3whq13ZQYLU4oqpAxF8Bpr9FueabOlZc38sdHfv8ve3W6qjXer6Y8eiHh0k+RhuBR+VZlMjfEaOa7VdE+goc9i5yYX6HXAN0lMvJT8xQg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
- dkim=pass header.d=mediatek.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pt8VLSh3hi+teOQg+P+IoqchDSiIjvIJHLhkvgiAxKw=;
- b=il/1X3Whm9hIMkNghSS3kAN5mAS8owQC9VyJlRBkjwxuM5FS+67p/320rCfBj3VqC2xUVxz7iVHeVTgFY93j1lNvlix+aggMbPnOzFTDibpIaYkN7x7HoMAFZ4OMC2dLPlvTjO7K3sLsAY3o3OP0tEmFEZz9MTNC92fV0ilEX7Y=
-Received: from TYZPR03MB6624.apcprd03.prod.outlook.com (2603:1096:400:1f4::13)
- by OS8PR03MB9083.apcprd03.prod.outlook.com (2603:1096:604:2ac::13) with
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MN0PR11MB6304.namprd11.prod.outlook.com (2603:10b6:208:3c0::7)
+ by CH0PR11MB8192.namprd11.prod.outlook.com (2603:10b6:610:191::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.14; Thu, 4 Jan
- 2024 06:00:03 +0000
-Received: from TYZPR03MB6624.apcprd03.prod.outlook.com
- ([fe80::eb43:57cb:edfd:3762]) by TYZPR03MB6624.apcprd03.prod.outlook.com
- ([fe80::eb43:57cb:edfd:3762%7]) with mapi id 15.20.7159.013; Thu, 4 Jan 2024
- 06:00:03 +0000
-From: =?utf-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>
-To: =?utf-8?B?TWFjIFNoZW4gKOayiOS/iik=?= <Mac.Shen@mediatek.com>,
-	"chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>,
-	=?utf-8?B?Sml0YW8gU2hpICjnn7PorrDmtpsp?= <jitao.shi@mediatek.com>,
-	"daniel@ffwll.ch" <daniel@ffwll.ch>, "p.zabel@pengutronix.de"
-	<p.zabel@pengutronix.de>, "airlied@gmail.com" <airlied@gmail.com>,
-	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-	"angelogioacchino.delregno@collabora.com"
-	<angelogioacchino.delregno@collabora.com>
-CC: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>,
-	=?utf-8?B?U2h1aWppbmcgTGkgKOadjuawtOmdmSk=?= <Shuijing.Li@mediatek.com>
-Subject: Re: [PATCH] drm/mediatek/dp: Add the HDCP feature for DisplayPort
-Thread-Topic: [PATCH] drm/mediatek/dp: Add the HDCP feature for DisplayPort
-Thread-Index: AQHaHrPjdunoffcOCEGmErF8vNrJIrDJaRsA
-Date: Thu, 4 Jan 2024 06:00:03 +0000
-Message-ID: <c645c91387c1056307b2ee303474bb8dd32211bd.camel@mediatek.com>
-References: <20231124085346.26602-1-mac.shen@mediatek.com>
-In-Reply-To: <20231124085346.26602-1-mac.shen@mediatek.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mediatek.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYZPR03MB6624:EE_|OS8PR03MB9083:EE_
-x-ms-office365-filtering-correlation-id: c5e5b8a9-935b-40df-1e0f-08dc0cea6522
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 379H2RUNLj/aSj2OJlHgOJssjXgP2k8Mbu+QpuZbrNMR/9ki+4xfk+5btjn/6BzJI5rxTJGAePMdYiuW8NMDN8HnOfVyqLjw34syuB8b7QjmKEiL3DaaCBUD8XlWnX/qiNdlxpNzF02R2As7gce0PsmR2zLWh5iL2r7nRick6JpH13rqNDZx5/huZljKqThOUbR0dKRkbniHiPXHOj/UAdpSwaWxItS+CAa8OrDfe0ODenNLyeiSL820Yabj/ghmoc2KmQjuMV1iZBVSZ7PGs2bi+arZpHrA86Pb+yqMWjGWgBenwKC5keU20cPcxBNB1gJ67EIj/Ws2GSuOeHijb7KNHjXop2PAVZoDT61GWlec6G3Zz/mrrbwgIUkrfGANK0jOvc69gEBihegUWLttsC+GVbXW0sWmrb70zWDlGCiX/CbWIvDxYgXEzjf7W6lVeyM91zLH1kBeYeAtN6sAAnM47V3xg1ZinPsHxpPjlOckpQDyDcp7223dcN0BroLfwaAChF5B6E2mjazVRJqNWC+UL+aFQz2jUk6SDZXLSnydPjCVYqaDPSCjS1mh5hIC/6Ue8X+jnJmM93oauXJqpnGigEOOMPC59Xq9W59R6bm5eE+b8IOxcnH8seMCBAyZbloniXcThuPBUUIPui1QyImki5vGDnjEh/If5mC2IzU=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6624.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(396003)(136003)(366004)(39860400002)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(4326008)(85182001)(38070700009)(4001150100001)(86362001)(8936002)(8676002)(4744005)(7416002)(5660300002)(2906002)(478600001)(71200400001)(41300700001)(6486002)(6512007)(38100700002)(6506007)(122000001)(76116006)(91956017)(36756003)(64756008)(316002)(66446008)(66476007)(66946007)(66556008)(110136005)(107886003)(2616005)(54906003)(26005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?d1J6ZkdVK2JWWnFWYnI1a2wxZ3NHbXI5ZXR1VTduczlobllHYVdKV3JTbXJV?=
- =?utf-8?B?OUZDa0pGS1R0ZEErMnpqVmlEL0wvUmtLSHhneUpzUldsUVM0ZzMwakZTWGV6?=
- =?utf-8?B?ak5wRUxJb3VVM3BpblNqUzJTeU94Z1lsMEg4SEw5a1h0aXFsWUY5Tmx5ekV0?=
- =?utf-8?B?NFdrSGc1eGZqUy9QVXM1YzVYeW9EdjFvbmtRcWlSSEhTWUVuQTFncTJPelFs?=
- =?utf-8?B?VGhUTng1dG4reU1OYWlHeVBkMm0yVDFXY1VqTTNtYjh6UitBT3BkdlFkWEZw?=
- =?utf-8?B?T3Z1SDQvc3JCcjgzWEYvTXJIaG5ZNDlHRjdRWjBVVnFkSDVIalIvVUhEV21s?=
- =?utf-8?B?VGY3YlFlOTl0dXFCU1NYNloyT2l5N3N6N2lTeE1jUzl5WnVSSmQvak44NTJL?=
- =?utf-8?B?V0lwbTlDdEoyZDk1UzVHMnRCWnBXc01OVDQyaFcrcVgweEEwY09NZ0w5TEx5?=
- =?utf-8?B?WXFNYWtCZUs3RG1QV0pDMFJmbkNCYjkxUWl2bENZOVVxUGx0NkNZZTllSHJG?=
- =?utf-8?B?am9RbzhhSVl6NWhMZkVqcFltQXFrYnFuckdja202dUZYd0ZQbjQrOENxWGwy?=
- =?utf-8?B?VmhVYkhQbnRkanYvZWhjcEZaVG4zM1J2Z0F3RzdXVWVkOWh2ZGYvRnJqMGRK?=
- =?utf-8?B?RW1NU1hqVDhhN05MSlF5bzg4bWdiSEhTaXBDNXV0RzlmeXBSN01LaThCaXFC?=
- =?utf-8?B?QUYrNHVoWXlVLzFhbUZES0NDQSt1c0RITzdNQjdRcE5xK3kvK3FPMmF6ZjhE?=
- =?utf-8?B?Qm1zR3duYWVpbyttRVJxcXRlOXU0K1J6Z3FpUERkSVZGWWpCeStYUzdWdkxQ?=
- =?utf-8?B?WDBCcVhIb0dVRzJUMjdLTFEwSnlxMEdnaTJqMVJTTFF0RFhrRmVkTENvSGVN?=
- =?utf-8?B?MWF5ejUzNXRCeTRxdWcvZWVVL1B6M0NFT2tva2o4NlRlUVczUFJKMGh2RVYz?=
- =?utf-8?B?WDBUN00wZHZqVUdpTFVET3p3TnNaTmZIYWtQME10VVhCTW9FZSttUlpRYXp1?=
- =?utf-8?B?ZTUxS3REa0gzVUVFVlZ6dUdtTHNmZk5zVE9zRzBiTmxsZkZieDExa1BCOStl?=
- =?utf-8?B?cEhxdkkvU1p1aFp5aTFNZkRKTmMyeXBDVUVPeEF5UUVWWWxqZjdNcnh5ZTNu?=
- =?utf-8?B?bEQrZ2NtQTZTUkRTZXY5bGhGYnMxTVQ5ckV1Wm92bzBMSCsvb1M1YXd0T1dE?=
- =?utf-8?B?N1RjMk93K09YYmVVMVVyY0p3S01GVEhGbmt1SEJhMXRBQTIyYVZiM3gzKzJh?=
- =?utf-8?B?cENNNzYzWWwxOXRpRHh3UzhJbm1aaWF0UzdXWU1WejJJYlpHbFJua092QWts?=
- =?utf-8?B?bDJHSXRrR0FnOXl4QnBRTk1aVWhBZTZxbnk4VG82UU1ja29XeTFYeldiakpL?=
- =?utf-8?B?ZlVvR05BOEQrblAxc0ZWRml0YU5kZjhobU5MTit3T0NCS3RDM1ZFWHcxQVBs?=
- =?utf-8?B?alNOYzBsdHFUcVZyUmJTUU9UTkt1YUJORWk0SVhCWUlXOHRsSTY4NUNoL2RI?=
- =?utf-8?B?cno1UloxQ1luYXVpei9yZlhHYURVUzd5QzZoUnRRYkp6RE11RVozblZmUGFl?=
- =?utf-8?B?TnhkSHdiOGxkbzZ1Qk13RmpuQytYRXcyQjBCWW5UVE1mLzdrRkJzV3FlNTRz?=
- =?utf-8?B?N3k3czBiRWtQZlhFV0FjTVlrOUdGT054dnM1cEdQcWU2QkZwNkZvaWlxT3NV?=
- =?utf-8?B?OUVWMzNpTWRmZ3VLR2FYUDB0cTQ0K1NZdHFhK3B2L1FITlJyWW9Cekh5NjBl?=
- =?utf-8?B?WXlyL2hRS1piYmJLQ1pMTkIzL3d1RnJCYXYvNld4K1RzOWdWL21lTjRseU1s?=
- =?utf-8?B?TWhUTjBGZXEwZ1dTd1VYbkdCOGJDT2o1d244eU9jVXZ6THlOWmhTQzdaOTF1?=
- =?utf-8?B?UU9Zb2h5SHAweEIwSUZDb3oxZEFRRTY5Q1pqUU9UUnNtWHZyZWQ1cTB6QjIy?=
- =?utf-8?B?Y2paZlpHUmZFL3gyYUdydkRNTHI5NUgvWFJDWjlYd1ZYaG5EdDQyWUdKSWlB?=
- =?utf-8?B?eGRkWjB6ZSs5Q3dDeWJ5bmFRK1hzUDlYNWRIWHpmd3FHQ21ObUFqbC9aT0M5?=
- =?utf-8?B?bXE2cVB1Vno1KzUrTXFnQzBTaTZmTTlJZ0dSQjhJVUtuaHVLNm1EME1LWkJX?=
- =?utf-8?Q?W0uMlyDbNauAQO+CFnKmk2vBr?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DE9289916DF3B840A01677B21A33F558@apcprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.27; Thu, 4 Jan
+ 2024 06:04:06 +0000
+Received: from MN0PR11MB6304.namprd11.prod.outlook.com
+ ([fe80::a9f3:d5aa:7ec3:d3e3]) by MN0PR11MB6304.namprd11.prod.outlook.com
+ ([fe80::a9f3:d5aa:7ec3:d3e3%6]) with mapi id 15.20.7159.013; Thu, 4 Jan 2024
+ 06:04:05 +0000
+Date: Thu, 4 Jan 2024 13:55:21 +0800
+From: Feng Tang <feng.tang@intel.com>
+To: Jiri Wiesner <jwiesner@suse.de>
+CC: <linux-kernel@vger.kernel.org>, John Stultz <jstultz@google.com>, "Thomas
+ Gleixner" <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>, "Paul E.
+ McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] clocksource: Skip watchdog check for large watchdog
+ intervals
+Message-ID: <ZZZISRg9YGyT2eQ+@feng-clx>
+References: <20240103112113.GA6108@incl>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240103112113.GA6108@incl>
+X-ClientProxiedBy: SG2PR06CA0205.apcprd06.prod.outlook.com
+ (2603:1096:4:68::13) To MN0PR11MB6304.namprd11.prod.outlook.com
+ (2603:10b6:208:3c0::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR11MB6304:EE_|CH0PR11MB8192:EE_
+X-MS-Office365-Filtering-Correlation-Id: b6c9c331-6f81-4dfb-b115-08dc0ceaf550
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /9jelu6R1TNKA8nhnIHWzg60dJTAgD0KnccdiQA53u/7lqOEQjEL+SGqpTasVF+cGbydD1bSoo1QR+v+kxn5uSCdlyM4NKy9sz+MWYYprbwWyL4ps6pSRHP95os0r5aRJIBGZWgIRhoFJVej6wMXD8UJm3TMI1rxoApTKs9ZP5GbasEVBKVAt93d6MOUdF4oAXnLs5hE2dUA0dVWb5Y1o9+W60Uui1nILdSunC4UuOZFVter241wtB7Efo9bvjr2TUoDvOkKdvZrEXbayu0IMWJ48YHWbfjZj0x7rp+ptfV26gnwgTx9qXMktpBvpBY0PW0xEN/Bgc6dMucy2UN3kjvsYnq/cmGXsMocXAo+QCajB3Ix0C6jN4AtsmAmDj2auJGLMoREsTgD5BCvCClQQyIIPCT52aR74gahVpf5xsqqscPs/H3vgNwYqoUjseAInrChsuIbbwx4rJ4sPCOyVG9u5o0uvfrTeA4zecGR7lDJ9SRrGeRhBHXGyi+X8NZF/JOGLCct02cRnR8L2kvQHzx0QY/SyiiHxgpr92FW8xOMv5s8Ma/SRUwc6mYom9uX
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB6304.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(366004)(346002)(396003)(136003)(39860400002)(376002)(230922051799003)(451199024)(1800799012)(186009)(64100799003)(38100700002)(83380400001)(82960400001)(4326008)(44832011)(26005)(86362001)(6506007)(6512007)(316002)(9686003)(66476007)(66556008)(6916009)(66946007)(54906003)(66899024)(8676002)(8936002)(41300700001)(6666004)(478600001)(6486002)(5660300002)(33716001)(2906002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?tJVygJTlxwniY7SskWkNdA+OYfSo05ZWehgoXy6ytIFvLapVFn91uis1Lsbu?=
+ =?us-ascii?Q?qUIRKvHqE9wfSK584WK12MAK93YnCVrr3ZGpvU9FHKJvXq0FTJzFvFhgKeq2?=
+ =?us-ascii?Q?urzOj4qgty9TsZLi0AR4ky7mSbPEd1vbAClpFdK1ePY1uruwSZTwF1GrI9aM?=
+ =?us-ascii?Q?uxKDKSCoS4yP/j2oLhxCwKqscA7ZPi7AnKYBl2DJ/i9nWt1llUjkpyCvsKQZ?=
+ =?us-ascii?Q?vJ4mnvoMzZUnFxKgsXruI8TVOU946z7xo70trsU631Lmpbdflzr0iyuB227F?=
+ =?us-ascii?Q?moLir9JUKuMvQUq0wfZcXJHiTdsJzL3c+PDJUythl0N1RHFc7UKINaCST//l?=
+ =?us-ascii?Q?G6NnL0Udegzfre/WbIIyRE7amDTxEu5t4bht48rMOBk2r3lbf63p4Y9Y2jBp?=
+ =?us-ascii?Q?CWt+mooooRdiKcgZJ8x3Hz95/1IiQoIxR82OLzQdajYHBnGNpB2t2ShNele3?=
+ =?us-ascii?Q?iVpdeuFU+xIMpLW5oQZk9dOPN7eJC5d0TS9BZy0GnNe8Szppahe9gg+KKEuO?=
+ =?us-ascii?Q?mGv8ar6Qa1grscRXwwkzUkYJgCa3V6AcJgbT+hDZW8TnbgWsT2WNQduri6Y/?=
+ =?us-ascii?Q?9B8OxwjagjVQj68uY6yWEKUyc4xDoHi5UOi05t/2WvLfY+ZMQEJBBebv0kpn?=
+ =?us-ascii?Q?U4lfVK0kghkflt0Tzvy+TpR4ExDvk2EnRHuEKEwpkacu9Gz3BeUKXTyzf73Z?=
+ =?us-ascii?Q?llElqrzk6cFN0LBXsi2cHTvh/5GBk5HdCod11SRwAVsRZVzs6UWbvmPBsyb/?=
+ =?us-ascii?Q?voj325ERl1Sjba87Z2+rjtxyzSr9CEs0MZA2yODm1xcd7ph4DLzPtriqDS0p?=
+ =?us-ascii?Q?n2KaJmu2BVYq4Hh2QotJP8QGHaYjOAMJTUoIvwjnDo7Szdy/2dSLX8Xr/R7w?=
+ =?us-ascii?Q?9wbTkkO/kVRrYqyaBU1WV3+lUMdfRf+sMT/7XMTknXCRW+qn/nAABQND6E1z?=
+ =?us-ascii?Q?5NODi0L3cSzSSfipn0x2GDa+iF4Ewbh8/73NhHJ2tBOKoB2ipFZwzKh0K4pQ?=
+ =?us-ascii?Q?zHztO7fBLTXfXaAiExRrSumnSwWHFAU/82sSML8j3i8Ea2ns2Gs8oNYvMU67?=
+ =?us-ascii?Q?kXEAIsIjfQVY9Z4kr85Uh/2cJBI2FQjCxG0urDZPwZuw1jxpmwnBsP2U0xik?=
+ =?us-ascii?Q?nmfkjpT+LfyUmHPx32mF46f902+O18WUg+G4JhLDKFGnTL0yxiOZq/VCzjif?=
+ =?us-ascii?Q?ucfWIA2vThXN09T84HFJjIz0sFKgedCLAplGfzUpzVmCtqLj79Cv+lfhvxRx?=
+ =?us-ascii?Q?eFDnCk2u9ejSDCs8SiiNUTQOXyBVdXruhbt5qfw4kYzLsgJynIsurw91jUEu?=
+ =?us-ascii?Q?yfQvyzgo+jxzq1/T4rogzkYxVGcLcxXIjq/IE2ly8YVSeZ+IfwjZVGIJudIU?=
+ =?us-ascii?Q?a9dOEPG8q3gCZUWI1d5py+z7HhEWEclsRedKO+p+hVxuUEAw1F7BzMzyFbRs?=
+ =?us-ascii?Q?VVfrKxJQ3OkknGbX6o9ZQWUdEAIbdjEE52dq60ansABFeyhMST2Qbo5JAmyK?=
+ =?us-ascii?Q?1lzeWH0yzD8GQFWof+3AUfm2mWr2KCPnqI/Kb5t9koEbxbyxycXbhNwxYrVM?=
+ =?us-ascii?Q?4V3bomH/+AKod8wzH8ZN3roY4HFNN7Qva1oZCfRL?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b6c9c331-6f81-4dfb-b115-08dc0ceaf550
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB6304.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6624.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c5e5b8a9-935b-40df-1e0f-08dc0cea6522
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jan 2024 06:00:03.7882
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jan 2024 06:04:05.8778
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lGTRpUbFFO+Odhae3NQYlD6werrZstNjKiHcAoMFZxmNSj6eNVaWifgPqj1cExl0F8zaiRchJNNb1sx+mBGkpg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS8PR03MB9083
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--11.344600-8.000000
-X-TMASE-MatchedRID: 5+1rHnqhWUTPaPH51LTU5Ca1MaKuob8PC/ExpXrHizxcKZwALwMGs8uj
-	Rkt05a7cM2MQQW7DL3i1q48Rh4wr9SnPugGsN3p5W7gz/Gbgpl5u95mt47DzNruwJO8uVRhKo8W
-	MkQWv6iUVR7DQWX/WkQGLeSok4rrZC24oEZ6SpSkj80Za3RRg8GUMaEIvhw1iLkz46FWQ+ZPrXm
-	RpP3OitNlO+f0pO05KHgxrP73AZWE=
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--11.344600-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP:
-	AF9CAF2EB33E05A5F6BF1CA201947181B5A6BF9AF9730EE082307FD4A9B19EAB2000:8
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WRZy9CVE5PSfKCuOCVHw1pxpYcEtKWg96w9uMaPuhndyPTO0eCOSMtkRqjOCHmDrE2h1kUojAALmsKrY/XeArw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB8192
+X-OriginatorOrg: intel.com
 
-SGksIE1hYzoNCg0KT24gRnJpLCAyMDIzLTExLTI0IGF0IDE2OjUzICswODAwLCBtYWMuc2hlbiB3
-cm90ZToNCj4gQWRkIHRlZSBjbGllbnQgYXBwbGljYXRpb24sIEhEQ1AgMS54IGFuZCAyLnggYXV0
-aGVudGljYXRpb24gZm9yDQo+IERpc3BsYXlQb3J0DQo+IHRvIHN1cHBvcnQgdGhlIEhEQ1AgZmVh
-dHVyZS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IG1hYy5zaGVuIDxtYWMuc2hlbkBtZWRpYXRlay5j
-b20+DQo+IC0tLQ0KDQpbc25pcF0NCg0KPiArDQo+ICBzdGF0aWMgaW50IG10a19kcF9wcm9iZShz
-dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgew0KPiAgCXN0cnVjdCBtdGtfZHAgKm10
-a19kcDsNCj4gQEAgLTI2NTcsNiArMjc3OCwxNiBAQCBzdGF0aWMgaW50IG10a19kcF9wcm9iZShz
-dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlDQo+ICpwZGV2KQ0KPiAgCWlmIChyZXQpDQo+ICAJCXJldHVy
-biByZXQ7DQo+ICANCj4gKwlJTklUX1dPUksoJm10a19kcC0+aGRjcF93b3JrLCBtdGtfZHBfaGRj
-cF9oYW5kbGUpOw0KPiArCW10a19kcC0+aGRjcF93b3JrcXVldWUgPSBjcmVhdGVfd29ya3F1ZXVl
-KCJtdGtfZHBfaGRjcF93b3JrIik7DQo+ICsJaWYgKCFtdGtfZHAtPmhkY3Bfd29ya3F1ZXVlKSB7
-DQo+ICsJCWRldl9lcnIobXRrX2RwLT5kZXYsICJmYWlsZWQgdG8gY3JlYXRlIGhkY3Agd29yaw0K
-PiBxdWV1ZSIpOw0KPiArCQlyZXR1cm4gLUVOT01FTTsNCj4gKwl9DQo+ICsNCj4gKwltdGtfZHAt
-PmhkY3BfaW5mby5hdXggPSAmbXRrX2RwLT5hdXg7DQo+ICsJbXRrX2RwLT5oZGNwX2luZm8ucmVn
-cyA9IG10a19kcC0+cmVnczsNCg0KSXQncyBub3QgbmVjZXNzYXJ5IHRvIGR1cGxpY2F0ZSBhdXgg
-YW5kIHJlZ3MsIHNvIGRyb3AgdGhpcy4NCg0KUmVnYXJkcywNCkNLDQoNCj4gKw0KPiAgCW10a19k
-cC0+YnJpZGdlLmZ1bmNzID0gJm10a19kcF9icmlkZ2VfZnVuY3M7DQo+ICAJbXRrX2RwLT5icmlk
-Z2Uub2Zfbm9kZSA9IGRldi0+b2Zfbm9kZTsNCj4gIAltdGtfZHAtPmJyaWRnZS50eXBlID0gbXRr
-X2RwLT5kYXRhLT5icmlkZ2VfdHlwZTsNCj4gDQo=
+On Wed, Jan 03, 2024 at 12:21:13PM +0100, Jiri Wiesner wrote:
+> There have been reports of the watchdog marking clocksources unstable on
+> machines with 8 NUMA nodes:
+> > clocksource: timekeeping watchdog on CPU373: Marking clocksource 'tsc' as unstable because the skew is too large:
+> > clocksource:   'hpet' wd_nsec: 14523447520 wd_now: 5a749706 wd_last: 45adf1e0 mask: ffffffff
+> > clocksource:   'tsc' cs_nsec: 14524115132 cs_now: 515ce2c5a96caa cs_last: 515cd9a9d83918 mask: ffffffffffffffff
+> > clocksource:   'tsc' is current clocksource.
+> > tsc: Marking TSC unstable due to clocksource watchdog
+> > TSC found unstable after boot, most likely due to broken BIOS. Use 'tsc=unstable'.
+> > sched_clock: Marking unstable (1950347883333462, 79649632569)<-(1950428279338308, -745776594)
+> > clocksource: Checking clocksource tsc synchronization from CPU 400 to CPUs 0,46,52,54,138,208,392,397.
+> > clocksource: Switched to clocksource hpet
+> 
+> The measured clocksource skew - the absolute difference between cs_nsec
+> and wd_nsec - was 668 microseconds:
+> > cs_nsec - wd_nsec = 14524115132 - 14523447520 = 667612
+> 
+> The kernel (based on 5.14.21) used 200 microseconds for the
+> uncertainty_margin of both the clocksource and watchdog, resulting in a
+> threshold of 400 microseconds.  The discrepancy is that the measured
+> clocksource skew was evaluated against a threshold suited for watchdog
+> intervals of roughly WATCHDOG_INTERVAL, i.e. HZ >> 1, which is 0.5 second.
+> Both the cs_nsec and the wd_nsec value indicate that the actual watchdog
+> interval was circa 14.5 seconds. Since the watchdog is executed in softirq
+> context the expiration of the watchdog timer can get severely delayed on
+> account of a ksoftirqd thread not getting to run in a timely manner.
+> Surely, a system with such belated softirq execution is not working well
+> and the scheduling issue should be looked into but the clocksource
+> watchdog should be able to deal with it accordingly.
+> 
+> The solution in this patch skips the current watchdog check if the
+> watchdog interval exceeds 1.5 * WATCHDOG_INTERVAL. Considering the maximum
+> watchdog interval of 1.5 * WATCHDOG_INTERVAL, the current default
+> uncertainty margin (of the TSC and HPET) corresponds to a limit on
+> clocksource skew of 333 ppm (microseconds of skew per second). To keep the
+> limit imposed by NTP (500 microseconds of skew per second) for all
+> possible watchdog intervals, the margins would have to be scaled so that
+> the threshold value is proportional to the length of the actual watchdog
+> interval.
+> 
+> Fixes: 2e27e793e280 ("clocksource: Reduce clocksource-skew threshold")
+
+IIUC, the issue could happen even before this commit? Though I do think 
+this is good stuff for stable kernel.
+
+> Suggested-by: Feng Tang <feng.tang@intel.com>
+> Signed-off-by: Jiri Wiesner <jwiesner@suse.de>
+
+0Day robot reported some compiling issue. Other than that, it looks
+good to me, thanks!
+
+Reviewed-by: Feng Tang <feng.tang@intel.com>
+
+>
+> ---
+>  kernel/time/clocksource.c | 28 ++++++++++++++++++++++++++--
+>  1 file changed, 26 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+> index c108ed8a9804..ac5cb0ff278b 100644
+> --- a/kernel/time/clocksource.c
+> +++ b/kernel/time/clocksource.c
+> @@ -98,7 +98,9 @@ static u64 suspend_start;
+>  /*
+>   * Interval: 0.5sec.
+>   */
+> -#define WATCHDOG_INTERVAL (HZ >> 1)
+> +#define WATCHDOG_INTERVAL	(HZ >> 1)
+> +#define WATCHDOG_INTR_MAX_NS	((WATCHDOG_INTERVAL + (WATCHDOG_INTERVAL >> 1))\
+> +				 * NSEC_PER_SEC / HZ)
+>  
+>  /*
+>   * Threshold: 0.0312s, when doubled: 0.0625s.
+> @@ -134,6 +136,7 @@ static DECLARE_WORK(watchdog_work, clocksource_watchdog_work);
+>  static DEFINE_SPINLOCK(watchdog_lock);
+>  static int watchdog_running;
+>  static atomic_t watchdog_reset_pending;
+> +static int64_t watchdog_max_intr;
+>  
+>  static inline void clocksource_watchdog_lock(unsigned long *flags)
+>  {
+> @@ -400,7 +403,7 @@ static void clocksource_watchdog(struct timer_list *unused)
+>  {
+>  	u64 csnow, wdnow, cslast, wdlast, delta;
+>  	int next_cpu, reset_pending;
+> -	int64_t wd_nsec, cs_nsec;
+> +	int64_t wd_nsec, cs_nsec, interval;
+>  	struct clocksource *cs;
+>  	enum wd_read_status read_ret;
+>  	unsigned long extra_wait = 0;
+> @@ -470,6 +473,27 @@ static void clocksource_watchdog(struct timer_list *unused)
+>  		if (atomic_read(&watchdog_reset_pending))
+>  			continue;
+>  
+> +		/*
+> +		 * The processing of timer softirqs can get delayed (usually
+> +		 * on account of ksoftirqd not getting to run in a timely
+> +		 * manner), which causes the watchdog interval to stretch.
+> +		 * Some clocksources, e.g. acpi_pm, cannot tolerate
+> +		 * watchdog intervals longer than a few seconds.
+> +		 * Skew detection may fail for longer watchdog intervals
+> +		 * on account of fixed margins being used.
+> +		 */
+> +		interval = max(cs_nsec, wd_nsec);
+> +		if (unlikely(interval > WATCHDOG_INTR_MAX_NS)) {
+> +			if (system_state > SYSTEM_SCHEDULING &&
+> +			    interval > 2 * watchdog_max_intr) {
+> +				watchdog_max_intr = interval;
+> +				pr_warn("Skipping watchdog check: cs_nsec: %lld wd_nsec: %lld\n",
+> +					cs_nsec, wd_nsec);
+> +			}
+> +			watchdog_timer.expires = jiffies;
+> +			continue;
+> +		}
+> +
+>  		/* Check the deviation from the watchdog clocksource. */
+>  		md = cs->uncertainty_margin + watchdog->uncertainty_margin;
+>  		if (abs(cs_nsec - wd_nsec) > md) {
+> -- 
+> 2.35.3
+> 
+> 
+> -- 
+> Jiri Wiesner
+> SUSE Labs
