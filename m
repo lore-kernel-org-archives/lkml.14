@@ -1,73 +1,72 @@
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B78225A1
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 14:17:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DxOtbUNN"
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4676dc16009so145102137.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 06:17:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704377853; x=1704982653; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=giLoYiBuCJluqiJ7Duk1l5c9a+I6JQIaND7ild3LKSE=;
-        b=DxOtbUNN23LHRxMwsp+MWzHZ3AYFsf2oqqxoROjFri+6hjipMn3pmAcusDpfP2VKdz
-         RYNoiKhcm3BPP9LjY9fAPi/YocEf26THJG2amYRvUAtIEVBh2AC5s4K4MhQoHJfe5UHC
-         PsFZCsxy7DWX/s69wBUaNpyXDgB9zO1D6BkYDs9nD0/pJTbReuHk9Lvtf+uYXoOqcXQ0
-         nALgk6P+ZW8/Qk2F00eNDKDD4mRp8MBNr4ORcERWfMXbVA2CV4eR4A6DHZYJ6LBHVcce
-         H0k8BD/9kg1hHccR1/80UpBGnrEk5uQKzaZkrP6B0Tnt3dZ1S+SZPVprYmyMWrV7rq6W
-         z53A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704377853; x=1704982653;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=giLoYiBuCJluqiJ7Duk1l5c9a+I6JQIaND7ild3LKSE=;
-        b=WMDap/AuZBWQLIgQM2RcxlnTZxV3X0OD1WJF8nVL7FnUGBuXq4fvWE9rRx3zhlUlyg
-         i5imvrGwv+Q3dRMxbd1zw4QBYXLg90I2mC0heovKYw4aMT7AVc1fpBELuWLOOqzOUNed
-         F0ilJHga104b9VjihqrTwbpW0yVQ/UPRV+mgnvVVgm42yhq2YCKvYqF9LhBlRfLXYSaH
-         3xe+80pnpW+d71jgZWtMDVdThCVa6YFUgzQqhxCAE5TVy61pxbkWhlqhrWmhTmnIxAQp
-         fCbQ+pcWYtSZAhERhP/v7wW7pWw9HF29YcmjqdrQEVELR8/ATpVUWFYExDXo7SKhN/5v
-         3k2g==
-X-Gm-Message-State: AOJu0YwvBWYtzhYB5Qaa23ppn5bBU9nrTqUut8fZByMq/PSqbdSZumNB
-	8Ow6ILxO7U4PE/8G1ZX8C8Da7Jx6ZRqCJXZaF5zx22yf6MQH
-X-Google-Smtp-Source: AGHT+IGGmXT5NwaRXznAvd/khpPo+30lICXph7Zp7dFvuoRHIJ8Z66QH5RcDJIO3wncQMw04tfWxFlWfMufxu9XEDlI=
-X-Received: by 2002:a05:6122:a01:b0:4b7:3eee:3a4a with SMTP id
- 1-20020a0561220a0100b004b73eee3a4amr347951vkn.28.1704377853494; Thu, 04 Jan
- 2024 06:17:33 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A4622F12;
+	Thu,  4 Jan 2024 14:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4T5TF23VGBzZgFt;
+	Thu,  4 Jan 2024 22:17:26 +0800 (CST)
+Received: from dggpeml500021.china.huawei.com (unknown [7.185.36.21])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8048B18001C;
+	Thu,  4 Jan 2024 22:17:40 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by dggpeml500021.china.huawei.com
+ (7.185.36.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 4 Jan
+ 2024 22:17:39 +0800
+From: Baokun Li <libaokun1@huawei.com>
+To: <linux-ext4@vger.kernel.org>
+CC: <tytso@mit.edu>, <adilger.kernel@dilger.ca>, <jack@suse.cz>,
+	<ritesh.list@gmail.com>, <linux-kernel@vger.kernel.org>,
+	<yi.zhang@huawei.com>, <yangerkun@huawei.com>, <yukuai3@huawei.com>,
+	<libaokun1@huawei.com>
+Subject: [PATCH v3 0/8] ext4: fix divide error in mb_update_avg_fragment_size()
+Date: Thu, 4 Jan 2024 22:20:32 +0800
+Message-ID: <20240104142040.2835097-1-libaokun1@huawei.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240104-rb-new-condvar-methods-v3-0-70b514fcbe52@google.com>
-In-Reply-To: <20240104-rb-new-condvar-methods-v3-0-70b514fcbe52@google.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 4 Jan 2024 15:17:22 +0100
-Message-ID: <CAH5fLggzw8K-MDaYPDULL1My4HooYwiZ+18aC6+RxYvL+XyPEA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] Additional CondVar methods needed by Rust Binder
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
-	Waiman Long <longman@redhat.com>, Tiago Lam <tiagolam@gmail.com>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: Martin Rodriguez Reboredo <yakoyoku@gmail.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpeml500021.china.huawei.com (7.185.36.21)
 
-On Thu, Jan 4, 2024 at 3:03=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> wr=
-ote:
-> This patchset is based on top of Boqun's patch [3] that renames the
-> existing wait methods to follow the C convention of using the
-> _interruptable suffix.
+V2->V3:
+  Replace patch 3's changelog with the one suggested by Jan Kara.
+  Refactor the code in patch 4 to make it more readable, as suggested by Jan Kara.
+  Patch 8 is adapted based on patch 4 after modification.
+  Add Reviewed-by tag.
 
-I forgot to update this part. It's actually based on top of rust-next
-(which has patch [3]).
+V1->V2:
+  Fixed some things pointed out by Jan Kara.
+  Fixed more cases where blocks could be allocated from corrupted groups.
+
+[V1]: https://lore.kernel.org/all/20231218141814.1477338-1-libaokun1@huawei.com/
+[V2]: https://lore.kernel.org/all/20231221150558.2740823-1-libaokun1@huawei.com/
+
+Baokun Li (8):
+  ext4: fix double-free of blocks due to wrong extents moved_len
+  ext4: do not trim the group with corrupted block bitmap
+  ext4: regenerate buddy after block freeing failed if under fc replay
+  ext4: avoid bb_free and bb_fragments inconsistency in mb_free_blocks()
+  ext4: avoid dividing by 0 in mb_update_avg_fragment_size() when block
+    bitmap corrupt
+  ext4: avoid allocating blocks from corrupted group in
+    ext4_mb_try_best_found()
+  ext4: avoid allocating blocks from corrupted group in
+    ext4_mb_find_by_goal()
+  ext4: mark the group block bitmap as corrupted before reporting an
+    error
+
+ fs/ext4/mballoc.c     | 91 ++++++++++++++++++++++++++++---------------
+ fs/ext4/move_extent.c |  6 +--
+ 2 files changed, 62 insertions(+), 35 deletions(-)
+
+-- 
+2.31.1
+
