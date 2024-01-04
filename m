@@ -1,212 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2131.outbound.protection.outlook.com [40.107.114.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6030A28E15;
-	Thu,  4 Jan 2024 19:09:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B34AEC433C8;
-	Thu,  4 Jan 2024 19:09:11 +0000 (UTC)
-Date: Thu, 4 Jan 2024 14:10:17 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Christian Brauner
- <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>,
- linux-doc@vger.kernel.org
-Subject: Re: [PATCH] tracefs/eventfs: Use root and instance inodes as
- default ownership
-Message-ID: <20240104141017.4cd8451f@gandalf.local.home>
-In-Reply-To: <20240104182502.GR1674809@ZenIV>
-References: <20240103203246.115732ec@gandalf.local.home>
-	<20240104014837.GO1674809@ZenIV>
-	<20240103212506.41432d12@gandalf.local.home>
-	<20240104043945.GQ1674809@ZenIV>
-	<20240104100544.593030e0@gandalf.local.home>
-	<20240104182502.GR1674809@ZenIV>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1462C681;
+	Thu,  4 Jan 2024 19:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="vdKuLnb4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B7jET+G3u97x39SBVpggpEaEbPd0CFrevizKJ41LEH/Aodn2wWZU/3xZ42t0BidGXxrjumOxlmpLtRK7qcg2KHQLoWXFE4fWLnRj6qpMxbWBAd4DBBKhTYKvzKNgW2u8x66f3H7H3hQ4yHDr0Ygw6Lc08t2L/aw/qupik1G88v2vM8NsSWxRhfaH2Py4PNHDh1rYmv013fbTNFyRCSA2e6rTLZ/lLQqOqVNTkv3YY7iOTRtAQdKechUWu2WQPtraKvs38FKLrXq44qDA9biPSYNdwyZh3DpzDvzFfJOZfIgLpO1REjuMbXlqzT/wqD2DCwlfhCK+IByZ7AGrTX2Zvg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=O+g5EKLalG8P+bWkoYdnXjdQ1ZxcS807tWxacAYa7PE=;
+ b=RcatYVN0iUo4m7P0QPZKHcg9i7tOioYtU0SWCdqLU6GeDgweDzTPlWgXe89lRbAVHVTdQhkGIOUX2XTOOt6BPi4+s4zggF9Zf/2KqehmHUnL3AYK9a2w0C7eqrZZtudGUMeUUil3HpTE3EWjvru0+R4w9mWM+FfQh9fqSqKEizpVd8AzhdPygKKmK2Cm9OP+CUiO/pzgrYX+HtyNcLaeY/NQpdNY1oCY1MN0uFxIos8niVlugvjDBzD5Dg08+/RAUceL6iVpOrwgy+LLIlITXHbXTviUIGE+quegxNk+JcAeoX3p5kq1Rw8S9CpePWbzfSqw3ltJbU8SC8UYky7nUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O+g5EKLalG8P+bWkoYdnXjdQ1ZxcS807tWxacAYa7PE=;
+ b=vdKuLnb4j5OyTWpaFGiMiAdSQX/S9vgjV7mD3YdY7q82TA29nPcXdkelxx3Ec1CLhLadTRNkfEsuKhiF0dazUYziP3oX5kA8p7SRt7ZDYpWksNPML5iMw6WARDGjrDTQB0gXM7ySk37YjcuHb2HAtNaCOM2ZsbSgO1bNO4EMgek=
+Received: from TYCPR01MB11269.jpnprd01.prod.outlook.com
+ (2603:1096:400:3c0::10) by TYWPR01MB8478.jpnprd01.prod.outlook.com
+ (2603:1096:400:175::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.9; Thu, 4 Jan
+ 2024 19:09:48 +0000
+Received: from TYCPR01MB11269.jpnprd01.prod.outlook.com
+ ([fe80::8d12:a02a:9fdc:9c78]) by TYCPR01MB11269.jpnprd01.prod.outlook.com
+ ([fe80::8d12:a02a:9fdc:9c78%5]) with mapi id 15.20.7181.009; Thu, 4 Jan 2024
+ 19:09:48 +0000
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Support Opensource
+	<support.opensource@diasemi.com>
+CC: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] Input: da9063_onkey - avoid explicitly setting input's
+ parent
+Thread-Topic: [PATCH] Input: da9063_onkey - avoid explicitly setting input's
+ parent
+Thread-Index: AQHaM7spcaFVxQzVj0aWvnobzcBporDKG4WQ
+Date: Thu, 4 Jan 2024 19:09:48 +0000
+Message-ID:
+ <TYCPR01MB1126942265F2B95741501A78286672@TYCPR01MB11269.jpnprd01.prod.outlook.com>
+References: <ZYOseYfVgg0Ve6Zl@google.com>
+In-Reply-To: <ZYOseYfVgg0Ve6Zl@google.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYCPR01MB11269:EE_|TYWPR01MB8478:EE_
+x-ms-office365-filtering-correlation-id: ca0361a5-16ac-45c3-0532-08dc0d58b8ae
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ Q7J7lHSvMWomKKmcxIucDApTFrVjzprp0UmQ+vHAYfl1JLKFFXnY4GvWRMiPr2TfgWRRBGte/Guz1B5RyqxRDAo1PeDF9hpe13RUKm2e7djpm80TfoxJSDqyLUcPefnPM/gLr1vd+f2FgUllE2C45QhIQyH5wuucbIzq7ARnMG4/sdcRZ2Rm0M+liWoRXacgTb58LS3MeW6Paml8LVomJPvT1Y/rmxtbKSDkijT0QdjNYIIe57ekICCi7Lp4XEaDWWR2kw34B44HVEBzOjfZrgSvUPoIXZrHUD8jb4ueN/4KDgSMho6vXDjtA3BsgjvDrXvlnw2hIs754R7twzDVYIsCu9KEkdd4fECi8GUYZhiwPxMI06WB3EPyI49fFRh027oJy1eluDvRdDLMOuI59m6VnbBc9yPWYk+Hi/QnRQZnTqbOF4rm1+mVulMgX56ZFWB+ytYSxnUIyieGlMIz3TBLz1PP6nM/X1CckMCveyPDrTEwYevUek69L/xqpHBJoaeZVm15gbzQUAj5feQvgTyCCpGPEkuA5tKgPxK79u7FQvImaURDzsOu+r6XkDh3Q1ikH/70IKRvfUTMgLXBsI0yQ7Kk87QqRZ1LQMiLbTLA2e/8dpLCMJfwzKMBBcTj
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB11269.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(346002)(136003)(396003)(376002)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(55016003)(7696005)(53546011)(478600001)(9686003)(71200400001)(6506007)(38100700002)(122000001)(86362001)(33656002)(2906002)(5660300002)(38070700009)(41300700001)(83380400001)(316002)(110136005)(66556008)(66446008)(76116006)(66476007)(66946007)(64756008)(54906003)(52536014)(4326008)(8936002)(8676002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?nIb7pyp641aFKKhv5Z01IJsMOrBG2OBJRzJsBD3xlyvlrvjCi7PXdHbL4cCm?=
+ =?us-ascii?Q?K2U9TmxA3fagoDJu6JzUqCID9v1MW2Ggw9hjHLKAf11IuY0bZabU3E+atHL7?=
+ =?us-ascii?Q?O/1m6qaJoG8Q7yJzRObxevPIuhBUM/PX5i9NjRrUXC7QEuT9zmMuHZYCey8m?=
+ =?us-ascii?Q?IGRcJ8BGdqbVc6+Ce8FrKSOnk2jxfpCjHWuECc6wsubgxIewjnimfU94bSBW?=
+ =?us-ascii?Q?GjCa/nTGyuBFtjA5E0Gsl82gt0knJI1FN8n8NyT8kYV9c40KPlEgW/w8vA2/?=
+ =?us-ascii?Q?7TlulgIYZNyELLQhmiZzptI2dhdfSDsoutHhGgMq94hthAN8WFht0aXo/eXI?=
+ =?us-ascii?Q?0yry5vOKpeEw4Xk+UxOjNnutjww4+CK2xXTQMtIpuwwiMMB+09wavpSBKhA2?=
+ =?us-ascii?Q?peWCTUr1VDHF49QNXrXhoNBfnh/FwQuIHZO+Hhe58vsqf6+v5USqU0Vj5yCJ?=
+ =?us-ascii?Q?44B03f8LEFDAiMfwgkXIc4MR/HGtSixGlP/qzD0K4vzCSDB6uyJSU4UVJJcY?=
+ =?us-ascii?Q?ZD1xrNAHdgrT5v3hITn0kvXVktCG3vOi7FCXB/IpgfCoj4S4baJdfU+V1mrL?=
+ =?us-ascii?Q?r1l9kqCTGSd8wjKVhAE62J20ZPdywdkGXN6t0xDZG5gUcicygFM0Joe4jEVG?=
+ =?us-ascii?Q?w6ldSYrAgzVWYlzoEAWeVtyjheCaSR66BntSCPJIDXYT8vySCyaZZwTM0fXe?=
+ =?us-ascii?Q?ISqpPEA8HFIsew5+Q/60urHoaitI1qy3fnTlhZZNV8Nt4NyxFiJaYvZARTbE?=
+ =?us-ascii?Q?gX4076P8LPPqE1dZbfollrQVgNW7f2rlrMqFzhxLaujmjlldykGQhgocVvSl?=
+ =?us-ascii?Q?RLvt6ChLgLjyiJIYURXRgrxAlHMtEoKlUXpWjjAKsAt2dznqrorlTOxAcHkP?=
+ =?us-ascii?Q?/wp7Qox8PPEa3vX7rlS4BP4qlHOco4pkKPKUJuOywi+ARE90c3Zxy56Fp63p?=
+ =?us-ascii?Q?pjo7xpLPTOWaMla1FkgBd/ugKjw98dArUGkcgin710f0+G7NSAIKsAEQUFpt?=
+ =?us-ascii?Q?z39KqD1YhkYvbFg1f+HuCHyLrPk4YeHsQIiGMPEgj8Gr0pTK9ZZ0vuWB5hn5?=
+ =?us-ascii?Q?yDES3cRkGFD9eqOqumJThgkoHKnP7kHHaB4xG5vFdo1g3GqKcxlR3RzXigAQ?=
+ =?us-ascii?Q?G4UxHHH/UA+2AR1KL6YkG7bwkU9kT+hFk5/oLqnwBA7wmw4FIvbvBErXTore?=
+ =?us-ascii?Q?R8QMdX7o03z8/PgFMFndCLvegl4AR313wP4YkJKA4u2x1C/5F6iWcCG2quC5?=
+ =?us-ascii?Q?hHxhe1D43sFqU1htab2s90+CteTflSsx/J3kzkqu2hkIq2GI203tzUdmWQeA?=
+ =?us-ascii?Q?4WJY1iQCuCzoKQrpm/Sj8CE88yC1PAauCCnZDQaGTPBI3ROujvHo1byQouEp?=
+ =?us-ascii?Q?REpaCtPfwhLVMHLNT8kDRV0zzeplU5NYmPZxf7Pe0n0RlDwAnUKeLJVDBeRv?=
+ =?us-ascii?Q?yArA7pMvnwg7Dg0vYT46SMk0hXs/rClTbNuQCM0JVZG6X6pu/eerB10b6OcC?=
+ =?us-ascii?Q?6SbxyY1dSBFp5Ds4QmY4KJOkwp+fze1wP163xXvleDklPfM49tahrZZM9KwU?=
+ =?us-ascii?Q?b4STt5JzgfMsi6OcMXM=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB11269.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca0361a5-16ac-45c3-0532-08dc0d58b8ae
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jan 2024 19:09:48.6410
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JXED2/cLVlkWGX0E0o1z6xkp7tJn31qvwBx+B5S2v/5vLfz/9NI6vocRRAa2zIKRxxSap1AXt5VfSd2EO3DD/4zlSODJZ9wkTkaydLvGoug=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWPR01MB8478
 
-On Thu, 4 Jan 2024 18:25:02 +0000
-Al Viro <viro@zeniv.linux.org.uk> wrote:
+Hi Dmitry Torokhov,
 
-> On Thu, Jan 04, 2024 at 10:05:44AM -0500, Steven Rostedt wrote:
-> 
-> > This is the "tribal knowledge" I'm talking about. I really didn't know how
-> > the root dentry parent worked. I guess that makes sense, as it matches the
-> > '..' of a directory, and the '/' directory '..' points to itself. Although
-> > mounted file systems do not behave that way. My /proc/.. is '/'. I just
-> > figured that the dentry->d_parent would be similar. Learn something everyday.  
-> 
-> What would you expect to happen if you have the same filesystem mounted in
-> several places?  Having separate dentry trees would be a nightmare - you'd
-> get cache coherency problems from hell.  It's survivable for procfs, but
-> for something like a normal local filesystem it'd become very painful.
-> And if we want them to share dentry tree, how do you choose where the ..
-> would lead from the root dentry?
+Thanks for the patch.
 
-My mistake was thinking that the dentry was attached more to the path than
-the inode. But that doesn't seem to be the case. I wasn't sure if there was
-a way to get to a dentry from the inode. I see the i_dentry list, which is
-a list, where I got some of my idea that dentry was closer to path than inode.
+> -----Original Message-----
+> From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Sent: Thursday, December 21, 2023 3:10 AM
+> To: Support Opensource <support.opensource@diasemi.com>; Biju Das
+> <biju.das.jz@bp.renesas.com>
+> Cc: linux-input@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: [PATCH] Input: da9063_onkey - avoid explicitly setting input's
+> parent
+>=20
+> devm_input_allocate_device() already sets parent of the new input device,
+> there's no need to set it up explicitly.
+>=20
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-> 
-> The way it's done is that linkage between the trees is done separately -
-> there's a tree of struct mount (well, forest, really - different processes
-> can easily have separate trees, which is how namespaces are done) and
-> each node in the mount tree refers to a dentry (sub)tree in some filesystem
-> instance.  Location is represented by (mount, dentry) pair and handling of
-> .. is basically (modulo refcounting, locking, error handling, etc.)
-> 	while dentry == subtree_root(mount) && mount != mountpoint_mount(mount)
-> 		// cross into the mountpoint under it
-> 		dentry = mountpoint_dentry(mount)
-> 		mount = mountpoint_mount(mount)
-> 	go_into(mount, dentry->d_parent)
-> 
-> Note that you can have e.g. /usr/lib/gcc/x86_64-linux-gnu/12 mounted on /mnt/blah:
-> ; mount --bind /usr/lib/gcc/x86_64-linux-gnu/12 /mnt/blah
-> will do it.  Then e.g. /mnt/blah/include will resolve to the same dentry as
-> /usr/lib/gcc/x86_64-linux-gnu/12/include, etc.
-> ; chdir /mnt/blah
-> ; ls
-> 32                 crtprec80.o        libgomp.so         libsanitizer.spec
-> cc1                g++-mapper-server  libgomp.spec       libssp_nonshared.a
-> cc1plus            include            libitm.a           libstdc++.a
-> collect2           libasan.a          libitm.so          libstdc++fs.a
-> crtbegin.o         libasan_preinit.o  libitm.spec        libstdc++.so
-> crtbeginS.o        libasan.so         liblsan.a          libsupc++.a
-> crtbeginT.o        libatomic.a        liblsan_preinit.o  libtsan.a
-> crtend.o           libatomic.so       liblsan.so         libtsan_preinit.o
-> crtendS.o          libbacktrace.a     liblto_plugin.so   libtsan.so
-> crtfastmath.o      libcc1.so          libobjc.a          libubsan.a
-> crtoffloadbegin.o  libgcc.a           libobjc_gc.a       libubsan.so
-> crtoffloadend.o    libgcc_eh.a        libobjc_gc.so      lto1
-> crtoffloadtable.o  libgcc_s.so        libobjc.so         lto-wrapper
-> crtprec32.o        libgcov.a          libquadmath.a      plugin
-> crtprec64.o        libgomp.a          libquadmath.so     x32
-> 
-> We obviously want .. to resolve to /mnt, though.
-> ; ls ..
-> ; ls /usr/lib/gcc/x86_64-linux-gnu/
-> 12
-> 
-> So the trigger for "cross into underlying mountpoint" has to be "dentry is
-> the root of subtree mount refers to" - it depends upon the mount we are
-> in.
-> 
-> > >  Filesystem object contents belongs here; multiple hardlinks
-> > > have different dentries and the same inode.  
-> > 
-> > So, can I assume that an inode could only have as many dentries as hard
-> > links? I know directories are only allowed to have a single hard link. Is
-> > that why they can only have a single dentry?  
-> 
-> Not quite.  Single alias for directories is more about cache coherency
-> fun; we really can't afford multiple aliases for those.  For non-directories
-> it's possible to have an entirely disconnected dentry refering to that
-> sucker; if somebody hands you an fhandle with no indication of the parent
-> directory, you might end up having to do one of those, no matter how many
-> times you find the same inode later.  Not an issue for tracefs, though.
-> 
-> > > namespace: mount tree.  Unlike everything prior, this one is a part of
-> > > process state - same as descriptor table, mappings, etc.  
-> > 
-> > And I'm guessing namespace is for containers. At least that's what I've
-> > been assuming they are for.  
-> 
-> It predates containers by quite a few years, but yes, that's one of the
-> users.  It is related to virtual machines, in the same sense the set
-> of memory mappings is - each thread can be thought of as a VM, with
-> a bunch of components.  Just as mmap() manipulates the virtual address
-> translation for the threads that share memory space with the caller,
-> mount() manipulates the pathname resolution for the threads that share
-> the namespace with the caller.
-> 
-> > > descriptor table: mapping from numbers to IO channels (opened files).  
-> > 
-> > This is that "process fd table" I mentioned above (I wrote that before
-> > reading this).
-> >   
-> > > Again, a part of process state.  dup() creates a new entry, with
-> > > reference to the same file as the old one; multiple open() of the  
-> > 
-> > Hmm, wouldn't "dup()" create another "file" that just points to the same
-> > dentry? It wouldn't be the "same file", or did you mean "file" from the
-> > user space point of view?  
-> 
-> No.  The difference between open() and dup() is that the latter will
-> result in a descriptor that really refers to the same file.  Current
-> IO position belongs to IO channel; it doesn't matter for e.g. terminals,
-> but for regular file it immediately becomes an issue.
-> 	fd1 = open("foo", 0);
-> 	fd2 = open("foo", 0);
-> 	read(fd1, &c1, 1);
-> 	read(fd2, &c2, 1);
-> will result in the first byte of foo read into c1 and c2, but
-> 	fd1 = open("foo", 0);
-> 	fd2 = dup(fd1);
-> 	read(fd1, &c1, 1);
-> 	read(fd2, &c2, 1);
-> will have the first byte of foo in c1 and the second one - in c2.
-> open() yields a new IO channel attached to new descriptor; dup()
-> (and dup2()) attaches the existing IO channel to new descriptor.
-> fork() acts like dup() in that respect - child gets its descriptor
-> table populated with references to the same IO channels as the
-> parent does.
+Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 
-Ah, looking at the code I use dup() in, it's mostly for pipes in
-and for redirecting stdout,stdin, etc. So yeah, that makes sense.
+Cheers,
+Biju
 
-> 
-> Any Unix since about '71 has it done that way and the same goes
-> for NT, DOS, etc. - you can't implement redirects to/from regular
-> files without that distinction.
-
-Yep, which is what I used it for. Just forgot the details.
-
-> 
-> > > same pathname will each yield a separate opened file.  _Some_ state
-> > > belongs here (close-on-exec, mostly).  Note that there's no such
-> > > thing as "the descriptor of this file" - not even "the user-supplied
-> > > number that had been used to get the file we are currently reading
-> > > from", since that number might be refering to something entirely
-> > > different right after we'd resolved it to opened file and that
-> > > happens *without* disrupting the operation.  
-> > 
-> > This last paragraph confused me. What do you mean by ""referring to
-> > something entirely different"?  
-> 
-> 	Two threads share descriptor table; one of them is in
-> read(fd, ...), another does dup2(fd2, fd).  If read() gets past the
-> point where it gets struct file reference, it will keep accessing that
-> IO channel.  dup2() will replace the reference in descriptor table,
-> but that won't disrupt the read()...
-
-Oh, OK. So basically if fd 4 is a reference to /tmp/foo and you open
-/tmp/bar which gets fd2, and one thread is reading fd 4 (/tmp/foo), the
-other thread doing dup2(fd2, fd) will make fd 4 a reference to /tmp/bar but
-the read will finish reading /tmp/foo.
-
-But if the first thread were to do another read(fd, ...) it would then read
-/tmp/bar. In other words, it allows read() to stay atomic with respect to
-what it is reading until it returns.
-
-> 
-> > 
-> > Thanks for this overview. It was very useful, and something I think we
-> > should add to kernel doc. I did read Documentation/filesystems/vfs.rst but
-> > honestly, I think your writeup here is a better overview.  
-> 
-> At the very least it would need serious reordering ;-/
-
-Yeah, but this is all great information. Thanks for explaining it.
-
--- Steve
+> ---
+>  drivers/input/misc/da9063_onkey.c | 1 -
+>  1 file changed, 1 deletion(-)
+>=20
+> diff --git a/drivers/input/misc/da9063_onkey.c
+> b/drivers/input/misc/da9063_onkey.c
+> index ce499c28a7b2..c338765e0ecd 100644
+> --- a/drivers/input/misc/da9063_onkey.c
+> +++ b/drivers/input/misc/da9063_onkey.c
+> @@ -211,7 +211,6 @@ static int da9063_onkey_probe(struct platform_device
+> *pdev)
+>  	snprintf(onkey->phys, sizeof(onkey->phys), "%s/input0",
+>  		 onkey->config->name);
+>  	onkey->input->phys =3D onkey->phys;
+> -	onkey->input->dev.parent =3D &pdev->dev;
+>=20
+>  	input_set_capability(onkey->input, EV_KEY, KEY_POWER);
+>=20
+> --
+> 2.43.0.195.gebba966016-goog
+>=20
+>=20
+> --
+> Dmitry
