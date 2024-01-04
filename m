@@ -1,140 +1,112 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2049.outbound.protection.outlook.com [40.107.243.49])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B34219FE;
-	Thu,  4 Jan 2024 12:12:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E361A21A01
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 12:12:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="m1nxoq/5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=COR0NAipkgicm7cMxHA6x4hXpMwnOTWQfYlNk1OO5Y5qnyBW0u3MNhwbDN6C07BzDwFSkKB9tdpM6LUwANjDn0emtDnxshi5lvy+63QoW9vING6zGbwNq/19N+rYZIquPPPxi5x1mQXNlE23pheFdwYUkMM5ces9E7PNjE3bSv/mWxnSvF0M4TmV3F5cdOnofTed4b7NhWAB5MWGIqoWvbrfHB+PxwEycreA7AcCDDSabHcR6w7wMGrgkK2EPcSgwy7fBLAApe6aMlGYEQwGM6f6ORw2lkBmpBmHhKaqDpIeRtyT2OVUk0c4fnBPhYzh7fvP+DwRY4Kfg2Zn4SgsTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8rPl2AQ77mdSNtSmWkhrZaDNVmvxUOXHW8MhK7eDPcI=;
- b=OijWA4LJsCUYAORFYOpUFHf/2LJUplrT8xXvb3WhKzbV/r3C8Wq6aC/KEX2ZLskaVscVI3CQ7JqQUVAuGMng6Xxj49GHCtcY2YNmiyGT76KL7FbuLlbZTX4j/xeq71dyRciisFLuSHWo0E7lzVyLr78o4hS9PVWBjwoYkgqtYCFygoix0IewY6xg3yXGo/pD9K40nswn3mKpSHnfcUEqiIm0po+Qif42PjJ7YO9WKfCHUulnao7nzLaNct7r1BoIU2Qzg+Kww704iJ0hoDp1l+LT67AKuTl0+9aXnoU1W9b4XlOjYZ/5NoYWEcelImScP7OyiQnSqncxNxsu+rAwbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.232) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8rPl2AQ77mdSNtSmWkhrZaDNVmvxUOXHW8MhK7eDPcI=;
- b=m1nxoq/5PSNxBxxZhw4pxQZWR8k4u5XGU6Xbk3xksgPNbOv6QtlgNqYj4/sXPiT23nMCpnJ4QcfUlcueSe6L7P1aP0yESudjS5A7wGEzWkkl2e4v6HkpWk3Iv376IPezsUdQRej43PLgYZYYqbC3IvgIECgHgC47e+pUH+aIfcupHNqNR9tQKxL8ON7Obc8KZwasQYf/+SKC2eSGNAi+PPyeAUaeYtlDBz+LwJlizsiiR5EAe7RQuk/d9wuSffkRPJBG9v+ZEEzjCIm2dFZPkmDSRujtVdkX4dLWMj9KDdNkZOYI3HcRzO1lrYxPKzJDquFzXx3kUEyBnP3XqRre/w==
-Received: from CY5PR15CA0216.namprd15.prod.outlook.com (2603:10b6:930:88::11)
- by DS0PR12MB7558.namprd12.prod.outlook.com (2603:10b6:8:133::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.25; Thu, 4 Jan
- 2024 12:12:25 +0000
-Received: from CY4PEPF0000EE3E.namprd03.prod.outlook.com
- (2603:10b6:930:88:cafe::95) by CY5PR15CA0216.outlook.office365.com
- (2603:10b6:930:88::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.15 via Frontend
- Transport; Thu, 4 Jan 2024 12:12:25 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.232) by
- CY4PEPF0000EE3E.mail.protection.outlook.com (10.167.242.18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7159.9 via Frontend Transport; Thu, 4 Jan 2024 12:12:25 +0000
-Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
- (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Thu, 4 Jan 2024
- 04:12:15 -0800
-Received: from drhqmail203.nvidia.com (10.126.190.182) by
- drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.41; Thu, 4 Jan 2024 04:12:15 -0800
-Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.126.190.182) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41 via Frontend
- Transport; Thu, 4 Jan 2024 04:12:15 -0800
-From: Jon Hunter <jonathanh@nvidia.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
-	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
-	<rwarsow@gmx.de>, <conor@kernel.org>, <allen.lkml@gmail.com>,
-	<linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH 6.1 000/100] 6.1.71-rc1 review
-In-Reply-To: <20240103164856.169912722@linuxfoundation.org>
-References: <20240103164856.169912722@linuxfoundation.org>
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="cU2qkYa7"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 404BTAnq000975;
+	Thu, 4 Jan 2024 05:56:13 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	PODMain02222019; bh=/NqDoBBjx0wFqGQbw4rIaY5FhG1vCYbHJvQ4OeObe4A=; b=
+	cU2qkYa76fAOJ1m4xYPyhycw5KoYgm7aazN87eC+FwvdG+Q0draagWiPGf8zpApk
+	jI5cvMcL6yWMmgH/L0Kt59hCOy1dCIreFpjkiL008O5H4PNCWuZvtmgyEoIfsyMP
+	k9lyDqyVyo8XzzuUDWMjXsK848jfmtUvLMplNDvyqPDvfRQl9Doe5CQs4IdZm4Dt
+	Gquxe6wgTIZbsFr5Y89GYcX4KhXxcqvHkchOg2chf0bmlugX6Vam/Z+AddcaG5Gt
+	DH6JBC8P37GR7V+H8D5JOE65xw848hnRJWHHpDhlrKJvQwJNYUu0XSLN3ppV9uKO
+	aE7tm0X1+ovNgQQX2homXQ==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3vaggqek4b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Jan 2024 05:56:13 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 4 Jan
+ 2024 11:56:11 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.2.1118.40 via Frontend
+ Transport; Thu, 4 Jan 2024 11:56:11 +0000
+Received: from [198.61.65.138] (EDIN4L06LR3.ad.cirrus.com [198.61.65.138])
+	by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 96C8B46C;
+	Thu,  4 Jan 2024 11:56:11 +0000 (UTC)
+Message-ID: <d6ffe1ae-6561-43a2-a1bc-55c44a6731bd@opensource.cirrus.com>
+Date: Thu, 4 Jan 2024 11:56:11 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <c82e1a26-700f-4a79-a995-20f44bc22520@drhqmail203.nvidia.com>
-Date: Thu, 4 Jan 2024 04:12:15 -0800
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE3E:EE_|DS0PR12MB7558:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6076a6db-1c71-459c-a113-08dc0d1e69be
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	GNOibgi3Fn0G2XZAPvAomqpw/BF8DqrEgvjSRqHxS/8Jg0ro41/jEPmW5a8+mngdoWSA81Xl8TtGia3likqIYCWQFhg2/AVWMPn8/e3L36QKYqbLWIA9c16oCFMBqe12dLGzyALn9ZKqD9lbKyT2ossyaI/IiZbzqsPZxzjYPZLJ6PEq3wWkt+toUJpDQ6ku/n4nUVllxv15jO1gokjBSdwuNZ6txQjoumourhQGAMyUAK1dDhBPfrIGgakA5jQosP1Dn0QN/8y+kXBO42twJWbR6O5GkgbMrG3LQpt0eGSHlWujHVVSS4gHA/Jb4mmG8EXLXn99uGUTP9LZzXs9pfrNZ/Sptj7xd9YM7I0UTfgcTzMYVLfZmDo+1z60UhS/7BSatChW5+dnWCR5FL9y9A/UfNjax/gnQxxqR3KIghAV5kXhaXTRw97DVFe3w8tCsf46eWT6WgK+Xb7hYdCLUKMtwQR0W89TU1iX9Z+zHmDJZWyiPGbgJqNxZYNRhBj/q7wtxeaQdWrTThCQNF7RJBQFzt18AEXSwLEBfgXMZXtFe26qqNZaQEbLKF/I6Bxy8swV6o+lq54EW+qiG/LlAcm2igg+C6XG1cfpbVX1ngoIc3NQkhyxK4r6aN/dBGEQa+tLrjzHdViRfUjppa6qWtPvqHROYJks0oSRaJ+hgGyNGniTNVOkohYdBS/saEVA34gHR1Qv37ZXaL8krRZ6DTHFH8+G5sNy+BwAOlogTxjlSEZha8CiB1DdulP5v2VDd3R3WODKPdBRBo55uygQXsqkqD/d5um1KAve7pklrWw=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(136003)(396003)(346002)(376002)(39860400002)(230922051799003)(1800799012)(82310400011)(186009)(64100799003)(451199024)(36840700001)(46966006)(40470700004)(82740400003)(356005)(7636003)(31686004)(40480700001)(40460700003)(31696002)(86362001)(426003)(336012)(47076005)(478600001)(966005)(36860700001)(70206006)(70586007)(316002)(26005)(8676002)(6916009)(8936002)(4326008)(54906003)(41300700001)(7416002)(5660300002)(2906002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jan 2024 12:12:25.3110
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6076a6db-1c71-459c-a113-08dc0d1e69be
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE3E.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7558
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 06/13] irqchip/madera: Convert to platform remove callback
+ returning void
+Content-Language: en-US
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        "Thomas Gleixner" <tglx@linutronix.de>
+CC: Charles Keepax <ckeepax@opensource.cirrus.com>,
+        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
+        <linux-kernel@vger.kernel.org>, <kernel@pengutronix.de>
+References: <cover.1703284359.git.u.kleine-koenig@pengutronix.de>
+ <64c2f79760c53f29651e7126418c407ff699317d.1703284359.git.u.kleine-koenig@pengutronix.de>
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+In-Reply-To: <64c2f79760c53f29651e7126418c407ff699317d.1703284359.git.u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: 77nqBSXgZ0baqHtBCgqqenVw1bjzlpLd
+X-Proofpoint-ORIG-GUID: 77nqBSXgZ0baqHtBCgqqenVw1bjzlpLd
+X-Proofpoint-Spam-Reason: safe
 
-On Wed, 03 Jan 2024 17:53:49 +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.71 release.
-> There are 100 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 22/12/23 22:50, Uwe Kleine-König wrote:
+> The .remove() callback for a platform driver returns an int which makes
+> many driver authors wrongly assume it's possible to do error handling by
+> returning an error code. However the value returned is ignored (apart
+> from emitting a warning) and this typically results in resource leaks.
 > 
-> Responses should be made by Fri, 05 Jan 2024 16:47:49 +0000.
-> Anything received after that time might be too late.
+> To improve here there is a quest to make the remove callback return
+> void. In the first step of this quest all drivers are converted to
+> .remove_new(), which already returns void. Eventually after all drivers
+> are converted, .remove_new() will be renamed to .remove().
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.71-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
+> Trivially convert this driver from always returning zero in the remove
+> callback to the void returning variant.
 > 
-> thanks,
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> ---
+>   drivers/irqchip/irq-madera.c | 6 ++----
+>   1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> greg k-h
+> diff --git a/drivers/irqchip/irq-madera.c b/drivers/irqchip/irq-madera.c
+> index 3eb1f8cdf674..b424c0a327f7 100644
+> --- a/drivers/irqchip/irq-madera.c
+> +++ b/drivers/irqchip/irq-madera.c
+> @@ -222,7 +222,7 @@ static int madera_irq_probe(struct platform_device *pdev)
+>   	return 0;
+>   }
+>   
+> -static int madera_irq_remove(struct platform_device *pdev)
+> +static void madera_irq_remove(struct platform_device *pdev)
+>   {
+>   	struct madera *madera = dev_get_drvdata(pdev->dev.parent);
+>   
+> @@ -232,13 +232,11 @@ static int madera_irq_remove(struct platform_device *pdev)
+>   	 */
+>   	madera->irq_dev = NULL;
+>   	regmap_del_irq_chip(madera->irq, madera->irq_data);
+> -
+> -	return 0;
+>   }
+>   
+>   static struct platform_driver madera_irq_driver = {
+>   	.probe	= &madera_irq_probe,
+> -	.remove = &madera_irq_remove,
+> +	.remove_new = madera_irq_remove,
+>   	.driver = {
+>   		.name	= "madera-irq",
+>   		.pm	= &madera_irq_pm_ops,
 
-All tests passing for Tegra ...
-
-Test results for stable-v6.1:
-    10 builds:	10 pass, 0 fail
-    26 boots:	26 pass, 0 fail
-    116 tests:	116 pass, 0 fail
-
-Linux version:	6.1.71-rc1-g55d8c3a7d744
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra194-p3509-0000+p3668-0000,
-                tegra20-ventana, tegra210-p2371-2180,
-                tegra210-p3450-0000, tegra30-cardhu-a04
-
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-
-Jon
+Reviewed-by: Richard Fitzgerald <rf@opensource.cirrus.com>
