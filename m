@@ -1,98 +1,71 @@
-Received: from smtp-8fab.mail.infomaniak.ch (smtp-8fab.mail.infomaniak.ch [83.166.143.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E482137E
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 12:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
-Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
-	by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4T5R7H5ZSHzMpnqr;
-	Thu,  4 Jan 2024 12:42:19 +0000 (UTC)
-Received: from unknown by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4T5R7G6TLWzMpnPs;
-	Thu,  4 Jan 2024 13:42:18 +0100 (CET)
-From: Quentin Schulz <foss+kernel@0leil.net>
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>
-Cc: Quentin Schulz <foss+kernel@0leil.net>,
-	Heiko Stuebner <heiko@sntech.de>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Quentin Schulz <quentin.schulz@theobroma-systems.com>
-Subject: [PATCH 2/2] drm/panel: ltk050h3146w: use dev_err_probe wherever possible
-Date: Thu,  4 Jan 2024 13:41:58 +0100
-Message-ID: <20240104-ltk-dev_err_probe-v1-2-8ef3c0b585d8@theobroma-systems.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240104-ltk-dev_err_probe-v1-0-8ef3c0b585d8@theobroma-systems.com>
-References: <20240104-ltk-dev_err_probe-v1-0-8ef3c0b585d8@theobroma-systems.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4EF2230A;
+	Thu,  4 Jan 2024 12:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHLnPAVv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ADCFC433C7;
+	Thu,  4 Jan 2024 12:53:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704372844;
+	bh=TUgtbOo/PVfQSA54Hl3nscCe0OQ8k5krHwt9pHz+FgM=;
+	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
+	b=cHLnPAVvbsxhokJh4rMwLRys1z3+1kjxvxQGdFmgwkh1UaRd5/0Eq9uZTUcz46VDa
+	 KkGxKQ90nc+PupobVDIvS9rDBEv6tJsx5rfOKDupthHWSNz5A27XhaopzaJ8MTWVxX
+	 +Y9XI6Obc+OyXl8K2RuzPkTglEXcWQGssHrJNdq39f7HJteFtrQBehCMCFChLAU1bE
+	 yhVcVsPRoL4+5/gOVxhUdERSkDpQkRi61VeO4sRpsUJoevJOg7ySSe1y4zzp66PNWw
+	 P4kFV4Ixr7KmSZCzUH1/8GMa550FukSl0AW/kEjZUmmCocptrkWaxoTGGNGcMaaZpc
+	 OTow14fYYaHew==
+Message-ID: <64ee255e-9a5a-405e-b342-e91c55bd95ce@kernel.org>
+Date: Thu, 4 Jan 2024 13:53:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.12.4
-Content-Transfer-Encoding: quoted-printable
-X-Infomaniak-Routing: alpha
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] OPP: Remove the unused argument to config_clks_t
+Content-Language: en-US
+To: Viresh Kumar <viresh.kumar@linaro.org>
+References: <f24f32f1213b4b9e9ff2b4a36922f8d6e3abac51.1704278832.git.viresh.kumar@linaro.org>
+Cc: Bart Van Assche <bvanassche@acm.org>, Dmitry Osipenko <digetx@gmail.com>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+ Viresh Kumar <vireshk@kernel.org>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ "James E.J. Bottomley" <jejb@linux.ibm.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Alim Akhtar <alim.akhtar@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>,
+ Kyungmin Park <kyungmin.park@samsung.com>,
+ MyungJoo Ham <myungjoo.ham@samsung.com>, Nishanth Menon <nm@ti.com>,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linux-tegra@vger.kernel.org,
+ Avri Altman <avri.altman@wdc.com>
+From: Konrad Dybcio <konradybcio@kernel.org>
+In-Reply-To: <f24f32f1213b4b9e9ff2b4a36922f8d6e3abac51.1704278832.git.viresh.kumar@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Quentin Schulz <quentin.schulz@theobroma-systems.com>=0D
-=0D
-This is only a cosmetic change.=0D
-=0D
-This replaces a hand-crafted EPROBE_DEFER handling for deciding to print=0D
-an error message with dev_err_probe.=0D
-=0D
-A side-effect is that dev_err_probe also adds a debug message when it's=0D
-not EPROBE_DEFER, but this is seen as an improvement.=0D
-=0D
-Cc: Quentin Schulz <foss+kernel@0leil.net>=0D
-Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>=0D
----=0D
- drivers/gpu/drm/panel/panel-leadtek-ltk050h3146w.c | 17 +++++------------=
-=0D
- 1 file changed, 5 insertions(+), 12 deletions(-)=0D
-=0D
-diff --git a/drivers/gpu/drm/panel/panel-leadtek-ltk050h3146w.c b/drivers/g=
-pu/drm/panel/panel-leadtek-ltk050h3146w.c=0D
-index ecfa4181c4fd9..9d87cc1a357e3 100644=0D
---- a/drivers/gpu/drm/panel/panel-leadtek-ltk050h3146w.c=0D
-+++ b/drivers/gpu/drm/panel/panel-leadtek-ltk050h3146w.c=0D
-@@ -650,20 +650,13 @@ static int ltk050h3146w_probe(struct mipi_dsi_device =
-*dsi)=0D
- 		return dev_err_probe(dev, PTR_ERR(ctx->reset_gpio), "cannot get reset gp=
-io\n");=0D
- =0D
- 	ctx->vci =3D devm_regulator_get(dev, "vci");=0D
--	if (IS_ERR(ctx->vci)) {=0D
--		ret =3D PTR_ERR(ctx->vci);=0D
--		if (ret !=3D -EPROBE_DEFER)=0D
--			dev_err(dev, "Failed to request vci regulator: %d\n", ret);=0D
--		return ret;=0D
--	}=0D
-+	if (IS_ERR(ctx->vci))=0D
-+		return dev_err_probe(dev, PTR_ERR(ctx->vci), "Failed to request vci regu=
-lator\n");=0D
- =0D
- 	ctx->iovcc =3D devm_regulator_get(dev, "iovcc");=0D
--	if (IS_ERR(ctx->iovcc)) {=0D
--		ret =3D PTR_ERR(ctx->iovcc);=0D
--		if (ret !=3D -EPROBE_DEFER)=0D
--			dev_err(dev, "Failed to request iovcc regulator: %d\n", ret);=0D
--		return ret;=0D
--	}=0D
-+	if (IS_ERR(ctx->iovcc))=0D
-+		return dev_err_probe(dev, PTR_ERR(ctx->iovcc),=0D
-+				     "Failed to request iovcc regulator\n");=0D
- =0D
- 	mipi_dsi_set_drvdata(dsi, ctx);=0D
- =0D
-=0D
--- =0D
-2.43.0=0D
-=0D
+
+
+On 3.01.2024 11:48, Viresh Kumar wrote:
+> The OPP core needs to take care of a special case, where the OPPs aren't
+> available for a device, but in order to keep the same unified interface
+> for the driver, the same OPP core API must take care of performing a
+> simple clk_set_rate() for the device.
+> 
+> This required the extra argument, but that is used only within the OPP
+> core and the drivers don't need to take care of that.
+> 
+> Simplify the external API and handle it differently within the OPP core.
+> 
+> This shouldn't result in any functional change.
+
+Hi, so this apparently breaks serial on Qualcomm platforms using
+"qcom,geni-debug-uart".. I'm seeing garbage on the console, likely
+meaning that ratesetting wasn't done.
+
+Konrad
