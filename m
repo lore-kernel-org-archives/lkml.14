@@ -1,85 +1,136 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 618482C68C
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 20:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="TcAgY24T"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40d5a41143fso7501155e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 12:02:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1704398539; x=1705003339; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9jDsDfmbTpiQpvGnfOhd0ROcnisF14caf1vpRK9xqg4=;
-        b=TcAgY24TVMOu9UYln9SgjwiLLt7KXvS7eV38BEAz0LiDd4c8Itbp+aRmvCzgLDsv8z
-         btwA0mPop8VYEmcWhQ9S+Z/LjiG8BmIwlZkLeHhQpB6VdU9jnXdE62t18jTPZqKJsD+z
-         4ZpyUNzjCDiJrE7ciRzvpBMU8+3XQB7D0qeNw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704398539; x=1705003339;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9jDsDfmbTpiQpvGnfOhd0ROcnisF14caf1vpRK9xqg4=;
-        b=iohUrl8C5h73jAqPUyG8t1aerCmpxspR8w0KQV3W4gFd+irk/7aoYdctU+OLcSBovK
-         mMOZZD37FFwBzul6Ut4Nrxpcv2c4eD0LehVW0CCamQGwM/7PEv0eb8B46txCHu1B1Oxc
-         toUn2DwfH7nTGn+gDsS4tdmZfjQSdvltlWqrKcHP9m9YFRNO8I0e2+Ev4leXKxNrwbn/
-         barBsq+sAm8thgysGSjK4Q51c2Z4Z/rJM/8mkohUnCqy1z/bBbbZkqyrKgq8Y3a6I9tR
-         RZSvWCI1Lk/wSxGoQQh6OJW6J2mwRP5l8ghlNFToWZHSbuiOl1GYa/npdLH6eGOyqbYk
-         0GVg==
-X-Gm-Message-State: AOJu0YzefbhZtJ2rGuTdX+Kjb6wvsAJMTVqy4mpeZVg9R827MGSqf+Gy
-	1Djz2CcdnH5tWL0RcmBqLSGNXmwx7oLbDiNvTHoymX9mHQWLZ11e
-X-Google-Smtp-Source: AGHT+IEDK81qQpeVF1oJvgjgO+S8JTazV65QsBrkBUvEHbZvxji3F0+Kg2P7gvisuFXTfi6iDFTldw==
-X-Received: by 2002:a05:600c:1912:b0:40d:6841:14cf with SMTP id j18-20020a05600c191200b0040d684114cfmr644099wmq.112.1704398539554;
-        Thu, 04 Jan 2024 12:02:19 -0800 (PST)
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
-        by smtp.gmail.com with ESMTPSA id e23-20020a170906249700b00a2327e826ccsm16213ejb.201.2024.01.04.12.02.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jan 2024 12:02:18 -0800 (PST)
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a28d25253d2so99055366b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 12:02:17 -0800 (PST)
-X-Received: by 2002:a17:907:360b:b0:a1d:932f:9098 with SMTP id
- bk11-20020a170907360b00b00a1d932f9098mr716728ejc.97.1704398537679; Thu, 04
- Jan 2024 12:02:17 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7282C1B3
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 20:03:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 382DCC433C7;
+	Thu,  4 Jan 2024 20:03:54 +0000 (UTC)
+Date: Thu, 4 Jan 2024 15:05:00 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Ajay Kaher <akaher@vmware.com>, Al Viro
+ <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>
+Subject: Re: [for-next][PATCH 2/3] eventfs: Stop using dcache_readdir() for
+ getdents()
+Message-ID: <20240104150500.38b15a62@gandalf.local.home>
+In-Reply-To: <20240104140246.688a3966@gandalf.local.home>
+References: <20240104164703.808999991@goodmis.org>
+	<20240104164738.483305222@goodmis.org>
+	<CAHk-=wiKwDUDv3+jCsv-uacDcHDVTYsXtBR9=6sGM5mqX+DhOg@mail.gmail.com>
+	<20240104140246.688a3966@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240103203246.115732ec@gandalf.local.home> <20240104014837.GO1674809@ZenIV>
- <20240103212506.41432d12@gandalf.local.home> <20240104043945.GQ1674809@ZenIV>
- <20240104100544.593030e0@gandalf.local.home> <20240104182502.GR1674809@ZenIV>
- <20240104141517.0657b9d1@gandalf.local.home> <CAHk-=wgxhmMcVGvyxTxvjeBaenOmG8t_Erahj16-68whbvh-Ug@mail.gmail.com>
-In-Reply-To: <CAHk-=wgxhmMcVGvyxTxvjeBaenOmG8t_Erahj16-68whbvh-Ug@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 4 Jan 2024 12:02:00 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wguvq7yFt3qaLrWoZK5FCK8Joizrb2wu=FN==mYM9PSbg@mail.gmail.com>
-Message-ID: <CAHk-=wguvq7yFt3qaLrWoZK5FCK8Joizrb2wu=FN==mYM9PSbg@mail.gmail.com>
-Subject: Re: [PATCH] tracefs/eventfs: Use root and instance inodes as default ownership
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, LKML <linux-kernel@vger.kernel.org>, 
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Christian Brauner <brauner@kernel.org>, 
-	linux-fsdevel@vger.kernel.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 4 Jan 2024 at 11:35, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->>
-> Which is *NOT* the inode, because the 'struct file' has other things
-> in it (the file position, the permissions that were used at open time
-> etc, close-on-exec state etc etc).
+On Thu, 4 Jan 2024 14:02:46 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-That close-on-exec thing was a particularly bad example of things that
-are in the 'struct file', because it's in fact the only thing that
-*isn't* in 'struct file' and is associated directly with the 'int fd'.
+> > And that very fact actually makes me wonder:
+> >   
+> > >         for (i = 0; i < ei->nr_entries; i++) {
+> > > +               void *cdata = ei->data;
+> > > +
+> > > +               if (c > 0) {
+> > > +                       c--;
+> > > +                       continue;
+> > > +               }    
+> > 
+> > The 'ei->nr_entries' things are in a stable array, so the indexing for
+> > them cannot change (ie even if "is_freed" were to be set the array is
+> > still stable).  
+> 
+> Yeah, the entries is fixed. If the ei itself gets freed, so does all the
+> entries at the same time. The individual entries should too.
+> 
+> Hmm, it probably doesn't even make sense to continue the loop if is_freed
+> is set as the same variable will be checked every time. :-/  Should just be
+> a "break;" not a "continue;"
 
-But hopefully the intent was clear despite me picking a particularly
-bad example.
+Also, I just realized it breaks if we update the 'c--' before the callback. :-/
 
-            Linus
+I have to put this check *after* the callback check.
+
+Reason being, the callback can say "this event doesn't get this file" and
+return 0, which tells eventfs to skip this file.
+
+For example, we have
+
+ # ls /sys/kernel/tracing/events/ftrace/function
+format  hist  hist_debug  id  inject
+
+and
+
+ # ls /sys/kernel/tracing/events/sched/sched_switch/
+enable  filter  format  hist  hist_debug  id  inject  trigger
+
+The "ftrace" event files are for information only. They describe the
+internal events. For example, the "function" event is what is written into
+the ring buffer by the function tracer. That event is not enabled by the
+events directory. It is only enabled when "function" is written into
+current_tracer.
+
+Same for filtering. The filter logic for function events is done by the
+"set_ftrace_filter" file in tracefs.
+
+But the "sched_switch" event is enabled and filtered by the eventfs
+directory. Here we see "enable" and "filter" files that the user could
+write into to enabled and/or filter the sched_switch event.
+
+Now because the "function" and "sched_switch" registered the same way, the
+callback that handles the two has:
+
+static int event_callback(const char *name, umode_t *mode, void **data,
+			  const struct file_operations **fops)
+{
+	struct trace_event_file *file = *data;
+	struct trace_event_call *call = file->event_call;
+
+[..]
+	if (!(call->flags & TRACE_EVENT_FL_IGNORE_ENABLE)) {
+		if (call->class->reg && strcmp(name, "enable") == 0) {
+			*mode = TRACE_MODE_WRITE;
+			*fops = &ftrace_enable_fops;
+			return 1;
+		}
+
+		if (strcmp(name, "filter") == 0) {
+			*mode = TRACE_MODE_WRITE;
+			*fops = &ftrace_event_filter_fops;
+			return 1;
+		}
+	}
+[..]
+	return 0;
+}
+
+Where the function event has that "TRACE_EVENT_FL_IGNORE_ENABLE" flag set,
+so when the entry for "enable" or "filter" is passed to it, it returns 0.
+
+Before, where we had c-- after the callback, we had:
+
+ # ls /sys/kernel/tracing/events/ftrace/function
+format  hist  hist_debug  id  inject
+
+After changing the c-- to before the callback I now get:
+
+ # ls /sys/kernel/tracing/events/ftrace/function/
+format  hist  hist  hist_debug  hist_debug  id  inject  inject
+
+Where the missing "enable" and "filter" files caused the indexing to be
+off, and the ls repeated "hist" and "hist_debug" because of it. Oh, and the
+function event doesn't have "trigger" either which is why we get two
+"inject" files.
+
+I have to move the c-- update down. I can still do it before creating the
+dentry though, as if that fails, we should just bail.
+
+-- Steve
