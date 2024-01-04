@@ -1,498 +1,273 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C598120B3B
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 08:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4162F1EA71;
+	Thu,  4 Jan 2024 08:43:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="DQzp8RL5"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-554909ac877so323574a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 00:42:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1704357745; x=1704962545; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xWXC08AomogX9fJjDHe3MxBIDHnKEfsu8+LOFUoPPqY=;
-        b=DQzp8RL593XWnKIwC+gmXQVYxTO6SzlkzcM6y/+SA5hYrEICJYQLUux4yPmG+clccB
-         kI5YWgJFHK2tuRaoCrq9OH9/lZnNRciVAhTLgWC6xTSLdCtCEx8w0pnVZtYTDkZX98wm
-         hBKfo7rTLnnov8mm6j1WNDl7QGKwd9SAjnQEw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704357745; x=1704962545;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xWXC08AomogX9fJjDHe3MxBIDHnKEfsu8+LOFUoPPqY=;
-        b=nNFU74vnR8SabsLlURTPs6tu4YVgreKa+Z3b43Q4r+0NEAlhL4ScWevXVcnCpRqROW
-         Y+TFyrsBrDxmge+0b76MeehHq4qS3QVMN42kdwRFvCJmmdJnRfkSvBeKxJvb7EXjh3Ve
-         blqLS5H7EJQhoUx1PAwuNh6jpPPM/nCQ40464YvXIC1JXGn9D7OdWMeKLXPCRCWEtJF6
-         TlRciSR7kCboKnJe5VgphsFbOrMwNqFYNHMn8wBhA6X3MHsrKZLyXBjTG1ge5RbfxHN0
-         lkoKVd3hQiF9UAp0U/h5kyyGwLWegqFe+FvZwr1kXdRKRUEkUEKHnUzWNociOvefPZ2l
-         Pw8w==
-X-Gm-Message-State: AOJu0YzMpKpQRbi/kkkhA8Jlnw5EhiM7FrIeuB7M5b4/5JVDYDdd5MD8
-	lQEE8DM8BnfVIW9ClnsKXfjrygo2k6W3tZaFuvJPMa8Wvy4=
-X-Google-Smtp-Source: AGHT+IHlmvxTc2+qf8oiKmoCMdz+XKI9ffGX9BsbK6Gg5TL5KmCMDdyPiSW2BZ+SGjbvcB/DxT2MCg==
-X-Received: by 2002:a17:907:1b1e:b0:a27:e214:96b with SMTP id mp30-20020a1709071b1e00b00a27e214096bmr150503ejc.112.1704357744885;
-        Thu, 04 Jan 2024 00:42:24 -0800 (PST)
-Received: from dario-ThinkPad-T14s-Gen-2i.amarulasolutions.com (net-93-150-255-34.cust.vodafonedsl.it. [93.150.255.34])
-        by smtp.gmail.com with ESMTPSA id wh14-20020a170906fd0e00b00a233efe6aa7sm13495704ejb.51.2024.01.04.00.42.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jan 2024 00:42:24 -0800 (PST)
-From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-amarula@amarulasolutions.com,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	David Airlie <airlied@gmail.com>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH v4 8/8] drm/panel: nt35510: support FRIDA FRD400B25025-A-CTK
-Date: Thu,  4 Jan 2024 09:41:48 +0100
-Message-ID: <20240104084206.721824-9-dario.binacchi@amarulasolutions.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240104084206.721824-1-dario.binacchi@amarulasolutions.com>
-References: <20240104084206.721824-1-dario.binacchi@amarulasolutions.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qJdBw/vI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD86EC433CB;
+	Thu,  4 Jan 2024 08:43:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704357796;
+	bh=tgi3mkIBg3dOw+vpGLogCyrV9K4HSGEkt+fxfTZNQhU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=qJdBw/vI90Q5CRe/TAi6MU8mdn/4mIknHLFsQzkmxPM7JC7sF1tynQ4LBs7tTbdmp
+	 6lbInQoCrunuWQoBjZ75FPvd+Vu023++Kmv4SkSvRgK1KghPnKaoEKg6Wahval0vbW
+	 l7XL6Ejyu+k8AJVkEbOYr47GWSXiaFFLM1q1LCqxyxfmiyvG6GNkzhzTD1jpe3nbhj
+	 Hsfu0kW95ri8IqiIrW7U9z4MjYoHdCxiVdsH6JdvPHYpV1Md8diNWxbEGE05wuMyaA
+	 2AAA97c0RrpmmgdXKAhfPNjys7/HuGhPc0YPoo6fxTBIlRHNvUVCKBfpbOiYHD/j36
+	 mW+l+lph4t3Ow==
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-50e4e3323a6so1183908e87.0;
+        Thu, 04 Jan 2024 00:43:16 -0800 (PST)
+X-Gm-Message-State: AOJu0YztyqGE/9WQCM619H7SWlfnqXJuZSaSrY3Ei9q5ETKN95NwvHlP
+	Rhb326oFj+4haq4G//36xhfM5pAZL4EsvZIdXQo=
+X-Google-Smtp-Source: AGHT+IF3K1WbzpDH4QpESSatpPZeT/IrAbAWh3EtWXLKRBaCAxr4+3CtctEKxI/ye+1KEPMiHID3l1e86+RMUADVJhc=
+X-Received: by 2002:ac2:4885:0:b0:50e:73e8:8d05 with SMTP id
+ x5-20020ac24885000000b0050e73e88d05mr134459lfc.30.1704357795023; Thu, 04 Jan
+ 2024 00:43:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230926194242.2732127-1-sjg@chromium.org> <20230926194242.2732127-2-sjg@chromium.org>
+ <BN9PR11MB5483FF3039913334C7EA83E1E6AEA@BN9PR11MB5483.namprd11.prod.outlook.com>
+ <CAMj1kXFG92NpL7T7YocOup0xLKyopt3MnSCp0RL8cLzozzJz7A@mail.gmail.com>
+ <BN9PR11MB548303B09536EB1577472029E6B3A@BN9PR11MB5483.namprd11.prod.outlook.com>
+ <CAPnjgZ36t8g7E=0MSJyaV8-QKv9RVYe47Jd5E=NU-mFM4LWBQA@mail.gmail.com>
+ <CAMj1kXHAEeK7x2f13k_JV3Xcw61nNLasyvXQf+mKwKekQ48EpQ@mail.gmail.com>
+ <BN9PR11MB548334E0DA6495C438FBFDE1E6BBA@BN9PR11MB5483.namprd11.prod.outlook.com>
+ <BN9PR11MB548314DDE8D4C9503103D51CE6BBA@BN9PR11MB5483.namprd11.prod.outlook.com>
+ <CAMj1kXHbM+ArLgNZgnmiok4gOfv6QLYxzyB9OCwfhEkJ2xGK_g@mail.gmail.com>
+ <BN9PR11MB5483C2FBCD07DE61DCCDB523E6BCA@BN9PR11MB5483.namprd11.prod.outlook.com>
+ <CAMj1kXHmu=ykgBMRiFqG4_ra3FJtHa=GASoMUJswdMFa9v4Xgw@mail.gmail.com>
+ <BN9PR11MB54837EEB391CC2A8FA6C0BF5E695A@BN9PR11MB5483.namprd11.prod.outlook.com>
+ <CAMj1kXEQL9n1Adedow5KEyZ5gdFQY3Fn+Fz8vSK3mHib_vDFig@mail.gmail.com>
+ <BN9PR11MB5483E191F1906641565A1337E694A@BN9PR11MB5483.namprd11.prod.outlook.com>
+ <CAMj1kXGcZP99hyURXFAZfwKmYqj-xBN9BcW7R3h9Mm2k937Buw@mail.gmail.com> <BN9PR11MB548370E8181B1BB3C6FB9A20E667A@BN9PR11MB5483.namprd11.prod.outlook.com>
+In-Reply-To: <BN9PR11MB548370E8181B1BB3C6FB9A20E667A@BN9PR11MB5483.namprd11.prod.outlook.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 4 Jan 2024 09:43:03 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXH9z0fvWc5UgzDQ=HfYKkh=YudjL-yoZwKX93baiMgZ8w@mail.gmail.com>
+Message-ID: <CAMj1kXH9z0fvWc5UgzDQ=HfYKkh=YudjL-yoZwKX93baiMgZ8w@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] schemas: Add some common reserved-memory usages
+To: "Chiu, Chasel" <chasel.chiu@intel.com>
+Cc: Simon Glass <sjg@chromium.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Rob Herring <robh@kernel.org>, "Tan, Lean Sheng" <sheng.tan@9elements.com>, 
+	lkml <linux-kernel@vger.kernel.org>, Dhaval Sharma <dhaval@rivosinc.com>, 
+	"Brune, Maximilian" <maximilian.brune@9elements.com>, Yunhui Cui <cuiyunhui@bytedance.com>, 
+	"Dong, Guo" <guo.dong@intel.com>, Tom Rini <trini@konsulko.com>, 
+	ron minnich <rminnich@gmail.com>, "Guo, Gua" <gua.guo@intel.com>, 
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, U-Boot Mailing List <u-boot@lists.denx.de>
+Content-Type: text/plain; charset="UTF-8"
 
-The initialization commands are taken from the STMicroelectronics driver
-found at [1].
-To ensure backward compatibility, flags have been added to enable gamma
-correction setting and display control. In other cases, registers have
-been set to their default values according to the specifications found
-in the datasheet.
+On Thu, 4 Jan 2024 at 01:25, Chiu, Chasel <chasel.chiu@intel.com> wrote:
+>
+>
+>
+> > -----Original Message-----
+> > From: Ard Biesheuvel <ardb@kernel.org>
+> > Sent: Wednesday, January 3, 2024 7:22 AM
+> > To: Chiu, Chasel <chasel.chiu@intel.com>
+> > Cc: Simon Glass <sjg@chromium.org>; devicetree@vger.kernel.org; Mark Rutland
+> > <mark.rutland@arm.com>; Rob Herring <robh@kernel.org>; Tan, Lean Sheng
+> > <sheng.tan@9elements.com>; lkml <linux-kernel@vger.kernel.org>; Dhaval
+> > Sharma <dhaval@rivosinc.com>; Brune, Maximilian
+> > <maximilian.brune@9elements.com>; Yunhui Cui <cuiyunhui@bytedance.com>;
+> > Dong, Guo <guo.dong@intel.com>; Tom Rini <trini@konsulko.com>; ron minnich
+> > <rminnich@gmail.com>; Guo, Gua <gua.guo@intel.com>; linux-
+> > acpi@vger.kernel.org; U-Boot Mailing List <u-boot@lists.denx.de>
+> > Subject: Re: [PATCH v7 2/2] schemas: Add some common reserved-memory
+> > usages
+> >
+> > On Fri, 22 Dec 2023 at 20:52, Chiu, Chasel <chasel.chiu@intel.com> wrote:
+> > >
+> > >
+> > > Please see my reply below inline.
+> > >
+> > > Thanks,
+> > > Chasel
+> > >
+> > ...
+> > > > > > The gEfiMemoryTypeInformationGuid HOB typically carries platform
+> > > > > > defaults, and the actual memory type information is kept in a
+> > > > > > non-volatile EFI variable, which gets updated when the memory
+> > > > > > usage changes. Is this different for UefiPayloadPkg?
+> > > > > >
+> > > > > > (For those among the cc'ees less versed in EFI/EDK2: when you
+> > > > > > get the 'config changed -rebooting' message from the boot
+> > > > > > firmware, it typically means that this memory type table has
+> > > > > > changed, and a reboot is necessary.)
+> > > > > >
+> > > > > > So the platform init needs to read this variable, or get the
+> > > > > > information in a different way. I assume it is the payload, not
+> > > > > > the platform init that updates the variable when necessary. This
+> > > > > > means the information flows from payload(n) to platform
+> > > > > > init(n+1), where n is a monotonic index tracking consecutive boots of the
+> > system.
+> > > > > >
+> > > > > > Can you explain how the DT fits into this? How are the
+> > > > > > runtime-code and runtime-data memory reservation nodes under
+> > > > > > /reserved-memory used to implement this information exchange
+> > > > > > between platform init and payload? And how do the HOB and the EFI
+> > variable fit into this picture?
+> > > > >
+> > > > >
+> > > > > 1. With some offline discussion, we would move
+> > > > > gEfiMemoryTypeInformationGuid usage to FDT->upl-custom node. This
+> > > > > is because it is edk2 implementation choice and non-edk2
+> > > > > PlatformInit or Payload may not have such memory optimization
+> > > > > implementation. (not a generic usage/requirement for PlatformInit
+> > > > > and Payload)
+> > > > >
+> > > > > The edk2 example flow will be like below:
+> > > > >
+> > > > > PlatformInit to GetVariable of gEfiMemoryTypeInformationGuid and
+> > > > > create Hob-
+> > > > >
+> > > > >   PlatformInit to initialize FDT->upl-custom node to report
+> > > > gEfiMemoryTypeInformationGuid HOB information ->
+> > > > >     UefiPayload entry to re-create gEfiMemoryTypeInformationGuid
+> > > > > HOB basing
+> > > > on FDT input (instead of the default MemoryType inside UefiPayload)
+> > > > ->
+> > > > >       UefiPayload DxeMain/Gcd will consume
+> > > > > gEfiMemoryTypeInformationGuid
+> > > > Hob for memory type information ->
+> > > > >         UefiPayload to initialize UEFI environment (mainly DXE dispatcher) ->
+> > > > >           (additional FV binary appended to common UefiPayload
+> > > > > binary)
+> > > > PlatformPayload to provide VariableService which is platform
+> > > > specific ->
+> > > > >             UefiPayload UefiBootManager will SetVariable if memory
+> > > > > type change
+> > > > needed and request a warm reset ->
+> > > > >               Back to PlatformInit ...
+> > > > >
+> > > >
+> > > > OK so the upl-custom node can do whatever it needs to. I imagine
+> > > > these will include the memory descriptor attribute field, and other
+> > > > parts that may be missing from the /reserved-memory DT node specification?
+> > >
+> > >
+> > > Yes, if needed by edk2 specific implementation, not generic enough, we may
+> > consider to use upl-custom node to pass those data.
+> > >
+> > >
+> > > >
+> > > > >
+> > > > > 2. Now the proposed reserved-memory node usages will be for
+> > > > > PlatformInit to
+> > > > provide data which may be used by Payload or OS. This is not edk2
+> > > > specific and any PlatformInit/Payload could have same support.
+> > > > > Note: all of below are optional and PlatformInit may choose to
+> > > > > implement some
+> > > > of them or not.
+> > > > >
+> > > > >       - acpi
+> > > > > If PlatformInit created some ACPI tables, this will report a
+> > > > > memory region which
+> > > > contains all the tables to Payload and Payload may base on this to
+> > > > add some more tables if required.
+> > > > >
+> > > > >       - acpi-nvs
+> > > > > If PlatformInit has created some ACPI tables which having ACPI NVS
+> > > > > memory
+> > > > dependency, this will be that nvs region.
+> > > > >
+> > > >
+> > > > These make sense.
+> > > >
+> > > > >       - boot-code
+> > > > > When PlatformInit having some FW boot phase code that could be
+> > > > > freed for OS to use when payload transferring control to UEFI OS
+> > > > >
+> > > > >       - boot-data
+> > > > > When PlatformInit having some FW boot phase data that could be
+> > > > > freed for OS
+> > > > to use when payload transferring control to UEFI OS.
+> > > > >
+> > > > >       - runtime-code
+> > > > > PlatformInit may provide some services code that can be used for
+> > > > > Payload to
+> > > > initialize UEFI Runtime Services for supporting UEFI OS.
+> > > > >
+> > > > >       - runtime-data
+> > > > > PlatformInit may provide some services data that can be used for
+> > > > > Payload to
+> > > > Initialize UEFI Runtime Services for supporting UEFI OS.
+> > > > >
+> > > >
+> > > > A UEFI OS must consume this information from the UEFI memory map,
+> > > > not from the /reserved-memory nodes. So these nodes must either not
+> > > > be visible to the OS at all, or carry an annotation that the OS must ignore
+> > them.
+> > > >
+> > > > Would it be possible to include a restriction in the DT schema that
+> > > > these are only valid in the firmware boot phase?
+> > >
+> > >
+> > > https://uefi.org/specs/UEFI/2.10/07_Services_Boot_Services.html#efi-bo
+> > > ot-services-exitbootservices Per UEFI specification, UEFI OS will
+> > > always call UEFI GetMemoryMap function to retrieve memory map, so FDT
+> > node present or not does not matter to UEFI OS. We probably could have
+> > annotation in UPL specification to emphasize this.
+> > > I'm not familiar with Linux FDT boot, but if non-UEFI OS does not call UEFI
+> > GetMemoryMap() and does not know what is runtime-code/data, boot-
+> > code/data, it might just treat such reserved-memory nodes as 'regular' reserved
+> > memory nodes, and that's still ok because non-UEFI OS will not call to any
+> > runtime service or re-purpose boot-code/data memory regions.
+> > >
+> >
+> > You are saying the same thing but in a different way. A UEFI OS must only rely on
+> > GetMemoryMap(), and not on the /reserved-memory node to obtain this
+> > information. But this requirement needs to be stated
+> > somewhere: the UEFI spec does not reason about other sources of EFI memory
+> > information at all, and this DT schema does not mention any of this either.
+> >
+> > > Would you provide a real OS case which will be impacted by this reserved-
+> > memory schema so we can discuss basing on real case?
+> > >
+> >
+> > Funny, that is what I have been trying to get from you :-)
+> >
+> > The problem I am anticipating here is that the information in /reserved-memory
+> > may be out of sync with the EFI memory map. It needs to be made clear that the
+> > EFI memory map is the only source of truth when the OS is involved, and this
+> > /reserved-memory mechanism should only be used by other firmware stages. But
+> > the schema does not mention this at all. The schema also does not mention that
+> > the information in /reserved-memory is not actually sufficient to reconstruct the
+> > EFI memory map that the firmware payload expects (which is why the upl-
+> > custom-node exists too)
+>
+>
+>
+> Does below solve your concerns if we mention those in schema description? (please feel free to add more if you have)
+> . boot-code/boot-data and runtime-code/runtime-data usages are following UEFI specification
+>   . before ExitBootServices: https://uefi.org/specs/UEFI/2.10/07_Services_Boot_Services.html#memory-type-usage-before-exitbootservices
+>   . after ExitBootServices: https://uefi.org/specs/UEFI/2.10/07_Services_Boot_Services.html#memory-type-usage-after-exitbootservices
+> . These usages do not intend to construct full UEFI memory map, it is only for PlatformInit to pass pre-installed tables or services to Payload for supporting UEFI OS boot.
+> . These usages are optional
+> . Typically UEFI OS boot will always call GetMemoryMap() to retrieve memory map following UEFI spec, no matter DT nodes present or not (https://uefi.org/specs/UEFI/2.10/07_Services_Boot_Services.html#efi-boot-services-exitbootservices)
+> . Typically Non-UEFI OS boot will treat those  boot* or runtime* reserved-memory as 'regular' reserved memory if present.
+>
 
-[1] https://github.com/STMicroelectronics/STM32CubeF7/blob/master/Drivers/BSP/Components/nt35510/
-Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+This already helps quite a lot, thanks.
 
----
+But why should a non-UEFI OS be required to keep boot* or runtime*
+regions reserved? The firmware stage that boots the OS knows whether
+it is performing an UEFI boot or a non-UEFI boot, and it should only
+present the information that goes along with that. The OS should never
+have to worry about reconciling two sources of truth.
 
-(no changes since v2)
+And to Rob's point about boot / runtime being ill-defined: I would
+argue that 'runtime' quite clearly implies 'under the OS', and so UEFI
+runtime* reservations are assumed to always be relevant to UEFI OSes.
 
-Changes in v2:
-- Re-write the patch [8/8] "drm/panel: nt35510: support FRIDA FRD400B25025-A-CTK"
-  in the same style as the original driver.
-
- drivers/gpu/drm/panel/panel-novatek-nt35510.c | 282 ++++++++++++++++--
- 1 file changed, 251 insertions(+), 31 deletions(-)
-
-diff --git a/drivers/gpu/drm/panel/panel-novatek-nt35510.c b/drivers/gpu/drm/panel/panel-novatek-nt35510.c
-index ce8969f48286..c85dd0d0829d 100644
---- a/drivers/gpu/drm/panel/panel-novatek-nt35510.c
-+++ b/drivers/gpu/drm/panel/panel-novatek-nt35510.c
-@@ -36,6 +36,9 @@
- #include <drm/drm_modes.h>
- #include <drm/drm_panel.h>
- 
-+#define NT35510_CMD_CORRECT_GAMMA BIT(0)
-+#define NT35510_CMD_CONTROL_DISPLAY BIT(1)
-+
- #define MCS_CMD_MAUCCTR		0xF0 /* Manufacturer command enable */
- #define MCS_CMD_READ_ID1	0xDA
- #define MCS_CMD_READ_ID2	0xDB
-@@ -112,18 +115,33 @@
- /* AVDD and AVEE setting 3 bytes */
- #define NT35510_P1_AVDD_LEN 3
- #define NT35510_P1_AVEE_LEN 3
-+#define NT35510_P1_VCL_LEN 3
- #define NT35510_P1_VGH_LEN 3
- #define NT35510_P1_VGL_LEN 3
- #define NT35510_P1_VGP_LEN 3
- #define NT35510_P1_VGN_LEN 3
-+#define NT35510_P1_VCMOFF_LEN 2
- /* BT1CTR thru BT5CTR setting 3 bytes */
- #define NT35510_P1_BT1CTR_LEN 3
- #define NT35510_P1_BT2CTR_LEN 3
-+#define NT35510_P1_BT3CTR_LEN 3
- #define NT35510_P1_BT4CTR_LEN 3
- #define NT35510_P1_BT5CTR_LEN 3
- /* 52 gamma parameters times two per color: positive and negative */
- #define NT35510_P1_GAMMA_LEN 52
- 
-+#define NT35510_WRCTRLD_BCTRL BIT(5)
-+#define NT35510_WRCTRLD_A BIT(4)
-+#define NT35510_WRCTRLD_DD BIT(3)
-+#define NT35510_WRCTRLD_BL BIT(2)
-+#define NT35510_WRCTRLD_DB BIT(1)
-+#define NT35510_WRCTRLD_G BIT(0)
-+
-+#define NT35510_WRCABC_OFF 0
-+#define NT35510_WRCABC_UI_MODE 1
-+#define NT35510_WRCABC_STILL_MODE 2
-+#define NT35510_WRCABC_MOVING_MODE 3
-+
- /**
-  * struct nt35510_config - the display-specific NT35510 configuration
-  *
-@@ -175,6 +193,10 @@ struct nt35510_config {
- 	 * @mode_flags: DSI operation mode related flags
- 	 */
- 	unsigned long mode_flags;
-+	/**
-+	 * @cmds: enable DSI commands
-+	 */
-+	u32 cmds;
- 	/**
- 	 * @avdd: setting for AVDD ranging from 0x00 = 6.5V to 0x14 = 4.5V
- 	 * in 0.1V steps the default is 0x05 which means 6.0V
-@@ -224,6 +246,25 @@ struct nt35510_config {
- 	 * The defaults are 4 and 3 yielding 0x34
- 	 */
- 	u8 bt2ctr[NT35510_P1_BT2CTR_LEN];
-+	/**
-+	 * @vcl: setting for VCL ranging from 0x00 = -2.5V to 0x11 = -4.0V
-+	 * in 1V steps, the default is 0x00 which means -2.5V
-+	 */
-+	u8 vcl[NT35510_P1_VCL_LEN];
-+	/**
-+	 * @bt3ctr: setting for boost power control for the VCL step-up
-+	 * circuit (3)
-+	 * bits 0..2 in the lower nibble controls CLCK, the booster clock
-+	 * frequency, the values are the same as for PCK in @bt1ctr.
-+	 * bits 4..5 in the upper nibble controls BTCL, the boosting
-+	 * amplification for the step-up circuit.
-+	 * 0 = Disable
-+	 * 1 = -0.5 x VDDB
-+	 * 2 = -1 x VDDB
-+	 * 3 = -2 x VDDB
-+	 * The defaults are 4 and 2 yielding 0x24
-+	 */
-+	u8 bt3ctr[NT35510_P1_BT3CTR_LEN];
- 	/**
- 	 * @vgh: setting for VGH ranging from 0x00 = 7.0V to 0x0B = 18.0V
- 	 * in 1V steps, the default is 0x08 which means 15V
-@@ -277,6 +318,19 @@ struct nt35510_config {
- 	 * same layout of bytes as @vgp.
- 	 */
- 	u8 vgn[NT35510_P1_VGN_LEN];
-+	/**
-+	 * @vcmoff: setting the DC VCOM offset voltage
-+	 * The first byte contains bit 8 of VCM in bit 0 and VCMOFFSEL in bit 4.
-+	 * The second byte contains bits 0..7 of VCM.
-+	 * VCMOFFSEL the common voltage offset mode.
-+	 * VCMOFFSEL 0x00 = VCOM .. 0x01 Gamma.
-+	 * The default is 0x00.
-+	 * VCM the VCOM output voltage (VCMOFFSEL = 0) or the internal register
-+	 * offset for gamma voltage (VCMOFFSEL = 1).
-+	 * VCM 0x00 = 0V/0 .. 0x118 = 3.5V/280 in steps of 12.5mV/1step
-+	 * The default is 0x00 = 0V/0.
-+	 */
-+	u8 vcmoff[NT35510_P1_VCMOFF_LEN];
- 	/**
- 	 * @dopctr: setting optional control for display
- 	 * ERR bits 0..1 in the first byte is the ERR pin output signal setting.
-@@ -441,6 +495,43 @@ struct nt35510_config {
- 	 * @gamma_corr_neg_b: Blue gamma correction parameters, negative
- 	 */
- 	u8 gamma_corr_neg_b[NT35510_P1_GAMMA_LEN];
-+	/**
-+	 * @wrdisbv: write display brightness
-+	 * 0x00 value means the lowest brightness and 0xff value means
-+	 * the highest brightness.
-+	 * The default is 0x00.
-+	 */
-+	u8 wrdisbv;
-+	/**
-+	 * @wrctrld: write control display
-+	 * G bit 0 selects gamma curve: 0 = Manual, 1 = Automatic
-+	 * DB bit 1 selects display brightness: 0 = Manual, 1 = Automatic
-+	 * BL bit 2 controls backlight control: 0 = Off, 1 = On
-+	 * DD bit 3 controls display dimming: 0 = Off, 1 = On
-+	 * A bit 4 controls LABC block: 0 = Off, 1 = On
-+	 * BCTRL bit 5 controls brightness block: 0 = Off, 1 = On
-+	 */
-+	u8 wrctrld;
-+	/**
-+	 * @wrcabc: write content adaptive brightness control
-+	 * There is possible to use 4 different modes for content adaptive
-+	 * image functionality:
-+	 * 0: Off
-+	 * 1: User Interface Image (UI-Mode)
-+	 * 2: Still Picture Image (Still-Mode)
-+	 * 3: Moving Picture Image (Moving-Mode)
-+	 * The default is 0
-+	 */
-+	u8 wrcabc;
-+	/**
-+	 * @wrcabcmb: write CABC minimum brightness
-+	 * Set the minimum brightness value of the display for CABC
-+	 * function.
-+	 * 0x00 value means the lowest brightness for CABC and 0xff
-+	 * value means the highest brightness for CABC.
-+	 * The default is 0x00.
-+	 */
-+	u8 wrcabcmb;
- };
- 
- /**
-@@ -584,6 +675,16 @@ static int nt35510_setup_power(struct nt35510 *nt)
- 				nt->conf->bt2ctr);
- 	if (ret)
- 		return ret;
-+	ret = nt35510_send_long(nt, dsi, NT35510_P1_SETVCL,
-+				NT35510_P1_VCL_LEN,
-+				nt->conf->vcl);
-+	if (ret)
-+		return ret;
-+	ret = nt35510_send_long(nt, dsi, NT35510_P1_BT3CTR,
-+				NT35510_P1_BT3CTR_LEN,
-+				nt->conf->bt3ctr);
-+	if (ret)
-+		return ret;
- 	ret = nt35510_send_long(nt, dsi, NT35510_P1_SETVGH,
- 				NT35510_P1_VGH_LEN,
- 				nt->conf->vgh);
-@@ -620,6 +721,12 @@ static int nt35510_setup_power(struct nt35510 *nt)
- 	if (ret)
- 		return ret;
- 
-+	ret = nt35510_send_long(nt, dsi, NT35510_P1_SETVCMOFF,
-+				NT35510_P1_VCMOFF_LEN,
-+				nt->conf->vcmoff);
-+	if (ret)
-+		return ret;
-+
- 	/* Typically 10 ms */
- 	usleep_range(10000, 20000);
- 
-@@ -799,36 +906,38 @@ static int nt35510_power_on(struct nt35510 *nt)
- 	if (ret)
- 		return ret;
- 
--	ret = nt35510_send_long(nt, dsi, NT35510_P1_SET_GAMMA_RED_POS,
--				NT35510_P1_GAMMA_LEN,
--				nt->conf->gamma_corr_pos_r);
--	if (ret)
--		return ret;
--	ret = nt35510_send_long(nt, dsi, NT35510_P1_SET_GAMMA_GREEN_POS,
--				NT35510_P1_GAMMA_LEN,
--				nt->conf->gamma_corr_pos_g);
--	if (ret)
--		return ret;
--	ret = nt35510_send_long(nt, dsi, NT35510_P1_SET_GAMMA_BLUE_POS,
--				NT35510_P1_GAMMA_LEN,
--				nt->conf->gamma_corr_pos_b);
--	if (ret)
--		return ret;
--	ret = nt35510_send_long(nt, dsi, NT35510_P1_SET_GAMMA_RED_NEG,
--				NT35510_P1_GAMMA_LEN,
--				nt->conf->gamma_corr_neg_r);
--	if (ret)
--		return ret;
--	ret = nt35510_send_long(nt, dsi, NT35510_P1_SET_GAMMA_GREEN_NEG,
--				NT35510_P1_GAMMA_LEN,
--				nt->conf->gamma_corr_neg_g);
--	if (ret)
--		return ret;
--	ret = nt35510_send_long(nt, dsi, NT35510_P1_SET_GAMMA_BLUE_NEG,
--				NT35510_P1_GAMMA_LEN,
--				nt->conf->gamma_corr_neg_b);
--	if (ret)
--		return ret;
-+	if (nt->conf->cmds & NT35510_CMD_CORRECT_GAMMA) {
-+		ret = nt35510_send_long(nt, dsi, NT35510_P1_SET_GAMMA_RED_POS,
-+					NT35510_P1_GAMMA_LEN,
-+					nt->conf->gamma_corr_pos_r);
-+		if (ret)
-+			return ret;
-+		ret = nt35510_send_long(nt, dsi, NT35510_P1_SET_GAMMA_GREEN_POS,
-+					NT35510_P1_GAMMA_LEN,
-+					nt->conf->gamma_corr_pos_g);
-+		if (ret)
-+			return ret;
-+		ret = nt35510_send_long(nt, dsi, NT35510_P1_SET_GAMMA_BLUE_POS,
-+					NT35510_P1_GAMMA_LEN,
-+					nt->conf->gamma_corr_pos_b);
-+		if (ret)
-+			return ret;
-+		ret = nt35510_send_long(nt, dsi, NT35510_P1_SET_GAMMA_RED_NEG,
-+					NT35510_P1_GAMMA_LEN,
-+					nt->conf->gamma_corr_neg_r);
-+		if (ret)
-+			return ret;
-+		ret = nt35510_send_long(nt, dsi, NT35510_P1_SET_GAMMA_GREEN_NEG,
-+					NT35510_P1_GAMMA_LEN,
-+					nt->conf->gamma_corr_neg_g);
-+		if (ret)
-+			return ret;
-+		ret = nt35510_send_long(nt, dsi, NT35510_P1_SET_GAMMA_BLUE_NEG,
-+					NT35510_P1_GAMMA_LEN,
-+					nt->conf->gamma_corr_neg_b);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	/* Set up stuff in  manufacturer control, page 0 */
- 	ret = nt35510_send_long(nt, dsi, MCS_CMD_MAUCCTR,
-@@ -907,6 +1016,26 @@ static int nt35510_prepare(struct drm_panel *panel)
- 	/* Up to 120 ms */
- 	usleep_range(120000, 150000);
- 
-+	if (nt->conf->cmds & NT35510_CMD_CONTROL_DISPLAY) {
-+		ret = mipi_dsi_dcs_write(dsi, MIPI_DCS_WRITE_CONTROL_DISPLAY,
-+					 &nt->conf->wrctrld,
-+					 sizeof(nt->conf->wrctrld));
-+		if (ret < 0)
-+			return ret;
-+
-+		ret = mipi_dsi_dcs_write(dsi, MIPI_DCS_WRITE_POWER_SAVE,
-+					 &nt->conf->wrcabc,
-+					 sizeof(nt->conf->wrcabc));
-+		if (ret < 0)
-+			return ret;
-+
-+		ret = mipi_dsi_dcs_write(dsi, MIPI_DCS_SET_CABC_MIN_BRIGHTNESS,
-+					 &nt->conf->wrcabcmb,
-+					 sizeof(nt->conf->wrcabcmb));
-+		if (ret < 0)
-+			return ret;
-+	}
-+
- 	ret = mipi_dsi_dcs_set_display_on(dsi);
- 	if (ret) {
- 		dev_err(nt->dev, "failed to turn display on (%d)\n", ret);
-@@ -1033,7 +1162,10 @@ static int nt35510_probe(struct mipi_dsi_device *dsi)
- 			return PTR_ERR(bl);
- 		}
- 		bl->props.max_brightness = 255;
--		bl->props.brightness = 255;
-+		if (nt->conf->cmds & NT35510_CMD_CONTROL_DISPLAY)
-+			bl->props.brightness = nt->conf->wrdisbv;
-+		else
-+			bl->props.brightness = 255;
- 		bl->props.power = FB_BLANK_POWERDOWN;
- 		nt->panel.backlight = bl;
- 	}
-@@ -1112,6 +1244,7 @@ static const struct nt35510_config nt35510_hydis_hva40wv1 = {
- 		.flags = 0,
- 	},
- 	.mode_flags = MIPI_DSI_CLOCK_NON_CONTINUOUS,
-+	.cmds = NT35510_CMD_CORRECT_GAMMA,
- 	/* 0x09: AVDD = 5.6V */
- 	.avdd = { 0x09, 0x09, 0x09 },
- 	/* 0x34: PCK = Hsync/2, BTP = 2 x VDDB */
-@@ -1120,6 +1253,10 @@ static const struct nt35510_config nt35510_hydis_hva40wv1 = {
- 	.avee = { 0x09, 0x09, 0x09 },
- 	/* 0x24: NCK = Hsync/2, BTN =  -2 x VDDB */
- 	.bt2ctr = { 0x24, 0x24, 0x24 },
-+	/* VBCLA: -2.5V, VBCLB: -2.5V, VBCLC: -2.5V */
-+	.vcl = { 0x00, 0x00, 0x00 },
-+	/* 0x24: CLCK = Hsync/2, BTN =  -1 x VDDB */
-+	.bt3ctr = { 0x24, 0x24, 0x24 },
- 	/* 0x05 = 12V */
- 	.vgh = { 0x05, 0x05, 0x05 },
- 	/* 0x24: NCKA = Hsync/2, VGH = 2 x AVDD - AVEE */
-@@ -1132,6 +1269,8 @@ static const struct nt35510_config nt35510_hydis_hva40wv1 = {
- 	.vgp = { 0x00, 0xA3, 0x00 },
- 	/* VGMP: 0x0A3 = 5.0375V, VGSP = 0V */
- 	.vgn = { 0x00, 0xA3, 0x00 },
-+	/* VCMOFFSEL = VCOM voltage offset mode, VCM = 0V */
-+	.vcmoff = { 0x00, 0x00 },
- 	/* Enable TE, EoTP and RGB pixel format */
- 	.dopctr = { NT35510_DOPCTR_0_DSITE | NT35510_DOPCTR_0_EOTP |
- 		    NT35510_DOPCTR_0_N565, NT35510_DOPCTR_1_CTB },
-@@ -1163,7 +1302,88 @@ static const struct nt35510_config nt35510_hydis_hva40wv1 = {
- 	.gamma_corr_neg_b = { NT35510_GAMMA_NEG_DEFAULT },
- };
- 
-+static const struct nt35510_config nt35510_frida_frd400b25025 = {
-+	.width_mm = 52,
-+	.height_mm = 86,
-+	.mode = {
-+		.clock = 23000,
-+		.hdisplay = 480,
-+		.hsync_start = 480 + 34, /* HFP = 34 */
-+		.hsync_end = 480 + 34 + 2, /* HSync = 2 */
-+		.htotal = 480 + 34 + 2 + 34, /* HBP = 34 */
-+		.vdisplay = 800,
-+		.vsync_start = 800 + 15, /* VFP = 15 */
-+		.vsync_end = 800 + 15 + 12, /* VSync = 12 */
-+		.vtotal = 800 + 15 + 12 + 15, /* VBP = 15 */
-+		.flags = 0,
-+	},
-+	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST |
-+			MIPI_DSI_MODE_LPM,
-+	.cmds = NT35510_CMD_CONTROL_DISPLAY,
-+	/* 0x03: AVDD = 6.2V */
-+	.avdd = { 0x03, 0x03, 0x03 },
-+	/* 0x46: PCK = 2 x Hsync, BTP = 2.5 x VDDB */
-+	.bt1ctr = { 0x46, 0x46, 0x46 },
-+	/* 0x03: AVEE = -6.2V */
-+	.avee = { 0x03, 0x03, 0x03 },
-+	/* 0x36: PCK = 2 x Hsync, BTP =  2 x VDDB */
-+	.bt2ctr = { 0x36, 0x36, 0x36 },
-+	/* VBCLA: -2.5V, VBCLB: -2.5V, VBCLC: -3.5V */
-+	.vcl = { 0x00, 0x00, 0x02 },
-+	/* 0x26: CLCK = 2 x Hsync, BTN =  -1 x VDDB */
-+	.bt3ctr = { 0x26, 0x26, 0x26 },
-+	/* 0x09 = 16V */
-+	.vgh = { 0x09, 0x09, 0x09 },
-+	/* 0x36: HCK = 2 x Hsync, VGH = 2 x AVDD - AVEE */
-+	.bt4ctr = { 0x36, 0x36, 0x36 },
-+	/* 0x08 = -10V */
-+	.vgl = { 0x08, 0x08, 0x08 },
-+	/* 0x26: LCK = 2 x Hsync, VGL = AVDD + VCL - AVDD */
-+	.bt5ctr = { 0x26, 0x26, 0x26 },
-+	/* VGMP: 0x080 = 4.6V, VGSP = 0V */
-+	.vgp = { 0x00, 0x80, 0x00 },
-+	/* VGMP: 0x080 = 4.6V, VGSP = 0V */
-+	.vgn = { 0x00, 0x80, 0x00 },
-+	/* VCMOFFSEL = VCOM voltage offset mode, VCM = -1V */
-+	.vcmoff = { 0x00, 0x50 },
-+	.dopctr = { NT35510_DOPCTR_0_RAMKP | NT35510_DOPCTR_0_DSITE |
-+		NT35510_DOPCTR_0_DSIG | NT35510_DOPCTR_0_DSIM |
-+		NT35510_DOPCTR_0_EOTP | NT35510_DOPCTR_0_N565, 0 },
-+	.madctl = NT35510_ROTATE_180_SETTING,
-+	/* 0x03: SDT = 1.5 us */
-+	.sdhdtctr = 0x03,
-+	/* EQ control for gate signals, 0x00 = 0 us */
-+	.gseqctr = { 0x00, 0x00 },
-+	/* SDEQCTR: source driver EQ mode 2, 1 us rise time on each step */
-+	.sdeqctr = { 0x01, 0x02, 0x02, 0x02 },
-+	/* SDVPCTR: Normal operation off color during v porch */
-+	.sdvpctr = 0x01,
-+	/* T1: number of pixel clocks on one scanline: 0x184 = 389 clocks */
-+	.t1 = 0x0184,
-+	/* VBP: vertical back porch toward the panel */
-+	.vbp = 0x1C,
-+	/* VFP: vertical front porch toward the panel */
-+	.vfp = 0x1C,
-+	/* PSEL: divide pixel clock 23MHz with 1 (no clock downscaling) */
-+	.psel = 0,
-+	/* DPTMCTR12: 0x03: LVGL = VGLX, overlap mode, swap R->L O->E */
-+	.dpmctr12 = { 0x03, 0x00, 0x00, },
-+	/* write display brightness */
-+	.wrdisbv = 0x7f,
-+	/* write control display */
-+	.wrctrld = NT35510_WRCTRLD_BCTRL | NT35510_WRCTRLD_DD |
-+			NT35510_WRCTRLD_BL,
-+	/* write content adaptive brightness control */
-+	.wrcabc = NT35510_WRCABC_STILL_MODE,
-+	/* write CABC minimum brightness */
-+	.wrcabcmb = 0xff,
-+};
-+
- static const struct of_device_id nt35510_of_match[] = {
-+	{
-+		.compatible = "frida,frd400b25025",
-+		.data = &nt35510_frida_frd400b25025,
-+	},
- 	{
- 		.compatible = "hydis,hva40wv1",
- 		.data = &nt35510_hydis_hva40wv1,
--- 
-2.43.0
-
+I think there is a fundamental difference of opinion here, where the
+position of the firmware developers is that the DT should be the same
+across all boot stages, while my position reasoning from the OS side
+is that the OS should be able to observe only the abstractions that
+are part of the contract between firmware and OS.
