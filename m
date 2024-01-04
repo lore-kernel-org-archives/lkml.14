@@ -1,158 +1,88 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726E21859
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 00:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34F44414;
+	Thu,  4 Jan 2024 00:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RFpA8CKw"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5efb07ddb0fso146657b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Jan 2024 16:24:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704327848; x=1704932648; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YGoAdMkmn3Mnvumr2fIYY5+6zsbtkTCTOlb0bB43RH8=;
-        b=RFpA8CKw0QT9basRBKCniJs1Un80M1ye9YVQbKW9qNaAM5wVvtrWsapA5Uqe7c2hIY
-         +WJAv9XNkLwkOc3AJyWi7enOcEJFagrCc07G7pTmXxqnTJusTV6N/dsllcxXtAJqC+ys
-         wkeSsMvRNYlCQfQixWCZ4+xYNC/KB+nMehXQwNDggsgBBMb8NK9zKA5oCNEtM97Ezju0
-         3J6wTYq8+Gn/rvAqHPZk1PVgaCjIodkPx+ljVRGPiDoaFsCRypkTHfIRkAl07jQJRBv2
-         Lu1lbzv/0wbhvgEC0uzHMqGxyDioE+QW2dmNfjIZdqWkWUz4OLTsnU7ZzSxDKDJ6/+1D
-         WgCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704327848; x=1704932648;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YGoAdMkmn3Mnvumr2fIYY5+6zsbtkTCTOlb0bB43RH8=;
-        b=qBDzF9QbTV0y0RIfxsoeaQYt3zpE9OO55g+JmjDHcmyUDbOkLOH5+hVQa1AyrQgFbd
-         jEV05nMvGaBXlOo20BUJ954UoDVnbTW+d1MIB+iUfXDgNwc1TrnWl4yT9BmWlnJ/WlYY
-         odz0XPn+0ZVB7Apw2iQ4XrWNV9B2jxGhEhwzhSVmbAAGjreY8KbKdu/Bh+0t1WXBI3mU
-         w56es3MHXdX7uw/Qs84UMgA+9GWdb0xTp8xVnsCgq8hfET6t6qL55fIorPwxZ3qeGRcZ
-         HjbSfYyLg53jLVjPu1DBAZJ0n28t2OsdgFVX6abNbxKguDFI/XryTpEwEFsO01Jquq1Y
-         iIxw==
-X-Gm-Message-State: AOJu0Ywtzu0oskqk7VE/ailY+OUF5030k2Q02gPQTWUgqBMhdCk1G3tG
-	W6jEgqiWQKkilUbW5Q5HOLeYni1MLG/7LUdiaQ==
-X-Google-Smtp-Source: AGHT+IF/oqsWgNiKNR618wuHPNv+Itn11kkolYaxoEfHGsUr8PjiJ9wl2bqDgqhJc2D2uuI8GYNIM8pgnKo=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:8142:0:b0:d9c:801c:4230 with SMTP id
- j2-20020a258142000000b00d9c801c4230mr472209ybm.5.1704327848261; Wed, 03 Jan
- 2024 16:24:08 -0800 (PST)
-Date: Wed, 3 Jan 2024 16:24:06 -0800
-In-Reply-To: <88f49775-2b56-48cc-81b8-651a940b7d6b@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GK5GAQ4B"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=z9OvDNJy0durGaaJOE76nAC55m5S+o9VSdvUuuk1bME=; b=GK5GAQ4BMSwaUZWIIZ2yOQz1UH
+	OO2MBjL+L5CE1F6TyxZWqzlVCfYZB/7L2LP7eNsGSKZOOoi/ygBeRr3BEs3GrpyFq0bXRXFoPT7F4
+	twLgyihWq30cr0Yt7vjZGDqibnbRdQvdiBTDRO8Mgw9zO8AhDFKOGzqIAnTYirO3BbWB3xV2i4jXi
+	VGakgW7fwp84UN5koD4GtKxAmnKq/UCYD0NvurK4YYiWiYgNeaCN3Ohcl1EwTkMDsD1jDAoGwEK8t
+	FQJwqLg3gkwAPPfUQoBm2Vls5zic/Cm1Fcz0Cd+E9PaA0nMPOvxU3mGTosGjz/xWFF1k0up787qm+
+	XamtGtFg==;
+Received: from [50.53.46.231] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rLBXB-00CTy8-15;
+	Thu, 04 Jan 2024 00:24:29 +0000
+Message-ID: <b91cc934-f343-4699-9711-a3b52cfbd39a@infradead.org>
+Date: Wed, 3 Jan 2024 16:24:28 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <3d8f5987-e09c-4dd2-a9c0-8ba22c9e948a@paulmck-laptop> <88f49775-2b56-48cc-81b8-651a940b7d6b@paulmck-laptop>
-Message-ID: <ZZX6pkHnZP777DVi@google.com>
-Subject: Re: [BUG] Guest OSes die simultaneously (bisected)
-From: Sean Christopherson <seanjc@google.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Like Xu <like.xu@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Luwei Kang <luwei.kang@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, Breno Leitao <leitao@debian.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/8] alpha: Fix typos
+Content-Language: en-US
+To: Bjorn Helgaas <helgaas@kernel.org>,
+ Richard Henderson <richard.henderson@linaro.org>
+Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
+ <mattst88@gmail.com>, linux-alpha@vger.kernel.org
+References: <20240103231605.1801364-1-helgaas@kernel.org>
+ <20240103231605.1801364-2-helgaas@kernel.org>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240103231605.1801364-2-helgaas@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 03, 2024, Paul E. McKenney wrote:
-> On Wed, Jan 03, 2024 at 02:22:23PM -0800, Paul E. McKenney wrote:
-> > Hello!
-> > 
-> > Since some time between v5.19 and v6.4, long-running rcutorture tests
-> > would (rarely but intolerably often) have all guests on a given host die
-> > simultaneously with something like an instruction fault or a segmentation
-> > violation.
-> > 
-> > Each bisection step required 20 hosts running 10 hours each, and
-> > this eventually fingered commit c59a1f106f5c ("KVM: x86/pmu: Add
-> > IA32_PEBS_ENABLE MSR emulation for extended PEBS").  Although this commit
-> > is certainly messing with things that could possibly cause all manner
-> > of mischief, I don't immediately see a smoking gun.  Except that the
-> > commit prior to this one is rock solid.
-> > Just to make things a bit more exciting, bisection in mainline proved
-> > to be problematic due to bugs of various kinds that hid this one.  I was
-> > therefore forced to bisect among the commits backported to the internal
-> > v5.19-based kernel, which fingered the backported version of the patch
-> > called out above.
+
+
+On 1/3/24 15:15, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> Ah, and so why do I believe that this is a problem in mainline rather
-> than just (say) a backporting mistake?
+> Fix typos, most reported by "codespell arch/alpha".  Only touches comments,
+> no code changes.
 > 
-> Because this issue was first located in v6.4, which already has this
-> commit included.
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+> Cc: Matt Turner <mattst88@gmail.com>
+> Cc: linux-alpha@vger.kernel.org
+> ---
+>  arch/alpha/boot/bootpz.c             | 4 ++--
+>  arch/alpha/include/asm/core_marvel.h | 2 +-
+>  arch/alpha/include/asm/fpu.h         | 2 +-
+>  arch/alpha/include/asm/sfp-machine.h | 2 +-
+>  arch/alpha/include/asm/thread_info.h | 2 +-
+>  arch/alpha/include/asm/wrperfmon.h   | 2 +-
+>  arch/alpha/include/uapi/asm/mman.h   | 2 +-
+>  arch/alpha/kernel/err_impl.h         | 2 +-
+>  arch/alpha/kernel/irq_i8259.c        | 2 +-
+>  arch/alpha/kernel/osf_sys.c          | 2 +-
+>  arch/alpha/kernel/pci_iommu.c        | 4 ++--
+>  arch/alpha/kernel/sys_eiger.c        | 4 ++--
+>  arch/alpha/kernel/sys_marvel.c       | 2 +-
+>  arch/alpha/kernel/sys_miata.c        | 2 +-
+>  arch/alpha/kernel/sys_takara.c       | 2 +-
+>  arch/alpha/lib/ev6-memcpy.S          | 2 +-
+>  arch/alpha/lib/ev6-stxcpy.S          | 2 +-
+>  arch/alpha/lib/ev67-strrchr.S        | 2 +-
+>  arch/alpha/lib/strrchr.S             | 2 +-
+>  arch/alpha/lib/stxcpy.S              | 2 +-
+>  20 files changed, 23 insertions(+), 23 deletions(-)
 > 
-> 							Thanx, Paul
-> 
-> > Please note that this is not (yet) an emergency.  I will just continue
-> > to run rcutorture on v5.19-based hypervisors in the meantime.
-> > 
-> > Any suggestions for debugging or fixing?
 
-This looks suspect:
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
 
-+       u64 pebs_mask = cpuc->pebs_enabled & x86_pmu.pebs_capable;
-+       int global_ctrl, pebs_enable;
- 
--       arr[0].msr = MSR_CORE_PERF_GLOBAL_CTRL;
--       arr[0].host = intel_ctrl & ~cpuc->intel_ctrl_guest_mask;
--       arr[0].guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask;
--       arr[0].guest &= ~(cpuc->pebs_enabled & x86_pmu.pebs_capable);
--       *nr = 1;
-+       *nr = 0;
-+       global_ctrl = (*nr)++;
-+       arr[global_ctrl] = (struct perf_guest_switch_msr){
-+               .msr = MSR_CORE_PERF_GLOBAL_CTRL,
-+               .host = intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
-+               .guest = intel_ctrl & (~cpuc->intel_ctrl_host_mask | ~pebs_mask),
-+       };
+Thanks.
 
-
-IIUC (always a big if with this code), the intent is that the guest's version of
-PERF_GLOBAL_CTRL gets bits that are (a) not exclusive to the host and (b) not
-being used for PEBS.  (b) is necessary because PEBS generates records in memory
-using virtual addresses, i.e. the CPU will write to memory using a virtual address
-that is valid for the host but not the guest.  And so PMU counters that are
-configured to generate PEBS records need to be disabled while running the guest.
-
-Before that commit, the logic was:
-
-  guest[PERF_GLOBAL_CTRL] = ctrl & ~host;
-  guest[PERF_GLOBAL_CTRL] &= ~pebs;
-
-But after, it's now:
-
-  guest[PERF_GLOBAL_CTRL] = ctrl & (~host | ~pebs);
-
-I.e. the kernel is enabled counters in the guest that are not host-only OR not
-PEBS.  E.g. if only counter 0 is in use, it's using PEBS, but it's not exclusive
-to the host, then the new code will yield (truncated to a single byte for sanity)
-
-  1 = 1 & (0xf | 0xe)
-
-and thus keep counter 0 enabled, whereas the old code would yield
-
-  1 = 1 & 0xf
-  0 = 1 & 0xe
-
-A bit of a shot in the dark and completed untested, but I think this is the correct
-fix?
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index a08f794a0e79..92d5a3464cb2 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4056,7 +4056,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
-        arr[global_ctrl] = (struct perf_guest_switch_msr){
-                .msr = MSR_CORE_PERF_GLOBAL_CTRL,
-                .host = intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
--               .guest = intel_ctrl & (~cpuc->intel_ctrl_host_mask | ~pebs_mask),
-+               .guest = intel_ctrl & ~(cpuc->intel_ctrl_host_mask | pebs_mask),
-        };
- 
-        if (!x86_pmu.pebs)
-
+-- 
+#Randy
