@@ -1,137 +1,136 @@
-Received: from refb02.tmes.trendmicro.eu (refb02.tmes.trendmicro.eu [18.185.115.58])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2F72230B
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 13:11:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensynergy.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensynergy.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C532230C;
+	Thu,  4 Jan 2024 13:12:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=opensynergy.com header.i=@opensynergy.com header.b="WPPTqUZ3"
-Received: from 104.47.11.169_.trendmicro.com (unknown [172.21.10.186])
-	by refb02.tmes.trendmicro.eu (Postfix) with ESMTPS id 6F6D410A35F44;
-	Thu,  4 Jan 2024 13:01:53 +0000 (UTC)
-Received: from 104.47.11.169_.trendmicro.com (unknown [172.21.165.80])
-	by repost01.tmes.trendmicro.eu (Postfix) with SMTP id 1C14C10000D76;
-	Thu,  4 Jan 2024 13:01:46 +0000 (UTC)
-X-TM-MAIL-RECEIVED-TIME: 1704373305.809000
-X-TM-MAIL-UUID: 7255899f-988c-4139-bb95-88cde1beafff
-Received: from DEU01-FR2-obe.outbound.protection.outlook.com (unknown [104.47.11.169])
-	by repre01.tmes.trendmicro.eu (Trend Micro Email Security) with ESMTPS id C59F010047C2A;
-	Thu,  4 Jan 2024 13:01:45 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LOqELa/huCpU7VEmB3YCfHCoWdTyI8sLpYRlDI+Xpag3HQDCDLlL/l0SAlTG35RwlXrbYTRtOpd3ecrcSLKOudilGwaMGRE05Z3we9x46F4ip90V5W/WPztnHf8Aa/ch6cLtFJbUt+aBJrkX8aA/nGkOl7RiYxbPQlUmOU+O5NrCKtuj/yaheXd4f32EoErLKiufiCJ+ruMHc/ue3g2MA1sOApXAmbbx9ThhpSq5/GzE/1tTDFbE5Thtypa+yjAbHo30AcA7NI2VV1xEIqMSngJVu1DX6ca0jxHETSgFQVMcDO37pUxj0nr/sl/j4WbqqRGMRxNfGKx9q9MYUvJz1w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zSNSQiLw2taR/25gESYnwRtDRVy5PR4seJYFt74sGfw=;
- b=aC+E4tIxlNK7qh+Z+IPtxwEJRj7cXfKxMVsKPhXLJxybifQi/4s5TVIwTbtVs6vhPv8Y7gzFXNcAh0ntEHeFIiRzOQvXPAGlfF6FHFQEvz8rbOw6FsBP/Vm5XtkCel/IguF0k5B97s6mLiKf3S9hU1MHwaiLYop0pvhs7u3/mG8KuiHjM8WZZafRbSwDpqcXh8vbR7GD1KCnbzcDbB9nJ9d3uL5CUUjJ69c16CeK121H9+zgeyjllbGmbnmrNUxYViWIGN+UVxGx2bsg2cYkrrm7Hgvg388TCTfvkWnHJpDrRGWC/ONDXzyfMPm6pPnXfKsf2Yayk8bqsiCPHpzOxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 217.66.60.4) smtp.rcpttodomain=kernel.org smtp.mailfrom=opensynergy.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=opensynergy.com; dkim=none (message not signed); arc=none (0)
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 217.66.60.4)
- smtp.mailfrom=opensynergy.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=opensynergy.com;
-Received-SPF: Pass (protection.outlook.com: domain of opensynergy.com
- designates 217.66.60.4 as permitted sender) receiver=protection.outlook.com;
- client-ip=217.66.60.4; helo=SR-MAIL-03.open-synergy.com; pr=C
-From: Harald Mommer <Harald.Mommer@opensynergy.com>
-To: virtio-dev@lists.oasis-open.org,
-	Haixu Cui <quic_haixcui@quicinc.com>,
-	Mark Brown <broonie@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: quic_ztu@quicinc.com,
-	Matti Moell <Matti.Moell@opensynergy.com>,
-	Mikhail Golubev <Mikhail.Golubev@opensynergy.com>,
-	Harald Mommer <harald.mommer@opensynergy.com>
-Subject: [RFC PATCH v2 1/3] virtio: Add ID for virtio SPI.
-Date: Thu,  4 Jan 2024 14:01:27 +0100
-Message-Id: <20240104130129.17823-2-Harald.Mommer@opensynergy.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240104130129.17823-1-Harald.Mommer@opensynergy.com>
-References: <20240104130129.17823-1-Harald.Mommer@opensynergy.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Rj+iS860"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 25D9740E0177;
+	Thu,  4 Jan 2024 13:12:27 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id w3--VQFIp462; Thu,  4 Jan 2024 13:12:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1704373944; bh=qQuqXJZL7aDM3EdHFv033v3MUj6t+i7wMVqmM1OonM0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Rj+iS860nEcddAPwD0TQAFDwf+sq6ZVMSL3z+bjEp8oD6qqxyxKvHLcJoDtIo+R9w
+	 ajm1JTz0Y9tw3zSmnUByOdxKKde9ZZ8Ai6uLrDawZkkgi8byVqUuta9fujR+8aPofz
+	 HyaycQOHJUzFnrHe0UlwO91f+3lVdBjXkLWxe8YoOCtEOsLSNL2idX8fdDixOsxT5l
+	 o2kmrAe8OBKA3mFOhCwZikz/rd1OGN8/QCiWEBlk5oVS7s9ovyCAL7s4IuZNN09Gp6
+	 J46Z2AEC+9VaR5f+rrQ+aqsu0OqHpOJ05TDE6HYSuDykDPH41yzrOYft/OTN2BnElt
+	 sXrf7o0qQttF7lCbCkiYkVBeiZaR8nChgTnLXsshl0oveoifZhmq4zoeUOHN/HvR5m
+	 MAhIw58w6d5nT5LvFPao9C+bgxisLYNFhYzbuUn21tihcjzxr3NJ9ZELlVrrAErQcO
+	 i76w4mUTH5VINlPDsBzGW8mLKD267+1PVmLTskJyZdMzP/Z2u67TB1qD+9rq4gGUu9
+	 OVtlLqkxdQhTbIXksF6JwkyqpcGSfk6dycNSfydgadlOhQWb0z3lML2VxNTDchUnkY
+	 u2DFX+7TJaWHJg2LRvjAbRCmmVQlTONviMHiNp6j3jBrT+LlLpphkZzyHcWRjSw6CH
+	 C2lIqGk+jQk4WzfABD2sbwZU=
+Received: from zn.tnic (pd9530f8c.dip0.t-ipconnect.de [217.83.15.140])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C768E40E00C5;
+	Thu,  4 Jan 2024 13:12:16 +0000 (UTC)
+Date: Thu, 4 Jan 2024 14:12:10 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: "Kaplan, David" <David.Kaplan@amd.com>, Ingo Molnar <mingo@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-tip-commits@vger.kernel.org" <linux-tip-commits@vger.kernel.org>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	David Howells <dhowells@redhat.com>
+Subject: Re: [tip: x86/bugs] x86/retpoline: Ensure default return thunk isn't
+ used at runtime
+Message-ID: <20240104131210.GDZZauqoeKoZGpYwDd@fat_crate.local>
+References: <20231018175531.GEZTAcE2p92U1AuVp1@fat_crate.local>
+ <20231018203747.GJZTBCG7mv5HL4w6CC@fat_crate.local>
+ <20231019063527.iwgyioxi2gznnshp@treble>
+ <20231019065928.mrvhtfaya22p2uzw@treble>
+ <20231019141514.GCZTE58qPOvcJCiBp3@fat_crate.local>
+ <SN6PR12MB2702AC3C27D25414FE4260F994D4A@SN6PR12MB2702.namprd12.prod.outlook.com>
+ <20231019143951.GEZTE/t/wECKBxMSjl@fat_crate.local>
+ <20231019152051.4u5xwhopbdisy6zl@treble>
+ <20231024201913.GHZTgmwf6QMkX8BGbo@fat_crate.local>
+ <20240103184656.GEZZWroPmHLJuP6y5H@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VI1EUR05FT004:EE_|FR0P281MB2829:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 4f8dda8a-b9b8-4b35-0bac-08dc0d254d8a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	ip1ayQKnGEmRJs+lZv9K6b79AzCB2t0Lt+48AkdUTC3bPrJ9cznBmqLKJApMNHSBOLhypkqAcArx/swuzhlcOCXa+5n2s5n5eQf0z94IKl8HfJeWRej+rz5YfL45EtB/QLAgtAi7MZPg0L1Zt9O7mWap2B8JXgO/1oqpGImC/ISD8W17lSIHXN+NVMQU7qkQsxMFe92GIZMpgThrKontAqu2DcExzxRfmO51eiQ90lG/jexhuN28RO3RUFW8Udqq5ke1JEkumz9rvIAcEp+Mvnq0RJmoOIq7WubBQAm6U8GBbxjBpF5ZI1tPww0wONn1mgh1mLy5SCSDvZeRQarBzGb1cURLbtCiolO2MyUJ4hwSf5RTY/iJ3kxL9Dyt5OT0Zpd0G3qnfjB79a6+pylvnBtn61lRmolKUqy9PzAOKpIkpLpKMru4LrDexNB4YzXgagFrMhUvSQUucH4xQVzfzH07pTg8kAb9bMNJU9/h/A6p3pgjOGjfHI7MaKGaCAAIPPeiDWl9aOhFQ9uneqZU+Xv2Y5bYiWQiGmNbpiWLCOekd7D8UPvMs+yY3+YMoLcmww6ncIisfeipM/xioWN7S9uB4BX3ReFU1S/4dEKRrU8w+MYkRWOsfXcNsyO6JrAHWqi79Qv0DB6GXYAnUmcky08QHprLcpd3E7Q0o6z5cq3073KVIUiDOl7xXzHZVGPBhTQqBSO9qTU7AURSSpMMSY1IRyDq5sDzCNFQnuGxn+S2GwCSDvGZHTXCn90tEDFGODh5IT6o2YKMVytfKLlgRc4mm3gS0dHFjKvJdzGYPy8=
-X-Forefront-Antispam-Report:
-	CIP:217.66.60.4;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SR-MAIL-03.open-synergy.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376002)(136003)(346002)(39840400004)(396003)(230922051799003)(1800799012)(64100799003)(451199024)(186009)(82310400011)(46966006)(36840700001)(40480700001)(70586007)(2906002)(4744005)(5660300002)(4326008)(316002)(70206006)(110136005)(42186006)(41300700001)(54906003)(36860700001)(47076005)(8676002)(8936002)(478600001)(36756003)(81166007)(86362001)(107886003)(2616005)(336012)(1076003)(26005)(36900700001);DIR:OUT;SFP:1102;
-X-OriginatorOrg: opensynergy.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jan 2024 13:01:44.4830
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f8dda8a-b9b8-4b35-0bac-08dc0d254d8a
-X-MS-Exchange-CrossTenant-Id: 800fae25-9b1b-4edc-993d-c939c4e84a64
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=800fae25-9b1b-4edc-993d-c939c4e84a64;Ip=[217.66.60.4];Helo=[SR-MAIL-03.open-synergy.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	VI1EUR05FT004.eop-eur05.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: FR0P281MB2829
-X-TM-AS-ERS: 104.47.11.169-0.0.0.0
-X-TMASE-Version: StarCloud-1.3-9.1.1015-28098.007
-X-TMASE-Result: 10-0.491300-4.000000
-X-TMASE-MatchedRID: UpZ+EYxJ0vnJ+P2VFrJmrBkPtuOr7qUwbNjTSFpLxCgW+iZuJylrLk9A
-	UWTSPmMGwDaIN9ul/L4BWl4ObycmgvCdAcVltQ/eagSSqLE/BViyooG/3X7JDlo7GmCOJYd13+6
-	k97GsyDhY8K0i1ArxDtV9etg/Zve8Xi/mhj8u3Y6g09DbTx3Qx+wYAW2kZxpQ
-X-TMASE-XGENCLOUD: e7f244f2-4235-437f-9b68-d51fecf3b5cb-0-0-200-0
-X-TM-Deliver-Signature: 7112093E0111FA70A881894C68BD17A3
-X-TM-Addin-Auth: d9w0SVeA3ntyvMnVpb30OhQHgQx1p+VWZvoGray4zzDLevDa2wYpV5xHGQI
-	if3OAnan6k8LgpR9YAW6GqfWoY/0pLU1Ls3d5Z/0jlS7rvG38IhLudMWoqTHWDcfbFsK/JSoglN
-	I1BkqTVgVmckk3Yw0UGH9W2Z7LwCACaFRb2Vxkl9Cubtl22RFhNzL+F9qJd/GxcbXHd+J34aK50
-	Rv3hWVnpEFJTzGz4AEvXFkL5R8Bg8NIhSnIpRhNGAqf0IGs9iQMhHZvARhrv5bFYcw+qeAkyPPp
-	MMV0GZ3I0iHVsfg=.1RKwdRojhoeGJcBJv8y79Ft0TFAbdR5pAXUEsKnFeWUvKA+B7nnicuM3KH
-	6pWRC3iY+J3BcXnZgo2rQLdxnbjqoPUQveZw5LiQ94xJnG20weR+/vU/R+FT6ekyA6lHAShVEFg
-	nLVcgz2iGpZmZvqC6dwh8D7267RxvclltuOhqLcIuU+My0XdK/zFSEGeuh8RDP35hh5gidbGoaS
-	5+iwaYRg4/bLTOETusQoqVoOt7my9VORSAIAX6YMgouUuDtdHTQHQnb/PB3nOa87Nnqbk8INsUo
-	19YnAvZp9SD1F/HSvdwwN86u2sJY5UKCNeszbkt3U0Nr+qi9171xNQqWaAg==
-X-TM-Addin-ProductCode: EMS
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=opensynergy.com;
-	s=TM-DKIM-20210503141657; t=1704373306;
-	bh=X4lHlvXtqSBf3mrkpOXdURMt/g8gLYp+Io15Exs90WE=; l=724;
-	h=From:To:Date;
-	b=WPPTqUZ37e/DPsDVjkR2UrrcpV2QYymOSFeiPLP61Q6RpRF+slxNA9dHACOxWJ0mW
-	 Q232EQQAsdQkNFTZvGzybIsUhzDpPhssH9IePeUI5sxUGj5cmbjMVhdBKbylgM5G57
-	 zssVSMh4z0+mRMbrqbo87FSbznI6WBSxl+hn241hb7AOuzNvBjYEelem6ex/jekeRO
-	 hzHnl+HWw0r+qvIp3qmbl/IqdUuppmmVx+mMzJkrcUBcwGjN+5S4RpF+vRqCITdt4Y
-	 yqK9myT3yeVmIOWiRrBHXzx5cSg4ucx8iGZ07T/N9Rip3dsSLyp+rDlV8IeUeEBcl7
-	 /rPa+fK65mFVQ==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240103184656.GEZZWroPmHLJuP6y5H@fat_crate.local>
 
-From: Harald Mommer <harald.mommer@opensynergy.com>
+On Wed, Jan 03, 2024 at 07:46:56PM +0100, Borislav Petkov wrote:
+> If only I can remember now how we did trigger the warning in the first
+> place in order to test it...
 
-Add #define ID VIRTIO_ID_SPI 45 for virtio SPI.
+Ok, got tired of trying to make it use the default thunk - it seems
+kinda hard to do - which is good - or I simply can't think of a good way
+to trigger it.
 
-Signed-off-by: Harald Mommer <harald.mommer@opensynergy.com>
----
- include/uapi/linux/virtio_ids.h | 1 +
- 1 file changed, 1 insertion(+)
+So I went and replaced the jump to the actual thunk:
 
-diff --git a/include/uapi/linux/virtio_ids.h b/include/uapi/linux/virtio_ids.h
-index 7aa2eb766205..6c12db16faa3 100644
---- a/include/uapi/linux/virtio_ids.h
-+++ b/include/uapi/linux/virtio_ids.h
-@@ -68,6 +68,7 @@
- #define VIRTIO_ID_AUDIO_POLICY		39 /* virtio audio policy */
- #define VIRTIO_ID_BT			40 /* virtio bluetooth */
- #define VIRTIO_ID_GPIO			41 /* virtio gpio */
-+#define VIRTIO_ID_SPI			45 /* virtio spi */
- 
- /*
-  * Virtio Transitional IDs
+Dump of assembler code for function default_idle_call:
+   0xffffffff8197bda0 <+0>:     nopw   (%rax)
+   0xffffffff8197bda4 <+4>:     nop
+   ...
+   0xffffffff8197bdda <+58>:    xchg   %ax,%ax
+   0xffffffff8197bddc <+60>:    sti
+   0xffffffff8197bddd <+61>:    nop
+   0xffffffff8197bdde <+62>:    jmp    0xffffffff81988420 <srso_return_thunk>
+
+to what it is at build time. I.e., what should *not* happen after
+patch_returns() as run:
+
+Dump of assembler code for function default_idle_call:
+   0xffffffff8197bda0 <+0>:     nopw   (%rax)
+   0xffffffff8197bda4 <+4>:     nop
+   ...
+   0xffffffff8197bdda <+58>:    xchg   %ax,%ax
+   0xffffffff8197bddc <+60>:    sti
+   0xffffffff8197bddd <+61>:    nop
+   0xffffffff8197bdde <+62>:    jmp    0xffffffff819884a0 <__x86_return_thunk>
+
+and yap, it fires as expected:
+
+[  209.051694] **********************************************************
+[  209.053200] **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **
+[  209.054435] **                                                      **
+[  209.055687] **   unpatched return thunk in use. This should not     **
+[  209.056911] **   on a production kernel. Please report this to      **
+[  209.058133] **   x86@kernel.org.                                    **
+[  209.059367] **                                                      **
+[  209.060587] **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **
+[  209.061808] **********************************************************
+[  209.063064] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W          6.7.0-rc8+ #15
+[  209.064527] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+[  209.066086] Call Trace:
+[  209.066569]  <TASK>
+[  209.066975]  dump_stack_lvl+0x36/0x50
+[  209.067675]  warn_thunk_thunk+0x1a/0x30
+[  209.068405]  do_idle+0x1a5/0x1e0
+[  209.069403]  cpu_startup_entry+0x29/0x30
+[  209.070147]  rest_init+0xc5/0xd0
+[  209.070775]  arch_call_rest_init+0xe/0x20
+[  209.071537]  start_kernel+0x425/0x680
+[  209.072235]  ? set_init_arg+0x80/0x80
+[  209.072931]  x86_64_start_reservations+0x18/0x30
+[  209.073803]  x86_64_start_kernel+0xb7/0xc0
+[  209.074590]  secondary_startup_64_no_verify+0x175/0x17b
+[  209.075584]  </TASK>
+
+Lemme write a proper patch.
+
 -- 
-2.25.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
