@@ -1,44 +1,44 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D112C686
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 20:04:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59BC2C1B5
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 20:05:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YKrgXN8k"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d3ea8d0f9dso29865ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 12:04:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RMoy52qN"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d47fae33e0so33575ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 12:05:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704398666; x=1705003466; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1704398751; x=1705003551; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=H5bvopne90ze66b5qL7PgimF4S4TbBUTQc7c41/Z5QU=;
-        b=YKrgXN8kSag8XgDrtu68trqBTEIXw1+mEzMhEDC3nP3oLNcL7rAXDbuDecXXWTynyJ
-         deAMX+KhLZFMgek8VetWBnbNwGrtl1jTeZFzX/Wi+miTffXatnz8QzBxOnWsX/cMbHsW
-         nDJ+RHtIDoGBXYpwCz7l4ohHyweTCJAs4MAepQdu5aNMKsuMXYbfAP36Mf1rHyoCk1tV
-         bS474ZEt4e/iVq5rnW022W3vLO6INMdH+IOt+EYppjrmCr5jW7jZUJG2NhTlvk76pJus
-         SIPzR2vNHwPAmkhuIPr8nZJ76A2ARK8ZIwpEBHKum3ckAbtpmeEMLPDkSwrV2tSda8Pa
-         pqww==
+        bh=ZvEetwkb9xaGP1xb5l25SZewPP7nYFLZIpeTOK182Ek=;
+        b=RMoy52qNnMYiLdicVgdhF2DjlDmMp1Den7Vb4cfy14nnTEf4DUKnMlTrM8KGHKO6d6
+         HdmJaC2dyrq8Yn/MJKtp4Mc+4pXB8wSX7d27iTahZDDUbkrefy0N6vvOhW6JyKbodYKv
+         eTowJbISzvL/9KlyhqedakIC/h59XnVK/KVbLrqfJzDFKNfuURRaKNkb8zhcQ8Rp6SBe
+         vu/2M1srAjaGG+1A9LyZQyTUQ39nF8kuzsssDmX4BnGTCEavt7iRAV30efP6Ey9uOnB2
+         RrEyFmSSbOWUGE1FXLAarzxr+Ip7TF/AcxjnZercrqMY/BG2cAAf4us30o5XyxX6nOoU
+         UQ9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704398666; x=1705003466;
+        d=1e100.net; s=20230601; t=1704398751; x=1705003551;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=H5bvopne90ze66b5qL7PgimF4S4TbBUTQc7c41/Z5QU=;
-        b=nX3W/vrFhVFZH3bY/A9AmYE5NpUBz+GUw008KjayKNXgwuaQELf4XOPdY4G5GCfn3C
-         nkA63kk/Uix6gcwWcRKLEzlAZ2VxSPw+WlUYngM0qyMf20/tYkB00V4AfMnx+c7vJdgW
-         ZSeHm24WI2s029fLoWfvlxSUiBqx7zEoIibwL6++Z1pNtLuB+FAB/PncexMSjAYdc6cc
-         eK9Qg//Ks9Y+Eq06IRVhHTSry6pxKmWT5Nd6skwZrWBFpVKt3l0C81I+ykkJ41k6R2n+
-         XG2qO6MknQKDMr7vcS4YrK+e3FUb5kzMARumQ2n/etStf1dYOthE8kdGZWHUlRYzBjT4
-         kNXA==
-X-Gm-Message-State: AOJu0YwdGaXrlliLRgkH4QF+Fq4VdfqBQuFXFBMAlccrH7BMXhBPtHPA
-	TiCn3/ImozzXjZbPQ/ctf5XYPia/TgFXjLHknuBNKtN3x5I=
-X-Google-Smtp-Source: AGHT+IE6nCDFGOxUbrT46tziEFORgeHGgMI1VagwWwylhIygnmG5Jq9lLyJhChcmbRH7x9xBjCVSikge7cwaQF0d6yU=
-X-Received: by 2002:a17:902:c412:b0:1d3:f33b:893 with SMTP id
- k18-20020a170902c41200b001d3f33b0893mr38511plk.28.1704398665574; Thu, 04 Jan
- 2024 12:04:25 -0800 (PST)
+        bh=ZvEetwkb9xaGP1xb5l25SZewPP7nYFLZIpeTOK182Ek=;
+        b=F5ssT5DtCrkITfWaJb7bAYcfVKu/l5fJkgC0WxxL/bMYOapt9s4I2hx+rwRWcvNIV+
+         gjeV0LQ66QEjixoLZAbN/KA87lhnjEwZ0Ix6h2ler7HKG8fsjyprVe+A7MxquTL+B+vw
+         njPFmbiExO27efdO12R5B0kR7EwMKMqvqYogl3GBXwPVQmDd5LtN5LdEWapeUcDl8P99
+         zuo2Nt45TKghIGvBKTCKFiIlcmHMqUO5HWrjg1k/Kkco7SzFu8cBHqs912naVyn4HpBN
+         Den2e12daGSyrztj+LxFl3yhm5IYnTlLxrlQ93pMsfiU/V8lr1O5FIBxnDOyrz5h1Mi6
+         3IPg==
+X-Gm-Message-State: AOJu0YyejfnBUZAf+Al/lAW5bgvmF0vmt88O4A9wfEC2Uhi4Tk0E1DsL
+	OCdxnOrByyU2mwX1ShBzy2vhsTt4AQu9MX7aVB9a4JE+S8U=
+X-Google-Smtp-Source: AGHT+IFtpK9YJeU2jGd3Bpf25IdYM4Caale+wmgEjoLqzqnOsTKnfaX9VNsHJOZHlAHU0P2aZXIT9K2U0qLn/rFYSYA=
+X-Received: by 2002:a17:902:fa50:b0:1d4:69a6:8a9d with SMTP id
+ lb16-20020a170902fa5000b001d469a68a9dmr33072plb.19.1704398750899; Thu, 04 Jan
+ 2024 12:05:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,12 +46,12 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20231206081538.17056-1-yunfei.dong@mediatek.com>
- <20231206081538.17056-3-yunfei.dong@mediatek.com> <797a2cbd-ab84-47ec-99b0-23c392f343e1@xs4all.nl>
-In-Reply-To: <797a2cbd-ab84-47ec-99b0-23c392f343e1@xs4all.nl>
+ <20231206081538.17056-5-yunfei.dong@mediatek.com> <ce2110bf-a16a-45ae-979b-7e41be2896cd@xs4all.nl>
+In-Reply-To: <ce2110bf-a16a-45ae-979b-7e41be2896cd@xs4all.nl>
 From: Jeffrey Kardatzke <jkardatzke@google.com>
-Date: Thu, 4 Jan 2024 12:04:13 -0800
-Message-ID: <CA+ddPcNOvfOszE+jrzNx4cFAB12iWuAchCVKdbE4Rm6+CQMvXg@mail.gmail.com>
-Subject: Re: [PATCH v3,02/21] v4l2: handle secure memory flags in queue setup
+Date: Thu, 4 Jan 2024 12:05:39 -0800
+Message-ID: <CA+ddPcM6nz0ufF5NXUq7E_vF6HnFKrEEag5iUDAknT6=hWTCNQ@mail.gmail.com>
+Subject: Re: [PATCH v3,04/21] v4l: add documentation for secure memory flag
 To: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Cc: Yunfei Dong <yunfei.dong@mediatek.com>, 
 	=?UTF-8?B?TsOtY29sYXMgRiAuIFIgLiBBIC4gUHJhZG8=?= <nfraprado@collabora.com>, 
@@ -72,254 +72,72 @@ Cc: Yunfei Dong <yunfei.dong@mediatek.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Yunfei,
-
-Can you please integrate these changes into the patch?
-
-Thanks,
-Jeff
-
-On Mon, Dec 11, 2023 at 2:45=E2=80=AFAM Hans Verkuil <hverkuil-cisco@xs4all=
+On Mon, Dec 11, 2023 at 3:05=E2=80=AFAM Hans Verkuil <hverkuil-cisco@xs4all=
 .nl> wrote:
->
-> Hi Yunfei, Jeffrey,
->
-> Some comments below:
 >
 > On 06/12/2023 09:15, Yunfei Dong wrote:
 > > From: Jeffrey Kardatzke <jkardatzke@google.com>
 > >
-> > Validates the secure memory flags when setting up a queue and ensures
-> > the queue has the proper capability.
+> > Adds documentation for V4L2_MEMORY_FLAG_SECURE.
 > >
 > > Signed-off-by: Jeffrey Kardatzke <jkardatzke@google.com>
 > > Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
 > > ---
-> >  .../media/common/videobuf2/videobuf2-core.c   | 23 +++++++++++++
-> >  .../media/common/videobuf2/videobuf2-v4l2.c   | 34 +++++++++++++------
-> >  2 files changed, 46 insertions(+), 11 deletions(-)
+> >  Documentation/userspace-api/media/v4l/buffer.rst | 8 +++++++-
+> >  1 file changed, 7 insertions(+), 1 deletion(-)
 > >
-> > diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/=
-media/common/videobuf2/videobuf2-core.c
-> > index 8c1df829745b..09dc030484be 100644
-> > --- a/drivers/media/common/videobuf2/videobuf2-core.c
-> > +++ b/drivers/media/common/videobuf2/videobuf2-core.c
-> > @@ -813,6 +813,15 @@ static bool verify_coherency_flags(struct vb2_queu=
-e *q, bool non_coherent_mem)
-> >       return true;
-> >  }
+> > diff --git a/Documentation/userspace-api/media/v4l/buffer.rst b/Documen=
+tation/userspace-api/media/v4l/buffer.rst
+> > index 52bbee81c080..a5a7d1c72d53 100644
+> > --- a/Documentation/userspace-api/media/v4l/buffer.rst
+> > +++ b/Documentation/userspace-api/media/v4l/buffer.rst
+> > @@ -696,7 +696,7 @@ enum v4l2_memory
 > >
-> > +static bool verify_secure_mem_flags(struct vb2_queue *q, bool secure_m=
-em)
-> > +{
-> > +     if (secure_mem !=3D q->secure_mem) {
-> > +             dprintk(q, 1, "secure memory model mismatch\n");
-> > +             return false;
-> > +     }
-> > +     return true;
-> > +}
+> >  .. _memory-flags:
+> >
+> > -Memory Consistency Flags
+> > +Memory Flags
+> >  ------------------------
+> >
+> >  .. raw:: latex
+> > @@ -728,6 +728,12 @@ Memory Consistency Flags
+> >       only if the buffer is used for :ref:`memory mapping <mmap>` I/O a=
+nd the
+> >       queue reports the :ref:`V4L2_BUF_CAP_SUPPORTS_MMAP_CACHE_HINTS
+> >       <V4L2-BUF-CAP-SUPPORTS-MMAP-CACHE-HINTS>` capability.
+> > +    * .. _`V4L2-MEMORY-FLAG-SECURE`:
 > > +
-> >  int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
-> >                    unsigned int flags, unsigned int *count)
-> >  {
-> > @@ -820,6 +829,7 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_=
-memory memory,
-> >       unsigned int q_num_bufs =3D vb2_get_num_buffers(q);
-> >       unsigned plane_sizes[VB2_MAX_PLANES] =3D { };
-> >       bool non_coherent_mem =3D flags & V4L2_MEMORY_FLAG_NON_COHERENT;
-> > +     bool secure_mem =3D flags & V4L2_MEMORY_FLAG_SECURE;
-> >       unsigned int i;
-> >       int ret =3D 0;
-> >
-> > @@ -836,6 +846,8 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_=
-memory memory,
-> >       if (*count =3D=3D 0 || q_num_bufs !=3D 0 ||
-> >           (q->memory !=3D VB2_MEMORY_UNKNOWN && q->memory !=3D memory) =
-||
-> >           !verify_coherency_flags(q, non_coherent_mem)) {
-> > +             bool no_previous_buffers =3D !q->num_buffers;
-> > +
-> >               /*
-> >                * We already have buffers allocated, so first check if t=
-hey
-> >                * are not in use and can be freed.
-> > @@ -854,6 +866,12 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2=
-_memory memory,
-> >               __vb2_queue_free(q, q_num_bufs);
-> >               mutex_unlock(&q->mmap_lock);
-> >
-> > +             /*
-> > +              * Do not allow switching secure buffer mode.
-> > +              */
-> > +             if (!no_previous_buffers && !verify_secure_mem_flags(q, s=
-ecure_mem))
-> > +                     return -EINVAL;
-> > +
+> > +      - ``V4L2_MEMORY_FLAG_SECURE``
+> > +      - 0x00000002
+> > +      - DMA bufs passed into the queue will be validated to ensure the=
+y were
+> > +     allocated from a secure dma-heap.
 >
-> Why is this needed? Here VIDIOC_REQBUFS is called either to just delete
-> all existing buffers (count =3D=3D 0), or to delete all existing buffers =
-and
-> allocate new buffers (count > 0).
+> Hmm, that needs a bit more work. How about:
 >
-> Since in both cases all existing buffers are deleted, you are free to cho=
-ose
-> whatever new secure mode you want.
+> - The queued buffers are expected to be in secure memory. If not, an erro=
+r will be
+>   returned. This flag can only be used with ``V4L2_MEMORY_DMABUF``. Typic=
+ally
+>   secure buffers are allocated using a secure dma-heap. This flag can onl=
+y be
+>   specified if the ``V4L2_BUF_CAP_SUPPORTS_SECURE_MEM`` is set.
 >
-> >               /*
-> >                * In case of REQBUFS(0) return immediately without calli=
-ng
-> >                * driver's queue_setup() callback and allocating resourc=
-es.
-> > @@ -882,6 +900,7 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_=
-memory memory,
-> >       if (ret)
-> >               return ret;
-> >       set_queue_coherency(q, non_coherent_mem);
-> > +     q->secure_mem =3D secure_mem;
-> >
-> >       /*
-> >        * Ask the driver how many buffers and planes per buffer it requi=
-res.
-> > @@ -986,6 +1005,7 @@ int vb2_core_create_bufs(struct vb2_queue *q, enum=
- vb2_memory memory,
-> >       unsigned plane_sizes[VB2_MAX_PLANES] =3D { };
-> >       bool non_coherent_mem =3D flags & V4L2_MEMORY_FLAG_NON_COHERENT;
-> >       unsigned int q_num_bufs =3D vb2_get_num_buffers(q);
-> > +     bool secure_mem =3D flags & V4L2_MEMORY_FLAG_SECURE;
-> >       bool no_previous_buffers =3D !q_num_bufs;
-> >       int ret =3D 0;
-> >
-> > @@ -1015,6 +1035,7 @@ int vb2_core_create_bufs(struct vb2_queue *q, enu=
-m vb2_memory memory,
-> >                       return ret;
-> >               q->waiting_for_buffers =3D !q->is_output;
-> >               set_queue_coherency(q, non_coherent_mem);
-> > +             q->secure_mem =3D secure_mem;
-> >       } else {
-> >               if (q->memory !=3D memory) {
-> >                       dprintk(q, 1, "memory model mismatch\n");
-> > @@ -1022,6 +1043,8 @@ int vb2_core_create_bufs(struct vb2_queue *q, enu=
-m vb2_memory memory,
-> >               }
-> >               if (!verify_coherency_flags(q, non_coherent_mem))
-> >                       return -EINVAL;
-> > +             if (!verify_secure_mem_flags(q, secure_mem))
-> > +                     return -EINVAL;
-> >       }
-> >
-> >       num_buffers =3D min(*count, q->max_num_buffers - q_num_bufs);
-> > diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/=
-media/common/videobuf2/videobuf2-v4l2.c
-> > index 54d572c3b515..0a530830276c 100644
-> > --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> > +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> > @@ -686,22 +686,30 @@ static void fill_buf_caps(struct vb2_queue *q, u3=
-2 *caps)
-> >               *caps |=3D V4L2_BUF_CAP_SUPPORTS_MMAP_CACHE_HINTS;
-> >       if (q->supports_requests)
-> >               *caps |=3D V4L2_BUF_CAP_SUPPORTS_REQUESTS;
-> > +     if (q->allow_secure_mem && q->io_modes & VB2_DMABUF)
-> > +             *caps |=3D V4L2_BUF_CAP_SUPPORTS_SECURE_MEM;
-> >  }
-> >
-> > -static void validate_memory_flags(struct vb2_queue *q,
-> > +static bool validate_memory_flags(struct vb2_queue *q,
-> >                                 int memory,
-> >                                 u32 *flags)
-> >  {
-> > +     if (*flags & V4L2_MEMORY_FLAG_SECURE &&
-> > +         (!q->allow_secure_mem || memory !=3D V4L2_MEMORY_DMABUF)) {
-> > +             return false;
-> > +     }
-> > +
->
-> This check belongs to videobuf2-core.c and the check should be done
-> in vb2_core_reqbufs and vb2_core_create_bufs.
->
-> So just leave this function as a void.
->
-> >       if (!q->allow_cache_hints || memory !=3D V4L2_MEMORY_MMAP) {
-> >               /*
-> > -              * This needs to clear V4L2_MEMORY_FLAG_NON_COHERENT only=
-,
-> > -              * but in order to avoid bugs we zero out all bits.
-> > +              * This needs to clear V4L2_MEMORY_FLAG_NON_COHERENT only=
-.
->
-> Just drop this as well since it adds no useful information anymore.
->
-> >                */
-> > -             *flags =3D 0;
-> > -     } else {
-> > -             /* Clear all unknown flags. */
-> > -             *flags &=3D V4L2_MEMORY_FLAG_NON_COHERENT;
-> > +             *flags &=3D ~V4L2_MEMORY_FLAG_NON_COHERENT;
-> >       }
-> > +
-> > +     /* Clear all unknown flags. */
-> > +     *flags &=3D V4L2_MEMORY_FLAG_NON_COHERENT | V4L2_MEMORY_FLAG_SECU=
-RE;
->
-> This is still needed here.
->
-> > +
-> > +     return true;
-> >  }
-> >
->
-> So the following changes from here...
->
-> >  int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req)
-> > @@ -710,7 +718,8 @@ int vb2_reqbufs(struct vb2_queue *q, struct v4l2_re=
-questbuffers *req)
-> >       u32 flags =3D req->flags;
-> >
-> >       fill_buf_caps(q, &req->capabilities);
-> > -     validate_memory_flags(q, req->memory, &flags);
-> > +     if (!validate_memory_flags(q, req->memory, &flags))
-> > +             return -EINVAL;
-> >       req->flags =3D flags;
-> >       return ret ? ret : vb2_core_reqbufs(q, req->memory,
-> >                                           req->flags, &req->count);
-> > @@ -752,7 +761,8 @@ int vb2_create_bufs(struct vb2_queue *q, struct v4l=
-2_create_buffers *create)
-> >       unsigned i;
-> >
-> >       fill_buf_caps(q, &create->capabilities);
-> > -     validate_memory_flags(q, create->memory, &create->flags);
-> > +     if (!validate_memory_flags(q, create->memory, &create->flags))
-> > +             return -EINVAL;
-> >       create->index =3D vb2_get_num_buffers(q);
-> >       create->max_num_buffers =3D q->max_num_buffers;
-> >       create->capabilities |=3D V4L2_BUF_CAP_SUPPORTS_MAX_NUM_BUFFERS;
-> > @@ -1007,7 +1017,8 @@ int vb2_ioctl_reqbufs(struct file *file, void *pr=
-iv,
-> >       u32 flags =3D p->flags;
-> >
-> >       fill_buf_caps(vdev->queue, &p->capabilities);
-> > -     validate_memory_flags(vdev->queue, p->memory, &flags);
-> > +     if (!validate_memory_flags(vdev->queue, p->memory, &flags))
-> > +             return -EINVAL;
-> >       p->flags =3D flags;
-> >       if (res)
-> >               return res;
-> > @@ -1031,7 +1042,8 @@ int vb2_ioctl_create_bufs(struct file *file, void=
- *priv,
-> >
-> >       p->index =3D vdev->queue->num_buffers;
-> >       fill_buf_caps(vdev->queue, &p->capabilities);
-> > -     validate_memory_flags(vdev->queue, p->memory, &p->flags);
-> > +     if (!validate_memory_flags(vdev->queue, p->memory, &p->flags))
-> > +             return -EINVAL;
-> >       /*
-> >        * If count =3D=3D 0, then just check if memory and type are vali=
-d.
-> >        * Any -EBUSY result from vb2_verify_memory_type can be mapped to=
- 0.
->
-> ...to the end should all be dropped since the vb2 core will do the checks=
-.
+
+Thanks Hans. Yunfei, can you integrate this change into the patch please?
+
+> In addition, the title of this table is currently "Memory Consistency Fla=
+gs": that
+> should be renamed to "Memory Flags".
+
+Hans, the patch is already renaming the table as you suggested. :)
+(unless there's some other spot I'm missing)
 >
 > Regards,
 >
 >         Hans
+>
+> >
+> >  .. raw:: latex
+> >
+>
