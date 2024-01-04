@@ -1,95 +1,162 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2EB241F7;
-	Thu,  4 Jan 2024 13:47:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65F424218;
+	Thu,  4 Jan 2024 13:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CvrdRdyj"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d4a2526a7eso3264225ad.3;
-        Thu, 04 Jan 2024 05:47:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704376072; x=1704980872; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yp8IfCHTatW0ncFNjRQTUbnECiIcWKU3D3cZUARMrCo=;
-        b=CvrdRdyjOMdFeB2V7NM76ENEofdN+nfmZeKVqCMjgWMa5z81xuP6hBaZOHou5LLe/R
-         betGbR7ICMuVqDub8gq6CuJT8vjGVjZk+IB0v7bJN1AbRy9Lm43cWMqUtxexhAEWjjsY
-         7gyXKCh9AIimIm3h2YGll/WSJf/wfueDvMUkzmP0g7Jk+WYE81ivzJZQ4C0KBPD35Dfv
-         056HjU5Gbu0wdeN50GjFzGI2prwzzxCo01Jk61zYN7vXZKwfQFA3wOATk81lpJEctkxi
-         waFLfU5vSM2ssce/qsBy1KgoSVwuo8kp0TgmojlB+Rb4n4jgGUwe5juLsPsfrP1WoxMy
-         LqYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704376072; x=1704980872;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yp8IfCHTatW0ncFNjRQTUbnECiIcWKU3D3cZUARMrCo=;
-        b=SwsNtf/meRWiWI9snd+BSi0r0Zeo9jG/zd64rbyn/0lCKKBnkwAXGDzpsoHcDhnpYh
-         uqvtHCHjQG64JU30fpI9pjH6rf8KZirRT41QUD72QxrXQ16DBsnjfPn62K7Isi3Y0IjB
-         RQcsQcZO/TiOpSw9PWsNmug4GXyhHv67U2LcOQCanM7XRp88vYGmKmnJKmTwnNCSe2nA
-         /vhXxz0M14NmB7ZI9MgQ01jcHpz99vxcAUWGaJ8My0t24JJYGzzXIucR5nmTpznv/oD9
-         2CM0asSJ3glcQ1k/A9qyBARM2QS9wmfZX91JPi6QDQV6xlpd877gJp3Vn1Jm2ksFLKzq
-         e0DQ==
-X-Gm-Message-State: AOJu0YwJ1WS/BuNuFEqN6GPspprIsDWtbMWKqnvm1tVKWIuncKoTgkHC
-	z4bmcXdzrWojljKV8sMTxGY=
-X-Google-Smtp-Source: AGHT+IFQHHYmwet3CoyyX/LqgEYVSersCYJ0/Vp/D600j6Qa7Pxw2BNU534S67X/82jEKX0M7gmpsw==
-X-Received: by 2002:a17:902:76c6:b0:1d4:3795:710f with SMTP id j6-20020a17090276c600b001d43795710fmr475758plt.135.1704376072280;
-        Thu, 04 Jan 2024 05:47:52 -0800 (PST)
-Received: from peter-bmc.dhcpserver.bu9bmc.local (1-34-21-66.hinet-ip.hinet.net. [1.34.21.66])
-        by smtp.gmail.com with ESMTPSA id a22-20020a1709027d9600b001d425d495c9sm22990550plm.190.2024.01.04.05.47.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jan 2024 05:47:51 -0800 (PST)
-From: Peter Yin <peteryin.openbmc@gmail.com>
-To: patrick@stwcx.xyz,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@aj.id.au>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 6/6] ARM: dts: aspeed: Harma: Add PDB temperature
-Date: Thu,  4 Jan 2024 21:45:32 +0800
-Message-Id: <20240104134532.536793-7-peteryin.openbmc@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240104134532.536793-1-peteryin.openbmc@gmail.com>
-References: <20240104134532.536793-1-peteryin.openbmc@gmail.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="kNGgoupT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=F677DMlRFfuOUxBej40MkJ2lKltaDghuaAWCmf8gXQc=; b=kNGgoupTyPl+j4/PRccqDi2z3C
+	0o9MWQTpGOF9dHAykolfZqHfEiToZnpkRso5xbWtzkg3c6smypF6KVEQyXOIMJfZWaEIyU9B/t4Ez
+	Vc0KgQvROqJbwhRtmlZUZMcnagFha04mM+w+Cd4nmoPyIkpEAwuJnTyYYiSww9HBw6T6L8HUX3lxI
+	B601V+ybZhS3eYHpfc1n9k6wqjo2XYc0mPMLI2GTaOAgRdEm0z4OWIedwaLyMFPxoCgWmRu8t/A/D
+	d595mNaS9SnWqMG36YT9dxxDnBIBn3Cmutf5VkjtR8tSp+fjiY/3ClayKL14RMkEOBr5BFhdoj7ev
+	8RseZWLA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:48000)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rLO4W-00005k-1G;
+	Thu, 04 Jan 2024 13:47:44 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rLO4W-0007Tl-A0; Thu, 04 Jan 2024 13:47:44 +0000
+Date: Thu, 4 Jan 2024 13:47:44 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev,
+	Mark Rutland <mark.rutland@arm.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Fang Xiang <fangxiang3@xiaomi.com>,
+	Robert Moore <robert.moore@intel.com>
+Subject: Re: [PATCH v4 0/3] irqchip/gic-v3: Enable non-coherent GIC designs
+ probing
+Message-ID: <ZZa3AMRmWUfYCROl@shell.armlinux.org.uk>
+References: <20230905104721.52199-1-lpieralisi@kernel.org>
+ <20231227110038.55453-1-lpieralisi@kernel.org>
+ <CAJZ5v0gUBU=VL8E34sjROssoGNbLnhmUQVHGWT60hgBG_ufTHw@mail.gmail.com>
+ <86h6jt9vs7.wl-maz@kernel.org>
+ <ZZaeyBXn85AnsIk6@shell.armlinux.org.uk>
+ <CAJZ5v0jcZ4WEiNUs3sAQUyy1uVJRNWmVJx2j0e3hLwi7heK1+A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0jcZ4WEiNUs3sAQUyy1uVJRNWmVJx2j0e3hLwi7heK1+A@mail.gmail.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Add PDB temperature sensor.
+On Thu, Jan 04, 2024 at 02:21:44PM +0100, Rafael J. Wysocki wrote:
+> On Thu, Jan 4, 2024 at 1:04 PM Russell King (Oracle)
+> <linux@armlinux.org.uk> wrote:
+> >
+> > On Thu, Jan 04, 2024 at 11:34:48AM +0000, Marc Zyngier wrote:
+> > > On Wed, 03 Jan 2024 13:43:16 +0000,
+> > > "Rafael J. Wysocki" <rafael@kernel.org> wrote:
+> > > >
+> > > > On Wed, Dec 27, 2023 at 12:00 PM Lorenzo Pieralisi
+> > > > <lpieralisi@kernel.org> wrote:
+> > > > >
+> > > > > This series is v4 of previous series:
+> > > > >
+> > > > > v3: https://lore.kernel.org/all/20231006125929.48591-1-lpieralisi@kernel.org
+> > > > > v2: https://lore.kernel.org/all/20230906094139.16032-1-lpieralisi@kernel.org
+> > > > > v1: https://lore.kernel.org/all/20230905104721.52199-1-lpieralisi@kernel.org
+> > > > >
+> > > > > v3 -> v4:
+> > > > >         - Dropped patches [1-3], already merged
+> > > > >         - Added Linuxized ACPICA changes accepted upstream
+> > > > >         - Rebased against v6.7-rc3
+> > > > >
+> > > > > v2 -> v3:
+> > > > >         - Added ACPICA temporary changes and ACPI changes to implement
+> > > > >           ECR https://bugzilla.tianocore.org/show_bug.cgi?id=4557
+> > > > >         - ACPI changes are for testing purposes - subject to ECR code
+> > > > >           first approval
+> > > > >
+> > > > > v1 -> v2:
+> > > > >         - Updated DT bindings as per feedback
+> > > > >         - Updated patch[2] to use GIC quirks infrastructure
+> > > > >
+> > > > > Original cover letter
+> > > > > ---
+> > > > > The GICv3 architecture specifications provide a means for the
+> > > > > system programmer to set the shareability and cacheability
+> > > > > attributes the GIC components (redistributors and ITSes) use
+> > > > > to drive memory transactions.
+> > > > >
+> > > > > Albeit the architecture give control over shareability/cacheability
+> > > > > memory transactions attributes (and barriers), it is allowed to
+> > > > > connect the GIC interconnect ports to non-coherent memory ports
+> > > > > on the interconnect, basically tying off shareability/cacheability
+> > > > > "wires" and de-facto making the redistributors and ITSes non-coherent
+> > > > > memory observers.
+> > > > >
+> > > > > This series aims at starting a discussion over a possible solution
+> > > > > to this problem, by adding to the GIC device tree bindings the
+> > > > > standard dma-noncoherent property. The GIC driver uses the property
+> > > > > to force the redistributors and ITSes shareability attributes to
+> > > > > non-shareable, which consequently forces the driver to use CMOs
+> > > > > on GIC memory tables.
+> > > > >
+> > > > > On ARM DT DMA is default non-coherent, so the GIC driver can't rely
+> > > > > on the generic DT dma-coherent/non-coherent property management layer
+> > > > > (of_dma_is_coherent()) which would default all GIC designs in the field
+> > > > > as non-coherent; it has to rely on ad-hoc dma-noncoherent property handling.
+> > > > >
+> > > > > When a consistent approach is agreed upon for DT an equivalent binding will
+> > > > > be put forward for ACPI based systems.
+> > > > >
+> > > > > Lorenzo Pieralisi (3):
+> > > > >   ACPICA: MADT: Add GICC online capable bit handling
+> > > > >   ACPICA: MADT: Add new MADT GICC/GICR/ITS non-coherent flags handling
+> > > > >   irqchip/gic-v3: Enable non-coherent redistributors/ITSes ACPI probing
+> > > > >
+> > > > >  drivers/acpi/processor_core.c    | 21 +++++++++++++++++++++
+> > > > >  drivers/irqchip/irq-gic-common.h |  8 ++++++++
+> > > > >  drivers/irqchip/irq-gic-v3-its.c |  4 ++++
+> > > > >  drivers/irqchip/irq-gic-v3.c     |  9 +++++++++
+> > > > >  include/acpi/actbl2.h            | 12 ++++++++++--
+> > > > >  include/linux/acpi.h             |  3 +++
+> > > > >  6 files changed, 55 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > --
+> > > >
+> > > > I can apply the first 2 patches, but I would need an ACK for the 3rd one.
+> > > >
+> > > > Alternatively, feel free to add
+> > > >
+> > > > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > >
+> > > > to the first 2 patches and route them via ARM64.
+> > >
+> > > Thanks for that. I have some comments on the third patch, which I'd
+> > > like to see addressed beforehand. This is probably all 6.9 material
+> > > anyway (nobody is affected by this so far).
+> >
+> > From a purely selfish point of view, it would be useful to have the
+> > first patch merged merely to reduce the burden of patches for vcpu
+> > hotplug.
+> 
+> OK, since there will be at least one more iteration of patch [3/3]
+> AFAICS, I'll queue up patches [1-2/3] for 6.8 (next week, though).
 
-Signed-off-by: Peter Yin <peteryin.openbmc@gmail.com>
----
- arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+Thanks!
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts
-index ca3052cce0e0..4d5d1c822fa3 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dts
-@@ -260,6 +260,11 @@ delta_brick@69 {
- 		compatible = "pmbus";
- 		reg = <0x69>;
- 	};
-+
-+	tmp75@49 {
-+		compatible = "ti,tmp75";
-+		reg = <0x49>;
-+	};
- };
- 
- &i2c5 {
 -- 
-2.25.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
