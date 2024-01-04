@@ -1,50 +1,90 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B176D111A7;
-	Thu,  4 Jan 2024 02:55:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C15C4C83;
+	Thu,  4 Jan 2024 02:58:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Kezb9ASk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=d/ZyyrczRRAg41dHk676oMumSI1/RuUVWYEm5uVQf9A=; b=Kezb9ASk4oEH4XR0eJzJzv5hSZ
-	2MHZYHHVOAOZaIQfKvgIhS3/QnU4aNQEsIDTRmj54EIrDAmHV20po0OfqfITzTJQKpCieuHEPhNK3
-	pvc0SQS3rC+vet3misG0FmIeF+yrKih7FBICbQCluyM5i1UxaiosseLqexKaN2z6YZ8FMZJY4cjyN
-	9JhFnUMkr67PYeCvjQr0WJFl8ybL2qv6KCjqdj8D/7rwnpYrqfuBmLKQg2OzG6QdvA/Nut6u7n3eG
-	QfZVOv5fbYTurJvbys1v3Ydwmfc4chjHaMDVoIH1T5Hw/H/A9twSB4UdyTzZ7i6h58Frjw9vwExuN
-	k72lEOKA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1rLDtW-00E7Ni-Bx; Thu, 04 Jan 2024 02:55:42 +0000
-Date: Thu, 4 Jan 2024 02:55:42 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Hou Tao <houtao@huaweicloud.com>
-Cc: linux-fsdevel@vger.kernel.org, Miklos Szeredi <miklos@szeredi.hu>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>, linux-kernel@vger.kernel.org,
-	virtualization@lists.linux.dev, houtao1@huawei.com
-Subject: Re: [PATCH] virtiofs: use GFP_NOFS when enqueuing request through
- kworker
-Message-ID: <ZZYeLn1l35pUSv6o@casper.infradead.org>
-References: <20240104015805.2103766-1-houtao@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XAvW7t9+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DDE3C433C8;
+	Thu,  4 Jan 2024 02:58:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704337138;
+	bh=01K1xit/4AEQ8i0BRSYPXXAVVlLb6B3z2QascNWt8Go=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XAvW7t9+ME532xnff0Cv4Ov9JDzr39BvFUOMveX1TewOFfaXs/Tn3zF9sfBn3pm2k
+	 wUeDbjA0DK1IY61bc7tHsvl7TXpDJ/7t33Jr9DuXJy/w8VTSv4iegGrCvn75hY4gGf
+	 l3JFNsn95NGvxaBRpAmV3GnEKmv8n0I6eZ93KDmzrlrxybTvUw7hgT0UdvE+MF0w5a
+	 3yJ5jwUibI9fptvRgdyZBiFC5zdbrWu0zrUnhiQ+YSgIPByX/6HWQBAu+dJjCcBPqt
+	 DS7sFGZTVHR/fL2n+O4OdnARNT70k8vzh7G5y3t+94j6gq5AsgmvWNKQZk2BkpUhhe
+	 96WDbjIo0Sl+w==
+Date: Thu, 4 Jan 2024 11:58:54 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Steven Rostedt
+ <rostedt@goodmis.org>, linux-doc@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] docs, kprobes: Update email address of Masami
+ Hiramatsu
+Message-Id: <20240104115854.e98f0081f771d4aa73647c3b@kernel.org>
+In-Reply-To: <87mstm6qvk.fsf@meer.lwn.net>
+References: <20231219062330.22813-1-yangtiezhu@loongson.cn>
+	<20231219062330.22813-2-yangtiezhu@loongson.cn>
+	<87mstm6qvk.fsf@meer.lwn.net>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240104015805.2103766-1-houtao@huaweicloud.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 04, 2024 at 09:58:05AM +0800, Hou Tao wrote:
->  static int virtio_fs_enqueue_req(struct virtio_fs_vq *fsvq,
-> -				 struct fuse_req *req, bool in_flight);
-> +				 struct fuse_req *req, bool in_flight,
-> +				 bool in_atomic);
+On Wed, 03 Jan 2024 14:36:47 -0700
+Jonathan Corbet <corbet@lwn.net> wrote:
 
-Better to pass the gfp_t directly instead of a bool.
+> Tiezhu Yang <yangtiezhu@loongson.cn> writes:
+> 
+> > According to the latest authorship and Signed-off-by:
+> >
+> >   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> >
+> > Masami Hiramatsu is working at Google, so the current email @redhat.com
+> > is out of date, it is better to use the email @kernel.org.
+> >
+> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > ---
+> >  Documentation/trace/kprobes.rst | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/trace/kprobes.rst b/Documentation/trace/kprobes.rst
+> > index f825970a1495..968ae080accd 100644
+> > --- a/Documentation/trace/kprobes.rst
+> > +++ b/Documentation/trace/kprobes.rst
+> > @@ -4,7 +4,7 @@ Kernel Probes (Kprobes)
+> >  
+> >  :Author: Jim Keniston <jkenisto@us.ibm.com>
+> >  :Author: Prasanna S Panchamukhi <prasanna.panchamukhi@gmail.com>
+> > -:Author: Masami Hiramatsu <mhiramat@redhat.com>
+> > +:Author: Masami Hiramatsu <mhiramat@kernel.org>
+> 
+> Masami, is this change OK with you?
 
+I would like to know the policy. Should we update the author's mail
+address in the document (source) everytime?
+
+Anyway, I'm OK for this update.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks,
+
+> 
+> Thanks,
+> 
+> jon
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
