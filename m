@@ -1,117 +1,94 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826C020DD0
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 10:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kJEMdnwr"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dbd990ad852so323024276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 02:35:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704364508; x=1704969308; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iGDdBT8N7Ke807mIT2INPgeaZYTNLnZUsmFbCBznysw=;
-        b=kJEMdnwrmCIEhf2MMccQchvV+ExuL6vLzxUNaGYu+wFnCTavWJUqX7Db04McsPshNx
-         rXU2aDcFSAYtQ9SSXzc7jr0T9gC3Jcak1FTUhCl3TaWyYr4/+HxOc2aVNLCpRPIAdXjI
-         BIHQyBw8ZJt+wzVxPRq0toW8G2G7ckSk2ui+El273DPy3Ah9akg3vc5P3xaJ729bePZf
-         fEMEsY1K2I765OcE+e6VOyfIFHp1bkYVFL3Ojr04rzLgBBmQDEjPrgR7zYgWoVmuDXDe
-         5Tc1e6CR+obPdnYrK+iCX+wFt1ozAhni+a1YEuUAZ7NWi6lgQCzflxTdu8hpWTqsqvtS
-         L1Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704364508; x=1704969308;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iGDdBT8N7Ke807mIT2INPgeaZYTNLnZUsmFbCBznysw=;
-        b=X5WnvVcpTUnVNhJvszHsBrng5OHtuWF/GhRB5Zp5TO4D5utSBu63VPgbO4deJuje2n
-         8Il2TQVOivlQNESptibjmzZ5qZXGcn307lEKuU8a37YrtHQpXmPOojNZANaa6DTcp9Be
-         dQwLq6kD6XBl5Bn25SpxD7tpiFV4nCoqgqq9eoHUxaGGUYaKJ48eilJ37FeiyBRSm4r8
-         LcmsCaVsmrprtpHZ3RJHvhR2EevSAUBlzAVEag2sxnpGYQV3q2EcQs6c3mLE1c6pyuuW
-         QRPC2DHLozpzPNBR120w2E0CrLaG1sAC+qQACzf/KZ8hwGOLg1qlncmhICCaDg/plhFQ
-         N0pw==
-X-Gm-Message-State: AOJu0Yw3isyBfgisx+7t6grDHdojH25qu2Z4iHf9mvEcNKRA5wKjn70G
-	ctwYOumrBAaoHsMo0DXOnvUJBNWJVea6Gsg9+KhbBOhnvLxP6g==
-X-Google-Smtp-Source: AGHT+IHoKTMbWkSi0xNxd3RqPhX+gaB/kVOtubVbd7XVPPoho9IJvAkVk3oqD8xz7kgETdGcyyw0WJE91md+wF2s/0w=
-X-Received: by 2002:a25:e20c:0:b0:dbd:beef:a4d3 with SMTP id
- h12-20020a25e20c000000b00dbdbeefa4d3mr291291ybe.64.1704364508485; Thu, 04 Jan
- 2024 02:35:08 -0800 (PST)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1257520DCC;
+	Thu,  4 Jan 2024 10:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 12952C15;
+	Thu,  4 Jan 2024 02:38:14 -0800 (PST)
+Received: from [10.57.88.128] (unknown [10.57.88.128])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 905143F5A1;
+	Thu,  4 Jan 2024 02:37:25 -0800 (PST)
+Message-ID: <9c1fa923-403f-4c98-b03e-37e467366284@arm.com>
+Date: Thu, 4 Jan 2024 10:38:43 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240104-gcc-docs-update-v1-1-127e4816b798@quicinc.com>
- <CAA8EJprsGke9zZBy_x=YSxz7R1aSpx8r3ndjjXVVKhjKBxd=QQ@mail.gmail.com>
- <724f608a-cbfe-48f6-a1f7-59b961a7d724@quicinc.com> <56ee556d-ec31-4553-bce3-0c1e12c111ed@linaro.org>
-In-Reply-To: <56ee556d-ec31-4553-bce3-0c1e12c111ed@linaro.org>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 4 Jan 2024 12:34:57 +0200
-Message-ID: <CAA8EJpqg_BMXbcQEiH-YtgMtioYp0D9W-vGBvKpoGjfrQydYtw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: ipq6018: add #power-domain-cells for
- gcc node
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Fenglin Wu <quic_fenglinw@quicinc.com>, quic_tdas@quicinc.com, 
-	quic_aiquny@quicinc.com, kernel@quicinc.com, Andy Gross <agross@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] OPP: Add API to update EM after adjustment of voltage
+ for OPPs
+Content-Language: en-US
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ dietmar.eggemann@arm.com, linux-arm-kernel@lists.infradead.org,
+ sboyd@kernel.org, nm@ti.com, linux-samsung-soc@vger.kernel.org,
+ daniel.lezcano@linaro.org, rafael@kernel.org,
+ krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com,
+ m.szyprowski@samsung.com, xuewen.yan94@gmail.com, mhiramat@kernel.org,
+ qyousef@layalina.io, wvw@google.com
+References: <20231220110339.1065505-1-lukasz.luba@arm.com>
+ <20231220110339.1065505-2-lukasz.luba@arm.com>
+ <20231226051228.oe7rpgf34nwgr5ah@vireshk-i7>
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <20231226051228.oe7rpgf34nwgr5ah@vireshk-i7>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 4 Jan 2024 at 12:16, Konrad Dybcio <konrad.dybcio@linaro.org> wrote=
-:
->
-> On 4.01.2024 11:13, Fenglin Wu wrote:
-> >
-> >
-> > On 1/4/2024 5:53 PM, Dmitry Baryshkov wrote:
-> >> On Thu, 4 Jan 2024 at 10:06, Fenglin Wu via B4 Relay
-> >> <devnull+quic_fenglinw.quicinc.com@kernel.org> wrote:
-> >>>
-> >>> From: Fenglin Wu <quic_fenglinw@quicinc.com>
-> >>>
-> >>> Property '#power-domain-cells' is required as per defined in qcom,gcc=
-.yaml
-> >>> so add it for ipq6018 gcc device node to eliminate following warning =
-in
-> >>> dtbs_check:
-> >>>
-> >>> arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dtb: gcc@1800000:
-> >>>          '#power-domain-cells' is a required property
-> >>> from schema $id: http://devicetree.org/schemas/clock/qcom,gcc-ipq6018=
-.yaml#
-> >>
-> >> But ipq6018 doesn't implement GDSC support. So for the sake of fixing
-> >> the warning you are adding a bogus property.
-> >>
-> > I agree. However, there are also some gcc drivers not implementing GDSC=
- support but the bindings are adding '#power-domain-cells' in the DT exampl=
-e, such as: qcom,gcc-apq8064.yaml, qcom,gcc-ipq4019.yaml, qcom,gcc-ipq6018.=
-yaml, qcom,gcc-ipq8064.yaml, qcom,gcc-msm8660.yaml.
-> >
-> > Actually I thought that maybe we should do a clean up by removing '#pow=
-er-domain-cells' out of the qcom,gcc.yaml binding and only adding it into i=
-ndividual qcom,gcc-xxx.yaml for the driver which has implemented GDSC suppo=
-rt. I checked this with Taniya offline, but she prefers only fixing it in i=
-pq6018.dtsi as it doesn't hurt anything by adding the property, and she exp=
-ects the GDSC support should be existing in most of qcom,gcc drivers especi=
-ally the newer Qcom chipsets.
->
-> Before we start changing anything, we should assess whether these
-> platforms actually have GDSCs within this clock controller block,
-> even if they are (currently) not described in the clk driver.
+Hi Viresh,
 
-APQ8064 / MSM8960 / MSM8x60  (and thus I assume IPQ8064) have an older
-power rail control mechanism called footswitch / GFS_CTL. We do not
-implement it (for now), but it might be worth implementing it as the
-question has been raised.
+On 12/26/23 05:12, Viresh Kumar wrote:
+> On 20-12-23, 11:03, Lukasz Luba wrote:
+>> There are device drivers which can modify voltage values for OPPs. It
+>> could be due to the chip binning and those drivers have specific chip
+>> knowledge about this. This adjustment can happen after Energy Model is
+>> registered, thus EM can have stale data about power.
+>>
+>> Introduce new API function which can be used by device driver which
+>> adjusted the voltage for OPPs. The implementation takes care about
+>> calculating needed internal details in the new EM table ('cost' field).
+>> It plugs in the new EM table to the framework so other subsystems would
+>> use the correct data.
+>>
+>> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+>> ---
+>>   drivers/opp/of.c       | 69 ++++++++++++++++++++++++++++++++++++++++++
+>>   include/linux/pm_opp.h |  6 ++++
+>>   2 files changed, 75 insertions(+)
+>>
+>> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+>> index 81fa27599d58..992434c0b711 100644
+>> --- a/drivers/opp/of.c
+>> +++ b/drivers/opp/of.c
+>> @@ -1596,3 +1596,72 @@ int dev_pm_opp_of_register_em(struct device *dev, struct cpumask *cpus)
+>>   	return ret;
+>>   }
+>>   EXPORT_SYMBOL_GPL(dev_pm_opp_of_register_em);
+>> +
+>> +/**
+>> + * dev_pm_opp_of_update_em() - Update Energy Model with new power values
+>> + * @dev		: Device for which an Energy Model has to be registered
+>> + *
+>> + * This uses the "dynamic-power-coefficient" devicetree property to calculate
+>> + * power values for EM. It uses the new adjusted voltage values known for OPPs
+>> + * which have changed after boot.
+>> + */
+>> +int dev_pm_opp_of_update_em(struct device *dev)
+> 
+> I don't see anything OPP or OF related in this function, I don't think it needs
+> to be part of the OPP core. You just want to reuse _get_power() I guess, which
+> can be exported then.
+> 
+> This should really be part of the EM core instead.
+> 
 
---=20
-With best wishes
-Dmitry
+Thank you for having a look at this. OK, that makes sense.
+When I finish the EM runtime modification core features and get them
+merged, I'll continue to work on this patch set. I'll try to follow
+your comment here and export that function (with a different name
+probably).
+
+Regards,
+Lukasz
