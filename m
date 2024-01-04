@@ -1,214 +1,256 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCEDA1F926
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 08:14:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE532031B;
+	Thu,  4 Jan 2024 08:14:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ehLT8o6h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F2E4C433C9
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Jan 2024 08:14:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704356081;
-	bh=jaE3szVj8MsgSxuSXcKLMpdQ+g8wxNLidI3HZVXMSME=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ehLT8o6hejxcx5mGGMVy8W5S0ZLxpHLPpMUMMbL/goXddDJ6V55fJFc2UW+ITCUeY
-	 UY/oddRCAMzoJvLnTweF/x4AX+Ysud1JOwZQkVYPCYp/9yrVIjoP18jjWtVhyXeLIj
-	 eXvPtnOQmyIL25B1dJpVyJrzyJuyA/mMziJxtYlwyuBar99Q+dc3bmKvllhfL7/iFe
-	 jOToFGtrc1yWPvbKfEQh6qwmcpIK29gRbndE3S480oCFYBESUnQG3Nq4c8QQDVGro/
-	 SrXFBR1sbz4r7G0prMR+cHrcXLucW3mlEZdnXUqi8QlQM3usxovJo0w/U8RkclJAMu
-	 wsnWC65ujJpUQ==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-555aa7fd668so291737a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 00:14:41 -0800 (PST)
-X-Gm-Message-State: AOJu0YwdEs15JUc8WyheuK8JbTsA3hVUi4oTE8nMJI7jhhEQe4jJR6mi
-	upIegUAbOGtYO2dIboq1ND4MNPmNxAOy8eDbLKk=
-X-Google-Smtp-Source: AGHT+IGmofhqQh3VQmtq0uihHErWzzBwYu85d9ONV1s6wEWx4GEUpDzZopd0NKZnV1IjSKshZFnRZmNHJpurrD1UujU=
-X-Received: by 2002:a17:906:4118:b0:a28:e5c9:79eb with SMTP id
- j24-20020a170906411800b00a28e5c979ebmr119219ejk.100.1704356079669; Thu, 04
- Jan 2024 00:14:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ZB/5N7iV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1704356094;
+	bh=ncd3XYdroNJ1ztYRtxUH+GhX1SePVlp2/xSXN9MvZ2g=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZB/5N7iVC4SLBbk6KhzT9dXGCjW4qDdrMHdOJLvYYiJAu/sIp1nme8mEyDmbyN+y4
+	 OT9fV4XkAav4hdMqQlLfaNJa/ClRbEPjI4Y17GBAzkcYjUrut25KgrGf9lPfS7kp+b
+	 rRLd538wVdHJxKCmQ8CjlQO5rstxaNWt/ufRWx8Q2W3ziygRC3672h/NgZx7Eein+0
+	 h0XseszQ8r2/xxxckwdfZJN73Vf8SDVcfWtqj05X55Tiu7g7W/EXMpyW3CaxP1ZDoD
+	 3dnz45z8Y0WS0g+nGXlvZ94m1mdC3iOfeG6YwmIfYU8C5avi0XDCAwsRb1DPaKgCvP
+	 g09xN8Cyun6bA==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: vignesh)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id D77A33780629;
+	Thu,  4 Jan 2024 08:14:48 +0000 (UTC)
+From: Vignesh Raman <vignesh.raman@collabora.com>
+To: linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org
+Cc: airlied@gmail.com,
+	daniel@ffwll.ch,
+	daniels@collabora.com,
+	helen.koike@collabora.com,
+	david.heidelberg@collabora.com,
+	guilherme.gallo@collabora.com,
+	sergi.blanch.torne@collabora.com,
+	robdclark@gmail.com,
+	quic_abhinavk@quicinc.com,
+	dmitry.baryshkov@linaro.org,
+	sean@poorly.run,
+	marijn.suijten@somainline.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] drm/ci: add sc7180-trogdor-kingoftown
+Date: Thu,  4 Jan 2024 13:44:35 +0530
+Message-Id: <20240104081435.1936059-1-vignesh.raman@collabora.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231231082955.16516-1-guoren@kernel.org> <20231231082955.16516-4-guoren@kernel.org>
- <20240102-81391283df04c430d76c0eb0@orel> <CAJF2gTQ7Oo8UKdPRs0GAAUsh9mDCgGucS8g8kuPzByaWVOtigw@mail.gmail.com>
- <ZZW5Y85OdibCu58h@LeoBras> <CAJF2gTTpi5A+9KP5EyH9qhD_fwuZrWpx6zdCJyG+iv0Ez5q-gw@mail.gmail.com>
- <ZZYsdyKx8kmoDBGB@LeoBras>
-In-Reply-To: <ZZYsdyKx8kmoDBGB@LeoBras>
-From: Guo Ren <guoren@kernel.org>
-Date: Thu, 4 Jan 2024 16:14:27 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTT8QBEKtKOpriF=c8Y3g5MmM23MZxN7JCa65MbKeKNOQ@mail.gmail.com>
-Message-ID: <CAJF2gTTT8QBEKtKOpriF=c8Y3g5MmM23MZxN7JCa65MbKeKNOQ@mail.gmail.com>
-Subject: Re: [PATCH V2 3/3] riscv: xchg: Prefetch the destination word for sc.w
-To: Leonardo Bras <leobras@redhat.com>
-Cc: Andrew Jones <ajones@ventanamicro.com>, paul.walmsley@sifive.com, palmer@dabbelt.com, 
-	panqinglin2020@iscas.ac.cn, bjorn@rivosinc.com, conor.dooley@microchip.com, 
-	peterz@infradead.org, keescook@chromium.org, wuwei2016@iscas.ac.cn, 
-	xiaoguang.xing@sophgo.com, chao.wei@sophgo.com, unicorn_wang@outlook.com, 
-	uwu@icenowy.me, jszhang@kernel.org, wefu@redhat.com, atishp@atishpatra.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Guo Ren <guoren@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 4, 2024 at 11:56=E2=80=AFAM Leonardo Bras <leobras@redhat.com> =
-wrote:
->
-> On Thu, Jan 04, 2024 at 09:24:40AM +0800, Guo Ren wrote:
-> > On Thu, Jan 4, 2024 at 3:45=E2=80=AFAM Leonardo Bras <leobras@redhat.co=
-m> wrote:
-> > >
-> > > On Wed, Jan 03, 2024 at 02:15:45PM +0800, Guo Ren wrote:
-> > > > On Tue, Jan 2, 2024 at 7:19=E2=80=AFPM Andrew Jones <ajones@ventana=
-micro.com> wrote:
-> > > > >
-> > > > > On Sun, Dec 31, 2023 at 03:29:53AM -0500, guoren@kernel.org wrote=
-:
-> > > > > > From: Guo Ren <guoren@linux.alibaba.com>
-> > > > > >
-> > > > > > The cost of changing a cacheline from shared to exclusive state=
- can be
-> > > > > > significant, especially when this is triggered by an exclusive =
-store,
-> > > > > > since it may result in having to retry the transaction.
-> > > > > >
-> > > > > > This patch makes use of prefetch.w to prefetch cachelines for w=
-rite
-> > > > > > prior to lr/sc loops when using the xchg_small atomic routine.
-> > > > > >
-> > > > > > This patch is inspired by commit: 0ea366f5e1b6 ("arm64: atomics=
-:
-> > > > > > prefetch the destination word for write prior to stxr").
-> > > > > >
-> > > > > > Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-> > > > > > Signed-off-by: Guo Ren <guoren@kernel.org>
-> > > > > > ---
-> > > > > >  arch/riscv/include/asm/cmpxchg.h | 4 +++-
-> > > > > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > > > > >
-> > > > > > diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/incl=
-ude/asm/cmpxchg.h
-> > > > > > index 26cea2395aae..d7b9d7951f08 100644
-> > > > > > --- a/arch/riscv/include/asm/cmpxchg.h
-> > > > > > +++ b/arch/riscv/include/asm/cmpxchg.h
-> > > > > > @@ -10,6 +10,7 @@
-> > > > > >
-> > > > > >  #include <asm/barrier.h>
-> > > > > >  #include <asm/fence.h>
-> > > > > > +#include <asm/processor.h>
-> > > > > >
-> > > > > >  #define __arch_xchg_masked(prepend, append, r, p, n)          =
-       \
-> > > > >
-> > > > > Are you sure this is based on v6.7-rc7? Because I don't see this =
-macro.
-> > > > Oh, it is based on Leobras' patches. I would remove it in the next =
-of version.
-> > >
-> > > I would say this next :)
-> > Thx for the grammar correction.
->
-> Oh, I was not intending to correct grammar.
-> I just meant the next thing I would mention is that it was based on top o=
-f
-> my patchset instead of v6.7-rc7:
->
-> >
-> > >
-> > > >
-> > > > >
-> > > > > >  ({                                                            =
-       \
-> > > > > > @@ -23,6 +24,7 @@
-> > > > > >                                                                =
-       \
-> > > > > >       __asm__ __volatile__ (                                   =
-       \
-> > > > > >              prepend                                           =
-       \
-> > > > > > +            PREFETCHW_ASM(%5)                                 =
-       \
-> > > > > >              "0:      lr.w %0, %2\n"                           =
-       \
-> > > > > >              "        and  %1, %0, %z4\n"                      =
-       \
-> > > > > >              "        or   %1, %1, %z3\n"                      =
-       \
-> > > > > > @@ -30,7 +32,7 @@
-> > > > > >              "        bnez %1, 0b\n"                           =
-       \
-> > > > > >              append                                            =
-       \
-> > > > > >              : "=3D&r" (__retx), "=3D&r" (__rc), "+A" (*(__ptr3=
-2b))       \
-> > > > > > -            : "rJ" (__newx), "rJ" (~__mask)                   =
-       \
-> > > > > > +            : "rJ" (__newx), "rJ" (~__mask), "rJ" (__ptr32b)  =
-       \
-> > > > >
-> > > > > I'm pretty sure we don't want to allow the J constraint for __ptr=
-32b.
-> > > > >
-> > > > > >              : "memory");                                      =
-       \
-> > > > > >                                                                =
-       \
-> > > > > >       r =3D (__typeof__(*(p)))((__retx & __mask) >> __s);      =
-         \
-> > > > > > --
-> > > > > > 2.40.1
-> > > > > >
-> > > > >
-> > > > > Thanks,
-> > > > > drew
-> > > >
-> > > >
-> > > >
-> > > > --
-> > > > Best Regards
-> > > >  Guo Ren
-> > > >
-> > >
-> > > Nice patch :)
-> > > Any reason it's not needed in __arch_cmpxchg_masked(), and __arch_cmp=
-xchg() ?
-> > CAS is a conditional AMO, unlike xchg (Stand AMO). Arm64 is wrong, or
-> > they have a problem with the hardware.
->
-> Sorry, I was unable to fully understand the reason here.
->
-> You suggest that the PREFETCH.W was inserted on xchg_masked because it wi=
-ll
-> always switch the variable (no compare, blind CAS), but not on cmpxchg.
->
-> Is this because cmpxchg will depend on a compare, and thus it does not
-> garantee a write? so it would be unwise to always prefetch cacheline
-Yes, it has a comparison, so a store may not exist there.
+Add job that executes the IGT test suite for sc7180-trogdor-kingoftown.
+This commit also updates xfails for sc7180-trogdor-lazor-limozeen.
 
-> exclusiveness for this cpu, where shared state would be enough.
-> Is that correct?
-Yes, exclusiveness would invalidate other harts' cache lines.
+Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
+---
 
->
-> Thanks!
-> Leo
->
->
-> >
-> > >
-> > > Thanks!
-> > > Leo
-> > >
-> >
-> >
-> > --
-> > Best Regards
-> >  Guo Ren
-> >
->
+See pipeline: https://gitlab.freedesktop.org/vigneshraman/linux/-/pipelines/1069934
 
+---
+ drivers/gpu/drm/ci/build.sh                   |  1 +
+ drivers/gpu/drm/ci/test.yml                   | 25 ++++++++++++----
+ .../gpu/drm/ci/xfails/msm-sc7180-fails.txt    | 30 -------------------
+ .../gpu/drm/ci/xfails/msm-sc7180-flakes.txt   | 17 -----------
+ .../gpu/drm/ci/xfails/msm-sc7180-skips.txt    |  7 -----
+ .../msm-sc7180-trogdor-kingoftown-fails.txt   | 17 +++++++++++
+ ...sm-sc7180-trogdor-lazor-limozeen-fails.txt | 17 +++++++++++
+ 7 files changed, 55 insertions(+), 59 deletions(-)
+ delete mode 100644 drivers/gpu/drm/ci/xfails/msm-sc7180-fails.txt
+ delete mode 100644 drivers/gpu/drm/ci/xfails/msm-sc7180-flakes.txt
+ delete mode 100644 drivers/gpu/drm/ci/xfails/msm-sc7180-skips.txt
+ create mode 100644 drivers/gpu/drm/ci/xfails/msm-sc7180-trogdor-kingoftown-fails.txt
+ create mode 100644 drivers/gpu/drm/ci/xfails/msm-sc7180-trogdor-lazor-limozeen-fails.txt
 
---=20
-Best Regards
- Guo Ren
+diff --git a/drivers/gpu/drm/ci/build.sh b/drivers/gpu/drm/ci/build.sh
+index 97ff43759b91..331a61e0d25a 100644
+--- a/drivers/gpu/drm/ci/build.sh
++++ b/drivers/gpu/drm/ci/build.sh
+@@ -26,6 +26,7 @@ if [[ "$KERNEL_ARCH" = "arm64" ]]; then
+     DEVICE_TREES+=" arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-juniper-sku16.dtb"
+     DEVICE_TREES+=" arch/arm64/boot/dts/mediatek/mt8192-asurada-spherion-r0.dtb"
+     DEVICE_TREES+=" arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-nots-r5.dtb"
++    DEVICE_TREES+=" arch/arm64/boot/dts/qcom/sc7180-trogdor-kingoftown.dtb"
+ elif [[ "$KERNEL_ARCH" = "arm" ]]; then
+     GCC_ARCH="arm-linux-gnueabihf"
+     DEBIAN_ARCH="armhf"
+diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
+index a079f3632a95..0c7920c0254d 100644
+--- a/drivers/gpu/drm/ci/test.yml
++++ b/drivers/gpu/drm/ci/test.yml
+@@ -82,20 +82,35 @@
+   tags:
+     - $RUNNER_TAG
+ 
+-msm:sc7180:
++.msm-sc7180:
+   extends:
+     - .lava-igt:arm64
+   stage: msm
+-  parallel: 4
+   variables:
+     DRIVER_NAME: msm
+-    DEVICE_TYPE: sc7180-trogdor-lazor-limozeen
+-    DTB: sc7180-trogdor-lazor-limozeen-nots-r5
+     BOOT_METHOD: depthcharge
+     KERNEL_IMAGE_TYPE: ""
+-    GPU_VERSION: sc7180
++
++msm:sc7180-trogdor-lazor-limozeen:
++  extends:
++    - .msm-sc7180
++  parallel: 4
++  variables:
++    DEVICE_TYPE: sc7180-trogdor-lazor-limozeen
++    DTB: sc7180-trogdor-lazor-limozeen-nots-r5
++    GPU_VERSION: ${DEVICE_TYPE}
+     RUNNER_TAG: mesa-ci-x86-64-lava-sc7180-trogdor-lazor-limozeen
+ 
++msm:sc7180-trogdor-kingoftown:
++  extends:
++    - .msm-sc7180
++  parallel: 6
++  variables:
++    DEVICE_TYPE: sc7180-trogdor-kingoftown
++    DTB: sc7180-trogdor-kingoftown
++    GPU_VERSION: ${DEVICE_TYPE}
++    RUNNER_TAG: mesa-ci-x86-64-lava-sc7180-trogdor-kingoftown
++
+ msm:apq8016:
+   extends:
+     - .baremetal-igt-arm64
+diff --git a/drivers/gpu/drm/ci/xfails/msm-sc7180-fails.txt b/drivers/gpu/drm/ci/xfails/msm-sc7180-fails.txt
+deleted file mode 100644
+index f71166a57731..000000000000
+--- a/drivers/gpu/drm/ci/xfails/msm-sc7180-fails.txt
++++ /dev/null
+@@ -1,30 +0,0 @@
+-kms_color@ctm-0-25,Fail
+-kms_color@ctm-0-50,Fail
+-kms_color@ctm-0-75,Fail
+-kms_color@ctm-blue-to-red,Fail
+-kms_color@ctm-green-to-red,Fail
+-kms_color@ctm-negative,Fail
+-kms_color@ctm-red-to-blue,Fail
+-kms_color@ctm-signed,Fail
+-kms_cursor_legacy@cursor-vs-flip-toggle,Fail
+-kms_cursor_legacy@cursor-vs-flip-varying-size,Fail
+-kms_cursor_legacy@cursorA-vs-flipA-atomic-transitions,Crash
+-kms_flip@flip-vs-modeset-vs-hang,Fail
+-kms_flip@flip-vs-panning-vs-hang,Fail
+-kms_pipe_crc_basic@compare-crc-sanitycheck-nv12,Fail
+-kms_plane_alpha_blend@alpha-7efc,Fail
+-kms_plane_alpha_blend@coverage-7efc,Fail
+-kms_plane_alpha_blend@coverage-vs-premult-vs-constant,Fail
+-kms_plane_alpha_blend@pipe-A-alpha-7efc,Fail
+-kms_plane_alpha_blend@pipe-A-coverage-7efc,Fail
+-kms_plane_alpha_blend@pipe-A-coverage-vs-premult-vs-constant,Fail
+-kms_plane_alpha_blend@pipe-B-alpha-7efc,Fail
+-kms_plane_alpha_blend@pipe-B-alpha-basic,Fail
+-kms_plane_alpha_blend@pipe-B-alpha-opaque-fb,Fail
+-kms_plane_alpha_blend@pipe-B-constant-alpha-max,Fail
+-kms_plane_alpha_blend@pipe-B-constant-alpha-mid,Fail
+-kms_plane_alpha_blend@pipe-B-coverage-7efc,Fail
+-kms_plane_alpha_blend@pipe-B-coverage-vs-premult-vs-constant,Fail
+-kms_rmfb@close-fd,Fail
+-kms_universal_plane@disable-primary-vs-flip-pipe-b,Fail
+-kms_universal_plane@universal-plane-pipe-B-sanity,Fail
+diff --git a/drivers/gpu/drm/ci/xfails/msm-sc7180-flakes.txt b/drivers/gpu/drm/ci/xfails/msm-sc7180-flakes.txt
+deleted file mode 100644
+index 04730044ed12..000000000000
+--- a/drivers/gpu/drm/ci/xfails/msm-sc7180-flakes.txt
++++ /dev/null
+@@ -1,17 +0,0 @@
+-kms_color@ctm-0-25
+-kms_color@ctm-0-50
+-kms_color@ctm-0-75
+-kms_color@ctm-blue-to-red
+-kms_color@ctm-green-to-red
+-kms_color@ctm-negative
+-kms_color@ctm-red-to-blue
+-kms_color@ctm-signed
+-kms_flip@flip-vs-modeset-vs-hang
+-kms_flip@flip-vs-panning-vs-hang
+-kms_plane@pixel-format
+-kms_plane@pixel-format-source-clamping
+-kms_plane@plane-position-covered
+-kms_plane@plane-position-hole
+-kms_plane@plane-position-hole-dpms
+-kms_writeback@writeback-fb-id
+-kms_writeback@writeback-invalid-parameters
+diff --git a/drivers/gpu/drm/ci/xfails/msm-sc7180-skips.txt b/drivers/gpu/drm/ci/xfails/msm-sc7180-skips.txt
+deleted file mode 100644
+index e59a2fddfde0..000000000000
+--- a/drivers/gpu/drm/ci/xfails/msm-sc7180-skips.txt
++++ /dev/null
+@@ -1,7 +0,0 @@
+-# Suspend to RAM seems to be broken on this machine
+-.*suspend.*
+-
+-# Test incorrectly assumes that CTM support implies gamma/degamma
+-# LUT support.  None of the subtests handle the case of only having
+-# CTM support
+-#kms_color.*
+diff --git a/drivers/gpu/drm/ci/xfails/msm-sc7180-trogdor-kingoftown-fails.txt b/drivers/gpu/drm/ci/xfails/msm-sc7180-trogdor-kingoftown-fails.txt
+new file mode 100644
+index 000000000000..7e4d8744fcc6
+--- /dev/null
++++ b/drivers/gpu/drm/ci/xfails/msm-sc7180-trogdor-kingoftown-fails.txt
+@@ -0,0 +1,17 @@
++kms_color@ctm-0-25,Fail
++kms_color@ctm-0-50,Fail
++kms_color@ctm-0-75,Fail
++kms_color@ctm-blue-to-red,Fail
++kms_color@ctm-green-to-red,Fail
++kms_color@ctm-negative,Fail
++kms_color@ctm-red-to-blue,Fail
++kms_color@ctm-signed,Fail
++kms_cursor_legacy@cursor-vs-flip-toggle,Fail
++kms_cursor_legacy@cursor-vs-flip-varying-size,Fail
++kms_flip@flip-vs-modeset-vs-hang,Fail
++kms_flip@flip-vs-panning-vs-hang,Fail
++kms_pipe_crc_basic@compare-crc-sanitycheck-nv12,Fail
++kms_plane_alpha_blend@alpha-7efc,Fail
++kms_plane_alpha_blend@coverage-7efc,Fail
++kms_plane_alpha_blend@coverage-vs-premult-vs-constant,Fail
++kms_rmfb@close-fd,Fail
+diff --git a/drivers/gpu/drm/ci/xfails/msm-sc7180-trogdor-lazor-limozeen-fails.txt b/drivers/gpu/drm/ci/xfails/msm-sc7180-trogdor-lazor-limozeen-fails.txt
+new file mode 100644
+index 000000000000..7e4d8744fcc6
+--- /dev/null
++++ b/drivers/gpu/drm/ci/xfails/msm-sc7180-trogdor-lazor-limozeen-fails.txt
+@@ -0,0 +1,17 @@
++kms_color@ctm-0-25,Fail
++kms_color@ctm-0-50,Fail
++kms_color@ctm-0-75,Fail
++kms_color@ctm-blue-to-red,Fail
++kms_color@ctm-green-to-red,Fail
++kms_color@ctm-negative,Fail
++kms_color@ctm-red-to-blue,Fail
++kms_color@ctm-signed,Fail
++kms_cursor_legacy@cursor-vs-flip-toggle,Fail
++kms_cursor_legacy@cursor-vs-flip-varying-size,Fail
++kms_flip@flip-vs-modeset-vs-hang,Fail
++kms_flip@flip-vs-panning-vs-hang,Fail
++kms_pipe_crc_basic@compare-crc-sanitycheck-nv12,Fail
++kms_plane_alpha_blend@alpha-7efc,Fail
++kms_plane_alpha_blend@coverage-7efc,Fail
++kms_plane_alpha_blend@coverage-vs-premult-vs-constant,Fail
++kms_rmfb@close-fd,Fail
+-- 
+2.40.1
+
