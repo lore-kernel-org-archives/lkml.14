@@ -1,69 +1,87 @@
-Received: from mail-m127150.qiye.163.com (mail-m127150.qiye.163.com [115.236.127.150])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D042420E;
-	Fri,  5 Jan 2024 08:25:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sangfor.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sangfor.com.cn
-Received: from [172.23.69.7] (unknown [121.32.254.147])
-	by mail-m12750.qiye.163.com (Hmail) with ESMTPA id 594FEF20615;
-	Fri,  5 Jan 2024 16:15:19 +0800 (CST)
-Message-ID: <62db1a02-41b8-44b0-960b-6d6f5bec5d19@sangfor.com.cn>
-Date: Fri, 5 Jan 2024 16:15:18 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6BB121A12;
+	Fri,  5 Jan 2024 08:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NcFuCEyh"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5D7BBC43391;
+	Fri,  5 Jan 2024 08:27:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704443225;
+	bh=71uc0hK9NDOdEhHgFTZarT58L7adnWBofG0Y0tpQY4Q=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=NcFuCEyh+prk2fzKt+wDxEd4g9CaqT+SUEmJN6lIgMXxBfamoBotw7SWeFr/qT1qz
+	 zoWoWDG8AYA2oo9XA+6mCm3PNxF1xrX7QglLDOVrDneumceTdK/W/3ikMRFeDIhPgK
+	 DqOLgVenomd/xYaRsi7LUwrHL3ya3DMk20p5TwXXmr8g/9b8p+UmYLz+9+WE53lXkl
+	 LdxOEzTIv4y8MBU29uTsTP0t0t+EvxjGUnJ8YVdhUZyu4hd73l6RXGV8+VlmUS9xrF
+	 tZNqGTkJT2OP/Nx3CN5SokCKJpPqF50XyfPo2bHDB4iQYHxRFbq5vUAwAI2agd2Dh1
+	 +3kx3auLxtAPQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CE4C3DA6E;
+	Fri,  5 Jan 2024 08:27:05 +0000 (UTC)
+From: Christoph Winklhofer via B4 Relay
+ <devnull+cj.winklhofer.gmail.com@kernel.org>
+Date: Fri, 05 Jan 2024 09:26:43 +0100
+Subject: [PATCH v3 2/3] dt-bindings: serial: allow onewire as child node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] RDMA/device: Fix a race between mad_client and cm_client
- init
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: leon@kernel.org, wenglianfa@huawei.com, gustavoars@kernel.org,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- Shifeng Li <lishifeng1992@126.com>, "Ding, Hui" <dinghui@sangfor.com.cn>
-References: <20240102034335.34842-1-lishifeng@sangfor.com.cn>
- <20240103184804.GB50608@ziepe.ca>
- <80cac9fd-7fed-403e-8889-78e2fc7a49b0@sangfor.com.cn>
- <20240104123728.GC50608@ziepe.ca>
-From: Shifeng Li <lishifeng@sangfor.com.cn>
-In-Reply-To: <20240104123728.GC50608@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDQhhIVk8eQxhJHh5MTU8aS1UTARMWGhIXJBQOD1
-	lXWRgSC1lBWUpJSlVISVVJTk9VSk9MWVdZFhoPEhUdFFlBWU9LSFVKTU9JTE5VSktLVUpCS0tZBg
-	++
-X-HM-Tid: 0a8cd8b0e062b21dkuuu594fef20615
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mkk6Nyo*TDwoIj80Kh8sECgc
-	OiMwFC1VSlVKTEtPT09JTklLSU9JVTMWGhIXVRcSCBMSHR4VHDsIGhUcHRQJVRgUFlUYFUVZV1kS
-	C1lBWUpJSlVISVVJTk9VSk9MWVdZCAFZQUlPT083Bg++
+Message-Id: <20240105-w1-uart-v3-2-8687093b2e76@gmail.com>
+References: <20240105-w1-uart-v3-0-8687093b2e76@gmail.com>
+In-Reply-To: <20240105-w1-uart-v3-0-8687093b2e76@gmail.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+ Christoph Winklhofer <cj.winklhofer@gmail.com>, 
+ Rob Herring <robh@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jiri Slaby <jirislaby@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-serial@vger.kernel.org, linux-doc@vger.kernel.org
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1704443222; l=827;
+ i=cj.winklhofer@gmail.com; s=20240104; h=from:subject:message-id;
+ bh=BPcWb7esDB40/mUZFKo7VPDltCBO7/vmdkKQuHI4X3c=;
+ b=ay2ffRxDQFeORRmb/dFUU1+2tmYdubWI25/2dywCsok6JsxpAOUY/+GGh2vft0EDpfYIOh9CZ
+ BrLamM8Za7rBjBIbMVgBG0MBgYYvd6Pdyqxpvz1QltICXRCtXrP9SU1
+X-Developer-Key: i=cj.winklhofer@gmail.com; a=ed25519;
+ pk=lgjGjOt7hFKJT9UXhgUyrdthxvZ7DJ5F1U/7d9qdAsk=
+X-Endpoint-Received:
+ by B4 Relay for cj.winklhofer@gmail.com/20240104 with auth_id=111
+X-Original-From: Christoph Winklhofer <cj.winklhofer@gmail.com>
+Reply-To: <cj.winklhofer@gmail.com>
 
-On 2024/1/4 20:37, Jason Gunthorpe wrote:
-> On Thu, Jan 04, 2024 at 02:48:14PM +0800, Shifeng Li wrote:
-> 
->> The root cause is that mad_client and cm_client may init concurrently
->> when devices_rwsem write semaphore is downgraded in enable_device_and_get() like:
-> 
-> That can't be true, the module loader infrastructue ensures those two
-> things are sequential.
-> 
+From: Christoph Winklhofer <cj.winklhofer@gmail.com>
 
-I'm a bit confused how the module loader infrastructue ensures that mad_client.add() and
-cm_client.add() are sequential. Could you explain in more detail please?
+The UART 1-Wire bus utilizes the Serial Device Bus to create the 1-wire
+timing patterns.
 
-We know that the ib_cm driver and mlx5_ib driver can load concurrently.
+Signed-off-by: Christoph Winklhofer <cj.winklhofer@gmail.com>
+---
+ Documentation/devicetree/bindings/serial/serial.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks.
+diff --git a/Documentation/devicetree/bindings/serial/serial.yaml b/Documentation/devicetree/bindings/serial/serial.yaml
+index 65804ca274ae..ffc9198ae214 100644
+--- a/Documentation/devicetree/bindings/serial/serial.yaml
++++ b/Documentation/devicetree/bindings/serial/serial.yaml
+@@ -88,7 +88,7 @@ properties:
+       TX FIFO threshold configuration (in bytes).
+ 
+ patternProperties:
+-  "^(bluetooth|bluetooth-gnss|gnss|gps|mcu)$":
++  "^(bluetooth|bluetooth-gnss|gnss|gps|mcu|onewire)$":
+     if:
+       type: object
+     then:
 
-> You are trying to say that the post-client fixup stuff will still see
-> the DEVICE_REGISTERED before it reaches the clients_rwsem lock?
-> 
-> That probably just says the clients_rwsem should be obtained before
-> changing the DEVICE_STATE too :\
-> 
-> Jason
-> 
+-- 
+2.43.0
 
