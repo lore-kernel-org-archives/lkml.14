@@ -1,127 +1,108 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3452E836
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 14:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3400C2DF66;
+	Fri,  5 Jan 2024 14:48:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="LGNHOJge"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id F2E4140E0177;
-	Fri,  5 Jan 2024 14:46:17 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id tHlnDYwKLLM7; Fri,  5 Jan 2024 14:46:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1704465975; bh=1xobjEfu3Q6pBw7OE9qufzNffwspDBkmg4vDh1PWMD8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LGNHOJgeSkPF0KN5PxImngwDgg8wIFigBTnju7sl55PdpD25b+LIJ+Yt2k7pu06tM
-	 tWqNXou92CWNFq/oOvOJMEsacIanhXff4xjfu8QqEGa2C0vTIeXdXpZtIV50CLYJvw
-	 0UPmbItIabRpO3hxDNCmxiQ2kzojnaUXXD67BlFItBNnsTIfCtqsOaSusXzE8yvhGe
-	 l/hcBVaBcnHubUUpIvsireim2J3uTWC6YKYlHF0ELQYlkvHcAnVPVoiWkNqCt2KiRw
-	 KxP7pluBvKoY3oNOatlzkIDNMIHYG+DKCTmEq8CKYFimCR09McZtcvavS8cdZRtDde
-	 xgZG0V8B/qws4r7mB5wHWj9g3P1b+MmWOgBIP3s1BYIb7EaBEOHoqNDmOcgrL3YURg
-	 eW4I/OBkIp0vMn3M5VlhOurPZklpy0K94oivRuhNGEFVEgtGbHR66YTV9FI8JzS1bW
-	 8bOPYwRrWVe3+QN9+Qk8lNb11snagp6NuEJWpIOl90xBF1MZV+RXKCIh41Zkmai8qp
-	 F+qpdChdoCoqWgqmJMbMFtdI56pZN3yRj+aiXW03XMjqunBqaZ72FaHX+6sRgfPZjS
-	 BH472TxGTIwIAqNZlgYHeUC4gZFmIMRbSC6VGYDVj6ROqrRoMsjI103e+fztROYFjI
-	 M5MtcjIGXnmD5WgOrmfw3aeA=
-Received: from zn.tnic (pd9530f8c.dip0.t-ipconnect.de [217.83.15.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9B89440E0196;
-	Fri,  5 Jan 2024 14:46:03 +0000 (UTC)
-Date: Fri, 5 Jan 2024 15:45:56 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Tanzir Hasan <tanzirh@google.com>, Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-	Kees Cook <keescook@chromium.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Andy Shevchenko <andy@kernel.org>
-Subject: Re: [PATCH] x86/vdso: shrink vdso/extable.i via IWYU
-Message-ID: <20240105144556.GBZZgWJOjq6Ekmps6Z@fat_crate.local>
-References: <20231228-extable-v1-1-32a18c66b440@google.com>
- <20231228212511.GCZY3nt3gKI+aDvSF1@fat_crate.local>
- <CAE-cH4rEWU-+ovwo8_-i3b2F8pK17kORJ3gV5tnjnUpRJA+B0Q@mail.gmail.com>
- <20231229093942.GBZY6T3knaGKpeRA9a@fat_crate.local>
- <CAKwvOd=aSQq3mcxGe-csNcygFWCbq03CPYFyc5DhjyvL_qYPAQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YTuBahhA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704466101; x=1736002101;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=RxEU85iqOfByUyrJYPVfCpaU9ks1B0mopNfPQI1Vdnk=;
+  b=YTuBahhAoSxEy8MdvLSuFQT7MIokQELSURlE3Dlnb6Y0nY7lhx2Wk1gi
+   lUJyzOEgRfy8UpFVLfBEO7fHU3og5H6Z+HgPEIgUIazD9VcFUrcosTaJO
+   H/I2qXGFjIV5tENXmhF01MxUbGGRfIc3lq2TuAuF1OGkIeNJ+EPd63zAE
+   cTs6KZBAfrSUzZXtJi40FERz6akdWDDiTQtJ4r6f9h57XmirGE8hCYZn0
+   LJs+nYxurgQZShDQrKJrAsD2c4CEgBUtfcTVvqpZengjNiUUmiPuI2We+
+   uKskhAcIAY/hNJQgEnjbXjfmPPOreITiFqOquyhu+/46mzCkfICj6of2R
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10944"; a="461819331"
+X-IronPort-AV: E=Sophos;i="6.04,334,1695711600"; 
+   d="scan'208";a="461819331"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 06:48:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.04,334,1695711600"; 
+   d="scan'208";a="15259927"
+Received: from gchung-mobl.gar.corp.intel.com (HELO hschroed-mobl1.ger.corp.intel.com) ([10.252.52.104])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 06:48:19 -0800
+Date: Fri, 5 Jan 2024 16:48:17 +0200 (EET)
+From: =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: lizhe <sensor1010@163.com>
+cc: Jiri Slaby <jirislaby@kernel.org>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    linux-serial <linux-serial@vger.kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re:Re: [PATCH v6] serial: linflexuart: Remove redundant uart type
+ assignment
+In-Reply-To: <7a49d3a4.1e16.18cd8564671.Coremail.sensor1010@163.com>
+Message-ID: <ee52b724-799f-1be5-b455-8e82aba55ee2@linux.intel.com>
+References: <20230105170437.4437-1-sensor1010@163.com> <67a7681a-ca4a-0ac7-97b6-2c7db8f2bb3c@kernel.org> <7a49d3a4.1e16.18cd8564671.Coremail.sensor1010@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKwvOd=aSQq3mcxGe-csNcygFWCbq03CPYFyc5DhjyvL_qYPAQ@mail.gmail.com>
+Content-Type: multipart/mixed; boundary="8323329-1854983850-1704466100=:1746"
 
-On Wed, Jan 03, 2024 at 11:36:35AM -0800, Nick Desaulniers wrote:
-> By being more precise in what's necessary via making more specific use
-> of includes (making "indirect" includes into "direct" includes) in the
-> .c files, it will allow us to more easily refactor the header files
-> themselves.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I know, but you have to realize that header files are not a static thing
-- we do "refactor" them all the time. So it's not like we'll refactor
-them and they'll be done. No, we'll refactor them again later.
+--8323329-1854983850-1704466100=:1746
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-> And yes, these inclusion lists will change over time.  As you say
-> below, they can be cleaned up again every couple of releases.  Though
-> right now most files have never been cleaned up at all.
+On Fri, 5 Jan 2024, lizhe wrote:
 
-Yap, the need for some tool or facility to keep include files proper and
-optimal is indisputable. There's a reason it is called the "Include
-Hell".
-
-> Over time, they will add up. But not if we reject the patches as
-> unnecessary churn.
-
-There's the other side of that coin: if we keep applying those, it'll
-turn into a never-ending stream of silly fixes. Like spellchecking and
-whitespace cleanups. And maintainers will start ignoring them.
-
-> Maybe the overall numbers are interesting, but landing one patch that
-> updates numerous .c files' inclusion lists seems error prone.  I
-> suspect it's more likely that a more incremental approach of smaller
-> patches allows progress if there are any issues; a build
-> failure/mistake doesn't block the whole thing from landing.
+> HI，all
 > 
-> Overall numbers can also be collected after the fact.
-
-You could do a single patch *set* and say, before and after, we get
-these improvements. And the whole set goes in in one fell swoop.
-
-> > And then do it
-> > again in a couple of releases, when it becomes necessary again.
+>        How should I wirte these comments ? please help me, 
+>        i am not sure how to properly write these comments, 
+>        i want to merge this patch into the mainline
 > 
-> That's the use case I had in mind.  Though I suspect the initial run
-> of this tooling will result in the most changes, as some files in tree
-> are hardly touched between releases. For those, I don't expect any
-> automated tooling to be churning those files after the initial
-> cleaning.
+> 
+> 
+> 
+> 
+> 
+> At 2023-01-06 15:16:56, "Jiri Slaby" <jirislaby@kernel.org> wrote:
+> >On 05. 01. 23, 18:04, 李哲 wrote:
+> >> in linflex_config_port() the member variable type will be
+> >> assigned again. see linflex_connfig_port()
+> >
+> >I wrote to v5:
+> >Please use capitals when you start a sentence. And periods at the ends 
+> >of them.
+> >> Signed-off-by: 李哲 <sensor1010@163.com>
+> >
+> >
+> >> V4 -> V5: Link: https://lore.kernel.org/all/ddcf396b-7b91-00f3-8c16-7de5d
+> c891aef@kernel.org/
+> >> V3 -> V4: Link: https://lore.kernel.org/all/2f726128-29c-b7dd-ad8-f8b536f
+> be5f@linux.intel.com/
+> >> V2 -> V3: Link: https://lore.kernel.org/all/8f433e5-fb46-d3b8-431b-4bddcc
+> 938f6b@linux.intel.com/
+> >> V1 -> V2: Link: https://lore.kernel.org/all/1c33a2af-cd0d-cdde-5bc7-49b41
+> 8665784@kernel.org/
+> >
+> >This is not the proper way. PLease see:
+> >https://www.kernel.org/doc/html/latest/process/submitting-patches.html#the-
+> canonical-patch-format
 
-That's why I said "when it becomes necessary". :)
+For this you need to spell out the changes you made between versions.
 
-> Yeah, the idea is that the tooling results in repeatable processes by
-> others.  One could imagine build bots running this, or integrating it
-> into checkpatch, or git presubmit hooks, or w/e.
+E.g.,
 
-Yap, that would be best. Because it'll stop from the whole include hell
-from even ensuing in the first place.
+v6:
+- Used Chinese letters for From and Signed-off-by
 
-Thx.
 
 -- 
-Regards/Gruss,
-    Boris.
+ i.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+--8323329-1854983850-1704466100=:1746--
