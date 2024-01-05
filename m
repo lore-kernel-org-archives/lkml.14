@@ -1,16 +1,41 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E21222F04
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 09:20:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 995B3C15;
-	Fri,  5 Jan 2024 01:21:30 -0800 (PST)
-Received: from [10.57.44.155] (unknown [10.57.44.155])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73C3A3F7A6;
-	Fri,  5 Jan 2024 01:20:40 -0800 (PST)
-Message-ID: <41956737-1f6c-4b53-b910-c37355b67480@arm.com>
-Date: Fri, 5 Jan 2024 09:20:39 +0000
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968E0249E1
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 09:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="TvqDL3NS"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 4052xVtj026982;
+	Fri, 5 Jan 2024 10:21:10 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=vW8CYyGIP/vC0L2YTygi0W0H7YOr9Bs1QNabt8ZBU1M=; b=Tv
+	qDL3NSqwEnMohCzDKfiJx/4bDSTntsHCmJ93nwH9C+miyfsS9+R9rbUPshYJtqX5
+	LPD0N2PGDrqjjg/XxQbBx/BGH5+SfgNjOvlHRAZmSDYKDDD9agRoJxf1WQFWGemP
+	bflaXuetxu030U1SxNqX4Wo2V66XtPgnYpiydlRl4UkV41/Jm8b9wDP4pK233w0h
+	ySbV4rDlpZsu67A4bp03GO5hR1yCZQe3XjWVm3+sucXT7r6ehFChl+GD5ZgttqCU
+	VVuoblEAcqoHXRzLfGDAh8i9APGuDKwjlS5d6QqV5ZTrOLJF5HfI4WIamAX0cp78
+	9Y/TxhvmDDQPmueDN8Iw==
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ve9fd19g7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 05 Jan 2024 10:21:10 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 978ED10002A;
+	Fri,  5 Jan 2024 10:21:09 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 830EE21861F;
+	Fri,  5 Jan 2024 10:21:09 +0100 (CET)
+Received: from [10.252.5.254] (10.252.5.254) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 5 Jan
+ 2024 10:21:09 +0100
+Message-ID: <76b4dfd8-f8c2-41f1-96df-539b168f9e80@foss.st.com>
+Date: Fri, 5 Jan 2024 10:21:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -18,114 +43,288 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/7] arm64: KVM: Add interface to set guest value for
- TRFCR register
-Content-Language: en-GB
-To: James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- broonie@kernel.org, maz@kernel.org, acme@kernel.org
-Cc: Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>,
- Zenghui Yu <yuzenghui@huawei.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>, Rob Herring
- <robh@kernel.org>, Miguel Luis <miguel.luis@oracle.com>,
- Jintack Lim <jintack.lim@linaro.org>, Ard Biesheuvel <ardb@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>,
- Kalesh Singh <kaleshsingh@google.com>, Quentin Perret <qperret@google.com>,
- Vincent Donnefort <vdonnefort@google.com>, Fuad Tabba <tabba@google.com>,
- Kristina Martsenko <kristina.martsenko@arm.com>,
- Akihiko Odaki <akihiko.odaki@daynix.com>, Joey Gouly <joey.gouly@arm.com>,
- Jing Zhang <jingzhangos@google.com>, linux-kernel@vger.kernel.org
-References: <20240104162714.1062610-1-james.clark@arm.com>
- <20240104162714.1062610-6-james.clark@arm.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20240104162714.1062610-6-james.clark@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2] drm/stm: Avoid use-after-free issues with crtc and
+ plane
+Content-Language: en-US
+To: Katya Orlova <e.orlova@ispras.ru>
+CC: Yannick Fertre <yannick.fertre@foss.st.com>,
+        Philippe Cornu
+	<philippe.cornu@foss.st.com>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter
+	<daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre
+ Torgue <alexandre.torgue@foss.st.com>,
+        Philipp Zabel
+	<p.zabel@pengutronix.de>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <lvc-project@linuxtesting.org>
+References: <20231124100415.21713-1-e.orlova@ispras.ru>
+From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
+In-Reply-To: <20231124100415.21713-1-e.orlova@ispras.ru>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-05_04,2024-01-05_01,2023-05-22_02
 
-On 04/01/2024 16:27, James Clark wrote:
-> Add an interface for the Coresight driver to use to set the value of the
-> TRFCR register for the guest. This register controls the exclude
-> settings for trace at different exception levels, and is used to honor
-> the exclude_host and exclude_guest parameters from the Perf session.
-> This will be used to later write TRFCR_EL1 on nVHE at guest switch. For
-> VHE, the host trace is controlled by TRFCR_EL2 and thus we can write to
-> the TRFCR_EL1 immediately. Because guest writes to the register are
-> trapped, the value will persist and can't be modified.
-> 
-> Signed-off-by: James Clark <james.clark@arm.com>
+
+On 11/24/23 11:04, Katya Orlova wrote:
+> ltdc_load() calls functions drm_crtc_init_with_planes(),
+> drm_universal_plane_init() and drm_encoder_init(). These functions
+> should not be called with parameters allocated with devm_kzalloc()
+> to avoid use-after-free issues [1].
+>
+> Use allocations managed by the DRM framework.
+>
+> Found by Linux Verification Center (linuxtesting.org).
+>
+> [1]
+> https://lore.kernel.org/lkml/u366i76e3qhh3ra5oxrtngjtm2u5lterkekcz6y2jkndhuxzli@diujon4h7qwb/
+>
+> Signed-off-by: Katya Orlova <e.orlova@ispras.ru>
 > ---
->   arch/arm64/include/asm/kvm_host.h |  3 +++
->   arch/arm64/kvm/debug.c            | 24 ++++++++++++++++++++++++
->   2 files changed, 27 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index 4864a1fcdf89..ee6cba7ee6ee 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -471,6 +471,7 @@ struct kvm_host_global_state {
->   		u32 events_host;
->   		u32 events_guest;
->   	} pmu_events;
-> +	u64 guest_trfcr_el1;
->   } ____cacheline_aligned;
->   extern struct kvm_host_global_state kvm_host_global_state[NR_CPUS];
->   
-> @@ -1145,6 +1146,7 @@ void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu);
->   void kvm_set_pmu_events(u32 set, struct perf_event_attr *attr);
->   void kvm_clr_pmu_events(u32 clr);
->   bool kvm_set_pmuserenr(u64 val);
-> +void kvm_etm_set_guest_trfcr(u64 trfcr_guest);
->   #else
->   static inline void kvm_set_pmu_events(u32 set, struct perf_event_attr *attr) {}
->   static inline void kvm_clr_pmu_events(u32 clr) {}
-> @@ -1152,6 +1154,7 @@ static inline bool kvm_set_pmuserenr(u64 val)
->   {
->   	return false;
->   }
-> +static inline void kvm_etm_set_guest_trfcr(u64 trfcr_guest) {}
->   #endif
->   
->   void kvm_vcpu_load_vhe(struct kvm_vcpu *vcpu);
-> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
-> index f86cbfae60f3..d69a0b9d9575 100644
-> --- a/arch/arm64/kvm/debug.c
-> +++ b/arch/arm64/kvm/debug.c
-> @@ -358,3 +358,27 @@ void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
->   	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
->   	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRFCR);
->   }
-> +
-> +/*
-> + * Interface for the Coresight driver to use to set the value of the TRFCR
-> + * register for the guest. This register controls the exclude settings for trace
-> + * at different exception levels, and is used to honor the exclude_host and
-> + * exclude_guest parameters from the Perf session.
-> + *
-> + * This will be used to later write TRFCR_EL1 on nVHE at guest switch. For VHE,
-> + * the host trace is controlled by TRFCR_EL2 and thus we can write to the
-> + * TRFCR_EL1 immediately. Because guest writes to the register are trapped, the
-> + * value will persist and can't be modified.
-> + */
-> +void kvm_etm_set_guest_trfcr(u64 trfcr_guest)
-> +{
-> +	if (!cpuid_feature_extract_unsigned_field(read_sysreg(id_aa64dfr0_el1),
-> +						  ID_AA64DFR0_EL1_TraceFilt_SHIFT))
+> v2: use allocations managed by the DRM as
+> Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com> suggested.
+> Also add a fix for encoder.
+>  drivers/gpu/drm/stm/drv.c  |  3 +-
+>  drivers/gpu/drm/stm/ltdc.c | 68 +++++++++-----------------------------
+>  2 files changed, 18 insertions(+), 53 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/stm/drv.c b/drivers/gpu/drm/stm/drv.c
+> index e8523abef27a..152bec2c0238 100644
+> --- a/drivers/gpu/drm/stm/drv.c
+> +++ b/drivers/gpu/drm/stm/drv.c
+> @@ -25,6 +25,7 @@
+>  #include <drm/drm_module.h>
+>  #include <drm/drm_probe_helper.h>
+>  #include <drm/drm_vblank.h>
+> +#include <drm/drm_managed.h>
+>  
+>  #include "ltdc.h"
+>  
+> @@ -75,7 +76,7 @@ static int drv_load(struct drm_device *ddev)
+>  
+>  	DRM_DEBUG("%s\n", __func__);
+>  
+> -	ldev = devm_kzalloc(ddev->dev, sizeof(*ldev), GFP_KERNEL);
+> +	ldev = drmm_kzalloc(ddev, sizeof(*ldev), GFP_KERNEL);
+>  	if (!ldev)
+>  		return -ENOMEM;
+>  
+> diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
+> index 5576fdae4962..02a7c8375f44 100644
+> --- a/drivers/gpu/drm/stm/ltdc.c
+> +++ b/drivers/gpu/drm/stm/ltdc.c
+> @@ -36,6 +36,7 @@
+>  #include <drm/drm_probe_helper.h>
+>  #include <drm/drm_simple_kms_helper.h>
+>  #include <drm/drm_vblank.h>
+> +#include <drm/drm_managed.h>
+>  
+>  #include <video/videomode.h>
+>  
+> @@ -1199,7 +1200,6 @@ static void ltdc_crtc_atomic_print_state(struct drm_printer *p,
+>  }
+>  
+>  static const struct drm_crtc_funcs ltdc_crtc_funcs = {
+> -	.destroy = drm_crtc_cleanup,
+>  	.set_config = drm_atomic_helper_set_config,
+>  	.page_flip = drm_atomic_helper_page_flip,
+>  	.reset = drm_atomic_helper_crtc_reset,
+> @@ -1212,7 +1212,6 @@ static const struct drm_crtc_funcs ltdc_crtc_funcs = {
+>  };
+>  
+>  static const struct drm_crtc_funcs ltdc_crtc_with_crc_support_funcs = {
+> -	.destroy = drm_crtc_cleanup,
+>  	.set_config = drm_atomic_helper_set_config,
+>  	.page_flip = drm_atomic_helper_page_flip,
+>  	.reset = drm_atomic_helper_crtc_reset,
+> @@ -1545,7 +1544,6 @@ static void ltdc_plane_atomic_print_state(struct drm_printer *p,
+>  static const struct drm_plane_funcs ltdc_plane_funcs = {
+>  	.update_plane = drm_atomic_helper_update_plane,
+>  	.disable_plane = drm_atomic_helper_disable_plane,
+> -	.destroy = drm_plane_cleanup,
+>  	.reset = drm_atomic_helper_plane_reset,
+>  	.atomic_duplicate_state = drm_atomic_helper_plane_duplicate_state,
+>  	.atomic_destroy_state = drm_atomic_helper_plane_destroy_state,
+> @@ -1572,7 +1570,6 @@ static struct drm_plane *ltdc_plane_create(struct drm_device *ddev,
+>  	const u64 *modifiers = ltdc_format_modifiers;
+>  	u32 lofs = index * LAY_OFS;
+>  	u32 val;
+> -	int ret;
+>  
+>  	/* Allocate the biggest size according to supported color formats */
+>  	formats = devm_kzalloc(dev, (ldev->caps.pix_fmt_nb +
+> @@ -1613,14 +1610,10 @@ static struct drm_plane *ltdc_plane_create(struct drm_device *ddev,
+>  		}
+>  	}
+>  
+> -	plane = devm_kzalloc(dev, sizeof(*plane), GFP_KERNEL);
+> -	if (!plane)
+> -		return NULL;
+> -
+> -	ret = drm_universal_plane_init(ddev, plane, possible_crtcs,
+> -				       &ltdc_plane_funcs, formats, nb_fmt,
+> -				       modifiers, type, NULL);
+> -	if (ret < 0)
+> +	plane = drmm_universal_plane_alloc(ddev, struct drm_plane, dev,
+> +				       possible_crtcs, &ltdc_plane_funcs, formats, nb_fmt,
+> +				       modifiers, type, NULL);
 
-Perhaps WARN_ON_ONCE() ?
+Hi Katya,
 
-Otherwise,
+Thanks for your submission, and sorry for the delay.
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-> +		return;
-> +
-> +	if (has_vhe())
-> +		write_sysreg_s(trfcr_guest, SYS_TRFCR_EL12);
-> +	else
-> +		kvm_host_global_state[smp_processor_id()].guest_trfcr_el1 = trfcr_guest;
-> +}
-> +EXPORT_SYMBOL_GPL(kvm_etm_set_guest_trfcr);
+There is several alignment style problems, such as the lines above.
 
+You can use "--strict" option with checkpatch script to show you all the faulty
+alignment before sending a patch.
+
+
+Other than that this patch looks pretty good to me.
+
+Regards,
+
+Raphaël
+
+> +	if (IS_ERR(plane))
+>  		return NULL;
+>  
+>  	if (ldev->caps.ycbcr_input) {
+> @@ -1643,15 +1636,6 @@ static struct drm_plane *ltdc_plane_create(struct drm_device *ddev,
+>  	return plane;
+>  }
+>  
+> -static void ltdc_plane_destroy_all(struct drm_device *ddev)
+> -{
+> -	struct drm_plane *plane, *plane_temp;
+> -
+> -	list_for_each_entry_safe(plane, plane_temp,
+> -				 &ddev->mode_config.plane_list, head)
+> -		drm_plane_cleanup(plane);
+> -}
+> -
+>  static int ltdc_crtc_init(struct drm_device *ddev, struct drm_crtc *crtc)
+>  {
+>  	struct ltdc_device *ldev = ddev->dev_private;
+> @@ -1677,14 +1661,14 @@ static int ltdc_crtc_init(struct drm_device *ddev, struct drm_crtc *crtc)
+>  
+>  	/* Init CRTC according to its hardware features */
+>  	if (ldev->caps.crc)
+> -		ret = drm_crtc_init_with_planes(ddev, crtc, primary, NULL,
+> +		ret = drmm_crtc_init_with_planes(ddev, crtc, primary, NULL,
+>  						&ltdc_crtc_with_crc_support_funcs, NULL);
+>  	else
+> -		ret = drm_crtc_init_with_planes(ddev, crtc, primary, NULL,
+> +		ret = drmm_crtc_init_with_planes(ddev, crtc, primary, NULL,
+>  						&ltdc_crtc_funcs, NULL);
+>  	if (ret) {
+>  		DRM_ERROR("Can not initialize CRTC\n");
+> -		goto cleanup;
+> +		return ret;
+>  	}
+>  
+>  	drm_crtc_helper_add(crtc, &ltdc_crtc_helper_funcs);
+> @@ -1698,9 +1682,8 @@ static int ltdc_crtc_init(struct drm_device *ddev, struct drm_crtc *crtc)
+>  	for (i = 1; i < ldev->caps.nb_layers; i++) {
+>  		overlay = ltdc_plane_create(ddev, DRM_PLANE_TYPE_OVERLAY, i);
+>  		if (!overlay) {
+> -			ret = -ENOMEM;
+>  			DRM_ERROR("Can not create overlay plane %d\n", i);
+> -			goto cleanup;
+> +			return -ENOMEM;
+>  		}
+>  		if (ldev->caps.dynamic_zorder)
+>  			drm_plane_create_zpos_property(overlay, i, 0, ldev->caps.nb_layers - 1);
+> @@ -1713,10 +1696,6 @@ static int ltdc_crtc_init(struct drm_device *ddev, struct drm_crtc *crtc)
+>  	}
+>  
+>  	return 0;
+> -
+> -cleanup:
+> -	ltdc_plane_destroy_all(ddev);
+> -	return ret;
+>  }
+>  
+>  static void ltdc_encoder_disable(struct drm_encoder *encoder)
+> @@ -1776,23 +1755,19 @@ static int ltdc_encoder_init(struct drm_device *ddev, struct drm_bridge *bridge)
+>  	struct drm_encoder *encoder;
+>  	int ret;
+>  
+> -	encoder = devm_kzalloc(ddev->dev, sizeof(*encoder), GFP_KERNEL);
+> -	if (!encoder)
+> -		return -ENOMEM;
+> +	encoder = drmm_simple_encoder_alloc(ddev, struct drm_encoder, dev,
+> +										DRM_MODE_ENCODER_DPI);
+Nit: bad alignment.
+> +	if (IS_ERR(encoder))
+> +		return PTR_ERR(encoder);
+>  
+>  	encoder->possible_crtcs = CRTC_MASK;
+>  	encoder->possible_clones = 0;	/* No cloning support */
+>  
+> -	drm_simple_encoder_init(ddev, encoder, DRM_MODE_ENCODER_DPI);
+> -
+>  	drm_encoder_helper_add(encoder, &ltdc_encoder_helper_funcs);
+>  
+>  	ret = drm_bridge_attach(encoder, bridge, NULL, 0);
+> -	if (ret) {
+> -		if (ret != -EPROBE_DEFER)
+> -			drm_encoder_cleanup(encoder);
+> +	if (ret)
+>  		return ret;
+> -	}
+>  
+>  	DRM_DEBUG_DRIVER("Bridge encoder:%d created\n", encoder->base.id);
+>  
+> @@ -1962,8 +1937,7 @@ int ltdc_load(struct drm_device *ddev)
+>  			goto err;
+>  
+>  		if (panel) {
+> -			bridge = drm_panel_bridge_add_typed(panel,
+> -							    DRM_MODE_CONNECTOR_DPI);
+> +			bridge = drmm_panel_bridge_add(ddev, panel);
+>  			if (IS_ERR(bridge)) {
+>  				DRM_ERROR("panel-bridge endpoint %d\n", i);
+>  				ret = PTR_ERR(bridge);
+> @@ -2045,7 +2019,7 @@ int ltdc_load(struct drm_device *ddev)
+>  		}
+>  	}
+>  
+> -	crtc = devm_kzalloc(dev, sizeof(*crtc), GFP_KERNEL);
+> +	crtc = drmm_kzalloc(ddev, sizeof(*crtc), GFP_KERNEL);
+>  	if (!crtc) {
+>  		DRM_ERROR("Failed to allocate crtc\n");
+>  		ret = -ENOMEM;
+> @@ -2072,8 +2046,6 @@ int ltdc_load(struct drm_device *ddev)
+>  
+>  	return 0;
+>  err:
+> -	for (i = 0; i < nb_endpoints; i++)
+> -		drm_of_panel_bridge_remove(ddev->dev->of_node, 0, i);
+>  
+>  	clk_disable_unprepare(ldev->pixel_clk);
+>  
+> @@ -2082,16 +2054,8 @@ int ltdc_load(struct drm_device *ddev)
+>  
+>  void ltdc_unload(struct drm_device *ddev)
+>  {
+> -	struct device *dev = ddev->dev;
+> -	int nb_endpoints, i;
+> -
+>  	DRM_DEBUG_DRIVER("\n");
+>  
+> -	nb_endpoints = of_graph_get_endpoint_count(dev->of_node);
+> -
+> -	for (i = 0; i < nb_endpoints; i++)
+> -		drm_of_panel_bridge_remove(ddev->dev->of_node, 0, i);
+> -
+>  	pm_runtime_disable(ddev->dev);
+>  }
+>  
