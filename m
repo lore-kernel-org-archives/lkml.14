@@ -1,95 +1,105 @@
-Received: from bee.tesarici.cz (bee.tesarici.cz [77.93.223.253])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDBE1D68C
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 06:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167D61D68C;
+	Fri,  5 Jan 2024 06:53:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="rUZM2/Bj"
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id CDA611A72AF;
-	Fri,  5 Jan 2024 07:51:10 +0100 (CET)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=none dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tesarici.cz; s=mail;
-	t=1704437470; bh=NPN413BX7veL0ZZ7wcFpIrFwMjUtaFyf8fSTVWxL9IY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rUZM2/BjJNY3By53aFMPeWST2d8QK3+nd6GJQtlK/Eua315I29ynJPJ7Sa5dsd4jC
-	 i4DA2glt0PCNyqxeNhKN6wG8ECyQoaj4APHCrBNEe9V5iXyegI6B1eRFvA+mhRFXSN
-	 oxUjV3B3dEU+Dc/Y4iitUaPs2eWirs0OFcALSvUWSQ+duXJNJfH/398JFDzcdoS0Pd
-	 dIb3Q6H8p0wq8siy3wBQvc3RuDa8SUWg4AM3t6CAUXCuCDdkyw6CG506k8nLDVc6M3
-	 tG4tp7vCuTo0v9rP5wUbiAaC79iBhYKzZSJeY/Yl9vA4xqxbYCpkd0azQW6iGzO1gW
-	 p5u/R2FppHTvw==
-Date: Fri, 5 Jan 2024 07:51:09 +0100
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: Richard Weinberger <richard@nod.at>
-Cc: Petr Tesarik <petrtesarik@huaweicloud.com>, anton ivanov
- <anton.ivanov@cambridgegreys.com>, Johannes Berg
- <johannes@sipsolutions.net>, linux-um <linux-um@lists.infradead.org>,
- linux-kernel <linux-kernel@vger.kernel.org>, Roberto Sassu
- <roberto.sassu@huaweicloud.com>, Petr Tesarik
- <petr.tesarik1@huawei-partners.com>
-Subject: Re: [PATCH 0/2] um: improve UML page fault handling
-Message-ID: <20240105075109.4f0e2785@meshulam.tesarici.cz>
-In-Reply-To: <435201914.200552.1704410531143.JavaMail.zimbra@nod.at>
-References: <20231215121431.680-1-petrtesarik@huaweicloud.com>
-	<435201914.200552.1704410531143.JavaMail.zimbra@nod.at>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eHwDU5yd"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a27cd5850d6so132984966b.1;
+        Thu, 04 Jan 2024 22:53:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704437594; x=1705042394; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BFOGLpcjoXzhR6JSGe3noB3vFxJi6+WAnSOC6t0PX4w=;
+        b=eHwDU5ydKKSCreOe067V/Fw+AJGfyBStMcopS7b4LIiNqHmcJ0mQs05958cGSxcAlD
+         guwFnbKVsRHD6xvbJ0BVIZbO+owZKtDXoB+GD1qQu+RrpbTQ6U5uxKxqgd1s9G8lIXEI
+         10IiauIO5p3iM1qrZr4+7g4rW+VQLvvL6qA5Hp6TJjCAsOJubtDTwTFLIjarXK/zcSbX
+         nMnZpGqzKFRwb+1hDhrI7DZGdaFUAZ+5AJGdslkPzCDg0h+JjkaKB92HOVDLUnS3+/+q
+         db0d13P+NIg3paI6MTSGlX/s1MoTkUMsiBwwMxcoSOH8uF1QH081hmX9fAl/Gbr1UYvo
+         tOtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704437594; x=1705042394;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BFOGLpcjoXzhR6JSGe3noB3vFxJi6+WAnSOC6t0PX4w=;
+        b=kpYy6/KPrrPzTDgjEHg58MOAmG3d0pn0KZRjHdcZCRqhIZsHo+p+vI+vqed7h2ey1M
+         lXqddTxP2vaKi98ImShVYdg/YAMlI4yq2wJXRzCu9P1SZ9c8XsGLDcc77CfA9fYfA81x
+         oaxdIycv8cZULvLs/C7cFJuAp24Fz+H14yvwVsk+p+620W+nDmFNPWGUb+qoRNnM/FJX
+         5odQ0OGjcSdFug6iRze6ji/OvB1WGVShx3yR+LlD/pptiHMJgLuO/MJpvZL6m2/3JOF6
+         bnJr6aOJudfUubqBqN2IiDtOQgL329or02Ct4nDZ2ebRGzbFxAMfo3dDTU0fJs/+mfst
+         bk6Q==
+X-Gm-Message-State: AOJu0YwS095od0ImVW5JjIlBqcHxsBlB25kxaSy7iCkJ6i/QvCijC58u
+	y9iZuciJS8qsxlVXLC04I+I=
+X-Google-Smtp-Source: AGHT+IH/RNoXjBd4MiyX0OLCTI5AmDJmvW3GwmGcu9xsZwFnO7vK/7pdJD2sx5+J69mSkoxXKkB3TQ==
+X-Received: by 2002:a17:906:2ac7:b0:a27:b918:5eba with SMTP id m7-20020a1709062ac700b00a27b9185ebamr777907eje.72.1704437594258;
+        Thu, 04 Jan 2024 22:53:14 -0800 (PST)
+Received: from hex.my.domain (83.11.207.119.ipv4.supernova.orange.pl. [83.11.207.119])
+        by smtp.gmail.com with ESMTPSA id g23-20020a17090669d700b00a28e2b72db2sm518809ejs.56.2024.01.04.22.53.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jan 2024 22:53:13 -0800 (PST)
+From: Artur Weber <aweber.kernel@gmail.com>
+Subject: [PATCH v2 0/2] Fix panel polarity mixup in S6D7AA0 panel driver
+ and Galaxy Tab 3 8.0 DTSI
+Date: Fri, 05 Jan 2024 07:53:00 +0100
+Message-Id: <20240105-tab3-display-fixes-v2-0-904d1207bf6f@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEynl2UC/32NQQqDMBBFryKz7pSMtal01XsUFxMTdUCNJBIq4
+ t2beoAu3/+8/3eILoiL8Cx2CC5JFD9nKC8FtAPPvUOxmaFUZaVIEa5sbmglLiNv2MnHRdR30p0
+ ymokJsrgEdxbZezeZB4mrD9v5keiX/p1LhArr+mG4ssaSNq9+YhmvrZ+gOY7jC6NvFfa0AAAA
+To: Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, Artur Weber <aweber.kernel@gmail.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1704437592; l=871;
+ i=aweber.kernel@gmail.com; s=20231030; h=from:subject:message-id;
+ bh=wxEs5SLA0q7BDvi+NHXyhorcl91KbDNYCzif/6ZAkt4=;
+ b=Sc7I1CZY2lJP8MxzHRgpRaD31yeQNY6wZgwzLCYkbJfFTTLBbNIjbqBuuSI+0mGf+1P+f6ndf
+ JUdiql2J12/AcfvnW9Sd5sjckGu/Vx11UeAoMAW2xkOnpKIFCqHhJIN
+X-Developer-Key: i=aweber.kernel@gmail.com; a=ed25519;
+ pk=RhDBfWbJEHqDibXbhNEBAnc9FMkyznGxX/hwfhL8bv8=
 
-Helo Richard,
+Two small one-line patches to address a mixup in the Samsung S6D7AA0
+panel driver and the Samsung Galaxy Tab 3 8.0 board it was initially
+added for.
 
-Am Fri, 5 Jan 2024 00:22:11 +0100 (CET)
-schrieb Richard Weinberger <richard@nod.at>:
+Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
+---
+Changes in v2:
+- Add "Fixes" tag to both commits.
+- Link to v1: https://lore.kernel.org/r/20240101-tab3-display-fixes-v1-0-887ba4dbd16b@gmail.com
 
-> ----- Urspr=C3=BCngliche Mail -----
-> > Von: "Petr Tesarik" <petrtesarik@huaweicloud.com>
-> > An: "richard" <richard@nod.at>, "anton ivanov" <anton.ivanov@cambridgeg=
-reys.com>, "Johannes Berg"
-> > <johannes@sipsolutions.net>, "linux-um" <linux-um@lists.infradead.org>,=
- "linux-kernel" <linux-kernel@vger.kernel.org>
-> > CC: "Roberto Sassu" <roberto.sassu@huaweicloud.com>, petr@tesarici.cz, =
-"Petr Tesarik"
-> > <petr.tesarik1@huawei-partners.com>
-> > Gesendet: Freitag, 15. Dezember 2023 13:14:29
-> > Betreff: [PATCH 0/2] um: improve UML page fault handling =20
->=20
-> > From: Petr Tesarik <petr.tesarik1@huawei-partners.com>
-> >=20
-> > Improve UML handling of segmentation faults in kernel mode. Although
-> > such page faults are generally caused by a kernel bug, it is annoying
-> > if they cause an infinite loop, or panic the kernel. More importantly,
-> > a robust implementation allows to write KUnit tests for various guard
-> > pages, preventing potential kernel self-protection regressions.
-> >=20
-> > Petr Tesarik (2):
-> >  um: do not panic on kernel mode faults
-> >  um: oops on accessing an non-present page in the vmalloc area =20
->=20
-> I think this is a good thing to have.
+---
+Artur Weber (2):
+      ARM: dts: exynos4212-tab3: add samsung,invert-vclk flag to fimd
+      drm/panel: samsung-s6d7aa0: drop DRM_BUS_FLAG_DE_HIGH for lsl080al02
 
-Thanks for the feedback.
+ arch/arm/boot/dts/samsung/exynos4212-tab3.dtsi | 1 +
+ drivers/gpu/drm/panel/panel-samsung-s6d7aa0.c  | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+---
+base-commit: fa4131df22d181c0f721bfc6a68addb8fc62c03d
+change-id: 20240101-tab3-display-fixes-6516f0b6a1a1
 
-> For the implementation side, this needs to use the oops_* helpers
-> from kernel/panic.c and taint the kernel, etc...
+Best regards,
+-- 
+Artur Weber <aweber.kernel@gmail.com>
 
-Yes, I did see that coming but wanted to get some confirmation that
-it's worth the effort.
-
-> See arch/x86/kernel/dumpstack.c die() and friends.
-
-This implementation also calls die notifiers, but AFAICS different
-architectures are not very consistent in their use. Do you also
-require die notifiers for the UML implementation?
-
-Petr T
