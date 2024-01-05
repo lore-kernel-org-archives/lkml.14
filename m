@@ -1,227 +1,122 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546401FAD
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 01:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE6A1FA3
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 01:38:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nCAmIKAf"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d4c91a9adcso1385615ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 17:37:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704418674; x=1705023474; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ogVvwDK/Dgt8I5gOLf0rKs+C40ZFKTDawpNUDK/TtKw=;
-        b=nCAmIKAf4W5VQ5WZlzMzbTSXDFyspnQCc2HMRw0jftWtGrTrhlWmKz8W9GBGaKSmPO
-         y9YRaJXB3dTzzNpqtYuLTxB0GLPU6lkfE1TarecJfmbQY3uSOVItO2SKRXnhFMt+CVfI
-         M+FGV4Sub4v4RIWQOIVw7Xdie1B8AJvIqtRceDqrh+WONlqW9ooI+aWGmekLMyCtXMKO
-         2aOOm/tvWvdEwAT5X36CWn35XnMx61Tea9ZwJQ/+F6aXSho4kuRrqHwiO2lKoS8ftExJ
-         mym+X41fy4QnJUPK1PDnzn2HdQQLJckM+6rC6EPyJ5Sh3y26C3zeTPju/gkiRWyOp6d/
-         ub8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704418674; x=1705023474;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ogVvwDK/Dgt8I5gOLf0rKs+C40ZFKTDawpNUDK/TtKw=;
-        b=khybHSWxsE4evBiWtiWB70Zyex8BXEYPaVF+9Rpae1x0cDJ1NURcXP6KE8AHhUk4Ig
-         AV7mKswaeCraWw8bIZHUOsRaRhTjUy2XXq42ezHAyY16fyIPx01ZJCpocu6wA3t0Kn4M
-         5f/u3P+YxgXDqOE/ekLTqsxDze2etKZWHgL8M8AA1CbYQodGuv1Zq4dDbtSuRR12CYun
-         pp1d6YJA/bTBlZQQ9n43SxX8P3AomT++Iobn3AOR9+S5VQUEs4rZBLPzJZ3aF9VV8mJk
-         g3mB3hvUi9aYRpmebf8tLWvYuMqvoIswyC43HQN0fMEjX8t8BKg9nu076X+Qg3FgL+Md
-         X7gw==
-X-Gm-Message-State: AOJu0YwOuo8FdneusNJ+01yIPcOktxvXzWlWqXmy5YV0PE8dDyW2Seyh
-	sNVnlsP61ngon2jKgVpv8QAN+n+Dh7JtzQ==
-X-Google-Smtp-Source: AGHT+IHDVbvAWgoJlpyO71KsCze60J3X7wdM90MBV1iT410hUQh1gPAxB7pvYhlLdwetE0WMN8W3og==
-X-Received: by 2002:a05:6a21:3384:b0:196:1899:d756 with SMTP id yy4-20020a056a21338400b001961899d756mr3166699pzb.2.1704418673477;
-        Thu, 04 Jan 2024 17:37:53 -0800 (PST)
-Received: from octopus ([2400:4050:c3e1:100:224b:9c3f:543b:97cb])
-        by smtp.gmail.com with ESMTPSA id i186-20020a62c1c3000000b006d9a1812e35sm306500pfg.119.2024.01.04.17.37.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jan 2024 17:37:53 -0800 (PST)
-Date: Fri, 5 Jan 2024 10:37:46 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v2 0/6] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Message-ID: <ZZddarpj14gPqg25@octopus>
-Mail-Followup-To: AKASHI Takahiro <takahiro.akashi@linaro.org>,
-	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>
-References: <20240104-pinctrl-scmi-v2-0-a9bd86ab5a84@nxp.com>
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="PoaUFHLO"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id E88AB24002B
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 02:29:34 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1704418174; bh=oAoNUgdOzVQyPdIoTkmvZg6pLTo+MPwqhbIwlJ+mDsQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:
+	 Content-Transfer-Encoding:From;
+	b=PoaUFHLO4ggfYDOsm28CktkHfOMXkkmHb0FdJC2irtJEUAjRqwlhd60lTiXJjdGrg
+	 HLmeG3CxLNnbOO8hfR2CGqfkWvpei3bKL1dOMb9y1k75MLiv7oSpp458twAWGj3O9T
+	 B9aIbRKjQAnAWWm1sHqv2Petl003wePCEj3vrKNJVj9M2cKJn+4MHhIDqMkxqbCgCc
+	 /7vLkCcQQgegOnkTIK/xDMARnH+589Mk9a+Qgc/811gNgCRzQX20kI+lcEHFA9aphX
+	 D+3psfjMu6ZxypgnZ2y9WngQbplGCuaSec+1Njk+ogJfB+HULCdH4I8LNU7ZWUQBwz
+	 VBf2+ZpwHRsCg==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4T5m8X48yrz6tv5;
+	Fri,  5 Jan 2024 02:29:32 +0100 (CET)
+From: Charalampos Mitrodimas <charmitro@posteo.net>
+To: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	wedsonaf@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	aliceryhl@google.com,
+	a.hindborg@samsung.com
+Cc: rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Charalampos Mitrodimas <charmitro@posteo.net>
+Subject: [PATCH] rust: sync: `CondVar` rename "wait_list" to "wait_queue_head"
+Date: Fri,  5 Jan 2024 01:29:30 +0000
+Message-Id: <20240105012930.1426214-1-charmitro@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240104-pinctrl-scmi-v2-0-a9bd86ab5a84@nxp.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 04, 2024 at 06:48:44PM +0800, Peng Fan (OSS) wrote:
-> This patchset is a rework from Oleksii's RFC v5 patchset
-> https://lore.kernel.org/all/cover.1698353854.git.oleksii_moisieiev@epam.com/
-> 
-> This patchset introduces some changes based on RFC v5:
-> - introduce helper get_max_msg_size
-> - support compatible string
-> - iterate the id_table
-> - Support multiple configs in one command
-> - Added i.MX support
-> - Patch 5 firmware: arm_scmi: Add SCMI v3.2 pincontrol protocol basic support
->   is almost same as RFCv5 expect multiple configs support.
-> - Patch 4 the dt-bindings includes compatible string to support i.MX
-> - Rebased on 2023-12-15 linux-next/master
+Fields named "wait_list" usually are of type "struct list_head". To
+avoid confusion and because it is of type
+"Opaque<bindings::wait_queue_head>" we are renaming "wait_list" to
+"wait_queue_head".
 
-For the record, the translation of pin config types,
-pinctrl_scmi_map_pinconf_type(), is finally implemented in patch 4.
+Signed-off-by: Charalampos Mitrodimas <charmitro@posteo.net>
+---
+ rust/kernel/sync/condvar.rs | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-Thanks,
--Takahiro Akashi
+diff --git a/rust/kernel/sync/condvar.rs b/rust/kernel/sync/condvar.rs
+index b679b6f6dbeb..ea0d559fbde5 100644
+--- a/rust/kernel/sync/condvar.rs
++++ b/rust/kernel/sync/condvar.rs
+@@ -73,7 +73,7 @@ macro_rules! new_condvar {
+ #[pin_data]
+ pub struct CondVar {
+     #[pin]
+-    pub(crate) wait_list: Opaque<bindings::wait_queue_head>,
++    pub(crate) wait_queue_head: Opaque<bindings::wait_queue_head>,
+ 
+     /// A condvar needs to be pinned because it contains a [`struct list_head`] that is
+     /// self-referential, so it cannot be safely moved once it is initialised.
+@@ -96,7 +96,7 @@ pub fn new(name: &'static CStr, key: &'static LockClassKey) -> impl PinInit<Self
+             _pin: PhantomPinned,
+             // SAFETY: `slot` is valid while the closure is called and both `name` and `key` have
+             // static lifetimes so they live indefinitely.
+-            wait_list <- Opaque::ffi_init(|slot| unsafe {
++            wait_queue_head <- Opaque::ffi_init(|slot| unsafe {
+                 bindings::__init_waitqueue_head(slot, name.as_char_ptr(), key.as_ptr())
+             }),
+         })
+@@ -108,16 +108,20 @@ fn wait_internal<T: ?Sized, B: Backend>(&self, wait_state: u32, guard: &mut Guar
+         // SAFETY: `wait` points to valid memory.
+         unsafe { bindings::init_wait(wait.get()) };
+ 
+-        // SAFETY: Both `wait` and `wait_list` point to valid memory.
++        // SAFETY: Both `wait` and `wait_queue_head` point to valid memory.
+         unsafe {
+-            bindings::prepare_to_wait_exclusive(self.wait_list.get(), wait.get(), wait_state as _)
++            bindings::prepare_to_wait_exclusive(
++                self.wait_queue_head.get(),
++                wait.get(),
++                wait_state as _,
++            )
+         };
+ 
+         // SAFETY: No arguments, switches to another thread.
+         guard.do_unlocked(|| unsafe { bindings::schedule() });
+ 
+-        // SAFETY: Both `wait` and `wait_list` point to valid memory.
+-        unsafe { bindings::finish_wait(self.wait_list.get(), wait.get()) };
++        // SAFETY: Both `wait` and `wait_queue_head` point to valid memory.
++        unsafe { bindings::finish_wait(self.wait_queue_head.get(), wait.get()) };
+     }
+ 
+     /// Releases the lock and waits for a notification in interruptible mode.
+@@ -144,10 +148,10 @@ pub fn wait_uninterruptible<T: ?Sized, B: Backend>(&self, guard: &mut Guard<'_,
+ 
+     /// Calls the kernel function to notify the appropriate number of threads with the given flags.
+     fn notify(&self, count: i32, flags: u32) {
+-        // SAFETY: `wait_list` points to valid memory.
++        // SAFETY: `wait_queue_head` points to valid memory.
+         unsafe {
+             bindings::__wake_up(
+-                self.wait_list.get(),
++                self.wait_queue_head.get(),
+                 bindings::TASK_NORMAL,
+                 count,
+                 flags as _,
+-- 
+2.39.2
 
-> If any comments from RFC v5 are missed, I am sorry in advance.
-> 
-> This PINCTRL Protocol is following Version 3.2 SCMI Spec Beta release.
-> 
-> On ARM-based systems, a separate Cortex-M based System Control Processor
-> (SCP) provides control on pins, as well as with power, clocks, reset
-> controllers. So implement the driver to support such cases.
-> 
-> The i.MX95 Example as below:
-> 
-> Configuration:
-> The scmi-pinctrl driver can be configured using DT bindings.
-> For example:
-> / {
-> 	sram0: sram@445b1000 {
-> 		compatible = "mmio-sram";
-> 		reg = <0x0 0x445b1000 0x0 0x400>;
-> 
-> 		#address-cells = <1>;
-> 		#size-cells = <1>;
-> 		ranges = <0x0 0x0 0x445b1000 0x400>;
-> 
-> 		scmi_buf0: scmi-sram-section@0 {
-> 			compatible = "arm,scmi-shmem";
-> 			reg = <0x0 0x80>;
-> 		};
-> 
-> 		scmi_buf1: scmi-sram-section@80 {
-> 			compatible = "arm,scmi-shmem";
-> 			reg = <0x80 0x80>;
-> 		};
-> 	};
-> 
-> 	firmware {
-> 		scmi {
-> 			compatible = "arm,scmi";
-> 			mboxes = <&mu2 5 0>, <&mu2 3 0>, <&mu2 3 1>;
-> 			shmem = <&scmi_buf0>, <&scmi_buf1>;
-> 			#address-cells = <1>;
-> 			#size-cells = <0>;
-> 
-> 			scmi_iomuxc: protocol@19 {
-> 				compatible = "fsl,imx95-scmi-pinctrl";
-> 				reg = <0x19>;
-> 			};
-> 		};
-> 	};
-> };
-> 
-> &scmi_iomuxc {
-> 	pinctrl_tpm3: tpm3grp {
-> 		fsl,pins = <
-> 			IMX95_PAD_GPIO_IO12__TPM3_CH2		0x51e
-> 		>;
-> 	};
-> };
-> 
-> This patchset has been tested on i.MX95-19x19-EVK board.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
-> Changes in v2:
->  Added comments, and added R-b for Patch 1
->  Moved the compatile string and i.MX patch to the end, marked NOT APPLY
->  Patchset based on lore.kernel.org/all/20231221151129.325749-1-cristian.marussi@arm.com/
->  Addressed the binding doc issue, dropped i.MX content.
->  For the firmware pinctrl scmi driver, addressed the comments from Cristian
->  For the pinctrl scmi driver, addressed comments from Cristian
-> 
->  For the i.MX95 OEM stuff, I not have good idea, expect using compatbile
->  string. Maybe the firmware public an protocol attribute to indicate it is 
->  VENDOR stuff or NXP use a new protocol id, not 0x19. But I think
->  current pinctrl-scmi.c not able to support OEM config, should we extend
->  it with some method? Anyway if patch 1-4 is good enough, they could
->  be picked up first.
-> 
->  Since I am only able to test the patch on i.MX95 which not support
->  geneirc pinconf, only OEM configs are tested in my side.
-> 
-> ---
-> Oleksii Moisieiev (1):
->       firmware: arm_scmi: Add SCMI v3.2 pincontrol protocol basic support
-> 
-> Peng Fan (5):
->       firmware: arm_scmi: introduce helper get_max_msg_size
->       dt-bindings: firmware: arm,scmi: support pinctrl protocol
->       pinctrl: Implementation of the generic scmi-pinctrl driver
->       [NOT APPLY]firmware: scmi: support compatible string
->       [NOT APPLY] pinctrl: scmi: implement pinctrl_scmi_imx_dt_node_to_map
-> 
->  .../devicetree/bindings/firmware/arm,scmi.yaml     |  50 ++
->  MAINTAINERS                                        |   7 +
->  drivers/firmware/arm_scmi/Makefile                 |   1 +
->  drivers/firmware/arm_scmi/bus.c                    |  39 +-
->  drivers/firmware/arm_scmi/common.h                 |   2 +-
->  drivers/firmware/arm_scmi/driver.c                 |  32 +-
->  drivers/firmware/arm_scmi/pinctrl.c                | 930 +++++++++++++++++++++
->  drivers/firmware/arm_scmi/protocols.h              |   3 +
->  drivers/pinctrl/Kconfig                            |  11 +
->  drivers/pinctrl/Makefile                           |   1 +
->  drivers/pinctrl/pinctrl-scmi-imx.c                 | 117 +++
->  drivers/pinctrl/pinctrl-scmi.c                     | 540 ++++++++++++
->  drivers/pinctrl/pinctrl-scmi.h                     |  12 +
->  include/linux/scmi_protocol.h                      |  75 ++
->  14 files changed, 1806 insertions(+), 14 deletions(-)
-> ---
-> base-commit: 8f266a167d1f0ca34668f05cd8c01bd245c8698b
-> change-id: 20231215-pinctrl-scmi-4c5b0374f4c6
-> 
-> Best regards,
-> -- 
-> Peng Fan <peng.fan@nxp.com>
-> 
