@@ -1,73 +1,108 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC979364B5;
-	Fri,  5 Jan 2024 20:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5A7358A4
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 21:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eztdRwfW"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=nMbzOtCbU7XTEYEKAv0oHU42nzHm9G0AGeV1eKduXTE=; b=eztdRwfWypwC8xZv1BIq3Aciu4
-	jbIeY4xGqeV/+VMpk0imOJyKUbEyjm5LbIqY4YOXcENrdsYbkbu8okln45v3sYnCZHCbcW3WPSYwn
-	totsqvt7HTbWbcy7WhB9rCMr+jrqRc4gpDGuJCNd/F3dgVhl4Su13eo9iS6FxhETKGFtGWc2NVK1h
-	QxoAxQr5Pu7F8Dl1l4RIZXE28TGs4JxNkLtikhoDRvrVoKp4slfzg9AtThHPXfZAtMSx5bYlIcPmx
-	eO1zZj5wzfVV+8HgXSqLKIizC/9P6Ufvnltk73WxrwhS8Esobha6s9kPYRCl8EkPQSGBd0fiVSlDR
-	vgzUAmMA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1rLrGN-001CKP-BM; Fri, 05 Jan 2024 20:57:55 +0000
-Date: Fri, 5 Jan 2024 20:57:55 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Hou Tao <houtao@huaweicloud.com>, linux-fsdevel@vger.kernel.org,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Stefan Hajnoczi <stefanha@redhat.com>, linux-kernel@vger.kernel.org,
-	virtualization@lists.linux.dev, houtao1@huawei.com
-Subject: Re: [PATCH v2] virtiofs: use GFP_NOFS when enqueuing request through
- kworker
-Message-ID: <ZZhtU0IxUycpLGJe@casper.infradead.org>
-References: <20240105105305.4052672-1-houtao@huaweicloud.com>
- <ZZhjzwnQUEJhNJiq@redhat.com>
- <ZZhkrOdbau2O/B59@casper.infradead.org>
- <ZZhpjEwDwMS_mq-u@redhat.com>
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="qjy0+Z+e"
+Received: from [192.168.1.114] (unknown [185.145.125.130])
+	by mail.ispras.ru (Postfix) with ESMTPSA id 3F35140737A3;
+	Fri,  5 Jan 2024 21:13:28 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 3F35140737A3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1704489208;
+	bh=pGz5BeUn1J1tLUOnuc57+4ifZTNHWxB2x2fBLp9vnFE=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+	b=qjy0+Z+eEeWLGd73OAA7npgyIBsdSzQogG9Ujge6ZiMDH75iVPWiQ2OuDGRhXrnCi
+	 zdZZCg9KakFJ9uwPfUPyHpNQPjA/N9mcNujSbe4DwUH8ghvo3nxjIQbrQg4Qa3sQWH
+	 q5DTuLrHYKxpF7qUt7ZRD7FxSFJH64WiVlyHdOTs=
+Subject: Re: [PATCH] therm.c: Adding an array index check before accessing an
+ element.
+To: Andrey Shumilin <shum.sdl@nppct.ru>, Karol Herbst <kherbst@redhat.com>
+Cc: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@redhat.com>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org,
+ "lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>
+References: <20231116063028.35871-1-shum.sdl@nppct.ru>
+From: Alexey Khoroshilov <khoroshilov@ispras.ru>
+Message-ID: <5be85b32-7339-d306-897e-142332807c9b@ispras.ru>
+Date: Fri, 5 Jan 2024 20:50:34 +0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZZhpjEwDwMS_mq-u@redhat.com>
+In-Reply-To: <20231116063028.35871-1-shum.sdl@nppct.ru>
+Content-Type: text/plain; charset=utf-8
+Content-Language: ru-RU
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 05, 2024 at 03:41:48PM -0500, Vivek Goyal wrote:
-> On Fri, Jan 05, 2024 at 08:21:00PM +0000, Matthew Wilcox wrote:
-> > On Fri, Jan 05, 2024 at 03:17:19PM -0500, Vivek Goyal wrote:
-> > > On Fri, Jan 05, 2024 at 06:53:05PM +0800, Hou Tao wrote:
-> > > > From: Hou Tao <houtao1@huawei.com>
-> > > > 
-> > > > When invoking virtio_fs_enqueue_req() through kworker, both the
-> > > > allocation of the sg array and the bounce buffer still use GFP_ATOMIC.
-> > > > Considering the size of both the sg array and the bounce buffer may be
-> > > > greater than PAGE_SIZE, use GFP_NOFS instead of GFP_ATOMIC to lower the
-> > > > possibility of memory allocation failure.
-> > > > 
-> > > 
-> > > What's the practical benefit of this patch. Looks like if memory
-> > > allocation fails, we keep retrying at interval of 1ms and don't
-> > > return error to user space.
-> > 
-> > You don't deplete the atomic reserves unnecessarily?
-> 
-> Sounds reasonable. 
-> 
-> With GFP_NOFS specificed, can we still get -ENOMEM? Or this will block
-> indefinitely till memory can be allocated. 
+> Subject: therm.c: Adding an array index check before accessing an element.
 
-If you need the "loop indefinitely" behaviour, that's
-GFP_NOFS | __GFP_NOFAIL.  If you're actually doing something yourself
-which can free up memory, this is a bad choice.  If you're just sleeping
-and retrying, you might as well have the MM do that for you.
+As
+
+$ git log --oneline drivers/gpu/drm/nouveau/nvkm/subdev/bios/therm.c
+a215721fb64e drm/nouveau/bios/therm: pointers are 32-bit
+46484438ab7d drm/nouveau/bios: convert to new-style nvkm_subdev
+7f5f518fd70b drm/nouveau/bios: remove object accessor functions
+60b29d207179 drm/nouveau/bios: switch to subdev printk macros
+9ace404b1098 drm/nouveau/device: include core/device.h automatically for
+subdevs/engines
+d390b48027f8 drm/nouveau/bios: namespace + nvidia gpu names (no binary
+change)
+c39f472e9f14 drm/nouveau: remove symlinks, move core/ to nvkm/ (no code
+changes)
+
+shows, a better prefix should be
+drm/nouveau/bios: or drm/nouveau/bios/therm:
+and there should not be a dot at the end.
+
+e.g.
+drm/nouveau/bios: avoid invalid memory memory access in
+nvbios_therm_fan_parse()
+
+
+On 16.11.2023 09:30, Andrey Shumilin wrote:
+> It is possible to access an element at index -1 if at the first iteration of the loop the result of switch is equal to 0x25
+> 
+
+
+If nvbios_rd08(bios, entry + 0) returns 0x25 before 0x24, buffer
+underrun happens as far as &fan->trip[fan->nr_fan_trip - 1] points to
+invalid memory.
+
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> 
+> Signed-off-by: Andrey Shumilin <shum.sdl@nppct.ru>
+> ---
+>  drivers/gpu/drm/nouveau/nvkm/subdev/bios/therm.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/therm.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/therm.c
+> index 5babc5a7c7d5..78387053f214 100644
+> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/therm.c
+> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/therm.c
+> @@ -180,6 +180,8 @@ nvbios_therm_fan_parse(struct nvkm_bios *bios, struct nvbios_therm_fan *fan)
+>  			cur_trip->fan_duty = duty_lut[(value & 0xf000) >> 12];
+>  			break;
+>  		case 0x25:
+> +			if (fan->nr_fan_trip == 0)
+> +				fan->nr_fan_trip++;
+
+I would suggest to return -EINVAL if the assumption on valid nr_fan_trip
+is failed.
+
+
+>  			cur_trip = &fan->trip[fan->nr_fan_trip - 1];
+>  			cur_trip->fan_duty = value;
+>  			break;
+> 
+
+--
+Alexey
