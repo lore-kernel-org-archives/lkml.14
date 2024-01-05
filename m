@@ -1,102 +1,78 @@
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D80944405;
-	Fri,  5 Jan 2024 03:26:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63DB44405;
+	Fri,  5 Jan 2024 03:28:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i6QfD3df"
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-20451bc39b1so608673fac.1;
-        Thu, 04 Jan 2024 19:26:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VStoL04s"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5ce10b5ee01so127608a12.1;
+        Thu, 04 Jan 2024 19:28:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704425170; x=1705029970; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OfrqhYTGUJ9pcqbluJqareOb2HurY1Vh3HHdZ5Gd8c0=;
-        b=i6QfD3dfYgdXj5XHFzVF8QRjQXE4L4lzxsrHzCG0Hc9uw1XFo7lorwMLNy4tyDw61d
-         +oDsJzwEvCo2341tC0PizZWV/C8PD1HTbszXXaNOOEjhFHzbFGG8nWnpctfyTktnRZQX
-         eQK2XTZ77tFp/PxXVQDTovm0mpIGM78y03c067Dah1lP85jBDp2/6jZLUR0eANosubag
-         cKI6HSkQIMwixYRYzfx6YNicEQMM1oGJ+47oaVaB0dTdU77ywvVkVgLSAigwcSJVRPdF
-         16ROd3m2DP+Cx7RptoRc2d6FI9IkcbzLYIvE+kxcxufExYm0iyX7zh+pPJFOWreRjdBs
-         /6/g==
+        d=gmail.com; s=20230601; t=1704425284; x=1705030084; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KR8vLsD9bZDkCb0zj7kqJDNeQ83Zsylg5eIJGKfIYAQ=;
+        b=VStoL04s3tynXmUX8QmJFqxG3t0IXBvkBTcofLTwfCi7m0SgI54hXY4U+tr2nP1dSh
+         G0kdpdvpU/pjarZhpH170wuEWkrNiT7ljB//9oKpFBxg51khU+PvEs3mw14W5mnOB7Qc
+         YHTLACYDJffTYlLek2pJBQkvwCrvomb/7K7lMRRwoeOVYrZH/CDaM0mjKKyZGIgCubZO
+         fkP/M4dSkvHiQ2CyZ9wJJVUtppsiarT1wff40lrprvzbPbX1fH2whlJVm2jRqoauoXUi
+         0oqlLpkH8L4R9xlGcwpSN8WJcM+m5DiZgysUxaPPsYcwqIKjjpyMAFBJOL66ijNX/3iY
+         9t3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704425170; x=1705029970;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OfrqhYTGUJ9pcqbluJqareOb2HurY1Vh3HHdZ5Gd8c0=;
-        b=cGPrwCzsisauRw4iydind4qgJ3u/BqA7Oc7R+QgLwsnQ+ZHrStIkXIrYUJX87GgZ98
-         gCFd8fB0mmxoodjjCckgeOpbKtzpaxf06jqH/lvlv25c1fhtEIgbGecC2u+Q00pu+ELL
-         hDsXDNakyrhn2S8unGtw5KeG/RotzME9tvpeVu+/5AUU2cwQLHuZQB87UwuLqE978tX1
-         LN7ITLsi//MRIVcgRBDmyJTX4MCIfrw2Mh2iNsJIR4mCoWfl5UYOYKyjzmiO+CYWNZC1
-         bKeUON+0aDG2qpZyxoDLzDQx1dPh2tl/kUknmxMWYJ1hjdG+xjKtuK6dFPY6yVt5G7A3
-         otqw==
-X-Gm-Message-State: AOJu0Yxm0ELv8ahrsSOdzkUv3Dh2HBNyqY8Qz7KbHAIdCuZh69SNXxdv
-	ZyHfb80cwhVGH4tS3WaZQClfvIJ08+bXRnelWf+v6CNo
-X-Google-Smtp-Source: AGHT+IEJJdh/Qjsp0GDBwgvwTgMsU4RRRkXQT0YqPoCz7PTSerEiTpOkQVUbvDyrq/rpi27sQXlA1pLvR2wjF/+1f9U=
-X-Received: by 2002:a05:6870:36d5:b0:204:c0:5db3 with SMTP id
- u21-20020a05687036d500b0020400c05db3mr1418682oak.13.1704425169809; Thu, 04
- Jan 2024 19:26:09 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704425284; x=1705030084;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KR8vLsD9bZDkCb0zj7kqJDNeQ83Zsylg5eIJGKfIYAQ=;
+        b=BIpvZcrxbu/jOR8rXfGiVSbYEApaWJKhySe+6KsFGI/PB7dFKoHVsA2W8923Jq5DE2
+         9TfAfTGTGkIFD6Zj6fhuy+fB03fMUwGia2G/nViEVVBJVP1I1MG51bRPPSHvJgXkTMjN
+         tFes8nXqtYwFkWONpLq200lhidfXAcRrqgoxQIsG46QAQqjdTojuCD3VYHScSbmnYaqB
+         jDuL3TAnAVHXV43soGwmfNFQ18Pi6DDe0m8w0uTNOpCzXzmwUJ3Ttiatgubyx3Mw89Hn
+         iSHfiITJDGCuSzRM0gc6yYv1O4i6vDGhpsoZHipoAOKKawjIrIBiqF/7WlPFsqBTFrT/
+         XbtA==
+X-Gm-Message-State: AOJu0YxCajGwRYwmIu6oWmV2OrHwt0DwPq5/yQzIq0KIX6YZxTG+4+yS
+	PhxbxcW0rTeV+ipsWDp/ysQ=
+X-Google-Smtp-Source: AGHT+IFA9RA7WddOR/qKx+TbW7rnH2QuQEnEG5MpkTVlvZ/M2k30OhnOKHLVZVeyqpXUqEEr7eG7ew==
+X-Received: by 2002:a05:6a20:1605:b0:199:1ddb:b42 with SMTP id l5-20020a056a20160500b001991ddb0b42mr1771362pzj.11.1704425284559;
+        Thu, 04 Jan 2024 19:28:04 -0800 (PST)
+Received: from [192.168.54.105] (static.220.238.itcsa.net. [190.15.220.238])
+        by smtp.gmail.com with ESMTPSA id q24-20020a63e218000000b005cdfb0a11e1sm384250pgh.88.2024.01.04.19.28.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jan 2024 19:28:04 -0800 (PST)
+Message-ID: <e57099de-f530-43a7-b9b2-bed295e13138@gmail.com>
+Date: Fri, 5 Jan 2024 00:27:59 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240104024244.12163-1-Wenhua.Lin@unisoc.com> <20240104024244.12163-2-Wenhua.Lin@unisoc.com>
-In-Reply-To: <20240104024244.12163-2-Wenhua.Lin@unisoc.com>
-From: Chunyan Zhang <zhang.lyra@gmail.com>
-Date: Fri, 5 Jan 2024 11:25:32 +0800
-Message-ID: <CAAfSe-ty=BgDNxST7q=+0CR6pshP4LhgmEPeZLmasiS2UkTjYA@mail.gmail.com>
-Subject: Re: [PATCH V3 1/4] gpio: eic-sprd: Keep the clock rtc_1k on
-To: Wenhua Lin <Wenhua.Lin@unisoc.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Orson Zhai <orsonzhai@gmail.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, wenhua lin <wenhua.lin1994@gmail.com>, 
-	Xiongpeng Wu <xiongpeng.wu@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] rust: sync: `CondVar` rename "wait_list" to
+ "wait_queue_head"
+Content-Language: en-US
+To: Charalampos Mitrodimas <charmitro@posteo.net>, ojeda@kernel.org,
+ alex.gaynor@gmail.com, wedsonaf@gmail.com, boqun.feng@gmail.com,
+ gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+ aliceryhl@google.com, a.hindborg@samsung.com
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240105012930.1426214-1-charmitro@posteo.net>
+From: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
+In-Reply-To: <20240105012930.1426214-1-charmitro@posteo.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 4 Jan 2024 at 10:43, Wenhua Lin <Wenhua.Lin@unisoc.com> wrote:
->
-> The eic debounce does not have a clock of rtc_1k in the sleep state,
-> but the eic debounce will be used to wake up the system, therefore the
-> clock of rtc_1k needs to be kept open.
-
-It seems that this issue is not in the latest SoCs. I would suggest
-not changing for the time being.
-
-Thanks,
-Chunyan
-
-
->
-> Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
+On 1/4/24 22:29, Charalampos Mitrodimas wrote:
+> Fields named "wait_list" usually are of type "struct list_head". To
+> avoid confusion and because it is of type
+> "Opaque<bindings::wait_queue_head>" we are renaming "wait_list" to
+> "wait_queue_head".
+> 
+> Signed-off-by: Charalampos Mitrodimas <charmitro@posteo.net>
 > ---
->  drivers/gpio/gpio-eic-sprd.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
-> index be7f2fa5aa7b..bdcb3510a208 100644
-> --- a/drivers/gpio/gpio-eic-sprd.c
-> +++ b/drivers/gpio/gpio-eic-sprd.c
-> @@ -24,6 +24,7 @@
->  #define SPRD_EIC_DBNC_IC               0x24
->  #define SPRD_EIC_DBNC_TRIG             0x28
->  #define SPRD_EIC_DBNC_CTRL0            0x40
-> +#define SPRD_EIC_DBNC_FORCE_CLK                0x8000
->
->  #define SPRD_EIC_LATCH_INTEN           0x0
->  #define SPRD_EIC_LATCH_INTRAW          0x4
-> @@ -223,6 +224,7 @@ static int sprd_eic_set_debounce(struct gpio_chip *chip, unsigned int offset,
->         u32 value = readl_relaxed(base + reg) & ~SPRD_EIC_DBNC_MASK;
->
->         value |= (debounce / 1000) & SPRD_EIC_DBNC_MASK;
-> +       value |= SPRD_EIC_DBNC_FORCE_CLK;
->         writel_relaxed(value, base + reg);
->
->         return 0;
-> --
-> 2.17.1
->
+> [...]
+
+Reviewed-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
