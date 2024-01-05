@@ -1,49 +1,16 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3560928E20
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 10:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dOFAPwkS"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2cd1aeb1b02so16911691fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 02:22:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704450169; x=1705054969; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Otn9loBBsw/UzqwebEZy3Ooa0CujzEAcJwFz8Zj1BXs=;
-        b=dOFAPwkSAsJq5YJUiju4J4fVJz0ZZ0Ky14HRIGt40H8EG8j+SXQVMFUUPmE1PGDfsd
-         wmGVc9s2cytmOHs83v1AY5GlxQqu4zXrB7ic70u71nFRkU5wVSkMRLUBpVbzM2ZHfcRy
-         gMDDroO+8usoVtxCxb9xQV/9H/Ky2W1tSOfAXxoBlX4/MrfkCmESsjnLj/NicbL8sVV4
-         cl7pgnGN63tNP8A78galhMAh9rZsobnRg1PjqGZaUp3mRMOmNOV+//cQbbmhZlledYCh
-         r1lB1AXZZDON/hnwU/8ZRrhwGGqnS33FfxNsZaxgPL7TCzXlZ0LrxoAkMxCEU90Y1F8B
-         uwKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704450169; x=1705054969;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Otn9loBBsw/UzqwebEZy3Ooa0CujzEAcJwFz8Zj1BXs=;
-        b=UOMm6M7dLEkMyQ1DARyVVKiAQo9nbtTfxocq2K6s0ydeGNpaSSUyss1ssvYhsk1nqL
-         PIB7bhXmCr/tod6MknkoIWcqMGUiJs5a7iyhEKvoX6K85T8dAfqWVOv90GM6hP/uoyEu
-         4y5GCSPIFuY1WdbU0c5M48iYJD/Ut9Hdu1TeHaV3jl7VxEc5DHZ6aIsOd0wjeK0lzyfS
-         DABjU8ndyz93nOEIARnnVqwYMyskAYzVLlIUrnTROrqJ6CqXMISdkpP0+XMS+n3TlzHa
-         LNBC3gnuQmciBoJV78WvVdvmiJWdSW+DU1xtw4psQPV6KamixyixBWux3ec5UkbwvMbM
-         vy+Q==
-X-Gm-Message-State: AOJu0Ywgn/l0f9Tu5b+g/o9klYdLmkH5fIzZ2wGjn5wRntagy8pV5sgD
-	yY5OXtRqeU+TfD8y4LDXEiT76WMgEvx/9g==
-X-Google-Smtp-Source: AGHT+IE2UecOtUprnsE+wTP7UJCkRZPB7fx0sJ/qDDVGHx8WV3NGtKzjOZu+swh/2+L77+HG7FmkwQ==
-X-Received: by 2002:a2e:a9a2:0:b0:2cc:6bf6:cdc6 with SMTP id x34-20020a2ea9a2000000b002cc6bf6cdc6mr1295046ljq.7.1704450169091;
-        Fri, 05 Jan 2024 02:22:49 -0800 (PST)
-Received: from [192.168.2.107] ([79.115.63.202])
-        by smtp.gmail.com with ESMTPSA id ek21-20020a056402371500b0055732bd1fc0sm474638edb.82.2024.01.05.02.22.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jan 2024 02:22:48 -0800 (PST)
-Message-ID: <19746c85-6eff-4f63-9370-9592ad73f22c@linaro.org>
-Date: Fri, 5 Jan 2024 10:22:46 +0000
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41AE9250E7
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 10:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7519DC15;
+	Fri,  5 Jan 2024 02:26:29 -0800 (PST)
+Received: from [10.57.76.44] (unknown [10.57.76.44])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D652A3F64C;
+	Fri,  5 Jan 2024 02:25:41 -0800 (PST)
+Message-ID: <63eda2bc-6791-454d-b43e-20d73c7e9843@arm.com>
+Date: Fri, 5 Jan 2024 10:25:40 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,133 +18,121 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 04/12] tty: serial: samsung: prepare for different IO
- types
-Content-Language: en-US
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: peter.griffin@linaro.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
- sboyd@kernel.org, conor+dt@kernel.org, andi.shyti@kernel.org,
- alim.akhtar@samsung.com, jirislaby@kernel.org, s.nawrocki@samsung.com,
- tomasz.figa@gmail.com, cw00.choi@samsung.com, arnd@arndb.de,
- semen.protsenko@linaro.org, andre.draszik@linaro.org, saravanak@google.com,
- willmcvicker@google.com, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org,
- kernel-team@android.com
-References: <20231228125805.661725-1-tudor.ambarus@linaro.org>
- <20231228125805.661725-5-tudor.ambarus@linaro.org>
- <2024010432-taco-moneyless-53e2@gregkh>
- <a3a9df6a-4270-4076-9e9b-ce2fc7284d54@linaro.org>
- <2024010450-heritage-variety-d72d@gregkh>
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <2024010450-heritage-variety-d72d@gregkh>
+Subject: Re: [syzbot] [mm?] WARNING in __folio_rmap_sanity_checks
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>, Yin Fengwei
+ <fengwei.yin@intel.com>,
+ syzbot <syzbot+50ef73537bbc393a25bb@syzkaller.appspotmail.com>,
+ akpm@linux-foundation.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ syzkaller-bugs@googlegroups.com, Matthew Wilcox <willy@infradead.org>
+References: <000000000000014174060e09316e@google.com>
+ <c4e2e700-2d26-492f-8eb2-eb3ab14bc07a@redhat.com>
+ <3feecbd6-b3bd-440c-a4f9-2a7dba3ff8f1@intel.com>
+ <36ace74a-1de7-4224-8bc1-7f487764f6e2@redhat.com>
+ <8bc02927-a0f0-490a-a014-0e100d30ffe4@intel.com>
+ <1eb61435-c89c-4ca1-b1b6-aa00b3478cd2@arm.com>
+ <556f8a4f-c739-41e0-85ec-643a0b32a2ce@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <556f8a4f-c739-41e0-85ec-643a0b32a2ce@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-
-
-On 1/4/24 15:56, Greg KH wrote:
-> On Thu, Jan 04, 2024 at 03:41:28PM +0000, Tudor Ambarus wrote:
+On 05/01/2024 08:56, David Hildenbrand wrote:
+>>>>>> If I am not wrong, that triggers:
+>>>>>>
+>>>>>> VM_WARN_ON_FOLIO(folio_test_large(folio) &&
+>>>>>>             !folio_test_large_rmappable(folio), folio);
+>>>>>>
+>>>>>> So we are trying to rmap a large folio that did not go through
+>>>>>> folio_prep_large_rmappable().
 >>
->>
->> On 1/4/24 15:32, Greg KH wrote:
->>> On Thu, Dec 28, 2023 at 12:57:57PM +0000, Tudor Ambarus wrote:
->>>> GS101's Connectivity Peripheral blocks (peric0/1 blocks) which
->>>> include the I3C and USI (I2C, SPI, UART) only allow 32-bit
->>>> register accesses. If using 8-bit register accesses, a SError
->>>> Interrupt is raised causing the system unusable.
->>>>
->>>> Instead of specifying the reg-io-width = 4 everywhere, for each node,
->>>> the requirement should be deduced from the compatible.
->>>>
->>>> Prepare the samsung tty driver to allow IO types different than
->>>> UPIO_MEM. ``struct uart_port::iotype`` is an unsigned char where all
->>>> its 8 bits are exposed to uapi. We can't make NULL checks on it to
->>>> verify if it's set, thus always set it from the driver's data.
->>>>
->>>> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
->>>> ---
->>>> v2: new patch
->>>>
->>>>  drivers/tty/serial/samsung_tty.c | 9 ++++++++-
->>>>  1 file changed, 8 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
->>>> index 66bd6c090ace..97ce4b2424af 100644
->>>> --- a/drivers/tty/serial/samsung_tty.c
->>>> +++ b/drivers/tty/serial/samsung_tty.c
->>>> @@ -72,6 +72,7 @@ struct s3c24xx_uart_info {
->>>>  	const char		*name;
->>>>  	enum s3c24xx_port_type	type;
->>>>  	unsigned int		port_type;
->>>> +	unsigned char		iotype;
->>>>  	unsigned int		fifosize;
->>>>  	unsigned long		rx_fifomask;
->>>>  	unsigned long		rx_fifoshift;
->>>
->>> Is there a reason you are trying to add unused memory spaces to this
->>> structure for no valid reason?  I don't think you could have picked a
->>> more incorrect place in there to add this :)
->>>
->>> Please fix.
->>>
->>
->> Will put it after "const char *name".
+>> Would someone mind explaining the rules to me for this? As far as I can see,
+>> folio_prep_large_rmappable() just inits the _deferred_list and sets a flag so we
+>> remember to deinit the list on destruction. Why can't we just init that list for
+>> all folios order-2 or greater? Then everything is rmappable?
 > 
-> If you do, spend some time with the tool, pahole, and see if that's
-> really the best place for it or not.  Might be, might not be, but you
-> should verify it please.
+> I think we much rather want to look into moving all mapcount-related stuff into
+> folio_prep_large_rmappable(). It doesn't make any sense to initialize that for
+> any compound pages, especially the ones that will never get mapped to user space.
+> 
+>>
+>>>>>>
+>>>>>> net/packet/af_packet.c calls vm_insert_page() on some pages/folios stoed
+>>>>>> in the "struct packet_ring_buffer". No idea where that comes from, but I
+>>>>>> suspect it's simply some compound allocation.
+>>>>> Looks like:
+>>>>>     alloc_pg_vec
+>>>>>       alloc_one_pg_vec_page
+>>>>>            gfp_t gfp_flags = GFP_KERNEL | __GFP_COMP |
+>>>>>                              __GFP_ZERO | __GFP_NOWARN | __GFP_NORETRY;
+>>>>>
+>>>>>            buffer = (char *) __get_free_pages(gfp_flags, order);
+>>>>> So you are right here... :).
+>>>>
+>>>> Hm, but I wonder if this something that's supposed to work or is this one of
+>>>> the cases where we should actually use a VM_PFN mapping?
+>>>>
+>>>> It's not a pagecache(file/shmem) page after all.
+>>>>
+>>>> We could relax that check and document why we expect something that is not
+>>>> marked rmappable. But it fells wrong. I suspect this should be a VM_PFNMAP
+>>>> instead (like recent udmabuf changes).
+>>>
+>>> VM_PFNMAP looks correct.
+>>
+>> And why is making the folio rmappable and mapping it the normal way not the
+>> right solution here? Because the folio could be order-1? Or something more
+>> profound?
+>>
+> 
+> Think about it: we are adding/removing a page from rmap handling that can
+> *never* be looked up using the rmap because there is no rmap for these pages,
+> and folio->index is just completely unexpressive. VM_MIXEDMAP doesn't have any
+> linearity constraints.
+
+I guess I was assuming treating it the same way as anon folios. But I guess that
+would be VeryBad (TM) because these aren't anon pages and we don't want to swap,
+etc? OK got it.
+
+> 
+> Logically, it doesn't make any sense to involve rmap code although it currently
+> might work. validate_page_before_insert() blocks off most pages where the
+> order-0 mapcount would be used for other purposes and everything would blow up.
+> 
+> Looking at vm_insert_page(), this interface is only for pages the caller
+> allocated. Maybe we should just not do any rmap accounting when
+> mapping/unmapping these pages: not involve any rmap code, including mapcounts?
+> 
+> vm_normal_page() works on these mappings, so we'd also have to skip rmap code
+> when unmapping these pages etc. Maybe that's the whole reason we have the rmap
+> handling here: to not special-case the unmap path.
+
+Right. I guess it depends what vm_insert_page() is spec'ed to expect; is the bug
+in the implementation or is the caller providing the wrong type of folio? I
+guess there will be many callers providing non-rmappable folios (inc out of tree?).
+
+> 
+> Alternatively, we can:
+> 
+> (1) Require the caller to make sure large folios are rmappable. We
+>     already require allocations to be compound. Should be easy to add.
+
+I'm not sure this is practical given vm_insert_page() is exported?
+
+> (2) Allow non-rmappable folios in rmap code just for mapcount tracking.
+>     Confusing but possible.
+> 
+>>>
+>>> I do have another question: why do we just check the large folio
+>>> rmappable? Does that mean order0 folio is always rmappable?
+>>>
+> 
+> We didn't really have a check for that I believe. We simply reject all pages in
+> vm_insert_page() that are problematic because the pagecount is overloaded.
+> 
+>>> I ask this because vm_insert_pages() is called in net/ipv4/tcp.c
+>>> and drivers call vm_insert_page. I suppose they all need be VM_PFNMAP.
+> 
+> Right, similar problem.
 > 
 
-Thanks!
-
-I played with pahole a bit. For arm32 this struct is not as bad defined
-as for arm64, all members fit in the same cacheline. There are some
-holes though and 2 cachelines for arm64 where this struct needs some
-love. The best and minimum invasive change for my iotype member would be
-to put it before the "has_divslot" member, as the has_divslot bitfield
-will be combined with the previous field.
-
-But I think the entire struct has to be reworked and the driver
-butchered a bit so that we get to a better memory footprint and a single
-cacheline. I volunteer to do this in a separate patch set so that we
-don't block this series. I think the final struct can look as following:
-
-struct s3c24xx_uart_info {
-	const char  *              name;                 /*     0     8 */
-	enum s3c24xx_port_type     type;                 /*     8     4 */
-	unsigned int               port_type;            /*    12     4 */
-	unsigned int               fifosize;             /*    16     4 */
-	u32                        rx_fifomask;          /*    20     4 */
-	u32                        rx_fifoshift;         /*    24     4 */
-	u32                        rx_fifofull;          /*    28     4 */
-	u32                        tx_fifomask;          /*    32     4 */
-	u32                        tx_fifoshift;         /*    36     4 */
-	u32                        tx_fifofull;          /*    40     4 */
-	u32                        clksel_mask;          /*    44     4 */
-	u32                        clksel_shift;         /*    48     4 */
-	u32                        ucon_mask;            /*    52     4 */
-	u8                         def_clk_sel;          /*    56     1 */
-	u8                         num_clks;             /*    57     1 */
-	u8                         iotype;               /*    58     1 */
-	u8                         has_divslot:1;        /*    59: 0  1 */
-
-	/* size: 64, cachelines: 1, members: 17 */
-	/* padding: 4 */
-	/* bit_padding: 7 bits */
-};
-
-
-This looks a lot better than what we have now:
-	/* size: 120, cachelines: 2, members: 17 */
-	/* sum members: 105, holes: 2, sum holes: 8 */
-	/* sum bitfield members: 1 bits (0 bytes) */
-	/* padding: 4 */
-	/* bit_padding: 23 bits */
-	/* last cacheline: 56 bytes */
-
-I'll put iotype before has_divslot and then follow up with a patch set
-to clean the driver. Cheers,
-ta
