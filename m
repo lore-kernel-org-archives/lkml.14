@@ -1,137 +1,157 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D46C5225;
-	Fri,  5 Jan 2024 04:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C595225
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 04:17:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Txq4EHQy"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-33674f60184so1077792f8f.1;
-        Thu, 04 Jan 2024 20:12:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704427969; x=1705032769; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=OLFgjsm/ePBrhreKAVD6iKPTAL6Ej79d9/IiFEfTBI0=;
-        b=Txq4EHQyesep1UExecuo5xg613qImSNdTVyqQ2bOzpuCb23oIsvHAM/ujUm9vu5jyL
-         AF7C4XAZxeoDx0/ANqjlQFbwiitvb3wYC0kzECxRrK6hNRJ4wUkDdXEL8vEhlIkxUYZt
-         1qErX2n/QZkHvU/oDsJFXt6qfkcG5dU5lvpa7oiEjyVxgcSZiti9KyD3kRxR+Hwfxxas
-         NO9GlntgNlWtffdkYhJWHZy/+qCembgftjHrwbEakmdJIAIGGLZAWmVSlxBXPi5dgScD
-         e2xavoNA54fbgiMV1jNYeQcmsb7PibmRTtt373nsg+ecURgPeIs1zUMWwetUg6TgmCeP
-         gXEA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D7LDz2On"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704428276;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=3wBtvd8AcUa+3WyzFrFiVlLy0PPCAnv0pduZK21JO48=;
+	b=D7LDz2OntocsgwDidf+YsLjGpfK3+qZHeIyU9OBoA4fNng9uQ0pxmdcA7EYi62an4iEzn+
+	c20l9DlTCRMMGX45OfWZMjOt+NuefhJQtaAvw+m13uUeNhPLvEcoJje5q//v9fujGnfOEv
+	E7Y3TSD3iwKSkN5OAlbTJxAuReNzWAo=
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
+ [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-111-D34ut3twO6GfGwE1G3ifDA-1; Thu, 04 Jan 2024 23:17:54 -0500
+X-MC-Unique: D34ut3twO6GfGwE1G3ifDA-1
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-6d9dfc1fc38so203427b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 20:17:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704427969; x=1705032769;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OLFgjsm/ePBrhreKAVD6iKPTAL6Ej79d9/IiFEfTBI0=;
-        b=fwUPHF6Lkt8BsVjjU2otxTRuq2XGA07U27rwOo5CoH5VSE4p75FC8pRCThGAwwurwu
-         gNlT+8kxxfuY2cmz7sc1w92fg/ydK5SIMOa6oNGEGhvTaUHR72V2ebvD217QN4g91h/S
-         xQE2wqO0Z0njxuOq2IzmlJ5eMUmOHhlPOHl+YhQjFgBeXUrXYj8U2UJV8VFXVwuq7w8H
-         YzCj/Mfe0tu25WRJ668VxHjiQ/iJMcbV6P9BLsqnVqXED867u7R8wI35LE4aTod0x94p
-         TpdcFMhtYNNPLgoI7B8KuV9Nd3MrmDcc1vct97FqbYymU5lDVqekjC/xQuZ/WqjWiy+G
-         G0og==
-X-Gm-Message-State: AOJu0YyTx6zwLAtqysU9s5zMj81TlvFkLwUMJKpJ261U7AD5HGAbmprg
-	jVxYyUjmU5rP170YUWiImWuvjLi3dQ4=
-X-Google-Smtp-Source: AGHT+IHclGZI4k0BauVsTmj9Gf+ZWggo3ZTfLk0x84mMZWmBhfkAmfZQ61D75J5ZE/ngXYeJwyC40g==
-X-Received: by 2002:a7b:c40c:0:b0:40d:6686:eb75 with SMTP id k12-20020a7bc40c000000b0040d6686eb75mr838086wmi.161.1704427969074;
-        Thu, 04 Jan 2024 20:12:49 -0800 (PST)
-Received: from [192.168.8.100] ([85.255.233.36])
-        by smtp.gmail.com with ESMTPSA id fa17-20020a05600c519100b0040d7b1ef521sm249118wmb.15.2024.01.04.20.12.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Jan 2024 20:12:48 -0800 (PST)
-Message-ID: <c9505525-54d9-4610-a47a-5f8d2d3f8de6@gmail.com>
-Date: Fri, 5 Jan 2024 04:02:38 +0000
+        d=1e100.net; s=20230601; t=1704428273; x=1705033073;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3wBtvd8AcUa+3WyzFrFiVlLy0PPCAnv0pduZK21JO48=;
+        b=OsnNCaWMrEv1R2kkh94294tfedSpiE0fXbWMPjpwG4pW2a69iF6Yh9cznEcK8O3O4z
+         2dekSziuZ+P06esmJTYN11UlnLr6rw1roR9Rh3fqNIk/8M/dRRqIpjYFLFrjBHcJg/51
+         OQStJuL1wDJyYBlIWzVI/Ue7xZytBrA1sC/3fr8sHIDxAJsDod1EVPwfGdL6GCalZuCg
+         aijDCpPU5oNbXK40hZpW1CWnUn2oB94X5G+iuoGGIqI06/252UCQr0j6qzfiZxQKdGsv
+         srphhXYcRQL/FZZcq3qq/xg/IWSZRx1onfeDdyr9IGpkdbJ7vWDNm459QRrIuD4STPtF
+         TDuQ==
+X-Gm-Message-State: AOJu0YzUc5p6YNqAbUTI3wBSsS8PYjYqpGkZ2s2BRFh4lgP3Z28C47XD
+	HWfkWjVFUADGGaT9A+3ySOFhXV4220kJ5RRT1371h/lzltZRyxRAj504VaMgWnVBZRiWuiZMw8F
+	9rF9N1QBmgvVQHYDQu/sYYHUk+jyzxeMx713K5KyX
+X-Received: by 2002:a05:6a20:e104:b0:197:78be:b5f6 with SMTP id kr4-20020a056a20e10400b0019778beb5f6mr1830571pzb.30.1704428272963;
+        Thu, 04 Jan 2024 20:17:52 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEokiFCVyap5KJ89I1Q0gN7ZI5vIsHsS7JOPAzDv9bI+X0Kz7fuEisChZiKFaACtFiEjxUVXg==
+X-Received: by 2002:a05:6a20:e104:b0:197:78be:b5f6 with SMTP id kr4-20020a056a20e10400b0019778beb5f6mr1830559pzb.30.1704428272620;
+        Thu, 04 Jan 2024 20:17:52 -0800 (PST)
+Received: from localhost.localdomain ([2804:431:c7ec:3efd:1dbc:859f:ecb4:d775])
+        by smtp.gmail.com with ESMTPSA id s11-20020a63f04b000000b005cdad153d84sm443222pgj.90.2024.01.04.20.17.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jan 2024 20:17:51 -0800 (PST)
+From: Leonardo Bras <leobras@redhat.com>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Leonardo Bras <leobras@redhat.com>,
+	Guo Hui <guohui@uniontech.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/1] arm64: remove unnecessary ifdefs around is_compat_task()
+Date: Fri,  5 Jan 2024 01:15:00 -0300
+Message-ID: <20240105041458.126602-3-leobras@redhat.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Pavel Begunkov <asml.silence@gmail.com>
-Subject: Re: [PATCH v6] io_uring: Statistics of the true utilization of sq
- threads.
-To: Xiaobing Li <xiaobing.li@samsung.com>, axboe@kernel.dk
-Cc: linux-kernel@vger.kernel.org, io-uring@vger.kernel.org,
- kun.dou@samsung.com, peiwei.li@samsung.com, joshi.k@samsung.com,
- kundan.kumar@samsung.com, wenwen.chen@samsung.com, ruyi.zhang@samsung.com
-References: <7967c7a9-3d17-44de-a170-2b5354460126@gmail.com>
- <CGME20240103055746epcas5p148c2b06032e09956ddcfc72894abc82a@epcas5p1.samsung.com>
- <20240103054940.2121301-1-xiaobing.li@samsung.com>
-Content-Language: en-US
-In-Reply-To: <20240103054940.2121301-1-xiaobing.li@samsung.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 1/3/24 05:49, Xiaobing Li wrote:
-> On 12/30/23 9:27 AM, Pavel Begunkov wrote:
->> Why it uses jiffies instead of some task run time?
->> Consequently, why it's fine to account irq time and other
->> preemption? (hint, it's not)
->>
->> Why it can't be done with userspace and/or bpf? Why
->> can't it be estimated by checking and tracking
->> IORING_SQ_NEED_WAKEUP in userspace?
->>
->> What's the use case in particular? Considering that
->> one of the previous revisions was uapi-less, something
->> is really fishy here. Again, it's a procfs file nobody
->> but a few would want to parse to use the feature.
->>
->> Why it just keeps aggregating stats for the whole
->> life time of the ring? If the workload changes,
->> that would either totally screw the stats or would make
->> it too inert to be useful. That's especially relevant
->> for long running (days) processes. There should be a
->> way to reset it so it starts counting anew.
-> 
-> Hi, Jens and Pavel,
-> I carefully read the questions you raised.
-> First of all, as to why I use jiffies to statistics time, it
-> is because I have done some performance tests and found that
-> using jiffies has a relatively smaller loss of performance
-> than using task run time. Of course, using task run time is
+Currently some parts of the codebase will test for CONFIG_COMPAT before
+testing is_compat_task().
 
-How does taking a measure for task runtime looks like? I expect it to
-be a simple read of a variable inside task_struct, maybe with READ_ONCE,
-in which case the overhead shouldn't be realistically measurable. Does
-it need locking?
+is_compat_task() is a inlined function only present on CONFIG_COMPAT.
+On the other hand, for !CONFIG_COMPAT, we have in linux/compat.h:
 
-> indeed more accurate.  But in fact, our requirements for
-> accuracy are not particularly high, so after comprehensive
+#define is_compat_task() (0)
 
-I'm looking at it as a generic feature for everyone, and the
-accuracy behaviour is dependent on circumstances. High load
-networking spends quite a good share of CPU in softirq, and
-preemption would be dependent on config, scheduling, pinning,
-etc.
+Since we have this define available in every usage of is_compat_task() for
+!CONFIG_COMPAT, it's unnecessary to keep the ifdefs, since the compiler is
+smart enough to optimize-out those snippets on CONFIG_COMPAT=n
 
-> consideration, we finally chose to use jiffies.
-> Of course, if you think that a little more performance loss
-> here has no impact, I can use task run time instead, but in
-> this case, does the way of calculating sqpoll thread timeout
-> also need to be changed, because it is also calculated through
-> jiffies.
+Signed-off-by: Leonardo Bras <leobras@redhat.com>
+---
+Changes since RFCv1:
+- Removed unnecessary new inlined is_compat_task() for arm64
+- Adjusted commit text and title
+Link: https://lore.kernel.org/all/20240104192433.109983-2-leobras@redhat.com/
 
-That's a good point. It doesn't have to change unless you're
-directly inferring the idle time parameter from those two
-time values rather than using the ratio. E.g. a simple
-bisection of the idle time based on the utilisation metric
-shouldn't change. But that definitely raises the question
-what idle_time parameter should exactly mean, and what is
-more convenient for algorithms.
+ arch/arm64/kernel/ptrace.c  | 6 ++----
+ arch/arm64/kernel/syscall.c | 5 +----
+ 2 files changed, 3 insertions(+), 8 deletions(-)
 
-
-> Then there’s how to use this metric.
-> We are studying some optimization methods for io-uring, including
-> performance and CPU utilization, but we found that there is
-> currently no tool that can observe the CPU ratio of sqthread's
-> actual processing IO part, so we want to merge this method  that
-> can observe this value so that we can more easily observe the
-> optimization effects.
-
+diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+index 20d7ef82de90a..9f8781f1fdfda 100644
+--- a/arch/arm64/kernel/ptrace.c
++++ b/arch/arm64/kernel/ptrace.c
+@@ -173,7 +173,6 @@ static void ptrace_hbptriggered(struct perf_event *bp,
+ 	struct arch_hw_breakpoint *bkpt = counter_arch_bp(bp);
+ 	const char *desc = "Hardware breakpoint trap (ptrace)";
+ 
+-#ifdef CONFIG_COMPAT
+ 	if (is_compat_task()) {
+ 		int si_errno = 0;
+ 		int i;
+@@ -195,7 +194,7 @@ static void ptrace_hbptriggered(struct perf_event *bp,
+ 						  desc);
+ 		return;
+ 	}
+-#endif
++
+ 	arm64_force_sig_fault(SIGTRAP, TRAP_HWBKPT, bkpt->trigger, desc);
+ }
+ 
+@@ -2112,7 +2111,6 @@ long compat_arch_ptrace(struct task_struct *child, compat_long_t request,
+ 
+ const struct user_regset_view *task_user_regset_view(struct task_struct *task)
+ {
+-#ifdef CONFIG_COMPAT
+ 	/*
+ 	 * Core dumping of 32-bit tasks or compat ptrace requests must use the
+ 	 * user_aarch32_view compatible with arm32. Native ptrace requests on
+@@ -2123,7 +2121,7 @@ const struct user_regset_view *task_user_regset_view(struct task_struct *task)
+ 		return &user_aarch32_view;
+ 	else if (is_compat_thread(task_thread_info(task)))
+ 		return &user_aarch32_ptrace_view;
+-#endif
++
+ 	return &user_aarch64_view;
+ }
+ 
+diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
+index 9a70d9746b661..ad198262b9817 100644
+--- a/arch/arm64/kernel/syscall.c
++++ b/arch/arm64/kernel/syscall.c
+@@ -20,14 +20,11 @@ long sys_ni_syscall(void);
+ 
+ static long do_ni_syscall(struct pt_regs *regs, int scno)
+ {
+-#ifdef CONFIG_COMPAT
+-	long ret;
+ 	if (is_compat_task()) {
+-		ret = compat_arm_syscall(regs, scno);
++		long ret = compat_arm_syscall(regs, scno);
+ 		if (ret != -ENOSYS)
+ 			return ret;
+ 	}
+-#endif
+ 
+ 	return sys_ni_syscall();
+ }
 -- 
-Pavel Begunkov
+2.43.0
+
