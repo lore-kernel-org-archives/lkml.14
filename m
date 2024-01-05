@@ -1,497 +1,226 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2065.outbound.protection.outlook.com [40.107.243.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8498D2E826
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 14:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F2C18EB7
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 14:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="wgiEFzp6"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-50e7c6e3c63so1785942e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 06:29:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1704464963; x=1705069763; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FYFFN4pjkdtnlZETCBGaOGQVgdsFE9pmEXoyxnP4sYs=;
-        b=wgiEFzp6U5y1OsFhFs0j++9qeFyN+8q1T6YmiS+ePxDh9FWWvMVDJPrNgWnRzReifv
-         TEMbto8hGJ2mwyZBHmdGTjSAxv0hty2I2O1Lta/4v+rrXOQ44hV47OtGkqUdUz/9IX0x
-         tBQaCegPdVRQ0gVDdq2s6tLsTQpIpBmuLbWapkSkI43zpAz8bQKBPo3/zV4NFcmEAUiF
-         OINzHrAKh6rYbYtENa/14TvHSMyQyUMLtabyubS5FEWZzQuIGU7qajRm2rMc4Q85G4cZ
-         uP0LHe5nkl2QrfjRa/1neS0iFJvhaB1okuXi1czTsr3CaSv2loQJgugjcNrHyqcQq0Wz
-         VW2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704464963; x=1705069763;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FYFFN4pjkdtnlZETCBGaOGQVgdsFE9pmEXoyxnP4sYs=;
-        b=OHcZmHMgp8+V6va4eA+AwOeAw7FHqIfn118fgKOvoz2GqaGZEsjq9XCM0degIJA/Yl
-         CGpuAZOpNsFH+qiq79C/xokfv2UPPMb4aUttmovhUQxeTUkFZR6BELkZ7JtJI9EYp0lJ
-         uChaAsP6WZdSH1YnHmWMPXKtStmadAKGxNbgMUC4qLpQ1b9wMzB5AEiY2Duc3l+k+7AP
-         0vz6ESkM7Prg6+LcEZp5CoGU1yzSAe22p1WAOh9kBCTgfklJPkIkTOs1ADWzyageUQFs
-         Qi/VusPPy+9C3uysD3A2J0UFPo0yxAclco/dyLSAs0agCVhnE/gYaFCQLjGnrRypHVXR
-         4WSg==
-X-Gm-Message-State: AOJu0Yze6N0Bf5GhF4I3RcJEKi6Bzv5lBF39ZsYlfKAnki2A/WtsGmZn
-	D32mXEC6piRdtiO9X1YNOKF6Ql+8VaB7bQ==
-X-Google-Smtp-Source: AGHT+IELSZ6Ej5QPNA1WPPUR7WOkfqM8XJh5H8fs0A8p8/KYNyVShiG8hhNgFhRSD/x38l+tM5ZkTQ==
-X-Received: by 2002:a19:f60d:0:b0:50e:7f75:698 with SMTP id x13-20020a19f60d000000b0050e7f750698mr555160lfe.92.1704464963446;
-        Fri, 05 Jan 2024 06:29:23 -0800 (PST)
-Received: from otso.luca.vpn.lucaweiss.eu (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id u7-20020a1709067d0700b00a26b057df46sm927006ejo.126.2024.01.05.06.29.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jan 2024 06:29:22 -0800 (PST)
-From: Luca Weiss <luca.weiss@fairphone.com>
-Date: Fri, 05 Jan 2024 15:29:13 +0100
-Subject: [PATCH 2/3] drm/panel: Add driver for DJN HX83112A LCD panel
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="q7yn9C21"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mV0BrutfYSFb4cAbCBz8LAZ7gzJ1DQTck918inKYSBhevnsvhiDtPn/Bh+t7qBXVrf81BJzbZ/Iy7iHXPLIZTqoCl21b4kCy/VI0LA5H9ahd/MW8V52aubJK3DJl9VIjHDFoU36T58IOu0ka8ZZou6MrTprRptDNfbu6mH7XNBd5rhfM4LLERiL3hdmr/3K0gaMT59yMEIZbB0CemxSs7G4qBkggSGBxdINwZDcQ2sEpNRZYE/1LqIy5I7Cr5SGPo6eKdVnCyXriJ2MxIRnod0B1MT0ltFHUBrcJ9lC3qxQeitKjfRmOsY4TQO2QXg5icBBedrVt7tjII/BFwphlAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WkC9z19jXJSfeSMuCzc2nYwKhe0Z/nLxK4bz/vRS0E8=;
+ b=Suq8ZK6ayVeOEA0n7CrvOe3/U5iQ7ZAm9wTDhJbeMeWcF/cGVTlkg/+f2fFBy3EzWPC/5Xx3d/i6Pj09gTZqB7pL0yDnKwj15ME17aG8yH6hnKf2d/6oBxjACU5SJRT3gUcUmCweJ9qoeSSSbgdnNmegtg1Gi1vMpr27PhGVI76GaAGddJdJA2s+enOAcH/B6/2gb1O5s81LSA6pgrRrni1rBfBpY9+HdaXzb/pUS0YL53iLmllG2dUUFhKKoKg2bLH3umdMIdQz3uv/gRgAKPShpsbFLzC7YYpcfLCgjQeRfrfEDJZANCNMMuoWZY/Zi+OY3/NpVjdjaQarR0kPRw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WkC9z19jXJSfeSMuCzc2nYwKhe0Z/nLxK4bz/vRS0E8=;
+ b=q7yn9C21vJYwDuNyDIXLmzsU3PWBHtr5XOm0+3KlnWVe5AYZAIYn8yz4OSdtunR+qyoKu04wFYnv2UFSKPi16isu6SzUrD1ekQEHxIndMYf0dv57w8ZjaYZz3qCC0JV+qmaL4u0M8FcKmQYrwzchbs9a31RLeCwzjphzgFZk6M2BUuwtAIGjGLaGSwrCCeD53heF5ya75FQqdwfF6JfDb+tckGxJvJzls1VQxUguV9cl1noblE81AIn3j0DlFbc6x9jP8qwXYNQCzNqzx/CmVBNuograQ8pdVJND1S3FIHp0/uFOrZ6nQrxEC5ed9LpXPdqgGdA2oOS/PLsvS4/D0w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
+ by SN7PR12MB7910.namprd12.prod.outlook.com (2603:10b6:806:34b::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.17; Fri, 5 Jan
+ 2024 14:31:03 +0000
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::60d4:c1e3:e1aa:8f93]) by LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::60d4:c1e3:e1aa:8f93%4]) with mapi id 15.20.7159.015; Fri, 5 Jan 2024
+ 14:31:03 +0000
+Date: Fri, 5 Jan 2024 10:31:02 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: "Suthikulpanit, Suravee" <suravee.suthikulpanit@amd.com>
+Cc: linux-kernel@vger.kernel.org, iommu@lists.linux.dev, joro@8bytes.org,
+	yi.l.liu@intel.com, kevin.tian@intel.com, nicolinc@nvidia.com,
+	eric.auger@redhat.com, vasant.hegde@amd.com, jon.grimm@amd.com,
+	santosh.shukla@amd.com, Dhaval.Giani@amd.com, pandoh@google.com,
+	loganodell@google.com
+Subject: Re: [RFC PATCH 6/6] iommu/amd: Introduce nested translation support
+Message-ID: <20240105143102.GZ50406@nvidia.com>
+References: <20231212160139.174229-1-suravee.suthikulpanit@amd.com>
+ <20231212160139.174229-7-suravee.suthikulpanit@amd.com>
+ <20231213135206.GD3259566@nvidia.com>
+ <12c5b705-1387-4d50-8706-cf5c35dcb3cc@amd.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <12c5b705-1387-4d50-8706-cf5c35dcb3cc@amd.com>
+X-ClientProxiedBy: BL1PR13CA0108.namprd13.prod.outlook.com
+ (2603:10b6:208:2b9::23) To LV2PR12MB5869.namprd12.prod.outlook.com
+ (2603:10b6:408:176::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240105-fp4-panel-v1-2-1afbabc55276@fairphone.com>
-References: <20240105-fp4-panel-v1-0-1afbabc55276@fairphone.com>
-In-Reply-To: <20240105-fp4-panel-v1-0-1afbabc55276@fairphone.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- Luca Weiss <luca.weiss@fairphone.com>
-X-Mailer: b4 0.12.4
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|SN7PR12MB7910:EE_
+X-MS-Office365-Filtering-Correlation-Id: 53409002-5a9e-4a48-aa2a-08dc0dfaf1e8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	vXihLklpCBdoxXS7I7A4R4hZWQ9uwH1U9ua9fTiyvHdQjuVSESokJ7+dtRONZJsoRt+lFuhOrhy6Vp5PpnIwkiLRL5DhKW+xgz2OM+aiDOAYgeD/dC1VsKZNgQc59hy79hqJON8Y1VuOHCtNFC35FjmFyH2P+GgRzE2aRdCHK3fMcvsefNqnnl0xYwGj1EoFIbA2ixpwnSDHddMh5TIFw0UF21Z9NZveWNFPPz6kT6rvYHcDg5ZPZFl/GlLm9d7qumDL+1J78ZM1fWbKr4GQX4J+5xsn0kh4aZYVkQnJSajoOwe17o1oFX8E8w8xBUDlwtTgraZm17VxKapyYHqW3mtzA7I+KDZ466BMmmQUheWutMRK2ATMGTWL2o3Uj+oRLr6lhTenr5ndRClab065QJVOpPkkyxJkNobN/FBGixuE5CHGgKJhUB/Dq2ImMsQ5lwNKUUehLvcgH365PWsAg+pUBwpDiai4elFK4PVxhoefI8FjPHaw5ptIxiMMUMYbsWY2katb4HL7xPqRQyAL1IR134L7W1SMrGHu7sP/lqlOqcX/pH/AFONXAKtVlRhMJFJxJVGAwvyVon3fXLPcVVbTJwOQYy7gdSpttQEE4oQ=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(376002)(39860400002)(346002)(136003)(396003)(230922051799003)(1800799012)(186009)(451199024)(64100799003)(83380400001)(2616005)(4326008)(6506007)(6486002)(38100700002)(478600001)(966005)(26005)(1076003)(6512007)(66476007)(316002)(8936002)(66556008)(66946007)(8676002)(6916009)(86362001)(41300700001)(33656002)(2906002)(36756003)(5660300002)(7416002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?jLNyLYGuDUVdQDsJQZdP2B9z2IIUMjWKDLgEiWr0WmNynAeuxrMM8U7liM2I?=
+ =?us-ascii?Q?1hflseFUMxQCFyACtD9V2cyC+/x6eqG/ioOE0VYFpK28GGGIVKBnZ4eEIL2q?=
+ =?us-ascii?Q?Ta0qxAQD2SV864OqnDQXwKgsJwQ07Upl/5X3CjT27wmnbu6fe4fJ/BXjyoFv?=
+ =?us-ascii?Q?976odFM7d7uth8cOlHQAE5bX7/xPh3G5eOfopPFUheExIr2vmJVdftmrp0jR?=
+ =?us-ascii?Q?uueIDMsfM+WbsW9ayJrC7x1tv1DvGrRjt20h4NdnNaMeEp+FhqB6NioMeN1D?=
+ =?us-ascii?Q?ILsbfDhRvbIuikQJsZspPtyqCtRMfwxeSqitmGIqetUJ3k0tbrOhML7/3K9Y?=
+ =?us-ascii?Q?uySZnrYr6cczNA4HFNoaP8kRu+2Bo0GHSp7QzsifgrFhXWjPyAd9z4/nc7Ap?=
+ =?us-ascii?Q?7h6Vgne07IXYqmCw78eGJnr+DIPDDTFn11oz0ydZepyBVYsUl/9FCzc/gEHS?=
+ =?us-ascii?Q?c4xJDFtVmj0JwQtZcTY1mGidjKeq/e3i4oqFxb2fL9IyqOi0IZV8cY/uwCZJ?=
+ =?us-ascii?Q?sc99RdqqBzSKidLFtaQtAJ4MN/pvJkaDnTJupfzwUaJ56GyRqfm+gCDlqnq+?=
+ =?us-ascii?Q?ruNXq0Fp2YlXOYO0IGtRMyjyHyocRm2HvMuP9V8wqXlUvQjPONnI4g4vqB94?=
+ =?us-ascii?Q?a4RKY9gosNmXBM7+cQvHG6WP8LGNzc7QPvrovNc9/Tly7eXpSmn/QQUbgPET?=
+ =?us-ascii?Q?J15TuyQ+neMyzR5knBPr75tUwFSy/xvtCc+uWOieCCvI8mNCDQqK/OC9N0Oz?=
+ =?us-ascii?Q?GoSRdZBpkXnNGf42Jg/V5T0ChWZ7miEDecfZR/d0r2H5fEgQVAlD6X++Ebx+?=
+ =?us-ascii?Q?yMEO2oUzU3G7oKBYly8eCZk/NjZ84ZZcBTp/ZZt+etdZHeiq53Sr3PDhV0Rp?=
+ =?us-ascii?Q?l/aO6QqyCmw7+Ur5xCRY6x+dPzxhVbgNWAiaIJGFrdnD8Yrp57O/6ZjUvS1n?=
+ =?us-ascii?Q?8ZQ4cR2uSjzaFTuvwfcsfqrY8qz0+6ugoVuecieqEJeEXZXQ7xzGEQPzgw0/?=
+ =?us-ascii?Q?Pk9ZcxFMeSDrtivY70jPGhuMggvqH96m4YdCw3S7pWoePbhMgfZ1NEJUDKBD?=
+ =?us-ascii?Q?wWT59gPbttF6ktMGf9vbP9WIGqkqkF4TNtnzB6D/Lk1KxqWGqmPhpg9abriY?=
+ =?us-ascii?Q?Hu95re/b9VC4dueVSK+yDWVrvELyAfA1KS8XuRlAZoq1pQHcsPqPBAZa51a0?=
+ =?us-ascii?Q?mxno8xMjRlmn3fUh63umoRAxwfS8ccJ7RVpy8NkHmtF7gu6QbUxuV9soaEwP?=
+ =?us-ascii?Q?41hztZo0LIThhXxrgEr2Ow+7xit/vhpoTbrtYr3ygd7proqC9ajEE40AG7ra?=
+ =?us-ascii?Q?S8akzFYj8D3srgK5uSWX/eNVmtAoPsLvkaFdKN2loFrm8vhApoxRHGepUACU?=
+ =?us-ascii?Q?a6ZEGHrbwS+zqHp0irEBtGSrJ1yl6MQ+5PPRQcNV0qSKAuVsKLo3yGsk9ShB?=
+ =?us-ascii?Q?o4ryIaHhgcXd481kIlZKObQC6ndolXuAsxhj2tOLyZR+WqsJwGoRvS0ZtXRq?=
+ =?us-ascii?Q?jSkLYcTCHOuh4tqkxxzLaJNFKEnI/d/USEqeu0ZXPOCxkoZJG2EPqIfJqKuC?=
+ =?us-ascii?Q?SQwTml78sZgf5MzwpuU=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 53409002-5a9e-4a48-aa2a-08dc0dfaf1e8
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2024 14:31:03.2899
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +kq90Pwbp/Inze7F9MjqtVsOZlGWkhhZdahMt/FF7ghnAI4/BbMiQbRDIQVIBNxx
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7910
 
-Add support for the 2340x1080 LCD DJN panel bundled with a HX83112A
-driver IC, as found on the Fairphone 4 smartphone.
+On Fri, Jan 05, 2024 at 08:38:47PM +0700, Suthikulpanit, Suravee wrote:
+> > > +	if (!pdev)
+> > > +		return -EINVAL;
+> > > +
+> > > +	/* Note: Currently only support GCR3TRPMode with nested translation */
+> > > +	if (!check_feature2(FEATURE_GCR3TRPMODE))
+> > > +		return -EOPNOTSUPP;
+> > > +
+> > > +	ret = amd_iommu_set_gcr3tbl_trp(iommu, pdev, hwpt->gcr3, hwpt->glx,
+> > > +					hwpt->guest_paging_mode);
+> > 
+> > Waah?
+> > 
+> > This is touching the dev table? That is not right, allocation is only
+> > *ALLOCATION*. The dev table can't be changed until you do attachment.
+> 
+> My understanding is QEMU should call:
+> 
+> 1. iommufd_backend_get_ioas()
+>    -> ioctl(IOMMU_IOAS_ALLOC)
+> 
+> 2. For parent domain
+> iommufd_backend_alloc_hwpt(IOMMU_HWPT_ALLOC_NEST_PARENT)
+>   -> ioctl( IOMMU_HWPT_ALLOC)
+>   --- in Linux ---
+>   ....
+>   -> iommufd_hwpt_paging_alloc()
+>     -> struct iommu_ops.domain_alloc_user(IOMMU_HWPT_ALLOC_NEST_PARENT)
+> 
+> 3. For parent domain
+> iommufd_device_attach_hwpt()
+>   -> vfio_device_attach_container()
+>     -> ioctl(VFIO_DEVICE_ATTACH_IOMMUFD_PT)
+>     --- in Linux ---
+>     vfio_iommufd_physical_attach_ioas()
+>     -> iommufd_device_attach()
+>       -> iommufd_device_do_attach()
+>         -> iommufd_hw_pagetable_attach()
+> 
+> 4. Same as (2) but for child domain w/ stage 1 table.
+> 
+> 5. Same as (3) but for child domain w/ stage 1 table.
 
-Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
----
- drivers/gpu/drm/panel/Kconfig                |   9 +
- drivers/gpu/drm/panel/Makefile               |   1 +
- drivers/gpu/drm/panel/panel-himax-hx83112a.c | 372 +++++++++++++++++++++++++++
- 3 files changed, 382 insertions(+)
+Yes, but understand it is not API that the driver can depend on that
+order. #3 can be skipped and there can be multiple parents and
+everything must still work.
 
-diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index 99e14dc212ec..e98d329826f2 100644
---- a/drivers/gpu/drm/panel/Kconfig
-+++ b/drivers/gpu/drm/panel/Kconfig
-@@ -162,6 +162,15 @@ config DRM_PANEL_FEIYANG_FY07024DI26A30D
- 	  Say Y if you want to enable support for panels based on the
- 	  Feiyang FY07024DI26A30-D MIPI-DSI interface.
- 
-+config DRM_PANEL_HIMAX_HX83112A
-+	tristate "Himax HX83112A-based DSI panel"
-+	depends on OF
-+	depends on DRM_MIPI_DSI
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	help
-+	  Say Y here if you want to enable support for Himax HX83112A-based
-+	  display panels, such as the one found in the Fairphone 4 smartphone.
-+
- config DRM_PANEL_HIMAX_HX8394
- 	tristate "HIMAX HX8394 MIPI-DSI LCD panels"
- 	depends on OF
-diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index d10c3de51c6d..c2fc4c8c8340 100644
---- a/drivers/gpu/drm/panel/Makefile
-+++ b/drivers/gpu/drm/panel/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_DRM_PANEL_EBBG_FT8719) += panel-ebbg-ft8719.o
- obj-$(CONFIG_DRM_PANEL_ELIDA_KD35T133) += panel-elida-kd35t133.o
- obj-$(CONFIG_DRM_PANEL_FEIXIN_K101_IM2BA02) += panel-feixin-k101-im2ba02.o
- obj-$(CONFIG_DRM_PANEL_FEIYANG_FY07024DI26A30D) += panel-feiyang-fy07024di26a30d.o
-+obj-$(CONFIG_DRM_PANEL_HIMAX_HX83112A) += panel-himax-hx83112a.o
- obj-$(CONFIG_DRM_PANEL_HIMAX_HX8394) += panel-himax-hx8394.o
- obj-$(CONFIG_DRM_PANEL_ILITEK_IL9322) += panel-ilitek-ili9322.o
- obj-$(CONFIG_DRM_PANEL_ILITEK_ILI9341) += panel-ilitek-ili9341.o
-diff --git a/drivers/gpu/drm/panel/panel-himax-hx83112a.c b/drivers/gpu/drm/panel/panel-himax-hx83112a.c
-new file mode 100644
-index 000000000000..ce86aad11bf5
---- /dev/null
-+++ b/drivers/gpu/drm/panel/panel-himax-hx83112a.c
-@@ -0,0 +1,372 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Generated with linux-mdss-dsi-panel-driver-generator from vendor device tree.
-+ * Copyright (c) 2024 Luca Weiss <luca.weiss@fairphone.com>
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_modes.h>
-+#include <drm/drm_panel.h>
-+
-+struct hx83112a_panel {
-+	struct drm_panel panel;
-+	struct mipi_dsi_device *dsi;
-+	struct regulator_bulk_data supplies[3];
-+	struct gpio_desc *reset_gpio;
-+	bool prepared;
-+};
-+
-+static inline struct hx83112a_panel *to_hx83112a_panel(struct drm_panel *panel)
-+{
-+	return container_of(panel, struct hx83112a_panel, panel);
-+}
-+
-+static void hx83112a_reset(struct hx83112a_panel *ctx)
-+{
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-+	msleep(20);
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+	msleep(20);
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-+	msleep(50);
-+}
-+
-+static int hx83112a_on(struct hx83112a_panel *ctx)
-+{
-+	struct mipi_dsi_device *dsi = ctx->dsi;
-+	struct device *dev = &dsi->dev;
-+	int ret;
-+
-+	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-+
-+	mipi_dsi_dcs_write_seq(dsi, 0xb9, 0x83, 0x11, 0x2a);
-+	mipi_dsi_dcs_write_seq(dsi, 0xb1,
-+			       0x08, 0x28, 0x28, 0x83, 0x83, 0x4c, 0x4f, 0x33);
-+	mipi_dsi_dcs_write_seq(dsi, 0xb2,
-+			       0x00, 0x02, 0x00, 0x90, 0x24, 0x00, 0x08, 0x19,
-+			       0xea, 0x11, 0x11, 0x00, 0x11, 0xa3);
-+	mipi_dsi_dcs_write_seq(dsi, 0xb4,
-+			       0x58, 0x68, 0x58, 0x68, 0x0f, 0xef, 0x0b, 0xc0,
-+			       0x0b, 0xc0, 0x0b, 0xc0, 0x00, 0xff, 0x00, 0xff,
-+			       0x00, 0x00, 0x14, 0x15, 0x00, 0x29, 0x11, 0x07,
-+			       0x12, 0x00, 0x29);
-+	mipi_dsi_dcs_write_seq(dsi, 0xbd, 0x02);
-+	mipi_dsi_dcs_write_seq(dsi, 0xb4,
-+			       0x00, 0x12, 0x12, 0x11, 0x88, 0x12, 0x12, 0x00,
-+			       0x53);
-+	mipi_dsi_dcs_write_seq(dsi, 0xbd, 0x00);
-+	mipi_dsi_dcs_write_seq(dsi, 0xbd, 0x03);
-+	mipi_dsi_dcs_write_seq(dsi, 0xc1,
-+			       0xff, 0xfe, 0xfb, 0xf8, 0xf4, 0xf1, 0xed, 0xe6,
-+			       0xe2, 0xde, 0xdb, 0xd6, 0xd3, 0xcf, 0xca, 0xc6,
-+			       0xc2, 0xbe, 0xb9, 0xb0, 0xa7, 0x9e, 0x96, 0x8d,
-+			       0x84, 0x7c, 0x74, 0x6b, 0x62, 0x5a, 0x51, 0x49,
-+			       0x41, 0x39, 0x31, 0x29, 0x21, 0x19, 0x12, 0x0a,
-+			       0x06, 0x05, 0x02, 0x01, 0x00, 0x00, 0xc9, 0xb3,
-+			       0x08, 0x0e, 0xf2, 0xe1, 0x59, 0xf4, 0x22, 0xad,
-+			       0x40);
-+	mipi_dsi_dcs_write_seq(dsi, 0xbd, 0x02);
-+	mipi_dsi_dcs_write_seq(dsi, 0xc1,
-+			       0xff, 0xfe, 0xfb, 0xf8, 0xf4, 0xf1, 0xed, 0xe6,
-+			       0xe2, 0xde, 0xdb, 0xd6, 0xd3, 0xcf, 0xca, 0xc6,
-+			       0xc2, 0xbe, 0xb9, 0xb0, 0xa7, 0x9e, 0x96, 0x8d,
-+			       0x84, 0x7c, 0x74, 0x6b, 0x62, 0x5a, 0x51, 0x49,
-+			       0x41, 0x39, 0x31, 0x29, 0x21, 0x19, 0x12, 0x0a,
-+			       0x06, 0x05, 0x02, 0x01, 0x00, 0x00, 0xc9, 0xb3,
-+			       0x08, 0x0e, 0xf2, 0xe1, 0x59, 0xf4, 0x22, 0xad,
-+			       0x40);
-+	mipi_dsi_dcs_write_seq(dsi, 0xbd, 0x01);
-+	mipi_dsi_dcs_write_seq(dsi, 0xc1,
-+			       0xff, 0xfe, 0xfb, 0xf8, 0xf4, 0xf1, 0xed, 0xe6,
-+			       0xe2, 0xde, 0xdb, 0xd6, 0xd3, 0xcf, 0xca, 0xc6,
-+			       0xc2, 0xbe, 0xb9, 0xb0, 0xa7, 0x9e, 0x96, 0x8d,
-+			       0x84, 0x7c, 0x74, 0x6b, 0x62, 0x5a, 0x51, 0x49,
-+			       0x41, 0x39, 0x31, 0x29, 0x21, 0x19, 0x12, 0x0a,
-+			       0x06, 0x05, 0x02, 0x01, 0x00, 0x00, 0xc9, 0xb3,
-+			       0x08, 0x0e, 0xf2, 0xe1, 0x59, 0xf4, 0x22, 0xad,
-+			       0x40);
-+	mipi_dsi_dcs_write_seq(dsi, 0xbd, 0x00);
-+	mipi_dsi_dcs_write_seq(dsi, 0xc1, 0x01);
-+	mipi_dsi_dcs_write_seq(dsi, 0xc7, 0x70, 0x00, 0x04, 0xe0, 0x33, 0x00);
-+	mipi_dsi_dcs_write_seq(dsi, 0xcc, 0x08);
-+	mipi_dsi_dcs_write_seq(dsi, 0xd2, 0x2b, 0x2b);
-+	mipi_dsi_dcs_write_seq(dsi, 0xd3,
-+			       0x80, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x08,
-+			       0x08, 0x03, 0x03, 0x22, 0x18, 0x07, 0x07, 0x07,
-+			       0x07, 0x32, 0x10, 0x06, 0x00, 0x06, 0x32, 0x10,
-+			       0x07, 0x00, 0x07, 0x32, 0x19, 0x31, 0x09, 0x31,
-+			       0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x00, 0x08,
-+			       0x09, 0x30, 0x00, 0x00, 0x00, 0x06, 0x0d, 0x00,
-+			       0x0f);
-+	mipi_dsi_dcs_write_seq(dsi, 0xbd, 0x01);
-+	mipi_dsi_dcs_write_seq(dsi, 0xd3,
-+			       0x00, 0x00, 0x19, 0x10, 0x00, 0x0a, 0x00, 0x81);
-+	mipi_dsi_dcs_write_seq(dsi, 0xbd, 0x00);
-+	mipi_dsi_dcs_write_seq(dsi, 0xd5,
-+			       0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18,
-+			       0xc0, 0xc0, 0x18, 0x18, 0x19, 0x19, 0x18, 0x18,
-+			       0x40, 0x40, 0x18, 0x18, 0x18, 0x18, 0x3f, 0x3f,
-+			       0x28, 0x28, 0x24, 0x24, 0x02, 0x03, 0x02, 0x03,
-+			       0x00, 0x01, 0x00, 0x01, 0x31, 0x31, 0x31, 0x31,
-+			       0x30, 0x30, 0x30, 0x30, 0x2f, 0x2f, 0x2f, 0x2f);
-+	mipi_dsi_dcs_write_seq(dsi, 0xd6,
-+			       0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18,
-+			       0x40, 0x40, 0x18, 0x18, 0x18, 0x18, 0x19, 0x19,
-+			       0x40, 0x40, 0x18, 0x18, 0x18, 0x18, 0x3f, 0x3f,
-+			       0x24, 0x24, 0x28, 0x28, 0x01, 0x00, 0x01, 0x00,
-+			       0x03, 0x02, 0x03, 0x02, 0x31, 0x31, 0x31, 0x31,
-+			       0x30, 0x30, 0x30, 0x30, 0x2f, 0x2f, 0x2f, 0x2f);
-+	mipi_dsi_dcs_write_seq(dsi, 0xd8,
-+			       0xaa, 0xea, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xea,
-+			       0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xea, 0xab, 0xaa,
-+			       0xaa, 0xaa, 0xaa, 0xea, 0xab, 0xaa, 0xaa, 0xaa);
-+	mipi_dsi_dcs_write_seq(dsi, 0xbd, 0x01);
-+	mipi_dsi_dcs_write_seq(dsi, 0xd8,
-+			       0xaa, 0x2e, 0x28, 0x00, 0x00, 0x00, 0xaa, 0x2e,
-+			       0x28, 0x00, 0x00, 0x00, 0xaa, 0xee, 0xaa, 0xaa,
-+			       0xaa, 0xaa, 0xaa, 0xee, 0xaa, 0xaa, 0xaa, 0xaa);
-+	mipi_dsi_dcs_write_seq(dsi, 0xbd, 0x02);
-+	mipi_dsi_dcs_write_seq(dsi, 0xd8,
-+			       0xaa, 0xff, 0xff, 0xff, 0xff, 0xff, 0xaa, 0xff,
-+			       0xff, 0xff, 0xff, 0xff);
-+	mipi_dsi_dcs_write_seq(dsi, 0xbd, 0x03);
-+	mipi_dsi_dcs_write_seq(dsi, 0xd8,
-+			       0xaa, 0xaa, 0xea, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa,
-+			       0xea, 0xaa, 0xaa, 0xaa, 0xaa, 0xff, 0xff, 0xff,
-+			       0xff, 0xff, 0xaa, 0xff, 0xff, 0xff, 0xff, 0xff);
-+	mipi_dsi_dcs_write_seq(dsi, 0xbd, 0x00);
-+	mipi_dsi_dcs_write_seq(dsi, 0xe7,
-+			       0x0e, 0x0e, 0x1e, 0x65, 0x1c, 0x65, 0x00, 0x50,
-+			       0x20, 0x20, 0x00, 0x00, 0x02, 0x02, 0x02, 0x05,
-+			       0x14, 0x14, 0x32, 0xb9, 0x23, 0xb9, 0x08);
-+	mipi_dsi_dcs_write_seq(dsi, 0xbd, 0x01);
-+	mipi_dsi_dcs_write_seq(dsi, 0xe7,
-+			       0x02, 0x00, 0xa8, 0x01, 0xa8, 0x0d, 0xa4, 0x0e);
-+	mipi_dsi_dcs_write_seq(dsi, 0xbd, 0x02);
-+	mipi_dsi_dcs_write_seq(dsi, 0xe7,
-+			       0x00, 0x00, 0x08, 0x00, 0x01, 0x00, 0x00, 0x00,
-+			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04, 0x00,
-+			       0x00, 0x00, 0x00, 0x02, 0x00);
-+	mipi_dsi_dcs_write_seq(dsi, 0xbd, 0x00);
-+	mipi_dsi_dcs_write_seq(dsi, 0xe9, 0xc3);
-+	mipi_dsi_dcs_write_seq(dsi, 0xcb, 0xd1, 0xd6);
-+	mipi_dsi_dcs_write_seq(dsi, 0xe9, 0x3f);
-+	mipi_dsi_dcs_write_seq(dsi, 0xe9, 0xc6);
-+	mipi_dsi_dcs_write_seq(dsi, 0xbf, 0x37);
-+	mipi_dsi_dcs_write_seq(dsi, 0xe9, 0x3f);
-+
-+	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to exit sleep mode: %d\n", ret);
-+		return ret;
-+	}
-+	msleep(150);
-+
-+	ret = mipi_dsi_dcs_set_display_on(dsi);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to set display on: %d\n", ret);
-+		return ret;
-+	}
-+	msleep(50);
-+
-+	return 0;
-+}
-+
-+static int hx83112a_disable(struct drm_panel *panel)
-+{
-+	struct hx83112a_panel *ctx = to_hx83112a_panel(panel);
-+	struct mipi_dsi_device *dsi = ctx->dsi;
-+	struct device *dev = &dsi->dev;
-+	int ret;
-+
-+	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-+
-+	ret = mipi_dsi_dcs_set_display_off(dsi);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to set display off: %d\n", ret);
-+		return ret;
-+	}
-+	msleep(20);
-+
-+	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to enter sleep mode: %d\n", ret);
-+		return ret;
-+	}
-+	msleep(120);
-+
-+	return 0;
-+}
-+
-+static int hx83112a_prepare(struct drm_panel *panel)
-+{
-+	struct hx83112a_panel *ctx = to_hx83112a_panel(panel);
-+	struct device *dev = &ctx->dsi->dev;
-+	int ret;
-+
-+	if (ctx->prepared)
-+		return 0;
-+
-+	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to enable regulators: %d\n", ret);
-+		return ret;
-+	}
-+
-+	hx83112a_reset(ctx);
-+
-+	ret = hx83112a_on(ctx);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to initialize panel: %d\n", ret);
-+		gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+		regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-+		return ret;
-+	}
-+
-+	ctx->prepared = true;
-+	return 0;
-+}
-+
-+static int hx83112a_unprepare(struct drm_panel *panel)
-+{
-+	struct hx83112a_panel *ctx = to_hx83112a_panel(panel);
-+
-+	if (!ctx->prepared)
-+		return 0;
-+
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+	regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-+
-+	ctx->prepared = false;
-+	return 0;
-+}
-+
-+static const struct drm_display_mode hx83112a_mode = {
-+	.clock = (1080 + 28 + 8 + 8) * (2340 + 27 + 5 + 5) * 60 / 1000,
-+	.hdisplay = 1080,
-+	.hsync_start = 1080 + 28,
-+	.hsync_end = 1080 + 28 + 8,
-+	.htotal = 1080 + 28 + 8 + 8,
-+	.vdisplay = 2340,
-+	.vsync_start = 2340 + 27,
-+	.vsync_end = 2340 + 27 + 5,
-+	.vtotal = 2340 + 27 + 5 + 5,
-+	.width_mm = 65,
-+	.height_mm = 115,
-+};
-+
-+static int hx83112a_get_modes(struct drm_panel *panel,
-+				  struct drm_connector *connector)
-+{
-+	struct drm_display_mode *mode;
-+
-+	mode = drm_mode_duplicate(connector->dev, &hx83112a_mode);
-+	if (!mode)
-+		return -ENOMEM;
-+
-+	drm_mode_set_name(mode);
-+
-+	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
-+	connector->display_info.width_mm = mode->width_mm;
-+	connector->display_info.height_mm = mode->height_mm;
-+	drm_mode_probed_add(connector, mode);
-+
-+	return 1;
-+}
-+
-+static const struct drm_panel_funcs hx83112a_panel_funcs = {
-+	.prepare = hx83112a_prepare,
-+	.unprepare = hx83112a_unprepare,
-+	.disable = hx83112a_disable,
-+	.get_modes = hx83112a_get_modes,
-+};
-+
-+static int hx83112a_probe(struct mipi_dsi_device *dsi)
-+{
-+	struct device *dev = &dsi->dev;
-+	struct hx83112a_panel *ctx;
-+	int ret;
-+
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ctx->supplies[0].supply = "vdd1";
-+	ctx->supplies[1].supply = "vsn";
-+	ctx->supplies[2].supply = "vsp";
-+	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
-+				      ctx->supplies);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "Failed to get regulators\n");
-+
-+	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(ctx->reset_gpio))
-+		return dev_err_probe(dev, PTR_ERR(ctx->reset_gpio),
-+				     "Failed to get reset-gpios\n");
-+
-+	ctx->dsi = dsi;
-+	mipi_dsi_set_drvdata(dsi, ctx);
-+
-+	dsi->lanes = 4;
-+	dsi->format = MIPI_DSI_FMT_RGB888;
-+	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST |
-+			  MIPI_DSI_MODE_VIDEO_HSE |
-+			  MIPI_DSI_CLOCK_NON_CONTINUOUS;
-+
-+	drm_panel_init(&ctx->panel, dev, &hx83112a_panel_funcs,
-+		       DRM_MODE_CONNECTOR_DSI);
-+	ctx->panel.prepare_prev_first = true;
-+
-+	ret = drm_panel_of_backlight(&ctx->panel);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to get backlight\n");
-+
-+	drm_panel_add(&ctx->panel);
-+
-+	ret = mipi_dsi_attach(dsi);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to attach to DSI host: %d\n", ret);
-+		drm_panel_remove(&ctx->panel);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void hx83112a_remove(struct mipi_dsi_device *dsi)
-+{
-+	struct hx83112a_panel *ctx = mipi_dsi_get_drvdata(dsi);
-+	int ret;
-+
-+	ret = mipi_dsi_detach(dsi);
-+	if (ret < 0)
-+		dev_err(&dsi->dev, "Failed to detach from DSI host: %d\n", ret);
-+
-+	drm_panel_remove(&ctx->panel);
-+}
-+
-+static const struct of_device_id hx83112a_of_match[] = {
-+	{ .compatible = "fairphone,fp4-hx83112a-djn" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, hx83112a_of_match);
-+
-+static struct mipi_dsi_driver hx83112a_driver = {
-+	.probe = hx83112a_probe,
-+	.remove = hx83112a_remove,
-+	.driver = {
-+		.name = "panel-himax-hx83112a",
-+		.of_match_table = hx83112a_of_match,
-+	},
-+};
-+module_mipi_dsi_driver(hx83112a_driver);
-+
-+MODULE_DESCRIPTION("DRM driver for hx83112a-equipped DSI panels");
-+MODULE_LICENSE("GPL");
+> You want the gcr3 table root point in the DTE to be update at step 5 only,
+> right? If so, this should be okay.
 
--- 
-2.43.0
+#3 sets the DTE to point to just the parent domain as a V1 page table
 
+#4/5 sets the DTE to point to both the V1 page table and the GCR3 table
+
+The DTE is calculated based only on the *currently* attached
+iommu_domain's for the struct device.
+
+> > Please look at the smmuv3 patches and try to be structurally
+> > similar. AMD and SMMUv3 are *very similar* in how their HW works
+> > excluding the viommu stuff.
+> 
+> Could you please point me to the series? I found one but it was really old.
+> I might have missed the latest stuff.
+
+https://lore.kernel.org/linux-iommu/0-v1-e289ca9121be+2be-smmuv3_newapi_p1_jgg@nvidia.com/
+https://lore.kernel.org/linux-iommu/0-v2-16665a652079+5947-smmuv3_newapi_p2_jgg@nvidia.com/
+
+(and the github link has the other parts)
+
+> > You also can't assume your parent is currently attached to anything.
+> > 
+> > The construction of the DTE has to be from-scratch based on the parent
+> > domain and the provided values in the "hwpt". Again see how smmuv3
+> > does this where there is one function that builds the entire DTE
+> > (called STE)
+> 
+> Ok. I'll program fields of the DTE, which are related to DMA-remapping with
+> v1 and v2 table using the information in the parent and child domains only.
+
+The smmu code looks like:
+
+static void arm_smmu_make_nested_domain_ste(
+	struct arm_smmu_ste *target, struct arm_smmu_master *master,
+	struct arm_smmu_nested_domain *nested_domain, bool ats_enabled)
+{
+        [..]
+        // Incorporate the "v1 fields" into the "DTE"
+	arm_smmu_make_s2_domain_ste(target, master, nested_domain->s2_parent,
+				    ats_enabled);
+
+        // Incorporate the "GCR3 fields" into the "DTE"
+	target->data[0] |= cpu_to_le64(FIELD_PREP(STRTAB_STE_0_CFG,
+						  STRTAB_STE_0_CFG_NESTED)) |
+			   nested_domain->ste[0];
+
+Where "arm_smmu_ste *" is stack memory that holds the "DTE" being
+constructed. Once the make* family of function figure out the exact
+STE that the struct device needs, another function writes the STE to
+the HW visible location(s).
+
+The goal is to be able to calculate the required DTE for the #3 and
+#4/5 cases you list above directly without making assumptions about
+the current state of the DTE or anything else.
+
+> A device can be attached to a domain, which could be either one-level or
+> nested domain. In case of nesting, the parent domain contains information
+> for the stage2 (v1) table, while the child domain contains information for
+> the stage1 (v2) table. For each domain, we need to keep track of the parent
+> domain.
+
+The nesting domain, and only the nesting domain, stores a pointer to
+it's parent domain - they are a unit together.
+
+Jason
