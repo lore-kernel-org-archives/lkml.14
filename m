@@ -1,208 +1,194 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 052985690
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 08:14:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 20CA82F4;
-	Fri,  5 Jan 2024 00:15:41 -0800 (PST)
-Received: from [10.57.76.44] (unknown [10.57.76.44])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF1A03F5A1;
-	Fri,  5 Jan 2024 00:14:53 -0800 (PST)
-Message-ID: <1eb61435-c89c-4ca1-b1b6-aa00b3478cd2@arm.com>
-Date: Fri, 5 Jan 2024 08:14:52 +0000
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0861E20B1B;
+	Fri,  5 Jan 2024 08:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nksiWy5a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704442630; x=1735978630;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=rSVm++J3Zquk/fkfuhk6+M2lNsVeJUI3lIYr6HUvvlY=;
+  b=nksiWy5aLXTjWdubluJCHlDLCwgZKAHwRFlRRhdMRnv9tSBACEAeDU9r
+   vGxcSggJ/PMFW4AA8I82Z2v4G9l//mO7pcqZHJPYA0qG8WtSDuRR8Fjc6
+   8aI/axOueVTPrbyjivPv5INRO8uSPv5TAu1vpTzdYS7YdV0RpteZvxmcT
+   /QRvptZonkJIIrI82YjJXCpIrd0eXC7H+OVJpAPBCDXgkuiHi3cGfoFqN
+   KLquuiY03MBRct2riATjhexZlNiZ8sIT4sGOh4MhLvWfGfBS+3N2Oqfop
+   BDfGelQ8+2YcwjgB1zddjUu9nA39uNN0GoCywBImEfYng7jn9kdmno/D7
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="483631359"
+X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
+   d="scan'208";a="483631359"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 00:17:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="924172394"
+X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
+   d="scan'208";a="924172394"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmsmga001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Jan 2024 00:17:08 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 5 Jan 2024 00:17:07 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Fri, 5 Jan 2024 00:17:07 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 5 Jan 2024 00:17:07 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KRNwx+6jB/Tf6hdLIYcXT8zOA0k/P8Rfwkl8qpOABO9UoBFNXaRRYv0C32Np3K8vwBuSi2MsNr1C5X5SmPebXTpXm1tEFRqP8kRJH57YU4Z7JfjalqcHgMl5IhVHw/vQMtPbJ7Z6N5UK17+2I8p/tJcdH8u0vFv42ICy/cH0fr4SZqfLV3c4mx0sIq8601s1eS3nAUHihBUk+V91zG4Aw/FwZu+9LRm/wqf+bnnyZz+NW8RiLxNA1Q41tNpMdTIn6+OoP6hnNiQll+w9FFssIARFILSTk0kFBEfrrl6s5M7qcUExhaW7R0AYOzG8GEObpzeGSNGWWg+ebCq55X7PSA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SP+nJoXOGgtN/Hy2twkK92MoLRWiU3/JkK9rDNox+mI=;
+ b=X4tDwdChr64ux88E9TmVk1uqz82q6iu9DtKhnMqm+JGAOA/rcx8Up/fhVHzm6hoRD3pEp3fKj6EL5PkpJAKhCvW9X1VgI3/3Wv0lTAy5TXWES8A9lq1Sr9835rKPb88+MOIB3ruBlm8YPN8Jwe7FT82ZfxadOskAmlzmJC7O2i2fcrs7AWKCVzqP+ZthKkw36GRf4mo4a7tcHB0oOJ2yaqQ2CNJTmE2JTb/HhszbGcsXyuvKcRbsE0qLmdndBx7qKokuY8xCmlCls850izfPyWlectuDLlDAhy/3wCvwDKWJ4RmoS+qBGllCRcCTm6AGPAi0eFUkOJOIW3aVploi2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH0PR11MB4965.namprd11.prod.outlook.com (2603:10b6:510:34::7)
+ by DM6PR11MB4643.namprd11.prod.outlook.com (2603:10b6:5:2a6::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.14; Fri, 5 Jan
+ 2024 08:17:05 +0000
+Received: from PH0PR11MB4965.namprd11.prod.outlook.com
+ ([fe80::819:818b:9159:3af1]) by PH0PR11MB4965.namprd11.prod.outlook.com
+ ([fe80::819:818b:9159:3af1%3]) with mapi id 15.20.7159.015; Fri, 5 Jan 2024
+ 08:17:05 +0000
+Message-ID: <82a9f0c4-7e6d-477a-bc6e-6dcb046b25fd@intel.com>
+Date: Fri, 5 Jan 2024 16:16:53 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 06/26] x86/fpu/xstate: Create guest fpstate with guest
+ specific config
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+CC: "Hansen, Dave" <dave.hansen@intel.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "seanjc@google.com" <seanjc@google.com>,
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, "kvm@vger.kernel.org"
+	<kvm@vger.kernel.org>, "john.allen@amd.com" <john.allen@amd.com>,
+	"peterz@infradead.org" <peterz@infradead.org>, "Gao, Chao"
+	<chao.gao@intel.com>, "mlevitsk@redhat.com" <mlevitsk@redhat.com>
+References: <20231221140239.4349-1-weijiang.yang@intel.com>
+ <20231221140239.4349-7-weijiang.yang@intel.com>
+ <055eee55f2ed04a822d99e1824d08a70aed942f5.camel@intel.com>
+Content-Language: en-US
+From: "Yang, Weijiang" <weijiang.yang@intel.com>
+In-Reply-To: <055eee55f2ed04a822d99e1824d08a70aed942f5.camel@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SG2PR04CA0159.apcprd04.prod.outlook.com (2603:1096:4::21)
+ To PH0PR11MB4965.namprd11.prod.outlook.com (2603:10b6:510:34::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [mm?] WARNING in __folio_rmap_sanity_checks
-Content-Language: en-GB
-To: Yin Fengwei <fengwei.yin@intel.com>, David Hildenbrand
- <david@redhat.com>,
- syzbot <syzbot+50ef73537bbc393a25bb@syzkaller.appspotmail.com>,
- akpm@linux-foundation.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- syzkaller-bugs@googlegroups.com, Matthew Wilcox <willy@infradead.org>
-References: <000000000000014174060e09316e@google.com>
- <c4e2e700-2d26-492f-8eb2-eb3ab14bc07a@redhat.com>
- <3feecbd6-b3bd-440c-a4f9-2a7dba3ff8f1@intel.com>
- <36ace74a-1de7-4224-8bc1-7f487764f6e2@redhat.com>
- <8bc02927-a0f0-490a-a014-0e100d30ffe4@intel.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <8bc02927-a0f0-490a-a014-0e100d30ffe4@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR11MB4965:EE_|DM6PR11MB4643:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2283fb88-62aa-461c-d4d7-08dc0dc6b330
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: SEQ2RXeIRj86I7QTKcpqY4BRA4+uEib7Wa4AEWykHIyHQbYnRSlWdy+V7D/yjMW9JuvGoNR8t2G4pJD8A+g3qdZf0/InQdtz8FzGHH6bfC+osUs7ZigYurVwdBjwAbWCu5P7Pq+obQS9GmrV9naRE5mLfmg1XnA/iP8JUYVuXrOiKQRDTIV5EqwQJI3pLrwIkHWwHZKKCD4aIgRrwy8qjNbi4Mm6LgeL2QE26VFprlNNn47st/ZayhxxOdAzFc/t9wp5vtqK/CYGahftBryQWvdAuQ3bLhuSRCCox6IFtPKf1vHOm5gxhp/GkK8XaLXKKb6V2jdZ/PLessBoFeTX/Wm0u7zX8NCV3hc87a5Mmgyw6Fud24XkYcAWbEluJQTiwRsPjGcQK2NW9jo2AZasKmoeIJ7HYiHI+wtCdqX3qD6qpVfUqF/rVFSbTldATRBwFrEHUTMwQfCCL6PBbfIw7aVqwBOb0yFjfKLZGmWCIbCV9IQF7z7otUTGAGPrvehDqE6wlHuzdwbN8VcP2fyLnUgi3ozM/TaSTYgt9srWk4aGVKMIA4am6a9dSJXvxqb7KOt12xzIRO8nq86TpN/n7m4Cxh764TqYC2ocQlnKfeJpprsiQ9AST/r9zhg+Ex6TvhUkQFHZUBMsfGb01TJBXA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB4965.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(346002)(376002)(39860400002)(366004)(136003)(230922051799003)(186009)(1800799012)(64100799003)(451199024)(4326008)(31686004)(6862004)(5660300002)(4001150100001)(2906002)(8676002)(8936002)(316002)(54906003)(37006003)(66946007)(6636002)(66476007)(66556008)(6486002)(41300700001)(6506007)(478600001)(6512007)(6666004)(53546011)(2616005)(36756003)(26005)(82960400001)(86362001)(31696002)(38100700002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?S1VPTGZqeW5KZnhuK09CR2pjZXl6VzRuMmNURnlDVzdRQWlNY01MOTFKZnp5?=
+ =?utf-8?B?VmovYU1oU2xVZzJiRGVNT3FCdzduZjE1RFpLeVE4R0VCTlA3YXNEOWF3Tzls?=
+ =?utf-8?B?dWVZN0R1b1pCWGxVRml6S3JlZG42RHE5V0dIODdRbDVCdXhyNHlsRTRhdmlY?=
+ =?utf-8?B?ZFFhNFNYbWNGOHNIa3dHc05hS3pLSm5GOUlIQTJvV3N6WmNIOHprcVRXazZv?=
+ =?utf-8?B?MWgwdnFoZXR4cDJuRnNlUldMWmQ4UUZMcmlKVlQ0TStRT2txWmViYVhOcnJK?=
+ =?utf-8?B?bHQ0dm80aHZsSi94b0w2RDFBVm5wWlJOVWprbEkxK0dHcXlRdVNISFU4TkNT?=
+ =?utf-8?B?ODFaWkc3SUFGcGtoNjhSWWsvNUxYWjYwMGFkVlFYeGhpQjBzWElpV1g0enMv?=
+ =?utf-8?B?SzZuclYyQ3ZhWUloSVpWNU1iUDhTUXdobXNzNlFuUjBSbGd0ZEd2UE82c0FL?=
+ =?utf-8?B?cHFac3JremgyMG9JeVVUM0dEcTlBU0dBakEwR0lsR2QzTHExRUhCcThVMUxp?=
+ =?utf-8?B?bk9JSCtpYm9KRXpRQVBzL1Y4Q2JBNWFGVlF4ckROUk5SaEVWVkQ2dHZPN1hu?=
+ =?utf-8?B?Qk1DVS93QWFSdXlXdUFEcHBwUUxvVjBKV2IycTVNU2FyYkdmYi9hM2JMOUpX?=
+ =?utf-8?B?UFJBZlpoWU50NWJLR29nRDJyWHBodkNGd1hLSUFhVGpoVVpieklXYjJENEQ3?=
+ =?utf-8?B?ZlVtazlneVlueEdaWmtYMHhEM0ZGejBWYlB6VFBsM005WmhZRUJhOXE2cU9H?=
+ =?utf-8?B?Qy9UVmpjclZCVy93UmpLTysrWUcrRTlBMnFLeDBYQ0FmZ2xic3ZhK2JGRTk1?=
+ =?utf-8?B?WHRuVVdnY0pxMGR0UlpTMjhCU1g3UXUyV0tON0s5aXllZWRqTnEzNXorbkNB?=
+ =?utf-8?B?OUY3V3NXc3ZIMFBWM1NMTERQbGVFei9TMmF1Y25ZcDMzT0VDa25yNDVtdldL?=
+ =?utf-8?B?NjlpOWRzdlBuakpSV3NVN1djZENnV21ZSW5MM2VqQkRjcEk2bHBRNHZ5ck9u?=
+ =?utf-8?B?c1RMRmpPMjFtQVVRazZpeFJtN1B1QlQrbHN3ZVVBdWRQTWJvWTJTV3FHRTh3?=
+ =?utf-8?B?a0hsZS8zdUJrcFNXa0Q5N3pJNnl2RGc3MFJZRGpzekhFZVZpaENSdEVZVXIz?=
+ =?utf-8?B?Rk1pUG93akZXZkoxSEhKVGNScjUrZ2xhbFJJN0J5WU9tM3dZZFBoZXBDS295?=
+ =?utf-8?B?byswSmEyYmQ3NXFnV1RTOTk1cTFSMVRPOG8vWEhFZ2huNklISS9ZZm0wVEZl?=
+ =?utf-8?B?NGo2bDF6UUJKdlZyd2xzRllsZUhFWEsrYVg2R1JMS3I4U25xQXRDYXFVM2Vl?=
+ =?utf-8?B?bnBDbzdDQVR6dXRXU2crazZTVVQyNGE1cWdqVDgrbEUzTUM2MnpubVVXWGtk?=
+ =?utf-8?B?bUVRWmlCd3hiczAzR3VUbkl2QUVNRHVsUndPTU0vMFFQTFdlakM3bExNV1Ev?=
+ =?utf-8?B?VEM1alBCcVZEK01MeC9mM1k5YzAwVTN6ajdsRnVsU1gySnNtWU1zcStWd203?=
+ =?utf-8?B?b3lvMVg3end4UW9JVHRIUHlLOVBvSlF0RGNqQk5TakRmdjhhU29HaDM5UUNz?=
+ =?utf-8?B?U3Nka2g3eW5TaytsTS9Rdy9acnZZTWRsYlk3MnNsUWZaajRKQmd0bDg2MTBr?=
+ =?utf-8?B?VHVuZFhyM0d6d1l2SDhyWWgwb3ZwRVlGdXhhMXdNYzdwaUE2b1pFODNjWmkv?=
+ =?utf-8?B?S1psNDhwT3prMXkzc3pXUzZZdThXSkZ4Qmc0NG5YdlJDdTZhZndXY0FSWG96?=
+ =?utf-8?B?eGM4UjdXd2s5WTNPNEhsUlBhT1R6dUEwVkg3VjA4RlVCZHlGQk5xUmpWTDVm?=
+ =?utf-8?B?dHBGOWVuTTNYTXhjR1pFbEJTOWZpUVJjTG16ZkUrcnV3YVlTZFY3a1U3SGps?=
+ =?utf-8?B?M3ZWb1NCZEo2cGRwQ3RMdHFjY0JSRXpJd0RUWEZrYmQ3UHI3eStoZHI4cjJJ?=
+ =?utf-8?B?MmRsSllWTGc0d0lPa0ZkaUJSeWI4WDBOVldrSy8xbWNxVndUQStVcWd0TnJ0?=
+ =?utf-8?B?K0t3bkNDempkUmtkMWJqR2xZMFpXWXBrVitkQnY5OGlvVmxrL2NlclRCSnRI?=
+ =?utf-8?B?VUtVY1F4dVhtcEpwODJIZ1c4RHhmb01Rb1lmZVA5WlMyN2wxYzZuOTlFUkRu?=
+ =?utf-8?B?RGlvRklLNHRyV2JGVkJ2SklQcmtGVEY1aDd5TWxHU2ZENTlIRU4zRDJncng3?=
+ =?utf-8?B?N1E9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2283fb88-62aa-461c-d4d7-08dc0dc6b330
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB4965.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2024 08:17:05.1101
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jVRZKklwvq3hU2QNWRh+4/tUdCyrHr4jdIVB/AsaXRpEQ5Xs3kVyyroQ2vzI6mz1NCgZ5wpPDmQGmEYkrtLbNw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4643
+X-OriginatorOrg: intel.com
 
-On 05/01/2024 02:20, Yin Fengwei wrote:
-> 
-> 
-> On 2024/1/5 05:36, David Hildenbrand wrote:
->> On 03.01.24 15:16, Yin, Fengwei wrote:
->>>
->>>
->>> On 1/3/2024 8:13 PM, David Hildenbrand wrote:
->>>> On 03.01.24 12:48, syzbot wrote:
->>>>> Hello,
->>>>>
->>>>> syzbot found the following issue on:
->>>>>
->>>>> HEAD commit:    ab0b3e6ef50d Add linux-next specific files for 20240102
->>>>> git tree:       linux-next
->>>>> console+strace: https://syzkaller.appspot.com/x/log.txt?x=17be3e09e80000
->>>>> kernel config:
->>>>> https://syzkaller.appspot.com/x/.config?x=a14a6350374945f9
->>>>> dashboard link:
->>>>> https://syzkaller.appspot.com/bug?extid=50ef73537bbc393a25bb
->>>>> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils
->>>>> for Debian) 2.40
->>>>> syz repro:
->>>>> https://syzkaller.appspot.com/x/repro.syz?x=14e2256ee80000
->>>>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17b57db5e80000
->>>>>
->>>>> Downloadable assets:
->>>>> disk image:
->>>>> https://storage.googleapis.com/syzbot-assets/4e6376fe5764/disk-ab0b3e6e.raw.xz
->>>>> vmlinux:
->>>>> https://storage.googleapis.com/syzbot-assets/7cb9ecbaf001/vmlinux-ab0b3e6e.xz
->>>>> kernel image:
->>>>> https://storage.googleapis.com/syzbot-assets/2c1a9a6d424f/bzImage-ab0b3e6e.xz
->>>>>
->>>>> The issue was bisected to:
->>>>>
->>>>> commit 68f0320824fa59c5429cbc811e6c46e7a30ea32c
->>>>> Author: David Hildenbrand <david@redhat.com>
->>>>> Date:   Wed Dec 20 22:44:31 2023 +0000
->>>>>
->>>>>       mm/rmap: convert folio_add_file_rmap_range() into
->>>>> folio_add_file_rmap_[pte|ptes|pmd]()
->>>>>
->>>>> bisection log:
->>>>> https://syzkaller.appspot.com/x/bisect.txt?x=10b9e1b1e80000
->>>>> final oops:
->>>>> https://syzkaller.appspot.com/x/report.txt?x=12b9e1b1e80000
->>>>> console output: https://syzkaller.appspot.com/x/log.txt?x=14b9e1b1e80000
->>>>>
->>>>> IMPORTANT: if you fix the issue, please add the following tag to the
->>>>> commit:
->>>>> Reported-by: syzbot+50ef73537bbc393a25bb@syzkaller.appspotmail.com
->>>>> Fixes: 68f0320824fa ("mm/rmap: convert folio_add_file_rmap_range()
->>>>> into folio_add_file_rmap_[pte|ptes|pmd]()")
->>>>>
->>>>>    kasan_quarantine_reduce+0x18e/0x1d0 mm/kasan/quarantine.c:283
->>>>>    __kasan_slab_alloc+0x65/0x90 mm/kasan/common.c:324
->>>>>    kasan_slab_alloc include/linux/kasan.h:201 [inline]
->>>>>    slab_post_alloc_hook mm/slub.c:3813 [inline]
->>>>>    slab_alloc_node mm/slub.c:3860 [inline]
->>>>>    kmem_cache_alloc+0x136/0x320 mm/slub.c:3867
->>>>>    vm_area_alloc+0x1f/0x220 kernel/fork.c:465
->>>>>    mmap_region+0x3ae/0x2a90 mm/mmap.c:2804
->>>>>    do_mmap+0x890/0xef0 mm/mmap.c:1379
->>>>>    vm_mmap_pgoff+0x1a7/0x3c0 mm/util.c:573
->>>>>    ksys_mmap_pgoff+0x421/0x5a0 mm/mmap.c:1425
->>>>>    __do_sys_mmap arch/x86/kernel/sys_x86_64.c:93 [inline]
->>>>>    __se_sys_mmap arch/x86/kernel/sys_x86_64.c:86 [inline]
->>>>>    __x64_sys_mmap+0x125/0x190 arch/x86/kernel/sys_x86_64.c:86
->>>>>    do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->>>>>    do_syscall_64+0xd0/0x250 arch/x86/entry/common.c:83
->>>>>    entry_SYSCALL_64_after_hwframe+0x62/0x6a
->>>>> ------------[ cut here ]------------
->>>>> WARNING: CPU: 1 PID: 5059 at include/linux/rmap.h:202
->>>>> __folio_rmap_sanity_checks+0x4d5/0x630 include/linux/rmap.h:202
->>>>> Modules linked in:
->>>>> CPU: 1 PID: 5059 Comm: syz-executor115 Not tainted
->>>>> 6.7.0-rc8-next-20240102-syzkaller #0
->>>>> Hardware name: Google Google Compute Engine/Google Compute Engine,
->>>>> BIOS Google 11/17/2023
->>>>> RIP: 0010:__folio_rmap_sanity_checks+0x4d5/0x630 include/linux/rmap.h:202
->>>>> Code: 41 83 e4 01 44 89 e6 e8 79 bc b7 ff 45 84 e4 0f 85 08 fc ff ff
->>>>> e8 3b c1 b7 ff 48 c7 c6 e0 b5 d9 8a 48 89 df e8 5c 12 f7 ff 90 <0f> 0b
->>>>> 90 e9 eb fb ff ff e8 1e c1 b7 ff be 01 00 00 00 48 89 df e8
->>>>> RSP: 0018:ffffc900038df978 EFLAGS: 00010293
->>>>> RAX: 0000000000000000 RBX: ffffea00008cde00 RCX: ffffffff81687419
->>>>> RDX: ffff88807becbb80 RSI: ffffffff81d06104 RDI: 0000000000000000
->>>>> RBP: ffffea00008cde00 R08: 0000000000000000 R09: fffffbfff1e75f6a
->>>>> R10: ffffffff8f3afb57 R11: 0000000000000001 R12: 0000000000000000
->>>>> R13: 0000000000000001 R14: 0000000000000000 R15: dffffc0000000000
->>>>> FS:  0000555556508380(0000) GS:ffff8880b9900000(0000)
->>>>> knlGS:0000000000000000
->>>>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>>>> CR2: 00000000200000c0 CR3: 0000000079000000 CR4: 00000000003506f0
->>>>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->>>>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->>>>> Call Trace:
->>>>>    <TASK>
->>>>>    __folio_add_rmap mm/rmap.c:1167 [inline]
->>>>>    __folio_add_file_rmap mm/rmap.c:1452 [inline]
->>>>>    folio_add_file_rmap_ptes+0x8e/0x2c0 mm/rmap.c:1478
->>>>>    insert_page_into_pte_locked.isra.0+0x34d/0x960 mm/memory.c:1874
->>>>>    insert_page mm/memory.c:1900 [inline]
->>>>>    vm_insert_page+0x62c/0x8c0 mm/memory.c:2053
->>>>>    packet_mmap+0x314/0x570 net/packet/af_packet.c:4594
->>>>>    call_mmap include/linux/fs.h:2090 [inline]
->>>>>    mmap_region+0x745/0x2a90 mm/mmap.c:2819
->>>>>    do_mmap+0x890/0xef0 mm/mmap.c:1379
->>>>>    vm_mmap_pgoff+0x1a7/0x3c0 mm/util.c:573
->>>>>    ksys_mmap_pgoff+0x421/0x5a0 mm/mmap.c:1425
->>>>>    __do_sys_mmap arch/x86/kernel/sys_x86_64.c:93 [inline]
->>>>>    __se_sys_mmap arch/x86/kernel/sys_x86_64.c:86 [inline]
->>>>>    __x64_sys_mmap+0x125/0x190 arch/x86/kernel/sys_x86_64.c:86
->>>>>    do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->>>>>    do_syscall_64+0xd0/0x250 arch/x86/entry/common.c:83
->>>>>    entry_SYSCALL_64_after_hwframe+0x62/0x6a
->>>>
->>>> If I am not wrong, that triggers:
->>>>
->>>> VM_WARN_ON_FOLIO(folio_test_large(folio) &&
->>>>            !folio_test_large_rmappable(folio), folio);
->>>>
->>>> So we are trying to rmap a large folio that did not go through
->>>> folio_prep_large_rmappable().
+On 1/5/2024 6:47 AM, Edgecombe, Rick P wrote:
+> On Thu, 2023-12-21 at 09:02 -0500, Yang Weijiang wrote:
+>> +static struct fpstate *__fpu_alloc_init_guest_fpstate(struct
+>> fpu_guest *gfpu)
+>>   {
+>> +       bool compacted = cpu_feature_enabled(X86_FEATURE_XCOMPACTED);
+>> +       unsigned int gfpstate_size, size;
+>>          struct fpstate *fpstate;
+>> -       unsigned int size;
+>>   
+>> -       size = fpu_user_cfg.default_size + ALIGN(offsetof(struct
+>> fpstate, regs), 64);
+>> +       /*
+>> +        * fpu_guest_cfg.default_size is initialized to hold all
+>> enabled
+>> +        * xfeatures except the user dynamic xfeatures. If the user
+>> dynamic
+>> +        * xfeatures are enabled, the guest fpstate will be re-
+>> allocated to
+>> +        * hold all guest enabled xfeatures, so omit user dynamic
+>> xfeatures
+>> +        * here.
+>> +        */
+>> +       size = fpu_guest_cfg.default_size +
+>> +              ALIGN(offsetof(struct fpstate, regs), 64);
+>> +
+>>          fpstate = vzalloc(size);
+>>          if (!fpstate)
+>> -               return false;
+>> +               return NULL;
+>> +       /*
+>> +        * Initialize sizes and feature masks, use fpu_user_cfg.*
+>> +        * for user_* settings for compatibility of exiting uAPIs.
+>> +        */
+>> +       fpstate->size           = gfpstate_size;
+> gfpstate_size is used uninitialized.
 
-Would someone mind explaining the rules to me for this? As far as I can see,
-folio_prep_large_rmappable() just inits the _deferred_list and sets a flag so we
-remember to deinit the list on destruction. Why can't we just init that list for
-all folios order-2 or greater? Then everything is rmappable?
+Ah, this is another unused variable after introduce fpu_guest_cfg.*, should be replaced by
+fpu_guest_cfg.default_size. Thanks for caching it!
 
->>>>
->>>> net/packet/af_packet.c calls vm_insert_page() on some pages/folios stoed
->>>> in the "struct packet_ring_buffer". No idea where that comes from, but I
->>>> suspect it's simply some compound allocation.
->>> Looks like:
->>>    alloc_pg_vec
->>>      alloc_one_pg_vec_page
->>>           gfp_t gfp_flags = GFP_KERNEL | __GFP_COMP |
->>>                             __GFP_ZERO | __GFP_NOWARN | __GFP_NORETRY;
->>>
->>>           buffer = (char *) __get_free_pages(gfp_flags, order);
->>> So you are right here... :).
->>
->> Hm, but I wonder if this something that's supposed to work or is this one of
->> the cases where we should actually use a VM_PFN mapping?
->>
->> It's not a pagecache(file/shmem) page after all.
->>
->> We could relax that check and document why we expect something that is not
->> marked rmappable. But it fells wrong. I suspect this should be a VM_PFNMAP
->> instead (like recent udmabuf changes).
-> 
-> VM_PFNMAP looks correct.
-
-And why is making the folio rmappable and mapping it the normal way not the
-right solution here? Because the folio could be order-1? Or something more profound?
-
-> 
-> I do have another question: why do we just check the large folio
-> rmappable? Does that mean order0 folio is always rmappable?
-> 
-> I ask this because vm_insert_pages() is called in net/ipv4/tcp.c
-> and drivers call vm_insert_page. I suppose they all need be VM_PFNMAP.
-> 
-> There is not warning because we didn't check order0 folio rmappable.
-> 
-> 
-> Regards
-> Yin, Fengwei
-> 
 
