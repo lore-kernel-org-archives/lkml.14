@@ -1,83 +1,125 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A6224B54;
-	Fri,  5 Jan 2024 09:43:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39331241F4
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 09:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="iVMxKve7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=6cx3AkYeOtWVTGHKX5Q/998ueJhhIC2qCjF0VHKq/4A=; b=iVMxKve7K1xzBcy7We6EzxyoZs
-	1AIders3rvB0HG8Nw86dNGjQynKVRTUTQCfTtJeDFgpQbrRQQTRUsW+WTsOX5H/6BQCjVHP4Mp0lZ
-	WtuX5jYOkIIetzcMy54+FhuJlPnd4800S83Cv2VGAHo7NFfUkE+BdneBSLbBamGdtdk2G4Bl8QvCu
-	76U2lsHSPChYfGP8u8uAOMt2s/5yTtxHlZlV2cAFAj0CkZWvb43er5rhhz8QY92rC5YWQcg4QfbK5
-	g9lF9M+ZDQCVRbOvskNwizBC9NSDxA5DgaSM87XQa1uaWLZWFzuOB7OQY4J1lmwbT2BbiNDs9fSUn
-	EBxHnYxg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:49732)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rLgjZ-0000mS-1i;
-	Fri, 05 Jan 2024 09:43:21 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rLgja-0008VX-9Y; Fri, 05 Jan 2024 09:43:22 +0000
-Date: Fri, 5 Jan 2024 09:43:22 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: andrew@lunn.ch, hkallweit1@gmail.com, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	yuiko.oshino@microchip.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: Re: [PATCH net] net: phy: micrel: populate .soft_reset for KSZ9131
-Message-ID: <ZZfPOky2p/ZJMKCQ@shell.armlinux.org.uk>
-References: <20240105085242.1471050-1-claudiu.beznea.uj@bp.renesas.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TCjKYS6v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704447844;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NIwLDUnI8NrUa1yoEmDStM8G2YxoAzCn45gUwvCVLMU=;
+	b=TCjKYS6v4udY0CyK+KRVnh8KLb2m40C1X61GHXJxHhk/tMIRwHTfSHOSeBKoqancNqZvJE
+	6krblsJAaB5X5p/4SXj9vgsYu0KxK18IGGt9aDPU25bvzWmG1wMgyMPBFHOBDLDkqK2WdH
+	1h8LQoJvl0wnuvbChryPj5tex083PcY=
+Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
+ [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-433-4yDRF3ekNrKW7vMRSOkEkg-1; Fri, 05 Jan 2024 04:44:01 -0500
+X-MC-Unique: 4yDRF3ekNrKW7vMRSOkEkg-1
+Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-5f1df517cf3so23345177b3.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 01:44:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704447841; x=1705052641;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NIwLDUnI8NrUa1yoEmDStM8G2YxoAzCn45gUwvCVLMU=;
+        b=oRTHdHKpHozQBAeH+rZvD6dWfIM9gDzdMqdwTEL0amZ9isg5y+O9GQ1euwYpy/JR8K
+         fY6++AxELWpgzMZXy5TrpdahCadusXxdwcOMxWyKUUMtlECGLYLOw5g+yKFjQ/za5zVX
+         QOY89RJDUUQsYib0wSU0OOiRG8WBNt2fjZXTM30ukXMh9Pb/TX4JJEHrseL1ISQjSi9y
+         CzR47gGT5SZOwuVBz2EL5ua6+f5bnRealaPHWhNm+MIX24Ms2XY1HwARsyH7Frs31x4g
+         FvGa3eUzkDnTPQXuZ1KHcnN66wRwXGIJT/gTyD5mWscMQvizfw5BlKEp8s+7cvhxKTOL
+         16lw==
+X-Gm-Message-State: AOJu0YxpVfRP5OjWItNnEDdcayc/7KyDpxS1H4Phl2yUwN7ImTeYKo9N
+	6peKmsmro7i7Yh8w5G78lXrmSbZ6UYyLwS9c4uzC52ioyXKujyJ+7IzytmcnEOJ3AoNCJY91bsh
+	w8IB2Jaj5SZd/s59zRmNWoiocRVSdcM3SCjGKOWHsRTVRld1A
+X-Received: by 2002:a0d:c042:0:b0:5ee:26aa:3d4 with SMTP id b63-20020a0dc042000000b005ee26aa03d4mr2038717ywd.43.1704447841434;
+        Fri, 05 Jan 2024 01:44:01 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGdAnA+xpbtbCqAMIEPbTW4gOvzkqFdMNwKSJx2Twyuke/V55aRkeGQnX3n3kmSfq6u7un2p348fwv2H8hb6Zc=
+X-Received: by 2002:a0d:c042:0:b0:5ee:26aa:3d4 with SMTP id
+ b63-20020a0dc042000000b005ee26aa03d4mr2038711ywd.43.1704447841236; Fri, 05
+ Jan 2024 01:44:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240105085242.1471050-1-claudiu.beznea.uj@bp.renesas.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+References: <20240104153753.2931026-1-maxime.coquelin@redhat.com> <20240104153753.2931026-2-maxime.coquelin@redhat.com>
+In-Reply-To: <20240104153753.2931026-2-maxime.coquelin@redhat.com>
+From: Eugenio Perez Martin <eperezma@redhat.com>
+Date: Fri, 5 Jan 2024 10:43:25 +0100
+Message-ID: <CAJaqyWd4UGpzscP=veX3DeyOF2gF6B2crQ6-R_Eo2tncZLgyAg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] vduse: validate block features only with block devices
+To: Maxime Coquelin <maxime.coquelin@redhat.com>
+Cc: mst@redhat.com, jasowang@redhat.com, xuanzhuo@linux.alibaba.com, 
+	xieyongji@bytedance.com, virtualization@lists.linux-foundation.org, 
+	linux-kernel@vger.kernel.org, david.marchand@redhat.com, lulu@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 05, 2024 at 10:52:42AM +0200, Claudiu wrote:
-> The order of PHY-related operations in ravb_open() is as follows:
-> ravb_open() ->
->   ravb_phy_start() ->
->     ravb_phy_init() ->
->       of_phy_connect() ->
->         phy_connect_direct() ->
-> 	  phy_attach_direct() ->
-> 	    phy_init_hw() ->
-> 	      phydev->drv->soft_reset()
-> 	      phydev->drv->config_init()
-> 	      phydev->drv->config_intr()
-> 	    phy_resume()
-> 	      kszphy_resume()
-> 
-> The order of PHY-related operations in ravb_close is as follows:
-> ravb_close() ->
->   phy_stop() ->
->     phy_suspend() ->
->       kszphy_suspend() ->
->         genphy_suspend()
-> 	  // set BMCR_PDOWN bit in MII_BMCR
+On Thu, Jan 4, 2024 at 4:38=E2=80=AFPM Maxime Coquelin
+<maxime.coquelin@redhat.com> wrote:
+>
+> This patch is preliminary work to enable network device
+> type support to VDUSE.
+>
+> As VIRTIO_BLK_F_CONFIG_WCE shares the same value as
+> VIRTIO_NET_F_HOST_TSO4, we need to restrict its check
+> to Virtio-blk device type.
+>
+> Acked-by: Jason Wang <jasowang@redhat.com>
+> Reviewed-by: Xie Yongji <xieyongji@bytedance.com>
+> Signed-off-by: Maxime Coquelin <maxime.coquelin@redhat.com>
 
-Andrew,
+Reviewed-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
 
-This looks wrong to me - shouldn't we be resuming the PHY before
-attempting to configure it?
+> ---
+>  drivers/vdpa/vdpa_user/vduse_dev.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/vdpa/vdpa_user/vduse_dev.c b/drivers/vdpa/vdpa_user/=
+vduse_dev.c
+> index 0ddd4b8abecb..0486ff672408 100644
+> --- a/drivers/vdpa/vdpa_user/vduse_dev.c
+> +++ b/drivers/vdpa/vdpa_user/vduse_dev.c
+> @@ -1671,13 +1671,14 @@ static bool device_is_allowed(u32 device_id)
+>         return false;
+>  }
+>
+> -static bool features_is_valid(u64 features)
+> +static bool features_is_valid(struct vduse_dev_config *config)
+>  {
+> -       if (!(features & (1ULL << VIRTIO_F_ACCESS_PLATFORM)))
+> +       if (!(config->features & (1ULL << VIRTIO_F_ACCESS_PLATFORM)))
+>                 return false;
+>
+>         /* Now we only support read-only configuration space */
+> -       if (features & (1ULL << VIRTIO_BLK_F_CONFIG_WCE))
+> +       if ((config->device_id =3D=3D VIRTIO_ID_BLOCK) &&
+> +                       (config->features & (1ULL << VIRTIO_BLK_F_CONFIG_=
+WCE)))
+>                 return false;
+>
+>         return true;
+> @@ -1704,7 +1705,7 @@ static bool vduse_validate_config(struct vduse_dev_=
+config *config)
+>         if (!device_is_allowed(config->device_id))
+>                 return false;
+>
+> -       if (!features_is_valid(config->features))
+> +       if (!features_is_valid(config))
+>                 return false;
+>
+>         return true;
+> --
+> 2.43.0
+>
+>
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
