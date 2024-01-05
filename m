@@ -1,116 +1,81 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B0935F0D;
-	Fri,  5 Jan 2024 19:22:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0BD35F03
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 19:32:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="sFrkJbmS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1704482482; x=1705087282; i=markus.elfring@web.de;
-	bh=HUSZWsUiGQOC/YkUR9iqXdqwdp4kixzaBeZcE5ri/Gw=;
-	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
-	 In-Reply-To;
-	b=sFrkJbmSup7D/LvjP3hYO2WjT4up6gCpjH2vXExnVY0ydzcCiTYkCAFKMVVWXi8j
-	 MrXtEbRtJd2hyzBqOwnWRDm2K00YIJQU1k02yHufR1EuuieO0MGBYUdln95ceBN6d
-	 V9PMtwfAOzuXP8BmFcdhoH4jjIyxG44hfqsVyVsq1fctqgKPpmAaHtsqK9lgL7HHv
-	 pAAiNwRH4wSoLAB2NxCCHdecOxrhjp0mpQA2ymo+JdSmS27AoUn2JULH8YPhGK6fk
-	 56iT0+OoXY3dqRSjAmOfAgmT3otYFV0TWrUJ1QBYNnjS678seErytdGsNWT509NEF
-	 7QJkmKbfmBdOcV3Pjg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MW9vi-1rg8aG29tK-00Y4pr; Fri, 05
- Jan 2024 20:21:22 +0100
-Message-ID: <34068514-27e5-4faf-9b82-2a25bdce9321@web.de>
-Date: Fri, 5 Jan 2024 20:21:19 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sYb0c6/9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93BF3C433C7;
+	Fri,  5 Jan 2024 19:32:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704483163;
+	bh=CE7UjEaDI5KMulL1/tLDiQr0CWV92dV7m9QiTsWAdrQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=sYb0c6/9+4SJRNj0rSrQJokQoxVGDDQ4v12DrEd9BEc2614Sp3o3hdmnsFEzlUzyr
+	 2zam8lIhRG0w9pBRy8vOo7EBUCESyp4gZcqsoILwvBKxlCVy4eU3rvQPKV7P8vx9EH
+	 IX2GXRZM06D9Oe8l1Rgbjaa/a/RjxRBuFZE6aJLs9UeLbT45Qt3Rxy+NqxE+IDPTFS
+	 wV4fVywlSZwWBNxqCcFe7MJjlD9Jx1kh+LvBjaqdareEf8iPtIjmqIVq4u94sAaVhR
+	 Cayg+z1vwxXpH5faIE+B6vTBgC8kha+nyCsaP5ySbXf64gijZQiR5OKXYltuF21BGO
+	 r0VMAl4VxcfNA==
+From: Mark Brown <broonie@kernel.org>
+To: cy_huang@richtek.com
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <cover.1703813842.git.cy_huang@richtek.com>
+References: <cover.1703813842.git.cy_huang@richtek.com>
+Subject: Re: [PATCH 0/2] rtq9128: Fix pm runtime and TDM usage
+Message-Id: <170448316228.816841.3370890831614540620.b4-ty@kernel.org>
+Date: Fri, 05 Jan 2024 19:32:42 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] drm/amd: Adjustments for three function
- implementations
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-To: kernel-janitors@vger.kernel.org, amd-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, Alan Liu <HaoPing.Liu@amd.com>,
- Alex Deucher <alexander.deucher@amd.com>, Alex Hung <alex.hung@amd.com>,
- Alexey Kodanev <aleksei.kodanev@bell-sw.com>,
- Aurabindo Pillai <aurabindo.pillai@amd.com>,
- Bhanuprakash Modem <bhanuprakash.modem@intel.com>,
- Candice Li <candice.li@amd.com>, Charlene Liu <charlene.liu@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>,
- David Tadokoro <davidbtadokoro@usp.br>, Eryk Brol <eryk.brol@amd.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Hamza Mahfooz <hamza.mahfooz@amd.com>,
- Harry Wentland <harry.wentland@amd.com>,
- Hawking Zhang <Hawking.Zhang@amd.com>, hersen wu <hersenxs.wu@amd.com>,
- Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, Jun Lei <jun.lei@amd.com>,
- Leo Li <sunpeng.li@amd.com>, Mikita Lipski <mikita.lipski@amd.com>,
- Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
- Stanley Yang <Stanley.Yang@amd.com>, Tao Zhou <tao.zhou1@amd.com>,
- Tom Rix <trix@redhat.com>, Victor Zhao <Victor.Zhao@amd.com>,
- Wayne Lin <Wayne.Lin@amd.com>, Wenjing Liu <wenjing.liu@amd.com>,
- Xinhui Pan <Xinhui.Pan@amd.com>, YiPeng Chai <YiPeng.Chai@amd.com>,
- Zhan Liu <zhan.liu@amd.com>
-Cc: cocci@inria.fr, LKML <linux-kernel@vger.kernel.org>
-References: <40c60719-4bfe-b1a4-ead7-724b84637f55@web.de>
- <1a11455f-ab57-dce0-1677-6beb8492a257@web.de>
- <2258ce64-2a14-6778-8319-b342b06a1f33@web.de>
-In-Reply-To: <2258ce64-2a14-6778-8319-b342b06a1f33@web.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:7BEoYkau02QTSNEGbr+lcjHZLdsk00FLyCbaxSUukTKrCYX15Hr
- J/M0C0rCpFuqzOWWas0eRRHRRo6pz2a0sVdU5glBU5fHOxUsaAQiiJ8oycLsVI+KmBX+V3V
- 3IgW3hUvw972A1pyu8KyvOfdI0J9j552K4rahvu9wJEQAr2Q7ivnaZsdXraHkLemcN6y7/C
- PC3hJ3gE78VaioUesvBKg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:6EmgwCH2oOE=;tO9aap8qByf+p7NbHIm8z1VCpLP
- VEInKE3iDL9hkz52w+6uel79EqVXEPE6JARy3lDjJQWO1SZxsEV/Hp3Ti5NBcnCuI3aYYmf9Z
- Y+cysq3iYMXzwAA5w8KlkhDtkQ4X12yfZvwL+AVCcBC+AQFKwUHUoHFIfDFQ5OAURoTxTS9+d
- jxgi+oFqgOXIBUq7flQEc+9Zt4tq+BNJrU4qzcy5q6SgS8jhSHWqbP6GnRXSY6Waa+tXvtK19
- X3ToL58H5kJdLNQW0aJCofLoHQJh2RSsE6jKaONyGpSQ3OtovztcpDG2f4Zng/hHo80knDRm7
- jkaqsXMLHcqKpssa9Yv4EHa6wKaSebq3Y8WVNFe09iR9soLXDnSXOwMP0pezWUTJEjBGntSSq
- 2Eh0PgRQS9ZuBKbjRPH1fKuYKw3LH2jp5EC036m3nCHw0YRX0FYeDjuv38JhsNB6Cf5v+KIV0
- tmBJw5SNQdfVOVdlDNlLOpsP7fElP6563rXAAsYo3AC+KO3nB8D5ziAz3rV05f7VokncFr0V5
- 1q7YzlzXUc7CNX2trDyjjUr5uvjibK6d8OycPmGbVRiKettQ2JSMDYcT9ETgIsAKCUWp5IeTt
- 9la+Ema3KZHHyrwqi0LPdP8cePtgDTD/jUWbaL0Wyl8xXM8N9iVm0uXofwURX5IU8PMNw5Mjk
- oqbk8j6mXM5ivnYepjPoVE3ibnjhPniiLWmJeo/EdY2+0kCqiNq1yilZSR/Wb9gnWrm8+5uVH
- f8k5L57VL1aQP5JJ/1ptrIKFPaQmCZcPH2VN8K9pf7BOq06Zb4zLhDuHbbSk4V73q1HAX7+2B
- aFZR8oSvWcJK+QJm6P+7uqjrmF4DYIAGGeXBayljRSBcW3OSI6umck/8z5dUjf1sbfnzFtbXh
- x/Dk4BdxeAFgZbGrh8uEsL+yg/zk9FqDxK5CRa6uawOWDZzmWfEVf3HQ5IHFxZ5CASP915Vx7
- hdhrRQ==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-5c066
 
-> Date: Tue, 11 Apr 2023 14:36:36 +0200
->
-> Some update suggestions were taken into account
-> from static source code analysis.
->
-> Markus Elfring (5)
->   amdgpu: Move a variable assignment behind a null pointer check in amdg=
-pu_ras_interrupt_dispatch()
->   display: Move three variable assignments behind condition checks in tr=
-igger_hotplug()
->   display: Delete three unnecessary variable initialisations in trigger_=
-hotplug()
->   display: Delete a redundant statement in trigger_hotplug()
->   display: Move an expression into a return statement in dcn201_link_enc=
-oder_create()
->
->  drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c       |  3 ++-
->  .../amd/display/amdgpu_dm/amdgpu_dm_debugfs.c | 19 ++++++++++---------
->  .../amd/display/dc/dcn201/dcn201_resource.c   |  4 +---
->  3 files changed, 13 insertions(+), 13 deletions(-)
+On Fri, 29 Dec 2023 09:46:00 +0800, cy_huang@richtek.com wrote:
+> This patch series fix rtq9128 pm_runtime and TDM usage.
+> 
+> ChiYuan Huang (2):
+>   ASoC: codecs: rtq9128: Fix PM_RUNTIME usage
+>   ASoC: codecs: rtq9128: Fix TDM enable and DAI format control flow
+> 
+>  sound/soc/codecs/rtq9128.c | 73 +++++++++++++++++++++-----------------
+>  1 file changed, 41 insertions(+), 32 deletions(-)
+> 
+> [...]
 
-Is this patch series still in review queues?
+Applied to
 
-See also:
-https://lore.kernel.org/cocci/2258ce64-2a14-6778-8319-b342b06a1f33@web.de/
-https://sympa.inria.fr/sympa/arc/cocci/2023-04/msg00034.html
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Regards,
-Markus
+Thanks!
+
+[1/2] ASoC: codecs: rtq9128: Fix PM_RUNTIME usage
+      commit: 35040410372ca27a33cec8382d42c90b6b6c99f6
+[2/2] ASoC: codecs: rtq9128: Fix TDM enable and DAI format control flow
+      commit: 415d10ccef712f3ec73cd880c1fef3eb48601c3a
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
