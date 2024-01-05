@@ -1,123 +1,111 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B372D602;
-	Fri,  5 Jan 2024 12:42:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9604F2D043;
+	Fri,  5 Jan 2024 12:42:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jn0ez182"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40d60c49ee7so15597475e9.0;
-        Fri, 05 Jan 2024 04:42:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fexVHH7I"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-55559e26ccfso1881484a12.3;
+        Fri, 05 Jan 2024 04:42:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704458544; x=1705063344; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DHfQJekuu4Rqw+ArKcUUY0Lwd5dJazKZX1eaX6xy6Tg=;
-        b=Jn0ez1828xfBqJDCJvgxfVOY2+Lp63vlUfILN9rI+Fb/qeCyUPzRdyS1CBoZ59UiFW
-         SGuzukJ/2m4tyktO8Vhs8w0dHJrWgMcUR2erixwl+5EfarIheOmZmsnIlWey1xCk2VIi
-         U3Kzrwl384HOJtVjUNwXjk9sS5zAzdyHy7yzm/AIs95L8lVxnbW4Ri/UEYjsO1qJmK5i
-         I2Fhdbu1ZYVaLLkPf1LL3FBqU09L0BfkQWN0OqyjWtCkj1vq/H3CY2bgVPtiKHTBdF8/
-         p2Nh1HWqatFF37glSkd+jfY7+bYVZGgJcEiGqYS0m0bym1JboHuF5M7fzhEFB8oB7oxz
-         P7UA==
+        d=gmail.com; s=20230601; t=1704458570; x=1705063370; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8Z/sbdKKt/wzLF4s9/xA3JvplJTqpdOGJ3HlSdybqII=;
+        b=fexVHH7IGBSYbV4lVwL8IbLqHOece2LUqKkLgg0Chzilr5AGKZ9eQamatfwBvXbrus
+         8n8wacln57aMue3ywhKbENOZFRPdrEpqZFC16LMzuJyMXPAn+NCpFGu00UsQEGD2O835
+         B99TbMDo4rMBAFrlACmZYCGYvidafOY5M+sjAwzA0zVUQe+55hnpnm+YbX4UAVtwPmle
+         5O2Mom55byRs4XazJcdUoOQFk7hfZBvo8ifmFjS7lrrs5iox/gVa41nqM+issjnDqv07
+         euPL5k/McKI1cwRLA+yMeaf4h14D7ehvhxTQNHBeUQckknk739z00X8Ft2mJyu0r3le1
+         9cfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704458544; x=1705063344;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DHfQJekuu4Rqw+ArKcUUY0Lwd5dJazKZX1eaX6xy6Tg=;
-        b=HXekpbISl9dv3f6CNKEbeLhVzjp0KsbVi6Am79LBb9ABkc6jhGL8IsUCHjRuGBUrid
-         QfmM0yq66Zb1pXzbEk4b3wMPQct2DN1HnmawPLgAEQBHn2wymeMr/zDgKV70NISvWjPs
-         wYK0k8+X06iBwFVFH+7pFf5iJOyXiy1TqJBNwOwROoutPOa7W/IbdiLEssgEcNggcgId
-         54IlZycQ64179DVLO9X95RnXbQevjWIuo9VqpKXBUZIswpA5ixz7xAW10vkid1+fdvbA
-         PYHNEVC3RkSaOEKzz9NT3fSsIAaCaqxsG83FiowCt6LIBc6CgYoYecGsM6u6ZWEk3Ooj
-         Go8Q==
-X-Gm-Message-State: AOJu0YyhWyCn9iavfCCeRZFZ+YS53HgLfmwE2+fHDhT7sKw4+Ykc0jth
-	KQ8S+RjbsyaRLJuIoaDYSLM=
-X-Google-Smtp-Source: AGHT+IFV3hK9icrAOXuX/rCJ/JH14sy8qoCgjiZo+BhHk3LoaQ5nuPc9SKGOfXNgMA8wQVvV3GjLYw==
-X-Received: by 2002:a05:600c:2901:b0:40d:f4bf:f0cd with SMTP id i1-20020a05600c290100b0040df4bff0cdmr1019896wmd.174.1704458544116;
-        Fri, 05 Jan 2024 04:42:24 -0800 (PST)
-Received: from debian ([93.184.186.109])
-        by smtp.gmail.com with ESMTPSA id f13-20020a05600c4e8d00b0040d887fda00sm1470441wmq.26.2024.01.05.04.42.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jan 2024 04:42:23 -0800 (PST)
-Date: Fri, 5 Jan 2024 13:42:21 +0100
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Stefan Eichenberger <eichest@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: phy: marvell-88q2xxx: add driver for the Marvell
- 88Q2220 PHY
-Message-ID: <20240105124221.GA30964@debian>
-References: <74d4b8f9-700e-45bc-af59-95a40a777b00@lunn.ch>
- <20231216221151.GA143483@debian>
- <28cc73bf-ed6d-49d8-b80b-4fbf5fa0442f@lunn.ch>
- <20231217111538.GA3591@debian>
- <ZX78ucHcNyEatXLD@eichest-laptop>
- <20231218090932.GA4319@debian>
- <ZYAqxPZHICtZO15O@eichest-laptop>
- <20231219081117.GA3479@debian>
- <ZYFfzei3SJSts5E/@eichest-laptop>
- <5d545a9b-feda-4908-8f74-9218806451c1@lunn.ch>
+        d=1e100.net; s=20230601; t=1704458570; x=1705063370;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8Z/sbdKKt/wzLF4s9/xA3JvplJTqpdOGJ3HlSdybqII=;
+        b=iRJ505e5/m1MH3pTFpXfzTdUlUbubuw/o8Ka9sRDKbEabSQhg3C6jngTT+oTDHO0dT
+         qzo31ssztmYApBoztDfkuVDOtlVcvAu76F3FwGt9weEJgA5QvGW8yGAWG8RdjoMCumZx
+         vmfZAY9SLQ8sAYH8y+26I4+/jC0GZ06jLo+H7ojC4HDaStwO6U7aIRUT2xNl/SAkjMnT
+         SKpGrUN/UJ9PDIn2vtU22a0TxQEXgTXPpk0ALX0kBtWM1m/kdE0ish1x911JrdK+2FnT
+         Lf5SK9bZuCn+0YMqLFchgt6Uz3w76g/15zckua235i8/yFtPvlbZ71XnFsi5JlXDMGvg
+         Fn+Q==
+X-Gm-Message-State: AOJu0YxH92qZ++VttV0hgkpOAbjFuIcOy1xxr8ZBGL3BMqy4GrhJmz/0
+	WZ9a6GElemPownz/Oq8OSCQ=
+X-Google-Smtp-Source: AGHT+IGbfX1w0N1pem4IEfrQ3cQn6z6SoqBmdwTlzBDIsENtwVd4ZQekXNKiB19iA+prjtO3rEK/Uw==
+X-Received: by 2002:a50:cd15:0:b0:557:1cfd:6efa with SMTP id z21-20020a50cd15000000b005571cfd6efamr432236edi.112.1704458569397;
+        Fri, 05 Jan 2024 04:42:49 -0800 (PST)
+Received: from ?IPV6:2a02:8389:41cf:e200:19ad:2fc2:9145:71e5? (2a02-8389-41cf-e200-19ad-2fc2-9145-71e5.cable.dynamic.v6.surfer.at. [2a02:8389:41cf:e200:19ad:2fc2:9145:71e5])
+        by smtp.gmail.com with ESMTPSA id fd5-20020a056402388500b0055743d6e9ebsm71122edb.41.2024.01.05.04.42.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jan 2024 04:42:48 -0800 (PST)
+Message-ID: <56a15164-dbce-4740-b59e-b566f613f878@gmail.com>
+Date: Fri, 5 Jan 2024 13:42:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5d545a9b-feda-4908-8f74-9218806451c1@lunn.ch>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] usb: typec: tipd: fix use of device-specific init
+ function
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Roger Quadros <rogerq@kernel.org>,
+ Javier Carrasco <javier.carrasco@wolfvision.net>, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240104-dev_spec_init-v1-1-1a57e7fd8cc8@gmail.com>
+ <ZZf2lhtRdmIHmlBq@kuha.fi.intel.com>
+Content-Language: en-US
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+In-Reply-To: <ZZf2lhtRdmIHmlBq@kuha.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Am Tue, Dec 19, 2023 at 04:57:50PM +0100 schrieb Andrew Lunn:
-> > I am not sure that it will be accepted by the maintainers if you use a
-> > lot of registers that are not documented.
+On 05.01.24 13:36, Heikki Krogerus wrote:
+> On Thu, Jan 04, 2024 at 06:07:12PM +0100, Javier Carrasco wrote:
+>> The current implementation supports device-pecific callbacks for the
+>> init function with a function pointer. The patch that introduced this
+>> feature did not update one call to the tps25750 init function to turn it
+>> into a call with the new pointer in the resume function.
+>>
+>> Fixes: d49f90822015 ("usb: typec: tipd: add init and reset functions to tipd_data")
+>> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
 > 
-> Sometimes there is no choice, there is no documentation except the
-> vendor crap driver which we try to clean up as much as possible, but
-> we still end up with lots of magic numbers.
->
+> This was suggested by Roger, no?
+> 
 
-Hi Andrew, hi Stefan,
+Yes, it was. Thanks for the reminder.
 
-tried to reduce the init sequence. This worked for me:
+Could the following trailer be added before applying?
 
-static int mv88q222x_config_init(struct phy_device *phydev)
-{
-	int ret;
+Suggested-by: Roger Quadros <rogerq@kernel.org>
 
-	/* send_s detection threshold, slave and master */
-	ret = phy_write_mmd(phydev, MDIO_MMD_AN, 0x8032, 0x2020);
-	if (ret < 0)
-		return ret;
+Otherwise I will resend the patch with that addition.
 
-	ret = phy_write_mmd(phydev, MDIO_MMD_AN, 0x8031, 0xa28);
-	if (ret < 0)
-		return ret;
-
-	ret = phy_write_mmd(phydev, MDIO_MMD_AN, 0x8031, 0xc28);
-	if (ret < 0)
-		return ret;
-
-	ret = phy_write_mmd(phydev, MDIO_MMD_PCS, 0xffe4, 0xc);
-	if (ret < 0)
-		return ret;
-
-	return mv88q2xxx_config_init(phydev);
-}
-
-The four register writes were required to make the PHY work in 1000Mbit forced
-mode. When using autonegotiation or 100Mbit forced mode they weren't needed.
-It was enough to write them once in mv88q222x_config_init as you can
-see. Thanks Stefan for the hint with the first three register writes, it
-helped a lot.
-
-> 	Andrew
-
-Best regards,
-Dimitri
+> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> 
+>> ---
+>>  drivers/usb/typec/tipd/core.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/usb/typec/tipd/core.c b/drivers/usb/typec/tipd/core.c
+>> index a956eb976906..8a7cdfee27a1 100644
+>> --- a/drivers/usb/typec/tipd/core.c
+>> +++ b/drivers/usb/typec/tipd/core.c
+>> @@ -1495,7 +1495,7 @@ static int __maybe_unused tps6598x_resume(struct device *dev)
+>>  		return ret;
+>>  
+>>  	if (ret == TPS_MODE_PTCH) {
+>> -		ret = tps25750_init(tps);
+>> +		ret = tps->data->init(tps);
+>>  		if (ret)
+>>  			return ret;
+>>  	}
+> 
+> thans,
+> 
