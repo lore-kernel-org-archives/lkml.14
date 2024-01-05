@@ -1,80 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m49216.qiye.163.com (mail-m49216.qiye.163.com [45.254.49.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542A028DDA;
-	Fri,  5 Jan 2024 10:58:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9092421C
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 10:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZHMJODsW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09EBFC433C8;
-	Fri,  5 Jan 2024 10:58:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704452310;
-	bh=7VPBGYOpqAVjbMriYWq9KPZB+dzGm77OsE6Z5xm7oSA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZHMJODsWZcBRtJfHIdw5MgkVCO/43sODxcr0m9PAIAVmo/opXnEUTjDm7DwqwTVAp
-	 iBbsOleygpHhiBmuCQ2ma1WQ/OvQYpEVHiT2SB9z6TIJPTY4meK+6EmnmgRwXuHhX9
-	 x52LmxJcj7+J92PjIvNylABUqvyjZ0jwfgcCELxa7RsAfheKJkc4jBOffj31kpu29A
-	 SH7hFF9DQKe7HUjZkNzRpRFgQmjsX4aB+sSP2UQFKbtIa2jT/QV6ZKQmR/ptFSkdl6
-	 sxHTXA2CWZS7iX//juvOMZZnKPR91kkVi7uWjjMD24NssnZehd7LXu1Poybb6t7LO0
-	 JrCIIY3DQUJ0A==
-Date: Fri, 5 Jan 2024 10:58:23 +0000
-From: Simon Horman <horms@kernel.org>
-To: Shinas Rasheed <srasheed@marvell.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, hgani@marvell.com,
-	vimleshk@marvell.com, sedara@marvell.com, egallen@redhat.com,
-	mschmidt@redhat.com, pabeni@redhat.com, kuba@kernel.org,
-	wizhao@redhat.com, kheib@redhat.com, konguyen@redhat.com,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Veerasenareddy Burru <vburru@marvell.com>,
-	Satananda Burla <sburla@marvell.com>,
-	Shannon Nelson <shannon.nelson@amd.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Alan Brady <alan.brady@intel.com>,
-	Rahul Rameshbabu <rrameshbabu@nvidia.com>,
-	Brett Creeley <brett.creeley@amd.com>,
-	Joshua Hay <joshua.a.hay@intel.com>, Andrew Lunn <andrew@lunn.ch>,
-	Jacob Keller <jacob.e.keller@intel.com>
-Subject: Re: [PATCH net-next v2 1/8] octeon_ep_vf: Add driver framework and
- device initialization
-Message-ID: <20240105105823.GT31813@kernel.org>
-References: <20231223134000.2906144-1-srasheed@marvell.com>
- <20231223134000.2906144-2-srasheed@marvell.com>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="J49zP1kc"
+DKIM-Signature: a=rsa-sha256;
+	b=J49zP1kcxyDLDuYjM1j/Nm85RnUYMNpETkXTFJtmfMkDN7noi608Tk7coSGxV/XODolyLuQGAfQwK5z9r8GBmQTRolRWVBxr3xENAIZ/q631aqmpzcv2t/h44mHU7k8zm6iScrfG66xhRB6ZXc+4CrxCcpc58vsJz6ASrURiAxE=;
+	c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=7Rpg1YBO3YN3stA5+Iw9eTT2absDZpy7ygnLlv2cEYU=;
+	h=date:mime-version:subject:message-id:from;
+Received: from [172.16.12.141] (unknown [58.22.7.114])
+	by mail-m12779.qiye.163.com (Hmail) with ESMTPA id 799D37802A7;
+	Fri,  5 Jan 2024 17:04:56 +0800 (CST)
+Message-ID: <acb52035-4f0c-430d-a2d2-26ab37805d7b@rock-chips.com>
+Date: Fri, 5 Jan 2024 17:04:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231223134000.2906144-2-srasheed@marvell.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/rockchip: vop2: Drop unused if_dclk_rate variable
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+ Sandy Huang <hjc@rock-chips.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Cc: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kernel@collabora.com
+References: <20240104143951.85219-1-cristian.ciocaltea@collabora.com>
+ <20240104143951.85219-2-cristian.ciocaltea@collabora.com>
+ <5867171.29KlJPOoH8@diego>
+Content-Language: en-US
+From: Andy Yan <andy.yan@rock-chips.com>
+In-Reply-To: <5867171.29KlJPOoH8@diego>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQhlPTFZDH0lJTh0fQkJPTkJVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk1PSU5IVUpLS1VKQk
+	tLWQY+
+X-HM-Tid: 0a8cd8de4dd6b24fkuuu799d37802a7
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Kxg6Pww*MDwZST8KPjc*F09R
+	UTAaCRxVSlVKTEtPT09OT0JMSEhMVTMWGhIXVRoVHwJVAhoVOwkUGBBWGBMSCwhVGBQWRVlXWRIL
+	WUFZTkNVSUlVTFVKSk9ZV1kIAVlBT09IQzcG
 
-On Sat, Dec 23, 2023 at 05:39:53AM -0800, Shinas Rasheed wrote:
-> Add driver framework and device setup and initialization for Octeon
-> PCI Endpoint NIC VF.
+Hi:
+
+On 1/4/24 23:58, Heiko Stübner wrote:
+> Hi Christian, Andy,
 > 
-> Add implementation to load module, initialize, register network device,
-> cleanup and unload module.
+> Am Donnerstag, 4. Januar 2024, 15:39:50 CET schrieb Cristian Ciocaltea:
+>> Commit 5a028e8f062f ("drm/rockchip: vop2: Add support for rk3588")
+>> introduced a variable which ended up being unused.  Remove it.
+>>
+>> rockchip_drm_vop2.c:1688:23: warning: variable ‘if_dclk_rate’ set but not used [-Wunused-but-set-variable]
+>>
+>> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
 > 
-> Signed-off-by: Shinas Rasheed <srasheed@marvell.com>
+> in general, please don't send non-series patches as replies to other patches.
+> It confuses tooling like b4 way too often, as this patch is not designated
+> as a 2/2 (similar to the first one not being 1/2).
+> 
+>> ---
+>>   drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 2 --
+>>   1 file changed, 2 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+>> index 44508c2dd614..923985d4161b 100644
+>> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+>> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+>> @@ -1685,7 +1685,6 @@ static unsigned long rk3588_calc_cru_cfg(struct vop2_video_port *vp, int id,
+>>   	unsigned long dclk_core_rate = v_pixclk >> 2;
+>>   	unsigned long dclk_rate = v_pixclk;
+>>   	unsigned long dclk_out_rate;
+>> -	unsigned long if_dclk_rate;
+>>   	unsigned long if_pixclk_rate;
+>>   	int K = 1;
+>>   
+>> @@ -1700,7 +1699,6 @@ static unsigned long rk3588_calc_cru_cfg(struct vop2_video_port *vp, int id,
+>>   		}
+>>   
+>>   		if_pixclk_rate = (dclk_core_rate << 1) / K;
+>> -		if_dclk_rate = dclk_core_rate / K;
+>>   		/*
+>>   		 * *if_pixclk_div = dclk_rate / if_pixclk_rate;
+>>   		 * *if_dclk_div = dclk_rate / if_dclk_rate;
+>>   		 */
+> 		*if_pixclk_div = 2;
+> 		*if_dclk_div = 4;
+> 
+> with the code continuing with those static constants but the comment
+> showing a forumula, I do hope Andy can provide a bit of insight into
+> what is happening here.
+> 
+> I.e. I'd really like to understand if that really is just a remnant or
+> something different is needed.
 
-Hi Shinas,
+This is not a remnant, in my V1, I calculate all the div by formula, but Sascha prefer
+more for a constants value[0], so I keep this formula as comments to indicate how these value come from.
 
-a minor nit from my side.
-
-...
-
-> diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.h b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.h
-
-...
-
-> +#ifndef UINT64_MAX
-> +#define UINT64_MAX		((u64)(~((u64)0)))        /* 0xFFFFFFFFFFFFFFFF */
-> +#endif
-
-nit: UINT64_MAX appears to be unused, so I think it can be removed.
-     Else, perhaps the code can be updated to use U64_MAX instead.
-
-...
+[0]https://patchwork.kernel.org/project/linux-rockchip/patch/20231114112855.1771372-1-andyshrk@163.com/
+> 
+> 
+> Heiko
+> 
+> 
