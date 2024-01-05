@@ -1,248 +1,86 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3281FBF;
-	Fri,  5 Jan 2024 02:09:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4T5n0r5MPZz1Q7Vm;
-	Fri,  5 Jan 2024 10:07:56 +0800 (CST)
-Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 59286140631;
-	Fri,  5 Jan 2024 10:09:24 +0800 (CST)
-Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
- (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 5 Jan
- 2024 10:09:24 +0800
-Subject: Re: [PATCH net-next 6/6] tools: virtio: introduce vhost_net_test
-To: Eugenio Perez Martin <eperezma@redhat.com>
-CC: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Michael S.
- Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Xuan Zhuo
-	<xuanzhuo@linux.alibaba.com>, <virtualization@lists.linux.dev>
-References: <20240103095650.25769-1-linyunsheng@huawei.com>
- <20240103095650.25769-7-linyunsheng@huawei.com>
- <CAJaqyWfHLDRL4z9ooNS2w_yGE_jnHfi2spdYPP_=F0jgSj3mJQ@mail.gmail.com>
-From: Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <4417b8ff-144d-374b-2188-38e30567a5ba@huawei.com>
-Date: Fri, 5 Jan 2024 10:09:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C14911FBE;
+	Fri,  5 Jan 2024 02:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AHAk27qn"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ccb6ddf651so3428211fa.0;
+        Thu, 04 Jan 2024 18:11:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704420686; x=1705025486; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XmPAokCF8XiRAhvGBrhmqGsgT7mk/J8HnsnCH8uI4Xg=;
+        b=AHAk27qnDZng4VBpj9+36AkAbKQqphnfZ1sfmkUaNXTloMRG4ivAYZvc3KDN1NS3lb
+         3frEgACaBVkf4pb47MJUqrHN89ZWd4fvFHiSiDw67heUZa9+/6UWUhBzECkXQ0R2f/X1
+         lCDl/58QgO5z7/VS/ZFrzZfB/7sL1/VnrLKSlQHmJpOQN1hR2Tfe+NdOPBIiIQD4BUCW
+         jhIvxUlBYdLA01lrwILA3URGVkqmGijlhg2dpCAOkiqbZg01cgceCcJ0OfZcrM0hPmCB
+         vDUqZfU6M0QXPJt+RWbMABasGXpOYiaiFm02Ke3vG/NEc8UTy8tft0EDXJjI8YcLLaDm
+         5pdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704420686; x=1705025486;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XmPAokCF8XiRAhvGBrhmqGsgT7mk/J8HnsnCH8uI4Xg=;
+        b=mH1m3gWu/7iXQrOQKDYUh0uhUgVHpGFixAXms7IpcvM+kJuTdKeFKjLZ1DQU86Hs8j
+         NLb0U6H9wo0bQJlK9KdiQ8PyLX8NH5PPKC4iJJ0OdDJ+1aR5N+/xc1RN5jYoq6R9Z0U8
+         G/kfNbCpUmYGhWf6wxabpOsNnhs/Ezwm31MbSr3KqyNq3xdXv7f2ObyjNT0AFcuj10gu
+         UbSWYddapSXO87B+5HWwcKwB7GGhV5yF+2+1TFf1BBSsb2UzeaqejCdgcYaWSWh9E7E+
+         7XWhActc6A/k9pzKSLzSu0ZHQw66e+iszZJs5QhxsRTWaCaxNUWTVZMNHif+rKCRiJpx
+         cg4Q==
+X-Gm-Message-State: AOJu0YxKOC2wHZ9UhlM4r/iXTGFy4eot5+qsNAkxbdOTnGXGd8Z0X+vS
+	0q/6I48UR6XFo+kTLKeFeNX5lSqwwZo+bArMgIA=
+X-Google-Smtp-Source: AGHT+IGLRoF1C1V3xSIo5Jv7tmG026oWvTJ29dQh/lwSN8IJv7p3WhV/tRlnTVz4yaIQa2wI1pk4vZgQr5AkCZhRvhE=
+X-Received: by 2002:a05:651c:2106:b0:2cc:e995:9db9 with SMTP id
+ a6-20020a05651c210600b002cce9959db9mr1623428ljq.5.1704420685526; Thu, 04 Jan
+ 2024 18:11:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAJaqyWfHLDRL4z9ooNS2w_yGE_jnHfi2spdYPP_=F0jgSj3mJQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500005.china.huawei.com (7.185.36.74)
+References: <20240104024244.12163-1-Wenhua.Lin@unisoc.com> <20240104024244.12163-2-Wenhua.Lin@unisoc.com>
+ <CAHp75VfdCHnPovC+LJyVsh=SGTLXDoDowd+0z+0J-wDF2_yjCQ@mail.gmail.com>
+In-Reply-To: <CAHp75VfdCHnPovC+LJyVsh=SGTLXDoDowd+0z+0J-wDF2_yjCQ@mail.gmail.com>
+From: wenhua lin <wenhua.lin1994@gmail.com>
+Date: Fri, 5 Jan 2024 10:11:14 +0800
+Message-ID: <CAB9BWhc0WyvMMudKcpuOw3=hqiWrC4e47fri6ywqYojULHnAdQ@mail.gmail.com>
+Subject: Re: [PATCH V3 1/4] gpio: eic-sprd: Keep the clock rtc_1k on
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Wenhua Lin <Wenhua.Lin@unisoc.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Xiongpeng Wu <xiongpeng.wu@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024/1/5 0:17, Eugenio Perez Martin wrote:
-> On Wed, Jan 3, 2024 at 11:00 AM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+On Thu, Jan 4, 2024 at 9:00=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Thu, Jan 4, 2024 at 4:43=E2=80=AFAM Wenhua Lin <Wenhua.Lin@unisoc.com>=
+ wrote:
+> >
+> > The eic debounce does not have a clock of rtc_1k in the sleep state,
+> > but the eic debounce will be used to wake up the system, therefore the
+> > clock of rtc_1k needs to be kept open.
+>
+> ...
+>
+> > +#define SPRD_EIC_DBNC_FORCE_CLK                0x8000
+>
+> BIT(15) ?
+>
 
-...
+Yes, writing 1 to bit15 of the register can ensure that the clock of
+rtc_1k remains normally on.
 
->> +
->> +static void run_tx_test(struct vdev_info *dev, struct vq_info *vq,
->> +                       bool delayed, int batch, int bufs)
->> +{
->> +       const bool random_batch = batch == RANDOM_BATCH;
->> +       long long spurious = 0;
->> +       struct scatterlist sl;
->> +       unsigned int len;
->> +       int r;
->> +
->> +       for (;;) {
->> +               long started_before = vq->started;
->> +               long completed_before = vq->completed;
->> +
->> +               virtqueue_disable_cb(vq->vq);
->> +               do {
->> +                       if (random_batch)
->> +                               batch = (random() % vq->vring.num) + 1;
->> +
->> +                       while (vq->started < bufs &&
->> +                              (vq->started - vq->completed) < batch) {
->> +                               sg_init_one(&sl, dev->test_buf, HDR_LEN + TEST_BUF_LEN);
->> +                               r = virtqueue_add_outbuf(vq->vq, &sl, 1,
->> +                                                        dev->test_buf + vq->started,
->> +                                                        GFP_ATOMIC);
->> +                               if (unlikely(r != 0)) {
->> +                                       if (r == -ENOSPC &&
->> +                                           vq->started > started_before)
->> +                                               r = 0;
->> +                                       else
->> +                                               r = -1;
->> +                                       break;
->> +                               }
->> +
->> +                               ++vq->started;
->> +
->> +                               if (unlikely(!virtqueue_kick(vq->vq))) {
->> +                                       r = -1;
->> +                                       break;
->> +                               }
->> +                       }
->> +
->> +                       if (vq->started >= bufs)
->> +                               r = -1;
->> +
->> +                       /* Flush out completed bufs if any */
->> +                       while (virtqueue_get_buf(vq->vq, &len)) {
->> +                               int n, i;
->> +
->> +                               n = recvfrom(dev->sock, dev->res_buf, TEST_BUF_LEN, 0, NULL, NULL);
->> +                               assert(n == TEST_BUF_LEN);
->> +
->> +                               for (i = ETHER_HDR_LEN; i < n; i++)
->> +                                       assert(dev->res_buf[i] == (char)i);
->> +
->> +                               ++vq->completed;
->> +                               r = 0;
->> +                       }
->> +               } while (r == 0);
->> +
->> +               if (vq->completed == completed_before && vq->started == started_before)
->> +                       ++spurious;
->> +
->> +               assert(vq->completed <= bufs);
->> +               assert(vq->started <= bufs);
->> +               if (vq->completed == bufs)
->> +                       break;
->> +
->> +               if (delayed) {
->> +                       if (virtqueue_enable_cb_delayed(vq->vq))
->> +                               wait_for_interrupt(vq);
->> +               } else {
->> +                       if (virtqueue_enable_cb(vq->vq))
->> +                               wait_for_interrupt(vq);
->> +               }
->> +       }
->> +       printf("TX spurious wakeups: 0x%llx started=0x%lx completed=0x%lx\n",
->> +              spurious, vq->started, vq->completed);
->> +}
->> +
->> +static void run_rx_test(struct vdev_info *dev, struct vq_info *vq,
->> +                       bool delayed, int batch, int bufs)
->> +{
->> +       const bool random_batch = batch == RANDOM_BATCH;
->> +       long long spurious = 0;
->> +       struct scatterlist sl;
->> +       unsigned int len;
->> +       int r;
->> +
->> +       for (;;) {
->> +               long started_before = vq->started;
->> +               long completed_before = vq->completed;
->> +
->> +               do {
->> +                       if (random_batch)
->> +                               batch = (random() % vq->vring.num) + 1;
->> +
->> +                       while (vq->started < bufs &&
->> +                              (vq->started - vq->completed) < batch) {
->> +                               sg_init_one(&sl, dev->res_buf, HDR_LEN + TEST_BUF_LEN);
->> +
->> +                               r = virtqueue_add_inbuf(vq->vq, &sl, 1,
->> +                                                       dev->res_buf + vq->started,
->> +                                                       GFP_ATOMIC);
->> +                               if (unlikely(r != 0)) {
->> +                                       if (r == -ENOSPC &&
->> +                                           vq->started > started_before)
->> +                                               r = 0;
->> +                                       else
->> +                                               r = -1;
->> +                                       break;
->> +                               }
->> +
->> +                               ++vq->started;
->> +
->> +                               vdev_send_packet(dev);
->> +
->> +                               if (unlikely(!virtqueue_kick(vq->vq))) {
->> +                                       r = -1;
->> +                                       break;
->> +                               }
->> +                       }
->> +
->> +                       if (vq->started >= bufs)
->> +                               r = -1;
->> +
->> +                       /* Flush out completed bufs if any */
->> +                       while (virtqueue_get_buf(vq->vq, &len)) {
->> +                               struct ether_header *eh;
->> +                               int i;
->> +
->> +                               eh = (struct ether_header *)(dev->res_buf + HDR_LEN);
->> +
->> +                               /* tun netdev is up and running, ignore the
->> +                                * non-TEST_PTYPE packet.
->> +                                */
->> +                               if (eh->ether_type != htons(TEST_PTYPE)) {
->> +                                       ++vq->completed;
->> +                                       r = 0;
->> +                                       continue;
->> +                               }
->> +
->> +                               assert(len == TEST_BUF_LEN + HDR_LEN);
->> +
->> +                               for (i = ETHER_HDR_LEN; i < TEST_BUF_LEN; i++)
->> +                                       assert(dev->res_buf[i + HDR_LEN] == (char)i);
->> +
->> +                               ++vq->completed;
->> +                               r = 0;
->> +                       }
->> +               } while (r == 0);
->> +               if (vq->completed == completed_before && vq->started == started_before)
->> +                       ++spurious;
->> +
->> +               assert(vq->completed <= bufs);
->> +               assert(vq->started <= bufs);
->> +               if (vq->completed == bufs)
->> +                       break;
->> +       }
->> +
->> +       printf("RX spurious wakeups: 0x%llx started=0x%lx completed=0x%lx\n",
->> +              spurious, vq->started, vq->completed);
->> +}
-> 
-> Hi!
-> 
-> I think the tests are great! Maybe both run_rx_test and run_tx_test
-> (and virtio_test.c:run_test) can be merged into a common function with
-> some callbacks? Not sure if it will complicate the code more.
-
-I looked at it more closely, it seems using callback just make the code
-more complicated without obvious benefit, as the main steps is different
-for tx and rx.
-
-For tx:
-1. Prepare a out buf
-2. Kick the vhost_net to do tx processing
-3. Do the receiving in the tun side
-4. verify the data received by tun is correct
-
-For rx:
-1. Prepare a in buf
-2. Do the sending in the tun side
-3. Kick the vhost_net to do rx processing
-4. verify the data received by vhost_net is correct
-
-I could refactor out a common function to do the data verifying for step 4
-of both tx and rx.
-
-For virtio_test.c:run_test, it does not seems to be using the vhost_net directly,
-it uses shim vhost_test.ko module, and it seems to only have step 1 & 3 of
-vhost_net_test' rx testing. The new vhost_net_test should be able to replace the
-virtio_test, I thought about deleting the virtio_test after adding the vhost_net_test,
-but I am not familiar enough with virtio to do the judgement yet.
-
-> 
-> Thanks!
-> 
-
+> --
+> With Best Regards,
+> Andy Shevchenko
