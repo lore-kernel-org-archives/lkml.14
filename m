@@ -1,169 +1,140 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25392C868
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 10:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3323224B48;
+	Fri,  5 Jan 2024 10:22:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JDHtesv+"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dbd7248ac28so1203004276.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 02:19:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704449969; x=1705054769; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=eN3mm0CyL5f2TZeRq2cvai8N3s8ehzSOlLnk4WHpwLs=;
-        b=JDHtesv+1x7Fu0jpky3GGD1tqZ9oHUCErljDRVfPJwdFoaYmVX0QxqUqS/TipDQA05
-         IZycT3uIZmJuXjwfOXMu9t8FMcV+MlLxtb9BUHUsHzy5zILuVlmTK3zPLAjOA/r+KBik
-         FVj7Hf9GpW1z9BmuGfU25GtMDmk1s1VHWC0PBnSFd5BHBuPNcq/tja8kpamuEcUz/HrZ
-         Yi4pBRjb4b07DjBHp3nh9T40GkBVSDehlrftfrcDOHu2VqDF4nX3Yd1n8rqQ7gPDnmbK
-         uekCM+gnYVKbmDf/U4k7F9lBAoEy5CbpzaadWjbUOlhP3IP3KsM2JkJW39ZWY/GjAoGg
-         peZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704449969; x=1705054769;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eN3mm0CyL5f2TZeRq2cvai8N3s8ehzSOlLnk4WHpwLs=;
-        b=VLmVx65vNRsDE5KLfM1J4jGw1BDzNCLYvYEZWTbnNF8NcMCs8kVVfhkGtUBWbIlAFd
-         WR7+yOh924/SZ6P9Gqwg7BZQwmi01qxdsrwNgB8lWQBJZVdWBXDy1bXk6SomRayWng+a
-         y+aOc8/6ZKjMzUAtqRDHMfSoEofOcQLHl/fK7gdMoT/5pJ4r6N1WIXqmF6hGIuGlWKz3
-         LVfeMpbfH3XbdxXHIGhnesLV6yGai8bCawO1o0Dkhq1s9hWHKVnZvkPkfzE5q7HH8tfX
-         6lju3I+qKzwTNL4m0D25QEYNlLT0aHp6BGc0H9H2IQIax96mRdXOFMKJD1IB69x7/f0g
-         wrSA==
-X-Gm-Message-State: AOJu0Yz9SshNyx8YNnF+xHDj8D1kH9GYGAwSzJDCtEHe8Hu37eXmX1uA
-	pNG5ZIF8vft+duD8cSRLiuyHn4EYnRe90MbHlOF7KPfndvGjwQ==
-X-Google-Smtp-Source: AGHT+IHCvMu4Pe3bJppU23iOJDYwvcbQ7DD/NNMVSoWGtk4WWytfur5c/bhfaMYzPR5HC1C9H1Ycpj4Ow2Fc5Y15Rkg=
-X-Received: by 2002:a05:6902:3c9:b0:db5:9004:cf5b with SMTP id
- g9-20020a05690203c900b00db59004cf5bmr1578144ybs.64.1704449968904; Fri, 05 Jan
- 2024 02:19:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i3fbB6Tj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D2CBC433C7;
+	Fri,  5 Jan 2024 10:22:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704450135;
+	bh=oQGOEMuZwhCeZ13+phWxoQu6BEy+A6aOg5LpzwI7iRs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i3fbB6TjVbslLJNPhjQfrDhvlyjSRyanKmCbk0YWFUz265z7ZAaranr1naJsVccNZ
+	 f/ZVvvsdyhOFCO78G8/QyIEvJIZmKAoPv/yqHkQVlmnJ/9b6wGU7/+5qmd860xWBaO
+	 JR28x4VLae9CE1nRfl/rBFB26xNuhXah1xm9t8DMXgqVtHB8dqi1ICS8Ch2sa0XIZW
+	 jZhEQ25nAA3no30MxSUawrAtdEZkZ6+yk5EVhrTxXNX/0cc8GEjiqxd36g1WPCeh4U
+	 /b+HqnAd1Wp7UbutG+4WD1O8h66w4kBNa1pFLVI+ZXll9fOXlPEw8kYzI+LI/53N80
+	 JZuY8oHjjnAog==
+Date: Fri, 5 Jan 2024 10:22:09 +0000
+From: Simon Horman <horms@kernel.org>
+To: Shinas Rasheed <srasheed@marvell.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, hgani@marvell.com,
+	vimleshk@marvell.com, sedara@marvell.com, egallen@redhat.com,
+	mschmidt@redhat.com, pabeni@redhat.com, kuba@kernel.org,
+	wizhao@redhat.com, kheib@redhat.com, konguyen@redhat.com,
+	Veerasenareddy Burru <vburru@marvell.com>,
+	Satananda Burla <sburla@marvell.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>
+Subject: Re: [PATCH net-next v2 2/8] octeon_ep_vf: add hardware configuration
+ APIs
+Message-ID: <20240105102209.GR31813@kernel.org>
+References: <20231223134000.2906144-1-srasheed@marvell.com>
+ <20231223134000.2906144-3-srasheed@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240104173033.2836110-1-enachman@marvell.com>
-In-Reply-To: <20240104173033.2836110-1-enachman@marvell.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Fri, 5 Jan 2024 11:18:53 +0100
-Message-ID: <CAPDyKFoJffGOu1cBeUi=Lg5u+MNxg6Xbp5qpjisHWM5oxXW6BA@mail.gmail.com>
-Subject: Re: [PATCH v2] mmc: xenon: Add ac5 support via bounce buffer
-To: Elad Nachman <enachman@marvell.com>
-Cc: huziji@marvell.com, adrian.hunter@intel.com, linux-mmc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231223134000.2906144-3-srasheed@marvell.com>
 
-On Thu, 4 Jan 2024 at 18:31, Elad Nachman <enachman@marvell.com> wrote:
->
-> From: Elad Nachman <enachman@marvell.com>
->
-> AC5/X/IM SOCs has a variant of the Xenon eMMC controller,
-> in which only 31-bit of addressing pass from the controller
-> on the AXI bus.
-> Since we cannot guarantee that only buffers from the first 2GB
-> of memory will reach the driver, the driver is configured for
-> SDMA mode, without 64-bit mode, overriding the DMA mask to 34-bit
-> to support the DDR memory mapping, which starts at offset 8GB.
->
-> Signed-off-by: Elad Nachman <enachman@marvell.com>
+On Sat, Dec 23, 2023 at 05:39:54AM -0800, Shinas Rasheed wrote:
+> Implement hardware resource init and shutdown helper APIs, like
+> hardware Tx/Rx queue init/enable/disable/reset.
+> 
+> Signed-off-by: Shinas Rasheed <srasheed@marvell.com>
 
-Applied for next, thanks!
+Hi Shinas,
 
-Kind regards
-Uffe
+some minor feedback from my side.
 
+...
 
-> ---
->  drivers/mmc/host/sdhci-xenon.c | 31 +++++++++++++++++++++++++++++++
->  drivers/mmc/host/sdhci-xenon.h |  3 ++-
->  2 files changed, 33 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/host/sdhci-xenon.c b/drivers/mmc/host/sdhci-xenon.c
-> index 25ba7aecc3be..0e52867f6e91 100644
-> --- a/drivers/mmc/host/sdhci-xenon.c
-> +++ b/drivers/mmc/host/sdhci-xenon.c
-> @@ -18,6 +18,8 @@
->  #include <linux/of.h>
->  #include <linux/pm.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/mm.h>
-> +#include <linux/dma-mapping.h>
->
->  #include "sdhci-pltfm.h"
->  #include "sdhci-xenon.h"
-> @@ -422,6 +424,7 @@ static int xenon_probe_params(struct platform_device *pdev)
->         struct xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
->         u32 sdhc_id, nr_sdhc;
->         u32 tuning_count;
-> +       struct sysinfo si;
->
->         /* Disable HS200 on Armada AP806 */
->         if (priv->hw_version == XENON_AP806)
-> @@ -450,6 +453,23 @@ static int xenon_probe_params(struct platform_device *pdev)
->         }
->         priv->tuning_count = tuning_count;
->
-> +       /*
-> +        * AC5/X/IM HW has only 31-bits passed in the crossbar switch.
-> +        * If we have more than 2GB of memory, this means we might pass
-> +        * memory pointers which are above 2GB and which cannot be properly
-> +        * represented. In this case, disable ADMA, 64-bit DMA and allow only SDMA.
-> +        * This effectively will enable bounce buffer quirk in the
-> +        * generic SDHCI driver, which will make sure DMA is only done
-> +        * from supported memory regions:
-> +        */
-> +       if (priv->hw_version == XENON_AC5) {
-> +               si_meminfo(&si);
-> +               if (si.totalram * si.mem_unit > SZ_2G) {
-> +                       host->quirks |= SDHCI_QUIRK_BROKEN_ADMA;
-> +                       host->quirks2 |= SDHCI_QUIRK2_BROKEN_64_BIT_DMA;
-> +               }
-> +       }
+> diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_cn9k.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_cn9k.c
+
+...
+
+> +/* Reset Hardware Tx queue */
+> +static int cn93_vf_reset_iq(struct octep_vf_device *oct, int q_no)
+> +{
+> +	u64 val = 0ULL;
 > +
->         return xenon_phy_parse_params(dev, host);
->  }
->
-> @@ -562,6 +582,16 @@ static int xenon_probe(struct platform_device *pdev)
->                 goto remove_sdhc;
->
->         pm_runtime_put_autosuspend(&pdev->dev);
-> +       /*
-> +        * If we previously detected AC5 with over 2GB of memory,
-> +        * then we disable ADMA and 64-bit DMA.
-> +        * This means generic SDHCI driver has set the DMA mask to
-> +        * 32-bit. Since DDR starts at 0x2_0000_0000, we must use
-> +        * 34-bit DMA mask to access this DDR memory:
-> +        */
-> +       if (priv->hw_version == XENON_AC5 &&
-> +           host->quirks2 & SDHCI_QUIRK2_BROKEN_64_BIT_DMA)
-> +               dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(34));
->
->         return 0;
->
-> @@ -680,6 +710,7 @@ static const struct of_device_id sdhci_xenon_dt_ids[] = {
->         { .compatible = "marvell,armada-ap807-sdhci", .data = (void *)XENON_AP807},
->         { .compatible = "marvell,armada-cp110-sdhci", .data =  (void *)XENON_CP110},
->         { .compatible = "marvell,armada-3700-sdhci", .data =  (void *)XENON_A3700},
-> +       { .compatible = "marvell,ac5-sdhci",         .data =  (void *)XENON_AC5},
->         {}
->  };
->  MODULE_DEVICE_TABLE(of, sdhci_xenon_dt_ids);
-> diff --git a/drivers/mmc/host/sdhci-xenon.h b/drivers/mmc/host/sdhci-xenon.h
-> index 3e9c6c908a79..0460d97aad26 100644
-> --- a/drivers/mmc/host/sdhci-xenon.h
-> +++ b/drivers/mmc/host/sdhci-xenon.h
-> @@ -57,7 +57,8 @@ enum xenon_variant {
->         XENON_A3700,
->         XENON_AP806,
->         XENON_AP807,
-> -       XENON_CP110
-> +       XENON_CP110,
-> +       XENON_AC5
->  };
->
->  struct xenon_priv {
-> --
-> 2.25.1
->
+> +	dev_dbg(&oct->pdev->dev, "Reset VF IQ-%d\n", q_no);
+> +
+> +	/* Disable the Tx/Instruction Ring */
+> +	octep_vf_write_csr64(oct, CN93_VF_SDP_R_IN_ENABLE(q_no), val);
+> +
+> +	/* clear the Instruction Ring packet/byte counts and doorbell CSRs */
+> +	octep_vf_write_csr64(oct, CN93_VF_SDP_R_IN_INT_LEVELS(q_no), val);
+> +	octep_vf_write_csr64(oct, CN93_VF_SDP_R_IN_PKT_CNT(q_no), val);
+> +	octep_vf_write_csr64(oct, CN93_VF_SDP_R_IN_BYTE_CNT(q_no), val);
+> +	octep_vf_write_csr64(oct, CN93_VF_SDP_R_IN_INSTR_BADDR(q_no), val);
+> +	octep_vf_write_csr64(oct, CN93_VF_SDP_R_IN_INSTR_RSIZE(q_no), val);
+> +
+> +	val = 0xFFFFFFFF;
+> +	octep_vf_write_csr64(oct, CN93_VF_SDP_R_IN_INSTR_DBELL(q_no), val);
+> +
+> +	val = octep_vf_read_csr64(oct, CN93_VF_SDP_R_IN_CNTS(q_no));
+> +	octep_vf_write_csr64(oct, CN93_VF_SDP_R_IN_CNTS(q_no), val & 0xFFFFFFFF);
+
+This function uses values that appear to have special values:
+0, and 0xFFFFFFFF (as a value and a mask).
+
+I think it would be nice to name these using #defines
+In the case of masks, using GENMASK_ULL() and FILED_PREP()
+may be appropriate.
+
+Likewise elsewhere in this patch.
+Usage of BIT() and BIT_ULL() may also be appropriate.
+
+> +
+> +	return 0;
+> +}
+
+...
+
+>  /* Tx/Rx queue interrupt handler */
+>  static irqreturn_t octep_vf_ioq_intr_handler_cn93(void *data)
+>  {
+> +	struct octep_vf_ioq_vector *vector = (struct octep_vf_ioq_vector *)data;
+
+nit: there is no need to cast a void pointer.
+
+> +	struct octep_vf_oq *oq = vector->oq;
+> +	struct octep_vf_device *oct = vector->octep_vf_dev;
+> +	u64 reg_val = 0ULL;
+
+As it looks like there will be a v3 of this patchset,
+please consider arranging local variables in Networking code
+in reverse xmas tree order - longest line to shortest.
+
+	struct octep_vf_ioq_vector *vector = data;
+	struct octep_vf_device *oct;
+	struct octep_vf_oq *oq;
+	u64 reg_val = 0ULL;
+
+	oct = vector->octep_vf_dev;
+	oq = vector->oq;
+
+...
+
+> diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_cnxk.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_cnxk.c
+
+...
+
+>  /* Tx/Rx queue interrupt handler */
+>  static irqreturn_t octep_vf_ioq_intr_handler_cnxk(void *data)
+>  {
+> +	struct octep_vf_ioq_vector *vector = (struct octep_vf_ioq_vector *)data;
+> +	struct octep_vf_oq *oq = vector->oq;
+> +	struct octep_vf_device *oct = vector->octep_vf_dev;
+> +	u64 reg_val = 0ULL;
+
+Likewise, here too.
+
+...
