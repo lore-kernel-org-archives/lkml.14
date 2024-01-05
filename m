@@ -1,87 +1,221 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F5E3225A1;
-	Fri,  5 Jan 2024 08:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1FD0219FE
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 08:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Ypx9vUWd"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3891220011;
-	Fri,  5 Jan 2024 08:33:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1704443639;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tr4AmEGv2scZUnfevs3m3o46Mdu5zJBUL4fi7MMzU58=;
-	b=Ypx9vUWdqeHKGOl/JEW5WOqXxtVXfIZGVWWf3wA1vokJB0CqmgaJ3mWL12xDTVwdOLbTc/
-	ClrwSqzWmM5b6Q6j3NyULA6H4YWInyc9H2zkZWrMv/jWmdGJyE1xal1/3MyNDx6KxHL/gr
-	R1ESPb9Dd4p7oBNVgWQpvxenF5394jnvgIutvP6t5GGrSJUQRpBGPQrQMi0QOC7dq+kjvg
-	lSY0i/Q/hi8x2UspCc3+FwwpF1kAmqHB17gkm6OZHAA0pdZ2oaS/QcRgbNRN04kk/u7ePf
-	ec0dl6iUusB/HMGKCe+CBrakTU5BM5/Y4736GOJZB5aQ/6pDLRpWebVMcdoqRA==
-Date: Fri, 5 Jan 2024 10:30:45 +0100
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: davem@davemloft.net, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, Andrew Lunn
- <andrew@lunn.ch>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
- linux-arm-kernel@lists.infradead.org, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
- Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit
- <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
- =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Jesse Brandeburg
- <jesse.brandeburg@intel.com>, Jonathan Corbet <corbet@lwn.net>, Marek
- =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, Piergiorgio Beruto
- <piergiorgio.beruto@gmail.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
- =?UTF-8?B?Tmljb2zDsg==?= Veronese <nicveronese@gmail.com>, Simon Horman
- <horms@kernel.org>
-Subject: Re: [PATCH net-next v5 05/13] net: ethtool: Allow passing a phy
- index for some commands
-Message-ID: <20240105103045.7b420759@device-28.home>
-In-Reply-To: <20240104151516.5f424dbf@kernel.org>
-References: <20231221180047.1924733-1-maxime.chevallier@bootlin.com>
-	<20231221180047.1924733-6-maxime.chevallier@bootlin.com>
-	<20240104151516.5f424dbf@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PWRVAEeG"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3606ebda57cso1663375ab.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 00:40:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1704444006; x=1705048806; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8hYTNkHTn/zV3BgYDxe7QnouYI4dlQvnLZozWj8iLVc=;
+        b=PWRVAEeGlxA8QXY+YfFjBK53ZxGIpi39YdCIZ2eQO3ZK3yEapdOZSPhSQFytjwNnX6
+         GcMTvzbTnbwHE6atKoiZuBBUpP2CVL1OWxpAI3hUjFmu/Z5vUOjW+xcDnvwSV043EfVP
+         VLoeReGCrdG+yzn6eESJcXFK5wr2Q+JAOVSLU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704444006; x=1705048806;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8hYTNkHTn/zV3BgYDxe7QnouYI4dlQvnLZozWj8iLVc=;
+        b=O0+e3R/7788NOn2ptxgVcjIEN8PGvuRcyAOye9KjAgh224PtRBp0043wZACKFAUNyA
+         XQ5GC/99fERK9qBGRMBZnb4SzAOfs6x5mQMHMKWU32+dRr/rj7hZbzExFzexgNFlsizW
+         tW13zEIiabJtYlWfdpqBGXrQ0ZomgGnv7mt+Bu1euCuMaAYnMJR9BQ1kPmoqbgS0/Yud
+         isrol3Inf6NI/VseVofjVhcRi4Z8evsGum9atzojQ6nxrTSp8jUaOTXyidMEHD48P8wF
+         xle/O6b4ezQgn7yJL1c22OUY4ktsyO+cqgXJO9JAKEA0IrIdK5oBFVWaYZqjbTNXr8+S
+         lpjQ==
+X-Gm-Message-State: AOJu0YyJdOpmajmh23PUYQmS/pjLboHEjJAyAJ1HwkLdazIpKedN5cZL
+	k7H2z1pVkOaFdDLqiPaqGxI92kujX122hJLVUQKiWFgncWrB
+X-Google-Smtp-Source: AGHT+IG2pc/bVNtoQyA5vLjyh1fbFJLdrI+GkS/9G1KKGXF6RnAflb2KFxD/87ykUzd6ApsxNMt9jeo2n4l5+qagNf8=
+X-Received: by 2002:a05:6e02:1aac:b0:35f:ea02:7491 with SMTP id
+ l12-20020a056e021aac00b0035fea027491mr2019344ilv.60.1704444005875; Fri, 05
+ Jan 2024 00:40:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: maxime.chevallier@bootlin.com
+References: <20240102081402.1226795-1-treapking@chromium.org>
+ <eed88b36-ae56-40d3-8588-0d5d75da71a6@collabora.com> <5520e8e3-c75b-480f-b831-c40b5cca029f@collabora.com>
+ <CAEXTbpeqRsWNgZE3ZgcFKogxv-tjAmQT=D6o6X4ViuG5ZZFCHQ@mail.gmail.com>
+In-Reply-To: <CAEXTbpeqRsWNgZE3ZgcFKogxv-tjAmQT=D6o6X4ViuG5ZZFCHQ@mail.gmail.com>
+From: Pin-yen Lin <treapking@chromium.org>
+Date: Fri, 5 Jan 2024 16:39:55 +0800
+Message-ID: <CAEXTbpdCHa9M=nMQAOdRiqeQqEB3gHYiwSuVUsPhOD0vCkyY8A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] clk: mediatek: Introduce need_pm_runtime to mtk_clk_desc
+To: Eugen Hristev <eugen.hristev@collabora.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, Chen-Yu Tsai <wenst@chromium.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Weiyi Lu <weiyi.lu@mediatek.com>, 
+	linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Jakub,
+On Thu, Jan 4, 2024 at 10:51=E2=80=AFPM Pin-yen Lin <treapking@chromium.org=
+> wrote:
+>
+> Hi Eugen and Angelo,
+>
+> Unfortunately, I don't have a way to reliably reproduce this either.
+>
+> We notice this issue from the automatic crash reports sent from the
+> users, but we are still not able to reproduce this locally.  So our
+> plan is to ship this patch to the users and see if the crash rate goes
+> down after a month or so.
+>
+> Regards,
+> Pin-yen
+>
+> On Wed, Jan 3, 2024 at 9:20=E2=80=AFPM Eugen Hristev
+> <eugen.hristev@collabora.com> wrote:
+> >
+> > On 1/3/24 14:19, AngeloGioacchino Del Regno wrote:
+> > > Il 02/01/24 09:12, Pin-yen Lin ha scritto:
+> > >> Introduce a new need_pm_runtime variable to mtk_clk_desc to indicate
+> > >> this clock needs a runtime PM get on the clock controller during the
+> > >> probing stage.
+> > >>
+> > >> Signed-off-by: Pin-yen Lin <treapking@chromium.org>
+> > >
+> > > Hello Pin-yen,
+> > >
+> > > We have experienced something similar, but it was really hard to repr=
+oduce after
+> > > some changes.
+> > >
+> > > In an effort to try to solve this issue (but again, reproducing is re=
+ally hard),
+> > > Eugen has sent a commit in the hope that someone else found a way to =
+easily
+> > > reproduce. Please look at [1].
+> > >
+> > > I'm also adding Eugen to the Cc's of this email.
+> > >
+> > > Cheers,
+> > > Angelo
+> > >
+> > > [1]:
+> > > https://patchwork.kernel.org/project/linux-pm/patch/20231225133615.78=
+993-1-eugen.hristev@collabora.com/
+> >
+> > Hello Pin-yen,
+> >
+> > Can you try my patch and let me know if this changes anything for you ?
+> >
+> > If it does not change anything, can you also try this one as well ? It'=
+s another
+> > attempt to fix the synchronization with genpd.
+> >
+> > https://lore.kernel.org/linux-arm-kernel/20231129113120.4907-1-eugen.hr=
+istev@collabora.com/
+> >
+> > Thanks,
+> > Eugen
 
-On Thu, 4 Jan 2024 15:15:16 -0800
-Jakub Kicinski <kuba@kernel.org> wrote:
+Hi Eugen and Angelo,
 
-> On Thu, 21 Dec 2023 19:00:38 +0100 Maxime Chevallier wrote:
-> > @@ -20,6 +21,7 @@ const struct nla_policy ethnl_header_policy[] = {
-> >  					    .len = ALTIFNAMSIZ - 1 },
-> >  	[ETHTOOL_A_HEADER_FLAGS]	= NLA_POLICY_MASK(NLA_U32,
-> >  							  ETHTOOL_FLAGS_BASIC),
-> > +	[ETHTOOL_A_HEADER_PHY_INDEX]		= NLA_POLICY_MIN(NLA_U32, 1),
-> >  };
-> >  
-> >  const struct nla_policy ethnl_header_policy_stats[] = {
-> > @@ -28,6 +30,7 @@ const struct nla_policy ethnl_header_policy_stats[] = {
-> >  					    .len = ALTIFNAMSIZ - 1 },
-> >  	[ETHTOOL_A_HEADER_FLAGS]	= NLA_POLICY_MASK(NLA_U32,
-> >  							  ETHTOOL_FLAGS_STATS),
-> > +	[ETHTOOL_A_HEADER_PHY_INDEX]		= NLA_POLICY_MIN(NLA_U32, 1),
-> >  };  
-> 
-> You should define (copy/paste) a new header policy and use it
-> only for commands which actually make use of the PHY index.
-> That's why we have separate copies already for stats.
+After the offline discussion with Chen-yu, we think this series is
+solving a different issue from the patches you mentioned. This one is
+trying to resolve a deadlock in the probe stage, and more details can
+be found in the commit message of the next patch. The referenced
+patches seem to be fixing other race conditions on powering on/off the
+power domain. Sorry for adding the wrong commit message and maybe
+leading to incorrect understanding on this series.
 
-Ah OK I didn't know that, I'll do this. Thanks !
+By the way, sorry for the top posting in the previous mail.
 
-Maxime
+Regards,
+Pin-yen
+> >
+> > >
+> > >> ---
+> > >>
+> > >> Changes in v2:
+> > >> - Fix the order of error handling
+> > >> - Update the commit message and add a comment before the runtime PM =
+call
+> > >>
+> > >>   drivers/clk/mediatek/clk-mtk.c | 15 +++++++++++++++
+> > >>   drivers/clk/mediatek/clk-mtk.h |  2 ++
+> > >>   2 files changed, 17 insertions(+)
+> > >>
+> > >> diff --git a/drivers/clk/mediatek/clk-mtk.c b/drivers/clk/mediatek/c=
+lk-mtk.c
+> > >> index 2e55368dc4d8..c31e535909c8 100644
+> > >> --- a/drivers/clk/mediatek/clk-mtk.c
+> > >> +++ b/drivers/clk/mediatek/clk-mtk.c
+> > >> @@ -13,6 +13,7 @@
+> > >>   #include <linux/of.h>
+> > >>   #include <linux/of_address.h>
+> > >>   #include <linux/platform_device.h>
+> > >> +#include <linux/pm_runtime.h>
+> > >>   #include <linux/slab.h>
+> > >>
+> > >>   #include "clk-mtk.h"
+> > >> @@ -494,6 +495,14 @@ static int __mtk_clk_simple_probe(struct platfo=
+rm_device *pdev,
+> > >>                      return IS_ERR(base) ? PTR_ERR(base) : -ENOMEM;
+> > >>      }
+> > >>
+> > >> +
+> > >> +    if (mcd->need_runtime_pm) {
+> > >> +            devm_pm_runtime_enable(&pdev->dev);
+> > >> +            r =3D pm_runtime_resume_and_get(&pdev->dev);
+> > >> +            if (r)
+> > >> +                    return r;
+> > >> +    }
+> > >> +
+> > >>      /* Calculate how many clk_hw_onecell_data entries to allocate *=
+/
+> > >>      num_clks =3D mcd->num_clks + mcd->num_composite_clks;
+> > >>      num_clks +=3D mcd->num_fixed_clks + mcd->num_factor_clks;
+> > >> @@ -574,6 +583,9 @@ static int __mtk_clk_simple_probe(struct platfor=
+m_device *pdev,
+> > >>                      goto unregister_clks;
+> > >>      }
+> > >>
+> > >> +    if (mcd->need_runtime_pm)
+> > >> +            pm_runtime_put(&pdev->dev);
+> > >> +
+> > >>      return r;
+> > >>
+> > >>   unregister_clks:
+> > >> @@ -604,6 +616,9 @@ static int __mtk_clk_simple_probe(struct platfor=
+m_device *pdev,
+> > >>   free_base:
+> > >>      if (mcd->shared_io && base)
+> > >>              iounmap(base);
+> > >> +
+> > >> +    if (mcd->need_runtime_pm)
+> > >> +            pm_runtime_put(&pdev->dev);
+> > >>      return r;
+> > >>   }
+> > >>
+> > >> diff --git a/drivers/clk/mediatek/clk-mtk.h b/drivers/clk/mediatek/c=
+lk-mtk.h
+> > >> index 22096501a60a..c17fe1c2d732 100644
+> > >> --- a/drivers/clk/mediatek/clk-mtk.h
+> > >> +++ b/drivers/clk/mediatek/clk-mtk.h
+> > >> @@ -237,6 +237,8 @@ struct mtk_clk_desc {
+> > >>
+> > >>      int (*clk_notifier_func)(struct device *dev, struct clk *clk);
+> > >>      unsigned int mfg_clk_idx;
+> > >> +
+> > >> +    bool need_runtime_pm;
+> > >>   };
+> > >>
+> > >>   int mtk_clk_pdev_probe(struct platform_device *pdev);
+> > >
+> > >
+> > >
+> > >
+> >
