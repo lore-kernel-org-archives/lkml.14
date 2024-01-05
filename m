@@ -1,94 +1,228 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A6531A9D;
-	Fri,  5 Jan 2024 16:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2146A31725;
+	Fri,  5 Jan 2024 16:48:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ORqlR1ML"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 405GAdea015401;
-	Fri, 5 Jan 2024 16:47:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2023-11-20; bh=gUFjJnldcCaXe2pdA55QFTTausQXLS6J9u68Q5ncGio=;
- b=ORqlR1MLCCOIG3+daQXHeCYON933hpPYh1ILuhU9wykDfFhUV1aZvhxhaVDrx1p9D6fM
- 2aOJ1h4hYvfz4DAwvprwtZmJ2jHZnGqqsAJOzW4DoqUIeh+ahTsnTlrkWOeQsxEDEBH+
- 58mvhVBxMkClJada3G5MCHNPLvif8uekBuHnVPl0uTPPIshFvsyZJcb9swErMvQ/Ilte
- Jdig8AWksgxJW7NYXu360LlrWwbGhya4QPR6ysxkOa6sTgWPydKrGfQx90NCFwTYfdSP
- ljhvsM94B+9YdMumhgqDZV77kleNfrvyRaUUMZXLQyjF1y4Pd1DIhkxNUHPHiMO3Fjn6 4A== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ven25g3h4-16
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 05 Jan 2024 16:47:28 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 405G5Uiw009401;
-	Fri, 5 Jan 2024 16:40:17 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3ve12hxey5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 05 Jan 2024 16:40:17 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 405GeGlf009736;
-	Fri, 5 Jan 2024 16:40:17 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3ve12hxewn-1;
-	Fri, 05 Jan 2024 16:40:16 +0000
-From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-To: linux-hardening@vger.kernel.org, keescook@chromium.org, error27@gmail.com,
-        gustavoars@kernel.org, Bryan Tan <bryantan@vmware.com>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc: vegard.nossum@oracle.com, darren.kenny@oracle.com,
-        harshit.m.mogalapalli@oracle.com
-Subject: [PATCH v2 1/2] VMCI: Use struct_size() in kmalloc()
-Date: Fri,  5 Jan 2024 08:39:59 -0800
-Message-ID: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
-X-Mailer: git-send-email 2.42.0
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="xao9Kpgy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+	t=1704473327; bh=oo3jPHfQQbPi8LrBuaocSKYLMQM9huUgqwSe+AhwAGw=;
+	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
+	b=xao9KpgyLXysZVA2SJl1CSqyJpVmtX3oToZY/o8VzAujGyow+xSdbf7we5Oag7Kz3
+	 XqCmirM6wZT8YSmi2PxcGhQW1L5xIlCaCdq0UJznaGi+2WPXdfbK1YJVbveBfye3i/
+	 bgU9I8m3boxWeyjxhlO95oRZEc5KjA/FIv5hzQhI=
+Date: Fri, 5 Jan 2024 17:48:46 +0100
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+To: Manuel Traut <manut@mecka.net>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>, 
+	Mark Yao <markyao0591@gmail.com>, Diederik de Haas <didi.debian@cknow.org>, 
+	Segfault <awarnecke002@hotmail.com>, Arnaud Ferraris <aferraris@debian.org>, 
+	Danct12 <danct12@riseup.net>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v3 4/4] arm64: dts: rockchip: Add devicetree for Pine64
+ PineTab2
+Message-ID: <elumjkchw5m6rcb73l4ouemjgk7nsgkeu576ybbkc5nbvcpiyi@txkepy7wqops>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
+	Manuel Traut <manut@mecka.net>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>, 
+	Mark Yao <markyao0591@gmail.com>, Diederik de Haas <didi.debian@cknow.org>, 
+	Segfault <awarnecke002@hotmail.com>, Arnaud Ferraris <aferraris@debian.org>, 
+	Danct12 <danct12@riseup.net>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
+References: <20240102-pinetab2-v3-0-cb1aa69f8c30@mecka.net>
+ <20240102-pinetab2-v3-4-cb1aa69f8c30@mecka.net>
+ <vj3elmkt6czisvwqouv2hhvut2va5jw6bbj5kjyxawvrnrdfwm@tlpo3dp3qcyb>
+ <ZZgqF5hLO8UThPep@mecka.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-05_08,2024-01-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- suspectscore=0 phishscore=0 adultscore=0 spamscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401050137
-X-Proofpoint-ORIG-GUID: kgrNTprd204Py8fGpk9BJG_QYnC6j41a
-X-Proofpoint-GUID: kgrNTprd204Py8fGpk9BJG_QYnC6j41a
+In-Reply-To: <ZZgqF5hLO8UThPep@mecka.net>
 
-Use struct_size() instead of open coding.
+On Fri, Jan 05, 2024 at 05:11:03PM +0100, Manuel Traut wrote:
+> On Wed, Jan 03, 2024 at 10:42:54AM +0100, Ondřej Jirman wrote:
+> > Hello Manuel,
+> > 
+> > a few more things I noticed:
+> > 
+> > On Tue, Jan 02, 2024 at 05:15:47PM +0100, Manuel Traut wrote:
+> > > From: Alexander Warnecke <awarnecke002@hotmail.com>
+> > > 
+> > > +	leds {
+> > > +		compatible = "gpio-leds";
+> > > +
+> > > +		pinctrl-names = "default";
+> > > +		pinctrl-0 = <&flash_led_en_h>;
+> > > +
+> > > +		led-0 {
+> > > +			gpios = <&gpio4 RK_PA5 GPIO_ACTIVE_HIGH>;
+> > > +			color = <LED_COLOR_ID_WHITE>;
+> > > +			function = LED_FUNCTION_FLASH;
+> > > +		};
+> > 
+> > This LED is supplied by VCC5V_MIDU, so maybe this should be a regulator-led
+> > supplied by gpio (FLASH_LED_EN_H) controlled regulator-fixed named f_led which
+> > is in turn supplied by VCC5V_MIDU.
+> > 
+> > https://megous.com/dl/tmp/9bf0d85d78946b5e.png
+> 
+> regulator-leds are controlled by turning on or off the regulator. However
+> VCC5V_MIDU is also used by other devices (USB, HDMI, ..) so I guess this is
+> not what we want. I would keep it as is.
 
-Suggested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
----
- drivers/misc/vmw_vmci/vmci_datagram.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+It's used by the LED. gpio-leds will not ensure it's on when you enable the LED.
 
-diff --git a/drivers/misc/vmw_vmci/vmci_datagram.c b/drivers/misc/vmw_vmci/vmci_datagram.c
-index f50d22882476..ac6cb0c8d99b 100644
---- a/drivers/misc/vmw_vmci/vmci_datagram.c
-+++ b/drivers/misc/vmw_vmci/vmci_datagram.c
-@@ -224,8 +224,8 @@ static int dg_dispatch_as_host(u32 context_id, struct vmci_datagram *dg)
- 				return VMCI_ERROR_NO_MEM;
- 			}
- 
--			dg_info = kmalloc(sizeof(*dg_info) +
--				    (size_t) dg->payload_size, GFP_ATOMIC);
-+			dg_info = kmalloc(struct_size(dg_info, msg_payload, dg->payload_size),
-+					  GFP_ATOMIC);
- 			if (!dg_info) {
- 				atomic_dec(&delayed_dg_host_queue_size);
- 				vmci_resource_put(resource);
--- 
-2.42.0
+In practice this may only come up if someone tries to save power by unloading
+dwc3 USB driver, when using PT2 outside of the keyboard case. Otherwise
+VCC5V_MIDU will be enabled by DWC3 driver's use of PHY API.
 
+In any case, I'm not saying you should use VCC5V_MIDU directly in regulator-led,
+but as a vin-supply to a new regulator-fixed node (which would be describing
+this "fixed voltage regulator" https://megous.com/dl/tmp/cc65ec81ab9af163.png ).
+
+> > > +	};
+> > > +
+> > > [...]
+> > >
+> > > +
+> > > +	speaker_amp: speaker-amplifier {
+> > > +		compatible = "simple-audio-amplifier";
+> > > +		pinctrl-names = "default";
+> > > +		pinctrl-0 = <&spk_ctl>;
+> > > +		enable-gpios = <&gpio4 RK_PC2 GPIO_ACTIVE_HIGH>;
+> > > +		sound-name-prefix = "Speaker Amplifier";
+> > > +		VCC-supply = <&vcc_bat>;
+> > > +	};
+> > > +
+> > > +	vcc_3v3: vcc-3v3 {
+> > > +		compatible = "regulator-fixed";
+> > > +		regulator-name = "vcc_3v3";
+> > > +		regulator-always-on;
+> > > +		regulator-boot-on;
+> > > +		regulator-min-microvolt = <3300000>;
+> > > +		regulator-max-microvolt = <3300000>;
+> > > +		vin-supply = <&vcc3v3_sys>;
+> > > +	};
+> > > +
+> > > +	vcc3v3_minipcie: vcc3v3-minipcie {
+> > > +		compatible = "regulator-fixed";
+> > > +		enable-active-high;
+> > > +		gpio = <&gpio4 RK_PC3 GPIO_ACTIVE_HIGH>;
+> > > +		pinctrl-names = "default";
+> > > +		pinctrl-0 = <&pcie_pwren_h>;
+> > > +		regulator-name = "vcc3v3_minipcie";
+> > > +		regulator-min-microvolt = <3300000>;
+> > > +		regulator-max-microvolt = <3300000>;
+> > > +		vin-supply = <&vcc_sys>;
+> > 
+> > This regulator is supplied by vcc_bat: https://megous.com/dl/tmp/4ec71a4a2aea9498.png
+> 
+> correct, I will update this in v4.
+> 
+> > > +	};
+> > > +
+> > > +	vcc3v3_sd: vcc3v3-sd {
+> > > +		compatible = "regulator-fixed";
+> > > +		gpio = <&gpio0 RK_PA5 GPIO_ACTIVE_HIGH>;
+> > > +		pinctrl-names = "default";
+> > > +		pinctrl-0 = <&sdmmc_pwren_l>;
+> > > +		regulator-name = "vcc3v3_sd";
+> > > +		regulator-min-microvolt = <3300000>;
+> > > +		regulator-max-microvolt = <3300000>;
+> > > +		vin-supply = <&vcc3v3_sys>;
+> > > +	};
+> > > +
+> > > +	vcc5v0_usb_host0: vcc5v0-usb-host0 {
+> > > +		compatible = "regulator-fixed";
+> > > +		enable-active-high;
+> > > +		gpio = <&gpio4 RK_PC4 GPIO_ACTIVE_HIGH>;
+> > > +		pinctrl-names = "default";
+> > > +		pinctrl-0 = <&usb_host_pwren1_h>;
+> > > +		regulator-name = "vcc5v0_usb_host0";
+> > > +		regulator-min-microvolt = <5000000>;
+> > > +		regulator-max-microvolt = <5000000>;
+> > > +		vin-supply = <&vcc5v_midu>;
+> > > +	};
+> > > +
+> > > +	vcc5v0_usb_host2: vcc5v0-usb-host2 {
+> > > +		compatible = "regulator-fixed";
+> > > +		enable-active-high;
+> > > +		gpio = <&gpio4 RK_PC5 GPIO_ACTIVE_HIGH>;
+> > > +		pinctrl-names = "default";
+> > > +		pinctrl-0 = <&usb_host_pwren2_h>;
+> > > +		regulator-name = "vcc5v0_usb_host2";
+> > > +		regulator-min-microvolt = <5000000>;
+> > > +		regulator-max-microvolt = <5000000>;
+> > > +		vin-supply = <&vcc5v_midu>;
+> > > +	};
+> > > +
+> > > +	vcc_bat: vcc-bat {
+> > > +		compatible = "regulator-fixed";
+> > > +		regulator-name = "vcc_bat";
+> > > +		regulator-always-on;
+> > > +		regulator-boot-on;
+> > > +	};
+> > > +
+> > > +	vcc_sys: vcc-sys {
+> > > +		compatible = "regulator-fixed";
+> > > +		regulator-name = "vcc_sys";
+> > > +		regulator-always-on;
+> > > +		regulator-boot-on;
+> > > +		vin-supply = <&vcc_bat>;
+> > > +	};
+> > > +
+> > > +	vdd1v2_dvp: vdd1v2-dvp {
+> > > +		compatible = "regulator-fixed";
+> > > +		regulator-name = "vdd1v2_dvp";
+> > > +		regulator-min-microvolt = <1200000>;
+> > > +		regulator-max-microvolt = <1200000>;
+> > > +		vin-supply = <&vcc_3v3>;
+> > > +		/*enable-supply = <&vcc2v8_dvp>;*/
+> > > +	};
+> > 
+> > There's no vdd1v2_dvp in the schematic on the camera sensor connector, or elsewhere:
+> >
+> >   https://megous.com/dl/tmp/fd95f003d8f3fbfb.png
+> 
+> It is on page 5 in the power diagram on the right top.
+
+That (Power diagram overview) is irrelevant part of the schematic. Can be and
+often is wrong. You need to use actual detailed parts of the schematic, which
+is what is actually used to route the PCB traces.
+
+kind regards,
+	o.
+
+> > So I guess, you can drop this, entirely. Maybe it's VDD1V5_DVP but I don't think
+> > it needs to be described in DT, since it's pretty local to this camera sensor,
+> > and nothing else uses it.
+> > 
+> >   https://megous.com/dl/tmp/7fc384e196c5428f.png
+> 
+> dvdd-supply is a required property of the ov5648 camera, so I would tend to keep
+> this. But us vcc_sys for vin-supply instead of vcc_3v3.
+> 
+> Regards
+> Manuel
