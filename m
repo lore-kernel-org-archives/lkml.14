@@ -1,16 +1,43 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47F0D249F7
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 09:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFD8BFEC;
-	Fri,  5 Jan 2024 01:50:51 -0800 (PST)
-Received: from [10.57.44.155] (unknown [10.57.44.155])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B410B3F5A1;
-	Fri,  5 Jan 2024 01:50:01 -0800 (PST)
-Message-ID: <8ba4d3dd-6ab2-49e3-9d25-d742e4958afc@arm.com>
-Date: Fri, 5 Jan 2024 09:50:00 +0000
+Received: from domac.alu.hr (domac.alu.unizg.hr [161.53.235.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D5B24B51;
+	Fri,  5 Jan 2024 09:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alu.unizg.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alu.unizg.hr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=alu.unizg.hr header.i=@alu.unizg.hr header.b="k53S5+Ch";
+	dkim=pass (2048-bit key) header.d=alu.unizg.hr header.i=@alu.unizg.hr header.b="F3veO7d3"
+Received: from localhost (localhost [127.0.0.1])
+	by domac.alu.hr (Postfix) with ESMTP id D6AE060173;
+	Fri,  5 Jan 2024 10:41:24 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1704447684; bh=qKJmrnjWkHPbpWrQi3wn/w/6aFlhApN2GLFP70rgZoA=;
+	h=Date:To:From:Cc:Subject:From;
+	b=k53S5+ChiDP5PKAJC0vZtf95BR6ZKhnVNVpPjw6eFHxIIr6u4N/qQ76C21AaRllgh
+	 PoMNi+pWbUfSDyaCLIV0GUiSQEvbHj4wFyBKq7x70X85BHbpLt8C4Rurb5pN1HJV6i
+	 hioUhumkj1oQnXswxLNO8viYPjuMuWpVHnhQ/6cMLrMfdqH5QFzFO5RcoGYBxDd5NN
+	 600QoY023ZgMIEBSA9mG0+iY7nn9AT54S0uAWQv5EqByY1gpti61T+bxrM5GD3nant
+	 nqap+35Taocv8kjgJgWCHp6fBYO9ZbDQiS44Cn5rWG6jaeyAAsvSj4oDP5BJDFGnAe
+	 AmnwypuhNAbxg==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id d_wiY3UvOH3p; Fri,  5 Jan 2024 10:41:22 +0100 (CET)
+Received: from [192.168.94.51] (unknown [212.15.178.51])
+	by domac.alu.hr (Postfix) with ESMTPSA id EF57360161;
+	Fri,  5 Jan 2024 10:41:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1704447682; bh=qKJmrnjWkHPbpWrQi3wn/w/6aFlhApN2GLFP70rgZoA=;
+	h=Date:To:From:Cc:Subject:From;
+	b=F3veO7d3mmYHG8MrgSjoykPb7YrG3/6gh5QlUSwBGSabwGRdKB+ETnbSoib7dDk2W
+	 QbaBSnS2KpMkkWb0sXangRnL9gUtqKoDRuznHNVjCV3vzCmG115CprzXSRkLoIdKIc
+	 1zNr2TFH6mcUol1Nu2dP9tYuJNvo2D1aPRdKWq4UmFNLbKXpOPXfyztZAwE8przJpv
+	 H5/L9caWaivDHTbqPg6PcOy1j3l9vLsu5my5jaIiKvmMH9bhzIZ9jK1XQVmL7UX2+z
+	 pQmco0PxPk/bCvVHW7nv+jG7CIqHgbWTXznrFK6D1r6Wjs71xYh1nztBKy8UY5R7NN
+	 wnGA15EVgrzsg==
+Message-ID: <0b9a2827-c9c5-41d6-a4f1-dbd91262c474@alu.unizg.hr>
+Date: Fri, 5 Jan 2024 10:41:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -18,149 +45,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 6/7] arm64: KVM: Write TRFCR value on guest switch with
- nVHE
-Content-Language: en-GB
-To: James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- broonie@kernel.org, maz@kernel.org, acme@kernel.org
-Cc: Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>,
- Zenghui Yu <yuzenghui@huawei.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>, Rob Herring
- <robh@kernel.org>, Miguel Luis <miguel.luis@oracle.com>,
- Jintack Lim <jintack.lim@linaro.org>, Ard Biesheuvel <ardb@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Helge Deller <deller@gmx.de>,
- Arnd Bergmann <arnd@arndb.de>, Kalesh Singh <kaleshsingh@google.com>,
- Quentin Perret <qperret@google.com>,
- Vincent Donnefort <vdonnefort@google.com>, Fuad Tabba <tabba@google.com>,
- Akihiko Odaki <akihiko.odaki@daynix.com>, Joey Gouly <joey.gouly@arm.com>,
- Jing Zhang <jingzhangos@google.com>, linux-kernel@vger.kernel.org
-References: <20240104162714.1062610-1-james.clark@arm.com>
- <20240104162714.1062610-7-james.clark@arm.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20240104162714.1062610-7-james.clark@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Language: en-US, hr
+To: LKML <linux-kernel@vger.kernel.org>
+From: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ netdev@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: selftest: net: fcnal-test.sh TIMEOUT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 04/01/2024 16:27, James Clark wrote:
-> The guest value for TRFCR requested by the Coresight driver is saved in
-> kvm_host_global_state. On guest switch this value needs to be written to
-> the register. Currently TRFCR is only modified when we want to disable
-> trace completely in guests due to an issue with TRBE. Expand the
-> __debug_save_trace() function to always write to the register if a
-> different value for guests is required, but also keep the existing TRBE
-> disable behavior if that's required.
-> 
-> The TRFCR restore function remains functionally the same, except a value
-> of 0 doesn't mean "don't restore" anymore. Now that we save both guest
-> and host values the register is restored any time the guest and host
-> values differ.
-> 
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->   arch/arm64/kvm/hyp/nvhe/debug-sr.c | 55 ++++++++++++++++++------------
->   1 file changed, 34 insertions(+), 21 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/hyp/nvhe/debug-sr.c b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
-> index 4558c02eb352..7fd876d4f034 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/debug-sr.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
-> @@ -51,32 +51,45 @@ static void __debug_restore_spe(u64 pmscr_el1)
->   	write_sysreg_s(pmscr_el1, SYS_PMSCR_EL1);
->   }
->   
-> -static void __debug_save_trace(u64 *trfcr_el1)
-> +/*
-> + * Save TRFCR and disable trace completely if TRBE is being used, otherwise
-> + * apply required guest TRFCR value.
-> + */
-> +static void __debug_save_trace(struct kvm_vcpu *vcpu)
->   {
-> -	*trfcr_el1 = 0;
-> +	u64 host_trfcr_el1 = read_sysreg_s(SYS_TRFCR_EL1);
-> +	u64 guest_trfcr_el1;
-> +
-> +	vcpu->arch.host_debug_state.trfcr_el1 = host_trfcr_el1;
->   
->   	/* Check if the TRBE is enabled */
-> -	if (!(read_sysreg_s(SYS_TRBLIMITR_EL1) & TRBLIMITR_EL1_E))
-> -		return;
-> -	/*
-> -	 * Prohibit trace generation while we are in guest.
-> -	 * Since access to TRFCR_EL1 is trapped, the guest can't
-> -	 * modify the filtering set by the host.
-> -	 */
-> -	*trfcr_el1 = read_sysreg_s(SYS_TRFCR_EL1);
-> -	write_sysreg_s(0, SYS_TRFCR_EL1);
-> -	isb();
-> -	/* Drain the trace buffer to memory */
-> -	tsb_csync();
-> +	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_TRBE) &&
-> +	    (read_sysreg_s(SYS_TRBLIMITR_EL1) & TRBLIMITR_EL1_E)) {
-> +		/*
-> +		 * Prohibit trace generation while we are in guest. Since access
-> +		 * to TRFCR_EL1 is trapped, the guest can't modify the filtering
-> +		 * set by the host.
-> +		 */
-> +		write_sysreg_s(0, SYS_TRFCR_EL1);
-> +		isb();
-> +		/* Drain the trace buffer to memory */
-> +		tsb_csync();
-> +	} else {
-> +		/*
-> +		 * Not using TRBE, so guest trace works. Apply the guest filters
-> +		 * provided by the Coresight driver, if different.
-> +		 */
-> +		guest_trfcr_el1 = kvm_host_global_state[vcpu->cpu].guest_trfcr_el1;
-> +		if (host_trfcr_el1 != guest_trfcr_el1)
-> +			write_sysreg_s(guest_trfcr_el1, SYS_TRFCR_EL1);
-> +	}
->   }
->   
->   static void __debug_restore_trace(u64 trfcr_el1)
->   {
-> -	if (!trfcr_el1)
-> -		return;
-> -
->   	/* Restore trace filter controls */
-> -	write_sysreg_s(trfcr_el1, SYS_TRFCR_EL1);
-> +	if (trfcr_el1 != read_sysreg_s(SYS_TRFCR_EL1))
-> +		write_sysreg_s(trfcr_el1, SYS_TRFCR_EL1);
+Hi, all,
 
-Could we not write it unconditionally here ? In the saving step, we have
-to save the host setting. But while restoring, we could skip the check.
-A read and write is probably the same cost, as the value is implicitly
-synchronized by a later ISB.
+The default timeout for tools/testing/selftest/net groups of tests is 1500s (25m).
 
-Eitherways,
+This is less than half of what is required to run the full fcnal-test.sh on my hardware
+(53m48s).
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+With the timeout adjusted, tests passed 914 of 914 OK.
+
+Best regards,
+Mirsad Todorovac
 
 
->   }
->   
->   void __debug_save_host_buffers_nvhe(struct kvm_vcpu *vcpu)
-> @@ -85,8 +98,8 @@ void __debug_save_host_buffers_nvhe(struct kvm_vcpu *vcpu)
->   	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_SPE))
->   		__debug_save_spe(&vcpu->arch.host_debug_state.pmscr_el1);
->   	/* Disable and flush Self-Hosted Trace generation */
-> -	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_TRBE))
-> -		__debug_save_trace(&vcpu->arch.host_debug_state.trfcr_el1);
-> +	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_TRFCR))
-> +		__debug_save_trace(vcpu);
->   }
->   
->   void __debug_switch_to_guest(struct kvm_vcpu *vcpu)
-> @@ -98,7 +111,7 @@ void __debug_restore_host_buffers_nvhe(struct kvm_vcpu *vcpu)
->   {
->   	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_SPE))
->   		__debug_restore_spe(vcpu->arch.host_debug_state.pmscr_el1);
-> -	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_TRBE))
-> +	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_TRFCR))
->   		__debug_restore_trace(vcpu->arch.host_debug_state.trfcr_el1);
->   }
->   
+diff --git a/tools/testing/selftests/net/settings b/tools/testing/selftests/net/settings
+index dfc27cdc6c05..ed8418e8217a 100644
+--- a/tools/testing/selftests/net/settings
++++ b/tools/testing/selftests/net/settings
+@@ -1 +1 @@
+-timeout=1500
++timeout=3600
 
+-----------------------------------------------------------------
+
+[snip]
+#################################################################
+Ping LLA with multiple interfaces
+
+TEST: Pre cycle, ping out ns-B - multicast IP                                 [ OK ]
+TEST: Pre cycle, ping out ns-C - multicast IP                                 [ OK ]
+TEST: Post cycle ns-A eth1, ping out ns-B - multicast IP                      [ OK ]
+TEST: Post cycle ns-A eth1, ping out ns-C - multicast IP                      [ OK ]
+TEST: Post cycle ns-A eth2, ping out ns-B - multicast IP                      [ OK ]
+TEST: Post cycle ns-A eth2, ping out ns-C - multicast IP                      [ OK ]
+
+#################################################################
+SNAT on VRF
+
+TEST: IPv4 TCP connection over VRF with SNAT                                  [ OK ]
+TEST: IPv6 TCP connection over VRF with SNAT                                  [ OK ]
+
+Tests passed: 914
+Tests failed:   0
+
+real	53m48.460s
+user	0m32.885s
+sys	2m41.509s
+root@hostname:/
+
+-- 
+Mirsad Goran Todorovac
+Sistem inženjer
+Grafički fakultet | Akademija likovnih umjetnosti
+Sveučilište u Zagrebu
+ 
+System engineer
+Faculty of Graphic Arts | Academy of Fine Arts
+University of Zagreb, Republic of Croatia
+The European Union
+
+"I see something approaching fast ... Will it be friends with me?"
