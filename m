@@ -1,104 +1,122 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4AB24B41
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 10:13:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TGn5YDig"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704449584;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ogjygCadqZqQPF0RXbXaEDph9fgsETZY7v/OnrLD3js=;
-	b=TGn5YDigmYghMfx1XxuxD4k/c0vqfAnMOrOuWZLGZMOTcjyYh6d8dxkqwhulD5LR8lKTth
-	ytOFdOaPh7QKRgSlVaqjk5HFcQXzX/UfhDwvICInPNjyQ8eA6rHTW1/3lb4A37+nod04bt
-	d/JRDY91kSawZPaBJiGmDJJ4XfgzlF4=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-306-4WUKZcOBNQ-J7NNVXyZBEg-1; Fri,
- 05 Jan 2024 05:13:01 -0500
-X-MC-Unique: 4WUKZcOBNQ-J7NNVXyZBEg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EC9E41C05148;
-	Fri,  5 Jan 2024 10:12:59 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.14])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 96FAA40C6EB9;
-	Fri,  5 Jan 2024 10:12:56 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <ZZeLAAf6qiieA5fy@casper.infradead.org>
-References: <ZZeLAAf6qiieA5fy@casper.infradead.org> <2202548.1703245791@warthog.procyon.org.uk> <20231221230153.GA1607352@dev-arch.thelio-3990X> <20231221132400.1601991-1-dhowells@redhat.com> <20231221132400.1601991-38-dhowells@redhat.com> <2229136.1703246451@warthog.procyon.org.uk>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: dhowells@redhat.com, Nathan Chancellor <nathan@kernel.org>,
-    Anna Schumaker <Anna.Schumaker@netapp.com>,
-    Trond Myklebust <trond.myklebust@hammerspace.com>,
-    Jeff Layton <jlayton@kernel.org>, Steve French <smfrench@gmail.com>,
-    Marc Dionne <marc.dionne@auristor.com>,
-    Paulo Alcantara <pc@manguebit.com>,
-    Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-    Dominique Martinet <asmadeus@codewreck.org>,
-    Eric Van Hensbergen <ericvh@kernel.org>,
-    Ilya Dryomov <idryomov@gmail.com>,
-    Christian Brauner <christian@brauner.io>, linux-cachefs@redhat.com,
-    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-    v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-    linux-mm@kvack.org, netdev@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Fix oops in NFS
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8D82C69D;
+	Fri,  5 Jan 2024 10:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4T5zmt5sT4z4f3jpr;
+	Fri,  5 Jan 2024 18:13:18 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 9DEFE1A0AD2;
+	Fri,  5 Jan 2024 18:13:20 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgDXJg0_1pdliqpcFg--.48265S3;
+	Fri, 05 Jan 2024 18:13:20 +0800 (CST)
+Subject: Re: [PATCH for-6.8/block RFC v2] block: support to account io_ticks
+ precisely
+To: Ming Lei <ming.lei@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: hch@lst.de, bvanassche@acm.org, axboe@kernel.dk,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ yi.zhang@huawei.com, yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20240103071515.2477311-1-yukuai1@huaweicloud.com>
+ <ZZduPrwMrwOLQiU7@fedora>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <0a7aa14b-2ceb-2551-3600-cac7f9370360@huaweicloud.com>
+Date: Fri, 5 Jan 2024 18:13:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1094258.1704449575.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jan 2024 10:12:55 +0000
-Message-ID: <1094259.1704449575@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+In-Reply-To: <ZZduPrwMrwOLQiU7@fedora>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgDXJg0_1pdliqpcFg--.48265S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7AFyDJry7GF4kur1UuF1Dtrb_yoW8uFWkpF
+	Wjk3WDKw1kXr18CF4DA3WxGas2grZ5Cw45Zr4fGry7Zr1jqrWfAr4xtrWF9F92vFs7Aw1I
+	93W8uF4DAw1UZrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
+	3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCT
+	nIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Matthew Wilcox <willy@infradead.org> wrote:
+Hi, Ming!
 
-> This commit (100ccd18bb41 in linux-next 20240104) is bad for me.  After
-> it, running xfstests gives me first a bunch of errors along these lines:
-> =
+ÔÚ 2024/01/05 10:49, Ming Lei Ð´µÀ:
+> On Wed, Jan 03, 2024 at 03:15:15PM +0800, Yu Kuai wrote:
+>> From: Yu Kuai <yukuai3@huawei.com>
+>>
+>> Currently, io_ticks is accounted based on sampling, specifically
+>> update_io_ticks() will always account io_ticks by 1 jiffies from
+>> bdev_start_io_acct()/blk_account_io_start(), and the result can be
+>> inaccurate, for example(HZ is 250):
+>>
+>> Test script:
+>> fio -filename=/dev/sda -bs=4k -rw=write -direct=1 -name=test -thinktime=4ms
+>>
+>> Test result: util is about 90%, while the disk is really idle.
+>>
+>> In order to account io_ticks precisely, update_io_ticks() must know if
+>> there are IO inflight already, and this requires overhead slightly,
+>> hence precise io accounting is disabled by default, and user can enable
+>> it through sysfs entry.
+>>
+>> Noted that for rq-based devcie, part_stat_local_inc/dec() and
+>> part_in_flight() is used to track inflight instead of iterating tags,
+>> which is not supposed to be used in fast path because 'tags->lock' is
+>> grabbed in blk_mq_find_and_get_req().
+>>
+>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+>> ---
+>> Changes in v2:
+>>   - remove the new parameter for update_io_ticks();
+>>   - simplify update_io_ticks();
+>>   - use swith in queue_iostats_store();
+>>   - add missing part_stat_local_dec() in blk_account_io_merge_request()
+> 
+> Looks fine,
+> 
+> Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-> 00004 depmod: ERROR: failed to load symbols from /lib/modules/6.7.0-rc7-=
-00037-g100ccd18bb41/kernel/fs/gfs2/gfs2.ko: Exec format error
-> 00004 depmod: ERROR: failed to load symbols from /lib/modules/6.7.0-rc7-=
-00037-g100ccd18bb41/kernel/fs/zonefs/zonefs.ko: Exec format error
-> 00004 depmod: ERROR: failed to load symbols from /lib/modules/6.7.0-rc7-=
-00037-g100ccd18bb41/kernel/security/keys/encrypted-keys/encrypted-keys.ko:=
- Exec format error
-> =
+Thanks for the review, however, I made a mistake while "simplify
+update_io_ticks()" that first IO will still account by 1 jiffies even if
+precise iostat is enabled:
 
-> and then later:
-> =
++       if (unlikely(time_after(now, stamp)) &&
++           likely(try_cmpxchg(&part->bd_stamp, &stamp, now))) {
++               if (end || (blk_queue_precise_io_stat(part->bd_queue) &&
++                           part_in_flight(part)))
++                       __part_stat_add(part, io_ticks, now - stamp);
++               else
+-> here, should be else if (!blk_queue_precise_io_stat(part->bd_queue))
++                       __part_stat_add(part, io_ticks, 1);
 
-> 00016 generic/001       run fstests generic/001 at 2024-01-05 04:50:46
-> 00017 [not run] this test requires a valid $TEST_DEV
-> 00017 generic/002       run fstests generic/002 at 2024-01-05 04:50:46
-> 00017 [not run] this test requires a valid $TEST_DEV
-> 00017 generic/003       run fstests generic/003 at 2024-01-05 04:50:47
-> 00018 [not run] this test requires a valid $SCRATCH_DEV
-> ...
-> =
+Alough this is RFC, my apologize for sending this version without fully
+test the functionally. I'll send a formal version soon.
 
-> so I think that's page cache corruption of some kind.
+Thanks,
+Kuai
 
-Is that being run on NFS?  Is /lib on NFS?
-
-David
+> 
+> 
+> thanks,
+> Ming
+> 
+> .
+> 
 
