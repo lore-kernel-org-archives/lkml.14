@@ -1,104 +1,119 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD8D2C857
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 11:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015F022EE6
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 11:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="2WG5mDwH"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40b5155e154so16351275e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 03:43:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Uo9OAOfx"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5569472f775so1757745a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 03:44:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1704455020; x=1705059820; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=r3kGqPETt9k7grf39pi8sU+581W84Ft4rteGJGKyNE8=;
-        b=2WG5mDwHiQyUKzaleDWv5OK3Is6JoddOMTNdW7afaYlLqjiWyNebl/wRrrBbVpKx7L
-         2RJf8EGd2zlhHm7WlXLHd8UKk9Dc6XZJWeH71NIUoLUetkBEWvEipH9prCr2WLpGfbd1
-         212RHF9DvNbZfsrGDfSOdmYs8bvmAHiBeIqty2aE/ycBMlqorjuhTnMQWlnIiXLpyTYs
-         D9wvzlcEM82EI6cf3oLNC+4egs6Q9E6UjiVkJ7x6V0zptR4VpcXDN8Iq5T57iYeeg4xV
-         hnSivow9+ql2nvgnl4cEANolDFdqb308Rej6yIAzV/RsgMjT3E5GfNVnzPubgxuoG7Lw
-         ilBg==
+        d=linaro.org; s=google; t=1704455089; x=1705059889; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UyYSCmnUK6YYgiXudsmTQSvphLBM898fCP+LWptTAmc=;
+        b=Uo9OAOfxSBomsRyuhDZRi1wC74qdTyAOZwiKk9XmKcmizMQ1LmfwnPwadlIkq/SzK7
+         NaoYFCta0BB2BJ2NEsWxdAwSKQD/Fnqt5fgwh590xYUWVOJ+PJBOFa91GRqDVlM2bvQF
+         C5pY/aPi98J+LbFiJ7nL38v0NnPgsmzsc7q3ZVVX5R4/g6hE8jUAg7HCgSom2Tm2Wmgg
+         CZoNJ9N0QXGRXBTX+t8GDEEZRDbjlq+6ysztmOwro2LY11Svg4V6z5oz+plhvpBjTsFr
+         TkYxEmWw5ibWCuiYRi6pJ1sTMIcxAMzzLzZ5ToQHMRKu1+CyboZ9tylSQpU4YKrE0mVz
+         5bew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704455020; x=1705059820;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r3kGqPETt9k7grf39pi8sU+581W84Ft4rteGJGKyNE8=;
-        b=W9eOyJDR3g3zIN2Z/8K57YroRtedGMwn8gXyjjPP8gzgcjwMmVGe8EQCFqY8sZw+Yg
-         8KX/zifUyWe4auG9JBkb8SgjXQ3qLMuJddqhOXjNyoIlcvLjrjhtEPIHWExq0e6x71hA
-         HjFINboaObCn0CGQmdzTSm9AfEp5dBNLYnfcJrkQ2b52oBi9iF2T3SRT6AIaHdi6VPK7
-         Zzt9ntvugRVFB1rztVjWuR8HZ7zpSZq14lLOnR3St+1t9BCMgyfmkn+Nd8ARJIggsMrl
-         rwjvEGQ+NFTPypm9UuZY7bclgOE9x+SZkKT5Vmy+kYwyvQVV/CCJzalLraGAT5N3XBiT
-         RBew==
-X-Gm-Message-State: AOJu0YxfwB5z/CAVwaXoF+9Soi5HdXkpbltRJ3Ds9ikVlg+tEzyaBXz4
-	Bz0E2JNxlLINaESNvgDO0pExAsJmd3C9jg==
-X-Google-Smtp-Source: AGHT+IGW3eudwDbD2LphnyuymzvawOk5islyitmnMc1lb8gf8qjEVFFiByU/S8G4KfTNybKOpsfaig==
-X-Received: by 2002:a7b:cb16:0:b0:40c:6d5f:e88c with SMTP id u22-20020a7bcb16000000b0040c6d5fe88cmr977192wmj.185.1704455019886;
-        Fri, 05 Jan 2024 03:43:39 -0800 (PST)
-Received: from localhost (host-213-179-129-39.customer.m-online.net. [213.179.129.39])
-        by smtp.gmail.com with ESMTPSA id w5-20020a05600c474500b0040e34835a58sm1319547wmo.22.2024.01.05.03.43.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jan 2024 03:43:39 -0800 (PST)
-Date: Fri, 5 Jan 2024 12:43:38 +0100
-From: Jiri Pirko <jiri@resnulli.us>
-To: Justin Lai <justinlai0215@realtek.com>
-Cc: kuba@kernel.org, davem@davemloft.net, edumazet@google.com,
-	pabeni@redhat.com, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, andrew@lunn.ch, pkshih@realtek.com,
-	larry.chiu@realtek.com
-Subject: Re: [PATCH net-next v16 13/13] MAINTAINERS: Add the rtase ethernet
- driver entry
-Message-ID: <ZZfrauRNNJsUGCRr@nanopsycho>
-References: <20240105112811.380952-1-justinlai0215@realtek.com>
- <20240105113257.381090-1-justinlai0215@realtek.com>
- <20240105113257.381090-9-justinlai0215@realtek.com>
+        d=1e100.net; s=20230601; t=1704455089; x=1705059889;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UyYSCmnUK6YYgiXudsmTQSvphLBM898fCP+LWptTAmc=;
+        b=AQFc22+utNAP6nb46rVTcHveGLCaXS1J2jKlU26B4hr6fgFRaaZBTPHCgRTsKxcWjj
+         x3XRPRpu8lF1WA2Sxe+SIKHxW1x7z3LC2adPViwuyFwqYJmQSA3ur/09Xv88i8PyEw8A
+         B61Ud5Z5nHkkawjFp+B5adevK8hJN8kWBIFS6mtql+9UlowTDIJSKL9GVS29i6hSepWz
+         VrIbALuAIxdWSxZovzFbJQ9Chl2uJ3Hr0DPsTCwdmyZ6sNMk648auOZHKwlHswsxNh83
+         97ebwsnn5HzKTajKEhciZTRGfE3xDnz9db8z4jQKIGGRnSyqcmLxZBaT3hmK6n7kIhVh
+         gr9Q==
+X-Gm-Message-State: AOJu0YzASKUrQO7Yp+QTEhyAKn7k4ZiV1huGGdJEzYvJSFBdfmd85Sem
+	7AuPyUoVN+3juF0TlTFG6rO9Kz87LCZtMg==
+X-Google-Smtp-Source: AGHT+IFa6oxfu+gyeUJNqDj991PX0xla2ldmGqqSePRfF6fdXO8w5DJJ7AJ45DBKZec0Hltfvtjepg==
+X-Received: by 2002:a17:906:cd09:b0:a28:a552:ca01 with SMTP id oz9-20020a170906cd0900b00a28a552ca01mr1126235ejb.122.1704455089215;
+        Fri, 05 Jan 2024 03:44:49 -0800 (PST)
+Received: from [192.168.199.125] (178235179036.dynamic-4-waw-k-1-3-0.vectranet.pl. [178.235.179.36])
+        by smtp.gmail.com with ESMTPSA id m13-20020a170906258d00b00a27984bd831sm785021ejb.163.2024.01.05.03.44.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jan 2024 03:44:48 -0800 (PST)
+Message-ID: <158df3b2-a7fa-449d-9cc8-1e4cdf6ef49b@linaro.org>
+Date: Fri, 5 Jan 2024 12:44:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240105113257.381090-9-justinlai0215@realtek.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] phy: qualcomm: eusb2-repeater: Rework init to drop
+ redundant zero-out loop
+Content-Language: en-US
+To: Abel Vesa <abel.vesa@linaro.org>, Bjorn Andersson <andersson@kernel.org>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>
+Cc: Elliot Berman <quic_eberman@quicinc.com>, linux-arm-msm@vger.kernel.org,
+ linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240105-phy-qcom-eusb2-repeater-fixes-v2-0-775d98e7df05@linaro.org>
+ <20240105-phy-qcom-eusb2-repeater-fixes-v2-2-775d98e7df05@linaro.org>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <20240105-phy-qcom-eusb2-repeater-fixes-v2-2-775d98e7df05@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Fri, Jan 05, 2024 at 12:32:57PM CET, justinlai0215@realtek.com wrote:
->Add myself and Larry Chiu as the maintainer for the rtase ethernet driver.
->
->Signed-off-by: Justin Lai <justinlai0215@realtek.com>
->---
-> MAINTAINERS | 7 +++++++
-> 1 file changed, 7 insertions(+)
->
->diff --git a/MAINTAINERS b/MAINTAINERS
->index 53b7ca804465..239aae94dc0f 100644
->--- a/MAINTAINERS
->+++ b/MAINTAINERS
->@@ -18476,6 +18476,13 @@ L:	linux-remoteproc@vger.kernel.org
-> S:	Maintained
-> F:	drivers/tty/rpmsg_tty.c
+On 5.01.2024 11:16, Abel Vesa wrote:
+> The device match config init table already has zero values, so rework
+> the container struct to hold a copy of the init table that can be
+> override be the DT specified values. By doing this, only the number of
+> vregs remain in the device match config that will be later needed, so
+> instead of holding the cfg after probe, store the number of vregs in the
+> container struct.
 > 
->+RTASE ETHERNET DRIVER
->+M:	Justin Lai <justinlai0215@realtek.com>
->+M:	Larry Chiu <larry.chiu@realtek.com>
->+L:	netdev@vger.kernel.org
->+S:	Maintained
+> Fixes: 99a517a582fc ("phy: qualcomm: phy-qcom-eusb2-repeater: Zero out untouched tuning regs")
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> ---
 
-Quoting the beginning of the file:
-	   Supported:	Someone is actually paid to look after this.
-	   Maintained:	Someone actually looks after it.
+This looks good as-is, though I think my proposal of storing the
+peripheral base reg instead is still better, as it'd require less
+memory (no kmemdup as the regs wouldn't be modified).
 
-I guess it should be "Supported" in your case.
-
-
->+F:	drivers/net/ethernet/realtek/rtase/
->+
-> RTL2830 MEDIA DRIVER
-> M:	Antti Palosaari <crope@iki.fi>
-> L:	linux-media@vger.kernel.org
->-- 
->2.34.1
->
->
+Konrad
