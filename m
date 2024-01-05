@@ -1,383 +1,310 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C370A2D052
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 13:05:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B832D615;
+	Fri,  5 Jan 2024 13:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TlKr5Iqx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EC30C433C9;
-	Fri,  5 Jan 2024 13:05:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704459928;
-	bh=oTSS/EwPD5WuU+/fULluC8lTlN13w5rb+Or0+3VPvNU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=TlKr5IqxPsQE3zvhSiA9wcCI+tIeU50I1AVHw7mbquyZL2AyMfih1RfIsXUecme7n
-	 n1JP1D7iHzx8yFFkpEZQ96Xla0tv8vNT7xdtL0hjZ+jGm9hPm0syZIcxU5Kt9EMFxO
-	 o5BxbyTCdubBHpmDOuAZwzLe5fhRaa+yCVy3u92ITorFI5ds84LS7nCD0wl/5hjVVs
-	 2FNfrmy6FfnxsZaZeCbbKtJ0KjuYEYfVq9n6F/co5LoO7hq1U5TbH3ogcbcOX94U0T
-	 2k02tak08mdAw40C2q9HC9q+igycaIsZYXC+vlK2pHYzUqLBeEo++TtoggAvrKwsNu
-	 vZ8ghLjfLHJdw==
-Date: Fri, 5 Jan 2024 13:05:23 +0000
-From: Will Deacon <will@kernel.org>
-To: torvalds@linux-foundation.org
-Cc: catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kernel-team@android.com
-Subject: [GIT PULL] arm64 updates for 6.8
-Message-ID: <20240105130523.GA9015@willie-the-truck>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="6g+wCJRY"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 405A7t5b024370;
+	Fri, 5 Jan 2024 14:04:37 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=selector1; bh=+rXwIBo
+	z3uZBmfT+N70oY/eRCTxAPAlCqTTaF22kiWk=; b=6g+wCJRY9JbxywFG800+3wC
+	T8asHbgfwlTZ41ArGagJtkPbZxpXDmZp2ELUZv4Uzym/ajTvEWw4o7JzS0ts4HbI
+	VaWHq7nw3BimIMdRGdlxMEaAuZK1wJG80tvy/oE70WL85HAFTaSxU5YYRfZ0aTdb
+	dNpTIVwcJUp4Wt3GXxIDrBowOhbdwsb832fjKCXtEmBXojub35zlPLoBSi4uuwWq
+	pA0uerUnbkWiIAEP8K9HTol/1ujHaGWRGpfS+lj/B1ssCWPZOj3RYDxwLb1/rsnX
+	jsBb8k1m3OKVFkN1TiZ2b388671XTBS5MxEVQovHSlkbQAz8TV2goVWvVboDCQA=
+	=
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ve9h0j5k1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 05 Jan 2024 14:04:37 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DB4DF10002A;
+	Fri,  5 Jan 2024 14:04:33 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4A03D229A8D;
+	Fri,  5 Jan 2024 14:04:33 +0100 (CET)
+Received: from localhost (10.201.20.32) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 5 Jan
+ 2024 14:04:32 +0100
+From: Gatien Chevallier <gatien.chevallier@foss.st.com>
+To: <Oleksii_Moisieiev@epam.com>, <gregkh@linuxfoundation.org>,
+        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <alexandre.torgue@foss.st.com>,
+        <vkoul@kernel.org>, <jic23@kernel.org>, <olivier.moysan@foss.st.com>,
+        <arnaud.pouliquen@foss.st.com>, <mchehab@kernel.org>,
+        <fabrice.gasnier@foss.st.com>, <andi.shyti@kernel.org>,
+        <ulf.hansson@linaro.org>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>, <hugues.fruchet@foss.st.com>, <lee@kernel.org>,
+        <will@kernel.org>, <catalin.marinas@arm.com>, <arnd@kernel.org>,
+        <richardcochran@gmail.com>, Frank Rowand <frowand.list@gmail.com>,
+        <peng.fan@oss.nxp.com>, <lars@metafoo.de>, <rcsekar@samsung.com>,
+        <wg@grandegger.com>, <mkl@pengutronix.de>
+CC: <linux-crypto@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-media@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-serial@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>,
+        Gatien Chevallier
+	<gatien.chevallier@foss.st.com>
+Subject: [PATCH v9 00/13] Introduce STM32 Firewall framework
+Date: Fri, 5 Jan 2024 14:03:51 +0100
+Message-ID: <20240105130404.301172-1-gatien.chevallier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-05_06,2024-01-05_01,2023-05-22_02
+
+Introduce STM32 Firewall framework for STM32MP1x and STM32MP2x
+platforms. STM32MP1x(ETZPC) and STM32MP2x(RIFSC) Firewall controllers
+register to the framework to offer firewall services such as access
+granting.
+
+This series of patches is a new approach on the previous STM32 system
+bus, history is available here:
+https://lore.kernel.org/lkml/20230127164040.1047583/
+
+The need for such framework arises from the fact that there are now
+multiple hardware firewalls implemented across multiple products.
+Drivers are shared between different products, using the same code.
+When it comes to firewalls, the purpose mostly stays the same: Protect
+hardware resources. But the implementation differs, and there are
+multiple types of firewalls: peripheral, memory, ... 
+
+Some hardware firewall controllers such as the RIFSC implemented on
+STM32MP2x platforms may require to take ownership of a resource before
+being able to use it, hence the requirement for firewall services to
+take/release the ownership of such resources.
+
+On the other hand, hardware firewall configurations are becoming
+more and more complex. These mecanisms prevent platform crashes
+or other firewall-related incoveniences by denying access to some
+resources.
+
+The stm32 firewall framework offers an API that is defined in
+firewall controllers drivers to best fit the specificity of each
+firewall.
+
+For every peripherals protected by either the ETZPC or the RIFSC, the
+firewall framework checks the firewall controlelr registers to see if
+the peripheral's access is granted to the Linux kernel. If not, the
+peripheral is configured as secure, the node is marked populated,
+so that the driver is not probed for that device.
+
+The firewall framework relies on the access-controller device tree
+binding. It is used by peripherals to reference a domain access
+controller. In this case a firewall controller. The bus uses the ID
+referenced by the access-controller property to know where to look
+in the firewall to get the security configuration for the peripheral.
+This allows a device tree description rather than a hardcoded peripheral
+table in the bus driver.
+
+The STM32 ETZPC device is responsible for filtering accesses based on
+security level, or co-processor isolation for any resource connected
+to it.
+
+The RIFSC is responsible for filtering accesses based on Compartment
+ID / security level / privilege level for any resource connected to
+it.
+
+STM32MP13/15/25 SoC device tree files are updated in this series to
+implement this mecanism.
+
+Changes in V9:
+	- Added Rob's reviews tags on bindings/of files
+	- Added "simple-bus" to RIFSC/ETZPC compatible item list
+	
+Changes in V8:
+	- Add missing "simple-bus" compatible in STM32MP13/25 SoC
+	  device tree files for the ETZPC/RIFSC nodes
+	- Add missing dependency on OF for OF_DYNAMIC that is selected
+	  by STM32_FIREWALL
+
+Changes in V7:
+	- Separate indentation changes from access-controllers changes
+	  in the device tree file commits
+	- Select OF_DYNAMIC when STM32_FIREWALL is set in order to use
+	  of_detach_node() in the firewall framework
+	- Handle previously non-present RNG and HASH nodes in the
+	  STM32MP13 device tree file
+
+Changes in V6:
+	- Rename access-controller to access-controllers
+	- Remove access-controller-provider
+	- Update device trees and other bindings accordingly
+	- Rework ETZPC/RIFSC bindings to define what access-controllers
+	  cells contain inside #access-controller-cells
+	- Some other minor fixes
+
+Changes in V5:
+	- Integrate and rework the "feature-domains" binding patch in
+	  this patchset. The binding is renamed to "access-controller"
+	- Rename every feature-domain* reference to access-control*
+	  ones
+	- Correct loop bug and missing select STM32_FIREWALL in 32-bit
+	  platform Kconfig
+	
+
+Changes in V4:
+	- Fix typo in commit message and YAML check errors in
+	  "dt-bindings: Document common device controller bindings"
+	  Note: This patch should be ignored as stated in the cover
+	  letter. I've done this to avoid errors on this series of
+	  patch
+	- Correct code syntax/style issues reported by Simon Horman
+	- Added Jonathan's tag for IIO on the treewide patch
+
+Changes in V3:
+
+	Change incorrect ordering for bindings commits leading
+	to an error while running
+	"make DT_CHECKER_FLAGS=-m dt_binding_check"
+
+Changes in V2:
+
+	generic:
+		- Add fw_devlink dependency for "feature-domains"
+		  property.
+
+	bindings:
+		- Corrected YAMLS errors highlighted by Rob's robot
+		- Firewall controllers YAMLs no longer define the
+		  maxItems for the "feature-domains" property
+		- Renamed st,stm32-rifsc.yaml to
+		  st,stm32mp25-rifsc.yaml
+		- Fix examples in YAML files
+		- Change feature-domains maxItems to 2 in firewall
+		  consumer files as there should not be more than
+		  2 entries for now
+		- Declare "feature-domain-names" as an optional
+		  property for firewall controllers child nodes.
+		- Add missing "feature-domains" property declaration
+		  in bosch,m_can.yaml and st,stm32-cryp.yaml files
+
+	firewall framework:
+		- Support multiple entries for "feature-domains"
+		  property
+		- Better handle the device-tree parsing using
+		  phandle+args APIs
+		- Remove "resource firewall" type
+		- Add a field for the name of the firewall entry
+		- Fix licenses
+	
+	RIFSC:
+		- Add controller name
+		- Driver is now a module_platform_driver
+		- Fix license
+
+	ETZPC:
+		- Add controller name
+		- Driver is now a module_platform_driver
+		- Fix license
+
+	Device trees:
+		- Fix rifsc node name
+		- Move the "ranges" property under the
+		  "feature-domains" one
+
+Gatien Chevallier (12):
+  dt-bindings: treewide: add access-controllers description
+  dt-bindings: bus: document RIFSC
+  dt-bindings: bus: document ETZPC
+  firewall: introduce stm32_firewall framework
+  of: property: fw_devlink: Add support for "access-controller"
+  bus: rifsc: introduce RIFSC firewall controller driver
+  arm64: dts: st: add RIFSC as an access controller for STM32MP25x
+    boards
+  bus: etzpc: introduce ETZPC firewall controller driver
+  ARM: dts: stm32: add ETZPC as a system bus for STM32MP15x boards
+  ARM: dts: stm32: put ETZPC as an access controller for STM32MP15x
+    boards
+  ARM: dts: stm32: add ETZPC as a system bus for STM32MP13x boards
+  ARM: dts: stm32: put ETZPC as an access controller for STM32MP13x
+    boards
+
+Oleksii Moisieiev (1):
+  dt-bindings: document generic access controllers
+
+ .../access-controllers.yaml                   |   84 +
+ .../bindings/bus/st,stm32-etzpc.yaml          |   96 +
+ .../bindings/bus/st,stm32mp25-rifsc.yaml      |  105 +
+ .../bindings/crypto/st,stm32-cryp.yaml        |    4 +
+ .../bindings/crypto/st,stm32-hash.yaml        |    4 +
+ .../devicetree/bindings/dma/st,stm32-dma.yaml |    4 +
+ .../bindings/dma/st,stm32-dmamux.yaml         |    4 +
+ .../devicetree/bindings/i2c/st,stm32-i2c.yaml |    4 +
+ .../bindings/iio/adc/st,stm32-adc.yaml        |    4 +
+ .../bindings/iio/adc/st,stm32-dfsdm-adc.yaml  |    4 +
+ .../bindings/iio/dac/st,stm32-dac.yaml        |    4 +
+ .../bindings/media/cec/st,stm32-cec.yaml      |    4 +
+ .../bindings/media/st,stm32-dcmi.yaml         |    4 +
+ .../memory-controllers/st,stm32-fmc2-ebi.yaml |    4 +
+ .../bindings/mfd/st,stm32-lptimer.yaml        |    4 +
+ .../bindings/mfd/st,stm32-timers.yaml         |    4 +
+ .../devicetree/bindings/mmc/arm,pl18x.yaml    |    4 +
+ .../bindings/net/can/bosch,m_can.yaml         |    4 +
+ .../devicetree/bindings/net/stm32-dwmac.yaml  |    4 +
+ .../bindings/phy/phy-stm32-usbphyc.yaml       |    4 +
+ .../bindings/regulator/st,stm32-vrefbuf.yaml  |    4 +
+ .../devicetree/bindings/rng/st,stm32-rng.yaml |    4 +
+ .../bindings/serial/st,stm32-uart.yaml        |    4 +
+ .../bindings/sound/st,stm32-i2s.yaml          |    4 +
+ .../bindings/sound/st,stm32-sai.yaml          |    4 +
+ .../bindings/sound/st,stm32-spdifrx.yaml      |    4 +
+ .../bindings/spi/st,stm32-qspi.yaml           |    4 +
+ .../devicetree/bindings/spi/st,stm32-spi.yaml |    4 +
+ .../devicetree/bindings/usb/dwc2.yaml         |    4 +
+ MAINTAINERS                                   |    7 +
+ arch/arm/boot/dts/st/stm32mp131.dtsi          | 1063 ++++---
+ arch/arm/boot/dts/st/stm32mp133.dtsi          |   51 +-
+ arch/arm/boot/dts/st/stm32mp13xc.dtsi         |   19 +-
+ arch/arm/boot/dts/st/stm32mp13xf.dtsi         |   19 +-
+ arch/arm/boot/dts/st/stm32mp151.dtsi          | 2756 +++++++++--------
+ arch/arm/boot/dts/st/stm32mp153.dtsi          |   52 +-
+ arch/arm/boot/dts/st/stm32mp15xc.dtsi         |   19 +-
+ arch/arm/mach-stm32/Kconfig                   |    1 +
+ arch/arm64/Kconfig.platforms                  |    1 +
+ arch/arm64/boot/dts/st/stm32mp251.dtsi        |    7 +-
+ drivers/bus/Kconfig                           |   10 +
+ drivers/bus/Makefile                          |    1 +
+ drivers/bus/stm32_etzpc.c                     |  141 +
+ drivers/bus/stm32_firewall.c                  |  294 ++
+ drivers/bus/stm32_firewall.h                  |   83 +
+ drivers/bus/stm32_rifsc.c                     |  252 ++
+ drivers/of/property.c                         |    2 +
+ include/linux/bus/stm32_firewall_device.h     |  141 +
+ 48 files changed, 3370 insertions(+), 1938 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/access-controllers/access-controllers.yaml
+ create mode 100644 Documentation/devicetree/bindings/bus/st,stm32-etzpc.yaml
+ create mode 100644 Documentation/devicetree/bindings/bus/st,stm32mp25-rifsc.yaml
+ create mode 100644 drivers/bus/stm32_etzpc.c
+ create mode 100644 drivers/bus/stm32_firewall.c
+ create mode 100644 drivers/bus/stm32_firewall.h
+ create mode 100644 drivers/bus/stm32_rifsc.c
+ create mode 100644 include/linux/bus/stm32_firewall_device.h
+
+-- 
+2.35.3
 
-Hi Linus,
-
-Please pull these New Year arm64 updates for 6.8. As per usual, there is
-a summary in the tag, but here are a few minor things to be aware of:
-
-  - There's a trivial conflict with the arm-soc tree in linux-next [1],
-    since we're both touching the 32-bit Arm PMU code. The arm-soc tree
-    removes support for the infamous 11MPcore CPU entirely (good
-    riddance), so the change here in 5cd7da19cb97 ("arm: perf: Remove
-    PMU locking") to remove unnecessary locking from
-    armv6mpcore_pmu_disable_event() is touching code that is removed
-    completely.
-
-  - The for-next/lpa2-prep and for-next/sysregs branches are shared with
-    kvmarm, as they build on top to enable 52-bit addressing (IPAs) and
-    fine-grained traps for guests.
-
-  - We've got a new PMU driver for the Synopsys DesignWare PCIe IP;
-    Bjorn has Acked the PCI changes.
-
-  - I've ended up merging our 6.7 fixes branch (for-next/fixes) so we
-    could update some CPU capability-checking logic in the KPTI enabling
-    code. Consequently, the diffstat is a tiny bit wonky due to the
-    three fixes that were merged after -rc3. I don't particularly like
-    changing that by hand, so you've got the raw thing (against -rc3)
-    here.
-
-Should all be straightforward, but please shout if not.
-
-Cheers,
-
-Will
-
-[1] https://lore.kernel.org/r/20240103100324.05f47bb8@canb.auug.org.au
-
---->8
-
-The following changes since commit 2cc14f52aeb78ce3f29677c2de1f06c0e91471ab:
-
-  Linux 6.7-rc3 (2023-11-26 19:59:33 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-upstream
-
-for you to fetch changes up to db32cf8e280b46726065c518e90761bb0229bacf:
-
-  Merge branch 'for-next/fixes' into for-next/core (2024-01-04 12:32:33 +0000)
-
-----------------------------------------------------------------
-arm64 updates for 6.8
-
-* for-next/cpufeature
-
-  - Remove ARM64_HAS_NO_HW_PREFETCH copy_page() optimisation for ye olde
-    Thunder-X machines.
-  - Avoid mapping KPTI trampoline when it is not required.
-  - Make CPU capability API more robust during early initialisation.
-
-* for-next/early-idreg-overrides
-
-  - Remove dependencies on core kernel helpers from the early
-    command-line parsing logic in preparation for moving this code
-    before the kernel is mapped.
-
-* for-next/fpsimd
-
-  - Restore kernel-mode fpsimd context lazily, allowing us to run fpsimd
-    code sequences in the kernel with pre-emption enabled.
-
-* for-next/kbuild
-
-  - Install 'vmlinuz.efi' when CONFIG_EFI_ZBOOT=y.
-  - Makefile cleanups.
-
-* for-next/lpa2-prep
-
-  - Preparatory work for enabling the 'LPA2' extension, which will
-    introduce 52-bit virtual and physical addressing even with 4KiB
-    pages (including for KVM guests).
-
-* for-next/misc
-
-  - Remove dead code and fix a typo.
-
-* for-next/mm
-
-  - Pass NUMA node information for IRQ stack allocations.
-
-* for-next/perf
-
-  - Add perf support for the Synopsys DesignWare PCIe PMU.
-  - Add support for event counting thresholds (FEAT_PMUv3_TH) introduced
-    in Armv8.8.
-  - Add support for i.MX8DXL SoCs to the IMX DDR PMU driver.
-  - Minor PMU driver fixes and optimisations.
-
-* for-next/rip-vpipt
-
-  - Remove what support we had for the obsolete VPIPT I-cache policy.
-
-* for-next/selftests
-
-  - Improvements to the SVE and SME selftests.
-
-* for-next/stacktrace
-
-  - Refactor kernel unwind logic so that it can used by BPF unwinding
-    and, eventually, reliable backtracing.
-
-* for-next/sysregs
-
-  - Update a bunch of register definitions based on the latest XML drop
-    from Arm.
-
-----------------------------------------------------------------
-Anshuman Khandual (4):
-      arm64/mm: Add FEAT_LPA2 specific ID_AA64MMFR0.TGRAN[2]
-      drivers: perf: arm_pmuv3: Add new macro PMUV3_INIT_MAP_EVENT()
-      arm: perf: Remove PMU locking
-      drivers: perf: arm_pmu: Drop 'pmu_lock' element from 'struct pmu_hw_events'
-
-Ard Biesheuvel (16):
-      arm64: Avoid enabling KPTI unnecessarily
-      arm64: mm: Only map KPTI trampoline if it is going to be used
-      arm64: Kconfig: drop KAISER reference from KPTI option description
-      arm64: kernel: Disable latent_entropy GCC plugin in early C runtime
-      arm64: mm: Take potential load offset into account when KASLR is off
-      arm64: mm: get rid of kimage_vaddr global variable
-      arm64: idreg-override: Omit non-NULL checks for override pointer
-      arm64: idreg-override: Prepare for place relative reloc patching
-      arm64: idreg-override: Avoid parameq() and parameqn()
-      arm64: idreg-override: avoid strlen() to check for empty strings
-      arm64: idreg-override: Avoid sprintf() for simple string concatenation
-      arm64: idreg-override: Avoid kstrtou64() to parse a single hex digit
-      arm64/kernel: Move 'nokaslr' parsing out of early idreg code
-      arm64: fpsimd: Drop unneeded 'busy' flag
-      arm64: fpsimd: Preserve/restore kernel mode NEON at context switch
-      arm64: fpsimd: Implement lazy restore for kernel mode FPSIMD
-
-Christophe JAILLET (1):
-      drivers/perf: Remove usage of the deprecated ida_simple_xx() API
-
-Fuad Tabba (6):
-      arm64/sysreg: Update HFGITR_EL2 definiton to DDI0601 2023-09
-      arm64/sysreg: Add definition for HAFGRTR_EL2
-      arm64/sysreg: Add missing Pauth_LR field definitions to ID_AA64ISAR1_EL1
-      arm64/sysreg: Add missing ExtTrcBuff field definition to ID_AA64DFR0_EL1
-      arm64/sysreg: Add missing system register definitions for FGT
-      arm64/sysreg: Add missing system instruction definitions for FGT
-
-Huang Shijie (2):
-      arm64: irq: set the correct node for VMAP stack
-      arm64: irq: set the correct node for shadow call stack
-
-James Clark (12):
-      arm: perf: Remove inlines from arm_pmuv3.c
-      arm: perf/kvm: Use GENMASK for ARMV8_PMU_PMCR_N
-      arm: perf: Use GENMASK for PMMIR fields
-      arm: perf: Convert remaining fields to use GENMASK
-      arm64: perf: Include threshold control fields in PMEVTYPER mask
-      arm: pmu: Share user ABI format mechanism with SPE
-      perf/arm_dmc620: Remove duplicate format attribute #defines
-      KVM: selftests: aarch64: Update tools copy of arm_pmuv3.h
-      arm: pmu: Move error message and -EOPNOTSUPP to individual PMUs
-      arm64: perf: Add support for event counting threshold
-      Documentation: arm64: Document the PMU event counting threshold feature
-      arm: perf: Fix ARCH=arm build with GCC
-
-James Houghton (1):
-      arm64: mm: Always make sw-dirty PTEs hw-dirty in pte_modify
-
-Joey Gouly (2):
-      arm64/sysreg: add system register POR_EL{0,1}
-      arm64/sysreg: update CPACR_EL1 register
-
-Josef Bacik (1):
-      arm64: properly install vmlinuz.efi
-
-Junhao He (1):
-      drivers/perf: hisi: Fix some event id for HiSilicon UC pmu
-
-Marc Zyngier (4):
-      KVM: arm64: Remove VPIPT I-cache handling
-      arm64: Kill detection of VPIPT i-cache policy
-      arm64: Rename reserved values for CTR_EL0.L1Ip
-      arm64: Get rid of ARM64_HAS_NO_HW_PREFETCH
-
-Mark Brown (12):
-      kselftest/arm64: Improve output for skipped TPIDR2 ABI test
-      kselftest/arm64: Log SVCR when the SME tests barf
-      arm64/sysreg: Add definition for ID_AA64PFR2_EL1
-      arm64/sysreg: Update ID_AA64ISAR2_EL1 defintion for DDI0601 2023-09
-      arm64/sysreg: Add definition for ID_AA64ISAR3_EL1
-      arm64/sysreg: Add definition for ID_AA64FPFR0_EL1
-      arm64/sysreg: Update ID_AA64SMFR0_EL1 definition for DDI0601 2023-09
-      arm64/sysreg: Update SCTLR_EL1 for DDI0601 2023-09
-      arm64/sysreg: Update HCRX_EL2 definition for DDI0601 2023-09
-      arm64/sysreg: Add definition for FPMR
-      arm64/sysreg: Add new system registers for GCS
-      kselftest/arm64: Don't probe the current VL for unsupported vector types
-
-Mark Rutland (5):
-      drivers/perf: pmuv3: don't expose SW_INCR event in sysfs
-      arm64: stacktrace: factor out kernel unwind state
-      arm64: stacktrace: factor out kunwind_stack_walk()
-      arm64: Cleanup system cpucap handling
-      arm64: Align boot cpucap handling with system cpucap handling
-
-Masahiro Yamada (3):
-      arm64: vdso32: rename 32-bit debug vdso to vdso32.so.dbg
-      arm64: replace <asm-generic/export.h> with <linux/export.h>
-      efi/libstub: zboot: do not use $(shell ...) in cmd_copy_and_pad
-
-Robin Murphy (2):
-      perf/arm-cmn: Fix HN-F class_occup_id events
-      perf/arm-cmn: Fail DTC counter allocation correctly
-
-Ryan Roberts (4):
-      arm64/mm: Modify range-based tlbi to decrement scale
-      arm64/mm: Add lpa2_is_enabled() kvm_lpa2_is_enabled() stubs
-      arm64/mm: Update tlb invalidation routines for FEAT_LPA2
-      arm64: Add ARM64_HAS_LPA2 CPU capability
-
-Shuai Xue (5):
-      docs: perf: Add description for Synopsys DesignWare PCIe PMU driver
-      PCI: Add Alibaba Vendor ID to linux/pci_ids.h
-      PCI: Move pci_clear_and_set_dword() helper to PCI header
-      drivers/perf: add DesignWare PCIe PMU driver
-      MAINTAINERS: add maintainers for DesignWare PCIe PMU driver
-
-Tsung-Han Lin (1):
-      Documentation/arch/arm64: Fix typo
-
-Wang Jinchao (1):
-      arm64: memory: remove duplicated include
-
-Will Deacon (15):
-      drivers/perf: arm_dsu_pmu: Remove kerneldoc-style comment syntax
-      Revert "perf/arm_dmc620: Remove duplicate format attribute #defines"
-      Merge branch 'for-next/cpufeature' into for-next/core
-      Merge branch 'for-next/early-idreg-overrides' into for-next/core
-      Merge branch 'for-next/fpsimd' into for-next/core
-      Merge branch 'for-next/kbuild' into for-next/core
-      Merge branch 'for-next/lpa2-prep' into for-next/core
-      Merge branch 'for-next/misc' into for-next/core
-      Merge branch 'for-next/mm' into for-next/core
-      Merge branch 'for-next/perf' into for-next/core
-      Merge branch 'for-next/rip-vpipt' into for-next/core
-      Merge branch 'for-next/selftests' into for-next/core
-      Merge branch 'for-next/stacktrace' into for-next/core
-      Merge branch 'for-next/sysregs' into for-next/core
-      Merge branch 'for-next/fixes' into for-next/core
-
-Xu Yang (4):
-      perf: fsl_imx8_ddr: Add AXI ID PORT CHANNEL filter support
-      docs/perf: Add explanation for DDR_CAP_AXI_ID_PORT_CHANNEL_FILTER quirk
-      dt-bindings: perf: fsl-imx-ddr: Add i.MX8DXL compatible
-      perf: fsl_imx8_ddr: Add driver support for i.MX8DXL DDR Perf
-
-Zenghui Yu (1):
-      arm64: Delete the zero_za macro
-
- Documentation/admin-guide/perf/dwc_pcie_pmu.rst    |  94 +++
- Documentation/admin-guide/perf/imx-ddr.rst         |  45 +-
- Documentation/admin-guide/perf/index.rst           |   1 +
- Documentation/arch/arm64/arm-acpi.rst              |   2 +-
- Documentation/arch/arm64/perf.rst                  |  72 ++
- .../devicetree/bindings/perf/fsl-imx-ddr.yaml      |   3 +
- MAINTAINERS                                        |   7 +
- arch/arm/kernel/perf_event_v6.c                    |  28 +-
- arch/arm/kernel/perf_event_v7.c                    |  50 +-
- arch/arm/kernel/perf_event_xscale.c                |  44 +-
- arch/arm64/Kconfig                                 |   2 +-
- arch/arm64/Makefile                                |   2 +-
- arch/arm64/boot/Makefile                           |   2 +-
- arch/arm64/boot/install.sh                         |   3 +-
- arch/arm64/include/asm/assembler.h                 |   2 +-
- arch/arm64/include/asm/cache.h                     |   6 -
- arch/arm64/include/asm/cpufeature.h                |   6 +
- arch/arm64/include/asm/fpsimdmacros.h              |   8 -
- arch/arm64/include/asm/kernel-pgtable.h            |  27 +-
- arch/arm64/include/asm/kvm_mmu.h                   |   7 -
- arch/arm64/include/asm/kvm_pgtable.h               |   2 +
- arch/arm64/include/asm/memory.h                    |   7 +-
- arch/arm64/include/asm/pgtable-prot.h              |   2 +
- arch/arm64/include/asm/pgtable.h                   |   6 +
- arch/arm64/include/asm/processor.h                 |   3 +
- arch/arm64/include/asm/simd.h                      |  11 +-
- arch/arm64/include/asm/stacktrace/common.h         |  19 +-
- arch/arm64/include/asm/stacktrace/nvhe.h           |   2 +-
- arch/arm64/include/asm/sysreg.h                    |  25 +
- arch/arm64/include/asm/thread_info.h               |   1 +
- arch/arm64/include/asm/tlb.h                       |  15 +-
- arch/arm64/include/asm/tlbflush.h                  | 100 ++-
- arch/arm64/kernel/cpufeature.c                     | 162 +++--
- arch/arm64/kernel/cpuinfo.c                        |   5 -
- arch/arm64/kernel/fpsimd.c                         | 169 +++--
- arch/arm64/kernel/head.S                           |   2 +-
- arch/arm64/kernel/idreg-override.c                 | 153 ++--
- arch/arm64/kernel/irq.c                            |   7 +-
- arch/arm64/kernel/kaslr.c                          |   7 +
- arch/arm64/kernel/pi/Makefile                      |   1 +
- arch/arm64/kernel/smp.c                            |  12 +-
- arch/arm64/kernel/stacktrace.c                     | 146 ++--
- arch/arm64/kernel/vdso32/Makefile                  |   8 +-
- arch/arm64/kvm/hyp/nvhe/pkvm.c                     |   2 +-
- arch/arm64/kvm/hyp/nvhe/tlb.c                      |  61 --
- arch/arm64/kvm/hyp/vhe/tlb.c                       |  13 -
- arch/arm64/kvm/pmu-emul.c                          |   8 +-
- arch/arm64/kvm/sys_regs.c                          |   4 +-
- arch/arm64/lib/copy_page.S                         |  11 -
- arch/arm64/mm/mmu.c                                |   6 +-
- arch/arm64/tools/cpucaps                           |   2 +-
- arch/arm64/tools/sysreg                            | 325 ++++++++-
- drivers/base/arch_numa.c                           |   2 +-
- drivers/firmware/efi/libstub/Makefile.zboot        |   4 +-
- drivers/infiniband/hw/erdma/erdma_hw.h             |   2 -
- drivers/pci/access.c                               |  12 +
- drivers/pci/pcie/aspm.c                            |  65 +-
- drivers/perf/Kconfig                               |   7 +
- drivers/perf/Makefile                              |   1 +
- drivers/perf/apple_m1_cpu_pmu.c                    |   6 +-
- drivers/perf/arm-cmn.c                             |   4 +-
- drivers/perf/arm_dsu_pmu.c                         |   6 +-
- drivers/perf/arm_pmu.c                             |  12 +-
- drivers/perf/arm_pmuv3.c                           | 240 ++++---
- drivers/perf/arm_spe_pmu.c                         |  22 -
- drivers/perf/dwc_pcie_pmu.c                        | 792 +++++++++++++++++++++
- drivers/perf/fsl_imx8_ddr_perf.c                   |  45 ++
- drivers/perf/fsl_imx9_ddr_perf.c                   |   6 +-
- drivers/perf/hisilicon/hisi_uncore_uc_pmu.c        |   4 +-
- include/asm-generic/numa.h                         |   2 +
- include/linux/pci.h                                |   2 +
- include/linux/pci_ids.h                            |   2 +
- include/linux/perf/arm_pmu.h                       |  28 +-
- include/linux/perf/arm_pmuv3.h                     |  34 +-
- tools/include/perf/arm_pmuv3.h                     |  43 +-
- tools/testing/selftests/arm64/abi/tpidr2.c         |  18 +-
- tools/testing/selftests/arm64/fp/sve-test.S        |  10 +
- tools/testing/selftests/arm64/fp/vec-syscfg.c      |  14 +-
- tools/testing/selftests/arm64/fp/za-test.S         |   6 +
- tools/testing/selftests/arm64/fp/zt-test.S         |   5 +
- .../selftests/kvm/aarch64/vpmu_counter_access.c    |   5 +-
- 81 files changed, 2301 insertions(+), 806 deletions(-)
- create mode 100644 Documentation/admin-guide/perf/dwc_pcie_pmu.rst
- create mode 100644 drivers/perf/dwc_pcie_pmu.c
