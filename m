@@ -1,262 +1,374 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from mx0a-00190b01.pphosted.com (mx0a-00190b01.pphosted.com [67.231.149.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF69364BA
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 23:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF63B360B9
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 23:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=akamai.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=akamai.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NtYdnV6s"
-Date: Fri, 5 Jan 2024 23:53:10 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1704498795;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lCwg2KhbBxczqWivmS+HLDaOklrbO1Me0OlTSs5JdVM=;
-	b=NtYdnV6sjgsbe1UXJefyHcbFa1lwJJL4d2o6kHmnw5N3UxwkTtKAY+8cQXjPmcI7Cd00d+
-	CZvi6peHaoJgx8x4a+/kT/VkhX6Ajj7tpbiJm89QYpKxGD7N0iEu/AVAwYMJ+nkm5/E8LH
-	7d8qZJg0YbXvmJPHbsOrIy82Nubj7yc=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-Cc: Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Gavin Shan <gshan@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Raghavendra Rao Ananta <rananta@google.com>,
-	D Scott Phillips <scott@os.amperecomputing.com>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] KVM: arm64: Workaround for Ampere AC03_CPU_36
- (exception taken to an incorrect EL)
-Message-ID: <ZZiWZkNP8Owytecw@linux.dev>
-References: <20240105213251.4141-1-ilkka@os.amperecomputing.com>
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="jLu+C3WG"
+Received: from pps.filterd (m0122333.ppops.net [127.0.0.1])
+	by mx0a-00190b01.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 405MSlT8024355;
+	Fri, 5 Jan 2024 22:46:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	jan2016.eng; bh=E4HinPTkCDFa4QOXQVhGBq5dpkVyw5V778fGHtU+jV0=; b=
+	jLu+C3WGqgJaWO/EBM/U3Cdfeuat/1y3TTUCp/ItG/P6LqyqgE2yjZk1VWTE1RlF
+	x8dsTWS5S+KxDah+RFiZui6bmXJXyxMd/pRs7WxZrWAo35YuX6khEYTMkQzzXlON
+	b4yK/oJ7wItEoA/q00wxQwVFb3Sjv1gQcK3/FDh2B0LiKZtdFKWIgW+CE+6EWB3c
+	txWIR6TiXXiZhM6ImNiRkCcqrmUtueFi9xJU9Yxn4oC7OekMcuD5oiBgRm+UDaEm
+	QgciGna+VpxqJE+B6t6aa3IceC9etajGjCEYdZJg+JnDvxXiCK/mT9/s4a1sBL5H
+	g1NLPuVPyKv4MWnX28Y1jw==
+Received: from prod-mail-ppoint1 (prod-mail-ppoint1.akamai.com [184.51.33.18] (may be forged))
+	by mx0a-00190b01.pphosted.com (PPS) with ESMTPS id 3vetkps4rb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 05 Jan 2024 22:46:52 +0000 (GMT)
+Received: from pps.filterd (prod-mail-ppoint1.akamai.com [127.0.0.1])
+	by prod-mail-ppoint1.akamai.com (8.17.1.19/8.17.1.19) with ESMTP id 405LJR2J016806;
+	Fri, 5 Jan 2024 17:46:42 -0500
+Received: from prod-mail-relay10.akamai.com ([172.27.118.251])
+	by prod-mail-ppoint1.akamai.com (PPS) with ESMTP id 3ve163yjvv-1;
+	Fri, 05 Jan 2024 17:46:42 -0500
+Received: from [172.19.39.209] (bos-lpa4700a.bos01.corp.akamai.com [172.19.39.209])
+	by prod-mail-relay10.akamai.com (Postfix) with ESMTP id B2CFD6410D;
+	Fri,  5 Jan 2024 22:46:41 +0000 (GMT)
+Message-ID: <69bd53de-0948-469f-ae58-48098af1973c@akamai.com>
+Date: Fri, 5 Jan 2024 17:46:41 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240105213251.4141-1-ilkka@os.amperecomputing.com>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 10/15] dyndbg: add open and close commands for trace
+Content-Language: en-US
+To: =?UTF-8?Q?=C5=81ukasz_Bartosik?= <lb@semihalf.com>,
+        Jim Cromie <jim.cromie@gmail.com>,
+        Andrew Morton
+ <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>
+Cc: Guenter Roeck <groeck@google.com>, Yaniv Tzoreff <yanivt@google.com>,
+        Benson Leung <bleung@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Pekka Paalanen <ppaalanen@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>, Daniel Vetter <daniel@ffwll.ch>,
+        linux-kernel@vger.kernel.org, upstream@semihalf.com
+References: <20231130234048.157509-1-lb@semihalf.com>
+ <20231130234048.157509-11-lb@semihalf.com>
+From: Jason Baron <jbaron@akamai.com>
+In-Reply-To: <20231130234048.157509-11-lb@semihalf.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-05_08,2024-01-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999 bulkscore=0
+ mlxscore=0 malwarescore=0 adultscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2401050174
+X-Proofpoint-ORIG-GUID: SLpskQQ9Md09-qCxLEgnluiXmLnUzKB7
+X-Proofpoint-GUID: SLpskQQ9Md09-qCxLEgnluiXmLnUzKB7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-05_08,2024-01-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 impostorscore=0
+ bulkscore=0 clxscore=1011 adultscore=0 suspectscore=0 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401050175
 
-Hi Ilkka,
-
-On Fri, Jan 05, 2024 at 01:32:51PM -0800, Ilkka Koskinen wrote:
-> Due to erratum AC03_CPU_36 on AmpereOne, if an Asynchronous Exception
-> (interrupts or SErrors) occurs to EL2, while EL2 software is modifying
-> system register bits that control EL2 exception behavior, the processor
-> may take an exception to an incorrect Exception Level.
+On 11/30/23 6:40 PM, Łukasz Bartosik wrote:
+> Add open and close commands for opening and closing trace instances.
+> The open command has to be mandatory followed by a trace instance name.
+> If a trace instance already exists in <debugfs>/tracing/instances
+> directory then the open command will reuse it otherwise a new trace
+> instance with a name provided to the open will be created. Close
+> command closes previously opened trace instance. The close will
+> fail if a user tries to close non-existent trace instances or an
+> instance which was not previously opened.
 > 
-> The affected system registers are HCR_EL2 and SCTLR_EL2, which contain
-> control bits for routing and enabling of EL2 exceptions.
+> For example the following command will open (create or reuse existing)
+> trace instance located in <debugfs>/tracing/instances/usbcore:
 > 
-> The issue is triggered when HGE.TGE bit is cleared while having
-> AMO/IMO/FMO bits cleared too. To avoid the exception getting taken
-> at a wrong Exception Level, we set AMO/IMO/FMO.
+>      echo "open usbcore" > <debugfs>/dynamic_debug/control
 
-We toggle HCR_EL2 for other things besides TLB invalidations, and the
-changelog does not describe why they're apparently unaffected.
+Hi,
 
-> Suggested-by: D Scott Phillips <scott@os.amperecomputing.com>
-> Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+I'm wondering why this needs to be part of dynamic debug? Can't we make 
+trace instances via 'mkdir' and then use those from the dynamic debug side?
 
-This isn't an acceptable way to go about errata mitigations. Besides
-extremely unusual circumstances, the pattern is to use a cpucap &&
-alternatives to only enable the workaround on affected designs. We then
-document the errata in the expected places (Kconfig and kernel
-documentation) such that the folks saddled with maintaining this stuff
-know how to handle it years down the line.
-
-> ---
->  arch/arm64/kvm/hyp/vhe/tlb.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/hyp/vhe/tlb.c b/arch/arm64/kvm/hyp/vhe/tlb.c
-> index b32e2940df7d..c72fdd2e4549 100644
-> --- a/arch/arm64/kvm/hyp/vhe/tlb.c
-> +++ b/arch/arm64/kvm/hyp/vhe/tlb.c
-> @@ -61,9 +61,15 @@ static void __tlb_switch_to_guest(struct kvm_s2_mmu *mmu,
->  	 * has an ISB in order to deal with this.
->  	 */
->  	__load_stage2(mmu, mmu->arch);
-> -	val = read_sysreg(hcr_el2);
-> -	val &= ~HCR_TGE;
-> -	write_sysreg(val, hcr_el2);
-> +
-> +	/*
-> +	 * With {E2H,TGE} == {1,0}, IMO == 1 is required so that IRQs are not
-> +	 * all masked.
-
-Huh? HCR_EL2.IMO affects the *routing* of IRQs at exception levels
-*lower than* EL2.
-
-> This also works around AmpereOne erratum AC03_CPU_36
-> +	 * which can incorrectly route an IRQ to EL1 when HCR_EL2.{E2H,TGE} is
-> +	 * written from {1,1} to {1,0} with interrupts unmasked.
-> +	 */
-> +	sysreg_clear_set(hcr_el2, HCR_TGE, HCR_AMO | HCR_IMO | HCR_FMO);
-> +
-
-Rather than further modifying the exception controls, why not mask DAIF
-like we do on guest entry/exit? AFAICT that is the only reason KVM_RUN
-is unaffected by this erratum.
-
-This is what I have been using on a few AmpereOne systems:
-
-From 265cb193190c13c651d8e008d34d1d18505d4804 Mon Sep 17 00:00:00 2001
-From: Oliver Upton <oliver.upton@linux.dev>
-Date: Fri, 5 Jan 2024 23:18:14 +0000
-Subject: [PATCH] KVM: arm64: Mitigate AmpereOne erratum AC03_CPU_36
-
-The AmpereOne design suffers from an erratum where if an asynchronous
-exception arrives while EL2 is modifying hypervisor exception controls
-(i.e. HCR_EL2, SCTLR_EL2) the PE may take an invalid exception to
-another EL.
-
-KVM's guest entry/exit path is unaffected because DAIF is already masked
-when modifying HCR_EL2. However, KVM only masks IRQs when switching to
-the guest MMU context for a TLB invalidation, meaning it is possible for
-an intervening exception to trigger the erratum. This becomes
-immediately obvious when profiling a KVM VM with pseudo-NMIs enabled,
-such as:
-
-  perf record ./dirty_log_perf_test -m 2 -s anonymous_thp -v 4 -b 4G
-
-Mitigate the erratum by masking DAIF completely before switching to the
-guest MMU context.
-
-Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
----
- Documentation/arch/arm64/silicon-errata.rst |  2 ++
- arch/arm64/Kconfig                          | 16 ++++++++++++++++
- arch/arm64/kernel/cpu_errata.c              |  7 +++++++
- arch/arm64/kvm/hyp/vhe/tlb.c                | 20 ++++++++++++++++++--
- arch/arm64/tools/cpucaps                    |  1 +
- 5 files changed, 44 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/arch/arm64/silicon-errata.rst b/Documentation/arch/arm64/silicon-errata.rst
-index f47f63bcf67c..aea7a75ae434 100644
---- a/Documentation/arch/arm64/silicon-errata.rst
-+++ b/Documentation/arch/arm64/silicon-errata.rst
-@@ -52,6 +52,8 @@ stable kernels.
- | Allwinner      | A64/R18         | UNKNOWN1        | SUN50I_ERRATUM_UNKNOWN1     |
- +----------------+-----------------+-----------------+-----------------------------+
- +----------------+-----------------+-----------------+-----------------------------+
-+| Ampere         | AmpereOne       | AC03_CPU_36     | AMPERE_ERRATUM_AC03_CPU_36  |
-++----------------+-----------------+-----------------+-----------------------------+
- | Ampere         | AmpereOne       | AC03_CPU_38     | AMPERE_ERRATUM_AC03_CPU_38  |
- +----------------+-----------------+-----------------+-----------------------------+
- +----------------+-----------------+-----------------+-----------------------------+
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 7b071a00425d..9ba04b90e945 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -434,6 +434,22 @@ config AMPERE_ERRATUM_AC03_CPU_38
- 
- 	  If unsure, say Y.
- 
-+config AMPERE_ERRATUM_AC03_CPU_36
-+	bool "AmpereOne: AC03_CPU_36: CPU takes invalid asynchronous exception while changing exception controls"
-+	default y
-+	help
-+	  This option adds an alternative code sequence to work around Ampere
-+	  erratum AC03_CPU_36 on AmpereOne parts.
-+
-+	  The affected designs can take an invalid exception to an incorrect
-+	  exception level if an asynchronous exception arrives while software
-+	  is changing the EL2 exception controls (i.e. HCR_EL2, SCTLR_EL2).
-+
-+	  The workaround forces KVM to mask all asynchronous exception sources
-+	  when switching to the guest MMU context for TLB invalidations.
-+
-+	  If unsure, say Y.
-+
- config ARM64_WORKAROUND_CLEAN_CACHE
- 	bool
- 
-diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-index e29e0fea63fb..7e2856360f38 100644
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -727,6 +727,13 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
- 		.capability = ARM64_WORKAROUND_AMPERE_AC03_CPU_38,
- 		ERRATA_MIDR_ALL_VERSIONS(MIDR_AMPERE1),
- 	},
-+#endif
-+#ifdef CONFIG_AMPERE_ERRATUM_AC03_CPU_36
-+	{
-+		.desc = "AmpereOne erratum AC03_CPU_36",
-+		.capability = ARM64_WORKAROUND_AMPERE_AC03_CPU_36,
-+		ERRATA_MIDR_ALL_VERSIONS(MIDR_AMPERE1),
-+	},
- #endif
- 	{
- 	}
-diff --git a/arch/arm64/kvm/hyp/vhe/tlb.c b/arch/arm64/kvm/hyp/vhe/tlb.c
-index b636b4111dbf..cedfb0a32fa0 100644
---- a/arch/arm64/kvm/hyp/vhe/tlb.c
-+++ b/arch/arm64/kvm/hyp/vhe/tlb.c
-@@ -17,13 +17,29 @@ struct tlb_inv_context {
- 	u64			sctlr;
- };
- 
-+#define __tlb_daif_save(flags)						\
-+({									\
-+	if (cpus_have_final_cap(ARM64_WORKAROUND_AMPERE_AC03_CPU_36))	\
-+		flags = local_daif_save();				\
-+	else								\
-+		local_irq_save(flags);					\
-+})
-+
-+#define __tlb_daif_restore(flags)					\
-+({									\
-+	if (cpus_have_final_cap(ARM64_WORKAROUND_AMPERE_AC03_CPU_36))	\
-+		local_daif_restore(flags);				\
-+	else								\
-+		local_irq_restore(flags);				\
-+})
-+
- static void __tlb_switch_to_guest(struct kvm_s2_mmu *mmu,
- 				  struct tlb_inv_context *cxt)
- {
- 	struct kvm_vcpu *vcpu = kvm_get_running_vcpu();
- 	u64 val;
- 
--	local_irq_save(cxt->flags);
-+	__tlb_daif_save(cxt->flags);
- 
- 	if (vcpu && mmu != vcpu->arch.hw_mmu)
- 		cxt->mmu = vcpu->arch.hw_mmu;
-@@ -86,7 +102,7 @@ static void __tlb_switch_to_host(struct tlb_inv_context *cxt)
- 		write_sysreg_el1(cxt->sctlr, SYS_SCTLR);
- 	}
- 
--	local_irq_restore(cxt->flags);
-+	__tlb_daif_restore(cxt->flags);
- }
- 
- void __kvm_tlb_flush_vmid_ipa(struct kvm_s2_mmu *mmu,
-diff --git a/arch/arm64/tools/cpucaps b/arch/arm64/tools/cpucaps
-index b98c38288a9d..cfaae3b4d2d0 100644
---- a/arch/arm64/tools/cpucaps
-+++ b/arch/arm64/tools/cpucaps
-@@ -85,6 +85,7 @@ WORKAROUND_2457168
- WORKAROUND_2645198
- WORKAROUND_2658417
- WORKAROUND_2966298
-+WORKAROUND_AMPERE_AC03_CPU_36
- WORKAROUND_AMPERE_AC03_CPU_38
- WORKAROUND_TRBE_OVERWRITE_FILL_MODE
- WORKAROUND_TSB_FLUSH_FAILURE
--- 
-2.43.0.472.g3155946c3a-goog
-
--- 
 Thanks,
-Oliver
+
+-Jason
+
+
+
+
+> 
+> Signed-off-by: Łukasz Bartosik <lb@semihalf.com>
+> ---
+>   lib/Kconfig.debug   |   1 +
+>   lib/dynamic_debug.c | 193 ++++++++++++++++++++++++++++++++++++++++++++
+>   2 files changed, 194 insertions(+)
+> 
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 5bc56c7247a2..f184c3c91ba3 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -181,6 +181,7 @@ config DYNAMIC_DEBUG_CORE
+>   	bool "Enable core function of dynamic debug support"
+>   	depends on PRINTK
+>   	depends on (DEBUG_FS || PROC_FS)
+> +	depends on TRACING
+>   	help
+>   	  Enable core functional support of dynamic debug. It is useful
+>   	  when you want to tie dynamic debug to your kernel modules with
+> diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+> index 0dc9ec76b867..43e94023a4eb 100644
+> --- a/lib/dynamic_debug.c
+> +++ b/lib/dynamic_debug.c
+> @@ -36,6 +36,7 @@
+>   #include <linux/sched.h>
+>   #include <linux/device.h>
+>   #include <linux/netdevice.h>
+> +#include <linux/trace.h>
+>   
+>   #define CREATE_TRACE_POINTS
+>   #include <trace/events/dyndbg.h>
+> @@ -73,6 +74,25 @@ struct flag_settings {
+>   	unsigned int mask;
+>   };
+>   
+> +#define DD_OPEN_CMD	"open"
+> +#define DD_CLOSE_CMD	"close"
+> +#define DD_TR_EVENT	"0"
+> +
+> +struct ddebug_trace_inst {
+> +	const char *name;
+> +	struct trace_array *arr;
+> +};
+> +
+> +/*
+> + * TRACE_DST_MAX value is reserved for writing
+> + * debug logs to trace events (prdbg, devdbg)
+> + */
+> +struct ddebug_trace {
+> +	struct ddebug_trace_inst inst[TRACE_DST_MAX-1];
+> +	DECLARE_BITMAP(bmap, TRACE_DST_MAX-1);
+> +	int bmap_size;
+> +};
+> +
+>   static DEFINE_MUTEX(ddebug_lock);
+>   static LIST_HEAD(ddebug_tables);
+>   static int verbose;
+> @@ -80,6 +100,8 @@ module_param(verbose, int, 0644);
+>   MODULE_PARM_DESC(verbose, " dynamic_debug/control processing "
+>   		 "( 0 = off (default), 1 = module add/rm, 2 = >control summary, 3 = parsing, 4 = per-site changes)");
+>   
+> +static struct ddebug_trace tr = { .bmap_size = TRACE_DST_MAX-1 };
+> +
+>   static inline struct dd_ctrl *get_ctrl(struct _ddebug *desc)
+>   {
+>   	return &desc->ctrl;
+> @@ -171,6 +193,148 @@ static void vpr_info_dq(const struct ddebug_query *query, const char *msg)
+>   		  query->first_lineno, query->last_lineno, query->class_string);
+>   }
+>   
+> +static bool is_ddebug_cmd(const char *str)
+> +{
+> +	if (!strcmp(str, DD_OPEN_CMD) ||
+> +	    !strcmp(str, DD_CLOSE_CMD))
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> +static bool validate_tr_name(const char *str)
+> +{
+> +	/* "0" is reserved for writing debug logs to trace events (prdbg, devdbg) */
+> +	if (!strcmp(str, DD_TR_EVENT))
+> +		return false;
+> +
+> +	/* we allow trace instance names to include ^\w+ and underscore */
+> +	while (*str != '\0') {
+> +		if (!isalnum(*str) && *str != '_')
+> +			return false;
+> +		str++;
+> +	}
+> +
+> +	return true;
+> +}
+> +
+> +static int find_tr_instance(const char *name)
+> +{
+> +	int idx;
+> +
+> +	for_each_set_bit(idx, tr.bmap, tr.bmap_size)
+> +		if (!strcmp(tr.inst[idx].name, name))
+> +			return idx;
+> +
+> +	return -ENOENT;
+> +}
+> +
+> +static int handle_tr_opend_cmd(const char *arg)
+> +{
+> +	struct ddebug_trace_inst *inst;
+> +	int idx, ret = 0;
+> +
+> +	mutex_lock(&ddebug_lock);
+> +
+> +	idx = find_first_zero_bit(tr.bmap, tr.bmap_size);
+> +	if (idx == tr.bmap_size) {
+> +		ret = -ENOSPC;
+> +		goto end;
+> +	}
+> +
+> +	if (!validate_tr_name(arg)) {
+> +		pr_err("invalid instance name:%s\n", arg);
+> +		ret = -EINVAL;
+> +		goto end;
+> +	}
+> +
+> +	if (find_tr_instance(arg) >= 0) {
+> +		pr_err("instance is already opened name:%s\n ", arg);
+> +		ret = -EEXIST;
+> +		goto end;
+> +	}
+> +
+> +	inst = &tr.inst[idx];
+> +	inst->name = kstrdup(arg, GFP_KERNEL);
+> +	if (!inst->name) {
+> +		ret = -ENOMEM;
+> +		goto end;
+> +	}
+> +
+> +	inst->arr = trace_array_get_by_name(inst->name);
+> +	if (!inst->arr) {
+> +		ret = -EINVAL;
+> +		goto end;
+> +	}
+> +
+> +	ret = trace_array_init_printk(inst->arr);
+> +	if (ret) {
+> +		trace_array_put(inst->arr);
+> +		trace_array_destroy(inst->arr);
+> +		goto end;
+> +	}
+> +
+> +	set_bit(idx, tr.bmap);
+> +	v3pr_info("opened trace instance idx=%d, name=%s\n", idx, arg);
+> +end:
+> +	mutex_unlock(&ddebug_lock);
+> +	return ret;
+> +}
+> +
+> +static int handle_tr_close_cmd(const char *arg)
+> +{
+> +	struct ddebug_trace_inst *inst;
+> +	int idx, ret = 0;
+> +
+> +	mutex_lock(&ddebug_lock);
+> +
+> +	idx = find_tr_instance(arg);
+> +	if (idx < 0) {
+> +		ret = idx;
+> +		goto end;
+> +	}
+> +
+> +	inst = &tr.inst[idx];
+> +
+> +	trace_array_put(inst->arr);
+> +	/*
+> +	 * don't destroy trace instance but let user do it manually
+> +	 * with rmdir command at a convenient time later, if it is
+> +	 * destroyed here all debug logs will be lost
+> +	 *
+> +	 * trace_array_destroy(inst->arr);
+> +	 */
+> +	inst->arr = NULL;
+> +
+> +	kfree(inst->name);
+> +	inst->name = NULL;
+> +
+> +	clear_bit(idx, tr.bmap);
+> +	v3pr_info("closed trace instance idx=%d, name=%s\n", idx, arg);
+> +end:
+> +	mutex_unlock(&ddebug_lock);
+> +	return ret;
+> +}
+> +
+> +static int ddebug_parse_cmd(char *words[], int nwords)
+> +{
+> +	int ret;
+> +
+> +	if (nwords != 1)
+> +		return -EINVAL;
+> +
+> +	if (!strcmp(words[0], DD_OPEN_CMD))
+> +		ret = handle_tr_opend_cmd(words[1]);
+> +	else if (!strcmp(words[0], DD_CLOSE_CMD))
+> +		ret = handle_tr_close_cmd(words[1]);
+> +	else {
+> +		pr_err("invalid command %s\n", words[0]);
+> +		ret = -EINVAL;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>   static struct ddebug_class_map *ddebug_find_valid_class(struct ddebug_table const *dt,
+>   							  const char *class_string, int *class_id)
+>   {
+> @@ -567,6 +731,11 @@ static int ddebug_exec_query(char *query_string, const char *modname)
+>   		pr_err("tokenize failed\n");
+>   		return -EINVAL;
+>   	}
+> +
+> +	/* check for open, close commands */
+> +	if (is_ddebug_cmd(words[0]))
+> +		return ddebug_parse_cmd(words, nwords-1);
+> +
+>   	/* check flags 1st (last arg) so query is pairs of spec,val */
+>   	if (ddebug_parse_flags(words[nwords-1], &modifiers)) {
+>   		pr_err("flags parse failed\n");
+> @@ -1191,6 +1360,20 @@ static struct _ddebug *ddebug_iter_next(struct ddebug_iter *iter)
+>   	return &iter->table->ddebugs[iter->idx];
+>   }
+>   
+> +/*
+> + * Check if the iterator points to the last _ddebug object
+> + * to traverse.
+> + */
+> +static bool ddebug_iter_is_last(struct ddebug_iter *iter)
+> +{
+> +	if (iter->table == NULL)
+> +		return false;
+> +	if (iter->idx-1 < 0 &&
+> +	    list_is_last(&iter->table->link, &ddebug_tables))
+> +		return true;
+> +	return false;
+> +}
+> +
+>   /*
+>    * Seq_ops start method.  Called at the start of every
+>    * read() call from userspace.  Takes the ddebug_lock and
+> @@ -1281,6 +1464,16 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
+>   	}
+>   	seq_puts(m, "\n");
+>   
+> +	if (ddebug_iter_is_last(iter) &&
+> +	    !bitmap_empty(tr.bmap, tr.bmap_size)) {
+> +		int idx;
+> +
+> +		seq_puts(m, "\n");
+> +		seq_puts(m, "Opened trace instances:\n");
+> +		for_each_set_bit(idx, tr.bmap, tr.bmap_size)
+> +			seq_printf(m, "%s\n", tr.inst[idx].name);
+> +	}
+> +
+>   	return 0;
+>   }
+>   
