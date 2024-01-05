@@ -1,76 +1,67 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1301FA3;
-	Fri,  5 Jan 2024 01:49:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXIscpV/"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-5f3a5b9e09cso2754237b3.0;
-        Thu, 04 Jan 2024 17:49:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704419387; x=1705024187; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EgeaXJc1BAQQwhIsnnUkEVIzKQJLyZHFHdN0kJVCdXo=;
-        b=KXIscpV/Sbu2T5DnfETKnP7EXhn14upnjGh3mSBTcNAM8Ud9PNwUWNIO/6rtjn8seG
-         Jnt9wvwwTj9uJcDOIrM7A9/81+PMX6dBxeAP5ihAIsNKh9hOhEI7CohECfXW6u4OTIyP
-         ET35n4BS9I2o6D552ShvGeUItOAqEpZecMZf9ON+eo5L6iq6beqZoqi+a85vCFK0R6zo
-         h0fpl9EdqUyQdJ3JYEb/VRG7RPSyhFqjUUPlH2KqE6EYB5yPzE9EwrxNuqwSUj2ahO5U
-         nKKxOIfBlNnqcZkBJC9SozbjL2inxQKvn9obfj8lX5x55a5kS/njvdEb9e0OyhgTziMc
-         9GgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704419387; x=1705024187;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EgeaXJc1BAQQwhIsnnUkEVIzKQJLyZHFHdN0kJVCdXo=;
-        b=NwWN1bbeyqJ911VlN3fyxng1MsNfG07zOvUfDjNIFvLdbbpKGM+kTOELM0MuzkemkW
-         +6g3rRrIVgZ1VX5kosdyVDfUSTCKrAYptB5Qn7qNbhkDrBGlDftysrb4nIFeo1iSK9CP
-         yoml7MeqP++vgXQ2531gHIDk/D8di2YIW41dKHuQOQSH55fzETSiN0zFwVMFQpd/15Qo
-         elPk0C0MbROHuJIMd3BV/9ZuB9mP0bhGxkXbkvaIA+Bx7f5TAMTUoSO5eML3OTaQFHMc
-         yNss3H2xRbEM4nCkUkarQ/3AxO3/kcWvH8QoloGV0nCDI0WTOEVwJD/VV9sMdAnKG/he
-         KdPA==
-X-Gm-Message-State: AOJu0YxvcTpkDdCo4qCbaLE3vLLQ5b/RfDYSMIiJAfrRLe2ybtlS62JZ
-	vpdZTHVdmbmjzGG3EbAey9w=
-X-Google-Smtp-Source: AGHT+IGziUfJwgFJObYRK8k1/dWNtcbmiI9iEoSrXnDyE8D1BhwChyjS/1WaeTOTK7Hy86bxYQ/2Iw==
-X-Received: by 2002:a25:80d2:0:b0:dbe:9db9:d113 with SMTP id c18-20020a2580d2000000b00dbe9db9d113mr2141097ybm.5.1704419387650;
-        Thu, 04 Jan 2024 17:49:47 -0800 (PST)
-Received: from hoboy.vegasvil.org ([2600:1700:2430:6f6f:e2d5:5eff:fea5:802f])
-        by smtp.gmail.com with ESMTPSA id d2-20020a256802000000b00dbdaacb96bdsm164283ybc.12.2024.01.04.17.49.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jan 2024 17:49:47 -0800 (PST)
-Date: Thu, 4 Jan 2024 17:49:45 -0800
-From: Richard Cochran <richardcochran@gmail.com>
-To: Min Li <lnimi@hotmail.com>
-Cc: lee@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	Min Li <min.li.xe@renesas.com>
-Subject: Re: [PATCH net-next v6 1/2] ptp: introduce PTP_CLOCK_EXTOFF event
- for the measured external offset
-Message-ID: <ZZdgOUmn2fzHMZwC@hoboy.vegasvil.org>
-References: <PH7PR03MB7064CD80AD7DA745B3F6790FA0672@PH7PR03MB7064.namprd03.prod.outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7342114
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 01:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 56909A20D4;
+	Fri,  5 Jan 2024 00:34:14 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf15.hostedemail.com (Postfix) with ESMTPA id B30D01E;
+	Fri,  5 Jan 2024 00:34:11 +0000 (UTC)
+Message-ID: <13fd63b7e8e0f197842ae1f1264e50c9614d0667.camel@perches.com>
+Subject: Re: get_maintainer.pl: penguin chiefs, maintainers and the rest
+From: Joe Perches <joe@perches.com>
+To: Anthony LOISEAU <anthony.loiseau@allcircuits.com>, 
+	"linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>
+Date: Thu, 04 Jan 2024 16:34:10 -0800
+In-Reply-To: <AS8PR07MB894183C6DE3473F23D5A046FF9602@AS8PR07MB8941.eurprd07.prod.outlook.com>
+References: 
+	<AS8PR07MB894183C6DE3473F23D5A046FF9602@AS8PR07MB8941.eurprd07.prod.outlook.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PH7PR03MB7064CD80AD7DA745B3F6790FA0672@PH7PR03MB7064.namprd03.prod.outlook.com>
+X-Stat-Signature: carfib1pzimtqftjayft59xkqese3nbw
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: B30D01E
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1/xPWXw9wdTk03rHjwIaHhJRcLLTBTknZ4=
+X-HE-Tag: 1704414851-616272
+X-HE-Meta: U2FsdGVkX19EeMUNmeQ9DCkzGPwjaiy346hmeo1+CApDaFBCr5d66wIRg6tZV3fmmHwMMbz7eOnrtqEGPdd+AI9ZEnjrH3zRbF/ye8w2A0QOx6UdrLpbiUZAa6hmJ4D0tMa62N/xeYzi0B2zEVUo71l8oZWkHOGqMaZqMyitaGlb7SF03o4rlZIF91Jq8c4JPICNsUGYUbGPOzvnvh5jSgS6MEeTccSf6fwRZd1Dj0LUkLes52zhahmSsvvObvOdSSpzn0kNGodEhMOmAxKDqA88j/oIMUiOohBqjJz+U4ZvjIwh2/EaC36Z42fHvF1K
 
-On Thu, Jan 04, 2024 at 12:12:11PM -0500, Min Li wrote:
-> From: Min Li <min.li.xe@renesas.com>
-> 
-> This change is for the PHC devices that can measure the phase offset
-> between PHC signal and the external signal, such as the 1PPS signal of
-> GNSS. Reporting PTP_CLOCK_EXTOFF to user space will be piggy-backed to
-> the existing ptp_extts_event so that application such as ts2phc can
-> poll the external offset the same way as extts. Hence, ts2phc can use
-> the offset to achieve the alignment between PHC and the external signal
-> by the help of either SW or HW filters.
-> 
-> Signed-off-by: Min Li <min.li.xe@renesas.com>
+On Wed, 2024-01-03 at 16:12 +0000, Anthony LOISEAU wrote:
+> Hello,
 
-Acked-by: Richard Cochran <richardcochran@gmail.com>
+Hello Anthony.
+
+
+> I am a little bit cluttered about a few things around
+> get_maintainer.pl and the fact that penguin chiefs may also be
+> maintainers, at least in third party projects also using
+> get_maintainer.pl script. My feeling is that get_maintainer.pl
+> mishandles penguin chiefs without it being an issue for Linux case,
+
+[]
+> My feeling is that this would be the cleaner way to address this
+> issue. What is you opinion?mmm
+
+For the various modified versions of get_maintainer.pl
+for other projects, any change should be made there.
+
+I think the linux specific get_maintainer.pl works as-is
+and does not particularly need modification.
+
+An option might be to externalize the 'penguin-chief'
+block into something like a separate file that is parsed
+at initialization.
+
+Maybe with a rename as penguin_chief is generally Tux,
+umm Torvalds...
