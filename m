@@ -1,103 +1,158 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mout.web.de (mout.web.de [212.227.15.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AFFA3608A
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 20:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3201DFC3;
+	Fri,  5 Jan 2024 20:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YX6k0R7g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704486504;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LBcU8Ucgw9WvEv4ml+FP6D15OBNp3BTNZQ7NFOWnOwY=;
-	b=YX6k0R7gQNWL5JgNyX2eo8jRk1v/9F3S57pMuaUEkINXH8B4iKi0dv2nGIJ8/Iz4CdlVr6
-	Rt2USJUwtfSMJIuedCnqoeiLx/if3eD2KjreN9Z02Lcm19HZ7NAWwGtyk3yT/31Bz/PJZT
-	IUzs2nHs/4HwMDjTKBkvE9TLlmshKOI=
-Received: from mail-vk1-f199.google.com (mail-vk1-f199.google.com
- [209.85.221.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-554-Rd1A_LzWOCa48M8vZOVUBQ-1; Fri, 05 Jan 2024 15:28:23 -0500
-X-MC-Unique: Rd1A_LzWOCa48M8vZOVUBQ-1
-Received: by mail-vk1-f199.google.com with SMTP id 71dfb90a1353d-4b7213832b5so987484e0c.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 12:28:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704486502; x=1705091302;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LBcU8Ucgw9WvEv4ml+FP6D15OBNp3BTNZQ7NFOWnOwY=;
-        b=lHdq1gVHlYmjls/vYJSE+WTHIuCF5qVxdsVxOXwlQVe95NRcX/qX1xRUXEnyk6Xxkl
-         QTEV1PHC6flehzEt2kSnGgk9wo1SyYmDNRiNWsXd/d7IAQxoEIYWqfngJ+8PtCE+Bier
-         fMpBZEo0PPqGwS+epsxkpFPaz38DrKj7UvwFg4DDLGxgXqNDWVSMR0RIpCsJ4Y8OLXCS
-         Zn97rog9E9MLQgDkqOQA6y9uBW5m06unErxl/+g2zrfWax8xGdZAwvLMaNS6MMzlBZNB
-         dFY9OdS2Fnwp7x89Wr+WvcUA8Yt5OqdmBdZQnwgeeAy3yR8hMf1I0KW4YI2Ses4g+eG0
-         qdGQ==
-X-Gm-Message-State: AOJu0YzMkxceGV4hUa4jbkDLUUB8qSHFC6nOkWChm36Eb71bDlGY+AJL
-	sYf+orJCE8M20kBIT3F1Ow6i7XeDOtv9R3hDx12KT2aIgSK/8qVnUIK5VJp9UaGlchh5hN7bUWL
-	0X6GViZSEne2e9kQueWvftwJQ4uYCMhNjQebftZRGDvJRn/ACXEIuD65ayvU=
-X-Received: by 2002:a05:6122:45aa:b0:4b7:49f9:c6f4 with SMTP id de42-20020a05612245aa00b004b749f9c6f4mr2001561vkb.4.1704486501818;
-        Fri, 05 Jan 2024 12:28:21 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGpDQHytoso1sLg6hnmUDkdBNPRRBqKeJtkvYB7/gPCh6lk57PZqRfGAY6qPDWdrCcQuJAioLMk24w/y+nIyFA=
-X-Received: by 2002:a05:6122:45aa:b0:4b7:49f9:c6f4 with SMTP id
- de42-20020a05612245aa00b004b749f9c6f4mr2001554vkb.4.1704486501520; Fri, 05
- Jan 2024 12:28:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="nZhuiscr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1704486725; x=1705091525; i=markus.elfring@web.de;
+	bh=XGJHY7BedW17ZVM0oJStSYNJNEGaJoAYc7/aRbjvsHk=;
+	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
+	 In-Reply-To;
+	b=nZhuiscruCjRi7o9uQUzT7emYJry3MpX8LYVmegrvIMK9eUKV8PQnO1tjibz6A5T
+	 qmTUdVb3Q8zrGHA5TqIY3JEFGHTekMk8TPPEGvix0SIifr31K0dtkzk+DISGzGI0H
+	 YkIoS0NvOJAH8n2U58hh0XyE3GYYH+5lEr44zA5jkIkbFh0oAZRCY2Hf4OZyxqnD+
+	 VOpM2TEQUjUvLFiqyVdzWAo6hyYxxs/zIgqnjoVdzmqELX9igW5M3dcBVM/Js5Hs/
+	 9k2nf8XUYp8gtiVuETI/6Cz+YbHqEwRRSDIqeIk+8B/5fHuvDp314xi/d5E+O+6pc
+	 umhbXxM6ws/ijYVomg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N9LIO-1r9nfM3ug0-015UC2; Fri, 05
+ Jan 2024 21:32:04 +0100
+Message-ID: <71892e93-1545-4d04-9570-a15672f60e81@web.de>
+Date: Fri, 5 Jan 2024 21:32:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240104205959.4128825-1-pbonzini@redhat.com> <20240104205959.4128825-2-pbonzini@redhat.com>
- <ZZhUzm9r5Z5l567Z@google.com>
-In-Reply-To: <ZZhUzm9r5Z5l567Z@google.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Fri, 5 Jan 2024 21:28:09 +0100
-Message-ID: <CABgObfYvuBeN6Vhp7TUBP9g8G8H2DvMQ=RJGWGNdCoS8k+AWfw@mail.gmail.com>
-Subject: Re: [PATCH 1/4] KVM: introduce CONFIG_KVM_COMMON
-To: Sean Christopherson <seanjc@google.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, ajones@ventanamicro.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] squashfs: Improve exception handling in
+ squashfs_decompressor_create()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+To: kernel-janitors@vger.kernel.org, Phillip Lougher <phillip@squashfs.org.uk>
+Cc: cocci@inria.fr, LKML <linux-kernel@vger.kernel.org>,
+ Minchan Kim <minchan@kernel.org>
+References: <6cbcf640-55e5-2f11-4a09-716fe681c0d2@web.de>
+ <f1712777-97ff-d89c-0bdd-d72faed9a7f1@web.de>
+In-Reply-To: <f1712777-97ff-d89c-0bdd-d72faed9a7f1@web.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Da2fsFoH9DyjyKLEhNG5crxXXvNF9eQ324haxaVQO6ouX0qrq4p
+ FoNEhMV+Ywrn993YlIs6lVdmca+/cViI2F9a6pXEf+MEGmOh1FmuYN0LM3mw4ote1T8siDU
+ PCjwfOXktl9gL3xQ2tMl/PXTYuXmv5lluB5LdlSYmPYtzeDddRsACp+HkvL78bc3AkBMofj
+ PU29q75GXd8fRwwwaLsOg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:PrI7ZW5BXWo=;rKRQjP/bvgnDb+9M7QFvxNffpeG
+ 3nLrZqmPUGvofAN6ogHB8IeUxhRwGYW54sjhYh6qn33T9LW4At0WBlA4qsTc1hFOcQEJiKe46
+ o87JoNVJGg7FcGuzxyallP8ypIdzNV4BL4v0yo2yepmoC9sndWGRpXKa8WSPWMKWRC/XLiHmS
+ 5A2vWqm0oHqHh+t/YJYbUbquHYxv4Z9jF4u4OkyboXz3P/kWyMoONQKPp74CqCv6imOS4nQEI
+ /Th+80fPjtTrNK0CtE6APy0ZUx1v/rhji04Mt43an2a5E3fYNWUJQJHqppztkP+H3N4q7vrNh
+ sAFzqVoqEzhftCB0xNk+DUbjiSo+cotgO8fuPgeWL6/AGLFkCr8ZBHHAYKUsS2W8y6lonvwF7
+ k0jKB3vQxU/p/vG2Tve4ck2FuLVv1RvYnxPsRZ/5uyAgG7XBcCGh5zMzyyJUekHY66iVkgfBz
+ Ez9Luy0acgWcTnT8HEOHhAbjEapcOaNldgpeKk+HcyBVmLF3O5uSC7uJjyv9Xh5S+aTvKSMqm
+ G4+2tfBcMjMjCBR9eC2+HQwk7cSFW9+GlHgwF9goJO3uBpUP+bc+ErETWi5URwktt0OOhMp/q
+ 00GaBNbabX7z6pokXZlJkNUwH0PNRi74xvHinQ1pOscvsv/b9Tu7tPrC8f4fPmOyktKtVVD0D
+ mtMCul58YjzqrQ8LepEcd8aPaK2q9EI/oqYZqHrDe3CqVjDRrkDKwzaeaK4hFmRNi3S9rMUBx
+ Tg9N5ZnmCIcQDFULcG7TQFgOe4ue6SGC+6n1CphwvmqRBwAri97wV4lZMGt9YJCtZpTJPFk4U
+ kIvAc9rLTe6Zj9sMmOHMIwvWbqUg3gtaVouf43zeylfNZz0wPy6mzXNKGa/7Tqmg7daiqFmw6
+ CuEXaKkw3XXIn8xQt4GUEGLWBKAywj5QVO9EMgLxLKu2d+0gf3DzvGuVr1gtHPwNpt+/vj5tr
+ rhbIBgNcAApLfOAeUAsIEsP1wEs=
 
-On Fri, Jan 5, 2024 at 8:13=E2=80=AFPM Sean Christopherson <seanjc@google.c=
-om> wrote:
-> > Start by introducing such a new Kconfig symbol, CONFIG_KVM_COMMON.
-> > Unlike CONFIG_HAVE_KVM, it is selected by CONFIG_KVM, not by
-> > architecture code.
+> Date: Thu, 30 Mar 2023 18:03:47 +0200
 >
-> Why?  I don't get it, just have code that cares do IS_ENABLED(CONFIG_KVM)=
-.  Except
-> for the MIPS usage of HAVE_KVM that you solved by adding CPU_SUPPORTS_VZ,=
- I got
-> all the way there using just CONFIG_KVM[*].
+> The label =E2=80=9Cout=E2=80=9D was used to jump to a kfree() call despi=
+te of
+> the detail in the implementation of the function
+> =E2=80=9Csquashfs_decompressor_create=E2=80=9D that it was determined al=
+ready
+> that a corresponding variable contained a null pointer because of
+> a failed memory allocation.
 >
-> Ah, and so does this series for the most part, the only usage of CONFIG_K=
-VM_COMMON
-> is in scripts/gdb/linux/constants.py.in.  Honestly, adding a Kconfig just=
- so that
-> VMX's posted interrupts that arrive in the host can be printed when KVM i=
-s built
-> as a module is a waste of a Kconfig.
+> Thus perform the following adjustments:
+>
+> 1. Return directly after a call of the function =E2=80=9Ckzalloc=E2=80=
+=9D failed
+>    at the beginning.
+>
+> 2. Use more appropriate labels instead.
+>
+> 3. Omit extra initialisations (for the variables =E2=80=9Cdecomp_strm=E2=
+=80=9D and =E2=80=9Cerr=E2=80=9D)
+>    which became unnecessary with this refactoring.
+>
+>
+> This issue was detected by using the Coccinelle software.
+>
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> ---
+>  fs/squashfs/decompressor_multi.c | 17 ++++++++++-------
+>  1 file changed, 10 insertions(+), 7 deletions(-)
+>
+> diff --git a/fs/squashfs/decompressor_multi.c b/fs/squashfs/decompressor=
+_multi.c
+> index 416c53eedbd1..0a054ba4c541 100644
+> --- a/fs/squashfs/decompressor_multi.c
+> +++ b/fs/squashfs/decompressor_multi.c
+> @@ -62,12 +62,12 @@ static void *squashfs_decompressor_create(struct squ=
+ashfs_sb_info *msblk,
+>  				void *comp_opts)
+>  {
+>  	struct squashfs_stream *stream;
+> -	struct decomp_stream *decomp_strm =3D NULL;
+> -	int err =3D -ENOMEM;
+> +	struct decomp_stream *decomp_strm;
+> +	int err;
+>
+>  	stream =3D kzalloc(sizeof(*stream), GFP_KERNEL);
+>  	if (!stream)
+> -		goto out;
+> +		return ERR_PTR(-ENOMEM);
+>
+>  	stream->comp_opts =3D comp_opts;
+>  	mutex_init(&stream->mutex);
+> @@ -81,22 +81,25 @@ static void *squashfs_decompressor_create(struct squ=
+ashfs_sb_info *msblk,
+>  	 * file system works.
+>  	 */
+>  	decomp_strm =3D kmalloc(sizeof(*decomp_strm), GFP_KERNEL);
+> -	if (!decomp_strm)
+> -		goto out;
+> +	if (!decomp_strm) {
+> +		err =3D -ENOMEM;
+> +		goto free_stream;
+> +	}
+>
+>  	decomp_strm->stream =3D msblk->decompressor->init(msblk,
+>  						stream->comp_opts);
+>  	if (IS_ERR(decomp_strm->stream)) {
+>  		err =3D PTR_ERR(decomp_strm->stream);
+> -		goto out;
+> +		goto free_decomp_stream;
+>  	}
+>
+>  	list_add(&decomp_strm->list, &stream->strm_list);
+>  	stream->avail_decomp =3D 1;
+>  	return stream;
+>
+> -out:
+> +free_decomp_stream:
+>  	kfree(decomp_strm);
+> +free_stream:
+>  	kfree(stream);
+>  	return ERR_PTR(err);
+>  }
 
-There is one extra thing that CONFIG_KVM_COMMON does, which is to
-avoid having to select common requirements in all architectures.
+Is this patch still in review queues?
 
-I jotted this to solve the reported randconfig failure, which is why
-CONFIG_KVM_COMMON only requires "select EVENTFD", but looking more
-closely it should also select PREEMPT_NOTIFIERS and INTERVAL_TREE.
-Both are used by virt/kvm/kvm_main.c, and loongarch + riscv both lack
-INTERVAL_TREE so I do think it's a good idea to introduce this symbol
-(though it requires a v2).
+See also:
+https://lore.kernel.org/cocci/f1712777-97ff-d89c-0bdd-d72faed9a7f1@web.de/
+https://sympa.inria.fr/sympa/arc/cocci/2023-03/msg00120.html
 
-> [*] https://lore.kernel.org/all/20230916003118.2540661-12-seanjc@google.c=
-om
-
-I guess you mean
-https://lore.kernel.org/all/20230916003118.2540661-8-seanjc@google.com/.
-
-Paolo
-
+Regards,
+Markus
