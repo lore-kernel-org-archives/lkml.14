@@ -1,70 +1,68 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2047.outbound.protection.outlook.com [40.107.93.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C4632E852;
-	Fri,  5 Jan 2024 16:00:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 116A1321B8
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 16:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="SOOEox2n"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CzXpHe+zGmV0I+m+bS4yNJ9v54/XsisM1JDvsJ8ljRSaGwLT5NjwXVXEhpLbTsjEQTQdGhey6MaUJvqfEcTxfiJJiaH+bCIX323sV1VRPEj9zJUZi1t/7Q2iDGE1t6+ni/miBtTKTt6lVadFJKptF8Hvhq5Ykl7dcbEAbfrdMrAgKICXiZqcunUeXx1QnRvBl5zcyEvkD71TrKAlxoH8P3XisuGnY7YlLIbRXvNJZqwIMaXDp0GJPuChzVJwwUADLRMmISECwSmnaWBk0fxU98DiM9FZQVZmsf7S7l0r03XP9iWPARzZDy8awxfH256aXsAK3drZlhs1k5x5vb0hWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BgTwTwAA74oG+QG5oi+SaerPwfOPNgXn6yDbXrpeEzQ=;
- b=Px1cxS6TqUktIYr3NF4fsmO07wqhql0X4Jv419GUYSLkQV+94leONBHFt61M3CjcyzBcBAEPu9keG6Y41NOP+k1TvXnAFr84RhBcW0gHBnv9t/tT0cwm2Z0ep5Y5QHzdoVwJzGy2WSxvTTO2o7lmTQgDtKbmZugIlNBUtP87q5qE0iroBH6jrbhA3ScQDzjO19HqGuUhgq4hL7MEWJ7G4LNGhc0yfWTUfG/IAs4AtSNl++/IK2Ykcf5fBWWLthiFPcg8b/t5ogxWtob5WRrMw7mdNGgGMKKgt3JQjQFERGG6Ltzip56g2L2YMaFr7LjbBFIPtoCo+Xk6hFtzmtvUeg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BgTwTwAA74oG+QG5oi+SaerPwfOPNgXn6yDbXrpeEzQ=;
- b=SOOEox2n7GBoPGzfEQjMmpWjH04eESfdf1l+Fk6DD0O/7bwcbQMSt5sJRzYh3o7DDqmWDNPxOAZwV8Ro5sv1KhwgrQxwDQyZQu+dpCYzWxsGFq1CT7/Efl9kTin3nJhjWdbZXCMYQ5gyXiqabrH7xIahrnjoHf2Eocb0pO8f9HwkzIia0wM822gIotfiS5cGdnxtpB0v0GlKyZZNQtfUWy2UAeVEFDyDOJL8Rl+GOOSsRJmiLnM4GaKClymd6+j+qlEaS8FdfyHiIV76ydsMnzSgGQYiVXNRts/ZBC9nFl222Qf4A9sU5zdVKJWoXFo/OLqi5/V/uvTcO8vejVlnLQ==
-Received: from BYAPR05CA0086.namprd05.prod.outlook.com (2603:10b6:a03:e0::27)
- by MN2PR12MB4568.namprd12.prod.outlook.com (2603:10b6:208:260::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.17; Fri, 5 Jan
- 2024 16:00:46 +0000
-Received: from SJ5PEPF000001CC.namprd05.prod.outlook.com
- (2603:10b6:a03:e0:cafe::ce) by BYAPR05CA0086.outlook.office365.com
- (2603:10b6:a03:e0::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.9 via Frontend
- Transport; Fri, 5 Jan 2024 16:00:46 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SJ5PEPF000001CC.mail.protection.outlook.com (10.167.242.41) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7159.9 via Frontend Transport; Fri, 5 Jan 2024 16:00:46 +0000
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Fri, 5 Jan 2024
- 08:00:18 -0800
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail203.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Fri, 5 Jan 2024
- 08:00:18 -0800
-Received: from vdi.nvidia.com (10.127.8.14) by mail.nvidia.com (10.129.68.8)
- with Microsoft SMTP Server id 15.2.986.41 via Frontend Transport; Fri, 5 Jan
- 2024 08:00:16 -0800
-From: Asmaa Mnebhi <asmaa@nvidia.com>
-To: <davem@davemloft.net>, <f.fainelli@gmail.com>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <tbogendoerfer@suse.de>,
-	<horms@kernel.org>
-CC: Asmaa Mnebhi <asmaa@nvidia.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <davthompson@nvidia.com>, Florian Fainelli
-	<florian.fainelli@broadcom.com>
-Subject: [PATCH net v4] mlxbf_gige: Enable the GigE port in mlxbf_gige_open
-Date: Fri, 5 Jan 2024 11:00:14 -0500
-Message-ID: <20240105160014.23353-1-asmaa@nvidia.com>
-X-Mailer: git-send-email 2.30.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fJlfLXum"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-50e5a9bcec9so2191178e87.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 08:01:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704470469; x=1705075269; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=38V7OcbMS6BvfR/Kfa+Il7csYOikckmVIMPsPO2mrzc=;
+        b=fJlfLXumnbjgA414C++MQNqKxdkH44NbYoSiS9Z5CAyw+quyTvGAetTALDY9ma58At
+         1fLn6ZTPqKpmW3NC8CqORI1Lm2kw86STv6u2xFQNLw/lRzLn3a6v1TB3DFGv3rcKN+cL
+         4psuVWg4ouN3acZzD0E5Z77Dkx0AHZpmXa27ek4+P2zxCH2MnTH1QeGUbvCH0PnMeZb+
+         DSgbGO+57vpTY6KdAkYHLVt9mvLJq6rnXPzH2LLGh3xlyeygmGCZeXOODFdkVV8iH8w9
+         ptwjvbqfU5Qux2qbobg/KQoBZ9/ZsFJAAT7mdesYEfUIxEeL9CkQdyqYr7JPv5uoIt5G
+         PLIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704470469; x=1705075269;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=38V7OcbMS6BvfR/Kfa+Il7csYOikckmVIMPsPO2mrzc=;
+        b=p1rDE45Qzu9C0sC2p34+jRSdrv92SiQZttg4YR5hRvM2TGyTJ8Vd+NZcCqN0Ux31yX
+         h8cFstNhdyuMxQoD+q+lq21VCzbyOSiQG+kJEwjqbcw4Y6i+2ucWZteLQhLeesmTY0zS
+         GBHrbUd0Bp+62ZvCSKQLPd4Y3+wyC0rYNTeLKxPFylTgnicRVf/+oZaxvz5HfE5NozFu
+         KJFoPuYjIzvc269OQFcQEcInwa0SvNgsppOCYrYWcZue1oMFopOaoXqU1PhdS40Hc3De
+         oGRe5tC0u2q5cw6wZ8NZOAWXXmJSaviHr3m5V7B3EgnVCh/RJMwQ0Cgrf+/wiOrS4V4T
+         StmQ==
+X-Gm-Message-State: AOJu0YzDOzFc2jqqQ5b3cfEvV4h8cqgb2rve2iIIP/EVHusu41GTJTpl
+	eYUzLdnu7zfIGe4JP5EXBj9y/JB7Wb+Zxg==
+X-Google-Smtp-Source: AGHT+IFh9YVPZuE9tKS0AFwt3Ec/+vDaZEOHyXj2dDkN6g3GOJ4V2yIMVU7V8xUNC8GjeZWedVH3Zw==
+X-Received: by 2002:a05:6512:2315:b0:50e:6ec3:6a42 with SMTP id o21-20020a056512231500b0050e6ec36a42mr1573154lfu.126.1704470469081;
+        Fri, 05 Jan 2024 08:01:09 -0800 (PST)
+Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
+        by smtp.gmail.com with ESMTPSA id n5-20020a056512310500b0050e76978861sm262094lfb.277.2024.01.05.08.01.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jan 2024 08:01:08 -0800 (PST)
+From: Ulf Hansson <ulf.hansson@linaro.org>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	linux-pm@vger.kernel.org
+Cc: Ulf Hansson <ulf.hansson@linaro.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Kevin Hilman <khilman@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Nikunj Kela <nkela@quicinc.com>,
+	Prasad Sodagudi <psodagud@quicinc.com>,
+	Stephan Gerhold <stephan@gerhold.net>,
+	Ben Horgan <Ben.Horgan@arm.com>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-remoteproc@vger.kernel.org,
+	linux-media@vger.kernel.org
+Subject: [PATCH v2 0/5] PM: domains: Add helpers for multi PM domains to avoid open-coding
+Date: Fri,  5 Jan 2024 17:00:58 +0100
+Message-Id: <20240105160103.183092-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,90 +70,61 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001CC:EE_|MN2PR12MB4568:EE_
-X-MS-Office365-Filtering-Correlation-Id: bd9d8fda-6b93-4b08-ee2f-08dc0e077ab1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	HoB5qxYJrMR9Z4nH9ayCT2GhMDtJM7xnTj1xvVWl5B9u9UUpDE9cSM06yesXv/ikcM0Nvl8TwzrW+E1GwAJSTFqDzswOmph4Ccw8rjiDhRblQ8IlbBIdSHCAypq07/Y0Tj6AV4iEj8wEt8XnCIPmH4nszz+OeR+9sPpDdUFVet0AQcyrzI52+v3EIf3VpCOZwXPZLXX5X+H9v2/HtYz3PdmLe3GWYzVEbzISB5CXrqZUtzwNmnV2Fyj+alzwUCJ0A9AscQtv0Dh0VY3jdvbzsrjwTpnLQzu0jWqGInZUSddfzCDp3q8f1J4IQpJJeI2xWvvc79AQ9rnyHfRH4awO42T+P0qCxFr2pBY+4E1vnLhYPn9OUudoBiGe8nXC30SikvamHy/rNw9q4TUmrbvnxwmwsmfx/EyDWUZXK0aHUGHc+yiIZJOS9aWMaLUid+oVScE5eiRhTvwJ2tli8MpQ0YRKwyOIv14iCUaJUiZwBsNDRx5V7A1eLXVuE1bACoBbll3plP+Ca83noxKMSh3tzadx4OGSYg+x9Vnl8ud8Bqj01mGr8XmpmGjjLrk/oH5RDnDO9VbW9XDLJM62VfbhSg2UsIVWrb4PpgqiTWOk85yFbIK4N+9JOC1oT+8G0oYu8FiEaerLLNa0gdRAV6cnZ6qPNhTpfgKpmcg4yluoZtMY170Jf+nzgSVQz9pO44D3QB1xj0e4FwzQuVgjrv0Bql0e9kWU7KJIcVPGjSxJtD1szSvwCF08FQFWQTRmWPE2
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(346002)(396003)(376002)(136003)(230922051799003)(82310400011)(186009)(451199024)(1800799012)(64100799003)(46966006)(40470700004)(36840700001)(40460700003)(40480700001)(2616005)(426003)(26005)(1076003)(336012)(7696005)(478600001)(82740400003)(36756003)(86362001)(7636003)(356005)(2906002)(41300700001)(7416002)(54906003)(36860700001)(47076005)(83380400001)(70586007)(110136005)(316002)(70206006)(5660300002)(8936002)(8676002)(4326008);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2024 16:00:46.5496
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bd9d8fda-6b93-4b08-ee2f-08dc0e077ab1
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001CC.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4568
 
-At the moment, the GigE port is enabled in the mlxbf_gige_probe
-function. If the mlxbf_gige_open is not executed, this could cause
-pause frames to increase in the case where there is high backgroud
-traffic. This results in clogging the port.
-So move enabling the OOB port to mlxbf_gige_open.
+Updates in v2:
+	- Ccing Daniel Baluta and Iuliana Prodan the NXP remoteproc patches to
+	requests help with testing.
+	- Fixed NULL pointer bug in patch1, pointed out by Nikunj.
+	- Added some tested/reviewed-by tags.
 
-Fixes: f92e1869d74e ("Add Mellanox BlueField Gigabit Ethernet driver")
-Reviewed-by: David Thompson <davthompson@nvidia.com>
-Signed-off-by: Asmaa Mnebhi <asmaa@nvidia.com>
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
----
-v3->v4:
-- rebase
-- Fork this patch from bundle of unrelated bug fixes.
-- update the subject format
 
- .../ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c   | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Attaching/detaching of a device to multiple PM domains has started to become a
+common operation for many drivers, typically during ->probe() and ->remove().
+In most cases, this has lead to lots of boilerplate code in the drivers.
 
-diff --git a/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c b/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c
-index 3385cf1ef9ae..ce50a25c4772 100644
---- a/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c
-+++ b/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c
-@@ -130,9 +130,15 @@ static int mlxbf_gige_open(struct net_device *netdev)
- {
- 	struct mlxbf_gige *priv = netdev_priv(netdev);
- 	struct phy_device *phydev = netdev->phydev;
-+	u64 control;
- 	u64 int_en;
- 	int err;
- 
-+	/* Perform general init of GigE block */
-+	control = readq(priv->base + MLXBF_GIGE_CONTROL);
-+	control |= MLXBF_GIGE_CONTROL_PORT_EN;
-+	writeq(control, priv->base + MLXBF_GIGE_CONTROL);
-+
- 	err = mlxbf_gige_request_irqs(priv);
- 	if (err)
- 		return err;
-@@ -365,7 +371,6 @@ static int mlxbf_gige_probe(struct platform_device *pdev)
- 	void __iomem *plu_base;
- 	void __iomem *base;
- 	int addr, phy_irq;
--	u64 control;
- 	int err;
- 
- 	base = devm_platform_ioremap_resource(pdev, MLXBF_GIGE_RES_MAC);
-@@ -380,11 +385,6 @@ static int mlxbf_gige_probe(struct platform_device *pdev)
- 	if (IS_ERR(plu_base))
- 		return PTR_ERR(plu_base);
- 
--	/* Perform general init of GigE block */
--	control = readq(base + MLXBF_GIGE_CONTROL);
--	control |= MLXBF_GIGE_CONTROL_PORT_EN;
--	writeq(control, base + MLXBF_GIGE_CONTROL);
--
- 	netdev = devm_alloc_etherdev(&pdev->dev, sizeof(*priv));
- 	if (!netdev)
- 		return -ENOMEM;
+This series adds a pair of helper functions to manage the attach/detach of a
+device to its multiple PM domains. Moreover, a couple of drivers have been
+converted to use the new helpers as a proof of concept.
+
+Note 1)
+The changes in the drivers have only been compile tested, while the helpers
+have been tested along with a couple of local dummy drivers that I have hacked
+up to model both genpd providers and genpd consumers.
+
+Note 2)
+I was struggling to make up mind if we should have a separate helper to attach
+all available power-domains described in DT, rather than providing "NULL" to the
+dev_pm_domain_attach_list(). I decided not to, but please let me know if you
+prefer the other option.
+
+Note 3)
+For OPP integration, as a follow up I am striving to make the
+dev_pm_opp_attach_genpd() redundant. Instead I think we should move towards
+using dev_pm_opp_set_config()->_opp_set_required_devs(), which would allow us to
+use the helpers that $subject series is adding.
+
+Kind regards
+Ulf Hansson
+
+
+Ulf Hansson (5):
+  PM: domains: Add helper functions to attach/detach multiple PM domains
+  remoteproc: imx_dsp_rproc: Convert to
+    dev_pm_domain_attach|detach_list()
+  remoteproc: imx_rproc: Convert to dev_pm_domain_attach|detach_list()
+  remoteproc: qcom_q6v5_adsp: Convert to
+    dev_pm_domain_attach|detach_list()
+  media: venus: Convert to dev_pm_domain_attach|detach_list() for vcodec
+
+ drivers/base/power/common.c                   | 134 +++++++++++++++
+ drivers/media/platform/qcom/venus/core.c      |  12 +-
+ drivers/media/platform/qcom/venus/core.h      |   7 +-
+ .../media/platform/qcom/venus/pm_helpers.c    |  48 ++----
+ drivers/remoteproc/imx_dsp_rproc.c            |  82 +--------
+ drivers/remoteproc/imx_rproc.c                |  73 +-------
+ drivers/remoteproc/qcom_q6v5_adsp.c           | 160 ++++++++----------
+ include/linux/pm_domain.h                     |  38 +++++
+ 8 files changed, 289 insertions(+), 265 deletions(-)
+
 -- 
-2.30.1
-
+2.34.1
