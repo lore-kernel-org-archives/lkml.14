@@ -1,72 +1,172 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+Received: from mx1.riseup.net (mx1.riseup.net [198.252.153.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD77A328B3
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 16:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B004534CF4;
+	Fri,  5 Jan 2024 16:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iPcTdpyM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704472638; x=1736008638;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=nNShzR6tVlt8MP2GEm4twbSrn0rdHKZew4twsigGRgc=;
-  b=iPcTdpyM5oDb3a9mJ9Wwa7KTc9/1yj5pV+pzMgzW2X6E+3IUPYTJrcqW
-   ZAGGKgjKRTX40rZ0c5Lul7JTyZcvgRL7V8NrLKLPDdoRAtHbH/99CUs4U
-   BdS0R+BdozZhC/vzcbwQ5QBmcSSCtKEQjL1zso621RXTzxMDjTGiCO3EQ
-   uzuaOw5lgITxrYQ5oiYeGuj9mzWch7CNYRNVn9qU4AH5VbHL45nW6adZf
-   WToPgcFgfeVtUy3ui4jDre2zfMBtwv60DUsYiWNL+qtL6pmx0slwbthja
-   ZzmSlgbneg4J8DHcSRjMHH5tjoUehdh+97z1AeuYYHWzfVeAtQAhycdgJ
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10944"; a="463931765"
-X-IronPort-AV: E=Sophos;i="6.04,334,1695711600"; 
-   d="scan'208";a="463931765"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 08:37:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10944"; a="953991189"
-X-IronPort-AV: E=Sophos;i="6.04,334,1695711600"; 
-   d="scan'208";a="953991189"
-Received: from tassilo.jf.intel.com ([10.54.38.190])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 08:37:18 -0800
-From: Andi Kleen <ak@linux.intel.com>
-To: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH] x86/mtrr: Check if fixed MTRRs exist before saving them
-Date: Fri,  5 Jan 2024 08:37:11 -0800
-Message-ID: <20240105163711.9278-1-ak@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="CHA6LNtf"
+Received: from fews01-sea.riseup.net (fews01-sea-pn.riseup.net [10.0.1.109])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx1.riseup.net (Postfix) with ESMTPS id 4T68J15FgwzDr8c;
+	Fri,  5 Jan 2024 16:37:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+	t=1704472642; bh=sqwpQ6x5qhOlKhST2bTqDbph6jVTFp9MazqbgU4yuSs=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=CHA6LNtfdvv+W7pwOBOvQ4NRRAgIDG2JHHeWdgaF+Ux0bZheqpTZyIAi1sx0zP9/4
+	 HDpPpsO+swcPEy+bZJipVVXtCdAUaC+lsFB+LfzlGNtypNytq89jHWdwOiBIKL9k6g
+	 2f1VtKxOa+Yaw4bE0SO1Pl0tAhWbqpTKTr3oktSA=
+X-Riseup-User-ID: CC767B1388D339A0556428D7788F9FD121D74D1B3A067AB065D4BA19CBCA3A74
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	 by fews01-sea.riseup.net (Postfix) with ESMTPSA id 4T68Hw3vbczJp2K;
+	Fri,  5 Jan 2024 16:37:16 +0000 (UTC)
+From: Arthur Grillo <arthurgrillo@riseup.net>
+Date: Fri, 05 Jan 2024 13:35:04 -0300
+Subject: [PATCH 3/7] drm/vkms: Add range and encoding properties to
+ pixel_read function
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240105-vkms-yuv-v1-3-34c4cd3455e0@riseup.net>
+References: <20240105-vkms-yuv-v1-0-34c4cd3455e0@riseup.net>
+In-Reply-To: <20240105-vkms-yuv-v1-0-34c4cd3455e0@riseup.net>
+To: Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>, 
+ Haneen Mohammed <hamohammed.sa@gmail.com>, 
+ Harry Wentland <harry.wentland@amd.com>, Jonathan Corbet <corbet@lwn.net>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, 
+ =?utf-8?q?Ma=C3=ADra_Canal?= <mairacanal@riseup.net>, 
+ Melissa Wen <melissa.srw@gmail.com>, 
+ Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Arthur Grillo <arthurgrillo@riseup.net>
 
-This one place forgot to check the fixed capability.
+Create range and encoding properties. This should be noop, as none of
+the conversion functions need those properties.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
 ---
- arch/x86/kernel/cpu/mtrr/mtrr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/vkms/vkms_drv.h     |  3 ++-
+ drivers/gpu/drm/vkms/vkms_formats.c | 20 ++++++++++++++------
+ drivers/gpu/drm/vkms/vkms_plane.c   |  9 +++++++++
+ 3 files changed, 25 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mtrr/mtrr.c b/arch/x86/kernel/cpu/mtrr/mtrr.c
-index 767bf1c71aad..2a2fc14955cd 100644
---- a/arch/x86/kernel/cpu/mtrr/mtrr.c
-+++ b/arch/x86/kernel/cpu/mtrr/mtrr.c
-@@ -609,7 +609,7 @@ void mtrr_save_state(void)
+diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
+index c38590562e4b..51349a0c32d8 100644
+--- a/drivers/gpu/drm/vkms/vkms_drv.h
++++ b/drivers/gpu/drm/vkms/vkms_drv.h
+@@ -56,7 +56,8 @@ struct vkms_writeback_job {
+ struct vkms_plane_state {
+ 	struct drm_shadow_plane_state base;
+ 	struct vkms_frame_info *frame_info;
+-	void (*pixel_read)(u8 **src_buffer, struct pixel_argb_u16 *out_pixel);
++	void (*pixel_read)(u8 **src_buffer, struct pixel_argb_u16 *out_pixel,
++			   enum drm_color_encoding enconding, enum drm_color_range range);
+ };
+ 
+ struct vkms_plane {
+diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
+index 5566a7cd7bb4..0156372aa1ef 100644
+--- a/drivers/gpu/drm/vkms/vkms_formats.c
++++ b/drivers/gpu/drm/vkms/vkms_formats.c
+@@ -51,7 +51,8 @@ static int get_x_position(const struct vkms_frame_info *frame_info, int limit, i
+ 	return x;
+ }
+ 
+-static void ARGB8888_to_argb_u16(u8 **src_pixels, struct pixel_argb_u16 *out_pixel)
++static void ARGB8888_to_argb_u16(u8 **src_pixels, struct pixel_argb_u16 *out_pixel,
++				 enum drm_color_encoding encoding, enum drm_color_range range)
  {
- 	int first_cpu;
+ 	/*
+ 	 * The 257 is the "conversion ratio". This number is obtained by the
+@@ -65,7 +66,8 @@ static void ARGB8888_to_argb_u16(u8 **src_pixels, struct pixel_argb_u16 *out_pix
+ 	out_pixel->b = (u16)src_pixels[0][0] * 257;
+ }
  
--	if (!mtrr_enabled())
-+	if (!mtrr_enabled() || !mtrr_state.have_fixed)
- 		return;
+-static void XRGB8888_to_argb_u16(u8 **src_pixels, struct pixel_argb_u16 *out_pixel)
++static void XRGB8888_to_argb_u16(u8 **src_pixels, struct pixel_argb_u16 *out_pixel,
++				 enum drm_color_encoding encoding, enum drm_color_range range)
+ {
+ 	out_pixel->a = (u16)0xffff;
+ 	out_pixel->r = (u16)src_pixels[0][2] * 257;
+@@ -73,7 +75,8 @@ static void XRGB8888_to_argb_u16(u8 **src_pixels, struct pixel_argb_u16 *out_pix
+ 	out_pixel->b = (u16)src_pixels[0][0] * 257;
+ }
  
- 	first_cpu = cpumask_first(cpu_online_mask);
+-static void ARGB16161616_to_argb_u16(u8 **src_pixels, struct pixel_argb_u16 *out_pixel)
++static void ARGB16161616_to_argb_u16(u8 **src_pixels, struct pixel_argb_u16 *out_pixel,
++				     enum drm_color_encoding encoding, enum drm_color_range range)
+ {
+ 	u16 *pixels = (u16 *)src_pixels[0];
+ 
+@@ -83,7 +86,8 @@ static void ARGB16161616_to_argb_u16(u8 **src_pixels, struct pixel_argb_u16 *out
+ 	out_pixel->b = le16_to_cpu(pixels[0]);
+ }
+ 
+-static void XRGB16161616_to_argb_u16(u8 **src_pixels, struct pixel_argb_u16 *out_pixel)
++static void XRGB16161616_to_argb_u16(u8 **src_pixels, struct pixel_argb_u16 *out_pixel,
++				     enum drm_color_encoding encoding, enum drm_color_range range)
+ {
+ 	u16 *pixels = (u16 *)src_pixels[0];
+ 
+@@ -93,7 +97,8 @@ static void XRGB16161616_to_argb_u16(u8 **src_pixels, struct pixel_argb_u16 *out
+ 	out_pixel->b = le16_to_cpu(pixels[0]);
+ }
+ 
+-static void RGB565_to_argb_u16(u8 **src_pixels, struct pixel_argb_u16 *out_pixel)
++static void RGB565_to_argb_u16(u8 **src_pixels, struct pixel_argb_u16 *out_pixel,
++			       enum drm_color_encoding encoding, enum drm_color_range range)
+ {
+ 	u16 *pixels = (u16 *)src_pixels[0];
+ 
+@@ -132,6 +137,9 @@ void vkms_compose_row(struct line_buffer *stage_buffer, struct vkms_plane_state
+ 	int limit = min_t(size_t, drm_rect_width(&frame_info->dst), stage_buffer->n_pixels);
+ 	u8 *src_pixels[DRM_FORMAT_MAX_PLANES];
+ 
++	enum drm_color_encoding encoding = plane->base.base.color_encoding;
++	enum drm_color_range range = plane->base.base.color_range;
++
+ 	for (size_t i = 0; i < frame_format->num_planes; i++)
+ 		src_pixels[i] = get_packed_src_addr(frame_info, y, i);
+ 
+@@ -146,7 +154,7 @@ void vkms_compose_row(struct line_buffer *stage_buffer, struct vkms_plane_state
+ 			}
+ 		}
+ 
+-		plane->pixel_read(src_pixels, &out_pixels[x_pos]);
++		plane->pixel_read(src_pixels, &out_pixels[x_pos], encoding, range);
+ 
+ 		for (size_t i = 0; i < frame_format->num_planes; i++)
+ 			src_pixels[i] += frame_format->cpp[i];
+diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
+index 8f2c6ea419a3..e87c80575b7d 100644
+--- a/drivers/gpu/drm/vkms/vkms_plane.c
++++ b/drivers/gpu/drm/vkms/vkms_plane.c
+@@ -212,5 +212,14 @@ struct vkms_plane *vkms_plane_init(struct vkms_device *vkmsdev,
+ 	drm_plane_create_rotation_property(&plane->base, DRM_MODE_ROTATE_0,
+ 					   DRM_MODE_ROTATE_MASK | DRM_MODE_REFLECT_MASK);
+ 
++	drm_plane_create_color_properties(&plane->base,
++					  BIT(DRM_COLOR_YCBCR_BT601) |
++					  BIT(DRM_COLOR_YCBCR_BT709) |
++					  BIT(DRM_COLOR_YCBCR_BT2020),
++					  BIT(DRM_COLOR_YCBCR_LIMITED_RANGE) |
++					  BIT(DRM_COLOR_YCBCR_FULL_RANGE),
++					  DRM_COLOR_YCBCR_BT601,
++					  DRM_COLOR_YCBCR_FULL_RANGE);
++
+ 	return plane;
+ }
+
 -- 
 2.43.0
 
