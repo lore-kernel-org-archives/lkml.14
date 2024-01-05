@@ -1,327 +1,150 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E5621A03;
-	Fri,  5 Jan 2024 08:47:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 114C07E
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 08:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=foundries.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foundries.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="a3+DqxLe"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C6F981C0002;
-	Fri,  5 Jan 2024 08:47:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1704444450;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KiAV7MkFAS8XsXcT4nrUFXbjcZjnTFTonmUxeLLAN6Y=;
-	b=a3+DqxLe45TsY1WKHwbjhC4ok2OHF5N8fmQep3fqsLV+byycHO/B6l6tdvaaXYLhqcq9lk
-	jDqWC+umSxZCKJj5g0gZ0WAooaa3NvQct6RtlWoBG4rsrCI9qq/a/5/AmQZYpuA1pdFyg0
-	BjFOX0kvX58F+zQY9BLjfYlX7UA6XQZ2BBaOLCJQryTBwtb61Sw0+tPC00BHCewtk/sXuN
-	Plzqc2vj1V0xpLJpFjxVtqR2vm1kofTcLbcRkPy/gvOFsMCBukhPRta/y+SB/IqIp631xl
-	jcvpFU/5kyj540blZ7eBLkocwgKMszNRNJru0GdWILqhpAXuRHS35HE0OZD14w==
-Date: Fri, 5 Jan 2024 10:43:11 +0100
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: davem@davemloft.net, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, Andrew Lunn
- <andrew@lunn.ch>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
- linux-arm-kernel@lists.infradead.org, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
- Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit
- <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
- =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Jesse Brandeburg
- <jesse.brandeburg@intel.com>, Jonathan Corbet <corbet@lwn.net>, Marek
- =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, Piergiorgio Beruto
- <piergiorgio.beruto@gmail.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
- =?UTF-8?B?Tmljb2zDsg==?= Veronese <nicveronese@gmail.com>, Simon Horman
- <horms@kernel.org>
-Subject: Re: [PATCH net-next v5 07/13] net: ethtool: Introduce a command to
- list PHYs on an interface
-Message-ID: <20240105104311.03a35622@device-28.home>
-In-Reply-To: <20240104153401.08ff9809@kernel.org>
-References: <20231221180047.1924733-1-maxime.chevallier@bootlin.com>
-	<20231221180047.1924733-8-maxime.chevallier@bootlin.com>
-	<20240104153401.08ff9809@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=foundries.io header.i=@foundries.io header.b="i+isjrXW"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3368ae75082so160235f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 00:49:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=foundries.io; s=google; t=1704444590; x=1705049390; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=reHGhYuAGKcqAhGeJnWgN4NgEOHejYDl2w91uwuMMDY=;
+        b=i+isjrXW1BWOOyDQ69eyuHNn34tJNHXAKRTzaE/vqCfve7sXt7TnOWi32h6If6DRij
+         CUJxhL0a6e/lYX+6qTzCnWvIMK9VBRkvMkNwDTq6q6cNuJ3U25/95LnDKjlIv4wT2Rqm
+         XfC5bL3bIybzszsofRfOtYo8jt7sFfFm/adf6SqjWl84I4lux6p2hc56YD+j1iU5+dI1
+         TVaNRJIr59XBitwEBgSZV45ikvoEfEOIyXt2ZTXn4Nl8xr0Z+rqreb80JnsVlcopo5xc
+         TsYzcN4MEOm9Qw43IjtNonqBB+2QTCdV1XH1TKjkrBMU7Qx+XbmIeFllOk0o5fQtTpUP
+         AK/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704444590; x=1705049390;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=reHGhYuAGKcqAhGeJnWgN4NgEOHejYDl2w91uwuMMDY=;
+        b=Gz84CtkbWJT751jLvSN8gq5b8ZyQxz+C/OA9lCWAqKeOheIBXGnnVvmFHKpqKUF55C
+         a+ZhL+JqFbN5+fGmIddg3rgcwPd5X1M5KTphIJ4UdmXOpkUZca5nxz2kQtHxFacihUXk
+         gw76dQuw1Q5hJt5r+dh17X9pWUyOF1izuX+bHI6JSBeWY6jHGwD0KAQBb2J/dKwkC6Vj
+         rOpl5ykR2kZtUw6lpBXoUDt3rlWSK7cmc4PRZZnOH30d3Bzwr14zPTwbUcOkY7ThWJnX
+         o1mCRcOcDonuK2p0PWn/zzYVeYGqnIZzGJ1dcQ2bg7F0PfxGBRrZPMCvtz4CEYHOWGN3
+         lYVA==
+X-Gm-Message-State: AOJu0YwJ1B6MGuaXhfJjuCiSsdgyEiDnvDGRkh/Ae+bx8mJpm2NNDnzR
+	fOHpNxxvEq478NL8ZxTVYDzV6hd4pCvsDA==
+X-Google-Smtp-Source: AGHT+IHfTU7QurLJjtMbnGCgFvuGMUV2a3bX0a00tqPcADj7+g59IMqBXOOCg/CPVrHhjMx0hy97Eg==
+X-Received: by 2002:adf:a31c:0:b0:336:d24d:3c76 with SMTP id c28-20020adfa31c000000b00336d24d3c76mr797899wrb.28.1704444590133;
+        Fri, 05 Jan 2024 00:49:50 -0800 (PST)
+Received: from trux (96.red-79-144-190.dynamicip.rima-tde.net. [79.144.190.96])
+        by smtp.gmail.com with ESMTPSA id o7-20020adfeac7000000b003372818f4ddsm1002760wrn.0.2024.01.05.00.49.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jan 2024 00:49:49 -0800 (PST)
+From: "Jorge Ramirez-Ortiz, Foundries" <jorge@foundries.io>
+X-Google-Original-From: "Jorge Ramirez-Ortiz, Foundries" <JorgeRamirez-Ortiz>
+Date: Fri, 5 Jan 2024 09:49:48 +0100
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: "Jorge Ramirez-Ortiz, Foundries" <jorge@foundries.io>,
+	Avri Altman <Avri.Altman@wdc.com>,
+	"ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+	michal.simek@amd.com, neal.frager@amd.com,
+	sai.krishna.potthuri@amd.com,
+	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mmc: rpmb: do not force a retune before RPMB switch
+Message-ID: <ZZfCrLr5isWF/bwN@trux>
+References: <f83933d3-6426-425c-903e-abbd2691e84a@intel.com>
+ <DM6PR04MB6575A30D162378E82B4D7DDEFC84A@DM6PR04MB6575.namprd04.prod.outlook.com>
+ <ZXBGTxS7sUSILtLs@trax>
+ <ZXbBhjZIn5sj6EYO@trax>
+ <ZZPoRPxdWXuT+cEo@trax>
+ <b88eca08-7f20-4287-802c-ae1c8e3cd5cf@intel.com>
+ <ZZSH1ykwP45fZaLh@trax>
+ <d1fac554-4a51-409e-bc52-100a6bb4f5dd@intel.com>
+ <ZZUm68tU9zHsC+X+@trux>
+ <29dc26a4-b95c-42d5-94f8-fbd23c589eaa@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <29dc26a4-b95c-42d5-94f8-fbd23c589eaa@intel.com>
 
-Hello Jakub,
+On 04/01/24 20:34:09, Adrian Hunter wrote:
+> On 3/01/24 11:20, Jorge Ramirez-Ortiz, Foundries wrote:
+> > On 03/01/24 10:03:38, Adrian Hunter wrote:
+> >> Thanks for doing that!  That seems to explain the mystery.
+> >>
+> >> You could hack the test to get an idea of how many successful
+> >> iterations there are before getting an error.
+> >>
+> >> For SDHCI, one difference between tuning and re-tuning is the
+> >> setting of bit-7 "Sampling Clock Select" of "Host Control 2 Register".
+> >> It is initially 0 and then set to 1 after the successful tuning.
+> >> Essentially, leaving it set to 1 is meant to speed up the re-tuning.
+> >> You could try setting it to zero instead, and see if that helps.
+> >> e.g.
+> >>
+> >> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> >> index c79f73459915..714d8cc39709 100644
+> >> --- a/drivers/mmc/host/sdhci.c
+> >> +++ b/drivers/mmc/host/sdhci.c
+> >> @@ -2732,6 +2732,7 @@ void sdhci_start_tuning(struct sdhci_host *host)
+> >>  	ctrl |= SDHCI_CTRL_EXEC_TUNING;
+> >>  	if (host->quirks2 & SDHCI_QUIRK2_TUNING_WORK_AROUND)
+> >>  		ctrl |= SDHCI_CTRL_TUNED_CLK;
+> >> +	ctrl &= ~SDHCI_CTRL_TUNED_CLK;
+> >>  	sdhci_writew(host, ctrl, SDHCI_HOST_CONTROL2);
+> >>
+> >>  	/*
+> >>
+> >
+> >
+> > Yes with that change, the re-tuning reliability test does pass.
+> >
+> > root@uz3cg-dwg-sec:/sys/kernel/debug/mmc0#  echo 52 > /sys/kernel/debug/mmc0/mmc0\:0001/test
+> > [  237.833585] mmc0: Starting tests of card mmc0:0001...
+> > [  237.838759] mmc0: Test case 52. Re-tuning reliability...
+> > [  267.845403] mmc0: Result: OK
+> > [  267.848365] mmc0: Tests completed.
+> >
+> >
+> > Unfortunately I still see the error when looping on RPMB reads.
+> >
+> > For instance with this test script
+> >  $ while true; do rpmb_read m4hash; usleep 300; done
+> >
+> > I can see the error triggering on the serial port after a minute or so.
+> > [  151.682907] sdhci-arasan ff160000.mmc: __mmc_blk_ioctl_cmd: data error -84
+> >
+> > Causing OP-TEE to panic since the RPMB read returns an error
+> > E/TC:? 0
+> > E/TC:? 0 TA panicked with code 0xffff0000
+> > E/LD:  Status of TA 22250a54-0bf1-48fe-8002-7b20f1c9c9b1
+> > E/LD:   arch: aarch64
+> > [...]
+> >
+> > if anything else springs to your mind I am happy to test of course - there are
+> > so many tunnables in this subsystem that experience is this area has exponential
+> > value (and I dont have much).
+> >
+> > Would it make sense if re-tuning requests are rejected unless a minimum number
+> > of jiffies have passed? should I try that as a change?
+> >
+> > or maybe delay a bit longer the RPMB access after a retune request?
+>
+> It seems re-tuning is not working properly, so ideally the
+> SoC vendor / driver implementer would provide a solution.
 
-Thanks a lot for the review on that part,
 
-On Thu, 4 Jan 2024 15:34:01 -0800
-Jakub Kicinski <kuba@kernel.org> wrote:
+Makes sense to me too. I am copying Michal on the DL.
 
-> On Thu, 21 Dec 2023 19:00:40 +0100 Maxime Chevallier wrote:
-> > As we have the ability to track the PHYs connected to a net_device
-> > through the link_topology, we can expose this list to userspace. This
-> > allows userspace to use these identifiers for phy-specific commands and
-> > take the decision of which PHY to target by knowing the link topology.
-> > 
-> > Add PHY_GET and PHY_DUMP, which can be a filtered DUMP operation to list
-> > devices on only one interface.
-> > 
-> > Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>  
-> 
-> > diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
-> > index 3ca6c21e74af..97ff787a7dd8 100644
-> > --- a/Documentation/networking/ethtool-netlink.rst
-> > +++ b/Documentation/networking/ethtool-netlink.rst
-> > @@ -2011,6 +2011,49 @@ The attributes are propagated to the driver through the following structure:
-> >  .. kernel-doc:: include/linux/ethtool.h
-> >      :identifiers: ethtool_mm_cfg
-> >  
-> > +PHY_GET
-> > +=======
-> > +
-> > +Retrieve information about a given Ethernet PHY sitting on the link. As there
-> > +can be more than one PHY, the DUMP operation can be used to list the PHYs
-> > +present on a given interface, by passing an interface index or name in
-> > +the dump request
-> > +
-> > +Request contents:
-> > +
-> > +  ====================================  ======  ==========================
-> > +  ``ETHTOOL_A_PHY_HEADER``              nested  request header
-> > +  ====================================  ======  ==========================
-> > +
-> > +Kernel response contents:
-> > +
-> > +  ===================================== ======  ==========================
-> > +  ``ETHTOOL_A_PHY_HEADER``              nested  request header
-> > +  ``ETHTOOL_A_PHY_INDEX``               u32     the phy's unique index, that can  
-> 
-> The fact that lines are longer than the ===== markings doesn't generate
-> warnings in htmldoc?
 
-I did test the doc, but maybe I missed the warning. Since I'll need to
-respin anyway, I'll clean this up :)
-
-> 
-> > +                                                be used for phy-specific requests
-> > +  ``ETHTOOL_A_PHY_DRVNAME``             string  the phy driver name
-> > +  ``ETHTOOL_A_PHY_NAME``                string  the phy device name
-> > +  ``ETHTOOL_A_PHY_UPSTREAM_TYPE``       u32     the type of device this phy is
-> > +                                                connected to
-> > +  ``ETHTOOL_A_PHY_UPSTREAM_PHY``        nested  if the phy is connected to another
-> > +                                                phy, this nest contains info on
-> > +                                                that connection
-> > +  ``ETHTOOL_A_PHY_DOWNSTREAM_SFP_NAME`` string  if the phy controls an sfp bus,
-> > +                                                the name of the sfp bus  
-> 
-> Is upstream / downstream clear to everyone / from the spec.
-> I guess it's scoped to the netdev so upstream means "towards 
-> the netdev MAC"?
-
-Good point, it's indeed scoped to the netdev, upstream means "towards
-the MAC" and downstream "towards the link-partner". The upstream
-terminology is used a little bit in the SFP code, but anyway should we
-keep that terminology, I'll document it better both here and in the
-dedicated documentation.
-
-> > +  ``ETHTOOL_A_PHY_ID``                  u32     the phy id if the phy is C22
-> > +  ===================================== ======  ==========================
-> > +
-> > +When ``ETHTOOL_A_PHY_UPSTREAM_TYPE`` is PHY_UPSTREAM_PHY, the PHY's parent is
-> > +another PHY. Information on the parent PHY will be set in the
-> > +``ETHTOOL_A_PHY_UPSTREAM_PHY`` nest, which has the following structure :
-> > +
-> > +  =================================== ======  ==========================
-> > +  ``ETHTOOL_A_PHY_UPSTREAM_INDEX``    u32     the PHY index of the upstream PHY
-> > +  ``ETHTOOL_A_PHY_UPSTREAM_SFP_NAME`` string  if this PHY is connected to it's
-> > +                                                parent PHY through an SFP bus, the
-> > +                                                name of this sfp bus
-> > +  =================================== ======  ==========================  
-> 
-> Why is this a nest?
-
-It was an attempt to structure the info, but I think we can do without,
-as it only contains 2 fields.
-
-> >  Request translation
-> >  ===================  
-> 
-> > +enum {
-> > +	ETHTOOL_A_PHY_UNSPEC,
-> > +	ETHTOOL_A_PHY_HEADER,			/* nest - _A_HEADER_* */
-> > +	ETHTOOL_A_PHY_INDEX,			/* u32 */
-> > +	ETHTOOL_A_PHY_DRVNAME,			/* string */
-> > +	ETHTOOL_A_PHY_NAME,			/* string */
-> > +	ETHTOOL_A_PHY_UPSTREAM_TYPE,		/* u8 */  
-> 
-> The Documentation say it's a u32 as it should be, AFAICT.
-> But code and some comments use u8.
-
-Ah my bad, Andrew did comment on that and I though I addressed the
-inconsistency but there are some left apparently.
-
-> > +	ETHTOOL_A_PHY_UPSTREAM,			/* nest - _A_PHY_UPSTREAM_* */
-> > +	ETHTOOL_A_PHY_DOWNSTREAM_SFP_NAME,	/* string */
-> > +	ETHTOOL_A_PHY_ID,			/* u32 */
-> > +
-> > +	/* add new constants above here */
-> > +	__ETHTOOL_A_PHY_CNT,
-> > +	ETHTOOL_A_PHY_MAX = (__ETHTOOL_A_PHY_CNT - 1)
-> > +};  
-> 
-> > +++ b/net/ethtool/phy.c
-> > @@ -0,0 +1,306 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright 2023 Bootlin
-> > + *
-> > + */  
-> 
-> Do you really need 4 lines for the copyright? :)
-
-No I don't, I'll tidy this up :)
-
-> 
-> > +/* Caller holds rtnl */
-> > +static ssize_t
-> > +ethnl_phy_reply_size(const struct ethnl_req_info *req_base,
-> > +		     struct netlink_ext_ack *extack)
-> > +{
-> > +	struct phy_link_topology *topo;
-> > +	struct phy_device_node *pdn;
-> > +	struct phy_device *phydev;
-> > +	unsigned long index;
-> > +	size_t size;
-> > +
-> > +	ASSERT_RTNL();
-> > +
-> > +	topo = &req_base->dev->link_topo;
-> > +
-> > +	size = nla_total_size(0);  
-> 
-> no comment on this one?
-
-Ah sorry I'll add it
-
-> > +
-> > +	xa_for_each(&topo->phys, index, pdn) {  
-> 
-> Why count all the PHYs, you only output one on doit, right?
-
-Uh ok good point, I'll fix it.
-
-> > +		phydev = pdn->phy;
-> > +
-> > +		/* ETHTOOL_A_PHY_INDEX */
-> > +		size += nla_total_size(sizeof(u32));
-> > +
-> > +		/* ETHTOOL_A_DRVNAME */
-> > +		size += nla_total_size(strlen(phydev->drv->name) + 1);
-> > +
-> > +		/* ETHTOOL_A_NAME */
-> > +		size += nla_total_size(strlen(dev_name(&phydev->mdio.dev)) + 1);
-> > +
-> > +		/* ETHTOOL_A_PHY_UPSTREAM_TYPE */
-> > +		size += nla_total_size(sizeof(u8));
-> > +
-> > +		/* ETHTOOL_A_PHY_ID */
-> > +		size += nla_total_size(sizeof(u32));
-> > +
-> > +		if (phy_on_sfp(phydev)) {
-> > +			const char *upstream_sfp_name = sfp_get_name(pdn->parent_sfp_bus);
-> > +
-> > +			/* ETHTOOL_A_PHY_UPSTREAM_SFP_NAME */
-> > +			if (upstream_sfp_name)
-> > +				size += nla_total_size(strlen(upstream_sfp_name) + 1);
-> > +
-> > +			/* ETHTOOL_A_PHY_UPSTREAM_INDEX */
-> > +			size += nla_total_size(sizeof(u32));
-> > +		}
-> > +
-> > +		/* ETHTOOL_A_PHY_DOWNSTREAM_SFP_NAME */
-> > +		if (phydev->sfp_bus) {
-> > +			const char *sfp_name = sfp_get_name(phydev->sfp_bus);
-> > +
-> > +			if (sfp_name)
-> > +				size += nla_total_size(strlen(sfp_name) + 1);
-> > +		}
-> > +	}
-> > +
-> > +	return size;
-> > +}  
-> 
-> > +static int ethnl_phy_parse_request(struct ethnl_req_info *req_base,
-> > +				   struct nlattr **tb)
-> > +{
-> > +	struct phy_link_topology *topo = &req_base->dev->link_topo;
-> > +	struct phy_req_info *req_info = PHY_REQINFO(req_base);
-> > +	struct phy_device_node *pdn;
-> > +
-> > +	if (!req_base->phydev)
-> > +		return 0;  
-> 
-> The PHY INDEX should probably be a required attr, with 
-> GENL_REQ_ATTR_CHECK()? Without phydev being specified
-> what's the point?
-
-We can still have a phydev without passing a PHY INDEX, this would
-report information on the netdev->phydev device, that can be helpful
-for users to know which PHY is targeted by commands such as "ethtool
---cable-test eth0" when no PHY index is passed
-
-> > +	pdn = xa_load(&topo->phys, req_base->phydev->phyindex);
-> > +	memcpy(&req_info->pdn, pdn, sizeof(*pdn));
-> > +
-> > +	return 0;
-> > +}  
-> 
-> > +int ethnl_phy_dumpit(struct sk_buff *skb, struct netlink_callback *cb)
-> > +{
-> > +	struct ethnl_phy_dump_ctx *ctx = (void *)cb->ctx;
-> > +	struct net *net = sock_net(skb->sk);
-> > +	unsigned long ifindex = 1;  
-> 
-> This doesn't look right, if dump gets full you gotta pick up
-> when previous call left off.
-
-I wasn't aware that this was the expected DUMP behaviour. So I should
-keep track of the last dev and last phy_index dumped in the dump_ctx I
-guess ? I'm not sure how I'm going to test this though, I only have
-devices with at most 2 PHYs :(
-
-> > +	struct net_device *dev;
-> > +	int ret = 0;
-> > +
-> > +	rtnl_lock();
-> > +
-> > +	if (ctx->phy_req_info->base.dev) {
-> > +		ret = ethnl_phy_dump_one_dev(skb, ctx->phy_req_info->base.dev, cb);
-> > +		ethnl_parse_header_dev_put(&ctx->phy_req_info->base);
-> > +		ctx->phy_req_info->base.dev = NULL;
-> > +	} else {
-> > +		for_each_netdev_dump(net, dev, ifindex) {
-> > +			ret = ethnl_phy_dump_one_dev(skb, dev, cb);
-> > +			if (ret)
-> > +				break;
-> > +		}
-> > +	}
-> > +	rtnl_unlock();
-> > +
-> > +	if (ret == -EMSGSIZE && skb->len)
-> > +		return skb->len;
-> > +	return ret;
-> > +}
-> > +  
-> 
-
-Thanks a lot for the review, the netlink part was definitely the hard
-part for me.
-
-Maxime
+>
+> There is also mmc_doing_retune() which could be used to skip
+> tuning execution entirely in the case of re-tuning.
+>
