@@ -1,53 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617B42E626;
-	Fri,  5 Jan 2024 15:21:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A4B2E62F
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 15:21:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="H6z9Lc/S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80019C433C8;
-	Fri,  5 Jan 2024 15:21:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1704468080;
-	bh=BJfr/NAghFFnbqECv5pu8D17fzlRfxtXE9hL5DIHvkQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H6z9Lc/Sx4ZGd6NgiFpuCHyanDx953R/XlSXJSSQXeRQ+u/txq8EdHo37DOLj8ZPY
-	 PM1tNQuwDALCwdRlPPNghBD7IdzrPx2qdUBoJDHVblOdJYDP5SuOLrDiLWNbec5c3y
-	 na3YId1CgbpsjAJG2NQpbqhTAXphZ7YgGn2qnIrw=
-Date: Fri, 5 Jan 2024 16:05:18 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH] spi: make spi_bus_type const
-Message-ID: <2024010554-unreached-colony-96dd@gregkh>
-References: <2024010549-erasure-swoop-1cc6@gregkh>
- <0fcee73a-bdcb-41d5-b6e5-21947ae9e3d7@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="KpoAMKzf"
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com [209.85.218.70])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 155923F186
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 15:21:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1704468104;
+	bh=K/MKIQt/2v5+gO4lOQWcPlqIQOmPYkzjUgvkJ8cDKMk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+	b=KpoAMKzfm++1hSyUEjyp0Vr1n9yGe5PckIWSUUuKNM0IZLf4BLJFaZ/ea5TC+Be9w
+	 ggZVtaugD96vDu0F/7rYHDStsntQw0pWesCMpQFY5a55WfhdmkRoeriEqKYmaCq58K
+	 /ag1HDC9ewSv1TIU5XIx9tvAG0jdCwYxvyHe2p12jC5sY1O+FQjyt4h/tmkEL9lYDu
+	 0/FRrH8uz58WrdPsIfeL+Iyy3YTu8O6meq7dSEu4gnMZsOvt22df6dWFdk2q7JKwap
+	 5rnt2fNu1pd9Dw/D2rGR+QBAWpa7TEI7qw4cIJ4anAKRKvMheK3XYQQYYH4tHUsoxn
+	 o04sH6qlub5fw==
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a28fd256e44so73406966b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 07:21:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704468103; x=1705072903;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K/MKIQt/2v5+gO4lOQWcPlqIQOmPYkzjUgvkJ8cDKMk=;
+        b=GmwShLdRZdTPj43oIt9HRwcfABPyW7oRLe2chjFUgwmYWHoktvNn0nqqGqaptruNN8
+         YAg5Ij7JHVV7YH2wwNMuRhLkZVDvq40TRd4N+sQ/Z3fXRxumcBU1zXeMnrRnHzqyQr6s
+         NjA45iAAjgETReTQWVZ5ISV+mtahdoV12P69Dk0f1udLVw9d+tPdY8kXKJRxHmM1f1bi
+         lLI6kVgcFO5MuYUq3VaX2yqtKUhBM8TZ/+fauT2WzVxdMOgmwr2lwqfTQayzQZrDVTil
+         xhKwf93VMZVuIr+EQEr/LREcviwySgQjWRajTzWAI1A1u8mp36MzAi7EbcILth+xHaUa
+         a34w==
+X-Gm-Message-State: AOJu0YyfVs1tPsq2lHVzg25pdPO9dIooM/9iIY2Faa+8aeYG8Hwo1S+Y
+	GgLVirTwZfr4OH0lhh2bu0kF3Aq1bcPuztICnf9RMNH2LTJDDLVgr6cq4OLZ0YGAOrnnTW3QQlF
+	8ioBD49MCfTFrRQO/XRrshzI3iKwPbJOcnnsW4UXchS2z4gPT
+X-Received: by 2002:a17:907:7204:b0:a26:8c4d:b0b6 with SMTP id dr4-20020a170907720400b00a268c4db0b6mr2791609ejc.9.1704468103807;
+        Fri, 05 Jan 2024 07:21:43 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGq3s8L43EPolrGptmL+SMamfp1oYJHC4hBjDWLEEuxQ8xChVbi+Equ4y7DZ/VoXFslj4GXcQ==
+X-Received: by 2002:a17:907:7204:b0:a26:8c4d:b0b6 with SMTP id dr4-20020a170907720400b00a268c4db0b6mr2791596ejc.9.1704468103553;
+        Fri, 05 Jan 2024 07:21:43 -0800 (PST)
+Received: from amikhalitsyn.lan ([91.64.72.41])
+        by smtp.gmail.com with ESMTPSA id i23-20020a170906115700b00a298adde5a1sm345630eja.189.2024.01.05.07.21.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jan 2024 07:21:43 -0800 (PST)
+From: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+To: mszeredi@redhat.com
+Cc: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/3] fuse: a few small fixes
+Date: Fri,  5 Jan 2024 16:21:26 +0100
+Message-Id: <20240105152129.196824-1-aleksandr.mikhalitsyn@canonical.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0fcee73a-bdcb-41d5-b6e5-21947ae9e3d7@sirena.org.uk>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 05, 2024 at 02:55:01PM +0000, Mark Brown wrote:
-> On Fri, Jan 05, 2024 at 11:32:50AM +0100, Greg Kroah-Hartman wrote:
-> > Now that the driver core can properly handle constant struct bus_type,
-> > move the spi_bus_type variable to be a constant structure as well,
-> > placing it into read-only memory which can not be modified at runtime.
-> 
-> Whatever makes the driver core able to handle this doesn't seem to be in
-> mainline yet - what's the story there?
+Found by chance while working on support for idmapped mounts in fuse
+(will send series soon :-)).
 
-Odd, what errors are you seeing when you build?  I have had to fix up a
-few subsys_* calls for this type of thing, but I don't see spi_bus_type
-being used in those that I saw in my local tree.  Did I miss something
-else?
+Cc: Miklos Szeredi <miklos@szeredi.hu>
+Cc: <linux-fsdevel@vger.kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
+Signed-off-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
 
-Maybe just wait for after 6.8-rc1, it builds properly here locally :)
+Alexander Mikhalitsyn (3):
+  fuse: fix typo for fuse_permission comment
+  fuse: use GFP_KERNEL_ACCOUNT for allocations in fuse_dev_alloc
+  fuse: __kuid_val/__kgid_val helpers in fuse_fill_attr_from_inode()
 
-thanks,
+ fs/fuse/dir.c   | 2 +-
+ fs/fuse/inode.c | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-greg k-h
+-- 
+2.34.1
+
