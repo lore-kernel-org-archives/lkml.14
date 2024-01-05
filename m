@@ -1,105 +1,71 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from out203-205-221-205.mail.qq.com (out203-205-221-205.mail.qq.com [203.205.221.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45FF2D620
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 13:18:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0CD728DD1
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 13:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="vjf734BG"
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 178BA3F5AC
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 13:18:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1704460728;
-	bh=IFg9X0cw6KEOe6IAlb6C60OWnstZjElkbRUwRAxmfko=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=vjf734BGqgllIB/OMUwCrnZtQUEyzFwrV3Yp8WDykjWHbFsV+a7Uu7RUlclbrSl3/
-	 WzsLoZUNn1osWEkfNul//o1POBMVfDFO3jga/orAFbVFsQ56UN2HbR1P3bBueE7e5s
-	 tMAbHlGhVO3xeO3zObYnzZuP5/TGznFavdTKmBBJx1nDYLMt2Kx7bjd+cnVDqLL/Dx
-	 W9m9cfUGYNquftE1n7BqpPC2fL/5+hFuxVnI7eeYls3g3L1klrf2kybVapiz5sMkUJ
-	 sWGHpK6B38r3vNGG8Z1y39hP9qlRyqJK9hHq5NHIO2w/T1jwBLR8QxiK/KJRpHRgtS
-	 67S18vw+bCXKA==
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-781029a475bso100918385a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 05:18:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704460726; x=1705065526;
-        h=content-transfer-encoding:cc:to:subject:message-id:date
-         :mime-version:references:in-reply-to:from:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=IFg9X0cw6KEOe6IAlb6C60OWnstZjElkbRUwRAxmfko=;
-        b=BUKCBBT0BGIv/iCU5Jt9JDthMpQM0lHGJI9XvVm7Kb+BVp3VGqVn7YGiS7Djd+N+Aa
-         mIAFrEViTslF8wGEsSi3SV/l3E64YCYhjuNcDZmlLeuGFYqYHW2iqOjnFqbHOf3HSGtB
-         O85bWkN4YKOku95uBpwKat3ScqZyVeNTDZwiolsmygrKP3zFM4nsJtutOiPvXYaEMhz+
-         W8V8P5P5bfaLsA4/2FZ9pSBCybJa+D+adaBV0v54CLGr3Ivbe2Y+hSnrbwmmiEhyuhV5
-         hKUzwWuzg2AVTJ5qOcYvK8iqK+PgbgmIFVnXprOeD9mo3G6KS/wOlIYUN2faf7uiUO3j
-         D8LQ==
-X-Gm-Message-State: AOJu0YyG7s2MNfb5szPdi0u+7LFX5cW7ZtDbFNv4mHQbi3gJxMxcim37
-	ge+CZrWFyyfEJ5S8hkhagHC5R3HisNK3IWjv6uJ+UMgJz9RqsTNJ/NwiNK5jjIUvc+ajr7VoEwY
-	WPtZ946/MX8bAZSb8KKkt6kPi5qD7J08Fw6L5XnePakHqQviAcPGay9kgJkZ3/DKTpFkfJ6ta
-X-Received: by 2002:a05:620a:178c:b0:783:de7:f55c with SMTP id ay12-20020a05620a178c00b007830de7f55cmr371559qkb.18.1704460726691;
-        Fri, 05 Jan 2024 05:18:46 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFSkJtpgQs5O0P21kOkQPotDAvI+IaEL+Pr5+euH6U094hbx+AkrsKTiUrqQJPzpV5J68/IEZ11z3+15L/lAVc=
-X-Received: by 2002:a05:620a:178c:b0:783:de7:f55c with SMTP id
- ay12-20020a05620a178c00b007830de7f55cmr371543qkb.18.1704460726480; Fri, 05
- Jan 2024 05:18:46 -0800 (PST)
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 5 Jan 2024 05:18:45 -0800
-From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-In-Reply-To: <xd2ryic6mr6d6cbljjbhmr56mfpchfzkmc3lnznhmoiwyzip2a@6bhbho267e7c>
-References: <20231222094548.54103-1-william.qiu@starfivetech.com>
- <20231222094548.54103-4-william.qiu@starfivetech.com> <CAJM55Z9tyrR7emEBrY0+Fnc_LUFQHkqYHLQ4ptL=XQMy52qtVw@mail.gmail.com>
- <xd2ryic6mr6d6cbljjbhmr56mfpchfzkmc3lnznhmoiwyzip2a@6bhbho267e7c>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="wG4H+KTw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1704460833; bh=MYY9stIYqlycYBITbBDp8hgnPLSnqcWc70hs+qeH1q4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=wG4H+KTwtTgWf+fuIJwsjdFGj+X2TXw0V4sCtg2UNqak/2oqWMXcfqzYIYn+jMGp4
+	 kEECMhEaKNbKRej8MSGlVokwtl4EYaPlNxlW6Q4tLa3xeuPN0WCFkvuLjihk+Umil0
+	 sU28+Y8G+wjzaB8W9uM4/izlf4w4gfY39apORq1w=
+Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
+	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
+	id 39719AEB; Fri, 05 Jan 2024 21:14:23 +0800
+X-QQ-mid: xmsmtpt1704460463tqr5ni1r6
+Message-ID: <tencent_684C75F177D366163C3136DE97A436404A09@qq.com>
+X-QQ-XMAILINFO: MQ+wLuVvI2LQe/ZWzugQ8nDB1qPxlZ7xl8XdkJBdsqmWDPftHSFWoX9L6JEu3I
+	 EIStlxHkloUAMsHWvYKJDpdVqKSrprpXpdDnKwV5BoZEvK6490tzodXj0bNZ32WUKwWh+GRVE5ci
+	 WAM2u04n5wRgsL4Ks5744sVCeic5AEW7v7wkiLMhWKs/Tev/K7sv+4rfGCAtsmFLafzeQMYteEE3
+	 KJY/LBPtZAAHTJ0SJy2je8GRjsdJaDf7gJ/ySQVf6YNNSNwJy8ikD4OPFtnTFkcgyxOwHdMmdI0J
+	 aECP9lzlBhWXoEW6ZITa9ugtUM8HYaE4k0y+WMS0kSEG8akavoRWYq7eBF2FmhPclGUNZZgvuBU4
+	 9StzrM9Sxxxb9VhJVJQt8TxgCvgEyadGrMtEEVgSYMLIUUQrincjMn6QmXpCo8rT22N0PS9ehqTK
+	 lcePEAQhkvRtAb+fPj3Dg4LOOLnFlH0jHeoSg5BC9gkn4M9tfXGvyEARCSoyvBMfkU109cgsMNkK
+	 7/SBXVLismeEVr5T6PC8aujlKdW1DOTQxgprd/Lj3bcp3hdXcdUla0KWouneVM8X0ROw6reew35a
+	 SQQ2lByt26MolY+4Qlc/pyqJDRgklRGCy0nyAX153KQ6p+d3rke9s3agh1L6JvrX1xuoNitWjVoG
+	 KOW5n034tbzyuDLOrzWJS1F672z2eil4jcfkBrD/c/KnYFidqpy/nGC28df+/WVbs+wdto/4JQpn
+	 uBJCXOkNl5ZYL75isfO4rsVhxKxKU2WUv/XiwTXWfDEaXtT7hD0xl0z0jR8rRp/RobV10/n4YBC3
+	 1Z1ViCbVD6zKyLwHgmJDcOUdeAIom4KpmmbDQNue8gRXUQNmYbNWok1BH/+qlaoZPbqyfbqLG4ya
+	 YmT5lGZ8kWahfc79doqqT5ovba1Ix6eo6+u/o9rnsZjzSXDdJirzIUHwNhhMLpOP0hkU2vBLWOcD
+	 bRIoHNUVk=
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+63cebbb27f598a7f901b@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [reiserfs?] general protection fault in __fget_files (2)
+Date: Fri,  5 Jan 2024 21:14:23 +0800
+X-OQ-MSGID: <20240105131422.664067-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <000000000000caa956060ddf5db1@google.com>
+References: <000000000000caa956060ddf5db1@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Fri, 5 Jan 2024 05:18:45 -0800
-Message-ID: <CAJM55Z9DgFCwXjQGhe+urnOg-AkJMbQUR+biXKONQsRcup1GXw@mail.gmail.com>
-Subject: Re: [PATCH v10 3/4] riscv: dts: starfive: jh7100: Add PWM node and
- pins configuration
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc: William Qiu <william.qiu@starfivetech.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-pwm@vger.kernel.org, Emil Renner Berthing <kernel@esmil.dk>, 
-	Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Hal Feng <hal.feng@starfivetech.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Uwe Kleine-K=C3=B6nig wrote:
-> Hello Emil,
->
-> On Sun, Dec 24, 2023 at 02:49:34AM -0800, Emil Renner Berthing wrote:
-> > William Qiu wrote:
-> > > Add OpenCores PWM controller node and add PWM pins configuration
-> > > on VisionFive 1 board.
-> > >
-> > > Signed-off-by: William Qiu <william.qiu@starfivetech.com>
-> >
-> > Sorry, I thought I already sent my review. This looks good.
-> >
-> > Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
->
-> Is this also an implicit Ack to take this patch via the pwm tree once
-> the earlier patches are ready? Or do you want to take it via your tree?
-> (Maybe already now together with the binding? If so, you can assume my
-> Reviewed-by to be an implicit Ack for that.)
+please test general protection fault in __fget_files
 
-Yes, sorry. This is also meant to be an Ack from me.
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git f5837722ffec
 
-I imagined the dt patches would go through Conor's riscv-dt-for-next branch=
-,
-but the pwm tree is certainly also fine by.
+diff --git a/fs/file.c b/fs/file.c
+index 5fb0b146e79e..724f60e6cc4f 100644
+--- a/fs/file.c
++++ b/fs/file.c
+@@ -1134,6 +1134,8 @@ static unsigned long __fget_light(unsigned int fd, fmode_t mask)
+ 			return 0;
+ 		return (unsigned long)file;
+ 	} else {
++		if (!atomic_read_acquire(&files->count))
++			return 0;
+ 		file = __fget(fd, mask);
+ 		if (!file)
+ 			return 0;
 
-/Emil
