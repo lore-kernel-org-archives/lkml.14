@@ -1,56 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A783E23757;
-	Fri,  5 Jan 2024 09:34:18 +0000 (UTC)
+Received: from smtp.smtpout.orange.fr (smtp-26.smtpout.orange.fr [80.12.242.26])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE1F623755
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 09:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Ips1awCK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1F9CC433C7;
-	Fri,  5 Jan 2024 09:34:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1704447258;
-	bh=kGrR0Ob7k7vFDLtA7j3VmPBdpjaASto2LcHNEJL8ORQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ips1awCK8Pnn6apCj/CH6jKsLgXqmsZ/Sur50Ya/2x8QoG5GYD8IMqmTwYSnLmCyx
-	 cD/8UESPq+Js2t0tzSelEt/5D9q7LK211sboP60mGNarryX1qNFEL5vGoTVAbjjJsu
-	 oRAM32U1FqVS0XfdepLrKjhgawBjgAVtGOccEb8k=
-Date: Fri, 5 Jan 2024 10:34:15 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Sergey Shtylyov <s.shtylyov@omp.ru>
-Cc: Jai Luthra <j-luthra@ti.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Javier Carrasco <javier.carrasco@wolfvision.net>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rogerq@kernel.org, r-gunasekaran@ti.com, vigneshr@ti.com,
-	d-gole@ti.com
-Subject: Re: [PATCH] usb: typec: tipd: Separate reset for TPS6598x
-Message-ID: <2024010559-passcode-bogus-2c97@gregkh>
-References: <20240105-next-tps-fix-v1-1-158cabaec168@ti.com>
- <78925337-0bba-ca7d-aeb1-2d5c53c565ea@omp.ru>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="OdasfErD"
+Received: from pop-os.home ([92.140.202.140])
+	by smtp.orange.fr with ESMTPA
+	id LgU0rtez5ELO0LgU0rh95i; Fri, 05 Jan 2024 10:27:18 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1704446838;
+	bh=dMB8gUFnPkx15KoZlZNMHrYfHd6SUVDdalp91RepVRM=;
+	h=From:To:Cc:Subject:Date;
+	b=OdasfErD1G4Pz6M+uro+RT6DQXpIdxZ3j618DElt81mGeWgC2WRqO7+3V3s4rsBGf
+	 uvpUiY05LEwPux0nwRFCsce0XdMn/gcZjiQvL+gEtalEHGAV+3AG82XZBrtIx8elnQ
+	 uxiI+MGEBCZyNv4g8OafMl/ibTD9doPjoWYUeyZB5f1uxBkuMeEgjD6Hpc3TTJ8iCU
+	 PjtiqyRH+ztLOQU5DMh3xS1M0/8wCV3R3I6fTEHGQj2X3BNOGcuT4T4PisWkw3E9Ej
+	 SlwV/72Z9Qp3K6NnKKbT75ee85u0srJu4nXzKtU0gylEGj3OcYVDcAhtQfB8PejMDG
+	 wPJr1HFgol0+w==
+X-ME-Helo: pop-os.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 05 Jan 2024 10:27:18 +0100
+X-ME-IP: 92.140.202.140
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: alexis.lothore@bootlin.com,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	netdev@vger.kernel.org
+Subject: [PATCH 1/2 net-next] ipvlan: Fix a typo in a comment
+Date: Fri,  5 Jan 2024 10:27:08 +0100
+Message-Id: <5adda8a3ce7af63bc980ba6b4b3fbfd6344e336b.1704446747.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <78925337-0bba-ca7d-aeb1-2d5c53c565ea@omp.ru>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 05, 2024 at 12:15:36PM +0300, Sergey Shtylyov wrote:
-> Hello!
-> 
-> On 1/5/24 12:06 PM, Jai Luthra wrote:
-> 
-> > Some platforms like SK-AM62, SK-AM62A cannot boot up to prompt if
-> > TPS6598x is cold-reset during unconditionally on probe failures by
-> 
->    Hm, I can't parse this. During what?
+s/diffentiate/differentiate/
 
-See the thread that is listed here:
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/net/ipvlan/ipvlan_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > Closes: https://lore.kernel.org/linux-usb/vmngazj6si7xxss7txenezkcukqje2glhvvs7ipdcx3vjiqvlk@ohmmhhhlryws/
+diff --git a/drivers/net/ipvlan/ipvlan_main.c b/drivers/net/ipvlan/ipvlan_main.c
+index f28fd7b6b708..e080e4fc41e4 100644
+--- a/drivers/net/ipvlan/ipvlan_main.c
++++ b/drivers/net/ipvlan/ipvlan_main.c
+@@ -601,7 +601,7 @@ int ipvlan_link_new(struct net *src_net, struct net_device *dev,
+ 		port->dev_id_start = 0x1;
+ 
+ 	/* Since L2 address is shared among all IPvlan slaves including
+-	 * master, use unique 16 bit dev-ids to diffentiate among them.
++	 * master, use unique 16 bit dev-ids to differentiate among them.
+ 	 * Assign IDs between 0x1 and 0xFFFE (used by the master) to each
+ 	 * slave link [see addrconf_ifid_eui48()].
+ 	 */
+-- 
+2.34.1
 
-thanks,
-
-greg k-h
