@@ -1,62 +1,27 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B059C2E412;
-	Fri,  5 Jan 2024 15:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617B42E626;
+	Fri,  5 Jan 2024 15:21:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O3HCkHom"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a277339dcf4so180602066b.2;
-        Fri, 05 Jan 2024 07:19:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704467949; x=1705072749; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cXM8mUu2b7I5NINWgE1xN7lsAgN9ikjmrQenDxvMoYo=;
-        b=O3HCkHomOHx8BjYuyfNNLHLohiIwPf6SmH3GXrIc9m2ps9ZmttX5NWBL/d9ZNmlg2q
-         e9UvXEjOJlOItiWWVCevxZbK8YYfmECGTRgqdJUvtIqXPL/zv6AgjZIPKrfb6ZmU5E1g
-         KFcGTPVhrBmS6kcsb2ks1nFmcvQoSpDnIVB+2MLinb8iMWB0TnZFXUn2+SxMnWMSTszZ
-         KSXUd+aFZYw8GUwJiONOPmFUAHcjMoCnLxMUBn6t+aQBcXp7wwkMXxDwrHQNnQLHYYLq
-         karFE6IClx/cFi32qKrn+fuOOKTR0le2FR8/al+S9AlCTdSOGZOEYiGrNA1kOOcjAK/T
-         jzAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704467949; x=1705072749;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cXM8mUu2b7I5NINWgE1xN7lsAgN9ikjmrQenDxvMoYo=;
-        b=HVloNXSBjMObJEcZhV9REzOWPgUVXT8gQSUeTZaWS/zzfPkkSo+zmyxxzFKP0B5qX/
-         v0OmkdKtJ/BijoLdEjrdqjTkL3HPAJxaqR+fU4CGHvvvLQe0/KlIFTgmbmZW0rnFdVE5
-         7FNmZnk7arSk4SOQOzLcR4vROOtT9pkUO9U8klXVE9iWluwMwtK67Yqb4xuEJ8+secVX
-         ScIh5PX3qAn5Uq16hkpli7u+0IkdPXCWVGSAQ4e21S6pKE72Wat70bBRRwdEIlwCbHoe
-         LJg0v5NYPIzQQC4gwPeWq4abYCQIiu74V0uuOyWYpgu+krDLcsfhoB96kFMSjUpB4TDD
-         FTuw==
-X-Gm-Message-State: AOJu0YzNN3d/AeoGT0ESSkM6a5Sa++NtfrAmOzVJR1emDr24P427p6eq
-	8hclxVV7LhBioDSLQO7P2ibE4XEDf11ZwA==
-X-Google-Smtp-Source: AGHT+IHMylC1f/uOwiPnE54XyvPyUNJflvpVz3FB0ZLbHNPVoLKw4ML5AEQ2yE/zVzZzRQJG9qQEHw==
-X-Received: by 2002:a17:906:6a82:b0:a23:4c5d:dab4 with SMTP id p2-20020a1709066a8200b00a234c5ddab4mr1164549ejr.62.1704467948901;
-        Fri, 05 Jan 2024 07:19:08 -0800 (PST)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id mj20-20020a170906af9400b00a27a7fa8691sm979246ejb.137.2024.01.05.07.19.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jan 2024 07:19:07 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Fri, 5 Jan 2024 16:19:06 +0100
-To: Daniel Xu <dxu@dxuuu.xyz>
-Cc: bpf@vger.kernel.org, fsverity@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, linux-input@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com, cgroups@vger.kernel.org,
-	netdev@vger.kernel.org, alexei.starovoitov@gmail.com,
-	olsajiri@gmail.com, quentin@isovalent.com, alan.maguire@oracle.com,
-	memxor@gmail.com
-Subject: Re: [PATCH bpf-next v2 0/3] Annotate kfuncs in .BTF_ids section
-Message-ID: <ZZgd6vOhpLcZmYp5@krava>
-References: <cover.1704422454.git.dxu@dxuuu.xyz>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="H6z9Lc/S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80019C433C8;
+	Fri,  5 Jan 2024 15:21:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1704468080;
+	bh=BJfr/NAghFFnbqECv5pu8D17fzlRfxtXE9hL5DIHvkQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H6z9Lc/Sx4ZGd6NgiFpuCHyanDx953R/XlSXJSSQXeRQ+u/txq8EdHo37DOLj8ZPY
+	 PM1tNQuwDALCwdRlPPNghBD7IdzrPx2qdUBoJDHVblOdJYDP5SuOLrDiLWNbec5c3y
+	 na3YId1CgbpsjAJG2NQpbqhTAXphZ7YgGn2qnIrw=
+Date: Fri, 5 Jan 2024 16:05:18 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH] spi: make spi_bus_type const
+Message-ID: <2024010554-unreached-colony-96dd@gregkh>
+References: <2024010549-erasure-swoop-1cc6@gregkh>
+ <0fcee73a-bdcb-41d5-b6e5-21947ae9e3d7@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,72 +30,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1704422454.git.dxu@dxuuu.xyz>
+In-Reply-To: <0fcee73a-bdcb-41d5-b6e5-21947ae9e3d7@sirena.org.uk>
 
-On Thu, Jan 04, 2024 at 07:45:46PM -0700, Daniel Xu wrote:
-> === Description ===
+On Fri, Jan 05, 2024 at 02:55:01PM +0000, Mark Brown wrote:
+> On Fri, Jan 05, 2024 at 11:32:50AM +0100, Greg Kroah-Hartman wrote:
+> > Now that the driver core can properly handle constant struct bus_type,
+> > move the spi_bus_type variable to be a constant structure as well,
+> > placing it into read-only memory which can not be modified at runtime.
 > 
-> This is a bpf-treewide change that annotates all kfuncs as such inside
-> .BTF_ids. This annotation eventually allows us to automatically generate
-> kfunc prototypes from bpftool.
-> 
-> We store this metadata inside a yet-unused flags field inside struct
-> btf_id_set8 (thanks Kumar!). pahole will be taught where to look.
-> 
-> More details about the full chain of events are available in commit 3's
-> description.
-> 
-> The accompanying pahole changes (still needs some cleanup) can be viewed
-> here on this "frozen" branch [0].
-> 
-> [0]: https://github.com/danobi/pahole/tree/kfunc_btf-mailed
+> Whatever makes the driver core able to handle this doesn't seem to be in
+> mainline yet - what's the story there?
 
-great, lgtm.. seems I've got the tags in right places (128 kfuncs)
+Odd, what errors are you seeing when you build?  I have had to fix up a
+few subsys_* calls for this type of thing, but I don't see spi_bus_type
+being used in those that I saw in my local tree.  Did I miss something
+else?
 
-please send it on the list once you're done with that, so we could
-comment on that
+Maybe just wait for after 6.8-rc1, it builds properly here locally :)
 
 thanks,
-jirka
 
-> 
-> === Changelog ===
-> 
-> Changes from v1:
-> * Move WARN_ON() up a call level
-> * Also return error when kfunc set is not properly tagged
-> * Use BTF_KFUNCS_START/END instead of flags
-> * Rename BTF_SET8_KFUNC to BTF_SET8_KFUNCS
-> 
-> Daniel Xu (3):
->   bpf: btf: Support flags for BTF_SET8 sets
->   bpf: btf: Add BTF_KFUNCS_START/END macro pair
->   bpf: treewide: Annotate BPF kfuncs in BTF
-> 
->  drivers/hid/bpf/hid_bpf_dispatch.c            |  8 +++----
->  fs/verity/measure.c                           |  4 ++--
->  include/linux/btf_ids.h                       | 21 +++++++++++++++----
->  kernel/bpf/btf.c                              |  4 ++++
->  kernel/bpf/cpumask.c                          |  4 ++--
->  kernel/bpf/helpers.c                          |  8 +++----
->  kernel/bpf/map_iter.c                         |  4 ++--
->  kernel/cgroup/rstat.c                         |  4 ++--
->  kernel/trace/bpf_trace.c                      |  8 +++----
->  net/bpf/test_run.c                            |  8 +++----
->  net/core/filter.c                             | 16 +++++++-------
->  net/core/xdp.c                                |  4 ++--
->  net/ipv4/bpf_tcp_ca.c                         |  4 ++--
->  net/ipv4/fou_bpf.c                            |  4 ++--
->  net/ipv4/tcp_bbr.c                            |  4 ++--
->  net/ipv4/tcp_cubic.c                          |  4 ++--
->  net/ipv4/tcp_dctcp.c                          |  4 ++--
->  net/netfilter/nf_conntrack_bpf.c              |  4 ++--
->  net/netfilter/nf_nat_bpf.c                    |  4 ++--
->  net/xfrm/xfrm_interface_bpf.c                 |  4 ++--
->  net/xfrm/xfrm_state_bpf.c                     |  4 ++--
->  .../selftests/bpf/bpf_testmod/bpf_testmod.c   |  8 +++----
->  22 files changed, 77 insertions(+), 60 deletions(-)
-> 
-> -- 
-> 2.42.1
-> 
+greg k-h
