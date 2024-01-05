@@ -1,184 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1B3185B
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 00:58:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352151FB2;
+	Fri,  5 Jan 2024 01:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZJqR8yDP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7803C433C7;
-	Fri,  5 Jan 2024 00:58:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704416330;
-	bh=LbWufgpY2x1b9pPxEw8zyOci1BCSYD9ImieN+zxIa/w=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=ZJqR8yDPn9AzVbQuyqNZlCBakm6CAC5NDXhDq160wUqttEUt7OXwRWhdZJnEz3ZQk
-	 8TGt8ZEqVFjK1jiPYS6usSVop+XpLuDOjaqD8NdlSJkYVsT4LMVhSQB0w2HvLZhuTQ
-	 B/qSSuDx270axwXqk7Kb7kzVKMZ7hkJB4XLuWcwmNzZutXmHambwqQeTV0beo7ffNk
-	 7jpZwzDkIfpbsnMOIRl4M/MmmqaU/O6Q952Baay+cibrSbxqeCOPtKhDSXAHQkCwsf
-	 t1S3lMxn57wz1UMqqLqZvQrr3B9DyreCWn9DUdzk5tMAQrbmu2AVPHaZAI856N+PvD
-	 Zm6U3+d9Mh7dQ==
-Date: Thu, 4 Jan 2024 16:58:47 -0800 (PST)
-From: Stefano Stabellini <sstabellini@kernel.org>
-X-X-Sender: sstabellini@ubuntu-linux-20-04-desktop
-To: Oleksandr Tyshchenko <olekstysh@gmail.com>
-cc: xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org, 
-    Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, 
-    =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-    Daniel Vetter <daniel@ffwll.ch>, Juergen Gross <jgross@suse.com>, 
-    Stefano Stabellini <sstabellini@kernel.org>
-Subject: Re: [PATCH] xen/gntdev: Fix the abuse of underlying struct page in
- DMA-buf import
-In-Reply-To: <20240104185327.177376-1-olekstysh@gmail.com>
-Message-ID: <alpine.DEB.2.22.394.2401041658200.1322202@ubuntu-linux-20-04-desktop>
-References: <20240104185327.177376-1-olekstysh@gmail.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GaXTFf9w"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d426ad4433so7456295ad.0;
+        Thu, 04 Jan 2024 17:03:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704416585; x=1705021385; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k+E1EN+rUnjR39IpeK1CRBGdfzTUqlP4IkUwFqZSxS0=;
+        b=GaXTFf9wnDjTmyQijPzTe3QV6Mv5/Bp8L10VIDDyFCjkBoaOFqwD+txBnXwEIjD6Vi
+         FxXGhHNdbgZiJt74X++CqgBA3+wIrjK/ARaTbRthDxMdD5jc1EC/yarUek04Hmxa0GIa
+         CKUz+A/3+DAnHjPesFQplAMR2Yusg/Y3/7uJ4lqQY8vCTMDD3FQxG+by6/liY3umyFKs
+         l0l+6r9LisCrlFPN1cOEHTwVRUGZ/9L9qSuhpKbXMN2DyWiFDpAWKIKATOq44nlZPY+E
+         79jK2g/GbCBM5QCjmIP2UQKxfPq4pwFXCLRC18LtCBQfzz9K5wHeWPl2n/IxuD+DuaRy
+         O8zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704416585; x=1705021385;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k+E1EN+rUnjR39IpeK1CRBGdfzTUqlP4IkUwFqZSxS0=;
+        b=WpP7cJFlJSz2zpukyJIo/hYql1lUOT4Xv0bNofbtY+url3Mzpqd1IcxwdKFVqjVo5N
+         bq6/a8NGRIXsYcw1buD0rZY4ntor6YKhGT2tZlQ9r8HDPcj564DFmZVQALRigPztWl4V
+         i0BwHr3cEEfi+UwQLmCM98P3AFLw2EOgFxJfcdeouYFgbzlJQwzWxxdrbkm8xw556WGT
+         y/xGMa6qj0zrXRfxApq5+zs2WFpupiFXtUZ+JDkt3h1xt3AXiATR7fYoAc4fx0ezN28N
+         s4zkqOWto5eo1LvyehqU10T28px3Kv/2MVlDLKyRHJE4W3RAvn5K9+DhZ0zw9Kes9Ur/
+         6yFA==
+X-Gm-Message-State: AOJu0YyukMPL78WAojUZAe8yi0tL0VY5OiSYX4lvm3wa63YupiHpO646
+	EZFy5i9BDwrBaGWGwlynKuQ=
+X-Google-Smtp-Source: AGHT+IEDYk4x1UpqQnc07Rpd0SOWtPQYdpWlUa3NF1yl+hUMq6LSTxKcQMkj3gsk66xJNT8YjhQvRg==
+X-Received: by 2002:a17:902:a50b:b0:1d3:f203:6110 with SMTP id s11-20020a170902a50b00b001d3f2036110mr1087089plq.75.1704416585175;
+        Thu, 04 Jan 2024 17:03:05 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id cp5-20020a170902e78500b001d04d730687sm221803plb.103.2024.01.04.17.03.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jan 2024 17:03:04 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Thu, 4 Jan 2024 17:03:03 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	allen.lkml@gmail.com
+Subject: Re: [PATCH 5.10 00/75] 5.10.206-rc1 review
+Message-ID: <09e8374e-2dd6-41dc-8b33-f194d9590e74@roeck-us.net>
+References: <20240103164842.953224409@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240103164842.953224409@linuxfoundation.org>
 
-On Thu, 4 Jan 2024, Oleksandr Tyshchenko wrote:
-> From: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+On Wed, Jan 03, 2024 at 05:54:41PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.10.206 release.
+> There are 75 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> DO NOT access the underlying struct page of an sg table exported
-> by DMA-buf in dmabuf_imp_to_refs(), this is not allowed.
-> Please see drivers/dma-buf/dma-buf.c:mangle_sg_table() for details.
+> Responses should be made by Fri, 05 Jan 2024 16:47:49 +0000.
+> Anything received after that time might be too late.
 > 
-> Fortunately, here (for special Xen device) we can avoid using
-> pages and calculate gfns directly from dma addresses provided by
-> the sg table.
-> 
-> Suggested-by: Daniel Vetter <daniel@ffwll.ch>
-> Signed-off-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
 
-Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
+Build results:
+	total: 157 pass: 157 fail: 0
+Qemu test results:
+	total: 495 pass: 495 fail: 0
 
+Tested-by: Guenter Roeck <linux@roeck-us.net>
 
-> ---
-> Please note, I didn't manage to test the patch against the latest master branch
-> on real HW (patch was only build tested there). Patch was tested on Arm64
-> guests using Linux v5.10.41 from vendor's BSP, this is the environment where
-> running this use-case is possible and to which I have an access (Xen PV display
-> with zero-copy and backend domain as a buffer provider - be-alloc=1, so dma-buf
-> import part was involved). A little bit old, but the dma-buf import code
-> in gntdev-dmabuf.c hasn't been changed much since that time, all context
-> remains allmost the same according to my code inspection.
-> ---
-> ---
->  drivers/xen/gntdev-dmabuf.c | 42 +++++++++++++++----------------------
->  1 file changed, 17 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/xen/gntdev-dmabuf.c b/drivers/xen/gntdev-dmabuf.c
-> index 4440e626b797..0dde49fca9a5 100644
-> --- a/drivers/xen/gntdev-dmabuf.c
-> +++ b/drivers/xen/gntdev-dmabuf.c
-> @@ -11,6 +11,7 @@
->  #include <linux/kernel.h>
->  #include <linux/errno.h>
->  #include <linux/dma-buf.h>
-> +#include <linux/dma-direct.h>
->  #include <linux/slab.h>
->  #include <linux/types.h>
->  #include <linux/uaccess.h>
-> @@ -50,7 +51,7 @@ struct gntdev_dmabuf {
->  
->  	/* Number of pages this buffer has. */
->  	int nr_pages;
-> -	/* Pages of this buffer. */
-> +	/* Pages of this buffer (only for dma-buf export). */
->  	struct page **pages;
->  };
->  
-> @@ -484,7 +485,7 @@ static int dmabuf_exp_from_refs(struct gntdev_priv *priv, int flags,
->  /* DMA buffer import support. */
->  
->  static int
-> -dmabuf_imp_grant_foreign_access(struct page **pages, u32 *refs,
-> +dmabuf_imp_grant_foreign_access(unsigned long *gfns, u32 *refs,
->  				int count, int domid)
->  {
->  	grant_ref_t priv_gref_head;
-> @@ -507,7 +508,7 @@ dmabuf_imp_grant_foreign_access(struct page **pages, u32 *refs,
->  		}
->  
->  		gnttab_grant_foreign_access_ref(cur_ref, domid,
-> -						xen_page_to_gfn(pages[i]), 0);
-> +						gfns[i], 0);
->  		refs[i] = cur_ref;
->  	}
->  
-> @@ -529,7 +530,6 @@ static void dmabuf_imp_end_foreign_access(u32 *refs, int count)
->  
->  static void dmabuf_imp_free_storage(struct gntdev_dmabuf *gntdev_dmabuf)
->  {
-> -	kfree(gntdev_dmabuf->pages);
->  	kfree(gntdev_dmabuf->u.imp.refs);
->  	kfree(gntdev_dmabuf);
->  }
-> @@ -549,12 +549,6 @@ static struct gntdev_dmabuf *dmabuf_imp_alloc_storage(int count)
->  	if (!gntdev_dmabuf->u.imp.refs)
->  		goto fail;
->  
-> -	gntdev_dmabuf->pages = kcalloc(count,
-> -				       sizeof(gntdev_dmabuf->pages[0]),
-> -				       GFP_KERNEL);
-> -	if (!gntdev_dmabuf->pages)
-> -		goto fail;
-> -
->  	gntdev_dmabuf->nr_pages = count;
->  
->  	for (i = 0; i < count; i++)
-> @@ -576,7 +570,8 @@ dmabuf_imp_to_refs(struct gntdev_dmabuf_priv *priv, struct device *dev,
->  	struct dma_buf *dma_buf;
->  	struct dma_buf_attachment *attach;
->  	struct sg_table *sgt;
-> -	struct sg_page_iter sg_iter;
-> +	struct sg_dma_page_iter sg_iter;
-> +	unsigned long *gfns;
->  	int i;
->  
->  	dma_buf = dma_buf_get(fd);
-> @@ -624,26 +619,23 @@ dmabuf_imp_to_refs(struct gntdev_dmabuf_priv *priv, struct device *dev,
->  
->  	gntdev_dmabuf->u.imp.sgt = sgt;
->  
-> -	/* Now convert sgt to array of pages and check for page validity. */
-> +	gfns = kcalloc(count, sizeof(*gfns), GFP_KERNEL);
-> +	if (!gfns)
-> +		goto fail_unmap;
-> +
-> +	/* Now convert sgt to array of gfns without accessing underlying pages. */
->  	i = 0;
-> -	for_each_sgtable_page(sgt, &sg_iter, 0) {
-> -		struct page *page = sg_page_iter_page(&sg_iter);
-> -		/*
-> -		 * Check if page is valid: this can happen if we are given
-> -		 * a page from VRAM or other resources which are not backed
-> -		 * by a struct page.
-> -		 */
-> -		if (!pfn_valid(page_to_pfn(page))) {
-> -			ret = ERR_PTR(-EINVAL);
-> -			goto fail_unmap;
-> -		}
-> +	for_each_sgtable_dma_page(sgt, &sg_iter, 0) {
-> +		dma_addr_t addr = sg_page_iter_dma_address(&sg_iter);
-> +		unsigned long pfn = bfn_to_pfn(XEN_PFN_DOWN(dma_to_phys(dev, addr)));
->  
-> -		gntdev_dmabuf->pages[i++] = page;
-> +		gfns[i++] = pfn_to_gfn(pfn);
->  	}
->  
-> -	ret = ERR_PTR(dmabuf_imp_grant_foreign_access(gntdev_dmabuf->pages,
-> +	ret = ERR_PTR(dmabuf_imp_grant_foreign_access(gfns,
->  						      gntdev_dmabuf->u.imp.refs,
->  						      count, domid));
-> +	kfree(gfns);
->  	if (IS_ERR(ret))
->  		goto fail_end_access;
->  
-> -- 
-> 2.34.1
-> 
+Guenter
