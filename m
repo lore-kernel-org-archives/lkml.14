@@ -1,397 +1,106 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8F6358B3
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 22:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4666358A4;
+	Fri,  5 Jan 2024 22:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="NmB9y3xC"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40d4a7f0c4dso415215e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 14:20:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H5M4n4NY"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40d4a222818so5798075e9.0;
+        Fri, 05 Jan 2024 14:20:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1704493225; x=1705098025; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=higS0mdLu/MLGgnWkn9tKbyrxY+yKhygKMHgrEHwEkU=;
-        b=NmB9y3xCKEGAzpsDhB9FJUddnndkWWZFWb9QI3f02tpua28nFfPzuF9JWetmVrFPmP
-         BnS1YfeivSju5m3DqrTgahLoKsei6IjAoKo0AJPQdFxryKXT0F8z2ux1JCJhIl/P/VGr
-         +x6QWJ1cNeHK618WqwzGtTLzNShEH7bpMAXTbAdERE5nuQNpSTqvARslbISVU3V0qpYg
-         ymj/iMloLLg/XkckP3rfPDPytR5SJRQaHFNqrTMK6zrHicfvzk7A+u4F4PqBzKoZ4Nlt
-         xt/buNfzYKrqYNS0ueiHY/umMZMXlSCdRA/ETGKAJaFO0y8uj+MRWLBrk5oc1224IR7F
-         En2A==
+        d=gmail.com; s=20230601; t=1704493237; x=1705098037; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fvAsbhn4zJAhQm5EKfY4yEOpwtln0a+WYL/6ejR1+Jc=;
+        b=H5M4n4NYKGrs3dW6zD6rZeIeVQN3ZMBl6FIdku0f71gC7HK/l6ku2/uMg+k7dh0O+6
+         OGWhzSdSNiaEo4mvr48iPqZMAcdPhG4bZ6m9BMI9WmPMkYuIc+2aWYyqUWRu2oBcIwkJ
+         f6X514zAzcIgzU0tkdDmSniqg3ulPTlajPkYyYFaTM5Jt76CtxqmdYcH95FjjXXHV4yy
+         Fr0i72zh5S+r/H7sI+nmWe8LHQu8fUI2m96iMkfdHiz4X/FyzXx+FY3JGuHXn8UBpSQj
+         790enMq7z01I7NUP0+w1zfXSldnRsxOQ37+hMEqVmO9RbOsKmxh2xzYjFhk34RMzdGcI
+         vd0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704493225; x=1705098025;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=higS0mdLu/MLGgnWkn9tKbyrxY+yKhygKMHgrEHwEkU=;
-        b=ohQ8fMh9ecihNqcGZdwK7K1BTnCWIg5oHB/s+Ldun2gS/Qd1ItmpUo3H8XYogsEF2y
-         IGs7tA0KZ6g3zTnJ10XbCSsgzLVUuV9keRPr4hKPQaaNdACsop5e7u2PK0uXSAkvcZ7y
-         AH1PEQYQUYsT4hzBw8M060aTZhi7ZWNCuClYYl/yf/qDKcqoXC1u6hlNbGeFKdVR9IVY
-         i29HHN0zpAJVJC1vApNrL36iuocI4RQYVsMSIYjnZKwJJiauqP+jFKQImEnhDg7rn8dT
-         3Fh2UiJcnHzElVrQkyZD7t5TibK2q9NngpuI1HnF0kvp2zyi3DvLWWmzW6W6i9j8olyx
-         DkXw==
-X-Gm-Message-State: AOJu0YxtPJAEgj0vnveh+bSHNqxxLzKGfAZRCmTqWiikgkRDxDLBRkQ5
-	ZiihdNqjJYjqlYpSJU06bQVl9E+izY8Ucg==
-X-Google-Smtp-Source: AGHT+IHgZ4yEbB1Ofj5qnxHHkzYKh/5JnqkSmNpiGuAXvb6+Mj17mm2DywcMhpzJr1P4/DcVT4YO0w==
-X-Received: by 2002:a05:600c:a686:b0:40b:5e59:c570 with SMTP id ip6-20020a05600ca68600b0040b5e59c570mr79665wmb.154.1704493224711;
-        Fri, 05 Jan 2024 14:20:24 -0800 (PST)
-Received: from airbuntu.. (host109-154-238-212.range109-154.btcentralplus.com. [109.154.238.212])
-        by smtp.gmail.com with ESMTPSA id q13-20020a05600c46cd00b0040d604dea3bsm2799022wmo.4.2024.01.05.14.20.24
+        d=1e100.net; s=20230601; t=1704493237; x=1705098037;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fvAsbhn4zJAhQm5EKfY4yEOpwtln0a+WYL/6ejR1+Jc=;
+        b=h9xDOOugKFaVgnn7k0RtzlhZ3AYokCOfNIgJAjDQZWYE4Gr6aKvJhUOsNSpQ02IrG5
+         IDvz4pFzg3+Nt7RRdeHZjDYEL1xCnBypRQff03F6u/Rw9e5Taa37S4F0kpsN8eNl4atM
+         xdH42XYH6Ksk5mkEAVNFeiPpbW0/yw1sy/7uYAZVIQyQPV1Nh0n6FNkewaGofohoL6Pl
+         DwVIcAHBcrJEoatA91zi7zA26ZAKJiAKBuVMnZXmFhVwqAXOdNQmraNcb+35+1YDoqpl
+         mczq+y+T3TRlOOVLJd2eQUp/a6Q2pQiaRCC5+XL3L83SiuIQYnEOX8MuJRk47Mz8tiUR
+         KZig==
+X-Gm-Message-State: AOJu0YxTDUYGJ9SDkkc1rDZ653Gkjrb4QXGSlItDIuzNJQcNkRPAQM2y
+	Nj5lBeMlMCTMGM5VjSsL/EM=
+X-Google-Smtp-Source: AGHT+IFcnNmMj2fkzftZMQsq1Do6VXzRlNJrtk6H6XNL9C4WNka4Xtl5CRPRbW5wz9Sfxi8YNcHCCQ==
+X-Received: by 2002:a1c:7903:0:b0:40d:94af:6c25 with SMTP id l3-20020a1c7903000000b0040d94af6c25mr62000wme.24.1704493236909;
+        Fri, 05 Jan 2024 14:20:36 -0800 (PST)
+Received: from debian ([93.184.186.109])
+        by smtp.gmail.com with ESMTPSA id z5-20020a05600c0a0500b0040d772030c2sm2716355wmp.44.2024.01.05.14.20.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jan 2024 14:20:24 -0800 (PST)
-From: Qais Yousef <qyousef@layalina.io>
-To: Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: linux-kernel@vger.kernel.org,
-	"Pierre Gondois" <Pierre.Gondois@arm.com>,
-	Qais Yousef <qyousef@layalina.io>
-Subject: [PATCH v4 1/2] sched/fair: Check a task has a fitting cpu when updating misfit
-Date: Fri,  5 Jan 2024 22:20:13 +0000
-Message-Id: <20240105222014.1025040-2-qyousef@layalina.io>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240105222014.1025040-1-qyousef@layalina.io>
-References: <20240105222014.1025040-1-qyousef@layalina.io>
+        Fri, 05 Jan 2024 14:20:36 -0800 (PST)
+Date: Fri, 5 Jan 2024 23:20:33 +0100
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Stefan Eichenberger <eichest@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: phy: marvell-88q2xxx: add driver for the Marvell
+ 88Q2220 PHY
+Message-ID: <20240105222033.GA40773@debian>
+References: <ZX78ucHcNyEatXLD@eichest-laptop>
+ <20231218090932.GA4319@debian>
+ <ZYAqxPZHICtZO15O@eichest-laptop>
+ <20231219081117.GA3479@debian>
+ <ZYFfzei3SJSts5E/@eichest-laptop>
+ <5d545a9b-feda-4908-8f74-9218806451c1@lunn.ch>
+ <20240105124221.GA30964@debian>
+ <c7b1b220-4a76-4cc0-b68d-cec5977ebadb@lunn.ch>
+ <20240105154351.GA39937@debian>
+ <ca76b515-9659-4fed-8a1a-402923b72868@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ca76b515-9659-4fed-8a1a-402923b72868@lunn.ch>
 
-From: Qais Yousef <qais.yousef@arm.com>
+Am Fri, Jan 05, 2024 at 05:06:53PM +0100 schrieb Andrew Lunn:
+> > Hi Andrew,
+> > 
+> > > Do we need to reduce the init sequence? Since this is all undocumented
+> > > magic which nobody understands, it would be safer to just keep with
+> > > the Marvell vendor crap code dump. Unless we really do need to change
+> > > it.
+> > >
+> > You are right, it would be safer to use the vendor code. But when
+> > looking at the vendor code, the init sequence changed a lot from rev. B0
+> > to rev. B1 of the PHY. There are some additional register writes, but
+> > mostly the order of the register writes changed. I don't know if this is
+> > going to be worse in the future. Maintaining different revisions will
+> > probably take some effort or at least result in bloated code. We probably
+> > don't need all of the init sequence. I'm not sure how to deal with it,
+> > keeping the init sequence at a minimum is probably a good idea.
+> 
+> Is the revision in the lower nibble of the ID register? We can handle
+> them as different PHYs, each gets its own init code, and share what
+> can be shared in helper functions.
+>
+Yes, lowest four bits. Handling them as different PHYs would definitely
+help maintaining PHY revisions. Still there is the problem with this
+huge undocumented init sequence. Is this going to be accepted ? Didn't
+see such a long undocumented init sequence in any other phy driver.
 
-If a misfit task is affined to a subset of the possible cpus, we need to
-verify that one of these cpus can fit it. Otherwise the load balancer
-code will continuously trigger needlessly leading the balance_interval
-to increase in return and eventually end up with a situation where real
-imbalances take a long time to address because of this impossible
-imbalance situation.
+> 	Andrew
 
-This can happen in Android world where it's common for background tasks
-to be restricted to little cores.
-
-Similarly if we can't fit the biggest core, triggering misfit is
-pointless as it is the best we can ever get on this system.
-
-To be able to detect that; we use asym_cap_list to iterate through
-capacities in the system to see if the task is able to run at a higher
-capacity level based on its p->cpus_ptr. To do so safely, we convert the
-list to be RCU protected.
-
-To be able to iterate through capacity levels, export asym_cap_list to
-allow for fast traversal of all available capacity levels in the system.
-
-Test:
-=====
-
-Add
-
-	trace_printk("balance_interval = %lu\n", interval)
-
-in get_sd_balance_interval().
-
-run
-	if [ "$MASK" != "0" ]; then
-		adb shell "taskset -a $MASK cat /dev/zero > /dev/null"
-	fi
-	sleep 10
-	// parse ftrace buffer counting the occurrence of each valaue
-
-Where MASK is either:
-
-	* 0: no busy task running
-	* 1: busy task is pinned to 1 cpu; handled today to not cause
-	  misfit
-	* f: busy task pinned to little cores, simulates busy background
-	  task, demonstrates the problem to be fixed
-
-Results:
-========
-
-Note how occurrence of balance_interval = 128 overshoots for MASK = f.
-
-BEFORE
-------
-
-	MASK=0
-
-		   1 balance_interval = 175
-		 120 balance_interval = 128
-		 846 balance_interval = 64
-		  55 balance_interval = 63
-		 215 balance_interval = 32
-		   2 balance_interval = 31
-		   2 balance_interval = 16
-		   4 balance_interval = 8
-		1870 balance_interval = 4
-		  65 balance_interval = 2
-
-	MASK=1
-
-		  27 balance_interval = 175
-		  37 balance_interval = 127
-		 840 balance_interval = 64
-		 167 balance_interval = 63
-		 449 balance_interval = 32
-		  84 balance_interval = 31
-		 304 balance_interval = 16
-		1156 balance_interval = 8
-		2781 balance_interval = 4
-		 428 balance_interval = 2
-
-	MASK=f
-
-		   1 balance_interval = 175
-		1328 balance_interval = 128
-		  44 balance_interval = 64
-		 101 balance_interval = 63
-		  25 balance_interval = 32
-		   5 balance_interval = 31
-		  23 balance_interval = 16
-		  23 balance_interval = 8
-		4306 balance_interval = 4
-		 177 balance_interval = 2
-
-AFTER
------
-
-Note how the high values almost disappear for all MASK values. The
-system has background tasks that could trigger the problem without
-simulate it even with MASK=0.
-
-	MASK=0
-
-		 103 balance_interval = 63
-		  19 balance_interval = 31
-		 194 balance_interval = 8
-		4827 balance_interval = 4
-		 179 balance_interval = 2
-
-	MASK=1
-
-		 131 balance_interval = 63
-		   1 balance_interval = 31
-		  87 balance_interval = 8
-		3600 balance_interval = 4
-		   7 balance_interval = 2
-
-	MASK=f
-
-		   8 balance_interval = 127
-		 182 balance_interval = 63
-		   3 balance_interval = 31
-		   9 balance_interval = 16
-		 415 balance_interval = 8
-		3415 balance_interval = 4
-		  21 balance_interval = 2
-
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-Signed-off-by: Qais Yousef (Google) <qyousef@layalina.io>
----
- kernel/sched/fair.c     | 65 ++++++++++++++++++++++++++++++++++-------
- kernel/sched/sched.h    | 14 +++++++++
- kernel/sched/topology.c | 29 ++++++++----------
- 3 files changed, 81 insertions(+), 27 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index bcea3d55d95d..0830ceb7ca07 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5065,17 +5065,61 @@ static inline int task_fits_cpu(struct task_struct *p, int cpu)
- 
- static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
- {
-+	unsigned long uclamp_min, uclamp_max;
-+	unsigned long util, cpu_cap;
-+	int cpu = cpu_of(rq);
-+
- 	if (!sched_asym_cpucap_active())
- 		return;
- 
--	if (!p || p->nr_cpus_allowed == 1) {
--		rq->misfit_task_load = 0;
--		return;
--	}
-+	if (!p || p->nr_cpus_allowed == 1)
-+		goto out;
- 
--	if (task_fits_cpu(p, cpu_of(rq))) {
--		rq->misfit_task_load = 0;
--		return;
-+	cpu_cap = arch_scale_cpu_capacity(cpu);
-+
-+	/* If we can't fit the biggest CPU, that's the best we can ever get. */
-+	if (cpu_cap == SCHED_CAPACITY_SCALE)
-+		goto out;
-+
-+	uclamp_min = uclamp_eff_value(p, UCLAMP_MIN);
-+	uclamp_max = uclamp_eff_value(p, UCLAMP_MAX);
-+	util = task_util_est(p);
-+
-+	if (util_fits_cpu(util, uclamp_min, uclamp_max, cpu) > 0)
-+		goto out;
-+
-+	/*
-+	 * If the task affinity is not set to default, make sure it is not
-+	 * restricted to a subset where no CPU can ever fit it. Triggering
-+	 * misfit in this case is pointless as it has no where better to move
-+	 * to. And it can lead to balance_interval to grow too high as we'll
-+	 * continuously fail to move it anywhere.
-+	 */
-+	if (!cpumask_equal(p->cpus_ptr, cpu_possible_mask)) {
-+		unsigned long clamped_util = clamp(util, uclamp_min, uclamp_max);
-+		bool has_fitting_cpu = false;
-+		struct asym_cap_data *entry;
-+
-+		rcu_read_lock();
-+		list_for_each_entry_rcu(entry, &asym_cap_list, link) {
-+			if (entry->capacity > cpu_cap) {
-+				cpumask_t *cpumask;
-+
-+				if (clamped_util > entry->capacity)
-+					continue;
-+
-+				cpumask = cpu_capacity_span(entry);
-+				if (!cpumask_intersects(p->cpus_ptr, cpumask))
-+					continue;
-+
-+				has_fitting_cpu = true;
-+				break;
-+			}
-+		}
-+		rcu_read_unlock();
-+
-+		if (!has_fitting_cpu)
-+			goto out;
- 	}
- 
- 	/*
-@@ -5083,6 +5127,9 @@ static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
- 	 * task_h_load() returns 0.
- 	 */
- 	rq->misfit_task_load = max_t(unsigned long, task_h_load(p), 1);
-+	return;
-+out:
-+	rq->misfit_task_load = 0;
- }
- 
- #else /* CONFIG_SMP */
-@@ -9583,9 +9630,7 @@ check_cpu_capacity(struct rq *rq, struct sched_domain *sd)
-  */
- static inline int check_misfit_status(struct rq *rq, struct sched_domain *sd)
- {
--	return rq->misfit_task_load &&
--		(arch_scale_cpu_capacity(rq->cpu) < rq->rd->max_cpu_capacity ||
--		 check_cpu_capacity(rq, sd));
-+	return rq->misfit_task_load && check_cpu_capacity(rq, sd);
- }
- 
- /*
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index e58a54bda77d..a653017a1b9b 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -109,6 +109,20 @@ extern int sysctl_sched_rt_period;
- extern int sysctl_sched_rt_runtime;
- extern int sched_rr_timeslice;
- 
-+/*
-+ * Asymmetric CPU capacity bits
-+ */
-+struct asym_cap_data {
-+	struct list_head link;
-+	struct rcu_head rcu;
-+	unsigned long capacity;
-+	unsigned long cpus[];
-+};
-+
-+extern struct list_head asym_cap_list;
-+
-+#define cpu_capacity_span(asym_data) to_cpumask((asym_data)->cpus)
-+
- /*
-  * Helpers for converting nanosecond timing to jiffy resolution
-  */
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 10d1391e7416..ba4a0b18ae25 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1329,24 +1329,13 @@ static void init_sched_groups_capacity(int cpu, struct sched_domain *sd)
- 	update_group_capacity(sd, cpu);
- }
- 
--/*
-- * Asymmetric CPU capacity bits
-- */
--struct asym_cap_data {
--	struct list_head link;
--	unsigned long capacity;
--	unsigned long cpus[];
--};
--
- /*
-  * Set of available CPUs grouped by their corresponding capacities
-  * Each list entry contains a CPU mask reflecting CPUs that share the same
-  * capacity.
-  * The lifespan of data is unlimited.
-  */
--static LIST_HEAD(asym_cap_list);
--
--#define cpu_capacity_span(asym_data) to_cpumask((asym_data)->cpus)
-+LIST_HEAD(asym_cap_list);
- 
- /*
-  * Verify whether there is any CPU capacity asymmetry in a given sched domain.
-@@ -1386,6 +1375,12 @@ asym_cpu_capacity_classify(const struct cpumask *sd_span,
- 
- }
- 
-+static void free_asym_cap_entry(struct rcu_head *head)
-+{
-+	struct asym_cap_data *entry = container_of(head, struct asym_cap_data, rcu);
-+	kfree(entry);
-+}
-+
- static inline void asym_cpu_capacity_update_data(int cpu)
- {
- 	unsigned long capacity = arch_scale_cpu_capacity(cpu);
-@@ -1400,7 +1395,7 @@ static inline void asym_cpu_capacity_update_data(int cpu)
- 	if (WARN_ONCE(!entry, "Failed to allocate memory for asymmetry data\n"))
- 		return;
- 	entry->capacity = capacity;
--	list_add(&entry->link, &asym_cap_list);
-+	list_add_rcu(&entry->link, &asym_cap_list);
- done:
- 	__cpumask_set_cpu(cpu, cpu_capacity_span(entry));
- }
-@@ -1423,8 +1418,8 @@ static void asym_cpu_capacity_scan(void)
- 
- 	list_for_each_entry_safe(entry, next, &asym_cap_list, link) {
- 		if (cpumask_empty(cpu_capacity_span(entry))) {
--			list_del(&entry->link);
--			kfree(entry);
-+			list_del_rcu(&entry->link);
-+			call_rcu(&entry->rcu, free_asym_cap_entry);
- 		}
- 	}
- 
-@@ -1434,8 +1429,8 @@ static void asym_cpu_capacity_scan(void)
- 	 */
- 	if (list_is_singular(&asym_cap_list)) {
- 		entry = list_first_entry(&asym_cap_list, typeof(*entry), link);
--		list_del(&entry->link);
--		kfree(entry);
-+		list_del_rcu(&entry->link);
-+		call_rcu(&entry->rcu, free_asym_cap_entry);
- 	}
- }
- 
--- 
-2.34.1
-
+Best regards,
+Dimitri
