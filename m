@@ -1,115 +1,87 @@
-Received: from mail-m49216.qiye.163.com (mail-m49216.qiye.163.com [45.254.49.216])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9092421C
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 10:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904462420A;
+	Fri,  5 Jan 2024 11:05:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="J49zP1kc"
-DKIM-Signature: a=rsa-sha256;
-	b=J49zP1kcxyDLDuYjM1j/Nm85RnUYMNpETkXTFJtmfMkDN7noi608Tk7coSGxV/XODolyLuQGAfQwK5z9r8GBmQTRolRWVBxr3xENAIZ/q631aqmpzcv2t/h44mHU7k8zm6iScrfG66xhRB6ZXc+4CrxCcpc58vsJz6ASrURiAxE=;
-	c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=7Rpg1YBO3YN3stA5+Iw9eTT2absDZpy7ygnLlv2cEYU=;
-	h=date:mime-version:subject:message-id:from;
-Received: from [172.16.12.141] (unknown [58.22.7.114])
-	by mail-m12779.qiye.163.com (Hmail) with ESMTPA id 799D37802A7;
-	Fri,  5 Jan 2024 17:04:56 +0800 (CST)
-Message-ID: <acb52035-4f0c-430d-a2d2-26ab37805d7b@rock-chips.com>
-Date: Fri, 5 Jan 2024 17:04:55 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QSmrksRi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C639BC433C7;
+	Fri,  5 Jan 2024 11:05:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704452714;
+	bh=tAcY3Wc85Xssfc6xmX/zkSzf1A83qZCnAsYuhsInaUA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QSmrksRiIqN7GoUVkymQxoJ9nLsKvI9RfLoXRVVkksE1CO+ObSwFhyH/6v3DN/jMw
+	 378Scwa1Da7fdmpRi4Is58HyL5Yg1OxC4B80mysdJJDsZ4ffNW84vPHT52f+0nHFuH
+	 EeNbWXASg1LLRk6ZguzDvRZXR2DE7ZODlqfg180GBjGgmTNORAf4SqS+5r+5wC4OAZ
+	 hvevt/jz542KojTCEBlyIIl4kFXTEKghd9okwxadLhAlszGIMqE3KRMnKcfoibahbN
+	 aZp0+aKil7dQJ89nhS6Wt18il2m66loRu8Ux+VO6yLYw2ir6x7ammjeIaCvhQxtihr
+	 7Qcwkv2uslEoQ==
+Date: Fri, 5 Jan 2024 11:05:08 +0000
+From: Simon Horman <horms@kernel.org>
+To: Shinas Rasheed <srasheed@marvell.com>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Haseeb Gani <hgani@marvell.com>,
+	Vimlesh Kumar <vimleshk@marvell.com>,
+	Sathesh B Edara <sedara@marvell.com>,
+	"egallen@redhat.com" <egallen@redhat.com>,
+	"mschmidt@redhat.com" <mschmidt@redhat.com>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"wizhao@redhat.com" <wizhao@redhat.com>,
+	"kheib@redhat.com" <kheib@redhat.com>,
+	"konguyen@redhat.com" <konguyen@redhat.com>,
+	Veerasenareddy Burru <vburru@marvell.com>,
+	Satananda Burla <sburla@marvell.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>
+Subject: Re: [EXT] Re: [PATCH net-next v2 6/8] octeon_ep_vf: add Tx/Rx
+ processing and interrupt support
+Message-ID: <20240105110508.GU31813@kernel.org>
+References: <20231223134000.2906144-1-srasheed@marvell.com>
+ <20231223134000.2906144-7-srasheed@marvell.com>
+ <20240104130016.47bc1071@kernel.org>
+ <PH0PR18MB473450986CAA852218F225F0C7662@PH0PR18MB4734.namprd18.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/rockchip: vop2: Drop unused if_dclk_rate variable
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
- Sandy Huang <hjc@rock-chips.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- kernel@collabora.com
-References: <20240104143951.85219-1-cristian.ciocaltea@collabora.com>
- <20240104143951.85219-2-cristian.ciocaltea@collabora.com>
- <5867171.29KlJPOoH8@diego>
-Content-Language: en-US
-From: Andy Yan <andy.yan@rock-chips.com>
-In-Reply-To: <5867171.29KlJPOoH8@diego>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQhlPTFZDH0lJTh0fQkJPTkJVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk1PSU5IVUpLS1VKQk
-	tLWQY+
-X-HM-Tid: 0a8cd8de4dd6b24fkuuu799d37802a7
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Kxg6Pww*MDwZST8KPjc*F09R
-	UTAaCRxVSlVKTEtPT09OT0JMSEhMVTMWGhIXVRoVHwJVAhoVOwkUGBBWGBMSCwhVGBQWRVlXWRIL
-	WUFZTkNVSUlVTFVKSk9ZV1kIAVlBT09IQzcG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PH0PR18MB473450986CAA852218F225F0C7662@PH0PR18MB4734.namprd18.prod.outlook.com>
 
-Hi:
+On Fri, Jan 05, 2024 at 07:26:14AM +0000, Shinas Rasheed wrote:
+> Hi Jakub,
+> 
+> Thanks for the review!
+> 
+> > > +	rx_done = octep_vf_oq_process_rx(ioq_vector->oq, budget);
+> > 
+> > You should not call Rx processing if budget is 0 at all, please see
+> > NAPI docs. Looks like the function may try to refill Rx buffers with
+> > budget of 0.
+> > 
+> If budget is zero, octep_vf_oq_process_rx just wouldn't try to query hw for packets. Also since by then, the refill count should have been less than refill threshold, if not it only flushes free buffers back to the ring, (and tell hw that there are more free buffers available which have been processed from maybe previous calls - but this seems unlikely and should have been flushed at that time). 
+> 
+> > > @@ -114,8 +158,8 @@ static int octep_vf_setup_oq(struct octep_vf_device
+> > *oct, int q_no)
+> > >  		goto desc_dma_alloc_err;
+> > >  	}
+> > >
+> > > -	oq->buff_info = (struct octep_vf_rx_buffer *)
+> > > -			vzalloc(oq->max_count *
+> > OCTEP_VF_OQ_RECVBUF_SIZE);
+> > > +	oq->buff_info = vzalloc(oq->max_count *
+> > OCTEP_VF_OQ_RECVBUF_SIZE);
+> > > +
+> > 
+> > bad fixup squash?
+> > 
+> Sorry, I didn't understand. Can you explain?
 
-On 1/4/24 23:58, Heiko Stübner wrote:
-> Hi Christian, Andy,
-> 
-> Am Donnerstag, 4. Januar 2024, 15:39:50 CET schrieb Cristian Ciocaltea:
->> Commit 5a028e8f062f ("drm/rockchip: vop2: Add support for rk3588")
->> introduced a variable which ended up being unused.  Remove it.
->>
->> rockchip_drm_vop2.c:1688:23: warning: variable ‘if_dclk_rate’ set but not used [-Wunused-but-set-variable]
->>
->> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-> 
-> in general, please don't send non-series patches as replies to other patches.
-> It confuses tooling like b4 way too often, as this patch is not designated
-> as a 2/2 (similar to the first one not being 1/2).
-> 
->> ---
->>   drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 2 --
->>   1 file changed, 2 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
->> index 44508c2dd614..923985d4161b 100644
->> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
->> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
->> @@ -1685,7 +1685,6 @@ static unsigned long rk3588_calc_cru_cfg(struct vop2_video_port *vp, int id,
->>   	unsigned long dclk_core_rate = v_pixclk >> 2;
->>   	unsigned long dclk_rate = v_pixclk;
->>   	unsigned long dclk_out_rate;
->> -	unsigned long if_dclk_rate;
->>   	unsigned long if_pixclk_rate;
->>   	int K = 1;
->>   
->> @@ -1700,7 +1699,6 @@ static unsigned long rk3588_calc_cru_cfg(struct vop2_video_port *vp, int id,
->>   		}
->>   
->>   		if_pixclk_rate = (dclk_core_rate << 1) / K;
->> -		if_dclk_rate = dclk_core_rate / K;
->>   		/*
->>   		 * *if_pixclk_div = dclk_rate / if_pixclk_rate;
->>   		 * *if_dclk_div = dclk_rate / if_dclk_rate;
->>   		 */
-> 		*if_pixclk_div = 2;
-> 		*if_dclk_div = 4;
-> 
-> with the code continuing with those static constants but the comment
-> showing a forumula, I do hope Andy can provide a bit of insight into
-> what is happening here.
-> 
-> I.e. I'd really like to understand if that really is just a remnant or
-> something different is needed.
-
-This is not a remnant, in my V1, I calculate all the div by formula, but Sascha prefer
-more for a constants value[0], so I keep this formula as comments to indicate how these value come from.
-
-[0]https://patchwork.kernel.org/project/linux-rockchip/patch/20231114112855.1771372-1-andyshrk@163.com/
-> 
-> 
-> Heiko
-> 
-> 
+I think he means that this change seems to make a minor update
+to code introduced in a previous patch of this series, and thus should
+be squashed into that previous patch.
