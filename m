@@ -1,102 +1,153 @@
-Received: from mx5.ucr.edu (mx.ucr.edu [138.23.62.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A074A36082
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 19:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucr.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucr.edu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53FF635F0C
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 19:37:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="KTtF4lJL";
-	dkim=pass (1024-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="lrcgdxHr"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
-  t=1704483261; x=1736019261;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=x/CY9SqhV19ov+IBOCB9G6eSjA+hDFL4XhUcPEIpaC8=;
-  b=KTtF4lJLqRsC6ZhLAbvOXkzp5iRIqQ83cUzIO7J9NB9ABgwqygK3ViQD
-   SUQs3ZaWXyofVoeo5xwrJmwaBSSnWG4jIT3t2RuKO564hlPJICNY3T1Xc
-   6+GjRepydcTjYEZzpCTOXBHc86l0+d2XemFWtegDbfDPmZOhyuTUsaSZS
-   m9u1gjNE+PyWZ30HxjzKnqUSK0Y6k8J8ZMS+I2tUpJwvSiHOMWc2V1BoI
-   I4NCq+3JiSls838wHZbVbFClbTIK8Npe/X4iwAsP6px1L0GWzlY48hHUv
-   e7YDJWSsgzkS61h4WvMqwoey8fRIUZSUspGKytFpQ470BqPRxh8e61nD4
-   g==;
-X-CSE-ConnectionGUID: CKrCfVssQnGW0X1at4vJuQ==
-X-CSE-MsgGUID: 24zRvTYBT8q3W3uYgSADyQ==
-Received: from mail-pj1-f71.google.com ([209.85.216.71])
-  by smtpmx5.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Jan 2024 11:33:12 -0800
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-28be2bd2ba4so1599703a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 11:33:12 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AwPpw0Tp"
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2046b2cd2d3so1241427fac.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 11:37:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ucr.edu; s=rmail; t=1704483191; x=1705087991; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HxlsttIvEzyojTFQZ0SaO2ARdSYUd7/ebhcJHQ29FLg=;
-        b=lrcgdxHr9FN5y22HLhPyKjcFHFmtgzqhGtMOn7LyM4F1Eva598J+hFxwZYYzl6+Nqs
-         HZObsc0VPvxk5ekBXtCVtLOI5T6axGoSu20djkwgTA7Q8GcOt38u9sX9NCMDM/vDxsn3
-         0MpZ0qYoL1F03IoEcmBqaLxesqNrGaR4jBPPc=
+        d=chromium.org; s=google; t=1704483465; x=1705088265; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vrOZywRVHYQrwYA4rEvbQOcCE+oYGeNQVUbfflcP1O8=;
+        b=AwPpw0Tphp3fbFYYPoIYS3l2fzwPI7FZuvaKt+ycRxz2VmTgh4ojp1DLrZSdTOnJ6g
+         BtAeHYG/qwzoZnRxTOKSvh4m6j/lDY8vLErNY19GAmguko+y2KQcsAtykqbMZFDgDXen
+         MQnDnjpT+xrvYfR3UAaEm2g6v1W8nj2Oo76a4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704483191; x=1705087991;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HxlsttIvEzyojTFQZ0SaO2ARdSYUd7/ebhcJHQ29FLg=;
-        b=YfBd+7ZRSgqrGk9qOZAEcnPKWL/CY5BcHmDanJNkT7wg6KGQP08ssq/Be9+RmnlGbx
-         W1Hx85878efI0XIiWmDx3UuBZ+/9AA5WQj14uCnrSEevD6NLSKX/AUIgnU9rXQqJUB80
-         yvJAV2ePx+8QOO4sQnUN/fOoZt35r43eD1W93DuGX60Uz7sOHdjdq/iFtp6slIn4Up1r
-         hkM1rcl8b6ntptbWhHD84ql/yrtHmQEVgZl4KxL4HQUN/YFSJ7tutCeZRWz8oiIJ9QRG
-         AlyDmeRfkbToDvt7ecGP+2Nv8lzl4K2utzfWOHXIcY2sWwQp7l8EERPaEFM13pJycFpa
-         WjlQ==
-X-Gm-Message-State: AOJu0YxINFTZ1wDpJPPCkKAn509dq07IdJtPKGPMuQ6KD2pzG2yuR/W0
-	t3t8oZrs+hFrRnr2BgtH35bcsCu5mV9Yc4q0NyP5YmI0dH/7tF4voN9Rcg+LiczQgPDPYToIrPf
-	LQS6ccHIbNLSXv6giI+M9mCntzbwzsuyYwg==
-X-Received: by 2002:a17:90a:ba97:b0:28b:e9ed:2a9d with SMTP id t23-20020a17090aba9700b0028be9ed2a9dmr2132123pjr.50.1704483191634;
-        Fri, 05 Jan 2024 11:33:11 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHioz/I4K9ut3ub7C76aj18It19F6YjEnZGz+AiRTzVsSogT/oTQ7Gu4049ADVceQNy/syT3g==
-X-Received: by 2002:a17:90a:ba97:b0:28b:e9ed:2a9d with SMTP id t23-20020a17090aba9700b0028be9ed2a9dmr2132116pjr.50.1704483191306;
-        Fri, 05 Jan 2024 11:33:11 -0800 (PST)
-Received: from localhost (kq.cs.ucr.edu. [169.235.27.223])
-        by smtp.gmail.com with UTF8SMTPSA id sc1-20020a17090b510100b0028d0b013880sm1598264pjb.0.2024.01.05.11.33.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jan 2024 11:33:11 -0800 (PST)
-From: Xiaochen Zou <xzou017@ucr.edu>
-To: aivazian.tigran@gmail.com
-Cc: linux-kernel@vger.kernel.org,
-	Xiaochen Zou <xzou017@ucr.edu>
-Subject: [PATCH] fs/bfs: Null check to prevent null-ptr-deref bug
-Date: Fri,  5 Jan 2024 11:33:31 -0800
-Message-Id: <20240105193331.1180331-1-xzou017@ucr.edu>
-X-Mailer: git-send-email 2.25.1
+        d=1e100.net; s=20230601; t=1704483465; x=1705088265;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vrOZywRVHYQrwYA4rEvbQOcCE+oYGeNQVUbfflcP1O8=;
+        b=t4RVDY6arLLH8FaUY6rNV/clFe5ppSCdXHVLIpUFC03w0GjKDc2WoN3RMQRlSH+sW3
+         zs+ExelowLsNJi639XmInREdCD9ISlfgsoQCcRn9KW713TV6Dc826DgbgQWTWP2ChFyP
+         aUMjpyKDNx8C0I8cd68agU0VcuPhlXr+lPgwTn3ixe7fBvt/nxWJ2VxwFJ7uhZkfn1xt
+         ohjj1x7bU01HoVcDj8RW2WdCHZPi0kuOcnUwkMPAhHxwR+y3C/y+b9dTDIJLSurwchOQ
+         zVzpfwl+nlge4IHkPg0zQZ2h4qu0QisV+/XlI5Y2CCHV2Zz3UUr/AjJOLOe3dOu8t0Yo
+         5TCA==
+X-Gm-Message-State: AOJu0YzsF+qq/eMlv+jVKrylw8aj2Vr8VKwCEHK/jcY22g1lCZVYwJHU
+	KF6RycWvtY2JyAg9TcpqA7cb0v8m37o31Bb9IjdnRekOoZEF
+X-Google-Smtp-Source: AGHT+IF+iHC1gEAXC43HF3ocZtXJBAdcsjjaDe5rzg2X0p+MIUjbNDmhc5uxVg01loIn0VUHcHP25gmmMl2GNf+rx+4=
+X-Received: by 2002:a05:6870:a19f:b0:203:c869:cd44 with SMTP id
+ a31-20020a056870a19f00b00203c869cd44mr2937532oaf.92.1704483465420; Fri, 05
+ Jan 2024 11:37:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240104185138.169307-1-jeffxu@chromium.org> <20240104185138.169307-5-jeffxu@chromium.org>
+ <796b6877-0548-4d2a-a484-ba4156104a20@infradead.org>
+In-Reply-To: <796b6877-0548-4d2a-a484-ba4156104a20@infradead.org>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Fri, 5 Jan 2024 11:37:34 -0800
+Message-ID: <CABi2SkWF8sVeqjOar8MMftEv-piZuLtb8Pt5Bz7dNTekcwzByg@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 4/4] mseal:add documentation
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
+	sroettger@google.com, willy@infradead.org, gregkh@linuxfoundation.org, 
+	torvalds@linux-foundation.org, usama.anjum@collabora.com, jeffxu@google.com, 
+	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
+	dave.hansen@intel.com, linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Similar to ea2b62f3058 (fs/sysv: Null check to prevent
-null-ptr-deref bug), bfs is lack of return value check for
-sb_getblk(). Adding a null check to prevent null-ptr-defer bug
+On Thu, Jan 4, 2024 at 3:47=E2=80=AFPM Randy Dunlap <rdunlap@infradead.org>=
+ wrote:
+>
+>
+>
+> On 1/4/24 10:51, jeffxu@chromium.org wrote:
+> > From: Jeff Xu <jeffxu@chromium.org>
+> >
+> > Add documentation for mseal().
+> >
+> > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+> > ---
+> >  Documentation/userspace-api/mseal.rst | 181 ++++++++++++++++++++++++++
+> >  1 file changed, 181 insertions(+)
+> >  create mode 100644 Documentation/userspace-api/mseal.rst
+> >
+> > diff --git a/Documentation/userspace-api/mseal.rst b/Documentation/user=
+space-api/mseal.rst
+> > new file mode 100644
+> > index 000000000000..1700ce5af218
+> > --- /dev/null
+> > +++ b/Documentation/userspace-api/mseal.rst
+> > @@ -0,0 +1,181 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +Introduction of mseal
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +:Author: Jeff Xu <jeffxu@chromium.org>
+> > +
+> > +Modern CPUs support memory permissions such as RW and NX bits. The mem=
+ory
+> > +permission feature improves security stance on memory corruption bugs,=
+ i.e.
+> > +the attacker can=E2=80=99t just write to arbitrary memory and point th=
+e code to it,
+> > +the memory has to be marked with X bit, or else an exception will happ=
+en.
+> > +
+> > +Memory sealing additionally protects the mapping itself against
+> > +modifications. This is useful to mitigate memory corruption issues whe=
+re a
+> > +corrupted pointer is passed to a memory management system. For example=
+,
+> > +such an attacker primitive can break control-flow integrity guarantees
+> > +since read-only memory that is supposed to be trusted can become writa=
+ble
+> > +or .text pages can get remapped. Memory sealing can automatically be
+> > +applied by the runtime loader to seal .text and .rodata pages and
+> > +applications can additionally seal security critical data at runtime.
+> > +
+> > +A similar feature already exists in the XNU kernel with the
+> > +VM_FLAGS_PERMANENT flag [1] and on OpenBSD with the mimmutable syscall=
+ [2].
+> > +
+> > +User API
+> > +=3D=3D=3D=3D=3D=3D=3D=3D
+> > +Two system calls are involved in virtual memory sealing, mseal() and m=
+map().
+> > +
+> > +mseal()
+> > +-----------
+> > +The mseal() syscall has following signature:
+> > +
+> > +``int mseal(void addr, size_t len, unsigned long flags)``
+> > +
+> > +**addr/len**: virtual memory address range.
+> > +
+> > +The address range set by ``addr``/``len`` must meet:
+> > +   - The start address must be in an allocated VMA.
+> > +   - The start address must be page aligned.
+> > +   - The end address (``addr`` + ``len``) must be in an allocated VMA.
+> > +   - no gap (unallocated memory) between start and end address.
+> > +
+> > +The ``len`` will be paged aligned implicitly by the kernel.
+>
+> Does that mean that the <len> will be extended to be page aligned
+> if it's not already page aligned?
+>
+Yes.
+the code (do_mseal) calls PAGE_ALIGNED(len).
+mprotect() also has this.
 
-Signed-off-by: Xiaochen Zou <xzou017@ucr.edu>
----
- fs/bfs/file.c | 2 ++
- 1 file changed, 2 insertions(+)
+Two test cases cover this part.
+test_seal_mprotect_unalign_len
+test_seal_mprotect_unalign_len_variant_2
 
-diff --git a/fs/bfs/file.c b/fs/bfs/file.c
-index adc2230079c6..35688424bde3 100644
---- a/fs/bfs/file.c
-+++ b/fs/bfs/file.c
-@@ -39,6 +39,8 @@ static int bfs_move_block(unsigned long from, unsigned long to,
- 	if (!bh)
- 		return -EIO;
- 	new = sb_getblk(sb, to);
-+	if (unlikely(!new))
-+		return -ENOMEM;
- 	memcpy(new->b_data, bh->b_data, bh->b_size);
- 	mark_buffer_dirty(new);
- 	bforget(bh);
--- 
-2.25.1
+-Jeff
 
+> --
+> #Randy
