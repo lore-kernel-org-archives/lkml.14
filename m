@@ -1,139 +1,93 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E1124B2A
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 10:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KewQG6iP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704448841;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WDTL7eZEwQEt4FJfs0Pl8u53p2yeEWxqLY7MxE4u220=;
-	b=KewQG6iPXpJuDfKWMbPm6ULwRUVPKh/4beMbSgpxdINHdmev9GTaNqUdnSbAb7kvyGbdss
-	RFTvZmSC4HYaLl3xast5TE/62Alt59rV5wVcDZ6V/KfsW5WyE/k+qGBhbOsQUPe/Z8cprS
-	HjanMcXOhbfMk7GDpV7jGwOtgB2cuKE=
-Received: from mail-yw1-f198.google.com (mail-yw1-f198.google.com
- [209.85.128.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-261-gX1yPgAVNl-dvWVBgZCDRg-1; Fri, 05 Jan 2024 05:00:38 -0500
-X-MC-Unique: gX1yPgAVNl-dvWVBgZCDRg-1
-Received: by mail-yw1-f198.google.com with SMTP id 00721157ae682-5ee11c69bb8so30062627b3.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 02:00:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704448838; x=1705053638;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WDTL7eZEwQEt4FJfs0Pl8u53p2yeEWxqLY7MxE4u220=;
-        b=scGK6x4iSmyIzfa8DXISxl7T4jvqAQHlkaUdENQ1cyuEh8LyA5hksdXYaBZqTtl9Bc
-         aSTb7KFccN+BXMwgmuMJIg7PKE7C0PoJ5Bk7NGrqkELa4xCm/Uv8xSSn39kTXxqJyRgv
-         oYJ901XSaahdUJYEMItdx/CF97Spc6r6z/dlPFOE0nAgKfLuDQoishVr3MzgdqKOvZ/2
-         T9/vqqQvAg8bbig3tEYkm+Fb7H4D9EdY9hhGQAqJp60Ib/5eGYbhl99HhAxNI8PZmwW2
-         g/f6UFUMHtCZc01TIdnPX8dEdloUgdBZyLO2/weYuGZhe/xAAKCFQwpd/MHfM/VCktdd
-         8iQg==
-X-Gm-Message-State: AOJu0Yw3is6aONOcejwa3X7LC9Xy0H4mV+iK5OrbYIjLaP/KjN5vLEFe
-	yXRfGQhn5JFR4aHGNlRONyTaLSqj74/ECdfhbUOt+apc8rvZlQNDPpdoY36I0lM0nzo4FnwKddh
-	VK0H1xQ2Xlg3780bIZqx9Fgg8m4SSXB+hvtlHFP5SI6LI4qfffvsRZeFYu3M=
-X-Received: by 2002:a81:5c07:0:b0:5e7:a7f6:47ee with SMTP id q7-20020a815c07000000b005e7a7f647eemr1962168ywb.80.1704448838218;
-        Fri, 05 Jan 2024 02:00:38 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHp80U4Fd+oLUI0ZzXKfeVM274HiCmXkNGJQljLBxBgi1oqb8H43lLPLE8Q4KVwka5d4Qc9Wk8GVOawxsKqLKk=
-X-Received: by 2002:a81:5c07:0:b0:5e7:a7f6:47ee with SMTP id
- q7-20020a815c07000000b005e7a7f647eemr1962155ywb.80.1704448837970; Fri, 05 Jan
- 2024 02:00:37 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B13250E1;
+	Fri,  5 Jan 2024 10:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.1.104] (178.176.73.147) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Fri, 5 Jan
+ 2024 13:01:18 +0300
+Subject: Re: [PATCH] usb: typec: tipd: Separate reset for TPS6598x
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Jai Luthra <j-luthra@ti.com>, Heikki Krogerus
+	<heikki.krogerus@linux.intel.com>, Javier Carrasco
+	<javier.carrasco@wolfvision.net>, <linux-usb@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <rogerq@kernel.org>, <r-gunasekaran@ti.com>,
+	<vigneshr@ti.com>, <d-gole@ti.com>
+References: <20240105-next-tps-fix-v1-1-158cabaec168@ti.com>
+ <78925337-0bba-ca7d-aeb1-2d5c53c565ea@omp.ru>
+ <2024010559-passcode-bogus-2c97@gregkh>
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <7f026dfe-d143-0d4c-6e3d-fe52ba49a6b7@omp.ru>
+Date: Fri, 5 Jan 2024 13:01:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240104153753.2931026-1-maxime.coquelin@redhat.com> <20240104153753.2931026-4-maxime.coquelin@redhat.com>
-In-Reply-To: <20240104153753.2931026-4-maxime.coquelin@redhat.com>
-From: Eugenio Perez Martin <eperezma@redhat.com>
-Date: Fri, 5 Jan 2024 11:00:01 +0100
-Message-ID: <CAJaqyWeMwC9-GFq4VpaES1NDTNziUnQ7PkD3xPfoYvVsCSvaqg@mail.gmail.com>
-Subject: Re: [PATCH v6 3/3] vduse: enable Virtio-net device type
-To: Maxime Coquelin <maxime.coquelin@redhat.com>
-Cc: mst@redhat.com, jasowang@redhat.com, xuanzhuo@linux.alibaba.com, 
-	xieyongji@bytedance.com, virtualization@lists.linux-foundation.org, 
-	linux-kernel@vger.kernel.org, david.marchand@redhat.com, lulu@redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <2024010559-passcode-bogus-2c97@gregkh>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 01/05/2024 09:46:20
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 0
+X-KSE-AntiSpam-Info: Lua profiles 182464 [Jan 04 2024]
+X-KSE-AntiSpam-Info: Version: 6.1.0.3
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_phishing_log_reg_50_60}
+X-KSE-AntiSpam-Info: {Tracking_arrow_text}
+X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info:
+	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;178.176.73.147:7.1.2;127.0.0.199:7.1.2;omp.ru:7.1.1;lore.kernel.org:7.1.1
+X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.73.147
+X-KSE-AntiSpam-Info: Rate: 0
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 01/05/2024 09:51:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 1/5/2024 9:01:00 AM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On Thu, Jan 4, 2024 at 4:39=E2=80=AFPM Maxime Coquelin
-<maxime.coquelin@redhat.com> wrote:
->
-> This patch adds Virtio-net device type to the supported
-> devices types.
->
-> Initialization fails if the device does not support
-> VIRTIO_F_VERSION_1 feature, in order to guarantee the
-> configuration space is read-only. It also fails with
-> -EPERM if the CAP_NET_ADMIN is missing.
->
-> Signed-off-by: Maxime Coquelin <maxime.coquelin@redhat.com>
+On 1/5/24 12:34 PM, Greg Kroah-Hartman wrote:
 
-Reviewed-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
+[...]
+>>> Some platforms like SK-AM62, SK-AM62A cannot boot up to prompt if
+>>> TPS6598x is cold-reset during unconditionally on probe failures by
+>>
+>>    Hm, I can't parse this. During what?
+> 
+> See the thread that is listed here:
+> 
+>>> Closes: https://lore.kernel.org/linux-usb/vmngazj6si7xxss7txenezkcukqje2glhvvs7ipdcx3vjiqvlk@ohmmhhhlryws/
 
-> ---
->  drivers/vdpa/vdpa_user/vduse_dev.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/drivers/vdpa/vdpa_user/vduse_dev.c b/drivers/vdpa/vdpa_user/=
-vduse_dev.c
-> index 94f54ea2eb06..4057b34ff995 100644
-> --- a/drivers/vdpa/vdpa_user/vduse_dev.c
-> +++ b/drivers/vdpa/vdpa_user/vduse_dev.c
-> @@ -151,6 +151,7 @@ static struct workqueue_struct *vduse_irq_bound_wq;
->
->  static u32 allowed_device_id[] =3D {
->         VIRTIO_ID_BLOCK,
-> +       VIRTIO_ID_NET,
->  };
->
->  static inline struct vduse_dev *vdpa_to_vduse(struct vdpa_device *vdpa)
-> @@ -1694,6 +1695,10 @@ static bool features_is_valid(struct vduse_dev_con=
-fig *config)
->                         (config->features & VDUSE_NET_INVALID_FEATURES_MA=
-SK))
->                 return false;
->
-> +       if ((config->device_id =3D=3D VIRTIO_ID_NET) &&
-> +                       !(config->features & (1ULL << VIRTIO_F_VERSION_1)=
-))
-> +               return false;
-> +
->         return true;
->  }
->
-> @@ -1801,6 +1806,10 @@ static int vduse_create_dev(struct vduse_dev_confi=
-g *config,
->         int ret;
->         struct vduse_dev *dev;
->
-> +       ret =3D -EPERM;
-> +       if ((config->device_id =3D=3D VIRTIO_ID_NET) && !capable(CAP_NET_=
-ADMIN))
-> +               goto err;
-> +
->         ret =3D -EEXIST;
->         if (vduse_find_dev(config->name))
->                 goto err;
-> @@ -2044,6 +2053,7 @@ static const struct vdpa_mgmtdev_ops vdpa_dev_mgmtd=
-ev_ops =3D {
->
->  static struct virtio_device_id id_table[] =3D {
->         { VIRTIO_ID_BLOCK, VIRTIO_DEV_ANY_ID },
-> +       { VIRTIO_ID_NET, VIRTIO_DEV_ANY_ID },
->         { 0 },
->  };
->
-> --
-> 2.43.0
->
->
+   I don't see how it helps with what seems to be a grammar issue...
+Either a noun should follow "during" or that "during" just shouldn't
+be there...
 
+> thanks,
+> 
+> greg k-h
+
+MBR, Sergey
