@@ -1,49 +1,22 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m118112.qiye.163.com (mail-m118112.qiye.163.com [115.236.118.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40B524B27
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 10:09:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411FD250E1
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 10:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uAN1up/B"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a28da6285c1so76849666b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 02:09:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704449375; x=1705054175; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gTcEvk43Zi+UN7zzUBz/Hjg74Fz72ewwhYJTN4bjNtI=;
-        b=uAN1up/B48jEfoRByOvJ1p57oAt1/jSGOgA++GHxOXTg6o4JSJH1d0qJVficIxcigc
-         N/GZKGqOLtn8RyH4gjzio8AB8tnIu3sXoE8CezEd/mYa4ucdIBqq9A4fUgBYXImgB0Sc
-         VH0+e3fECV/6EQREXGBBiduO/4sJNOwHNIczjguzVtVX2irbH1bMJDVPj6xfA+9zZghI
-         uvUQgTx9DIDDM2Qf90o4ndLBszU4w4tK/9NLKMhLumXh/6UAUkKkhH36bCrk2JDERqFQ
-         6IozhIL0LpfSM6mwKotxH1iPXz7Y6chOK6FkMLmjgRwEA/IkGzgfTwiZ8OioRSqQlOuQ
-         bFNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704449375; x=1705054175;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gTcEvk43Zi+UN7zzUBz/Hjg74Fz72ewwhYJTN4bjNtI=;
-        b=oT3ArnPtmTfbxF7mvR4h2iIjtLvzW37tL3NvB0VUegCFAjIz2mPLkF1t+28kHyHPqL
-         bH+c9nYJ5E/pblZqdgR0t8DSaUAFqAGnm6QNHgkWYRqEDTZ2ZMaXWUWwTBbIEkGsh48Z
-         uSL0ZXxaItSIbjDaBnER9k31J9tN3VH+FkpnPBSK88Km1/xnat24vFLwiDXh2V0icqZ8
-         /WwLFyxlsVBC+OJ73rJRQDkR6o2c+A/L0skLlLV80KNk0by3ri0CdiVKjHhEoEaPgl5H
-         M/xFHN2smHkKLaPZPfsui/dy6GN7Q2krXm9qFMxXYe7SJ7ROqd9Vzh3CipihwuINL0zB
-         arAg==
-X-Gm-Message-State: AOJu0Yx57YWu4RrYeOb4lFo0dWkRnUxys6tuN35D36QqXykA9gr/kVqx
-	yOzWMjI69OVWmN5gTbj1pRfAqpsDxRzDbg==
-X-Google-Smtp-Source: AGHT+IF8sfuHpaTxBxJG1gisQbpioyy4ova0pOxUKeHyMgZow4orIbEewEQEjK6no57uTAMRurEpDQ==
-X-Received: by 2002:a17:906:c289:b0:a28:ac22:7575 with SMTP id r9-20020a170906c28900b00a28ac227575mr1746518ejz.4.1704449375170;
-        Fri, 05 Jan 2024 02:09:35 -0800 (PST)
-Received: from [192.168.199.125] (178235179036.dynamic-4-waw-k-1-3-0.vectranet.pl. [178.235.179.36])
-        by smtp.gmail.com with ESMTPSA id ka8-20020a170907920800b00a1c7b20e9e6sm711718ejb.32.2024.01.05.02.09.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jan 2024 02:09:34 -0800 (PST)
-Message-ID: <e216c027-dc23-415d-8d00-e6b1cbbd4248@linaro.org>
-Date: Fri, 5 Jan 2024 11:09:33 +0100
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="KSM370iF"
+DKIM-Signature: a=rsa-sha256;
+	b=KSM370iFKjmw5xxrk6/QzaAkCHdhqtuv0hlvvSEvcmnQsIbTaoBRQ+eK0zJeDVa8sr6Jk7akmw5IQ2GDgQXF5O4mEuzR6f9qezacvcPdc475m6T+7tn0hprSt/f8dGel64uVjr/KEKMRL5/aGuhQF2qAm0dV5iKMMy1XwwJvHIM=;
+	c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=B2Kpa4LwHRxteTEkl0iXK8SA2qrb5sEeEowWu1YDokw=;
+	h=date:mime-version:subject:message-id:from;
+Received: from [172.16.12.141] (unknown [58.22.7.114])
+	by mail-m12779.qiye.163.com (Hmail) with ESMTPA id 3AD6E780511;
+	Fri,  5 Jan 2024 17:13:58 +0800 (CST)
+Message-ID: <6812a957-dafd-4687-8094-074d8d2b5471@rock-chips.com>
+Date: Fri, 5 Jan 2024 17:13:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,113 +24,124 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] phy: qualcomm: eusb2-repeater: Drop the redundant
- zeroing
+Subject: Re: [PATCH] drm/rockchip: vop2: Drop unused if_dclk_rate variable
 Content-Language: en-US
-To: Abel Vesa <abel.vesa@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240104-phy-qcom-eusb2-repeater-fixes-v1-0-047b7b6b8333@linaro.org>
- <20240104-phy-qcom-eusb2-repeater-fixes-v1-2-047b7b6b8333@linaro.org>
- <33b32e2b-fa35-448c-8b4c-c5c51a514922@linaro.org>
- <ZZfI66Mj6v/Qjp5X@linaro.org>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <ZZfI66Mj6v/Qjp5X@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+ =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+ Sandy Huang <hjc@rock-chips.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kernel@collabora.com
+References: <20240104143951.85219-1-cristian.ciocaltea@collabora.com>
+ <20240104143951.85219-2-cristian.ciocaltea@collabora.com>
+ <5867171.29KlJPOoH8@diego>
+ <b017a3e2-f658-4a95-b972-6ffb87acfdc3@collabora.com>
+From: Andy Yan <andy.yan@rock-chips.com>
+In-Reply-To: <b017a3e2-f658-4a95-b972-6ffb87acfdc3@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkhLGVZCH0hNQ0ofHU0fSENVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk1PSE1DVUpLS1VKQk
+	tLWQY+
+X-HM-Tid: 0a8cd8e69206b24fkuuu3ad6e780511
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NE06Ogw5PTwfLj88PksRTiEu
+	MQ4aCw1VSlVKTEtPT09NS0hCSUlMVTMWGhIXVRoVHwJVAhoVOwkUGBBWGBMSCwhVGBQWRVlXWRIL
+	WUFZTkNVSUlVTFVKSk9ZV1kIAVlBTkJOTDcG
 
-On 5.01.2024 10:16, Abel Vesa wrote:
-> On 24-01-04 23:50:48, Konrad Dybcio wrote:
->> On 4.01.2024 15:52, Abel Vesa wrote:
->>> The local init_tlb is already zero initialized, so the entire zeroing loop
->>> is useless in this case, since the initial values are copied over anyway,
->>> before being written.
+Hi Cristian:
+
+On 1/5/24 03:12, Cristian Ciocaltea wrote:
+> Hi Heiko,
+> 
+> On 1/4/24 17:58, Heiko Stübner wrote:
+>> Hi Christian, Andy,
+>>
+>> Am Donnerstag, 4. Januar 2024, 15:39:50 CET schrieb Cristian Ciocaltea:
+>>> Commit 5a028e8f062f ("drm/rockchip: vop2: Add support for rk3588")
+>>> introduced a variable which ended up being unused.  Remove it.
 >>>
->>> Fixes: 99a517a582fc ("phy: qualcomm: phy-qcom-eusb2-repeater: Zero out untouched tuning regs")
->>> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+>>> rockchip_drm_vop2.c:1688:23: warning: variable ‘if_dclk_rate’ set but not used [-Wunused-but-set-variable]
+>>>
+>>> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+>>
+>> in general, please don't send non-series patches as replies to other patches.
+>> It confuses tooling like b4 way too often, as this patch is not designated
+>> as a 2/2 (similar to the first one not being 1/2).
+> 
+> That was unintentional, sorry!  I wrongly assumed 'git send-email' is
+> able to correctly handle multiple patches which are not part of a
+> series.  I'm not sure if the '--no-thread' flag would have helped.
+> 
 >>> ---
->>
->> That's another good spot.. partial struct initialization of
->> pm8550b_init_tbl zeroes out the uninitialized fields.
->>
->>
->>>  drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c | 10 ----------
->>>  1 file changed, 10 deletions(-)
+>>>   drivers/gpu/drm/rockchip/rockchip_drm_vop2.c | 2 --
+>>>   1 file changed, 2 deletions(-)
 >>>
->>> diff --git a/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c b/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
->>> index 5f5862a68b73..3060c0749797 100644
->>> --- a/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
->>> +++ b/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
->>> @@ -156,16 +156,6 @@ static int eusb2_repeater_init(struct phy *phy)
->>>  
->>>  	regmap_field_update_bits(rptr->regs[F_EN_CTL1], EUSB2_RPTR_EN, EUSB2_RPTR_EN);
->>>  
->>> -	for (i = 0; i < F_NUM_TUNE_FIELDS; i++) {
->>> -		if (init_tbl[i]) {
->>> -			regmap_field_update_bits(rptr->regs[i], init_tbl[i], init_tbl[i]);
->>> -		} else {
->>> -			/* Write 0 if there's no value set */
->>> -			u32 mask = GENMASK(regfields[i].msb, regfields[i].lsb);
->>> -
->>> -			regmap_field_update_bits(rptr->regs[i], mask, 0);
->>> -		}
->>> -	}
->>>  	memcpy(init_tbl, rptr->cfg->init_tbl, sizeof(init_tbl));
+>>> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+>>> index 44508c2dd614..923985d4161b 100644
+>>> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+>>> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop2.c
+>>> @@ -1685,7 +1685,6 @@ static unsigned long rk3588_calc_cru_cfg(struct vop2_video_port *vp, int id,
+>>>   	unsigned long dclk_core_rate = v_pixclk >> 2;
+>>>   	unsigned long dclk_rate = v_pixclk;
+>>>   	unsigned long dclk_out_rate;
+>>> -	unsigned long if_dclk_rate;
+>>>   	unsigned long if_pixclk_rate;
+>>>   	int K = 1;
+>>>   
+>>> @@ -1700,7 +1699,6 @@ static unsigned long rk3588_calc_cru_cfg(struct vop2_video_port *vp, int id,
+>>>   		}
+>>>   
+>>>   		if_pixclk_rate = (dclk_core_rate << 1) / K;
+>>> -		if_dclk_rate = dclk_core_rate / K;
+>>>   		/*
+>>>   		 * *if_pixclk_div = dclk_rate / if_pixclk_rate;
+>>>   		 * *if_dclk_div = dclk_rate / if_dclk_rate;
+>>>   		 */
+>> 		*if_pixclk_div = 2;
+>> 		*if_dclk_div = 4;
 >>
->> I think this patchset can be made even better, this memcpy is also
->> useless and we can simply initialize init_tbl=rptr->cfg->init_tbl.
+>> with the code continuing with those static constants but the comment
+>> showing a forumula, I do hope Andy can provide a bit of insight into
+>> what is happening here.
+>>
+>> I.e. I'd really like to understand if that really is just a remnant or
+>> something different is needed.
 > 
-> Actually no. The init_tbl in cfg is a pointer to const. Plus, if you do
-> that, you will end up with the same situation like in the other patch,
-> as there are some overrides based on DT values below this.
+> The current implementation is not able to handle all display modes
+> supported by connected displays, e.g. in my testing environment I
+> encountered issues with 2560x1440-75.00Hz, 2048x1152-60.00Hz,
+> 1024x768-60.00Hz.  Additionally, it doesn't seem to cope well with
+> non-integer refresh rates like 59.94, 29.97, 23.98, etc.
 
-Hm, you're right. Maybe we should simple store *base and stop
-modifying these tables then. There's not a whole lot of regmap_rw
-calls, so making the first argument "rptr->base + rptr->regs[ASDF]"
-shouldn't add much fluff. Then we can make the cfg referernce const.
-
-Konrad
-
+I think this is because the thee PLL from cru can't divide accurate clock for these
+non-integer refresh rates.
 > 
-> But now that I've had another look, maybe doing the exact same thing as
-> the other patch does (kmemdup) will probably look better anyway,
-> specially if we do that on probe.
+> My temporary workaround relies on using the HDMI PHY PLL in conjunction
+> with a downstream-based hack to compute the clock rates.  I'm not sure
+> that would be an upstreamable solution, so I would let Andy shed some
+> light on the topic.
+
+Yes, use PLL from HDMI PHY can give more flexible clock rates to support more display mode.
+We also use it in our bsp kernel, but one thing should  keep in mind that  use HDMI PHY pll
+as dclk source can only work for HDMI 2.0 or bellow, if can't be used in hdmi 2.1 mode(such as 4K120),
+so we need to switch the clock source by hdmi work mode.
+
+The difficult thing is how to make this accepted by upstream.
+> 
+> Thanks,
+> Cristian
 > 
 >>
->> Konrad
+>> Heiko
+>>
+>>
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
