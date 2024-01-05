@@ -1,113 +1,225 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38FC32CCD5;
-	Fri,  5 Jan 2024 12:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBB12D602;
+	Fri,  5 Jan 2024 12:47:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=linosanfilippo@gmx.de header.b="U6tNp3c1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1704458564; x=1705063364; i=linosanfilippo@gmx.de;
-	bh=FeFq9f1LEHSJJFeWAk7/qG+nMMyVg8j/quqe2kNS2K8=;
-	h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:
-	 In-Reply-To;
-	b=U6tNp3c1qGrUfmwFaWxWdK3m7Z9AxbgDAlMKEP/jP8T+9yDAwSNOH8M8skc68r23
-	 vubMOb6KUxUA5pZ7dRVDyvGrJfm6XRJ91QWOUNKccP9j/G33/qNjk7/Hp7tt+skP3
-	 OMVAYnnpfRDpeGleh0A9pTCHV8wwJpNp2Q2+KVJlU3BHDCza3kESAtM8hP0lUHP1F
-	 UIrsRrvdjW7WQSmQzB9IBq3eBVl/z/CN84kzkEB4gcHnvx4KW65AhLN2mEro6khyr
-	 mpBl4z6tQvcFvinBf0CMjnC4Tc44NQSvQsr3FDTNoyKXYfMtpyfyy7Q7PV0UPtxMW
-	 T0MEXhd/Cj3OGqQBZA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.2.37] ([84.162.15.98]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MdNcA-1qmOma03EG-00ZS1j; Fri, 05
- Jan 2024 13:42:44 +0100
-Subject: Re: [PATCH v7 6/7] serial: omap: do not override settings for RS485
- support
-To: =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Lino Sanfilippo <l.sanfilippo@kunbus.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, u.kleine-koenig@pengutronix.de,
- shawnguo@kernel.org, s.hauer@pengutronix.de, mcoquelin.stm32@gmail.com,
- alexandre.torgue@foss.st.com, cniedermaier@dh-electronics.com,
- hugo@hugovil.com, m.brock@vanmierlo.com, LKML
- <linux-kernel@vger.kernel.org>, linux-serial <linux-serial@vger.kernel.org>,
- Lukas Wunner <lukas@wunner.de>, p.rosenberger@kunbus.com,
- stable@vger.kernel.org
-References: <20240103061818.564-1-l.sanfilippo@kunbus.com>
- <20240103061818.564-7-l.sanfilippo@kunbus.com>
- <c88034d4-cb5-b64e-7a76-194ef35f28@linux.intel.com>
-From: Lino Sanfilippo <LinoSanfilippo@gmx.de>
-Message-ID: <a41ae447-565a-4db3-96ff-30aef6455a7c@gmx.de>
-Date: Fri, 5 Jan 2024 13:42:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vGJr7qtw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79FC5C433C7;
+	Fri,  5 Jan 2024 12:47:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704458824;
+	bh=f7aJUqAeO+62GIOemsYAtg4AYwU9wZ1B8RIVl2IX2Zg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=vGJr7qtwsZz/T4P3Otx5SkXUs+x3QBKWPrH2yQuN2FcOLt8MuhVd+VMUXhKm5aoW7
+	 nwNb+XcFNRHFJuNDTbHXSZx0rTfX686lnJS4WaAmnmwihfjF+K0qoTIEZ6Yj3yfi59
+	 FwLfidcRjJkxUMw7Dqb/wZhzCUpiAATsS/dJWG4sRPf94N0ULNxIYyNsd+ueBUaOOH
+	 Q4GcTrcz2bghhFhD0mYKZFevALT6lMIjFLVn3NgHGoNwn5rLJflSNmDFppxmeW6yF2
+	 WpnFuO0CeiUZeFJ5/xOFMixaa9VJo9ClBHujYeWBjdCfBu+N2kHzwNEG1D9nrejVj5
+	 4GFpz/cQGsyXQ==
+From: Christian Brauner <brauner@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] vfs mount api updates
+Date: Fri,  5 Jan 2024 13:46:53 +0100
+Message-ID: <20240105-vfs-mount-5e94596bd1d1@brauner>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <c88034d4-cb5-b64e-7a76-194ef35f28@linux.intel.com>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:pchYpIMV93nsbeYzl5wDPqzNit1opOGKWax2b+K7V7kiudOo7Xh
- 2XD2YIoFvNvoCM5jJUJINXGblK48tYOxLTRuSyJL8pcV3ci7UXozjlV2Wd9inajSMhUYf9w
- D+xdKApyilZcu/uB6KNXCj2tvU7+a6NCVt/CLRuO8WJGH4M/7ks52EC2ivIY7O7LlaZPKw4
- g9/CTU1ne66xifS1il+Pg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:T4KpTWouqx0=;OKKxA3jIye+cUL0iCOD9NzRy5pp
- qDkUmW4P62E4SDjw9QRL6nCKpOclFMHVJVj5V9Yul3y+lbLgi/7TJJgPjvclseqD6Ulh4tkFp
- vIG/tjjhAZvHZ74W4fYE9EO9lajkHSwNRSJEKoAOYtUHgrksU88ScnqSry1nXX/q58lPjxP9h
- 3RBVt+AHKH+QbEwC3NAqXLn1nm7ACJZC40IMODouBCLobkgViWb+ovitzvgvX76yP4mAAgmEE
- u7R2nUwspNVBHlh6bEJ7ncwwO/jXjTzVvg7XBmGMcxRTpa3OGeSxS9U6jv3pEMMQyhsopeP7Y
- MiM+W77d0mZAo7Z07t4gwp6rrkoMDfZ78gol9N3oF+XzmT6vryg+0hNvAKKA1Z9hwIIz85hht
- N7HO+nyDUYvdI/uus+3WcZCsjfqLWnDd1xbBtg0ImIqznZ2r4Mp3A9mFBaclh3vF2UV0x3Lbu
- BMiews4A1xHsYP/fQlUvhhsrR7XWgyc0HykF4H5T27046fckP1XhuKbAAMjoCjisBNIPRlk0V
- qs1tRe0OthmuB5itOhddTw00KbBy3xvQuECCI5LGPPp9U1mndHrGprV47ltpe1h+NsiWL5jkf
- EzERKiWRCCBhUErBj3dwmGTzZxJO1JWz/nfq94h2CCqnpIObOfmkQphOYJ8eYIn+bvab1uqz9
- r7Q8ppyuhaaelg3SDmSzyXvWEB7H59WgYfeB7uG/MmDrz69hi1MdJQ/S6oyfEzonf87JTq/z8
- h/gglhvyi++W9AmXuo5XZMcdzbb2TxAzzEsPzAbgHZ0afeWakTqHYKA7mU5D2s9o7Xl1nwOeA
- 7Rc0TEccqor7kMNv1ey7Ng2gwUH0O16Yp+/eNsWGjyDDpwHInbpSetPHngudF2z4+aXfBotig
- LQIk8Bj/M/O5gOS8RzW2S0yTmQZDRlfdO8V9UFtthmNVF895QKCmnZkiT/9uTjDYsUaR7vO6Q
- VgUStIs+MRWnH8OFoqW9tAE8YKA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8671; i=brauner@kernel.org; h=from:subject:message-id; bh=f7aJUqAeO+62GIOemsYAtg4AYwU9wZ1B8RIVl2IX2Zg=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRO/2Vzf7pJ7848R1n7K49Dl90w5NqxMDhEzvCKQ6f1/ EOBNQxBHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABNJqGD4H38+aPHxVPX0xQ9+ NEVu0v7jzHRMbtfs0BanqQvNdPbMk2JkmJl4N2Eh7yONPvNDX3KufXvCOeV/m9S8uv9uMUq7DvR +YwAA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On 03.01.24 at 12:36, Ilpo J=E4rvinen wrote:
-> On Wed, 3 Jan 2024, Lino Sanfilippo wrote:
->
->> The drivers RS485 support is deactivated if there is no RTS GPIO availa=
-ble.
->> This is done by nullifying the ports rs485_supported struct. After that
->> however the settings in serial_omap_rs485_supported are assigned to the
->> same structure unconditionally, which results in an unintended reactiva=
-tion
->> of RS485 support.
->>
->> Fix this by moving the assignment to the beginning of
->> serial_omap_probe_rs485() and thus before uart_get_rs485_mode() gets
->> called.
->
-> This doesn't seem to accurately reflect what the problem is (which you
-> correctly described in the paragraph above this). The problem doesn't se=
-em
-> to have anything to do with the placement of uart_get_rs485_mode() call
-> but the if (IS_ERR(up->rts_gpiod)) block that clears rs485_supported?
->
+Hey Linus,
 
-Right, this should be "...Fix this by moving the assignment to the beginni=
-ng of
-serial_omap_probe_rs485() and thus before the check for the RTS GPIO."
-I will correct this.
+/* Summary */
+This contains the work to retrieve detailed information about mounts via two
+new system calls. This is hopefully the beginning of the end of the saga that
+started with fsinfo() years ago. The LWN articles in [1] and [2] can serve as a
+summary so we can avoid rehashing everything here.
 
+At LSFMM in May 2022 we got into a room and agreed on what we want to do about
+fsinfo(). Basically, split it into pieces. This is the first part of that
+agreement. Specifically, it is concerned with retrieving information about
+mounts. So this only concerns the mount information retrieval, not the mount
+table change notification, or the extended filesystem specific mount option
+work. That is separate work.
 
-> A future work item that came to my mind while reviewing this: I suppose
-> uart_disable_rs485_support() could be added into core which memsets
-> rs485_supported and rs485 to zero so this driver could just call it.
->
+Currently mounts have a 32bit id. Mount ids are already in heavy use by
+libmount and other low-level userspace but they can't be relied upon because
+they're recycled very quickly. We agreed that mounts should carry a unique
+64bit id by which they can be referenced directly. This is now implemented as
+part of this work. The new 64bit mount id is exposed in statx() through the new
+STATX_MNT_ID_UNIQUE flag. If the flag isn't raised the old mount id is
+returned. If it is raised and the kernel supports the new 64bit mount id the
+flag is raised in the result mask and the new 64bit mount id is returned. New
+and old mount ids do not overlap so they cannot be conflated.
 
-Yes, and the ar933x driver could use that as well.
+Two new system calls are introduced that operate on the 64bit mount id:
+statmount() and listmount(). A summary of the api and usage can be found on LWN
+as well (cf. [3]) but of course, I'll provide a summary here as well.
 
+Both system calls rely on struct mnt_id_req. Which is the request struct used
+to pass the 64bit mount id identifying the mount to operate on. It is
+extensible to allow for the addition of new parameters and for future use in
+other apis that make use of mount ids.
 
-Regards,
-Lino
+statmount() mimicks the semantics of statx() and exposes a set flags that
+userspace may raise in mnt_id_req to request specific information to be
+retrieved. A statmount() call returns a struct statmount filled in with
+information about the requested mount. Supported requests are indicated by
+raising the request flag passed in struct mnt_id_req in the @mask argument in
+struct statmount. Currently we do support:
+
+* STATMOUNT_SB_BASIC:
+  Basic filesystem info.
+
+* STATMOUNT_MNT_BASIC
+  Mount information (mount id, parent mount id, mount attributes etc.).
+
+* STATMOUNT_PROPAGATE_FROM
+  Propagation from what mount in current namespace.
+
+* STATMOUNT_MNT_ROOT
+  Path of the root of the mount (e.g., mount --bind /bla /mnt returns /bla).
+
+* STATMOUNT_MNT_POINT
+  Path of the mount point (e.g., mount --bind /bla /mnt returns /mnt).
+
+* STATMOUNT_FS_TYPE
+  Name of the filesystem type as the magic number isn't enough due to submounts.
+
+The string options STATMOUNT_MNT_{ROOT,POINT} and STATMOUNT_FS_TYPE are
+appended to the end of the struct. Userspace can use the offsets in @fs_type,
+@mnt_root, and @mnt_point to reference those strings easily.
+
+The struct statmount reserves quite a bit of space currently for future
+extensibility. This isn't really a problem and if this bothers us we can just
+send a follow-up pull request during this cycle.
+
+listmount() is given a 64bit mount id via mnt_id_req just as statmount(). It
+takes a buffer and a size to return an array of the 64bit ids of the child
+mounts of the requested mount. Userspace can thus choose to either retrieve
+child mounts for a mount in batches or iterate through the child mounts. For
+most use-cases it will be sufficient to just leave space for a few child
+mounts. But for big mount tables having an iterator is really helpful.
+Iterating through a mount table works by setting @param in mnt_id_req to the
+mount id of the last child mount retrieved in the previous listmount() call.
+
+[1]: https://lwn.net/Articles/934469
+[2]: https://lwn.net/Articles/829212
+[3]: https://lwn.net/Articles/950569
+
+/* Testing */
+clang: Debian clang version 16.0.6 (19)
+gcc: (Debian 13.2.0-7) 13.2.0
+
+All patches are based on v6.7-rc1 and have been sitting in linux-next.
+No build failures or warnings were observed.
+
+/* Conflicts */
+
+Merge conflicts with other trees
+================================
+
+[1] linux-next: manual merge of the security tree with the vfs-brauner tree
+    https://lore.kernel.org/linux-next/20231120143106.3f8faedd@canb.auug.org.au
+
+    Possible conflict in system call numbering depending on whether the LSM
+    people do send a pull request including their new system calls.
+
+[2] This will have a merge conflict with the vfs misc pull request.
+    https://lore.kernel.org/r/20240105-vfs-misc-62acb84c5066@brauner
+
+    The resolution is as follows:
+
+    diff --cc tools/testing/selftests/Makefile
+    index 27f9f679ed15,da2e1b0e4dd8..000000000000
+    --- a/tools/testing/selftests/Makefile
+    +++ b/tools/testing/selftests/Makefile
+    @@@ -26,7 -26,7 +26,8 @@@ TARGETS += filesystem
+      TARGETS += filesystems/binderfs
+      TARGETS += filesystems/epoll
+      TARGETS += filesystems/fat
+     +TARGETS += filesystems/overlayfs
+    + TARGETS += filesystems/statmount
+      TARGETS += firmware
+      TARGETS += fpu
+      TARGETS += ftrace
+
+The following changes since commit b85ea95d086471afb4ad062012a4d73cd328fa86:
+
+  Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.8.mount
+
+for you to fetch changes up to 5bd3cf8cbc8a286308ef3f40656659d5abc89995:
+
+  add selftest for statmount/listmount (2023-12-14 16:13:59 +0100)
+
+Please consider pulling these changes from the signed vfs-6.8.mount tag.
+
+Happy New Year!
+Christian
+
+----------------------------------------------------------------
+vfs-6.8.mount
+
+----------------------------------------------------------------
+Christian Brauner (3):
+      statmount: simplify numeric option retrieval
+      statmount: simplify string option retrieval
+      fs: keep struct mnt_id_req extensible
+
+Miklos Szeredi (7):
+      add unique mount ID
+      mounts: keep list of mounts in an rbtree
+      namespace: extract show_path() helper
+      add statmount(2) syscall
+      add listmount(2) syscall
+      wire up syscalls for statmount/listmount
+      add selftest for statmount/listmount
+
+ arch/alpha/kernel/syscalls/syscall.tbl             |   2 +
+ arch/arm/tools/syscall.tbl                         |   2 +
+ arch/arm64/include/asm/unistd32.h                  |   4 +
+ arch/m68k/kernel/syscalls/syscall.tbl              |   2 +
+ arch/microblaze/kernel/syscalls/syscall.tbl        |   2 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl          |   2 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl          |   2 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl          |   2 +
+ arch/parisc/kernel/syscalls/syscall.tbl            |   2 +
+ arch/powerpc/kernel/syscalls/syscall.tbl           |   2 +
+ arch/s390/kernel/syscalls/syscall.tbl              |   2 +
+ arch/sh/kernel/syscalls/syscall.tbl                |   2 +
+ arch/sparc/kernel/syscalls/syscall.tbl             |   2 +
+ arch/x86/entry/syscalls/syscall_32.tbl             |   2 +
+ arch/x86/entry/syscalls/syscall_64.tbl             |   2 +
+ arch/xtensa/kernel/syscalls/syscall.tbl            |   2 +
+ fs/internal.h                                      |   2 +
+ fs/mount.h                                         |  27 +-
+ fs/namespace.c                                     | 627 +++++++++++++++++----
+ fs/pnode.c                                         |   2 +-
+ fs/proc_namespace.c                                |  13 +-
+ fs/stat.c                                          |   9 +-
+ include/linux/mount.h                              |   5 +-
+ include/linux/syscalls.h                           |   8 +
+ include/uapi/asm-generic/unistd.h                  |   8 +-
+ include/uapi/linux/mount.h                         |  70 +++
+ include/uapi/linux/stat.h                          |   1 +
+ tools/testing/selftests/Makefile                   |   1 +
+ .../selftests/filesystems/statmount/.gitignore     |   2 +
+ .../selftests/filesystems/statmount/Makefile       |   6 +
+ .../filesystems/statmount/statmount_test.c         | 612 ++++++++++++++++++++
+ 31 files changed, 1298 insertions(+), 129 deletions(-)
+ create mode 100644 tools/testing/selftests/filesystems/statmount/.gitignore
+ create mode 100644 tools/testing/selftests/filesystems/statmount/Makefile
+ create mode 100644 tools/testing/selftests/filesystems/statmount/statmount_test.c
