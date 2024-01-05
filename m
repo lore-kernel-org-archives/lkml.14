@@ -1,50 +1,51 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F05A7360B7
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 23:34:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B049F360B4
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 23:34:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LPxoWth0"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-50e7ddd999bso77839e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 15:34:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="agNdjeqs"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-50eaaf2c7deso67284e87.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 15:34:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704497658; x=1705102458; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1704497660; x=1705102460; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pivXLuv3moQJBJFOlfzUjv/WGq0UATAH7Ew9ljEMyg4=;
-        b=LPxoWth0+Dz0gOHJAmUE7pw8+rG9W0gy2HL9by3XMA6B6bYmWXF1XNN6lyVRCHL8qx
-         EcRurGeMKj18ag3NMXEnrhOlZLlF2YjM+oszGsEmISwxLPdSfUbSi2FyYwk+7P1eyG8H
-         bl94sxZoANEQXozFoTi/bya2bIKfuoUBcjEd8fI+VUnFnEwhWSf1ymeeefaxcvROzkba
-         nFZvHkzW6pzx2UihdMjAhgttItpMVyMkGA/xi97IHV7gu0noKFMbpCqxm8zUJv+Tr+UE
-         z5XnsN/ieWb4xRRwuXYrpocGqxg2DJItI1bCzswCkIWS2UZL/vcsyBi3E13HiYl6fOMI
-         n8lA==
+        bh=Ca8QpilXW9nIueljtJCFA85v0Hen2fQTmG6mJOfT0Tg=;
+        b=agNdjeqsfDfDS+HAC3UxEJYxh6UNd2pgrT4YzFqR8TjIrfUjAZUS4DmzcxuEwtiD2O
+         SrqaGzMaiJ3WaSQn6g0QjzwZASa7dZWsd2EHBsU3g6yWqX81ysC1ZFKzXaph+7zKOyp/
+         Hk4jossFZpcee8yZA4addodAGk7OddnoNuMhiPh/Z67gfo1jOz48qcc3Qg9sHSBifIKg
+         0tJNhrTL/6A86avR7lEFSiRAd9gbm/KsDkF0FteDGOCy9970krfacwao3Df+BURQpmCI
+         pF2D1RRTZ9RY8fUh1IfS5kbO3w0zzzrA8vUCx+bPvydX2XS/vUFHoqwgW6z1jfV2d5xR
+         in3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704497658; x=1705102458;
+        d=1e100.net; s=20230601; t=1704497660; x=1705102460;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pivXLuv3moQJBJFOlfzUjv/WGq0UATAH7Ew9ljEMyg4=;
-        b=qiZiYHW34gZfXmN8oyF7mpgMX2iAeJqX/PYwkR1zh4CF6zdwl5xDV4EPklrhVI5z6o
-         UxscjgATGpFKzNtOWo7IxlwV+NDM/Lys5ufPPlfQbdthKQwzNPdiIc4vcrBbeuqsPoV0
-         fYb1js3qRUNhO79RGxHCCVRqYvdutVA94l83pT0IcEhQnTJBVTfFrkA9BuwXXGqZjA9Y
-         VqUmoIOqzG4BN6gnk34i6SG2w5xQszz5bj25oowrv9AP5iimBW6eLSvfUPNu1rYODRuM
-         FOEkRAAUR4zDqgrA4Az5Vqci6E63u/3fU/wJqvULcpdV6p7o53HDf5M7sRim6DO/yvI7
-         LeDQ==
-X-Gm-Message-State: AOJu0YxRBDkKFLBQmjJ6iq0BvXmE5nQNScsVIKDG5AHn96n+5Y6zED2r
-	VsvtJI7YNnZ71ORgKXiVOL68QmgDPtOKJFRcEcGIBT2UnEW10A==
-X-Google-Smtp-Source: AGHT+IHjjfgIUzKUmYx8HvWto+XFSDXGxrDrzCnNGlIaweKA9Pizp1MjnofAvmLAwmRQ4ywaKSuTYQ==
-X-Received: by 2002:a05:6512:1304:b0:50e:b206:50f6 with SMTP id x4-20020a056512130400b0050eb20650f6mr105571lfu.62.1704497658026;
-        Fri, 05 Jan 2024 15:34:18 -0800 (PST)
+        bh=Ca8QpilXW9nIueljtJCFA85v0Hen2fQTmG6mJOfT0Tg=;
+        b=COWWQM3rs5YVKk4wWXLALGoaArTbKAT7E1EJQ1PIeuXoihpEhMJNq8IEHq6uiA3nN6
+         AWrnuhNFcnz4vR7jXXvHGQv46HWRHB61yUlEWwjuIwPeU9KeN3Qbpb4xzosDts6DQ8Ji
+         +lGnU+iWR2B/fZST9StbJp/ARs0e9whUyGsvKqT9bu3ohKrJXTQldRfNOrXx+YsXa7BX
+         E0mKzcCLS5e90IilccrmPqNP3oH0+rhh+tKsadBQ6yZvz0mwGSu4LntKN1HTlGmMfJN1
+         NnUrarSyERmKq6D6PA9Jt0F8QWV7x98Z9dKoak3DNcxySOYtI081ieHaRRhpyWzMWRXu
+         V61w==
+X-Gm-Message-State: AOJu0Yz/hGoT9jwRumfix2cWqNzKO+TsPvKWMQ8fGEHHgnHYjVAPzzKO
+	j4vUkU+PZKCBjAZ1gHwvBnDLyippRVE2HQ==
+X-Google-Smtp-Source: AGHT+IGMR+uDBBj+HxtcIk41GnXMSBMW/eQumehmT4kFqTC7BOPEvc4PDEeLuhIoW+vhS10c4S2r/w==
+X-Received: by 2002:ac2:4a8a:0:b0:50e:7f70:a08b with SMTP id l10-20020ac24a8a000000b0050e7f70a08bmr65774lfp.112.1704497659755;
+        Fri, 05 Jan 2024 15:34:19 -0800 (PST)
 Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id k4-20020ac24f04000000b0050e74d04c8asm362211lfr.132.2024.01.05.15.34.17
+        by smtp.gmail.com with ESMTPSA id k4-20020ac24f04000000b0050e74d04c8asm362211lfr.132.2024.01.05.15.34.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jan 2024 15:34:17 -0800 (PST)
+        Fri, 05 Jan 2024 15:34:19 -0800 (PST)
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Sat, 06 Jan 2024 01:34:15 +0200
-Subject: [PATCH v3 1/4] drm/msm/mdss: generate MDSS data for MDP5 platforms
+Date: Sat, 06 Jan 2024 01:34:17 +0200
+Subject: [PATCH v3 3/4] drm/msm: add a kernel param to select between MDP5
+ and DPU drivers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,7 +54,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240106-fd-migrate-mdp5-v3-1-3d2750378063@linaro.org>
+Message-Id: <20240106-fd-migrate-mdp5-v3-3-3d2750378063@linaro.org>
 References: <20240106-fd-migrate-mdp5-v3-0-3d2750378063@linaro.org>
 In-Reply-To: <20240106-fd-migrate-mdp5-v3-0-3d2750378063@linaro.org>
 To: Rob Clark <robdclark@gmail.com>, 
@@ -62,111 +63,121 @@ To: Rob Clark <robdclark@gmail.com>,
  Marijn Suijten <marijn.suijten@somainline.org>, 
  David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
 Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Stephen Boyd <swboyd@chromium.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2820;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3741;
  i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=LkZVf/+xPhq0hvOZBHDG1k3f2Ti6cdXMRdV8DhuZcww=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBlmJH3neGn4tNLgH5uqv+GRDujihKsIuYzeU+fQ
- q1wipxEVTKJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZZiR9wAKCRCLPIo+Aiko
- 1Yx5B/9qCYBUPIhNXXCNksAqS7Arv9TpBfuk3jYAtOIwuslsf84dtngnOJy6DXX8QwgKpSXgDe5
- JhfPlKOHR9iZhYK5hS+C7iwVbnxvAPpdrd9Sywmekw1jdXD/dHqJIh2i5zEfj0rtE8rxaa2TPF9
- deM0w/KJ3NIz8Uu1jb8Bi+PlnwiBb6hF9y0B5Mj4/TNl/a//GjhBJGxY0RCpdck24Tmcm+HrJsP
- wzskwxbkgDYAjlaGhfEYZHoYz5WQddJgOS0LAk/hk4qamQvaJBUlIlZSYNqY0s/JbokBghgyYjA
- ZMWyStoIRyPRfOWmjpgpomAa1vpzfGd8sMkF08lDj+F1roJy
+ bh=abAC+lw4hjGPuNmxpktM2ndFdh6eRFn95EvCwJH6BVI=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBlmJH35H1Sc7wsyEAR8ndmd1/uurtz+VgYXO7iI
+ IlnDLKn032JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZZiR9wAKCRCLPIo+Aiko
+ 1T5fB/9F0oTDVX6dnOnu/guTRuyY9cAlZrxxzwIIsUIrwdacCBuuOfH/xvwArLOr2mTEQv0OQ+b
+ u0VpTuKpvASKrm0ZPG38DHXndlKgr//GhnQZCkZT0i5tAgfkrf7d6XAWhE7VzEskg1U7dxtYmYR
+ SnIDBmvA68Iug8QPrM2KsauOF+B0SMKhm3bBhN4lfmEibQctGSZU+29Hdhdr4zKs6A71WzY3ZG6
+ 2yMLYUTbeqg5WuVr1hPaoLFf47FvIfF6zoKl+vUlxlE0+BnSR8EmpWP/Pj4OJIBTdaX0D09JhCe
+ IVIK1RxDQ65a+gtqO5VUMmC5VtxpklfgMvjnyG+mevMstM6S
 X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Older (mdp5) platforms do not use per-SoC compatible strings. Instead
-they use a single compat entry 'qcom,mdss'. To facilitate migrating
-these platforms to the DPU driver provide a way to generate the MDSS /
-UBWC data at runtime, when the DPU driver asks for it.
+For some of the platforms (e.g. SDM660, SDM630, MSM8996, etc.) it is
+possible to support this platform via the DPU driver (e.g. to provide
+support for DP, multirect, etc). Add a modparam to be able to switch
+between these two drivers.
 
-It is not possible to generate this data structure at the probe time,
-since some platforms might not have MDP_CLK enabled, which makes reading
-HW_REV register return 0.
+All platforms supported by both drivers are by default handled by the
+MDP5 driver. To let them be handled by the DPU driver pass the
+`msm.prefer_mdp5=false` kernel param.
 
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/gpu/drm/msm/msm_mdss.c | 51 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c  |  3 +++
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c |  3 +++
+ drivers/gpu/drm/msm/msm_drv.c            | 31 +++++++++++++++++++++++++++++++
+ drivers/gpu/drm/msm/msm_drv.h            |  1 +
+ 4 files changed, 38 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/msm_mdss.c b/drivers/gpu/drm/msm/msm_mdss.c
-index 455b2e3a0cdd..566a5dd5b8e8 100644
---- a/drivers/gpu/drm/msm/msm_mdss.c
-+++ b/drivers/gpu/drm/msm/msm_mdss.c
-@@ -3,6 +3,7 @@
-  * Copyright (c) 2018, The Linux Foundation
-  */
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+index aa9e0ad33ebb..8f11a98491a1 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -1276,6 +1276,9 @@ static int dpu_dev_probe(struct platform_device *pdev)
+ 	int irq;
+ 	int ret = 0;
  
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/interconnect.h>
-@@ -213,6 +214,49 @@ static void msm_mdss_setup_ubwc_dec_40(struct msm_mdss *msm_mdss)
- 	}
++	if (!msm_disp_drv_should_bind(&pdev->dev, true))
++		return -ENODEV;
++
+ 	dpu_kms = devm_kzalloc(dev, sizeof(*dpu_kms), GFP_KERNEL);
+ 	if (!dpu_kms)
+ 		return -ENOMEM;
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+index 0827634664ae..43d05851c54d 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+@@ -866,6 +866,9 @@ static int mdp5_dev_probe(struct platform_device *pdev)
+ 
+ 	DBG("");
+ 
++	if (!msm_disp_drv_should_bind(&pdev->dev, false))
++		return -ENODEV;
++
+ 	mdp5_kms = devm_kzalloc(&pdev->dev, sizeof(*mdp5_kms), GFP_KERNEL);
+ 	if (!mdp5_kms)
+ 		return -ENOMEM;
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index 50b65ffc24b1..ef57586fbeca 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -969,6 +969,37 @@ static int add_components_mdp(struct device *master_dev,
+ 	return 0;
  }
  
-+#define MDSS_HW_MAJ_MIN		GENMASK(31, 16)
-+
-+#define MDSS_HW_MSM8996		0x1007
-+#define MDSS_HW_MSM8937		0x100e
-+#define MDSS_HW_MSM8956		0x1010
-+#define MDSS_HW_MSM8998		0x3000
-+#define MDSS_HW_SDM660		0x3002
-+#define MDSS_HW_SDM630		0x3003
-+
-+/*
-+ * MDP5 platforms use generic qcom,mdp5 compat string, so we have to generate this data
-+ */
-+static const struct msm_mdss_data *msm_mdss_generate_mdp5_mdss_data(struct msm_mdss *mdss)
++#if !IS_REACHABLE(CONFIG_DRM_MSM_MDP5) || !IS_REACHABLE(CONFIG_DRM_MSM_DPU)
++bool msm_disp_drv_should_bind(struct device *dev, bool mdp5_driver)
 +{
-+	struct msm_mdss_data *data;
-+	u32 hw_rev;
-+
-+	data = devm_kzalloc(mdss->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return NULL;
-+
-+	hw_rev = readl_relaxed(mdss->mmio + HW_REV);
-+	hw_rev = FIELD_GET(MDSS_HW_MAJ_MIN, hw_rev);
-+
-+	if (hw_rev == MDSS_HW_MSM8996 ||
-+	    hw_rev == MDSS_HW_MSM8937 ||
-+	    hw_rev == MDSS_HW_MSM8956 ||
-+	    hw_rev == MDSS_HW_MSM8998 ||
-+	    hw_rev == MDSS_HW_SDM660 ||
-+	    hw_rev == MDSS_HW_SDM630) {
-+		data->ubwc_dec_version = UBWC_1_0;
-+		data->ubwc_enc_version = UBWC_1_0;
-+	}
-+
-+	if (hw_rev == MDSS_HW_MSM8996 ||
-+	    hw_rev == MDSS_HW_MSM8998)
-+		data->highest_bank_bit = 2;
-+	else
-+		data->highest_bank_bit = 1;
-+
-+	return data;
++	/* If just a single driver is enabled, use it no matter what */
++	return true;
 +}
++#else
 +
- const struct msm_mdss_data *msm_mdss_get_mdss_data(struct device *dev)
- {
- 	struct msm_mdss *mdss;
-@@ -222,6 +266,13 @@ const struct msm_mdss_data *msm_mdss_get_mdss_data(struct device *dev)
- 
- 	mdss = dev_get_drvdata(dev);
- 
-+	/*
-+	 * We could not do it at the probe time, since hw revision register was
-+	 * not readable. Fill data structure now for the MDP5 platforms.
-+	 */
-+	if (!mdss->mdss_data && mdss->is_mdp5)
-+		mdss->mdss_data = msm_mdss_generate_mdp5_mdss_data(mdss);
++static bool prefer_mdp5 = true;
++MODULE_PARM_DESC(prefer_mdp5, "Select whether MDP5 or DPU driver should be preferred");
++module_param(prefer_mdp5, bool, 0444);
 +
- 	return mdss->mdss_data;
- }
++/* list all platforms supported by both mdp5 and dpu drivers */
++static const char *const msm_mdp5_dpu_migration[] = {
++	NULL,
++};
++
++bool msm_disp_drv_should_bind(struct device *dev, bool dpu_driver)
++{
++	/* If it is not an MDP5 device, do not try MDP5 driver */
++	if (!of_device_is_compatible(dev->of_node, "qcom,mdp5"))
++		return dpu_driver;
++
++	/* If it is not in the migration list, use MDP5 */
++	if (!of_device_compatible_match(dev->of_node, msm_mdp5_dpu_migration))
++		return !dpu_driver;
++
++	return prefer_mdp5 ? !dpu_driver : dpu_driver;
++}
++#endif
++
+ /*
+  * We don't know what's the best binding to link the gpu with the drm device.
+  * Fow now, we just hunt for all the possible gpus that we support, and add them
+diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
+index 01e783130054..762e13e2df74 100644
+--- a/drivers/gpu/drm/msm/msm_drv.h
++++ b/drivers/gpu/drm/msm/msm_drv.h
+@@ -563,5 +563,6 @@ int msm_drv_probe(struct device *dev,
+ 	struct msm_kms *kms);
+ void msm_kms_shutdown(struct platform_device *pdev);
  
++bool msm_disp_drv_should_bind(struct device *dev, bool dpu_driver);
+ 
+ #endif /* __MSM_DRV_H__ */
 
 -- 
 2.39.2
