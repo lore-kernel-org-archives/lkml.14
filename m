@@ -1,180 +1,277 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2075.outbound.protection.outlook.com [40.107.102.75])
+Received: from bee.tesarici.cz (bee.tesarici.cz [77.93.223.253])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8293588C;
-	Fri,  5 Jan 2024 14:45:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E0E2E3E8;
+	Fri,  5 Jan 2024 14:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tesarici.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ZgXUtIj4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Rk1MJgHh1M3mGwaZpvR+klFRZOB0/jz33BeJlOHT0DXhAbn/y7B2D0p9f0C5b9vRfyZgOdjypOv43NzJ+OUoWIU6MyXlUyqsvhG30DfXU444WoDKWJwhySZ/1b5dsa4IVX1jmbPtg97Z0Dk4LabeuVxAYazpzfLwgOsTH7ZbS1ZAinnPlFGhoVlXRigKoo1tGU0te6R17jIZBzTy+KOhFSuetYrzxFNzdQSWkh4Uf2iPerS4ttFlm6QrXlXqxnUyYEPPsqKW83Ib1UtRNIQER9a7vcfS8JWWrPQR1wrn3XwWZZQrG9wmC+jZNJzPxjif6wx5b6ec+kaZo4nNB7yjag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nP48OH3JemuBmAJBBTUNZEOewc5ZIQvd8mXEam+hOgg=;
- b=oIsGbfirELOqwo0lzlPnmfiXMkME++z5dZgQRmM8neN2qBAo6ucLwszBdmXH9fvteixIkUimHPGxTjqfBTqROCP8QORroW8Wo0W15A8KbCRykkfnn7Fqa8SqCoSQmwu3vAKHIUdvTIcBuC9fqUFCg0Uh+JowYXxfhitGb0HSdNd24MJv69uOy3hUhaa/Nu+buYEJkjR8eg0GI9Z02lUI1eCv93h4RRRdtnO3FCXYAq2N3vU26Xt3GKM3VC3Hd6SJudvjZanlx65G97x+yqVHDDwIGqfVFiI25zP1XjVGU3Ywt/FfsWVuuYeDvBm8T10obIezGxncJqEycq7KYMO/qA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nP48OH3JemuBmAJBBTUNZEOewc5ZIQvd8mXEam+hOgg=;
- b=ZgXUtIj4Qcs8PamFj6jIAUP0OhhTecQoVJKVFLL6gVdxqqHAQlWlmZ+fcHDcjeSuqeKxZV6ZJHZlQeVnARo6HoLGiGH23JNX2qB+V37k6x31Z2pEcBh3vhZiWnBsX+4W3wGGx/MxdpgkYdlNR8rxQtjKaRRWq1U7X1M+O9lvVAegN+p8pgve607IxupOVmtwtXf7PuO2t1WFECHKO6pwSYzHCgYSMnLoKOo7tvGnKXekGGJwFNHgKtnyY/AU4jvTBEpAFTcSACBLak9roaPzBmTmIjNtA18obeHp/5bzx2HEXaa0Ef85zX7wYQMzpHpDtDYmfhrbyPSpuyIHYfNUwA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
- by BL1PR12MB5111.namprd12.prod.outlook.com (2603:10b6:208:31b::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.17; Fri, 5 Jan
- 2024 14:45:17 +0000
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::60d4:c1e3:e1aa:8f93]) by LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::60d4:c1e3:e1aa:8f93%4]) with mapi id 15.20.7159.015; Fri, 5 Jan 2024
- 14:45:17 +0000
-Date: Fri, 5 Jan 2024 10:45:16 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-Cc: "Liu, Yi L" <yi.l.liu@intel.com>, "joro@8bytes.org" <joro@8bytes.org>,
-	"alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-	"cohuck@redhat.com" <cohuck@redhat.com>,
-	"eric.auger@redhat.com" <eric.auger@redhat.com>,
-	"nicolinc@nvidia.com" <nicolinc@nvidia.com>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"mjrosato@linux.ibm.com" <mjrosato@linux.ibm.com>,
-	"chao.p.peng@linux.intel.com" <chao.p.peng@linux.intel.com>,
-	"yi.y.sun@linux.intel.com" <yi.y.sun@linux.intel.com>,
-	"peterx@redhat.com" <peterx@redhat.com>,
-	"jasowang@redhat.com" <jasowang@redhat.com>,
-	"shameerali.kolothum.thodi@huawei.com" <shameerali.kolothum.thodi@huawei.com>,
-	"lulu@redhat.com" <lulu@redhat.com>,
-	"suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-	"Duan, Zhenzhong" <zhenzhong.duan@intel.com>,
-	"joao.m.martins@oracle.com" <joao.m.martins@oracle.com>,
-	"Zeng, Xin" <xin.zeng@intel.com>,
-	"Zhao, Yan Y" <yan.y.zhao@intel.com>
-Subject: Re: [PATCH v7 1/3] iommufd: Add data structure for Intel VT-d
- stage-1 cache invalidation
-Message-ID: <20240105144516.GC50406@nvidia.com>
-References: <20231117131816.24359-1-yi.l.liu@intel.com>
- <20231117131816.24359-2-yi.l.liu@intel.com>
- <c967e716-9112-4d1a-b6f7-9a005e28202d@intel.com>
- <20240104143658.GX50406@nvidia.com>
- <BN9PR11MB52769EEDAE2783426144E2588C662@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BN9PR11MB52769EEDAE2783426144E2588C662@BN9PR11MB5276.namprd11.prod.outlook.com>
-X-ClientProxiedBy: BL0PR03CA0015.namprd03.prod.outlook.com
- (2603:10b6:208:2d::28) To LV2PR12MB5869.namprd12.prod.outlook.com
- (2603:10b6:408:176::16)
+	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="TlsFY3EA"
+Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by bee.tesarici.cz (Postfix) with ESMTPSA id D6D7D1A80E5;
+	Fri,  5 Jan 2024 15:46:00 +0100 (CET)
+Authentication-Results: mail.tesarici.cz; dmarc=fail (p=none dis=none) header.from=tesarici.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tesarici.cz; s=mail;
+	t=1704465961; bh=jVPDDlHEkAJsKbkJAQA4OoaB0GVHg6A4zFDVTiaBIYg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=TlsFY3EAgOksGz5dkQzISJo3LB919H/zGwZ7MnySbuCYPpPMO21Iw67Ky55BAD1JZ
+	 xCgs0giNLhESBRGjFnLNpHg+k7U+0/U2DwMA03QpJdKwirhUgSuxbnobEv2ivxOAHJ
+	 ryAxkmpPSm+Rc/8dYai77r6orb8sYK5E9NvQoJBZugf5HaQNdsraftGIjAwT6C8c/v
+	 17q07yE550pG6MIIHwsN48rUMyF5FCzEbsFGYlpbls2t3N+UZsdnF1Enw10AmaMxPg
+	 9OMcgobUy4mTBepjqSRQCd6epxIKSNg6cZba497zeV22EswhChOGheuJqsNgIeMGB7
+	 Zo3gzS1cZZH/A==
+Date: Fri, 5 Jan 2024 15:45:58 +0100
+From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+To: Eric Dumazet <edumazet@google.com>
+Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu
+ <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Maxime
+ Coquelin <mcoquelin.stm32@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Jernej
+ Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>,
+ "open list:STMMAC ETHERNET DRIVER" <netdev@vger.kernel.org>, "moderated
+ list:ARM/STM32 ARCHITECTURE" <linux-stm32@st-md-mailman.stormreply.com>,
+ "moderated list:ARM/STM32 ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>, open list
+ <linux-kernel@vger.kernel.org>, "open list:ARM/Allwinner sunXi SoC support"
+ <linux-sunxi@lists.linux.dev>, Jiri Pirko <jiri@resnulli.us>
+Subject: Re: [PATCH] net: stmmac: protect statistics updates with a spinlock
+Message-ID: <20240105154558.2ca38aca@meshulam.tesarici.cz>
+In-Reply-To: <CANn89iKWSemsKmfsLjupwWBnyeKjtHH+mZjTzYiJT4G=xyUrNQ@mail.gmail.com>
+References: <20240105091556.15516-1-petr@tesarici.cz>
+	<CANn89iLuYZBersxq4aH-9Fg_ojD0fh=0xtdLbRdbMrup=nvrkA@mail.gmail.com>
+	<20240105113402.0f5f1232@meshulam.tesarici.cz>
+	<CANn89iLEvW9ZS=+WPETPC=mKRyu9AKmueGCWZZOrz9oX3Xef=g@mail.gmail.com>
+	<20240105121447.11ae80d1@meshulam.tesarici.cz>
+	<20240105142732.1903bc70@meshulam.tesarici.cz>
+	<CANn89iLHLvGFX_JEYU-en0ZoCUpTvjXPBzFECxLFfa_Jhpcjmg@mail.gmail.com>
+	<CANn89iKWSemsKmfsLjupwWBnyeKjtHH+mZjTzYiJT4G=xyUrNQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|BL1PR12MB5111:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2c4e4b74-5f3b-4969-83c7-08dc0dfceed0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Xotm2n9Lx2AcF9rGsJw96jnPqhLIoYi/AZiSmPvwoqVyNAN8jvCrgjCNK7mnESwuU0v1pvzKCe1vI+Tqo7xPwOYxYLpp4oyIdDetGGpKRqhzzUFVuu4dui8xs6/Fgv8KrJK6Nef8Y5WSZxK1513htJCr3wCQYzY9dIXBxwejtsnKAhzkff/+894Kmbz2umhKk1H2fyp2Oe40D3PRkHLEhBcH4wQbDj4q9xYIZdtoxjXQJRzFWWdGb9tl4uKAJgCrEplvW1GExcVnAfLDMOohpUrAVDNI41YFhrNwgcX5Ukeaqmj6yfgMaWy45phYZCdbv6c2NHxwp7NDvQBnUOK+hcxUZAu/g1ttToOQqfKWFxYaeRmPb6bSRAQsmOEUJ/bm3gDxklfF08JIy0cgpdKtPZULqCyY9D1lbHoZ6extJaZboG0GsU4bOBYlmBWICsOinem+yTh2R/5x7x0EzKP7vrHbOh3hWZ4646hVDIgLhWimQnLdm0BF4I4HiambFwbQ7Z9Gobd9Zp2wdoEDTwAGlpK+DJs6xy/CIT8Q11L85fL15VzNA6YtGAZJ8RUD+wnJ
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(376002)(346002)(366004)(396003)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(38100700002)(6916009)(66476007)(66556008)(86362001)(66946007)(4326008)(6512007)(6506007)(2616005)(1076003)(26005)(5660300002)(2906002)(7416002)(36756003)(478600001)(33656002)(6486002)(83380400001)(316002)(54906003)(8936002)(8676002)(41300700001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?91VQZZ5LrMUSq80YEKI56YK6LLSB6o4ouDplgG6Xf69IS1hvSXK/GvaK11Ge?=
- =?us-ascii?Q?4A3Y02zN6FOHAd+N4yJgFFbfnc2JyG6v6hxBBd67e6H68/THWGiADy5+aAL3?=
- =?us-ascii?Q?FoS3eexKScxOzwuYJKOdDSRvunIUlvJNVdRyWb2MZIZoyEv+dYS/VJaeyHHL?=
- =?us-ascii?Q?ch8lIqdk8EJwXA/TaSgEPajWgYluSgws6pQCXaOsiFQ5WP1ZKtrOIZh4FAub?=
- =?us-ascii?Q?YHvmvFCZ/iYfnjCn5LMXUWas5NtDiQXsj8KhTnPHTRJ9mfU06ZpFFfDml53Q?=
- =?us-ascii?Q?46qku8rsjF7+TP6RTJdbksl29CJLtxBPv7OQhCrDO/bfBVYak7gKpKoqXq1j?=
- =?us-ascii?Q?YGeEIZDbRwRrS9yUema4keccrGdwaEgQA00i2NaNcwP+d6YOx8ItX8jcp6Se?=
- =?us-ascii?Q?/22g5P2rFKbXa8rbdb97HyQmnlbjjnUDU4ivhbLb/pZLdHdaGwUC/v3aau+A?=
- =?us-ascii?Q?TZ5aqDIGezI/IHYXc16RWER+4E/U3dglB/DgY+ciRq2WwZpJOosTrN/2/PHE?=
- =?us-ascii?Q?wP++iHWWkAxezCdKQAXSFFmW+nRBN6r9r25tfUGb3jnDFAwMQHHPYt1HCD1g?=
- =?us-ascii?Q?RhO7cSeUswJNQRg3NN8jkkOPm5exXpNwoOfhIn/qtsdvtUOFB0MtLxNPDbTV?=
- =?us-ascii?Q?uU34ZWc0MDkx+vZ9Ym66czVYQoWLO1OU03mZVHHitmHUwfGPexzOiZV3Qvdo?=
- =?us-ascii?Q?5EkIJF8Boftxg99Bklvl8qlxnVN+s5NgrrHlUmxabzd7CzkqlksIUj6eVi9n?=
- =?us-ascii?Q?AmIPYiFOBw9Um9DrbonaKFs3kiDCZumrD7tPEOKtD+JwvZTNocncoJOa6Iwu?=
- =?us-ascii?Q?lOo+9FRJVwaZnS9Wo2DaB/6v+Wzs1oS6ghjd/qP0Xb2PF4E7e/a9BYot4L1L?=
- =?us-ascii?Q?po2EwfqHdOrlu44fv5QIQwuqk2F/P4mIbn22rhq+bLat9au4kS/j6s1oUsGh?=
- =?us-ascii?Q?SAc1pdtXOhRNvSyZ6KjBXWVFSZyPH0EI3XE3dqlGldiIe/3EPcZPsXty/wub?=
- =?us-ascii?Q?pY++BAFzDy7ES7ISq4gJd+6DXm80M5T1njv/wjhyImzpOlAjUK0qlsUUkr+Y?=
- =?us-ascii?Q?Piiqk+rNIJm6G6dmuadLWhinKLurtdrIDZ1x1EXBSYoQwjlTF/1ZDY2d8btP?=
- =?us-ascii?Q?4Fu8ppgcO0L2h3TT2tb9+01FuzRmSnEpnNaZ2sxcTbR7770eyWFdE0YIzdMq?=
- =?us-ascii?Q?561Y8nw9MILEpt2UySfi7Mgu+k3tXrekCpAjPvnPR7kBr8S1RHpaYK19ZAPA?=
- =?us-ascii?Q?6287Vb2MNM90KenVzQGFUm2IjGqA0KnL5PFZSg/eK7g2IlZmzAfQMvG5S1eS?=
- =?us-ascii?Q?A1vS6UEL8jjTlZRa/djQAlZOoWiXxv0nrO5pM6zwZZY9CrO/nNpbWHzYUdnH?=
- =?us-ascii?Q?oi+RaSLIMZ626NDX5gEnmnKpJtl7pIFpNHPB1oKzkCDHdJ2NUfde+ap8bewR?=
- =?us-ascii?Q?BaOrdtI0AQfBw8GpXkASnnEkPhYXvLsKthP6EYffbeUbCgErY2KTj0waXUD8?=
- =?us-ascii?Q?UcifEAgQzUJt/FLTjFLQZwDo183iPzS8IDpniPQ++sqUr6X07ugc2r/rL588?=
- =?us-ascii?Q?LmcxDDOsuMoXY0qJxkI=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2c4e4b74-5f3b-4969-83c7-08dc0dfceed0
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2024 14:45:17.1032
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: A1U9vpxigpf9kqmL1GbNHyFXMNfZKeUBGeHIMgdhnIRUgyYfkOSVLdV+e3aYn0lm
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5111
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 05, 2024 at 02:52:50AM +0000, Tian, Kevin wrote:
-> > but in reality the relation could be identified in an easy way due to a SIOV
-> > restriction which we discussed before - shared PASID space of PF disallows
-> > assigning sibling vdev's to a same VM (otherwise no way to identify which
-> > sibling vdev triggering an iopf when a pasid is used on both vdev's). That
-> > restriction implies that within an iommufd context every iommufd_device
-> > object should contain a unique struct device pointer. So PASID can be
-> > instead ignored in the lookup then just always do iommufd_get_dev_id()
-> > using struct device.
-> 
-> A bit more background.
-> 
-> Previously we thought this restriction only applies to SIOV+vSVA, as
-> a guest process may bind to both sibling vdev's, leading to the same
-> pasid situation.
-> 
-> In concept w/o vSVA it's still possible to assign sibling vdev's to
-> a same VM as each vdev is allocated with a unique pasid to mark vRID
-> so can be differentiated from each other in the fault/error path.
+On Fri, 5 Jan 2024 15:28:41 +0100
+Eric Dumazet <edumazet@google.com> wrote:
 
-I thought the SIOV plan was that each "vdev" ie vpci function would
-get a slice of the pRID's PASID space statically selected at creation?
+> On Fri, Jan 5, 2024 at 3:26=E2=80=AFPM Eric Dumazet <edumazet@google.com>=
+ wrote:
+> >
+> > On Fri, Jan 5, 2024 at 2:27=E2=80=AFPM Petr Tesa=C5=99=C3=ADk <petr@tes=
+arici.cz> wrote: =20
+> > >
+> > > Hi Eric,
+> > >
+> > > yeah, it's me again...
+> > >
+> > > On Fri, 5 Jan 2024 12:14:47 +0100
+> > > Petr Tesa=C5=99=C3=ADk <petr@tesarici.cz> wrote:
+> > > =20
+> > > > On Fri, 5 Jan 2024 11:48:19 +0100
+> > > > Eric Dumazet <edumazet@google.com> wrote:
+> > > > =20
+> > > > > On Fri, Jan 5, 2024 at 11:34=E2=80=AFAM Petr Tesa=C5=99=C3=ADk <p=
+etr@tesarici.cz> wrote: =20
+> > > > > >
+> > > > > > On Fri, 5 Jan 2024 10:58:42 +0100
+> > > > > > Eric Dumazet <edumazet@google.com> wrote:
+> > > > > > =20
+> > > > > > > On Fri, Jan 5, 2024 at 10:16=E2=80=AFAM Petr Tesarik <petr@te=
+sarici.cz> wrote: =20
+> > > > > > > >
+> > > > > > > > Add a spinlock to fix race conditions while updating Tx/Rx =
+statistics.
+> > > > > > > >
+> > > > > > > > As explained by a comment in <linux/u64_stats_sync.h>, writ=
+e side of struct
+> > > > > > > > u64_stats_sync must ensure mutual exclusion, or one seqcoun=
+t update could
+> > > > > > > > be lost on 32-bit platforms, thus blocking readers forever.
+> > > > > > > >
+> > > > > > > > Such lockups have been actually observed on 32-bit Arm afte=
+r stmmac_xmit()
+> > > > > > > > on one core raced with stmmac_napi_poll_tx() on another cor=
+e.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Petr Tesarik <petr@tesarici.cz> =20
+> > > > > > >
+> > > > > > > This is going to add more costs to 64bit platforms ? =20
+> > > > > >
+> > > > > > Yes, it adds a (hopefully not too contended) spinlock and in mo=
+st
+> > > > > > places an interrupt disable/enable pair.
+> > > > > >
+> > > > > > FWIW the race condition is also present on 64-bit platforms, re=
+sulting
+> > > > > > in inaccurate statistic counters. I can understand if you consi=
+der it a
+> > > > > > mild annoyance, not worth fixing.
+> > > > > > =20
+> > > > > > > It seems to me that the same syncp can be used from two diffe=
+rent
+> > > > > > > threads : hard irq and napi poller... =20
+> > > > > >
+> > > > > > Yes, that's exactly the scenario that locks up my system.
+> > > > > > =20
+> > > > > > > At this point, I do not see why you keep linux/u64_stats_sync=
+.h if you
+> > > > > > > decide to go for a spinlock... =20
+> > > > > >
+> > > > > > The spinlock does not havce to be taken on the reader side, so =
+the
+> > > > > > seqcounter still adds some value.
+> > > > > > =20
+> > > > > > > Alternative would use atomic64_t fields for the ones where th=
+ere is no
+> > > > > > > mutual exclusion.
+> > > > > > >
+> > > > > > > RX : napi poll is definitely safe (protected by an atomic bit)
+> > > > > > > TX : each TX queue is also safe (protected by an atomic exclu=
+sion for
+> > > > > > > non LLTX drivers)
+> > > > > > >
+> > > > > > > This leaves the fields updated from hardware interrupt contex=
+t ? =20
+> > > > > >
+> > > > > > I'm afraid I don't have enough network-stack-foo to follow here.
+> > > > > >
+> > > > > > My issue on 32 bit is that stmmac_xmit() may be called directly=
+ from
+> > > > > > process context while another core runs the TX napi on the same=
+ channel
+> > > > > > (in interrupt context). I didn't observe any race on the RX pat=
+h, but I
+> > > > > > believe it's possible with NAPI busy polling.
+> > > > > >
+> > > > > > In any case, I don't see the connection with LLTX. Maybe you wa=
+nt to
+> > > > > > say that the TX queue is safe for stmmac (because it is a non-L=
+LTX
+> > > > > > driver), but might not be safe for LLTX drivers? =20
+> > > > >
+> > > > > LLTX drivers (mostly virtual drivers like tunnels...) can have mu=
+ltiple cpus
+> > > > > running ndo_start_xmit() concurrently. So any use of a 'shared sy=
+ncp'
+> > > > > would be a bug.
+> > > > > These drivers usually use per-cpu stats, to avoid races and false
+> > > > > sharing anyway.
+> > > > >
+> > > > > I think you should split the structures into two separate groups,=
+ each
+> > > > > guarded with its own syncp.
+> > > > >
+> > > > > No extra spinlocks, no extra costs on 64bit arches...
+> > > > >
+> > > > > If TX completion can run in parallel with ndo_start_xmit(), then
+> > > > > clearly we have to split stmmac_txq_stats in two halves: =20
+> > > >
+> > > > Oh, now I get it. Yes, that's much better, indeed.
+> > > >
+> > > > I mean, the counters have never been consistent (due to the race on=
+ the
+> > > > writer side), and nobody is concerned. So, there is no value in tak=
+ing
+> > > > a consistent snapshot in stmmac_get_ethtool_stats().
+> > > >
+> > > > I'm going to rework and retest my patch. Thank you for pointing me =
+in
+> > > > the right direction!
+> > > >
+> > > > Petr T
+> > > > =20
+> > > > > Also please note the conversion from u64 to u64_stats_t =20
+> > > >
+> > > > Noted. IIUC this will in turn close the update race on 64-bit by us=
+ing
+> > > > an atomic type and on 32-bit by using a seqlock. Clever.
+> > > >
+> > > > Petr T
+> > > > =20
+> > > > > Very partial patch, only to show the split and new structure :
+> > > > >
+> > > > > diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h
+> > > > > b/drivers/net/ethernet/stmicro/stmmac/common.h
+> > > > > index e3f650e88f82f927f0dcf95748fbd10c14c30cbe..702bceea5dc8c875a=
+80f5e3a92b7bb058f373eda
+> > > > > 100644
+> > > > > --- a/drivers/net/ethernet/stmicro/stmmac/common.h
+> > > > > +++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+> > > > > @@ -60,16 +60,22 @@
+> > > > >  /* #define FRAME_FILTER_DEBUG */
+> > > > >
+> > > > >  struct stmmac_txq_stats {
+> > > > > -       u64 tx_bytes;
+> > > > > -       u64 tx_packets;
+> > > > > -       u64 tx_pkt_n;
+> > > > > -       u64 tx_normal_irq_n;
+> > > > > -       u64 napi_poll;
+> > > > > -       u64 tx_clean;
+> > > > > -       u64 tx_set_ic_bit;
+> > > > > -       u64 tx_tso_frames;
+> > > > > -       u64 tx_tso_nfrags;
+> > > > > -       struct u64_stats_sync syncp;
+> > > > > +/* First part, updated from ndo_start_xmit(), protected by tx qu=
+eue lock */
+> > > > > +       struct u64_stats_sync syncp_tx;
+> > > > > +       u64_stats_t tx_bytes;
+> > > > > +       u64_stats_t tx_packets;
+> > > > > +       u64_stats_t tx_pkt_n;
+> > > > > +       u64_stats_t tx_tso_frames;
+> > > > > +       u64_stats_t tx_tso_nfrags;
+> > > > > +
+> > > > > +/* Second part, updated from TX completion (protected by NAPI po=
+ll logic) */
+> > > > > +       struct u64_stats_sync syncp_tx_completion;
+> > > > > +       u64_stats_t napi_poll;
+> > > > > +       u64_stats_t tx_clean;
+> > > > > +       u64_stats_t tx_set_ic_bit; =20
+> > >
+> > > Unfortunately, this field is also updated from ndo_start_xmit():
+> > >
+> > > 4572)     if (set_ic)
+> > > 4573)             txq_stats->tx_set_ic_bit++;
+> > >
+> > > I feel it would be a shame to introduce a spinlock just for this one
+> > > update. But I think the field could be converted to an atomic64_t.
+> > >
+> > > Which raises a question: Why aren't all stat counters simply atomic64=
+_t? There
+> > > is no guarantee that the reader side takes a consistent snapshot
+> > > (except on 32-bit). So, why do we even bother with u64_stats_sync? =20
+> >
+> > This infra was added to have no _lock_ overhead on 64bit arches.
+> >
+> > If a counter must be updated from multiple cpus (regardless of 32/64
+> > bit kernel), then use atomic64_t =20
+>=20
+> Or use two different u64_stats_t (each guarded by a different syncp),
+> then fold them at stats gathering time.
 
-So SVA/etc doesn't matter, you reliably get a disjoint set of pRID &
-pPASID into each VM.
+Oh, right, why didn't I think about it!
 
-From that view you can't identify the iommufd dev_id without knowing
-both the pRID and pPASID which will disambiguate the different SIOV
-iommufd dev_id instances sharing a rid.
+This only leaves an atomic_t in hard irq context. I have tried to find
+something that could relax the requirement, but AFAICS at least some
+setups use several interrupts that can be delivered to different CPUs
+simultaneously, and all of them will walk over all channels. So we're
+left with an atomic_t here.
 
-> But when looking at this err code issue with Yi closely, we found
-> there is another gap in the VT-d spec. Upon devtlb invalidation
-> timeout the hw doesn't report pasid in the error info register. this
-> makes it impossible to identify the source vdev if a hwpt invalidation
-> request involves sibling vdev's from a same PF.
+> > > Is it merely because u64_stats_add() should be cheaper than
+> > > atomic64_add()? Or is there anything else I'm missing? If yes,
+> > > does it invalidate my proposal to convert tx_set_ic_bit to an
+> > > atomic64_t? =20
+> >
+> > atomic64_add() is expensive, especially in contexts where updates
+> > are already guarded by a spinlock or something. =20
 
-Don't you know which command timed out?
- 
-> with that I'm inclined to always imposing this restriction for SIOV. 
-> One may argue that SIOV w/o vSVA w/o devtlb is conceptually immune
-> but I'm with you that given SIOVr1 is one-off I prefer to limiting its
-> usability other than complexing the kernel.
+Yeah, I know atomics can be expensive. I've heard of cases where an Arm
+core was spinning on an atomic operation for several seconds...
 
-By this you mean give up on SIOV entirely and always assign the full
-pRID to an entire VM? I'm confused what restriction you mean if you
-can't rely on the PASID?
-
-Jason
+Petr T
