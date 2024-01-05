@@ -1,125 +1,60 @@
-Received: from smtp.smtpout.orange.fr (smtp-19.smtpout.orange.fr [80.12.242.19])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 066E02E631;
-	Fri,  5 Jan 2024 14:55:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="sgpU6O11"
-Received: from [192.168.1.18] ([92.140.202.140])
-	by smtp.orange.fr with ESMTPA
-	id LlU8rZXOax8edLlU8rWP3j; Fri, 05 Jan 2024 15:47:46 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1704466066;
-	bh=3o+5IuQI3KZqIsQuHVkAVYAXMFpoFfomYAL99cJxMGI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=sgpU6O11WbmPfG4vpUH2O7BN1pofyUbOrstaUMQg0d2e0uzP2AewwyzIk/YctiQZO
-	 CWGCK7hoX12xjrEAgBUI4ER5Ayb44ki9D7O8crIiCjzpQgnROgUMcIt1DNqlNyCEor
-	 AIMKuqcpZEvg6kJcg/vxxLgNOvxjnRLbCYUALcmplkO0gGieZ6WOfraYiqJ3TcEtgF
-	 vTFfCoVYx7KV+kxZpGe9Qdf9ISAqdEIMPoPGLzjitMYIvdoeD9RnTeetFELFUoiDJy
-	 6NC8CmhTBq8lxs1LPup6OmvL+8i8GwzaRCpUYUaAWJ8VPwrhsPWlSj33xz8dBLqbGn
-	 y8i+4UGB10THw==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 05 Jan 2024 15:47:46 +0100
-X-ME-IP: 92.140.202.140
-Message-ID: <a821c56b-2153-4464-8323-66ba62348f59@wanadoo.fr>
-Date: Fri, 5 Jan 2024 15:47:43 +0100
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5648C2DF8F
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 14:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-35ff23275b8so12122785ab.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 06:57:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704466623; x=1705071423;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nl5bqvUR1HOZ5rsPTwxmCCNc/lWY1QotfCXXvDlGr+g=;
+        b=nn7grzRC+HUukMs4iNFw217+iPzuSwvdqwO2gBwv2ZZRefTONj5THnF8AHcVxqRZZo
+         attvGxyZHlOaWKGjj5DDk0VALdHITCba0bL73sB0dyM9+qvNzE9yX5R5U49fU0CUOs8z
+         7/PD3i/E/matGX7kuPORDT4IRW5QDsqJCDEYfpuEa/6eYYOnGMFOhfkAopnORv5UsqcF
+         WzG/N9fREub62D9ZWizGsn2VOuNUppvKvt4VreqxMmxYAewJ52f0fSeN1evAqoqWd7DU
+         lkxy8uRTHfcCU296e01GMBLwqnrDW4pOmb2QqqLLrWzZNlI/rL3blgqdR/JLWWXYx8Mz
+         3Pwg==
+X-Gm-Message-State: AOJu0YwmMQ9UjObW1vTAfVaNpb/BzDzfZLqZ32wFJpGx9X3kqz5mRKiP
+	pTwvz6y7kdWjoopGepgK0n3RjXJJyR56G3TT/sQviLMV0SH3
+X-Google-Smtp-Source: AGHT+IFYZ0LlixXZslfSIMOSGO+LuNB8GDKXKlknKWmnMQyT/Sr0IDG1S+KzmkOvMb+NxNa4DbECT6IIviS1t6HAUfqk+BVRY0bu
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] thermal: core: Save a few bytes of memory when
- registering a cooling device
-Content-Language: fr
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
- Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
- alexis.lothore@bootlin.com, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org, linux-pm@vger.kernel.org
-References: <4a3658efad8f6247ed8c477717dc2820b72319d0.1704462287.git.christophe.jaillet@wanadoo.fr>
- <CAJZ5v0hqaJ79BUj_hWDmErCVvJdBJ8o9fcHxcZDyP4+C4iDVxQ@mail.gmail.com>
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <CAJZ5v0hqaJ79BUj_hWDmErCVvJdBJ8o9fcHxcZDyP4+C4iDVxQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:218f:b0:35f:8652:5ce8 with SMTP id
+ j15-20020a056e02218f00b0035f86525ce8mr277395ila.4.1704466622595; Fri, 05 Jan
+ 2024 06:57:02 -0800 (PST)
+Date: Fri, 05 Jan 2024 06:57:02 -0800
+In-Reply-To: <tencent_E0365C961437B24AA074DD76D3674A3C5D09@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000924fdc060e340f5c@google.com>
+Subject: Re: [syzbot] [ext4?] INFO: task hung in ext4_quota_write
+From: syzbot <syzbot+a43d4f48b8397d0e41a9@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Le 05/01/2024 à 14:50, Rafael J. Wysocki a écrit :
-> On Fri, Jan 5, 2024 at 2:45 PM Christophe JAILLET
-> <christophe.jaillet@wanadoo.fr> wrote:
->>
->> Some *thermal_cooling_device_register() calls pass a string literal as the
->> 'type' parameter.
->>
->> So kstrdup_const() can be used instead of kfree() to avoid a memory
-> 
-> I guess you mean kstrdup()?
+Hello,
 
-Sure.
-Stupid cut'n'paste typo. Thx for catching it.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Should I resend, or can it be fixed if/when the patch is applied?
+Reported-and-tested-by: syzbot+a43d4f48b8397d0e41a9@syzkaller.appspotmail.com
 
-CJ
+Tested on:
 
-> 
->> allocation in such cases.
->>
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->> ---
->>   drivers/thermal/thermal_core.c | 6 +++---
->>   include/linux/thermal.h        | 2 +-
->>   2 files changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
->> index fa88d8707241..d21225ddbf10 100644
->> --- a/drivers/thermal/thermal_core.c
->> +++ b/drivers/thermal/thermal_core.c
->> @@ -846,7 +846,7 @@ static void thermal_release(struct device *dev)
->>                              sizeof("cooling_device") - 1)) {
->>                  cdev = to_cooling_device(dev);
->>                  thermal_cooling_device_destroy_sysfs(cdev);
->> -               kfree(cdev->type);
->> +               kfree_const(cdev->type);
->>                  ida_free(&thermal_cdev_ida, cdev->id);
->>                  kfree(cdev);
->>          }
->> @@ -918,7 +918,7 @@ __thermal_cooling_device_register(struct device_node *np,
->>          cdev->id = ret;
->>          id = ret;
->>
->> -       cdev->type = kstrdup(type ? type : "", GFP_KERNEL);
->> +       cdev->type = kstrdup_const(type ? type : "", GFP_KERNEL);
->>          if (!cdev->type) {
->>                  ret = -ENOMEM;
->>                  goto out_ida_remove;
->> @@ -969,7 +969,7 @@ __thermal_cooling_device_register(struct device_node *np,
->>   out_cooling_dev:
->>          thermal_cooling_device_destroy_sysfs(cdev);
->>   out_cdev_type:
->> -       kfree(cdev->type);
->> +       kfree_const(cdev->type);
->>   out_ida_remove:
->>          ida_free(&thermal_cdev_ida, id);
->>   out_kfree_cdev:
->> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
->> index bf84595a4e86..052c72c0fa17 100644
->> --- a/include/linux/thermal.h
->> +++ b/include/linux/thermal.h
->> @@ -102,7 +102,7 @@ struct thermal_cooling_device_ops {
->>
->>   struct thermal_cooling_device {
->>          int id;
->> -       char *type;
->> +       const char *type;
->>          unsigned long max_state;
->>          struct device device;
->>          struct device_node *np;
->> --
->> 2.34.1
->>
-> 
-> 
+commit:         f5837722 Merge tag 'mm-hotfixes-stable-2023-12-27-15-0..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=16076105e80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f8e72bae38c079e4
+dashboard link: https://syzkaller.appspot.com/bug?extid=a43d4f48b8397d0e41a9
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=16723a4de80000
 
+Note: testing is done by a robot and is best-effort only.
