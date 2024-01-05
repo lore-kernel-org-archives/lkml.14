@@ -1,23 +1,23 @@
 Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3424E2CCC4;
-	Fri,  5 Jan 2024 08:58:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06EE22D056;
+	Fri,  5 Jan 2024 08:58:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4058wBqX52287928, This message is accepted by code: ctloc85258
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4058wGZ412287937, This message is accepted by code: ctloc85258
 Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 4058wBqX52287928
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 4058wGZ412287937
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 5 Jan 2024 16:58:11 +0800
+	Fri, 5 Jan 2024 16:58:16 +0800
 Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
  RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.17; Fri, 5 Jan 2024 16:58:11 +0800
+ 15.1.2507.17; Fri, 5 Jan 2024 16:58:17 +0800
 Received: from RTDOMAIN (172.21.210.160) by RTEXDAG02.realtek.com.tw
  (172.21.6.101) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.7; Fri, 5 Jan 2024
- 16:58:11 +0800
+ 16:58:16 +0800
 From: Justin Lai <justinlai0215@realtek.com>
 To: <kuba@kernel.org>
 CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
@@ -25,9 +25,9 @@ CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
         <andrew@lunn.ch>, <pkshih@realtek.com>, <larry.chiu@realtek.com>,
         Justin Lai
 	<justinlai0215@realtek.com>
-Subject: [PATCH net-next v15 06/13] rtase: Implement .ndo_start_xmit function
-Date: Fri, 5 Jan 2024 16:57:30 +0800
-Message-ID: <20240105085737.376885-7-justinlai0215@realtek.com>
+Subject: [PATCH net-next v15 08/13] rtase: Implement net_device_ops
+Date: Fri, 5 Jan 2024 16:57:32 +0800
+Message-ID: <20240105085737.376885-9-justinlai0215@realtek.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240105085737.376885-1-justinlai0215@realtek.com>
 References: <20240105085737.376885-1-justinlai0215@realtek.com>
@@ -46,324 +46,296 @@ X-KSE-AntiSpam-Interceptor-Info: fallback
 X-KSE-Antivirus-Interceptor-Info: fallback
 X-KSE-AntiSpam-Interceptor-Info: fallback
 
-Implement .ndo_start_xmit function to fill the information of the packet
-to be transmitted into the tx descriptor, and then the hardware will
-transmit the packet using the information in the tx descriptor.
-In addition, we also implemented the tx_handler function to enable the
-tx descriptor to be reused.
+1. Implement .ndo_set_rx_mode so that the device can change address
+list filtering.
+2. Implement .ndo_set_mac_address so that mac address can be changed.
+3. Implement .ndo_change_mtu so that mtu can be changed.
+4. Implement .ndo_tx_timeout to perform related processing when the
+transmitter does not make any progress.
+5. Implement .ndo_get_stats64 to provide statistics that are called
+when the user wants to get network device usage.
+6. Implement .ndo_vlan_rx_add_vid to register VLAN ID when the device
+supports VLAN filtering.
+7. Implement .ndo_vlan_rx_kill_vid to unregister VLAN ID when the device
+supports VLAN filtering.
+8. Implement the .ndo_setup_tc to enable setting any "tc" scheduler,
+classifier or action on dev.
+9. Implement .ndo_fix_features enables adjusting requested feature flags
+based on device-specific constraints.
+10. Implement .ndo_set_features enables updating device configuration to
+new features.
 
 Signed-off-by: Justin Lai <justinlai0215@realtek.com>
 ---
- .../net/ethernet/realtek/rtase/rtase_main.c   | 282 ++++++++++++++++++
- 1 file changed, 282 insertions(+)
+ .../net/ethernet/realtek/rtase/rtase_main.c   | 234 ++++++++++++++++++
+ 1 file changed, 234 insertions(+)
 
 diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-index 2337c3cf3cd0..9bbda3ad0c49 100644
+index 0a0b456b0f50..16fe3d8e3987 100644
 --- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
 +++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-@@ -252,6 +252,67 @@ static void rtase_mark_to_asic(union rx_desc *desc, u32 rx_buf_sz)
- 		   cpu_to_le32(DESC_OWN | eor | rx_buf_sz));
+@@ -1416,6 +1416,11 @@ static netdev_tx_t rtase_start_xmit(struct sk_buff *skb,
+ 	return NETDEV_TX_BUSY;
  }
  
-+static u32 rtase_tx_avail(struct rtase_ring *ring)
++static void rtase_set_rx_mode(struct net_device *dev)
 +{
-+	return READ_ONCE(ring->dirty_idx) + NUM_DESC - READ_ONCE(ring->cur_idx);
-+}
-+
-+static int tx_handler(struct rtase_ring *ring, int budget)
-+{
-+	const struct rtase_private *tp = ring->ivec->tp;
-+	struct net_device *dev = tp->dev;
-+	u32 dirty_tx, tx_left;
-+	u32 bytes_compl = 0;
-+	u32 pkts_compl = 0;
-+	int workdone = 0;
-+
-+	dirty_tx = ring->dirty_idx;
-+	tx_left = READ_ONCE(ring->cur_idx) - dirty_tx;
-+
-+	while (tx_left > 0) {
-+		u32 entry = dirty_tx % NUM_DESC;
-+		struct tx_desc *desc = ring->desc +
-+				       sizeof(struct tx_desc) * entry;
-+		u32 status;
-+
-+		status = le32_to_cpu(desc->opts1);
-+
-+		if (status & DESC_OWN)
-+			break;
-+
-+		rtase_unmap_tx_skb(tp->pdev, ring->mis.len[entry], desc);
-+		ring->mis.len[entry] = 0;
-+		if (ring->skbuff[entry]) {
-+			pkts_compl++;
-+			bytes_compl += ring->skbuff[entry]->len;
-+			napi_consume_skb(ring->skbuff[entry], budget);
-+			ring->skbuff[entry] = NULL;
-+		}
-+
-+		dirty_tx++;
-+		tx_left--;
-+		workdone++;
-+
-+		if (workdone == RTASE_TX_BUDGET_DEFAULT)
-+			break;
-+	}
-+
-+	if (ring->dirty_idx != dirty_tx) {
-+		dev_sw_netstats_tx_add(dev, pkts_compl, bytes_compl);
-+		WRITE_ONCE(ring->dirty_idx, dirty_tx);
-+
-+		netif_subqueue_completed_wake(dev, ring->index, pkts_compl,
-+					      bytes_compl,
-+					      rtase_tx_avail(ring),
-+					      RTASE_TX_START_THRS);
-+
-+		if (ring->cur_idx != dirty_tx)
-+			rtase_w8(tp, RTASE_TPPOLL, BIT(ring->index));
-+	}
-+
-+	return 0;
-+}
-+
- static void rtase_tx_desc_init(struct rtase_private *tp, u16 idx)
- {
- 	struct rtase_ring *ring = &tp->tx_ring[idx];
-@@ -991,6 +1052,226 @@ static int rtase_close(struct net_device *dev)
- 	return 0;
- }
- 
-+static u32 rtase_tx_vlan_tag(const struct rtase_private *tp,
-+			     const struct sk_buff *skb)
-+{
-+	return (skb_vlan_tag_present(skb)) ?
-+		(TX_VLAN_TAG | swab16(skb_vlan_tag_get(skb))) : 0x00;
-+}
-+
-+static u32 rtase_tx_csum(struct sk_buff *skb, const struct net_device *dev)
-+{
-+	u32 csum_cmd = 0;
-+	u8 ip_protocol;
-+
-+	switch (vlan_get_protocol(skb)) {
-+	case htons(ETH_P_IP):
-+		csum_cmd = TX_IPCS_C;
-+		ip_protocol = ip_hdr(skb)->protocol;
-+		break;
-+
-+	case htons(ETH_P_IPV6):
-+		csum_cmd = TX_IPV6F_C;
-+		ip_protocol = ipv6_hdr(skb)->nexthdr;
-+		break;
-+
-+	default:
-+		ip_protocol = IPPROTO_RAW;
-+		break;
-+	}
-+
-+	if (ip_protocol == IPPROTO_TCP)
-+		csum_cmd |= TX_TCPCS_C;
-+	else if (ip_protocol == IPPROTO_UDP)
-+		csum_cmd |= TX_UDPCS_C;
-+	else
-+		WARN_ON_ONCE(1);
-+
-+	csum_cmd |= u32_encode_bits(skb_transport_offset(skb), TCPHO_MASK);
-+
-+	return csum_cmd;
-+}
-+
-+static int rtase_xmit_frags(struct rtase_ring *ring, struct sk_buff *skb,
-+			    u32 opts1, u32 opts2)
-+{
-+	const struct skb_shared_info *info = skb_shinfo(skb);
-+	const struct rtase_private *tp = ring->ivec->tp;
-+	const u8 nr_frags = info->nr_frags;
-+	struct tx_desc *txd = NULL;
-+	u32 cur_frag, entry;
-+
-+	entry = ring->cur_idx;
-+	for (cur_frag = 0; cur_frag < nr_frags; cur_frag++) {
-+		const skb_frag_t *frag = &info->frags[cur_frag];
-+		dma_addr_t mapping;
-+		u32 status, len;
-+		void *addr;
-+
-+		entry = (entry + 1) % NUM_DESC;
-+
-+		txd = ring->desc + sizeof(struct tx_desc) * entry;
-+		len = skb_frag_size(frag);
-+		addr = skb_frag_address(frag);
-+		mapping = dma_map_single(&tp->pdev->dev, addr, len,
-+					 DMA_TO_DEVICE);
-+
-+		if (unlikely(dma_mapping_error(&tp->pdev->dev, mapping))) {
-+			if (unlikely(net_ratelimit()))
-+				netdev_err(tp->dev,
-+					   "Failed to map TX fragments DMA!\n");
-+
-+			goto err_out;
-+		}
-+
-+		if (((entry + 1) % NUM_DESC) == 0)
-+			status = (opts1 | len | RING_END);
-+		else
-+			status = opts1 | len;
-+
-+		if (cur_frag == (nr_frags - 1)) {
-+			ring->skbuff[entry] = skb;
-+			status |= TX_LAST_FRAG;
-+		}
-+
-+		ring->mis.len[entry] = len;
-+		txd->addr = cpu_to_le64(mapping);
-+		txd->opts2 = cpu_to_le32(opts2);
-+
-+		/* make sure the operating fields have been updated */
-+		wmb();
-+		txd->opts1 = cpu_to_le32(status);
-+	}
-+
-+	return cur_frag;
-+
-+err_out:
-+	rtase_tx_clear_range(ring, ring->cur_idx + 1, cur_frag);
-+	return -EIO;
-+}
-+
-+static netdev_tx_t rtase_start_xmit(struct sk_buff *skb,
-+				    struct net_device *dev)
-+{
-+	struct skb_shared_info *shinfo = skb_shinfo(skb);
-+	struct rtase_private *tp = netdev_priv(dev);
-+	u32 q_idx, entry, len, opts1, opts2;
-+	struct netdev_queue	*tx_queue;
-+	bool stop_queue, door_bell;
-+	u32 mss = shinfo->gso_size;
-+	struct rtase_ring *ring;
-+	struct tx_desc *txd;
-+	dma_addr_t mapping;
-+	int frags;
-+
-+	/* multiqueues */
-+	q_idx = skb_get_queue_mapping(skb);
-+	ring = &tp->tx_ring[q_idx];
-+	tx_queue = netdev_get_tx_queue(dev, q_idx);
-+
-+	if (unlikely(!rtase_tx_avail(ring))) {
-+		if (net_ratelimit())
-+			netdev_err(dev, "BUG! Tx Ring full when queue awake!\n");
-+		goto err_stop;
-+	}
-+
-+	entry = ring->cur_idx % NUM_DESC;
-+	txd = ring->desc + sizeof(struct tx_desc) * entry;
-+
-+	opts1 = DESC_OWN;
-+	opts2 = rtase_tx_vlan_tag(tp, skb);
-+
-+	/* tcp segmentation offload (or tcp large send) */
-+	if (mss) {
-+		if (shinfo->gso_type & SKB_GSO_TCPV4) {
-+			opts1 |= GIANT_SEND_V4;
-+		} else if (shinfo->gso_type & SKB_GSO_TCPV6) {
-+			if (skb_cow_head(skb, 0))
-+				goto err_dma_0;
-+
-+			tcp_v6_gso_csum_prep(skb);
-+			opts1 |= GIANT_SEND_V6;
-+		} else {
-+			WARN_ON_ONCE(1);
-+		}
-+
-+		opts1 |= u32_encode_bits(skb_transport_offset(skb), TCPHO_MASK);
-+		opts2 |= u32_encode_bits(mss, MSS_MASK);
-+	} else if (skb->ip_summed == CHECKSUM_PARTIAL) {
-+		opts2 |= rtase_tx_csum(skb, dev);
-+	}
-+
-+	frags = rtase_xmit_frags(ring, skb, opts1, opts2);
-+	if (unlikely(frags < 0))
-+		goto err_dma_0;
-+
-+	if (frags) {
-+		len = skb_headlen(skb);
-+		opts1 |= TX_FIRST_FRAG;
-+	} else {
-+		len = skb->len;
-+		ring->skbuff[entry] = skb;
-+		opts1 |= TX_FIRST_FRAG | TX_LAST_FRAG;
-+	}
-+
-+	if (((entry + 1) % NUM_DESC) == 0)
-+		opts1 |= (len | RING_END);
-+	else
-+		opts1 |= len;
-+
-+	mapping = dma_map_single(&tp->pdev->dev, skb->data, len,
-+				 DMA_TO_DEVICE);
-+
-+	if (unlikely(dma_mapping_error(&tp->pdev->dev, mapping))) {
-+		if (unlikely(net_ratelimit()))
-+			netdev_err(dev, "Failed to map TX DMA!\n");
-+
-+		goto err_dma_1;
-+	}
-+
-+	ring->mis.len[entry] = len;
-+	txd->addr = cpu_to_le64(mapping);
-+	txd->opts2 = cpu_to_le32(opts2);
-+	txd->opts1 = cpu_to_le32(opts1 & ~DESC_OWN);
-+
-+	/* make sure the operating fields have been updated */
-+	wmb();
-+
-+	door_bell = __netdev_tx_sent_queue(tx_queue, skb->len, netdev_xmit_more());
-+
-+	txd->opts1 = cpu_to_le32(opts1);
-+
-+	skb_tx_timestamp(skb);
-+
-+	/* tx needs to see descriptor changes before updated cur_idx */
-+	smp_wmb();
-+
-+	WRITE_ONCE(ring->cur_idx, ring->cur_idx + frags + 1);
-+
-+	stop_queue = !netif_subqueue_maybe_stop(dev, ring->index, rtase_tx_avail(ring),
-+						RTASE_TX_STOP_THRS,
-+						RTASE_TX_START_THRS);
-+
-+	if (door_bell || stop_queue)
-+		rtase_w8(tp, RTASE_TPPOLL, BIT(ring->index));
-+
-+	return NETDEV_TX_OK;
-+
-+err_dma_1:
-+	ring->skbuff[entry] = NULL;
-+	rtase_tx_clear_range(ring, ring->cur_idx + 1, frags);
-+
-+err_dma_0:
-+	dev->stats.tx_dropped++;
-+	dev_kfree_skb_any(skb);
-+	return NETDEV_TX_OK;
-+
-+err_stop:
-+	netif_stop_queue(dev);
-+	dev->stats.tx_dropped++;
-+	return NETDEV_TX_BUSY;
++	rtase_hw_set_rx_packet_filter(dev);
 +}
 +
  static void rtase_enable_eem_write(const struct rtase_private *tp)
  {
  	u8 val;
-@@ -1042,6 +1323,7 @@ static void rtase_netpoll(struct net_device *dev)
+@@ -1448,6 +1453,202 @@ static void rtase_rar_set(const struct rtase_private *tp, const u8 *addr)
+ 	rtase_w16(tp, RTASE_LBK_CTRL, LBK_ATLD | LBK_CLR);
+ }
+ 
++static int rtase_set_mac_address(struct net_device *dev, void *p)
++{
++	struct rtase_private *tp = netdev_priv(dev);
++	int ret;
++
++	ret = eth_mac_addr(dev, p);
++	if (ret)
++		return ret;
++
++	rtase_rar_set(tp, dev->dev_addr);
++
++	return 0;
++}
++
++static int rtase_change_mtu(struct net_device *dev, int new_mtu)
++{
++	dev->mtu = new_mtu;
++
++	netdev_update_features(dev);
++
++	return 0;
++}
++
++static void rtase_wait_for_quiescence(const struct net_device *dev)
++{
++	struct rtase_private *tp = netdev_priv(dev);
++	struct rtase_int_vector *ivec;
++	u32 i;
++
++	for (i = 0; i < tp->int_nums; i++) {
++		ivec = &tp->int_vector[i];
++		synchronize_irq(ivec->irq);
++		/* wait for any pending NAPI task to complete */
++		napi_disable(&ivec->napi);
++	}
++
++	rtase_irq_dis_and_clear(tp);
++
++	for (i = 0; i < tp->int_nums; i++) {
++		ivec = &tp->int_vector[i];
++		napi_enable(&ivec->napi);
++	}
++}
++
++static void rtase_sw_reset(struct net_device *dev)
++{
++	struct rtase_private *tp = netdev_priv(dev);
++	int ret;
++
++	netif_stop_queue(dev);
++	netif_carrier_off(dev);
++	rtase_hw_reset(dev);
++
++	/* let's wait a bit while any (async) irq lands on */
++	rtase_wait_for_quiescence(dev);
++	rtase_tx_clear(tp);
++	rtase_rx_clear(tp);
++
++	ret = rtase_init_ring(dev);
++	if (ret) {
++		netdev_err(dev, "unable to init ring\n");
++		rtase_free_desc(tp);
++		return;
++	}
++
++	rtase_hw_config(dev);
++	/* always link, so start to transmit & receive */
++	rtase_hw_start(dev);
++
++	netif_carrier_on(dev);
++	netif_wake_queue(dev);
++}
++
++static void rtase_dump_tally_counter(const struct rtase_private *tp)
++{
++	dma_addr_t paddr = tp->tally_paddr;
++	u32 cmd = lower_32_bits(paddr);
++	u32 val;
++	int err;
++
++	rtase_w32(tp, RTASE_DTCCR4, upper_32_bits(paddr));
++	rtase_w32(tp, RTASE_DTCCR0, cmd);
++	rtase_w32(tp, RTASE_DTCCR0, cmd | COUNTER_DUMP);
++
++	err = read_poll_timeout(rtase_r32, val, !(val & COUNTER_DUMP), 10, 250,
++				false, tp, RTASE_DTCCR0);
++
++	if (err == -ETIMEDOUT)
++		netdev_err(tp->dev, "error occurred in dump tally counter\n");
++}
++
++static void rtase_dump_state(const struct net_device *dev)
++{
++	const struct rtase_private *tp = netdev_priv(dev);
++	int max_reg_size = RTASE_PCI_REGS_SIZE;
++	const struct rtase_counters *counters;
++	const struct rtase_ring *ring;
++	u32 dword_rd;
++	int n = 0;
++
++	ring = &tp->tx_ring[0];
++	netdev_err(dev, "Tx descriptor info:\n");
++	netdev_err(dev, "Tx curIdx = 0x%x\n", ring->cur_idx);
++	netdev_err(dev, "Tx dirtyIdx = 0x%x\n", ring->dirty_idx);
++	netdev_err(dev, "Tx phyAddr = %pad\n", &ring->phy_addr);
++
++	ring = &tp->rx_ring[0];
++	netdev_err(dev, "Rx descriptor info:\n");
++	netdev_err(dev, "Rx curIdx = 0x%x\n", ring->cur_idx);
++	netdev_err(dev, "Rx dirtyIdx = 0x%x\n", ring->dirty_idx);
++	netdev_err(dev, "Rx phyAddr = %pad\n", &ring->phy_addr);
++
++	netdev_err(dev, "Device Registers:\n");
++	netdev_err(dev, "Chip Command = 0x%02x\n", rtase_r8(tp, RTASE_CHIP_CMD));
++	netdev_err(dev, "IMR = %08x\n", rtase_r32(tp, RTASE_IMR0));
++	netdev_err(dev, "ISR = %08x\n", rtase_r32(tp, RTASE_ISR0));
++	netdev_err(dev, "Boot Ctrl Reg(0xE004) = %04x\n",
++		   rtase_r16(tp, RTASE_BOOT_CTL));
++	netdev_err(dev, "EPHY ISR(0xE014) = %04x\n",
++		   rtase_r16(tp, RTASE_EPHY_ISR));
++	netdev_err(dev, "EPHY IMR(0xE016) = %04x\n",
++		   rtase_r16(tp, RTASE_EPHY_IMR));
++	netdev_err(dev, "CLKSW SET REG(0xE018) = %04x\n",
++		   rtase_r16(tp, RTASE_CLKSW_SET));
++
++	netdev_err(dev, "Dump PCI Registers:\n");
++
++	while (n < max_reg_size) {
++		if ((n % RTASE_DWORD_MOD) == 0)
++			netdev_err(tp->dev, "0x%03x:\n", n);
++
++		pci_read_config_dword(tp->pdev, n, &dword_rd);
++		netdev_err(tp->dev, "%08x\n", dword_rd);
++		n += 4;
++	}
++
++	netdev_err(dev, "Dump tally counter:\n");
++	counters = tp->tally_vaddr;
++	rtase_dump_tally_counter(tp);
++
++	netdev_err(dev, "tx_packets %lld\n",
++		   le64_to_cpu(counters->tx_packets));
++	netdev_err(dev, "rx_packets %lld\n",
++		   le64_to_cpu(counters->rx_packets));
++	netdev_err(dev, "tx_errors %lld\n",
++		   le64_to_cpu(counters->tx_errors));
++	netdev_err(dev, "rx_errors %d\n",
++		   le32_to_cpu(counters->rx_errors));
++	netdev_err(dev, "rx_missed %d\n",
++		   le16_to_cpu(counters->rx_missed));
++	netdev_err(dev, "align_errors %d\n",
++		   le16_to_cpu(counters->align_errors));
++	netdev_err(dev, "tx_one_collision %d\n",
++		   le32_to_cpu(counters->tx_one_collision));
++	netdev_err(dev, "tx_multi_collision %d\n",
++		   le32_to_cpu(counters->tx_multi_collision));
++	netdev_err(dev, "rx_unicast %lld\n",
++		   le64_to_cpu(counters->rx_unicast));
++	netdev_err(dev, "rx_broadcast %lld\n",
++		   le64_to_cpu(counters->rx_broadcast));
++	netdev_err(dev, "rx_multicast %d\n",
++		   le32_to_cpu(counters->rx_multicast));
++	netdev_err(dev, "tx_aborted %d\n",
++		   le16_to_cpu(counters->tx_aborted));
++	netdev_err(dev, "tx_underun %d\n",
++		   le16_to_cpu(counters->tx_underun));
++}
++
++static void rtase_tx_timeout(struct net_device *dev, unsigned int txqueue)
++{
++	rtase_dump_state(dev);
++	rtase_sw_reset(dev);
++}
++
++static void rtase_get_stats64(struct net_device *dev,
++			      struct rtnl_link_stats64 *stats)
++{
++	const struct rtase_private *tp = netdev_priv(dev);
++	const struct rtase_counters *counters = tp->tally_vaddr;
++
++	if (!counters)
++		return;
++
++	netdev_stats_to_stats64(stats, &dev->stats);
++	dev_fetch_sw_netstats(stats, dev->tstats);
++
++	/* fetch additional counter values missing in stats collected by driver
++	 * from tally counter
++	 */
++	rtase_dump_tally_counter(tp);
++	stats->tx_errors = le64_to_cpu(counters->tx_errors);
++	stats->rx_missed_errors = le16_to_cpu(counters->rx_missed);
++	stats->collisions = le32_to_cpu(counters->tx_multi_collision);
++	stats->tx_aborted_errors = le16_to_cpu(counters->tx_aborted);
++}
++
+ #ifdef CONFIG_NET_POLL_CONTROLLER
+ /* Polling 'interrupt' - used by things like netconsole to send skbs
+  * without having to re-enable interrupts. It's not called while
+@@ -1464,13 +1665,46 @@ static void rtase_netpoll(struct net_device *dev)
+ }
+ #endif
+ 
++static netdev_features_t rtase_fix_features(struct net_device *dev,
++					    netdev_features_t features)
++{
++	netdev_features_t features_fix = features;
++
++	/*  not support TSO for jumbo frames */
++	if (dev->mtu > ETH_DATA_LEN)
++		features_fix &= ~NETIF_F_ALL_TSO;
++
++	return features_fix;
++}
++
++static int rtase_set_features(struct net_device *dev,
++			      netdev_features_t features)
++{
++	netdev_features_t features_set = features;
++
++	features_set &= NETIF_F_RXALL | NETIF_F_RXCSUM |
++			NETIF_F_HW_VLAN_CTAG_RX;
++
++	if (features_set ^ dev->features)
++		rtase_hw_set_features(dev, features_set);
++
++	return 0;
++}
++
  static const struct net_device_ops rtase_netdev_ops = {
  	.ndo_open = rtase_open,
  	.ndo_stop = rtase_close,
-+	.ndo_start_xmit = rtase_start_xmit,
+ 	.ndo_start_xmit = rtase_start_xmit,
++	.ndo_set_rx_mode = rtase_set_rx_mode,
++	.ndo_set_mac_address = rtase_set_mac_address,
++	.ndo_change_mtu = rtase_change_mtu,
++	.ndo_tx_timeout = rtase_tx_timeout,
++	.ndo_get_stats64 = rtase_get_stats64,
  #ifdef CONFIG_NET_POLL_CONTROLLER
  	.ndo_poll_controller = rtase_netpoll,
  #endif
++	.ndo_fix_features = rtase_fix_features,
++	.ndo_set_features = rtase_set_features,
+ };
+ 
+ static void rtase_get_mac_address(struct net_device *dev)
 -- 
 2.34.1
 
