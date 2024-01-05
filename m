@@ -1,100 +1,164 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57E1612F;
-	Fri,  5 Jan 2024 06:54:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574D61CA85;
+	Fri,  5 Jan 2024 06:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="C235nB2A"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4052qJe1025139;
-	Thu, 4 Jan 2024 22:54:33 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=pfpt0220; bh=FXXZmgEd
-	rQ5Dl7tnuNrdMEihuFNy4KvIdoE9yJfOVZo=; b=C235nB2AH39f3VOJVviBfdED
-	ODuxTwzw1gNSHIu4s4NuwVKaDxXJByX0Iz54JnoKkKZLovEajcppCGObRCPBBkrl
-	KStZ0T1UKrCKx8q3gZ3Rn88Fwb+9op6evRXEwOy8CBJEQ5dQDcXLjqcB/keK/b5+
-	4lI7IGDDL5HHPIGPaXSsRJCPJ8IUyFfn8Z0hZDK+X3TmJPlhOn4VJOkclBePW5cF
-	Jg24Ozeu6Pt/rKATPdcOfq0czOkCRQzVVRI6hvfk8YPlfy9pINHGC/mcN1J5JL3m
-	s7KH08QeJbuwu6cQgeT4kKJGS6KuCTSE4Kt2IeKcpha0xSIQUw/R+N3L45dR5A==
-Received: from dc5-exch01.marvell.com ([199.233.59.181])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3ve9c7gjf8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-	Thu, 04 Jan 2024 22:54:33 -0800 (PST)
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 4 Jan
- 2024 22:54:32 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
- Transport; Thu, 4 Jan 2024 22:54:32 -0800
-Received: from #hyd1583.marvell.com (unknown [10.29.37.44])
-	by maili.marvell.com (Postfix) with ESMTP id 33DF53F704F;
-	Thu,  4 Jan 2024 22:54:28 -0800 (PST)
-From: Naveen Mamindlapalli <naveenm@marvell.com>
-To: <davem@davemloft.net>, <kuba@kernel.org>, <edumazet@google.com>,
-        <pabeni@redhat.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sgoutham@marvell.com>
-CC: Nithin Dabilpuram <ndabilpuram@marvell.com>,
-        Naveen Mamindlapalli
-	<naveenm@marvell.com>
-Subject: [net PATCH] octeontx2-af: CN10KB: Fix FIFO length calculation for RPM2
-Date: Fri, 5 Jan 2024 12:24:23 +0530
-Message-ID: <20240105065423.714-1-naveenm@marvell.com>
-X-Mailer: git-send-email 2.39.0.198.ga38d39a4c5
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AyWJmm9l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704437704; x=1735973704;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=itE2hezhzcfYQfYEK/xtymd29CLOFQR5E8uwHsYdpls=;
+  b=AyWJmm9lveejbxjpkpvz5fcj/hXGCiHyHBc5Yx08j9VJIh9wfTFzL7Op
+   u6sX/UZU1b0MJhf6iDPxT9uWmh9YOncPmLg8EIeqj9FADVWlHkvmnpOna
+   aIR036V00vKJkmiMjeyNt5bU608ADuljJBGsnjlC51Npu6rRBAw1Se5rU
+   MsmsHntH565dpazd/J3U5y1qgOFtFdTQ57SGPITb1+SJZD4zwBppH5hom
+   L22lgye2FSb+R38PkwFDCjvx0iLREkKDfPvrpRGicGGBBRGKqMGxXKdvt
+   vF2RZTnK0lzHP48E18SHJ0FuSV29eHx+xCY9Biuam8SCgH3A02U9iH8DS
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="10818749"
+X-IronPort-AV: E=Sophos;i="6.04,332,1695711600"; 
+   d="scan'208";a="10818749"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 22:53:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="773768947"
+X-IronPort-AV: E=Sophos;i="6.04,332,1695711600"; 
+   d="scan'208";a="773768947"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 22:53:38 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Gregory Price <gregory.price@memverge.com>
+Cc: Gregory Price <gourry.memverge@gmail.com>,  <linux-mm@kvack.org>,
+  <linux-doc@vger.kernel.org>,  <linux-fsdevel@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>,  <linux-api@vger.kernel.org>,
+  <x86@kernel.org>,  <akpm@linux-foundation.org>,  <arnd@arndb.de>,
+  <tglx@linutronix.de>,  <luto@kernel.org>,  <mingo@redhat.com>,
+  <bp@alien8.de>,  <dave.hansen@linux.intel.com>,  <hpa@zytor.com>,
+  <mhocko@kernel.org>,  <tj@kernel.org>,  <corbet@lwn.net>,
+  <rakie.kim@sk.com>,  <hyeongtak.ji@sk.com>,  <honggyu.kim@sk.com>,
+  <vtavarespetr@micron.com>,  <peterz@infradead.org>,
+  <jgroves@micron.com>,  <ravis.opensrc@micron.com>,
+  <sthanneeru@micron.com>,  <emirakhur@micron.com>,  <Hasan.Maruf@amd.com>,
+  <seungjun.ha@samsung.com>,  Srinivasulu Thanneeru
+ <sthanneeru.opensrc@micron.com>
+Subject: Re: [PATCH v5 02/11] mm/mempolicy: introduce
+ MPOL_WEIGHTED_INTERLEAVE for weighted interleaving
+In-Reply-To: <ZZcAF4zIpsVN3dLd@memverge.com> (Gregory Price's message of "Thu,
+	4 Jan 2024 13:59:35 -0500")
+References: <20231223181101.1954-1-gregory.price@memverge.com>
+	<20231223181101.1954-3-gregory.price@memverge.com>
+	<8734vof3kq.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZYp6ZRLZQVtTHest@memverge.com>
+	<878r58dt31.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZZRybDPSoLme8Ldh@memverge.com>
+	<87mstnc6jz.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZZXbN4+2nVbE/lRe@memverge.com>
+	<875y09d5d8.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<ZZcAF4zIpsVN3dLd@memverge.com>
+Date: Fri, 05 Jan 2024 14:51:40 +0800
+Message-ID: <87cyugb7cz.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: SRHvoCpTTMVVOuN7hwSmeMr49WRl_np9
-X-Proofpoint-ORIG-GUID: SRHvoCpTTMVVOuN7hwSmeMr49WRl_np9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+Content-Type: text/plain; charset=ascii
 
-From: Nithin Dabilpuram <ndabilpuram@marvell.com>
+Gregory Price <gregory.price@memverge.com> writes:
 
-RPM0 and RPM1 on the CN10KB SoC have 8 LMACs each, whereas RPM2
-has only 4 LMACs. Similarly, the RPM0 and RPM1 have 256KB FIFO,
-whereas RPM2 has 128KB FIFO. This patch fixes an issue with
-improper TX credit programming for the RPM2 link.
+> On Thu, Jan 04, 2024 at 01:39:31PM +0800, Huang, Ying wrote:
+>> Gregory Price <gregory.price@memverge.com> writes:
+>> 
+>> > On Wed, Jan 03, 2024 at 01:46:56PM +0800, Huang, Ying wrote:
+>> >> Gregory Price <gregory.price@memverge.com> writes:
+>> >> > I'm specifically concerned about:
+>> >> > 	weighted_interleave_nid
+>> >> > 	alloc_pages_bulk_array_weighted_interleave
+>> >> >
+>> >> > I'm unsure whether kmalloc/kfree is safe (and non-offensive) in those
+>> >> > contexts. If kmalloc/kfree is safe fine, this problem is trivial.
+>> >> >
+>> >> > If not, there is no good solution to this without pre-allocating a
+>> >> > scratch area per-task.
+>> >> 
+>> >> You need to audit whether it's safe for all callers.  I guess that you
+>> >> need to allocate pages after calling, so you can use the same GFP flags
+>> >> here.
+>> >> 
+>> >
+>> > After picking away i realized that this code is usually going to get
+>> > called during page fault handling - duh.  So kmalloc is almost never
+>> > safe (or can fail), and we it's nasty to try to handle those errors.
+>> 
+>> Why not just OOM for allocation failure?
+>>
+>
+> 2 notes:
+>
+> 1) callers of weighted_interleave_nid do not expect OOM conditions, they
+>    expect a node selection.  On error, we would simply return the local
+>    numa node without indication of failure.
+>
+> 2) callers of alloc_pages_bulk_array_weighted_interleave receive the
+>    total number of pages allocated, and they are expected to detect
+>    pages allocated != pages requested, and then handle whether to
+>    OOM or simply retry (allocation may fail for a variety of reasons).
+>
+> By introducing an allocation into this area, if an allocation failure
+> occurs, we would essentially need to silently squash it and return
+> either local_node (interleave_nid) or return 0 (bulk allocator) and
+> allow the allocation logic to handle any subsequent OOM condition.
+>
+> That felt less desirable than just allocating a scratch space up front
+> in the mempolicy and avoiding the issue altogether.
+>
+>> > Instead of doing that, I simply chose to implement the scratch space
+>> > in the mempolicy structure
+>> >
+>> > mempolicy->wil.scratch_weights[MAX_NUMNODES].
+>> >
+>> > We eat an extra 1kb of memory in the mempolicy, but it gives us a safe
+>> > scratch space we can use any time the task is allocating memory, and
+>> > prevents the need for any fancy error handling.  That seems like a
+>> > perfectly reasonable tradeoff.
+>> 
+>> I don't think that this is a good idea.  The weight array is temporary.
+>> 
+>
+> It's temporary, but it's also only used in the context of the task while
+> the alloc lock is held.
+>
+> If you think it's fine to introduce another potential OOM generating
+> spot, then I'll just go ahead and allocate the memory on the fly.
+>
+> I do want to point out, though, that weighted_interleave_nid is called
+> per allocated page.  So now we're not just collecting weights to
+> calculate the offset, we're doing an allocation (that can fail) per page
+> allocated for that region.
+>
+> The bulk allocator amortizes the cost of this allocation by doing it
+> once while allocating a chunk of pages - but the weighted_interleave_nid
+> function is called per-page.
+>
+> By comparison, the memory cost to just allocate a static scratch area in
+> the mempolicy struct is only incurred by tasks with a mempolicy.
+>
+>
+> So we're talking ~1MB for 1024 threads with mempolicies to avoid error
+> conditions mid-page-allocation and to reduce the cost associated with
+> applying weighted interleave.
 
-Signed-off-by: Nithin Dabilpuram <ndabilpuram@marvell.com>
-Signed-off-by: Naveen Mamindlapalli <naveenm@marvell.com>
----
- drivers/net/ethernet/marvell/octeontx2/af/rpm.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Think about this again.  Why do we need weights array on stack?  I think
+this is used to keep weights consistent.  If so, we don't need weights
+array on stack.  Just use RCU to access global weights array.
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rpm.c b/drivers/net/ethernet/marvell/octeontx2/af/rpm.c
-index 4728ba34b0e3..76218f1cb459 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rpm.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rpm.c
-@@ -506,6 +506,7 @@ u32 rpm2_get_lmac_fifo_len(void *rpmd, int lmac_id)
- 	rpm_t *rpm = rpmd;
- 	u8 num_lmacs;
- 	u32 fifo_len;
-+	u16 max_lmac;
- 
- 	lmac_info = rpm_read(rpm, 0, RPM2_CMRX_RX_LMACS);
- 	/* LMACs are divided into two groups and each group
-@@ -513,7 +514,11 @@ u32 rpm2_get_lmac_fifo_len(void *rpmd, int lmac_id)
- 	 * Group0 lmac_id range {0..3}
- 	 * Group1 lmac_id range {4..7}
- 	 */
--	fifo_len = rpm->mac_ops->fifo_len / 2;
-+	max_lmac = (rpm_read(rpm, 0, CGX_CONST) >> 24) & 0xFF;
-+	if (max_lmac > 4)
-+		fifo_len = rpm->mac_ops->fifo_len / 2;
-+	else
-+		fifo_len = rpm->mac_ops->fifo_len;
- 
- 	if (lmac_id < 4) {
- 		num_lmacs = hweight8(lmac_info & 0xF);
--- 
-2.39.0.198.ga38d39a4c5
-
+--
+Best Regards,
+Huang, Ying
