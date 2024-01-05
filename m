@@ -1,149 +1,196 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDB51DFC4
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 02:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DB020B0E
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 02:13:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="X7t8WXOo"
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240105021225epoutp04a651d7ee0c241565f6973c6f141f00d5~nUaMw3EPT2716427164epoutp04H
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 02:12:25 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240105021225epoutp04a651d7ee0c241565f6973c6f141f00d5~nUaMw3EPT2716427164epoutp04H
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1704420745;
-	bh=dZVb79P+qvTVTPnXDcb6hSixeCMAiEBLHc2YBjIHyJM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=X7t8WXOoO5p7W34ud3FXqxMQcKbi9akktGrnFH5eiIaauiXo4QMRUmuvkFTnhUVu5
-	 PfvxX+v/iwoTPiw5iPGq8Vy4bmzXvoVbOe7O1dzc+goRpqtdVsdriQuzJyaTE50lEy
-	 EG+LzpIUhegGb0UxIkLrZaBU1qugXgtocuD7Rp28=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-	20240105021224epcas1p3833c624d783a76f90b309fd68f0bb91c~nUaLnMY6G1090310903epcas1p3p;
-	Fri,  5 Jan 2024 02:12:24 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.38.248]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4T5n5z56m9z4x9QC; Fri,  5 Jan
-	2024 02:12:23 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-	epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	5B.93.09744.78567956; Fri,  5 Jan 2024 11:12:23 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240105021223epcas1p156208a9a445b5e0b527a9eb2d2589ed3~nUaKngZV_0053900539epcas1p12;
-	Fri,  5 Jan 2024 02:12:23 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240105021223epsmtrp1a71c939bc2231410859ad3fdaafec842~nUaKmgFZg2623726237epsmtrp1m;
-	Fri,  5 Jan 2024 02:12:23 +0000 (GMT)
-X-AuditID: b6c32a35-107fa70000002610-02-65976587a7b0
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	F2.6C.07368.68567956; Fri,  5 Jan 2024 11:12:22 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.253.100.232]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240105021222epsmtip1d273cc1fb5d846ef2fe7a27b5d4b53db~nUaKPuQwd2152021520epsmtip1e;
-	Fri,  5 Jan 2024 02:12:22 +0000 (GMT)
-From: Chanwoo Lee <cw9316.lee@samsung.com>
-To: alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org,
-	jejb@linux.ibm.com, martin.petersen@oracle.com, stanley.chu@mediatek.com,
-	quic_cang@quicinc.com, mani@kernel.org, quic_asutoshd@quicinc.com,
-	powen.kao@mediatek.com, quic_nguyenb@quicinc.com, cw9316.lee@samsung.com,
-	yang.lee@linux.alibaba.com, peter.wang@mediatek.com, athierry@redhat.com,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: grant.jung@samsung.com, jt77.jang@samsung.com, dh0421.hwang@samsung.com,
-	sh043.lee@samsung.com
-Subject: [PATCH 2/2] ufs:mcq:Remove unused parameters
-Date: Fri,  5 Jan 2024 11:10:41 +0900
-Message-Id: <20240105021041.20400-3-cw9316.lee@samsung.com>
-X-Mailer: git-send-email 2.29.0
-In-Reply-To: <20240105021041.20400-1-cw9316.lee@samsung.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2qqYxwRL"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1d3f888ee39so6003745ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 18:13:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704420793; x=1705025593; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5+grBcrGVuvV4liSJu69kJ2ylLSuHocR0OaEGbLjwBA=;
+        b=2qqYxwRLJoVj3b/23IxQUOz6jMEsi3FaLUvszZHbXbbiFXYMHtrHIdLZcWsMM9FybU
+         BnZlbjfQ+Kj9vxOrrPZLYEXeULDS6Cs6eL4t5laXg284xQL0GEF4uveYT/oFuLizLkE/
+         5h9JxyuPeZ3qriAxmiYpD/AL7Y9zBvgAvMaBklS2qlEo6FQuIbQRK4wCnUtgqla30gFk
+         81z8tyD+tltdZ5guZWhLx3hsFcb/zqJK/MhE2YlD+sHkcgKbNLsyykBX6thW+SFWeFJH
+         d+z5O3Qu5wB09fwzFjwdWm38PcAUs1/yTkIYM+7v66aZyM5eCZswEdYNCJOnHIJE+deP
+         ubCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704420793; x=1705025593;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5+grBcrGVuvV4liSJu69kJ2ylLSuHocR0OaEGbLjwBA=;
+        b=Xyo6PJ1/K1GeySghp3wy4Kbxxyyr6WXPa8fqiL/ZRQx1SQL4u8Whm0U/6pwo37q1bA
+         IPOjiA/GnwXIfUa8/BhED5GM9hWKSF/y7kk5qTvc4OqYgX2kge2ckP6ahJUHDnm/F+YF
+         BdhURMJ/UefAHrKAJfLrvjv1rKhy8wzzCGqAQqcrgwvCkJLj/YL0NhgfYeMIAB9oPLsg
+         mX/kaQCGrju6oDauRdSPNgYEzuGc6QnohFibuftSaUl/7BWhVmW+gt3hwtwsfbxkD0j4
+         3dX1N7x1/kSfpyXaod6cVgeOi8HONhe+SDfhilpOrNnNZyNmuG2zm7DqTL8MdyIign6O
+         w/sw==
+X-Gm-Message-State: AOJu0Yy2zX0H4C0lklz3t5ogkZ9ZKfCfvgkXGvEfVt7Ju3CAzQ3xRWNY
+	MW8WMIKHxVus5y5CdJGbqAXvQ3JrE2L/8UfDkw==
+X-Google-Smtp-Source: AGHT+IG/U2QC5Y+0MYUnbGp2rZg3hY/EEchDQ6omkGn7csCqtl3k7PDPSzo6S/WwQ+npbS3ZQhZGaKLX/CY=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:903:2352:b0:1d4:1370:ebca with SMTP id
+ c18-20020a170903235200b001d41370ebcamr8366plh.6.1704420793102; Thu, 04 Jan
+ 2024 18:13:13 -0800 (PST)
+Date: Thu, 4 Jan 2024 18:13:11 -0800
+In-Reply-To: <daaf098a6219310b6b1c1e3dc147fbb7e48b6f54.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0xTVxTHc/va14eu27Ogu+nCj9RphARogbKLwiQB9S0Qx6b8MbcFK32j
-	DGhLX4tANsYoIKtEigtjMjdBpxNChCHUgsAQorXoxA1Qh3PAtAzY+FGGlh8Co7y5+d8593zO
-	95tz7r0EJhzCRUSySkdrVfJUMb6Oa+7y9fc/QpfTkj9PeKOhb8w4Gm6089DYfD+Ovpiex9CX
-	3YU81H7HxkcLS3V8dPqemYMsf9zko96Wkzg6eteCo47pGoC+sy5zUNPMIg9NPFjhoqqir7no
-	+J16HJWNWvko72k7F51t+gWgyU+7QORGqrcvhmqo+QynmofDKNPpDkDl237gUg77AJcqbc2h
-	ptr7cepYYw2g/m7woo50HOXErT+QEq6k5Qpa60OrEtWKZFVShDhmX0JUgixUIvWXhqHXxD4q
-	eRodIY6OjfPfnZy6OqfYJ0Oeql89ipMzjDjw9XCtWq+jfZRqRhchpjWKVE2oJoCRpzF6VVKA
-	itZtl0okQbJV8GCKcnipmK8Zc8tc7FnAckEBYQQEAckQWFOQbATrCCFpATB36hLOJjMADv6+
-	xGOTJwBOnZrhGoHbWkde5QhgC20Amk1W3FUQkrMATtjedsnipB+8fy3GxXiQ1Rgs6x7nuxiM
-	VMDx4sk1IXdSBuvNecDFc8ktsOea2nUsIHfAuuZyDuvlDZ8OFmOu2I0MhwPV57ksswHaTjzi
-	spLe0ND0FebyguQcAQ32EowdLRr+bA5gddzhuLWRz8YiOFZSyGd5A4BVf1n/bTYBOOu4j7PU
-	TmgoMOAuIYz0hXUtgazZi3DycTGP1RfAokIhS78KTxpv4c/0Hfce8tiYgoO5y3x2VyUAXnTU
-	AhPwrnhuhornZqj4360SYDVgE61h0pJoRqqR/nepieq0BrD21P1kFlA6MR3QCTgE6ASQwMQe
-	groLn9NCgUKelU1r1QlafSrNdALZ6oJLMdHGRPXqX1HpEqQhYZKQ0KAQFBwWHCp+WXCzL4MW
-	kklyHZ1C0xpa+6yPQ7iJcjm3qpz9pG19dtTVubpKVaDD7rcnR+lsSY/bdjYz68PYWFPG+Ld9
-	2w+MeV4XpQ9dcGaXdTtPBd0YO/zm7ksXfT+ebLMcqow+s2Nl7+YPdpbInvzmCK7yev/qoRds
-	15WGDnGh4GDURGNQ9Pkr8R3OOdW5kVGPPXcX4/T7gtI59t6kJZ4DzVfILSteyfma4drDvK69
-	GYEjV4xZ2e9u5VVvLSseOvbYFLvw1gSfkOw2hG5WtBZdLvPPX350O36A+mkT4dlSr38pcvSN
-	De/EW21h/Z6vtJ278VHPr5/scmTmXJ6h7PunW/c3e90uOfPjrFO062FV7ffliSLjg/fct5R7
-	MttmptuYhkgxl1HKpX6YlpH/A1aJ5INzBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCIsWRmVeSWpSXmKPExsWy7bCSnG5b6vRUg/aHRhYP5m1js3i45Smr
-	xcufV9kspn34yWwx41Qbq8W+ayfZLX79Xc9usejGNiaLHc/PsFtc3jWHzaL7+g42iwMfVjFa
-	LD/+j8li66ffrBZv7/5nsVjYMZfFYtK1DWwWU18cZ7do+rOPxWLp1puMFu8aDzM6iHpcvuLt
-	sWlVJ5vHzoeWHhMWHWD0aDm5n8Xj49NbLB4T99R5vN93lc2jb8sqRo/Pm+Q82g90MwVwR3HZ
-	pKTmZJalFunbJXBlPPzbw17wkrPi9/lfzA2MrRxdjJwcEgImEk0LnjGC2EICuxklbu1jhIhL
-	Sezef56ti5EDyBaWOHy4uIuRC6jkE6PEszMzmEDibAJaErePeYOUiwjsZ5Y43RYLYjMLZEh8
-	+3iCCcQWFjCV2LCtiRGknEVAVeL8sXyQMK+AtcT6ndOZIDbJS/y538MMYnMK2EjcWrmCBeIa
-	a4lVL26wQNQLSpyc+YQFYry8RPPW2cwTGAVmIUnNQpJawMi0ilEytaA4Nz032bDAMC+1XK84
-	Mbe4NC9dLzk/dxMjOCK1NHYw3pv/T+8QIxMH4yFGCQ5mJRHe9esmpwrxpiRWVqUW5ccXleak
-	Fh9ilOZgURLnNZwxO0VIID2xJDU7NbUgtQgmy8TBKdXAVNWqfWTy/Lvx0+uC+95Mr579K82k
-	t/VuSLnclihRt0wG33j2997W7uZLgnyUX6z7U71qzoLW/N9LSxffFKw6vOHG6aV/TweUFRzd
-	4ZY1192+gaXIjKXop5uBVlai4I+jpS4yh1w83c51q6t0XpafF1TluM5Jxql5/v5WjWbLXdoX
-	U1fWtPOsm+za6hBXa/LcJuxIWMVF8SSXuI6c64sXtB55KWLzy9d/r5Krq+D6Fffjrxbsacje
-	f0TAn5uZ4wxbi5IX74W7m1b0PN1722Hvl8wQNekVG6O9ol5ftGiN15vM/6uk5uX+l7dNvGfZ
-	sW7p/hMbosSzxCvlRZws80WOP+p5h1vCX1/LusVi9kyJpTgj0VCLuag4EQCAS72BNwMAAA==
-X-CMS-MailID: 20240105021223epcas1p156208a9a445b5e0b527a9eb2d2589ed3
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240105021223epcas1p156208a9a445b5e0b527a9eb2d2589ed3
-References: <20240105021041.20400-1-cw9316.lee@samsung.com>
-	<CGME20240105021223epcas1p156208a9a445b5e0b527a9eb2d2589ed3@epcas1p1.samsung.com>
+Mime-Version: 1.0
+References: <20231110235528.1561679-1-seanjc@google.com> <20231110235528.1561679-4-seanjc@google.com>
+ <3ad69657ba8e1b19d150db574193619cf0cb34df.camel@redhat.com>
+ <ZWk8IMZamuemfwXG@google.com> <daaf098a6219310b6b1c1e3dc147fbb7e48b6f54.camel@redhat.com>
+Message-ID: <ZZdlt2Dm36VF4WL6@google.com>
+Subject: Re: [PATCH 3/9] KVM: x86: Initialize guest cpu_caps based on guest CPUID
+From: Sean Christopherson <seanjc@google.com>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-From: ChanWoo Lee <cw9316.lee@samsung.com>
+On Thu, Dec 21, 2023, Maxim Levitsky wrote:
+> On Thu, 2023-11-30 at 17:51 -0800, Sean Christopherson wrote:
+> > On Sun, Nov 19, 2023, Maxim Levitsky wrote:
+> > > On Fri, 2023-11-10 at 15:55 -0800, Sean Christopherson wrote:
+> > > > +/*
+> > > > + * This isn't truly "unsafe", but all callers except kvm_cpu_after_set_cpuid()
+> > > > + * should use __cpuid_entry_get_reg(), which provides compile-time validation
+> > > > + * of the input.
+> > > > + */
+> > > > +static u32 cpuid_get_reg_unsafe(struct kvm_cpuid_entry2 *entry, u32 reg)
+> > > > +{
+> > > > +	switch (reg) {
+> > > > +	case CPUID_EAX:
+> > > > +		return entry->eax;
+> > > > +	case CPUID_EBX:
+> > > > +		return entry->ebx;
+> > > > +	case CPUID_ECX:
+> > > > +		return entry->ecx;
+> > > > +	case CPUID_EDX:
+> > > > +		return entry->edx;
+> > > > +	default:
+> > > > +		WARN_ON_ONCE(1);
+> > > > +		return 0;
+> > > > +	}
+> > > > +}
+> > 
+> > ...
+> > 
+> > > >  static void kvm_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+> > > >  {
+> > > >  	struct kvm_lapic *apic = vcpu->arch.apic;
+> > > >  	struct kvm_cpuid_entry2 *best;
+> > > >  	bool allow_gbpages;
+> > > > +	int i;
+> > > >  
+> > > > -	memset(vcpu->arch.cpu_caps, 0, sizeof(vcpu->arch.cpu_caps));
+> > > > +	BUILD_BUG_ON(ARRAY_SIZE(reverse_cpuid) != NR_KVM_CPU_CAPS);
+> > > > +
+> > > > +	/*
+> > > > +	 * Reset guest capabilities to userspace's guest CPUID definition, i.e.
+> > > > +	 * honor userspace's definition for features that don't require KVM or
+> > > > +	 * hardware management/support (or that KVM simply doesn't care about).
+> > > > +	 */
+> > > > +	for (i = 0; i < NR_KVM_CPU_CAPS; i++) {
+> > > > +		const struct cpuid_reg cpuid = reverse_cpuid[i];
+> > > > +
+> > > > +		best = kvm_find_cpuid_entry_index(vcpu, cpuid.function, cpuid.index);
+> > > > +		if (best)
+> > > > +			vcpu->arch.cpu_caps[i] = cpuid_get_reg_unsafe(best, cpuid.reg);
+> > > 
+> > > Why not just use __cpuid_entry_get_reg? 
+> > > 
+> > > cpuid.reg comes from read/only 'reverse_cpuid' anyway, and in fact
+> > > it seems that all callers of __cpuid_entry_get_reg, take the reg value from
+> > > x86_feature_cpuid() which also takes it from 'reverse_cpuid'.
+> > > 
+> > > So if the compiler is smart enough to not complain in these cases, I don't
+> > > see why this case is different.
+> > 
+> > It's because the input isn't a compile-time constant, and so the BUILD_BUG() in
+> > the default path will fire. 
+> >  All of the compile-time assertions in reverse_cpuid.h
+> > rely on the feature being a constant value, which allows the compiler to optimize
+> > away the dead paths, i.e. turn __cpuid_entry_get_reg()'s switch statement into
+> > simple pointer arithmetic and thus omit the BUILD_BUG() code.
+> 
+> In the above code, assuming that the compiler really treats the reverse_cpuid
+> as const (if that assumption is not true, then all uses of __cpuid_entry_get_reg
+> are also not compile time constant either),
 
-The 'hwq' parameter is not used in this function.
-So, remove unused parameters.
+It's not so much the compiler treating something as const as it is the compiler
+generating code that resolves the relevant inputs to compile-time constants.
 
-Signed-off-by: ChanWoo Lee <cw9316.lee@samsung.com>
----
- drivers/ufs/core/ufs-mcq.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+> then the 'reg' value depends only on 'i', and therefore for each iteration of
+> the loop, the compiler does know the compile time value of the 'reg', and so
+> it can easily prove that 'default' case in __cpuid_entry_get_reg can't be
+> reached, and thus eliminate that BUILD_BUG().
 
-diff --git a/drivers/ufs/core/ufs-mcq.c b/drivers/ufs/core/ufs-mcq.c
-index edc752e55878..8db81f1a12d5 100644
---- a/drivers/ufs/core/ufs-mcq.c
-+++ b/drivers/ufs/core/ufs-mcq.c
-@@ -258,9 +258,7 @@ EXPORT_SYMBOL_GPL(ufshcd_mcq_write_cqis);
-  * Current MCQ specification doesn't provide a Task Tag or its equivalent in
-  * the Completion Queue Entry. Find the Task Tag using an indirect method.
-  */
--static int ufshcd_mcq_get_tag(struct ufs_hba *hba,
--				     struct ufs_hw_queue *hwq,
--				     struct cq_entry *cqe)
-+static int ufshcd_mcq_get_tag(struct ufs_hba *hba, struct cq_entry *cqe)
- {
- 	u64 addr;
- 
-@@ -278,7 +276,7 @@ static void ufshcd_mcq_process_cqe(struct ufs_hba *hba,
- 				   struct ufs_hw_queue *hwq)
- {
- 	struct cq_entry *cqe = ufshcd_mcq_cur_cqe(hwq);
--	int tag = ufshcd_mcq_get_tag(hba, hwq, cqe);
-+	int tag = ufshcd_mcq_get_tag(hba, cqe);
- 
- 	if (cqe->command_desc_base_addr) {
- 		ufshcd_compl_one_cqe(hba, tag, cqe);
--- 
-2.29.0
+A compiler _could_ know, but as above what truly matters is what code the compiler
+actually generates.  E.g. all helpers are tagged __always_inline to prevent the
+compiler from uninlining the functions (thanks, KASAN), at which point the code
+of the non-inline function is no longer dealing with compile-time constants and
+so the BUILD_BUG_ON() doesn't get eliminated.
 
+For the loop, while all values are indeed constant, the compiler may choose to
+generate a loop instead of unrolling everything.  A sufficiently clever compiler
+could still detect that nothing in the loop can hit the "default" case, but in
+practice neither clang nor gcc does that level of optimization, at least not yet.
+
+> > > Also why not to initialize guest_caps = host_caps & userspace_cpuid?
+> > > 
+> > > If this was the default we won't need any guest_cpu_cap_restrict and such,
+> > > instead it will just work.
+> > 
+> > Hrm, I definitely like the idea.  Unfortunately, unless we do an audit of all
+> > ~120 uses of guest_cpuid_has(), restricting those based on kvm_cpu_caps might
+> > break userspace.
+> 
+> 120 uses is not that bad, IMHO it is worth it - we won't need to deal with that
+> in the future.
+> 
+> How about a compromise - you change the patches such as it will be possible
+> to remove these cases one by one, and also all new cases will be fully
+> automatic?
+
+Hrm, I'm not necessarily opposed to that, but I don't think we should go partway
+unless we are 100% confident that changing the default to "use guest CPUID ANDed
+with KVM capabilities" is the best end state, *and* that someone will actually
+have the bandwidth to do the work soon-ish so that KVM isn't in a half-baked
+state for months on end.  Even then, my preference would definitely be to switch
+everything in one go.
+
+And automatically handling new features would only be feasible for entirely new
+leafs.  E.g. X86_FEATURE_RDPID is buried in CPUID.0x7.0x0.ECX, so to automatically
+handle new features KVM would need to set the default guest_caps for all bits
+*except* RDPID, at which point we're again building a set of features that need
+to opt-out.
+
+> > To be fair, the manual lists predate the governed features.
+> 
+> 100% agree, however the point of governed features was to simplify this list,
+> the point of this patch set is to simplify these lists and yet they still remain,
+> more or less untouched, and we will still need to maintain them.
+> 
+> Again I do think that governed features and/or this patchset are better than
+> the mess that was there before, but a part of me wants to fully get rid of
+> this mess instead of just making it a bit more beautiful. 
+
+Oh, I would love to get rid of the mess too, I _completely_ getting rid of the
+mess isn't realistic.  There are guaranteed to be exceptions to the rule, whether
+the rule is "use guest CPUID by default" or "use guest CPUID constrained by KVM
+capabilities by default".
+
+I.e. there will always be some amount of manual messiness, the question is which
+default behavior would yield the smallest mess.  My gut agrees with you, that
+defaulting to "guest & KVM" would yield the fewest exceptions.  But as above,
+I think we're better off doing the switch as an all-or-nothing things (where "all"
+means within a single series, not within a single patch).
