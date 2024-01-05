@@ -1,153 +1,104 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854551DFC5
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 06:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="azYitYZN"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-5f2d44a6842so12081627b3.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 22:11:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704435099; x=1705039899; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GKDQ+5pnW68Nbi3B0uL1FG88vOkGBEVvuvzp5rUCPBU=;
-        b=azYitYZN/P4YqYK+vjsl94vwoWWq9Itoc4/MaxN6TizaL73XGLXpS1oRrxHMab+3Mv
-         6r39l5F4IdIAzNCkkGtIV0WjZHhzdWjRJS6RNLEduXJKFPeGVI4oSh3J/m3W0bW/jQEw
-         uRLc/Uj7aELla0ENAb0C+ZSOdsDwSaASOyAagu1g1woxK57mmR8+OYGoCP8Bvrtn3xCr
-         1nCoQoAn6OCV7OtlOTuKqao8Fpj2XVPsMYcr0F7jbW2DeHILcl1WhNl8dvbqDyzwc/OZ
-         I+1p1sX2N8gI6msuvWBj+QmoPrHw1nLYYP1AKc8gPQcJSrYxWQ5zWuM/DBHl3RX1t4z3
-         KQMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704435099; x=1705039899;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GKDQ+5pnW68Nbi3B0uL1FG88vOkGBEVvuvzp5rUCPBU=;
-        b=naaeRWsgu6uw0UeU1AdBXRYawadwvQajsM7sDG/7F+/x9VsjGNqfapCpcXcMGZz65u
-         o2pMPWpn28H3f9ng7o/23wa3PVyjxGvnezFBdqmembWh8t2AzOe0jmCoowhp05STBsep
-         xUuXQfkM7Ai/8gaHQo96iUd5/JEGGdqOYf8SXpkAYHAg8u1NchcwL0CONkM57lYWoehE
-         aPAO4TB3Wx5GHCEppRzA6Bic9v7WV8U2UWm6S+dRhrQvTGDJUOebyTlR4ydI21XIHjeN
-         XDsJ/vgTniJK6V2cqLQ6P2EZc9+8ka/ks2anEBDW1fwqpWbT2+1vbGaEFv58XCZ20q9l
-         j+YQ==
-X-Gm-Message-State: AOJu0YzG8pzA1bbnpB3kSpg0/WFEyjTG4FYvgcN04BD5OeitAhRw06yB
-	3jfIV5C5T5l8j7JpjSQGkik=
-X-Google-Smtp-Source: AGHT+IGXjI7ARK/zF18CPRzdfa7R/9+ll3ePFJmEzHKpOD0J1ujIZANn5sTiFN5ovJskj1Es16K0Zg==
-X-Received: by 2002:a81:5456:0:b0:5e8:45c5:a6bf with SMTP id i83-20020a815456000000b005e845c5a6bfmr1648912ywb.32.1704435099542;
-        Thu, 04 Jan 2024 22:11:39 -0800 (PST)
-Received: from localhost ([185.215.181.31])
-        by smtp.gmail.com with ESMTPSA id w67-20020a816246000000b005ee92416510sm415589ywb.43.2024.01.04.22.11.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jan 2024 22:11:39 -0800 (PST)
-From: Kevin Martin <kevinmbecause@gmail.com>
-To: Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	linux-kernel@vger.kernel.org
-Cc: Kevin Martin <kevinmbecause@gmail.com>
-Subject: [PATCH v2 2/2] firmware_loader: Enable compressed files with EXTRA_FIRMWARE
-Date: Fri,  5 Jan 2024 01:10:02 -0500
-Message-ID: <cd370037f8c21dc851a2a33a07250459c9c98708.1704353568.git.kevinmbecause@gmail.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <cover.1704353568.git.kevinmbecause@gmail.com>
-References: <cover.1704353568.git.kevinmbecause@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6D06121;
+	Fri,  5 Jan 2024 06:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iie.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iie.ac.cn
+Received: from localhost.localdomain (unknown [159.226.43.30])
+	by APP-05 (Coremail) with SMTP id zQCowAAXKD2Yn5dlRx3EAw--.57384S2;
+	Fri, 05 Jan 2024 14:20:08 +0800 (CST)
+From: Jingzi Meng <mengjingzi@iie.ac.cn>
+To: gregkh@linuxfoundation.org
+Cc: gpiccoli@igalia.com,
+	john.ogness@linutronix.de,
+	keescook@chromium.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pmladek@suse.com,
+	rostedt@goodmis.org,
+	senozhatsky@chromium.org,
+	tony.luck@intel.com
+Subject: [PATCH] cap_syslog: remove CAP_SYS_ADMIN when dmesg_restrict
+Date: Fri,  5 Jan 2024 14:20:07 +0800
+Message-Id: <20240105062007.26965-1-mengjingzi@iie.ac.cn>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <2024010306-tweezers-skinhead-083e@gregkh>
+References: <2024010306-tweezers-skinhead-083e@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAAXKD2Yn5dlRx3EAw--.57384S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7uF13Zr47KFW7Aw1DKF45Wrg_yoW8ArW5p3
+	4fCr1Utw4DJr17CF4xtayDuFW5WrnFkrWDJa9Y9a1Sv3ZIkw4Iv34qyr18XF1UKrZ3Kr43
+	ta4qvF4DtF10kwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvmb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwV
+	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr1j6F
+	4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc2xSY4AK67AK6r47MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+	67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
+	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
+	UI43ZEXa7IU5dC7UUUUUU==
+X-CM-SenderInfo: pphqwyxlqj6xo6llvhldfou0/
 
-The linux-firmware packages on Gentoo, Fedora, Arch, and others
-compress the firmware files. This works well with
-CONFIG_FW_LOADER_COMPRESS but does not work with CONFIG_EXTRA_FIRMWARE.
-This patch allows the build system to decompress firmware files
-specified by CONFIG_EXTRA_FIRMWARE. Uncompressed files are used first,
-then the compressed files are used.
+CAP_SYSLOG was separated from CAP_SYS_ADMIN and introduced in Linux
+2.6.37 (2010-11). For a long time, certain syslog actions required
+CAP_SYS_ADMIN or CAP_SYSLOG. Maybe it’s time to officially remove
+CAP_SYS_ADMIN for more fine-grained control.
 
-The patch works by copying or decompressing the specified firmware files
-into the build directory, then compiling them in from there. I would
-prefer to not copy any uncompressed files, but I have not found a clean
-way to do that.
+CAP_SYS_ADMIN was once removed but added back for backwards
+compatibility reasons. In commit 38ef4c2e437d ("syslog: check cap_syslog
+when dmesg_restrict") (2010-12), CAP_SYS_ADMIN was no longer needed. And
+in commit ee24aebffb75 ("cap_syslog: accept CAP_SYS_ADMIN for now")
+(2011-02), it was accepted again. Since then, CAP_SYS_ADMIN has been
+preserved.
 
-Signed-off-by: Kevin Martin <kevinmbecause@gmail.com>
+Now that almost 13 years have passed, the legacy application may have
+had enough time to be updated.
+
+Signed-off-by: Jingzi Meng <mengjingzi@iie.ac.cn>
 ---
-Changes in v2:
-- Changed .gitignore to ignore all firmware files copied into the
-directory.
-- Fixed a tab.
 
- drivers/base/firmware_loader/Kconfig            |  5 ++++-
- drivers/base/firmware_loader/builtin/.gitignore |  5 ++++-
- drivers/base/firmware_loader/builtin/Makefile   | 16 ++++++++++++----
- 3 files changed, 20 insertions(+), 6 deletions(-)
+In addition, we examined the kernel code and identified that the user api
+affected by this change is the syslog system call, which we tested on
+the patched kernel to make sure the effect is as expected.
 
-diff --git a/drivers/base/firmware_loader/Kconfig b/drivers/base/firmware_loader/Kconfig
-index 5ca00e02f..b7a908bff 100644
---- a/drivers/base/firmware_loader/Kconfig
-+++ b/drivers/base/firmware_loader/Kconfig
-@@ -76,7 +76,10 @@ config EXTRA_FIRMWARE
- 	  image since it combines both GPL and non-GPL work. You should
- 	  consult a lawyer of your own before distributing such an image.
- 
--	  NOTE: Compressed files are not supported in EXTRA_FIRMWARE.
-+	  NOTE: Compressed files are supported by EXTRA_FIRMWARE. The build
-+	  system will look for uncompressed files first then fall back to
-+	  searching for compressed files in a similar way to
-+	  CONFIG_FW_LOADER_COMPRESS.
- 
- config EXTRA_FIRMWARE_DIR
- 	string "Firmware blobs root directory"
-diff --git a/drivers/base/firmware_loader/builtin/.gitignore b/drivers/base/firmware_loader/builtin/.gitignore
-index 166f76b43..b3124ee78 100644
---- a/drivers/base/firmware_loader/builtin/.gitignore
-+++ b/drivers/base/firmware_loader/builtin/.gitignore
-@@ -1,2 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
--*.gen.S
-+*
-+!.gitignore
-+!Makefile
-+!main.c
-diff --git a/drivers/base/firmware_loader/builtin/Makefile b/drivers/base/firmware_loader/builtin/Makefile
-index 6c067dedc..cc60eb441 100644
---- a/drivers/base/firmware_loader/builtin/Makefile
-+++ b/drivers/base/firmware_loader/builtin/Makefile
-@@ -20,7 +20,7 @@ filechk_fwbin = \
- 	echo "    .section .rodata"				;\
- 	echo "    .p2align 4"					;\
- 	echo "_fw_$(FWSTR)_bin:"				;\
--	echo "    .incbin \"$(fwdir)/$(FWNAME)\""		;\
-+	echo "    .incbin \"$(obj)/$(FWNAME)\""			;\
- 	echo "_fw_end:"						;\
- 	echo "    .section .rodata.str,\"aMS\",$(PROGBITS),1"	;\
- 	echo "    .p2align $(ASM_ALIGN)"			;\
-@@ -36,7 +36,15 @@ $(obj)/%.gen.S: FORCE
- 	$(call filechk,fwbin)
- 
- # The .o files depend on the binaries directly; the .S files don't.
--$(addprefix $(obj)/, $(firmware)): $(obj)/%.gen.o: $(fwdir)/%
-+$(addprefix $(obj)/, $(firmware)): $(obj)/%.gen.o: $(obj)/%
- 
--targets := $(patsubst $(obj)/%,%, \
--                                $(shell find $(obj) -name \*.gen.S 2>/dev/null))
-+$(obj)/% : $(fwdir)/% FORCE
-+	$(call if_changed,copy)
-+
-+$(obj)/% : $(fwdir)/%.xz FORCE
-+	$(call if_changed,xzdec)
-+
-+$(obj)/% : $(fwdir)/%.zst FORCE
-+	$(call if_changed,zstddec)
-+
-+targets := $(patsubst %.gen.o, %.gen.S, $(firmware)) $(CONFIG_EXTRA_FIRMWARE)
+ kernel/printk/printk.c | 11 -----------
+ 1 file changed, 11 deletions(-)
+
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index be95a6851164..6e1153d7de21 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -598,17 +598,6 @@ static int check_syslog_permissions(int type, int source)
+ 	if (syslog_action_restricted(type)) {
+ 		if (capable(CAP_SYSLOG))
+ 			goto ok;
+-		/*
+-		 * For historical reasons, accept CAP_SYS_ADMIN too, with
+-		 * a warning.
+-		 */
+-		if (capable(CAP_SYS_ADMIN)) {
+-			pr_warn_once("%s (%d): Attempt to access syslog with "
+-				     "CAP_SYS_ADMIN but no CAP_SYSLOG "
+-				     "(deprecated).\n",
+-				 current->comm, task_pid_nr(current));
+-			goto ok;
+-		}
+ 		return -EPERM;
+ 	}
+ ok:
 -- 
-2.41.0
+2.20.1
 
