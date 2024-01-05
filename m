@@ -1,125 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39331241F4
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 09:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8210624B49;
+	Fri,  5 Jan 2024 09:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TCjKYS6v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704447844;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NIwLDUnI8NrUa1yoEmDStM8G2YxoAzCn45gUwvCVLMU=;
-	b=TCjKYS6v4udY0CyK+KRVnh8KLb2m40C1X61GHXJxHhk/tMIRwHTfSHOSeBKoqancNqZvJE
-	6krblsJAaB5X5p/4SXj9vgsYu0KxK18IGGt9aDPU25bvzWmG1wMgyMPBFHOBDLDkqK2WdH
-	1h8LQoJvl0wnuvbChryPj5tex083PcY=
-Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
- [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-433-4yDRF3ekNrKW7vMRSOkEkg-1; Fri, 05 Jan 2024 04:44:01 -0500
-X-MC-Unique: 4yDRF3ekNrKW7vMRSOkEkg-1
-Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-5f1df517cf3so23345177b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 01:44:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704447841; x=1705052641;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NIwLDUnI8NrUa1yoEmDStM8G2YxoAzCn45gUwvCVLMU=;
-        b=oRTHdHKpHozQBAeH+rZvD6dWfIM9gDzdMqdwTEL0amZ9isg5y+O9GQ1euwYpy/JR8K
-         fY6++AxELWpgzMZXy5TrpdahCadusXxdwcOMxWyKUUMtlECGLYLOw5g+yKFjQ/za5zVX
-         QOY89RJDUUQsYib0wSU0OOiRG8WBNt2fjZXTM30ukXMh9Pb/TX4JJEHrseL1ISQjSi9y
-         CzR47gGT5SZOwuVBz2EL5ua6+f5bnRealaPHWhNm+MIX24Ms2XY1HwARsyH7Frs31x4g
-         FvGa3eUzkDnTPQXuZ1KHcnN66wRwXGIJT/gTyD5mWscMQvizfw5BlKEp8s+7cvhxKTOL
-         16lw==
-X-Gm-Message-State: AOJu0YxpVfRP5OjWItNnEDdcayc/7KyDpxS1H4Phl2yUwN7ImTeYKo9N
-	6peKmsmro7i7Yh8w5G78lXrmSbZ6UYyLwS9c4uzC52ioyXKujyJ+7IzytmcnEOJ3AoNCJY91bsh
-	w8IB2Jaj5SZd/s59zRmNWoiocRVSdcM3SCjGKOWHsRTVRld1A
-X-Received: by 2002:a0d:c042:0:b0:5ee:26aa:3d4 with SMTP id b63-20020a0dc042000000b005ee26aa03d4mr2038717ywd.43.1704447841434;
-        Fri, 05 Jan 2024 01:44:01 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGdAnA+xpbtbCqAMIEPbTW4gOvzkqFdMNwKSJx2Twyuke/V55aRkeGQnX3n3kmSfq6u7un2p348fwv2H8hb6Zc=
-X-Received: by 2002:a0d:c042:0:b0:5ee:26aa:3d4 with SMTP id
- b63-20020a0dc042000000b005ee26aa03d4mr2038711ywd.43.1704447841236; Fri, 05
- Jan 2024 01:44:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="llifZT+L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704447854; x=1735983854;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references;
+  bh=TAQv9JJR1XqAj6tjxwKS30HsTbZYt1Z095C7qYz5bks=;
+  b=llifZT+LT5JFklPZLtvMD6OSUyLlFZdQAxyVQwUyy85tmICkuc/cqXuU
+   5VbNfepjNfrHPRTF87oa3jb7W8PdQASabjwJ5IY7CQYfNXmO/BME9pRl0
+   Xn8+0gO72RU8Q9jlQWAiJHmgd/5A3pxROn3CqYM6fjK4GSFH4IWcbaZ0m
+   p6g59h/OD3IHe0Vm7DjrXUiOiLIOWGZjTWN8Bc4F2hLZFr/hLjO/b6yfX
+   iDoJ6PyobELrAtjGtVmrR07CmgrZUxqnetHRH/ipB8PiThBy5MubqRyZP
+   bAEc0WKhFl7awk/AilCXHQ8AYrzcuvmRqFWNfR2Ts410s3BeCQvqV++d1
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="10842964"
+X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
+   d="scan'208";a="10842964"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 01:44:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
+   d="scan'208";a="22458420"
+Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 01:44:07 -0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Cc: pbonzini@redhat.com,
+	seanjc@google.com,
+	olvaffe@gmail.com,
+	kevin.tian@intel.com,
+	zhiyuan.lv@intel.com,
+	zhenyu.z.wang@intel.com,
+	yongwei.ma@intel.com,
+	vkuznets@redhat.com,
+	wanpengli@tencent.com,
+	jmattson@google.com,
+	joro@8bytes.org,
+	gurchetansingh@chromium.org,
+	kraxel@redhat.com,
+	zzyiwei@google.com,
+	ankita@nvidia.com,
+	jgg@nvidia.com,
+	alex.williamson@redhat.com,
+	maz@kernel.org,
+	oliver.upton@linux.dev,
+	james.morse@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	Yan Zhao <yan.y.zhao@intel.com>,
+	Zhenyu Wang <zhenyuw@linux.intel.com>
+Subject: [PATCH 2/4] KVM: x86: Add a new param "slot" to op get_mt_mask in kvm_x86_ops
+Date: Fri,  5 Jan 2024 17:14:54 +0800
+Message-Id: <20240105091454.24700-1-yan.y.zhao@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240105091237.24577-1-yan.y.zhao@intel.com>
+References: <20240105091237.24577-1-yan.y.zhao@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240104153753.2931026-1-maxime.coquelin@redhat.com> <20240104153753.2931026-2-maxime.coquelin@redhat.com>
-In-Reply-To: <20240104153753.2931026-2-maxime.coquelin@redhat.com>
-From: Eugenio Perez Martin <eperezma@redhat.com>
-Date: Fri, 5 Jan 2024 10:43:25 +0100
-Message-ID: <CAJaqyWd4UGpzscP=veX3DeyOF2gF6B2crQ6-R_Eo2tncZLgyAg@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] vduse: validate block features only with block devices
-To: Maxime Coquelin <maxime.coquelin@redhat.com>
-Cc: mst@redhat.com, jasowang@redhat.com, xuanzhuo@linux.alibaba.com, 
-	xieyongji@bytedance.com, virtualization@lists.linux-foundation.org, 
-	linux-kernel@vger.kernel.org, david.marchand@redhat.com, lulu@redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 4, 2024 at 4:38=E2=80=AFPM Maxime Coquelin
-<maxime.coquelin@redhat.com> wrote:
->
-> This patch is preliminary work to enable network device
-> type support to VDUSE.
->
-> As VIRTIO_BLK_F_CONFIG_WCE shares the same value as
-> VIRTIO_NET_F_HOST_TSO4, we need to restrict its check
-> to Virtio-blk device type.
->
-> Acked-by: Jason Wang <jasowang@redhat.com>
-> Reviewed-by: Xie Yongji <xieyongji@bytedance.com>
-> Signed-off-by: Maxime Coquelin <maxime.coquelin@redhat.com>
+Add param "slot" to op get_mt_mask in kvm_x86_ops.
+This is a preparation patch to later honor guest PATs for certain memslots.
 
-Reviewed-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
+No functional change intended.
 
-> ---
->  drivers/vdpa/vdpa_user/vduse_dev.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/vdpa/vdpa_user/vduse_dev.c b/drivers/vdpa/vdpa_user/=
-vduse_dev.c
-> index 0ddd4b8abecb..0486ff672408 100644
-> --- a/drivers/vdpa/vdpa_user/vduse_dev.c
-> +++ b/drivers/vdpa/vdpa_user/vduse_dev.c
-> @@ -1671,13 +1671,14 @@ static bool device_is_allowed(u32 device_id)
->         return false;
->  }
->
-> -static bool features_is_valid(u64 features)
-> +static bool features_is_valid(struct vduse_dev_config *config)
->  {
-> -       if (!(features & (1ULL << VIRTIO_F_ACCESS_PLATFORM)))
-> +       if (!(config->features & (1ULL << VIRTIO_F_ACCESS_PLATFORM)))
->                 return false;
->
->         /* Now we only support read-only configuration space */
-> -       if (features & (1ULL << VIRTIO_BLK_F_CONFIG_WCE))
-> +       if ((config->device_id =3D=3D VIRTIO_ID_BLOCK) &&
-> +                       (config->features & (1ULL << VIRTIO_BLK_F_CONFIG_=
-WCE)))
->                 return false;
->
->         return true;
-> @@ -1704,7 +1705,7 @@ static bool vduse_validate_config(struct vduse_dev_=
-config *config)
->         if (!device_is_allowed(config->device_id))
->                 return false;
->
-> -       if (!features_is_valid(config->features))
-> +       if (!features_is_valid(config))
->                 return false;
->
->         return true;
-> --
-> 2.43.0
->
->
+Suggested-by: Sean Christopherson <seanjc@google.com>
+Cc: Kevin Tian <kevin.tian@intel.com>
+Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+Tested-by: Yongwei Ma <yongwei.ma@intel.com>
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+---
+ arch/x86/include/asm/kvm_host.h | 3 ++-
+ arch/x86/kvm/mmu/spte.c         | 3 ++-
+ arch/x86/kvm/vmx/vmx.c          | 3 ++-
+ 3 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index a565a2e70f30..6be0d8ccff65 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1675,7 +1675,8 @@ struct kvm_x86_ops {
+ 	int (*sync_pir_to_irr)(struct kvm_vcpu *vcpu);
+ 	int (*set_tss_addr)(struct kvm *kvm, unsigned int addr);
+ 	int (*set_identity_map_addr)(struct kvm *kvm, u64 ident_addr);
+-	u8 (*get_mt_mask)(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio);
++	u8 (*get_mt_mask)(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio,
++			  const struct kvm_memory_slot *slot);
+ 
+ 	void (*load_mmu_pgd)(struct kvm_vcpu *vcpu, hpa_t root_hpa,
+ 			     int root_level);
+diff --git a/arch/x86/kvm/mmu/spte.c b/arch/x86/kvm/mmu/spte.c
+index 4a599130e9c9..2c3ede3f27a9 100644
+--- a/arch/x86/kvm/mmu/spte.c
++++ b/arch/x86/kvm/mmu/spte.c
+@@ -191,7 +191,8 @@ bool make_spte(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp,
+ 
+ 	if (shadow_memtype_mask)
+ 		spte |= static_call(kvm_x86_get_mt_mask)(vcpu, gfn,
+-							 kvm_is_mmio_pfn(pfn));
++							 kvm_is_mmio_pfn(pfn),
++							 slot);
+ 	if (host_writable)
+ 		spte |= shadow_host_writable_mask;
+ 	else
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 40e3780d73ae..85a23765e506 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7576,7 +7576,8 @@ static int vmx_vm_init(struct kvm *kvm)
+ 	return 0;
+ }
+ 
+-static u8 vmx_get_mt_mask(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio)
++static u8 vmx_get_mt_mask(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio,
++			  const struct kvm_memory_slot *slot)
+ {
+ 	/* We wanted to honor guest CD/MTRR/PAT, but doing so could result in
+ 	 * memory aliases with conflicting memory types and sometimes MCEs.
+-- 
+2.17.1
 
