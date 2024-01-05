@@ -1,269 +1,69 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m127150.qiye.163.com (mail-m127150.qiye.163.com [115.236.127.150])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502C331734
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 08:25:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="lfFQt1IV"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a28ac851523so155006866b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 00:25:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1704443129; x=1705047929; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D52HtaDyG1yQmVNxfMf3+ZvDLZVTUO44eFJ4THAqFfQ=;
-        b=lfFQt1IVBbUjxJzX7wU88vnF+faewzzYXcdtenrNORr6NHzk1P5lLd6wYrwnA25cwc
-         hAS7yxXkaNpXDxEuyZIuSmAmIXWixm1QBXYi9q1Y7saCa7FAm50EWKvNc35AXEwTk20N
-         78XDUUjysSz76c0JSCef8DMznILqaciOV3aHub5YYts3Yjxe39+rKdyLRBr+dcWhO0I3
-         VQFL9HAt+AyFmiLafdXtaoKMYtsL9J/rK9xDPDstfGfMSdbEKCcpJFHTTYUwSDOJGRry
-         G32qO9mbPQcirQY9h1GmavC8rLU49GZWlk2ByRKEghpMAgtbz9axtRqdrCx4XhYypJex
-         oGfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704443129; x=1705047929;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D52HtaDyG1yQmVNxfMf3+ZvDLZVTUO44eFJ4THAqFfQ=;
-        b=kIlX8+NCfB9ykk8J/Tuo+kTgFdZYepbzKo2MA2L/RJzG8noEoaO+rOHVWGWqd6zHVc
-         EWL/O2P8zq5JEkV30h2nX3L72d6U7z7EBVqnlC1kfs/aIHZErH64MGJ2Q7prCkBCfyCf
-         7BDI8Sj1il3LZE89kc8vPPLNgVqRWeemixxuxM0RXkr7RDioRX011OCJvJWE+XK5k5HC
-         qKRWMPRCoT1Xjb2hpFp2+mGI9z1Ucpq+JaS6lQy6AGdscrArHWut5c2AARxjz534jxfe
-         jRHzdcxDwCAB3gI7MJK8CHWGmTqv03A29Ev5+Xc5nLIk3qaNKp3m5VheVmE6QydvB5H7
-         4vug==
-X-Gm-Message-State: AOJu0Yz6/R+B9E4pCVn3E1jt7GSSadJoA7b2Q54YOg0CQmseu/06LWAZ
-	S1ltYxb/PTbDj/aYbt44aiR/aHIl4sy77w==
-X-Google-Smtp-Source: AGHT+IGupMTvlbpzG5ZEVKfHUzeR+3LC7MnHzEXa0jX2qmlVtmewPRTkwwV8k2b68gfov4MttdLUNQ==
-X-Received: by 2002:a17:906:4554:b0:a28:b6a5:a26b with SMTP id s20-20020a170906455400b00a28b6a5a26bmr1003355ejq.141.1704443129678;
-        Fri, 05 Jan 2024 00:25:29 -0800 (PST)
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.5])
-        by smtp.gmail.com with ESMTPSA id j15-20020a1709064b4f00b00a28e759a447sm596198ejv.213.2024.01.05.00.25.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jan 2024 00:25:29 -0800 (PST)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: s.shtylyov@omp.ru,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	richardcochran@gmail.com,
-	p.zabel@pengutronix.de,
-	yoshihiro.shimoda.uh@renesas.com,
-	wsa+renesas@sang-engineering.com
-Cc: netdev@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	claudiu.beznea@tuxon.dev,
-	geert+renesas@glider.be,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH net-next v3 19/19] net: ravb: Add runtime PM support
-Date: Fri,  5 Jan 2024 10:23:39 +0200
-Message-Id: <20240105082339.1468817-20-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240105082339.1468817-1-claudiu.beznea.uj@bp.renesas.com>
-References: <20240105082339.1468817-1-claudiu.beznea.uj@bp.renesas.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D042420E;
+	Fri,  5 Jan 2024 08:25:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sangfor.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sangfor.com.cn
+Received: from [172.23.69.7] (unknown [121.32.254.147])
+	by mail-m12750.qiye.163.com (Hmail) with ESMTPA id 594FEF20615;
+	Fri,  5 Jan 2024 16:15:19 +0800 (CST)
+Message-ID: <62db1a02-41b8-44b0-960b-6d6f5bec5d19@sangfor.com.cn>
+Date: Fri, 5 Jan 2024 16:15:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] RDMA/device: Fix a race between mad_client and cm_client
+ init
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: leon@kernel.org, wenglianfa@huawei.com, gustavoars@kernel.org,
+ linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Shifeng Li <lishifeng1992@126.com>, "Ding, Hui" <dinghui@sangfor.com.cn>
+References: <20240102034335.34842-1-lishifeng@sangfor.com.cn>
+ <20240103184804.GB50608@ziepe.ca>
+ <80cac9fd-7fed-403e-8889-78e2fc7a49b0@sangfor.com.cn>
+ <20240104123728.GC50608@ziepe.ca>
+From: Shifeng Li <lishifeng@sangfor.com.cn>
+In-Reply-To: <20240104123728.GC50608@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDQhhIVk8eQxhJHh5MTU8aS1UTARMWGhIXJBQOD1
+	lXWRgSC1lBWUpJSlVISVVJTk9VSk9MWVdZFhoPEhUdFFlBWU9LSFVKTU9JTE5VSktLVUpCS0tZBg
+	++
+X-HM-Tid: 0a8cd8b0e062b21dkuuu594fef20615
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mkk6Nyo*TDwoIj80Kh8sECgc
+	OiMwFC1VSlVKTEtPT09JTklLSU9JVTMWGhIXVRcSCBMSHR4VHDsIGhUcHRQJVRgUFlUYFUVZV1kS
+	C1lBWUpJSlVISVVJTk9VSk9MWVdZCAFZQUlPT083Bg++
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On 2024/1/4 20:37, Jason Gunthorpe wrote:
+> On Thu, Jan 04, 2024 at 02:48:14PM +0800, Shifeng Li wrote:
+> 
+>> The root cause is that mad_client and cm_client may init concurrently
+>> when devices_rwsem write semaphore is downgraded in enable_device_and_get() like:
+> 
+> That can't be true, the module loader infrastructue ensures those two
+> things are sequential.
+> 
 
-Add runtime PM support for the ravb driver. As the driver is used by
-different IP variants, with different behaviors, to be able to have the
-runtime PM support available for all devices, the preparatory commits
-moved all the resources parsing and allocations in the driver's probe
-function and kept the settings for ravb_open(). This is due to the fact
-that on some IP variants-platforms tuples disabling/enabling the clocks
-will switch the IP to the reset operation mode where registers' content is
-lost and reconfiguration needs to be done. For this the rabv_open()
-function enables the clocks, switches the IP to configuration mode, applies
-all the registers settings and switches the IP to the operational mode. At
-the end of ravb_open() IP is ready to send/receive data.
+I'm a bit confused how the module loader infrastructue ensures that mad_client.add() and
+cm_client.add() are sequential. Could you explain in more detail please?
 
-In ravb_close() necessary reverts are done (compared with ravb_open()), the
-IP is switched to reset mode and clocks are disabled.
+We know that the ib_cm driver and mlx5_ib driver can load concurrently.
 
-The ethtool APIs or IOCTLs that might execute while the interface is down
-are either cached (and applied in ravb_open()) or rejected (as at that time
-the IP is in reset mode). Keeping the IP in the reset mode also increases
-the power saved (according to the hardware manual).
+Thanks.
 
-Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
-
-Changes in v3:
-- this was patch 21/21 in v2
-- collected tags
-- fixed typos in patch description
-
-Changes in v2:
-- keep RPM support for all platforms
-
- drivers/net/ethernet/renesas/ravb_main.c | 54 ++++++++++++++++++++++--
- 1 file changed, 50 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index e909960fbc30..e99351fe8d7f 100644
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -1840,16 +1840,21 @@ static int ravb_open(struct net_device *ndev)
- {
- 	struct ravb_private *priv = netdev_priv(ndev);
- 	const struct ravb_hw_info *info = priv->info;
-+	struct device *dev = &priv->pdev->dev;
- 	int error;
- 
- 	napi_enable(&priv->napi[RAVB_BE]);
- 	if (info->nc_queues)
- 		napi_enable(&priv->napi[RAVB_NC]);
- 
-+	error = pm_runtime_resume_and_get(dev);
-+	if (error < 0)
-+		goto out_napi_off;
-+
- 	/* Set AVB config mode */
- 	error = ravb_set_config_mode(ndev);
- 	if (error)
--		goto out_napi_off;
-+		goto out_rpm_put;
- 
- 	ravb_set_delay_mode(ndev);
- 	ravb_write(ndev, priv->desc_bat_dma, DBAT);
-@@ -1883,6 +1888,9 @@ static int ravb_open(struct net_device *ndev)
- 	ravb_stop_dma(ndev);
- out_set_reset:
- 	ravb_set_opmode(ndev, CCC_OPC_RESET);
-+out_rpm_put:
-+	pm_runtime_mark_last_busy(dev);
-+	pm_runtime_put_autosuspend(dev);
- out_napi_off:
- 	if (info->nc_queues)
- 		napi_disable(&priv->napi[RAVB_NC]);
-@@ -2184,6 +2192,8 @@ static int ravb_close(struct net_device *ndev)
- 	struct ravb_private *priv = netdev_priv(ndev);
- 	const struct ravb_hw_info *info = priv->info;
- 	struct ravb_tstamp_skb *ts_skb, *ts_skb2;
-+	struct device *dev = &priv->pdev->dev;
-+	int error;
- 
- 	netif_tx_stop_all_queues(ndev);
- 
-@@ -2233,7 +2243,14 @@ static int ravb_close(struct net_device *ndev)
- 	ravb_get_stats(ndev);
- 
- 	/* Set reset mode. */
--	return ravb_set_opmode(ndev, CCC_OPC_RESET);
-+	error = ravb_set_opmode(ndev, CCC_OPC_RESET);
-+	if (error)
-+		return error;
-+
-+	pm_runtime_mark_last_busy(dev);
-+	pm_runtime_put_autosuspend(dev);
-+
-+	return 0;
- }
- 
- static int ravb_hwtstamp_get(struct net_device *ndev, struct ifreq *req)
-@@ -2725,6 +2742,8 @@ static int ravb_probe(struct platform_device *pdev)
- 	clk_prepare(priv->refclk);
- 
- 	platform_set_drvdata(pdev, ndev);
-+	pm_runtime_set_autosuspend_delay(&pdev->dev, 100);
-+	pm_runtime_use_autosuspend(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
- 	error = pm_runtime_resume_and_get(&pdev->dev);
- 	if (error < 0)
-@@ -2830,6 +2849,9 @@ static int ravb_probe(struct platform_device *pdev)
- 	netdev_info(ndev, "Base address at %#x, %pM, IRQ %d.\n",
- 		    (u32)ndev->base_addr, ndev->dev_addr, ndev->irq);
- 
-+	pm_runtime_mark_last_busy(&pdev->dev);
-+	pm_runtime_put_autosuspend(&pdev->dev);
-+
- 	return 0;
- 
- out_napi_del:
-@@ -2847,6 +2869,7 @@ static int ravb_probe(struct platform_device *pdev)
- 	pm_runtime_put(&pdev->dev);
- out_rpm_disable:
- 	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_dont_use_autosuspend(&pdev->dev);
- 	clk_unprepare(priv->refclk);
- out_reset_assert:
- 	reset_control_assert(rstc);
-@@ -2860,6 +2883,12 @@ static void ravb_remove(struct platform_device *pdev)
- 	struct net_device *ndev = platform_get_drvdata(pdev);
- 	struct ravb_private *priv = netdev_priv(ndev);
- 	const struct ravb_hw_info *info = priv->info;
-+	struct device *dev = &priv->pdev->dev;
-+	int error;
-+
-+	error = pm_runtime_resume_and_get(dev);
-+	if (error < 0)
-+		return;
- 
- 	unregister_netdev(ndev);
- 	if (info->nc_queues)
-@@ -2871,8 +2900,9 @@ static void ravb_remove(struct platform_device *pdev)
- 	dma_free_coherent(ndev->dev.parent, priv->desc_bat_size, priv->desc_bat,
- 			  priv->desc_bat_dma);
- 
--	pm_runtime_put_sync(&pdev->dev);
-+	pm_runtime_put_sync_suspend(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_dont_use_autosuspend(dev);
- 	clk_unprepare(priv->refclk);
- 	reset_control_assert(priv->rstc);
- 	free_netdev(ndev);
-@@ -2954,6 +2984,10 @@ static int ravb_suspend(struct device *dev)
- 	if (ret)
- 		return ret;
- 
-+	ret = pm_runtime_force_suspend(&priv->pdev->dev);
-+	if (ret)
-+		return ret;
-+
- reset_assert:
- 	return reset_control_assert(priv->rstc);
- }
-@@ -2976,16 +3010,28 @@ static int ravb_resume(struct device *dev)
- 		ret = ravb_wol_restore(ndev);
- 		if (ret)
- 			return ret;
-+	} else {
-+		ret = pm_runtime_force_resume(dev);
-+		if (ret)
-+			return ret;
- 	}
- 
- 	/* Reopening the interface will restore the device to the working state. */
- 	ret = ravb_open(ndev);
- 	if (ret < 0)
--		return ret;
-+		goto out_rpm_put;
- 
- 	ravb_set_rx_mode(ndev);
- 	netif_device_attach(ndev);
- 
-+	return 0;
-+
-+out_rpm_put:
-+	if (!priv->wol_enabled) {
-+		pm_runtime_mark_last_busy(dev);
-+		pm_runtime_put_autosuspend(dev);
-+	}
-+
- 	return ret;
- }
- 
--- 
-2.39.2
+> You are trying to say that the post-client fixup stuff will still see
+> the DEVICE_REGISTERED before it reaches the clients_rwsem lock?
+> 
+> That probably just says the clients_rwsem should be obtained before
+> changing the DEVICE_STATE too :\
+> 
+> Jason
+> 
 
