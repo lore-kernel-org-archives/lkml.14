@@ -1,92 +1,27 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF6A2C1A9;
-	Fri,  5 Jan 2024 13:11:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="PirfMTLk";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="/vZmO3d4";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Uk26/hGB";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Dq2NWLSj"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id BF64421D34;
-	Fri,  5 Jan 2024 13:11:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1704460298;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XMu0Tc8M/OGHMVCqGwKKidHMYVyujs8ULbIrYAKyctk=;
-	b=PirfMTLkdWyOzUVVz7p6G2ULi4VhsbiBiEovaWdYP6RmzcuwhtQKKUgKa98M3/Ip8l1k/g
-	XwNng9X+TvSLeuIRIA9U9KlvSfKkHLqoBB1MvKK/dh3zwPOw6svOjDiCk3dtV0Bq+qEnr5
-	Qv06406TfLtT/5tFFYvfvqWg9SA8IqM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1704460298;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XMu0Tc8M/OGHMVCqGwKKidHMYVyujs8ULbIrYAKyctk=;
-	b=/vZmO3d4O+ZOvy2AL7ekQ7g4Fa0ZowPCpSXsCf1l01Jz1p9pxtSiDqKiaPh+6bDpvquCQ9
-	f3qkaTRGWtQT5+AQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1704460297;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XMu0Tc8M/OGHMVCqGwKKidHMYVyujs8ULbIrYAKyctk=;
-	b=Uk26/hGBJXjpw8WTegFn/8dWqIzARLH7T6rfeEUvsOk1mAl5RjTrjREnCSUF82cXmbTFX9
-	ts3XwW8FLL2JAyFOtJWm3lU0iLZC81SdDShl3VZRNMWb0BNeZNSJ3HWfhQaPBCcvuyZzgl
-	B8qt1ml182j0+u5k2jGWDzmk7ft6S0o=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1704460297;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XMu0Tc8M/OGHMVCqGwKKidHMYVyujs8ULbIrYAKyctk=;
-	b=Dq2NWLSjfkY6KPsXaTn2B4MnPvlbKABhwyuoEx9zmsCM6PoEOnXj0wNXu+xI3t+rB1SZi2
-	oehXWwFEzy/kGqDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0DE05136F5;
-	Fri,  5 Jan 2024 13:11:37 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id GC9eAgkAmGVEDQAAD6G6ig
-	(envelope-from <pvorel@suse.cz>); Fri, 05 Jan 2024 13:11:37 +0000
-Date: Fri, 5 Jan 2024 14:11:35 +0100
-From: Petr Vorel <pvorel@suse.cz>
-To: Rob Landley <rob@landley.net>
-Cc: Cyril Hrubis <chrubis@suse.cz>,
-	Geert Uytterhoeven <geert@linux-m68k.org>, ltp@lists.linux.it,
-	Li Wang <liwang@redhat.com>,
-	Andrea Cervesato <andrea.cervesato@suse.com>,
-	Greg Ungerer <gerg@linux-m68k.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Christophe Lyon <christophe.lyon@linaro.org>,
-	linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	linux-riscv <linux-riscv@lists.infradead.org>,
-	Linux-sh list <linux-sh@vger.kernel.org>,
-	automated-testing@lists.yoctoproject.org, buildroot@buildroot.org
-Subject: Call for nommu LTP maintainer [was: Re: [PATCH 00/36] Remove UCLINUX
- from LTP]
-Message-ID: <20240105131135.GA1484621@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <20240103015240.1065284-1-pvorel@suse.cz>
- <CAMuHMdXGwyS-CL0vLdUP4Z4YEYhmcmDyC3YdGCnS=jFkqASqvw@mail.gmail.com>
- <20240103114957.GD1073466@pevik>
- <CAMuHMdX0s0gLRoPtjJmDnSmZ_MNY590dN+JxM1HKAL1g_bjX+w@mail.gmail.com>
- <ZZVOhlGPg5KRyS-F@yuki>
- <5a1f1ff3-8a61-67cf-59a9-ce498738d912@landley.net>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88BD52D60F
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 13:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 20F23C15;
+	Fri,  5 Jan 2024 05:15:24 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.86.44])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 30D123F64C;
+	Fri,  5 Jan 2024 05:14:36 -0800 (PST)
+Date: Fri, 5 Jan 2024 13:14:30 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Leonardo Bras <leobras@redhat.com>
+Cc: Oleg Nesterov <oleg@redhat.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Brown <broonie@kernel.org>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	Arnd Bergmann <arnd@arndb.de>, Guo Hui <guohui@uniontech.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] arm64: remove unnecessary ifdefs around
+ is_compat_task()
+Message-ID: <ZZgAtntCQFKbsGiW@FVFF77S0Q05N>
+References: <20240105041458.126602-3-leobras@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -95,75 +30,122 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5a1f1ff3-8a61-67cf-59a9-ce498738d912@landley.net>
-X-Spam-Level: 
-X-Spam-Level: 
-X-Spamd-Bar: /
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="Uk26/hGB";
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=Dq2NWLSj
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-0.82 / 50.00];
-	 HAS_REPLYTO(0.30)[pvorel@suse.cz];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 TO_DN_SOME(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 BAYES_HAM(-0.11)[66.47%];
-	 ARC_NA(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 REPLYTO_EQ_FROM(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 URIBL_BLOCKED(0.00)[suse.cz:dkim];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 RCPT_COUNT_TWELVE(0.00)[18];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[]
-X-Spam-Score: -0.82
-X-Rspamd-Queue-Id: BF64421D34
-X-Spam-Flag: NO
+In-Reply-To: <20240105041458.126602-3-leobras@redhat.com>
 
-Hi all,
+On Fri, Jan 05, 2024 at 01:15:00AM -0300, Leonardo Bras wrote:
+> Currently some parts of the codebase will test for CONFIG_COMPAT before
+> testing is_compat_task().
+> 
+> is_compat_task() is a inlined function only present on CONFIG_COMPAT.
+> On the other hand, for !CONFIG_COMPAT, we have in linux/compat.h:
+> 
+> #define is_compat_task() (0)
+> 
+> Since we have this define available in every usage of is_compat_task() for
+> !CONFIG_COMPAT, it's unnecessary to keep the ifdefs, since the compiler is
+> smart enough to optimize-out those snippets on CONFIG_COMPAT=n
+> 
+> Signed-off-by: Leonardo Bras <leobras@redhat.com>
 
-[ Cc also automated-testing and buildroot ML
-FYI thread started here:
-https://lore.kernel.org/ltp/20240103015240.1065284-1-pvorel@suse.cz/ ]
+I tried this atop the arm64 for-next/core branch, using GCC 13.2.0; building
+defconfig + CONFIG_COMPAT=n results in build errors:
 
-> On 1/3/24 06:09, Cyril Hrubis wrote:
-> > Hi!
-> >> I am not sure I agree with this series.
-> >> Removing support for UCLINUX from LTP is almost a guarantee for
-> >> not noticing when more breakage is introduced.
+[mark@lakrids:~/src/linux]% usekorg 13.2.0 make ARCH=arm64 CROSS_COMPILE=aarch64-linux- Image
+  CALL    scripts/checksyscalls.sh
+  CC      arch/arm64/kernel/ptrace.o
+arch/arm64/kernel/ptrace.c: In function 'task_user_regset_view':
+arch/arm64/kernel/ptrace.c:2121:25: error: 'user_aarch32_view' undeclared (first use in this function); did you mean 'user_aarch64_view'?
+ 2121 |                 return &user_aarch32_view;
+      |                         ^~~~~~~~~~~~~~~~~
+      |                         user_aarch64_view
+arch/arm64/kernel/ptrace.c:2121:25: note: each undeclared identifier is reported only once for each function it appears in
+arch/arm64/kernel/ptrace.c:2123:25: error: 'user_aarch32_ptrace_view' undeclared (first use in this function)
+ 2123 |                 return &user_aarch32_ptrace_view;
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~
+make[4]: *** [scripts/Makefile.build:243: arch/arm64/kernel/ptrace.o] Error 1
+make[3]: *** [scripts/Makefile.build:480: arch/arm64/kernel] Error 2
+make[2]: *** [scripts/Makefile.build:480: arch/arm64] Error 2
+make[1]: *** [/home/mark/src/linux/Makefile:1911: .] Error 2
+make: *** [Makefile:234: __sub-make] Error 2
 
-> >> How exactly is UCLINUX broken in LTP?
+... and looking at the code, user_aarch32_view and user_aarch32_ptrace_view are
+both defined under ifdeffery for CONFIG_COMPAT, so that's obviously not going
+to work...
 
-> > As far as we know noone is using it and nobody is maintaing it for a
-> > decade,
+That aside, removing ifdeffery is generally nice, so could you please try
+building with CONFIG_COMPAT=n and see where you get to?
 
-> Nobody is maintaining "uclinux" because that was a distro, but you can build
-> nommu support in buildroot and such, and people do.
+Thanks,
+Mark.
 
-Right, there are nommu users. Will anybody join LTP development to maintain
-nommu support in LTP? The needed work is to add this support to LTP new C API
-[1] and use it in the relevant test. There is some implementation in the old
-API, I have no idea how well it worked.
-
-If nobody stands for maintaing nommu, we will have to delete it. There is nobody
-from the current maintainers who is using LTP on nommu HW (that is the reason why
-nommu support have not been implemented in the new API).
-
-Kind regards,
-Petr
-
-> Rob
-
-[1] https://github.com/linux-test-project/ltp/wiki/C-Test-API
+> ---
+> Changes since RFCv1:
+> - Removed unnecessary new inlined is_compat_task() for arm64
+> - Adjusted commit text and title
+> Link: https://lore.kernel.org/all/20240104192433.109983-2-leobras@redhat.com/
+> 
+>  arch/arm64/kernel/ptrace.c  | 6 ++----
+>  arch/arm64/kernel/syscall.c | 5 +----
+>  2 files changed, 3 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+> index 20d7ef82de90a..9f8781f1fdfda 100644
+> --- a/arch/arm64/kernel/ptrace.c
+> +++ b/arch/arm64/kernel/ptrace.c
+> @@ -173,7 +173,6 @@ static void ptrace_hbptriggered(struct perf_event *bp,
+>  	struct arch_hw_breakpoint *bkpt = counter_arch_bp(bp);
+>  	const char *desc = "Hardware breakpoint trap (ptrace)";
+>  
+> -#ifdef CONFIG_COMPAT
+>  	if (is_compat_task()) {
+>  		int si_errno = 0;
+>  		int i;
+> @@ -195,7 +194,7 @@ static void ptrace_hbptriggered(struct perf_event *bp,
+>  						  desc);
+>  		return;
+>  	}
+> -#endif
+> +
+>  	arm64_force_sig_fault(SIGTRAP, TRAP_HWBKPT, bkpt->trigger, desc);
+>  }
+>  
+> @@ -2112,7 +2111,6 @@ long compat_arch_ptrace(struct task_struct *child, compat_long_t request,
+>  
+>  const struct user_regset_view *task_user_regset_view(struct task_struct *task)
+>  {
+> -#ifdef CONFIG_COMPAT
+>  	/*
+>  	 * Core dumping of 32-bit tasks or compat ptrace requests must use the
+>  	 * user_aarch32_view compatible with arm32. Native ptrace requests on
+> @@ -2123,7 +2121,7 @@ const struct user_regset_view *task_user_regset_view(struct task_struct *task)
+>  		return &user_aarch32_view;
+>  	else if (is_compat_thread(task_thread_info(task)))
+>  		return &user_aarch32_ptrace_view;
+> -#endif
+> +
+>  	return &user_aarch64_view;
+>  }
+>  
+> diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
+> index 9a70d9746b661..ad198262b9817 100644
+> --- a/arch/arm64/kernel/syscall.c
+> +++ b/arch/arm64/kernel/syscall.c
+> @@ -20,14 +20,11 @@ long sys_ni_syscall(void);
+>  
+>  static long do_ni_syscall(struct pt_regs *regs, int scno)
+>  {
+> -#ifdef CONFIG_COMPAT
+> -	long ret;
+>  	if (is_compat_task()) {
+> -		ret = compat_arm_syscall(regs, scno);
+> +		long ret = compat_arm_syscall(regs, scno);
+>  		if (ret != -ENOSYS)
+>  			return ret;
+>  	}
+> -#endif
+>  
+>  	return sys_ni_syscall();
+>  }
+> -- 
+> 2.43.0
+> 
