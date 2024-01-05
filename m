@@ -1,184 +1,112 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2071.outbound.protection.outlook.com [40.107.100.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124BE2E821;
-	Fri,  5 Jan 2024 16:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BCEB2E852
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 16:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="itvsjfFf"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IBIIbcv4ihec6knCdJ5AG8ofTNwD36kS6h9WiDe4QKIdoE/wLt/RhPiahRK4+jIZD0EQ0VfxXhscdm9hSkPdNhRLBcx9N1ZpHIBxI6JUs2sYdipJBJFKfoug3qXEZ/sX0l7ofLRBAcQ7HlfwOFpIJRWwUGwMk51phq7KjKxvglFAoQo1ftgBIvteaI0J1T+sawTHvLmihiiKyOcStN7E+UOS2OPYwWSCAKjfTTVN2VInQW2HdLjq6kVpHYB9gb6BguEAg3cDx42aLoW0M/NlDmNcyrMyNK6vAkecOPaPP7PVivj6SsLvxs9U0MLmynbKQvb+UKtE6m1M3QYao8CrCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+XMpEgwyzWdp/e+b5mhwFJQ4OWGBvQypJUiKX2EKqlM=;
- b=lZi1h/7Yy2WmaDbxtHz9S7jvBlvlbvOt0lZceCGJrqnITy2ikV/ronMbozrdmlWDNgGOTZLhtfrAiAsinztYYJlHV8nJw0fGFrzzGkEE4f/BQSRyl8N40/E9lHKbhNJj3NZgYCdkgKgVhn3FC5MTijDdhcEN0rQ/pDFbQrvO1STIhGsNseagasaWNPiQ9TQUpGtXqKf3unX1oEPzCjbi9FANKToIUzu5lLC4Fwvt2ox7ndb5B0c9jC0ACmgasNkNt3ZpQx4c0lPP8SJr2t3Y776opuX2lQicJmKMLCQnSb1t2fLgRE5RZ4300GIYAkYOxQ/JZCO0Y2UFE47Ah8rqyQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.232) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+XMpEgwyzWdp/e+b5mhwFJQ4OWGBvQypJUiKX2EKqlM=;
- b=itvsjfFfM0gdP8wyfn+O08U3iFc3ISJXy93ZVSyhMuNiZ4F38+o283ExtJiCqtv53uvkSTJcwWzxf0j97BFTFbm31IWrKoccTUiBWyjMLTr/aejQ3Jfn81UNc4t4L/+5M3xULUI/gya6HYG9ia4G9892eDlAYvgfH4TG9VWhOVoisNhIGn4e774l3ifJj1quolD9nXKOxxxsNLBBDHG8q+BonMDit+YG8xUUakssTnWIDstxNQOBCXCmCjKAiMIIyI6a6mDnG1cRIyZOR1dAlWcfgOyqeREjzGdtDhZF4CmDMBV7kJNqKsh95S7ZbIT/OXIxMKX9cVnfxoe7+0zNkg==
-Received: from DM6PR18CA0015.namprd18.prod.outlook.com (2603:10b6:5:15b::28)
- by SA1PR12MB8966.namprd12.prod.outlook.com (2603:10b6:806:385::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.16; Fri, 5 Jan
- 2024 16:00:04 +0000
-Received: from DS3PEPF000099D6.namprd04.prod.outlook.com
- (2603:10b6:5:15b:cafe::1) by DM6PR18CA0015.outlook.office365.com
- (2603:10b6:5:15b::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.24 via Frontend
- Transport; Fri, 5 Jan 2024 16:00:04 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.232) by
- DS3PEPF000099D6.mail.protection.outlook.com (10.167.17.7) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7159.9 via Frontend Transport; Fri, 5 Jan 2024 16:00:04 +0000
-Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
- (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Fri, 5 Jan 2024
- 07:59:50 -0800
-Received: from drhqmail203.nvidia.com (10.126.190.182) by
- drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.41; Fri, 5 Jan 2024 07:59:50 -0800
-Received: from vdi.nvidia.com (10.127.8.14) by mail.nvidia.com
- (10.126.190.182) with Microsoft SMTP Server id 15.2.986.41 via Frontend
- Transport; Fri, 5 Jan 2024 07:59:48 -0800
-From: Asmaa Mnebhi <asmaa@nvidia.com>
-To: <davem@davemloft.net>, <f.fainelli@gmail.com>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <tbogendoerfer@suse.de>,
-	<horms@kernel.org>
-CC: Asmaa Mnebhi <asmaa@nvidia.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <davthompson@nvidia.com>
-Subject: [PATCH net v4] mlxbf_gige: Fix intermittent no ip issue
-Date: Fri, 5 Jan 2024 10:59:46 -0500
-Message-ID: <20240105155946.23121-1-asmaa@nvidia.com>
-X-Mailer: git-send-email 2.30.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AmGuh7To"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-67f9f6caabcso7935796d6.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 08:00:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704470442; x=1705075242; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=dn6MgJ/6ZzbMLMCkvKlinwOAEJn5n1fruy8Tzx3bMM0=;
+        b=AmGuh7To2G1MG+2a0NvP8syCW+ZmYIpeFTew1EKC0yp4WVOXm9T0yBGVxTy3MRxfeF
+         uSqdiUwJF80yRdxQPJ82MYvvWky5OSpGf8YjxZZrNJZIAc1CzqJPLEhOBbs4oNFAndEE
+         DVuCZzfy/OhExa9rI5zXC5i01QqpAhQbep5xJ+frtUNfi7OAzHkG2xxW5gPh10bm/PQm
+         5gUOAnys3DOSkBwWm7qQnK40WhiDupi2N/thMnYdtyWjJMWbRYTePyIf0AWAAsKMCa2n
+         u8SEaq5l/PRCT8j2Zrbp1sVSYDqWlbOWxkO87+ytIIsbOVB357/sFXpV4uGU0KlqE/wi
+         CFRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704470442; x=1705075242;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dn6MgJ/6ZzbMLMCkvKlinwOAEJn5n1fruy8Tzx3bMM0=;
+        b=HRf0l31Oz1ATpKzTAF2XQm12tRk8qTghx581iRBB1L1ULAW8hu/GBiQgz7iZaX2Mga
+         tOANySAKTbDim3x9UdJTnCC0ADbHVD0T/66mzoFBWiGofdohFSYLqJtX9G4HGeNnhN/2
+         epAOi6SRD9MOg5L003t/6oVEUbOCjsy4cSrD4BmlVY0m0F+ZcbLp1/Yp8o5Z9WlL5c/d
+         mCG8CiJciWw5cNhfhuNqDQlM5M9tA+DWqWGymPuxNqPYIuNmBoQhD+Ledfrwy4t7IM/e
+         bk0sV4QPSkynBjCjmWBR5+1rWwnNNRiiBUPs6wsVp9vyZrkmpagw/eoKl3K4SzXksFIm
+         UuMw==
+X-Gm-Message-State: AOJu0YzWyEOvJJpXK3a0HUU9uNzzGHkuaQfrpHA2/LDO2MfuHtY+4qLn
+	l4ck0NnoEN869jxGLQdrAx2X10kzfmjpSoi06PkA4K+d2GUEeA==
+X-Google-Smtp-Source: AGHT+IEw94IZb/sngG0I+NbdEIM9RGCKMXUXlZS80Fe/znbT2cb+xlGnLVD+6GqKGUgMFPnm4VNWJ7bd1MWbspAj8ws=
+X-Received: by 2002:a05:6214:3018:b0:67f:f92:2a05 with SMTP id
+ ke24-20020a056214301800b0067f0f922a05mr2678267qvb.25.1704470442146; Fri, 05
+ Jan 2024 08:00:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099D6:EE_|SA1PR12MB8966:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3ef02b20-c3da-4175-979e-08dc0e076166
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	pp1qD6b8QkFPAjqPzwHMqqfpMbVJP11d9rEPE/MEYS/7PB71dON9UAqYp/fBah4QNJpJUDnhkR5OlfDwhz0GWvo/QS7EQAaw2APhEOBSnyj/Pd0tB0+eE8ZmdmcWNrso2Wnm/0/6AH20HyXpU14BE9Q21Q0ZWAbH18clwwR5eYySRAgufuEw+dssIst3WQOdv/fmhYOyXzotdKKCYVvNhIoF0iB5+Ao5ggcs72GStsdPK0xZ94AanhxBksi8KfIvD576ZoInYZX42xWmiSXHYLlNeJUQ1l7SIn9Fy7GAK7eNg4v8vOkQGRWfm9SfdskZixi3b6LzlAQu7vUAYngq/qvFjLIOO9CwKi2lIELFh9Pq2QftyiJn4/1fTwyTDu6U7Rk1ok52IPgdgc9yKjYrFGu43IJjZQ/3CfFf6M+v2S8KVmz0L2t0pYx6tzd3ITtS5PpN6Xr4a9abXwDmDgzgkahNzuJB0pUh8bHlnOEP0VJrQGgoDMIkKhDBcfwpdFp0DEbi7DzrsQtxDXTrbBYHzkSj6lKv3jWHY3+aOYHuQNk9Iaxcrs/mf1FjiQuBdxIozzZdHHUismTYs24fwd4a+2j8js2mXb7ZUrTX1tCBUUJgd9anbdODsluFrxuVIBJ4ztyPp0l3O8WgTvx62RznnogjhJ+PHjCvNrJ/t4FyauYp6zk3xUhKXzL+YYSXzPro0T7RXud/wW/+Of5Wse7/9nSaK9YOqhFADok+Yy+LgCEPN6+eMFVP3H85Fz/Kj3VC
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(396003)(136003)(39860400002)(346002)(376002)(230922051799003)(451199024)(1800799012)(64100799003)(82310400011)(186009)(46966006)(36840700001)(40470700004)(82740400003)(36860700001)(47076005)(86362001)(356005)(7636003)(41300700001)(478600001)(2906002)(5660300002)(7696005)(336012)(83380400001)(426003)(110136005)(1076003)(2616005)(26005)(8936002)(54906003)(8676002)(316002)(4326008)(107886003)(70206006)(70586007)(36756003)(40460700003)(40480700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2024 16:00:04.0034
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ef02b20-c3da-4175-979e-08dc0e076166
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099D6.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8966
+References: <alpine.DEB.2.22.394.2310032059060.3220@hadrien>
+ <b8ab29de-1775-46e-dd75-cdf98be8b0@inria.fr> <CAKfTPtBhWwk9sf9F1=KwubiAWFDC2A9ZT-SSJ+tgFxme1cFmYA@mail.gmail.com>
+ <alpine.DEB.2.22.394.2312182302310.3361@hadrien> <CAKfTPtALEFtrapi3Kk97KLGQN4259eEQEwwftVUK4RG42Vgoyw@mail.gmail.com>
+ <98b3df1-79b7-836f-e334-afbdd594b55@inria.fr> <CAKfTPtCRN_eWgVdK2-h6E_ifJKwwJEtMjeNjB=5DXZFWyBS+tQ@mail.gmail.com>
+ <93112fbe-30be-eab8-427c-5d4670a0f94e@inria.fr> <CAKfTPtAeFvrZxApK3RruWwCjMxbQvOkU+_YgZSo4QPT_AD6FxA@mail.gmail.com>
+ <9dc451b5-9dd8-89f2-1c9c-7c358faeaad@inria.fr> <CAKfTPtDCsLnDnVje9maP5s-L7TbtSu4CvF19xHOxbkvSNd7vZg@mail.gmail.com>
+ <2359ab5-4556-1a73-9255-3fcf2fc57ec@inria.fr> <6618dcfa-a42f-567c-2a9d-a76786683b29@inria.fr>
+ <CAKfTPtDrULyOB9+RhjoPfCpHKVhx5kRf6dq79DSE6jZgsEairw@mail.gmail.com>
+ <edbd8ecd-148c-b366-fd46-3531dec39d49@inria.fr> <cecfd395-f067-99e1-bdd2-fec2ebc3db3@inria.fr>
+ <CAKfTPtCAcHuzhcDvry6_nH2K29wc-LEo2yOi-J-mnZkwMvGDbw@mail.gmail.com> <cfae246d-9383-59d-ee5b-81ea3dd0a795@inria.fr>
+In-Reply-To: <cfae246d-9383-59d-ee5b-81ea3dd0a795@inria.fr>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Fri, 5 Jan 2024 17:00:28 +0100
+Message-ID: <CAKfTPtD0B29zadkeEOCWvry123zWVEEm41ouKj7noXwQdoh2+Q@mail.gmail.com>
+Subject: Re: EEVDF and NUMA balancing
+To: Julia Lawall <julia.lawall@inria.fr>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Although the link is up, there is no ip assigned on setups with high background
-traffic. Nothing is transmitted nor received. The RX error count keeps on
-increasing. After several minutes, the RX error count stagnates and the
-GigE interface finally gets an ip.
+On Fri, 5 Jan 2024 at 15:51, Julia Lawall <julia.lawall@inria.fr> wrote:
+>
+> > Your system is calling the polling mode and not the default
+> > cpuidle_idle_call() ? This could explain why I don't see such problem
+> > on my system which doesn't have polling
+> >
+> > Are you forcing the use of polling mode ?
+> > If yes, could you check that this problem disappears without forcing
+> > polling mode ?
+>
+> I expanded the code in do_idle to:
+>
+>                 if (cpu_idle_force_poll) { c1++;
+>                         tick_nohz_idle_restart_tick();
+>                         cpu_idle_poll();
+>                 } else if (tick_check_broadcast_expired()) { c2++;
+>                         tick_nohz_idle_restart_tick();
+>                         cpu_idle_poll();
+>                 } else { c3++;
+>                         cpuidle_idle_call();
+>                 }
+>
+> Later, I have:
+>
+>         trace_printk("force poll: %d: c1: %d, c2: %d, c3: %d\n",cpu_idle_force_poll, c1, c2, c3);
+>         flush_smp_call_function_queue();
+>         schedule_idle();
+>
+> force poll, c1 and c2 are always 0, and c3 is always some non-zero value.
+> Sometimes small (often 1), and sometimes large (304 or 305).
+>
+> So I don't think it's calling cpu_idle_poll().
 
-The issue is that mlxbf_gige_rx_init() is called before phy_start().
-As soon as the RX DMA is enabled in mlxbf_gige_rx_init(), the RX CI reaches the max
-of 128, and becomes equal to RX PI. RX CI doesn't decrease since the code hasn't
-ran phy_start yet.
-Bring the PHY up before starting the RX.
+I agree that something else
 
-Fixes: f92e1869d74e ("Add Mellanox BlueField Gigabit Ethernet driver")
-Reviewed-by: David Thompson <davthompson@nvidia.com>
-Signed-off-by: Asmaa Mnebhi <asmaa@nvidia.com>
----
-v3->v4:
-- rebase
-- Fork this patch from bundle of unrelated bug fixes.
-- update the subject format
+>
+> x86 has TIF_POLLING_NRFLAG defined to be a non zero value, which I think
+> is sufficient to cause the issue.
 
- .../ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c | 14 +++++++-------
- .../ethernet/mellanox/mlxbf_gige/mlxbf_gige_rx.c   |  6 +++---
- 2 files changed, 10 insertions(+), 10 deletions(-)
+Could you trace trace_sched_wake_idle_without_ipi() ans csd traces as well ?
+I don't understand what set need_resched() in your case; having in
+mind that I don't see the problem on my Arm systems and IIRC Peter
+said that he didn't face the problem on his x86 system.
 
-diff --git a/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c b/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c
-index b3adc491bdb9..3385cf1ef9ae 100644
---- a/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c
-+++ b/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c
-@@ -147,14 +147,14 @@ static int mlxbf_gige_open(struct net_device *netdev)
- 	 */
- 	priv->valid_polarity = 0;
- 
--	err = mlxbf_gige_rx_init(priv);
-+	phy_start(phydev);
-+
-+	err = mlxbf_gige_tx_init(priv);
- 	if (err)
- 		goto free_irqs;
--	err = mlxbf_gige_tx_init(priv);
-+	err = mlxbf_gige_rx_init(priv);
- 	if (err)
--		goto rx_deinit;
--
--	phy_start(phydev);
-+		goto tx_deinit;
- 
- 	netif_napi_add(netdev, &priv->napi, mlxbf_gige_poll);
- 	napi_enable(&priv->napi);
-@@ -176,8 +176,8 @@ static int mlxbf_gige_open(struct net_device *netdev)
- 
- 	return 0;
- 
--rx_deinit:
--	mlxbf_gige_rx_deinit(priv);
-+tx_deinit:
-+	mlxbf_gige_tx_deinit(priv);
- 
- free_irqs:
- 	mlxbf_gige_free_irqs(priv);
-diff --git a/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_rx.c b/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_rx.c
-index 0d5a41a2ae01..a65fe026e1e6 100644
---- a/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_rx.c
-+++ b/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_rx.c
-@@ -142,6 +142,9 @@ int mlxbf_gige_rx_init(struct mlxbf_gige *priv)
- 	writeq(MLXBF_GIGE_RX_MAC_FILTER_COUNT_PASS_EN,
- 	       priv->base + MLXBF_GIGE_RX_MAC_FILTER_COUNT_PASS);
- 
-+	writeq(ilog2(priv->rx_q_entries),
-+	       priv->base + MLXBF_GIGE_RX_WQE_SIZE_LOG2);
-+
- 	/* Clear MLXBF_GIGE_INT_MASK 'receive pkt' bit to
- 	 * indicate readiness to receive interrupts
- 	 */
-@@ -154,9 +157,6 @@ int mlxbf_gige_rx_init(struct mlxbf_gige *priv)
- 	data |= MLXBF_GIGE_RX_DMA_EN;
- 	writeq(data, priv->base + MLXBF_GIGE_RX_DMA);
- 
--	writeq(ilog2(priv->rx_q_entries),
--	       priv->base + MLXBF_GIGE_RX_WQE_SIZE_LOG2);
--
- 	return 0;
- 
- free_wqe_and_skb:
--- 
-2.30.1
-
+>
+> julia
