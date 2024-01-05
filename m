@@ -1,132 +1,136 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11B324B57
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 10:17:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F4324B46
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 10:19:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P1ppLLM/"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-5e7467eb93aso12828457b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 02:17:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iMnmdFc6"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5570bef7cb8so1453911a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 02:19:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704449849; x=1705054649; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=RhTPtiU3ebbMMUs+zK0c151tFKxnFYC6rMwGCcNmmuI=;
-        b=P1ppLLM/4BVEJepjLPbdzolZo65gPkWdkol7g/CZ87xhVuBnxsOJbArN3tpx2Z+CSn
-         t0g40p2y1+pQRBBBYhVbXsYezGPf6EZk7Of/+W8ZafAlcWES2fItTVSVZQweUJhOAXCg
-         053HTeAV2oGSWeQAbsED7wx1ZAIKAxscCwXqefs8rUzmG8UPkCAwOcc5pQUEeUOkT0DQ
-         C+YMKGsdA2+arSqUsCyAMo+lW9VXIdozFu/nz6p+Hy64bev2wjpsyRtBNk6dYg8QiXEz
-         ShxytcF6L4DJgl8Nwy/zOaqERqvIpaYxZzM17f6n8tgyIVZdB1H9vzvl7je+3gK2wWUG
-         ZBAA==
+        d=linaro.org; s=google; t=1704449959; x=1705054759; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+hknyE2eZjhSwC6c7qytx4LWJUxTBkHsXIiXR8AEB9g=;
+        b=iMnmdFc6JlHQHrpsp+Mh0Jr+1IvEeWNE/12qm+PW+8I8HX4hlqpNS0FK2ikwvgCQaK
+         YX/GxwiZN4qbFnLuCY4l0pSNP+XgjHHk84LWhD+rBGj4kYmUOIPONiQRZKDYl+EQ6EQk
+         KG3fu7bZfZWK+1rkDArmCZ93EQJDUMlqs0y7jUz2IIhnUZw+KJnEmrIL8bs+4mSNCOz1
+         Wzx+sg43X/sJFYd8rtAnpilgXoNUIg4dnTcefXVIK6WGsy1WqQb+/lt3C0svSmN6vHgT
+         PivLumVLRCDnbKoyoL9qpDxZsdpHucKfJigfIL6EZPZm8Vu0JQaQgBEtfURCup+oUaxs
+         Xg/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704449849; x=1705054649;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RhTPtiU3ebbMMUs+zK0c151tFKxnFYC6rMwGCcNmmuI=;
-        b=GxbYLgF0EknOhh5g96oDgwSUXI/xflTAK9axiuQyf3li04jnVOObB0SA1N4BCqKPhd
-         ovn3fTMhUGt+OYszNy3wtPUqfvan0U1mrI0op6vgDBt6X5qxHhspj6R4aA3mXGVI+KtE
-         CD1wT/YbKP26k1Y9yUvSBhJ1mItaHj5XePkTOsBb8yoPV9vXL/CcSldUY9GfthM/y5GM
-         Y9lYMSoJHd1UgXrgIP+37FDfrKwbNz0H1y/tEy/Tfj91Thn7w0eI3zNoMjR2z8sJX916
-         QZwcjjPe8VQ0RMFJhBJH/IdqX/OObV2NIQSr5M/EHF26DpaSEP2cazMwfRjMczbkNekS
-         3g6Q==
-X-Gm-Message-State: AOJu0Yxp4cXgJgtYab2N9Jir0QV/i1OtHcn2ai//rlAm/sea0q+eoyjS
-	S77dE2Fx0PwAmYVZj2FcJ0YCKjVtTIbiV15P0qM+vGWzhxpr0g==
-X-Google-Smtp-Source: AGHT+IGKL1ZE/btE1pbZWUoVkU6B5UzlJPmzxOF6Klg0Ce9+oqf2cNXwRxwkKPLOwFRjsyv1s0XB0EvHD3md0oZ192k=
-X-Received: by 2002:a05:690c:4287:b0:5f5:6038:bebe with SMTP id
- gj7-20020a05690c428700b005f56038bebemr1311343ywb.53.1704449848844; Fri, 05
- Jan 2024 02:17:28 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704449959; x=1705054759;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+hknyE2eZjhSwC6c7qytx4LWJUxTBkHsXIiXR8AEB9g=;
+        b=V+u0ZVxslQ3FtaJ7hFJN8SmswjeccUAtB11AVkeeWllvm6ACez1jIS1P8iUdwfqMgD
+         QkJYkcvl8UrV29Tvh4sQV82vpB/SslWBj7QasWiHhabdfqS1dxJVeAUr9Lv9zTl9wEPW
+         7wXAYpy9gLU8a1Z63XPcakRuJwW60gg2rqeLvAEL2bkoezn3E+iGKY3Ku+SJeJlvq1xM
+         7NfCPtdH42EmO7qoUTQ7X5Nqovyo1hvQtxPW6gjoYGCYjl8Bttdk5FkfygbzAfNiSSkL
+         uhQAjqR7OZCH8mj6nRjsFi3On/lHqlOFtbpy8/hWU/uCGKAhItuU6Fyfx9n2LqD3zQ0L
+         edmg==
+X-Gm-Message-State: AOJu0Yywh/MK1oAEf1L8Tvei0W451EeAIYOpUFXhtOoeMwi8/zlV9sMG
+	8Y9wMnJA8cU/WdSj80EBjzHGULi/sTJXSA==
+X-Google-Smtp-Source: AGHT+IE3bIe0HFtRGAoE31PPV2ROxvMXnzIVTMTKatLvHoWI9px662D1ICE5geEVV4tgfp9SXYk4ig==
+X-Received: by 2002:a50:d78c:0:b0:557:41c4:cbdf with SMTP id w12-20020a50d78c000000b0055741c4cbdfmr25edi.49.1704449959074;
+        Fri, 05 Jan 2024 02:19:19 -0800 (PST)
+Received: from linaro.org ([79.115.23.25])
+        by smtp.gmail.com with ESMTPSA id bt6-20020a0564020a4600b0055510f6527dsm799566edb.26.2024.01.05.02.19.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jan 2024 02:19:18 -0800 (PST)
+Date: Fri, 5 Jan 2024 12:19:17 +0200
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] phy: qualcomm: eusb2-repeater: Drop the redundant
+ zeroing
+Message-ID: <ZZfXpWpFAELlUnUT@linaro.org>
+References: <20240104-phy-qcom-eusb2-repeater-fixes-v1-0-047b7b6b8333@linaro.org>
+ <20240104-phy-qcom-eusb2-repeater-fixes-v1-2-047b7b6b8333@linaro.org>
+ <33b32e2b-fa35-448c-8b4c-c5c51a514922@linaro.org>
+ <ZZfI66Mj6v/Qjp5X@linaro.org>
+ <e216c027-dc23-415d-8d00-e6b1cbbd4248@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231208032145.2143580-1-ricky_wu@realtek.com> <20231208032145.2143580-4-ricky_wu@realtek.com>
-In-Reply-To: <20231208032145.2143580-4-ricky_wu@realtek.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Fri, 5 Jan 2024 11:16:52 +0100
-Message-ID: <CAPDyKFrcUPtPrENW_0_H9F8Hq4YBuK_MTpMSi+CdnNycQ6LDFw@mail.gmail.com>
-Subject: Re: [PATCH v7 3/3] mmc: rtsx: add rts5264 to support sd express card
-To: Ricky Wu <ricky_wu@realtek.com>, gregkh@linuxfoundation.org
-Cc: arnd@arndb.de, linux-kernel@vger.kernel.org, frank.li@vivo.com, 
-	u.kleine-koenig@pengutronix.de, linux-mmc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e216c027-dc23-415d-8d00-e6b1cbbd4248@linaro.org>
 
-On Fri, 8 Dec 2023 at 04:22, Ricky Wu <ricky_wu@realtek.com> wrote:
->
-> rts5264 can support sd express card, so add the id in sd express card init
-> to do rts5264 register setting when the sd express card insert
->
-> Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
+On 24-01-05 11:09:33, Konrad Dybcio wrote:
+> On 5.01.2024 10:16, Abel Vesa wrote:
+> > On 24-01-04 23:50:48, Konrad Dybcio wrote:
+> >> On 4.01.2024 15:52, Abel Vesa wrote:
+> >>> The local init_tlb is already zero initialized, so the entire zeroing loop
+> >>> is useless in this case, since the initial values are copied over anyway,
+> >>> before being written.
+> >>>
+> >>> Fixes: 99a517a582fc ("phy: qualcomm: phy-qcom-eusb2-repeater: Zero out untouched tuning regs")
+> >>> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> >>> ---
+> >>
+> >> That's another good spot.. partial struct initialization of
+> >> pm8550b_init_tbl zeroes out the uninitialized fields.
+> >>
+> >>
+> >>>  drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c | 10 ----------
+> >>>  1 file changed, 10 deletions(-)
+> >>>
+> >>> diff --git a/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c b/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
+> >>> index 5f5862a68b73..3060c0749797 100644
+> >>> --- a/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
+> >>> +++ b/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
+> >>> @@ -156,16 +156,6 @@ static int eusb2_repeater_init(struct phy *phy)
+> >>>  
+> >>>  	regmap_field_update_bits(rptr->regs[F_EN_CTL1], EUSB2_RPTR_EN, EUSB2_RPTR_EN);
+> >>>  
+> >>> -	for (i = 0; i < F_NUM_TUNE_FIELDS; i++) {
+> >>> -		if (init_tbl[i]) {
+> >>> -			regmap_field_update_bits(rptr->regs[i], init_tbl[i], init_tbl[i]);
+> >>> -		} else {
+> >>> -			/* Write 0 if there's no value set */
+> >>> -			u32 mask = GENMASK(regfields[i].msb, regfields[i].lsb);
+> >>> -
+> >>> -			regmap_field_update_bits(rptr->regs[i], mask, 0);
+> >>> -		}
+> >>> -	}
+> >>>  	memcpy(init_tbl, rptr->cfg->init_tbl, sizeof(init_tbl));
+> >>
+> >> I think this patchset can be made even better, this memcpy is also
+> >> useless and we can simply initialize init_tbl=rptr->cfg->init_tbl.
+> > 
+> > Actually no. The init_tbl in cfg is a pointer to const. Plus, if you do
+> > that, you will end up with the same situation like in the other patch,
+> > as there are some overrides based on DT values below this.
+> 
+> Hm, you're right. Maybe we should simple store *base and stop
+> modifying these tables then. There's not a whole lot of regmap_rw
+> calls, so making the first argument "rptr->base + rptr->regs[ASDF]"
+> shouldn't add much fluff. Then we can make the cfg referernce const.
+> 
 
-Greg, unless you think it's too late to get this in for v6.8, feel
-free to pick this mmc patch too as a part of the series.
+Oh, sorry, did not see your reply in time before sending v2.
 
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+Have a look at v2 and we can decide if we want something different then.
+https://lore.kernel.org/all/20240105-phy-qcom-eusb2-repeater-fixes-v2-0-775d98e7df05@linaro.org/
 
-Kind regards
-Uffe
+Thanks for reviewing.
 
-> ---
-> v3: split up mmc part from v2 patch
-> v4: split new definition up from v3
-> ---
-> ---
->  drivers/mmc/host/rtsx_pci_sdmmc.c | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/host/rtsx_pci_sdmmc.c b/drivers/mmc/host/rtsx_pci_sdmmc.c
-> index 87d78432a1e0..7dfe7c4e0077 100644
-> --- a/drivers/mmc/host/rtsx_pci_sdmmc.c
-> +++ b/drivers/mmc/host/rtsx_pci_sdmmc.c
-> @@ -7,6 +7,7 @@
->   *   Wei WANG <wei_wang@realsil.com.cn>
->   */
->
-> +#include <linux/pci.h>
->  #include <linux/module.h>
->  #include <linux/slab.h>
->  #include <linux/highmem.h>
-> @@ -947,7 +948,7 @@ static int sd_power_on(struct realtek_pci_sdmmc *host, unsigned char power_mode)
->         /* send at least 74 clocks */
->         rtsx_pci_write_register(pcr, SD_BUS_STAT, SD_CLK_TOGGLE_EN, SD_CLK_TOGGLE_EN);
->
-> -       if (PCI_PID(pcr) == PID_5261) {
-> +       if ((PCI_PID(pcr) == PID_5261) || (PCI_PID(pcr) == PID_5264)) {
->                 /*
->                  * If test mode is set switch to SD Express mandatorily,
->                  * this is only for factory testing.
-> @@ -1364,6 +1365,14 @@ static int sdmmc_init_sd_express(struct mmc_host *mmc, struct mmc_ios *ios)
->         struct realtek_pci_sdmmc *host = mmc_priv(mmc);
->         struct rtsx_pcr *pcr = host->pcr;
->
-> +       if (PCI_PID(pcr) == PID_5264) {
-> +               pcie_capability_clear_and_set_word(pcr->pci, PCI_EXP_LNKCTL2,
-> +                               PCI_EXP_LNKCTL2_TLS, PCI_EXP_LNKCTL2_TLS_2_5GT);
-> +               pci_write_config_byte(pcr->pci, 0x80e, 0x02);
-> +               pcie_capability_clear_and_set_word(pcr->pci, PCI_EXP_LNKCTL2,
-> +                               PCI_EXP_LNKCTL2_TLS, PCI_EXP_LNKCTL2_TLS_5_0GT);
-> +       }
-> +
->         /* Set relink_time for changing to PCIe card */
->         relink_time = 0x8FFF;
->
-> @@ -1379,6 +1388,12 @@ static int sdmmc_init_sd_express(struct mmc_host *mmc, struct mmc_ios *ios)
->         if (pcr->ops->disable_auto_blink)
->                 pcr->ops->disable_auto_blink(pcr);
->
-> +       if (PCI_PID(pcr) == PID_5264) {
-> +               rtsx_pci_write_register(pcr, RTS5264_AUTOLOAD_CFG2,
-> +                       RTS5264_CHIP_RST_N_SEL, RTS5264_CHIP_RST_N_SEL);
-> +               rtsx_pci_write_register(pcr, GPIO_CTL, 0x02, 0x00);
-> +       }
-> +
->         /* For PCIe/NVMe mode can't enter delink issue */
->         pcr->hw_param.interrupt_en &= ~(SD_INT_EN);
->         rtsx_pci_writel(pcr, RTSX_BIER, pcr->hw_param.interrupt_en);
-> --
-> 2.25.1
->
+> Konrad
+> 
+> > 
+> > But now that I've had another look, maybe doing the exact same thing as
+> > the other patch does (kmemdup) will probably look better anyway,
+> > specially if we do that on probe.
+> > 
+> >>
+> >> Konrad
