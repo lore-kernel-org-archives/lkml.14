@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39DA922EEF;
-	Fri,  5 Jan 2024 21:50:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39DFC23772
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 21:50:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eqKFe3dT"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D8506C433CB;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIwjEhlb"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E2788C433CC;
 	Fri,  5 Jan 2024 21:50:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1704491427;
-	bh=IdUsCMJ/vqOhBPKNbHGvLL4LIHpK7zjcsFeMXwJmk8I=;
+	bh=zZbKh0bXY4jP2LnG1owu/TGlfOhgMqLikZKmb67mDlg=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=eqKFe3dTU5AlHizIphVnFxETIy8JPb1Td00q8vgFuanO5pGzF3YJ/3Z7VMKLUIK1u
-	 bRxRgzdOvQL8B5zUIMSWO6di7VQIoYRKRU1BSbVyd95ox8XfOkeeQIJlsZOfXn8KP2
-	 p8NHd+m9KITKwgRmy0kHW14CyWCTtFFYVIG3b9+0S3Yz+RzM3BafXvTrp5rtbsJ0iZ
-	 tDcCnI6rB/QXs3i/KH3JzDoHfVJaLIul+YMYfdsHbBTeBa/6a0SZ5m7bE7xG4AygMd
-	 TawnKjFUCImNv9TMi0hWfB8Z0K0VQ+lZxrIBUhRpwHslHFAEQvh7M1PYUrnPZe/uov
-	 HvqnLo6rrB6YA==
+	b=XIwjEhlb4OOUssD1jGBzURaXALBo0jBKlPcdvjF10U85umoyNI/ZXOBgaVwX49pgc
+	 QsTHWwlk22gCrm9Q8rFUvwiQ7E1xkW13/saKttLuS2Jn+K6ohnkGZP2Ura36SHh6uy
+	 Ece4XXBTW99nm8Eq/RFFJq09LmuBKdo4gfeWHT2ZwGrbvhwBVWkzjVDo/hD4+yjd7w
+	 Y6lQnAOvD3JcTr3uNLc3AVu5EFzLPR6CHqzW7IZXyLhWcN+90JMBHATeXWPBbe+fIN
+	 ARQlM8ZzWTuhU5vkqUgzXjgV1+8AYoMxwQf1r/I4bkFuCIv6KX6ribWLc2xRYLryS8
+	 7inC75tPPsbXw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C002DDCB6FD;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CB91FDCB6F9;
 	Fri,  5 Jan 2024 21:50:27 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -28,48 +28,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2 0/4] riscv: Use READ_ONCE()/WRITE_ONCE() for pte accesses
+Subject: Re: [PATCH 0/3] riscv: CPU operations cleanup
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <170449142778.26226.7492189738418488414.git-patchwork-notify@kernel.org>
+ <170449142782.26226.4217701485670023420.git-patchwork-notify@kernel.org>
 Date: Fri, 05 Jan 2024 21:50:27 +0000
-References: <20231213203001.179237-1-alexghiti@rivosinc.com>
-In-Reply-To: <20231213203001.179237-1-alexghiti@rivosinc.com>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, linux@armlinux.org.uk,
- ryan.roberts@arm.com, glider@google.com, elver@google.com,
- dvyukov@google.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, anup@brainfault.org, atishp@atishpatra.org,
- ardb@kernel.org, ryabinin.a.a@gmail.com, andreyknvl@gmail.com,
- vincenzo.frascino@arm.com, kasan-dev@googlegroups.com,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- kvm-riscv@lists.infradead.org, linux-efi@vger.kernel.org, linux-mm@kvack.org
+References: <20231121234736.3489608-1-samuel.holland@sifive.com>
+In-Reply-To: <20231121234736.3489608-1-samuel.holland@sifive.com>
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: linux-riscv@lists.infradead.org, palmer@dabbelt.com,
+ linux-kernel@vger.kernel.org
 
 Hello:
 
 This series was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Wed, 13 Dec 2023 21:29:57 +0100 you wrote:
-> This series is a follow-up for riscv of a recent series from Ryan [1] which
-> converts all direct dereferences of pte_t into a ptet_get() access.
+On Tue, 21 Nov 2023 15:47:23 -0800 you wrote:
+> This series cleans up some duplicated and dead code around the RISC-V
+> CPU operations, that was copied from arm64 but is not needed here. The
+> result is a bit of memory savings and removal of a few SBI calls during
+> boot, with no functional change.
 > 
-> The goal here for riscv is to use READ_ONCE()/WRITE_ONCE() for all page
-> table entries accesses to avoid any compiler transformation when the
-> hardware can concurrently modify the page tables entries (A/D bits for
-> example).
+> 
+> Samuel Holland (3):
+>   riscv: Deduplicate code in setup_smp()
+>   riscv: Remove unused members from struct cpu_operations
+>   riscv: Use the same CPU operations for all CPUs
 > 
 > [...]
 
 Here is the summary with links:
-  - [v2,1/4] riscv: Use WRITE_ONCE() when setting page table entries
-    https://git.kernel.org/riscv/c/c30fa83b4989
-  - [v2,2/4] mm: Introduce pudp/p4dp/pgdp_get() functions
-    https://git.kernel.org/riscv/c/eba2591d99d1
-  - [v2,3/4] riscv: mm: Only compile pgtable.c if MMU
-    https://git.kernel.org/riscv/c/d6508999d188
-  - [v2,4/4] riscv: Use accessors to page table entries instead of direct dereference
-    https://git.kernel.org/riscv/c/edf955647269
+  - [1/3] riscv: Deduplicate code in setup_smp()
+    https://git.kernel.org/riscv/c/a4166aec1130
+  - [2/3] riscv: Remove unused members from struct cpu_operations
+    https://git.kernel.org/riscv/c/79093f3ec39c
+  - [3/3] riscv: Use the same CPU operations for all CPUs
+    https://git.kernel.org/riscv/c/62ff262227a4
 
 You are awesome, thank you!
 -- 
