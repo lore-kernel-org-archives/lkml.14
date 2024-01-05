@@ -1,108 +1,149 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74DDF5255;
-	Fri,  5 Jan 2024 02:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDB51DFC4
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 02:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pTgQgJBm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1704420703;
-	bh=8zHJ31DhC1Lvs+CITjrFIsJWiZrY43yUu1UaoB0v8ZQ=;
-	h=Date:From:To:Cc:Subject:From;
-	b=pTgQgJBmYzUzOq6yuE6ow78PxuIEcChbLeEpkNFhAfKtkcx+iNspmUI5ke02qR/IA
-	 28RQGw8cAzpIhjyBP5CkzZy+r6U/iIeo+9IjtsPTL579LWKfe60bWkByUC6YmOGtNk
-	 chzoy80hMiEN2p2PdwHSpdai+2Lvaqbx2CNkLyWQOMtjbi15vOWipMLa8JNn5UjyWK
-	 3x4fMUVsNe0rpVWLimhu7eAk4nI8GrHj0If7t72h4zm2WIToENjsK2jMQU7xaVyxTn
-	 cgKx/NaC29yJWyZ1iC2sXA4Ht68jUJM+qL0vMPk4hqkogDe5avY4FMzLwkMEPtWJfb
-	 j4U6tJPvBn+EQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4T5n5B2wdgz4x1x;
-	Fri,  5 Jan 2024 13:11:42 +1100 (AEDT)
-Date: Fri, 5 Jan 2024 13:11:40 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Paul Moore <paul@paul-moore.com>, Jonathan Corbet <corbet@lwn.net>
-Cc: Casey Schaufler <casey@schaufler-ca.com>, Kees Cook
- <keescook@chromium.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Vegard Nossum <vegard.nossum@oracle.com>
-Subject: linux-next: manual merge of the security tree with the jc_docs tree
-Message-ID: <20240105131140.7afdbbe3@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="X7t8WXOo"
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240105021225epoutp04a651d7ee0c241565f6973c6f141f00d5~nUaMw3EPT2716427164epoutp04H
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 02:12:25 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240105021225epoutp04a651d7ee0c241565f6973c6f141f00d5~nUaMw3EPT2716427164epoutp04H
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1704420745;
+	bh=dZVb79P+qvTVTPnXDcb6hSixeCMAiEBLHc2YBjIHyJM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=X7t8WXOoO5p7W34ud3FXqxMQcKbi9akktGrnFH5eiIaauiXo4QMRUmuvkFTnhUVu5
+	 PfvxX+v/iwoTPiw5iPGq8Vy4bmzXvoVbOe7O1dzc+goRpqtdVsdriQuzJyaTE50lEy
+	 EG+LzpIUhegGb0UxIkLrZaBU1qugXgtocuD7Rp28=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+	20240105021224epcas1p3833c624d783a76f90b309fd68f0bb91c~nUaLnMY6G1090310903epcas1p3p;
+	Fri,  5 Jan 2024 02:12:24 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.38.248]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4T5n5z56m9z4x9QC; Fri,  5 Jan
+	2024 02:12:23 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+	epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	5B.93.09744.78567956; Fri,  5 Jan 2024 11:12:23 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240105021223epcas1p156208a9a445b5e0b527a9eb2d2589ed3~nUaKngZV_0053900539epcas1p12;
+	Fri,  5 Jan 2024 02:12:23 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240105021223epsmtrp1a71c939bc2231410859ad3fdaafec842~nUaKmgFZg2623726237epsmtrp1m;
+	Fri,  5 Jan 2024 02:12:23 +0000 (GMT)
+X-AuditID: b6c32a35-107fa70000002610-02-65976587a7b0
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	F2.6C.07368.68567956; Fri,  5 Jan 2024 11:12:22 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.253.100.232]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240105021222epsmtip1d273cc1fb5d846ef2fe7a27b5d4b53db~nUaKPuQwd2152021520epsmtip1e;
+	Fri,  5 Jan 2024 02:12:22 +0000 (GMT)
+From: Chanwoo Lee <cw9316.lee@samsung.com>
+To: alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org,
+	jejb@linux.ibm.com, martin.petersen@oracle.com, stanley.chu@mediatek.com,
+	quic_cang@quicinc.com, mani@kernel.org, quic_asutoshd@quicinc.com,
+	powen.kao@mediatek.com, quic_nguyenb@quicinc.com, cw9316.lee@samsung.com,
+	yang.lee@linux.alibaba.com, peter.wang@mediatek.com, athierry@redhat.com,
+	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: grant.jung@samsung.com, jt77.jang@samsung.com, dh0421.hwang@samsung.com,
+	sh043.lee@samsung.com
+Subject: [PATCH 2/2] ufs:mcq:Remove unused parameters
+Date: Fri,  5 Jan 2024 11:10:41 +0900
+Message-Id: <20240105021041.20400-3-cw9316.lee@samsung.com>
+X-Mailer: git-send-email 2.29.0
+In-Reply-To: <20240105021041.20400-1-cw9316.lee@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/w=_xNN+Bd06jW.HsLm/wN.A";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0xTVxTHc/va14eu27Ogu+nCj9RphARogbKLwiQB9S0Qx6b8MbcFK32j
+	DGhLX4tANsYoIKtEigtjMjdBpxNChCHUgsAQorXoxA1Qh3PAtAzY+FGGlh8Co7y5+d8593zO
+	95tz7r0EJhzCRUSySkdrVfJUMb6Oa+7y9fc/QpfTkj9PeKOhb8w4Gm6089DYfD+Ovpiex9CX
+	3YU81H7HxkcLS3V8dPqemYMsf9zko96Wkzg6eteCo47pGoC+sy5zUNPMIg9NPFjhoqqir7no
+	+J16HJWNWvko72k7F51t+gWgyU+7QORGqrcvhmqo+QynmofDKNPpDkDl237gUg77AJcqbc2h
+	ptr7cepYYw2g/m7woo50HOXErT+QEq6k5Qpa60OrEtWKZFVShDhmX0JUgixUIvWXhqHXxD4q
+	eRodIY6OjfPfnZy6OqfYJ0Oeql89ipMzjDjw9XCtWq+jfZRqRhchpjWKVE2oJoCRpzF6VVKA
+	itZtl0okQbJV8GCKcnipmK8Zc8tc7FnAckEBYQQEAckQWFOQbATrCCFpATB36hLOJjMADv6+
+	xGOTJwBOnZrhGoHbWkde5QhgC20Amk1W3FUQkrMATtjedsnipB+8fy3GxXiQ1Rgs6x7nuxiM
+	VMDx4sk1IXdSBuvNecDFc8ktsOea2nUsIHfAuuZyDuvlDZ8OFmOu2I0MhwPV57ksswHaTjzi
+	spLe0ND0FebyguQcAQ32EowdLRr+bA5gddzhuLWRz8YiOFZSyGd5A4BVf1n/bTYBOOu4j7PU
+	TmgoMOAuIYz0hXUtgazZi3DycTGP1RfAokIhS78KTxpv4c/0Hfce8tiYgoO5y3x2VyUAXnTU
+	AhPwrnhuhornZqj4360SYDVgE61h0pJoRqqR/nepieq0BrD21P1kFlA6MR3QCTgE6ASQwMQe
+	groLn9NCgUKelU1r1QlafSrNdALZ6oJLMdHGRPXqX1HpEqQhYZKQ0KAQFBwWHCp+WXCzL4MW
+	kklyHZ1C0xpa+6yPQ7iJcjm3qpz9pG19dtTVubpKVaDD7rcnR+lsSY/bdjYz68PYWFPG+Ld9
+	2w+MeV4XpQ9dcGaXdTtPBd0YO/zm7ksXfT+ebLMcqow+s2Nl7+YPdpbInvzmCK7yev/qoRds
+	15WGDnGh4GDURGNQ9Pkr8R3OOdW5kVGPPXcX4/T7gtI59t6kJZ4DzVfILSteyfma4drDvK69
+	GYEjV4xZ2e9u5VVvLSseOvbYFLvw1gSfkOw2hG5WtBZdLvPPX350O36A+mkT4dlSr38pcvSN
+	De/EW21h/Z6vtJ278VHPr5/scmTmXJ6h7PunW/c3e90uOfPjrFO062FV7ffliSLjg/fct5R7
+	MttmptuYhkgxl1HKpX6YlpH/A1aJ5INzBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCIsWRmVeSWpSXmKPExsWy7bCSnG5b6vRUg/aHRhYP5m1js3i45Smr
+	xcufV9kspn34yWwx41Qbq8W+ayfZLX79Xc9usejGNiaLHc/PsFtc3jWHzaL7+g42iwMfVjFa
+	LD/+j8li66ffrBZv7/5nsVjYMZfFYtK1DWwWU18cZ7do+rOPxWLp1puMFu8aDzM6iHpcvuLt
+	sWlVJ5vHzoeWHhMWHWD0aDm5n8Xj49NbLB4T99R5vN93lc2jb8sqRo/Pm+Q82g90MwVwR3HZ
+	pKTmZJalFunbJXBlPPzbw17wkrPi9/lfzA2MrRxdjJwcEgImEk0LnjGC2EICuxklbu1jhIhL
+	Sezef56ti5EDyBaWOHy4uIuRC6jkE6PEszMzmEDibAJaErePeYOUiwjsZ5Y43RYLYjMLZEh8
+	+3iCCcQWFjCV2LCtiRGknEVAVeL8sXyQMK+AtcT6ndOZIDbJS/y538MMYnMK2EjcWrmCBeIa
+	a4lVL26wQNQLSpyc+YQFYry8RPPW2cwTGAVmIUnNQpJawMi0ilEytaA4Nz032bDAMC+1XK84
+	Mbe4NC9dLzk/dxMjOCK1NHYw3pv/T+8QIxMH4yFGCQ5mJRHe9esmpwrxpiRWVqUW5ccXleak
+	Fh9ilOZgURLnNZwxO0VIID2xJDU7NbUgtQgmy8TBKdXAVNWqfWTy/Lvx0+uC+95Mr579K82k
+	t/VuSLnclihRt0wG33j2997W7uZLgnyUX6z7U71qzoLW/N9LSxffFKw6vOHG6aV/TweUFRzd
+	4ZY1192+gaXIjKXop5uBVlai4I+jpS4yh1w83c51q6t0XpafF1TluM5Jxql5/v5WjWbLXdoX
+	U1fWtPOsm+za6hBXa/LcJuxIWMVF8SSXuI6c64sXtB55KWLzy9d/r5Krq+D6Fffjrxbsacje
+	f0TAn5uZ4wxbi5IX74W7m1b0PN1722Hvl8wQNekVG6O9ol5ftGiN15vM/6uk5uX+l7dNvGfZ
+	sW7p/hMbosSzxCvlRZws80WOP+p5h1vCX1/LusVi9kyJpTgj0VCLuag4EQCAS72BNwMAAA==
+X-CMS-MailID: 20240105021223epcas1p156208a9a445b5e0b527a9eb2d2589ed3
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240105021223epcas1p156208a9a445b5e0b527a9eb2d2589ed3
+References: <20240105021041.20400-1-cw9316.lee@samsung.com>
+	<CGME20240105021223epcas1p156208a9a445b5e0b527a9eb2d2589ed3@epcas1p1.samsung.com>
 
---Sig_/w=_xNN+Bd06jW.HsLm/wN.A
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: ChanWoo Lee <cw9316.lee@samsung.com>
 
-Hi all,
+The 'hwq' parameter is not used in this function.
+So, remove unused parameters.
 
-Today's linux-next merge of the security tree got a conflict in:
+Signed-off-by: ChanWoo Lee <cw9316.lee@samsung.com>
+---
+ drivers/ufs/core/ufs-mcq.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-  Documentation/userspace-api/index.rst
+diff --git a/drivers/ufs/core/ufs-mcq.c b/drivers/ufs/core/ufs-mcq.c
+index edc752e55878..8db81f1a12d5 100644
+--- a/drivers/ufs/core/ufs-mcq.c
++++ b/drivers/ufs/core/ufs-mcq.c
+@@ -258,9 +258,7 @@ EXPORT_SYMBOL_GPL(ufshcd_mcq_write_cqis);
+  * Current MCQ specification doesn't provide a Task Tag or its equivalent in
+  * the Completion Queue Entry. Find the Task Tag using an indirect method.
+  */
+-static int ufshcd_mcq_get_tag(struct ufs_hba *hba,
+-				     struct ufs_hw_queue *hwq,
+-				     struct cq_entry *cqe)
++static int ufshcd_mcq_get_tag(struct ufs_hba *hba, struct cq_entry *cqe)
+ {
+ 	u64 addr;
+ 
+@@ -278,7 +276,7 @@ static void ufshcd_mcq_process_cqe(struct ufs_hba *hba,
+ 				   struct ufs_hw_queue *hwq)
+ {
+ 	struct cq_entry *cqe = ufshcd_mcq_cur_cqe(hwq);
+-	int tag = ufshcd_mcq_get_tag(hba, hwq, cqe);
++	int tag = ufshcd_mcq_get_tag(hba, cqe);
+ 
+ 	if (cqe->command_desc_base_addr) {
+ 		ufshcd_compl_one_cqe(hba, tag, cqe);
+-- 
+2.29.0
 
-between commits:
-
-  77e075579e88 ("Documentation: move driver-api/isapnp to userspace-api/")
-  bb67bf1c4a56 ("Documentation: move driver-api/dcdbas to userspace-api/")
-
-from the jc_docs tree and commit:
-
-  f3b8788cde61 ("LSM: Identify modules by more than name")
-
-from the security tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc Documentation/userspace-api/index.rst
-index 74bc0716432e,8be8b1979194..000000000000
---- a/Documentation/userspace-api/index.rst
-+++ b/Documentation/userspace-api/index.rst
-@@@ -30,9 -33,7 +30,10 @@@ place where this information is gathere
-     sysfs-platform_profile
-     vduse
-     futex2
- +   tee
- +   isapnp
- +   dcdbas
-+    lsm
- =20
-  .. only::  subproject and html
- =20
-
---Sig_/w=_xNN+Bd06jW.HsLm/wN.A
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWXZV0ACgkQAVBC80lX
-0GzJUAf9HmWLD88EC+YlGuWOM5s1g5Gr044Vk76+rr5OXJ4k+exYa2VvtOHe8FWK
-Gyh5ajnoqiqVxU1mcqhrLq7T4YD9NBja4C/dq8vVMr2KxOhh8NW4ByBFpT05pUaY
-RlVUStaS7Bozz/b84+NK4FIZZ7zLbjwloQ9V6qgV+emeZ55hYQC9bTA5sX8WyEKm
-EStn55pigJa05mhQBn6ZtC6SkeYOkDIBU6m9q7OMymqTQrFoBY2QXBYjsz1DK+lR
-V3kRxOZTVsUYo67kRatgJ4FbdqBA5Wneph3zvGFwPuUtbnO1AdceaqKaJDumWgQT
-u+NlyOu25eKPkW4wWRc4Oeslrje3rg==
-=a/kJ
------END PGP SIGNATURE-----
-
---Sig_/w=_xNN+Bd06jW.HsLm/wN.A--
