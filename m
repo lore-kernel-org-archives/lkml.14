@@ -1,107 +1,98 @@
-Received: from smtp.smtpout.orange.fr (smtp-15.smtpout.orange.fr [80.12.242.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C72E2D78C
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 13:45:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53E82D781;
+	Fri,  5 Jan 2024 13:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="ZWbulTye"
-Received: from pop-os.home ([92.140.202.140])
-	by smtp.orange.fr with ESMTPA
-	id LkVcrdK8nez8cLkVcrylHG; Fri, 05 Jan 2024 14:45:14 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1704462314;
-	bh=grojnI9yCI7rgx9ixAnLj1H5YTl+RCfBvs/OtW0Sc/E=;
-	h=From:To:Cc:Subject:Date;
-	b=ZWbulTyezPsVPkCWp5JZV1G/eSTocoeVg+Wh+w70+gRvoYdJ4bcRUNIsep1UV86Oy
-	 4wBK6df++3OZxjEgtsMsCqDdw5U4g9tMTQqgT5d9b7PMvSzQq7ivbuuJRHIIyIfc/V
-	 skoVd/AXTtUFrnrDY/Q2eBrS/UaLT36KK9LhiHDwGdzs1RLND8JLtyFx340s8qDQ1o
-	 kzgwHqe/ul9criYdlYjC/zkhJE4+k7tuVE+iOY8/Q9bd4mrRr+We7AtbqECEjgAtqR
-	 GE3a2UPNRAWsSYEH+U04ZfCpbQmSXMiQBrYR+I2h5Jwz+tIt2EPTAxn27JsaHgNG0A
-	 aGnmwZM8hko3g==
-X-ME-Helo: pop-os.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 05 Jan 2024 14:45:14 +0100
-X-ME-IP: 92.140.202.140
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>
-Cc: alexis.lothore@bootlin.com,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-pm@vger.kernel.org
-Subject: [PATCH] thermal: core: Save a few bytes of memory when registering a cooling device
-Date: Fri,  5 Jan 2024 14:45:11 +0100
-Message-Id: <4a3658efad8f6247ed8c477717dc2820b72319d0.1704462287.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="r2qTnBRB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:Content-Type:MIME-Version:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=PiMVdce53Ufudq9W9yWmSnj7Yoq+fvtR1119t1CZpPI=; b=r2qTnBRB5DIJUJWgUPBK2ce91h
+	dJxh9rtiy8G4k2vDEx+FzZP2IlDE65E7d7t1sjmaC89Kh7uyI9LkoMI6eJy57lCa8+zLm26izWOBK
+	W3WB3o1U55DMaq6lXzfw1JrmhIwEL27A2UBch+5I4nT7NSvCyNkZOCqIyBSECfKkMWYotr7F/t+HS
+	AZCE//dKeiM7MDy3XFSzBn2SD6SwB/24j71nBNE+RCVwdJkllEPgsGuT6JrKCXUfI6WeorILn4xbZ
+	yu+jVQVUjIeEpgOf5xXKFew3PUV8KjujZdI/15elLdhEZbIU3sZtEYF2FW/nRnocM+QYUdiSW9E6L
+	9OYYiCGg==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <carnil@debian.org>)
+	id 1rLkJu-001i9w-DT; Fri, 05 Jan 2024 13:33:06 +0000
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 5A7BBBE2DE0; Fri,  5 Jan 2024 14:33:05 +0100 (CET)
+Date: Fri, 5 Jan 2024 14:33:05 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>,
+	Ronnie Sahlberg <lsahlber@redhat.com>,
+	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+	Ben Hutchings <benh@debian.org>
+Cc: linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+	linux-kernel@vger.kernel.org
+Subject: Information on use-after-free in smb2_is_status_io_timeout()?
+Message-ID: <ZZgFEX3QNWWj_VxA@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Debian-User: carnil
 
-Some *thermal_cooling_device_register() calls pass a string literal as the
-'type' parameter.
+Hi,
 
-So kstrdup_const() can be used instead of kfree() to avoid a memory
-allocation in such cases.
+There is a Red Hat bugzilla report in
+https://bugzilla.redhat.com/show_bug.cgi?id=2154178 about a
+use-after-free in smb2_is_status_io_timeout() . While the commit noted
+initially there seems not correct, Ben Hutchings raised a question on
+more information in
+https://bugzilla.redhat.com/show_bug.cgi?id=2154178#c24 .
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/thermal/thermal_core.c | 6 +++---
- include/linux/thermal.h        | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+(there is a CVE assigned for it, CVE-2023-1192)
 
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index fa88d8707241..d21225ddbf10 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -846,7 +846,7 @@ static void thermal_release(struct device *dev)
- 			    sizeof("cooling_device") - 1)) {
- 		cdev = to_cooling_device(dev);
- 		thermal_cooling_device_destroy_sysfs(cdev);
--		kfree(cdev->type);
-+		kfree_const(cdev->type);
- 		ida_free(&thermal_cdev_ida, cdev->id);
- 		kfree(cdev);
- 	}
-@@ -918,7 +918,7 @@ __thermal_cooling_device_register(struct device_node *np,
- 	cdev->id = ret;
- 	id = ret;
- 
--	cdev->type = kstrdup(type ? type : "", GFP_KERNEL);
-+	cdev->type = kstrdup_const(type ? type : "", GFP_KERNEL);
- 	if (!cdev->type) {
- 		ret = -ENOMEM;
- 		goto out_ida_remove;
-@@ -969,7 +969,7 @@ __thermal_cooling_device_register(struct device_node *np,
- out_cooling_dev:
- 	thermal_cooling_device_destroy_sysfs(cdev);
- out_cdev_type:
--	kfree(cdev->type);
-+	kfree_const(cdev->type);
- out_ida_remove:
- 	ida_free(&thermal_cdev_ida, id);
- out_kfree_cdev:
-diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-index bf84595a4e86..052c72c0fa17 100644
---- a/include/linux/thermal.h
-+++ b/include/linux/thermal.h
-@@ -102,7 +102,7 @@ struct thermal_cooling_device_ops {
- 
- struct thermal_cooling_device {
- 	int id;
--	char *type;
-+	const char *type;
- 	unsigned long max_state;
- 	struct device device;
- 	struct device_node *np;
--- 
-2.34.1
+To quote the initial message in RHBZ#2154178:
 
+> A use after free flaw was found in smb2_is_status_io_timeout() in CIFS
+> in the Linux Kernel. After CIFS transfers response data to system
+> call, there is still a local variable points to the memory region, and
+> if system call frees it faster than CIFS uses it, CIFS will access a
+> free memory region leading to a denial of service.
+
+Ben asked:
+
+> smb2_is_status_io_timeout() is only ever called from cifs_demultiplex_thread().
+> That happens after it conditionally decrypts the original receive buffer (buf) into
+> one or more new buffers (bufs[...]), or otherwise sets bufs[0] = buf.  The
+> decryption process looks like it can free the original buffer, resulting in the
+> reported UAF.
+> 
+> If the error code is part of the encrypted payload, then I think the check for an
+> I/O timeout should use bufs[0] like other code further down the function:
+> 
+> --- a/fs/smb/client/connect.c
+> +++ b/fs/smb/client/connect.c
+> @@ -1236,7 +1236,7 @@ cifs_demultiplex_thread(void *p)
+>                 }
+> 
+>                 if (server->ops->is_status_io_timeout &&
+> -                   server->ops->is_status_io_timeout(buf)) {
+> +                   server->ops->is_status_io_timeout(bufs[0])) {
+>                         num_io_timeout++;
+>                         if (num_io_timeout > MAX_STATUS_IO_TIMEOUT) {
+>                                 cifs_server_dbg(VFS,
+> --- END ---
+> 
+> If the error code does not get encrypted, then the timeout check needs to be done
+> further up the function.
+> 
+> Does anyone have a reproducer for this?
+
+Does anyone knows more on this issue?
+
+Regards,
+Salvatore
