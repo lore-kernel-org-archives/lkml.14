@@ -1,97 +1,116 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A14822EEB;
-	Fri,  5 Jan 2024 09:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from [192.168.1.104] (178.176.73.147) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Fri, 5 Jan
- 2024 12:15:37 +0300
-Subject: Re: [PATCH] usb: typec: tipd: Separate reset for TPS6598x
-To: Jai Luthra <j-luthra@ti.com>, Heikki Krogerus
-	<heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Javier Carrasco
-	<javier.carrasco@wolfvision.net>
-CC: <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<rogerq@kernel.org>, <r-gunasekaran@ti.com>, <vigneshr@ti.com>,
-	<d-gole@ti.com>
-References: <20240105-next-tps-fix-v1-1-158cabaec168@ti.com>
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <78925337-0bba-ca7d-aeb1-2d5c53c565ea@omp.ru>
-Date: Fri, 5 Jan 2024 12:15:36 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C843922F06
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 09:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YaOciSO2"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a28ee72913aso67455066b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 01:16:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704446189; x=1705050989; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bJqK2boMhlBPvYPzwyxlpWb4GxEdD9+xMel7BalA1gY=;
+        b=YaOciSO2NiWdm8I50YQ8+Ib9BgiuFUS+xROGjl9/Ez29m+ZKMJX/6RCBHdcgY3MFvv
+         u/CwDukv5gPArtX2pJJHvhl2tPvu0//T1zruc+MDw0L0lvtBSzCxTF6LD26d2ZE9S2vp
+         Wup/fH8PsYWXCOlPexEqnPt3lNM+plxvFUZ7XV3G6gDAsFhMWphylODDrz6GB1lz5F9v
+         0waC1oTiJw/Qvu6Pz96OuH6wD8a3sbOhCV8M/UBx2Rf84Y+3TkSp5cNtE63F3qtyzhM/
+         sGk68TPEgLjGjwAVLWfIeFPvI9DPVK+f5IitqyT6LnqcIF1U6wK0+lB4UqWcM+czT5J0
+         70/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704446189; x=1705050989;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bJqK2boMhlBPvYPzwyxlpWb4GxEdD9+xMel7BalA1gY=;
+        b=jipnQuTj6evHNOAErzuR+0Cl2NFQY2sTj5A42Fxv9D/w3ylbQJ1tDHfjFyDbvfi30h
+         5hyaQFNtS7MLhq+W3FthV0bWDM00/u6SdDrUdOiymisu25pbtgKie/+WPTu7Mtx/4zXX
+         4yKjE6Bfd3+/Jm6X/yyBw2P/JhDrF38nEUREuzELsqYEDuRZdBCYceKXqJoGYK6igttz
+         1fo/8isP3iInsVu/mDaCNBB5TCqXsxtZ8HsUASTx3P5XjE1LtZqVVUIsHxzXFO4eeHi5
+         j2TqP9RPdl8zX5HdUfaNLtHfsye2SDE+24FeEFQCsr3dq6Th1aciewwTOm/tEXqwuo1O
+         29hw==
+X-Gm-Message-State: AOJu0Yxga7Mca1iQt1t3x9fSBa8pbyahOzu8ijiPm3UMIgSKqKPGzvBg
+	er7yGeb0L6eyhn2LDV4nt41ioRqH7xwbTmFTWKsC6By3NUk=
+X-Google-Smtp-Source: AGHT+IE7Ems0dPZ1o0LW0EtS1iu6PYF+DxBcwjMzLo1TFWzXXKrSUypTKqAr3qn2Lye0u/OuOf1ekA==
+X-Received: by 2002:a17:907:b9cc:b0:a28:bc4f:16ff with SMTP id xa12-20020a170907b9cc00b00a28bc4f16ffmr1788363ejc.28.1704446188930;
+        Fri, 05 Jan 2024 01:16:28 -0800 (PST)
+Received: from linaro.org ([79.115.23.25])
+        by smtp.gmail.com with ESMTPSA id t8-20020a056402020800b0055712dec5a6sm747448edv.2.2024.01.05.01.16.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jan 2024 01:16:28 -0800 (PST)
+Date: Fri, 5 Jan 2024 11:16:27 +0200
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] phy: qualcomm: eusb2-repeater: Drop the redundant
+ zeroing
+Message-ID: <ZZfI66Mj6v/Qjp5X@linaro.org>
+References: <20240104-phy-qcom-eusb2-repeater-fixes-v1-0-047b7b6b8333@linaro.org>
+ <20240104-phy-qcom-eusb2-repeater-fixes-v1-2-047b7b6b8333@linaro.org>
+ <33b32e2b-fa35-448c-8b4c-c5c51a514922@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240105-next-tps-fix-v1-1-158cabaec168@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 01/05/2024 09:03:19
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 59
-X-KSE-AntiSpam-Info: Lua profiles 182464 [Jan 04 2024]
-X-KSE-AntiSpam-Info: Version: 6.1.0.3
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_phishing_log_reg_50_60}
-X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {relay has no DNS name}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.73.147 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.73.147 in (user)
- dbl.spamhaus.org}
-X-KSE-AntiSpam-Info:
-	lore.kernel.org:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;178.176.73.147:7.1.2;omp.ru:7.1.1
-X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.73.147
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 59
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 01/05/2024 09:08:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 1/5/2024 6:56:00 AM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <33b32e2b-fa35-448c-8b4c-c5c51a514922@linaro.org>
 
-Hello!
-
-On 1/5/24 12:06 PM, Jai Luthra wrote:
-
-> Some platforms like SK-AM62, SK-AM62A cannot boot up to prompt if
-> TPS6598x is cold-reset during unconditionally on probe failures by
-
-   Hm, I can't parse this. During what?
-
-> sending "GAID" sequence.
+On 24-01-04 23:50:48, Konrad Dybcio wrote:
+> On 4.01.2024 15:52, Abel Vesa wrote:
+> > The local init_tlb is already zero initialized, so the entire zeroing loop
+> > is useless in this case, since the initial values are copied over anyway,
+> > before being written.
+> > 
+> > Fixes: 99a517a582fc ("phy: qualcomm: phy-qcom-eusb2-repeater: Zero out untouched tuning regs")
+> > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> > ---
 > 
-> The probe can fail initially because USB0 remote-endpoint may not be
-> probed yet, which defines the usb-role-switch property.
+> That's another good spot.. partial struct initialization of
+> pm8550b_init_tbl zeroes out the uninitialized fields.
 > 
-> Fixes: d49f90822015 ("usb: typec: tipd: add init and reset functions to tipd_data")
-> Closes: https://lore.kernel.org/linux-usb/vmngazj6si7xxss7txenezkcukqje2glhvvs7ipdcx3vjiqvlk@ohmmhhhlryws/
-> Signed-off-by: Jai Luthra <j-luthra@ti.com>
-[...]
+> 
+> >  drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c | 10 ----------
+> >  1 file changed, 10 deletions(-)
+> > 
+> > diff --git a/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c b/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
+> > index 5f5862a68b73..3060c0749797 100644
+> > --- a/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
+> > +++ b/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
+> > @@ -156,16 +156,6 @@ static int eusb2_repeater_init(struct phy *phy)
+> >  
+> >  	regmap_field_update_bits(rptr->regs[F_EN_CTL1], EUSB2_RPTR_EN, EUSB2_RPTR_EN);
+> >  
+> > -	for (i = 0; i < F_NUM_TUNE_FIELDS; i++) {
+> > -		if (init_tbl[i]) {
+> > -			regmap_field_update_bits(rptr->regs[i], init_tbl[i], init_tbl[i]);
+> > -		} else {
+> > -			/* Write 0 if there's no value set */
+> > -			u32 mask = GENMASK(regfields[i].msb, regfields[i].lsb);
+> > -
+> > -			regmap_field_update_bits(rptr->regs[i], mask, 0);
+> > -		}
+> > -	}
+> >  	memcpy(init_tbl, rptr->cfg->init_tbl, sizeof(init_tbl));
+> 
+> I think this patchset can be made even better, this memcpy is also
+> useless and we can simply initialize init_tbl=rptr->cfg->init_tbl.
 
-MBR, Sergey
+Actually no. The init_tbl in cfg is a pointer to const. Plus, if you do
+that, you will end up with the same situation like in the other patch,
+as there are some overrides based on DT values below this.
+
+But now that I've had another look, maybe doing the exact same thing as
+the other patch does (kmemdup) will probably look better anyway,
+specially if we do that on probe.
+
+> 
+> Konrad
