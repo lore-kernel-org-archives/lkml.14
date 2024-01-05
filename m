@@ -1,94 +1,176 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C96346B3;
-	Fri,  5 Jan 2024 01:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4T5m0y5WZgz4f3lwP;
-	Fri,  5 Jan 2024 09:22:58 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 1B12E1A0531;
-	Fri,  5 Jan 2024 09:23:02 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.124.27])
-	by APP4 (Coremail) with SMTP id gCh0CgBXZUXyWZdl68i0Fg--.35140S9;
-	Fri, 05 Jan 2024 09:23:01 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	jack@suse.cz,
-	ojaswin@linux.ibm.com
-Cc: linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 7/9] ext4: remove unused return value of ext4_mb_release_group_pa
-Date: Fri,  5 Jan 2024 17:21:00 +0800
-Message-Id: <20240105092102.496631-8-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20240105092102.496631-1-shikemeng@huaweicloud.com>
-References: <20240105092102.496631-1-shikemeng@huaweicloud.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C9D81C10;
+	Fri,  5 Jan 2024 01:24:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="Clbt61oB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="i+l8k8Vu"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.west.internal (Postfix) with ESMTP id 24AD23200B83;
+	Thu,  4 Jan 2024 20:24:02 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Thu, 04 Jan 2024 20:24:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1704417841;
+	 x=1704504241; bh=8oxbnZeja7VLjsmNqyq5U5Vh+kwCbUgeDbgUqppXGZw=; b=
+	Clbt61oBxHKzbCGy07g4rOxFGxLX2tL7ztb/4TkbPXfZQuKZQ/QyOJQC/agh/u3h
+	4fxlz6ral5PdX4FkRqJWcF6oOsXVYXhgCtHv1LjN2lvqDGU7s0B9cTK1b0BBwMSN
+	Z21AW0UE1OfncoCrqw/ZTJ03MT0LBK7yK5qE9/P+P351qT15DP1nWGH4RNBxBmGb
+	tO6f5eGnKgZ1kbYkENSmdY8a4F2wJztAWfX5xOY89USB7OLTQuskrt4lGgi3cc9T
+	w7b9FmxorG2Xa4WFoaEXObUiXijrMNw7TQkTptGio3KGcNk8JF3fr8BDUWUuZWqW
+	oKTxhIxshUpNCydt78/Q0Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1704417841; x=
+	1704504241; bh=8oxbnZeja7VLjsmNqyq5U5Vh+kwCbUgeDbgUqppXGZw=; b=i
+	+l8k8VuIIdFlO50LVgUeJ1KML/J4piu+x2pGugwd5FztWf51/Ha/wIbikIFRayzp
+	T7n59YgISpvOMgNWfbOfEuBVVvKfosnDYq6HPcq5F1UX6AmEMkdiAIGBHevcT/Dm
+	S2EUPLEmdWoad7JyXOn3jWXU7RWYCArPyw3wcR4dk1suiIFlEOhaMmkts8ndy248
+	9tDIS1kH9aqutke0Bfh6+hh3+vQGe3Af4gHoOI3D7L0FAvpWUBIWHpzgWAsUQlD0
+	PM+Nmh7bZ8JinIJP3b/Ox/mxbQbRQkLLTndWItk2SNGEQRo4mXSvM982IvCXhiQR
+	DjV2EM404gB2LJeKh54tA==
+X-ME-Sender: <xms:MVqXZSKBaN7TBhy4Zc2VdmVgU2iOjocnFdMiSSbj67X6d8369G6Ugw>
+    <xme:MVqXZaKj0WUXZtlpI0oTrRKBjodl_ocKWNAYGm1i6MNkSwITV2NiXAl395E-aWn6-
+    L0B9LCLdQuyStiJ0w>
+X-ME-Received: <xmr:MVqXZSuQ_v8RvaMsu0noBR27s66DAhhJndwlJlMp5FBIwU845HUb6zYQoIxDtwjSyMxcp4UUBAbEpjxAhOsfvQAgaXUxjOPCktOCE2c>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdegkedgfeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdlfeehmdenucfjughrpeffhffvvefukfhfgggtugfgjgestheksfdt
+    tddtjeenucfhrhhomhepffgrnhhivghlucgiuhcuoegugihusegugihuuhhurdighiiiqe
+    enucggtffrrghtthgvrhhnpeffffeggeekjedvjeegheetkeduhffgfeegveeklefhgeeu
+    leejhfeljedtkeevffenucffohhmrghinhepghhithhhuhgsrdgtohhmnecuvehluhhsth
+    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepugiguhesugiguhhuuhdr
+    giihii
+X-ME-Proxy: <xmx:MVqXZXZwcSucBHIhiIBwPwtGo9-q9c77HCauzLkeGXV8HjMuHQH7pw>
+    <xmx:MVqXZZaqYqcT9VxtI0DGRaCm_ZP9bPeKhD8rUgvJ66XIhiV9dl2TcA>
+    <xmx:MVqXZTACdMHw1kpLkYuwllTDf7gxzqYcenRHKF_77XgrFHA__kvrTg>
+    <xmx:MVqXZSIUUz5GnIstwKXA44tQlTXR3xA31LFZ7_wMUlud7BuBd_h6yQ>
+Feedback-ID: i6a694271:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 4 Jan 2024 20:24:00 -0500 (EST)
+Date: Thu, 4 Jan 2024 18:23:58 -0700
+From: Daniel Xu <dxu@dxuuu.xyz>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Andrii Nakryiko <andrii@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>, 
+	Quentin Monnet <quentin@isovalent.com>, Alan Maguire <alan.maguire@oracle.com>, 
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH bpf-next 1/2] bpf: btf: Support optional flags for
+ BTF_SET8 sets
+Message-ID: <dpjloyytomne6efi76qe4mmh3mdjp67penogwbak7ojznf23wc@5gs6o7gc2gdt>
+References: <cover.1704324602.git.dxu@dxuuu.xyz>
+ <29644dc7906c7c0e6843d8acf92c3e29089845d0.1704324602.git.dxu@dxuuu.xyz>
+ <ZZaVFxMvmMjbOlra@krava>
+ <CAADnVQKZZw-e12-BOJsMMiA3s+vOskQEYRqhviQC2rBMf4AckA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBXZUXyWZdl68i0Fg--.35140S9
-X-Coremail-Antispam: 1UD129KBjvdXoWrtr4fGF45tF4UXFWxZF1xAFb_yoWkKFb_Ca
-	4UXr4kA343A3s293WrJry3t3yqkan2vr9rur4rKrZ3AF1rW3ZxAw1DZrsxA397ua10ka43
-	GF93Zry8GFZYqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbS8YFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JFv_Gryl82
-	xGYIkIc2x26280x7IE14v26r126s0DM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC
-	64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM2
-	8EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq
-	3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jstxDUUUUU=
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+In-Reply-To: <CAADnVQKZZw-e12-BOJsMMiA3s+vOskQEYRqhviQC2rBMf4AckA@mail.gmail.com>
 
-Remove unused return value of ext4_mb_release_group_pa.
+On Thu, Jan 04, 2024 at 09:11:56AM -0800, Alexei Starovoitov wrote:
+> On Thu, Jan 4, 2024 at 3:23 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+> >
+> > On Wed, Jan 03, 2024 at 04:31:55PM -0700, Daniel Xu wrote:
+> > > This commit adds support for optional flags on BTF_SET8s.
+> > > struct btf_id_set8 already supported 32 bits worth of flags, but was
+> > > only used for alignment purposes before.
+> > >
+> > > We now use these bits to encode flags. The next commit will tag all
+> > > kfunc sets with a flag so that pahole can recognize which
+> > > BTF_ID_FLAGS(func, ..) are actual kfuncs.
+> > >
+> > > Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+> > > ---
+> > >  include/linux/btf_ids.h | 14 +++++++++-----
+> > >  1 file changed, 9 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/include/linux/btf_ids.h b/include/linux/btf_ids.h
+> > > index a9cb10b0e2e9..88f914579fa1 100644
+> > > --- a/include/linux/btf_ids.h
+> > > +++ b/include/linux/btf_ids.h
+> > > @@ -183,17 +183,21 @@ extern struct btf_id_set name;
+> > >   * .word (1 << 3) | (1 << 1) | (1 << 2)
+> > >   *
+> > >   */
+> > > -#define __BTF_SET8_START(name, scope)                        \
+> > > +#define ___BTF_SET8_START(name, scope, flags)                \
+> > >  asm(                                                 \
+> > >  ".pushsection " BTF_IDS_SECTION ",\"a\";       \n"   \
+> > >  "." #scope " __BTF_ID__set8__" #name ";        \n"   \
+> > >  "__BTF_ID__set8__" #name ":;                   \n"   \
+> > > -".zero 8                                       \n"   \
+> > > +".zero 4                                       \n"   \
+> > > +".long " #flags                               "\n"   \
+> > >  ".popsection;                                  \n");
+> > >
+> > > -#define BTF_SET8_START(name)                         \
+> > > +#define __BTF_SET8_START(name, scope, flags, ...)    \
+> > > +___BTF_SET8_START(name, scope, flags)
+> > > +
+> > > +#define BTF_SET8_START(name, ...)                    \
+> > >  __BTF_ID_LIST(name, local)                           \
+> > > -__BTF_SET8_START(name, local)
+> > > +__BTF_SET8_START(name, local, ##__VA_ARGS__, 0)
+> >
+> > I think it'd better to use something like:
+> >
+> >   BTF_SET8_KFUNCS_START(fsverity_set_ids)
+> >
+> > instead of:
+> >
+> >   BTF_SET8_START(fsverity_set_ids, BTF_SET8_KFUNC)
+> >
+> > and to keep current BTF_SET8_START without flags argument, like:
+> >
+> >   #define BTF_SET8_START(name) \
+> >     __BTF_SET8_START(... , 0, ...
+> >
+> >   #define BTF_SET8_KFUNCS_START(name) \
+> >     __BTF_SET8_START(... , BTF_SET8_KFUNC, ...
+> 
+> I was about to suggest the same :)
+> 
+> We can drop SET8 part as well, since it's implementation detail.
+> Just BTF_KFUNCS_START and pair it with BTF_KFUNCS_END
+> that will be the same as BTF_SET8_END.
+> Until we need to do something else with these macros.
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
----
- fs/ext4/mballoc.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Ack, will change.
 
-diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-index 1ed6d1d5a..e6561a09d 100644
---- a/fs/ext4/mballoc.c
-+++ b/fs/ext4/mballoc.c
-@@ -5330,7 +5330,7 @@ ext4_mb_release_inode_pa(struct ext4_buddy *e4b, struct buffer_head *bitmap_bh,
- 	atomic_add(free, &sbi->s_mb_discarded);
- }
- 
--static noinline_for_stack int
-+static noinline_for_stack void
- ext4_mb_release_group_pa(struct ext4_buddy *e4b,
- 				struct ext4_prealloc_space *pa)
- {
-@@ -5344,13 +5344,11 @@ ext4_mb_release_group_pa(struct ext4_buddy *e4b,
- 	if (unlikely(group != e4b->bd_group && pa->pa_len != 0)) {
- 		ext4_warning(sb, "bad group: expected %u, group %u, pa_start %llu",
- 			     e4b->bd_group, group, pa->pa_pstart);
--		return 0;
-+		return;
- 	}
- 	mb_free_blocks(pa->pa_inode, e4b, bit, pa->pa_len);
- 	atomic_add(pa->pa_len, &EXT4_SB(sb)->s_mb_discarded);
- 	trace_ext4_mballoc_discard(sb, NULL, group, bit, pa->pa_len);
--
--	return 0;
- }
- 
- /*
--- 
-2.30.0
+> 
+> >
+> > also I'd rename BTF_SET8_KFUNC to BTF_SET8_KFUNCS (with S)
+> >
+> > do you have the pahole changes somewhere? would be great to
+> > see all the related changes and try the whole thing
+> 
+> +1
+> without corresponding pahole changes it's not clear whether
+> it actually helps.
 
+Here's a checkpointed branch: https://github.com/danobi/pahole/tree/kfunc_btf-mailed .
+I won't force push to it.
+
+It should work against this patchset. I might need to clean it up a bit still.
+
+Thanks,
+Daniel
