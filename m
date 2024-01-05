@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39DFC23772
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E2725116
 	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 21:50:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIwjEhlb"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E2788C433CC;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sLLQHEZY"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C4E79C433CA;
 	Fri,  5 Jan 2024 21:50:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1704491427;
-	bh=zZbKh0bXY4jP2LnG1owu/TGlfOhgMqLikZKmb67mDlg=;
+	bh=TbP2ZiKWNQumHFHTZE3CH6DZOuJ/7CINRHp6fTS6928=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=XIwjEhlb4OOUssD1jGBzURaXALBo0jBKlPcdvjF10U85umoyNI/ZXOBgaVwX49pgc
-	 QsTHWwlk22gCrm9Q8rFUvwiQ7E1xkW13/saKttLuS2Jn+K6ohnkGZP2Ura36SHh6uy
-	 Ece4XXBTW99nm8Eq/RFFJq09LmuBKdo4gfeWHT2ZwGrbvhwBVWkzjVDo/hD4+yjd7w
-	 Y6lQnAOvD3JcTr3uNLc3AVu5EFzLPR6CHqzW7IZXyLhWcN+90JMBHATeXWPBbe+fIN
-	 ARQlM8ZzWTuhU5vkqUgzXjgV1+8AYoMxwQf1r/I4bkFuCIv6KX6ribWLc2xRYLryS8
-	 7inC75tPPsbXw==
+	b=sLLQHEZYyfz+Z9ZaAbStkoUPxk7s0nTs8Jz6auG/Dj5S/m96kPcB13Wm3UJIcjFuI
+	 9PuK4e2ysWlYh73h3ryG0mq//DpqvHRc/GVTggwRF4xd07rFSeHQnt64IxstT49Zw7
+	 Xd0LWRFFBuEaEsLUaulQ+Lor/7XiCo+f/VeQcR+/k9JSBOBHVhNJ6hAKB7wENmLoLi
+	 gDp5G+EgLYwAzb95EYL1J56kMl0c0BtdbhjNdgj32xsA78NLrtDkI6Df1ApkdE227P
+	 U53T2ZNhvrb8tE4kLDbJ96Xk8XcR7ws0m/nSwV9AJBNUXjuwBFxZkl/7wkGL3gEVlH
+	 H2wI3d3h5sT+A==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CB91FDCB6F9;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B007DC41606;
 	Fri,  5 Jan 2024 21:50:27 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -28,43 +28,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 0/3] riscv: CPU operations cleanup
+Subject: Re: [PATCH] riscv: Select ARCH_WANTS_NO_INSTR
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <170449142782.26226.4217701485670023420.git-patchwork-notify@kernel.org>
+ <170449142771.26226.4393775934262321528.git-patchwork-notify@kernel.org>
 Date: Fri, 05 Jan 2024 21:50:27 +0000
-References: <20231121234736.3489608-1-samuel.holland@sifive.com>
-In-Reply-To: <20231121234736.3489608-1-samuel.holland@sifive.com>
-To: Samuel Holland <samuel.holland@sifive.com>
-Cc: linux-riscv@lists.infradead.org, palmer@dabbelt.com,
+References: <20231123142223.1787-1-jszhang@kernel.org>
+In-Reply-To: <20231123142223.1787-1-jszhang@kernel.org>
+To: Jisheng Zhang <jszhang@kernel.org>
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, nathan@kernel.org,
  linux-kernel@vger.kernel.org
 
 Hello:
 
-This series was applied to riscv/linux.git (for-next)
+This patch was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Tue, 21 Nov 2023 15:47:23 -0800 you wrote:
-> This series cleans up some duplicated and dead code around the RISC-V
-> CPU operations, that was copied from arm64 but is not needed here. The
-> result is a bit of memory savings and removal of a few SBI calls during
-> boot, with no functional change.
+On Thu, 23 Nov 2023 22:22:23 +0800 you wrote:
+> As said in the help of ARCH_WANTS_NO_INSTR entry in arch/Kconfig:
+> "An architecture should select this if the noinstr macro is being used on
+> functions to denote that the toolchain should avoid instrumenting such
+> functions and is required for correctness."
 > 
-> 
-> Samuel Holland (3):
->   riscv: Deduplicate code in setup_smp()
->   riscv: Remove unused members from struct cpu_operations
->   riscv: Use the same CPU operations for all CPUs
+> Select ARCH_WANTS_NO_INSTR for correctness.
 > 
 > [...]
 
 Here is the summary with links:
-  - [1/3] riscv: Deduplicate code in setup_smp()
-    https://git.kernel.org/riscv/c/a4166aec1130
-  - [2/3] riscv: Remove unused members from struct cpu_operations
-    https://git.kernel.org/riscv/c/79093f3ec39c
-  - [3/3] riscv: Use the same CPU operations for all CPUs
-    https://git.kernel.org/riscv/c/62ff262227a4
+  - riscv: Select ARCH_WANTS_NO_INSTR
+    https://git.kernel.org/riscv/c/5a2cf779e677
 
 You are awesome, thank you!
 -- 
