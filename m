@@ -1,97 +1,78 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBB32D7A5
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 14:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1FED2D7A5;
+	Fri,  5 Jan 2024 14:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XhCvbfkz"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a28d25253d2so172663866b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 06:03:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1704463419; x=1705068219; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=K3bnN4quUJEriHwirvyf/MlXpTwHAU6a4DSC6ByIGJA=;
-        b=XhCvbfkz4xkGtCVUYS6P6SCTByNC1xWYpzXGFzGFRpBiJY+Pxp01VrJsLZE8+u2TA0
-         a+9t4jcJXk9DgGBOAcU1a6H3v1y8vkPgQLcOKCZ7JAclZ6ukU2VfhNvvyOv6EmMWwmG8
-         n2gluIJRMq5UvWC9yNMyWHCO3p+j5Bf79pvUhKEjtMgdJCivV+ZNc5uEZqus7UeBZ200
-         M7716C9exydMONEvTM5F2niNIjfpLDIcR/yFvb6rndu6BG9pJvhoWmhph2Z2CjmWnCrR
-         E8+oopJYNv20evry3TRGQMMwSufSykDNXtQkYSh10LoIUCYOqDth7x3Vd+ooxeL0POzT
-         /rJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704463419; x=1705068219;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K3bnN4quUJEriHwirvyf/MlXpTwHAU6a4DSC6ByIGJA=;
-        b=epXh5ktkd7EB93l+ZL7WjcoNwtHnbzI4aojia01qBYM8C1m3QnkhOLU7NZ7R1A7BLB
-         /0r12khZuQr9tBXiHX5eJ6TvTXlH6HGSR6V3hZxh5J9nZUxpQgltV18s6kcPuD1+jNIF
-         ytsOAS80ivx9Om5F4JQaOigZw18TobPR4/bwTTPZ6BBJ8TGlAfvE6p6b5ijteDvrCgqQ
-         9SMvmjh33cj4NC1D/19jNH90ovw25DZ/B14HUq18w6JJ1AwycVs2TXEVb3F/oTX417aR
-         N3R4OSD1h+0DlyMx13llJFZCLC+UCNnypYBGby1cmuydP81Kxu4cv6hU3weRcNithuTn
-         d+yw==
-X-Gm-Message-State: AOJu0YwBnRxzeQAzfZWzSAXQqzrXgo+6mtWzva2NArnCh941SXGrG7nN
-	eet2sbjWF80sRz2fzwTGkArzaczgpabltw==
-X-Google-Smtp-Source: AGHT+IH67SLFJ8C5gG4C5TbvF/XM8nwvZHERmu7ffu0wKuatbRuETiCLz0Cl7892rpSm45VScaekzA==
-X-Received: by 2002:a17:906:2dcc:b0:a29:18c:8998 with SMTP id h12-20020a1709062dcc00b00a29018c8998mr752587eji.129.1704463418914;
-        Fri, 05 Jan 2024 06:03:38 -0800 (PST)
-Received: from alley ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id t13-20020a170906178d00b00a28cf49520asm905749eje.203.2024.01.05.06.03.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jan 2024 06:03:38 -0800 (PST)
-Date: Fri, 5 Jan 2024 15:03:36 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Lukas Hruska <lhruska@suse.cz>
-Cc: Miroslav Benes <mbenes@suse.cz>, Josh Poimboeuf <jpoimboe@kernel.org>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kbuild@vger.kernel.org,
-	Marcos Paulo de Souza <mpdesouza@suse.com>,
-	Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH v1 3/5] kbuild/modpost: integrate klp-convert
-Message-ID: <ZZgMOA7s0VWsrTLA@alley>
-References: <20231106162513.17556-1-lhruska@suse.cz>
- <20231106162513.17556-4-lhruska@suse.cz>
+	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="ctnF/fbz"
+Message-ID: <1d2bb04665d19a4722a0b9f7f552cab3@manguebit.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1704463486;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+1FNVgsj+qEWnvxHNGqdoPY64SlF8p/+fHrooM8zYkM=;
+	b=ctnF/fbzbkDthaVPva5if5djG2bq6W+3+ARQNPmEDGhN7aeEywM7B8C2t10Un7VC2+MSuf
+	CTbfuO0HBqfn8+HfDph0cBDfoPz1kXqSigPssFBonKnC7mMMI4WTbLrhmsS07KU9/lusXb
+	88POJKP7oFoeTfm7wmlEpU+U2LApL+5A6ZFdKwZnaVg6Sfs14urLVrWErvwfO38ete3Y0d
+	lpYgjJgZsBdc9855VN0dYyl4zWR8hFOuhv2pKlBV5C4sRA19oJNCYdsfvUT7Vf8DKVRCOx
+	VES7OYzfLhuURqBE8dCshjgcRkR4QCY4ci7M55p5zwDRGv1uqxSA6SrjAYXDFQ==
+ARC-Seal: i=1; s=dkim; d=manguebit.com; t=1704463486; a=rsa-sha256;
+	cv=none;
+	b=E3nD/uSc3rlSDyQwsy+DdSrppLHlk5z48Dy0FmXC45LqO7knRCq13R1qHFHx95AKZxDyOB
+	0ZzYwmpHIwbU6vfvqDk9JmWt8iY0vNQRfU1tHr5wZwiKHLJQPsAh4yHoWhcUwPMB3Ll/s6
+	3hSm+TMBvNgwZEuWEGyLAkYxOykF1ARGXgXOO+eCBRmwy12eepYGyHqEBpo4aHNtuTHILU
+	t3JR/mIhZnjR4bA670FDDjwFjfuNvuLGlFtdAq3ea1v3U/v4EgM0mvVBnZBdKe95JlvYWk
+	DU5zreM+gKwv+sHLNjCpEZo1vX/JCTYeE9BrtDCs1zzu9rsy/i5sg9e/e9Qckg==
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.auth=pc@manguebit.com smtp.mailfrom=pc@manguebit.com
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1704463486; h=from:from:sender:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+1FNVgsj+qEWnvxHNGqdoPY64SlF8p/+fHrooM8zYkM=;
+	b=W1PlfjcTslLslIr4fj9tv9upynqeeY0WXI+Op4qhcXRMM67a5Sxrgamo6/wWPZBmzfB7oy
+	yChfeOngZMPWB4SILw+b1oBTk0nsfRxioCAoSzZUIjwWqqVVd2gpKu3h4aFry8wph6AI9i
+	5iJ5rOsrgxXxpb78iqlGaratTaDnfPQqYjmfDAhflQRZK4sYc10dv9RfG/KAAoglSU5mkw
+	bNhURUr2ClJHhRwBgr3h8nTM5uITDGznrnBKDdT3aXnNghPA0jPlaN/PiHKfCHQ8sFHj7Y
+	FCw5Dv/ATBNNvR0f3IIvwTOKwVJLIr5qEZXmH7htFXiGyEFDBJyDn+J3OOJO+w==
+From: Paulo Alcantara <pc@manguebit.com>
+To: Salvatore Bonaccorso <carnil@debian.org>, Steve French
+ <sfrench@samba.org>, Ronnie Sahlberg <lsahlber@redhat.com>, Shyam Prasad N
+ <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, Ben Hutchings
+ <benh@debian.org>
+Cc: linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: Information on use-after-free in smb2_is_status_io_timeout()?
+In-Reply-To: <ZZgFEX3QNWWj_VxA@eldamar.lan>
+References: <ZZgFEX3QNWWj_VxA@eldamar.lan>
+Date: Fri, 05 Jan 2024 11:04:43 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231106162513.17556-4-lhruska@suse.cz>
+Content-Type: text/plain
 
-On Mon 2023-11-06 17:25:11, Lukas Hruska wrote:
-> From: Josh Poimboeuf <jpoimboe@redhat.com>
-> 
-> Update the modpost program so that it does not warn about unresolved
-> symbols matching the expected format which will be then resolved by
-> klp-convert.
+Salvatore Bonaccorso <carnil@debian.org> writes:
 
-This in only one part.
+> There is a Red Hat bugzilla report in
+> https://bugzilla.redhat.com/show_bug.cgi?id=2154178 about a
+> use-after-free in smb2_is_status_io_timeout() . While the commit noted
+> initially there seems not correct, Ben Hutchings raised a question on
+> more information in
+> https://bugzilla.redhat.com/show_bug.cgi?id=2154178#c24 .
+>
+> (there is a CVE assigned for it, CVE-2023-1192)
 
-The main change is that it klp-convert is called for livepatch modules
-after the final linking.
+That is supposed to be fixed by
 
-I would write something like:
+        d527f51331ca ("cifs: Fix UAF in cifs_demultiplex_thread()")
 
-<proposal>
-Call klp-convert for the livepatch modules after the final linking.
-
-Also update the modpost tool so that it does not warn about unresolved
-symbols matching the expected format which will be then resolved by
-klp-convert.
-</proposal>
-
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> Signed-off-by: Lukas Hruska <lhruska@suse.cz>
-
-Otherwise the code looks good. With the updated commit message:
-
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-
-Best Regards,
-Petr
+While the commit refers to an UAF in ->is_network_name_deleted(), this
+should also work for smb2_is_status_io_timeout(), AFAICT.
