@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39DD222EF1
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 21:50:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39DA922EEF;
+	Fri,  5 Jan 2024 21:50:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e2xcmSPr"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BCB4CC433C8;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eqKFe3dT"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D8506C433CB;
 	Fri,  5 Jan 2024 21:50:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1704491427;
-	bh=p/B1O0r+YQ/Z4tDjcQ/pjutR7YcnXY2qajqhdidShBI=;
+	bh=IdUsCMJ/vqOhBPKNbHGvLL4LIHpK7zjcsFeMXwJmk8I=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=e2xcmSPrev3wbMlmCgsV3kdDTWpxEqMrIO/B+OngbVUz91q8n0SYkhBgCPLgnMh7D
-	 9G0i2CavIniixCUbEm/p4C8ZSL37FId9ZHgCQ4RB/vUMtaz6ojMI+adUWOEZaIhvvt
-	 LkLkWNYfp6JjLcYwlIyuiKIljAz9NI+oVI3eVXt8vlhxZGypWOI/hqXFWAxacMtXKG
-	 XZV9NZduRUEc30V8N7dPJVCxvgTGA3BdTQSbtzzJ3iL9aT+EDaCA3k8Kj6U8GzqtBF
-	 E52lTD/07jg0dQpySQQkuJdPXW3OeQH9+Jq0Uq4BLYb8jsiTNklRmhsP3oLAp59v1E
-	 BXDO+4K1iq47Q==
+	b=eqKFe3dTU5AlHizIphVnFxETIy8JPb1Td00q8vgFuanO5pGzF3YJ/3Z7VMKLUIK1u
+	 bRxRgzdOvQL8B5zUIMSWO6di7VQIoYRKRU1BSbVyd95ox8XfOkeeQIJlsZOfXn8KP2
+	 p8NHd+m9KITKwgRmy0kHW14CyWCTtFFYVIG3b9+0S3Yz+RzM3BafXvTrp5rtbsJ0iZ
+	 tDcCnI6rB/QXs3i/KH3JzDoHfVJaLIul+YMYfdsHbBTeBa/6a0SZ5m7bE7xG4AygMd
+	 TawnKjFUCImNv9TMi0hWfB8Z0K0VQ+lZxrIBUhRpwHslHFAEQvh7M1PYUrnPZe/uov
+	 HvqnLo6rrB6YA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A701BDCB6F7;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C002DDCB6FD;
 	Fri,  5 Jan 2024 21:50:27 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -28,36 +28,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv: Remove obsolete rv32_defconfig file
+Subject: Re: [PATCH v2 0/4] riscv: Use READ_ONCE()/WRITE_ONCE() for pte accesses
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <170449142768.26226.3943147801325806226.git-patchwork-notify@kernel.org>
+ <170449142778.26226.7492189738418488414.git-patchwork-notify@kernel.org>
 Date: Fri, 05 Jan 2024 21:50:27 +0000
-References: <20231121225320.3430550-1-samuel.holland@sifive.com>
-In-Reply-To: <20231121225320.3430550-1-samuel.holland@sifive.com>
-To: Samuel Holland <samuel.holland@sifive.com>
-Cc: linux-riscv@lists.infradead.org, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, raven@themaw.net, paul.walmsley@sifive.com,
- svenjoac@gmx.de, linux-kernel@vger.kernel.org
+References: <20231213203001.179237-1-alexghiti@rivosinc.com>
+In-Reply-To: <20231213203001.179237-1-alexghiti@rivosinc.com>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, linux@armlinux.org.uk,
+ ryan.roberts@arm.com, glider@google.com, elver@google.com,
+ dvyukov@google.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, anup@brainfault.org, atishp@atishpatra.org,
+ ardb@kernel.org, ryabinin.a.a@gmail.com, andreyknvl@gmail.com,
+ vincenzo.frascino@arm.com, kasan-dev@googlegroups.com,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ kvm-riscv@lists.infradead.org, linux-efi@vger.kernel.org, linux-mm@kvack.org
 
 Hello:
 
-This patch was applied to riscv/linux.git (for-next)
+This series was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Tue, 21 Nov 2023 14:53:18 -0800 you wrote:
-> This file is not used since commit 72f045d19f25 ("riscv: Fixup
-> difference with defconfig"), where it was replaced by the
-> 32-bit.config fragment. Delete the old file to avoid any confusion.
+On Wed, 13 Dec 2023 21:29:57 +0100 you wrote:
+> This series is a follow-up for riscv of a recent series from Ryan [1] which
+> converts all direct dereferences of pte_t into a ptet_get() access.
 > 
-> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-> ---
+> The goal here for riscv is to use READ_ONCE()/WRITE_ONCE() for all page
+> table entries accesses to avoid any compiler transformation when the
+> hardware can concurrently modify the page tables entries (A/D bits for
+> example).
 > 
 > [...]
 
 Here is the summary with links:
-  - riscv: Remove obsolete rv32_defconfig file
-    https://git.kernel.org/riscv/c/f4727fe60ff6
+  - [v2,1/4] riscv: Use WRITE_ONCE() when setting page table entries
+    https://git.kernel.org/riscv/c/c30fa83b4989
+  - [v2,2/4] mm: Introduce pudp/p4dp/pgdp_get() functions
+    https://git.kernel.org/riscv/c/eba2591d99d1
+  - [v2,3/4] riscv: mm: Only compile pgtable.c if MMU
+    https://git.kernel.org/riscv/c/d6508999d188
+  - [v2,4/4] riscv: Use accessors to page table entries instead of direct dereference
+    https://git.kernel.org/riscv/c/edf955647269
 
 You are awesome, thank you!
 -- 
