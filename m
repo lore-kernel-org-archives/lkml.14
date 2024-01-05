@@ -1,114 +1,94 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4FA2E84A;
-	Fri,  5 Jan 2024 16:47:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A6531A9D;
+	Fri,  5 Jan 2024 16:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TojGoyr/"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-55739500b39so605632a12.0;
-        Fri, 05 Jan 2024 08:47:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704473243; x=1705078043; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8GhoWygouKwNF/i+Ar+uHKGYE9ZPPakZhcuyJ3HA+yM=;
-        b=TojGoyr/pXqP9E4i0NJW+bJlS6MSm8U3Tmd8FcrteiIMP4gXAwUfap7keQbOIwzPHj
-         M9ZfUCZoackAL/csP8lfvqU/05ensxDaaNz4j0EFFWrbnKDq2ba8jq77Nhcgbj7YI+Y2
-         ulTvCs7VCCPv5sWBEkYmzkdqM5rCdz7HuUXRi197DQgCNQ5mjAWgWnNaQVCNFY0fQF+M
-         CVilh6p4u23E2ZNAXqnGfexsCNgkeIPmGSqVbiKq97zzPrrgVHLFFA50ZeawmTWBU1yb
-         YnDATvJXkvk7aR9rgbYs16HmQvXbmBoV3Fu5QxdknJyHuXx1sffGseT+fhxo4oWNe74E
-         9F/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704473243; x=1705078043;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8GhoWygouKwNF/i+Ar+uHKGYE9ZPPakZhcuyJ3HA+yM=;
-        b=PTjUGTuec/S3jHSueTDPAhoKb9pOXhtSlpsYY1WvR9IfX82TxUu5nx/1ECI9oLhi9O
-         8LZ87PDE79LUVoFu5twRikX2b5J54edCGzkN5swHg60U+tKDslCRRKpGMPMY1iKhIKhv
-         U6eRQKkSaZZyDNJPupbCJZq8EwK2/D9VHA2fx/CmyTUzR8W9K99J6xZ1WX+1CNZMS83j
-         7/XvPAaozN9NYM36KztKI/j0OZYCQR/WvWiPwQkdwI0NC0aAOXU7l7s55UuxjMAhp4HR
-         eb8QCP99SahM+W6tJy9tEE/G1Tz0lIqQIWw2Dx9Ylh8S/TfR2p5Svlfck3jdsk1khdsb
-         ySzw==
-X-Gm-Message-State: AOJu0YxzzXAJbWf23q8kmFRgKYA7/8iBf+adfI95wimQf4r1pp/4Z7XQ
-	PtWenfrhyU88iJSimTW4EiU8BmrK0g==
-X-Google-Smtp-Source: AGHT+IEmqVeHlv3hQC7rMHa0U1jc6f1uX/xyuXiZ6rLuFGn1h9XpROfBTFyH9I651Ze1bS12LJUPyw==
-X-Received: by 2002:a17:906:2853:b0:a27:a258:f340 with SMTP id s19-20020a170906285300b00a27a258f340mr1240311ejc.65.1704473243418;
-        Fri, 05 Jan 2024 08:47:23 -0800 (PST)
-Received: from ?IPV6:2a02:810b:f40:4300:890b:36c3:934f:6f56? ([2a02:810b:f40:4300:890b:36c3:934f:6f56])
-        by smtp.gmail.com with ESMTPSA id r11-20020a1709062ccb00b00a26aa845084sm1064504ejr.17.2024.01.05.08.47.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jan 2024 08:47:23 -0800 (PST)
-Message-ID: <3e7aa9f2-6e37-44c3-9361-5fa7c4ef203d@gmail.com>
-Date: Fri, 5 Jan 2024 17:47:21 +0100
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ORqlR1ML"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 405GAdea015401;
+	Fri, 5 Jan 2024 16:47:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2023-11-20; bh=gUFjJnldcCaXe2pdA55QFTTausQXLS6J9u68Q5ncGio=;
+ b=ORqlR1MLCCOIG3+daQXHeCYON933hpPYh1ILuhU9wykDfFhUV1aZvhxhaVDrx1p9D6fM
+ 2aOJ1h4hYvfz4DAwvprwtZmJ2jHZnGqqsAJOzW4DoqUIeh+ahTsnTlrkWOeQsxEDEBH+
+ 58mvhVBxMkClJada3G5MCHNPLvif8uekBuHnVPl0uTPPIshFvsyZJcb9swErMvQ/Ilte
+ Jdig8AWksgxJW7NYXu360LlrWwbGhya4QPR6ysxkOa6sTgWPydKrGfQx90NCFwTYfdSP
+ ljhvsM94B+9YdMumhgqDZV77kleNfrvyRaUUMZXLQyjF1y4Pd1DIhkxNUHPHiMO3Fjn6 4A== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ven25g3h4-16
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 05 Jan 2024 16:47:28 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 405G5Uiw009401;
+	Fri, 5 Jan 2024 16:40:17 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3ve12hxey5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 05 Jan 2024 16:40:17 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 405GeGlf009736;
+	Fri, 5 Jan 2024 16:40:17 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3ve12hxewn-1;
+	Fri, 05 Jan 2024 16:40:16 +0000
+From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+To: linux-hardening@vger.kernel.org, keescook@chromium.org, error27@gmail.com,
+        gustavoars@kernel.org, Bryan Tan <bryantan@vmware.com>,
+        Vishnu Dasa <vdasa@vmware.com>,
+        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc: vegard.nossum@oracle.com, darren.kenny@oracle.com,
+        harshit.m.mogalapalli@oracle.com
+Subject: [PATCH v2 1/2] VMCI: Use struct_size() in kmalloc()
+Date: Fri,  5 Jan 2024 08:39:59 -0800
+Message-ID: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: (subset) [PATCH v4 00/29] Add HDMI support for RK3128
-Content-Language: en-US, de-DE
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
- dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- David Airlie <airlied@gmail.com>, Rob Herring <robh+dt@kernel.org>,
- Sandy Huang <hjc@rock-chips.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>
-References: <20231222174220.55249-1-knaerzche@gmail.com>
- <170435598418.3166964.9367277671989164237.b4-ty@sntech.de>
-From: Alex Bee <knaerzche@gmail.com>
-In-Reply-To: <170435598418.3166964.9367277671989164237.b4-ty@sntech.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-05_08,2024-01-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ suspectscore=0 phishscore=0 adultscore=0 spamscore=0 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401050137
+X-Proofpoint-ORIG-GUID: kgrNTprd204Py8fGpk9BJG_QYnC6j41a
+X-Proofpoint-GUID: kgrNTprd204Py8fGpk9BJG_QYnC6j41a
 
-Hi Heiko,
+Use struct_size() instead of open coding.
 
+Suggested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+---
+ drivers/misc/vmw_vmci/vmci_datagram.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Am 04.01.24 um 09:14 schrieb Heiko Stuebner:
-> On Fri, 22 Dec 2023 18:41:51 +0100, Alex Bee wrote:
->> This is version 4 of my series that aims to add support for the display
->> controller (VOP) and the HDMI controller block of RK3128 (which is very
->> similar to the one found in RK3036). The original intention of this series
->> was to add support for this slightly different integration but is by now,
->> driven by maintainer's feedback, exploded to be a rework of inno-hdmi
->> driver in large parts. It is, however, a change for the better.
->>
->> [...]
-> Applied, thanks!
->
-> [23/29] drm/rockchip: inno_hdmi: Add variant support
->          commit: 5f2e93e6719701a91307090f8f7696fd6b3bffdf
-> [24/29] drm/rockchip: inno_hdmi: Add RK3128 support
->          commit: aa54f334c291effe321aa4b9ac0e67a895fd7b58
-> [25/29] drm/rockchip: inno_hdmi: Add basic mode validation
->          commit: 701029621d4141d0c9f8b81a88a37b95ec84ce65
-> [26/29] drm/rockchip: inno_hdmi: Drop custom fill_modes hook
->          commit: 50a3c772bd927dd409c484832ddd9f6bf00b7389
->
->
-> For reference, Rob has applied the rk3128 compatible in
-> https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/commit/?id=21960bda59852ca961fcd27fba9f92750caccd06
-thanks for keeping track on this.
+diff --git a/drivers/misc/vmw_vmci/vmci_datagram.c b/drivers/misc/vmw_vmci/vmci_datagram.c
+index f50d22882476..ac6cb0c8d99b 100644
+--- a/drivers/misc/vmw_vmci/vmci_datagram.c
++++ b/drivers/misc/vmw_vmci/vmci_datagram.c
+@@ -224,8 +224,8 @@ static int dg_dispatch_as_host(u32 context_id, struct vmci_datagram *dg)
+ 				return VMCI_ERROR_NO_MEM;
+ 			}
+ 
+-			dg_info = kmalloc(sizeof(*dg_info) +
+-				    (size_t) dg->payload_size, GFP_ATOMIC);
++			dg_info = kmalloc(struct_size(dg_info, msg_payload, dg->payload_size),
++					  GFP_ATOMIC);
+ 			if (!dg_info) {
+ 				atomic_dec(&delayed_dg_host_queue_size);
+ 				vmci_resource_put(resource);
+-- 
+2.42.0
 
-Is there any reason the DT paches aren't merged yet? From what I can see
-they should be fine to be merged in your v6.8-armsoc/dts32 branch which is
-6.7-rc1 based. There was only a txt-binding at this point and it's very
-likely that both the rockchip,inno-hdmi.yaml-conversion and the rk3128
-additon will both land in 6.8 (they are both in linux-next). Linus' 6.8
-merge-window will open earliest next week.
-I'm really not pressuring here and I'm fine if they land in 6.9 - it's just
-for my understanding for further submissions.
-
-Alex
-
->
-> Best regards,
