@@ -1,184 +1,312 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 180FA39AC5;
-	Fri,  5 Jan 2024 18:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB1435EF3;
+	Fri,  5 Jan 2024 19:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AdDHe1tU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704480716; x=1736016716;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=IMIhoe+j/f9rBex1PFLbiC4k1JRAnW3KU/gJ1EeL/HM=;
-  b=AdDHe1tUNmx35K745BbL8KcrReBPe7FGlx1JHZVpQy9AkUmjjP3nzeOW
-   IIZ/WwTz0fxTOgwtqa0AgskbP13eDBdzENWpqW2VA2n7ZtId6Cw12Udgl
-   JsgIBZiGHD5+Jpv6RxcmjSozD4JJrIYYEuFPYLD6+hgsIVcUq6wOW2g7s
-   QMCyLnI1wM/dx3ge9dv7PTUC0Uq1c8mpDrFcrKclBDz/caHsUO7WI3+Lg
-   uHZ0gL2uREjSnEIDRw7c8a67AoqVmocriU6csiZYSYkzdeREElrNK8miN
-   73HL/PJvE/Ie5yPrw8b+4HGW8PJ2zYLR86Udp8tYMuv4aW5eiSWyaTjwM
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10944"; a="401348096"
-X-IronPort-AV: E=Sophos;i="6.04,334,1695711600"; 
-   d="scan'208";a="401348096"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 10:51:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10944"; a="924291033"
-X-IronPort-AV: E=Sophos;i="6.04,334,1695711600"; 
-   d="scan'208";a="924291033"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmsmga001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Jan 2024 10:51:54 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 5 Jan 2024 10:51:54 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 5 Jan 2024 10:51:53 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Fri, 5 Jan 2024 10:51:53 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.100)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 5 Jan 2024 10:51:53 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hwJvtWvosY3cPRaQq720gj3mGAGkgQRWnBKxzuLnaBqdw4kSPi75QB1LFylFJ5dIt5Cbv7kcuXVaUG5y6WN8B0MnCXjs8LyyUR1D3E4ZH7//K2NM7V9Nwf5Lb2tLKXkYZWXCKTFXUeaC5/z4bs6qEjKfemXOC49C72AMIEtZOQi57RIPfGBqRSYOLnCztUtkvoNonePv5YrddimpGW4L3cZgHsAh4uL0uMCj7oMHr4XUUpgV3KN1l+Z7ZB8hvUl/z5ojHAShLMMUvRokrTVDN3IwjDPc32Wgz8RvHfjsi5xeVMRJ8PQDk56LvdKekroBQvUscxg3KWTRAz3HAc+lWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IMIhoe+j/f9rBex1PFLbiC4k1JRAnW3KU/gJ1EeL/HM=;
- b=gqEQEoa4bebrhp1dH1RWk8XhyxcSfGLEBzFQHr6B4bHo22ILs4T1FJb5T6CWUE523NMAVPe5C3VBZmy++9ZR/+g2sdLK1GutNzBaMVWA+Nzs82Jt/hMgEK8rh/S+3kjC6ZkIfoRQnbbE9mUlpeUf4mJ6EGzAr0oIdXi4+V/EdPi0JIDsppZo08565L5wA8jcF6zoKunJC8kohYJx4lF/Jp9zH+7YooHCyGNTSYe36UXD3dGSklXxRqv1zaWacsEnXGjgYyjlIvpIY2EibxeioXcrN4IQDTAKk3FF4nbqcEiZe2zf590SVS674f+E6YDK0ABotJo/yDnc4l4MpTT3gw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
- by SA2PR11MB4956.namprd11.prod.outlook.com (2603:10b6:806:112::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.16; Fri, 5 Jan
- 2024 18:51:51 +0000
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::6dc:cee5:b26b:7d93]) by MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::6dc:cee5:b26b:7d93%4]) with mapi id 15.20.7159.015; Fri, 5 Jan 2024
- 18:51:51 +0000
-From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To: "jmattson@google.com" <jmattson@google.com>
-CC: "Gao, Chao" <chao.gao@intel.com>, "Yang, Weijiang"
-	<weijiang.yang@intel.com>, "Hansen, Dave" <dave.hansen@intel.com>,
-	"seanjc@google.com" <seanjc@google.com>, "peterz@infradead.org"
-	<peterz@infradead.org>, "john.allen@amd.com" <john.allen@amd.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"mlevitsk@redhat.com" <mlevitsk@redhat.com>, "pbonzini@redhat.com"
-	<pbonzini@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH v8 00/26] Enable CET Virtualization
-Thread-Topic: [PATCH v8 00/26] Enable CET Virtualization
-Thread-Index: AQHaM+ybd3H3II6aZU6KWHt3rvxkNLDIg7MAgADO/oCAAOpTAIAANboAgAADMYCAAAXLgIAAj3+AgABzaACAABlggIAABMoAgAAL1wA=
-Date: Fri, 5 Jan 2024 18:51:50 +0000
-Message-ID: <b6ed5961a3a73de532e2ff0610f43ca129151199.camel@intel.com>
-References: <20231221140239.4349-1-weijiang.yang@intel.com>
-	 <93f118670137933980e9ed263d01afdb532010ed.camel@intel.com>
-	 <5f57ce03-9568-4739-b02d-e9fac6ed381a@intel.com>
-	 <6179ddcb25c683bd178e74e7e2455cee63ba74de.camel@intel.com>
-	 <ZZdLG5W5u19PsnTo@google.com>
-	 <a2344e2143ef2b9eca0d153c86091e58e596709d.camel@intel.com>
-	 <ZZdSSzCqvd-3sdBL@google.com>
-	 <8f070910-2b2e-425d-995e-dfa03a7695de@intel.com>
-	 <ZZgsipXoXTKyvCZT@google.com>
-	 <9abd8400d25835dd2a6fd41b0104e3c666ee8a13.camel@intel.com>
-	 <CALMp9eRMoWOS5oAywQCdEsCuTkDqmsVG=Do11FkthD5amr96WA@mail.gmail.com>
-In-Reply-To: <CALMp9eRMoWOS5oAywQCdEsCuTkDqmsVG=Do11FkthD5amr96WA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.44.4-0ubuntu2 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|SA2PR11MB4956:EE_
-x-ms-office365-filtering-correlation-id: d9347710-8135-43d9-4c12-08dc0e1f60be
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: h/NJ3ZosTOztA/nvExD8Aq9okZzIrwQuI06iyQ2jkR0fiKgWy38y5/VUxwJ8rTpw8s6rMUmsT9yT+rd5hZatAMkrd8vTpAjus5pWTiKK5Bf1pAP89NCcSxvHjdi8IV4O7Mj02WXTpuA0sJ1vZPamNn4r2pNvCT4MsIesmY8fCyjNmAn9bTPY4FK2gRf/38YT3cZC516rnTRoGtl0wD7NQNrIx12EXEUfzInbdoenXn+4K2wGHf+b3FrV74xEDtyksv3PKxHAcDs5HYDI1BEuRaOetQFG0SpANihn5pdhIPwuKnSERT+R/BAibnAWnLB/oejDbSAfSsxW1aC3ORZ+IzYIHntv6UZVhVEJY+7CcxxCStWJBGhNE1aytcmq+ysfGWM9edaYcvzskRKHSPoNaSDGunDmaN3IIeTRjBShaJYrTFoaxUVwijU0TSRAPjrs5QAE01TfftdB82SXAIdW5WSxwVT7PWSXcRJ9Y6XYC6cZ7n+82Ufi2wo298A69GRUTYkm8Bz+FZxSLAfLPYfjDX5xXFtgbxMw9dIqVBowPFjn440TmJuJQsd4q+F0e/fw1LWiqvaGDkrMjhmANjNAiGzffSRb/ATvXS3tFpQfGfgaWQovlBXrK5/D3H+AYJej
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(396003)(366004)(376002)(136003)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(2616005)(26005)(5660300002)(478600001)(71200400001)(6512007)(6486002)(6506007)(38100700002)(122000001)(82960400001)(86362001)(36756003)(2906002)(4744005)(316002)(41300700001)(83380400001)(54906003)(38070700009)(76116006)(91956017)(6916009)(66446008)(66556008)(66476007)(66946007)(8676002)(8936002)(64756008)(4326008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?bitkRkhOWHY4elM1bGl0aG1LMWcwcUV2Szd0TExFMGFnNEtNeTdhMEtHYjdP?=
- =?utf-8?B?RnRJV2xXZDhYeXFsR2xqOFB4VmFPdEQyZTRQQURSTDlqenFOS3pvMURmOXh0?=
- =?utf-8?B?MVNDaWk0VFNRWWVUTlRnV0RPZ1ZhWTVHZHl1eGJ6SW4zd0h6WjI0eGoraXFO?=
- =?utf-8?B?Yk1LaTlWamgvWUhycTFYcFRMQnVuMGJKN0dyYU03QThKWVRUakZscVBpMlpo?=
- =?utf-8?B?ZnV3dXRwT3JaditzVFBnTEJ2a29RZjZjWGVlNkN2QmU4czZjK3BLSUQ0Smlt?=
- =?utf-8?B?eHVxTjR5cERESjhNYTlqUXdWblhCaVBvd2YrdFgvUGRLbDByaHFxT09JTVMv?=
- =?utf-8?B?S1pMRmdzQzNEeXZheEN3U3VRVytOSFhjTi9Ya0Q3WU5KS3Y0c1ZFQTdrTG1x?=
- =?utf-8?B?SDU4MW9BUzhIWjJ5MWJRRWcxSW1BS1FvazFHZDJwTWdLbkl0QWdOaXM3Q1Za?=
- =?utf-8?B?QmUrUnFYdGpzdlNEWUhXNFZ0Qy9HbHVQZ0U2aVlaZ0JvMm1BUVpTTHkwbFFL?=
- =?utf-8?B?QUNpVGtudlY0R0J4SlQxWXBqb241bFNVQzA3cUswRmp3a2kyWnlESDVQNzlV?=
- =?utf-8?B?dHR3UCtjSitSb2NZaythU2FEaGlXSy9ONk1nSFlQbVdodmpaaW9yMXVZZXZs?=
- =?utf-8?B?WmFkZ3M0QXF0aG1Za1NIV1AyREpSZnkwT3B5a3M2OHpGdjZZYmE4QWdGV3or?=
- =?utf-8?B?MnFPY3RHenFaZThQWEpacjk1bnBNck9WM0s4cUo1enV0dXBEb1E4UVdHKzJ5?=
- =?utf-8?B?dkFvSFNqUC9qN2V1YlJ5UUcvbmJaWnZab2swSHdzV3dUYnoybU1mdEFtWWxp?=
- =?utf-8?B?YlBGd1VoL1hTUTdXUHpDWmRCUnYyVnNubWxCNnh1eGFWNndVbW01VVRHak0r?=
- =?utf-8?B?cjA4ZHJlMElyQyszck9CNlJpMGRqZU1ybER2Z0JXQm1IMzRacnVxSFJpampo?=
- =?utf-8?B?SXFDKzZKYlRoMXRaeDNxSU92VVpiaUx2dDZXZjI4VDRraDUvNnhiNnFZMGhw?=
- =?utf-8?B?OHBBMkExUFFuU0UvdmZjNkdGOCtXdnMweUYzSmJmdzd4NXB1c0lQdk9QL3dr?=
- =?utf-8?B?L2RQWUczMUZ6dkhyK2EzMVZLYnp5VlhXOXVsZWhpVGdpWUgxYm9jM1B2L1d4?=
- =?utf-8?B?bEo2VE1kdEIvaXJlbHhFQkIwZUVVczlEQlF4QXFoa1J3NFltMGx0SjZSRXJ3?=
- =?utf-8?B?QndVVW93MlNkVW1MbUNXK2xrV1Z2M0YyMHEwOVJPQ0lKelljMUZaYnNhbUN1?=
- =?utf-8?B?Qktua01ZanJGamJta2IvNEpVbUxOWFQvWDZnMStycGFSUTNwSkdWaDBLMHpy?=
- =?utf-8?B?bjB3K3hpN083WkYrTDdCOTMzeXNqQ3ZtWGs3aTFuTjcyRlljaEVsaksySnhR?=
- =?utf-8?B?SVRMTTA5UVQ1RmJTcDFOYlRQVXJVVGhNVWhtV2pBay9rN1VWVG12d09TVFhJ?=
- =?utf-8?B?UkZYWlNNTW11MGRGM0w3amFqK0FLNWFhTG8xMW8yRE52ZVhaMkc2cVpIbElG?=
- =?utf-8?B?MEFxamtQeE1wNG5GY3J0NitYQVUwSWNpY09LTUluMHhZQ2w2MGRINUswalla?=
- =?utf-8?B?ZzM1WGhmbGZnMUpaNjhYZzI0ZDB4MmEzdWxmNVNZN0FXeWRQOG1JQm1ISjhs?=
- =?utf-8?B?Wm9YcUtFWGNxbXkxd25DcURvTjhZaVpNNkVEY1NPNkRFSTFiTUlnU0h4aU1U?=
- =?utf-8?B?ZDNyTnJmeHQ4d0NVNSsrWURKR2JPV2RqV1ZtbG53Mko0bnBFNFpOSTdlM2lu?=
- =?utf-8?B?U1dsMTB0aCtpcnU5SlVBMzFnaC80OVU5eFg4aVlBa0lxVUdPZUZpcmlVTXZU?=
- =?utf-8?B?RVNBZXExc2prQkFRWGJGL1BCZmYybUVDMit1Nk9iOVhCcmdhbXZSL1VSb1Vk?=
- =?utf-8?B?aXNwdEpGNVJ5TlJrbHJrOHlxb0ovOXMyUlQ5djV0MDJFTmhKV2hHOHpOeHU4?=
- =?utf-8?B?bnQ1UlVUVHRaZElWangvVTl3QTRjaE1naFB2UVVJaEtCcHNHSkNHb2I3Tm9a?=
- =?utf-8?B?KzJ6WXRXK3N4Vnc4Qnd5ZEtjcGRsZEY0S3JwSUhjelQ5UGh2K0FTbklXdGdy?=
- =?utf-8?B?d1pBT2owNHg4SVl2bDBoZHdBRXZpdzFFNDNnZElSL3M3dTRYbnhSS2FVZzA5?=
- =?utf-8?B?MElORFNDYzljdFZIWG5XdkwxZ3MrZ3FwU0prcFdvclhwNDZGM3NWS0RaV0Mv?=
- =?utf-8?B?b2c9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BB95D429044FE94DADB957ED1DFB33A0@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="TiY+DajG";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="TiY+DajG"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 18C421F8B3;
+	Fri,  5 Jan 2024 19:04:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1704481446; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=eMG+dLQCXvidlTTg8O92qT268IeVX8E990nQkSfGYF8=;
+	b=TiY+DajGiWyQQ4L213F3AQq/TerVwcQR7Pb5EbsNeibbbZ7mAoUiQe0ppH1JyJGcZJU/0M
+	irw00jlL3xh/1tnul2Aill0HrBh/cLI9PJnTzjIuCl6SJnOLaeItT38r2cEX4akLpQs8ko
+	xzm7R4iVcmXVRVSDmNYNtHQtpzCEqBM=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1704481446; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=eMG+dLQCXvidlTTg8O92qT268IeVX8E990nQkSfGYF8=;
+	b=TiY+DajGiWyQQ4L213F3AQq/TerVwcQR7Pb5EbsNeibbbZ7mAoUiQe0ppH1JyJGcZJU/0M
+	irw00jlL3xh/1tnul2Aill0HrBh/cLI9PJnTzjIuCl6SJnOLaeItT38r2cEX4akLpQs8ko
+	xzm7R4iVcmXVRVSDmNYNtHQtpzCEqBM=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E01B3136F5;
+	Fri,  5 Jan 2024 19:04:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Ya0rNqVSmGWRZwAAD6G6ig
+	(envelope-from <dsterba@suse.com>); Fri, 05 Jan 2024 19:04:05 +0000
+Date: Fri, 5 Jan 2024 20:03:53 +0100
+From: David Sterba <dsterba@suse.com>
+To: torvalds@linux-foundation.org
+Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Btrfs updates for 6.8
+Message-ID: <cover.1704481157.git.dsterba@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9347710-8135-43d9-4c12-08dc0e1f60be
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jan 2024 18:51:50.9328
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 18avsFztGuKbgqD3ud67FOQLFL4oRXtvQZnJrOKbFW5iyvjNyItw+D21dhdnSGaznGMpr5qwR6/k7wE7qMdmQsp++5bPgL4zY49GU0Nec9o=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB4956
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Level: 
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -3.30
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 RCPT_COUNT_THREE(0.00)[3];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 TO_DN_NONE(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 MID_CONTAINS_FROM(1.00)[];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Flag: NO
 
-T24gRnJpLCAyMDI0LTAxLTA1IGF0IDEwOjA5IC0wODAwLCBKaW0gTWF0dHNvbiB3cm90ZToNCj4g
-PiAzLiBUYXNrIHN3aXRjaGluZw0KPiANCj4gU2lnaC4gS1ZNIGlzIGZvcmNlZCB0byBlbXVsYXRl
-IHRhc2sgc3dpdGNoLCBiZWNhdXNlIHRoZSBoYXJkd2FyZSBpcw0KPiBpbmNhcGFibGUgb2Ygdmly
-dHVhbGl6aW5nIGl0LiBIb3cgaGFyZCB3b3VsZCBpdCBiZSB0byBtYWtlIEtWTSdzDQo+IHRhc2st
-c3dpdGNoIGVtdWxhdGlvbiBDRVQtYXdhcmU/DQoNCihJIGFtIG5vdCB0b28gZmFtaWxpYXIgd2l0
-aCB0aGlzIHBhcnQgb2YgdGhlIGFyY2gpLg0KDQpTZWUgU0RNIFZvbCAzYSwgY2hhcHRlciA3LjMs
-IG51bWJlciA4IGFuZCAxNS4gVGhlIGJlaGF2aW9yIGlzIGFyb3VuZA0KYWN0dWFsIHRhc2sgc3dp
-dGNoaW5nLiBBdCBmaXJzdCBnbGFuY2UsIGl0IGxvb2tzIGFubm95aW5nIGF0IGxlYXN0LiBJdA0K
-d291bGQgbmVlZCB0byBkbyBhIENNUFhDSEcgdG8gZ3Vlc3QgbWVtb3J5IGF0IHNvbWUgcG9pbnRz
-IGFuZCB0YWtlIGNhcmUNCnRvIG5vdCBpbXBsZW1lbnQgdGhlICJDb21wbGV4IFNoYWRvdy1TdGFj
-ayBVcGRhdGVzIiBiZWhhdmlvci4NCg0KQnV0LCB3b3VsZCBhbnlvbmUgdXNlIGl0PyBJJ20gbm90
-IGF3YXJlIG9mIGFueSAzMiBiaXQgc3VwZXJ2aXNvciBzaGFkb3cNCnN0YWNrIHN1cHBvcnQgb3V0
-IHRoZXJlLiBTbyBtYXliZSBpdCBpcyBvayB0byBqdXN0IHB1bnQgdG8gdXNlcnNwYWNlIGluDQp0
-aGlzIGNhc2U/DQoNCg0K
+Hi,
+
+there are no exciting changes for users, it's been mostly API
+conversions and some fixes or refactoring.  The mount API conversion is
+a base for future improvements that would come with VFS. Metadata
+processing has been converted to folios, not yet enabling the large
+folios but it's one patch away once everything gets tested enough.
+
+There are possible minor merge conflicts reported by linux-next.
+Please pull, thanks.
+
+Core changes:
+
+- convert extent buffers to folios
+  - direct API conversion where possible
+  - performance can drop by a few percent on metadata heavy workloads,
+    the folio sizes are not constant and the calculations add up in the
+    item helpers
+  - both regular and subpage modes
+  - data cannot be converted yet, we need to port that to iomap and
+    there are some other generic changes required
+
+- convert mount to the new API, there should be no user visible change
+  - options deprecated long time ago have been removed: inode_cache,
+    recovery
+  - the new logic that splits mount to two phases slightly changes
+    timing of device scanning for multi-device filesystems
+  - LSM options will now work (like for selinux), previous fix attempt
+    https://lore.kernel.org/selinux/20210316144823.2188946-1-omosnace@redhat.com/
+
+- convert delayed nodes radix tree to xarray, preserving the
+  preload-like logic that still allows to allocate with GFP_NOFS
+
+- more validation of sysfs value of scrub_speed_max
+
+- refactor chunk map structure, reduce size and improve performance
+
+- extent map refactoring, smaller data structures, improved performance
+
+- reduce size of struct extent_io_tree, embedded in several structures
+
+- temporary pages used for compression are cached and attached to a
+  shrinker, this may slightly improve performance
+
+- in zoned mode, remove redirty extent buffer tracking, zeros are
+  written in case an out-of-order is detected and proper data are
+  written to the actual write pointer
+
+- cleanups, refactoring, error message improvements, updated tests
+
+- verify and update branch name or tag
+- remove unwanted text
+
+----------------------------------------------------------------
+The following changes since commit 3f7168591ebf7bbdb91797d02b1afaf00a4289b1:
+
+  Merge tag '6.7-rc5-smb3-client-fixes' of git://git.samba.org/sfrench/cifs-2.6 (2023-12-14 19:57:42 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.8-tag
+
+for you to fetch changes up to e94dfb7a2935cb91faca88bf7136177d1ce0dda8:
+
+  btrfs: pass btrfs_io_geometry into btrfs_max_io_len (2023-12-15 23:03:59 +0100)
+
+----------------------------------------------------------------
+Christian Brauner (1):
+      fs: indicate request originates from old mount API
+
+David Disseldorp (1):
+      btrfs: sysfs: validate scrub_speed_max value
+
+David Sterba (15):
+      btrfs: use page alloc/free wrappers for compression pages
+      btrfs: use shrinker for compression page pool
+      btrfs: scrub: remove unused scrub_ctx::sectors_per_bio
+      btrfs: remove unused btrfs_ordered_extent::outstanding_isize
+      btrfs: raid56: remove unused btrfs_plug_cb::work
+      btrfs: remove unused definition of tree_entry in extent-io-tree.c
+      btrfs: remove unused btrfs_root::type
+      btrfs: move lockdep class setting out of extent_io_tree_init
+      btrfs: drop error message in extent_io_tree insert_state()
+      btrfs: constify fs_info parameter in __btrfs_panic()
+      btrfs: enhance extent_io_tree error reports
+      btrfs: always set extent_io_tree::inode and drop fs_info
+      btrfs: allocate btrfs_inode::file_extent_tree only without NO_HOLES
+      btrfs: fix typos found by codespell
+      btrfs: switch btrfs_root::delayed_nodes_tree to xarray from radix-tree
+
+Filipe Manana (22):
+      btrfs: remove duplicate btrfs_clear_buffer_dirty() prototype from disk-io.h
+      btrfs: remove log_extents_lock and logged_list from struct btrfs_root
+      btrfs: use bool for return type of btrfs_block_can_be_shared()
+      btrfs: make the logic from btrfs_block_can_be_shared() easier to read
+      btrfs: mark sanity checks when getting chunk map as unlikely
+      btrfs: split assert into two different asserts when removing block group
+      btrfs: unexport extent_map_block_end()
+      btrfs: use btrfs_next_item() at scrub.c:find_first_extent_item()
+      btrfs: use a dedicated data structure for chunk maps
+      btrfs: remove stripe size local variable from insert_dev_extents()
+      btrfs: remove no longer used EXTENT_MAP_DELALLOC block start value
+      btrfs: assert extent map is not in a list when setting it up
+      btrfs: tests: fix error messages for test case 4 of extent map tests
+      btrfs: tests: do not ignore NULL extent maps for extent maps tests
+      btrfs: tests: print all values as decimal in messages for extent map tests
+      btrfs: unexport add_extent_mapping()
+      btrfs: remove redundant value assignment at btrfs_add_extent_mapping()
+      btrfs: log messages at unpin_extent_range() during unexpected cases
+      btrfs: avoid useless rbtree iterations when attempting to merge extent map
+      btrfs: make extent_map_end() argument const
+      btrfs: refactor mergable_maps() for more readability
+      btrfs: use the flags of an extent map to identify the compression type
+
+Johannes Thumshirn (18):
+      btrfs: rename EXTENT_BUFFER_NO_CHECK to EXTENT_BUFFER_ZONED_ZEROOUT
+      btrfs: zoned: don't clear dirty flag of extent buffer
+      btrfs: remove now unneeded btrfs_redirty_list_add
+      btrfs: use memset_page instead of opencoding it
+      btrfs: reflow btrfs_free_tree_block
+      btrfs: factor out helper for single device IO check
+      btrfs: re-introduce struct btrfs_io_geometry
+      btrfs: factor out block-mapping for RAID0
+      btrfs: factor out RAID1 block mapping
+      btrfs: factor out block mapping for DUP profiles
+      btrfs: factor out block mapping for RAID10
+      btrfs: reduce scope of data_stripes in btrfs_map_block
+      btrfs: factor out block mapping for RAID5/6
+      btrfs: factor out block mapping for single profiles
+      btrfs: change block mapping to switch/case in btrfs_map_block
+      btrfs: open code set_io_stripe for RAID56
+      btrfs: pass struct btrfs_io_geometry to set_io_stripe
+      btrfs: pass btrfs_io_geometry into btrfs_max_io_len
+
+Josef Bacik (20):
+      btrfs: split out the mount option validation code into its own helper
+      btrfs: set default compress type at btrfs_init_fs_info time
+      btrfs: move space cache settings into open_ctree
+      btrfs: do not allow free space tree rebuild on extent tree v2
+      btrfs: split out ro->rw and rw->ro helpers into their own functions
+      btrfs: add a NOSPACECACHE mount option flag
+      btrfs: add fs_parameter definitions
+      btrfs: add parse_param callback for the new mount API
+      btrfs: add fs context handling functions
+      btrfs: add reconfigure callback for fs_context
+      btrfs: add get_tree callback for new mount API
+      btrfs: handle the ro->rw transition for mounting different subvolumes
+      btrfs: switch to the new mount API
+      btrfs: move the device specific mount options to super.c
+      btrfs: remove old mount API code
+      btrfs: move one shot mount option clearing to super.c
+      btrfs: set clear_cache if we use usebackuproot
+      btrfs: remove code for inode_cache and recovery mount options
+      btrfs: cache that we don't have security.capability set
+      btrfs: don't double put our subpage reference in alloc_extent_buffer
+
+Qu Wenruo (12):
+      btrfs: do not utilize goto to implement delayed inode ref deletion
+      btrfs: migrate to use folio private instead of page private
+      btrfs: allow extent buffer helpers to skip cross-page handling
+      btrfs: fix mismatching parameter names for btrfs_get_extent()
+      btrfs: refactor alloc_extent_buffer() to allocate-then-attach method
+      btrfs: migrate extent_buffer::pages[] to folio
+      btrfs: cleanup metadata page pointer usage
+      btrfs: migrate get_eb_page_index() and get_eb_offset_in_page() to folios
+      btrfs: migrate subpage code to folio interfaces
+      btrfs: migrate various end io functions to folios
+      btrfs: migrate eb_bitmap_offset() to folio interfaces
+      btrfs: migrate btrfs_repair_io_failure() to folio interfaces
+
+ fs/btrfs/accessors.c              |   98 +-
+ fs/btrfs/accessors.h              |    4 +-
+ fs/btrfs/bio.c                    |   17 +-
+ fs/btrfs/bio.h                    |    4 +-
+ fs/btrfs/block-group.c            |  167 ++-
+ fs/btrfs/block-group.h            |    6 +-
+ fs/btrfs/btrfs_inode.h            |   10 +-
+ fs/btrfs/compression.c            |  139 ++-
+ fs/btrfs/compression.h            |    5 +
+ fs/btrfs/ctree.c                  |   63 +-
+ fs/btrfs/ctree.h                  |   17 +-
+ fs/btrfs/defrag.c                 |   13 +-
+ fs/btrfs/delayed-inode.c          |  109 +-
+ fs/btrfs/dev-replace.c            |   28 +-
+ fs/btrfs/disk-io.c                |  155 ++-
+ fs/btrfs/disk-io.h                |    3 -
+ fs/btrfs/extent-io-tree.c         |  123 +-
+ fs/btrfs/extent-io-tree.h         |   18 +-
+ fs/btrfs/extent-tree.c            |  112 +-
+ fs/btrfs/extent_io.c              | 1051 ++++++++++-------
+ fs/btrfs/extent_io.h              |   80 +-
+ fs/btrfs/extent_map.c             |  189 ++-
+ fs/btrfs/extent_map.h             |   77 +-
+ fs/btrfs/file-item.c              |   15 +-
+ fs/btrfs/file.c                   |   27 +-
+ fs/btrfs/free-space-cache.c       |    4 +-
+ fs/btrfs/fs.h                     |   18 +-
+ fs/btrfs/inode.c                  |  153 ++-
+ fs/btrfs/lru_cache.c              |    2 +-
+ fs/btrfs/lzo.c                    |    4 +-
+ fs/btrfs/messages.c               |    2 +-
+ fs/btrfs/messages.h               |    2 +-
+ fs/btrfs/ordered-data.c           |    5 +-
+ fs/btrfs/ordered-data.h           |    7 -
+ fs/btrfs/qgroup.c                 |    2 +-
+ fs/btrfs/raid56.c                 |    7 +-
+ fs/btrfs/raid56.h                 |    2 +-
+ fs/btrfs/reflink.c                |    6 +-
+ fs/btrfs/relocation.c             |    7 +-
+ fs/btrfs/scrub.c                  |   63 +-
+ fs/btrfs/subpage.c                |  371 +++---
+ fs/btrfs/subpage.h                |   82 +-
+ fs/btrfs/super.c                  | 2351 +++++++++++++++++++------------------
+ fs/btrfs/super.h                  |    5 +-
+ fs/btrfs/sysfs.c                  |    4 +
+ fs/btrfs/tests/btrfs-tests.c      |    5 +-
+ fs/btrfs/tests/btrfs-tests.h      |    1 +
+ fs/btrfs/tests/extent-io-tests.c  |    4 +-
+ fs/btrfs/tests/extent-map-tests.c |  143 +--
+ fs/btrfs/tests/inode-tests.c      |   60 +-
+ fs/btrfs/tree-checker.h           |    2 +-
+ fs/btrfs/tree-log.c               |   17 +-
+ fs/btrfs/volumes.c                |  934 +++++++++------
+ fs/btrfs/volumes.h                |   47 +-
+ fs/btrfs/xattr.c                  |   55 +-
+ fs/btrfs/zlib.c                   |    6 +-
+ fs/btrfs/zoned.c                  |   66 +-
+ fs/btrfs/zoned.h                  |   12 +-
+ fs/btrfs/zstd.c                   |    7 +-
+ fs/namespace.c                    |   11 +
+ include/trace/events/btrfs.h      |   78 +-
+ 61 files changed, 3885 insertions(+), 3190 deletions(-)
