@@ -1,124 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B6424213;
-	Fri,  5 Jan 2024 09:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53BE2421D
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 09:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HAs4YsIO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704447896; x=1735983896;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=dRCZ1S0CO2msFURA90luHjWFusP5YsJ6PzRmy9EYQoE=;
-  b=HAs4YsIOHW+Pid1jcca5wKwo6ctPSfAA65outbCZccaszkdPYOsrdm76
-   JGPi3y3xfPR5ZMT0D2ybPTPzA8os3obluvbRs38R26EHiclsnV0AUw16D
-   PCdmqiMhTPk86PBHIyEYhEsE7gAlURIa/SuclNem7XRCBtKzh+8OJB+w/
-   f/cbM8dU4HGnNzXPVQhbHXdIVLOVT2ts76277VWBgYHOy2VBOlbyncKsV
-   9ajEIQ3iUuTlLpFS1cTbCaxeAob5hXgiT531WiS21gVukJ2pfvccLdgiB
-   JHRK9rqT9iPIw0hukA260h4M/3/XJeB+vnuybrPw867bJpW3UCFU7E0MP
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="10959399"
-X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
-   d="scan'208";a="10959399"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 01:44:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="784158177"
-X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
-   d="scan'208";a="784158177"
-Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 01:44:47 -0800
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Cc: pbonzini@redhat.com,
-	seanjc@google.com,
-	olvaffe@gmail.com,
-	kevin.tian@intel.com,
-	zhiyuan.lv@intel.com,
-	zhenyu.z.wang@intel.com,
-	yongwei.ma@intel.com,
-	vkuznets@redhat.com,
-	wanpengli@tencent.com,
-	jmattson@google.com,
-	joro@8bytes.org,
-	gurchetansingh@chromium.org,
-	kraxel@redhat.com,
-	zzyiwei@google.com,
-	ankita@nvidia.com,
-	jgg@nvidia.com,
-	alex.williamson@redhat.com,
-	maz@kernel.org,
-	oliver.upton@linux.dev,
-	james.morse@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	Yan Zhao <yan.y.zhao@intel.com>,
-	Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: [PATCH 3/4] KVM: VMX: Honor guest PATs for memslots of flag KVM_MEM_NON_COHERENT_DMA
-Date: Fri,  5 Jan 2024 17:15:35 +0800
-Message-Id: <20240105091535.24760-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240105091237.24577-1-yan.y.zhao@intel.com>
-References: <20240105091237.24577-1-yan.y.zhao@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NHI3SJE3"
+Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-4673b620d95so285265137.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 01:44:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704447895; x=1705052695; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TFpseWSlXa6VJ8x1Bw84TJ22oa6aTo4EtNJAEkzn/5k=;
+        b=NHI3SJE32/yf9P1jX0pK04v0UXnSp5H5/4Kp0l/CbEQyHc/RYN77xBfVeaZXIggzx3
+         4XEvwzy7pJAWlBiBJwQUVRQvl5VlMZAaJYmbo63qRh2QNsyvvTLOdZoXHtPPhX0rtlym
+         bz6lUg7FfaQ4aGe6Cm48jZME8OORoFo52QY7WRqaAjOH/adnyLqlVvZxy5DHXPLC3Sgg
+         8X3+FnVBcZlkweY26MoQ0GNbxaajtSe9cIo/EvWRIXPTGY8xz+0LMPbNGinBPjkmRSVR
+         +U52U7xnsPUSfymXL/eRecpCGbDmkrzpPCRlhdU5aA5hNxJICbVrf6eTwFV8GsV30Q+V
+         IgfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704447895; x=1705052695;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TFpseWSlXa6VJ8x1Bw84TJ22oa6aTo4EtNJAEkzn/5k=;
+        b=xNQnRGw/I6UBqY1Y8pkjMbj7IgV7KdfbU8+Uuvjb+/XkEXOepA+J11DS9ZR1eUCUun
+         kKvmPKgY6cZHJsDps7Ifhg2VaID8yFFmm0Rkvbt8pZuSpJ12kZ2MaAfGjw2hMPwwdpGN
+         khdRESzHJjkUH//pp26aKo/AOYOBz2UXdZibg6IToGltZXCX0Sw/e0WE3iIIcVne/jFz
+         EAHlk1YRkgrCler/z/vmFcS1undGd8VMyFjrWB5GkoT/rf63Jp7wnuW0XQ4DKb8yPikD
+         E3sGqZipI/A6wy8RrMrK5z7zyd5RJwONPkhI2C61YLszkBLPKf835sXk/bzMMReyVzJv
+         9cBQ==
+X-Gm-Message-State: AOJu0YzcHTZetuv5wnluCxyrrKSJHiTQb7o8hQuW/WnPoJIpSGyXZUmy
+	owV6CawjUQmS7VkAFndk+55SQSMIum9bfi6q3ZGd1hgxy89N
+X-Google-Smtp-Source: AGHT+IH4FqpMAlNwGaCvWINiNBl7iVD5T08hKuClAAWaczaKj/nZDT0JQx8gWAWE1GGQR/8rwUprdx9cH4a66mdDW1k=
+X-Received: by 2002:a05:6102:440f:b0:467:bacf:5a6e with SMTP id
+ df15-20020a056102440f00b00467bacf5a6emr54778vsb.20.1704447895692; Fri, 05 Jan
+ 2024 01:44:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240104-rb-new-condvar-methods-v3-0-70b514fcbe52@google.com>
+ <20240104-rb-new-condvar-methods-v3-4-70b514fcbe52@google.com> <ZZc1ZcgzdRHtipr0@boqun-archlinux>
+In-Reply-To: <ZZc1ZcgzdRHtipr0@boqun-archlinux>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Fri, 5 Jan 2024 10:44:44 +0100
+Message-ID: <CAH5fLggfvRrCLOEmkAhSuEsyZdXpwb6KkvosvfOjFcw=BSvyEQ@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] rust: sync: update integer types in CondVar
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
+	Waiman Long <longman@redhat.com>, Tiago Lam <tiagolam@gmail.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Martin Rodriguez Reboredo <yakoyoku@gmail.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Honor guest PATs in the range of memslots of flag KVM_MEM_NON_COHERENT_DMA
-set no matter the value of noncoherent dma count.
+On Thu, Jan 4, 2024 at 11:48=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
+rote:
+>
+> On Thu, Jan 04, 2024 at 02:02:44PM +0000, Alice Ryhl wrote:
+> [...]
+> > -use core::ffi::c_long;
+> > +use core::ffi::{c_int, c_long, c_uint};
+>
+> core::ffi::c_uint is not needed here. And
+>
+>         use core::ptr;
+>
+> is missing (for the `ptr::mut_null()` below)
 
-Just honoring guest PATs (without honoring guest MTRRs) for memslots of
-flag KVM_MEM_NON_COHERENT_DMA is because
-- guest OS will ensure no page aliasing issue in guest side by honoring
-  guest MTRRs in guest page table.
-  Combinations like guest MTRR=WC or UC, guest PAT = WB is not allowed.
-  (at least in Linux, see pat_x_mtrr_type()).
-- guest device driver programs device hardware according to guest PATs in
-  modern platforms.
-
-Besides, we don't break down an EPT huge page if guest MTRRs in its range
-are not consistent, because
-- guest should have chosen correct guest PATs according to guest MTRRs.
-- in normal platforms, small guest pages with different PATs must
-  correspond to different TLBs though they are mapped in a huge page in
-  EPT.
-
-However, one condition may not be supported well by honoring guest PAT
-alone -- when guest MTRR=WC, guest PAT=UC-.
-By honoring guest MTRRs+PATs, the effective memory type is WC; while
-by honoring guest PATs alone, the effective memory type is UC.
-But it's arguable to support such a usage.
-
-Suggested-by: Sean Christopherson <seanjc@google.com>
-Cc: Kevin Tian <kevin.tian@intel.com>
-Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
-Tested-by: Yongwei Ma <yongwei.ma@intel.com>
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
----
- arch/x86/kvm/vmx/vmx.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 85a23765e506..99f22589fa6d 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7600,6 +7600,9 @@ static u8 vmx_get_mt_mask(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio,
- 	if (is_mmio)
- 		return MTRR_TYPE_UNCACHABLE << VMX_EPT_MT_EPTE_SHIFT;
- 
-+	if (slot->flags & KVM_MEM_NON_COHERENT_DMA)
-+		return MTRR_TYPE_WRBACK << VMX_EPT_MT_EPTE_SHIFT;
-+
- 	if (!kvm_arch_has_noncoherent_dma(vcpu->kvm))
- 		return (MTRR_TYPE_WRBACK << VMX_EPT_MT_EPTE_SHIFT) | VMX_EPT_IPAT_BIT;
- 
--- 
-2.17.1
-
+Oops, looks like I messed up this patch. Sorry about that.
