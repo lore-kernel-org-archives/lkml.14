@@ -1,162 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E622524B3A;
-	Fri,  5 Jan 2024 09:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5AA241E9;
+	Fri,  5 Jan 2024 09:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZoIf+xOC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704447790; x=1735983790;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=yLRKvEWofDO1K6stvr9i2IomNOvR/08Zs5+c4O/ibFk=;
-  b=ZoIf+xOCUja/+xF6xyOHlmjoliHWOoFCtn9VtwXxc1nrttUKQz7wnTKt
-   ePIytw3QiiMdUiiu6YH3SeX4krUlFxmjnwEyLwJXMZbCYgwFJcgR+eRdX
-   FlMVlwqictEQ8be4FDr/FQE9+XGB5BwSTMPk+Nygqcx6Vk+6E1FOoqRcK
-   aHcqxXPRM9bmjK/ef7HhTRYYpvnS3m5kVxKJp6jZneecv1mUHl59JEwE7
-   TP9cPzq0E0y6tYSoHkU6X2wP0VSD7jHcDDGbcv6aakpHGNxZl8TqGAPvC
-   C47RzxDfIPf6dOxgV84xnwlXaljEd/QEc3pp39FHhXJQqnSYQ8LvWTI95
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="401260554"
-X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
-   d="scan'208";a="401260554"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 01:43:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="814920081"
-X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
-   d="scan'208";a="814920081"
-Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 01:43:03 -0800
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Cc: pbonzini@redhat.com,
-	seanjc@google.com,
-	olvaffe@gmail.com,
-	kevin.tian@intel.com,
-	zhiyuan.lv@intel.com,
-	zhenyu.z.wang@intel.com,
-	yongwei.ma@intel.com,
-	vkuznets@redhat.com,
-	wanpengli@tencent.com,
-	jmattson@google.com,
-	joro@8bytes.org,
-	gurchetansingh@chromium.org,
-	kraxel@redhat.com,
-	zzyiwei@google.com,
-	ankita@nvidia.com,
-	jgg@nvidia.com,
-	alex.williamson@redhat.com,
-	maz@kernel.org,
-	oliver.upton@linux.dev,
-	james.morse@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	Yan Zhao <yan.y.zhao@intel.com>,
-	Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: [PATCH 1/4] KVM: Introduce a new memslot flag KVM_MEM_NON_COHERENT_DMA
-Date: Fri,  5 Jan 2024 17:13:46 +0800
-Message-Id: <20240105091346.24637-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240105091237.24577-1-yan.y.zhao@intel.com>
-References: <20240105091237.24577-1-yan.y.zhao@intel.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="W9r6lOqm"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 30349C0005;
+	Fri,  5 Jan 2024 09:43:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1704447805;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Tg+cGgMq8pxVi7pfoAS8f36ObtzxcpalFQWLzmVnS9c=;
+	b=W9r6lOqmL8erIAhcahN6PXh1q2lHaYA164FpQk/1hY9YV933Ctc2WNXqWITWFbIZt/GVyQ
+	ue5FXiRR4FU7JR4Mgsb8Ual6RDPqS5fmj22lHGc5fAlVnVNwdd7pNkOv+KdtKSZdQdn95T
+	p4p5nT2zbyzD390UG5NOBq7HpwvOY7HnmoCfZBu6uzqhW77h04fCUXpbUuM7ofAkLUfExK
+	VV2bq3El96fPzEQcbF7Pkgs542lnZz3cGKMxPPGTtUhg8vi3sKm0iP15Sbx/fZQtD0coqW
+	pSRX+ZiJ4v8o0uPYay8i8YCQ102wHPDR+aYlJ18vY+n4rohVWZZm03denybZpA==
+Date: Fri, 5 Jan 2024 10:43:23 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, yuiko.oshino@microchip.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Claudiu Beznea
+ <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH net] net: phy: micrel: populate .soft_reset for KSZ9131
+Message-ID: <20240105104323.76ddfdca@device-28.home>
+In-Reply-To: <20240105085242.1471050-1-claudiu.beznea.uj@bp.renesas.com>
+References: <20240105085242.1471050-1-claudiu.beznea.uj@bp.renesas.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Introduce a new flag KVM_MEM_NON_COHERENT_DMA to provide user space a
-channel to notify KVM that guest memory specified by the memslot may be
-accessed by noncoherent DMA devices.
+Hi Claudiu,
 
-KVM can start honoring guest memory type for this range of guest memory in
-platforms that do not always honoring guest PAT, e.g. in Intel's platform.
+On Fri,  5 Jan 2024 10:52:42 +0200
+Claudiu <claudiu.beznea@tuxon.dev> wrote:
 
-Previously, the only way to let KVM be aware of noncoherent DMA devices
-is through KVM device for VFIO pass-through devices, in which case, KVM is
-notified that all guest memory may be accessed by noncoherent DMA devices.
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 
+> The RZ/G3S SMARC Module has 2 KSZ9131 PHYs. In this setup, the KSZ9131 PHY
+> is used with the ravb Ethernet driver. It has been discovered that when
+> bringing the Ethernet interface down/up continuously, e.g., with the
+> following sh script:
+> 
+> $ while :; do ifconfig eth0 down; ifconfig eth0 up; done
+> 
+> the link speed and duplex are wrong after interrupting the bring down/up
+> operation even though the Ethernet interface is up. To recover from this
+> state the following configuration sequence is necessary (executed
+> manually):
+> 
+> $ ifconfig eth0 down
+> $ ifconfig eth0 up
+> 
+> The behavior has been identified also on the Microchip SAMA7G5-EK board
+> which runs the macb driver and uses the same PHY.
+> 
+> The order of PHY-related operations in ravb_open() is as follows:
+> ravb_open() ->
+>   ravb_phy_start() ->
+>     ravb_phy_init() ->
+>       of_phy_connect() ->
+>         phy_connect_direct() ->
+> 	  phy_attach_direct() ->
+> 	    phy_init_hw() ->
+> 	      phydev->drv->soft_reset()
+> 	      phydev->drv->config_init()
+> 	      phydev->drv->config_intr()
+> 	    phy_resume()
+> 	      kszphy_resume()
+> 
+> The order of PHY-related operations in ravb_close is as follows:
+> ravb_close() ->
+>   phy_stop() ->
+>     phy_suspend() ->
+>       kszphy_suspend() ->
+>         genphy_suspend()
+> 	  // set BMCR_PDOWN bit in MII_BMCR
+> 
+> In genphy_suspend() setting the BMCR_PDWN bit in MII_BMCR switches the PHY
+> to Software Power-Down (SPD) mode (according to the KSZ9131 datasheet).
+> Thus, when opening the interface after it has been  previously closed (via
+> ravb_close()), the phydev->drv->config_init() and
+> phydev->drv->config_intr() reach the KSZ9131 PHY driver via the
+> ksz9131_config_init() and kszphy_config_intr() functions.
+> 
+> KSZ9131 specifies that the MII management interface remains operational
+> during SPD (Software Power-Down), but (according to manual):
+> - Only access to the standard registers (0 through 31) is supported.
+> - Access to MMD address spaces other than MMD address space 1 is possible
+>   if the spd_clock_gate_override bit is set.
+> - Access to MMD address space 1 is not possible.
+> 
+> The spd_clock_gate_override bit is not used in the KSZ9131 driver.
+> 
+> ksz9131_config_init() configures RGMII delay, pad skews and LEDs by
+> accessesing MMD registers other than those in address space 1.
+> 
+> The datasheet for the KSZ9131 does not specify what happens if registers
+> from an unsupported address space are accessed while the PHY is in SPD.
+> 
+> To fix the issue the .soft_reset method has been instantiated for KSZ9131,
+> too. This resets the PHY to the default state before doing any
+> configurations to it, thus switching it out of SPD.
+> 
+> Fixes: bff5b4b37372 ("net: phy: micrel: add Microchip KSZ9131 initial driver")
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> ---
+>  drivers/net/phy/micrel.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+> index 08e3915001c3..f31f03dd87dd 100644
+> --- a/drivers/net/phy/micrel.c
+> +++ b/drivers/net/phy/micrel.c
+> @@ -4842,6 +4842,7 @@ static struct phy_driver ksphy_driver[] = {
+>  	.flags		= PHY_POLL_CABLE_TEST,
+>  	.driver_data	= &ksz9131_type,
+>  	.probe		= kszphy_probe,
+> +	.soft_reset	= genphy_soft_reset,
+>  	.config_init	= ksz9131_config_init,
+>  	.config_intr	= kszphy_config_intr,
+>  	.config_aneg	= ksz9131_config_aneg,
 
-To avoid complication, flag KVM_MEM_NON_COHERENT_DMA is not allowed to be
-dynamically modified for a memslot.
+This looks good to me. Thanks for the detailed analysis,
 
-A KVM_CAP_USER_CONFIGURE_NONCOHERENT_DMA is added to let user space know if
-this new memslot flag is supported in KVM.
+Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 
-Cc: Kevin Tian <kevin.tian@intel.com>
-Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
-Tested-by: Yongwei Ma <yongwei.ma@intel.com>
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
----
- include/uapi/linux/kvm.h | 2 ++
- virt/kvm/kvm_main.c      | 8 ++++++--
- 2 files changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index b1f92a0edc35..4cb615e46488 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -46,6 +46,7 @@ struct kvm_userspace_memory_region2 {
- #define KVM_MEM_LOG_DIRTY_PAGES	(1UL << 0)
- #define KVM_MEM_READONLY	(1UL << 1)
- #define KVM_MEM_GUEST_MEMFD	(1UL << 2)
-+#define KVM_MEM_NON_COHERENT_DMA (1UL << 3)
- 
- /* for KVM_IRQ_LINE */
- struct kvm_irq_level {
-@@ -1155,6 +1156,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_MEMORY_ATTRIBUTES 233
- #define KVM_CAP_GUEST_MEMFD 234
- #define KVM_CAP_VM_TYPES 235
-+#define KVM_CAP_USER_CONFIGURE_NONCOHERENT_DMA 236
- 
- #ifdef KVM_CAP_IRQ_ROUTING
- 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index acd67fb40183..6d44dcf7322d 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1607,7 +1607,7 @@ static void kvm_replace_memslot(struct kvm *kvm,
-  * only allows these.
-  */
- #define KVM_SET_USER_MEMORY_REGION_V1_FLAGS \
--	(KVM_MEM_LOG_DIRTY_PAGES | KVM_MEM_READONLY)
-+	(KVM_MEM_LOG_DIRTY_PAGES | KVM_MEM_READONLY | KVM_MEM_NON_COHERENT_DMA)
- 
- static int check_memory_region_flags(struct kvm *kvm,
- 				     const struct kvm_userspace_memory_region2 *mem)
-@@ -1625,6 +1625,8 @@ static int check_memory_region_flags(struct kvm *kvm,
- 	valid_flags |= KVM_MEM_READONLY;
- #endif
- 
-+	valid_flags |= KVM_MEM_NON_COHERENT_DMA;
-+
- 	if (mem->flags & ~valid_flags)
- 		return -EINVAL;
- 
-@@ -2095,7 +2097,8 @@ int __kvm_set_memory_region(struct kvm *kvm,
- 			return -EINVAL;
- 		if ((mem->userspace_addr != old->userspace_addr) ||
- 		    (npages != old->npages) ||
--		    ((mem->flags ^ old->flags) & KVM_MEM_READONLY))
-+		    ((mem->flags ^ old->flags) &
-+		     (KVM_MEM_READONLY | KVM_MEM_NON_COHERENT_DMA)))
- 			return -EINVAL;
- 
- 		if (base_gfn != old->base_gfn)
-@@ -4822,6 +4825,7 @@ static int kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
- 	case KVM_CAP_USER_MEMORY2:
- 	case KVM_CAP_DESTROY_MEMORY_REGION_WORKS:
- 	case KVM_CAP_JOIN_MEMORY_REGIONS_WORKS:
-+	case KVM_CAP_USER_CONFIGURE_NONCOHERENT_DMA:
- 	case KVM_CAP_INTERNAL_ERROR_DATA:
- #ifdef CONFIG_HAVE_KVM_MSI
- 	case KVM_CAP_SIGNAL_MSI:
--- 
-2.17.1
-
+Maxime
