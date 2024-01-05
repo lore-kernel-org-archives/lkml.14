@@ -1,592 +1,603 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E4E360AF;
-	Fri,  5 Jan 2024 20:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0737360BB
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 20:39:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="jcelYoJS"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4058MNZx030822;
-	Fri, 5 Jan 2024 12:38:54 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	pfpt0220; bh=MijqZi1wrE+yTeUujBctxsmL4qFW+pBnYPtV29nxOqA=; b=jce
-	lYoJSWwQaL99K6/fEcBkAsj/4L2CkEDY31oEyUYUyNqbuIQPnnIdT/qpRv935KcV
-	fl9QBbfwXHckmMqqpr3p3bHe2QOvdMxqYcjOTxvmJK2tCcUNVTdYABzrNAbBVcQH
-	Qc3VWPhiH5bLoEii9iNUHgOqz3V0beL+RojVhow8LBiOc+/jL4+Mq8B9BkHpiKBg
-	oKXRiKTaLi4XkWYGtKdqRXtM9YYub6oLkO9MvbyHju1rZzP2SKIsUFIUoEyks/rj
-	QqZUPyVoLzjLVXtehvWLlJ2o4Kq/ncqhr207gtnf984880a2iFhivqdtccImyP+p
-	agD0GqU4tBWenfePrqQ==
-Received: from dc5-exch02.marvell.com ([199.233.59.182])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3vee6xa44q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-	Fri, 05 Jan 2024 12:38:54 -0800 (PST)
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Fri, 5 Jan
- 2024 12:38:52 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
- Transport; Fri, 5 Jan 2024 12:38:52 -0800
-Received: from ubuntu-PowerEdge-T110-II.sclab.marvell.com (unknown [10.106.27.86])
-	by maili.marvell.com (Postfix) with ESMTP id 454613F707B;
-	Fri,  5 Jan 2024 12:38:52 -0800 (PST)
-From: Shinas Rasheed <srasheed@marvell.com>
-To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <hgani@marvell.com>, <vimleshk@marvell.com>, <sedara@marvell.com>,
-        <srasheed@marvell.com>, <egallen@redhat.com>, <mschmidt@redhat.com>,
-        <pabeni@redhat.com>, <kuba@kernel.org>, <horms@kernel.org>,
-        <wizhao@redhat.com>, <kheib@redhat.com>, <konguyen@redhat.com>,
-        Veerasenareddy Burru <vburru@marvell.com>,
-        Satananda Burla
-	<sburla@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet
-	<edumazet@google.com>
-Subject: [PATCH net-next v3 4/8] octeon_ep_vf: add Tx/Rx ring resource setup and cleanup
-Date: Fri, 5 Jan 2024 12:38:19 -0800
-Message-ID: <20240105203823.2953604-5-srasheed@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240105203823.2953604-1-srasheed@marvell.com>
-References: <20240105203823.2953604-1-srasheed@marvell.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PT0SKvqN"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40e36e29685so12719355e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 12:39:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704487153; x=1705091953; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=g1tGMZkZ9pe+vGPxtPhPtPgSrfYlIn/2+AsR9dEH15s=;
+        b=PT0SKvqN5NMUR2Uo5YR//n90QHXZbNepum/wOtDQwLrBnsnLmYG5JM+6oGda9/ea8w
+         dShWO8lyWGFanLswwqjxydtL/U8GdgZ8P48khy6q/IyfjXDVQGHB5p8XE3krDXiRYg4h
+         ctzxjETyGRX9uXMomAjRuyh0yVG9Fz33Ruia8Ng6gWy+B5zPAARRb5NslKSlW0x317bj
+         iv/Ejtt2x+7La39zUFiQ8hkNzdq01aKAtHM4GpRPKk5wvnnglxwu2F3fMB5k9f09zrOn
+         hq1KdIeyD+DzSK7ZgcmWqm99KsLygFx1OS2N9yCxMzxKFLiO72nuWPcVKaqjRxD+Dm2E
+         RtXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704487153; x=1705091953;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=g1tGMZkZ9pe+vGPxtPhPtPgSrfYlIn/2+AsR9dEH15s=;
+        b=eytLItTR5w7927HxntnIwhZX7+C6s8eoHUFd+T0su5+eutlgGU7XCI0b1j2ijGs/Gh
+         bUd6uVx3KUgPhAAKQMidzirs3pXZOrsYOuJ+zld6k8nODnRw+GQFGH9PjcveVAAiLPWS
+         a6pGRuqCsTL63jRnBL1HiPzKP+HJzpGVvMw4k4VKRroU1UT72pGS1mz9hQlFl4qND46O
+         PE1lIbFSrd6Cd1tExd0HHmUXur/q5vuhc4MyBvs+6LIXCC/0x95lvPFJg2WuCqav1iOF
+         WoEO0l+3zCagukCjGnOAW2oXrtPOgPG++S9TOUcxQl8+6nSeHw6vQWdF4L35ScwfHFu1
+         FpBQ==
+X-Gm-Message-State: AOJu0YwfK4hiv3OVgjlpb6w33KY89JyatTylDO4s3kiKwXg9TpopRmNC
+	LJBQLCscOz0wWkDniQYC0YwrTHLBBKcNyg==
+X-Google-Smtp-Source: AGHT+IH0jYbmQMnsF+Mh1NQJEEChzS6BFlV0KMY99yVUgbUL5EV7K8y8FwT+QLPgqw65wIUATEluvg==
+X-Received: by 2002:a05:600c:a05:b0:40d:8068:f1ac with SMTP id z5-20020a05600c0a0500b0040d8068f1acmr38819wmp.21.1704487153186;
+        Fri, 05 Jan 2024 12:39:13 -0800 (PST)
+Received: from [127.0.1.1] ([37.228.218.3])
+        by smtp.gmail.com with ESMTPSA id hn3-20020a05600ca38300b0040e398f8cafsm2283890wmb.31.2024.01.05.12.39.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jan 2024 12:39:12 -0800 (PST)
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Date: Fri, 05 Jan 2024 20:39:06 +0000
+Subject: [PATCH v2 2/4] media: dt-bindings: media: camss: Add
+ qcom,sc8280xp-camss binding
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: M7xWfuf0uqsTbWSTTwuuI3jGrJAmYs4r
-X-Proofpoint-ORIG-GUID: M7xWfuf0uqsTbWSTTwuuI3jGrJAmYs4r
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240105-linux-next-24-01-02-sc8280xp-camss-core-dtsi-v2-2-7a57b8b07398@linaro.org>
+References: <20240105-linux-next-24-01-02-sc8280xp-camss-core-dtsi-v2-0-7a57b8b07398@linaro.org>
+In-Reply-To: <20240105-linux-next-24-01-02-sc8280xp-camss-core-dtsi-v2-0-7a57b8b07398@linaro.org>
+To: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13-dev-4e032
 
-Implement Tx/Rx ring resource allocation and cleanup.
+Add bindings for qcom,sc8280xp-camss in order to support the camera
+subsystem for sc8280xp as found in the Lenovo x13s Laptop.
 
-Signed-off-by: Shinas Rasheed <srasheed@marvell.com>
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
-V3:
-  - Moved vfree and vzalloc null pointer casting corrections to this
-    patch
-  - Corrected return values to follow standard kernel error codes
+ .../bindings/media/qcom,sc8280xp-camss.yaml        | 512 +++++++++++++++++++++
+ 1 file changed, 512 insertions(+)
 
-V2: https://lore.kernel.org/all/20231223134000.2906144-5-srasheed@marvell.com/
-  - No changes
+diff --git a/Documentation/devicetree/bindings/media/qcom,sc8280xp-camss.yaml b/Documentation/devicetree/bindings/media/qcom,sc8280xp-camss.yaml
+new file mode 100644
+index 000000000000..c0bc31709873
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/qcom,sc8280xp-camss.yaml
+@@ -0,0 +1,512 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/qcom,sc8280xp-camss.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm SC8280XP Camera Subsystem (CAMSS)
++
++maintainers:
++  - Bryan O'Donoghue <bryan.odonoghue@linaro.org>
++
++description: |
++  The CAMSS IP is a CSI decoder and ISP present on Qualcomm platforms.
++
++properties:
++  compatible:
++    const: qcom,sc8280xp-camss
++
++  clocks:
++    maxItems: 40
++
++  clock-names:
++    items:
++      - const: camnoc_axi
++      - const: cpas_ahb
++      - const: csiphy0
++      - const: csiphy0_timer
++      - const: csiphy1
++      - const: csiphy1_timer
++      - const: csiphy2
++      - const: csiphy2_timer
++      - const: csiphy3
++      - const: csiphy3_timer
++      - const: vfe0_axi
++      - const: vfe0
++      - const: vfe0_cphy_rx
++      - const: vfe0_csid
++      - const: vfe1_axi
++      - const: vfe1
++      - const: vfe1_cphy_rx
++      - const: vfe1_csid
++      - const: vfe2_axi
++      - const: vfe2
++      - const: vfe2_cphy_rx
++      - const: vfe2_csid
++      - const: vfe3_axi
++      - const: vfe3
++      - const: vfe3_cphy_rx
++      - const: vfe3_csid
++      - const: vfe_lite0
++      - const: vfe_lite0_cphy_rx
++      - const: vfe_lite0_csid
++      - const: vfe_lite1
++      - const: vfe_lite1_cphy_rx
++      - const: vfe_lite1_csid
++      - const: vfe_lite2
++      - const: vfe_lite2_cphy_rx
++      - const: vfe_lite2_csid
++      - const: vfe_lite3
++      - const: vfe_lite3_cphy_rx
++      - const: vfe_lite3_csid
++      - const: gcc_axi_hf
++      - const: gcc_axi_sf
++
++  interrupts:
++    maxItems: 20
++
++  interrupt-names:
++    items:
++      - const: csid1_lite
++      - const: vfe_lite1
++      - const: csiphy3
++      - const: csid0
++      - const: vfe0
++      - const: csid1
++      - const: vfe1
++      - const: csid0_lite
++      - const: vfe_lite0
++      - const: csiphy0
++      - const: csiphy1
++      - const: csiphy2
++      - const: csid2
++      - const: vfe2
++      - const: csid3_lite
++      - const: csid2_lite
++      - const: vfe_lite3
++      - const: vfe_lite2
++      - const: csid3
++      - const: vfe3
++
++  iommus:
++    maxItems: 16
++
++  interconnects:
++    maxItems: 4
++
++  interconnect-names:
++    items:
++      - const: cam_ahb
++      - const: cam_hf_mnoc
++      - const: cam_sf_mnoc
++      - const: cam_sf_icp_mnoc
++
++  power-domains:
++    items:
++      - description: IFE0 GDSC - Image Front End, Global Distributed Switch Controller.
++      - description: IFE1 GDSC - Image Front End, Global Distributed Switch Controller.
++      - description: IFE2 GDSC - Image Front End, Global Distributed Switch Controller.
++      - description: IFE3 GDSC - Image Front End, Global Distributed Switch Controller.
++      - description: Titan Top GDSC - Titan ISP Block, Global Distributed Switch Controller.
++
++  power-domain-names:
++    items:
++      - const: ife0
++      - const: ife1
++      - const: ife2
++      - const: ife3
++      - const: top
++
++  ports:
++    $ref: /schemas/graph.yaml#/properties/ports
++
++    description:
++      CSI input ports.
++
++    properties:
++      port@0:
++        $ref: /schemas/graph.yaml#/$defs/port-base
++        unevaluatedProperties: false
++        description:
++          Input port for receiving CSI data from CSIPHY0.
++
++        properties:
++          endpoint:
++            $ref: video-interfaces.yaml#
++            unevaluatedProperties: false
++
++            properties:
++              clock-lanes:
++                maxItems: 1
++
++              data-lanes:
++                minItems: 1
++                maxItems: 4
++
++            required:
++              - clock-lanes
++              - data-lanes
++
++      port@1:
++        $ref: /schemas/graph.yaml#/$defs/port-base
++        unevaluatedProperties: false
++        description:
++          Input port for receiving CSI data from CSIPHY1.
++
++        properties:
++          endpoint:
++            $ref: video-interfaces.yaml#
++            unevaluatedProperties: false
++
++            properties:
++              clock-lanes:
++                maxItems: 1
++
++              data-lanes:
++                minItems: 1
++                maxItems: 4
++
++            required:
++              - clock-lanes
++              - data-lanes
++
++      port@2:
++        $ref: /schemas/graph.yaml#/$defs/port-base
++        unevaluatedProperties: false
++        description:
++          Input port for receiving CSI data from CSIPHY2.
++
++        properties:
++          endpoint:
++            $ref: video-interfaces.yaml#
++            unevaluatedProperties: false
++
++            properties:
++              clock-lanes:
++                maxItems: 1
++
++              data-lanes:
++                minItems: 1
++                maxItems: 4
++
++            required:
++              - clock-lanes
++              - data-lanes
++
++      port@3:
++        $ref: /schemas/graph.yaml#/$defs/port-base
++        unevaluatedProperties: false
++        description:
++          Input port for receiving CSI data from CSIPHY3.
++
++        properties:
++          endpoint:
++            $ref: video-interfaces.yaml#
++            unevaluatedProperties: false
++
++            properties:
++              clock-lanes:
++                maxItems: 1
++
++              data-lanes:
++                minItems: 1
++                maxItems: 4
++
++            required:
++              - clock-lanes
++              - data-lanes
++
++  reg:
++    maxItems: 20
++
++  reg-names:
++    items:
++      - const: csiphy2
++      - const: csiphy3
++      - const: csiphy0
++      - const: csiphy1
++      - const: vfe0
++      - const: csid0
++      - const: vfe1
++      - const: csid1
++      - const: vfe2
++      - const: csid2
++      - const: vfe_lite0
++      - const: csid0_lite
++      - const: vfe_lite1
++      - const: csid1_lite
++      - const: vfe_lite2
++      - const: csid2_lite
++      - const: vfe_lite3
++      - const: csid3_lite
++      - const: vfe3
++      - const: csid3
++
++  vdda-phy-supply:
++    description:
++      Phandle to a regulator supply to PHY core block.
++
++  vdda-pll-supply:
++    description:
++      Phandle to 1.8V regulator supply to PHY refclk pll block.
++
++required:
++  - clock-names
++  - clocks
++  - compatible
++  - interconnects
++  - interconnect-names
++  - interrupts
++  - interrupt-names
++  - iommus
++  - power-domains
++  - power-domain-names
++  - reg
++  - reg-names
++  - vdda-phy-supply
++  - vdda-pll-supply
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/qcom,gcc-sc8280xp.h>
++    #include <dt-bindings/clock/qcom,sc8280xp-camcc.h>
++    #include <dt-bindings/interconnect/qcom,sc8280xp.h>
++    #include <dt-bindings/power/qcom-rpmpd.h>
++
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        camss: camss@ac5a000 {
++            compatible = "qcom,sc8280xp-camss";
++
++            reg = <0 0x0ac5a000 0 0x2000>,
++                  <0 0x0ac5c000 0 0x2000>,
++                  <0 0x0ac65000 0 0x2000>,
++                  <0 0x0ac67000 0 0x2000>,
++                  <0 0x0acaf000 0 0x4000>,
++                  <0 0x0acb3000 0 0x1000>,
++                  <0 0x0acb6000 0 0x4000>,
++                  <0 0x0acba000 0 0x1000>,
++                  <0 0x0acbd000 0 0x4000>,
++                  <0 0x0acc1000 0 0x1000>,
++                  <0 0x0acc4000 0 0x4000>,
++                  <0 0x0acc8000 0 0x1000>,
++                  <0 0x0accb000 0 0x4000>,
++                  <0 0x0accf000 0 0x1000>,
++                  <0 0x0acd2000 0 0x4000>,
++                  <0 0x0acd6000 0 0x1000>,
++                  <0 0x0acd9000 0 0x4000>,
++                  <0 0x0acdd000 0 0x1000>,
++                  <0 0x0ace0000 0 0x4000>,
++                  <0 0x0ace4000 0 0x1000>;
++
++            reg-names = "csiphy2",
++                        "csiphy3",
++                        "csiphy0",
++                        "csiphy1",
++                        "vfe0",
++                        "csid0",
++                        "vfe1",
++                        "csid1",
++                        "vfe2",
++                        "csid2",
++                        "vfe_lite0",
++                        "csid0_lite",
++                        "vfe_lite1",
++                        "csid1_lite",
++                        "vfe_lite2",
++                        "csid2_lite",
++                        "vfe_lite3",
++                        "csid3_lite",
++                        "vfe3",
++                        "csid3";
++
++            vdda-phy-supply = <&vreg_l6d>;
++            vdda-pll-supply = <&vreg_l4d>;
++
++            interrupts = <GIC_SPI 359 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 360 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 448 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 464 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 465 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 467 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 468 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 469 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 477 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 478 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 479 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 640 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 641 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 758 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 759 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 760 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 761 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 762 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 764 IRQ_TYPE_LEVEL_HIGH>;
++
++            interrupt-names = "csid1_lite",
++                              "vfe_lite1",
++                              "csiphy3",
++                              "csid0",
++                              "vfe0",
++                              "csid1",
++                              "vfe1",
++                              "csid0_lite",
++                              "vfe_lite0",
++                              "csiphy0",
++                              "csiphy1",
++                              "csiphy2",
++                              "csid2",
++                              "vfe2",
++                              "csid3_lite",
++                              "csid2_lite",
++                              "vfe_lite3",
++                              "vfe_lite2",
++                              "csid3",
++                              "vfe3";
++
++            power-domains = <&camcc IFE_0_GDSC>,
++                            <&camcc IFE_1_GDSC>,
++                            <&camcc IFE_2_GDSC>,
++                            <&camcc IFE_3_GDSC>,
++                            <&camcc TITAN_TOP_GDSC>;
++
++            power-domain-names = "ife0",
++                                 "ife1",
++                                 "ife2",
++                                 "ife3",
++                                 "top";
++
++            clocks = <&camcc CAMCC_CAMNOC_AXI_CLK>,
++                     <&camcc CAMCC_CPAS_AHB_CLK>,
++                     <&camcc CAMCC_CSIPHY0_CLK>,
++                     <&camcc CAMCC_CSI0PHYTIMER_CLK>,
++                     <&camcc CAMCC_CSIPHY1_CLK>,
++                     <&camcc CAMCC_CSI1PHYTIMER_CLK>,
++                     <&camcc CAMCC_CSIPHY2_CLK>,
++                     <&camcc CAMCC_CSI2PHYTIMER_CLK>,
++                     <&camcc CAMCC_CSIPHY3_CLK>,
++                     <&camcc CAMCC_CSI3PHYTIMER_CLK>,
++                     <&camcc CAMCC_IFE_0_AXI_CLK>,
++                     <&camcc CAMCC_IFE_0_CLK>,
++                     <&camcc CAMCC_IFE_0_CPHY_RX_CLK>,
++                     <&camcc CAMCC_IFE_0_CSID_CLK>,
++                     <&camcc CAMCC_IFE_1_AXI_CLK>,
++                     <&camcc CAMCC_IFE_1_CLK>,
++                     <&camcc CAMCC_IFE_1_CPHY_RX_CLK>,
++                     <&camcc CAMCC_IFE_1_CSID_CLK>,
++                     <&camcc CAMCC_IFE_2_AXI_CLK>,
++                     <&camcc CAMCC_IFE_2_CLK>,
++                     <&camcc CAMCC_IFE_2_CPHY_RX_CLK>,
++                     <&camcc CAMCC_IFE_2_CSID_CLK>,
++                     <&camcc CAMCC_IFE_3_AXI_CLK>,
++                     <&camcc CAMCC_IFE_3_CLK>,
++                     <&camcc CAMCC_IFE_3_CPHY_RX_CLK>,
++                     <&camcc CAMCC_IFE_3_CSID_CLK>,
++                     <&camcc CAMCC_IFE_LITE_0_CLK>,
++                     <&camcc CAMCC_IFE_LITE_0_CPHY_RX_CLK>,
++                     <&camcc CAMCC_IFE_LITE_0_CSID_CLK>,
++                     <&camcc CAMCC_IFE_LITE_1_CLK>,
++                     <&camcc CAMCC_IFE_LITE_1_CPHY_RX_CLK>,
++                     <&camcc CAMCC_IFE_LITE_1_CSID_CLK>,
++                     <&camcc CAMCC_IFE_LITE_2_CLK>,
++                     <&camcc CAMCC_IFE_LITE_2_CPHY_RX_CLK>,
++                     <&camcc CAMCC_IFE_LITE_2_CSID_CLK>,
++                     <&camcc CAMCC_IFE_LITE_3_CLK>,
++                     <&camcc CAMCC_IFE_LITE_3_CPHY_RX_CLK>,
++                     <&camcc CAMCC_IFE_LITE_3_CSID_CLK>,
++                     <&gcc GCC_CAMERA_HF_AXI_CLK>,
++                     <&gcc GCC_CAMERA_SF_AXI_CLK>;
++
++            clock-names = "camnoc_axi",
++                          "cpas_ahb",
++                          "csiphy0",
++                          "csiphy0_timer",
++                          "csiphy1",
++                          "csiphy1_timer",
++                          "csiphy2",
++                          "csiphy2_timer",
++                          "csiphy3",
++                          "csiphy3_timer",
++                          "vfe0_axi",
++                          "vfe0",
++                          "vfe0_cphy_rx",
++                          "vfe0_csid",
++                          "vfe1_axi",
++                          "vfe1",
++                          "vfe1_cphy_rx",
++                          "vfe1_csid",
++                          "vfe2_axi",
++                          "vfe2",
++                          "vfe2_cphy_rx",
++                          "vfe2_csid",
++                          "vfe3_axi",
++                          "vfe3",
++                          "vfe3_cphy_rx",
++                          "vfe3_csid",
++                          "vfe_lite0",
++                          "vfe_lite0_cphy_rx",
++                          "vfe_lite0_csid",
++                          "vfe_lite1",
++                          "vfe_lite1_cphy_rx",
++                          "vfe_lite1_csid",
++                          "vfe_lite2",
++                          "vfe_lite2_cphy_rx",
++                          "vfe_lite2_csid",
++                          "vfe_lite3",
++                          "vfe_lite3_cphy_rx",
++                          "vfe_lite3_csid",
++                          "gcc_axi_hf",
++                          "gcc_axi_sf";
++
++
++            iommus = <&apps_smmu 0x2000 0x4e0>,
++                     <&apps_smmu 0x2020 0x4e0>,
++                     <&apps_smmu 0x2040 0x4e0>,
++                     <&apps_smmu 0x2060 0x4e0>,
++                     <&apps_smmu 0x2080 0x4e0>,
++                     <&apps_smmu 0x20e0 0x4e0>,
++                     <&apps_smmu 0x20c0 0x4e0>,
++                     <&apps_smmu 0x20a0 0x4e0>,
++                     <&apps_smmu 0x2400 0x4e0>,
++                     <&apps_smmu 0x2420 0x4e0>,
++                     <&apps_smmu 0x2440 0x4e0>,
++                     <&apps_smmu 0x2460 0x4e0>,
++                     <&apps_smmu 0x2480 0x4e0>,
++                     <&apps_smmu 0x24e0 0x4e0>,
++                     <&apps_smmu 0x24c0 0x4e0>,
++                     <&apps_smmu 0x24a0 0x4e0>;
++
++            interconnects = <&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_CAMERA_CFG 0>,
++                            <&mmss_noc MASTER_CAMNOC_HF 0 &mc_virt SLAVE_EBI1 0>,
++                            <&mmss_noc MASTER_CAMNOC_SF 0 &mc_virt SLAVE_EBI1 0>,
++                            <&mmss_noc MASTER_CAMNOC_ICP 0 &mc_virt SLAVE_EBI1 0>;
++            interconnect-names = "cam_ahb",
++                                 "cam_hf_mnoc",
++                                 "cam_sf_mnoc",
++                                 "cam_sf_icp_mnoc";
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++                    #address-cells = <1>;
++                    #size-cells = <0>;
++
++                    csiphy_ep0: endpoint@0 {
++                        reg = <0>;
++                        clock-lanes = <7>;
++                        data-lanes = <0 1>;
++                        remote-endpoint = <&sensor_ep>;
++                    };
++                };
++            };
++        };
++    };
 
-V1: https://lore.kernel.org/all/20231221092844.2885872-5-srasheed@marvell.com/
-
-
-diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_rx.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_rx.c
-index 4f1a8157ce39..330d6e72bc0b 100644
---- a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_rx.c
-+++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_rx.c
-@@ -7,10 +7,198 @@
- 
- #include <linux/pci.h>
- #include <linux/etherdevice.h>
-+#include <linux/vmalloc.h>
- 
- #include "octep_vf_config.h"
- #include "octep_vf_main.h"
- 
-+static void octep_vf_oq_reset_indices(struct octep_vf_oq *oq)
-+{
-+	oq->host_read_idx = 0;
-+	oq->host_refill_idx = 0;
-+	oq->refill_count = 0;
-+	oq->last_pkt_count = 0;
-+	oq->pkts_pending = 0;
-+}
-+
-+/**
-+ * octep_vf_oq_fill_ring_buffers() - fill initial receive buffers for Rx ring.
-+ *
-+ * @oq: Octeon Rx queue data structure.
-+ *
-+ * Return: 0, if successfully filled receive buffers for all descriptors.
-+ *         -ENOMEM, if failed to allocate a buffer or failed to map for DMA.
-+ */
-+static int octep_vf_oq_fill_ring_buffers(struct octep_vf_oq *oq)
-+{
-+	struct octep_vf_oq_desc_hw *desc_ring = oq->desc_ring;
-+	struct page *page;
-+	u32 i;
-+
-+	for (i = 0; i < oq->max_count; i++) {
-+		page = dev_alloc_page();
-+		if (unlikely(!page)) {
-+			dev_err(oq->dev, "Rx buffer alloc failed\n");
-+			goto rx_buf_alloc_err;
-+		}
-+		desc_ring[i].buffer_ptr = dma_map_page(oq->dev, page, 0,
-+						       PAGE_SIZE,
-+						       DMA_FROM_DEVICE);
-+		if (dma_mapping_error(oq->dev, desc_ring[i].buffer_ptr)) {
-+			dev_err(oq->dev,
-+				"OQ-%d buffer alloc: DMA mapping error!\n",
-+				oq->q_no);
-+			goto dma_map_err;
-+		}
-+		oq->buff_info[i].page = page;
-+	}
-+
-+	return 0;
-+
-+dma_map_err:
-+	put_page(page);
-+rx_buf_alloc_err:
-+	while (i) {
-+		i--;
-+		dma_unmap_page(oq->dev, desc_ring[i].buffer_ptr, PAGE_SIZE, DMA_FROM_DEVICE);
-+		put_page(oq->buff_info[i].page);
-+		oq->buff_info[i].page = NULL;
-+	}
-+
-+	return -ENOMEM;
-+}
-+
-+/**
-+ * octep_vf_setup_oq() - Setup a Rx queue.
-+ *
-+ * @oct: Octeon device private data structure.
-+ * @q_no: Rx queue number to be setup.
-+ *
-+ * Allocate resources for a Rx queue.
-+ */
-+static int octep_vf_setup_oq(struct octep_vf_device *oct, int q_no)
-+{
-+	struct octep_vf_oq *oq;
-+	u32 desc_ring_size;
-+
-+	oq = vzalloc(sizeof(*oq));
-+	if (!oq)
-+		goto create_oq_fail;
-+	oct->oq[q_no] = oq;
-+
-+	oq->octep_vf_dev = oct;
-+	oq->netdev = oct->netdev;
-+	oq->dev = &oct->pdev->dev;
-+	oq->q_no = q_no;
-+	oq->max_count = CFG_GET_OQ_NUM_DESC(oct->conf);
-+	oq->ring_size_mask = oq->max_count - 1;
-+	oq->buffer_size = CFG_GET_OQ_BUF_SIZE(oct->conf);
-+	oq->max_single_buffer_size = oq->buffer_size - OCTEP_VF_OQ_RESP_HW_SIZE;
-+
-+	/* When the hardware/firmware supports additional capabilities,
-+	 * additional header is filled-in by Octeon after length field in
-+	 * Rx packets. this header contains additional packet information.
-+	 */
-+	if (oct->fw_info.rx_ol_flags)
-+		oq->max_single_buffer_size -= OCTEP_VF_OQ_RESP_HW_EXT_SIZE;
-+
-+	oq->refill_threshold = CFG_GET_OQ_REFILL_THRESHOLD(oct->conf);
-+
-+	desc_ring_size = oq->max_count * OCTEP_VF_OQ_DESC_SIZE;
-+	oq->desc_ring = dma_alloc_coherent(oq->dev, desc_ring_size,
-+					   &oq->desc_ring_dma, GFP_KERNEL);
-+
-+	if (unlikely(!oq->desc_ring)) {
-+		dev_err(oq->dev,
-+			"Failed to allocate DMA memory for OQ-%d !!\n", q_no);
-+		goto desc_dma_alloc_err;
-+	}
-+
-+	oq->buff_info = vzalloc(oq->max_count * OCTEP_VF_OQ_RECVBUF_SIZE);
-+
-+	if (unlikely(!oq->buff_info)) {
-+		dev_err(&oct->pdev->dev,
-+			"Failed to allocate buffer info for OQ-%d\n", q_no);
-+		goto buf_list_err;
-+	}
-+
-+	if (octep_vf_oq_fill_ring_buffers(oq))
-+		goto oq_fill_buff_err;
-+
-+	octep_vf_oq_reset_indices(oq);
-+	oct->hw_ops.setup_oq_regs(oct, q_no);
-+	oct->num_oqs++;
-+
-+	return 0;
-+
-+oq_fill_buff_err:
-+	vfree(oq->buff_info);
-+	oq->buff_info = NULL;
-+buf_list_err:
-+	dma_free_coherent(oq->dev, desc_ring_size,
-+			  oq->desc_ring, oq->desc_ring_dma);
-+	oq->desc_ring = NULL;
-+desc_dma_alloc_err:
-+	vfree(oq);
-+	oct->oq[q_no] = NULL;
-+create_oq_fail:
-+	return -ENOMEM;
-+}
-+
-+/**
-+ * octep_vf_oq_free_ring_buffers() - Free ring buffers.
-+ *
-+ * @oq: Octeon Rx queue data structure.
-+ *
-+ * Free receive buffers in unused Rx queue descriptors.
-+ */
-+static void octep_vf_oq_free_ring_buffers(struct octep_vf_oq *oq)
-+{
-+	struct octep_vf_oq_desc_hw *desc_ring = oq->desc_ring;
-+	int  i;
-+
-+	if (!oq->desc_ring || !oq->buff_info)
-+		return;
-+
-+	for (i = 0; i < oq->max_count; i++)  {
-+		if (oq->buff_info[i].page) {
-+			dma_unmap_page(oq->dev, desc_ring[i].buffer_ptr,
-+				       PAGE_SIZE, DMA_FROM_DEVICE);
-+			put_page(oq->buff_info[i].page);
-+			oq->buff_info[i].page = NULL;
-+			desc_ring[i].buffer_ptr = 0;
-+		}
-+	}
-+	octep_vf_oq_reset_indices(oq);
-+}
-+
-+/**
-+ * octep_vf_free_oq() - Free Rx queue resources.
-+ *
-+ * @oq: Octeon Rx queue data structure.
-+ *
-+ * Free all resources of a Rx queue.
-+ */
-+static int octep_vf_free_oq(struct octep_vf_oq *oq)
-+{
-+	struct octep_vf_device *oct = oq->octep_vf_dev;
-+	int q_no = oq->q_no;
-+
-+	octep_vf_oq_free_ring_buffers(oq);
-+
-+	vfree(oq->buff_info);
-+
-+	if (oq->desc_ring)
-+		dma_free_coherent(oq->dev,
-+				  oq->max_count * OCTEP_VF_OQ_DESC_SIZE,
-+				  oq->desc_ring, oq->desc_ring_dma);
-+
-+	vfree(oq);
-+	oct->oq[q_no] = NULL;
-+	oct->num_oqs--;
-+	return 0;
-+}
-+
- /**
-  * octep_vf_setup_oqs() - setup resources for all Rx queues.
-  *
-@@ -18,7 +206,27 @@
-  */
- int octep_vf_setup_oqs(struct octep_vf_device *oct)
- {
--	return -1;
-+	int i, retval = 0;
-+
-+	oct->num_oqs = 0;
-+	for (i = 0; i < CFG_GET_PORTS_ACTIVE_IO_RINGS(oct->conf); i++) {
-+		retval = octep_vf_setup_oq(oct, i);
-+		if (retval) {
-+			dev_err(&oct->pdev->dev,
-+				"Failed to setup OQ(RxQ)-%d.\n", i);
-+			goto oq_setup_err;
-+		}
-+		dev_dbg(&oct->pdev->dev, "Successfully setup OQ(RxQ)-%d.\n", i);
-+	}
-+
-+	return 0;
-+
-+oq_setup_err:
-+	while (i) {
-+		i--;
-+		octep_vf_free_oq(oct->oq[i]);
-+	}
-+	return retval;
- }
- 
- /**
-@@ -30,6 +238,10 @@ int octep_vf_setup_oqs(struct octep_vf_device *oct)
-  */
- void octep_vf_oq_dbell_init(struct octep_vf_device *oct)
- {
-+	int i;
-+
-+	for (i = 0; i < oct->num_oqs; i++)
-+		writel(oct->oq[i]->max_count, oct->oq[i]->pkts_credit_reg);
- }
- 
- /**
-@@ -39,4 +251,13 @@ void octep_vf_oq_dbell_init(struct octep_vf_device *oct)
-  */
- void octep_vf_free_oqs(struct octep_vf_device *oct)
- {
-+	int i;
-+
-+	for (i = 0; i < CFG_GET_PORTS_ACTIVE_IO_RINGS(oct->conf); i++) {
-+		if (!oct->oq[i])
-+			continue;
-+		octep_vf_free_oq(oct->oq[i]);
-+		dev_dbg(&oct->pdev->dev,
-+			"Successfully freed OQ(RxQ)-%d.\n", i);
-+	}
- }
-diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.c
-index 232ba479ecf6..1a3e1a651dc4 100644
---- a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.c
-+++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_tx.c
-@@ -7,10 +7,73 @@
- 
- #include <linux/pci.h>
- #include <linux/etherdevice.h>
-+#include <linux/vmalloc.h>
- 
- #include "octep_vf_config.h"
- #include "octep_vf_main.h"
- 
-+/* Reset various index of Tx queue data structure. */
-+static void octep_vf_iq_reset_indices(struct octep_vf_iq *iq)
-+{
-+	iq->fill_cnt = 0;
-+	iq->host_write_index = 0;
-+	iq->octep_vf_read_index = 0;
-+	iq->flush_index = 0;
-+	iq->pkts_processed = 0;
-+	iq->pkt_in_done = 0;
-+}
-+
-+/**
-+ * octep_vf_iq_free_pending() - Free Tx buffers for pending completions.
-+ *
-+ * @iq: Octeon Tx queue data structure.
-+ */
-+static void octep_vf_iq_free_pending(struct octep_vf_iq *iq)
-+{
-+	struct octep_vf_tx_buffer *tx_buffer;
-+	struct skb_shared_info *shinfo;
-+	u32 fi = iq->flush_index;
-+	struct sk_buff *skb;
-+	u8 frags, i;
-+
-+	while (fi != iq->host_write_index) {
-+		tx_buffer = iq->buff_info + fi;
-+		skb = tx_buffer->skb;
-+
-+		fi++;
-+		if (unlikely(fi == iq->max_count))
-+			fi = 0;
-+
-+		if (!tx_buffer->gather) {
-+			dma_unmap_single(iq->dev, tx_buffer->dma,
-+					 tx_buffer->skb->len, DMA_TO_DEVICE);
-+			dev_kfree_skb_any(skb);
-+			continue;
-+		}
-+
-+		/* Scatter/Gather */
-+		shinfo = skb_shinfo(skb);
-+		frags = shinfo->nr_frags;
-+
-+		dma_unmap_single(iq->dev,
-+				 tx_buffer->sglist[0].dma_ptr[0],
-+				 tx_buffer->sglist[0].len[0],
-+				 DMA_TO_DEVICE);
-+
-+		i = 1; /* entry 0 is main skb, unmapped above */
-+		while (frags--) {
-+			dma_unmap_page(iq->dev, tx_buffer->sglist[i >> 2].dma_ptr[i & 3],
-+				       tx_buffer->sglist[i >> 2].len[i & 3], DMA_TO_DEVICE);
-+			i++;
-+		}
-+
-+		dev_kfree_skb_any(skb);
-+	}
-+
-+	iq->flush_index = fi;
-+	netdev_tx_reset_queue(netdev_get_tx_queue(iq->netdev, iq->q_no));
-+}
-+
- /**
-  * octep_vf_clean_iqs()  - Clean Tx queues to shutdown the device.
-  *
-@@ -21,6 +84,132 @@
-  */
- void octep_vf_clean_iqs(struct octep_vf_device *oct)
- {
-+	int i;
-+
-+	for (i = 0; i < oct->num_iqs; i++) {
-+		octep_vf_iq_free_pending(oct->iq[i]);
-+		octep_vf_iq_reset_indices(oct->iq[i]);
-+	}
-+}
-+
-+/**
-+ * octep_vf_setup_iq() - Setup a Tx queue.
-+ *
-+ * @oct: Octeon device private data structure.
-+ * @q_no: Tx queue number to be setup.
-+ *
-+ * Allocate resources for a Tx queue.
-+ */
-+static int octep_vf_setup_iq(struct octep_vf_device *oct, int q_no)
-+{
-+	u32 desc_ring_size, buff_info_size, sglist_size;
-+	struct octep_vf_iq *iq;
-+	int i;
-+
-+	iq = vzalloc(sizeof(*iq));
-+	if (!iq)
-+		goto iq_alloc_err;
-+	oct->iq[q_no] = iq;
-+
-+	iq->octep_vf_dev = oct;
-+	iq->netdev = oct->netdev;
-+	iq->dev = &oct->pdev->dev;
-+	iq->q_no = q_no;
-+	iq->max_count = CFG_GET_IQ_NUM_DESC(oct->conf);
-+	iq->ring_size_mask = iq->max_count - 1;
-+	iq->fill_threshold = CFG_GET_IQ_DB_MIN(oct->conf);
-+	iq->netdev_q = netdev_get_tx_queue(iq->netdev, q_no);
-+
-+	/* Allocate memory for hardware queue descriptors */
-+	desc_ring_size = OCTEP_VF_IQ_DESC_SIZE * CFG_GET_IQ_NUM_DESC(oct->conf);
-+	iq->desc_ring = dma_alloc_coherent(iq->dev, desc_ring_size,
-+					   &iq->desc_ring_dma, GFP_KERNEL);
-+	if (unlikely(!iq->desc_ring)) {
-+		dev_err(iq->dev,
-+			"Failed to allocate DMA memory for IQ-%d\n", q_no);
-+		goto desc_dma_alloc_err;
-+	}
-+
-+	/* Allocate memory for hardware SGLIST descriptors */
-+	sglist_size = OCTEP_VF_SGLIST_SIZE_PER_PKT *
-+		      CFG_GET_IQ_NUM_DESC(oct->conf);
-+	iq->sglist = dma_alloc_coherent(iq->dev, sglist_size,
-+					&iq->sglist_dma, GFP_KERNEL);
-+	if (unlikely(!iq->sglist)) {
-+		dev_err(iq->dev,
-+			"Failed to allocate DMA memory for IQ-%d SGLIST\n",
-+			q_no);
-+		goto sglist_alloc_err;
-+	}
-+
-+	/* allocate memory to manage Tx packets pending completion */
-+	buff_info_size = OCTEP_VF_IQ_TXBUFF_INFO_SIZE * iq->max_count;
-+	iq->buff_info = vzalloc(buff_info_size);
-+	if (!iq->buff_info) {
-+		dev_err(iq->dev,
-+			"Failed to allocate buff info for IQ-%d\n", q_no);
-+		goto buff_info_err;
-+	}
-+
-+	/* Setup sglist addresses in tx_buffer entries */
-+	for (i = 0; i < CFG_GET_IQ_NUM_DESC(oct->conf); i++) {
-+		struct octep_vf_tx_buffer *tx_buffer;
-+
-+		tx_buffer = &iq->buff_info[i];
-+		tx_buffer->sglist =
-+			&iq->sglist[i * OCTEP_VF_SGLIST_ENTRIES_PER_PKT];
-+		tx_buffer->sglist_dma =
-+			iq->sglist_dma + (i * OCTEP_VF_SGLIST_SIZE_PER_PKT);
-+	}
-+
-+	octep_vf_iq_reset_indices(iq);
-+	oct->hw_ops.setup_iq_regs(oct, q_no);
-+
-+	oct->num_iqs++;
-+	return 0;
-+
-+buff_info_err:
-+	dma_free_coherent(iq->dev, sglist_size, iq->sglist, iq->sglist_dma);
-+sglist_alloc_err:
-+	dma_free_coherent(iq->dev, desc_ring_size,
-+			  iq->desc_ring, iq->desc_ring_dma);
-+desc_dma_alloc_err:
-+	vfree(iq);
-+	oct->iq[q_no] = NULL;
-+iq_alloc_err:
-+	return -1;
-+}
-+
-+/**
-+ * octep_vf_free_iq() - Free Tx queue resources.
-+ *
-+ * @iq: Octeon Tx queue data structure.
-+ *
-+ * Free all the resources allocated for a Tx queue.
-+ */
-+static void octep_vf_free_iq(struct octep_vf_iq *iq)
-+{
-+	struct octep_vf_device *oct = iq->octep_vf_dev;
-+	u64 desc_ring_size, sglist_size;
-+	int q_no = iq->q_no;
-+
-+	desc_ring_size = OCTEP_VF_IQ_DESC_SIZE * CFG_GET_IQ_NUM_DESC(oct->conf);
-+
-+	vfree(iq->buff_info);
-+
-+	if (iq->desc_ring)
-+		dma_free_coherent(iq->dev, desc_ring_size,
-+				  iq->desc_ring, iq->desc_ring_dma);
-+
-+	sglist_size = OCTEP_VF_SGLIST_SIZE_PER_PKT *
-+		      CFG_GET_IQ_NUM_DESC(oct->conf);
-+	if (iq->sglist)
-+		dma_free_coherent(iq->dev, sglist_size,
-+				  iq->sglist, iq->sglist_dma);
-+
-+	vfree(iq);
-+	oct->iq[q_no] = NULL;
-+	oct->num_iqs--;
- }
- 
- /**
-@@ -30,6 +219,25 @@ void octep_vf_clean_iqs(struct octep_vf_device *oct)
-  */
- int octep_vf_setup_iqs(struct octep_vf_device *oct)
- {
-+	int i;
-+
-+	oct->num_iqs = 0;
-+	for (i = 0; i < CFG_GET_PORTS_ACTIVE_IO_RINGS(oct->conf); i++) {
-+		if (octep_vf_setup_iq(oct, i)) {
-+			dev_err(&oct->pdev->dev,
-+				"Failed to setup IQ(TxQ)-%d.\n", i);
-+			goto iq_setup_err;
-+		}
-+		dev_dbg(&oct->pdev->dev, "Successfully setup IQ(TxQ)-%d.\n", i);
-+	}
-+
-+	return 0;
-+
-+iq_setup_err:
-+	while (i) {
-+		i--;
-+		octep_vf_free_iq(oct->iq[i]);
-+	}
- 	return -1;
- }
- 
-@@ -40,4 +248,12 @@ int octep_vf_setup_iqs(struct octep_vf_device *oct)
-  */
- void octep_vf_free_iqs(struct octep_vf_device *oct)
- {
-+	int i;
-+
-+	for (i = 0; i < CFG_GET_PORTS_ACTIVE_IO_RINGS(oct->conf); i++) {
-+		octep_vf_free_iq(oct->iq[i]);
-+		dev_dbg(&oct->pdev->dev,
-+			"Successfully destroyed IQ(TxQ)-%d.\n", i);
-+	}
-+	oct->num_iqs = 0;
- }
 -- 
-2.25.1
+2.42.0
 
