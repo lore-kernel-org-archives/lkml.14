@@ -1,106 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD381EB3D
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 07:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6CE1DDDC;
+	Fri,  5 Jan 2024 07:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nkwDt/BG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704439012; x=1735975012;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=rmI+/pbw5vwRtTdn9jKRFOQEK4BpH6g7BJ8uZMZV//0=;
-  b=nkwDt/BGCxA7IYG6zPysGh885y97wruhn61RD6q/cKTIdDf6HurOQek4
-   WicV6gNEqkW0FBoYWfDNCUD5Mz/yZMnkCN0Nv4hBqRmODNVWcn2UYLYJE
-   KmJ1WB1KCZsu9lgmmXZH5ZtSKAJsotZvhI+h+5XSJQAbdWvsGrDs1vL2e
-   BSLTAi++XL5uTdR36RDD7cGUnQ1mZbDNkHEb30xIqRkHXcA8v89zLQSBJ
-   oBgcWNey7PDaxWmi/w5e78kOqsPJ+EVW9tyK0CZnCgUMNk9KDQAtUR3hX
-   SsSzSdZt+SmlnnxxzfaIEn9bp/cbdRLyijqpzr0WF0mzySg1x+Ja+tJ7m
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="10822152"
-X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
-   d="scan'208";a="10822152"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 23:16:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="809473787"
-X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
-   d="scan'208";a="809473787"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2024 23:16:47 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Kairui Song <ryncsn@gmail.com>
-Cc: linux-mm@kvack.org,  Kairui Song <kasong@tencent.com>,  Andrew Morton
- <akpm@linux-foundation.org>,  Chris Li <chrisl@kernel.org>,  Hugh Dickins
- <hughd@google.com>,  Johannes Weiner <hannes@cmpxchg.org>,  Matthew Wilcox
- <willy@infradead.org>,  Michal Hocko <mhocko@suse.com>,  Yosry Ahmed
- <yosryahmed@google.com>,  David Hildenbrand <david@redhat.com>,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/9] mm/swap: always account swapped in page into
- current memcg
-In-Reply-To: <20240102175338.62012-5-ryncsn@gmail.com> (Kairui Song's message
-	of "Wed, 3 Jan 2024 01:53:33 +0800")
-References: <20240102175338.62012-1-ryncsn@gmail.com>
-	<20240102175338.62012-5-ryncsn@gmail.com>
-Date: Fri, 05 Jan 2024 15:14:49 +0800
-Message-ID: <878r54b6ae.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V68hIClb"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4057JKiM065605;
+	Fri, 5 Jan 2024 01:19:20 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1704439160;
+	bh=nnbd4NNKlxIwd09RppD3PPXEsR2CI47y98ZUeI58Kjg=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=V68hIClb9NB4iTuZkakfWhO8/vk5DBlJFqTiIrE81l6Wq1Yqdz/8UMF4SZvLXzMFv
+	 OmpdS2yScv8n8DnYQY5SZmPYUtx/LYrdLkoBTvoYIvDPoBDjcIOkMuiZ76ARG64A1j
+	 tcbGQKQOEpVLh/pUZq4i3FKfgsjIKsIg2TwmtuFA=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4057JKaU013603
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 5 Jan 2024 01:19:20 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 5
+ Jan 2024 01:19:20 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 5 Jan 2024 01:19:20 -0600
+Received: from [10.249.132.18] ([10.249.132.18])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4057JF5I023483;
+	Fri, 5 Jan 2024 01:19:16 -0600
+Message-ID: <e08d7240-6b28-43c4-9ce4-95a041bfad25@ti.com>
+Date: Fri, 5 Jan 2024 12:49:14 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: can: Add support for aliases in CAN
+Content-Language: en-US
+To: Simon Horman <horms@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-can@vger.kernel.org>, <mailhol.vincent@wanadoo.fr>,
+        <rcsekar@samsung.com>, <pabeni@redhat.com>, <kuba@kernel.org>,
+        <edumazet@google.com>, <davem@davemloft.net>, <mkl@pengutronix.de>,
+        <wg@grandegger.com>, <vigneshr@ti.com>, <u-kumar1@ti.com>
+References: <20240102102949.138607-1-b-kapoor@ti.com>
+ <20240104171940.GI31813@kernel.org>
+From: Bhavya Kapoor <b-kapoor@ti.com>
+In-Reply-To: <20240104171940.GI31813@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Kairui Song <ryncsn@gmail.com> writes:
 
-> From: Kairui Song <kasong@tencent.com>
+On 04/01/24 22:49, Simon Horman wrote:
+> On Tue, Jan 02, 2024 at 03:59:49PM +0530, Bhavya Kapoor wrote:
+>> When multiple CAN's are present, then names that are getting assigned
+>> changes after every boot even after providing alias in the device tree.
+>> Thus, Add support for implementing CAN aliasing so that names or
+>> alias for CAN will now be provided from device tree.
+>>
+>> Signed-off-by: Bhavya Kapoor <b-kapoor@ti.com>
+> Hi Bhavya,
 >
-> Currently, mem_cgroup_swapin_charge_folio is always called with
-> mm argument as NULL, except in swapin_direct.
+> some minor feedback from my side.
 >
-> swapin_direct is used when swapin should skip readahead and
-> swapcache (SWP_SYNCHRONOUS_IO). Other caller paths of
-> mem_cgroup_swapin_charge_folio are for swapin that should
-> not skip readahead and cache.
+> ...
 >
-> This could cause swapin charging to behave differently depending
-> on swap device. This currently didn't happen because the only call
-> path of swapin_direct is the direct anon page fault path, where mm
-> equals to current->mm, but will no longer be true if swapin_direct
-> is shared and have other callers (eg, swapoff).
+>> diff --git a/drivers/net/can/dev/dev.c b/drivers/net/can/dev/dev.c
+>> index 3a3be5cdfc1f..ed483c23ec79 100644
+>> --- a/drivers/net/can/dev/dev.c
+>> +++ b/drivers/net/can/dev/dev.c
+>> @@ -247,12 +247,14 @@ void can_setup(struct net_device *dev)
+>>  
+>>  /* Allocate and setup space for the CAN network device */
+>>  struct net_device *alloc_candev_mqs(int sizeof_priv, unsigned int echo_skb_max,
+>> -				    unsigned int txqs, unsigned int rxqs)
+>> +					unsigned int txqs, unsigned int rxqs,
+>> +					struct device *candev)
+>>  {
+>>  	struct can_ml_priv *can_ml;
+>>  	struct net_device *dev;
+>>  	struct can_priv *priv;
+>> -	int size;
+>> +	int size, aliasid;
+>> +	char devname[6] = "can%d";
+> nit: Please consider arranging local variables in Networking code
+>      in reverse xmas tree order - longest line to shortest.
+Okay, i will keep this in mind from next time.
 >
-> So make swapin_direct also passes NULL for mm, no feature change.
->
-> Signed-off-by: Kairui Song <kasong@tencent.com>
-> ---
->  mm/swap_state.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/mm/swap_state.c b/mm/swap_state.c
-> index 6130de8d5226..d39c5369da21 100644
-> --- a/mm/swap_state.c
-> +++ b/mm/swap_state.c
-> @@ -881,7 +881,7 @@ struct folio *swapin_direct(swp_entry_t entry, gfp_t gfp_mask,
->  	folio = vma_alloc_folio(GFP_HIGHUSER_MOVABLE, 0,
->  				vma, vmf->address, false);
->  	if (folio) {
-> -		if (mem_cgroup_swapin_charge_folio(folio, vma->vm_mm,
-> +		if (mem_cgroup_swapin_charge_folio(folio, NULL,
->  						   GFP_KERNEL, entry)) {
->  			folio_put(folio);
->  			return NULL;
+>>  
+>>  	/* We put the driver's priv, the CAN mid layer priv and the
+>>  	 * echo skb into the netdevice's priv. The memory layout for
+>> @@ -273,7 +275,14 @@ struct net_device *alloc_candev_mqs(int sizeof_priv, unsigned int echo_skb_max,
+>>  		size = ALIGN(size, sizeof(struct sk_buff *)) +
+>>  			echo_skb_max * sizeof(struct sk_buff *);
+>>  
+>> -	dev = alloc_netdev_mqs(size, "can%d", NET_NAME_UNKNOWN, can_setup,
+>> +	if (candev) {
+>> +		aliasid = of_alias_get_id(candev->of_node, "can");
+>> +		if (aliasid >= 0)
+>> +			snprintf(devname, sizeof(devname), "%s%d", "can", aliasid);
+> The size of devname is 6 bytes (can%d\0).
+> This means that snprintf() will truncate devname if alias is greater than 99.
+> Is this a concern?
 
-I think that why not provide "mm" when it's available?  For
-swapin_direct() called by do_swap_page(), mm can be provided.  While,
-for swapin_direct() called by shmem swapin, mm will be NULL.  We can
-even provide "mm" for __read_swap_cache_async() for VMA based swapin and
-for the fault address for cluster swapin.
+When sequential naming will be done from can0 in aliases for can, 
 
---
-Best Regards,
-Huang, Ying
+considering that 99 is still a very large number and so 6 bytes for
+
+devname should suffice.
+
+Regards
+
+> If so, perhaps devname could be declared to be IFNAMSIZ bytes long?
+>
+> Flagged by gcc-13 -Wformat-truncation
+>
+>> +	}
+>> +	dev_dbg(candev, "Name of CAN assigned is : %s\n", devname);
+>> +
+>> +	dev = alloc_netdev_mqs(size, devname, NET_NAME_UNKNOWN, can_setup,
+>>  			       txqs, rxqs);
+>>  	if (!dev)
+>>  		return NULL;
+> ...
