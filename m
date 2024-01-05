@@ -1,67 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1E22E3E5;
-	Fri,  5 Jan 2024 14:55:05 +0000 (UTC)
+Received: from smtp.smtpout.orange.fr (smtp-19.smtpout.orange.fr [80.12.242.19])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 066E02E631;
+	Fri,  5 Jan 2024 14:55:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJFdOn+I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33B76C433C8;
-	Fri,  5 Jan 2024 14:55:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704466505;
-	bh=lGUdel1pSqfVSSsk+jkeamuY2dz/AgFfW/Up5Y3jyyc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kJFdOn+INyNtgXvtGywabad049FU0N2AFPiP/S9/QDeKPUFSx0qJYVWxJUx8JP7LH
-	 fjFXcHbY3A2zTCxYalisD11ATWbAjkteOdTf0b7dU3HiqxmiB3mAeBpy9AwhA6lDPA
-	 rdEtx0TVFHv4j3wxX0jiot75Hbc4bEvCQtJPMkZ4aiSwUT4t7bIMr+HVVH/iQ7whSU
-	 2I6tSkXzbo4MYsm3f/Pt+65FOBZrP/hAsF49HxKYCl9ZATpYO69aA8UCs/8QiwyDfN
-	 ZIqafqweomkgUK3/0JqrgdauZBACuCdbosWcLQiMqxp1k/iOQJU44MOTBhmoWW1pCA
-	 q7XiOB30rQl/g==
-Date: Fri, 5 Jan 2024 14:55:01 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH] spi: make spi_bus_type const
-Message-ID: <0fcee73a-bdcb-41d5-b6e5-21947ae9e3d7@sirena.org.uk>
-References: <2024010549-erasure-swoop-1cc6@gregkh>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="sgpU6O11"
+Received: from [192.168.1.18] ([92.140.202.140])
+	by smtp.orange.fr with ESMTPA
+	id LlU8rZXOax8edLlU8rWP3j; Fri, 05 Jan 2024 15:47:46 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1704466066;
+	bh=3o+5IuQI3KZqIsQuHVkAVYAXMFpoFfomYAL99cJxMGI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=sgpU6O11WbmPfG4vpUH2O7BN1pofyUbOrstaUMQg0d2e0uzP2AewwyzIk/YctiQZO
+	 CWGCK7hoX12xjrEAgBUI4ER5Ayb44ki9D7O8crIiCjzpQgnROgUMcIt1DNqlNyCEor
+	 AIMKuqcpZEvg6kJcg/vxxLgNOvxjnRLbCYUALcmplkO0gGieZ6WOfraYiqJ3TcEtgF
+	 vTFfCoVYx7KV+kxZpGe9Qdf9ISAqdEIMPoPGLzjitMYIvdoeD9RnTeetFELFUoiDJy
+	 6NC8CmhTBq8lxs1LPup6OmvL+8i8GwzaRCpUYUaAWJ8VPwrhsPWlSj33xz8dBLqbGn
+	 y8i+4UGB10THw==
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 05 Jan 2024 15:47:46 +0100
+X-ME-IP: 92.140.202.140
+Message-ID: <a821c56b-2153-4464-8323-66ba62348f59@wanadoo.fr>
+Date: Fri, 5 Jan 2024 15:47:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="G6vr2r0iBS5VvrxZ"
-Content-Disposition: inline
-In-Reply-To: <2024010549-erasure-swoop-1cc6@gregkh>
-X-Cookie: Your step will soil many countries.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] thermal: core: Save a few bytes of memory when
+ registering a cooling device
+Content-Language: fr
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+ alexis.lothore@bootlin.com, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, linux-pm@vger.kernel.org
+References: <4a3658efad8f6247ed8c477717dc2820b72319d0.1704462287.git.christophe.jaillet@wanadoo.fr>
+ <CAJZ5v0hqaJ79BUj_hWDmErCVvJdBJ8o9fcHxcZDyP4+C4iDVxQ@mail.gmail.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <CAJZ5v0hqaJ79BUj_hWDmErCVvJdBJ8o9fcHxcZDyP4+C4iDVxQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+Le 05/01/2024 à 14:50, Rafael J. Wysocki a écrit :
+> On Fri, Jan 5, 2024 at 2:45 PM Christophe JAILLET
+> <christophe.jaillet@wanadoo.fr> wrote:
+>>
+>> Some *thermal_cooling_device_register() calls pass a string literal as the
+>> 'type' parameter.
+>>
+>> So kstrdup_const() can be used instead of kfree() to avoid a memory
+> 
+> I guess you mean kstrdup()?
 
---G6vr2r0iBS5VvrxZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Sure.
+Stupid cut'n'paste typo. Thx for catching it.
 
-On Fri, Jan 05, 2024 at 11:32:50AM +0100, Greg Kroah-Hartman wrote:
-> Now that the driver core can properly handle constant struct bus_type,
-> move the spi_bus_type variable to be a constant structure as well,
-> placing it into read-only memory which can not be modified at runtime.
+Should I resend, or can it be fixed if/when the patch is applied?
 
-Whatever makes the driver core able to handle this doesn't seem to be in
-mainline yet - what's the story there?
+CJ
 
---G6vr2r0iBS5VvrxZ
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+>> allocation in such cases.
+>>
+>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+>> ---
+>>   drivers/thermal/thermal_core.c | 6 +++---
+>>   include/linux/thermal.h        | 2 +-
+>>   2 files changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+>> index fa88d8707241..d21225ddbf10 100644
+>> --- a/drivers/thermal/thermal_core.c
+>> +++ b/drivers/thermal/thermal_core.c
+>> @@ -846,7 +846,7 @@ static void thermal_release(struct device *dev)
+>>                              sizeof("cooling_device") - 1)) {
+>>                  cdev = to_cooling_device(dev);
+>>                  thermal_cooling_device_destroy_sysfs(cdev);
+>> -               kfree(cdev->type);
+>> +               kfree_const(cdev->type);
+>>                  ida_free(&thermal_cdev_ida, cdev->id);
+>>                  kfree(cdev);
+>>          }
+>> @@ -918,7 +918,7 @@ __thermal_cooling_device_register(struct device_node *np,
+>>          cdev->id = ret;
+>>          id = ret;
+>>
+>> -       cdev->type = kstrdup(type ? type : "", GFP_KERNEL);
+>> +       cdev->type = kstrdup_const(type ? type : "", GFP_KERNEL);
+>>          if (!cdev->type) {
+>>                  ret = -ENOMEM;
+>>                  goto out_ida_remove;
+>> @@ -969,7 +969,7 @@ __thermal_cooling_device_register(struct device_node *np,
+>>   out_cooling_dev:
+>>          thermal_cooling_device_destroy_sysfs(cdev);
+>>   out_cdev_type:
+>> -       kfree(cdev->type);
+>> +       kfree_const(cdev->type);
+>>   out_ida_remove:
+>>          ida_free(&thermal_cdev_ida, id);
+>>   out_kfree_cdev:
+>> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+>> index bf84595a4e86..052c72c0fa17 100644
+>> --- a/include/linux/thermal.h
+>> +++ b/include/linux/thermal.h
+>> @@ -102,7 +102,7 @@ struct thermal_cooling_device_ops {
+>>
+>>   struct thermal_cooling_device {
+>>          int id;
+>> -       char *type;
+>> +       const char *type;
+>>          unsigned long max_state;
+>>          struct device device;
+>>          struct device_node *np;
+>> --
+>> 2.34.1
+>>
+> 
+> 
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWYGEQACgkQJNaLcl1U
-h9B/wgf/Q1ndw+LG2G204dk6f7CZL+mu1YHZcGuXF/e9pjk8yt4EutHo2sZwVmM/
-4rcZTDNzPvQ3siPIJWup9b1gOy9dQ8TlTqOsb5ndoI5kSxu5zHE0v8MFGq1YzV6Q
-wi1Wp98J4Kyv6dhBeIudZH8tbv3wthEy06D6cJvcBDOEvBiJdnYSwXYHM+ySZ+Nn
-c4l5FPMCCPbBDborTewwnojkwmy1oAXj35QFNrBbhbM3F0rqWuB6EgzgC55jfdja
-5Z+STMHmJFU7Q97HVQP5/MK+IR3/wUvYQtOEjA++zniUxJVfHxo4a7hOXuLWQ6ZL
-RiGtRBeKIg1uQjfFcShh5j2p2O2Qew==
-=9kv/
------END PGP SIGNATURE-----
-
---G6vr2r0iBS5VvrxZ--
