@@ -1,200 +1,208 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2050.outbound.protection.outlook.com [40.107.223.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E402B2134A;
-	Fri,  5 Jan 2024 07:39:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94FC620306
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 07:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="aGcGJB2S"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V5+uU29fV7u31KVw5gBnD/ekDwf4a9WGIuDCNZDBzkbQFyJEcYG5uhcRoEG/rx4IT9g52xHaUMzszvbqWJKFHKjZUpB1ZwZH3yk2w9cSFdWY2PRaHll6NLlW7l0Ajz1nsr+NEwjJtmdxByFUNwDEOimHkPyifIwOOBxAuLbxdH74a4+cVKTiZJE2H9wZYehUJc8VhM5LEzpGyoI/kaDNu7Ur1M3tL3ye53178QR6yGNQClQuBNzA3wv6FlLkejzKGYKLpee5jei5hfLW9G87Z4N0PgU6cLnHFrC7ePZ+Dk0V3H+HhA6keQLGxHqFWZYgsYUUnHnUn509V0cEPcnrOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tVxQdUzaGM4z/PADjmgKO1bLWhVm/seNRf3hqiv/Vk8=;
- b=LJBisCz5/yMWQPOKAuaiWtyBNPZ5Gl29NnaMmpafIUUyYB7GfiAIvPvps0YPsh8bBxEFSICX1YxOeKH6rRwjhb+IJvwRx9ZfS40TXk25lNvGlB6eRSEP1MPxfZ5E2kxHj98nCFbo/vXAye/EiGjCY0LE0Ol9GURpMO/Yw+UJzcXUN0BanswngWtz2Wrv6MwvwGXpOvDnAASi4HQlCowr1VhczcPLMcrMaIEuxHhCygHUFlJewee7Cmm7AnQ7ub5yfzI8rpJfdaqq6xkKaqX0Hi0e9HQp5l+1T2G6BsbGsgd1cxfkwhHk1rowCfaOC7yMobJA3S6SactSRhcr7oGFBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=oracle.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tVxQdUzaGM4z/PADjmgKO1bLWhVm/seNRf3hqiv/Vk8=;
- b=aGcGJB2SdIWnGNUflkUkL7zhkbsznGElyvGtz/AAt8GTz+UdgDQQQOA5t/ldpVt4URhmtvwkE2LZUS9mw+ubgLH/NKcKlSmRJc19/8IYsrauDFKU3YmGBekfb2t1GUJ79ZpzAJyG7ajQP0+ad+PrdaJBtbXTqNyE6V3P4ucoSuB7+kiRyApxJUD0Z4OMaJ5lfyDPgp9tgUAwKZoFCknIdlrL8WPCNDG8xF/jBve4nkSqlgKxNumqozeHyfVpKPAg50uQM3QwtperX6f2ofMxpX/606m4ZknAIWJ2AwdgQgNKwKi4Ia0XBISEWu0HjL/dJqTjliu4rMVHe63Gb9ecOQ==
-Received: from CY5PR19CA0083.namprd19.prod.outlook.com (2603:10b6:930:69::21)
- by DS7PR12MB8291.namprd12.prod.outlook.com (2603:10b6:8:e6::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.17; Fri, 5 Jan
- 2024 07:38:56 +0000
-Received: from CY4PEPF0000E9D8.namprd05.prod.outlook.com
- (2603:10b6:930:69:cafe::e4) by CY5PR19CA0083.outlook.office365.com
- (2603:10b6:930:69::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.16 via Frontend
- Transport; Fri, 5 Jan 2024 07:38:56 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CY4PEPF0000E9D8.mail.protection.outlook.com (10.167.241.83) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7159.9 via Frontend Transport; Fri, 5 Jan 2024 07:38:56 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Thu, 4 Jan 2024
- 23:38:43 -0800
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Thu, 4 Jan 2024
- 23:38:43 -0800
-Received: from Asurada-Nvidia (10.127.8.12) by mail.nvidia.com (10.129.68.6)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41 via Frontend
- Transport; Thu, 4 Jan 2024 23:38:41 -0800
-Date: Thu, 4 Jan 2024 23:38:40 -0800
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-CC: Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
-	"joro@8bytes.org" <joro@8bytes.org>, "alex.williamson@redhat.com"
-	<alex.williamson@redhat.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>, "cohuck@redhat.com"
-	<cohuck@redhat.com>, "eric.auger@redhat.com" <eric.auger@redhat.com>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "mjrosato@linux.ibm.com"
-	<mjrosato@linux.ibm.com>, "chao.p.peng@linux.intel.com"
-	<chao.p.peng@linux.intel.com>, "yi.y.sun@linux.intel.com"
-	<yi.y.sun@linux.intel.com>, "peterx@redhat.com" <peterx@redhat.com>,
-	"jasowang@redhat.com" <jasowang@redhat.com>,
-	"shameerali.kolothum.thodi@huawei.com"
-	<shameerali.kolothum.thodi@huawei.com>, "lulu@redhat.com" <lulu@redhat.com>,
-	"suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, "Duan,
- Zhenzhong" <zhenzhong.duan@intel.com>, "joao.m.martins@oracle.com"
-	<joao.m.martins@oracle.com>, "Zeng, Xin" <xin.zeng@intel.com>, "Zhao, Yan Y"
-	<yan.y.zhao@intel.com>
-Subject: Re: [PATCH v7 1/3] iommufd: Add data structure for Intel VT-d
- stage-1 cache invalidation
-Message-ID: <ZZeyAC3c8LJz7nsQ@Asurada-Nvidia>
-References: <7c398efc-8a2f-479d-bcff-ded8cc1ef3d0@intel.com>
- <20240102233849.GK50406@nvidia.com>
- <c59a780d-4030-4815-a34b-fb2e2f902ab3@intel.com>
- <20240103160108.GP50406@nvidia.com>
- <ZZWP7iBqUtbTRb3s@Asurada-Nvidia>
- <20240103165848.GR50406@nvidia.com>
- <ZZWUD+lCw3mRc/15@Asurada-Nvidia>
- <20240103175202.GT50406@nvidia.com>
- <ZZXBGw9dJyvb/5r5@Asurada-Nvidia>
- <20240104000204.GV50406@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/Ys391T"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2ccec119587so15684911fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Jan 2024 23:43:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704440603; x=1705045403; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dE868xNBfi0PhqqrB/NKR+HFo2ZSd9jez98UiAP14BY=;
+        b=i/Ys391TpT3YGSUGFQXmf/qoTCaW6bwLI4pgvB/R0OKCNECHLHmfi9QJh/kBLQANU7
+         bKi8jb5IkJG/edKqk2Gsj4myTAP+uCYJFNNKGpoCoqt7j5FjVpMor90uLK5o/3IYNHf2
+         gdICn58MzriaB0Ex4LY5Ixkmn8XPi+11qXmFvjocZ8DCl6zRy/Z9fWRgR2dihWya0aBW
+         mMTPpd5bis6k1c7YR4+tsaikPxRh9z8/NyESNoTxs5GkCZUM8e5EkoB9mfUGa0OPp5bq
+         vI4ypjYgoUfYhqj1AaMzqyuF1rXESUcP8prkBq2EUFnqJEx8pM9MnnHYgRtF8UuNBesY
+         +Ykw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704440603; x=1705045403;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dE868xNBfi0PhqqrB/NKR+HFo2ZSd9jez98UiAP14BY=;
+        b=rxtx8TinaV+UfvJYKxBjOY8FTo7KTiSGoe3VfzSE+CvHZq/KRBYHYEtmYE3HQ6GE80
+         tzMDGQ+PDm0QBHgx2OyLglqa9F/tR6lXfIcV5AhhJkRr9Ayea566K5KTHje8IztjqhBm
+         L1KpDcOu/GzZwUVk7MpgnBdwyi+2gDYn5oo0njPsbtQRPE4Vh01i+TZudNnH2S6foyUw
+         yTTUZXE7lZXpzqeAMaKZqjZHWjtW0S4etKKNvrdwzr2HWg7ZZtuPJKvALQwsa6sB4paK
+         EkDXKQ8/7PCTFRSD7rK7AyxD+2aeIeJJuJ/DT/BlxIfRJgRgDHX79KyTiBdYdnFlq9kT
+         ouvA==
+X-Gm-Message-State: AOJu0Yw72dKYD1XmFlU0liCdWzxcDb1lD/KL+rKNUvybwBa+hARJ/qZf
+	tvWoXXb7xcE4vyyLhYPwDomCCcsNzqp7dAUQCOo=
+X-Google-Smtp-Source: AGHT+IFZLpTreRF0zt34oUwZoLpE3HLliez5NT7pNkRznUKhapTmEWa7qM/5DxcHL3uyLeWM70Bg/MX+kVUU8HjPu1s=
+X-Received: by 2002:a2e:3502:0:b0:2cc:de79:2b3b with SMTP id
+ z2-20020a2e3502000000b002ccde792b3bmr931936ljz.44.1704440603311; Thu, 04 Jan
+ 2024 23:43:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240104000204.GV50406@nvidia.com>
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D8:EE_|DS7PR12MB8291:EE_
-X-MS-Office365-Filtering-Correlation-Id: f6e9e5cd-2b57-4662-2d25-08dc0dc15f83
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	QE+A390BRBr76HFRwrNSbDJqQlOS0Wgbih5aE0ZjSwuuuHOuC/Mbh0S9tBoYM7EE7v6E0A6rFpHHV8AJ0/FM1V43Kzz2ycVNB46VtrSnz2+bt+5cvHONsNkc2Qr/k5pTERSsXRexFxwRQ/1wQdh+oJYXIjxsxL/V78g8zk9UGVXRajT+Pav5cvY5YVzF7eeHAbSqibsm65R8g5g2vygGsDS++6iTGf7wjSMRreZorKQisxpr4eKlJ87FVh5FUFOtu/k4ZEESu7RgqERPx2R+ZlSuyxjT23Icscxu8We56TyV5Ok9ieZp38S35+iV4ajmQZUxXP3oMOPU2q0GgFnIXlBwhA/nWpt/05U0tmkPvVTrHbfms9XAFYfw4SwxQOLPERaSi+3AiC5qJj16rm3kmsOjVBM3OSbYr50CAoang2kZHYtDss92bPr84qdrQt9j9GqujxENCaEZQMgWYqcs3MQ7a3I+K2PTRehx+2hnUvu2AXMlCEwhBX6qsH0aM8UK648NcRVQqO5YuUoOhQwDFY8Qq2H6KokYEeVEo2auFzHffBdNtWqNhiq7+TzcBI7lP/fsBwjKWRBs3VpEFCcZpilLHGe4hA3On57LWIvFgeqmSIhzRoTw9BFy1VcefsmWzeyrYaVzlMKH7ui6TRVWHjitzEWa4S3TID19tuGZ/9IlOKcxUeEji2HiXD7mHZbgwXDUWqm9CW2qxfyEkYSfkv16w4/QdvkBzh7CY+CsAdR5SsH9K+X1yEN+OKmdHHCJ
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(376002)(136003)(346002)(396003)(39860400002)(230922051799003)(451199024)(1800799012)(82310400011)(64100799003)(186009)(46966006)(40470700004)(36840700001)(83380400001)(9686003)(336012)(426003)(26005)(82740400003)(316002)(47076005)(36860700001)(5660300002)(8676002)(8936002)(6862004)(4326008)(7416002)(2906002)(478600001)(33716001)(6636002)(54906003)(70206006)(70586007)(41300700001)(356005)(7636003)(86362001)(40480700001)(55016003)(40460700003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2024 07:38:56.0955
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f6e9e5cd-2b57-4662-2d25-08dc0dc15f83
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000E9D8.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8291
+References: <20240102175338.62012-1-ryncsn@gmail.com> <20240102175338.62012-3-ryncsn@gmail.com>
+ <87plyhblqe.fsf@yhuang6-desk2.ccr.corp.intel.com>
+In-Reply-To: <87plyhblqe.fsf@yhuang6-desk2.ccr.corp.intel.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Fri, 5 Jan 2024 15:43:04 +0800
+Message-ID: <CAMgjq7AsPct2rQp-Csg6MtK1DQJCm01UjuoeBcvtxTNhHv7j5Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/9] mm/swap: move no readahead swapin code to a
+ stand-alone helper
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Chris Li <chrisl@kernel.org>, Hugh Dickins <hughd@google.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Matthew Wilcox <willy@infradead.org>, Michal Hocko <mhocko@suse.com>, 
+	Yosry Ahmed <yosryahmed@google.com>, David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 03, 2024 at 08:02:04PM -0400, Jason Gunthorpe wrote:
-> On Wed, Jan 03, 2024 at 12:18:35PM -0800, Nicolin Chen wrote:
-> > > The driver would have to create it and there would be some driver
-> > > specific enclosing struct to go with it
-> > > 
-> > > Perhaps device_ids goes in the driver specific struct, I don't know.
-> > 
-> > +struct iommufd_viommu {
-> > +	struct iommufd_object obj;
-> > +	struct iommufd_ctx *ictx;
-> > +	struct iommu_device *iommu_dev;
-> > +	struct iommufd_hwpt_paging *hwpt;	/* maybe unneeded */
+Huang, Ying <ying.huang@intel.com> =E4=BA=8E2024=E5=B9=B41=E6=9C=884=E6=97=
+=A5=E5=91=A8=E5=9B=9B 15:31=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Kairui Song <ryncsn@gmail.com> writes:
+>
+> > From: Kairui Song <kasong@tencent.com>
+> >
+> > No feature change, simply move the routine to a standalone function to
+> > be re-used later. The error path handling is copied from the "out_page"
+> > label, to make the code change minimized for easier reviewing.
+> >
+> > Signed-off-by: Kairui Song <kasong@tencent.com>
+> > ---
+> >  mm/memory.c     | 32 ++++----------------------------
+> >  mm/swap.h       |  8 ++++++++
+> >  mm/swap_state.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 59 insertions(+), 28 deletions(-)
+> >
+> > diff --git a/mm/memory.c b/mm/memory.c
+> > index a0a50d3754f0..0165c8cad489 100644
+> > --- a/mm/memory.c
+> > +++ b/mm/memory.c
+> > @@ -3803,7 +3803,6 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+> >       swp_entry_t entry;
+> >       pte_t pte;
+> >       vm_fault_t ret =3D 0;
+> > -     void *shadow =3D NULL;
+> >
+> >       if (!pte_unmap_same(vmf))
+> >               goto out;
+> > @@ -3867,33 +3866,10 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+> >       if (!folio) {
+> >               if (data_race(si->flags & SWP_SYNCHRONOUS_IO) &&
+> >                   __swap_count(entry) =3D=3D 1) {
+> > -                     /* skip swapcache */
+> > -                     folio =3D vma_alloc_folio(GFP_HIGHUSER_MOVABLE, 0=
+,
+> > -                                             vma, vmf->address, false)=
+;
+> > -                     page =3D &folio->page;
+> > -                     if (folio) {
+> > -                             __folio_set_locked(folio);
+> > -                             __folio_set_swapbacked(folio);
+> > -
+> > -                             if (mem_cgroup_swapin_charge_folio(folio,
+> > -                                                     vma->vm_mm, GFP_K=
+ERNEL,
+> > -                                                     entry)) {
+> > -                                     ret =3D VM_FAULT_OOM;
+> > -                                     goto out_page;
+> > -                             }
+> > -                             mem_cgroup_swapin_uncharge_swap(entry);
+> > -
+> > -                             shadow =3D get_shadow_from_swap_cache(ent=
+ry);
+> > -                             if (shadow)
+> > -                                     workingset_refault(folio, shadow)=
+;
+> > -
+> > -                             folio_add_lru(folio);
+> > -
+> > -                             /* To provide entry to swap_read_folio() =
+*/
+> > -                             folio->swap =3D entry;
+> > -                             swap_read_folio(folio, true, NULL);
+> > -                             folio->private =3D NULL;
+> > -                     }
+> > +                     /* skip swapcache and readahead */
+> > +                     folio =3D swapin_direct(entry, GFP_HIGHUSER_MOVAB=
+LE, vmf);
+> > +                     if (folio)
+> > +                             page =3D &folio->page;
+> >               } else {
+> >                       page =3D swapin_readahead(entry, GFP_HIGHUSER_MOV=
+ABLE,
+> >                                               vmf);
+> > diff --git a/mm/swap.h b/mm/swap.h
+> > index 758c46ca671e..83eab7b67e77 100644
+> > --- a/mm/swap.h
+> > +++ b/mm/swap.h
+> > @@ -56,6 +56,8 @@ struct folio *swap_cluster_readahead(swp_entry_t entr=
+y, gfp_t flag,
+> >               struct mempolicy *mpol, pgoff_t ilx);
+> >  struct page *swapin_readahead(swp_entry_t entry, gfp_t flag,
+> >                             struct vm_fault *vmf);
+> > +struct folio *swapin_direct(swp_entry_t entry, gfp_t flag,
+> > +                         struct vm_fault *vmf);
+> >
+> >  static inline unsigned int folio_swap_flags(struct folio *folio)
+> >  {
+> > @@ -86,6 +88,12 @@ static inline struct folio *swap_cluster_readahead(s=
+wp_entry_t entry,
+> >       return NULL;
+> >  }
+> >
+> > +struct folio *swapin_direct(swp_entry_t entry, gfp_t flag,
+> > +                     struct vm_fault *vmf)
+> > +{
+> > +     return NULL;
+> > +}
 > > +
-> > +	int vmid;
+> >  static inline struct page *swapin_readahead(swp_entry_t swp, gfp_t gfp=
+_mask,
+> >                       struct vm_fault *vmf)
+> >  {
+> > diff --git a/mm/swap_state.c b/mm/swap_state.c
+> > index e671266ad772..24cb93ed5081 100644
+> > --- a/mm/swap_state.c
+> > +++ b/mm/swap_state.c
+> > @@ -861,6 +861,53 @@ static struct folio *swap_vma_readahead(swp_entry_=
+t targ_entry, gfp_t gfp_mask,
+> >       return folio;
+> >  }
+> >
+> > +/**
+> > + * swapin_direct - swap in folios skipping swap cache and readahead
+>
+> swap in a folio ...
+>
+> > + * @entry: swap entry of this memory
+> > + * @gfp_mask: memory allocation flags
+> > + * @vmf: fault information
+> > + *
+> > + * Returns the struct folio for entry and addr after the swap entry is=
+ read
+> > + * in.
+> > + */
+> > +struct folio *swapin_direct(swp_entry_t entry, gfp_t gfp_mask,
+> > +                         struct vm_fault *vmf)
+> > +{
+> > +     struct vm_area_struct *vma =3D vmf->vma;
+> > +     struct folio *folio;
+> > +     void *shadow =3D NULL;
 > > +
-> > +	union iommu_driver_user_data {
-> > +		struct iommu_driver_user_vtd;
-> > +		struct iommu_driver_user_arm_smmuv3;
-> > +		struct iommu_driver_user_amd_viommu;
-> > +	};
-> 
-> Not like that, in the usual container_of way
+> > +     /* skip swapcache */
+> > +     folio =3D vma_alloc_folio(GFP_HIGHUSER_MOVABLE, 0,
+>
+> You passed gfp_mask in, but don't use it.
+>
 
-How about this:
+Thanks, will fix these.
 
-// iommu.h
-@@ -490,6 +490,16 @@ struct iommu_ops {
-+       /* User space instance allocation and freeing by the iommu driver */
-+       struct iommu_device_user *(*iommu_alloc_user)(struct iommu_device *iommu);
-+       void (*iommu_free_user)(struct iommu_device_user *iommu_user);
-+       int (*iommu_user_set_dev_id)(struct iommu_device_user *iommu_user,
-+                                    struct device *dev, u64 dev_id);
-+       int (*iommu_user_unset_dev_id)(struct iommu_device_user *iommu_user,
-+                                      struct device *dev);
-+       int (*iommu_cache_invalidate_usewr)(struct iommu_device_user *iommu_user,
-+                                           struct iommu_user_data_array *array);
-...
-+/**
-+ * struct iommu_device_user - IOMMU core representation of one IOMMU virtual
-+ *                            instance
-+ * @iommu_dev: Underlying IOMMU hardware instance
-+ * @id: Virtual instance ID, e.g. a vmid
-+ */
-+struct iommu_device_user {
-+       struct iommu_device *iommu_dev;
-+       struct xarray virtual_ids;
-+       u32 id;
-+};
-
-// iommufd_private.h
-+struct iommufd_viommu {
-+       struct iommufd_object obj;
-+       struct iommufd_ctx *ictx;
-+       struct iommu_device *iommu_dev;
-+       struct iommu_device_user *iommu_user;
-+       struct iommufd_hwpt_paging *hwpt;
-+};
-+
-+int iommufd_viommu_alloc_ioctl(struct iommufd_ucmd *ucmd);
-+void iommufd_viommu_destroy(struct iommufd_object *obj);
-
-So iommu_alloc_user op allocates a driver private structure that
-contains an iommu_device_user and returns &priv->iommu_user.
-
-The set/unset_dev_id ops probably need a type argument if there
-can be a multi-xarray case, then the virtual_ids xarray should
-be moved to the driver private structure too?
-
-Also, a 64-bit virtual id in the uAPI was suggested previously.
-But xarray is limited to a 32-bit index? Should we compromise
-the uAPI to 32-bit or is there an alternative for a 64-bit id
-lookup?
-
-Thanks
-Nicolin
+> --
+> Best Regards,
+> Huang, Ying
