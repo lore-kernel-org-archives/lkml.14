@@ -1,123 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C3921A17;
-	Fri,  5 Jan 2024 08:27:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666BF208BD;
+	Fri,  5 Jan 2024 08:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lhvb/brI"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 51EA0C433C9;
-	Fri,  5 Jan 2024 08:27:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704443225;
-	bh=G8eLuVwnsvFwn4kF39vSmn4oX45xzBPrmGlnzDyCVrY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=lhvb/brIwBcIhUY6hJTYMUIz9BRxjoZkiCe4osmeqKEovt4N/1yvHnpZ/muqgJkSY
-	 OPJiUewPw7bk42vS3BiOEMHosaFmoaEB+umU1f+gRyOwkxlprKXLhgXHErbzUeFAUJ
-	 LPXx0NnBkgv3bTuZSHdCGLJ8rjwraZXD+5DWGWijGXPq/hlPw4C/LPtD8x0i7wMwId
-	 IwUx9ubh4M/OsTdtIk2e7JOgAuE+fA/6k0Q7kiCD/JMZaPqrzh2AvO7ZPxJpVxqg9C
-	 fwFG6JLrbVdiAkyUX1YAmUYBOK6JpQWiirIrQPg6qbSSxieoRltLhqf3TukB7wAoFG
-	 AjoZOdwVcDDSQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37030C4707B;
-	Fri,  5 Jan 2024 08:27:05 +0000 (UTC)
-From: Christoph Winklhofer via B4 Relay
- <devnull+cj.winklhofer.gmail.com@kernel.org>
-Date: Fri, 05 Jan 2024 09:26:42 +0100
-Subject: [PATCH v3 1/3] dt-bindings: w1: UART 1-Wire bus
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bk8VwQGY"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D578C40005;
+	Fri,  5 Jan 2024 08:32:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1704443541;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kmyYmzVm/qP7CoTti/7/1uH5HNF3/IzXKxXhez/kx98=;
+	b=bk8VwQGYlzu3Ebd+X3+nP4+BE4bFXE9ZGZCBQp/VY0+vekrlAvi1sqnw9zBzxXbJwSy9ap
+	kbNxKxAMlcat2ng9Dhx/oacFdFEiMzhduDajPQ7sjNcsFiK4SuyMSsAiTQR2H4iPTF04rV
+	XDv9Qc5Wx1LeHhGJuoQi9NOsdk/SjX8/WwBPh7aGVZkn5QhJBrJ5Tq01tAn5noNEtcjlY9
+	i+/wW5+5O1caAfCHluzAKSugHz/+jMpTyGpYXNJBjPIeJsBJOgOg5TNHqQOKtsTHKYtOV4
+	7UnPxsS7wojv9FfAlzELNdVPF60uDafpV75k0D7e+zXGN5Qq+3V3iTfUpDPgWw==
+Date: Fri, 5 Jan 2024 10:29:18 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: davem@davemloft.net, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, Andrew Lunn
+ <andrew@lunn.ch>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
+ linux-arm-kernel@lists.infradead.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
+ =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Jesse Brandeburg
+ <jesse.brandeburg@intel.com>, Jonathan Corbet <corbet@lwn.net>, Marek
+ =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, Piergiorgio Beruto
+ <piergiorgio.beruto@gmail.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ =?UTF-8?B?Tmljb2zDsg==?= Veronese <nicveronese@gmail.com>, Simon Horman
+ <horms@kernel.org>
+Subject: Re: [PATCH net-next v5 01/13] net: phy: Introduce ethernet link
+ topology representation
+Message-ID: <20240105102918.24398552@device-28.home>
+In-Reply-To: <20240104151242.52fa8cb4@kernel.org>
+References: <20231221180047.1924733-1-maxime.chevallier@bootlin.com>
+	<20231221180047.1924733-2-maxime.chevallier@bootlin.com>
+	<20240104151242.52fa8cb4@kernel.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240105-w1-uart-v3-1-8687093b2e76@gmail.com>
-References: <20240105-w1-uart-v3-0-8687093b2e76@gmail.com>
-In-Reply-To: <20240105-w1-uart-v3-0-8687093b2e76@gmail.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- Christoph Winklhofer <cj.winklhofer@gmail.com>, 
- Rob Herring <robh@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Jiri Slaby <jirislaby@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-serial@vger.kernel.org, linux-doc@vger.kernel.org
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1704443222; l=1794;
- i=cj.winklhofer@gmail.com; s=20240104; h=from:subject:message-id;
- bh=mQ67z9MozxmHEO1WDHe54CopgfQx4fCTtQWX0na1aCg=;
- b=YhCSSb9LicuB5pF3Y8aRvjUrvBF+D+7RDn+7/rpIYWGgWQXV0ZCJP8J7JZAQBxe2GaRDaukJT
- sgYnkIn+mVzD/FS0UCXTrBJQa9HuNDU8HweE3rd1VxvxnxdwwBqqAy4
-X-Developer-Key: i=cj.winklhofer@gmail.com; a=ed25519;
- pk=lgjGjOt7hFKJT9UXhgUyrdthxvZ7DJ5F1U/7d9qdAsk=
-X-Endpoint-Received:
- by B4 Relay for cj.winklhofer@gmail.com/20240104 with auth_id=111
-X-Original-From: Christoph Winklhofer <cj.winklhofer@gmail.com>
-Reply-To: <cj.winklhofer@gmail.com>
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-From: Christoph Winklhofer <cj.winklhofer@gmail.com>
+Hi Jakub,
 
-Add device tree binding for UART 1-Wire bus.
+On Thu, 4 Jan 2024 15:12:42 -0800
+Jakub Kicinski <kuba@kernel.org> wrote:
 
-Signed-off-by: Christoph Winklhofer <cj.winklhofer@gmail.com>
----
- Documentation/devicetree/bindings/w1/w1-uart.yaml | 44 +++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+> On Thu, 21 Dec 2023 19:00:34 +0100 Maxime Chevallier wrote:
+> > @@ -2441,6 +2442,7 @@ struct net_device {
+> >  #if IS_ENABLED(CONFIG_CGROUP_NET_PRIO)
+> >  	struct netprio_map __rcu *priomap;
+> >  #endif
+> > +	struct phy_link_topology	link_topo;  
+> 
+> Perhaps others would disagree but can we make this a pointer instead?
+> Only allocate it on demand, when first PHY gets attached?
+> Both saves space and netdevice.h will no longer need to know the
+> definition of the struct.
+>
+> Complete noob question but I thought PHYs get attached at ndo_open
+> time for drivers, don't they? We shouldn't want to re-ID in that case.
 
-diff --git a/Documentation/devicetree/bindings/w1/w1-uart.yaml b/Documentation/devicetree/bindings/w1/w1-uart.yaml
-new file mode 100644
-index 000000000000..93d83c42c407
---- /dev/null
-+++ b/Documentation/devicetree/bindings/w1/w1-uart.yaml
-@@ -0,0 +1,44 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/w1/w1-uart.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: UART 1-Wire Bus
-+
-+maintainers:
-+  - Christoph Winklhofer <cj.winklhofer@gmail.com>
-+
-+description: |
-+  UART 1-wire bus. Utilizes the UART interface via the Serial Device Bus
-+  to create the 1-Wire timing patterns.
-+
-+  The UART peripheral must support full-duplex and operate in open-drain
-+  mode. The timing patterns are generated by a specific combination of
-+  baud-rate and transmitted byte, which corresponds to a 1-Wire read bit,
-+  write bit or reset pulse.
-+
-+  The default baud-rate for reset and presence detection is 9600 and for
-+  a 1-Wire read or write operation 115200. In case the actual baud-rate
-+  is different from the requested one, the transmitted byte is adapted
-+  to generate the 1-Wire timing patterns.
-+
-+  https://www.analog.com/en/technical-articles/using-a-uart-to-implement-a-1wire-bus-master.html
-+
-+
-+properties:
-+  compatible:
-+    const: w1-uart
-+
-+required:
-+  - compatible
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    serial {
-+      onewire {
-+        compatible = "w1-uart";
-+      };
-+    };
+I'll give it a try, it could be doable to try to keep the index for
+_some_ PHYs. I had a first try at this in the very first iteration, but
+that was lost when converting to xarray for the index management. Since
+the phy_device keeps track of its own index, we can try to re-use it,
+but I can see it becoming difficult if we destroy the topology when all
+PHYs are detached (after ndo_close).
 
--- 
-2.43.0
+When re-creating the xarray at the next ndo_open, we would need to know
+what was the previous next_index, and we can't know that until PHYs are
+all re-attached.
 
+For now it would work because in most cases, we only have one PHY
+behind the MAC we can guarantee won't go away, but there are devices
+out-there with 2 PHYs connected to the same MAC with a MUX in the
+middle (that's one thing this series prepares for), and here it would
+be more complex to re-allocate the topology while knowing what's the
+next unused index. Hope that makes sense :)
+
+To summarize, I don't think we can easily both dynamically
+allocate/destroy the topology based only on the presence of at least
+one PHY, and try to keep the PHY index the same for non-hot-pluggable
+PHYs.
+
+> 
+> >  	struct phy_device	*phydev;
+> >  	struct sfp_bus		*sfp_bus;
+> >  	struct lock_class_key	*qdisc_tx_busylock;  
+> 
+> > @@ -10872,6 +10873,8 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
+> >  #ifdef CONFIG_NET_SCHED
+> >  	hash_init(dev->qdisc_hash);
+> >  #endif
+> > +	phy_link_topo_init(&dev->link_topo);
+> > +
+> >  	dev->priv_flags = IFF_XMIT_DST_RELEASE | IFF_XMIT_DST_RELEASE_PERM;
+> >  	setup(dev);
+> >    
+> 
+> I think you're missing a call to xa_destroy() somewhere, no?
+
+Arg you're right... I was under the false assumption that because the
+xarray wasn't dynamically allocated, we didn't need to perform any
+cleanup, thanks for spotting this.
+
+Maxime
