@@ -1,115 +1,102 @@
-Received: from bee.tesarici.cz (bee.tesarici.cz [77.93.223.253])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1F32E405;
-	Fri,  5 Jan 2024 10:34:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E282CCBA
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 10:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="vsp/ed+p"
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id E3E231A6FC6;
-	Fri,  5 Jan 2024 11:34:03 +0100 (CET)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=none dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tesarici.cz; s=mail;
-	t=1704450844; bh=W5kCnIB42LtsWaPmFAcROMCgMQPTBbi21yBS1qwCu3o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=vsp/ed+p/jez3C+wSexJ/WxUleoMdIAYBCau4oba3WHeINZOmT49XmZg71MHuOnXC
-	 /96L+GGHlVPtqeNDBNq11AiSrJXnMGlMOwIHre2Cs9YIOtPxWB0oTn5c3n26wDWLAh
-	 XTmGFjkHId1xkRB0mQUS0CFAAvu4i9/ysdrjmKlKx8d2sAbf0Z5mFL53xoDLcGxtmF
-	 7kd+II8C/wcovQkpRn9TiYf8wAFcOYR9CKESmQQIY46X1ZIQvMiR++rvuoDxXft82j
-	 KWS9v1/4/r+1FbDm0JxeCpDjxpLYMCfCnwZ81Xrq3rPEGV/IhKULwMtAJxA5p3yfvy
-	 fRD1Jv9G8xgsA==
-Date: Fri, 5 Jan 2024 11:34:02 +0100
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: Eric Dumazet <edumazet@google.com>
-Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu
- <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Maxime
- Coquelin <mcoquelin.stm32@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Jernej
- Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>,
- "open list:STMMAC ETHERNET DRIVER" <netdev@vger.kernel.org>, "moderated
- list:ARM/STM32 ARCHITECTURE" <linux-stm32@st-md-mailman.stormreply.com>,
- "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>, open list
- <linux-kernel@vger.kernel.org>, "open list:ARM/Allwinner sunXi SoC support"
- <linux-sunxi@lists.linux.dev>
-Subject: Re: [PATCH] net: stmmac: protect statistics updates with a spinlock
-Message-ID: <20240105113402.0f5f1232@meshulam.tesarici.cz>
-In-Reply-To: <CANn89iLuYZBersxq4aH-9Fg_ojD0fh=0xtdLbRdbMrup=nvrkA@mail.gmail.com>
-References: <20240105091556.15516-1-petr@tesarici.cz>
-	<CANn89iLuYZBersxq4aH-9Fg_ojD0fh=0xtdLbRdbMrup=nvrkA@mail.gmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KCDxuDH0"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5cdfbd4e8caso1001080a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 02:34:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704450898; x=1705055698; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WJ+3lkUD3PcgGfGxvkRaWTL+ma2UbkIJWkqsRj7YstE=;
+        b=KCDxuDH08tdQOVTXAWmPxq70pEK1uW7fGJDet6ALwH697BN8l52jB3aQnmjX5s7UHG
+         bhVirNpURID9AQO26/hnHfp4FrG5fLl4wv1cV4WNYazQkVkfeo0i7wCmn0U5zz/gVjS1
+         MT2TbVTiJwtZgrCPGCRJiG1rUc63wNUFQD1woDmAhqgRMTeg2fWnvDfD0hek685mA5at
+         wVcqjDDt1j646f1R+lxdtcj2locmLy3bGpV9ZqwMaJPYIy3KvuW/YKIyA84dbafk7KaD
+         ajzMeu9XB26TETptGAZomv7rK/KimwpuEuV1EKnG2PrP0gM7Mbx67/wpzVE066RMgaeg
+         UFCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704450898; x=1705055698;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WJ+3lkUD3PcgGfGxvkRaWTL+ma2UbkIJWkqsRj7YstE=;
+        b=xSTsXb2NJnHPHv2EbgmKwK00tYaLqaFk6IUkBFM05wVgiyq70yL2DsrSoYUaAwS8Rl
+         kiSJGl0kC2wsm6cueF5Ti/MGLw52Gk/S4I9AFKlrrtrwRANz5HoITe9OfEBayow0o9+0
+         rAlnWHt6bhX1bCruGOsYf00jWKyxAImp8p8Rp2G4PZb/m2QI23Hp0QX9/Zx13h5MLug1
+         UvgB/jWDCqxQVcAjcZbKZnUnHyueVV1t27bmDBTGKGccWlK3Nfu82I18zMED4HBuiusA
+         zT/hIDT1ZHjmNoXvvMz4tVuKq6rgGOuP3MMxQzM5T4wqmzJ+95w+0YiQQ1jDrTlvnIYJ
+         CIyQ==
+X-Gm-Message-State: AOJu0YzwM8z/ZX/e6GwouI84IacqnpLvIksKjx1i661HCGyujLn5w4a0
+	zeyeM+GUr43wHPoXy44OibV5wTvNRWe+5g==
+X-Google-Smtp-Source: AGHT+IGUo41ABXS8rCxKJiuRcNLhqF2QPdz0DGJ/Fk7r3EeZouzt3jwZJdmpivBVOkXjjJi3lr2lZQ==
+X-Received: by 2002:a05:6a20:c759:b0:196:2018:2bac with SMTP id hj25-20020a056a20c75900b0019620182bacmr1486037pzb.107.1704450898337;
+        Fri, 05 Jan 2024 02:34:58 -0800 (PST)
+Received: from localhost ([122.172.86.168])
+        by smtp.gmail.com with ESMTPSA id ks13-20020a056a004b8d00b006d9b93ca5e2sm1126988pfb.146.2024.01.05.02.34.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jan 2024 02:34:57 -0800 (PST)
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Viresh Kumar <vireshk@kernel.org>,
+	Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>,
+	linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	"v5 . 18+" <stable@vger.kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] OPP: Pass rounded rate to _set_opp()
+Date: Fri,  5 Jan 2024 16:04:52 +0530
+Message-Id: <7269c250db1b89cda72ca419b7bd5e37997309d6.1704450876.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, 5 Jan 2024 10:58:42 +0100
-Eric Dumazet <edumazet@google.com> wrote:
+The OPP core finds the eventual frequency to set with the help of
+clk_round_rate() and the same was earlier getting passed to _set_opp()
+and that's what would get configured.
 
-> On Fri, Jan 5, 2024 at 10:16=E2=80=AFAM Petr Tesarik <petr@tesarici.cz> w=
-rote:
-> >
-> > Add a spinlock to fix race conditions while updating Tx/Rx statistics.
-> >
-> > As explained by a comment in <linux/u64_stats_sync.h>, write side of st=
-ruct
-> > u64_stats_sync must ensure mutual exclusion, or one seqcount update cou=
-ld
-> > be lost on 32-bit platforms, thus blocking readers forever.
-> >
-> > Such lockups have been actually observed on 32-bit Arm after stmmac_xmi=
-t()
-> > on one core raced with stmmac_napi_poll_tx() on another core.
-> >
-> > Signed-off-by: Petr Tesarik <petr@tesarici.cz> =20
->=20
-> This is going to add more costs to 64bit platforms ?
+The commit 1efae8d2e777 ("OPP: Make dev_pm_opp_set_opp() independent of
+frequency") mistakenly changed that. Fix it.
 
-Yes, it adds a (hopefully not too contended) spinlock and in most
-places an interrupt disable/enable pair.
+Fixes: 1efae8d2e777 ("OPP: Make dev_pm_opp_set_opp() independent of frequency")
+Cc: v5.18+ <stable@vger.kernel.org> # v6.0+
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ drivers/opp/core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-FWIW the race condition is also present on 64-bit platforms, resulting
-in inaccurate statistic counters. I can understand if you consider it a
-mild annoyance, not worth fixing.
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index 29f8160c3e38..5e6cfcbd2e87 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -1352,12 +1352,12 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
+ 		 * value of the frequency. In such a case, do not abort but
+ 		 * configure the hardware to the desired frequency forcefully.
+ 		 */
+-		forced = opp_table->rate_clk_single != target_freq;
++		forced = opp_table->rate_clk_single != freq;
+ 	}
+ 
+-	ret = _set_opp(dev, opp_table, opp, &target_freq, forced);
++	ret = _set_opp(dev, opp_table, opp, &freq, forced);
+ 
+-	if (target_freq)
++	if (freq)
+ 		dev_pm_opp_put(opp);
+ 
+ put_opp_table:
+-- 
+2.31.1.272.g89b43f80a514
 
-> It seems to me that the same syncp can be used from two different
-> threads : hard irq and napi poller...
-
-Yes, that's exactly the scenario that locks up my system.
-
-> At this point, I do not see why you keep linux/u64_stats_sync.h if you
-> decide to go for a spinlock...
-
-The spinlock does not havce to be taken on the reader side, so the
-seqcounter still adds some value.
-
-> Alternative would use atomic64_t fields for the ones where there is no
-> mutual exclusion.
->=20
-> RX : napi poll is definitely safe (protected by an atomic bit)
-> TX : each TX queue is also safe (protected by an atomic exclusion for
-> non LLTX drivers)
->=20
-> This leaves the fields updated from hardware interrupt context ?
-
-I'm afraid I don't have enough network-stack-foo to follow here.
-
-My issue on 32 bit is that stmmac_xmit() may be called directly from
-process context while another core runs the TX napi on the same channel
-(in interrupt context). I didn't observe any race on the RX path, but I
-believe it's possible with NAPI busy polling.
-
-In any case, I don't see the connection with LLTX. Maybe you want to
-say that the TX queue is safe for stmmac (because it is a non-LLTX
-driver), but might not be safe for LLTX drivers?
-
-Petr T
