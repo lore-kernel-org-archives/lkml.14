@@ -1,90 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3F024201
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Jan 2024 09:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nds/cX3E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704445813; x=1735981813;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=dZPVqfWRlpt41RlG0uqz1mITwbjH23pG5K3j08buB/Y=;
-  b=Nds/cX3EflC6mjbloV1086wnxTWdE3vT/YVHor+SSBv5EHi9Zi0QapRl
-   uezDZmm8vCsiqWgy6OSQMW8PGK45VXJ5m1Hoqd1BA1ZeL1zTOkH3W3QEA
-   ovONdmqGwvnMW6kD7PqpurLpMNKNnardt1O9lLjcGuxKZMhyGvyePJKRC
-   2a/FszS7fFCPO8KU+6Yy/czR3+FXua47RUXCU6uLfzS36ASQIjYE3Wwnk
-   CUk58AIiQWKUsnCUZfFzbmy6mhALfh7CZfy3/nqt2Oea1Jfc0ITruCL8a
-   Ttj3+fz1eZOiDs52II38b52fzRodk+GRf6iQHEjGaakN5Qu4RYIYoxqsK
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="461768752"
-X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
-   d="scan'208";a="461768752"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 01:10:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
-   d="scan'208";a="15192501"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmviesa002.fm.intel.com with ESMTP; 05 Jan 2024 01:10:11 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rLgDR-00012O-1s;
-	Fri, 05 Jan 2024 09:10:09 +0000
-Date: Fri, 5 Jan 2024 17:10:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Guo Ren <guoren@linux.alibaba.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Palmer Dabbelt <palmer@rivosinc.com>
-Subject: arch/riscv/kernel/irq.c:49:1: sparse: sparse: symbol
- '__pcpu_scope_irq_stack' was not declared. Should it be static?
-Message-ID: <202401051709.Lg5tIeRM-lkp@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A14822EEB;
+	Fri,  5 Jan 2024 09:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.1.104] (178.176.73.147) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Fri, 5 Jan
+ 2024 12:15:37 +0300
+Subject: Re: [PATCH] usb: typec: tipd: Separate reset for TPS6598x
+To: Jai Luthra <j-luthra@ti.com>, Heikki Krogerus
+	<heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Javier Carrasco
+	<javier.carrasco@wolfvision.net>
+CC: <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<rogerq@kernel.org>, <r-gunasekaran@ti.com>, <vigneshr@ti.com>,
+	<d-gole@ti.com>
+References: <20240105-next-tps-fix-v1-1-158cabaec168@ti.com>
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <78925337-0bba-ca7d-aeb1-2d5c53c565ea@omp.ru>
+Date: Fri, 5 Jan 2024 12:15:36 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <20240105-next-tps-fix-v1-1-158cabaec168@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 01/05/2024 09:03:19
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 59
+X-KSE-AntiSpam-Info: Lua profiles 182464 [Jan 04 2024]
+X-KSE-AntiSpam-Info: Version: 6.1.0.3
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_phishing_log_reg_50_60}
+X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {relay has no DNS name}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.73.147 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.73.147 in (user)
+ dbl.spamhaus.org}
+X-KSE-AntiSpam-Info:
+	lore.kernel.org:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;178.176.73.147:7.1.2;omp.ru:7.1.1
+X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.73.147
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 59
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 01/05/2024 09:08:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 1/5/2024 6:56:00 AM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   1f874787ed9a2d78ed59cb21d0d90ac0178eceb0
-commit: 163e76cc6ef43b7a5e9b6e245a6d6667c9d9b4a7 riscv: stack: Support HAVE_IRQ_EXIT_ON_IRQ_STACK
-date:   7 months ago
-config: riscv-randconfig-r122-20231115 (https://download.01.org/0day-ci/archive/20240105/202401051709.Lg5tIeRM-lkp@intel.com/config)
-compiler: riscv64-linux-gcc (GCC) 13.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20240105/202401051709.Lg5tIeRM-lkp@intel.com/reproduce)
+Hello!
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401051709.Lg5tIeRM-lkp@intel.com/
+On 1/5/24 12:06 PM, Jai Luthra wrote:
 
-sparse warnings: (new ones prefixed by >>)
->> arch/riscv/kernel/irq.c:49:1: sparse: sparse: symbol '__pcpu_scope_irq_stack' was not declared. Should it be static?
+> Some platforms like SK-AM62, SK-AM62A cannot boot up to prompt if
+> TPS6598x is cold-reset during unconditionally on probe failures by
 
-vim +/__pcpu_scope_irq_stack +49 arch/riscv/kernel/irq.c
+   Hm, I can't parse this. During what?
 
-    35	
-    36	#ifdef CONFIG_VMAP_STACK
-    37	static void init_irq_stacks(void)
-    38	{
-    39		int cpu;
-    40		ulong *p;
-    41	
-    42		for_each_possible_cpu(cpu) {
-    43			p = arch_alloc_vmap_stack(IRQ_STACK_SIZE, cpu_to_node(cpu));
-    44			per_cpu(irq_stack_ptr, cpu) = p;
-    45		}
-    46	}
-    47	#else
-    48	/* irq stack only needs to be 16 byte aligned - not IRQ_STACK_SIZE aligned. */
-  > 49	DEFINE_PER_CPU_ALIGNED(ulong [IRQ_STACK_SIZE/sizeof(ulong)], irq_stack);
-    50	
+> sending "GAID" sequence.
+> 
+> The probe can fail initially because USB0 remote-endpoint may not be
+> probed yet, which defines the usb-role-switch property.
+> 
+> Fixes: d49f90822015 ("usb: typec: tipd: add init and reset functions to tipd_data")
+> Closes: https://lore.kernel.org/linux-usb/vmngazj6si7xxss7txenezkcukqje2glhvvs7ipdcx3vjiqvlk@ohmmhhhlryws/
+> Signed-off-by: Jai Luthra <j-luthra@ti.com>
+[...]
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+MBR, Sergey
