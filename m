@@ -1,141 +1,97 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE16524201;
-	Fri,  5 Jan 2024 09:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8FE8249E9;
+	Fri,  5 Jan 2024 09:45:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="p1Gvid2Y";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Tqecptw3"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id F05761F850;
-	Fri,  5 Jan 2024 09:45:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1704447908; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WjMAyVdiebrt/Q0pS2dmmJub9qx0XoEkNWeuoUlkfwo=;
-	b=p1Gvid2Yx7rB6xquGDuCYppBhbc/gAtKc0wrv0gBT50BqlzJK8hTKFQrytCCjyOzHWLfbE
-	Y2XGpbQrz1c7Q21Zex4/mE+1dqaHMGda58PuiBXIVOfXVJlhO8bcPm8+xGa+sclP5720lq
-	1jW4vWn0cOfeFiuLR8q9NrkKVPpNXnk=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1704447907; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WjMAyVdiebrt/Q0pS2dmmJub9qx0XoEkNWeuoUlkfwo=;
-	b=Tqecptw3BTnIUZiudoZwWXFz8DvrhvVQ0cdCR01ZJWtLoMYC076yGW/+VYDFm0jYgsOFWe
-	9XhBmBIqpkC/1O3YAtp2rYCgoCC3vXVrS9ggqVEcJJ0V4NRKYrrUJNQcVQxP0nnzdtm9Dk
-	/+AT7ckcg18sWIFSJ0Q9pX8pMUvyYqg=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D8D5413C99;
-	Fri,  5 Jan 2024 09:45:07 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id P5C6NKPPl2WQUgAAD6G6ig
-	(envelope-from <mkoutny@suse.com>); Fri, 05 Jan 2024 09:45:07 +0000
-Date: Fri, 5 Jan 2024 10:45:02 +0100
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Haitao Huang <haitao.huang@linux.intel.com>
-Cc: jarkko@kernel.org, dave.hansen@linux.intel.com, tj@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org, x86@kernel.org, 
-	cgroups@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	hpa@zytor.com, sohil.mehta@intel.com, zhiquan1.li@intel.com, 
-	kristen@linux.intel.com, seanjc@google.com, zhanb@microsoft.com, anakrish@microsoft.com, 
-	mikko.ylinen@linux.intel.com, yangjie@microsoft.com
-Subject: Re: [PATCH v6 01/12] cgroup/misc: Add per resource callbacks for CSS
- events
-Message-ID: <5qfjx2vvirtffkro5u6zdbbwia2bhhbjxwgij2igdnxk5hysaq@kpqboajvuzbc>
-References: <20231030182013.40086-1-haitao.huang@linux.intel.com>
- <20231030182013.40086-2-haitao.huang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fnuyo02r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704447943; x=1735983943;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references;
+  bh=Ipngyt99PQBot25YTtxsZ8y9PD4Q1alyU7StkGQNfLY=;
+  b=fnuyo02rSKwwPWrsZFROs7v/XHn9dr5YDWhie/bbv5+7sNUQx1Kx9e6t
+   3pLdO95MBos9DmdsTw9bWomhj2XsM4LXWvOp4ESTBClk0nPmgXyZEmYVB
+   WsqbHUHC5qjLzn4RJAjG/+1rFx6kjrqfKp2cafqu797EewAd5/VZQ0bHH
+   CdVekDRYa96g6968LeqNeZEdIBIWn9vizSVeuNERsZEECkbH5rNvkhax+
+   98yPQ0dNV7CPZe/p9plKBOir7VhYDbSlHeSkll9bjjLr1wChGshvdFwYh
+   /t3CV6Oxx1nD7ok1wy4E0WJqIweTnd3o1nmexXLUkHq/89ACpKIAPKsFt
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="10959501"
+X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
+   d="scan'208";a="10959501"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 01:45:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10943"; a="784158335"
+X-IronPort-AV: E=Sophos;i="6.04,333,1695711600"; 
+   d="scan'208";a="784158335"
+Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 01:45:36 -0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Cc: pbonzini@redhat.com,
+	seanjc@google.com,
+	olvaffe@gmail.com,
+	kevin.tian@intel.com,
+	zhiyuan.lv@intel.com,
+	zhenyu.z.wang@intel.com,
+	yongwei.ma@intel.com,
+	vkuznets@redhat.com,
+	wanpengli@tencent.com,
+	jmattson@google.com,
+	joro@8bytes.org,
+	gurchetansingh@chromium.org,
+	kraxel@redhat.com,
+	zzyiwei@google.com,
+	ankita@nvidia.com,
+	jgg@nvidia.com,
+	alex.williamson@redhat.com,
+	maz@kernel.org,
+	oliver.upton@linux.dev,
+	james.morse@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	Yan Zhao <yan.y.zhao@intel.com>
+Subject: [PATCH 4/4] KVM: selftests: Set KVM_MEM_NON_COHERENT_DMA as a supported memslot flag
+Date: Fri,  5 Jan 2024 17:16:24 +0800
+Message-Id: <20240105091624.24822-1-yan.y.zhao@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240105091237.24577-1-yan.y.zhao@intel.com>
+References: <20240105091237.24577-1-yan.y.zhao@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gkycr2ejudi4nnse"
-Content-Disposition: inline
-In-Reply-To: <20231030182013.40086-2-haitao.huang@linux.intel.com>
-X-Spam-Level: 
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spamd-Result: default: False [-2.90 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 SIGNED_PGP(-2.00)[];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+,1:+,2:~];
-	 BAYES_HAM(-0.00)[19.25%];
-	 ARC_NA(0.00)[];
-	 URIBL_BLOCKED(0.00)[intel.com:email];
-	 FROM_HAS_DN(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 RCPT_COUNT_TWELVE(0.00)[20];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -2.90
 
+Update test_invalid_memory_region_flags() to treat KVM_MEM_NON_COHERENT_DMA
+as a supported memslot flag.
 
---gkycr2ejudi4nnse
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+---
+ tools/testing/selftests/kvm/set_memory_region_test.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-On Mon, Oct 30, 2023 at 11:20:02AM -0700, Haitao Huang <haitao.huang@linux.=
-intel.com> wrote:
-> From: Kristen Carlson Accardi <kristen@linux.intel.com>
->=20
-> The misc cgroup controller (subsystem) currently does not perform
-> resource type specific action for Cgroups Subsystem State (CSS) events:
-> the 'css_alloc' event when a cgroup is created and the 'css_free' event
-> when a cgroup is destroyed.
->=20
-> Define callbacks for those events and allow resource providers to
-> register the callbacks per resource type as needed. This will be
-> utilized later by the EPC misc cgroup support implemented in the SGX
-> driver.
+diff --git a/tools/testing/selftests/kvm/set_memory_region_test.c b/tools/testing/selftests/kvm/set_memory_region_test.c
+index 075b80dbe237..2d6f961734db 100644
+--- a/tools/testing/selftests/kvm/set_memory_region_test.c
++++ b/tools/testing/selftests/kvm/set_memory_region_test.c
+@@ -335,6 +335,9 @@ static void test_invalid_memory_region_flags(void)
+ 
+ #if defined __aarch64__ || defined __x86_64__
+ 	supported_flags |= KVM_MEM_READONLY;
++
++	if (kvm_has_cap(KVM_CAP_USER_CONFIGURE_NONCOHERENT_DMA))
++		supported_flags |= KVM_MEM_NON_COHERENT_DMA;
+ #endif
+ 
+ #ifdef __x86_64__
+-- 
+2.17.1
 
-I notice now that the callbacks are per resource and per cgroup.
-I think that is an overkill that complicates misc_cg allocation code
-with parent's callbacks while freeing is done by own callbacks.
-It's possibly too much liberal to keep objects' lifecycle understandable
-in the long term too.=20
-
-For some uniformity, I'd suggest struct blkcg_policy array in
-block/blk-cgroup.c as the precedent. (Perhaps indexed with static enum
-misc_res_type instead of dynamic index assignment as
-blkcg_policy_registeer() does.)
-
-I hope you don't really need per-cgroup callbacks :-)
-
-Michal
-
---gkycr2ejudi4nnse
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQpEWyjXuwGT2dDBqAGvrMr/1gcjgUCZZfPnAAKCRAGvrMr/1gc
-jiP8AP0Q8YvyVS22t8yNx/wVtFr60JLTA5zAgGTIFU7k+w/G+AEA9Jr2ZtxN0QWV
-FYzPie0m1EL3RCqoPrIQleZGYmOfMAw=
-=d7Pm
------END PGP SIGNATURE-----
-
---gkycr2ejudi4nnse--
