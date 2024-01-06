@@ -1,188 +1,115 @@
-Received: from www.linux-watchdog.org (www.linux-watchdog.org [185.87.125.42])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17AA48C0A;
-	Sat,  6 Jan 2024 14:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=linux-watchdog.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux-watchdog.org
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62CC07469;
+	Sat,  6 Jan 2024 14:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="XDlqgqcS"
-Received: by www.linux-watchdog.org (Postfix, from userid 500)
-	id 0A668409F1; Sat,  6 Jan 2024 14:44:16 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org 0A668409F1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
-	s=odk20180602; t=1704548667;
-	bh=3wXHJ5X0Y/5UXPZ+cSSBwup9eb5KfXFSoUe6hAGQfEo=;
-	h=Date:From:To:Cc:Subject:From;
-	b=XDlqgqcSKAuuaZtp6IM02qFkinnhHJF/rqpkVnrrDx3gvW9VkcYdbqnOSibkYCXQi
-	 uSlrZF1s0ShjcvtdK531vxgDACVcojL77mchveENsuyHw5WeaD5PmMQmb4IKx06Fqp
-	 WlEJZ07DbYDHQcqh7bHFgqhUhJbAm5LjNBq9GuKk=
-Date: Sat, 6 Jan 2024 14:44:11 +0100
-From: Wim Van Sebroeck <wim@linux-watchdog.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Ben Dooks <ben.dooks@codethink.co.uk>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Curtis Klein <curtis.klein@hpe.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Jerry Hoemann <jerry.hoemann@hpe.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WnhsEeM4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704549955; x=1736085955;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=b8S9YQ723Vakq/AypdH+EFs2g1D+6lWqicTwgFrXQVY=;
+  b=WnhsEeM47w4acjUoTE0d+WugJ3tUhpSkBWxmi66OWMQ3eGckmWG26yda
+   n9AU4MOEs2fm3QLE+Y4iw1LVS7fgPhDocTbKK5w0z+UxRSuB9fgenqrz/
+   kRRz/rq/J0A+X//rFleXgYrMzGXKzoqXor3nIKJpPjUNyt/ECWEAEtygf
+   YrCxcm/Q13p21vH37Ft+f9G7JddjO5+RWOIiBDUbPWXGMhY/JuEl4vlpU
+   ppOToTOxeVhNkxdd6zxxmVYSBzp1nwtvw9LzXn3cIWL2xVQlnWyBeVJcq
+   mb1HWSsxucJ6hsN90yQNA6kazJKzNyayxKuGe9XAshKExeCiPDrwDHRWf
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10945"; a="5025338"
+X-IronPort-AV: E=Sophos;i="6.04,337,1695711600"; 
+   d="scan'208";a="5025338"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2024 06:05:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10945"; a="1112336317"
+X-IronPort-AV: E=Sophos;i="6.04,337,1695711600"; 
+   d="scan'208";a="1112336317"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2024 06:05:49 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rM7J4-0000000BvKX-1CLt;
+	Sat, 06 Jan 2024 16:05:46 +0200
+Date: Sat, 6 Jan 2024 16:05:46 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mark Hasemeyer <markhas@chromium.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
 	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	Nik Bune <n2h9z4@gmail.com>,
-	Nikita Shubin <nikita.shubin@maquefel.me>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Werner Fischer <devlists@wefi.net>
-Subject: [GIT PULL REQUEST] watchdog - v6.8 release cycle.
-Message-ID: <20240106134410.GA19394@www.linux-watchdog.org>
+	Rob Herring <robh@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Raul Rangel <rrangel@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Frank Rowand <frowand.list@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Len Brown <lenb@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v3 21/24] device property: Modify fwnode irq_get() to use
+ resource
+Message-ID: <ZZleOi6-ekoTL-Jk@smile.fi.intel.com>
+References: <20231226192149.1830592-1-markhas@chromium.org>
+ <20231226122113.v3.21.I38ac58ab04985a404ed6551eb5813fa7841ef410@changeid>
+ <ZYxdwrJw7_JudQXB@smile.fi.intel.com>
+ <CANg-bXBwWXaJWv9gMtjYvRBnOaP3E8U1nh5-ScWOoyRayzn7Zw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.5.20 (2009-12-10)
+In-Reply-To: <CANg-bXBwWXaJWv9gMtjYvRBnOaP3E8U1nh5-ScWOoyRayzn7Zw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Linus,
+On Wed, Dec 27, 2023 at 12:09:19PM -0700, Mark Hasemeyer wrote:
+> > A side note: in all files where you use ioport.h check if you actually included it.
 
-Please pull following watchdog changes for the v6.8 release cycle (once the window is open :-) ).
+...
 
-This series contains:
-* Add Mediatek MT7988 watchdog
-* Add IT8659 watchdog
-* watchdog: set cdev owner before adding
-* hpwdt: Only claim UNKNOWN NMI if from iLO
-* Various other fixes and improvements
+> > > -#include <linux/types.h>
+> > > -#include <linux/list.h>
+> > >  #include <linux/bits.h>
+> > >  #include <linux/err.h>
+> > > +#include <linux/ioport.h>
+> > > +#include <linux/list.h>
+> > > +#include <linux/types.h>
+> >
+> > Fine, but no. This file is still not using the iopoll.h.
+> > See the forward declarations below? It should be there.
+> >
+> > >  struct fwnode_operations;
+> > >  struct device;
 
-The output from git request-pull:
-----------------------------------------------------------------
-The following changes since commit b85ea95d086471afb4ad062012a4d73cd328fa86:
+...
 
-  Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
+> > > --- a/include/linux/property.h
+> > > +++ b/include/linux/property.h
+> >
+> > Same comment(s) here.
+> 
+> I don't fully follow. Are you suggesting adding an explicit 'struct
+> resource' declaration as opposed to including ioport.h?
 
-are available in the git repository at:
+Yes.
 
-  git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-6.8-rc1
+> If so, why? To reduce scope?
 
-for you to fetch changes up to 9546b21ea672aa961d5a89ea754214afed013f02:
+Build time, better granularity, less include hellness.
 
-  watchdog: mlx_wdt: fix all kernel-doc warnings (2023-12-24 10:44:40 +0100)
+-- 
+With Best Regards,
+Andy Shevchenko
 
-----------------------------------------------------------------
-linux-watchdog 6.8-rc1 tag
-
-----------------------------------------------------------------
-Ben Dooks (1):
-      watchdog: starfive: add lock annotations to fix context imbalances
-
-Biju Das (2):
-      dt-bindings: watchdog: dlg,da9062-watchdog: Add fallback for DA9061 watchdog
-      dt-bindings: watchdog: dlg,da9062-watchdog: Document DA9063 watchdog
-
-Curtis Klein (1):
-      watchdog: set cdev owner before adding
-
-Daniel Golle (2):
-      dt-bindings: watchdog: mediatek,mtk-wdt: add MT7988 watchdog and toprgu
-      watchdog: mediatek: mt7988: add wdt support
-
-Douglas Anderson (1):
-      dt-bindings: watchdog: qcom-wdt: Make the interrupt example edge triggered
-
-Jerry Hoemann (3):
-      watchdog/hpwdt: Only claim UNKNOWN NMI if from iLO
-      watchdog/hpwdt: Remove redundant test.
-      watchdog/hpwdt: Remove unused variable
-
-Johan Hovold (1):
-      dt-bindings: watchdog: qcom,pm8916-wdt: add parent spmi node to example
-
-Krzysztof Kozlowski (2):
-      dt-bindings: watchdog: re-order entries to match coding convention
-      dt-bindings: watchdog: intel,keembay: reference common watchdog schema
-
-Lukas Bulwahn (1):
-      MAINTAINERS: rectify entry for DIALOG SEMICONDUCTOR DRIVERS
-
-Nik Bune (3):
-      dt-bindings: watchdog: realtek,rtd1295-watchdog: convert txt to yaml
-      dt-bindings: watchdog: qca,ar7130-wdt: convert txt to yaml
-      dt-bindings: watchdog: nxp,pnx4008-wdt: convert txt to yaml
-
-Nikita Shubin (1):
-      dt-bindings: wdt: Add ts72xx
-
-Randy Dunlap (1):
-      watchdog: mlx_wdt: fix all kernel-doc warnings
-
-Stefan Wahren (1):
-      watchdog: bcm2835_wdt: Fix WDIOC_SETTIMEOUT handling
-
-Uwe Kleine-König (5):
-      watchdog: at91sam9: Stop using module_platform_driver_probe()
-      watchdog: txx9: Stop using module_platform_driver_probe()
-      watchdog: at91sam9_wdt: Convert to platform remove callback returning void
-      watchdog: starfive-wdt: Convert to platform remove callback returning void
-      watchdog: txx9wdt: Convert to platform remove callback returning void
-
-Vignesh Raghavendra (1):
-      watchdog: rti_wdt: Drop runtime pm reference count when watchdog is unused
-
-Werner Fischer (4):
-      watchdog: it87_wdt: add blank line after variable declaration
-      watchdog: it87_wdt: Remove redundant max_units setting
-      watchdog: it87_wdt: Add IT8659 ID
-      watchdog: it87_wdt: Keep WDTCTRL bit 3 unmodified for IT8784/IT8786
-
- .../bindings/watchdog/allwinner,sun4i-a10-wdt.yaml |  6 +--
- .../bindings/watchdog/alphascale,asm9260-wdt.yaml  |  6 +--
- .../devicetree/bindings/watchdog/apple,wdt.yaml    |  6 +--
- .../devicetree/bindings/watchdog/arm-smc-wdt.yaml  |  6 +--
- .../bindings/watchdog/brcm,bcm7038-wdt.yaml        | 10 ++---
- .../bindings/watchdog/cnxt,cx92755-wdt.yaml        |  6 +--
- .../bindings/watchdog/dlg,da9062-watchdog.yaml     | 12 ++++--
- .../bindings/watchdog/intel,keembay-wdt.yaml       |  5 ++-
- .../bindings/watchdog/maxim,max63xx.yaml           |  8 ++--
- .../bindings/watchdog/mediatek,mtk-wdt.yaml        |  1 +
- .../bindings/watchdog/nxp,pnx4008-wdt.yaml         | 34 ++++++++++++++++
- .../devicetree/bindings/watchdog/pnx4008-wdt.txt   | 17 --------
- .../bindings/watchdog/qca,ar7130-wdt.yaml          | 33 ++++++++++++++++
- .../bindings/watchdog/qca-ar7130-wdt.txt           | 13 -------
- .../bindings/watchdog/qcom,pm8916-wdt.yaml         | 33 +++++++++-------
- .../devicetree/bindings/watchdog/qcom-wdt.yaml     |  2 +-
- .../bindings/watchdog/realtek,rtd119x.txt          | 17 --------
- .../watchdog/realtek,rtd1295-watchdog.yaml         | 38 ++++++++++++++++++
- .../devicetree/bindings/watchdog/snps,dw-wdt.yaml  | 10 ++---
- .../bindings/watchdog/technologic,ts7200-wdt.yaml  | 45 ++++++++++++++++++++++
- MAINTAINERS                                        |  2 +-
- drivers/watchdog/at91sam9_wdt.c                    | 12 +++---
- drivers/watchdog/bcm2835_wdt.c                     |  3 +-
- drivers/watchdog/hpwdt.c                           |  9 +----
- drivers/watchdog/it87_wdt.c                        | 29 ++++++++++----
- drivers/watchdog/mlx_wdt.c                         |  4 +-
- drivers/watchdog/mtk_wdt.c                         | 42 ++++++++++++++++++++
- drivers/watchdog/rti_wdt.c                         | 13 ++++++-
- drivers/watchdog/starfive-wdt.c                    |  8 ++--
- drivers/watchdog/txx9wdt.c                         | 11 +++---
- drivers/watchdog/watchdog_dev.c                    |  3 +-
- 31 files changed, 307 insertions(+), 137 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/watchdog/nxp,pnx4008-wdt.yaml
- delete mode 100644 Documentation/devicetree/bindings/watchdog/pnx4008-wdt.txt
- create mode 100644 Documentation/devicetree/bindings/watchdog/qca,ar7130-wdt.yaml
- delete mode 100644 Documentation/devicetree/bindings/watchdog/qca-ar7130-wdt.txt
- delete mode 100644 Documentation/devicetree/bindings/watchdog/realtek,rtd119x.txt
- create mode 100644 Documentation/devicetree/bindings/watchdog/realtek,rtd1295-watchdog.yaml
- create mode 100644 Documentation/devicetree/bindings/watchdog/technologic,ts7200-wdt.yaml
-----------------------------------------------------------------
-
-Kind regards,
-Wim.
 
