@@ -1,104 +1,77 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D10C4426
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Jan 2024 08:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E15D522B
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Jan 2024 08:38:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h1/2hPlf"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-680d1908fb2so2983076d6.3
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Jan 2024 00:09:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GsAB2/Q9"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-78158569dc6so41181385a.3
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Jan 2024 00:38:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704528564; x=1705133364; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SRZMYz5tGg2CVHgwSa5v03Ysex5vkTLyHVYkZh3pAH8=;
-        b=h1/2hPlfrm7u4tIs4tcWqVqPXUsYxZqIbAACmwU6XKvwnCbQwMTqDwDCf90kzUdmfe
-         p9FrU3l8OR4RSs2zajmmJdkGdhLz5d6DTRO8detHUB1X+bIvwdhZp4dJjbdDV8V7cLQA
-         SctmH9bjB4+TFHpjqiH7MxOwz4EWiaJlmLdg1a7lmzsQ6rk2J2k2i8PjqtH4AoiWxXvM
-         wfjJBbvhQZJOEkP0CwKoYytfySKoF6Rp1t6beCIvnMLsx+dd1ws6zuf2DN1J8Wp8PFJJ
-         CBJ3ni6YNssLUdaNOvqmYqw3spp2G5McAfP1COezQVsGDXQzQucAhfEsQKs1a/2fjYFi
-         J73w==
+        d=gmail.com; s=20230601; t=1704530294; x=1705135094; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=kppXyXVQVtZYAC+jpLWN5j5UxASoZa6NImaunFYNEuc=;
+        b=GsAB2/Q9sLMvHZ7VJN4DAxlwj2luW4djqwTnJvH0zRZh1xs5cvR0b2BQRk/B0pv7RJ
+         +7uEQ9zML7xFkHcchCISi5xQRHU/b2qczgYsacwNG9Bw+Ki2tTkUW/pYrd1wwOBPQyGU
+         HMq1dkgUpnWXGxLc3I2tKjRhL/9spZgQCGRkk/ycmjHpqFpx3R9tYFtTOg/nqqnGwvej
+         ZoskpgAh7qywkF64EhZ0fy2BQLsdgJk5Y1T7IkUlsFaRdz+oS55C4AjDEK2/gGXTPkYI
+         Ib+ZErJMtkH6hKNO170yWSjRojsW+uH7pSOaRf9BEqsTFNipum+icaMYrGkmq6qqUI7s
+         0nYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704528564; x=1705133364;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SRZMYz5tGg2CVHgwSa5v03Ysex5vkTLyHVYkZh3pAH8=;
-        b=gt6aHdtFact4gJN2UQ7t8AE9LtqpSIzLsRkJhaotgLAbpMoe/GqwBJLR9mAtPoLUcF
-         2/zmkdSZOtqJp4+DD6F7aHym+PQXGLT3LP599tIOvEZX0p3VT8BqdsgSUEicJ0Fbw2sv
-         kZXkhbXU2U6RAnyGMKZvkp7OMB0eXkLPu/1jUNPHPpPpd2Lo7JZnZBi5lVMS1IyZXoD2
-         eNdPDNHwmMY4Jfd7vJbE7wLxiCYk8J7uDOmrEhqyX30EBdtzUC89kmk8/t5IQYmuJpzK
-         4gatznIyKt9SMCcwKlwUI2sbeZM5sjL8+TviL2QAAQXwA5PMOKwxRMOGuY0ipvVIPwXv
-         DFoQ==
-X-Gm-Message-State: AOJu0Yy00Ci3N6R/rhREvYLNj5jGlhZcAhmIyuH1ZXkiSeb9T85qioxX
-	JUW+0uierAI00/wBIm1ds1YITTutfWh49Mo6R0mROWUdOsLE
-X-Google-Smtp-Source: AGHT+IGNZn0m8paKocQJUSZlQN8n6Znw04sRBC6kbmYiF977qlVZtYqLlwEq8RxKSplwZDYkh/s5529DAMXE8kyNF4M=
-X-Received: by 2002:ad4:5b8b:0:b0:67f:2254:1629 with SMTP id
- 11-20020ad45b8b000000b0067f22541629mr677963qvp.86.1704528563895; Sat, 06 Jan
- 2024 00:09:23 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704530294; x=1705135094;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kppXyXVQVtZYAC+jpLWN5j5UxASoZa6NImaunFYNEuc=;
+        b=SJJVHdQKNNPBpS+feKqbJ8VfuZCHVvudenpAiqmsD1DToWtG7STs/6kcVy/dFE6+ca
+         VIoknEAIwOUmHX1/1VdrlqHJBBSUyesorXT4jir+qr9kTDgNq9yIgvmNt4+Pfo7p+Cyk
+         HZ6JexPRftKltcs55e+JeV9O+8A2YPc5tsXHM38OECQQ+1zBWXgH1eB0tspBpzqnqi6G
+         baHuIg/PtUptqT0tFYyGjai0X1x73FIqRYqW7sZKtWfp2UV2JLig3lXmNNo7zXgYjx1A
+         ZXlLUZp9QsvyQHuiCyzgHBbSZ0GRF/zsGSWohXN938TP1MzM5ttUTJYlN/fWgLkxfwSi
+         5V2w==
+X-Gm-Message-State: AOJu0YwW7P/TahU84MVvsSAcHif1OA1yf2gpwwbMHHxPwI8vUAaj5m2/
+	AE1m4X4iZFTD+QSE7W9VPYZ3hwk45uYn9snnFcIS10pQIjQ=
+X-Google-Smtp-Source: AGHT+IF1ptMzrzkP7UVAJOyCkG+0k2rHWOY17WnNkENu8LWtrGvMgeOeoVP9787nJtW/Dm65hPB84tkJzXu+uJUhxyM=
+X-Received: by 2002:a05:620a:1197:b0:783:11d3:8ffe with SMTP id
+ b23-20020a05620a119700b0078311d38ffemr611611qkk.91.1704530293837; Sat, 06 Jan
+ 2024 00:38:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240104212439.3276458-1-maheshb@google.com> <ZZczNlXzM8lrZgH5@hoboy.vegasvil.org>
- <CAF2d9jga9oc4OST6PMU=C9rz_NDrURCcLGx-1tP31U00z63vbA@mail.gmail.com> <ZZjdUlaYyHZSiwSM@hoboy.vegasvil.org>
-In-Reply-To: <ZZjdUlaYyHZSiwSM@hoboy.vegasvil.org>
-From: =?UTF-8?B?TWFoZXNoIEJhbmRld2FyICjgpK7gpLngpYfgpLYg4KSs4KSC4KSh4KWH4KS14KS+4KSwKQ==?= <maheshb@google.com>
-Date: Sat, 6 Jan 2024 00:08:57 -0800
-Message-ID: <CAF2d9jhnsubL-sw792ZviSXrFB826G-U8OktdEMN1NCe5zuj0Q@mail.gmail.com>
-Subject: Re: [PATCHv3 net-next 2/3] ptp: add ioctl interface for ptp_gettimex64any()
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: Netdev <netdev@vger.kernel.org>, Linux <linux-kernel@vger.kernel.org>, 
-	David Miller <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, John Stultz <jstultz@google.com>, Don Hatchett <hatch@google.com>, 
-	Yuliang Li <yuliangli@google.com>, Mahesh Bandewar <mahesh@bandewar.net>, 
-	Willem de Bruijn <willemb@google.com>
+References: <20240105193331.1180331-1-xzou017@ucr.edu>
+In-Reply-To: <20240105193331.1180331-1-xzou017@ucr.edu>
+From: Tigran Aivazian <aivazian.tigran@gmail.com>
+Date: Sat, 6 Jan 2024 08:38:02 +0000
+Message-ID: <CAK+_RLm93haEd13Z0hVPSRqG4STsDHMHfu4FBdaBW1QP0m_c6w@mail.gmail.com>
+Subject: Re: [PATCH] fs/bfs: Null check to prevent null-ptr-deref bug
+To: Xiaochen Zou <xzou017@ucr.edu>
+Cc: linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 5, 2024 at 8:55=E2=80=AFPM Richard Cochran <richardcochran@gmai=
-l.com> wrote:
->
-> On Fri, Jan 05, 2024 at 09:51:40AM -0800, Mahesh Bandewar (=E0=A4=AE=E0=
-=A4=B9=E0=A5=87=E0=A4=B6 =E0=A4=AC=E0=A4=82=E0=A4=A1=E0=A5=87=E0=A4=B5=E0=
-=A4=BE=E0=A4=B0) wrote:
->
-> > POSIX clocks are employed in this series for syscall width
-> > measurement, potentially leading to misunderstandings about
-> > overlapping functionality. However, their roles are distinct and serve
-> > different purposes.
->
-> I don't see any difference in purposes.  The multi_clock_gettime call
-> is a more general solution.  Thus it will obviate the need for any new
-> PTP ioctls.
->
+Hello,
 
-I disagree! NICs inherently benefit from bundled PTP devices due to
-their superior low-latency, low-overhead, and precise TX/RX
-timestamping capabilities. For demanding systems requiring increased
-capacity, multiple NICs from various vendors are often deployed.
-However, disciplining these diverse PTP devices across the host
-demands a flexible approach; a general purpose syscall is not an
-answer. The current PHC implementation using ioctls through exported
-ptp devices (/dev/ptpX) provides a solid foundation that is per device
-(/per NIC).
+On Fri, 5 Jan 2024 at 19:33, Xiaochen Zou <xzou017@ucr.edu> wrote:
+> Similar to ea2b62f3058 (fs/sysv: Null check to prevent
+> null-ptr-deref bug), bfs is lack of return value check for
+> sb_getblk(). Adding a null check to prevent null-ptr-defer bug
 
-This series is providing another piece in an existing suite of methods
-used for disciplining / precision tuning (along with adjfine, adjtime,
-gettime etc.) This addition is to take that precision even further.
+> diff --git a/fs/bfs/file.c b/fs/bfs/file.c
+> index adc2230079c6..35688424bde3 100644
+> --- a/fs/bfs/file.c
+> +++ b/fs/bfs/file.c
+> @@ -39,6 +39,8 @@ static int bfs_move_block(unsigned long from, unsigned long to,
+>         if (!bh)
+>                 return -EIO;
+>         new = sb_getblk(sb, to);
+> +       if (unlikely(!new))
+> +               return -ENOMEM;
 
-Having a general solution for posix timers is a nice addition.
-However, expecting a general purpose syscall to eliminate need for
-device ioctl is an unreasonable expectation.
+Thank you, yes, that makes sense. Please apply the patch.
 
-Thanks,
---mahesh..
-
-> Thanks,
-> Richard
+Acknowledged-By; Tigran Aivazian <aivazian.tigran@gmail.com>
