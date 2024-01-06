@@ -1,129 +1,245 @@
-Received: from mail.subdimension.ro (skycaves.subdimension.ro [172.104.132.142])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E144FF516;
-	Sat,  6 Jan 2024 16:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=subdimension.ro
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=subdimension.ro
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789CBF9F9;
+	Sat,  6 Jan 2024 16:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=subdimension.ro header.i=@subdimension.ro header.b="W4KlRPNK"
-Received: from sunspire (unknown [188.24.94.216])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.subdimension.ro (Postfix) with ESMTPSA id 3D16728B53B;
-	Sat,  6 Jan 2024 16:02:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=subdimension.ro;
-	s=skycaves; t=1704556974;
-	bh=Cm940zKVyu6a9aez1H379JbaXjqxCkC1bSHDLSDNWZs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=W4KlRPNK6dqWpx+TR7mH+uYK5BgMn/lM9v7TO9syhA3mH4/I+em6EbPmbfBh1oxpN
-	 n3kExN2INgg1tovd2GR34YbhOiepDDUDjfr9MyyaLGRqR13DGlX+RXI6Tw/6kht68p
-	 Yxyljco9lHrzC31FTwSUEHxjIS4pKhOOfdl0ktoY=
-Date: Sat, 6 Jan 2024 18:02:52 +0200
-From: Petre Rodan <petre.rodan@subdimension.ro>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andreas Klinger <ak@it-klinger.de>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Angel Iglesias <ang.iglesiasg@gmail.com>,
-	Matti Vaittinen <mazziesaccount@gmail.com>
-Subject: Re: [PATCH v3 10/10] iio: pressure: mprls0025pa add SPI driver
-Message-ID: <ZZl5rBPOKwvxZAAx@sunspire>
-References: <20231229092445.30180-1-petre.rodan@subdimension.ro>
- <20231229092445.30180-11-petre.rodan@subdimension.ro>
- <ZZlyDT0J4n1_YXh4@smile.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="pqW9ONcO"
+Received: from pyrite.hamster-moth.ts.net (unknown [IPv6:2001:268:c203:a8ee:6c57:4243:1eb3:6cb])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8E3E1FF3;
+	Sat,  6 Jan 2024 17:01:56 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1704556922;
+	bh=kRiempBB5ue59aUfTI8+HAXdGLIAfyEF0AWetnd33OM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=pqW9ONcO3NtxOTylXLAexjV0gmwQqY32hQfE94WlE6eieU/t9jm99/s2soHHeKcTJ
+	 GebMZ1nkZfGN4jipjgHEK8/E09gZuQsuc9K9LibH+BY5KqNcQ85O4lbFKecXnutDHE
+	 jKhCe5YxuJvgCR3tLATJ3UoJOYKE6mgMto1Q+2aY=
+From: Paul Elder <paul.elder@ideasonboard.com>
+To: linux-media@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org
+Cc: kieran.bingham@ideasonboard.com,
+	tomi.valkeinen@ideasonboard.com,
+	umang.jain@ideasonboard.com,
+	aford173@gmail.com,
+	Paul Elder <paul.elder@ideasonboard.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Dafna Hirschfeld <dafna@fastmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/Rockchip SoC support),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v5 03/10] media: rkisp1: Support devices lacking self path
+Date: Sun,  7 Jan 2024 01:02:14 +0900
+Message-Id: <20240106160221.4183409-4-paul.elder@ideasonboard.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240106160221.4183409-1-paul.elder@ideasonboard.com>
+References: <20240106160221.4183409-1-paul.elder@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="GAFEAXN8xuUBlkzd"
-Content-Disposition: inline
-In-Reply-To: <ZZlyDT0J4n1_YXh4@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
 
+Some versions of the ISP supported by the rkisp1 driver, such as the ISP
+in the i.MX8MP, lack the self path. Support those ISP versions by adding
+a self path feature flag, and massage the rest of the driver to support
+the lack of a self path.
 
---GAFEAXN8xuUBlkzd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Paul Elder <paul.elder@ideasonboard.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Tested-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+Tested-by: Adam Ford <aford173@gmail.com>
+---
+Changes since v3:
 
+- Document the feature bit
+- Reorder commit
 
-hello Andy,
+Changes since v2:
 
-On Sat, Jan 06, 2024 at 05:30:21PM +0200, Andy Shevchenko wrote:
-> On Fri, Dec 29, 2023 at 11:24:38AM +0200, Petre Rodan wrote:
-> > Add SPI component of the driver.
->=20
-> > Tested with mprls0015pa0000sa in spi mode on BeagleBone Black on
-> > slightly patched 6.7.0-rc6 mainline.
->=20
-> > Tested with mprls0025pa in i2c mode on BeagleBone Black with togreg
-> > branch on
-> > git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
-> > (tag: iio-for-6.8a)
->=20
-> I believe these paragraphs can be moved to the patch submission comments =
-=66rom
-> the commit message...
->=20
-> > Tested-by: Andreas Klinger <ak@it-klinger.de>
-> > Signed-off-by: Petre Rodan <petre.rodan@subdimension.ro>
-> > ---
-> > v2 -> v3 removed iio.h include line
->=20
-> ...somewhere here.
->=20
-> ...
->=20
-> > +#include <linux/mod_devicetable.h>
-> > +#include <linux/module.h>
-> > +#include <linux/spi/spi.h>
-> > +#include <linux/stddef.h>
->=20
-> Basically here we need additionally these ones:
->=20
-> device.h
-> errno.h
-> types.h
+- Simplify rkisp1_path_count()
+- Use the rkisp1_has_feature() macro
+---
+ .../platform/rockchip/rkisp1/rkisp1-capture.c     |  9 ++++++---
+ .../platform/rockchip/rkisp1/rkisp1-common.h      | 15 +++++++++++++++
+ .../media/platform/rockchip/rkisp1/rkisp1-dev.c   |  9 ++++++---
+ .../platform/rockchip/rkisp1/rkisp1-resizer.c     |  6 ++++--
+ 4 files changed, 31 insertions(+), 8 deletions(-)
 
-ok, I'll add errno.h. the other two are in the shared .h file.
+diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c b/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c
+index 83a968487f24..ca95f62822fa 100644
+--- a/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c
++++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c
+@@ -730,6 +730,7 @@ irqreturn_t rkisp1_capture_isr(int irq, void *ctx)
+ {
+ 	struct device *dev = ctx;
+ 	struct rkisp1_device *rkisp1 = dev_get_drvdata(dev);
++	unsigned int dev_count = rkisp1_path_count(rkisp1);
+ 	unsigned int i;
+ 	u32 status;
+ 
+@@ -742,7 +743,7 @@ irqreturn_t rkisp1_capture_isr(int irq, void *ctx)
+ 
+ 	rkisp1_write(rkisp1, RKISP1_CIF_MI_ICR, status);
+ 
+-	for (i = 0; i < ARRAY_SIZE(rkisp1->capture_devs); ++i) {
++	for (i = 0; i < dev_count; ++i) {
+ 		struct rkisp1_capture *cap = &rkisp1->capture_devs[i];
+ 
+ 		if (!(status & RKISP1_CIF_MI_FRAME(cap)))
+@@ -899,6 +900,7 @@ static void rkisp1_cap_stream_enable(struct rkisp1_capture *cap)
+ {
+ 	struct rkisp1_device *rkisp1 = cap->rkisp1;
+ 	struct rkisp1_capture *other = &rkisp1->capture_devs[cap->id ^ 1];
++	bool has_self_path = rkisp1_has_feature(rkisp1, SELF_PATH);
+ 
+ 	cap->ops->set_data_path(cap);
+ 	cap->ops->config(cap);
+@@ -916,7 +918,7 @@ static void rkisp1_cap_stream_enable(struct rkisp1_capture *cap)
+ 	 * This's also required because the second FE maybe corrupt
+ 	 * especially when run at 120fps.
+ 	 */
+-	if (!other->is_streaming) {
++	if (!has_self_path || !other->is_streaming) {
+ 		/* force cfg update */
+ 		rkisp1_write(rkisp1, RKISP1_CIF_MI_INIT,
+ 			     RKISP1_CIF_MI_INIT_SOFT_UPD);
+@@ -1509,10 +1511,11 @@ rkisp1_capture_init(struct rkisp1_device *rkisp1, enum rkisp1_stream_id id)
+ 
+ int rkisp1_capture_devs_register(struct rkisp1_device *rkisp1)
+ {
++	unsigned int dev_count = rkisp1_path_count(rkisp1);
+ 	unsigned int i;
+ 	int ret;
+ 
+-	for (i = 0; i < ARRAY_SIZE(rkisp1->capture_devs); i++) {
++	for (i = 0; i < dev_count; i++) {
+ 		struct rkisp1_capture *cap = &rkisp1->capture_devs[i];
+ 
+ 		rkisp1_capture_init(rkisp1, i);
+diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h b/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
+index 6a811b7ef1b9..f7c251f79aa9 100644
+--- a/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
++++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
+@@ -111,6 +111,7 @@ enum rkisp1_isp_pad {
+  *
+  * @RKISP1_FEATURE_MIPI_CSI2: The ISP has an internal MIPI CSI-2 receiver
+  * @RKISP1_FEATURE_MAIN_STRIDE: The ISP supports configurable stride on the main path
++ * @RKISP1_FEATURE_SELF_PATH: The ISP has a self path
+  *
+  * The ISP features are stored in a bitmask in &rkisp1_info.features and allow
+  * the driver to implement support for features present in some ISP versions
+@@ -119,6 +120,7 @@ enum rkisp1_isp_pad {
+ enum rkisp1_feature {
+ 	RKISP1_FEATURE_MIPI_CSI2 = BIT(0),
+ 	RKISP1_FEATURE_MAIN_STRIDE = BIT(1),
++	RKISP1_FEATURE_SELF_PATH = BIT(2),
+ };
+ 
+ #define rkisp1_has_feature(rkisp1, feature) \
+@@ -531,6 +533,19 @@ int rkisp1_cap_enum_mbus_codes(struct rkisp1_capture *cap,
+  */
+ const struct rkisp1_mbus_info *rkisp1_mbus_info_get_by_index(unsigned int index);
+ 
++/*
++ * rkisp1_path_count - Return the number of paths supported by the device
++ *
++ * Some devices only have a main path, while other device have both a main path
++ * and a self path. This function returns the number of paths that this device
++ * has, based on the feature flags. It should be used insted of checking
++ * ARRAY_SIZE of capture_devs/resizer_devs.
++ */
++static inline unsigned int rkisp1_path_count(struct rkisp1_device *rkisp1)
++{
++	return rkisp1_has_feature(rkisp1, SELF_PATH) ? 2 : 1;
++}
++
+ /*
+  * rkisp1_sd_adjust_crop_rect - adjust a rectangle to fit into another rectangle.
+  *
+diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-dev.c b/drivers/media/platform/rockchip/rkisp1/rkisp1-dev.c
+index 44b753026ba2..106040c4181c 100644
+--- a/drivers/media/platform/rockchip/rkisp1/rkisp1-dev.c
++++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-dev.c
+@@ -358,6 +358,7 @@ static const struct dev_pm_ops rkisp1_pm_ops = {
+ 
+ static int rkisp1_create_links(struct rkisp1_device *rkisp1)
+ {
++	unsigned int dev_count = rkisp1_path_count(rkisp1);
+ 	unsigned int i;
+ 	int ret;
+ 
+@@ -373,7 +374,7 @@ static int rkisp1_create_links(struct rkisp1_device *rkisp1)
+ 	}
+ 
+ 	/* create ISP->RSZ->CAP links */
+-	for (i = 0; i < 2; i++) {
++	for (i = 0; i < dev_count; i++) {
+ 		struct media_entity *resizer =
+ 			&rkisp1->resizer_devs[i].sd.entity;
+ 		struct media_entity *capture =
+@@ -505,7 +506,8 @@ static const struct rkisp1_info px30_isp_info = {
+ 	.isrs = px30_isp_isrs,
+ 	.isr_size = ARRAY_SIZE(px30_isp_isrs),
+ 	.isp_ver = RKISP1_V12,
+-	.features = RKISP1_FEATURE_MIPI_CSI2,
++	.features = RKISP1_FEATURE_MIPI_CSI2
++		  | RKISP1_FEATURE_SELF_PATH,
+ };
+ 
+ static const char * const rk3399_isp_clks[] = {
+@@ -524,7 +526,8 @@ static const struct rkisp1_info rk3399_isp_info = {
+ 	.isrs = rk3399_isp_isrs,
+ 	.isr_size = ARRAY_SIZE(rk3399_isp_isrs),
+ 	.isp_ver = RKISP1_V10,
+-	.features = RKISP1_FEATURE_MIPI_CSI2,
++	.features = RKISP1_FEATURE_MIPI_CSI2
++		  | RKISP1_FEATURE_SELF_PATH,
+ };
+ 
+ static const struct of_device_id rkisp1_of_match[] = {
+diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-resizer.c b/drivers/media/platform/rockchip/rkisp1/rkisp1-resizer.c
+index a8e377701302..dd77a31e6014 100644
+--- a/drivers/media/platform/rockchip/rkisp1/rkisp1-resizer.c
++++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-resizer.c
+@@ -631,6 +631,7 @@ static int rkisp1_rsz_s_stream(struct v4l2_subdev *sd, int enable)
+ 	struct rkisp1_device *rkisp1 = rsz->rkisp1;
+ 	struct rkisp1_capture *other = &rkisp1->capture_devs[rsz->id ^ 1];
+ 	enum rkisp1_shadow_regs_when when = RKISP1_SHADOW_REGS_SYNC;
++	bool has_self_path = rkisp1_has_feature(rkisp1, SELF_PATH);
+ 	struct v4l2_subdev_state *sd_state;
+ 
+ 	if (!enable) {
+@@ -639,7 +640,7 @@ static int rkisp1_rsz_s_stream(struct v4l2_subdev *sd, int enable)
+ 		return 0;
+ 	}
+ 
+-	if (other->is_streaming)
++	if (has_self_path && other->is_streaming)
+ 		when = RKISP1_SHADOW_REGS_ASYNC;
+ 
+ 	sd_state = v4l2_subdev_lock_and_get_active_state(sd);
+@@ -731,10 +732,11 @@ static int rkisp1_rsz_register(struct rkisp1_resizer *rsz)
+ 
+ int rkisp1_resizer_devs_register(struct rkisp1_device *rkisp1)
+ {
++	unsigned int dev_count = rkisp1_path_count(rkisp1);
+ 	unsigned int i;
+ 	int ret;
+ 
+-	for (i = 0; i < ARRAY_SIZE(rkisp1->resizer_devs); i++) {
++	for (i = 0; i < dev_count; i++) {
+ 		struct rkisp1_resizer *rsz = &rkisp1->resizer_devs[i];
+ 
+ 		rsz->rkisp1 = rkisp1;
+-- 
+2.39.2
 
-cheers,
-peter
-
-> (I haven't checked i2c counterpart for the similarities).
->=20
-> --=20
-> With Best Regards,
-> Andy Shevchenko
->=20
->=20
-
---=20
-petre rodan
-
---GAFEAXN8xuUBlkzd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE2Ap/wXYVGTXsPl+pzyaZmYROfzAFAmWZeagACgkQzyaZmYRO
-fzA8tA/8CuTLOuHDKpjZ86++xEJoWwzqi22ttcVBzdZIfdmAKgZNGmCzBczvJG4I
-uiPlhyI7MilWFYfjWx1uPRV3nkDc2iMOxNBwM9JzAE0kryEo3azaRfox2SnmkGVn
-cFfV4b3O8UY+fqNGNEFu5bLoeztSnyYokstYUd8qoI3S0L1KTvpbkAUIa+aOionv
-QIYvP1tadfogwWg4yYBiLDevJsB7VjdyYfVXHKca8EP8ubQC5xH0Tf2P+AaY8Hsl
-VJXR2pGwy7CscpwpQm4K9T6IS2Xtuyzvmfz7I9nEuiS2obqFm6Gpk4+WS++gnQg9
-lntd93DQFTPRVQbGCpoUZZ9/T/o9oWsB3yT14jRhFyaVngbzZugDya2Pq+uTs8ZW
-fwieiYeZbybYCQOw0SHCQ06qdzTsWxHxkCuNmmL9/Q7CR6nwdSSPTZpzcocWvaBW
-DFoGsHp2jWEfaovjW1Np5QeDUqhwPFC2J2+ydCfxs+Cxl9G/1ujOvLELSDEay3WH
-IrAgPuPkrubg3AAwc84sb2kLIDjKlQwJlQ5+i3ea4KYfuR4cGB2YLcebXlZfECAe
-7rehc4EiGCpR9VMrc57N8Or4dPqasfO3BHOqyKcqWeHJz7ITyRuCAXu4If4wIFuW
-Gd+s/ov/RqFXv4F89RBgtyCkQvutJx5Ph4av+IrQTzJeMbuw3FA=
-=xmDc
------END PGP SIGNATURE-----
-
---GAFEAXN8xuUBlkzd--
