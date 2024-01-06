@@ -1,248 +1,129 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mail.subdimension.ro (skycaves.subdimension.ro [172.104.132.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8EAEF508;
-	Sat,  6 Jan 2024 16:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E144FF516;
+	Sat,  6 Jan 2024 16:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=subdimension.ro
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=subdimension.ro
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="kzhbQs5Q"
-Received: from pyrite.hamster-moth.ts.net (unknown [IPv6:2001:268:c203:a8ee:6c57:4243:1eb3:6cb])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6842913C5;
-	Sat,  6 Jan 2024 17:01:49 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1704556915;
-	bh=2xPUMEYrMG/6tKRljNcKcz3iOiVa5td8FcRatAGfGBs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kzhbQs5QaQVdtLDX+eUS04DIynOOeJxV4c553Xy5wcbayEo9rq8Ns4bO23EFUmtPP
-	 iI7xpQIqv1MxE2oSOjnz8Gai0jmXFHiTEZDUNaM7N4kRvq6nKDrLaMGatfQ/sAPEyU
-	 uogZHfplr4SkPCUBmjuadhAl9XRywDdcB8/eszxs=
-From: Paul Elder <paul.elder@ideasonboard.com>
-To: linux-media@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	devicetree@vger.kernel.org
-Cc: kieran.bingham@ideasonboard.com,
-	tomi.valkeinen@ideasonboard.com,
-	umang.jain@ideasonboard.com,
-	aford173@gmail.com,
-	Paul Elder <paul.elder@ideasonboard.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Dafna Hirschfeld <dafna@fastmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/Rockchip SoC support),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v5 02/10] media: rkisp1: Support setting memory stride for main path
-Date: Sun,  7 Jan 2024 01:02:13 +0900
-Message-Id: <20240106160221.4183409-3-paul.elder@ideasonboard.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240106160221.4183409-1-paul.elder@ideasonboard.com>
-References: <20240106160221.4183409-1-paul.elder@ideasonboard.com>
+	dkim=pass (1024-bit key) header.d=subdimension.ro header.i=@subdimension.ro header.b="W4KlRPNK"
+Received: from sunspire (unknown [188.24.94.216])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.subdimension.ro (Postfix) with ESMTPSA id 3D16728B53B;
+	Sat,  6 Jan 2024 16:02:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=subdimension.ro;
+	s=skycaves; t=1704556974;
+	bh=Cm940zKVyu6a9aez1H379JbaXjqxCkC1bSHDLSDNWZs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=W4KlRPNK6dqWpx+TR7mH+uYK5BgMn/lM9v7TO9syhA3mH4/I+em6EbPmbfBh1oxpN
+	 n3kExN2INgg1tovd2GR34YbhOiepDDUDjfr9MyyaLGRqR13DGlX+RXI6Tw/6kht68p
+	 Yxyljco9lHrzC31FTwSUEHxjIS4pKhOOfdl0ktoY=
+Date: Sat, 6 Jan 2024 18:02:52 +0200
+From: Petre Rodan <petre.rodan@subdimension.ro>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andreas Klinger <ak@it-klinger.de>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Angel Iglesias <ang.iglesiasg@gmail.com>,
+	Matti Vaittinen <mazziesaccount@gmail.com>
+Subject: Re: [PATCH v3 10/10] iio: pressure: mprls0025pa add SPI driver
+Message-ID: <ZZl5rBPOKwvxZAAx@sunspire>
+References: <20231229092445.30180-1-petre.rodan@subdimension.ro>
+ <20231229092445.30180-11-petre.rodan@subdimension.ro>
+ <ZZlyDT0J4n1_YXh4@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="GAFEAXN8xuUBlkzd"
+Content-Disposition: inline
+In-Reply-To: <ZZlyDT0J4n1_YXh4@smile.fi.intel.com>
 
-Some versions of the ISP supported by the rkisp1 driver, such as the ISP
-in the i.MX8MP, implement configurable memory stride for the main path
-the same way as already implemented by the driver for the self path.
-Support this feature by adding a main stride feature flag and program
-the corresponding registers accordingly.
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Paul Elder <paul.elder@ideasonboard.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Tested-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-Tested-by: Adam Ford <aford173@gmail.com>
----
-Changes since v3:
+--GAFEAXN8xuUBlkzd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-- Implement memory stride support
-- Squash patch that adds register bits definitions
-- Reword the commit message
 
-Changes since v2:
+hello Andy,
 
-- Document the RKISP1_FEATURE_MAIN_STRIDE bit
-- Use the rkisp1_has_feature() macro
----
- .../platform/rockchip/rkisp1/rkisp1-capture.c | 34 ++++++++++++-------
- .../platform/rockchip/rkisp1/rkisp1-common.h  |  6 ++--
- .../platform/rockchip/rkisp1/rkisp1-regs.h    | 27 +++++++++++++++
- 3 files changed, 52 insertions(+), 15 deletions(-)
+On Sat, Jan 06, 2024 at 05:30:21PM +0200, Andy Shevchenko wrote:
+> On Fri, Dec 29, 2023 at 11:24:38AM +0200, Petre Rodan wrote:
+> > Add SPI component of the driver.
+>=20
+> > Tested with mprls0015pa0000sa in spi mode on BeagleBone Black on
+> > slightly patched 6.7.0-rc6 mainline.
+>=20
+> > Tested with mprls0025pa in i2c mode on BeagleBone Black with togreg
+> > branch on
+> > git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
+> > (tag: iio-for-6.8a)
+>=20
+> I believe these paragraphs can be moved to the patch submission comments =
+=66rom
+> the commit message...
+>=20
+> > Tested-by: Andreas Klinger <ak@it-klinger.de>
+> > Signed-off-by: Petre Rodan <petre.rodan@subdimension.ro>
+> > ---
+> > v2 -> v3 removed iio.h include line
+>=20
+> ...somewhere here.
+>=20
+> ...
+>=20
+> > +#include <linux/mod_devicetable.h>
+> > +#include <linux/module.h>
+> > +#include <linux/spi/spi.h>
+> > +#include <linux/stddef.h>
+>=20
+> Basically here we need additionally these ones:
+>=20
+> device.h
+> errno.h
+> types.h
 
-diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c b/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c
-index c381c22135a2..83a968487f24 100644
---- a/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c
-+++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c
-@@ -442,6 +442,14 @@ static void rkisp1_mp_config(struct rkisp1_capture *cap)
- 	rkisp1_write(rkisp1, cap->config->mi.cr_size_init,
- 		     rkisp1_pixfmt_comp_size(pixm, RKISP1_PLANE_CR));
- 
-+	if (rkisp1_has_feature(rkisp1, MAIN_STRIDE)) {
-+		rkisp1_write(rkisp1, RKISP1_CIF_MI_MP_Y_LLENGTH, cap->stride);
-+		rkisp1_write(rkisp1, RKISP1_CIF_MI_MP_Y_PIC_WIDTH, pixm->width);
-+		rkisp1_write(rkisp1, RKISP1_CIF_MI_MP_Y_PIC_HEIGHT, pixm->height);
-+		rkisp1_write(rkisp1, RKISP1_CIF_MI_MP_Y_PIC_SIZE,
-+			     cap->stride * pixm->height);
-+	}
-+
- 	rkisp1_irq_frame_end_enable(cap);
- 
- 	/* set uv swapping for semiplanar formats */
-@@ -479,11 +487,11 @@ static void rkisp1_sp_config(struct rkisp1_capture *cap)
- 	rkisp1_write(rkisp1, cap->config->mi.cr_size_init,
- 		     rkisp1_pixfmt_comp_size(pixm, RKISP1_PLANE_CR));
- 
--	rkisp1_write(rkisp1, RKISP1_CIF_MI_SP_Y_LLENGTH, cap->sp_y_stride);
-+	rkisp1_write(rkisp1, RKISP1_CIF_MI_SP_Y_LLENGTH, cap->stride);
- 	rkisp1_write(rkisp1, RKISP1_CIF_MI_SP_Y_PIC_WIDTH, pixm->width);
- 	rkisp1_write(rkisp1, RKISP1_CIF_MI_SP_Y_PIC_HEIGHT, pixm->height);
- 	rkisp1_write(rkisp1, RKISP1_CIF_MI_SP_Y_PIC_SIZE,
--		     cap->sp_y_stride * pixm->height);
-+		     cap->stride * pixm->height);
- 
- 	rkisp1_irq_frame_end_enable(cap);
- 
-@@ -1095,8 +1103,8 @@ static const struct vb2_ops rkisp1_vb2_ops = {
-  */
- 
- static const struct v4l2_format_info *
--rkisp1_fill_pixfmt(struct v4l2_pix_format_mplane *pixm,
--		   enum rkisp1_stream_id id)
-+rkisp1_fill_pixfmt(const struct rkisp1_capture *cap,
-+		   struct v4l2_pix_format_mplane *pixm)
- {
- 	struct v4l2_plane_pix_format *plane_y = &pixm->plane_fmt[0];
- 	const struct v4l2_format_info *info;
-@@ -1109,10 +1117,13 @@ rkisp1_fill_pixfmt(struct v4l2_pix_format_mplane *pixm,
- 
- 	/*
- 	 * The SP supports custom strides, expressed as a number of pixels for
--	 * the Y plane. Clamp the stride to a reasonable value to avoid integer
--	 * overflows when calculating the bytesperline and sizeimage values.
-+	 * the Y plane, and so does the MP in ISP versions that have the
-+	 * MAIN_STRIDE feature. Clamp the stride to a reasonable value to avoid
-+	 * integer overflows when calculating the bytesperline and sizeimage
-+	 * values.
- 	 */
--	if (id == RKISP1_SELFPATH)
-+	if (cap->id == RKISP1_SELFPATH ||
-+	    rkisp1_has_feature(cap->rkisp1, MAIN_STRIDE))
- 		stride = clamp(DIV_ROUND_UP(plane_y->bytesperline, info->bpp[0]),
- 			       pixm->width, 65536U);
- 	else
-@@ -1187,7 +1198,7 @@ static void rkisp1_try_fmt(const struct rkisp1_capture *cap,
- 	pixm->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
- 	pixm->quantization = V4L2_QUANTIZATION_DEFAULT;
- 
--	info = rkisp1_fill_pixfmt(pixm, cap->id);
-+	info = rkisp1_fill_pixfmt(cap, pixm);
- 
- 	if (fmt_cfg)
- 		*fmt_cfg = fmt;
-@@ -1199,12 +1210,9 @@ static void rkisp1_set_fmt(struct rkisp1_capture *cap,
- 			   struct v4l2_pix_format_mplane *pixm)
- {
- 	rkisp1_try_fmt(cap, pixm, &cap->pix.cfg, &cap->pix.info);
--	cap->pix.fmt = *pixm;
- 
--	/* SP supports custom stride in number of pixels of the Y plane */
--	if (cap->id == RKISP1_SELFPATH)
--		cap->sp_y_stride = pixm->plane_fmt[0].bytesperline /
--				   cap->pix.info->bpp[0];
-+	cap->pix.fmt = *pixm;
-+	cap->stride = pixm->plane_fmt[0].bytesperline / cap->pix.info->bpp[0];
- }
- 
- static int rkisp1_try_fmt_vid_cap_mplane(struct file *file, void *fh,
-diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h b/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
-index be6cb42776b0..6a811b7ef1b9 100644
---- a/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
-+++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
-@@ -110,6 +110,7 @@ enum rkisp1_isp_pad {
-  * enum rkisp1_feature - ISP features
-  *
-  * @RKISP1_FEATURE_MIPI_CSI2: The ISP has an internal MIPI CSI-2 receiver
-+ * @RKISP1_FEATURE_MAIN_STRIDE: The ISP supports configurable stride on the main path
-  *
-  * The ISP features are stored in a bitmask in &rkisp1_info.features and allow
-  * the driver to implement support for features present in some ISP versions
-@@ -117,6 +118,7 @@ enum rkisp1_isp_pad {
-  */
- enum rkisp1_feature {
- 	RKISP1_FEATURE_MIPI_CSI2 = BIT(0),
-+	RKISP1_FEATURE_MAIN_STRIDE = BIT(1),
- };
- 
- #define rkisp1_has_feature(rkisp1, feature) \
-@@ -266,7 +268,7 @@ struct rkisp1_device;
-  *		  handler to stop the streaming by waiting on the 'done' wait queue.
-  *		  If the irq handler is not called, the stream is stopped by the callback
-  *		  after timeout.
-- * @sp_y_stride:  the selfpath allows to configure a y stride that is longer than the image width.
-+ * @stride:       the line stride for the first plane, in pixel units
-  * @buf.lock:	  lock to protect buf.queue
-  * @buf.queue:	  queued buffer list
-  * @buf.dummy:	  dummy space to store dropped data
-@@ -287,7 +289,7 @@ struct rkisp1_capture {
- 	bool is_streaming;
- 	bool is_stopping;
- 	wait_queue_head_t done;
--	unsigned int sp_y_stride;
-+	unsigned int stride;
- 	struct {
- 		/* protects queue, curr and next */
- 		spinlock_t lock;
-diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-regs.h b/drivers/media/platform/rockchip/rkisp1/rkisp1-regs.h
-index bea69a0d766a..3b19c8411360 100644
---- a/drivers/media/platform/rockchip/rkisp1/rkisp1-regs.h
-+++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-regs.h
-@@ -207,6 +207,24 @@
- #define RKISP1_CIF_MI_XTD_FMT_CTRL_SP_CB_CR_SWAP	BIT(1)
- #define RKISP1_CIF_MI_XTD_FMT_CTRL_DMA_CB_CR_SWAP	BIT(2)
- 
-+/* MI_OUTPUT_ALIGN_FORMAT */
-+#define RKISP1_CIF_OUTPUT_ALIGN_FORMAT_MP_LSB_ALIGNMENT			BIT(0)
-+#define RKISP1_CIF_OUTPUT_ALIGN_FORMAT_MP_BYTE_SWAP_BYTES		BIT(1)
-+#define RKISP1_CIF_OUTPUT_ALIGN_FORMAT_MP_BYTE_SWAP_WORDS		BIT(2)
-+#define RKISP1_CIF_OUTPUT_ALIGN_FORMAT_MP_BYTE_SWAP_DWORDS		BIT(3)
-+#define RKISP1_CIF_OUTPUT_ALIGN_FORMAT_SP_BYTE_SWAP_BYTES		BIT(4)
-+#define RKISP1_CIF_OUTPUT_ALIGN_FORMAT_SP_BYTE_SWAP_WORDS		BIT(5)
-+#define RKISP1_CIF_OUTPUT_ALIGN_FORMAT_SP_BYTE_SWAP_DWORDS		BIT(6)
-+#define RKISP1_CIF_OUTPUT_ALIGN_FORMAT_DMA_BYTE_SWAP_BYTES		BIT(7)
-+#define RKISP1_CIF_OUTPUT_ALIGN_FORMAT_DMA_BYTE_SWAP_WORDS		BIT(8)
-+#define RKISP1_CIF_OUTPUT_ALIGN_FORMAT_DMA_BYTE_SWAP_DWORDS		BIT(9)
-+
-+/* MI_MP_OUTPUT_FIFO_SIZE */
-+#define RKISP1_CIF_MI_MP_OUTPUT_FIFO_SIZE_OUTPUT_FIFO_DEPTH_FULL	(0 << 0)
-+#define RKISP1_CIF_MI_MP_OUTPUT_FIFO_SIZE_OUTPUT_FIFO_DEPTH_HALF	(1 << 0)
-+#define RKISP1_CIF_MI_MP_OUTPUT_FIFO_SIZE_OUTPUT_FIFO_DEPTH_QUARTER	(2 << 0)
-+#define RKISP1_CIF_MI_MP_OUTPUT_FIFO_SIZE_OUTPUT_FIFO_DEPTH_EIGHT	(3 << 0)
-+
- /* VI_CCL */
- #define RKISP1_CIF_CCL_CIF_CLK_DIS			BIT(2)
- /* VI_ISP_CLK_CTRL */
-@@ -1000,6 +1018,15 @@
- #define RKISP1_CIF_MI_SP_CB_BASE_AD_INIT2	(RKISP1_CIF_MI_BASE + 0x00000140)
- #define RKISP1_CIF_MI_SP_CR_BASE_AD_INIT2	(RKISP1_CIF_MI_BASE + 0x00000144)
- #define RKISP1_CIF_MI_XTD_FORMAT_CTRL		(RKISP1_CIF_MI_BASE + 0x00000148)
-+#define RKISP1_CIF_MI_MP_HANDSHAKE_0		(RKISP1_CIF_MI_BASE + 0x0000014C)
-+#define RKISP1_CIF_MI_MP_Y_LLENGTH		(RKISP1_CIF_MI_BASE + 0x00000150)
-+#define RKISP1_CIF_MI_MP_Y_SLICE_OFFSET		(RKISP1_CIF_MI_BASE + 0x00000154)
-+#define RKISP1_CIF_MI_MP_C_SLICE_OFFSET		(RKISP1_CIF_MI_BASE + 0x00000158)
-+#define RKISP1_CIF_MI_OUTPUT_ALIGN_FORMAT	(RKISP1_CIF_MI_BASE + 0x0000015C)
-+#define RKISP1_CIF_MI_MP_OUTPUT_FIFO_SIZE	(RKISP1_CIF_MI_BASE + 0x00000160)
-+#define RKISP1_CIF_MI_MP_Y_PIC_WIDTH		(RKISP1_CIF_MI_BASE + 0x00000164)
-+#define RKISP1_CIF_MI_MP_Y_PIC_HEIGHT		(RKISP1_CIF_MI_BASE + 0x00000168)
-+#define RKISP1_CIF_MI_MP_Y_PIC_SIZE		(RKISP1_CIF_MI_BASE + 0x0000016C)
- 
- #define RKISP1_CIF_SMIA_BASE			0x00001a00
- #define RKISP1_CIF_SMIA_CTRL			(RKISP1_CIF_SMIA_BASE + 0x00000000)
--- 
-2.39.2
+ok, I'll add errno.h. the other two are in the shared .h file.
 
+cheers,
+peter
+
+> (I haven't checked i2c counterpart for the similarities).
+>=20
+> --=20
+> With Best Regards,
+> Andy Shevchenko
+>=20
+>=20
+
+--=20
+petre rodan
+
+--GAFEAXN8xuUBlkzd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE2Ap/wXYVGTXsPl+pzyaZmYROfzAFAmWZeagACgkQzyaZmYRO
+fzA8tA/8CuTLOuHDKpjZ86++xEJoWwzqi22ttcVBzdZIfdmAKgZNGmCzBczvJG4I
+uiPlhyI7MilWFYfjWx1uPRV3nkDc2iMOxNBwM9JzAE0kryEo3azaRfox2SnmkGVn
+cFfV4b3O8UY+fqNGNEFu5bLoeztSnyYokstYUd8qoI3S0L1KTvpbkAUIa+aOionv
+QIYvP1tadfogwWg4yYBiLDevJsB7VjdyYfVXHKca8EP8ubQC5xH0Tf2P+AaY8Hsl
+VJXR2pGwy7CscpwpQm4K9T6IS2Xtuyzvmfz7I9nEuiS2obqFm6Gpk4+WS++gnQg9
+lntd93DQFTPRVQbGCpoUZZ9/T/o9oWsB3yT14jRhFyaVngbzZugDya2Pq+uTs8ZW
+fwieiYeZbybYCQOw0SHCQ06qdzTsWxHxkCuNmmL9/Q7CR6nwdSSPTZpzcocWvaBW
+DFoGsHp2jWEfaovjW1Np5QeDUqhwPFC2J2+ydCfxs+Cxl9G/1ujOvLELSDEay3WH
+IrAgPuPkrubg3AAwc84sb2kLIDjKlQwJlQ5+i3ea4KYfuR4cGB2YLcebXlZfECAe
+7rehc4EiGCpR9VMrc57N8Or4dPqasfO3BHOqyKcqWeHJz7ITyRuCAXu4If4wIFuW
+Gd+s/ov/RqFXv4F89RBgtyCkQvutJx5Ph4av+IrQTzJeMbuw3FA=
+=xmDc
+-----END PGP SIGNATURE-----
+
+--GAFEAXN8xuUBlkzd--
