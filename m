@@ -1,197 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392BF15CE
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Jan 2024 03:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE76617D2
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Jan 2024 04:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cY89efzu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iqPpVzrb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704513501; x=1736049501;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=nmWIj9K0w6XZc/q5zHoIah/euBo0zmHTlXeW6gVWXbw=;
-  b=cY89efzuYe41thRpdJ0j0KdOafgyTy/8Gzx6foDw8otk+UN4j7Us2hIZ
-   hyuaN+DjSmODXhWX0H8mpTKknPCvG33PZ5SpBCiF2csrLiKgzkjavEdNn
-   skug1bFi9csyyN7oss4dCTGcu1P1q+/LdGgQyiiVNmnHlwKv6B3Gvc9va
-   fioF9rgohYWpmMZIRcK4bBoiv2jqMoDg8Q3gCOEDc9ZUFdQmI7IZdwShi
-   CrqslqqJsfg2tHRBcxVfXKJQ4KIIBFyYCgpBH0rv4gPhCRT6+qkF21kVK
-   rGmhPPncCfunOyRh88eobc8nDGWhP0PeeFsVnJWfbMVE522wP3m27i5GW
+  t=1704513843; x=1736049843;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=PvYiBAvbCc1PtL2eLMohgTUZrYB4MkX6teoGHMh0kkU=;
+  b=iqPpVzrbSvDYUKsKvI/doo8L2qiSCeUrV0Q6KsszkhibZbXrzdybqtfl
+   i6qaPUE93JiSYkE3ZILD6KYcUH4DEjWoMnq7sWVk6CDAfq11rblmyjPYe
+   aoiyo/k4d50y2vfZp/LW9tgCK+chObSHSgHc6hDK5Deiqw//9T2eJTgvc
+   dBk7EyFhxDYQMsyA0I6EI25Cl9fPJYSWPOTBLR46NVNulW60UrglcntD7
+   m3wdOtxPfUOwKWy1V7UOdo1BXRIn0Nz5FsrVY/OpxgL7namluYDN2dsRU
+   SM2iiFrynjPqlQurr6zSXDYXmssJQR1fQoceyhBkru4G/Ag9uum8RVy/Z
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10944"; a="377123103"
+X-IronPort-AV: E=McAfee;i="6600,9927,10944"; a="464034079"
 X-IronPort-AV: E=Sophos;i="6.04,335,1695711600"; 
-   d="scan'208";a="377123103"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 19:58:19 -0800
+   d="scan'208";a="464034079"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 20:04:02 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10944"; a="774009166"
 X-IronPort-AV: E=Sophos;i="6.04,335,1695711600"; 
-   d="scan'208";a="29286444"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 05 Jan 2024 19:58:17 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rLxp8-000208-2o;
-	Sat, 06 Jan 2024 03:58:14 +0000
-Date: Sat, 6 Jan 2024 11:57:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>
-Subject: arch/riscv/kernel/traps_misaligned.c:249:21: sparse: sparse:
- dereference of noderef expression
-Message-ID: <202401061103.iYLnsFu2-lkp@intel.com>
+   d="scan'208";a="774009166"
+Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.93.16.94]) ([10.93.16.94])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 20:03:59 -0800
+Message-ID: <7363f8c1-8ab6-4c3e-8f32-d7ab8e9244f1@linux.intel.com>
+Date: Sat, 6 Jan 2024 12:03:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/2] iommu/iova: Make the rcache depot properly
+ flexible
+To: Ido Schimmel <idosch@idosch.org>, Robin Murphy <robin.murphy@arm.com>
+Cc: joro@8bytes.org, will@kernel.org, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, zhangzekun11@huawei.com,
+ john.g.garry@oracle.com, dheerajkumar.srivastava@amd.com, jsnitsel@redhat.com
+References: <cover.1694535580.git.robin.murphy@arm.com>
+ <ZY1osaGLyT-sdKE8@shredder>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+In-Reply-To: <ZY1osaGLyT-sdKE8@shredder>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   a4ab2706bb1280693e7dff1c5c42a8cb9d70c177
-commit: 7c83232161f609bbc452a1255f823f41afc411dd riscv: add support for misaligned trap handling in S-mode
-date:   9 weeks ago
-config: riscv-randconfig-r122-20231115 (https://download.01.org/0day-ci/archive/20240106/202401061103.iYLnsFu2-lkp@intel.com/config)
-compiler: riscv64-linux-gcc (GCC) 13.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20240106/202401061103.iYLnsFu2-lkp@intel.com/reproduce)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401061103.iYLnsFu2-lkp@intel.com/
+On 12/28/2023 8:23 PM, Ido Schimmel wrote:
+> On Tue, Sep 12, 2023 at 05:28:04PM +0100, Robin Murphy wrote:
+>> v2: https://lore.kernel.org/linux-iommu/cover.1692641204.git.robin.murphy@arm.com/
+>>
+>> Hi all,
+>>
+>> I hope this is good to go now, just fixed the locking (and threw
+>> lockdep at it to confirm, which of course I should have done to begin
+>> with...) and picked up tags.
+> Hi,
+>
+> After pulling the v6.7 changes we started seeing the following memory
+> leaks [1] of 'struct iova_magazine'. I'm not sure how to reproduce it,
+> which is why I didn't perform bisection. However, looking at the
+> mentioned code paths, they seem to have been changed in v6.7 as part of
+> this patchset. I reverted both patches and didn't see any memory leaks
+> when running a full regression (~10 hours), but I will repeat it to be
+> sure.
+>
+> Any idea what could be the problem?
+>
+> Thanks
+>
+> [1]
+> unreferenced object 0xffff8881a5301000 (size 1024):
 
-sparse warnings: (new ones prefixed by >>)
->> arch/riscv/kernel/traps_misaligned.c:249:21: sparse: sparse: dereference of noderef expression
-   arch/riscv/kernel/traps_misaligned.c:261:21: sparse: sparse: dereference of noderef expression
-   arch/riscv/kernel/traps_misaligned.c:269:21: sparse: sparse: dereference of noderef expression
->> arch/riscv/kernel/traps_misaligned.c:210:24: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned char const [noderef] __user *__gu_ptr @@     got unsigned char const [usertype] *addr @@
-   arch/riscv/kernel/traps_misaligned.c:210:24: sparse:     expected unsigned char const [noderef] __user *__gu_ptr
-   arch/riscv/kernel/traps_misaligned.c:210:24: sparse:     got unsigned char const [usertype] *addr
->> arch/riscv/kernel/traps_misaligned.c:249:21: sparse: sparse: dereference of noderef expression
-   arch/riscv/kernel/traps_misaligned.c:261:21: sparse: sparse: dereference of noderef expression
-   arch/riscv/kernel/traps_misaligned.c:269:21: sparse: sparse: dereference of noderef expression
->> arch/riscv/kernel/traps_misaligned.c:220:24: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned char [noderef] __user *__gu_ptr @@     got unsigned char [usertype] *addr @@
-   arch/riscv/kernel/traps_misaligned.c:220:24: sparse:     expected unsigned char [noderef] __user *__gu_ptr
-   arch/riscv/kernel/traps_misaligned.c:220:24: sparse:     got unsigned char [usertype] *addr
+size 1024, seems one "iova_magazine" was leaked ?
 
-vim +249 arch/riscv/kernel/traps_misaligned.c
+no other struct happens to be size 1024.
 
-   172	
-   173	static inline int get_insn(struct pt_regs *regs, ulong mepc, ulong *r_insn)
-   174	{
-   175		register ulong __mepc asm ("a2") = mepc;
-   176		ulong val, rvc_mask = 3, tmp;
-   177	
-   178		asm ("and %[tmp], %[addr], 2\n"
-   179			"bnez %[tmp], 1f\n"
-   180	#if defined(CONFIG_64BIT)
-   181			__stringify(LWU) " %[insn], (%[addr])\n"
-   182	#else
-   183			__stringify(LW) " %[insn], (%[addr])\n"
-   184	#endif
-   185			"and %[tmp], %[insn], %[rvc_mask]\n"
-   186			"beq %[tmp], %[rvc_mask], 2f\n"
-   187			"sll %[insn], %[insn], %[xlen_minus_16]\n"
-   188			"srl %[insn], %[insn], %[xlen_minus_16]\n"
-   189			"j 2f\n"
-   190			"1:\n"
-   191			"lhu %[insn], (%[addr])\n"
-   192			"and %[tmp], %[insn], %[rvc_mask]\n"
-   193			"bne %[tmp], %[rvc_mask], 2f\n"
-   194			"lhu %[tmp], 2(%[addr])\n"
-   195			"sll %[tmp], %[tmp], 16\n"
-   196			"add %[insn], %[insn], %[tmp]\n"
-   197			"2:"
-   198		: [insn] "=&r" (val), [tmp] "=&r" (tmp)
-   199		: [addr] "r" (__mepc), [rvc_mask] "r" (rvc_mask),
-   200		  [xlen_minus_16] "i" (XLEN_MINUS_16));
-   201	
-   202		*r_insn = val;
-   203	
-   204		return 0;
-   205	}
-   206	#else
-   207	static inline int load_u8(struct pt_regs *regs, const u8 *addr, u8 *r_val)
-   208	{
-   209		if (user_mode(regs)) {
- > 210			return __get_user(*r_val, addr);
-   211		} else {
-   212			*r_val = *addr;
-   213			return 0;
-   214		}
-   215	}
-   216	
-   217	static inline int store_u8(struct pt_regs *regs, u8 *addr, u8 val)
-   218	{
-   219		if (user_mode(regs)) {
- > 220			return __put_user(val, addr);
-   221		} else {
-   222			*addr = val;
-   223			return 0;
-   224		}
-   225	}
-   226	
-   227	#define __read_insn(regs, insn, insn_addr)		\
-   228	({							\
-   229		int __ret;					\
-   230								\
-   231		if (user_mode(regs)) {				\
-   232			__ret = __get_user(insn, insn_addr);	\
-   233		} else {					\
-   234			insn = *insn_addr;			\
-   235			__ret = 0;				\
-   236		}						\
-   237								\
-   238		__ret;						\
-   239	})
-   240	
-   241	static inline int get_insn(struct pt_regs *regs, ulong epc, ulong *r_insn)
-   242	{
-   243		ulong insn = 0;
-   244	
-   245		if (epc & 0x2) {
-   246			ulong tmp = 0;
-   247			u16 __user *insn_addr = (u16 __user *)epc;
-   248	
- > 249			if (__read_insn(regs, insn, insn_addr))
-   250				return -EFAULT;
-   251			/* __get_user() uses regular "lw" which sign extend the loaded
-   252			 * value make sure to clear higher order bits in case we "or" it
-   253			 * below with the upper 16 bits half.
-   254			 */
-   255			insn &= GENMASK(15, 0);
-   256			if ((insn & __INSN_LENGTH_MASK) != __INSN_LENGTH_32) {
-   257				*r_insn = insn;
-   258				return 0;
-   259			}
-   260			insn_addr++;
-   261			if (__read_insn(regs, tmp, insn_addr))
-   262				return -EFAULT;
-   263			*r_insn = (tmp << 16) | insn;
-   264	
-   265			return 0;
-   266		} else {
-   267			u32 __user *insn_addr = (u32 __user *)epc;
-   268	
-   269			if (__read_insn(regs, insn, insn_addr))
-   270				return -EFAULT;
-   271			if ((insn & __INSN_LENGTH_MASK) == __INSN_LENGTH_32) {
-   272				*r_insn = insn;
-   273				return 0;
-   274			}
-   275			insn &= GENMASK(15, 0);
-   276			*r_insn = insn;
-   277	
-   278			return 0;
-   279		}
-   280	}
-   281	#endif
-   282	
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+
+Ethan
+
+>    comm "softirq", pid 0, jiffies 4306297099 (age 462.991s)
+>    hex dump (first 32 bytes):
+>      00 00 00 00 00 00 00 00 e7 7d 05 00 00 00 00 00  .........}......
+>      0f b4 05 00 00 00 00 00 b4 96 05 00 00 00 00 00  ................
+>    backtrace:
+>      [<ffffffff819f5f08>] __kmem_cache_alloc_node+0x1e8/0x320
+>      [<ffffffff818a239a>] kmalloc_trace+0x2a/0x60
+>      [<ffffffff8231d31e>] free_iova_fast+0x28e/0x4e0
+>      [<ffffffff82310860>] fq_ring_free_locked+0x1b0/0x310
+>      [<ffffffff8231225d>] fq_flush_timeout+0x19d/0x2e0
+>      [<ffffffff813e95ba>] call_timer_fn+0x19a/0x5c0
+>      [<ffffffff813ea16b>] __run_timers+0x78b/0xb80
+>      [<ffffffff813ea5bd>] run_timer_softirq+0x5d/0xd0
+>      [<ffffffff82f1d915>] __do_softirq+0x205/0x8b5
+>
+> unreferenced object 0xffff8881392ec000 (size 1024):
+>    comm "softirq", pid 0, jiffies 4306326731 (age 433.359s)
+>    hex dump (first 32 bytes):
+>      00 10 30 a5 81 88 ff ff 50 ff 0f 00 00 00 00 00  ..0.....P.......
+>      f3 99 05 00 00 00 00 00 87 b7 05 00 00 00 00 00  ................
+>    backtrace:
+>      [<ffffffff819f5f08>] __kmem_cache_alloc_node+0x1e8/0x320
+>      [<ffffffff818a239a>] kmalloc_trace+0x2a/0x60
+>      [<ffffffff8231d31e>] free_iova_fast+0x28e/0x4e0
+>      [<ffffffff82310860>] fq_ring_free_locked+0x1b0/0x310
+>      [<ffffffff8231225d>] fq_flush_timeout+0x19d/0x2e0
+>      [<ffffffff813e95ba>] call_timer_fn+0x19a/0x5c0
+>      [<ffffffff813ea16b>] __run_timers+0x78b/0xb80
+>      [<ffffffff813ea5bd>] run_timer_softirq+0x5d/0xd0
+>      [<ffffffff82f1d915>] __do_softirq+0x205/0x8b5
+>
+> unreferenced object 0xffff8881411f9000 (size 1024):
+>    comm "softirq", pid 0, jiffies 4306708887 (age 51.459s)
+>    hex dump (first 32 bytes):
+>      00 10 1c 26 81 88 ff ff 2c 96 05 00 00 00 00 00  ...&....,.......
+>      ac fe 0f 00 00 00 00 00 a6 fe 0f 00 00 00 00 00  ................
+>    backtrace:
+>      [<ffffffff819f5f08>] __kmem_cache_alloc_node+0x1e8/0x320
+>      [<ffffffff818a239a>] kmalloc_trace+0x2a/0x60
+>      [<ffffffff8231d31e>] free_iova_fast+0x28e/0x4e0
+>      [<ffffffff82310860>] fq_ring_free_locked+0x1b0/0x310
+>      [<ffffffff8231225d>] fq_flush_timeout+0x19d/0x2e0
+>      [<ffffffff813e95ba>] call_timer_fn+0x19a/0x5c0
+>      [<ffffffff813ea16b>] __run_timers+0x78b/0xb80
+>      [<ffffffff813ea5bd>] run_timer_softirq+0x5d/0xd0
+>      [<ffffffff82f1d915>] __do_softirq+0x205/0x8b5
+>
+> unreferenced object 0xffff88812be26400 (size 1024):
+>    comm "softirq", pid 0, jiffies 4306710027 (age 50.319s)
+>    hex dump (first 32 bytes):
+>      00 c0 2e 39 81 88 ff ff 32 ab 05 00 00 00 00 00  ...9....2.......
+>      e3 ac 05 00 00 00 00 00 1f b6 05 00 00 00 00 00  ................
+>    backtrace:
+>      [<ffffffff819f5f08>] __kmem_cache_alloc_node+0x1e8/0x320
+>      [<ffffffff818a239a>] kmalloc_trace+0x2a/0x60
+>      [<ffffffff8231d31e>] free_iova_fast+0x28e/0x4e0
+>      [<ffffffff82310860>] fq_ring_free_locked+0x1b0/0x310
+>      [<ffffffff8231225d>] fq_flush_timeout+0x19d/0x2e0
+>      [<ffffffff813e95ba>] call_timer_fn+0x19a/0x5c0
+>      [<ffffffff813ea16b>] __run_timers+0x78b/0xb80
+>      [<ffffffff813ea5bd>] run_timer_softirq+0x5d/0xd0
+>      [<ffffffff82f1d915>] __do_softirq+0x205/0x8b5
+>
+> unreferenced object 0xffff8881261c1000 (size 1024):
+>    comm "softirq", pid 0, jiffies 4306711547 (age 48.799s)
+>    hex dump (first 32 bytes):
+>      00 64 e2 2b 81 88 ff ff c0 7c 05 00 00 00 00 00  .d.+.....|......
+>      87 a5 05 00 00 00 00 00 0e 9a 05 00 00 00 00 00  ................
+>    backtrace:
+>      [<ffffffff819f5f08>] __kmem_cache_alloc_node+0x1e8/0x320
+>      [<ffffffff818a239a>] kmalloc_trace+0x2a/0x60
+>      [<ffffffff8231d31e>] free_iova_fast+0x28e/0x4e0
+>      [<ffffffff82310860>] fq_ring_free_locked+0x1b0/0x310
+>      [<ffffffff8231225d>] fq_flush_timeout+0x19d/0x2e0
+>      [<ffffffff813e95ba>] call_timer_fn+0x19a/0x5c0
+>      [<ffffffff813ea16b>] __run_timers+0x78b/0xb80
+>      [<ffffffff813ea5bd>] run_timer_softirq+0x5d/0xd0
+>      [<ffffffff82f1d915>] __do_softirq+0x205/0x8b5
+>
