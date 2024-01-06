@@ -1,163 +1,236 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3EA317CD
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Jan 2024 03:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=landley.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5988A440A
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Jan 2024 03:52:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20230601.gappssmtp.com header.i=@landley-net.20230601.gappssmtp.com header.b="gh7ATWRR"
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7bbe90357d8so14212839f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 19:52:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="oB1wZTXN"
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-59502aa878aso128402eaf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Jan 2024 19:52:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20230601.gappssmtp.com; s=20230601; t=1704513121; x=1705117921; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=enno4RDG7Jc2tI8Uw9IJMPfOQP8dq6cok+ed1FX+/z8=;
-        b=gh7ATWRRRO4zPYNDnoVMr3CRnUPCarZxzyIwPDcu6zbDX5vLPvSxgIc9oKLWunSzS7
-         0udeuafrZu2rS8qq40IfQZN1ilDRFRgnUDM4lr3SflPG10c5tNCfQAYY/nti64n/FGG8
-         j9WIFQ4qy/tx8BrLonMjAVBJ1fvnWLffo/DYhCsYDikPt7qePXLFj4SYn5Slx3eFFdhB
-         CgFXyQ5VEYdGG9i/fCWtvJTiSOmSNNF9w8maQLGCGPW4fyfBifas7+HcXW1l4f0TQQsq
-         2zynch/KZyVcxm10xo1SxtlGuKqDPZtxGODQ+N0SRt0O/GeEbM8KMr17eZpz2dW0s2Gi
-         hJaA==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1704513178; x=1705117978; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=X2aOIl4UNnpRK6RyeoDnHpQHzACVL3QRju2SnuNTBm0=;
+        b=oB1wZTXN8MruiWXHtaPpZkFJlPviDCbnZkvZoriNCUHDVJVMGBtuvddGG7R7kVJ8jj
+         j8olInbE6OiS2D90BsVp3j/CyvKHouXnUpr9mqF+7M7KU9qEsHUyiWn88p8CcJWLteRY
+         5XPLwO5Uj0LcaWGTtqEF8zMuyGBfg/jNqRO06B4JmrlFafEm07xUvZOTL4HFlve+V7Y8
+         afPLs+B5gVcu5yzBHHJYnbzO3iWY6RrFFQoMMa1YxB0k0R+Csa5fHrthla74pZG16GHN
+         3o2/mbaqIK2MxLgnRzcalCdg6h8XITAYkLFjqxso0Y2VgmgvUBObL3YyWG2DGIZonB4v
+         Uiyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704513121; x=1705117921;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1704513178; x=1705117978;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=enno4RDG7Jc2tI8Uw9IJMPfOQP8dq6cok+ed1FX+/z8=;
-        b=HgCJlA5vHpTeD3nYTjAGMfTkHC2r13Zcl/PQ0+GPdC+W4jefoqwdaZ+8w4NqeEZ7Wk
-         OrHy4fWSUyk/Q0O9S1MR1JTs8koJ0GMYoX2bf7F9dRMuTYiYnGMUI1+p2Gu0J2SSx2tL
-         gUJWF6oZ5CkWbwT7jZh+eTc3vhP+n9I8AB/zyE8JcYsug9AUznKhoYomvvLVAHU5dK6i
-         yj/PiWHm14rUHIDgYUFvpoyiTv2xDS+nE3FGDt6aManoK1l1NR0XdB4O3HvRuUAPeb0C
-         Hm1fg7TbB/AVR2Eylt3XyLFDpnl2htsrO4W0B+ai9SgWBEygGrR0Lr8ZRR/nZiFnsZ1k
-         3kZQ==
-X-Gm-Message-State: AOJu0YwkfXaDf/4dZCUjkgsI6t5akWQjnLZKz+CkN+uX4DR+6oOKekc7
-	Te0+XktsSf2xJ7A8cDXb0eT/J/mtv37Qzw==
-X-Google-Smtp-Source: AGHT+IGTddaSjZgOGB35qmivrEEVWMRiyLxFuiI9YqBmA2e7RS9koXVG6vidS0Xx6CzgCLA+n146Kw==
-X-Received: by 2002:a5d:8059:0:b0:7b4:28f8:519 with SMTP id b25-20020a5d8059000000b007b428f80519mr667420ior.25.1704513121061;
-        Fri, 05 Jan 2024 19:52:01 -0800 (PST)
-Received: from [172.16.32.83] ([198.232.126.202])
-        by smtp.gmail.com with ESMTPSA id ck15-20020a0566383f0f00b004665f85c6d7sm823366jab.4.2024.01.05.19.52.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jan 2024 19:52:00 -0800 (PST)
-Message-ID: <90c1ddc1-c608-30fc-d5aa-fdf63c90d055@landley.net>
-Date: Fri, 5 Jan 2024 21:58:30 -0600
+        bh=X2aOIl4UNnpRK6RyeoDnHpQHzACVL3QRju2SnuNTBm0=;
+        b=v1lo+msxyJ/IXlnNJwp97YQHg6aTH3ZRXgf2l5ikb4w+i4sTEcURazGTlNO17w8oMH
+         xhs8VKCM/h0nNrJJpinpkTWLet6jg9ySFYXRbVvEshuwV3TfPfvUfTsAfPG8FLHQC+WK
+         /IrRQbUqrSp/6z5pKdaWjVFXtiqIJGNZGBmwP9MQnBus+160rk1gdZSsGYyiLGU3oua5
+         6CjvKldfjXxlVRimZEiB8lKtuUIC49wb8mYdimB193tjAIMTWRjBXfezfWBg11ZlOZ/o
+         TV41Yc0OSwQeD8Ct3mNsrwRQsVB9xoe5q25bbI4V02Jp7W+MwwjTKsmEVFFoc7FjFY3P
+         ER/A==
+X-Gm-Message-State: AOJu0YxfXCEl4ATsOAjqJKFGWVAyybn0nFCP6L+tebo+UEPq5omCryuh
+	HCVVTeKnNYvIqabiHGor4+mCz9cgPxFZCg==
+X-Google-Smtp-Source: AGHT+IFZdiX5/Chz2pb3J2lpmWZK0wj7liYYlV3sycKkqbhQFnl4yRMsyYKAzwdDC9bujM3U8Qb0KA==
+X-Received: by 2002:a05:6358:4406:b0:172:e3d3:4906 with SMTP id z6-20020a056358440600b00172e3d34906mr489239rwc.34.1704513178245;
+        Fri, 05 Jan 2024 19:52:58 -0800 (PST)
+Received: from ghost ([2601:647:5700:6860:73c:7a5f:bc03:fe77])
+        by smtp.gmail.com with ESMTPSA id mv2-20020a17090b198200b0028c361b5c7csm2079193pjb.23.2024.01.05.19.52.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jan 2024 19:52:57 -0800 (PST)
+Date: Fri, 5 Jan 2024 19:52:55 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Atish Patra <atishp@atishpatra.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Jonathan Corbet <corbet@lwn.net>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] documentation: Document
+ PR_RISCV_SET_ICACHE_FLUSH_CTX prctl
+Message-ID: <ZZjOl1zDhUYbzpF9@ghost>
+References: <20231213-fencei-v3-0-b75158238eb7@rivosinc.com>
+ <20231213-fencei-v3-2-b75158238eb7@rivosinc.com>
+ <CAOnJCULhAMmz22bH6A5AXv7aaJpH8SVGBATQyx-bfKAn4eFxsQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: Call for nommu LTP maintainer [was: Re: [PATCH 00/36] Remove
- UCLINUX from LTP]
-Content-Language: en-US
-To: Petr Vorel <pvorel@suse.cz>
-Cc: Cyril Hrubis <chrubis@suse.cz>, Geert Uytterhoeven
- <geert@linux-m68k.org>, ltp@lists.linux.it, Li Wang <liwang@redhat.com>,
- Andrea Cervesato <andrea.cervesato@suse.com>,
- Greg Ungerer <gerg@linux-m68k.org>, Jonathan Corbet <corbet@lwn.net>,
- Randy Dunlap <rdunlap@infradead.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Christophe Lyon <christophe.lyon@linaro.org>,
- linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
- Linux ARM <linux-arm-kernel@lists.infradead.org>,
- linux-riscv <linux-riscv@lists.infradead.org>,
- Linux-sh list <linux-sh@vger.kernel.org>,
- automated-testing@lists.yoctoproject.org, buildroot@buildroot.org
-References: <20240103015240.1065284-1-pvorel@suse.cz>
- <CAMuHMdXGwyS-CL0vLdUP4Z4YEYhmcmDyC3YdGCnS=jFkqASqvw@mail.gmail.com>
- <20240103114957.GD1073466@pevik>
- <CAMuHMdX0s0gLRoPtjJmDnSmZ_MNY590dN+JxM1HKAL1g_bjX+w@mail.gmail.com>
- <ZZVOhlGPg5KRyS-F@yuki> <5a1f1ff3-8a61-67cf-59a9-ce498738d912@landley.net>
- <20240105131135.GA1484621@pevik>
-From: Rob Landley <rob@landley.net>
-In-Reply-To: <20240105131135.GA1484621@pevik>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOnJCULhAMmz22bH6A5AXv7aaJpH8SVGBATQyx-bfKAn4eFxsQ@mail.gmail.com>
 
-On 1/5/24 07:11, Petr Vorel wrote:
->> Nobody is maintaining "uclinux" because that was a distro, but you can build
->> nommu support in buildroot and such, and people do.
+On Fri, Jan 05, 2024 at 06:52:12PM -0800, Atish Patra wrote:
+> On Wed, Dec 13, 2023 at 2:48 PM Charlie Jenkins <charlie@rivosinc.com> wrote:
+> >
+> > Provide documentation that explains how to properly do CMODX in riscv.
+> >
+> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > ---
+> >  Documentation/arch/riscv/cmodx.rst | 98 ++++++++++++++++++++++++++++++++++++++
+> >  Documentation/arch/riscv/index.rst |  1 +
+> >  2 files changed, 99 insertions(+)
+> >
+> > diff --git a/Documentation/arch/riscv/cmodx.rst b/Documentation/arch/riscv/cmodx.rst
+> > new file mode 100644
+> > index 000000000000..20f327d85116
+> > --- /dev/null
+> > +++ b/Documentation/arch/riscv/cmodx.rst
+> > @@ -0,0 +1,98 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +
+> > +==============================================================================
+> > +Concurrent Modification and Execution of Instructions (CMODX) for RISC-V Linux
+> > +==============================================================================
+> > +
+> > +CMODX is a programming technique where a program executes instructions that were
+> > +modified by the program itself. Instruction storage and the instruction cache
+> > +(icache) is not guaranteed to be synchronized on RISC-V hardware. Therefore, the
+> > +program must enforce its own synchonization with the unprivileged fence.i/
 > 
-> Right, there are nommu users. Will anybody join LTP development to maintain
-> nommu support in LTP? The needed work is to add this support to LTP new C API
-> [1] and use it in the relevant test. There is some implementation in the old
-> API, I have no idea how well it worked.
+> /s/synchonization/synchronization
 > 
-> If nobody stands for maintaing nommu, we will have to delete it. There is nobody
-> from the current maintainers who is using LTP on nommu HW (that is the reason why
-> nommu support have not been implemented in the new API).
+> > +instruction.
+> > +
+> > +However, the default Linux ABI prohibits the use of fence.i in userspace
+> > +applications. At any point the scheduler may migrate a task onto a new hart. If
+> > +migration occurs after the userspace synchronized the icache and instruction
+> > +storage with fence.i, the icache will no longer be clean. This is due to the
+> > +behavior of fence.i only affecting the hart that it is called on. Thus, the hart
+> > +that the task has been migrated to, may not have synchronized instruction
+> > +storage and icache.
+> > +
+> > +There are two ways to solve this problem: use the riscv_flush_icache() syscall,
+> > +or use the ``PR_RISCV_SET_ICACHE_FLUSH_CTX`` prctl(). The syscall should be used
+> > +when the application very rarely needs to flush the icache. If the icache will
+> 
+> The syscall is a one time operation while prctl is sticky.
+> It would be great if we can add a little more context why the syscall
+> behaves this way compared to prctl.
 
-I'm interested, but overwhelmed. Not sure I've got the spoons to come up to
-speed on a new project and give it regular attention just now.
+I can highlight the point that the prctl is sticky and the syscall is
+not.
 
-I see you cc'd buildroot (although the message might not go through if you
-aren't subscribed, dunno how clogged their moderation queue is these days, and
-the cc: list is long enough it might twig anyway). They had a nommu fix go in
-earlier this week (commit 98684ba7885b).
+As for "why", they simply fill different roles. It is useful to have
+both a sticky and a non-sticky option. I chose the sticky operation to
+be a prctl rather than a generic syscall because the semantics of prctl
+is that they operate on process or thread scoped behavior which is what
+was needed.
 
-That said, qemu supports several nommu platforms and buildroot has defconfigs to
-build systems for them:
+- Charlie
 
-$ git clone git://buildroot.org/buildroot
-$ make help
-$ make list-defconfigs | grep qemu
-$ make qemu_ppc_bamboo_defconfig
-$ make
-  (time passes...)
->>> host-gettext-tiny 0.3.2 Extracting
-gzip -d -c
-/home/landley/buildroot/buildroot/dl/gettext-tiny/gettext-tiny-0.3.2.tar.gz |
-tar --strip-components=1 -C
-/home/landley/buildroot/buildroot/output/build/host-gettext-tiny-0.3.2   -xf -
-mkdir -p
-/home/landley/buildroot/buildroot/output/build/host-gettext-tiny-0.3.2/gettext-gnu
-xzcat /home/landley/buildroot/buildroot/dl/gettext-tiny/gettext-0.22.4.tar.xz |
-tar --strip-components=1 -C
-/home/landley/buildroot/buildroot/output/build/host-gettext-tiny-0.3.2/gettext-gnu
- -xf -
-xzcat: /home/landley/buildroot/buildroot/dl/gettext-tiny/gettext-0.22.4.tar.xz:
-No such file or directory
-tar: This does not look like a tar archive
-tar: Exiting with failure status due to previous errors
-make: *** [package/pkg-generic.mk:209:
-/home/landley/buildroot/buildroot/output/build/host-gettext-tiny-0.3.2/.stamp_extracted]
-Error 2
-
-
-Sigh, never build git pull du jour of anything, buildroot's having glitch du
-jour. But the point is:
-
-$ grep -rl bamboo board/
-board/qemu/ppc-bamboo/readme.txt
-$ cat board/qemu/ppc-bamboo/readme.txt
-Run the emulation with:
-
-qemu-system-ppc -nographic -M bamboo -kernel output/images/vmlinux -net
-nic,model=virtio-net-pci -net user # qemu_ppc_bamboo_defconfig
-
-The login prompt will appear in the terminal that started Qemu
--------------------
-
-In THEORY, once it builds an image (presumably using a tagged release version
-rather than expecting "continuous integration" to ever mean anything) you should
-be able to launch it with qemu. Assuming the instructions aren't also
-bit-rotted. (Or using one of the other nommu boards, I haven't gone through the
-whole list to see what they've got. I used to use a nommu arm board, but the
-linux kernel broke it when converting everything to device tree and not
-regression testing it.)
-
-Buildroot also apparently has an LTP package selectable in menuconfig:
-
-https://github.com/buildroot/buildroot/tree/master/package/ltp-testsuite
-
-But I haven't tried it...
-
-Rob
-
-P.S. I automate qemu testing all the time over in toybox, see testroot.sh under
-https://github.com/landley/toybox/tree/master/mkroot for an example.
+> 
+> > +need to be flushed many times in the lifetime of the application, the prctl
+> > +should be used.
+> > +
+> > +The prctl informs the kernel that it must emit synchronizing instructions upon
+> > +task migration. The program itself must emit synchonizing instructions when
+> 
+> /s/synchonizing/synchronizing
+> 
+> > +necessary as well.
+> > +
+> > +1.  prctl() Interface
+> > +---------------------
+> > +
+> > +Before the program emits their first icache flushing instruction, the program
+> > +must call this prctl().
+> > +
+> > +* prctl(PR_RISCV_SET_ICACHE_FLUSH_CTX, unsigned long ctx, unsigned long per_thread)
+> > +
+> > +       Sets the icache flushing context. If per_thread is 0, context will be
+> > +       applied per process, otherwise if per_thread is 1 context will be
+> > +       per-thread. Any other number will have undefined behavior.
+> > +
+> > +       * :c:macro:`PR_RISCV_CTX_SW_FENCEI`: Allow fence.i to be called in
+> > +         userspace.
+> > +
+> > +Example usage:
+> > +
+> > +The following files are meant to be compiled and linked with each other. The
+> > +modify_instruction() function replaces an add with 0 with an add with one,
+> > +causing the instruction sequence in get_value() to change from returning a zero
+> > +to returning a one.
+> > +
+> > +cmodx.c::
+> > +
+> > +       #include <stdio.h>
+> > +       #include <sys/prctl.h>
+> > +
+> > +       extern int get_value();
+> > +       extern void modify_instruction();
+> > +
+> > +       int main()
+> > +       {
+> > +               int value = get_value();
+> > +               printf("Value before cmodx: %d\n", value);
+> > +
+> > +               // Call prctl before first fence.i is called inside modify_instruction
+> > +               prctl(PR_RISCV_SET_ICACHE_FLUSH_CTX, PR_RISCV_CTX_SW_FENCEI, 0);
+> > +               modify_instruction();
+> > +
+> > +               value = get_value();
+> > +               printf("Value after cmodx: %d\n", value);
+> > +               return 0;
+> > +       }
+> > +
+> > +cmodx.S::
+> > +
+> > +       .option norvc
+> > +
+> > +       .text
+> > +       .global modify_instruction
+> > +       modify_instruction:
+> > +       lw a0, new_insn
+> > +       lui a5,%hi(old_insn)
+> > +       sw  a0,%lo(old_insn)(a5)
+> > +       fence.i
+> > +       ret
+> > +
+> > +       .section modifiable, "awx"
+> > +       .global get_value
+> > +       get_value:
+> > +       li a0, 0
+> > +       old_insn:
+> > +       addi a0, a0, 0
+> > +       ret
+> > +
+> > +       .data
+> > +       new_insn:
+> > +       addi a0, a0, 1
+> > diff --git a/Documentation/arch/riscv/index.rst b/Documentation/arch/riscv/index.rst
+> > index 4dab0cb4b900..eecf347ce849 100644
+> > --- a/Documentation/arch/riscv/index.rst
+> > +++ b/Documentation/arch/riscv/index.rst
+> > @@ -13,6 +13,7 @@ RISC-V architecture
+> >      patch-acceptance
+> >      uabi
+> >      vector
+> > +    cmodx
+> >
+> >      features
+> >
+> >
+> > --
+> > 2.43.0
+> >
+> >
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+> 
+> 
+> 
+> -- 
+> Regards,
+> Atish
