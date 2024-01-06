@@ -1,108 +1,102 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBD479EC;
-	Sat,  6 Jan 2024 15:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6570679F1;
+	Sat,  6 Jan 2024 15:05:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="pSMwvwgc"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 567EF60002;
-	Sat,  6 Jan 2024 15:00:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-	t=1704553261;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=skoV/MYNvEJ7Q4zca+8v7GcUrjuUMIoeHzDPlkaXyPY=;
-	b=pSMwvwgcVeeUxycO6OHaK+SCwICC7DmsXLDD+dHVpiqvO0ehxBcQ5/MPqdsrxBg/NXWYMM
-	LWoCT1PqXQ24WS2lXN2D5dqv2Vqjli/duePWnVZeanTB3qG0b76eiJlmonD8EHlv7rkxSJ
-	Xh7FC1AtuLcuVZBtJgSYMqofRC9mW3j09DgkAQqE9zR2KePRaDbzjry3Vda0HQw94rQSO5
-	soUQPqFEhdcHl+p2Wme3AP/3ba68cDNQHbbCAMWx1yO35E66jANw6LaREYVSA5xcIZU9rM
-	o1AtHTvKj1UeMjIKlfQRGy4cYpC/AlkfK4WYg8jDYiwdEc42jrmIs/P6U0zWGw==
-Message-ID: <f9ad000a-2e42-4ddf-89a4-9a3ff452dc4b@arinc9.com>
-Date: Sat, 6 Jan 2024 18:00:53 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RUPPheLz"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40d5ac76667so4301175e9.1;
+        Sat, 06 Jan 2024 07:05:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704553499; x=1705158299; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=r+jORYiUTO9PmKWOcOQPyN1v50dStgTx0NZ6TsUFmhg=;
+        b=RUPPheLzW22N2QQs5S6NQF8/yVYBaJ6A+oK0uEV65wGdWmaeXFtBinll7qDQP2y8PA
+         VhzHejNXI7R0CRQAx05M2v8s4tno0R55yQQlKjAqf5YTtb4KjPmeIlhyWPIGfz+UcQeX
+         Q5c2Jfs1VyK7v/5W5xFjE3UMyfHdp6btz+9Rh+JIcQ0kJv38JoCi3axGdpWOQG8m2Gd2
+         MbxZcoTrE+X2n3gdUD615pGPe6tMS2bxKBkizOQstHKHwh6tdHrCktSDsJk0OSoat8pX
+         cr3Gwy4QH2OV2tQgLBdZns0F8dqAW4XrnZS068iWbjezdvCzPuXPWVFSpXb7hV1nxF1c
+         yZVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704553499; x=1705158299;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=r+jORYiUTO9PmKWOcOQPyN1v50dStgTx0NZ6TsUFmhg=;
+        b=SaWOfD6jvvsKfr65eMzNo5dWV+bzitA1i02j7qyGUACCdzXJ3P/7NUMII8iNEbUjwq
+         6BYGobtUwOvlbRDCwDewdauK6t7QoQTJZQYOF+qRyjsfi1J6IJu4AXMFCdghFm6Q8AzC
+         tDe5f2Tbn4Td0ZQgzbBV+ES1s4jVYrE6TZOtft3vL9oa2w/+al7RuR7Lo3v3eI4nccx0
+         h47q6zGU6tmKzxeyXJnL0ndwSZ54TVT/dl9GSCGvfIDVJva0g1WVctP2fLW14mSqEi4J
+         kTYF5V3Ziip0P4uDOQOr6Sw5Mzwb5vBv7dJHNWT28wkfMm35AXzxQaoH24WtfCOnSN+Z
+         OF3Q==
+X-Gm-Message-State: AOJu0YwJ3CudFtJ4wCwb9BEuKlr1xp7iNmRp4cw5b1Wb7YB3YN3Zi26K
+	ILJochjhrRRFM5n7x/vUH6M=
+X-Google-Smtp-Source: AGHT+IFBjfthUn80oHP48orVD+8I03MMj0HKnQn/QcpxmKjVJR8UyEDGbRq3D2m+XoyP5/EWszSOWg==
+X-Received: by 2002:a05:600c:45c8:b0:40e:3f9f:8f76 with SMTP id s8-20020a05600c45c800b0040e3f9f8f76mr457834wmo.23.1704553499379;
+        Sat, 06 Jan 2024 07:04:59 -0800 (PST)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id i1-20020a05600c354100b0040d8ff79fd8sm4942745wmq.7.2024.01.06.07.04.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Jan 2024 07:04:58 -0800 (PST)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
+	Todd Kjos <tkjos@android.com>,
+	Martijn Coenen <maco@android.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Carlos Llamas <cmllamas@google.com>,
+	Suren Baghdasaryan <surenb@google.com>
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] binder: remove redundant variable page_addr
+Date: Sat,  6 Jan 2024 15:04:57 +0000
+Message-Id: <20240106150457.53423-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2 6/7] net: dsa: mt7530: do not set
- priv->p5_interface on mt7530_setup_port5()
-Content-Language: en-US
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: Daniel Golle <daniel@makrotopia.org>,
- Landen Chao <Landen.Chao@mediatek.com>, DENG Qingfang <dqfext@gmail.com>,
- Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
- Florian Fainelli <f.fainelli@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Russell King <linux@armlinux.org.uk>,
- Frank Wunderlich <frank-w@public-files.de>,
- Bartel Eerdekens <bartel.eerdekens@constell8.be>, mithat.guner@xeront.com,
- erkin.bozoglu@xeront.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20231227044347.107291-1-arinc.unal@arinc9.com>
- <20231227044347.107291-7-arinc.unal@arinc9.com>
- <20240104154241.rxjins4mi5zkbhia@skbuf>
-From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-In-Reply-To: <20240104154241.rxjins4mi5zkbhia@skbuf>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: arinc.unal@arinc9.com
 
-On 4.01.2024 18:42, Vladimir Oltean wrote:
-> On Wed, Dec 27, 2023 at 07:43:46AM +0300, Arınç ÜNAL wrote:
->> priv->p5_interface and priv->p6_interface are for use on the MT7531 switch.
->> They prevent the CPU ports of MT7531 to be configured again. They are
->> useless for MT7530. Therefore, remove setting priv->p5_interface for
->> MT7530.
->>
->> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
->> ---
-> 
-> What makes priv->p5_interface and priv->p6_interface useless for MT7530
-> as you say? This code in mt753x_phylink_mac_config() seems executed
-> regardless of switch family:
-> 
-> 	case 5:
-> 		if (priv->p5_interface == state->interface)
-> 			break;
-> 
-> 		if (mt753x_mac_config(ds, port, mode, state) < 0)
-> 			goto unsupported;
-> 
-> 		if (priv->p5_intf_sel != P5_DISABLED)
-> 			priv->p5_interface = state->interface;
-> 		break;
-> 	case 6:
-> 		if (priv->p6_interface == state->interface)
-> 			break;
-> 
-> 		mt753x_pad_setup(ds, state);
-> 
-> 		if (mt753x_mac_config(ds, port, mode, state) < 0)
-> 			goto unsupported;
-> 
-> 		priv->p6_interface = state->interface;
-> 		break;
+From: Colin Ian King <colin.i.king@intel.com>
 
-This is also useless for non-MT7531 switches in the sense that it
-unnecessarily prevents port 5 and 6 from being reconfigured. There's
-nothing wrong with configuring them multiple times. These are the remains
-of before phylink was implemented on this driver so the thought of changing
-phy_interface_t on the fly was non existent. At that time, it was probably
-made to apply to all switch models for convenience, as port 5 and 6 are CPU
-ports so they're highly likely to be fixed links.
+Variable page_addr is being assigned a value that is never read. The
+variable is redundant and can be removed.
 
-The reason I don't deal with this code block now is because I will get rid
-of priv->p5_interface and priv->p6_interface when I also get rid of
-priv->info->cpu_port_config() with a later patch.
+Cleans up clang scan build warning:
+warning: Value stored to 'page_addr' is never read [deadcode.DeadStores]
 
-Arınç
+Signed-off-by: Colin Ian King <colin.i.king@intel.com>
+---
+ drivers/android/binder_alloc.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/android/binder_alloc.c b/drivers/android/binder_alloc.c
+index ea5e1ba2d0d7..ed4ca6689c75 100644
+--- a/drivers/android/binder_alloc.c
++++ b/drivers/android/binder_alloc.c
+@@ -925,7 +925,6 @@ void binder_alloc_deferred_release(struct binder_alloc *alloc)
+ 		int i;
+ 
+ 		for (i = 0; i < alloc->buffer_size / PAGE_SIZE; i++) {
+-			unsigned long page_addr;
+ 			bool on_lru;
+ 
+ 			if (!alloc->pages[i].page_ptr)
+@@ -933,7 +932,6 @@ void binder_alloc_deferred_release(struct binder_alloc *alloc)
+ 
+ 			on_lru = list_lru_del_obj(&binder_freelist,
+ 					      &alloc->pages[i].lru);
+-			page_addr = alloc->buffer + i * PAGE_SIZE;
+ 			binder_alloc_debug(BINDER_DEBUG_BUFFER_ALLOC,
+ 				     "%s: %d: page %d %s\n",
+ 				     __func__, alloc->pid, i,
+-- 
+2.43.0
+
