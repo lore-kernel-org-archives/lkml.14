@@ -1,94 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC86479D9;
-	Sat,  6 Jan 2024 14:55:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52ABBC433C7;
-	Sat,  6 Jan 2024 14:55:28 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH] LoongArch: Change SHMLBA from SZ_64K to PAGE_SIZE
-Date: Sat,  6 Jan 2024 22:55:01 +0800
-Message-Id: <20240106145501.3370364-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0950FC12A
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Jan 2024 14:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oCsn6TCE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704552966; x=1736088966;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dXTx/XeIcZvKEX0bwQ0/pKpd2DVP5McBkOgOXRxpbxk=;
+  b=oCsn6TCE/N3Y8nsz9YQKjj4i2LXPDvQHLmashJDcB+kffTBajme9A6It
+   gaK09X+4GxuxyrWhhFcbqxX569UTNLPzI1mfK2MlekgT0yfqGv+HWjVe8
+   Dhe6GX+Fee0hO+mcSm4KFZ6X7HRwmIcQpYLpz/Qptl4xK8Lrpxg/ySQp1
+   H7lBG3c6/H9+bjOYgAybvRcKsXDz7Eyvwb9njrN1vV3VIOWUyjNhyUzf/
+   uT4vxOGMdf9kpz1umTpxYpWR0SHSivIJLP2hxZvSKGSeyxOMxkoEukyJp
+   U7PqyKRLWMYdgVg480GG1EIE8XmQVG6etor26cLN7G1+3vhXqV6gvuvty
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10945"; a="4429270"
+X-IronPort-AV: E=Sophos;i="6.04,337,1695711600"; 
+   d="scan'208";a="4429270"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2024 06:56:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10945"; a="1028013610"
+X-IronPort-AV: E=Sophos;i="6.04,337,1695711600"; 
+   d="scan'208";a="1028013610"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2024 06:56:00 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rM85d-0000000BvzY-1nd5;
+	Sat, 06 Jan 2024 16:55:57 +0200
+Date: Sat, 6 Jan 2024 16:55:57 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mark Hasemeyer <markhas@chromium.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Raul Rangel <rrangel@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>, David Gow <davidgow@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Mark Brown <broonie@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Takashi Iwai <tiwai@suse.de>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v4 23/24] platform: Modify platform_get_irq_optional() to
+ use resource
+Message-ID: <ZZlp_YszbYTUFC1u@smile.fi.intel.com>
+References: <20240102210820.2604667-1-markhas@chromium.org>
+ <20240102140734.v4.23.Ife9ebad2bbfbab3a05e90040f344d750aa0aac7e@changeid>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240102140734.v4.23.Ife9ebad2bbfbab3a05e90040f344d750aa0aac7e@changeid>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-LoongArch has hardware page coloring for L1 Cache, so we don't have
-cache aliases. But SFB (Store Fill Buffer) still has aliases. So we
-define SHMLBA to SZ_64K previously. But there are losts of applications
-use PAGE_SIZE rather than SHMLBA to mmap() file pages and shared pages.
-Of course we can fix them one by one, but not easy.
+On Tue, Jan 02, 2024 at 02:07:47PM -0700, Mark Hasemeyer wrote:
+> Unify handling of ACPI, GPIO, devictree, and platform resource
+> interrupts in platform_get_irq_optional(). Each of these subsystems
+> provide their own APIs which provide IRQ information as a struct
+> resource. This simplifies the logic of the function and allows callers
+> to get more information about the IRQ by looking at the resource flags.
+> For example, whether or not an IRQ is wake capable.
 
-On the other hand, we can simply disable SFB for 4KB page size to fix
-cache alias (there will be performance decrease, but acceptable), and
-in future we will fix SFB in hardware. So we can safely define SHMLBA to
-PAGE_SIZE (use the generic shmparam.h) to make life easier.
+...
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/include/asm/shmparam.h | 12 ------------
- arch/loongarch/kernel/head.S          | 10 ++++++++++
- 2 files changed, 10 insertions(+), 12 deletions(-)
- delete mode 100644 arch/loongarch/include/asm/shmparam.h
+> +	ret = fwnode_irq_get_resource(fwnode, num, r);
 
-diff --git a/arch/loongarch/include/asm/shmparam.h b/arch/loongarch/include/asm/shmparam.h
-deleted file mode 100644
-index c9554f48d2df..000000000000
---- a/arch/loongarch/include/asm/shmparam.h
-+++ /dev/null
-@@ -1,12 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * Copyright (C) 2020-2022 Loongson Technology Corporation Limited
-- */
--#ifndef _ASM_SHMPARAM_H
--#define _ASM_SHMPARAM_H
--
--#define __ARCH_FORCE_SHMLBA	1
--
--#define	SHMLBA	SZ_64K		 /* attach addr a multiple of this */
--
--#endif /* _ASM_SHMPARAM_H */
-diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-index 53b883db0786..be187e99d358 100644
---- a/arch/loongarch/kernel/head.S
-+++ b/arch/loongarch/kernel/head.S
-@@ -75,6 +75,11 @@ SYM_CODE_START(kernel_entry)			# kernel entry point
- 	la.pcrel	t0, fw_arg2
- 	st.d		a2, t0, 0
- 
-+#ifdef CONFIG_PAGE_SIZE_4KB
-+	li.d		t0, 0
-+	li.d		t1, CSR_STFILL
-+	csrxchg		t0, t1, LOONGARCH_CSR_IMPCTL1
-+#endif
- 	/* KSave3 used for percpu base, initialized as 0 */
- 	csrwr		zero, PERCPU_BASE_KS
- 	/* GPR21 used for percpu base (runtime), initialized as 0 */
-@@ -127,6 +132,11 @@ SYM_CODE_START(smpboot_entry)
- 
- 	JUMP_VIRT_ADDR	t0, t1
- 
-+#ifdef CONFIG_PAGE_SIZE_4KB
-+	li.d		t0, 0
-+	li.d		t1, CSR_STFILL
-+	csrxchg		t0, t1, LOONGARCH_CSR_IMPCTL1
-+#endif
- 	/* Enable PG */
- 	li.w		t0, 0xb0		# PLV=0, IE=0, PG=1
- 	csrwr		t0, LOONGARCH_CSR_CRMD
+I still prefer this not to return positive value. Since you _require_ @r to be
+not NULL, i.e. valid, the returning positive value makes no sense.
+
+> +	ret = ret < 0 ? ret : 0;
+> +	if (!ret || ret == -EPROBE_DEFER)
+> +		goto out;
+
+...
+
+> +	struct resource *platform_res = platform_get_resource(dev, IORESOURCE_IRQ, num);
+
+Same comment, please split definition and assignment.
+
 -- 
-2.39.3
+With Best Regards,
+Andy Shevchenko
+
 
