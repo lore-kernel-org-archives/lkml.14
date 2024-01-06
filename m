@@ -1,116 +1,188 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1134B79F1
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Jan 2024 14:03:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: from www.linux-watchdog.org (www.linux-watchdog.org [185.87.125.42])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17AA48C0A;
+	Sat,  6 Jan 2024 14:04:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=linux-watchdog.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux-watchdog.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PHwUCxXd"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-28be52a85b9so265819a91.1
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Jan 2024 06:03:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704549810; x=1705154610; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NS8AIREFz1XWmTAMUhkfxle7maAtwV7jGirdI2uRztQ=;
-        b=PHwUCxXdEU7bwoIf8mjeALzg82qdYIYNc8Goj6mH2SqLSf6dzkK7ZU9bCy/h/5LRjd
-         meH7WekP+VzorUVg5v+00KKEozUFSdYVgIVXiGCipvXe7YugMHaSFQufyGtDMrjveV73
-         FsDs90p+2hzm4ywxZ8wmymO2DMBy3sJN8hVrX3r0F7ZUyd9/LAnpS2SXz72owtT375sv
-         ZWUTu+eYUvYVYNfUYL6ONf2JysLBAqFa1yKGb3p6hc2xoTOTSrXr5J0fMyf4XCJb4a0j
-         XnXQZQl6a5NECvHfNn4ri2JlpqltQDYxTv9xxrA0ty2t4P8PYpQn6NQtIs0x5R6MRHdv
-         7r6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704549810; x=1705154610;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NS8AIREFz1XWmTAMUhkfxle7maAtwV7jGirdI2uRztQ=;
-        b=OHNF9I4yFzkqmAb+DHrbGiTnHQfaTsb6vsUcetezVs9pmVZLJPQtWBXmw8b1TfRGil
-         eqpS/A1glW//e60bga+jSw11AcgbbK7OTmMwdP9SttzM4x18j+gN3bkDw/9zT9riH820
-         2OJe3YPAu346URWCmoMQS80v+D9e6n4WOLfCqvXSVvP11atL2aXplnu56Cphz9SAb4D2
-         oLQ1EYgrilJQTamzW/QX1Hdq5qNM8P2l8iQMfvYe6ed0ZH3uMsmqGmkFK8X0RwepiGAj
-         /KZAqmAPm4UZRoHamd5pRv9bJkvpZrAo92CXv2/N6o/ZW8xRWO95gJh8X6zmcBo38wRp
-         koCQ==
-X-Gm-Message-State: AOJu0YztiV1noiXgnJcggL/KSUUlzgjeOV/aYaRWj/BSgL0AfYtJ7dcK
-	f/wNtC9pU9zMf+efjjgH1T8=
-X-Google-Smtp-Source: AGHT+IG4c74Zx8hbqiQVId29IZQbC6NTlq/Z51ofPKz6crwPf/GIf/VzHhswWMqbUus7RJOZFgdIpA==
-X-Received: by 2002:a17:902:7004:b0:1d4:2df6:95c0 with SMTP id y4-20020a170902700400b001d42df695c0mr382327plk.114.1704549810223;
-        Sat, 06 Jan 2024 06:03:30 -0800 (PST)
-Received: from anfanite396-Predator-PH315-51.. ([202.43.120.140])
-        by smtp.gmail.com with ESMTPSA id bj12-20020a170902850c00b001d058ad8770sm3071576plb.306.2024.01.06.06.03.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jan 2024 06:03:29 -0800 (PST)
-From: Dipam Turkar <dipamt1729@gmail.com>
-To: maarten.lankhorst@linux.intel.com
-Cc: mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Dipam Turkar <dipamt1729@gmail.com>
-Subject: [PATCH v3 1/1] drm/tests: Add KUnit tests for drm_mode_create_dvi_i_properties()
-Date: Sat,  6 Jan 2024 19:31:18 +0530
-Message-Id: <20240106140117.9777-1-dipamt1729@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <CALHmwspWRT=pj+mPDhf8YTwSpTz6LiNjq18wbUk7wCW3ijKU4A@mail.gmail.com>
-References: <CALHmwspWRT=pj+mPDhf8YTwSpTz6LiNjq18wbUk7wCW3ijKU4A@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="XDlqgqcS"
+Received: by www.linux-watchdog.org (Postfix, from userid 500)
+	id 0A668409F1; Sat,  6 Jan 2024 14:44:16 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org 0A668409F1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
+	s=odk20180602; t=1704548667;
+	bh=3wXHJ5X0Y/5UXPZ+cSSBwup9eb5KfXFSoUe6hAGQfEo=;
+	h=Date:From:To:Cc:Subject:From;
+	b=XDlqgqcSKAuuaZtp6IM02qFkinnhHJF/rqpkVnrrDx3gvW9VkcYdbqnOSibkYCXQi
+	 uSlrZF1s0ShjcvtdK531vxgDACVcojL77mchveENsuyHw5WeaD5PmMQmb4IKx06Fqp
+	 WlEJZ07DbYDHQcqh7bHFgqhUhJbAm5LjNBq9GuKk=
+Date: Sat, 6 Jan 2024 14:44:11 +0100
+From: Wim Van Sebroeck <wim@linux-watchdog.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Ben Dooks <ben.dooks@codethink.co.uk>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Curtis Klein <curtis.klein@hpe.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Jerry Hoemann <jerry.hoemann@hpe.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Nik Bune <n2h9z4@gmail.com>,
+	Nikita Shubin <nikita.shubin@maquefel.me>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Werner Fischer <devlists@wefi.net>
+Subject: [GIT PULL REQUEST] watchdog - v6.8 release cycle.
+Message-ID: <20240106134410.GA19394@www.linux-watchdog.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.5.20 (2009-12-10)
 
----
- drivers/gpu/drm/tests/drm_connector_test.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Hi Linus,
 
-diff --git a/drivers/gpu/drm/tests/drm_connector_test.c b/drivers/gpu/drm/tests/drm_connector_test.c
-index c66aa2dc8d9d..aad63839b5e5 100644
---- a/drivers/gpu/drm/tests/drm_connector_test.c
-+++ b/drivers/gpu/drm/tests/drm_connector_test.c
-@@ -4,6 +4,9 @@
-  */
- 
- #include <drm/drm_connector.h>
-+#include <drm/drm_device.h>
-+#include <drm/drm_drv.h>
-+#include <drm/drm_kunit_helpers.h>
- 
- #include <kunit/test.h>
- 
-@@ -58,10 +61,27 @@ static void drm_test_get_tv_mode_from_name_truncated(struct kunit *test)
- 	KUNIT_EXPECT_LT(test, ret, 0);
- };
- 
-+static void drm_test_mode_create_dvi_i_properties(struct kunit *test)
-+{
-+	struct drm_device *drm;
-+	struct device *dev;
-+
-+	dev = drm_kunit_helper_alloc_device(test);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, dev);
-+
-+	drm = __drm_kunit_helper_alloc_drm_device(test, dev, sizeof(*drm), 0, DRIVER_MODESET);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, drm);
-+
-+	KUNIT_EXPECT_EQ(test, drm_mode_create_dvi_i_properties(drm), 0);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, drm->mode_config.dvi_i_select_subconnector_property);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, drm->mode_config.dvi_i_subconnector_property);
-+}
-+
- static struct kunit_case drm_get_tv_mode_from_name_tests[] = {
- 	KUNIT_CASE_PARAM(drm_test_get_tv_mode_from_name_valid,
- 			 drm_get_tv_mode_from_name_valid_gen_params),
- 	KUNIT_CASE(drm_test_get_tv_mode_from_name_truncated),
-+	KUNIT_CASE(drm_test_mode_create_dvi_i_properties),
- 	{ }
- };
- 
--- 
-2.34.1
+Please pull following watchdog changes for the v6.8 release cycle (once the window is open :-) ).
+
+This series contains:
+* Add Mediatek MT7988 watchdog
+* Add IT8659 watchdog
+* watchdog: set cdev owner before adding
+* hpwdt: Only claim UNKNOWN NMI if from iLO
+* Various other fixes and improvements
+
+The output from git request-pull:
+----------------------------------------------------------------
+The following changes since commit b85ea95d086471afb4ad062012a4d73cd328fa86:
+
+  Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
+
+are available in the git repository at:
+
+  git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-6.8-rc1
+
+for you to fetch changes up to 9546b21ea672aa961d5a89ea754214afed013f02:
+
+  watchdog: mlx_wdt: fix all kernel-doc warnings (2023-12-24 10:44:40 +0100)
+
+----------------------------------------------------------------
+linux-watchdog 6.8-rc1 tag
+
+----------------------------------------------------------------
+Ben Dooks (1):
+      watchdog: starfive: add lock annotations to fix context imbalances
+
+Biju Das (2):
+      dt-bindings: watchdog: dlg,da9062-watchdog: Add fallback for DA9061 watchdog
+      dt-bindings: watchdog: dlg,da9062-watchdog: Document DA9063 watchdog
+
+Curtis Klein (1):
+      watchdog: set cdev owner before adding
+
+Daniel Golle (2):
+      dt-bindings: watchdog: mediatek,mtk-wdt: add MT7988 watchdog and toprgu
+      watchdog: mediatek: mt7988: add wdt support
+
+Douglas Anderson (1):
+      dt-bindings: watchdog: qcom-wdt: Make the interrupt example edge triggered
+
+Jerry Hoemann (3):
+      watchdog/hpwdt: Only claim UNKNOWN NMI if from iLO
+      watchdog/hpwdt: Remove redundant test.
+      watchdog/hpwdt: Remove unused variable
+
+Johan Hovold (1):
+      dt-bindings: watchdog: qcom,pm8916-wdt: add parent spmi node to example
+
+Krzysztof Kozlowski (2):
+      dt-bindings: watchdog: re-order entries to match coding convention
+      dt-bindings: watchdog: intel,keembay: reference common watchdog schema
+
+Lukas Bulwahn (1):
+      MAINTAINERS: rectify entry for DIALOG SEMICONDUCTOR DRIVERS
+
+Nik Bune (3):
+      dt-bindings: watchdog: realtek,rtd1295-watchdog: convert txt to yaml
+      dt-bindings: watchdog: qca,ar7130-wdt: convert txt to yaml
+      dt-bindings: watchdog: nxp,pnx4008-wdt: convert txt to yaml
+
+Nikita Shubin (1):
+      dt-bindings: wdt: Add ts72xx
+
+Randy Dunlap (1):
+      watchdog: mlx_wdt: fix all kernel-doc warnings
+
+Stefan Wahren (1):
+      watchdog: bcm2835_wdt: Fix WDIOC_SETTIMEOUT handling
+
+Uwe Kleine-König (5):
+      watchdog: at91sam9: Stop using module_platform_driver_probe()
+      watchdog: txx9: Stop using module_platform_driver_probe()
+      watchdog: at91sam9_wdt: Convert to platform remove callback returning void
+      watchdog: starfive-wdt: Convert to platform remove callback returning void
+      watchdog: txx9wdt: Convert to platform remove callback returning void
+
+Vignesh Raghavendra (1):
+      watchdog: rti_wdt: Drop runtime pm reference count when watchdog is unused
+
+Werner Fischer (4):
+      watchdog: it87_wdt: add blank line after variable declaration
+      watchdog: it87_wdt: Remove redundant max_units setting
+      watchdog: it87_wdt: Add IT8659 ID
+      watchdog: it87_wdt: Keep WDTCTRL bit 3 unmodified for IT8784/IT8786
+
+ .../bindings/watchdog/allwinner,sun4i-a10-wdt.yaml |  6 +--
+ .../bindings/watchdog/alphascale,asm9260-wdt.yaml  |  6 +--
+ .../devicetree/bindings/watchdog/apple,wdt.yaml    |  6 +--
+ .../devicetree/bindings/watchdog/arm-smc-wdt.yaml  |  6 +--
+ .../bindings/watchdog/brcm,bcm7038-wdt.yaml        | 10 ++---
+ .../bindings/watchdog/cnxt,cx92755-wdt.yaml        |  6 +--
+ .../bindings/watchdog/dlg,da9062-watchdog.yaml     | 12 ++++--
+ .../bindings/watchdog/intel,keembay-wdt.yaml       |  5 ++-
+ .../bindings/watchdog/maxim,max63xx.yaml           |  8 ++--
+ .../bindings/watchdog/mediatek,mtk-wdt.yaml        |  1 +
+ .../bindings/watchdog/nxp,pnx4008-wdt.yaml         | 34 ++++++++++++++++
+ .../devicetree/bindings/watchdog/pnx4008-wdt.txt   | 17 --------
+ .../bindings/watchdog/qca,ar7130-wdt.yaml          | 33 ++++++++++++++++
+ .../bindings/watchdog/qca-ar7130-wdt.txt           | 13 -------
+ .../bindings/watchdog/qcom,pm8916-wdt.yaml         | 33 +++++++++-------
+ .../devicetree/bindings/watchdog/qcom-wdt.yaml     |  2 +-
+ .../bindings/watchdog/realtek,rtd119x.txt          | 17 --------
+ .../watchdog/realtek,rtd1295-watchdog.yaml         | 38 ++++++++++++++++++
+ .../devicetree/bindings/watchdog/snps,dw-wdt.yaml  | 10 ++---
+ .../bindings/watchdog/technologic,ts7200-wdt.yaml  | 45 ++++++++++++++++++++++
+ MAINTAINERS                                        |  2 +-
+ drivers/watchdog/at91sam9_wdt.c                    | 12 +++---
+ drivers/watchdog/bcm2835_wdt.c                     |  3 +-
+ drivers/watchdog/hpwdt.c                           |  9 +----
+ drivers/watchdog/it87_wdt.c                        | 29 ++++++++++----
+ drivers/watchdog/mlx_wdt.c                         |  4 +-
+ drivers/watchdog/mtk_wdt.c                         | 42 ++++++++++++++++++++
+ drivers/watchdog/rti_wdt.c                         | 13 ++++++-
+ drivers/watchdog/starfive-wdt.c                    |  8 ++--
+ drivers/watchdog/txx9wdt.c                         | 11 +++---
+ drivers/watchdog/watchdog_dev.c                    |  3 +-
+ 31 files changed, 307 insertions(+), 137 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/nxp,pnx4008-wdt.yaml
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/pnx4008-wdt.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/qca,ar7130-wdt.yaml
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/qca-ar7130-wdt.txt
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/realtek,rtd119x.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/realtek,rtd1295-watchdog.yaml
+ create mode 100644 Documentation/devicetree/bindings/watchdog/technologic,ts7200-wdt.yaml
+----------------------------------------------------------------
+
+Kind regards,
+Wim.
 
