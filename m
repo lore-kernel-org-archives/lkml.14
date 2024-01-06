@@ -1,134 +1,429 @@
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3AB79C3
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Jan 2024 14:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B95C7489
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Jan 2024 14:18:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOtG4yaR"
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3bbd6e37a9bso591504b6e.0
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Jan 2024 06:14:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704550499; x=1705155299; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=70BmQ1AAqBQF/HMHseYDQ1nTDNOHkvcVEOwfs5CBfAw=;
-        b=XOtG4yaRuQko11eLz9TgCAdWPCyv61OKM/sqlt+ObOmFY06bXEKndh5uC9B1b8R2Bv
-         x5T+PutvcEJ+Bn57SQsgGwSv8a6co2wmK/uKYTuF0I4zII8XrQ4WV5WXxdxpVol1RnDe
-         sEL7GyXi+CL6oxOKHwXQvvVjFb3TKC5T9VnL70EGitgynCAMU3r/32m04zxlKsbkKrqt
-         twJ6CrzEX1Y2oHJ8CNXcvUaSyHOElNmbqoDiB/r56rYSD7j7LxNvBiPXa+lu+V32DWr+
-         vhJIcf2fhtq7iMzMUw4ERXMyTaWY5uZunmgg71V1euv1RKdoTXdWU2Qc7rUL71YWcMB9
-         sPQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704550499; x=1705155299;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=70BmQ1AAqBQF/HMHseYDQ1nTDNOHkvcVEOwfs5CBfAw=;
-        b=VNrnIn/8GfyY3FlRFYEVQDNq4GxCpDgViKakD6mLouFhCbNmruSkjwrYzuNZT8i+o2
-         DM4f/S4giCUD5yZ4OM7uUWH6OyXOk8A12pZvpH2g1aYu9izumgPxVAhCI4+sibXr8v7a
-         fT+78sPeHuXvLn42DztvUGjkSyL6i+rSyoVdfnJne/SBTMQcyV4rm9/yGUnIejOJ6668
-         ERnQ8MQrLCB69hic4kM5usCVs3ZbwvT3G4ohJMD6heLnZPgALqULbDnfST2sXX2MN/8m
-         ahGn5l2trJjRHrIad4zX99D/KDu1KW1jhtdI1nlvWA3f4iDpCvSLSfxI/JBWDuiAM0Ak
-         7h0w==
-X-Gm-Message-State: AOJu0Yzn52q7tWIkE/5uuzO7PiHRToIA9zgrgHdBXAkNhV5uReRXAFbx
-	1JoHIHgJHtUcwAh0XRSl7Tk=
-X-Google-Smtp-Source: AGHT+IGSdb9c7+Nu8KHp/gytkNLMwMgd3BPpCK1bPyMhFIqjH0pYoq/PPNkGN5lmBKH/185POMYmVA==
-X-Received: by 2002:a05:6358:70c:b0:170:ee27:bfa1 with SMTP id e12-20020a056358070c00b00170ee27bfa1mr986956rwj.5.1704550498730;
-        Sat, 06 Jan 2024 06:14:58 -0800 (PST)
-Received: from anfanite396-Predator-PH315-51.. ([202.43.120.140])
-        by smtp.gmail.com with ESMTPSA id qj14-20020a17090b28ce00b0028afdb88d08sm3050268pjb.23.2024.01.06.06.14.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jan 2024 06:14:58 -0800 (PST)
-From: Dipam Turkar <dipamt1729@gmail.com>
-To: alexander.deucher@amd.com
-Cc: christian.koenig@amd.com,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Dipam Turkar <dipamt1729@gmail.com>
-Subject: [PATCH 1/1] Refactor radeon driver to use drm_gem_create_map_offset() instead of its custom implementation for associating GEM object with a fake offset. Since, we already have a generic implementation, we don't need the custom function and it is better to standardize the code.
-Date: Sat,  6 Jan 2024 19:44:23 +0530
-Message-Id: <20240106141422.10734-1-dipamt1729@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fwgjLTRO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78562C433C8;
+	Sat,  6 Jan 2024 14:18:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704550683;
+	bh=cKYoqI6bKfb7k5GvezyM/feTJvs7VHLNgVJ5vwF4uHc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fwgjLTRO4DHyrJK9tDw7IPT4Q11gGFY/gwrIYMtcTbhRFF9LA93o21pQHSs92rK8q
+	 741tVwOvTGT0pbtPenE6gCje1qd+oEr3X3XjsOYgO8fQJzkeMvvpw0bIzipiVq00Q5
+	 IcF7XKBWMvD5sHKdmPpGRmjv86ci4xJeIMQ/LtJeX1GFuzYPthxN6hII+Ok+h9mVvF
+	 W4C6AVMuu3OtSIfb8p7h20XvNa2zOclqGCsOwUycZ04FzyQ2Ulv+JEXZDDlC7D3n3N
+	 Thm0jpvbK9lIkeNiDxEC6hZ5vEpCwGQgaDhC9bo2ty7HLSUeR8HqtUWIS+zYxVntP0
+	 wLIzXoC3pIkzw==
+Date: Sat, 6 Jan 2024 22:05:19 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: Add support for BATCHED_UNMAP_TLB_FLUSH
+Message-ID: <ZZleH4KcnIwkI6q9@xhacker>
+References: <20240102141851.105144-1-alexghiti@rivosinc.com>
+ <ZZU9s7iHDTBD39C0@xhacker>
+ <CAHVXubgpMFesz8C-tY4qY0OGzB3Jfyp1eK6YafN8GQN=u7Etyg@mail.gmail.com>
+ <CAHVXubij+L84tpwM-O1W6HV31D8Q7Gb0OerobYJVcmznXaQ2eg@mail.gmail.com>
+ <ZZlZ1HEhDuj4Ojwd@xhacker>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZZlZ1HEhDuj4Ojwd@xhacker>
 
-Signed-off-by: Dipam Turkar <dipamt1729@gmail.com>
----
- drivers/gpu/drm/radeon/radeon_drv.c |  2 +-
- drivers/gpu/drm/radeon/radeon_gem.c | 24 ++----------------------
- 2 files changed, 3 insertions(+), 23 deletions(-)
+On Sat, Jan 06, 2024 at 09:47:04PM +0800, Jisheng Zhang wrote:
+> On Fri, Jan 05, 2024 at 02:36:44PM +0100, Alexandre Ghiti wrote:
+> > On Thu, Jan 4, 2024 at 6:42 PM Alexandre Ghiti <alexghiti@rivosinc.com> wrote:
+> > >
+> > > Hi Jisheng,
+> > >
+> > > On Wed, Jan 3, 2024 at 12:10 PM Jisheng Zhang <jszhang@kernel.org> wrote:
+> > > >
+> > > > On Tue, Jan 02, 2024 at 03:18:51PM +0100, Alexandre Ghiti wrote:
+> > > > > Allow to defer the flushing of the TLB when unmapping pges, which allows
+> > > > > to reduce the numbers of IPI and the number of sfence.vma.
+> > > > >
+> > > > > The ubenchmarch used in commit 43b3dfdd0455 ("arm64: support
+> > > > > batched/deferred tlb shootdown during page reclamation/migration") shows
+> > > > > good performance improvement and perf reports an important decrease in
+> > > > > time spent flushing the tlb (results come from qemu):
+> > > >
+> > > > Hi Alex,
+> > > >
+> > > > I tried this micro benchmark with your patch on T-HEAD TH1520 platform, I
+> > > > didn't see any performance improvement for the micro benchmark. Per
+> > > > myunderstanding, the micro benchmark is special case for arm64 because
+> > > > in a normal tlb flush flow, below sequence is necessary:
+> > > >
+> > > > tlbi
+> > > > dsb
+> > > >
+> > > >
+> > > > while with BATCHED_UNMAP_TLB_FLUSH, the arm64 just does 'tlbi', leaving
+> > > > the dsb to the arch_tlbbatch_flush(). So the final result is
+> > > >
+> > > > several 'tlbi + dsb' sequence VS. several 'tlbi' instructions + only one dsb
+> > > > The performance improvement comes from the unnecessary dsb eliminations.
+> > >
+> > > Some batching should take place, and with this patch, we only send one
+> > > "full" sfence.vma instead of a "local" sfence.vma for each page, it
+> > > seems weird that you don't see any improvement, I would have thought
+> > > that one "full" sfence.vma would be better.
+> > >
+> > > >
+> > > > Do you have suitable benchmark(s) for BATCHED_UNMAP_TLB_FLUSH on riscv?
+> > >
+> > > Can you give the following benchmark a try? I simply created threads
+> > > and dispatched them on all the cpus to force IPI usage, that should be
+> > > way better if the batching of the first ubenchmark is not enough to
+> > > exacerbate performance improvements, let me know and thanks for your
+> > > tests!
+> > >
+> > > #define _GNU_SOURCE
+> > > #include <pthread.h>
+> > > #include <sys/types.h>
+> > > #include <unistd.h>
+> > > #include <sys/mman.h>
+> > > #include <string.h>
+> > > #include <errno.h>
+> > > #include <sched.h>
+> > > #include <time.h>
+> > >
+> > > int stick_this_thread_to_core(int core_id) {
+> > >         int num_cores = sysconf(_SC_NPROCESSORS_ONLN);
+> > >         if (core_id < 0 || core_id >= num_cores)
+> > >            return EINVAL;
+> > >
+> > >         cpu_set_t cpuset;
+> > >         CPU_ZERO(&cpuset);
+> > >         CPU_SET(core_id, &cpuset);
+> > >
+> > >         pthread_t current_thread = pthread_self();
+> > >         return pthread_setaffinity_np(current_thread,
+> > > sizeof(cpu_set_t), &cpuset);
+> > > }
+> > >
+> > > static void *fn_thread (void *p_data)
+> > > {
+> > >         int ret;
+> > >         pthread_t thread;
+> > >
+> > >         stick_this_thread_to_core((int)p_data);
+> > >
+> > >         while (1) {
+> > >                 sleep(1);
+> > >         }
+> > >
+> > >         return NULL;
+> > > }
+> > >
+> > > int main()
+> > > {
+> > > #define SIZE (1 * 1024 * 1024)
+> > >         volatile unsigned char *p = mmap(NULL, SIZE, PROT_READ | PROT_WRITE,
+> > >                                          MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+> > >         pthread_t threads[4];
+> > >         int ret;
+> > >
+> > >         for (int i = 0; i < 4; ++i) {
+> > >                 ret = pthread_create(&threads[i], NULL, fn_thread, (void *)i);
+> > >                 if (ret)
+> > >                 {
+> > >                         printf("%s", strerror (ret));
+> > >                 }
+> > >         }
+> > >
+> > >         memset(p, 0x88, SIZE);
+> > >
+> > >         for (int k = 0; k < 500 /* 10000 */; k++) {
+> > >                 /* swap in */
+> > >                 for (int i = 0; i < SIZE; i += 4096) {
+> > >                         (void)p[i];
+> > >                 }
+> > >
+> > >                 /* swap out */
+> > >                 madvise(p, SIZE, MADV_PAGEOUT);
+> > >         }
+> > >
+> > >         for (int i = 0; i < 4; i++)
+> > >         {
+> > >                 pthread_cancel(threads[i]);
+> > >         }
+> > >
+> > >         for (int i = 0; i < 4; i++)
+> > >         {
+> > >                 pthread_join(threads[i], NULL);
+> > >         }
+> > >
+> > >         return 0;
+> > >
+> > > }
+> > >
+> > 
+> > So I removed the dust from my unmatched and ran the benchmarks I proposed:
+> > 
+> > Without this patch:
+> > * benchmark from commit 43b3dfdd0455 (4 runs)  : ~20.3s
+> > * same benchmark with threads (4 runs)                : ~27.4s
+> > 
+> > With this patch:
+> > * benchmark from commit 43b3dfdd0455 (4 runs)  : ~17.9s
+> > * same benchmark with threads (4 runs)                : ~18.1s
+> > 
+> > So a small improvement for the single thread benchmark, but it depends
+> > on the number of pages that get flushed, so to me that's not
+> > applicable for the general case. For the same benchmark with multiple
+> > threads, that's ~34% improvement. I'll add those numbers to the v2,
+> > and JIsheng if you can provide some too, I'll add them too!
+> 
+> Hi Alex,
+> 
+> the threaded version show ~78% improvement! impressive!
 
-diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
-index fa531493b111..f590ed65ffba 100644
---- a/drivers/gpu/drm/radeon/radeon_drv.c
-+++ b/drivers/gpu/drm/radeon/radeon_drv.c
-@@ -578,7 +578,7 @@ static const struct drm_driver kms_driver = {
- 	.ioctls = radeon_ioctls_kms,
- 	.num_ioctls = ARRAY_SIZE(radeon_ioctls_kms),
- 	.dumb_create = radeon_mode_dumb_create,
--	.dumb_map_offset = radeon_mode_dumb_mmap,
-+	.dumb_map_offset = drm_gem_dumb_map_offset,
- 	.fops = &radeon_driver_kms_fops,
- 
- 	.gem_prime_import_sg_table = radeon_gem_prime_import_sg_table,
-diff --git a/drivers/gpu/drm/radeon/radeon_gem.c b/drivers/gpu/drm/radeon/radeon_gem.c
-index 358d19242f4b..99794c550d2c 100644
---- a/drivers/gpu/drm/radeon/radeon_gem.c
-+++ b/drivers/gpu/drm/radeon/radeon_gem.c
-@@ -31,6 +31,7 @@
- 
- #include <drm/drm_device.h>
- #include <drm/drm_file.h>
-+#include <drm/dem_gem.h>
- #include <drm/drm_gem_ttm_helper.h>
- #include <drm/radeon_drm.h>
- 
-@@ -480,33 +481,12 @@ int radeon_gem_set_domain_ioctl(struct drm_device *dev, void *data,
- 	return r;
- }
- 
--int radeon_mode_dumb_mmap(struct drm_file *filp,
--			  struct drm_device *dev,
--			  uint32_t handle, uint64_t *offset_p)
--{
--	struct drm_gem_object *gobj;
--	struct radeon_bo *robj;
--
--	gobj = drm_gem_object_lookup(filp, handle);
--	if (gobj == NULL) {
--		return -ENOENT;
--	}
--	robj = gem_to_radeon_bo(gobj);
--	if (radeon_ttm_tt_has_userptr(robj->rdev, robj->tbo.ttm)) {
--		drm_gem_object_put(gobj);
--		return -EPERM;
--	}
--	*offset_p = radeon_bo_mmap_offset(robj);
--	drm_gem_object_put(gobj);
--	return 0;
--}
--
- int radeon_gem_mmap_ioctl(struct drm_device *dev, void *data,
- 			  struct drm_file *filp)
- {
- 	struct drm_radeon_gem_mmap *args = data;
- 
--	return radeon_mode_dumb_mmap(filp, dev, args->handle, &args->addr_ptr);
-+	return drm_gem_dumb_map_offset(filp, dev, args->handle, &args->addr_ptr);
- }
- 
- int radeon_gem_busy_ioctl(struct drm_device *dev, void *data,
--- 
-2.34.1
+One more thing when you cook v2: it's better to patch the riscv entry
+in Documentation/features/vm/TLB/arch-support.txt
 
+> 
+> So for the patch:
+> 
+> Reviewed-by: Jisheng Zhang <jszhang@kernel.org>
+> Tested-by: Jisheng Zhang <jszhang@kernel.org>
+> 
+> Thanks
+> > 
+> > Thanks,
+> > 
+> > Alex
+> > 
+> > > >
+> > > > Thanks
+> > > >
+> > > > >
+> > > > > Before this patch:
+> > > > >
+> > > > > real  2m1.135s
+> > > > > user  0m0.980s
+> > > > > sys   2m0.096s
+> > > > >
+> > > > > 4.83%  batch_tlb  [kernel.kallsyms]            [k] __flush_tlb_range
+> > > > >
+> > > > > After this patch:
+> > > > >
+> > > > > real  1m0.543s
+> > > > > user  0m1.059s
+> > > > > sys   0m59.489s
+> > > > >
+> > > > > 0.14%  batch_tlb  [kernel.kallsyms]            [k] __flush_tlb_range
+> > > > >
+> > > > > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> > > > > ---
+> > > > >  arch/riscv/Kconfig                |  1 +
+> > > > >  arch/riscv/include/asm/tlbbatch.h | 15 +++++++
+> > > > >  arch/riscv/include/asm/tlbflush.h | 10 +++++
+> > > > >  arch/riscv/mm/tlbflush.c          | 71 ++++++++++++++++++++++---------
+> > > > >  4 files changed, 77 insertions(+), 20 deletions(-)
+> > > > >  create mode 100644 arch/riscv/include/asm/tlbbatch.h
+> > > > >
+> > > > > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > > > > index 7603bd8ab333..aa07bd43b138 100644
+> > > > > --- a/arch/riscv/Kconfig
+> > > > > +++ b/arch/riscv/Kconfig
+> > > > > @@ -53,6 +53,7 @@ config RISCV
+> > > > >       select ARCH_USE_MEMTEST
+> > > > >       select ARCH_USE_QUEUED_RWLOCKS
+> > > > >       select ARCH_USES_CFI_TRAPS if CFI_CLANG
+> > > > > +     select ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH if SMP && MMU
+> > > > >       select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
+> > > > >       select ARCH_WANT_FRAME_POINTERS
+> > > > >       select ARCH_WANT_GENERAL_HUGETLB if !RISCV_ISA_SVNAPOT
+> > > > > diff --git a/arch/riscv/include/asm/tlbbatch.h b/arch/riscv/include/asm/tlbbatch.h
+> > > > > new file mode 100644
+> > > > > index 000000000000..46014f70b9da
+> > > > > --- /dev/null
+> > > > > +++ b/arch/riscv/include/asm/tlbbatch.h
+> > > > > @@ -0,0 +1,15 @@
+> > > > > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > > > > +/*
+> > > > > + * Copyright (C) 2023 Rivos Inc.
+> > > > > + */
+> > > > > +
+> > > > > +#ifndef _ASM_RISCV_TLBBATCH_H
+> > > > > +#define _ASM_RISCV_TLBBATCH_H
+> > > > > +
+> > > > > +#include <linux/cpumask.h>
+> > > > > +
+> > > > > +struct arch_tlbflush_unmap_batch {
+> > > > > +     struct cpumask cpumask;
+> > > > > +};
+> > > > > +
+> > > > > +#endif /* _ASM_RISCV_TLBBATCH_H */
+> > > > > diff --git a/arch/riscv/include/asm/tlbflush.h b/arch/riscv/include/asm/tlbflush.h
+> > > > > index 8f3418c5f172..f0b731ccc0c2 100644
+> > > > > --- a/arch/riscv/include/asm/tlbflush.h
+> > > > > +++ b/arch/riscv/include/asm/tlbflush.h
+> > > > > @@ -46,6 +46,16 @@ void flush_tlb_kernel_range(unsigned long start, unsigned long end);
+> > > > >  void flush_pmd_tlb_range(struct vm_area_struct *vma, unsigned long start,
+> > > > >                       unsigned long end);
+> > > > >  #endif
+> > > > > +
+> > > > > +#ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
+> > > > > +bool arch_tlbbatch_should_defer(struct mm_struct *mm);
+> > > > > +void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
+> > > > > +                            struct mm_struct *mm,
+> > > > > +                            unsigned long uaddr);
+> > > > > +void arch_flush_tlb_batched_pending(struct mm_struct *mm);
+> > > > > +void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch);
+> > > > > +#endif /* CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH */
+> > > > > +
+> > > > >  #else /* CONFIG_SMP && CONFIG_MMU */
+> > > > >
+> > > > >  #define flush_tlb_all() local_flush_tlb_all()
+> > > > > diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
+> > > > > index e6659d7368b3..bb623bca0a7d 100644
+> > > > > --- a/arch/riscv/mm/tlbflush.c
+> > > > > +++ b/arch/riscv/mm/tlbflush.c
+> > > > > @@ -93,29 +93,23 @@ static void __ipi_flush_tlb_range_asid(void *info)
+> > > > >       local_flush_tlb_range_asid(d->start, d->size, d->stride, d->asid);
+> > > > >  }
+> > > > >
+> > > > > -static void __flush_tlb_range(struct mm_struct *mm, unsigned long start,
+> > > > > -                           unsigned long size, unsigned long stride)
+> > > > > +static void __flush_tlb_range(struct cpumask *cmask, unsigned long asid,
+> > > > > +                           unsigned long start, unsigned long size,
+> > > > > +                           unsigned long stride)
+> > > > >  {
+> > > > >       struct flush_tlb_range_data ftd;
+> > > > > -     const struct cpumask *cmask;
+> > > > > -     unsigned long asid = FLUSH_TLB_NO_ASID;
+> > > > >       bool broadcast;
+> > > > >
+> > > > > -     if (mm) {
+> > > > > -             unsigned int cpuid;
+> > > > > +     if (cpumask_empty(cmask))
+> > > > > +             return;
+> > > > >
+> > > > > -             cmask = mm_cpumask(mm);
+> > > > > -             if (cpumask_empty(cmask))
+> > > > > -                     return;
+> > > > > +     if (cmask != cpu_online_mask) {
+> > > > > +             unsigned int cpuid;
+> > > > >
+> > > > >               cpuid = get_cpu();
+> > > > >               /* check if the tlbflush needs to be sent to other CPUs */
+> > > > >               broadcast = cpumask_any_but(cmask, cpuid) < nr_cpu_ids;
+> > > > > -
+> > > > > -             if (static_branch_unlikely(&use_asid_allocator))
+> > > > > -                     asid = atomic_long_read(&mm->context.id) & asid_mask;
+> > > > >       } else {
+> > > > > -             cmask = cpu_online_mask;
+> > > > >               broadcast = true;
+> > > > >       }
+> > > > >
+> > > > > @@ -135,25 +129,34 @@ static void __flush_tlb_range(struct mm_struct *mm, unsigned long start,
+> > > > >               local_flush_tlb_range_asid(start, size, stride, asid);
+> > > > >       }
+> > > > >
+> > > > > -     if (mm)
+> > > > > +     if (cmask != cpu_online_mask)
+> > > > >               put_cpu();
+> > > > >  }
+> > > > >
+> > > > > +static inline unsigned long get_mm_asid(struct mm_struct *mm)
+> > > > > +{
+> > > > > +     return static_branch_unlikely(&use_asid_allocator) ?
+> > > > > +                     atomic_long_read(&mm->context.id) & asid_mask : FLUSH_TLB_NO_ASID;
+> > > > > +}
+> > > > > +
+> > > > >  void flush_tlb_mm(struct mm_struct *mm)
+> > > > >  {
+> > > > > -     __flush_tlb_range(mm, 0, FLUSH_TLB_MAX_SIZE, PAGE_SIZE);
+> > > > > +     __flush_tlb_range(mm_cpumask(mm), get_mm_asid(mm),
+> > > > > +                       0, FLUSH_TLB_MAX_SIZE, PAGE_SIZE);
+> > > > >  }
+> > > > >
+> > > > >  void flush_tlb_mm_range(struct mm_struct *mm,
+> > > > >                       unsigned long start, unsigned long end,
+> > > > >                       unsigned int page_size)
+> > > > >  {
+> > > > > -     __flush_tlb_range(mm, start, end - start, page_size);
+> > > > > +     __flush_tlb_range(mm_cpumask(mm), get_mm_asid(mm),
+> > > > > +                       start, end - start, page_size);
+> > > > >  }
+> > > > >
+> > > > >  void flush_tlb_page(struct vm_area_struct *vma, unsigned long addr)
+> > > > >  {
+> > > > > -     __flush_tlb_range(vma->vm_mm, addr, PAGE_SIZE, PAGE_SIZE);
+> > > > > +     __flush_tlb_range(mm_cpumask(vma->vm_mm), get_mm_asid(vma->vm_mm),
+> > > > > +                       addr, PAGE_SIZE, PAGE_SIZE);
+> > > > >  }
+> > > > >
+> > > > >  void flush_tlb_range(struct vm_area_struct *vma, unsigned long start,
+> > > > > @@ -185,18 +188,46 @@ void flush_tlb_range(struct vm_area_struct *vma, unsigned long start,
+> > > > >               }
+> > > > >       }
+> > > > >
+> > > > > -     __flush_tlb_range(vma->vm_mm, start, end - start, stride_size);
+> > > > > +     __flush_tlb_range(mm_cpumask(vma->vm_mm), get_mm_asid(vma->vm_mm),
+> > > > > +                       start, end - start, stride_size);
+> > > > >  }
+> > > > >
+> > > > >  void flush_tlb_kernel_range(unsigned long start, unsigned long end)
+> > > > >  {
+> > > > > -     __flush_tlb_range(NULL, start, end - start, PAGE_SIZE);
+> > > > > +     __flush_tlb_range((struct cpumask *)cpu_online_mask, FLUSH_TLB_NO_ASID,
+> > > > > +                       start, end - start, PAGE_SIZE);
+> > > > >  }
+> > > > >
+> > > > >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> > > > >  void flush_pmd_tlb_range(struct vm_area_struct *vma, unsigned long start,
+> > > > >                       unsigned long end)
+> > > > >  {
+> > > > > -     __flush_tlb_range(vma->vm_mm, start, end - start, PMD_SIZE);
+> > > > > +     __flush_tlb_range(mm_cpumask(vma->vm_mm), get_mm_asid(vma->vm_mm),
+> > > > > +                       start, end - start, PMD_SIZE);
+> > > > >  }
+> > > > >  #endif
+> > > > > +
+> > > > > +#ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
+> > > > > +bool arch_tlbbatch_should_defer(struct mm_struct *mm)
+> > > > > +{
+> > > > > +     return true;
+> > > > > +}
+> > > > > +
+> > > > > +void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
+> > > > > +                            struct mm_struct *mm,
+> > > > > +                            unsigned long uaddr)
+> > > > > +{
+> > > > > +     cpumask_or(&batch->cpumask, &batch->cpumask, mm_cpumask(mm));
+> > > > > +}
+> > > > > +
+> > > > > +void arch_flush_tlb_batched_pending(struct mm_struct *mm)
+> > > > > +{
+> > > > > +     flush_tlb_mm(mm);
+> > > > > +}
+> > > > > +
+> > > > > +void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
+> > > > > +{
+> > > > > +     __flush_tlb_range(&batch->cpumask, FLUSH_TLB_NO_ASID, 0,
+> > > > > +                       FLUSH_TLB_MAX_SIZE, PAGE_SIZE);
+> > > > > +}
+> > > > > +#endif /* CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH */
+> > > > > --
+> > > > > 2.39.2
+> > > > >
+> > > > >
+> > > > > _______________________________________________
+> > > > > linux-riscv mailing list
+> > > > > linux-riscv@lists.infradead.org
+> > > > > http://lists.infradead.org/mailman/listinfo/linux-riscv
