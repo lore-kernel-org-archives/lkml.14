@@ -1,86 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8CA0846F;
-	Sat,  6 Jan 2024 14:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBD479EC;
+	Sat,  6 Jan 2024 15:01:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xm4fBVLg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704553196; x=1736089196;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=JnCYGoOQs0yi8PaGnxuB0NsSgyv/YTGrF0XZ0KOj6K8=;
-  b=Xm4fBVLgnwUlNPHMOx9qpsyDQErqfanP9HfdKdSIzKhMMrAleriDv0R4
-   Zf3j/XwIKd96KeqGoskwW7227XczsL4ywFJkU3DDLeysqJNF5J29PwZMv
-   BjTAYryJ7etAD9kvq3XJp8NTnM6g843TpyeFifA1hsz5MEyveyRUVUTAb
-   C6Y0Diip2FVSLcaDXoOtKLuCbOj88c/4UVlqbheaKDLsHM+dmeIRTdhfx
-   L3SO6Ot45wDc15BCrUkxvLx57YhI73F0pDi2Iw3i5whDP5R0NFmaYS55d
-   bI8mYANg3wnXTFMkVjLaq4OwAs6sUXZKp5E6TfxojmTaHi4pm5K2jJ3W4
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10945"; a="5017136"
-X-IronPort-AV: E=Sophos;i="6.04,337,1695711600"; 
-   d="scan'208";a="5017136"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2024 06:59:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10945"; a="846816279"
-X-IronPort-AV: E=Sophos;i="6.04,337,1695711600"; 
-   d="scan'208";a="846816279"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2024 06:59:51 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rM7nJ-0000000BvkH-23ko;
-	Sat, 06 Jan 2024 16:37:01 +0200
-Date: Sat, 6 Jan 2024 16:37:01 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Pierre Gondois <pierre.gondois@arm.com>
-Cc: linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Carlos Llamas <cmllamas@google.com>,
-	Suren Baghdasaryan <surenb@google.com>, Coly Li <colyli@suse.de>,
-	Kent Overstreet <kent.overstreet@gmail.com>,
-	Kees Cook <keescook@chromium.org>, Marco Elver <elver@google.com>,
-	Jani Nikula <jani.nikula@intel.com>, Ingo Molnar <mingo@kernel.org>,
-	linux-bcache@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] list: Add hlist_count_nodes()
-Message-ID: <ZZlljaqUr44CPicD@smile.fi.intel.com>
-References: <20240104164937.424320-1-pierre.gondois@arm.com>
+	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="pSMwvwgc"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 567EF60002;
+	Sat,  6 Jan 2024 15:00:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
+	t=1704553261;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=skoV/MYNvEJ7Q4zca+8v7GcUrjuUMIoeHzDPlkaXyPY=;
+	b=pSMwvwgcVeeUxycO6OHaK+SCwICC7DmsXLDD+dHVpiqvO0ehxBcQ5/MPqdsrxBg/NXWYMM
+	LWoCT1PqXQ24WS2lXN2D5dqv2Vqjli/duePWnVZeanTB3qG0b76eiJlmonD8EHlv7rkxSJ
+	Xh7FC1AtuLcuVZBtJgSYMqofRC9mW3j09DgkAQqE9zR2KePRaDbzjry3Vda0HQw94rQSO5
+	soUQPqFEhdcHl+p2Wme3AP/3ba68cDNQHbbCAMWx1yO35E66jANw6LaREYVSA5xcIZU9rM
+	o1AtHTvKj1UeMjIKlfQRGy4cYpC/AlkfK4WYg8jDYiwdEc42jrmIs/P6U0zWGw==
+Message-ID: <f9ad000a-2e42-4ddf-89a4-9a3ff452dc4b@arinc9.com>
+Date: Sat, 6 Jan 2024 18:00:53 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240104164937.424320-1-pierre.gondois@arm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2 6/7] net: dsa: mt7530: do not set
+ priv->p5_interface on mt7530_setup_port5()
+Content-Language: en-US
+To: Vladimir Oltean <olteanv@gmail.com>
+Cc: Daniel Golle <daniel@makrotopia.org>,
+ Landen Chao <Landen.Chao@mediatek.com>, DENG Qingfang <dqfext@gmail.com>,
+ Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
+ Florian Fainelli <f.fainelli@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Frank Wunderlich <frank-w@public-files.de>,
+ Bartel Eerdekens <bartel.eerdekens@constell8.be>, mithat.guner@xeront.com,
+ erkin.bozoglu@xeront.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20231227044347.107291-1-arinc.unal@arinc9.com>
+ <20231227044347.107291-7-arinc.unal@arinc9.com>
+ <20240104154241.rxjins4mi5zkbhia@skbuf>
+From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+In-Reply-To: <20240104154241.rxjins4mi5zkbhia@skbuf>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: arinc.unal@arinc9.com
 
-On Thu, Jan 04, 2024 at 05:49:32PM +0100, Pierre Gondois wrote:
-> v2:
-> - Add usages of the function to avoid considering it as dead code.
-> v1:
-> - https://lore.kernel.org/all/20240103090241.164817-1-pierre.gondois@arm.com/
+On 4.01.2024 18:42, Vladimir Oltean wrote:
+> On Wed, Dec 27, 2023 at 07:43:46AM +0300, Arınç ÜNAL wrote:
+>> priv->p5_interface and priv->p6_interface are for use on the MT7531 switch.
+>> They prevent the CPU ports of MT7531 to be configured again. They are
+>> useless for MT7530. Therefore, remove setting priv->p5_interface for
+>> MT7530.
+>>
+>> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+>> ---
 > 
-> Add a generic hlist_count_nodes() function.
+> What makes priv->p5_interface and priv->p6_interface useless for MT7530
+> as you say? This code in mt753x_phylink_mac_config() seems executed
+> regardless of switch family:
 > 
-> This function aims to be used in a private module. As suggested by
-> Marco, having it used would avoid to consider it as dead code.
-> Thus, add some usages of the function in two drivers.
+> 	case 5:
+> 		if (priv->p5_interface == state->interface)
+> 			break;
+> 
+> 		if (mt753x_mac_config(ds, port, mode, state) < 0)
+> 			goto unsupported;
+> 
+> 		if (priv->p5_intf_sel != P5_DISABLED)
+> 			priv->p5_interface = state->interface;
+> 		break;
+> 	case 6:
+> 		if (priv->p6_interface == state->interface)
+> 			break;
+> 
+> 		mt753x_pad_setup(ds, state);
+> 
+> 		if (mt753x_mac_config(ds, port, mode, state) < 0)
+> 			goto unsupported;
+> 
+> 		priv->p6_interface = state->interface;
+> 		break;
 
-With or without a nit-pick being addressed,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+This is also useless for non-MT7531 switches in the sense that it
+unnecessarily prevents port 5 and 6 from being reconfigured. There's
+nothing wrong with configuring them multiple times. These are the remains
+of before phylink was implemented on this driver so the thought of changing
+phy_interface_t on the fly was non existent. At that time, it was probably
+made to apply to all switch models for convenience, as port 5 and 6 are CPU
+ports so they're highly likely to be fixed links.
 
--- 
-With Best Regards,
-Andy Shevchenko
+The reason I don't deal with this code block now is because I will get rid
+of priv->p5_interface and priv->p6_interface when I also get rid of
+priv->info->cpu_port_config() with a later patch.
 
-
+Arınç
