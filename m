@@ -1,49 +1,49 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E432FC131
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Jan 2024 16:53:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54C4C13F
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Jan 2024 16:56:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NRtDV5Am"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a28a997f3dfso37644666b.0
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Jan 2024 08:53:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MyEtwTUw"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5542a7f1f3cso563732a12.2
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Jan 2024 08:56:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704560013; x=1705164813; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1704560197; x=1705164997; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=LW1sllt9zBRwCDc97u2X0itt1kBazT6XeAMdWffTCRs=;
-        b=NRtDV5Amob1N2iaTioiD+Z3dcSIBCBdnaJDOzRwY5rz7ea+mG9HRWbTRhweL6IRDyS
-         l9HmnNhGMLeN2I1er38arQgCpuKC09KfiJHm9ZhX5cCHoUDRnc901r6HxWqUxCuer4+Y
-         usWdWX+Tfylex8gtrGPBHh4e2kKO+wUpY4UElNLw56o059JkSK1m12FOJx+EQnn3v028
-         jhDA5LDiR4V73GhNXF8DSZMJsIJr3YaxYNASprXvwTGN6evEVtrbzilxXSS4GYSz5acU
-         59uW0xVn377slDKIV1tQ9mig+Rh1qBuyMIl1O1snEB2SnlTT4F3TZfF6MJvqtSp5hT8h
-         ddcg==
+        bh=m3RK8M7nZjmwg4vSv0KVTgjny+F4gwHfQQ0/FeMDQeg=;
+        b=MyEtwTUwH2dcipUNbcbijO46yviikphZBrzSQle+/s/xEXp5b0QFP4smrkEktpyny3
+         R+/IE8zaIJu1QtmxqYuZ3zwXOpol7+7hoAcBIS+sGuLilKvu0i34mRmGr+9cyBxnUJML
+         LjYIYgSHabDekVkN4Zoc5oVHx4BNjuezPD/2AdN+e2M8wDoU/34XEumNf5z0fADjZnWY
+         VyJ5PVlLzoSwhtWDDlnJJYtIKT5YSIbN8zNBeYgulY8Ad4PgtcElU+CfQTPbnELJ6bo5
+         vpDAB9Nf7oSIdoBSCabQAA2bxWqdz0gxVermQD0V04xvAB5y1x2rbgv70ZNHwcnLfoR8
+         E1Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704560013; x=1705164813;
+        d=1e100.net; s=20230601; t=1704560197; x=1705164997;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LW1sllt9zBRwCDc97u2X0itt1kBazT6XeAMdWffTCRs=;
-        b=WbKp3ntK9A7COR4fMgBY8rIu1/gzG+o9uIX85j2FuQNEm4LtFxFaY9X37KM/4C/uDE
-         m+pYKwmVlO3BZLr8aWtc9O/nf1ghrCh+9FyIwI1dUppUbnkOEMSpGaEi9oZhlflj4NR+
-         txte4nBa4D65r0Vf1CmcgtJb+wDsm/z3MSwWAzqCE2Fr3iL7MKfjBJU37++WYx1DGrQp
-         q6wKAJJYtPVkBPilb9aX1GQ96COVblfjn7x6JsDPV0NHEtkbTNGfdNcay+uWbwD8BwAC
-         c5WAsaaCVxtYzvZQcmJNVxlomL02kInTYA/o9xGbR11a3FBdjWvxq8vdckRiCf27yrSY
-         7R3w==
-X-Gm-Message-State: AOJu0YyUjpSFPtZIbA/qt+IxyWX/1kfcC9kum9J/ytErUd3EDNsIry6x
-	Vlyiws/jZjpTZurBnl++6taMokCC+VOdG5Fqup1fbz0OP9ly/Q==
-X-Google-Smtp-Source: AGHT+IE4sIe/vNE84X7XdpyJ3k7v8Kdc7k8r0eQhUrHcPbV2XeLjp+STeRzc8Nzgn/D69RAmOSMmww==
-X-Received: by 2002:a17:906:dd1:b0:a23:6c6e:6b4b with SMTP id p17-20020a1709060dd100b00a236c6e6b4bmr521132eji.45.1704560013192;
-        Sat, 06 Jan 2024 08:53:33 -0800 (PST)
+        bh=m3RK8M7nZjmwg4vSv0KVTgjny+F4gwHfQQ0/FeMDQeg=;
+        b=crtt2KssLz4nKAFc2JYuOHpGtz9bZlLMR3rWEOot5O0RkXWXUotQM3QffQDhJgpqa6
+         yygj7aI3teZwXRxy2mqGWNU9wtJlyQcfhfptnUH5/PkgzHhz3AqEdoC10HxCv9FOD59/
+         5R+jVmfn2N8+kBEwMUib2gSRF3FUYmSEIbWoeMqCq+otYBYJU+fqdtkjz+G6XQMuc6Zk
+         ylWvGYYetdXIrgjUVmqidFbeRG3UcL28zR8BWfN2e1A2dC2dwEuTPsoDTarW5u39r6hG
+         IAj+nob+UCSPzKgQxVwOtevw9d/A/WZYL/G3iqc1Nk1gFPMvSVtsawr8Wy2CXs8rSiEM
+         4Syw==
+X-Gm-Message-State: AOJu0YymsXFAEbDNNOVGQZL1peg6B/omp7YMAuqBqOhDDWV3Akpv6XnW
+	P3/Mpx8Ol5PC5yC4q1+gdjXYuxD7sL5L6w==
+X-Google-Smtp-Source: AGHT+IECPwnKhvzCjYKxro2ZGhjfoCUP5QqyjBZ1p68pC+adiLkXI8Us/3oeeLjqqbaLrpWfvQXqeQ==
+X-Received: by 2002:a17:907:c902:b0:a23:8a00:cfbe with SMTP id ui2-20020a170907c90200b00a238a00cfbemr411822ejc.132.1704560197092;
+        Sat, 06 Jan 2024 08:56:37 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.223.112])
-        by smtp.gmail.com with ESMTPSA id ez5-20020a1709070bc500b00a2a09be8a2dsm490926ejc.114.2024.01.06.08.53.31
+        by smtp.gmail.com with ESMTPSA id v26-20020a1709064e9a00b00a26a061ae1esm2135066eju.97.2024.01.06.08.56.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 06 Jan 2024 08:53:32 -0800 (PST)
-Message-ID: <b8f417a0-14b1-4d02-92d1-bf9469d38eb1@linaro.org>
-Date: Sat, 6 Jan 2024 17:53:31 +0100
+        Sat, 06 Jan 2024 08:56:36 -0800 (PST)
+Message-ID: <1aeff309-6867-4296-8983-a60e8fd31614@linaro.org>
+Date: Sat, 6 Jan 2024 17:56:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,16 +51,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] power: supply: Add STC3117 fuel gauge unit driver
+Subject: Re: [PATCH v4 0/3] w1: add UART w1 bus driver
 Content-Language: en-US
-To: Bhavin Sharma <bhavin.sharma@siliconsignals.io>, sre@kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>,
+To: cj.winklhofer@gmail.com, Rob Herring <robh+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>,
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Hardevsinh Palaniya <hardevsinh.palaniya@siliconsignals.io>,
- linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240106133546.936261-1-bhavin.sharma@siliconsignals.io>
+ Jonathan Corbet <corbet@lwn.net>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20240106-w1-uart-v4-0-7fe1378a8b3e@gmail.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -106,27 +107,37 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240106133546.936261-1-bhavin.sharma@siliconsignals.io>
+In-Reply-To: <20240106-w1-uart-v4-0-7fe1378a8b3e@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 06/01/2024 14:35, Bhavin Sharma wrote:
-> Adding support for stc3117 fuel gauge driver with
-> minimal functionality to read voltage level currently
+On 06/01/2024 17:02, Christoph Winklhofer via B4 Relay wrote:
+> Hello!
 > 
-> Signed-off-by: Bhavin Sharma <bhavin.sharma@siliconsignals.io>
-> ---
->  drivers/power/supply/Kconfig              |   7 ++
->  drivers/power/supply/Makefile             |   1 +
->  drivers/power/supply/stc3117_fuel_gauge.c | 136 ++++++++++++++++++++++
->  3 files changed, 144 insertions(+)
->  create mode 100644 drivers/power/supply/stc3117_fuel_gauge.c
+> This patch contains a driver for a 1-Wire bus over UART. The driver
+> utilizes the UART interface via the Serial Device Bus to create the
+> 1-Wire timing patterns.
+> 
+> Changes in v4:
+> - rework baud-rate configuration: also check max bit-time, support higher
+>   baud-rates by adding a delay to complete 1-Wire cycle.
+> - dt-binding w1-uart: specify baud-rates for 1-Wire operations
+> - Link to v3: https://lore.kernel.org/r/20240105-w1-uart-v3-0-8687093b2e76@gmail.com
 > 
 
-I see now that you got review for your v1. You must implement it fully.
-Second, don't send patchsets more often than one per day to allow people
-to actually review your code. Especially if you do not test it (neither
-v1 nor v2!).
+You can slow down a bit. You sent v2 too late to be applied. Then you
+sent v3 and next day v4.
+
+While I like approach to release early, release often, it does not
+necessarily apply to the bindings. Bindings should be complete, which
+means they should describe the hardware as fully as possible.
+
+About the driver, you can develop it incrementally, it is a good idea,
+however since ~rc6 my w1 tree is closed. It will remain closed till next
+rc1 is released (merge window finished). Nothing will get applied during
+that time, so if you intend to add new features, better to send v5 after
+the merge window (instead v4 now, v5 tomorrow, v6 next week and then v7
+after rc1).
 
 Best regards,
 Krzysztof
