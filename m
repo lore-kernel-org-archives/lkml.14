@@ -1,297 +1,423 @@
-Received: from smtp.smtpout.orange.fr (smtp-15.smtpout.orange.fr [80.12.242.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB4279C3;
-	Sat,  6 Jan 2024 13:58:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27F27482
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Jan 2024 13:59:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="TycST3He"
-Received: from [192.168.1.18] ([92.140.202.140])
-	by smtp.orange.fr with ESMTPA
-	id M7BVr2yKtEoWxM7BVrkYrO; Sat, 06 Jan 2024 14:57:58 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1704549478;
-	bh=5+DV8oxdafXMalKMMxvfVdg2F/E7Ox7KYUXojGKS/zk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=TycST3HeQPw2Gzh/DrxYr6RjHpB9lcY9u7UCYdodMrltrfinSETlcddYqCS/sre5x
-	 QL/l0UiEcz3KpsbkLG/XQgIzQJBnjF58cEmvw7Q1GlE5KVSvqP4it8FBuXn9NnnoyS
-	 XEevVUibRLYnuEc6ij8BCyt8fyKy2Ek8xs1swDChOJgQF2J0R21mqEyLxPd+0BW/qs
-	 lxjY1OEeHOWmIQSy9NhXINEzKdzUi6mwajG7W4mf4Vz7iNmfoh0v6AEXS/Py1a43ad
-	 7LbKut14pD1xdfGSXSfBquyQ8wVgSNu4c2ofQOkuWkEPn3WOhbwPKxYwJsmDm2q7Q6
-	 wx3uy8du/ojtQ==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 06 Jan 2024 14:57:58 +0100
-X-ME-IP: 92.140.202.140
-Message-ID: <46bba29c-330d-417d-ad84-ceb5207fdb55@wanadoo.fr>
-Date: Sat, 6 Jan 2024 14:57:57 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pOJIMp+C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41CF3C433C7;
+	Sat,  6 Jan 2024 13:59:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704549584;
+	bh=Pq8SfrXdgj+ly7z2v4/coodhuaROaXljdjD7G4bZz18=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pOJIMp+CI1AcyHVPfUiCCgrfFWVuKGAJMbpb2JUC83deTMMJGquMbGaVnLg5dtKMM
+	 L2X2KDLTssUBWSUobZHiXPXqJXC68vfb+KMUBYLy/3fAHlKXO71oqoJR4S8xCwCcm1
+	 uwDbHzPQgK/piaq7bgKLjqUx/M6o8lYFXqV1u4UEM9HH+/dlm5k4iy6lbVD3jLIuwC
+	 V8VWaVN0PA8XlzusPtvQCnXqexFVWF4hn1Yh7Z5c4lQtFqVmhx3JvHnFNCoLeDbRX7
+	 fmn6G90LiIRWqqL/i2aT36VDYSv0ktHWj4f8o5p/tSRmMsJ3ej3HgYDjiDItwZ1QjO
+	 SEAf8c09HCphw==
+Date: Sat, 6 Jan 2024 21:47:00 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: Add support for BATCHED_UNMAP_TLB_FLUSH
+Message-ID: <ZZlZ1HEhDuj4Ojwd@xhacker>
+References: <20240102141851.105144-1-alexghiti@rivosinc.com>
+ <ZZU9s7iHDTBD39C0@xhacker>
+ <CAHVXubgpMFesz8C-tY4qY0OGzB3Jfyp1eK6YafN8GQN=u7Etyg@mail.gmail.com>
+ <CAHVXubij+L84tpwM-O1W6HV31D8Q7Gb0OerobYJVcmznXaQ2eg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] power: supply: Add STC3117 fuel gauge unit driver
-Content-Language: fr
-To: bhavin.sharma@siliconsignals.io
-Cc: conor+dt@kernel.org, devicetree@vger.kernel.org,
- krzysztof.kozlowski+dt@linaro.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, robh+dt@kernel.org, sre@kernel.org
-References: <20240106101435.2927116-1-bhavin.sharma@siliconsignals.io>
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240106101435.2927116-1-bhavin.sharma@siliconsignals.io>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHVXubij+L84tpwM-O1W6HV31D8Q7Gb0OerobYJVcmznXaQ2eg@mail.gmail.com>
 
-Le 06/01/2024 à 11:14, Bhavin Sharma a écrit :
-> Adding support for stc3117 fuel gauge driver with
-> minimal functionality to read voltage level currently
+On Fri, Jan 05, 2024 at 02:36:44PM +0100, Alexandre Ghiti wrote:
+> On Thu, Jan 4, 2024 at 6:42 PM Alexandre Ghiti <alexghiti@rivosinc.com> wrote:
+> >
+> > Hi Jisheng,
+> >
+> > On Wed, Jan 3, 2024 at 12:10 PM Jisheng Zhang <jszhang@kernel.org> wrote:
+> > >
+> > > On Tue, Jan 02, 2024 at 03:18:51PM +0100, Alexandre Ghiti wrote:
+> > > > Allow to defer the flushing of the TLB when unmapping pges, which allows
+> > > > to reduce the numbers of IPI and the number of sfence.vma.
+> > > >
+> > > > The ubenchmarch used in commit 43b3dfdd0455 ("arm64: support
+> > > > batched/deferred tlb shootdown during page reclamation/migration") shows
+> > > > good performance improvement and perf reports an important decrease in
+> > > > time spent flushing the tlb (results come from qemu):
+> > >
+> > > Hi Alex,
+> > >
+> > > I tried this micro benchmark with your patch on T-HEAD TH1520 platform, I
+> > > didn't see any performance improvement for the micro benchmark. Per
+> > > myunderstanding, the micro benchmark is special case for arm64 because
+> > > in a normal tlb flush flow, below sequence is necessary:
+> > >
+> > > tlbi
+> > > dsb
+> > >
+> > >
+> > > while with BATCHED_UNMAP_TLB_FLUSH, the arm64 just does 'tlbi', leaving
+> > > the dsb to the arch_tlbbatch_flush(). So the final result is
+> > >
+> > > several 'tlbi + dsb' sequence VS. several 'tlbi' instructions + only one dsb
+> > > The performance improvement comes from the unnecessary dsb eliminations.
+> >
+> > Some batching should take place, and with this patch, we only send one
+> > "full" sfence.vma instead of a "local" sfence.vma for each page, it
+> > seems weird that you don't see any improvement, I would have thought
+> > that one "full" sfence.vma would be better.
+> >
+> > >
+> > > Do you have suitable benchmark(s) for BATCHED_UNMAP_TLB_FLUSH on riscv?
+> >
+> > Can you give the following benchmark a try? I simply created threads
+> > and dispatched them on all the cpus to force IPI usage, that should be
+> > way better if the batching of the first ubenchmark is not enough to
+> > exacerbate performance improvements, let me know and thanks for your
+> > tests!
+> >
+> > #define _GNU_SOURCE
+> > #include <pthread.h>
+> > #include <sys/types.h>
+> > #include <unistd.h>
+> > #include <sys/mman.h>
+> > #include <string.h>
+> > #include <errno.h>
+> > #include <sched.h>
+> > #include <time.h>
+> >
+> > int stick_this_thread_to_core(int core_id) {
+> >         int num_cores = sysconf(_SC_NPROCESSORS_ONLN);
+> >         if (core_id < 0 || core_id >= num_cores)
+> >            return EINVAL;
+> >
+> >         cpu_set_t cpuset;
+> >         CPU_ZERO(&cpuset);
+> >         CPU_SET(core_id, &cpuset);
+> >
+> >         pthread_t current_thread = pthread_self();
+> >         return pthread_setaffinity_np(current_thread,
+> > sizeof(cpu_set_t), &cpuset);
+> > }
+> >
+> > static void *fn_thread (void *p_data)
+> > {
+> >         int ret;
+> >         pthread_t thread;
+> >
+> >         stick_this_thread_to_core((int)p_data);
+> >
+> >         while (1) {
+> >                 sleep(1);
+> >         }
+> >
+> >         return NULL;
+> > }
+> >
+> > int main()
+> > {
+> > #define SIZE (1 * 1024 * 1024)
+> >         volatile unsigned char *p = mmap(NULL, SIZE, PROT_READ | PROT_WRITE,
+> >                                          MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+> >         pthread_t threads[4];
+> >         int ret;
+> >
+> >         for (int i = 0; i < 4; ++i) {
+> >                 ret = pthread_create(&threads[i], NULL, fn_thread, (void *)i);
+> >                 if (ret)
+> >                 {
+> >                         printf("%s", strerror (ret));
+> >                 }
+> >         }
+> >
+> >         memset(p, 0x88, SIZE);
+> >
+> >         for (int k = 0; k < 500 /* 10000 */; k++) {
+> >                 /* swap in */
+> >                 for (int i = 0; i < SIZE; i += 4096) {
+> >                         (void)p[i];
+> >                 }
+> >
+> >                 /* swap out */
+> >                 madvise(p, SIZE, MADV_PAGEOUT);
+> >         }
+> >
+> >         for (int i = 0; i < 4; i++)
+> >         {
+> >                 pthread_cancel(threads[i]);
+> >         }
+> >
+> >         for (int i = 0; i < 4; i++)
+> >         {
+> >                 pthread_join(threads[i], NULL);
+> >         }
+> >
+> >         return 0;
+> >
+> > }
+> >
 > 
-> Signed-off-by: Bhavin Sharma <bhavin.sharma-TXG9oGKWPboh9/7i5KS7/GGXanvQGlWp@public.gmane.org>
-> ---
-
-Hi,
-
->   drivers/power/supply/Kconfig              |   7 ++
->   drivers/power/supply/Makefile             |   1 +
->   drivers/power/supply/stc3117_fuel_gauge.c | 136 ++++++++++++++++++++++
->   3 files changed, 144 insertions(+)
->   create mode 100644 drivers/power/supply/stc3117_fuel_gauge.c
+> So I removed the dust from my unmatched and ran the benchmarks I proposed:
 > 
-> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-> index f21cb05815ec..02df55b0d5f0 100644
-> --- a/drivers/power/supply/Kconfig
-> +++ b/drivers/power/supply/Kconfig
-> @@ -875,6 +875,13 @@ config FUEL_GAUGE_SC27XX
->   	  Say Y here to enable support for fuel gauge with SC27XX
->   	  PMIC chips.
->   
-> +config FUEL_GAUGE_STC3117
-> +	tristate "STMicroelectronics STC3117 fuel gauge driver"
-> +	depends on I2C
-> +	help
-> +	  Say Y here to enable support for fuel gauge with STC3117
-> +	  PMIC chips.
-> +
->   config CHARGER_UCS1002
->   	tristate "Microchip UCS1002 USB Port Power Controller"
->   	depends on I2C
-> diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-> index 58b567278034..f8ed3e5a8882 100644
-> --- a/drivers/power/supply/Makefile
-> +++ b/drivers/power/supply/Makefile
-> @@ -104,6 +104,7 @@ obj-$(CONFIG_CHARGER_CROS_USBPD)	+= cros_usbpd-charger.o
->   obj-$(CONFIG_CHARGER_CROS_PCHG)	+= cros_peripheral_charger.o
->   obj-$(CONFIG_CHARGER_SC2731)	+= sc2731_charger.o
->   obj-$(CONFIG_FUEL_GAUGE_SC27XX)	+= sc27xx_fuel_gauge.o
-> +obj-$(CONFIG_FUEL_GAUGE_STC3117)	+= stc3117_fuel_gauge.o
->   obj-$(CONFIG_CHARGER_UCS1002)	+= ucs1002_power.o
->   obj-$(CONFIG_CHARGER_BD99954)	+= bd99954-charger.o
->   obj-$(CONFIG_CHARGER_WILCO)	+= wilco-charger.o
-> diff --git a/drivers/power/supply/stc3117_fuel_gauge.c b/drivers/power/supply/stc3117_fuel_gauge.c
-> new file mode 100644
-> index 000000000000..bb033ac54858
-> --- /dev/null
-> +++ b/drivers/power/supply/stc3117_fuel_gauge.c
-> @@ -0,0 +1,136 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * stc3117_fuel_gauge.c - STMicroelectronics STC3117 Fuel Gauge Driver
-> + *
-> + * Copyright (c) 2024 Silicon Signals Pvt Ltd.
-> + * Author:      Bhavin Sharma <bhavin.sharma-TXG9oGKWPboh9/7i5KS7/GGXanvQGlWp@public.gmane.org>
-> + *              Hardevsinh Palaniya <hardevsinh.palaniya-TXG9oGKWPbrc8hPZMNZi9dBPR1lH4CV8@public.gmane.org>
-> + */
-> +
-> +
+> Without this patch:
+> * benchmark from commit 43b3dfdd0455 (4 runs)  : ~20.3s
+> * same benchmark with threads (4 runs)                : ~27.4s
+> 
+> With this patch:
+> * benchmark from commit 43b3dfdd0455 (4 runs)  : ~17.9s
+> * same benchmark with threads (4 runs)                : ~18.1s
+> 
+> So a small improvement for the single thread benchmark, but it depends
+> on the number of pages that get flushed, so to me that's not
+> applicable for the general case. For the same benchmark with multiple
+> threads, that's ~34% improvement. I'll add those numbers to the v2,
+> and JIsheng if you can provide some too, I'll add them too!
 
-Only 1 NL is enough.
+Hi Alex,
 
-> +#include <linux/i2c.h>
-> +#include <linux/i2c-dev.h>
-> +#include <linux/kernel.h>
+the threaded version show ~78% improvement! impressive!
 
-Is it really needed for a small driver like this?
+So for the patch:
 
-> +#include <linux/module.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/power_supply.h>
+Reviewed-by: Jisheng Zhang <jszhang@kernel.org>
+Tested-by: Jisheng Zhang <jszhang@kernel.org>
 
-Keep alphabetical order.
-
-> +
-> +#define VOLTAGE_REG_ADDR	0x08
-> +#define VOLTAGE_REG_ADDR_SIZE	1		//in bytes
-> +#define VOLTAGE_DATA_SIZE	2		//in bytes
-> +#define LSB_VALUE		2200		//in micro-volts
-> +
-> +
-> +static int stc3117_probe(struct i2c_client *client);
-> +static void stc3117_dev_remove(struct i2c_client *client);
-
-If struct i2c_driver stc3117_i2c_driver was declared at the end of the 
-fine, these prototypes could be removed.
-
-> +
-> +static int stc3117_get_property(struct power_supply *psy,
-> +	enum power_supply_property psp, union power_supply_propval *val);
-> +static int stc3117_get_batt_volt(const struct i2c_client *client);
-
-Same here.
-I think that a different ordering could avoid these prototypes.
-
-> +
-> +const struct i2c_client *tmp_client;
-> +struct power_supply *stc_sply;
-> +
-> +static const struct of_device_id stc3117_of_match[] = {
-> +	{ .compatible = "st,stc3117-fgu" },
-> +	{},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, stc3117_of_match);
-> +
-> +static const struct i2c_device_id stc3117_id[] = {
-> +	{"stc3117", 0},
-> +	{},
-> +};
-> +
-> +
-
-Only 1 NL is enough.
-
-> +MODULE_DEVICE_TABLE(i2c, stc3117_id);
-> +
-> +struct i2c_driver stc3117_i2c_driver = {
-> +	.driver = {
-> +		.name = "stc3117_i2c_driver",
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = of_match_ptr(stc3117_of_match),
-> +	},
-> +	.probe = stc3117_probe,
-> +	.id_table = stc3117_id,
-> +	.remove = stc3117_dev_remove,
-> +};
-> +
-> +
-
-Only 1 NL is enough.
-
-> +static enum power_supply_property stc3117_battery_props[] = {
-> +	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-> +};
-> +
-> +static const struct power_supply_desc stc3117_battery_desc = {
-> +	.name = "stc3117-battery",
-> +	.type = POWER_SUPPLY_TYPE_BATTERY,
-> +	.get_property = stc3117_get_property,
-> +	.properties = stc3117_battery_props,
-> +	.num_properties = ARRAY_SIZE(stc3117_battery_props),
-> +};
-> +
-> +static int stc3117_get_property(struct power_supply *psy,
-> +	enum power_supply_property psp, union power_supply_propval *val)
-> +{
-> +	switch (psp) {
-> +	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-> +		val->intval = stc3117_get_batt_volt(tmp_client);
-> +	break;
-
-This break should be indented by 1 more tab.
-
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +	return 0;
-> +}
-> +
-> +
-
-Only 1 NL is enough.
-
-> +static int stc3117_get_batt_volt(const struct i2c_client *stc_client)
-> +{
-> +	int ret, volt = 0;
-> +	char i2c_tx = VOLTAGE_REG_ADDR, i2c_rx[2] = {0};
-
-Maybe VOLTAGE_DATA_SIZE, instead of 2?
-
-> +
-> +	ret = i2c_master_send(stc_client, &i2c_tx, VOLTAGE_REG_ADDR_SIZE);
-> +	if (ret > 0) {
-> +
-> +		ret = i2c_master_recv(stc_client, i2c_rx, VOLTAGE_DATA_SIZE);
-> +		if (ret > 0) {
-> +
-> +			volt = (i2c_rx[1] << 8) + i2c_rx[0];
-> +			volt *= LSB_VALUE;
-> +
-> +			return volt;
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-
-Writting it as:
-   ret = i2c_master_send()
-   if (ret < 0)
-	return ret;
-
-   ret = i2c_master_recv();
-   if (ret < 0)
-	return ret;
-
-   vols = ...
-
-would save some indentation.
-
-> +
-> +static int stc3117_probe(struct i2c_client *client)
-> +{
-> +	struct power_supply_config psy_cfg = {};
-> +	struct device *dev;
-> +
-> +	dev = &client->dev;
-> +
-> +	psy_cfg.of_node = dev->of_node;
-> +
-> +	tmp_client = client;
-> +
-> +	stc_sply = power_supply_register(dev, &stc3117_battery_desc, &psy_cfg);
-
-devm_power_supply_register() ?
-This would remove the need of the .remove() function.
-
-> +	if (IS_ERR(stc_sply))
-> +		pr_err("failed to register battery\n");
-
-dev_err()?
-
-Maybe this error code should be propagated. What the point of this 
-driver if this function fails?
-
-just my 2c,
-
-CJ
-
-> +
-> +	return 0;
-> +}
-> +
-> +static void stc3117_dev_remove(struct i2c_client *client)
-> +{
-> +	power_supply_unregister(stc_sply);
-> +}
-> +
-> +module_i2c_driver(stc3117_i2c_driver);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Bhavin Sharma <bhavin.sharma-TXG9oGKWPboh9/7i5KS7/GGXanvQGlWp@public.gmane.org>");
-> +MODULE_AUTHOR("Hardevsinh Palaniya <hardevsinh.palaniya-TXG9oGKWPboh9/7i5KS7/GGXanvQGlWp@public.gmane.org>");
-> +MODULE_DESCRIPTION("STC3117 Fuel Gauge Driver");
-> +MODULE_VERSION("v1.0");
-> +
-
+Thanks
+> 
+> Thanks,
+> 
+> Alex
+> 
+> > >
+> > > Thanks
+> > >
+> > > >
+> > > > Before this patch:
+> > > >
+> > > > real  2m1.135s
+> > > > user  0m0.980s
+> > > > sys   2m0.096s
+> > > >
+> > > > 4.83%  batch_tlb  [kernel.kallsyms]            [k] __flush_tlb_range
+> > > >
+> > > > After this patch:
+> > > >
+> > > > real  1m0.543s
+> > > > user  0m1.059s
+> > > > sys   0m59.489s
+> > > >
+> > > > 0.14%  batch_tlb  [kernel.kallsyms]            [k] __flush_tlb_range
+> > > >
+> > > > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> > > > ---
+> > > >  arch/riscv/Kconfig                |  1 +
+> > > >  arch/riscv/include/asm/tlbbatch.h | 15 +++++++
+> > > >  arch/riscv/include/asm/tlbflush.h | 10 +++++
+> > > >  arch/riscv/mm/tlbflush.c          | 71 ++++++++++++++++++++++---------
+> > > >  4 files changed, 77 insertions(+), 20 deletions(-)
+> > > >  create mode 100644 arch/riscv/include/asm/tlbbatch.h
+> > > >
+> > > > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > > > index 7603bd8ab333..aa07bd43b138 100644
+> > > > --- a/arch/riscv/Kconfig
+> > > > +++ b/arch/riscv/Kconfig
+> > > > @@ -53,6 +53,7 @@ config RISCV
+> > > >       select ARCH_USE_MEMTEST
+> > > >       select ARCH_USE_QUEUED_RWLOCKS
+> > > >       select ARCH_USES_CFI_TRAPS if CFI_CLANG
+> > > > +     select ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH if SMP && MMU
+> > > >       select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
+> > > >       select ARCH_WANT_FRAME_POINTERS
+> > > >       select ARCH_WANT_GENERAL_HUGETLB if !RISCV_ISA_SVNAPOT
+> > > > diff --git a/arch/riscv/include/asm/tlbbatch.h b/arch/riscv/include/asm/tlbbatch.h
+> > > > new file mode 100644
+> > > > index 000000000000..46014f70b9da
+> > > > --- /dev/null
+> > > > +++ b/arch/riscv/include/asm/tlbbatch.h
+> > > > @@ -0,0 +1,15 @@
+> > > > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > > > +/*
+> > > > + * Copyright (C) 2023 Rivos Inc.
+> > > > + */
+> > > > +
+> > > > +#ifndef _ASM_RISCV_TLBBATCH_H
+> > > > +#define _ASM_RISCV_TLBBATCH_H
+> > > > +
+> > > > +#include <linux/cpumask.h>
+> > > > +
+> > > > +struct arch_tlbflush_unmap_batch {
+> > > > +     struct cpumask cpumask;
+> > > > +};
+> > > > +
+> > > > +#endif /* _ASM_RISCV_TLBBATCH_H */
+> > > > diff --git a/arch/riscv/include/asm/tlbflush.h b/arch/riscv/include/asm/tlbflush.h
+> > > > index 8f3418c5f172..f0b731ccc0c2 100644
+> > > > --- a/arch/riscv/include/asm/tlbflush.h
+> > > > +++ b/arch/riscv/include/asm/tlbflush.h
+> > > > @@ -46,6 +46,16 @@ void flush_tlb_kernel_range(unsigned long start, unsigned long end);
+> > > >  void flush_pmd_tlb_range(struct vm_area_struct *vma, unsigned long start,
+> > > >                       unsigned long end);
+> > > >  #endif
+> > > > +
+> > > > +#ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
+> > > > +bool arch_tlbbatch_should_defer(struct mm_struct *mm);
+> > > > +void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
+> > > > +                            struct mm_struct *mm,
+> > > > +                            unsigned long uaddr);
+> > > > +void arch_flush_tlb_batched_pending(struct mm_struct *mm);
+> > > > +void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch);
+> > > > +#endif /* CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH */
+> > > > +
+> > > >  #else /* CONFIG_SMP && CONFIG_MMU */
+> > > >
+> > > >  #define flush_tlb_all() local_flush_tlb_all()
+> > > > diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
+> > > > index e6659d7368b3..bb623bca0a7d 100644
+> > > > --- a/arch/riscv/mm/tlbflush.c
+> > > > +++ b/arch/riscv/mm/tlbflush.c
+> > > > @@ -93,29 +93,23 @@ static void __ipi_flush_tlb_range_asid(void *info)
+> > > >       local_flush_tlb_range_asid(d->start, d->size, d->stride, d->asid);
+> > > >  }
+> > > >
+> > > > -static void __flush_tlb_range(struct mm_struct *mm, unsigned long start,
+> > > > -                           unsigned long size, unsigned long stride)
+> > > > +static void __flush_tlb_range(struct cpumask *cmask, unsigned long asid,
+> > > > +                           unsigned long start, unsigned long size,
+> > > > +                           unsigned long stride)
+> > > >  {
+> > > >       struct flush_tlb_range_data ftd;
+> > > > -     const struct cpumask *cmask;
+> > > > -     unsigned long asid = FLUSH_TLB_NO_ASID;
+> > > >       bool broadcast;
+> > > >
+> > > > -     if (mm) {
+> > > > -             unsigned int cpuid;
+> > > > +     if (cpumask_empty(cmask))
+> > > > +             return;
+> > > >
+> > > > -             cmask = mm_cpumask(mm);
+> > > > -             if (cpumask_empty(cmask))
+> > > > -                     return;
+> > > > +     if (cmask != cpu_online_mask) {
+> > > > +             unsigned int cpuid;
+> > > >
+> > > >               cpuid = get_cpu();
+> > > >               /* check if the tlbflush needs to be sent to other CPUs */
+> > > >               broadcast = cpumask_any_but(cmask, cpuid) < nr_cpu_ids;
+> > > > -
+> > > > -             if (static_branch_unlikely(&use_asid_allocator))
+> > > > -                     asid = atomic_long_read(&mm->context.id) & asid_mask;
+> > > >       } else {
+> > > > -             cmask = cpu_online_mask;
+> > > >               broadcast = true;
+> > > >       }
+> > > >
+> > > > @@ -135,25 +129,34 @@ static void __flush_tlb_range(struct mm_struct *mm, unsigned long start,
+> > > >               local_flush_tlb_range_asid(start, size, stride, asid);
+> > > >       }
+> > > >
+> > > > -     if (mm)
+> > > > +     if (cmask != cpu_online_mask)
+> > > >               put_cpu();
+> > > >  }
+> > > >
+> > > > +static inline unsigned long get_mm_asid(struct mm_struct *mm)
+> > > > +{
+> > > > +     return static_branch_unlikely(&use_asid_allocator) ?
+> > > > +                     atomic_long_read(&mm->context.id) & asid_mask : FLUSH_TLB_NO_ASID;
+> > > > +}
+> > > > +
+> > > >  void flush_tlb_mm(struct mm_struct *mm)
+> > > >  {
+> > > > -     __flush_tlb_range(mm, 0, FLUSH_TLB_MAX_SIZE, PAGE_SIZE);
+> > > > +     __flush_tlb_range(mm_cpumask(mm), get_mm_asid(mm),
+> > > > +                       0, FLUSH_TLB_MAX_SIZE, PAGE_SIZE);
+> > > >  }
+> > > >
+> > > >  void flush_tlb_mm_range(struct mm_struct *mm,
+> > > >                       unsigned long start, unsigned long end,
+> > > >                       unsigned int page_size)
+> > > >  {
+> > > > -     __flush_tlb_range(mm, start, end - start, page_size);
+> > > > +     __flush_tlb_range(mm_cpumask(mm), get_mm_asid(mm),
+> > > > +                       start, end - start, page_size);
+> > > >  }
+> > > >
+> > > >  void flush_tlb_page(struct vm_area_struct *vma, unsigned long addr)
+> > > >  {
+> > > > -     __flush_tlb_range(vma->vm_mm, addr, PAGE_SIZE, PAGE_SIZE);
+> > > > +     __flush_tlb_range(mm_cpumask(vma->vm_mm), get_mm_asid(vma->vm_mm),
+> > > > +                       addr, PAGE_SIZE, PAGE_SIZE);
+> > > >  }
+> > > >
+> > > >  void flush_tlb_range(struct vm_area_struct *vma, unsigned long start,
+> > > > @@ -185,18 +188,46 @@ void flush_tlb_range(struct vm_area_struct *vma, unsigned long start,
+> > > >               }
+> > > >       }
+> > > >
+> > > > -     __flush_tlb_range(vma->vm_mm, start, end - start, stride_size);
+> > > > +     __flush_tlb_range(mm_cpumask(vma->vm_mm), get_mm_asid(vma->vm_mm),
+> > > > +                       start, end - start, stride_size);
+> > > >  }
+> > > >
+> > > >  void flush_tlb_kernel_range(unsigned long start, unsigned long end)
+> > > >  {
+> > > > -     __flush_tlb_range(NULL, start, end - start, PAGE_SIZE);
+> > > > +     __flush_tlb_range((struct cpumask *)cpu_online_mask, FLUSH_TLB_NO_ASID,
+> > > > +                       start, end - start, PAGE_SIZE);
+> > > >  }
+> > > >
+> > > >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> > > >  void flush_pmd_tlb_range(struct vm_area_struct *vma, unsigned long start,
+> > > >                       unsigned long end)
+> > > >  {
+> > > > -     __flush_tlb_range(vma->vm_mm, start, end - start, PMD_SIZE);
+> > > > +     __flush_tlb_range(mm_cpumask(vma->vm_mm), get_mm_asid(vma->vm_mm),
+> > > > +                       start, end - start, PMD_SIZE);
+> > > >  }
+> > > >  #endif
+> > > > +
+> > > > +#ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
+> > > > +bool arch_tlbbatch_should_defer(struct mm_struct *mm)
+> > > > +{
+> > > > +     return true;
+> > > > +}
+> > > > +
+> > > > +void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
+> > > > +                            struct mm_struct *mm,
+> > > > +                            unsigned long uaddr)
+> > > > +{
+> > > > +     cpumask_or(&batch->cpumask, &batch->cpumask, mm_cpumask(mm));
+> > > > +}
+> > > > +
+> > > > +void arch_flush_tlb_batched_pending(struct mm_struct *mm)
+> > > > +{
+> > > > +     flush_tlb_mm(mm);
+> > > > +}
+> > > > +
+> > > > +void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
+> > > > +{
+> > > > +     __flush_tlb_range(&batch->cpumask, FLUSH_TLB_NO_ASID, 0,
+> > > > +                       FLUSH_TLB_MAX_SIZE, PAGE_SIZE);
+> > > > +}
+> > > > +#endif /* CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH */
+> > > > --
+> > > > 2.39.2
+> > > >
+> > > >
+> > > > _______________________________________________
+> > > > linux-riscv mailing list
+> > > > linux-riscv@lists.infradead.org
+> > > > http://lists.infradead.org/mailman/listinfo/linux-riscv
