@@ -1,53 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB547483
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Jan 2024 14:18:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3762C847B
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Jan 2024 14:18:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K7gH1ZWe"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fBU+SB2N"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704550706; x=1736086706;
+  t=1704550714; x=1736086714;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=6o5SASJAjHggjTPxF+4jiLSwlA4i/EomIqUIbo30sTY=;
-  b=K7gH1ZWeRUcbQ7q0opRW7XXhx4URnZ21SVs9qTfsHShmkP02JvvITWv5
-   T9dxwHCBE8aI7WRlirpoufCcF1EbEO+8N0GgE0btmuf1RNmwqOAfS/YTZ
-   cdNAW/kHE+VGHfVqusGx2WSCL/lUKYzJcUlJKtqAozsg3NbmIeoeo51/h
-   yfgsdtmRrSg1wQWbuI8DM1VUpmWsw/V8u5a12lmvlvt47pVvQFw+ZK/GO
-   q4MeDbIjCRW2lP/eBr3ViEhwSE+UF1+ECtEhNRK4ak1YuCq0PVxog9c6u
-   clhZoGqY6sruLZIm+4aZJrshLtEgABGrmfaTt1JOs21xSKsEolagiNDev
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10945"; a="461958656"
+  bh=IZCz/MZA6E72BOm/MHR3k5Pv0uD88Tp+9lsZbl+gfxE=;
+  b=fBU+SB2NBr1tdqCcUwOsk+6L5l5BGvOP78Vx/U4+reWKnXzobxUWmOKg
+   O34iLDPlOtAj9HtZbcbqav0C+ViTa3Dbbzk6lklAyu4DclZhZhdg0Hso1
+   Z0sBwfDb1bzclkCqpYUmhEbwjBqXL0MWOupC7p5iiaffLc/y3QDKSnDoR
+   4ao4akMu4Dd20n0nAIMYvUAlJKfTkV/+m5GuoWcVcVQgJi7hyw5LtXG0r
+   4pc2F2Hn5meexpU+L+OoVX2ASJvVUKeOe9qQ3k4qYPoS7isMRUZ6u6xQh
+   KWWdHZZ5RcwebekPgBTMV1JBMsdI/U4SS7K3My8E3EL9mqRyyHXlYI60f
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10945"; a="16266400"
 X-IronPort-AV: E=Sophos;i="6.04,337,1695711600"; 
-   d="scan'208";a="461958656"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2024 06:18:25 -0800
+   d="scan'208";a="16266400"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2024 06:18:33 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10945"; a="1028009404"
+X-IronPort-AV: E=McAfee;i="6600,9927,10945"; a="954223935"
 X-IronPort-AV: E=Sophos;i="6.04,337,1695711600"; 
-   d="scan'208";a="1028009404"
+   d="scan'208";a="954223935"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2024 06:18:22 -0800
+  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2024 06:18:28 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rM7VE-0000000BvWx-0ucP;
-	Sat, 06 Jan 2024 16:18:20 +0200
-Date: Sat, 6 Jan 2024 16:18:19 +0200
+	id 1rM7MG-0000000BvMv-1HXB;
+	Sat, 06 Jan 2024 16:09:04 +0200
+Date: Sat, 6 Jan 2024 16:09:04 +0200
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Marco Elver <elver@google.com>
-Cc: Pierre Gondois <pierre.gondois@arm.com>, linux-kernel@vger.kernel.org,
-	Kees Cook <keescook@chromium.org>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Jani Nikula <jani.nikula@intel.com>, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH] list: Add hlist_count_nodes()
-Message-ID: <ZZlhK6rF8gSy0toK@smile.fi.intel.com>
-References: <20240103090241.164817-1-pierre.gondois@arm.com>
- <CANpmjNPsBUJy6tkOdRSJyWrS9CMUOQhQyb7_hwmw68pjjiEDWQ@mail.gmail.com>
- <2f4a5ea1-daa2-4ede-bdc0-6692d7d52e8c@arm.com>
- <CANpmjNMqzYsSh-DSsdFz4D_Ad0sAgf9J1A6CBz4fEOXAS4ejjw@mail.gmail.com>
+To: Mark Hasemeyer <markhas@chromium.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Raul Rangel <rrangel@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>, David Gow <davidgow@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Mark Brown <broonie@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Takashi Iwai <tiwai@suse.de>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v3 23/24] platform: Modify platform_get_irq_optional() to
+ use resource
+Message-ID: <ZZlfADa5_-NnK4UI@smile.fi.intel.com>
+References: <20231226192149.1830592-1-markhas@chromium.org>
+ <20231226122113.v3.23.Ife9ebad2bbfbab3a05e90040f344d750aa0aac7e@changeid>
+ <ZYxfLjCzjnocKaTo@smile.fi.intel.com>
+ <CANg-bXAPrhS9iYASSSXFJguYEvejL_NcgMCWCHU=6mvP9AstLA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,35 +66,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANpmjNMqzYsSh-DSsdFz4D_Ad0sAgf9J1A6CBz4fEOXAS4ejjw@mail.gmail.com>
+In-Reply-To: <CANg-bXAPrhS9iYASSSXFJguYEvejL_NcgMCWCHU=6mvP9AstLA@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Jan 03, 2024 at 02:46:00PM +0100, Marco Elver wrote:
-> On Wed, 3 Jan 2024 at 13:04, Pierre Gondois <pierre.gondois@arm.com> wrote:
-> > On 1/3/24 12:25, Marco Elver wrote:
-> > > On Wed, 3 Jan 2024 at 10:02, Pierre Gondois <pierre.gondois@arm.com> wrote:
-> > >>
-> > >> Add a function to count nodes in a hlist. hlist_count_nodes()
-> > >> is similar to list_count_nodes().
-> > >>
-> > >> Signed-off-by: Pierre Gondois <pierre.gondois@arm.com>
-> > >
-> > > Is this patch part of another patch series? As-is, this will be dead
-> > > code, and there's no guarantee someone will just go and delete it in
-> > > future. Although this function looks useful, we also should avoid
-> > > adding new dead code.
+On Wed, Dec 27, 2023 at 01:33:14PM -0700, Mark Hasemeyer wrote:
+> > > -     struct resource *r;
+> >         ...
+> > > +     struct resource *platform_res = platform_get_resource(dev, IORESOURCE_IRQ, num);
 > >
-> > The function is indeed not used in the project right now. I needed
-> > it for a private module. If it helps integrating the function and
-> > not make it dead code, maybe I could add usages at the following
-> > places:
-> > - drivers/gpu/drm/drm_hashtab.c::print_binder_node_nilocked()
-> > - drivers/md/bcache/sysfs.c::bch_cache_max_chain()
+> > This is quite unusual (as far as cleanup.h is not used and there is no place
+> > for it here).
 > 
-> If this function allows to simplify these other places, by all means
-> go ahead. That would look a lot better than having an unused function.
+> Sorry, what's unusual? The declaration of a separate 'platform_res'?
+> If so, I introduced it because I wanted to avoid setting 'r' if
+> 'irq_get_irq_data()' fails below.
 
-+1, produce a little series with those drivers being cleaned up.
+Defining the variable in the depth of the code.
+There are exceptions, but usually we follow the style that definitions are
+grouped at the top of the {} scope(s).
+
 
 -- 
 With Best Regards,
