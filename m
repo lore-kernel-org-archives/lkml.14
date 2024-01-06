@@ -1,128 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FBA13C15;
-	Sat,  6 Jan 2024 07:16:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UFXeACEH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9290FC433C7;
-	Sat,  6 Jan 2024 07:16:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704525408;
-	bh=dG0phtdnvCCkXxKsiM0aT+uPfINQvrWi1CxX3oZjNpk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UFXeACEHnSPawP6cd9scXaSiG/L0zYDNa6b03SxmQ06d+UguZqTrXUbK74SEx+QXa
-	 jXkGyoBBeJjY7TO/u0N50pS0Tfc624K+B4RUakx1tZ60wTlblLS+Tc9ZEYPX4z7Alw
-	 AgzgcBeA3CF+LkFyjNODcKMSNCb4oXWfJsu+rJFH7f6F2uQcSIXdroOKp0BB5YGdEw
-	 xOT3zbXOH6VrIY8NMQwd/yH80j4zHFV5kkJ0U8P3SHQwcKL8oHI5MSUHTtGKNlMKZE
-	 ynS31RyIRXfXEug2ZqdRD0jozOi/gP14IYrlGOn2LVYXpJsevBm4O7rPrWfX/jfgG2
-	 4avy2DAskjOyQ==
-Date: Sat, 6 Jan 2024 15:04:01 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Petr Tesarik <petr@tesarici.cz>
-Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	"open list:STMMAC ETHERNET DRIVER" <netdev@vger.kernel.org>,
-	"moderated list:ARM/STM32 ARCHITECTURE" <linux-stm32@st-md-mailman.stormreply.com>,
-	"moderated list:ARM/STM32 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH net] net: stmmac: fix ethtool per-queue  statistics
-Message-ID: <ZZj7YfYa3Hl5TW1n@xhacker>
-References: <20240105201642.30904-1-petr@tesarici.cz>
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3C2846B4
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Jan 2024 07:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.239])
+	by gateway (Coremail) with SMTP id _____8AxDOvl_5hlT5YCAA--.9126S3;
+	Sat, 06 Jan 2024 15:23:17 +0800 (CST)
+Received: from [10.20.42.239] (unknown [10.20.42.239])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxid3i_5hlhVcEAA--.11456S3;
+	Sat, 06 Jan 2024 15:23:16 +0800 (CST)
+Subject: Re: [PATCH 1/1] LoongArch: defconfig: Enable Generic PCIE by default
+From: gaosong <gaosong@loongson.cn>
+To: chenhuacai@kernel.org, kernel@xen0n.name
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ raven@themaw.net, davem@davemloft.net, svenjoac@gmx.de,
+ anthony.l.nguyen@intel.com, richard.henderson@linaro.org,
+ peter.maydell@linaro.org, philmd@linaro.org, maobibo@loongson.cn
+References: <20231222024628.3138406-1-gaosong@loongson.cn>
+Message-ID: <16576063-1df9-5aa4-1aaa-1a99c4a660cb@loongson.cn>
+Date: Sat, 6 Jan 2024 15:23:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240105201642.30904-1-petr@tesarici.cz>
+In-Reply-To: <20231222024628.3138406-1-gaosong@loongson.cn>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:AQAAf8Cxid3i_5hlhVcEAA--.11456S3
+X-CM-SenderInfo: 5jdr20tqj6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrZr4kKr45GFyfuFyftr47GFX_yoWfJFc_JF
+	W2kw4UCr48AFWkW39Fqw4rGa1DC3WxC3Z8JFnrZr1xXa1aqr43tw4DX3W7C3Z093yDWrZx
+	ZaykAF9xCr18tosvyTuYvTs0mTUanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbDAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
+	JVW8Jr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j5o7tUUUUU=
 
-On Fri, Jan 05, 2024 at 09:16:42PM +0100, Petr Tesarik wrote:
-> Fix per-queue statistics for devices with more than one queue.
-> 
-> The output data pointer is currently reset in each loop iteration,
-> effectively summing all queue statistics in the first four u64 values.
-> 
-> The summary values are not even labeled correctly. For example, if eth0 has
-> 2 queues, ethtool -S eth0 shows:
-> 
->      q0_tx_pkt_n: 374 (actually tx_pkt_n over all queues)
->      q0_tx_irq_n: 23  (actually tx_normal_irq_n over all queues)
->      q1_tx_pkt_n: 462 (actually rx_pkt_n over all queues)
->      q1_tx_irq_n: 446 (actually rx_normal_irq_n over all queues)
->      q0_rx_pkt_n: 0
->      q0_rx_irq_n: 0
->      q1_rx_pkt_n: 0
->      q1_rx_irq_n: 0
-> 
-> Fixes: 133466c3bbe1 ("net: stmmac: use per-queue 64 bit statistics where necessary")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Petr Tesarik <petr@tesarici.cz>
+Ping!
 
-Good catch! I mixed this with the statics sum up for
-stmmac_qstats_string[].
-
-Reviewed-by: Jisheng Zhang <jszhang@kernel.org>
-
+ÔÚ 2023/12/22 ÉÏÎç10:46, Song Gao Ð´µÀ:
+> Enable generic PCIe by default in the LoongArch defconfig.
+> QEMU requires this configuration when booting the kernel with FDT.
+>
+> Signed-off-by: Song Gao <gaosong@loongson.cn>
 > ---
->  drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c | 9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-> index f628411ae4ae..112a36a698f1 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-> @@ -543,15 +543,12 @@ static void stmmac_get_per_qstats(struct stmmac_priv *priv, u64 *data)
->  	u32 rx_cnt = priv->plat->rx_queues_to_use;
->  	unsigned int start;
->  	int q, stat;
-> -	u64 *pos;
->  	char *p;
->  
-> -	pos = data;
->  	for (q = 0; q < tx_cnt; q++) {
->  		struct stmmac_txq_stats *txq_stats = &priv->xstats.txq_stats[q];
->  		struct stmmac_txq_stats snapshot;
->  
-> -		data = pos;
->  		do {
->  			start = u64_stats_fetch_begin(&txq_stats->syncp);
->  			snapshot = *txq_stats;
-> @@ -559,17 +556,15 @@ static void stmmac_get_per_qstats(struct stmmac_priv *priv, u64 *data)
->  
->  		p = (char *)&snapshot + offsetof(struct stmmac_txq_stats, tx_pkt_n);
->  		for (stat = 0; stat < STMMAC_TXQ_STATS; stat++) {
-> -			*data++ += (*(u64 *)p);
-> +			*data++ = (*(u64 *)p);
->  			p += sizeof(u64);
->  		}
->  	}
->  
-> -	pos = data;
->  	for (q = 0; q < rx_cnt; q++) {
->  		struct stmmac_rxq_stats *rxq_stats = &priv->xstats.rxq_stats[q];
->  		struct stmmac_rxq_stats snapshot;
->  
-> -		data = pos;
->  		do {
->  			start = u64_stats_fetch_begin(&rxq_stats->syncp);
->  			snapshot = *rxq_stats;
-> @@ -577,7 +572,7 @@ static void stmmac_get_per_qstats(struct stmmac_priv *priv, u64 *data)
->  
->  		p = (char *)&snapshot + offsetof(struct stmmac_rxq_stats, rx_pkt_n);
->  		for (stat = 0; stat < STMMAC_RXQ_STATS; stat++) {
-> -			*data++ += (*(u64 *)p);
-> +			*data++ = (*(u64 *)p);
->  			p += sizeof(u64);
->  		}
->  	}
-> -- 
-> 2.43.0
-> 
+>   arch/loongarch/configs/loongson3_defconfig | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
+> index 33795e4a5bd6..6350be7e8ec8 100644
+> --- a/arch/loongarch/configs/loongson3_defconfig
+> +++ b/arch/loongarch/configs/loongson3_defconfig
+> @@ -348,6 +348,7 @@ CONFIG_NET_9P=y
+>   CONFIG_NET_9P_VIRTIO=y
+>   CONFIG_CEPH_LIB=m
+>   CONFIG_PCIEPORTBUS=y
+> +CONFIG_PCI_HOST_GENERIC=y
+>   CONFIG_HOTPLUG_PCI_PCIE=y
+>   CONFIG_PCIEAER=y
+>   # CONFIG_PCIEASPM is not set
+
