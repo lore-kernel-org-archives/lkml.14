@@ -1,51 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15EE513FF2
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Jan 2024 16:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC4313AC8;
+	Sun,  7 Jan 2024 16:11:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KS9cRpZL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704643771; x=1736179771;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=pbzbwueR6azseIyoosxBA8lVRb3S3TRduNcuhuZDD2U=;
-  b=KS9cRpZLhhO6/clSVZ+KABKm5eq31UF0f7F3ScGWSiL5DCRjNOF6qy6x
-   FPgG829OFTSfH2jhqbTYuk6mvkRMViiVAC70yoQvJRsvgkpm4TFEwV4PK
-   7msB4TeEnirYTcaEXOOAgcNq4rv4ZdblUB749Hd6KoMDA5X/io3oF3sAv
-   wEEeZlK0d97wWDbOl52r5l8CwcL62YSClIDvFBa/O5mM/dLAR7BsgKheJ
-   XKWQ7Pr8IT+TGuI/9rXLTc7omxuvAXvGsS3LtxEYJUdkWJK/QQojsKII0
-   LSIwDzWqrt2DWzAqEj4iCR8gQ9Q9C+CWyElLBOf1fddmaSQ+UxlGUkFtj
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="483919016"
-X-IronPort-AV: E=Sophos;i="6.04,339,1695711600"; 
-   d="scan'208";a="483919016"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2024 08:09:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="810001637"
-X-IronPort-AV: E=Sophos;i="6.04,339,1695711600"; 
-   d="scan'208";a="810001637"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 07 Jan 2024 08:09:27 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rMViH-0003u8-1a;
-	Sun, 07 Jan 2024 16:09:25 +0000
-Date: Mon, 8 Jan 2024 00:08:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Jarkko Sakkinen <jarkko@kernel.org>,
-	Sumit Garg <sumit.garg@linaro.org>,
-	Pankaj Gupta <pankaj.gupta@nxp.com>
-Subject: include/linux/tpm.h:290:2: warning: field  within 'struct
- tpm_header' is less aligned than 'union tpm_header::(anonymous at
- include/linux/tpm.h:290:2)' and is usually due to 'struct tpm_header' being
- packed, which can lead to unaligned accesses
-Message-ID: <202401072350.jkkVKE5l-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="SCDVufUw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Nfh3SPlScpJNbmFJG3AvjHYz4crJ6ErWPuXcGN1GLks=; b=SCDVufUwJZIwyEBZ8yQr0RsD3y
+	lFaH1joDkia+4v8Z3v5GdHoj4lbuPTNvwNRTtcf+6SnmUX9mtkxmgiJnZOOvt9Ca3aJYAfIEodz7r
+	cg0jMMEelJmS84t6X9sszVXiZ1AQgc9lDN75GESstm6Wt1R7n2LJrxl7sMpjetu3yCprCIrMjgqN1
+	TqIYaKjtW9R4x3XkPv2fcmJxAx0aNnusmr/vGhuHwwvfrC6cxfw4/W3Gzir4LG3wBuExvJzvZd1jR
+	q2geFA2iY/djUT/p18XrU602ScW1k+a45rZqNNkfbYq7NllmX16ny/v5YfJuhhKaGHFDkLQQVGonl
+	HRKXqcXw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54952)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rMVjd-0002Fm-0F;
+	Sun, 07 Jan 2024 16:10:49 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rMVje-0002NN-2m; Sun, 07 Jan 2024 16:10:50 +0000
+Date: Sun, 7 Jan 2024 16:10:50 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Josua Mayer <josua@solid-run.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: sfp: add fixup for tplink 2.5gbase-t rj45 modules
+Message-ID: <ZZrNChuIw0X9fr6Z@shell.armlinux.org.uk>
+References: <20240106-tplink-25gbaset-sfp-fixup-v1-1-8d26696bd2f4@solid-run.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,49 +47,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240106-tplink-25gbaset-sfp-fixup-v1-1-8d26696bd2f4@solid-run.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   52b1853b080a082ec3749c3a9577f6c71b1d4a90
-commit: be07858fbf8115fc74528292c2ee8775fe49116f KEYS: trusted: allow use of TEE as backend without TCG_TPM support
-date:   1 year, 8 months ago
-config: arm-randconfig-001-20240107 (https://download.01.org/0day-ci/archive/20240107/202401072350.jkkVKE5l-lkp@intel.com/config)
-compiler: clang version 18.0.0git (https://github.com/llvm/llvm-project 7e186d366d6c7def0543acc255931f617e76dff0)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240107/202401072350.jkkVKE5l-lkp@intel.com/reproduce)
+On Sat, Jan 06, 2024 at 05:29:56PM +0100, Josua Mayer wrote:
+> TP-Link TL-SM410U modules are single-rate 2.5GBase-T RJ45 SFP modules.
+> The EEPROM data is lying about connector and extended cc,
+> reporting 25Gbps fiber.
+> 
+> Add fixup for these specific modules forcing RJ45 @ 2.5Gbase-T.
+> 
+> For reference original eeprom data dump from ethtool:
+> 
+> Identifier                : 0x03 (SFP)
+> Extended identifier       : 0x04 (GBIC/SFP defined by 2-wire interface ID)
+> Connector                 : 0x07 (LC)
+> Transceiver codes         : 0x00 0x00 0x00 0x00 0x00 0x00 0x40 0x00 0x00
+> Transceiver type          : FC: Twisted Pair (TP)
+> Encoding                  : 0x01 (8B/10B)
+> BR, Nominal               : 3100MBd
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401072350.jkkVKE5l-lkp@intel.com/
+This isn't 25Gbps - it's 2.5Gbps!
 
-All warnings (new ones prefixed by >>):
+So what actually happens with this module without the quirk? We should
+end up marking it for use as a 2500base-X fibre module which should
+result in it working.
 
-   In file included from security/keys/trusted-keys/trusted_core.c:10:
-   In file included from include/keys/trusted-type.h:12:
->> include/linux/tpm.h:290:2: warning: field  within 'struct tpm_header' is less aligned than 'union tpm_header::(anonymous at include/linux/tpm.h:290:2)' and is usually due to 'struct tpm_header' being packed, which can lead to unaligned accesses [-Wunaligned-access]
-     290 |         union {
-         |         ^
-   1 warning generated.
+(Please include in the commit message how it works or not without the
+patch.)
 
+Also, patches to netdev need to have "net" (for -rc) or "net-next"
+(for the next merge window) in the "[PATCH ...]" n the subject line.
 
-vim +290 include/linux/tpm.h
-
-74edff2d74c64c Sumit Garg 2019-10-16  286  
-74edff2d74c64c Sumit Garg 2019-10-16  287  struct tpm_header {
-74edff2d74c64c Sumit Garg 2019-10-16  288  	__be16 tag;
-74edff2d74c64c Sumit Garg 2019-10-16  289  	__be32 length;
-74edff2d74c64c Sumit Garg 2019-10-16 @290  	union {
-74edff2d74c64c Sumit Garg 2019-10-16  291  		__be32 ordinal;
-74edff2d74c64c Sumit Garg 2019-10-16  292  		__be32 return_code;
-74edff2d74c64c Sumit Garg 2019-10-16  293  	};
-74edff2d74c64c Sumit Garg 2019-10-16  294  } __packed;
-74edff2d74c64c Sumit Garg 2019-10-16  295  
-
-:::::: The code at line 290 was first introduced by commit
-:::::: 74edff2d74c64ca5977a57efb5c238c8f5318ba9 tpm: Move tpm_buf code to include/linux/
-
-:::::: TO: Sumit Garg <sumit.garg@linaro.org>
-:::::: CC: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-
+Thanks.
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
