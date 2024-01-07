@@ -1,59 +1,84 @@
-Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 245D5125BF;
-	Sun,  7 Jan 2024 08:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-	by vmicros1.altlinux.org (Postfix) with ESMTP id 14EE372C8CC;
-	Sun,  7 Jan 2024 10:56:23 +0300 (MSK)
-Received: from pony.office.basealt.ru (unknown [193.43.10.9])
-	by imap.altlinux.org (Postfix) with ESMTPSA id D1A1836D0170;
-	Sun,  7 Jan 2024 10:56:23 +0300 (MSK)
-Received: by pony.office.basealt.ru (Postfix, from userid 500)
-	id AE40C360AC7D; Sun,  7 Jan 2024 10:56:23 +0300 (MSK)
-Date: Sun, 7 Jan 2024 10:56:23 +0300
-From: Vitaly Chikunov <vt@altlinux.org>
-To: Dominique Martinet <asmadeus@codewreck.org>
-Cc: Christian Schoenebeck <linux_oss@crudebyte.com>, 
-	Fedor Pchelkin <pchelkin@ispras.ru>, Eric Van Hensbergen <ericvh@kernel.org>, 
-	Latchesar Ionkov <lucho@ionkov.net>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, v9fs@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Alexey Khoroshilov <khoroshilov@ispras.ru>, 
-	lvc-project@linuxtesting.org
-Subject: Re: [PATCH v4] net: 9p: avoid freeing uninit memory in p9pdu_vreadf
-Message-ID: <2et72smsvglzicqsyvt5m7bx2akyqzi2moq7tjupppygbsme3u@o2sltttok5wy>
-References: <20231206200913.16135-1-pchelkin@ispras.ru>
- <1808202.Umia7laAZq@silver>
- <ZXeZevFb1oDvMFns@codewreck.org>
+Received: from smtp.smtpout.orange.fr (smtp-13.smtpout.orange.fr [80.12.242.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE30D12B6D
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Jan 2024 08:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Vg/znhKa"
+Received: from pop-os.home ([92.140.202.140])
+	by smtp.orange.fr with ESMTPA
+	id MOGZrUCWm9dP0MOGZraHLC; Sun, 07 Jan 2024 09:12:21 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1704615141;
+	bh=LQ4ImjzjK8ZTAlmP+wrgMb7Xtb7eat0Xo8zSIFqCBoY=;
+	h=From:To:Cc:Subject:Date;
+	b=Vg/znhKaeNOWrDwuXPv738I/Rd4tsXNsB3ybHAJAn6l8HG91aqtwLldsMS0hRsI1p
+	 oAlIJ0RAtQTEuavoIU0CR7c7E+FUUAqs1mVBt1a796Ht7OqizuXE+UTKrGT53ksWKC
+	 qmjLawYBogHzgJGYEuVGVNVisyMxvujp8vtTrCRqqDUjB6Xg5T3yuoyJYJHsRCcVl3
+	 LOS1VvOOPunuuAZLgbygiLQVHKAX27sNG9/FapW/BqSWzGPnKFske0RmZWBhVwVz2F
+	 nHUIYZrl5cPJzgK5BOIm1tBt63CRf+klN3R+35nqVDQ18EDz1O3j7ixB1LvvKMCoHO
+	 tM1uqfXx9MzAQ==
+X-ME-Helo: pop-os.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 07 Jan 2024 09:12:21 +0100
+X-ME-IP: 92.140.202.140
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Chen-Yu Tsai <wenst@chromium.org>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH] clk: mediatek: mt8135: Fix an error handling path in clk_mt8135_apmixed_probe()
+Date: Sun,  7 Jan 2024 09:12:17 +0100
+Message-Id: <6cd6af61e5a91598068227f1f68cfcfde1507453.1704615011.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZXeZevFb1oDvMFns@codewreck.org>
+Content-Transfer-Encoding: 8bit
 
-Dominique,
+If an error occurs after mtk_alloc_clk_data(), mtk_free_clk_data() should
+be called, as already done in the remove function.
 
-On Tue, Dec 12, 2023 at 08:21:30AM +0900, Dominique Martinet wrote:
-> Christian Schoenebeck wrote on Thu, Dec 07, 2023 at 01:54:02PM +0100:
-> > I just checked whether this could create a leak, but it looks clean, so LGTM:
-> 
-> Right, either version look good to me.
+Fixes: 54b7026f011e ("clk: mediatek: mt8135-apmixedsys: Convert to platform_driver and module")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/clk/mediatek/clk-mt8135-apmixedsys.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Also, there was unnoticed bug in v2[1] - `int i` is moved to outer block
-and `i` counld be used uninitialized inside of `if (errcode) {`.
+diff --git a/drivers/clk/mediatek/clk-mt8135-apmixedsys.c b/drivers/clk/mediatek/clk-mt8135-apmixedsys.c
+index d1239b4b3db7..41bb2d2e2ea7 100644
+--- a/drivers/clk/mediatek/clk-mt8135-apmixedsys.c
++++ b/drivers/clk/mediatek/clk-mt8135-apmixedsys.c
+@@ -59,7 +59,7 @@ static int clk_mt8135_apmixed_probe(struct platform_device *pdev)
+ 
+ 	ret = mtk_clk_register_plls(node, plls, ARRAY_SIZE(plls), clk_data);
+ 	if (ret)
+-		return ret;
++		goto free_clk_data;
+ 
+ 	ret = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
+ 	if (ret)
+@@ -69,6 +69,8 @@ static int clk_mt8135_apmixed_probe(struct platform_device *pdev)
+ 
+ unregister_plls:
+ 	mtk_clk_unregister_plls(plls, ARRAY_SIZE(plls), clk_data);
++free_clk_data:
++	mtk_free_clk_data(clk_data);
+ 
+ 	return ret;
+ }
+-- 
+2.34.1
 
-Thanks,
-
-[1] https://lore.kernel.org/all/20231205091952.24754-1-pchelkin@ispras.ru/
-
-> I don't have a hard preference here, I've finished testing and just
-> updated the patch -- thanks for your comments & review
-> (and thanks Simon as well!)
-> 
-> -- 
-> Dominique Martinet | Asmadeus
