@@ -1,258 +1,99 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61D7134A5;
-	Sun,  7 Jan 2024 13:27:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mx0b-0016f401.pphosted.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68663134B2
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Jan 2024 13:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="ZBiCegkz"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 407BL5rJ025934;
-	Sun, 7 Jan 2024 05:26:55 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	pfpt0220; bh=kTBCfQFVMTFwhZ+RBcu+Y/wUEgP6lDYodciSiwX/zeo=; b=ZBi
-	CegkzIkJv8HB5O+IhdYIrRlKQ7HXO04ESV0AkTVqdbwGFsc5oYH0I13bDdgsDrbV
-	PSalR+/vREPR7pXtR7xSBXM844k6nz2PPNlMvBMWQyB+3UC20hxZaiX8Olyf5zcu
-	aZXrltgqx2n8+Y81SKUwKdjn6TlaJYK5wojLTjIotPnc7LA+IF857zeMAuLM4XL8
-	eQYqBLsUoHxoX4sB7FcaGcuCfmZ2r94T1tuH/wbFMvVDaxvVIE7e5MDLZvUuVo8B
-	wTH/ywhM6k8+dBLqEnAWWheJNKLATKGYY2YdR9FyAgIgq5QsoXZigAO4waTbRKyj
-	/lznj/MMiiheg9VZRrQ==
-Received: from dc5-exch01.marvell.com ([199.233.59.181])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3vf78n23j9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-	Sun, 07 Jan 2024 05:26:54 -0800 (PST)
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sun, 7 Jan
- 2024 05:26:48 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
- Transport; Sun, 7 Jan 2024 05:26:48 -0800
-Received: from dc3lp-swdev041.marvell.com (dc3lp-swdev041.marvell.com [10.6.60.191])
-	by maili.marvell.com (Postfix) with ESMTP id 4E4FF3F7093;
-	Sun,  7 Jan 2024 05:26:46 -0800 (PST)
-From: Elad Nachman <enachman@marvell.com>
-To: <gregory.clement@bootlin.com>, <andi.shyti@kernel.org>,
-        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <enachman@marvell.com>, <cyuval@marvell.com>
-Subject: [PATCH v4 1/1] i2c: busses: i2c-mv64xxx: fix arb-loss i2c lock
-Date: Sun, 7 Jan 2024 15:26:41 +0200
-Message-ID: <20240107132641.3418208-2-enachman@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240107132641.3418208-1-enachman@marvell.com>
-References: <20240107132641.3418208-1-enachman@marvell.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BgiG/vAG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704635899;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kAWVwfaNjpLshEWYFcR9bmtF8nNUppRn3hitAUVt2zE=;
+	b=BgiG/vAGSMdQ9YW+G5tRFLvtX+3sefdTtcfdBOgyrGTkY3NaUK0tItH1jiZe4g32MLbCy5
+	JC4gLuuXUOyUaEAw95YO0EyuGP1FB+sgd8d7GkYR8+50uJkxJjt/a0R2XFZ9WrGuuSIMLo
+	ZN9n926ix/zLUTfrt3538HrrSfsIGCg=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-20-tYf8LWUjPHCsHwWvnvmvTw-1; Sun,
+ 07 Jan 2024 08:58:15 -0500
+X-MC-Unique: tYf8LWUjPHCsHwWvnvmvTw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C466029AC003;
+	Sun,  7 Jan 2024 13:58:14 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.129])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id E9ECD5190;
+	Sun,  7 Jan 2024 13:58:13 +0000 (UTC)
+Date: Sun, 7 Jan 2024 21:58:10 +0800
+From: Baoquan He <bhe@redhat.com>
+To: kernel test robot <lkp@intel.com>
+Cc: linux-kernel@vger.kernel.org, oe-kbuild-all@lists.linux.dev,
+	akpm@linux-foundation.org, kexec@lists.infradead.org,
+	hbathini@linux.ibm.com, arnd@arndb.de, ignat@cloudflare.com,
+	eric_devolder@yahoo.com, viro@zeniv.linux.org.uk,
+	ebiederm@xmission.com, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/5] kexec_core: move kdump related codes from
+ crash_core.c to kexec_core.c
+Message-ID: <ZZqt8uXV6TwMiH32@MiWiFi-R3L-srv>
+References: <20240105103305.557273-2-bhe@redhat.com>
+ <202401061800.3XPSaPsa-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: Tyhjr7KF__O2C0TMiUe3wgoBhl8EJrvu
-X-Proofpoint-GUID: Tyhjr7KF__O2C0TMiUe3wgoBhl8EJrvu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202401061800.3XPSaPsa-lkp@intel.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-From: Elad Nachman <enachman@marvell.com>
+On 01/06/24 at 06:59pm, kernel test robot wrote:
+> Hi Baoquan,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on linus/master]
+> [also build test ERROR on v6.7-rc8]
+> [cannot apply to powerpc/next powerpc/fixes tip/x86/core arm64/for-next/core next-20240105]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Baoquan-He/kexec_core-move-kdump-related-codes-from-crash_core-c-to-kexec_core-c/20240105-223735
+> base:   linus/master
+> patch link:    https://lore.kernel.org/r/20240105103305.557273-2-bhe%40redhat.com
+> patch subject: [PATCH 1/5] kexec_core: move kdump related codes from crash_core.c to kexec_core.c
+> config: x86_64-randconfig-104-20240106 (https://download.01.org/0day-ci/archive/20240106/202401061800.3XPSaPsa-lkp@intel.com/config)
+> compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240106/202401061800.3XPSaPsa-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202401061800.3XPSaPsa-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    In file included from include/linux/string.h:11,
+>                     from include/linux/bitmap.h:12,
+>                     from include/linux/cpumask.h:12,
+>                     from include/linux/smp.h:13,
+>                     from arch/x86/kernel/crash.c:18:
+>    arch/x86/kernel/crash.c: In function 'fill_up_crash_elf_data':
+> >> include/linux/overflow.h:293:23: error: invalid application of 'sizeof' to incomplete type 'struct crash_mem'
+>      293 |                 sizeof(*(p)) + flex_array_size(p, member, count),       \
 
-Some i2c slaves, mainly SFPs, might cause the bus to lose arbitration
-while slave is in the middle of responding.
-This means that the i2c slave has not finished the transmission, but
-the master has already finished toggling the clock, probably due to
-the slave missing some of the master's clocks.
-This was seen with Ubiquity SFP module.
-This is typically caused by slaves which do not adhere completely
-to the i2c standard.
+Thanks for reporting.
+This is the same as the one reported and fixed in below link:
 
-The solution is to change the I2C mode from mpps to gpios, and toggle
-the i2c_scl gpio to emulate bus clock toggling, so slave will finish
-its transmission, driven by the manual clock toggling, and will release
-the i2c bus.
-
-Signed-off-by: Elad Nachman <enachman@marvell.com>
----
- drivers/i2c/busses/i2c-mv64xxx.c | 108 +++++++++++++++++++++++++++++++
- 1 file changed, 108 insertions(+)
-
-diff --git a/drivers/i2c/busses/i2c-mv64xxx.c b/drivers/i2c/busses/i2c-mv64xxx.c
-index dc160cbc3155..c06eecef66dc 100644
---- a/drivers/i2c/busses/i2c-mv64xxx.c
-+++ b/drivers/i2c/busses/i2c-mv64xxx.c
-@@ -26,6 +26,7 @@
- #include <linux/clk.h>
- #include <linux/err.h>
- #include <linux/delay.h>
-+#include <linux/of_gpio.h>
- 
- #define MV64XXX_I2C_ADDR_ADDR(val)			((val & 0x7f) << 1)
- #define MV64XXX_I2C_BAUD_DIV_N(val)			(val & 0x7)
-@@ -104,6 +105,7 @@ enum {
- 	MV64XXX_I2C_ACTION_RCV_DATA,
- 	MV64XXX_I2C_ACTION_RCV_DATA_STOP,
- 	MV64XXX_I2C_ACTION_SEND_STOP,
-+	MV64XXX_I2C_ACTION_UNLOCK_BUS
- };
- 
- struct mv64xxx_i2c_regs {
-@@ -150,6 +152,12 @@ struct mv64xxx_i2c_data {
- 	bool			clk_n_base_0;
- 	struct i2c_bus_recovery_info	rinfo;
- 	bool			atomic;
-+	/* I2C mpp states & gpios needed for arbitration lost recovery */
-+	int			scl_gpio, sda_gpio;
-+	bool			soft_reset;
-+	struct pinctrl_state *i2c_mpp_state;
-+	struct pinctrl_state *i2c_gpio_state;
-+	struct pinctrl *pc;
- };
- 
- static struct mv64xxx_i2c_regs mv64xxx_i2c_regs_mv64xxx = {
-@@ -318,6 +326,11 @@ mv64xxx_i2c_fsm(struct mv64xxx_i2c_data *drv_data, u32 status)
- 		drv_data->state = MV64XXX_I2C_STATE_IDLE;
- 		break;
- 
-+	case MV64XXX_I2C_STATUS_MAST_LOST_ARB: /* 0x38 */
-+		drv_data->action = MV64XXX_I2C_ACTION_UNLOCK_BUS;
-+		drv_data->state = MV64XXX_I2C_STATE_IDLE;
-+		break;
-+
- 	case MV64XXX_I2C_STATUS_MAST_WR_ADDR_NO_ACK: /* 0x20 */
- 	case MV64XXX_I2C_STATUS_MAST_WR_NO_ACK: /* 30 */
- 	case MV64XXX_I2C_STATUS_MAST_RD_ADDR_NO_ACK: /* 48 */
-@@ -356,6 +369,9 @@ static void mv64xxx_i2c_send_start(struct mv64xxx_i2c_data *drv_data)
- static void
- mv64xxx_i2c_do_action(struct mv64xxx_i2c_data *drv_data)
- {
-+	struct pinctrl *pc;
-+	int i;
-+
- 	switch(drv_data->action) {
- 	case MV64XXX_I2C_ACTION_SEND_RESTART:
- 		/* We should only get here if we have further messages */
-@@ -409,6 +425,54 @@ mv64xxx_i2c_do_action(struct mv64xxx_i2c_data *drv_data)
- 			drv_data->reg_base + drv_data->reg_offsets.control);
- 		break;
- 
-+	case MV64XXX_I2C_ACTION_UNLOCK_BUS:
-+		if (!drv_data->soft_reset)
-+			break;
-+
-+		pc = drv_data->pc;
-+		if (IS_ERR(pc)) {
-+			dev_err(&drv_data->adapter.dev,
-+				"failed to get pinctrl for bus unlock!\n");
-+			break;
-+		}
-+
-+		/* Change i2c MPPs state to act as GPIOs: */
-+		if (pinctrl_select_state(pc, drv_data->i2c_gpio_state) >= 0) {
-+			/*
-+			 * Toggle i2c scl (serial clock) 10 times.
-+			 * 10 clocks are enough to transfer a full
-+			 * byte plus extra as seen from tests with
-+			 * Ubiquity SFP module causing the issue.
-+			 * This allows the slave that occupies
-+			 * the bus to transmit its remaining data,
-+			 * so it can release the i2c bus:
-+			 */
-+			for (i = 0; i < 10; i++) {
-+				gpio_set_value(drv_data->scl_gpio, 1);
-+				usleep_range(100, 1000);
-+				gpio_set_value(drv_data->scl_gpio, 0);
-+			};
-+
-+			/* restore i2c pin state to MPPs: */
-+			pinctrl_select_state(pc, drv_data->i2c_mpp_state);
-+		}
-+
-+		/*
-+		 * Trigger controller soft reset
-+		 * This register is write only, with none of the bits defined.
-+		 * So any value will do.
-+		 * 0x1 just seems more intuitive than 0x0 ...
-+		 */
-+		writel(0x1, drv_data->reg_base + drv_data->reg_offsets.soft_reset);
-+		/* wait for i2c controller to complete reset: */
-+		usleep_range(100, 1000);
-+		/*
-+		 * Need to proceed to the data stop condition generation clause.
-+		 * This is needed after clock toggling to put the i2c slave
-+		 * in the correct state.
-+		 */
-+		fallthrough;
-+
- 	case MV64XXX_I2C_ACTION_RCV_DATA_STOP:
- 		drv_data->msg->buf[drv_data->byte_posn++] =
- 			readl(drv_data->reg_base + drv_data->reg_offsets.data);
-@@ -950,6 +1014,8 @@ static int mv64xxx_i2c_init_recovery_info(struct mv64xxx_i2c_data *drv_data,
- 		return -ENODEV;
- 	}
- 
-+	rinfo->sda_gpiod = devm_gpiod_get(dev, "sda", GPIOD_OUT_HIGH);
-+	rinfo->scl_gpiod = devm_gpiod_get(dev, "scl", GPIOD_OUT_HIGH);
- 	drv_data->adapter.bus_recovery_info = rinfo;
- 	return 0;
- }
-@@ -985,6 +1051,7 @@ mv64xxx_i2c_probe(struct platform_device *pd)
- {
- 	struct mv64xxx_i2c_data		*drv_data;
- 	struct mv64xxx_i2c_pdata	*pdata = dev_get_platdata(&pd->dev);
-+	struct pinctrl *pc;
- 	int	rc;
- 
- 	if ((!pdata && !pd->dev.of_node))
-@@ -1040,6 +1107,47 @@ mv64xxx_i2c_probe(struct platform_device *pd)
- 	if (rc == -EPROBE_DEFER)
- 		return rc;
- 
-+	/*
-+	 * Start with arbitration lost soft reset enabled as to false.
-+	 * Try to locate the necessary items in the device tree to
-+	 * make this feature work.
-+	 * Only after we verify that the device tree contains all of
-+	 * the needed information and that it is sound and usable,
-+	 * then we enable this flag.
-+	 * This information should be defined, but the driver maintains
-+	 * backward compatibility with old dts files, so it will not fail
-+	 * the probe in case these are missing.
-+	 */
-+	drv_data->soft_reset = false;
-+	pc = devm_pinctrl_get(&pd->dev);
-+	if (!IS_ERR(pc)) {
-+		drv_data->pc = pc;
-+		drv_data->i2c_mpp_state =
-+			pinctrl_lookup_state(pc, "default");
-+		drv_data->i2c_gpio_state =
-+			pinctrl_lookup_state(pc, "gpio");
-+		drv_data->scl_gpio =
-+			of_get_named_gpio(pd->dev.of_node, "scl-gpios", 0);
-+		drv_data->sda_gpio =
-+			of_get_named_gpio(pd->dev.of_node, "sda-gpios", 0);
-+
-+		if (!IS_ERR(drv_data->i2c_gpio_state) &&
-+		    !IS_ERR(drv_data->i2c_mpp_state) &&
-+		    gpio_is_valid(drv_data->scl_gpio) &&
-+		    gpio_is_valid(drv_data->sda_gpio)) {
-+			rc = devm_gpio_request_one(&pd->dev, drv_data->scl_gpio,
-+						   GPIOF_DIR_OUT, NULL);
-+			rc |= devm_gpio_request_one(&pd->dev, drv_data->sda_gpio,
-+						    GPIOF_DIR_OUT, NULL);
-+			if (!rc)
-+				drv_data->soft_reset = true;
-+		}
-+	}
-+
-+	if (!drv_data->soft_reset)
-+		dev_info(&pd->dev,
-+			"mv64xxx: missing arbitration-lost recovery definitions in dts file\n");
-+
- 	drv_data->adapter.dev.parent = &pd->dev;
- 	drv_data->adapter.algo = &mv64xxx_i2c_algo;
- 	drv_data->adapter.owner = THIS_MODULE;
--- 
-2.25.1
+https://lore.kernel.org/oe-kbuild-all/ZZpmP5QeH+VigqXw@MiWiFi-R3L-srv/
 
