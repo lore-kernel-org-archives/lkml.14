@@ -1,73 +1,65 @@
-Received: from mail-m25492.xmail.ntesmail.com (mail-m25492.xmail.ntesmail.com [103.129.254.92])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A2513ADB
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Jan 2024 16:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from amadeus-Vostro-3710.lan (unknown [113.118.189.127])
-	by mail-m121145.qiye.163.com (Hmail) with ESMTPA id 425C180005B;
-	Sun,  7 Jan 2024 20:30:23 +0800 (CST)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Chukun Pan <amadeus@jmu.edu.cn>
-Subject: [PATCH 1/1] mtd: nand: Add Dosilicon manufacturer id
-Date: Sun,  7 Jan 2024 20:30:20 +0800
-Message-Id: <20240107123020.22053-1-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74AD813ADD;
+	Sun,  7 Jan 2024 16:26:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xWzza6Cq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description;
+	bh=zfknrnCeFYxSjd2vcVFKSzQu+I7SQi+JYtABfxA+FSw=; b=xWzza6Cq/XLZ/FsfTLjcpG5Njo
+	cgv6dcceX/MFIKqdl8iHc3Oxgf7xEEW72jo8J9xrnu7bk9zAKaeuOKwL5GxlWgpwajejRvsfei9B3
+	MQPdPoXnZswLA0cGHSq3W9a9urUo4LFqQY1NMbUeiFo0f/vCGax1lpfsncZ78eJu3X7oxWiF7iSwg
+	NpTvFszsgpmAqOQiQDIKkYlZoKr7Qm2iG22DeqmlVRcq98DZfoWw7BYeZG37wjppGyBPGjpvnpMbY
+	O73vr0PnTli3ULMW11/sXB4cghZOFjjAQqz3AjL+Bn/onGnw3cu61yTziS/Gfu2mf7E5PMAr/skjJ
+	cgmps7aA==;
+Received: from [50.53.46.231] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rMVya-003GT3-1C;
+	Sun, 07 Jan 2024 16:26:16 +0000
+Message-ID: <7b840061-83a7-40b1-9220-309841b73c34@infradead.org>
+Date: Sun, 7 Jan 2024 08:26:15 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaThlDVksZTElKSUkdHUsaT1UTARMWGhIXJBQOD1
-	lXWRgSC1lBWUpKSFVKSkNVSkNCVUpJTFlXWRYaDxIVHRRZQVlPS0hVSkpLSEpDVUpLS1VLWQY+
-X-HM-Tid: 0a8ce3e71cd0b03akuuu425c180005b
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ky46GSo4NzwtGDw2KyIJLxwu
-	CygKFEtVSlVKTEtPTUhLTUlPS09JVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUpK
-	SFVKSkNVSkNCVUpJTFlXWQgBWUFJSk9JNwY+
+User-Agent: Mozilla Thunderbird
+Subject: Re: Mouse wheel resolution with kernel 6.6+
+Content-Language: en-US
+To: Klaus Ethgen <Klaus+lkml@ethgen.de>, linux-kernel@vger.kernel.org,
+ linux-input@vger.kernel.org
+References: <ZZqwmckYIS1rLEAP@ikki.ethgen.ch>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <ZZqwmckYIS1rLEAP@ikki.ethgen.ch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add Dosilicon manufacturer id.
-Tested on Dosilicon FMND1G08S3D.
+[add linux-input mailing list]
 
-Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
----
- drivers/mtd/nand/raw/internals.h | 1 +
- drivers/mtd/nand/raw/nand_ids.c  | 1 +
- 2 files changed, 2 insertions(+)
+On 1/7/24 06:09, Klaus Ethgen wrote:
+> Hi,
+> 
+> I have another minor issue that I don't know how to fix. (And even don't
+> know which subsystem creates that issue.)
+> 
+> I use a Logitech MX3 via bluetooth, which work fine for kernel 6.5 and
+> under. But when using kernel 6.6+, the mouse wheel dropped the
+> resolution to not usable slow. Scrolling is not really useful that way.
+> It seems to me that only every second scroll event is forwarded to the X
+> server.
+> 
+> Any help to identify the source of this annoying bug is appreciated.
+> 
+> Regards
+>    Klaus
+> 
+> Ps. Please keep me in Cc as I am not subscribed to the list.
 
-diff --git a/drivers/mtd/nand/raw/internals.h b/drivers/mtd/nand/raw/internals.h
-index b7162ced9efa..e94788597a72 100644
---- a/drivers/mtd/nand/raw/internals.h
-+++ b/drivers/mtd/nand/raw/internals.h
-@@ -18,6 +18,7 @@
-  */
- #define NAND_MFR_AMD		0x01
- #define NAND_MFR_ATO		0x9b
-+#define NAND_MFR_DOSILICON	0xf8
- #define NAND_MFR_EON		0x92
- #define NAND_MFR_ESMT		0xc8
- #define NAND_MFR_FUJITSU	0x04
-diff --git a/drivers/mtd/nand/raw/nand_ids.c b/drivers/mtd/nand/raw/nand_ids.c
-index 650351c62af6..54e07e148c6e 100644
---- a/drivers/mtd/nand/raw/nand_ids.c
-+++ b/drivers/mtd/nand/raw/nand_ids.c
-@@ -181,6 +181,7 @@ struct nand_flash_dev nand_flash_ids[] = {
- static const struct nand_manufacturer_desc nand_manufacturer_descs[] = {
- 	{NAND_MFR_AMD, "AMD/Spansion", &amd_nand_manuf_ops},
- 	{NAND_MFR_ATO, "ATO"},
-+	{NAND_MFR_DOSILICON, "Dosilicon"},
- 	{NAND_MFR_EON, "Eon"},
- 	{NAND_MFR_ESMT, "ESMT", &esmt_nand_manuf_ops},
- 	{NAND_MFR_FUJITSU, "Fujitsu"},
 -- 
-2.25.1
-
+#Randy
