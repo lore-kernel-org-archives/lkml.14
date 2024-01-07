@@ -1,106 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99EFE10A3C
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Jan 2024 19:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F60511193
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Jan 2024 19:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kNuLpt97"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704656512; x=1736192512;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=k6T1t+jqUOcqGHUG5Fk3o3bHj/5BhPk54YIbKawj9AU=;
-  b=kNuLpt97vD/3gy+m7vFpI4Y9ILAyS/F1XGa6WVAnruCM4MxzJ6JTVNYQ
-   Bz1B1muyOswjFZgAggE8AlSAzntBOdD79FiFb+tVCon/HqWyRY029FolP
-   VO9JpdEwk7un9SVpIn3lt+NB6RWbqmuln1rxtViadkjQpLybE/nvAFORC
-   s6Oc8BM6M5o8CJkxSz+dgSk3cDElFU3S0VchtmwtI21Nb95x1TUwgf8ZJ
-   zvdnFQGvMHxZy+gZhdtIUlqQbr7VJtiIYk6+GRl2/eUuPYDnCaws4gsdI
-   KfUH2zbwXouyA+E5/4+Z6rBh0Vvo9G5wYeR/DNLpLzrm4gVPs34sPMhJk
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="483934137"
-X-IronPort-AV: E=Sophos;i="6.04,339,1695711600"; 
-   d="scan'208";a="483934137"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2024 11:41:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="900170415"
-X-IronPort-AV: E=Sophos;i="6.04,339,1695711600"; 
-   d="scan'208";a="900170415"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 07 Jan 2024 11:41:48 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rMZ1m-00044Y-1g;
-	Sun, 07 Jan 2024 19:41:46 +0000
-Date: Mon, 8 Jan 2024 03:41:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dipam Turkar <dipamt1729@gmail.com>, alexander.deucher@amd.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
-	daniel@ffwll.ch, amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	Dipam Turkar <dipamt1729@gmail.com>
-Subject: Re: [PATCH 1/1] Refactor radeon driver to use
- drm_gem_create_map_offset() instead of its custom implementation for
- associating GEM object with a fake offset. Since, we already have a generic
- implementation, we don't need the custom function and it is better to
- standardize the code.
-Message-ID: <202401080333.6PSOtuIK-lkp@intel.com>
-References: <20240106141422.10734-1-dipamt1729@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BxQVZ7lE"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7831f567100so48463085a.0
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jan 2024 11:47:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704656821; x=1705261621; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Bgw6P5LZhwAlCIvVPfp2eYZqWEaTiqAWQo/dlHlVaXI=;
+        b=BxQVZ7lEndiAHfiLse42mznMDyJC3NIey3+yBfNeqavKNKfSEkf/FI0j21yJParchK
+         L8Rl+zu1YqmeT5PswMvnRm2BDOSNE2HLtK2KnBrDK7lWqDgN9YWBWlLuDhGlKelSLF9b
+         ICGMN9Bu5SO0Y8ja2812JCFQTyf7eUFByBa79HEw/SbbokjJMIU4Qb8eTWxJR23k0F6n
+         90NkP+3IbGB0/G32nOP70+Aqere5CsWKoLGhmIecS5pzYtFuQD4eDphR1spQ7ERMfQt6
+         NB59ib7nTuxoLad821AJwGpPMkVRSrhHhKvA1Er9CVguVQVX/zqiLk7Xv9PjvHf6Ldn5
+         h93A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704656821; x=1705261621;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Bgw6P5LZhwAlCIvVPfp2eYZqWEaTiqAWQo/dlHlVaXI=;
+        b=tUyzkbeGKRncubty2RfwthawhLFD6SgY7DQ6p//pUfyUZzHu3/mkQ4YraYLUOJHgbs
+         MGXZNq0Hgc8I9u9KsV77abGpoyzoXO268k5cyea2+GEiqFYssSqxXBPdf2P2JTLkxTCP
+         bOlZ8M/WVQpOx0ld3oycYVNmupv78RtJLwvS51A19x35OZTJ7i7bwGJ94D/yuI657Uok
+         w+tSKwwlzToIQpxJOsMMy2hlHwy1UpXdV+cgbox0KiRZ0no+5N/qz0f2oKClVtk/H82Q
+         ExxNaMXgwDhqauFpCJ9xg172G+ihC5S+vE1laUvmvZrGufeJTTK2e7WdFWM3QokUyH4f
+         v2Lw==
+X-Gm-Message-State: AOJu0YxebzT1GtPWyF6gFNTK+rz/1FxwBJ9Zbnat9x1SH3Z2Jd3TD2Cr
+	rFs5fiHy7E9k6bnPNsWrTIomhzDDe/1XqgwV79M=
+X-Google-Smtp-Source: AGHT+IGcTlPUiVIo4ImmPte03fF77QlSaouekvVBUc7VviYy4OCu8x8Y2c+1mJTb0YRoNxHun78P8T2uiOmCPPq6Uig=
+X-Received: by 2002:a05:6214:2a8e:b0:67f:3991:ef38 with SMTP id
+ jr14-20020a0562142a8e00b0067f3991ef38mr4009781qvb.122.1704656821115; Sun, 07
+ Jan 2024 11:47:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240106141422.10734-1-dipamt1729@gmail.com>
+References: <202401070901.68H00NFa-lkp@intel.com> <CAGb2v64zGvceVXy_F7pVTrFYY7-eLQktoWZB4Xcb1MQtFu=1Ww@mail.gmail.com>
+In-Reply-To: <CAGb2v64zGvceVXy_F7pVTrFYY7-eLQktoWZB4Xcb1MQtFu=1Ww@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sun, 7 Jan 2024 21:46:24 +0200
+Message-ID: <CAHp75VfiTCCa+Rjn4JavxvSziNmjBTXEgUq-UT+PHkD8__5dhw@mail.gmail.com>
+Subject: Re: drivers/iio/adc/axp20x_adc.c:572:26: sparse: sparse: dubious: x & !y
+To: wens@csie.org
+Cc: kernel test robot <lkp@intel.com>, Aidan MacDonald <aidanmacdonald.0x0@gmail.com>, 
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Dipam,
+On Sun, Jan 7, 2024 at 7:37=E2=80=AFAM Chen-Yu Tsai <wens@csie.org> wrote:
+> On Sun, Jan 7, 2024 at 9:30=E2=80=AFAM kernel test robot <lkp@intel.com> =
+wrote:
 
-kernel test robot noticed the following build errors:
+...
 
-[auto build test ERROR on drm-misc/drm-misc-next]
-[also build test ERROR on linus/master v6.7-rc8 next-20240105]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > sparse warnings: (new ones prefixed by >>)
+> > >> drivers/iio/adc/axp20x_adc.c:572:26: sparse: sparse: dubious: x & !y
+> >    drivers/iio/adc/axp20x_adc.c:577:26: sparse: sparse: dubious: x & !y
+>
+> This looks like a false positive. The code is doing exactly what we want:
+> val =3D val ? 1 : 0, but in a shorter format.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Dipam-Turkar/Refactor-radeon-driver-to-use-drm_gem_create_map_offset-instead-of-its-custom-implementation-for-associating-GEM-object-/20240106-221755
-base:   git://anongit.freedesktop.org/drm/drm-misc drm-misc-next
-patch link:    https://lore.kernel.org/r/20240106141422.10734-1-dipamt1729%40gmail.com
-patch subject: [PATCH 1/1] Refactor radeon driver to use drm_gem_create_map_offset() instead of its custom implementation for associating GEM object with a fake offset. Since, we already have a generic implementation, we don't need the custom function and it is better to standardize the code.
-config: x86_64-allmodconfig (https://download.01.org/0day-ci/archive/20240108/202401080333.6PSOtuIK-lkp@intel.com/config)
-compiler: ClangBuiltLinux clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240108/202401080333.6PSOtuIK-lkp@intel.com/reproduce)
+Yes, but the problem is that FIELD_PREP() is a macro.
+You can replace these by ternary (here and in other cases) to satisfy
+sparse. Compiler will optimize that anyway, so no branch is expected
+in the generated code.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401080333.6PSOtuIK-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/gpu/drm/radeon/radeon_gem.c:34:10: fatal error: 'drm/dem_gem.h' file not found
-      34 | #include <drm/dem_gem.h>
-         |          ^~~~~~~~~~~~~~~
-   1 error generated.
-
-
-vim +34 drivers/gpu/drm/radeon/radeon_gem.c
-
-    31	
-    32	#include <drm/drm_device.h>
-    33	#include <drm/drm_file.h>
-  > 34	#include <drm/dem_gem.h>
-    35	#include <drm/drm_gem_ttm_helper.h>
-    36	#include <drm/radeon_drm.h>
-    37	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--=20
+With Best Regards,
+Andy Shevchenko
