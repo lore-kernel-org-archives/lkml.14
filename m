@@ -1,72 +1,59 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7102811183;
-	Sun,  7 Jan 2024 18:44:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="zVfDGiXp"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=0jaV7ovbzbIte+b19ohi0bhK6HoVIw2c2WB+T5GbL3w=; b=zVfDGiXp6wfbV4hPykKINDsu5o
-	bTNMbvJfQbUbj+0Yq4aQOmAJzZjomgTN6WGOFgvTmV14HyQ17z0v39+IkD3N89/rL0nbaor+uITc5
-	lcxAn35uNW/cP0ogR2PHGYr7s3Vqu5wHzHa8nx8eSX3C7niVUEGzmGxC5xA6oKpmV3aI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rMY8S-004aGA-Bh; Sun, 07 Jan 2024 19:44:36 +0100
-Date: Sun, 7 Jan 2024 19:44:36 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Sergey Ryazanov <ryazanov.s.a@gmail.com>,
-	Robert Marko <robert.marko@sartura.hr>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>, Luo Jie <quic_luoj@quicinc.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [net-next PATCH RFC v3 1/8] dt-bindings: net: document ethernet
- PHY package nodes
-Message-ID: <a6a155ab-0852-4f08-b49b-952ac74124a8@lunn.ch>
-References: <20231126015346.25208-1-ansuelsmth@gmail.com>
- <20231126015346.25208-2-ansuelsmth@gmail.com>
- <0926ea46-1ce4-4118-a04c-b6badc0b9e15@gmail.com>
- <659aedb1.df0a0220.35691.1853@mx.google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184E010A1F;
+	Sun,  7 Jan 2024 18:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nefkom.net
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+	by mail-out.m-online.net (Postfix) with ESMTP id 4T7Qxh08bDz1sBq3;
+	Sun,  7 Jan 2024 19:40:55 +0100 (CET)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.68])
+	by mail.m-online.net (Postfix) with ESMTP id 4T7Qxg5Slpz1qqlS;
+	Sun,  7 Jan 2024 19:40:55 +0100 (CET)
+X-Virus-Scanned: amavis at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+ by localhost (dynscan1.mail.m-online.net [192.168.6.68]) (amavis, port 10024)
+ with ESMTP id xkFHhBBJOFcf; Sun,  7 Jan 2024 19:40:54 +0100 (CET)
+X-Auth-Info: /W4ayZJD3y3xzE2nctsIdMXMG3SGQlPURR+PFDNHw9uO7xJQj9/m8RstH8iW2NKE
+Received: from igel.home (aftr-62-216-202-6.dynamic.mnet-online.de [62.216.202.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.mnet-online.de (Postfix) with ESMTPSA;
+	Sun,  7 Jan 2024 19:40:54 +0100 (CET)
+Received: by igel.home (Postfix, from userid 1000)
+	id 7D9912C12EA; Sun,  7 Jan 2024 19:40:54 +0100 (CET)
+From: Andreas Schwab <schwab@linux-m68k.org>
+To: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
+Cc: =?utf-8?Q?N=C3=ADcolas?= F. R. A. Prado <nfraprado@collabora.com>,  Mark
+ Brown
+ <broonie@kernel.org>,  linux-sound@vger.kernel.org,
+  linux-kselftest@vger.kernel.org,  linux-kernel@vger.kernel.org,  Jaroslav
+ Kysela <perex@perex.cz>,  Takashi Iwai <tiwai@suse.com>,  Shuah Khan
+ <shuah@kernel.org>
+Subject: Re: [PATCH v1 3/4] ksellftest: alsa: Fix the printf format
+ specifier to unsigned int
+In-Reply-To: <20240107151218.933806-4-mirsad.todorovac@alu.unizg.hr> (Mirsad
+	Todorovac's message of "Sun, 7 Jan 2024 16:12:20 +0100")
+References: <20240107151218.933806-1-mirsad.todorovac@alu.unizg.hr>
+	<20240107151218.933806-4-mirsad.todorovac@alu.unizg.hr>
+X-Yow: --``I love KATRINKA because she drives a PONTIAC.  We're going away now.
+ I fed the cat. - Zippy''
+Date: Sun, 07 Jan 2024 19:40:54 +0100
+Message-ID: <87r0itm1ft.fsf@igel.home>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <659aedb1.df0a0220.35691.1853@mx.google.com>
+Content-Type: text/plain
 
-> Honestly I would postpone untile we have a clear idea of what is
-> actually part of the PHY and what can be handled externally... Example
-> setting the clock in gcc, writing a specific driver...
+s/ksellftest/kselftest/
 
-That is really core of the problem here. We have no reliable
-description of the hardware. The datasheet often starts with a block
-diagram of the PHY package. Sometimes there is a product brief with
-the same diagram. We need that published. I'm not asking for the full
-data sheet, just the introductory text which gives a high level
-overview of what the hardware actually is. Then we can sketch out a
-high level Linux architecture for the PHY package.
-
-     Andrew
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
