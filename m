@@ -1,118 +1,112 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0757137F;
-	Sun,  7 Jan 2024 01:24:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21A91388
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Jan 2024 01:28:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yGrCQ/6Y"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=dCyDGSEioYdeunZdzZB63ylJy1g1gtQtPEDXYg17y5k=; b=yGrCQ/6YuI72KR9g8WruJKwNfU
-	nZphzMlcefoLZ3wj56NJM+8tbynOoIvZC+vyyVrNVI5XfYznrZ5YQOtWV7BLhPlbTemIRquQtEpui
-	251EeFXwCTVZ7VTrLknyY6+IadTA8Z28oZHlGiCQ2jz/WN6Zg4VhV7eqr4971ENWWUNztCPz1LxFN
-	F/kPsjl+ma0mb4qmPC14huP1wN3AlnwU1eWrvTmyjoccVjd7TWDHb7ShFfwVnZHvu2M24yX/YJYqD
-	QErk65d2EiXG6MjdFuXi88EMYLPT36oFXmGC0428FIgwFlae27VFQhboPRden9ttXgW1j5oP83VrG
-	DCxux4GA==;
-Received: from [50.53.46.231] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rMHtQ-002A6e-2r;
-	Sun, 07 Jan 2024 01:24:00 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org
-Subject: [PATCH v2] doc-guide: kernel-doc: tell about object-like macros
-Date: Sat,  6 Jan 2024 17:24:00 -0800
-Message-ID: <20240107012400.32587-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TyacBoMw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704590925; x=1736126925;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=OxLF2393s7TfSw37Q+XtUBUI5q02bkmOSGUxZDsWJPg=;
+  b=TyacBoMw0SDFJibQU86PqpQxqG27C0MUEauWTEuXCYa/y2YwIo7yyWf1
+   wkQUD/RjD4EvbT7nzvvZYgMdTfv8SIH7MfVTWZ5T/LFVSFeCXWpnpsB8G
+   fIoYM7Bp6iELyp+nUB1cCndwd5QMFNWdz4isY3eFvSpZMXjkb+kD9E4L6
+   9ibr5APVkc8qQ4Yqn/th7UPISVeIl21WAArFXronP6523QX110SYdAEAx
+   0b7b+i80N4fwDmbQ5O09WOd+Fzp62ervKghpjsNfc0MYJWTRbrD3Cw28B
+   FQCD7MtW+SeqWKvC/CBsu7TDxOUg5dLFmTzXSfE89bgQT7r+esLE0H6fu
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10945"; a="428875589"
+X-IronPort-AV: E=Sophos;i="6.04,338,1695711600"; 
+   d="scan'208";a="428875589"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2024 17:28:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.04,338,1695711600"; 
+   d="scan'208";a="23179112"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by fmviesa001.fm.intel.com with ESMTP; 06 Jan 2024 17:28:43 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rMHxx-0003F2-0Y;
+	Sun, 07 Jan 2024 01:28:41 +0000
+Date: Sun, 7 Jan 2024 09:28:34 +0800
+From: kernel test robot <lkp@intel.com>
+To: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: drivers/iio/adc/axp20x_adc.c:572:26: sparse: sparse: dubious: x & !y
+Message-ID: <202401070901.68H00NFa-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Since 2014 kernel-doc has supported describing object-like macros
-but it is not documented anywhere. I should have required some
-documentation for it when I merged the patch. :(
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   52b1853b080a082ec3749c3a9577f6c71b1d4a90
+commit: 8957e5344353e9cd3f6b1e3004942e35449fa0e8 iio: adc: axp20x_adc: Minor code cleanups
+date:   10 months ago
+config: x86_64-randconfig-121-20240106 (https://download.01.org/0day-ci/archive/20240107/202401070901.68H00NFa-lkp@intel.com/config)
+compiler: ClangBuiltLinux clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240107/202401070901.68H00NFa-lkp@intel.com/reproduce)
 
-There are currently only 3 uses of this (all in DRM headers, in
-include/drm/*.h).
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401070901.68H00NFa-lkp@intel.com/
 
-Add object-like macro kernel-doc documentation now so that more may
-know about it and use it.
+sparse warnings: (new ones prefixed by >>)
+>> drivers/iio/adc/axp20x_adc.c:572:26: sparse: sparse: dubious: x & !y
+   drivers/iio/adc/axp20x_adc.c:577:26: sparse: sparse: dubious: x & !y
 
-Fixes: cbb4d3e6510b ("scripts/kernel-doc: handle object-like macros")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org
----
-v2: Previous attempts to use kernel-doc were for data definitions,
-    not macros, so remove that comment.
-    Remove a duplicate word in the patch description.
-    Add examples.
+vim +572 drivers/iio/adc/axp20x_adc.c
 
- Documentation/doc-guide/kernel-doc.rst |   45 +++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+   551	
+   552	static int axp20x_write_raw(struct iio_dev *indio_dev,
+   553				    struct iio_chan_spec const *chan, int val, int val2,
+   554				    long mask)
+   555	{
+   556		struct axp20x_adc_iio *info = iio_priv(indio_dev);
+   557		unsigned int regmask, regval;
+   558	
+   559		/*
+   560		 * The AXP20X PMIC allows the user to choose between 0V and 0.7V offsets
+   561		 * for (independently) GPIO0 and GPIO1 when in ADC mode.
+   562		 */
+   563		if (mask != IIO_CHAN_INFO_OFFSET)
+   564			return -EINVAL;
+   565	
+   566		if (val != 0 && val != 700000)
+   567			return -EINVAL;
+   568	
+   569		switch (chan->channel) {
+   570		case AXP20X_GPIO0_V:
+   571			regmask = AXP20X_GPIO10_IN_RANGE_GPIO0;
+ > 572			regval = FIELD_PREP(AXP20X_GPIO10_IN_RANGE_GPIO0, !!val);
+   573			break;
+   574	
+   575		case AXP20X_GPIO1_V:
+   576			regmask = AXP20X_GPIO10_IN_RANGE_GPIO1;
+   577			regval = FIELD_PREP(AXP20X_GPIO10_IN_RANGE_GPIO1, !!val);
+   578			break;
+   579	
+   580		default:
+   581			return -EINVAL;
+   582		}
+   583	
+   584		return regmap_update_bits(info->regmap, AXP20X_GPIO10_IN_RANGE, regmask, regval);
+   585	}
+   586	
 
-diff -- a/Documentation/doc-guide/kernel-doc.rst b/Documentation/doc-guide/kernel-doc.rst
---- a/Documentation/doc-guide/kernel-doc.rst
-+++ b/Documentation/doc-guide/kernel-doc.rst
-@@ -341,6 +341,51 @@ Typedefs with function prototypes can al
-    */
-    typedef void (*type_name)(struct v4l2_ctrl *arg1, void *arg2);
- 
-+Object-like macro documentation
-+-------------------------------
-+
-+Object-like macros are distinct from function-like macros. They are
-+differentiated by whether the macro name is immediately followed by a
-+left parenthesis ('(') for function-like macros or not followed by one
-+for object-like macros.
-+
-+Function-like macros are handled like functions by ``scripts/kernel-doc``.
-+They may have a parameter list. Object-like macros have do not have a
-+parameter list.
-+
-+The general format of an object-like macro kernel-doc comment is::
-+
-+  /**
-+   * define object_name - Brief description.
-+   *
-+   * Description of the object.
-+   */
-+
-+Example::
-+
-+  /**
-+   * define MAX_ERRNO - maximum errno value that is supported
-+   *
-+   * Kernel pointers have redundant information, so we can use a
-+   * scheme where we can return either an error code or a normal
-+   * pointer with the same return value.
-+   */
-+  #define MAX_ERRNO	4095
-+
-+Example::
-+
-+  /**
-+   * define DRM_GEM_VRAM_PLANE_HELPER_FUNCS - \
-+   *	Initializes struct drm_plane_helper_funcs for VRAM handling
-+   *
-+   * This macro initializes struct drm_plane_helper_funcs to use the
-+   * respective helper functions.
-+   */
-+  #define DRM_GEM_VRAM_PLANE_HELPER_FUNCS \
-+	.prepare_fb = drm_gem_vram_plane_helper_prepare_fb, \
-+	.cleanup_fb = drm_gem_vram_plane_helper_cleanup_fb
-+
-+
- Highlights and cross-references
- -------------------------------
- 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
