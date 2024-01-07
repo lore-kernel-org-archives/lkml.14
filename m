@@ -1,231 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2071.outbound.protection.partner.outlook.cn [139.219.17.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94BE5522D;
-	Mon,  8 Jan 2024 05:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lZOS4/32"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704690614; x=1736226614;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=aLdcT2COVtiEIS/6Kvb+02p057yocVIuhX5dT60xI6w=;
-  b=lZOS4/32uUvRuaDH3ocYApb8+qBbaQvrxp/EdVL9bJlie16VNhEqeT6f
-   /cKw0EYDZLKQIiSz3Vqpwz9+23xtFU+B8u3f10LDrjhlEbQcWxEBmldYT
-   C4CxQZmV7RPuTeMHeyOdmLkzYK5p1y8Jii6XYfYwW8y4YW0NTe9XmiHMZ
-   a3g/XMPT6ioph4qdeAwGdvG0nu6Cm9CUq38dEEel0cYckxmyxy9DAwKTY
-   eA5PdF3V8nNd0D7c0VF+X9Aian2nmd0lwXnO1Xpk9BIAomh+XsR6uwEqk
-   Qiop0N+eymgJnxUJqQ/htvnUHo0QFmwJnBoe3V0wGN1wwMmDtyUP0BcFt
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="4554422"
-X-IronPort-AV: E=Sophos;i="6.04,340,1695711600"; 
-   d="scan'208";a="4554422"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2024 21:10:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="954529514"
-X-IronPort-AV: E=Sophos;i="6.04,340,1695711600"; 
-   d="scan'208";a="954529514"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 07 Jan 2024 21:10:12 -0800
-Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Sun, 7 Jan 2024 21:10:11 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Sun, 7 Jan 2024 21:10:11 -0800
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.41) by
- edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Sun, 7 Jan 2024 21:10:11 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A559779C2;
+	Mon,  8 Jan 2024 05:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ERO+iAPDCmXaM/axsCuTbgG+sayuO3uqAeeu2qWTrcXxaKiBGu0QBQOf8gzQvZCG2EJpyfOO94d1MF9rBrVZB5S2zIXk/JIBN5Hmr9PjOM8dy4Sc8Wlol2cQ/Ii/b572f0TaKyX/mpJWGmLmhs5ljCQe4jU31c39GmRGZOuOsdJomfMSotL06+6Eogk1M9p/5uEnqJIybRT5kkz/c0XMkXKf3v8T9Y6fF6QfLzl3oBkvkLtSPpR6GRRH3BHZWalgcQkMSNhzpNnNJD04KefbzYG0QNwCJrWMsrHfuVAcNpljpSc149ZJE7GIhiH0nkFIQobi6TwPFsNEPaSipQRwTg==
+ b=TcJ47kYUYRTgrySJRrpep914ZwwJ0wuvtqpR2K/xBpZAHxHyhiAL8100EDjPFRHWwQjzmQsnyFwkM1jnlSYfken1Xv9RHxDcibzHklyK+8/0MjcGwpwIfEA+/30Lh6UXqnwjH5idj/92+ycEZpJ1W80REeswIsZiYfPqEuevvAZFR+OuQEY7fbFm/iPaoXhu4Gqb7ljd7ywHws5QcTVVgP9akrJTPd4BkKHocHTa5EW9j8JaPiiIyajzHtQRLgmABFiTbym/eRPo6LBW7SpPh7lzpDgDtDmTz+EWdgjI7dsBpYEkfLM9SyT49ndlGOlz3xM7HC+hPgL4fP+dBcuIjg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UNnm+vihaIQCrPiDXSMc8uMTgvnX/BhKs9jD/QoH4CM=;
- b=fF4gHWwBJfhTbv1py6jnWSPrDeMh5T1dO7LpP4b5/opsU60TWXHFHrmbOz7wPFVz1qlc9VtbM85rTPi9KOGk7dGYCXvXu7iSF9wqV4suLrOAWxHqTDnkxeqIJazOX80yk85CQ+I/AvgBnmo+KQMH2jh0tb39MdXSW/3FugU+3o7HcLNW8SeXp8sQBPYSGtIzVrFokeyfx9UAGCH2BCSfmOOlqLT1OowgFHuOR1YjLWr/I3sq0jxQhDRiMOb9SIIobtTpaLqVeGjjMX0df4d9+xqTec54Pqz5dKmYFZnyvHEH1/EfI9c3PeXZLQZqP5IhDgsUhn1Ktwj/41rogRrRlg==
+ bh=FcvonXjMC1UsUrzhChkwYUxc9/tjgBofxieUt34tVd4=;
+ b=eEszzH4jpCIoyZU37dnQ5EEouNeckcXZlkya/IUuaTJIXL17Sw7N/tQh5Vi0k9cckrjKQEUZYSNpjIp4nsNqcOlr+ZyX+9XOqIya+CyM/hJGDC0/1VkG9UmzVJIDVDGiME16sxpkFMmWxyWllT3ES6Ks2mJr/4YJllVJ+NZ5Z+1BzNMetXzXFqaQcmkra6fHitRsEiggW12oXP6dLTj27/sIeDvFNs4gJEOzjXF9xXf9T1fJQmgZ+HlWWDUalftpKaSW4fiVM+WisLw3Q0h118U0Vfj/CAJdXx9H8BC9EGVBWrFqEzejXtg3yWoBLb/gkb8j09gb8XP1K95fWqbHCg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
- by SJ2PR11MB8403.namprd11.prod.outlook.com (2603:10b6:a03:53c::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.21; Mon, 8 Jan
- 2024 05:10:09 +0000
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::66ec:5c08:f169:6038]) by CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::66ec:5c08:f169:6038%3]) with mapi id 15.20.7159.020; Mon, 8 Jan 2024
- 05:10:09 +0000
-Date: Mon, 8 Jan 2024 13:09:59 +0800
-From: Chao Gao <chao.gao@intel.com>
-To: Sean Christopherson <seanjc@google.com>
-CC: <isaku.yamahata@intel.com>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <isaku.yamahata@gmail.com>, Paolo Bonzini
-	<pbonzini@redhat.com>, <erdemaktas@google.com>, Sagi Shahar
-	<sagis@google.com>, David Matlack <dmatlack@google.com>, Kai Huang
-	<kai.huang@intel.com>, Zhi Wang <zhi.wang.linux@gmail.com>,
-	<chen.bo@intel.com>, <hang.yuan@intel.com>, <tina.zhang@intel.com>
-Subject: Re: [PATCH v17 092/116] KVM: TDX: Handle TDX PV HLT hypercall
-Message-ID: <ZZuDp+Pl0BHKEfPt@chao-email>
-References: <cover.1699368322.git.isaku.yamahata@intel.com>
- <7ca4b7af33646e3f5693472b4394ba0179b550e1.1699368322.git.isaku.yamahata@intel.com>
- <ZZiLKKobVcmvrPmb@google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZZiLKKobVcmvrPmb@google.com>
-X-ClientProxiedBy: SI1PR02CA0054.apcprd02.prod.outlook.com
- (2603:1096:4:1f5::13) To CH3PR11MB8660.namprd11.prod.outlook.com
- (2603:10b6:610:1ce::13)
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:19::6) by ZQ0PR01MB1096.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:c::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.21; Sun, 7 Jan
+ 2024 23:47:17 +0000
+Received: from ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+ ([fe80::1dbb:b090:7d89:4e22]) by
+ ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn ([fe80::1dbb:b090:7d89:4e22%4])
+ with mapi id 15.20.7135.032; Sun, 7 Jan 2024 23:47:17 +0000
+From: JiSheng Teoh <jisheng.teoh@starfivetech.com>
+To: "andi.shyti@kernel.org" <andi.shyti@kernel.org>
+CC: JiSheng Teoh <jisheng.teoh@starfivetech.com>, Leyfoon Tan
+	<leyfoon.tan@starfivetech.com>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-i2c@vger.kernel.org"
+	<linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "michal.simek@amd.com" <michal.simek@amd.com>
+Subject: RE: [PATCH v2] i2c: cadence: Add system suspend and resume PM support
+Thread-Topic: [PATCH v2] i2c: cadence: Add system suspend and resume PM
+ support
+Thread-Index: AQHaKqHICsIFtOoPykiU4PTXtMLy1rCg6VYAgACMaYCAAG4PAIAASqKAgC0BRBA=
+Date: Sun, 7 Jan 2024 23:47:17 +0000
+Message-ID:
+ <ZQ0PR01MB1160E73BE852925A270DBE95EB64A@ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn>
+References: <20231210115412.hztjrubacnmenbvz@zenone.zhora.eu>
+ <20231210162119.364-1-jisheng.teoh@starfivetech.com>
+In-Reply-To: <20231210162119.364-1-jisheng.teoh@starfivetech.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: ZQ0PR01MB1160:EE_|ZQ0PR01MB1096:EE_
+x-ms-office365-filtering-correlation-id: e284a4bf-755f-4a45-2744-08dc0fdafb3f
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ LQx0sz7Cg2zi5i7jLXkrrxyJoPkiEiZDv02RctFQzp537OhbYUhUBU5t6qZ6G8RI06S7CSK3JrSjhf9RCcdhdhEgLlG6O1pUalWYC32czqdkzNrAmatKJsSiI4NEagj/52Aeh+J4RYOT+qA71SynNtKSSUD1NoXh1kiOkQnXGlX6QxRY1lta1MImjTLxT9KxHyeat7bv5j1mJwL03StYq/ZS6vpF4wBNj2zmsJbA6bAFn7/hveKWgK9LTbh+elKTGmOrpHAnYTWvSf5MNzve0iJoOngJ4oqAj4wbtN93JleeTJ4+1NrbB7xfne4SrvuL2LGVVLdoHuMBHih5cf7256ifX+KpL2svFU0jm0X8Ldk3Y0CrXw52pmQ0Pocq+pGEwskT/HoWmtKB7B3e12jdhuuINEE4XbU2JdMXRJNpyHhY2Bb9UqCe0Wge3Uy0G4gQ/dkWZ8n/26PdV8LHpudlymL2VYOpEJHE2e/MuguM90Zz+/sqKyVbyONKVU/l964j3Pu02PMyhDxOMsiHMKTMiMd7hgP1m2szn1K4yEkIMIcWQHog7Jl69QxncpWyUGaQkGMTAdmR9qsnw1WKIPXjY7LfynP18mEUoxNKhoritZo6KswVjKe4qFhko3vK5DmPiJek8BL+3NjkSp2kxcmlqg==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(396003)(346002)(136003)(39830400003)(366004)(230922051799003)(186009)(1800799012)(64100799003)(451199024)(66446008)(7696005)(66476007)(6916009)(66556008)(40180700001)(64756008)(966005)(9686003)(71200400001)(66946007)(76116006)(41320700001)(508600001)(54906003)(38070700009)(40160700002)(8676002)(15650500001)(5660300002)(8936002)(4326008)(86362001)(26005)(122000001)(55016003)(38100700002)(83380400001)(2906002)(33656002)(41300700001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?lhBfLWmWMeCJEu2l1id5B8mF01sWaYdf9NxdkvfUYIV8Qt5y49HKIvdcIi5k?=
+ =?us-ascii?Q?oFqJa/mL3cfPvGEuHC71AHL5abohKGcDUAfX/CsayXoOsvkuC9T6cGy3OQBE?=
+ =?us-ascii?Q?1zZxp3IwDBxHc9aB60jDxllg0TKrm9op8aVCpgRgc6kuZlBoXs3FJGQpyMPh?=
+ =?us-ascii?Q?+rSXj41H0rAe7K5XDZ7MCTb0i2WfmiPxh8JSnGP1nANVtbS3F5+o/6n4i/5n?=
+ =?us-ascii?Q?HUcR/fCiLxCvIVoJZOduqBLL4e+D9SXFyQ1IWPZbN2qfa0nCgWSb7KEK/rHh?=
+ =?us-ascii?Q?6WDZhmRxLtaX5YSi3hO7gIGjZ4fhHThsNOmxChTwzh5x4YD3za8DWezJUSn9?=
+ =?us-ascii?Q?nMpwx/eYAHZAbMHkCPSF7NjWHwUYh/ega8xFRre8Y+/UHmfosm1c3+mqNxtn?=
+ =?us-ascii?Q?WZOQpXlP62jDIgvls39rA5tRon/AbtONsghzClLlqa/ddR6SmwuqBEEmWQXM?=
+ =?us-ascii?Q?Pt8B9pkxU31kQAoh7KwcHKKifravOTKh4Z0RBwp0MLo6utLO/3sHIYDcUmBH?=
+ =?us-ascii?Q?SXAOqHEkpHQrvbq6S/gOFfL53xBWfyODkrOCmbzslUP62Fcn/ObPy4GP9vng?=
+ =?us-ascii?Q?HMJ88m9hdCTTfpP5jp2KSBDavjDBvY6qVHK016+yXgGSkD7A+mk/aoM97s6w?=
+ =?us-ascii?Q?fhhU0pwmyOglNXn3LEjA5u11EbDJQex2Lx8YvXqwNmu1A69sGCwOIjMOWMpt?=
+ =?us-ascii?Q?TM8ha4NuIh7dqdr+dZWrElzqIrYy5Rsw27ERCXZz91rD5gRceNPqvBssrMmF?=
+ =?us-ascii?Q?nlhMAO/P7utimNeP95Jf9D3QyzhQATSE2TNq4KqMDFBUrsKudlvLg1fnbOxk?=
+ =?us-ascii?Q?kOB/xOsW1GfyfT6TIYQe/3Y/WBrlrxLSgC+vA7okPJvFmVag1myOGcN1XsbE?=
+ =?us-ascii?Q?Jl1yH5OPUMoknbvxvNwpPxkqdUuQRedI8mU2RSDUrsYnNfmW7hYryhBMcL5g?=
+ =?us-ascii?Q?VDqrFxEqlz3lYvuTg61bUfmnmkkWySRlUxu2wjZsRq4CrJ11flFHzNJHHwfD?=
+ =?us-ascii?Q?i42RU1QEVU6eh8w3EGeKNND15sHBUDXcShHXj40BuWckDsix6IGhZQNdw88+?=
+ =?us-ascii?Q?HQLMKvDveoifHS+/iTQYp4cLlUJ3aj0BEJy9prQ7gDp8P97fsJ6GiD/tNNjV?=
+ =?us-ascii?Q?9QmjBuiTnqTdDE1Ii0/DsDFocTFsCVFmEbpcUp5HDGtWYF8ApoKrmSglioTm?=
+ =?us-ascii?Q?1NHfZ1uBZpdyOJKmCNQSDK3kXbDLQ+giq7CsvbOPYCCMFzi/+0gzEAtf7umm?=
+ =?us-ascii?Q?F+xXLujsi5jDhF9PmChZ107Ew9g1pmCh8Y2VgYRKeZFPnKDL8hxU/HxXCaqp?=
+ =?us-ascii?Q?mr5AwV8qAIYG9NsGQfd54dBgAGupSQhfGMr7ORuniSsESlMYSBSEcWZYTXd4?=
+ =?us-ascii?Q?ykEroGFBtW3OwK/qPT2XLV1dM+FxL7UoiJnGGov2QMw3YrbtXvNvwFJoHcdn?=
+ =?us-ascii?Q?PTjsyae+EDmlnUPpuEOkLX6BPJuQSLLuUXS9mcuGPzUFo9uokhBCj+BH586E?=
+ =?us-ascii?Q?xBgR7+eZ8DUD3R2yUIL+JmluIDKMFrNq7Yq2ZRBSIekoDrrhbFFQuVH0PTLa?=
+ =?us-ascii?Q?nimAJhDkPvtjWumrJa8S+jjUw81ghEqfNJ+NQ9zAavES1o86/2nTiGDx5I3B?=
+ =?us-ascii?Q?zw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|SJ2PR11MB8403:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7f8c1e62-a3d7-4328-684a-08dc100815e5
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5MUn6BssY+8dPhxex+rlxR2xWES73vZ1mwM/qExrIem/IzGSA7Nv7y+9Ksc8UDKXDgcSLGd6dT0Z4iWNKHYeaxrjvUzWVmEJkV1odZq46XTSaB0a+oGfSzUO7Y/l+spDUqUQImWnbZWT9JCs5A4FhPqlKNMbyJFywXjxuw8eDH59SMxUfIxFT5sVwAjttWEs7mlSe4c0qhrw9tXNWUD0HyoiVbLz+cfGT4KI3F9VZq4LBU3pOJPFj4ABGVBCAjENtj/pQQjTMbTOXiYXW0f9SAydXHLRYQOVOzJH7HuoPvcXxg45ocuM0NtlABPF0YjS4zFCe9krE70TF12uY7gPrb91tE2Jm16UkZ6YVc5zFDe9Qj4AM4tOxUdFteKRtVP6WLTsCIGF4oZBaXb7OHLwR5U/ObRpn1KFQHE28vVYEiYapPvBepp00lZPVlbutf+IK7qAIzWqAvnw3Xdddf/euIRGGOI3qaE79c00HRpIgeEptB1AsA34jAM16Bol/gmcIknj7vOwgQH3QKm9FEsWujh06BCgRMLxcrOU3X8/jsd8hcSwHX+LQHDoiz8XeQWOQbdCHis4TBTq22VbIsSGEwR7LP3nYJxb+61GzJGIkWA=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(136003)(376002)(346002)(366004)(396003)(39860400002)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(66899024)(38100700002)(44832011)(4326008)(5660300002)(2906002)(9686003)(6512007)(478600001)(6666004)(6506007)(966005)(83380400001)(26005)(107886003)(54906003)(316002)(66946007)(66476007)(6916009)(66556008)(8936002)(8676002)(6486002)(33716001)(86362001)(41300700001)(82960400001)(67856001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TEIxSlJvaTE5QjhYWVVaeDhCQWQ5VXcrS3RYdG92cjI4QXdYRnZPRUxCQ3dY?=
- =?utf-8?B?b0FQVnZPNHdqcldHbjQ5T1Q5Sjh6WlF5aWlWSFBZbmMwUmc2b3NpQWtSYkx1?=
- =?utf-8?B?VzNwMG9ZQ1BBck5kTXJNZzAweDV5dFBxMmhNWG1XNWF3MDFoZDBnV0V0MzM0?=
- =?utf-8?B?VUp4N1VadWtjQTQybE9YUXJma2NhMTVlUDJrWW5wWG56ZUhUT0Y2NEUxL0pl?=
- =?utf-8?B?V0pKMVlzbldTWWMrWlNvVHNVQUpRdWdPTHhRSURiOWEvSE80b0xqVHVYdVZ0?=
- =?utf-8?B?V0xUeTV3WnUxOWUyQldmcHRUTXVoL3hKTTdUeVVEQ3ppUzZQOE4rY0crYmpk?=
- =?utf-8?B?YXpEMEd1QnE4MnZCRnRTbExvT3Rvc2NzQTU0dldlekVRNjhnbFBZcEJKRnJH?=
- =?utf-8?B?bmJna3JoeEdXWGxJU3JKWHlWQWU5aTJzbjN5NTRIVVFQMUJRM2tBd05RNXJB?=
- =?utf-8?B?bWdFK0Fuc1VIZHhPQk9YRGQ5ZGI5b1RFdGZlTmhsMEZyaHhPZ0VKUVJ1bk1Q?=
- =?utf-8?B?M09YYVVIMW01UG9BSzcxSXp5VDQydUt1TGRGWlRxYUF3YXZmVkdrS3NSMWlo?=
- =?utf-8?B?T0Y0bW1hZzIzekFaV1BrV3VHWHVmay92ZXdWNWRzRHlQbTlPd2FyNUVnVGNp?=
- =?utf-8?B?dVBzK1c1a1B6L29KL3puelZYY1pxREk0Z0xxUFg1WWtkUjdtakJuWjNsQnE5?=
- =?utf-8?B?ZFZ4dG9XTDFSbVBqdTY3TVF1bkNrR0ZrWUovWTFwQzQvSU5sWHNPUDRGd3pM?=
- =?utf-8?B?VTNhTXUrUnV1bU9XZ1JiWkVZZnVwMlJJZVdWWEJwcUgvcEdvVzNtMituNHNo?=
- =?utf-8?B?L0FKdzArejZKd2tHbTFUT2tiaDQvNndjVnUrQTZjTit1ajNiY0NDTjNhSHR3?=
- =?utf-8?B?TFhzU1djbXVYZUhQQ2lPb0RrbW8xaHBOL2tHODMwVDZEUkw5RDA0azlpWlI5?=
- =?utf-8?B?OGFEdnRQazZkZGhNdUVTckZOWVZPRVBlUFZPOEoxUEgyblZ6aTJudmJibzhj?=
- =?utf-8?B?U3MzYytGNGFHVzA2Zk1JTDBMaFN4azJuUWtRWWRxbkVQZzl2YWZWQUY0WWQr?=
- =?utf-8?B?NFNWWFk5d0hEOFZXN2xYOHlUbmMwRkRSSmN3NmJxdHdQakt0aHhDV1pnR0ZI?=
- =?utf-8?B?VHZoRmQyQml2L1JEcFVpSldVUDQ1aFBxS1ErbmJtRjhvaXgzQk1xQUZSWnpZ?=
- =?utf-8?B?YTJ4VTRTeEIwYk1SNC9ncFNseTRSYlZRaG5NUW9nWDFEZ1hCam9aT2dxMlJp?=
- =?utf-8?B?TGovM3pRN0g3TVIwRFc2SEdNNHZzQ0Y1bzI0YTVsVktjaW5nNktFTGY5RFJs?=
- =?utf-8?B?R2JwRE14V2JXT1ZPSWJXWVk5TVdXMnpoaVppMGZVUFA5RmJpTGNIT3cyaTNu?=
- =?utf-8?B?c0FEdGRkUllkSXRNaWZrS1BONFViWDljKzkwVHhZNHdQV1gzVEFrY2lzRXpl?=
- =?utf-8?B?dFlNT3RtRzRlSnc5amU4ZDZtV3hDcXYrNWQ5Y0RtYkJacXpxeTFmM3o4bVBy?=
- =?utf-8?B?UVhWRU9Fd0hIYjhGN1FuTFA2Tm1xWXFjN2pUOFFzNlFpSDFobS84akh6cVVV?=
- =?utf-8?B?cGZzZEJDOEdOcmtCR3pRZW5QWWNpeHVvN0VRZjZESUpoQWppVU11dFp1Y3hS?=
- =?utf-8?B?anNJSnFOQ2hXSmxSK0duSXJoWjVNN2lydVcyeVBxUE5RaGtBazU4UXMvaUhs?=
- =?utf-8?B?SG91alVPZGEzd2lxalFPQlN6TkM2K1NsUFdjbVdGTFpNdFVrb0dySGxicmN5?=
- =?utf-8?B?REQ5MDhUeWwxbXRydElSRnlzaEdzVllWK0JQRHJvTVRKOUVpcFdqZEUxTlBC?=
- =?utf-8?B?bWJwM2Exa285Snp2RjRvSFJEQ0MybHR1bVdyZklYSGpzWm1GMHhLNTd1NTYx?=
- =?utf-8?B?Vm4yLzhsdFpJMElrd3dnTTdCRE9weHpNODdoRjFZR1hPWUV3U1RucHFmWEdZ?=
- =?utf-8?B?SjRyanFCcGtVaFVDalZIUFNHdlg4UDF5YStQY2s3UmxiNHdUK3N4Sm9kUTZs?=
- =?utf-8?B?bnBRVEl0bEIzREFqSWo4dlZjeUhSTXpvNjJvZUJObWFDMGNwOGtnZ1l4WFh6?=
- =?utf-8?B?eFd4dEgvZVVvWm94NWpCQkRJKzZJUzgyQ2gvL0FiblNJeFljNUt3SW9wVThr?=
- =?utf-8?Q?x9gBT8sqRwBWBOZz8JapRzyUg?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7f8c1e62-a3d7-4328-684a-08dc100815e5
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8660.namprd11.prod.outlook.com
+X-OriginatorOrg: starfivetech.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2024 05:10:09.6507
+X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: e284a4bf-755f-4a45-2744-08dc0fdafb3f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jan 2024 23:47:17.1897
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NtgFCLBTlZLeCfhKM+w4qz81IrQaNyND6wMONgsOGkQQb+qg6+40A7Y5o+iyLGZNF7PptntTI8XqshbeV7wEnA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB8403
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fB+lhLyfQ7TSY5YmZhV92G+A1udROa3hf7NtmQQz4zlNKcA1RrT84XoaoREhf9T1GHyWSgPjHUaTTF7aP2a4u+QMlav4+sg96Q7H/SRvS1c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1096
 
-On Fri, Jan 05, 2024 at 03:05:12PM -0800, Sean Christopherson wrote:
->On Tue, Nov 07, 2023, isaku.yamahata@intel.com wrote:
->> From: Isaku Yamahata <isaku.yamahata@intel.com>
->> 
->> Wire up TDX PV HLT hypercall to the KVM backend function.
->> 
->> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
->> ---
->>  arch/x86/kvm/vmx/tdx.c | 42 +++++++++++++++++++++++++++++++++++++++++-
->>  arch/x86/kvm/vmx/tdx.h |  3 +++
->>  2 files changed, 44 insertions(+), 1 deletion(-)
->> 
->> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
->> index 3a1fe74b95c3..4e48989d364f 100644
->> --- a/arch/x86/kvm/vmx/tdx.c
->> +++ b/arch/x86/kvm/vmx/tdx.c
->> @@ -662,7 +662,32 @@ void tdx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
->>  
->>  bool tdx_protected_apic_has_interrupt(struct kvm_vcpu *vcpu)
->>  {
->> -	return pi_has_pending_interrupt(vcpu);
->> +	bool ret = pi_has_pending_interrupt(vcpu);
->> +	struct vcpu_tdx *tdx = to_tdx(vcpu);
->> +
->> +	if (ret || vcpu->arch.mp_state != KVM_MP_STATE_HALTED)
->> +		return true;
->> +
->> +	if (tdx->interrupt_disabled_hlt)
->> +		return false;
->> +
->> +	/*
->> +	 * This is for the case where the virtual interrupt is recognized,
->> +	 * i.e. set in vmcs.RVI, between the STI and "HLT".  KVM doesn't have
->> +	 * access to RVI and the interrupt is no longer in the PID (because it
->> +	 * was "recognized".  It doesn't get delivered in the guest because the
->> +	 * TDCALL completes before interrupts are enabled.
->> +	 *
->> +	 * TDX modules sets RVI while in an STI interrupt shadow.
->> +	 * - TDExit(typically TDG.VP.VMCALL<HLT>) from the guest to TDX module.
->> +	 *   The interrupt shadow at this point is gone.
->> +	 * - It knows that there is an interrupt that can be delivered
->> +	 *   (RVI > PPR && EFLAGS.IF=1, the other conditions of 29.2.2 don't
->> +	 *    matter)
->> +	 * - It forwards the TDExit nevertheless, to a clueless hypervisor that
->> +	 *   has no way to glean either RVI or PPR.
->
->WTF.  Seriously, what in the absolute hell is going on.  I reported this internally
->four ***YEARS*** ago.  This is not some obscure theoretical edge case, this is core
->functionality and it's completely broken garbage.
->
->NAK.  Hard NAK.  Fix the TDX module, full stop.
->
->Even worse, TDX 1.5 apparently _already_ has the necessary logic for dealing with
->interrupts that are pending in RVI when handling NESTED VM-Enter.  Really!?!?!
->Y'all went and added nested virtualization support of some kind, but can't find
->the time to get the basics right?
+Hi Andi,
 
-We actually fixed the TDX module. See 11.9.5. Pending Virtual Interrupt
-Delivery Indication in TDX module 1.5 spec [1]
+> On Sun, 10 Dec 2023 12:54:12 +0100
+> Andi Shyti <andi.shyti@kernel.org> wrote:
+>=20
+> > Hi Ji Sheng,
+> >
+> > [...]
+> >
+> > > > > +static int __maybe_unused cdns_i2c_resume(struct device *dev) {
+> > > >
+> > > > I am not really understanding what you are trying to do here:
+> > > >
+> > > > > +	struct cdns_i2c *xi2c =3D dev_get_drvdata(dev);
+> > > > > +	int err;
+> > > > > +
+> > > > > +	err =3D cdns_i2c_runtime_resume(dev);
+> > > >
+> > > > First you try to resume...
+> > > >
+> > > > > +	if (err)
+> > > > > +		return err;
+> > > > > +
+> > > > > +	if (pm_runtime_status_suspended(dev)) {
+> > > >
+> > > > ... then you check if you are suspended ...
+> > >
+> > > This serves as a check and balance to ensure that when the system
+> > > resumes with device in runtime suspend state, we disable the clock
+> > > enabled in earlier cdns_i2c_runtime_resume() to ensure a balanced
+> > > clock reference count for subsequent runtime resume transition.
+> > > Similar implementation can be found in this commit:
+> > > https://github.com/torvalds/linux/commit/44c99904cf61f945d02ac9976ab
+> > > 10dd5ccaea393
+> > >
+> >
+> > OK, this is done purely for clock balancing, but then, I still don't
+> > understand the case. I expect the clock counter to be unbalanced when
+> > you suspend (because is moving towards '0').
+> >
+> > While, if you check if the clock is unbalanced when resuming, it means
+> > that the clock had a negative counter (which is impossible because the
+> > clock counter is unsigned).
+> >
+> > If there is any unbalancing at this stage, then I recommend you to
+> > check what has happened previously.
+> >
+> > ... Or is there anything I am missing?
+> >
+> > Thanks,
+> > Andi
+>=20
+> You are right, the clock counter will move towards 0 during system suspen=
+d.
+> Conversely during system resume, the clock counter is incremented to 1 ea=
+rly on in cdns_i2c_runtime_resume(). So the clock counter
+> is not negative to start with.
+> At this point of time, clock counter is 1. If the device is in runtime su=
+spend, we decrement the clock counter back to 0, so the
+> subsequent runtime resume could increment it back to 1. In a sense, balan=
+cing the clock counter.
+> Please help correct me if I've got it wrong.
+>=20
+Just to check on the status of this patch. Let me know if the above stateme=
+nt makes sense.
+> >
+> > > > > +		err =3D cdns_i2c_runtime_suspend(dev);
+> > > >
+> > > > ... and suspend again? Shouldn't this be _resume()?
+> > > >
+> > > > Thanks,
+> > > > Andi
+> > > >
+> > > > > +		if (err)
+> > > > > +			return err;
+> > > > > +	}
+> > > > > +
+> > > > > +	i2c_mark_adapter_resumed(&xi2c->adap);
+> > > > > +
+> > > > > +	return 0;
+> > > > > +}
+>=20
 
-  The host VMM can detect whether a virtual interrupt is pending delivery to a
-  VCPU in the Virtual APIC page, using TDH.VP.RD to read the VCPU_STATE_DETAILS
-  TDVPS field.
-  
-  The typical use case is when the guest TD VCPU indicates to the host VMM, using
-  TDG.VP.VMCALL, that it has no work to do and can be halted. The guest TD is
-  expected to pass an “interrupt blocked” flag. The guest TD is expected to set
-  this flag to 0 if and only if RFLAGS.IF is 1 or the TDCALL instruction that
-  invokes TDG.VP.VMCALL immediately follows an STI instruction. If the “interrupt
-  blocked” flag is 0, the host VMM can determine whether to re-schedule the guest
-  TD VCPU based on VCPU_STATE_DETAILS.
-
-Isaku, this patch didn't read VCPU_STATE_DETAILS. Maybe you missed something
-during rebase? Regarding buggy_hlt_workaround, do you aim to avoid reading
-VCPU_STATE_DETAILS as much as possible (because reading it via SEAMCALL is
-costly, ~3-4K cycles)? if so, please make it clear in the changelog/comment.
-
-[1]: https://cdrdv2.intel.com/v1/dl/getContent/733575
-
->
