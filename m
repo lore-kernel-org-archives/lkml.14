@@ -1,71 +1,115 @@
-Received: from pokefinder.org (pokefinder.org [135.181.139.117])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C5AD125A7;
-	Sun,  7 Jan 2024 22:04:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=the-dreams.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=the-dreams.de
-Received: from localhost (183-123-142-46.pool.kielnet.net [46.142.123.183])
-	by pokefinder.org (Postfix) with ESMTPSA id 16575A4A0E5;
-	Sun,  7 Jan 2024 22:55:12 +0100 (CET)
-Date: Sun, 7 Jan 2024 22:55:11 +0100
-From: Wolfram Sang <wsa@the-dreams.de>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: duplicate patches in the i2c tree
-Message-ID: <ZZsdvyddoXxWBfbR@kunai>
-Mail-Followup-To: Wolfram Sang <wsa@the-dreams.de>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20240108082408.75eff37e@canb.auug.org.au>
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA65B11C80
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Jan 2024 22:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="T+bQRlu8"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 78CB340E016C;
+	Sun,  7 Jan 2024 22:08:38 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id nR2reh-y4pd7; Sun,  7 Jan 2024 22:08:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1704665312; bh=yrKA2wiVqmAgfrUvkvMXLpeRfcN16MHaApnHyJsIuEA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=T+bQRlu8BZYGGoR2AFJbtX98WpvtzfA7iSoTyRosuKitBS9TiNvNMr8pi4LcAXXgg
+	 x/tQk2lS0u+Vd+yBsoLndZzb4fVfHcoA0i1hLNAVnpY8ZR8XMoTFzDG9W04Qpz9clw
+	 cb1GLpPmNAaiWH3Ee04B2SzRiJPjOx/onmUUw+Esnvnr8j6SNsbigyHwsCLrcdTn/E
+	 VCSgRzF2FqT7CJ7IImJIH9JIVBsb8cCGw7HqvSmj7S+bjF68HiXCu0Xk/uLE0C2kuI
+	 WF4fB8TLGmfdHBuhmroLaQSJz6vy/ISe44iDFmorUAMFk36+hZTgZSmLccI9nZ7XWL
+	 m7rCj0OzBDnFdam/zvnz8VSXJSf50eE2LAjKKDshwCPMwdFnhFmBxaxUs+YLeTi2wu
+	 MqSeSdh2JTZUulhBDWpoBTpsrNzxulbQ4NLuV7CMpGsrmRAs5P97wc16XWBm3wrcox
+	 c9sBASAAVfPjkzy4vjmJRHv/G8fl8hBrcAS5f2xPdcb5VngEtiv4/1GK28ryd543QV
+	 b/RFJugOBCCKtze0Xocfw5dX95pe6TPRxjAgvTTzST5wxPdLnYZPGdPdS5DsQ/CWyr
+	 +8XXArPodCVKgPiHLH+GJyXS9OFMEyJ+Fj19vdgaGij8c8KAZqD87QR1r7U4WHp1di
+	 4UWiuD2X9r/neYQjEqmN5nFg=
+Received: from zn.tnic (pd9530f8c.dip0.t-ipconnect.de [217.83.15.140])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 441B140E00C5;
+	Sun,  7 Jan 2024 22:08:29 +0000 (UTC)
+Date: Sun, 7 Jan 2024 23:08:23 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] x86/paravirt for v6.8
+Message-ID: <20240107220823.GAZZsg18/8q1JNRksh@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="5UYYWqDANUVmM7Bg"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240108082408.75eff37e@canb.auug.org.au>
+
+Hi Linus,
+
+please pull the x86/paravirt pile of changes for v6.8.
+
+Thx.
+
+---
+
+The following changes since commit b85ea95d086471afb4ad062012a4d73cd328fa86:
+
+  Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tags/x86_paravirt_for_v6.8
+
+for you to fetch changes up to 7991ed43587d1106315208cc289c851d6915d4a3:
+
+  x86/alternative: Correct feature bit debug output (2023-12-30 12:25:55 +0100)
+
+----------------------------------------------------------------
+- Replace the paravirt patching functionality using the alternatives
+  infrastructure and remove the former
+
+- Misc other improvements
+
+----------------------------------------------------------------
+Borislav Petkov (AMD) (1):
+      x86/alternative: Correct feature bit debug output
+
+Hou Wenlong (2):
+      x86/paravirt: Use relative reference for the original instruction offset
+      x86/paravirt: Make the struct paravirt_patch_site packed
+
+Juergen Gross (5):
+      x86/paravirt: Introduce ALT_NOT_XEN
+      x86/paravirt: Move some functions and defines to alternative.c
+      x86/alternative: Add indirect call patching
+      x86/paravirt: Switch mixed paravirt/alternative calls to alternatives
+      x86/paravirt: Remove no longer needed paravirt patching code
+
+ arch/x86/include/asm/alternative.h        |  30 ++++++-
+ arch/x86/include/asm/paravirt.h           |  79 +++++-------------
+ arch/x86/include/asm/paravirt_types.h     |  87 ++++++-------------
+ arch/x86/include/asm/qspinlock_paravirt.h |   4 +-
+ arch/x86/include/asm/text-patching.h      |  12 ---
+ arch/x86/kernel/alternative.c             | 134 +++++++++++++++---------------
+ arch/x86/kernel/callthunks.c              |  17 ++--
+ arch/x86/kernel/kvm.c                     |   4 +-
+ arch/x86/kernel/module.c                  |  20 ++---
+ arch/x86/kernel/paravirt.c                |  54 ++----------
+ arch/x86/kernel/vmlinux.lds.S             |  13 ---
+ arch/x86/tools/relocs.c                   |   2 +-
+ arch/x86/xen/irq.c                        |   2 +-
+ 13 files changed, 169 insertions(+), 289 deletions(-)
 
 
---5UYYWqDANUVmM7Bg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+-- 
+Regards/Gruss,
+    Boris.
 
-
-> The following commits are also in Linus Torvalds' tree as different
-> commits (but the same patches):
->=20
->   ba6181152308 ("i2c: core: Fix atomic xfer check for non-preempt config")
->   e3bcb32ffc10 ("Documentation/i2c: fix spelling error in i2c-address-tra=
-nslator
-
-Yes, sorry, I needed to change the commit messages in the last minute. I
-told Linus about that in my PR. I can add the new patches to linux-next
-tomorrow.
-
-
---5UYYWqDANUVmM7Bg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmWbHbsACgkQFA3kzBSg
-KbaYQQ//bFKuhh1jjoBrXOR1II0ST9cT00QK8+gSXvq/55+996/bLAgYvEl77VGt
-4O8xgZuW6rSVG/ftKZSXAJLWvJaV0W/QVg+Yw2Az28Br7E8XnbdKrVIi7G9YV5Pv
-MMt4HRC0MmB98YHQ/Kq9NWbTFMDdQA6Rr6s9+1gUU9t2qGUp+QnQLziS17G7vYNv
-3xJSR9C+lkDh5fKQik/CrziD6FmF48TtwTXXsOkLTbHbOJudtdVlZcNrLFcfdMLL
-3ZepRu9QKYdkdwHGkJvWH7jSijPurB3Fo8Su18yui9rwQ+22A4B+P4SCNzUXXSga
-kQbWuxwkio2LCjXJsTy85KUAXG88CzF/C+A3kY26Po7JT93bpJzk6N/+IDuE4T4n
-JpPXsKGaWv0ByhMlNv9xT11kQpV5TeDf+Y+TJufzsghBqu2cAXD3NH4t9oqeo6Rt
-S/uTFe3fxu4VClAQz+VjWFRJt++33pI8x6MqYURfzO6qBJJDo1eOfLHrt1T745x/
-jT3nPPTmCyo9d7lHMVU5f/ARecTjS+nl8nlyYJHd0yhnna4JPSL4e1/h2l+tQgwm
-GSDn/avwvHQBbEkSv1FIpMd/4Ir+98del0TfdeBZgX8cErd7tgYbMwyeKKQbuAO+
-Nx8/NMFVWSH4N9RS6rhGm4GcEdzsRh1ADnatxhxrBL/pzckdi0M=
-=nh1X
------END PGP SIGNATURE-----
-
---5UYYWqDANUVmM7Bg--
+https://people.kernel.org/tglx/notes-about-netiquette
