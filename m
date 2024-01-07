@@ -1,91 +1,77 @@
-Received: from trent.utfs.org (trent.utfs.org [94.185.90.103])
+Received: from sxb1plwbeout02.prod.sxb1.secureserver.net (sxb1plwbeout02.prod.sxb1.secureserver.net [188.121.53.192])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9D210A2A;
-	Sun,  7 Jan 2024 19:27:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nerdbynature.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nerdbynature.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=nerdbynature.de header.i=@nerdbynature.de header.b="5/zHpgcH";
-	dkim=permerror (0-bit key) header.d=nerdbynature.de header.i=@nerdbynature.de header.b="nF2yXHd2";
-	dkim=pass (2048-bit key) header.d=nerdbynature.de header.i=@nerdbynature.de header.b="fQAHzeaR"
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/simple;
- d=nerdbynature.de; i=@nerdbynature.de; q=dns/txt; s=key1;
- t=1704655636; h=date : from : to : cc : subject : in-reply-to :
- message-id : references : mime-version : content-type : from;
- bh=BvIoYb/Fn5HQPIN8rIurDtiMGDlWrRB9nG1WDbCuGZ8=;
- b=5/zHpgcHmNmU4ARFrdNiIbEBaMdr2LKfIMwQ/YnTCR4Yw6LNoneY4R6ZQ3RWF3fPsKG5y
- e5xZDHMrbwRLb5pAg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=nerdbynature.de;
-	s=dkim; t=1704655636;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rmQJjEhWMY+tYzgMK5HnZv6TWvOnuPe8JnejlKdQzqU=;
-	b=nF2yXHd2EIy7JsJdxgMDTiXl7PAlF9Rz0f5vnWKIxk7eo3P1tHkr6rg7zy4v+3FbMOA3nk
-	VrcDHSDigm9+vLBg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nerdbynature.de;
- i=@nerdbynature.de; q=dns/txt; s=key0; t=1704655636; h=date : from :
- to : cc : subject : in-reply-to : message-id : references :
- mime-version : content-type : from;
- bh=BvIoYb/Fn5HQPIN8rIurDtiMGDlWrRB9nG1WDbCuGZ8=;
- b=fQAHzeaR9TdD0eU4cy0QQwcGqQlm0W8s3DGhE2/Ixnl3K7f2LufEOZzeGtFYbhhak86IL
- aH5E0hzUx7TzLzunDzmQRLazzPd3+OVubewyeTcSQIF4yCyHnOFKNkFY8x61HnKECbGScRZ
- Pf4Ow/ITcBIsZJa9KOv4Dbuk58wlI/B8dkVO7BH29mA+VjLgFTY4Rhr4dQTievtJRnUku6O
- PqCIk5bQB9k3tXMtzaCGHgeWTyiwX7h1PTUzHm33fpQBw6hUJw0kQhYp2U12m1OTNbawVxM
- uHQ1+ssk1cDfqNNC6Az1sP+fS26pGAqqEWEAwNJ9hiwg3DthawnMy8fjnzwA==
-Received: from localhost (localhost [IPv6:::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by trent.utfs.org (Postfix) with ESMTPS id 389755FFAF;
-	Sun,  7 Jan 2024 20:27:16 +0100 (CET)
-Date: Sun, 7 Jan 2024 20:27:16 +0100 (CET)
-From: Christian Kujau <lists@nerdbynature.de>
-To: Dmitry Safonov <dima@arista.com>
-cc: netdev@vger.kernel.org, Dmitry Safonov <0x7f454c46@gmail.com>, 
-    Francesco Ruggeri <fruggeri@arista.com>, 
-    Salam Noureddine <noureddine@arista.com>, David Ahern <dsahern@kernel.org>, 
-    linux-kernel@vger.kernel.org
-Subject: Re: syslog spam: TCP segment has incorrect auth options set
-In-Reply-To: <491b1b19-f719-1aa6-7757-ba4168228bbd@nerdbynature.de>
-Message-ID: <65ad94ae-36a9-f128-ea45-26772772ba31@nerdbynature.de>
-References: <f6b59324-1417-566f-a976-ff2402718a8d@nerdbynature.de> <fe1752a6-9866-45e6-b011-92a242304fce@arista.com> <491b1b19-f719-1aa6-7757-ba4168228bbd@nerdbynature.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF5411188
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Jan 2024 19:30:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squashfs.org.uk
+X-MW-NODE: 
+X-CMAE-Analysis: v=2.4 cv=JNb98eGb c=1 sm=1 tr=0 ts=659af14c
+ a=xZsz1WqYln3YGRp0IohaNA==:117 a=xZsz1WqYln3YGRp0IohaNA==:17
+ a=ggZhUymU-5wA:10 a=IkcTkHD0fZMA:10 a=FP58Ms26AAAA:8 a=VwQbUJbxAAAA:8
+ a=OQEHJ-BNlmcVwaK9_LUA:9 a=QEXdDO2ut3YA:10 a=EebzJV9D4rpJJoWO5PQE:22
+ a=AjGcO6oz07-iQ99wixmX:22
+X-SECURESERVER-ACCT: phillip@squashfs.org.uk
+X-SID: MY9KrZPrXz19A
+Date: Sun, 7 Jan 2024 18:45:30 +0000 (GMT)
+From: Phillip Lougher <phillip@squashfs.org.uk>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Message-ID: <522978349.868758.1704653130312@eu1.myprofessionalmail.com>
+In-Reply-To: <49472d26-29e6-443f-b0f5-21967a67dd4a@web.de>
+References: <49472d26-29e6-443f-b0f5-21967a67dd4a@web.de>
+Subject: Re: [PATCH] squashfs: Improve error handling in
+ squashfs_decompressor_create()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Priority: 3
+Importance: Normal
+X-Mailer: Open-Xchange Mailer v8.19.35
+X-Originating-Client: open-xchange-appsuite
+X-CMAE-Envelope: MS4xfOp6H2w7Gin0kDxhYJ6f54ZB0ExIU0in4Z5vWX/LeMg+nZcHXaBIR+/2mkPHvBQmNjfBWbbKLD0XcFwfpM1/kcigFSOKoONRTeOp/6a6kDiRjsbxuXPT
+ GOVeHmhOQRkX7dsmvOB+cBFgXUZlroRfuhAk1Rpbac0Gyd0VPSBJugSMrBhBf+SKBBtPC9znBuvdznfJE8uKHiz03Bc4r7KArLn7IlR7nu5KevHVsbDxmJxu
+ i/oTUkoeXh+3TsrbdaLr/PA5zMLQUVdWsqjeonV8cW8awiAB6uoHiwAsv7GjSe2OHMkO82zJSr6LVgkNjfxhPLxKxibwyHOddwvE/Lrmcjs=
 
-On Thu, 4 Jan 2024, Christian Kujau wrote:
-> On Thu, 4 Jan 2024, Dmitry Safonov wrote:
-> > Yeah, I guess it's possible to down the severity of these logs, but may
-> > be unexpected by admins: TCP-MD5 messages existed for long time and
-> > there may be userspace that expects them (i.e. in arista there are tests
-> > that look for these specific messages - those would be easy to fix, but
-> > there may be others outside this company).
-> 
-> Understood, thanks for explaining that.
-> 
-> > While thinking on the origin of your issue, it seems that the logs
-> > produced by either TCP-MD5 or TCP-AO are desired by a user when they
-> > add/use the authentication. Could you try this and see if that solves
-> > the issue for you?
-> 
-> Thanks for preparing that patch so quickly, did not expect that :-)
-> 
-> I've applied this on top of 6.7.0-rc8 and will report back if I see those 
-> messages again in the next days.
+> On 30/12/2023 09:55 GMT Markus Elfring <markus.elfring@web.de> wrote:
+>=20
+> =20
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Fri, 29 Dec 2023 21:30:26 +0100
+>=20
+> The kfree() function was called in two cases by
+> the squashfs_decompressor_create() function during error handling
+> even if the passed variable contained a null pointer.
+> This issue was detected by using the Coccinelle software.
+>=20
+> * Thus return directly after a call of the function =E2=80=9Ckzalloc=E2=
+=80=9D failed
+>   at the beginning.
+>=20
+> * Use another label.
+>=20
+> * Move an error code assignment into an if branch.
+>=20
+> * Delete an initialisation (for the variable =E2=80=9Cdecomp_strm=E2=80=
+=9D)
+>   which became unnecessary with this refactoring.
+>=20
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 
-No messages so far, great!
+As mentioned in this thread (and many others)
 
-Tested-by: Christian Kujau <lists@nerdbynature.de>
+https://lore.kernel.org/all/20240104204032.GN31813@kernel.org/
 
-Thanks again for fixing this so quickly,
-Christian.
--- 
-BOFH excuse #323:
+calling Kfree with a NULL pointer is perfectly valid.
 
-Your processor has processed too many instructions.  Turn it off immediately, do not type any commands!!
+So like most others I'm going to ignore this patch.
+
+Cheers
+
+Phillip
