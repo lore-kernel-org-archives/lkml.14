@@ -1,47 +1,51 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B17513AD1;
-	Sun,  7 Jan 2024 16:09:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15EE513FF2
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Jan 2024 16:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Je4QSk1X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CDAAC433C8;
-	Sun,  7 Jan 2024 16:09:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704643764;
-	bh=vtEdJ8x0t9Cig7F/OQ58765CvJpN5U3pnuPNn8bEtX0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Je4QSk1Xsi5jvomPOikxCGlVFwk8iqkAbNF6aVYGaBGYI1jkUw+CADMBs0/wZQr36
-	 xy22SDkRZMP5sMid5EvoeH3h/Kwf68Tcbn77GX8EDm+cjFQlFTs6TguY93Et6BFDPv
-	 UlIs+e2Jheeb2/ck0biFbtZrf0Vw9LMCbIX3TaJmqJZgdrEhhfSfxUMIfjU8lZxJF7
-	 Q+aCdvG3kA6VLZkjLHS+Vga8pwGe2Z6VghL3LobYtAq3sM2rUGAW8uNlztGT7uqIEc
-	 x+WdUyce0Wh+SeZcYOdm2MG39rO2B8pkIyqp3viKoDClILrK1BwA1eJJXlvP2hGICM
-	 kq7yyH7rMCZgg==
-Date: Sun, 7 Jan 2024 16:09:16 +0000
-From: Simon Horman <horms@kernel.org>
-To: David Howells <dhowells@redhat.com>
-Cc: Christian Brauner <christian@brauner.io>,
-	Jeff Layton <jlayton@kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Steve French <smfrench@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>, linux-cachefs@redhat.com,
-	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev, linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Yiqun Leng <yqleng@linux.alibaba.com>,
-	Jia Zhu <zhujia.zj@bytedance.com>
-Subject: Re: [PATCH 1/5] cachefiles: Fix __cachefiles_prepare_write()
-Message-ID: <20240107160916.GA129355@kernel.org>
-References: <20240103145935.384404-1-dhowells@redhat.com>
- <20240103145935.384404-2-dhowells@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KS9cRpZL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704643771; x=1736179771;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=pbzbwueR6azseIyoosxBA8lVRb3S3TRduNcuhuZDD2U=;
+  b=KS9cRpZLhhO6/clSVZ+KABKm5eq31UF0f7F3ScGWSiL5DCRjNOF6qy6x
+   FPgG829OFTSfH2jhqbTYuk6mvkRMViiVAC70yoQvJRsvgkpm4TFEwV4PK
+   7msB4TeEnirYTcaEXOOAgcNq4rv4ZdblUB749Hd6KoMDA5X/io3oF3sAv
+   wEEeZlK0d97wWDbOl52r5l8CwcL62YSClIDvFBa/O5mM/dLAR7BsgKheJ
+   XKWQ7Pr8IT+TGuI/9rXLTc7omxuvAXvGsS3LtxEYJUdkWJK/QQojsKII0
+   LSIwDzWqrt2DWzAqEj4iCR8gQ9Q9C+CWyElLBOf1fddmaSQ+UxlGUkFtj
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="483919016"
+X-IronPort-AV: E=Sophos;i="6.04,339,1695711600"; 
+   d="scan'208";a="483919016"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2024 08:09:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="810001637"
+X-IronPort-AV: E=Sophos;i="6.04,339,1695711600"; 
+   d="scan'208";a="810001637"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by orsmga008.jf.intel.com with ESMTP; 07 Jan 2024 08:09:27 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rMViH-0003u8-1a;
+	Sun, 07 Jan 2024 16:09:25 +0000
+Date: Mon, 8 Jan 2024 00:08:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Jarkko Sakkinen <jarkko@kernel.org>,
+	Sumit Garg <sumit.garg@linaro.org>,
+	Pankaj Gupta <pankaj.gupta@nxp.com>
+Subject: include/linux/tpm.h:290:2: warning: field  within 'struct
+ tpm_header' is less aligned than 'union tpm_header::(anonymous at
+ include/linux/tpm.h:290:2)' and is usually due to 'struct tpm_header' being
+ packed, which can lead to unaligned accesses
+Message-ID: <202401072350.jkkVKE5l-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,110 +54,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240103145935.384404-2-dhowells@redhat.com>
 
-On Wed, Jan 03, 2024 at 02:59:25PM +0000, David Howells wrote:
-> Fix __cachefiles_prepare_write() to correctly determine whether the
-> requested write will fit correctly with the DIO alignment.
-> 
-> Reported-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> Tested-by: Yiqun Leng <yqleng@linux.alibaba.com>
-> Tested-by: Jia Zhu <zhujia.zj@bytedance.com>
-> cc: Jeff Layton <jlayton@kernel.org>
-> cc: linux-cachefs@redhat.com
-> cc: linux-erofs@lists.ozlabs.org
-> cc: linux-fsdevel@vger.kernel.org
-> cc: linux-mm@kvack.org
-> ---
->  fs/cachefiles/io.c | 28 +++++++++++++++++-----------
->  1 file changed, 17 insertions(+), 11 deletions(-)
-> 
-> diff --git a/fs/cachefiles/io.c b/fs/cachefiles/io.c
-> index bffffedce4a9..7529b40bc95a 100644
-> --- a/fs/cachefiles/io.c
-> +++ b/fs/cachefiles/io.c
-> @@ -522,16 +522,22 @@ int __cachefiles_prepare_write(struct cachefiles_object *object,
->  			       bool no_space_allocated_yet)
->  {
->  	struct cachefiles_cache *cache = object->volume->cache;
-> -	loff_t start = *_start, pos;
-> -	size_t len = *_len, down;
-> +	unsigned long long start = *_start, pos;
-> +	size_t len = *_len;
->  	int ret;
->  
->  	/* Round to DIO size */
-> -	down = start - round_down(start, PAGE_SIZE);
-> -	*_start = start - down;
-> -	*_len = round_up(down + len, PAGE_SIZE);
-> -	if (down < start || *_len > upper_len)
-> +	start = round_down(*_start, PAGE_SIZE);
-> +	if (start != *_start) {
-> +		kleave(" = -ENOBUFS [down]");
-> +		return -ENOBUFS;
-> +	}
-> +	if (*_len > upper_len) {
-> +		kleave(" = -ENOBUFS [up]");
->  		return -ENOBUFS;
-> +	}
-> +
-> +	*_len = round_up(len, PAGE_SIZE);
->  
->  	/* We need to work out whether there's sufficient disk space to perform
->  	 * the write - but we can skip that check if we have space already
-> @@ -542,7 +548,7 @@ int __cachefiles_prepare_write(struct cachefiles_object *object,
->  
->  	pos = cachefiles_inject_read_error();
->  	if (pos == 0)
-> -		pos = vfs_llseek(file, *_start, SEEK_DATA);
-> +		pos = vfs_llseek(file, start, SEEK_DATA);
->  	if (pos < 0 && pos >= (loff_t)-MAX_ERRNO) {
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   52b1853b080a082ec3749c3a9577f6c71b1d4a90
+commit: be07858fbf8115fc74528292c2ee8775fe49116f KEYS: trusted: allow use of TEE as backend without TCG_TPM support
+date:   1 year, 8 months ago
+config: arm-randconfig-001-20240107 (https://download.01.org/0day-ci/archive/20240107/202401072350.jkkVKE5l-lkp@intel.com/config)
+compiler: clang version 18.0.0git (https://github.com/llvm/llvm-project 7e186d366d6c7def0543acc255931f617e76dff0)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240107/202401072350.jkkVKE5l-lkp@intel.com/reproduce)
 
-Hi David,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401072350.jkkVKE5l-lkp@intel.com/
 
-I realise these patches have been accepted, but I have a minor nit:
-pos is now unsigned, and so cannot be less than zero.
+All warnings (new ones prefixed by >>):
 
-Flagged by Smatch and Coccinelle.
+   In file included from security/keys/trusted-keys/trusted_core.c:10:
+   In file included from include/keys/trusted-type.h:12:
+>> include/linux/tpm.h:290:2: warning: field  within 'struct tpm_header' is less aligned than 'union tpm_header::(anonymous at include/linux/tpm.h:290:2)' and is usually due to 'struct tpm_header' being packed, which can lead to unaligned accesses [-Wunaligned-access]
+     290 |         union {
+         |         ^
+   1 warning generated.
 
->  		if (pos == -ENXIO)
->  			goto check_space; /* Unallocated tail */
-> @@ -550,7 +556,7 @@ int __cachefiles_prepare_write(struct cachefiles_object *object,
->  					  cachefiles_trace_seek_error);
->  		return pos;
->  	}
-> -	if ((u64)pos >= (u64)*_start + *_len)
-> +	if (pos >= start + *_len)
->  		goto check_space; /* Unallocated region */
->  
->  	/* We have a block that's at least partially filled - if we're low on
-> @@ -563,13 +569,13 @@ int __cachefiles_prepare_write(struct cachefiles_object *object,
->  
->  	pos = cachefiles_inject_read_error();
->  	if (pos == 0)
-> -		pos = vfs_llseek(file, *_start, SEEK_HOLE);
-> +		pos = vfs_llseek(file, start, SEEK_HOLE);
->  	if (pos < 0 && pos >= (loff_t)-MAX_ERRNO) {
 
-Ditto.
+vim +290 include/linux/tpm.h
 
->  		trace_cachefiles_io_error(object, file_inode(file), pos,
->  					  cachefiles_trace_seek_error);
->  		return pos;
->  	}
-> -	if ((u64)pos >= (u64)*_start + *_len)
-> +	if (pos >= start + *_len)
->  		return 0; /* Fully allocated */
->  
->  	/* Partially allocated, but insufficient space: cull. */
-> @@ -577,7 +583,7 @@ int __cachefiles_prepare_write(struct cachefiles_object *object,
->  	ret = cachefiles_inject_remove_error();
->  	if (ret == 0)
->  		ret = vfs_fallocate(file, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
-> -				    *_start, *_len);
-> +				    start, *_len);
->  	if (ret < 0) {
->  		trace_cachefiles_io_error(object, file_inode(file), ret,
->  					  cachefiles_trace_fallocate_error);
-> 
+74edff2d74c64c Sumit Garg 2019-10-16  286  
+74edff2d74c64c Sumit Garg 2019-10-16  287  struct tpm_header {
+74edff2d74c64c Sumit Garg 2019-10-16  288  	__be16 tag;
+74edff2d74c64c Sumit Garg 2019-10-16  289  	__be32 length;
+74edff2d74c64c Sumit Garg 2019-10-16 @290  	union {
+74edff2d74c64c Sumit Garg 2019-10-16  291  		__be32 ordinal;
+74edff2d74c64c Sumit Garg 2019-10-16  292  		__be32 return_code;
+74edff2d74c64c Sumit Garg 2019-10-16  293  	};
+74edff2d74c64c Sumit Garg 2019-10-16  294  } __packed;
+74edff2d74c64c Sumit Garg 2019-10-16  295  
+
+:::::: The code at line 290 was first introduced by commit
+:::::: 74edff2d74c64ca5977a57efb5c238c8f5318ba9 tpm: Move tpm_buf code to include/linux/
+
+:::::: TO: Sumit Garg <sumit.garg@linaro.org>
+:::::: CC: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
