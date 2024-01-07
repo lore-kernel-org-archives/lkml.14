@@ -1,115 +1,83 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66248134A4
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Jan 2024 13:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BDD4134A5
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Jan 2024 13:18:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0x0f.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0x0f.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hfj40Ld0"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-28cec7ae594so912818a91.3
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jan 2024 05:12:51 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="KRwcOonu"
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6dc36e501e1so869828a34.1
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jan 2024 05:18:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704633171; x=1705237971; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0AZ0NYrGHkvNJ0BuPObLV8cnMGqTc5rnXOPBAm7Oj3w=;
-        b=Hfj40Ld0ss0kXbFSC7BhbJzHcOwbT8m33wV98ocfXtJgXtAgiA83XXWrTOULqB8eAg
-         OQxSyZOMGEOqrwn7LxSkFT8iH44pLjs9pPI+vCUAkehW1HkNpLRxCw53ccPXNjVIT/iz
-         iG/QwBg1GvGgcLkAflxIolP1DvMJmHMMANhG12mYIh8jsehmElRKVcE1L3PlBxar10RZ
-         m4McrztyYkklblCioA2p7TSdZxfOlY+8V5LNRshJTecFY6oO8R2vZR1gFtiAMb3d96nW
-         m/f46KHlEH5LcCI0I7k5cxnRmeFXrYRw7I+qv1lRLV3NW6Tvz2x3WfXJ0ZdG4XpYh3gB
-         iUGQ==
+        d=0x0f.com; s=google; t=1704633487; x=1705238287; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=oQ7uDXAAmr0puYLSf6CVOO6ldyBnrL24XwRJb0qVA3g=;
+        b=KRwcOonujkZvLDk23IydJ7raT1pPmI5W5MdUvKly/eu+7fRoEkMC4MssBnUWx5uvo4
+         /WTsWB+4vZ0pmZnMtg3r6AsZQHJG2m9hV45wy82Nk2LLo8rZ9ier745v3/JZcupr+5VT
+         ohcmT+V8Mic/63gi60k4O9iDgWuyleoiPWU+I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704633171; x=1705237971;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1704633487; x=1705238287;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=0AZ0NYrGHkvNJ0BuPObLV8cnMGqTc5rnXOPBAm7Oj3w=;
-        b=c2Q/80Zg5+wMTj821Xtc6PKvbAfp2gaPI7x9dpM8izViQPoYcV23YCRouzx7VlKbWE
-         +VLq8jpw3Ax9vmrpJV/PzbJaYJntmNQ3I1oQkj3tiYDI3FPbkjJbsJof3Mahcq165wD9
-         ZjXeUoWSJXzL0ysfD2wLRGNyzfoNNKgo+I3zc1/jvWDJvcvxfPoKMFcy/gSYnnVgZSNf
-         sG3EwWUC3T5vq9/2AkCVqKaC/WD85wPvDmHOsU8vVYiFcugc2Hw0nVzv+jlBY6MADkLd
-         4MmDFibcPgtNf7DQMiNn6A+9UIBQ2o+f/mmXhBRK/16kB7atBqiP717kmjzUUbtpRkHk
-         vPKQ==
-X-Gm-Message-State: AOJu0Yz3WsowiZvYgBDRHPSCTGztD1CP5D5cDZj5ihOwc/O255s40ksz
-	vDjh83XX/jBkEKEd45zqNrfgTSlUNOfbHg==
-X-Google-Smtp-Source: AGHT+IEyT6cSkWIap2ItvbxhQ0T2N09gJiyxAbix4fWyCmxtd7aUxUqmQ3xS+BlozSvYsxONSTHncg==
-X-Received: by 2002:a17:90b:1b47:b0:28b:7124:c467 with SMTP id nv7-20020a17090b1b4700b0028b7124c467mr799077pjb.89.1704633170489;
-        Sun, 07 Jan 2024 05:12:50 -0800 (PST)
-Received: from localhost.localdomain ([2001:250:4000:8246:82c:d0d:31ee:3949])
-        by smtp.gmail.com with ESMTPSA id db4-20020a17090ad64400b00286da7407f2sm4534878pjb.7.2024.01.07.05.12.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jan 2024 05:12:50 -0800 (PST)
-From: Wenjie <qwjhust@gmail.com>
-To: jaegeuk@kernel.org,
-	chao@kernel.org,
-	guoweichao@oppo.com,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org
-Cc: hustqwj@hust.edu.cn,
-	Wenjie Qi <qwjhust@gmail.com>
-Subject: [PATCH] f2fs: fix NULL pointer dereference in f2fs_submit_page_write()
-Date: Sun,  7 Jan 2024 21:12:36 +0800
-Message-ID: <20240107131236.625-1-qwjhust@gmail.com>
-X-Mailer: git-send-email 2.43.0.windows.1
+        bh=oQ7uDXAAmr0puYLSf6CVOO6ldyBnrL24XwRJb0qVA3g=;
+        b=WW/MahA1tUiaSYt4CtgJPJsbmOydD+yXipd3aJdhu4aXWNdTXy8pq29k1ExIldieAp
+         cR+KhOrRpoXdBC6O1n344jNfaX0/2KkVX2VUCCesT2V4Wa6bW/xBAUkIkS1tXP47boNS
+         fA5XbkOTsHAdK066uurdmMO43Fkqdi06PLfGK0ZwifF9qKk18jlA+4z3qZW1Q9++bkkD
+         BIo1ig/sq8icV9EprH/nkpD1jdwdvaVKAc1N5Y+OkKWYH30w2ZtrGxaHXpR3sRvHpEf/
+         pvo7JOucRP4q7QndOFzO8tfvQC94UsGPvLxZqznvAKI5341upvKpNSC4IQXMwWlyAnsD
+         tbxQ==
+X-Gm-Message-State: AOJu0YzIXJuoKLlBR3MzoMXx9DXok25FbiD38sTixb/+hLHXfszNGE0R
+	qOEoEUGB8Bkz2I4aUXPhQZUpP1TCo2IXH1b8a9jKvTZ/LmGtAA==
+X-Google-Smtp-Source: AGHT+IEqD211Ve0cTZTZRpJxL6Z+iwiEuQX5fLYEIoQr6EnUMsxqUHjiyG7Mw5wc+LX66pgOMEUNst1U+Wmfhu3vkOg=
+X-Received: by 2002:a05:6358:93a7:b0:172:98ae:cd35 with SMTP id
+ h39-20020a05635893a700b0017298aecd35mr3194744rwb.29.1704633487421; Sun, 07
+ Jan 2024 05:18:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240107014248.3651022-1-daniel@0x0f.com>
+In-Reply-To: <20240107014248.3651022-1-daniel@0x0f.com>
+From: Daniel Palmer <daniel@0x0f.com>
+Date: Sun, 7 Jan 2024 22:17:56 +0900
+Message-ID: <CAFr9PX=-eC-FZmmOKK_beFvs05_moe8u0jGPrSyW5Xr=AagmTA@mail.gmail.com>
+Subject: Re: [PATCH] m68k: Use macro to generate 68000 interrupt entry sleds
+To: gerg@linux-m68k.org, geert@linux-m68k.org
+Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Wenjie Qi <qwjhust@gmail.com>
+Hi me,
 
-BUG: kernel NULL pointer dereference, address: 0000000000000014
-RIP: 0010:f2fs_submit_page_write+0x6cf/0x780 [f2fs]
-Call Trace:
-<TASK>
-? show_regs+0x6e/0x80
-? __die+0x29/0x70
-? page_fault_oops+0x154/0x4a0
-? prb_read_valid+0x20/0x30
-? __irq_work_queue_local+0x39/0xd0
-? irq_work_queue+0x36/0x70
-? do_user_addr_fault+0x314/0x6c0
-? exc_page_fault+0x7d/0x190
-? asm_exc_page_fault+0x2b/0x30
-? f2fs_submit_page_write+0x6cf/0x780 [f2fs]
-? f2fs_submit_page_write+0x736/0x780 [f2fs]
-do_write_page+0x50/0x170 [f2fs]
-f2fs_outplace_write_data+0x61/0xb0 [f2fs]
-f2fs_do_write_data_page+0x3f8/0x660 [f2fs]
-f2fs_write_single_data_page+0x5bb/0x7a0 [f2fs]
-f2fs_write_cache_pages+0x3da/0xbe0 [f2fs]
-...
+On Sun, 7 Jan 2024 at 10:42, Daniel Palmer <daniel@0x0f.com> wrote:
+<snip>
+>
+> --- a/arch/m68k/68000/ints.c
+> +++ b/arch/m68k/68000/ints.c
+> +asmlinkage irqreturn_t inthandler65(void);
+> +asmlinkage irqreturn_t inthandler66(void);
+> +asmlinkage irqreturn_t inthandler67(void);
+> +asmlinkage irqreturn_t inthandler68(void);
+> +asmlinkage irqreturn_t inthandler69(void);
+> +asmlinkage irqreturn_t inthandler70(void);
+> +asmlinkage irqreturn_t inthandler71(void);
+>
+>  /* The 68k family did not have a good way to determine the source
+>   * of interrupts until later in the family.  The EC000 core does
+> --
+> 2.43.0
 
-It is possible that other threads have added this fio to io->bio
-and submitted the io->bio before entering f2fs_submit_page_write().
-At this point io->bio = NULL.
-If is_end_zone_blkaddr(sbi, fio->new_blkaddr) of this fio is true,
-then an NULL pointer dereference error occurs at bio_get(io->bio).
-In this case, the code to determine the zone end can simply be skipped.
+There is a missing part of this that updates the symbols used when
+populating the vector table that I missed when splitting this patch
+out.
+This will currently cause a build break that I didn't notice because
+the change is actually in my tree.
+I'll send a v2 if the general idea is ok.
 
-Signed-off-by: Wenjie Qi <qwjhust@gmail.com>
----
- fs/f2fs/data.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Cheers,
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 1896928cae77..d08e92bb2621 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -1100,7 +1100,7 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
- 		goto next;
- out:
- #ifdef CONFIG_BLK_DEV_ZONED
--	if (f2fs_sb_has_blkzoned(sbi) && btype < META &&
-+	if (io->bio && f2fs_sb_has_blkzoned(sbi) && btype < META &&
- 			is_end_zone_blkaddr(sbi, fio->new_blkaddr)) {
- 		spin_lock_bh(&sbi->available_active_zones_lock);
- 		if (sbi->available_active_zones > 0) {
--- 
-2.34.1
-
+Daniel
