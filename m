@@ -1,52 +1,47 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7999A125C5;
-	Sun,  7 Jan 2024 07:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 116C8125C3
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Jan 2024 08:01:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XWxpXghw"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-204a16df055so835725fac.0;
-        Sat, 06 Jan 2024 23:43:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704613381; x=1705218181; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sNKji9NxWGIfJI5662GCEQ8jNTqt/barrReQ9fFAVgs=;
-        b=XWxpXghwAPQxuDKaxF/pegD076DjYtdHWnJqMQWA1kuoHMTYDwqVhf6gztLzjdwqtn
-         wxfSNlcsps57N0S35KIimExIiIsHs7mR7g+k0m9tzLAaEbZuWD72X6hptdEEAadjil23
-         z8weegC1Mbt9h74vuv+i/mlOqhnixl6d2XxGl/R/5r5MoathF/kV3HnLMirmN9WCOFph
-         0i9fb0XffsvjJOjHe0phL6tGt8e1WyL9pH784In/mu/tHPCpF51Rf+5AENi6CAngETZ5
-         rdr52KZ+zza91Q6f2EJ1CxzcoCv+ztXS21FiiAztjIS/K3pZI1YPBgesK0VX9uCH6fd3
-         R3zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704613381; x=1705218181;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sNKji9NxWGIfJI5662GCEQ8jNTqt/barrReQ9fFAVgs=;
-        b=nSRx7tkGt39PiPRT3u1nwi6Jec6REx5BXA9axD4vNyvVjstLWvQOfrbWq5ZRrWJeAd
-         DSmcJPwa0rqYzVk0MMgrxIzQ67s8NjbVHJbSem2Sf1gTd0zLcGFfyRx1LCLCKf30Z7vk
-         X6cx7jPem6DTp26Bbrilz8OQ3sNCCQ6AKezGLbKbZ0j0Oj8P5ZynR7bQaQcz2ULRapGT
-         rH7CYLV9cCSQOuWfRWmeMYvwynYbWsrfc8UCvD/fxphY/VEHudQeros3pU0fYmCelz4S
-         SxkzEVrEPkWzLptNyT2ufaE+HZiyi4B54XGUCcjMkNJooMMqm+TGjeJbkk+oYgtqaVUh
-         De1A==
-X-Gm-Message-State: AOJu0Yzn9IHHSgnoOrHZ5LZRyWuO1KctmKiKvxfM27AAROUzEA9SEb7k
-	1KF1D3yO7DPj7RDPTY0kQQc=
-X-Google-Smtp-Source: AGHT+IGSSfZGKp52IWknFCtLFDkGSmSiPW8wdo64nUSkh6BqrZyWVjGPg9sA8CINiGyPZeecpiF/BA==
-X-Received: by 2002:a05:6871:8802:b0:204:1d3e:94d with SMTP id te2-20020a056871880200b002041d3e094dmr2694830oab.11.1704613381412;
-        Sat, 06 Jan 2024 23:43:01 -0800 (PST)
-Received: from localhost ([218.186.180.226])
-        by smtp.gmail.com with ESMTPSA id nb12-20020a17090b35cc00b0028658c6209dsm4136040pjb.2.2024.01.06.23.43.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jan 2024 23:43:01 -0800 (PST)
-Date: Sun, 7 Jan 2024 15:42:59 +0800
-From: Vinay Varma <varmavinaym@gmail.com>
-To: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	"open list:SONY IMX219 SENSOR DRIVER" <linux-media@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH] media: i2c: imx219: implement the v4l2 selection api
-Message-ID: <kv6yfyahbud474e75y4jaczg64pcowvlz7i52kikknuh6wje5o@4k2hikwcueoy>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k9tBTsaU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704614503; x=1736150503;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=F3iruKT4fxqF1QDuoTmtaxLu4zWWEUqI59gl02qbCy4=;
+  b=k9tBTsaUANbwW1RN+DTXmSa5d9mo7jfoPRAzNeYHPyyiOKx4mZH7fW+6
+   VbzVKB9MeFonjwpT6baxXB8hIftHxOq750dQwUNE0zBx3tCaFY8/gOHxU
+   zgIom1bi7BboRilole/JEg+Vb1v02dWGfNONUTK3zxSHpxcpBLHzjf2do
+   gxc5ojDHbyiHiDz+TlBxpURDgRYWxRj3p96MkwPFIq+P2lPYt6cqI0O3C
+   fXc226ejKCj/wHPJOdoznQ1CtGXOQFhNIj6MoqL342zQ6nNN3JSI+n0ng
+   cQoersYSnhr4OcjqWlxstffioWD+hl+uE7Sh37/9p5PtRuCDiI7Shl+Wn
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10945"; a="397434502"
+X-IronPort-AV: E=Sophos;i="6.04,338,1695711600"; 
+   d="scan'208";a="397434502"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2024 00:01:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10945"; a="1112471401"
+X-IronPort-AV: E=Sophos;i="6.04,338,1695711600"; 
+   d="scan'208";a="1112471401"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by fmsmga005.fm.intel.com with ESMTP; 07 Jan 2024 00:01:40 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rMO6E-0003c4-1R;
+	Sun, 07 Jan 2024 08:01:38 +0000
+Date: Sun, 7 Jan 2024 16:01:09 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: drivers/md/bcache/request.c:309: warning: Function parameter or
+ member 'bch_data_insert' not described in 'CLOSURE_CALLBACK'
+Message-ID: <202401071547.Zr3Ffy8F-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,336 +51,67 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-This patch exposes IMX219's crop and compose capabilities
-by implementing the selection API. Horizontal and vertical
-binning being separate registers, `imx219_binning_goodness`
-computes the best possible height and width of the compose
-specification using the selection flags. Compose operation
-updates the subdev's format object to keep them in sync.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   52b1853b080a082ec3749c3a9577f6c71b1d4a90
+commit: d4e3b928ab487a8aecd1f6a140b40ac365116cfb closures: CLOSURE_CALLBACK() to fix type punning
+date:   6 weeks ago
+config: i386-buildonly-randconfig-001-20240107 (https://download.01.org/0day-ci/archive/20240107/202401071547.Zr3Ffy8F-lkp@intel.com/config)
+compiler: ClangBuiltLinux clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240107/202401071547.Zr3Ffy8F-lkp@intel.com/reproduce)
 
-Signed-off-by: Vinay Varma <varmavinaym@gmail.com>
----
- drivers/media/i2c/imx219.c | 222 +++++++++++++++++++++++++++++++------
- 1 file changed, 190 insertions(+), 32 deletions(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401071547.Zr3Ffy8F-lkp@intel.com/
 
-diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-index 39943d72c22d..27d85fb7ad51 100644
---- a/drivers/media/i2c/imx219.c
-+++ b/drivers/media/i2c/imx219.c
-@@ -29,6 +29,7 @@
- #include <media/v4l2-event.h>
- #include <media/v4l2-fwnode.h>
- #include <media/v4l2-mediabus.h>
-+#include <media/v4l2-rect.h>
- 
- /* Chip ID */
- #define IMX219_REG_CHIP_ID		CCI_REG16(0x0000)
-@@ -73,6 +74,7 @@
- /* V_TIMING internal */
- #define IMX219_REG_VTS			CCI_REG16(0x0160)
- #define IMX219_VTS_MAX			0xffff
-+#define IMX219_VTS_DEF 1763
- 
- #define IMX219_VBLANK_MIN		32
- 
-@@ -146,6 +148,7 @@
- #define IMX219_PIXEL_ARRAY_TOP		8U
- #define IMX219_PIXEL_ARRAY_WIDTH	3280U
- #define IMX219_PIXEL_ARRAY_HEIGHT	2464U
-+#define IMX219_MIN_COMPOSE_SIZE 8U
- 
- /* Mode : resolution and related config&values */
- struct imx219_mode {
-@@ -284,6 +287,8 @@ static const u32 imx219_mbus_formats[] = {
- #define IMX219_XCLR_MIN_DELAY_US	6200
- #define IMX219_XCLR_DELAY_RANGE_US	1000
- 
-+static const u32 binning_ratios[] = { 1, 2 };
-+
- /* Mode configs */
- static const struct imx219_mode supported_modes[] = {
- 	{
-@@ -296,19 +301,19 @@ static const struct imx219_mode supported_modes[] = {
- 		/* 1080P 30fps cropped */
- 		.width = 1920,
- 		.height = 1080,
--		.vts_def = 1763,
-+		.vts_def = IMX219_VTS_DEF,
- 	},
- 	{
- 		/* 2x2 binned 30fps mode */
- 		.width = 1640,
- 		.height = 1232,
--		.vts_def = 1763,
-+		.vts_def = IMX219_VTS_DEF,
- 	},
- 	{
- 		/* 640x480 30fps mode */
- 		.width = 640,
- 		.height = 480,
--		.vts_def = 1763,
-+		.vts_def = IMX219_VTS_DEF,
- 	},
- };
- 
-@@ -809,6 +814,39 @@ static int imx219_enum_frame_size(struct v4l2_subdev *sd,
- 	return 0;
- }
- 
-+static void imx219_refresh_ctrls(struct v4l2_subdev *sd,
-+				 struct v4l2_subdev_state *state,
-+				 unsigned int vts_def)
-+{
-+	int exposure_max;
-+	int exposure_def;
-+	int hblank;
-+	struct imx219 *imx219 = to_imx219(sd);
-+	struct v4l2_mbus_framefmt *fmt =
-+		v4l2_subdev_get_pad_format(sd, state, 0);
-+
-+	/* Update limits and set FPS to default */
-+	__v4l2_ctrl_modify_range(imx219->vblank, IMX219_VBLANK_MIN,
-+				 IMX219_VTS_MAX - fmt->height, 1,
-+				 vts_def - fmt->height);
-+	__v4l2_ctrl_s_ctrl(imx219->vblank, vts_def - fmt->height);
-+	/* Update max exposure while meeting expected vblanking */
-+	exposure_max = vts_def - 4;
-+	exposure_def = (exposure_max < IMX219_EXPOSURE_DEFAULT) ?
-+			       exposure_max :
-+			       IMX219_EXPOSURE_DEFAULT;
-+	__v4l2_ctrl_modify_range(imx219->exposure, imx219->exposure->minimum,
-+				 exposure_max, imx219->exposure->step,
-+				 exposure_def);
-+	/*
-+	 * Currently PPL is fixed to IMX219_PPL_DEFAULT, so hblank
-+	 * depends on mode->width only, and is not changeble in any
-+	 * way other than changing the mode.
-+	 */
-+	hblank = IMX219_PPL_DEFAULT - fmt->width;
-+	__v4l2_ctrl_modify_range(imx219->hblank, hblank, hblank, 1, hblank);
-+}
-+
- static int imx219_set_pad_format(struct v4l2_subdev *sd,
- 				 struct v4l2_subdev_state *state,
- 				 struct v4l2_subdev_format *fmt)
-@@ -816,7 +854,7 @@ static int imx219_set_pad_format(struct v4l2_subdev *sd,
- 	struct imx219 *imx219 = to_imx219(sd);
- 	const struct imx219_mode *mode;
- 	struct v4l2_mbus_framefmt *format;
--	struct v4l2_rect *crop;
-+	struct v4l2_rect *crop, *compose;
- 	unsigned int bin_h, bin_v;
- 
- 	mode = v4l2_find_nearest_size(supported_modes,
-@@ -842,34 +880,14 @@ static int imx219_set_pad_format(struct v4l2_subdev *sd,
- 	crop->left = (IMX219_NATIVE_WIDTH - crop->width) / 2;
- 	crop->top = (IMX219_NATIVE_HEIGHT - crop->height) / 2;
- 
--	if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
--		int exposure_max;
--		int exposure_def;
--		int hblank;
--
--		/* Update limits and set FPS to default */
--		__v4l2_ctrl_modify_range(imx219->vblank, IMX219_VBLANK_MIN,
--					 IMX219_VTS_MAX - mode->height, 1,
--					 mode->vts_def - mode->height);
--		__v4l2_ctrl_s_ctrl(imx219->vblank,
--				   mode->vts_def - mode->height);
--		/* Update max exposure while meeting expected vblanking */
--		exposure_max = mode->vts_def - 4;
--		exposure_def = (exposure_max < IMX219_EXPOSURE_DEFAULT) ?
--			exposure_max : IMX219_EXPOSURE_DEFAULT;
--		__v4l2_ctrl_modify_range(imx219->exposure,
--					 imx219->exposure->minimum,
--					 exposure_max, imx219->exposure->step,
--					 exposure_def);
--		/*
--		 * Currently PPL is fixed to IMX219_PPL_DEFAULT, so hblank
--		 * depends on mode->width only, and is not changeble in any
--		 * way other than changing the mode.
--		 */
--		hblank = IMX219_PPL_DEFAULT - mode->width;
--		__v4l2_ctrl_modify_range(imx219->hblank, hblank, hblank, 1,
--					 hblank);
--	}
-+	compose = v4l2_subdev_get_pad_compose(sd, state, 0);
-+	compose->width = format->width;
-+	compose->height = format->height;
-+	compose->left = 0;
-+	compose->top = 0;
-+
-+	if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE)
-+		imx219_refresh_ctrls(sd, state, mode->vts_def);
- 
- 	return 0;
- }
-@@ -884,6 +902,11 @@ static int imx219_get_selection(struct v4l2_subdev *sd,
- 		return 0;
- 	}
- 
-+	case V4L2_SEL_TGT_COMPOSE: {
-+		sel->r = *v4l2_subdev_get_pad_compose(sd, state, 0);
-+		return 0;
-+	}
-+
- 	case V4L2_SEL_TGT_NATIVE_SIZE:
- 		sel->r.top = 0;
- 		sel->r.left = 0;
-@@ -900,11 +923,145 @@ static int imx219_get_selection(struct v4l2_subdev *sd,
- 		sel->r.height = IMX219_PIXEL_ARRAY_HEIGHT;
- 
- 		return 0;
-+
-+	case V4L2_SEL_TGT_COMPOSE_DEFAULT:
-+	case V4L2_SEL_TGT_COMPOSE_BOUNDS:
-+	case V4L2_SEL_TGT_COMPOSE_PADDED:
-+		sel->r.top = 0;
-+		sel->r.left = 0;
-+		sel->r.width = IMX219_PIXEL_ARRAY_WIDTH;
-+		sel->r.height = IMX219_PIXEL_ARRAY_HEIGHT;
-+		return 0;
- 	}
- 
- 	return -EINVAL;
- }
- 
-+#define IMX219_ROUND(dim, step, flags)                \
-+	((flags) & V4L2_SEL_FLAG_GE ?                 \
-+		 round_up((dim), (step)) :            \
-+		 ((flags) & V4L2_SEL_FLAG_LE ?        \
-+			  round_down((dim), (step)) : \
-+			  round_down((dim) + (step) / 2, (step))))
-+
-+static int imx219_set_selection_crop(struct v4l2_subdev *sd,
-+				     struct v4l2_subdev_state *sd_state,
-+				     struct v4l2_subdev_selection *sel)
-+{
-+	u32 max_binning;
-+	struct v4l2_rect *compose, *crop;
-+	struct v4l2_mbus_framefmt *fmt;
-+
-+	crop = v4l2_subdev_get_pad_crop(sd, sd_state, 0);
-+	if (v4l2_rect_equal(&sel->r, crop))
-+		return false;
-+	max_binning = binning_ratios[ARRAY_SIZE(binning_ratios) - 1];
-+	sel->r.width =
-+		clamp(IMX219_ROUND(sel->r.width, max_binning, sel->flags),
-+		      max_binning * IMX219_MIN_COMPOSE_SIZE,
-+		      IMX219_PIXEL_ARRAY_WIDTH);
-+	sel->r.height =
-+		clamp(IMX219_ROUND(sel->r.width, max_binning, sel->flags),
-+		      max_binning * IMX219_MIN_COMPOSE_SIZE,
-+		      IMX219_PIXEL_ARRAY_WIDTH);
-+	sel->r.left =
-+		min_t(u32, sel->r.left, IMX219_PIXEL_ARRAY_LEFT - sel->r.width);
-+	sel->r.top =
-+		min_t(u32, sel->r.top, IMX219_PIXEL_ARRAY_TOP - sel->r.top);
-+
-+	compose = v4l2_subdev_get_pad_compose(sd, sd_state, 0);
-+	fmt = v4l2_subdev_get_pad_format(sd, sd_state, 0);
-+	*crop = sel->r;
-+	compose->height = crop->height;
-+	compose->width = crop->width;
-+	return true;
-+}
-+
-+static int imx219_binning_goodness(u32 act, u32 ask, u32 flags)
-+{
-+	const int goodness = 100000;
-+	int val = 0;
-+
-+	if (flags & V4L2_SEL_FLAG_GE)
-+		if (act < ask)
-+			val -= goodness;
-+
-+	if (flags & V4L2_SEL_FLAG_LE)
-+		if (act > ask)
-+			val -= goodness;
-+
-+	val -= abs(act - ask);
-+
-+	return val;
-+}
-+
-+static bool imx219_set_selection_compose(struct v4l2_subdev *sd,
-+					 struct v4l2_subdev_state *state,
-+					 struct v4l2_subdev_selection *sel)
-+{
-+	int best_goodness;
-+	struct v4l2_rect *compose, *crop;
-+
-+	compose = v4l2_subdev_get_pad_compose(sd, state, 0);
-+	if (v4l2_rect_equal(compose, &sel->r))
-+		return false;
-+
-+	crop = v4l2_subdev_get_pad_crop(sd, state, 0);
-+
-+	best_goodness = INT_MIN;
-+	for (int i = 0; i < ARRAY_SIZE(binning_ratios); ++i) {
-+		u32 width = crop->width / binning_ratios[i];
-+		int goodness = imx219_binning_goodness(width, sel->r.width,
-+						       sel->flags);
-+		if (goodness > best_goodness) {
-+			best_goodness = goodness;
-+			compose->width = width;
-+		}
-+	}
-+	best_goodness = INT_MIN;
-+	for (int i = 0; i < ARRAY_SIZE(binning_ratios); ++i) {
-+		u32 height = crop->height / binning_ratios[i];
-+		int goodness = imx219_binning_goodness(height, sel->r.height,
-+						       sel->flags);
-+		if (goodness > best_goodness) {
-+			best_goodness = goodness;
-+			compose->height = height;
-+		}
-+	}
-+	return true;
-+}
-+
-+static int imx219_set_selection(struct v4l2_subdev *sd,
-+				struct v4l2_subdev_state *sd_state,
-+				struct v4l2_subdev_selection *sel)
-+{
-+	bool compose_updated = false;
-+
-+	switch (sel->target) {
-+	case V4L2_SEL_TGT_CROP:
-+		compose_updated = imx219_set_selection_crop(sd, sd_state, sel);
-+		break;
-+	case V4L2_SEL_TGT_COMPOSE:
-+		compose_updated =
-+			imx219_set_selection_compose(sd, sd_state, sel);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	if (compose_updated) {
-+		struct v4l2_rect *compose =
-+			v4l2_subdev_get_pad_compose(sd, sd_state, 0);
-+		struct v4l2_mbus_framefmt *fmt =
-+			v4l2_subdev_get_pad_format(sd, sd_state, 0);
-+		fmt->height = compose->height;
-+		fmt->width = compose->width;
-+	}
-+	if (compose_updated && sel->which == V4L2_SUBDEV_FORMAT_ACTIVE)
-+		imx219_refresh_ctrls(sd, sd_state, IMX219_VTS_DEF);
-+
-+	return 0;
-+}
-+
- static int imx219_init_cfg(struct v4l2_subdev *sd,
- 			   struct v4l2_subdev_state *state)
- {
-@@ -938,6 +1095,7 @@ static const struct v4l2_subdev_pad_ops imx219_pad_ops = {
- 	.get_fmt = v4l2_subdev_get_fmt,
- 	.set_fmt = imx219_set_pad_format,
- 	.get_selection = imx219_get_selection,
-+	.set_selection = imx219_set_selection,
- 	.enum_frame_size = imx219_enum_frame_size,
- };
- 
+All warnings (new ones prefixed by >>):
+
+>> drivers/md/bcache/request.c:309: warning: Function parameter or member 'bch_data_insert' not described in 'CLOSURE_CALLBACK'
+>> drivers/md/bcache/request.c:309: warning: expecting prototype for bch_data_insert(). Prototype was for CLOSURE_CALLBACK() instead
+
+
+vim +309 drivers/md/bcache/request.c
+
+cafe563591446c Kent Overstreet 2013-03-23  287  
+cafe563591446c Kent Overstreet 2013-03-23  288  /**
+a34a8bfd4e6358 Kent Overstreet 2013-10-24  289   * bch_data_insert - stick some data in the cache
+47344e330eabc1 Bart Van Assche 2018-03-18  290   * @cl: closure pointer.
+cafe563591446c Kent Overstreet 2013-03-23  291   *
+cafe563591446c Kent Overstreet 2013-03-23  292   * This is the starting point for any data to end up in a cache device; it could
+cafe563591446c Kent Overstreet 2013-03-23  293   * be from a normal write, or a writeback write, or a write to a flash only
+cafe563591446c Kent Overstreet 2013-03-23  294   * volume - it's also used by the moving garbage collector to compact data in
+cafe563591446c Kent Overstreet 2013-03-23  295   * mostly empty buckets.
+cafe563591446c Kent Overstreet 2013-03-23  296   *
+cafe563591446c Kent Overstreet 2013-03-23  297   * It first writes the data to the cache, creating a list of keys to be inserted
+cafe563591446c Kent Overstreet 2013-03-23  298   * (if the data had to be fragmented there will be multiple keys); after the
+cafe563591446c Kent Overstreet 2013-03-23  299   * data is written it calls bch_journal, and after the keys have been added to
+cafe563591446c Kent Overstreet 2013-03-23  300   * the next journal write they're inserted into the btree.
+cafe563591446c Kent Overstreet 2013-03-23  301   *
+3db4d0783eaf2a Shenghui Wang   2018-12-13  302   * It inserts the data in op->bio; bi_sector is used for the key offset,
+cafe563591446c Kent Overstreet 2013-03-23  303   * and op->inode is used for the key inode.
+cafe563591446c Kent Overstreet 2013-03-23  304   *
+3db4d0783eaf2a Shenghui Wang   2018-12-13  305   * If op->bypass is true, instead of inserting the data it invalidates the
+3db4d0783eaf2a Shenghui Wang   2018-12-13  306   * region of the cache represented by op->bio and op->inode.
+cafe563591446c Kent Overstreet 2013-03-23  307   */
+d4e3b928ab487a Kent Overstreet 2023-11-17  308  CLOSURE_CALLBACK(bch_data_insert)
+cafe563591446c Kent Overstreet 2013-03-23 @309  {
+d4e3b928ab487a Kent Overstreet 2023-11-17  310  	closure_type(op, struct data_insert_op, cl);
+cafe563591446c Kent Overstreet 2013-03-23  311  
+60ae81eee86dd7 Slava Pestov    2014-05-22  312  	trace_bcache_write(op->c, op->inode, op->bio,
+60ae81eee86dd7 Slava Pestov    2014-05-22  313  			   op->writeback, op->bypass);
+220bb38c21b83e Kent Overstreet 2013-09-10  314  
+220bb38c21b83e Kent Overstreet 2013-09-10  315  	bch_keylist_init(&op->insert_keys);
+220bb38c21b83e Kent Overstreet 2013-09-10  316  	bio_get(op->bio);
+d4e3b928ab487a Kent Overstreet 2023-11-17  317  	bch_data_insert_start(&cl->work);
+cafe563591446c Kent Overstreet 2013-03-23  318  }
+cafe563591446c Kent Overstreet 2013-03-23  319  
+
+:::::: The code at line 309 was first introduced by commit
+:::::: cafe563591446cf80bfbc2fe3bc72a2e36cf1060 bcache: A block layer cache
+
+:::::: TO: Kent Overstreet <koverstreet@google.com>
+:::::: CC: Kent Overstreet <koverstreet@google.com>
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
