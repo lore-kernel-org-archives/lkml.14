@@ -1,67 +1,102 @@
-Received: from out203-205-221-149.mail.qq.com (out203-205-221-149.mail.qq.com [203.205.221.149])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57AC240BF2;
-	Mon,  8 Jan 2024 12:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ECA040C0C
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 12:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="SfAlAja2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1704718402; bh=CPfVigqtKj9N695Aa1G5su1g8j3lakcRAE4bhJn7SZ0=;
-	h=From:To:Cc:Subject:Date;
-	b=SfAlAja2Bu9lwctmVzvbERypdiM04AcR8MicQYJVXEE3WEIlYl4F/f8i+IT77FnpY
-	 +3cDP00tnyJRzUCvELwwupocQJSxg5FaEyUHCP4zyUIhr7JqSaVV8cMZ2e6HOV1iq/
-	 ztW2iIQWhXmYXXiAc5mWpMd7squJ/ueTlKg7nqXM=
-Received: from levi-pc.. ([61.186.21.12])
-	by newxmesmtplogicsvrszc5-1.qq.com (NewEsmtp) with SMTP
-	id D5405488; Mon, 08 Jan 2024 20:53:20 +0800
-X-QQ-mid: xmsmtpt1704718400ts1lhh214
-Message-ID: <tencent_0ED010E11594001F62B9EF66C41B0FABCC05@qq.com>
-X-QQ-XMAILINFO: OW8nL0XA5GqleSrjdBA7ntZHzHSgw2nE91fUuaBc1wWL83X5FLNBZiJqwigJDn
-	 V0g08mNheRmsg9LS0xDWNFtwIAyTm4n5gPN525VRorjE1SNG+Io3ZcDFr+0uTnAk52JLp7hMYrKt
-	 W/v8I3PsGNvfyy3flBzfsPYst8QOW8B8qf67vQ6DYdggOPiGgxjjco1o7GvxClVIFeGyt9b25LZo
-	 W6mrvU9jCymCK7uZIm7uxS46KUl9GTHxpA+asInZtmUIYbUOI8Snr6fFo7regHNoILKH4ncGuRU+
-	 4TNapv9LkuNDQ8DGrgXpmVVw9n7m32LJAr+SHvrVQ1uUfi51ybipsU96jiF8N8VrzySQtjybiESo
-	 j3UzVu+QuTXRMFwNHzmXq4Hx493uYBArRxY6ITwqhjrpHjiRWCLfjcq5cwlG9FFqiZmKbzHro8kD
-	 hKQ63uew1zpou1DgJ2si/csONeG6cDXLPg81vxUecfgQ8COYBup1WIDyLC2FIZdSa3eRITkKFLqm
-	 Q8CRBudGIY6jBNIclgxjEHHh0je9u3xlfkhR1yP/aSkHyH5MBEOdWlEIHwTT+ZeX5SiQzjJnjG15
-	 y8IBjSuEpBD1pgNd6tcHWr1C2oKqVC4ynQ3zIqKb2qxJiWAtT4A9wSf6MiPLpaYqxMERlZmsikDI
-	 htRVNnz+sgOHKYXoTYSlrFA17Q7rSo5lcFgQ5Co+5T6+r6Rq8L3S6/ADRUeyqJTSxeTh0Y8loCVw
-	 psMAjUf5712p7EawlRha9GlzEYN+ifbEx92JBMM8sKfUx/sh3MHeR7GGA20FPftUPvzD+dwpU8dS
-	 pBnoKpbMdVpnOewPOGuqBW7QJZDS3/KDv9uSRfX/RHkNsi9veievjV97gd++HBR8DQp5h/huL5SF
-	 ain4xr+tU4QGcQ3hvwucolVWrNeTnS3TuR5XdkHYv+3UgcVdGFxq4pTTl7+bucq44TrvK5H/2klF
-	 rvHAbNjyt2Zmy0OMeoEt2DrXYpsDmQ
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-From: Huayu Zhang <932367230@qq.com>
-To: tiwai@suse.com
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	james.schulman@cirrus.com,
-	david.rhodes@cirrus.com,
-	rf@opensource.cirrus.com,
-	perex@perex.cz,
-	sbinding@opensource.cirrus.com,
-	kailang@realtek.com,
-	zhanghuayu.dev@gmail.com
-Subject: add DSD for ThinkBook 16p G4 IRH with Subsystem Id of :
-Date: Mon,  8 Jan 2024 20:51:36 +0800
-X-OQ-MSGID: <20240108125137.15081-1-932367230@qq.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DZDzd95m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704718491;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v9/XzYGtf3zuy1/gN/Tcx1jMZeUXDmt2Uyj9YvqrOzQ=;
+	b=DZDzd95m0m6+UJoBN17V9Ht0K7lSol1T7ANR9tQqSVXl7R6SWgHgWrXsUY6/GV7s+MxA+2
+	K15EtJ2lJ3enN0jRr+5se+2DheVzLwksTfAEIvX8s5n034lqnfkdJl/XoTz5g4xJLBcdwx
+	vJqRyrjByerD/ZHRbldrOlyWQEQZPI8=
+Received: from mail-vs1-f70.google.com (mail-vs1-f70.google.com
+ [209.85.217.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-557-qbztXik_PrSXz1kwH-qFmg-1; Mon, 08 Jan 2024 07:54:50 -0500
+X-MC-Unique: qbztXik_PrSXz1kwH-qFmg-1
+Received: by mail-vs1-f70.google.com with SMTP id ada2fe7eead31-466f4639ef7so2765372137.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 04:54:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704718490; x=1705323290;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=v9/XzYGtf3zuy1/gN/Tcx1jMZeUXDmt2Uyj9YvqrOzQ=;
+        b=LjubXAvBtgew/VQAYvZJFTXxAtPAafrbaHCmHTAo4bTPsxkqeExJtbKuN9lQ5KAFe9
+         HvdUeEit2BaSPW/Nb+c8qBtl88eHQZ1Hh/U+9IW5pBY7keD8MhdZms1dXqGX82eEowjB
+         xEeNaH1pCwMrpYOysLff96rVBVvCyKMe9YTKg0QwNXm45k2P40W9jMrTXLvL4dE5fM4i
+         WJ13Txxnn5fLy/RX0w7rgYp3e64gwdXY4oCRZsidZ1Z3khCi8ScfNVMrWCAxFBiX4OXb
+         oTzHgxLIY4VXsM+IeeY/hWNijmqYgyq/6GJlFHYLsfSd1BbuuWDGdZPdWM/PnJXR1ES1
+         tGCg==
+X-Gm-Message-State: AOJu0YxNfX/g4PHkQo+WtGnUfEhyQWVKW6aSxH+TjCxbmSAdWrJlyFWq
+	DSSWzXjlD+YOmduznilHlOgTzLngz7dJ59hQFm7QweatWIK5/U0i9mj8bRLp67NQ+ig6RUAiLTD
+	mNPp6Xp/9lhHya/KU/QGRgSBN7h8YClxXimYy+5QnLyfCPBL3
+X-Received: by 2002:a05:6102:41ab:b0:467:c27a:ee36 with SMTP id cd43-20020a05610241ab00b00467c27aee36mr1983332vsb.3.1704718489899;
+        Mon, 08 Jan 2024 04:54:49 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGEHYwL+cKo3CUEW0LoVY+W3kcW8vUISpsYg6AY5XbAYP9iRvhAGefNSkZ9qg1ovwO9G25gElUUSms2b2gHmVQ=
+X-Received: by 2002:a05:6102:41ab:b0:467:c27a:ee36 with SMTP id
+ cd43-20020a05610241ab00b00467c27aee36mr1983327vsb.3.1704718489605; Mon, 08
+ Jan 2024 04:54:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240104193303.3175844-1-seanjc@google.com> <20240104193303.3175844-2-seanjc@google.com>
+In-Reply-To: <20240104193303.3175844-2-seanjc@google.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Mon, 8 Jan 2024 13:54:37 +0100
+Message-ID: <CABgObfamcmdyevL1HCfri65wGnHwDeRB+NyCn0M0pONQLHxZPA@mail.gmail.com>
+Subject: Re: [GIT PULL] KVM: non-x86 changes for 6.8
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Sorry for missing the info within patch and not familiar with the
-mailing system using git. As mentioned in the subject,
-the patch is using to fix the sound issue of ThinkBook 16p G4 IRH with
-Subsystem Id of : 0x17aa38a9. But this just enable the downside (bass)
-speakers. When I tried to adjust the volumn, it atually mapped to the
-frequency division (the lower volumn actually set the bass speakers,
-and higher volumn map to the louder sound of up facing speakers).
-Wondering if this related to ALSA?
+On Thu, Jan 4, 2024 at 8:33=E2=80=AFPM Sean Christopherson <seanjc@google.c=
+om> wrote:
+>
+> Please pull a few minor changes that aren't (just) x86.  The
+> vmemdup_array_user() patches were sent as a series, and the s390 folks we=
+re
+> quick on the draw with acks, so it was easiest for all involved to just g=
+rab
+> everything in one shot.
+>
+> The following changes since commit e9e60c82fe391d04db55a91c733df4a017c28b=
+2f:
+>
+>   selftests/kvm: fix compilation on non-x86_64 platforms (2023-11-21 11:5=
+8:25 -0500)
+>
+> are available in the Git repository at:
+>
+>   https://github.com/kvm-x86/linux.git tags/kvm-x86-generic-6.8
+>
+> for you to fetch changes up to 1f829359c8c37f77a340575957686ca8c4bca317:
+>
+>   KVM: Harden copying of userspace-array against overflow (2023-12-01 08:=
+00:53 -0800)
+
+Pulled, thanks.
+
+Paolo
+
+> ----------------------------------------------------------------
+> Common KVM changes for 6.8:
+>
+>  - Use memdup_array_user() to harden against overflow.
+>
+>  - Unconditionally advertise KVM_CAP_DEVICE_CTRL for all architectures.
+>
+> ----------------------------------------------------------------
 
