@@ -1,130 +1,215 @@
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01rlnn2079.outbound.protection.outlook.com [40.95.110.79])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157FD45C0D;
-	Mon,  8 Jan 2024 19:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=taln60.nuvoton.co.il
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b="JQbipxoY"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Qw6bBZNRZzilX0z6YnGHzMXt6MG0tebgGVdwsU/piOWDg7HhQzxLaruLxqQQs+2uOK2rw6X7TFTZHw30rmynai2pjapsKbfZv43FnxtaHlZE8uT+SVgyua1h4C0sboooVgNI1Ti5VNaG9b2iD1Kh3dMozis2AAwHJU+mAsbO3SZiglU/xNUmoFYFmymSOdIAIiGCucr5ETWppbRG1lPH+KoMOgXJNPzj/cmDKATanhaYfDcSEUYLjZn2P/LpAxnp6LAEmEWGUy2mzFQs46FQneakR/6/hxp2QJmEhtzv7qpagW6kNp2LRNTX2wahsnCn/5rngQTNgL/1ljz3CVGB0Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=v2D468flie3JNhJ+N5NYFfoJqr/veU8Xh/sDR5huZgc=;
- b=a/QkMYRDym6RP/+CxQO9Gm8wrTINQr3C4T0+RZvLao3flxcqFlmTFKJOIYL0PQt33fxpontcbDuNJL8Haw3OxWVT7d/mEDk/YBIXsB6fwYsJUtbcijTGud5MsggH5woqDkh6eDGFHVv1MqoHZYQ+h98Api8WHPWAtpxEJqM+IhyXRKeUN9jfooEuy5gBmzYs4IMwqXHHT8CDnANBuv3wrZfWIkDlo+I0mONO0fGUOKLomSqWlf1PTl87u10hmAEgfDzP0li6yFNPxHfpmBF5y3jTvMlDyymOdTK/RtME5Ttn12TXkr26UuVAw6yr01uheHVNe7ab4FYzyDvAPy7fbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 211.75.126.7) smtp.rcpttodomain=baylibre.com
- smtp.mailfrom=taln60.nuvoton.co.il; dmarc=fail (p=none sp=quarantine pct=100)
- action=none header.from=gmail.com; dkim=none (message not signed); arc=none
- (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v2D468flie3JNhJ+N5NYFfoJqr/veU8Xh/sDR5huZgc=;
- b=JQbipxoYbAo+FY9POlT2KWZc0MwCO8reoFohLhwDev3Ww9KeEH/Mz6cbpGElQf/peIvHQGuanUuiOPMm/ByJv0JFqAUwl4OyDLAa4Hf/uJfAHXSX8/uJ9M7DvdLimpwmsmGYLe/UkrvzE6Ld61RlfTb+t/2Tv319o1cP5KLoxrE=
-Received: from PS2PR02CA0082.apcprd02.prod.outlook.com (2603:1096:300:5c::22)
- by SEYPR03MB7681.apcprd03.prod.outlook.com (2603:1096:101:13d::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.21; Mon, 8 Jan
- 2024 13:54:35 +0000
-Received: from HK2PEPF00006FB5.apcprd02.prod.outlook.com
- (2603:1096:300:5c:cafe::b7) by PS2PR02CA0082.outlook.office365.com
- (2603:1096:300:5c::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.21 via Frontend
- Transport; Mon, 8 Jan 2024 13:54:35 +0000
-X-MS-Exchange-Authentication-Results: spf=none (sender IP is 211.75.126.7)
- smtp.mailfrom=taln60.nuvoton.co.il; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=gmail.com;
-Received-SPF: None (protection.outlook.com: taln60.nuvoton.co.il does not
- designate permitted sender hosts)
-Received: from NTHCCAS01.nuvoton.com (211.75.126.7) by
- HK2PEPF00006FB5.mail.protection.outlook.com (10.167.8.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7181.12 via Frontend Transport; Mon, 8 Jan 2024 13:54:34 +0000
-Received: from NTHCCAS01.nuvoton.com (10.1.8.28) by NTHCCAS01.nuvoton.com
- (10.1.8.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 8 Jan
- 2024 21:54:25 +0800
-Received: from taln58.nuvoton.co.il (10.191.1.178) by NTHCCAS01.nuvoton.com
- (10.1.8.28) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
- Transport; Mon, 8 Jan 2024 21:54:25 +0800
-Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
-	by taln58.nuvoton.co.il (Postfix) with ESMTP id 97D175F64B;
-	Mon,  8 Jan 2024 15:54:23 +0200 (IST)
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
-	id 97224DC0047; Mon,  8 Jan 2024 15:54:23 +0200 (IST)
-From: Tomer Maimon <tmaimon77@gmail.com>
-To: <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <tali.perry1@gmail.com>,
-	<joel@jms.id.au>, <venture@google.com>, <yuenn@google.com>,
-	<benjaminfair@google.com>
-CC: <openbmc@lists.ozlabs.org>, <linux-clk@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>, Tomer Maimon
-	<tmaimon77@gmail.com>
-Subject: [PATCH v22 5/8] arm64: dts: nuvoton: npcm8xx: add clock reset syscon node
-Date: Mon, 8 Jan 2024 15:54:18 +0200
-Message-ID: <20240108135421.684263-6-tmaimon77@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240108135421.684263-1-tmaimon77@gmail.com>
-References: <20240108135421.684263-1-tmaimon77@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA3445C1C;
+	Mon,  8 Jan 2024 19:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=v0yd.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=v0yd.nl
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4T83z03ZNxz9sch;
+	Mon,  8 Jan 2024 20:29:16 +0100 (CET)
+Message-ID: <d1e7219f-e7b4-4474-ae89-70925b8787fa@v0yd.nl>
+Date: Mon, 8 Jan 2024 20:29:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH v2 4/4] Bluetooth: Remove pending ACL connection attempts
+Content-Language: en-US
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>, linux-bluetooth@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, verdre@v0yd.nl
+References: <20240108183938.468426-1-verdre@v0yd.nl>
+ <20240108183938.468426-5-verdre@v0yd.nl>
+ <5d1f2013-5758-4d6c-8d01-e96a76bb2686@v0yd.nl>
+ <40550fc1-3b5b-438c-891d-2da0f30874f3@v0yd.nl>
+ <CABBYNZKV8SujJ7GFUqTMXUskE=yK0q=opmwvTZNEpPb=JkiQbA@mail.gmail.com>
+From: =?UTF-8?Q?Jonas_Dre=C3=9Fler?= <verdre@v0yd.nl>
+In-Reply-To: <CABBYNZKV8SujJ7GFUqTMXUskE=yK0q=opmwvTZNEpPb=JkiQbA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NotSetDelaration: True
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HK2PEPF00006FB5:EE_|SEYPR03MB7681:EE_
-X-MS-Office365-Filtering-Correlation-Id: 84125afc-d926-4982-9c15-08dc105158e2
-X-MS-Exchange-SenderADCheck: 2
-X-MS-Exchange-AntiSpam-Relay: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	30A8GdJ4Y3sRrJQp8gWd8ptywWyvFxh6Y+C2Y3t4XrIGEwIf/ZfTlODxPIk0x6u9AR8/aAf2XxzmBmh4y/Lg8Mx+cM1+rMO00i9sH5BxiVnWMXLdu/wDzmQhM2axWVxhgD+lCnstKhPuz45nyEQ4RwYEYme6+IqnOUkkTN3RGO3QQ4u7hsWsswzubgpB3cWhvF8Nf059ty/uAyH4grJaw477S2f6NXQcPe3BN2eAy8b4FugySAYMKM20CQX03ZGxr2NC5/NdBM5cYtxQey0xRE6/sRzHKDYycdSo0Sa7btrqglu8j5TmlXOXE46spAnL279xKOfBbgZZFUGyLQzqvvDDEsOgCyY7j9UA6xyOw4zV/WOq2ATI/lHOLeIGv4IZTt2U+XqH0UIV3MfealxTnniPYX3rthoImeJEeNEmv9s6YWh6DwRnXHBS5ChfrKwGqQPu23aWVvnvhTKQi9/W+eXbcbvUNKKK8eLhMxxwL4QzjxasYV7uSX/ppsVKzOVMUtOxAT7ihtKVJ+a/Nam6yYQPRpa5G0kjEVm08spYPWIkby2IeJvj1Ibggypfb+ebD1Y0321C7UDvrk/nGkn14RWEcAgFF2lW82oTBKDU5ckpApZ48ZVBhELIe0qHJI5i4Dl/S9FmOyPcz+7WNYaziIaHjiA3vurpg07FW6XNrFMVjjKfJmDbYni8qUgiCo1TpdcRZvc7kQB42uGOXXg18cDmCcB8JGUFXN5VEU/8WKxJZBssv0V509p8Drjm+Z0DBH0tBoHVqhoe6lAsboi4qpGIcHKJyLPZKEnzemlLdBq5i0hA7FPlogGL83xk0tkbtl6malWQ4GmGuQ34sIdEZ7cdWkMuEhBiph5llwlwFCh3Kf61kkjyMbRo4wKudwlx
-X-Forefront-Antispam-Report:
-	CIP:211.75.126.7;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:NTHCCAS01.nuvoton.com;PTR:211-75-126-7.hinet-ip.hinet.net;CAT:NONE;SFS:(13230031)(4636009)(346002)(376002)(396003)(136003)(39860400002)(230922051799003)(61400799012)(451199024)(82310400011)(48200799006)(64100799003)(46966006)(40470700004)(47076005)(35950700001)(5660300002)(2906002)(4744005)(7416002)(83170400001)(36756003)(41300700001)(81166007)(356005)(55446002)(82740400003)(40460700003)(4326008)(2616005)(6666004)(110136005)(316002)(54906003)(42186006)(498600001)(76482006)(70206006)(8936002)(8676002)(336012)(6266002)(70586007)(40480700001)(73392003)(42882007)(83380400001)(82202003)(26005)(1076003)(45356006)(32563001)(35450700002);DIR:OUT;SFP:1022;
-X-OriginatorOrg: nuvoton.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2024 13:54:34.9096
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84125afc-d926-4982-9c15-08dc105158e2
-X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a3f24931-d403-4b4a-94f1-7d83ac638e07;Ip=[211.75.126.7];Helo=[NTHCCAS01.nuvoton.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	HK2PEPF00006FB5.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR03MB7681
 
-Add clock reset syscon node to handle reset and clock registers
-controllers.
+Hi Luiz,
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+On 1/8/24 20:14, Luiz Augusto von Dentz wrote:
+> Hi Jonas,
+> 
+> On Mon, Jan 8, 2024 at 1:55 PM Jonas Dreßler <verdre@v0yd.nl> wrote:
+>>
+>> On 1/8/24 19:44, Jonas Dreßler wrote:
+>>> On 1/8/24 19:39, Jonas Dreßler wrote:
+>>>> With the last commit we moved to using the hci_sync queue for "Create
+>>>> Connection" requests, removing the need for retrying the paging after
+>>>> finished/failed "Create Connection" requests and after the end of
+>>>> inquiries.
+>>>>
+>>>> hci_conn_check_pending() was used to trigger this retry, we can remove it
+>>>> now.
+>>>>
+>>>> Note that we can also remove the special handling for COMMAND_DISALLOWED
+>>>> errors in the completion handler of "Create Connection", because "Create
+>>>> Connection" requests are now always serialized.
+>>>>
+>>>> This is somewhat reverting commit 4c67bc74f016 ("[Bluetooth] Support
+>>>> concurrent connect requests").
+>>>>
+>>>> With this, the BT_CONNECT2 state of ACL hci_conn objects should now be
+>>>> back to meaning only one thing: That we received a connection request
+>>>> from another device (see hci_conn_request_evt), but the actual connect
+>>>> should be deferred.
+>>>> ---
+>>>>    include/net/bluetooth/hci_core.h |  1 -
+>>>>    net/bluetooth/hci_conn.c         | 16 ----------------
+>>>>    net/bluetooth/hci_event.c        | 21 ++++-----------------
+>>>>    3 files changed, 4 insertions(+), 34 deletions(-)
+>>>>
+>>>> diff --git a/include/net/bluetooth/hci_core.h
+>>>> b/include/net/bluetooth/hci_core.h
+>>>> index 2c30834c1..d7483958d 100644
+>>>> --- a/include/net/bluetooth/hci_core.h
+>>>> +++ b/include/net/bluetooth/hci_core.h
+>>>> @@ -1330,7 +1330,6 @@ struct hci_conn *hci_conn_add(struct hci_dev
+>>>> *hdev, int type, bdaddr_t *dst,
+>>>>                      u8 role);
+>>>>    void hci_conn_del(struct hci_conn *conn);
+>>>>    void hci_conn_hash_flush(struct hci_dev *hdev);
+>>>> -void hci_conn_check_pending(struct hci_dev *hdev);
+>>>>    struct hci_chan *hci_chan_create(struct hci_conn *conn);
+>>>>    void hci_chan_del(struct hci_chan *chan);
+>>>> diff --git a/net/bluetooth/hci_conn.c b/net/bluetooth/hci_conn.c
+>>>> index 541d55301..22033057b 100644
+>>>> --- a/net/bluetooth/hci_conn.c
+>>>> +++ b/net/bluetooth/hci_conn.c
+>>>> @@ -2534,22 +2534,6 @@ void hci_conn_hash_flush(struct hci_dev *hdev)
+>>>>        }
+>>>>    }
+>>>> -/* Check pending connect attempts */
+>>>> -void hci_conn_check_pending(struct hci_dev *hdev)
+>>>> -{
+>>>> -    struct hci_conn *conn;
+>>>> -
+>>>> -    BT_DBG("hdev %s", hdev->name);
+>>>> -
+>>>> -    hci_dev_lock(hdev);
+>>>> -
+>>>> -    conn = hci_conn_hash_lookup_state(hdev, ACL_LINK, BT_CONNECT2);
+>>>> -    if (conn)
+>>>> -        hci_cmd_sync_queue(hdev, hci_acl_create_connection_sync,
+>>>> conn, NULL);
+>>>> -
+>>>> -    hci_dev_unlock(hdev);
+>>>> -}
+>>>> -
+>>>>    static u32 get_link_mode(struct hci_conn *conn)
+>>>>    {
+>>>>        u32 link_mode = 0;
+>>>> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+>>>> index e8b4a0126..91973d6d1 100644
+>>>> --- a/net/bluetooth/hci_event.c
+>>>> +++ b/net/bluetooth/hci_event.c
+>>>> @@ -117,8 +117,6 @@ static u8 hci_cc_inquiry_cancel(struct hci_dev
+>>>> *hdev, void *data,
+>>>>            hci_discovery_set_state(hdev, DISCOVERY_STOPPED);
+>>>>        hci_dev_unlock(hdev);
+>>>> -    hci_conn_check_pending(hdev);
+>>>> -
+>>>>        return rp->status;
+>>>>    }
+>>>> @@ -149,8 +147,6 @@ static u8 hci_cc_exit_periodic_inq(struct hci_dev
+>>>> *hdev, void *data,
+>>>>        hci_dev_clear_flag(hdev, HCI_PERIODIC_INQ);
+>>>> -    hci_conn_check_pending(hdev);
+>>>> -
+>>>>        return rp->status;
+>>>>    }
+>>>> @@ -2296,10 +2292,8 @@ static void hci_cs_inquiry(struct hci_dev
+>>>> *hdev, __u8 status)
+>>>>    {
+>>>>        bt_dev_dbg(hdev, "status 0x%2.2x", status);
+>>>> -    if (status) {
+>>>> -        hci_conn_check_pending(hdev);
+>>>> +    if (status)
+>>>>            return;
+>>>> -    }
+>>>>        set_bit(HCI_INQUIRY, &hdev->flags);
+>>>>    }
+>>>> @@ -2323,12 +2317,9 @@ static void hci_cs_create_conn(struct hci_dev
+>>>> *hdev, __u8 status)
+>>>>        if (status) {
+>>>>            if (conn && conn->state == BT_CONNECT) {
+>>>> -            if (status != HCI_ERROR_COMMAND_DISALLOWED ||
+>>>> conn->attempt > 2) {
+>>>> -                conn->state = BT_CLOSED;
+>>>> -                hci_connect_cfm(conn, status);
+>>>> -                hci_conn_del(conn);
+>>>> -            } else
+>>>> -                conn->state = BT_CONNECT2;
+>>>> +            conn->state = BT_CLOSED;
+>>>> +            hci_connect_cfm(conn, status);
+>>>> +            hci_conn_del(conn);
+>>>>            }
+>>>>        } else {
+>>>>            if (!conn) {
+>>>> @@ -3020,8 +3011,6 @@ static void hci_inquiry_complete_evt(struct
+>>>> hci_dev *hdev, void *data,
+>>>>        bt_dev_dbg(hdev, "status 0x%2.2x", ev->status);
+>>>> -    hci_conn_check_pending(hdev);
+>>>> -
+>>>>        if (!test_and_clear_bit(HCI_INQUIRY, &hdev->flags))
+>>>>            return;
+>>>> @@ -3247,8 +3236,6 @@ static void hci_conn_complete_evt(struct hci_dev
+>>>> *hdev, void *data,
+>>>>    unlock:
+>>>>        hci_dev_unlock(hdev);
+>>>> -
+>>>> -    hci_conn_check_pending(hdev);
+>>>>    }
+>>>>    static void hci_reject_conn(struct hci_dev *hdev, bdaddr_t *bdaddr)
+>>>
+>>> Please take a special look at this one: I'm not sure if I'm breaking the
+>>> functionality of deferred connecting using BT_CONNECT2 in
+>>> hci_conn_request_evt() here, as I don't see anywhere where we check for
+>>> this state and establish a connection later.
+>>>
+>>> It seems that this is how hci_conn_request_evt() was initially written
+>>> though, hci_conn_check_pending() only got introduced later and seems
+>>> unrelated.
+>>
+>> Ahh nevermind... The check for BT_CONNECT2 on "Conn Complete event" got
+>> introduced with 4c67bc74f01 ([Bluetooth] Support concurrent connect
+>> requests). And later the deferred connection setup on "Conn Request
+>> event" got introduced with 20714bfef8 ("Bluetooth: Implement deferred
+>> sco socket setup").
+>>
+>> I assume the latter commit was relying on the "Create Connection"
+>> request "Conn Complete event" that got introduced with the former commit
+>> then? That would imply that we use BT_CONNECT2 if there's already a
+>> "Create Connection" going on when the "Conn Request event" happens, and
+>> we must wait for that existing request to finish.. Is that how those
+>> deferred connections are supposed to work?
+> 
+> Well if you are not sure that works we better make sure we have tests
+> that cover this, for LE I know for sure it works because we have the
+> likes of iso-tester that do connect 2 peers simultaneously, but for
+> classic I don't recall having any test that does multiple connections.
 
-diff --git a/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi b/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
-index 9c4df91031e7..7d5956e2c9f3 100644
---- a/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
-+++ b/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
-@@ -22,6 +22,11 @@ gcr: system-controller@f0800000 {
- 			reg = <0x0 0xf0800000 0x0 0x1000>;
- 		};
- 
-+		clk_rst: syscon@f0801000 {
-+			compatible = "nuvoton,npcm845-clk-rst", "syscon", "simple-mfd";
-+			reg = <0x0 0xf0801000 0x0 0xC4>;
-+		};
-+
- 		gic: interrupt-controller@dfff9000 {
- 			compatible = "arm,gic-400";
- 			reg = <0x0 0xdfff9000 0x0 0x1000>,
--- 
-2.34.1
+The sequential "Create Connection" logic works, I tested that (of course 
+I'm happy to add tests if it's not too much work).
 
+What I'm unsure about is if and how incoming connection requests from 
+other devices with HCI_PROTO_DEFER flag are supposed to work and whether 
+they are meant to trigger a "Create Connection" from us?
+
+> 
+>>>
+>>> Thanks,
+>>> Jonas
+> 
+> 
+> 
