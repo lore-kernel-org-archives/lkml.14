@@ -1,249 +1,199 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55B948827;
-	Mon,  8 Jan 2024 06:41:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8CxLun+mJtlBQwDAA--.1689S3;
-	Mon, 08 Jan 2024 14:41:02 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxfNz4mJtlNRoHAA--.18591S7;
-	Mon, 08 Jan 2024 14:41:00 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Juergen Gross <jgross@suse.com>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	kvm@vger.kernel.org
-Subject: [PATCH v2 5/6] LoongArch: KVM: Add physical cpuid map support
-Date: Mon,  8 Jan 2024 14:40:55 +0800
-Message-Id: <20240108064056.232546-6-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240108064056.232546-1-maobibo@loongson.cn>
-References: <20240108064056.232546-1-maobibo@loongson.cn>
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2059.outbound.protection.outlook.com [40.107.94.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC728BE3
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 06:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ML/wyvtM"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RiFQYGr//8KoVcWsexq7H9netGjNDO4lV6oe7zPCULWJOY5s7MqYT0+gG3tmcHBJk7jbVHSckNs6m7S64iKYZ4L64XNZctZ+Wk91drX4qJ46NeldAwnB+oD2T238IKWCZBxOx8Hs4Dj1k+26Mvpd1MT+UfoEUT8+QkUzeDcp/T0TNcXskqrLf/sG34/Q7wOtoQ+T7J57Jn6W2veSvNMrdjx89rtklheDRwGJ0GRwJZw2rLeddX4gDnnLExVT1EimJEg5sdpp2HoamGa01TFtaCTgTuk3256Ef4Ezsb37YZr3IkBD3Br9LjzaFdwDHPkDYOOSyYEa51YG/zOEabLZTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=atAiE1fxIaR6BbnSkuiGgZsTu2ZXrOoGPJjP2K0KUgE=;
+ b=gesKfTrH8pJ+HCvQLzQoyCLnCFD4uapsHqOjJp2uN/Lg8QeFWe8pq9qj24SL7lI/2miIDiVJq4AFNs3rg5bU6GZwt1CIyoMeMIk+nLwb+NCGS+V+sO33yWpqTQSveA3/ZjRcfl5k84h34YVj5vNVDOOU28F3v05xB08qwmr4nxkdBpD1G1mFFpzDnmFMsdschJu21SuHOU2ajSA6Ps81XDY5w+1BE5CF9AXN08cb1d8p86QCxza51UrlBVKA3HkMv8eF4MdoQotTzQr+h62rQaFs8nFDNRggHJVSh0n4SN01WJZ1G6LIf1n9SAvstJVBz82s6bjn7x0E2lmPKy9f7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=atAiE1fxIaR6BbnSkuiGgZsTu2ZXrOoGPJjP2K0KUgE=;
+ b=ML/wyvtM6IyTDW1rFDOP1ygXTqSsKObcdQNf7gfOoklZaER1dlAPnEDIatdRNcs3y4uPyKYTNvEb96hudxkUTvnqYz1DXgAC8EUfySz6LeacA9BCkIMwPnaJaWdVLo5Jc56c6dOAkHYilhUr+sS2xGbfdTh5zH971nRbH9s1hg4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by MN2PR12MB4389.namprd12.prod.outlook.com (2603:10b6:208:262::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.21; Mon, 8 Jan
+ 2024 06:45:13 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::e1fb:4123:48b1:653]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::e1fb:4123:48b1:653%4]) with mapi id 15.20.7159.020; Mon, 8 Jan 2024
+ 06:45:13 +0000
+Message-ID: <c82fbab0-1ba1-43cf-9f31-57d365b2baa2@amd.com>
+Date: Mon, 8 Jan 2024 07:45:09 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] Refactor radeon driver to use
+ drm_gem_create_map_offset() instead of its custom implementation for
+ associating GEM object with a fake offset. Since, we already have a generic
+ implementation, we don't need the custom function and it is better to
+ standardize the code.
+Content-Language: en-US
+To: Dipam Turkar <dipamt1729@gmail.com>, alexander.deucher@amd.com
+Cc: Xinhui.Pan@amd.com, airlied@gmail.com, daniel@ffwll.ch,
+ amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20240106141422.10734-1-dipamt1729@gmail.com>
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <20240106141422.10734-1-dipamt1729@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR0P281CA0235.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:b2::20) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8CxfNz4mJtlNRoHAA--.18591S7
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxKrykGw1xKw1DJr48XFWxXwc_yoWxGw4rpF
-	9rCwn8WrWrGr17G348tw4kurZI9rWvgw1SvasIgay3Ar1qqry5ZrWvkryUAF98Gw4ruF4I
-	qFn5J3W5uF40yabCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Fb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
-	6r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj6F1UMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU8EeHDUUUUU==
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|MN2PR12MB4389:EE_
+X-MS-Office365-Filtering-Correlation-Id: ad30f7b0-5128-44ab-ebeb-08dc10155d94
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	21rf7eTHU5nOYSlykLoCR+0T+vGgPS/fOZ62zc5e8cic9PKgEST79dqBWZonFPzrDoEbuu4HQxJ7i97LWCf0xaMsCvbzPdIfAAV5AaQXA8/qS3VCHw80/N6/JnmUCPmkoZyIqzxspGo6z5WfiJX+mci2aj6hy0ekClbSGkdnepauGrPOtDUJZrjdktFaSCqRw+9mU5ZWB/szPGhWuofxG5XO1tBe7iFs2nyeQL+mBRog291BysK5NMzXtGsvtpwtVSZ3//EdE/kPigvjL+keqjKpf02crOv9cC9GcOLJuqCoKyYuieXmsto57WuazQVX4VnWAwz44VYyLoIxcSsUFJN2KNuRGMHBjf232zR40LpY2Q09VBp83m988X68d/OmJm85vJx91WXp+UGUDhwxP8lYfCUZtZBlj+PwdQEapXb18U7hatpb3827jT71n1O1Up8bfz5zivPQk0ip6wm4K2ht0RvDBdKSmLfuGh3/LSbLi0rLks5/hWE2L4dNWRhKuXPnp9CnodGg90/GogOmgvnlUqap//c6yAQUpJMR96DqWBsMgWYjJE9BS62qR3uAPDF/uhkAKaqiZ+1ZlbyGYOcfya52Yac6/ryyF0KjsvaOEHfEAsXgPerSsJ5zRB/tsuczsydJkOFwfOsSKMPYmduwQbMLktyKc6CX/eDbce2UjpMpUIfGF+I/QPpCvLuZ2rsuUDM+wQf6f9ZI6w0ksg==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(376002)(39860400002)(396003)(346002)(136003)(230922051799003)(451199024)(64100799003)(1800799012)(186009)(8936002)(2616005)(26005)(8676002)(6506007)(316002)(6512007)(83380400001)(6486002)(31696002)(66556008)(66476007)(66946007)(41300700001)(86362001)(6666004)(6636002)(478600001)(36756003)(5660300002)(38100700002)(31686004)(2906002)(4326008)(41533002)(219693005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RXIvMm9nS05CdjRZNW9XRFRYR2crOVphaTl4Q3ZWbWdmNkJySVdFWEhTQ2J1?=
+ =?utf-8?B?WlpEY1ljbkU2UmdJMDhPc1c0VkZCTFB2clhKRXlETklpZ1YzZEpQSGFvd1Jm?=
+ =?utf-8?B?eld3TXpFRWVyb1dvSDhqQXBRUkM2cjFLbzYyMDVpTStYQTQ3VmV1enJPcDlo?=
+ =?utf-8?B?YTVwUGZQQjdWaFVVWitGYzJsdkNNdE1oZGVnWFJnV3pSREpCYnFYYis4dzZi?=
+ =?utf-8?B?SXYxU0VDd1BVTlpLTGd4Z1dxcEd6UjJNalVmUEFxLzNia0Zaa1MyTncvTzhz?=
+ =?utf-8?B?OEpmNzcwM041RFo0cDN6OFA4WklDeXNTcCtRWWpwdm9VNHlhVW9TQXNRYzJu?=
+ =?utf-8?B?YzlEVzJIYkkwcU1LYmh1UnY5YzM1cHdiUlZGa1pPU0s0d3VmQlpKejYwSGVh?=
+ =?utf-8?B?b21Mb0dTcDZDakVPOElkSWF5MmNsSnIzVzNNdkU2RVM3UEFlTHBWcTZwcVJQ?=
+ =?utf-8?B?bm9DeTBuWHVSdnNDaWpVSDR4a0NLVGhCOS9lc1BlUUg0M011MG9FaEdlNnFO?=
+ =?utf-8?B?RFZ0ZUlBZEFQYWRPWEo4ZHBtZEE1WTBuME5USmhXQmFDS2tZa29aektGaW5u?=
+ =?utf-8?B?MkdXUVVFWXdqTzlQYkdhOVRPOEN3WXlnTEtRMEozUTVTaDFaTkFWM3MvK1V0?=
+ =?utf-8?B?R3o1ZlNiajgvcDlMK28rL1FzcGllWHNuQ2pFZW5pelhtTENBY1RSamhxTzJi?=
+ =?utf-8?B?SE50eHo0TXYyWVdXcUtoa0w3NmNrTWxuSUFiSTZRS3Q4TWt0Y2JMdTUvclpw?=
+ =?utf-8?B?emJkb29Fa1NNZGhzZmxBL0U5eUd6SCtlU2YweVlNZk0yVW0rMllvZ2hYL1Y0?=
+ =?utf-8?B?WkhMYXVNSzZwNmdHNEdWMlliYVEvUnI5VEQwelVnZW9xaGx2cHozZG5QZENk?=
+ =?utf-8?B?eTBWL0RXbTB1THd6QnlseWM1R1ZMNkdSWlRnMFl6SlU0RExhU1V5bGhMRzAr?=
+ =?utf-8?B?NDBtcUI5cTRYaEJwNzNTSmU4Zko4cE9ZQXZCNnF0Um9BVWFXU3UwZm1FZ1hH?=
+ =?utf-8?B?dUx6QmxJZFhKT1V4QUJBczcxckpid21od1ExVVYxNnlEWlNyK1UxTDhtekUw?=
+ =?utf-8?B?Z1dTYVl6M0E1di9paDM5S2x5TDY4MHF5YlZ0UEFiSENFblg2Uk5jMHowb0JZ?=
+ =?utf-8?B?alJzMkkvcDg0amoreEMxWjNVcjhYb053UElFLzFMTUllc3daSlQyVnN6ZUcy?=
+ =?utf-8?B?cWtNRDlmR3czcDY1TkZpUktEcmhJZi9UN09tZUNVTVhDVWlod2NFclQvOThr?=
+ =?utf-8?B?a0x2ZnlpSEt2TStlZjZQNGEway9Vc0VhcHBSM2RON0NYSG0zVnFHbnpxYkRz?=
+ =?utf-8?B?c21uTk1Ob2lVUVo0YUtCYU1wVkl6dGFQQUhSY0VJajUzenIwajN5N1JQTklJ?=
+ =?utf-8?B?RGZXRmtvUnBEOU1DQm8ya2pmNisvclJCRXUvNlRvaGM2dFE4S1BmL2NHMzds?=
+ =?utf-8?B?QmZ5YVYvMkU2K3ZwZWF6UlptaTFCNnpvaER4WWN4d1F6Q00zOER4YUpoU25T?=
+ =?utf-8?B?cFA0b0U1YlpiS3BDYzZXUGYwQXdGWVg4d3cycU9tZlBGTEViUHVPWTQxZTdP?=
+ =?utf-8?B?dWdLSEdCR1FodjRmcS9vSG5xcXV0NkhiNEJCd0Ria2JxLzUyeU1qWWoxNmY2?=
+ =?utf-8?B?UlN2NEErSTByVEJVM2lGQWdlTGxHRlM4d3FheHYrYzF4d2pvT2Fuc0JlcnN4?=
+ =?utf-8?B?Vmw4YndrblVON1UrMTZpQlRxSEJzUi9DOVdvbTNaczNqT1cyZHRybk1hVGhr?=
+ =?utf-8?B?RGQ1OWhnK3UzbnV4azZWTEN2U2dxbElFL1FRK2ozcmkvU05nUDNKNUlnV2Q2?=
+ =?utf-8?B?dVpMdXd5TVJMNTJ2aXBrSVgvU2ZZTThOUXU1Ui9CRXlWL0t2dTRPK2xUejBD?=
+ =?utf-8?B?OVN0Y3ppdFkvbmxHSWsxZVpzUityTjNyTnFVUzB3UG90bjczTWQrOXdTbThw?=
+ =?utf-8?B?dUxuakN1R3dZeVdCNWE5SE9oMStySnBPbW9IdW1wTmZwWjB3VWRlbHV3em9V?=
+ =?utf-8?B?QmJGNHg5NllxM3ZxTjJwRGQrTmg0WUwwUWxyQWI2c3krSE8rVmRPeDlOYmpx?=
+ =?utf-8?B?VTN4VEtJTWJNMkxHVFJGTFdZK3RDRlo5TzVGMTk1a1hwUEV4dnNjYmx0a3Rz?=
+ =?utf-8?Q?MpmwwN4ZMzs/kYUSpUYjx0/bw?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad30f7b0-5128-44ab-ebeb-08dc10155d94
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2024 06:45:13.3078
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +jImhtLqLufzlmYIIlsXBo7QgJo+dk1FPVaGIyUkUQerKjDyFL8a/gyNC1OAHIui
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4389
 
-Physical cpuid is used to irq routing for irqchips such as ipi/msi/
-extioi interrupt controller. And physical cpuid is stored at CSR
-register LOONGARCH_CSR_CPUID, it can not be changed once vcpu is
-created. Since different irqchips have different size definition
-about physical cpuid, KVM uses the smallest cpuid from extioi, and
-the max cpuid size is defines as 256.
+Am 06.01.24 um 15:14 schrieb Dipam Turkar:
+> Signed-off-by: Dipam Turkar <dipamt1729@gmail.com>
+> ---
+>   drivers/gpu/drm/radeon/radeon_drv.c |  2 +-
+>   drivers/gpu/drm/radeon/radeon_gem.c | 24 ++----------------------
+>   2 files changed, 3 insertions(+), 23 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+> index fa531493b111..f590ed65ffba 100644
+> --- a/drivers/gpu/drm/radeon/radeon_drv.c
+> +++ b/drivers/gpu/drm/radeon/radeon_drv.c
+> @@ -578,7 +578,7 @@ static const struct drm_driver kms_driver = {
+>   	.ioctls = radeon_ioctls_kms,
+>   	.num_ioctls = ARRAY_SIZE(radeon_ioctls_kms),
+>   	.dumb_create = radeon_mode_dumb_create,
+> -	.dumb_map_offset = radeon_mode_dumb_mmap,
+> +	.dumb_map_offset = drm_gem_dumb_map_offset,
+>   	.fops = &radeon_driver_kms_fops,
+>   
+>   	.gem_prime_import_sg_table = radeon_gem_prime_import_sg_table,
+> diff --git a/drivers/gpu/drm/radeon/radeon_gem.c b/drivers/gpu/drm/radeon/radeon_gem.c
+> index 358d19242f4b..99794c550d2c 100644
+> --- a/drivers/gpu/drm/radeon/radeon_gem.c
+> +++ b/drivers/gpu/drm/radeon/radeon_gem.c
+> @@ -31,6 +31,7 @@
+>   
+>   #include <drm/drm_device.h>
+>   #include <drm/drm_file.h>
+> +#include <drm/dem_gem.h>
+>   #include <drm/drm_gem_ttm_helper.h>
+>   #include <drm/radeon_drm.h>
+>   
+> @@ -480,33 +481,12 @@ int radeon_gem_set_domain_ioctl(struct drm_device *dev, void *data,
+>   	return r;
+>   }
+>   
+> -int radeon_mode_dumb_mmap(struct drm_file *filp,
+> -			  struct drm_device *dev,
+> -			  uint32_t handle, uint64_t *offset_p)
+> -{
+> -	struct drm_gem_object *gobj;
+> -	struct radeon_bo *robj;
+> -
+> -	gobj = drm_gem_object_lookup(filp, handle);
+> -	if (gobj == NULL) {
+> -		return -ENOENT;
+> -	}
+> -	robj = gem_to_radeon_bo(gobj);
+> -	if (radeon_ttm_tt_has_userptr(robj->rdev, robj->tbo.ttm)) {
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/include/asm/kvm_host.h | 26 ++++++++++++
- arch/loongarch/include/asm/kvm_vcpu.h |  1 +
- arch/loongarch/kvm/vcpu.c             | 61 ++++++++++++++++++++++++++-
- arch/loongarch/kvm/vm.c               | 11 +++++
- 4 files changed, 98 insertions(+), 1 deletion(-)
+Well apart from the obvious typos, the missing commit message and the 
+mangled subject line this also removes this important check for userptrs 
+here.
 
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 0e89db020481..93acba84f87e 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -64,6 +64,30 @@ struct kvm_world_switch {
- 
- #define MAX_PGTABLE_LEVELS	4
- 
-+/*
-+ * Physical cpu id is used for interrupt routing, there are different
-+ * definitions about physical cpuid on different hardwares.
-+ *  For LOONGARCH_CSR_CPUID register, max cpuid size if 512
-+ *  For IPI HW, max dest CPUID size 1024
-+ *  For extioi interrupt controller, max dest CPUID size is 256
-+ *  For MSI interrupt controller, max supported CPUID size is 65536
-+ *
-+ * Currently max CPUID is defined as 256 for KVM hypervisor, in future
-+ * it will be expanded to 4096, including 16 packages at most. And every
-+ * package supports at most 256 vcpus
-+ */
-+#define KVM_MAX_PHYID		256
-+
-+struct kvm_phyid_info {
-+	struct kvm_vcpu	*vcpu;
-+	bool		enabled;
-+};
-+
-+struct kvm_phyid_map {
-+	int max_phyid;
-+	struct kvm_phyid_info phys_map[KVM_MAX_PHYID];
-+};
-+
- struct kvm_arch {
- 	/* Guest physical mm */
- 	kvm_pte_t *pgd;
-@@ -71,6 +95,8 @@ struct kvm_arch {
- 	unsigned long invalid_ptes[MAX_PGTABLE_LEVELS];
- 	unsigned int  pte_shifts[MAX_PGTABLE_LEVELS];
- 	unsigned int  root_level;
-+	struct mutex  phyid_map_lock;
-+	struct kvm_phyid_map  *phyid_map;
- 
- 	s64 time_offset;
- 	struct kvm_context __percpu *vmcs;
-diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
-index 0e87652f780a..3019e260a3ae 100644
---- a/arch/loongarch/include/asm/kvm_vcpu.h
-+++ b/arch/loongarch/include/asm/kvm_vcpu.h
-@@ -61,6 +61,7 @@ void kvm_save_timer(struct kvm_vcpu *vcpu);
- void kvm_restore_timer(struct kvm_vcpu *vcpu);
- 
- int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu, struct kvm_interrupt *irq);
-+struct kvm_vcpu *kvm_get_vcpu_by_cpuid(struct kvm *kvm, int cpuid);
- 
- /*
-  * Loongarch KVM guest interrupt handling
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index cf1c4d64c1b7..9dc40a80ab5a 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -274,6 +274,63 @@ static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *val)
- 	return 0;
- }
- 
-+static inline int kvm_set_cpuid(struct kvm_vcpu *vcpu, u64 val)
-+{
-+	int cpuid;
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+	struct kvm_phyid_map  *map;
-+
-+	if (val >= KVM_MAX_PHYID)
-+		return -EINVAL;
-+
-+	cpuid = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT);
-+	if (cpuid == 0) {
-+		kvm_write_sw_gcsr(csr, LOONGARCH_CSR_CPUID, val);
-+		map = vcpu->kvm->arch.phyid_map;
-+		map->phys_map[val].enabled	= true;
-+		map->phys_map[val].vcpu		= vcpu;
-+
-+		mutex_lock(&vcpu->kvm->arch.phyid_map_lock);
-+		if (map->max_phyid < val)
-+			map->max_phyid = val;
-+		mutex_unlock(&vcpu->kvm->arch.phyid_map_lock);
-+	} else if (cpuid != val)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+struct kvm_vcpu *kvm_get_vcpu_by_cpuid(struct kvm *kvm, int cpuid)
-+{
-+	struct kvm_phyid_map  *map;
-+
-+	if (cpuid >= KVM_MAX_PHYID)
-+		return NULL;
-+
-+	map = kvm->arch.phyid_map;
-+	if (map->phys_map[cpuid].enabled)
-+		return map->phys_map[cpuid].vcpu;
-+
-+	return NULL;
-+}
-+
-+static inline void kvm_drop_cpuid(struct kvm_vcpu *vcpu)
-+{
-+	int cpuid;
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+	struct kvm_phyid_map  *map;
-+
-+	map = vcpu->kvm->arch.phyid_map;
-+	cpuid = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT);
-+	if (cpuid >= KVM_MAX_PHYID)
-+		return;
-+
-+	if (map->phys_map[cpuid].enabled) {
-+		map->phys_map[cpuid].vcpu = NULL;
-+		map->phys_map[cpuid].enabled = false;
-+	}
-+}
-+
- static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
- {
- 	int ret = 0, gintc;
-@@ -291,7 +348,8 @@ static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
- 		kvm_set_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, gintc);
- 
- 		return ret;
--	}
-+	} else if (id == LOONGARCH_CSR_CPUID)
-+		return kvm_set_cpuid(vcpu, val);
- 
- 	kvm_write_sw_gcsr(csr, id, val);
- 
-@@ -666,6 +724,7 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
- 	hrtimer_cancel(&vcpu->arch.swtimer);
- 	kvm_mmu_free_memory_cache(&vcpu->arch.mmu_page_cache);
- 	kfree(vcpu->arch.csr);
-+	kvm_drop_cpuid(vcpu);
- 
- 	/*
- 	 * If the vCPU is freed and reused as another vCPU, we don't want the
-diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-index 0a37f6fa8f2d..6fd5916ebef3 100644
---- a/arch/loongarch/kvm/vm.c
-+++ b/arch/loongarch/kvm/vm.c
-@@ -30,6 +30,14 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
- 	if (!kvm->arch.pgd)
- 		return -ENOMEM;
- 
-+	kvm->arch.phyid_map = kvzalloc(sizeof(struct kvm_phyid_map),
-+				GFP_KERNEL_ACCOUNT);
-+	if (!kvm->arch.phyid_map) {
-+		free_page((unsigned long)kvm->arch.pgd);
-+		kvm->arch.pgd = NULL;
-+		return -ENOMEM;
-+	}
-+
- 	kvm_init_vmcs(kvm);
- 	kvm->arch.gpa_size = BIT(cpu_vabits - 1);
- 	kvm->arch.root_level = CONFIG_PGTABLE_LEVELS - 1;
-@@ -44,6 +52,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
- 	for (i = 0; i <= kvm->arch.root_level; i++)
- 		kvm->arch.pte_shifts[i] = PAGE_SHIFT + i * (PAGE_SHIFT - 3);
- 
-+	mutex_init(&kvm->arch.phyid_map_lock);
- 	return 0;
- }
- 
-@@ -51,7 +60,9 @@ void kvm_arch_destroy_vm(struct kvm *kvm)
- {
- 	kvm_destroy_vcpus(kvm);
- 	free_page((unsigned long)kvm->arch.pgd);
-+	kvfree(kvm->arch.phyid_map);
- 	kvm->arch.pgd = NULL;
-+	kvm->arch.phyid_map = NULL;
- }
- 
- int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
--- 
-2.39.3
+This in turn is a complete no-go since it can lead to kernel crashes.
+
+Regards,
+Christian.
+
+> -		drm_gem_object_put(gobj);
+> -		return -EPERM;
+> -	}
+> -	*offset_p = radeon_bo_mmap_offset(robj);
+> -	drm_gem_object_put(gobj);
+> -	return 0;
+> -}
+> -
+>   int radeon_gem_mmap_ioctl(struct drm_device *dev, void *data,
+>   			  struct drm_file *filp)
+>   {
+>   	struct drm_radeon_gem_mmap *args = data;
+>   
+> -	return radeon_mode_dumb_mmap(filp, dev, args->handle, &args->addr_ptr);
+> +	return drm_gem_dumb_map_offset(filp, dev, args->handle, &args->addr_ptr);
+>   }
+>   
+>   int radeon_gem_busy_ioctl(struct drm_device *dev, void *data,
 
