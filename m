@@ -1,293 +1,266 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A018079C2;
-	Mon,  8 Jan 2024 06:18:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a28d61ba65eso141977066b.3;
-        Sun, 07 Jan 2024 22:18:38 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FB979CD
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 06:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Ut+10Ooe"
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-59821e6fd38so230305eaf.1
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jan 2024 22:21:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1704694911; x=1705299711; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rTagxW2qGB+SOLygMjXPo1Qtb5o4FGjhXHBVBibN0pU=;
+        b=Ut+10OoeHFHsNusCYQ2BgY6Ks4st7F8UFjbQkeKSwLA4ArRiA75ibBVOGuhtxlXTok
+         hDZ0syA/MyuqtQt/6CWpaD37fu/AgN+dsrFXqsI6E7zTloePgDJF4H4jFvx0Vt4V6CaL
+         rFvbbvUnFFxfb2qaSCRNOUeZVPu8tJk5LpbwdbA3+6BYPYCj3TdIItJ1I5ANVEa4Q95m
+         w3Pqom3BMDwMrAXAoNgngBhC/HxysQRKD3Sk/IqGF8KXPJMhG3km8E36d488q3zAhNqC
+         7Plno6OiBajCMqMHxvmBID9FFDjlAKmivVw75gAi+8qVtA4oPlHah/TEIT4111kgyHuJ
+         GQnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704694717; x=1705299517;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JxKWZ0iFvolfQySmIZiVviFxg2q/+Ns/Cenq1wSZJho=;
-        b=gdxQB2+Q9VoolFW97n58rOvf38dqBjg6aKqWFWSS517gmtfbDvacYCLLqcjgT1a9J6
-         R4jOeUCh4CZVeFTU7Ve8wWnAytzv6Xy1yVCaSoTYdAOFX8MxkzFtMLVK+Yxw9oVDzuNF
-         Q54f6w4JqwjAp2mhFFPde8nlYM/jdQpBO3gDKmpe+J1tPFI6MpJGnOo4mu2WLyCs2SVJ
-         SHdoy6o6YVoI0r2wKro+onQzjxLYG+QNCspHA/qblf5/VbC4bXyjrkku0d3N5K4HnQV/
-         F+w0GmH2w7nrCKiZJA8MN5J7lR+5k6eWDFRuEvLMtjnwvjWhe2sWviLkpwAJUw2mCYIS
-         49fg==
-X-Gm-Message-State: AOJu0YySFNvM1QFFAetVw/LG/MYCK0LlnQsy6cyvHCoRoPFV9GROsBaB
-	xQE9123Qmfs3CgF8Lffdal4=
-X-Google-Smtp-Source: AGHT+IFeqtsrG2JhlBgein+Rw5XTWn/lKs4vnN4bvJMQevNx/oK+r3H1HNZrWhEAjCpUj4ErahUCVw==
-X-Received: by 2002:a17:906:4f:b0:a28:aa08:200b with SMTP id 15-20020a170906004f00b00a28aa08200bmr744741ejg.140.1704694712800;
-        Sun, 07 Jan 2024 22:18:32 -0800 (PST)
-Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:59? ([2a0b:e7c0:0:107::aaaa:59])
-        by smtp.gmail.com with ESMTPSA id d11-20020a170906640b00b00a26f1f36708sm3624821ejm.78.2024.01.07.22.18.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 Jan 2024 22:18:32 -0800 (PST)
-Message-ID: <5ff1d706-9f06-4eb6-bc86-75f933e54118@kernel.org>
-Date: Mon, 8 Jan 2024 07:18:31 +0100
+        d=1e100.net; s=20230601; t=1704694911; x=1705299711;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rTagxW2qGB+SOLygMjXPo1Qtb5o4FGjhXHBVBibN0pU=;
+        b=mTpKHrc2PwLYNbLRb8XFzV/BAO3r3+SP4/i+stb2hJUGek5VOixzSkHJaIcCjWMeJO
+         ddwST11g4q0SgDkRQnZkviix8UuvvHyot5p+5qpahVc0T0HZXKl0U/qRNHLKmzDXS/9D
+         zuFpADQ0lEl7li47gpi0X7c1cKvNvsNz+6s4MG/r8AorFND2TwEQe3xNlGNPc9aKhDIT
+         TJgHY0egkbKutZwc0TqFmjGgIk3DenivlHmp7/ZMfpNFgr0LxL0qaeJMdLFLmGafRypn
+         AKIwkf+j8EUmB2HDf4rKvvOEBrLpUzB9uhVffdq9IwO5DbDjt2hyCdtr0TuZvponFi9q
+         tpUA==
+X-Gm-Message-State: AOJu0YwUD+3LW41OqaRw+gS9ZrZmCDElWBN+xUiP6aNRhM5xeLfxNop0
+	cAyZ0M9ENgXDI5JRFo2cTrWYE9LCK2wR6kNwJ3yDqBYSPho=
+X-Google-Smtp-Source: AGHT+IFa/8crDGiw23IVD1Re4sfunNDvOsjvdYD9ocKdSLdiRngJSe7dZWlLFJzqhXakKcaX9nv6eQ==
+X-Received: by 2002:a05:6871:341e:b0:1fa:f86b:8624 with SMTP id nh30-20020a056871341e00b001faf86b8624mr904328oac.19.1704694911244;
+        Sun, 07 Jan 2024 22:21:51 -0800 (PST)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id i12-20020a9d53cc000000b006dba99e1835sm1274322oth.4.2024.01.07.22.21.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jan 2024 22:21:50 -0800 (PST)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Date: Sun, 07 Jan 2024 22:21:45 -0800
+Subject: [PATCH v4 1/2] riscv: Include riscv_set_icache_flush_ctx prctl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] w1: add UART w1 bus driver
-Content-Language: en-US
-To: cj.winklhofer@gmail.com,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Rob Herring <robh@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Jonathan Corbet <corbet@lwn.net>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20240106-w1-uart-v4-0-7fe1378a8b3e@gmail.com>
- <20240106-w1-uart-v4-3-7fe1378a8b3e@gmail.com>
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20240106-w1-uart-v4-3-7fe1378a8b3e@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240107-fencei-v4-1-d4cf2fb905d3@rivosinc.com>
+References: <20240107-fencei-v4-0-d4cf2fb905d3@rivosinc.com>
+In-Reply-To: <20240107-fencei-v4-0-d4cf2fb905d3@rivosinc.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Jonathan Corbet <corbet@lwn.net>, Conor Dooley <conor.dooley@microchip.com>, 
+ =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <cleger@rivosinc.com>, 
+ Atish Patra <atishp@atishpatra.org>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1704694908; l=7194;
+ i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
+ bh=44jA1SP4uAeWO8J8wsxBQ+ZD40NMHu45EJStFpvhUWw=;
+ b=D7UBMh9ebhLewE4U2l7cKbc38/hZBpH6xpofpr+GzFrjeRWkPTAn7+VNKdzVmd8uEW+nIITMh
+ tylX6iA10nEDdAPm3eerU9jJAkXoOSV9+UJ82fUbrUu5dM88k8NUmdj
+X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
+ pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
 
-On 06. 01. 24, 17:02, Christoph Winklhofer via B4 Relay wrote:
-> From: Christoph Winklhofer <cj.winklhofer@gmail.com>
-> 
-> Add a UART 1-Wire bus driver. The driver utilizes the UART interface via
-> the Serial Device Bus to create the 1-Wire timing patterns. The driver
-> was tested on a "Raspberry Pi 3B" with a DS18B20 and on a "Variscite
-> DART-6UL" with a DS18S20 temperature sensor.
-> 
-> The 1-Wire timing pattern and the corresponding UART baud-rate with the
-> interpretation of the transferred bytes are described in the document:
-> 
-> Link: https://www.analog.com/en/technical-articles/using-a-uart-to-implement-a-1wire-bus-master.html
-> 
-> In short, the UART peripheral must support full-duplex and operate in
-> open-drain mode. The timing patterns are generated by a specific
-> combination of baud-rate and transmitted byte, which corresponds to a
-> 1-Wire read bit, write bit or reset.
-...
-> --- /dev/null
-> +++ b/drivers/w1/masters/w1-uart.c
-> @@ -0,0 +1,398 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * w1-uart - UART 1-Wire bus driver
-> + *
-> + * Uses the UART interface (via Serial Device Bus) to create the 1-Wire
-> + * timing patterns. Implements the following 1-Wire master interface:
-> + *
-> + * - reset_bus: requests baud-rate 9600
-> + *
-> + * - touch_bit: requests baud-rate 115200
-> + *
-> + * Author: Christoph Winklhofer <cj.winklhofer@gmail.com>
-> + */
-> +
-> +#include <linux/completion.h>
-> +#include <linux/delay.h>
-> +#include <linux/jiffies.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of.h>
-> +#include <linux/serdev.h>
-> +#include <linux/w1.h>
-> +
-> +#define W1_UART_TIMEOUT msecs_to_jiffies(500)
-> +
-> +/*
-> + * struct w1_uart_config - configuration for 1-Wire operation
-> + *
-> + * @baudrate: baud-rate returned from serdev
-> + * @delay_us: delay to complete a 1-Wire cycle (in us)
-> + * @tx_byte: byte to generate 1-Wire timing pattern
-> + */
-> +struct w1_uart_config {
-> +	unsigned int baudrate;
-> +	unsigned int delay_us;
-> +	unsigned char tx_byte;
+Support new prctl with key PR_RISCV_SET_ICACHE_FLUSH_CTX to enable
+optimization of cross modifying code. This prctl enables userspace code
+to use icache flushing instructions such as fence.i with the guarantee
+that the icache will continue to be clean after thread migration.
 
-If it is a "byte", it should be u8.
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+---
+ arch/riscv/include/asm/mmu.h       |  2 ++
+ arch/riscv/include/asm/processor.h |  6 ++++
+ arch/riscv/mm/cacheflush.c         | 56 ++++++++++++++++++++++++++++++++++++++
+ arch/riscv/mm/context.c            |  8 ++++--
+ include/uapi/linux/prctl.h         |  4 +++
+ kernel/sys.c                       |  6 ++++
+ 6 files changed, 79 insertions(+), 3 deletions(-)
 
-> +};
-> +
-> +struct w1_uart_device {
-> +	struct serdev_device *serdev;
-> +	struct w1_bus_master bus;
-> +
-> +	struct w1_uart_config cfg_reset;
-> +	struct w1_uart_config cfg_touch_0;
-> +	struct w1_uart_config cfg_touch_1;
-> +
-> +	struct completion rx_byte_received;
-> +	unsigned char rx_byte;
+diff --git a/arch/riscv/include/asm/mmu.h b/arch/riscv/include/asm/mmu.h
+index 355504b37f8e..60be458e94da 100644
+--- a/arch/riscv/include/asm/mmu.h
++++ b/arch/riscv/include/asm/mmu.h
+@@ -19,6 +19,8 @@ typedef struct {
+ #ifdef CONFIG_SMP
+ 	/* A local icache flush is needed before user execution can resume. */
+ 	cpumask_t icache_stale_mask;
++	/* Force local icache flush on all migrations. */
++	bool force_icache_flush;
+ #endif
+ #ifdef CONFIG_BINFMT_ELF_FDPIC
+ 	unsigned long exec_fdpic_loadmap;
+diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
+index f19f861cda54..7eda6c75e0f2 100644
+--- a/arch/riscv/include/asm/processor.h
++++ b/arch/riscv/include/asm/processor.h
+@@ -84,6 +84,9 @@ struct thread_struct {
+ 	unsigned long vstate_ctrl;
+ 	struct __riscv_v_ext_state vstate;
+ 	unsigned long align_ctl;
++#ifdef CONFIG_SMP
++	bool force_icache_flush;
++#endif
+ };
+ 
+ /* Whitelist the fstate from the task_struct for hardened usercopy */
+@@ -145,6 +148,9 @@ extern int set_unalign_ctl(struct task_struct *tsk, unsigned int val);
+ #define GET_UNALIGN_CTL(tsk, addr)	get_unalign_ctl((tsk), (addr))
+ #define SET_UNALIGN_CTL(tsk, val)	set_unalign_ctl((tsk), (val))
+ 
++#define RISCV_SET_ICACHE_FLUSH_CTX(arg1, arg2)	riscv_set_icache_flush_ctx(arg1, arg2)
++extern int riscv_set_icache_flush_ctx(unsigned long ctx, unsigned long per_thread);
++
+ #endif /* __ASSEMBLY__ */
+ 
+ #endif /* _ASM_RISCV_PROCESSOR_H */
+diff --git a/arch/riscv/mm/cacheflush.c b/arch/riscv/mm/cacheflush.c
+index 55a34f2020a8..f483b6090c27 100644
+--- a/arch/riscv/mm/cacheflush.c
++++ b/arch/riscv/mm/cacheflush.c
+@@ -5,6 +5,7 @@
+ 
+ #include <linux/acpi.h>
+ #include <linux/of.h>
++#include <linux/prctl.h>
+ #include <asm/acpi.h>
+ #include <asm/cacheflush.h>
+ 
+@@ -152,3 +153,58 @@ void __init riscv_init_cbo_blocksizes(void)
+ 	if (cboz_block_size)
+ 		riscv_cboz_block_size = cboz_block_size;
+ }
++
++/**
++ * riscv_set_icache_flush_ctx() - Enable/disable icache flushing instructions in userspace.
++ * @ctx: Set the type of icache flushing instructions permitted/prohibited.
++ *
++ * * %PR_RISCV_CTX_SW_FENCEI_ON: Allow fence.i in userspace.
++ *
++ * * %PR_RISCV_CTX_SW_FENCEI_OFF: Disallow fence.i in userspace. When
++ *   ``per_thread == 0``, this will effect all threads in a process. Therefore,
++ *   caution must be taken -- only use this flag when you can guarantee that no
++ *   thread in the process will emit fence.i from this point onward.
++ *
++ * @per_thread: When set to 0, will perform operation on process migration. When
++ *  set to 1, will perform operation on thread migration.
++ *
++ * When (per_thread == 0), all threads in the process are permitted to emit
++ * icache flushing instructions. Whenever any thread in the process is migrated,
++ * the corresponding hart's icache will be guaranteed to be consistent with
++ * instruction memory. Note this does not enforce any guarantees outside of
++ * migration. If a thread modifies an instruction that another thread may attempt
++ * to execute, the other thread must still emit an icache flushing instruction
++ * before attempting to execute the potentially modified instruction. This must
++ * be performed by the userspace program.
++ *
++ * In per-thread context (eg. per_thread == 1), only the thread calling this
++ * function is permitted to emit icache flushing instructions. When the thread
++ * is migrated, the corresponding hart's icache will be guaranteed to be
++ * consistent with instruction memory.
++ *
++ * On kernels configured without SMP, this function is a nop as migrations
++ * across harts will not occur.
++ */
++int riscv_set_icache_flush_ctx(unsigned long ctx, unsigned long per_thread)
++{
++#ifdef CONFIG_SMP
++	switch (ctx) {
++	case PR_RISCV_CTX_SW_FENCEI_ON:
++		if (per_thread)
++			current->thread.force_icache_flush = true;
++		else
++			current->mm->context.force_icache_flush = true;
++		break;
++	case PR_RISCV_CTX_SW_FENCEI_OFF:
++		if (per_thread)
++			current->thread.force_icache_flush = false;
++		else
++			current->mm->context.force_icache_flush = false;
++		break;
++
++	default:
++		break;
++	}
++#endif
++	return 0;
++}
+diff --git a/arch/riscv/mm/context.c b/arch/riscv/mm/context.c
+index 217fd4de6134..0146c61be0ab 100644
+--- a/arch/riscv/mm/context.c
++++ b/arch/riscv/mm/context.c
+@@ -297,12 +297,14 @@ static inline void set_mm(struct mm_struct *prev,
+  *
+  * The "cpu" argument must be the current local CPU number.
+  */
+-static inline void flush_icache_deferred(struct mm_struct *mm, unsigned int cpu)
++static inline void flush_icache_deferred(struct mm_struct *mm, unsigned int cpu,
++					 struct task_struct *task)
+ {
+ #ifdef CONFIG_SMP
+ 	cpumask_t *mask = &mm->context.icache_stale_mask;
+ 
+-	if (cpumask_test_cpu(cpu, mask)) {
++	if (cpumask_test_cpu(cpu, mask) || mm->context.force_icache_flush ||
++	    (task && task->thread.force_icache_flush)) {
+ 		cpumask_clear_cpu(cpu, mask);
+ 		/*
+ 		 * Ensure the remote hart's writes are visible to this hart.
+@@ -332,5 +334,5 @@ void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+ 
+ 	set_mm(prev, next, cpu);
+ 
+-	flush_icache_deferred(next, cpu);
++	flush_icache_deferred(next, cpu, task);
+ }
+diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+index 370ed14b1ae0..ec731dda5b8e 100644
+--- a/include/uapi/linux/prctl.h
++++ b/include/uapi/linux/prctl.h
+@@ -306,4 +306,8 @@ struct prctl_mm_map {
+ # define PR_RISCV_V_VSTATE_CTRL_NEXT_MASK	0xc
+ # define PR_RISCV_V_VSTATE_CTRL_MASK		0x1f
+ 
++#define PR_RISCV_SET_ICACHE_FLUSH_CTX	71
++# define PR_RISCV_CTX_SW_FENCEI_ON	0
++# define PR_RISCV_CTX_SW_FENCEI_OFF	1
++
+ #endif /* _LINUX_PRCTL_H */
+diff --git a/kernel/sys.c b/kernel/sys.c
+index 420d9cb9cc8e..e806a8a67c36 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -146,6 +146,9 @@
+ #ifndef RISCV_V_GET_CONTROL
+ # define RISCV_V_GET_CONTROL()		(-EINVAL)
+ #endif
++#ifndef RISCV_SET_ICACHE_FLUSH_CTX
++# define RISCV_SET_ICACHE_FLUSH_CTX(a, b)	(-EINVAL)
++#endif
+ 
+ /*
+  * this is where the system-wide overflow UID and GID are defined, for
+@@ -2739,6 +2742,9 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
+ 	case PR_RISCV_V_GET_CONTROL:
+ 		error = RISCV_V_GET_CONTROL();
+ 		break;
++	case PR_RISCV_SET_ICACHE_FLUSH_CTX:
++		error = RISCV_SET_ICACHE_FLUSH_CTX(arg2, arg3);
++		break;
+ 	default:
+ 		error = -EINVAL;
+ 		break;
 
-The same here.
-
-> +	int rx_err;
-> +
-> +	struct mutex mutex;
-> +};
-> +
-> +/*
-> + * struct w1_uart_limits - limits for 1-Wire operations
-> + *
-> + * @baudrate: Requested baud-rate to create 1-Wire timing pattern
-> + * @bit_min_us: minimum time for a bit (in us)
-> + * @bit_max_us: maximum time for a bit (in us)
-> + * @sample_us: timespan to sample 1-Wire response
-> + * @cycle_us: duration of the 1-Wire cycle
-> + */
-> +struct w1_uart_limits {
-> +	unsigned int baudrate;
-> +	unsigned int bit_min_us;
-> +	unsigned int bit_max_us;
-> +	unsigned int sample_us;
-> +	unsigned int cycle_us;
-> +};
-> +
-> +static inline unsigned int baud_to_bit_ns(unsigned int baud)
-> +{
-> +	return 1000000000 / baud;
-
-NSEC_PER_SEC
-
-> +}
-> +
-> +static inline unsigned int to_ns(unsigned int us)
-> +{
-> +	return us * 1000;
-
-NSEC_PER_USEC
-
-> +}
-> +
-> +/*
-> + * Set baud-rate, delay and tx-byte to create a 1-Wire pulse and adapt
-> + * the tx-byte according to the actual baud-rate.
-> + *
-> + * Reject when:
-> + * - time for a bit outside min/max range
-> + * - a 1-Wire response is not detectable for sent byte
-> + */
-> +static int w1_uart_set_config(struct serdev_device *serdev,
-> +			      const struct w1_uart_limits *limits,
-> +			      struct w1_uart_config *w1cfg)
-> +{
-> +	unsigned int bits_low;
-> +	unsigned int bit_ns;
-> +	unsigned int low_ns;
-> +
-> +	w1cfg->baudrate = serdev_device_set_baudrate(serdev, limits->baudrate);
-> +	if (w1cfg->baudrate == 0)
-> +		return -EINVAL;
-> +
-> +	/* Compute in nanoseconds for accuracy */
-> +	bit_ns = baud_to_bit_ns(w1cfg->baudrate);
-> +	bits_low = to_ns(limits->bit_min_us) / bit_ns;
-> +	/* start bit is always low */
-> +	low_ns = bit_ns * (bits_low + 1);
-> +
-> +	if (low_ns < to_ns(limits->bit_min_us))
-> +		return -EINVAL;
-> +
-> +	if (low_ns > to_ns(limits->bit_max_us))
-> +		return -EINVAL;
-> +
-> +	/* 1-Wire response detectable for sent byte */
-> +	if (limits->sample_us > 0 &&
-> +	    bit_ns * 8 < low_ns + to_ns(limits->sample_us))
-
-BITS_PER_BYTE
-
-> +		return -EINVAL;
-> +
-> +	/* delay to complete 1-Wire cycle, include start and stop-bit */
-> +	w1cfg->delay_us = 0;
-> +	if (bit_ns * 10 < to_ns(limits->cycle_us))
-
-What is this 10? Dub it.
-
-> +		w1cfg->delay_us =
-> +			(to_ns(limits->cycle_us) - bit_ns * 10) / 1000;
-
-And this 10?
-
-The end: / NSEC_PER_USEC
-
-> +
-> +	/* byte to create 1-Wire pulse */
-> +	w1cfg->tx_byte = 0xff << bits_low;
-> +
-> +	return 0;
-> +}
-...
-
-> +static int w1_uart_serdev_tx_rx(struct w1_uart_device *w1dev,
-> +				const struct w1_uart_config *w1cfg,
-> +				unsigned char *rx_byte)
-
-u8 *
-
-> +{
-...
-> +}
-> +
-> +static int w1_uart_serdev_receive_buf(struct serdev_device *serdev,
-> +				      const unsigned char *buf, size_t count)
-
-serdev already uses u8 * here. You are basing on the top of some old tree.
-
-regards,
 -- 
-js
-suse labs
+2.43.0
 
