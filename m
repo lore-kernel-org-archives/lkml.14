@@ -1,116 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8558244C81
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 13:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B826B4121B;
+	Mon,  8 Jan 2024 13:07:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a27UhlN+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704719180;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b+8Lqj6hWE2i7R49OXd/zNqcjNcogl72LCJ21CQyGp4=;
-	b=a27UhlN+Xfmoc2KimiJwrLF+y+s9dkgjYdEgBKUOW5wa5nfw4rEgDl9bqV196o+5dkcKIM
-	5n43Mx2ZQe/zutsOVDQldeCXR4Z699i7sjEAvRibaP/t1ya7XCPL7XxKTShSyZ0nC8Yg06
-	OcLWzlsxgpXqvfcawpah+VKXnuaqflY=
-Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
- [209.85.210.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-690-XJFem5jqMm6VoVxG_C9JFQ-1; Mon, 08 Jan 2024 08:06:19 -0500
-X-MC-Unique: XJFem5jqMm6VoVxG_C9JFQ-1
-Received: by mail-ot1-f70.google.com with SMTP id 46e09a7af769-6dbfec8ee69so2050430a34.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 05:06:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704719178; x=1705323978;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b+8Lqj6hWE2i7R49OXd/zNqcjNcogl72LCJ21CQyGp4=;
-        b=Gw7IwzT3UCh6o24hLAjTHUVbyvckHt5DEoLeoEzmkwksb6JsMy/YPp7BHpAE1BiPSF
-         IEsO28OefZ1NF9qlAEQFWlJDyInrgrSHbM2OWA7iGEBFe07PtppRjR+ucCyZ8VeKs5q0
-         huR+oqMlyBVk1HZx1QSK+lcWhEZrQNcFE8OxL8k9lFoQwueoVWC7Q7CW1fCfwDhIysNt
-         /48yhcyNv3kCcg8++mpOH8iariGonZh70YNeQATI4EoeEXGyyoG9CXtRKTvbXFbFhUUh
-         I2qUQ2OtBYceC4NgdK8M7dRGJvAWIY3xCJTf/ExLYVxxthfxAOICXq16EEU+xKPW6l4+
-         xiSg==
-X-Gm-Message-State: AOJu0Yyezu0WiU36IFyro9SwoZujMB/sJLoPsU9D3vWStjlTDtEeqQcu
-	j+FS0WLFVZW2JkVDfYYrmWi0Ecygbmo3tIlYiTkc+HTrtQ5g2TiFwoabGlc6YSH6SAJ5yxJXVAH
-	vlU2gVcj6JoSBEgIdUWS8puv/wueaJdkv4nLK6i9Hmk9wcgNp
-X-Received: by 2002:a9d:6e18:0:b0:6dc:91b7:ca96 with SMTP id e24-20020a9d6e18000000b006dc91b7ca96mr3101772otr.6.1704719178407;
-        Mon, 08 Jan 2024 05:06:18 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFTBr19IZ9T5r+flE9vk3UxQSRnxjgnfuTD+WjZPThubQVoz63Ho4YxFtB3vHcJK/+dN/27gRc3emkbSLKGkoY=
-X-Received: by 2002:a9d:6e18:0:b0:6dc:91b7:ca96 with SMTP id
- e24-20020a9d6e18000000b006dc91b7ca96mr3101761otr.6.1704719178214; Mon, 08 Jan
- 2024 05:06:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="POHozhsy"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 408D5F63016636;
+	Mon, 8 Jan 2024 13:07:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version:content-type; s=
+	qcppdkim1; bh=Yj9tfHIzcfb2h/uSh/hSnE1BOhG/nWfIZRNBZOaOKwc=; b=PO
+	HozhsyEi8bceubFsjNEO071nGkwSLZFl63qVaZHnM+bcYT9vZDFmYa4/PmeSUZE8
+	e3egga/UuxhFCR3H1zi1d2qAN+YjwQ1uLXHgAch9ap89g0ltNX6iGYc7XPyFSjs5
+	s45Tjo5ri/Cj+z7nRqSsY4/0zGEsd4VSE315gJ8b2OliuGL/CZXJ82IfRObD04bi
+	64ISO3iUn/cQBdIUKN28L2IOXVhLX772mGuYGaXrMH24nFuR9KVFwECjb41ipvO/
+	XAJRSk/Iv3wsTCfyV91i9WDmlAjQCWrWIAlsIh+G0ADlScDE4axXRBPJVIqj8KEK
+	dGrHyk32wqodTJPSJ2Ag==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vghkvg07u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Jan 2024 13:07:27 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 408D7RZa008122
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 8 Jan 2024 13:07:27 GMT
+Received: from hu-ugoswami-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 8 Jan 2024 05:07:24 -0800
+From: Udipto Goswami <quic_ugoswami@quicinc.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Krishna Kurapati <quic_kriskura@quicinc.com>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        Udipto Goswami
+	<quic_ugoswami@quicinc.com>
+Subject: [PATCH v2] usb: core: Prevent null pointer dereference in update_port_device_state
+Date: Mon, 8 Jan 2024 18:37:06 +0530
+Message-ID: <20240108130706.15698-1-quic_ugoswami@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240104193303.3175844-1-seanjc@google.com> <20240104193303.3175844-9-seanjc@google.com>
-In-Reply-To: <20240104193303.3175844-9-seanjc@google.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Mon, 8 Jan 2024 14:06:06 +0100
-Message-ID: <CABgObfavshc4VZAF0q+EjpXnkA4nVw8NSz_EvNt-iKxoFqgR5w@mail.gmail.com>
-Subject: Re: [GIT PULL] KVM: x86: Xen change for 6.8
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: tFXC9erw_5xUX0EVfnEybc4zJbpTspHs
+X-Proofpoint-GUID: tFXC9erw_5xUX0EVfnEybc4zJbpTspHs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ mlxscore=0 lowpriorityscore=0 clxscore=1011 adultscore=0
+ priorityscore=1501 suspectscore=0 spamscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=708 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401080113
 
-On Thu, Jan 4, 2024 at 8:33=E2=80=AFPM Sean Christopherson <seanjc@google.c=
-om> wrote:
->
-> A single Xen fix (of sorts) to let userspace workaround buggy guests that=
- don't
-> react well to KVM setting the "stable TSC" bit in Xen PV clocks.
->
-> The following changes since commit e9e60c82fe391d04db55a91c733df4a017c28b=
-2f:
->
->   selftests/kvm: fix compilation on non-x86_64 platforms (2023-11-21 11:5=
-8:25 -0500)
->
-> are available in the Git repository at:
->
->   https://github.com/kvm-x86/linux.git tags/kvm-x86-xen-6.8
->
-> for you to fetch changes up to 6d72283526090850274d065cd5d60af732cc5fc8:
->
->   KVM x86/xen: add an override for PVCLOCK_TSC_STABLE_BIT (2023-12-07 15:=
-52:57 -0800)
+Currently,the function update_port_device_state gets the usb_hub from
+udev->parent by calling usb_hub_to_struct_hub.
+However, in case the actconfig or the maxchild is 0, the usb_hub would
+be NULL and upon further accessing to get port_dev would result in null
+pointer dereference.
 
-Pulled, thanks.
+Fix this by introducing an if check after the usb_hub is populated.
 
-Paolo
+Fixes: 83cb2604f641 ("usb: core: add sysfs entry for usb device state")
+Cc: stable@vger.kernel.org
+Signed-off-by: Udipto Goswami <quic_ugoswami@quicinc.com>
+---
+v2: Introduced comment for the if check & CC'ed stable.
 
+ drivers/usb/core/hub.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-
-> ----------------------------------------------------------------
-> KVM Xen change for 6.8:
->
-> To workaround Xen guests that don't expect Xen PV clocks to be marked as =
-being
-> based on a stable TSC, add a Xen config knob to allow userspace to opt ou=
-t of
-> KVM setting the "TSC stable" bit in Xen PV clocks.  Note, the "TSC stable=
-" bit
-> was added to the PVCLOCK ABI by KVM without an ack from Xen, i.e. KVM isn=
-'t
-> entirely blameless for the buggy guest behavior.
->
-> ----------------------------------------------------------------
-> Paul Durrant (1):
->       KVM x86/xen: add an override for PVCLOCK_TSC_STABLE_BIT
->
->  Documentation/virt/kvm/api.rst |  6 ++++++
->  arch/x86/kvm/x86.c             | 28 +++++++++++++++++++++++-----
->  arch/x86/kvm/xen.c             |  9 ++++++++-
->  include/uapi/linux/kvm.h       |  1 +
->  4 files changed, 38 insertions(+), 6 deletions(-)
->
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index ffd7c99e24a3..d40b5500f95b 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -2053,9 +2053,18 @@ static void update_port_device_state(struct usb_device *udev)
+ 
+ 	if (udev->parent) {
+ 		hub = usb_hub_to_struct_hub(udev->parent);
+-		port_dev = hub->ports[udev->portnum - 1];
+-		WRITE_ONCE(port_dev->state, udev->state);
+-		sysfs_notify_dirent(port_dev->state_kn);
++
++		/*
++		 * usb_hub_to_struct_hub() if returns NULL can
++		 * potentially cause NULL pointer dereference upon further
++		 * access.
++		 * Avoid this with an if check.
++		 */
++		if (hub) {
++			port_dev = hub->ports[udev->portnum - 1];
++			WRITE_ONCE(port_dev->state, udev->state);
++			sysfs_notify_dirent(port_dev->state_kn);
++		}
+ 	}
+ }
+ 
+-- 
+2.17.1
 
