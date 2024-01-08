@@ -1,140 +1,74 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from kylie.crudebyte.com (kylie.crudebyte.com [5.189.157.229])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4084022068
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 12:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3292575B;
+	Mon,  8 Jan 2024 12:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crudebyte.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dHrCe9Zc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704715561;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=HtmrrRZs23B4hXwrrEuiwzHUR6n+wAsGzVFjIlhR+Rs=;
-	b=dHrCe9ZclzU3upv9v0DoPzBel66ltEgPyw1AG6OkM3jEhEn1/FbWAGwrdw2IEtJ87rGeDp
-	55xAQY8e/RfotnpZk4Ii/6f36ZYeLUxVWUONJSnx1PeJmhEzHbTgTVHBpI5zJWSs+VFnwd
-	bnShsdCDaeNKRLufbN79okdRYaN3q0w=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-690-mSyYL8gpNv-4cBr26tSdRg-1; Mon, 08 Jan 2024 07:05:55 -0500
-X-MC-Unique: mSyYL8gpNv-4cBr26tSdRg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A285585A58B;
-	Mon,  8 Jan 2024 12:05:55 +0000 (UTC)
-Received: from pasta.redhat.com (unknown [10.45.227.7])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id BA3401C060AF;
-	Mon,  8 Jan 2024 12:05:54 +0000 (UTC)
-From: Andreas Gruenbacher <agruenba@redhat.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andreas Gruenbacher <agruenba@redhat.com>,
-	gfs2@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] gfs2 changes
-Date: Mon,  8 Jan 2024 13:05:53 +0100
-Message-ID: <20240108120553.4993-1-agruenba@redhat.com>
+	dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b="akIgN35X"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=crudebyte.com; s=kylie; h=Content-Type:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Content-ID:Content-Description;
+	bh=cagyf7j04cToSXabvYW43dze5arP+lifLYmlhSYnUZ8=; b=akIgN35X1P9RGr00+WcbSHEpBA
+	klW5ykJiJY05ljY+rZoWhILwOYxxB5r64OavHvm4Mje2AG/MKG48BzUAc+MPr+y8h5ThPd7K5s7ns
+	wVBJ2PgIt7UT6nSxYuZx65QN6OVPQpYm+53lSlmUhkto9Gj4XtQLXy+OKwcFL//MWdWpTHOF1AtnZ
+	kET5KB9UikjlWEuwPbZRQn4ro6TqGSxi8S4qttZW4qAVl/DbTlF9UDqpD9hM57PDFa3bq+S3P0L82
+	deh4802xgtgzU2y3C67DKzHPgJJfJgEVR23qMs0jnspYyo+X5xA206XwzB9aOhJC2PXIaXEAVuT2S
+	Wq+hliOs1vmiDVlzGD2Nqva6eedM/0/NIB1zYRFJM61FxEXLA1z83PIqINokjzDsSxU3HvwHBvK96
+	C1kktiEoGfhm788/YST6bb5IW5hC9mNuIoCS00Ov0J9jtP2BCWPKdIep2zV+LktCw7Q2fKeJ/zg97
+	mWJkHtXud5ApC9XPMfPGcSFf+panICrd6rQrgUHxCAuEcyiYNWZRDLCOxS3NinDc+VzBoaMEbOKIv
+	i6KbywucrpnD+2lrY27plMaBE0AIcD37WhVnE/j7TKHUchJYfKaubZ8ZQh3pQW1TBL3W0lq5aKHMi
+	hr7s7BZRrWVcM/8gK6nb41bF80Vo3NWbGJB/XNndY=;
+From: Christian Schoenebeck <linux_oss@crudebyte.com>
+To: Eric Van Hensbergen <ericvh@kernel.org>, asmadeus@codewreck.org
+Cc: linux-kernel@vger.kernel.org, v9fs@lists.linux.dev, rminnich@gmail.com,
+ lucho@ionkov.net
+Subject: Re: [PATCH] fs/9p: fix inode nlink accounting
+Date: Mon, 08 Jan 2024 13:08:31 +0100
+Message-ID: <8004884.rDQMAZhJ5Z@silver>
+In-Reply-To: <ZZvaRt4T-RjOBoS2@codewreck.org>
+References:
+ <20240107-fix-nlink-handling-v1-1-8b1f65ebc9b2@kernel.org>
+ <ZZvaRt4T-RjOBoS2@codewreck.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-Hello Linus,
+On Monday, January 8, 2024 12:19:34 PM CET asmadeus@codewreck.org wrote:
+> Eric Van Hensbergen wrote on Sun, Jan 07, 2024 at 07:07:52PM +0000:
+> > I was running some regressions and noticed a (race-y) kernel warning that
+> > happens when nlink becomes less than zero.  Looking through the code
+> > it looks like we aren't good about protecting the inode lock when
+> > manipulating nlink and some code that was added several years ago to
+> > protect against bugs in underlying file systems nlink handling didn't
+> > look quite right either.  I took a look at what NFS was doing and tried to
+> > follow similar approaches in the 9p code.
+> 
+> I was about to say the set/inc/etc_nlink helpers could probably just be
+> using atomic (there's an atomic_dec_if_postive that we could have used
+> for the v9fs_dec_count warning), but this isn't our code so not much to
+> do about that -- I agree it needs a lock.
+> 
+> I didn't take the time to check if you missed any, but it won't be worse
+> than what we have right now:
+> Acked-by: Dominique Martinet <asmadeus@codewreck.org>
 
-please consider pulling the following gfs2 changes.
+That's actually a good point. For these tasks atomic inc/sub/etc are usually
+used instead of locks.
 
-In addition to the usual fixes and cleanups, this adds gfs2 support for
-non-blocking lookups (MAY_NOT_BLOCK / LOOKUP_RCU).  That's a worthwhile
-improvement by itself and gets us one step closer to making RESOLVE_CACHED
-work (*).
+I would at least add local wrapper functions that would do these spinlocks for
+us.
 
-https://lore.kernel.org/linux-fsdevel/20231109190844.2044940-1-agruenba@redhat.com/
+However would it be too bold to change those inode functions to use atomic
+operations directly on their end?
 
-Thanks,
-Andreas
+/Christian
 
-The following changes since commit b85ea95d086471afb4ad062012a4d73cd328fa86:
-
-  Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git tags/gfs2-v6.7-rc1-fixes
-
-for you to fetch changes up to e345b87b0b0444d1c644b0ea15cfb50e88f10b55:
-
-  gfs2: Fix freeze consistency check in log_write_header (2023-12-27 13:16:48 +0100)
-
-----------------------------------------------------------------
-gfs2 updates
-
-- Add support for non-blocking lookup (MAY_NOT_BLOCK / LOOKUP_RCU)
-
-- Various minor fixes and cleanups
-
-----------------------------------------------------------------
-Abhi Das (1):
-      gfs2: Use GL_NOBLOCK flag for non-blocking lookups
-
-Al Viro (2):
-      gfs2: d_obtain_alias(ERR_PTR(...)) will do the right thing
-      gfs2: use is_subdir()
-
-Andreas Gruenbacher (9):
-      gfs2: Fix inode_go_instantiate description
-      gfs2: Add GL_NOBLOCK flag
-      gfs2: Minor gfs2_ail1_empty cleanup
-      gfs2: Mark withdraws as unlikely
-      gfs2: Rename gfs2_withdrawn to gfs2_withdrawing_or_withdrawn
-      gfs2: Lift withdraw check out of gfs2_ail1_empty
-      gfs2: Minor gfs2_{freeze,thaw}_super cleanup
-      gfs2: Refcounting fix in gfs2_thaw_super
-      gfs2: Fix freeze consistency check in log_write_header
-
-Edward Adam Davis (1):
-      gfs2: fix kernel BUG in gfs2_quota_cleanup
-
-Kevin Hao (2):
-      gfs2: Add missing set_freezable() for freezable kthread
-      gfs2: Use wait_event_freezable_timeout() for freezable kthread
-
-Matthew Wilcox (Oracle) (1):
-      gfs2: Remove use of error flag in journal reads
-
-Osama Muhammad (1):
-      gfs2: Fix kernel NULL pointer dereference in gfs2_rgrp_dump
-
-Randy Dunlap (1):
-      gfs2: rgrp: fix kernel-doc warnings
-
- fs/gfs2/aops.c       |  2 +-
- fs/gfs2/dentry.c     | 23 ++++++++------
- fs/gfs2/export.c     |  2 --
- fs/gfs2/file.c       |  2 +-
- fs/gfs2/glock.c      | 47 +++++++++++++++++++++++++---
- fs/gfs2/glock.h      |  1 +
- fs/gfs2/glops.c      |  4 +--
- fs/gfs2/inode.c      |  8 ++---
- fs/gfs2/lock_dlm.c   |  8 ++---
- fs/gfs2/log.c        | 63 +++++++++++++++++++++----------------
- fs/gfs2/lops.c       | 21 +++++--------
- fs/gfs2/meta_io.c    |  9 ++++--
- fs/gfs2/ops_fstype.c |  2 +-
- fs/gfs2/quota.c      | 16 +++++-----
- fs/gfs2/recovery.c   |  2 +-
- fs/gfs2/rgrp.c       | 12 +++----
- fs/gfs2/super.c      | 88 +++++++++++++++++++++-------------------------------
- fs/gfs2/sys.c        |  2 +-
- fs/gfs2/trans.c      |  2 +-
- fs/gfs2/util.c       |  4 +--
- fs/gfs2/util.h       | 15 ++++-----
- 21 files changed, 182 insertions(+), 151 deletions(-)
 
