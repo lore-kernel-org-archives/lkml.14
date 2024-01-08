@@ -1,89 +1,79 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBDD6524C8
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 16:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB71537FD
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 16:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="q3QHvqdK"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 870DD24002D
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 17:15:37 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1704730537; bh=Ts/rOOm0/Jq58HYvOJXottonXceweiTE91bQUrYjFqc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:
-	 Content-Transfer-Encoding:From;
-	b=q3QHvqdKJhTn1p6fiWYdee57zvhifiCR2vUxYtlkYlDApvZHCc1yrdS3w760e27Vv
-	 r8Osz2cuC41ts3vtM6YZ2XfIfv/JHwACVG69zZnLS6PHixmT5Ar1aw7l+w5j+BttZr
-	 jpm2qrf+rXg0W9JN/B8aV2tn5TEJ5Vp17TwdHkr8ZYW5ol/0guxFfkhnhRF0GtBEHD
-	 i1zyJ0IQWpJMRMfvnvUXLsA0CMhh06p/yjW4hNderRJhD1Ww3YQLla8elGXxD0L5C0
-	 E0ZAcN0BRLwN+T33PMT2EHuKVt114vZp2dtikmU6/rC/gYARk3XT/o1K9b3cahFIrf
-	 ZsJXYQekFFYkg==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4T7zgR3Q0kz9rxF;
-	Mon,  8 Jan 2024 17:15:30 +0100 (CET)
-From: Yueh-Shun Li <shamrocklee@posteo.net>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Hu Haowen <src.res.211@gmail.com>,
-	Alex Shi <alexs@kernel.org>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	Randy Dunlap <rdunlap@infradead.org>
-Cc: Yueh-Shun Li <shamrocklee@posteo.net>,
-	workflows@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/4] coding-style: recommend reusing macros from split headers instead of kernel.h
-Date: Mon,  8 Jan 2024 16:03:21 +0000
-Message-ID: <20240108160746.177421-1-shamrocklee@posteo.net>
-In-Reply-To: <107b6b5e-ca14-4b2b-ba2e-38ecd74c0ad3@infradead.org>
-References: <107b6b5e-ca14-4b2b-ba2e-38ecd74c0ad3@infradead.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lEDsrMlU"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-680d4584a81so16710746d6.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 08:15:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704730554; x=1705335354; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=2TgBDkQz+4qqwrUlFCPQLEvy6TMuXVBnRueM2UoZXNw=;
+        b=lEDsrMlUqJcjBA0GPsTf4Lsk5MSsaTDnclScpEaapUC+RcMYmc8b22E0rlWZJaZ/NX
+         cz9TrqwxmuCAqD4aL7HXamvftE925SxLcW7cMmNlhG58Br1jkH1odpBEqrWNn0u5YMmA
+         SZL7YA7Wp4EdV1e5bQlOFMnE+NxTl3akFTxFk23nPTEED4w2y5+jDMnZdatUE1+c9fiy
+         R4/n6ptkL4U3mE8XCsMBaEiTZkEFj1RBYYG+U3YNBbQI93FnbJ5P4r8IA0I7kCdb9h4O
+         gpg4pTBHquXpbvepKASbHWEGYUxeEyTVAVfSmefMeXSs7qsL8IsmMMgqgDD621IhdBO+
+         uJDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704730554; x=1705335354;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2TgBDkQz+4qqwrUlFCPQLEvy6TMuXVBnRueM2UoZXNw=;
+        b=mvb1S8vIPj8KNugiFnBEoX4hcNf3EbyRB4qudK3LrFgI3svqbuojGbn84RjT0Toq5W
+         vdbyMSIjAJStKhi5Mhnl9r8GJJcw4QC1qfD6BDKBlujUgRIDoeTAYN0V1zQNF/UDJsBT
+         EbkC2aCEyoGlH68S2kYDBUaE2CUFj9yo+shYU89j802UeBDJhLKxOXuLh0ppTn+hTtLa
+         vx7vXBdgsZFzXTbcd0fqPkCyhVO79kAEUdj/COzalXu2IuvkaGUAq9dGAyStMuzOcf/e
+         AiANKr3MCM65iqVhdJFNc1TwGDrBFMXtMFTIEVgO0uhWtWs4Wp4kMBzXwcpguKvsMN0l
+         Df9A==
+X-Gm-Message-State: AOJu0Yx6Mp/jOUnQGC7vqaMIt7/9h/KEhKqXJzcE37Li7Qw8pDWeAS3Z
+	vjgJ9exvL7rhaoa+b/YIJ/0CF7E/vFvF1w39Bgjv6UyN1vLn+Q==
+X-Google-Smtp-Source: AGHT+IFxmRb3UlUaz+5aRpILb3jdoFFWR4KwyrDk0NnaBENQjhicBr2IqyEiJ7fJsWqZbqxFwWANocDQ6lrKRKI0Z1A=
+X-Received: by 2002:a0c:fdea:0:b0:681:933:c8cb with SMTP id
+ m10-20020a0cfdea000000b006810933c8cbmr1443382qvu.63.1704730554613; Mon, 08
+ Jan 2024 08:15:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20231228125805.661725-1-tudor.ambarus@linaro.org> <20231228125805.661725-13-tudor.ambarus@linaro.org>
+In-Reply-To: <20231228125805.661725-13-tudor.ambarus@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Mon, 8 Jan 2024 16:15:43 +0000
+Message-ID: <CADrjBPpUvi+f87UrpeEYaQ0zJ3cvp_2MJAvMYiZ5hNaew-N_7A@mail.gmail.com>
+Subject: Re: [PATCH v2 12/12] arm64: dts: exynos: gs101: enable eeprom on gs101-oriole
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	mturquette@baylibre.com, sboyd@kernel.org, conor+dt@kernel.org, 
+	andi.shyti@kernel.org, alim.akhtar@samsung.com, gregkh@linuxfoundation.org, 
+	jirislaby@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com, 
+	cw00.choi@samsung.com, arnd@arndb.de, semen.protsenko@linaro.org, 
+	andre.draszik@linaro.org, saravanak@google.com, willmcvicker@google.com, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-serial@vger.kernel.org, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 
-Dear Maintainers,
+Hi Tudor,
 
-This series of patches targets the "Linux kernel coding style"
-documentation and recommend reusing macros inside the include/linux
-directory instead of the obsolete header "include/linux/kernel.h".
+On Thu, 28 Dec 2023 at 12:58, Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
+>
+> Enable the eeprom found on the battery connector.
+>
+> The selection of the USI protocol is done in the board dts file because
+> the USI CONFIG register comes with a 0x0 reset value, meaning that USI8
+> does not have a default protocol (I2C, SPI, UART) at reset.
+>
+> Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 
-This addresses the issue 'Irrelevant documentation recommending the use
-of "include/linux/kernel.h"'[1][2] and help deprecating "kernel.h".
-
-If applied, developers will no longer be confused by the contradiction
-between "Linux kernel style guide" suggestions and the deprecation
-notice on top of "kernel.h".
-
-There's also a patch that adds an example to show how reusing macro
-definition from shared headers help prevent naming collisions.
-
-This series contains the update to the zh_TW and zh_CN translation of
-the corresponding documentation changes.
-
-Best regards,
-
-Shamrock
-
-[1]: https://lore.kernel.org/linux-doc/bc63acd7ef43bdd8d9609fa48dbf92f9@posteo.net/
-[2]: https://lore.kernel.org/linux-doc/107b6b5e-ca14-4b2b-ba2e-38ecd74c0ad3@infradead.org/
-
-Yueh-Shun Li (4):
-  coding-style: recommend split headers instead of kernel.h
-  coding-style: show how reusing macros prevents naming collisions
-  doc/zh_TW: coding-style: update content for section 18
-  doc/zh_CN: coding-style: update content of section 18
-
- Documentation/process/coding-style.rst        | 41 +++++++++++++++----
- .../zh_CN/process/coding-style.rst            | 39 ++++++++++++++----
- .../zh_TW/process/coding-style.rst            | 39 ++++++++++++++----
- 3 files changed, 95 insertions(+), 24 deletions(-)
-
--- 
-2.42.0
-
+Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
