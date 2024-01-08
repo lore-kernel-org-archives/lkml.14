@@ -1,192 +1,212 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2048.outbound.protection.partner.outlook.cn [139.219.17.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F186C224E9;
-	Mon,  8 Jan 2024 11:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Fnll+4r0l1nTz0/+ZOCrXR9lHwxEXMt+zIkUynhmrcLQkzEvuY2upGaGwYH1e7IMSBcBfmBV9rST05Rfe/GnUL8B+Bxb5YXLZ1LPJdzFDuGUOCxax+xSoMxdLDWABbiO+PlS4Qzjpf+idf+tBefCh9Tm/vbelChcLzCH6QJpAXgpFgoHyAj9UuZQsoa8+dPd05SmDdW+KhvFUy4cv071kkmMRxcIXoSz9zXzArSmSDLfvP2lPtEucafYs12M5B1ldARjum+5lqurCrZjjFEqWjLC/KdVVPTWdunCRsQ105VKvQlBLB1YVJvJph/YhTRWjaMKN34bcsyJUHLQ/YwgxQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Pc2T6SbVvFNGAc7jANlqkHZ/EYw1YXpAsFWAuojjcfk=;
- b=nEBWNET509afv5ZYoZzR+tMBQPNby11dT4b+qDRZKul9Headx+bGwNbuG3DwzQq73SPTDmmFcXGovZbT5P9Y03iK23bNfGpOI/v9zh+NWFZ4K3cESBvBWPX3oxZTaVThyPkSf9yb3iDdV5eRdrN3IhCtn9kiAXy6tqt7/ImTXPMu87D7kqJSKayEyTLxrJHN5zQfZzRtB7wYgSr8l/lMzgoGRqTd63JSvl6sGu38T+qTpKZrtRcEgCvP+qJGt8il+65ukQVG97f/TO9wNEeuYcejaNzccg8/2u7Y+8qLZZMHNHZXEbQ3QzsMqSjy2DV7Z6bpJRbt0fmw/0RIvNqu7A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::15) by SHXPR01MB0797.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:26::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.32; Mon, 8 Jan
- 2024 11:06:36 +0000
-Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- ([fe80::e6aa:baea:fd8c:4cd2]) by
- SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn ([fe80::e6aa:baea:fd8c:4cd2%7])
- with mapi id 15.20.7135.032; Mon, 8 Jan 2024 11:06:36 +0000
-From: Minda Chen <minda.chen@starfivetech.com>
-To: Conor Dooley <conor@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Mason Huo <mason.huo@starfivetech.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Kevin Xie <kevin.xie@starfivetech.com>,
-	Minda Chen <minda.chen@starfivetech.com>
-Subject: [PATCH v14 07/22] PCI: microchip: Rename two setup functions
-Date: Mon,  8 Jan 2024 19:05:57 +0800
-Message-Id: <20240108110612.19048-8-minda.chen@starfivetech.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240108110612.19048-1-minda.chen@starfivetech.com>
-References: <20240108110612.19048-1-minda.chen@starfivetech.com>
-Content-Type: text/plain
-X-ClientProxiedBy: ZQ0PR01CA0014.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:5::19) To SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::15)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E351E497
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 11:39:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CEjqpgon"
+Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-33753ac460bso1181350f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 03:39:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704713996; x=1705318796; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PYojaOK4ISq04M658HG0Lc/KZ0ySyiQHYKNYCJoto0c=;
+        b=CEjqpgonj8m+5sondGn57GtCVxqwa8qCUkPzP+Z9764GAG5mZba2EE48W+soeOnVyY
+         +qN5zpHnB/auGbfWdCuEqdnHGk0ouNdiEUjwsUBd8Hosr+UmQsyjOLA8IG9IAb7m62ps
+         U2a/inhAp/dgIit34SN6fM5gBGwincQfUz8qzl+CjjKsu/xjr6ISu2FjcrsXk817MyrJ
+         CVwyqXYh0Q6TIj1D4R6J1npigIfSwuzRebFdPa4+eLuTkIXh+sPbeb1IWLuCApg/Fymv
+         cZrkJ/G2vSUP6lUlD8GlCR11eYg8mqIe0nSUMUzAbdxlslRVFR4IjInN4jScS3/9xC/f
+         4b7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704713996; x=1705318796;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PYojaOK4ISq04M658HG0Lc/KZ0ySyiQHYKNYCJoto0c=;
+        b=sEt83iQd7VBKlf3BaZlFmCWE0EuqcHh6aQb34dECdYUXicf3EDVwnAoQ0tIqg/+aLY
+         ZUBxj3DHX4foViCSVNBsOKQa4bo6BN7RlUAoGPH83IYiC/CEBChmYwvqDVJS0X1cHdPL
+         jd8mQpNUYdcMZz+gqf/uVQghu3LW3XAA7F2Yy3gOQs131I6ZaNbjc1tXFrnKmIh0lFqB
+         +mtFut2uEYHFChmqu0T6STbUa19aZOpcN/9HPUmrmrOyWoFSD1iLydf44QWaNkUicP8v
+         PfiVKTRz6Sk0eMJWl99ff0Gp9u5BRsFEQvsjDgV7MvBS5TzWMnoh3T9ufvc26LT2ZXvt
+         FqBQ==
+X-Gm-Message-State: AOJu0Yw+VKOk5fyhBeF4IJjEMRmDt2uoS+eGsKpmxY7ZbgB19j+jEuk4
+	Qi/1cv25a68jHCs8c/5mpPMhChCQyOifd7IaLo9h
+X-Google-Smtp-Source: AGHT+IHMmf52kGj2P/XSi6kfkFV9ZlexWdM7YQjiOQF59eZwbeswVX/euw77KcuNiNyxDc9oJv2aw7dEqFYP/g==
+X-Received: from beeg.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:11db])
+ (user=jackmanb job=sendgmr) by 2002:a05:6000:4007:b0:337:54d0:a99e with SMTP
+ id cp7-20020a056000400700b0033754d0a99emr12525wrb.2.1704713995691; Mon, 08
+ Jan 2024 03:39:55 -0800 (PST)
+Date: Mon,  8 Jan 2024 11:39:50 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SHXPR01MB0863:EE_|SHXPR01MB0797:EE_
-X-MS-Office365-Filtering-Correlation-Id: d990fe60-f60a-4683-a69f-08dc1039e16b
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	3Tsa9W6i36SJnTtdqbz0/lMWP5ZMfpA0HL++t0pzkQUdAs8DbDTdRiJtqOMxPApzapHkSeQ1xCHrJHkG430u6b3Y95L5Tbx0o2JAThtrfsRKCRgPNMRBT6KcYVIo1IfZl4AvA1S0b1r6VtbTvVUprHB467Kg/yqad80tBFI/CiyhY82b0SWCVo4j+nPF7ueBio4GKUhejcj+wLeC1RGk7nfmgF4pJM/nX3JTAIjKoQVvXznF3Ll8/qyPHchF35rrSamnlT8WwusXz9ijJg5Vj+BXiCUzJYnZoWsjyLz0B6sj8+j26SHIZQpw4OqTBP0SKTLIARJQymMJQfrdzGr1XeoAur7noQSu9wRcyY96b34WZQxc5+bXJJrJyUeR9bhcuRxnkVbA/1mECEAzPAJ+7slW/loZFfofHRe+oC3qlUVGGPunb1xgYODYbbzKcbARF+snqHsnVnkMmXeFHoCfm4n0hgKxIFOsTX6NSyXvSbthJp2zBppYk2cL+RF8A51orLEamo7Z7/muAk3H3ArQv7uv/M3OGSbtexJ9XuRPV4MsL9cmEoJUVSNrLrdfm1Fk
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(136003)(39830400003)(346002)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(8936002)(41320700001)(1076003)(107886003)(26005)(2616005)(83380400001)(44832011)(8676002)(4326008)(86362001)(52116002)(508600001)(66476007)(6666004)(66946007)(66556008)(54906003)(110136005)(40160700002)(38100700002)(38350700005)(2906002)(5660300002)(7416002)(40180700001)(41300700001)(36756003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9J8nJdbFmKRHmMiEOlE9U/xzcszmKAWOVwA6kmfFJDkRjCmH172SmOGBqPuz?=
- =?us-ascii?Q?d5GFiBbRqPqRcc5IE1Wz3T3oCk7Z84O5A1ItYNO/AkUAAdaOmKFsMhU14rwT?=
- =?us-ascii?Q?auQwV9Gb+5JiT+X1V7DFyYUbM3CQQA77j/nfvbbukaM4wvh0Gwo/YM5WrD3G?=
- =?us-ascii?Q?te4VsTx/2sxwEK7A/ZF35K4TPFYirgFiaNll0YX9aoXpdAjeZI7T7RXQSinT?=
- =?us-ascii?Q?UcKkWhMhiI9qsN69AFDjdvdaKNnKi64GxkkjcXj7iQIVdsSAcwUm5/V0pJML?=
- =?us-ascii?Q?P7vog9OuiGj35HIHY67MtMljadNsmbZL20pusjn67AokIUV9EAHXTBLII9lo?=
- =?us-ascii?Q?8snJGXSDiBrD46GBjCaVKa47TSIG2WRIUxRuyrQBqOR+EQr3v6/YKrb/usHM?=
- =?us-ascii?Q?lbkyS5cnMtxOE4W2JqlIMYBhLBs5gALwjTcRW8egQHBGJgvLNyTVzqOO0dHa?=
- =?us-ascii?Q?uUGWcM5N/mw1kYHJ53cryAAKZWDmWrT9UdaP1WO8iToPV54jHyAXswrbBIJA?=
- =?us-ascii?Q?y44vrVhMTlj6CcZVcLPULwfpa2Oqk0pFBJ9uEPF1H9YxSqxB1X5hIC1Ikim8?=
- =?us-ascii?Q?l2iHwnqzKM5MQ4sO0m2a+8yBhy3gGCWkT9fYKAIjxeyLzhC0RrzIXtTBOCS4?=
- =?us-ascii?Q?8rz+Ii6bWUnA5VPYCIPkUjyqNKjUtWPe5vn46vSbwxgBzpV1JT+3Tth3x2Bh?=
- =?us-ascii?Q?tgmKDH3EPlRcsMY/zBkGrpxRQSIuk7tQam9yDrlxyWpIu64IDZPJXk65zq9M?=
- =?us-ascii?Q?QXmEHZudYDd0BB+3Oq/nuW6GXhXPgg6osT3uuvl3p1veQmqftFAoKI1d92KX?=
- =?us-ascii?Q?uOpCbdP8r9+v0Tzl3+yB/cY7p/DmlvqAFRmVrjl5U6d7swrskGlXbeGW7HkY?=
- =?us-ascii?Q?kSNWF/cv+OG5lGMq4c5IqPCJAPdZ9Yyv241TdIjgaMTYk4wODeT606yd/u8b?=
- =?us-ascii?Q?+Auf8kY++3wtmvn+Nnwdr4CDfVaaWu7oU7ri5hzoBCtKUa5aLjtzCImjbgly?=
- =?us-ascii?Q?3J+FB7R16iHcW86Y7ERThC7/7pP5OAgF+OTQy6NO9+Q4aL1zK0JPZgn7K+FB?=
- =?us-ascii?Q?CM0gHhKsKA9jiuMxrWrSxgFoZJoPAsGsBeubPqtjtQ5/0QJ6r8Lg93/k+g6A?=
- =?us-ascii?Q?o4etm8QjcA//yMwf2wOVIQXJlBf3OH6NVujCo1U39lTtOySVi7WULxf6xi0D?=
- =?us-ascii?Q?E/tjWYYrADGxcGK318FMZQk+FPmuOm8TeG+1c9jpXBqtlwpsrgOmUU9tlXg6?=
- =?us-ascii?Q?4ty9Qy7fI40JTdT4bJGEpUzhlH02jaeYiuYe3h1Gf8NzsOcIRqHoyw+QPEIh?=
- =?us-ascii?Q?gznGL9ob82VkUK3eyg4XB1oUKIOWHIYwEDFXIJynnEVTAXHQ/XBWS5FvU++r?=
- =?us-ascii?Q?er0rR2/mVISqdEw/TWfwIikfM0Lq/PNVU1Hv1YdAiWTHUPrmaAvYHXXipGGS?=
- =?us-ascii?Q?2p2/0nViWWoB23bs4H2HrwcZCZ3Hzy5L2Z6/RSh2zX67Hxy2vONnL31XefXh?=
- =?us-ascii?Q?Wq3EJBCHgbPIz4naggNJk/Ir8AJKe+3jvMoz6Zwtk1f1BrlkG/SVhzA6aw+n?=
- =?us-ascii?Q?MDRs3yOar0SYzoJqLZm4rt/1TXCcGroMoWpW3XP075Fr8eDp3fWYOupZiLXj?=
- =?us-ascii?Q?9A=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d990fe60-f60a-4683-a69f-08dc1039e16b
-X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2024 11:06:36.2244
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UPo3ikEas0OCFUubGrjmdRLi1bT1F/tREpoAqxff8zYAZv0B3LQiBA6Qcy0ttYQGxfWjl9sXybJ4v9xAzAZ9BGBOJPk0CBeKTXzYHQ9zPkc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0797
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.275.g3460e3d667-goog
+Message-ID: <20240108113950.360438-1-jackmanb@google.com>
+Subject: [PATCH v3 RESEND] x86/entry: Avoid redundant CR3 write on paranoid returns
+From: Brendan Jackman <jackmanb@google.com>
+To: luto@kernel.org, tglx@linutronix.de, peterz@infradead.org, 
+	dave.hansen@linux.intel.com
+Cc: mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com, 
+	linux-kernel@vger.kernel.org, laijs@linux.alibaba.com, yosryahmed@google.com, 
+	reijiw@google.com, oweisse@google.com, Brendan Jackman <jackmanb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Rename two setup functions to plda prefix. Prepare to re-use these two
-setup function.
+From: Lai Jiangshan <laijs@linux.alibaba.com>
 
-For two setup functions names are similar, rename mc_pcie_setup_windows()
-to plda_pcie_setup_iomems().
+This path gets used called from:
 
-Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+1. #NMI return.
+2. paranoid_exit (i.e. #MCE, #VC, #DB and #DF return)
+
+Contrary to the implication in commit 21e94459110252 ("x86/mm: Optimize
+RESTORE_CR3"), the kernel never modifies CR3 in any of these exceptions,
+except for switching from user to kernel pagetables under PTI. That
+means that most of the time when returning from an exception that
+interrupted the kernel no CR3 restore is necessary. Writing CR3 is
+expensive on some machines, so this commit avoids redundant writes.
+
+I said "most of the time" because the interrupt might have come during
+kernel entry before the user->kernel CR3 switch or the during exit after
+the kernel->user switch. In the former case skipping the restore might
+actually be be fine, but definitely not the latter. So we do still need
+to check the saved CR3 and restore it if it's a user CR3.
+
+Note this code is ONLY used for returning _to kernel code_. So the only
+times where the CR3 write is necessary are in those rather special cases
+mentioned above where we are in kernel _code_ but a userspace CR3.
+
+While changing this logic the macro is given a new name to clarify its
+usage, and a comment that was describing its behaviour at the call site
+is removed.  We can also simplify the code around the SET_NOFLUSH_BIT
+invocation as we no longer need to branch to it from above.
+
+Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+[Rewrote commit message; responded to review comments]
+Signed-off-by: Brendan Jackman <jackmanb@google.com>
+Change-Id: I6e56978c4753fb943a7897ff101f519514fa0827
 ---
- .../pci/controller/plda/pcie-microchip-host.c | 24 +++++++++----------
- 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
-index a554a56cc0e8..9b367927cd32 100644
---- a/drivers/pci/controller/plda/pcie-microchip-host.c
-+++ b/drivers/pci/controller/plda/pcie-microchip-host.c
-@@ -838,9 +838,9 @@ static int mc_pcie_init_irq_domains(struct plda_pcie_rp *port)
- 	return mc_allocate_msi_domains(port);
- }
+Notes:
+    v1: https://lore.kernel.org/lkml/20230817121513.1382800-1-jackmanb@google.com/
+
+    v1->v2: Rewrote some comments, added a proper commit message, cleaned up
+        the code per tglx's suggestion.
+
+        I've kept Lai as the Author. If you prefer for the blame to
+        record the last person that touched it then that's also fine
+        though, I can credit Lai as Co-developed-by.
+
+    v2: https://lore.kernel.org/lkml/20230920150443.1789000-1-jackmanb@google.com/
+
+    v2->v3: Clarified the commit message per Dave's suggestion and renamed the
+        macro. I did not carry PeterZ's ack since I have made some changes.
+
+    original v3 (no responses): 
+        https://lore.kernel.org/lkml/20231108171656.3444702-1-jackmanb@google.com/
+
+Thanks for the reviews :)
+
+ arch/x86/entry/calling.h  | 26 ++++++++++----------------
+ arch/x86/entry/entry_64.S |  7 +++----
+ 2 files changed, 13 insertions(+), 20 deletions(-)
+
+diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
+index f6907627172b..25cbfba1fe46 100644
+--- a/arch/x86/entry/calling.h
++++ b/arch/x86/entry/calling.h
+@@ -233,17 +233,19 @@ For 32-bit we have the following conventions - kernel is built with
+ .Ldone_\@:
+ .endm
  
--static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
--				 phys_addr_t axi_addr, phys_addr_t pci_addr,
--				 size_t size)
-+static void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
-+				   phys_addr_t axi_addr, phys_addr_t pci_addr,
-+				   size_t size)
- {
- 	u32 atr_sz = ilog2(size) - 1;
- 	u32 val;
-@@ -876,8 +876,8 @@ static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
- 	writel(0, bridge_base_addr + ATR0_PCIE_WIN0_SRC_ADDR);
- }
+-.macro RESTORE_CR3 scratch_reg:req save_reg:req
++/* Restore CR3 from a kernel context. May restore a user CR3 value. */
++.macro PARANOID_RESTORE_CR3 scratch_reg:req save_reg:req
+ 	ALTERNATIVE "jmp .Lend_\@", "", X86_FEATURE_PTI
  
--static int mc_pcie_setup_windows(struct platform_device *pdev,
--				 struct plda_pcie_rp *port)
-+static int plda_pcie_setup_iomems(struct platform_device *pdev,
-+				  struct plda_pcie_rp *port)
- {
- 	void __iomem *bridge_base_addr = port->bridge_addr;
- 	struct pci_host_bridge *bridge = platform_get_drvdata(pdev);
-@@ -888,9 +888,9 @@ static int mc_pcie_setup_windows(struct platform_device *pdev,
- 	resource_list_for_each_entry(entry, &bridge->windows) {
- 		if (resource_type(entry->res) == IORESOURCE_MEM) {
- 			pci_addr = entry->res->start - entry->offset;
--			mc_pcie_setup_window(bridge_base_addr, index,
--					     entry->res->start, pci_addr,
--					     resource_size(entry->res));
-+			plda_pcie_setup_window(bridge_base_addr, index,
-+					       entry->res->start, pci_addr,
-+					       resource_size(entry->res));
- 			index++;
- 		}
- 	}
-@@ -1023,15 +1023,15 @@ static int mc_platform_init(struct pci_config_window *cfg)
- 	int ret;
+-	ALTERNATIVE "jmp .Lwrcr3_\@", "", X86_FEATURE_PCID
+-
+ 	/*
+-	 * KERNEL pages can always resume with NOFLUSH as we do
+-	 * explicit flushes.
++	 * If CR3 contained the kernel page tables at the paranoid exception
++	 * entry, then there is nothing to restore as CR3 is not modified while
++	 * handling the exception.
+ 	 */
+ 	bt	$PTI_USER_PGTABLE_BIT, \save_reg
+-	jnc	.Lnoflush_\@
++	jnc	.Lend_\@
++
++	ALTERNATIVE "jmp .Lwrcr3_\@", "", X86_FEATURE_PCID
  
- 	/* Configure address translation table 0 for PCIe config space */
--	mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start,
--			     cfg->res.start,
--			     resource_size(&cfg->res));
-+	plda_pcie_setup_window(bridge_base_addr, 0, cfg->res.start,
-+			       cfg->res.start,
-+			       resource_size(&cfg->res));
+ 	/*
+ 	 * Check if there's a pending flush for the user ASID we're
+@@ -251,20 +253,12 @@ For 32-bit we have the following conventions - kernel is built with
+ 	 */
+ 	movq	\save_reg, \scratch_reg
+ 	andq	$(0x7FF), \scratch_reg
+-	bt	\scratch_reg, THIS_CPU_user_pcid_flush_mask
+-	jnc	.Lnoflush_\@
+-
+ 	btr	\scratch_reg, THIS_CPU_user_pcid_flush_mask
+-	jmp	.Lwrcr3_\@
++	jc	.Lwrcr3_\@
  
- 	/* Need some fixups in config space */
- 	mc_pcie_enable_msi(port, cfg->win);
+-.Lnoflush_\@:
+ 	SET_NOFLUSH_BIT \save_reg
  
- 	/* Configure non-config space outbound ranges */
--	ret = mc_pcie_setup_windows(pdev, &port->plda);
-+	ret = plda_pcie_setup_iomems(pdev, &port->plda);
- 	if (ret)
- 		return ret;
+ .Lwrcr3_\@:
+-	/*
+-	 * The CR3 write could be avoided when not changing its value,
+-	 * but would require a CR3 read *and* a scratch register.
+-	 */
+ 	movq	\save_reg, %cr3
+ .Lend_\@:
+ .endm
+@@ -279,7 +273,7 @@ For 32-bit we have the following conventions - kernel is built with
+ .endm
+ .macro SAVE_AND_SWITCH_TO_KERNEL_CR3 scratch_reg:req save_reg:req
+ .endm
+-.macro RESTORE_CR3 scratch_reg:req save_reg:req
++.macro PARANOID_RESTORE_CR3 scratch_reg:req save_reg:req
+ .endm
  
+ #endif
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index de6469dffe3a..d65182500bfe 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -957,14 +957,14 @@ SYM_CODE_START_LOCAL(paranoid_exit)
+ 	IBRS_EXIT save_reg=%r15
+ 
+ 	/*
+-	 * The order of operations is important. RESTORE_CR3 requires
++	 * The order of operations is important. PARANOID_RESTORE_CR3 requires
+ 	 * kernel GSBASE.
+ 	 *
+ 	 * NB to anyone to try to optimize this code: this code does
+ 	 * not execute at all for exceptions from user mode. Those
+ 	 * exceptions go through error_return instead.
+ 	 */
+-	RESTORE_CR3	scratch_reg=%rax save_reg=%r14
++	PARANOID_RESTORE_CR3 scratch_reg=%rax save_reg=%r14
+ 
+ 	/* Handle the three GSBASE cases */
+ 	ALTERNATIVE "jmp .Lparanoid_exit_checkgs", "", X86_FEATURE_FSGSBASE
+@@ -1393,8 +1393,7 @@ end_repeat_nmi:
+ 	/* Always restore stashed SPEC_CTRL value (see paranoid_entry) */
+ 	IBRS_EXIT save_reg=%r15
+ 
+-	/* Always restore stashed CR3 value (see paranoid_entry) */
+-	RESTORE_CR3 scratch_reg=%r15 save_reg=%r14
++	PARANOID_RESTORE_CR3 scratch_reg=%r15 save_reg=%r14
+ 
+ 	/*
+ 	 * The above invocation of paranoid_entry stored the GSBASE
 -- 
-2.17.1
+2.42.0.869.gea05f2083d-goog
 
