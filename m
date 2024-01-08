@@ -1,104 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C031A54BC5;
-	Mon,  8 Jan 2024 17:55:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E77A9C433C8;
-	Mon,  8 Jan 2024 17:55:34 +0000 (UTC)
-Date: Mon, 8 Jan 2024 17:55:32 +0000
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	iommu@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Petr =?utf-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>,
-	Ramon Fried <ramon@neureality.ai>
-Subject: Re: [PATCH RFC 3/4] dma-direct: add offset to zone_dma_bits
-Message-ID: <ZZw3FDy8800NScEk@arm.com>
-References: <cover.1703683642.git.baruch@tkos.co.il>
- <fae5b1180161a7d8cd626a96f5df80b0a0796b8b.1703683642.git.baruch@tkos.co.il>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F52554BD8;
+	Mon,  8 Jan 2024 17:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jdFPCMiG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5081C433C7;
+	Mon,  8 Jan 2024 17:57:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704736668;
+	bh=BLBgw7Bz1zaWtB+gCKvTikqaTEA3+buotrK11oGUT5c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=jdFPCMiGicLxEq43rwbRvYy+P2Op+mXkterFA0LwR7uxPCf+FLtLq00DJGNLo23Zc
+	 v4AXYDsG73kHr+zHlHijIWx/Oyf2tjPbg1Z9aDpBPgLmkALaQfAN24mZvEid3IxPz8
+	 yOlc3PAwWjbLM/OXTMum6XXYwJeC/9BIrI0McUdzkzZJutG5UEuHuYi+UY8w7NefsP
+	 okkunEcEWz3miCGW85/acUKJdHPPip7r1BEOyYhw8B7xt0CpMgnmrxKEmGgI6t99dg
+	 +f4v7LbySKxqE/KSPPWDuYBaFQIP7WUVGSDam36GZcaWEZpACjhP+x3Oq04TW0CiBN
+	 AC6349yE5hrSw==
+From: SeongJae Park <sj@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org,
+	patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	linux@roeck-us.net,
+	shuah@kernel.org,
+	patches@kernelci.org,
+	lkft-triage@lists.linaro.org,
+	pavel@denx.de,
+	jonathanh@nvidia.com,
+	f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net,
+	rwarsow@gmx.de,
+	conor@kernel.org,
+	allen.lkml@gmail.com,
+	damon@lists.linux.dev,
+	SeongJae Park <sj@kernel.org>
+Subject: Re: [PATCH 6.1 000/150] 6.1.72-rc1 review
+Date: Mon,  8 Jan 2024 09:57:44 -0800
+Message-Id: <20240108175744.67972-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240108153511.214254205@linuxfoundation.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fae5b1180161a7d8cd626a96f5df80b0a0796b8b.1703683642.git.baruch@tkos.co.il>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Dec 27, 2023 at 05:04:27PM +0200, Baruch Siach wrote:
-> Current code using zone_dma_bits assume that all addresses range in the
-> bits mask are suitable for DMA. For some existing platforms this
-> assumption is not correct. DMA range might have non zero lower limit.
+Hello,
+
+On Mon,  8 Jan 2024 16:34:11 +0100 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+
+> This is the start of the stable review cycle for the 6.1.72 release.
+> There are 150 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Add 'zone_dma_off' for platform code to set base address for DMA zone.
+> Responses should be made by Wed, 10 Jan 2024 15:34:37 +0000.
+> Anything received after that time might be too late.
 > 
-> Rename the dma_direct_supported() local 'min_mask' variable to better
-> describe its use as limit.
-> 
-> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.72-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+> and the diffstat can be found below.
 
-When I suggested taking the DMA offsets into account, that's not exactly
-what I meant. Based on patch 4, it looks like zone_dma_off is equivalent
-to the lower CPU address. Let's say a system has DRAM starting at 2GB
-and all 32-bit DMA-capable devices has a DMA offset of 0. We want
-ZONE_DMA32 to end at 4GB rather than 6GB.
+This rc kernel passes DAMON functionality test[1] on my test machine.
+Attaching the test results summary below.  Please note that I retrieved the
+kernel from linux-stable-rc tree[2].
 
-> @@ -59,7 +60,7 @@ static gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 *phys_limit)
->  	 * zones.
->  	 */
->  	*phys_limit = dma_to_phys(dev, dma_limit);
-> -	if (*phys_limit <= DMA_BIT_MASK(zone_dma_bits))
-> +	if (*phys_limit <= zone_dma_off + DMA_BIT_MASK(zone_dma_bits))
->  		return GFP_DMA;
->  	if (*phys_limit <= DMA_BIT_MASK(32))
->  		return GFP_DMA32;
+Tested-by: SeongJae Park <sj@kernel.org>
 
-Ah, you ignore the zone_dma_off for 32-bit calculations. But the
-argument still stands, the start of DRAM does not necessarily mean that
-all non-64-bit devices have such DMA offset.
+[1] https://github.com/awslabs/damon-tests/tree/next/corr
+[2] 28e6ce52ce18 ("Linux 6.1.72-rc1")
 
-The current dma_direct_optimal_gfp_mask() confuses me a bit, I think it
-gives the wrong flag if we have a zone_dma_bits of 30 and a device with
-a coherent_dma_mask of 31, it incorrectly ends up with GFP_DMA32 (I'm
-ignoring dma offsets in this example). Luckily I don't think we have any
-set up where this would fail. Basically if *phys_limit is strictly
-smaller than DMA_BIT_MASK(32), we want GFP_DMA rather than GFP_DMA32
-even if it is larger than DMA_BIT_MASK(zone_dma_bits).
+Thanks,
+SJ
 
-Anyway, current mainline assumes that DMA_BIT_MASK(zone_dma_bits) and
-DMA_BIT_MASK(32) are CPU addresses. The problem is that we may have the
-start of RAM well above 4GB and neither ZONE_DMA nor ZONE_DMA32 upper
-limits would be a power-of-two. We could change the DMA_BIT_MASK(...) to
-be DMA address limits and we end up with something like:
+[...]
 
-static gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 *phys_limit)
-{
-	u64 dma_limit = min_not_zero(
-		dev->coherent_dma_mask,
-		dev->bus_dma_limit);
-	u64 dma32_limit = dma_to_phys(dev, DMA_BIT_MASK(32));
+---
 
-	*phys_limit = dma_to_phys(dev, dma_limit);
-	if (*phys_limit > dma_limit)
-		return 0;
-	if (*phys_limit = dma32_limit)
-		return GFP_DMA32;
-	return GFP_DMA;
-}
-
-The alternative is to get rid of the *_bits variants and go for
-zone_dma_limit and zone_dma32_limit in the generic code. For most
-architectures they would match the current DMA_BIT_MASK(32) etc. but
-arm64 would be able to set some higher values.
-
-My preference would be to go for zone_dma{,32}_limit, it's easier to
-change all the places where DMA_BIT_MASK({zone_dma_bits,32}) is used.
-
--- 
-Catalin
+ok 1 selftests: damon: debugfs_attrs.sh
+ok 2 selftests: damon: debugfs_schemes.sh
+ok 3 selftests: damon: debugfs_target_ids.sh
+ok 4 selftests: damon: debugfs_empty_targets.sh
+ok 5 selftests: damon: debugfs_huge_count_read_write.sh
+ok 6 selftests: damon: debugfs_duplicate_context_creation.sh
+ok 7 selftests: damon: sysfs.sh
+ok 1 selftests: damon-tests: kunit.sh
+ok 2 selftests: damon-tests: huge_count_read_write.sh
+ok 3 selftests: damon-tests: buffer_overflow.sh
+ok 4 selftests: damon-tests: rm_contexts.sh
+ok 5 selftests: damon-tests: record_null_deref.sh
+ok 6 selftests: damon-tests: dbgfs_target_ids_read_before_terminate_race.sh
+ok 7 selftests: damon-tests: dbgfs_target_ids_pid_leak.sh
+ok 8 selftests: damon-tests: damo_tests.sh
+ok 9 selftests: damon-tests: masim-record.sh
+ok 10 selftests: damon-tests: build_i386.sh
+ok 11 selftests: damon-tests: build_arm64.sh
+ok 12 selftests: damon-tests: build_m68k.sh
+ok 13 selftests: damon-tests: build_i386_idle_flag.sh
+ok 14 selftests: damon-tests: build_i386_highpte.sh
+ok 15 selftests: damon-tests: build_nomemcg.sh
+ [33m
+ [92mPASS [39m
