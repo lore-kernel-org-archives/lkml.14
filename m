@@ -1,71 +1,113 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C9346442
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 14:00:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4T7wdX71J2z1Q7sX;
-	Mon,  8 Jan 2024 21:58:40 +0800 (CST)
-Received: from kwepemm600020.china.huawei.com (unknown [7.193.23.147])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9EF3C140416;
-	Mon,  8 Jan 2024 22:00:11 +0800 (CST)
-Received: from localhost.localdomain (10.175.112.125) by
- kwepemm600020.china.huawei.com (7.193.23.147) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 8 Jan 2024 22:00:10 +0800
-From: Peng Zhang <zhangpeng362@huawei.com>
-To: <hch@lst.de>, <m.szyprowski@samsung.com>, <robin.murphy@arm.com>,
-	<petr.tesarik1@huawei-partners.com>, <iommu@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>
-CC: <wangkefeng.wang@huawei.com>, <sunnanyong@huawei.com>,
-	<zhangpeng362@huawei.com>
-Subject: [PATCH] swiotlb: check alloc_size before the allocation of a new memory pool
-Date: Mon, 8 Jan 2024 22:00:05 +0800
-Message-ID: <20240108140005.3355316-1-zhangpeng362@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2794645B
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 14:00:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vrull.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vrull.eu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=vrull.eu header.i=@vrull.eu header.b="UGCs0p40"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-28bf1410e37so1639807a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 06:00:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vrull.eu; s=google; t=1704722441; x=1705327241; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tsHjtSAD7CR/Uw67tDyZXUJsMA+vgb2Il2+MXiGde7A=;
+        b=UGCs0p4068lLQwCRR2iIsFuGu6SUsFfca6kMXlPd6ApIdSM8AhGzLcU8lgFyNvAAS6
+         4nAUYGO+PTgdHjXiUOpVaiOlIHiDXj7R18i8zKQvOtLaHc+EpLQh0Wi+KhDMemF1lL7s
+         kzZAyUtU4aF+ILfPc/Vqqeoex1q9t+36wNb8reIv/lZZQ91gR1CfbkEW/vgxEC9rcMZw
+         isBLOep7iGC1IcHLFH2GOl60q6F9nvykybzTTIaXxWUcb/y/4TZP5/hK8VGICSIaa9ZM
+         6tza4TlHF05BG8D97U7+FMW2WsvnzkoRnCQVoyJ2jjAv7HzB22i4aU9WLkdc5/cuEVtW
+         3WGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704722441; x=1705327241;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tsHjtSAD7CR/Uw67tDyZXUJsMA+vgb2Il2+MXiGde7A=;
+        b=ARGIIfOQx+h+3sr8tCnkfRdoa/lbj+LQ9gJA8HsgJ9x1IYpOn/ipAuSAiV1Wq/VIGQ
+         FwER32aFvF3ItKYQuq+Vt9Lvo6V/GevAfIA511/CYKjargya/8NurFbCX3cTqsYbfMoT
+         R4KGkatvENORz/pg5QBp8CZ8mApibmJrcH4DoBDZBs1kmwKgZf011LJlJB0KNV+KpZA3
+         gkYNL+aYeob4m9rNiTNxxdI39EDGfUTaXTtS1M3XYdLrlq/VReAn7WfJCPwKOu29kFVr
+         oz8BWgTkUz4SZI8UMej9iy17UdeSVJyy+IHge3C1cJS4fVhDu7JHF/gvHyd+gTmAynxZ
+         erDA==
+X-Gm-Message-State: AOJu0YzE6CJx0u55KjQ+5Yj5Vw5K6EoTdD95tJbTfXvOZmdP8HClNc/9
+	n367CpQbEYoMatpA8dVncQj2RsvXVoCDswU13ZVgcJwYUYDVGQ==
+X-Google-Smtp-Source: AGHT+IG6M5/HPL5z2iu+bv+cDT8okM9t+0Kb9SYQo0HU3bi50MXU6tg3bagSrM1h0jjNwpnrNJpAS5jTVZd+AmduFM4=
+X-Received: by 2002:a17:90a:474e:b0:28c:25d9:cc08 with SMTP id
+ y14-20020a17090a474e00b0028c25d9cc08mr1737979pjg.82.1704722441110; Mon, 08
+ Jan 2024 06:00:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600020.china.huawei.com (7.193.23.147)
+References: <20230521114715.955823-1-heiko.stuebner@vrull.eu>
+ <ZTE7eUyrb8+J+ORB@andrea> <CAEg0e7jkTOn1pjO=+GaiCZJ9_Yd2NcB1GMG=Q6m3-r0+Q0OjGQ@mail.gmail.com>
+ <ZTJUOji+B+dDbMKh@andrea> <20240108-a56ba0dfd1779e4ab6893d16@orel>
+In-Reply-To: <20240108-a56ba0dfd1779e4ab6893d16@orel>
+From: =?UTF-8?Q?Christoph_M=C3=BCllner?= <christoph.muellner@vrull.eu>
+Date: Mon, 8 Jan 2024 15:00:29 +0100
+Message-ID: <CAEg0e7g34qXbtaGbQftqucRxopFKHvErm=DWx8N65kueDo2n4w@mail.gmail.com>
+Subject: Re: Re: [PATCH v3 0/2] Add Zawrs support and use it for spinlocks
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Heiko Stuebner <heiko@sntech.de>, 
+	linux-riscv@lists.infradead.org, palmer@dabbelt.com, paul.walmsley@sifive.com, 
+	linux-kernel@vger.kernel.org, David.Laight@aculab.com, 
+	Conor Dooley <conor@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: ZhangPeng <zhangpeng362@huawei.com>
+On Mon, Jan 8, 2024 at 12:35=E2=80=AFPM Andrew Jones <ajones@ventanamicro.c=
+om> wrote:
+>
+> On Fri, Oct 20, 2023 at 12:19:38PM +0200, Andrea Parri wrote:
+> > (Removing Heiko's @vrull address from Cc:, since it seemed to bounce, k=
+eeping
+> >  his @sntech address.)
+> >
+> > > I had a quick look at your changes, and they look good to me.
+> >
+> > Great.  Thank you for looking them over.
+> >
+> > > Did you agree with Palmer about testing requirements?
+> > > I.e., do we need to run this on hardware that implements Zawrs in a
+> > > non-trivial way?
+> >
+> > I didn't quite discuss such specific requirements or hardware implement=
+ations,
+> > but I agree that's a valid concern.  Not that I currently have access t=
+o such
+> > hardware; any further inputs/data will be appreciated.
+> >
+> > > I can try to raise the priority on this here, but can't promise anyth=
+ing.
+> > > For me it is also ok if you take over this patchset.
+> >
+> > Thanks.  Either way works for me.  No urgency from my side.  I'd say - =
+let us
+> > leave this up to the community/other reviewers.  (IIUC, Palmer was reco=
+vering
+> > from a certain flu and might need more time than usual to get back here=
+.)
+> >
+>
+> Hi everyone,
+>
+> I'm also interested in seeing this series resurrected and making progress
+> again. I'd be happy to help out in any way. It's not clear to me if it ha=
+s
+> a current owner. If not, then I could start shepherding the patches with
+> their authorships intact.
 
-The allocation request for swiotlb contiguous memory greater than
-128*2KB cannot be fulfilled because it exceeds the maximum contiguous
-memory limit. If the swiotlb memory we allocate is larger than 128*2KB,
-swiotlb_find_slots() will still schedule the allocation of a new memory
-pool, which will increase memory overhead.
+Sounds good to me!
+Thanks for working on this!
 
-Fix it by adding a check with alloc_size no more than 128*2KB before
-scheduling the allocation of a new memory pool in swiotlb_find_slots().
-
-Signed-off-by: ZhangPeng <zhangpeng362@huawei.com>
----
- kernel/dma/swiotlb.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index 33d942615be5..cc92cff02c60 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -1126,6 +1126,9 @@ static int swiotlb_find_slots(struct device *dev, phys_addr_t orig_addr,
- 	u64 phys_limit;
- 	int index;
- 
-+	if (alloc_size > IO_TLB_SEGSIZE * IO_TLB_SIZE)
-+		return -1;
-+
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(pool, &mem->pools, node) {
- 		index = swiotlb_pool_find_slots(dev, pool, orig_addr,
--- 
-2.25.1
-
+>
+> I may be able to do some testing on an FPGA too.
+>
+> Thanks,
+> drew
