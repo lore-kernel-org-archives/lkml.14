@@ -1,86 +1,91 @@
-Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF02F8BF3;
-	Mon,  8 Jan 2024 01:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=richtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
-X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
-Received: from 192.168.10.46
-	by mg.richtek.com with MailGates ESMTPS Server V6.0(636803:0:AUTH_RELAY)
-	(envelope-from <cy_huang@richtek.com>)
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Mon, 08 Jan 2024 09:47:30 +0800 (CST)
-Received: from ex4.rt.l (192.168.10.47) by ex3.rt.l (192.168.10.46) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.27; Mon, 8 Jan
- 2024 09:47:29 +0800
-Received: from linuxcarl2.richtek.com (192.168.10.154) by ex4.rt.l
- (192.168.10.45) with Microsoft SMTP Server id 15.2.1258.27 via Frontend
- Transport; Mon, 8 Jan 2024 09:47:29 +0800
-From: <cy_huang@richtek.com>
-To: Jonathan Cameron <jic23@kernel.org>
-CC: Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>, ChiYuan Huang <cy_huang@richtek.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 0/2] RTQ6056: Add compatible for the same chip family
-Date: Mon, 8 Jan 2024 09:47:26 +0800
-Message-ID: <cover.1704676198.git.cy_huang@richtek.com>
-X-Mailer: git-send-email 1.8.3.1
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7753A7F;
+	Mon,  8 Jan 2024 01:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FBYJFMab"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1704678564;
+	bh=Lf53kHBVwbitP7k47OPxiji8oPEUlYg9H+eTQgsaYEI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=FBYJFMabJvocXp/zMaN/XvQQpocHjMm9B3K+lCfmlgvzeC4uC0YQXawKi8LCL6k87
+	 ZpAlrK1+WJssR59IdKUHavJo9Q9wtBl7w+xEnfbevpQ3hHU4l3VLJt0fsDR+6TqTO7
+	 I17e+jDNMTlSqKdcLRhCPvxcDW/5wHZQpD8FkvI+t+cJ5ST+wBTpQsSgBaDPD/dl0J
+	 VxI5BP7ngcWSw33M6AgobSj6cfGRxsRY3lJEZtmV0FMSPuLc9PYivn5RPmHxeoJCwH
+	 wCPS0EHorcbUhrf7px/p/tMsw8nIqkST1C+MMzVc/N0/oCbkVrRP7qE30oHjLctuuu
+	 CLmz7yD4XNg9A==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4T7cS32zMPz4wx5;
+	Mon,  8 Jan 2024 12:49:23 +1100 (AEDT)
+Date: Mon, 8 Jan 2024 12:49:22 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the ftrace tree with the vfs tree
+Message-ID: <20240108124922.37bd7fe3@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; boundary="Sig_/x+fIwksRk+Kxf4h2ScQydzQ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-From: ChiYuan Huang <cy_huang@richtek.com>
+--Sig_/x+fIwksRk+Kxf4h2ScQydzQ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-RTQ6053 and RTQ6059 are the same RTQ6056 family.
-The differences are listed below
-- RTQ6053
-  Only change chip package type
-- RTQ6059
-  1. Enlarge the shunt voltage sensing range
-  2. Shrink the pinout for VBUS sense pin
-  3. Due to 1, the scale value is also changed
+Hi all,
 
-Since v5:
-- Correct field names for rtq6059 bitfield declaration
+Today's linux-next merge of the ftrace tree got a conflict in:
 
-Since v4:
-- Remove the unused chip type enum
-- Directly return in switch case of read_channel function
-- Refine in write_raw switch case for IIO_CHAN_INFO_SAMP_FREQ
-  If sample frequency is fixed, return invalid and break switch case
-- Use devdata->num_channels to replace the predefined constant
-- Change the rtq6059 difference part for the control bitfield name from
-  the general 'F_xxx' to 'F_RTQ6059_xxx'
-- Fix rtq6059 average sample variable store problem in 'set_average' function
+  fs/tracefs/inode.c
 
-Since v3:
-- Add Reviewed-by tag in binding document patch
-- Resotre the enum for control field.
-- Put all the predefined datas/callbacks in dev_data.
-- Remove the unused 'rtq6059_info'.
-- Change 'default_conv_time' to 'default_conv_time_us'.
-- Move the comment for default config above the dev_data setting line.
+between commit:
 
-Since v2:
-- Refine the description of 'compatible' property
+  da549bdd15c2 ("dentry: switch the lists of children to hlist")
 
-ChiYuan Huang (2):
-  dt-bindings: iio: adc: rtq6056: add support for the whole RTQ6056
-    family
-  iio: adc: rtq6056: Add support for the whole RTQ6056 family
+from the vfs tree and commit:
 
- .../bindings/iio/adc/richtek,rtq6056.yaml     |   9 +-
- drivers/iio/adc/rtq6056.c                     | 275 ++++++++++++++++--
- 2 files changed, 263 insertions(+), 21 deletions(-)
+  8186fff7ab64 ("tracefs/eventfs: Use root and instance inodes as default o=
+wnership")
 
+from the ftrace tree.
 
-base-commit: 610a9b8f49fbcf1100716370d3b5f6f884a2835a
--- 
-2.34.1
+I fixed it up (the latter removed the code modified by the former, so
+I just did that) and can carry the fix as necessary. This is now fixed
+as far as linux-next is concerned, but any non trivial conflicts should
+be mentioned to your upstream maintainer when your tree is submitted for
+merging.  You may also want to consider cooperating with the maintainer
+of the conflicting tree to minimise any particularly complex conflicts.
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/x+fIwksRk+Kxf4h2ScQydzQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWbVKIACgkQAVBC80lX
+0Gx/qgf8CIlnK9gkNc0lxCD8t2z0dljFVw/iVj1F96iBZ/FHXPnErhceK36SzzOU
+zc+Smwz4tfrP730btCvE2P4cUzK4ifRBM0KBJGzeseqIbcOShqdQmp9W5cB1dh53
+iP9xGMEQZwR6lQ1KiyAQUOdymDQS4q+e0FuWArwUJBbR0nX161NxUq85bIPTD2Y1
+7xGrgTzBL/5MBH8Ql8wM7NfBjZrOND/yFYQuXTtfbPlxAM2F6pIpMfeLky5fcxhP
+zgUlEN5gyk5KzUGmYqewXC54wVGX2cEHtvoahtIIyaobDOGAt4LIKWJqaxJyA4+0
+B2ITAuDyrNKcHOPfn/qaErzXqPMK0Q==
+=SVM+
+-----END PGP SIGNATURE-----
+
+--Sig_/x+fIwksRk+Kxf4h2ScQydzQ--
