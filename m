@@ -1,54 +1,21 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35F013ADD
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 10:23:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YaN2ncaS"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a28fb463a28so152905466b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 02:23:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704709385; x=1705314185; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=FhujCW470qViRsX+Hw5x/JSRO0y6Rf4yH8UeTlvgOnE=;
-        b=YaN2ncaS9Z1g8PuCblmMo1C/IPva2jPoJcj9J2KZC3pV7XPptYMHbq38/ziUgmo8mK
-         IXOg7PcP60vVUSUgAJxKPZvh+5IxYlX73XfsVOXAiTj0sK7NVpdsLz/zhDkHSBoMQBK5
-         zra2MDmIVU2Pv9iSAbO36aVAUjnJQA5FfpaAE5JaeDM+TegTeD49BzQuT6+fF+8nmcc3
-         qSj67SG1fr8h4edri9C0apv1XDbUkTW2/xr/LKdwwSDNrammIK2RMfzCQ9u+NfjXyxwS
-         /cnQBO2muIry8RXffLJYZsklujkygyx7NTbt4uvfroArp9EUh/nBIuJLxgXGLKWMd1UX
-         g8xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704709385; x=1705314185;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FhujCW470qViRsX+Hw5x/JSRO0y6Rf4yH8UeTlvgOnE=;
-        b=PoBrOIky6tB8AWV405fEU4icYH5qP4D0HzQsCs/L5sT/yEeN+1UpOpl19TXnzQM1KB
-         VbuqXjEs9ZAXJERJ6cqXiA3thkvq/GN5A+5Oy7uUeA0F/gTFCLaqVUx/7hs5sxbV0pOV
-         MdxFbJ6M7ANthX8gFcdIWQQMYQLqsNC3FcgESLeLLfjPuff0wzZ3Ud7s5dF7fPheDTHJ
-         ZJe3bGBESxMbbmuWpKsBqmj9izJJZ2IvFhMZjyZ1PNXtwbCXN/cnL0csibx4dyHLokoZ
-         plU8DyqfC6qvYVHPNtKmESRXW25xj8l7N5vkjl04I4dZFll1cJOZqpahLSxCOWjmKnZp
-         mZgg==
-X-Gm-Message-State: AOJu0YxWtretFeTnEXtEl904MoJxHGGIZeQdVEYH8ZV5gXj7clYezWen
-	zxprU9c8b11Khtso/MMfRH8=
-X-Google-Smtp-Source: AGHT+IHR4iEVriWKDFtLGeM9zc6tKD1ISPwT0UDwI4QNA9C8gp5DQkpCHAbhHSOTLP62zwBk9Oqggw==
-X-Received: by 2002:a17:906:1752:b0:a28:7d3b:5706 with SMTP id d18-20020a170906175200b00a287d3b5706mr1429390eje.111.1704709384708;
-        Mon, 08 Jan 2024 02:23:04 -0800 (PST)
-Received: from gmail.com (1F2EF3FE.nat.pool.telekom.hu. [31.46.243.254])
-        by smtp.gmail.com with ESMTPSA id 1-20020a170906318100b00a2a632e4eebsm1343131ejy.119.2024.01.08.02.23.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jan 2024 02:23:04 -0800 (PST)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Mon, 8 Jan 2024 11:23:02 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: [GIT PULL] CPU hotplug changes for v6.8
-Message-ID: <ZZvNBnboWjpkQuW9@gmail.com>
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 614B213AC9;
+	Mon,  8 Jan 2024 10:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1rMmMM-00026i-00; Mon, 08 Jan 2024 10:55:54 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 53BBCC0135; Mon,  8 Jan 2024 10:41:14 +0100 (CET)
+Date: Mon, 8 Jan 2024 10:41:14 +0100
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-mips@vger.kernel.org
+Subject: Re: [PATCH 6/8] MIPS: Fix typos
+Message-ID: <ZZvDOl8mBbeDmdyu@alpha.franken.de>
+References: <20240103231605.1801364-1-helgaas@kernel.org>
+ <20240103231605.1801364-7-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,34 +24,88 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240103231605.1801364-7-helgaas@kernel.org>
 
-Linus,
+On Wed, Jan 03, 2024 at 05:16:03PM -0600, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Fix typos, most reported by "codespell arch/mips".  Only touches comments,
+> no code changes.
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: linux-mips@vger.kernel.org
+> ---
+>  arch/mips/bcm47xx/buttons.c                            | 6 +++---
+>  arch/mips/bcm63xx/clk.c                                | 4 ++--
+>  arch/mips/boot/compressed/dbg.c                        | 2 +-
+>  arch/mips/boot/elf2ecoff.c                             | 2 +-
+>  arch/mips/cavium-octeon/csrc-octeon.c                  | 2 +-
+>  arch/mips/cavium-octeon/executive/cvmx-boot-vector.c   | 2 +-
+>  arch/mips/cavium-octeon/executive/cvmx-bootmem.c       | 2 +-
+>  arch/mips/cavium-octeon/executive/cvmx-cmd-queue.c     | 4 ++--
+>  arch/mips/cavium-octeon/executive/cvmx-helper-jtag.c   | 2 +-
+>  arch/mips/cavium-octeon/executive/cvmx-pko.c           | 2 +-
+>  arch/mips/cavium-octeon/octeon-platform.c              | 2 +-
+>  arch/mips/fw/arc/promlib.c                             | 6 +++---
+>  arch/mips/include/asm/debug.h                          | 2 +-
+>  arch/mips/include/asm/io.h                             | 4 ++--
+>  arch/mips/include/asm/mach-au1x00/au1000_dma.h         | 2 +-
+>  arch/mips/include/asm/mach-au1x00/gpio-au1000.h        | 2 +-
+>  arch/mips/include/asm/mach-lantiq/falcon/lantiq_soc.h  | 2 +-
+>  arch/mips/include/asm/mach-loongson64/loongson_hwmon.h | 2 +-
+>  arch/mips/include/asm/mach-loongson64/loongson_regs.h  | 2 +-
+>  arch/mips/include/asm/mach-malta/spaces.h              | 4 ++--
+>  arch/mips/include/asm/mips-boards/bonito64.h           | 2 +-
+>  arch/mips/include/asm/mips-cpc.h                       | 2 +-
+>  arch/mips/include/asm/mipsregs.h                       | 4 ++--
+>  arch/mips/include/asm/octeon/cvmx-bootinfo.h           | 2 +-
+>  arch/mips/include/asm/octeon/cvmx-cmd-queue.h          | 6 +++---
+>  arch/mips/include/asm/octeon/cvmx-pko.h                | 2 +-
+>  arch/mips/include/asm/octeon/cvmx-pow.h                | 4 ++--
+>  arch/mips/include/asm/octeon/octeon-model.h            | 4 ++--
+>  arch/mips/include/asm/page.h                           | 2 +-
+>  arch/mips/include/asm/pci.h                            | 2 +-
+>  arch/mips/include/asm/pgtable-bits.h                   | 2 +-
+>  arch/mips/include/asm/sgi/mc.h                         | 2 +-
+>  arch/mips/include/asm/sn/klconfig.h                    | 2 +-
+>  arch/mips/include/asm/sync.h                           | 2 +-
+>  arch/mips/include/asm/thread_info.h                    | 2 +-
+>  arch/mips/include/asm/timex.h                          | 2 +-
+>  arch/mips/include/asm/vdso/vdso.h                      | 2 +-
+>  arch/mips/include/uapi/asm/mman.h                      | 2 +-
+>  arch/mips/include/uapi/asm/msgbuf.h                    | 2 +-
+>  arch/mips/kernel/cpu-probe.c                           | 2 +-
+>  arch/mips/kernel/kprobes.c                             | 2 +-
+>  arch/mips/kernel/relocate.c                            | 2 +-
+>  arch/mips/kernel/relocate_kernel.S                     | 2 +-
+>  arch/mips/kernel/setup.c                               | 2 +-
+>  arch/mips/kernel/signal.c                              | 2 +-
+>  arch/mips/kernel/traps.c                               | 2 +-
+>  arch/mips/kernel/vpe.c                                 | 4 ++--
+>  arch/mips/kvm/emulate.c                                | 2 +-
+>  arch/mips/loongson2ef/common/platform.c                | 2 +-
+>  arch/mips/loongson64/smp.c                             | 2 +-
+>  arch/mips/mm/c-r4k.c                                   | 2 +-
+>  arch/mips/mm/cex-gen.S                                 | 2 +-
+>  arch/mips/mm/tlb-r3k.c                                 | 2 +-
+>  arch/mips/mm/tlb-r4k.c                                 | 2 +-
+>  arch/mips/mm/tlbex.c                                   | 4 ++--
+>  arch/mips/net/bpf_jit_comp32.c                         | 2 +-
+>  arch/mips/pci/ops-loongson2.c                          | 2 +-
+>  arch/mips/pci/pci-alchemy.c                            | 2 +-
+>  arch/mips/pci/pci-ar2315.c                             | 2 +-
+>  arch/mips/pci/pci-lantiq.c                             | 2 +-
+>  arch/mips/pci/pci-octeon.c                             | 2 +-
+>  arch/mips/pci/pci-xtalk-bridge.c                       | 2 +-
+>  arch/mips/pci/pcie-octeon.c                            | 2 +-
+>  arch/mips/ralink/mt7621.c                              | 2 +-
+>  arch/mips/txx9/generic/pci.c                           | 2 +-
+>  65 files changed, 80 insertions(+), 80 deletions(-)
 
-Please pull the latest smp/core git tree from:
+applied to mips-next.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git smp-core-2024-01-08
+Thomas.
 
-   # HEAD: fe22944cf05ede8e6f841cfecdb7093a53a3d9b3 cpu/hotplug: Increase the number of dynamic states
-
-CPU hotplug changes for v6.8:
-
- - Remove unused CPU hotplug states
-
- - Increase the number of dynamic CPU hotplug states
-   from 30 to 40, because existing drivers can exhaust
-   the allocation space
-
- Thanks,
-
-	Ingo
-
------------------->
-Zenghui Yu (1):
-      cpu/hotplug: Remove unused CPU hotplug states
-
-xiaoming Wang (1):
-      cpu/hotplug: Increase the number of dynamic states
-
-
- include/linux/cpuhotplug.h | 16 +---------------
- 1 file changed, 1 insertion(+), 15 deletions(-)
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
