@@ -1,77 +1,91 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64DA5576D
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 19:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KccVwIMV"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-557a615108eso2309a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 11:13:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704741224; x=1705346024; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+oXQEvZyRm83EC0SdphMRj69tozvt9DFLasvJhLf/LE=;
-        b=KccVwIMVrYMTbAd5xZYhE4O3dGD63qx+gbJodl3V2UFPJ2j360qi+l+uhuxP6UTQ3N
-         5oeUDc0ioui0Kxio+fUtFhvg3Yf50B3burL/QshR01HEclBM2/aPFNCexSYLrV4gAKYa
-         HssAnQ9cP0Q7VeGFJlc4FyD8G3TR29l7NHX5k2sbr1ONWroubiymSCMPhDSZTxhllXmv
-         KDiLMCuameKwYFSd2b9tebKLGywjymFS3MuiMiJR7QMDFGSvqhT9mM1YvoIrqKHJQput
-         L+c974SjSYOFkAKZ1RLKE8+lN67jdrrApw4bmUFHEprnbN7jZuljDWOL57G5hgKcl/3E
-         LBRg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33BB55766;
+	Mon,  8 Jan 2024 19:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a2ac304e526so110813366b.0;
+        Mon, 08 Jan 2024 11:13:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704741224; x=1705346024;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+oXQEvZyRm83EC0SdphMRj69tozvt9DFLasvJhLf/LE=;
-        b=jg291gKICmQqH+R52MQgwMEizVzExEur8WCmct6a0vgQ5o/dC07fzKpxm0renAt0d3
-         aGY9hzTZSakllh+5MUgGv8746fQXTxIKMin+bv2VGHwIRFJ4MscE11F4csNLpU9k20rV
-         a7uKqEHClXeuLh1AhCnB9n/FKsN+Oui+c9hRtRqzYQI0OWH4SbvCzq0+e2q7OWX6BUCZ
-         iuX3jIuK3H/kDexceOfZRRx1eCyk+9pfscd1f1/Zq1la08mmO4oMQdGymp01kJ2FCkUF
-         bz0R5nAhpjHfN4q6D/gAN7Hr8glNa2ek7HwBlX/5RJyIyFqzTmVnprGCcQ2hJj+BH6KB
-         OKtA==
-X-Gm-Message-State: AOJu0YzMT7JU10sieE/imauZRy07YQDfo9lNAEzlWFEn2tuO6PKMzkZ2
-	///gnaZvAfBjFc+knANO6KTI7+e73Tmx9Z9Z8Miep2YvUqA5
-X-Google-Smtp-Source: AGHT+IEe9b/BGjK21pYspxexkEyrcJXFEnlR6e3ULTttrVUkeJbZTST3UeFapBlY232i4XBG+5+qtthjbxcHcjBCSq8=
-X-Received: by 2002:a50:cc87:0:b0:557:15d:b784 with SMTP id
- q7-20020a50cc87000000b00557015db784mr1775edi.2.1704741223938; Mon, 08 Jan
- 2024 11:13:43 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704741235; x=1705346035;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0rpvq8Yg/ydgOgzuehJs8deQQoH5fXvdPWPAK1pUUco=;
+        b=rZ5Y24n35dNFks/VAZcEG3OkMFPRBjLxgO6kVEQ3HVN9q8Yf+XNB7rsXBioU61AmqP
+         KHV+MQjq7+PIZnTJV9VbI7qNf83Ed7XWa7ecmqjHFs95QN2IgbP5za+vad54Ffy1Z+/v
+         DDf03sUx460RafPhz4zZ0oUYBVOUD4qdd41JKaqMhvZJd6sTudBaY4JHMR3wjiQIdUAK
+         DnDVnbjYY2zlBOiJ0cex7lAOUIg92mbA5zc4z0/PSO8l8aVFu32AFehfLDmbCYRVlyqk
+         AC5ij1x1L0wzDPtKikzNfY1EqDZjECewIvpa2D3GLxx66XZKsISAGFc8p3dRIBYWyToV
+         dLbA==
+X-Gm-Message-State: AOJu0YxCekBsB02+Mabw0s3CwW3iA5h47/AKQ6R6JATJ3DI/BGw2upkO
+	9zRhO8Tlgs8nlxetoq0zmJk=
+X-Google-Smtp-Source: AGHT+IENSyBaeAxqjIQOyc3AgvX70HtJq+YgB9PS1LlDluPp51gxxJ9ZIFmZJRNInza3g0sHLau8pw==
+X-Received: by 2002:a17:906:2791:b0:a2a:38d8:a64 with SMTP id j17-20020a170906279100b00a2a38d80a64mr1286348ejc.65.1704741234619;
+        Mon, 08 Jan 2024 11:13:54 -0800 (PST)
+Received: from localhost (fwdproxy-lla-005.fbsv.net. [2a03:2880:30ff:5::face:b00c])
+        by smtp.gmail.com with ESMTPSA id bw8-20020a170906c1c800b00a269b4692a9sm175029ejb.84.2024.01.08.11.13.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jan 2024 11:13:54 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+To: dsahern@kernel.org,
+	weiwan@google.com,
+	kuba@kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: leit@meta.com,
+	netdev@vger.kernel.org (open list:NETWORKING [IPv4/IPv6]),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next 1/2] net/ipv6: Remove unnecessary pr_debug() logs
+Date: Mon,  8 Jan 2024 11:12:53 -0800
+Message-Id: <20240108191254.3422696-1-leitao@debian.org>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231214230850.379863-14-rdbabiera@google.com>
- <20231214230850.379863-19-rdbabiera@google.com> <ZYGjmryUR7m2Q9yw@kuha.fi.intel.com>
-In-Reply-To: <ZYGjmryUR7m2Q9yw@kuha.fi.intel.com>
-From: RD Babiera <rdbabiera@google.com>
-Date: Mon, 8 Jan 2024 11:13:32 -0800
-Message-ID: <CALzBnUH6Zb+yx-ri39bPOoTydNcQZOc3Vwo32xLxtS_dESBWGQ@mail.gmail.com>
-Subject: Re: [PATCH v2 05/12] usb: typec: tcpm: process receive and
- transmission of sop' messages
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: linux@roeck-us.net, gregkh@linuxfoundation.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, badhri@google.com, 
-	bryan.odonoghue@linaro.org, agross@kernel.org, andersson@kernel.org, 
-	konrad.dybcio@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Dec 19, 2023 at 6:07=E2=80=AFAM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
-> Why not just fall through?
->
->         case TCPC_TX_SOP:
->         default:
->                 negotiated_rev =3D port->negotiated_rev;
->                 break;
->
+In the ipv6 system, we have some logs basically dumping the name of the
+function that is being called. This is not ideal, since ftrace give it
+to us "for free". Moreover, checkpatch is not happy when touching that
+code:
 
-Will do, thanks for the advice!
+	WARNING: Unnecessary ftrace-like logging - prefer using ftrace
 
-best,
-rd
+Remove debug functions that only print the current function name.
+
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ net/ipv6/ip6_fib.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/net/ipv6/ip6_fib.c b/net/ipv6/ip6_fib.c
+index 4fc2cae0d116..fb41bec6b4b5 100644
+--- a/net/ipv6/ip6_fib.c
++++ b/net/ipv6/ip6_fib.c
+@@ -751,8 +751,6 @@ static struct fib6_node *fib6_add_1(struct net *net,
+ 	int	bit;
+ 	__be32	dir = 0;
+ 
+-	RT6_TRACE("fib6_add_1\n");
+-
+ 	/* insert node in tree */
+ 
+ 	fn = root;
+@@ -1905,8 +1903,6 @@ static void fib6_del_route(struct fib6_table *table, struct fib6_node *fn,
+ 	struct net *net = info->nl_net;
+ 	bool notify_del = false;
+ 
+-	RT6_TRACE("fib6_del_route\n");
+-
+ 	/* If the deleted route is the first in the node and it is not part of
+ 	 * a multipath route, then we need to replace it with the next route
+ 	 * in the node, if exists.
+-- 
+2.39.3
+
