@@ -1,120 +1,88 @@
-Received: from zg8tmty3ljk5ljewns4xndka.icoremail.net (zg8tmty3ljk5ljewns4xndka.icoremail.net [167.99.105.149])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8D162CCD5;
-	Mon,  8 Jan 2024 11:29:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=buaa.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buaa.edu.cn
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D50D14A93
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 11:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=buaa.edu.cn header.i=@buaa.edu.cn header.b="otSGCTw2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQFDCW27"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-555e07761acso1942033a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 03:30:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=buaa.edu.cn; s=buaa; h=Received:Message-ID:Date:MIME-Version:
-	User-Agent:Subject:To:Cc:References:From:In-Reply-To:
-	Content-Type:Content-Transfer-Encoding; bh=+4rCyt0de8rnxrMRRo2pE
-	d/n8irU9T6nN4E08mQWVgM=; b=otSGCTw22R5VqHz+VRdyWU+3Qil1aeJMW/d5s
-	Wdl9SPUJ0B7B6GU1PW6XpwlLqZNZU3J1O76c//B/Q5r9iZQxguwQGiUgjKTXjNsj
-	FjOd4RYT74IPEp9Zbf8dZhPnVEKnAOLZp204krpy/utT/dD0sru6Lb6GSx5rrghL
-	zg7v+A=
-Received: from [192.168.1.108] (unknown [10.130.147.18])
-	by coremail-app1 (Coremail) with SMTP id OCz+CgCXyFpz3JtlRKfJAA--.19759S2;
-	Mon, 08 Jan 2024 19:28:51 +0800 (CST)
-Message-ID: <6572ae72-0d2e-4c48-9a46-877f46890811@buaa.edu.cn>
-Date: Mon, 8 Jan 2024 19:28:51 +0800
+        d=gmail.com; s=20230601; t=1704713417; x=1705318217; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=A2dPYN7RpQplP4WDf8DLRQnv8gMznORo8Hbp2VTh0AU=;
+        b=dQFDCW27QaLEVsDojexvTnmcRt1VC2qxnToZEBwLCeJx4tGfnt0su2oqIxK+SIfwlZ
+         YrFlfM0xHMI84c7lcYxLsFgZtiQuNihYbBT5a/+N1RbObF01z4b+SkX0ZqD59b/99xqp
+         GoTaUwDJmKf1R37MoXAy2hTWbnGIif72UOkeczrqb/0eGOPsww6zVbi2pkT7BAyiK0SP
+         zNy04ZgjJg2iQF7HUKUDmYN5rD/I0J/AJ0IES6cwl2uVS/iT2K4w1fkIyXFQPlrBdk43
+         QjEmWYlKIMV1PBfB6vw9oAVIypeylQCzEG8hJhDwoxZ3HbWc3QbJ5LDDRG90PXJ2Piqw
+         mS4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704713417; x=1705318217;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=A2dPYN7RpQplP4WDf8DLRQnv8gMznORo8Hbp2VTh0AU=;
+        b=ZxctoeNaMqoQ6g8O7Rtir82A5wprGfy2RsH5E/ivvxYld+yqazPubi9mXK58TKc34e
+         fZmVjKSd2XPWqMyeFAkBqsKmst6Rv+I487TD5SNbNji8fCYKsmRD6W3VrjOpSFqWMG5n
+         wXNnj2ZChcefkDhNuKgBF2Fg8P10TDSnudXy9l1I6aLXqSh4WMtEZWMuBfJYBvKdo/yJ
+         mImQNoJXchMg9kaKaybgCcJ8uEu0WSDXrr/3JQw1n8bmypYa8gvzT7f0GeOkiRF1UzfR
+         j1q4eDGChj3GHL3ba6ei8ZfAPMHU+kIZcxm4Hf+Fd66j1VdPonSPBBKEqNLI734HTvab
+         nehw==
+X-Gm-Message-State: AOJu0YztkFrbqIG7F/LP1HYXFCdeqdBIMZNQPnuUkKwEusdswo8uYf/U
+	3xFkUADjLmFG//Fyhm2NQDILE1LmVzk=
+X-Google-Smtp-Source: AGHT+IFlUpLaqoCJbiSFhD64IlH95xiv08LvOcyzU6Z/yb15d/6OOnUWrAzF2uFu4kBOc6RehvbCJQ==
+X-Received: by 2002:a17:906:d195:b0:a26:c748:44e5 with SMTP id c21-20020a170906d19500b00a26c74844e5mr1096591ejz.183.1704713417214;
+        Mon, 08 Jan 2024 03:30:17 -0800 (PST)
+Received: from gmail.com (1F2EF3FE.nat.pool.telekom.hu. [31.46.243.254])
+        by smtp.gmail.com with ESMTPSA id lb24-20020a170906add800b00a2a43568cd8sm1646936ejb.186.2024.01.08.03.30.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jan 2024 03:30:16 -0800 (PST)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Mon, 8 Jan 2024 12:30:15 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, the arch/x86 maintainers <x86@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: [GIT PULL] x86/entry changes for v6.8
+Message-ID: <ZZvcx3N1KxL2GBb8@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3] Bluetooth: rfcomm: Fix null-ptr-deref in
- rfcomm_check_security
-To: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
- pmenzel@molgen.mpg.de
-Cc: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
- baijiaju1990@gmail.com, sy2239101@buaa.edu.cn
-References: <20240103090238.3376565-1-20373622@buaa.edu.cn>
-From: Yuxuan-Hu <20373622@buaa.edu.cn>
-In-Reply-To: <20240103090238.3376565-1-20373622@buaa.edu.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:OCz+CgCXyFpz3JtlRKfJAA--.19759S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxCw1rKr13Aw1xtFW5XF1UZFb_yoW5WFykpF
-	ZFya93Kr1kury5Awn7AF4kZFWrZr1vgr13K395urWUC3s8W3s3KrWSkF1jyayUCFs0k345
-	ZF10qa9xKrnFv37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvG1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-	w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-	IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E
-	87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lnxkEFVAIw20F6c
-	xK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-	Yx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
-	WUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK6svPMxAI
-	w28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_Aw1UJr1UMxC20s026xCaFVCjc4AY6r
-	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
-	b7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
-	vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
-	cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa
-	73UjIFyTuYvjfUOlksUUUUU
-X-CM-SenderInfo: ysqtljawssquxxddhvlgxou0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Dear All:
+Linus,
 
-I hope this email finds you well. I hope you haven't missed my previous 
-email, as I understand that everyone has a busy schedule. I just wanted 
-to follow up on my previous message sent.
+Please pull the latest x86/entry git tree from:
 
-I understand that you may be occupied with other tasks or priorities. 
-However, I would greatly appreciate it if you could spare a few moments 
-to check the patch in my previous email. Your prompt response would be 
-highly valuable to me.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-entry-2024-01-08
 
-Thank you for your attention to this matter, and I look forward to 
-hearing from you soon.
+   # HEAD: 1e4d3001f59fb7a9917cb746544b65e616b5f809 x86/entry: Harden return-to-user
+
+x86/entry changes for v6.8:
+
+ - Optimize common_interrupt_return()
+
+ - Harden the return-to-user code by making a CONFIG_DEBUG_ENTRY=y
+   check unconditional & moving it closer to the IRET.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Peter Zijlstra (2):
+      x86/entry: Optimize common_interrupt_return()
+      x86/entry: Harden return-to-user
 
 
-On 2024/1/3 17:02, Yuxuan Hu wrote:
-> During our fuzz testing of the connection and disconnection process at the
-> RFCOMM layer, we discovered this bug. By comparing the packets from a normal
-> connection and disconnection process with the testcase that triggered a
-> KASAN report. We analyzed the cause of this bug as follows:
->
-> 1. In the packets captured during a normal connection, the host sends a
-> `Read Encryption Key Size` type of `HCI_CMD` packet (Command Opcode: 0x1408)
-> to the controller to inquire the length of encryption key.After receiving
-> this packet, the controller immediately replies with a Command Complete
-> packet (Event Code: 0x0e) to return the Encryption Key Size.
->
-> 2. In our fuzz test case, the timing of the controller's response to this
-> packet was delayed to an unexpected point: after the RFCOMM and L2CAP
-> layers had disconnected but before the HCI layer had disconnected.
->
-> 3. After receiving the Encryption Key Size Response at the time described
-> in point 2, the host still called the rfcomm_check_security function.
-> However, by this time `struct l2cap_conn *conn = l2cap_pi(sk)->chan->conn;`
-> had already been released, and when the function executed
-> `return hci_conn_security(conn->hcon, d->sec_level, auth_type, d->out);`,
-> specifically when accessing `conn->hcon`, a null-ptr-deref error occurred.
->
-> To fix this bug, check if `sk->sk_state` is BT_CLOSED before calling
-> rfcomm_recv_frame in rfcomm_process_rx.
->
-> Signed-off-by: Yuxuan Hu <20373622@buaa.edu.cn>
-> ---
-> V1 -> V2: Check earlier on rfcomm_process_rx
-> V2 -> V3: Fixed formatting errors in the commit
->
->   net/bluetooth/rfcomm/core.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/net/bluetooth/rfcomm/core.c b/net/bluetooth/rfcomm/core.c
-> index 053ef8f25fae..1d34d8497033 100644
-> --- a/net/bluetooth/rfcomm/core.c
-> +++ b/net/bluetooth/rfcomm/core.c
-> @@ -1941,7 +1941,7 @@ static struct rfcomm_session *rfcomm_process_rx(struct rfcomm_session *s)
->   	/* Get data directly from socket receive queue without copying it. */
->   	while ((skb = skb_dequeue(&sk->sk_receive_queue))) {
->   		skb_orphan(skb);
-> -		if (!skb_linearize(skb)) {
-> +		if (!skb_linearize(skb) && sk->sk_state != BT_CLOSED) {
->   			s = rfcomm_recv_frame(s, skb);
->   			if (!s)
->   				break;
-
+ arch/x86/entry/calling.h  | 12 +++++++++---
+ arch/x86/entry/entry_64.S | 33 ++++++++++++++++++++++-----------
+ 2 files changed, 31 insertions(+), 14 deletions(-)
