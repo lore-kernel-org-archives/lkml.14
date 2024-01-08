@@ -1,307 +1,136 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C761555C0F
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 19:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65C754FA3;
+	Mon,  8 Jan 2024 19:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Botro/Sz"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-50e5a9bcec9so2621779e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 11:23:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1704741791; x=1705346591; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pxCaRDmSqsLBvSOC+ec1RaWFfJ/mHhsWAI2gaK+/jy8=;
-        b=Botro/SzYLxBCIb3Nu3lKqDSTlUlJdEKIqYN+ncMXHn7leko7mWlfejUWoBPNK8Q6Z
-         fGIIfj5uY0wKEod0ppgVG3tc9BrJIBn8MHZ7FZ6kDsQ/S/uHgDIOcEX/kkv544sRjSqd
-         Sm38T0KACpMUCdz54H+3dmlItxLZ2w+St3Zsdz7RrUxXWvYgJ8tmwL9AfXtTljK7AEns
-         UBRudvKkWWp54My90lAg7/SIt2wOKJufSwQQQwALWUKz2eV9Tj1nKOSC/GVrUQtnAgZX
-         qWkJD1gt9yikqcbuGvVWTxXkDX6wIHw1a1MYZ3XiSXZxuxfxEaE3zXC1NqquwNceeJe3
-         rz5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704741791; x=1705346591;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pxCaRDmSqsLBvSOC+ec1RaWFfJ/mHhsWAI2gaK+/jy8=;
-        b=CYsiBxpVdl63k4GmeMtD5Gyg3YQVreIHTGf59CfXo4yK375W+xLUrj5rFWV/Un/acN
-         bGBJAcrmjlHi9g8DinZFfcZ6u9u+CSpnIV1mIBMkEQ1xebS//KFjXRnynOYEGceqlSV+
-         ggNoRpsfyxp7BNkSabNu2rOPpSB94SZvDIIIZQ9vMO0lt4xYXW5jP8r0W2g1UWb3SqED
-         6Abs91M4Mv7z+39LsVh7dMJ0M3w3RVPth773CQTKJl8z1HpOccwnPefjpZsWzHbprpr1
-         ks/OkIDwBe6sdP9X5vow8OUpVeCqrptiUcyFvGxnRkWgGJbYOUqPaJySF930zmUYsybu
-         OAUg==
-X-Gm-Message-State: AOJu0Yy5nrJICRpkaVrhNA9MtfUvdXqTFsd/iv8jm/PKu+eDONw3PWz6
-	CYMPAYVfnzf3yoLpWWJJSphdlTlijBC419fNGUwnSaZeMdJVGg==
-X-Google-Smtp-Source: AGHT+IGX7tj4NQqFdLLzsLhJbSGqUUbtw6AZ3qSFM9YDtORIeW2rw1tTwTJ34SefrTeFxS1hs38T6NjzISoolBVO+oA=
-X-Received: by 2002:ac2:5dfb:0:b0:50e:74ec:75f6 with SMTP id
- z27-20020ac25dfb000000b0050e74ec75f6mr1748307lfq.136.1704741790709; Mon, 08
- Jan 2024 11:23:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C0jNbgz5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704741851; x=1736277851;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=cJOrLgxgkebHcXJBcayOfWJpxDUa4IaN64xEo8IWidU=;
+  b=C0jNbgz5nPfecAtIEgmxemMUHSRpwHncwoGouqmXL3BHx+U2RoXo51gS
+   fsXIyBH9VYx8AjuXhgLKx2nK3pYz3HSKSyfn5iQ8JkpoYya8Id9M/bSg+
+   gXAEkA3aERzMVtdvDSPsoylofa6pKYWkx/Tu/wi95A5I0i7HEuDdtZRqW
+   8ZEC+NGf1IycsmkzybPRs8twIlRMhPMuOB+wpM0bpJCLNFMeVFDMAM/Ew
+   iBPN28vyXkPpYap/ik3jy9WPiupQpISuXwTkBzK2CJEHiPckkM9J1CIGt
+   BB0YphIim1PtgtOie2LSjP2Bzq3eer8mkpC/1oMgGRIkQf+7ezMrcJabA
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="401777923"
+X-IronPort-AV: E=Sophos;i="6.04,180,1695711600"; 
+   d="scan'208";a="401777923"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 11:24:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.04,180,1695711600"; 
+   d="scan'208";a="23282048"
+Received: from nsingiri-mobl2.amr.corp.intel.com (HELO [10.212.166.188]) ([10.212.166.188])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 11:24:10 -0800
+Message-ID: <9f0c0b3d-6021-466d-8ee0-375f66c5006a@linux.intel.com>
+Date: Mon, 8 Jan 2024 11:24:06 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231227-optimize_checksum-v14-0-ddfd48016566@rivosinc.com> <20231227-optimize_checksum-v14-2-ddfd48016566@rivosinc.com>
-In-Reply-To: <20231227-optimize_checksum-v14-2-ddfd48016566@rivosinc.com>
-From: Evan Green <evan@rivosinc.com>
-Date: Mon, 8 Jan 2024 11:22:34 -0800
-Message-ID: <CALs-HssxwMphYSCFEYh6b3paQchmSm+tzeZ=2Ro-S4U_Gkom=w@mail.gmail.com>
-Subject: Re: [PATCH v14 2/5] riscv: Add static key for misaligned accesses
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, Conor Dooley <conor@kernel.org>, 
-	Samuel Holland <samuel.holland@sifive.com>, David Laight <David.Laight@aculab.com>, 
-	Xiao Wang <xiao.w.wang@intel.com>, Guo Ren <guoren@kernel.org>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] x86/hyperv: Make encrypted/decrypted changes safe
+ for load_unaligned_zeropad()
+Content-Language: en-US
+To: Michael Kelley <mhklinux@outlook.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+ "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "luto@kernel.org" <luto@kernel.org>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+ "urezki@gmail.com" <urezki@gmail.com>, "hch@infradead.org"
+ <hch@infradead.org>, "lstoakes@gmail.com" <lstoakes@gmail.com>,
+ "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+ "ardb@kernel.org" <ardb@kernel.org>, "jroedel@suse.de" <jroedel@suse.de>,
+ "seanjc@google.com" <seanjc@google.com>,
+ "rick.p.edgecombe@intel.com" <rick.p.edgecombe@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>
+References: <20240105183025.225972-1-mhklinux@outlook.com>
+ <20240105183025.225972-4-mhklinux@outlook.com>
+ <a559406d-acd5-40eb-906e-2b8b11739e9e@linux.intel.com>
+ <SN6PR02MB415797321652A47E166A295FD46B2@SN6PR02MB4157.namprd02.prod.outlook.com>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <SN6PR02MB415797321652A47E166A295FD46B2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Dec 27, 2023 at 9:38=E2=80=AFAM Charlie Jenkins <charlie@rivosinc.c=
-om> wrote:
->
-> Support static branches depending on the value of misaligned accesses.
-> This will be used by a later patch in the series. All online cpus must
-> be considered "fast" for this static branch to be flipped.
->
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
 
-This is fancier than I would have gone for, I probably would have
-punted on heterogeneous hotplug out of laziness for now. However, what
-you've done looks smart, in that we'll basically flip the branch if at
-any moment all the online CPUs are fast. I've got some nits below, but
-won't withhold my review for them (making them optional I suppose :)).
 
-Reviewed-by: Evan Green <evan@rivosinc.com>
+On 1/8/2024 11:13 AM, Michael Kelley wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Sent: Monday, January 8, 2024 10:37 AM
+>>
+>> On 1/5/2024 10:30 AM, mhkelley58@gmail.com wrote:
+>>> From: Michael Kelley <mhklinux@outlook.com>
+>>>
+>>> In a CoCo VM, when transitioning memory from encrypted to decrypted, or
+>>> vice versa, the caller of set_memory_encrypted() or set_memory_decrypted()
+>>> is responsible for ensuring the memory isn't in use and isn't referenced
+>>> while the transition is in progress.  The transition has multiple steps,
+>>> and the memory is in an inconsistent state until all steps are complete.
+>>> A reference while the state is inconsistent could result in an exception
+>>> that can't be cleanly fixed up.
+>>>
+>>> However, the kernel load_unaligned_zeropad() mechanism could cause a stray
+>>> reference that can't be prevented by the caller of set_memory_encrypted()
+>>> or set_memory_decrypted(), so there's specific code to handle this case.
+>>> But a CoCo VM running on Hyper-V may be configured to run with a paravisor,
+>>> with the #VC or #VE exception routed to the paravisor. There's no
+>>> architectural way to forward the exceptions back to the guest kernel, and
+>>> in such a case, the load_unaligned_zeropad() specific code doesn't work.
+>>>
+>>> To avoid this problem, mark pages as "not present" while a transition
+>>> is in progress. If load_unaligned_zeropad() causes a stray reference, a
+>>> normal page fault is generated instead of #VC or #VE, and the
+>>> page-fault-based fixup handlers for load_unaligned_zeropad() resolve the
+>>> reference. When the encrypted/decrypted transition is complete, mark the
+>>> pages as "present" again.
+>>
+>> Change looks good to me. But I am wondering why are adding it part of
+>> prepare and finish callbacks instead of directly in set_memory_encrypted() function.
+>>
+> 
+> The prepare/finish callbacks are different for TDX, SEV-SNP, and
+> Hyper-V CoCo guests running with a paravisor -- so there are three sets
+> of callbacks.  As described in the cover letter, I've given up on using this
+> scheme for the TDX and SEV-SNP cases, because of the difficulty with
+> the SEV-SNP callbacks needing a valid virtual address (whereas TDX and
+> Hyper-V paravisor need only a physical address).  So it seems like the
+> callbacks specific to the Hyper-V paravisor are the natural place for the
+> code.  That leaves the TDX and SEV-SNP code paths unchanged, which
+> was my intent.
+> 
 
-> ---
->  arch/riscv/include/asm/cpufeature.h |  2 +
->  arch/riscv/kernel/cpufeature.c      | 89 +++++++++++++++++++++++++++++++=
-++++--
->  2 files changed, 87 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm=
-/cpufeature.h
-> index a418c3112cd6..7b129e5e2f07 100644
-> --- a/arch/riscv/include/asm/cpufeature.h
-> +++ b/arch/riscv/include/asm/cpufeature.h
-> @@ -133,4 +133,6 @@ static __always_inline bool riscv_cpu_has_extension_u=
-nlikely(int cpu, const unsi
->         return __riscv_isa_extension_available(hart_isa[cpu].isa, ext);
->  }
->
-> +DECLARE_STATIC_KEY_FALSE(fast_misaligned_access_speed_key);
-> +
->  #endif
-> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeatur=
-e.c
-> index b3785ffc1570..dfd716b93565 100644
-> --- a/arch/riscv/kernel/cpufeature.c
-> +++ b/arch/riscv/kernel/cpufeature.c
-> @@ -8,8 +8,10 @@
->
->  #include <linux/acpi.h>
->  #include <linux/bitmap.h>
-> +#include <linux/cpu.h>
->  #include <linux/cpuhotplug.h>
->  #include <linux/ctype.h>
-> +#include <linux/jump_label.h>
->  #include <linux/log2.h>
->  #include <linux/memory.h>
->  #include <linux/module.h>
-> @@ -44,6 +46,8 @@ struct riscv_isainfo hart_isa[NR_CPUS];
->  /* Performance information */
->  DEFINE_PER_CPU(long, misaligned_access_speed);
->
-> +static cpumask_t fast_misaligned_access;
-> +
->  /**
->   * riscv_isa_extension_base() - Get base extension word
->   *
-> @@ -643,6 +647,16 @@ static int check_unaligned_access(void *param)
->                 (speed =3D=3D RISCV_HWPROBE_MISALIGNED_FAST) ? "fast" : "=
-slow");
->
->         per_cpu(misaligned_access_speed, cpu) =3D speed;
-> +
-> +       /*
-> +        * Set the value of fast_misaligned_access of a CPU. These operat=
-ions
-> +        * are atomic to avoid race conditions.
-> +        */
-> +       if (speed =3D=3D RISCV_HWPROBE_MISALIGNED_FAST)
-> +               cpumask_set_cpu(cpu, &fast_misaligned_access);
-> +       else
-> +               cpumask_clear_cpu(cpu, &fast_misaligned_access);
-> +
->         return 0;
->  }
->
-> @@ -655,13 +669,70 @@ static void check_unaligned_access_nonboot_cpu(void=
- *param)
->                 check_unaligned_access(pages[cpu]);
->  }
->
-> +DEFINE_STATIC_KEY_FALSE(fast_misaligned_access_speed_key);
-> +
-> +static int exclude_set_unaligned_access_static_branches(int cpu)
-> +{
-> +       /*
-> +        * Same as set_unaligned_access_static_branches, except excludes =
-the
-> +        * given CPU from the result. When a CPU is hotplugged into an of=
-fline
-> +        * state, this function is called before the CPU is set to offlin=
-e in
-> +        * the cpumask, and thus the CPU needs to be explicitly excluded.
-> +        */
-> +
-> +       cpumask_t online_fast_misaligned_access;
-> +
-> +       cpumask_and(&online_fast_misaligned_access, &fast_misaligned_acce=
-ss, cpu_online_mask);
-> +       cpumask_clear_cpu(cpu, &online_fast_misaligned_access);
-> +
-> +       if (cpumask_weight(&online_fast_misaligned_access) =3D=3D (num_on=
-line_cpus() - 1))
-> +               static_branch_enable_cpuslocked(&fast_misaligned_access_s=
-peed_key);
-> +       else
-> +               static_branch_disable_cpuslocked(&fast_misaligned_access_=
-speed_key);
-> +
-> +       return 0;
-> +}
+Got it. Thanks for clarifying it.
 
-A minor nit:  the function above and below are looking a little
-copy/pasty, and lead to multiple spots where the static branch gets
-changed. You could make a third function that actually does the
-setting with parameters, then these two could call it in different
-ways. The return types also don't need to be int, since you always
-return 0. Something like:
+> Or maybe I'm not understanding your comment?  If that's the case,
+> please elaborate.
+> 
+> Michael
+> 
+>> Reviewed-by: Kuppuswamy Sathyanarayanan
+>> <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>
 
-static void modify_unaligned_access_branches(cpumask_t *mask, int weight)
-{
-        if (cpumask_weight(mask) =3D=3D weight) {
-               static_branch_enable_cpuslocked(&fast_misaligned_access_spee=
-d_key);
-        } else {
-               static_branch_disable_cpuslocked(&fast_misaligned_access_spe=
-ed_key);
-        }
-}
-
-static void set_unaligned_access_branches(void)
-{
-        cpumask_t fast_and_online;
-
-        cpumask_and(&fast_and_online, &fast_misaligned_access, cpu_online_m=
-ask);
-        modify_unaligned_access_branches(&fast_and_online, num_online_cpus(=
-));
-}
-
-static void set_unaligned_access_branches_except_cpu(unsigned int cpu)
-{
-        cpumask_t fast_except_me;
-
-        cpumask_and(&online_fast_misaligned_access,
-&fast_misaligned_access, cpu_online_mask);
-        cpumask_clear_cpu(cpu, &fast_except_me);
-        modify_unaligned_access_branches(&fast_except_me,
-num_online_cpus() - 1);
-}
-
-> +
-> +static int set_unaligned_access_static_branches(void)
-> +{
-> +       /*
-> +        * This will be called after check_unaligned_access_all_cpus so t=
-he
-> +        * result of unaligned access speed for all CPUs will be availabl=
-e.
-> +        *
-> +        * To avoid the number of online cpus changing between reading
-> +        * cpu_online_mask and calling num_online_cpus, cpus_read_lock mu=
-st be
-> +        * held before calling this function.
-> +        */
-> +       cpumask_t online_fast_misaligned_access;
-> +
-> +       cpumask_and(&online_fast_misaligned_access, &fast_misaligned_acce=
-ss, cpu_online_mask);
-> +
-> +       if (cpumask_weight(&online_fast_misaligned_access) =3D=3D num_onl=
-ine_cpus())
-> +               static_branch_enable_cpuslocked(&fast_misaligned_access_s=
-peed_key);
-> +       else
-> +               static_branch_disable_cpuslocked(&fast_misaligned_access_=
-speed_key);
-> +
-> +       return 0;
-> +}
-> +
-> +static int lock_and_set_unaligned_access_static_branch(void)
-> +{
-> +       cpus_read_lock();
-> +       set_unaligned_access_static_branches();
-> +       cpus_read_unlock();
-> +
-> +       return 0;
-> +}
-> +
-> +arch_initcall_sync(lock_and_set_unaligned_access_static_branch);
-> +
->  static int riscv_online_cpu(unsigned int cpu)
->  {
->         static struct page *buf;
->
->         /* We are already set since the last check */
->         if (per_cpu(misaligned_access_speed, cpu) !=3D RISCV_HWPROBE_MISA=
-LIGNED_UNKNOWN)
-> -               return 0;
-> +               goto exit;
->
->         buf =3D alloc_pages(GFP_KERNEL, MISALIGNED_BUFFER_ORDER);
->         if (!buf) {
-> @@ -671,7 +742,14 @@ static int riscv_online_cpu(unsigned int cpu)
->
->         check_unaligned_access(buf);
->         __free_pages(buf, MISALIGNED_BUFFER_ORDER);
-> -       return 0;
-> +
-> +exit:
-> +       return set_unaligned_access_static_branches();
-> +}
-> +
-> +static int riscv_offline_cpu(unsigned int cpu)
-> +{
-> +       return exclude_set_unaligned_access_static_branches(cpu);
->  }
->
->  /* Measure unaligned access on all CPUs present at boot in parallel. */
-> @@ -705,9 +783,12 @@ static int check_unaligned_access_all_cpus(void)
->         /* Check core 0. */
->         smp_call_on_cpu(0, check_unaligned_access, bufs[0], true);
->
-> -       /* Setup hotplug callback for any new CPUs that come online. */
-> +       /*
-> +        * Setup hotplug callbacks for any new CPUs that come online or g=
-o
-> +        * offline.
-> +        */
->         cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "riscv:online",
-> -                                 riscv_online_cpu, NULL);
-> +                                 riscv_online_cpu, riscv_offline_cpu);
->
->  out:
->         unaligned_emulation_finish();
->
-> --
-> 2.43.0
->
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
