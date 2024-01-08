@@ -1,89 +1,219 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m608.netease.com (mail-m608.netease.com [210.79.60.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB77013FEE
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 10:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hg6FlY7l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A8ABC433C7;
-	Mon,  8 Jan 2024 10:37:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704710242;
-	bh=I2cJ5pKDt48/1lLJBuJjqvcrXBZNtAWlklGQZCuHpjs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hg6FlY7lKiLYrFwaqeNhLYHZxk7eszjRg2Fq0ct68Fv/psOZH3K+FPsv8oVYRmDX7
-	 A/fJiSYGMA9CO548Snl9fDWzi7xKz9YWA9dmzASPfH//TygDBGJPTbmyrfQlCHFff0
-	 6ChfaZZyomBzr0eBfBjjN0XyPJ/jxci7MMLYofT164sE4lwNzHw+p1ghcW9tQzVb9o
-	 8aCzlKV83NcGnyYc49XB7J/OQ8xG4R+d7DzqhQ6ZROYkWSvKO3GtDPFce/CLAn9As1
-	 pLzi6fgM+M81YsrxDJr/WKUwEF2NteH9lZD6o8u7lc/JgP8ei1NC5/h0iEkK3D0qJe
-	 d7xR16cKqV73w==
-Date: Mon, 8 Jan 2024 11:37:19 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
-Cc: intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Michal Wajdeczko <michal.wajdeczko@intel.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Javier Martinez Canillas <javierm@redhat.com>, 
-	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>
-Subject: Re: [PATCH v4 2/6] drm/tests: managed: Rename the suite name to
- match other DRM tests
-Message-ID: <ful4yeyeeqrfzdsgq6azz5rhlgood2cnjkodlrdozsglbhtymt@3r6wukug6gtr>
-References: <20240105101324.26811-1-michal.winiarski@intel.com>
- <20240105101324.26811-3-michal.winiarski@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFEE13FF6;
+	Mon,  8 Jan 2024 10:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=senarytech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=senarytech.com
+Received: from liubo (unknown [61.183.143.78])
+	by mail-m12756.qiye.163.com (Hmail) with ESMTPA id 8C244DC05F0;
+	Mon,  8 Jan 2024 11:29:50 +0800 (CST)
+From: =?gb2312?B?wfWyqQ==?= <bo.liu@senarytech.com>
+To: "'Takashi Iwai'" <tiwai@suse.de>
+Cc: <perex@perex.cz>,
+	<tiwai@suse.com>,
+	<linux-sound@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ALSA: hda/conexant: Fix headset auto detect fail in cx8070 and SN6140
+Date: Mon, 8 Jan 2024 11:29:51 +0800
+Message-ID: <002401da41e2$f159f5f0$d40de1d0$@senarytech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wllsfru5xpnuqssj"
-Content-Disposition: inline
-In-Reply-To: <20240105101324.26811-3-michal.winiarski@intel.com>
-
-
---wllsfru5xpnuqssj
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain;
+	charset="gb2312"
 Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AdpB4vBlAuC7K9/cRVGMODF0aT21Gg==
+Content-Language: zh-cn
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaTksYVkwdGBhISB9KQkhOGVUTARMWGhIXJBQOD1
+	lXWRgSC1lBWU1KVUpDSFVKT0hVTENZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
+X-HM-Tid: 0a8ce71e9649b223kuuu8c244dc05f0
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NC46Ghw4AzwdTTI2LzAsGiJJ
+	QlZPCUlVSlVKTEtPTUNPTkJKTkxMVTMWGhIXVRkUVRcSDjsIHhUaCQIPHhgTVRgUFkVZV1kSC1lB
+	WU1KVUpDSFVKT0hVTENZV1kIAVlBTElLTzcG
 
-On Fri, Jan 05, 2024 at 11:13:20AM +0100, Micha=C5=82 Winiarski wrote:
-> DRM tests use "_" rather than "-" as word separator. Rename the test
-> suite to match other tests.
+hi Takashi Iwai,
+	Thank you very much for your patient guidance. Below is the reply to
+the question, please kindly correct it, thanks.
+
+> +static void cx_fixup_headset_recog(struct hda_codec *codec) {
+> +	unsigned int mic_persent;
+> +
+> +	/* fix some headset type recognize fail issue, such as EDIFIER
+headset */
+> +	snd_hda_codec_write(codec, 0x1c, 0, 0x320, 0x010);
+> +	snd_hda_codec_write(codec, 0x1c, 0, 0x3b0, 0xe10);
+> +	snd_hda_codec_write(codec, 0x1c, 0, 0x4f0, 0x0eb);
+
+Please use the defined verbs in sound/hda_verbs.h.
+The arguments (0x320, 0x010) are (AC_VERB_SET_AMP_GAIN_MUTE, 0x2010) =
+etc.
+
+Re: (0x1c, 0x320) is not amp gain register, but vendor defined register =
+as
+rx control register. Use AC_VERB_SET_AMP_GAIN_MUTE will confused. It's
+similar to 0x4f0 and 0xca0.
+
+Also, it's still not clear what if other nodes are used for headphone =
+and
+mic pins -- or when either only headphone or only mic is present.
+A rare case, but we need to cover.
+
+Re: in cx8070 and sn6140, only 0x16 and 0x19 can be used together as
+headset. Other nodes can be used separately as headphones or =
+microphones,
+but not as headset,=20
+so their configuration will not interfere with the type detection of
+headset.
+
+> +	/* fix reboot headset type recognize fail issue */
+> +	mic_persent =3D snd_hda_codec_read(codec, 0x19, 0,
+AC_VERB_GET_PIN_SENSE, 0x0);
+> +	if (mic_persent&0x80000000)
+
+A coding style problem.  Similar issues seen in a few other places, too.
+Consult scripts/checkpatch.pl.
+
+Re: was & need space? I have checked with scripts/checkpatch.pl before
+submitting the patch and there are no warnings or errors.
+
+> +static void cx_process_headset_plugin(struct hda_codec *codec) {
+> +	unsigned int val;
+> +	unsigned int count =3D 0;
+> +
+> +	/* Wait headset detect done. */
+> +	do {
+> +		val =3D snd_hda_codec_read(codec, 0x1c, 0, 0xca0, 0x0);
+
+Use the verb: AC_VERB_GET_PROC_COEF, 0xa000.
+At best, define the COEF values 0xa000 and 0xb000, and the corresponding
+value bits, too.
+
+Re: (0x1c, 0xca0) is not COEF register, but vendor defined register as
+jacksense register.
+
+> +static void cx_update_headset_mic_vref(struct hda_codec *codec,=20
+> +unsigned int res) {
+> +	unsigned int phone_present, mic_persent, phone_tag, mic_tag;
+> +	struct conexant_spec *spec =3D codec->spec;
+> +
+> +	/* In cx8070 and sn6140, headset is fixed to use node 16 and node
+19.
+
+Is it really guaranteed?  IMO, we should check the pin configs =
+beforehand at
+the parsing time.
+
+Re: in cx8070 and sn6140, only 0x16 and 0x19 can be used together as
+headset. The node 16 can only be config to headphone or disable,
+The node 19 can only be config to microphone or disable. Only node 16 =
+and
+node 19 both enable, the patch will process.
+
+Best Regards
+Bo Liu
+=A1=A1
+-----=D3=CA=BC=FE=D4=AD=BC=FE-----
+=B7=A2=BC=FE=C8=CB: Takashi Iwai <tiwai@suse.de>=20
+=B7=A2=CB=CD=CA=B1=BC=E4: 2024=C4=EA1=D4=C26=C8=D5 1:02
+=CA=D5=BC=FE=C8=CB: bo liu <bo.liu@senarytech.com>
+=B3=AD=CB=CD: perex@perex.cz; tiwai@suse.com; =
+linux-sound@vger.kernel.org;
+linux-kernel@vger.kernel.org
+=D6=F7=CC=E2: Re: [PATCH] ALSA: hda/conexant: Fix headset auto detect =
+fail in cx8070
+and SN6140
+
+On Thu, 04 Jan 2024 12:10:44 +0100,
+bo liu wrote:
 >=20
-> Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
-> ---
->  drivers/gpu/drm/tests/drm_managed_test.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> When OMTP headset plugin the headset jack of CX8070 and SN6160 sound=20
+> cards, the headset type detection circuit will recognize the headset =
+type
+as CTIA.
+> At this point, plugout and plugin the headset will get the correct=20
+> headset type as OMTP.
+> The reason for the failure of headset type recognition is that the=20
+> sound card creation will enable the VREF voltage of the headset mic,=20
+> which interferes with the headset type automatic detection circuit.=20
+> Plugout and plugin the headset will restart the headset detection and=20
+> get the correct headset type.
+> The patch is disable the VREF voltage when the headset is not present, =
+
+> and will enable the VREF voltage when the headset is present.
 >=20
-> diff --git a/drivers/gpu/drm/tests/drm_managed_test.c b/drivers/gpu/drm/t=
-ests/drm_managed_test.c
-> index 1652dca11d30c..659af5abb8014 100644
-> --- a/drivers/gpu/drm/tests/drm_managed_test.c
-> +++ b/drivers/gpu/drm/tests/drm_managed_test.c
-> @@ -61,7 +61,7 @@ static struct kunit_case drm_managed_tests[] =3D {
->  };
-> =20
->  static struct kunit_suite drm_managed_test_suite =3D {
-> -	.name =3D "drm-test-managed",
-> +	.name =3D "drm_test_managed",
->  	.test_cases =3D drm_managed_tests
->  };
+> Signed-off-by: bo liu <bo.liu@senarytech.com>
 
-I guess if we were to truly follow the trend, it would be drm_managed?
+Please put the revision number to the subject prefix, i.e.
+"Subject: [PATCH v3] ALSA: hda/conexant: ...."
 
-Maxime
+> +static void cx_fixup_headset_recog(struct hda_codec *codec) {
+> +	unsigned int mic_persent;
+> +
+> +	/* fix some headset type recognize fail issue, such as EDIFIER
+headset */
+> +	snd_hda_codec_write(codec, 0x1c, 0, 0x320, 0x010);
+> +	snd_hda_codec_write(codec, 0x1c, 0, 0x3b0, 0xe10);
+> +	snd_hda_codec_write(codec, 0x1c, 0, 0x4f0, 0x0eb);
 
---wllsfru5xpnuqssj
-Content-Type: application/pgp-signature; name="signature.asc"
+Please use the defined verbs in sound/hda_verbs.h.
+The arguments (0x320, 0x010) are (AC_VERB_SET_AMP_GAIN_MUTE, 0x2010) =
+etc.
 
------BEGIN PGP SIGNATURE-----
+Also, it's still not clear what if other nodes are used for headphone =
+and
+mic pins -- or when either only headphone or only mic is present.
+A rare case, but we need to cover.
 
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZZvQXwAKCRDj7w1vZxhR
-xZojAP9it/UDliDk2mE/BdkWkwweIMSTuPNInr+lArfeFsu9eQEA4bwgWSdKPPNS
-P77GouENMe1JX2xdTSQ/TlMuvGeNfg4=
-=ulYa
------END PGP SIGNATURE-----
+> +	/* fix reboot headset type recognize fail issue */
+> +	mic_persent =3D snd_hda_codec_read(codec, 0x19, 0,
+AC_VERB_GET_PIN_SENSE, 0x0);
+> +	if (mic_persent&0x80000000)
 
---wllsfru5xpnuqssj--
+A coding style problem.  Similar issues seen in a few other places, too.
+Consult scripts/checkpatch.pl.
+
+> +enum {
+> +	CX_HEADSET_NOPRESENT =3D 0,
+> +	CX_HEADSET_PARTPRESENT,
+> +	CX_HEADSET_ALLPRESENT,
+> +};
+
+This should be defined earlier.  You can use the enum type for
+spec->headset_present_flag, too.
+
+> +static void cx_process_headset_plugin(struct hda_codec *codec) {
+> +	unsigned int val;
+> +	unsigned int count =3D 0;
+> +
+> +	/* Wait headset detect done. */
+> +	do {
+> +		val =3D snd_hda_codec_read(codec, 0x1c, 0, 0xca0, 0x0);
+
+Use the verb: AC_VERB_GET_PROC_COEF, 0xa000.
+At best, define the COEF values 0xa000 and 0xb000, and the corresponding
+value bits, too.
+
+> +static void cx_update_headset_mic_vref(struct hda_codec *codec,=20
+> +unsigned int res) {
+> +	unsigned int phone_present, mic_persent, phone_tag, mic_tag;
+> +	struct conexant_spec *spec =3D codec->spec;
+> +
+> +	/* In cx8070 and sn6140, headset is fixed to use node 16 and node
+19.
+
+Is it really guaranteed?  IMO, we should check the pin configs =
+beforehand at
+the parsing time.
+
+
+thanks,
+
+Takashi
+
