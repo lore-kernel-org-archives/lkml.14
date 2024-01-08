@@ -1,125 +1,143 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2073.outbound.protection.outlook.com [40.107.243.73])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2913452F6B;
-	Mon,  8 Jan 2024 15:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vX3Jwset"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mkuf1M3AYacMtxLTeLhNc7vwot0BAdeNY3F4kP0HMh91+TXUWbAer1PVTsB1ikYr6WC45Xlhe74XweamtT/gs9lKBvDDotaYX48mKfjLJGEMGqIqV1Mti7yjvnLlTQoVfJuXC3FGQ42R2xw1adwTwCuJhzxnRLyLt6C/1JhP41NhhNPgdBZoUR4q753xA6zPE/uV14i8b1VrkO0FdlbremDaGDPEP9JvmAVqPYsf+o/nPHueu15zu7axK+ayrz+SnSJothyoGK6Zgd2tP7YdhGdd0HfgIVP9GmcMG8/mS/5zATFZSGevU79StsexPB1AfxEmtssLvOiWICMN6qhAgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tXuDDzcfqhO9fgQNp974TyiZJ+L1Yt7BETQ4vL2+mJI=;
- b=evpkLrKf9aJPcyKDxJenqaC+PBib4lotNVI0YBDMxactSPrRST6xi5KkeATaXfWS4/PoQ787mn7gYFtnieZ2+21oABvNCYAQl6GAZv+n25lSb0LY/gvl5wlko3Aqhiels0Z6opVVAoVxiNRre1UWQbniQlkgLinjLVPuhtFFGogEY/PWgZ7NWlxfED4/HYw+hRBdZxceiw7ALQ/MWu1PgeYB54lAYNuYWzTbWmeh3zl9UdBVnynW/SJCDcCzPiC7GPFOzyoFm0aMiJDRsfWyW8oQXSxBBXVGUDggOFycAC3UvjIr3/yQWxdglNPuhe5Ksg7rn0Be6E04CRbOQ0pxaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tXuDDzcfqhO9fgQNp974TyiZJ+L1Yt7BETQ4vL2+mJI=;
- b=vX3JwsetYjy4tiQs67HkFXj9DLue2CD4xpI24u9Q/AAIqfK7ojAhElYCRZm2jlXObfuDWZHXIINaXHJ7sK6riM6JykBRNBb6XcpeCtp8D9PfnIeCtV1x4+q81mTjNXcee9ULtz3dGNO0D0O44zCoqorW7I8mRFzZ8gCL/h9YQOg=
-Received: from MN2PR02CA0024.namprd02.prod.outlook.com (2603:10b6:208:fc::37)
- by IA0PR12MB8895.namprd12.prod.outlook.com (2603:10b6:208:491::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.21; Mon, 8 Jan
- 2024 15:40:22 +0000
-Received: from BL6PEPF0001AB72.namprd02.prod.outlook.com
- (2603:10b6:208:fc:cafe::b8) by MN2PR02CA0024.outlook.office365.com
- (2603:10b6:208:fc::37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.21 via Frontend
- Transport; Mon, 8 Jan 2024 15:40:22 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF0001AB72.mail.protection.outlook.com (10.167.242.165) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7181.12 via Frontend Transport; Mon, 8 Jan 2024 15:40:22 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Mon, 8 Jan
- 2024 09:40:20 -0600
-From: Michal Simek <michal.simek@amd.com>
-To: <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
-	<michal.simek@xilinx.com>, <git@xilinx.com>
-CC: Thippeswamy Havalige <thippeswamy.havalige@amd.com>, Conor Dooley
-	<conor+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Rob Herring <robh+dt@kernel.org>, "open
- list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
-	<devicetree@vger.kernel.org>, "moderated list:ARM/ZYNQ ARCHITECTURE"
-	<linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH 07/14] arm64: zynqmp: Update ECAM size to discover up to 256 buses
-Date: Mon, 8 Jan 2024 16:39:18 +0100
-Message-ID: <4f7621a790f4aa35b3e7f74683d3ae4ffe820667.1704728353.git.michal.simek@amd.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <cover.1704728353.git.michal.simek@amd.com>
-References: <cover.1704728353.git.michal.simek@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518085380B;
+	Mon,  8 Jan 2024 15:40:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAFE0C433C7;
+	Mon,  8 Jan 2024 15:40:51 +0000 (UTC)
+Date: Mon, 8 Jan 2024 10:41:47 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Al Viro
+ <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Kees Cook
+ <keescook@chromium.org>
+Subject: Re: [PATCH] tracefs/eventfs: Use root and instance inodes as
+ default ownership
+Message-ID: <20240108104147.49baa4cb@gandalf.local.home>
+In-Reply-To: <20240108-natur-geophysik-f4c6fdaf6901@brauner>
+References: <20240103203246.115732ec@gandalf.local.home>
+	<20240105-wegstecken-sachkenntnis-6289842d6d01@brauner>
+	<20240105095954.67de63c2@gandalf.local.home>
+	<20240107-getrickst-angeeignet-049cea8cad13@brauner>
+	<20240107132912.71b109d8@rorschach.local.home>
+	<20240107133228.05b0f485@rorschach.local.home>
+	<20240108-natur-geophysik-f4c6fdaf6901@brauner>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1030; i=michal.simek@amd.com; h=from:subject:message-id; bh=kO6lW1upOOBH7LOITIBi6Aijv/ZvT+sNMH9PkpJmFkg=; b=owGbwMvMwCR4yjP1tKYXjyLjabUkhtQ54uqV5o7yoic+XcqY7skftpcvf8fc2BXuOTvvBsn8n V9vZpzZEcvCIMjEICumyCJtc+XM3soZU4QvHpaDmcPKBDKEgYtTACbC3MqwoD936uYjlsH2u2p3 qx35dSvx9q4eRob5LhMmeJhEJ37vyM5TlFjuM2eC8vSPAA==
-X-Developer-Key: i=michal.simek@amd.com; a=openpgp; fpr=67350C9BF5CCEE9B5364356A377C7F21FE3D1F91
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB72:EE_|IA0PR12MB8895:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8b3a0053-13ff-49ec-4a26-08dc10602024
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	NJYI6otPhoXz5VjGpauFsJnLRUxdWGi3xEcDif3XVmM7LDu3sM4sTKII/s2CSOXACK8bglqgScPITcicRGKHwCJMrDB9hWuLJUheSH7IP7QqgJtd4TR8u07M8eoAJRS6YkfRUrduu9doIz3NOPH3O3yobcVbNTAeR8/arKct4ezgumpHboRlqPWje+3k1s61zlEyXMqi02BZHzA6R0Sg6LFbVHCLUUE1Cudx20IlynMfDgSb1yid3aBSZy4YhHjxMy5yGvuzrtntaFGsrp5PcPn9RuQFPhUAbxv5ldgfiz+8CGdqM9bfCIViw9VTm/gSFp5nfRonrtlFG5GRsr2Aiz39oeHV2zDClPhbZ4Cdc+rDZhfL1CGIPEd6czdxh2bH5HlpDHS7pK8gxfgv/RQRPo5XG/LWtBsPVKX7vno6nZb3P2pnEV3G3anUa1gYcTL2MAPZ4+lKkvNtJn2q1PUe20scXyOr89ba1HC9ov434KyRK9v7EF9DBpeSMrjJ3vsyh3Rc9In5T9HorgCmtpk8/rCM4mvWjquz0xzqoLn9048E40bQy4hhZsdoucvCqeZgk/m5cE8ag3VYBIrOKRLa3osoVNdD8d1uBUx3Zn5vLXxMWlHPiYehdNDIXWzgF+soQFRIfFM1oVyACs9SwIcjp4KEEc/NQICgQ7IeCLaYeE/ndJZIwCcQzJa9r6xFpRfoBc4u0oeX+znFUmG/3KLB2QrhNmkSzp4TyM9V88JlB1j5Ix2XTppY0Zm5rU1pYRs0kJ6DoWOWWgLb1dCUPsxoKB1qfHH5LfZJ9seVHkv+5I8=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(376002)(346002)(39860400002)(396003)(230922051799003)(451199024)(82310400011)(1800799012)(186009)(64100799003)(40470700004)(46966006)(36840700001)(36860700001)(2906002)(47076005)(2616005)(70206006)(26005)(70586007)(41300700001)(40480700001)(86362001)(40460700003)(356005)(81166007)(36756003)(82740400003)(54906003)(5660300002)(4326008)(15650500001)(316002)(110136005)(16526019)(336012)(426003)(44832011)(83380400001)(478600001)(8936002)(8676002)(36900700001)(2101003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2024 15:40:22.1453
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b3a0053-13ff-49ec-4a26-08dc10602024
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB72.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8895
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+On Mon, 8 Jan 2024 12:32:46 +0100
+Christian Brauner <brauner@kernel.org> wrote:
 
-Update ECAM size to discover up to 256 buses.
+> On Sun, Jan 07, 2024 at 01:32:28PM -0500, Steven Rostedt wrote:
+> > On Sun, 7 Jan 2024 13:29:12 -0500
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> >   
+> > > > 
+> > > > IOW, the inode_permission() in lookup_one_len() that eventfs does is
+> > > > redundant and just wrong.    
+> > > 
+> > > I don't think so.  
+> > 
+> > Just to make it clear. eventfs has nothing to do with mkdir instance/foo.
+> > It exists without that. Although one rationale to do eventfs was so  
+> 
+> Every instance/foo/ tracefs instances also contains an events directory
+> and thus a eventfs portion. Eventfs is just a subtree of tracefs. It's
+> not a separate filesystem. Both eventfs and tracefs are on the same
+> single, system wide superblock.
+> 
+> > that the instance directories wouldn't recreate the same 10thousands
+> > event inodes and dentries for every mkdir done.  
+> 
+> I know but that's irrelevant to what I'm trying to tell you.
+> 
+> A mkdir /sys/kernel/tracing/instances/foo creates a new tracefs
+> instance. With or without the on-demand dentry and inode creation for
+> the eventfs portion that tracefs "instance" has now been created in its
+> entirety including all the required information for someone to later
+> come along and perform a lookup on /sys/kernel/tracing/instances/foo/events.
+> 
+> All you've done is to defer the addition of the dentries and inodes when
+> someone does actually look at the events directory of the tracefs
+> instance.
+> 
+> Whether you choose to splice in the dentries and inodes for the eventfs
+> portion during lookup and readdir or if you had chosen to not do the
+> on-demand thing at all and the entries were created at the same time as
+> the mkdir call are equivalent from the perspective of permission
+> checking.
+> 
+> If you have the required permissions to look at the events directory
+> then there's no reason why listing the directory entries in there should
+> fail. This can't even happen right now.
 
-Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-Signed-off-by: Michal Simek <michal.simek@amd.com>
----
+Ah, I think I know where the confusion lies. The tracing information in
+kernel/trace/*.c doesn't keep track of permission. It relies totally on
+fs/tracefs/* to do so. If someone does 'chmod' or 'chown' or mounts with
+'gid=xxx' then it's up to tracefs to maintain that information and not the
+tracing subsystem. The tracing subsystem only gives the "default"
+permissions (before boot finishes).
 
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The difference between normal file systems and pseudo file systems like
+debugfs and tracefs, is that normal file systems keep the permission
+information stored on the external device. That is, when the inodes and
+dentries are created, the information is retrieved from the stored file
+system.
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index c41c935f92b1..f1b0d4a15e76 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -690,7 +690,7 @@ pcie: pcie@fd0e0000 {
- 			msi-parent = <&pcie>;
- 			reg = <0x0 0xfd0e0000 0x0 0x1000>,
- 			      <0x0 0xfd480000 0x0 0x1000>,
--			      <0x80 0x00000000 0x0 0x1000000>;
-+			      <0x80 0x00000000 0x0 0x10000000>;
- 			reg-names = "breg", "pcireg", "cfg";
- 			ranges = <0x02000000 0x00000000 0xe0000000 0x00000000 0xe0000000 0x00000000 0x10000000>,/* non-prefetchable memory */
- 				 <0x43000000 0x00000006 0x00000000 0x00000006 0x00000000 0x00000002 0x00000000>;/* prefetchable memory */
--- 
-2.36.1
+I think this may actually be a failure of debugfs (and tracefs as it was
+based on debugfs), in that the inodes and dentries are created at the same
+time the "files" backing them are. Which is normally at boot up and before
+the file system is mounted.
 
+That is, inodes and dentries are actually coupled with the data they
+represent. It's not a cache for a back store like a hard drive partition.
+
+To create a file in debugfs you do:
+
+struct dentry *debugfs_create_file(const char *name, umode_t mode,
+				   struct dentry *parent, void *data,
+				   const struct file_operations *fops)
+
+That is, you pass a the name, the mode, the parent dentry, data, and the
+fops and that will create an inode and dentry (which is returned).
+
+This happens at boot up before user space is running and before debugfs is
+even mounted.
+
+Because debugfs is mostly for debugging, people don't care about how it's
+mounted. It is usually restricted to root only access. Especially since
+there's a lot of sensitive information that shouldn't be exposed to
+non-privileged users.
+
+The reason tracefs came about is that people asked me to be able to have
+access to tracing without needing to even enable debugfs. They also want to
+easily make it accessible to non root users and talking with Kees Cook, he
+recommended using ACL. But because it inherited a lot from debugfs, I
+started doing these tricks like walking the dentry tree to make it work a
+bit better. Because the dentries and inodes were created before mount, I
+had to play these tricks.
+
+But as Linus pointed out, that was the wrong way to do that. The right way
+was to use .getattr and .permission callbacks to figure out what the
+permissions to the files are.
+
+This has nothing to do with the creation of the files, it's about who has
+access to the files that the inodes point to.
+
+This sounds like another topic to bring up at LSFMM ;-)  "Can we
+standardize pseudo file systems like debugfs and tracefs to act more like
+real file systems, and have inodes and dentries act as cache and not be so
+coupled to the data?"
+
+-- Steve
