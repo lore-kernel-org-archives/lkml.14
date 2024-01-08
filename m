@@ -1,72 +1,40 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from aposti.net (aposti.net [89.234.176.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7034444374
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 12:10:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A33405CC;
+	Mon,  8 Jan 2024 12:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="ME1wlTxe"
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com [209.85.208.69])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id EC3DA3F744
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 12:10:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1704715824;
-	bh=5YU1NX55EkC+kEj5EffEs5H2AwvURtGdQ/HYjkwRM8I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version;
-	b=ME1wlTxeCrq7VypFX8QeCIX9CrWDmtHj3rCV7u52LprNG24j5mRPU1v0quLW8Yp6X
-	 GIa1SUT3GdEZLo47aA2gHLg/zC/3vUqjWtZQyi5V45qQ7AOayOlIRSbKZ/OytvW34h
-	 GK+ScFaONHEUNA5TgQZBZaB/zexMemv8THw/icOkRqS4rJvrZmKPV/fs2+LvFHSw6Y
-	 Z3CK69KZQtloqdiNrmipkdd4j03+B9GBFNPeLqTcr5Bdk5CN/HUT0JGJfjwebT1alb
-	 ZcLDCuaEvnUCzM/FyLVl9R6IQTtjmGtlpI7GOnVcugOkvVvRP981hYQWMR/DjqPhtt
-	 6mZadzbd03egw==
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5572a57deb1so968216a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 04:10:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704715824; x=1705320624;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5YU1NX55EkC+kEj5EffEs5H2AwvURtGdQ/HYjkwRM8I=;
-        b=Xu2Z//rAHGs211CE3lMedN2pa3Wr49kMYPk+GvBWRDp9P8v42VdcjnIwDz3t72/AXY
-         6ySCj1aPCthpaNHLIoO6rsfYpetE7tH/ei+D8SlY70CZNM1qsI1eBqmoD9PDyONYqUOf
-         cJ+ib3qzhtkrtCj5krC1q9tsosEVTJz8TYvhGX2yIXuPmxsA2Fd8LJt2ws5LZhwVOkYI
-         muO8ptKvSyRalwmbwzovmQqyMFI4JeuQzdVAiHdPB9gE/HHMU6npSiIwUai5seeAY4sc
-         xnR7ryuPdwnL6dQHICKnELaJpd0NQoHPZFHgyFEdjMc5RbUfjwnMRkBuf137unyz2Cb5
-         BqWA==
-X-Gm-Message-State: AOJu0Yxcios9YcTmVzzmpCMvY7CieSOqBkKf2686ZQPeIiwaD/tT9tbP
-	1OUMnJYur1y0P/1CdUSfGgG5cLrx2l/Rmd2s7tNkwjKPG1XNTt8h9zw6ObSlXURnRLduDFlYhBn
-	xBgWp7eRb69StnbG4YbIdAafZVOTaxCJhoMUZqsJF6SvydMcF
-X-Received: by 2002:a50:951e:0:b0:552:fcca:ee11 with SMTP id u30-20020a50951e000000b00552fccaee11mr1322927eda.74.1704715824424;
-        Mon, 08 Jan 2024 04:10:24 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGbkDQ81TrJrfcIXQl9SZ1Mnhsn8K0v5xkp/foSnlY+Kqttn18YIQ5m+/IG2qQHswCxHJux4g==
-X-Received: by 2002:a50:951e:0:b0:552:fcca:ee11 with SMTP id u30-20020a50951e000000b00552fccaee11mr1322918eda.74.1704715823978;
-        Mon, 08 Jan 2024 04:10:23 -0800 (PST)
-Received: from localhost.localdomain ([91.64.72.41])
-        by smtp.gmail.com with ESMTPSA id fi21-20020a056402551500b005578b816f20sm1767959edb.29.2024.01.08.04.10.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jan 2024 04:10:22 -0800 (PST)
-From: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
-To: mszeredi@redhat.com
-Cc: brauner@kernel.org,
-	stgraber@stgraber.org,
-	linux-fsdevel@vger.kernel.org,
-	Seth Forshee <sforshee@kernel.org>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Bernd Schubert <bschubert@ddn.com>,
-	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 9/9] fs/fuse: allow idmapped mounts
-Date: Mon,  8 Jan 2024 13:08:24 +0100
-Message-Id: <20240108120824.122178-10-aleksandr.mikhalitsyn@canonical.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240108120824.122178-1-aleksandr.mikhalitsyn@canonical.com>
-References: <20240108120824.122178-1-aleksandr.mikhalitsyn@canonical.com>
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="W6fod49M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+	s=mail; t=1704715263;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=kw2xnPE5HtY1SEvsv8OuzuBAyMF2igZ6CutMKzqtu08=;
+	b=W6fod49MZzGKeKASfexzXo/74JFcIFld1pbmYxXq7OXhAtPX5G7Ifl0VWUswisMuN4S04y
+	5NLkk/CClNpn75kJB2PiGGoRGMhR8rj1e35NH8jmlUixSdz4bWBc396mUHcI9K7lAaVlvM
+	g+LHGTNPldL6HMuN9Gh4QWWyJURIlkw=
+From: Paul Cercueil <paul@crapouillou.net>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	=?UTF-8?q?Nuno=20S=C3=A1?= <noname.nuno@gmail.com>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+	linux-usb@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v3 0/4] usb: gadget: functionfs: DMABUF import interface
+Date: Mon,  8 Jan 2024 13:00:52 +0100
+Message-ID: <20240108120056.22165-1-paul@crapouillou.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,170 +42,64 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Spam: Yes
 
-Now we have everything in place and we can allow idmapped mounts
-by setting the FS_ALLOW_IDMAP flag. Notice that real availability
-of idmapped mounts will depend on the fuse daemon. Fuse daemon
-have to set FUSE_ALLOW_IDMAP flag in the FUSE_INIT reply.
+Hi,
 
-To discuss:
-- we enable idmapped mounts support only if "default_permissions" mode is enabled,
-because otherwise we would need to deal with UID/GID mappings in the userspace side OR
-provide the userspace with idmapped req->in.h.uid/req->in.h.gid values which is not
-something that we probably want to. Idmapped mounts phylosophy is not about faking
-caller uid/gid.
+This small patchset adds three new IOCTLs that can be used to attach,
+detach, or transfer from/to a DMABUF object.
 
-- We have a small offlist discussion with Christian around adding fs_type->allow_idmap
-hook. Christian pointed that it would be nice to have a superblock flag instead like
-SB_I_NOIDMAP and we can set this flag during mount time if we see that filesystem does not
-support idmappings. But, unfortunately I didn't succeed here because the kernel will
-know if the filesystem supports idmapping or not after FUSE_INIT request, but FUSE_INIT request
-is being sent at the end of mounting process, so mount and superblock will exist and
-visible by the userspace in that time. It seems like setting SB_I_NOIDMAP flag in this
-case is too late as user may do the trick with creating a idmapped mount while it wasn't
-restricted by SB_I_NOIDMAP. Alternatively, we can introduce a "positive" version SB_I_ALLOWIDMAP
-and "weak" version of FS_ALLOW_IDMAP like FS_MAY_ALLOW_IDMAP. So if FS_MAY_ALLOW_IDMAP is set,
-then SB_I_ALLOWIDMAP has to be set on the superblock to allow creation of an idmapped mount.
-But that's a matter of our discussion.
+This interface is being used at Analog Devices, to transfer data from
+high-speed transceivers to USB in a zero-copy fashion, using also the
+DMABUF import interface to the IIO subsystem which is being upstreamed
+in parallel [1] (and has high chances to be accepted for 5.9, I think
+Jonathan can confirm). The two are used by the Libiio software [2].
 
-Some extra links and examples:
+On a ZCU102 board with a FMComms3 daughter board, using the combination
+of these two new interfaces yields a drastic improvement of the
+throughput, from about 127 MiB/s using IIO's buffer read/write interface
++ read/write to the FunctionFS endpoints, to about 274 MiB/s when
+passing around DMABUFs, for a lower CPU usage (0.85 load avg. before,
+vs. 0.65 after).
 
-- libfuse support
-https://github.com/mihalicyn/libfuse/commits/idmap_support
+Right now, *technically* there are no users of this interface, as
+Analog Devices wants to wait until both interfaces are accepted upstream
+to merge the DMABUF code in Libiio into the main branch, and Jonathan
+wants to wait and see if this patchset is accepted to greenlight the
+DMABUF interface in IIO as well. I think this isn't really a problem;
+once everybody is happy with its part of the cake, we can merge them all
+at once.
 
-- fuse-overlayfs support:
-https://github.com/mihalicyn/fuse-overlayfs/commits/idmap_support
+This is obviously for 5.9, and based on next-20240108.
 
-- cephfs-fuse conversion example
-https://github.com/mihalicyn/ceph/commits/fuse_idmap
+Changelog:
 
-- glusterfs conversion example
-https://github.com/mihalicyn/glusterfs/commits/fuse_idmap
+- [3/4]:
+  - Inline to_ffs_dma_fence() which was called only once.
+  - Simplify ffs_dma_resv_lock()
+  - Add comment explaining why we unref twice in ffs_dmabuf_detach()
+  - Document uapi struct usb_ffs_dmabuf_transfer_req and IOCTLs
+- [4/4]: New patch, as I figured out having documentation wouldn't hurt.
 
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Seth Forshee <sforshee@kernel.org>
-Cc: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Amir Goldstein <amir73il@gmail.com>
-Cc: Bernd Schubert <bschubert@ddn.com>
-Cc: <linux-fsdevel@vger.kernel.org>
-Signed-off-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
----
- fs/fuse/fuse_i.h          |  3 +++
- fs/fuse/inode.c           | 22 +++++++++++++++++++---
- include/uapi/linux/fuse.h |  5 ++++-
- 3 files changed, 26 insertions(+), 4 deletions(-)
+Cheers,
+-Paul
 
-diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-index 94b25ea5344a..9317b8c35191 100644
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -809,6 +809,9 @@ struct fuse_conn {
- 	/* Add owner_{u,g}id info when creating a new inode */
- 	unsigned int owner_uid_gid_ext:1;
- 
-+	/* Allow creation of idmapped mounts */
-+	unsigned int allow_idmap:1;
-+
- 	/* Does the filesystem support per inode DAX? */
- 	unsigned int inode_dax:1;
- 
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index 08cd3714b32d..47e32a8baed3 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -1286,6 +1286,12 @@ static void process_init_reply(struct fuse_mount *fm, struct fuse_args *args,
- 				fc->direct_io_allow_mmap = 1;
- 			if (flags & FUSE_OWNER_UID_GID_EXT)
- 				fc->owner_uid_gid_ext = 1;
-+			if (flags & FUSE_ALLOW_IDMAP) {
-+				if (fc->owner_uid_gid_ext && fc->default_permissions)
-+					fc->allow_idmap = 1;
-+				else
-+					ok = false;
-+			}
- 		} else {
- 			ra_pages = fc->max_read / PAGE_SIZE;
- 			fc->no_lock = 1;
-@@ -1332,7 +1338,8 @@ void fuse_send_init(struct fuse_mount *fm)
- 		FUSE_NO_OPENDIR_SUPPORT | FUSE_EXPLICIT_INVAL_DATA |
- 		FUSE_HANDLE_KILLPRIV_V2 | FUSE_SETXATTR_EXT | FUSE_INIT_EXT |
- 		FUSE_SECURITY_CTX | FUSE_CREATE_SUPP_GROUP |
--		FUSE_HAS_EXPIRE_ONLY | FUSE_DIRECT_IO_ALLOW_MMAP | FUSE_OWNER_UID_GID_EXT;
-+		FUSE_HAS_EXPIRE_ONLY | FUSE_DIRECT_IO_ALLOW_MMAP |
-+		FUSE_OWNER_UID_GID_EXT | FUSE_ALLOW_IDMAP;
- #ifdef CONFIG_FUSE_DAX
- 	if (fm->fc->dax)
- 		flags |= FUSE_MAP_ALIGNMENT;
-@@ -1915,12 +1922,20 @@ static void fuse_kill_sb_anon(struct super_block *sb)
- 	fuse_mount_destroy(get_fuse_mount_super(sb));
- }
- 
-+static bool fuse_allow_idmap(struct super_block *sb)
-+{
-+	struct fuse_conn *fc = get_fuse_conn_super(sb);
-+
-+	return fc->allow_idmap;
-+}
-+
- static struct file_system_type fuse_fs_type = {
- 	.owner		= THIS_MODULE,
- 	.name		= "fuse",
--	.fs_flags	= FS_HAS_SUBTYPE | FS_USERNS_MOUNT,
-+	.fs_flags	= FS_HAS_SUBTYPE | FS_USERNS_MOUNT | FS_ALLOW_IDMAP,
- 	.init_fs_context = fuse_init_fs_context,
- 	.parameters	= fuse_fs_parameters,
-+	.allow_idmap	= fuse_allow_idmap,
- 	.kill_sb	= fuse_kill_sb_anon,
- };
- MODULE_ALIAS_FS("fuse");
-@@ -1938,8 +1953,9 @@ static struct file_system_type fuseblk_fs_type = {
- 	.name		= "fuseblk",
- 	.init_fs_context = fuse_init_fs_context,
- 	.parameters	= fuse_fs_parameters,
-+	.allow_idmap	= fuse_allow_idmap,
- 	.kill_sb	= fuse_kill_sb_blk,
--	.fs_flags	= FS_REQUIRES_DEV | FS_HAS_SUBTYPE,
-+	.fs_flags	= FS_REQUIRES_DEV | FS_HAS_SUBTYPE | FS_ALLOW_IDMAP,
- };
- MODULE_ALIAS_FS("fuseblk");
- 
-diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
-index ebe82104b172..d8e1235d9796 100644
---- a/include/uapi/linux/fuse.h
-+++ b/include/uapi/linux/fuse.h
-@@ -215,6 +215,7 @@
-  *  7.40
-  *  - add FUSE_EXT_OWNER_UID_GID
-  *  - add FUSE_OWNER_UID_GID_EXT
-+ *  - add FUSE_ALLOW_IDMAP
-  */
- 
- #ifndef _LINUX_FUSE_H
-@@ -250,7 +251,7 @@
- #define FUSE_KERNEL_VERSION 7
- 
- /** Minor version number of this interface */
--#define FUSE_KERNEL_MINOR_VERSION 39
-+#define FUSE_KERNEL_MINOR_VERSION 40
- 
- /** The node ID of the root inode */
- #define FUSE_ROOT_ID 1
-@@ -416,6 +417,7 @@ struct fuse_file_lock {
-  * FUSE_DIRECT_IO_ALLOW_MMAP: allow shared mmap in FOPEN_DIRECT_IO mode.
-  * FUSE_OWNER_UID_GID_EXT: add inode owner UID/GID info to create, mkdir,
-  *			   symlink and mknod
-+ * FUSE_ALLOW_IDMAP: allow creation of idmapped mounts
-  */
- #define FUSE_ASYNC_READ		(1 << 0)
- #define FUSE_POSIX_LOCKS	(1 << 1)
-@@ -459,6 +461,7 @@ struct fuse_file_lock {
- /* Obsolete alias for FUSE_DIRECT_IO_ALLOW_MMAP */
- #define FUSE_DIRECT_IO_RELAX	FUSE_DIRECT_IO_ALLOW_MMAP
- #define FUSE_OWNER_UID_GID_EXT	(1ULL << 37)
-+#define FUSE_ALLOW_IDMAP	(1ULL << 38)
- 
- /**
-  * CUSE INIT request/reply flags
+[1] https://lore.kernel.org/linux-iio/219abc43b4fdd4a13b307ed2efaa0e6869e68e3f.camel@gmail.com/T/
+[2] https://github.com/analogdevicesinc/libiio/tree/pcercuei/dev-new-dmabuf-api
+
+Paul Cercueil (4):
+  usb: gadget: Support already-mapped DMA SGs
+  usb: gadget: functionfs: Factorize wait-for-endpoint code
+  usb: gadget: functionfs: Add DMABUF import interface
+  Documentation: usb: Document FunctionFS DMABUF API
+
+ Documentation/usb/functionfs.rst    |  36 +++
+ drivers/usb/gadget/function/f_fs.c  | 463 ++++++++++++++++++++++++++--
+ drivers/usb/gadget/udc/core.c       |   7 +-
+ include/linux/usb/gadget.h          |   2 +
+ include/uapi/linux/usb/functionfs.h |  41 +++
+ 5 files changed, 528 insertions(+), 21 deletions(-)
+
 -- 
-2.34.1
+2.43.0
 
