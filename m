@@ -1,133 +1,86 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1FD54F86;
-	Mon,  8 Jan 2024 19:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hartkopp.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hartkopp.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEFBA54F85;
+	Mon,  8 Jan 2024 19:02:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="dsl1jFZo";
-	dkim=permerror (0-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="L/p7ZIlt"
-ARC-Seal: i=1; a=rsa-sha256; t=1704740263; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=mbX2NOrWlrdLP/l4MXNn3D0/OxHGs/icq//JzU4nXPxA7QAmoAWjcNDV0YjKXxUIQ+
-    p8wVTd5txLZkvlYFKsAOo8p5s2K2vK8GNBsL0TsWYWOrgjeo+x8GkT/6pD5XHiX7wezH
-    8/R7U+0fZsPQcAren5iirIEis1rNCUwtiBSJCXDGbniIWTBwjg7jJSJ+mhMD+fFBD79I
-    /goKrkkK1D50R5hvPaamQO+cT1QYgazjNt0hv9QInwkMMq9AtqDHY0xoxZqJXoHRGLSM
-    xEWJdyZmyBVo1t8mfZJUmSGF/+FlYxQVRvOoMtzb7TGBN3lHfBRfvIn6j+lBEGM5OCtS
-    t9GQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1704740263;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=J3px+OU0XxKXAITwpaExTX0RE765Q6Bda/x0EbY4UKA=;
-    b=NU+UWhid9y8QPwvk9aG3CRfovQpUzyXWG2KRktQ7mBHa+DI10tchcfylD141E1OzPI
-    9B4Jb1JIOGvboS0+dQEvocFwHgevTO1l80REiaGlWnBaLR9EEiXaZij7TmZHpLekr65u
-    C3/bNmgJ1Xd7bMX5Vl1tTKf3VK6OUvWse/wtk1KjiLOoKq5JDJc26efokX4xyB8lWk6x
-    yqv1F/dnlMcoBE8riSOBbfOBW3WmmBvGEOZ07uk9gUHFK9RStcoAjjh6AWqhodC+8w0w
-    jXAB4fE+L2Wzz57VD3DYgMVM5QLePOmB2PicZSme7/TU5ZVVK1JJ57Xr2JnqDI1RtVuK
-    CHUg==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1704740263;
-    s=strato-dkim-0002; d=hartkopp.net;
-    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=J3px+OU0XxKXAITwpaExTX0RE765Q6Bda/x0EbY4UKA=;
-    b=dsl1jFZoYwOPTFLdBvLOy2raOacaICxcxbKVjSRMTDks9DVuLaVPk48F8R/2GDp3aF
-    S8AaOxg6d8cJ1MtierySMjtClWs63HwooL2vs+bSqLtczgpRdedBjtUOmLfJEM3WGk0+
-    l0k7EX00xJvlGFNtFtn2IGk243PETZiFRP8bChrbwc9FO0leDGabltouXd2Zz0O86dnl
-    YDI2BFDAJD2Pv9yszHVV9zxjOJN7iWmRcOvKERdo1YJDA/zWwZgtTW/bEfS1UkoG7UUp
-    YQeNdIEKbL3g2EjRxrQPGS4N0unRA0ycN0vuOTL+lDLth6IZ9mHZHa4CXZt6aHHulpXa
-    SIVA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1704740263;
-    s=strato-dkim-0003; d=hartkopp.net;
-    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=J3px+OU0XxKXAITwpaExTX0RE765Q6Bda/x0EbY4UKA=;
-    b=L/p7ZIltLSCCwwiG30j1g+sDiJl6K2ptO3qqejk1iy3zWyAN3QKrg/CKb/hCeqWrok
-    1SjhE5MF95YYbJow1uCQ==
-X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1qCHSa1GLptZHusl129OHEdFr0USPYLtQZHsrzEmm3snIDlVAt06sCg=="
-Received: from [IPV6:2a00:6020:4a8e:5010:150f:f6b8:d0ef:d443]
-    by smtp.strato.de (RZmta 49.10.2 AUTH)
-    with ESMTPSA id K7b2c2008Ivh0WP
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Mon, 8 Jan 2024 19:57:43 +0100 (CET)
-Message-ID: <14e86ea6-e038-4702-957a-39af27bfc280@hartkopp.net>
-Date: Mon, 8 Jan 2024 19:57:36 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXhYikmK"
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-7cd42bc09adso606151241.2;
+        Mon, 08 Jan 2024 11:02:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704740550; x=1705345350; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=i6abKjHrQB2M3iEvyThch0ew2ujiuN7TwHMLgZSiAGw=;
+        b=KXhYikmKdUow0TClfQxzD0HP3VGvWEgLyHsURCbeJOCX2jSPV32MB2P5YVcacCOSAA
+         7cWkd10y/S18NcLNY9CC0LHnUpRfqpUb/Wi5+gxrU23QEDq6LJ3ByccqldrWKBY9dpZM
+         kO/x8Z6d33N8IWAliVHpcjtxWa+elvR88gZ6GDhmb9VHFVK+VLAxxPcaphGANaMWGHmM
+         s/HXOlnepuHWBh9y627d5FuBf4UIvRXuzVutE4QxWZD863GJIA7VIzazKAg1NCVULYQH
+         gu6tc3WB4HsqiogNcieeaKmwQU9uIgkaqMuKItcRA3l2U0kgqWbJEgXz4xRZ57ZhCAn6
+         fCtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704740550; x=1705345350;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=i6abKjHrQB2M3iEvyThch0ew2ujiuN7TwHMLgZSiAGw=;
+        b=imzeWw1o8D8ohIADFnkg1FF1K130RGwyKFbySHPMDNjhuQYrTtEBnFYelxuIfutj7Y
+         oFKCHmZbY6XwtjkBe06FXddZJu4/9n/kkDete+mG8g2VvKVXHaVPbLSZsaptcDJRQQmj
+         BJDHDUcZD2xZcfyPvIN2CU09TltKZuxFLqX4pgUUSmzcqcqxzCzzQwPp7p97Cxzmzgck
+         y6pHh2Mzuun6RaaEUpz7Bez9ggeUgib00fRmAbClytHHc4JeFIMXZs6DBy1zrdw3X2jI
+         4SshvMegvEoVgJG0IdeMKFjEq3qa6tvvpT5Fl6gidCbTz6zoTbGbcDzo8TLL1J2/PF3q
+         pvYA==
+X-Gm-Message-State: AOJu0Yy3pI747JkgogUrTCm0uKX9iSLXv69JqixJwoyCV2PK17aBF9v2
+	+PL/MwJPZl3DzWMWBWrvBziNESZeoJnBOJ7zo5U=
+X-Google-Smtp-Source: AGHT+IFZ1oroFQ9FrqNxPzcXlCCnla9b5liu5pflOjp0/Ol/BjcIbkeCD8sMeSlMGrotbUouwpW/5I/1St5MfZUJ1D0=
+X-Received: by 2002:a05:6122:589:b0:4b7:97b9:527d with SMTP id
+ i9-20020a056122058900b004b797b9527dmr1351897vko.26.1704740550525; Mon, 08 Jan
+ 2024 11:02:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] can: bcm: add recvmsg flags for own, local and remote
- traffic
-To: Nicolas Maier <nicolas.maier.dev@gmail.com>, mkl@pengutronix.de,
- linux-can@vger.kernel.org
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, corbet@lwn.net, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1cf96afe-6a27-4fd5-975e-96122f72df2e@gmail.com>
-Content-Language: en-US
-From: Oliver Hartkopp <socketcan@hartkopp.net>
-In-Reply-To: <1cf96afe-6a27-4fd5-975e-96122f72df2e@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240108150602.976232871@linuxfoundation.org>
+In-Reply-To: <20240108150602.976232871@linuxfoundation.org>
+From: Allen <allen.lkml@gmail.com>
+Date: Mon, 8 Jan 2024 11:02:19 -0800
+Message-ID: <CAOMdWSJei7UHccSGRcUD-A8uoKz-nGdpogVk5bOU6=3cHJ5s-w@mail.gmail.com>
+Subject: Re: [PATCH 6.6 000/124] 6.6.11-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Nicolas,
+> This is the start of the stable review cycle for the 6.6.11 release.
+> There are 124 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 10 Jan 2024 15:05:35 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.11-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-thanks for the patch!
+Compiled and booted on my x86_64 and ARM64 test systems. No errors or
+regressions.
 
-On 07.01.24 07:44, Nicolas Maier wrote:
+Tested-by: Allen Pais <apais@linux.microsoft.com>
 
-> @@ -642,7 +666,7 @@ static enum hrtimer_restart bcm_rx_thr_handler(struct hrtimer *hrtimer)
->   static void bcm_rx_handler(struct sk_buff *skb, void *data)
->   {
->   	struct bcm_op *op = (struct bcm_op *)data;
-> -	const struct canfd_frame *rxframe = (struct canfd_frame *)skb->data;
-> +	struct canfd_frame *rxframe = (struct canfd_frame *)skb->data;
->   	unsigned int i;
->   
->   	if (op->can_id != rxframe->can_id)
-> @@ -657,6 +681,13 @@ static void bcm_rx_handler(struct sk_buff *skb, void *data)
->   			return;
->   	}
->   
-> +	/* add flags to distinguish between own/local/remote CAN traffic */
-> +	if (skb->sk) {
-> +		rxframe->flags |= RX_LOCAL;
-> +		if (skb->sk == op->sk)
-> +			rxframe->flags |= RX_OWN;
-> +	}
-> +
->   	/* disable timeout */
->   	hrtimer_cancel(&op->timer);
->   
-
-No. You are writing to a read-only skbuff, which is not yet cloned or 
-copied. The read-only handling of the skb is done in the NET_RX_SOFTIRQ 
-triggering can_rcv_filter() and friends.
-
-See this note:
-
-https://elixir.bootlin.com/linux/v6.7/source/net/can/af_can.c#L430
-
-When you are also changing the CAN frames' content you need to 
-skb_copy() the provided skb, see:
-
-https://elixir.bootlin.com/linux/v6.7/source/net/can/gw.c#L504
-
-So if you want to pass these new flags to the user space you should 
-think of extending the parameter list of bcm_rx_update_and_send() and 
-bcm_rx_cmp_to_index().
-
-But in the first place I'm interested to know what the use-case for this 
-extension is.
-
-Best regards,
-Oliver
+Thanks.
