@@ -1,76 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B69B673
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 08:28:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JrUqbAZj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704702533; x=1736238533;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=prSPQ9PpceItCYT5PtbjU8y4+s795odvXDIRVVIUCcg=;
-  b=JrUqbAZj3I5oCL8ZwNwjsaQrkmci2QqGb25VBv8J9hg6/l24Fk/q5pb7
-   17/yGQHH/e2X/E5GZ0cACxh0TPIz2gaaxBveRLEz+RdZleDIEJw0NFeJi
-   cqPV9ZK86xYgFy9TOjNpfJVry7IY0z/EQvKSswbkNDldMuopIZD/N4oWy
-   uN98ypMe6lnbZg5BN1c0sZXvkte28TYJXAbr2vTc+PzjerTn1/x0Zz5yo
-   A3vYqwYrO+PYu31hR9Ok4rSfXm6H2h+P7qV4VuDA4wd+vD60wUaR7zYGz
-   6+8/GlXt4xCnwEq5PiBwDZQ2uITpaDysD8VSr0a2FcR22oC8TEQ/D6djq
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="377967276"
-X-IronPort-AV: E=Sophos;i="6.04,340,1695711600"; 
-   d="scan'208";a="377967276"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 00:28:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="924793054"
-X-IronPort-AV: E=Sophos;i="6.04,340,1695711600"; 
-   d="scan'208";a="924793054"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 00:28:49 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Kairui Song <ryncsn@gmail.com>
-Cc: linux-mm@kvack.org,  Kairui Song <kasong@tencent.com>,  Andrew Morton
- <akpm@linux-foundation.org>,  Chris Li <chrisl@kernel.org>,  Hugh Dickins
- <hughd@google.com>,  Johannes Weiner <hannes@cmpxchg.org>,  Matthew Wilcox
- <willy@infradead.org>,  Michal Hocko <mhocko@suse.com>,  Yosry Ahmed
- <yosryahmed@google.com>,  David Hildenbrand <david@redhat.com>,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/9] mm/swap: handle swapcache lookup in swapin_entry
-In-Reply-To: <20240102175338.62012-7-ryncsn@gmail.com> (Kairui Song's message
-	of "Wed, 3 Jan 2024 01:53:35 +0800")
-References: <20240102175338.62012-1-ryncsn@gmail.com>
-	<20240102175338.62012-7-ryncsn@gmail.com>
-Date: Mon, 08 Jan 2024 16:26:51 +0800
-Message-ID: <87a5pg9qno.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2603EBA26;
+	Mon,  8 Jan 2024 08:29:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A28AFC433C7;
+	Mon,  8 Jan 2024 08:29:45 +0000 (UTC)
+Message-ID: <545138cc-2cc1-4da0-9b26-7ebe4241c8df@xs4all.nl>
+Date: Mon, 8 Jan 2024 09:29:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3,04/21] v4l: add documentation for secure memory flag
+To: Jeffrey Kardatzke <jkardatzke@google.com>
+Cc: Yunfei Dong <yunfei.dong@mediatek.com>,
+ =?UTF-8?Q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>,
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+ Nathan Hebert <nhebert@chromium.org>, Chen-Yu Tsai <wenst@chromium.org>,
+ Yong Wu <yong.wu@mediatek.com>, Hsin-Yi Wang <hsinyi@chromium.org>,
+ Fritz Koenig <frkoenig@chromium.org>, Daniel Vetter <daniel@ffwll.ch>,
+ Steve Cho <stevecho@chromium.org>, Sumit Semwal <sumit.semwal@linaro.org>,
+ Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
+ "T . J . Mercier" <tjmercier@google.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org,
+ linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org,
+ Project_Global_Chrome_Upstream_Group@mediatek.com
+References: <20231206081538.17056-1-yunfei.dong@mediatek.com>
+ <20231206081538.17056-5-yunfei.dong@mediatek.com>
+ <ce2110bf-a16a-45ae-979b-7e41be2896cd@xs4all.nl>
+ <CA+ddPcM6nz0ufF5NXUq7E_vF6HnFKrEEag5iUDAknT6=hWTCNQ@mail.gmail.com>
+Content-Language: en-US, nl
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+In-Reply-To: <CA+ddPcM6nz0ufF5NXUq7E_vF6HnFKrEEag5iUDAknT6=hWTCNQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Kairui Song <ryncsn@gmail.com> writes:
+On 04/01/2024 21:05, Jeffrey Kardatzke wrote:
+> On Mon, Dec 11, 2023 at 3:05 AM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
+>>
+>> On 06/12/2023 09:15, Yunfei Dong wrote:
+>>> From: Jeffrey Kardatzke <jkardatzke@google.com>
+>>>
+>>> Adds documentation for V4L2_MEMORY_FLAG_SECURE.
+>>>
+>>> Signed-off-by: Jeffrey Kardatzke <jkardatzke@google.com>
+>>> Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
+>>> ---
+>>>  Documentation/userspace-api/media/v4l/buffer.rst | 8 +++++++-
+>>>  1 file changed, 7 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/userspace-api/media/v4l/buffer.rst b/Documentation/userspace-api/media/v4l/buffer.rst
+>>> index 52bbee81c080..a5a7d1c72d53 100644
+>>> --- a/Documentation/userspace-api/media/v4l/buffer.rst
+>>> +++ b/Documentation/userspace-api/media/v4l/buffer.rst
+>>> @@ -696,7 +696,7 @@ enum v4l2_memory
+>>>
+>>>  .. _memory-flags:
+>>>
+>>> -Memory Consistency Flags
+>>> +Memory Flags
+>>>  ------------------------
+>>>
+>>>  .. raw:: latex
+>>> @@ -728,6 +728,12 @@ Memory Consistency Flags
+>>>       only if the buffer is used for :ref:`memory mapping <mmap>` I/O and the
+>>>       queue reports the :ref:`V4L2_BUF_CAP_SUPPORTS_MMAP_CACHE_HINTS
+>>>       <V4L2-BUF-CAP-SUPPORTS-MMAP-CACHE-HINTS>` capability.
+>>> +    * .. _`V4L2-MEMORY-FLAG-SECURE`:
+>>> +
+>>> +      - ``V4L2_MEMORY_FLAG_SECURE``
+>>> +      - 0x00000002
+>>> +      - DMA bufs passed into the queue will be validated to ensure they were
+>>> +     allocated from a secure dma-heap.
+>>
+>> Hmm, that needs a bit more work. How about:
+>>
+>> - The queued buffers are expected to be in secure memory. If not, an error will be
+>>   returned. This flag can only be used with ``V4L2_MEMORY_DMABUF``. Typically
+>>   secure buffers are allocated using a secure dma-heap. This flag can only be
+>>   specified if the ``V4L2_BUF_CAP_SUPPORTS_SECURE_MEM`` is set.
+>>
+> 
+> Thanks Hans. Yunfei, can you integrate this change into the patch please?
+> 
+>> In addition, the title of this table is currently "Memory Consistency Flags": that
+>> should be renamed to "Memory Flags".
+> 
+> Hans, the patch is already renaming the table as you suggested. :)
+> (unless there's some other spot I'm missing)
 
-> From: Kairui Song <kasong@tencent.com>
->
-> Since all callers of swapin_entry need to check the swap cache first, we
-> can merge this common routine into swapin_entry, so it can be shared and
-> optimized later.
->
-> Also introduce a enum to better represent possible swap cache usage, and
-> add some comments about it, make the usage of swap cache easier to
-> understand.
+Sorry for the noise, I missed that change.
 
-I don't find any benefit to do this.  The code line number isn't
-reduced.  The concept of swap cache isn't hided either.
+Regards,
 
---
-Best Regards,
-Huang, Ying
+	Hans
+
+>>
+>> Regards,
+>>
+>>         Hans
+>>
+>>>
+>>>  .. raw:: latex
+>>>
+>>
 
