@@ -1,111 +1,147 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB6454F9C;
-	Mon,  8 Jan 2024 18:23:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A21A55778
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 18:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pqpNI8Rj"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 408IHepa024137;
-	Mon, 8 Jan 2024 18:23:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=qcppdkim1; bh=uHY3fQLsNHWDaKV+dXru0
-	SBvr/s3dbPl29fFLxwGtjg=; b=pqpNI8Rjihhn5C/FPeVII7fBTbYbpwp9BkbEf
-	B1v9CFO1Xl5uLWoR9Ulo7ijKPYf75Xa8OOBGMFdROFV5J3GBVG82JkJdmIpJi3rL
-	KPjlELd95b5sJBojSZp0ClrQYEfdl8U+tfeXSwEsKo4/Wd4SYowsEkuehmILglCU
-	Wo5I6G9TV5GGIwTuSD8aK74Q4UmeW4d1NGuX0eAKEdfbmWGq6UrqFoyCenTQq9zE
-	+ejwKDOK9Ld6MAyNsWSQ+9WuoJyz1bw2aEz0ji74Qku0Dz6PoFlAlxae5/5gk8bH
-	jRgGeUi3tfMcwX3uCwCHhZx1Ug86Bc6fkzyLvFsBJWqTMf45g==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vgfwjry3u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jan 2024 18:23:11 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 408INApm012620
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 8 Jan 2024 18:23:10 GMT
-Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 8 Jan 2024 10:23:09 -0800
-Date: Mon, 8 Jan 2024 10:23:08 -0800
-From: Bjorn Andersson <quic_bjorande@quicinc.com>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring
-	<robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Taniya Das <quic_tdas@quicinc.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        Catalin Marinas
-	<catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Dmitry
- Baryshkov" <dmitry.baryshkov@linaro.org>
-Subject: Re: [PATCH v2 3/8] clk: qcom: gpucc-sc8280xp: Add external supply
- for GX gdsc
-Message-ID: <20240108182308.GL1315173@hu-bjorande-lv.qualcomm.com>
-References: <20231220-sa8295p-gpu-v2-0-4763246b72c0@quicinc.com>
- <20231220-sa8295p-gpu-v2-3-4763246b72c0@quicinc.com>
- <0d20be70-7db2-4d8b-aecb-5256a42ba62e@linaro.org>
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="A/pEiq0N"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 5E9A4240028
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 19:23:25 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1704738205; bh=fwt/GANjNvWWtupqWsOG0MztgpT1y2UeL0pOsAIRuPg=;
+	h=MIME-Version:Content-Transfer-Encoding:Date:From:To:Cc:Subject:
+	 Message-ID:From;
+	b=A/pEiq0NY9RP7r3bCBdSIk7irRHQ7Gr3qKUQ4103zHQ+p4HvwshIxw84GG0tY2vVq
+	 bcCTmvSerBeDSl6t402vFLikEyLPzDxIcem1wllgvDlK1LQGOnt44zOTYjlffuEK4a
+	 7fAOIKEo/XO+dRK4Q4tiSK231fdTEY/Gu/GFM4IkV32oBOjCcgtuhKYXL1sljpErWH
+	 bQ6lM4BUN4bnzq7ydIIF+n8HHsOs3XzZsGR1tyekrErKGoIzkM9G2txrQZQ7+V5IUZ
+	 bwImo7b7wrOKlVHzgpd6nTtbKrS8IngZ0jYBo5AbYWCB5GutT9FgL0tb8iV+mwkeg3
+	 AXRMGYk1V/w4A==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4T82Vy2MWRz6twD;
+	Mon,  8 Jan 2024 19:23:21 +0100 (CET)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <0d20be70-7db2-4d8b-aecb-5256a42ba62e@linaro.org>
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: AWHDRG9Pdm-ZMgbxBVL6ZrxrNndmMuFG
-X-Proofpoint-GUID: AWHDRG9Pdm-ZMgbxBVL6ZrxrNndmMuFG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- impostorscore=0 lowpriorityscore=0 phishscore=0 mlxlogscore=778
- suspectscore=0 priorityscore=1501 mlxscore=0 malwarescore=0 adultscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401080154
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date: Mon, 08 Jan 2024 18:23:21 +0000
+From: Yueh-Shun Li <shamrocklee@posteo.net>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Hu Haowen <src.res.211@gmail.com>, Alex Shi <alexs@kernel.org>, Yanteng
+ Si <siyanteng@loongson.cn>, Randy Dunlap <rdunlap@infradead.org>,
+ workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] coding-style: show how reusing macros prevents
+ naming collisions
+In-Reply-To: <871qaryel9.fsf@meer.lwn.net>
+References: <107b6b5e-ca14-4b2b-ba2e-38ecd74c0ad3@infradead.org>
+ <20240108160746.177421-1-shamrocklee@posteo.net>
+ <20240108160746.177421-3-shamrocklee@posteo.net>
+ <871qaryel9.fsf@meer.lwn.net>
+Message-ID: <eecb9fa3e0cd84fce0b2f9e5449888a0@posteo.net>
 
-On Wed, Dec 27, 2023 at 02:07:52AM +0100, Konrad Dybcio wrote:
-> On 22.12.2023 05:39, Bjorn Andersson wrote:
-> > On SA8295P and SA8540P the GFX rail is powered by a dedicated external
-> > regulator, instead of the rpmh-controlled "gfx.lvl".
-> > 
-> > Define the "vdd-gfx" as the supply regulator for the GDSC, to cause the
-> > gdsc logic to look for, and control, this external power supply.
-> > 
-> > Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
-> > ---
-> Worth noting the regulator framework will create a virtual supply
-> for the normal 8280
+Dear Mr. Corbet,
+
+Thank you very much for your feed back.
+
+On 2024-01-09 00:28, Jonathan Corbet wrote:
+> Yueh-Shun Li <shamrocklee@posteo.net> writes:
+> 
+>> In section "18) Don't re-invent the kernel macros" in "Linux kernel
+>> coding style":
+>> 
+>> Show how reusing macros from shared headers prevents naming collisions
+>> using "stringify", the one of the most widely reinvented macro, as an
+>> example.
+>> 
+>> This patch aims to provide a stronger reason to reuse shared macros,
+>> by showing the risk of improvised macro variants.
+>> 
+>> Signed-off-by: Yueh-Shun Li <shamrocklee@posteo.net>
+>> ---
+>>  Documentation/process/coding-style.rst | 22 ++++++++++++++++++++++
+>>  1 file changed, 22 insertions(+)
+>> 
+>> diff --git a/Documentation/process/coding-style.rst 
+>> b/Documentation/process/coding-style.rst
+>> index 2504cb00a961..1e79aba4b346 100644
+>> --- a/Documentation/process/coding-style.rst
+>> +++ b/Documentation/process/coding-style.rst
+>> @@ -1070,6 +1070,28 @@ Similarly, if you need to calculate the size of 
+>> some structure member, use
+>>  There are also ``min()`` and ``max()`` macros in 
+>> ``include/linux/minmax.h``
+>>  that do strict type checking if you need them.
+>> 
+>> +Using existing macros provided by the shared headers also prevents 
+>> naming
+>> +collisions. For example, if one developer define in ``foo.h``
+>> +
+>> +.. code-block:: c
+>> +
+>> +	#define __stringify(x) __stringify_1(x)
+>> +	#define __stringify_1(x) #x
+>> +
+>> +and another define in ``bar.h``
+>> +
+>> +.. code-block:: c
+>> +
+>> +	#define stringify(x) __stringify(x)
+>> +	#define __stringify(x) #x
+>> +
+>> +When both headers are ``#include``-d into the same file, the 
+>> facilities provided
+>> +by ``foo.h`` might be broken by ``bar.h``.
+>> +
+>> +If both ``foo.h`` and ``bar.h``  use the macro ``__stringify()`` 
+>> provided by
+>> +``include/linux/stringify.h``, they wouldn't have stepped onto each 
+>> other's
+>> +toes.
+>> +
+> 
+> So everything we add to our documentation has a cost in terms of reader
+> attention.  We ask people to read through a lot of material now, and
+> should only increase that ask for good reason.
+> 
+> With that context, I have to wonder whether we really need to tell our
+> readers, who are supposed to be capable developers, that reuse can help
+> to avoid name collisions?
 > 
 
-You're right. No functional harm, but that's not very nice.
+The motivation comes from existing inconsistency of the "__stringify()" 
+macro
+definition between e.g. "samples/bpf/tracex5.bpf.c" and other files.
 
-I don't think we have any benefit from having a dummy supply, if the DT
-author failed to provide a proper one, so it seems reasonable to switch
-gdsc to devm_regulator_get_optional().
+I agree that increasing the length of the documentation without 
+substantial
+benefits would not be helpful for the readers, and doubling the length 
+of a
+section is too much for its purpose.
 
-Regards,
-Bjorn
+Should I shorten it into one sentence, like
 
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+```
+On the other hand, locally-defined variants, such as ``#define 
+__stringify(x) #x``,
+could lead to naming collisions that break otherwise functioning 
+facilities.
+```
+
+or just omit it in the next version of patches?
+
+> Thanks,
 > 
-> Konrad
+> jon
+
+Thank you for your time and guidance.
+
+Shamrock
