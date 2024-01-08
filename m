@@ -1,79 +1,116 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB71537FD
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 16:15:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2CC52F61
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 16:16:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lEDsrMlU"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-680d4584a81so16710746d6.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 08:15:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704730554; x=1705335354; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=2TgBDkQz+4qqwrUlFCPQLEvy6TMuXVBnRueM2UoZXNw=;
-        b=lEDsrMlUqJcjBA0GPsTf4Lsk5MSsaTDnclScpEaapUC+RcMYmc8b22E0rlWZJaZ/NX
-         cz9TrqwxmuCAqD4aL7HXamvftE925SxLcW7cMmNlhG58Br1jkH1odpBEqrWNn0u5YMmA
-         SZL7YA7Wp4EdV1e5bQlOFMnE+NxTl3akFTxFk23nPTEED4w2y5+jDMnZdatUE1+c9fiy
-         R4/n6ptkL4U3mE8XCsMBaEiTZkEFj1RBYYG+U3YNBbQI93FnbJ5P4r8IA0I7kCdb9h4O
-         gpg4pTBHquXpbvepKASbHWEGYUxeEyTVAVfSmefMeXSs7qsL8IsmMMgqgDD621IhdBO+
-         uJDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704730554; x=1705335354;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2TgBDkQz+4qqwrUlFCPQLEvy6TMuXVBnRueM2UoZXNw=;
-        b=mvb1S8vIPj8KNugiFnBEoX4hcNf3EbyRB4qudK3LrFgI3svqbuojGbn84RjT0Toq5W
-         vdbyMSIjAJStKhi5Mhnl9r8GJJcw4QC1qfD6BDKBlujUgRIDoeTAYN0V1zQNF/UDJsBT
-         EbkC2aCEyoGlH68S2kYDBUaE2CUFj9yo+shYU89j802UeBDJhLKxOXuLh0ppTn+hTtLa
-         vx7vXBdgsZFzXTbcd0fqPkCyhVO79kAEUdj/COzalXu2IuvkaGUAq9dGAyStMuzOcf/e
-         AiANKr3MCM65iqVhdJFNc1TwGDrBFMXtMFTIEVgO0uhWtWs4Wp4kMBzXwcpguKvsMN0l
-         Df9A==
-X-Gm-Message-State: AOJu0Yx6Mp/jOUnQGC7vqaMIt7/9h/KEhKqXJzcE37Li7Qw8pDWeAS3Z
-	vjgJ9exvL7rhaoa+b/YIJ/0CF7E/vFvF1w39Bgjv6UyN1vLn+Q==
-X-Google-Smtp-Source: AGHT+IFxmRb3UlUaz+5aRpILb3jdoFFWR4KwyrDk0NnaBENQjhicBr2IqyEiJ7fJsWqZbqxFwWANocDQ6lrKRKI0Z1A=
-X-Received: by 2002:a0c:fdea:0:b0:681:933:c8cb with SMTP id
- m10-20020a0cfdea000000b006810933c8cbmr1443382qvu.63.1704730554613; Mon, 08
- Jan 2024 08:15:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="oAR6Gwaj"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 87889240101
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 17:16:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1704730564; bh=X3VtHd5GjlJi8/Twrh4yAaOYDgw5xWt6nucsz68JnqU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:
+	 Content-Transfer-Encoding:From;
+	b=oAR6GwajS3y8dsWT0cTJzZ++cMYORHI0OiZFlheCvbx9Bz2WOu21/mJCYSGtxDwz4
+	 h6k3yv1V0fWP2Fvp2A3WLR/Mskuz806PGtjJxfdhQO5XwjPOaZMtPIQcYnTrQfXZP1
+	 /I1E6cdiqypmkVIDZb60H7W/6n1eyBNDcQTg9L447vqXWyPc7Tg8xYGYs+7UE8b/Gf
+	 GsLpP9ijgW8lf4vSUdF6tG8puOM3ifhROSGQj823ibDvoI0VR3NLUIn1XOZCeyPnmc
+	 rQy51/3RE6opGSEbI/kqmwQzt7vt6cl2TGREoSDpibLb9smIP5PihqRP3GLRCT5AJU
+	 pflgMcO7yXtbw==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4T7zh03SCsz9rxB;
+	Mon,  8 Jan 2024 17:16:00 +0100 (CET)
+From: Yueh-Shun Li <shamrocklee@posteo.net>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Yueh-Shun Li <shamrocklee@posteo.net>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Hu Haowen <src.res.211@gmail.com>,
+	Alex Shi <alexs@kernel.org>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	workflows@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/4] coding-style: recommend split headers instead of kernel.h
+Date: Mon,  8 Jan 2024 16:03:22 +0000
+Message-ID: <20240108160746.177421-2-shamrocklee@posteo.net>
+In-Reply-To: <20240108160746.177421-1-shamrocklee@posteo.net>
+References: <107b6b5e-ca14-4b2b-ba2e-38ecd74c0ad3@infradead.org>
+ <20240108160746.177421-1-shamrocklee@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231228125805.661725-1-tudor.ambarus@linaro.org> <20231228125805.661725-13-tudor.ambarus@linaro.org>
-In-Reply-To: <20231228125805.661725-13-tudor.ambarus@linaro.org>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Mon, 8 Jan 2024 16:15:43 +0000
-Message-ID: <CADrjBPpUvi+f87UrpeEYaQ0zJ3cvp_2MJAvMYiZ5hNaew-N_7A@mail.gmail.com>
-Subject: Re: [PATCH v2 12/12] arm64: dts: exynos: gs101: enable eeprom on gs101-oriole
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	mturquette@baylibre.com, sboyd@kernel.org, conor+dt@kernel.org, 
-	andi.shyti@kernel.org, alim.akhtar@samsung.com, gregkh@linuxfoundation.org, 
-	jirislaby@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com, 
-	cw00.choi@samsung.com, arnd@arndb.de, semen.protsenko@linaro.org, 
-	andre.draszik@linaro.org, saravanak@google.com, willmcvicker@google.com, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-serial@vger.kernel.org, kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Tudor,
+In section "18) Don't re-invent the kernel macros" in "Linux kernel
+coding style":
 
-On Thu, 28 Dec 2023 at 12:58, Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
->
-> Enable the eeprom found on the battery connector.
->
-> The selection of the USI protocol is done in the board dts file because
-> the USI CONFIG register comes with a 0x0 reset value, meaning that USI8
-> does not have a default protocol (I2C, SPI, UART) at reset.
->
-> Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+Recommend reusing macros from headers inside include/linux, instead of
+the obsolete include/linux/kernel.h
 
-Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
+Change wording
+
+- "The header file contains macros" -> "the header files provide macros"
+  Some macros are intended to use inside the header file only, or are
+  considered the implementation detail of other facilities. Developers
+  are expected to determine if a macro is meant to be used outside the
+  header file.
+
+Signed-off-by: Yueh-Shun Li <shamrocklee@posteo.net>
+---
+ Documentation/process/coding-style.rst | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
+
+diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
+index 6db37a46d305..2504cb00a961 100644
+--- a/Documentation/process/coding-style.rst
++++ b/Documentation/process/coding-style.rst
+@@ -1048,27 +1048,30 @@ readable alternative if the call-sites have naked true/false constants.
+ Otherwise limited use of bool in structures and arguments can improve
+ readability.
+ 
++
+ 18) Don't re-invent the kernel macros
+ -------------------------------------
+ 
+-The header file include/linux/kernel.h contains a number of macros that
+-you should use, rather than explicitly coding some variant of them yourself.
++The header files in the ``include/linux`` directory provide a number of macros
++that you should use, rather than explicitly coding some variant of them
++yourself.
++
+ For example, if you need to calculate the length of an array, take advantage
+-of the macro
++of the macro ``ARRAY_SIZE()`` from ``include/linux/array_size.h`` by
+ 
+ .. code-block:: c
+ 
+-	#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
++	#include <linux/array_size.h>
++	ARRAY_SIZE(x) // The size of array x
+ 
+ Similarly, if you need to calculate the size of some structure member, use
++``sizeof_field()`` from ``include/linux/stddef.h``.
+ 
+-.. code-block:: c
+-
+-	#define sizeof_field(t, f) (sizeof(((t*)0)->f))
++There are also ``min()`` and ``max()`` macros in ``include/linux/minmax.h``
++that do strict type checking if you need them.
+ 
+-There are also min() and max() macros that do strict type checking if you
+-need them.  Feel free to peruse that header file to see what else is already
+-defined that you shouldn't reproduce in your code.
++Feel free to search across and peruse the header files to see what else is
++already defined that you shouldn't reproduce in your code.
+ 
+ 
+ 19) Editor modelines and other cruft
+-- 
+2.42.0
+
