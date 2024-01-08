@@ -1,153 +1,130 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01rlnn2079.outbound.protection.outlook.com [40.95.110.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D9745BEF;
-	Mon,  8 Jan 2024 19:28:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from [192.168.1.105] (31.173.87.204) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Mon, 8 Jan
- 2024 22:28:09 +0300
-Subject: Re: [PATCH net-next v3 13/19] net: ravb: Set config mode in ndo_open
- and reset mode in ndo_close
-To: Claudiu <claudiu.beznea@tuxon.dev>, <davem@davemloft.net>,
-	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<richardcochran@gmail.com>, <p.zabel@pengutronix.de>,
-	<yoshihiro.shimoda.uh@renesas.com>, <wsa+renesas@sang-engineering.com>
-CC: <netdev@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <geert+renesas@glider.be>, Claudiu Beznea
-	<claudiu.beznea.uj@bp.renesas.com>
-References: <20240105082339.1468817-1-claudiu.beznea.uj@bp.renesas.com>
- <20240105082339.1468817-14-claudiu.beznea.uj@bp.renesas.com>
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <feb1c87e-a84d-4e61-3e58-f61d5402170d@omp.ru>
-Date: Mon, 8 Jan 2024 22:28:08 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157FD45C0D;
+	Mon,  8 Jan 2024 19:29:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=taln60.nuvoton.co.il
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b="JQbipxoY"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Qw6bBZNRZzilX0z6YnGHzMXt6MG0tebgGVdwsU/piOWDg7HhQzxLaruLxqQQs+2uOK2rw6X7TFTZHw30rmynai2pjapsKbfZv43FnxtaHlZE8uT+SVgyua1h4C0sboooVgNI1Ti5VNaG9b2iD1Kh3dMozis2AAwHJU+mAsbO3SZiglU/xNUmoFYFmymSOdIAIiGCucr5ETWppbRG1lPH+KoMOgXJNPzj/cmDKATanhaYfDcSEUYLjZn2P/LpAxnp6LAEmEWGUy2mzFQs46FQneakR/6/hxp2QJmEhtzv7qpagW6kNp2LRNTX2wahsnCn/5rngQTNgL/1ljz3CVGB0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=v2D468flie3JNhJ+N5NYFfoJqr/veU8Xh/sDR5huZgc=;
+ b=a/QkMYRDym6RP/+CxQO9Gm8wrTINQr3C4T0+RZvLao3flxcqFlmTFKJOIYL0PQt33fxpontcbDuNJL8Haw3OxWVT7d/mEDk/YBIXsB6fwYsJUtbcijTGud5MsggH5woqDkh6eDGFHVv1MqoHZYQ+h98Api8WHPWAtpxEJqM+IhyXRKeUN9jfooEuy5gBmzYs4IMwqXHHT8CDnANBuv3wrZfWIkDlo+I0mONO0fGUOKLomSqWlf1PTl87u10hmAEgfDzP0li6yFNPxHfpmBF5y3jTvMlDyymOdTK/RtME5Ttn12TXkr26UuVAw6yr01uheHVNe7ab4FYzyDvAPy7fbg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 211.75.126.7) smtp.rcpttodomain=baylibre.com
+ smtp.mailfrom=taln60.nuvoton.co.il; dmarc=fail (p=none sp=quarantine pct=100)
+ action=none header.from=gmail.com; dkim=none (message not signed); arc=none
+ (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v2D468flie3JNhJ+N5NYFfoJqr/veU8Xh/sDR5huZgc=;
+ b=JQbipxoYbAo+FY9POlT2KWZc0MwCO8reoFohLhwDev3Ww9KeEH/Mz6cbpGElQf/peIvHQGuanUuiOPMm/ByJv0JFqAUwl4OyDLAa4Hf/uJfAHXSX8/uJ9M7DvdLimpwmsmGYLe/UkrvzE6Ld61RlfTb+t/2Tv319o1cP5KLoxrE=
+Received: from PS2PR02CA0082.apcprd02.prod.outlook.com (2603:1096:300:5c::22)
+ by SEYPR03MB7681.apcprd03.prod.outlook.com (2603:1096:101:13d::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.21; Mon, 8 Jan
+ 2024 13:54:35 +0000
+Received: from HK2PEPF00006FB5.apcprd02.prod.outlook.com
+ (2603:1096:300:5c:cafe::b7) by PS2PR02CA0082.outlook.office365.com
+ (2603:1096:300:5c::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.21 via Frontend
+ Transport; Mon, 8 Jan 2024 13:54:35 +0000
+X-MS-Exchange-Authentication-Results: spf=none (sender IP is 211.75.126.7)
+ smtp.mailfrom=taln60.nuvoton.co.il; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=gmail.com;
+Received-SPF: None (protection.outlook.com: taln60.nuvoton.co.il does not
+ designate permitted sender hosts)
+Received: from NTHCCAS01.nuvoton.com (211.75.126.7) by
+ HK2PEPF00006FB5.mail.protection.outlook.com (10.167.8.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7181.12 via Frontend Transport; Mon, 8 Jan 2024 13:54:34 +0000
+Received: from NTHCCAS01.nuvoton.com (10.1.8.28) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 8 Jan
+ 2024 21:54:25 +0800
+Received: from taln58.nuvoton.co.il (10.191.1.178) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
+ Transport; Mon, 8 Jan 2024 21:54:25 +0800
+Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
+	by taln58.nuvoton.co.il (Postfix) with ESMTP id 97D175F64B;
+	Mon,  8 Jan 2024 15:54:23 +0200 (IST)
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+	id 97224DC0047; Mon,  8 Jan 2024 15:54:23 +0200 (IST)
+From: Tomer Maimon <tmaimon77@gmail.com>
+To: <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <tali.perry1@gmail.com>,
+	<joel@jms.id.au>, <venture@google.com>, <yuenn@google.com>,
+	<benjaminfair@google.com>
+CC: <openbmc@lists.ozlabs.org>, <linux-clk@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>, Tomer Maimon
+	<tmaimon77@gmail.com>
+Subject: [PATCH v22 5/8] arm64: dts: nuvoton: npcm8xx: add clock reset syscon node
+Date: Mon, 8 Jan 2024 15:54:18 +0200
+Message-ID: <20240108135421.684263-6-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240108135421.684263-1-tmaimon77@gmail.com>
+References: <20240108135421.684263-1-tmaimon77@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240105082339.1468817-14-claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 01/08/2024 19:15:22
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 59
-X-KSE-AntiSpam-Info: Lua profiles 182481 [Jan 08 2024]
-X-KSE-AntiSpam-Info: Version: 6.1.0.3
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {relay has no DNS name}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 31.173.87.204 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 31.173.87.204 in (user)
- dbl.spamhaus.org}
-X-KSE-AntiSpam-Info:
-	31.173.87.204:7.1.2;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1
-X-KSE-AntiSpam-Info: ApMailHostAddress: 31.173.87.204
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 59
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 01/08/2024 19:19:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 1/8/2024 5:12:00 PM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NotSetDelaration: True
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HK2PEPF00006FB5:EE_|SEYPR03MB7681:EE_
+X-MS-Office365-Filtering-Correlation-Id: 84125afc-d926-4982-9c15-08dc105158e2
+X-MS-Exchange-SenderADCheck: 2
+X-MS-Exchange-AntiSpam-Relay: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	30A8GdJ4Y3sRrJQp8gWd8ptywWyvFxh6Y+C2Y3t4XrIGEwIf/ZfTlODxPIk0x6u9AR8/aAf2XxzmBmh4y/Lg8Mx+cM1+rMO00i9sH5BxiVnWMXLdu/wDzmQhM2axWVxhgD+lCnstKhPuz45nyEQ4RwYEYme6+IqnOUkkTN3RGO3QQ4u7hsWsswzubgpB3cWhvF8Nf059ty/uAyH4grJaw477S2f6NXQcPe3BN2eAy8b4FugySAYMKM20CQX03ZGxr2NC5/NdBM5cYtxQey0xRE6/sRzHKDYycdSo0Sa7btrqglu8j5TmlXOXE46spAnL279xKOfBbgZZFUGyLQzqvvDDEsOgCyY7j9UA6xyOw4zV/WOq2ATI/lHOLeIGv4IZTt2U+XqH0UIV3MfealxTnniPYX3rthoImeJEeNEmv9s6YWh6DwRnXHBS5ChfrKwGqQPu23aWVvnvhTKQi9/W+eXbcbvUNKKK8eLhMxxwL4QzjxasYV7uSX/ppsVKzOVMUtOxAT7ihtKVJ+a/Nam6yYQPRpa5G0kjEVm08spYPWIkby2IeJvj1Ibggypfb+ebD1Y0321C7UDvrk/nGkn14RWEcAgFF2lW82oTBKDU5ckpApZ48ZVBhELIe0qHJI5i4Dl/S9FmOyPcz+7WNYaziIaHjiA3vurpg07FW6XNrFMVjjKfJmDbYni8qUgiCo1TpdcRZvc7kQB42uGOXXg18cDmCcB8JGUFXN5VEU/8WKxJZBssv0V509p8Drjm+Z0DBH0tBoHVqhoe6lAsboi4qpGIcHKJyLPZKEnzemlLdBq5i0hA7FPlogGL83xk0tkbtl6malWQ4GmGuQ34sIdEZ7cdWkMuEhBiph5llwlwFCh3Kf61kkjyMbRo4wKudwlx
+X-Forefront-Antispam-Report:
+	CIP:211.75.126.7;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:NTHCCAS01.nuvoton.com;PTR:211-75-126-7.hinet-ip.hinet.net;CAT:NONE;SFS:(13230031)(4636009)(346002)(376002)(396003)(136003)(39860400002)(230922051799003)(61400799012)(451199024)(82310400011)(48200799006)(64100799003)(46966006)(40470700004)(47076005)(35950700001)(5660300002)(2906002)(4744005)(7416002)(83170400001)(36756003)(41300700001)(81166007)(356005)(55446002)(82740400003)(40460700003)(4326008)(2616005)(6666004)(110136005)(316002)(54906003)(42186006)(498600001)(76482006)(70206006)(8936002)(8676002)(336012)(6266002)(70586007)(40480700001)(73392003)(42882007)(83380400001)(82202003)(26005)(1076003)(45356006)(32563001)(35450700002);DIR:OUT;SFP:1022;
+X-OriginatorOrg: nuvoton.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2024 13:54:34.9096
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 84125afc-d926-4982-9c15-08dc105158e2
+X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a3f24931-d403-4b4a-94f1-7d83ac638e07;Ip=[211.75.126.7];Helo=[NTHCCAS01.nuvoton.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	HK2PEPF00006FB5.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR03MB7681
 
-On 1/5/24 11:23 AM, Claudiu wrote:
+Add clock reset syscon node to handle reset and clock registers
+controllers.
 
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> 
-> As some IP variants switch to reset mode (and thus registers content is
-> lost) when setting clocks (due to module standby functionality) to be able
-> to implement runtime PM and save more power, set the IP's operating mode to
-> reset at the end of the probe. Along with it, in the ndo_open API the IP
-> will be switched to configuration, then operation mode. In the ndo_close
-> API, the IP will be switched back to reset mode. This allows implementing
-> runtime PM and, along with it, save more power when the IP is not used.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
-> 
-> Changes in v3:
-> - fixed typos in patch description
-> - in ravb_probe() switch the hardware to reset mode just after phy
->   initialization
-> 
-> Changes in v2:
-> - none; this patch is new
-> 
-> 
->  drivers/net/ethernet/renesas/ravb_main.c | 78 ++++++++++++++----------
->  1 file changed, 46 insertions(+), 32 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-> index 1cc1ecd8d6a8..434b4777de5e 100644
-> --- a/drivers/net/ethernet/renesas/ravb_main.c
-> +++ b/drivers/net/ethernet/renesas/ravb_main.c
-[...]
-> @@ -2746,11 +2755,6 @@ static int ravb_probe(struct platform_device *pdev)
->  	ndev->netdev_ops = &ravb_netdev_ops;
->  	ndev->ethtool_ops = &ravb_ethtool_ops;
->  
-> -	/* Set AVB config mode */
-> -	error = ravb_set_config_mode(ndev);
-> -	if (error)
-> -		goto out_rpm_put;
-> -
->  	error = ravb_compute_gti(ndev);
->  	if (error)
->  		goto out_rpm_put;
-> @@ -2785,13 +2789,23 @@ static int ravb_probe(struct platform_device *pdev)
->  		eth_hw_addr_random(ndev);
->  	}
->  
-> +	/* Set config mode as this is needed for PHY initialization. */
-> +	error = ravb_set_opmode(ndev, CCC_OPC_CONFIG);
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-   Hm... don't you need this at laest before calling ravb_read_mac_address()
-just above?
+diff --git a/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi b/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
+index 9c4df91031e7..7d5956e2c9f3 100644
+--- a/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
++++ b/arch/arm64/boot/dts/nuvoton/nuvoton-common-npcm8xx.dtsi
+@@ -22,6 +22,11 @@ gcr: system-controller@f0800000 {
+ 			reg = <0x0 0xf0800000 0x0 0x1000>;
+ 		};
+ 
++		clk_rst: syscon@f0801000 {
++			compatible = "nuvoton,npcm845-clk-rst", "syscon", "simple-mfd";
++			reg = <0x0 0xf0801000 0x0 0xC4>;
++		};
++
+ 		gic: interrupt-controller@dfff9000 {
+ 			compatible = "arm,gic-400";
+ 			reg = <0x0 0xdfff9000 0x0 0x1000>,
+-- 
+2.34.1
 
-> +	if (error)
-> +		goto out_rpm_put;
-> +
->  	/* MDIO bus init */
->  	error = ravb_mdio_init(priv);
->  	if (error) {
->  		dev_err(&pdev->dev, "failed to initialize MDIO\n");
-> -		goto out_dma_free;
-> +		goto out_reset_mode;
->  	}
->  
-> +	/* Undo previous switch to config opmode. */
-> +	error = ravb_set_opmode(ndev, CCC_OPC_RESET);
-> +	if (error)
-> +		goto out_mdio_release;
-> +
->  	netif_napi_add(ndev, &priv->napi[RAVB_BE], ravb_poll);
->  	if (info->nc_queues)
->  		netif_napi_add(ndev, &priv->napi[RAVB_NC], ravb_poll);
-[...]
-
-MBR, Sergey
