@@ -1,73 +1,67 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out203-205-221-149.mail.qq.com (out203-205-221-149.mail.qq.com [203.205.221.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A286B4175C
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 12:52:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57AC240BF2;
+	Mon,  8 Jan 2024 12:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ftxwX6d8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704718353;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=fD1GykFikbXTFKh3tVS8W6aZYCFQw2YGT7ld2MYyAJI=;
-	b=ftxwX6d8po3E6L/dzICEM9btBB3uO7uqEP9pOeK0ruDJUgoSxTAgJ0+k8GVPD2vaLWDHEa
-	FJR0t+7x0t7EwTFJHZmGoGXsyKZFQkVVJaFaJIqvKLaF3ifVgWfhQo/hWJnUeLLc9bceMD
-	IdTbDf+Cb7Wl4/rhObM8fFev+EyP/9c=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-329-OX0Np3ZbPcOLiTJaY-vt2Q-1; Mon, 08 Jan 2024 07:52:30 -0500
-X-MC-Unique: OX0Np3ZbPcOLiTJaY-vt2Q-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 96F0D185A786;
-	Mon,  8 Jan 2024 12:52:28 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 7FA9D492BC7;
-	Mon,  8 Jan 2024 12:52:28 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: [PATCH] KVM: x86: add missing "depends on KVM"
-Date: Mon,  8 Jan 2024 07:52:28 -0500
-Message-Id: <20240108125228.115731-1-pbonzini@redhat.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="SfAlAja2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1704718402; bh=CPfVigqtKj9N695Aa1G5su1g8j3lakcRAE4bhJn7SZ0=;
+	h=From:To:Cc:Subject:Date;
+	b=SfAlAja2Bu9lwctmVzvbERypdiM04AcR8MicQYJVXEE3WEIlYl4F/f8i+IT77FnpY
+	 +3cDP00tnyJRzUCvELwwupocQJSxg5FaEyUHCP4zyUIhr7JqSaVV8cMZ2e6HOV1iq/
+	 ztW2iIQWhXmYXXiAc5mWpMd7squJ/ueTlKg7nqXM=
+Received: from levi-pc.. ([61.186.21.12])
+	by newxmesmtplogicsvrszc5-1.qq.com (NewEsmtp) with SMTP
+	id D5405488; Mon, 08 Jan 2024 20:53:20 +0800
+X-QQ-mid: xmsmtpt1704718400ts1lhh214
+Message-ID: <tencent_0ED010E11594001F62B9EF66C41B0FABCC05@qq.com>
+X-QQ-XMAILINFO: OW8nL0XA5GqleSrjdBA7ntZHzHSgw2nE91fUuaBc1wWL83X5FLNBZiJqwigJDn
+	 V0g08mNheRmsg9LS0xDWNFtwIAyTm4n5gPN525VRorjE1SNG+Io3ZcDFr+0uTnAk52JLp7hMYrKt
+	 W/v8I3PsGNvfyy3flBzfsPYst8QOW8B8qf67vQ6DYdggOPiGgxjjco1o7GvxClVIFeGyt9b25LZo
+	 W6mrvU9jCymCK7uZIm7uxS46KUl9GTHxpA+asInZtmUIYbUOI8Snr6fFo7regHNoILKH4ncGuRU+
+	 4TNapv9LkuNDQ8DGrgXpmVVw9n7m32LJAr+SHvrVQ1uUfi51ybipsU96jiF8N8VrzySQtjybiESo
+	 j3UzVu+QuTXRMFwNHzmXq4Hx493uYBArRxY6ITwqhjrpHjiRWCLfjcq5cwlG9FFqiZmKbzHro8kD
+	 hKQ63uew1zpou1DgJ2si/csONeG6cDXLPg81vxUecfgQ8COYBup1WIDyLC2FIZdSa3eRITkKFLqm
+	 Q8CRBudGIY6jBNIclgxjEHHh0je9u3xlfkhR1yP/aSkHyH5MBEOdWlEIHwTT+ZeX5SiQzjJnjG15
+	 y8IBjSuEpBD1pgNd6tcHWr1C2oKqVC4ynQ3zIqKb2qxJiWAtT4A9wSf6MiPLpaYqxMERlZmsikDI
+	 htRVNnz+sgOHKYXoTYSlrFA17Q7rSo5lcFgQ5Co+5T6+r6Rq8L3S6/ADRUeyqJTSxeTh0Y8loCVw
+	 psMAjUf5712p7EawlRha9GlzEYN+ifbEx92JBMM8sKfUx/sh3MHeR7GGA20FPftUPvzD+dwpU8dS
+	 pBnoKpbMdVpnOewPOGuqBW7QJZDS3/KDv9uSRfX/RHkNsi9veievjV97gd++HBR8DQp5h/huL5SF
+	 ain4xr+tU4QGcQ3hvwucolVWrNeTnS3TuR5XdkHYv+3UgcVdGFxq4pTTl7+bucq44TrvK5H/2klF
+	 rvHAbNjyt2Zmy0OMeoEt2DrXYpsDmQ
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+From: Huayu Zhang <932367230@qq.com>
+To: tiwai@suse.com
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	james.schulman@cirrus.com,
+	david.rhodes@cirrus.com,
+	rf@opensource.cirrus.com,
+	perex@perex.cz,
+	sbinding@opensource.cirrus.com,
+	kailang@realtek.com,
+	zhanghuayu.dev@gmail.com
+Subject: add DSD for ThinkBook 16p G4 IRH with Subsystem Id of :
+Date: Mon,  8 Jan 2024 20:51:36 +0800
+X-OQ-MSGID: <20240108125137.15081-1-932367230@qq.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-Support for KVM software-protected VMs should not be configurable,
-if KVM is not available at all.
-
-Fixes: 89ea60c2c7b5 ("KVM: x86: Add support for "protected VMs" that can utilize private memory")
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index cce3dea27920..10c56603cc06 100644
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -77,7 +77,7 @@ config KVM_WERROR
- config KVM_SW_PROTECTED_VM
- 	bool "Enable support for KVM software-protected VMs"
- 	depends on EXPERT
--	depends on X86_64
-+	depends on KVM && X86_64
- 	select KVM_GENERIC_PRIVATE_MEM
- 	help
- 	  Enable support for KVM software-protected VMs.  Currently "protected"
--- 
-2.39.1
+Sorry for missing the info within patch and not familiar with the
+mailing system using git. As mentioned in the subject,
+the patch is using to fix the sound issue of ThinkBook 16p G4 IRH with
+Subsystem Id of : 0x17aa38a9. But this just enable the downside (bass)
+speakers. When I tried to adjust the volumn, it atually mapped to the
+frequency division (the lower volumn actually set the bass speakers,
+and higher volumn map to the louder sound of up facing speakers).
+Wondering if this related to ALSA?
 
