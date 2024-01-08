@@ -1,92 +1,135 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3923A5380E
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 21:11:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B267256442
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 21:12:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UQVm02xd"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a271a28aeb4so227391366b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 13:11:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ycR7xWHR"
+Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-467021612acso344865137.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 13:12:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1704748291; x=1705353091; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=RTN2vPhLY7RAk40kndh1PrOmouWR62J2f4LyCXtmXbs=;
-        b=UQVm02xdZH6q2Tn9pirvRAaD9rC+lRVSfhBlv/zLbdtOPCwOAtqVRMXhiwtfluohNI
-         vMCPkoo5gPHaEW0pS2hUJDpCqePLo3fMevWYsZE2X2O1iEoLc6snBhMsQqlzzGr7LKec
-         9AMawepY46mOIvMCdCT/oHwzLQTYlH2dMLOUI=
+        d=linaro.org; s=google; t=1704748324; x=1705353124; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YBGJtvh92bb/MQJAenOPY/iQdorsefTTda6AN+tF6dQ=;
+        b=ycR7xWHRYKszqBr4SqRWaE+NQH41ZzUWB7v8aYV9MoSr6Qv/ymtz/4CE6k2AfNXXXu
+         IyoERCZ0NPcR4yJotJr+fzZvD5gBODlrsso8A02wLHOlXamaXoU6ifpeQYNeqn1CFfLU
+         vlfsbyddCTV5N6U2zeE1f7gINpwYeaM+zqJE1X43os3iAXcDLh0a/utlVHpFJUzyq6ZV
+         a4/MXsUZCQVRh6031Z9o4rNvhrItRFeshED4q9GWAD4M8ZJm9oBXaimwOXIe39Iq7QI5
+         XoNy2JCu790UxU3fuDE8cRE/Ju20wiPTtfNMAXMLARDj6vXkY1z0bOUjc8246ogG/t5s
+         sQjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704748291; x=1705353091;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RTN2vPhLY7RAk40kndh1PrOmouWR62J2f4LyCXtmXbs=;
-        b=LcujygGhzlBurkJBquI3rGaA9Xd1iv4qjX1CdD9aInQyJF7qgjB5UOpQCMeinY2NpN
-         1T7TD3erEVDLp0/wHpl7ZwQEwfwTZekeceVyKb/wMQVjjwdiLz+rTMNYSIa4ppzOIFKx
-         dhQydqE3Z5M19oo7+7v5d+OIz1SA+hJ9G0V4PCXZOFl5SCPKj02Neif7NCrJqc46IErb
-         57sP39d8ciHEI0HPPvNEQMKypIPZPdFtHYszMX4S+WlHLZ06Lj19AkrACIV+6lJWpgOV
-         OSXt6uQQuWedR3CrzDfJvFr9iJ54UzH1k8aaXUO39RS8RYrIDjHQ6s53qbP4QMfZzLAw
-         ZlDw==
-X-Gm-Message-State: AOJu0Yw1glfbuIxWlV8rTQ5ixXRoBlzXEu7SNDv/3PQ4KpC1RN9E+csN
-	WZNkGuUfgIS9PyABAex7pIqJHqRHh1qSkB60CTG0S/WlJ1Re171X
-X-Google-Smtp-Source: AGHT+IGmCdykgOZQxT0dMbdWk3/JE7adi1+RpwW42SsJSjSJkdCbB03mqkxv/6chiC/79m3VJdC5QQ==
-X-Received: by 2002:a17:907:9056:b0:a28:d83e:d0ac with SMTP id az22-20020a170907905600b00a28d83ed0acmr13893ejc.142.1704748291383;
-        Mon, 08 Jan 2024 13:11:31 -0800 (PST)
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com. [209.85.218.41])
-        by smtp.gmail.com with ESMTPSA id l15-20020a1709065a8f00b00a26b361ec0esm253013ejq.118.2024.01.08.13.11.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jan 2024 13:11:30 -0800 (PST)
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a28a6cef709so228120866b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 13:11:30 -0800 (PST)
-X-Received: by 2002:a17:906:5806:b0:a28:ccb4:6ba7 with SMTP id
- m6-20020a170906580600b00a28ccb46ba7mr28069ejq.11.1704748289910; Mon, 08 Jan
- 2024 13:11:29 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704748324; x=1705353124;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YBGJtvh92bb/MQJAenOPY/iQdorsefTTda6AN+tF6dQ=;
+        b=SoAAlcSBX/jDSCLxqwQ0pbYFVNMbVhOg1BG4EA8mFTUmDJIzAjHUg2GkJdVMO1s34X
+         skjGZMAd2gm8oqxN2izm1ZALlHAScNBRr7JujL0U20eh+h2L8QA2gfDkeinUvnrz4E92
+         mfOogENtNguFQ+uIVEsUFOGeKaxSJq2PS3m38TErWzaBdE8oMwkK3tvLK9pmJN4jpmdJ
+         8aFAs7kc+ENL5dOcpyiX1yQc8/lcfZskn8e378ukDQWp+FZRDJQgAZFuNSwHNmIqvHwl
+         JyjavOJ8UnUFsiuiY7jSD79L4M4blJ6Ihbgrs8BTMbgmNOGHgioEEEP9quKoVW/gEnjC
+         tPYg==
+X-Gm-Message-State: AOJu0Ywy9Nsw8XseCvj0ZqW/U+PldcSCm9yX4e269fF4Ii7rd+ujKkq/
+	TCDSprDGUjBBln5HMZq3TfPxzc6xJQ78Ig==
+X-Google-Smtp-Source: AGHT+IH3EQQvsaMhKI85+JDKyxLi0PolQ2SDP4LRpa4fw3WIbC3ZktiUYL5iLbnJ2jlU4GzE/GMXnw==
+X-Received: by 2002:a05:6102:158e:b0:467:da9e:3bd0 with SMTP id g14-20020a056102158e00b00467da9e3bd0mr929523vsv.23.1704748324588;
+        Mon, 08 Jan 2024 13:12:04 -0800 (PST)
+Received: from ubuntu-server-vm-macos (072-189-067-006.res.spectrum.com. [72.189.67.6])
+        by smtp.gmail.com with ESMTPSA id g19-20020a05610209d300b0046695b658dcsm92939vsi.30.2024.01.08.13.12.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jan 2024 13:12:04 -0800 (PST)
+Date: Mon, 8 Jan 2024 21:06:52 +0000
+From: William Breathitt Gray <william.gray@linaro.org>
+To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+Cc: lee@kernel.org, alexandre.torgue@foss.st.com, linux-iio@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 09/10] counter: stm32-timer-cnt: add support for
+ overflow events
+Message-ID: <ZZxj7BpXFyGbcrpi@ubuntu-server-vm-macos>
+References: <20231220145726.640627-1-fabrice.gasnier@foss.st.com>
+ <20231220145726.640627-10-fabrice.gasnier@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <b97faef60ad24922b530241c5d7c933c@AcuMS.aculab.com>
- <18c6df0d-45ed-450c-9eda-95160a2bbb8e@gmail.com> <CAHk-=wjvM5KiQFpbPMPXH-DcvheNcPGj+ThNEJVm+QL6n05A8A@mail.gmail.com>
- <CAHk-=wjE1eLMtkKqTt0XqNSnKAeDagV=WQU+vxHL_wsLuO8Gag@mail.gmail.com>
-In-Reply-To: <CAHk-=wjE1eLMtkKqTt0XqNSnKAeDagV=WQU+vxHL_wsLuO8Gag@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 8 Jan 2024 13:11:12 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whkGHOmpM_1kNgzX1UDAs10+UuALcpeEWN29EE0m-my=w@mail.gmail.com>
-Message-ID: <CAHk-=whkGHOmpM_1kNgzX1UDAs10+UuALcpeEWN29EE0m-my=w@mail.gmail.com>
-Subject: Re: [PATCH next v4 0/5] minmax: Relax type checks in min() and max().
-To: Jiri Slaby <jirislaby@gmail.com>
-Cc: David Laight <David.Laight@aculab.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Christoph Hellwig <hch@infradead.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="eTyfW+fM+V9Seofn"
+Content-Disposition: inline
+In-Reply-To: <20231220145726.640627-10-fabrice.gasnier@foss.st.com>
 
-On Mon, 8 Jan 2024 at 12:04, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> So we *could* plan on that, remove the checks from min/max, and use
-> something like the attached patch.
 
-Whee.
+--eTyfW+fM+V9Seofn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On my machine, that patch makes an "allmodconfig" build go from
+On Wed, Dec 20, 2023 at 03:57:25PM +0100, Fabrice Gasnier wrote:
+> diff --git a/include/linux/mfd/stm32-timers.h b/include/linux/mfd/stm32-timers.h
+> index ca35af30745f..9eb17481b07f 100644
+> --- a/include/linux/mfd/stm32-timers.h
+> +++ b/include/linux/mfd/stm32-timers.h
+> @@ -41,6 +41,11 @@
+>  #define TIM_SMCR_SMS	(BIT(0) | BIT(1) | BIT(2)) /* Slave mode selection */
+>  #define TIM_SMCR_TS	(BIT(4) | BIT(5) | BIT(6)) /* Trigger selection */
+>  #define TIM_DIER_UIE	BIT(0)	/* Update interrupt	   */
+> +#define TIM_DIER_CC1IE	BIT(1)  /* CC1 Interrupt Enable    */
+> +#define TIM_DIER_CC2IE	BIT(2)  /* CC2 Interrupt Enable    */
+> +#define TIM_DIER_CC3IE	BIT(3)  /* CC3 Interrupt Enable    */
+> +#define TIM_DIER_CC4IE	BIT(4)  /* CC4 Interrupt Enable    */
+> +#define TIM_DIER_CC_IE(x)	BIT((x) + 1) /* CC1, CC2, CC3, CC4 interrupt enable */
+>  #define TIM_DIER_UDE	BIT(8)  /* Update DMA request Enable */
+>  #define TIM_DIER_CC1DE	BIT(9)  /* CC1 DMA request Enable  */
+>  #define TIM_DIER_CC2DE	BIT(10) /* CC2 DMA request Enable  */
+> @@ -49,6 +54,7 @@
+>  #define TIM_DIER_COMDE	BIT(13) /* COM DMA request Enable  */
+>  #define TIM_DIER_TDE	BIT(14) /* Trigger DMA request Enable */
+>  #define TIM_SR_UIF	BIT(0)	/* Update interrupt flag   */
+> +#define TIM_SR_CC_IF(x)	BIT((x) + 1) /* CC1, CC2, CC3, CC4 interrupt flag */
+>  #define TIM_EGR_UG	BIT(0)	/* Update Generation       */
+>  #define TIM_CCMR_PE	BIT(3)	/* Channel Preload Enable  */
+>  #define TIM_CCMR_M1	(BIT(6) | BIT(5))  /* Channel PWM Mode 1 */
+> @@ -60,16 +66,23 @@
+>  #define TIM_CCMR_CC1S_TI2	BIT(1)	/* IC1/IC3 selects TI2/TI4 */
+>  #define TIM_CCMR_CC2S_TI2	BIT(8)	/* IC2/IC4 selects TI2/TI4 */
+>  #define TIM_CCMR_CC2S_TI1	BIT(9)	/* IC2/IC4 selects TI1/TI3 */
+> +#define TIM_CCMR_CC3S		(BIT(0) | BIT(1)) /* Capture/compare 3 sel */
+> +#define TIM_CCMR_CC4S		(BIT(8) | BIT(9)) /* Capture/compare 4 sel */
+> +#define TIM_CCMR_CC3S_TI3	BIT(0)	/* IC3 selects TI3 */
+> +#define TIM_CCMR_CC4S_TI4	BIT(8)	/* IC4 selects TI4 */
+>  #define TIM_CCER_CC1E	BIT(0)	/* Capt/Comp 1  out Ena    */
+>  #define TIM_CCER_CC1P	BIT(1)	/* Capt/Comp 1  Polarity   */
+>  #define TIM_CCER_CC1NE	BIT(2)	/* Capt/Comp 1N out Ena    */
+>  #define TIM_CCER_CC1NP	BIT(3)	/* Capt/Comp 1N Polarity   */
+>  #define TIM_CCER_CC2E	BIT(4)	/* Capt/Comp 2  out Ena    */
+>  #define TIM_CCER_CC2P	BIT(5)	/* Capt/Comp 2  Polarity   */
+> +#define TIM_CCER_CC2NP	BIT(7)	/* Capt/Comp 2N Polarity   */
+>  #define TIM_CCER_CC3E	BIT(8)	/* Capt/Comp 3  out Ena    */
+>  #define TIM_CCER_CC3P	BIT(9)	/* Capt/Comp 3  Polarity   */
+> +#define TIM_CCER_CC3NP	BIT(11)	/* Capt/Comp 3N Polarity   */
+>  #define TIM_CCER_CC4E	BIT(12)	/* Capt/Comp 4  out Ena    */
+>  #define TIM_CCER_CC4P	BIT(13)	/* Capt/Comp 4  Polarity   */
+> +#define TIM_CCER_CC4NP	BIT(15)	/* Capt/Comp 4N Polarity   */
 
-    10:41 elapsed
+I forgot to mention that you should move the introduction of these
+defines to the subsequent patch adding support for capture events
+because that's where the defines are actually used.
 
-to
+William Breathitt Gray
 
-     8:46 elapsed
+--eTyfW+fM+V9Seofn
+Content-Type: application/pgp-signature; name="signature.asc"
 
-so that min/max type checking is almost 20% of the build time.
+-----BEGIN PGP SIGNATURE-----
 
-Yeah, I think we need to get rid of it.
+iHUEABYIAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZZxj7AAKCRC1SFbKvhIj
+K+hKAQDcvx+8TB+sVsYW8HmeYUBMwLZvZN/fvDizKykS/fZDcQD+JaDR+HGTgp3B
+Lc5+qDJlEopQuesY+K90Tw2taDDrxQY=
+=S2kh
+-----END PGP SIGNATURE-----
 
-Can somebody else confirm similar time differences? Or is it just me?
-
-                 Linus
+--eTyfW+fM+V9Seofn--
