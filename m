@@ -1,71 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 065A05103E
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 15:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BAC05100D
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 15:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jE41wOS4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704728913;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LXzSdb2GMelu2RY7M9wBwnEHadZ8ZB5xT40HRRNlufA=;
-	b=jE41wOS4sayDryxZ+P2NDNbSrKn7KY+/PDT05ysW5vubCm1WsWL4VU0ZoVPDq+JtluoIaL
-	WYoBAuYxeYHwVuj/5U14iDy8xduy9iaDNHJoy37JU3cVHvAbw2J2ZLcmoyRZphhsiYX+Qq
-	mGBWEerfikf8VoqV+mk4dS1iQCQpz+g=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-82-5TVjKgI4NYCMEu1t82eQcQ-1; Mon,
- 08 Jan 2024 10:48:28 -0500
-X-MC-Unique: 5TVjKgI4NYCMEu1t82eQcQ-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DEDDD3C025AC;
-	Mon,  8 Jan 2024 15:48:27 +0000 (UTC)
-Received: from [100.85.132.103] (ovpn-0-5.rdu2.redhat.com [10.22.0.5])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id C07A8492BC7;
-	Mon,  8 Jan 2024 15:48:25 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Hou Tao <houtao@huaweicloud.com>
-Cc: linux-fsdevel@vger.kernel.org, Miklos Szeredi <miklos@szeredi.hu>,
- Vivek Goyal <vgoyal@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>,
- Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
- virtualization@lists.linux.dev, houtao1@huawei.com
-Subject: Re: [PATCH v2] virtiofs: use GFP_NOFS when enqueuing request through
- kworker
-Date: Mon, 08 Jan 2024 10:48:24 -0500
-Message-ID: <A7DF37C3-9C00-4C3C-BFD3-12BE0DE699B3@redhat.com>
-In-Reply-To: <20240105105305.4052672-1-houtao@huaweicloud.com>
-References: <20240105105305.4052672-1-houtao@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ScUJdTf6"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5e73bd9079eso33036767b3.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 07:53:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704729184; x=1705333984; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LXpfvDdR25mi61ZRv+hUGYfziJrbv6+q0uR9W3pdtgw=;
+        b=ScUJdTf6pY1EyzXXhTCOXHjVT97d9to7GQ83OVVOdFBTRhGje7AGwchBSTlrSGUrYQ
+         VFbN4vMFF6Hla0gcX4RSkXf6EB87oabE/uJ0REVkG1YoQnSO9DHgfBiIqpjFeVPpYgzK
+         HXHrCrHGNHHUcptvmkPg86uQDGNIfA4Fh/ldNw7mjAzVqIsfH6Lfsq5tLDEKfe/MjSVD
+         Ejfo41gQFHZtoLFYZpVLtvZAUILVJCvSpfdWYL5sbxmnQCSYpM4snT6X7Do0wUrHWdlt
+         SDtLaa4/o7/jEn/nOJYlnSZIvd4GiuE5MFW8M3iYnzZS699H8VSVAX1CKzzhaTLXF02A
+         Cn7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704729184; x=1705333984;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LXpfvDdR25mi61ZRv+hUGYfziJrbv6+q0uR9W3pdtgw=;
+        b=gdbHIxbAv3WRapYFvp5XKoNLNw8WXFZ2rjLuGYaU7uTEkQ/83v+togff2GqjwFXpuX
+         JzrpQzRmwpkK1X2/zftjp8hV/mBT23PsttvxUzL1cw3zjg1koRRKBCz4UZ/9/q5W6ttg
+         H1zHGv4hzQkl4tTfbixMWCBrwk2otpSkmxzv0FAmEuav8SOTg6kFcvpuMMEGdmO91ut+
+         uvt+H0aNA7RCSeHA6EEz+z26rwqlBCPRt1Jyvn3CqFMkyMZWcJowPQZCVqpZyieeZmQE
+         +B96wDybdx+ut4Kjd1V9sXdXEey4/VpjZMyMVIFdujzl63yiYPE7zfUTFmZC9IXz9ROU
+         xKFQ==
+X-Gm-Message-State: AOJu0YwdfpERGt9HQj2l3O0G0vGAfK4IyuuuU/IN61KiLdSBitKruLl+
+	fe6x+kiMwrFDTC1O2cBEOYvbWxyY0nJYyB9sZg==
+X-Google-Smtp-Source: AGHT+IH6tgug6GZXuthKAIt2m3rWLQls/sRxvnIhe9rTO176GAtStoSNma4aHNycx8stxCAgF2wzux11TeA=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a25:83d0:0:b0:dbe:a20a:6330 with SMTP id
+ v16-20020a2583d0000000b00dbea20a6330mr1497318ybm.9.1704729184054; Mon, 08 Jan
+ 2024 07:53:04 -0800 (PST)
+Date: Mon, 8 Jan 2024 07:53:02 -0800
+In-Reply-To: <CAJ5mJ6hpSSVhZ5hbPZ8vfSnmNU6W+g4e=PeLrG7fG2u8KptfHQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+Mime-Version: 1.0
+References: <20231230172351.574091-1-michael.roth@amd.com> <20231230172351.574091-27-michael.roth@amd.com>
+ <CAJ5mJ6hpSSVhZ5hbPZ8vfSnmNU6W+g4e=PeLrG7fG2u8KptfHQ@mail.gmail.com>
+Message-ID: <ZZwaXo62DpiBJiWN@google.com>
+Subject: Re: [PATCH v11 26/35] KVM: SEV: Support SEV-SNP AP Creation NAE event
+From: Sean Christopherson <seanjc@google.com>
+To: Jacob Xu <jacobhxu@google.com>
+Cc: Michael Roth <michael.roth@amd.com>, kvm@vger.kernel.org, linux-coco@lists.linux.dev, 
+	linux-mm@kvack.org, linux-crypto@vger.kernel.org, x86@kernel.org, 
+	linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, 
+	jroedel@suse.de, thomas.lendacky@amd.com, hpa@zytor.com, ardb@kernel.org, 
+	pbonzini@redhat.com, vkuznets@redhat.com, jmattson@google.com, 
+	luto@kernel.org, dave.hansen@linux.intel.com, slp@redhat.com, 
+	pgonda@google.com, peterz@infradead.org, srinivas.pandruvada@linux.intel.com, 
+	rientjes@google.com, dovmurik@linux.ibm.com, tobin@ibm.com, bp@alien8.de, 
+	vbabka@suse.cz, kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com, 
+	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com, 
+	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com, 
+	pankaj.gupta@amd.com, liam.merwick@oracle.com, zhi.a.wang@intel.com, 
+	Brijesh Singh <brijesh.singh@amd.com>, Adam Dunlap <acdunlap@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On 5 Jan 2024, at 5:53, Hou Tao wrote:
+On Fri, Jan 05, 2024, Jacob Xu wrote:
+> > +       if (kick) {
+> > +               if (target_vcpu->arch.mp_state == KVM_MP_STATE_UNINITIALIZED)
+> > +                       target_vcpu->arch.mp_state = KVM_MP_STATE_RUNNABLE;
+> > +
+> > +               kvm_make_request(KVM_REQ_UPDATE_PROTECTED_GUEST_STATE, target_vcpu);
+> 
+> I think we should  switch the order of these two statements for
+> setting mp_state and for making the request for
+> KVM_REQ_UPDATE_PROTECTED_GUEST_STATE.
+> There is a race condition I observed when booting with SVSM where:
+> 1. BSP sets target vcpu to KVM_MP_STATE_RUNNABLE
+> 2. AP thread within the loop of arch/x86/kvm.c:vcpu_run() checks
+> vm_vcpu_running()
+> 3. AP enters the guest without having updated the VMSA state from
+> KVM_REQ_UPDATE_PROTECTED_GUEST_STATE
+> 
+> This results in the AP executing on a bad RIP and then crashing.
+> If we set the request first, then we avoid the race condition.
 
-> From: Hou Tao <houtao1@huawei.com>
->
-> When invoking virtio_fs_enqueue_req() through kworker, both the
-> allocation of the sg array and the bounce buffer still use GFP_ATOMIC.
-> Considering the size of both the sg array and the bounce buffer may be
-> greater than PAGE_SIZE, use GFP_NOFS instead of GFP_ATOMIC to lower the
-> possibility of memory allocation failure.
+That just introducs a different race, e.g. if this task gets delayed and the
+target vCPU processes KVM_REQ_UPDATE_PROTECTED_GUEST_STATE before its marked
+RUNNABLE, then the target vCPU could end up stuck in the UNINITIALIZED loop.
 
-Perhaps not appropriate for this case, but are you aware of
-memalloc_nofs_save/restore?  NFS has been converting over and cleaning out
-our GFP_NOFS usage:
+Reading and writing arch.mp_state across vCPUs is simply not safe.  There's a
+reason why KVM atomically manages INITs and SIPIs and only modifies mp_state when
+processing events on the target vCPU.
 
-Documentation/core-api/gfp_mask-from-fs-io.rst
+> > +               kvm_vcpu_kick(target_vcpu);
 
-Ben
+...
 
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index 87b78d63e81d..df9ec357d538 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -10858,6 +10858,14 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+> >
+> >                 if (kvm_check_request(KVM_REQ_UPDATE_CPU_DIRTY_LOGGING, vcpu))
+> >                         static_call(kvm_x86_update_cpu_dirty_logging)(vcpu);
+> > +
+> > +               if (kvm_check_request(KVM_REQ_UPDATE_PROTECTED_GUEST_STATE, vcpu)) {
+> > +                       kvm_vcpu_reset(vcpu, true);
+> > +                       if (vcpu->arch.mp_state != KVM_MP_STATE_RUNNABLE) {
+> > +                               r = 1;
+> > +                               goto out;
+> > +                       }
+> > +               }
+> >         }
+> >
+> >         if (kvm_check_request(KVM_REQ_EVENT, vcpu) || req_int_win ||
+> > @@ -13072,6 +13080,9 @@ static inline bool kvm_vcpu_has_events(struct kvm_vcpu *vcpu)
+> >         if (kvm_test_request(KVM_REQ_PMI, vcpu))
+> >                 return true;
+> >
+> > +       if (kvm_test_request(KVM_REQ_UPDATE_PROTECTED_GUEST_STATE, vcpu))
+> > +               return true;
+> > +
+> >         if (kvm_arch_interrupt_allowed(vcpu) &&
+> >             (kvm_cpu_has_interrupt(vcpu) ||
+> >             kvm_guest_apic_has_interrupt(vcpu)))
+> > --
+> > 2.25.1
+> >
+> >
