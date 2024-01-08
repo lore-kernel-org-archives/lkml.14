@@ -1,143 +1,113 @@
-Received: from zg8tmty3ljk5ljewns4xndka.icoremail.net (zg8tmty3ljk5ljewns4xndka.icoremail.net [167.99.105.149])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB44D524D3;
-	Mon,  8 Jan 2024 15:28:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from luzhipeng.223.5.5.5 (unknown [183.159.171.224])
-	by mail-app2 (Coremail) with SMTP id by_KCgBn+fBKGZxleMgHAA--.4251S2;
-	Mon, 08 Jan 2024 23:48:27 +0800 (CST)
-From: Zhipeng Lu <alexious@zju.edu.cn>
-To: alexious@zju.edu.cn
-Cc: Simon Horman <horms@kernel.org>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maor Gottlieb <maorg@mellanox.com>,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] net/mlx5e: fix a double-free in arfs_create_groups
-Date: Mon,  8 Jan 2024 23:26:04 +0800
-Message-Id: <20240108152605.3712050-1-alexious@zju.edu.cn>
-X-Mailer: git-send-email 2.34.1
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869C051015
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 15:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L8XvTMFz"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5534180f0e9so13973a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 07:28:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704727729; x=1705332529; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Isb5ut/bgR2/r/5F9YVy69h9kXC52tbAkHmnKiVEMAY=;
+        b=L8XvTMFz+FqT5IYD+cdWuhRKyF3Ar0k6TDArT+GP5KsonDmtexmzwyMVYZLMEln0Qd
+         YUVRsk8BPr0gNjDIugXnsoaKxr7zRz1WKiqjixe5jEMU42V+FjfpRflOXURylYL+yOq4
+         0uVk4gxuSV5203Rp9qIWFrEie8slfuDjbArzC7G/T4RJfSL24MF8A68ZLuPB4ky9wXlI
+         SjiBjlFOYshvPC5P2K/JKpMUsqTwrGIi0SwCZhmSMeCCynu1XrDe6eXOH5nA0CANshNr
+         tHwWIW+deNMZCtLdpG0siNJdojg7hT+Y+wrzguNBKOJrwqkBPCTIXe+qcIEAxLcKii+G
+         6BtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704727729; x=1705332529;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Isb5ut/bgR2/r/5F9YVy69h9kXC52tbAkHmnKiVEMAY=;
+        b=smI7404JfAJGqs/rY5I21q4D93uByTB5rXKRhAmcrCE3oPLp1eogkbLw0QRl90K8w7
+         bnaW2aJeyY4oieoJx9MHH0fXRN3m4ZIC8y5bGJiSl27z043KIVk2aVPBx5kjK9ryEVgG
+         6j7uQz8nZ6sMRR0pl2vhNQloXjXKvazR9nIZhU8EZ7YEv+QUsc+sNDWFKeuJCdFmCA2d
+         WwcWB4s51mAiha4ZEeHSC1CX+/PMqoUkQfQ8Tqo20603FK7JS/eYCku76VVk2f+MR8Ym
+         rBQ9IJjGDzx6rghinwCU+SU4kFptTI/Fp5ZugPuiBCvYgCNz3onPQSGwPB3AjGWnM6tX
+         PFYw==
+X-Gm-Message-State: AOJu0YxrHJCBAsgAIUZ3akcZLTjR+E36xJRjAyVBerKEzjHXWYgELgGu
+	KxrS/qowxAmUJJijX9pdwtsrIeDsCVfuRGw8JXa2aMFsZi6/
+X-Google-Smtp-Source: AGHT+IHj/hq+6ybdQUvW8IbBNJtuct1zKTEIHf3ZIq7kIXyUg1Av9/t8o646IQy69IltOXBD+zdKfjnHF7CGKOGeBPI=
+X-Received: by 2002:a50:8a93:0:b0:554:2501:cc8e with SMTP id
+ j19-20020a508a93000000b005542501cc8emr282070edj.6.1704727728768; Mon, 08 Jan
+ 2024 07:28:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:by_KCgBn+fBKGZxleMgHAA--.4251S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxZrWUXrWrXw4kWF48KrWDCFg_yoW5Ar48pF
-	45J34DKFs5Za48XanrA3yvqw1rCa18tayUu3WIv34SqwnFyr4UCFyrK3y3AFyxCFW3ArnF
-	y3Z8Zw1UAFZxArUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvj14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUoO
-	J5UUUUU
-X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
+References: <20231130204817.2031407-1-jannh@google.com> <170142744948.398.4203675877225809071.tip-bot2@tip-bot2>
+ <20231201121808.GL3818@noisy.programming.kicks-ass.net> <ZZu2F8KNygWzWVY7@gmail.com>
+In-Reply-To: <ZZu2F8KNygWzWVY7@gmail.com>
+From: Jann Horn <jannh@google.com>
+Date: Mon, 8 Jan 2024 16:28:11 +0100
+Message-ID: <CAG48ez0pO9sfNfW35q5qjoWr+_s5_16t=gTC+kU-j1LGkA-SMQ@mail.gmail.com>
+Subject: Re: [PATCH] locking/mutex: Clarify that mutex_unlock(), and most
+ other sleeping locks, cannot be used to reference-count objects
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
+	linux-tip-commits@vger.kernel.org, x86@kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When `in` allocated by kvzalloc fails, arfs_create_groups will free
-ft->g and return an error. However, arfs_create_table, the only caller of
-arfs_create_groups, will hold this error and call to
-mlx5e_destroy_flow_table, in which the ft->g will be freed again.
+On Mon, Jan 8, 2024 at 9:45=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wrote=
+:
+> * Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> > On Fri, Dec 01, 2023 at 10:44:09AM -0000, tip-bot2 for Jann Horn wrote:
+> >
+> > > --- a/Documentation/locking/mutex-design.rst
+> > > +++ b/Documentation/locking/mutex-design.rst
+> > > @@ -101,6 +101,12 @@ features that make lock debugging easier and fas=
+ter:
+> > >      - Detects multi-task circular deadlocks and prints out all affec=
+ted
+> > >        locks and tasks (and only those tasks).
+> > >
+> > > +Releasing a mutex is not an atomic operation: Once a mutex release o=
+peration
+> >
+> > I still object to this confusing usage of atomic. Also all this also
+> > applies to all sleeping locks, rwsem etc. I don't see why we need to
+> > special case mutex here.
+> >
+> > Also completion_done() has an explicit lock+unlock on wait.lock to
+> > deal with this there.
+>
+> Fair enough - but Jan's original observation stands: mutexes are the
+> sleeping locks most similar to spinlocks, so the locking & object lifetim=
+e
+> pattern that works under spinlocks cannot be carried over to mutexes in a=
+ll
+> cases, and it's fair to warn about this pitfall.
+>
+> We single out mutex_lock(), because they are the most similar in behavior
+> to spinlocks, and because this concern isn't hypothethical, it has been
+> observed in the wild with mutex users.
+>
+> How about the language in the attached patch?
 
-Fixes: 1cabe6b0965e ("net/mlx5e: Create aRFS flow tables")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
-Reviewed-by: Simon Horman <horms@kernel.org>
----
-Changelog:
+In case you missed it, I sent this rewritten documentation patch in
+response to the feedback I got, intended to replace the patch that is
+now sitting in the tip tree (but I don't know how that works
+procedurally for something that's already in the tip tree, whether
+you'd want to just swap out the patch with a forced update, or revert
+out the old version, or something else):
+<https://lore.kernel.org/all/20231204132259.112152-1-jannh@google.com/>
 
-v2: free ft->g just in arfs_create_groups with a unwind ladde.
----
- .../net/ethernet/mellanox/mlx5/core/en_arfs.c   | 17 +++++++++--------
- drivers/net/ethernet/mellanox/mlx5/core/en_fs.c |  1 -
- 2 files changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c b/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c
-index bb7f86c993e5..c96f4c571b63 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c
-@@ -252,13 +252,14 @@ static int arfs_create_groups(struct mlx5e_flow_table *ft,
- 	int err;
- 	u8 *mc;
- 
-+	ft->num_groups = 0;
-+
- 	ft->g = kcalloc(MLX5E_ARFS_NUM_GROUPS,
- 			sizeof(*ft->g), GFP_KERNEL);
- 	in = kvzalloc(inlen, GFP_KERNEL);
- 	if  (!in || !ft->g) {
--		kfree(ft->g);
--		kvfree(in);
--		return -ENOMEM;
-+		err = -ENOMEM;
-+		goto free_ft;
- 	}
- 
- 	mc = MLX5_ADDR_OF(create_flow_group_in, in, match_criteria);
-@@ -278,7 +279,7 @@ static int arfs_create_groups(struct mlx5e_flow_table *ft,
- 		break;
- 	default:
- 		err = -EINVAL;
--		goto out;
-+		goto free_ft;
- 	}
- 
- 	switch (type) {
-@@ -300,7 +301,7 @@ static int arfs_create_groups(struct mlx5e_flow_table *ft,
- 		break;
- 	default:
- 		err = -EINVAL;
--		goto out;
-+		goto free_ft;
- 	}
- 
- 	MLX5_SET_CFG(in, match_criteria_enable, MLX5_MATCH_OUTER_HEADERS);
-@@ -327,7 +328,9 @@ static int arfs_create_groups(struct mlx5e_flow_table *ft,
- err:
- 	err = PTR_ERR(ft->g[ft->num_groups]);
- 	ft->g[ft->num_groups] = NULL;
--out:
-+free_ft:
-+	kfree(ft->g);
-+	ft->g = NULL;
- 	kvfree(in);
- 
- 	return err;
-@@ -343,8 +346,6 @@ static int arfs_create_table(struct mlx5e_flow_steering *fs,
- 	struct mlx5_flow_table_attr ft_attr = {};
- 	int err;
- 
--	ft->num_groups = 0;
--
- 	ft_attr.max_fte = MLX5E_ARFS_TABLE_SIZE;
- 	ft_attr.level = MLX5E_ARFS_FT_LEVEL;
- 	ft_attr.prio = MLX5E_NIC_PRIO;
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_fs.c b/drivers/net/ethernet/mellanox/mlx5/core/en_fs.c
-index 777d311d44ef..7b6aa0c8b58d 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_fs.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_fs.c
-@@ -883,7 +883,6 @@ void mlx5e_fs_init_l2_addr(struct mlx5e_flow_steering *fs, struct net_device *ne
- void mlx5e_destroy_flow_table(struct mlx5e_flow_table *ft)
- {
- 	mlx5e_destroy_groups(ft);
--	kfree(ft->g);
- 	mlx5_destroy_flow_table(ft->t);
- 	ft->t = NULL;
- }
--- 
-2.34.1
-
+Since there were comments on how this is really a more general rule
+than a mutex-specific one, that version doesn't touch
+Documentation/locking/mutex-design.rst and instead documents the rule
+in Documentation/locking/locktypes.rst; and then it adds comments
+above some of the most common unlock-type functions that would be
+affected.
