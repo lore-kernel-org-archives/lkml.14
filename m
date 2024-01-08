@@ -1,111 +1,94 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F2E29417
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 11:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rMo5P-0002a4-7b; Mon, 08 Jan 2024 12:46:31 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rMo5N-001ErC-IJ; Mon, 08 Jan 2024 12:46:29 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rMo5N-004rXs-1T;
-	Mon, 08 Jan 2024 12:46:29 +0100
-Date: Mon, 8 Jan 2024 12:46:29 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Philipp Stanner <pstanner@redhat.com>
-Cc: dri-devel@lists.freedesktop.org, Fabio Estevam <festevam@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Takashi Iwai <tiwai@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>, 
-	Mark Brown <broonie@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>, 
-	David Gow <davidgow@google.com>, Shawn Guo <shawnguo@kernel.org>, 
-	David Airlie <airlied@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v2 1/2] platform_device: add devres function region-reqs
-Message-ID: <ixywpvuwlhdpv6szvssipy2ygjhzdvt6nrbcppy4yx5ix5b3is@pq7s6hpse2ni>
-References: <20240108092042.16949-2-pstanner@redhat.com>
- <20240108092042.16949-3-pstanner@redhat.com>
- <hywkbwwwkddbd5vye366bhz64dlpet4chv3kzwfu5dx6rvvix6@2jnk3xx6vfiy>
- <404aea6b7bb7874064153044f04f3b8f6fccb97b.camel@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A35F219E2;
+	Mon,  8 Jan 2024 11:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="XwK15PFa"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 408AaSjt001674;
+	Mon, 8 Jan 2024 11:48:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version:content-type; s=
+	qcppdkim1; bh=MeiW+hkPgx74Q6DWyTwZl/EShtcH742eJKFOhUlm+AY=; b=Xw
+	K15PFateT3kgmd2UhzJifzBWXkGpVFK8bzLLBJD7Kz2Elh9BwNn8nuvoclGo7+UM
+	v5OVthdTPIIw8Za5RdeEr12qWC0FEN3MH7WLNYt5XaCHzP3xXYjizQXbAziAI6S7
+	hLlk4NZIXC9RBMqQIM9o8mphW0tHdeQ4hJQKuz+alpvF//99/WWyv7C/ImLwfaLU
+	mBlHeKQ0llJDt6Xh8rcMn29qKwyA5yrNEUkwrX9DilXtnIAPPdMS36TfffR+DAsY
+	+vH1Q8Dc7H4s9kKaNFY+w0pIopfRf5x+Y3HxQrLymLZQWDomwI5Lx53HWIrUrphM
+	c1Rp5B0Qhs+0EdFcGOlA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vg8mx8yth-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Jan 2024 11:48:44 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 408Bmhi6006798
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 8 Jan 2024 11:48:43 GMT
+Received: from hu-ekangupt-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 8 Jan 2024 03:48:41 -0800
+From: Ekansh Gupta <quic_ekangupt@quicinc.com>
+To: <srinivas.kandagatla@linaro.org>, <linux-arm-msm@vger.kernel.org>
+CC: <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+        stable
+	<stable@kernel.org>
+Subject: [PATCH v1] misc: fastrpc: Mark all sessions as invalid in cb_remove
+Date: Mon, 8 Jan 2024 17:18:33 +0530
+Message-ID: <20240108114833.20480-1-quic_ekangupt@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4r5afev3r6p7skdi"
-Content-Disposition: inline
-In-Reply-To: <404aea6b7bb7874064153044f04f3b8f6fccb97b.camel@redhat.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: ozVec1aNJKFPgAmPCD-jliLZ9qEeFKjg
+X-Proofpoint-ORIG-GUID: ozVec1aNJKFPgAmPCD-jliLZ9qEeFKjg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ malwarescore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
+ mlxlogscore=851 adultscore=0 impostorscore=0 mlxscore=0 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401080101
 
+In remoteproc shutdown sequence, rpmsg_remove will get called which
+would depopulate all the child nodes that have been created during
+rpmsg_probe. This would result in cb_remove call for all the context
+banks for the remoteproc. In cb_remove function, session 0 is
+getting skipped which is not correct as session 0 will never become
+available again. Add changes to mark session 0 also as invalid.
 
---4r5afev3r6p7skdi
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: f6f9279f2bf0 ("misc: fastrpc: Add Qualcomm fastrpc basic driver model")
+Cc: stable <stable@kernel.org>
+Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
+---
+ drivers/misc/fastrpc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Mon, Jan 08, 2024 at 10:45:31AM +0100, Philipp Stanner wrote:
-> On Mon, 2024-01-08 at 10:37 +0100, Uwe Kleine-K=F6nig wrote:
-> > Other than that I indifferent if this is a good idea. There are so many
-> > helpers around these functions ...
->=20
-> Around which, the devres functions in general? There are, but that's
-> kind of the point, unless we'd want everyone to call into the lowest
-> level region-request functions with their own devres callbacks.
->=20
-> In any case: What would your suggestion be, should parties who can't
-> (without restructuring very large parts of their code) ioremap() and
-> request() simultaneously just not use devres? See my patch #2
-> Or is there another way to reach that goal that I'm not aware of?
+diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+index 1c6c62a7f7f5..03319a1fa97f 100644
+--- a/drivers/misc/fastrpc.c
++++ b/drivers/misc/fastrpc.c
+@@ -2191,7 +2191,7 @@ static int fastrpc_cb_remove(struct platform_device *pdev)
+ 	int i;
+ 
+ 	spin_lock_irqsave(&cctx->lock, flags);
+-	for (i = 1; i < FASTRPC_MAX_SESSIONS; i++) {
++	for (i = 0; i < FASTRPC_MAX_SESSIONS; i++) {
+ 		if (cctx->session[i].sid == sess->sid) {
+ 			cctx->session[i].valid = false;
+ 			cctx->sesscount--;
+-- 
+2.17.1
 
-This wasn't a constructive feedback unfortunately and more a feeling
-than a measurable criticism. To actually improve the state, maybe first
-check what helpers are actually there, how they are used and if they are
-suitable to what they are used for.
-
-Having many helpers is a hint that the usage is complicated. Is that
-because the situation is complicated, or is this just a big pile of
-inconsistency that can be simplified and consolidated?
-
-Also I think there are helpers that take a resource type parameter (as
-your function) and others hard code it in the function name. Maybe
-unifying that would be nice, too.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---4r5afev3r6p7skdi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWb4I8ACgkQj4D7WH0S
-/k6x9wf/RNngXMX4s0qPs1qC/g9icFOmmH2DMWt97cJ3/OzyVs7x1qTteymH2ANR
-NGt8HE68vKkFyM6QoZz1z/1qAcMZLHWSO44ok7+cYVXfROHiVKe5/13ofkObfyMh
-8aUYI/XXd/PXmXrWuxiCyCH8IdWoiBryBqd9DOWrssjqOb/QZyC0y4Mj34gDGWF2
-dC/M0HByG8TnH/KPydYys5sHf68xdVTsDhABJtxNo/vDMc0yBdB8dzmb02GjM8Qy
-kC6odjtco3TBr5tPAJENW1F2pn7Rm3bMBeLEjwo68oAHTKrqpzkUo/v2rbo11MOf
-+NFUHJXT9gfOOY1B6rdzcT2WPmu+TQ==
-=38uX
------END PGP SIGNATURE-----
-
---4r5afev3r6p7skdi--
