@@ -1,753 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501FC1E4A2;
-	Mon,  8 Jan 2024 15:38:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7184651C31;
+	Mon,  8 Jan 2024 15:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="qQE31MYs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D720C433AB;
-	Mon,  8 Jan 2024 15:38:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1704728292;
-	bh=PzVOp9ss4U20vcPIaxirITO3dC2ctLBgiQ6I6mojJ0E=;
-	h=From:To:Cc:Subject:Date:From;
-	b=qQE31MYsVAKTlyEzJVlPy7YGOjBc4BL/otNUopeQCNiXm8jPwCDTJi+sJI/RdTygA
-	 ZiWRkl/fiICvTQqfipIWmYyeuEfd917nX6O1ryRAG1ehqXL3iLBAJgsCbH1Mx4hlNo
-	 VRVTPxZ2aRiwWa24tabvsz+bbEPWy0nz76STaGXQ=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	allen.lkml@gmail.com
-Subject: [PATCH 6.1 000/150] 6.1.72-rc1 review
-Date: Mon,  8 Jan 2024 16:34:11 +0100
-Message-ID: <20240108153511.214254205@linuxfoundation.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="PZzpU/WL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UCVOoYYgQ2xdTggOcOa5MBLfLgYDNBjCpDACgXptLhUSVBsMsYpTxyiw2BXdqRXZNtuWJ8C684KCKy4uKLOisl+Yh4OYagm+8B+OIgJ9MHFX6f/yhjW875p701qTa+FIDJTqKcpswj3CldaRD+xAEktdb2jzo+oYl/9m8qnhEAbatZx7hYnQ1odJkGyufdBpfxqlpc5HMcYbRH0tnQ7BM1XT4MkWWozRJ+W2xErD2mGRmRegacmyHuqQ1iaK72YCZRB/r3I2E2YkyhC+3NreR5xC+UL5tWwZ2knGe0KgAdtxaaAZWIpoACpk6ppmsNAYWFkDPBJ8xgLMghkBJHtQsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yxhTpKlS64YB0ZoqBBx3ar0+K06/xCMs4QiqQFduH2w=;
+ b=F++3b8PouFtvxNLzavSoddql0jpiSB7ascRcFRyHdosBnMY+gmETNWQ/ClX7XDEfyftTAkYvYEUMDlKghOpLtODtTqnU/1HDBL0ScHaYFC7bMOXPNGp6RQzVPrk+dJjMzdTRrQDeiffFnB/cAhNK+fpxpcBMY98xbiXs+WIofd+H1vy+OIzRmFHThXD/tB7sGsXjLtIjOa4wImCzDmKHKtfuVamOqR6Kme7DkpxfmHWczorB0yezS0c5E3NRVEF1Mjk2vWLsym6ldDH3Tmc4+/xJGShQUCnJdakeDysgrWARisJVete3lQRF29Cvx4derScKRgeZjcQLi8TH1T3r4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yxhTpKlS64YB0ZoqBBx3ar0+K06/xCMs4QiqQFduH2w=;
+ b=PZzpU/WL16I2691dfBZC/+YjoewM+bLGn9ttdORFZKEksGt4bHlKgwD1UEdqK8Eiuhe75gwOcqdg1ol7BLHIiZvkOfdcCMszCNCft60GsWE8q1qlP3VB7/WZvwLUiMO3lDie7+jCcEFrPS4SA0lJOTkfd/YAJGNtHMzcTDM1bFOFP8BQkqc+2nP7/kKUzaqtuaWpetlzHpcDwWP6Fia82ife3QRXTytuHvjq97lPnGj0UYXnmwZoGRrIqsnzGJPX8OtfrBW7x7MF4FTQ6K6AZyiP6sGJXno5KDEfYNe/V6GqLQ6GNnBcaRd16uB9CvxGbbzPGJFbF+U4Neg3spPF9Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
+ by MW3PR12MB4395.namprd12.prod.outlook.com (2603:10b6:303:5c::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Mon, 8 Jan
+ 2024 15:38:19 +0000
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::60d4:c1e3:e1aa:8f93]) by LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::60d4:c1e3:e1aa:8f93%4]) with mapi id 15.20.7159.020; Mon, 8 Jan 2024
+ 15:38:19 +0000
+Date: Mon, 8 Jan 2024 11:38:18 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Yan Zhao <yan.y.zhao@intel.com>, wanpengli@tencent.com,
+	kvm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, kraxel@redhat.com, maz@kernel.org,
+	joro@8bytes.org, zzyiwei@google.com, yuzenghui@huawei.com,
+	olvaffe@gmail.com, kevin.tian@intel.com, suzuki.poulose@arm.com,
+	alex.williamson@redhat.com, yongwei.ma@intel.com,
+	zhiyuan.lv@intel.com, gurchetansingh@chromium.org,
+	jmattson@google.com, zhenyu.z.wang@intel.com, seanjc@google.com,
+	ankita@nvidia.com, oliver.upton@linux.dev, james.morse@arm.com,
+	pbonzini@redhat.com, vkuznets@redhat.com
+Subject: Re: [PATCH 0/4] KVM: Honor guest memory types for virtio GPU devices
+Message-ID: <20240108153818.GK50406@nvidia.com>
+References: <20240105091237.24577-1-yan.y.zhao@intel.com>
+ <20240105195551.GE50406@nvidia.com>
+ <ZZuQEQAVX28v7p9Z@yzhao56-desk.sh.intel.com>
+ <20240108140250.GJ50406@nvidia.com>
+ <ZZwTzsZqx-XSTKma@phenom.ffwll.local>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZZwTzsZqx-XSTKma@phenom.ffwll.local>
+X-ClientProxiedBy: MN2PR18CA0002.namprd18.prod.outlook.com
+ (2603:10b6:208:23c::7) To LV2PR12MB5869.namprd12.prod.outlook.com
+ (2603:10b6:408:176::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.72-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-6.1.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 6.1.72-rc1
-X-KernelTest-Deadline: 2024-01-10T15:35+00:00
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-This is the start of the stable review cycle for the 6.1.72 release.
-There are 150 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Wed, 10 Jan 2024 15:34:37 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.72-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 6.1.72-rc1
-
-Amit Pundir <amit.pundir@linaro.org>
-    Revert "interconnect: qcom: sm8250: Enable sync_state"
-
-Kees Cook <keescook@chromium.org>
-    smb3: Replace smb2pdu 1-element arrays with flex-arrays
-
-Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-    media: qcom: camss: Comment CSID dt_id field
-
-John Fastabend <john.fastabend@gmail.com>
-    bpf: syzkaller found null ptr deref in unix_bpf proto add
-
-Yonghong Song <yonghong.song@linux.dev>
-    bpf: Fix a verifier bug due to incorrect branch offset comparison with cpu=v4
-
-Vlad Buslov <vladbu@nvidia.com>
-    net/sched: act_ct: Always fill offloading tuple iifidx
-
-Vlad Buslov <vladbu@nvidia.com>
-    net/sched: act_ct: additional checks for outdated flows
-
-Chao Yu <chao@kernel.org>
-    f2fs: compress: fix to assign compress_level for lz4 correctly
-
-Ingo Molnar <mingo@kernel.org>
-    genirq/affinity: Only build SMP-only helper functions on SMP kernels
-
-Wenchao Chen <wenchao.chen@unisoc.com>
-    mmc: sdhci-sprd: Fix eMMC init failure after hw reset
-
-Geert Uytterhoeven <geert+renesas@glider.be>
-    mmc: core: Cancel delayed work before releasing host
-
-Jorge Ramirez-Ortiz <jorge@foundries.io>
-    mmc: rpmb: fixes pause retune on all RPMB partitions.
-
-Ziyang Huang <hzyitc@outlook.com>
-    mmc: meson-mx-sdhc: Fix initialization frozen issue
-
-Alex Deucher <alexander.deucher@amd.com>
-    drm/amd/display: add nv12 bounding box
-
-Alex Deucher <alexander.deucher@amd.com>
-    drm/amdgpu: skip gpu_info fw loading on navi12
-
-Jiajun Xie <jiajun.xie.sh@gmail.com>
-    mm: fix unmap_mapping_range high bits shift bug
-
-Benjamin Bara <benjamin.bara@skidata.com>
-    i2c: core: Fix atomic xfer check for non-preempt config
-
-Jinghao Jia <jinghao7@illinois.edu>
-    x86/kprobes: fix incorrect return address calculation in kprobe_emulate_call_indirect
-
-Takashi Sakamoto <o-takashi@sakamocchi.jp>
-    firewire: ohci: suppress unexpected system reboot in AMD Ryzen machines and ASM108x/VT630x PCIe cards
-
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-    ring-buffer: Fix 32-bit rb_time_read() race with rb_time_cmpxchg()
-
-Christoph Hellwig <hch@lst.de>
-    btrfs: mark the len field in struct btrfs_ordered_sum as unsigned
-
-Boris Burkov <boris@bur.io>
-    btrfs: fix qgroup_free_reserved_data int overflow
-
-Rakesh Babu Saladi <rsaladi2@marvell.com>
-    octeontx2-af: Support variable number of lmacs
-
-Hariprasad Kelam <hkelam@marvell.com>
-    octeontx2-af: Fix pause frame configuration
-
-Vlad Buslov <vladbu@nvidia.com>
-    net/sched: act_ct: Take per-cb reference to tcf_ct_flow_table
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: flowtable: GC pushes back packets to classic path
-
-Paul Blakey <paulb@nvidia.com>
-    net/sched: act_ct: Fix promotion of offloaded unreplied tuple
-
-Vlad Buslov <vladbu@nvidia.com>
-    net/sched: act_ct: offload UDP NEW connections
-
-Vlad Buslov <vladbu@nvidia.com>
-    netfilter: flowtable: cache info of last offload
-
-Vlad Buslov <vladbu@nvidia.com>
-    netfilter: flowtable: allow unidirectional rules
-
-Xin Long <lucien.xin@gmail.com>
-    net: sched: call tcf_ct_params_free to free params in tcf_ct_init
-
-Sumanth Korikkar <sumanthk@linux.ibm.com>
-    mm/memory_hotplug: fix error handling in add_memory_resource()
-
-Sumanth Korikkar <sumanthk@linux.ibm.com>
-    mm/memory_hotplug: add missing mem_hotplug_lock
-
-Ming Lei <ming.lei@redhat.com>
-    lib/group_cpus.c: avoid acquiring cpu hotplug lock in group_cpus_evenly
-
-Ming Lei <ming.lei@redhat.com>
-    genirq/affinity: Move group_cpus_evenly() into lib/
-
-Ming Lei <ming.lei@redhat.com>
-    genirq/affinity: Rename irq_build_affinity_masks as group_cpus_evenly
-
-Ming Lei <ming.lei@redhat.com>
-    genirq/affinity: Don't pass irq_affinity_desc array to irq_build_affinity_masks
-
-Ming Lei <ming.lei@redhat.com>
-    genirq/affinity: Pass affinity managed mask array to irq_build_affinity_masks
-
-Ming Lei <ming.lei@redhat.com>
-    genirq/affinity: Remove the 'firstvec' parameter from irq_build_affinity_masks
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: hda/realtek: Add quirk for Lenovo Yoga Pro 7
-
-Sudeep Holla <sudeep.holla@arm.com>
-    firmware: arm_scmi: Fix frequency truncation by promoting multiplier type
-
-John Fastabend <john.fastabend@gmail.com>
-    bpf, sockmap: af_unix stream sockets need to hold ref for pair sock
-
-Jakub Kicinski <kuba@kernel.org>
-    ethtool: don't propagate EOPNOTSUPP from dumps
-
-Ioana Ciornei <ioana.ciornei@nxp.com>
-    dpaa2-eth: recycle the RX buffer only after all processing done
-
-Ioana Ciornei <ioana.ciornei@nxp.com>
-    net: dpaa2-eth: rearrange variable in dpaa2_eth_get_ethtool_stats
-
-Paulo Alcantara <pc@manguebit.com>
-    smb: client: fix missing mode bits for SMB symlinks
-
-Christoph Hellwig <hch@lst.de>
-    block: update the stable_writes flag in bdev_add
-
-Christoph Hellwig <hch@lst.de>
-    filemap: add a per-mapping stable writes flag
-
-David Howells <dhowells@redhat.com>
-    mm, netfs, fscache: stop read optimisation when folio removed from pagecache
-
-David Howells <dhowells@redhat.com>
-    mm: merge folio_has_private()/filemap_release_folio() call pairs
-
-Vishal Moola (Oracle) <vishal.moola@gmail.com>
-    memory-failure: convert truncate_error_page() to use folio
-
-Vishal Moola (Oracle) <vishal.moola@gmail.com>
-    khugepage: replace try_to_release_page() with filemap_release_folio()
-
-Vishal Moola (Oracle) <vishal.moola@gmail.com>
-    ext4: convert move_extent_per_page() to use folios
-
-Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-    media: qcom: camss: Fix set CSI2_RX_CFG1_VC_MODE when VC is greater than 3
-
-Milen Mitkov <quic_mmitkov@quicinc.com>
-    media: camss: sm8250: Virtual channels for CSID
-
-Geliang Tang <geliang.tang@suse.com>
-    selftests: mptcp: set FAILING_LINKS in run_tests
-
-Paolo Abeni <pabeni@redhat.com>
-    selftests: mptcp: fix fastclose with csum failure
-
-Jaegeuk Kim <jaegeuk@kernel.org>
-    f2fs: set the default compress_level on ioctl
-
-Jaegeuk Kim <jaegeuk@kernel.org>
-    f2fs: assign default compression level
-
-Yangtao Li <frank.li@vivo.com>
-    f2fs: convert to use bitmap API
-
-Chao Yu <chao@kernel.org>
-    f2fs: clean up i_compress_flag and i_compress_level usage
-
-Thomas Richter <tmricht@linux.ibm.com>
-    s390/cpumf: support user space events for counting
-
-Heiko Carstens <hca@linux.ibm.com>
-    s390/mm: add missing arch_set_page_dat() call to vmem_crst_alloc()
-
-Rahul Rameshbabu <rrameshbabu@nvidia.com>
-    net/mlx5: Increase size of irq name buffer
-
-Christoph Hellwig <hch@infradead.org>
-    blk-mq: make sure active queue usage is held for bio_integrity_prep()
-
-Andrii Nakryiko <andrii@kernel.org>
-    bpf: fix precision backtracking instruction iteration
-
-Andrii Nakryiko <andrii@kernel.org>
-    bpf: handle ldimm64 properly in check_cfg()
-
-Yonghong Song <yonghong.song@linux.dev>
-    bpf: Support new 32bit offset jmp instruction
-
-Andrii Nakryiko <andrii@kernel.org>
-    bpf: clean up visit_insn()'s instruction processing
-
-Andrii Nakryiko <andrii@kernel.org>
-    bpf: Remove unused insn_cnt argument from visit_[func_call_]insn()
-
-Andrii Nakryiko <andrii@kernel.org>
-    bpf: remove unnecessary prune and jump points
-
-Andrii Nakryiko <andrii@kernel.org>
-    bpf: decouple prune and jump points
-
-Dan Carpenter <dan.carpenter@linaro.org>
-    fbdev: imsttfb: fix double free in probe()
-
-Helge Deller <deller@gmx.de>
-    fbdev: imsttfb: Release framebuffer and dealloc cmap on error path
-
-David Heidelberg <david@ixit.cz>
-    arm64: dts: qcom: sdm845: Fix PSCI power domain names
-
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-    arm64: dts: qcom: sdm845: align RPMh regulator nodes with bindings
-
-Rotem Saado <rotem.saado@intel.com>
-    wifi: iwlwifi: yoyo: swap cdb and jacket bits values
-
-Eric Dumazet <edumazet@google.com>
-    udp: annotate data-races around udp->encap_type
-
-Eric Dumazet <edumazet@google.com>
-    udp: lockless UDP_ENCAP_L2TPINUDP / UDP_GRO
-
-Eric Dumazet <edumazet@google.com>
-    udp: move udp->accept_udp_{l4|fraglist} to udp->udp_flags
-
-Eric Dumazet <edumazet@google.com>
-    udp: move udp->gro_enabled to udp->udp_flags
-
-Eric Dumazet <edumazet@google.com>
-    udp: move udp->no_check6_rx to udp->udp_flags
-
-Eric Dumazet <edumazet@google.com>
-    udp: move udp->no_check6_tx to udp->udp_flags
-
-Eric Dumazet <edumazet@google.com>
-    udp: introduce udp->udp_flags
-
-David Howells <dhowells@redhat.com>
-    ipv4, ipv6: Use splice_eof() to flush
-
-David Howells <dhowells@redhat.com>
-    splice, net: Add a splice_eof op to file-ops and socket-ops
-
-David Howells <dhowells@redhat.com>
-    udp: Convert udp_sendpage() to use MSG_SPLICE_PAGES
-
-David Howells <dhowells@redhat.com>
-    net: Declare MSG_SPLICE_PAGES internal sendmsg() flag
-
-Menglong Dong <imagedong@tencent.com>
-    bpf, x86: save/restore regs with BPF_DW size
-
-Pu Lehui <pulehui@huawei.com>
-    bpf, x86: Simplify the parsing logic of structure parameters
-
-Leon Hwang <hffilwlqm@gmail.com>
-    bpf, x64: Fix tailcall infinite loop
-
-Frederic Weisbecker <frederic@kernel.org>
-    srcu: Fix callbacks acceleration mishandling
-
-Thomas Gleixner <tglx@linutronix.de>
-    cpu/SMT: Make SMT control more robust against enumeration failures
-
-Michael Ellerman <mpe@ellerman.id.au>
-    cpu/SMT: Create topology_smt_thread_allowed()
-
-Muhammad Usama Anjum <usama.anjum@collabora.com>
-    selftests: secretmem: floor the memory size to the multiple of page_size
-
-Thomas Lange <thomas@corelatus.se>
-    net: Implement missing SO_TIMESTAMPING_NEW cmsg support
-
-Michael Chan <michael.chan@broadcom.com>
-    bnxt_en: Remove mis-applied code from bnxt_cfg_ntp_filters()
-
-Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-    net: ravb: Wait for operating mode to be applied
-
-Chen Ni <nichen@iscas.ac.cn>
-    asix: Add check for usbnet_get_endpoints
-
-Naveen Mamindlapalli <naveenm@marvell.com>
-    octeontx2-af: Re-enable MAC TX in otx2_stop processing
-
-Naveen Mamindlapalli <naveenm@marvell.com>
-    octeontx2-af: Always configure NIX TX link credits based on max frame size
-
-Wen Gu <guwen@linux.alibaba.com>
-    net/smc: fix invalid link access in dumping SMC-R connections
-
-Dinghao Liu <dinghao.liu@zju.edu.cn>
-    net/qla3xxx: fix potential memleak in ql_alloc_buffer_queues
-
-Rodrigo Cataldo <rodrigo.cadore@l-acoustics.com>
-    igc: Fix hicredit calculation
-
-Andrii Staikov <andrii.staikov@intel.com>
-    i40e: Restore VF MSI-X state during PCI reset
-
-Mark Brown <broonie@kernel.org>
-    ASoC: meson: g12a-tohdmitx: Fix event generation for S/PDIF mux
-
-Mark Brown <broonie@kernel.org>
-    ASoC: meson: g12a-toacodec: Fix event generation
-
-Mark Brown <broonie@kernel.org>
-    ASoC: meson: g12a-tohdmitx: Validate written enum values
-
-Mark Brown <broonie@kernel.org>
-    ASoC: meson: g12a-toacodec: Validate written enum values
-
-Ke Xiao <xiaoke@sangfor.com.cn>
-    i40e: fix use-after-free in i40e_aqc_add_filters()
-
-Marc Dionne <marc.dionne@auristor.com>
-    net: Save and restore msg_namelen in sock_sendmsg
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: nft_immediate: drop chain reference counter on error
-
-Adrian Cinal <adriancinal@gmail.com>
-    net: bcmgenet: Fix FCS generation for fragmented skbuffs
-
-Zhipeng Lu <alexious@zju.edu.cn>
-    sfc: fix a double-free bug in efx_probe_filters
-
-Stefan Wahren <wahrenst@gmx.net>
-    ARM: sun9i: smp: Fix array-index-out-of-bounds read in sunxi_mc_smp_init
-
-Hangbin Liu <liuhangbin@gmail.com>
-    selftests: bonding: do not set port down when adding to bond
-
-Jörn-Thorben Hinz <jthinz@mailbox.tu-berlin.de>
-    net: Implement missing getsockopt(SO_TIMESTAMPING_NEW)
-
-Eric Dumazet <edumazet@google.com>
-    net: annotate data-races around sk->sk_bind_phc
-
-Eric Dumazet <edumazet@google.com>
-    net: annotate data-races around sk->sk_tsflags
-
-Vadim Fedorenko <vadfed@meta.com>
-    net-timestamp: extend SOF_TIMESTAMPING_OPT_ID to HW timestamps
-
-Marc Kleine-Budde <mkl@pengutronix.de>
-    can: raw: add support for SO_MARK
-
-Kai-Heng Feng <kai.heng.feng@canonical.com>
-    r8169: Fix PCI error on system resume
-
-Hangyu Hua <hbh25y@gmail.com>
-    net: sched: em_text: fix possible memory leak in em_text_destroy()
-
-David Thompson <davthompson@nvidia.com>
-    mlxbf_gige: fix receive packet race condition
-
-Eugen Hristev <eugen.hristev@collabora.com>
-    ASoC: mediatek: mt8186: fix AUD_PAD_TOP register and offset
-
-Chancel Liu <chancel.liu@nxp.com>
-    ASoC: fsl_rpmsg: Fix error handler with pm_runtime_enable
-
-Kurt Kanzenbach <kurt@linutronix.de>
-    igc: Check VLAN EtherType mask
-
-Kurt Kanzenbach <kurt@linutronix.de>
-    igc: Check VLAN TCI mask
-
-Kurt Kanzenbach <kurt@linutronix.de>
-    igc: Report VLAN EtherType matching back to user
-
-Sudheer Mogilappagari <sudheer.mogilappagari@intel.com>
-    i40e: Fix filter input checks to prevent config with invalid values
-
-Ngai-Mint Kwan <ngai-mint.kwan@intel.com>
-    ice: Shut down VSI with "link-down-on-close" enabled
-
-Katarzyna Wieczerzycka <katarzyna.wieczerzycka@intel.com>
-    ice: Fix link_down_on_close message
-
-Khaled Almahallawy <khaled.almahallawy@intel.com>
-    drm/i915/dp: Fix passing the correct DPCD_REV for drm_dp_set_phy_test_pattern
-
-Suman Ghosh <sumang@marvell.com>
-    octeontx2-af: Fix marking couple of structure as __packed
-
-Siddh Raman Pant <code@siddh.me>
-    nfc: llcp_core: Hold a ref to llcp_local->dev when holding a ref to llcp_local
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: nf_tables: set transport offset from mac header for netdev/egress
-
-Xin Long <lucien.xin@gmail.com>
-    netfilter: use skb_ip_totlen and iph_totlen
-
-Douglas Anderson <dianders@chromium.org>
-    drm/bridge: ti-sn65dsi86: Never store more than msg->size bytes in AUX xfer
-
-Johannes Berg <johannes.berg@intel.com>
-    wifi: iwlwifi: pcie: don't synchronize IRQs from IRQ
-
-Paolo Bonzini <pbonzini@redhat.com>
-    KVM: x86/pmu: fix masking logic for MSR_CORE_PERF_GLOBAL_CTRL
-
-Shyam Prasad N <sprasad@microsoft.com>
-    cifs: do not depend on release_iface for maintaining iface_list
-
-Shyam Prasad N <sprasad@microsoft.com>
-    cifs: cifs_chan_is_iface_active should be called with chan_lock held
-
-Jocelyn Falempe <jfalempe@redhat.com>
-    drm/mgag200: Fix gamma lut not initialized for G200ER, G200EV, G200SE
-
-Bjorn Helgaas <bhelgaas@google.com>
-    Revert "PCI/ASPM: Remove pcie_aspm_pm_state_change()"
-
-Paolo Abeni <pabeni@redhat.com>
-    mptcp: prevent tcp diag from closing listener subflows
-
-Siddhesh Dharme <siddheshdharme18@gmail.com>
-    ALSA: hda/realtek: Fix mute and mic-mute LEDs for HP ProBook 440 G6
-
-Andy Chi <andy.chi@canonical.com>
-    ALSA: hda/realtek: fix mute/micmute LEDs for a HP ZBook
-
-Aabish Malik <aabishmalik3337@gmail.com>
-    ALSA: hda/realtek: enable SND_PCI_QUIRK for hp pavilion 14-ec1xxx series
-
-Sarthak Kukreti <sarthakkukreti@chromium.org>
-    block: Don't invalidate pagecache for invalid falloc modes
-
-Edward Adam Davis <eadavis@qq.com>
-    keys, dns: Fix missing size check of V1 server-list header
-
-
--------------
-
-Diffstat:
-
- MAINTAINERS                                        |   2 +
- Makefile                                           |   4 +-
- arch/Kconfig                                       |   3 +
- arch/arm/mach-sunxi/mc_smp.c                       |   4 +-
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi         |  24 +-
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts         |   4 +-
- arch/arm64/boot/dts/qcom/sdm845-lg-common.dtsi     |   6 +-
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts            |   6 +-
- .../arm64/boot/dts/qcom/sdm845-oneplus-common.dtsi |   6 +-
- arch/arm64/boot/dts/qcom/sdm845-shift-axolotl.dts  |   6 +-
- .../boot/dts/qcom/sdm845-sony-xperia-tama.dtsi     |   6 +-
- .../boot/dts/qcom/sdm845-xiaomi-beryllium.dts      |   2 +-
- arch/arm64/boot/dts/qcom/sdm845-xiaomi-polaris.dts |   6 +-
- .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts      |   2 +-
- arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dts   |   2 +-
- arch/s390/kernel/perf_cpum_cf.c                    |  35 +-
- arch/s390/mm/vmem.c                                |   8 +-
- arch/x86/events/intel/core.c                       |   7 +-
- arch/x86/kernel/kprobes/core.c                     |   3 +-
- arch/x86/net/bpf_jit_comp.c                        | 150 ++++---
- block/bdev.c                                       |   2 +
- block/blk-mq.c                                     |  75 ++--
- block/fops.c                                       |  21 +-
- drivers/base/memory.c                              |  18 +-
- drivers/firewire/ohci.c                            |  51 +++
- drivers/firmware/arm_scmi/perf.c                   |   6 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c         |  11 +-
- .../gpu/drm/amd/display/dc/dml/dcn20/dcn20_fpu.c   | 110 +++++-
- drivers/gpu/drm/bridge/ti-sn65dsi86.c              |   4 +-
- drivers/gpu/drm/i915/display/intel_dp.c            |   2 +-
- drivers/gpu/drm/mgag200/mgag200_drv.h              |   5 +
- drivers/gpu/drm/mgag200/mgag200_g200er.c           |   5 +
- drivers/gpu/drm/mgag200/mgag200_g200ev.c           |   5 +
- drivers/gpu/drm/mgag200/mgag200_g200se.c           |   5 +
- drivers/gpu/drm/mgag200/mgag200_mode.c             |  10 +-
- drivers/i2c/i2c-core.h                             |   4 +-
- drivers/interconnect/qcom/sm8250.c                 |   1 -
- .../media/platform/qcom/camss/camss-csid-gen2.c    |  68 +++-
- drivers/media/platform/qcom/camss/camss-csid.c     |  44 ++-
- drivers/media/platform/qcom/camss/camss-csid.h     |  11 +-
- drivers/mmc/core/block.c                           |   7 +-
- drivers/mmc/core/host.c                            |   1 +
- drivers/mmc/host/meson-mx-sdhc-mmc.c               |  26 +-
- drivers/mmc/host/sdhci-sprd.c                      |  10 +-
- drivers/net/ethernet/broadcom/bnxt/bnxt.c          |   4 +-
- drivers/net/ethernet/broadcom/genet/bcmgenet.c     |   4 +-
- drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c   |   7 +-
- .../net/ethernet/freescale/dpaa2/dpaa2-ethtool.c   |  18 +-
- drivers/net/ethernet/intel/i40e/i40e_main.c        |  11 +-
- drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c |  34 +-
- drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.h |   3 +
- drivers/net/ethernet/intel/ice/ice_main.c          |  12 +-
- drivers/net/ethernet/intel/igc/igc.h               |   1 +
- drivers/net/ethernet/intel/igc/igc_ethtool.c       |  42 +-
- drivers/net/ethernet/intel/igc/igc_tsn.c           |   2 +-
- drivers/net/ethernet/marvell/octeontx2/af/cgx.c    |  35 +-
- drivers/net/ethernet/marvell/octeontx2/af/cgx.h    |   6 +-
- .../ethernet/marvell/octeontx2/af/lmac_common.h    |   5 +-
- drivers/net/ethernet/marvell/octeontx2/af/npc.h    |   4 +-
- drivers/net/ethernet/marvell/octeontx2/af/rpm.c    |  11 +-
- drivers/net/ethernet/marvell/octeontx2/af/rvu.h    |   3 +-
- .../net/ethernet/marvell/octeontx2/af/rvu_cgx.c    |  43 +-
- .../ethernet/marvell/octeontx2/af/rvu_debugfs.c    |   2 +-
- .../net/ethernet/marvell/octeontx2/af/rvu_nix.c    | 120 +-----
- .../ethernet/marvell/octeontx2/af/rvu_npc_hash.c   |   4 +-
- drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c  |   6 +-
- drivers/net/ethernet/mellanox/mlx5/core/pci_irq.h  |   3 +
- .../ethernet/mellanox/mlxbf_gige/mlxbf_gige_rx.c   |   9 +-
- drivers/net/ethernet/qlogic/qla3xxx.c              |   2 +
- drivers/net/ethernet/realtek/r8169_main.c          |   2 +-
- drivers/net/ethernet/renesas/ravb_main.c           |  65 +--
- drivers/net/ethernet/sfc/rx_common.c               |   4 +-
- drivers/net/gtp.c                                  |   4 +-
- drivers/net/usb/ax88172a.c                         |   4 +-
- drivers/net/wireless/intel/iwlwifi/iwl-prph.h      |   4 +-
- drivers/net/wireless/intel/iwlwifi/pcie/internal.h |   4 +-
- drivers/net/wireless/intel/iwlwifi/pcie/rx.c       |   8 +-
- drivers/net/wireless/intel/iwlwifi/pcie/trans.c    |  17 +-
- drivers/pci/pci.c                                  |   6 +
- drivers/pci/pci.h                                  |   2 +
- drivers/pci/pcie/aspm.c                            |  19 +
- drivers/video/fbdev/imsttfb.c                      |   6 +-
- fs/9p/cache.c                                      |   2 +
- fs/afs/internal.h                                  |   2 +
- fs/btrfs/delalloc-space.c                          |   2 +-
- fs/btrfs/file-item.c                               |   2 +-
- fs/btrfs/file.c                                    |   2 +-
- fs/btrfs/inode.c                                   |  16 +-
- fs/btrfs/ordered-data.c                            |   7 +-
- fs/btrfs/ordered-data.h                            |   2 +-
- fs/btrfs/qgroup.c                                  |  25 +-
- fs/btrfs/qgroup.h                                  |   4 +-
- fs/cachefiles/namei.c                              |   2 +
- fs/ceph/cache.c                                    |   2 +
- fs/ext4/move_extent.c                              |  48 ++-
- fs/f2fs/checkpoint.c                               |   2 +-
- fs/f2fs/compress.c                                 |  15 +-
- fs/f2fs/data.c                                     |  12 +-
- fs/f2fs/dir.c                                      |   2 +-
- fs/f2fs/f2fs.h                                     |  35 +-
- fs/f2fs/file.c                                     |  11 +-
- fs/f2fs/inode.c                                    |  18 +-
- fs/f2fs/node.h                                     |  20 +-
- fs/f2fs/super.c                                    |  26 +-
- fs/f2fs/sysfs.c                                    |   2 +-
- fs/inode.c                                         |   2 +
- fs/nfs/fscache.c                                   |   3 +
- fs/smb/client/cifsglob.h                           |   1 -
- fs/smb/client/connect.c                            |   9 +-
- fs/smb/client/fscache.c                            |   2 +
- fs/smb/client/inode.c                              |   2 +-
- fs/smb/client/smb2file.c                           |   2 +-
- fs/smb/client/smb2misc.c                           |   2 +-
- fs/smb/client/smb2ops.c                            |  48 ++-
- fs/smb/client/smb2pdu.c                            |  16 +-
- fs/smb/client/smb2pdu.h                            |   2 +-
- fs/smb/common/smb2pdu.h                            |  42 +-
- fs/smb/server/smb2ops.c                            |   8 +-
- fs/smb/server/smb2pdu.c                            |   5 +-
- fs/splice.c                                        |  34 +-
- include/linux/bpf.h                                |  13 +-
- include/linux/bpf_verifier.h                       |   1 +
- include/linux/f2fs_fs.h                            |   9 +-
- include/linux/fs.h                                 |   1 +
- include/linux/group_cpus.h                         |  14 +
- include/linux/net.h                                |   1 +
- include/linux/pagemap.h                            |  33 ++
- include/linux/skmsg.h                              |   1 +
- include/linux/socket.h                             |   3 +
- include/linux/splice.h                             |   1 +
- include/linux/udp.h                                |  69 ++--
- include/net/af_unix.h                              |   1 +
- include/net/inet_common.h                          |   1 +
- include/net/ip.h                                   |   2 +-
- include/net/netfilter/nf_conntrack_act_ct.h        |  34 +-
- include/net/netfilter/nf_flow_table.h              |  21 +-
- include/net/netfilter/nf_tables_ipv4.h             |   6 +-
- include/net/sock.h                                 |  23 +-
- include/net/tcp.h                                  |   1 +
- include/net/udp.h                                  |   1 +
- include/net/udp_tunnel.h                           |   9 +-
- io_uring/net.c                                     |   2 +
- kernel/bpf/core.c                                  |  25 +-
- kernel/bpf/trampoline.c                            |   4 +-
- kernel/bpf/verifier.c                              | 162 +++++---
- kernel/cpu.c                                       |  42 +-
- kernel/irq/affinity.c                              | 405 +------------------
- kernel/rcu/srcutree.c                              |  31 +-
- kernel/trace/ring_buffer.c                         |   4 +-
- lib/Makefile                                       |   2 +
- lib/group_cpus.c                                   | 438 +++++++++++++++++++++
- mm/filemap.c                                       |   2 +
- mm/huge_memory.c                                   |   3 +-
- mm/internal.h                                      |  11 +
- mm/khugepaged.c                                    |  22 +-
- mm/memory-failure.c                                |   9 +-
- mm/memory.c                                        |   4 +-
- mm/memory_hotplug.c                                |  15 +-
- mm/migrate.c                                       |   3 +-
- mm/page-writeback.c                                |   2 +-
- mm/truncate.c                                      |   6 +-
- mm/vmscan.c                                        |   8 +-
- net/can/j1939/socket.c                             |  10 +-
- net/can/raw.c                                      |   1 +
- net/core/skbuff.c                                  |  10 +-
- net/core/skmsg.c                                   |   2 +
- net/core/sock.c                                    |  16 +-
- net/core/sock_map.c                                |   2 +
- net/dns_resolver/dns_key.c                         |  19 +-
- net/ethtool/netlink.c                              |   2 +-
- net/ipv4/af_inet.c                                 |  18 +
- net/ipv4/ip_output.c                               |   4 +-
- net/ipv4/ip_sockglue.c                             |   2 +-
- net/ipv4/tcp.c                                     |  20 +-
- net/ipv4/tcp_ipv4.c                                |   1 +
- net/ipv4/udp.c                                     | 110 ++----
- net/ipv4/udp_offload.c                             |   4 +-
- net/ipv4/udp_tunnel_core.c                         |   2 +-
- net/ipv4/xfrm4_input.c                             |   4 +-
- net/ipv6/af_inet6.c                                |   1 +
- net/ipv6/ip6_output.c                              |   4 +-
- net/ipv6/ping.c                                    |   2 +-
- net/ipv6/raw.c                                     |   2 +-
- net/ipv6/tcp_ipv6.c                                |   1 +
- net/ipv6/udp.c                                     |  38 +-
- net/ipv6/xfrm6_input.c                             |   4 +-
- net/l2tp/l2tp_core.c                               |   6 +-
- net/mptcp/subflow.c                                |  13 +
- net/netfilter/ipvs/ip_vs_xmit.c                    |   2 +-
- net/netfilter/nf_flow_table_core.c                 |  13 +-
- net/netfilter/nf_flow_table_inet.c                 |   2 +-
- net/netfilter/nf_flow_table_ip.c                   |   4 +-
- net/netfilter/nf_flow_table_offload.c              |  18 +-
- net/netfilter/nf_log_syslog.c                      |   2 +-
- net/netfilter/nf_tables_core.c                     |   2 +-
- net/netfilter/nft_immediate.c                      |   2 +-
- net/netfilter/xt_length.c                          |   2 +-
- net/nfc/llcp_core.c                                |  39 +-
- net/openvswitch/conntrack.c                        |   2 +-
- net/sched/act_ct.c                                 | 165 ++++++--
- net/sched/em_text.c                                |   4 +-
- net/smc/smc_diag.c                                 |   3 +-
- net/socket.c                                       |  29 +-
- net/unix/af_unix.c                                 |   2 -
- net/unix/unix_bpf.c                                |   5 +
- sound/pci/hda/patch_realtek.c                      |   4 +
- sound/soc/fsl/fsl_rpmsg.c                          |  10 +-
- sound/soc/mediatek/mt8186/mt8186-dai-adda.c        |   2 +-
- sound/soc/meson/g12a-toacodec.c                    |   5 +-
- sound/soc/meson/g12a-tohdmitx.c                    |   8 +-
- tools/testing/selftests/bpf/verifier/ld_imm64.c    |   8 +-
- .../net/bonding/bond-arp-interval-causes-panic.sh  |   6 +-
- tools/testing/selftests/net/mptcp/mptcp_join.sh    |  14 +-
- tools/testing/selftests/vm/memfd_secret.c          |   3 +
- 214 files changed, 2405 insertions(+), 1455 deletions(-)
-
-
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|MW3PR12MB4395:EE_
+X-MS-Office365-Filtering-Correlation-Id: e47bb733-dd7e-4472-81c9-08dc105fd70c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	pki/hrg6ZuhXm+NSzNYaK4Zb8nPwKmN3mK1wpeiyiEPS6hPI99bwKgqWsNYLcwNfKkH2m0XulSrJVUmjzQfYbLw1NKlIGk6xRuAA8LRj+X6q3qtb8uulO8V8m7eCJHb9YuqUcUipLCqR6OblnroAGv97D3U3qbUAWyGAqjssXzT02RgME7zQNe8brfsjO11t+0npelnt3uoMfNa5yg2HOrzogs4vjcJ/OPEPXWhuYn3IivG7lNbk2quEeLeeS9/iTVsVLFiVsgB5MR1q54DfmCcPWnlLjXFs4aiVc1Sa88PiDrVnhlUJmRmZYX8fG5O574yIsvYe93po+AYjWXKeEHhrDSIiShysmvORzi87DiIVMYX7L7YQZfF4Q7yDH2zkEU5i5kledKXsumQs3z5LgiSuHc6EVRJZpZkj9O41C7TSxrulPND5EolnsPYS541pgNOmr9QmHpB8SzEqrwVJmshV+zhYTh8lZojPeYs9A4EWyGPGRdS7SRejZfVKt+VrhGDLmuFmdQTyOszCQBy+RSKBBwRzwXJfOJ7BfcOEghKNWQZs5jAhdhHf7m+IiB+AxXyXj3TNspa2Pk4x0B2pDF1MmbumSTcHY032MIzZzqo=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(366004)(136003)(39860400002)(396003)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(66946007)(66556008)(66476007)(316002)(8936002)(8676002)(1076003)(26005)(478600001)(2616005)(83380400001)(2906002)(5660300002)(41300700001)(7416002)(38100700002)(86362001)(6512007)(6506007)(921011)(6486002)(33656002)(36756003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?YGzcC6Z6zOpgqZiJ6/a30a/2JPrkmCq6TUDgiXsAOxmkKXE+15KHE0VMVB7n?=
+ =?us-ascii?Q?RqvfLK3KEVKOspNChiXxig5ghy0kPbnic2LV8GsVGBUlmZLrAmNLPyJ6sHKD?=
+ =?us-ascii?Q?85Q7zQb9GKJUwoct94R6zBEXsc52BbeERDY+AcgE2O+Tj+nQ2t59eXRjWGO2?=
+ =?us-ascii?Q?jhWrXcWz5RAbtxfYL6ZrUiuI46Gxe2eJybKZS/yNovI30ZA1Y40QqZCJz+Ti?=
+ =?us-ascii?Q?S0E/MslXp05tP47m4OkV5gnohOWp33/0dq25EGR/PB/7hU7WbyhKQXKGYi57?=
+ =?us-ascii?Q?qEkgx5Gk286L1Dv4/+rxTRT5CaP70qmXCiSTUZShXstdEBqCy+Lxq9zzCKZ/?=
+ =?us-ascii?Q?is0e3F54nabTReW8A4jfRa5A0hYBlrUDTBkfSitodaCQqh9YHEII66uTy3gm?=
+ =?us-ascii?Q?RbrY6O35l/3Igf64oO0b93LDKRb8E52oSFnwBZNqTCrBW/7XKSaENdFVAjUc?=
+ =?us-ascii?Q?X3onP4GMYYkXikqZFnUW00UWuBsVBgpAM5yNp+Nzjv9qIQ650uq4gB2+yp1U?=
+ =?us-ascii?Q?vaLD5L6wI3v6PTUSN3u/ycNSGeXUC16/9SAHn6eMqA3jZsqufW5x3Xn9F3cA?=
+ =?us-ascii?Q?w02wyWl+JP33upwBKnzd52iLKdpvSXgbKauNNyc8tWopag4fUhJtdhhL+jjk?=
+ =?us-ascii?Q?6dcm4rodTgBXvLBo9YOJcAYI1DPzi01Bx4RFtm9b1g2RLKZtvPVasVNNtVzZ?=
+ =?us-ascii?Q?8TwgZGu3WFNxnzd4PiEMpLBLLHBLHwrseI4EpW3MKeHDgYOiCKi0n2ifAd4k?=
+ =?us-ascii?Q?eiZZY8emm0rVOloXbin16xz33iJDVSk1q0Xo2oOKHVtl3FIbmkmrtZNgYOZf?=
+ =?us-ascii?Q?TQTTErk5MrM7p/oBH4X4MIFGRYQbLk+OULSoSZlKX5zWZ03Y4iucr3gneeaZ?=
+ =?us-ascii?Q?hxnOdHWCvtSoQXE5dYdiX515kKXAuDW3CLPALmikAQ4DITU7kw0BtnU6AzYj?=
+ =?us-ascii?Q?EyHs1TwHzeuT5fpk3Lmg2CJalxAn/zjKoyCDFybmFATVc5c2AzZ2RGtCZuoA?=
+ =?us-ascii?Q?aP8elQlSuPptRMF6GHgK76e4OO9QRDtvHleLyI3PjCGF0vQog6eIdfX4S1g9?=
+ =?us-ascii?Q?P+bRpGipW52lYpz/PErjfaoAJdqGPgcb/mFiS1ZWQvffnJ64Suga7a5peNO0?=
+ =?us-ascii?Q?VmzsCX+0LjPry0OK4GB5QbJHq25nwv0CY1haQvROn97VusIDbqMMbLRRwZhT?=
+ =?us-ascii?Q?YUNuI1iLiTjcRBpV9cywdphwIFF9Qsn3Dkc5qv96Zdr5mQyQ1A6RFeYuynxi?=
+ =?us-ascii?Q?XJiUsAgdPdEjqR1MRlrLPhaMmkRW1ZC3DzAGk1u/zaDsN5vw8Xd0E/820Ip+?=
+ =?us-ascii?Q?slo95CbERpmlC4w35uvEdNAAENYi0vGJ4/v4nMs9skDUvZrY785WzuH+BEIw?=
+ =?us-ascii?Q?eHCc8GOViwuehDRR5W16ZBiyqoKaj5fjbov9e03KouZEpTTuucO8jP3lQL2i?=
+ =?us-ascii?Q?pQ+oagcpguG+AEORALZBi+0+apRsAa0Iy0O4pE9f3EvYcF0+MhM5PaQPtF3n?=
+ =?us-ascii?Q?SFZaeFr5TZfCwm4oG8dcwqSDtrycNxWsrgd0wLgD0terTu85x10IIjl9VbbX?=
+ =?us-ascii?Q?p1dg6oB5dOqyQM/EKiY=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e47bb733-dd7e-4472-81c9-08dc105fd70c
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2024 15:38:19.6827
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BHDJ0IhZDLVjxjvE/1kTpTlzCr5/R+62UCO6RiaPNGGrs0EhbQMMo2AvMawRDeNq
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4395
+
+On Mon, Jan 08, 2024 at 04:25:02PM +0100, Daniel Vetter wrote:
+> On Mon, Jan 08, 2024 at 10:02:50AM -0400, Jason Gunthorpe wrote:
+> > On Mon, Jan 08, 2024 at 02:02:57PM +0800, Yan Zhao wrote:
+> > > On Fri, Jan 05, 2024 at 03:55:51PM -0400, Jason Gunthorpe wrote:
+> > > > On Fri, Jan 05, 2024 at 05:12:37PM +0800, Yan Zhao wrote:
+> > > > > This series allow user space to notify KVM of noncoherent DMA status so as
+> > > > > to let KVM honor guest memory types in specified memory slot ranges.
+> > > > > 
+> > > > > Motivation
+> > > > > ===
+> > > > > A virtio GPU device may want to configure GPU hardware to work in
+> > > > > noncoherent mode, i.e. some of its DMAs do not snoop CPU caches.
+> > > > 
+> > > > Does this mean some DMA reads do not snoop the caches or does it
+> > > > include DMA writes not synchronizing the caches too?
+> > > Both DMA reads and writes are not snooped.
+> > 
+> > Oh that sounds really dangerous.
+> 
+> So if this is an issue then we might already have a problem, because with
+> many devices it's entirely up to the device programming whether the i/o is
+> snooping or not. So the moment you pass such a device to a guest, whether
+> there's explicit support for non-coherent or not, you have a
+> problem.
+
+No, the iommus (except Intel and only for Intel integrated GPU, IIRC)
+prohibit the use of non-coherent DMA entirely from a VM.
+
+Eg AMD systems 100% block non-coherent DMA in VMs at the iommu level.
+
+> _If_ there is a fundamental problem. I'm not sure of that, because my
+> assumption was that at most the guest shoots itself and the data
+> corruption doesn't go any further the moment the hypervisor does the
+> dma/iommu unmapping.
+
+Who fixes the cache on the unmapping? I didn't see anything..
+
+Jason
