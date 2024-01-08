@@ -1,70 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp85.cstnet.cn [159.226.251.85])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB66379DC;
-	Mon,  8 Jan 2024 06:39:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zgRQChGh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24915C433C8;
-	Mon,  8 Jan 2024 06:39:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1704695988;
-	bh=nHahIKG1B+hbq6S6EJafO53DOY81FU14NqxbHiUl0qQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=zgRQChGhcR50eyy9G2qGMn1k+uozQgySgx6t1LFBzrXM521RSuYNkN5EF7qJiOCaW
-	 SGwyxaQbkhQghIKgB+ruFW2Xh39MabeEoNRzKZtE1AqD7WEfJlOkcKMPAEOXId3gr0
-	 aQVug0UtbDrbrnxlqyT3XlKDqpzs116V8EgsH6aE=
-Date: Mon, 8 Jan 2024 07:39:45 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Matthias Yee <mgyee9@gmail.com>
-Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: vt6655: fixed check alignment of open
- parenthesis in card.c
-Message-ID: <2024010822-unplug-pacifist-9791@gregkh>
-References: <20240108060207.92348-1-mgyee9@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208138F6D;
+	Mon,  8 Jan 2024 06:40:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iie.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iie.ac.cn
+Received: from mengjingzi$iie.ac.cn ( [159.226.94.107] ) by
+ ajax-webmail-APP-13 (Coremail) ; Mon, 8 Jan 2024 14:32:12 +0800 (GMT+08:00)
+Date: Mon, 8 Jan 2024 14:32:12 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: =?UTF-8?B?5a2f5pWs5ae/?= <mengjingzi@iie.ac.cn>
+To: "Theodore Ts'o" <tytso@mit.edu>
+Cc: gregkh@linuxfoundation.org, gpiccoli@igalia.com, 
+	john.ogness@linutronix.de, keescook@chromium.org, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	pmladek@suse.com, rostedt@goodmis.org, senozhatsky@chromium.org, 
+	tony.luck@intel.com
+Subject: Re: [PATCH] cap_syslog: remove CAP_SYS_ADMIN when dmesg_restrict
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.15 build 20230921(8ad33efc)
+ Copyright (c) 2002-2024 www.mailtech.cn cnic.cn
+In-Reply-To: <20240105144944.GA246367@mit.edu>
+References: <2024010306-tweezers-skinhead-083e@gregkh>
+ <20240105062007.26965-1-mengjingzi@iie.ac.cn>
+ <20240105144944.GA246367@mit.edu>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240108060207.92348-1-mgyee9@gmail.com>
+Message-ID: <4b5ac92c.1086b.18ce7c58a95.Coremail.mengjingzi@iie.ac.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:twCowACHj8_slptlZdEEAA--.50409W
+X-CM-SenderInfo: pphqwyxlqj6xo6llvhldfou0/1tbiCRAKE2WbUw7IpAABsO
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VW3Jw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-On Sun, Jan 07, 2024 at 10:02:07PM -0800, Matthias Yee wrote:
-> Fixed a coding style issue.
-> 
-> Signed-off-by: Matthias Yee <mgyee9@gmail.com>
-> ---
->  drivers/staging/vt6655/card.c | 74 +++++++++++++++++------------------
->  1 file changed, 37 insertions(+), 37 deletions(-)
-> 
-
-Hi,
-
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- You did not specify a description of why the patch is needed, or
-  possibly, any description at all, in the email body.  Please read the
-  section entitled "The canonical patch format" in the kernel file,
-  Documentation/process/submitting-patches.rst for what is needed in
-  order to properly describe the change.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+Ck9uIEZyaSAyMDI0LTAxLTA1IDA5OjQ5OjQ0LCBUaGVvZG9yZSBUcydvIHdyb3RlOgomZ3Q7IEl0
+J3MgdW5jbGVhciB0byBtZSB3aGF0IGdvYWwgeW91IGhhdmUgaW4gdHJ5aW5nIHRvIG1lc3Mgd2l0
+aCB0aGUKJmd0OyBjYXBhYmlsaXR5IGRlZmluaXRpb25zPyAgUGVyaGFwcyBpdCBtaWdodCBiZSB1
+c2VmdWwgaWYgeW91IHdlcmUgdG8KJmd0OyBleHBsaWNpdGx5IHN0YXRlIHlvdXIgZ29hbHMgaW4g
+dGhlc2UgcHJvcG9zYWxzPwoKUGV0ciBpcyByaWdodCwgd2UgYXJlIHRyeWluZyB0byByZXNvbHZl
+IHRoZSBvdmVybGFwIHByb2JsZW0gb2YgY2FwYWJpbGl0eS4gCgpDYXBhYmlsaXR5IGlzIGFib3V0
+IHRvIHNlcGFyYXRlIHN1cGVydXNlciBwcml2aWxlZ2VzIGludG8gZGlzdGluY3QgdW5pdHMgZm9y
+IApmaW5lci1ncmFpbmVkIGFjY2VzcyBjb250cm9sLiBJdOKAmXMgZWZmZWN0aXZlIHdvcmsgcmVx
+dWlyZXMgdGhlIGtlcm5lbCB0byB1c2UgCnByb3BlciBjYXBhYmlsaXR5IGZvciBzZW5zaXRpdmUg
+cmVzb3VyY2VzIGFuZCB0aGUgdXNlciBwcm9ncmFtcyB0byBjaG9vc2UgdGhlIApyaWdodCBjYXBh
+YmlsaXR5IGluc3RlYWQgb2YgUk9PVCB0byBleGVjdXRlLiBBbmQgd2Ugd2FudCB0byBwcm9tb3Rl
+IHRoZSAKc3RhbmRhcmRpemVkIHVzZSBvZiBjYXBhYmlsaXR5LgoKCiZndDsgU28gdGhlcmUgaXNu
+J3QgYWxsIHRoYXQgbXVjaCB1cHNpZGUgaW4gdHJ5aW5nIHRvIHJldGlyZSBDQVBfU1lTX0FETUlO
+IAoKV2UgYXJlIG5vdCBnb2luZyB0byByZXRpcmUgQ0FQX1NZU19BRE1JTiwgYnV0IHNheWluZyB0
+aGF0IENBUF9TWVNMT0cgaXMgdGhlCm1vcmUgYXBwcm9wcmlhdGUgY2FwYWJpbGl0eSB3aGVuIGl0
+IGNvbWVzIHRvIHByb3RlY3Rpbmcgc3lzbG9nIGZ1bmN0aW9uYWxpdHkuIApDQVBfU1lTX0FETUlO
+IGlzIGFscmVhZHkgb3ZlcmxvYWRlZCwgY2hlY2sgb3V0IHRoZSBsaW5rWzFdLCBuYXJyb3dpbmcg
+ZG93biBpdHMgCmRlZmluaXRpb25zIHdpbGwgZmFjaWxpdGF0ZSB0aGUgaW1wbGVtZW50YXRpb24g
+b2YgbGVhc3QgcHJpdmlsZWdlLiBUaGlzIGFkanVzdG1lbnQgCm1ha2VzIGl0IGNsZWFyZXIgZm9y
+IGEgdXNlciBwcm9ncmFtIHJlcXVpcmluZyBzeXNsb2cgYWNjZXNzIHRvIHNwZWNpZnkgb25seSB0
+aGUgCm5lY2Vzc2FyeSBjYXBhYmlsaXR5LCBDQVBfU1lTTE9HLCBpbnN0ZWFkIG9mIHJlbHlpbmcg
+b24gdGhlIGJyb2FkZXIgQ0FQX1NZU19BRE1JTi4KCiZndDsgV2hhdCB0ZXN0aW5nIGhhdmUgeW91
+IGRvbmUgdG8gbWFrZSBzdXJlIHRoYXQgdGhpcyBpcyBPSz8KCldlIGJvb3RlZCB0aGUgbW9kaWZp
+ZWQga2VybmVsIGFuZCBjb25maXJtZWQgdGhhdCBDQVBfU1lTX0FETUlOIG5vIGxvbmdlciBoYXMg
+YWNjZXNzIAp0byBzeXNsb2cgd2hlbiBkbWVzZyBpcyBzZXQuCgpXaGlsZSBjZXJ0YWluIHVzZXIg
+cHJvZ3JhbXMgcmVseWluZyBvbiBDQVBfU1lTX0FETUlOIGZvciBzeXNsb2cgYWNjZXNzIG1pZ2h0
+IGJlIGltcGFjdGVkLCAKdGhleSBjYW4gYWRqdXN0IHRoZWlyIGNhcGFiaWxpdHkgY29uZmlndXJh
+dGlvbiB1c2luZyB0aGUg4oCYc2V0Y2Fw4oCZIGNvbW1hbmQuIERlY3JlYXNpbmcgdGhlIApyZWxp
+YW5jZSBvbiBDQVBfU1lTX0FETUlOIGFjcm9zcyBhcHBsaWNhdGlvbnMgY29udHJpYnV0ZXMgdG8g
+bWluaW1pemluZyBzZWN1cml0eSByaXNrcyBpbiAKdGhlIHN5c3RlbS4gQ3VycmVudGx5LCBpdCdz
+IHVuY2VydGFpbiBpZiBhbnkgc3VjaCBwcm9ncmFtcyBleGlzdC4KCgpCZXN0IHJlZ3JhZHMsCkpp
+bmd6aQoKWzFdOiBodHRwczovL2x3bi5uZXQvQXJ0aWNsZXMvNDg2MzA2LwoKCg==
