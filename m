@@ -1,209 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01rlnn2050.outbound.protection.outlook.com [40.95.110.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4443646521
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 14:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394314777C;
+	Mon,  8 Jan 2024 14:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=taln60.nuvoton.co.il
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a05ITonK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704723991; x=1736259991;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bj5j5nuhV/qrZwZnlx7DCKPmSdslwRR0SSqhJ0uVBmM=;
-  b=a05ITonK3HE7hLImU3em80dqDH7iT8cqGLRWcDapFLZP8UVm7XvVAL1E
-   qMw8Qk4BhdZge2Fzznsy4/1YqMnR2sv7NQgDk1O2ms0Bci2Z4h8qhrDYF
-   MuzMS3RQBNtjFmQx3yqG3W073vkCsS2QZpvvIXb8VqwiG4vopQT1TGkm2
-   q2WFpSru/+fPbV9EfDouD3GPEavbteu4NchSQiSq0MniF3mIMqy9/q+j/
-   pfeDxqTrft96ZKofFbMfRfrjjtb7rlNYpHXXHaqD3RPN+nGf+mySDBzfd
-   ZbhsS15CZpTNDQ2Aj90pRnwkPudvm8r6zF/0cQbO6sRhKVYHw9NZ2wY/P
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="4649809"
-X-IronPort-AV: E=Sophos;i="6.04,341,1695711600"; 
-   d="scan'208";a="4649809"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 06:26:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="781425229"
-X-IronPort-AV: E=Sophos;i="6.04,341,1695711600"; 
-   d="scan'208";a="781425229"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 08 Jan 2024 06:26:26 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rMqa7-0004mh-2q;
-	Mon, 08 Jan 2024 14:26:23 +0000
-Date: Mon, 8 Jan 2024 22:26:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Xiao Wang <xiao.w.wang@intel.com>, paul.walmsley@sifive.com,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu
-Cc: oe-kbuild-all@lists.linux.dev, conor.dooley@microchip.com,
-	ajones@ventanamicro.com, heiko@sntech.de, haicheng.li@intel.com,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Xiao Wang <xiao.w.wang@intel.com>
-Subject: Re: [PATCH] riscv: Optimize crc32 with Zbc extension
-Message-ID: <202401082215.4rPI1A5Z-lkp@intel.com>
-References: <20240105080830.3738117-1-xiao.w.wang@intel.com>
+	dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b="uttHVWk3"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Toq+zBhFGLG++L0jAmn0+DOMlFPrWREuQ2ihXl8OQ7CqBL7dFI5JYM5957dC9yBDSte8yTGmXbJ0lwaSP4J8g8EpA5KEZlsKUPGsuPIzWB6uLcmWrIKOskpu7HAhGgsHLnnhBcmh56WutN1vwChF8c28Wh3EtxK1wFCsRaub8zpmvKdKaUDYa1ZaOlZvYP3NOcLx9wEPlZwj+HJ95fSjYcLJKOn3K7nPYS+JXAyoHgzcaH1fuibQ1vBoMfjwcoDl88e5hD7LxgpMeZXfqTARSYXMFiVHSsq6kRX4+uJ9mMSm0hPJcF/LWNU/dLgCo99gWKEmrW6hnLOWkFTlFcU+gw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XvTno2ldL33EagYWpxaNixMNkdbH0dEQ0CPhyIa9KWY=;
+ b=VHh3AvH5bsxdzmu9XW1oQD+kRCw+b3tjCkHuoRn/kDXHf1SJTgy4UD4qVoy+kiYBl/nxbvv7Ou2zZocMZRL+WJRGBOyrGhLVafTf/4qLqJZ3vJeWryR4LFqH4gHBRv9k/C2LIJE/eqsZDRi3WZdmVWxJ+HqACKo8c7shB6eLU7fVFFFcN8HyrkCDBgZw1p57JqV8bqNqAi9LKRr3MNjI6gEARcndje6t8ibPbRxW7zwbVuAskkeyPKoVXIi0Y343ZrZldf3fOj50y1+FDmLjh3do3qb9q+WAI8NE4z4ifP/GEuPT2J+mmeFG95o5errnD9X9x15Bsm7MFZys/w/wTQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 211.75.126.7) smtp.rcpttodomain=baylibre.com
+ smtp.mailfrom=taln60.nuvoton.co.il; dmarc=fail (p=none sp=quarantine pct=100)
+ action=none header.from=gmail.com; dkim=none (message not signed); arc=none
+ (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XvTno2ldL33EagYWpxaNixMNkdbH0dEQ0CPhyIa9KWY=;
+ b=uttHVWk3xgMag4pByyKzbjXLB3tsq62KgeQunEPXdPbDwxg8ouFzPRKdapf59oJasl2i/fkdxtMbnfxDiIyfBXwatUGpY+xvyZJxrggsmEWHLFTqC9SjW6JwbV+jkxCt5CLocgPQRWBA8Cf282qrN0K8Fqk72TM+P5YVsw/PO/A=
+Received: from PS2PR02CA0091.apcprd02.prod.outlook.com (2603:1096:300:5c::31)
+ by SEYPR03MB7968.apcprd03.prod.outlook.com (2603:1096:101:168::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.21; Mon, 8 Jan
+ 2024 13:54:30 +0000
+Received: from HK2PEPF00006FB5.apcprd02.prod.outlook.com
+ (2603:1096:300:5c:cafe::ac) by PS2PR02CA0091.outlook.office365.com
+ (2603:1096:300:5c::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.21 via Frontend
+ Transport; Mon, 8 Jan 2024 13:54:30 +0000
+X-MS-Exchange-Authentication-Results: spf=none (sender IP is 211.75.126.7)
+ smtp.mailfrom=taln60.nuvoton.co.il; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=gmail.com;
+Received-SPF: None (protection.outlook.com: taln60.nuvoton.co.il does not
+ designate permitted sender hosts)
+Received: from NTHCCAS01.nuvoton.com (211.75.126.7) by
+ HK2PEPF00006FB5.mail.protection.outlook.com (10.167.8.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7181.12 via Frontend Transport; Mon, 8 Jan 2024 13:54:29 +0000
+Received: from NTHCCAS01.nuvoton.com (10.1.8.28) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 8 Jan
+ 2024 21:54:24 +0800
+Received: from taln58.nuvoton.co.il (10.191.1.178) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
+ Transport; Mon, 8 Jan 2024 21:54:24 +0800
+Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
+	by taln58.nuvoton.co.il (Postfix) with ESMTP id 8C75F5F649;
+	Mon,  8 Jan 2024 15:54:23 +0200 (IST)
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+	id 8BF9CDC0047; Mon,  8 Jan 2024 15:54:23 +0200 (IST)
+From: Tomer Maimon <tmaimon77@gmail.com>
+To: <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <tali.perry1@gmail.com>,
+	<joel@jms.id.au>, <venture@google.com>, <yuenn@google.com>,
+	<benjaminfair@google.com>
+CC: <openbmc@lists.ozlabs.org>, <linux-clk@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>, Tomer Maimon
+	<tmaimon77@gmail.com>
+Subject: [PATCH v22 4/8] dt-bindings: soc: nuvoton: add binding for clock and reset registers
+Date: Mon, 8 Jan 2024 15:54:17 +0200
+Message-ID: <20240108135421.684263-5-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240108135421.684263-1-tmaimon77@gmail.com>
+References: <20240108135421.684263-1-tmaimon77@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240105080830.3738117-1-xiao.w.wang@intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NotSetDelaration: True
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HK2PEPF00006FB5:EE_|SEYPR03MB7968:EE_
+X-MS-Office365-Filtering-Correlation-Id: 11d72320-b249-4be3-aee6-08dc1051556b
+X-MS-Exchange-SenderADCheck: 2
+X-MS-Exchange-AntiSpam-Relay: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	ePeVN6yWmgxcfRl8nzvRTI+Y8369zHx/Aov5bTLywIPvuqHXjnLdMbNW3WMxfUa0P65NZP8FugLKcjCma6iOVi+IwiIiH7VbvUefB7UHuaSoLS5u88y7TCA/6LZgQG2406Q4dHrfGzLS372xRYkD5pB6Mmj0cLbtCCfVifyC60aRfhkj728qg8Dapbz0Diq+OqcSJdKQlkGi0SGgaaRy1zcjyjcdAKJNQVXBYED1ogcjaexjDBhTd94d1L1NJpckNidYpP0G+eyGNwE9AEeyGEPVfmNaMmgsHUBBGZ4pt6cVYdR2UINmYSpA+JXVqA3AbC/CEkujHyEm5RKF1T1SclmSDMu8M0FI9bwh8CVVr5LPEDy2RPvegmiJmshGWhKaRjY+Zy6dVZsyUkNNrDjGUmR3WuKOAytPSnYJ2B3pqtOZjat/ZhnYRuDP5Z6FacNcsEBvInCVu9DVOILnsVbO5FVu69ORw96JQDnVuuSow+d835Bbki+nUSgFx/9gZCDDJZ4f22eEEhmb9GCSTFokp2B52MkJink/d5VvnY4EzOLM2HWRlD4VBubCzbK6ni90+jwJsVNU4Buwh24at3iO6JNV6GIqkICirKX6nCef8+0JzyDVMzTtBRj4/KKxMRPNKeCWoc4avjwHWMnrsfmhnMEq7IP3bMnh+B2ahiNiCrFAGR0vXMM5TDhJOp33zWhyYE6hIW3G1GkVTDboVmQQ1IknlUbaYYjGrhNc+PbWXjS2Mfncxe8Ue+feIJFfTUIlZsGLcsJdFgBwUHwumFPM0CeFJBalkL9B7J4MA7Y7wPio6k4bg9uDDV2Hw8XcZ6h3uTX3QT0ohK01rbY9K06stw==
+X-Forefront-Antispam-Report:
+	CIP:211.75.126.7;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:NTHCCAS01.nuvoton.com;PTR:211-75-126-7.hinet-ip.hinet.net;CAT:NONE;SFS:(13230031)(4636009)(376002)(396003)(136003)(346002)(39860400002)(230922051799003)(61400799012)(48200799006)(64100799003)(82310400011)(451199024)(46966006)(40470700004)(966005)(1076003)(26005)(2616005)(336012)(6266002)(498600001)(6666004)(47076005)(35950700001)(83380400001)(73392003)(82202003)(42882007)(5660300002)(2906002)(7416002)(41300700001)(70206006)(42186006)(316002)(76482006)(54906003)(8936002)(110136005)(8676002)(4326008)(70586007)(82740400003)(55446002)(36756003)(356005)(81166007)(83170400001)(40460700003)(40480700001)(45356006)(35450700002);DIR:OUT;SFP:1022;
+X-OriginatorOrg: nuvoton.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2024 13:54:29.0814
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11d72320-b249-4be3-aee6-08dc1051556b
+X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a3f24931-d403-4b4a-94f1-7d83ac638e07;Ip=[211.75.126.7];Helo=[NTHCCAS01.nuvoton.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	HK2PEPF00006FB5.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR03MB7968
 
-Hi Xiao,
+A nuvoton,*-clk-rst node is present in nuvoton-common-npcm7xx.dtsi and
+will be added to nuvoton-common-npcm8xx.dtsi. It is necessary for the
+NPCM7xx and NPCM8xx clock and reset drivers, and may later be used to
+retrieve SoC model and version information.
 
-kernel test robot noticed the following build warnings:
+This patch adds a binding to describe this node.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.7 next-20240108]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ .../soc/nuvoton/nuvoton,npcm-clk-rst.yaml     | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-clk-rst.yaml
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Xiao-Wang/riscv-Optimize-crc32-with-Zbc-extension/20240105-161053
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240105080830.3738117-1-xiao.w.wang%40intel.com
-patch subject: [PATCH] riscv: Optimize crc32 with Zbc extension
-config: riscv-randconfig-r121-20240106 (https://download.01.org/0day-ci/archive/20240108/202401082215.4rPI1A5Z-lkp@intel.com/config)
-compiler: riscv64-linux-gcc (GCC) 13.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20240108/202401082215.4rPI1A5Z-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401082215.4rPI1A5Z-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> arch/riscv/lib/crc32.c:192:19: sparse: sparse: invalid assignment: ^=
-   arch/riscv/lib/crc32.c:192:19: sparse:    left side has type unsigned long
-   arch/riscv/lib/crc32.c:192:19: sparse:    right side has type restricted __be64
->> arch/riscv/lib/crc32.c:110:42: sparse: sparse: restricted __le64 degrades to integer
->> arch/riscv/lib/crc32.c:110:42: sparse: sparse: restricted __le64 degrades to integer
-
-vim +192 arch/riscv/lib/crc32.c
-
-    78	
-    79	static inline u32 __pure crc32_le_generic(u32 crc, unsigned char const *p,
-    80	#if (BITS_PER_LONG == 64)
-    81						  size_t len, u32 poly, u64 poly_qt,
-    82	#else
-    83						  size_t len, u32 poly, u32 poly_qt,
-    84	#endif
-    85						  fallback crc_fb)
-    86	{
-    87		size_t offset, head_len, tail_len;
-    88		const unsigned long *p_ul;
-    89		unsigned long s;
-    90	
-    91		asm_volatile_goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
-    92					      RISCV_ISA_EXT_ZBC, 1)
-    93				  : : : : legacy);
-    94	
-    95		/* Handle the unalignment head. */
-    96		offset = (unsigned long)p & OFFSET_MASK;
-    97		if (offset) {
-    98			head_len = MIN(STEP - offset, len);
-    99			crc = crc_fb(crc, p, head_len);
-   100			len -= head_len;
-   101			p += head_len;
-   102		}
-   103	
-   104		tail_len = len & OFFSET_MASK;
-   105		len = len >> STEP_ORDER;
-   106		p_ul = (unsigned long *)p;
-   107	
-   108		for (int i = 0; i < len; i++) {
-   109	#if (BITS_PER_LONG == 64)
- > 110			s = (unsigned long)crc ^ __cpu_to_le64(*p_ul++);
-   111			/* We don't have a "clmulrh" insn, so use clmul + slli instead.
-   112			 */
-   113			asm volatile (".option push\n"
-   114				      ".option arch,+zbc\n"
-   115				      "clmul	%0, %1, %2\n"
-   116				      "slli	%0, %0, 1\n"
-   117				      "xor	%0, %0, %1\n"
-   118				      "clmulr	%0, %0, %3\n"
-   119				      "srli	%0, %0, 32\n"
-   120				      ".option pop\n"
-   121				      : "=&r" (crc)
-   122				      : "r" (s),
-   123					"r" (poly_qt),
-   124					"r" ((u64)poly << 32)
-   125				      :);
-   126	#else
-   127			s = crc ^ __cpu_to_le32(*p_ul++);
-   128			/* We don't have a "clmulrh" insn, so use clmul + slli instead.
-   129			 */
-   130			asm volatile (".option push\n"
-   131				      ".option arch,+zbc\n"
-   132				      "clmul	%0, %1, %2\n"
-   133				      "slli	%0, %0, 1\n"
-   134				      "xor	%0, %0, %1\n"
-   135				      "clmulr	%0, %0, %3\n"
-   136				      ".option pop\n"
-   137				      : "=&r" (crc)
-   138				      : "r" (s),
-   139					"r" (poly_qt),
-   140					"r" (poly)
-   141				      :);
-   142	#endif
-   143		}
-   144	
-   145		/* Handle the tail bytes. */
-   146		if (tail_len)
-   147			crc = crc_fb(crc, (unsigned char const *)p_ul, tail_len);
-   148		return crc;
-   149	
-   150	legacy:
-   151		return crc_fb(crc, p, len);
-   152	}
-   153	
-   154	u32 __pure crc32_le(u32 crc, unsigned char const *p, size_t len)
-   155	{
-   156		return crc32_le_generic(crc, p, len, CRC32_POLY_LE, CRC32_POLY_QT_LE,
-   157					crc32_le_base);
-   158	}
-   159	
-   160	u32 __pure __crc32c_le(u32 crc, unsigned char const *p, size_t len)
-   161	{
-   162		return crc32_le_generic(crc, p, len, CRC32C_POLY_LE,
-   163					CRC32C_POLY_QT_LE, __crc32c_le_base);
-   164	}
-   165	
-   166	u32 __pure crc32_be(u32 crc, unsigned char const *p, size_t len)
-   167	{
-   168		size_t offset, head_len, tail_len;
-   169		const unsigned long *p_ul;
-   170		unsigned long s;
-   171	
-   172		asm_volatile_goto(ALTERNATIVE("j %l[legacy]", "nop", 0,
-   173					      RISCV_ISA_EXT_ZBC, 1)
-   174				  : : : : legacy);
-   175	
-   176		/* Handle the unalignment head. */
-   177		offset = (unsigned long)p & OFFSET_MASK;
-   178		if (offset) {
-   179			head_len = MIN(STEP - offset, len);
-   180			crc = crc32_be_base(crc, p, head_len);
-   181			len -= head_len;
-   182			p += head_len;
-   183		}
-   184	
-   185		tail_len = len & OFFSET_MASK;
-   186		len = len >> STEP_ORDER;
-   187		p_ul = (unsigned long *)p;
-   188	
-   189		for (int i = 0; i < len; i++) {
-   190	#if (BITS_PER_LONG == 64)
-   191			s = (unsigned long)crc << 32;
- > 192			s ^= __cpu_to_be64(*p_ul++);
-
+diff --git a/Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-clk-rst.yaml b/Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-clk-rst.yaml
+new file mode 100644
+index 000000000000..dfec64a8eb26
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-clk-rst.yaml
+@@ -0,0 +1,40 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/soc/nuvoton/nuvoton,npcm-clk-rst.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Clock and reset registers block in Nuvoton SoCs
++
++maintainers:
++  - Tomer Maimon <tmaimon77@gmail.com>
++
++description:
++  The clock and reset registers are a registers block in Nuvoton SoCs that 
++  handle both reset and clock functionality.
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - nuvoton,npcm750-clk-rst
++          - nuvoton,npcm845-clk-rst
++      - const: syscon
++      - const: simple-mfd
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties:
++  type: object
++
++examples:
++  - |
++    clk_rst: syscon@801000 {
++      compatible = "nuvoton,npcm750-clk-rst", "syscon", "simple-mfd";
++      reg = <0x801000 0x6C>;
++    };
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
