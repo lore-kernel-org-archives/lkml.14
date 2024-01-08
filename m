@@ -1,129 +1,84 @@
-Received: from TWMBX02.aspeed.com (mail.aspeedtech.com [211.20.114.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64850B662;
-	Mon,  8 Jan 2024 07:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-Received: from TWMBX02.aspeed.com (192.168.0.24) by TWMBX02.aspeed.com
- (192.168.0.24) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 8 Jan
- 2024 15:43:50 +0800
-Received: from twmbx02.aspeed.com (192.168.10.10) by TWMBX02.aspeed.com
- (192.168.0.24) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 8 Jan 2024 15:43:50 +0800
-From: Billy Tsai <billy_tsai@aspeedtech.com>
-To: <jdelvare@suse.com>, <linux@roeck-us.net>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <joel@jms.id.au>, <andrew@aj.id.au>,
-	<corbet@lwn.net>, <thierry.reding@gmail.com>,
-	<u.kleine-koenig@pengutronix.de>, <p.zabel@pengutronix.de>,
-	<billy_tsai@aspeedtech.com>, <naresh.solanki@9elements.com>,
-	<linux-hwmon@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-aspeed@lists.ozlabs.org>,
-	<linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-pwm@vger.kernel.org>, <BMC-SW@aspeedtech.com>, <patrick@stwcx.xyz>
-Subject: [PATCH v12 2/3] dt-bindings: hwmon: Support Aspeed g6 PWM TACH Control
-Date: Mon, 8 Jan 2024 15:43:47 +0800
-Message-ID: <20240108074348.735014-3-billy_tsai@aspeedtech.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240108074348.735014-1-billy_tsai@aspeedtech.com>
-References: <20240108074348.735014-1-billy_tsai@aspeedtech.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6DA8BED
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 07:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0W-9bfT6_1704699918;
+Received: from 30.221.132.24(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W-9bfT6_1704699918)
+          by smtp.aliyun-inc.com;
+          Mon, 08 Jan 2024 15:45:19 +0800
+Message-ID: <328501ae-828f-4aa8-baab-833573c010e7@linux.alibaba.com>
+Date: Mon, 8 Jan 2024 15:45:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: Fail (TWMBX02.aspeed.com: domain of billy_tsai@aspeedtech.com
- does not designate 192.168.10.10 as permitted sender)
- receiver=TWMBX02.aspeed.com; client-ip=192.168.10.10;
- helo=twmbx02.aspeed.com;
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 04/11] mm: vmalloc: Remove global vmap_area_root
+ rb-tree
+To: Hillf Danton <hdanton@sina.com>, Uladzislau Rezki <urezki@gmail.com>
+Cc: linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+References: <20240102184633.748113-1-urezki@gmail.com>
+ <20240102184633.748113-5-urezki@gmail.com>
+ <238e63cd-e0e8-4fbf-852f-bc4d5bc35d5a@linux.alibaba.com>
+ <ZZfe4O850fFaxOgQ@pc638.lan>
+ <52766da2-41de-41ce-b60b-1118da343b8a@linux.alibaba.com>
+ <20240107065942.3141-1-hdanton@sina.com>
+From: Wen Gu <guwen@linux.alibaba.com>
+In-Reply-To: <20240107065942.3141-1-hdanton@sina.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Document the compatible for aspeed,ast2600-pwm-tach device, which can
-support up to 16 PWM outputs and 16 fan tach input.
 
-Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
----
- .../bindings/hwmon/aspeed,g6-pwm-tach.yaml    | 69 +++++++++++++++++++
- 1 file changed, 69 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml
 
-diff --git a/Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml b/Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml
-new file mode 100644
-index 000000000000..c615fb10705c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/aspeed,g6-pwm-tach.yaml
-@@ -0,0 +1,69 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2023 Aspeed, Inc.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwmon/aspeed,g6-pwm-tach.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ASPEED G6 PWM and Fan Tach controller
-+
-+maintainers:
-+  - Billy Tsai <billy_tsai@aspeedtech.com>
-+
-+description: |
-+  The ASPEED PWM controller can support up to 16 PWM outputs.
-+  The ASPEED Fan Tacho controller can support up to 16 fan tach input.
-+  They are independent hardware blocks, which are different from the
-+  previous version of the ASPEED chip.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - aspeed,ast2600-pwm-tach
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  "#pwm-cells":
-+    const: 3
-+
-+patternProperties:
-+  "^fan-[0-9]+$":
-+    $ref: fan-common.yaml#
-+    unevaluatedProperties: false
-+    required:
-+      - tach-ch
-+
-+required:
-+  - reg
-+  - clocks
-+  - resets
-+  - "#pwm-cells"
-+  - compatible
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/aspeed-clock.h>
-+    pwm_tach: pwm-tach-controller@1e610000 {
-+      compatible = "aspeed,ast2600-pwm-tach";
-+      reg = <0x1e610000 0x100>;
-+      clocks = <&syscon ASPEED_CLK_AHB>;
-+      resets = <&syscon ASPEED_RESET_PWM>;
-+      #pwm-cells = <3>;
-+
-+      fan-0 {
-+        tach-ch = /bits/ 8 <0x0>;
-+      };
-+
-+      fan-1 {
-+        tach-ch = /bits/ 8 <0x1 0x2>;
-+      };
-+    };
--- 
-2.25.1
+On 2024/1/7 14:59, Hillf Danton wrote:
+> On Sat, 6 Jan 2024 17:36:23 +0100 Uladzislau Rezki <urezki@gmail.com>
+>>>
+>>> Thank you! I tried the patch, and it seems that the wait for rwlock_t
+>>> also exists, as much as using spinlock_t. (The flamegraph is attached.
+>>> Not sure why the read_lock waits so long, given that there is no frequent
+>>> write_lock competition)
+>>>
+>>>                 vzalloced shmem(spinlock_t)   vzalloced shmem(rwlock_t)
+>>> Requests/sec         583729.93                     460007.44
+>>>
+>>> So I guess the overhead in finding vmap area is inevitable here and the
+>>> original spin_lock is fine in this series.
+>>>
+>> I have also noticed a erformance difference between rwlock and spinlock.
+>> So, yes. This is what we need to do extra if CONFIG_HARDENED_USERCOPY is
+>> set, i.e. find a VA.
+> 
+> See if read bias helps to understand the gap between spinlock and rwlock.
+> 
+> --- x/kernel/locking/qrwlock.c
+> +++ y/kernel/locking/qrwlock.c
+> @@ -23,7 +23,7 @@ void __lockfunc queued_read_lock_slowpat
+>   	/*
+>   	 * Readers come here when they cannot get the lock without waiting
+>   	 */
+> -	if (unlikely(in_interrupt())) {
+> +	if (1) {
+>   		/*
+>   		 * Readers in interrupt context will get the lock immediately
+>   		 * if the writer is just waiting (not holding the lock yet),
 
+Thank you for the idea! Hillf.
+
+IIUC, the change makes read operations more likely to acquire lock and
+modified fairness to favor reading.
+
+The test in my scenario shows:
+
+vzalloced shmem with     spinlock_t      rwlock_t      rwlock_t(with above change)
+Requests/sec              564961.29     442534.33     439733.31
+
+In addition to read bias, there seems to be other factors that cause the
+gap, but I haven't figured it out yet..
+
+Thanks,
+Wen Gu
