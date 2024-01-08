@@ -1,124 +1,100 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D69945BFC
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 12:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 703E6FEC;
-	Mon,  8 Jan 2024 04:35:37 -0800 (PST)
-Received: from [127.0.1.1] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D55CD3F64C;
-	Mon,  8 Jan 2024 04:34:50 -0800 (PST)
-From: Cristian Marussi <cristian.marussi@arm.com>
-Date: Mon, 08 Jan 2024 12:34:16 +0000
-Subject: [PATCH 6/6] firmware: arm_ffa: Handle partitions setup failures
+Received: from out203-205-251-60.mail.qq.com (out203-205-251-60.mail.qq.com [203.205.251.60])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41C75644E;
+	Mon,  8 Jan 2024 12:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="mOlAYhla"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1704717293; bh=0ub3HiEeynpEvWN9T9rYs29daqMSRNhQo+LY89G/pJQ=;
+	h=From:To:Cc:Subject:Date;
+	b=mOlAYhla6tInPjvp4nllwhMtgn3+55onrvpjt+K5rJ1o3Ot//cvj0O9pYx7fLvBsR
+	 2tvspT0ZuEnDEglbrtPgPrgl7z1M1oIiiTF5rFotdSaGdmhitjRlMnefszGd7JWwt+
+	 x2u9hbAQAwXBKjIE3RhYcqJnqB8h0vk4xSjChieM=
+Received: from levi-pc.. ([61.186.21.12])
+	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
+	id 7291AE67; Mon, 08 Jan 2024 20:28:41 +0800
+X-QQ-mid: xmsmtpt1704716921tnwswvaia
+Message-ID: <tencent_CD95311972BE7A11FC41B4F5718E14E02D0A@qq.com>
+X-QQ-XMAILINFO: M/NR0wiIuy70B4sqURBSAfyGq5AxsWzh71hchYgD9jVJGaFCd7NH7ZvGyCOimW
+	 NDCsDxMDjLhnWT4NOG3WvuyMRVDFqMpoIf8vANzgixfGIZGiTiz/RohVDQUmxP4kAObi6h/YX68X
+	 y9Sejd7lGxQcGf62Avv5E7Vj1pBWFgmJKI5MXzRomqUD6yqbbyAq39Wkt3scl0Mg0y6xJhEbWGM8
+	 reGvalm7IpvsgWdkcJuA6t7uKSrSIN5e2VajQJPEMTGCqPKeEXojHA/L1cU7OLwLxje43zQT3kpV
+	 UZGR/EWFrNj3XWz+cU64IU5HLqEVUxyho1kcWOspqGtmXLPQ08kf4OjMWl3LhlyjRLEOJO7T44t9
+	 ZqLkPsVdxNJHWL0gjY/SRMvsIVxV5J41pOQ8Kfba7WJJiGJBzHZ3CvhrmVXoOLgmqI5Rm3qsJbx4
+	 QXVlp+t8pQkbjvAkbvmNG7iOgUJ1nFVNAGAhHlHeldK9ibuqeln1jpDAsj1EEtfSeI8c+ka4hM/0
+	 WXZwVd7B3hdF1zKZnXkB4eOTo7h+4aBnEtw+voeBav3Foy7xLgFwSy6Ii30oxHV8/hygZWS9qAcI
+	 AGcMZyjODEOQY8/8OXGM6G7AfDTfiyP9bU29ve+tpDmAP8CXO00dyBpR1bIZSZhOuXkZxbcBzWHH
+	 M4tqnc/6SiRmuOC5BQOt3BEX+qHTtKbx7vCwwg2zQQHnnjwMNMFJrwOhnchCFg76s2n+GhEYRFiG
+	 TWhO5IvrgwDmJ9oxwOrckPsXymPXFIixYCT7UXsgJs43yl/04DDa5Luh95r3AOpF396rFLwIFTsQ
+	 ecKtb3gmbXNiFYei1KKcfvPxgmMcTKwzPt5u6pEiognHy5ezkuxSEnEGpRRxIkOsynN7V1YKf4Lc
+	 UmxoszZTiK3mZNqiAMvoLIPIMcUSNlNd0LiAZ17TvovNDOxziVWKGGQQ+u8CMMcvp6O8+MNJFSn6
+	 gUK57JqVUEfJAZ0gS+dqmO5Vwbej03WbVGIhDy/Io=
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+From: Huayu Zhang <932367230@qq.com>
+To: tiwai@suse.com
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	james.schulman@cirrus.com,
+	david.rhodes@cirrus.com,
+	rf@opensource.cirrus.com,
+	perex@perex.cz,
+	sbinding@opensource.cirrus.com,
+	kailang@realtek.com,
+	zhanghuayu.dev@gmail.com
+Subject: [PATCH] add DSD for ThinkBook 16p G4 IRH with Subsystem Id of : 0x17aa38a9
+Date: Mon,  8 Jan 2024 20:28:42 +0800
+X-OQ-MSGID: <20240108122842.12642-1-932367230@qq.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240108-ffa_fixes_6-8-v1-6-75bf7035bc50@arm.com>
-References: <20240108-ffa_fixes_6-8-v1-0-75bf7035bc50@arm.com>
-In-Reply-To: <20240108-ffa_fixes_6-8-v1-0-75bf7035bc50@arm.com>
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Cristian Marussi <cristian.marussi@arm.com>
-X-Mailer: b4 0.12.4
+Content-Transfer-Encoding: 8bit
 
-Make ffa_setup_partitions() fail, cleanup and return an error when the Host
-partition setup fails: in such a case ffa_init() itself will fail.
+From: Huayu Zhang <zhanghuayu.dev@gmail.com>
 
-Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
 ---
- drivers/firmware/arm_ffa/driver.c | 28 +++++++++++++++++++++++-----
- 1 file changed, 23 insertions(+), 5 deletions(-)
+ sound/pci/hda/cs35l41_hda_property.c | 2 ++
+ sound/pci/hda/patch_realtek.c        | 1 +
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/firmware/arm_ffa/driver.c b/drivers/firmware/arm_ffa/driver.c
-index c613b57747cf..f2556a8e9401 100644
---- a/drivers/firmware/arm_ffa/driver.c
-+++ b/drivers/firmware/arm_ffa/driver.c
-@@ -112,6 +112,7 @@ struct ffa_drv_info {
- };
- 
- static struct ffa_drv_info *drv_info;
-+static void ffa_partitions_cleanup(void);
- 
- /*
-  * The driver must be able to support all the versions from the earliest
-@@ -1195,7 +1196,7 @@ void ffa_device_match_uuid(struct ffa_device *ffa_dev, const uuid_t *uuid)
- 	kfree(pbuf);
- }
- 
--static void ffa_setup_partitions(void)
-+static int ffa_setup_partitions(void)
- {
- 	int count, idx, ret;
- 	uuid_t uuid;
-@@ -1206,7 +1207,7 @@ static void ffa_setup_partitions(void)
- 	count = ffa_partition_probe(&uuid_null, &pbuf);
- 	if (count <= 0) {
- 		pr_info("%s: No partitions found, error %d\n", __func__, count);
--		return;
-+		return -EINVAL;
- 	}
- 
- 	xa_init(&drv_info->partition_info);
-@@ -1250,8 +1251,14 @@ static void ffa_setup_partitions(void)
- 
- 	/* Allocate for the host */
- 	info = kzalloc(sizeof(*info), GFP_KERNEL);
--	if (!info)
--		return;
-+	if (!info) {
-+		pr_err("%s: failed to alloc Host partition ID 0x%x. Abort.\n",
-+		       __func__, drv_info->vm_id);
-+		/* Already registered devices are freed on bus_exit */
-+		ffa_partitions_cleanup();
-+		return -ENOMEM;
-+	}
-+
- 	rwlock_init(&info->rw_lock);
- 	ret = xa_insert(&drv_info->partition_info, drv_info->vm_id,
- 			info, GFP_KERNEL);
-@@ -1259,7 +1266,11 @@ static void ffa_setup_partitions(void)
- 		pr_err("%s: failed to save Host partition ID 0x%x - ret:%d. Abort.\n",
- 		       __func__, drv_info->vm_id, ret);
- 		kfree(info);
-+		/* Already registered devices are freed on bus_exit */
-+		ffa_partitions_cleanup();
- 	}
-+
-+	return ret;
- }
- 
- static void ffa_partitions_cleanup(void)
-@@ -1520,7 +1531,11 @@ static int __init ffa_init(void)
- 
- 	ffa_notifications_setup();
- 
--	ffa_setup_partitions();
-+	ret = ffa_setup_partitions();
-+	if (ret) {
-+		pr_err("failed to setup partitions\n");
-+		goto cleanup_notifs;
-+	}
- 
- 	ret = ffa_sched_recv_cb_update(drv_info->vm_id, ffa_self_notif_handle,
- 				       drv_info, true);
-@@ -1528,6 +1543,9 @@ static int __init ffa_init(void)
- 		pr_info("Failed to register driver sched callback %d\n", ret);
- 
- 	return 0;
-+
-+cleanup_notifs:
-+	ffa_notifications_cleanup();
- free_pages:
- 	if (drv_info->tx_buffer)
- 		free_pages_exact(drv_info->tx_buffer, RXTX_BUFFER_SIZE);
-
+diff --git a/sound/pci/hda/cs35l41_hda_property.c b/sound/pci/hda/cs35l41_hda_property.c
+index 35277ce890a4..b1844224123f 100644
+--- a/sound/pci/hda/cs35l41_hda_property.c
++++ b/sound/pci/hda/cs35l41_hda_property.c
+@@ -93,6 +93,7 @@ static const struct cs35l41_config cs35l41_config_table[] = {
+ 	{ "10431F12", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
+ 	{ "10431F1F", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, -1, 0, 0, 0, 0 },
+ 	{ "10431F62", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 0, 0, 0 },
++	{ "17AA38A9", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 0, 0, 0 },
+ 	{ "17AA38B4", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 0, 0, 0 },
+ 	{ "17AA38B5", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 0, 0, 0 },
+ 	{ "17AA38B6", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 0, 0, 0 },
+@@ -427,6 +428,7 @@ static const struct cs35l41_prop_model cs35l41_prop_model_table[] = {
+ 	{ "CSC3551", "10431F12", generic_dsd_config },
+ 	{ "CSC3551", "10431F1F", generic_dsd_config },
+ 	{ "CSC3551", "10431F62", generic_dsd_config },
++	{ "CSC3551", "17AA38A9", generic_dsd_config },
+ 	{ "CSC3551", "17AA38B4", generic_dsd_config },
+ 	{ "CSC3551", "17AA38B5", generic_dsd_config },
+ 	{ "CSC3551", "17AA38B6", generic_dsd_config },
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 1dcfba27e075..3eae1a5d9bcd 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -10256,6 +10256,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x17aa, 0x3886, "Y780 VECO DUAL", ALC287_FIXUP_TAS2781_I2C),
+ 	SND_PCI_QUIRK(0x17aa, 0x38a7, "Y780P AMD YG dual", ALC287_FIXUP_TAS2781_I2C),
+ 	SND_PCI_QUIRK(0x17aa, 0x38a8, "Y780P AMD VECO dual", ALC287_FIXUP_TAS2781_I2C),
++	SND_PCI_QUIRK(0x17aa, 0x38a9, "ThinkBook 16p G4 IRH", ALC287_FIXUP_CS35L41_I2C_2),
+ 	SND_PCI_QUIRK(0x17aa, 0x38b4, "Legion Slim 7 16IRH8", ALC287_FIXUP_CS35L41_I2C_2),
+ 	SND_PCI_QUIRK(0x17aa, 0x38b5, "Legion Slim 7 16IRH8", ALC287_FIXUP_CS35L41_I2C_2),
+ 	SND_PCI_QUIRK(0x17aa, 0x38b6, "Legion Slim 7 16APH8", ALC287_FIXUP_CS35L41_I2C_2),
 -- 
 2.34.1
 
