@@ -1,72 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD673522D
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 01:45:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RYZqdPht"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 656CAC433C7;
-	Mon,  8 Jan 2024 01:45:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704678352;
-	bh=xjmnXEKv1lECuwEh6Yk8bttQ20GcHU0SGe1AicjpZEk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=RYZqdPhtXdOI9JTmdiyBQ44mBTHIo/1bSHGxHRSwfeFWu6zUNLFi/HTDLbVc7ok0J
-	 zW8VOBlOyL07swhiY++laQq8Gi2Y3H/bvNGN0H/OfS3Un5SVccJFa5d3th6VqdGXgv
-	 43uIONGlAMgBQVHn0zmwfY+RCWFtbfJlHjnR+cQPXKr4jjHfyrQl9wku742ff2ms1N
-	 Obgf67GjaJehDeKu9StCG+2CD796wS21jGslcEsP/W1yZTNQU+r0wTaEiErPxOGbMB
-	 JLtwJp6gXySKg+PKyYOgzzze1ojSY2u+Sg7fkqae7F07W0+yK7rrkE2rjRlOc34qhS
-	 Vk7yCTgpLW5+w==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] clang-format for v6.8
-Date: Mon,  8 Jan 2024 02:45:43 +0100
-Message-ID: <20240108014543.525447-1-ojeda@kernel.org>
+Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEFC67F;
+	Mon,  8 Jan 2024 01:48:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=richtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
+X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
+Received: from 192.168.10.46
+	by mg.richtek.com with MailGates ESMTPS Server V6.0(636808:0:AUTH_RELAY)
+	(envelope-from <cy_huang@richtek.com>)
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Mon, 08 Jan 2024 09:47:30 +0800 (CST)
+Received: from ex4.rt.l (192.168.10.47) by ex3.rt.l (192.168.10.46) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.27; Mon, 8 Jan
+ 2024 09:47:29 +0800
+Received: from linuxcarl2.richtek.com (192.168.10.154) by ex4.rt.l
+ (192.168.10.45) with Microsoft SMTP Server id 15.2.1258.27 via Frontend
+ Transport; Mon, 8 Jan 2024 09:47:29 +0800
+From: <cy_huang@richtek.com>
+To: Jonathan Cameron <jic23@kernel.org>
+CC: Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+	<conor+dt@kernel.org>, ChiYuan Huang <cy_huang@richtek.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v5 1/2] dt-bindings: iio: adc: rtq6056: add support for the whole RTQ6056 family
+Date: Mon, 8 Jan 2024 09:47:27 +0800
+Message-ID: <c1abb261bb00846f456eb8fe9b5919f59f287c24.1704676198.git.cy_huang@richtek.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <cover.1704676198.git.cy_huang@richtek.com>
+References: <cover.1704676198.git.cy_huang@richtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Hi Linus,
+From: ChiYuan Huang <cy_huang@richtek.com>
 
-A routine update for clang-format -- we did not have one for quite
-a while.
+Add compatible support for RTQ6053 and RTQ6059.
 
-All the commits have been in -next for a month. No conflicts expected.
+Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+v3
+- Add Reviewed-by tag.
 
-Please pull for v6.8 -- thanks!
+v2
+- Refine the 'compatible' description with oneOf and listed items.
+---
+ .../devicetree/bindings/iio/adc/richtek,rtq6056.yaml     | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Cheers,
-Miguel
+diff --git a/Documentation/devicetree/bindings/iio/adc/richtek,rtq6056.yaml b/Documentation/devicetree/bindings/iio/adc/richtek,rtq6056.yaml
+index 88e008629ea8..af2c3a67f888 100644
+--- a/Documentation/devicetree/bindings/iio/adc/richtek,rtq6056.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/richtek,rtq6056.yaml
+@@ -25,7 +25,14 @@ description: |
+ 
+ properties:
+   compatible:
+-    const: richtek,rtq6056
++    oneOf:
++      - enum:
++          - richtek,rtq6056
++          - richtek,rtq6059
++      - items:
++          - enum:
++              - richtek,rtq6053
++          - const: richtek,rtq6056
+ 
+   reg:
+     maxItems: 1
+-- 
+2.34.1
 
-The following changes since commit 33cc938e65a98f1d29d0a18403dbbee050dcad9a:
-
-  Linux 6.7-rc4 (2023-12-03 18:52:56 +0900)
-
-are available in the Git repository at:
-
-  https://github.com/ojeda/linux.git tags/clang-format-6.8
-
-for you to fetch changes up to 5a205c6a9f79d14db38006aa2d7c4f4e76b1bfc7:
-
-  clang-format: Update with v6.7-rc4's `for_each` macro list (2023-12-08 23:54:38 +0100)
-
-----------------------------------------------------------------
-clang-format changes for v6.8
-
-A routine update of the 'for_each' macro list.
-
-----------------------------------------------------------------
-Elliot Berman (1):
-      clang-format: Add maple tree's for_each macros
-
-Miguel Ojeda (1):
-      clang-format: Update with v6.7-rc4's `for_each` macro list
-
- .clang-format | 92 +++++++++++++++++++++++++++++++++++++++++++++++------------
- 1 file changed, 73 insertions(+), 19 deletions(-)
