@@ -1,141 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45DAE578
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 07:46:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF35B657
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 07:46:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bxEAxt3W"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X0tIZ8zK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704699979; x=1736235979;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=PZxQ8Ps+P7mZ0Hr0oqTsFUwxlBWxzQlbFso4pftin1o=;
-  b=bxEAxt3WL4w9REKuZKvJ/I7senPjn4R+kJKA3LMOfuIttjyEMyDXiODC
-   pY6GB5vjrzRCKTprHkf3mdkk21JJU5DwLg/CnC5Ed4q79SlEKO7S4HcTV
-   R9NEIMD1HqKNlSfTKPolJ2ESLWIZ1z2ZF0HdClI7tzQieDmzyztXGQcfY
-   pB5OnEs8LwyXa8g+A3hntrc1DIZekwZnCw7M4fZDU85S/tHqZ3ukbMxgU
-   8YawFuDXatDvO28aTJ3l6aF75AsBo8HtDRDo7yfYRh37uM8trF4GpDLmy
-   Bojqf4tLdJ+tnXA1tTXWxciNwT+auYLjkAvCtFouOo7bOvKy3SXF6FGbj
+  t=1704700012; x=1736236012;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=AvhfDm2j+qVAzbx7SoLzumEYgb5qaDh8X5waSOXgjnA=;
+  b=X0tIZ8zKVNyZNHQDlAvxmVzg496mogyN+qUZOwE9n7LScSnaFlPfZMFU
+   iqxkUzX8SvSNYEPqYsosKBXdEpfgaJoWfHgBs5xCAM45ehylgzWl1XYxi
+   SOp8bFxsgppmtqzWz6WZVkbE8ti/Fbh+E8h0FU9fqW5ACqPK8/XwjuqtO
+   gyAfNrhmd8zDzYKQDEc9quIvQwvByA2YkYS4QOlPWG0Z1oUiX1lAPAP6U
+   +NYD5Bc3SY6Eds+zUoDA7btkkQ2QjXR3HKLqXau0hn8euBhVH6CbiJcTD
+   poh28HhPf1RraiGb/6lVUub4mfNKUWAtlDxQX33PfMTOicuzu2mARtKMI
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="5170477"
+X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="19316783"
 X-IronPort-AV: E=Sophos;i="6.04,340,1695711600"; 
-   d="scan'208";a="5170477"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2024 23:46:18 -0800
+   d="scan'208";a="19316783"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2024 23:46:51 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="900294546"
 X-IronPort-AV: E=Sophos;i="6.04,340,1695711600"; 
-   d="scan'208";a="900294546"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2024 23:46:14 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Kairui Song <ryncsn@gmail.com>
-Cc: linux-mm@kvack.org,  Andrew Morton <akpm@linux-foundation.org>,  Chris
- Li <chrisl@kernel.org>,  Hugh Dickins <hughd@google.com>,  Johannes Weiner
- <hannes@cmpxchg.org>,  Matthew Wilcox <willy@infradead.org>,  Michal Hocko
- <mhocko@suse.com>,  Yosry Ahmed <yosryahmed@google.com>,  David
- Hildenbrand <david@redhat.com>,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/9] mm/swap: always account swapped in page into
- current memcg
-In-Reply-To: <CAMgjq7B7iShnLaiT-0MBGEMdVS65bupx_NshjM0ssLmhJm0CFQ@mail.gmail.com>
-	(Kairui Song's message of "Fri, 5 Jan 2024 15:33:08 +0800")
-References: <20240102175338.62012-1-ryncsn@gmail.com>
-	<20240102175338.62012-5-ryncsn@gmail.com>
-	<878r54b6ae.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAMgjq7B7iShnLaiT-0MBGEMdVS65bupx_NshjM0ssLmhJm0CFQ@mail.gmail.com>
-Date: Mon, 08 Jan 2024 15:44:17 +0800
-Message-ID: <87edes9smm.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+   d="scan'208";a="23091188"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by orviesa002.jf.intel.com with ESMTP; 07 Jan 2024 23:46:45 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rMkLJ-0004Wy-2z;
+	Mon, 08 Jan 2024 07:46:41 +0000
+Date: Mon, 8 Jan 2024 15:46:19 +0800
+From: kernel test robot <lkp@intel.com>
+To: Philipp Stanner <pstanner@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>, Mark Brown <broonie@kernel.org>,
+	Takashi Iwai <tiwai@suse.de>, David Gow <davidgow@google.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: oe-kbuild-all@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	Philipp Stanner <pstanner@redhat.com>
+Subject: Re: [PATCH 1/2] platform_device: add devres function region-reqs
+Message-ID: <202401081547.VBj4FKaw-lkp@intel.com>
+References: <20240105172218.42457-3-pstanner@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240105172218.42457-3-pstanner@redhat.com>
 
-Kairui Song <ryncsn@gmail.com> writes:
+Hi Philipp,
 
-> Huang, Ying <ying.huang@intel.com> =E4=BA=8E2024=E5=B9=B41=E6=9C=885=E6=
-=97=A5=E5=91=A8=E4=BA=94 15:16=E5=86=99=E9=81=93=EF=BC=9A
->>
->> Kairui Song <ryncsn@gmail.com> writes:
->>
->> > From: Kairui Song <kasong@tencent.com>
->> >
->> > Currently, mem_cgroup_swapin_charge_folio is always called with
->> > mm argument as NULL, except in swapin_direct.
->> >
->> > swapin_direct is used when swapin should skip readahead and
->> > swapcache (SWP_SYNCHRONOUS_IO). Other caller paths of
->> > mem_cgroup_swapin_charge_folio are for swapin that should
->> > not skip readahead and cache.
->> >
->> > This could cause swapin charging to behave differently depending
->> > on swap device. This currently didn't happen because the only call
->> > path of swapin_direct is the direct anon page fault path, where mm
->> > equals to current->mm, but will no longer be true if swapin_direct
->> > is shared and have other callers (eg, swapoff).
->> >
->> > So make swapin_direct also passes NULL for mm, no feature change.
->> >
->> > Signed-off-by: Kairui Song <kasong@tencent.com>
->> > ---
->> >  mm/swap_state.c | 2 +-
->> >  1 file changed, 1 insertion(+), 1 deletion(-)
->> >
->> > diff --git a/mm/swap_state.c b/mm/swap_state.c
->> > index 6130de8d5226..d39c5369da21 100644
->> > --- a/mm/swap_state.c
->> > +++ b/mm/swap_state.c
->> > @@ -881,7 +881,7 @@ struct folio *swapin_direct(swp_entry_t entry, gfp=
-_t gfp_mask,
->> >       folio =3D vma_alloc_folio(GFP_HIGHUSER_MOVABLE, 0,
->> >                               vma, vmf->address, false);
->> >       if (folio) {
->> > -             if (mem_cgroup_swapin_charge_folio(folio, vma->vm_mm,
->> > +             if (mem_cgroup_swapin_charge_folio(folio, NULL,
->> >                                                  GFP_KERNEL, entry)) {
->> >                       folio_put(folio);
->> >                       return NULL;
->>
->> I think that why not provide "mm" when it's available?  For
->> swapin_direct() called by do_swap_page(), mm can be provided.  While,
->> for swapin_direct() called by shmem swapin, mm will be NULL.  We can
->> even provide "mm" for __read_swap_cache_async() for VMA based swapin and
->> for the fault address for cluster swapin.
->
-> Hi, Ying.
->
-> Thanks for the comment.
->
-> Without modifying too much code, providing mm here will change swapin
-> charge behaviour on swapoff, we discussed it previously:
-> https://lkml.org/lkml/2023/11/19/320
+kernel test robot noticed the following build warnings:
 
-It's better to use "lore" for kernel email link, for example,
+[auto build test WARNING on drm-misc/drm-misc-next]
+[also build test WARNING on driver-core/driver-core-testing driver-core/driver-core-next driver-core/driver-core-linus linus/master v6.7 next-20240105]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-https://lore.kernel.org/lkml/20231119194740.94101-24-ryncsn@gmail.com/
+url:    https://github.com/intel-lab-lkp/linux/commits/Philipp-Stanner/platform_device-add-devres-function-region-reqs/20240106-012526
+base:   git://anongit.freedesktop.org/drm/drm-misc drm-misc-next
+patch link:    https://lore.kernel.org/r/20240105172218.42457-3-pstanner%40redhat.com
+patch subject: [PATCH 1/2] platform_device: add devres function region-reqs
+config: x86_64-randconfig-101-20240106 (https://download.01.org/0day-ci/archive/20240108/202401081547.VBj4FKaw-lkp@intel.com/config)
+compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240108/202401081547.VBj4FKaw-lkp@intel.com/reproduce)
 
-This is more readable than the above link.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401081547.VBj4FKaw-lkp@intel.com/
 
-> If we want to avoid the behavior change, we have to extend all direct
-> and indirect callers of mem_cgroup_swapin_charge_folio to accept a
-> standalone mm argument (including swapin_direct, swap_vma_readahead,
-> swap_cluster_readahead, __read_swap_cache_async, swapin_entry_mpol,
-> read_swap_cache_async, and some other path may need more audit), and
-> sort things our case by case. I'm not sure if that's a good idea...
->
-> Simply dropping it here seems the easiest way to avoid such change.
+All warnings (new ones prefixed by >>):
 
-OK.  Didn't realize that they are related directly.  It appears that we
-always pass NULL as mm to mem_cgroup_swapin_charge_folio().  If so,
-please just remove the parameter.
+>> drivers/base/platform.c:101: warning: expecting prototype for devm_platform_get_and_resource(). Prototype was for devm_platform_get_resource() instead
 
---
-Best Regards,
-Huang, Ying
+
+vim +101 drivers/base/platform.c
+
+    84	
+    85	/**
+    86	 * devm_platform_get_and_resource - get and request a resource
+    87	 *
+    88	 * @pdev: the platform device to get the resource from
+    89	 * @type: resource type (either IORESOURCE_MEM or IORESOURCE_IO)
+    90	 * @num: resource index
+    91	 * @name: name to be associated with the request
+    92	 *
+    93	 * Return: a pointer to the resource on success, an ERR_PTR on failure.
+    94	 *
+    95	 * Gets a resource and requests it. Use this instead of
+    96	 * devm_platform_ioremap_resource() only if you have to create several single
+    97	 * mappings with devm_ioremap().
+    98	 */
+    99	struct resource *devm_platform_get_resource(struct platform_device *pdev,
+   100			unsigned int type, unsigned int num, const char *name)
+ > 101	{
+   102		struct resource *res;
+   103	
+   104		res = platform_get_resource(pdev, type, num);
+   105		if (!res)
+   106			return ERR_PTR(-EINVAL);
+   107	
+   108		if (type & IORESOURCE_MEM)
+   109			res = devm_request_mem_region(&pdev->dev, res->start, res->end, name);
+   110		else if (type & IORESOURCE_IO)
+   111			res = devm_request_region(&pdev->dev, res->start, res->end, name);
+   112		else
+   113			return ERR_PTR(-EINVAL);
+   114	
+   115		if (!res)
+   116			return ERR_PTR(-EBUSY);
+   117	
+   118		return res;
+   119	}
+   120	EXPORT_SYMBOL_GPL(devm_platform_get_resource);
+   121	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
