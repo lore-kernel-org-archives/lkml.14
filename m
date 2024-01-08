@@ -1,77 +1,155 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from lahtoruutu.iki.fi (lahtoruutu.iki.fi [185.185.170.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AE12E650
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 11:24:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4T7s9z3RMXz29jrx;
-	Mon,  8 Jan 2024 19:23:03 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
-	by mail.maildlp.com (Postfix) with ESMTPS id AFC641404F7;
-	Mon,  8 Jan 2024 19:24:33 +0800 (CST)
-Received: from ubuntu2204.huawei.com (10.67.174.22) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 8 Jan 2024 19:24:33 +0800
-From: Yang Jihong <yangjihong1@huawei.com>
-To: <yangyicong@hisilicon.com>, <jonathan.cameron@huawei.com>,
-	<alexander.shishkin@linux.intel.com>, <linux-kernel@vger.kernel.org>
-CC: <yangjihong1@huawei.com>, <wangkefeng.wang@huawei.com>,
-	<yangyicong@huawei.com>
-Subject: [PATCH] hwtracing: hisi_ptt: Move type check to the beginning of hisi_ptt_pmu_event_init()
-Date: Mon, 8 Jan 2024 11:20:24 +0000
-Message-ID: <20240108112024.3514498-1-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501AB14A8D;
+	Mon,  8 Jan 2024 11:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b="Luppexhm";
+	dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b="wlzWEzml"
+Received: from meesny.iki.fi (meesny.iki.fi [195.140.195.201])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lahtoruutu.iki.fi (Postfix) with ESMTPS id 4T7s2975kkz49Py8;
+	Mon,  8 Jan 2024 13:16:17 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=lahtoruutu;
+	t=1704712578;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FRzBCMMQ3iNT4N+/PtoE+zl1cNf6xy8Jh8N7QEIPuR0=;
+	b=LuppexhmF+qLbw/oCBO6M82rgaF2MnuRfZPyAkoWzoDHEVASUB7ccsqBrVFA0rJVQUz3qW
+	tg7/ZAScmc/wWtZrc1RJ7qnQd2knGxDe2IUGL9eY0vqkzpVmyavDCmJTuskTb4RYPZAKEx
+	TZAd+uNT7Q9bdvgZDamY5QpP56VZGtDHBTT67ZOl53cZ7je9FZ4OOIdwcfK9ES2uy6E2M3
+	maytfVves+96dso5hUukg26h9YDyIAVQg0MXGBC/+ZE/y/+zpNLyyWXQnaefWWQzduW0oq
+	Lhxe3DAMB/kTICVibgoY3hp368XbS5t18ZNZbuIXHKxjTSMJYfsE4wo5Bj8xeg==
+Received: from hillosipuli.retiisi.eu (2a00-1190-d1dd-0-c641-1eff-feae-163c.v6.cust.suomicom.net [IPv6:2a00:1190:d1dd:0:c641:1eff:feae:163c])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sailus)
+	by meesny.iki.fi (Postfix) with ESMTPSA id 4T7s203rwCzyVF;
+	Mon,  8 Jan 2024 13:16:08 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=meesny;
+	t=1704712570;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FRzBCMMQ3iNT4N+/PtoE+zl1cNf6xy8Jh8N7QEIPuR0=;
+	b=wlzWEzmlfbjtN7EPAYxysu6dnh1OrLqhAltCHxtZNtHPfb3E+Q96GDuHP+twx271ZDm6r1
+	ITyttcHJS8Z9hnA0PuMESKwmbEM+MidtOwyPHDW/LhvGMy/yLPJ2gEucSG09uVhgobxjIV
+	veG1KXvcfPpwxJevtdwd1XFA/wVrgNg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
+	s=meesny; t=1704712570;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FRzBCMMQ3iNT4N+/PtoE+zl1cNf6xy8Jh8N7QEIPuR0=;
+	b=OwaUdeirO3y0WBsvVKLnjqN9JcMnQxS2glNNDL9wjYy8tRAjhXz2AFIl5vINm/CtPLYkFd
+	6qGbLU7gnq7gPlelrcgx7by8kydtDGfnYM1bv+l9+EgZ0SVAJgBcZhcQKNSyQMAe6r/2Dl
+	XbxbNzSJPQR1VnRciPmiM3SH8GMlygg=
+ARC-Seal: i=1; s=meesny; d=iki.fi; t=1704712570; a=rsa-sha256; cv=none;
+	b=QAyS2Xbkog7xn84AR3YlL+1qoyaideEeDfZXszlGKtqNDMYlkQ8JGwCRXV6h+ww1dKbgoY
+	cJLoT8xmm7VCS1JT/ZaPHsCjT3Hxb0d5ct2eyPrJRIjTtKZsDC1D1z9jBjCEyulms55G+w
+	O5eTf7hl7iW3AdACeWSPLi2L5edQG88=
+ARC-Authentication-Results: i=1;
+	ORIGINATING;
+	auth=pass smtp.auth=sailus smtp.mailfrom=sakari.ailus@iki.fi
+Received: from valkosipuli.retiisi.eu (valkosipuli.localdomain [192.168.4.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by hillosipuli.retiisi.eu (Postfix) with ESMTPS id 01AD2634C93;
+	Mon,  8 Jan 2024 13:16:07 +0200 (EET)
+Date: Mon, 8 Jan 2024 11:16:07 +0000
+From: Sakari Ailus <sakari.ailus@iki.fi>
+To: Mikhail Rudenko <mike.rudenko@gmail.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Jacopo Mondi <jacopo@jmondi.org>,
+	Tommaso Merciai <tomm.merciai@gmail.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH v2 06/20] media: i2c: ov4689: Refactor ov4689_set_ctrl
+Message-ID: <ZZvZdxqotS47XftY@valkosipuli.retiisi.eu>
+References: <20231218174042.794012-1-mike.rudenko@gmail.com>
+ <20231218174042.794012-7-mike.rudenko@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemm600003.china.huawei.com (7.193.23.202)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231218174042.794012-7-mike.rudenko@gmail.com>
 
-When perf_init_event() calls perf_try_init_event() to init pmu driver,
-searches for the next pmu driver only when the return value is -ENOENT.
-Therefore, hisi_ptt_pmu_event_init() needs to check the type at the
-beginning of the function.
-Otherwise, in the case of perf-task mode, perf_try_init_event() returns
--EOPNOTSUPP and skips subsequent pmu drivers, causes perf_init_event() to
-fail.
+Hi Mikhail,
 
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
----
- drivers/hwtracing/ptt/hisi_ptt.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On Mon, Dec 18, 2023 at 08:40:27PM +0300, Mikhail Rudenko wrote:
+> Introduce local variable for regmap within the ov4689_set_ctrl
+> function. This adjustment eliminates repetition within the function.
+> 
+> Signed-off-by: Mikhail Rudenko <mike.rudenko@gmail.com>
+> ---
+>  drivers/media/i2c/ov4689.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/ov4689.c b/drivers/media/i2c/ov4689.c
+> index 3b20eba59c9c..d42f5d1a1ba8 100644
+> --- a/drivers/media/i2c/ov4689.c
+> +++ b/drivers/media/i2c/ov4689.c
+> @@ -580,6 +580,7 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
+>  {
+>  	struct ov4689 *ov4689 =
+>  		container_of(ctrl->handler, struct ov4689, ctrl_handler);
+> +	struct regmap *regmap = ov4689->regmap;
+>  	struct device *dev = ov4689->dev;
+>  	int sensor_gain;
+>  	s64 max_expo;
+> @@ -603,16 +604,15 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
+>  	switch (ctrl->id) {
+>  	case V4L2_CID_EXPOSURE:
+>  		/* 4 least significant bits of exposure are fractional part */
+> -		ret = cci_write(ov4689->regmap, OV4689_REG_EXPOSURE,
+> -				ctrl->val << 4, NULL);
+> +		cci_write(regmap, OV4689_REG_EXPOSURE, ctrl->val << 4, &ret);
 
-diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
-index a991ecb7515a..24a1f7797aeb 100644
---- a/drivers/hwtracing/ptt/hisi_ptt.c
-+++ b/drivers/hwtracing/ptt/hisi_ptt.c
-@@ -995,6 +995,9 @@ static int hisi_ptt_pmu_event_init(struct perf_event *event)
- 	int ret;
- 	u32 val;
- 
-+	if (event->attr.type != hisi_ptt->hisi_ptt_pmu.type)
-+		return -ENOENT;
-+
- 	if (event->cpu < 0) {
- 		dev_dbg(event->pmu->dev, "Per-task mode not supported\n");
- 		return -EOPNOTSUPP;
-@@ -1003,9 +1006,6 @@ static int hisi_ptt_pmu_event_init(struct perf_event *event)
- 	if (event->attach_state & PERF_ATTACH_TASK)
- 		return -EOPNOTSUPP;
- 
--	if (event->attr.type != hisi_ptt->hisi_ptt_pmu.type)
--		return -ENOENT;
--
- 	ret = hisi_ptt_trace_valid_filter(hisi_ptt, event->attr.config);
- 	if (ret < 0)
- 		return ret;
+If you do this, ret needs to have been initialised to 0, but it isn't.
+
+Same for the changes below.
+
+>  		break;
+>  	case V4L2_CID_ANALOGUE_GAIN:
+>  		ret = ov4689_map_gain(ov4689, ctrl->val, &sensor_gain);
+> -		cci_write(ov4689->regmap, OV4689_REG_GAIN, sensor_gain, &ret);
+> +		cci_write(regmap, OV4689_REG_GAIN, sensor_gain, &ret);
+>  		break;
+>  	case V4L2_CID_VBLANK:
+> -		ret = cci_write(ov4689->regmap, OV4689_REG_VTS,
+> -				ctrl->val + ov4689->cur_mode->height, NULL);
+> +		cci_write(regmap, OV4689_REG_VTS,
+> +			  ctrl->val + ov4689->cur_mode->height, &ret);
+>  		break;
+>  	case V4L2_CID_TEST_PATTERN:
+>  		ret = ov4689_enable_test_pattern(ov4689, ctrl->val);
+> @@ -625,7 +625,6 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
+>  	}
+>  
+>  	pm_runtime_put(dev);
+> -
+
+I thought it was nice.
+
+>  	return ret;
+>  }
+>  
+
 -- 
-2.34.1
+Regards,
 
+Sakari Ailus
