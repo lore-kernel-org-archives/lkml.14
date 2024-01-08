@@ -1,374 +1,123 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8104125A6;
-	Mon,  8 Jan 2024 09:38:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z3nYco1P"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-55770379ed4so1346973a12.3;
-        Mon, 08 Jan 2024 01:38:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704706735; x=1705311535; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f922AAAvTUPPGAMjuD/HGIUip6YX4Zxif4jpCQOF54Q=;
-        b=Z3nYco1PB8wrEretwoNbX5rl//Q5CNMuJqNYHNYyVKccZTq7DiCcfLcjL37pRmtHFg
-         gsPsFmWUmzxMtYo/O+ej7Xsgjev8mPxt7p/P25CxriWgW2J+mwdRDbTGW5GVZZmONga5
-         1XkD4j2haXVc8J8bxcMArVC2Na369noZpacCqZEgQYp36qEkxw0B/rfKqMnTg8RUvXui
-         yi3pQE3c09t8jSb3vrmna6XniVhqDYmfMfsMwYBQPmcKoavhA+jYUbcea3WTeQUa/3Dz
-         LWUQtv6AL8VUW+jS1TmLtFcCY6JqzxNmHILeqSSt/ki9/Zn0AaXN3kS2+Cms5hPFUlIu
-         GgkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704706735; x=1705311535;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f922AAAvTUPPGAMjuD/HGIUip6YX4Zxif4jpCQOF54Q=;
-        b=eYa/6mMRWjwBKFEYz5IkoRLAKATUPmMlXvl/lpPWkDVWkmKyTU+XazNkHi/GVJ1OqU
-         kxzUXISymfGFkZr7djDj6G/FUQ+NotvyA/VkX9sXRzhtBk5TeZAORtfBYVR7kWCusm14
-         ny1OPttTnuolxteHazV0jBqX0K5FeXRich1NCLd4bSi0hM+KSnI2Cmvl1bccgj3WMNQh
-         JbTxxU554OTYNaBJJHLC4VIv+hgpgIQEQCV5FHjGKKTfyXM5d54Es+qKkw6MhXMVDx2K
-         NJ3Q6QxDxJesvki4Yng0Dz1C+2u2l5ukwtpxI2LNW/e7KY4bf2ERNK3MDlM0PPnQD0r8
-         1kjQ==
-X-Gm-Message-State: AOJu0Yyzuz8vFXctWTWYXP76WIIx5mVCfoSBIm8T0m4RIi1owvPPAtoq
-	rzKwlMU7uOCG+yQ42kRSAnSmBFIhB90+EQ==
-X-Google-Smtp-Source: AGHT+IH2J5bvyAlahRK3WFWSh7+fk+vNfS5rTlvUTI+eJr2X8J7ADz3qdASb7PiB6YGRPg2y62Yfyw==
-X-Received: by 2002:a17:906:2685:b0:a28:b92e:c22a with SMTP id t5-20020a170906268500b00a28b92ec22amr1602842ejc.22.1704706735142;
-        Mon, 08 Jan 2024 01:38:55 -0800 (PST)
-Received: from debian.fritz.box ([93.184.186.109])
-        by smtp.gmail.com with ESMTPSA id v12-20020a170906338c00b00a2ae71cee2asm326851eja.177.2024.01.08.01.38.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jan 2024 01:38:54 -0800 (PST)
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: 
-Cc: Dimitri Fedrau <dima.fedrau@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Stefan Eichenberger <eichest@gmail.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 net-next 5/5] net: phy: marvell-88q2xxx: add driver for the Marvell 88Q2220 PHY
-Date: Mon,  8 Jan 2024 10:37:00 +0100
-Message-Id: <20240108093702.13476-6-dima.fedrau@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240108093702.13476-1-dima.fedrau@gmail.com>
-References: <20240108093702.13476-1-dima.fedrau@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B964312B6C
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 09:39:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rMlt0-000418-SC; Mon, 08 Jan 2024 10:25:34 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rMlsz-001DHQ-BP; Mon, 08 Jan 2024 10:25:33 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rMlsz-004jki-0p;
+	Mon, 08 Jan 2024 10:25:33 +0100
+Date: Mon, 8 Jan 2024 10:25:33 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Nylon Chen <nylon.chen@sifive.com>
+Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, paul.walmsley@sifive.com, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, thierry.reding@gmail.com, 
+	emil.renner.berthing@canonical.com, vincent.chen@sifive.com, greentime.hu@sifive.com, 
+	zong.li@sifive.com, nylon7717@gmail.com
+Subject: Re: [v5 2/2] pwm: sifive: change the PWM controlled LED algorithm
+Message-ID: <djdio3t54er4vqnjp4yjeoghopd5gdkybktvojzzvhs5ijxmwg@4db2hsmtoh6e>
+References: <20231024101902.6689-1-nylon.chen@sifive.com>
+ <20231024101902.6689-3-nylon.chen@sifive.com>
+ <20231211204950.fkaqsnpzb6kixqf2@pengutronix.de>
+ <CAHh=Yk-9-M2G_cfdxLig2d0g1DucEytXhfFO5dp5HcDn+egWBw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2uooa2ltsa4cbfhk"
+Content-Disposition: inline
+In-Reply-To: <CAHh=Yk-9-M2G_cfdxLig2d0g1DucEytXhfFO5dp5HcDn+egWBw@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Add a driver for the Marvell 88Q2220. This driver allows to detect the
-link, switch between 100BASE-T1 and 1000BASE-T1 and switch between
-master and slave mode. Autonegoation is supported.
 
-Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
----
- drivers/net/phy/marvell-88q2xxx.c | 206 +++++++++++++++++++++++++++++-
- include/linux/marvell_phy.h       |   1 +
- 2 files changed, 201 insertions(+), 6 deletions(-)
+--2uooa2ltsa4cbfhk
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/net/phy/marvell-88q2xxx.c b/drivers/net/phy/marvell-88q2xxx.c
-index dcebb4643aff..8a0dae82ab2d 100644
---- a/drivers/net/phy/marvell-88q2xxx.c
-+++ b/drivers/net/phy/marvell-88q2xxx.c
-@@ -6,6 +6,8 @@
- #include <linux/marvell_phy.h>
- #include <linux/phy.h>
- 
-+#define PHY_ID_88Q2220_REVB0	(MARVELL_PHY_ID_88Q2220 | 0x1)
-+
- #define MDIO_MMD_AN_MV_STAT			32769
- #define MDIO_MMD_AN_MV_STAT_ANEG		0x0100
- #define MDIO_MMD_AN_MV_STAT_LOCAL_RX		0x1000
-@@ -13,6 +15,11 @@
- #define MDIO_MMD_AN_MV_STAT_LOCAL_MASTER	0x4000
- #define MDIO_MMD_AN_MV_STAT_MS_CONF_FAULT	0x8000
- 
-+#define MDIO_MMD_AN_MV_STAT2			32794
-+#define MDIO_MMD_AN_MV_STAT2_AN_RESOLVED	0x0800
-+#define MDIO_MMD_AN_MV_STAT2_100BT1		0x2000
-+#define MDIO_MMD_AN_MV_STAT2_1000BT1		0x4000
-+
- #define MDIO_MMD_PCS_MV_100BT1_STAT1			33032
- #define MDIO_MMD_PCS_MV_100BT1_STAT1_IDLE_ERROR		0x00ff
- #define MDIO_MMD_PCS_MV_100BT1_STAT1_JABBER		0x0100
-@@ -29,6 +36,42 @@
- 
- #define MDIO_MMD_PCS_MV_RX_STAT			33328
- 
-+struct mmd_val {
-+	int devad;
-+	u32 regnum;
-+	u16 val;
-+};
-+
-+const struct mmd_val mv88q222x_revb0_init_seq0[] = {
-+	{ MDIO_MMD_PCS, 0x8033, 0x6801 },
-+	{ MDIO_MMD_AN, MDIO_AN_T1_CTRL, 0x0 },
-+	{ MDIO_MMD_PMAPMD, MDIO_CTRL1,
-+	  MDIO_CTRL1_LPOWER | MDIO_PMA_CTRL1_SPEED1000 },
-+	{ MDIO_MMD_PCS, 0xfe1b, 0x48 },
-+	{ MDIO_MMD_PCS, 0xffe4, 0x6b6 },
-+	{ MDIO_MMD_PMAPMD, MDIO_CTRL1, 0x0 },
-+	{ MDIO_MMD_PCS, MDIO_CTRL1, 0x0 },
-+};
-+
-+const struct mmd_val mv88q222x_revb0_init_seq1[] = {
-+	{ MDIO_MMD_PCS, 0xfe79, 0x0 },
-+	{ MDIO_MMD_PCS, 0xfe07, 0x125a },
-+	{ MDIO_MMD_PCS, 0xfe09, 0x1288 },
-+	{ MDIO_MMD_PCS, 0xfe08, 0x2588 },
-+	{ MDIO_MMD_PCS, 0xfe11, 0x1105 },
-+	{ MDIO_MMD_PCS, 0xfe72, 0x042c },
-+	{ MDIO_MMD_PCS, 0xfbba, 0xcb2 },
-+	{ MDIO_MMD_PCS, 0xfbbb, 0xc4a },
-+	{ MDIO_MMD_AN, 0x8032, 0x2020 },
-+	{ MDIO_MMD_AN, 0x8031, 0xa28 },
-+	{ MDIO_MMD_AN, 0x8031, 0xc28 },
-+	{ MDIO_MMD_PCS, 0xffdb, 0xfc10 },
-+	{ MDIO_MMD_PCS, 0xfe1b, 0x58 },
-+	{ MDIO_MMD_PCS, 0xfe79, 0x4 },
-+	{ MDIO_MMD_PCS, 0xfe5f, 0xe8 },
-+	{ MDIO_MMD_PCS, 0xfe05, 0x755c },
-+};
-+
- static int mv88q2xxx_soft_reset(struct phy_device *phydev)
- {
- 	int ret;
-@@ -125,24 +168,90 @@ static int mv88q2xxx_read_link_100m(struct phy_device *phydev)
- 
- static int mv88q2xxx_read_link(struct phy_device *phydev)
- {
--	int ret;
--
- 	/* The 88Q2XXX PHYs do not have the PMA/PMD status register available,
- 	 * therefore we need to read the link status from the vendor specific
- 	 * registers depending on the speed.
- 	 */
-+
- 	if (phydev->speed == SPEED_1000)
--		ret = mv88q2xxx_read_link_gbit(phydev);
-+		return mv88q2xxx_read_link_gbit(phydev);
-+	else if (phydev->speed == SPEED_100)
-+		return mv88q2xxx_read_link_100m(phydev);
-+
-+	phydev->link = false;
-+	return 0;
-+}
-+
-+static int mv88q2xxx_read_master_slave_state(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	phydev->master_slave_state = MASTER_SLAVE_STATE_UNKNOWN;
-+	ret = phy_read_mmd(phydev, MDIO_MMD_AN, MDIO_MMD_AN_MV_STAT);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ret & MDIO_MMD_AN_MV_STAT_LOCAL_MASTER)
-+		phydev->master_slave_state = MASTER_SLAVE_STATE_MASTER;
- 	else
--		ret = mv88q2xxx_read_link_100m(phydev);
-+		phydev->master_slave_state = MASTER_SLAVE_STATE_SLAVE;
- 
--	return ret;
-+	return 0;
-+}
-+
-+static int mv88q2xxx_read_aneg_speed(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	phydev->speed = SPEED_UNKNOWN;
-+	ret = phy_read_mmd(phydev, MDIO_MMD_AN, MDIO_MMD_AN_MV_STAT2);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (!(ret & MDIO_MMD_AN_MV_STAT2_AN_RESOLVED))
-+		return 0;
-+
-+	if (ret & MDIO_MMD_AN_MV_STAT2_100BT1)
-+		phydev->speed = SPEED_100;
-+	else if (ret & MDIO_MMD_AN_MV_STAT2_1000BT1)
-+		phydev->speed = SPEED_1000;
-+
-+	return 0;
- }
- 
- static int mv88q2xxx_read_status(struct phy_device *phydev)
- {
- 	int ret;
- 
-+	if (phydev->autoneg == AUTONEG_ENABLE) {
-+		/* We have to get the negotiated speed first, otherwise we are
-+		 * not able to read the link.
-+		 */
-+		ret = mv88q2xxx_read_aneg_speed(phydev);
-+		if (ret < 0)
-+			return ret;
-+
-+		ret = mv88q2xxx_read_link(phydev);
-+		if (ret < 0)
-+			return ret;
-+
-+		ret = genphy_c45_read_lpa(phydev);
-+		if (ret < 0)
-+			return ret;
-+
-+		ret = genphy_c45_baset1_read_status(phydev);
-+		if (ret < 0)
-+			return ret;
-+
-+		ret = mv88q2xxx_read_master_slave_state(phydev);
-+		if (ret < 0)
-+			return ret;
-+
-+		phy_resolve_aneg_linkmode(phydev);
-+
-+		return 0;
-+	}
-+
- 	ret = mv88q2xxx_read_link(phydev);
- 	if (ret < 0)
- 		return ret;
-@@ -171,7 +280,9 @@ static int mv88q2xxx_get_features(struct phy_device *phydev)
- 	 * sequence provided by Marvell. Disable it for now until a proper
- 	 * workaround is found or a new PHY revision is released.
- 	 */
--	linkmode_clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT, phydev->supported);
-+	if (phydev->drv->phy_id == MARVELL_PHY_ID_88Q2110)
-+		linkmode_clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
-+				   phydev->supported);
- 
- 	return 0;
- }
-@@ -241,6 +352,75 @@ static int mv88q2xxx_get_sqi_max(struct phy_device *phydev)
- 	return 15;
- }
- 
-+static int mv88q222x_soft_reset(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	/* Enable RESET of DCL */
-+	if (phydev->autoneg == AUTONEG_ENABLE || phydev->speed == SPEED_1000) {
-+		ret = phy_write_mmd(phydev, MDIO_MMD_PCS, 0xfe1b, 0x48);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	ret = phy_write_mmd(phydev, MDIO_MMD_PCS, MDIO_PCS_1000BT1_CTRL,
-+			    MDIO_PCS_1000BT1_CTRL_RESET);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = phy_write_mmd(phydev, MDIO_MMD_PCS, 0xffe4, 0xc);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Disable RESET of DCL */
-+	if (phydev->autoneg == AUTONEG_ENABLE || phydev->speed == SPEED_1000)
-+		return phy_write_mmd(phydev, MDIO_MMD_PCS, 0xfe1b, 0x58);
-+
-+	return 0;
-+}
-+
-+static int mv88q222x_config_aneg(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	ret = genphy_c45_config_aneg(phydev);
-+	if (ret)
-+		return ret;
-+
-+	return mv88q222x_soft_reset(phydev);
-+}
-+
-+static int mv88q222x_revb0_config_init(struct phy_device *phydev)
-+{
-+	int ret, i;
-+
-+	for (i = 0; i < ARRAY_SIZE(mv88q222x_revb0_init_seq0); i++) {
-+		ret = phy_write_mmd(phydev, mv88q222x_revb0_init_seq0[i].devad,
-+				    mv88q222x_revb0_init_seq0[i].regnum,
-+				    mv88q222x_revb0_init_seq0[i].val);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	usleep_range(5000, 10000);
-+
-+	for (i = 0; i < ARRAY_SIZE(mv88q222x_revb0_init_seq1); i++) {
-+		ret = phy_write_mmd(phydev, mv88q222x_revb0_init_seq1[i].devad,
-+				    mv88q222x_revb0_init_seq1[i].regnum,
-+				    mv88q222x_revb0_init_seq1[i].val);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	/* The 88Q2XXX PHYs do have the extended ability register available, but
-+	 * register MDIO_PMA_EXTABLE where they should signalize it does not
-+	 * work according to specification. Therefore, we force it here.
-+	 */
-+	phydev->pma_extable = MDIO_PMA_EXTABLE_BT1;
-+
-+	return 0;
-+}
-+
- static struct phy_driver mv88q2xxx_driver[] = {
- 	{
- 		.phy_id			= MARVELL_PHY_ID_88Q2110,
-@@ -255,12 +435,26 @@ static struct phy_driver mv88q2xxx_driver[] = {
- 		.get_sqi		= mv88q2xxx_get_sqi,
- 		.get_sqi_max		= mv88q2xxx_get_sqi_max,
- 	},
-+	{
-+		PHY_ID_MATCH_EXACT(PHY_ID_88Q2220_REVB0),
-+		.name			= "mv88q2220",
-+		.get_features		= mv88q2xxx_get_features,
-+		.config_aneg		= mv88q222x_config_aneg,
-+		.aneg_done		= genphy_c45_aneg_done,
-+		.config_init		= mv88q222x_revb0_config_init,
-+		.read_status		= mv88q2xxx_read_status,
-+		.soft_reset		= mv88q222x_soft_reset,
-+		.set_loopback		= genphy_c45_loopback,
-+		.get_sqi		= mv88q2xxx_get_sqi,
-+		.get_sqi_max		= mv88q2xxx_get_sqi_max,
-+	},
- };
- 
- module_phy_driver(mv88q2xxx_driver);
- 
- static struct mdio_device_id __maybe_unused mv88q2xxx_tbl[] = {
- 	{ MARVELL_PHY_ID_88Q2110, MARVELL_PHY_ID_MASK },
-+	{ PHY_ID_MATCH_EXACT(PHY_ID_88Q2220_REVB0), },
- 	{ /*sentinel*/ }
- };
- MODULE_DEVICE_TABLE(mdio, mv88q2xxx_tbl);
-diff --git a/include/linux/marvell_phy.h b/include/linux/marvell_phy.h
-index 9b54c4f0677f..693eba9869e4 100644
---- a/include/linux/marvell_phy.h
-+++ b/include/linux/marvell_phy.h
-@@ -26,6 +26,7 @@
- #define MARVELL_PHY_ID_88E2110		0x002b09b0
- #define MARVELL_PHY_ID_88X2222		0x01410f10
- #define MARVELL_PHY_ID_88Q2110		0x002b0980
-+#define MARVELL_PHY_ID_88Q2220		0x002b0b20
- 
- /* Marvel 88E1111 in Finisar SFP module with modified PHY ID */
- #define MARVELL_PHY_ID_88E1111_FINISAR	0x01ff0cc0
--- 
-2.39.2
+Hello Nylon,
 
+On Mon, Jan 08, 2024 at 04:27:40PM +0800, Nylon Chen wrote:
+> Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> =E6=96=BC 2023=E5=
+=B9=B412=E6=9C=8812=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=884:50=E5=
+=AF=AB=E9=81=93=EF=BC=9A
+> > On Tue, Oct 24, 2023 at 06:19:02PM +0800, Nylon Chen wrote:
+> > > diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+> > > index eabddb7c7820..353c2342fbf1 100644
+> > > --- a/drivers/pwm/pwm-sifive.c
+> > > +++ b/drivers/pwm/pwm-sifive.c
+> > > @@ -101,7 +101,7 @@ static void pwm_sifive_update_clock(struct pwm_si=
+five_ddata *ddata,
+> > >
+> > >       /* As scale <=3D 15 the shift operation cannot overflow. */
+> > >       num =3D (unsigned long long)NSEC_PER_SEC << (PWM_SIFIVE_CMPWIDT=
+H + scale);
+> > > -     ddata->real_period =3D div64_ul(num, rate);
+> > > +     ddata->real_period =3D DIV_ROUND_UP_ULL(num, rate);
+> >
+> > It's unclear to me, why you changed that.
+> Because there is a gap in idempotent tests.
+> e.g.
+> root@unmatched:~# echo 110 >
+> /sys/devices/platform/led-controller-1/leds/d12/brightness
+> [  706.987712] .apply is not idempotent (ena=3D1 pol=3D0 1739692/4032985)
+> -> (ena=3D1 pol=3D0 1739630/4032985)
+> root@unmatched:~# echo 120 >
+> /sys/devices/platform/led-controller-1/leds/d12/brightness
+> [  709.817554] .apply is not idempotent (ena=3D1 pol=3D0 1897846/4032985)
+> -> (ena=3D1 pol=3D0 1897784/4032985)
+>=20
+> Round the result to the nearest whole number. This ensures that
+> real_period is always a reasonable integer that is not lower than the
+> actual value.
+>=20
+> After modification, idempotent errors can be avoided.
+
+That's very welcome, however I think this should be a separate change.
+
+I'll think about the rest of your changes when you send a new patch.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--2uooa2ltsa4cbfhk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWbv4wACgkQj4D7WH0S
+/k7eMAgAiRy8wWagjbQMdQFD8bdFQ8EgRz0wMMyWy44lAb0p+sC7KeIaefzAl9je
+8cSVn2Lo82Ow0FZoWuF0cfYjYCWqVfXJ4oONYedhbs4AEW0dRvk79FSG4AUdyGpY
+msD3CfrGSSEcfGilhKj1IO894popC2K9VbviBlfssNo39tpksIFhBZuW0OMKY8VF
+fgezepSwzXsrBbHMWstvwtDH7hvQkgtfgzID+GM1pgdKuQ/kPbE1Zqt0crbkhP9O
+p6kCCUDRFHecYHJUN69Io0k//+eE6789vFmvBVkRkdy8XoxIdj7XpxWLEOvHtnIU
+C+D/5IyP9Uh8fm46qcCD/n7BLjzI5g==
+=eV/P
+-----END PGP SIGNATURE-----
+
+--2uooa2ltsa4cbfhk--
