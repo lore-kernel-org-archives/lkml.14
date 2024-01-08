@@ -1,86 +1,95 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC2154BC0;
-	Mon,  8 Jan 2024 18:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0090825755
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 18:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="gyCpfHha"
-Received: from localhost (unknown [IPv6:2601:280:5e00:7e19::646])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 31CC5377;
-	Mon,  8 Jan 2024 18:27:23 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 31CC5377
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1704738443; bh=6A53Fmc3sg36fdjFQCDXxbk/Zai3VfsgTloQdrPblU0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=gyCpfHhaEHCNty4eBaRFlalLNy3XXk1BRuvXBCi6xxtRGX5KwOVyclDy4guaOSw7X
-	 hxIXok/dNoDMJuNKSoxwdhio+8ayHPmNZhr65tB3MQuTHHbwUWT9n3f9sqtR4FggeW
-	 ZvONN6KwAVI/Awylp+0zxcaH7pf87kDzKthJpZnT/wRj8dWCX86u3vMwf5XiNty2A2
-	 3OMeYNKCl7rtqtiz4HiDtG0+XUw7z/AhpfoXSnI5kipWoIVjJ0i2rJwh5UO1kc/HEJ
-	 3hEJKM6lQja22SRObdBIGpnu88ntRCqFryGKE3sR99+jmVfAQC50g3QUZfRULRXLbl
-	 naMYuT7+fdC5w==
-From: Jonathan Corbet <corbet@lwn.net>
-To: Yueh-Shun Li <shamrocklee@posteo.net>
-Cc: Hu Haowen <src.res.211@gmail.com>, Alex Shi <alexs@kernel.org>, Yanteng
- Si <siyanteng@loongson.cn>, Randy Dunlap <rdunlap@infradead.org>,
- workflows@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] coding-style: show how reusing macros prevents
- naming collisions
-In-Reply-To: <eecb9fa3e0cd84fce0b2f9e5449888a0@posteo.net>
-References: <107b6b5e-ca14-4b2b-ba2e-38ecd74c0ad3@infradead.org>
- <20240108160746.177421-1-shamrocklee@posteo.net>
- <20240108160746.177421-3-shamrocklee@posteo.net>
- <871qaryel9.fsf@meer.lwn.net>
- <eecb9fa3e0cd84fce0b2f9e5449888a0@posteo.net>
-Date: Mon, 08 Jan 2024 11:27:22 -0700
-Message-ID: <87ederwuid.fsf@meer.lwn.net>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="1UE7pWXu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=VlUAd8oG1kTAZGT+1dUtSqGacdlM72KwoMUwqlEUI6I=; b=1UE7pWXutFGrTxLmE5ZCVPTO14
+	M63GVNMrAPGye81IQWjB8pvSE5kTNKazD+g7m8vXx3iKyHnaeNctY5MyUObp0EBQJxnQB4TeT31rG
+	qCVQhh9yAm/bvbgFFsvBWJlXdPQgp0f2B1T4cjncVpo8vof2iOW80B6rbL62VIb3Z5NIvrEBe/MsQ
+	JJGknppsWIRU6FyE3KMZwHVOxaE7UMNLmGFMAMklZbBUPnfTvvp9ruRBxlrSWzy66vfDtCpKfbG2k
+	Rp6nkLFkzclC0E5YijowGnOEvBOt3xOqzOLdLrS80YqByxro2O02GCumsTCRVomagWyJHTbGDFHB8
+	LA6R+/1A==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45438)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rMuOf-0003Jh-1A;
+	Mon, 08 Jan 2024 18:30:49 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rMuOi-0003S7-22; Mon, 08 Jan 2024 18:30:52 +0000
+Date: Mon, 8 Jan 2024 18:30:52 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Dimitri John Ledkov <dimitri.ledkov@canonical.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [BUG] SHA-3 causes kmod 28 to segfault
+Message-ID: <ZZw/XK12CnSgPtaB@shell.armlinux.org.uk>
+References: <ZZwk8nFBTIMISLXp@shell.armlinux.org.uk>
+ <CADWks+Y7JOsvzWc50syVwOB9LF2Lxc_YiLzLxCkhEv8sBxrNvw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADWks+Y7JOsvzWc50syVwOB9LF2Lxc_YiLzLxCkhEv8sBxrNvw@mail.gmail.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Yueh-Shun Li <shamrocklee@posteo.net> writes:
+On Mon, Jan 08, 2024 at 06:14:17PM +0000, Dimitri John Ledkov wrote:
+> Hi,
+> 
+> On Mon, 8 Jan 2024 at 16:38, Russell King (Oracle)
+> <linux@armlinux.org.uk> wrote:
+> >
+> > Hi,
+> >
+> > When building 6.7 under Debian Oldstable with kmod 28, the installation
+> > of modules fails during depmod with a SEGV.
+> >
+> 
+> What is your kernel configuration, and I hope you make config choices
+> compatible with your target host OS.
 
->> So everything we add to our documentation has a cost in terms of reader
->> attention.  We ask people to read through a lot of material now, and
->> should only increase that ask for good reason.
->> 
->> With that context, I have to wonder whether we really need to tell our
->> readers, who are supposed to be capable developers, that reuse can help
->> to avoid name collisions?
->> 
->
-> The motivation comes from existing inconsistency of the "__stringify()" 
-> macro
-> definition between e.g. "samples/bpf/tracex5.bpf.c" and other files.
->
-> I agree that increasing the length of the documentation without
-> substantial benefits would not be helpful for the readers, and
-> doubling the length of a section is too much for its purpose.
->
-> Should I shorten it into one sentence, like
->
-> ```
-> On the other hand, locally-defined variants, such as ``#define 
-> __stringify(x) #x``,
-> could lead to naming collisions that break otherwise functioning 
-> facilities.
-> ```
->
-> or just omit it in the next version of patches?
+"target host OS" - that's a total misnomer. "host" is generally what
+you're building under. "target" is generally what you're building _for_.
+So I don't fully understand your comment. Maybe you meant "target _and_
+host" ?
 
-My own feeling (others may well disagree) is that this isn't worth
-mentioning in the coding-style document.  What you *could* do is to fix
-the redefinitions (if that hasn't happened yet) and make sure that the
-macros in question are covered in our kernel documentation.
+> > Running under gdb:
+> >
+> > Program received signal SIGSEGV, Segmentation fault.
+> > __strlen_sse2 () at ../sysdeps/x86_64/multiarch/strlen-vec.S:133
+> >
+> > I have no further information as I can't remember how to get the debug
+> > info for packages under Debian - and even if I could, it's probably a
+> > bug in the kmod package that Debian will have absolutely no interest in
+> > fixing (based on previous experience reporting bugs to Debian.)
+> 
+> For latest kernel and latest kernel features support in kmod, latest
+> kmod is required. I.e. patched with
+> https://github.com/kmod-project/kmod/commit/510c8b7f7455c6613dd1706e5e41ec7b09cf6703
 
-Thanks,
+Would be nice if there was some documentation. Also, as kconfig provides
+a mechanism to detect e.g. the version of tooling used to build the
+kernel, it would've been nice to detect whether depmod was sufficiently
+recent to support SHA3 and make the module signing SHA3 options depend
+on that.
 
-jon
+Leaving this to a SEGV to indicate that something is wrong isn't user
+friendly.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
