@@ -1,121 +1,141 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A1A8BED
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 07:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054C0B642
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 07:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jmQjQkEP"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4083W4jo025153;
-	Mon, 8 Jan 2024 07:32:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=pRwL7tB0nJKbdGk2WmSX08I3bGiRbyCJpV6DOrHHcdA=; b=jm
-	QjQkEP2MycG3N/fOeBFYRABy7Ct5r4NaE22+DLl4DY/H1v75skDIJBM+uN/8XVIO
-	UMJq4DMeh6RwSS+pt+rLmBf/D75Dk6qm4MBssqJljnxLYtUL+f48km8UldKq/abV
-	B1ljXRLW+7AryX8Cwty/aJeNMi8/qo+nB6P+gpqqs2fGJt8olqKOf32JOMbWC1v6
-	hKVz3ACCGtNN6N2PWpCUQ02NbCUIhrVMIqpdhMbhyfffD4m74qxE88MKFIJSRV/v
-	DkmYeQgIpMGth47hKnPMh3BtxE3pXMyYFXuQy+wf0wKk2XuKrz5qGLczNZGTBm+5
-	5NGISjWIbRjYfzyE28xg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vg97b0bqr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jan 2024 07:32:40 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4087WduE006648
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 8 Jan 2024 07:32:39 GMT
-Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Sun, 7 Jan
- 2024 23:32:32 -0800
-Message-ID: <2e7ad0c9-ec5a-a65a-899d-a575b6201510@quicinc.com>
-Date: Mon, 8 Jan 2024 13:02:25 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e9f8nQHZ"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3368ae75082so1295522f8f.1
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jan 2024 23:33:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704699208; x=1705304008; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VsT49imzj00s7Yll7mY42k837UkAbQah3cdA20IzaIY=;
+        b=e9f8nQHZBzZH4C2cMvbRd881dsgqU9IP1r/38dI6m6mex4LH4v7m19OWwgYH/z5Dgx
+         ruC8nKsLUfz+7Mo0+XJuJMHwzb1HQtJgMzhvcyYRE0jM4qgdRv27EUtNoSd/PR4+0OS8
+         PeLXOP2857FJTinYK2wHt8DKJt4JMoHLj2JXJ9rCxTK1hXq4vRXPryjsDiZyMxv9k+rZ
+         R4SilUbCiEaHO0fHbVqWfgf43Vhh/UeRIB/HHyoLF/l7Wc29PQLPQMzYLLtg9NehAUpT
+         y8W3yFwOCkSwJrGrbt34/ID7H9RoEjpi21pL0lpZyb3UHrNevQ1eSqz4BJsorus4xLDq
+         q8+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704699208; x=1705304008;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VsT49imzj00s7Yll7mY42k837UkAbQah3cdA20IzaIY=;
+        b=w4B/nkW5MGySUGnHy7OcVYHLQMukQwosHasY0ndbrdLc+k9rxBa4FNrSifYVuXQh+x
+         8dl2f62dIRLDLTiNih40ZGKtkE/EP9xHFb7pfAKtpjOhJ8DeSKutlDziWvlOngQeX8jY
+         TECCck7KsaJCv5FkXonsU0NwU1ZTzhgZPKhyNVQFBKcBuK0JyratznGg4A+cXlSmNW13
+         zHMfZXuLFafYEvHEAqfZ094FeZULMZ0JF8bom9/jmxv4wtpK4JYMG2AKwVky5T+RxQz4
+         EA6OeAN0nYuRNA4npxEH72v12MLBZ2dH2SOWrR2Ys4sAkkIVjGfdITYCuQTG6TTGaRGd
+         XEYw==
+X-Gm-Message-State: AOJu0Yzv1hIz9O0puuVowDqK1eNdWpl1UyOAcv986QM8loFCrclfbMke
+	aw2eWZwrniIr3pzLH3SSNIp/oxWb0ipEGw==
+X-Google-Smtp-Source: AGHT+IFEon0WJ044xjZRsrBXv1jCnpkHNL4f/KhLfxPPOLM0AFbplbDzxkpS+LR9wL8/p34pMOxh9Q==
+X-Received: by 2002:a05:600c:1c92:b0:40d:8f0c:db84 with SMTP id k18-20020a05600c1c9200b0040d8f0cdb84mr1437440wms.184.1704699208301;
+        Sun, 07 Jan 2024 23:33:28 -0800 (PST)
+Received: from localhost ([102.140.209.237])
+        by smtp.gmail.com with ESMTPSA id e9-20020a05600c4e4900b0040e38859c47sm9998015wmq.16.2024.01.07.23.33.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jan 2024 23:33:27 -0800 (PST)
+Date: Mon, 8 Jan 2024 10:33:23 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Cc: linux-hardening@vger.kernel.org, keescook@chromium.org,
+	error27@gmail.com, gustavoars@kernel.org,
+	Bryan Tan <bryantan@vmware.com>, Vishnu Dasa <vdasa@vmware.com>,
+	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, vegard.nossum@oracle.com,
+	darren.kenny@oracle.com, syzkaller <syzkaller@googlegroups.com>
+Subject: Re: [PATCH v2 2/2] VMCI: Fix memcpy() run-time warning in
+ dg_dispatch_as_host()
+Message-ID: <fc132bde-d42d-4aac-ba91-7a939a18091a@moroto.mountain>
+References: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
+ <20240105164001.2129796-2-harshit.m.mogalapalli@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 1/7] [RFC PATCH 1/7] osdump: Add one new os minidump
- module
-To: ruipeng qi <ruipengqi7@gmail.com>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>, <bhe@redhat.com>,
-        <vgoyal@redhat.com>, <dyoung@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
-        <zalbassam@google.com>, <dianders@chromium.org>,
-        <mark.rutland@arm.com>, <lecopzer.chen@mediatek.com>, <maz@kernel.org>,
-        <arnd@arndb.de>, <yury.norov@gmail.com>, <brauner@kernel.org>,
-        <mcgrof@kernel.org>, <maninder1.s@samsung.com>,
-        <michael.christie@oracle.com>, <samitolvanen@google.com>,
-        <linux-arm-kernel@lists.infradead.org>, <qiruipeng@lixiang.com>
-References: <20231221130930.32634-1-ruipengqi7@gmail.com>
- <e9aa311f-6f13-410e-bb35-20320275668c@linaro.org>
- <CADHLONGLZaZT4Ot56AnxOf=ROrTWvge5=NUx5uqKqJhpJibfOQ@mail.gmail.com>
- <6fe05804-da74-45cd-a6f1-df4644671d99@linaro.org>
- <CADHLONE2YnBJGJUp2-vn_XEpc7+quTMWF7y1zpV0ygeL2VpQxA@mail.gmail.com>
- <CADHLONHHZAeubePPfZbG1N0Nv3ZJM5OWaJWqchBUpiN5Q27UdQ@mail.gmail.com>
-Content-Language: en-US
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <CADHLONHHZAeubePPfZbG1N0Nv3ZJM5OWaJWqchBUpiN5Q27UdQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: uw-DguUr1t_QwRl5eDO3byLAwgnp72FB
-X-Proofpoint-ORIG-GUID: uw-DguUr1t_QwRl5eDO3byLAwgnp72FB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- impostorscore=0 phishscore=0 clxscore=1011 mlxscore=0 bulkscore=0
- priorityscore=1501 malwarescore=0 mlxlogscore=854 suspectscore=0
- spamscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401080062
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240105164001.2129796-2-harshit.m.mogalapalli@oracle.com>
 
-
-
-On 12/23/2023 9:00 PM, ruipeng qi wrote:
-> On Sat, Dec 23, 2023 at 11:13 PM ruipeng qi <ruipengqi7@gmail.com> wrote:
+On Fri, Jan 05, 2024 at 08:40:00AM -0800, Harshit Mogalapalli wrote:
+> Syzkaller hit 'WARNING in dg_dispatch_as_host' bug.
 > 
->>> I don't see a problem why minidump cannot do it.
->> Qcom minidump allows one kernel client to register its region to dump, and then
->> driver will create and maintain one elf head for it.
->> But osdump will dump thousands of non-continuous regions. If you register one
->> by one, and add an elf head for each, it will cause heavy overhead. So it store
->> data in binary, and reassemble a standard elf format file offline for debug.
->>
-> Osdump will only dump useful data, which may have been allocated before but
-> freed now. In a word, useful data are changing all the time. I think this is not
-> suitable for Qcom minidump's framework。
-
-
-Hey @ruipeng,
-
-I like the idea, However, as i already said here
-
-https://lore.kernel.org/lkml/520e377d-e990-c185-4a20-07806873e506@quicinc.com/
-
-This looks more close to pstore ramoops based on Ram backend, as your 
-entire thing is based on RAM content to be preserved across boot and
-that way it aligns to pstore ramoops concept.
-
-Also most of the stuff like compression is already available in pstore.
-So, let me know if you think that way, will be happy to collaborate and 
-test this.
-
--Mukesh
-
+> memcpy: detected field-spanning write (size 56) of single field "&dg_info->msg"
+> at drivers/misc/vmw_vmci/vmci_datagram.c:237 (size 24)
 > 
-> Best Regards
-> Ruipeng
+> WARNING: CPU: 0 PID: 1555 at drivers/misc/vmw_vmci/vmci_datagram.c:237
+> dg_dispatch_as_host+0x88e/0xa60 drivers/misc/vmw_vmci/vmci_datagram.c:237
 > 
+> Some code commentry, based on my understanding:
+> 
+> 544 #define VMCI_DG_SIZE(_dg) (VMCI_DG_HEADERSIZE + (size_t)(_dg)->payload_size)
+> /// This is 24 + payload_size
+> 
+> memcpy(&dg_info->msg, dg, dg_size);
+> 	Destination = dg_info->msg ---> this is a 24 byte
+> 					structure(struct vmci_datagram)
+> 	Source = dg --> this is a 24 byte structure (struct vmci_datagram)
+> 	Size = dg_size = 24 + payload_size
+> 
+> {payload_size = 56-24 =32} -- Syzkaller managed to set payload_size to 32.
+> 
+>  35 struct delayed_datagram_info {
+>  36         struct datagram_entry *entry;
+>  37         struct work_struct work;
+>  38         bool in_dg_host_queue;
+>  39         /* msg and msg_payload must be together. */
+>  40         struct vmci_datagram msg;
+>  41         u8 msg_payload[];
+>  42 };
+> 
+> So those extra bytes of payload are copied into msg_payload[], a run time
+> warning is seen while fuzzing with Syzkaller.
+> 
+> One possible way to fix the warning is to split the memcpy() into
+> two parts -- one -- direct assignment of msg and second taking care of payload.
+> 
+> Gustavo quoted:
+> "Under FORTIFY_SOURCE we should not copy data across multiple members
+> in a structure."
+> 
+> Reported-by: syzkaller <syzkaller@googlegroups.com>
+> Suggested-by: Vegard Nossum <vegard.nossum@oracle.com>
+> Suggested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+> ---
+> This patch is only tested with the C reproducer, not any testing
+> specific to driver is done.
+> 
+> v1->v2: ( Suggestions from Gustavo )
+>         1. Change the commit message false positive --> legitimate
+>            warning.
+
+The commit message is fine.
+
+Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
+
+But, I mean, it's not really "legitimate".  It meets the fortify source
+heuristic, but it's still a false positive.  Fortify source is
+*supposed* to find memory corruption bugs and this is not a memory
+corruption bug.  It's just that these days we have to treat foritify
+false positives as crashing bugs because people enable it and we have to
+fix it.
+
+Let's not pretend that fortify has helped us in this situation, it has
+caused us a problem.  It has taken valid code and created a crashing
+bug.  I'm not saying that the cost isn't worth it, but let's not pretend.
+
+regards,
+dan carpenter
+
+
