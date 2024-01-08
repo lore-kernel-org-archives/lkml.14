@@ -1,74 +1,103 @@
-Received: from kylie.crudebyte.com (kylie.crudebyte.com [5.189.157.229])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3292575B;
-	Mon,  8 Jan 2024 12:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crudebyte.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1DF25757
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 12:08:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b="akIgN35X"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=crudebyte.com; s=kylie; h=Content-Type:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Content-ID:Content-Description;
-	bh=cagyf7j04cToSXabvYW43dze5arP+lifLYmlhSYnUZ8=; b=akIgN35X1P9RGr00+WcbSHEpBA
-	klW5ykJiJY05ljY+rZoWhILwOYxxB5r64OavHvm4Mje2AG/MKG48BzUAc+MPr+y8h5ThPd7K5s7ns
-	wVBJ2PgIt7UT6nSxYuZx65QN6OVPQpYm+53lSlmUhkto9Gj4XtQLXy+OKwcFL//MWdWpTHOF1AtnZ
-	kET5KB9UikjlWEuwPbZRQn4ro6TqGSxi8S4qttZW4qAVl/DbTlF9UDqpD9hM57PDFa3bq+S3P0L82
-	deh4802xgtgzU2y3C67DKzHPgJJfJgEVR23qMs0jnspYyo+X5xA206XwzB9aOhJC2PXIaXEAVuT2S
-	Wq+hliOs1vmiDVlzGD2Nqva6eedM/0/NIB1zYRFJM61FxEXLA1z83PIqINokjzDsSxU3HvwHBvK96
-	C1kktiEoGfhm788/YST6bb5IW5hC9mNuIoCS00Ov0J9jtP2BCWPKdIep2zV+LktCw7Q2fKeJ/zg97
-	mWJkHtXud5ApC9XPMfPGcSFf+panICrd6rQrgUHxCAuEcyiYNWZRDLCOxS3NinDc+VzBoaMEbOKIv
-	i6KbywucrpnD+2lrY27plMaBE0AIcD37WhVnE/j7TKHUchJYfKaubZ8ZQh3pQW1TBL3W0lq5aKHMi
-	hr7s7BZRrWVcM/8gK6nb41bF80Vo3NWbGJB/XNndY=;
-From: Christian Schoenebeck <linux_oss@crudebyte.com>
-To: Eric Van Hensbergen <ericvh@kernel.org>, asmadeus@codewreck.org
-Cc: linux-kernel@vger.kernel.org, v9fs@lists.linux.dev, rminnich@gmail.com,
- lucho@ionkov.net
-Subject: Re: [PATCH] fs/9p: fix inode nlink accounting
-Date: Mon, 08 Jan 2024 13:08:31 +0100
-Message-ID: <8004884.rDQMAZhJ5Z@silver>
-In-Reply-To: <ZZvaRt4T-RjOBoS2@codewreck.org>
-References:
- <20240107-fix-nlink-handling-v1-1-8b1f65ebc9b2@kernel.org>
- <ZZvaRt4T-RjOBoS2@codewreck.org>
+	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="NuLkP4Xk"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6d9bbf71bc8so410502b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 04:08:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1704715726; x=1705320526; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/nhSNer/yVL2skacLugz8NMKxcIl7PuX2VC9t+mugzE=;
+        b=NuLkP4Xky7lTFL8ERqiw7ClleT0DOrBKlgFK4Ton8mnIXQuhexKy4kYETnNz9AEY2t
+         eOaNZei3GnzWqYMpp2Isx47nnlGr5Jq2Kun6PbUmg/fSTuQCAPV65zLj7zk0ZmVyUVbt
+         Ds4QjnM4PmyzEpgcsxMmKBYYiVxXYvYDP4X5ZM+d/zm1NRkBk3Y+GapwrmWBqCUbjaWL
+         lnrqVFUetAa9zFFaS4HcDPIJvBqPPyExfcNscm5GekEYT6XVIsqUV68rvw6CRaB8hFa3
+         0kwnXwLPXj9Ew038R++CGoX2MyubpZY9hyS/jFC3YxkxOYkETSRn3fT+yPFeXEO5iJ0v
+         tHvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704715726; x=1705320526;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/nhSNer/yVL2skacLugz8NMKxcIl7PuX2VC9t+mugzE=;
+        b=ung3Nijyb6AqL+cnODsvCFns5MUUQKv7Vn05tJhUy5sU1XD/+sODNN7X6RcaFY96w3
+         UT7EO6wMn7endvF8lLoqulXYScf/fctvE5XKRzo3WVmdU2oZMZnR1d+rUidSBJUmVZhV
+         XOG2yxU2CR/Iv+fHKQu1cdFb8P+JdQJE/z1Q7vpD8fHQ4B2chPsCrTNrM01WZhKxkxR2
+         x+M/q7JbeOUus3wpF34iLZ0pmjZ1XWpMx8tkzQxir7UIJUuWB6SQamg610MB8MKOFb77
+         CET29cboJzx2etsh6s2CYmmUD+Gzu3HIzjSghHUymEfMhAEJpjQ1i9CxezuwsFKTICcI
+         1XBw==
+X-Gm-Message-State: AOJu0Yw/i4eUoCzjSc3x4GAceYApogkHZcNhc4BFXDmvx2v8end7qsYo
+	bByPnheka8TokmNAJFm4iGiJIuc9lj8/mg==
+X-Google-Smtp-Source: AGHT+IGoSAHza6f/gGxUz5CpIyLUVbg/lQJL20KAwRWxJsjEjnYmktGVhaUdgtsbKhHhbOmGjmZD1g==
+X-Received: by 2002:aa7:9215:0:b0:6d9:bb52:9977 with SMTP id 21-20020aa79215000000b006d9bb529977mr1033162pfo.11.1704715726415;
+        Mon, 08 Jan 2024 04:08:46 -0800 (PST)
+Received: from chromeos.huaqin.com ([116.66.212.162])
+        by smtp.gmail.com with ESMTPSA id fb13-20020a056a002d8d00b006d9aa6592d0sm5822588pfb.82.2024.01.08.04.08.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jan 2024 04:08:45 -0800 (PST)
+From: Ruihai Zhou <zhouruihai@huaqin.corp-partner.google.com>
+To: broonie@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com
+Cc: linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	wenst@chromium.org,
+	Ruihai Zhou <zhouruihai@huaqin.corp-partner.google.com>
+Subject: [PATCH] spi: spi-mt65xx: Support sleep pin control
+Date: Mon,  8 Jan 2024 20:08:02 +0800
+Message-Id: <20240108120802.7601-1-zhouruihai@huaqin.corp-partner.google.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
 
-On Monday, January 8, 2024 12:19:34 PM CET asmadeus@codewreck.org wrote:
-> Eric Van Hensbergen wrote on Sun, Jan 07, 2024 at 07:07:52PM +0000:
-> > I was running some regressions and noticed a (race-y) kernel warning that
-> > happens when nlink becomes less than zero.  Looking through the code
-> > it looks like we aren't good about protecting the inode lock when
-> > manipulating nlink and some code that was added several years ago to
-> > protect against bugs in underlying file systems nlink handling didn't
-> > look quite right either.  I took a look at what NFS was doing and tried to
-> > follow similar approaches in the 9p code.
-> 
-> I was about to say the set/inc/etc_nlink helpers could probably just be
-> using atomic (there's an atomic_dec_if_postive that we could have used
-> for the v9fs_dec_count warning), but this isn't our code so not much to
-> do about that -- I agree it needs a lock.
-> 
-> I didn't take the time to check if you missed any, but it won't be worse
-> than what we have right now:
-> Acked-by: Dominique Martinet <asmadeus@codewreck.org>
+Supports configuring sleep pin control during system suspend to prevent
+potential power leakage and additional power consumption.
 
-That's actually a good point. For these tasks atomic inc/sub/etc are usually
-used instead of locks.
+Signed-off-by: Ruihai Zhou <zhouruihai@huaqin.corp-partner.google.com>
+---
+ drivers/spi/spi-mt65xx.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-I would at least add local wrapper functions that would do these spinlocks for
-us.
-
-However would it be too bold to change those inode functions to use atomic
-operations directly on their end?
-
-/Christian
-
+diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+index 8d5d170d49cc..8d4633b353ee 100644
+--- a/drivers/spi/spi-mt65xx.c
++++ b/drivers/spi/spi-mt65xx.c
+@@ -13,6 +13,7 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/gpio/consumer.h>
++#include <linux/pinctrl/consumer.h>
+ #include <linux/platform_device.h>
+ #include <linux/platform_data/spi-mt65xx.h>
+ #include <linux/pm_runtime.h>
+@@ -1316,6 +1317,8 @@ static int mtk_spi_suspend(struct device *dev)
+ 		clk_disable_unprepare(mdata->spi_hclk);
+ 	}
+ 
++	pinctrl_pm_select_sleep_state(dev);
++
+ 	return 0;
+ }
+ 
+@@ -1325,6 +1328,8 @@ static int mtk_spi_resume(struct device *dev)
+ 	struct spi_controller *host = dev_get_drvdata(dev);
+ 	struct mtk_spi *mdata = spi_controller_get_devdata(host);
+ 
++	pinctrl_pm_select_default_state(dev);
++
+ 	if (!pm_runtime_suspended(dev)) {
+ 		ret = clk_prepare_enable(mdata->spi_clk);
+ 		if (ret < 0) {
+-- 
+2.17.1
 
