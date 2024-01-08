@@ -1,103 +1,177 @@
-Received: from mail-m17244.xmail.ntesmail.com (mail-m17244.xmail.ntesmail.com [45.195.17.244])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D5F344C7A
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 13:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=easystack.cn
-Received: from fedora.. (unknown [211.103.144.18])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 386114C0297;
-	Mon,  8 Jan 2024 21:07:33 +0800 (CST)
-From: fuqiang wang <fuqiang.wang@easystack.cn>
-To: Baoquan He <bhe@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4] x86/kexec: fix potential cmem->ranges out of bounds
-Date: Mon,  8 Jan 2024 21:06:47 +0800
-Message-ID: <20240108130720.228478-1-fuqiang.wang@easystack.cn>
-X-Mailer: git-send-email 2.42.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DE544C76
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 13:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NsO9rgYN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704720799; x=1736256799;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=G54Pi13jT8VpODe/nYPHSczABLoKWp9Q4adw6Xh/qxE=;
+  b=NsO9rgYNz9BOEZyZN7ywOdeYFpGLRNZDDoUbUmp6UYFhJeYI1RDMAH15
+   rsTUDfi0EKL/CgPwE+5tutDEOrJvqwT/IACXOlx2HccT0x+al4zqetEGp
+   wWlTTMwopuPfloxzYX6LQcqdXqv1pVI1LjvpCeZkNi6AtYuFFr2h3xioS
+   2qUWje3tCVyLB3FwrCQc2P76rI502ZQoRYlVj6IGFQX6DxoOdwC20jZZ9
+   rQ12EdVUBbEEbqpy+3+m9mG5SKCTgv+eHqu8iA/eQHnS7H8ukyZkpjgpe
+   ff2PQrhoDMS0JNrllxVN0/wp2Lbgof4DJx24Gsnhe8jaaDAxUAVEe0bu0
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="4669364"
+X-IronPort-AV: E=Sophos;i="6.04,341,1695711600"; 
+   d="scan'208";a="4669364"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 05:33:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="815606779"
+X-IronPort-AV: E=Sophos;i="6.04,341,1695711600"; 
+   d="scan'208";a="815606779"
+Received: from ddraghic-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.251.212.53])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 05:33:12 -0800
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id CC77610498C; Mon,  8 Jan 2024 16:33:08 +0300 (+03)
+Date: Mon, 8 Jan 2024 16:33:08 +0300
+From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
+To: "Huang, Kai" <kai.huang@intel.com>
+Cc: "tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"hpa@zytor.com" <hpa@zytor.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"ak@linux.intel.com" <ak@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"seanjc@google.com" <seanjc@google.com>
+Subject: Re: [PATCHv2] x86/trampoline: Bypass compat mode in
+ trampoline_start64() if not needed
+Message-ID: <20240108133308.dqffkxcojo3nab6p@box.shutemov.name>
+References: <20240107122847.27740-1-kirill.shutemov@linux.intel.com>
+ <b69afad98d043ddfb685982c9977105f1b563485.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkaTkIYVk5OGRhKQxpIGRlOT1UZERMWGhIXJBQOD1
-	lXWRgSC1lBWUlKSlVKS0hVSk9PVUpDWVdZFhoPEhUdFFlBWU9LSFVKTU9JTE5VSktLVUpCS0tZBg
-	++
-X-HM-Tid: 0a8ce92f7fc0022ekunm386114c0297
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MhQ6Pww5ITczExAPIwoZIik0
-	D0wKCg9VSlVKTEtPTEpCSU5PS0lIVTMWGhIXVR0OChIaFRxVDBoVHDseGggCCA8aGBBVGBVFWVdZ
-	EgtZQVlJSkpVSktIVUpPT1VKQ1lXWQgBWUFITk5MNwY+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b69afad98d043ddfb685982c9977105f1b563485.camel@intel.com>
 
-In memmap_exclude_ranges(), elfheader will be excluded from crashk_res.
-In the current x86 architecture code, the elfheader is always allocated
-at crashk_res.start. It seems that there won't be a new split range.
-But it depends on the allocation position of elfheader in crashk_res. To
-avoid potential out of bounds in future, add a extra slot.
+On Mon, Jan 08, 2024 at 01:10:31PM +0000, Huang, Kai wrote:
+> On Sun, 2024-01-07 at 15:28 +0300, Kirill A. Shutemov wrote:
+> > The trampoline_start64() vector is used when a secondary CPU starts in
+> > 64-bit mode. The current implementation directly enters compatibility
+> > mode. It is necessary to disable paging and re-enable it in the correct
+> > paging mode: either 4- or 5-level, depending on the configuration.
+> > 
+> > The X86S[1] ISA does not support compatibility mode in ring 0, and
+> > paging cannot be disabled.
+> > 
+> > The trampoline_start64() function is reworked to only enter compatibility
+> > mode if it is necessary to change the paging mode. If the CPU is already
+> > in the desired paging mode, it will proceed in long mode.
+> > 
+> > This change will allow a secondary CPU to boot on an X86S machine as
+> > long as the CPU is already in the correct paging mode.
+> > 
+> > In the future, there will be a mechanism to switch between paging modes
+> > without disabling paging.
+> > 
+> > [1] https://www.intel.com/content/www/us/en/developer/articles/technical/envisioning-future-simplified-architecture.html
+> > 
+> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > Reviewed-by: Andi Kleen <ak@linux.intel.com>
+> > Cc: Sean Christopherson <seanjc@google.com>
+> > 
+> > ---
+> >  v2:
+> >   - Fix build with GCC;
+> > ---
+> >  arch/x86/realmode/rm/trampoline_64.S | 31 +++++++++++++++++++++++++++-
+> >  1 file changed, 30 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/realmode/rm/trampoline_64.S b/arch/x86/realmode/rm/trampoline_64.S
+> > index c9f76fae902e..c07354542188 100644
+> > --- a/arch/x86/realmode/rm/trampoline_64.S
+> > +++ b/arch/x86/realmode/rm/trampoline_64.S
+> > @@ -37,13 +37,15 @@
+> >  	.text
+> >  	.code16
+> >  
+> > -.macro LOCK_AND_LOAD_REALMODE_ESP lock_pa=0
+> > +.macro LOCK_AND_LOAD_REALMODE_ESP lock_pa=0 lock_rip=0
+> >  	/*
+> >  	 * Make sure only one CPU fiddles with the realmode stack
+> >  	 */
+> >  .Llock_rm\@:
+> >  	.if \lock_pa
+> >          lock btsl       $0, pa_tr_lock
+> > +	.elseif \lock_rip
+> > +        lock btsl       $0, tr_lock(%rip)
+> >  	.else
+> >          lock btsl       $0, tr_lock
+> >  	.endif
+> > @@ -220,6 +222,33 @@ SYM_CODE_START(trampoline_start64)
+> >  	lidt	tr_idt(%rip)
+> >  	lgdt	tr_gdt64(%rip)
+> >  
+> > +	/* Check if paging mode has to be changed */
+> > +	movq	%cr4, %rax
+> > +	xorq	tr_cr4(%rip), %rax
+> > +	andq	$X86_CR4_LA57, %rax
+> > +	jnz	.L_switch_paging
+> 
+> This seems depends on the BIOS will always use 4-level paging.  Can we make such
+> assumption?
 
-The similar issue also exists in fill_up_crash_elf_data(). The range to
-be excluded is [0, 1M], start (0) is special and will not appear in the
-middle of existing cmem->ranges[]. But in cast the low 1M could be
-changed in the future, add a extra slot too.
+What makes you think this?
 
-Previously discussed link:
-[1] https://lore.kernel.org/kexec/ZXk2oBf%2FT1Ul6o0c@MiWiFi-R3L-srv/
-[2] https://lore.kernel.org/kexec/273284e8-7680-4f5f-8065-c5d780987e59@easystack.cn/
-[3] https://lore.kernel.org/kexec/ZYQ6O%2F57sHAPxTHm@MiWiFi-R3L-srv/
+The check is basically
 
-Signed-off-by: fuqiang wang <fuqiang.wang@easystack.cn>
----
- arch/x86/kernel/crash.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+    if ((tr_cr4 ^ CR4) & X86_CR4_LA57)
+	goto .L_switch_paging;
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index b6b044356f1b..d21592ad8952 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -149,8 +149,18 @@ static struct crash_mem *fill_up_crash_elf_data(void)
- 	/*
- 	 * Exclusion of crash region and/or crashk_low_res may cause
- 	 * another range split. So add extra two slots here.
-+	 *
-+	 * Exclusion of low 1M may not cause another range split, because the
-+	 * range of exclude is [0, 1M] and the condition for splitting a new
-+	 * region is that the start, end parameters are both in a certain
-+	 * existing region in cmem and cannot be equal to existing region's
-+	 * start or end. Obviously, the start of [0, 1M] cannot meet this
-+	 * condition.
-+	 *
-+	 * But in order to lest the low 1M could be changed in the future,
-+	 * (e.g. [stare, 1M]), add a extra slot.
- 	 */
--	nr_ranges += 2;
-+	nr_ranges += 3;
- 	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
- 	if (!cmem)
- 		return NULL;
-@@ -282,9 +292,16 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 	struct crash_memmap_data cmd;
- 	struct crash_mem *cmem;
- 
--	cmem = vzalloc(struct_size(cmem, ranges, 1));
-+	/*
-+	 * In the current x86 architecture code, the elfheader is always
-+	 * allocated at crashk_res.start. But it depends on the allocation
-+	 * position of elfheader in crashk_res. To avoid potential out of
-+	 * bounds in future, add a extra slot.
-+	 */
-+	cmem = vzalloc(struct_size(cmem, ranges, 2));
- 	if (!cmem)
- 		return -ENOMEM;
-+	cmem->max_nr_ranges = 2;
- 
- 	memset(&cmd, 0, sizeof(struct crash_memmap_data));
- 	cmd.params = params;
+It means if LA57 is not the same between tr_cr4 and CR4 we need to change
+paging mode.
+
+> > +
+> > +	/* Paging mode is correct proceed in 64-bit mode */
+> > +
+> > +	LOCK_AND_LOAD_REALMODE_ESP lock_rip=1
+> > +
+> > +	movw	$__KERNEL_DS, %dx
+> > +	movl	%edx, %ss
+> > +	addl	$pa_real_mode_base, %esp
+> > +	movl	%edx, %ds
+> > +	movl	%edx, %es
+> > +	movl	%edx, %fs
+> > +	movl	%edx, %gs
+> > +
+> > +	movl	$pa_trampoline_pgd, %eax
+> > +	movq	%rax, %cr3
+> > +
+> > +	jmpq	*tr_start(%rip)
+> 
+> IIUC you won't be using __KERNEL_CS in this case?  Not sure whether this matters
+> though, because the spec says in 64-bit mode the hardware treats CS,DS,ES,SS as
+> zero.
+> 
+
+secondary_startup_64() will set CS to __KERNEL_CS before jumping to C
+code.
+
+> > +.L_switch_paging:
+> > +	/*
+> > +	 * To switch between 4- and 5-level paging modes, it is necessary
+> > +	 * to disable paging. This must be done in the compatibility mode.
+> > +	 */
+> >  	ljmpl	*tr_compat(%rip)
+> >  SYM_CODE_END(trampoline_start64)
+> >  
+> 
+
 -- 
-2.42.0
-
+  Kiryl Shutsemau / Kirill A. Shutemov
