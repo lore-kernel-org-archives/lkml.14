@@ -1,183 +1,83 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D974312B87
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 09:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0x0f.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0x0f.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="Ld18rbZ1"
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6dc20b4595bso1349542a34.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 01:32:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google; t=1704706353; x=1705311153; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TfdL1VvrUAffk+JEt/9C7vAUDoa3/sBqju5Vv3smMQQ=;
-        b=Ld18rbZ1Y5wcUbVQYH428vzwZALY9KghdXoh/2OHSl1X2Ge4ktao7m6JKMSJFb8A79
-         XHJLe6dJRdb1u9ok5/xjs9JA2qrdZdZEJjFKMZOYv4xBSJ2RJV/xGeNLMx3JTQkrdDkk
-         TY/VW++NW1xhOZA0CxI/Zsby5+irfwx3jPoc8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704706353; x=1705311153;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TfdL1VvrUAffk+JEt/9C7vAUDoa3/sBqju5Vv3smMQQ=;
-        b=gNhiQuZlner/AgzeCxLV3YQqltJN3nDN2Zbewhk/oWSQFTJMzJuRrSFgNGn8CQ9w/C
-         NeWcxPzESg74zPyNRmZmT4A3L7Nizg8qAz2sGeIp8rbTDW2eAahQGgrPY9EzoYaMPYi6
-         L+i9gUy03TRULvWe6wmDdZ/ZQvSK41vZmf8zGJ7uqUCSbN5vQ77wXpGGzmD7NXr1zZPI
-         gZvpTy2slLWxOuEIMceEfuvB/YKI5UFS6kYO0TagQQ4zbDL9Pfd+4ArlE5XODSOLOXnJ
-         wnMcvfZGd44Ne7KCZXkaupNDtJlHgApkR+8zRJSaQPCxkFKlMJGLx6n04qTNFOU4Fls4
-         bzJQ==
-X-Gm-Message-State: AOJu0Yz2IaMMGgGxiraiWNKKCtg9ngxHOuDsA7GbLWnVrAag5MNK+fbf
-	AybaX3dBU3EGgV0ouQUZ57vUwUvx78hMcA6Ua3BqN/wxnwA=
-X-Google-Smtp-Source: AGHT+IHOfqcx1LisFMsghCeAdvBasVv/c4m8FJbkf6lrgBZPAPZGqSJTbJFW/Lb7JJGqlKNxTU388A==
-X-Received: by 2002:a9d:590a:0:b0:6db:fe20:fc1c with SMTP id t10-20020a9d590a000000b006dbfe20fc1cmr2517182oth.63.1704706352778;
-        Mon, 08 Jan 2024 01:32:32 -0800 (PST)
-Received: from shiro.work.home.arpa ([2400:4162:2428:2ffe:a221:b29b:7116:6ce9])
-        by smtp.googlemail.com with ESMTPSA id i8-20020a632208000000b005cdbebd61d8sm5578974pgi.9.2024.01.08.01.32.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jan 2024 01:32:32 -0800 (PST)
-From: Daniel Palmer <daniel@0x0f.com>
-To: gerg@linux-m68k.org,
-	geert@linux-m68k.org,
-	fthain@linux-m68k.org
-Cc: linux-m68k@lists.linux-m68k.org,
-	linux-kernel@vger.kernel.org,
-	Daniel Palmer <daniel@0x0f.com>
-Subject: [PATCH v2 2/2] m68k: Fix interrupt stack frames for 68000
-Date: Mon,  8 Jan 2024 18:32:21 +0900
-Message-ID: <20240108093221.1477020-3-daniel@0x0f.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240108093221.1477020-1-daniel@0x0f.com>
-References: <20240108093221.1477020-1-daniel@0x0f.com>
+Received: from aliyun-sdnproxy-1.icoremail.net (aliyun-cloud.icoremail.net [47.90.88.95])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 873D511709;
+	Mon,  8 Jan 2024 09:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from alexious$zju.edu.cn ( [10.190.64.155] ) by
+ ajax-webmail-mail-app4 (Coremail) ; Mon, 8 Jan 2024 17:12:06 +0800
+ (GMT+08:00)
+Date: Mon, 8 Jan 2024 17:12:06 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: alexious@zju.edu.cn
+To: "Simon Horman" <horms@kernel.org>
+Cc: "Saeed Mahameed" <saeedm@nvidia.com>, 
+	"Leon Romanovsky" <leon@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, 
+	"Eric Dumazet" <edumazet@google.com>, 
+	"Jakub Kicinski" <kuba@kernel.org>, 
+	"Paolo Abeni" <pabeni@redhat.com>, 
+	"Maor Gottlieb" <maorg@mellanox.com>, netdev@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net/mlx5e: fix a double-free in arfs_create_groups
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2023.2-cmXT5 build
+ 20230825(e13b6a3b) Copyright (c) 2002-2024 www.mailtech.cn
+ mispb-4df6dc2c-e274-4d1c-b502-72c5c3dfa9ce-zj.edu.cn
+In-Reply-To: <20240103172254.GB31813@kernel.org>
+References: <20231224081348.3535146-1-alexious@zju.edu.cn>
+ <20240103172254.GB31813@kernel.org>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <5d93189f.7631f.18ce857ef38.Coremail.alexious@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:cS_KCgBXzSxmvJtlmiOHAA--.8335W
+X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/1tbiAgwOAGWadaU02gABsA
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-The plain old 68000 does not push the frame type/vector on the
-stack when an interrupt starts like the brand new 68010 does.
-
-This means that currently everything in struct pt_regs is
-a bit off because it expects the processor to push an extra
-short before the kernel interrupt code adds the rest.
-
-In entry.S for the 68000 we already need to manually put
-the vector number on the stack to work out what interrupt
-is being handled because the cpu doesn't push that to the
-stack.
-
-So we can jiggle this around a bit to fix the issue:
-- For 68000 use the same struct pt_regs layout as coldfire
-  where frame/vector is after pc and sp.
-- In entry.S push the vector number first, the stack pointer
-  now lines up with the sktadj field in pt_regs and when saving
-  the remaining registers the offsets match the fields in the
-  struct.
-- Remove the vec argument from the DragonBall interrupt
-  decoding logic as it's not pushed on the stack anymore
-  and not used either way.
-
-Signed-off-by: Daniel Palmer <daniel@0x0f.com>
----
- arch/m68k/68000/entry.S             | 9 ++++-----
- arch/m68k/68000/ints.c              | 2 +-
- arch/m68k/include/asm/entry.h       | 3 +++
- arch/m68k/include/uapi/asm/ptrace.h | 2 +-
- 4 files changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/arch/m68k/68000/entry.S b/arch/m68k/68000/entry.S
-index e1fc740412f2..58c64656713a 100644
---- a/arch/m68k/68000/entry.S
-+++ b/arch/m68k/68000/entry.S
-@@ -54,6 +54,7 @@ do_trace:
- 	jra	ret_from_exception
- 
- ENTRY(system_call)
-+	movew	#32,%sp@-
- 	SAVE_ALL_SYS
- 
- 	/* save top of frame*/
-@@ -116,17 +117,15 @@ Lsignal_return:
-  .macro inthandler num func
- 	.globl inthandler\num
- 	inthandler\num:
-+	movew	#\num,%sp@-
- 	SAVE_ALL_INT
--	movew	%sp@(PT_OFF_FORMATVEC), %d0
--	and	#0x3ff, %d0
- 
-+	/* Push frame address onto stack */
- 	movel	%sp,%sp@-
--	/* put vector # on stack*/
--	movel	#\num,%sp@-
- 	/* process the IRQ*/
- 	jbsr	\func
- 	/* pop parameters off stack*/
--	addql	#8,%sp
-+	addql	#4,%sp
- 	bra	ret_from_exception
-  .endm
- 
-diff --git a/arch/m68k/68000/ints.c b/arch/m68k/68000/ints.c
-index e721932e495d..67c8f9e000ca 100644
---- a/arch/m68k/68000/ints.c
-+++ b/arch/m68k/68000/ints.c
-@@ -77,7 +77,7 @@ asmlinkage irqreturn_t inthandler71(void);
-  * into one vector and look in the blasted mask register...
-  * This code is designed to be fast, almost constant time, not clean!
-  */
--asmlinkage void process_int(int vec, struct pt_regs *fp)
-+asmlinkage void process_int(struct pt_regs *fp)
- {
- 	int irq;
- 	int mask;
-diff --git a/arch/m68k/include/asm/entry.h b/arch/m68k/include/asm/entry.h
-index 9b52b060c76a..71396c948162 100644
---- a/arch/m68k/include/asm/entry.h
-+++ b/arch/m68k/include/asm/entry.h
-@@ -184,6 +184,7 @@
-  * that the stack frame is NOT for syscall
-  */
- .macro SAVE_ALL_INT
-+					/* entry.S should populate the vector */
- 	clrl	%sp@-			/* stk_adj */
- 	pea	-1:w			/* orig d0 */
- 	movel	%d0,%sp@-		/* d0 */
-@@ -191,6 +192,7 @@
- .endm
- 
- .macro SAVE_ALL_SYS
-+					/* entry.S should populate the vector */
- 	clrl	%sp@-			/* stk_adj */
- 	movel	%d0,%sp@-		/* orig d0 */
- 	movel	%d0,%sp@-		/* d0 */
-@@ -202,6 +204,7 @@
- 	movel	%sp@+,%d0
- 	addql	#4,%sp			/* orig d0 */
- 	addl	%sp@+,%sp		/* stk adj */
-+	addql	#2,%sp			/* entry.S populated vector */
- 	rte
- .endm
- 
-diff --git a/arch/m68k/include/uapi/asm/ptrace.h b/arch/m68k/include/uapi/asm/ptrace.h
-index 5b50ea592e00..49d7829df77c 100644
---- a/arch/m68k/include/uapi/asm/ptrace.h
-+++ b/arch/m68k/include/uapi/asm/ptrace.h
-@@ -39,7 +39,7 @@ struct pt_regs {
-   long     d0;
-   long     orig_d0;
-   long     stkadj;
--#ifdef CONFIG_COLDFIRE
-+#if defined(CONFIG_COLDFIRE) || defined(CONFIG_M68000)
-   unsigned format :  4; /* frame format specifier */
-   unsigned vector : 12; /* vector offset */
-   unsigned short sr;
--- 
-2.43.0
-
+Cgo+IE9uIFN1biwgRGVjIDI0LCAyMDIzIGF0IDA0OjEzOjQ4UE0gKzA4MDAsIFpoaXBlbmcgTHUg
+d3JvdGU6Cj4gPiBXaGVuIGBpbmAgYWxsb2NhdGVkIGJ5IGt2emFsbG9jIGZhaWxzLCBhcmZzX2Ny
+ZWF0ZV9ncm91cHMgd2lsbCBmcmVlCj4gPiBmdC0+ZyBhbmQgcmV0dXJuIGFuIGVycm9yLiBIb3dl
+dmVyLCBhcmZzX2NyZWF0ZV90YWJsZSwgdGhlIG9ubHkgY2FsbGVyIG9mCj4gPiBhcmZzX2NyZWF0
+ZV9ncm91cHMsIHdpbGwgaG9sZCB0aGlzIGVycm9yIGFuZCBjYWxsIHRvCj4gPiBtbHg1ZV9kZXN0
+cm95X2Zsb3dfdGFibGUsIGluIHdoaWNoIHRoZSBmdC0+ZyB3aWxsIGJlIGZyZWVkIGFnYWluLgo+
+ID4gCj4gPiBGaXhlczogMWNhYmU2YjA5NjVlICgibmV0L21seDVlOiBDcmVhdGUgYVJGUyBmbG93
+IHRhYmxlcyIpCj4gPiBTaWduZWQtb2ZmLWJ5OiBaaGlwZW5nIEx1IDxhbGV4aW91c0B6anUuZWR1
+LmNuPgo+IAo+IFRoYW5rcywKPiAKPiBJIGFncmVlIHRoaXMgYWRkcmVzc2VzIHRoZSBpc3N1ZSB0
+aGF0IHlvdSBkZXNjcmliZS4KPiBBbmQgYXMgYSBtaW5pbWFsIGZpeCBpdCBsb29rcyBnb29kLgo+
+IAo+IFJldmlld2VkLWJ5OiBTaW1vbiBIb3JtYW4gPGhvcm1zQGtlcm5lbC5vcmc+Cj4gCj4gSG93
+ZXZlciwgSSB3b3VsZCBsaWtlIHRvIHN1Z2dlc3QgdGhhdCBzb21lIGNsZWFuLXVwIHdvcmsgY291
+bGQKPiB0YWtlIHBsYWNlIGFzIGEgZm9sbG93LXVwLgo+IAo+IEkgdGhpbmsgdGhhdCB0aGUgZXJy
+b3IgaGFuZGxpbmcgaW4gdGhpcyBhcmVhIG9mIHRoZSBjb2RlCj4gaXMgcmF0aGVyIGZyYWdpbGUu
+IFRoaXMgaXMgYmVjYXVzZSBpbml0aWFsaXNhdGlvbiBpcyBub3QgbmVjZXNzYXJpbHkKPiB1bndv
+dW5kIG9uIGVycm9yIHdpdGhpbiB0aGUgZnVuY3Rpb24gdGhhdCBpbml0aWFsaXNhdGlvbiBvY2N1
+cnMuCj4gCj4gSSB0aGluayBpdCB3b3VsZCBiZSBiZXR0ZXIgaWYgYXJmc19jcmVhdGVfZ3JvdXBz
+KCk6Cj4gCj4gMS4gUmVsZWFzZWQgYWxsb2NhdGVzIHJlc291cmNlcyBpdCBhbGxvY2F0ZXMsIGlu
+Y2x1ZGluZyBmdC0+ZyBhbmQKPiAgICBlbGVtZW50cyBvZiBmdC0+Zywgb24gZXJyb3IuCj4gMi4g
+VGhpcyB3YXMgYWNoaWV2ZWQgYnkgdXNpbmcgYSBnb3RvIHVud2luZCBsYWRkZXIuCj4gMy4gVGhl
+IGNhbGxlciB0cmVhdGVkIGZ0LT5nIGFzIHVuaW5pdGlhbGlzZWQgaWYKPiAgICBhcmZzX2NyZWF0
+ZV9ncm91cHMgZmFpbHMuCj4KIApBZ3JlZSwgSSB0aGluayBhIHVud2luZCBsYWRkZXIgZm9yIGFy
+ZnNfY3JlYXRlX2dyb3VwcyBpcyBtdWNoIGJldHRlci4KSSdsbCBmb2xsb3cgdGhpcyBpZGVhIHRv
+IHNlbmQgYSB2MiBwYXRjaCBsYXRlci4KQW5vdGhlciBjb21tZW50IGJlbG93LgoKPiBMaWtld2lz
+ZSwgSSB0aGluayB0aGF0Ogo+IAo+ICogYXJmc19jcmVhdGVfZ3JvdXBzLCBzaG91bGQgaW5pdGlh
+bGlzZSBmdC0+bnVtX2dyb3Vwcwo+IAo+IEFuZCBmdXJ0aGVyLCBsb2dpYyBzaW1pbGFyIHRvIHRo
+ZSBhYm92ZSBzaG91bGQgZ3VpZGUKPiBob3cgYXJmc19jcmVhdGVfdGFibGUoKSBpbml0aWFsaXNl
+cyBmdC0+dCBhbmQgY2xlYW5zIGl0Cj4gdXAgb24gZXJyb3IuCj4gCgpJIHRoaW5rIHRoYXQgZnQt
+PnQgeW91IG1lbnRpb25lZCByZWZlcnMgdG8gbWx4NV9jcmVhdGVfZmxvd190YWJsZS4KSSdkIGxp
+a2UgdG8gbWFrZSB0aGUgbGlmZSBjeWNsZSBvZiBmdC0+dCBzaW1pbGFyIHRvIGZ0LT5nIGluIGFy
+ZnNfY3JlYXRlX2dyb3VwcywgCmJ1dCBpdCBuZWVkcyB0byBhZGQgYW4gYXJndW1lbnQgZm9yIG1s
+eDVfY3JlYXRlX2Zsb3dfdGFibGUgdG8gdHJhbnNmZXIgZnQgdG8gCml0LiBIb3dldmVyLCBtbHg1
+X2NyZWF0ZV9mbG93X3RhYmxlIGlzIGNhbGxlZCBpbiBtb3JlIHRoYW4gMzAgZGlmZmVyZW50IHBs
+YWNlcyAKdGhyb3VnaG91dCB0aGUga2VybmVsLiBTbyBzdWNoIG1vZGlmaWNhdGlvbiBjb3VsZCBi
+ZSBhbm90aGVyIHJlZmFjdG9yaW5nIHBhdGNoCmJ1dCBtYXkgYmUgb3V0IG9mIHRoaXMgZml4IHBh
+dGNoJ3MgZHV0eS4KCj4gSSBkaWQgbm90IGxvb2sgYXQgdGhlIGNvZGUgYmV5b25kIHRoZSBzY29w
+ZSBkZXNjcmliZWQgYWJvdmUuCj4gQnV0IHRoZSBhYm92ZSBhcmUgZ2VuZXJhbCBwcmluY2lwbGVz
+IHRoYXQgbWF5IHdlbGwgYXBwbHkgaW4KPiBvdGhlciBuZWFyYnkgY29kZSB0b28uCj4gCj4gLi4u
+Cg==
