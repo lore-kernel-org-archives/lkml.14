@@ -1,218 +1,153 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A54F56440;
-	Mon,  8 Jan 2024 21:13:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92B15644D
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 21:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sN59wZaO"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 408LCinY087860;
-	Mon, 8 Jan 2024 15:12:44 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1704748364;
-	bh=1V9tORwpzYfVb0olcT8LBwL6ffWshq4GJ85wu4/jFFE=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=sN59wZaOZwrjgzpXwDot+yTJZECOhdBnS1dA2D/6VX/ELFna55GY43AXSjDckM3Nc
-	 /D+3PzuRgP905P69hzjcWm4yubzQkj05YJ2PBpTdaTWxACdTYHf4a3WEzx24A6I1YS
-	 BR8W6FxSFOa/BECNz/qR222C4PTFP1fcMJf0a104=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 408LCiS0020724
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 8 Jan 2024 15:12:44 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 8
- Jan 2024 15:12:43 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 8 Jan 2024 15:12:43 -0600
-Received: from [10.249.40.136] ([10.249.40.136])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 408LCh6P050663;
-	Mon, 8 Jan 2024 15:12:43 -0600
-Message-ID: <6ec8c7c4-588a-48b5-b0c5-56ca5216a757@ti.com>
-Date: Mon, 8 Jan 2024 15:12:43 -0600
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="Z1V784RG"
+Received: from pps.filterd (m0148663.ppops.net [127.0.0.1])
+	by mx0a-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 408Jahf5029291;
+	Mon, 8 Jan 2024 21:21:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pps0720; bh=ZufkvsNmBYIhf482lC8Wys9kgXuS94HzOt66ZnzeuNQ=;
+ b=Z1V784RGrqKxUoLyAoTX1A1PLrBZWq5zZSqbaVJ09iS6YlILOJHD7Z2gJlsbN5ohsdKu
+ Aj7heOgDxVRpY38SAkLDPmBPGWimMLa70j/dPNFaicaoXLpDdsJdkkeMYh1ZrzRG2Xar
+ Uam8XG7djnh9O7PbsNU62X/Vpa5X2T55E5bUa7TcQrLwQBK+hsyFlKzkmui0dpfaNSer
+ NGp4ToGsBONKNcyXZ9rd+9BhZQ+O1106JIYvXxByXpbXHBPVSqQYqkgzqsn81JnwXoRO
+ 43Z40xwzScAWM4Dw4vjxwFyZhaawdLMZRj8DpGHJhyXERGlnJGD2Bj7CqHqvSFD8Kb+W 3g== 
+Received: from p1lg14881.it.hpe.com ([16.230.97.202])
+	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 3vgmnutdkd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Jan 2024 21:21:11 +0000
+Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by p1lg14881.it.hpe.com (Postfix) with ESMTPS id B424C805E1F;
+	Mon,  8 Jan 2024 21:21:10 +0000 (UTC)
+Received: from dog.eag.rdlabs.hpecorp.net (unknown [16.231.227.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(Client did not present a certificate)
+	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id 48FB18065C5;
+	Mon,  8 Jan 2024 21:21:08 +0000 (UTC)
+Date: Mon, 8 Jan 2024 15:21:06 -0600
+From: Steve Wahl <steve.wahl@hpe.com>
+To: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
+Cc: Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>
+Subject: Re: [PATCH v2] x86/mm/ident_map: Use gbpages only where full GB page
+ should be mapped.
+Message-ID: <20240108212106.GA1571174@dog.eag.rdlabs.hpecorp.net>
+References: <20231103190108.184817-1-steve.wahl@hpe.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/8] iio: new DMABUF based API, v5
-Content-Language: en-US
-To: Paul Cercueil <paul@crapouillou.net>, Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Vinod Koul
-	<vkoul@kernel.org>, Jonathan Corbet <corbet@lwn.net>
-CC: Michael Hennerich <Michael.Hennerich@analog.com>,
-        <linux-doc@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>,
-        =?UTF-8?Q?Nuno_S=C3=A1?=
-	<noname.nuno@gmail.com>,
-        <dmaengine@vger.kernel.org>, <linux-media@vger.kernel.org>
-References: <20231219175009.65482-1-paul@crapouillou.net>
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20231219175009.65482-1-paul@crapouillou.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231103190108.184817-1-steve.wahl@hpe.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-GUID: QK5-pRRNz1n0EOJVcZF1eRRMp9Kc1Vjc
+X-Proofpoint-ORIG-GUID: QK5-pRRNz1n0EOJVcZF1eRRMp9Kc1Vjc
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-08_10,2024-01-08_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ bulkscore=0 phishscore=0 lowpriorityscore=0 mlxlogscore=999 suspectscore=0
+ clxscore=1011 priorityscore=1501 impostorscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401080175
 
-On 12/19/23 11:50 AM, Paul Cercueil wrote:
-> [V4 was: "iio: Add buffer write() support"][1]
-> 
-> Hi Jonathan,
-> 
-> This is a respin of the V3 of my patchset that introduced a new
-> interface based on DMABUF objects [2].
-> 
-> The V4 was a split of the patchset, to attempt to upstream buffer
-> write() support first. But since there is no current user upstream, it
-> was not merged. This V5 is about doing the opposite, and contains the
-> new DMABUF interface, without adding the buffer write() support. It can
-> already be used with the upstream adi-axi-adc driver.
-> 
-> In user-space, Libiio uses it to transfer back and forth blocks of
-> samples between the hardware and the applications, without having to
-> copy the data.
-> 
-> On a ZCU102 with a FMComms3 daughter board, running Libiio from the
-> pcercuei/dev-new-dmabuf-api branch [3], compiled with
-> WITH_LOCAL_DMABUF_API=OFF (so that it uses fileio):
->    sudo utils/iio_rwdev -b 4096 -B cf-ad9361-lpc
->    Throughput: 116 MiB/s
-> 
-> Same hardware, with the DMABUF API (WITH_LOCAL_DMABUF_API=ON):
->    sudo utils/iio_rwdev -b 4096 -B cf-ad9361-lpc
->    Throughput: 475 MiB/s
-> 
-> This benchmark only measures the speed at which the data can be fetched
-> to iio_rwdev's internal buffers, and does not actually try to read the
-> data (e.g. to pipe it to stdout). It shows that fetching the data is
-> more than 4x faster using the new interface.
-> 
-> When actually reading the data, the performance difference isn't that
-> impressive (maybe because in case of DMABUF the data is not in cache):
-> 
-> WITH_LOCAL_DMABUF_API=OFF (so that it uses fileio):
->    sudo utils/iio_rwdev -b 4096 cf-ad9361-lpc | dd of=/dev/zero status=progress
->    2446422528 bytes (2.4 GB, 2.3 GiB) copied, 22 s, 111 MB/s
-> 
-> WITH_LOCAL_DMABUF_API=ON:
->    sudo utils/iio_rwdev -b 4096 cf-ad9361-lpc | dd of=/dev/zero status=progress
->    2334388736 bytes (2.3 GB, 2.2 GiB) copied, 21 s, 114 MB/s
-> 
-> One interesting thing to note is that fileio is (currently) actually
-> faster than the DMABUF interface if you increase a lot the buffer size.
-> My explanation is that the cache invalidation routine takes more and
-> more time the bigger the DMABUF gets. This is because the DMABUF is
-> backed by small-size pages, so a (e.g.) 64 MiB DMABUF is backed by up
-> to 16 thousands pages, that have to be invalidated one by one. This can
-> be addressed by using huge pages, but the udmabuf driver does not (yet)
-> support creating DMABUFs backed by huge pages.
-> 
+Gentle ping.  
 
-Have you tried DMABUFs created using the DMABUF System heap exporter?
-(drivers/dma-buf/heaps/system_heap.c) It should be able to handle
-larger allocation better here, and if you don't have any active
-mmaps or vmaps then it can skip CPU-side coherency maintenance
-(useful for device to device transfers).
+We'd like to see this get in, we're finding the most likely time to
+hit the problem seems to be when kexec'ing a kdump kernel, and we
+don't get the dump we need to diagnose some other problem.
 
-Allocating DMABUFs out of user pages has a bunch of other issues you
-might run into also. I'd argue udmabuf is now completely superseded
-by DMABUF system heaps. Try it out :)
+Thanks,
 
-Andrew
+--> Steve Wahl
 
-> Anyway, the real benefits happen when the DMABUFs are either shared
-> between IIO devices, or between the IIO subsystem and another
-> filesystem. In that case, the DMABUFs are simply passed around drivers,
-> without the data being copied at any moment.
+On Fri, Nov 03, 2023 at 02:01:08PM -0500, Steve Wahl wrote:
+> Instead of using gbpages for all memory regions, which can include
+> vast areas outside what's actually been requested, use them only when
+> map creation requests include the full GB page of space; descend to
+> using smaller 2M pages when only portions of a GB page are included in
+> the request.
 > 
-> We use that feature to transfer samples from our transceivers to USB,
-> using a DMABUF interface to FunctionFS [4].
+> No attempt is made to coalesce mapping requests. If a request requires
+> a map entry at the 2M (pmd) level, subsequent mapping requests within
+> the same 1G region will also be at the pmd level, even if adjacent or
+> overlapping such requests could theoretically have been combined to
+> map a full gbpage.  Existing usage starts with larger regions and then
+> adds smaller regions, so this should not have any great consequence.
 > 
-> This drastically increases the throughput, to about 274 MiB/s over a
-> USB3 link, vs. 127 MiB/s using IIO's fileio interface + write() to the
-> FunctionFS endpoints, for a lower CPU usage (0.85 vs. 0.65 load avg.).
+> When gbpages are used exclusively to create identity maps, large
+> ranges of addresses not actually requested can be included in the
+> resulting table.  On UV systems, this ends up including regions that
+> will cause hardware to halt the system if accessed (these are marked
+> "reserved" by BIOS).  Even though code does not actually make
+> references to these addresses, including them in an active map allows
+> processor speculation into this region, which is enough to trigger the
+> system halt.
 > 
-> Based on linux-next/next-20231219.
+> The kernel option "nogbpages" will disallow use of gbpages entirely
+> and avoid this problem, but uses a lot of extra memory for page tables
+> that are not really needed.
 > 
-> Cheers,
-> -Paul
-> 
-> [1] https://lore.kernel.org/all/20230807112113.47157-1-paul@crapouillou.net/
-> [2] https://lore.kernel.org/all/20230403154800.215924-1-paul@crapouillou.net/
-> [3] https://github.com/analogdevicesinc/libiio/tree/pcercuei/dev-new-dmabuf-api
-> [4] https://lore.kernel.org/all/20230322092118.9213-1-paul@crapouillou.net/
-> 
+> Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
 > ---
-> Changelog:
-> - [3/8]: Replace V3's dmaengine_prep_slave_dma_array() with a new
->    dmaengine_prep_slave_dma_vec(), which uses a new 'dma_vec' struct.
->    Note that at some point we will need to support cyclic transfers
->    using dmaengine_prep_slave_dma_vec(). Maybe with a new "flags"
->    parameter to the function?
+> v2: per Dave Hanson review: Additional changelog info,
+>     moved pud_large() check earlier in the code, and
+>     improved the comment describing the conditions
+>     that restrict gbpage usage.
+>    
+>  arch/x86/mm/ident_map.c | 20 +++++++++++++++-----
+>  1 file changed, 15 insertions(+), 5 deletions(-)
 > 
-> - [4/8]: Implement .device_prep_slave_dma_vec() instead of V3's
->    .device_prep_slave_dma_array().
-> 
->    @Vinod: this patch will cause a small conflict with my other
->    patchset adding scatter-gather support to the axi-dmac driver.
->    This patch adds a call to axi_dmac_alloc_desc(num_sgs), but the
->    prototype of this function changed in my other patchset - it would
->    have to be passed the "chan" variable. I don't know how you prefer it
->    to be resolved. Worst case scenario (and if @Jonathan is okay with
->    that) this one patch can be re-sent later, but it would make this
->    patchset less "atomic".
-> 
-> - [5/8]:
->    - Use dev_err() instead of pr_err()
->    - Inline to_iio_dma_fence()
->    - Add comment to explain why we unref twice when detaching dmabuf
->    - Remove TODO comment. It is actually safe to free the file's
->      private data even when transfers are still pending because it
->      won't be accessed.
->    - Fix documentation of new fields in struct iio_buffer_access_funcs
->    - iio_dma_resv_lock() does not need to be exported, make it static
-> 
-> - [7/8]:
->    - Use the new dmaengine_prep_slave_dma_vec().
->    - Restrict to input buffers, since output buffers are not yet
->      supported by IIO buffers.
-> 
-> - [8/8]:
->    Use description lists for the documentation of the three new IOCTLs
->    instead of abusing subsections.
-> 
-> ---
-> Alexandru Ardelean (1):
->    iio: buffer-dma: split iio_dma_buffer_fileio_free() function
-> 
-> Paul Cercueil (7):
->    iio: buffer-dma: Get rid of outgoing queue
->    dmaengine: Add API function dmaengine_prep_slave_dma_vec()
->    dmaengine: dma-axi-dmac: Implement device_prep_slave_dma_vec
->    iio: core: Add new DMABUF interface infrastructure
->    iio: buffer-dma: Enable support for DMABUFs
->    iio: buffer-dmaengine: Support new DMABUF based userspace API
->    Documentation: iio: Document high-speed DMABUF based API
-> 
->   Documentation/iio/dmabuf_api.rst              |  54 +++
->   Documentation/iio/index.rst                   |   2 +
->   drivers/dma/dma-axi-dmac.c                    |  40 ++
->   drivers/iio/buffer/industrialio-buffer-dma.c  | 242 ++++++++---
->   .../buffer/industrialio-buffer-dmaengine.c    |  52 ++-
->   drivers/iio/industrialio-buffer.c             | 402 ++++++++++++++++++
->   include/linux/dmaengine.h                     |  25 ++
->   include/linux/iio/buffer-dma.h                |  33 +-
->   include/linux/iio/buffer_impl.h               |  26 ++
->   include/uapi/linux/iio/buffer.h               |  22 +
->   10 files changed, 836 insertions(+), 62 deletions(-)
->   create mode 100644 Documentation/iio/dmabuf_api.rst
+> diff --git a/arch/x86/mm/ident_map.c b/arch/x86/mm/ident_map.c
+> index 968d7005f4a7..5c88c3a7d12a 100644
+> --- a/arch/x86/mm/ident_map.c
+> +++ b/arch/x86/mm/ident_map.c
+> @@ -31,13 +31,23 @@ static int ident_pud_init(struct x86_mapping_info *info, pud_t *pud_page,
+>  		if (next > end)
+>  			next = end;
+>  
+> -		if (info->direct_gbpages) {
+> -			pud_t pudval;
+> +		/* if this is already a gbpage, this portion is already mapped */
+> +		if (pud_large(*pud))
+> +			continue;
+>  
+> -			if (pud_present(*pud))
+> -				continue;
+> +		/*
+> +		 * To be eligible to use a gbpage:
+> +		 *   - gbpages must be enabled
+> +		 *   - addr must be gb aligned (start of region)
+> +		 *   - next must be gb aligned (end of region)
+> +		 *   - PUD must be empty (nothing already mapped in this region)
+> +		 */
+> +		if (info->direct_gbpages
+> +		    && !(addr & ~PUD_MASK)
+> +		    && !(next & ~PUD_MASK)
+> +		    && !pud_present(*pud)) {
+> +			pud_t pudval;
+>  
+> -			addr &= PUD_MASK;
+>  			pudval = __pud((addr - info->offset) | info->page_flag);
+>  			set_pud(pud, pudval);
+>  			continue;
+> -- 
+> 2.26.2
 > 
