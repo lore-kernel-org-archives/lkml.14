@@ -1,38 +1,38 @@
 Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B767551C4D;
-	Mon,  8 Jan 2024 12:42:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08178524A2;
+	Mon,  8 Jan 2024 12:42:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="XxxqFpwo"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="XC4IBRlr"
 Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 407NP5Zo009772;
-	Mon, 8 Jan 2024 04:42:42 -0800
+	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 407NP5Zp009772;
+	Mon, 8 Jan 2024 04:42:49 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	pfpt0220; bh=fUPBaTQEH5fMC+HGD6Qp6fpaMk8RgrodZiZreQWQGdg=; b=Xxx
-	qFpwoa+fsAZUfi3As+B+aG2+5LMcJPeSYI6ZRh1mBzsAg7dIjvUjp0+F/AQGsMRb
-	cfuqsm9JKJYyGN9aX6sEYaVVSWkoHiOwzr5S8pWYsJCWxr9HSHRezuXvutAySipK
-	fMJXWxugJPWPcl2S5hFHalkKeM9Y/4MQgr8FMi2MPxB9hRSbDei9qWw9xLvICDjh
-	IEPKcJD9s1QgeGIUmVc6ZramF0jIeFJc/UKKpytXwzHfq2nTza80O4zmZdy+Orwl
-	9acUZUBkyEaILuCHC/EBDbRKTVzqxHYccxnKuRiaqmjrS+W5JRR4NwwNHctedev5
-	6YftaK3W2IP5JH82Vfg==
+	pfpt0220; bh=zlmD5el3RZ00OlPzKfH3lC8Ki49HJRUiOlVa/NZxRyI=; b=XC4
+	IBRlrDko9zMHXmYz6SPPUFcd3ADR8UH6gGlSL5pzZT5Wc1C4Nc+zdu/dVWhtLXCe
+	V1SMhXP/TemQ1j6jhxQ5ZuR2jlJDpvrA4z/8NqJSxyr4tSSS6I3THnYu17w3TVMA
+	JGWcZYhlPNskPcVRtNv7xJyTCv8WrvedW6i+z+Pzy8Z2O2ofkHvONdMtGQSHBWMA
+	L69oqkKUSLMI6cWgj6PXxThEEhAVQb6B+E1yhfLztixoyB7rddOrNoF6CY2d0p18
+	kNj5yqxcqjc+WKu2sWwseq/Ei9qK0mlgAoNvsIDhkf/Btg93wI7mc9pzzqO3z/0P
+	odoWGOuigoeNEyDnNzQ==
 Received: from dc5-exch01.marvell.com ([199.233.59.181])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3vf78n4tn5-1
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3vf78n4tnd-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jan 2024 04:42:42 -0800 (PST)
+	Mon, 08 Jan 2024 04:42:49 -0800 (PST)
 Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
  (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 8 Jan
- 2024 04:42:40 -0800
+ 2024 04:42:47 -0800
 Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
  (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.48 via Frontend
- Transport; Mon, 8 Jan 2024 04:42:40 -0800
+ Transport; Mon, 8 Jan 2024 04:42:47 -0800
 Received: from ubuntu-PowerEdge-T110-II.sclab.marvell.com (unknown [10.106.27.86])
-	by maili.marvell.com (Postfix) with ESMTP id 38F0C3F7072;
-	Mon,  8 Jan 2024 04:42:40 -0800 (PST)
+	by maili.marvell.com (Postfix) with ESMTP id D7CAF3F7072;
+	Mon,  8 Jan 2024 04:42:46 -0800 (PST)
 From: Shinas Rasheed <srasheed@marvell.com>
 To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <hgani@marvell.com>, <vimleshk@marvell.com>, <sedara@marvell.com>,
@@ -45,9 +45,9 @@ CC: <hgani@marvell.com>, <vimleshk@marvell.com>, <sedara@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet
 	<edumazet@google.com>
-Subject: [PATCH net-next v4 5/8] octeon_ep_vf: add support for ndo ops
-Date: Mon, 8 Jan 2024 04:42:10 -0800
-Message-ID: <20240108124213.2966536-6-srasheed@marvell.com>
+Subject: [PATCH net-next v4 7/8] octeon_ep_vf: add ethtool support
+Date: Mon, 8 Jan 2024 04:42:12 -0800
+Message-ID: <20240108124213.2966536-8-srasheed@marvell.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240108124213.2966536-1-srasheed@marvell.com>
 References: <20240108124213.2966536-1-srasheed@marvell.com>
@@ -59,116 +59,353 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: -BxPvUqOjDlWSkXHK-GBexAvRT20DAaj
-X-Proofpoint-GUID: -BxPvUqOjDlWSkXHK-GBexAvRT20DAaj
+X-Proofpoint-ORIG-GUID: pX5OGFB7sWi2iNvxDqwE59gIPFgC9FrS
+X-Proofpoint-GUID: pX5OGFB7sWi2iNvxDqwE59gIPFgC9FrS
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
 
-Add support for ndo ops to set MAC address, change MTU, get stats.
-Add control path support to set MAC address, change MTU, get stats,
-set speed, get and set link mode.
+Add support for the following ethtool commands:
+
+ethtool -i|--driver devname
+ethtool devname
+ethtool -S|--statistics devname
 
 Signed-off-by: Shinas Rasheed <srasheed@marvell.com>
 ---
 V4:
-  - Provide more stats in ndo_get_stats64 such as tx_dropped, rx_dropped
-    etc.
+  - Removed stats which are already sent in ndo_get_stats64
 
-V3: https://lore.kernel.org/all/20240105203823.2953604-6-srasheed@marvell.com/
+V3: https://lore.kernel.org/all/20240105203823.2953604-8-srasheed@marvell.com/
+  - Removed duplicate reporting of TX/RX packets/bytes, which is already
+    done during ndo_get_stats64
+
+V2: https://lore.kernel.org/all/20231223134000.2906144-8-srasheed@marvell.com/
   - No changes
 
-V2: https://lore.kernel.org/all/20231223134000.2906144-6-srasheed@marvell.com/
-  - No changes
+V1: https://lore.kernel.org/all/20231221092844.2885872-8-srasheed@marvell.com/
 
-V1: https://lore.kernel.org/all/20231221092844.2885872-6-srasheed@marvell.com/
+ .../ethernet/marvell/octeon_ep_vf/Makefile    |   3 +-
+ .../marvell/octeon_ep_vf/octep_vf_ethtool.c   | 273 ++++++++++++++++++
+ .../marvell/octeon_ep_vf/octep_vf_main.c      |   1 +
+ .../marvell/octeon_ep_vf/octep_vf_main.h      |   1 +
+ 4 files changed, 277 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_ethtool.c
 
- .../marvell/octeon_ep_vf/octep_vf_main.c      | 58 +++++++++++++++++++
- 1 file changed, 58 insertions(+)
-
-diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
-index 51f92c8223e8..13084cac9ce0 100644
---- a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
-+++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
-@@ -187,6 +187,23 @@ static netdev_tx_t octep_vf_start_xmit(struct sk_buff *skb,
- 	return NETDEV_TX_OK;
- }
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/Makefile b/drivers/net/ethernet/marvell/octeon_ep_vf/Makefile
+index 694eb9b46e99..4a5f9fcb0b40 100644
+--- a/drivers/net/ethernet/marvell/octeon_ep_vf/Makefile
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/Makefile
+@@ -6,4 +6,5 @@
+ obj-$(CONFIG_OCTEON_EP_VF) += octeon_ep_vf.o
  
-+int octep_vf_get_if_stats(struct octep_vf_device *oct)
-+{
-+	struct octep_vf_iface_rxtx_stats vf_stats;
-+	int ret, size;
-+
-+	memset(&vf_stats, 0, sizeof(struct octep_vf_iface_rxtx_stats));
-+	ret = octep_vf_mbox_bulk_read(oct, OCTEP_PFVF_MBOX_CMD_GET_STATS,
-+				      (u8 *)&vf_stats, &size);
-+	if (!ret) {
-+		memcpy(&oct->iface_rx_stats, &vf_stats.iface_rx_stats,
-+		       sizeof(struct octep_vf_iface_rx_stats));
-+		memcpy(&oct->iface_tx_stats, &vf_stats.iface_tx_stats,
-+		       sizeof(struct octep_vf_iface_tx_stats));
-+	}
-+	return ret;
-+}
-+
- int octep_vf_get_link_info(struct octep_vf_device *oct)
- {
- 	int ret, size;
-@@ -200,6 +217,46 @@ int octep_vf_get_link_info(struct octep_vf_device *oct)
- 	return 0;
- }
- 
-+/**
-+ * octep_vf_get_stats64() - Get Octeon network device statistics.
+ octeon_ep_vf-y := octep_vf_main.o octep_vf_cn9k.o octep_vf_cnxk.o \
+-		  octep_vf_tx.o octep_vf_rx.o octep_vf_mbox.o
++		  octep_vf_tx.o octep_vf_rx.o octep_vf_mbox.o \
++		  octep_vf_ethtool.o
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_ethtool.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_ethtool.c
+new file mode 100644
+index 000000000000..a1979b45e355
+--- /dev/null
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_ethtool.c
+@@ -0,0 +1,273 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Marvell Octeon EP (EndPoint) VF Ethernet Driver
 + *
-+ * @netdev: kernel network device.
-+ * @stats: pointer to stats structure to be filled in.
++ * Copyright (C) 2020 Marvell.
++ *
 + */
-+static void octep_vf_get_stats64(struct net_device *netdev,
-+				 struct rtnl_link_stats64 *stats)
++
++#include <linux/pci.h>
++#include <linux/netdevice.h>
++#include <linux/ethtool.h>
++
++#include "octep_vf_config.h"
++#include "octep_vf_main.h"
++
++static const char octep_vf_gstrings_global_stats[][ETH_GSTRING_LEN] = {
++	"rx_alloc_errors",
++	"tx_busy_errors",
++	"tx_hw_pkts",
++	"tx_hw_octs",
++	"tx_hw_bcast",
++	"tx_hw_mcast",
++	"rx_hw_pkts",
++	"rx_hw_bytes",
++	"rx_hw_bcast",
++	"rx_dropped_bytes_fifo_full",
++};
++
++#define OCTEP_VF_GLOBAL_STATS_CNT (sizeof(octep_vf_gstrings_global_stats) / ETH_GSTRING_LEN)
++
++static const char octep_vf_gstrings_tx_q_stats[][ETH_GSTRING_LEN] = {
++	"tx_packets_posted[Q-%u]",
++	"tx_packets_completed[Q-%u]",
++	"tx_bytes[Q-%u]",
++	"tx_busy[Q-%u]",
++};
++
++#define OCTEP_VF_TX_Q_STATS_CNT (sizeof(octep_vf_gstrings_tx_q_stats) / ETH_GSTRING_LEN)
++
++static const char octep_vf_gstrings_rx_q_stats[][ETH_GSTRING_LEN] = {
++	"rx_packets[Q-%u]",
++	"rx_bytes[Q-%u]",
++	"rx_alloc_errors[Q-%u]",
++};
++
++#define OCTEP_VF_RX_Q_STATS_CNT (sizeof(octep_vf_gstrings_rx_q_stats) / ETH_GSTRING_LEN)
++
++static void octep_vf_get_drvinfo(struct net_device *netdev,
++				 struct ethtool_drvinfo *info)
 +{
 +	struct octep_vf_device *oct = netdev_priv(netdev);
-+	u64 tx_packets, tx_bytes, rx_packets, rx_bytes;
-+	int q;
 +
-+	tx_packets = 0;
-+	tx_bytes = 0;
-+	rx_packets = 0;
-+	rx_bytes = 0;
++	strscpy(info->driver, OCTEP_VF_DRV_NAME, sizeof(info->driver));
++	strscpy(info->bus_info, pci_name(oct->pdev), sizeof(info->bus_info));
++}
++
++static void octep_vf_get_strings(struct net_device *netdev,
++				 u32 stringset, u8 *data)
++{
++	struct octep_vf_device *oct = netdev_priv(netdev);
++	u16 num_queues = CFG_GET_PORTS_ACTIVE_IO_RINGS(oct->conf);
++	char *strings = (char *)data;
++	int i, j;
++
++	switch (stringset) {
++	case ETH_SS_STATS:
++		for (i = 0; i < OCTEP_VF_GLOBAL_STATS_CNT; i++) {
++			snprintf(strings, ETH_GSTRING_LEN,
++				 octep_vf_gstrings_global_stats[i]);
++			strings += ETH_GSTRING_LEN;
++		}
++
++		for (i = 0; i < num_queues; i++) {
++			for (j = 0; j < OCTEP_VF_TX_Q_STATS_CNT; j++) {
++				snprintf(strings, ETH_GSTRING_LEN,
++					 octep_vf_gstrings_tx_q_stats[j], i);
++				strings += ETH_GSTRING_LEN;
++			}
++		}
++
++		for (i = 0; i < num_queues; i++) {
++			for (j = 0; j < OCTEP_VF_RX_Q_STATS_CNT; j++) {
++				snprintf(strings, ETH_GSTRING_LEN,
++					 octep_vf_gstrings_rx_q_stats[j], i);
++				strings += ETH_GSTRING_LEN;
++			}
++		}
++		break;
++	default:
++		break;
++	}
++}
++
++static int octep_vf_get_sset_count(struct net_device *netdev, int sset)
++{
++	struct octep_vf_device *oct = netdev_priv(netdev);
++	u16 num_queues = CFG_GET_PORTS_ACTIVE_IO_RINGS(oct->conf);
++
++	switch (sset) {
++	case ETH_SS_STATS:
++		return OCTEP_VF_GLOBAL_STATS_CNT + (num_queues *
++		       (OCTEP_VF_TX_Q_STATS_CNT + OCTEP_VF_RX_Q_STATS_CNT));
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static void octep_vf_get_ethtool_stats(struct net_device *netdev,
++				       struct ethtool_stats *stats, u64 *data)
++{
++	struct octep_vf_device *oct = netdev_priv(netdev);
++	struct octep_vf_iface_tx_stats *iface_tx_stats;
++	struct octep_vf_iface_rx_stats *iface_rx_stats;
++	u64 rx_alloc_errors, tx_busy_errors;
++	int q, i;
++
++	rx_alloc_errors = 0;
++	tx_busy_errors = 0;
++
++	octep_vf_get_if_stats(oct);
++	iface_tx_stats = &oct->iface_tx_stats;
++	iface_rx_stats = &oct->iface_rx_stats;
++
 +	for (q = 0; q < oct->num_oqs; q++) {
 +		struct octep_vf_iq *iq = oct->iq[q];
 +		struct octep_vf_oq *oq = oct->oq[q];
 +
-+		tx_packets += iq->stats.instr_completed;
-+		tx_bytes += iq->stats.bytes_sent;
-+		rx_packets += oq->stats.packets;
-+		rx_bytes += oq->stats.bytes;
++		tx_busy_errors += iq->stats.tx_busy;
++		rx_alloc_errors += oq->stats.alloc_failures;
 +	}
-+	stats->tx_packets = tx_packets;
-+	stats->tx_bytes = tx_bytes;
-+	stats->rx_packets = rx_packets;
-+	stats->rx_bytes = rx_bytes;
-+	if (!octep_vf_get_if_stats(oct)) {
-+		stats->multicast = oct->iface_rx_stats.mcast_pkts;
-+		stats->rx_errors = oct->iface_rx_stats.err_pkts;
-+		stats->rx_dropped = oct->iface_rx_stats.dropped_pkts_fifo_full +
-+				    oct->iface_rx_stats.err_pkts;
-+		stats->rx_missed_errors = oct->iface_rx_stats.dropped_pkts_fifo_full;
-+		stats->tx_dropped = oct->iface_tx_stats.dropped;
++	i = 0;
++	data[i++] = rx_alloc_errors;
++	data[i++] = tx_busy_errors;
++	data[i++] = iface_tx_stats->pkts;
++	data[i++] = iface_tx_stats->octs;
++	data[i++] = iface_tx_stats->bcst;
++	data[i++] = iface_tx_stats->mcst;
++	data[i++] = iface_rx_stats->pkts;
++	data[i++] = iface_rx_stats->octets;
++	data[i++] = iface_rx_stats->bcast_pkts;
++	data[i++] = iface_rx_stats->dropped_octets_fifo_full;
++
++	/* Per Tx Queue stats */
++	for (q = 0; q < oct->num_iqs; q++) {
++		struct octep_vf_iq *iq = oct->iq[q];
++
++		data[i++] = iq->stats.instr_posted;
++		data[i++] = iq->stats.instr_completed;
++		data[i++] = iq->stats.bytes_sent;
++		data[i++] = iq->stats.tx_busy;
++	}
++
++	/* Per Rx Queue stats */
++	for (q = 0; q < oct->num_oqs; q++) {
++		struct octep_vf_oq *oq = oct->oq[q];
++
++		data[i++] = oq->stats.packets;
++		data[i++] = oq->stats.bytes;
++		data[i++] = oq->stats.alloc_failures;
 +	}
 +}
 +
- /**
-  * octep_vf_tx_timeout_task - work queue task to Handle Tx queue timeout.
-  *
-@@ -312,6 +369,7 @@ static const struct net_device_ops octep_vf_netdev_ops = {
- 	.ndo_open                = octep_vf_open,
- 	.ndo_stop                = octep_vf_stop,
- 	.ndo_start_xmit          = octep_vf_start_xmit,
-+	.ndo_get_stats64         = octep_vf_get_stats64,
- 	.ndo_tx_timeout          = octep_vf_tx_timeout,
- 	.ndo_set_mac_address     = octep_vf_set_mac,
- 	.ndo_change_mtu          = octep_vf_change_mtu,
++#define OCTEP_VF_SET_ETHTOOL_LINK_MODES_BITMAP(octep_vf_speeds, ksettings, name) \
++{ \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_10GBASE_T)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 10000baseT_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_10GBASE_R)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 10000baseR_FEC); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_10GBASE_CR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 10000baseCR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_10GBASE_KR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 10000baseKR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_10GBASE_LR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 10000baseLR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_10GBASE_SR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 10000baseSR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_25GBASE_CR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 25000baseCR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_25GBASE_KR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 25000baseKR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_25GBASE_SR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 25000baseSR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_40GBASE_CR4)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 40000baseCR4_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_40GBASE_KR4)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 40000baseKR4_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_40GBASE_LR4)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 40000baseLR4_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_40GBASE_SR4)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 40000baseSR4_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_50GBASE_CR2)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 50000baseCR2_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_50GBASE_KR2)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 50000baseKR2_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_50GBASE_SR2)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 50000baseSR2_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_50GBASE_CR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 50000baseCR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_50GBASE_KR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 50000baseKR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_50GBASE_LR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 50000baseLR_ER_FR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_50GBASE_SR)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 50000baseSR_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_100GBASE_CR4)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 100000baseCR4_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_100GBASE_KR4)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 100000baseKR4_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_100GBASE_LR4)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 100000baseLR4_ER4_Full); \
++	if ((octep_vf_speeds) & BIT(OCTEP_VF_LINK_MODE_100GBASE_SR4)) \
++		ethtool_link_ksettings_add_link_mode(ksettings, name, 100000baseSR4_Full); \
++}
++
++static int octep_vf_get_link_ksettings(struct net_device *netdev,
++				       struct ethtool_link_ksettings *cmd)
++{
++	struct octep_vf_device *oct = netdev_priv(netdev);
++	struct octep_vf_iface_link_info *link_info;
++	u32 advertised_modes, supported_modes;
++
++	ethtool_link_ksettings_zero_link_mode(cmd, supported);
++	ethtool_link_ksettings_zero_link_mode(cmd, advertising);
++
++	octep_vf_get_link_info(oct);
++
++	advertised_modes = oct->link_info.advertised_modes;
++	supported_modes = oct->link_info.supported_modes;
++	link_info = &oct->link_info;
++
++	OCTEP_VF_SET_ETHTOOL_LINK_MODES_BITMAP(supported_modes, cmd, supported);
++	OCTEP_VF_SET_ETHTOOL_LINK_MODES_BITMAP(advertised_modes, cmd, advertising);
++
++	if (link_info->autoneg) {
++		if (link_info->autoneg & OCTEP_VF_LINK_MODE_AUTONEG_SUPPORTED)
++			ethtool_link_ksettings_add_link_mode(cmd, supported, Autoneg);
++		if (link_info->autoneg & OCTEP_VF_LINK_MODE_AUTONEG_ADVERTISED) {
++			ethtool_link_ksettings_add_link_mode(cmd, advertising, Autoneg);
++			cmd->base.autoneg = AUTONEG_ENABLE;
++		} else {
++			cmd->base.autoneg = AUTONEG_DISABLE;
++		}
++	} else {
++		cmd->base.autoneg = AUTONEG_DISABLE;
++	}
++
++	cmd->base.port = PORT_FIBRE;
++	ethtool_link_ksettings_add_link_mode(cmd, supported, FIBRE);
++	ethtool_link_ksettings_add_link_mode(cmd, advertising, FIBRE);
++
++	if (netif_carrier_ok(netdev)) {
++		cmd->base.speed = link_info->speed;
++		cmd->base.duplex = DUPLEX_FULL;
++	} else {
++		cmd->base.speed = SPEED_UNKNOWN;
++		cmd->base.duplex = DUPLEX_UNKNOWN;
++	}
++	return 0;
++}
++
++static const struct ethtool_ops octep_vf_ethtool_ops = {
++	.get_drvinfo = octep_vf_get_drvinfo,
++	.get_link = ethtool_op_get_link,
++	.get_strings = octep_vf_get_strings,
++	.get_sset_count = octep_vf_get_sset_count,
++	.get_ethtool_stats = octep_vf_get_ethtool_stats,
++	.get_link_ksettings = octep_vf_get_link_ksettings,
++};
++
++void octep_vf_set_ethtool_ops(struct net_device *netdev)
++{
++	netdev->ethtool_ops = &octep_vf_ethtool_ops;
++}
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
+index 576ef176f2f7..705a7c0a2976 100644
+--- a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
+@@ -1091,6 +1091,7 @@ static int octep_vf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	INIT_WORK(&octep_vf_dev->tx_timeout_task, octep_vf_tx_timeout_task);
+ 
+ 	netdev->netdev_ops = &octep_vf_netdev_ops;
++	octep_vf_set_ethtool_ops(netdev);
+ 	netif_carrier_off(netdev);
+ 
+ 	if (octep_vf_setup_mbox(octep_vf_dev)) {
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.h b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.h
+index 5a3b545ad590..5769f62545cd 100644
+--- a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.h
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.h
+@@ -327,6 +327,7 @@ void octep_vf_device_setup_cn93(struct octep_vf_device *oct);
+ void octep_vf_device_setup_cnxk(struct octep_vf_device *oct);
+ int octep_vf_iq_process_completions(struct octep_vf_iq *iq, u16 budget);
+ int octep_vf_oq_process_rx(struct octep_vf_oq *oq, int budget);
++void octep_vf_set_ethtool_ops(struct net_device *netdev);
+ int octep_vf_get_link_info(struct octep_vf_device *oct);
+ int octep_vf_get_if_stats(struct octep_vf_device *oct);
+ void octep_vf_mbox_work(struct work_struct *work);
 -- 
 2.25.1
 
