@@ -1,76 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f68.google.com (mail-ed1-f68.google.com [209.85.208.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62ED28BE3;
-	Mon,  8 Jan 2024 07:34:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABD88BEB;
+	Mon,  8 Jan 2024 07:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jqy1+qxg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704699294; x=1736235294;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=H22OiCmXKA/Jr7ukOv8t27r8p7fZrpkasq/T1pnZ5NA=;
-  b=jqy1+qxgrMy3D+HtlySvDupTvlly5b/6d/nepc6z8Dq9aGT/4F2sJMRj
-   F6YLHQvKjpDMn8C/rm0WzHaf7Oe3GWyvlY7tdOWepnKcstn5m8odI2EnZ
-   tNOikv2CLc4IJS51H+oCXhFUMWkWME9GhqnhwDtTU89yOptE20nOnwmjg
-   pquK5auh2upcWJw1B1UXjgGvy1+hD1gP3be4UNTPlVj3ucftvTR90arwz
-   66ECgTX+0e9yyOiPfjtJea9nOETU9SxVJa1MdPgPUviFKaaUFVbGH9SVQ
-   5kL5yaNeFxKabBKdqwvzxBfAh1ya53/TA9MqNw76HyTMfmxWaqNE9XbKv
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="464214776"
-X-IronPort-AV: E=Sophos;i="6.04,340,1695711600"; 
-   d="scan'208";a="464214776"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2024 23:33:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,340,1695711600"; 
-   d="scan'208";a="15838089"
-Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.238.2.99]) ([10.238.2.99])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2024 23:32:58 -0800
-Message-ID: <632616b2-ab84-4d2d-bef2-4b564322f78f@linux.intel.com>
-Date: Mon, 8 Jan 2024 15:32:55 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WXJYvnte"
+Received: by mail-ed1-f68.google.com with SMTP id 4fb4d7f45d1cf-55760f84177so175996a12.0;
+        Sun, 07 Jan 2024 23:37:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704699421; x=1705304221; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NMUTVEWLD9rAe8ABai7E5sFz8lZUsa+4VnMsezRlEsE=;
+        b=WXJYvntedVLtcTZjTSmSo6ia3HF8J4LHK0Y1NhM7WaApTuwAKI26EdLdJ4lZcK1R9a
+         vyKE0h+VjXANayJTuoTIy08xFkrn0lHr+3shIJviE20BsBfB77fpzvZ94kTLsf0S59g1
+         LPGRnj0jhZyQqPSjEWFSvJ1FGCHDF3LJeAUUu/EbClFePapo8kZvZcS3zpzuU/NGbhdO
+         gCV0aPtWh2fy6jplfZPobUKsp063UuCdTKLCeZL4r4NFnwgDKaIGBhUgqUBorqH29jmy
+         4WFwH6u5bXqcirmSaaA9mhnLJlwWjycaeRDvzmsubpjgRaayWVCIKf8p7IPbYOBZI9QB
+         46xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704699421; x=1705304221;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NMUTVEWLD9rAe8ABai7E5sFz8lZUsa+4VnMsezRlEsE=;
+        b=duijXvkTeJaoWdwHRK7TMAMATOe3BKj6q7C5Pnz04vcj1ynB0fv83sPLmhl1uLImfb
+         j7nt9Vb/OuND1jorbS49f1yMH5Bw88AyV+G6lSXL1F3BmdCzFlh3iMF2BeML7hwNSk5p
+         B7odEmxM/wT2rYB/mld0T+g41wSqOSkk2SoWek+h+BRuNW96jc074KXAuuVAeis9X4hQ
+         3zZBcIMotlbGaQkkN7XALG4QPD1zKy6U0cyEt4BRYtpe3emOco+34WZqYJO36Ha/ijPi
+         WoQvB7LIby5QpYGyGxcREVq8IGsyIzT605bdwvJpx2SyxlB7PxcLD8RDEgyl5/O0SL0Q
+         K5Yg==
+X-Gm-Message-State: AOJu0YxEsORWFHPA07GEI2OMEzkfvTRi806NP/HgDaTXdeifBWOCwn85
+	+8U2TOiZ8GJjmbBHUSUAExFy7Dg19K8llSZg9KoOzQIWtHZvAg==
+X-Google-Smtp-Source: AGHT+IHEpfi8DVMa4mVbICvPsxCEATNAA6QqZIobrWVsB/mXF83As2NP19BBj+NNBcrpRCREpsnJKxWxX3SlZXhdOrI=
+X-Received: by 2002:a50:9345:0:b0:557:1b89:4f01 with SMTP id
+ n5-20020a509345000000b005571b894f01mr3354909eda.2.1704699420800; Sun, 07 Jan
+ 2024 23:37:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/6] iommu: Add cache_invalidate_user op
-To: Yi Liu <yi.l.liu@intel.com>
-Cc: joro@8bytes.org, alex.williamson@redhat.com, jgg@nvidia.com,
- kevin.tian@intel.com, robin.murphy@arm.com, baolu.lu@linux.intel.com,
- cohuck@redhat.com, eric.auger@redhat.com, nicolinc@nvidia.com,
- kvm@vger.kernel.org, mjrosato@linux.ibm.com, chao.p.peng@linux.intel.com,
- yi.y.sun@linux.intel.com, peterx@redhat.com, jasowang@redhat.com,
- shameerali.kolothum.thodi@huawei.com, lulu@redhat.com,
- suravee.suthikulpanit@amd.com, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- zhenzhong.duan@intel.com, joao.m.martins@oracle.com, xin.zeng@intel.com,
- yan.y.zhao@intel.com
-References: <20231117130717.19875-1-yi.l.liu@intel.com>
- <20231117130717.19875-2-yi.l.liu@intel.com>
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <20231117130717.19875-2-yi.l.liu@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240104024244.12163-1-Wenhua.Lin@unisoc.com> <20240104024244.12163-2-Wenhua.Lin@unisoc.com>
+ <CAAfSe-ty=BgDNxST7q=+0CR6pshP4LhgmEPeZLmasiS2UkTjYA@mail.gmail.com>
+In-Reply-To: <CAAfSe-ty=BgDNxST7q=+0CR6pshP4LhgmEPeZLmasiS2UkTjYA@mail.gmail.com>
+From: wenhua lin <wenhua.lin1994@gmail.com>
+Date: Mon, 8 Jan 2024 15:36:49 +0800
+Message-ID: <CAB9BWhcCyJd5uYgFBEuY4kR+iPam68U6i21UUmhGX-hORH64Pg@mail.gmail.com>
+Subject: Re: [PATCH V3 1/4] gpio: eic-sprd: Keep the clock rtc_1k on
+To: Chunyan Zhang <zhang.lyra@gmail.com>
+Cc: Wenhua Lin <Wenhua.Lin@unisoc.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Xiongpeng Wu <xiongpeng.wu@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 11/17/2023 9:07 PM, Yi Liu wrote:
-> From: Lu Baolu <baolu.lu@linux.intel.com>
+On Fri, Jan 5, 2024 at 11:26=E2=80=AFAM Chunyan Zhang <zhang.lyra@gmail.com=
+> wrote:
 >
-> The updates of the PTEs in the nested page table will be propagated to the
-> hardware caches on both IOMMU (IOTLB) and devices (DevTLB/ATC).
+> On Thu, 4 Jan 2024 at 10:43, Wenhua Lin <Wenhua.Lin@unisoc.com> wrote:
+> >
+> > The eic debounce does not have a clock of rtc_1k in the sleep state,
+> > but the eic debounce will be used to wake up the system, therefore the
+> > clock of rtc_1k needs to be kept open.
 >
-> Add a new domain op cache_invalidate_user for the userspace to flush the
-> hardware caches for a nested domain through iommufd. No wrapper for it,
-> as it's only supposed to be used by iommufd. Then, pass in invalidation
-> requests in form of a user data array conatining a number of invalidation
+> It seems that this issue is not in the latest SoCs. I would suggest
+> not changing for the time being.
+>
 
-s/conatining/containing/
-> data entries.
+OK, we will delete this modification on pacth v4.
+
+> Thanks,
+> Chunyan
 >
+>
+> >
+> > Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
+> > ---
+> >  drivers/gpio/gpio-eic-sprd.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.=
+c
+> > index be7f2fa5aa7b..bdcb3510a208 100644
+> > --- a/drivers/gpio/gpio-eic-sprd.c
+> > +++ b/drivers/gpio/gpio-eic-sprd.c
+> > @@ -24,6 +24,7 @@
+> >  #define SPRD_EIC_DBNC_IC               0x24
+> >  #define SPRD_EIC_DBNC_TRIG             0x28
+> >  #define SPRD_EIC_DBNC_CTRL0            0x40
+> > +#define SPRD_EIC_DBNC_FORCE_CLK                0x8000
+> >
+> >  #define SPRD_EIC_LATCH_INTEN           0x0
+> >  #define SPRD_EIC_LATCH_INTRAW          0x4
+> > @@ -223,6 +224,7 @@ static int sprd_eic_set_debounce(struct gpio_chip *=
+chip, unsigned int offset,
+> >         u32 value =3D readl_relaxed(base + reg) & ~SPRD_EIC_DBNC_MASK;
+> >
+> >         value |=3D (debounce / 1000) & SPRD_EIC_DBNC_MASK;
+> > +       value |=3D SPRD_EIC_DBNC_FORCE_CLK;
+> >         writel_relaxed(value, base + reg);
+> >
+> >         return 0;
+> > --
+> > 2.17.1
+> >
