@@ -1,106 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F26C28E25
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 10:46:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C62F13FF5
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 10:47:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AHaEXqrL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704710765;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KkVC+mvoxuSAncS71/24Hr1464TinqZdTby20Br9LBs=;
-	b=AHaEXqrLCB5EhVKw+harz40HHfcgHxPcq7eDpFjii548y3MA8SFMRTCcdFF9LAg843rPsN
-	SGprROUTCRYL6FeVrTkwWuwZmEYZ1Tsc2lInwheedl1P/tUSgSSEwL4ok5cnHgRAFukHy6
-	bH7oKtqn6TjF7/+JjuRDHDVTptylGZI=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-182-DhmFpjpwMkahJnS2v2P_5A-1; Mon, 08 Jan 2024 05:46:03 -0500
-X-MC-Unique: DhmFpjpwMkahJnS2v2P_5A-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-33770774fe4so119720f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 02:46:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704710762; x=1705315562;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KkVC+mvoxuSAncS71/24Hr1464TinqZdTby20Br9LBs=;
-        b=vHAAyCifIpFl7CPUJK9T0YqHX4UUkBvtVCFKXuwuQgHSQUwT4wBt3w+9nta/o5Xe1+
-         2oZ88JFNEVot/I/+wYH1/veM5Y/moh6Gyh9lCB70B9eX7eEbrYdICrdPh0N5fVbmVGO8
-         XEmeOv+Qy2B4d0e28lFDyqcJp8A9e7q+H+w3AAH2cwn2s5xY3KY9cDme9hto4SwtQQfu
-         vS7YLoVqhmF7lvSeXJyqe3qNCu3qX8TKaiHbmotPnUrbW8ojVgsfFlAr+WM6khzVPqkJ
-         qSn8BaqI6CqF4T5VNRAwJ+t7Nbw/55m7c+oYV4XCHSsQWEJWgkiakDzhpuwMDP5uFzI+
-         TtnA==
-X-Gm-Message-State: AOJu0YzFTDQy/YG+GHhlkcQMZXrgsu+qDu6RAjyPuALk7sn3qMKJ5nJG
-	6Fjx2YY/DYlfutxQKVMham4KlwDVBweox2wPgUUTGFiRQTtXrgYHyXrDgH8Jz7J1MeW2lgW305j
-	L+HiRGJf1vWybgRY9hsSNIF6f3hFRLHAFPrUTPYtyooHqf9d2
-X-Received: by 2002:a5d:6b8a:0:b0:337:554a:1663 with SMTP id n10-20020a5d6b8a000000b00337554a1663mr2007855wrx.44.1704710762303;
-        Mon, 08 Jan 2024 02:46:02 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHpjJr9yCYeNvIWrWfB4mgnNZI1yKac6oPZt2P6kwuw0tK5p+zVcPKccb3QSB5RutnnWw97+Mg7cr6swttBbLA=
-X-Received: by 2002:a5d:6b8a:0:b0:337:554a:1663 with SMTP id
- n10-20020a5d6b8a000000b00337554a1663mr2007850wrx.44.1704710762007; Mon, 08
- Jan 2024 02:46:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SVhRemVp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 517DBC433C8;
+	Mon,  8 Jan 2024 10:47:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704710852;
+	bh=dmaBrp9KY2QVBWgy7KW3qoX2FUl+4p1SCBb6S4fQ9Lk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SVhRemVpxFamoIn708UyKd9RW/PtshX20Q3yPAGUxhzPNPZy/srq/ea54Do4J6C7M
+	 xu5deaDoadRKYOXj3Klc6A4wAsHFepMOnkMfJdZrJ8/Rnxro7FtTXORggn5x/Ajnie
+	 sux0WaiMwa7zVnO7rXmwt4fn6ZyWZ4uceKRAce9Jmr5oAQH5xgafKou3xHiOcwEqcT
+	 ZHSGbMRaoncCvvOkWbd7Tz/DQ3nOfEg8T4H6FR30nRwISiJ+5CJFe+PafWM3RvcwDX
+	 3K+8sq9lQDXmVrsTbaquTqo9dbp73wirKng6y5qMByWFX4khpMjLFlzsIAE5JXmRrA
+	 WW5Z1vX55tbSg==
+Date: Mon, 8 Jan 2024 11:47:30 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
+Cc: intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Michal Wajdeczko <michal.wajdeczko@intel.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Javier Martinez Canillas <javierm@redhat.com>, 
+	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>
+Subject: Re: [PATCH v4 4/6] drm/tests: managed: Add comments and expect fail
+ messages
+Message-ID: <3shr5njdajcgjc5ogaf2bgbnmd4mzhjmhmhzhngawsft4cpkf3@txec5av6wsfa>
+References: <20240105101324.26811-1-michal.winiarski@intel.com>
+ <20240105101324.26811-5-michal.winiarski@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240103075343.549293-1-ppandit@redhat.com>
-In-Reply-To: <20240103075343.549293-1-ppandit@redhat.com>
-From: Prasad Pandit <ppandit@redhat.com>
-Date: Mon, 8 Jan 2024 16:15:45 +0530
-Message-ID: <CAE8KmOwPKDM5xcd1kFhefeJsqYZndP09n9AxaRbypTsHm8mkgw@mail.gmail.com>
-Subject: Re: [PATCH] KVM: x86: make KVM_REQ_NMI request iff NMI pending for vcpu
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Prasad Pandit <pjp@fedoraproject.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="lukyo5knmjm62jpd"
+Content-Disposition: inline
+In-Reply-To: <20240105101324.26811-5-michal.winiarski@intel.com>
 
-On Wed, 3 Jan 2024 at 13:24, Prasad Pandit <ppandit@redhat.com> wrote:
-> kvm_vcpu_ioctl_x86_set_vcpu_events() routine makes 'KVM_REQ_NMI'
-> request for a vcpu even when its 'events->nmi.pending' is zero.
-> Ex:
->     qemu_thread_start
->      kvm_vcpu_thread_fn
->       qemu_wait_io_event
->        qemu_wait_io_event_common
->         process_queued_cpu_work
->          do_kvm_cpu_synchronize_post_init/_reset
->           kvm_arch_put_registers
->            kvm_put_vcpu_events (cpu, level=[2|3])
->
-> This leads vCPU threads in QEMU to constantly acquire & release the
-> global mutex lock, delaying the guest boot due to lock contention.
-> Add check to make KVM_REQ_NMI request only if vcpu has NMI pending.
->
-> Fixes: bdedff263132 ("KVM: x86: Route pending NMIs from userspace through process_nmi()")
-> Signed-off-by: Prasad Pandit <pjp@fedoraproject.org>
+
+--lukyo5knmjm62jpd
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jan 05, 2024 at 11:13:22AM +0100, Micha=C5=82 Winiarski wrote:
+> Add comments explaining the intention behind the test and certain
+> implementation details related to device lifetime.
+>=20
+> Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
 > ---
->  arch/x86/kvm/x86.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 1a3aaa7dafae..468870450b8b 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -5405,7 +5405,8 @@ static int kvm_vcpu_ioctl_x86_set_vcpu_events(struct kvm_vcpu *vcpu,
->         if (events->flags & KVM_VCPUEVENT_VALID_NMI_PENDING) {
->                 vcpu->arch.nmi_pending = 0;
->                 atomic_set(&vcpu->arch.nmi_queued, events->nmi.pending);
-> -               kvm_make_request(KVM_REQ_NMI, vcpu);
-> +               if (events->nmi.pending)
-> +                       kvm_make_request(KVM_REQ_NMI, vcpu);
->         }
->         static_call(kvm_x86_set_nmi_mask)(vcpu, events->nmi.masked);
-> --
-> 2.43.0
+>  drivers/gpu/drm/tests/drm_managed_test.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpu/drm/tests/drm_managed_test.c b/drivers/gpu/drm/t=
+ests/drm_managed_test.c
+> index e4790ae838ba7..986a38c9144a5 100644
+> --- a/drivers/gpu/drm/tests/drm_managed_test.c
+> +++ b/drivers/gpu/drm/tests/drm_managed_test.c
+> @@ -19,6 +19,10 @@ static void drm_action(struct drm_device *drm, void *p=
+tr)
+>  	priv->action_done =3D true;
+>  }
+> =20
+> +/*
+> + * The test verifies that the release action is called automatically whe=
+n the
+> + * device is released.
+> + */
+>  static void drm_test_managed_run_action(struct kunit *test)
+>  {
+>  	struct managed_test_priv *priv;
+> @@ -32,6 +36,11 @@ static void drm_test_managed_run_action(struct kunit *=
+test)
+>  	dev =3D drm_kunit_helper_alloc_device(test);
+>  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, dev);
+> =20
+> +	/*
+> +	 * DRM device can't be embedded in priv, since priv->action_done needs
+> +	 * to remain allocated beyond both parent device and drm_device
+> +	 * lifetime.
+> +	 */
+>  	drm =3D __drm_kunit_helper_alloc_drm_device(test, dev, sizeof(*drm), 0,=
+ DRIVER_MODESET);
+>  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, drm);
+> =20
+> @@ -44,7 +53,7 @@ static void drm_test_managed_run_action(struct kunit *t=
+est)
+>  	drm_dev_unregister(drm);
+>  	drm_kunit_helper_free_device(test, dev);
+> =20
+> -	KUNIT_EXPECT_TRUE(test, priv->action_done);
+> +	KUNIT_EXPECT_TRUE_MSG(test, priv->action_done, "Release action was not =
+called");
 
-Ping...!
----
-  - Prasad
+I'm fine with the other two comments, but I'm not really sure what that
+message brings to the table. It should be pretty obvious from the
+function name, variable name and comments already.
 
+Maxime
+
+--lukyo5knmjm62jpd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZZvSwQAKCRDj7w1vZxhR
+xSZBAP4ptsPag+C91bzoIBqAmBdTbkAsS5CeGNI1w24L6aauQwD/ZYhmou/zzgCe
+UloSBBNotq1rzb92bPzOnzdZcU0fyw4=
+=vGjv
+-----END PGP SIGNATURE-----
+
+--lukyo5knmjm62jpd--
