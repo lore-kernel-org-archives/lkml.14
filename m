@@ -1,164 +1,209 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2089.outbound.protection.partner.outlook.cn [139.219.146.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43AB544C8D;
-	Mon,  8 Jan 2024 13:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b7S/yH5ofnUibDxx4aetjwq5fpHYBXvQe1l07zae+lEVRlFIyiqI1uEJYW0oZx7MxI/o8itOW4gkeuIs/6P36gwlHKnoTE6nGPC0Fx/KGwXKX3XX/bdI78hvEuROSTK92ogsSiHO5YZlcQdsEfPWZlBC6z8HXL9daAyQ32C6VQEIuAXF4A49E/CSqK/iA9gs9qd9rL6McuHAfYdbVsdbxVXfDTUAsUm/+19Yy3nt2BKtlJ/U9HaEMQlUPG5BraXvjdOHu2fTOWgJRPXhK4u9ykA3AuvVVE/F2ebZUgZOsIyId/AwBQmwve1K/bBGLPU5JY35+jex2K1r9re44HhXxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=H1L2zCinMaKZ61leC9g0xpthGdFxAFSQ7l+a9Zn1/VQ=;
- b=bbqixbJzxBdoyVWW9AJa6mcPHO8DLYo0Yf/2yy/Yh76JuUigcFx8gh5e0k1mVTcKFjMjI2UXwWmaGOHrXLKkHY/EScxaG3jqAzN0IDawLp96DKvagjmCVSdTosUqeGreUbGJjZvyQ4XCGkiTXwqbNVpiv4U5+m8W5+lCX2ZpJ+5hKu0FqpN7ihVb+9TrYl1bUMwyXGNUTlYKEuYx775I+NUJSk7IGqcyEvJcyU+g5x18DGoabRxSPTyU2QJfxEW0lB/CWnJdrs3wBDSOxCtXa+8Rdfuyajjps86z8qm5VfFCS5aGXzELQppd6V8f2sLJDH3FZr5zPdsGTVy2TGVTvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::15) by SHXPR01MB0797.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:26::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.32; Mon, 8 Jan
- 2024 11:06:38 +0000
-Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- ([fe80::e6aa:baea:fd8c:4cd2]) by
- SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn ([fe80::e6aa:baea:fd8c:4cd2%7])
- with mapi id 15.20.7135.032; Mon, 8 Jan 2024 11:06:38 +0000
-From: Minda Chen <minda.chen@starfivetech.com>
-To: Conor Dooley <conor@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc: devicetree@vger.kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFD944C89;
+	Mon,  8 Jan 2024 13:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UfdbhMYu"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-557bfc7f7b4so1006930a12.0;
+        Mon, 08 Jan 2024 05:41:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704721265; x=1705326065; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3r6g5z9Mx4IxtW42MMxxjM9D6NLe62syXKXuO2xxI40=;
+        b=UfdbhMYuz7Slksf7KjAEI3fNe+TuJvFAfDX6WyqgMQvjUSyuurAdWtLm62fryPbS5W
+         LAetMQObo4ihXyubJQaHTLMVHMFEDZJf0AsPgJv6FjEdm+oF2tE/08ARAC1URlQEviHl
+         wYiqlGkuc2WQL8sce2ALwlcN8X+WjKcmZV5qieIjg1DCsdD+7J7k44q4yzrPjCJyqQR7
+         AhJ+V1DGHolE/AzvTovns2qFtkqxwBCPUgP+N9AgBAkwP1IYkP12vAdIa0mbLAGl7wh4
+         XayWqm3W4PUcaPyqYBwTiZ3qmPUaBTCo4XMiWUzdi3vQbzloVJdxDOL4awJyoq86pT89
+         Ewow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704721265; x=1705326065;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3r6g5z9Mx4IxtW42MMxxjM9D6NLe62syXKXuO2xxI40=;
+        b=qryFBt/Sd0ydDO1rgO0FZicpd83H6aFc6SwV0iprbEg7kXG9vsEb9BkwjtiaciM4nB
+         wLjkeWGoZ9NbZ/GDLWDDQMwP5Kt60Ld0i2sUKjnY6Vsa3LDOCOpLHHrMXkzbeAsOSS8h
+         ncCWubdYKNInOVKFB6pjF2UCJvCaVWlm5KccE2GmboZuy9vrCdGpSQ+Cp1+pislnS5qt
+         lS9HjnuJYv26rl+7e45gdmnguHMJkjrTN9zcpK12M8bWgsh9o3/vRoBfq11m1uI+ejMa
+         KpoA5ioowVraITMt26n06dsBdIJnOFQFIKeM/FsqMnCOXAH8TWf9NoFFw5KNxMeiKMSP
+         uiJg==
+X-Gm-Message-State: AOJu0Yxbf1b8bUbQ0NDluszmNl4N2Bd8qxl9/1S81y2I7ggxTvSjwOa4
+	RQSWt0NrxM3hEbWvXYlz1pY=
+X-Google-Smtp-Source: AGHT+IHsSgTUHLYbaiUv5IWw6W2ekoAhScEgfGZkpNW1wQrT2vNPo2yxBdPLVFG/wdZpaBKadwDpqw==
+X-Received: by 2002:a17:906:2c53:b0:a27:fdc1:59c6 with SMTP id f19-20020a1709062c5300b00a27fdc159c6mr5492095ejh.26.1704721265272;
+        Mon, 08 Jan 2024 05:41:05 -0800 (PST)
+Received: from felia.fritz.box ([2a02:810d:7e40:14b0:a060:7056:782e:5e26])
+        by smtp.gmail.com with ESMTPSA id b1-20020a170906490100b00a26b36311ecsm4017896ejq.146.2024.01.08.05.41.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jan 2024 05:41:04 -0800 (PST)
+From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-serial@vger.kernel.org
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Helge Deller <deller@gmx.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-input@vger.kernel.org,
+	linux-m68k@lists.linux-m68k.org,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	kernel-janitors@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Mason Huo <mason.huo@starfivetech.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Kevin Xie <kevin.xie@starfivetech.com>,
-	Minda Chen <minda.chen@starfivetech.com>
-Subject: [PATCH v14 08/22] PCI: microchip: Change the argument of plda_pcie_setup_iomems()
-Date: Mon,  8 Jan 2024 19:05:58 +0800
-Message-Id: <20240108110612.19048-9-minda.chen@starfivetech.com>
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] vt: remove superfluous CONFIG_HW_CONSOLE
+Date: Mon,  8 Jan 2024 14:41:02 +0100
+Message-Id: <20240108134102.601-1-lukas.bulwahn@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240108110612.19048-1-minda.chen@starfivetech.com>
-References: <20240108110612.19048-1-minda.chen@starfivetech.com>
-Content-Type: text/plain
-X-ClientProxiedBy: ZQ0PR01CA0014.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:5::19) To SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:25::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SHXPR01MB0863:EE_|SHXPR01MB0797:EE_
-X-MS-Office365-Filtering-Correlation-Id: 85a1babd-467a-44a9-a6b7-08dc1039e295
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	lqApmGxLXWnlSVfl4w2R8KyOgqza8qlFmj1qrjukCYWfxbanHlUY8mYASdc2Lmbjrg3QMuk8by+eQiPHL/iyaL8hpkmetAs+eXXehocwO7TFUTO9WARdwsjiY2YY48Ph2jp/Ioyte3PGje0wVhwx3GdGZ7hRWucyo1e/kdtLn/0l9W76eyLhxr7JHtQ/Ll7UtghMzr6ylaTaifEWBdWKMxOb5LFZDese76OFrpRMy/BH+Kj6qmj1JahBzXzER+64ORabBe7G77aq/+7Sa2CUApvgVyePrmcI5EGORT/Qzjqk7QujJ97ggbbfe37s4lfoSAVY9aNkA1MzNqyPWB8P+ZmgYpxytZwDcQ2gUg4HcHGxrppH3nGiX86GSG7wRH+ukbbCvOo7AxoiuRDMn6jD0CIqqB0n2ys9MZSr/Nag/fKvZ87A3QCn3Xw/aDfsYvZ6TxWAaP+D50QbunVBrWaxk7iRvzcVolxALG8NaDsdZVja4PnhlfyHOMSdda3NW1uZS0gdbzwvzGf8gfW2re3CsCUX7YITsPAs/sEZMArrbXRT3pU29o6Y+OK4WaeTI9J/
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(136003)(39830400003)(346002)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(8936002)(41320700001)(1076003)(107886003)(26005)(2616005)(83380400001)(44832011)(8676002)(4326008)(86362001)(52116002)(508600001)(66476007)(6666004)(66946007)(66556008)(54906003)(110136005)(40160700002)(38100700002)(38350700005)(2906002)(5660300002)(7416002)(40180700001)(41300700001)(36756003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Lun/eo3MEVjzpcU+1qQJPXUk/LHhiIFlfgnvun1a8eeARf0B4Gn8OvQlDYc1?=
- =?us-ascii?Q?03szhJ1VVTK1z08WiVUls8nixYcXBEA4X5eFjngvQ3o1xdtc87KjB7sz0rSV?=
- =?us-ascii?Q?ZzUYHblKVn3cB4/wdois/k5IamrOfh09OyLLS1jNhMSj9UP/fL5p/UkQdlPQ?=
- =?us-ascii?Q?iVoHoqM/wwGWbGY1fuu13s7+n4+BMiPNr5a8pXhJK9dxuCoduKU3LdwYpnlF?=
- =?us-ascii?Q?7Ej8vQoPWeY+PLEv56e5rckoE2q+ppsoyrQWUGlUazt9tBY3gZgz1Py5Vj2w?=
- =?us-ascii?Q?0j1Q6wgObKrGbIodc9fDvwIaSOYYw7Pfvv1hpNiaAIucfNTuCFh5yaEjwTzh?=
- =?us-ascii?Q?hhka+/NflRNxeQ8yyCAYf2ktCk0f0We7j5iMsfOaRXX3QJrCV6uyx5H9Hpjr?=
- =?us-ascii?Q?JyojUNrt95H9ya5hyFbPJljLF0F8IdegcIGu/QfcT3I2cLn31Pmb6GsLUfgl?=
- =?us-ascii?Q?y0+ogiMK/zHBs6Qw5TYbLbHC9chJjcGHUBm3pxN4XYAFNvl6Qy2AOt3WGYFw?=
- =?us-ascii?Q?oUsARjo8UfBjm1UhDYm42fvFcU9pot9FxG7aw7xePE7qEzG05ZqWeKmmJPJt?=
- =?us-ascii?Q?jfmudXPzwcF/Z63Q6ZSyNfnn3uezyJHhMyk8n3k6FPBtBaPhcl7ivcjvBwW2?=
- =?us-ascii?Q?fRTcqWeU9+9iRBV4hPn/S6wHOO6IDoCDzB1W6gYyNvb/vZPXdpkK1vLE56JY?=
- =?us-ascii?Q?oZJD4tqNe7/hMDeA6B0oDt83XWMg39Bv0V+j+TGBgP/ludk7++Ok01wm1Q+X?=
- =?us-ascii?Q?jDD+aVkMrTNp9adB7C2qEPKW6zr+SN6G+iTl4wzTweDrloZKqZ31jWAQwZdG?=
- =?us-ascii?Q?RDgvR50D1Ud3Z9ZygJ1FANv2mzKPzor8qCaZhRr4TxDd0kji0Vz+Qdaotumi?=
- =?us-ascii?Q?dd1hVtAFMc4uxUCKY9ttX+lWkaJDWoB3xqm/ca1zYk6ftU2O4mbApIrIyrfP?=
- =?us-ascii?Q?0skUdmcqdIrI3CcIikAQQkGqLTq5CD30cmpn5+hZ/SIExk2Du+yeptby2XRr?=
- =?us-ascii?Q?RwgIrORjpOtXGk5m2H/uzjQmO+/i2ttdlpVI3FJhSktNC1zbQRr3esztyH94?=
- =?us-ascii?Q?kLCbyL8C56Fr4oZaJBDMcXw5r2px0kZ3oVqWpFNb1n+9TSNhKy5cT5zGc7NA?=
- =?us-ascii?Q?1j2ezqlCDpRDbCnpeRczX34H5g5g8eA0OTD5yXToQ+5we0D/y5qRI09D0Yt2?=
- =?us-ascii?Q?Qa/SFm8D7SNNsmhJidOtcwL2/PjiAjOf/5CBXEXI4diswKfYLSTni90vFk0j?=
- =?us-ascii?Q?ZQeNx1Z1HotHlA8bxao/CoscZe2q3lJz8SwahAdI11hVC5pBNGncWm2NYGeo?=
- =?us-ascii?Q?hQsF7kMFc6jqqequnlUgHf4IlLFrGcv/ZFJpz60/p9/EbtLFlpwWFI+vm5Ac?=
- =?us-ascii?Q?yWZIt5GMsf/YJEe8UBu11EzWUBqH8Cfs2mFExnqd2uZbe/CKjE4YaFxcTTZR?=
- =?us-ascii?Q?b/+IMLSa1VpRY9cr1uuJxI5oastAWMvhtTJZ9V6+JmAtmhYjKZY/3ZpXPrBW?=
- =?us-ascii?Q?UpJlTMjc10W2dSefzQt6/H4MSVL0heRgPxn0VcEOEynpMTx5T+RLGfrOWUvJ?=
- =?us-ascii?Q?iO6tpabZxg1d4QDON/byr9dzfBq4SvJMuo4xjruclyZs+meQodaZO+pKJRDG?=
- =?us-ascii?Q?AQ=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85a1babd-467a-44a9-a6b7-08dc1039e295
-X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2024 11:06:38.1278
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: r4RgA0aNN2ayus94RNdHAZ7pmffkjX5wZfEcrvaoPLa4NqKorSt/KX/++vLwKxBoSYbSoJGCI+AbgB9co1WvqhhWKRsL0vre/r6s2ma/fzk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0797
 
-If other vendor do not select PCI_HOST_COMMON, the driver data is not
-struct pci_host_bridge.
+The config HW_CONSOLE is always identical to the config VT and is not
+visible in the kernel's build menuconfig. So, CONFIG_HW_CONSOLE is
+redundant.
 
-Move calling platform_get_drvdata() to mc_platform_init().
+Replace all references to CONFIG_HW_CONSOLE with CONFIG_VT and remove
+CONFIG_HW_CONSOLE.
 
-Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 ---
- drivers/pci/controller/plda/pcie-microchip-host.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+I think this patch is best picked up by Greg rather than splitting it
+in smaller pieces for m68k, amiga keyboard, fbdev etc.
 
-diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
-index 9b367927cd32..805870aed61d 100644
---- a/drivers/pci/controller/plda/pcie-microchip-host.c
-+++ b/drivers/pci/controller/plda/pcie-microchip-host.c
-@@ -876,11 +876,10 @@ static void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
- 	writel(0, bridge_base_addr + ATR0_PCIE_WIN0_SRC_ADDR);
+Greg, if that is fine, could you pick this for the next merge window?
+
+I was also considering to rename config VT_HW_CONSOLE_BINDING to
+VT_CONSOLE_BINDING, as the dependency is on VT, not HW_CONSOLE, but
+at the moment, that seemed more churn than value of clarification.
+
+ arch/m68k/amiga/config.c        | 2 +-
+ drivers/input/keyboard/amikbd.c | 6 +++---
+ drivers/tty/Kconfig             | 7 +------
+ drivers/tty/vt/Makefile         | 4 ++--
+ drivers/video/fbdev/tgafb.c     | 2 +-
+ include/linux/console.h         | 2 +-
+ lib/Kconfig.kgdb                | 2 +-
+ 7 files changed, 10 insertions(+), 15 deletions(-)
+
+diff --git a/arch/m68k/amiga/config.c b/arch/m68k/amiga/config.c
+index 7791673e547b..99718f3dc686 100644
+--- a/arch/m68k/amiga/config.c
++++ b/arch/m68k/amiga/config.c
+@@ -846,6 +846,6 @@ static void amiga_get_hardware_list(struct seq_file *m)
+  * The Amiga keyboard driver needs key_maps, but we cannot export it in
+  * drivers/char/defkeymap.c, as it is autogenerated
+  */
+-#ifdef CONFIG_HW_CONSOLE
++#ifdef CONFIG_VT
+ EXPORT_SYMBOL_GPL(key_maps);
+ #endif
+diff --git a/drivers/input/keyboard/amikbd.c b/drivers/input/keyboard/amikbd.c
+index e305c44cd0aa..ecfae0b0b6aa 100644
+--- a/drivers/input/keyboard/amikbd.c
++++ b/drivers/input/keyboard/amikbd.c
+@@ -26,7 +26,7 @@ MODULE_AUTHOR("Vojtech Pavlik <vojtech@ucw.cz>");
+ MODULE_DESCRIPTION("Amiga keyboard driver");
+ MODULE_LICENSE("GPL");
+ 
+-#ifdef CONFIG_HW_CONSOLE
++#ifdef CONFIG_VT
+ static unsigned char amikbd_keycode[0x78] __initdata = {
+ 	[0]	 = KEY_GRAVE,
+ 	[1]	 = KEY_1,
+@@ -148,9 +148,9 @@ static void __init amikbd_init_console_keymaps(void)
+ 		memcpy(key_maps[i], temp_map, sizeof(temp_map));
+ 	}
  }
+-#else /* !CONFIG_HW_CONSOLE */
++#else /* !CONFIG_VT */
+ static inline void amikbd_init_console_keymaps(void) {}
+-#endif /* !CONFIG_HW_CONSOLE */
++#endif /* !CONFIG_VT */
  
--static int plda_pcie_setup_iomems(struct platform_device *pdev,
-+static int plda_pcie_setup_iomems(struct pci_host_bridge *bridge,
- 				  struct plda_pcie_rp *port)
- {
- 	void __iomem *bridge_base_addr = port->bridge_addr;
--	struct pci_host_bridge *bridge = platform_get_drvdata(pdev);
- 	struct resource_entry *entry;
- 	u64 pci_addr;
- 	u32 index = 1;
-@@ -1018,6 +1017,7 @@ static int mc_platform_init(struct pci_config_window *cfg)
- {
- 	struct device *dev = cfg->parent;
- 	struct platform_device *pdev = to_platform_device(dev);
-+	struct pci_host_bridge *bridge = platform_get_drvdata(pdev);
- 	void __iomem *bridge_base_addr =
- 		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
- 	int ret;
-@@ -1031,7 +1031,7 @@ static int mc_platform_init(struct pci_config_window *cfg)
- 	mc_pcie_enable_msi(port, cfg->win);
+ static const char *amikbd_messages[8] = {
+ 	[0] = KERN_ALERT "amikbd: Ctrl-Amiga-Amiga reset warning!!\n",
+diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
+index 5646dc6242cd..a45d423ad10f 100644
+--- a/drivers/tty/Kconfig
++++ b/drivers/tty/Kconfig
+@@ -75,14 +75,9 @@ config VT_CONSOLE_SLEEP
+ 	def_bool y
+ 	depends on VT_CONSOLE && PM_SLEEP
  
- 	/* Configure non-config space outbound ranges */
--	ret = plda_pcie_setup_iomems(pdev, &port->plda);
-+	ret = plda_pcie_setup_iomems(bridge, &port->plda);
- 	if (ret)
- 		return ret;
+-config HW_CONSOLE
+-	bool
+-	depends on VT
+-	default y
+-
+ config VT_HW_CONSOLE_BINDING
+ 	bool "Support for binding and unbinding console drivers"
+-	depends on HW_CONSOLE
++	depends on VT
+ 	help
+ 	  The virtual terminal is the device that interacts with the physical
+ 	  terminal through console drivers. On these systems, at least one
+diff --git a/drivers/tty/vt/Makefile b/drivers/tty/vt/Makefile
+index b3dfe9d5717e..2c8ce8b592ed 100644
+--- a/drivers/tty/vt/Makefile
++++ b/drivers/tty/vt/Makefile
+@@ -5,9 +5,9 @@
+ FONTMAPFILE = cp437.uni
  
+ obj-$(CONFIG_VT)			+= vt_ioctl.o vc_screen.o \
+-					   selection.o keyboard.o
++					   selection.o keyboard.o \
++					   vt.o defkeymap.o
+ obj-$(CONFIG_CONSOLE_TRANSLATIONS)	+= consolemap.o consolemap_deftbl.o
+-obj-$(CONFIG_HW_CONSOLE)		+= vt.o defkeymap.o
+ 
+ # Files generated that shall be removed upon make clean
+ clean-files := consolemap_deftbl.c defkeymap.c
+diff --git a/drivers/video/fbdev/tgafb.c b/drivers/video/fbdev/tgafb.c
+index ca43774f3156..dccfc38cfbd5 100644
+--- a/drivers/video/fbdev/tgafb.c
++++ b/drivers/video/fbdev/tgafb.c
+@@ -380,7 +380,7 @@ tgafb_set_par(struct fb_info *info)
+ 		BT463_LOAD_ADDR(par, 0x0000);
+ 		TGA_WRITE_REG(par, BT463_PALETTE << 2, TGA_RAMDAC_SETUP_REG);
+ 
+-#ifdef CONFIG_HW_CONSOLE
++#ifdef CONFIG_VT
+ 		for (i = 0; i < 16; i++) {
+ 			int j = color_table[i];
+ 
+diff --git a/include/linux/console.h b/include/linux/console.h
+index 779d388af8a0..c129e4173dec 100644
+--- a/include/linux/console.h
++++ b/include/linux/console.h
+@@ -112,7 +112,7 @@ int con_is_bound(const struct consw *csw);
+ int do_unregister_con_driver(const struct consw *csw);
+ int do_take_over_console(const struct consw *sw, int first, int last, int deflt);
+ void give_up_console(const struct consw *sw);
+-#ifdef CONFIG_HW_CONSOLE
++#ifdef CONFIG_VT
+ int con_debug_enter(struct vc_data *vc);
+ int con_debug_leave(void);
+ #else
+diff --git a/lib/Kconfig.kgdb b/lib/Kconfig.kgdb
+index 3b9a44008433..b5c0e6576749 100644
+--- a/lib/Kconfig.kgdb
++++ b/lib/Kconfig.kgdb
+@@ -43,7 +43,7 @@ config KGDB_SERIAL_CONSOLE
+ 	tristate "KGDB: use kgdb over the serial console"
+ 	select CONSOLE_POLL
+ 	select MAGIC_SYSRQ
+-	depends on TTY && HW_CONSOLE
++	depends on TTY && VT
+ 	default y
+ 	help
+ 	  Share a serial console with kgdb. Sysrq-g must be used
 -- 
 2.17.1
 
