@@ -1,41 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B584840C05;
-	Mon,  8 Jan 2024 12:28:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B476F40C14;
+	Mon,  8 Jan 2024 12:28:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gy9/q2L4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4795C433C8;
-	Mon,  8 Jan 2024 12:28:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YlKVnuk0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 248A9C43391;
+	Mon,  8 Jan 2024 12:28:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704716925;
-	bh=tij3zoxBMK+MBVN+7nMEI60sbQV6NDv5rjGx+xkKnhA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Gy9/q2L4G1iTSF7sVMeTCQKGdE0wdl07eYAO/TOZd5wqxSHzDlj56ljqesaafP56j
-	 Wf6SwNRtFHoiYMjoKRi3sDzCzLCIAM3+kOmvb2buGZJfQaWKSDC60FwECR9HHMhTGQ
-	 dT3bgGYhFxzMvvk1X1S4JE9Nk/xqk/tZ5O2OJMOcgkFzdIlys5SfbuHSSHJbuThGiX
-	 uzGZ0CW70eRvxUeCVJRvmh80w9Gapp4Ww7wY30SPf8XyGioVe9vQMpRot90oFZUhCe
-	 t1iXL+ZpO1+yEX/voQDbsyokCtlthBDXiFQh5G/UzU5NSHt61brQ1077hL40ljS0OW
-	 OtC0wzEhJksfg==
+	s=k20201202; t=1704716933;
+	bh=sDfJXwKWjn74MbogewQnU/EvWzN8rn72tezbLGGzpQs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=YlKVnuk0CZYffwSeapuYAVJl1uoBuaWY5m15CRmPZJr3SXdrmGolY49paptBwZxwx
+	 Oh+t3rrm/9NRGODAZe6MHWZEMDnDedzD3lFKB3ldmE1uV7sw24bRPxvqjIj+Y7LMJ9
+	 cDnAuP2S4TNedRYfVrJT0qBjl1ET4gMaOF3mpJsmQfw1jj0vRFQiAHTuWRotV3us+2
+	 +a9t+PIJz4/Mg52nhiYXgN2UmN61qexf7mt+3e3EpAS7oFBbL6p8jvxMAtfUMcE6Lu
+	 7qtWF3KugZj6wPsxOwDNhqOZ1oIMM+118/CyBiN8NZ258bIxRC4jUKAK515YS7iQbY
+	 ///b2C+zMijUA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dave Airlie <airlied@gmail.com>,
-	Dave Airlie <airlied@redhat.com>,
+Cc: Siddh Raman Pant <code@siddh.me>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Suman Ghosh <sumang@marvell.com>,
+	"David S . Miller" <davem@davemloft.net>,
 	Sasha Levin <sashal@kernel.org>,
-	kherbst@redhat.com,
-	lyude@redhat.com,
-	dakr@redhat.com,
-	daniel@ffwll.ch,
-	bskeggs@redhat.com,
-	dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.1 5/5] nouveau: fix disp disabling with GSP
-Date: Mon,  8 Jan 2024 07:28:16 -0500
-Message-ID: <20240108122823.2090312-5-sashal@kernel.org>
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 1/3] nfc: Do not send datagram if socket state isn't LLCP_BOUND
+Date: Mon,  8 Jan 2024 07:28:44 -0500
+Message-ID: <20240108122849.2090674-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240108122823.2090312-1-sashal@kernel.org>
-References: <20240108122823.2090312-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,51 +41,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.71
+X-stable-base: Linux 5.15.146
 Content-Transfer-Encoding: 8bit
 
-From: Dave Airlie <airlied@gmail.com>
+From: Siddh Raman Pant <code@siddh.me>
 
-[ Upstream commit 7854ea0e408d7f2e8faaada1773f3ddf9cb538f5 ]
+[ Upstream commit 6ec0d7527c4287369b52df3bcefd21a0c4fb2b7c ]
 
-This func ptr here is normally static allocation, but gsp r535
-uses a dynamic pointer, so we need to handle that better.
+As we know we cannot send the datagram (state can be set to LLCP_CLOSED
+by nfc_llcp_socket_release()), there is no need to proceed further.
 
-This fixes a crash with GSP when you use config=disp=0 to avoid
-disp problems.
+Thus, bail out early from llcp_sock_sendmsg().
 
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231222043308.3090089-4-airlied@gmail.com
+Signed-off-by: Siddh Raman Pant <code@siddh.me>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Suman Ghosh <sumang@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/engine/disp/base.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/nfc/llcp_sock.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/disp/base.c b/drivers/gpu/drm/nouveau/nvkm/engine/disp/base.c
-index 65c99d948b686..ae47eabd5d0bd 100644
---- a/drivers/gpu/drm/nouveau/nvkm/engine/disp/base.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/engine/disp/base.c
-@@ -359,7 +359,7 @@ nvkm_disp_oneinit(struct nvkm_engine *engine)
- 	if (ret)
- 		return ret;
+diff --git a/net/nfc/llcp_sock.c b/net/nfc/llcp_sock.c
+index 6e1fba2084930..fd643a1d39bc6 100644
+--- a/net/nfc/llcp_sock.c
++++ b/net/nfc/llcp_sock.c
+@@ -798,6 +798,11 @@ static int llcp_sock_sendmsg(struct socket *sock, struct msghdr *msg,
+ 	}
  
--	if (disp->func->oneinit) {
-+	if (disp->func && disp->func->oneinit) {
- 		ret = disp->func->oneinit(disp);
- 		if (ret)
- 			return ret;
-@@ -461,8 +461,10 @@ nvkm_disp_new_(const struct nvkm_disp_func *func, struct nvkm_device *device,
- 	spin_lock_init(&disp->client.lock);
+ 	if (sk->sk_type == SOCK_DGRAM) {
++		if (sk->sk_state != LLCP_BOUND) {
++			release_sock(sk);
++			return -ENOTCONN;
++		}
++
+ 		DECLARE_SOCKADDR(struct sockaddr_nfc_llcp *, addr,
+ 				 msg->msg_name);
  
- 	ret = nvkm_engine_ctor(&nvkm_disp, device, type, inst, true, &disp->engine);
--	if (ret)
-+	if (ret) {
-+		disp->func = NULL;
- 		return ret;
-+	}
- 
- 	if (func->super) {
- 		disp->super.wq = create_singlethread_workqueue("nvkm-disp");
 -- 
 2.43.0
 
