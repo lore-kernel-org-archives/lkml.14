@@ -1,32 +1,31 @@
 Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
 	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA1155761
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 17:34:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5A15576A;
+	Mon,  8 Jan 2024 17:34:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="ALPPqpBy"
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="m5ajLXJk"
 Received: from [192.168.1.54] (unknown [85.30.205.207])
-	by mail.ispras.ru (Postfix) with ESMTPSA id D5F3F40F1DCA;
-	Mon,  8 Jan 2024 17:34:33 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru D5F3F40F1DCA
+	by mail.ispras.ru (Postfix) with ESMTPSA id 286DF40F1DEB;
+	Mon,  8 Jan 2024 17:34:35 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 286DF40F1DEB
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1704735274;
-	bh=fG72HQNS24TUTLjRsu7kBiaznvvqKulgAlLMRyjQxe8=;
+	s=default; t=1704735275;
+	bh=hRWuIE+2qFwu/n+vsFXIu1/VBVgfBej0lvtPdg99qfs=;
 	h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-	b=ALPPqpByHuD3DwL9WdjL0Tp6DdeOYaqiR4ULsPJqmzr+3U9EXcU+Pjz2eWrhnC+/V
-	 K/eW3kz2YtytycnBRvEyZFrtOWrgrATWnIHQ0LUunwbQkKZeGP7GE9QOKWdop19ext
-	 ZRfJsdv+VdvIjsv7uodIr2Q0YP83IZhWJx9VdDn4=
-Subject: Re: [PATCH 2/2] procfs.c: Increasing array size
-To: Andrey Shumilin <shum.sdl@nppct.ru>,
- Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
- "lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>
-References: <20231116070536.38122-1-shum.sdl@nppct.ru>
+	b=m5ajLXJk2I7FoFz07Q7nQtLAg9Q/ozw+ilu15EXO/B2u6a8Pr8ygdcZ5hyJeu/Il8
+	 +GWMZW/ucsbpsxOb6kDBQXZRXWoS10dJhiYGJYJtip0UR/DfC/pBJZr8BVoith1o1z
+	 yKuvp1wmHWlp6JppHO5aNHTahmvECuquP8M3yc9c=
+Subject: Re: [PATCH] iphase: Adding a null pointer check
+To: Andrey Shumilin <shum.sdl@nppct.ru>, 3chas3@gmail.com
+Cc: linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
+References: <20231107123600.14529-1-shum.sdl@nppct.ru>
 From: Alexey Khoroshilov <khoroshilov@ispras.ru>
-Message-ID: <c238ee65-30fb-a5b4-cff7-9adc8f12971c@ispras.ru>
-Date: Mon, 8 Jan 2024 19:56:44 +0300
+Message-ID: <d8884b3c-bef4-7042-934b-0bcdb4347b97@ispras.ru>
+Date: Mon, 8 Jan 2024 20:28:31 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 Precedence: bulk
@@ -35,50 +34,61 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20231116070536.38122-1-shum.sdl@nppct.ru>
+In-Reply-To: <20231107123600.14529-1-shum.sdl@nppct.ru>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 
-On 16.11.2023 10:05, Andrey Shumilin wrote:
-> The maximum size in bytes of the port->base and port->base_hi
-> variables is 20 bytes per variable, since they are copied in
-> decimal notation. Two more characters are \t and \n.
-> A maximum of 42 bytes can be written to a buffer variable.
+Proposal for subject:
 
-I would update subject and description like that:
-
-paport: Fix potential buffer overflow in do_hardware_base_addr()
-
-The maximum size after expansion for the "%lu\t%lu\n"
-is 20+1+20+1+1 = 43 bytes, while buffer is of size 20 bytes.
-So buffer overflow may happen.
+atm: iphase: Move check for NULL before derefence in get_desc()
 
 
-Otherwise, looks good to me.
+On 07.11.2023 15:36, Andrey Shumilin wrote:
+> The pointer <dev->desc_tbl[i].iavcc> is dereferenced on line 195.
+> Further in the code, it is checked for null on line 204.
+> It is proposed to add a check before dereferencing the pointer.
 
-Reviewed-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
+Line numbers in commit messages are not welcome since they are subject
+for change and a reader of the message likely has other code at that
+lines in his version of the file.
 
-
+> 
 > Found by Linux Verification Center (linuxtesting.org) with SVACE.
 > 
 > Signed-off-by: Andrey Shumilin <shum.sdl@nppct.ru>
 > ---
->  drivers/parport/procfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/atm/iphase.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> diff --git a/drivers/parport/procfs.c b/drivers/parport/procfs.c
-> index bd388560ed59..9b894f7cb581 100644
-> --- a/drivers/parport/procfs.c
-> +++ b/drivers/parport/procfs.c
-> @@ -117,7 +117,7 @@ static int do_hardware_base_addr(struct ctl_table *table, int write,
->  				 void *result, size_t *lenp, loff_t *ppos)
->  {
->  	struct parport *port = (struct parport *)table->extra1;
-> -	char buffer[20];
-> +	char buffer[44];
->  	int len = 0;
->  
->  	if (*ppos) {
+> diff --git a/drivers/atm/iphase.c b/drivers/atm/iphase.c
+> index 324148686953..596422fbfacc 100644
+> --- a/drivers/atm/iphase.c
+> +++ b/drivers/atm/iphase.c
+> @@ -192,6 +192,11 @@ static u16 get_desc (IADEV *dev, struct ia_vcc *iavcc) {
+>             i++;
+>             continue;
+>          }
+> +       if (!(iavcc_r = dev->desc_tbl[i].iavcc)) {
+> +	   printk("Fatal err, desc table vcc or skb is NULL\n");
+> +	   i++;
+> +	   continue;
+> +	}
+
+Error message should be fixed, skb is not check for NULL here.
+
+>          ltimeout = dev->desc_tbl[i].iavcc->ltimeout; 
+>          delta = jiffies - dev->desc_tbl[i].timestamp;
+>          if (delta >= ltimeout) {
 > 
 
+
+>           if (!dev->desc_tbl[i].txskb || !(iavcc_r =
+dev->desc_tbl[i].iavcc))
+>              printk("Fatal err, desc table vcc or skb is NULL\n");
+
+
+The existing check should be fixed to check for skb only.
+
+--
+Alexey
