@@ -1,146 +1,72 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from mail.subdimension.ro (skycaves.subdimension.ro [172.104.132.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F382513ACF;
-	Mon,  8 Jan 2024 10:29:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
-Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id B1C21A155C;
-	Mon,  8 Jan 2024 10:21:14 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf19.hostedemail.com (Postfix) with ESMTPA id C8CE620026;
-	Mon,  8 Jan 2024 10:21:11 +0000 (UTC)
-Message-ID: <486973921f89f70bcc5d42501eeca3fd105be2c4.camel@perches.com>
-Subject: Re: [HID Patchsets for Samsung driver v2 2/6] HID: Samsung : Fix
- the checkpatch complain.
-From: Joe Perches <joe@perches.com>
-To: Sandeep C S <sandeep.cs@samsung.com>, Jiri Kosina <jikos@kernel.org>, 
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: gaudium.lee@samsung.com, ih0923.kim@samsung.com,
- suhyun_.kim@samsung.com,  jitender.s21@samsung.com, junwan.cho@samsung.com,
- linux-input@vger.kernel.org,  linux-kernel@vger.kernel.org
-Date: Mon, 08 Jan 2024 02:21:10 -0800
-In-Reply-To: <20240108091917.1552013-3-sandeep.cs@samsung.com>
-References: <20240108091917.1552013-1-sandeep.cs@samsung.com>
-	 <CGME20240108091959epcas5p2559b779424e2fb7c7e268d1b24612b4f@epcas5p2.samsung.com>
-	 <20240108091917.1552013-3-sandeep.cs@samsung.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F9F13FF0;
+	Mon,  8 Jan 2024 10:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=subdimension.ro
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=subdimension.ro
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=subdimension.ro header.i=@subdimension.ro header.b="rKinlehF"
+Received: from localhost.localdomain (unknown [188.24.94.216])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.subdimension.ro (Postfix) with ESMTPSA id C7DFA28B53B;
+	Mon,  8 Jan 2024 10:32:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=subdimension.ro;
+	s=skycaves; t=1704709953;
+	bh=xXbmxn5INj/J1TQWPOKYjsTvyEdW1MHuOlWjpU57nV0=;
+	h=From:To:Cc:Subject:Date;
+	b=rKinlehFkpTpkSle87AdgEryyN6wAzMEKKKAOmNJ0meHRa6NtWfGxYb9XXZAnd6KE
+	 ArlCYP6UVFSGU+P1TnEFvxOUXBh5jJm/wt3RQeKCIzNkRmnXT1vjeHOZx4ufY9zwn1
+	 7P5omYDwfOD9KqE+HJ5AQ1h5D9lU1AEOPfuQC9iA=
+From: Petre Rodan <petre.rodan@subdimension.ro>
+To: linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Petre Rodan <petre.rodan@subdimension.ro>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>
+Subject: [PATCH 1/1] tools: iio: replace seekdir() in iio_generic_buffer
+Date: Mon,  8 Jan 2024 12:32:20 +0200
+Message-ID: <20240108103224.3986-1-petre.rodan@subdimension.ro>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: C8CE620026
-X-Stat-Signature: ohyahdhggxcq6imyoria9os1j15h5bc3
-X-Rspamd-Server: rspamout01
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1/53bmHUQaLyx7q7JMJOiCZyDhi2zgUNEI=
-X-HE-Tag: 1704709271-838445
-X-HE-Meta: U2FsdGVkX196M2AdNXOPLo9uz+4s8/IoxjHpXeHLkLeCQAmORr8bhzTvACQY+KOVz3zekDoNImo57EunBEU513qa2RTm3p9lWfSkK457FybOEmGQRcTUp8XTy/gf6xQugTubj1iyTK4Wh7MxgstD6r3mvOj5tLFPjiEEXGTeNPFF3Cj7AAy94fa+ybN/8GYAfJTKHWbtOxRJLcbc1Bzg7jz2BoA47b6ZhoJn4s7ejKhxZraYWQBUAZonO5lYKtreZS45+VtX8A6b7vfJTCxmAX9h/sZTSI6tkxtYQvGBv2jP3Pr8L86mVAcbIZgpmZ56
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2024-01-08 at 14:49 +0530, Sandeep C S wrote:
-> Warning found by checkpatch.pl script.
-[]
-> diff --git a/drivers/hid/hid-samsung.c b/drivers/hid/hid-samsung.c
-[]
-> @@ -67,20 +67,17 @@ static __u8 *samsung_irda_report_fixup(struct hid_dev=
-ice *hdev, __u8 *rdesc,
->  		rdesc[178] =3D 0x08;
->  		rdesc[180] =3D 0x06;
->  		rdesc[182] =3D 0x42;
-> -	} else
-> -	if (*rsize =3D=3D 203 && rdesc[192] =3D=3D 0x15 && rdesc[193] =3D=3D 0x=
-0 &&
-> +	} else if (*rsize =3D=3D 203 && rdesc[192] =3D=3D 0x15 && rdesc[193] =
-=3D=3D 0x0 &&
->  			rdesc[194] =3D=3D 0x25 && rdesc[195] =3D=3D 0x12) {
->  		samsung_irda_dev_trace(hdev, 203);
->  		rdesc[193] =3D 0x1;
->  		rdesc[195] =3D 0xf;
-> -	} else
-> -	if (*rsize =3D=3D 135 && rdesc[124] =3D=3D 0x15 && rdesc[125] =3D=3D 0x=
-0 &&
-> +	} else if (*rsize =3D=3D 135 && rdesc[124] =3D=3D 0x15 && rdesc[125] =
-=3D=3D 0x0 &&
->  			rdesc[126] =3D=3D 0x25 && rdesc[127] =3D=3D 0x11) {
->  		samsung_irda_dev_trace(hdev, 135);
->  		rdesc[125] =3D 0x1;
->  		rdesc[127] =3D 0xe;
-> -	} else
-> -	if (*rsize =3D=3D 171 && rdesc[160] =3D=3D 0x15 && rdesc[161] =3D=3D 0x=
-0 &&
-> +	} else if (*rsize =3D=3D 171 && rdesc[160] =3D=3D 0x15 && rdesc[161] =
-=3D=3D 0x0 &&
->  			rdesc[162] =3D=3D 0x25 && rdesc[163] =3D=3D 0x01) {
->  		samsung_irda_dev_trace(hdev, 171);
->  		rdesc[161] =3D 0x1;
+Replace seekdir() with rewinddir() in order to fix a localized glibc bug.
 
-For this block, I think a rewrite using memcmp would be clearer.
-Something like:
+One of the glibc patches that stable Gentoo is using causes an improper
+directory stream positioning bug on 32bit arm. That in turn ends up as a
+floating point exception in iio_generic_buffer.
+
+The attached patch provides a fix by using an equivalent function which
+should not cause trouble for other distros.
+
+https://sourceware.org/bugzilla/show_bug.cgi?id=31212
+
+Signed-off-by: Petre Rodan <petre.rodan@subdimension.ro>
 ---
- drivers/hid/hid-samsung.c | 34 +++++++++++++++-------------------
- 1 file changed, 15 insertions(+), 19 deletions(-)
+ tools/iio/iio_utils.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-samsung.c b/drivers/hid/hid-samsung.c
-index cf5992e970940..cd84fb5e68f69 100644
---- a/drivers/hid/hid-samsung.c
-+++ b/drivers/hid/hid-samsung.c
-@@ -58,33 +58,29 @@ static inline void samsung_irda_dev_trace(struct hid_de=
-vice *hdev,
- static __u8 *samsung_irda_report_fixup(struct hid_device *hdev, __u8 *rdes=
-c,
- 		unsigned int *rsize)
- {
--	if (*rsize =3D=3D 184 && rdesc[175] =3D=3D 0x25 && rdesc[176] =3D=3D 0x40=
- &&
--			rdesc[177] =3D=3D 0x75 && rdesc[178] =3D=3D 0x30 &&
--			rdesc[179] =3D=3D 0x95 && rdesc[180] =3D=3D 0x01 &&
--			rdesc[182] =3D=3D 0x40) {
-+	if (*rsize =3D=3D 184 &&
-+	    !memcmp(&rdesc[175], "\x25\x40\x75\x30\x95\x01", 6) &&
-+	    rdesc[182] =3D=3D 0x40) {
- 		samsung_irda_dev_trace(hdev, 184);
- 		rdesc[176] =3D 0xff;
- 		rdesc[178] =3D 0x08;
- 		rdesc[180] =3D 0x06;
- 		rdesc[182] =3D 0x42;
--	} else
--	if (*rsize =3D=3D 203 && rdesc[192] =3D=3D 0x15 && rdesc[193] =3D=3D 0x0 =
-&&
--			rdesc[194] =3D=3D 0x25 && rdesc[195] =3D=3D 0x12) {
-+	} else if (*rsize =3D=3D 203 &&
-+		   !memcmp(&rdesc[192], "\x15\x00\x25\x12", 4)) {
- 		samsung_irda_dev_trace(hdev, 203);
--		rdesc[193] =3D 0x1;
--		rdesc[195] =3D 0xf;
--	} else
--	if (*rsize =3D=3D 135 && rdesc[124] =3D=3D 0x15 && rdesc[125] =3D=3D 0x0 =
-&&
--			rdesc[126] =3D=3D 0x25 && rdesc[127] =3D=3D 0x11) {
-+		rdesc[193] =3D 0x01;
-+		rdesc[195] =3D 0x0f;
-+	} else if (*rsize =3D=3D 135 &&
-+		   !memcmp(&rdesc[124], "\x15\x00\x25\x11", 4)) {
- 		samsung_irda_dev_trace(hdev, 135);
--		rdesc[125] =3D 0x1;
--		rdesc[127] =3D 0xe;
--	} else
--	if (*rsize =3D=3D 171 && rdesc[160] =3D=3D 0x15 && rdesc[161] =3D=3D 0x0 =
-&&
--			rdesc[162] =3D=3D 0x25 && rdesc[163] =3D=3D 0x01) {
-+		rdesc[125] =3D 0x01;
-+		rdesc[127] =3D 0x0e;
-+	} else if (*rsize =3D=3D 171 &&
-+		   !memcmp(&rdesc[160], "\x15\x00\x25\x01", 4)) {
- 		samsung_irda_dev_trace(hdev, 171);
--		rdesc[161] =3D 0x1;
--		rdesc[163] =3D 0x3;
-+		rdesc[161] =3D 0x01;
-+		rdesc[163] =3D 0x03;
+diff --git a/tools/iio/iio_utils.c b/tools/iio/iio_utils.c
+index 6a00a6eecaef..c5c5082cb24e 100644
+--- a/tools/iio/iio_utils.c
++++ b/tools/iio/iio_utils.c
+@@ -376,7 +376,7 @@ int build_channel_array(const char *device_dir, int buffer_idx,
+ 		goto error_close_dir;
  	}
- 	return rdesc;
- }
+
+-	seekdir(dp, 0);
++	rewinddir(dp);
+ 	while (ent = readdir(dp), ent) {
+ 		if (strcmp(ent->d_name + strlen(ent->d_name) - strlen("_en"),
+ 			   "_en") == 0) {
+--
+2.41.0
 
