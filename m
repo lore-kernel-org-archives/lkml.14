@@ -1,207 +1,137 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9305B79D8
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 06:08:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D6379DE;
+	Mon,  8 Jan 2024 06:16:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MBf0z4dd"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-6dbbc637df7so1263990a34.2
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jan 2024 22:08:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ehxx9LLd"
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2045bedb806so1671584fac.3;
+        Sun, 07 Jan 2024 22:16:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704694081; x=1705298881; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eMSqJnJNR3cyrW6XV2nDwhDWgR56IWMyrQ77a78UbYg=;
-        b=MBf0z4ddn4LKHlPYq2RVn8p6E7sppMTwb4yMEOgyNZWZzvn+FDE+HIlqkl9Q/NA76e
-         3xN1GfUoKZ3Db8zbQ2/Istt1pjaiB8/CUfWSAlVHEgoJwgH8+3c8YEbrB3kX7LJk3R85
-         0ysXKJqVywWEJpuSrdu9X0tLsSo8ikScCg4jrzBSpFo2KmIaOXXxbw0yfofUaZ5rBPS5
-         HqXLKOqR+PVfWOU+mjPujN1EbDm6KU7lTgxameOhaaxl7B/9G/9lwk513FCyx7pIsWf/
-         MlK8P85fRYKNfsmx0//hjtrF+jQOq5N7j21r+rFj0ntbMIPW/AmhSHvIddpFvjABSEwc
-         jBHQ==
+        d=gmail.com; s=20230601; t=1704694609; x=1705299409; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=R96nFtUAHcvK+Syyw7DXDD2f4NflWNpk/wdXNthWbzI=;
+        b=ehxx9LLdjRFHfsVMpsrdenN9NZuOs8NJSmXFuz8thZMoWg6dKQT59fOL1MBwP1WA/y
+         M+8LpcdG4u1r3jxDL9m7mqvz61GAvZ2LuubxndkmZhbkSanrt2LUWIwXuMMYn7k1ImWh
+         hapqsRWHIOkne3GtXjRZFNEc0kLRCBqWahJ51jr7g2hxmIDaaNq08uEWd5rtJlG8ZeG7
+         jP6o+tf8ow879kpDJ4Gp+qCIrlFHFyJKJ9jKtUwtG/ZgUypqWjdVbzqHALqOyl+h3g0F
+         XUyGFvTvamLWpsav6AO41df+Mep2FnQFZgdrAomh/WfQjaBdMEmES+vBNotfvPRtpHJa
+         bZfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704694081; x=1705298881;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eMSqJnJNR3cyrW6XV2nDwhDWgR56IWMyrQ77a78UbYg=;
-        b=AHVNzNNJyT6YNVzU2joBZNd60UbqAHSfZtntVOmMboTKNZzXssu9gw8G5Oo6hk8+Xm
-         pyRBcrS6CEspKCTKHAiE9itkDiTQTmXqtwcuR/btUALRZnkcWeTVGFI4+52OB4vgGb8T
-         OB5ho0qklE0UOFQWLgkgsQH4CEjF4stwjYpLE35PEt2w/DjnhDAHgU485RIcARROFhB/
-         AxPrHgSlm6hnxzWYGfz84K1O/K5ySv/59johp/nuxxasq0LTnbbIZ/HKhHqZz+P9i5LO
-         s3/hoQ8oJk4uXwWlN13nWiIbvNUmDaEziap9kwQUMd/vNGkmHJJnVvrDHjeWhxz37lpj
-         iqZw==
-X-Gm-Message-State: AOJu0YwvdFnT/a9zUy7ht2wXzQ6cB+WaYVTXMQtzi1DYKt2gGI/LX0Pa
-	sJ66H7RNo7VDoV0tZtp4lqkF1uT4zbgHDQ==
-X-Google-Smtp-Source: AGHT+IGfh/w/5Ie/jBa2rokFbGNWowia4g9QDgw0B+11BzOtzrq/dSgWB4nrSjrebygsSQphb37jkg==
-X-Received: by 2002:a05:6358:2917:b0:174:f7a9:bece with SMTP id y23-20020a056358291700b00174f7a9becemr2846512rwb.5.1704694081510;
-        Sun, 07 Jan 2024 22:08:01 -0800 (PST)
-Received: from mgyee-VirtualBox ([47.152.33.114])
-        by smtp.gmail.com with ESMTPSA id x68-20020a636347000000b005ce6b79ab6asm5293141pgb.82.2024.01.07.22.08.00
+        d=1e100.net; s=20230601; t=1704694609; x=1705299409;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=R96nFtUAHcvK+Syyw7DXDD2f4NflWNpk/wdXNthWbzI=;
+        b=S1gj4k8adxtfZ5AF16vVxzSoYv14vpp4X9+3xeFhjOvQRmUe7VZeDtSM5G0RYcVf63
+         QodtB34Tel/PiedzmsxpfDI8NVOpHcY3Q3ZhIF3LChboxw7OFWTe4t1DnT1V8kYVyykj
+         VlhKcJpBSgoENXAkp1Pra2Myyinl2JeVmC7S/qAqaO3612xuBO+BrWziSTzrdzgFs4ol
+         krPSWnrj/tdG0HWsEUGtzmSS+iKgXTR3guxcYDJtSMuQHKlEVKJH+QvpUNtn3XuS9tL9
+         65tRVnL67pE2GTgsu632xy0MHLKSQIITVRUsnGL5EwLKYv3jsxGiWqE0QvDaygLZC6Az
+         nwQw==
+X-Gm-Message-State: AOJu0Yzo6ijRQYkYE79yJ9/6sGxoklrT2+RhoPDPjzCtyiV9lOuN1u/Z
+	sWGASkJGdvSW3SiYjv23Mkc=
+X-Google-Smtp-Source: AGHT+IGM41Cgc2Loe8AEzfxl/LX42E5QQD9J+La3nidUPkLnPHcx80eiqLpXgjHIxCPMBHCwZclhug==
+X-Received: by 2002:a05:6358:5384:b0:175:67e3:f9be with SMTP id z4-20020a056358538400b0017567e3f9bemr3641697rwe.31.1704694608850;
+        Sun, 07 Jan 2024 22:16:48 -0800 (PST)
+Received: from google.com ([2620:15c:9d:2:7a4a:2478:1813:e8c2])
+        by smtp.gmail.com with ESMTPSA id nc6-20020a17090b37c600b0028649b84907sm5464921pjb.16.2024.01.07.22.16.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jan 2024 22:08:01 -0800 (PST)
-From: Matthias Yee <mgyee9@gmail.com>
-To: gregkh@linuxfoundation.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Matthias Yee <mgyee9@gmail.com>
-Subject: [PATCH] staging: vt6655: fixed check alignment of open parenthesis in card.c
-Date: Sun,  7 Jan 2024 22:02:07 -0800
-Message-Id: <20240108060207.92348-1-mgyee9@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Sun, 07 Jan 2024 22:16:48 -0800 (PST)
+Date: Sun, 7 Jan 2024 22:16:45 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH] asm-generic: make sparse happy with odd-sized
+ put_unaligned_*()
+Message-ID: <ZZuTTRCUFqWzA1y-@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Fixed a coding style issue.
+__put_unaligned_be24() and friends use implicit casts to convert
+larger-sized data to bytes, which trips sparse truncation warnings when
+the argument is a constant:
 
-Signed-off-by: Matthias Yee <mgyee9@gmail.com>
+  CC [M]  drivers/input/touchscreen/hynitron_cstxxx.o
+  CHECK   drivers/input/touchscreen/hynitron_cstxxx.c
+drivers/input/touchscreen/hynitron_cstxxx.c: note: in included file (through arch/x86/include/generated/asm/unaligned.h):
+./include/asm-generic/unaligned.h:119:16: warning: cast truncates bits from constant value (aa01a0 becomes a0)
+./include/asm-generic/unaligned.h:120:20: warning: cast truncates bits from constant value (aa01 becomes 1)
+./include/asm-generic/unaligned.h:119:16: warning: cast truncates bits from constant value (ab00d0 becomes d0)
+./include/asm-generic/unaligned.h:120:20: warning: cast truncates bits from constant value (ab00 becomes 0)
+
+To avoid this let's mask off upper bits explicitly, the resulting code
+should be exactly the same, but it will keep sparse happy.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Closes: https://lore.kernel.org/oe-kbuild-all/202401070147.gqwVulOn-lkp@intel.com/
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/staging/vt6655/card.c | 74 +++++++++++++++++------------------
- 1 file changed, 37 insertions(+), 37 deletions(-)
+ include/asm-generic/unaligned.h | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/staging/vt6655/card.c b/drivers/staging/vt6655/card.c
-index 36183f2a64c1..688c870d89bc 100644
---- a/drivers/staging/vt6655/card.c
-+++ b/drivers/staging/vt6655/card.c
-@@ -81,9 +81,9 @@ static void vt6655_mac_set_bb_type(void __iomem *iobase, u32 mask)
-  * Return Value: none
-  */
- static void calculate_ofdmr_parameter(unsigned char rate,
--				       u8 bb_type,
--				       unsigned char *tx_rate,
--				       unsigned char *rsv_time)
-+				      u8 bb_type,
-+				      unsigned char *tx_rate,
-+				      unsigned char *rsv_time)
- {
- 	switch (rate) {
- 	case RATE_6M:
-@@ -288,7 +288,7 @@ bool card_set_phy_parameter(struct vnt_private *priv, u8 bb_type)
-  * Return Value: none
-  */
- bool card_update_tsf(struct vnt_private *priv, unsigned char rx_rate,
--		    u64 bss_timestamp)
-+		     u64 bss_timestamp)
- {
- 	u64 local_tsf;
- 	u64 tsf_offset = 0;
-@@ -297,7 +297,7 @@ bool card_update_tsf(struct vnt_private *priv, unsigned char rx_rate,
+diff --git a/include/asm-generic/unaligned.h b/include/asm-generic/unaligned.h
+index 699650f81970..a84c64e5f11e 100644
+--- a/include/asm-generic/unaligned.h
++++ b/include/asm-generic/unaligned.h
+@@ -104,9 +104,9 @@ static inline u32 get_unaligned_le24(const void *p)
  
- 	if (bss_timestamp != local_tsf) {
- 		tsf_offset = card_get_tsf_offset(rx_rate, bss_timestamp,
--						local_tsf);
-+						 local_tsf);
- 		/* adjust TSF, HW's TSF add TSF Offset reg */
- 		tsf_offset =  le64_to_cpu(tsf_offset);
- 		iowrite32((u32)tsf_offset, priv->port_offset + MAC_REG_TSFOFST);
-@@ -321,7 +321,7 @@ bool card_update_tsf(struct vnt_private *priv, unsigned char rx_rate,
-  * Return Value: true if succeed; otherwise false
-  */
- bool card_set_beacon_period(struct vnt_private *priv,
--			  unsigned short beacon_interval)
-+			    unsigned short beacon_interval)
+ static inline void __put_unaligned_be24(const u32 val, u8 *p)
  {
- 	u64 next_tbtt;
+-	*p++ = val >> 16;
+-	*p++ = val >> 8;
+-	*p++ = val;
++	*p++ = (val >> 16) & 0xff;
++	*p++ = (val >> 8) & 0xff;
++	*p++ = val & 0xff;
+ }
  
-@@ -586,61 +586,61 @@ void card_set_rspinf(struct vnt_private *priv, u8 bb_type)
+ static inline void put_unaligned_be24(const u32 val, void *p)
+@@ -116,9 +116,9 @@ static inline void put_unaligned_be24(const u32 val, void *p)
  
- 	/* RSPINF_a_6 */
- 	calculate_ofdmr_parameter(RATE_6M,
--				   bb_type,
--				   &byTxRate,
--				   &byRsvTime);
-+				  bb_type,
-+				  &byTxRate,
-+				  &byRsvTime);
- 	iowrite16(MAKEWORD(byTxRate, byRsvTime), priv->port_offset + MAC_REG_RSPINF_A_6);
- 	/* RSPINF_a_9 */
- 	calculate_ofdmr_parameter(RATE_9M,
--				   bb_type,
--				   &byTxRate,
--				   &byRsvTime);
-+				  bb_type,
-+				  &byTxRate,
-+				  &byRsvTime);
- 	iowrite16(MAKEWORD(byTxRate, byRsvTime), priv->port_offset + MAC_REG_RSPINF_A_9);
- 	/* RSPINF_a_12 */
- 	calculate_ofdmr_parameter(RATE_12M,
--				   bb_type,
--				   &byTxRate,
--				   &byRsvTime);
-+				  bb_type,
-+				  &byTxRate,
-+				  &byRsvTime);
- 	iowrite16(MAKEWORD(byTxRate, byRsvTime), priv->port_offset + MAC_REG_RSPINF_A_12);
- 	/* RSPINF_a_18 */
- 	calculate_ofdmr_parameter(RATE_18M,
--				   bb_type,
--				   &byTxRate,
--				   &byRsvTime);
-+				  bb_type,
-+				  &byTxRate,
-+				  &byRsvTime);
- 	iowrite16(MAKEWORD(byTxRate, byRsvTime), priv->port_offset + MAC_REG_RSPINF_A_18);
- 	/* RSPINF_a_24 */
- 	calculate_ofdmr_parameter(RATE_24M,
--				   bb_type,
--				   &byTxRate,
--				   &byRsvTime);
-+				  bb_type,
-+				  &byTxRate,
-+				  &byRsvTime);
- 	iowrite16(MAKEWORD(byTxRate, byRsvTime), priv->port_offset + MAC_REG_RSPINF_A_24);
- 	/* RSPINF_a_36 */
- 	calculate_ofdmr_parameter(CARDwGetOFDMControlRate((void *)priv,
--							   RATE_36M),
--				   bb_type,
--				   &byTxRate,
--				   &byRsvTime);
-+							  RATE_36M),
-+				  bb_type,
-+				  &byTxRate,
-+				  &byRsvTime);
- 	iowrite16(MAKEWORD(byTxRate, byRsvTime), priv->port_offset + MAC_REG_RSPINF_A_36);
- 	/* RSPINF_a_48 */
- 	calculate_ofdmr_parameter(CARDwGetOFDMControlRate((void *)priv,
--							   RATE_48M),
--				   bb_type,
--				   &byTxRate,
--				   &byRsvTime);
-+							  RATE_48M),
-+				  bb_type,
-+				  &byTxRate,
-+				  &byRsvTime);
- 	iowrite16(MAKEWORD(byTxRate, byRsvTime), priv->port_offset + MAC_REG_RSPINF_A_48);
- 	/* RSPINF_a_54 */
- 	calculate_ofdmr_parameter(CARDwGetOFDMControlRate((void *)priv,
--							   RATE_54M),
--				   bb_type,
--				   &byTxRate,
--				   &byRsvTime);
-+							  RATE_54M),
-+				  bb_type,
-+				  &byTxRate,
-+				  &byRsvTime);
- 	iowrite16(MAKEWORD(byTxRate, byRsvTime), priv->port_offset + MAC_REG_RSPINF_A_54);
- 	/* RSPINF_a_72 */
- 	calculate_ofdmr_parameter(CARDwGetOFDMControlRate((void *)priv,
--							   RATE_54M),
--				   bb_type,
--				   &byTxRate,
--				   &byRsvTime);
-+							  RATE_54M),
-+				  bb_type,
-+				  &byTxRate,
-+				  &byRsvTime);
- 	iowrite16(MAKEWORD(byTxRate, byRsvTime), priv->port_offset + MAC_REG_RSPINF_A_72);
- 	/* Set to Page0 */
- 	VT6655_MAC_SELECT_PAGE0(priv->port_offset);
+ static inline void __put_unaligned_le24(const u32 val, u8 *p)
+ {
+-	*p++ = val;
+-	*p++ = val >> 8;
+-	*p++ = val >> 16;
++	*p++ = val & 0xff;
++	*p++ = (val >> 8) & 0xff;
++	*p++ = (val >> 16) & 0xff;
+ }
+ 
+ static inline void put_unaligned_le24(const u32 val, void *p)
+@@ -128,12 +128,12 @@ static inline void put_unaligned_le24(const u32 val, void *p)
+ 
+ static inline void __put_unaligned_be48(const u64 val, u8 *p)
+ {
+-	*p++ = val >> 40;
+-	*p++ = val >> 32;
+-	*p++ = val >> 24;
+-	*p++ = val >> 16;
+-	*p++ = val >> 8;
+-	*p++ = val;
++	*p++ = (val >> 40) & 0xff;
++	*p++ = (val >> 32) & 0xff;
++	*p++ = (val >> 24) & 0xff;
++	*p++ = (val >> 16) & 0xff;
++	*p++ = (val >> 8) & 0xff;
++	*p++ = val & 0xff;
+ }
+ 
+ static inline void put_unaligned_be48(const u64 val, void *p)
 -- 
-2.34.1
+2.43.0.195.gebba966016-goog
 
+
+-- 
+Dmitry
