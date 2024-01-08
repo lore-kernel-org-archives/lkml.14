@@ -1,293 +1,192 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2048.outbound.protection.partner.outlook.cn [139.219.17.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C705714AAE;
-	Mon,  8 Jan 2024 11:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Lf/gwVK9"
-Received: from [192.168.88.20] (91-154-35-128.elisa-laajakaista.fi [91.154.35.128])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 73E24480;
-	Mon,  8 Jan 2024 12:37:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1704713849;
-	bh=Apu0LcX+HI1x1I8B+6F1DY6EFGKpI+VtkB40HG3o5+Y=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=Lf/gwVK9PQdCt/2A5xkMzEai0YrJFJuO23QFB9mgrTTJWdjDExgPFmm7WORZQ7bDy
-	 0PwFlyTcW1v2qMQnRvFRzuw77fhp2aavHnyXyZIfwi+0LqDNYXcyTNV8OKsU9Cvqpa
-	 D/XQeKzWfmreGzNqju1VbWbQQ+rLI7O7KZPO3Qvk=
-Message-ID: <83520f6d-15b5-412a-adb4-e95daf519bf2@ideasonboard.com>
-Date: Mon, 8 Jan 2024 13:38:31 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F186C224E9;
+	Mon,  8 Jan 2024 11:39:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Fnll+4r0l1nTz0/+ZOCrXR9lHwxEXMt+zIkUynhmrcLQkzEvuY2upGaGwYH1e7IMSBcBfmBV9rST05Rfe/GnUL8B+Bxb5YXLZ1LPJdzFDuGUOCxax+xSoMxdLDWABbiO+PlS4Qzjpf+idf+tBefCh9Tm/vbelChcLzCH6QJpAXgpFgoHyAj9UuZQsoa8+dPd05SmDdW+KhvFUy4cv071kkmMRxcIXoSz9zXzArSmSDLfvP2lPtEucafYs12M5B1ldARjum+5lqurCrZjjFEqWjLC/KdVVPTWdunCRsQ105VKvQlBLB1YVJvJph/YhTRWjaMKN34bcsyJUHLQ/YwgxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Pc2T6SbVvFNGAc7jANlqkHZ/EYw1YXpAsFWAuojjcfk=;
+ b=nEBWNET509afv5ZYoZzR+tMBQPNby11dT4b+qDRZKul9Headx+bGwNbuG3DwzQq73SPTDmmFcXGovZbT5P9Y03iK23bNfGpOI/v9zh+NWFZ4K3cESBvBWPX3oxZTaVThyPkSf9yb3iDdV5eRdrN3IhCtn9kiAXy6tqt7/ImTXPMu87D7kqJSKayEyTLxrJHN5zQfZzRtB7wYgSr8l/lMzgoGRqTd63JSvl6sGu38T+qTpKZrtRcEgCvP+qJGt8il+65ukQVG97f/TO9wNEeuYcejaNzccg8/2u7Y+8qLZZMHNHZXEbQ3QzsMqSjy2DV7Z6bpJRbt0fmw/0RIvNqu7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::15) by SHXPR01MB0797.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:26::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.32; Mon, 8 Jan
+ 2024 11:06:36 +0000
+Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+ ([fe80::e6aa:baea:fd8c:4cd2]) by
+ SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn ([fe80::e6aa:baea:fd8c:4cd2%7])
+ with mapi id 15.20.7135.032; Mon, 8 Jan 2024 11:06:36 +0000
+From: Minda Chen <minda.chen@starfivetech.com>
+To: Conor Dooley <conor@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Mason Huo <mason.huo@starfivetech.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Kevin Xie <kevin.xie@starfivetech.com>,
+	Minda Chen <minda.chen@starfivetech.com>
+Subject: [PATCH v14 07/22] PCI: microchip: Rename two setup functions
+Date: Mon,  8 Jan 2024 19:05:57 +0800
+Message-Id: <20240108110612.19048-8-minda.chen@starfivetech.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240108110612.19048-1-minda.chen@starfivetech.com>
+References: <20240108110612.19048-1-minda.chen@starfivetech.com>
+Content-Type: text/plain
+X-ClientProxiedBy: ZQ0PR01CA0014.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:5::19) To SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/10] media: rkisp1: Shift DMA buffer addresses on
- i.MX8MP
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-To: Paul Elder <paul.elder@ideasonboard.com>, linux-media@vger.kernel.org,
- linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Cc: kieran.bingham@ideasonboard.com, umang.jain@ideasonboard.com,
- aford173@gmail.com, Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Alexander Stein <alexander.stein@ew.tq-group.com>,
- Dafna Hirschfeld <dafna@fastmail.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Heiko Stuebner
- <heiko@sntech.de>,
- "moderated list:ARM/Rockchip SoC support"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240106160221.4183409-1-paul.elder@ideasonboard.com>
- <20240106160221.4183409-9-paul.elder@ideasonboard.com>
- <5e335fef-201c-4775-8a42-4441d749c345@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <5e335fef-201c-4775-8a42-4441d749c345@ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SHXPR01MB0863:EE_|SHXPR01MB0797:EE_
+X-MS-Office365-Filtering-Correlation-Id: d990fe60-f60a-4683-a69f-08dc1039e16b
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	3Tsa9W6i36SJnTtdqbz0/lMWP5ZMfpA0HL++t0pzkQUdAs8DbDTdRiJtqOMxPApzapHkSeQ1xCHrJHkG430u6b3Y95L5Tbx0o2JAThtrfsRKCRgPNMRBT6KcYVIo1IfZl4AvA1S0b1r6VtbTvVUprHB467Kg/yqad80tBFI/CiyhY82b0SWCVo4j+nPF7ueBio4GKUhejcj+wLeC1RGk7nfmgF4pJM/nX3JTAIjKoQVvXznF3Ll8/qyPHchF35rrSamnlT8WwusXz9ijJg5Vj+BXiCUzJYnZoWsjyLz0B6sj8+j26SHIZQpw4OqTBP0SKTLIARJQymMJQfrdzGr1XeoAur7noQSu9wRcyY96b34WZQxc5+bXJJrJyUeR9bhcuRxnkVbA/1mECEAzPAJ+7slW/loZFfofHRe+oC3qlUVGGPunb1xgYODYbbzKcbARF+snqHsnVnkMmXeFHoCfm4n0hgKxIFOsTX6NSyXvSbthJp2zBppYk2cL+RF8A51orLEamo7Z7/muAk3H3ArQv7uv/M3OGSbtexJ9XuRPV4MsL9cmEoJUVSNrLrdfm1Fk
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(136003)(39830400003)(346002)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(8936002)(41320700001)(1076003)(107886003)(26005)(2616005)(83380400001)(44832011)(8676002)(4326008)(86362001)(52116002)(508600001)(66476007)(6666004)(66946007)(66556008)(54906003)(110136005)(40160700002)(38100700002)(38350700005)(2906002)(5660300002)(7416002)(40180700001)(41300700001)(36756003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?9J8nJdbFmKRHmMiEOlE9U/xzcszmKAWOVwA6kmfFJDkRjCmH172SmOGBqPuz?=
+ =?us-ascii?Q?d5GFiBbRqPqRcc5IE1Wz3T3oCk7Z84O5A1ItYNO/AkUAAdaOmKFsMhU14rwT?=
+ =?us-ascii?Q?auQwV9Gb+5JiT+X1V7DFyYUbM3CQQA77j/nfvbbukaM4wvh0Gwo/YM5WrD3G?=
+ =?us-ascii?Q?te4VsTx/2sxwEK7A/ZF35K4TPFYirgFiaNll0YX9aoXpdAjeZI7T7RXQSinT?=
+ =?us-ascii?Q?UcKkWhMhiI9qsN69AFDjdvdaKNnKi64GxkkjcXj7iQIVdsSAcwUm5/V0pJML?=
+ =?us-ascii?Q?P7vog9OuiGj35HIHY67MtMljadNsmbZL20pusjn67AokIUV9EAHXTBLII9lo?=
+ =?us-ascii?Q?8snJGXSDiBrD46GBjCaVKa47TSIG2WRIUxRuyrQBqOR+EQr3v6/YKrb/usHM?=
+ =?us-ascii?Q?lbkyS5cnMtxOE4W2JqlIMYBhLBs5gALwjTcRW8egQHBGJgvLNyTVzqOO0dHa?=
+ =?us-ascii?Q?uUGWcM5N/mw1kYHJ53cryAAKZWDmWrT9UdaP1WO8iToPV54jHyAXswrbBIJA?=
+ =?us-ascii?Q?y44vrVhMTlj6CcZVcLPULwfpa2Oqk0pFBJ9uEPF1H9YxSqxB1X5hIC1Ikim8?=
+ =?us-ascii?Q?l2iHwnqzKM5MQ4sO0m2a+8yBhy3gGCWkT9fYKAIjxeyLzhC0RrzIXtTBOCS4?=
+ =?us-ascii?Q?8rz+Ii6bWUnA5VPYCIPkUjyqNKjUtWPe5vn46vSbwxgBzpV1JT+3Tth3x2Bh?=
+ =?us-ascii?Q?tgmKDH3EPlRcsMY/zBkGrpxRQSIuk7tQam9yDrlxyWpIu64IDZPJXk65zq9M?=
+ =?us-ascii?Q?QXmEHZudYDd0BB+3Oq/nuW6GXhXPgg6osT3uuvl3p1veQmqftFAoKI1d92KX?=
+ =?us-ascii?Q?uOpCbdP8r9+v0Tzl3+yB/cY7p/DmlvqAFRmVrjl5U6d7swrskGlXbeGW7HkY?=
+ =?us-ascii?Q?kSNWF/cv+OG5lGMq4c5IqPCJAPdZ9Yyv241TdIjgaMTYk4wODeT606yd/u8b?=
+ =?us-ascii?Q?+Auf8kY++3wtmvn+Nnwdr4CDfVaaWu7oU7ri5hzoBCtKUa5aLjtzCImjbgly?=
+ =?us-ascii?Q?3J+FB7R16iHcW86Y7ERThC7/7pP5OAgF+OTQy6NO9+Q4aL1zK0JPZgn7K+FB?=
+ =?us-ascii?Q?CM0gHhKsKA9jiuMxrWrSxgFoZJoPAsGsBeubPqtjtQ5/0QJ6r8Lg93/k+g6A?=
+ =?us-ascii?Q?o4etm8QjcA//yMwf2wOVIQXJlBf3OH6NVujCo1U39lTtOySVi7WULxf6xi0D?=
+ =?us-ascii?Q?E/tjWYYrADGxcGK318FMZQk+FPmuOm8TeG+1c9jpXBqtlwpsrgOmUU9tlXg6?=
+ =?us-ascii?Q?4ty9Qy7fI40JTdT4bJGEpUzhlH02jaeYiuYe3h1Gf8NzsOcIRqHoyw+QPEIh?=
+ =?us-ascii?Q?gznGL9ob82VkUK3eyg4XB1oUKIOWHIYwEDFXIJynnEVTAXHQ/XBWS5FvU++r?=
+ =?us-ascii?Q?er0rR2/mVISqdEw/TWfwIikfM0Lq/PNVU1Hv1YdAiWTHUPrmaAvYHXXipGGS?=
+ =?us-ascii?Q?2p2/0nViWWoB23bs4H2HrwcZCZ3Hzy5L2Z6/RSh2zX67Hxy2vONnL31XefXh?=
+ =?us-ascii?Q?Wq3EJBCHgbPIz4naggNJk/Ir8AJKe+3jvMoz6Zwtk1f1BrlkG/SVhzA6aw+n?=
+ =?us-ascii?Q?MDRs3yOar0SYzoJqLZm4rt/1TXCcGroMoWpW3XP075Fr8eDp3fWYOupZiLXj?=
+ =?us-ascii?Q?9A=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d990fe60-f60a-4683-a69f-08dc1039e16b
+X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2024 11:06:36.2244
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UPo3ikEas0OCFUubGrjmdRLi1bT1F/tREpoAqxff8zYAZv0B3LQiBA6Qcy0ttYQGxfWjl9sXybJ4v9xAzAZ9BGBOJPk0CBeKTXzYHQ9zPkc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0797
 
-On 08/01/2024 13:37, Tomi Valkeinen wrote:
-> On 06/01/2024 18:02, Paul Elder wrote:
->> On the ISP that is integrated in the i.MX8MP, DMA addresses have been
->> extended to 34 bits, with the 32 MSBs stored in the DMA address
->> registers and the 2 LSBs set to 0. Shift the buffer addresses right by 2
->> on that platform.
->>
->> While at it, fix an issue where if the system allocated CMA memory
->> happens to be located higher than 32-bits, the driver will fail to
->> allocate CMA memory and falls back to kmalloc(), which will fail for
->> larger allocations (over MAX_ORDER, which often mean 4MB).
->>
->> Fix this by setting the dma mask to 34 bits when allowed, and fixing the
->> use dma_addr_t when storing dma addresses instead of u32.
-> 
-> I think the desc could be rewritten a bit for clarity. "While at it" 
-> sounds like doing some secondary changes too, but it's all required. And 
-> it's not really "fixing", as this is adding a new feature.
-> 
-> To support i.MX8MP's 34-bit addresses, we need to:
-> 
-> - shift the addresses when writing to registers
-> - set the dma mask
-> - use dma_addr_t instead of u32 when storing the addresses
-> 
-> Can you rewrite the desc to describe the above?
+Rename two setup functions to plda prefix. Prepare to re-use these two
+setup function.
 
-Oh, and the patch title is not quite right anymore. I think this is more 
-about supporting i.MX8MP's 34-bit DMA.
+For two setup functions names are similar, rename mc_pcie_setup_windows()
+to plda_pcie_setup_iomems().
 
-  Tomi
+Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+---
+ .../pci/controller/plda/pcie-microchip-host.c | 24 +++++++++----------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-> For the change itself:
-> 
-> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-> 
->   Tomi
-> 
->> Signed-off-by: Paul Elder <paul.elder@ideasonboard.com>
->> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
->> Tested-by: Alexander Stein <alexander.stein@ew.tq-group.com>
->> Tested-by: Adam Ford <aford173@gmail.com>
->> ---
->> Changes since v4:
->>
->> - Squash in fix from Tomi:
->>    - 
->> https://gitlab.com/ideasonboard/nxp/linux/-/commit/d6477fe673b1c0d05d12ae21d8db9a03b07e7fea
->>
->> Changes since v2:
->>
->> - Document the RKISP1_FEATURE_DMA_34BIT bit
->> - Use the rkisp1_has_feature() macro
->> ---
->>   .../platform/rockchip/rkisp1/rkisp1-capture.c | 20 ++++++++++---------
->>   .../platform/rockchip/rkisp1/rkisp1-common.h  |  4 +++-
->>   .../platform/rockchip/rkisp1/rkisp1-dev.c     | 11 +++++++++-
->>   3 files changed, 24 insertions(+), 11 deletions(-)
-> 
-> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-> 
->   Tomi
-> 
->> diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c 
->> b/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c
->> index ca95f62822fa..1ee7639c42b7 100644
->> --- a/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c
->> +++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-capture.c
->> @@ -648,11 +648,13 @@ static void rkisp1_dummy_buf_destroy(struct 
->> rkisp1_capture *cap)
->>   static void rkisp1_set_next_buf(struct rkisp1_capture *cap)
->>   {
->> +    u8 shift = rkisp1_has_feature(cap->rkisp1, DMA_34BIT) ? 2 : 0;
->> +
->>       cap->buf.curr = cap->buf.next;
->>       cap->buf.next = NULL;
->>       if (!list_empty(&cap->buf.queue)) {
->> -        u32 *buff_addr;
->> +        dma_addr_t *buff_addr;
->>           cap->buf.next = list_first_entry(&cap->buf.queue, struct 
->> rkisp1_buffer, queue);
->>           list_del(&cap->buf.next->queue);
->> @@ -660,7 +662,7 @@ static void rkisp1_set_next_buf(struct 
->> rkisp1_capture *cap)
->>           buff_addr = cap->buf.next->buff_addr;
->>           rkisp1_write(cap->rkisp1, cap->config->mi.y_base_ad_init,
->> -                 buff_addr[RKISP1_PLANE_Y]);
->> +                 buff_addr[RKISP1_PLANE_Y] >> shift);
->>           /*
->>            * In order to support grey format we capture
->>            * YUV422 planar format from the camera and
->> @@ -669,17 +671,17 @@ static void rkisp1_set_next_buf(struct 
->> rkisp1_capture *cap)
->>           if (cap->pix.cfg->fourcc == V4L2_PIX_FMT_GREY) {
->>               rkisp1_write(cap->rkisp1,
->>                        cap->config->mi.cb_base_ad_init,
->> -                     cap->buf.dummy.dma_addr);
->> +                     cap->buf.dummy.dma_addr >> shift);
->>               rkisp1_write(cap->rkisp1,
->>                        cap->config->mi.cr_base_ad_init,
->> -                     cap->buf.dummy.dma_addr);
->> +                     cap->buf.dummy.dma_addr >> shift);
->>           } else {
->>               rkisp1_write(cap->rkisp1,
->>                        cap->config->mi.cb_base_ad_init,
->> -                     buff_addr[RKISP1_PLANE_CB]);
->> +                     buff_addr[RKISP1_PLANE_CB] >> shift);
->>               rkisp1_write(cap->rkisp1,
->>                        cap->config->mi.cr_base_ad_init,
->> -                     buff_addr[RKISP1_PLANE_CR]);
->> +                     buff_addr[RKISP1_PLANE_CR] >> shift);
->>           }
->>       } else {
->>           /*
->> @@ -687,11 +689,11 @@ static void rkisp1_set_next_buf(struct 
->> rkisp1_capture *cap)
->>            * throw data if there is no available buffer.
->>            */
->>           rkisp1_write(cap->rkisp1, cap->config->mi.y_base_ad_init,
->> -                 cap->buf.dummy.dma_addr);
->> +                 cap->buf.dummy.dma_addr >> shift);
->>           rkisp1_write(cap->rkisp1, cap->config->mi.cb_base_ad_init,
->> -                 cap->buf.dummy.dma_addr);
->> +                 cap->buf.dummy.dma_addr >> shift);
->>           rkisp1_write(cap->rkisp1, cap->config->mi.cr_base_ad_init,
->> -                 cap->buf.dummy.dma_addr);
->> +                 cap->buf.dummy.dma_addr >> shift);
->>       }
->>       /* Set plane offsets */
->> diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h 
->> b/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
->> index 69940014d597..26573f6ae575 100644
->> --- a/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
->> +++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
->> @@ -114,6 +114,7 @@ enum rkisp1_isp_pad {
->>    * @RKISP1_FEATURE_MAIN_STRIDE: The ISP supports configurable stride 
->> on the main path
->>    * @RKISP1_FEATURE_SELF_PATH: The ISP has a self path
->>    * @RKISP1_FEATURE_DUAL_CROP: The ISP has the dual crop block at the 
->> resizer input
->> + * @RKISP1_FEATURE_DMA_34BIT: The ISP uses 34-bit DMA addresses
->>    *
->>    * The ISP features are stored in a bitmask in &rkisp1_info.features 
->> and allow
->>    * the driver to implement support for features present in some ISP 
->> versions
->> @@ -124,6 +125,7 @@ enum rkisp1_feature {
->>       RKISP1_FEATURE_MAIN_STRIDE = BIT(1),
->>       RKISP1_FEATURE_SELF_PATH = BIT(2),
->>       RKISP1_FEATURE_DUAL_CROP = BIT(3),
->> +    RKISP1_FEATURE_DMA_34BIT = BIT(4),
->>   };
->>   #define rkisp1_has_feature(rkisp1, feature) \
->> @@ -239,7 +241,7 @@ struct rkisp1_vdev_node {
->>   struct rkisp1_buffer {
->>       struct vb2_v4l2_buffer vb;
->>       struct list_head queue;
->> -    u32 buff_addr[VIDEO_MAX_PLANES];
->> +    dma_addr_t buff_addr[VIDEO_MAX_PLANES];
->>   };
->>   /*
->> diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-dev.c 
->> b/drivers/media/platform/rockchip/rkisp1/rkisp1-dev.c
->> index 01f811b9f9a5..fd99355d5fe0 100644
->> --- a/drivers/media/platform/rockchip/rkisp1/rkisp1-dev.c
->> +++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-dev.c
->> @@ -549,7 +549,8 @@ static const struct rkisp1_info imx8mp_isp_info = {
->>       .isrs = imx8mp_isp_isrs,
->>       .isr_size = ARRAY_SIZE(imx8mp_isp_isrs),
->>       .isp_ver = IMX8MP_V10,
->> -    .features = RKISP1_FEATURE_MAIN_STRIDE,
->> +    .features = RKISP1_FEATURE_MAIN_STRIDE
->> +          | RKISP1_FEATURE_DMA_34BIT,
->>   };
->>   static const struct of_device_id rkisp1_of_match[] = {
->> @@ -575,6 +576,7 @@ static int rkisp1_probe(struct platform_device *pdev)
->>       struct device *dev = &pdev->dev;
->>       struct rkisp1_device *rkisp1;
->>       struct v4l2_device *v4l2_dev;
->> +    unsigned long long dma_mask;
->>       unsigned int i;
->>       int ret, irq;
->>       u32 cif_id;
->> @@ -589,6 +591,13 @@ static int rkisp1_probe(struct platform_device 
->> *pdev)
->>       dev_set_drvdata(dev, rkisp1);
->>       rkisp1->dev = dev;
->> +    dma_mask = rkisp1_has_feature(rkisp1, DMA_34BIT) ? 
->> DMA_BIT_MASK(34) :
->> +                               DMA_BIT_MASK(32);
->> +
->> +    ret = dma_set_mask_and_coherent(dev, dma_mask);
->> +    if (ret)
->> +        return ret;
->> +
->>       mutex_init(&rkisp1->stream_lock);
->>       rkisp1->base_addr = devm_platform_ioremap_resource(pdev, 0);
-> 
+diff --git a/drivers/pci/controller/plda/pcie-microchip-host.c b/drivers/pci/controller/plda/pcie-microchip-host.c
+index a554a56cc0e8..9b367927cd32 100644
+--- a/drivers/pci/controller/plda/pcie-microchip-host.c
++++ b/drivers/pci/controller/plda/pcie-microchip-host.c
+@@ -838,9 +838,9 @@ static int mc_pcie_init_irq_domains(struct plda_pcie_rp *port)
+ 	return mc_allocate_msi_domains(port);
+ }
+ 
+-static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
+-				 phys_addr_t axi_addr, phys_addr_t pci_addr,
+-				 size_t size)
++static void plda_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
++				   phys_addr_t axi_addr, phys_addr_t pci_addr,
++				   size_t size)
+ {
+ 	u32 atr_sz = ilog2(size) - 1;
+ 	u32 val;
+@@ -876,8 +876,8 @@ static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
+ 	writel(0, bridge_base_addr + ATR0_PCIE_WIN0_SRC_ADDR);
+ }
+ 
+-static int mc_pcie_setup_windows(struct platform_device *pdev,
+-				 struct plda_pcie_rp *port)
++static int plda_pcie_setup_iomems(struct platform_device *pdev,
++				  struct plda_pcie_rp *port)
+ {
+ 	void __iomem *bridge_base_addr = port->bridge_addr;
+ 	struct pci_host_bridge *bridge = platform_get_drvdata(pdev);
+@@ -888,9 +888,9 @@ static int mc_pcie_setup_windows(struct platform_device *pdev,
+ 	resource_list_for_each_entry(entry, &bridge->windows) {
+ 		if (resource_type(entry->res) == IORESOURCE_MEM) {
+ 			pci_addr = entry->res->start - entry->offset;
+-			mc_pcie_setup_window(bridge_base_addr, index,
+-					     entry->res->start, pci_addr,
+-					     resource_size(entry->res));
++			plda_pcie_setup_window(bridge_base_addr, index,
++					       entry->res->start, pci_addr,
++					       resource_size(entry->res));
+ 			index++;
+ 		}
+ 	}
+@@ -1023,15 +1023,15 @@ static int mc_platform_init(struct pci_config_window *cfg)
+ 	int ret;
+ 
+ 	/* Configure address translation table 0 for PCIe config space */
+-	mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start,
+-			     cfg->res.start,
+-			     resource_size(&cfg->res));
++	plda_pcie_setup_window(bridge_base_addr, 0, cfg->res.start,
++			       cfg->res.start,
++			       resource_size(&cfg->res));
+ 
+ 	/* Need some fixups in config space */
+ 	mc_pcie_enable_msi(port, cfg->win);
+ 
+ 	/* Configure non-config space outbound ranges */
+-	ret = mc_pcie_setup_windows(pdev, &port->plda);
++	ret = plda_pcie_setup_iomems(pdev, &port->plda);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.17.1
 
