@@ -1,115 +1,94 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E6579DC;
-	Mon,  8 Jan 2024 06:49:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8ACB665
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 06:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shopee.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YRUFwPG9"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4086kel0018212;
-	Mon, 8 Jan 2024 06:49:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=ip/sp5Uiq66KxZvnGzhPTlV3Ok/XCmMqVJ9pJkw7pu8=; b=YR
-	UFwPG9IJchbbD7PVgZD7uAqD7Gt4j/0JIn1YFKF1Hjl5rWGdvvEBVGs5NEZ/Ybx1
-	t8+F2eCbJ1NAHPWvmKvIBNB1thH4MCoiDgyVu4U7NrDH8nnoXG5jaPoYd5Ev2Rpz
-	a2fZfIbx5jV6EmN065pPAiyFXU2QbgmhSMpNgyvvp+yipftWad4Zg1l1GvghdAQk
-	4OXVNt6UpVV79a5V7Ws4AUhOcP8DU0Sn2PbgSlE7TU6GV6/iQymtr/vlvXC8PZPF
-	rqNySmZo116WQu+pigkiq9yLVx73t2vM9vD4KDZEteLWef5ge5g68/J1Fog76zv8
-	XYdCXZG4ADNlZb/KY6Tg==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vg97b09hn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jan 2024 06:49:23 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4086nMNW022657
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 8 Jan 2024 06:49:22 GMT
-Received: from [10.216.5.133] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Sun, 7 Jan
- 2024 22:49:18 -0800
-Message-ID: <02f5e23d-f760-3f3e-23f9-35317b81ec54@quicinc.com>
-Date: Mon, 8 Jan 2024 12:19:15 +0530
+	dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b="OwqMnmlY"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6d9344f30caso953881b3a.1
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jan 2024 22:49:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shopee.com; s=shopee.com; t=1704696577; x=1705301377; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Tt7PGUQ5L43nYUE94yk4XF4aImWy48h5RdG3yYl8t6c=;
+        b=OwqMnmlYLvURIl9QtFMLrHVdWZfv9XnlkyehWqik1btaZ+kdwaaIHtR0PT523qsQxt
+         /tsFJ5LaGEWThxXBUqz9fGt9N06/eCuTCUnsUpJifaOszEuUbBsMMQJ+eRWn5Ioct5b3
+         puTdZclYm5hPmtz2joAt9P34Udb3VvfMIKJKOcMHRIefz/6oXTYdeAjNLzq3bpdn77xV
+         i5ITT+KY3SY0MEgBDzasfeZVjvGO2c39TWauaT92nhYs6yPbxSwalHRtEE74jR16IMyl
+         y7mAW+ElfOTI7oXCDr7LIeI1FKTQCXnZBAkmE5fUPA7bUCxDTE6+Sq2rW/W21Xu6b0t8
+         kjzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704696577; x=1705301377;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Tt7PGUQ5L43nYUE94yk4XF4aImWy48h5RdG3yYl8t6c=;
+        b=DCqDhMqo9N2GrPrshAvP1Onvsvs+ohLIgLiBJ/ONzsEJ7pPJnJrCuocu7fj1ff2BhO
+         FnNHmS4JeRZUblTNzCS7Nlq52qpHL6brKKuatmjwXDM95Slty6t7/yjE8SToNi1s0khY
+         hg4x31tvNzTHcVRVIhSGMbhj834xEOxpo1IbtK6og364NEinCbkPKMAHO++wdEj4BtYe
+         Jz5UNrs/7EfkzMkoV+0MBXgZ+lvILVHt93qoLeztX4hbcuO88CSzbK+btOYIDOzsUHJg
+         J7/QB8GnuO30LpzPKIj57QQYrxl0ZnxbEA/JCsFFx6/elzA7T8VdWYGRAySz8jE4Q+aU
+         MJig==
+X-Gm-Message-State: AOJu0Yx8zscFAPAwmnk+rtpTX9Vtcob2okJossFINlugJgjyf9YepgcB
+	9vZymHMGQOS7MLrS208LYjXSIjMIFtOZ/0Ow4TLN2NiGoCASol2N
+X-Google-Smtp-Source: AGHT+IHAvFu60wzgJRTtJBBjAUwjzK1rkytjoKsxQqjLOp60SbdqSYBofXcZZZ9ecUspoWLvn9S/jw==
+X-Received: by 2002:a05:6a00:731:b0:6da:ca4b:8632 with SMTP id 17-20020a056a00073100b006daca4b8632mr5746697pfm.5.1704696576864;
+        Sun, 07 Jan 2024 22:49:36 -0800 (PST)
+Received: from [10.54.24.52] (static-ip-148-99-134-202.rev.dyxnet.com. [202.134.99.148])
+        by smtp.gmail.com with ESMTPSA id p28-20020a056a000a1c00b006d9b30b33b0sm5235704pfh.196.2024.01.07.22.49.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Jan 2024 22:49:36 -0800 (PST)
+Message-ID: <70448afd-cb53-478c-83fc-831c712e9a82@shopee.com>
+Date: Mon, 8 Jan 2024 14:49:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] media: venus: flush all buffers in output streamoff
-Content-Language: en-US
-To: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
-        Vikash Garodia
-	<quic_vgarodia@quicinc.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        "Mauro
- Carvalho Chehab" <mchehab@kernel.org>
-CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1704695615-1036-1-git-send-email-quic_dikshita@quicinc.com>
- <1704695615-1036-2-git-send-email-quic_dikshita@quicinc.com>
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-In-Reply-To: <1704695615-1036-2-git-send-email-quic_dikshita@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] mm: list_lru: disable memcg_aware when cgroup.memory
+ is set to "nokmem"
+To: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, mhocko@kernel.org,
+ shakeelb@google.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20231228062715.338672-1-haifeng.xu@shopee.com>
+ <ZZS-IFA6TScotocU@P9FQF9L96D>
+From: Haifeng Xu <haifeng.xu@shopee.com>
+In-Reply-To: <ZZS-IFA6TScotocU@P9FQF9L96D>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ko16LJ3AXbnGtGvS4R0w7jlZkblyxRlK
-X-Proofpoint-ORIG-GUID: ko16LJ3AXbnGtGvS4R0w7jlZkblyxRlK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- impostorscore=0 phishscore=0 clxscore=1015 mlxscore=0 bulkscore=0
- priorityscore=1501 malwarescore=0 mlxlogscore=999 suspectscore=0
- spamscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401080055
 
-Hello All,
 
-Please ignore this duplicate email and review the other patch [1].
-Sorry for the spam.
 
-[1]
-https://patchwork.linuxtv.org/project/linux-media/patch/1704695615-1036-1-git-send-email-quic_dikshita@quicinc.com/
-
-Thanks,
-Dikshita
-
-On 1/8/2024 12:03 PM, Dikshita Agarwal wrote:
-> For scenarios, when source change is followed by VIDIOC_STREAMOFF
-> on output, driver should discards any remaining queued OUTPUT
-> buffers which are not decoded or dequeued.
-> Flush with HFI_FLUSH_INPUT doesn't have any actual implact. So,
-> fix it by invoking HFI_FLUSH_ALL which will flush all queued buffers.
+On 2024/1/3 09:53, Roman Gushchin wrote:
+> On Thu, Dec 28, 2023 at 06:27:14AM +0000, Haifeng Xu wrote:
+>> Actually, when using a boot time kernel option "cgroup.memory=nokmem",
+>> all lru items are inserted to list_lru_node. But for those users who
+>> invoke list_lru_init_memcg() to initialize list_lru, list_lru_memcg_aware()
+>> returns true. And this brings unneeded operations related to memcg.
+>>
+>> To make things more convenient, let's disable memcg_aware when
+>> cgroup.memory is set to "nokmem".
 > 
-> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
-> ---
->  drivers/media/platform/qcom/venus/vdec.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> I guess it's not only more convenient, but also should save a bit of memory.
+> But _probably_ not enough to justify messing up with stable backports.
+> Do you have any data on memory savings?
+
+Do you mean that it will remove the allocation of 'list_lru_memcg' in memcg_init_list_lru_one()?
+
+In fact, even without this patch, if we set cgroup.memory set to "nokmem", all memcg's kmemcg_id is -1, so
+memcg_list_lru_allocated() always returns true and we won't invoke memcg_init_list_lru_one().
+
+
 > 
-> diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-> index 29130a9..0d2ab95 100644
-> --- a/drivers/media/platform/qcom/venus/vdec.c
-> +++ b/drivers/media/platform/qcom/venus/vdec.c
-> @@ -1255,7 +1255,7 @@ static int vdec_stop_output(struct venus_inst *inst)
->  		break;
->  	case VENUS_DEC_STATE_INIT:
->  	case VENUS_DEC_STATE_CAPTURE_SETUP:
-> -		ret = hfi_session_flush(inst, HFI_FLUSH_INPUT, true);
-> +		ret = hfi_session_flush(inst, HFI_FLUSH_ALL, true);
->  		break;
->  	default:
->  		break;
+>>
+>> Signed-off-by: Haifeng Xu <haifeng.xu@shopee.com>
+> 
+> Acked-by: Roman Gushchin <roman.gushchin@linux.dev>
+> 
+> Thanks!
