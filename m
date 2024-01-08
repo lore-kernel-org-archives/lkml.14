@@ -1,85 +1,104 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2045B56444
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 23:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAECF1DDDC
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 23:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V+7RGMXv"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40e4d64a431so2960795e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 15:45:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704757503; x=1705362303; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kpE4qjeetNEvv2r2f+0SxvAe1muEwFSilksS8BiXRqc=;
-        b=V+7RGMXvtO2I3zQh6Uf+7I++ZiXRzIEhKwPl86hBtUjAZsobYxAUXGptSMcFPPGpTs
-         xyR0c3LqP2PvbTKaxBkYkNy/5lRkGy3sef4g+X7SXzZhKdppWxpYweKtLu8cTy6o5rug
-         Xl6ySxgZXrFfSCMUOhiEWj2VY8bVzfFoqa9Ygy/V7jUvFIwiAdtA7lmkb+ySyc8Y/Zkf
-         IFZcRFrrizXvLrVF0AN7TmbtA90umArRDM1HyRskjigNfICChRF5oYMNlI2ysK1UGFz+
-         7DMMrUHvNroUSKb5oM28robR1ayJ6cL+3RFvWQpzJVpvBga2BearNU0WsdxMjkXJTB3J
-         5J9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704757503; x=1705362303;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kpE4qjeetNEvv2r2f+0SxvAe1muEwFSilksS8BiXRqc=;
-        b=OGx5Vy/3s//9kBS3omizBjDESw/QGkRJCmxDKwHIJcrX1d6BFRHyZyZ0P5NorzIWgQ
-         5ynFPbniW5l4Hj5Y81ETL53lojYSrvkKRw996oPficbTBdmDC8Kp+u8S65RyFlBKqf9U
-         A6ODJoX9k7bz0Sr+1YPJk3cJZ6ZSb35mP9H18HYTgd5K3viD4iyPTKzCmmXmvHyJHsXs
-         UjWLGkeUBG7DmArFwLqRlLxoVbpcobycB2AvFAZIdBSuitXfsTLcMuYpNMHB3SMck2SR
-         455GbVbb3M5/1Dsv0REfCzqWIUIknwG5mEn1lGtMl5SCwJUXSZ43tvpmH5r9xCJJ0slC
-         FGhA==
-X-Gm-Message-State: AOJu0YygRe7s7VTfoC61lhd0ZPChpIQ6a8pPBjq0Ym6i4aqaVSmDM9Df
-	H3j+53miH+mar8Gj8MfV+T0qrIfVkAkU+A==
-X-Google-Smtp-Source: AGHT+IERrmwHOLhdJIube3b8XFQkbiWoBjMVF94oGhwhvLiqJt7I5hYP6vW1ivHxK4fG9uN2quaqQw==
-X-Received: by 2002:a05:600c:ccb:b0:40e:4c1a:e87c with SMTP id fk11-20020a05600c0ccb00b0040e4c1ae87cmr395739wmb.119.1704757503250;
-        Mon, 08 Jan 2024 15:45:03 -0800 (PST)
-Received: from [192.168.100.48] ([37.228.218.3])
-        by smtp.gmail.com with ESMTPSA id i12-20020adff30c000000b00336b8461a5esm819712wro.88.2024.01.08.15.45.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Jan 2024 15:45:02 -0800 (PST)
-Message-ID: <5c274f9c-6270-455f-8b82-fcba992e3b83@linaro.org>
-Date: Mon, 8 Jan 2024 23:45:02 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fiJRU92I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704757641; x=1736293641;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=6RR7L84j9ABImNUePA+VATo4ttwSxPrmI54MpbcpA3o=;
+  b=fiJRU92ITzEYHuMjb8Ur1o3eIVJibdQ/zmH132vwcNMlBNe2UVuSnrtD
+   23CF5PsEt4090rd2FzC6ZZ75HnHd8IxY82wIIyjN/TSDD/XoV3VSQYWrw
+   Rx9ETBiYv+ye/w9BXozl9BpeV8aTynAh2xzhZrZI5654L2No7VrRUur2f
+   8KQCXbtxto+rbrc7iauQvLPvuSl7t/a13yaP6K0Mp3YX4syFFONgCQWVM
+   MxN8el1XAwfKluIVysdXN8dfJ+wPqIBu5/q282Gkjs2U7lYgUzFLhnPSU
+   vuoD7k0C6N7JjyW2u+KsxO2rpthdd+mny+CO3mhF6Y0hXNbQXFN/wu+7h
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="11520957"
+X-IronPort-AV: E=Sophos;i="6.04,181,1695711600"; 
+   d="scan'208";a="11520957"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 15:47:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="785014921"
+X-IronPort-AV: E=Sophos;i="6.04,181,1695711600"; 
+   d="scan'208";a="785014921"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by fmsmga007.fm.intel.com with ESMTP; 08 Jan 2024 15:47:19 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rMzKu-0005EW-24;
+	Mon, 08 Jan 2024 23:47:16 +0000
+Date: Tue, 9 Jan 2024 07:46:58 +0800
+From: kernel test robot <lkp@intel.com>
+To: Takashi Iwai <tiwai@suse.de>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: sound/core/control.c:390:11: sparse: sparse: incorrect type in
+ assignment (different base types)
+Message-ID: <202401090705.hJXfE4sT-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/18] Qualcomm GCC/VIDEOCC reset overhaul for Venus
-Content-Language: en-US
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>,
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-kernel@vger.kernel.org, Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Manivannan Sadhasivam <mani@kernel.org>
-References: <20240105-topic-venus_reset-v1-0-981c7a624855@linaro.org>
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20240105-topic-venus_reset-v1-0-981c7a624855@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 08/01/2024 12:32, Konrad Dybcio wrote:
-> Some resets associated with venus require a larger delay for the hardware
-> on the other end to function properly. These seem to fall into three
-> categories:
-> 
-> - 150us for 8250 and earlier
-> - 400us for 8350 and friends
-> - 1000us for >=8450
-> 
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   5db8752c3b81bd33a549f6f812bab81e3bb61b20
+commit: c27e1efb61c545f36c450ef60862df9251d239a4 ALSA: control: Use xarray for faster lookups
+date:   1 year, 7 months ago
+config: i386-randconfig-063-20240107 (https://download.01.org/0day-ci/archive/20240109/202401090705.hJXfE4sT-lkp@intel.com/config)
+compiler: ClangBuiltLinux clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240109/202401090705.hJXfE4sT-lkp@intel.com/reproduce)
 
-What's your reference for these delay values ?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401090705.hJXfE4sT-lkp@intel.com/
 
----
-bod
+sparse warnings: (new ones prefixed by >>)
+>> sound/core/control.c:390:11: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned long h @@     got restricted snd_ctl_elem_iface_t const [usertype] iface @@
+   sound/core/control.c:390:11: sparse:     expected unsigned long h
+   sound/core/control.c:390:11: sparse:     got restricted snd_ctl_elem_iface_t const [usertype] iface
+   sound/core/control.c:926:17: sparse: sparse: restricted snd_ctl_elem_type_t degrades to integer
+   sound/core/control.c:926:26: sparse: sparse: restricted snd_ctl_elem_type_t degrades to integer
+   sound/core/control.c:927:17: sparse: sparse: restricted snd_ctl_elem_type_t degrades to integer
+   sound/core/control.c:927:26: sparse: sparse: restricted snd_ctl_elem_type_t degrades to integer
+   sound/core/control.c:946:48: sparse: sparse: restricted snd_ctl_elem_type_t degrades to integer
+   sound/core/control.c:1640:40: sparse: sparse: restricted snd_ctl_elem_type_t degrades to integer
 
+vim +390 sound/core/control.c
+
+   378	
+   379	#ifdef CONFIG_SND_CTL_FAST_LOOKUP
+   380	/* Compute a hash key for the corresponding ctl id
+   381	 * It's for the name lookup, hence the numid is excluded.
+   382	 * The hash key is bound in LONG_MAX to be used for Xarray key.
+   383	 */
+   384	#define MULTIPLIER	37
+   385	static unsigned long get_ctl_id_hash(const struct snd_ctl_elem_id *id)
+   386	{
+   387		unsigned long h;
+   388		const unsigned char *p;
+   389	
+ > 390		h = id->iface;
+   391		h = MULTIPLIER * h + id->device;
+   392		h = MULTIPLIER * h + id->subdevice;
+   393		for (p = id->name; *p; p++)
+   394			h = MULTIPLIER * h + *p;
+   395		h = MULTIPLIER * h + id->index;
+   396		h &= LONG_MAX;
+   397		return h;
+   398	}
+   399	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
