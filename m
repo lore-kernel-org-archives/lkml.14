@@ -1,92 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691D38F5C
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 07:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9AAC8F55
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 07:03:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DqwWDey1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704697281; x=1736233281;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=5S4isNVG9Yb7RJpP09hRnFGD7S+jYFLuPo45bW/bt5o=;
-  b=DqwWDey1+T38GDYEc9VrkEvpC0el72ezITooAQ4dITstZfv/ieoMWPcv
-   tBvJlNmRezOkOt71/7fLjMLXkEnliSQhcXIe7xLRXZah54ykB9lhgcuL7
-   H89UQ8qfnbYfrcljsplQPB1lTswPgE8nQnkmsc9dH9d53AALG4Xy4ZwVa
-   e2dhC/WWOcNIu0fVckqfKsUoFkUJibXnu2yeAn2NYO6+lH7zwrIfg23XG
-   yi2IzSZYQrEg7sbiMmmRQCVD/E8Y0q8hbiDpXdNRqOYmjdFzatZJewPE3
-   xbffhKWF3/3Bi7Nld0dVUjF8ybrTNBegNKz+RP2OVXyrCW3tLFu1oKAOF
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="462099696"
-X-IronPort-AV: E=Sophos;i="6.04,340,1695711600"; 
-   d="scan'208";a="462099696"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2024 23:01:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,340,1695711600"; 
-   d="scan'208";a="23077666"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orviesa002.jf.intel.com with ESMTP; 07 Jan 2024 23:01:20 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rMjci-0004V6-1c;
-	Mon, 08 Jan 2024 07:00:59 +0000
-Date: Mon, 8 Jan 2024 14:59:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Bjorn Andersson <andersson@kernel.org>
-Subject: drivers/usb/typec/ucsi/ucsi_glink.c:258:2-3: Unneeded semicolon
-Message-ID: <202401081453.4Ff5FBfw-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SuTS8i+i"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ccae380df2so14242601fa.1
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jan 2024 23:03:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704697384; x=1705302184; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/KaKy41Wl3MSbQMyAjeN+ovopvqexe3XNPCK+UGM1Aw=;
+        b=SuTS8i+iaxZjndTW7EPiLSfh2rTg7OychI/nyo4FBpkIg8uVud6vlY631yN2MB8sl/
+         u9u5rlr8aRU6ufsyq23AbIpZEDxETHG93indwUGgKq8DDjtgqoUDGfKse59XW5w4WiFC
+         hcAp3iC4PFanEYUtRkrJte15XXa5rpCEVHkDXBovHo7F2Ns66p7ChAtK+wi5iDjgHRct
+         oJdUiGYkG83BnCJHSlNSlclaWQBJLmChGTPrK17XYqdHnjd3cN5FEcUvfWxcmg26EspO
+         QIWEZLoYwPn0Ij23GW2rz/w9zYHYzB6wRphPzh0tQeQ98uGovvpkSqoqBqv5nD/CSvnh
+         OHrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704697384; x=1705302184;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/KaKy41Wl3MSbQMyAjeN+ovopvqexe3XNPCK+UGM1Aw=;
+        b=DMS+FIkXFb4xfDtEd9AhMjcO6e9qhV8lRFTpaBV/7KkiJOgLOH9weo0cIGUbzEqulq
+         M5rArn5Uo9XWYsbYypVsx1YIdbfEfjGHqgLevesyNi6F6p4fr2GYlEY4BxcfJC5WStar
+         LirowIRTUEFSoOfr0nxhx5BTnn85iESbYO8eY/AK3mXkEeFeKor2SphC0fMUXzE1TQ2/
+         vpQzC8GvQAtwkpR+Fp2OGOBrkncSvgm/wF2hbfX5eLzS5YwtZ51zUhJCu6sfkIQNGr+z
+         iDGjur0Ogfw2ZV8UfbzOcZHyPj2LOSbDMwzAyM9HwTgF8bdiwQ67PcVQ2Bc+GgL+wL1u
+         HDgw==
+X-Gm-Message-State: AOJu0YxdppC+quG5+U2ooYf+2xahIPMDAugE7XbZ8mel0EyCOS5vrDQ3
+	2yhwZAsK5dGogi96/lEBHJ+HKc/Ys6n5tg==
+X-Google-Smtp-Source: AGHT+IFQFyNxCs4W5c+otBlgRtlz4sM8FhUK59SRgJYF8ukc5ONiyT9lbikH0M8Trkk9qGlzlDiMlw==
+X-Received: by 2002:a2e:9cd4:0:b0:2cd:2acc:e9ff with SMTP id g20-20020a2e9cd4000000b002cd2acce9ffmr1040830ljj.26.1704697384577;
+        Sun, 07 Jan 2024 23:03:04 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.223.112])
+        by smtp.gmail.com with ESMTPSA id fd5-20020a056402388500b0055743d6e9ebsm3059360edb.41.2024.01.07.23.03.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Jan 2024 23:03:04 -0800 (PST)
+Message-ID: <cc7cc943-7242-4fd1-9b56-3ece0a418e05@linaro.org>
+Date: Mon, 8 Jan 2024 08:03:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 1/4] dt-bindings: soc: sophgo: Add Sophgo system
+ control module
+Content-Language: en-US
+To: Chen Wang <unicornxw@gmail.com>, aou@eecs.berkeley.edu,
+ chao.wei@sophgo.com, conor@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ mturquette@baylibre.com, palmer@dabbelt.com, paul.walmsley@sifive.com,
+ richardcochran@gmail.com, robh+dt@kernel.org, sboyd@kernel.org,
+ devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ haijiao.liu@sophgo.com, xiaoguang.xing@sophgo.com, guoren@kernel.org,
+ jszhang@kernel.org, inochiama@outlook.com, samuel.holland@sifive.com
+Cc: Chen Wang <unicorn_wang@outlook.com>
+References: <cover.1704694903.git.unicorn_wang@outlook.com>
+ <acebc88db3e5fcd2a2607b56842af7443a6e1289.1704694903.git.unicorn_wang@outlook.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <acebc88db3e5fcd2a2607b56842af7443a6e1289.1704694903.git.unicorn_wang@outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   0dd3ee31125508cd67f7e7172247f05b7fd1753a
-commit: 62b5412b1f4afab27d8df90ddcabb8e1e11a00ad usb: typec: ucsi: add PMIC Glink UCSI driver
-date:   10 months ago
-config: i386-randconfig-052-20240106 (https://download.01.org/0day-ci/archive/20240108/202401081453.4Ff5FBfw-lkp@intel.com/config)
-compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
+On 08/01/2024 07:48, Chen Wang wrote:
+> From: Chen Wang <unicorn_wang@outlook.com>
+> 
+> Add documentation to describe Sophgo System Controller for SG2042.
+> 
+> Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  .../soc/sophgo/sophgo,sg2042-sysctrl.yaml     | 34 +++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/sophgo/sophgo,sg2042-sysctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/sophgo/sophgo,sg2042-sysctrl.yaml b/Documentation/devicetree/bindings/soc/sophgo/sophgo,sg2042-sysctrl.yaml
+> new file mode 100644
+> index 000000000000..1ec1eaa55598
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/sophgo/sophgo,sg2042-sysctrl.yaml
+> @@ -0,0 +1,34 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/sophgo/sophgo,sg2042-sysctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Sophgo SG2042 SoC system controller
+> +
+> +maintainers:
+> +  - Chen Wang <unicorn_wang@outlook.com>
+> +
+> +description:
+> +  The Sophgo SG2042 SoC system controller provides register information such
+> +  as offset, mask and shift that can be used by other modules, such as clocks.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401081453.4Ff5FBfw-lkp@intel.com/
+"offset, mask and shift" is not a register information stored in
+syscons. Are you really sure, that your system controller hardware
+stores offsets of some other registers?
 
-cocci warnings: (new ones prefixed by >>)
->> drivers/usb/typec/ucsi/ucsi_glink.c:258:2-3: Unneeded semicolon
+Show as some example of such offsets, masks and shifts provided by this
+hardware.
 
-vim +258 drivers/usb/typec/ucsi/ucsi_glink.c
 
-   242	
-   243	static void pmic_glink_ucsi_callback(const void *data, size_t len, void *priv)
-   244	{
-   245		struct pmic_glink_ucsi *ucsi = priv;
-   246		const struct pmic_glink_hdr *hdr = data;
-   247	
-   248		switch (hdr->opcode) {
-   249		case UC_UCSI_READ_BUF_REQ:
-   250			pmic_glink_ucsi_read_ack(ucsi, data, len);
-   251			break;
-   252		case UC_UCSI_WRITE_BUF_REQ:
-   253			pmic_glink_ucsi_write_ack(ucsi, data, len);
-   254			break;
-   255		case UC_UCSI_USBC_NOTIFY_IND:
-   256			schedule_work(&ucsi->notify_work);
-   257			break;
- > 258		};
-   259	}
-   260	
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards,
+Krzysztof
+
