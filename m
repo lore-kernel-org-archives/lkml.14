@@ -1,128 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340C355E50;
-	Mon,  8 Jan 2024 20:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3780654BDA;
+	Mon,  8 Jan 2024 20:47:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sacmy2fi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704746815; x=1736282815;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ysxA/zp0hOOuWwajvTnchvlZ9+DORxFTUedJeEkkADQ=;
-  b=Sacmy2fivxBIZDU1UXb1e1TWl08KScxegUMq5oIk8q4BBNkmg/5yPIrt
-   UfJjVQ+nsTJ3gD9eMpv+MYBIz0iWRWS33ze9bZcbV9RAMOMA5FTmAbpnl
-   BRt77Mi7Odi5FTVDzsx3F6ypFlhslYSjbKLC/lMNblebPnlBGkOjt6pw2
-   uakQb5Wh2lMf9XlP2LrqxJzNEJbWxfg6a/VWGh12c8zz2sk4+iZP6i8o/
-   ZOdtfdkWIWqIVFelP/exXC9oVzNHBbByOYroOZNrJxFnUMaIuNKvAYS/i
-   QBXgQFd+TRvdcTzMVILIBezaLeHzgOQkD173hz2dJZjyey+ebWMRDQS8o
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="5085374"
-X-IronPort-AV: E=Sophos;i="6.04,180,1695711600"; 
-   d="scan'208";a="5085374"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 12:46:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="781543260"
-X-IronPort-AV: E=Sophos;i="6.04,180,1695711600"; 
-   d="scan'208";a="781543260"
-Received: from irvmail002.ir.intel.com ([10.43.11.120])
-  by orsmga002.jf.intel.com with ESMTP; 08 Jan 2024 12:46:50 -0800
-Received: from [10.249.149.159] (mwajdecz-MOBL.ger.corp.intel.com [10.249.149.159])
-	by irvmail002.ir.intel.com (Postfix) with ESMTP id 6E90728165;
-	Mon,  8 Jan 2024 20:46:49 +0000 (GMT)
-Message-ID: <84a5c289-e2f6-4e30-a093-5a1c5b335057@intel.com>
-Date: Mon, 8 Jan 2024 21:46:47 +0100
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fu3FyYNg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1704746837;
+	bh=UQ/Pqq9hCugSxC3Fzh31NRAczf6loqtAEVkRzY9ZrUY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fu3FyYNgD+idTI4piSZ17tN+M/ZavzrqZBkRgO1z+9KFmMqXzHO/8MaMHHeKbgKmT
+	 FCunKCxfVFTFdoQar8AN/9ZqZr73MNkTPjR4aPHsgoeJMS3NuE0UjmZFmJZh9B/wfm
+	 uBEtKjRtItys+DDipV5HuIPi+QxZbVslRP6BrQ25fHTV6u4sqn6rq+CbWBPIPNKJIu
+	 Z7TIDqO1NBgHE+VnrVF1jYrZ+UsjsfAxgLF+mpZLRIqqcC8Nrg5QeSBRea5wf5wLY2
+	 BeZvGKI5a1tuhoHWLF+B5uVf+5ch4VRy95pl7af70cunodjkUWc85q+yz1zoXVfAPQ
+	 RwNDbkGikAX2Q==
+Received: from localhost.localdomain (zone.collabora.co.uk [167.235.23.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 924B33781475;
+	Mon,  8 Jan 2024 20:47:12 +0000 (UTC)
+From: =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	kernel@collabora.com,
+	=?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	=?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado=20via=20Alsa-devel?= <alsa-devel@alsa-project.org>,
+	Rob Herring <robh@kernel.org>,
+	Takashi Iwai <tiwai@suse.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-sound@vger.kernel.org
+Subject: [PATCH] ASoC: mediatek: mt8192: Check existence of dai_name before dereferencing
+Date: Mon,  8 Jan 2024 17:44:58 -0300
+Message-ID: <20240108204508.691739-1-nfraprado@collabora.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/xe: clean up type of GUC_HXG_MSG_0_ORIGIN
-Content-Language: en-US
-To: Lucas De Marchi <lucas.demarchi@intel.com>,
- Dan Carpenter <dan.carpenter@linaro.org>
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
- Maxime Ripard <mripard@kernel.org>, dri-devel@lists.freedesktop.org,
- Thomas Zimmermann <tzimmermann@suse.de>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, intel-xe@lists.freedesktop.org
-References: <ec22d742-632b-426a-ac86-62641a38c907@moroto.mountain>
- <e5g3qkwvc3sjfpxcdvn43fiwbxthpblqgg2getxpbkd6g4lp5k@pgfm75tsg7wz>
-From: Michal Wajdeczko <michal.wajdeczko@intel.com>
-In-Reply-To: <e5g3qkwvc3sjfpxcdvn43fiwbxthpblqgg2getxpbkd6g4lp5k@pgfm75tsg7wz>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+Following commit 13f58267cda3 ("ASoC: soc.h: don't create dummy
+Component via COMP_DUMMY()"), the dai_name field is only populated for
+dummy components after the card is registered. This causes a null
+pointer dereference in the mt8192-mt6359 sound card driver's probe
+function when searching for a dai_name among all the card's dai links.
 
+Verify that the dai_name is non-null before passing it to strcmp. While
+at it, also check that there's at least one codec.
 
-On 08.01.2024 15:07, Lucas De Marchi wrote:
-> On Mon, Jan 08, 2024 at 12:05:57PM +0300, Dan Carpenter wrote:
->> The GUC_HXG_MSG_0_ORIGIN definition should be unsigned.  Currently it is
->> defined as INT_MIN.  This doesn't cause a problem currently but it's
->> still worth cleaning up.
->>
->> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> 
-> it seems there are a few more places to change to follow what was done
-> in commit 962bd34bb457 ("drm/i915/uc: Fix undefined behavior due to
-> shift overflowing the constant").
-> 
-> +Michal
-> 
-> Could we eventually share these abi includes with i915 so we don't
-> keep fixing the same thing in 2 places?
+Reported-by: "kernelci.org bot" <bot@kernelci.org>
+Closes: https://linux.kernelci.org/test/case/id/6582cd6d992645c680e13478/
+Fixes: 13f58267cda3 ("ASoC: soc.h: don't create dummy Component via COMP_DUMMY()")
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
-it should be possible and I guess we should plan for that while
-discussing all this new xe driver...
+---
 
-anyway, what about creating new intel/ folder under drm/ ?
+ sound/soc/mediatek/mt8192/mt8192-mt6359-rt1015-rt5682.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- - drm/intel/include/abi
-        guc_actions_abi.h
-        guc_klvs_abi.h
-        ...
+diff --git a/sound/soc/mediatek/mt8192/mt8192-mt6359-rt1015-rt5682.c b/sound/soc/mediatek/mt8192/mt8192-mt6359-rt1015-rt5682.c
+index 5bd6addd1450..bfcb2c486c39 100644
+--- a/sound/soc/mediatek/mt8192/mt8192-mt6359-rt1015-rt5682.c
++++ b/sound/soc/mediatek/mt8192/mt8192-mt6359-rt1015-rt5682.c
+@@ -1208,7 +1208,8 @@ static int mt8192_mt6359_dev_probe(struct platform_device *pdev)
+ 			dai_link->ignore = 0;
+ 		}
+ 
+-		if (strcmp(dai_link->codecs[0].dai_name, RT1015_CODEC_DAI) == 0)
++		if (dai_link->num_codecs && dai_link->codecs[0].dai_name &&
++		    strcmp(dai_link->codecs[0].dai_name, RT1015_CODEC_DAI) == 0)
+ 			dai_link->ops = &mt8192_rt1015_i2s_ops;
+ 
+ 		if (!dai_link->platforms->name)
+-- 
+2.43.0
 
-the only question would be what prefix should be used for macros:
-just GUC_ or INTEL_GUC_ or XE_GUC_ ?
-
-then we can also think of creating library with common helpers for GuC
-(for encoding/decoding HXG messages, preparing ADS, reading logs, etc)
-
-btw, we can also consider sharing register definitions:
-
- - drm/intel/include/regs
-        xe_engine_regs.h
-        xe_gt_regs.h
-        xe_regs_defs.h
-
-Michal
-
-> 
-> Lucas De Marchi
-> 
->> ---
->> drivers/gpu/drm/xe/abi/guc_messages_abi.h | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpu/drm/xe/abi/guc_messages_abi.h
->> b/drivers/gpu/drm/xe/abi/guc_messages_abi.h
->> index 3d199016cf88..c04606872e48 100644
->> --- a/drivers/gpu/drm/xe/abi/guc_messages_abi.h
->> +++ b/drivers/gpu/drm/xe/abi/guc_messages_abi.h
->> @@ -40,7 +40,7 @@
->>  */
->>
->> #define GUC_HXG_MSG_MIN_LEN            1u
->> -#define GUC_HXG_MSG_0_ORIGIN            (0x1 << 31)
->> +#define GUC_HXG_MSG_0_ORIGIN            (0x1U << 31)
->> #define   GUC_HXG_ORIGIN_HOST            0u
->> #define   GUC_HXG_ORIGIN_GUC            1u
->> #define GUC_HXG_MSG_0_TYPE            (0x7 << 28)
->> -- 
->> 2.42.0
->>
