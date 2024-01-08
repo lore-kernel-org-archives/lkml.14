@@ -1,213 +1,101 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E7055C11
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 19:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB83B54FA6
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 19:22:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="UcuRE8b/"
-Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
-	by cmsmtp with ESMTPS
-	id MuM0rnqW4oMN9MvBorreTt; Mon, 08 Jan 2024 19:21:36 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id MvBorBURFyxR5MvBorECh3; Mon, 08 Jan 2024 19:21:36 +0000
-X-Authority-Analysis: v=2.4 cv=JYOvEGGV c=1 sm=1 tr=0 ts=659c4b40
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GfQleyYEO+cc22AUyTT7qQ==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=4RBUngkUAAAA:8
- a=yPCof4ZbAAAA:8 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=xBSaC5TXKjcKYkrMF84A:9
- a=QEXdDO2ut3YA:10 a=_sbA2Q-Kp09kWB8D3iXc:22 a=AjGcO6oz07-iQ99wixmX:22
- a=cvBusfyB2V15izCimMoJ:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=rxv1zyBPmROyH3ODikrSiXesbgEjrba4VMOwSjsq8Bs=; b=UcuRE8b/Z8LikqSXkz82gnemfo
-	5s0zrEyCNtKTDjk6HHrqCtfDwBPPlrdxtnwO21fRoyfMO8z+THBoyTPbOBjbuDEtlaVbu1P7DC6D7
-	PcBPVl0ER3Osiw2Enn6lqQC+3NhDSMMyRFWFyjRCvM1K6ovQdchituyy86QeUQ6awQn6Tkp/6oXyz
-	CklilmjSS+JJYzvyyR0yRsmyJwHbq2LqnQx0Sthz8QQpggBcobS/75iJzybv+JAeUttaDhSufLhE0
-	iyE2ZNVnk2tfYejn9JUJ9Q4Ohj63go4LPd/qqq3tZT9k4X7relp63HU//hpuhzzVgCK/6qgee2H2O
-	5ehjGSag==;
-Received: from 187.184.157.186.cable.dyn.cableonline.com.mx ([187.184.157.186]:32462 helo=[192.168.0.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rMvBm-000aMY-0G;
-	Mon, 08 Jan 2024 13:21:34 -0600
-Message-ID: <7be0e5cc-058e-474e-bca9-f1c5b9a5f507@embeddedor.com>
-Date: Mon, 8 Jan 2024 13:21:30 -0600
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="15/oa8U4"
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-4b87d79a7d8so207581e0c.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 11:22:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1704741774; x=1705346574; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t630KAds7hYgoJ0f0LCQ0AiFafn/yi4jTUENLdj9Tv0=;
+        b=15/oa8U4pdYzJkHwwrBD/ZBIkmGcfTosoOL6LTbBCbW9PSojKpdH1liW5vWEyMcehQ
+         vEx6D2purj1hfQkQAL3p7NY67GY3BgKuLDFWxCiRsNi9pB6cnKjGzbPHUmnWKyKCjdtf
+         kCENjprM5m6D9ONGevgO16eUiQJ7c+XnFGq+uwkdXxbjjwgNVYwk/gCf4oAdEpUEQ8L7
+         0OqmMouljJgrcrBqjkntsuGjj4ZJzLOSxVVK8UYut5H65FahRmMsln2nAHcgAK9SzAQK
+         YKS8MBcUY3csqZgpL3Yov7vR97sH6qVXqaOH+q/SooB/SUXyoRfC9X0cu4mQNvPb/ONS
+         J0tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704741774; x=1705346574;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t630KAds7hYgoJ0f0LCQ0AiFafn/yi4jTUENLdj9Tv0=;
+        b=Z4YGHdEBKnJbcGvXNklHd8bh8Yl/bru0fuH4J4aFm3nQPJfhpjD2qdA2s6UiO1UOA1
+         tD+xsQ8MJ3Eckigyt+4LEsZGXfQgYDYIZnujcBg4whX+6UfHq81ug5zHf5iuG2X4S6Kj
+         e53ehhLapVFH/Jz7j5h+sEHUE9qYlhkY5Artixk6cwsUAUlw+fe9zyhM4Gzd1rSqDTM0
+         BKeBS38Mtfba89Hlhza44JHAVC3PJKoXtBeG8BVpEzNr/+KtQTYSt9AFCX3HCjlkQi/M
+         a7s85ajIM1lhraWtMlu+yAFV4IHyDvFNtBkd3t2708WRbTYJ5zKi0GVS7upLBo9OhtH0
+         jHUg==
+X-Gm-Message-State: AOJu0YyD67zxfPSdPAdiZG7DPeAcHOcUPNnUjDH5CNvoQyM8S1DBnYKn
+	OYwampNaZ1zbiBi9BZV12KPpAd8T7fM0ZZd9JfJ6DbIznnHmqw==
+X-Google-Smtp-Source: AGHT+IEah3V2Xy4oFA525rnBCO8YyKWJvg7Na5/wUj76Z4lWssvjCk0GeQpBn6QxzFQI/HexZWRnBZrcb5Awcliqtng=
+X-Received: by 2002:a05:6122:17a6:b0:4b6:aeb7:3f1d with SMTP id
+ o38-20020a05612217a600b004b6aeb73f1dmr1198020vkf.9.1704741773775; Mon, 08 Jan
+ 2024 11:22:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] VMCI: Fix memcpy() run-time warning in
- dg_dispatch_as_host()
-Content-Language: en-US
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
- linux-hardening@vger.kernel.org, keescook@chromium.org, error27@gmail.com,
- gustavoars@kernel.org, Bryan Tan <bryantan@vmware.com>,
- Vishnu Dasa <vdasa@vmware.com>,
- VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-kernel@vger.kernel.org, vegard.nossum@oracle.com,
- darren.kenny@oracle.com, syzkaller <syzkaller@googlegroups.com>
-References: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
- <20240105164001.2129796-2-harshit.m.mogalapalli@oracle.com>
- <fc132bde-d42d-4aac-ba91-7a939a18091a@moroto.mountain>
- <7826922a-d642-424e-bede-bfc45be9254d@embeddedor.com>
- <8023e9f4-c14b-453a-8071-ef94bba0d0d3@moroto.mountain>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <8023e9f4-c14b-453a-8071-ef94bba0d0d3@moroto.mountain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.184.157.186
-X-Source-L: No
-X-Exim-ID: 1rMvBm-000aMY-0G
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187.184.157.186.cable.dyn.cableonline.com.mx ([192.168.0.10]) [187.184.157.186]:32462
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfIXnlu80mlNMk2Tb6Cd2rmVFiFcIBCB1tuWPwCCwf40GPYyBwJTY2vxnfFWKfFCuLvm8QL4CVWiaI0DEeIZpgBYnlPL6Kj+/w4aYEYOAePF2D1RNQ0sB
- S42s9Za2Pha2SLV1Hsjf/VPPlCKkMKnJWqf4oCGd/8Xk5hIX4fbSI9pKnMgNibPyZufA3WSJqz+Ak9rKaYLQ2mA7HP1ePlm9hvM8xqIlNDi93z4muLKNR2Y1
+References: <20240104130123.37115-1-brgl@bgdev.pl> <20240104130123.37115-7-brgl@bgdev.pl>
+ <20240108191052.GA1893484-robh@kernel.org>
+In-Reply-To: <20240108191052.GA1893484-robh@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 8 Jan 2024 20:22:42 +0100
+Message-ID: <CAMRc=Mc7D1rVHaA4yoOC2DHDkkCptF4wjAm=24Rr=kkqM1ztjg@mail.gmail.com>
+Subject: Re: [RFC 6/9] dt-bindings: vendor-prefixes: add a PCI prefix for
+ Qualcomm Atheros
+To: Rob Herring <robh@kernel.org>
+Cc: Kalle Valo <kvalo@kernel.org>, "David S . Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Heiko Stuebner <heiko@sntech.de>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Chris Morgan <macromorgan@hotmail.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	=?UTF-8?B?TsOtY29sYXMgRiAuIFIgLiBBIC4gUHJhZG8=?= <nfraprado@collabora.com>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Peng Fan <peng.fan@nxp.com>, 
+	Robert Richter <rrichter@amd.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Terry Bowman <terry.bowman@amd.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, Alex Elder <elder@linaro.org>, 
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-wireless@vger.kernel.org, 
+	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Jan 8, 2024 at 8:10=E2=80=AFPM Rob Herring <robh@kernel.org> wrote:
+>
+> On Thu, Jan 04, 2024 at 02:01:20PM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Document the PCI vendor prefix for Qualcomm Atheros so that we can
+> > define the QCA PCI devices on device tree.
+>
+> Why? vendor-prefixes.yaml is only applied to property names. 'qca'
+> should be the prefix for those.
+>
+> Rob
 
+I didn't have any better idea. PCI devices on DT are defined by their
+"pci<vendor ID>,<model ID>" compatible, not regular human-readable
+strings and this makes checkpatch.pl complain.
 
-On 1/8/24 12:36, Dan Carpenter wrote:
-> On Mon, Jan 08, 2024 at 11:03:51AM -0600, Gustavo A. R. Silva wrote:
->>
->>
->> On 1/8/24 01:33, Dan Carpenter wrote:
->>> On Fri, Jan 05, 2024 at 08:40:00AM -0800, Harshit Mogalapalli wrote:
->>>> Syzkaller hit 'WARNING in dg_dispatch_as_host' bug.
->>>>
->>>> memcpy: detected field-spanning write (size 56) of single field "&dg_info->msg"
->>>> at drivers/misc/vmw_vmci/vmci_datagram.c:237 (size 24)
->>>>
->>>> WARNING: CPU: 0 PID: 1555 at drivers/misc/vmw_vmci/vmci_datagram.c:237
->>>> dg_dispatch_as_host+0x88e/0xa60 drivers/misc/vmw_vmci/vmci_datagram.c:237
->>>>
->>>> Some code commentry, based on my understanding:
->>>>
->>>> 544 #define VMCI_DG_SIZE(_dg) (VMCI_DG_HEADERSIZE + (size_t)(_dg)->payload_size)
->>>> /// This is 24 + payload_size
->>>>
->>>> memcpy(&dg_info->msg, dg, dg_size);
->>>> 	Destination = dg_info->msg ---> this is a 24 byte
->>>> 					structure(struct vmci_datagram)
->>>> 	Source = dg --> this is a 24 byte structure (struct vmci_datagram)
->>>> 	Size = dg_size = 24 + payload_size
->>>>
->>>> {payload_size = 56-24 =32} -- Syzkaller managed to set payload_size to 32.
->>>>
->>>>    35 struct delayed_datagram_info {
->>>>    36         struct datagram_entry *entry;
->>>>    37         struct work_struct work;
->>>>    38         bool in_dg_host_queue;
->>>>    39         /* msg and msg_payload must be together. */
->>>>    40         struct vmci_datagram msg;
->>>>    41         u8 msg_payload[];
->>>>    42 };
->>>>
->>>> So those extra bytes of payload are copied into msg_payload[], a run time
->>>> warning is seen while fuzzing with Syzkaller.
->>>>
->>>> One possible way to fix the warning is to split the memcpy() into
->>>> two parts -- one -- direct assignment of msg and second taking care of payload.
->>>>
->>>> Gustavo quoted:
->>>> "Under FORTIFY_SOURCE we should not copy data across multiple members
->>>> in a structure."
->>>>
->>>> Reported-by: syzkaller <syzkaller@googlegroups.com>
->>>> Suggested-by: Vegard Nossum <vegard.nossum@oracle.com>
->>>> Suggested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->>>> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
->>>> ---
->>>> This patch is only tested with the C reproducer, not any testing
->>>> specific to driver is done.
->>>>
->>>> v1->v2: ( Suggestions from Gustavo )
->>>>           1. Change the commit message false positive --> legitimate
->>>>              warning.
->>>
->>> The commit message is fine.
->>>
->>> Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
->>>
->>> But, I mean, it's not really "legitimate".  It meets the fortify source
->>> heuristic, but it's still a false positive.  Fortify source is
->>> *supposed* to find memory corruption bugs and this is not a memory
->>> corruption bug.  It's just that these days we have to treat foritify
->>> false positives as crashing bugs because people enable it and we have to
->>> fix it.
->>>
->>> Let's not pretend that fortify has helped us in this situation, it has
->>> caused us a problem.  It has taken valid code and created a crashing
->>> bug.  I'm not saying that the cost isn't worth it, but let's not pretend.
->>>
->>
->> It's a "legitimate warning" (which differs from a "legitimate memory
->> corruption bug") in the sense that the feature is doing what it's
->> supposed to do: reporting a write beyond the boundaries of a field/member
->> in a structure.
->>
->> Is that simple.  I don't see the "pretense" here.
->>
->> BTW, is this _warning_ really causing a crash?
-> 
-> I don't know how many people have Reboot on Warn enabled but I've heard
-> it's a shocking high number of people.
-> 
-> My problem with "legitimate" is that it's a biased word which imples
-> "good".  A more neutral way to describe it would be "acceptable" or
-> "matches the heuristic".
-> 
-> Generally, we get a lot of patches which are to make a tool happy and
-> sometimes like here it's probably an acceptable cost.  But I think
-> other times people lose sight of what it's all about and confuse good
-> and bad.  In some kind of very literal and narrow sense this warning is
-> bad.  It takes perfectly okay code and turns it into a crashing bug.  In
-> the larger sense and long term view then, sure, the heuristic is useful,
-> but right here, in this situation, it's bad.
+I'm open to suggestions.
 
-
-This is right on point:
-
-"In some kind of very literal and narrow sense this warning is bad."
-
-Let's say the vast majority of people is of this opinion. Thus, they
-engage in never-ending discussions, and end up disregarding this sort
-of warning, deciding to ignore it completely. Then, a lot more of these
-warnings go unfixed. Then, a couple of actual memory corruption bugs
-are introduced. Then, people don't notice them. Then, the hardening
-feature ends up becoming useless.
-
-Why insist on disregarding something that is clearly beneficial to
-acknowledge and worth correcting right on the spot?
-
-This is real work that must be done if we want the feature to help us
-detect bugs and potential vulnerabilities.
-
-Thanks
---
-Gustavo
+Bartosz
