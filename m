@@ -1,101 +1,132 @@
-Received: from out203-205-221-191.mail.qq.com (out203-205-221-191.mail.qq.com [203.205.221.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD11741744;
-	Mon,  8 Jan 2024 12:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F5574643C;
+	Mon,  8 Jan 2024 12:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Lcf1XyRU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1704717132; bh=0ub3HiEeynpEvWN9T9rYs29daqMSRNhQo+LY89G/pJQ=;
-	h=From:To:Cc:Subject:Date;
-	b=Lcf1XyRUwj8JYaOdyYt0yt8lM1SJaU5PVJLxQHlR2LB81R61nbLCghBHO84A3p5C1
-	 pHA/xrYqZXDHh8qJI79D+XAn1aJN52ToJUGJnjSnopaSU0+ZO8EGOWK9m6NNCWGVu8
-	 G/dtGEy6tjPUN01fU1cq9Mi4xoiXQnjIr+O7yKBs=
-Received: from levi-pc.. ([61.186.21.12])
-	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
-	id 809A30F8; Mon, 08 Jan 2024 20:32:09 +0800
-X-QQ-mid: xmsmtpt1704717129t9llkx3wl
-Message-ID: <tencent_36BEBD114FBCA33263C3945743822F888907@qq.com>
-X-QQ-XMAILINFO: OKkKo7I1HxIeOOCsKVtKsyIlhIW7b/zjUV6pUrNrYZZI9XK2Oic147fEU5fTgm
-	 7kNxktRJnBnvLdamswo0GZFc92xuFBVxB17zsqa7/LhyZ9qzDko3/xwv9TOqP05NhUZkG89fqBv1
-	 0NMm9Mgvs+S/kpNQ41b+KH76jMuJnOKt/1K5YM/i2Azf6ojGpANPOCQopx4cLtm5LNrgLSnwDiOS
-	 MlKig5T9rWosJrznVdFICrqNcxenmYMs+q/HgzYZQM7lUEDCUIeqM7kQ2Iz2EOQG70fI//1rhVWL
-	 hJq82vghNBYXskuFwSKNAsafImf3OHGqZHZj+KvPc9RuOCYoMsCXdrWyYMGhkufZnXyH6F/BvsiV
-	 mV4LmTsobuiOOGy9R9uu5QQMfenA2KNCnOjvzRUFVstVrc+7OUzDj+eA0TqeIY4PlusiooukYsSn
-	 hjkrNJjSpLE56kVa7io8hPsUGRhaDufbgzGhMq/UZQ/CQjuArd1HH4KVfYuLife0hJL+NozqOSRG
-	 MSj5Hw+My+cz+3OlxaSTTX8B0zzpfR+gYyy1KycDZeJxodqI9M+nYlYdcNB4ysyfDwIZqpuTr5Vx
-	 cD/d8QYvcF3Ub9GuSHWJMSYhUovo8+bPVT8lNOnuXoVLqtuQgTsX4qQcKunFJ1bcLUTyvVBa1r4k
-	 6KHnSHB6nStfRQryQ3m1WlKoG+7DWXXaiRzvUnp9oeJdPoN6egITseJm2FcGt6GyyZRDrGVqloQT
-	 nk+hfLpOngRyTh/kz0ixtDhJQy3+3cuNOgKgczOwik+3AHBVmr/QlbDxVWHk5KXyp89LfXpkWr9G
-	 mKmitAa2yNjpRZYN1nZTC0gVb/wuY0ohqvVRfN2PP72189oc9hqjzVeiMEenAT5GK9sKu/b65sPl
-	 MC0a5k2oQd6SL2Shna3tREMfi6eyF72O88sP1tneINeZ2/XIUnlvVnADw4sOKbcg0stKfYPKwMsX
-	 JCcTGsOSSN+eNJH/xEmtC/K5scWMkOnGXvYW0QAoEbgiqV24OQhGuVpMDsC9vlRwzR1viJCs8vuP
-	 0LEvhF3JD0YF3FgOHO
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: Huayu Zhang <932367230@qq.com>
-To: tiwai@suse.com
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	james.schulman@cirrus.com,
-	david.rhodes@cirrus.com,
-	rf@opensource.cirrus.com,
-	perex@perex.cz,
-	sbinding@opensource.cirrus.com,
-	kailang@realtek.com,
-	zhanghuayu.dev@gmail.com
-Subject: [PATCH] add DSD for ThinkBook 16p G4 IRH with Subsystem Id of : 0x17aa38a9
-Date: Mon,  8 Jan 2024 20:32:11 +0800
-X-OQ-MSGID: <20240108123211.13059-1-932367230@qq.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F0qlnKAM"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-336897b6bd6so1975521f8f.2;
+        Mon, 08 Jan 2024 04:37:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704717473; x=1705322273; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ydZi+7MEKV7AqVazGsUhXNex/I1gb98UFo+mMABX9Jo=;
+        b=F0qlnKAMVyEojigP6n2Rwp8co9HaSQOQk5C3jlCtlW41KfT9fN7Alc8jbzeEK9skVu
+         ky3hZdJKSzaI98wShNjtKgGGwZH0D7ybPnPNmymh42Eyhmus/dfZeXbdhqc8Wi7tmNL7
+         asljOJUx8hSnO7n9BeJw8ucEK4ahs3uO6MhekPg0mm3GWnpeu7vQVR39p0a/B5tVoo2x
+         j5v8f1jd2FimPKTlDL6X/sroty1J5tau7x4pRD5SaI1U2GtOXado1lmZVRuGI9qkUnvY
+         Yl+zvHV3gdRpU8+xKCC1XUdziVIrYDc/A1kbikzdam/IyKOi9Oz2NZhPPMfGDehsgiAE
+         XM/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704717473; x=1705322273;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ydZi+7MEKV7AqVazGsUhXNex/I1gb98UFo+mMABX9Jo=;
+        b=TtHVQVBs1VFP1+94GCoGYXOkVQSO13hdJCYjfHJzM9zAsRY2jFWF8hVAzsZDAdOXhy
+         y+JIPXnONb01OU2XjuomWxLy23AjbK37TIWFTfo+MtSK/bA+hHltGGoypkxQxYaxtveX
+         9+gjLQxDSiSUH4SuPmofbrepqPe6CRqHv/Bhh9ZIXkupYPcTpVr7MYxPVbnAuHVr/3pR
+         oaGJExxnKlumuS3E4p0MjCHQKGnR982NSKZCBpGr4LEIM/Kc82+ggqoCFcPB2OM2JW5B
+         oy4L6TL0fMUn/vfl/7rQRXrdhtDFfjQAuUqzWzzGz/+T9AF+UmxoGbsELJ7I/OX7nfsh
+         xNBQ==
+X-Gm-Message-State: AOJu0YyMSQPYf4cNtrxh/kmFPPaPhPBihqJ0jKh2ZyUjvgvJtqsh8ySj
+	SqqJwFUzPes9lCVpLD7X2x8NCrbBqm835FFDVGo=
+X-Google-Smtp-Source: AGHT+IHTqYiIpN1dr5yrgM+CDdeE0g5tfbnhXHENK5rJ+Qg3UHLEQuqNdauBSsC9gsUbW0OQEWfi4io6/vHLjuvObsE=
+X-Received: by 2002:adf:fd43:0:b0:337:6f4a:122d with SMTP id
+ h3-20020adffd43000000b003376f4a122dmr372152wrs.128.1704717472748; Mon, 08 Jan
+ 2024 04:37:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-
+References: <tencent_CD95311972BE7A11FC41B4F5718E14E02D0A@qq.com>
+In-Reply-To: <tencent_CD95311972BE7A11FC41B4F5718E14E02D0A@qq.com>
 From: Huayu Zhang <zhanghuayu.dev@gmail.com>
+Date: Mon, 8 Jan 2024 20:37:45 +0800
+Message-ID: <CAB5Sz22VwnZg0=-i+sMwuf2VDnvmwjdth9RBjcMJmc5yLWk7zA@mail.gmail.com>
+Subject: Re: [PATCH] add DSD for ThinkBook 16p G4 IRH with Subsystem Id of : 0x17aa38a9
+To: Huayu Zhang <932367230@qq.com>
+Cc: tiwai@suse.com, linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	james.schulman@cirrus.com, david.rhodes@cirrus.com, rf@opensource.cirrus.com, 
+	perex@perex.cz, sbinding@opensource.cirrus.com, kailang@realtek.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
----
- sound/pci/hda/cs35l41_hda_property.c | 2 ++
- sound/pci/hda/patch_realtek.c        | 1 +
- 2 files changed, 3 insertions(+)
+Sorry for missing the info within patch. As mentioned in the subject,
+the patch is using to fix the sound issue of ThinkBook 16p G4 IRH with
+Subsystem Id of : 0x17aa38a9. But this just enable the downside (bass)
+speakers. When I tried to adjust the volumn, it atually mapped to the
+frequency division (the lower volumn actually set the bass speakers,
+and higher volumn map to the louder sound of up facing speakers).
+Wondering if this related to ALSA?
 
-diff --git a/sound/pci/hda/cs35l41_hda_property.c b/sound/pci/hda/cs35l41_hda_property.c
-index 35277ce890a4..b1844224123f 100644
---- a/sound/pci/hda/cs35l41_hda_property.c
-+++ b/sound/pci/hda/cs35l41_hda_property.c
-@@ -93,6 +93,7 @@ static const struct cs35l41_config cs35l41_config_table[] = {
- 	{ "10431F12", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
- 	{ "10431F1F", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, -1, 0, 0, 0, 0 },
- 	{ "10431F62", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 0, 0, 0 },
-+	{ "17AA38A9", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 0, 0, 0 },
- 	{ "17AA38B4", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 0, 0, 0 },
- 	{ "17AA38B5", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 0, 0, 0 },
- 	{ "17AA38B6", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 0, 0, 0 },
-@@ -427,6 +428,7 @@ static const struct cs35l41_prop_model cs35l41_prop_model_table[] = {
- 	{ "CSC3551", "10431F12", generic_dsd_config },
- 	{ "CSC3551", "10431F1F", generic_dsd_config },
- 	{ "CSC3551", "10431F62", generic_dsd_config },
-+	{ "CSC3551", "17AA38A9", generic_dsd_config },
- 	{ "CSC3551", "17AA38B4", generic_dsd_config },
- 	{ "CSC3551", "17AA38B5", generic_dsd_config },
- 	{ "CSC3551", "17AA38B6", generic_dsd_config },
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 1dcfba27e075..3eae1a5d9bcd 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -10256,6 +10256,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x17aa, 0x3886, "Y780 VECO DUAL", ALC287_FIXUP_TAS2781_I2C),
- 	SND_PCI_QUIRK(0x17aa, 0x38a7, "Y780P AMD YG dual", ALC287_FIXUP_TAS2781_I2C),
- 	SND_PCI_QUIRK(0x17aa, 0x38a8, "Y780P AMD VECO dual", ALC287_FIXUP_TAS2781_I2C),
-+	SND_PCI_QUIRK(0x17aa, 0x38a9, "ThinkBook 16p G4 IRH", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x17aa, 0x38b4, "Legion Slim 7 16IRH8", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x17aa, 0x38b5, "Legion Slim 7 16IRH8", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x17aa, 0x38b6, "Legion Slim 7 16APH8", ALC287_FIXUP_CS35L41_I2C_2),
--- 
-2.34.1
-
+On Mon, Jan 8, 2024 at 8:28=E2=80=AFPM Huayu Zhang <932367230@qq.com> wrote=
+:
+>
+> From: Huayu Zhang <zhanghuayu.dev@gmail.com>
+>
+> ---
+>  sound/pci/hda/cs35l41_hda_property.c | 2 ++
+>  sound/pci/hda/patch_realtek.c        | 1 +
+>  2 files changed, 3 insertions(+)
+>
+> diff --git a/sound/pci/hda/cs35l41_hda_property.c b/sound/pci/hda/cs35l41=
+_hda_property.c
+> index 35277ce890a4..b1844224123f 100644
+> --- a/sound/pci/hda/cs35l41_hda_property.c
+> +++ b/sound/pci/hda/cs35l41_hda_property.c
+> @@ -93,6 +93,7 @@ static const struct cs35l41_config cs35l41_config_table=
+[] =3D {
+>         { "10431F12", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 },=
+ 0, 1, -1, 1000, 4500, 24 },
+>         { "10431F1F", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 },=
+ 1, -1, 0, 0, 0, 0 },
+>         { "10431F62", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 },=
+ 1, 2, 0, 0, 0, 0 },
+> +       { "17AA38A9", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 },=
+ 0, 1, -1, 0, 0, 0 },
+>         { "17AA38B4", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 },=
+ 0, 1, -1, 0, 0, 0 },
+>         { "17AA38B5", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 },=
+ 0, 1, -1, 0, 0, 0 },
+>         { "17AA38B6", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 },=
+ 0, 1, -1, 0, 0, 0 },
+> @@ -427,6 +428,7 @@ static const struct cs35l41_prop_model cs35l41_prop_m=
+odel_table[] =3D {
+>         { "CSC3551", "10431F12", generic_dsd_config },
+>         { "CSC3551", "10431F1F", generic_dsd_config },
+>         { "CSC3551", "10431F62", generic_dsd_config },
+> +       { "CSC3551", "17AA38A9", generic_dsd_config },
+>         { "CSC3551", "17AA38B4", generic_dsd_config },
+>         { "CSC3551", "17AA38B5", generic_dsd_config },
+>         { "CSC3551", "17AA38B6", generic_dsd_config },
+> diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.=
+c
+> index 1dcfba27e075..3eae1a5d9bcd 100644
+> --- a/sound/pci/hda/patch_realtek.c
+> +++ b/sound/pci/hda/patch_realtek.c
+> @@ -10256,6 +10256,7 @@ static const struct snd_pci_quirk alc269_fixup_tb=
+l[] =3D {
+>         SND_PCI_QUIRK(0x17aa, 0x3886, "Y780 VECO DUAL", ALC287_FIXUP_TAS2=
+781_I2C),
+>         SND_PCI_QUIRK(0x17aa, 0x38a7, "Y780P AMD YG dual", ALC287_FIXUP_T=
+AS2781_I2C),
+>         SND_PCI_QUIRK(0x17aa, 0x38a8, "Y780P AMD VECO dual", ALC287_FIXUP=
+_TAS2781_I2C),
+> +       SND_PCI_QUIRK(0x17aa, 0x38a9, "ThinkBook 16p G4 IRH", ALC287_FIXU=
+P_CS35L41_I2C_2),
+>         SND_PCI_QUIRK(0x17aa, 0x38b4, "Legion Slim 7 16IRH8", ALC287_FIXU=
+P_CS35L41_I2C_2),
+>         SND_PCI_QUIRK(0x17aa, 0x38b5, "Legion Slim 7 16IRH8", ALC287_FIXU=
+P_CS35L41_I2C_2),
+>         SND_PCI_QUIRK(0x17aa, 0x38b6, "Legion Slim 7 16APH8", ALC287_FIXU=
+P_CS35L41_I2C_2),
+> --
+> 2.34.1
+>
