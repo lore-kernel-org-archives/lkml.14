@@ -1,73 +1,91 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D381A25757;
-	Mon,  8 Jan 2024 11:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F4314263
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 11:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ak7pHqML";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ESWjcGtI"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1704712141;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cBr54UrbDBqBWO0Zs3pXK4ySEoD4xvWP17nI7TgZkWs=;
-	b=ak7pHqML8qBLZvhs66sx1miPuG8E/Vc45gFM5rts0SeNmjy/TrVg2TZRsuWxspA9FdJYpi
-	2z01rYJyCNj+xhB7CNSEDqTPv7p/PLcrRAKOVnl9MAI0bBZNoB4LvUZ5x5eVQcrhBVlj4L
-	lWtPd4MWz74du1uf920GgapC3KQogwcwDXlugy58fE/pZt47CUqL/uF4p270H3cVwdjaW1
-	MLisYv6TaIkxzCdSf39pS7rpQXqDdDLOkwvs51x+Vqd0YpmQD0g5Rl72BZJvEip5ubO/Xu
-	UBh6vKy2niM34+L+sLK5IP+hDbNqGjKQaiHRoEJ1c5EXWqfRqdo4OiSdOzSpKw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1704712141;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cBr54UrbDBqBWO0Zs3pXK4ySEoD4xvWP17nI7TgZkWs=;
-	b=ESWjcGtI3EVArg1SWAS/o+XnPp8w9CzXgk8/SmWZK+qRnT6dsWhQ6UszStMiCEMnAsMeX8
-	GvPxy5pAzYjppACg==
-To: Sagi Maimon <maimon.sagi@gmail.com>, richardcochran@gmail.com,
- luto@kernel.org, datglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, arnd@arndb.de,
- geert@linux-m68k.org, peterz@infradead.org, hannes@cmpxchg.org,
- sohil.mehta@intel.com, rick.p.edgecombe@intel.com, nphamcs@gmail.com,
- palmer@sifive.com, maimon.sagi@gmail.com, keescook@chromium.org,
- legion@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
- linux-arch@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v5] posix-timers: add multi_clock_gettime system call
-In-Reply-To: <20240102091855.70418-1-maimon.sagi@gmail.com>
-References: <20240102091855.70418-1-maimon.sagi@gmail.com>
-Date: Mon, 08 Jan 2024 12:09:00 +0100
-Message-ID: <875y04kroz.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kFrUvuu2"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40d60c49ee7so19707245e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 03:09:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704712179; x=1705316979; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=dCbP19Yuo6zcTY8Lt+3L+c+HrEIBgk2LF5vyBS21+bg=;
+        b=kFrUvuu2Rzdgi6OCYN/nbBBP1O7L9XL5ESOJUCWNzvlrVqNksESJpwYFXxpMM4Bps7
+         wOkzSHqK5XJaoW1fV5RDN0sL1pYHgml4ZwX8bEWWRbEQNH5YtvgqqVX3F71sgsiQGGXK
+         i5gUqGpdoP+JUO28dqLo1aRkdsJHs5TEmLtT4wFge/Kip+TGaVImLmeXty3Jm4YpTs5T
+         a5rY3df80Kl9ohVswKlLLZUnX9cKAWL11nd9aOeO0Up2Ow8ZXBvYO90W/zVFQ81LCj+l
+         N59935WvwRq/CwLElfV+XinmEAXOiNwREGWZurtK/HTLQdNgDQin1/OFucWql7zdg5lY
+         n0Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704712179; x=1705316979;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dCbP19Yuo6zcTY8Lt+3L+c+HrEIBgk2LF5vyBS21+bg=;
+        b=C9xBkiT/2/fueiJ4S/kH5900IhENJ5ok7Bnw2zsqlA/dWNs8Mf730qpHXvj5nyR/HC
+         qjgaLE9PQJPqf+suByWWwpaIcQMb1jxWiUjwGH5/kTzjQY1I/W5R2BO9IiQo6KWlQfs3
+         Dp9Ur+TIWCOiSI/zKfK45iyZs7acQPxG7wK/jMODnEHy8vOOeUlCQpil3V4jiqbzkPhb
+         5iyeKUw704zpaE689q4zJUBNIe8lHdgwfGtxbJuKl/KRwxLr+N2W/dKyLqYEa4pVVIi2
+         ywFUsj7ykNmeZK1Bie3VGMk9/ELGkhBpNKzTKYd8K+lnaepkgH3x6+YhSfYSepyJ1aIU
+         VsSQ==
+X-Gm-Message-State: AOJu0YwPJV1li3Ph+cTLNPXrZY68t8iWgpjYTJrGP0K4bTeSzIVhwVOf
+	D2cL/vLubWN6cqreY9QTRlshkB/daGQ=
+X-Google-Smtp-Source: AGHT+IGTlk8WabjPz3WeNyz0wn12VXrMc6zU9iBzljVRNr7J4UoNSzDyQ/S3Bn2u5bPB43t/XYDhCQ==
+X-Received: by 2002:a05:600c:3eca:b0:40e:44c2:92be with SMTP id ek10-20020a05600c3eca00b0040e44c292bemr968287wmb.143.1704712179538;
+        Mon, 08 Jan 2024 03:09:39 -0800 (PST)
+Received: from gmail.com (1F2EF3FE.nat.pool.telekom.hu. [31.46.243.254])
+        by smtp.gmail.com with ESMTPSA id h17-20020a05600c351100b0040d5f466deesm10585667wmq.38.2024.01.08.03.09.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jan 2024 03:09:38 -0800 (PST)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Mon, 8 Jan 2024 12:09:37 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, the arch/x86 maintainers <x86@kernel.org>
+Subject: [GIT PULL] x86/boot changes for v6.8
+Message-ID: <ZZvX8fAPmSwiESj4@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, Jan 02 2024 at 11:18, Sagi Maimon wrote:
-> Some user space applications need to read some clocks.
-> Each read requires moving from user space to kernel space.
-> The syscall overhead causes unpredictable delay between N clocks reads
-> Removing this delay causes better synchronization between N clocks.
+Linus,
 
-As I explained to you before: This is wishful thinking.
+Please pull the latest x86/boot git tree from:
 
-There is absolutely no guarantee that the syscall will yield better
-results. It might on average, but that's a useless measure.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-boot-2024-01-08
 
-You also still fail to explain what this is going to solve and how it's
-used.
+   # HEAD: 257ca14f4d780e27a0605fd68053d2cc3178a232 x86/boot: Remove redundant initialization of the 'delta' variable in strcmp()
 
-> Some user space applications need to read some clocks.
+x86/boot changes for v6.8:
 
-Is just not an explanation at all.
+ - Ignore NMIs during very early boot, to address kexec crashes
 
-Thanks,
+ - Remove redundant initialization in boot/string.c's strcmp()
 
-        tglx
+ Thanks,
+
+	Ingo
+
+------------------>
+Colin Ian King (1):
+      x86/boot: Remove redundant initialization of the 'delta' variable in strcmp()
+
+Jun'ichi Nomura (1):
+      x86/boot: Ignore NMIs during very early boot
+
+
+ arch/x86/boot/compressed/ident_map_64.c    | 5 +++++
+ arch/x86/boot/compressed/idt_64.c          | 1 +
+ arch/x86/boot/compressed/idt_handlers_64.S | 1 +
+ arch/x86/boot/compressed/misc.h            | 1 +
+ arch/x86/boot/string.c                     | 2 +-
+ 5 files changed, 9 insertions(+), 1 deletion(-)
