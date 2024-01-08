@@ -1,39 +1,28 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67A913AC7;
-	Mon,  8 Jan 2024 10:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4600113AD8;
+	Mon,  8 Jan 2024 10:22:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bhA03MLh"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 408AKOIA044815;
-	Mon, 8 Jan 2024 04:20:24 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1704709224;
-	bh=MZTcfKa0JGgjKosImq417HAF98o0lITE41SczYfrfg0=;
-	h=Date:CC:Subject:To:References:From:In-Reply-To;
-	b=bhA03MLhviuwXzRnTVzi8ydbZQZ/jJLbeSbDlFxebWw0VifD6Fs6A9eSoHgb59Sic
-	 qO0KcW3GJY/ePZFN5y/GuJKug1L4haDh3HYqhHrdxfPHJ85f+r9g65030Jm/vSkoEn
-	 CJ4ETLpSGobcqXLk/HwhjgA3yiDik4QdHMekZqkQ=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 408AKObi012359
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 8 Jan 2024 04:20:24 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 8
- Jan 2024 04:20:24 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 8 Jan 2024 04:20:24 -0600
-Received: from [172.24.227.9] (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 408AKKJC108092;
-	Mon, 8 Jan 2024 04:20:21 -0600
-Message-ID: <bc3a0fb0-6268-476a-a13a-2d538704f61d@ti.com>
-Date: Mon, 8 Jan 2024 15:50:20 +0530
+	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="o8+G7C7L"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0E041240004;
+	Mon,  8 Jan 2024 10:22:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
+	t=1704709348;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XuJv/OyK8RE0Y94blspywgd4cYFg7aH1NjsPMWEemMY=;
+	b=o8+G7C7L1f0U+TNR9hjwq2dvwbkDeoKwHmYJ/lL98i2S7oyotEB4PbNN8gyDcg5GRlloJ4
+	OciNnaR2VvZAC4nmjTZ+np5PbKkNYYG7o1Cxr7H5Ye6fAga97KSuwf7NsI7zp7idUgQpfg
+	SJ5mMW2o4WK9TYiKJbFjDrnvtHRuIBMM1O5SEMQzc5CfYklj5y1x6IP7YkqlmqWwl+YquJ
+	yqFc4NSjOXsnEZ7IPLJZI/AEBAntp7P30m6zqhukwqjO/1FoLS/c3pMqFGmgUl1G6OssGb
+	psc0qp57ss1dPfKAo2AdfXGmLbT3NcjCQLmbmv/g/I0FcIuhY6aWaSsm1ApBBw==
+Message-ID: <65274929-fa59-482c-a744-6b9ce162ab46@arinc9.com>
+Date: Mon, 8 Jan 2024 13:22:18 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,52 +30,94 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: Re: [RFC PATCH] dt-bindings: PCI: ti,j721e-pci-host: Add device-id
- for TI's J784S4 SoC
+Subject: Re: [PATCH net-next] net: dsa: mt7530: support OF-based registration
+ of switch MDIO bus
 Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>
-References: <20240108050735.512445-1-s-vadapalli@ti.com>
- <67af1724-6424-456a-aff6-85d9e010c430@linaro.org>
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-In-Reply-To: <67af1724-6424-456a-aff6-85d9e010c430@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+To: Simon Horman <horms@kernel.org>
+Cc: Daniel Golle <daniel@makrotopia.org>,
+ Landen Chao <Landen.Chao@mediatek.com>, DENG Qingfang <dqfext@gmail.com>,
+ Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
+ Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean
+ <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ David Bauer <mail@david-bauer.net>, mithat.guner@xeront.com,
+ erkin.bozoglu@xeront.com, Luiz Angelo Daros de Luca <luizluca@gmail.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+References: <20240106122142.235389-1-arinc.unal@arinc9.com>
+ <20240107195241.GB132648@kernel.org>
+From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+In-Reply-To: <20240107195241.GB132648@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: arinc.unal@arinc9.com
 
-Hello Krzysztof,
-
-On 08/01/24 12:39, Krzysztof Kozlowski wrote:
-> On 08/01/2024 06:07, Siddharth Vadapalli wrote:
->> Add the device-id of 0xb012 for the PCIe controller on the J784S4 SoC as
->> described in the CTRL_MMR_PCI_DEVICE_ID register's PCI_DEVICE_ID_DEVICE_ID
->> field. The Register descriptions and the Technical Reference Manual for
->> J784S4 SoC can be found at: https://www.ti.com/lit/zip/spruj52
+On 7.01.2024 22:52, Simon Horman wrote:
+> On Sat, Jan 06, 2024 at 03:21:42PM +0300, Arınç ÜNAL wrote:
+>> From: David Bauer <mail@david-bauer.net>
 >>
->> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+>> Currently the MDIO bus of the switches the MT7530 DSA subdriver controls
+>> can only be registered as non-OF-based. Bring support for registering the
+>> bus OF-based.
+>>
+>> The subdrivers that control switches [with MDIO bus] probed on OF must
+>> follow this logic to support all cases properly:
+>>
+>> No switch MDIO bus defined: Populate ds->user_mii_bus, register the MDIO
+>> bus, set the interrupts for PHYs if "interrupt-controller" is defined at
+>> the switch node. This case should only be covered for the switches which
+>> their dt-bindings documentation didn't document the MDIO bus from the
+>> start. This is to keep supporting the device trees that do not describe the
+>> MDIO bus on the device tree but the MDIO bus is being used nonetheless.
+>>
+>> Switch MDIO bus defined: Don't populate ds->user_mii_bus, register the MDIO
+>> bus, set the interrupts for PHYs if ["interrupt-controller" is defined at
+>> the switch node and "interrupts" is defined at the PHY nodes under the
+>> switch MDIO bus node].
+>>
+>> Switch MDIO bus defined but explicitly disabled: If the device tree says
+>> status = "disabled" for the MDIO bus, we shouldn't need an MDIO bus at all.
+>> Instead, just exit as early as possible and do not call any MDIO API.
+>>
+>> The use of ds->user_mii_bus is inappropriate when the MDIO bus of the
+>> switch is described on the device tree [1], which is why we don't populate
+>> ds->user_mii_bus in that case.
+>>
+>> Link: https://lore.kernel.org/netdev/20231213120656.x46fyad6ls7sqyzv@skbuf/ [1]
+>> Suggested-by: David Bauer <mail@david-bauer.net>
+>> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
 >> ---
+>>   drivers/net/dsa/mt7530.c | 18 ++++++++++++++----
+>>   1 file changed, 14 insertions(+), 4 deletions(-)
 >>
->> This patch is based on linux-next tagged next-20240105.
+>> diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+>> index 391c4dbdff42..39d7e7ad7154 100644
+>> --- a/drivers/net/dsa/mt7530.c
+>> +++ b/drivers/net/dsa/mt7530.c
+>> @@ -2153,17 +2153,25 @@ mt7530_free_irq(struct mt7530_priv *priv)
+>>   static int
+>>   mt7530_setup_mdio(struct mt7530_priv *priv)
+>>   {
+>> +	struct device_node *mnp, *np = priv->dev->of_node;
+>>   	struct dsa_switch *ds = priv->ds;
+>>   	struct device *dev = priv->dev;
+>>   	struct mii_bus *bus;
+>>   	static int idx;
+>> -	int ret;
+>> +	int ret = 0;
+>> +
+>> +	mnp = of_get_child_by_name(np, "mdio");
+>> +
+>> +	if (mnp && !of_device_is_available(mnp))
+>> +		goto out;
 > 
-> Why is this patch incomplete? What is missing here? What are you asking
-> about as RFC?
-
-Since the merge window is closed, I was hoping to get the patch reviewed in
-order to get any "Reviewed-by" tags if possible. That way, I will be able to
-post it again as v1 along with the tags when the merge window opens. For that
-reason, I have marked it as an RFC patch. Is there an alternative to this "RFC
-patch" method that I have followed? Please let me know.
-
+> nit: I think it would easier on the eyes to simply
 > 
-> Best regards,
-> Krzysztof
-> 
+> 		return 0;
 
--- 
-Regards,
-Siddharth.
+Will do.
+
+Thanks.
+Arınç
