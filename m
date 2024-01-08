@@ -1,116 +1,101 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129A856B6A;
-	Mon,  8 Jan 2024 18:33:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D6957302
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 18:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KhN99XDn"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 408IXCGj126863;
-	Mon, 8 Jan 2024 12:33:12 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1704738792;
-	bh=2nMLoHZjmVIC5bz7SNEGOj0N9pS9iZCge0lbcW6Gklw=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=KhN99XDnNgcw3jsBL59qL7fpLl9nPGHgZzCGjOySufVIgwfUbsn2gCTFASCDwTLPX
-	 o03qgn2KXtLyapu4MUyhazV+/coAieRkpdXYXtkH+snx59ladhR1/9bWB2TwHHUGok
-	 OJNrPWVPLA9fZrXPl2ZPG9S5yV+fwjvfVAsWIxtI=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 408IXCUk057415
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 8 Jan 2024 12:33:12 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 8
- Jan 2024 12:33:11 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 8 Jan 2024 12:33:11 -0600
-Received: from lelvsmtp5.itg.ti.com ([10.249.40.136])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 408IX3hH051691;
-	Mon, 8 Jan 2024 12:33:10 -0600
-From: Andrew Davis <afd@ti.com>
-To: Frank Binns <frank.binns@imgtec.com>,
-        Donald Robson
-	<donald.robson@imgtec.com>,
-        Matt Coster <matt.coster@imgtec.com>,
-        "H .
- Nikolaus Schaller" <hns@goldelico.com>,
-        Adam Ford <aford173@gmail.com>,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec
-	<jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren
-	<tony@atomide.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>, Paul Cercueil
-	<paul@crapouillou.net>
-CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-sunxi@lists.linux.dev>, <linux-omap@vger.kernel.org>,
-        <linux-mips@vger.kernel.org>, Andrew Davis <afd@ti.com>
-Subject: [PATCH RFC v2 08/11] ARM: dts: DRA7xx: Add device tree entry for SGX GPU
-Date: Mon, 8 Jan 2024 12:32:59 -0600
-Message-ID: <20240108183302.255055-9-afd@ti.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240108183302.255055-1-afd@ti.com>
-References: <20240108183302.255055-1-afd@ti.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gB0maOuK"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-28c0df4b42eso2070988a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 10:35:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1704738902; x=1705343702; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=unPpQVTDeVqN66DKJjPl4haWBetUrrskmet/dbbnct8=;
+        b=gB0maOuKH9EYBK20PGbJ1ou6i9UFFJODNOAnMhE4erZqK30iZZAQICGfeUnxMGX2Tg
+         fcgkDs6VVv8LCRGoxpr2Y2hJpi4x/PLKPY+ZgN1hOI2qA2sFPnWRfc4kvvWGnQ89+QRa
+         8Zs5Rp9tRK6kg2lvjvyf0LhOTFoMtIbMrtPGs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704738902; x=1705343702;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=unPpQVTDeVqN66DKJjPl4haWBetUrrskmet/dbbnct8=;
+        b=gK8E3KucVj94DZ107Hp0mNgMPPIfgOFBikoBHVDHBzk19CDScQZnnZ14eeGh1TW3Qj
+         dsrxOUrWjJVhRfWutbZFx5Vp8QSJwGGUEZPvo3BUudPhC+XrqTBBN2TZiUFSWTHwvLcG
+         f5vB8VKsbt70JrhHWHmHCmMeBamtwvXDVssU9UDwcsso9J5bW2wse8CJ8E+S+zqRYEba
+         XY2j65lp1QQlnMqb10OoMyykEnUQodiW4j4eAYjrSK5Gz9+IVcChNeUZK00JtNJ927sI
+         GRWyE0HVTli3QH9GVElIeC+i+pqtwPEGikcTvzHZ1xuXZV9Yj4amR2KyOUNugz+QEN8i
+         n4lA==
+X-Gm-Message-State: AOJu0YyavOXAAaGwrIbhtEXbOhbdXYjQFbc5s7Mg/TgCplGxcpm8xfZf
+	8lZGw9v3WbkJYJP5vg6c227qUfw95AwP
+X-Google-Smtp-Source: AGHT+IFMAJKlIHur8xVj2dEytFnwu92FXt4vuV1qqmouZ8QSMRxfvhp8/gNVS3ldQZaSlW3lXVBmAA==
+X-Received: by 2002:a17:90b:1b50:b0:28b:c02a:d0e2 with SMTP id nv16-20020a17090b1b5000b0028bc02ad0e2mr186788pjb.18.1704738902366;
+        Mon, 08 Jan 2024 10:35:02 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id sz15-20020a17090b2d4f00b0028c940cdad8sm6867394pjb.5.2024.01.08.10.35.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jan 2024 10:35:01 -0800 (PST)
+Date: Mon, 8 Jan 2024 10:35:01 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Kees Cook <keescook@chromium.org>
+Subject: [GIT PULL] execve updates for v6.8-rc1
+Message-ID: <202401081028.0E908F9E0A@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Add SGX GPU device entry to base DRA7x dtsi file.
+Hi Linus,
 
-Signed-off-by: Andrew Davis <afd@ti.com>
----
- arch/arm/boot/dts/ti/omap/dra7.dtsi | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+Please pull these execve updates for v6.8-rc1. A fast-fail check has
+been added to dramatically speed up execve-based PATH searches, and has
+been in -next for the entire development window. A minor conflict with
+netdev exists due to neighboring MAINTAINERS entries:
+https://lore.kernel.org/linux-next/20231218161704.05c25766@canb.auug.org.au/
 
-diff --git a/arch/arm/boot/dts/ti/omap/dra7.dtsi b/arch/arm/boot/dts/ti/omap/dra7.dtsi
-index 6509c742fb58c..8527643cb69a8 100644
---- a/arch/arm/boot/dts/ti/omap/dra7.dtsi
-+++ b/arch/arm/boot/dts/ti/omap/dra7.dtsi
-@@ -850,12 +850,19 @@ target-module@56000000 {
- 					<SYSC_IDLE_SMART>;
- 			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
- 					<SYSC_IDLE_NO>,
--					<SYSC_IDLE_SMART>;
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
- 			clocks = <&gpu_clkctrl DRA7_GPU_CLKCTRL 0>;
- 			clock-names = "fck";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0 0x56000000 0x2000000>;
-+
-+			gpu@0 {
-+				compatible = "ti,am5728-gpu", "img,powervr-sgx544";
-+				reg = <0x0 0x10000>; /* 64kB */
-+				interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+			};
- 		};
- 
- 		crossbar_mpu: crossbar@4a002a48 {
+Thanks!
+
+-Kees
+
+The following changes since commit 21ca59b365c091d583f36ac753eaa8baf947be6f:
+
+  binfmt_misc: enable sandboxed mounts (2023-10-11 08:46:01 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/execve-v6.8-rc1
+
+for you to fetch changes up to 0a8a952a75f2c5c140939c1616423e240677666c:
+
+  ELF, MAINTAINERS: specifically mention ELF (2023-12-06 14:55:31 -0800)
+
+----------------------------------------------------------------
+execve updates for v6.8-rc1
+
+- Update MAINTAINERS entry to explicitly mention ELF (Alexey Dobriyan)
+
+- Add a fail-fast check to speed up execve-based PATH searches (Josh
+  Triplett)
+
+----------------------------------------------------------------
+Alexey Dobriyan (1):
+      ELF, MAINTAINERS: specifically mention ELF
+
+Josh Triplett (1):
+      fs/exec.c: Add fast path for ENOENT on PATH search before allocating mm
+
+ MAINTAINERS |  3 ++-
+ fs/exec.c   | 13 +++++++++++++
+ 2 files changed, 15 insertions(+), 1 deletion(-)
+
 -- 
-2.39.2
-
+Kees Cook
