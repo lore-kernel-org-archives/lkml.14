@@ -1,193 +1,221 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E498473
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 06:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D58D8BE3;
+	Mon,  8 Jan 2024 06:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="K2fhodUs"
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6dc53fc4b0dso1155105a34.2
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jan 2024 22:21:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1704694912; x=1705299712; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7zIxoN+SgU88Z6qGdoK7DlJzsgAjm+cXBEiUMLpGQcU=;
-        b=K2fhodUssilWIgz7HUJpifg0MUGRWZ3zKMQSdErBcmytWZOJ9OmYGmYINohiwcZCfe
-         pTlAJMrOkXw9NcRYApsVYX0GgVps7kUI43ot5hxEC3Xwy9kLYG5iCY900phT84I3HPoD
-         he66wcPQi+n1KQp+Ux52FqpumdrMwfm3hHF9LvqNKm1ZiSDnLOnOZDnbkqdfg9EPev3B
-         b89h7T64yXaaUdQguJ3ICVdrt67d9oKubOauLZG7I4l5PlhsHvH8eGYn+I8ClxQiM705
-         SYzt7coeMQJ4d46tyBQEJHmRlRHP163TpxDI1nDYMyAjmQ+P+SaNLbbk0Zfn0EzgCSRI
-         ueQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704694912; x=1705299712;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7zIxoN+SgU88Z6qGdoK7DlJzsgAjm+cXBEiUMLpGQcU=;
-        b=um80RZjmkv4CySQulS/8axGV5GUiLcZ2K5qZeqD4Zn6l8dR/zMT/nZ4qbFGb+ddSYc
-         LRywnrHyr6tnjugW0q53M3IXScwLb6EobP4BkDH1X6rZgRL5/oKEpnPZ2gY4MIc3Cyd4
-         kQCwkC98dXmJBvvLeu+QidlO+K9GXYbZY+unSSzgRze7zF9lQzxq1sSIYvDWI1tJ9lZw
-         gI1V+xg5Z9Q8HAkHA6999Znj59JBCbI6ORR5MJexszOCrZpWIvROhRbkXx9J1SmpQku4
-         xoiKJlL0fn/yB+nlQV2mCG0hLnMbCs4a0wlH5ft6RzyeIzOEwlGrcCPvQmJw0rW2Rhm+
-         a/Fg==
-X-Gm-Message-State: AOJu0Yzg6l2cXferjrRzTdKuwqP9peCx75BoUD1xB+bcFq7GcCh7EQ94
-	8a0z0+aG3jodSsqfQYa/ThZjcPY3qTGkCA==
-X-Google-Smtp-Source: AGHT+IE2RD77UZkWItFT81fkRj5KkrLB/kBjCp/AJOn60PTjV5k/LNvDjNw8kS6q6TlbpgWCWHHmgw==
-X-Received: by 2002:a9d:7a85:0:b0:6db:95ba:c422 with SMTP id l5-20020a9d7a85000000b006db95bac422mr2004194otn.41.1704694912539;
-        Sun, 07 Jan 2024 22:21:52 -0800 (PST)
-Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id i12-20020a9d53cc000000b006dba99e1835sm1274322oth.4.2024.01.07.22.21.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jan 2024 22:21:52 -0800 (PST)
-From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Sun, 07 Jan 2024 22:21:46 -0800
-Subject: [PATCH v4 2/2] documentation: Document
- PR_RISCV_SET_ICACHE_FLUSH_CTX prctl
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gg6IyFLV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704695545; x=1736231545;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   in-reply-to:mime-version;
+  bh=knIVwYUdH/U3EoUDFUOg4cooiZ3qNyc5t39UFY0WNHQ=;
+  b=gg6IyFLVQxcB3ViKpX/1zuNvbm1+SXehBm/9PPA3i9F+JQXRasdQ+z1f
+   ve9uooxEZcN58nMiYSLI8XBycWWzWUTglFnJ8VjvTBoNCPFWXx78J6wIt
+   gauRe+Z1hS1wRaR1A7bPQtHaaRpZnkeDfq/wJYjDZZDT8mQsNu6GBfYdX
+   40E11MgNOAhX3s8FOZlqs7kfEQJjuJ2nYApU3ruWUja7m7FbnfEvUU863
+   fELg03OrFgaLYiFteyG/cx1CAyjuICWl+0uF3/ZQVIV/mZobvH2XItjCc
+   KdVzzpPxTdkQqfT7mndFqliH5AcHONWwsJgjuNFjXkl80UsHBcrwPSnGO
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="16403048"
+X-IronPort-AV: E=Sophos;i="6.04,340,1695711600"; 
+   d="scan'208";a="16403048"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2024 22:32:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="900281426"
+X-IronPort-AV: E=Sophos;i="6.04,340,1695711600"; 
+   d="scan'208";a="900281426"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 07 Jan 2024 22:32:24 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 7 Jan 2024 22:32:23 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 7 Jan 2024 22:32:23 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Sun, 7 Jan 2024 22:32:23 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.168)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Sun, 7 Jan 2024 22:32:23 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FjRi1z4TaVT1vIFUacFymPKEMTgt4jw/smCS1ogbee9nytsa8HhkBt5Nw8RvmH+W/rdp/mIWV3FdjEx2aFEmGKQD4wJyQQVji3H3N7c6kDhXOQloyVDPYAqwmvKQWNFZH0yzcOaGHXYDqfjXre7KKQo79wI46hhIxL/KHzx0KRfdH8u49nYUlKjtHRjZHhm0zlG+2lauLIZFBAAwuzukz6KZUV6D42NhU56qpLCQ7kPCXqgT3aXIcHnWTqLlUBMJy7gmVMrr5YN32dnDzjatkeUGQ1q9BYSNd+Gtibwcx7M3QlpP4oEN61VvGVbS4PM9igBE7Uxr8qGQkwkQZ0XvYQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uggCuDlteYTBuOQMfFX9g5AY5oqzo5DL/3OjUDRCKdw=;
+ b=hFd5pycsDS93+8yhkX4yWdz4WNPzRV6o+nkaEDGwZk2l/KHy3n4UCSocXfgXq4/7JK0cRBCqIwZuv6BPXNE/NMrbTg8tUlDHZHojtDOHkdzfEOYPFmibFXC7nmEbQ85KSvHu0xUWbdLFNwWECS4s7XwrtexBvrZ6nwlMnprFId0IjAd8CNELmiGSiTiVbO1xM8zQF407v+szQc4IHmLTQpbztMYL/T0hf38sG+5rWj6FqyTVZnb8JPihfViU+mXp4/rKI5S2t0dxT+X3/tHGBX9Wr5QVpmRdqeKw5R1cuv9HMQZHb7d5RbQs6kKp0laN5x9b/sDR+hEpNzAQpqq1HA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
+ PH0PR11MB5207.namprd11.prod.outlook.com (2603:10b6:510:32::15) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7159.21; Mon, 8 Jan 2024 06:32:21 +0000
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::32a9:54b8:4253:31d4]) by DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::32a9:54b8:4253:31d4%4]) with mapi id 15.20.7159.020; Mon, 8 Jan 2024
+ 06:32:20 +0000
+Date: Mon, 8 Jan 2024 14:02:57 +0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<dri-devel@lists.freedesktop.org>, <pbonzini@redhat.com>,
+	<seanjc@google.com>, <olvaffe@gmail.com>, <kevin.tian@intel.com>,
+	<zhiyuan.lv@intel.com>, <zhenyu.z.wang@intel.com>, <yongwei.ma@intel.com>,
+	<vkuznets@redhat.com>, <wanpengli@tencent.com>, <jmattson@google.com>,
+	<joro@8bytes.org>, <gurchetansingh@chromium.org>, <kraxel@redhat.com>,
+	<zzyiwei@google.com>, <ankita@nvidia.com>, <alex.williamson@redhat.com>,
+	<maz@kernel.org>, <oliver.upton@linux.dev>, <james.morse@arm.com>,
+	<suzuki.poulose@arm.com>, <yuzenghui@huawei.com>
+Subject: Re: [PATCH 0/4] KVM: Honor guest memory types for virtio GPU devices
+Message-ID: <ZZuQEQAVX28v7p9Z@yzhao56-desk.sh.intel.com>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20240105091237.24577-1-yan.y.zhao@intel.com>
+ <20240105195551.GE50406@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240105195551.GE50406@nvidia.com>
+X-ClientProxiedBy: SG2PR04CA0198.apcprd04.prod.outlook.com
+ (2603:1096:4:14::36) To DS7PR11MB5966.namprd11.prod.outlook.com
+ (2603:10b6:8:71::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240107-fencei-v4-2-d4cf2fb905d3@rivosinc.com>
-References: <20240107-fencei-v4-0-d4cf2fb905d3@rivosinc.com>
-In-Reply-To: <20240107-fencei-v4-0-d4cf2fb905d3@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Jonathan Corbet <corbet@lwn.net>, Conor Dooley <conor.dooley@microchip.com>, 
- =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <cleger@rivosinc.com>, 
- Atish Patra <atishp@atishpatra.org>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-doc@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1704694908; l=3764;
- i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
- bh=somI31K4e1DNhLYi544ikiKSJVE5TPTc178CdwxSACE=;
- b=wOjyNp3Bafs5E4EAXPZDcY5CMZv7eGYP53YeKRTCExbTq0Ej9zlAWZ2834TSECygPHMj+NHYv
- 9lX1K2SdI/4Dy5Tn8rFusqYzrPJcIbPyqyeQcXJdQVXSC5NuhF6Mkt6
-X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
- pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|PH0PR11MB5207:EE_
+X-MS-Office365-Filtering-Correlation-Id: 671385a7-fa70-4fd6-c9ba-08dc10139142
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: aS5kg4431Tvl2oYtJIooEbJMQ/TqhrW9lhkzjc+fMQUieD3luoveviRZ9ZsQJ52adaZio5j4BGAW5TgsOg40w+z6CikfXVd8Lhz3oeDnJnOO9kbvuA6cT0bpptQPqi7vHwf6QEvEXfQOCY/UFXvdQumrkCldFzrCADzDkEuQwxbGCyERLV5B6S/iatPKepnRjqJ/MP+wjoOqX7Qa7MPyDJOkuir1g72lWBEYJxS5x924bFd0i9lyjiVDZcYqm80q4YOFIwPJN4JM/5YfyGd9iIcWK996KuZ0vQECP0dKtT3LhHPHzUX+unacazcdhqpQN2y2yX3jCZOujHPvTifLptXJ4KKAFehVT2HX8lrqqI3qnk+HHP+80H6n7SlMH6bRZKLbOTGOsK8NRrGjdwK1Uvd9Pm2Zk1mbKWGYty5uwVtz0vNv+/8tzGYXQB5TeUJ11I1+gzx57zx2vfEcOYIM8dhaOmbe4wFOElikhrU9PBZG102gQoybjqhW6mzteiWt41f4Vwn8TyDJl934GZlhzGrht0yFbrBY2JarAtQ64lL48lc1CKgV9SorxFdyfe+m
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(346002)(39860400002)(396003)(376002)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(6486002)(26005)(478600001)(6506007)(6512007)(6666004)(83380400001)(5660300002)(2906002)(7416002)(41300700001)(66476007)(66556008)(66946007)(6916009)(316002)(54906003)(8936002)(8676002)(4326008)(3450700001)(38100700002)(86362001)(82960400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?p6jM7Na2Ia0Q850VhWTEgtg8tLR/cUAw95a/g+R8wa9d0RYrWK1ud2XNAdOS?=
+ =?us-ascii?Q?stc5WBVmZcNHptxTEgwJPMoFGzOh9Baob6XNZr9ioHt7NgqDtY3ivksfE6VJ?=
+ =?us-ascii?Q?G/RCmWwtey6n1F9zIMPGBjKBFClOskBMTBOr0RKQWYmajHk6oO8IOtPTA/tL?=
+ =?us-ascii?Q?5HeCYfR5nItFwCsoer11QIm+Kfef9wWHDSzMTX/QGejnril6m3enQROX9AHX?=
+ =?us-ascii?Q?nCFFaY5v1fyh+qcZqz+TZuYA7hbfhWOIv++BHAJZc/kCQF3dlpxWN6R5pjMc?=
+ =?us-ascii?Q?cTGZwtuNyXs8O3mm0OpbgnPVmQ/Na3PZvbMC3kTdwLSmef25Zv2gt/luqz3k?=
+ =?us-ascii?Q?G8rpZs1Vy+/V4c0lMu675SctwTUYxaI6Im9SZgAdNZpFxO3mOu6MDtrIm3We?=
+ =?us-ascii?Q?K9IobQZHYf692xfRffF/PSpzuRpVZbo4QgEC9JY6n+rAfuo/pfuJvcwkFdT4?=
+ =?us-ascii?Q?4gQ1bMZ/b7FxkuZ37qRUsmAGmbCqIxUv3xAsl08Sn5z1tuXKWZ7ZlylqY7xH?=
+ =?us-ascii?Q?PBHj0IEAuykx+3FO8KFlOMND+rQU0ej+68prePrzUrx4aeTceh5rUaN0Y91A?=
+ =?us-ascii?Q?LDahhlC3qdU3BLDgAhil8AvJMr1Rst3Q+M7LNW6TxHRhEu6JNmU4nqnbBext?=
+ =?us-ascii?Q?MuxrPLsgvt7N9xgFVYhYlh1jUDIgHwn9sHmsagMv9sdfLvyUUacuLrt4B31V?=
+ =?us-ascii?Q?CNg6gS8dSHxxOP2SBfqpHTqcoc3gNlJ6GTi5T/RGLvqJPgdxb151GQS4k1jV?=
+ =?us-ascii?Q?M36PpAgrdVF0mxDjgnS5pHKtRgANoJWZObYtyOLR79fO7cUTL24Pmxogo/Tg?=
+ =?us-ascii?Q?urt3xt07sfOomwmtvbWnPx36U93ItqPZX2QoO/tvYYGTcRfwSPHr2EPnvdcj?=
+ =?us-ascii?Q?Oeo3pn+trlaDvLMd2HhdUe35vxSeFl2mMu+o8AvWkzeqNpQhsb0rpErPXsS2?=
+ =?us-ascii?Q?+o3whNHMaLtNWFQvJMojEA6k96aIBe01snYG1ObH5Lzp4qI0iGzwObaYINVn?=
+ =?us-ascii?Q?FkdamQ6+utGUwXuZ9NABRQJNEWif7vwFntoZPdL1zMpQDg/B/03ztKTRwwVu?=
+ =?us-ascii?Q?NQcPBVWg4E9N927sh1ICsJBzd6zncZAxQe7P2hx1PFyddwAl/Xds8RGrzulY?=
+ =?us-ascii?Q?mSA78UEB2pKhNIAOFWZdM6HNFAroV+J5taXnxkfbXvEpQubwmz9MDMHIjFR2?=
+ =?us-ascii?Q?6DOs9ONDbO7BjdA1pjQB+/ac+cYtaSTZ3q7GgNip+XSupjN372voNybdkjc7?=
+ =?us-ascii?Q?2vUg8lEAAuFf1rET0recWNxz96Jn/d3lOsnGWAWqVn+Wl2tpKfOl29zpOitT?=
+ =?us-ascii?Q?6eE9AXFSPw6cKSBIKOCKiKFUrJ5SXTUzohVTUzQmEMS3GALDvFyIvkkbK9R4?=
+ =?us-ascii?Q?XndIOct4DngzxGJiLaSaKAUR4QmiGUYHxtoO38P5l0TPqvNuG1J166E3fsUg?=
+ =?us-ascii?Q?j+BiZ3s1ibI/cv5bBURlGpc0fqz33M7Y6Rw2L7KdoLjOz32AoPTrRLhTyKYm?=
+ =?us-ascii?Q?Uu5/KPJf9WJUMrHvKhaQOXH0jmbw1hpdnkGoSTC97JzV4/Li9mO+8uXgGein?=
+ =?us-ascii?Q?f9AZ9Ue5y91oXgSvrjIiKh2NDoktyEpaotRU4/Iy?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 671385a7-fa70-4fd6-c9ba-08dc10139142
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2024 06:32:20.8793
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NdgQyTOl8TrdsYL7+2eu5y0Zi/o1bWMS5V40k7b14jDLuLzhg89LWHT1AM88EY5RfJdt133LIr4bE9jL7TF29g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5207
+X-OriginatorOrg: intel.com
 
-Provide documentation that explains how to properly do CMODX in riscv.
+On Fri, Jan 05, 2024 at 03:55:51PM -0400, Jason Gunthorpe wrote:
+> On Fri, Jan 05, 2024 at 05:12:37PM +0800, Yan Zhao wrote:
+> > This series allow user space to notify KVM of noncoherent DMA status so as
+> > to let KVM honor guest memory types in specified memory slot ranges.
+> > 
+> > Motivation
+> > ===
+> > A virtio GPU device may want to configure GPU hardware to work in
+> > noncoherent mode, i.e. some of its DMAs do not snoop CPU caches.
+> 
+> Does this mean some DMA reads do not snoop the caches or does it
+> include DMA writes not synchronizing the caches too?
+Both DMA reads and writes are not snooped.
+The virtio host side will mmap the buffer to WC (pgprot_writecombine)
+for CPU access and program the device to access the buffer in uncached
+way.
+Meanwhile, virtio host side will construct a memslot in KVM with the PTR
+returned from the mmap, and notify virtio guest side to mmap the same buffer in
+guest page table with PAT=WC, too.
 
-Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
----
- Documentation/arch/riscv/cmodx.rst | 88 ++++++++++++++++++++++++++++++++++++++
- Documentation/arch/riscv/index.rst |  1 +
- 2 files changed, 89 insertions(+)
+> 
+> > This is generally for performance consideration.
+> > In certain platform, GFX performance can improve 20+% with DMAs going to
+> > noncoherent path.
+> > 
+> > This noncoherent DMA mode works in below sequence:
+> > 1. Host backend driver programs hardware not to snoop memory of target
+> >    DMA buffer.
+> > 2. Host backend driver indicates guest frontend driver to program guest PAT
+> >    to WC for target DMA buffer.
+> > 3. Guest frontend driver writes to the DMA buffer without clflush stuffs.
+> > 4. Hardware does noncoherent DMA to the target buffer.
+> > 
+> > In this noncoherent DMA mode, both guest and hardware regard a DMA buffer
+> > as not cached. So, if KVM forces the effective memory type of this DMA
+> > buffer to be WB, hardware DMA may read incorrect data and cause misc
+> > failures.
+> 
+> I don't know all the details, but a big concern would be that the
+> caches remain fully coherent with the underlying memory at any point
+> where kvm decides to revoke the page from the VM.
+Ah, you mean, for page migration, the content of the page may not be copied
+correctly, right?
 
-diff --git a/Documentation/arch/riscv/cmodx.rst b/Documentation/arch/riscv/cmodx.rst
-new file mode 100644
-index 000000000000..71598850e131
---- /dev/null
-+++ b/Documentation/arch/riscv/cmodx.rst
-@@ -0,0 +1,88 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==============================================================================
-+Concurrent Modification and Execution of Instructions (CMODX) for RISC-V Linux
-+==============================================================================
-+
-+CMODX is a programming technique where a program executes instructions that were
-+modified by the program itself. Instruction storage and the instruction cache
-+(icache) is not guaranteed to be synchronized on RISC-V hardware. Therefore, the
-+program must enforce its own synchronization with the unprivileged fence.i
-+instruction.
-+
-+However, the default Linux ABI prohibits the use of fence.i in userspace
-+applications. At any point the scheduler may migrate a task onto a new hart. If
-+migration occurs after the userspace synchronized the icache and instruction
-+storage with fence.i, the icache will no longer be clean. This is due to the
-+behavior of fence.i only affecting the hart that it is called on. Thus, the hart
-+that the task has been migrated to, may not have synchronized instruction
-+storage and icache.
-+
-+There are two ways to solve this problem: use the riscv_flush_icache() syscall,
-+or use the ``PR_RISCV_SET_ICACHE_FLUSH_CTX`` prctl() and emit fence.i in
-+userspace. The syscall performs a one-off icache flushing operation. The prctl
-+changes the Linux ABI to allow userspace to emit icache flushing operations.
-+
-+1.  prctl() Interface
-+---------------------
-+
-+Call prctl() with ``PR_RISCV_SET_ICACHE_FLUSH_CTX`` as the first argument. The
-+remaining arguments will be delegated to the riscv_set_icache_flush_ctx
-+function detailed below.
-+
-+.. kernel-doc:: arch/riscv/mm/cacheflush.c
-+	:identifiers: riscv_set_icache_flush_ctx
-+
-+Example usage:
-+
-+The following files are meant to be compiled and linked with each other. The
-+modify_instruction() function replaces an add with 0 with an add with one,
-+causing the instruction sequence in get_value() to change from returning a zero
-+to returning a one.
-+
-+cmodx.c::
-+
-+	#include <stdio.h>
-+	#include <sys/prctl.h>
-+
-+	extern int get_value();
-+	extern void modify_instruction();
-+
-+	int main()
-+	{
-+		int value = get_value();
-+		printf("Value before cmodx: %d\n", value);
-+
-+		// Call prctl before first fence.i is called inside modify_instruction
-+		prctl(PR_RISCV_SET_ICACHE_FLUSH_CTX_ON, PR_RISCV_CTX_SW_FENCEI, 0);
-+		modify_instruction();
-+
-+		value = get_value();
-+		printf("Value after cmodx: %d\n", value);
-+		return 0;
-+	}
-+
-+cmodx.S::
-+
-+	.option norvc
-+
-+	.text
-+	.global modify_instruction
-+	modify_instruction:
-+	lw a0, new_insn
-+	lui a5,%hi(old_insn)
-+	sw  a0,%lo(old_insn)(a5)
-+	fence.i
-+	ret
-+
-+	.section modifiable, "awx"
-+	.global get_value
-+	get_value:
-+	li a0, 0
-+	old_insn:
-+	addi a0, a0, 0
-+	ret
-+
-+	.data
-+	new_insn:
-+	addi a0, a0, 1
-diff --git a/Documentation/arch/riscv/index.rst b/Documentation/arch/riscv/index.rst
-index 4dab0cb4b900..eecf347ce849 100644
---- a/Documentation/arch/riscv/index.rst
-+++ b/Documentation/arch/riscv/index.rst
-@@ -13,6 +13,7 @@ RISC-V architecture
-     patch-acceptance
-     uabi
-     vector
-+    cmodx
- 
-     features
- 
+Currently in x86, we have 2 ways to let KVM honor guest memory types:
+1. through KVM memslot flag introduced in this series, for virtio GPUs, in
+   memslot granularity.
+2. through increasing noncoherent dma count, as what's done in VFIO, for
+   Intel GPU passthrough, for all guest memory.
 
--- 
-2.43.0
+This page migration issue should not be the case for virtio GPU, as both host
+and guest are synced to use the same memory type and actually the pages
+are not anonymous pages.
+For GPU pass-through, though host mmaps with WB, it's still fine for guest to
+use WC because page migration on pages of VMs with pass-through device is not
+allowed.
+
+But I agree, this should be a case if user space sets the memslot flag to honor
+guest memory type to memslots for guest system RAM where non-enlightened guest
+components may cause guest and host to access with different memory types.
+Or simply when the guest is a malicious one.
+
+> If you allow an incoherence of cache != physical then it opens a
+> security attack where the observed content of memory can change when
+> it should not.
+
+In this case, will this security attack impact other guests?
+
+> 
+> ARM64 has issues like this and due to that ARM has to have explict,
+> expensive, cache flushing at certain points.
+>
+
+
 
