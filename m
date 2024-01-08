@@ -1,69 +1,143 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8EA4653B;
-	Mon,  8 Jan 2024 14:02:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8994654D;
+	Mon,  8 Jan 2024 14:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="IDRcJWNA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=UrcCoznsGe6jbQRLq+9vtH0N2hJ7Jd1bMTvVnCS7xYI=; b=IDRcJWNAvbnfe+/Ros99KeN77T
-	HCfvHw1cG4I/ykS1D/K2sKSAFPGx2vEyBuYcK3FsCJMrig7D+CkK6FpB1G5XdVdEn7dm1F++xru62
-	Re8FPLkomas9vR37NTlTz1De1U/GswxsLUaWm+LLorE14W4Kr527r6Vwtu2w7Bg51hPM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rMqCo-004eDc-K4; Mon, 08 Jan 2024 15:02:18 +0100
-Date: Mon, 8 Jan 2024 15:02:18 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Dimitri Fedrau <dima.fedrau@gmail.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Stefan Eichenberger <eichest@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 net-next 4/5] net: phy: marvell-88q2xxx: fix typos
-Message-ID: <10b09d30-70c6-4f87-8367-19b2579496a1@lunn.ch>
-References: <20240108093702.13476-1-dima.fedrau@gmail.com>
- <20240108093702.13476-5-dima.fedrau@gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="i9kxvcAv"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 408BgcYI015255;
+	Mon, 8 Jan 2024 14:02:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-type; s=qcppdkim1; bh=1wSjxuT/iAH9PZBT3uHn
+	E13TeuGmyWFfZuSvtiQEhYQ=; b=i9kxvcAvG0mTt10sh3+3RTU06ZiRjCxLs5mu
+	9Bc+lN81S+Xcgx/SSPwJaPBfsPX0AujGESc8y8AY5YipYHk00y0yKXAu/yTHmO+S
+	imBV/kIc4ZlezT74zW3PbAYlbVWmQsS7HlvyxMm0qQJeutwgiKsNrZr08EI0rFfv
+	lnCPebOTqcMU+XmgM3MrLB6fly2saH2xXAsDpIt6ohPcEvRAGEYtXZ7L8fgqBZhc
+	HjcYNCJe2+HgatIfi5SGFunbGk3bNyz9jdkCylAKHR10kLVtLLE9RrjXlZk2olKj
+	NIU/DfRtT6V+34GyjpjWq6YQ9z4jhnknnXUWO1a0WZQ78wUD5A==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vg8n09738-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Jan 2024 14:02:19 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 408E1jql020970
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 8 Jan 2024 14:01:45 GMT
+Received: from blr-ubuntu-253.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 8 Jan 2024 06:01:42 -0800
+From: Sibi Sankar <quic_sibis@quicinc.com>
+To: <sudeep.holla@arm.com>, <cristian.marussi@arm.com>, <rafael@kernel.org>,
+        <viresh.kumar@linaro.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_mdtipton@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, Sibi Sankar <quic_sibis@quicinc.com>
+Subject: [PATCH 2/3] firmware: arm_scmi: Add perf_opp_xlate interface
+Date: Mon, 8 Jan 2024 19:31:17 +0530
+Message-ID: <20240108140118.1596-3-quic_sibis@quicinc.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240108140118.1596-1-quic_sibis@quicinc.com>
+References: <20240108140118.1596-1-quic_sibis@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240108093702.13476-5-dima.fedrau@gmail.com>
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: R5D3casVtRTZy-PqIhmC_qx1iFnJMUVd
+X-Proofpoint-ORIG-GUID: R5D3casVtRTZy-PqIhmC_qx1iFnJMUVd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=999 impostorscore=0 adultscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 mlxscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2311290000
+ definitions=main-2401080120
 
-On Mon, Jan 08, 2024 at 10:36:59AM +0100, Dimitri Fedrau wrote:
-> Rename mv88q2xxxx_get_sqi to mv88q2xxx_get_sqi and
-> mv88q2xxxx_get_sqi_max to mv88q2xxx_get_sqi_max.
-> Fix linebreaks and use everywhere hexadecimal numbers written with
-> lowercase letters instead of mixing it up.
+Add a new perf_opp_xlate interface to the existing perf_ops to translate
+a given perf index to frequency.
 
-You could split is up into three patches. Its probably not worth it
-now, but its something to remember for the future.
+This can be used by the cpufreq driver and framework to determine the
+throttled frequency from a given perf index and apply HW pressure
+accordingly.
 
-Ideally you want lots of small patches which are obviously correct.  A
-patch just containing a rename mv88q2xxxx_get_XXX to
-mv88q2xxx_get_sqi_XXX etc, should be obviously correct, and just takes
-a few seconds to review.
+Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
+---
+ drivers/firmware/arm_scmi/perf.c | 21 +++++++++++++++++++++
+ include/linux/scmi_protocol.h    |  3 +++
+ 2 files changed, 24 insertions(+)
 
-A patch adding a few line breaks should again take a few seconds to
-review.
+diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
+index c167bb5e3607..f26390924e1c 100644
+--- a/drivers/firmware/arm_scmi/perf.c
++++ b/drivers/firmware/arm_scmi/perf.c
+@@ -964,6 +964,26 @@ static int scmi_notify_support(const struct scmi_protocol_handle *ph, u32 domain
+ 	return 0;
+ }
+ 
++static int scmi_perf_opp_xlate(const struct scmi_protocol_handle *ph, u32 domain,
++			       int idx, unsigned long *freq)
++{
++	struct perf_dom_info *dom;
++
++	dom = scmi_perf_domain_lookup(ph, domain);
++	if (IS_ERR(dom))
++		return PTR_ERR(dom);
++
++	if (idx >= dom->opp_count)
++		return -ERANGE;
++
++	if (!dom->level_indexing_mode)
++		*freq = dom->opp[idx].perf * dom->mult_factor;
++	else
++		*freq = dom->opp[idx].indicative_freq * dom->mult_factor;
++
++	return 0;
++}
++
+ static const struct scmi_perf_proto_ops perf_proto_ops = {
+ 	.num_domains_get = scmi_perf_num_domains_get,
+ 	.info_get = scmi_perf_info_get,
+@@ -979,6 +999,7 @@ static const struct scmi_perf_proto_ops perf_proto_ops = {
+ 	.fast_switch_possible = scmi_fast_switch_possible,
+ 	.power_scale_get = scmi_power_scale_get,
+ 	.perf_notify_support = scmi_notify_support,
++	.perf_opp_xlate = scmi_perf_opp_xlate,
+ };
+ 
+ static int scmi_perf_set_notify_enabled(const struct scmi_protocol_handle *ph,
+diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
+index b0947d004826..9c285ae89848 100644
+--- a/include/linux/scmi_protocol.h
++++ b/include/linux/scmi_protocol.h
+@@ -145,6 +145,7 @@ struct scmi_perf_notify_info {
+  * @power_scale_mw_get: indicates if the power values provided are in milliWatts
+  *	or in some other (abstract) scale
+  * @perf_notify_support: indicates if limit and level change notification is supported
++ * @perf_opp_xlate: translates the given perf index to frequency in Hz
+  */
+ struct scmi_perf_proto_ops {
+ 	int (*num_domains_get)(const struct scmi_protocol_handle *ph);
+@@ -173,6 +174,8 @@ struct scmi_perf_proto_ops {
+ 	enum scmi_power_scale (*power_scale_get)(const struct scmi_protocol_handle *ph);
+ 	int (*perf_notify_support)(const struct scmi_protocol_handle *ph, u32 domain,
+ 				   struct scmi_perf_notify_info *info);
++	int (*perf_opp_xlate)(const struct scmi_protocol_handle *ph, u32 domain,
++			      int idx, unsigned long *freq);
+ };
+ 
+ /**
+-- 
+2.17.1
 
-Upper case to lower case is easy to review.
-
-When it is all mixed together, in a bigger patch it takes a bit more
-effort to review, a bit more effort is needed to look for typ0s etc.
-Its can be faster and easier to review 10 very simple patches than 3
-big patches...
-
-    Andrew
