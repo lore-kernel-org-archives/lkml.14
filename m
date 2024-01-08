@@ -1,115 +1,77 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990112E623;
-	Mon,  8 Jan 2024 11:24:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RMCn/0dh"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5537dd673e5so1397223a12.0;
-        Mon, 08 Jan 2024 03:24:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704713062; x=1705317862; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2LaOxVMHCgTdR4Fyp5Ka+5rLkqURhu2L6n6SimV39BI=;
-        b=RMCn/0dhWBzYlLcJAcZLYnOwmHzX7a2bGAZREf9wiSPXlkMlCRSJnfVi8DsLCbQIWf
-         z0K/c4NyBCAtSp3FT+5CBiJ8t171JhNpU0tj7AoScHh1NB8Lt4P2DLRXcY6kxGQg1Wc5
-         ERbb1KOo0Pn+p5tgydQVu8dkaLDyUyz4wnAjyy/Q37HIeb3a4vUPfgLCL8lKj1bPjRq+
-         5wk9TF1Ys8MQ9JJUd+//06ufPIVgKd6eqix2LBU5Ls0aC8Y2e+UCRpd/Sa/oJzozC5Kd
-         /H5oJ3hE9iNc4cPcbHYyOYcbTmyQwzYI8XbDqWMWLQIkuu63jda2rlyhZKNhg32ePajy
-         Exbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704713062; x=1705317862;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2LaOxVMHCgTdR4Fyp5Ka+5rLkqURhu2L6n6SimV39BI=;
-        b=Re/qmQhlHcwzgnhPFVEsHUYRfTGON3qXM2AQMQXyqAYIXE/wnEqK7mepqrMxNSu+aH
-         EOLid5DyzZweVfutLnJbbQx4BD0LeQbaT+726kDrGCI6PXORNrawv7mg2ntaAaqBRr3V
-         H4YEEfe11ITJrGAJfpXWeTeEB9goQgkoYJaCCnwwF6FujTBQb2uamzcVEUjQJHRTrJNf
-         5vf3kwKSOPQQ8plKjzzCqlEVdURxUqrIBNCfI+oT+W5Ca8cFoQyQAfXjMUl+u4Bgubi3
-         +Z8OIElA7W8BgbVQNY8OMV2CkmQsTSkRQ65NfLLW6y6QPoFKgQ8nhthUFQ2my06SmnTL
-         s6eA==
-X-Gm-Message-State: AOJu0Ywde9PBXAqsELVFh7hrJx6OJ9B84mSujbPWEva/vEbztY8DFJlj
-	yX5qb2yqjyrV1nFN7UK4buA=
-X-Google-Smtp-Source: AGHT+IFzYV09hGBJFhePsjzgsWlZLQL/MOoO5EgxBtSSRcyLUmkU0eKwQw8HU32LpFpNrK00SFZEIw==
-X-Received: by 2002:a50:bb65:0:b0:556:c60c:b20f with SMTP id y92-20020a50bb65000000b00556c60cb20fmr1979341ede.34.1704713061516;
-        Mon, 08 Jan 2024 03:24:21 -0800 (PST)
-Received: from debian ([93.184.186.109])
-        by smtp.gmail.com with ESMTPSA id g18-20020a056402091200b00557c48abe41sm491347edz.55.2024.01.08.03.24.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jan 2024 03:24:21 -0800 (PST)
-Date: Mon, 8 Jan 2024 12:24:18 +0100
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Stefan Eichenberger <eichest@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 net-next 0/5] net: phy: marvell-88q2xxx: add driver
- for the Marvell 88Q2220 PHY
-Message-ID: <20240108112418.GA30325@debian>
-References: <20240108093702.13476-1-dima.fedrau@gmail.com>
- <bb44432d-0cde-47cd-a44c-be5e3f11afab@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AE12E650
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 11:24:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4T7s9z3RMXz29jrx;
+	Mon,  8 Jan 2024 19:23:03 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
+	by mail.maildlp.com (Postfix) with ESMTPS id AFC641404F7;
+	Mon,  8 Jan 2024 19:24:33 +0800 (CST)
+Received: from ubuntu2204.huawei.com (10.67.174.22) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 8 Jan 2024 19:24:33 +0800
+From: Yang Jihong <yangjihong1@huawei.com>
+To: <yangyicong@hisilicon.com>, <jonathan.cameron@huawei.com>,
+	<alexander.shishkin@linux.intel.com>, <linux-kernel@vger.kernel.org>
+CC: <yangjihong1@huawei.com>, <wangkefeng.wang@huawei.com>,
+	<yangyicong@huawei.com>
+Subject: [PATCH] hwtracing: hisi_ptt: Move type check to the beginning of hisi_ptt_pmu_event_init()
+Date: Mon, 8 Jan 2024 11:20:24 +0000
+Message-ID: <20240108112024.3514498-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bb44432d-0cde-47cd-a44c-be5e3f11afab@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
 
-Am Mon, Jan 08, 2024 at 12:18:30PM +0100 schrieb Heiner Kallweit:
-> On 08.01.2024 10:36, Dimitri Fedrau wrote:
-> > Changes in v2:
-> > 	- used defines MDIO_CTRL1_LPOWER and MDIO_PMA_CTRL1_SPEED1000
-> > 	  in mv88q222x_config_aneg_preinit
-> > 	- use genphy_c45_loopback
-> > 	- mv88q2xxx_read_status reads speed, master or slave state when
-> > 	  autonegotiation is enabled
-> > 	- added defines for magic values in mv88q222x_get_sqi
-> > 
-> > Changes in v3:
-> > 	- mv88q2xxx_read_status includes autonegotiation case
-> > 	- add support for 100BT1 and 1000BT1 linkmode advertisement
-> > 	- use mv88q2xxx_get_sqi and mv88q2xxx_get_sqi_max, remove
-> > 	  mv88q222x_get_sqi and mv88q222x_get_sqi_max
-> > 	- fix typo: rename mv88q2xxxx_get_sqi and mv88q2xxxx_get_sqi_max to
-> > 	  mv88q2xxx_get_sqi and mv88q2xxx_get_sqi
-> > 	- add define MDIO_MMD_PCS_MV_RX_STAT for magic value 0x8230, documented
-> > 	  in latest datasheets for both PHYs
-> > 
-> > Changes in V4:
-> > 	- clean up init sequence
-> > 	- separate patch for fixing typos in upstreamed code
-> > 
-> > Dimitri Fedrau (5):
-> >   net: phy: Add BaseT1 auto-negotiation constants
-> >   net: phy: Support 100/1000BT1 linkmode advertisements
-> >   net: phy: c45: detect 100/1000BASE-T1 linkmode advertisements
-> >   net: phy: marvell-88q2xxx: fix typos
-> >   net: phy: marvell-88q2xxx: add driver for the Marvell 88Q2220 PHY
-> > 
-> >  drivers/net/phy/marvell-88q2xxx.c | 234 +++++++++++++++++++++++++++---
-> >  drivers/net/phy/phy-c45.c         |   3 +-
-> >  include/linux/marvell_phy.h       |   1 +
-> >  include/linux/mdio.h              |   8 +
-> >  include/uapi/linux/mdio.h         |   2 +
-> >  5 files changed, 230 insertions(+), 18 deletions(-)
-> > 
-> net-next is closed. Let's see whether the maintainers still accept your series.
-> Otherwise you may have to resubmit once net-next opens again.
->
-Hi Heiner,
+When perf_init_event() calls perf_try_init_event() to init pmu driver,
+searches for the next pmu driver only when the return value is -ENOENT.
+Therefore, hisi_ptt_pmu_event_init() needs to check the type at the
+beginning of the function.
+Otherwise, in the case of perf-task mode, perf_try_init_event() returns
+-EOPNOTSUPP and skips subsequent pmu drivers, causes perf_init_event() to
+fail.
 
-thanks for the information, next time I will check if net-next is
-closed.
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ drivers/hwtracing/ptt/hisi_ptt.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Best regards,
-Dimitri Fedrau
+diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
+index a991ecb7515a..24a1f7797aeb 100644
+--- a/drivers/hwtracing/ptt/hisi_ptt.c
++++ b/drivers/hwtracing/ptt/hisi_ptt.c
+@@ -995,6 +995,9 @@ static int hisi_ptt_pmu_event_init(struct perf_event *event)
+ 	int ret;
+ 	u32 val;
+ 
++	if (event->attr.type != hisi_ptt->hisi_ptt_pmu.type)
++		return -ENOENT;
++
+ 	if (event->cpu < 0) {
+ 		dev_dbg(event->pmu->dev, "Per-task mode not supported\n");
+ 		return -EOPNOTSUPP;
+@@ -1003,9 +1006,6 @@ static int hisi_ptt_pmu_event_init(struct perf_event *event)
+ 	if (event->attach_state & PERF_ATTACH_TASK)
+ 		return -EOPNOTSUPP;
+ 
+-	if (event->attr.type != hisi_ptt->hisi_ptt_pmu.type)
+-		return -ENOENT;
+-
+ 	ret = hisi_ptt_trace_valid_filter(hisi_ptt, event->attr.config);
+ 	if (ret < 0)
+ 		return ret;
+-- 
+2.34.1
+
