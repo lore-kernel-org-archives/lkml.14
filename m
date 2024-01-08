@@ -1,74 +1,19 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51ACB51C3D
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 15:25:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="EIAl8B2B"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-50e7b03fbbeso134155e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 07:25:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1704727505; x=1705332305; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zJ3EIRKSn5X0NGN+Lowl9P7K2Ny+tJ4mGNydRmUvWrU=;
-        b=EIAl8B2B0plV+Fd4CRAObep5/NzHmfzHghjvMvOOv5g3NFWGHvyqE1/8mPM6nCD3P+
-         1U0inDAvFfqky7fRmiQ6t5rHCZa/ufGtCl0km5FodIYqbSnNitPHdWBxeSiSAf9OCS7a
-         8W6iBx5uYdWowVS5mbjky2Aif2BtM9CTNExCg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704727505; x=1705332305;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zJ3EIRKSn5X0NGN+Lowl9P7K2Ny+tJ4mGNydRmUvWrU=;
-        b=pqZ5BWhP/zTN2TZdbDTYqjpzxvw1T5h5aLuTTUtxUF3eHm9c4r9ILTU9ki3pjlOg7e
-         T3rJKgEbQZBgvD/Mu2RMHtU7K8CF+o/khz+wxQy68lxC0+PtpL5saKLX28x6c8WPx6Zi
-         NMTw3m12MXEoFf+//NDpHvZ8/YRbMBhlpk/5CCawfSNcBxkYqwzp+VrWnqX1ESBPScK6
-         x03zvePpGu3+tF5v78LUY2MXM62CmzVGn04xYuHf/Y+8uX0aAEx2oyxGXee1J2o9MBjj
-         9fEmmZQjs8Nz1ULRESfZyZOIbHHt8Z6FwnLRG77H8zeuceCriVTt4jaNPnIFQZmeiCtW
-         yuqw==
-X-Gm-Message-State: AOJu0Yy2LNrteb8NhY5j2nIHpVkES4s1Blyyh/aJPY7lNjt3J9ZawhNR
-	AgaKSvmLEwwfNTIeQtIq9dsfumwILT2mvg==
-X-Google-Smtp-Source: AGHT+IFEZmb84ZsP7WndigoWhVfLIJmu7Z3cqw2RTpxB6wKa9AmlpaVhv3E1Czp2+q+7kFveVkRA7Q==
-X-Received: by 2002:a05:6512:2212:b0:50e:9e95:5290 with SMTP id h18-20020a056512221200b0050e9e955290mr3890677lfu.1.1704727505082;
-        Mon, 08 Jan 2024 07:25:05 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id i16-20020a5d5230000000b00333404e9935sm8075814wra.54.2024.01.08.07.25.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jan 2024 07:25:04 -0800 (PST)
-Date: Mon, 8 Jan 2024 16:25:02 +0100
-From: Daniel Vetter <daniel@ffwll.ch>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Yan Zhao <yan.y.zhao@intel.com>, wanpengli@tencent.com,
-	kvm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, kraxel@redhat.com, maz@kernel.org,
-	joro@8bytes.org, zzyiwei@google.com, yuzenghui@huawei.com,
-	olvaffe@gmail.com, kevin.tian@intel.com, suzuki.poulose@arm.com,
-	alex.williamson@redhat.com, yongwei.ma@intel.com,
-	zhiyuan.lv@intel.com, gurchetansingh@chromium.org,
-	jmattson@google.com, zhenyu.z.wang@intel.com, seanjc@google.com,
-	ankita@nvidia.com, oliver.upton@linux.dev, james.morse@arm.com,
-	pbonzini@redhat.com, vkuznets@redhat.com
-Subject: Re: [PATCH 0/4] KVM: Honor guest memory types for virtio GPU devices
-Message-ID: <ZZwTzsZqx-XSTKma@phenom.ffwll.local>
-Mail-Followup-To: Jason Gunthorpe <jgg@nvidia.com>,
-	Yan Zhao <yan.y.zhao@intel.com>, wanpengli@tencent.com,
-	kvm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, kraxel@redhat.com, maz@kernel.org,
-	joro@8bytes.org, zzyiwei@google.com, yuzenghui@huawei.com,
-	olvaffe@gmail.com, kevin.tian@intel.com, suzuki.poulose@arm.com,
-	alex.williamson@redhat.com, yongwei.ma@intel.com,
-	zhiyuan.lv@intel.com, gurchetansingh@chromium.org,
-	jmattson@google.com, zhenyu.z.wang@intel.com, seanjc@google.com,
-	ankita@nvidia.com, oliver.upton@linux.dev, james.morse@arm.com,
-	pbonzini@redhat.com, vkuznets@redhat.com
-References: <20240105091237.24577-1-yan.y.zhao@intel.com>
- <20240105195551.GE50406@nvidia.com>
- <ZZuQEQAVX28v7p9Z@yzhao56-desk.sh.intel.com>
- <20240108140250.GJ50406@nvidia.com>
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id CE1C451010
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 15:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 499378 invoked by uid 1000); 8 Jan 2024 10:26:07 -0500
+Date: Mon, 8 Jan 2024 10:26:07 -0500
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Udipto Goswami <quic_ugoswami@quicinc.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+  Krishna Kurapati <quic_kriskura@quicinc.com>, linux-usb@vger.kernel.org,
+  linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] usb: core: Prevent null pointer dereference in
+ update_port_device_state
+Message-ID: <2d801dd7-93de-4323-a214-1a73cc5a8451@rowland.harvard.edu>
+References: <20240108130706.15698-1-quic_ugoswami@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,95 +22,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240108140250.GJ50406@nvidia.com>
-X-Operating-System: Linux phenom 6.5.0-4-amd64 
+In-Reply-To: <20240108130706.15698-1-quic_ugoswami@quicinc.com>
 
-On Mon, Jan 08, 2024 at 10:02:50AM -0400, Jason Gunthorpe wrote:
-> On Mon, Jan 08, 2024 at 02:02:57PM +0800, Yan Zhao wrote:
-> > On Fri, Jan 05, 2024 at 03:55:51PM -0400, Jason Gunthorpe wrote:
-> > > On Fri, Jan 05, 2024 at 05:12:37PM +0800, Yan Zhao wrote:
-> > > > This series allow user space to notify KVM of noncoherent DMA status so as
-> > > > to let KVM honor guest memory types in specified memory slot ranges.
-> > > > 
-> > > > Motivation
-> > > > ===
-> > > > A virtio GPU device may want to configure GPU hardware to work in
-> > > > noncoherent mode, i.e. some of its DMAs do not snoop CPU caches.
-> > > 
-> > > Does this mean some DMA reads do not snoop the caches or does it
-> > > include DMA writes not synchronizing the caches too?
-> > Both DMA reads and writes are not snooped.
+On Mon, Jan 08, 2024 at 06:37:06PM +0530, Udipto Goswami wrote:
+> Currently,the function update_port_device_state gets the usb_hub from
+> udev->parent by calling usb_hub_to_struct_hub.
+> However, in case the actconfig or the maxchild is 0, the usb_hub would
+> be NULL and upon further accessing to get port_dev would result in null
+> pointer dereference.
 > 
-> Oh that sounds really dangerous.
-
-So if this is an issue then we might already have a problem, because with
-many devices it's entirely up to the device programming whether the i/o is
-snooping or not. So the moment you pass such a device to a guest, whether
-there's explicit support for non-coherent or not, you have a problem.
-
-_If_ there is a fundamental problem. I'm not sure of that, because my
-assumption was that at most the guest shoots itself and the data
-corruption doesn't go any further the moment the hypervisor does the
-dma/iommu unmapping.
-
-Also, there's a pile of x86 devices where this very much applies, x86
-being dma-coherent is not really the true ground story.
-
-Cheers, Sima
-
-> > > > This is generally for performance consideration.
-> > > > In certain platform, GFX performance can improve 20+% with DMAs going to
-> > > > noncoherent path.
-> > > > 
-> > > > This noncoherent DMA mode works in below sequence:
-> > > > 1. Host backend driver programs hardware not to snoop memory of target
-> > > >    DMA buffer.
-> > > > 2. Host backend driver indicates guest frontend driver to program guest PAT
-> > > >    to WC for target DMA buffer.
-> > > > 3. Guest frontend driver writes to the DMA buffer without clflush stuffs.
-> > > > 4. Hardware does noncoherent DMA to the target buffer.
-> > > > 
-> > > > In this noncoherent DMA mode, both guest and hardware regard a DMA buffer
-> > > > as not cached. So, if KVM forces the effective memory type of this DMA
-> > > > buffer to be WB, hardware DMA may read incorrect data and cause misc
-> > > > failures.
-> > > 
-> > > I don't know all the details, but a big concern would be that the
-> > > caches remain fully coherent with the underlying memory at any point
-> > > where kvm decides to revoke the page from the VM.
-> > Ah, you mean, for page migration, the content of the page may not be copied
-> > correctly, right?
+> Fix this by introducing an if check after the usb_hub is populated.
 > 
-> Not just migration. Any point where KVM revokes the page from the
-> VM. Ie just tearing down the VM still has to make the cache coherent
-> with physical or there may be problems.
+> Fixes: 83cb2604f641 ("usb: core: add sysfs entry for usb device state")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Udipto Goswami <quic_ugoswami@quicinc.com>
+> ---
+> v2: Introduced comment for the if check & CC'ed stable.
+> 
+>  drivers/usb/core/hub.c | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+> index ffd7c99e24a3..d40b5500f95b 100644
+> --- a/drivers/usb/core/hub.c
+> +++ b/drivers/usb/core/hub.c
+> @@ -2053,9 +2053,18 @@ static void update_port_device_state(struct usb_device *udev)
 >  
-> > Currently in x86, we have 2 ways to let KVM honor guest memory types:
-> > 1. through KVM memslot flag introduced in this series, for virtio GPUs, in
-> >    memslot granularity.
-> > 2. through increasing noncoherent dma count, as what's done in VFIO, for
-> >    Intel GPU passthrough, for all guest memory.
-> 
-> And where does all this fixup the coherency problem?
-> 
-> > This page migration issue should not be the case for virtio GPU, as both host
-> > and guest are synced to use the same memory type and actually the pages
-> > are not anonymous pages.
-> 
-> The guest isn't required to do this so it can force the cache to
-> become incoherent.
-> 
-> > > If you allow an incoherence of cache != physical then it opens a
-> > > security attack where the observed content of memory can change when
-> > > it should not.
-> > 
-> > In this case, will this security attack impact other guests?
-> 
-> It impacts the hypervisor potentially. It depends..
-> 
-> Jason
+>  	if (udev->parent) {
+>  		hub = usb_hub_to_struct_hub(udev->parent);
+> -		port_dev = hub->ports[udev->portnum - 1];
+> -		WRITE_ONCE(port_dev->state, udev->state);
+> -		sysfs_notify_dirent(port_dev->state_kn);
+> +
+> +		/*
+> +		 * usb_hub_to_struct_hub() if returns NULL can
+> +		 * potentially cause NULL pointer dereference upon further
+> +		 * access.
+> +		 * Avoid this with an if check.
+> +		 */
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+This is not what I meant.  It's perfectly obvious that if 
+usb_hub_to_struct_hub() returns NULL then there will be a NULL-pointer 
+dereference.  You don't need to explain that to anybody.
+
+Instead, you need to explain why it is _possible_ for 
+usb_hub_to_struct_hub() to return NULL.  The reason is because the 
+lvstest driver messes around with usbcore internals without telling the 
+hub driver, so hub will be NULL in cases where udev was created by 
+lvstest.
+
+Alan Stern
