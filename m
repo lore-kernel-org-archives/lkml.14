@@ -1,49 +1,49 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9AAC8F55
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 07:03:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902A78BF3
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 07:04:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SuTS8i+i"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ccae380df2so14242601fa.1
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jan 2024 23:03:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xTEEEgTu"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-50e7e55c0f6so1273222e87.0
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jan 2024 23:04:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704697384; x=1705302184; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1704697457; x=1705302257; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=/KaKy41Wl3MSbQMyAjeN+ovopvqexe3XNPCK+UGM1Aw=;
-        b=SuTS8i+iaxZjndTW7EPiLSfh2rTg7OychI/nyo4FBpkIg8uVud6vlY631yN2MB8sl/
-         u9u5rlr8aRU6ufsyq23AbIpZEDxETHG93indwUGgKq8DDjtgqoUDGfKse59XW5w4WiFC
-         hcAp3iC4PFanEYUtRkrJte15XXa5rpCEVHkDXBovHo7F2Ns66p7ChAtK+wi5iDjgHRct
-         oJdUiGYkG83BnCJHSlNSlclaWQBJLmChGTPrK17XYqdHnjd3cN5FEcUvfWxcmg26EspO
-         QIWEZLoYwPn0Ij23GW2rz/w9zYHYzB6wRphPzh0tQeQ98uGovvpkSqoqBqv5nD/CSvnh
-         OHrg==
+        bh=SL1rSV8LJDmQM8c+9mhidlWqZwK4QsTJy4vBuMNpFw4=;
+        b=xTEEEgTu9wbCe9e4MoAYnV9Lk98d18crxZ5sEANHpH5gQwv09SgwCPXYyj2Zf7cURr
+         Qn3ba79CJNY9OgCZUTndkDWoRyLNA6gx4AX8z98AaVX26TpN3Ycb6kxMMwTKzHrB+gEA
+         I+3USrrxrIJ6wrZMJAHHMMh2/0j7IUYxwmKzJNtv8XLIFsnNxXds2Km9Nef/fUa4WptQ
+         cIji7RUWP6sY8N8EtwzktRiUJl2tm7Vo/mOB8tbvMxvFEev0LlNCossfv5m7+i8ewZrn
+         jrmex+SJcoRo6SctVCrXayOIvlAHYl7NO16HrN/Ij6aKxl8gz5h9zeGaEGX/GZYQ9LJC
+         RfpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704697384; x=1705302184;
+        d=1e100.net; s=20230601; t=1704697457; x=1705302257;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/KaKy41Wl3MSbQMyAjeN+ovopvqexe3XNPCK+UGM1Aw=;
-        b=DMS+FIkXFb4xfDtEd9AhMjcO6e9qhV8lRFTpaBV/7KkiJOgLOH9weo0cIGUbzEqulq
-         M5rArn5Uo9XWYsbYypVsx1YIdbfEfjGHqgLevesyNi6F6p4fr2GYlEY4BxcfJC5WStar
-         LirowIRTUEFSoOfr0nxhx5BTnn85iESbYO8eY/AK3mXkEeFeKor2SphC0fMUXzE1TQ2/
-         vpQzC8GvQAtwkpR+Fp2OGOBrkncSvgm/wF2hbfX5eLzS5YwtZ51zUhJCu6sfkIQNGr+z
-         iDGjur0Ogfw2ZV8UfbzOcZHyPj2LOSbDMwzAyM9HwTgF8bdiwQ67PcVQ2Bc+GgL+wL1u
-         HDgw==
-X-Gm-Message-State: AOJu0YxdppC+quG5+U2ooYf+2xahIPMDAugE7XbZ8mel0EyCOS5vrDQ3
-	2yhwZAsK5dGogi96/lEBHJ+HKc/Ys6n5tg==
-X-Google-Smtp-Source: AGHT+IFQFyNxCs4W5c+otBlgRtlz4sM8FhUK59SRgJYF8ukc5ONiyT9lbikH0M8Trkk9qGlzlDiMlw==
-X-Received: by 2002:a2e:9cd4:0:b0:2cd:2acc:e9ff with SMTP id g20-20020a2e9cd4000000b002cd2acce9ffmr1040830ljj.26.1704697384577;
-        Sun, 07 Jan 2024 23:03:04 -0800 (PST)
+        bh=SL1rSV8LJDmQM8c+9mhidlWqZwK4QsTJy4vBuMNpFw4=;
+        b=W5hFiX7u2Ubzref+UeoCFELVdEaNV8ANp7HI617mnSJBhkLnbXzg0P+OWXV7giZXis
+         oG+MnY7Qbs5SMMcZWOQLxss2grmwOSG9efW+Blwo1jU07U6x4NPstMmlqneauYclfSFl
+         fJXFfTwX26DlwPyY1aEz7rraXzseONNAwEpWGi2/QaR8zvjQVZDtSwN7UVspUzJC32Qe
+         vM1cRvhBRaNrwMJAUlOtpbzrFskYIDluVRvWzXhVsk3c7vXyQ8DsWFTuRX3MtZ4DX7oS
+         cR7CIc37b9VuoxbMYBBvDSkW62YABc0F1U6ehvmniBEIf7sDdr1I23u+kcLZ5KMb8RZt
+         hj+A==
+X-Gm-Message-State: AOJu0YzEBkPYXBw/vQ+4J6/Iyos/NI1TL6SBIcb8CBNDdfr6oy1Dv77R
+	C/okGl0oEuKvocS569tyfPsNGG87QjcPdA==
+X-Google-Smtp-Source: AGHT+IFgFyWraRxaAqzd7d4j4BvaM+LCCOZNIWcc6ZZR/RQzXb1fVCsPXa3sFAQ+0kJYC5QjpGzYSA==
+X-Received: by 2002:a05:6512:acb:b0:50e:6940:238e with SMTP id n11-20020a0565120acb00b0050e6940238emr720899lfu.19.1704697457605;
+        Sun, 07 Jan 2024 23:04:17 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.223.112])
-        by smtp.gmail.com with ESMTPSA id fd5-20020a056402388500b0055743d6e9ebsm3059360edb.41.2024.01.07.23.03.02
+        by smtp.gmail.com with ESMTPSA id fd5-20020a056402388500b0055743d6e9ebsm3059360edb.41.2024.01.07.23.04.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 Jan 2024 23:03:04 -0800 (PST)
-Message-ID: <cc7cc943-7242-4fd1-9b56-3ece0a418e05@linaro.org>
-Date: Mon, 8 Jan 2024 08:03:01 +0100
+        Sun, 07 Jan 2024 23:04:17 -0800 (PST)
+Message-ID: <f88b79c3-e44b-4136-ae56-10e1f2502e2d@linaro.org>
+Date: Mon, 8 Jan 2024 08:04:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,8 +51,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/4] dt-bindings: soc: sophgo: Add Sophgo system
- control module
+Subject: Re: [PATCH v7 2/4] dt-bindings: clock: sophgo: support SG2042
 Content-Language: en-US
 To: Chen Wang <unicornxw@gmail.com>, aou@eecs.berkeley.edu,
  chao.wei@sophgo.com, conor@kernel.org, krzysztof.kozlowski+dt@linaro.org,
@@ -62,9 +61,10 @@ To: Chen Wang <unicornxw@gmail.com>, aou@eecs.berkeley.edu,
  linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
  haijiao.liu@sophgo.com, xiaoguang.xing@sophgo.com, guoren@kernel.org,
  jszhang@kernel.org, inochiama@outlook.com, samuel.holland@sifive.com
-Cc: Chen Wang <unicorn_wang@outlook.com>
+Cc: Chen Wang <unicorn_wang@outlook.com>,
+ Conor Dooley <conor.dooley@microchip.com>
 References: <cover.1704694903.git.unicorn_wang@outlook.com>
- <acebc88db3e5fcd2a2607b56842af7443a6e1289.1704694903.git.unicorn_wang@outlook.com>
+ <925d99d5b4ece01337cb3389aaea4b631894dd1d.1704694903.git.unicorn_wang@outlook.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -110,49 +110,58 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <acebc88db3e5fcd2a2607b56842af7443a6e1289.1704694903.git.unicorn_wang@outlook.com>
+In-Reply-To: <925d99d5b4ece01337cb3389aaea4b631894dd1d.1704694903.git.unicorn_wang@outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 08/01/2024 07:48, Chen Wang wrote:
+On 08/01/2024 07:49, Chen Wang wrote:
 > From: Chen Wang <unicorn_wang@outlook.com>
 > 
-> Add documentation to describe Sophgo System Controller for SG2042.
+> Add bindings for the clock generator on the SG2042 RISC-V SoC.
 > 
 > Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 > ---
->  .../soc/sophgo/sophgo,sg2042-sysctrl.yaml     | 34 +++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/sophgo/sophgo,sg2042-sysctrl.yaml
+>  .../bindings/clock/sophgo,sg2042-clkgen.yaml  |  53 ++++++
+>  .../dt-bindings/clock/sophgo,sg2042-clkgen.h  | 169 ++++++++++++++++++
+>  2 files changed, 222 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/sophgo,sg2042-clkgen.yaml
+>  create mode 100644 include/dt-bindings/clock/sophgo,sg2042-clkgen.h
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/sophgo/sophgo,sg2042-sysctrl.yaml b/Documentation/devicetree/bindings/soc/sophgo/sophgo,sg2042-sysctrl.yaml
+> diff --git a/Documentation/devicetree/bindings/clock/sophgo,sg2042-clkgen.yaml b/Documentation/devicetree/bindings/clock/sophgo,sg2042-clkgen.yaml
 > new file mode 100644
-> index 000000000000..1ec1eaa55598
+> index 000000000000..f9935e66fc95
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/sophgo/sophgo,sg2042-sysctrl.yaml
-> @@ -0,0 +1,34 @@
+> +++ b/Documentation/devicetree/bindings/clock/sophgo,sg2042-clkgen.yaml
+> @@ -0,0 +1,53 @@
 > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/soc/sophgo/sophgo,sg2042-sysctrl.yaml#
+> +$id: http://devicetree.org/schemas/clock/sophgo,sg2042-clkgen.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Sophgo SG2042 SoC system controller
+> +title: Sophgo SG2042 Clock Generator
 > +
 > +maintainers:
 > +  - Chen Wang <unicorn_wang@outlook.com>
 > +
-> +description:
-> +  The Sophgo SG2042 SoC system controller provides register information such
-> +  as offset, mask and shift that can be used by other modules, such as clocks.
+> +properties:
+> +  compatible:
+> +    const: sophgo,sg2042-clkgen
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  sophgo,system-ctrl:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Phandle to SG2042 System Controller node. On SG2042, part of control
+> +      registers of Clock Controller are defined in System controller. Clock
+> +      driver will use this phandle to get the register map base to plus the
+> +      offset of the registers to access them.
 
-"offset, mask and shift" is not a register information stored in
-syscons. Are you really sure, that your system controller hardware
-stores offsets of some other registers?
-
-Show as some example of such offsets, masks and shifts provided by this
-hardware.
+Do not describe the driver, but hardware. What registers are in
+system-ctrl? What are their purpose? Why this hardware needs them?
 
 
 
