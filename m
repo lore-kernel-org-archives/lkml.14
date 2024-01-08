@@ -1,178 +1,308 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345611428E
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 10:00:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2AF613ACF;
+	Mon,  8 Jan 2024 10:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MQlN9YuO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QxSt1KPi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704708044; x=1736244044;
+  t=1704708192; x=1736244192;
   h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=iWpSe0+WfT5CYlcinPsE0nq60rZgZg2wsO2FiDb2w9k=;
-  b=MQlN9YuOJCCDVy0LwOGTW1RVLZBCYJ9FKgKbTTstOQWeFDTcjax5n92E
-   QuFIAjZb/bC+DTSY61hA1JwqEjN2fLk/z/Jws4rtAh7xWXJKJIHlysSKR
-   EigY8PqRvzSMcLE95VaW9xDAZwyMoRDsrg/WUwqTErOs4TN1Es/2zMj17
-   QHDYTsn9VTCPWWKI9f3Y/KT68g7r77sHr8sD2X3rkxQtH+Ee//8HOeimd
-   Qn5po5jYyawmmZAS840IaRdPR7dR/Mey+6aYh3LKuGFznTnlkXZSjy1YJ
-   jhNMcHjam+JaGihWbx6NTyT+W5UOVK+s8bpyw4bUNIJ01hWwwyTv/awbz
+   mime-version:in-reply-to;
+  bh=t9ibrJFOVgyhcdPDuPa5NcrTMKPcC41hMEaQWW3U7Ic=;
+  b=QxSt1KPiWi6C/xsc3LQzhsXvpRXSCLZ2NB8dWCOaaM8DfaUsqWfM2/rT
+   yffJ17tKA2M46pj4EL+fdhx5NWQSmSJxFhC81CgrahOSjsJH5GWYdzcM3
+   ucneqyEe/2CwFdcu7UE/Pm6iYoOlbsLvhSsD1rUaxRcgVn/d8vIEG/ZsV
+   zjKiy/vk5fWK8TR3l5obaPXxfF83EIQINfpoz9MlybW98plJOKn+Ddo/z
+   3oVkUrZG3EKPSUr8iJe1YtRdGyhwin+oogsitUkDGL1trIcLAKqW/EiLg
+   BwHfcGg/saThJCu2ldgUCiIzV1CiAlgYAgJGZ9Qx7xiKcZ94PQDbbWLdy
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="4918841"
+X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="464239563"
 X-IronPort-AV: E=Sophos;i="6.04,340,1695711600"; 
-   d="scan'208";a="4918841"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 02:00:44 -0800
+   d="scan'208";a="464239563"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 02:03:11 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="1028361723"
 X-IronPort-AV: E=Sophos;i="6.04,340,1695711600"; 
-   d="scan'208";a="15872558"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 08 Jan 2024 02:00:43 -0800
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 8 Jan 2024 02:00:42 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 8 Jan 2024 02:00:42 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 8 Jan 2024 02:00:42 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 8 Jan 2024 02:00:42 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Thck3B+/EjSfVqav6i7ADNwp1AGNX8HfGZgqGlXwfb6vpXvrSBaUHuFA/J9g6JjKftnnCxwRaW//jCNkQucd3pGTMCL/8d+Bo+Tl6vBI9HyjcNrOkjEUoP8SMvY5NFoYiEni/tHl6KJLfBpoOVUljV3mHv3eJaCsQnpEt/S6anDnWTHQwXsalOTnNZ97tZpzqyfDk8indbRJ5Uop+CaFc1x17uRTxkiwuCyHOn3Ei/Aet+wSwBEBuMoHJVsXhhI6kEqnEDTnVzizi09ciEwu56NBkwHk5Y3f41zU1HvWp8iw82BLhOZm/mhmWKtAaEmx+4ZkJX18GIeUChCBv4AxwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cyNmBfGm4w0hqaf/q0V9JcAzScJYifLe/cmD5zu7/9U=;
- b=UGDJ9rb2iKiaWI2tBpf6A7ebH30VGfFKTLZdy6ObYXKa9FlZuNLtMxqbe745SinUJHexWzX9cF+zTCBlbZNd+mqjXo9AJeYgS91iRRVreux4g1v85DWehFXoYg9j1A+3UQeyDOg61bn+k/BvNUpAjo3CNs7KyihjcCEdDZ9ce7wmFoDB0T1uY0BfW6SNwWFM69d2pV7Sg7fgIm9jO5amyEABj2P/r+7//+V/eblqDZBaLnFZ920icup36A5m3rHZV+17qifdewUpeAnJw2xy4Rzq1zojaCpadI6VEr0E5g/IjHZ8z2OuqCDlkXbxTvfHQSCoRAAgFfbTuvAW1VusMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CY5PR11MB6392.namprd11.prod.outlook.com (2603:10b6:930:37::15)
- by SA2PR11MB5004.namprd11.prod.outlook.com (2603:10b6:806:112::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.23; Mon, 8 Jan
- 2024 10:00:40 +0000
-Received: from CY5PR11MB6392.namprd11.prod.outlook.com
- ([fe80::b99c:f603:f176:aca]) by CY5PR11MB6392.namprd11.prod.outlook.com
- ([fe80::b99c:f603:f176:aca%5]) with mapi id 15.20.7159.020; Mon, 8 Jan 2024
- 10:00:40 +0000
-Date: Mon, 8 Jan 2024 17:56:22 +0800
-From: Yujie Liu <yujie.liu@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-CC: kernel test robot <lkp@intel.com>, Arnd Bergmann <arnd@arndb.de>,
-	<oe-kbuild-all@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-Subject: Re: arch/alpha/include/asm/core_t2.h:587:23: warning: no previous
- prototype for 't2_ioread64'
-Message-ID: <ZZvGxhON7wNBgyg5@yujie-X299>
-References: <202401061736.yM5FZ2oV-lkp@intel.com>
- <CACRpkdbx=qgdy1JRyxzFGW+8Ojj+g2tLKU4dD8oWX9V0xH2-JQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdbx=qgdy1JRyxzFGW+8Ojj+g2tLKU4dD8oWX9V0xH2-JQ@mail.gmail.com>
-X-ClientProxiedBy: SG2PR06CA0236.apcprd06.prod.outlook.com
- (2603:1096:4:ac::20) To CY5PR11MB6392.namprd11.prod.outlook.com
- (2603:10b6:930:37::15)
+   d="scan'208";a="1028361723"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2024 02:03:09 -0800
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id A664111F913;
+	Mon,  8 Jan 2024 12:03:06 +0200 (EET)
+Date: Mon, 8 Jan 2024 10:03:06 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Umang Jain <umang.jain@ideasonboard.com>
+Cc: linux-media@vger.kernel.org,
+	"Paul J . Murphy" <paul.j.murphy@intel.com>,
+	Daniele Alessandrelli <daniele.alessandrelli@intel.com>,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] media: i2c: imx335: Support multiple link frequency
+Message-ID: <ZZvIWhqPkwe9E8wR@kekkonen.localdomain>
+References: <20231213091712.55529-1-umang.jain@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6392:EE_|SA2PR11MB5004:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9a04892c-562e-4c41-2006-08dc1030abcb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wd8Tsi7pC6AfssXNgAlcc4K5iWcMS0zeMG4bpRRwszlr44Wkq4/KHRAtV0J39HW41EtwmxIoLSkawj2dN+9E539p4Jc11rGzOw2sa7b6wfjrs7W8abpRc/wt73CwNEbYgF2EI965yKCrpfBYxKfnLef8cI5PNLe/sunKeOt+IpM3os7Utb8kJzT9RXPghP9rrdpCJIe9wuXAGTeSqTeArQxqhq2dvVITKa17FG+X3amrPCSucyExIuUsS/PCWZzmgfIZPji84MMcKYZJe8aE6rFSm2CLQFeQpbNWV61NoEzkotdKMrO0Y7qXaj8iPeP+xM5XT67ie22V6VfvSVcUhG2Jw4QXr6e1QXM5/n3MuW0/1x4Cgs4yuzSSOmUldT28KRaTuP2rumeUpy5NwsoeBfquJch+rECiIJTvxJdeFRGb8iOicCyOItB54qlNA39FWIR+Hqz/j7aGnqb+sNbEwmwFb4ZO/WI4hep82WMYp5UrWE30Bu+kK3G/Ch9kpn5y6+lWQDI19DqpstvHv4im3Zmzbx4FyFCnYy76g/r3BwB1M7UnXhOm83w0F8wyHFkE8/CsvnHc5FHcB3AYi8ln+o9s+jCvSn0ullFR5bJMcYbEaLFzovgVhkTMF5nSnabP
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6392.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(366004)(376002)(396003)(346002)(136003)(39860400002)(230922051799003)(230273577357003)(230173577357003)(64100799003)(451199024)(186009)(1800799012)(26005)(53546011)(9686003)(6666004)(6512007)(6506007)(478600001)(6486002)(966005)(38100700002)(86362001)(82960400001)(4744005)(2906002)(5660300002)(33716001)(41300700001)(83380400001)(66946007)(6916009)(8676002)(66556008)(66476007)(316002)(54906003)(4326008)(8936002)(44832011);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dTY1ZlZDZmVnK01DMnRka3R6YmdpS0ZnL3RScDEycjdBVlB6aFZvS0cvTTdO?=
- =?utf-8?B?Z1k3ZzVBSnV5TFBQaWRNcTdCbStxc0FlcmpvSFZHSVo3OFNVdy9NWDJQNDhC?=
- =?utf-8?B?WVlYeXE0MzRRZDltRW1keEhUdlRPVGRqc252RjB1MnhaQS9UQUYyR2ttYzhZ?=
- =?utf-8?B?VnNOMElEamNOZWVyN2ljYUpCcG40U25aK0xrZVZwb0luRWJJQ2ZJemExeGdL?=
- =?utf-8?B?czl2ckFXUXVIblByVWNJOXlONnNueGtHZ25NbmhQNk9mU05Ock1tU09EeHZP?=
- =?utf-8?B?NlBVRTFzWG9mOU1CYjRIeWpDUTZ4WUU5dlFsWHVsQW93cG1VdE42SytVNUJZ?=
- =?utf-8?B?eFQySUtQTTR1d2liU2tvZmFVY2hVZzdEMFBRZUE2ZjYyeTE4dCtvS2pnUFkr?=
- =?utf-8?B?eGIwRysxdHl1czZJRTFoQ2EzNVVGeHRuVHNEclVPQkxGc3NZNzkvQWxERC90?=
- =?utf-8?B?dU5sK0xVQkZicmMxMDFFL09ib2wxYmpDNG5hcDQxeDVOS3ptYzhTRm53dVZ2?=
- =?utf-8?B?V0U5TXg3VW1neXNFajl5cGl1ZXdZOHVzY0laNW8zbWZoem1wSXNxRlI0ei9G?=
- =?utf-8?B?SVVhTWkyNGdCbUx3REs5YU9WRCtOU0VJMW83WHd4Tmx4eWxGUmIyRUc3VWpj?=
- =?utf-8?B?S09JYlVlelZpYXQwaHFNd0F1WlBua1AxeWFMVnJBRDR3SEI0Ykx2MWNjL1Vl?=
- =?utf-8?B?OFgzY3BOcWZIZGZ1SHpTWm80QWFKZTJyRzRPZklPRVgzU09JMzllZUI5QWpm?=
- =?utf-8?B?S2FZK01rVWJ3U0ZMUjREaUtJTXU0YWhqK2JwQmhWWHpxZ3JmSy80WFdZMUY1?=
- =?utf-8?B?K0NBN0ZIMW1iVVVRVmNzdjVudGtlZ1RoOGkrNCtiN2FMRjFvNkFvUHZjZVZq?=
- =?utf-8?B?OSt0L0lCM204T3daem1XUTRwREpoL2xVN0pKTGlYTzZaNS9HSXdXRUVldDQv?=
- =?utf-8?B?OU44ZkxvU3h5d2xUWHhCZmlTVGtYWk9odEJSbmFmNEtsZUdiWWYwS0VWVEZU?=
- =?utf-8?B?RFo5M290NDBIcDlwTzRHT0xoZkQrcms1UFpUQ2FJMW53NlFWbkF0L3ZkNUV6?=
- =?utf-8?B?c1N5K0N6dUM4UVZHbnN3eTl2UG5tQndXRnFWYy9XUHMxcXZHTVd5SmtTN1o1?=
- =?utf-8?B?SHpJRVFyL0xWZ0NVT0s1RFB3Mi9mWTBqVEJUQzd3eXZnTUsvc2xDQ2dwcVVC?=
- =?utf-8?B?Wmt4TWNIWTluN1lJMFhFQmdVOExUbGZGYWYyS2VaTFhpN3JuQUJGcms5eTlm?=
- =?utf-8?B?bFR3bVZsczVEbmlNVkhVS0Rla2NERi80YS9hNDNpQWNrRTZLUVVSVjJnMnA0?=
- =?utf-8?B?TThBdXJpczVJcXBmSGN1Vi9UQm5DVXI5WFNkb1h2aGVSTy9GSE54WjM1QVo0?=
- =?utf-8?B?dHNiV0Q2YmJreUoycklYbWdHVFMyTHB0SC85YXNoeEdsTXhHQlZUTGUrcnNK?=
- =?utf-8?B?a2QzTUN4dmZKK2NyaWxzS0pTbXpGVWJDVzZneG1WR0MzMko5MTgxa2luSkc4?=
- =?utf-8?B?eHg4ZE5zTHBOYzAwdHZzdi80T0RPRCs0OVQ1RkZKMTJVLzhTWVVxbnpON3oz?=
- =?utf-8?B?Q01iS292SmNVRDU2ZU05K29PTXZjYXpJSEYza1VJMWxwcXZlNStGaFRQdlpV?=
- =?utf-8?B?YUdXSFlTWlJHdmhuanYzTTc2cTcrZzZjbkQyNk1KZWFyOVlXaTVEQnJ2MW5T?=
- =?utf-8?B?MkxhYUg5MjFDNkZIb1pXQ29pWHMrdTVEWWRpaHo1SmhVZ0RBYTZWczR1elM3?=
- =?utf-8?B?bEIweTZMcDFpRW1CV1J4eHpwWUtla2xobThCTldDMUlMWWxXbXk0RFpwMnFH?=
- =?utf-8?B?WTRxTXRkK3FtQStQajhBWkh4akk3QUhGYm11V0pZOWlKNWdaWmh3TXpOM1p3?=
- =?utf-8?B?NDM3N3gyQ2pQaGJmSDYzODJDZEdCOGYreURnRUpvWVJZVXVXMW0rTUJQWGdi?=
- =?utf-8?B?Z2VsNElEWHZwQ0pXNkhYSkJYSmlIQ0l1M1FaaHFxSDZWQmFKQm9BM3JaN2Zo?=
- =?utf-8?B?ZENyTTU0ejlVY2ZKekdOTitscmplNzZKSHRvQ2IwT0tJUE05bDRiQyttRlhE?=
- =?utf-8?B?amV0VXNyUU1JdExOWGQxVVQ0anpvR0J3QUJ2dkxrZVZYU2trTkRTNi9UeSta?=
- =?utf-8?Q?m94c/ggKhSI/dhpaAUr2UxUl2?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9a04892c-562e-4c41-2006-08dc1030abcb
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6392.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2024 10:00:40.7679
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YmKDMwEaHqHqHGX9xKBw5r8QMZcI9gTvzTurPtHNE5nCMIkh6cWkspu6D94xbleJDp2MbrtMp+9CpoVWq7uQ0w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB5004
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231213091712.55529-1-umang.jain@ideasonboard.com>
 
-Hi Linus Walleij,
+Hi Umang,
 
-On Sun, Jan 07, 2024 at 09:09:21PM +0100, Linus Walleij wrote:
-> Hi robot,
+Thanks for the patch.
+
+Note that Daniele and Paul are no longer maintaining the driver.
+
+On Wed, Dec 13, 2023 at 02:47:12PM +0530, Umang Jain wrote:
+> Support link frequency of 445MHz in addition to 594MHz.
+> Break out the register set specific to each data lane rate and also add
+> the general timing register set corresponding to the each data
+> lane rate.
 > 
-> On Sat, Jan 6, 2024 at 10:40 AM kernel test robot <lkp@intel.com> wrote:
+> Signed-off-by: Umang Jain <umang.jain@ideasonboard.com>
+> ---
+> Changes in v3:
+> - Use tabspace for indent as denoted by checkpatch.
 > 
+> Changes in v2:
+> - Split out from [PATCH v3 0/8] media: Sony IMX335 improvements
+>   where original patch was introduced.
+> - Add general timing registers to each data lane rate configuration
+> - Reword commit message. 
+> ---
+>  drivers/media/i2c/imx335.c | 108 +++++++++++++++++++++++++++++--------
+>  1 file changed, 87 insertions(+), 21 deletions(-)
 > 
-> > Hi Arnd,
-> >
-> > FYI, the error/warning still remains.
-> 
-> FYI I have already said I can't reproduce this at all. Not using
-> allnoconfig, not using the .config attached to the report.
-> 
-> I have no idea what this is.
+> diff --git a/drivers/media/i2c/imx335.c b/drivers/media/i2c/imx335.c
+> index 7a37eb327ff4..ffceeb8a15c7 100644
+> --- a/drivers/media/i2c/imx335.c
+> +++ b/drivers/media/i2c/imx335.c
+> @@ -49,7 +49,8 @@
+>  #define IMX335_INCLK_RATE	24000000
+>  
+>  /* CSI2 HW configuration */
+> -#define IMX335_LINK_FREQ	594000000
+> +#define IMX335_LINK_FREQ_594MHz	594000000
+> +#define IMX335_LINK_FREQ_445MHz	445500000
+>  #define IMX335_NUM_DATA_LANES	4
+>  
+>  #define IMX335_REG_MIN		0x00
+> @@ -99,7 +100,6 @@ static const char * const imx335_supply_name[] = {
+>   * @vblank_min: Minimum vertical blanking in lines
+>   * @vblank_max: Maximum vertical blanking in lines
+>   * @pclk: Sensor pixel clock
+> - * @link_freq_idx: Link frequency index
+>   * @reg_list: Register list for sensor mode
+>   */
+>  struct imx335_mode {
+> @@ -111,7 +111,6 @@ struct imx335_mode {
+>  	u32 vblank_min;
+>  	u32 vblank_max;
+>  	u64 pclk;
+> -	u32 link_freq_idx;
+>  	struct imx335_reg_list reg_list;
+>  };
+>  
+> @@ -133,6 +132,7 @@ struct imx335_mode {
+>   * @again_ctrl: Pointer to analog gain control
+>   * @vblank: Vertical blanking in lines
+>   * @cur_mode: Pointer to current selected sensor mode
+> + * @link_freq_idx: Selected link frequency index
+>   * @mutex: Mutex for serializing sensor controls
+>   * @cur_mbus_code: Currently selected media bus format code
+>   */
+> @@ -156,20 +156,16 @@ struct imx335 {
+>  	};
+>  	u32 vblank;
+>  	const struct imx335_mode *cur_mode;
+> +	u32 link_freq_idx;
+>  	struct mutex mutex;
+>  	u32 cur_mbus_code;
+>  };
+>  
+> -static const s64 link_freq[] = {
+> -	IMX335_LINK_FREQ,
+> -};
+>  
+>  /* Sensor mode registers */
+>  static const struct imx335_reg mode_2592x1940_regs[] = {
+>  	{0x3000, 0x01},
+>  	{0x3002, 0x00},
+> -	{0x300c, 0x3b},
+> -	{0x300d, 0x2a},
+>  	{0x3018, 0x04},
+>  	{0x302c, 0x3c},
+>  	{0x302e, 0x20},
+> @@ -177,10 +173,6 @@ static const struct imx335_reg mode_2592x1940_regs[] = {
+>  	{0x3074, 0xc8},
+>  	{0x3076, 0x28},
+>  	{0x304c, 0x00},
+> -	{0x314c, 0xc6},
+> -	{0x315a, 0x02},
+> -	{0x3168, 0xa0},
+> -	{0x316a, 0x7e},
+>  	{0x31a1, 0x00},
+>  	{0x3288, 0x21},
+>  	{0x328a, 0x02},
+> @@ -266,6 +258,65 @@ static const struct imx335_reg raw12_framefmt_regs[] = {
+>  	{0x341d, 0x00},
+>  };
+>  
+> +static const struct imx335_reg mipi_data_rate_1188Mbps[] = {
+> +	{0x300c, 0x3b},
+> +	{0x300d, 0x2a},
+> +	{0x314c, 0xc6},
+> +	{0x314d, 0x00},
+> +	{0x315a, 0x02},
+> +	{0x3168, 0xa0},
+> +	{0x316a, 0x7e},
+> +	{0x319e, 0x01},
+> +	{0x3a18, 0x8f},
+> +	{0x3a1a, 0x4f},
+> +	{0x3a1c, 0x47},
+> +	{0x3a1e, 0x37},
+> +	{0x3a1f, 0x01},
+> +	{0x3a20, 0x4f},
+> +	{0x3a22, 0x87},
+> +	{0x3a24, 0x4f},
+> +	{0x3a26, 0x7f},
+> +	{0x3a28, 0x3f},
+> +};
+> +
+> +static const struct imx335_reg mipi_data_rate_891Mbps[] = {
+> +	{0x300c, 0x3b},
+> +	{0x300d, 0x2a},
+> +	{0x314c, 0x29},
+> +	{0x314d, 0x01},
+> +	{0x315a, 0x06},
+> +	{0x3168, 0xa0},
+> +	{0x316a, 0x7e},
+> +	{0x319e, 0x02},
+> +	{0x3a18, 0x7f},
+> +	{0x3a1a, 0x37},
+> +	{0x3a1c, 0x37},
+> +	{0x3a1e, 0xf7},
+> +	{0x3a20, 0x3f},
+> +	{0x3a22, 0x6f},
+> +	{0x3a24, 0x3f},
+> +	{0x3a26, 0x5f},
+> +	{0x3a28, 0x2f},
+> +};
+> +
+> +static const s64 link_freq[] = {
+> +	/* Corresponds to 1188Mbps data lane rate */
+> +	IMX335_LINK_FREQ_594MHz,
+> +	/* Corresponds to 891Mbps data lane rate */
+> +	IMX335_LINK_FREQ_445MHz,
+> +};
+> +
+> +static const struct imx335_reg_list link_freq_reglist[] = {
+> +	{
+> +		.num_of_regs = ARRAY_SIZE(mipi_data_rate_1188Mbps),
+> +		.regs = mipi_data_rate_1188Mbps,
+> +	},
+> +	{
+> +		.num_of_regs = ARRAY_SIZE(mipi_data_rate_891Mbps),
+> +		.regs = mipi_data_rate_891Mbps,
+> +	},
+> +};
+> +
+>  static const u32 imx335_mbus_codes[] = {
+>  	MEDIA_BUS_FMT_SRGGB12_1X12,
+>  	MEDIA_BUS_FMT_SRGGB10_1X10,
+> @@ -280,7 +331,6 @@ static const struct imx335_mode supported_mode = {
+>  	.vblank_min = 2560,
+>  	.vblank_max = 133060,
+>  	.pclk = 396000000,
+> -	.link_freq_idx = 0,
+>  	.reg_list = {
+>  		.num_of_regs = ARRAY_SIZE(mode_2592x1940_regs),
+>  		.regs = mode_2592x1940_regs,
+> @@ -405,7 +455,7 @@ static int imx335_update_controls(struct imx335 *imx335,
+>  {
+>  	int ret;
+>  
+> -	ret = __v4l2_ctrl_s_ctrl(imx335->link_freq_ctrl, mode->link_freq_idx);
+> +	ret = __v4l2_ctrl_s_ctrl(imx335->link_freq_ctrl, imx335->link_freq_idx);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -755,6 +805,14 @@ static int imx335_start_streaming(struct imx335 *imx335)
+>  	const struct imx335_reg_list *reg_list;
+>  	int ret;
+>  
+> +	/* Setup PLL */
+> +	reg_list = &link_freq_reglist[imx335->link_freq_idx];
+> +	ret = imx335_write_regs(imx335, reg_list->regs, reg_list->num_of_regs);
+> +	if (ret) {
+> +		dev_err(imx335->dev, "%s failed to set plls\n", __func__);
+> +		return ret;
+> +	}
+> +
+>  	/* Write sensor mode registers */
+>  	reg_list = &imx335->cur_mode->reg_list;
+>  	ret = imx335_write_regs(imx335, reg_list->regs,
+> @@ -881,7 +939,7 @@ static int imx335_parse_hw_config(struct imx335 *imx335)
+>  	};
+>  	struct fwnode_handle *ep;
+>  	unsigned long rate;
+> -	unsigned int i;
+> +	unsigned int i, j;
+>  	int ret;
+>  
+>  	if (!fwnode)
+> @@ -945,13 +1003,21 @@ static int imx335_parse_hw_config(struct imx335 *imx335)
+>  		goto done_endpoint_free;
+>  	}
+>  
+> -	for (i = 0; i < bus_cfg.nr_of_link_frequencies; i++)
+> -		if (bus_cfg.link_frequencies[i] == IMX335_LINK_FREQ)
+> -			goto done_endpoint_free;
+>  
+> -	dev_err(imx335->dev, "no compatible link frequencies found\n");
+> +	for (i = 0; i < bus_cfg.nr_of_link_frequencies; i++) {
+> +		for (j = 0; j < ARRAY_SIZE(link_freq); j++) {
+> +			if (bus_cfg.link_frequencies[i] == link_freq[j]) {
+> +				imx335->link_freq_idx = j;
+> +				break;
 
-We double checked this, and looks like it needs to be reproduced by
-"make W=1". Could you please recheck with W=1?
+Instead of stabbing the old implementation, could you instead use
+v4l2_link_freq_to_bitmap()
+<URL:https://patchwork.linuxtv.org/project/linux-media/patch/20240108075221.15757-2-sakari.ailus@linux.intel.com/>?
 
-The following link has some hints of handling W=1 warnings:
+> +			}
+> +		}
+>  
+> -	ret = -EINVAL;
+> +		if (j == ARRAY_SIZE(link_freq)) {
+> +			ret = dev_err_probe(imx335->dev, -EINVAL,
+> +					    "no supported link freq found\n");
+> +			goto done_endpoint_free;
+> +		}
+> +	}
+>  
+>  done_endpoint_free:
+>  	v4l2_fwnode_endpoint_free(&bus_cfg);
+> @@ -1101,7 +1167,7 @@ static int imx335_init_controls(struct imx335 *imx335)
+>  							V4L2_CID_LINK_FREQ,
+>  							ARRAY_SIZE(link_freq) -
+>  							1,
+> -							mode->link_freq_idx,
+> +							imx335->link_freq_idx,
+>  							link_freq);
+>  	if (imx335->link_freq_ctrl)
+>  		imx335->link_freq_ctrl->flags |= V4L2_CTRL_FLAG_READ_ONLY;
 
-https://github.com/intel/lkp-tests/wiki/LKP-FAQ#how-is-one-meant-to-act-on-w1-reports-like--wmissing-prototypes
+-- 
+Regards,
 
-Please kindly let us know if you'd like to ignore these W=1 warnings,
-and we will configure the bot for you to avoid further bothering.
-
-Thanks,
-Yujie
+Sakari Ailus
