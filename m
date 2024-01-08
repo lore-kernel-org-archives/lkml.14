@@ -1,165 +1,422 @@
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01rlnn2050.outbound.protection.outlook.com [40.95.110.50])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394314777C;
-	Mon,  8 Jan 2024 14:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=taln60.nuvoton.co.il
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b="uttHVWk3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Toq+zBhFGLG++L0jAmn0+DOMlFPrWREuQ2ihXl8OQ7CqBL7dFI5JYM5957dC9yBDSte8yTGmXbJ0lwaSP4J8g8EpA5KEZlsKUPGsuPIzWB6uLcmWrIKOskpu7HAhGgsHLnnhBcmh56WutN1vwChF8c28Wh3EtxK1wFCsRaub8zpmvKdKaUDYa1ZaOlZvYP3NOcLx9wEPlZwj+HJ95fSjYcLJKOn3K7nPYS+JXAyoHgzcaH1fuibQ1vBoMfjwcoDl88e5hD7LxgpMeZXfqTARSYXMFiVHSsq6kRX4+uJ9mMSm0hPJcF/LWNU/dLgCo99gWKEmrW6hnLOWkFTlFcU+gw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XvTno2ldL33EagYWpxaNixMNkdbH0dEQ0CPhyIa9KWY=;
- b=VHh3AvH5bsxdzmu9XW1oQD+kRCw+b3tjCkHuoRn/kDXHf1SJTgy4UD4qVoy+kiYBl/nxbvv7Ou2zZocMZRL+WJRGBOyrGhLVafTf/4qLqJZ3vJeWryR4LFqH4gHBRv9k/C2LIJE/eqsZDRi3WZdmVWxJ+HqACKo8c7shB6eLU7fVFFFcN8HyrkCDBgZw1p57JqV8bqNqAi9LKRr3MNjI6gEARcndje6t8ibPbRxW7zwbVuAskkeyPKoVXIi0Y343ZrZldf3fOj50y1+FDmLjh3do3qb9q+WAI8NE4z4ifP/GEuPT2J+mmeFG95o5errnD9X9x15Bsm7MFZys/w/wTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 211.75.126.7) smtp.rcpttodomain=baylibre.com
- smtp.mailfrom=taln60.nuvoton.co.il; dmarc=fail (p=none sp=quarantine pct=100)
- action=none header.from=gmail.com; dkim=none (message not signed); arc=none
- (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XvTno2ldL33EagYWpxaNixMNkdbH0dEQ0CPhyIa9KWY=;
- b=uttHVWk3xgMag4pByyKzbjXLB3tsq62KgeQunEPXdPbDwxg8ouFzPRKdapf59oJasl2i/fkdxtMbnfxDiIyfBXwatUGpY+xvyZJxrggsmEWHLFTqC9SjW6JwbV+jkxCt5CLocgPQRWBA8Cf282qrN0K8Fqk72TM+P5YVsw/PO/A=
-Received: from PS2PR02CA0091.apcprd02.prod.outlook.com (2603:1096:300:5c::31)
- by SEYPR03MB7968.apcprd03.prod.outlook.com (2603:1096:101:168::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.21; Mon, 8 Jan
- 2024 13:54:30 +0000
-Received: from HK2PEPF00006FB5.apcprd02.prod.outlook.com
- (2603:1096:300:5c:cafe::ac) by PS2PR02CA0091.outlook.office365.com
- (2603:1096:300:5c::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.21 via Frontend
- Transport; Mon, 8 Jan 2024 13:54:30 +0000
-X-MS-Exchange-Authentication-Results: spf=none (sender IP is 211.75.126.7)
- smtp.mailfrom=taln60.nuvoton.co.il; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=gmail.com;
-Received-SPF: None (protection.outlook.com: taln60.nuvoton.co.il does not
- designate permitted sender hosts)
-Received: from NTHCCAS01.nuvoton.com (211.75.126.7) by
- HK2PEPF00006FB5.mail.protection.outlook.com (10.167.8.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7181.12 via Frontend Transport; Mon, 8 Jan 2024 13:54:29 +0000
-Received: from NTHCCAS01.nuvoton.com (10.1.8.28) by NTHCCAS01.nuvoton.com
- (10.1.8.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 8 Jan
- 2024 21:54:24 +0800
-Received: from taln58.nuvoton.co.il (10.191.1.178) by NTHCCAS01.nuvoton.com
- (10.1.8.28) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
- Transport; Mon, 8 Jan 2024 21:54:24 +0800
-Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
-	by taln58.nuvoton.co.il (Postfix) with ESMTP id 8C75F5F649;
-	Mon,  8 Jan 2024 15:54:23 +0200 (IST)
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
-	id 8BF9CDC0047; Mon,  8 Jan 2024 15:54:23 +0200 (IST)
-From: Tomer Maimon <tmaimon77@gmail.com>
-To: <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <tali.perry1@gmail.com>,
-	<joel@jms.id.au>, <venture@google.com>, <yuenn@google.com>,
-	<benjaminfair@google.com>
-CC: <openbmc@lists.ozlabs.org>, <linux-clk@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>, Tomer Maimon
-	<tmaimon77@gmail.com>
-Subject: [PATCH v22 4/8] dt-bindings: soc: nuvoton: add binding for clock and reset registers
-Date: Mon, 8 Jan 2024 15:54:17 +0200
-Message-ID: <20240108135421.684263-5-tmaimon77@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240108135421.684263-1-tmaimon77@gmail.com>
-References: <20240108135421.684263-1-tmaimon77@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D8C537E4
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 14:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2266DFF806;
+	Mon,  8 Jan 2024 14:27:38 +0000 (UTC)
+Message-ID: <c671e93a-c3a9-4d15-aade-ea4a70390f08@ghiti.fr>
+Date: Mon, 8 Jan 2024 15:27:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: Add support for BATCHED_UNMAP_TLB_FLUSH
+Content-Language: en-US
+To: Jisheng Zhang <jszhang@kernel.org>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240102141851.105144-1-alexghiti@rivosinc.com>
+ <ZZU9s7iHDTBD39C0@xhacker>
+ <CAHVXubgpMFesz8C-tY4qY0OGzB3Jfyp1eK6YafN8GQN=u7Etyg@mail.gmail.com>
+ <CAHVXubij+L84tpwM-O1W6HV31D8Q7Gb0OerobYJVcmznXaQ2eg@mail.gmail.com>
+ <ZZlZ1HEhDuj4Ojwd@xhacker> <ZZleH4KcnIwkI6q9@xhacker>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <ZZleH4KcnIwkI6q9@xhacker>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NotSetDelaration: True
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HK2PEPF00006FB5:EE_|SEYPR03MB7968:EE_
-X-MS-Office365-Filtering-Correlation-Id: 11d72320-b249-4be3-aee6-08dc1051556b
-X-MS-Exchange-SenderADCheck: 2
-X-MS-Exchange-AntiSpam-Relay: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	ePeVN6yWmgxcfRl8nzvRTI+Y8369zHx/Aov5bTLywIPvuqHXjnLdMbNW3WMxfUa0P65NZP8FugLKcjCma6iOVi+IwiIiH7VbvUefB7UHuaSoLS5u88y7TCA/6LZgQG2406Q4dHrfGzLS372xRYkD5pB6Mmj0cLbtCCfVifyC60aRfhkj728qg8Dapbz0Diq+OqcSJdKQlkGi0SGgaaRy1zcjyjcdAKJNQVXBYED1ogcjaexjDBhTd94d1L1NJpckNidYpP0G+eyGNwE9AEeyGEPVfmNaMmgsHUBBGZ4pt6cVYdR2UINmYSpA+JXVqA3AbC/CEkujHyEm5RKF1T1SclmSDMu8M0FI9bwh8CVVr5LPEDy2RPvegmiJmshGWhKaRjY+Zy6dVZsyUkNNrDjGUmR3WuKOAytPSnYJ2B3pqtOZjat/ZhnYRuDP5Z6FacNcsEBvInCVu9DVOILnsVbO5FVu69ORw96JQDnVuuSow+d835Bbki+nUSgFx/9gZCDDJZ4f22eEEhmb9GCSTFokp2B52MkJink/d5VvnY4EzOLM2HWRlD4VBubCzbK6ni90+jwJsVNU4Buwh24at3iO6JNV6GIqkICirKX6nCef8+0JzyDVMzTtBRj4/KKxMRPNKeCWoc4avjwHWMnrsfmhnMEq7IP3bMnh+B2ahiNiCrFAGR0vXMM5TDhJOp33zWhyYE6hIW3G1GkVTDboVmQQ1IknlUbaYYjGrhNc+PbWXjS2Mfncxe8Ue+feIJFfTUIlZsGLcsJdFgBwUHwumFPM0CeFJBalkL9B7J4MA7Y7wPio6k4bg9uDDV2Hw8XcZ6h3uTX3QT0ohK01rbY9K06stw==
-X-Forefront-Antispam-Report:
-	CIP:211.75.126.7;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:NTHCCAS01.nuvoton.com;PTR:211-75-126-7.hinet-ip.hinet.net;CAT:NONE;SFS:(13230031)(4636009)(376002)(396003)(136003)(346002)(39860400002)(230922051799003)(61400799012)(48200799006)(64100799003)(82310400011)(451199024)(46966006)(40470700004)(966005)(1076003)(26005)(2616005)(336012)(6266002)(498600001)(6666004)(47076005)(35950700001)(83380400001)(73392003)(82202003)(42882007)(5660300002)(2906002)(7416002)(41300700001)(70206006)(42186006)(316002)(76482006)(54906003)(8936002)(110136005)(8676002)(4326008)(70586007)(82740400003)(55446002)(36756003)(356005)(81166007)(83170400001)(40460700003)(40480700001)(45356006)(35450700002);DIR:OUT;SFP:1022;
-X-OriginatorOrg: nuvoton.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2024 13:54:29.0814
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11d72320-b249-4be3-aee6-08dc1051556b
-X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a3f24931-d403-4b4a-94f1-7d83ac638e07;Ip=[211.75.126.7];Helo=[NTHCCAS01.nuvoton.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	HK2PEPF00006FB5.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR03MB7968
+X-GND-Sasl: alex@ghiti.fr
 
-A nuvoton,*-clk-rst node is present in nuvoton-common-npcm7xx.dtsi and
-will be added to nuvoton-common-npcm8xx.dtsi. It is necessary for the
-NPCM7xx and NPCM8xx clock and reset drivers, and may later be used to
-retrieve SoC model and version information.
+Hi Jisheng,
 
-This patch adds a binding to describe this node.
+On 06/01/2024 15:05, Jisheng Zhang wrote:
+> On Sat, Jan 06, 2024 at 09:47:04PM +0800, Jisheng Zhang wrote:
+>> On Fri, Jan 05, 2024 at 02:36:44PM +0100, Alexandre Ghiti wrote:
+>>> On Thu, Jan 4, 2024 at 6:42 PM Alexandre Ghiti <alexghiti@rivosinc.com> wrote:
+>>>> Hi Jisheng,
+>>>>
+>>>> On Wed, Jan 3, 2024 at 12:10 PM Jisheng Zhang <jszhang@kernel.org> wrote:
+>>>>> On Tue, Jan 02, 2024 at 03:18:51PM +0100, Alexandre Ghiti wrote:
+>>>>>> Allow to defer the flushing of the TLB when unmapping pges, which allows
+>>>>>> to reduce the numbers of IPI and the number of sfence.vma.
+>>>>>>
+>>>>>> The ubenchmarch used in commit 43b3dfdd0455 ("arm64: support
+>>>>>> batched/deferred tlb shootdown during page reclamation/migration") shows
+>>>>>> good performance improvement and perf reports an important decrease in
+>>>>>> time spent flushing the tlb (results come from qemu):
+>>>>> Hi Alex,
+>>>>>
+>>>>> I tried this micro benchmark with your patch on T-HEAD TH1520 platform, I
+>>>>> didn't see any performance improvement for the micro benchmark. Per
+>>>>> myunderstanding, the micro benchmark is special case for arm64 because
+>>>>> in a normal tlb flush flow, below sequence is necessary:
+>>>>>
+>>>>> tlbi
+>>>>> dsb
+>>>>>
+>>>>>
+>>>>> while with BATCHED_UNMAP_TLB_FLUSH, the arm64 just does 'tlbi', leaving
+>>>>> the dsb to the arch_tlbbatch_flush(). So the final result is
+>>>>>
+>>>>> several 'tlbi + dsb' sequence VS. several 'tlbi' instructions + only one dsb
+>>>>> The performance improvement comes from the unnecessary dsb eliminations.
+>>>> Some batching should take place, and with this patch, we only send one
+>>>> "full" sfence.vma instead of a "local" sfence.vma for each page, it
+>>>> seems weird that you don't see any improvement, I would have thought
+>>>> that one "full" sfence.vma would be better.
+>>>>
+>>>>> Do you have suitable benchmark(s) for BATCHED_UNMAP_TLB_FLUSH on riscv?
+>>>> Can you give the following benchmark a try? I simply created threads
+>>>> and dispatched them on all the cpus to force IPI usage, that should be
+>>>> way better if the batching of the first ubenchmark is not enough to
+>>>> exacerbate performance improvements, let me know and thanks for your
+>>>> tests!
+>>>>
+>>>> #define _GNU_SOURCE
+>>>> #include <pthread.h>
+>>>> #include <sys/types.h>
+>>>> #include <unistd.h>
+>>>> #include <sys/mman.h>
+>>>> #include <string.h>
+>>>> #include <errno.h>
+>>>> #include <sched.h>
+>>>> #include <time.h>
+>>>>
+>>>> int stick_this_thread_to_core(int core_id) {
+>>>>          int num_cores = sysconf(_SC_NPROCESSORS_ONLN);
+>>>>          if (core_id < 0 || core_id >= num_cores)
+>>>>             return EINVAL;
+>>>>
+>>>>          cpu_set_t cpuset;
+>>>>          CPU_ZERO(&cpuset);
+>>>>          CPU_SET(core_id, &cpuset);
+>>>>
+>>>>          pthread_t current_thread = pthread_self();
+>>>>          return pthread_setaffinity_np(current_thread,
+>>>> sizeof(cpu_set_t), &cpuset);
+>>>> }
+>>>>
+>>>> static void *fn_thread (void *p_data)
+>>>> {
+>>>>          int ret;
+>>>>          pthread_t thread;
+>>>>
+>>>>          stick_this_thread_to_core((int)p_data);
+>>>>
+>>>>          while (1) {
+>>>>                  sleep(1);
+>>>>          }
+>>>>
+>>>>          return NULL;
+>>>> }
+>>>>
+>>>> int main()
+>>>> {
+>>>> #define SIZE (1 * 1024 * 1024)
+>>>>          volatile unsigned char *p = mmap(NULL, SIZE, PROT_READ | PROT_WRITE,
+>>>>                                           MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+>>>>          pthread_t threads[4];
+>>>>          int ret;
+>>>>
+>>>>          for (int i = 0; i < 4; ++i) {
+>>>>                  ret = pthread_create(&threads[i], NULL, fn_thread, (void *)i);
+>>>>                  if (ret)
+>>>>                  {
+>>>>                          printf("%s", strerror (ret));
+>>>>                  }
+>>>>          }
+>>>>
+>>>>          memset(p, 0x88, SIZE);
+>>>>
+>>>>          for (int k = 0; k < 500 /* 10000 */; k++) {
+>>>>                  /* swap in */
+>>>>                  for (int i = 0; i < SIZE; i += 4096) {
+>>>>                          (void)p[i];
+>>>>                  }
+>>>>
+>>>>                  /* swap out */
+>>>>                  madvise(p, SIZE, MADV_PAGEOUT);
+>>>>          }
+>>>>
+>>>>          for (int i = 0; i < 4; i++)
+>>>>          {
+>>>>                  pthread_cancel(threads[i]);
+>>>>          }
+>>>>
+>>>>          for (int i = 0; i < 4; i++)
+>>>>          {
+>>>>                  pthread_join(threads[i], NULL);
+>>>>          }
+>>>>
+>>>>          return 0;
+>>>>
+>>>> }
+>>>>
+>>> So I removed the dust from my unmatched and ran the benchmarks I proposed:
+>>>
+>>> Without this patch:
+>>> * benchmark from commit 43b3dfdd0455 (4 runs)  : ~20.3s
+>>> * same benchmark with threads (4 runs)                : ~27.4s
+>>>
+>>> With this patch:
+>>> * benchmark from commit 43b3dfdd0455 (4 runs)  : ~17.9s
+>>> * same benchmark with threads (4 runs)                : ~18.1s
+>>>
+>>> So a small improvement for the single thread benchmark, but it depends
+>>> on the number of pages that get flushed, so to me that's not
+>>> applicable for the general case. For the same benchmark with multiple
+>>> threads, that's ~34% improvement. I'll add those numbers to the v2,
+>>> and JIsheng if you can provide some too, I'll add them too!
+>> Hi Alex,
+>>
+>> the threaded version show ~78% improvement! impressive!
+> One more thing when you cook v2: it's better to patch the riscv entry
+> in Documentation/features/vm/TLB/arch-support.txt
+>
+>> So for the patch:
+>>
+>> Reviewed-by: Jisheng Zhang <jszhang@kernel.org>
+>> Tested-by: Jisheng Zhang <jszhang@kernel.org>
+>>
+>> Thanks
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- .../soc/nuvoton/nuvoton,npcm-clk-rst.yaml     | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-clk-rst.yaml
 
-diff --git a/Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-clk-rst.yaml b/Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-clk-rst.yaml
-new file mode 100644
-index 000000000000..dfec64a8eb26
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-clk-rst.yaml
-@@ -0,0 +1,40 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/soc/nuvoton/nuvoton,npcm-clk-rst.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Clock and reset registers block in Nuvoton SoCs
-+
-+maintainers:
-+  - Tomer Maimon <tmaimon77@gmail.com>
-+
-+description:
-+  The clock and reset registers are a registers block in Nuvoton SoCs that 
-+  handle both reset and clock functionality.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - nuvoton,npcm750-clk-rst
-+          - nuvoton,npcm845-clk-rst
-+      - const: syscon
-+      - const: simple-mfd
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties:
-+  type: object
-+
-+examples:
-+  - |
-+    clk_rst: syscon@801000 {
-+      compatible = "nuvoton,npcm750-clk-rst", "syscon", "simple-mfd";
-+      reg = <0x801000 0x6C>;
-+    };
--- 
-2.34.1
+Thanks for your tests and review, and the missing documentation update!
 
+Alex
+
+
+>>> Thanks,
+>>>
+>>> Alex
+>>>
+>>>>> Thanks
+>>>>>
+>>>>>> Before this patch:
+>>>>>>
+>>>>>> real  2m1.135s
+>>>>>> user  0m0.980s
+>>>>>> sys   2m0.096s
+>>>>>>
+>>>>>> 4.83%  batch_tlb  [kernel.kallsyms]            [k] __flush_tlb_range
+>>>>>>
+>>>>>> After this patch:
+>>>>>>
+>>>>>> real  1m0.543s
+>>>>>> user  0m1.059s
+>>>>>> sys   0m59.489s
+>>>>>>
+>>>>>> 0.14%  batch_tlb  [kernel.kallsyms]            [k] __flush_tlb_range
+>>>>>>
+>>>>>> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+>>>>>> ---
+>>>>>>   arch/riscv/Kconfig                |  1 +
+>>>>>>   arch/riscv/include/asm/tlbbatch.h | 15 +++++++
+>>>>>>   arch/riscv/include/asm/tlbflush.h | 10 +++++
+>>>>>>   arch/riscv/mm/tlbflush.c          | 71 ++++++++++++++++++++++---------
+>>>>>>   4 files changed, 77 insertions(+), 20 deletions(-)
+>>>>>>   create mode 100644 arch/riscv/include/asm/tlbbatch.h
+>>>>>>
+>>>>>> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+>>>>>> index 7603bd8ab333..aa07bd43b138 100644
+>>>>>> --- a/arch/riscv/Kconfig
+>>>>>> +++ b/arch/riscv/Kconfig
+>>>>>> @@ -53,6 +53,7 @@ config RISCV
+>>>>>>        select ARCH_USE_MEMTEST
+>>>>>>        select ARCH_USE_QUEUED_RWLOCKS
+>>>>>>        select ARCH_USES_CFI_TRAPS if CFI_CLANG
+>>>>>> +     select ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH if SMP && MMU
+>>>>>>        select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
+>>>>>>        select ARCH_WANT_FRAME_POINTERS
+>>>>>>        select ARCH_WANT_GENERAL_HUGETLB if !RISCV_ISA_SVNAPOT
+>>>>>> diff --git a/arch/riscv/include/asm/tlbbatch.h b/arch/riscv/include/asm/tlbbatch.h
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..46014f70b9da
+>>>>>> --- /dev/null
+>>>>>> +++ b/arch/riscv/include/asm/tlbbatch.h
+>>>>>> @@ -0,0 +1,15 @@
+>>>>>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>>>>>> +/*
+>>>>>> + * Copyright (C) 2023 Rivos Inc.
+>>>>>> + */
+>>>>>> +
+>>>>>> +#ifndef _ASM_RISCV_TLBBATCH_H
+>>>>>> +#define _ASM_RISCV_TLBBATCH_H
+>>>>>> +
+>>>>>> +#include <linux/cpumask.h>
+>>>>>> +
+>>>>>> +struct arch_tlbflush_unmap_batch {
+>>>>>> +     struct cpumask cpumask;
+>>>>>> +};
+>>>>>> +
+>>>>>> +#endif /* _ASM_RISCV_TLBBATCH_H */
+>>>>>> diff --git a/arch/riscv/include/asm/tlbflush.h b/arch/riscv/include/asm/tlbflush.h
+>>>>>> index 8f3418c5f172..f0b731ccc0c2 100644
+>>>>>> --- a/arch/riscv/include/asm/tlbflush.h
+>>>>>> +++ b/arch/riscv/include/asm/tlbflush.h
+>>>>>> @@ -46,6 +46,16 @@ void flush_tlb_kernel_range(unsigned long start, unsigned long end);
+>>>>>>   void flush_pmd_tlb_range(struct vm_area_struct *vma, unsigned long start,
+>>>>>>                        unsigned long end);
+>>>>>>   #endif
+>>>>>> +
+>>>>>> +#ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
+>>>>>> +bool arch_tlbbatch_should_defer(struct mm_struct *mm);
+>>>>>> +void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
+>>>>>> +                            struct mm_struct *mm,
+>>>>>> +                            unsigned long uaddr);
+>>>>>> +void arch_flush_tlb_batched_pending(struct mm_struct *mm);
+>>>>>> +void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch);
+>>>>>> +#endif /* CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH */
+>>>>>> +
+>>>>>>   #else /* CONFIG_SMP && CONFIG_MMU */
+>>>>>>
+>>>>>>   #define flush_tlb_all() local_flush_tlb_all()
+>>>>>> diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
+>>>>>> index e6659d7368b3..bb623bca0a7d 100644
+>>>>>> --- a/arch/riscv/mm/tlbflush.c
+>>>>>> +++ b/arch/riscv/mm/tlbflush.c
+>>>>>> @@ -93,29 +93,23 @@ static void __ipi_flush_tlb_range_asid(void *info)
+>>>>>>        local_flush_tlb_range_asid(d->start, d->size, d->stride, d->asid);
+>>>>>>   }
+>>>>>>
+>>>>>> -static void __flush_tlb_range(struct mm_struct *mm, unsigned long start,
+>>>>>> -                           unsigned long size, unsigned long stride)
+>>>>>> +static void __flush_tlb_range(struct cpumask *cmask, unsigned long asid,
+>>>>>> +                           unsigned long start, unsigned long size,
+>>>>>> +                           unsigned long stride)
+>>>>>>   {
+>>>>>>        struct flush_tlb_range_data ftd;
+>>>>>> -     const struct cpumask *cmask;
+>>>>>> -     unsigned long asid = FLUSH_TLB_NO_ASID;
+>>>>>>        bool broadcast;
+>>>>>>
+>>>>>> -     if (mm) {
+>>>>>> -             unsigned int cpuid;
+>>>>>> +     if (cpumask_empty(cmask))
+>>>>>> +             return;
+>>>>>>
+>>>>>> -             cmask = mm_cpumask(mm);
+>>>>>> -             if (cpumask_empty(cmask))
+>>>>>> -                     return;
+>>>>>> +     if (cmask != cpu_online_mask) {
+>>>>>> +             unsigned int cpuid;
+>>>>>>
+>>>>>>                cpuid = get_cpu();
+>>>>>>                /* check if the tlbflush needs to be sent to other CPUs */
+>>>>>>                broadcast = cpumask_any_but(cmask, cpuid) < nr_cpu_ids;
+>>>>>> -
+>>>>>> -             if (static_branch_unlikely(&use_asid_allocator))
+>>>>>> -                     asid = atomic_long_read(&mm->context.id) & asid_mask;
+>>>>>>        } else {
+>>>>>> -             cmask = cpu_online_mask;
+>>>>>>                broadcast = true;
+>>>>>>        }
+>>>>>>
+>>>>>> @@ -135,25 +129,34 @@ static void __flush_tlb_range(struct mm_struct *mm, unsigned long start,
+>>>>>>                local_flush_tlb_range_asid(start, size, stride, asid);
+>>>>>>        }
+>>>>>>
+>>>>>> -     if (mm)
+>>>>>> +     if (cmask != cpu_online_mask)
+>>>>>>                put_cpu();
+>>>>>>   }
+>>>>>>
+>>>>>> +static inline unsigned long get_mm_asid(struct mm_struct *mm)
+>>>>>> +{
+>>>>>> +     return static_branch_unlikely(&use_asid_allocator) ?
+>>>>>> +                     atomic_long_read(&mm->context.id) & asid_mask : FLUSH_TLB_NO_ASID;
+>>>>>> +}
+>>>>>> +
+>>>>>>   void flush_tlb_mm(struct mm_struct *mm)
+>>>>>>   {
+>>>>>> -     __flush_tlb_range(mm, 0, FLUSH_TLB_MAX_SIZE, PAGE_SIZE);
+>>>>>> +     __flush_tlb_range(mm_cpumask(mm), get_mm_asid(mm),
+>>>>>> +                       0, FLUSH_TLB_MAX_SIZE, PAGE_SIZE);
+>>>>>>   }
+>>>>>>
+>>>>>>   void flush_tlb_mm_range(struct mm_struct *mm,
+>>>>>>                        unsigned long start, unsigned long end,
+>>>>>>                        unsigned int page_size)
+>>>>>>   {
+>>>>>> -     __flush_tlb_range(mm, start, end - start, page_size);
+>>>>>> +     __flush_tlb_range(mm_cpumask(mm), get_mm_asid(mm),
+>>>>>> +                       start, end - start, page_size);
+>>>>>>   }
+>>>>>>
+>>>>>>   void flush_tlb_page(struct vm_area_struct *vma, unsigned long addr)
+>>>>>>   {
+>>>>>> -     __flush_tlb_range(vma->vm_mm, addr, PAGE_SIZE, PAGE_SIZE);
+>>>>>> +     __flush_tlb_range(mm_cpumask(vma->vm_mm), get_mm_asid(vma->vm_mm),
+>>>>>> +                       addr, PAGE_SIZE, PAGE_SIZE);
+>>>>>>   }
+>>>>>>
+>>>>>>   void flush_tlb_range(struct vm_area_struct *vma, unsigned long start,
+>>>>>> @@ -185,18 +188,46 @@ void flush_tlb_range(struct vm_area_struct *vma, unsigned long start,
+>>>>>>                }
+>>>>>>        }
+>>>>>>
+>>>>>> -     __flush_tlb_range(vma->vm_mm, start, end - start, stride_size);
+>>>>>> +     __flush_tlb_range(mm_cpumask(vma->vm_mm), get_mm_asid(vma->vm_mm),
+>>>>>> +                       start, end - start, stride_size);
+>>>>>>   }
+>>>>>>
+>>>>>>   void flush_tlb_kernel_range(unsigned long start, unsigned long end)
+>>>>>>   {
+>>>>>> -     __flush_tlb_range(NULL, start, end - start, PAGE_SIZE);
+>>>>>> +     __flush_tlb_range((struct cpumask *)cpu_online_mask, FLUSH_TLB_NO_ASID,
+>>>>>> +                       start, end - start, PAGE_SIZE);
+>>>>>>   }
+>>>>>>
+>>>>>>   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>>>>>>   void flush_pmd_tlb_range(struct vm_area_struct *vma, unsigned long start,
+>>>>>>                        unsigned long end)
+>>>>>>   {
+>>>>>> -     __flush_tlb_range(vma->vm_mm, start, end - start, PMD_SIZE);
+>>>>>> +     __flush_tlb_range(mm_cpumask(vma->vm_mm), get_mm_asid(vma->vm_mm),
+>>>>>> +                       start, end - start, PMD_SIZE);
+>>>>>>   }
+>>>>>>   #endif
+>>>>>> +
+>>>>>> +#ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
+>>>>>> +bool arch_tlbbatch_should_defer(struct mm_struct *mm)
+>>>>>> +{
+>>>>>> +     return true;
+>>>>>> +}
+>>>>>> +
+>>>>>> +void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
+>>>>>> +                            struct mm_struct *mm,
+>>>>>> +                            unsigned long uaddr)
+>>>>>> +{
+>>>>>> +     cpumask_or(&batch->cpumask, &batch->cpumask, mm_cpumask(mm));
+>>>>>> +}
+>>>>>> +
+>>>>>> +void arch_flush_tlb_batched_pending(struct mm_struct *mm)
+>>>>>> +{
+>>>>>> +     flush_tlb_mm(mm);
+>>>>>> +}
+>>>>>> +
+>>>>>> +void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
+>>>>>> +{
+>>>>>> +     __flush_tlb_range(&batch->cpumask, FLUSH_TLB_NO_ASID, 0,
+>>>>>> +                       FLUSH_TLB_MAX_SIZE, PAGE_SIZE);
+>>>>>> +}
+>>>>>> +#endif /* CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH */
+>>>>>> --
+>>>>>> 2.39.2
+>>>>>>
+>>>>>>
+>>>>>> _______________________________________________
+>>>>>> linux-riscv mailing list
+>>>>>> linux-riscv@lists.infradead.org
+>>>>>> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
