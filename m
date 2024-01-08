@@ -1,83 +1,54 @@
-Received: from lahtoruutu.iki.fi (lahtoruutu.iki.fi [185.185.170.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501AB14A8D;
-	Mon,  8 Jan 2024 11:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E6B1429B
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 11:25:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b="Luppexhm";
-	dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b="wlzWEzml"
-Received: from meesny.iki.fi (meesny.iki.fi [195.140.195.201])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lahtoruutu.iki.fi (Postfix) with ESMTPS id 4T7s2975kkz49Py8;
-	Mon,  8 Jan 2024 13:16:17 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=lahtoruutu;
-	t=1704712578;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FRzBCMMQ3iNT4N+/PtoE+zl1cNf6xy8Jh8N7QEIPuR0=;
-	b=LuppexhmF+qLbw/oCBO6M82rgaF2MnuRfZPyAkoWzoDHEVASUB7ccsqBrVFA0rJVQUz3qW
-	tg7/ZAScmc/wWtZrc1RJ7qnQd2knGxDe2IUGL9eY0vqkzpVmyavDCmJTuskTb4RYPZAKEx
-	TZAd+uNT7Q9bdvgZDamY5QpP56VZGtDHBTT67ZOl53cZ7je9FZ4OOIdwcfK9ES2uy6E2M3
-	maytfVves+96dso5hUukg26h9YDyIAVQg0MXGBC/+ZE/y/+zpNLyyWXQnaefWWQzduW0oq
-	Lhxe3DAMB/kTICVibgoY3hp368XbS5t18ZNZbuIXHKxjTSMJYfsE4wo5Bj8xeg==
-Received: from hillosipuli.retiisi.eu (2a00-1190-d1dd-0-c641-1eff-feae-163c.v6.cust.suomicom.net [IPv6:2a00:1190:d1dd:0:c641:1eff:feae:163c])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sailus)
-	by meesny.iki.fi (Postfix) with ESMTPSA id 4T7s203rwCzyVF;
-	Mon,  8 Jan 2024 13:16:08 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=meesny;
-	t=1704712570;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FRzBCMMQ3iNT4N+/PtoE+zl1cNf6xy8Jh8N7QEIPuR0=;
-	b=wlzWEzmlfbjtN7EPAYxysu6dnh1OrLqhAltCHxtZNtHPfb3E+Q96GDuHP+twx271ZDm6r1
-	ITyttcHJS8Z9hnA0PuMESKwmbEM+MidtOwyPHDW/LhvGMy/yLPJ2gEucSG09uVhgobxjIV
-	veG1KXvcfPpwxJevtdwd1XFA/wVrgNg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-	s=meesny; t=1704712570;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FRzBCMMQ3iNT4N+/PtoE+zl1cNf6xy8Jh8N7QEIPuR0=;
-	b=OwaUdeirO3y0WBsvVKLnjqN9JcMnQxS2glNNDL9wjYy8tRAjhXz2AFIl5vINm/CtPLYkFd
-	6qGbLU7gnq7gPlelrcgx7by8kydtDGfnYM1bv+l9+EgZ0SVAJgBcZhcQKNSyQMAe6r/2Dl
-	XbxbNzSJPQR1VnRciPmiM3SH8GMlygg=
-ARC-Seal: i=1; s=meesny; d=iki.fi; t=1704712570; a=rsa-sha256; cv=none;
-	b=QAyS2Xbkog7xn84AR3YlL+1qoyaideEeDfZXszlGKtqNDMYlkQ8JGwCRXV6h+ww1dKbgoY
-	cJLoT8xmm7VCS1JT/ZaPHsCjT3Hxb0d5ct2eyPrJRIjTtKZsDC1D1z9jBjCEyulms55G+w
-	O5eTf7hl7iW3AdACeWSPLi2L5edQG88=
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=sailus smtp.mailfrom=sakari.ailus@iki.fi
-Received: from valkosipuli.retiisi.eu (valkosipuli.localdomain [192.168.4.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by hillosipuli.retiisi.eu (Postfix) with ESMTPS id 01AD2634C93;
-	Mon,  8 Jan 2024 13:16:07 +0200 (EET)
-Date: Mon, 8 Jan 2024 11:16:07 +0000
-From: Sakari Ailus <sakari.ailus@iki.fi>
-To: Mikhail Rudenko <mike.rudenko@gmail.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Jacopo Mondi <jacopo@jmondi.org>,
-	Tommaso Merciai <tomm.merciai@gmail.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v2 06/20] media: i2c: ov4689: Refactor ov4689_set_ctrl
-Message-ID: <ZZvZdxqotS47XftY@valkosipuli.retiisi.eu>
-References: <20231218174042.794012-1-mike.rudenko@gmail.com>
- <20231218174042.794012-7-mike.rudenko@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mpB9BKZk"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-557c46872d3so366267a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 03:25:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704713158; x=1705317958; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=RO7JSB3/Xq9PGPLwpAVAxp7jWLegIWH0CnFSRPnQ6/o=;
+        b=mpB9BKZk+7G9XHnt6vlaC38//eojmTQ13buhaDhbYpSpNi9nYjA9WWjzCWz1fwjaIB
+         mJ3++m10DQFNUbijPDubqcH0sA96+U7sGGld3xCK6vZz96bro+T4lr8MFeVk5LilKaRx
+         JDyqbDcdqIiWildLKdOrgYEsiTqVyKBbhjSM4ibrt2sKvnHIr9PY4v+7WkCPv5wKBmMZ
+         dwXUSSzRWeBtcJlVYrGAqWk9fW247zR1waODOLii2KxLm/F0dHBha6LCOvI8PvbjToM0
+         BoDgtf0EKFhpD2ZxNwd0e9PFgy2y0nPcpZ1uPy7FOMIv0HmWSWVAjByDO29GzNs9KUTv
+         XBNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704713158; x=1705317958;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RO7JSB3/Xq9PGPLwpAVAxp7jWLegIWH0CnFSRPnQ6/o=;
+        b=JMRjb4JP6iUVQKo7mxCyyFYgZL1+4ThYyt0EsI4vRCfLGcKdyjDtayqNn6la+EdYOV
+         b0PwDLG6MmtQ+iY5DX1UCzAy6ID69DL2AcIegWr0ep9BLzgXNugJmAR/UvDtvECbc4zB
+         Vj1ZjIpm66t+6+UyaFCc08H16IV3xhdz5hYkszBorxKjFcOav/1Vw4OWBx5BRfowHMgJ
+         nbO7HO2GvNwU8v5HysD6sBrb3TMbfWH3PRXpDQJA8+AbehXPQ9pwkfIllqyWapVyawBv
+         pYCJTA9Qj5CsvslfNRv5eob0XbXGSxI2x+JHLHeb/CoEjQJbKpId3USovkBrCkOJdjje
+         YMpg==
+X-Gm-Message-State: AOJu0YyHaBhkqD8kuzGn2cWf9q5GuD52pxELvy3gwthqi1ikW96soLRn
+	5iUyTAIoZ7ufGWsbzfDiiMtjxniOm90=
+X-Google-Smtp-Source: AGHT+IFD5OdxipsBj9n31IIhAi0XoHoIXgM1ccQefFGex6bH4alegnlvuwz3ymxqwv52q1SxkF4W6A==
+X-Received: by 2002:a50:d742:0:b0:554:79d1:d9dc with SMTP id i2-20020a50d742000000b0055479d1d9dcmr2384747edj.69.1704713158042;
+        Mon, 08 Jan 2024 03:25:58 -0800 (PST)
+Received: from gmail.com (1F2EF3FE.nat.pool.telekom.hu. [31.46.243.254])
+        by smtp.gmail.com with ESMTPSA id n19-20020aa7c453000000b005550844cd1dsm4190179edr.30.2024.01.08.03.25.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jan 2024 03:25:57 -0800 (PST)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Mon, 8 Jan 2024 12:25:55 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, the arch/x86 maintainers <x86@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: [GIT PULL] x86/core changes for v6.8
+Message-ID: <ZZvbw0RICmvVvGtP@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,70 +57,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231218174042.794012-7-mike.rudenko@gmail.com>
 
-Hi Mikhail,
+Linus,
 
-On Mon, Dec 18, 2023 at 08:40:27PM +0300, Mikhail Rudenko wrote:
-> Introduce local variable for regmap within the ov4689_set_ctrl
-> function. This adjustment eliminates repetition within the function.
-> 
-> Signed-off-by: Mikhail Rudenko <mike.rudenko@gmail.com>
-> ---
->  drivers/media/i2c/ov4689.c | 11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/ov4689.c b/drivers/media/i2c/ov4689.c
-> index 3b20eba59c9c..d42f5d1a1ba8 100644
-> --- a/drivers/media/i2c/ov4689.c
-> +++ b/drivers/media/i2c/ov4689.c
-> @@ -580,6 +580,7 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
->  {
->  	struct ov4689 *ov4689 =
->  		container_of(ctrl->handler, struct ov4689, ctrl_handler);
-> +	struct regmap *regmap = ov4689->regmap;
->  	struct device *dev = ov4689->dev;
->  	int sensor_gain;
->  	s64 max_expo;
-> @@ -603,16 +604,15 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
->  	switch (ctrl->id) {
->  	case V4L2_CID_EXPOSURE:
->  		/* 4 least significant bits of exposure are fractional part */
-> -		ret = cci_write(ov4689->regmap, OV4689_REG_EXPOSURE,
-> -				ctrl->val << 4, NULL);
-> +		cci_write(regmap, OV4689_REG_EXPOSURE, ctrl->val << 4, &ret);
+Please pull the latest x86/core git tree from:
 
-If you do this, ret needs to have been initialised to 0, but it isn't.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-core-2024-01-08
 
-Same for the changes below.
+   # HEAD: edc8fc01f608108b0b7580cb2c29dfb5135e5f0e x86: Fix CPUIDLE_FLAG_IRQ_ENABLE leaking timer reprogram
 
->  		break;
->  	case V4L2_CID_ANALOGUE_GAIN:
->  		ret = ov4689_map_gain(ov4689, ctrl->val, &sensor_gain);
-> -		cci_write(ov4689->regmap, OV4689_REG_GAIN, sensor_gain, &ret);
-> +		cci_write(regmap, OV4689_REG_GAIN, sensor_gain, &ret);
->  		break;
->  	case V4L2_CID_VBLANK:
-> -		ret = cci_write(ov4689->regmap, OV4689_REG_VTS,
-> -				ctrl->val + ov4689->cur_mode->height, NULL);
-> +		cci_write(regmap, OV4689_REG_VTS,
-> +			  ctrl->val + ov4689->cur_mode->height, &ret);
->  		break;
->  	case V4L2_CID_TEST_PATTERN:
->  		ret = ov4689_enable_test_pattern(ov4689, ctrl->val);
-> @@ -625,7 +625,6 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
->  	}
->  
->  	pm_runtime_put(dev);
-> -
+x86/core changes for v6.8:
 
-I thought it was nice.
+ - Fix possible unintended timer delays caused by a race in
+   mwait_idle_with_hints().
 
->  	return ret;
->  }
->  
+ - Add comments about the magic behind the shadow STI
+   before MWAIT in __sti_mwait().
 
--- 
-Regards,
+ Thanks,
 
-Sakari Ailus
+	Ingo
+
+------------------>
+Frederic Weisbecker (1):
+      x86: Add a comment about the "magic" behind shadow sti before mwait
+
+Peter Zijlstra (1):
+      x86: Fix CPUIDLE_FLAG_IRQ_ENABLE leaking timer reprogram
+
+
+ arch/x86/include/asm/mwait.h | 20 ++++++++++++++++++--
+ drivers/idle/intel_idle.c    | 19 +++++++------------
+ 2 files changed, 25 insertions(+), 14 deletions(-)
