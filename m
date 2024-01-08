@@ -1,227 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890747493;
-	Mon,  8 Jan 2024 06:35:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450638C06;
+	Mon,  8 Jan 2024 06:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R4sySwq/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704695716; x=1736231716;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=T+u9j3c47yhngrz+FM6tbbFm2Vqtd0o68a0TMjK4crM=;
-  b=R4sySwq/sUYvWSAItiniso9A8ubRtD+6CvatlZFMcGe9fgEZhBVCFTn8
-   U4YBLU+NzhnxodCg4ET7nHJOy45WpZKq1PtbYAPNFMGNxn23fRgHJcTYv
-   +3JQTfjM7IuHDbVOc4n/PPgIg64zyUGQyFmSo2nzrm2ANazIQ9nEmsayF
-   cVo9Tf1l0sOWdUMECR7R09tFMiNcwcyo5LHiMuVqW5546eT6mrGLcqLwg
-   2p0HElOjBcXtGJiOZjA/wFOakqhuYczYPo4bwx2dA6zw+z75AK8YYaZnU
-   4wLm1Y8gSea0GxV0Kuel2k5FhwKOu7i57Zo5Wg8Gnp21nricaghe3Z3F4
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10946"; a="396685622"
-X-IronPort-AV: E=Sophos;i="6.04,340,1695711600"; 
-   d="scan'208";a="396685622"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2024 22:35:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,340,1695711600"; 
-   d="scan'208";a="23073387"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa002.jf.intel.com with ESMTP; 07 Jan 2024 22:35:11 -0800
-Date: Mon, 8 Jan 2024 14:32:14 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: "Manne, Nava kishore" <nava.kishore.manne@amd.com>
-Cc: "mdf@kernel.org" <mdf@kernel.org>,
-	"hao.wu@intel.com" <hao.wu@intel.com>,
-	"yilun.xu@intel.com" <yilun.xu@intel.com>,
-	"trix@redhat.com" <trix@redhat.com>,
-	"peter.colberg@intel.com" <peter.colberg@intel.com>,
-	"conor.dooley@microchip.com" <conor.dooley@microchip.com>,
-	"v.georgiev@metrotek.ru" <v.georgiev@metrotek.ru>,
-	"Simek, Michal" <michal.simek@amd.com>,
-	Marco Pagani <marpagan@redhat.com>,
-	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"ruanjinjie@huawei.com" <ruanjinjie@huawei.com>,
-	"linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"git (AMD-Xilinx)" <git@amd.com>
-Subject: Re: [RFC] FPGA Subsystem User Space Interface Proposal
-Message-ID: <ZZuW7rQv22xEreu0@yilunxu-OptiPlex-7050>
-References: <DM6PR12MB3993D5ECA50B27682AEBE19FCD67A@DM6PR12MB3993.namprd12.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nl6cIWW3"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2cceb5f0918so13724491fa.2;
+        Sun, 07 Jan 2024 22:35:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704695719; x=1705300519; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RUHqImkDji/0W298q5CLYrFD/FU6lfeTagixCLoFStQ=;
+        b=nl6cIWW36HYtDxoKwj7T8xg130WMTS0zFAgrtRzmRqLGeLZpLRIxU0eLOlRCGqnmI+
+         avAbA9VOc4/HODV8bBJXJTj3NumEYFWRAkkZeNbUyck00oHwophoejbZExosU/yqthzB
+         dJd9XwWtpUKu0jkcpq2IcQZU2+qs40+GyHUYFc6zqL9tqpdZigIowL4ZzZ8m6qG+lVEg
+         xTH1n7JYg/ICgoZBiEsceQ+Cm0uxdn21OWjWbimUViuAEdGMw7aNcY0WR9mu8NRQ7Xd2
+         IZaak0pNGPYuCwT9v8jYuDdimgE65WjGzGwqM804jTmw6tezoz40nZw9DGmvt1czZLkn
+         S13w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704695719; x=1705300519;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RUHqImkDji/0W298q5CLYrFD/FU6lfeTagixCLoFStQ=;
+        b=dyhtth7buYqvRO67jZdwjGAmuzNHToR19IX1uSqWjyK+kPfpUKWygTe7vCXVCvZ2fM
+         0cnJscAhhZWUs+ccAhyi3ydnS3zjtI9QCj8uLjJiuVjlJqe5oH24oo58YJ7a3LXNYRDb
+         hmAPqOCId+o/X8w2e96OpyhTBDIGs17lekvhoc/o/3LX8pr6PW86thYGgEyhwAVMB2Eh
+         Xwg5t9fLWx/bjHSoZZ8RXYGNzl9VVv+8hC9SNtbN2XIV2Xh4hm51yM1QZt2lzzEbNaCG
+         JOwAnvxNG2MNBS3aUF2UiOMx9UJzZ/XsvoPcu8s01SC/NGwJeJ+vlJUUBRF170VfEnnb
+         1vMw==
+X-Gm-Message-State: AOJu0Yy1t4H0pTknsJl5G7sDU9liYOeWEdTobYMFDoKZovZdNXHsk7bd
+	35E8VKLW2CQH2H0SGFxf0+8=
+X-Google-Smtp-Source: AGHT+IG7QnT1MqegDq6TKHm2afXir+xT1YBWCGCM0moJ5ZPk35M1BZnuzE+I1B97RV+GXtLD5R5PcQ==
+X-Received: by 2002:a2e:a553:0:b0:2cd:4e51:cea6 with SMTP id e19-20020a2ea553000000b002cd4e51cea6mr449278ljn.106.1704695718962;
+        Sun, 07 Jan 2024 22:35:18 -0800 (PST)
+Received: from ?IPV6:2001:14ba:16f8:1500::7? (dc78bmyyyyyyyyyyyyydt-3.rev.dnainternet.fi. [2001:14ba:16f8:1500::7])
+        by smtp.gmail.com with ESMTPSA id g22-20020a2eb0d6000000b002cd40121a49sm1017491ljl.36.2024.01.07.22.35.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Jan 2024 22:35:17 -0800 (PST)
+Message-ID: <fb847634-94f1-4001-bb5c-3c4c56aba9f7@gmail.com>
+Date: Mon, 8 Jan 2024 08:35:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM6PR12MB3993D5ECA50B27682AEBE19FCD67A@DM6PR12MB3993.namprd12.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iio: gts-helper: Fix division loop
+Content-Language: en-US, en-GB
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <ZZZ7pJBGkTdFFqiY@dc78bmyyyyyyyyyyyyydt-3.rev.dnainternet.fi>
+ <20240107162253.66c1f0f1@jic23-huawei>
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20240107162253.66c1f0f1@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 04, 2024 at 04:52:15AM +0000, Manne, Nava kishore wrote:
-> =======================================================================
-> | Introduction                                                        |
-> =======================================================================
-> This document provides a detailed overview of the proposed Kernel feature for FPGA Manager subsystem user interface.
-> It describes the problem statement behind the proposal, the problem to be solved, a top-level solution design.
+On 1/7/24 18:22, Jonathan Cameron wrote:
+> On Thu, 4 Jan 2024 11:34:28 +0200
+> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
 > 
-> Table of Contents:
-> ------------------
-> A. Problem Statement and Background
-> B. Scope and Out of scope of the proposal
->      B.1 Scope
->      B.2 Out of scope
-> C. Proposed Solution
-> D. Proposed User Interface Details
-> =======================================================================
-> | A. Problem Statement and Background                                        |
-> =======================================================================
-> The existing FPGA manager subsystem didn't have any user space interface (other than the status/state in sysfs) in Kernel. 
-> Basically, FPGAs are semiconductor devices that can be reprogrammed for desired hardware functionality.
-> FPGAs can be reprogrammed at runtime with different types of logic and IPs as per user need and hence there is a need to use device tree overlays for removing/updating/adding the devices at runtime for the IPs/controllers that are present in FPGA. 
-> But we don't have any user interface in kernel for updating the device tree at runtime.
+>> The loop based 64bit division may run for a long time when dividend is a
+>> lot bigger than the divider. Replace the division loop by the
+>> div64_u64() which implementation may be significantly faster.
+>>
+>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+>> Fixes: 38416c28e168 ("iio: light: Add gain-time-scale helpers")
 > 
-> Sometime back there was a series sent by Pantelis Antoniou (https://lore.kernel.org/lkml/1414528565-10907-4-git-send-email-pantelis.antoniou@konsulko.com/).
-> This patch introduced a user interface configfs for Device Tree overlays, a method of dynamically altering the kernel's live Device Tree. However,  this patch series was not accepted in mainline due to various concerns.
-> For more details refer to this link: https://elinux.org/Frank%27s_Evolving_Overlay_Thoughts#issues_and_what_needs_to_be_completed_--_Not_an_exhaustive_list
-> 
-> One of the major valid concerns that were raised with this configfs interface was security as it opens up the interface to users for modifying the live device tree.
-> 
-> So, in order to configure/program the FPGA devices, All the major vendors of FPGA are using this configfs series as out-of-tree patch for configuring the FPGAs
-> and there was never an attempt to introduce a generic interface to configure/program the FPGA in upstream and hence upstream kernel ended up in not having proper support for FPGAs.
-> 
-> The proposal below tries to address this gap of FPGA programmability by providing an interface to the user.
-> 
-> =======================================================================
-> | B. Proposed Solution                                                |
-> =======================================================================
-> The proposed interface adds a new sysfs interface (of-fpga-region.c) as part of the fpga subsystem and it is responsible for supporting the below functionalities.
+> Hmm. Fix or not perf improvement?
 
-Why only for of-fpga-region? There are also FPGA regions that don't rely
-on OF. My quick idea is that an interface for /sys/class/fpga-region/
-and OF could be one of the implementation.
+Ha. I don't fancy calling my own doings as bugs - but when a code can 
+keep kernel busy looping for several seconds... :|
 
-Thanks,
-Yilun
+>  I'm going to take the middle ground
+> and leave the fixes tag, but not rush this in.
 
-> --> Provide the user interface for the FPGA subsystem to handle the below FPGA relevant stuff.
->          - Bridges.
->          - FPGA Configuration.
->          - Driver - Probe/Remove
->                                 
-> --> The new sysfs interface uses Device Tree overlay (DTO) files to configure/ reprogram an FPGA while an operating system is running.
->                 - Restrict the overlay's subsystem usage only to FPGA regions in order to mitigate the major security concern with configfs.
->                 - Do validation checks on the user provided DTO files.
->                                 - If the user provided DTO doesn't target an FPGA Region which is already part of the running kernel, then return -INVALID error.
->                                 - If the DTO file contains multiple targets, then return -INVALID error.
->                                 - It will allow only Child nodes which are part of targeted FPGA Region.
->                 - It avoids Overlay notification calls . So that it will not interrupt the other subsystem's(Like; GPIO, I2C.....etc) exists in the kernel.
->                 
-> -->This proposed solution will not change the existing sequence When a 
-> -->DT overlay that targets an FPGA Region is applied
->                 - The FPGA Region will do the following:
->                 - 1. Disable appropriate FPGA bridges.
->                 - 2. Program the FPGA using the FPGA manager.
->                 - 3. Enable the FPGA bridges.
->                 - 4. The Device Tree overlay is accepted into the live tree.
->                 - 5. Child devices are populated.
->                 - When the overlay is removed, the child nodes will be removed, and the FPGA Region will disable the bridges.
->        
->                                                                     . --------------------------------------.                       .-----------------------------------------.                        
->                                                                    |                                                    |                     |                                                        |
->                                                                    |                           .------------------|                     |---------------------.                           |
->                                                                    |                           | sysfs_load() |<=======> |Overaly_apply()|                          | 
-> .---------------------------------.                     |                           '------------------|                     |---------------------'                           |
-> |                                          |                     |                                                    |                     |                                                        |
-> |    New Sysfs interface   |        ====>   |       of-fpga-region .c               |                     |            DT Overlay.c                      |
-> |       load/unload             |                      |                                                   |                     |                                                        |
-> '--------------------------------'                      |                      .---------------------|                     |-------------------------.                     |
->                                                                     |                     | sysfs_unload() |<=======> | Overlay_remove() |                    |
->                                                                     |                      '-------------------- |                     |-------------------------'                     |
->                                                                     |                                                   |                     |                                                       |
->                                                                      '----------------------------------- --'                       '------------------------------------------'
-> =======================================================================
-> | D. Proposed User Interface Details                                               |
-> =======================================================================
-> How to use the fpga sysfs interface.
-> 
-> To load Image:
-> 	 - echo "DTBO file" > /sys/class/of-fpga_region/<region>/load
-> 
-> To unload Image:
-> 	 - /sys/class/of-fpga_region/<region>/unload
-> 
-> To get the image status (Load/Unload):
-> 	 - cat /sys/class/of-fpga_region/<region>/status
-> 
-> Base Image
->                - Also called the "static image"
->                - An FPGA image that is designed to do full reconfiguration of the FPGA.
->                - A base image may set up a set of partial reconfiguration regions that may later be reprogrammed.
-> 
->      .-----------------------.                       .--------------------------------------------.
->     | Host CPU              |                   |             FPGA                                      |
->     |                                |                   |                                                            |
->     |                           -- -|                   |                  -----------             ---------  |
->     |                         | H |                   |       |==>| Bridge0 |<==>| PRR0 | |
->     |                         | W|                   |       |         -----------             --------    |
->     |                         |     |                   |       |                                                   |
->     |                         | B |<=====>    |<== |         -----------             --------   |
->     |                         | R |                   |        |==>| Bridge1 |<==>| PRR1| |
->     |                         |  I |                   |        |        -----------              --------   |
->     |                         | D |                  |        |                                                   |
->     |                         | G |                  |        |         -----------               -------   |
->     |                         | E |                   |        |==>| Bridge2 |<==>| PRR2 ||
->     |                          ----|                  |                   -----------               --------  |
->     |                               |                  |                                                              |
->      '-----------------------'                     '---------------------------------------------'
-> 
-> In the above diagram a typical FPGA is setup with a base image that created three regions.
-> Each region (PRR0 - 2) gets its own split of the busses that is independently gated by a soft logic bridge (Bridge0 - 2) in the FPGA.
-> The contents of each PRR can be reprogrammed independently while the rest of the system continues to function.
-> 
-> Form the above tropology the sysfs interface looks like as follows.
-> 
-> For Base/static region:
-> To load Image:
->                 - echo "DTBO file" > /sys/class/of-fpga_region/FPGA/load
-> 
-> To unload Image:
->                 - /sys/class/of-fpga_region/FPGA/unload
-> 
-> To get the image status (Load/Unload):
->                 - cat /sys/class/of-fpga_region/FPGA/status
-> 
-> For PRR0:
-> To load Image:
->                 - echo "DTBO file" >   /sys/class/of-fpga_region/PRR0/load
-> 
-> To unload Image:
->                 - /sys/class/of-fpga_region/PRR0/unload
-> 
-> To get the image status (Load/Unload):
->                 - cat /sys/class/of-fpga_region/PRR0/status
-> 
-> For PRR1:
-> To load Image:
->                 - echo "DTBO file" >   /sys/class/of-fpga_region/PRR1/load
-> 
-> To unload Image:
->                 - /sys/class/of-fpga_region/PRR1/unload
-> 
-> To get the image status (Load/Unload):
->                 - cat /sys/class/of-fpga_region/PRR1/status
-> 
-> For PRR1:
-> To load Image:
->                 - echo "DTBO file" >   /sys/class/of-fpga_region/PRR1/load
-> 
-> To unload Image:
->                 - /sys/class/of-fpga_region/PRR1/unload
-> 
-> To get the image status (Load/Unload):
->                 - cat /sys/class/of-fpga_region/PRR1/status
-> 
+I think this is fine. It is nice to get this fix in stable if we have 
+longer living stables with GTS helpers, because that's where many people 
+do "real work" - and because it is likely some devices with new sensors 
+are being built on products using these stable releases.
+
+Still, the current users (ROHM light sensors) don't use that big 
+dividends. Hence I don't think this needs any high speed fixup process :)
+
+Thanks!
+
+
+-- 
+Matti Vaittinen
+Linux kernel developer at ROHM Semiconductors
+Oulu Finland
+
+~~ When things go utterly wrong vim users can always type :help! ~~
+
