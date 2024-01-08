@@ -1,94 +1,134 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2066.outbound.protection.outlook.com [40.107.101.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A35F219E2;
-	Mon,  8 Jan 2024 11:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E5729415;
+	Mon,  8 Jan 2024 11:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="XwK15PFa"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 408AaSjt001674;
-	Mon, 8 Jan 2024 11:48:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type; s=
-	qcppdkim1; bh=MeiW+hkPgx74Q6DWyTwZl/EShtcH742eJKFOhUlm+AY=; b=Xw
-	K15PFateT3kgmd2UhzJifzBWXkGpVFK8bzLLBJD7Kz2Elh9BwNn8nuvoclGo7+UM
-	v5OVthdTPIIw8Za5RdeEr12qWC0FEN3MH7WLNYt5XaCHzP3xXYjizQXbAziAI6S7
-	hLlk4NZIXC9RBMqQIM9o8mphW0tHdeQ4hJQKuz+alpvF//99/WWyv7C/ImLwfaLU
-	mBlHeKQ0llJDt6Xh8rcMn29qKwyA5yrNEUkwrX9DilXtnIAPPdMS36TfffR+DAsY
-	+vH1Q8Dc7H4s9kKaNFY+w0pIopfRf5x+Y3HxQrLymLZQWDomwI5Lx53HWIrUrphM
-	c1Rp5B0Qhs+0EdFcGOlA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vg8mx8yth-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jan 2024 11:48:44 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 408Bmhi6006798
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 8 Jan 2024 11:48:43 GMT
-Received: from hu-ekangupt-hyd.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 8 Jan 2024 03:48:41 -0800
-From: Ekansh Gupta <quic_ekangupt@quicinc.com>
-To: <srinivas.kandagatla@linaro.org>, <linux-arm-msm@vger.kernel.org>
-CC: <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
-        stable
-	<stable@kernel.org>
-Subject: [PATCH v1] misc: fastrpc: Mark all sessions as invalid in cb_remove
-Date: Mon, 8 Jan 2024 17:18:33 +0530
-Message-ID: <20240108114833.20480-1-quic_ekangupt@quicinc.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="moOlMLas"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ITFhNkFfcfk35Aw2jg2K/nT8FC2d8mTidnw2G7NAhlRR6I4buI+4WnTDR23jyjtTJNCUppJ0B9l+EfoI/bLdQeQ+cSGgeX4ytK6yahfWvSUhA7ZtHtBDna6hz31vL1tVtb8BzM/e3u+5ONdqfIIMhqDl8kw0S9RY3LU0npa524vW5Ht0OvAQRDc1FPaCNDqHjHsFkIfryRhdSuy0Xu8GiPhONpmMw1E6G6u5PQ5P3gmp2ZGxNihek8BRZM2naUGfcSuD69yb668B+6Lcxi9GnKc1hmsG8B3lHk+M0RQG+Z0VK2tssh+E35E3nJjF6y7hLlwdwoCk5ow2bpkJRsGtQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=E42vZcZ2BbEHi75k9DFeMkkatq2SZZjHE5MFSQWyd5g=;
+ b=RCBxzn38RwPSl99UVjrDijtP64pWZnEYA+0TPO7ixJkWqBPd/muo3s3u1F2YOxK80DalxwxgnIxM0YVz9Wur98On/vjZ9poDA4xr/xF3EM/TJNov77mQSqiBBEJT5zM/qYluPTynJmB2X1elzM9/+96K12eZKJrV081rE+AWi9vkCEpw/g/yiIOG3FnCnERGRahc0+zBKpKOBz1SrRYFrtOEWr47raY8BxCoXvUskp2XexNNfYJQhpQICKLYnJ30Ay0CcZe/uMYtO9PMIJ9DTmxrqwdbLA4H9RxPSfCe0GwWldz4xhE8yB2AauhNFwigySeUbChM+lDjNR0+Xt8Kfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E42vZcZ2BbEHi75k9DFeMkkatq2SZZjHE5MFSQWyd5g=;
+ b=moOlMLasLi/VZ+ST/9//WvckUcxZVLRHXJQ6MUCaVGRESGMpsFSVOSov8PoeevNhvs+BZPTeIxfCKXI0X4k9QWbTKEaImATxk7q9xubIVKVubVHl9BuR9A6ec21qMXp+HFnEfjeliVuGLtfq+gzWCdafqqVLJk67RCo9DCbzRp8=
+Received: from PH8PR15CA0022.namprd15.prod.outlook.com (2603:10b6:510:2d2::19)
+ by DS7PR12MB6023.namprd12.prod.outlook.com (2603:10b6:8:85::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7159.21; Mon, 8 Jan 2024 11:49:11 +0000
+Received: from SA2PEPF000015CD.namprd03.prod.outlook.com
+ (2603:10b6:510:2d2:cafe::4b) by PH8PR15CA0022.outlook.office365.com
+ (2603:10b6:510:2d2::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.21 via Frontend
+ Transport; Mon, 8 Jan 2024 11:49:10 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SA2PEPF000015CD.mail.protection.outlook.com (10.167.241.203) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7181.13 via Frontend Transport; Mon, 8 Jan 2024 11:49:10 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Mon, 8 Jan
+ 2024 05:49:07 -0600
+From: Robert Richter <rrichter@amd.com>
+To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Rafael J.
+ Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, Robert Richter
+	<rrichter@amd.com>
+Subject: [PATCH v2 0/3] CDAT updates and fixes
+Date: Mon, 8 Jan 2024 12:48:30 +0100
+Message-ID: <20240108114833.241710-1-rrichter@amd.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ozVec1aNJKFPgAmPCD-jliLZ9qEeFKjg
-X-Proofpoint-ORIG-GUID: ozVec1aNJKFPgAmPCD-jliLZ9qEeFKjg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- malwarescore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
- mlxlogscore=851 adultscore=0 impostorscore=0 mlxscore=0 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401080101
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015CD:EE_|DS7PR12MB6023:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4963e9ea-aa66-4595-4368-08dc103fd406
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	bHuw+X8CBxC1M8Cb+gh+YAY6g8Pk/l2SUlrRlXYbCFRgrIslqZFTHc+PccIwbmlwWq74XUVWaHDw4KxMoIMcV37POCmjAodF1VndIwyuW9YYkpXhrAVK6CivzUJEumqSWxqsQYARkL1KnOJMovd16euwpl0pExReQzA2AneSj3cY2ga/Lb/RpDNjFdJcj2mlzDVih8zmWdDs+Q2pVTToDqzcD0aUObvjr3wCB1EUWmS6lQzVLa9EAhqAmWcXKYi0yosQgKVkkjWG3bslNLzM8UWeC67tl99655hyIErLE0IlpyJi01ERUsB64gt4tEvp5rr4R/Eh3d8rwuLaxQsyrTZQ5Fx1Y+0WSCNdORIKDBb11PzSjBO5VWE74IcoIxYhfhVaw++iqym3LpZHjgoHySgg2Ikdi5cRUqSdPLlKh3C3vwJn7QSts/Sulh2eNpgGscCudkVDkpp7rl2Zyi6PRXl44/3DYB9tdLbH8JALHTqcBmaXzj0F/+4+v1k9sbkmb1UpxnKKaqRS5iuJTwSD4/aqIGMn8mq8DNrq3DRE8Zenot1o1qlfhLWVe1DmAZZ4cQeQjlbTSFtMYs5h+MgD2LIn+r+Lt9E4jCk8tnfdmeHgXO7y0rgE8Zxq76mqRNMCK1eg9OH4FQM0xophy6iXzyeG2z60YBxNmmKx2Lhs5plbBvoxyaUqbCLHmbxFh/crWsG/2qrQt16eChtE/lmU96OATErWwvikeM5lSlkbeNmxLvK167Vn2nDwcMwU1hpRrvVCxuYowKvhjz02EdM2gQ==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(136003)(396003)(376002)(39860400002)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(82310400011)(36840700001)(46966006)(40470700004)(40460700003)(40480700001)(26005)(2616005)(1076003)(426003)(336012)(6666004)(478600001)(966005)(82740400003)(36860700001)(36756003)(356005)(81166007)(2906002)(15650500001)(5660300002)(7416002)(41300700001)(47076005)(83380400001)(16526019)(110136005)(70206006)(54906003)(316002)(70586007)(4326008)(8936002)(8676002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2024 11:49:10.5150
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4963e9ea-aa66-4595-4368-08dc103fd406
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF000015CD.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6023
 
-In remoteproc shutdown sequence, rpmsg_remove will get called which
-would depopulate all the child nodes that have been created during
-rpmsg_probe. This would result in cb_remove call for all the context
-banks for the remoteproc. In cb_remove function, session 0 is
-getting skipped which is not correct as session 0 will never become
-available again. Add changes to mark session 0 also as invalid.
+Some CDAT related updates and fixes. Patch #3 does not depend on the
+previous patches and could be applied separately.
 
-Fixes: f6f9279f2bf0 ("misc: fastrpc: Add Qualcomm fastrpc basic driver model")
-Cc: stable <stable@kernel.org>
-Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
----
- drivers/misc/fastrpc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+See [1] for v1. There is some rework going on [2] which might require
+a v3 for patches #1 and #2.
 
-diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-index 1c6c62a7f7f5..03319a1fa97f 100644
---- a/drivers/misc/fastrpc.c
-+++ b/drivers/misc/fastrpc.c
-@@ -2191,7 +2191,7 @@ static int fastrpc_cb_remove(struct platform_device *pdev)
- 	int i;
- 
- 	spin_lock_irqsave(&cctx->lock, flags);
--	for (i = 1; i < FASTRPC_MAX_SESSIONS; i++) {
-+	for (i = 0; i < FASTRPC_MAX_SESSIONS; i++) {
- 		if (cctx->session[i].sid == sess->sid) {
- 			cctx->session[i].valid = false;
- 			cctx->sesscount--;
+References:
+
+[1] https://patchwork.kernel.org/project/cxl/patch/ZVfJ6Fxidvw_gz7r@rric.localdomain/
+[2] https://patchwork.kernel.org/project/cxl/patch/170261791914.1714654.6447680285357545638.stgit@dwillia2-xfh.jf.intel.com/
+
+Changelog:
+
+v2:
+ * rebased onto cxl/next (e16bf7e015d7)
+ * renamed struct cdat_doe to struct cdat_doe_rsp and also local pointers
+   accordingly to buf/rsp.
+ * added comment that the CDAT table has space for a DOE header at the
+   beginning
+ * use DECLARE_FLEX_ARRAY() macro in struct cdat_doe_rsp
+ * moved the rename to doe_mb variable into separate patch
+ * added Reviewed-by tag
+ * added patch: lib/firmware_table: Provide buffer length argument to cdat_table_parse()
+
+Robert Richter (3):
+  cxl/pci: Rename DOE mailbox handle to doe_mb
+  cxl/pci: Get rid of pointer arithmetic reading CDAT table
+  lib/firmware_table: Provide buffer length argument to
+    cdat_table_parse()
+
+ drivers/acpi/tables.c    |  2 +-
+ drivers/cxl/core/cdat.c  |  6 +--
+ drivers/cxl/core/pci.c   | 83 ++++++++++++++++++++--------------------
+ drivers/cxl/cxlpci.h     | 19 +++++++++
+ include/linux/fw_table.h |  4 +-
+ lib/fw_table.c           | 15 +++++---
+ 6 files changed, 78 insertions(+), 51 deletions(-)
+
+
+base-commit: e16bf7e015d75fdd805528bedaf285fcb71dad2a
 -- 
-2.17.1
-
+2.39.2
