@@ -1,99 +1,146 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DF913ADC
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 10:29:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="scJNIGOu"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5571e662b93so1344747a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 02:29:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704709772; x=1705314572; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=J0INKQiw2jrwahwrMOC10qIoex00EN2Y17N016vNomw=;
-        b=scJNIGOuUufXBGVqX57JZXkgZoD8aSN7t1bkJKf5U5CWj9jUq/JCTq5YRIgriRI0ij
-         RrCxDEW02sUQtQt9gHML+J/ZaPQVqoc8pJ3gNojamPbHbPfw6M1y1uWv9VOSwMzZvAnJ
-         +DKtGhzcVOmHRhNKwExMb1zMDcusJr+WEFI4e/CFoIhAHCkwuSgRbAMVNiq2ApR4ZrNI
-         XRl1o8/JHcQb8IVOTQBx20UT8I5W4yw7YtrwcXsnHhm0iNvAKNiEoXVypOb4i3zzOk5B
-         fcyzyq+q5ht/Yr4nwNUaXKGO9f2y/a72buYBbwLE2Y1fPeLEjdtrh9PfZjN6T82MUoFQ
-         wlsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704709772; x=1705314572;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J0INKQiw2jrwahwrMOC10qIoex00EN2Y17N016vNomw=;
-        b=iIxiTDwRgUdVOQgBsNMum6aF5wWz9xYh9gzK0RfriiXTrLfZvaK9KBjt8UvX8X/m2k
-         KyeE91PqkknndBq7Yg/6b3rqbKmn+OUP7NH6mT7WV765VD7Nm6GvihSv2IG7pYL0sTZp
-         qtdcmf6XIeBToOIf+WfsW55mktH4AH39/CsYupNvqc+vDk0XenFXp3AiXIGzSoUJhp11
-         vcIrB/TLrSA7U8Y5zQhcy9Q1/UYlzQ0rKf/zo4crUrOm7BydV/q0TDZnrIn8x1A/HPeB
-         Ew5M+YT4p5spv8VGjqYvTtuG2Si7QbNumYSB+zps75/qsEQsiSA/myg7y+L7oSdI3dBE
-         uwrA==
-X-Gm-Message-State: AOJu0YzQzEgP/vR9GRcww8+WdUVOYRyPpy2NeB2md4XY4EFEPepOsjuw
-	3BsFzQD0KnQGVQSmSMMB0vRvO/IKx6pSsw==
-X-Google-Smtp-Source: AGHT+IGZ5RCgxVpuPDDy9Yc9IgdivJoTADBX0bICoB3ZlcPnD70Nyp9tnjnsp7CWxfv8Dn3p9svcuA==
-X-Received: by 2002:a50:8707:0:b0:557:1b48:b931 with SMTP id i7-20020a508707000000b005571b48b931mr1961869edb.32.1704709772514;
-        Mon, 08 Jan 2024 02:29:32 -0800 (PST)
-Received: from linaro.org ([79.115.23.25])
-        by smtp.gmail.com with ESMTPSA id b5-20020a50ccc5000000b0055504002a5fsm4273174edj.72.2024.01.08.02.29.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jan 2024 02:29:32 -0800 (PST)
-Date: Mon, 8 Jan 2024 12:29:30 +0200
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Elliot Berman <quic_eberman@quicinc.com>,
-	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] phy: qualcomm: eusb2-repeater: Rework init to
- drop redundant zero-out loop
-Message-ID: <ZZvOih+gTTnxPkUr@linaro.org>
-References: <20240105-phy-qcom-eusb2-repeater-fixes-v2-0-775d98e7df05@linaro.org>
- <20240105-phy-qcom-eusb2-repeater-fixes-v2-2-775d98e7df05@linaro.org>
- <158df3b2-a7fa-449d-9cc8-1e4cdf6ef49b@linaro.org>
- <CAA8EJpq88bhFFY2RcSEqaecoTw4a_ps6Osx5rJs3s0Mi7toXyQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F382513ACF;
+	Mon,  8 Jan 2024 10:29:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id B1C21A155C;
+	Mon,  8 Jan 2024 10:21:14 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf19.hostedemail.com (Postfix) with ESMTPA id C8CE620026;
+	Mon,  8 Jan 2024 10:21:11 +0000 (UTC)
+Message-ID: <486973921f89f70bcc5d42501eeca3fd105be2c4.camel@perches.com>
+Subject: Re: [HID Patchsets for Samsung driver v2 2/6] HID: Samsung : Fix
+ the checkpatch complain.
+From: Joe Perches <joe@perches.com>
+To: Sandeep C S <sandeep.cs@samsung.com>, Jiri Kosina <jikos@kernel.org>, 
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: gaudium.lee@samsung.com, ih0923.kim@samsung.com,
+ suhyun_.kim@samsung.com,  jitender.s21@samsung.com, junwan.cho@samsung.com,
+ linux-input@vger.kernel.org,  linux-kernel@vger.kernel.org
+Date: Mon, 08 Jan 2024 02:21:10 -0800
+In-Reply-To: <20240108091917.1552013-3-sandeep.cs@samsung.com>
+References: <20240108091917.1552013-1-sandeep.cs@samsung.com>
+	 <CGME20240108091959epcas5p2559b779424e2fb7c7e268d1b24612b4f@epcas5p2.samsung.com>
+	 <20240108091917.1552013-3-sandeep.cs@samsung.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA8EJpq88bhFFY2RcSEqaecoTw4a_ps6Osx5rJs3s0Mi7toXyQ@mail.gmail.com>
+X-Rspamd-Queue-Id: C8CE620026
+X-Stat-Signature: ohyahdhggxcq6imyoria9os1j15h5bc3
+X-Rspamd-Server: rspamout01
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1/53bmHUQaLyx7q7JMJOiCZyDhi2zgUNEI=
+X-HE-Tag: 1704709271-838445
+X-HE-Meta: U2FsdGVkX196M2AdNXOPLo9uz+4s8/IoxjHpXeHLkLeCQAmORr8bhzTvACQY+KOVz3zekDoNImo57EunBEU513qa2RTm3p9lWfSkK457FybOEmGQRcTUp8XTy/gf6xQugTubj1iyTK4Wh7MxgstD6r3mvOj5tLFPjiEEXGTeNPFF3Cj7AAy94fa+ybN/8GYAfJTKHWbtOxRJLcbc1Bzg7jz2BoA47b6ZhoJn4s7ejKhxZraYWQBUAZonO5lYKtreZS45+VtX8A6b7vfJTCxmAX9h/sZTSI6tkxtYQvGBv2jP3Pr8L86mVAcbIZgpmZ56
 
-On 24-01-05 14:22:50, Dmitry Baryshkov wrote:
-> On Fri, 5 Jan 2024 at 13:44, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
-> >
-> > On 5.01.2024 11:16, Abel Vesa wrote:
-> > > The device match config init table already has zero values, so rework
-> > > the container struct to hold a copy of the init table that can be
-> > > override be the DT specified values. By doing this, only the number of
-> > > vregs remain in the device match config that will be later needed, so
-> > > instead of holding the cfg after probe, store the number of vregs in the
-> > > container struct.
-> > >
-> > > Fixes: 99a517a582fc ("phy: qualcomm: phy-qcom-eusb2-repeater: Zero out untouched tuning regs")
-> > > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-> > > ---
-> >
-> > This looks good as-is, though I think my proposal of storing the
-> > peripheral base reg instead is still better, as it'd require less
-> > memory (no kmemdup as the regs wouldn't be modified).
-> 
-> I'd second this. We usually handle such cases via the base + offset
-> rather than patching the data. If regfields can not handle this, then
-> the regfield should be fixed.
-> 
+On Mon, 2024-01-08 at 14:49 +0530, Sandeep C S wrote:
+> Warning found by checkpatch.pl script.
+[]
+> diff --git a/drivers/hid/hid-samsung.c b/drivers/hid/hid-samsung.c
+[]
+> @@ -67,20 +67,17 @@ static __u8 *samsung_irda_report_fixup(struct hid_dev=
+ice *hdev, __u8 *rdesc,
+>  		rdesc[178] =3D 0x08;
+>  		rdesc[180] =3D 0x06;
+>  		rdesc[182] =3D 0x42;
+> -	} else
+> -	if (*rsize =3D=3D 203 && rdesc[192] =3D=3D 0x15 && rdesc[193] =3D=3D 0x=
+0 &&
+> +	} else if (*rsize =3D=3D 203 && rdesc[192] =3D=3D 0x15 && rdesc[193] =
+=3D=3D 0x0 &&
+>  			rdesc[194] =3D=3D 0x25 && rdesc[195] =3D=3D 0x12) {
+>  		samsung_irda_dev_trace(hdev, 203);
+>  		rdesc[193] =3D 0x1;
+>  		rdesc[195] =3D 0xf;
+> -	} else
+> -	if (*rsize =3D=3D 135 && rdesc[124] =3D=3D 0x15 && rdesc[125] =3D=3D 0x=
+0 &&
+> +	} else if (*rsize =3D=3D 135 && rdesc[124] =3D=3D 0x15 && rdesc[125] =
+=3D=3D 0x0 &&
+>  			rdesc[126] =3D=3D 0x25 && rdesc[127] =3D=3D 0x11) {
+>  		samsung_irda_dev_trace(hdev, 135);
+>  		rdesc[125] =3D 0x1;
+>  		rdesc[127] =3D 0xe;
+> -	} else
+> -	if (*rsize =3D=3D 171 && rdesc[160] =3D=3D 0x15 && rdesc[161] =3D=3D 0x=
+0 &&
+> +	} else if (*rsize =3D=3D 171 && rdesc[160] =3D=3D 0x15 && rdesc[161] =
+=3D=3D 0x0 &&
+>  			rdesc[162] =3D=3D 0x25 && rdesc[163] =3D=3D 0x01) {
+>  		samsung_irda_dev_trace(hdev, 171);
+>  		rdesc[161] =3D 0x1;
 
-Sure. Will do that instead.
+For this block, I think a rewrite using memcmp would be clearer.
+Something like:
+---
+ drivers/hid/hid-samsung.c | 34 +++++++++++++++-------------------
+ 1 file changed, 15 insertions(+), 19 deletions(-)
 
-> -- 
-> With best wishes
-> Dmitry
+diff --git a/drivers/hid/hid-samsung.c b/drivers/hid/hid-samsung.c
+index cf5992e970940..cd84fb5e68f69 100644
+--- a/drivers/hid/hid-samsung.c
++++ b/drivers/hid/hid-samsung.c
+@@ -58,33 +58,29 @@ static inline void samsung_irda_dev_trace(struct hid_de=
+vice *hdev,
+ static __u8 *samsung_irda_report_fixup(struct hid_device *hdev, __u8 *rdes=
+c,
+ 		unsigned int *rsize)
+ {
+-	if (*rsize =3D=3D 184 && rdesc[175] =3D=3D 0x25 && rdesc[176] =3D=3D 0x40=
+ &&
+-			rdesc[177] =3D=3D 0x75 && rdesc[178] =3D=3D 0x30 &&
+-			rdesc[179] =3D=3D 0x95 && rdesc[180] =3D=3D 0x01 &&
+-			rdesc[182] =3D=3D 0x40) {
++	if (*rsize =3D=3D 184 &&
++	    !memcmp(&rdesc[175], "\x25\x40\x75\x30\x95\x01", 6) &&
++	    rdesc[182] =3D=3D 0x40) {
+ 		samsung_irda_dev_trace(hdev, 184);
+ 		rdesc[176] =3D 0xff;
+ 		rdesc[178] =3D 0x08;
+ 		rdesc[180] =3D 0x06;
+ 		rdesc[182] =3D 0x42;
+-	} else
+-	if (*rsize =3D=3D 203 && rdesc[192] =3D=3D 0x15 && rdesc[193] =3D=3D 0x0 =
+&&
+-			rdesc[194] =3D=3D 0x25 && rdesc[195] =3D=3D 0x12) {
++	} else if (*rsize =3D=3D 203 &&
++		   !memcmp(&rdesc[192], "\x15\x00\x25\x12", 4)) {
+ 		samsung_irda_dev_trace(hdev, 203);
+-		rdesc[193] =3D 0x1;
+-		rdesc[195] =3D 0xf;
+-	} else
+-	if (*rsize =3D=3D 135 && rdesc[124] =3D=3D 0x15 && rdesc[125] =3D=3D 0x0 =
+&&
+-			rdesc[126] =3D=3D 0x25 && rdesc[127] =3D=3D 0x11) {
++		rdesc[193] =3D 0x01;
++		rdesc[195] =3D 0x0f;
++	} else if (*rsize =3D=3D 135 &&
++		   !memcmp(&rdesc[124], "\x15\x00\x25\x11", 4)) {
+ 		samsung_irda_dev_trace(hdev, 135);
+-		rdesc[125] =3D 0x1;
+-		rdesc[127] =3D 0xe;
+-	} else
+-	if (*rsize =3D=3D 171 && rdesc[160] =3D=3D 0x15 && rdesc[161] =3D=3D 0x0 =
+&&
+-			rdesc[162] =3D=3D 0x25 && rdesc[163] =3D=3D 0x01) {
++		rdesc[125] =3D 0x01;
++		rdesc[127] =3D 0x0e;
++	} else if (*rsize =3D=3D 171 &&
++		   !memcmp(&rdesc[160], "\x15\x00\x25\x01", 4)) {
+ 		samsung_irda_dev_trace(hdev, 171);
+-		rdesc[161] =3D 0x1;
+-		rdesc[163] =3D 0x3;
++		rdesc[161] =3D 0x01;
++		rdesc[163] =3D 0x03;
+ 	}
+ 	return rdesc;
+ }
+
