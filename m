@@ -1,121 +1,82 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D142E14292
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 11:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-253-EyLyuJXtPwmi8cp329UFpQ-1; Mon, 08 Jan 2024 11:03:47 +0000
-X-MC-Unique: EyLyuJXtPwmi8cp329UFpQ-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 8 Jan
- 2024 11:03:22 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Mon, 8 Jan 2024 11:03:22 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Dmitry Torokhov' <dmitry.torokhov@gmail.com>, Arnd Bergmann
-	<arnd@arndb.de>
-CC: "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linus Torvalds
-	<torvalds@linux-foundation.org>
-Subject: RE: [PATCH] asm-generic: make sparse happy with odd-sized
- put_unaligned_*()
-Thread-Topic: [PATCH] asm-generic: make sparse happy with odd-sized
- put_unaligned_*()
-Thread-Index: AQHaQfo/rBE9iMqwLUOx80/L8Ll8bLDPvnqw
-Date: Mon, 8 Jan 2024 11:03:22 +0000
-Message-ID: <12d88da48f6947ab86a845e8d02319ff@AcuMS.aculab.com>
-References: <ZZuTTRCUFqWzA1y-@google.com>
-In-Reply-To: <ZZuTTRCUFqWzA1y-@google.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA691401A;
+	Mon,  8 Jan 2024 11:04:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA6B7C433C7;
+	Mon,  8 Jan 2024 11:04:49 +0000 (UTC)
+Date: Mon, 8 Jan 2024 11:04:47 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Jason Gunthorpe <jgg@nvidia.com>, ankita@nvidia.com, maz@kernel.org,
+	suzuki.poulose@arm.com, yuzenghui@huawei.com, will@kernel.org,
+	alex.williamson@redhat.com, kevin.tian@intel.com,
+	yi.l.liu@intel.com, ardb@kernel.org, akpm@linux-foundation.org,
+	gshan@redhat.com, linux-mm@kvack.org, aniketa@nvidia.com,
+	cjia@nvidia.com, kwankhede@nvidia.com, targupta@nvidia.com,
+	vsethi@nvidia.com, acurrid@nvidia.com, apopple@nvidia.com,
+	jhubbard@nvidia.com, danw@nvidia.com, mochs@nvidia.com,
+	kvmarm@lists.linux.dev, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	james.morse@arm.com
+Subject: Re: [PATCH v3 2/2] kvm: arm64: set io memory s2 pte as normalnc for
+ vfio pci devices
+Message-ID: <ZZvWzyNb1V29-H85@arm.com>
+References: <20231208164709.23101-1-ankita@nvidia.com>
+ <20231208164709.23101-3-ankita@nvidia.com>
+ <ZXicemDzXm8NShs1@arm.com>
+ <20231212181156.GO3014157@nvidia.com>
+ <ZXoOieQN7rBiLL4A@linux.dev>
+ <ZXsjv+svp44YjMmh@lpieralisi>
+ <ZXszoQ48pZ7FnQNV@linux.dev>
+ <ZYQ7VjApH1v1QwTW@arm.com>
+ <ZZhpt8vdlnOP7i82@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZZhpt8vdlnOP7i82@linux.dev>
 
-From: Dmitry Torokhov
-> Sent: 08 January 2024 06:17
->=20
-> __put_unaligned_be24() and friends use implicit casts to convert
-> larger-sized data to bytes, which trips sparse truncation warnings when
-> the argument is a constant:
->=20
->   CC [M]  drivers/input/touchscreen/hynitron_cstxxx.o
->   CHECK   drivers/input/touchscreen/hynitron_cstxxx.c
-> drivers/input/touchscreen/hynitron_cstxxx.c: note: in included file (thro=
-ugh
-> arch/x86/include/generated/asm/unaligned.h):
-> ./include/asm-generic/unaligned.h:119:16: warning: cast truncates bits fr=
-om constant value (aa01a0
-> becomes a0)
-> ./include/asm-generic/unaligned.h:120:20: warning: cast truncates bits fr=
-om constant value (aa01
-> becomes 1)
-> ./include/asm-generic/unaligned.h:119:16: warning: cast truncates bits fr=
-om constant value (ab00d0
-> becomes d0)
-> ./include/asm-generic/unaligned.h:120:20: warning: cast truncates bits fr=
-om constant value (ab00
-> becomes 0)
->=20
-> To avoid this let's mask off upper bits explicitly, the resulting code
-> should be exactly the same, but it will keep sparse happy.
+On Fri, Jan 05, 2024 at 08:42:31PM +0000, Oliver Upton wrote:
+> On Thu, Dec 21, 2023 at 01:19:18PM +0000, Catalin Marinas wrote:
+> > > Apologies, I didn't mean to question what's going on here from the
+> > > hardware POV. My concern was more from the kernel + user interfaces POV,
+> > > this all seems to work (specifically for PCI) by maintaining an
+> > > intentional mismatch between the VFIO stage-1 and KVM stage-2 mappings.
+> > 
+> > If you stare at it long enough, the mismatch starts to look fine ;).
+> > Even if you have the VFIO stage 1 Normal NC, KVM stage 2 Normal NC, you
+> > can still have the guest setting stage 1 to Device and introduce an
+> > architectural mismatch. These aliases have some bad reputation but the
+> > behaviour is constrained architecturally.
+> > 
+> > IMHO we should move on from this attribute mismatch since we can't fully
+> > solve it anyway and focus instead on what the device, system can
+> > tolerate, who's responsible for deciding which MMIO ranges can be mapped
+> > as Normal NC.
+> 
+> Fair enough :) The other slightly unsavory part is that we're baking
+> the mapping policy into KVM. I'd prefer it if this policy were kept in
+> userspace somehow, but there's no actual usecase for userspace selecting
+> memory attributes at this point.
 
-Maybe someone should fix sparse?
-I have seen a compiler generate two explicit masks with 0xff
-followed by a byte write for:
-=09*p =3D (char)(x & 0xff);
-but I expect modern gcc is ok.
+If by policy you mean who's deciding the write-combining relaxation,
+this series moved it to the vfio-pci host driver. KVM only picks the
+appropriate memory type for stage 2 based on the vma flags. That's
+Normal NC in the absence of anything better on arm64 and it does more
+than just write-combining but we can describe what this new VM_* flag
+allows.
 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202401070147.gqwVulOn-lkp@i=
-ntel.com/
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  include/asm-generic/unaligned.h | 24 ++++++++++++------------
->  1 file changed, 12 insertions(+), 12 deletions(-)
->=20
-> diff --git a/include/asm-generic/unaligned.h b/include/asm-generic/unalig=
-ned.h
-> index 699650f81970..a84c64e5f11e 100644
-> --- a/include/asm-generic/unaligned.h
-> +++ b/include/asm-generic/unaligned.h
-> @@ -104,9 +104,9 @@ static inline u32 get_unaligned_le24(const void *p)
->=20
->  static inline void __put_unaligned_be24(const u32 val, u8 *p)
->  {
-> -=09*p++ =3D val >> 16;
-> -=09*p++ =3D val >> 8;
-> -=09*p++ =3D val;
-> +=09*p++ =3D (val >> 16) & 0xff;
-> +=09*p++ =3D (val >> 8) & 0xff;
-> +=09*p++ =3D val & 0xff;
->  }
+If we want to keep this decision strictly in user space, we can do it
+with some ioctl(). The downside is that the host kernel now puts more
+trust in the user VMM, so my preference would be to keep this in the
+vfio driver. Or we can do both, vfio-pci allows the relaxation, the VMM
+tells KVM to go for a more relaxed stage 2 via an ioctl().
 
-What happens if you implement the as (eg):
-=09*p =3D val >> 16;
-=09put_unaligned_be16(p + 1, val);
-I think that should generate better code.
-And it may stop sparse bleating.
-
-=09David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
-
+-- 
+Catalin
