@@ -1,115 +1,65 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B6344C7F;
-	Mon,  8 Jan 2024 13:27:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E9B45941;
+	Mon,  8 Jan 2024 13:28:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="L133qaA2"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 408DG8Yo005240;
-	Mon, 8 Jan 2024 13:27:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type; s=
-	qcppdkim1; bh=Cz9N0Iv039pO0J3plF5Oz0zQifQGedt5jqRTlubgixI=; b=L1
-	33qaA2hKvcsykHXx4JvjAmwKQit65Zze3fhkD+m7tVYbKR7F2N0bIjD4e6mNXRTC
-	5YUjO6la4cd7WhniphbTtTuPAVQ8XSZ0fuXywxAtD99XZOjqm8lA+ynHNjOia3is
-	SjEpjxtxdKh7wMttKYwXRIjhMFsOn0nNADsS0Xa8TSSWrGjuUYGk4WexyCeJ4dkx
-	oFTtVlcB+AYb3sdTk6J/gAK3IGPs4OYbJv3TDgzilRRSPbmAR80aOAqJq/m1eBj+
-	Ib3+ce8s1fOfNPGSLrQn3HsLTPzmOmPPrOzJyHWhuPQ3/NPIwdPDXTio616Ow8Q0
-	+m1iM0TyONLmJkFVU3nw==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vgbuj8tk3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jan 2024 13:27:39 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 408DRcpV011973
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 8 Jan 2024 13:27:38 GMT
-Received: from hu-ugoswami-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 8 Jan 2024 05:27:36 -0800
-From: Udipto Goswami <quic_ugoswami@quicinc.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Krishna Kurapati <quic_kriskura@quicinc.com>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Udipto Goswami <quic_ugoswami@quicinc.com>
-Subject: [PATCH v2] usb: gadget: ncm: Fix indentations in documentation of NCM section
-Date: Mon, 8 Jan 2024 18:57:20 +0530
-Message-ID: <20240108132720.7786-1-quic_ugoswami@quicinc.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="PFfi857p"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=TX1ob0NXeEnx/TVxb8PvAQsAyBl2EGpz5La7bAP2skE=; b=PFfi857pgwL8kOAS8tLYDOGgJS
+	QIcAFflZAaIa+sIbbRYLWP9mnqXHMMfkvgf6PfgHXy4GJyz49sknl9dFnEICiccG06bh2gE0+IJ4H
+	ZH3qdTJ+4aJJOhS2DesdN2fIE5yO9gdKyod7aYTAyiPdNRbnrwRY5WGOt6n4s3921jCI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rMpfX-004dqX-J3; Mon, 08 Jan 2024 14:27:55 +0100
+Date: Mon, 8 Jan 2024 14:27:55 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Jie Luo <quic_luoj@quicinc.com>
+Cc: Sergey Ryazanov <ryazanov.s.a@gmail.com>, agross@kernel.org,
+	andersson@kernel.org, konrad.dybcio@linaro.org, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, hkallweit1@gmail.com, linux@armlinux.org.uk,
+	robert.marko@sartura.hr, linux-arm-msm@vger.kernel.org,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, quic_srichara@quicinc.com
+Subject: Re: [PATCH v4 0/5] support ipq5332 platform
+Message-ID: <3ae7f014-5b51-4198-a8e1-c042a7926969@lunn.ch>
+References: <20231225084424.30986-1-quic_luoj@quicinc.com>
+ <a6a50fb6-871f-424c-a146-12b2628b8b64@gmail.com>
+ <cfb04c82-3cc3-49f6-9a8a-1f6d1a22df40@quicinc.com>
+ <dd05a599-247a-4516-8ad3-7550ceea99f7@gmail.com>
+ <ac1977f5-cd6a-4f16-b0a0-f4322c34c5f5@quicinc.com>
+ <bdeca791-f2e5-4256-b386-a75c03f93686@gmail.com>
+ <895eadd7-1631-4b6b-8db4-d371f2e52611@lunn.ch>
+ <e8722b79-e58a-4856-ae56-e44e2860c2f6@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 7sfaMaf-krFeYvCKwbT0-1gCbFEM438K
-X-Proofpoint-ORIG-GUID: 7sfaMaf-krFeYvCKwbT0-1gCbFEM438K
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- bulkscore=0 phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0
- mlxlogscore=576 lowpriorityscore=0 malwarescore=0 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401080116
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e8722b79-e58a-4856-ae56-e44e2860c2f6@quicinc.com>
 
-Currently, the section of NCM which describes attributes are having wrong
-indentation.
+> The IPQ PPE includes MAC and UNIPHY integrated, the connection with
+> external PHY is as below.
+> MAC ---- UNIPHY(PCS) ---- (PCS)external PHY.
+> 
+> The UNIPHY here is the Ethernet dedicated SERDES for connecting with
+> external PHY.
 
-Fix this by following the correct format recommended.
+You call it a PCS here. So does it implement clause 37 or 73 of the
+802.3 standard? If it does, the driver for it belongs in
+drivers/net/pcs.
 
-Fixes: 1900daeefd3e ("usb: gadget: ncm: Add support to update wMaxSegmentSize via configfs")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Closes: https://lore.kernel.org/all/20240108160221.743649b5@canb.auug.org.au/
-Signed-off-by: Udipto Goswami <quic_ugoswami@quicinc.com>
----
-v2: Added "Reported-by" and "Closes" tags.
+	Andrew
 
- Documentation/usb/gadget-testing.rst | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
-
-diff --git a/Documentation/usb/gadget-testing.rst b/Documentation/usb/gadget-testing.rst
-index 8cd62c466d20..077dfac7ed98 100644
---- a/Documentation/usb/gadget-testing.rst
-+++ b/Documentation/usb/gadget-testing.rst
-@@ -448,17 +448,17 @@ Function-specific configfs interface
- The function name to use when creating the function directory is "ncm".
- The NCM function provides these attributes in its function directory:
- 
--	===============   ==================================================
--	ifname		  network device interface name associated with this
--			  function instance
--	qmult		  queue length multiplier for high and super speed
--	host_addr	  MAC address of host's end of this
--			  Ethernet over USB link
--	dev_addr	  MAC address of device's end of this
--			  Ethernet over USB link
--	max_segment_size  Segment size required for P2P connections. This
--			  will set MTU to (max_segment_size - 14 bytes)
--	===============   ==================================================
-+	======================= ==================================================
-+	ifname			network device interface name associated with this
-+				function instance
-+	qmult			queue length multiplier for high and super speed
-+	host_addr		MAC address of host's end of this
-+				Ethernet over USB link
-+	dev_addr		MAC address of device's end of this
-+				Ethernet over USB link
-+	max_segment_size	Segment size required for P2P connections. This
-+				will set MTU to 14 bytes
-+	======================= ==================================================
- 
- and after creating the functions/ncm.<instance name> they contain default
- values: qmult is 5, dev_addr and host_addr are randomly selected.
--- 
-2.17.1
 
