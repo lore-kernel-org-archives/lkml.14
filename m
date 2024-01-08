@@ -1,140 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA445479F;
-	Mon,  8 Jan 2024 18:01:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7690B55C12
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 18:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OxeWVIM5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50FD0C433C8;
-	Mon,  8 Jan 2024 18:01:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704736890;
-	bh=2sJKQnWiuRcHb9YAm7i4yHBXpq3l+A/vAPFiNhQHp3w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OxeWVIM5KodphfplHbe3qTtNn0aaP41JS4rDwwLWMpnXDdNdq4b7BPyeU2SO6KZ6q
-	 L7JRl5nbLiJwID4Ba8n8KOyFw+BQdLtXY6ZOFe20Tyz+3lntZbWBjekPs/zLGHhrij
-	 5Rt1Q27IgT57pmk13bXK6h1Q/h8dXLoiQ8CazKwzlPQKmZJdjCnSpbeEyKuwVkhbB8
-	 VrSkqppWrpcb09bYnK6N+wJ5a+e/RdWDo2D74W7mY/v7M0Yllrn6954jPf7oqiiznv
-	 WgxFBc5ZLMMqXgMLkUHkCTu6uKsmKP0iXq/6XpV1rcXjpTqIVoaDJpr1wQ9OkQcuOV
-	 SQ8SqJ0vBIEZw==
-Date: Mon, 8 Jan 2024 18:01:26 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Elad Nachman <enachman@marvell.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"robh+dt@kernel.org" <robh+dt@kernel.org>,
-	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXT] Re: [PATCH] dt-bindings: usb: Add Marvell ac5
-Message-ID: <20240108-chariot-thinner-7a86808a0571@spud>
-References: <20240107152557.3561341-1-enachman@marvell.com>
- <20240108-zoning-tactical-20501dccfac1@spud>
- <BN9PR18MB425195C57E2FC24D5F331C19DB6B2@BN9PR18MB4251.namprd18.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="CjjNn3ty"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d3e2972f65so4506515ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 10:02:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1704736956; x=1705341756; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KLhyf5sIXfLhdOh02ua5GenSjAf22p09pniZl0gR2xc=;
+        b=CjjNn3tyERbER0eNoDZezpmtO3PQ2BUtHkyiVvjL3OLOUQd0BINz721p3mtkvFw+yR
+         5juLmIvNcPGeQein1WwfhxwqyguFDiS1krH0GKg11cHDJTVWK7e7Ji3YnyOgg44h22XC
+         E6RPDB2f2FkXz72K1Jwvlc6UC/8s6Q1mbvIcyOMrYlHmmg3tfccoQhtV176YUAmdaIhZ
+         1vFZczjKT17aVXMKye4YutpKKz1GrbRxinJ5dT627F/9KtBkCzaBJejRvARQYv6WQ2g2
+         CnQZbpNNW/pCDeJLE1HW9LggQLzujEPvQa14GS5sMC4POeqmBINVHVbT4TR3chQE6saT
+         Tseg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704736956; x=1705341756;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KLhyf5sIXfLhdOh02ua5GenSjAf22p09pniZl0gR2xc=;
+        b=Nd43WFxECh1hqhNOuwoD2y+6UWwteqFkgtM0aUq3H+cwQNEWMiIPQkfMRtt8g55vkF
+         mVUX5dt9nIvBLavTGwbTapgmrrmZlyFkOnBaPdB2Fxs58hHPr1RDCV0ECxLa0FyqfYfA
+         2rt53SCDdftm45NK/qnJl+zj+svg0/sVJFkN3pFPkQMXG2NXIds0ZQpn0bDhSBDYwdIk
+         NptXzTiZdybfZtdxqk3NSbOY5jkWBGkvUrONcJk4Vek0wh9CtZufKW3E+RUbBseHyS8u
+         qMp4O4So2FvNki0s9i+aaVbGFRCknflTbortutGD5PTyM2SjsRzbiRS6bceP8GrNtj4O
+         apQg==
+X-Gm-Message-State: AOJu0YyyWbJWpi1X3P/f3OgdBqkcyhOWqu3VND10WsKxowJObmEDAjjM
+	NJTrBh86rel2N6spJN6B3KbtjBSsWWugLA==
+X-Google-Smtp-Source: AGHT+IF0KV6ppakYNjF2hnQktuahh7myDZAFD1mLkbcDl8/nMLb6ibIHPCTgpmQPcDHUkw/Qt6ReXg==
+X-Received: by 2002:a17:903:1205:b0:1d5:4c70:262f with SMTP id l5-20020a170903120500b001d54c70262fmr692193plh.95.1704736955622;
+        Mon, 08 Jan 2024 10:02:35 -0800 (PST)
+Received: from ghost ([2601:647:5700:6860:304d:b1a:4fb3:783f])
+        by smtp.gmail.com with ESMTPSA id m2-20020a170902768200b001cff9cd5129sm174005pll.298.2024.01.08.10.02.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jan 2024 10:02:35 -0800 (PST)
+Date: Mon, 8 Jan 2024 10:02:32 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Jonathan Corbet <corbet@lwn.net>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] documentation: Document
+ PR_RISCV_SET_ICACHE_FLUSH_CTX prctl
+Message-ID: <ZZw4uCCahPRbHdfR@ghost>
+References: <20240107-fencei-v4-0-d4cf2fb905d3@rivosinc.com>
+ <20240107-fencei-v4-2-d4cf2fb905d3@rivosinc.com>
+ <34f6da8c-1e63-43a5-b9d4-d6865a5d2252@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="DBZslo/amjWoSLRv"
-Content-Disposition: inline
-In-Reply-To: <BN9PR18MB425195C57E2FC24D5F331C19DB6B2@BN9PR18MB4251.namprd18.prod.outlook.com>
-
-
---DBZslo/amjWoSLRv
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <34f6da8c-1e63-43a5-b9d4-d6865a5d2252@infradead.org>
 
-On Mon, Jan 08, 2024 at 05:47:24PM +0000, Elad Nachman wrote:
->=20
->=20
-> > -----Original Message-----
-> > From: Conor Dooley <conor@kernel.org>
-> > Sent: Monday, January 8, 2024 7:15 PM
-> > To: Elad Nachman <enachman@marvell.com>
-> > Cc: gregkh@linuxfoundation.org; robh+dt@kernel.org;
-> > krzysztof.kozlowski+dt@linaro.org; conor+dt@kernel.org;
-> > devicetree@vger.kernel.org; linux-usb@vger.kernel.org; linux-
-> > kernel@vger.kernel.org
-> > Subject: [EXT] Re: [PATCH] dt-bindings: usb: Add Marvell ac5
-> >=20
-> > External Email
-> >=20
-> > ----------------------------------------------------------------------
-> > On Sun, Jan 07, 2024 at 05:25:57PM +0200, Elad Nachman wrote:
-> > > From: Elad Nachman <enachman@marvell.com>
-> > >
-> > > Add Marvell ac5 device tree bindings to generic EHCI.
-> > > This compatible enables the Marvell Orion platform code to properly
-> > > configure the DMA mask for the Marvell AC5 SOC.
-> > >
-> > > Signed-off-by: Elad Nachman <enachman@marvell.com>
-> >=20
-> > Maybe I am dumb, but I don't understand how this does what the commit
-> > message says. There's no fallback to generic-ehci or any other compatib=
-le
-> > that is already understood by the driver.
-> >=20
-> > What am I missing?
->=20
-> Following guidance by Andrew Lunn on my mmc patchset, I have split the pa=
-tchset
-> Into a single patch for dt-bindings review and another for USB driver rev=
-iew.
+On Sun, Jan 07, 2024 at 11:06:34PM -0800, Randy Dunlap wrote:
+> Hi--
+> 
+> On 1/7/24 22:21, Charlie Jenkins wrote:
+> > Provide documentation that explains how to properly do CMODX in riscv.
+> > 
+> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > ---
+> >  Documentation/arch/riscv/cmodx.rst | 88 ++++++++++++++++++++++++++++++++++++++
+> >  Documentation/arch/riscv/index.rst |  1 +
+> >  2 files changed, 89 insertions(+)
+> > 
+> > diff --git a/Documentation/arch/riscv/cmodx.rst b/Documentation/arch/riscv/cmodx.rst
+> > new file mode 100644
+> > index 000000000000..71598850e131
+> > --- /dev/null
+> > +++ b/Documentation/arch/riscv/cmodx.rst
+> > @@ -0,0 +1,88 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +
+> > +==============================================================================
+> > +Concurrent Modification and Execution of Instructions (CMODX) for RISC-V Linux
+> > +==============================================================================
+> > +
+> > +CMODX is a programming technique where a program executes instructions that were
+> > +modified by the program itself. Instruction storage and the instruction cache
+> > +(icache) is not guaranteed to be synchronized on RISC-V hardware. Therefore, the
+> 
+>             are not
+> 
+> > +program must enforce its own synchronization with the unprivileged fence.i
+> > +instruction.
+> > +
+> > +However, the default Linux ABI prohibits the use of fence.i in userspace
+> > +applications. At any point the scheduler may migrate a task onto a new hart. If
+> > +migration occurs after the userspace synchronized the icache and instruction
+> > +storage with fence.i, the icache will no longer be clean. This is due to the
+> > +behavior of fence.i only affecting the hart that it is called on. Thus, the hart
+> > +that the task has been migrated to, may not have synchronized instruction
+> 
+>                                    to may not
+> 
+> > +storage and icache.
+> > +
+> > +There are two ways to solve this problem: use the riscv_flush_icache() syscall,
+> > +or use the ``PR_RISCV_SET_ICACHE_FLUSH_CTX`` prctl() and emit fence.i in
+> > +userspace. The syscall performs a one-off icache flushing operation. The prctl
+> > +changes the Linux ABI to allow userspace to emit icache flushing operations.
+> > +
+> > +1.  prctl() Interface
+> > +---------------------
+> 
+> Why is "1." needed here? or is it?
 
-I don't understand that advice. dt-bindings should (almost) always be
-with the driver. Otherwise you just confuse people like me.
+Not needed, thank you.
 
-Perhaps Andrew meant sending dt*s* patches separately from the driver &
-bindings?
+- Charlie
 
-Cheers,
-Conor.
-
->=20
-> The USB driver patch utilizing this new dt bindings compatible string is =
-here:
->=20
-> https://patchwork.kernel.org/project/linux-usb/patch/20240107163307.36773=
-47-1-enachman@marvell.com/
->=20
-> >=20
-> > > ---
-> > >  Documentation/devicetree/bindings/usb/generic-ehci.yaml | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/usb/generic-ehci.yaml
-> > > b/Documentation/devicetree/bindings/usb/generic-ehci.yaml
-> > > index 87986c45be88..2ed178f16a78 100644
-> > > --- a/Documentation/devicetree/bindings/usb/generic-ehci.yaml
-> > > +++ b/Documentation/devicetree/bindings/usb/generic-ehci.yaml
-> > > @@ -77,6 +77,7 @@ properties:
-> > >            - const: usb-ehci
-> > >        - enum:
-> > >            - generic-ehci
-> > > +          - marvell,ac5-ehci
-> > >            - marvell,armada-3700-ehci
-> > >            - marvell,orion-ehci
-> > >            - nuvoton,npcm750-ehci
-> > > --
-> > > 2.25.1
-> > >
->=20
-> Elad.
-
---DBZslo/amjWoSLRv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZZw4dQAKCRB4tDGHoIJi
-0hSqAP4xusX8cEpsDU84zERhVTTbTIH10Je3uZ6ZsbDppShawwEA3ZBtfSjtCUIi
-vFt1tM8Hu6nQZwxkTPe6i0M7wmX46wg=
-=yA4S
------END PGP SIGNATURE-----
-
---DBZslo/amjWoSLRv--
+> 
+> > +
+> > +Call prctl() with ``PR_RISCV_SET_ICACHE_FLUSH_CTX`` as the first argument. The
+> > +remaining arguments will be delegated to the riscv_set_icache_flush_ctx
+> > +function detailed below.
+> > +
+> > +.. kernel-doc:: arch/riscv/mm/cacheflush.c
+> > +	:identifiers: riscv_set_icache_flush_ctx
+> > +
+> > +Example usage:
+> > +
+> > +The following files are meant to be compiled and linked with each other. The
+> > +modify_instruction() function replaces an add with 0 with an add with one,
+> > +causing the instruction sequence in get_value() to change from returning a zero
+> > +to returning a one.
+> > +
+> > +cmodx.c::
+> > +
+> > +	#include <stdio.h>
+> > +	#include <sys/prctl.h>
+> > +
+> > +	extern int get_value();
+> > +	extern void modify_instruction();
+> > +
+> > +	int main()
+> > +	{
+> > +		int value = get_value();
+> > +		printf("Value before cmodx: %d\n", value);
+> > +
+> > +		// Call prctl before first fence.i is called inside modify_instruction
+> > +		prctl(PR_RISCV_SET_ICACHE_FLUSH_CTX_ON, PR_RISCV_CTX_SW_FENCEI, 0);
+> > +		modify_instruction();
+> > +
+> > +		value = get_value();
+> > +		printf("Value after cmodx: %d\n", value);
+> > +		return 0;
+> > +	}
+> > +
+> > +cmodx.S::
+> > +
+> > +	.option norvc
+> > +
+> > +	.text
+> > +	.global modify_instruction
+> > +	modify_instruction:
+> > +	lw a0, new_insn
+> > +	lui a5,%hi(old_insn)
+> > +	sw  a0,%lo(old_insn)(a5)
+> > +	fence.i
+> > +	ret
+> > +
+> > +	.section modifiable, "awx"
+> > +	.global get_value
+> > +	get_value:
+> > +	li a0, 0
+> > +	old_insn:
+> > +	addi a0, a0, 0
+> > +	ret
+> > +
+> > +	.data
+> > +	new_insn:
+> > +	addi a0, a0, 1
+> > diff --git a/Documentation/arch/riscv/index.rst b/Documentation/arch/riscv/index.rst
+> > index 4dab0cb4b900..eecf347ce849 100644
+> > --- a/Documentation/arch/riscv/index.rst
+> > +++ b/Documentation/arch/riscv/index.rst
+> > @@ -13,6 +13,7 @@ RISC-V architecture
+> >      patch-acceptance
+> >      uabi
+> >      vector
+> > +    cmodx
+> >  
+> >      features
+> >  
+> > 
+> 
+> Thanks.
+> -- 
+> #Randy
