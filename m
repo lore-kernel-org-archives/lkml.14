@@ -1,126 +1,195 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from aposti.net (aposti.net [89.234.176.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F385F405C6;
-	Mon,  8 Jan 2024 12:18:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D6F3FE3B;
+	Mon,  8 Jan 2024 12:20:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AApAgBBn"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5572a9b3420so4648350a12.1;
-        Mon, 08 Jan 2024 04:18:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704716280; x=1705321080; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ataiuoEiZAKbJMfDTmDPqOcB+hhvmSxMEb08xxsTGtE=;
-        b=AApAgBBnwJG2FrZrk/PUT2YwNETLSLueuDsB7K5+3O6cInP/XbbkP5fROxXQk8s7sf
-         tkcufgk84WpemDTCIMjgkjALIADduZWrPtggx29cwkSaJMEpozpPbZuHx4vRnWxvTJfA
-         wAFtKQoTL6ocIjTW34M+tn2HTG1BoZkbS4RTOAkkNYB/ep3TFNCrdeKC4ZknHmFXR0I6
-         moOjlAdYoZP3PecoMXRUUl5ujFMUt3tr5Sl25ZdwGWhSf4y7imVMdn3GM6gMIQdRxNi+
-         Vv05YMRked6ICbUuDjDVVcQuQDtipbxvOCCe0ufy2mEDraTPoR7qhdkzTB8oJvpbGxvu
-         looA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704716280; x=1705321080;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ataiuoEiZAKbJMfDTmDPqOcB+hhvmSxMEb08xxsTGtE=;
-        b=bKK7D+jLpTgUKCSQcyKs38y+RZleJZt+/ULwlfHVwEHz2nhyjt9q7SQP86TWEJRdTt
-         Ldvfz+6fhrr6KfBpz+1qrOfAzjmGPn8D9M72paNohVF7BkjbIds0jURdmZSxr/j92GS9
-         Q1JbdgYk21zVzq95j3hNG+iuWnjqN2L5ezrzb3dVAIRNU2+HVwpC+wAvPws70Fj3tWih
-         I9eDGCX/8T0QmKlN6WnVETSvn+/8PWVQiOteb/6FL16AFevdhk0dVa8XdLLaAg4N5Pcd
-         ZYKy6FtDIPkpNIGYrE6sIlVZSxPmFdA6FSn9jEvj0tkzxFXpQYD0KwmBC5tT4cS9WLpA
-         jhoQ==
-X-Gm-Message-State: AOJu0YzpBDBJB02d8NEE24MT2VRJ9isFy3od5ysDiKwcITSAdyATshqI
-	uaUd3EdxYCDHYxNiYPmqijA=
-X-Google-Smtp-Source: AGHT+IGk837jJFvS+TcY7fBXJR80jcXc31znrg/A2V9l7q0ncwOgKoPeJG795sFAlbjTJcin9QtHhQ==
-X-Received: by 2002:a17:906:7743:b0:a29:d642:46ba with SMTP id o3-20020a170906774300b00a29d64246bamr3042338ejn.29.1704716279986;
-        Mon, 08 Jan 2024 04:17:59 -0800 (PST)
-Received: from felia.fritz.box ([2a02:810d:7e40:14b0:a060:7056:782e:5e26])
-        by smtp.gmail.com with ESMTPSA id r17-20020a170906551100b00a2356a7eafasm3641365ejp.199.2024.01.08.04.17.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jan 2024 04:17:59 -0800 (PST)
-From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] drm: Clean-up superfluously selecting VT_HW_CONSOLE_BINDING
-Date: Mon,  8 Jan 2024 13:17:57 +0100
-Message-Id: <20240108121757.14069-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="dlxo1pt/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+	s=mail; t=1704716446;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=e/gl3waAmRsVvHaSKsJ9/eFbRDdv4GZ/gdDUqwyQv+E=;
+	b=dlxo1pt/kw/1GOutVLNVnaDwrqVU2K+JAk09BZ9VZKRsTIRDw1/x2IxODjHegcvgd9niYg
+	edavWPoW4sKRh27wAjwiu6kXiaFwkz4gftZIPA2Lq2mKm2q+kRVezgSXhXH/EJ6af5k+Qk
+	l1b6HGRGMGpmO4GTfy7TX12Y8b/sLXo=
+Message-ID: <86a30af0db2232bd473a38cd001342156cd4012e.camel@crapouillou.net>
+Subject: Re: [PATCH v5 3/8] dmaengine: Add API function
+ dmaengine_prep_slave_dma_vec()
+From: Paul Cercueil <paul@crapouillou.net>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen
+ <lars@metafoo.de>,  Sumit Semwal <sumit.semwal@linaro.org>, Christian
+ =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,  Jonathan Corbet
+ <corbet@lwn.net>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ dmaengine@vger.kernel.org, linux-iio@vger.kernel.org, 
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ linaro-mm-sig@lists.linaro.org, Nuno =?ISO-8859-1?Q?S=E1?=
+ <noname.nuno@gmail.com>, Michael Hennerich <Michael.Hennerich@analog.com>
+Date: Mon, 08 Jan 2024 13:20:44 +0100
+In-Reply-To: <ZYRWbROAuMXftH07@matsya>
+References: <20231219175009.65482-1-paul@crapouillou.net>
+	 <20231219175009.65482-4-paul@crapouillou.net> <ZYRWbROAuMXftH07@matsya>
+Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
+ keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZMLQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5UzFZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtNz8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe+rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIPdlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7Urf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KFlBwgAhlGy6nqP7O3u7q23hRW5AQ0EXQqFwQEIAMo+MgvYHsyjX3Ja4Oolg1Txzm8woj30ch2nACFCqaO0R/1kLj2VVeLrDyQUOlXx9PD6IQI4M8wy8m0sR4wV2p/g/paw7k65cjzYYLh+FdLNyO7IW
+	YXndJO+wDPi3aK/YKUYepqlP+QsmaHNYNdXEQDRKqNfJg8t0f5rfzp9ryxd1tCnbV+tG8VHQWiZXNqN7062DygSNXFUfQ0vZ3J2D4oAcIAEXTymRQ2+hr3Hf7I61KMHWeSkCvCG2decTYsHlw5Erix/jYWqVOtX0roOOLqWkqpQQJWtU+biWrAksmFmCp5fXIg1Nlg39v21xCXBGxJkxyTYuhdWyu1yDQ+LSIUAEQEAAYkBNgQYAQoAIBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsMAAoJEHPua9InSr1B4wsH/Az767YCT0FSsMNt1jkkdLCBi7nY0GTW+PLP1a4zvVqFMo/vD6uz1ZflVTUAEvcTi3VHYZrlgjcxmcGu239oruqUS8Qy/xgZBp9KF0NTWQSl1iBfVbIU5VV1vHS6r77W5x0qXgfvAUWOH4gmN3MnF01SH2zMcLiaUGF+mcwl15rHbjnT3Nu2399aSE6cep86igfCAyFUOXjYEGlJy+c6UyT+DUylpjQg0nl8MlZ/7Whg2fAU9+FALIbQYQzGlT4c71SibR9T741jnegHhlmV4WXXUD6roFt54t0MSAFSVxzG8mLcSjR2cLUJ3NIPXixYUSEn3tQhfZj07xIIjWxAYZo=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
 
-As config FRAMEBUFFER_CONSOLE already selects VT_HW_CONSOLE_BINDING, there
-is no need for any drm driver to repeat that rule for selecting.
+Hi Vinod,
 
-Remove those duplications of selecting VT_HW_CONSOLE_BINDING.
+Le jeudi 21 d=C3=A9cembre 2023 =C3=A0 20:44 +0530, Vinod Koul a =C3=A9crit=
+=C2=A0:
+> On 19-12-23, 18:50, Paul Cercueil wrote:
+> > This function can be used to initiate a scatter-gather DMA
+> > transfer,
+> > where the address and size of each segment is located in one entry
+> > of
+> > the dma_vec array.
+> >=20
+> > The major difference with dmaengine_prep_slave_sg() is that it
+> > supports
+> > specifying the lengths of each DMA transfer; as trying to override
+> > the
+> > length of the transfer with dmaengine_prep_slave_sg() is a very
+> > tedious
+> > process. The introduction of a new API function is also justified
+> > by the
+> > fact that scatterlists are on their way out.
+> >=20
+> > Note that dmaengine_prep_interleaved_dma() is not helpful either in
+> > that
+> > case, as it assumes that the address of each segment will be higher
+> > than
+> > the one of the previous segment, which we just cannot guarantee in
+> > case
+> > of a scatter-gather transfer.
+> >=20
+> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> >=20
+> > ---
+> > v3: New patch
+> >=20
+> > v5: Replace with function dmaengine_prep_slave_dma_vec(), and
+> > struct
+> > =C2=A0=C2=A0=C2=A0 'dma_vec'.
+> > =C2=A0=C2=A0=C2=A0 Note that at some point we will need to support cycl=
+ic
+> > transfers
+> > =C2=A0=C2=A0=C2=A0 using dmaengine_prep_slave_dma_vec(). Maybe with a n=
+ew "flags"
+> > =C2=A0=C2=A0=C2=A0 parameter to the function?
+> > ---
+> > =C2=A0include/linux/dmaengine.h | 25 +++++++++++++++++++++++++
+> > =C2=A01 file changed, 25 insertions(+)
+> >=20
+> > diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> > index 3df70d6131c8..ee5931ddb42f 100644
+> > --- a/include/linux/dmaengine.h
+> > +++ b/include/linux/dmaengine.h
+> > @@ -160,6 +160,16 @@ struct dma_interleaved_template {
+> > =C2=A0	struct data_chunk sgl[];
+> > =C2=A0};
+> > =C2=A0
+> > +/**
+> > + * struct dma_vec - DMA vector
+> > + * @addr: Bus address of the start of the vector
+> > + * @len: Length in bytes of the DMA vector
+> > + */
+> > +struct dma_vec {
+> > +	dma_addr_t addr;
+> > +	size_t len;
+> > +};
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
- drivers/gpu/drm/ingenic/Kconfig | 1 -
- drivers/gpu/drm/mcde/Kconfig    | 1 -
- drivers/gpu/drm/pl111/Kconfig   | 1 -
- drivers/gpu/drm/tve200/Kconfig  | 1 -
- 4 files changed, 4 deletions(-)
+I don't want to be pushy, but I'd like to know how to solve this now,
+otherwise I'll just send the same patches for my v6.
 
-diff --git a/drivers/gpu/drm/ingenic/Kconfig b/drivers/gpu/drm/ingenic/Kconfig
-index b440e0cdc057..3db117c5edd9 100644
---- a/drivers/gpu/drm/ingenic/Kconfig
-+++ b/drivers/gpu/drm/ingenic/Kconfig
-@@ -11,7 +11,6 @@ config DRM_INGENIC
- 	select DRM_GEM_DMA_HELPER
- 	select REGMAP
- 	select REGMAP_MMIO
--	select VT_HW_CONSOLE_BINDING if FRAMEBUFFER_CONSOLE
- 	help
- 	  Choose this option for DRM support for the Ingenic SoCs.
- 
-diff --git a/drivers/gpu/drm/mcde/Kconfig b/drivers/gpu/drm/mcde/Kconfig
-index 4f3d68e11bc1..907460b69d4f 100644
---- a/drivers/gpu/drm/mcde/Kconfig
-+++ b/drivers/gpu/drm/mcde/Kconfig
-@@ -11,7 +11,6 @@ config DRM_MCDE
- 	select DRM_PANEL_BRIDGE
- 	select DRM_KMS_HELPER
- 	select DRM_GEM_DMA_HELPER
--	select VT_HW_CONSOLE_BINDING if FRAMEBUFFER_CONSOLE
- 	help
- 	  Choose this option for DRM support for the ST-Ericsson MCDE
- 	  Multi-Channel Display Engine.
-diff --git a/drivers/gpu/drm/pl111/Kconfig b/drivers/gpu/drm/pl111/Kconfig
-index ad24cdf1d992..20fe1d2c0aaf 100644
---- a/drivers/gpu/drm/pl111/Kconfig
-+++ b/drivers/gpu/drm/pl111/Kconfig
-@@ -9,7 +9,6 @@ config DRM_PL111
- 	select DRM_GEM_DMA_HELPER
- 	select DRM_BRIDGE
- 	select DRM_PANEL_BRIDGE
--	select VT_HW_CONSOLE_BINDING if FRAMEBUFFER_CONSOLE
- 	help
- 	  Choose this option for DRM support for the PL111 CLCD controller.
- 	  If M is selected the module will be called pl111_drm.
-diff --git a/drivers/gpu/drm/tve200/Kconfig b/drivers/gpu/drm/tve200/Kconfig
-index 11e865be81c6..5121fed571a5 100644
---- a/drivers/gpu/drm/tve200/Kconfig
-+++ b/drivers/gpu/drm/tve200/Kconfig
-@@ -9,7 +9,6 @@ config DRM_TVE200
- 	select DRM_PANEL_BRIDGE
- 	select DRM_KMS_HELPER
- 	select DRM_GEM_DMA_HELPER
--	select VT_HW_CONSOLE_BINDING if FRAMEBUFFER_CONSOLE
- 	help
- 	  Choose this option for DRM support for the Faraday TV Encoder
- 	  TVE200 Controller.
--- 
-2.17.1
+> so you want to transfer multiple buffers, right? why not use
+> dmaengine_prep_slave_sg(). If there is reason for not using that one?
+
+The reason is that we want to have the possibility to transfer less
+than the total size of the scatterlist, and that's currently very hard
+to do - scatterlists were designed to not be tampered with.
+
+Christian K=C3=B6nig then suggested to introduce a "dma_vec" which had been
+on his TODO list for a while now.
+
+> Furthermore I missed replying to your email earlier on use of
+> dmaengine_prep_interleaved_dma(), my apologies.
+> That can be made to work for you as well. Please see the notes where
+> icg
+> can be ignored and it does not need icg value to be set
+>=20
+> Infact, interleaved api can be made to work in most of these cases I
+> can
+> think of...
+
+Interleaved API only supports incrementing addresses, I see no way to
+decrement the address (without using crude hacks e.g. overflowing
+size_t). I can't guarantee that my DMABUF's pages are ordered in
+memory.
+
+Cheers,
+-Paul
+
+> > +
+> > =C2=A0/**
+> > =C2=A0 * enum dma_ctrl_flags - DMA flags to augment operation
+> > preparation,
+> > =C2=A0 *=C2=A0 control completion, and communicate status.
+> > @@ -910,6 +920,10 @@ struct dma_device {
+> > =C2=A0	struct dma_async_tx_descriptor
+> > *(*device_prep_dma_interrupt)(
+> > =C2=A0		struct dma_chan *chan, unsigned long flags);
+> > =C2=A0
+> > +	struct dma_async_tx_descriptor
+> > *(*device_prep_slave_dma_vec)(
+> > +		struct dma_chan *chan, const struct dma_vec *vecs,
+> > +		size_t nents, enum dma_transfer_direction
+> > direction,
+> > +		unsigned long flags);
+> > =C2=A0	struct dma_async_tx_descriptor *(*device_prep_slave_sg)(
+> > =C2=A0		struct dma_chan *chan, struct scatterlist *sgl,
+> > =C2=A0		unsigned int sg_len, enum dma_transfer_direction
+> > direction,
+> > @@ -972,6 +986,17 @@ static inline struct dma_async_tx_descriptor
+> > *dmaengine_prep_slave_single(
+> > =C2=A0						=C2=A0 dir, flags,
+> > NULL);
+> > =C2=A0}
+> > =C2=A0
+> > +static inline struct dma_async_tx_descriptor
+> > *dmaengine_prep_slave_dma_vec(
+> > +	struct dma_chan *chan, const struct dma_vec *vecs, size_t
+> > nents,
+> > +	enum dma_transfer_direction dir, unsigned long flags)
+> > +{
+> > +	if (!chan || !chan->device || !chan->device-
+> > >device_prep_slave_dma_vec)
+> > +		return NULL;
+> > +
+> > +	return chan->device->device_prep_slave_dma_vec(chan, vecs,
+> > nents,
+> > +						=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dir,
+> > flags);
+> > +}
+> > +
+> > =C2=A0static inline struct dma_async_tx_descriptor
+> > *dmaengine_prep_slave_sg(
+> > =C2=A0	struct dma_chan *chan, struct scatterlist
+> > *sgl,	unsigned int sg_len,
+> > =C2=A0	enum dma_transfer_direction dir, unsigned long flags)
+> > --=20
+> > 2.43.0
+>=20
 
