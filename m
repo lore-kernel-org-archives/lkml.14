@@ -1,163 +1,312 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71FF4653E
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 20:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9446755776;
+	Mon,  8 Jan 2024 20:46:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bzt7U+/W";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UkgPg0Vu"
-Date: Mon, 8 Jan 2024 21:44:48 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1704746689;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QFJeHLw9GqQjgm3FgM7p7sOy93Z0Ypb7HjJTBpJG3O4=;
-	b=bzt7U+/W2wueF3ZyEvkRbDnY9Xe1TPDS/cu37+INvXFswbDOZ9DJAmKTgBNj7O1TtS7xbP
-	q5nJSKzZ69fjbrX+nE9v46voHIVDbS7bV67LO5YvJ4t2b2gZREQOa3iUiVtjtsvZh4Rs0l
-	3lVTImw/fw98wwmHPAk1uhlhkjirXUOAJ0ytCr8YY6iSi1bxo89GPmuUKEvKEMschzoJ4U
-	crp1o5Ar7GKTV+nkBoNy2md9a4fPtpYJCloyUVVDKg9bPGzv2YfaOWSTjlreHFOwnhe4GO
-	qURQz+qCcAKfd2uBaGmeKRv/v+6LUQyvhAeIgNG9oRy5yW4F/dhHhThW11j5ZA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1704746689;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QFJeHLw9GqQjgm3FgM7p7sOy93Z0Ypb7HjJTBpJG3O4=;
-	b=UkgPg0VuU9/DJID5oFyG5SAC8mwxbwH9zoayBjaH1aPk1owx29WmNSIHFu5RQYR6X7Uq9u
-	sC2u8FaismFOZzCQ==
-From: Nam Cao <namcao@linutronix.de>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Jisheng
- Zhang <jszhang@kernel.org>
-Subject: Re: [PATCH v2] riscv: Add support for BATCHED_UNMAP_TLB_FLUSH
-Message-ID: <20240108214448.025977ac@namcao>
-In-Reply-To: <20240108214346.5fd93127@namcao>
-References: <20240108193640.344929-1-alexghiti@rivosinc.com>
-	<20240108214346.5fd93127@namcao>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TGV8B3lW"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2cd053d5683so25992911fa.2;
+        Mon, 08 Jan 2024 12:46:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704746796; x=1705351596; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HZQSSuEov1m94GTK+3rCrdLk/BXHqNE/mhue/X0KjOo=;
+        b=TGV8B3lWdzPuZVteIbtemrM1hNcvlQ49mgpREq+mSuLthfFHDx/9acNhf25h0aCXb/
+         Haga3uT8VrLRVMeKugCDebmZ0dyXWDgxy5AyZK40UFrYI//SJg/vBRGnquKqjoHFl5u0
+         8MJNvfVl5CVpPp5SN38B8NsWIX4k8U/b2T/a3ltc09KXVqEN9Et4IzuSQOaeBuSxvusH
+         /AKtFIeyei7TR1oMpAj++BTEUjYcP/5QjvTDrdZTafbSEwEvuyWgg2+rpfL6QXUpuG4c
+         w/bozufNu5NVKUmPkRh/IsM4L0QLlpaGoPTxYuZyvQwf2y4HReMdTI3ux4PFJmxlUbHO
+         lKtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704746796; x=1705351596;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HZQSSuEov1m94GTK+3rCrdLk/BXHqNE/mhue/X0KjOo=;
+        b=CnSF2uYxNUci0YL9+fh3ugDm2X9LI45GDbTWyJhEK4Z7/xXxFtOMlW01ywioPdTQze
+         ZJW026f4UgqX9GkBLc0UFYrqNr0GMOrSfAf9flN4Kk2U/ZMUqENz+Td5ahD2bqUawt2l
+         qncQnCK8IQfHwrgKZmp63BPyvdqZwKaUcTAt9o7C+ohQ9XJoMI3JWOgWhWjQMWE+t8BO
+         /cLCvUMstDafPLl58mN56WHmjE7gcE/AvUY2F9IM9J6Omg9w11O6xYyQ/yFDulE2zvxS
+         vfvAinn5xFTioUqF59G6+0ervzT8hZDmJsyXU1DvJEQb5p6r4lch78IdJHQQO+dy3lGc
+         mC0Q==
+X-Gm-Message-State: AOJu0Yx+3OkzqyALO7+7imPiW6ecaLhp0fgnvUghU140BoohTAJXYx5F
+	zrwFBo+PomuB49cqikldmahrG9AWo/hgoax5WPA=
+X-Google-Smtp-Source: AGHT+IFAd1Im/x73j+HN+fteMR6gcTc/xpPKbDXMlbjrxEb5PxAfwwEoMkT0wU9YgL9OgE+2e+ctSO0isVXTHc6buX8=
+X-Received: by 2002:a05:651c:118f:b0:2cc:eaa3:bb4d with SMTP id
+ w15-20020a05651c118f00b002cceaa3bb4dmr1511107ljo.61.1704746796173; Mon, 08
+ Jan 2024 12:46:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240108183938.468426-1-verdre@v0yd.nl> <20240108183938.468426-5-verdre@v0yd.nl>
+ <5d1f2013-5758-4d6c-8d01-e96a76bb2686@v0yd.nl> <40550fc1-3b5b-438c-891d-2da0f30874f3@v0yd.nl>
+ <CABBYNZKV8SujJ7GFUqTMXUskE=yK0q=opmwvTZNEpPb=JkiQbA@mail.gmail.com>
+ <d1e7219f-e7b4-4474-ae89-70925b8787fa@v0yd.nl> <CABBYNZLNeKOT0n=D-PN=aPgfu07xZ-x8nNKitas40X=0Snp4jQ@mail.gmail.com>
+ <d7e6ff1d-f69f-4e48-8167-7dbcb0d8093f@v0yd.nl>
+In-Reply-To: <d7e6ff1d-f69f-4e48-8167-7dbcb0d8093f@v0yd.nl>
+From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date: Mon, 8 Jan 2024 15:46:22 -0500
+Message-ID: <CABBYNZJZ8cA77FBgvXWJeVjVpzjuwzC4Mn4QRR3OsZJn+M=VyQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] Bluetooth: Remove pending ACL connection attempts
+To: =?UTF-8?Q?Jonas_Dre=C3=9Fler?= <verdre@v0yd.nl>
+Cc: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
+	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 8 Jan 2024 21:43:46 +0100 Nam Cao <namcao@linutronix.de> wrote:
+Hi Jonas,
 
-> On Mon,  8 Jan 2024 20:36:40 +0100 Alexandre Ghiti <alexghiti@rivosinc.com> wrote:
-> > Allow to defer the flushing of the TLB when unmapping pages, which allows
-> > to reduce the numbers of IPI and the number of sfence.vma.
-> > 
-> > The ubenchmarch used in commit 43b3dfdd0455 ("arm64: support
-> > batched/deferred tlb shootdown during page reclamation/migration") that
-> > was multithreaded to force the usage of IPI shows good performance
-> > improvement on all platforms:
-> > 
-> > * Unmatched: ~34%
-> > * TH1520   : ~78%
-> > * Qemu     : ~81%
-> > 
-> > In addition, perf on qemu reports an important decrease in time spent
-> > dealing with IPIs:
-> > 
-> > Before:  68.17%  main     [kernel.kallsyms]            [k] __sbi_rfence_v02_call
-> > After :   8.64%  main     [kernel.kallsyms]            [k] __sbi_rfence_v02_call
-> > 
-> > * Benchmark:
-> > 
-> > int stick_this_thread_to_core(int core_id) {
-> >         int num_cores = sysconf(_SC_NPROCESSORS_ONLN);
-> >         if (core_id < 0 || core_id >= num_cores)
-> >            return EINVAL;
-> > 
-> >         cpu_set_t cpuset;
-> >         CPU_ZERO(&cpuset);
-> >         CPU_SET(core_id, &cpuset);
-> > 
-> >         pthread_t current_thread = pthread_self();
-> >         return pthread_setaffinity_np(current_thread,
-> > sizeof(cpu_set_t), &cpuset);
-> > }
-> > 
-> > static void *fn_thread (void *p_data)
-> > {
-> >         int ret;
-> >         pthread_t thread;
-> > 
-> >         stick_this_thread_to_core((int)p_data);
-> > 
-> >         while (1) {
-> >                 sleep(1);
-> >         }
-> > 
-> >         return NULL;
-> > }
-> > 
-> > int main()
-> > {
-> >         volatile unsigned char *p = mmap(NULL, SIZE, PROT_READ | PROT_WRITE,
-> >                                          MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-> >         pthread_t threads[4];
-> >         int ret;
-> > 
-> >         for (int i = 0; i < 4; ++i) {
-> >                 ret = pthread_create(&threads[i], NULL, fn_thread, (void *)i);
-> >                 if (ret)
-> >                 {
-> >                         printf("%s", strerror (ret));
-> >                 }
-> >         }
-> > 
-> >         memset(p, 0x88, SIZE);
-> > 
-> >         for (int k = 0; k < 10000; k++) {
-> >                 /* swap in */
-> >                 for (int i = 0; i < SIZE; i += 4096) {
-> >                         (void)p[i];
-> >                 }
-> > 
-> >                 /* swap out */
-> >                 madvise(p, SIZE, MADV_PAGEOUT);
-> >         }
-> > 
-> >         for (int i = 0; i < 4; i++)
-> >         {
-> >                 pthread_cancel(threads[i]);
-> >         }
-> > 
-> >         for (int i = 0; i < 4; i++)
-> >         {
-> >                 pthread_join(threads[i], NULL);
-> >         }
-> > 
-> >         return 0;
-> > }
-> > 
-> > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> > Reviewed-by: Jisheng Zhang <jszhang@kernel.org>
-> > Tested-by: Jisheng Zhang <jszhang@kernel.org> # Tested on TH1520  
-> 
-> Before:
->     real 0m36.674s
->     user 0m0.173s
->     sys  0m36.493s
-> After:
->     real 0m18.016s
->     user 0m0.125s
->     sys  0m17.885s
-> 
-> Tested-by: Nam Cao <namcao@linutronix.de>
+On Mon, Jan 8, 2024 at 3:26=E2=80=AFPM Jonas Dre=C3=9Fler <verdre@v0yd.nl> =
+wrote:
+>
+> Hi Luiz,
+>
+> On 1/8/24 20:41, Luiz Augusto von Dentz wrote:
+> > Hi Jonas,
+> >
+> > On Mon, Jan 8, 2024 at 2:29=E2=80=AFPM Jonas Dre=C3=9Fler <verdre@v0yd.=
+nl> wrote:
+> >>
+> >> Hi Luiz,
+> >>
+> >> On 1/8/24 20:14, Luiz Augusto von Dentz wrote:
+> >>> Hi Jonas,
+> >>>
+> >>> On Mon, Jan 8, 2024 at 1:55=E2=80=AFPM Jonas Dre=C3=9Fler <verdre@v0y=
+d.nl> wrote:
+> >>>>
+> >>>> On 1/8/24 19:44, Jonas Dre=C3=9Fler wrote:
+> >>>>> On 1/8/24 19:39, Jonas Dre=C3=9Fler wrote:
+> >>>>>> With the last commit we moved to using the hci_sync queue for "Cre=
+ate
+> >>>>>> Connection" requests, removing the need for retrying the paging af=
+ter
+> >>>>>> finished/failed "Create Connection" requests and after the end of
+> >>>>>> inquiries.
+> >>>>>>
+> >>>>>> hci_conn_check_pending() was used to trigger this retry, we can re=
+move it
+> >>>>>> now.
+> >>>>>>
+> >>>>>> Note that we can also remove the special handling for COMMAND_DISA=
+LLOWED
+> >>>>>> errors in the completion handler of "Create Connection", because "=
+Create
+> >>>>>> Connection" requests are now always serialized.
+> >>>>>>
+> >>>>>> This is somewhat reverting commit 4c67bc74f016 ("[Bluetooth] Suppo=
+rt
+> >>>>>> concurrent connect requests").
+> >>>>>>
+> >>>>>> With this, the BT_CONNECT2 state of ACL hci_conn objects should no=
+w be
+> >>>>>> back to meaning only one thing: That we received a connection requ=
+est
+> >>>>>> from another device (see hci_conn_request_evt), but the actual con=
+nect
+> >>>>>> should be deferred.
+> >>>>>> ---
+> >>>>>>     include/net/bluetooth/hci_core.h |  1 -
+> >>>>>>     net/bluetooth/hci_conn.c         | 16 ----------------
+> >>>>>>     net/bluetooth/hci_event.c        | 21 ++++-----------------
+> >>>>>>     3 files changed, 4 insertions(+), 34 deletions(-)
+> >>>>>>
+> >>>>>> diff --git a/include/net/bluetooth/hci_core.h
+> >>>>>> b/include/net/bluetooth/hci_core.h
+> >>>>>> index 2c30834c1..d7483958d 100644
+> >>>>>> --- a/include/net/bluetooth/hci_core.h
+> >>>>>> +++ b/include/net/bluetooth/hci_core.h
+> >>>>>> @@ -1330,7 +1330,6 @@ struct hci_conn *hci_conn_add(struct hci_dev
+> >>>>>> *hdev, int type, bdaddr_t *dst,
+> >>>>>>                       u8 role);
+> >>>>>>     void hci_conn_del(struct hci_conn *conn);
+> >>>>>>     void hci_conn_hash_flush(struct hci_dev *hdev);
+> >>>>>> -void hci_conn_check_pending(struct hci_dev *hdev);
+> >>>>>>     struct hci_chan *hci_chan_create(struct hci_conn *conn);
+> >>>>>>     void hci_chan_del(struct hci_chan *chan);
+> >>>>>> diff --git a/net/bluetooth/hci_conn.c b/net/bluetooth/hci_conn.c
+> >>>>>> index 541d55301..22033057b 100644
+> >>>>>> --- a/net/bluetooth/hci_conn.c
+> >>>>>> +++ b/net/bluetooth/hci_conn.c
+> >>>>>> @@ -2534,22 +2534,6 @@ void hci_conn_hash_flush(struct hci_dev *hd=
+ev)
+> >>>>>>         }
+> >>>>>>     }
+> >>>>>> -/* Check pending connect attempts */
+> >>>>>> -void hci_conn_check_pending(struct hci_dev *hdev)
+> >>>>>> -{
+> >>>>>> -    struct hci_conn *conn;
+> >>>>>> -
+> >>>>>> -    BT_DBG("hdev %s", hdev->name);
+> >>>>>> -
+> >>>>>> -    hci_dev_lock(hdev);
+> >>>>>> -
+> >>>>>> -    conn =3D hci_conn_hash_lookup_state(hdev, ACL_LINK, BT_CONNEC=
+T2);
+> >>>>>> -    if (conn)
+> >>>>>> -        hci_cmd_sync_queue(hdev, hci_acl_create_connection_sync,
+> >>>>>> conn, NULL);
+> >>>>>> -
+> >>>>>> -    hci_dev_unlock(hdev);
+> >>>>>> -}
+> >>>>>> -
+> >>>>>>     static u32 get_link_mode(struct hci_conn *conn)
+> >>>>>>     {
+> >>>>>>         u32 link_mode =3D 0;
+> >>>>>> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+> >>>>>> index e8b4a0126..91973d6d1 100644
+> >>>>>> --- a/net/bluetooth/hci_event.c
+> >>>>>> +++ b/net/bluetooth/hci_event.c
+> >>>>>> @@ -117,8 +117,6 @@ static u8 hci_cc_inquiry_cancel(struct hci_dev
+> >>>>>> *hdev, void *data,
+> >>>>>>             hci_discovery_set_state(hdev, DISCOVERY_STOPPED);
+> >>>>>>         hci_dev_unlock(hdev);
+> >>>>>> -    hci_conn_check_pending(hdev);
+> >>>>>> -
+> >>>>>>         return rp->status;
+> >>>>>>     }
+> >>>>>> @@ -149,8 +147,6 @@ static u8 hci_cc_exit_periodic_inq(struct hci_=
+dev
+> >>>>>> *hdev, void *data,
+> >>>>>>         hci_dev_clear_flag(hdev, HCI_PERIODIC_INQ);
+> >>>>>> -    hci_conn_check_pending(hdev);
+> >>>>>> -
+> >>>>>>         return rp->status;
+> >>>>>>     }
+> >>>>>> @@ -2296,10 +2292,8 @@ static void hci_cs_inquiry(struct hci_dev
+> >>>>>> *hdev, __u8 status)
+> >>>>>>     {
+> >>>>>>         bt_dev_dbg(hdev, "status 0x%2.2x", status);
+> >>>>>> -    if (status) {
+> >>>>>> -        hci_conn_check_pending(hdev);
+> >>>>>> +    if (status)
+> >>>>>>             return;
+> >>>>>> -    }
+> >>>>>>         set_bit(HCI_INQUIRY, &hdev->flags);
+> >>>>>>     }
+> >>>>>> @@ -2323,12 +2317,9 @@ static void hci_cs_create_conn(struct hci_d=
+ev
+> >>>>>> *hdev, __u8 status)
+> >>>>>>         if (status) {
+> >>>>>>             if (conn && conn->state =3D=3D BT_CONNECT) {
+> >>>>>> -            if (status !=3D HCI_ERROR_COMMAND_DISALLOWED ||
+> >>>>>> conn->attempt > 2) {
+> >>>>>> -                conn->state =3D BT_CLOSED;
+> >>>>>> -                hci_connect_cfm(conn, status);
+> >>>>>> -                hci_conn_del(conn);
+> >>>>>> -            } else
+> >>>>>> -                conn->state =3D BT_CONNECT2;
+> >>>>>> +            conn->state =3D BT_CLOSED;
+> >>>>>> +            hci_connect_cfm(conn, status);
+> >>>>>> +            hci_conn_del(conn);
+> >>>>>>             }
+> >>>>>>         } else {
+> >>>>>>             if (!conn) {
+> >>>>>> @@ -3020,8 +3011,6 @@ static void hci_inquiry_complete_evt(struct
+> >>>>>> hci_dev *hdev, void *data,
+> >>>>>>         bt_dev_dbg(hdev, "status 0x%2.2x", ev->status);
+> >>>>>> -    hci_conn_check_pending(hdev);
+> >>>>>> -
+> >>>>>>         if (!test_and_clear_bit(HCI_INQUIRY, &hdev->flags))
+> >>>>>>             return;
+> >>>>>> @@ -3247,8 +3236,6 @@ static void hci_conn_complete_evt(struct hci=
+_dev
+> >>>>>> *hdev, void *data,
+> >>>>>>     unlock:
+> >>>>>>         hci_dev_unlock(hdev);
+> >>>>>> -
+> >>>>>> -    hci_conn_check_pending(hdev);
+> >>>>>>     }
+> >>>>>>     static void hci_reject_conn(struct hci_dev *hdev, bdaddr_t *bd=
+addr)
+> >>>>>
+> >>>>> Please take a special look at this one: I'm not sure if I'm breakin=
+g the
+> >>>>> functionality of deferred connecting using BT_CONNECT2 in
+> >>>>> hci_conn_request_evt() here, as I don't see anywhere where we check=
+ for
+> >>>>> this state and establish a connection later.
+> >>>>>
+> >>>>> It seems that this is how hci_conn_request_evt() was initially writ=
+ten
+> >>>>> though, hci_conn_check_pending() only got introduced later and seem=
+s
+> >>>>> unrelated.
+> >>>>
+> >>>> Ahh nevermind... The check for BT_CONNECT2 on "Conn Complete event" =
+got
+> >>>> introduced with 4c67bc74f01 ([Bluetooth] Support concurrent connect
+> >>>> requests). And later the deferred connection setup on "Conn Request
+> >>>> event" got introduced with 20714bfef8 ("Bluetooth: Implement deferre=
+d
+> >>>> sco socket setup").
+> >>>>
+> >>>> I assume the latter commit was relying on the "Create Connection"
+> >>>> request "Conn Complete event" that got introduced with the former co=
+mmit
+> >>>> then? That would imply that we use BT_CONNECT2 if there's already a
+> >>>> "Create Connection" going on when the "Conn Request event" happens, =
+and
+> >>>> we must wait for that existing request to finish.. Is that how those
+> >>>> deferred connections are supposed to work?
+> >>>
+> >>> Well if you are not sure that works we better make sure we have tests
+> >>> that cover this, for LE I know for sure it works because we have the
+> >>> likes of iso-tester that do connect 2 peers simultaneously, but for
+> >>> classic I don't recall having any test that does multiple connections=
+.
+> >>
+> >> The sequential "Create Connection" logic works, I tested that (of cour=
+se
+> >> I'm happy to add tests if it's not too much work).
+> >>
+> >> What I'm unsure about is if and how incoming connection requests from
+> >> other devices with HCI_PROTO_DEFER flag are supposed to work and wheth=
+er
+> >> they are meant to trigger a "Create Connection" from us?
+> >
+> > For incoming connections on Classic that should result in an
+> > accept/reject connection command, so it should cause another Create
+> > Connection if that is what you are afraid of.
+> >
+>
+> Hmm, do you mean it *shouldn't* cause another "Create Connection"?
 
-I forgot to mention: this is for Starfive's Visionfive 2 board.
+Yeah, sorry about that, it is Monday I should probably double check if
+what I wrote makes any sense before sending :D
 
-Best regards,
-Nam
+> I just checked in the spec: It sounds like once we send the "Accept
+> Connection Request" to the controller, the controller takes care of
+> establishing the connection by itself (no "Create Connection"
+> necessary), and will then later give us a "Connection Complete" event to
+> indicate that the connection is done.
 
+Yep, it will follow up with a Connection Complete.
+
+> If I'm reading all this correctly, that sounds like my commit is
+> correct, and we had a bug in this logic before by interpreting
+> BT_CONNECT2 in two different ways.
+>
+> >>>
+> >>>>>
+> >>>>> Thanks,
+> >>>>> Jonas
+> >>>
+> >>>
+> >>>
+> >
+> >
+> >
+
+
+
+--=20
+Luiz Augusto von Dentz
