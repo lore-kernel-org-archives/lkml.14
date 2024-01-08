@@ -1,39 +1,35 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C047554BEF;
-	Mon,  8 Jan 2024 17:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bRxLwTOm"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 408Dxck7012024;
-	Mon, 8 Jan 2024 17:57:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=l3rs5QalRzBq6bDr+l+YAPawJwhfuREesXmJgkFlGjA=; b=bR
-	xLwTOmM/xmF8jZ5BBWGIbGzkNQZq4R1PrymnowlbJWsZkDusCetT4ZAA83X+yFdz
-	jalkR9HRkX/2AKO6XjEGOX3YLuZ2jdRg3iPg6cy3cT1eoZtMXi8RE0DqylKVFnko
-	xG5megy5F3kZ4mF8CZs9dHlmBLR3bUqMv4n9ANat0bHtJ007V1OanPzgFWbhLTsZ
-	WFMquMTTdj6iYYTbFKJAq7izUHmSJbqW3bFhV3mqkxV4KGn+GLK3rXET8FgjZHWi
-	COJnsxNjD55/eyU5bMfmGQ9wiA+BPrCsKpqOWzhFyiw5luVy8ai55FBxVaf9cXi6
-	FzqYDnq+XdP5kNUHyw/Q==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vgfwjrw5h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jan 2024 17:57:34 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 408HvXnm012203
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 8 Jan 2024 17:57:33 GMT
-Received: from [10.110.73.235] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 8 Jan
- 2024 09:57:32 -0800
-Message-ID: <9807bb4a-98d9-8f4b-b24d-0134f42f6cd3@quicinc.com>
-Date: Mon, 8 Jan 2024 09:57:31 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028EC55E52;
+	Mon,  8 Jan 2024 17:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d3eb299e2eso10019785ad.2;
+        Mon, 08 Jan 2024 09:57:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704736676; x=1705341476;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FsJws2GBQTqVuL0zDyeQXawwmM6nlw+BJqfE/TGg9/g=;
+        b=bFRJBM8P2R2uEq0JQIGwcmW34f4D4G0uW0m9eBK46E11VMenWfUOzcEAhFYBoRpYWt
+         09jgAhwYyCJKrWNdwJzHiPVa06pxT4AUQhRf6jlRcis70CiHmro38RScgr3TliiTRo6M
+         v2T4gP7Ee6ZWhF3nbBKq53Y09YxUpu2NxkoW054DCYKRG/5DsnyNL/GMHUh+bjJnEKkn
+         zRfm7jpeJTiahoYT0bc8lFxw76+w7zN5S8pFr1/tEymQg9cgUiw7UAFmFmnXi+6GBfHk
+         Bjow5RibNu4LrOeQ+DAwkudFyEHotNh9GM4NCwV6VRK5wKAk4kIMdmbUSxyDs/Cko4r0
+         eTXw==
+X-Gm-Message-State: AOJu0YzTxJ2sCPXITLW0pcljJwCcIeZNrmsUzTC/xrnKS20S9D8MDAGH
+	lzikBV65FIKBgjf2+UAOj1Y=
+X-Google-Smtp-Source: AGHT+IHLtStDtgCU08Axpj6/fVlaoUMqBauKXKas/k+5UZBD649yTmWj4FpPjb982/WaQgr8+5tSGw==
+X-Received: by 2002:a17:902:b681:b0:1d4:6274:b4fb with SMTP id c1-20020a170902b68100b001d46274b4fbmr1489185pls.20.1704736676177;
+        Mon, 08 Jan 2024 09:57:56 -0800 (PST)
+Received: from ?IPV6:2620:0:1000:8411:cee:c48d:78d6:ed9a? ([2620:0:1000:8411:cee:c48d:78d6:ed9a])
+        by smtp.gmail.com with ESMTPSA id n2-20020a170902e54200b001d058ad8770sm169957plf.306.2024.01.08.09.57.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jan 2024 09:57:55 -0800 (PST)
+Message-ID: <f95ce17f-f42b-4784-b725-8081df27a7a8@acm.org>
+Date: Mon, 8 Jan 2024 09:57:52 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,82 +37,28 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] drm/msm: add a kernel param to select between MDP5
- and DPU drivers
+Subject: Re: [PATCH v3] ufs: mcq: Add definition for REG_UFS_MEM_CFG register
 Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, "Daniel
- Vetter" <daniel@ffwll.ch>,
-        <linux-arm-msm@vger.kernel.org>, <freedreno@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        Stephen Boyd <swboyd@chromium.org>
-References: <20240106-fd-migrate-mdp5-v3-0-3d2750378063@linaro.org>
- <20240106-fd-migrate-mdp5-v3-3-3d2750378063@linaro.org>
- <c8d6769b-eb28-337c-fa55-4dae86611da5@quicinc.com>
- <CAA8EJpoF3uKobGzjHbLMKYvcQbdqYzur7Mn1cNDPyc+wiiZ+SQ@mail.gmail.com>
-From: Carl Vanderlip <quic_carlv@quicinc.com>
-In-Reply-To: <CAA8EJpoF3uKobGzjHbLMKYvcQbdqYzur7Mn1cNDPyc+wiiZ+SQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To: Chanwoo Lee <cw9316.lee@samsung.com>, alim.akhtar@samsung.com,
+ avri.altman@wdc.com, jejb@linux.ibm.com, martin.petersen@oracle.com,
+ peter.wang@mediatek.com, chu.stanley@gmail.com, matthias.bgg@gmail.com,
+ angelogioacchino.delregno@collabora.com, stanley.chu@mediatek.com,
+ quic_cang@quicinc.com, mani@kernel.org, quic_asutoshd@quicinc.com,
+ powen.kao@mediatek.com, quic_nguyenb@quicinc.com,
+ yang.lee@linux.alibaba.com, athierry@redhat.com, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org
+Cc: grant.jung@samsung.com, jt77.jang@samsung.com, dh0421.hwang@samsung.com,
+ sh043.lee@samsung.com
+References: <CGME20240102014248epcas1p4d49dcf2cd3f020bed88eebaeba648789@epcas1p4.samsung.com>
+ <20240102014222.23351-1-cw9316.lee@samsung.com>
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20240102014222.23351-1-cw9316.lee@samsung.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: XFQhFCDc3KnBi07E_fNpugNNuv6RtugH
-X-Proofpoint-GUID: XFQhFCDc3KnBi07E_fNpugNNuv6RtugH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- impostorscore=0 lowpriorityscore=0 phishscore=0 mlxlogscore=820
- suspectscore=0 priorityscore=1501 mlxscore=0 malwarescore=0 adultscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401080152
 
+On 1/1/24 17:42, Chanwoo Lee wrote:
+> Instead of hardcoding the register field, add the proper definition. While
+> at it, let's also use ufshcd_rmwl() to simplify updating this register.
 
-
-On 1/5/2024 4:38 PM, Dmitry Baryshkov wrote:
-> On Sat, 6 Jan 2024 at 02:04, Carl Vanderlip <quic_carlv@quicinc.com> wrote:
->>
->>
->> On 1/5/2024 3:34 PM, Dmitry Baryshkov wrote:
->>> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
->>> index 50b65ffc24b1..ef57586fbeca 100644
->>> --- a/drivers/gpu/drm/msm/msm_drv.c
->>> +++ b/drivers/gpu/drm/msm/msm_drv.c
->>> @@ -969,6 +969,37 @@ static int add_components_mdp(struct device *master_dev,
->>>        return 0;
->>>    }
->>>
->>> +#if !IS_REACHABLE(CONFIG_DRM_MSM_MDP5) || !IS_REACHABLE(CONFIG_DRM_MSM_DPU)
->>> +bool msm_disp_drv_should_bind(struct device *dev, bool mdp5_driver)
->>> +{
->>> +     /* If just a single driver is enabled, use it no matter what */
->>> +     return true;
->>> +}
->>
->> This will cause both MDP/DPU probes to return -ENODEV, rather than
->> select the enabled one.
-> 
-> No. The code (e.g. for DPU) is:
-> 
->         if (!msm_disp_drv_should_bind(&pdev->dev, true))
->                  return -ENODEV;
-> 
-> So the driver returns -ENODEV if msm_disp_drv_should_bind() returns
-> false. Which is logical from the function name point of view.
-> 
-
-but msm_disp_drv_should_bind() is returning true in the #if !REACHABLE() 
-case?
-
-at minimum the comment is incorrect since returning true causes the
-driver to NOT be used.
-
--Carl V.
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
