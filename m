@@ -1,115 +1,94 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0664C79C2
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 04:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [209.85.160.179])
-	by gateway (Coremail) with SMTP id _____8BxHLuveZtlOAgDAA--.1634S3;
-	Mon, 08 Jan 2024 12:27:28 +0800 (CST)
-Received: from mail-qt1-f179.google.com (unknown [209.85.160.179])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axqt2seZtlvvcGAA--.18355S3;
-	Mon, 08 Jan 2024 12:27:26 +0800 (CST)
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-427e83601c4so15527751cf.0
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Jan 2024 20:27:26 -0800 (PST)
-X-Gm-Message-State: AOJu0YxwsIgP7HzpXwpsuPtzChLf58BeV++w/ZCeAEZ4PoJxYFS49G0p
-	OHHCKiXT0+8i9qrLN92qx37Ro+dj84q0gJyxPfOJeyfNo5h7sA==
-X-Google-Smtp-Source: AGHT+IGKnCG8TykNKu6ZAbyjwnzNC87gaoIpVZsuDDN+mlXo4QRoj8lgmpTyYllZ7a5FmM235WXdm/gN/LQ8AnX4xlE=
-X-Received: by 2002:a05:620a:272a:b0:783:251a:e5d9 with SMTP id
- b42-20020a05620a272a00b00783251ae5d9mr445312qkp.21.1704684114109; Sun, 07 Jan
- 2024 19:21:54 -0800 (PST)
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 189F9749C
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 04:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QnYnMp3k"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-555d89bf8f4so329291a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Jan 2024 20:46:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704689188; x=1705293988; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qBQoCtGsAlNdiuEM9BfbadXmqeot2938UuOpdhMoIOA=;
+        b=QnYnMp3k0/0EQgksRVQXAYzXVt4NFM9eDUY0v0bEliTxPaG/pyFx+DBeBtpzh1/ACJ
+         Z4bLn2CVIaUO5I6KE4Z3kXU4G7pqjaB9sgFFbUbOuvLP9KBhsVCCbuQ0PBzuVJmF3+uH
+         ljur369sqViGFixOTXGngfVyylNEQwtnkQvlk7JD81E90Z12iwTCD/j0Mq5x4PWDCfBP
+         j5fheImjB+3piQ+ppjP1htdhaP/muv3mms8NAIJ1ypeRXMD81UPXNHtUxYYWvxZahAdP
+         5p+CboHCr9Tv3W522QQp7Qs5aypV7mAu3sTE9Xt3PVYSHDUS6vaVCmPZYy/BlX02Cipa
+         1Sjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704689188; x=1705293988;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qBQoCtGsAlNdiuEM9BfbadXmqeot2938UuOpdhMoIOA=;
+        b=rPZJ0Z15nBF6DvlrznF69B8Csm5qUeE8+aAtC7+SjkptI8VPmEnaFZxK0ABTXYrnJg
+         K1qFa3Fo+248qfGqBZLCGRtODvGVLBpItRh54d2DacJRsuTj4oDt6yBz2QDirDmQ7fOe
+         o8bzkLpBApbyvbZE/4g9QnnyuGnDfnlGC2+34/W3JDvGOPGFvqQX34cp4pNWa3ZnYsfZ
+         p27MQM9x8ZELD87d4fw7TkBbN7oAeUCB7zWcLGyiiPIQZxAebkQDJAIL+B5M5uUwppbH
+         9JlD9NK8uEK1vo4lXiYlYZ0LzF9V0nhNKrT9yT9eGWinSo5MH8LO6ek4xHvVdd57AjXv
+         SFcQ==
+X-Gm-Message-State: AOJu0Yxrz0cNMk8yNV0NMT3iOrirovRo8hdEW1GQVPqzxuOUR5drOi1w
+	vdphTo/LXjERZRYUIwAA+ig=
+X-Google-Smtp-Source: AGHT+IHgJxrZw0Dn+jNq/CXNJUNGp2UOlFLAKsAsrPM7qMuLtzQBCVmyBRzb8LA0OacxnfNOXCQ5kg==
+X-Received: by 2002:a17:907:a0cf:b0:a28:34e5:b86e with SMTP id hw15-20020a170907a0cf00b00a2834e5b86emr2738438ejc.2.1704689187935;
+        Sun, 07 Jan 2024 20:46:27 -0800 (PST)
+Received: from [192.168.0.104] (p54a07fa0.dip0.t-ipconnect.de. [84.160.127.160])
+        by smtp.gmail.com with ESMTPSA id r2-20020a170906550200b00a2a4086c6b0sm1412269ejp.82.2024.01.07.20.46.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Jan 2024 20:46:27 -0800 (PST)
+Message-ID: <9be7603e-1a94-4077-80e0-091f863e7b72@gmail.com>
+Date: Mon, 8 Jan 2024 05:46:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240106065941.180796-1-wangrui@loongson.cn> <CANiq72=M5TrUL+9Z0nqKKcD=KHwyDA79fNYHgU2EJ+7u6Ct8qw@mail.gmail.com>
-In-Reply-To: <CANiq72=M5TrUL+9Z0nqKKcD=KHwyDA79fNYHgU2EJ+7u6Ct8qw@mail.gmail.com>
-From: WANG Rui <wangrui@loongson.cn>
-Date: Mon, 8 Jan 2024 11:21:43 +0800
-X-Gmail-Original-Message-ID: <CAHirt9hd4W25p1kVNYXbEXrLj6NgT5r=EPWsoOmHZzS1qGR-yA@mail.gmail.com>
-Message-ID: <CAHirt9hd4W25p1kVNYXbEXrLj6NgT5r=EPWsoOmHZzS1qGR-yA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Enable initial Rust support
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, WANG Xuerui <kernel@xen0n.name>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-doc@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID:AQAAf8Axqt2seZtlvvcGAA--.18355S3
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7CF1Utw17JryrZFykCF1DCFX_yoW8GF45p3
-	Z2yryxKr4UJr9rJF17Ar1xXw1qyrn5Gw15Jwn5G3yUAw1UJr13Jr1UKF45tFyDGr1xCr4j
-	yF1jvF1DAF4DJrgCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY1x
-	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1CPfJUUUUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/5] staging: rtl8192e: renamed variable is40MHz and 4
+ other
+To: Gary Rookard <garyrookard@fastmail.org>, gregkh@linuxfoundation.org
+Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240108032233.4280-1-garyrookard@fastmail.org>
+Content-Language: en-US
+From: Philipp Hortmann <philipp.g.hortmann@gmail.com>
+In-Reply-To: <20240108032233.4280-1-garyrookard@fastmail.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 1/8/24 04:22, Gary Rookard wrote:
+> Hi,
+> 
+> This patch series renames (5) different variables with
+> the checkpatch coding style issue, Avoid CamelCase.
+> 
+> Patch 1/5) rename variable is40MHz
+> Patch 2/5) rename variable isShortGI
+> Patch 3/5) rename variable retValue
+> Patch 4/5) rename variable EWC11NHTCap
+> Patch 5/5) rename variable AdvCoding
+> 
+> Signed-off-by: Gary Rookard <garyrookard@fastmail.org>
+> 
+> Gary Rookard (5):
+>    staging: rtl8192e: rename variable is40MHz
+>    staging: rtl8192e: rename variable isShortGI
+>    staging: rtl8192e: rename variable retValue
+>    staging: rtl8192e: rename variable EWC11NHTCap
+>    staging: rtl8192e: rename variable AdvCoding
+> 
+>   drivers/staging/rtl8192e/rtl819x_HT.h     |  2 +-
+>   drivers/staging/rtl8192e/rtl819x_HTProc.c | 58 +++++++++++------------
+>   2 files changed, 30 insertions(+), 30 deletions(-)
+> 
 
-On Sun, Jan 7, 2024 at 10:29=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Sat, Jan 6, 2024 at 8:04=E2=80=AFAM WANG Rui <wangrui@loongson.cn> wro=
-te:
-> >
-> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-> >  Architecture  Level of support  Constraints
-> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-> > +``loongarch`` Maintained
->
-> On top of what Huacai said, it would be nice to add another character
-> and realign the table so that `loongarch` it doesn't overflow (perhaps
-> best done in an additional, previous patch).
+Can be applied on top of other patches send in.
+Is working fine on hardware.
 
-Thanks Huacai, Miguel.
-
->
-> > +    } else if cfg.has("LOONGARCH") {
->
-> Would it be possible to do it without a custom target in
-> `scripts/generate_rust_target.rs`? If it is not possible (e.g. there
-> is something that you cannot tweak otherwise on top of a built-in
-> target via the CLI flags), it is fine to use a custom target for the
-> moment.
->
-> For instance, this is how ARM is doing it:
-> https://lore.kernel.org/rust-for-linux/20231020155056.3495121-1-Jamie.Cun=
-liffe@arm.com/
->
-
-Thanks for your comments. I noticed that the refactoring of the build
-system to support the use of Rust built-in targets is still ongoing.
-Could this take some time? In the meantime, let's proceed with the
-generation method.
-
-> Thanks!
->
-> Cheers,
-> Miguel
->
-
---=20
-Rui
-
+Bye Philipp
