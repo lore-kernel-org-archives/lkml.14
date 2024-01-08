@@ -1,80 +1,108 @@
-Received: from eggs.gnu.org (eggs.gnu.org [209.51.188.92])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B562A14281;
-	Mon,  8 Jan 2024 11:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gnu.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnu.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8F22940E
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Jan 2024 11:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gnu.org header.i=@gnu.org header.b="RelumATz"
-Received: from fencepost.gnu.org ([2001:470:142:3::e])
-	by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.90_1)
-	(envelope-from <othacehe@gnu.org>)
-	id 1rMnPZ-0001Ry-73; Mon, 08 Jan 2024 06:03:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
-	s=fencepost-gnu-org; h=MIME-Version:References:In-Reply-To:Date:Subject:To:
-	From; bh=k2bv0lubVH8NsRJr5+61Oe3KPK8iIPvWwJlHbhSRxgY=; b=RelumATzJt8gnNL/W/76
-	kqcOOtSogvG2oXBtVajdlhjh8CZh7CLmMW5zO1dTaFrWdsQEw1jOnpgcLRts/afq+UpTI8dZ2jfau
-	y0uwkiivyFY9ZUej+oNd4rvvKaF0/dmuqPDht0cw3FNfb63AH0Nv3er+8BNKZsc/XkLtqpaAe6i3m
-	iywYGFJAtYCFZUZxwfKkgQyzml5/67hl1ErcpUV14OTk4SXJX/AgoFARWIhIY3fvkTrowoh6YYXdy
-	zZMlDhj/NCtZbWPmc1ah3EbwJU4y37Ngy4FdUcl03nuuC8YvCRLrL0uEvdJg0gdUcd31VtGZivEgR
-	dEBl/XcO2F/1cw==;
-From: Mathieu Othacehe <othacehe@gnu.org>
-To: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Li Yang <leoyang.li@nxp.com>,
-	Stefan Wahren <wahrenst@gmx.net>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Mathieu Othacehe <othacehe@gnu.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v7 1/2] dt-bindings: arm: fsl: Add VAR-SOM-MX93 with Symphony
-Date: Mon,  8 Jan 2024 12:02:40 +0100
-Message-ID: <20240108110241.8555-2-othacehe@gnu.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20240108110241.8555-1-othacehe@gnu.org>
-References: <20240108110241.8555-1-othacehe@gnu.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c0MQKTfi"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a298accc440so171417366b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 03:03:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704711812; x=1705316612; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=1wov7S+c4eP3tA/GZq5tzz01wP3CYZQxPahNS7M7qNc=;
+        b=c0MQKTfiplX4ceUasvMX49L372RtGFyx3xn7pVRCQdB/yLxyEtIaoETTggyr4Y7OOP
+         BJ0nLQIgIkLb/jRRgZFtQbHVmMnGkaTza5A9NMSq8odRpYXcbTWCq+xjb/Dkr4OQN90r
+         lUDLNCPP2Vc7nLFtDtjDVqZK0vpu3HxU6WTgtEyglPLCduhVtDYqFA0k3d7RRmcXY1lb
+         DC34Nd7msGBxoq/mb9CwSr2vohm1QevdEcfpd9CRPOU5RSF924Xxua93EcpSzOsvkZDE
+         0v0IQpSH/giLgsynDO/PqqyPOq+tqJiIZO8w7ZrmScMpqdTsk9Bao39bbuSJFNVzMh8E
+         McHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704711812; x=1705316612;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1wov7S+c4eP3tA/GZq5tzz01wP3CYZQxPahNS7M7qNc=;
+        b=NvQ9kkKjqYBzahVOr7aJtBfCjM3jkzOhNFA4RXs2km4ZHmtQHRiWdEJ2oJAr0hjGJL
+         YmVllmfOCeptv+8Nx7EFg1d/6r4njV8CGagD4v2qmSHDph3hsRD9SBpcJcR5f/sU1rnj
+         1OVoRJLPwtwmTVeIbJ2dkVcIvJHm8JcO0PXiuxPmP1bXYpRYantaa17J5/q2XSvQyXsq
+         tM0gq7XPoxAu9JrwXzmMv83EkSzbtmUhlIP2jD9kocFfj0ECLG5v3QoaUk2dkfGlpX/+
+         7m0i69/w8/4A0j9EKfCqQKXvqUf0a6t7zWZc3xr+U447JvAF1XuYkOP4uwkOHTEqQUT2
+         7o+w==
+X-Gm-Message-State: AOJu0YzjkYXC3d7+gWaH7oILGdPuSq23eJ7rJdtFRoQnz1pL8RYSga9g
+	noOSxPtmbhSetkfCkrg6c2M=
+X-Google-Smtp-Source: AGHT+IFi8eDoTveBUHW6MozVPRwFM6NpnZSq4KpmHCz4D3CVm9qkLzjaBRZYYfi1bbG7pegdmwlfhg==
+X-Received: by 2002:a17:907:268a:b0:a28:abb3:dd74 with SMTP id bn10-20020a170907268a00b00a28abb3dd74mr1751694ejc.81.1704711812382;
+        Mon, 08 Jan 2024 03:03:32 -0800 (PST)
+Received: from gmail.com (1F2EF3FE.nat.pool.telekom.hu. [31.46.243.254])
+        by smtp.gmail.com with ESMTPSA id ch16-20020a170906c2d000b00a2afe82f651sm204827ejb.12.2024.01.08.03.03.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jan 2024 03:03:31 -0800 (PST)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Mon, 8 Jan 2024 12:03:29 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, the arch/x86 maintainers <x86@kernel.org>,
+	Vegard Nossum <vegard.nossum@oracle.com>
+Subject: [GIT PULL] x86/asm changes for v6.8
+Message-ID: <ZZvWgXCxrBcVwFco@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Add support for Variscite i.MX93 VAR-SOM-MX93 SoM with Symphony board.
+Linus,
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Mathieu Othacehe <othacehe@gnu.org>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+Please pull the latest x86/asm git tree from:
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 228dcc5c7d6f..27936edfe054 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -1275,6 +1275,12 @@ properties:
-           - const: tq,imx93-tqma9352        # TQ-Systems GmbH i.MX93 TQMa93xxCA/LA SOM
-           - const: fsl,imx93
- 
-+      - description: Variscite VAR-SOM-MX93 based boards
-+        items:
-+          - const: variscite,var-som-mx93-symphony
-+          - const: variscite,var-som-mx93
-+          - const: fsl,imx93
-+
-       - description:
-           Freescale Vybrid Platform Device Tree Bindings
- 
--- 
-2.41.0
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-asm-2024-01-08
 
+   # HEAD: bc90aefa99f74452d549d503a3f1cbf3adc9c6bb x86/asm: Add DB flag to 32-bit percpu GDT entry
+
+x86/asm changes for v6.8:
+
+ - Replace magic numbers in GDT descriptor definitions & handling:
+
+   - Introduce symbolic names via macros for descriptor types/fields/flags,
+     and then use these symbolic names.
+
+   - Clean up definitions a bit, such as GDT_ENTRY_INIT()
+
+   - Fix/clean up details that became visibly inconsistent after the
+     symbol-based code was introduced:
+
+      - Unify accessed flag handling
+
+      - Set the D/B size flag consistently & according to the HW specification
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Vegard Nossum (5):
+      x86/asm: Provide new infrastructure for GDT descriptors
+      x86/asm: Replace magic numbers in GDT descriptors, preparations
+      x86/asm: Replace magic numbers in GDT descriptors, script-generated change
+      x86/asm: Always set A (accessed) flag in GDT descriptors
+      x86/asm: Add DB flag to 32-bit percpu GDT entry
+
+
+ arch/x86/boot/pm.c                      |  7 +--
+ arch/x86/include/asm/desc_defs.h        | 78 +++++++++++++++++++++++++++------
+ arch/x86/kernel/apm_32.c                |  2 +-
+ arch/x86/kernel/cpu/common.c            | 48 +++++++++-----------
+ arch/x86/kernel/head64.c                |  6 +--
+ arch/x86/kernel/setup_percpu.c          |  4 +-
+ arch/x86/platform/pvh/head.S            |  7 +--
+ arch/x86/realmode/rm/reboot.S           |  3 +-
+ drivers/firmware/efi/libstub/x86-5lvl.c |  4 +-
+ drivers/pnp/pnpbios/bioscalls.c         |  2 +-
+ 10 files changed, 104 insertions(+), 57 deletions(-)
