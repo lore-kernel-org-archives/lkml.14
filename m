@@ -1,124 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.tkos.co.il (hours.tkos.co.il [84.110.109.230])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E948535EEF;
-	Tue,  9 Jan 2024 10:09:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B045364CA;
+	Tue,  9 Jan 2024 10:09:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tkos.co.il
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TqoKHNVv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 269C2C433C7;
-	Tue,  9 Jan 2024 10:09:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704794951;
-	bh=eBy8oO5dbaOO40AD9QACd0yuXbqBpvBDoQ/D7p6+2NY=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=TqoKHNVvziTGxP8gXMTfuFv0GATSVJdS+CYh5o+NkywHCTOweS2p+557QhdVJSSQI
-	 OCk6EF+fYLM5Ocxx+kqxf7PQeOp07i4kHqKe6IOFd/S3zJsVpDpStEXEdk0Eq0bEQZ
-	 a2SccJxwocPW2sgTlslDy8ylrTWU1qIj36wXIqxlQQgUzLZJYKEg2ssZMhutqE57fU
-	 USqwn/qG7daG+XVf2YvkvsT2X3zStvrvIoYr+6pW/OHviay/dm9xzDOuYorqqIHxkp
-	 lrpHKWdxv9iBcOJ7fAmj2LR7nsLgdP9vSJ8+VDQY1v7wCmRBbOfK4nGrSVqWVLoK98
-	 K+dUSgGX337Lg==
-From: Kalle Valo <kvalo@kernel.org>
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Jeff Johnson <quic_jjohnson@quicinc.com>,  Bartosz Golaszewski
- <brgl@bgdev.pl>,  "David S . Miller" <davem@davemloft.net>,  Eric Dumazet
- <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,  Paolo Abeni
- <pabeni@redhat.com>,  Rob Herring <robh+dt@kernel.org>,  Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,  Conor Dooley
- <conor+dt@kernel.org>,  Bjorn Andersson <andersson@kernel.org>,  Konrad
- Dybcio <konrad.dybcio@linaro.org>,  Catalin Marinas
- <catalin.marinas@arm.com>,  Will Deacon <will@kernel.org>,  Bjorn Helgaas
- <bhelgaas@google.com>,  Heiko Stuebner <heiko@sntech.de>,  Jernej Skrabec
- <jernej.skrabec@gmail.com>,  Chris Morgan <macromorgan@hotmail.com>,
-  Linus Walleij <linus.walleij@linaro.org>,  Geert Uytterhoeven
- <geert+renesas@glider.be>,  Arnd Bergmann <arnd@arndb.de>,  Neil Armstrong
- <neil.armstrong@linaro.org>,  =?utf-8?Q?N=C3=ADcolas?= F . R . A . Prado
- <nfraprado@collabora.com>,  Marek Szyprowski <m.szyprowski@samsung.com>,
-  Peng Fan <peng.fan@nxp.com>,  Robert Richter <rrichter@amd.com>,  Dan
- Williams <dan.j.williams@intel.com>,  Jonathan Cameron
- <Jonathan.Cameron@huawei.com>,  Terry Bowman <terry.bowman@amd.com>,
-  Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-  Ilpo =?utf-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,  Huacai
- Chen
- <chenhuacai@kernel.org>,  Alex Elder <elder@linaro.org>,  Srini Kandagatla
- <srinivas.kandagatla@linaro.org>,  Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,  linux-wireless@vger.kernel.org,
-  netdev@vger.kernel.org,  devicetree@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  linux-arm-msm@vger.kernel.org,
-  linux-arm-kernel@lists.infradead.org,  linux-pci@vger.kernel.org,
-  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [RFC 8/9] PCI/pwrseq: add a pwrseq driver for QCA6390
-References: <20240104130123.37115-1-brgl@bgdev.pl>
-	<20240104130123.37115-9-brgl@bgdev.pl>
-	<15443d5d-6544-45d0-afeb-b23e6a041ecf@quicinc.com>
-	<87jzoizwz7.fsf@kernel.org>
-	<CAGXv+5FhYY+qyyT8wxY5DggvWPibfM2ypHVKQbsJZ30VkZDAkQ@mail.gmail.com>
-Date: Tue, 09 Jan 2024 12:09:02 +0200
-In-Reply-To: <CAGXv+5FhYY+qyyT8wxY5DggvWPibfM2ypHVKQbsJZ30VkZDAkQ@mail.gmail.com>
-	(Chen-Yu Tsai's message of "Tue, 9 Jan 2024 17:34:44 +0800")
-Message-ID: <87bk9uzum9.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b="ra8Abjhd"
+Received: from localhost (unknown [10.0.8.2])
+	by mail.tkos.co.il (Postfix) with ESMTP id 4BF75440525;
+	Tue,  9 Jan 2024 12:07:02 +0200 (IST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
+	s=default; t=1704794822;
+	bh=43xE3vA91KlBiHYDQYZH4+I07czZ0PHwWXpeBYujzyo=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:From;
+	b=ra8Abjhd3wYdSlybleRufYMxkaE1+BMC4kbkA4imvxpBloAdLz+3ebgDaMB/W1Azc
+	 9v15fDP3UQogHqy6VsccDLOJS3EipJuuoz0UYtXV7iJHgiDknsQx5DLY0O+SFJpqTb
+	 mAVYUR0auLIBB39aooMOEFQSr5JLJXTJC7BGkaW9pn0Tw/dXHD9qrKUo/R+eg0wkNX
+	 iNsasprvywnJBZXfPAQDRwslVPQnDZSvOaJxEIv+HO72TOzf+fkcscL3Zxe4KYVO/7
+	 1foNh71grgTMkCMzS773WPRrxS2IgNoUt3s0qVYTL8HKxvTs3FswJjX0iONRNiSVbp
+	 I7IeKaZZQTjJA==
+References: <cover.1703683642.git.baruch@tkos.co.il>
+ <fae5b1180161a7d8cd626a96f5df80b0a0796b8b.1703683642.git.baruch@tkos.co.il>
+ <ZZw3FDy8800NScEk@arm.com>
+User-agent: mu4e 1.10.8; emacs 29.1
+From: Baruch Siach <baruch@tkos.co.il>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Christoph Hellwig <hch@lst.de>, Marek Szyprowski
+ <m.szyprowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand
+ <frowand.list@gmail.com>, Will Deacon <will@kernel.org>, Robin Murphy
+ <robin.murphy@arm.com>, iommu@lists.linux.dev, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Petr
+ =?utf-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>, Ramon Fried
+ <ramon@neureality.ai>, Elad
+ Nachman <enachman@marvell.com>
+Subject: Re: [PATCH RFC 3/4] dma-direct: add offset to zone_dma_bits
+Date: Tue, 09 Jan 2024 12:03:43 +0200
+In-reply-to: <ZZw3FDy8800NScEk@arm.com>
+Message-ID: <87msterf7b.fsf@tarshish>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Chen-Yu Tsai <wenst@chromium.org> writes:
+Hi Catalin,
 
-> On Tue, Jan 9, 2024 at 5:18=E2=80=AFPM Kalle Valo <kvalo@kernel.org> wrot=
-e:
+On Mon, Jan 08 2024, Catalin Marinas wrote:
+> On Wed, Dec 27, 2023 at 05:04:27PM +0200, Baruch Siach wrote:
+>> Current code using zone_dma_bits assume that all addresses range in the
+>> bits mask are suitable for DMA. For some existing platforms this
+>> assumption is not correct. DMA range might have non zero lower limit.
+>> 
+>> Add 'zone_dma_off' for platform code to set base address for DMA zone.
+>> 
+>> Rename the dma_direct_supported() local 'min_mask' variable to better
+>> describe its use as limit.
+>> 
+>> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
 >
->>
->> Jeff Johnson <quic_jjohnson@quicinc.com> writes:
->>
->> > On 1/4/2024 5:01 AM, Bartosz Golaszewski wrote:
->> >> diff --git a/drivers/pci/pcie/pwrseq/Kconfig b/drivers/pci/pcie/pwrse=
-q/Kconfig
->> >> index 010e31f432c9..f9fe555b8506 100644
->> >> --- a/drivers/pci/pcie/pwrseq/Kconfig
->> >> +++ b/drivers/pci/pcie/pwrseq/Kconfig
->> >> @@ -6,3 +6,14 @@ menuconfig PCIE_PWRSEQ
->> >>      help
->> >>        Say yes here to enable support for PCIe power sequencing
->> >>        drivers.
->> >> +
->> >> +if PCIE_PWRSEQ
->> >> +
->> >> +config PCIE_PWRSEQ_QCA6390
->> >> +    tristate "PCIe Power Sequencing driver for QCA6390"
->> >> +    depends on ARCH_QCOM || COMPILE_TEST
->> >> +    help
->> >> +      Enable support for the PCIe power sequencing driver for the
->> >> +      ath11k module of the QCA6390 WLAN/BT chip.
->> >> +
->> >> +endif
->> >
->> > As I mentioned in the 5/9 patch I'm concerned that the current
->> > definition of PCIE_PWRSEQ and PCIE_PWRSEQ_QCA6390 will effectively hide
->> > the fact that QCA6390 may need additional configuration since the menu
->> > item will only show up if you have already enabled PCIE_PWRSEQ.
->> > Yes I see that these are set in the defconfig in 9/9 but I'm concerned
->> > about the more generic case.
->> >
->> > I'm wondering if there should be a separate config QCA6390 within ath1=
-1k
->> > which would then select PCIE_PWRSEQ and PCIE_PWRSEQ_QCA6390
->>
->> Or is it possible to provide an optional dependency in Kconfig (I guess
+> When I suggested taking the DMA offsets into account, that's not exactly
+> what I meant. Based on patch 4, it looks like zone_dma_off is equivalent
+> to the lower CPU address. Let's say a system has DRAM starting at 2GB
+> and all 32-bit DMA-capable devices has a DMA offset of 0. We want
+> ZONE_DMA32 to end at 4GB rather than 6GB.
+
+Patch 4 sets zone_dma_off to the lower limit from 'dma-ranges' property
+that determines zone_dma_bits. This is not necessarily equivalent to
+start of DRAM, though it happens to be that way on my platform.
+
+>> @@ -59,7 +60,7 @@ static gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 *phys_limit)
+>>  	 * zones.
+>>  	 */
+>>  	*phys_limit = dma_to_phys(dev, dma_limit);
+>> -	if (*phys_limit <= DMA_BIT_MASK(zone_dma_bits))
+>> +	if (*phys_limit <= zone_dma_off + DMA_BIT_MASK(zone_dma_bits))
+>>  		return GFP_DMA;
+>>  	if (*phys_limit <= DMA_BIT_MASK(32))
+>>  		return GFP_DMA32;
 >
-> imply PCIE_PWRSEQ
-> imply PCIE_PWRSEQ_QCA6390
-> ?
+> Ah, you ignore the zone_dma_off for 32-bit calculations. But the
+> argument still stands, the start of DRAM does not necessarily mean that
+> all non-64-bit devices have such DMA offset.
+>
+> The current dma_direct_optimal_gfp_mask() confuses me a bit, I think it
+> gives the wrong flag if we have a zone_dma_bits of 30 and a device with
+> a coherent_dma_mask of 31, it incorrectly ends up with GFP_DMA32 (I'm
+> ignoring dma offsets in this example). Luckily I don't think we have any
+> set up where this would fail. Basically if *phys_limit is strictly
+> smaller than DMA_BIT_MASK(32), we want GFP_DMA rather than GFP_DMA32
+> even if it is larger than DMA_BIT_MASK(zone_dma_bits).
+>
+> Anyway, current mainline assumes that DMA_BIT_MASK(zone_dma_bits) and
+> DMA_BIT_MASK(32) are CPU addresses. The problem is that we may have the
+> start of RAM well above 4GB and neither ZONE_DMA nor ZONE_DMA32 upper
+> limits would be a power-of-two. We could change the DMA_BIT_MASK(...) to
+> be DMA address limits and we end up with something like:
+>
+> static gfp_t dma_direct_optimal_gfp_mask(struct device *dev, u64 *phys_limit)
+> {
+> 	u64 dma_limit = min_not_zero(
+> 		dev->coherent_dma_mask,
+> 		dev->bus_dma_limit);
+> 	u64 dma32_limit = dma_to_phys(dev, DMA_BIT_MASK(32));
+>
+> 	*phys_limit = dma_to_phys(dev, dma_limit);
+> 	if (*phys_limit > dma_limit)
+> 		return 0;
+> 	if (*phys_limit = dma32_limit)
+> 		return GFP_DMA32;
+> 	return GFP_DMA;
+> }
+>
+> The alternative is to get rid of the *_bits variants and go for
+> zone_dma_limit and zone_dma32_limit in the generic code. For most
+> architectures they would match the current DMA_BIT_MASK(32) etc. but
+> arm64 would be able to set some higher values.
+>
+> My preference would be to go for zone_dma{,32}_limit, it's easier to
+> change all the places where DMA_BIT_MASK({zone_dma_bits,32}) is used.
 
-Nice, I had forgotten imply altogether. Would 'imply
-PCIE_PWRSEQ_QCA6390' in ath11k Kconfig be enough to address Jeff's
-concern?
+Sounds good to me.
 
---=20
-https://patchwork.kernel.org/project/linux-wireless/list/
+Thanks for your review of this confusing piece of code.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
+baruch
+
+-- 
+                                                     ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
