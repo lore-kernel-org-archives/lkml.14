@@ -1,96 +1,92 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53253C6BF;
-	Tue,  9 Jan 2024 21:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CD233DB89
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 21:48:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W0v0lAOr"
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-595b208a050so2178394eaf.0;
-        Tue, 09 Jan 2024 13:48:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OCeptIj7"
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3bbd6e3795eso3024758b6e.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Jan 2024 13:48:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704836908; x=1705441708; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UvdJeq2ZBGjXZzlPb1uDy/+QxH7QbSi8cCkivdpW86k=;
-        b=W0v0lAOrjixCW3VBfB/7DyErQuGWnd/D5mF7Na1L2XUozE+qcFdIYhxfQvzxgBoWpH
-         BOCnFQGLP88N0ZbO7aSZ+4TuJ7Bs6x1txsS8F/7xXpbaPY9SBPYtopQ0jCBNjMbvGz2o
-         bgUPw9glYgVPXjdV2kAs3NrtFe2Fp1FX0kS6YB9Ex4H5awKzLUs/pbd/4cRHrl4W3jnR
-         NBROdZQGFyIRxfNbwlenftDjeVtKbMgQBSQVHFtheCwuLroghnCz7VLGnsAMjoRJg9co
-         esniL4esdNLuNjXfCq/l0mJATDKOJ1yz3oL09McveM2DebrHIXJpRwZZsplMD6f6Q7/9
-         lDyQ==
+        d=gmail.com; s=20230601; t=1704836914; x=1705441714; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=vUT9WEUxRD9BkIbxg8bhQm6T8z8s7DL2miSnerAV6qc=;
+        b=OCeptIj7HiM0o/49i8qDvPXyX4tDsnOPvCugkCmcwLhBJlM5/NxRB3eUNkL/hyNzNe
+         VhYgpSzrZz/dfdZXt8WXThr20vurPcmXVNbCvcBV2crd0okznbRdLCF99JpzoamNQgdu
+         FE5ptlKVGYTQjD/wkeI78N6En2hfeXlkX87hndDemnba42Y141XlA+iCrl9O6OLRpszI
+         l/i+AuDVNM4vXqyqLOlXbeNumP3R3oLL3bRhOH8DI/hslzfh6kY6wXkkbuNBoSB6vId1
+         D8uCHCzDfZ00iG7wfMdYX8cxJ8PhepdWbqlb2hfvPDcBJHlPKTSe1lVKVMVo4OzRQ6Px
+         jO2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704836908; x=1705441708;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1704836914; x=1705441714;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UvdJeq2ZBGjXZzlPb1uDy/+QxH7QbSi8cCkivdpW86k=;
-        b=ITxYDhoH8PgMV698z5QTddAOw6fayDwssSXTFD18hz5Q7nL6JBGFwx1ghCffxJXHll
-         bebeG4tcnSjxKeGdDDR5u4vOdTRj7dkWENGD27yihp+zJ7hj6Fn8zQE62vjlSt3v02gq
-         sfL7m2Tncg62tXBEINxJLZinyiIKFi1oZkKKrx59xpM3AUlFSbS2nFMfMDWKMou2SH84
-         1alHU0+lLoYm/8d4xKSN2GEcgEbO4v3Kkbk0px6utKQEjJIhSM3DQl/D6SLK57cv7Lhs
-         KVEoQSxDeknaI3Q2pih6s0+oFkZNX7PzArHZF0AIjwRp9WK1h6HZfjL0mJnL8E3EzAJx
-         iXfA==
-X-Gm-Message-State: AOJu0YyIoVHgTDawDnLWFP0BO+u/9OHpYQg4umrWQvUM4IjokLiiZSFh
-	QP+yTuqaMU8IhS0CpKDDRTo=
-X-Google-Smtp-Source: AGHT+IHUwiTUiTbOOMgRI+gBgs9efvZk8PJoJM0uHPgr/GwHLKas07lU6aQ4pBFuYyzhVoGr8P65fw==
-X-Received: by 2002:a05:6358:5e1d:b0:175:a47b:6616 with SMTP id q29-20020a0563585e1d00b00175a47b6616mr21234rwn.24.1704836907570;
-        Tue, 09 Jan 2024 13:48:27 -0800 (PST)
-Received: from google.com ([2620:15c:9d:2:1135:ca4a:123c:5e53])
-        by smtp.gmail.com with ESMTPSA id u12-20020aa7848c000000b006d97cc5cc13sm2137072pfn.8.2024.01.09.13.48.26
+        bh=vUT9WEUxRD9BkIbxg8bhQm6T8z8s7DL2miSnerAV6qc=;
+        b=DvL4IitSuwfBlCe8VmMrVZ2GzMGSqzyVI1KXEdNnC7xsknS81Urc1c8/uB+5r06mpp
+         /6NJ8u2JPDG+xG6+c5Q83HCrLvXgh615Y5cyWGft8RBZxE1U9iQo6oi0Jy96EmziqItl
+         gzKebGByANHzlh+uxOmzGOZkD6FRUL9vMPF9bE879mNzu4TNj55ckpsB2Nk0jZ8laT9f
+         9Z1+2jWdK0uy8X2NEY9oXKJOnt4oppJrV3O/VlcI2zvPr44brerEF42pQqpaB4MH/HoH
+         7lYbJLe101+phIHhdSGTspgkdIrOeFVxJpjjGUs9xCXNBP9Na8OwquOQCIpA5v/OIcKY
+         +ZBA==
+X-Gm-Message-State: AOJu0YzJBlVTUJGXcS5jzO094HqbZiahuAbkgwPLWSK4r/8WBthYhkCF
+	GMi4kBEusYf9uVfM6KfQh8U=
+X-Google-Smtp-Source: AGHT+IH6KvaSKJAK85q30Z2FmF68k9uvDkpvPuVVzy8FATqm5Cw3ANEuO6nPrdOEGB64M3gakeF1fg==
+X-Received: by 2002:a05:6870:d887:b0:206:53c3:da6a with SMTP id oe7-20020a056870d88700b0020653c3da6amr181863oac.26.1704836914041;
+        Tue, 09 Jan 2024 13:48:34 -0800 (PST)
+Received: from localhost ([2620:10d:c090:400::4:fd50])
+        by smtp.gmail.com with ESMTPSA id c32-20020a631c20000000b005c66b54476bsm2084149pgc.63.2024.01.09.13.48.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 13:48:27 -0800 (PST)
-Date: Tue, 9 Jan 2024 13:48:24 -0800
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Werner Sembach <wse@tuxedocomputers.com>
-Cc: hdegoede@redhat.com, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] i8042: Add forcenorestore quirk to leave
- controller untouched even on s3
-Message-ID: <ZZ2_KMGdokHNWcNL@google.com>
-References: <20240104183118.779778-1-wse@tuxedocomputers.com>
- <20240104183118.779778-2-wse@tuxedocomputers.com>
+        Tue, 09 Jan 2024 13:48:33 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+From: Tejun Heo <tj@kernel.org>
+To: gregkh@linuxfoundation.org
+Cc: andrea.righi@canonical.com,
+	ast@kernel.org,
+	linux-kernel@vger.kernel.org,
+	geert@linux-m68k.org
+Subject: [PATCHSET driver-core-next] kernfs: Protect kernfs_find_and_get_node_by_id() with RCU
+Date: Tue,  9 Jan 2024 11:48:01 -1000
+Message-ID: <20240109214828.252092-1-tj@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240104183118.779778-2-wse@tuxedocomputers.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Werner,
+The BPF helper bpf_cgroup_from_id() calls kernfs_find_and_get_node_by_id()
+which acquires kernfs_idr_lock, which is an non-raw non-IRQ-safe lock.
+kernfs_idr_lock used to be a non-irq-safe lock which could lead to deadlocks
+as bpf_cgroup_from_id() can be called from any BPF programs including e.g.
+the ones that attach to functions which are holding the scheduler rq lock.
 
-On Thu, Jan 04, 2024 at 07:31:17PM +0100, Werner Sembach wrote:
-> On s3 resume the i8042 driver tries to restore the controller to a known
-> state by reinitializing things, however this can confuse the controller
-> with different effects. Mostly occasionally unresponsive keyboards after
-> resume.
-> 
-> These issues do not rise on s0ix resume as here the controller is assumed
-> to preserved its state from before suspend.
-> 
-> This patch adds a quirk for devices where the reinitialization on s3 resume
-> is not needed and might be harmful as described above. It does this by
-> using the s0ix resume code path at selected locations.
-> 
-> This new quirk goes beyond what the preexisting reset=never quirk does,
-> which only skips some reinitialization steps.
+To resolve the situation dad3fb67ca1c ("kernfs: convert kernfs_idr_lock to
+an irq safe raw spinlock") converted kernfs_idr_lock to an irq-safe raw
+spinlock. However, this was also broken as we call idr_alloc*() while
+holding the lock and idr itself uses an non-irq-safe lock and also calls
+into memory allocator.
 
-I think the original change mentioned not only issues on resume, but
-also after boot, which this one does not address, at least directly, so
-I am not sure if this patch is the proper replacement.
+Let's instead RCU protect kernfs_node and kernfs_root so that
+kernfs_find_and_get_node_by_id() can use rcu_read_lock() instead of
+kernfs_idr_lock. While this unfortunately increases the size of kernfs_node,
+it's the most straightforward thing to do and there likely are other places
+that can take advantage of RCU protection and improve scalability too.
 
-I would also like to understand better what exact step is troublesome,
-as I would be surprised if any interaction with the keyboard
-controller while suspending causes the issue to manifest. Is it enough,
-by chance, to skip restoring MUX mode and reset?
+Please see the patch descriptions for more details.
 
-Also, shoudl this system use s2idle by chance?
+This patchset is on top of the current driver-core-next - dad3fb67ca1c
+("kernfs: convert kernfs_idr_lock to an irq safe raw spinlock"), and also
+available in the following git branch.
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/tj/misc.git kernfs-use-rcu
 
 Thanks.
 
--- 
-Dmitry
+--
+tejun
