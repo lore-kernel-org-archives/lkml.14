@@ -1,121 +1,131 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD05ABE4A
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Jan 2024 07:08:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED6A79C4;
+	Tue,  9 Jan 2024 07:13:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XsI0alcB"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4298bd85e33so14884841cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Jan 2024 23:08:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704784132; x=1705388932; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mWKZBm49HTKJsSVTqSFKBSK/qcMrSE6KA1YgsZXKd+s=;
-        b=XsI0alcBIbC5KWOhXw92SV9e9mEed1N8Mr2Fqp1+NlGImqOwayPSgwrUWW879lwgYO
-         YgsR6TRwLe7cauaH5JFCZeSe645xyfsYPv+9pZ07+uv5Z9CL2gdo8OPf/R9jO3Hmav7o
-         KK7j1aiehcIqlWyiybp6Bf0JziCFLaaSNRbRu/BjWWPFCpSXccscUeo58gKioxnlSsXT
-         lGbugmL+6m9CAOxtUff9pn0IHB2Lsl48fQfnZXY7/HJXrY5d/WNPkOVZ6YWzcnRQgpCB
-         AXtI1mtUaQlGOvHAQHa/1PIyH1dlTNAWSgiADH9RpEOL15Bf0ICZnU/zLRAsqT9aaKW1
-         TtMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704784132; x=1705388932;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mWKZBm49HTKJsSVTqSFKBSK/qcMrSE6KA1YgsZXKd+s=;
-        b=TdPwVQDSiK9wrrH3aRedpE8xX1IAmv52/k1l2V0etawBBxTNkj++2j3Un4HmJBOYrG
-         EFaxS4/NkAipTDZWNTpP/0LtrKAXKpREtV4mPSD7HixCcZR+4LXHVNU8l7Xzko1UzhfO
-         5YVTTy66NP6418pfofRaqFTOCH2heMC47rfwShKlvsb4AOxg+WutaWnbEggp0BAMPirZ
-         k3w6AjSeIU46dH/b2zI6i44kJEKr7cKRnaGnQL3YUZEMizXaQW1+U5FmW77N0R2KQFfD
-         sSDCJGvbhtPPFdLyeOVgpbntefnzjT+REmAnwVfazo0n2yqaEcZAstvXy8XYqjJB4qH0
-         eNJg==
-X-Gm-Message-State: AOJu0YzqfbN8egcWTEm51ixRIWSntVKtdPtenhHnwG5Fmsps2bAIQrl8
-	uCP1IXUhstH4qTOtA62ziAbE09JPOZrdjqUAlC8=
-X-Google-Smtp-Source: AGHT+IHyNz4lnf3pR9yAD3GY4+j+Tua6f4ik1QBbsJ0ck80NNcsn8VPe0EOqPlw5mtfd1rEUVcvQ8OKVe/7YPBGHXL8=
-X-Received: by 2002:ac8:5a8b:0:b0:428:400c:ed0 with SMTP id
- c11-20020ac85a8b000000b00428400c0ed0mr6682061qtc.35.1704784132660; Mon, 08
- Jan 2024 23:08:52 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kxd7L47X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76F35C433C7;
+	Tue,  9 Jan 2024 07:13:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1704784381;
+	bh=KW+h+R/WBAgOJEnE4m6clFnLxv6Xr732ZUMriIV0kXQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kxd7L47X0QpJB6vNmFmMeG8Ml9h67ISPM5fncSn9iX0I6pyMJksIukgSkx9A5iEPz
+	 qHNbTKzZ5vhtTcJcbqrPZKnhL54J2VhEaRGVxrl825lzPF1CuKKPfJ7AQ3ORT5nbnM
+	 qTpM9K/NdVGqbOptQZsEJOFU3lcr3Yxh6i9oaPE4=
+Date: Tue, 9 Jan 2024 08:12:58 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Elad Nachman <enachman@marvell.com>
+Cc: stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] usb: host: Add ac5 to EHCI Orion
+Message-ID: <2024010943-deluxe-snitch-febc@gregkh>
+References: <20240108175457.4113480-1-enachman@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240107131236.625-1-qwjhust@gmail.com>
-In-Reply-To: <20240107131236.625-1-qwjhust@gmail.com>
-From: =?UTF-8?B?5LqT5paH5p2w?= <qwjhust@gmail.com>
-Date: Tue, 9 Jan 2024 15:08:41 +0800
-Message-ID: <CAGFpFsQsRm0s3OG1zENHSgPB+TcbGG6NKXKhugCYnzX=shf00A@mail.gmail.com>
-Subject: Re: [PATCH] f2fs: fix NULL pointer dereference in f2fs_submit_page_write()
-To: jaegeuk@kernel.org, chao@kernel.org, guoweichao@oppo.com, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240108175457.4113480-1-enachman@marvell.com>
 
-This patch has been merged into the new patch.
-
-[PATCH v2] f2fs: fix max open zone constraints
-https://lore.kernel.org/linux-f2fs-devel/20240109035804.642-1-qwjhust@gmail=
-.com/
-
-
-Wenjie <qwjhust@gmail.com> =E4=BA=8E2024=E5=B9=B41=E6=9C=887=E6=97=A5=E5=91=
-=A8=E6=97=A5 21:12=E5=86=99=E9=81=93=EF=BC=9A
->
-> From: Wenjie Qi <qwjhust@gmail.com>
->
-> BUG: kernel NULL pointer dereference, address: 0000000000000014
-> RIP: 0010:f2fs_submit_page_write+0x6cf/0x780 [f2fs]
-> Call Trace:
-> <TASK>
-> ? show_regs+0x6e/0x80
-> ? __die+0x29/0x70
-> ? page_fault_oops+0x154/0x4a0
-> ? prb_read_valid+0x20/0x30
-> ? __irq_work_queue_local+0x39/0xd0
-> ? irq_work_queue+0x36/0x70
-> ? do_user_addr_fault+0x314/0x6c0
-> ? exc_page_fault+0x7d/0x190
-> ? asm_exc_page_fault+0x2b/0x30
-> ? f2fs_submit_page_write+0x6cf/0x780 [f2fs]
-> ? f2fs_submit_page_write+0x736/0x780 [f2fs]
-> do_write_page+0x50/0x170 [f2fs]
-> f2fs_outplace_write_data+0x61/0xb0 [f2fs]
-> f2fs_do_write_data_page+0x3f8/0x660 [f2fs]
-> f2fs_write_single_data_page+0x5bb/0x7a0 [f2fs]
-> f2fs_write_cache_pages+0x3da/0xbe0 [f2fs]
-> ...
->
-> It is possible that other threads have added this fio to io->bio
-> and submitted the io->bio before entering f2fs_submit_page_write().
-> At this point io->bio =3D NULL.
-> If is_end_zone_blkaddr(sbi, fio->new_blkaddr) of this fio is true,
-> then an NULL pointer dereference error occurs at bio_get(io->bio).
-> In this case, the code to determine the zone end can simply be skipped.
->
-> Signed-off-by: Wenjie Qi <qwjhust@gmail.com>
+On Mon, Jan 08, 2024 at 07:54:57PM +0200, Elad Nachman wrote:
+> From: Elad Nachman <enachman@marvell.com>
+> 
+> Add support for ac5 to the EHCI Orion platform driver.
+> The ac5 SOC has DDR starting at offset 0x2_0000_0000,
+> Hence it requires a larger than 32-bit DMA mask to operate.
+> Move the dma mask to be pointed by the OF match data, and
+> use that match data when initializng the DMA mask.
+> 
+> Signed-off-by: Elad Nachman <enachman@marvell.com>
 > ---
->  fs/f2fs/data.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index 1896928cae77..d08e92bb2621 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -1100,7 +1100,7 @@ void f2fs_submit_page_write(struct f2fs_io_info *fi=
-o)
->                 goto next;
->  out:
->  #ifdef CONFIG_BLK_DEV_ZONED
-> -       if (f2fs_sb_has_blkzoned(sbi) && btype < META &&
-> +       if (io->bio && f2fs_sb_has_blkzoned(sbi) && btype < META &&
->                         is_end_zone_blkaddr(sbi, fio->new_blkaddr)) {
->                 spin_lock_bh(&sbi->available_active_zones_lock);
->                 if (sbi->available_active_zones > 0) {
-> --
-> 2.34.1
->
+>  drivers/usb/host/ehci-orion.c | 19 +++++++++++++++----
+>  1 file changed, 15 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
+> index 6c47ab0a491d..58883664c884 100644
+> --- a/drivers/usb/host/ehci-orion.c
+> +++ b/drivers/usb/host/ehci-orion.c
+> @@ -65,6 +65,15 @@ struct orion_ehci_hcd {
+>  
+>  static struct hc_driver __read_mostly ehci_orion_hc_driver;
+>  
+> +/*
+> + * Legacy DMA mask is 32 bit.
+> + * AC5 has the DDR starting at 8GB, hence it requires
+> + * a larger (34-bit) DMA mask, in order for DMA allocations
+> + * to succeed:
+> + */
+> +static const u64 dma_mask_orion =	DMA_BIT_MASK(32);
+> +static const u64 dma_mask_ac5 =		DMA_BIT_MASK(34);
+> +
+>  /*
+>   * Implement Orion USB controller specification guidelines
+>   */
+> @@ -211,6 +220,7 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+>  	int irq, err;
+>  	enum orion_ehci_phy_ver phy_version;
+>  	struct orion_ehci_hcd *priv;
+> +	u64 *dma_mask_ptr;
+>  
+>  	if (usb_disabled())
+>  		return -ENODEV;
+> @@ -228,7 +238,8 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+>  	 * set. Since shared usb code relies on it, set it here for
+>  	 * now. Once we have dma capability bindings this can go away.
+>  	 */
+> -	err = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+> +	dma_mask_ptr = (u64 *)of_device_get_match_data(&pdev->dev);
+> +	err = dma_coerce_mask_and_coherent(&pdev->dev, *dma_mask_ptr);
+>  	if (err)
+>  		goto err;
+>  
+> @@ -332,9 +343,9 @@ static void ehci_orion_drv_remove(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id ehci_orion_dt_ids[] = {
+> -	{ .compatible = "marvell,orion-ehci", },
+> -	{ .compatible = "marvell,armada-3700-ehci", },
+> -	{},
+> +	{ .compatible = "marvell,orion-ehci", .data = &dma_mask_orion},
+> +	{ .compatible = "marvell,armada-3700-ehci", .data = &dma_mask_orion},
+> +	{ .compatible = "marvell,ac5-ehci", .data = &dma_mask_ac5},
+>  };
+>  MODULE_DEVICE_TABLE(of, ehci_orion_dt_ids);
+>  
+> -- 
+> 2.25.1
+> 
+> 
+
+Hi,
+
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
+
+You are receiving this message because of the following common error(s)
+as indicated below:
+
+- This looks like a new version of a previously submitted patch, but you
+  did not list below the --- line any changes from the previous version.
+  Please read the section entitled "The canonical patch format" in the
+  kernel file, Documentation/process/submitting-patches.rst for what
+  needs to be done here to properly describe this.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
